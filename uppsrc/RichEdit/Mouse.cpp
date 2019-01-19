@@ -275,6 +275,21 @@ void RichEdit::StdBar(Bar& menu)
 				WString w = GetWordAtCursor();
 				if(!w.IsEmpty() && !SpellWord(w, w.GetLength(),
 				                              fixedlang ? fixedlang : formatinfo.language)) {
+					if(true) {
+						Vector<String> h = SpellerFindCloseWords(fixedlang ? fixedlang : formatinfo.language, w.ToString(), 10);
+						for(String s : h)
+							menu.Add(s, [=] {
+								int pos, count;
+								GetWordAtCursorPos(pos, count);
+								if(count) {
+									Remove(pos, count);
+									WString h = s.ToWString();
+									Insert(pos, AsRichText(h, formatinfo));
+									Move(pos + h.GetCount());
+									Finish();
+								}
+							});
+					}
 					menu.Add(t_("Add to user dictionary"), THISBACK(AddUserDict));
 					menu.Separator();
 				}

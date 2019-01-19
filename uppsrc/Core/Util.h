@@ -493,6 +493,7 @@ bool SpellWord(const WString& ws, int lang);
 bool SpellWord(const wchar *ws, int len, int lang);
 void SpellerAdd(const WString& w, int lang);
 bool AllSpellerWords(int lang, Gate<String> iter);
+Vector<String> SpellerFindCloseWords(int lang, const String& w, int n);
 
 String GetP7Signature(const void *data, int length, const String& cert_pem, const String& pkey_pem);
 String GetP7Signature(const String& data, const String& cert_pem, const String& pkey_pem);

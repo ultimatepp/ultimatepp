@@ -579,6 +579,7 @@ private:
 
 	void    AddUserDict();
 	WString GetWordAtCursor();
+	void    GetWordAtCursorPos(int& pos, int& count);
 
 	Rect     GetCaretRect(const RichCaret& pr) const;
 	Rect     GetCaretRect() const;

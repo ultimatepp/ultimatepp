@@ -319,4 +319,115 @@ void SpellerAdd(const WString& w, int lang)
 	}
 }
 
+struct WordDistanceTester {
+	byte pchars[256];
+	byte wchars[256];
+	byte pairs[256 * 256];
+	int  used_pairs[256]; // store used positions in pairs to be able to clear them at exit
+	int  used_pairs_count; // count of pairs
+	
+	int Get(const String& w, const String& p);
+	
+	WordDistanceTester();
+};
+
+WordDistanceTester::WordDistanceTester()
+{
+	Zero(pchars);
+	Zero(wchars);
+	Zero(pairs);
+	Zero(used_pairs);
+	used_pairs_count = 0;
+}
+
+int WordDistanceTester::Get(const String& p, const String& w)
+{
+	if(abs(p.GetLength() - w.GetLength()) > 4 || w.GetCount() > 200 || p.GetCount() > 200)
+		return INT_MAX;
+	
+	VectorMap<int, int> chars;
+	for(int i = 0; i < p.GetCount(); i++)
+		pchars[(byte)p[i]]++;
+	
+	int score = 0;
+	String pp;
+	VectorMap<int, int> found;
+	for(int i = 0; i < w.GetCount(); i++) {
+		int c = (byte)w[i];
+		if(pchars[c]) {
+			pchars[c]--;
+			wchars[c]++;
+			score++;
+			LLOG("Letter " << (char)w[i]);
+		}
+	}
+
+	int first = 0;
+	used_pairs_count = 0;
+	for(int i = 0; i < p.GetCount(); i++) {
+		int c = p[i];
+		if(wchars[c]) {
+			wchars[c]--;
+			if(first) {
+				LLOG("Pair " << (char)first << (char)c);
+				int pairi = MAKEWORD(first, c);
+				pairs[pairi]++;
+				used_pairs[used_pairs_count++] = pairi;
+			}
+			first = c;
+		}
+	}
+
+	for(int i = 1; i < w.GetCount(); i++) {
+		int pairi = MAKEWORD(w[i - 1], w[i]);
+		if(pairs[pairi]) {
+			pairs[pairi]--;
+			score++;
+		}
+	}
+	
+	score -= abs(p.GetLength() - w.GetLength());
+
+	Zero(pchars);
+	Zero(wchars);
+	for(int i = 0; i < used_pairs_count; i++)
+		pairs[used_pairs[i]] = 0;
+	
+	return -score;
+}
+
+Vector<String> SpellerFindCloseWords(int lang, const String& w, int n)
+{
+	Vector<String> r;
+	Vector<int>    min_distance;
+	if(n < 1)
+		return r;
+	String aw = ToUpper(ToAscii(w));
+	One<WordDistanceTester> tester;
+	tester.Create();
+	AllSpellerWords(lang, [&] (String h) -> bool {
+		if(abs(h.GetLength() - w.GetLength()) < 5) {
+			int d = tester->Get(Utf8ToUpperAscii(h), aw);
+			if(min_distance.GetCount() == 0) {
+				min_distance.Add(d);
+				r.Add(h);
+			}
+			else
+			if(d <= min_distance.Top()) {
+				int ii = min_distance.GetCount() - 1;
+				while(ii > 0 && d < min_distance[ii - 1])
+					ii--;
+				min_distance.Insert(ii, d);
+				r.Insert(ii, h);
+				if(r.GetCount() > n) {
+					r.Trim(n);
+					min_distance.Trim(n);
+				}
+			}
+		}
+		return false;
+	});
+	return r;
+}
+
 };
