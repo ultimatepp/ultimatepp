@@ -365,18 +365,28 @@ bool RichEdit::RemoveSelection(bool back)
 	return false;
 }
 
-WString RichEdit::GetWordAtCursor()
+void    RichEdit::GetWordAtCursorPos(int& pos, int& count)
 {
 	WString w;
 	int c = cursor;
+	pos = count = 0;
 	if(IsLetter(text[c])) {
 		while(c > 0 && IsLetter(text[c - 1]))
 			c--;
-		while(w.GetLength() < 64 && IsLetter(text[c])) {
-			w.Cat(text[c]);
+		pos = c;
+		while(w.GetLength() < 64 && IsLetter(text[c]))
 			c++;
-		}
+		count = c - pos;
 	}
+}
+
+WString RichEdit::GetWordAtCursor()
+{
+	int pos, count;
+	GetWordAtCursorPos(pos, count);
+	WString w;
+	for(int i = 0; i < count; i++)
+		w.Cat(text[i + pos]);
 	return w;
 }
 
