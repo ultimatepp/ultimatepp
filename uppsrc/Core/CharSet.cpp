@@ -2267,7 +2267,29 @@ String ToAscii(const String& s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToAscii(FromUtf8(s)));
+		return Utf8ToAscii(s);
+	int l = s.GetLength();
+	StringBuffer r(l);
+	ToAscii(r, s, l, charset);
+	return r;
+}
+
+String ToUpperAscii(const String& s, byte charset)
+{
+	charset = ResolveCharset(charset);
+	if(charset == CHARSET_UTF8)
+		return Utf8ToUpperAscii(s);
+	int l = s.GetLength();
+	StringBuffer r(l);
+	ToAscii(r, s, l, charset);
+	return r;
+}
+
+String ToLowerAscii(const String& s, byte charset)
+{
+	charset = ResolveCharset(charset);
+	if(charset == CHARSET_UTF8)
+		return Utf8ToLowerAscii(s);
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);

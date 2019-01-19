@@ -136,4 +136,44 @@ Vector<dword> ToUtf32(const wchar *s, int len)
 	return r;
 }
 
+String Utf8ToAscii(const String& src)
+{
+	StringBuffer r(src.GetLength());
+	const char *s = src.begin();
+	const char *lim = src.end();
+
+	char *t = r;
+	while(s < lim)
+		*t++ = (byte)*s < 128 ? *s++ : ToAscii(FetchUtf8(s, lim));
+	r.SetLength(int(t - ~r));
+	return r;
+}
+
+String Utf8ToUpperAscii(const String& src)
+{
+	StringBuffer r(src.GetLength());
+	const char *s = src.begin();
+	const char *lim = src.end();
+
+	char *t = r;
+	while(s < lim) {
+		*t++ = (byte)*s <= 'Z' ? *s++ : ToUpperAscii(FetchUtf8(s, lim));
+	}
+	r.SetLength(int(t - ~r));
+	return r;
+}
+
+String Utf8ToLowerAscii(const String& src)
+{
+	StringBuffer r(src.GetLength());
+	const char *s = src.begin();
+	const char *lim = src.end();
+
+	char *t = r;
+	while(s < lim)
+		*t++ = ToLowerAscii(FetchUtf8(s, lim));
+	r.SetLength(int(t - ~r));
+	return r;
+}
+
 };
