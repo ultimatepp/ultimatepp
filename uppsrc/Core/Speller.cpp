@@ -124,6 +124,7 @@ void SetSpellPath(const String& p)
 
 static String sZet(FileIn& in, int offset, int len)
 {
+	RTIMING("sZet");
 	in.Seek(offset);
 	return ZDecompress(in.Get(len));
 }
@@ -140,6 +141,7 @@ void DoSpellerPath(String& pp, String dir)
 
 Speller *sGetSpeller(int lang)
 {
+	RTIMING("sGetSpeller");
 	static ArrayMap<int, Speller> speller;
 	int q = speller.Find(lang);
 	if(q < 0) {
@@ -239,6 +241,35 @@ bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia)
 		}
 	}
 	return f->user.Find(wrd) >= 0;;
+}
+
+bool AllSpellerWords(int lang, Gate<String> iter)
+{
+	RTIMING("AllSpellerWords");
+	Speller *f = sGetSpeller(lang);
+	if(!f)
+		return false;
+	for(int i = 0; i < f->block.GetCount(); i++) {
+		const SpellBlock& b = f->block[i++];
+		FileIn in(f->path);
+		String ctrl = sZet(in, b.offset, b.ctrl_len);
+		String text = sZet(in, b.offset + b.ctrl_len, b.text_len);
+		in.Close();
+		String w;
+		const char *s = ctrl;
+		const char *e = ctrl.End();
+		const char *t = text;
+		const char *te = text.End();
+		while(s < e && t < te) {
+			w.Trim(*s++);
+			while(*t)
+				w.Cat(*t++);
+			if(iter(w))
+				return true;
+			t++;
+		}
+	}
+	return false;
 }
 
 struct SpellKey : Moveable<SpellKey> {

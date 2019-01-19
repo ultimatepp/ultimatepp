@@ -1,5 +1,4 @@
 topic "Character set support";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Character set support";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Character set support]]}}&]
 [s9;%% While in ideal world every text resource would be encoded 
@@ -245,7 +245,17 @@ UNICODE lower`-case character, otherwise returns [%-*@3 c].&]
 [s5;:ToAscii`(int`): [@(0.0.255) int]_[* ToAscii]([@(0.0.255) int]_[*@3 c])&]
 [s2;%% Returns UNICODE [%-*@3 c] `'converted`' to basic ASCII. Conversion 
 is performed by removing any diacritical marks. If such conversion 
-is not possible, returns 0.&]
+is not possible, returns 32 (space).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToUpperAscii`(int`): [@(0.0.255) char]_[* ToUpperAscii]([@(0.0.255) int]_[*@3 c])
+&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 c]) (but faster).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToLowerAscii`(int`): [@(0.0.255) char]_[* ToLowerAscii]([@(0.0.255) int]_[*@3 c])
+&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 c]) (but faster).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:IsLetter`(char`): [@(0.0.255) bool]_[* IsLetter]([@(0.0.255) char]_[*@3 c])&]
@@ -289,6 +299,26 @@ r]_[*@3 c])&]
 [s2;%% Returns [^topic`:`/`/Core`/src`/CharSet`$en`-us`#ToAscii`(int`)^ ToAscii]((byte)
 [%-*@3 c]).&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToUpperAscii`(signed char`): [@(0.0.255) char]_[* ToUpperAscii]([@(0.0.255) sig
+ned]_[@(0.0.255) char]_[*@3 c])&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 c])).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToLowerAscii`(signed char`): [@(0.0.255) char]_[* ToLowerAscii]([@(0.0.255) sig
+ned]_[@(0.0.255) char]_[*@3 c])&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 c])).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToUpperAscii`(char`): [@(0.0.255) char]_[* ToUpperAscii]([@(0.0.255) char]_[*@3 c
+])&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 c])).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToLowerAscii`(char`): [@(0.0.255) char]_[* ToLowerAscii]([@(0.0.255) char]_[*@3 c
+])&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 c])).&]
+[s3;%% &]
 [s4;%% &]
 [s5;:IsLetter`(wchar`): [@(0.0.255) bool]_[* IsLetter]([_^wchar^ wchar]_[*@3 c])&]
 [s2;%% Returns [^topic`:`/`/Core`/src`/CharSet`$en`-us`#IsLetter`(int`)^ IsLetter]([%-*@3 c
@@ -318,6 +348,16 @@ r]_[*@3 c])&]
 [s5;:ToAscii`(wchar`): [@(0.0.255) int]_[* ToAscii]([_^wchar^ wchar]_[*@3 c])&]
 [s2;%% Returns [^topic`:`/`/Core`/src`/CharSet`$en`-us`#ToAscii`(int`)^ ToAscii]([%-*@3 c
 ]).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToUpperAscii`(Upp`:`:wchar`): [@(0.0.255) char]_[* ToUpperAscii]([_^Upp`:`:wchar^ w
+char]_[*@3 c])&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 c])).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToLowerAscii`(Upp`:`:wchar`): [@(0.0.255) char]_[* ToLowerAscii]([_^Upp`:`:wchar^ w
+char]_[*@3 c])&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 c])).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:IsDigit`(int`): [@(0.0.255) bool]_[* IsDigit]([@(0.0.255) int]_[*@3 c])&]
@@ -364,6 +404,23 @@ ideogram.&]
 [s2;%% Combines [%-*@3 chr] with diacritical marking [%-*@3 combine], 
 returns the result as UNICODE character. Not all combinations 
 are covered...&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Utf8ToAscii`(const Upp`:`:String`&`): [_^Upp`:`:String^ String]_[* Utf8ToAsci
+i]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 src])&]
+[s2;%% Returns UTF`-8 String `'converted`' to basic ASCII. Conversion 
+is performed by removing any diacritical marks. If such conversion 
+is not possible, returns 32 (space).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Utf8ToUpperAscii`(const Upp`:`:String`&`): [_^Upp`:`:String^ String]_[* Utf8T
+oUpperAscii]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 src])&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 src]) but faster.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Utf8ToLowerAscii`(const Upp`:`:String`&`): [_^Upp`:`:String^ String]_[* Utf8T
+oLowerAscii]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 src])&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 src]) but faster.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ToUpper`(wchar`*`,const wchar`*`,int`): [@(0.0.255) void]_[* ToUpper]([_^wchar^ wchar]_
@@ -530,6 +587,18 @@ tring][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)
 tring][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
 [s2; Converts input 8`-bit string.encoded in [*@3 charset] to basic 
 ASCII by removing diacritical markings. [*@3 charset] can be CHARSET`_UTF8.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToUpperAscii`(const Upp`:`:String`&`,Upp`:`:byte`): [_^Upp`:`:String^ Strin
+g]_[* ToUpperAscii]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s], 
+[_^Upp`:`:byte^ byte]_[*@3 charset])&]
+[s2;%% Same as ToUpper(ToAscii([%-*@3 s]), [%-*@3 charset]), but faster.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ToLowerAscii`(const Upp`:`:String`&`,Upp`:`:byte`): [_^Upp`:`:String^ Strin
+g]_[* ToLowerAscii]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s], 
+[_^Upp`:`:byte^ byte]_[*@3 charset])&]
+[s2;%% Same as ToLower(ToAscii([%-*@3 s]), [%-*@3 charset]), but faster.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ToUpper`(const char`*`,byte`): [_^String^ String]_[* ToUpper]([@(0.0.255) const]_[@(0.0.255) c
