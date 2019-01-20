@@ -1,9 +1,17 @@
 #include <Core/Core.h>
 
-#undef _WIN32
+#ifdef PLATFORM_WIN32
 #define OPENSSL_SYS_WINDOWS
+#define OPENSSL_SYS_WIN32
+#endif
+
 #include <openssl/rand.h>
-#include "AESStream.h"
+
+#include <AESStream/AESStream.h>
+
+#define TFILE <AESStream/AESStream.t>
+#include <Core/t.h>
+
 
 void AESInit();
 
@@ -71,12 +79,12 @@ void AESInit()
 		
 		static int hops = 0;
 		if (hops > 1000000)
-			throw "AESInit: Random generator init error";//Ошибка инициализации генератора случайных чисел";
+			throw t_("AESInit: Random generator init error");
 	}
 }
 
 //----------------------------------------------------------------------------------------------
-AESEncoderStream::AESEncoderStream(qword _size, const String &_key) throw (const char *)
+AESEncoderStream::AESEncoderStream(qword _size, const String &_key) // Deprecated in C++11:  throw (const char *)
 	: size       (_size)
 	, blocks     (_size / AES_BLOCK_SIZE)
 	, blocksDone (0)
@@ -93,9 +101,9 @@ AESEncoderStream::AESEncoderStream(qword _size, const String &_key) throw (const
 	iv.Cat(iv0);
 	
 	if (_key.GetLength() != 16 && _key.GetLength() != 24 && _key.GetLength() != 32)
-		throw "AESEncoderStream::ctor: Key must be 16, 24 or 32 bytes long";//Неверная длина ключа. Нужно 16, 24 или 32 байт";
+		throw t_("AESEncoderStream::ctor: Key must be 16, 24 or 32 bytes long");
 	if (AES_set_encrypt_key((const unsigned char *) ~_key, _key.GetLength() << 3, &key))
-		throw "AESEncoderStream::ctor: Could not setup AES key. OpenSSL problem?";//Не установился ключ для AES. Проблема в OpenSSL?";
+		throw t_("AESEncoderStream::ctor: Could not setup AES key. OpenSSL problem?");
 }
 
 int AESEncoderStream::AddData(const String &s)
@@ -183,7 +191,7 @@ String AESEncoderStream::GetEncryptedData()
 }
 
 //----------------------------------------------------------------------------------------------
-AESDecoderStream::AESDecoderStream(const String &_key) throw (const char *)
+AESDecoderStream::AESDecoderStream(const String &_key) // Deprecated in C++11:  throw (const char *)
 	: size       (0L)
 	, sizeDone   (0L)
 	, iv         (AES_BLOCK_SIZE)
@@ -192,9 +200,9 @@ AESDecoderStream::AESDecoderStream(const String &_key) throw (const char *)
 	AESInit();
 
 	if (_key.GetLength() != 16 && _key.GetLength() != 24 && _key.GetLength() != 32)
-		throw "AESDecoderStream::ctor: Key must be 16, 24 or 32 bytes long";//Неверная длина ключа. Нужно 16, 24 или 32 байт";
+		throw t_("AESDecoderStream::ctor: Key must be 16, 24 or 32 bytes long");
 	if (AES_set_decrypt_key((const unsigned char *) ~_key, _key.GetLength() << 3, &key))
-		throw "AESDecoderStream::ctor: Could not setup AES key. OpenSSL problem?";//Не установился ключ для AES. Проблема в OpenSSL?";
+		throw t_("AESDecoderStream::ctor: Could not setup AES key. OpenSSL problem?");
 }
 
 int AESDecoderStream::AddData(const String &s)
@@ -226,7 +234,7 @@ int AESDecoderStream::AddData(const String &s)
 	return (int) sl;
 }
 
-String AESDecoderStream::GetDecryptedData() throw (const char *)
+String AESDecoderStream::GetDecryptedData() // Deprecated in C++1:  throw (const char *)
 {
 	#pragma pack(push,1)
 	struct AES_CONTAINER_HEADER
@@ -247,7 +255,7 @@ String AESDecoderStream::GetDecryptedData() throw (const char *)
 			AES_ecb_encrypt(((const unsigned char *) ~data)+offs, ((unsigned char *) &header)+offs, &key, false);
 		
 		if (header.m1+header.m2 != AES_CONTAINER_DWORD_HEADER)
-			throw "Wrong key!";//"Ключ шифрования неверный";
+			throw t_("Wrong key!");
 		
 		memcpy(~iv,  &(header.iv[0]), AES_BLOCK_SIZE);
 		size = header.size;
@@ -277,3 +285,9 @@ String AESDecoderStream::GetDecryptedData() throw (const char *)
 
 //----------------------------------------------------------------------------------------------
 const dword AES_CONTAINER_DWORD_HEADER = 0x377FEA9F;
+
+String SHA256Bin(const char *key) {
+	byte hash32[32];
+	SHA256(hash32, key);
+	return String(hash32, 32);
+}

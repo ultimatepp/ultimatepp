@@ -1,5 +1,4 @@
 topic "Installing OpenSSL";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,6 +20,7 @@ topic "Installing OpenSSL";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Installing OpenSSL&]
 [s5; [* 1. In Linux]&]
@@ -74,4 +74,4 @@ Files`\Microsoft Visual Studio 9.0`\VC`\vcvarsall.bat`"`" x86]&]
 [s5; [* Last steps]&]
 [s5; 2.6. Add in `"Setup/Build methods/Lib directories`" menu, the 
 directory where out32 and out32dll have been copied.&]
-[s0; ]
+[s0; ]]

@@ -2,8 +2,10 @@
 #define _SSLTest_AESStream_h_
 
 #include <Core/Core.h>
-#include <openssl/aes.h>
+
 using namespace Upp;
+
+#include <openssl/aes.h>
 
 //----------------------------------------------------------------------------------------------
 String AESRandomString(int length);
@@ -13,7 +15,7 @@ String AESPadString(const String &s, int l);
 class AESEncoderStream
 {
 public:
-	AESEncoderStream(qword size, const String &key) throw (const char *);
+	AESEncoderStream(qword size, const String &key); // Deprecated in C++11: throw (const char *);
 	
 	int AddData(const String &);
 	
@@ -48,10 +50,10 @@ inline AESEncoderStream & operator << (AESEncoderStream &stream, const String &s
 class AESDecoderStream
 {
 public:
-	AESDecoderStream(const String &key) throw (const char *);
+	AESDecoderStream(const String &key); // Deprecated in C++11:  throw (const char *);
 	
 	int AddData(const String &);
-	String GetDecryptedData() throw (const char *); //выброс исключения если ключ неверный
+	String GetDecryptedData(); // Deprecated in C++11:  throw (const char *); //выброс исключения если ключ неверный
 	
 	qword GetSize() {return size;}
 
@@ -79,4 +81,6 @@ inline AESDecoderStream & operator << (AESDecoderStream &stream, const String &s
 //----------------------------------------------------------------------------------------------
 extern const dword AES_CONTAINER_DWORD_HEADER;
 
+String SHA256Bin(const char *key);
+	
 #endif
