@@ -342,7 +342,12 @@ void SelectPackageDlg::SyncSvnDirs()
 void SelectPackageDlg::ToolBase(Bar& bar)
 {
 	bar.Add("New assembly..", THISBACK(OnBaseAdd))
-		.Key(K_INSERT);
+#ifdef PLATFORM_COCOA
+		.Key(K_CTRL_N)
+#else
+		.Key(K_INSERT)
+#endif
+	;
 	bar.Add(base.IsCursor(), "Edit assembly..", THISBACK(OnBaseEdit))
 		.Key(K_CTRL_ENTER);
 	bar.Add(base.IsCursor(), "Remove assembly", THISBACK(OnBaseRemove))

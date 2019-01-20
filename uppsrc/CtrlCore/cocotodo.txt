@@ -5,19 +5,14 @@ sooner:
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
-- Topic++, menu at topics, New topic has wrong hotkey
-- New assembly - wrong hotkey (?)
-
 - cursor problem after local menu invocation (better, but still...)
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
-
-- Uword cursor is blinking even in background
 
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
 - fix package organiser link options (joining link options missing space)
 
-- download .scd files (or put to bundle)
+- download .ucd files (or put to bundle)
 
 * apple debugger
 
@@ -69,6 +64,11 @@ later:
 
 done:
 
+- New assembly - wrong hotkey (?)
+
+- Topic++, menu at topics, New topic has wrong hotkey
+
+- Uword cursor is blinking even in background
 
 - .iml D&D does not work
 

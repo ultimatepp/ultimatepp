@@ -215,7 +215,11 @@ void TopicEditor::TopicMenu(Bar& bar)
 	if(IsNull(grouppath))
 		return;
 	bar.Add("New topic..", THISBACK(NewTopic))
-	   .Key(K_CTRL_N).Key(K_ALT_INSERT);
+	   .Key(K_CTRL_N)
+#ifndef PLATFORM_COCOA
+	   .Key(K_ALT_INSERT)
+#endif
+	;
 	bar.Add(topics_list.IsCursor(), "Move topic..", THISBACK(MoveTopic));
 	bar.Add(topics_list.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
