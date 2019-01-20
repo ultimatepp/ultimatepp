@@ -7,6 +7,57 @@
 
 #ifdef PLATFORM_WIN32
 
+#include <TlHelp32.h>
+
+Vector<DWORD> GetChildProcessList(DWORD processId) {
+	Vector<DWORD> child, all, parents;
+	
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hSnap == INVALID_HANDLE_VALUE) 
+		return child;
+	
+	PROCESSENTRY32 proc;
+	proc.dwSize = sizeof(proc);
+	
+	if (!Process32First(hSnap, &proc)) {
+		CloseHandle(hSnap);	
+		return child;
+	}
+	
+	do {
+		all << proc.th32ProcessID;
+		parents << proc.th32ParentProcessID;
+    } while(Process32Next(hSnap, &proc));
+	
+	CloseHandle(hSnap);
+	
+	child << processId;
+	int init = 0;
+	while (true) {
+		int count = child.GetCount();
+		if (init >= count)
+			break;
+		for (int cid = init; cid < count; ++cid) {
+			for (int i = 0; i < all.GetCount(); ++i) {
+				if (parents[i] == child[cid])
+					child << all[i];
+			}
+		}
+		init = count;
+	}
+	child.Remove(0);
+	return child;	
+}
+
+void TerminateChildProcesses(DWORD dwProcessId, UINT uExitCode) {
+	Vector<DWORD> children = GetChildProcessList(dwProcessId);
+	for (int i = 0; i < children.GetCount(); ++i) {
+		HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, children[i]);
+		TerminateProcess(hProcess, uExitCode);
+		CloseHandle(hProcess);
+	}
+}
+
 #pragma comment(lib, "DbgHelp.lib")
 #pragma comment(lib, "psapi.lib")
 
@@ -116,6 +167,7 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	}
 	hProcess = pi.hProcess;
 	mainThread = pi.hThread;
+	hProcessId = pi.dwProcessId;
 	mainThreadId = pi.dwThreadId;
 
 #ifdef CPU_64
@@ -364,6 +416,7 @@ void Pdb::Stop()
 					break;
 				Sleep(100);
 			}
+			TerminateChildProcesses(hProcessId, 0);
 			TerminateProcess(hProcess, 0);
 			dword exitcode = STILL_ACTIVE;
 			int start = msecs();

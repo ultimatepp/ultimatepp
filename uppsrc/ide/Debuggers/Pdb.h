@@ -168,6 +168,7 @@ struct Pdb : Debugger, ParentCtrl {
 	HANDLE                      hProcess;
 	HANDLE                      mainThread;
 	DWORD                       processid;
+	DWORD                       hProcessId;
 	DWORD                       mainThreadId;
 	ArrayMap<dword, Thread>     threads;
 	bool                        terminated;
