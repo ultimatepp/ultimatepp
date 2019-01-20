@@ -7,6 +7,8 @@ CONSOLE_APP_MAIN
 {
 	// Generate cryptographically stable key
 	String key(AESRandomString(32));
+	// Generate key from user key
+	//String key(SHA256Bin("ThisIsMyWonderfulKey_&6;"));
 
 	// Encryption 
 	String sIn,sOut;
