@@ -47,33 +47,6 @@ void Ide::MakeTitle()
 	Title(title.ToWString());
 }
 
-void Ide::MakeIcon() {
-#ifdef PLATFORM_WIN32
-	Image li = IdeImg::PackageLarge();
-	String mp = main;
-	if(!IsNull(mp))
-	{
-		Size isz = li.GetSize();
-		ImageDraw idraw(isz);
-		Draw& mdraw = idraw.Alpha();
-		idraw.DrawImage(0, 0, li);
-		mdraw.DrawImage(0, 0, li, White);
-		Font font = StdFont(9);
-		Size sz = GetTextSize(mp, font);
-		sz.cx = min(sz.cx + 4, isz.cx);
-		sz.cy += 2;
-		int x = (isz.cx - sz.cx) / 2;
-		int y = isz.cy - sz.cy;
-		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
-		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
-		idraw.DrawText(x + 2, y + 1, mp, font, Black);
-		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
-		li = idraw;
-	}
-	LargeIcon(li);
-#endif
-}
-
 bool Ide::CanToggleReadOnly()
 {
 	return NormalizePath(GetActiveFilePath()) == NormalizePath(editfile) && !editor.IsView();
@@ -579,6 +552,36 @@ void Ide::SetIdeState(int newstate)
 	SetBar();
 }
 
+
+void Ide::MakeIcon() {
+	Image li = IdeImg::PackageLarge2();
+	String mp = main;
+	if(!IsNull(mp))
+	{
+		Size isz = li.GetSize();
+		ImageDraw idraw(isz);
+		Draw& mdraw = idraw.Alpha();
+		idraw.DrawImage(0, 0, li);
+		mdraw.DrawImage(0, 0, li, White);
+		Font font = StdFont(DPI(9));
+		Size sz = GetTextSize(mp, font);
+		sz.cx = min(sz.cx + 4, isz.cx);
+		sz.cy += 2;
+		int x = (isz.cx - sz.cx) / 2;
+		int y = isz.cy - sz.cy;
+		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
+		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
+		idraw.DrawText(x + 2, y + 1, mp, font, Black);
+		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
+		if(state_icon)
+			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge2(),
+			                                         2, IdeImg::IconRunningLarge2(),
+			                                         IdeImg::IconBuildingLarge2()));
+		li = idraw;
+	}
+	LargeIcon(li);
+}
+
 void Ide::SetIcon()
 {
 	int new_state_icon = 0;
@@ -597,6 +600,7 @@ void Ide::SetIcon()
 	if(state_icon == new_state_icon)
 		return;
 	state_icon = new_state_icon;
+	MakeIcon();
 #ifdef PLATFORM_WIN32
 	switch(state_icon) {
 	case 1:  Icon(DPI(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge())); break;
