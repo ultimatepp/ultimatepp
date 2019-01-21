@@ -22,6 +22,7 @@ CONSOLE_APP_MAIN
 			String cat = h[2];
 			int upper = ScanHex(h[12]);
 			int lower = ScanHex(h[13]);
+			DUMP(code);
 			DUMPHEX(code);
 			DUMP(cat);
 			DUMPHEX(lower);
@@ -46,15 +47,20 @@ CONSOLE_APP_MAIN
 
 			Vector<String> decomb;
 			decomb.AppendRange(FilterRange(Split(h[5], ' '), [] (const String& x) { return x[0] != '<'; }));
+			DDUMP(decomb);
 			dword first = decomb.GetCount() ? ScanHex(decomb[0]) : 0;
+			DDUMP(first);
+			DDUMP((int)ToAscii(code));
+			DDUMP(first);
 
 			if(code < 128)
 				ASSERT(ToAscii(code) == code);
-			else {
+			else
+			if(first) {
 				if(first < 128)
 					ASSERT(ToAscii(code) == first);
 				else
-					ASSERT(ToAscii(code) == 0);
+					ASSERT(ToAscii(code) == 32);
 			}
 			
 			bool compat = *h[5] == '<';
