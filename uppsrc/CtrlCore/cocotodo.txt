@@ -3,6 +3,8 @@ brew install gdb
 
 sooner:
 
+- dropping DropList several times can lead to focus issue
+
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
 - cursor problem after local menu invocation (better, but still...)
@@ -15,6 +17,8 @@ sooner:
 - download .ucd files (or put to bundle)
 
 * apple debugger
+
+- filesel icons
 
 later:
 
@@ -33,8 +37,6 @@ later:
 - ch focus
 
 - improve dnd protocol - allow macstyle images and offsets
-
-- filesel icons
 
 - Bazaar GetAdapterInfo
 
