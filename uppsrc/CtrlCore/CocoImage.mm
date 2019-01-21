@@ -330,6 +330,27 @@ ImageDraw::operator Image()
 	return Image(ib);
 }
 
+Image GetIconForFileExt(const char *ext)
+{
+	ImageDraw iw(DPI(16, 16));
+
+	CGContextRef cg = (CGContextRef) iw.GetCGHandle();
+
+	CFRef<CFStringRef> fext = CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8);
+	CFRef<CFStringRef> fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fext, NULL);
+
+	NSImage *image = *ext == '*' ? [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericFolderIcon)]
+	                             : [[NSWorkspace sharedWorkspace]iconForFileType:(__bridge NSString *)~fileUTI];
+	
+    NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithCGContext:cg flipped:YES];
+    NSGraphicsContext* cgc = [NSGraphicsContext currentContext];
+    [NSGraphicsContext setCurrentContext:gc];
+    [image drawInRect:NSMakeRect(0, 0, DPI(16), DPI(16))];
+	[NSGraphicsContext setCurrentContext:cgc];
+	
+	return iw;
+}
+
 };
 
 #endif

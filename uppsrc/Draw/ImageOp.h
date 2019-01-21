@@ -224,9 +224,10 @@ void SyncUHDMode();
 Image DPI(const Image& m);
 Image DPI(const Image& img, int expected);
 
-inline int    DPI(int a)      { return IsUHDMode() ? 2 * a : a; }
-inline double DPI(double a)   { return IsUHDMode() ? 2 * a : a; }
-inline Size   DPI(Size sz)    { return IsUHDMode() ? 2 * sz : sz; }
+inline int    DPI(int a)          { return IsUHDMode() ? 2 * a : a; }
+inline double DPI(double a)       { return IsUHDMode() ? 2 * a : a; }
+inline Size   DPI(Size sz)        { return IsUHDMode() ? 2 * sz : sz; }
+inline Size   DPI(int cx, int cy) { return Size(DPI(cx), DPI(cy)); }
 
 inline Image DPI(const Image& a, const Image& b) { return IsUHDMode() ? b : a; }
 
