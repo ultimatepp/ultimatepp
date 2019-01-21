@@ -214,7 +214,7 @@ char ToAsciiRest_(dword c)
 	UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(c);
 	if(q < 0)
-		return 0;
+		return ' ';
 	int ch = *(const dword *)~f.decomposed[q];
 	return ch < 128 ? ch : ' ';
 }
