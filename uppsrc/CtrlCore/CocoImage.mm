@@ -269,6 +269,7 @@ void  Ctrl::SetMouseCursor(const Image& img)
 void ImageDraw::Init(int cx, int cy)
 {
 	ib.Create(cx, cy);
+	Fill(~ib, RGBAZero(), ib.GetLength());
 
 	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 

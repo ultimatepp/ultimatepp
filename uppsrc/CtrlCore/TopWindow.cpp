@@ -153,10 +153,13 @@ void TopWindow::SetupRect(Ctrl *owner)
 	Rect r = GetRect();
 	if(r.IsEmpty())
 	   SetRect(GetDefaultWindowRect());
-	else
-	if(r.left == 0 && r.top == 0 && center == 1) {
-		Rect area = owner ? owner->GetWorkArea() : Ctrl::GetWorkArea();
-		SetRect(area.CenterRect(min(area.Size(), r.Size())));
+	else {
+		r.SetSize(max(r.GetSize(), GetMinSize()));
+		SetRect(r);
+		if(r.left == 0 && r.top == 0 && center == 1) {
+			Rect area = owner ? owner->GetWorkArea() : Ctrl::GetWorkArea();
+			SetRect(area.CenterRect(min(area.Size(), r.Size())));
+		}
 	}
 }
 
@@ -332,7 +335,7 @@ int  TopWindow::Run(bool appmodal)
 	}
 	int q = exitcode;
 	inloop = pinloop;
-	exitcode = pexitcode;		
+	exitcode = pexitcode;
 	LLOG("TopWindow::Run() = " << q << " -> " << typeid(*this).name());
 #ifdef GUI_WIN
 	LLOG("Focus = " << UPP::Name(GetFocusCtrl()) << ", raw " << (void *)::GetFocus());
