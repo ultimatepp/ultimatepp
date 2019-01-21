@@ -394,6 +394,42 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 
 #endif
 
+#ifdef PLATFORM_COCOA
+struct FileIconMaker : ImageMaker {
+	String file;
+	bool   exe;
+	bool   dir;
+	bool   large;
+
+	virtual String Key() const {
+		return file + (exe ? "1" : "0") + (dir ? "1" : "0");
+	}
+
+	virtual Image Make() const {
+		String ext = GetFileExt(file);
+		if(*ext == '.')
+			ext = ext.Mid(1);
+		if(exe)
+			ext = "app";
+		if(dir && ext != "app")
+			return GetIconForFileExt("*");
+		return GetIconForFileExt(ext);
+	}
+};
+
+#define GETFILEICON_DEFINED
+
+Image GetFileIcon(const char *path, bool dir, bool exe, bool large, bool quick = false)
+{
+	FileIconMaker m;
+	m.exe = exe;
+	m.dir = dir;
+	m.file = path;
+	m.large = large;
+	return MakeImage(m);
+}
+#endif
+
 #ifndef GETFILEICON_DEFINED
 Image PosixGetDriveImage(String dir, bool)
 {
@@ -432,8 +468,12 @@ Image NativePathIcon0(const char *path, bool folder, bool large)
 	String p = path;
 	bool isdrive = folder && ((p == "/media") || (p == "/mnt"));
 	FindFile ff(path);
+#ifdef PLATFORM_COCOA
+	return GetFileIcon(path, folder, ff.GetMode() & 0111, large);
+#else
 	return isdrive ? PosixGetDriveImage(GetFileName(path), large)
 				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111, large);
+#endif
 #endif
 }
 
@@ -508,8 +548,12 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   MatchSearch(fi.filename, search) && show) {
 				Image img;
 			#ifdef PLATFORM_POSIX
+			#ifdef PLATFORM_COCOA
+				img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false, lazyicons);
+			#else
 				img = isdrive ? PosixGetDriveImage(fi.filename, false)
 				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
+			#endif
 			#endif
 			#ifdef GUI_WIN
 				img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);

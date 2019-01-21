@@ -9,7 +9,7 @@
 
 void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, int state, bool focus)
 {
-	auto cg = (CGContextRef) cgcontext;
+	auto cg = (CGContextRef) cgcontext	;
 	if(Upp::IsUHDMode())
 		CGContextScaleCTM(cg, 2, 2);
 	CGRect cr = CGRectMake(r.left, r.top, r.Width(), r.Height());

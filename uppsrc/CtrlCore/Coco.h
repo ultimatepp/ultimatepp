@@ -145,6 +145,8 @@ struct DrawDragRectInfo {
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
+Image GetIconForFileExt(const char *ext);
+
 #ifndef PLATFORM_WIN32
 #include <CtrlCore/stdids.h>
 #endif
