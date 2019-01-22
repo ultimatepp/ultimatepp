@@ -24,7 +24,7 @@ void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fil
 	if(r.cx > 0 && r.cy > 0 && !IsNull(fill_color))
 		GLDrawPolygons(dd, center, fill, r, fill_color);
 	r = radius - Sizef(width / 2, width / 2);
-	if(width && !IsNull(line_color))
+	if(width && !IsNull(line_color)) {
 		if(dash.GetCount()) {
 			GL_TIMING("Ellipse Dash");
 			Vector<Pointf> line;
@@ -38,6 +38,7 @@ void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fil
 		}
 		else
 			GLDrawPolylines(dd, center, line, r, width, line_color);
+	}
 }
 
 void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color, double width,
