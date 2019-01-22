@@ -187,6 +187,10 @@ void InstantSetup()
 				String& sslbin = bins.At(2);
 				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
 					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin64" : "bin/OpenSSL-Win/bin");
+
+				String& sdlbin = bins.At(3);
+				if(IsNull(sdlbin) || ToLower(sdlbin).Find("sdl2") >= 0)
+					sdlbin = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
 				
 				incs.At(0) = vc + "/include";
 				int ii = 1;
@@ -204,6 +208,10 @@ void InstantSetup()
 				String& sslinc = incs.At(4);
 				if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
 					sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
+
+				String& sdlinc = incs.At(5);
+				if(IsNull(sdlinc) || ToLower(sdlinc).Find("sdl2") >= 0)
+					sdlinc = GetExeDirFile("bin/SDL2/include");
 				
 				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
@@ -217,6 +225,10 @@ void InstantSetup()
 				String& ssllib = libs.At(3);
 				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
 					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib64" : "bin/OpenSSL-Win/lib");
+				
+				String& sdllib = libs.At(4);
+				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
+					sdllib = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
 			
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
@@ -305,12 +317,15 @@ void InstantSetup()
 			bins.At(0) = binx + "/bin";
 			bins.At(1) = binx + "/opt/bin";
 			bins.At(2) = binx + "/gdb/bin";
+			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
 
 			incs.At(0) = mingw + "/include";
 			incs.At(1) = binx + "/opt/include";
+			incs.At(2) = GetExeDirFile("bin/SDL2/include");
 
 			libs.At(0) = mingw + "/lib";
 			libs.At(1) = binx + "/opt/lib";
+			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
