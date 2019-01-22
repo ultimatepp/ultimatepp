@@ -1,0 +1,12 @@
+library
+	"SDL2 SDL2main";
+
+file
+	Synth.h,
+	Core.cpp,
+	sample.i,
+	Gen.cpp,
+	Operator.cpp,
+	Sequencer.cpp,
+	QSF.cpp;
+
