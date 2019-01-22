@@ -1,3 +1,5 @@
+description "Demonstrates sound output with SDL2\377";
+
 uses
 	CtrlLib,
 	Synth;

@@ -2,12 +2,7 @@
 
 using namespace Upp;
 
-#ifdef COMPILER_MSC
 #include <SDL.h>
-#endif
-#ifdef COMPILER_GCC
-#include <SDL/SDL.h>
-#endif
 
 const int maxpoint  = 1000;
 const int maxscroll = 7;
