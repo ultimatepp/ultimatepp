@@ -70,6 +70,8 @@ ScatterDraw::ScatterDraw() {
 	rainbowBorderColor = Black;
 	rainbowPaletteFont = StdFont();
 	rainbowPaletteTextColor = Black;
+	
+	mouseHandlingX = mouseHandlingY = true;
 }
 
 void debug_h() {
@@ -1094,6 +1096,8 @@ bool ScatterDraw::IsShowMark(int index) const throw (Exc) {
 void ScatterDraw::SetDataPrimaryY(int index, bool primary) {
 	ASSERT(IsValid(index));
 	series[index].primaryY = primary;
+	if (!primary)
+		SetDrawY2Reticle(true);
 	Refresh();
 }
 
@@ -1105,6 +1109,8 @@ ScatterDraw &ScatterDraw::SetDataPrimaryY(bool primary) {
 void ScatterDraw::SetDataSecondaryY(int index, bool secondary) {
 	ASSERT(IsValid(index));
 	series[index].primaryY = !secondary;
+	if (secondary)
+		SetDrawY2Reticle(true);
 	Refresh();
 }
 

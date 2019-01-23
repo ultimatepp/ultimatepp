@@ -219,11 +219,27 @@ Vector<int64> DataSource::Envelope(Getdatafun getdataY, Getdatafun getdataX, dou
 	return ret;
 }
 
-bool GreaterEqualThan(double a, double b) {return a >= b;}
-bool LowerEqualThan(double a, double b) {return a <= b;}
+inline bool GreaterEqualThan(double a, double b) {return a >= b;}
+inline bool LowerEqualThan(double a, double b) {return a <= b;}
 
 Vector<int64> DataSource::UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, GreaterEqualThan);}
 Vector<int64> DataSource::LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, LowerEqualThan);}
+
+Vector<Pointf> DataSource::Cumulative(Getdatafun getdataY, Getdatafun getdataX) {
+	Vector<Pointf> ret;
+	
+	double acum = 0;
+	for (int i = 0; i < GetCount(); ++i) {
+		double y = Membercall(getdataY)(i);
+		double x = Membercall(getdataX)(i);
+		
+		if (IsNull(x) || IsNull(y))
+			continue;
+		acum += y;
+		ret << Pointf(x, acum);
+	}
+	return ret;
+}
 
 Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width) {
 	Vector<Pointf> ret;

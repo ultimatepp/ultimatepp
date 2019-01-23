@@ -1252,9 +1252,23 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 		xLabel = xLabel_base;
 		yLabel = yLabel_base;
 		yLabel2 = yLabel2_base;
+		String yLabelLegends, yLabelLegends2;
 		Upp::Index<String> xUnits, yUnits, yUnits2;
 		for (int i = 0; i < series.GetCount(); ++i) {
 			ScatterSeries &serie = series[i];
+			if (serie.primaryY) {
+				if (yLabel.IsEmpty()) {
+					if (!yLabelLegends.IsEmpty())
+						yLabelLegends << ";";
+					yLabelLegends << serie.legend;
+				}
+			} else {
+				if (yLabel2.IsEmpty()) {
+					if (!yLabelLegends2.IsEmpty())
+						yLabelLegends2 << ";";
+					yLabelLegends2 << serie.legend;
+				}
+			}
 			if (!serie.unitsX.IsEmpty())
 				xUnits.FindAdd(serie.unitsX);
 			if (!serie.unitsY.IsEmpty()) {
@@ -1264,6 +1278,8 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 					yUnits2.FindAdd(serie.unitsY);
 			}
 		}
+		yLabel << yLabelLegends;
+		yLabel2 << yLabelLegends2;
 		if (xLabel.Find('[') < 0 && !xUnits.IsEmpty()) {
 			xLabel += " ";
 			for (int i = 0; i < xUnits.GetCount(); ++i)
@@ -1512,17 +1528,16 @@ void ScatterDraw::Plot(T& w)
 					int64 imin, imax;
 					if (series[j].sequential) {
 						imin = imax = Null;
-						imin = imax = Null;
 						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
 							double xx = series[j].PointsData()->x(i);
-							if (IsNull(xx))
-								continue;
-							if (IsNull(imin)) {
-								if (xx >= xMin)
-									imin = i;// - 1;
-							} else if (IsNull(imax)) {
-								if (xx >= xMin + xRange) 
-									imax = i;// + 1;
+							if (!IsNull(xx)) {
+								if (IsNull(imin)) {
+									if (xx >= xMin) 
+										imin = i;
+								} else if (IsNull(imax)) {
+									if (xx >= xMin + xRange) 
+										imax = i;
+								}
 							}
 						}
 						if (IsNull(imin))
@@ -1539,7 +1554,8 @@ void ScatterDraw::Plot(T& w)
 					int npix = 1;
 					for (int64 i = imin; i <= imax; ) {
 						double xx, yy;
-						if (fastViewX && dxpix < 1) {					
+						if (fastViewX && dxpix < 1) {	
+							debug_h();				
 							yy = series[j].PointsData()->y(i);
 							if (IsNull(yy)) {
 								++i;

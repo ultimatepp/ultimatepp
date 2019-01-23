@@ -3,12 +3,6 @@
 #endif
 // ScatterDraw.cpp
 
-T_("No series")
-caES("")
-esES("Sin series")
-euES("")
-frFR("")
-
 T_("No mark")
 caES("Sense marca")
 esES("Sin marca")
@@ -111,6 +105,18 @@ esES("ExponenteReal")
 euES("")
 frFR("")
 
+T_("Weibull cumulative")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Weibull")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Rational_1")
 caES("Racional_1")
 esES("Racional_1")
@@ -155,6 +161,12 @@ frFR("")
 
 
 // Obsolete
+
+T_("No series")
+caES("")
+esES("Sin series")
+euES("")
+frFR("")
 
 T_("Divide by zero")
 caES("")
