@@ -97,12 +97,14 @@ const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wcha
 	for(const wchar *s = p; s < e && IsLetter(*s); s++)
 		w.Cat(ToUpper(*s));
 	int n = w.GetCount();
-	if(!n)
+	word flags = 0;
+	if(n) {
+		if(comments_lang && !SpellWord(w, comments_lang))
+			flags = LineEdit::SPELLERROR;
+	}
+	else
 		for(const wchar *s = p; s < e && !IsLetter(*s); s++)
 			n++;
-	word flags = 0;
-	if(n && comments_lang && !SpellWord(w, comments_lang))
-		flags = LineEdit::SPELLERROR;
 	hls.SetFlags(n, flags);
 	static WString todo = "TODO";
 	static WString fixme = "FIXME";
