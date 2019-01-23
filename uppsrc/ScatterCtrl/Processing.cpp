@@ -388,7 +388,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFitLeft.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
 	tabFitLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 	
-	tabFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+	tabFitLeft.scatter.Units(0, pscatter->GetUnitsY(id), pscatter->GetUnitsX(id));
+	tabFitLeft.scatter.SetLabelX(pscatter->GetLabelX());
 	
 	bool primary = pscatter->IsDataPrimaryY(id);
     tabFitLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
@@ -547,7 +548,8 @@ void ProcessingTab::OnSet()
 	
 		tabOpLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 		
-		tabOpLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+		tabOpLeft.scatter.Units(0, pscatter->GetUnitsY(id), pscatter->GetUnitsX(id));
+		tabOpLeft.scatter.SetLabelX(pscatter->GetLabelX());
 		
 		bool primary = pscatter->IsDataPrimaryY(id);
 		tabOpLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
@@ -567,7 +569,8 @@ void ProcessingTab::OnSet()
 	
 		tabBestFitLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 		
-		tabBestFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+		tabBestFitLeft.scatter.Units(0, pscatter->GetUnitsY(id), pscatter->GetUnitsX(id));
+		tabBestFitLeft.scatter.SetLabelX(pscatter->GetLabelX());
 		
 		bool primary = pscatter->IsDataPrimaryY(id);
 		tabBestFitLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
