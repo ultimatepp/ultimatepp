@@ -216,7 +216,20 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		PutConsole("Unable to launch " + String(_cmdline));
 #endif
 #ifdef PLATFORM_POSIX
-	String script = ConfigFile("console-script-" + AsString(getpid()) + ".tmp");
+	String script = ConfigFile("console-script-" + AsString(getpid()));
+	if(console) {
+		FileStream out(script, FileStream::CREATE, 0777);
+		out << "#!/bin/sh\n"
+		    << cmdline << '\n'
+		#ifndef PLATFORM_COCOA
+		    << "echo \"<--- Finished, press [ENTER] to close the window --->\"\nread dummy\n"
+		#endif
+		;
+	}
+#ifdef PLATFORM_COCOA
+	if(console)
+		cmdline = "/usr/bin/open " + script;
+#else
 	String lc;
 	static const char *term[] = {
 		"/usr/bin/mate-terminal -x",
@@ -232,20 +245,20 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 			break;
 		LinuxHostConsole = term[ii++];
 	}
-	if(FileExists(lc)) {
-		if(console) {
-			FileStream out(script, FileStream::CREATE, 0777);
-			out << "#!/bin/sh\n"
-			    << cmdline << '\n'
-			    << "echo \"<--- Finished, press [ENTER] to close the window --->\"\nread dummy\n";
+	if(FileExists(lc))
+	{
+		if(console)
 			cmdline = LinuxHostConsole + " sh " + script;
-		}
 	}
 	else
 	if(LinuxHostConsole.GetCount())
 		PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
+#endif
+
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	Vector<char *> args;
+	
+	PutVerbose(cmdline);
 
 	char *o = cmd_buf;
 	const char *s = cmdline;
