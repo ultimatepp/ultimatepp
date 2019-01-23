@@ -4,10 +4,8 @@ brew install gdb
 sooner:
 
 - dropping DropList several times can lead to focus issue
-
-- Warning: Terminal '/usr/bin/xterm' not found, executing in background.
-
 - cursor problem after local menu invocation (better, but still...)
+
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
 - UHD problem with tabbar
@@ -66,6 +64,8 @@ later:
 - FileSelector
 
 done:
+
+- Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
 - New assembly - wrong hotkey (?)
 
