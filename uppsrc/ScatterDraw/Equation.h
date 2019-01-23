@@ -295,6 +295,74 @@ public:
 	void SetDegree(int num)				{NEVER();}
 };
 
+class WeibullCumulativeEquation : public ExplicitEquation {
+public:
+	WeibullCumulativeEquation() 						{SetCoeff(1, 1);}
+	WeibullCumulativeEquation(double k, double lambda)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda);}
+	double f(double x) {
+		if (x < 0)
+			return 0;
+		double k =  coeff[0];
+		double lambda = coeff[1];
+		return 1 - exp(-pow(x/lambda, k));
+	}
+	virtual String GetName() 					{return t_("Weibull cumulative");}
+	virtual String GetEquation(int numDigits = 3) {
+		String k =  FormatCoeff(0, numDigits);
+		String lambda = FormatCoeff(1, numDigits);
+		String ret = Format("1 - e^(-((x/%s)^%s))", lambda, k);
+		ret.Replace("+ -", "- ");
+		return ret;
+	}	
+	virtual void GuessCoeff(DataSource &series) {}
+	void SetDegree(int num)				{NEVER();}
+};
+
+class WeibullEquation : public ExplicitEquation {
+public:
+	WeibullEquation() 							{SetCoeff(1, 1); factor = Null;}
+	WeibullEquation(double k, double lambda)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda); factor = Null;}
+	double f(double x) {
+		if (x < 0)
+			return 0;
+		double k =  coeff[0];
+		double lambda = coeff[1];
+		return factor*(k/lambda)*(pow(x/lambda, k-1))*exp(-pow(x/lambda, k));
+	}
+	virtual String GetName() 					{return t_("Weibull");}
+	virtual String GetEquation(int numDigits = 3) {
+		String sfactor = FormatDoubleFix(factor, numDigits);
+		String k =  FormatCoeff(0, numDigits);
+		String lambda = FormatCoeff(1, numDigits);
+		String ret = Format("%s*(%s/%s)*(x/%s)^(%s-1)*e^(-((x/%s)^%s))", sfactor, k, lambda, lambda, k, lambda, k);
+		ret.Replace("+ -", "- ");
+		return ret;
+	}	
+	virtual void GuessCoeff(DataSource &series) {}
+	virtual void _GuessCoeff(DataSource &series) {
+		Vector<Pointf> cumulative = series.CumulativeY();
+		factor = cumulative.Top().y;
+		for (int i = 0; i < cumulative.GetCount(); ++i)
+			cumulative[i].y /= factor;
+		VectorPointf data(cumulative);
+		WeibullCumulativeEquation weibullCumulative;
+		ExplicitEquation::FitError error = weibullCumulative.Fit(data);
+		if (error == ExplicitEquation::NoError) {
+			double k = weibullCumulative.GetCoeff()[0];
+			double lambda = weibullCumulative.GetCoeff()[1];
+			SetCoeff(k, lambda);
+		}
+	}
+	FitError Fit(DataSource &series, double &r2) {
+		_GuessCoeff(series);
+		return ExplicitEquation::Fit(series, r2);
+	}
+	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
+	void SetDegree(int num)				{NEVER();}
+private:
+	double factor;
+};
+
 class Rational1Equation : public ExplicitEquation {
 public:
 	Rational1Equation() 				{SetCoeff(1, 0, 0);}

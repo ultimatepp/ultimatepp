@@ -611,6 +611,8 @@ INITBLOCK {
 	ExplicitEquation::Register<FourierEquation2>("FourierEquation2");
 	ExplicitEquation::Register<FourierEquation3>("FourierEquation3");
 	ExplicitEquation::Register<FourierEquation4>("FourierEquation4");
+	ExplicitEquation::Register<WeibullEquation>("WeibullEquation");
+	ExplicitEquation::Register<WeibullCumulativeEquation>("WeibullCumulativeEquation");
 }
 
 }

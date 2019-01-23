@@ -48,7 +48,8 @@ public:
 	virtual double VarianceY(double avg = Null) {return Variance(&DataSource::y, avg);}	
 	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
-	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}	
+	virtual Vector<Pointf> CumulativeY() 				{return Cumulative(&DataSource::y, &DataSource::x);}
+	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}
 	virtual Vector<Pointf> SectorAverageY(double width) {return SectorAverage(&DataSource::y, &DataSource::x, width);}	
 	virtual void MaxListY(Vector<int64> &id, double width){MaxList(&DataSource::y, &DataSource::x, id, width);}
 	virtual Pointf MaxSubDataImpY(int64 maxId, int width)	{return MaxSubDataImp(&DataSource::y, &DataSource::x, maxId, width);}
@@ -85,6 +86,7 @@ public:
 	double Variance(Getdatafun getdata, double avg = Null);
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
+	Vector<Pointf> Cumulative(Getdatafun getdataY, Getdatafun getdataX);
 	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> SectorAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	void MaxList(Getdatafun getdataY, Getdatafun getdataX, Vector<int64> &id, double width);

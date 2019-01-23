@@ -978,7 +978,8 @@ raw]_`&[* SetReticleColor]([@(0.0.255) const]_[_^Upp`:`:Color^ Color]_`&[*@3 col
 [@(0.0.255) int]_[*@3 index], [@(0.0.255) bool]_[*@3 primary]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 primary] is true, [%-*@3 index] series is considered to 
 be a primary series so it uses the left vertical axis. If false 
-it uses the right vertical axis.&]
+it uses the right vertical axis. In this case right vertical 
+grid is activated.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDataPrimaryY`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetDataP
@@ -992,7 +993,7 @@ be a primary series so it uses the left vertical axis. &]
 ryY]([@(0.0.255) int]_[*@3 index], [@(0.0.255) bool]_[*@3 secondary])&]
 [s3; Opposed to SetDataPrimaryY() if [%-*@3 secondary] is true, [%-*@3 index] 
 series is considered to be a secondary series so it uses the 
-right vertical axis. &]
+right vertical axis. In this case right vertical grid is activated.&]
 [s3; If false it uses the left vertical axis.&]
 [s1; &]
 [s6;%- &]
@@ -1000,7 +1001,8 @@ right vertical axis. &]
 aSecondaryY]([@(0.0.255) bool]_[*@3 secondary])&]
 [s3; Opposed to SetDataPrimaryY() if [%-*@3 secondary] is true, last 
 added series is considered to be a secondary series so it uses 
-the right vertical axis.&]
+the right vertical axis. In this case right vertical grid is 
+activated.&]
 [s3; If false it uses the left vertical axis.&]
 [s1; &]
 [s6;%- &]
