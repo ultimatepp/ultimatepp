@@ -6,14 +6,16 @@ void Tab9_Big::Init()
 	CtrlLayout(*this);	
 	SizePos();
 	
-	scatter.SetRange(100000,40).SetXYMin(0, -20);
+	int dataRange = 100000;
+	
+	scatter.SetRange(dataRange, 40).SetXYMin(0, -20);
 	scatter.SetMouseHandling(true).SetMaxRange(500000).SetMinRange(2);
-	for (int t = 0; t < 100000; ++t) {
-		s1 <<Pointf(t,20*sin(2*M_PI*t/100000));
-		s2 <<Pointf(t,15*cos(2*M_PI*t/100000));
+	for (int t = 0; t < dataRange; ++t) {
+		s1 << Pointf(t,20*sin(2*M_PI*t/dataRange));
+		s2 << Pointf(t,15*cos(2*M_PI*t/dataRange));
 	}
-	scatter.AddSeries(s1).Legend("series1");
-	scatter.AddSeries(s2).Legend("series2");
+	scatter.AddSeries(s1).Legend("series1").NoMark();
+	scatter.AddSeries(s2).Legend("series2").NoMark();
 	scatter.ShowAllMenus();	
 	fastView.WhenAction = THISBACK(OnFastView);
 	sequentialX.WhenAction = THISBACK(OnSequentialX);
