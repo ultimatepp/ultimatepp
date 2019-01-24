@@ -61,9 +61,10 @@ later:
 
 - implement DrawPoly... patterns
 
-- FileSelector
-
 done:
+
+
+- double click should test proximity (click on two assemblies)
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
