@@ -406,14 +406,7 @@ struct FileIconMaker : ImageMaker {
 	}
 
 	virtual Image Make() const {
-		String ext = GetFileExt(file);
-		if(*ext == '.')
-			ext = ext.Mid(1);
-		if(exe && !dir)
-			return GetIconForFileExt("?");
-		if(dir && ext != "app")
-			return GetIconForFileExt("*");
-		return GetIconForFileExt(ext);
+		return GetIconForFile(file);
 	}
 };
 
@@ -2027,7 +2020,11 @@ FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& nam
 
 FileSel& FileSel::AddPlace(const String& path, const String& name, const char* group, int row)
 {
+#ifdef PLATFORM_COCOA
+	return AddPlace(path, GetFileIcon(NormalizePath(path), true, false, false), name, group, row);
+#else
 	return AddPlace(path, GetDirIcon(NormalizePath(path)), name, group, row);
+#endif
 }
 
 FileSel& FileSel::AddPlace(const String& path, const char* group, int row)
@@ -2093,12 +2090,21 @@ void FileSel::AddSystemPlaces(int row)
 FileSel& FileSel::AddStandardPlaces()
 {
 	AddPlace(GetHomeDirectory(), t_("Home"), "PLACES:FOLDER");
+#ifdef PLATFORM_COCOA
+	AddPlace(GetSpecialDirectory(SF_NSDesktopDirectory), t_("Desktop"), "PLACES:FOLDER");
+	AddPlace(GetSpecialDirectory(SF_NSMusicDirectory), t_("Music"), "PLACES:FOLDER");
+	AddPlace(GetSpecialDirectory(SF_NSPicturesDirectory), t_("Pictures"), "PLACES:FOLDER");
+	AddPlace(GetSpecialDirectory(SF_NSMoviesDirectory), t_("Videos"), "PLACES:FOLDER");
+	AddPlace(GetSpecialDirectory(SF_NSDocumentDirectory), t_("Documents"), "PLACES:FOLDER");
+	AddPlace(GetSpecialDirectory(SF_NSDownloadsDirectory), t_("Downloads"), "PLACES:FOLDER");
+#else
 	AddPlace(GetDesktopFolder(), t_("Desktop"), "PLACES:FOLDER");
 	AddPlace(GetMusicFolder(), t_("Music"), "PLACES:FOLDER");
 	AddPlace(GetPicturesFolder(), t_("Pictures"), "PLACES:FOLDER");
 	AddPlace(GetVideoFolder(), t_("Videos"), "PLACES:FOLDER");
 	AddPlace(GetDocumentsFolder(), t_("Documents"), "PLACES:FOLDER");
 	AddPlace(GetDownloadFolder(), t_("Downloads"), "PLACES:FOLDER");
+#endif
 	AddPlaceSeparator();
 	AddSystemPlaces();
 #ifdef PLATFORM_WIN32

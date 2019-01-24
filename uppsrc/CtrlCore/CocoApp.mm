@@ -366,6 +366,27 @@ ViewDraw::~ViewDraw()
 	LeaveGuiMutex();
 }
 
+String GetSpecialDirectory(int i)
+{
+	Tuple<int, NSSearchPathDirectory> map[] = {
+		{ SF_NSDocumentDirectory, NSDocumentDirectory },
+		{ SF_NSUserDirectory, NSUserDirectory },
+		{ SF_NSDesktopDirectory, NSDesktopDirectory },
+		{ SF_NSDownloadsDirectory, NSDownloadsDirectory },
+		{ SF_NSMoviesDirectory, NSMoviesDirectory },
+		{ SF_NSMusicDirectory, NSMusicDirectory },
+		{ SF_NSPicturesDirectory, NSPicturesDirectory },
+	};
+	
+	if(auto *h = FindTuple(map, __countof(map), i)) {
+		NSArray * paths = NSSearchPathForDirectoriesInDomains(h->b, NSUserDomainMask, YES);
+		if(paths.count)
+			return ToString([paths objectAtIndex:0]);
+	}
+	
+	return Null;
+};
+
 };
 
 #endif

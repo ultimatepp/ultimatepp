@@ -330,7 +330,7 @@ ImageDraw::operator Image()
 	return Image(ib);
 }
 
-Image GetIconForFileExt(const char *ext)
+Image GetIconForFile(const char *path)
 {
 	ImageDraw iw(DPI(16, 16));
 
@@ -338,16 +338,16 @@ Image GetIconForFileExt(const char *ext)
 
 	
 	NSImage *image;
-	if(*ext == '?') {
-		CFRef<CFStringRef> fexe = CFStringCreateWithCString(NULL, GetExeFilePath(), kCFStringEncodingUTF8);
-		image = [[NSWorkspace sharedWorkspace]iconForFile:(__bridge NSString *)~fexe];
+	CFRef<CFStringRef> fexe = CFStringCreateWithCString(NULL, path, kCFStringEncodingUTF8);
+	image = [[NSWorkspace sharedWorkspace]iconForFile:(__bridge NSString *)~fexe];
+/*
 	}
-	else {
-		CFRef<CFStringRef> fext = CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8);
+	else { // not used any more
+		CFRef<CFStringRef> fext = CFStringCreateWithCString(NULL, path, kCFStringEncodingUTF8);
 		image = *ext == '*' ? [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericFolderIcon)]
 	                        : [[NSWorkspace sharedWorkspace]iconForFileType:(__bridge NSString *)~fext];
 	}
-
+*/
     NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithCGContext:cg flipped:YES];
     NSGraphicsContext* cgc = [NSGraphicsContext currentContext];
     [NSGraphicsContext setCurrentContext:gc];
