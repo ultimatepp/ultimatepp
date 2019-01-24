@@ -121,8 +121,12 @@ struct MMImp {
 		if(Ctrl::ignoreclick)
 			return false;
 		static int clicktime = msecs() - 100000;
+		static CocoView *dbl_view;
+		static NSPoint   dbl_pos;
+		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		bool b;
-		if(msecs(clicktime) < GUI_DblClickTime()) {
+		if(msecs(clicktime) < GUI_DblClickTime() && view == dbl_view &&
+		   max(abs(np.x - dbl_pos.x), abs(np.y - dbl_pos.y)) < 3) {
 			b = MouseEvent(view, e, button|Upp::Ctrl::DOUBLE);
 			clicktime = msecs() - 999999;
 		}
@@ -130,6 +134,8 @@ struct MMImp {
 			b = MouseEvent(view, e, button|Upp::Ctrl::DOWN);
 			clicktime = msecs();
 		}
+		dbl_view = view;
+		dbl_pos = np;
 		return b;
 	}
 	

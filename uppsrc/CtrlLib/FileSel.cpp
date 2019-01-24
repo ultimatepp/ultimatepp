@@ -409,8 +409,8 @@ struct FileIconMaker : ImageMaker {
 		String ext = GetFileExt(file);
 		if(*ext == '.')
 			ext = ext.Mid(1);
-		if(exe)
-			ext = "app";
+		if(exe && !dir)
+			return GetIconForFileExt("?");
 		if(dir && ext != "app")
 			return GetIconForFileExt("*");
 		return GetIconForFileExt(ext);

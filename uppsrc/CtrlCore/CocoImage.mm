@@ -336,12 +336,18 @@ Image GetIconForFileExt(const char *ext)
 
 	CGContextRef cg = (CGContextRef) iw.GetCGHandle();
 
-	CFRef<CFStringRef> fext = CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8);
-	CFRef<CFStringRef> fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fext, NULL);
-
-	NSImage *image = *ext == '*' ? [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericFolderIcon)]
-	                             : [[NSWorkspace sharedWorkspace]iconForFileType:(__bridge NSString *)~fileUTI];
 	
+	NSImage *image;
+	if(*ext == '?') {
+		CFRef<CFStringRef> fexe = CFStringCreateWithCString(NULL, GetExeFilePath(), kCFStringEncodingUTF8);
+		image = [[NSWorkspace sharedWorkspace]iconForFile:(__bridge NSString *)~fexe];
+	}
+	else {
+		CFRef<CFStringRef> fext = CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8);
+		image = *ext == '*' ? [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericFolderIcon)]
+	                        : [[NSWorkspace sharedWorkspace]iconForFileType:(__bridge NSString *)~fext];
+	}
+
     NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithCGContext:cg flipped:YES];
     NSGraphicsContext* cgc = [NSGraphicsContext currentContext];
     [NSGraphicsContext setCurrentContext:gc];
