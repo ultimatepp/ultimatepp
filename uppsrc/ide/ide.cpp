@@ -552,7 +552,6 @@ void Ide::SetIdeState(int newstate)
 	SetBar();
 }
 
-
 void Ide::MakeIcon() {
 	Image li = IdeImg::PackageLarge2();
 	String mp = main;
@@ -563,10 +562,18 @@ void Ide::MakeIcon() {
 		Draw& mdraw = idraw.Alpha();
 		idraw.DrawImage(0, 0, li);
 		mdraw.DrawImage(0, 0, li, White);
-		Font font = StdFont(DPI(9));
-		Size sz = GetTextSize(mp, font);
-		sz.cx = min(sz.cx + 4, isz.cx);
-		sz.cy += 2;
+		int fh = DPI(12);
+		Size sz;
+		Font font;
+		while(fh > 5) {
+			font = StdFont(fh);
+			sz = GetTextSize(mp, font);
+			sz.cx = min(sz.cx + 4, isz.cx);
+			sz.cy += 2;
+			if(sz.cx < isz.cx)
+				break;
+			fh--;
+		}
 		int x = (isz.cx - sz.cx) / 2;
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
@@ -610,10 +617,10 @@ void Ide::SetIcon()
 	}
 #else
 	switch(state_icon) {
-	case 1:  Icon(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge()); break;
-	case 2:  Icon(IdeImg::IconRunning(), IdeImg::IconRunningLarge()); break;
-	case 3:  Icon(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge()); break;
-	default: Icon(IdeImg::Icon(), IdeImg::PackageLarge());
+	case 1:  Icon(IdeImg::IconDebugging()); break;
+	case 2:  Icon(IdeImg::IconRunning()); break;
+	case 3:  Icon(IdeImg::IconBuilding()); break;
+	default: Icon(IdeImg::Icon());
 	}
 #endif
 }
