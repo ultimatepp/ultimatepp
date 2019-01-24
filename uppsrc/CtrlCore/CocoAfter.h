@@ -29,3 +29,15 @@ void GuiMainFn_()
 #endif
 
 class DHCtrl : Ctrl {};
+
+enum {
+	SF_NSDocumentDirectory,
+	SF_NSUserDirectory,
+	SF_NSDesktopDirectory,
+	SF_NSDownloadsDirectory,
+	SF_NSMoviesDirectory,
+	SF_NSMusicDirectory,
+	SF_NSPicturesDirectory,
+};
+
+String GetSpecialDirectory(int i);
