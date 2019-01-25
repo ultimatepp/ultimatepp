@@ -3,6 +3,8 @@ brew install gdb
 
 sooner:
 
+- replace block dialog has wrong layout
+
 - dropping DropList several times can lead to focus issue
 - cursor problem after local menu invocation (better, but still...)
 
