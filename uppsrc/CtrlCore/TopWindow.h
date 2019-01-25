@@ -193,6 +193,9 @@ void ArrangeOKCancel(Ctrl& ok, Ctrl& cancel);
 int  SwapOKCancel();
 void SwapOKCancel_Write(int b);
 
+void SetLayout_Size(Ctrl& ctrl, Size sz);
+void SetLayout_Size(Ctrl& ctrl, int cx, int cy);
+
 template <class L>
 void InitLayout(Ctrl& ctrl, L& layout)
 {
@@ -202,9 +205,7 @@ void InitLayout(Ctrl& ctrl, L& layout)
 template <class T>
 void CtrlLayout(T& ctrl) {
 	InitLayout(ctrl, ctrl, ctrl, ctrl);
-	Size sz = ctrl.AddFrameSize(T::GetLayoutSize());
-	ctrl.SetMinSize(sz);
-	ctrl.SetRect(sz);
+	SetLayout_Size(ctrl, T::GetLayoutSize());
 }
 
 template <class T>
