@@ -62,7 +62,7 @@ enum {
 	WI_CURSOR = 0x10,
 };
 
-Vector<Image> ReadIcon(String data);
+Vector<Image> ReadIcon(String data, bool just_best = false);
 String        WriteIcon(const Vector<Image>& icons, int flags = WI_COLOR);
 
 }

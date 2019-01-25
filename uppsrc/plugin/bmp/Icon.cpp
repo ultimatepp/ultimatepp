@@ -4,12 +4,12 @@ namespace Upp {
 
 #include "bmphdr.h"
 
-Vector<Image> ReadIcon(String data)
+Vector<Image> ReadIcon(String data, bool just_best)
 {
+	VectorMap<Size, Tuple2<int, Image> > best;
 	Vector<Image> out;
 	const byte *in = data;
 	int count = Peek16le(in + OFFSETOF(BMP_ICONDIR, idCount));
-	out.SetCount(count);
 	for(int i = 0; i < count; i++) {
 		const byte *hdr = in + sizeof(BMP_ICONDIR) + i * sizeof(BMP_ICONDIRENTRY);
 		dword offset = Peek32le(hdr + OFFSETOF(BMP_ICONDIRENTRY, dwImageOffset));
@@ -97,8 +97,22 @@ Vector<Image> ReadIcon(String data)
 				while(--cx);
 			}
 		}
-		out[i] = buffer;
+		Image m = buffer;
+		if(just_best) {
+			int q = best.Find(m.GetSize());
+			auto x = MakeTuple(bitcount, m);
+			if(q < 0)
+				best.Add(m.GetSize(), x);
+			else
+			if(bitcount > best[q].a)
+				best[q] = x;
+		}
+		else
+			out.Add(m);
 	}
+	if(just_best)
+		for(auto x : best)
+			out.Add(x.b);
 	return out;
 }
 

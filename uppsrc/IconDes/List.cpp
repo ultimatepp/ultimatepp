@@ -264,7 +264,7 @@ FileSel& IconDes::ImgFile()
 {
 	static FileSel sel;
 	ONCELOCK {
-		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif");
+		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif *.ico");
 		sel.AllFilesType();
 		sel.Multi();
 #ifdef _MULTITHREADED
@@ -285,14 +285,29 @@ void IconDes::InsertFile()
 	if(!ImgFile().ExecuteOpen()) return;
 	for(int i = 0; i < ImgFile().GetCount(); i++) {
 		String fn = ImgFile()[i];
-		Image m = StreamRaster::LoadFileAny(fn);
-		if(IsNull(m))
-			Exclamation(DeQtf(fn) + " not an image.");
-		String id = Filter(GetFileTitle(fn), CharFilterImageId);
-		if(!IsAlpha(*id) && *id != '_')
-			id = '_' + id;
-		SetRes(m, IMAGE_RESOLUTION_STANDARD);
-		ImageInsert(id, m);
+		Index<Image> ml;
+		if(ToLower(GetFileExt(fn)) == ".ico")
+			for(Image m : ReadIcon(LoadFile(fn), true))
+				ml.FindAdd(m);
+		else {
+			Image mm = StreamRaster::LoadFileAny(fn);
+			if(IsNull(mm))
+				Exclamation(DeQtf(fn) + " not an image.");
+			else
+				ml.Add(mm);
+		}
+		int ii = 0;
+		DDUMP(ml.GetCount());
+		for(Image m : ml) {
+			String id = Filter(GetFileTitle(fn), CharFilterImageId);
+			if(!IsAlpha(*id) && *id != '_')
+				id = '_' + id;
+			if(ii)
+				id << "_" << ii;
+			SetRes(m, IMAGE_RESOLUTION_STANDARD);
+			ImageInsert(id, m);
+			ii++;
+		}
 	}
 }
 
