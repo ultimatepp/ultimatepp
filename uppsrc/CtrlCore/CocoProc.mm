@@ -12,6 +12,8 @@ static bool       coco_mouse_right;
 static int        coco_flags;
 static Upp::Ptr<Upp::Ctrl> coco_capture;
 
+Upp::Ptr<Upp::Ctrl> Upp::Ctrl::lastActive;
+
 namespace Upp {
 	
 extern id menubar;
@@ -113,6 +115,7 @@ struct MMImp {
 
 	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
 	{
+		Upp::Ctrl::lastActive = view->ctrl;
 		if(Ctrl::ignoremouseup) {
 			Ctrl::KillRepeat();
 			Ctrl::ignoreclick = false;
@@ -179,6 +182,7 @@ struct MMImp {
 	static void BecomeKey(Upp::Ctrl *ctrl)
 	{
 		LLOG("Become key " << Upp::Name(ctrl));
+		Upp::Ctrl::lastActive = ctrl;
 		ctrl->ActivateWnd();
 		auto tw = dynamic_cast<TopWindow *>(ctrl);
 		if(tw && tw->placefocus) {

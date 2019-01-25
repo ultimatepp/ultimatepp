@@ -4,6 +4,22 @@
 
 #ifdef PLATFORM_COCOA
 
+@interface AppDelegate : NSObject<NSApplicationDelegate>
+{
+}
+@end
+
+namespace Upp {
+NSMenu *Cocoa_DockMenu();
+};
+
+@implementation AppDelegate
+- (NSMenu *)applicationDockMenu:(NSApplication *)sender
+{
+	return Upp::Cocoa_DockMenu();
+}
+@end
+
 namespace Upp {
 
 int  Ctrl::WndCaretTime;
@@ -48,6 +64,8 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	[appMenuItem setSubmenu:appMenu];
 
 	[NSApp setMainMenu:menubar];
+
+	[NSApp setDelegate:[[AppDelegate alloc] init]];
 	
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);

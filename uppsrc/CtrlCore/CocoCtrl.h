@@ -11,6 +11,7 @@ private:
 	static bool                WndCaretVisible;
 	static bool                local_dnd_copy;
 	static void AnimateCaret();
+	static Ptr<Ctrl>           lastActive;
 	
 	friend void CocoInit(int argc, const char **argv, const char **envptr);
 

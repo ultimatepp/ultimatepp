@@ -27,6 +27,13 @@
 	return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
 }
 
+- (NSMenu *)applicationDockMenu:(NSApplication *)sender {
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"DocTile Menu"] autorelease];
+	NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:@"Hello" action:@selector(hello) keyEquivalent:@"k"] autorelease];
+	[menu addItem:item];
+	return menu;
+}
+
 @end
 
 namespace Upp {
@@ -45,7 +52,7 @@ Ctrl *Ctrl::GetActiveCtrl()
 	for(Ctrl *p : mmtopctrl)
 		if(p && p->top && p->top->coco && p->top->coco->window.keyWindow)
 			return p;
-	return NULL;
+	return lastActive;
 }
 
 bool Ctrl::SetWndFocus()

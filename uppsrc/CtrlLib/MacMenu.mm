@@ -25,6 +25,7 @@ namespace Upp {
 struct CocoMenuBar : public Bar {
 	CocoMenu *cocomenu;
 	int       lock = 0;
+	bool      dockmenu = false;
 
 	struct Item : Bar::Item {
 		NSMenuItem      *nsitem;
@@ -85,14 +86,27 @@ struct CocoMenuBar : public Bar {
 	
 	void Set(Event<Bar&> bar);
 	
-	CocoMenuBar() {
+	void Clear() {
+		item.Clear();
+		if(cocomenu) {
+			[cocomenu release];
+			cocomenu = NULL;
+		}
+	}
+	void New() {
+		Clear();
 		cocomenu = [CocoMenu new];
 		cocomenu.autoenablesItems = NO;
 		cocomenu->ptr = this;
 		cocomenu.delegate = cocomenu;
 	}
+	
+	CocoMenuBar() {
+		cocomenu = NULL;
+		New();
+	}
 	~CocoMenuBar() {
-		[cocomenu release];
+		Clear();
 	}
 };
 
@@ -189,6 +203,8 @@ bool CocoMenuBar::IsEmpty() const
 
 - (void)menuWillOpen:(NSMenu *)menu {
 	CocoMenu *m = (CocoMenu *)menu;
+	if(m && m->ptr && m->ptr->dockmenu)
+		return;
 	if(m && m->ptr && proc) {
 		[m removeAllItems];
 		proc(*m->ptr);
@@ -197,6 +213,8 @@ bool CocoMenuBar::IsEmpty() const
 
 - (void)menuDidClose:(NSMenu *)menu {
 	CocoMenu *m = (CocoMenu *)menu;
+	if(m && m->ptr && m->ptr->dockmenu)
+		return;
 	[m removeAllItems];
 }
 
@@ -234,15 +252,17 @@ bool TopWindow::HotKey(dword key)
 	return Ctrl::HotKey(key);
 }
 
-TopWindow *TopWindow::GetMenuTopWindow()
+TopWindow *TopWindow::GetMenuTopWindow(bool dock)
 {
 	Ctrl *q = GetFocusCtrl();
+	if(!q)
+		q = GetActiveCtrl();
 	if(!q)
 		return NULL;
 	q = q->GetTopCtrl();
 	while(q) {
 		TopWindow *w = dynamic_cast<TopWindow *>(q);
-		if(w && w->menubar)
+		if(w && (dock ? (bool)w->WhenDockMenu : (bool)w->menubar))
 			return w;
 		q = q->GetOwner();
 	}
@@ -251,7 +271,7 @@ TopWindow *TopWindow::GetMenuTopWindow()
 
 void TopWindow::SyncMainMenu(bool force)
 {
-	TopWindow *w = GetMenuTopWindow();
+	TopWindow *w = GetMenuTopWindow(false);
 	static TopWindow *current;
 	if(w != current || force) {
 		current = w;
@@ -264,7 +284,7 @@ void TopWindow::SyncMainMenu(bool force)
 
 void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 {
-	if(host_bar) {
+	if(host_bar && owner) {
 		CocoMenuBar& bar = *(CocoMenuBar *)~host_bar;
 
 		owner = owner->GetTopCtrl();
@@ -287,6 +307,25 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 void MenuBar::CreateHostBar(One<Bar>& bar)
 {
 	host_bar.Create<CocoMenuBar>();
+}
+
+NSMenu *Cocoa_DockMenu() {
+	Upp::TopWindow *w = Upp::TopWindow::GetMenuTopWindow(true);
+
+	if(w && w->WhenDockMenu) {
+		static Upp::CocoMenuBar bar;
+		bar.dockmenu = true;
+		bar.Clear();
+		bar.cocomenu = [[[CocoMenu alloc] initWithTitle:@"DocTile Menu"] autorelease];
+		bar.cocomenu.autoenablesItems = NO;
+		bar.cocomenu->ptr = &bar;
+		bar.cocomenu.delegate = bar.cocomenu;
+		w->WhenDockMenu(bar);
+		CocoMenu *m = bar.cocomenu;
+		bar.cocomenu = NULL;
+		return m;
+	}
+	return nil;
 }
 
 };
