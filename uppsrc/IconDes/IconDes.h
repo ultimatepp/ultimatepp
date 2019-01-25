@@ -4,6 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
 #include <RichEdit/RichEdit.h>
+#include <plugin/bmp/bmp.h>
 
 namespace Upp {
 
