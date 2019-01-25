@@ -562,10 +562,10 @@ void Ide::MakeIcon() {
 		Draw& mdraw = idraw.Alpha();
 		idraw.DrawImage(0, 0, li);
 		mdraw.DrawImage(0, 0, li, White);
-		int fh = DPI(12);
+		int fh = DPI(13);
 		Size sz;
 		Font font;
-		while(fh > 5) {
+		while(fh > 8) {
 			font = StdFont(fh);
 			sz = GetTextSize(mp, font);
 			sz.cx = min(sz.cx + 4, isz.cx);

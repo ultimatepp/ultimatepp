@@ -656,6 +656,14 @@ Ide::Ide()
 	editfile_repo = NOT_REPO_DIR;
 	
 	auto_rescan = auto_check = true;
+
+#ifdef PLATFORM_COCOA
+	WhenDockMenu = [=](Bar& bar) {
+		bar.Add("New Window", [=] {
+			CreateHost(false, false)->Launch(GetExeFilePath() + " --nosplash");
+		});
+	};
+#endif
 }
 
 Ide::~Ide()
