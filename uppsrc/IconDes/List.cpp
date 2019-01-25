@@ -297,7 +297,6 @@ void IconDes::InsertFile()
 				ml.Add(mm);
 		}
 		int ii = 0;
-		DDUMP(ml.GetCount());
 		for(Image m : ml) {
 			String id = Filter(GetFileTitle(fn), CharFilterImageId);
 			if(!IsAlpha(*id) && *id != '_')
