@@ -338,19 +338,20 @@ void DlSpellerLangs(DropList& dl)
 	static Vector<int> lng;
 	ONCELOCK {
 		VectorMap<int, String> lngs;
-		String path = GetExeDirFile("scd") + ';' + ConfigFile("scd") + ';' +
+		String path = GetExeDirFile("speller") + ';' + ConfigFile("speller") + ';' +
 		              GetExeFolder() + ';' + GetConfigFolder() + ';' +
 		              getenv("LIB") + ';' + getenv("PATH");
+#ifdef PLATFORM_POSIX
+		path << "/usr/local/share/upp/speller;/usr/local/share/upp;/usr/share/upp/speller;/usr/share/upp";
+#endif
 		Vector<String> p = Split(path, ';');
 		for(auto dir : p) {
-			for(int pass = 0; pass < 2; pass++) {
-				FindFile ff(AppendFileName(dir, pass ? "*.udc" : "*.scd"));
-				while(ff) {
-					int lang = LNGFromText(ff.GetName());
-					if(lang)
-						lngs.Add(lang, LNGAsText(lang));
-					ff.Next();
-				}
+			FindFile ff(AppendFileName(dir, "*.udc"));
+			while(ff) {
+				int lang = LNGFromText(ff.GetName());
+				if(lang)
+					lngs.Add(lang, LNGAsText(lang));
+				ff.Next();
 			}
 		}
 		SortByValue(lngs);
