@@ -195,3 +195,12 @@ lz4plugin/astyle
 plugin/box2d
 plugin/glew
 plugin/ndisasm
+
+------------------------------------------------------------------
+SDL2
+
+https://www.libsdl.org/download-2.0.php
+
+download development libraries for VC and mingw
+take docs, include and lib from VC variant
+copy to lib/x64 x32 libSDL2.dll.a and libSDL2main.a from corresponding mingw directories

@@ -274,10 +274,11 @@ log_debug_info "Creating upp, upp.out, MyApps and .upp directories in $DESTDIR$p
   install -d "$DESTDIR$prefix/upp.out"
   install -d "$DESTDIR$prefix/MyApps"
   install -d "$DESTDIR$prefix/.upp/theide"
+  install -d "$DESTDIR$prefix/.upp/theide/speller"
 
 log_debug_info "Copying theide and umk"
-  install ./theide "$DESTDIR$prefix/theide"
-  install ./umk    "$DESTDIR$prefix/umk"
+  install ./theide "$DESTDIR$prefix/upp/theide"
+  install ./umk    "$DESTDIR$prefix/upp/umk"
 
 log_debug_info "Copying U++ source code"
   cp -r uppsrc    "$DESTDIR$prefix/upp"
@@ -293,9 +294,14 @@ log_debug_info "Cleaning source code"
   rm -r "$DESTDIR$prefix/upp/uppsrc/umk.out"
 #<end> TODO
 
-log_debug_info "Copying" *.bm *.scd
+log_debug_info "Copying" *.bm
   cp -p *.bm  "$DESTDIR$prefix/.upp/theide"
-  cp -p *.scd "$DESTDIR$prefix/.upp/theide"
+
+  if [ "$(ls *.udc 2>/dev/null)" != "" ]
+  then
+log_debug_info "Copying" *.udc
+    cp -p *.udc "$DESTDIR$prefix/.upp/theide/speller/"
+  fi
 
   if [ "$installdoc" = "true" ]
   then
@@ -337,6 +343,7 @@ log_debug_info "mandir          = $mandir"
 log_debug_info "Creating directories"
   install -d "$DESTDIR$bindir"
   install -d "$DESTDIR$datadir/$package_name"
+  install -d "$DESTDIR$datadir/$package_name/speller"
   install -d "$DESTDIR$datadir/applications"
   install -d "$DESTDIR$datadir/icons/hicolor/48x48/apps"
   install -d "$DESTDIR$datadir/pixmaps"
@@ -388,9 +395,14 @@ log_debug_info "Cleaning source code"
   rm -f  "$DESTDIR$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
-log_debug_info "Copying" *.bm *.scd
+log_debug_info "Copying" *.bm
   cp -p *.bm  "$DESTDIR$datadir/$package_name/"
-  cp -p *.scd "$DESTDIR$datadir/$package_name/"
+
+  if [ "$(ls *.udc 2>/dev/null)" != "" ]
+  then
+log_debug_info "Copying" *.udc
+    cp -p *.udc "$DESTDIR$datadir/$package_name/speller/"
+  fi
   
   if [ "$installdoc" = "true" ]
   then
