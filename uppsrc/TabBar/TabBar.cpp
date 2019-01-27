@@ -473,7 +473,7 @@ void TabBar::ContextMenu(Bar& bar)
 				Refresh();
 			});;
 		});
-	if(tabs.GetCount() - 2 >= ii)
+	if(tabs.GetCount() - 2 >= ii && ii >= 0)
 		bar.Sub(t_("Move right after"),  [=](Bar& bar)  {
 			for(int i = ii+1; i < tabs.GetCount(); i++)
 				bar.Add(tabs[i].value.ToString(),[=] {
