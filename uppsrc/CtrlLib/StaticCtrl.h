@@ -66,8 +66,7 @@ public:
 	virtual Rect   GetVoidRect() const;
 	virtual Size   GetStdSize() const;
 	virtual Size   GetMinSize() const;
-
-	void    SetMinSize(Size sz)         { minsize = sz; }
+	virtual void   SetMinSize(Size sz)         { minsize = sz; }
 
 	ParentCtrl();
 };

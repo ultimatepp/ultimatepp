@@ -16,6 +16,7 @@ public:
 	virtual void     Close();
 	virtual String   GetDesc() const;
 	virtual void     ChildGotFocus();
+	virtual void     SetMinSize(Size sz);
 
 public:
 	struct TopStyle : ChStyle<TopStyle> {
@@ -115,8 +116,6 @@ public:
 	TopWindow&  NoCenter()                          { center = 0; return *this; }
 	TopWindow&  CenterOwner()                       { center = 1; return *this; }
 	TopWindow&  CenterScreen()                      { center = 2; return *this; }
-
-	void        SetMinSize(Size sz);
 
 	void       Open(Ctrl *owner);
 	void       Open();

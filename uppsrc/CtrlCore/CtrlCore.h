@@ -910,6 +910,8 @@ public:
 
 	virtual String GetDesc() const;
 
+	virtual void   SetMinSize(Size sz) {}
+
 	Event<>          WhenAction;
 
 	void             AddChild(Ctrl *child);
@@ -1230,8 +1232,6 @@ public:
 	bool   IsDragAndDropSource()    { return this == GetDragAndDropSource(); }
 	bool   IsDragAndDropTarget()    { return this == GetDragAndDropTarget(); }
 	static Size  StdSampleSize()    { return Size(126, 106); }
-
-	void SetMinSize(Size sz) {} // see CtrlLayout template and WindowCtrl...
 
 public:
 	static void SetSkin(void (*skin)());
