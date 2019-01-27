@@ -146,15 +146,13 @@ Speller *sGetSpeller(int lang)
 	int q = speller.Find(lang);
 	if(q < 0) {
 		String pp = spell_path;
-		DoSpellerPath(pp, GetExeDirFile("scd"));
-		DoSpellerPath(pp, ConfigFile("scd"));
+		DoSpellerPath(pp, GetExeDirFile("speller"));
+		DoSpellerPath(pp, ConfigFile("speller"));
 		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
 #ifdef PLATFORM_POSIX
-		pp << "/usr/share/upp;/usr/local/share/upp;/usr/share/upp/scd;/usr/local/share/upp/scd";
+		pp << "/usr/local/share/upp/speller;/usr/local/share/upp;/usr/share/upp/speller;/usr/share/upp";
 #endif
 		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
-		if(IsNull(path))
-			path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".scd", pp);
 		if(IsNull(path))
 			return NULL;
 		FileIn in(path);
@@ -173,7 +171,7 @@ Speller *sGetSpeller(int lang)
 		else {
 			f.path = path;
 			int n = in.Get32();
-			LLOG("Found scd file " << path << " blocks " << n);
+			LLOG("Found dictionary file " << path << " blocks " << n);
 			if(n > 0 && n < 100000) {
 				for(int i = 0; i < n; i++) {
 					SpellBlock& b = f.block.Add();
