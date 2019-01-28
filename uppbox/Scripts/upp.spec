@@ -206,12 +206,19 @@ rm -fr %{buildroot}
 %{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/CLANG.bm
+%{_datadir}/%{name}/GCC.bm
+%dir %{_datadir}/%{name}/speller
+%{_datadir}/%{name}/speller/*
 
 #-----
 %files devel
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
-
+%{_datadir}/%{name}/bazaar
+%{_datadir}/%{name}/examples
+%{_datadir}/%{name}/reference
+%{_datadir}/%{name}/tutorial
+%{_datadir}/%{name}/uppsrc
 
 #---------
 %changelog
@@ -219,6 +226,7 @@ rm -fr %{buildroot}
 - New snapshot
 - Rename main package (upp-devel -> upp)
 - Add devel package containing source only
+- Add dictionary files used by theide speller
 
 * Sat Dec 09 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.2-1
 - New release (rev 11540)
