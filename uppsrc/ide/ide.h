@@ -160,7 +160,7 @@ VectorMap<String, String> GetMethodVars(const String& method);
 String                    GetDefaultMethod();
 
 bool CheckLicense();
-bool Install();
+bool Install(bool& hasvars);
 void AutoInstantSetup();
 
 #define HELPNAME    "Help Topics"
