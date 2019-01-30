@@ -48,9 +48,9 @@ after the process terminated).&]
 [@(0.0.255) bool]_[* Read2]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 os], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 es])&]
-[s2;%% Reads data separately from standard output combined and from 
-standard error output. Returns true if the process is running 
-or there are more data to be read  (even after the process terminated). 
+[s2;%% Reads data separately from standard output and from standard 
+error output. Returns true if the process is running or there 
+are more data to be read  (even after the process terminated). 
 Usually, implementing class has to be in special mode for this 
 to work (e.g. LocalProcess must be started with Start2).&]
 [s3;%% &]
