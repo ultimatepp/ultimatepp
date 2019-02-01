@@ -351,10 +351,18 @@ String Gdb::DoRun()
 {
 	if(firstrun) {
 		firstrun = false;
+	#ifdef PLATFORM_LLDB
+		Cmd("b main");
+		String s = Cmd("r", true);
+		s << Cmd("settings show prompt"); // Resync stdout
+		int q = s.FindAfter("Process");
+		pid = atoi(~s + q);
+	#else
 		Cmd("start");
 		String s = Cmd("info inferior");
 		int q = s.FindAfter("process");
 		pid = atoi(~s + q);
+	#endif
 		IdeSetBar();
 	}
 	
@@ -535,6 +543,16 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	watches.WhenAcceptEdit = THISBACK(ObtainData);
 	tab <<= THISBACK(ObtainData);
 
+#ifdef PLATFORM_LLDB
+	Cmd("settings set auto-confirm true");
+	#if 0
+		Cmd("l");
+		Cmd("b main");
+		Cmd("r", true); Cmd("settings show prompt");
+		Cmd("bt");
+		return false;
+	#endif
+#else
 	Cmd("set prompt " GDB_PROMPT);
 	Cmd("set disassembly-flavor intel");
 	Cmd("set exec-done-display off");
@@ -554,6 +572,7 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 
 	if(!IsNull(cmdline))
 		Cmd("set args " + cmdline);
+#endif
 
 	firstrun = true;
 
