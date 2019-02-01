@@ -86,8 +86,8 @@ bool TTYQuit()          { return false; }
 
 String GdbCommand(bool console)
 {
-#ifdef PLATFORM_COCOA
-	String gdb = "/usr/local/bin/gdb ";
+#ifdef PLATFORM_LLDB
+	String gdb = "/usr/bin/lldb -X ";
 #else
 	String gdb = "gdb ";
 #ifdef PLATFORM_POSIX

@@ -91,19 +91,35 @@ void Gdb::Unlock()
 	}
 }
 
-bool Gdb::Result(String& result, const String& s)
+bool Gdb::Result(String& result, const String& s, bool run)
 {
 	result.Cat(s);
 	int l = result.GetLength();
-	int q = result.Find(GDB_PROMPT, max(0, l - 50));
-	if(q >= 0) {
-		result.Trim(q);
-		return true;
+	if(run) {
+		if(result.Find("stopped") >= 0 || result.Find("exited") >= 0)
+			return true;
+	}
+	else {
+		int q = result.Find(GDB_PROMPT, max(0, l - 50));
+		if(q >= 0) {
+			result.Trim(q);
+			return true;
+		}
 	}
 	return false;
 }
 
-String Gdb::Cmd(const char *command, bool start)
+void LLDBFixResult(String& result)
+{
+	int q = result.Find('\n');
+	if(q >= 0 && result.StartsWith("(lldb)"))
+		result = result.Mid(q + 1);
+	q = result.ReverseFind('\n');
+	if(q >= 0 && result.Find("(lldb)", q) == q + 1)
+		result.Trim(q);
+}
+
+String Gdb::Cmd(const char *command, bool run)
 {
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
 	TimeStop ts;
@@ -112,6 +128,10 @@ String Gdb::Cmd(const char *command, bool start)
 		LLOG("========= Cmd: " << command);
 		dbg->Write(String(command) + "\n");
 		PutVerbose(String() << "Command: " << command);
+	#ifdef PLATFORM_LLDB
+		if(!run)
+			dbg->Write("#" + String(GDB_PROMPT) + "\n"); // the echo will mark the end of command...
+	#endif
 	}
 	String result;
 	int ms0 = msecs();
@@ -123,16 +143,8 @@ String Gdb::Cmd(const char *command, bool start)
 			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
-		if(!s.IsEmpty() && Result(result, s)) {
-			LLOG(result);
-			PutVerbose(result);
-			if(start) {
-				start = false;
-				result = s.Mid(result.GetCount());
-			}
-			else
-				break;
-		}
+		if(!s.IsEmpty() && Result(result, s, run))
+			break;
 		if(ms0 != msecs()) {
 			ProcessEvents();
 			ms0 = msecs();
@@ -147,8 +159,10 @@ String Gdb::Cmd(const char *command, bool start)
 	if(command) {
 		PutVerbose(String() << "Time of `" << command <<"` " << ts);
 	}
-	PutVerbose("=========== Result:");
-	PutVerbose(result);
+#ifdef PLATFORM_LLDB
+	LLDBFixResult(result);
+#endif
+	PutVerbose("=========== Result:\n" + result);
 	PutVerbose("===================");
 	return result;
 }
@@ -160,6 +174,7 @@ String Gdb::FastCmd(const char *command)
 	if(command) {
 		dbg->Write(String(command) + "\n");
 		PutVerbose(String() << "Fast Command: " << command);
+		dbg->Write("#" + String(GDB_PROMPT) + "\n"); // the echo will mark the end of command...
 	}
 	String result;
 	TimeStop ts;
@@ -176,13 +191,8 @@ String Gdb::FastCmd(const char *command)
 			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
-		if(!s.IsEmpty() && Result(result, s)) {
-			LLOG(result);
-			LLOG("Result length: " << result.GetLength());
-			if(result.GetLength() < 1000)
-				PutVerbose(result);
+		if(!s.IsEmpty() && Result(result, s))
 			break;
-		}
 		if(s.GetCount() == 0)
 			Sleep(0);
 		if(ts.Elapsed() > 500) {
@@ -200,7 +210,11 @@ String Gdb::FastCmd(const char *command)
 		PutVerbose(String() << "Time of `" << command <<"` " << ts);
 	}
 #endif
-	PutVerbose("Result: " + result);
+#ifdef PLATFORM_LLDB
+	LLDBFixResult(result);
+#endif
+	PutVerbose("=========== Fast Result:\n" + result);
+	PutVerbose("===================");
 	return result;
 }
 

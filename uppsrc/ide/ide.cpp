@@ -554,7 +554,7 @@ void Ide::SetIdeState(int newstate)
 
 void Ide::MakeIcon() {
 	Image li = IdeImg::PackageLarge2();
-	String mp = main;
+	WString mp = main.ToWString();
 	if(!IsNull(mp))
 	{
 		Size isz = li.GetSize();
@@ -565,20 +565,39 @@ void Ide::MakeIcon() {
 		int fh = DPI(13);
 		Size sz;
 		Font font;
-		while(fh > 8) {
+		while(fh > DPI(8)) {
 			font = StdFont(fh);
-			sz = GetTextSize(mp, font);
-			sz.cx = min(sz.cx + 4, isz.cx);
-			sz.cy += 2;
-			if(sz.cx < isz.cx)
+			sz = GetTextSize(mp, font) + Size(4, 2);
+			if(sz.cx <= isz.cx)
 				break;
 			fh--;
+		}
+		Font font2;
+		int  cx1 = 0;
+		WString mp2;
+		Size sz2;
+		if(sz.cx > isz.cx && mp.GetCount() > 2) {
+			mp2 = mp.Mid(1);
+			mp.Trim(1);
+			cx1 = GetTextSize(mp, font).cx;
+			while(fh > DPI(5)) {
+				font2 = StdFont(fh);
+				sz = GetTextSize(mp2, font2) + Size(4, 2);
+				sz.cx += cx1;
+				sz.cy = font.GetCy();
+				if(sz.cx <= isz.cx)
+					break;
+				fh--;
+			}
 		}
 		int x = (isz.cx - sz.cx) / 2;
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		idraw.DrawText(x + 2, y + 1, mp, font, Black);
+		if(cx1)
+			idraw.DrawText(x + 2 + cx1, y + 1 + font.GetAscent() - font2.GetAscent(),
+			               mp2, font2, Black);
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		if(state_icon)
 			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge2(),

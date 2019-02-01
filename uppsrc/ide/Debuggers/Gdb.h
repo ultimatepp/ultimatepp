@@ -17,7 +17,7 @@ public:
 public:
 	String DoRun();
 	
-	bool Result(String& result, const String& s);
+	bool Result(String& result, const String& s, bool run = false);
 
 	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
 
@@ -27,7 +27,7 @@ public:
 	void      Lock();
 	void      Unlock();
 
-	String    Cmd(const char *command, bool start = false);
+	String    Cmd(const char *command, bool run = false);
 	String    FastCmd(const char *command);
 	
 	bool      IsProcessExitedNormally(const String& cmd_output) const;
