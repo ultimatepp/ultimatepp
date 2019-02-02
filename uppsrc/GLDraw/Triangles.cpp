@@ -10,7 +10,7 @@ void GLTriangles::Draw(const GLContext2D& dd)
 	static GLCode program(R"(
 	#version 130
 	    attribute vec3 p;
-	    attribute vec3 c;
+	    attribute uvec3 c;
 		uniform vec2 offset;
 		uniform vec2 scale;
 		varying vec4 v_color;

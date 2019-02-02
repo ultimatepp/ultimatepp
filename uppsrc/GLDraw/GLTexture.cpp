@@ -27,9 +27,10 @@ void GLTexture::Set(const Image& img, dword flags)
 
 extern int sTextureCounter;
 
-void GLTexture::Bind() const
+void GLTexture::Bind(int ii) const
 {
 	if(data) {
+		glActiveTexture(GL_TEXTURE0 + ii);
 		glBindTexture(GL_TEXTURE_2D, data->textureid);
 		sTextureCounter++;
 	}
@@ -51,11 +52,17 @@ GLTexture& GLTexture::operator=(const GLTexture& src)
 	return *this;
 }
 
-void GLBind(const Image& img, dword style)
+void GLBind(int ii, const Image& img, dword style)
 {
 	extern int sTextureCounter;
+	glActiveTexture(GL_TEXTURE0 + ii);
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(style, img));
 	sTextureCounter++;
+}
+
+void GLBind(const Image& img, dword style)
+{
+	GLBind(0, img, style);
 }
 
 const GLVertexData& GLRectMesh()

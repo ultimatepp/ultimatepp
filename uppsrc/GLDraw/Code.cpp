@@ -7,36 +7,55 @@ GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 	Compile(vertex_shader, pixel_shader);
 	Vector<Tuple2<int, const char *>> ins;
 	CParser p(vertex_shader);
-	int ii = 0;
-	int ti = 0;
-	auto readID = [&] {
+	auto readID = [&](int& n) {
 		String id;
-		while(!p.IsEof() && !p.Char(';'))
-			if(p.IsId())
+		n = 0;
+		while(!p.IsEof() && !p.IsChar(';'))
+			if(p.IsId()) {
 				id = p.ReadId();
-			else
+				if(p.Char('[') && p.IsInt()) {
+					n = p.ReadInt();
+					p.Char(']');
+				}
+			}
+			else {
 				p.SkipTerm();
+				n = 0;
+			}
 		return id;
 	};
+	int ii = 0;
 	while(!p.IsEof() && !p.Char('{'))
 		if(p.Id("attribute") || p.Id("in")) {
-			String id = readID();
+			int n;
+			String id = readID(n);
 			if(id.GetCount())
 				glBindAttribLocation(program, ii++, id);
 		}
 		else
 			p.SkipTerm();
 	
+	Link();
+	Use();
+
 	p.Set(pixel_shader);
+	int ti = 0;
 	while(!p.IsEof() && !p.Char('{'))
 		if(p.Id("sampler2D") || p.Id("sampler3D")) {
-			String id = readID();
+			int n;
+			String id = readID(n);
 			if(id.GetCount())
-				glUniform1i(GetUniform(id), ti++);
+				if(n) {
+					for(int i = 0; i < n; i++) {
+						ASSERT(GetUniform(id + '[' + AsString(i) + ']') >= 0);
+						glUniform1i(GetUniform(id + '[' + AsString(i) + ']'), ti++);
+					}
+				}
+				else
+					glUniform1i(GetUniform(id), ti++);
 		}
 		else
 			p.SkipTerm();
-	Link();
 }
 
 GLCode& GLCode::Uniform(int i, double a)

@@ -251,6 +251,8 @@ void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const i
 	DoDrawPolylines(poly, width, color);
 }
 
+extern int sTesselateCounter;
+
 void DrawGL::DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color)
 {
 	const int TESS_LIMIT = 200;
@@ -268,6 +270,7 @@ void DrawGL::DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color)
 	}
 	Vector<Pointf> vertex;
 	Vector<Tuple<int, int, int>> triangle;
+	sTesselateCounter++;
 	RTIMING("Tesselate");
 	Tesselate(path, vertex, triangle, false);
 	int ii0;
