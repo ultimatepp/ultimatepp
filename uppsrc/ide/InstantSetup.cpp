@@ -136,7 +136,7 @@ void InstantSetup()
 			String method = x86method + x64s;
 			String builder = (version == VS_2015 ? "MSC15" : "MSC17") + ToUpper(x64s);
 		
-		#ifdef _DEBUG
+		#ifdef _DEBUG0
 			method << "Test";
 		#endif
 	
@@ -190,7 +190,11 @@ void InstantSetup()
 
 				String& sdlbin = bins.At(3);
 				if(IsNull(sdlbin) || ToLower(sdlbin).Find("sdl2") >= 0)
-					sdlbin = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
+					sdlbin = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+				
+				String& pgbin = bins.At(4);
+				if(IsNull(pgbin) || ToLower(pgbin).Find("pgsql") >= 0)
+					pgbin = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
 				
 				incs.At(0) = vc + "/include";
 				int ii = 1;
@@ -212,6 +216,10 @@ void InstantSetup()
 				String& sdlinc = incs.At(5);
 				if(IsNull(sdlinc) || ToLower(sdlinc).Find("sdl2") >= 0)
 					sdlinc = GetExeDirFile("bin/SDL2/include");
+
+				String& pginc = incs.At(6);
+				if(IsNull(pginc) || ToLower(pginc).Find("pgsql") >= 0)
+					pginc = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
 				
 				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
@@ -228,7 +236,11 @@ void InstantSetup()
 				
 				String& sdllib = libs.At(4);
 				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
-					sdllib = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
+					sdllib = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+
+				String& pglib = libs.At(5);
+				if(IsNull(pglib) || ToLower(pglib).Find("pgsql") >= 0)
+					pglib = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
 			
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
@@ -317,15 +329,18 @@ void InstantSetup()
 			bins.At(0) = binx + "/bin";
 			bins.At(1) = binx + "/opt/bin";
 			bins.At(2) = binx + "/gdb/bin";
-			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
+			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			bins.At(4) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
 
 			incs.At(0) = mingw + "/include";
 			incs.At(1) = binx + "/opt/include";
 			incs.At(2) = GetExeDirFile("bin/SDL2/include");
+			incs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
 
 			libs.At(0) = mingw + "/lib";
 			libs.At(1) = binx + "/opt/lib";
-			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2\\lib\\x86");
+			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
