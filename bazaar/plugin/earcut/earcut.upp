@@ -1,0 +1,8 @@
+description "\3770,128,128";
+
+file
+	earcut.h,
+	earcut.hpp,
+	earcut.cpp,
+	Copying;
+
