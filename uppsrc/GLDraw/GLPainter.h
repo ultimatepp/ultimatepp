@@ -78,7 +78,7 @@ public:
 	void     Clear();
 	void     Set(const Image& img, dword flags = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 	
-	void     Bind() const;
+	void     Bind(int ii = 0) const;
 	int      GetID() const      { return data ? data->textureid : 0; }
 	operator GLuint() const     { return GetID(); }
 	Size     GetSize() const    { return data ? data->sz : Size(0, 0); }
@@ -92,6 +92,7 @@ public:
 	GLTexture& operator=(const GLTexture& src);
 };
 
+void GLBind(int ii, const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src);
@@ -120,8 +121,10 @@ public:
 	GLVertexData& Add(const void *data, int type, int ntuple, int count);
 	GLVertexData& Add(const float *data, int ntuple, int count) { return Add(data, GL_FLOAT, ntuple, count); }
 	GLVertexData& Add(const byte *data, int ntuple, int count)  { return Add(data, GL_UNSIGNED_BYTE, ntuple, count); }
+	GLVertexData& Add(const dword *data, int ntuple, int count) { return Add(data, GL_UNSIGNED_INT, ntuple, count); }
 	GLVertexData& Add(const Vector<float>& data, int ntuple)    { return Add(data, ntuple, data.GetCount() / ntuple); }
 	GLVertexData& Add(const Vector<byte>& data, int ntuple)     { return Add(data, ntuple, data.GetCount() / ntuple); }
+	GLVertexData& Add(const Vector<dword>& data, int ntuple)    { return Add(data, ntuple, data.GetCount() / ntuple); }
 	GLVertexData& Add(const Vector<Pointf>& pt);
 	GLVertexData& Index(const int *indices, int count);
 	GLVertexData& Index(const Vector<int>& indices)             { return Index(indices, indices.GetCount()); }
@@ -306,6 +309,7 @@ int  GLElementCounter();
 int  GLTextureCounter();
 int  GLProgramCounter();
 int  GLDrawCounter();
+int  GLTesselateCounter();
 
 };
 

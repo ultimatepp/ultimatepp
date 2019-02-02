@@ -57,7 +57,10 @@ GLVertexData& GLVertexData::Add(const void *values, int type, int ntuple, int co
 	                           GL_UNSIGNED_INT, sizeof(uint32),
 	                           sizeof(double));
 	glBufferData(GL_ARRAY_BUFFER, sz * ntuple * count, values, GL_STATIC_DRAW);
-	glVertexAttribPointer(ii, ntuple, type, GL_FALSE, ntuple * sz, (void*)0);
+	if(type == GL_FLOAT)
+		glVertexAttribPointer(ii, ntuple, type, GL_FALSE, ntuple * sz, (void*)0);
+	else
+		glVertexAttribIPointer(ii, ntuple, type, ntuple * sz, (void*)0);
     glEnableVertexAttribArray(ii);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
