@@ -1,5 +1,3 @@
-#ifndef _Eigen_UppMatrixPlugin_h_
-#define _Eigen_UppMatrixPlugin_h_
 
 UPP::String ToString() const {
 	std::stringstream s;
@@ -7,4 +5,3 @@ UPP::String ToString() const {
 	return s.str();
 }
 
-#endif

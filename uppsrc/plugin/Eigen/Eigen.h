@@ -3,8 +3,9 @@
 
 #include <Core/Core.h>
 
-#define EIGEN_MATRIX_PLUGIN <plugin/Eigen/ToStringPlugin.h>
-#define EIGEN_DENSEBASE_PLUGIN <plugin/Eigen/ToStringPlugin.h>
+#define EIGEN_MATRIX_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
+#define EIGEN_DENSEBASE_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
+#define EIGEN_TENSOR_PLUGIN		<plugin/Eigen/ToStringPlugin.h>
 
 #ifndef flagSSE2
  #define EIGEN_DONT_VECTORIZE
@@ -19,10 +20,10 @@
 
 #define eigen_assert(x) ASSERT(x)
 
-//#undef Success
 #include "Eigen/Eigen"
 #include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
 #include <plugin/Eigen/unsupported/Eigen/FFT>
+#include <plugin/Eigen/unsupported/Eigen/CXX11/Tensor>
 
 namespace Upp {
 

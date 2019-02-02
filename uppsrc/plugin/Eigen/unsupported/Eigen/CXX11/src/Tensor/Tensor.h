@@ -23,12 +23,12 @@ namespace Eigen {
   * The %Tensor class encompasses only dynamic-size objects so far.
   *
   * The first two template parameters are required:
-  * \tparam Scalar_ \anchor tensor_tparam_scalar Numeric type, e.g. float, double, int or std::complex<float>.
+  * \tparam Scalar_  Numeric type, e.g. float, double, int or `std::complex<float>`.
   *                 User defined scalar types are supported as well (see \ref user_defined_scalars "here").
   * \tparam NumIndices_ Number of indices (i.e. rank of the tensor)
   *
   * The remaining template parameters are optional -- in most cases you don't have to worry about them.
-  * \tparam Options_ \anchor tensor_tparam_options A combination of either \b #RowMajor or \b #ColMajor, and of either
+  * \tparam Options_  A combination of either \b #RowMajor or \b #ColMajor, and of either
   *                 \b #AutoAlign or \b #DontAlign.
   *                 The former controls \ref TopicStorageOrders "storage order", and defaults to column-major. The latter controls alignment, which is required
   *                 for vectorization. It defaults to aligning tensors. Note that tensors currently do not support any operations that profit from vectorization.
@@ -42,13 +42,13 @@ namespace Eigen {
   * \endcode
   *
   * This class can be extended with the help of the plugin mechanism described on the page
-  * \ref TopicCustomizingEigen by defining the preprocessor symbol \c EIGEN_TENSOR_PLUGIN.
+  * \ref TopicCustomizing_Plugins by defining the preprocessor symbol \c EIGEN_TENSOR_PLUGIN.
   *
   * <i><b>Some notes:</b></i>
   *
   * <dl>
   * <dt><b>Relation to other parts of Eigen:</b></dt>
-  * <dd>The midterm developement goal for this class is to have a similar hierarchy as Eigen uses for matrices, so that
+  * <dd>The midterm development goal for this class is to have a similar hierarchy as Eigen uses for matrices, so that
   * taking blocks or using tensors in expressions is easily possible, including an interface with the vector/matrix code
   * by providing .asMatrix() and .asVector() (or similar) methods for rank 2 and 1 tensors. However, currently, the %Tensor
   * class does not provide any of these features and is only available as a stand-alone class that just allows for
@@ -73,7 +73,7 @@ class Tensor : public TensorBase<Tensor<Scalar_, NumIndices_, Options_, IndexTyp
     typedef typename Base::CoeffReturnType CoeffReturnType;
 
     enum {
-      IsAligned = bool(EIGEN_MAX_ALIGN_BYTES>0) & !(Options_&DontAlign),
+      IsAligned = int(EIGEN_MAX_ALIGN_BYTES>0) & !(Options_&DontAlign),
       Layout = Options_ & RowMajor ? RowMajor : ColMajor,
       CoordAccess = true,
       RawAccess = true
@@ -494,6 +494,11 @@ class Tensor : public TensorBase<Tensor<Scalar_, NumIndices_, Options_, IndexTyp
       resize(dims);
     }
 #endif
+
+    // allow to extend Tensor outside Eigen
+    #ifdef EIGEN_TENSOR_PLUGIN
+    #include EIGEN_TENSOR_PLUGIN
+    #endif
 
   protected:
 
