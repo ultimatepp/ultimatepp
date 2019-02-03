@@ -8,23 +8,17 @@ uses
 	Sql,
 	plugin\z;
 
-library(WIN32 !NOMYSQL MSC DEBUG !(SO | MYSQLDLL)) debug/mysqlclient.lib;
+library(WIN32 !NOMYSQL MSC) libmysql;
 
-library(WIN32 !NOMYSQL MSC !DEBUG !(SO | MYSQLDLL)) mysqlclient.lib;
-
-library(WIN32 !NOMYSQL MSC DEBUG (SO | MYSQLDLL)) debug/libmysql.lib;
-
-library(WIN32 !NOMYSQL MSC !DEBUG (SO | MYSQLDLL)) libmysql.lib;
-
-library(WIN32 !NOMYSQL MSC) ws2_32.lib;
-
-library(WIN32 GCC !NOMYSQL) mysql;
+library(WIN32 GCC !NOMYSQL) libmysql.dll;
 
 library(LINUX !MT) "mysqlclient ssl";
 
 library(LINUX MT) "mysqlclient_r ssl";
 
 library(FREEBSD) mysqlclient;
+
+link(WIN32 GCC !NOMYSQL) "-Wl,--enable-stdcall-fixup";
 
 link(DEBUG SO) /nodefaultlib:LIBCD;
 

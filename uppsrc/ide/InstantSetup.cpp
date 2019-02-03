@@ -195,6 +195,10 @@ void InstantSetup()
 				String& pgbin = bins.At(4);
 				if(IsNull(pgbin) || ToLower(pgbin).Find("pgsql") >= 0)
 					pgbin = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+
+				String& mybin = bins.At(5);
+				if(IsNull(mybin) || ToLower(mybin).Find("pgsql") >= 0)
+					mybin = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 				
 				incs.At(0) = vc + "/include";
 				int ii = 1;
@@ -220,6 +224,10 @@ void InstantSetup()
 				String& pginc = incs.At(6);
 				if(IsNull(pginc) || ToLower(pginc).Find("pgsql") >= 0)
 					pginc = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
+
+				String& myinc = incs.At(7);
+				if(IsNull(myinc) || ToLower(myinc).Find("mysql") >= 0)
+					myinc = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
 				
 				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
@@ -230,17 +238,21 @@ void InstantSetup()
 				if(kit81.GetCount()) {
 					libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
 				}
-				String& ssllib = libs.At(3);
+				String& ssllib = libs.At(ii++);
 				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
 					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib64" : "bin/OpenSSL-Win/lib");
 				
-				String& sdllib = libs.At(4);
+				String& sdllib = libs.At(ii++);
 				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
 					sdllib = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
 
-				String& pglib = libs.At(5);
+				String& pglib = libs.At(ii++);
 				if(IsNull(pglib) || ToLower(pglib).Find("pgsql") >= 0)
 					pglib = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
+
+				String& mylib = libs.At(ii++);
+				if(IsNull(mylib) || ToLower(mylib).Find("pgsql") >= 0)
+					mylib = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 			
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
@@ -326,21 +338,25 @@ void InstantSetup()
 			String m = x64 ? "64" : "32";
 			String binx = bin + (x64 ? "/mingw64/64" : "/mingw64/32");
 			String mingw = binx + (x64 ? "/x86_64-w64-mingw32" : "/i686-w64-mingw32");
+
 			bins.At(0) = binx + "/bin";
 			bins.At(1) = binx + "/opt/bin";
 			bins.At(2) = binx + "/gdb/bin";
 			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
 			bins.At(4) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+			bins.At(5) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 
 			incs.At(0) = mingw + "/include";
 			incs.At(1) = binx + "/opt/include";
 			incs.At(2) = GetExeDirFile("bin/SDL2/include");
 			incs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
+			incs.At(4) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
 
 			libs.At(0) = mingw + "/lib";
 			libs.At(1) = binx + "/opt/lib";
 			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
 			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+			libs.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
