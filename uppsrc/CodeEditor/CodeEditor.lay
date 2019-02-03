@@ -30,7 +30,7 @@ LAYOUT(BlockReplaceLayout, 408, 136)
 	ITEM(Option, regexp, SetLabel(t_("RegEx")).LeftPosZ(344, 64).BottomPosZ(40, 20))
 	ITEM(Button, next, SetLabel(t_("Replace")).RightPosZ(80, 76).BottomPosZ(8, 24))
 	ITEM(Button, close, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
-	ITEM(Switch, mode, SetLabel(t_("Replace\nRemove lines without pattern\nRemove line with pattern")).LeftPosZ(8, 396).TopPosZ(28, 16))
+	ITEM(Switch, mode, SetLabel(t_("Replace\nRemove lines without pattern\nRemove lines with pattern")).LeftPosZ(8, 396).TopPosZ(28, 16))
 	ITEM(Label, find_lbl, SetLabel(t_("Find")).LeftPosZ(8, 48).TopPosZ(4, 19))
 	ITEM(Label, replace_lbl, SetLabel(t_("Replace")).LeftPosZ(8, 48).TopPosZ(48, 19))
 END_LAYOUT
