@@ -9,5 +9,5 @@ file
 	main.cpp;
 
 mainconfig
-	"" = ".MYSQLDLL";
+	"" = "";
 
