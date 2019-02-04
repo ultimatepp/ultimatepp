@@ -204,3 +204,20 @@ https://www.libsdl.org/download-2.0.php
 download development libraries for VC and mingw
 take docs, include and lib from VC variant
 copy to lib/x64 x32 libSDL2.dll.a and libSDL2main.a from corresponding mingw directories
+
+------------------------------------------------------------------
+PostgresSQL
+
+https://www.enterprisedb.com/download-postgresql-binaries
+
+------------------------------------------------------------------
+MySQL
+
+https://downloads.mysql.com/archives/c-c/
+
+current 6.1.11 Jule 13 2017
+
+------------------------------------------------------------------
+GLM
+
+https://github.com/g-truc/glm
