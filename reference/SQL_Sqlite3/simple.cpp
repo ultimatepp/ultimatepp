@@ -25,7 +25,7 @@ CONSOLE_APP_MAIN
 	SQL = sqlite3;
 
 	// Update the schema to match the schema described in "simple.sch"
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	SqlSchema sch(SQLITE3);
 	All_Tables(sch);
 	if(sch.ScriptChanged(SqlSchema::UPGRADE))
@@ -38,7 +38,7 @@ CONSOLE_APP_MAIN
 		SqlPerformScript(sch.Config());
 	}
 	sch.SaveNormal();
-	#endif
+#endif
 
 	// Now test out some functionality:
 	//--------------------------------------------------------------------
