@@ -126,6 +126,10 @@ TOPIC("install_ru-ru")
 #include "install_ru-ru.tppi"
 END_TOPIC
 
+TOPIC("macos_en-us")
+#include "macos_en-us.tppi"
+END_TOPIC
+
 TOPIC("macros_en-us")
 #include "macros_en-us.tppi"
 END_TOPIC

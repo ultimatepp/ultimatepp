@@ -138,6 +138,12 @@ void AppMain___()
 
 	SetVppLogSizeLimit(200000000);
 	
+#ifdef PLATFORM_WIN32
+	if(!CheckLicense())
+		return;
+	AutoInstantSetup();
+#endif
+
 	bool hasvars = FindFile(ConfigFile("*.var"));
 
 #ifdef PLATFORM_POSIX
@@ -150,12 +156,6 @@ void AppMain___()
 			return;
 		SaveFile(ConfigFile("version"), IDE_VERSION);
 	}
-#endif
-
-#ifdef PLATFORM_WIN32
-	if(!CheckLicense())
-		return;
-	AutoInstantSetup();
 #endif
 
 	if(!hasvars)
