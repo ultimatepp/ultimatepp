@@ -58,6 +58,9 @@ struct GLCode : GLProgram {
 	GLCode& operator()(int i, Sizef sz)                                        { return Uniform(i, sz.cx, sz.cy); }
 	GLCode& operator()(const char *id, Color c, double alpha = 1);
 	GLCode& operator()(int i, Color c, double alpha = 1);
+	
+	GLCode& Mat4(int i, float *mat4);
+	GLCode& Mat4(const char *id, float *mat4);
 };
 
 class GLTexture {
