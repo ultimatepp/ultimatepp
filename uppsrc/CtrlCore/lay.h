@@ -40,7 +40,7 @@
 #undef  END_LAYOUT
 
 #define LAYOUT(nm, x, y)       template<class T, class D> inline void SetLayout_##nm(T& ctrl, D& parent, bool add = false, bool show = false) { \
-                                  SetLayout_Size(parent, Zx(x), Zy(y));
+                                  SetLayout_Size(ctrl, Zx(x), Zy(y));
 #define UNTYPED(var, param)       parent.var.param; if(add) ctrl.Add(parent.var); if(show) parent.var.Show();
 #define ITEM(clss, var, param)    UNTYPED(var, param);
 #define END_LAYOUT             }
