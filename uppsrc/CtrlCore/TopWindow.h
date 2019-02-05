@@ -204,7 +204,9 @@ void InitLayout(Ctrl& ctrl, L& layout)
 template <class T>
 void CtrlLayout(T& ctrl) {
 	InitLayout(ctrl, ctrl, ctrl, ctrl);
-	SetLayout_Size(ctrl, T::GetLayoutSize());
+	Size sz = T::GetLayoutSize();
+	SetLayout_Size(ctrl, sz);
+	ctrl.SetRect(sz);
 }
 
 template <class T>

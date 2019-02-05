@@ -544,7 +544,6 @@ void SetLayout_Size(Ctrl& ctrl, Size sz)
 {
 	sz = ctrl.AddFrameSize(sz);
 	ctrl.SetMinSize(sz);
-	ctrl.SetRect(sz);
 }
 
 void SetLayout_Size(Ctrl& ctrl, int cx, int cy)
