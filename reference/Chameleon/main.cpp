@@ -53,6 +53,7 @@ Button::Style ColorStyle()
 	s.look[1] = Yellow();
 	s.look[2] = Brown();
 	s.look[3] = Gray();
+	s.focus_use_ok = false; // otherwise Button would use OK style for focused button
 	return s;
 }
 
@@ -62,6 +63,7 @@ Button::Style ImageStyle()
 	for(int i = 0; i < 4; i++)
 		s.look[i] = MyButtonImg::Get(i);
 	s.pressoffset = Point(1, -1);
+	s.focus_use_ok = false; // otherwise Button would use OK style for focused button
 	return s;
 }
 
@@ -72,6 +74,7 @@ Button::Style FnStyle()
 	s.look[1] = EllipseLook(3, Red, WhiteGray);
 	s.look[2] = EllipseLook(4, Blue, White);
 	s.look[3] = EllipseLook(1, Black, Gray);
+	s.focus_use_ok = false; // otherwise Button would use OK style for focused button
 	return s;
 }
 
