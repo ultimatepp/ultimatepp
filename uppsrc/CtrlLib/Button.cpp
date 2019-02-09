@@ -191,6 +191,7 @@ CH_STYLE(Button, Style, StyleNormal)
 	focusmargin = 3;
 	overpaint = 0;
 	transparent = true;
+	focus_use_ok = true;
 }
 
 CH_STYLE(Button, Style, StyleOk)
@@ -331,7 +332,7 @@ const Button::Style *Button::St() const
 			if(!b || b == this || b->GetTopCtrl() != GetTopCtrl())
 				st = &StyleOk();
 		}
-		if(HasFocus())
+		if(HasFocus() && st->focus_use_ok)
 			st = &StyleOk();
 	}
 	return st;

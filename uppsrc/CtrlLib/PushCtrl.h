@@ -83,6 +83,7 @@ public:
 		Font  font;
 		Image ok, cancel, exit;
 		bool  transparent;
+		bool  focus_use_ok;
 	};
 
 protected:
