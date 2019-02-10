@@ -15,17 +15,20 @@ struct OpenGLExample : GLCtrl {
 		
 		Rect r = Rect(GetSize()).Deflated(20, 20);
 		
-		w.DrawRect(sz, LtRed());
+		w.DrawRect(sz, White());
+		return;
 		DrawFatFrame(w, r, LtBlue(), 2);
 
 		DrawFatFrame(w, r.Deflated(5), LtBlue(), 2);
 		
 		w.DrawRect(100, 100, 2, 2, Blue());
 		
+		DDUMP(CtrlImg::exclamation());
+	
 		w.DrawImage(200, 100, CtrlImg::exclamation());
 		w.DrawImage(300, 100, CtrlImg::reporticon());		
-		w.DrawImage(350, 100, CtrlImg::reporticon(), Blue());
-		w.DrawImage(400, 100, CtrlImg::swap_color_cursor());
+		w.DrawImage(400, 100, CtrlImg::reporticon(), Blue());
+		w.DrawImage(500, 100, CtrlImg::swap_color_cursor());
 		
 		for(int i = 0; i < 16; i++) {
 			w.DrawImage(50 + 20 * i, 180, CtrlImg::checkers());
