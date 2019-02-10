@@ -8,9 +8,6 @@ namespace Upp {
 
 Color PaintInfo::ResolveInk(Color ink) const
 {
-	DDUMP(ink);
-	DDUMP(DarkThemeCached(ink));
-	DDUMP(Nvl(textcolor, darktheme ? Nvl(DarkThemeCached(ink), SColorText()) : Nvl(ink, SColorText())));
 	return Nvl(textcolor, darktheme ? Nvl(DarkThemeCached(ink), SColorText()) : Nvl(ink, SColorText()));
 }
 
