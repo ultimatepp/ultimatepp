@@ -133,7 +133,6 @@ void AssistEditor::SyncAnnotationPopup()
 	if(y < GetWorkArea().top)
 		y = r.bottom;
 	annotation_popup.SetRect(r.left, y, Zx(600), h + DPI(16));
-	DLOG("POPUP");
 	annotation_popup.Ctrl::PopUp(this, false, false, true);
 }
 
