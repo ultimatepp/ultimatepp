@@ -19,7 +19,6 @@ struct ColorTest : TopWindow {
 
 GUI_APP_MAIN
 {
-	DDUMP(DarkTheme(Color(0, 0, 255)));
 #ifndef _DEBUG
 	for(int i = 0; i < 10000000; i++) {
 		RTIMING("MakeDark");
