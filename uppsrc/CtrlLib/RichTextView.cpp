@@ -37,6 +37,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.sizetracking = sizetracking;
 	pi.shrink_oversized_objects = shrink_oversized_objects;
 	pi.darktheme = Grayscale(SColorPaper()) < 100;
+	DDUMP(pi.darktheme);
 	Rect pg = GetPage();
 	if(vcenter && sb.GetTotal() < sb.GetPage())
 		pg.top = (sb.GetPage() - sb.GetTotal()) / 2;

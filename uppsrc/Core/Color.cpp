@@ -214,10 +214,42 @@ bool IsLight(Color c)
 	return Grayscale(c) > 255 - 80;
 }
 
+int  Grayscale2(const Color& c)
+{
+//	return (97 * c.GetR() + 101 * c.GetG() + 58 * c.GetB()) >> 8;
+	return (90 * c.GetR() + 95 * c.GetG() + 70 * c.GetB()) >> 8;
+}
+
 Color DarkTheme(Color c)
 {
 	if(IsNull(c))
 		return Null;
+	
+	int m = 255 - Grayscale2(c);
+	
+	int r = c.GetR();
+	int g = c.GetG();
+	int b = c.GetB();
+	
+	DDUMP(m);
+	
+	if(m < 128)
+		while(Grayscale2(Color(r, g, b)) > m) {
+			r = max(r - 1, 0);
+			g = max(g - 1, 0);
+			b = max(b - 1, 0);
+		}
+	else
+		while(Grayscale2(Color(r, g, b)) < m) {
+			r = min(r + 1, 255);
+			g = min(g + 1, 255);
+			b = min(b + 1, 255);
+		}
+	
+	DDUMP(Grayscale2(Color(r, g, b)));
+	return Color(r, g, b);
+
+/*	
 	double h, s, v;
 	const double m = 1/255.0;
 #if 0
@@ -226,7 +258,8 @@ Color DarkTheme(Color c)
 #endif
 	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
 	v = m * Grayscale(c);
-	return HsvColorf(h, s, 1 - v);
+	return HsvColorf(h, 1 - v, 1 - v);
+*/
 }
 
 Color DarkThemeCached(Color c)
