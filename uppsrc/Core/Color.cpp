@@ -216,8 +216,7 @@ bool IsLight(Color c)
 
 int  Grayscale2(const Color& c)
 {
-//	return (97 * c.GetR() + 101 * c.GetG() + 58 * c.GetB()) >> 8;
-	return (90 * c.GetR() + 95 * c.GetG() + 70 * c.GetB()) >> 8;
+	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
 Color DarkTheme(Color c)
@@ -225,13 +224,87 @@ Color DarkTheme(Color c)
 	if(IsNull(c))
 		return Null;
 	
-	int m = 255 - Grayscale2(c);
+	DLOG("=====");
+	DDUMP(c);
+	
+#if 1
+	int v[3];
+	v[0] = c.GetR();
+	v[1] = c.GetG();
+	v[2] = c.GetB();
+
+	int m = 3*256 - v[0] - v[1] - v[2];
+	
+	int i0 = 0;
+	int i1 = 1;
+	int i2 = 2;
+	
+	if(v[i0] > v[i1])
+		Swap(i0, i1);
+	if(v[i1] > v[i2])
+		Swap(i1, i2);
+	if(v[i0] > v[i1])
+		Swap(i0, i1);
+	
+	DDUMP(v[i0]);
+	DDUMP(v[i1]);
+	DDUMP(v[i2]);
+	DDUMP(m);
+
+	if(m > 128) {
+		int a = min(v[i2] + m / 3, 255) - v[i2];
+		DDUMP(v[i2] + m);
+		DDUMP(a);
+		v[i0] += a;
+		v[i1] += a;
+		v[i2] += a;
+		m -= 3 * a;
+
+		a = min(v[i1] + m / 2, 255) - v[i1];
+		DDUMP(m);
+		DDUMP(a);
+		v[i0] += a;
+		v[i1] += a;
+		m -= 2 * a;
+
+		DDUMP(m);
+		DDUMP(v[i0] - m);
+		v[i0] = min(v[i0] + m, 255);
+		DDUMP(v[i0]);
+		DDUMP((v[i0] + v[i1] + v[i2]) / 3);
+	}
+	else {
+		int a = max(v[i0] - m, 0) - v[i0];
+		DDUMP(v[i0] + m);
+		DDUMP(a);
+		v[i0] += a;
+		v[i1] += a;
+		v[i2] += a;
+		m += a;
+
+		a = max(v[i1] - m, 0) - v[i1];
+		DDUMP(m);
+		DDUMP(a);
+		v[i1] += a;
+		v[i2] += a;
+		m += 2 * a / 3;
+
+		DDUMP(m);
+		DDUMP(v[i2] - m);
+		v[i2] = max(v[i2] - m, 0);
+		DDUMP(v[i2]);
+	}
+	
+	DDUMP(Color(v[0], v[1], v[2]));
+	
+	return Color(v[0], v[1], v[2]);
+#else
+	DDUMP(m);
+	int m = 255 - (c.GetR() + c.GetG() + c.GetB()) / 3;
 	
 	int r = c.GetR();
 	int g = c.GetG();
 	int b = c.GetB();
-	
-	DDUMP(m);
 	
 	if(m < 128)
 		while(Grayscale2(Color(r, g, b)) > m) {
@@ -240,7 +313,7 @@ Color DarkTheme(Color c)
 			b = max(b - 1, 0);
 		}
 	else
-		while(Grayscale2(Color(r, g, b)) < m) {
+		while(Grayscale2(Color(r, g, b)) < m - 1) {
 			r = min(r + 1, 255);
 			g = min(g + 1, 255);
 			b = min(b + 1, 255);
@@ -248,6 +321,7 @@ Color DarkTheme(Color c)
 	
 	DDUMP(Grayscale2(Color(r, g, b)));
 	return Color(r, g, b);
+#endif
 
 /*	
 	double h, s, v;
