@@ -224,16 +224,13 @@ Color DarkTheme(Color c)
 	if(IsNull(c))
 		return Null;
 	
-	DLOG("=====");
-	DDUMP(c);
-	
-#if 1
 	int v[3];
 	v[0] = c.GetR();
 	v[1] = c.GetG();
 	v[2] = c.GetB();
 
-	int m = 3*256 - v[0] - v[1] - v[2];
+	int m0 = v[0] + v[1] + v[2];
+	int m = 3*256 - m0;
 	
 	int i0 = 0;
 	int i1 = 1;
@@ -245,95 +242,39 @@ Color DarkTheme(Color c)
 		Swap(i1, i2);
 	if(v[i0] > v[i1])
 		Swap(i0, i1);
-	
-	DDUMP(v[i0]);
-	DDUMP(v[i1]);
-	DDUMP(v[i2]);
-	DDUMP(m);
 
-	if(m > 128) {
+	if(m > 3*256 / 2) {
+		m -= m0;
 		int a = min(v[i2] + m / 3, 255) - v[i2];
-		DDUMP(v[i2] + m);
-		DDUMP(a);
 		v[i0] += a;
 		v[i1] += a;
 		v[i2] += a;
 		m -= 3 * a;
 
 		a = min(v[i1] + m / 2, 255) - v[i1];
-		DDUMP(m);
-		DDUMP(a);
 		v[i0] += a;
 		v[i1] += a;
 		m -= 2 * a;
 
-		DDUMP(m);
-		DDUMP(v[i0] - m);
 		v[i0] = min(v[i0] + m, 255);
-		DDUMP(v[i0]);
-		DDUMP((v[i0] + v[i1] + v[i2]) / 3);
 	}
 	else {
-		int a = max(v[i0] - m, 0) - v[i0];
-		DDUMP(v[i0] + m);
-		DDUMP(a);
+		m = m0 - m;
+		int a = v[i0] - max(v[i0] - m / 3, 0);
 		v[i0] += a;
 		v[i1] += a;
 		v[i2] += a;
-		m += a;
+		m -= 3 * a;
 
-		a = max(v[i1] - m, 0) - v[i1];
-		DDUMP(m);
-		DDUMP(a);
+		a = v[i1] - max(v[i1] - m / 2, 0);
 		v[i1] += a;
 		v[i2] += a;
-		m += 2 * a / 3;
+		m -= 2 * a;
 
-		DDUMP(m);
-		DDUMP(v[i2] - m);
 		v[i2] = max(v[i2] - m, 0);
-		DDUMP(v[i2]);
 	}
 	
-	DDUMP(Color(v[0], v[1], v[2]));
-	
 	return Color(v[0], v[1], v[2]);
-#else
-	DDUMP(m);
-	int m = 255 - (c.GetR() + c.GetG() + c.GetB()) / 3;
-	
-	int r = c.GetR();
-	int g = c.GetG();
-	int b = c.GetB();
-	
-	if(m < 128)
-		while(Grayscale2(Color(r, g, b)) > m) {
-			r = max(r - 1, 0);
-			g = max(g - 1, 0);
-			b = max(b - 1, 0);
-		}
-	else
-		while(Grayscale2(Color(r, g, b)) < m - 1) {
-			r = min(r + 1, 255);
-			g = min(g + 1, 255);
-			b = min(b + 1, 255);
-		}
-	
-	DDUMP(Grayscale2(Color(r, g, b)));
-	return Color(r, g, b);
-#endif
-
-/*	
-	double h, s, v;
-	const double m = 1/255.0;
-#if 0
-	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
-	return HsvColorf(h, s, (1 + s * 0.5) - v);
-#endif
-	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
-	v = m * Grayscale(c);
-	return HsvColorf(h, 1 - v, 1 - v);
-*/
 }
 
 Color DarkThemeCached(Color c)
