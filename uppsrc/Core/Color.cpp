@@ -220,8 +220,13 @@ Color DarkTheme(Color c)
 		return Null;
 	double h, s, v;
 	const double m = 1/255.0;
+#if 0
 	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
 	return HsvColorf(h, s, (1 + s * 0.5) - v);
+#endif
+	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
+	v = m * Grayscale(c);
+	return HsvColorf(h, s, 1 - v);
 }
 
 Color DarkThemeCached(Color c)
