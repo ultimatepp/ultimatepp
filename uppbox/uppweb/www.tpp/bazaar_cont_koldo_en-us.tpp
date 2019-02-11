@@ -1,8 +1,8 @@
-topic "Bazaar contributors: Koldo Ramirez";
-[ $$0,0#00000000000000000000000000000000:Default]
+topic "Bazaar contributors: Iñaki Zabala (Koldo)";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; Bazaar contributors: Koldo Ramirez&]
+[s1; Bazaar contributors: Iñaki Zabala (Koldo)&]
 [s0; [*2 List of contributions]&]
 [s0;2 &]
 [s0;l160; [*2 U`+`+]&]
@@ -46,7 +46,4 @@ rabYourScreen]&]
 [s0; [2 If you have any idea you can address it to me ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 h
 ere][2  for an opinion or even create a new joint venture to do 
 a new package or project.]&]
-[s0;2 &]
-[s0; [2 I am ][^http`:`/`/en`.wikipedia`.org`/wiki`/Basque`_people^2 Basque][2  
-and I live in the ][^http`:`/`/en`.wikipedia`.org`/wiki`/Basque`_Country`_`%28greater`_region`%29^2 B
-asque Country][2 . If you plan to come here I can advise you!]]]
+[s0;2 ]]
