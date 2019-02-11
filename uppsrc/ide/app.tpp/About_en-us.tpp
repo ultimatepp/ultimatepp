@@ -3,7 +3,7 @@ topic "Copyright © 1999-2019 Ultimate++ team";
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
 [s0; [*+117 Copyright © 1998, 2019 Ultimate`+`+ team]&]
-[s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
+[s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
 bigniew Rębacz]&]
