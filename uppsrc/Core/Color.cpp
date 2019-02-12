@@ -243,7 +243,7 @@ Color DarkTheme(Color c)
 	if(v[i0] > v[i1])
 		Swap(i0, i1);
 
-	if(m > 3*256 / 2) {
+	if(m0 < m) {
 		m -= m0;
 		int a = min(v[i2] + m / 3, 255) - v[i2];
 		v[i0] += a;
@@ -261,14 +261,14 @@ Color DarkTheme(Color c)
 	else {
 		m = m0 - m;
 		int a = v[i0] - max(v[i0] - m / 3, 0);
-		v[i0] += a;
-		v[i1] += a;
-		v[i2] += a;
+		v[i0] -= a;
+		v[i1] -= a;
+		v[i2] -= a;
 		m -= 3 * a;
 
 		a = v[i1] - max(v[i1] - m / 2, 0);
-		v[i1] += a;
-		v[i2] += a;
+		v[i1] -= a;
+		v[i2] -= a;
 		m -= 2 * a;
 
 		v[i2] = max(v[i2] - m, 0);
