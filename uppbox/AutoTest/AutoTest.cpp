@@ -54,7 +54,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 			if(Sys(c, out)) {
 				Cout() << " *** ERROR\n";
 				infolog << ": ERROR\n";
-				errors << txt << ": ERROR\n";
+				errors << txt << ", " << GetSysTime() << ": ERROR\n";
 				Error++;
 			}
 			else {
