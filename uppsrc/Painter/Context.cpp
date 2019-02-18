@@ -188,6 +188,8 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 	attr.mask = false;
 	attr.invert = false;
 	attr.mtx_serial = 0;
+	
+	pathattr = attr;
 
 	ClearPath();
 	
