@@ -39,7 +39,6 @@ class Smtp : public TcpSocket {
 	String         reply_to_name;
 	String         subject;
 
-	int            start_time;
 	String         smtp_msg;
 	int            smtp_code;
 	String         error;
