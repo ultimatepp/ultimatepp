@@ -24,7 +24,7 @@ void SFtpTransparency(SshSession& session)
 	SFtpFileSystemInfo sfsi(sftp);
 	
 	LOG("Remote file system objects---------------------------------------------------------");
-	ReadDirEntries(sfsi, "/pub/example/*.png");
+	ReadDirEntries((FileSystemInfo&) sfsi, "/pub/example/*.png");
 	
 	if(sftp.IsError())
 		LOG(sftp.GetErrorDesc());
