@@ -13,14 +13,14 @@ Vector<DWORD> GetChildProcessList(DWORD processId) {
 	Vector<DWORD> child, all, parents;
 	
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (hSnap == INVALID_HANDLE_VALUE) 
+	if (hSnap == INVALID_HANDLE_VALUE)
 		return child;
 	
 	PROCESSENTRY32 proc;
 	proc.dwSize = sizeof(proc);
 	
 	if (!Process32First(hSnap, &proc)) {
-		CloseHandle(hSnap);	
+		CloseHandle(hSnap);
 		return child;
 	}
 	

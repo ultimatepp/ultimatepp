@@ -224,6 +224,7 @@ struct Pdb : Debugger, ParentCtrl {
 	StaticRect         pane;
 	Splitter           split;
 	TreeCtrl           tree;
+	bool               first_exception = true;
 
 	VectorMap<String, String> treetype;
 
