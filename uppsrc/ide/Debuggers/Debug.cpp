@@ -367,7 +367,16 @@ bool Pdb::RunToException()
 						desc << Format(" at [* %08llX]", (int64)x.ExceptionInformation[1]);
 					}
 					ToForeground();
-					PromptOK(desc);
+					BeepError();
+					if(first_exception) {
+						first_exception = false;
+						ErrorOK(desc);
+					}
+					else
+					if(!Prompt(Ctrl::GetAppName(), CtrlImg::error(), desc, t_("OK"), t_("Stop"))) {
+						Stop();
+						return false;
+					}
 				}
 #ifdef CPU_64
 				if(!win64 && x.ExceptionCode == EXCEPTION_BREAKPOINT && !break_running) // Ignore x64 breakpoint in wow64

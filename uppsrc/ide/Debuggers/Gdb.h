@@ -14,6 +14,8 @@ public:
 	virtual bool IsFinished();
 	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 
+	void ShowException();
+
 public:
 	String DoRun();
 	
@@ -133,6 +135,8 @@ protected:
 	String             bp_filename;
 	int                bp_line;
 	String             bp_val;
+	
+	String             exception;
 	
 	const int max_stack_trace_size = 400;
 	

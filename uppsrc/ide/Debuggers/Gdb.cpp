@@ -237,6 +237,19 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 	expression_cache.Clear();
 	IdeHidePtr();
 	String s = Cmd(cmdline);
+	exception.Clear();
+	int q = s.Find("received signal SIG");
+	if(q >= 0) {
+		int l = s.ReverseFind('\n', q);
+		if(l < 0)
+			l = 0;
+		int r = s.Find('\n', q);
+		if(r < 0)
+			r = s.GetCount();
+		if(l < r)
+			exception = s.Mid(l, r - l);
+	}
+		
 	if(ParsePos(s, file, line, addr)) {
 		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr()
 		                                                : DbgImg::IpLinePtr(), 0);
@@ -274,7 +287,6 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 			ObtainData();
 		}
 	}
-	
 	return s;
 }
 
@@ -347,6 +359,13 @@ String Gdb::ObtainThreadsInfo()
 	return output;
 }
 
+void Gdb::ShowException()
+{
+	if(exception.GetCount())
+		ErrorOK(exception);
+	exception.Clear();
+}
+
 String Gdb::DoRun()
 {
 	if(firstrun) {
@@ -368,6 +387,7 @@ String Gdb::DoRun()
 			SetBreakpoint(bp_filename, bp_line, bp_val);
 		bp_filename.Clear();
 	}
+	ShowException();
 	return s;
 }
 
@@ -426,6 +446,7 @@ void Gdb::Step(const char *cmd)
 	if(b) disas.SetFocus();
 	CheckEnd(s);
 	IdeActivateBottom();
+	ShowException();
 }
 
 void Gdb::DisasCursor()
