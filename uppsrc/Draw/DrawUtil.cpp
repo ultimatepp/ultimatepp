@@ -205,7 +205,7 @@ const ColorF *WhiteBorder()
 {
 	static ColorF data[] = {
 		(ColorF)1,
-		&SWhite, &SWhite, &SWhite, &SWhite,
+		&SColorPaper, &SColorPaper, &SColorPaper, &SColorPaper,
 	};
 	return data;
 }

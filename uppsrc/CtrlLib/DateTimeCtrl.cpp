@@ -880,7 +880,7 @@ void Clock::Paint(Draw& w)
 		PaintCenteredText(w,
 		                  int(cm.x + 0.8 * sin(i * M_PI / 6.0) * cf.x),
 		                  int(cm.y - 0.8 * cos(i * M_PI / 6.0) * cf.y),
-		                  AsString(i), fnt.Bold(i % 3 == 0), SBlack());
+		                  AsString(i), fnt.Bold(i % 3 == 0), SColorText());
 	}
 
 	for(int i = 1; i <= 60; i++) {
