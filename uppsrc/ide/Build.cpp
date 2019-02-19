@@ -87,6 +87,7 @@ void Ide::PackageBuild()
 		String linkopt;
 		bool ok = BuildPackage(wspc, pi, 0, 1, mainconfigparam, Null, linkfile, immfile, linkopt);
 		EndBuilding(ok);
+		SetErrorEditor();
 	}
 }
 
