@@ -589,6 +589,12 @@ bool IsSysFlag(dword flag)
 	return SystemParametersInfo(flag, 0, &b, 0) && b;
 }
 
+bool IsSystemThemeDark()
+{
+	String s = GetWinRegString("AppsUseLightTheme", "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", HKEY_CURRENT_USER);
+	return s.GetCount() && *s == 0;
+}
+
 void ChSysInit()
 {
 	CtrlImg::Reset();
@@ -649,10 +655,20 @@ void ChSysInit()
 
 	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
-	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++)
-		(*s->set)(Color::FromCR(GetSysColor(s->syscolor)));
+	
+	bool adjust_dark = false; // IsLight(Color::FromCR(GetSysColor(COLOR_WINDOW))) && IsSystemThemeDark();
+	
+	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) {
+		Color c = Color::FromCR(GetSysColor(s->syscolor));
+		if(adjust_dark)
+			c = DarkTheme(c);
+		(*s->set)(c);
+	}
 	dword x = GetSysColor(COLOR_GRAYTEXT);
-	SColorDisabled_Write(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW)));
+	Color c = x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW));
+	if(adjust_dark)
+		c = DarkTheme(c);
+	SColorDisabled_Write(c);
 }
 
 #endif
