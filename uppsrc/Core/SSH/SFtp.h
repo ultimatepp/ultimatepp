@@ -235,7 +235,6 @@ class SFtpFileSystemInfo : public FileSystemInfo {
 public:
     SFtpFileSystemInfo& Mount(SFtp& sftp)       { browser = &sftp; return *this; }
     int GetStyle() const override               { return STYLE_POSIX; }
-    operator FileSystemInfo&()                  { return static_cast<FileSystemInfo&>(*this); }
     bool CreateFolder(String path, String& error) const override;
     Array<FileSystemInfo::FileInfo> Find(String mask, int max_count = INT_MAX, bool unmounted = false) const override;
     

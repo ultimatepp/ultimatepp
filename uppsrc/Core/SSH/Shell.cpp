@@ -35,6 +35,15 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 			if(xenabled)
 				X11Loop();
 			ConsoleRead();
+			#if defined(PLATFORM_MACOS)
+			// We are using sigtimedwait on POSIX-compliant systems.
+			// Unfortunately MacOS didn't implement it. This is a simple workaround for MacOS.
+			// It relies on ioctl, which is implemented on MacOS.
+			Size sz = GetConsolePageSize();
+			resized = !IsNull(sz) && sz != psize;
+			if(resized)
+				LLOG("Window size changed.");
+			#else
 			// We need to catch the WINCH signal. To this end we'll use a POSIX compliant kernel
 			// function: sigtimedwait. To speed up, we'll simply poll for the monitored event.
 			sigset_t set;
@@ -51,6 +60,7 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 			if(rc > 0)
 				LLOG("SIGWINCH received.");
 			resized = rc > 0;
+			#endif
 #elif PLATFORM_WIN32
 			// This part is a little bit tricky. We need to handle Windows console events here.
 			// But we cannot simply ignore the events we don't look for. We need to actively

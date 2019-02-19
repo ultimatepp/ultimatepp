@@ -580,12 +580,6 @@ FtpFileSystemInfo][@(0.0.255) `&]_[* Mount]([_^Upp`:`:SFtp^ SFtp][@(0.0.255) `&]
 `*this for method chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:SFtpFileSystemInfo`:`:operator FileSystemInfo`&`(`):%- [* operator_FileSyst
-emInfo`&]()&]
-[s2; Operator support for direct SFtpFileSystemInfo `-> FileSystemInfo 
-conversion.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Upp`:`:SFtpFileSystemInfo`:`:Find`(Upp`:`:String`,int`,bool`)const override:%- [_^Upp`:`:Array^ A
 rray]<[_^Upp`:`:FileSystemInfo`:`:FileInfo^ FileSystemInfo`::FileInfo]>_[* Find]([_^Upp`:`:String^ S
 tring]_[*@3 mask], [@(0.0.255) int]_[*@3 max`_count]_`=_`_`_INT`_MAX`_`_, 
