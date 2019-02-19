@@ -87,6 +87,7 @@ void Gdb::CopyStackAll()
 		String s = ss.GetLine();
 		CParser p(s);
 		try {
+			p.Char('*');
 			if(p.IsNumber()) {
 				int id = p.ReadInt();
 				r << "----------------------------------\r\n"
@@ -95,7 +96,6 @@ void Gdb::CopyStackAll()
 				FastCmd(Sprintf("thread %d", id));
 
 				int i = 0;
-				frame.Clear();
 				for(;;) {
 					String s = FormatFrame(FastCmd("frame " + AsString(i++)));
 					if(IsNull(s)) break;

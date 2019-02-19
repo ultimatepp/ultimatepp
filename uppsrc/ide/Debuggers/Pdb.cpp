@@ -380,8 +380,6 @@ void Pdb::CopyStack()
 void Pdb::CopyStackAll()
 {
 	String s;
-
-	threadlist.Clear();
 	for(int i = 0; i < threads.GetCount(); i++) {
 		int thid = threads.GetKey(i);
 		s << "----------------------------------\r\n"
