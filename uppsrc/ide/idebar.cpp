@@ -602,9 +602,12 @@ void Ide::BuildPackageMenu(Bar& menu)
 {
 	int pi = GetPackageIndex();
 	bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();
-	menu.Add(b, AK_BUILDPACKAGE, THISBACK(PackageBuild))
+	String name;
+	if(b)
+		name = '\'' + IdeWorkspace()[pi] + '\'';
+	menu.Add(b, "Build package " + name, THISBACK(PackageBuild))
 		.Help("Build current package");
-	menu.Add(b, AK_CLEANPACKAGE, THISBACK(PackageClean))
+	menu.Add(b, "Clean package " + name, THISBACK(PackageClean))
 		.Help("Remove all intermediate files of the current package");
 	menu.MenuSeparator();
 }
