@@ -51,10 +51,11 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 			infolog << txt;
 			String out;
 			Tested += test;
+			txt << ", " << GetSysTime();
 			if(Sys(c, out)) {
 				Cout() << " *** ERROR\n";
 				infolog << ": ERROR\n";
-				errors << txt << ", " << GetSysTime() << ": ERROR\n";
+				errors << txt << ": ERROR\n";
 				Error++;
 			}
 			else {
