@@ -596,7 +596,8 @@ void ChHostSkin()
 		int m = ImageMargin(mimg, 4, 5);
 		if(Qt)
 			m = max(m, DPI(4));
-		s.popupframe = WithHotSpot(mimg, m, m);
+		if(m > 0) // Zero frame is causing problems with menu popups - immediate closes via RightUp
+			s.popupframe = WithHotSpot(mimg, m, m);
 		s.popupbody = Crop(mimg, m, m, 32 - 2 * m, 32 - 2 * m);
 		s.leftgap = DPI(16) + Zx(6);;
 		ChGtkNew(menu_item, "menuitem", GTK_BOX);
