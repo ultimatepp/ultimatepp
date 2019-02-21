@@ -219,18 +219,20 @@ int  Grayscale2(const Color& c)
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
-Color DarkTheme(Color c)
+Color DarkTheme(Color color)
 {
-	if(IsNull(c))
+	if(IsNull(color))
 		return Null;
 	
-	int v[3];
-	v[0] = c.GetR();
-	v[1] = c.GetG();
-	v[2] = c.GetB();
+	double v[3];
+	v[0] = color.GetR();
+	v[1] = color.GetG();
+	v[2] = color.GetB();
+	
+	static double c[3] = { 0.21, 0.72, 0.07 };
 
-	int m0 = v[0] + v[1] + v[2];
-	int m = 3*256 - m0;
+	double m0 = 0.21 * v[0] + 0.72 * v[1] + 0.07 * v[2];
+	double m = 256 - m0;
 	
 	int i0 = 0;
 	int i1 = 1;
@@ -245,36 +247,36 @@ Color DarkTheme(Color c)
 
 	if(m0 < m) {
 		m -= m0;
-		int a = min(v[i2] + m / 3, 255) - v[i2];
+		double a = min(v[i2] + m, 255.0) - v[i2];
 		v[i0] += a;
 		v[i1] += a;
 		v[i2] += a;
-		m -= 3 * a;
+		m -= a;
 
-		a = min(v[i1] + m / 2, 255) - v[i1];
+		a = min(v[i1] + m / (c[i0] + c[i1]), 255.0) - v[i1];
 		v[i0] += a;
 		v[i1] += a;
-		m -= 2 * a;
+		m -= (c[i0] + c[i1]) * a;
 
-		v[i0] = min(v[i0] + m, 255);
+		v[i0] = min(v[i0] + m / c[i1], 255.0);
 	}
 	else {
 		m = m0 - m;
-		int a = v[i0] - max(v[i0] - m / 3, 0);
+		double a = v[i0] - max(v[i0] - m, 0.0);
 		v[i0] -= a;
 		v[i1] -= a;
 		v[i2] -= a;
-		m -= 3 * a;
+		m -= a;
 
-		a = v[i1] - max(v[i1] - m / 2, 0);
+		a = v[i1] - max(v[i1] - m / (c[i1] + c[i2]), 0.0);
 		v[i1] -= a;
 		v[i2] -= a;
-		m -= 2 * a;
+		m -= (c[i1] + c[i2]) * a;
 
-		v[i2] = max(v[i2] - m, 0);
+		v[i2] = max(v[i2] - m / c[i2], 0.0);
 	}
 	
-	return Color(v[0], v[1], v[2]);
+	return Color((int)v[0], (int)v[1], (int)v[2]);
 }
 
 Color DarkThemeCached(Color c)
