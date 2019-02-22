@@ -26,6 +26,8 @@ mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
 cp -p ~/Scripts/Makefile ~/upp.tmp/upp
 cp -p ~/Scripts/domake ~/upp.tmp/upp
 cp -p ~/Scripts/doinstall ~/upp.tmp/upp
+cp -p ~/Scripts/douninstall ~/upp.tmp/upp
+cp -p ~/Scripts/do-xdg-desktop-menu ~/upp.tmp/upp
 cp -p ~/Scripts/function_library ~/upp.tmp/upp
 cp -p ~/Scripts/readme.md ~/upp.tmp/upp
 cp -p ~/Scripts/upp.spec ~/upp.tmp/upp

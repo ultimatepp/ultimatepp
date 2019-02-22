@@ -6,6 +6,8 @@ file
 	debian,
 	doinstall,
 	domake,
+	douninstall,
+	do-xdg-desktop-menu,
 	fedora,
 	function_library,
 	GCCMK.bm,
