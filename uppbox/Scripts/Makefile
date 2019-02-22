@@ -13,6 +13,9 @@ ide:
 install:
 	+./doinstall --verbose
 
+uninstall:
+	+./douninstall
+
 clean:
 	if [ -d "$(UPPOUT)" ] ; then \
 		rm -fr "$(UPPOUT)" ; \

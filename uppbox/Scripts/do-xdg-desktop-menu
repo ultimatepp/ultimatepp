@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+applications_list="theide.desktop"
+
+if [ "$1" = "" -o \( "$1" != "install" -a "$1" != "uninstall" \) ]
+then
+  echo "usage: $0 [install|uninstall]"
+
+elif ! which xdg-desktop-menu
+then
+  echo "$1 requires xdg-desktop-menu program to work properly"
+ 
+elif [ "$1" = "install" ]
+then
+  echo "xdg-desktop-menu install --mode user --novendor $applications_list"
+  xdg-desktop-menu install --mode user --novendor $applications_list
+
+elif [ "$1" = "uninstall" ]
+then
+  echo "xdg-desktop-menu uninstall --mode user --novendor $applications_list"
+  xdg-desktop-menu uninstall --mode user --novendor $applications_list
+
+fi

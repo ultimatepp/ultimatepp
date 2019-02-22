@@ -280,6 +280,34 @@ log_debug_info "Copying theide and umk"
   install ./theide "$DESTDIR$prefix/upp/theide"
   install ./umk    "$DESTDIR$prefix/upp/umk"
 
+log_debug_info "Creating theide.desktop, copying default icon and creating user menu entry"
+
+cat > "theide.desktop" << EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=TheIDE
+GenericName=TheIDE
+Comment=IDE for cross-platform C++ development 
+MimeType=application/x-upp;
+Exec=$DESTDIR$prefix/upp/theide
+Icon=$DESTDIR$prefix/upp/theide.png
+Terminal=false
+Type=Application
+Categories=Development;IDE;
+StartupNotify=false
+EOF
+
+  chmod +x "theide.desktop"
+
+  cp -p "uppsrc/ide/theide-48.png" "theide.png"
+
+  cp -p "theide.desktop" "$DESTDIR$prefix/upp/"
+  cp -p "theide.png" "$DESTDIR$prefix/upp/"
+  cp -p "do-xdg-desktop-menu" "$DESTDIR$prefix/upp/"
+  cp -p "douninstall" "$DESTDIR$prefix/upp/uninstall"
+
+  ./do-xdg-desktop-menu install
+
 log_debug_info "Copying U++ source code"
   cp -r uppsrc    "$DESTDIR$prefix/upp"
   cp -r examples  "$DESTDIR$prefix/upp"
