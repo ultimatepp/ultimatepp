@@ -144,6 +144,8 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	mmtopctrl.Add(this);
 
 	RegisterCocoaDropFormats();
+	
+	StateH(OPEN);
 }
 
 void Ctrl::WndDestroy()
