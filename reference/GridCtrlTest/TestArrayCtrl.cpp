@@ -33,7 +33,7 @@ void TestArrayCtrl::Init()
 	arr.HeaderObject().Absolute();
 	arr.MultiSelect();
 	arr.Inserting();
-	arr.SetLineCy(20);
+	arr.SetLineCy(DPI(20));
 
 	const int total_cols = 15;
 	const int total_rows = 10;

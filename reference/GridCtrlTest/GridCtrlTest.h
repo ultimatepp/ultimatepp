@@ -31,7 +31,7 @@ struct TestMain : BasicTest
 	EditInt edit1;
 	EditString edit2;
 	DropTime dt;
-	EditInt ei;	
+	EditInt ei;
 	EditString ee0, ee1;
 	
 	DropList list, colors, names, numbers;

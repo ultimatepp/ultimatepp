@@ -55,7 +55,7 @@ void TestMain::Init()
 	grid.GetColumn(total_cols - 2).Fixed(50);
 	grid.GetColumn(total_cols - 3).Fixed(40);
 
-	grid.SetDefaultRowHeight(26);			
+	grid.SetDefaultRowHeight(DPI(26));			
 	grid.AddRow(total_rows);
 	grid.FixedPaste();
 	
