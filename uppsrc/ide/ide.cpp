@@ -577,8 +577,8 @@ void Ide::MakeIcon() {
 		WString mp2;
 		Size sz2;
 		if(sz.cx > isz.cx && mp.GetCount() > 2) {
-			mp2 = mp.Mid(1);
-			mp.Trim(1);
+			mp2 = mp.Mid(3);
+			mp.Trim(3);
 			cx1 = GetTextSize(mp, font).cx;
 			while(fh > DPI(5)) {
 				font2 = StdFont(fh);
@@ -590,7 +590,7 @@ void Ide::MakeIcon() {
 				fh--;
 			}
 		}
-		int x = (isz.cx - sz.cx) / 2;
+		int x = max((isz.cx - sz.cx) / 2, 0);
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
