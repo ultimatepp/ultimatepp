@@ -17,6 +17,7 @@ void RegisterExample(const char *name, void (*ex)(Painter& pw));
 
 struct App : TopWindow {
 	virtual void Paint(Draw& w);
+	virtual bool Key(dword key, int count);
 
 	SplitterFrame  split;
 	ArrayCtrl      list;

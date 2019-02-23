@@ -81,6 +81,15 @@ void App::Benchmark()
 		PromptOK(Format("%.3f ms", tm[0]));
 }
 
+bool App::Key(dword key, int count)
+{
+	if(key == K_ALT_M) {
+		MemoryProfileInfo();
+		return true;
+	}
+	return TopWindow::Key(key, count);
+}
+
 void App::Paint(Draw& w)
 {
 	Size sz = GetSize();
