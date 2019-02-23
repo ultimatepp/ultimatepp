@@ -82,6 +82,14 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << x << ", " << y << ", "<< img.GetSize());
 	ImageSysDataMaker m;
 	static LRUCache<ImageSysData, int64> cache;
+	static int Rsz;
+	Rsz += img.GetLength();
+	if(Rsz > 200 * 200) { // we do not want to do this for each small image painted...
+		Rsz = 0;
+		cache.Remove([](const ImageSysData& object) {
+			return object.img.GetRefCount() == 1;
+		});
+	}
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
 	ImageSysData& sd = cache.Get(m);
