@@ -28,6 +28,7 @@ clean:
 distclean: clean
 	rm -f theide
 	rm -f umk
+	rm -f theide.desktop
 	rm -f GCC.bm
 	rm -f CLANG.bm
 	rm -f uppsrc/Makefile
