@@ -253,6 +253,10 @@ public:
 		char info[24];
 	};
 	explicit Image(const Init& init);
+	
+	// required by system image cache managemenent
+	
+	int GetRefCount() const         { return data->refcount; }
 };
 
 Image Premultiply(const Image& img);
