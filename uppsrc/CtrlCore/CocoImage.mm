@@ -48,12 +48,26 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 
 static LRUCache<ImageSysData, int64> cg_image_cache;
 
+static void sCleanImageCache(const Image& img)
+{
+	static int Rsz;
+	Rsz += img.GetLength();
+	if(Rsz > 200 * 200) { // we do not want to do this for each small image painted...
+		Rsz = 0;
+		cg_image_cache.Remove([](const ImageSysData& object) {
+			return object.img.GetRefCount() == 1;
+		});
+	}
+}
+
 void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 {
 	GuiLock __;
 
 	if(img.GetLength() == 0)
 		return;
+	
+	sCleanImageCache(img);
 
 	ImageSysDataMaker m;
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
@@ -169,6 +183,7 @@ NSCursor *GetNSCursor(int kind)
 
 NSImage *CreateNSImage(const Image& img, CGImageRef cgimg)
 {
+	sCleanImageCache(img);
 	Size isz = img.GetSize();
 	double scale = 1.0 / DPI(1);
 	NSSize size;
