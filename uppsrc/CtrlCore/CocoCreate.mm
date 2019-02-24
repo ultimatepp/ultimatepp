@@ -224,7 +224,9 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 
 dword TopWindow::GetMMStyle() const
 {
-	dword style = NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskResizable;
+	dword style = 0;
+	if(!frameless)
+		style |= NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskResizable;
 	if(minimizebox)
 		style |= NSWindowStyleMaskMiniaturizable;
 //	if(maximizebox)
