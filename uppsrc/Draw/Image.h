@@ -256,7 +256,7 @@ public:
 	
 	// required by system image cache managemenent
 	
-	int GetRefCount() const         { return data->refcount; }
+	int GetRefCount() const         { return data ? (int)data->refcount : 0; }
 };
 
 Image Premultiply(const Image& img);
