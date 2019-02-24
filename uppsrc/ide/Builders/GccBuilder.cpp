@@ -297,7 +297,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		return false;
 	}
 
-	linkoptions << Gather(pkg.link, config.GetKeys());
+	MergeWith(linkoptions, " ", Gather(pkg.link, config.GetKeys()));
 	if(linkoptions.GetCount())
 		linkoptions << ' ';
 
@@ -496,7 +496,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -L" << GetHostPathQ(libpath[i]);
 			if(!HasFlag("OSX") && !HasFlag("COCOA"))
 				lnk << " -Wl,-O,2 ";
-			lnk << linkoptions;
+			MergeWith(lnk, " ", linkoptions);
 			String lfilename;
 			if(HasFlag("OBJC")) {
 				String lfilename;
