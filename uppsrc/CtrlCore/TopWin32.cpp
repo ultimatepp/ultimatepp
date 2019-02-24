@@ -254,7 +254,7 @@ void TopWindow::Open(HWND hwnd)
 	LLOG("TopWindow::Open, owner HWND = " << FormatIntHex((int)hwnd, 8) << ", Active = " << FormatIntHex((int)::GetActiveWindow(), 8));
 	IgnoreMouseUp();
 	SyncCaption();
-	DLOG("WindowStyles: " << WindowStyleAsString(style, exstyle));
+	LLOG("WindowStyles: " << WindowStyleAsString(style, exstyle));
 #ifdef PLATFORM_WINCE
 	if(!GetRect().IsEmpty())
 #endif
