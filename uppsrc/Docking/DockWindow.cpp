@@ -16,7 +16,7 @@ void DockWindow::State(int reason)
 			DockLayout();
 		if (!init) {
 			DockInit();
-			init = true;	
+			init = true;
 			StopHighlight(false);
 		}
 	}
@@ -35,7 +35,7 @@ void DockWindow::DoHotKeys(dword key)
 	for (int i = 0; i < dockers.GetCount(); i++) {
 		if (dockers[i]->IsHotKey(key))
 			HideRestoreDocker(*dockers[i]);
-	}	
+	}
 }
 
 void DockWindow::Dock(int align, DockableCtrl& dc, int pos)
@@ -47,7 +47,7 @@ void DockWindow::Dock(int align, DockableCtrl& dc, int pos)
 
 void DockWindow::Tabify(DockableCtrl& target, DockableCtrl& dc)
 {
-	ASSERT(GetContainer(target));	
+	ASSERT(GetContainer(target));
 	Register(dc);
 	DockAsTab(*GetContainer(target), dc);
 }
@@ -55,23 +55,23 @@ void DockWindow::Tabify(DockableCtrl& target, DockableCtrl& dc)
 void DockWindow::Float(DockableCtrl& dc, Point p)
 {
 	if (dc.GetParent() && p.IsNullInstance())
-		p = GetScreenRect().TopLeft(); 
+		p = GetScreenRect().TopLeft();
 	else
-		Register(dc);        
+		Register(dc);
 	FloatContainer(*GetReleasedContainer(dc), p);
 }
 
 void DockWindow::Float(DockableCtrl& dc, const char *title, Point p)
 {
-	dc.Title(title); 
-	Float(dc, p);	
+	dc.Title(title);
+	Float(dc, p);
 }
 
 void DockWindow::AutoHide(DockableCtrl& dc)
 {
 	if (dc.IsAutoHide()) return;
 	int align = GetDockAlign(dc);
-	AutoHide(align == DOCK_NONE ? DOCK_TOP : align,  dc);	
+	AutoHide(align == DOCK_NONE ? DOCK_TOP : align,  dc);
 }
 
 void DockWindow::AutoHide(int align, DockableCtrl& dc)
@@ -93,18 +93,18 @@ int DockWindow::FindDocker(const Ctrl *dc)
 
 DockableCtrl& DockWindow::Register(DockableCtrl& dc)
 {
-	int ix = FindDocker(&dc); 
+	int ix = FindDocker(&dc);
 	if (ix < 0) {
 		ix = dockers.GetCount();
 		dockers.Add(&dc);
-		dockerpos.Add();;
+		dockerpos.Add();
 	}
 	return *dockers[ix];
 }
 
 void DockWindow::Deregister(const DockableCtrl& dc)
 {
-	int ix = FindDocker(&dc); 
+	int ix = FindDocker(&dc);
 	if (ix >= 0) {
 		DockableCtrl &dc = *dockers[ix];
 		dockers.Remove(ix);
@@ -150,7 +150,7 @@ void DockWindow::ActivateDockableChild(Ctrl& c)
 
 void DockWindow::Activate(DockableCtrl& dc)
 {
-	if (dc.IsVisible() && dc.IsOpen()) 
+	if (dc.IsVisible() && dc.IsOpen())
 		return dc.TimedHighlight(200);
 	DockCont *c = GetContainer(dc);
 	if (!c)
@@ -204,7 +204,7 @@ void DockWindow::SaveDockerPos(DockableCtrl& dc, PosInfo& pi)
 			for (int i = 0; i < 4; i++) {
 				int ix = hideframe[i].FindCtrl(*cont);
 				if (ix >= 0) {
-					s.Put(ix);		
+					s.Put(ix);
 					break;
 				}
 				ASSERT(i != 3); // No alignment found!

@@ -4,12 +4,12 @@ namespace Upp {
 
 int ToolWin::GetTitleCy() const
 {
-	return max(GetStdFontCy(), 16);
+	return max(GetStdFontCy() + DPI(4), DPI(16));
 }
 
 int ToolWin::GetBorder() const
 {
-	return max(2, GetStdFontCy() / 4);
+	return DPI(2);
 }
 
 Rect ToolWin::GetMargins() const
@@ -56,14 +56,14 @@ void ToolWin::FramePaint(Draw& w, const Rect& rr)
 	int bn = GetBorder();
 	Rect r = rr;
 	for(int i = 0; i < bn; i++) {
-		DrawFrame(w, r, decode(i, 0, SColorShadow(), 1, SColorLight(), SColorFace()));	
+		DrawFrame(w, r, decode(i, 0, SColorShadow(), 1, SColorLight(), SColorFace()));
 		r.Deflate(1);
 	}
 	int fcy = GetStdFontCy();
 	int titlecy = GetTitleCy();
 	w.DrawRect(r.left, r.top, r.GetWidth(), titlecy, Blend(SColorFace(), SColorShadow()));
 	DrawTextEllipsis(w, r.left + fcy / 4, r.top + (titlecy - fcy) / 2,
-	                 r.GetWidth() - fcy / 2 - 16, GetTitle(), "...", StdFont(), SColorText());
+	                 r.GetWidth() - fcy / 2 - DPI(16), GetTitle(), "...", StdFont(), SColorText());
 }
 
 void ToolWin::StartMouseDrag0()
@@ -71,7 +71,7 @@ void ToolWin::StartMouseDrag0()
 	p0 = GetMousePos();
 	rect0 = GetRect();
 	UnIgnoreMouse();
-	SetCapture();	
+	SetCapture();
 }
 
 void ToolWin::StartMouseDrag()
@@ -225,7 +225,6 @@ ToolWin::ToolWin()
 	close <<= THISBACK(DoClose);
 	close.Tip(t_("Close"));
 	AddFrame(*this);
-	Sizeable();
 	FrameLess();
 }
 

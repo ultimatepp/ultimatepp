@@ -118,7 +118,7 @@ DockableCtrl::DockableCtrl()
 void DockableCtrlImgsLook(Value* look, int i, int n)
 {
 	while(n--)
-		*look++ = DockingImg::Get(i++);
+		*look++ = ChLookWith(Null, DockingImg::Get(i++), Point(0, 0)); // Center image
 }
 
 Image ChCrop(const Value& element, Size canvas, Rect crop, Color baseline)
