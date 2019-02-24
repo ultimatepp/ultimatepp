@@ -161,8 +161,13 @@ CH_STYLE(DockableCtrl, Style, StyleDefault)
 {
 	const TabCtrl::Style *style = &TabCtrl::StyleDefault();
 	
+#ifdef PLATFORM_COCOA
+	handle[0] = SColorFace();
+	handle[1] = SColorHighlight();
+#else
 	handle[0] = ChCrop(style->normal[0], Size(20, 20), Rect(2, 2, 11, 20), SColorShadow); // No focus
 	handle[1] = Colorize(handle[0], SColorHighlight(), 160); // Focus
+#endif
 	handle_margins = Rect(2, 0, 0, 0);
 	handle_vert = false;
 	
