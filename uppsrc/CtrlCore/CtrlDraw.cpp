@@ -361,6 +361,9 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	Rect view = rect;
 	for(int i = 0; i < frame.GetCount(); i++) {
 		LEVELCHECK(w, NULL);
+		DDUMP(i);
+		DDUMP(typeid(*frame[i].frame).name());
+		DDUMP(frame[i].view);
 		frame[i].frame->FramePaint(w, view);
 		view = frame[i].view;
 	}

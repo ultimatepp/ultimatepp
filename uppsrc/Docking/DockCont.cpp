@@ -12,14 +12,14 @@ void ImgButton::Paint(Draw &w)
 	int dy = IsPush();
 	if (!img.IsEmpty()) {
 		Size isz = img.GetSize();
-		w.DrawImage((sz.cx - isz.cx) / 2 + dx, (sz.cy - isz.cy) / 2 + dy, img);	
+		w.DrawImage((sz.cx - isz.cx) / 2 + dx, (sz.cy - isz.cy) / 2 + dy, img);
 	}
 }
 
 // DockContHandle frame
 int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style &s) const
 {
-	return 	(IsNull(s.title_font) ? 12 : s.title_font.GetHeight()+4)
+	return 	(IsNull(s.title_font) ? DPI(12) : s.title_font.GetCy() + DPI(2))
 			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
 }
 /*
@@ -46,7 +46,7 @@ void DockCont::DockContHandle::FrameAddSize(Size& sz)
 	if (s.handle_vert)
 		sz.cx += GetHandleSize(s);
 	else
-		sz.cy += GetHandleSize(s);	
+		sz.cy += GetHandleSize(s);
 }
 
 void DockCont::DockContHandle::Paint(Draw& w)
@@ -108,7 +108,7 @@ void DockCont::Layout()
 				base->CloseContainer(*dc);
 				RefreshLayout();
 			}
-		}	
+		}
 		if (!tabbar.GetCount())
 			base->CloseContainer(*this);
 		TabSelected();
@@ -125,7 +125,7 @@ void DockCont::ChildRemoved(Ctrl *child)
 			if (c == GetCtrl(i)) {
 				tabbar.Close(i);
 				waitsync = true;
-				break;				
+				break;
 			}
 }
 
@@ -812,8 +812,7 @@ DockCont::DockCont()
 	waitsync = false;	
 	animating = false;
 	usersize.cx = usersize.cy = Null;
-	BackPaint();
-	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
+	NoCenter();
 
 	tabbar.SortTabValues(Single<StdValueOrder>());
 	tabbar.SortTabs(false);

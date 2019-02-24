@@ -497,18 +497,6 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	style &= ~WS_VISIBLE;
 	if(!IsWinXP())
 		dropshadow = false;
-#ifdef PLATFORM_WINCE
-		if(parent)
-			top->hwnd = CreateWindowExW(exstyle,
-			                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-			                                         : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-			                            L"", style, 0, 0, 0, 0,
-			                            parent, NULL, hInstance, this);
-		else
-			top->hwnd = CreateWindowW(L"UPP-CLASS-W",
-			                          L"", WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			                          parent, NULL, hInstance, this);
-#else
 	if(IsWinNT() && (!parent || IsWindowUnicode(parent)))
 		top->hwnd = CreateWindowExW(exstyle,
 		                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
@@ -521,7 +509,6 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 		                                        : dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
 		                           "", style, 0, 0, 0, 0,
 		                           parent, NULL, hInstance, this);
-#endif
 
 	inloop = false;
 
