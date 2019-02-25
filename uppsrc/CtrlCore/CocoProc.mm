@@ -109,6 +109,17 @@ struct MMImp {
 //			Upp::Ctrl::ReleaseCtrlCapture();
 			return false;
 		}
+		if(GetAlt()) { // Emulate right click
+			if(event == Ctrl::LEFTDOWN) {
+				coco_mouse_left = false;
+				coco_mouse_right = true;
+				event = Ctrl::RIGHTDOWN;
+			}
+			if(event == Ctrl::LEFTUP) {
+				coco_mouse_right = false;
+				event = Ctrl::RIGHTUP;
+			}
+		}
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(DPI(np.x), DPI(np.y));
