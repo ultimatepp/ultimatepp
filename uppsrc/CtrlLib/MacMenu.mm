@@ -123,6 +123,7 @@ void CocoMenuBar::MenuAction(id sender)
 {
 	for(const Item& m : item)
 		if(m.nsitem == sender) {
+			ResetCocoaMouse();
 			m.cb();
 			break;
 		}
@@ -296,7 +297,7 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 		np.x = scale * p.x;
 		np.y = scale * p.y;
 		
-		ReleaseCtrlCapture(); // Because we will not get "MouseUp" event...
+		ResetCocoaMouse(); // Because we will not get "MouseUp" event...
 
 		[bar.cocomenu popUpMenuPositioningItem:nil//bar.item[0].nsitem
 	                                atLocation:np
