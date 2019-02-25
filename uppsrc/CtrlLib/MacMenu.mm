@@ -26,6 +26,7 @@ struct CocoMenuBar : public Bar {
 	CocoMenu *cocomenu;
 	int       lock = 0;
 	bool      dockmenu = false;
+	int       cy = 0; // estimate of height to place the menu correctly
 
 	struct Item : Bar::Item {
 		NSMenuItem      *nsitem;
@@ -54,6 +55,7 @@ struct CocoMenuBar : public Bar {
 	Item& AddItem() {
 		Item& m = item.Add();
 		[cocomenu addItem:m.nsitem];
+		cy += GetStdFontCy();
 		return m;
 	}
 
@@ -87,6 +89,7 @@ struct CocoMenuBar : public Bar {
 	void Set(Event<Bar&> bar);
 	
 	void Clear() {
+		cy = 0;
 		item.Clear();
 		if(cocomenu) {
 			[cocomenu release];
@@ -132,6 +135,7 @@ void CocoMenuBar::MenuAction(id sender)
 void CocoMenuBar::Separator()
 {
 	[cocomenu addItem:[NSMenuItem separatorItem]];
+	cy += GetStdFontCy();
 }
 
 CocoMenuBar::Item& CocoMenuBar::Item::Text(const char *text)
@@ -290,6 +294,9 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 
 		owner = owner->GetTopCtrl();
 		
+		int h = GetWorkArea().GetHeight();
+		bool up = p.y > h / 2 && bar.cy + 2 * GetStdFontCy() + p.y > h;
+		
 		p -= owner->GetScreenRect().TopLeft();
 		
 		double scale = 1.0 / DPI(1);
@@ -299,7 +306,7 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 		
 		ResetCocoaMouse(); // Because we will not get "MouseUp" event...
 
-		[bar.cocomenu popUpMenuPositioningItem:nil//bar.item[0].nsitem
+		[bar.cocomenu popUpMenuPositioningItem:(up ? bar.item.Top().nsitem : nil)
 	                                atLocation:np
 	                                    inView:(NSView *)owner->GetNSView()];
 	}
