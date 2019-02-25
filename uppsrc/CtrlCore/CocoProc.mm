@@ -67,6 +67,12 @@ bool Ctrl::ReleaseWndCapture()
 	return true;
 }
 
+void Ctrl::ResetCocoaMouse()
+{
+	ReleaseCtrlCapture();
+	coco_mouse_left = coco_mouse_right = false;
+}
+
 struct MMImp {
 	static bool KeyFlags(Upp::Ctrl *ctrl, NSEvent *e) {
 		bool alt = GetAlt();

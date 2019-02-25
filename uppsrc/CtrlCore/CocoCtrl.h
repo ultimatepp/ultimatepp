@@ -21,6 +21,7 @@ protected:
 	void   Create(Ctrl *owner, dword style, bool active);
 	static void SetNSAppImage(const Image& img);
 	static void SyncAppIcon();
+	static void ResetCocoaMouse();
 
 public:
 	static void      EndSession()              {}
