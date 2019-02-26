@@ -321,7 +321,7 @@ void Vector<T>::Insert(int i, std::initializer_list<T> init)
 {
 	RawInsert(i, (int)init.size());
 	T *t = vector + i;
-	for(auto q : init)
+	for(const auto& q : init)
 		new(t++) T(clone(q));
 }
 
@@ -331,7 +331,7 @@ void Vector<T>::InsertRange(int i, const Range& r)
 {
 	RawInsert(i, r.GetCount());
 	T *t = vector + i;
-	for(auto q : r)
+	for(const auto& q : r)
 		new(t++) T(clone(q));
 }
 
@@ -593,7 +593,7 @@ template <class T>
 void Array<T>::Insert(int i, std::initializer_list<T> init)
 {
 	vector.InsertN(i, (int)init.size());
-	for(auto q : init)
+	for(const auto& q : init)
 		vector[i++] = new T(q);
 }
 
