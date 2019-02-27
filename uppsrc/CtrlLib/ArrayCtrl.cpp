@@ -1,4 +1,5 @@
 #include "CtrlLib.h"
+#include "CtrlLib.h"
 
 namespace Upp {
 
@@ -623,6 +624,8 @@ void ArrayCtrl::Reline(int i, int y)
 			i++;
 		}
 	SetSb();
+	Refresh();
+	SyncCtrls();
 }
 
 int  ArrayCtrl::GetLineY(int i) const
@@ -1518,8 +1521,8 @@ void ArrayCtrl::ShowLine(int i, bool e)
 	int q = ln.GetCount();
 	array.At(i).visible = e;
 	ln.At(i);
-	if(q > 0)
-		Reline(q - 1, ln[q - 1].y);
+	if(q > 0 && i > 0)
+		Reline(i - 1, ln[i - 1].y);
 	else
 		Reline(0, 0);
 }
