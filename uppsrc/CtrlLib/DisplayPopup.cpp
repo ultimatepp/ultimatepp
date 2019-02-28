@@ -51,6 +51,7 @@ void DisplayPopup::MouseMove(Point p, dword flags)
 
 void DisplayPopup::Paint(Draw& w)
 {
+	RDUMP("Paint");
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
 	if(display) {
@@ -130,7 +131,6 @@ void DisplayPopup::Sync()
 					SetRect(r);
 					if(!IsOpen())
 						Ctrl::PopUp(ctrl, true, false, false);
-					Refresh();
 					return;
 				}
 			}
@@ -207,9 +207,8 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		if(ctrl)
 			Tip(ctrl->GetTip());
 		Sync();
-	}
-	else
 		Refresh();
+	}
 }
 
 }
