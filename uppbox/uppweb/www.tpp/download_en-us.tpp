@@ -1,9 +1,9 @@
 topic "Ultimate++ download";
-[ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [a83;*R6 $$2,4#31310162474203024125188417583966:caption]
 [b83;*4 $$3,4#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$4,4#45413000475342174754091244180557:text]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2;= U`+`+ download&]
 [s3; Quick overview&]
@@ -22,36 +22,11 @@ topic "Ultimate++ download";
 archive]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
 portable .7z archive]]
-:: [s0; [*2 Ubuntu]]
-:: [s0;=2 ]
-:: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 PPA][2 , 
-][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly`/`+packages^2 d
-eb, dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
-:: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
-][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
-dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0;%DE-DE [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
-:: [s0; [*2 Gentoo]]
-::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 ebuil
-d]]
-::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
-:: [s0;%- ]
-::l8/25r8/25t8/15b8/15R(128) [s0; [*2 Arch Linux]]
-::-2 [s0;= [^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^2 PKGBUILDs]]
-::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
-:: [s0;%- ]}}&]
-[s0;~~~64;2 &]
-[s3; Source code&]
-[s4; For Gentoo users, an ebuild using subversion checkout is under 
-construction. Have a look at the corresponding [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^ f
-orum thread] if you are interested.&]
-[s4; Arch Linux users can download source packages in [^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^ A
-UR] and build them using makepkg tool. Alternatively yaourt (or 
-some other AUR`-aware pacman frontend) allows to download, build 
-and install the packages automatically.&]
+:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]}}&]
+[s3; &]
 [s3; Nightly builds&]
 [s4; Every night there is automatic release published [%DE-DE^topic`:`/`/uppweb`/www`/nightly`$en`-us^ t
 opic://uppweb/www/nightly`$en`-us]. Here you can find windows 
