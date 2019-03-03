@@ -380,6 +380,7 @@ struct SlideShow : TopWindow {
 	Vector<String> path;
 	int            page;
 	int            rp;
+	int            zoom = 4;
 
 	void SetPage();
 
@@ -391,25 +392,32 @@ bool SlideShow::Key(dword key, int count)
 	switch(key) {
 	case K_ESCAPE:
 		Break();
-		break;
+		return true;
 	case K_LEFT:
-	case K_UP:
 	case K_PAGEUP:
+	case K_SPACE:
 		page--;
-		SetPage();
 		break;
 	case K_RIGHT:
-	case K_DOWN:
 	case K_PAGEDOWN:
 		page++;
-		SetPage();
 		break;
+	case K_CTRL|K_ADD:
+		zoom = min(zoom + 1, 20);
+		break;
+	case K_CTRL|K_SUBTRACT:
+		zoom = min(zoom - 1, 20);
+		break;
+	default:
+		return true;
 	}
+	SetPage();
 	return true;
 }
 
 void SlideShow::SetPage()
 {
+	text.SetZoom(Zoom(DPI(zoom), 20));
 	page = minmax(page, 0, path.GetCount() - 1);
 	if(page != rp) {
 		rp = page;
@@ -424,7 +432,6 @@ SlideShow::SlideShow()
 	text.NoHyperlinkDecoration();
 	text.NoSb();
 	text.VCenter();
-	text.SetZoom(Zoom(1, 5));
 	text.Margins(8);
 	rp = -1;
 }

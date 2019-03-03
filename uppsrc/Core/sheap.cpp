@@ -110,7 +110,7 @@ void *Heap::AllocK(int k)
 	}
 }
 
-inline
+force_inline
 void *Heap::Allok(int k)
 { // Try to alloc from the front-cache first
 	FreeLink *ptr = cache[k];
