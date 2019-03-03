@@ -229,7 +229,7 @@ void Vector<T>::Remove(int q, int count) {
 	ASSERT(q >= 0 && q <= items - count && count >= 0);
 	if(count == 0) return;
 	Destroy(vector + q, vector + q + count);
-	memmove(vector + q, vector + q + count, (items - q - count) * sizeof(T));
+	memmove((void *)(vector + q), (void *)(vector + q + count), (items - q - count) * sizeof(T));
 	items -= count;
 }
 
@@ -272,14 +272,14 @@ void Vector<T>::RawInsert(int q, int count)
 	if(items + count > alloc) {
 		T *newvector = RawAlloc(alloc = max(alloc + count, int(alloc + ((unsigned)alloc >> 1))));
 		if(vector) {
-			memcpy(newvector, vector, q * sizeof(T));
-			memcpy(newvector + q + count, vector + q, (items - q) * sizeof(T));
+			memcpy((void *)newvector, (void *)vector, q * sizeof(T));
+			memcpy((void *)(newvector + q + count), (void *)(vector + q), (items - q) * sizeof(T));
 			RawFree(vector);
 		}
 		vector = newvector;
 	}
 	else
-		memmove(vector + q + count, vector + q, (items - q) * sizeof(T));
+		memmove((void *)(vector + q + count), (void *)(vector + q), (items - q) * sizeof(T));
 	items += count;
 }
 
@@ -346,7 +346,7 @@ void Vector<T>::Insert(int i, Vector<T>&& v) {
 	ASSERT(!vector || v.vector != vector);
 	if(v.items) {
 		RawInsert(i, v.items);
-		memcpy(vector + i, v.vector, sizeof(T) * v.items);
+		memcpy((void *)(vector + i), (void *)v.vector, sizeof(T) * v.items);
 	}
 	RawFree(v.vector);
 	v.Zero();
@@ -359,7 +359,7 @@ void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
 	int n = v.GetCount() - from;
 	if(n) {
 		RawInsert(i, n);
-		memcpy(vector + i, v.vector + from, sizeof(T) * n);
+		memcpy((void *)(vector + i), (void *)(v.vector + from), sizeof(T) * n);
 		v.items = from;
 	}
 }
@@ -627,10 +627,10 @@ void BiVector<T>::ReAlloc(int newalloc) {
 	if(items) {
 		int end = start + items;
 		if(end <= alloc)
-			memcpy(newvector, vector + start, (end - start) * sizeof(T));
+			memcpy((void *)newvector, (void *)(vector + start), (end - start) * sizeof(T));
 		else {
-			memcpy(newvector, vector + start, (alloc - start) * sizeof(T));
-			memcpy(newvector + alloc - start, vector, (end - alloc) * sizeof(T));
+			memcpy((void *)newvector, (void *)(vector + start), (alloc - start) * sizeof(T));
+			memcpy((void *)(newvector + alloc - start), (void *)vector, (end - alloc) * sizeof(T));
 		}
 		delete[] (byte *)vector;
 	}

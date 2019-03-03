@@ -89,7 +89,7 @@ Image Upscale2x(const Image& src)
 				int b = mx[1][2].a;
 				int l1 = 110;
 				int l2 = 230;
-				return l * r * t * b || s.a > l1 || mx[0][1].a > l2 || mx[2][1].a > l2 || mx[1][0].a > l2 || mx[1][2].a > l2 ? s
+				return l * r * t * b != 0 || s.a > l1 || mx[0][1].a > l2 || mx[2][1].a > l2 || mx[1][0].a > l2 || mx[1][2].a > l2 ? s
 				       : RGBAZero();
 			}
 		} ef;
