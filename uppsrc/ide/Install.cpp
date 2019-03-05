@@ -97,14 +97,19 @@ bool Install(bool& hasvars)
 	String myapps = GetHomeDirFile("MyApps");
 	RealizeDirectory(out);
 
-	String uppsrc = FileExists(GetHomeDirFile("upp.src/uppsrc/ide/ide.upp")) ? GetHomeDirFile("upp.src/uppsrc")
-	                                                                         : GetHomeDirFile("uppsrc");
+	String uppsrc;
 
 	auto MakeAssembly = [&](String b, String name = Null) {
 		name = Nvl(name, GetFileTitle(b));
 		String a = ass + '/' + name + ".var";
-		if(name != "uppsrc")
+		if(name == "uppsrc")
+			uppsrc = Nvl(uppsrc, b);
+		else {
+			if(uppsrc.GetCount() == 0)
+				uppsrc = FileExists(GetHomeDirFile("upp.src/uppsrc/ide/ide.upp"))
+				         ? GetHomeDirFile("upp.src/uppsrc") : GetHomeDirFile("uppsrc");
 			b << ';' << uppsrc;
+		}
 		if(!FileExists(a))
 			SaveFile(a,
 				"UPP = " + AsCString(b) + ";\r\n"
@@ -128,17 +133,26 @@ bool Install(bool& hasvars)
 			}
 	};
 	
+#ifdef PLATFORM_COCOA
+	if(!hasvars) {
+		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/uppsrc");
+		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/*");
+	}
+#endif
+
+	Scan(GetHomeDirFile("upp.src/uppsrc"));
 	Scan(GetHomeDirFile("upp.src/*"));
+	Scan(GetHomeDirFile("upp/uppsrc"));
+	Scan(GetHomeDirFile("upp/*"));
 	Scan(GetHomeDirFile("*"));
 	for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
 		if(ff.IsFolder())
 			Scan(ff.GetPath() + "/*");
 	
-	
 	MakeAssembly(myapps);
 	uppsrc = GetHomeDirFile("bazaar") + ';' + uppsrc;
 	MakeAssembly(myapps, "MyApps-bazaar");
-#ifdef PLATFORM_OSX
+#ifdef PLATFORM_COCOA
 	String bm = ConfigFile("CLANG.bm");
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, clang_bm);

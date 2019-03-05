@@ -122,6 +122,10 @@ TOPIC("install_en-us")
 #include "install_en-us.tppi"
 END_TOPIC
 
+TOPIC("install_mac_en-us")
+#include "install_mac_en-us.tppi"
+END_TOPIC
+
 TOPIC("install_ru-ru")
 #include "install_ru-ru.tppi"
 END_TOPIC

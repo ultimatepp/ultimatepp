@@ -424,7 +424,7 @@ void InstantSetup()
 
 bool CheckLicense()
 {
-	if(!FileExists((GetExeDirFile("license.chk"))))
+	if(!FileExists(GetExeDirFile("license.chk")))
 		return true;
 	ShowSplash();
 	Ctrl::ProcessEvents();

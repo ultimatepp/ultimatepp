@@ -141,17 +141,22 @@ void DoSpellerPath(String& pp, String dir)
 
 Speller *sGetSpeller(int lang)
 {
-	RTIMING("sGetSpeller");
 	static ArrayMap<int, Speller> speller;
 	int q = speller.Find(lang);
 	if(q < 0) {
 		String pp = spell_path;
+#ifdef PLATFORM_COCOA
+		String Contents = GetFileFolder(GetFileFolder(GetExeFilePath()));
+		DoSpellerPath(pp, Contents + "/Resources");
+		DoSpellerPath(pp, Contents + "/SharedSupport");
+#endif
 		DoSpellerPath(pp, GetExeDirFile("speller"));
 		DoSpellerPath(pp, ConfigFile("speller"));
 		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
 #ifdef PLATFORM_POSIX
 		pp << "/usr/local/share/upp/speller;/usr/local/share/upp;/usr/share/upp/speller;/usr/share/upp";
 #endif
+		RDUMP(pp);
 		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
 		if(IsNull(path))
 			return NULL;
