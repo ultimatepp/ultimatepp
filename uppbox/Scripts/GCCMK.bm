@@ -1,5 +1,5 @@
 BUILDER = "GCC";
-COMMON_CPP_OPTIONS = "-std=c++11";
+COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-parentheses";
 DEBUG_INFO = "2";
 DEBUG_BLITZ = "1";
 DEBUG_LINKMODE = "1";

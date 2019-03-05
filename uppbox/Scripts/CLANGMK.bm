@@ -1,7 +1,6 @@
 BUILDER = "CLANG";
 COMPILER = "clang++";
-COMMON_OPTIONS = "-Wno-logical-op-parentheses";
-COMMON_CPP_OPTIONS = "-std=c++11";
+COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_FLAGS = "";
 DEBUG_INFO = "2";

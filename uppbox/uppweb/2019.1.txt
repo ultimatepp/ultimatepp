@@ -1,6 +1,4 @@
 - Copy dictionary files (*.udc and/or *.scd) used by theide speller inside 
-
-
 IconDes: can now import .ico files
 IconDes: Improved
 ide: 'Disable UHD mode' run option
@@ -86,7 +84,6 @@ Draw: UHD rescaling now using different rescaling filters if hotspot 2 is >0 (th
 Draw: UHD tweak
 
 Eigen: Updated to 3.3.7
-GLCtrl: Attempt at fixing
 GLDraw, GLCtrl: SMAA support in win32, various improvements, plugin/tess2
 
 Bazaar(XMLMenu : hopefully completed migration from Callback to Function
@@ -102,7 +99,6 @@ VirtualGUI/SDL2GL: Event hook virtual method
 VirtualGUI: Cosmetics
 VirtualGui: Improved dependencies
 
-
 Painter: Create optimizations
 Painter: Fixed subpixel mode in MT
 Painter: MT subpixel optimized
@@ -115,6 +111,8 @@ plugin/bmp: LoadIco now has just_best parameter,
 plugin/jpg: Now reading DateTime meta
 plugin/tif: Compile fix
 plugin\tess2: removed main config
+plugin/glm
+
 RichText: Temporary of dark theme issues
 ScatterCtrl: Improvements and fixes in legends
 ScatterDraw: Added Weibull
