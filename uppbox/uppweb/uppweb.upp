@@ -58,7 +58,8 @@ file
 	NewCoreDone.txt,
 	www.t,
 	forum-header.txt,
-	2019.1.txt;
+	2019.1.txt,
+	2019.1a.txt;
 
 mainconfig
 	"" = "MT SKELETON RAINBOW NOGTK";
