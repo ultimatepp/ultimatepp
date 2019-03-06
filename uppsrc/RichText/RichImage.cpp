@@ -1,4 +1,5 @@
 #include "RichText.h"
+#include <Painter/Painter.h>
 
 namespace Upp {
 
@@ -24,6 +25,7 @@ String RichImage::GetTypeName(const Value& v) const
 	return "image";
 }
 
+// following function pointers are set in CtrlCore (or similar host platform interface package)
 static String      (*sGetImageClip)(const Image& img, const String& fmt);
 static bool        (*sAcceptImage)(PasteClip& clip);
 static Image       (*sGetImage)(PasteClip& clip);
@@ -208,7 +210,12 @@ Size RichRawImage::GetPhysicalSize(const Value& data) const
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
 	if(r)
 		return r->GetInfo().dots;
-	return Size(0, 0);
+	else
+	if(IsString(data) && IsSVG(~data)) {
+		Rectf f = GetSVGBoundingBox(~data);
+		Zoom z = GetRichTextStdScreenZoom();
+		return z.d * (Size)f.GetSize() / z.m;
+	}
 }
 
 Size RichRawImage::GetPixelSize(const Value& data) const
@@ -218,6 +225,11 @@ Size RichRawImage::GetPixelSize(const Value& data) const
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
 	if(r)
 		return r->GetSize();
+	else
+	if(IsString(data) && IsSVG(~data)) {
+		Rectf f = GetSVGBoundingBox(~data);
+		return (Size)f.GetSize();
+	}
 	return Size(0, 0);
 }
 
@@ -236,6 +248,9 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 		else
 			w.DrawImage(0, 0, sz.cx, sz.cy, r->GetImage()); // scale up by Draw to give e.g. PDF chance to store unscaled
 	}
+	else
+	if(IsString(data) && IsSVG(~data))
+		w.DrawImage(0, 0, RenderSVGImage(sz, ~data));
 }
 
 Image RichRawImage::ToImage(const Value& data, Size sz, void *) const
@@ -247,6 +262,9 @@ Image RichRawImage::ToImage(const Value& data, Size sz, void *) const
 		Image x = r->GetImage();
 		return Rescale(x, sz);
 	}
+	else
+	if(IsString(data) && IsSVG(~data))
+		return RenderSVGImage(sz, ~data);
 	return Null;
 }
 

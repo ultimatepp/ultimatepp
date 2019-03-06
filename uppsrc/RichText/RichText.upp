@@ -2,7 +2,8 @@ description "Rich-text data structures and painting, including RTF and HTML expo
 
 uses
 	plugin\png,
-	Draw;
+	Draw,
+	Painter;
 
 file
 	RichText.h options(BUILDER_OPTION) PCH,

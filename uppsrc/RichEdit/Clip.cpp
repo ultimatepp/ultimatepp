@@ -1,4 +1,5 @@
 #include "RichEdit.h"
+#include <Painter/Painter.h>
 
 namespace Upp {
 
@@ -13,7 +14,7 @@ void RichEdit::InsertImage()
 	}
 	String data = LoadFile(fn);
 	StringStream ss(data);
-	if(!StreamRaster::OpenAny(ss)) {
+	if(!StreamRaster::OpenAny(ss) && !IsSVG(data)) {
 		Exclamation(NFormat(t_("Unsupported image format in file [* \1%s\1]."), ~imagefs));
 		return;
 	}
@@ -32,12 +33,14 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 		Vector<String> s = GetFiles(d);
 		if(s.GetCount()) {
 			String fn = s[0];
-			String ext = ToUpper(GetFileExt(fn));
-			if(ext == ".PNG" || ext == ".JPG" || ext == ".JPEG" || ext == ".GIF" || ext == ".TIF" || ext == ".TIFF") {
-				if(d.Accept()) {
-					if(StreamRaster::LoadFileAny(fn)) {
+			String ext = ToLower(GetFileExt(fn));
+			if(findarg(ext, ".png", ".jpg", ".jpeg", ".gif", ".tif", ".tiff", ".svg") >= 0) {
+				if(d.Accept() && GetFileLength(fn) < 17000000) {
+					String data = LoadFile(fn);
+					StringStream ss(data);
+					if(StreamRaster::OpenAny(ss) || ext == ".svg" && IsSVG(LoadFile(fn))) {
 						RichPara p;
-						p.Cat(CreateRawImageObject(LoadFile(fn)), formatinfo);
+						p.Cat(CreateRawImageObject(data), formatinfo);
 						clip.Cat(p);
 						fmt = "files";
 					}
@@ -47,6 +50,12 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 			}
 		}
 		d.Reject();
+	}
+	if(d.Accept("image/x-inkscape-svg")) {
+		RichPara p;
+		p.Cat(CreateRawImageObject(~d), formatinfo);
+		clip.Cat(p);
+		fmt = "files";
 	}
 	if(d.Accept("text/QTF")) {
 		fmt = "text/QTF";
