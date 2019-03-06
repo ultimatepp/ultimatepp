@@ -109,7 +109,7 @@ void SvgParser::ProcessValue(const String& key, const String& value_)
 			s.font.Italic(findarg(value, "italic", "oblique") >= 0);
 		else
 		if(key == "font-weight")
-			s.font.Bold(findarg(value, "bold", "bolder") || atoi(value) >= 500);
+			s.font.Bold(findarg(value, "bold", "bolder") >= 0 || atoi(value) >= 500);
 	}
 }
 

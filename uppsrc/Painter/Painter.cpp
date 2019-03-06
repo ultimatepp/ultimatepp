@@ -207,7 +207,17 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 		Move(0, 0);
 		return;
 	}
-	FontInfo fi = fnt.Info();
+	Font fi = fnt;
+	double m = 1;
+	if(fnt.GetHeight() < 50) {
+		fi.Height(100 * fnt.GetHeight());
+		m = 0.01;
+	}
+	else
+	if(fnt.GetHeight() < 500) {
+		fi.Height(10 * fnt.GetHeight());
+		m = 0.1;
+	}
 	double x = p.x;
 	while(n) {
 		int ch = *text++;
@@ -216,7 +226,7 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 		if(dx)
 			x += *dx++;
 		else
-			x += fi[ch];
+			x += fi[ch] * m;
 		n--;
 	}
 	if(fnt.IsUnderline() || fnt.IsStrikeout()) {
