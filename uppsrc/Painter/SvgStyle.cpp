@@ -110,7 +110,7 @@ void SvgParser::ProcessValue(const String& key, const String& value_)
 		else
 		if(key == "font-weight")
 			s.font.Bold(findarg(value, "bold", "bolder") || atoi(value) >= 500);
-   	}
+	}
 }
 
 void SvgParser::Style(const char *style)

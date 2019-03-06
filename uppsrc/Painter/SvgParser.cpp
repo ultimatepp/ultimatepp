@@ -384,14 +384,25 @@ void SvgParser::ParseG() {
 	else
 	if(Tag("text")) {
 		StartElement();
-		String text = ReadText();
-		text.Replace("\n", " ");
-		text.Replace("\r", "");
-		text.Replace("\t", " ");
-		Font fnt = state.Top().font;
-		bp.Text(Dbl("x"), Dbl("y") - fnt.GetAscent(), text, fnt);
+		auto DoText = [&] {
+			String text = ReadText();
+			text.Replace("\n", " ");
+			text.Replace("\r", "");
+			text.Replace("\t", " ");
+			if(text.GetCount()) {
+				Font fnt = state.Top().font;
+				bp.Text(Dbl("x"), Dbl("y") - fnt.GetAscent(), text, fnt);
+			}
+		};
+		DoText();
+		while(Tag("tspan")) {
+			StartElement();
+			DoText();
+			FinishElement();
+			PassEnd();
+		}
 		FinishElement();
-		PassEnd();	
+		PassEnd();
 	}
 	else
 	if(Tag("g")) {
@@ -438,7 +449,8 @@ bool SvgParser::Parse() {
 
 SvgParser::SvgParser(const char *svg, Painter& sw)
 :	XmlParser(svg),
-    sw(sw), bp(sw)	
+    sw(sw),
+    bp(sw)
 {
 	Reset();
 }
@@ -509,6 +521,20 @@ Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader)
 Image RenderSVGImage(Size sz, const char *svg)
 {
 	return RenderSVGImage(sz, svg, Event<String, String&>());
+}
+
+bool IsSVG(const char *svg)
+{
+	try {
+		XmlParser xml(svg);
+		while(!xml.IsTag())
+			xml.Skip();
+		if(xml.Tag("svg"))
+			return true;
+	}
+	catch(XmlError e) {
+	}
+	return false;
 }
 
 }

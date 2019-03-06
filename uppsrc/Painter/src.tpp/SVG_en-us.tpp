@@ -1,9 +1,9 @@
 topic "SVG support";
-[ $$0,0#00000000000000000000000000000000:Default]
 [H6;0 $$1,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483370:codeitem]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
 [0 $$4,0#96390100711032703541132217272105:end]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@(229)4 SVG support]]}}&]
 [s4; &]
@@ -40,5 +40,10 @@ e]_[*@3 sz], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg])&]
 specified in SVG and uses computed bounding box. It is then scaled 
 into [*@3 sz] at maximum size preserving aspect ratio. Use [*@3 resloader] 
 to provide resources like images.&]
+[s4; &]
+[s1;%- &]
+[s2;:Upp`:`:IsSVG`(const char`*`):%- [@(0.0.255) bool]_[* IsSVG]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 svg])&]
+[s3; Returns true if [%-*@3 svg] likely contains SVG image.&]
 [s4; &]
 [s0; ]]

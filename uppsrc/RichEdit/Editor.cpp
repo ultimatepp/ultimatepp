@@ -736,7 +736,7 @@ RichEdit::RichEdit()
 	ClearModify();
 	Finish();
 	
-	imagefs.Type("Images (*.png *.gif *.jpg *.bmp)", "*.png *.gif *.jpg *.bmp");
+	imagefs.Type("Images (*.png *.gif *.jpg *.bmp *.svg)", "*.png *.gif *.jpg *.bmp *.svg");
 	
 	singleline = false;
 	

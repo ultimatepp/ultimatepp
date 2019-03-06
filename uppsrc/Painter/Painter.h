@@ -466,6 +466,8 @@ Rectf GetSVGBoundingBox(const char *svg);
 Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader);
 Image RenderSVGImage(Size sz, const char *svg);
 
+bool IsSVG(const char *svg);
+
 }
 
 #endif
