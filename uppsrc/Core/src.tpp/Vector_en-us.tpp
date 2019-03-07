@@ -155,7 +155,7 @@ the reference to the element at [%-*@3 i], otherwiser returns [%-*@3 def].&]
 [s5;:Vector`:`:Trim`(int`):%- [@(0.0.255) void]_[* Trim]([@(0.0.255) int]_[*@3 n])&]
 [s2; Reduces number of elements in Vector to specified number. Required 
 number must be less than or equal to actual number of elements 
-in Vector.&]
+in Vector. Capacity of Vector is however unchanged.&]
 [s6; Invalidates iterators to Vector.&]
 [s7; [*C@3 n]-|Required number of elements.&]
 [s3;%- &]
