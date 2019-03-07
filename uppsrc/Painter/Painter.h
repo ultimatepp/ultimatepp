@@ -123,7 +123,7 @@ protected:
 	virtual void   FillOp(const Pointf& p1, const RGBA& color1,
 	                      const Pointf& p2, const RGBA& color2,
 	                      int style) = 0;
-	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
+	virtual void   FillOp(const Pointf& f, const RGBA& color1,
 	                      const Pointf& c, double r, const RGBA& color2,
 	                      int style) = 0;
 	virtual void   FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
