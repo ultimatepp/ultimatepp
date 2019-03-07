@@ -16,6 +16,8 @@ file
 	svg\anne.svg,
 	svg\tux.svg,
 	svg\rg1024_Presentation_with_girl.svg,
+	svg\symbol.svg,
+	svg\idtest.svg,
 	svg\yinyang.svg;
 
 mainconfig
