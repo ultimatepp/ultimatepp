@@ -91,6 +91,11 @@ bool SvgView::Key(dword key, int)
 		DoDir();
 		return true;
 	}
+	if(key == K_F5) {
+		dir = GetDataFile("svg");
+		LoadDir();
+		return true;
+	}
 	return false;
 }
 
