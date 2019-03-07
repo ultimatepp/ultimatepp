@@ -183,16 +183,22 @@ Color SvgParser::GetColor(const String& text_) {
 		try {
 			CParser p(text);
 			if(p.Id("rgb")) {
+				auto rch = [&] {
+					double h = p.ReadDouble();
+					if(p.Char('%'))
+						h = 255 * h / 100;
+					return (int)clamp(h, 0.0, 255.0);
+				};
 				p.Char('(');
-				int r = clamp(p.ReadInt(), 0, 255);
+				int r = rch();
 				p.Char(',');
-				int g = clamp(p.ReadInt(), 0, 255);
+				int g = rch();
 				p.Char(',');
-				int b = clamp(p.ReadInt(), 0, 255);
+				int b = rch();
 				return Color(r, g, b);
 			}
 		}
-		catch(CParser::Error()) {
+		catch(CParser::Error) {
 		}
 		return GetTextColor(text);
 	}
