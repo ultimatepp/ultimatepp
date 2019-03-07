@@ -29,6 +29,7 @@ Pointf Painter::ReadPoint(CParser& p, Pointf current, bool rel)
 Painter& Painter::Path(CParser& p)
 {
 	Pointf current(0, 0);
+	bool done = false;
 	while(!p.IsEof()) {
 		int c = p.GetChar();
 		p.Spaces();
@@ -43,20 +44,24 @@ Painter& Painter::Path(CParser& p)
 				current = ReadPoint(p, current, rel);
 				Line(current);
 			}
+			done = true;
 			break;
 		case 'Z':
 			Close();
+			done = true;
 			break;
 		case 'H':
 			while(p.IsDouble2()) {
 				current.x = p.ReadDouble() + rel * current.x;
 				Line(current);
+				done = true;
 			}
 			break;
 		case 'V':
 			while(p.IsDouble2()) {
 				current.y = p.ReadDouble() + rel * current.y;
 				Line(current);
+				done = true;
 			}
 			break;
 		case 'C':
@@ -65,6 +70,7 @@ Painter& Painter::Path(CParser& p)
 				t2 = ReadPoint(p, current, rel);
 				current = ReadPoint(p, current, rel);
 				Cubic(t1, t2, current);
+				done = true;
 			}
 			break;
 		case 'S':
@@ -72,6 +78,7 @@ Painter& Painter::Path(CParser& p)
 				t2 = ReadPoint(p, current, rel);
 				current = ReadPoint(p, current, rel);
 				Cubic(t2, current);
+				done = true;
 			}
 			break;
 		case 'Q':
@@ -79,12 +86,14 @@ Painter& Painter::Path(CParser& p)
 				t1 = ReadPoint(p, current, rel);
 				current = ReadPoint(p, current, rel);
 				Quadratic(t1, current);
+				done = true;
 			}
 			break;
 		case 'T':
 			while(p.IsDouble2()) {
 				current = ReadPoint(p, current, rel);
 				Quadratic(current);
+				done = true;
 			}
 			break;
 		case 'A':
@@ -95,12 +104,17 @@ Painter& Painter::Path(CParser& p)
 				bool sweep = ReadBool(p);
 				current = ReadPoint(p, current, rel);
 				SvgArc(t1, xangle * M_PI / 180.0, large, sweep, current);
+				done = true;
 			}
 			break;
 		default:
+			if(!done)
+				Move(0, 0); // to clear previous path
 			return *this;
 		}
 	}
+	if(!done)
+		Move(0, 0); // to clear previous path
 	return *this;
 }
 

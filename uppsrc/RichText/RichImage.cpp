@@ -216,6 +216,7 @@ Size RichRawImage::GetPhysicalSize(const Value& data) const
 		Zoom z = GetRichTextStdScreenZoom();
 		return z.d * (Size)f.GetSize() / z.m;
 	}
+	return Size(0, 0);
 }
 
 Size RichRawImage::GetPixelSize(const Value& data) const

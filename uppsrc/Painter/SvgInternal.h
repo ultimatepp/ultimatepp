@@ -43,7 +43,7 @@ struct BoundsPainter : public NilPainter {
 	BoundsPainter(Painter& sw) : sw(sw) { New(); mtx.Add(); svg_boundingbox = Null; compute_svg_boundingbox = false; }
 };
 
-struct SvgParser : XmlParser {
+struct SvgParser {
 	Painter& sw;
 
 	void ParseSVG(const char *svg, const char *folder);
@@ -85,13 +85,17 @@ struct SvgParser : XmlParser {
 		double dash_offset;
 		
 		Font   font;
+		
+		const XmlNode *n;
 	};
 	
-	Array<State> state;
-	bool         closed;
-	Pointf       prev;
-	Xform2D      lastTransform;
-	BoundsPainter bp;
+	const XmlNode *current = NULL;
+	Array<State>   state;
+	bool           closed;
+	Pointf         prev;
+	Xform2D        lastTransform;
+	BoundsPainter  bp;
+	VectorMap<String, const XmlNode*> idmap;
 
 	void Reset();
 
@@ -102,28 +106,30 @@ struct SvgParser : XmlParser {
 	void    Style(const char *style);
 	Xform2D Transform(const char *transform);
 	
-	String Txt(const char *id)                  { return (*this)[id]; }
+	String Txt(const char *id)                  { return current ? current->Attr(id) : String(); }
 	double Dbl(const char *id, double def = 0)  { return Nvl(StrDbl(Txt(id)), def); }
 	
-	void StartElement();
+	void StartElement(const XmlNode& n);
 	void EndElement();
 	void StrokeFinishElement();
 	void FinishElement();
 	void DoGradient(int gi, bool stroke);
-	void Poly(bool line);
-	void ParseG();
-	void ParseGradient(bool radial);
+	void Poly(const XmlNode& n, bool line);
+	void Items(const XmlNode& n, int depth);
+	void Element(const XmlNode& n, int depth, bool dosymbols = false);
+	void ParseGradient(const XmlNode& n, bool radial);
 	void ResolveGradient(int i);
-	
+	void MapIds(const XmlNode& n);
+
 	bool   ReadBool(CParser& p);
 	double ReadDouble(CParser& p);
 	Pointf ReadPoint0(CParser& p, bool rel);
 	Pointf ReadPoint(CParser& p, bool rel);
 	void   Path(const char *s);
 	
-	bool Parse();
+	bool Parse(const char *xml);
 
 	Event<String, String&> resloader;
 	
-	SvgParser(const char *svg, Painter& sw);
+	SvgParser(Painter& sw);
 };

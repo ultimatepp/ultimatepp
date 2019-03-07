@@ -1,4 +1,5 @@
 #include "Painter.h"
+#include "Painter.h"
 
 #define LLOG(x)
 
@@ -32,15 +33,17 @@ void SvgParser::ResolveGradient(int i)
 	g.style = Nvl(Nvl(g.style, g2.style), GRADIENT_PAD);
 }
 
-void SvgParser::StartElement()
+void SvgParser::StartElement(const XmlNode& n)
 {
-	state.Add();
-	state.Top() = state[state.GetCount() - 2];
+	State& s = state.Add();
+	s = state[state.GetCount() - 2];
+	s.n = current;
+	current = &n;
 	bp.Begin();
 	bp.Transform(Transform(Txt("transform")));
 	Style(Txt("style"));
-	for(int i = 0; i < GetAttrCount(); i++)
-		ProcessValue(GetAttr(i), (*this)[i]);
+	for(int i = 0; i < n.GetAttrCount(); i++)
+		ProcessValue(n.AttrId(i), n.Attr(i));
 	closed = false;
 }
 
@@ -49,6 +52,7 @@ void SvgParser::EndElement()
 	if(!closed) {
 		sw.Stroke(0, Black()); // Finish path to allow new transformations, if not yet done
 	}
+	current = state.Top().n;
 	state.Drop();
 	bp.End();
 }
@@ -143,34 +147,37 @@ void SvgParser::FinishElement()
 {
 	State& s = state.Top();
 	double o = s.opacity * s.fill_opacity;
-	if(o != 1) {
-		sw.Begin();
-		sw.Opacity(o);
+	if(o > 0) {
+		if(o != 1) {
+			sw.Begin();
+			sw.Opacity(o);
+		}
+		if(s.fill_gradient >= 0)
+			DoGradient(s.fill_gradient, false);
+		else
+		if(!IsNull(s.fill)) {
+			sw.Fill(s.fill);
+			bp.Finish(0);
+			closed = true;
+		}
+		if(o != 1)
+			sw.End();
 	}
-	if(s.fill_gradient >= 0)
-		DoGradient(s.fill_gradient, false);
-	else
-	if(!IsNull(s.fill)) {
-		sw.Fill(s.fill);
-		bp.Finish(0);
-		closed = true;
-	}
-	if(o != 1)
-		sw.End();
 	StrokeFinishElement();
 }
 
-void SvgParser::ParseGradient(bool radial)
+void SvgParser::ParseGradient(const XmlNode& n, bool radial)
 {
-	LLOG("ParseGradient " << Txt("id"));
-	Gradient& g = gradient.Add(Txt("id"));
+	LLOG("ParseGradient " << n.Attr("id"));
+	Gradient& g = gradient.Add(n.Attr("id"));
 	g.radial = radial;
-	g.user_space = Txt("gradientUnits") == "userSpaceOnUse";
-	g.transform = Txt("gradientTransform");
-	g.href = Txt("xlink:href");
+	g.user_space = n.Attr("gradientUnits") == "userSpaceOnUse";
+	g.transform = n.Attr("gradientTransform");
+	g.href = n.Attr("xlink:href");
 	g.resolved = IsNull(g.href);
 	double def = g.resolved ? 0.0 : (double)Null;
 	double def5 = g.resolved ? 0.5 : (double)Null;
+	auto Dbl = [&](const char *id, double def) { return Nvl(StrDbl(n.Attr(id)), def); };
 	g.c.x = Dbl("cx", def5);
 	g.c.y = Dbl("cy", def5);
 	g.r = Dbl("r", g.resolved ? 1.0 : (double)Null);
@@ -182,11 +189,12 @@ void SvgParser::ParseGradient(bool radial)
 	g.b.y = Dbl("y2", def);
 	g.style = decode(Txt("spreadMethod"), "pad", GRADIENT_PAD, "reflect", GRADIENT_REFLECT,
 	                 "repeat", GRADIENT_REPEAT, (int)Null);
-	while(!End())
-		if(TagE("stop")) {
+
+	for(const XmlNode& m : n)
+		if(m.IsTag("stop")) {
 			Stop &s = g.stop.Add();
 			double offset = 0;
-			String st = Txt("style");
+			String st = m.Attr("style");
 			const char *style = st;
 			double opacity = 1;
 			Color  color;
@@ -218,23 +226,21 @@ void SvgParser::ParseGradient(bool radial)
 				else
 					value.Cat(*style++);
 			}
-			value = Txt("stop-color");
+			value = m.Attr("stop-color");
 			if(value.GetCount())
 				color = GetColor(value);
-			value = Txt("stop-opacity");
+			value = m.Attr("stop-opacity");
 			if(value.GetCount())
-				opacity = StrDbl(value);
+				opacity = Nvl(StrDbl(value), opacity);
 			s.color = clamp(int(opacity * 255 + 0.5), 0, 255) * color;
-			s.offset = Nvl(Dbl("offset"), offset);
+			s.offset = Nvl(StrDbl(m.Attr("offset")), offset);
 		}
-		else
-			Skip();
 }
 
-void SvgParser::Poly(bool line)
+void SvgParser::Poly(const XmlNode& n, bool line)
 {
 	Vector<Point> r;
-	String value = Txt("points");
+	String value = n.Attr("points");
 	try {
 		CParser p(value);
 		while(!p.IsEof()) {
@@ -248,7 +254,7 @@ void SvgParser::Poly(bool line)
 	}
 	catch(CParser::Error) {}
 	if(r.GetCount()) {
-		StartElement();
+		StartElement(n);
 		bp.Move(r[0].x, r[0].y);
 		for(int i = 1; i < r.GetCount(); ++i)
 			bp.Line(r[i].x, r[i].y);
@@ -266,9 +272,8 @@ double ReadNumber(CParser& p)
 	return p.ReadDouble();
 }
 
-Rectf GetSvgViewBox(XmlParser& xml)
+Rectf GetSvgViewBox(const String& v)
 {
-	String v = xml["viewBox"];
 	Rectf r = Null;
 	if(v.GetCount()) {
 		try {
@@ -283,6 +288,16 @@ Rectf GetSvgViewBox(XmlParser& xml)
 		}
 	}
 	return r;
+}
+
+Rectf GetSvgViewBox(XmlParser& xml)
+{
+	return GetSvgViewBox(xml["viewBox"]);
+}
+
+Rectf GetSvgViewBox(const XmlNode& xml)
+{
+	return GetSvgViewBox(xml.Attr("viewBox"));
 }
 
 Sizef GetSvgSize(XmlParser& xml)
@@ -305,49 +320,68 @@ Pointf GetSvgPos(XmlParser& xml)
 	return p;
 }
 
-void SvgParser::ParseG() {
-#ifdef _DEBUG
-	LLOG("====== TAG " << (IsTag() ? PeekTag() : String()));
-#endif
-	if(Tag("defs")) {
-		while(!End())
-			if(Tag("linearGradient"))
-				ParseGradient(false);
+Sizef GetSvgSize(const XmlNode& xml)
+{
+	Sizef sz;
+	sz.cx = StrDbl(xml.Attr("width"));
+	sz.cy = StrDbl(xml.Attr("height"));
+	if(IsNull(sz.cx) || IsNull(sz.cy))
+		sz = Null;
+	return sz;
+}
+
+Pointf GetSvgPos(const XmlNode& xml)
+{
+	Pointf p;
+	p.x = StrDbl(xml.Attr("x"));
+	p.y = StrDbl(xml.Attr("y"));
+	if(IsNull(p.x) || IsNull(p.y))
+		p = Null;
+	return p;
+}
+
+void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
+{
+	if(depth > 100) // defend against id recursion
+		return;
+	LLOG("====== " << n.GetTag());
+	if(n.IsTag("defs")) {
+		for(const auto& m : n)
+			if(m.IsTag("linearGradient"))
+				ParseGradient(m, false);
 			else
-			if(Tag("radialGradient"))
-				ParseGradient(true);
-			else // TODO: Implement pattern, filter, ...
-				Skip();
+			if(m.IsTag("radialGradient"))
+				ParseGradient(m, true);
 	}
 	else
-	if(Tag("linearGradient"))
-		ParseGradient(false);
+	if(n.IsTag("linearGradient"))
+		ParseGradient(n, false);
 	else
-	if(Tag("radialGradient"))
-		ParseGradient(true);
+	if(n.IsTag("radialGradient"))
+		ParseGradient(n, true);
 	else
-	if(TagE("rect")) {
-		StartElement();
+	if(n.IsTag("rect")) {
+		StartElement(n);
 		bp.RoundedRectangle(Dbl("x"), Dbl("y"), Dbl("width"), Dbl("height"), Dbl("rx"), Dbl("ry"));
 		FinishElement();
 	}
 	else
-	if(TagE("ellipse")) {
-		StartElement();
+	if(n.IsTag("ellipse")) {
+		StartElement(n);
 		bp.Ellipse(Dbl("cx"), Dbl("cy"), Dbl("rx"), Dbl("ry"));
 		FinishElement();
 	}
 	else
-	if(TagE("circle")) {
-		StartElement();
+	if(n.IsTag("circle")) {
+		StartElement(n);
 		Pointf c(Dbl("cx"), Dbl("cy"));
 		double r = Dbl("r");
 		bp.Ellipse(c.x, c.y, r, r);
 		FinishElement();
 	}
 	else
-	if(TagE("line")) {
-		StartElement();
+	if(n.IsTag("line")) {
+		StartElement(n);
 		Pointf a(Dbl("x1"), Dbl("y1"));
 		Pointf b(Dbl("x2"), Dbl("y2"));
 		bp.Move(a);
@@ -355,20 +389,20 @@ void SvgParser::ParseG() {
 		FinishElement();
 	}
 	else
-	if(TagE("polygon"))
-		Poly(false);
+	if(n.IsTag("polygon"))
+		Poly(n, false);
 	else
-	if(TagE("polyline"))
-		Poly(true);
+	if(n.IsTag("polyline"))
+		Poly(n, true);
 	else
-	if(TagE("path")) {
-		StartElement();
+	if(n.IsTag("path")) {
+		StartElement(n);
 		bp.Path(Txt("d"));
 		FinishElement();
 	}
 	else
-	if(TagE("image")) {
-		StartElement();
+	if(n.IsTag("image")) {
+		StartElement(n);
 		String fileName = Txt("xlink:href");
 		String data;
 		resloader(fileName, data);
@@ -382,10 +416,10 @@ void SvgParser::ParseG() {
 		EndElement();
 	}
 	else
-	if(Tag("text")) {
-		StartElement();
-		auto DoText = [&] {
-			String text = ReadText();
+	if(n.IsTag("text")) {
+		StartElement(n);
+		auto DoText = [&](const XmlNode& n) {
+			String text = n.GatherText();
 			text.Replace("\n", " ");
 			text.Replace("\r", "");
 			text.Replace("\t", " ");
@@ -394,52 +428,67 @@ void SvgParser::ParseG() {
 				bp.Text(Dbl("x"), Dbl("y") - fnt.GetAscent(), text, fnt);
 			}
 		};
-		DoText();
-		while(Tag("tspan")) {
-			StartElement();
-			DoText();
-			FinishElement();
-			PassEnd();
-		}
+		DoText(n);
+		for(const auto& m : n)
+			if(m.IsTag("tspan")) {
+				StartElement(m);
+				DoText(m);
+				FinishElement();
+			}
 		FinishElement();
-		PassEnd();
 	}
 	else
-	if(Tag("g")) {
-		StartElement();
-		while(!End())
-			ParseG();
-		EndElement();
+	if(n.IsTag("g") || n.IsTag("symbol") && dosymbols)
+		Items(n, depth);
+	else
+	if(n.IsTag("use")) {
+		const XmlNode *idn = idmap.Get(Nvl(n.Attr("href"), n.Attr("xlink:href")), NULL);
+		if(idn) {
+			StartElement(n);
+			bp.Translate(Dbl("x"), Dbl("y"));
+			Element(*idn, depth + 1, true);
+			FinishElement();
+		}
 	}
 	else
-	if(Tag("svg")) {
-		Sizef sz = GetSvgSize(*this);
+	if(n.IsTag("svg")) {
+		Sizef sz = GetSvgSize(n);
 		if(!IsNull(sz)) {
-			Pointf p = Nvl(GetSvgPos(*this), Pointf(0, 0));
-			Rectf vb = Nvl(GetSvgViewBox(*this), sz);
+			Pointf p = Nvl(GetSvgPos(n), Pointf(0, 0));
+			Rectf vb = Nvl(GetSvgViewBox(n), sz);
 			//TODO: For now, we support "xyMid meet" only
 			bp.Translate(p.x, p.y);
 			bp.Scale(min(sz.cx / vb.GetWidth(), sz.cy / vb.GetHeight()));
 			bp.Translate(-vb.TopLeft());
-			StartElement();
-			while(!End())
-				ParseG();
-			EndElement();
+			Items(n, depth);
 		}
 	}
-	else
-		Skip();
 }
 
-bool SvgParser::Parse() {
+void SvgParser::Items(const XmlNode& n, int depth)
+{
+	StartElement(n);
+	for(const auto& m : n)
+		Element(m, depth);
+	EndElement();
+}
+
+void SvgParser::MapIds(const XmlNode& n)
+{
+	String id = n.Attr("id");
+	if(id.GetCount())
+		idmap.Add('#' + id, &n);
+	for(const auto& m : n)
+		MapIds(m);
+}
+
+bool SvgParser::Parse(const char *xml) {
 	try {
-		while(!IsTag())
-			Skip();
-		PassTag("svg");
-		bp.Begin();
-		while(!End())
-			ParseG();
-		bp.End();
+		XmlNode n = ParseXML(xml);
+		MapIds(n);
+		for(const auto& m : n)
+			if(m.IsTag("svg"))
+				Items(m, 0);
 	}
 	catch(XmlError e) {
 		return false;
@@ -447,20 +496,18 @@ bool SvgParser::Parse() {
 	return true;
 }
 
-SvgParser::SvgParser(const char *svg, Painter& sw)
-:	XmlParser(svg),
-    sw(sw),
-    bp(sw)
+SvgParser::SvgParser(Painter& sw)
+:	sw(sw), bp(sw)
 {
 	Reset();
 }
 
 bool ParseSVG(Painter& p, const char *svg, Event<String, String&> resloader, Rectf *boundingbox)
 {
-	SvgParser sp(svg, p);
+	SvgParser sp(p);
 	sp.bp.compute_svg_boundingbox = boundingbox;
 	sp.resloader = resloader;
-	if(!sp.Parse())
+	if(!sp.Parse(svg))
 		return false;
 	if(boundingbox)
 		*boundingbox = sp.bp.svg_boundingbox;
