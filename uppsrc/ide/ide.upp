@@ -75,6 +75,7 @@ file
 	About.cpp,
 	Macro.cpp,
 	Help.cpp,
+	SlideShow.cpp,
 	OnlineSearch.cpp,
 	Errors.cpp,
 	Calc.cpp,

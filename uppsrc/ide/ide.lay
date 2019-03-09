@@ -839,3 +839,14 @@ LAYOUT(SetupSVNLayout, 536, 112)
 	ITEM(Label, dv___10, SetLabel(t_("Revision to checkout")).LeftPosZ(304, 160).TopPosZ(28, 19))
 END_LAYOUT
 
+LAYOUT(SlideShowSettings, 184, 108)
+	ITEM(Label, dv___0, SetLabel(t_("Horizontal margins")).LeftPosZ(8, 112).TopPosZ(32, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Zoom")).LeftPosZ(8, 40).TopPosZ(8, 19))
+	ITEM(Option, vcenter, SetLabel(t_("Center the text vertically")).LeftPosZ(8, 168).TopPosZ(56, 20))
+	ITEM(Option, title, SetLabel(t_("Display title")).LeftPosZ(8, 168).TopPosZ(80, 20))
+	ITEM(Button, zoom_plus, SetLabel(t_("+")).LeftPosZ(124, 24).TopPosZ(8, 19))
+	ITEM(Button, zoom_minus, SetLabel(t_("-")).LeftPosZ(152, 24).TopPosZ(8, 19))
+	ITEM(Button, margin_plus, SetLabel(t_("+")).LeftPosZ(124, 24).TopPosZ(32, 19))
+	ITEM(Button, margin_minus, SetLabel(t_("-")).LeftPosZ(152, 24).TopPosZ(32, 19))
+END_LAYOUT
+
