@@ -380,7 +380,10 @@ struct SlideShow : TopWindow {
 	Vector<String> path;
 	int            page;
 	int            rp;
+
 	int            zoom = 4;
+	int            margins = 1;
+	bool           vcenter = true;
 
 	void SetPage();
 
@@ -402,6 +405,12 @@ bool SlideShow::Key(dword key, int count)
 	case K_PAGEDOWN:
 		page++;
 		break;
+	case K_ALT|K_ADD:
+		margins = min(margins + 1, 100);
+		break;
+	case K_ALT|K_SUBTRACT:
+		margins = max(margins - 1, 0);
+		break;
 	case K_CTRL|K_ADD:
 		zoom = min(zoom + 1, 20);
 		break;
@@ -418,6 +427,8 @@ bool SlideShow::Key(dword key, int count)
 void SlideShow::SetPage()
 {
 	text.SetZoom(Zoom(DPI(zoom), 20));
+	text.VCenter(vcenter);
+	text.Margins(8 * margins);
 	page = minmax(page, 0, path.GetCount() - 1);
 	if(page != rp) {
 		rp = page;
@@ -431,8 +442,6 @@ SlideShow::SlideShow()
 	Add(text.SizePos());
 	text.NoHyperlinkDecoration();
 	text.NoSb();
-	text.VCenter();
-	text.Margins(8);
 	rp = -1;
 }
 
