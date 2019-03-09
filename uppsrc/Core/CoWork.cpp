@@ -7,6 +7,7 @@ namespace Upp {
 #define LLOG(x)       // RLOG(x)
 #define LDUMP(x)      // DDUMP(x)
 
+#define LTIMING(x)    // RTIMING(x)
 #define LHITCOUNT(x)  // RHITCOUNT(x)
 
 thread_local bool    CoWork::Pool::finlock;
@@ -164,6 +165,7 @@ void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work, bool looper)
 	job.looper = looper;
 	LLOG("Adding job");
 	if(waiting_threads) {
+		LTIMING("Releasing thread waiting for job");
 		LLOG("Releasing thread waiting for job, waiting threads: " << waiting_threads);
 		waitforjob.Signal();
 	}
@@ -186,6 +188,7 @@ void CoWork::Schedule(Function<void ()>&& fn)
 
 void CoWork::Do0(Function<void ()>&& fn, bool looper)
 {
+	LTIMING("Scheduling callback");
 	LHITCOUNT("CoWork: Scheduling callback");
 	LLOG("Do0, looper: " << looper << ", previous todo: " << todo);
 	Pool& p = GetPool();
