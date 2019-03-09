@@ -22,6 +22,11 @@ topic "Ultimate++ download";
 archive]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
 portable .7z archive]]
+:: [s0;%DE-DE [*2 macOS]]
+:: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
+:: [s0;= [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`%20MacOS`%20Alpha`%20release`/upp`-macos`.zip`/download^2 z
+ip][2  (Alpha)]]
+:: [s0;=^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 ]
 :: [s0;%DE-DE [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
