@@ -26,7 +26,7 @@ topic "Supported platforms";
 [s5; This page contains detailed information about platforms features 
 that are supported by U`+`+ framework and TheIDE.&]
 [s5; In the future this page will be update with additional information.&]
-[s3;:1: Table of contents&]
+[s3; Table of contents&]
 [s0; &]
 [s0; [^topic`:`/`/uppweb`/www`/SupportedPlatforms`_en`-us`#1^ 1. Core 
 packages]&]
