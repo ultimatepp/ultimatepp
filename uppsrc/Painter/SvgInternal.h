@@ -96,6 +96,7 @@ struct SvgParser {
 	Xform2D        lastTransform;
 	BoundsPainter  bp;
 	VectorMap<String, const XmlNode*> idmap;
+	VectorMap<String, String> classes;
 
 	void Reset();
 
