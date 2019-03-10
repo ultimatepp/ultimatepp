@@ -42,6 +42,9 @@ void SvgParser::StartElement(const XmlNode& n)
 	bp.Begin();
 	bp.Transform(Transform(Txt("transform")));
 	Style(Txt("style"));
+	String classid = Txt("class");
+	if(classid.GetCount())
+		Style(classes.Get(classid, String()));
 	for(int i = 0; i < n.GetAttrCount(); i++)
 		ProcessValue(n.AttrId(i), n.Attr(i));
 	closed = false;
@@ -462,6 +465,28 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 			bp.Translate(-vb.TopLeft());
 			Items(n, depth);
 		}
+	}
+	else
+	if(n.IsTag("style")) {
+		String text = n.GatherText();
+		try {
+			CParser p(text);
+			while(!p.IsEof()) {
+				if(p.Char('.') && p.IsId()) {
+					String id = p.ReadId();
+					if(p.Char('{')) {
+						const char *b = p.GetPtr();
+						while(!p.IsChar('}') && !p.IsEof())
+							p.SkipTerm();
+						classes.Add(id, String(b, p.GetPtr()));
+					}
+					p.Char('}');
+				}
+				else
+					p.SkipTerm();
+			}
+		}
+		catch(CParser::Error) {}
 	}
 }
 
