@@ -600,7 +600,7 @@ Time GetUtcTime()
 	time_t gmt = time(NULL);
 	struct tm timer;
 	struct tm *utc = gmtime_r(&gmt, &timer);
-	return Time(utc->tm_year + 1900, utc->tm_mon + 1, utc->tm_mday, 
+	return Time(utc->tm_year + 1900, utc->tm_mon + 1, utc->tm_mday,
 	            utc->tm_hour, utc->tm_min, utc->tm_sec);
 }
 
