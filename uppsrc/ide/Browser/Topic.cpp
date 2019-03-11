@@ -1,7 +1,7 @@
 #include "Browser.h"
 
 ArrayMap<String, TopicEditor::FileInfo> TopicEditor::editstate;
-VectorMap<String, String>               TopicEditor::grouptopic;
+VectorMap<String, String>               TopicEditor::grouptopic; // the last topic edited in group
 
 String     TopicEditor::lasttemplate;
 int        TopicEditor::lastlang;
@@ -19,11 +19,15 @@ bool LoadTopics(Vector<String>& topics, const String& grouppath)
 	bool renamed = false;
 	
 	for(int pass = 0; pass < 2; pass++) {
+		topics.Clear();
+
 		FindFile ff(AppendFileName(grouppath, "*.*"));
 		for(; ff; ff.Next()) {
 			if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tppi") {
 				String n = ff.GetName();
 				int q = n.ReverseFind('$');
+				if(q < 0)
+					q = n.ReverseFind('@');
 				if(q >= 0 && q > n.GetLength() - 12) {
 					String nn = n;
 					n.Set(q, '_');
@@ -57,16 +61,17 @@ void FillTopicsList(FileList& list, const Vector<String>& topics)
 {
 	list.Clear();
 	
-	for (const auto& topic : topics) {
+	for (const auto& topic : topics)
 		list.Add(topic, TopicImg::Topic());
-	}
 	
 	list.Sort(ListOrder());
 	list.Enable();
+	
 }
 
 void TopicEditor::Open(const String& group_path)
 {
+
 	topics_search.Clear();
 	
 	grouppath = group_path;
@@ -74,7 +79,6 @@ void TopicEditor::Open(const String& group_path)
 		DeleteFile(grouppath);
 	DirectoryCreate(grouppath);
 	
-	topics.Clear();
 	if(LoadTopics(topics, grouppath))
 		SaveInc();
 	FillTopicsList(topics_list, topics);

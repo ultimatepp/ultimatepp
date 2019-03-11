@@ -8,7 +8,7 @@ int CharFilterID(int c)
 bool ParseTopicFileName(const String& fn, String& topic, int& lang)
 {
 	String q = GetFileTitle(fn);
-	int w = q.Find('_');
+	int w = q.ReverseFind('_');
 	if(w < 0)
 		return false;
 	topic = q.Mid(0, w);

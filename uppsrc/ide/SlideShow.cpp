@@ -55,8 +55,8 @@ SlideShowSettingsDlg::SlideShowSettingsDlg()
 	zoom_minus.WhenRepeat = zoom_minus ^= [=] { slideshow->Key(K_CTRL|K_SUBTRACT, 1); };
 	margin_plus.WhenRepeat = margin_plus ^= [=] { slideshow->Key(K_ALT|K_ADD, 1); };
 	margin_minus.WhenRepeat = margin_minus ^= [=] { slideshow->Key(K_ALT|K_SUBTRACT, 1); };
-	title_plus.WhenRepeat = title_plus ^= [=] { slideshow->Key(K_SHIFT|K_ALT|K_ADD, 1); };
-	title_minus.WhenRepeat = title_minus ^= [=] { slideshow->Key(K_SHIFT|K_ALT|K_SUBTRACT, 1); };
+	title_plus.WhenRepeat = title_plus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_ADD, 1); };
+	title_minus.WhenRepeat = title_minus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_SUBTRACT, 1); };
 }
 
 void SlideShow::Serialize(Stream& s)
@@ -88,6 +88,7 @@ SlideShow::SlideShow()
 	title.NoSb();
 	Add(title);
 	title.SetFrame(NullFrame());
+	title.SizePos();
 	LoadFromGlobal(*this, "SlideShow");
 }
 
@@ -131,6 +132,9 @@ bool SlideShow::Key(dword key, int count)
 	case K_ESCAPE:
 		Break();
 		return true;
+	case K_HOME:
+		page = 0;
+		break;
 	case K_LEFT:
 	case K_PAGEUP:
 	case K_SPACE:
@@ -180,11 +184,11 @@ void SlideShow::SetPage()
 	if(page >= 0)
 		t = ReadTopic(LoadFile(path[page]));
 	if(settings.title) {
-		title <<= "{{1@C~ [*R+" + AsString(titleh) + " " + t.title + "}}";
+		title <<= "{{1@C~ [*R+" + AsString(titleh) + " \1" + t.title + "\1}}";
 		title.HMargins(DPI(8) * margins);
 		title.VMargins(0);
-		int cy = min(title.GetHeight() + DPI(20), GetSize().cx / 2);
-		title.HSizePos().TopPos(0, cy);
+		int cy = min(title.GetHeight() + DPI(20), GetSize().cy / 2);
+		title.TopPos(0, cy);
 		text.VSizePos(cy, 0);
 		title.Show();
 	}

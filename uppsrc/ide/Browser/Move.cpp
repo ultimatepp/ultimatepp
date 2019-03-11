@@ -64,7 +64,7 @@ void TopicEditor::MoveTopic()
 	if(dlg.Run() != IDOK)
 		return;
 	String np = AppendFileName(SourcePath(~dlg.package, (String)~dlg.group + ".tpp"),
-	                           (String)~dlg.topic + "@" + ToLower(LNGAsText(~dlg.lang)) + ".tpp");
+	                           (String)~dlg.topic + "_" + ToLower(LNGAsText(~dlg.lang)) + ".tpp");
 	if(FindFile(np)) {
 		if(!PromptYesNo("Target file aready exists!&Do you want to overwrite it?"))
 			return;
