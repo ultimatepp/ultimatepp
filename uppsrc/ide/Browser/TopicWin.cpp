@@ -384,7 +384,7 @@ void TopicEditor::SaveAsTemplate()
 		d.nest.GoBegin();
 	if(d.Execute() != IDOK || IsNull(~d.nest))
 		return;
-	SaveFile(AppendFileName(AppendFileName(~d.nest, "$.tpp"), d.GetName()),
+	SaveFile(AppendFileName(AppendFileName(~d.nest, "_.tpp"), d.GetName()),
 	         WriteTopic((String)~title, editor.Get()));
 }
 

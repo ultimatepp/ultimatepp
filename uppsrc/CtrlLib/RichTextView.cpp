@@ -4,9 +4,38 @@ namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
+
+Zoom  RichTextView::GetZoom() const
+{
+	int szcx = GetSize().cx;
+	if(!sb.IsShown() && sb.IsAutoHide())
+		szcx -= ScrollBarSize();
+	return IsNull(zoom) ? Zoom(szcx - margin.left - margin.right, cx) : zoom;
+}
+
+int   RichTextView::GetPageCx(bool reduced) const
+{
+	int szcx = GetSize().cx;
+	if(reduced && !sb.IsShown() && sb.IsAutoHide())
+		szcx -= ScrollBarSize();
+	return IsNull(zoom) ? cx : (szcx - margin.left - margin.right) / zoom;
+}
+
 Rect  RichTextView::GetPage() const
 {
 	return Rect(0, 0, GetPageCx(), INT_MAX);
+}
+
+int RichTextView::GetHeight() const
+{
+	return text.GetHeight(GetPage()).y;
+}
+
+int RichTextView::TopY() const
+{
+	if(vcenter && sb.GetTotal() < sb.GetPage())
+		return (sb.GetPage() - sb.GetTotal()) / 2;
+	return 0;
 }
 
 void  RichTextView::Paint(Draw& w)
@@ -38,34 +67,15 @@ void  RichTextView::Paint(Draw& w)
 	pi.shrink_oversized_objects = shrink_oversized_objects;
 	pi.darktheme = Grayscale(SColorPaper()) < 100;
 	Rect pg = GetPage();
-	if(vcenter && sb.GetTotal() < sb.GetPage())
-		pg.top = (sb.GetPage() - sb.GetTotal()) / 2;
+	pg.top = TopY();
 	text.Paint(pw, pg, pi);
 	w.End();
 	w.End();
 }
 
-Zoom  RichTextView::GetZoom() const
-{
-	int szcx = GetSize().cx;
-	if(!sb.IsShown() && sb.IsAutoHide())
-		szcx -= ScrollBarSize();
-	return IsNull(zoom) ? Zoom(szcx - margin.left - margin.right, cx) : zoom;
-}
-
-int   RichTextView::GetPageCx(bool reduced) const
-{
-	int szcx = GetSize().cx;
-	if(reduced && !sb.IsShown() && sb.IsAutoHide())
-		szcx -= ScrollBarSize();
-	return IsNull(zoom) ? cx : (szcx - margin.left - margin.right) / zoom;
-}
-
 void  RichTextView::SetSb()
 {
-	Rect page(0, 0, GetPageCx(true), INT_MAX);
-	PageY py = text.GetHeight(page);
-	sb.SetTotal(py.y);
+	sb.SetTotal(GetHeight());
 	sb.SetPage((GetSize().cy - margin.top - margin.bottom) / GetZoom());
 }
 
@@ -132,7 +142,7 @@ Point RichTextView::GetTextPoint(Point p) const
 	p -= margin.TopLeft();
 	Zoom zoom = GetZoom();
 	p.y += sb * zoom;
-	return Point(p.x / zoom, p.y / zoom);
+	return Point(p.x / zoom, p.y / zoom - TopY());
 }
 
 int  RichTextView::GetPointPos(Point p) const
@@ -172,7 +182,7 @@ void RichTextView::RefreshRange(int a, int b)
 	Rect r1 = text.GetCaret(l, GetPage()) + margin.TopLeft();
 	Rect r2 = text.GetCaret(h, GetPage()) + margin.TopLeft();
 	Zoom zoom = GetZoom();
-	Refresh(Rect(0, zoom * (r1.top - sb), GetSize().cx, zoom * (r2.bottom - sb + zoom.d - 1)));
+	Refresh(Rect(0, zoom * (r1.top - sb + TopY()), GetSize().cx, zoom * (r2.bottom - sb + zoom.d - 1) + TopY()));
 }
 
 void  RichTextView::RefreshSel()
