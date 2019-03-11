@@ -51,7 +51,6 @@ void DisplayPopup::MouseMove(Point p, dword flags)
 
 void DisplayPopup::Paint(Draw& w)
 {
-	RDUMP("Paint");
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
 	if(display) {
