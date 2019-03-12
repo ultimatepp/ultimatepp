@@ -137,11 +137,11 @@ bool SlideShow::Key(dword key, int count)
 		break;
 	case K_LEFT:
 	case K_PAGEUP:
-	case K_SPACE:
 		page--;
 		break;
 	case K_RIGHT:
 	case K_PAGEDOWN:
+	case K_SPACE:
 		page++;
 		break;
 	case K_CTRL|K_ALT|K_ADD:
@@ -184,12 +184,15 @@ void SlideShow::SetPage()
 	if(page >= 0)
 		t = ReadTopic(LoadFile(path[page]));
 	if(settings.title) {
-		title <<= "{{1@C~ [*R+" + AsString(titleh) + " \1" + t.title + "\1}}";
+//		title <<= "{{1@C~ [*R+" + AsString(titleh) + " \1" + t.title + "\1}}";
+		title <<= "[*R+" + AsString(titleh) + " \1" + t.title + "\1]";
+		title.Background(LtCyan());
 		title.HMargins(DPI(8) * margins);
 		title.VMargins(0);
-		int cy = min(title.GetHeight() + DPI(20), GetSize().cy / 2);
+		int cy = min(title.GetCy() + DPI(10), GetSize().cy / 2);
 		title.TopPos(0, cy);
-		text.VSizePos(cy, 0);
+		text.Background(Yellow());
+		text.VSizePos(cy + 10, 0);
 		title.Show();
 	}
 	else {

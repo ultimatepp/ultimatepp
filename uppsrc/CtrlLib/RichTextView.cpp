@@ -26,9 +26,9 @@ Rect  RichTextView::GetPage() const
 	return Rect(0, 0, GetPageCx(), INT_MAX);
 }
 
-int RichTextView::GetHeight() const
+int RichTextView::GetCy() const
 {
-	return text.GetHeight(GetPage()).y;
+	return GetZoom() * text.GetHeight(GetPage()).y;
 }
 
 int RichTextView::TopY() const
@@ -75,7 +75,7 @@ void  RichTextView::Paint(Draw& w)
 
 void  RichTextView::SetSb()
 {
-	sb.SetTotal(GetHeight());
+	sb.SetTotal(text.GetHeight(GetPage()).y);
 	sb.SetPage((GetSize().cy - margin.top - margin.bottom) / GetZoom());
 }
 
