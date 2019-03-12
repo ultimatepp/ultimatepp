@@ -16,6 +16,7 @@ void SvgParser::Reset()
 	s.opacity = s.fill_opacity = s.stroke_opacity = s.stroke_width = 1;
 	s.dash_offset = 0;
 	s.font = Serif(24);
+	s.text_anchor = 0;
 }
 
 void SvgParser::ProcessValue(const String& key, const String& value_)
@@ -110,6 +111,9 @@ void SvgParser::ProcessValue(const String& key, const String& value_)
 		else
 		if(key == "font-weight")
 			s.font.Bold(findarg(value, "bold", "bolder") >= 0 || atoi(value) >= 500);
+		else
+		if(key == "text-anchor")
+			s.text_anchor = decode(value, "left", 0, "middle", 1, "right", 2, 0);
 	}
 }
 

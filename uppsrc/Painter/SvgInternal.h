@@ -84,6 +84,8 @@ struct SvgParser {
 		String dash_array;
 		double dash_offset;
 		
+		int    text_anchor; // 0 left, 1 middle, 2 right
+		
 		Font   font;
 		
 		const XmlNode *n;
