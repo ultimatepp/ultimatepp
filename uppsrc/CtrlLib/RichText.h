@@ -64,7 +64,7 @@ public:
 
 	int             GetWidth() const                          { return text.GetWidth(); }
 	int             GetHeight(int cx) const                   { return text.GetHeight(Zoom(1, 1), cx); }
-	int             GetHeight() const;
+	int             GetCy() const;
 
 	int             GetSb() const                             { return sb; }
 	void            SetSb(int i)                              { sb = i; }
