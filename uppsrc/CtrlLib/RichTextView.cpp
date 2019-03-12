@@ -4,7 +4,6 @@ namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
-
 Zoom  RichTextView::GetZoom() const
 {
 	int szcx = GetSize().cx;
