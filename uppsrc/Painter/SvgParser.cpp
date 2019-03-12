@@ -261,6 +261,8 @@ void SvgParser::Poly(const XmlNode& n, bool line)
 		bp.Move(r[0].x, r[0].y);
 		for(int i = 1; i < r.GetCount(); ++i)
 			bp.Line(r[i].x, r[i].y);
+		if(!line)
+			bp.Close();
 		if(line)
 			StrokeFinishElement();
 		else
@@ -428,7 +430,13 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 			text.Replace("\t", " ");
 			if(text.GetCount()) {
 				Font fnt = state.Top().font;
-				bp.Text(Dbl("x"), Dbl("y") - fnt.GetAscent(), text, fnt);
+				int anchor = state.Top().text_anchor;
+				double x = Dbl("x");
+				if(anchor) {
+					Sizef sz = GetTextSize(text, fnt); // TODO; GetTextSizef
+					x -= anchor == 1 ? sz.cx / 2 : sz.cx;
+				}
+				bp.Text(x	, Dbl("y") - fnt.GetAscent(), text, fnt);
 			}
 		};
 		DoText(n);

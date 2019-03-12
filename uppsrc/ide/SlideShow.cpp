@@ -191,7 +191,6 @@ void SlideShow::SetPage()
 		title.VMargins(0);
 		int cy = min(title.GetCy() + DPI(10), GetSize().cy / 2);
 		title.TopPos(0, cy);
-		text.Background(Yellow());
 		text.VSizePos(cy + 10, 0);
 		title.Show();
 	}
