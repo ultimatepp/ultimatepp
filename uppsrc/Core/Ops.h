@@ -46,7 +46,7 @@ inline int    SwapEndian32(int v)     { __asm__("bswap %0" : "=r" (v) : "0" (v))
 #endif
 
 #ifdef COMPILER_MSC
-#pragma intrinsic (_byteswap_ushort, _byteswap_ulong, _byteswap_uint64,strlen)
+#pragma intrinsic (_byteswap_ushort, _byteswap_ulong, _byteswap_uint64, strlen)
 
 inline word   SwapEndian16(word v)    { return _byteswap_ushort(v); }
 inline int16  SwapEndian16(int16 v)   { return _byteswap_ushort(v); }
