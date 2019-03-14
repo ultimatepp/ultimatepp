@@ -12,7 +12,7 @@ topic "Ultimate++ download";
 :: [s0;= [+92 Source]]
 :: [s0;= [+92 Nightly builds]]
 :: [s0;= [+92 Stable releases]]
-::@2 [s0; [*2 POSIX/X11]]
+::@2 [s0; [*2 POSIX/X11 (GNU/Linux, FreeBSD etc.)]]
 :: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
 :: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 tarball]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
