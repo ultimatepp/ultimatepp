@@ -4,12 +4,14 @@ struct SlideShow;
 
 struct SlideShowView : RichTextView {
 	SlideShow *slideshow;
+	Image      cursor;
 	
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual Image CursorImage(Point p, dword keyflags);
 };
 
-struct SlideShowSettingsDlg : WithSlideShowSettings<TopWindow> {
+struct SlideShowSettingsDlg : WithSlideShowSettingsLayout<TopWindow> {
 	SlideShow *slideshow;
 
 	typedef SlideShowSettingsDlg CLASSNAME;
@@ -57,6 +59,7 @@ SlideShowSettingsDlg::SlideShowSettingsDlg()
 	margin_minus.WhenRepeat = margin_minus ^= [=] { slideshow->Key(K_ALT|K_SUBTRACT, 1); };
 	title_plus.WhenRepeat = title_plus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_ADD, 1); };
 	title_minus.WhenRepeat = title_minus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_SUBTRACT, 1); };
+	pointer ^= [=] { slideshow->SetPage(); };
 }
 
 void SlideShow::Serialize(Stream& s)
@@ -121,6 +124,13 @@ void SlideShowView::MouseWheel(Point p, int zdelta, dword keyflags)
 		return;
 	}
 	RichTextView::MouseWheel(p, zdelta, keyflags);
+}
+
+Image SlideShowView::CursorImage(Point p, dword keyflags)
+{
+	if(IsNull(cursor))
+		return RichTextView::CursorImage(p, keyflags);
+	return cursor;
 }
 
 bool SlideShow::Key(dword key, int count)
@@ -206,6 +216,9 @@ void SlideShow::SetPage()
 		rp = page;
 		text <<= t.text;
 	}
+	
+	text.cursor = decode(~settings.pointer, 1, IdeImg::ShowPointer1(), 2, IdeImg::ShowPointer2(),
+	                     Image());
 }
 
 void TopicCtrl::SShow()
