@@ -92,7 +92,7 @@ interface packages]&]
 [s5; [1 Additional information about back ends:]&]
 [s0;l160;i150;O0;~~~0; [1 WinAPI `- Windows native back end.]&]
 [s0;l160;i150;O0;~~~0; [1 X11 `- Back end that runs on the top of X11 
-server. Can be used on Mac OS.]&]
+server.]&]
 [s0;l160;i150;O0;~~~0; [1 GTK `- Back end that uses GTK library to 
 render ]&]
 [s0;l160;i150;O0;~~~0; [1 Cocoa `- macOS native back end.]&]
