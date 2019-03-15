@@ -74,6 +74,8 @@ void SlideShow::Serialize(Stream& s)
 	h = ~settings.vcenter;
 	s % h;
 	settings.vcenter <<= h;
+	if(version >= 2)
+		s % settings.pointer;
 }
 
 INITBLOCK {
