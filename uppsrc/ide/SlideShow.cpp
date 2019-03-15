@@ -6,6 +6,7 @@ struct SlideShowView : RichTextView {
 	SlideShow *slideshow;
 	Image      cursor;
 	
+	virtual void LeftDown(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
@@ -106,6 +107,18 @@ void SlideShow::Settings()
 		settings.Close();
 	else
 		settings.Open(this);
+}
+
+void SlideShowView::LeftDown(Point p, dword keyflags)
+{
+	int m = DPI(8) * slideshow->margins;
+	if(p.x <= m)
+		slideshow->Key(K_PAGEUP, 1);
+	else
+	if(p.x >= GetSize().cx - m)
+		slideshow->Key(K_PAGEDOWN, 1);
+	else
+		slideshow->LeftDown(p, keyflags);
 }
 
 void SlideShowView::RightDown(Point p, dword)
