@@ -1699,7 +1699,7 @@ bool LayDes::DoKey(dword key, int count)
 			dword k = (key == K_PAGEUP ? K_UP : key == K_PAGEDOWN ? K_DOWN : key);
 			Ptr<Ctrl> focus = GetFocusCtrl();
 			if(!item.IsCursor() && item.GetCount() > 0)
-				item.SetCursor(k = K_DOWN ? 0 : item.GetCount() - 1);
+				item.SetCursor(k == K_DOWN ? 0 : item.GetCount() - 1);
 			else
 				item.Key(k, count);
 			ItemClick();
