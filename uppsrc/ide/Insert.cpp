@@ -171,6 +171,8 @@ void Ide::InsertMenu(Bar& bar)
 
 void Ide::InsertInclude(Bar& bar)
 {
+	if(bar.IsScanKeys()) // this takes time and contains no keys
+		return;
 	const Workspace& w = GetIdeWorkspace();
 	String all;
 	for(int i = 0; i < w.GetCount(); i++) {

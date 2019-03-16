@@ -265,3 +265,4 @@ void TopicCtrl::SShow()
 	tl.topic = l[ss.page];
 	GoTo(TopicLinkString(tl));
 }
+	
