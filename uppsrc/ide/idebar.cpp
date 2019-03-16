@@ -640,7 +640,8 @@ void Ide::BuildMenu(Bar& menu)
 
 	menu.MenuSeparator();
 
-	if(menu.IsMenuBar())
+
+	if(menu.IsMenuBar() && !menu.IsScanKeys())
 		BuildPackageMenu(menu);
 
 	BuildFileMenu(menu);
