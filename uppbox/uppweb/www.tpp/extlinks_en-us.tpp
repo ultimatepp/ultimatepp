@@ -26,8 +26,8 @@ C`+`+ multi`-plates`-formes]&]
 ltimate`+`+ et les bases de données]&]
 [s0;i150;a17;O0; [^http`:`/`/sdjournal`.org`/^2 Software Developer`'s 
 Journal]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sdjournal`.org`/magazine`/article`/8^2 Środowisko 
-programistyczne TheIDE]&]
+[s0;l160;i150;a17;O0; [2 Środowisko programistyczne TheIDE (Polish, 
+No longer available 2019)]&]
 [s0;i150;a17;O0; [^http`:`/`/www`.codeproject`.com`/^2 The Code Project]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/www`.codeproject`.com`/KB`/library`/IntroUpp`.aspx^2 G
 etting Started With Ultimate`+`+]&]
@@ -38,10 +38,10 @@ Les meilleurs outils C`+`+]&]
 [s0;i150;a17;O0; [^http`:`/`/www`.nixp`.ru`/news`/Open`-Source`-068`-`%D0`%BD`%D0`%BE`%D0`%B2`%D1`%8B`%D0`%B9`-`%D0`%B2`%D1`%8B`%D0`%BF`%D1`%83`%D1`%81`%D0`%BA`-`%D1`%8D`%D0`%BB`%D0`%B5`%D0`%BA`%D1`%82`%D1`%80`%D0`%BE`%D0`%BD`%D0`%BD`%D0`%BE`%D0`%B3`%D0`%BE`-`%D0`%B8`%D0`%B7`%D0`%B4`%D0`%B0`%D0`%BD`%D0`%B8`%D1`%8F`.html^2 С
 истемный администратор (`"System Administrator`") 
 ]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/osa`.samag`.ru`/info`/OpenSource068`.zip^2 Неста
-ндартные GUI`-тулкиты. Часть 1: Знакомство 
-с Ultimate`+`+ (`"Non standard GUI`-Toolkits. Part 1: Introduction 
-to Ultimate`+`+`")]&]
+[s0;l160;i150;a17;O0; [2 Нестандартные GUI`-тулкиты. 
+Часть 1: Знакомство с Ultimate`+`+ (`"Non standard 
+GUI`-Toolkits. Part 1: Introduction to Ultimate`+`+`") (Russian, 
+No longer available 2019)]&]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Interesting discussions]]}}&]
 [s0;2 &]

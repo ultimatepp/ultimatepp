@@ -1,6 +1,6 @@
 topic "Google Summer of Code Resources 2014";
-[ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1;#b0; [R@(0.0.255)6 G][R@6;6 o][R@(255.170.0)6 o][R@(0.0.255)6 g][R@(28.170.0)6 l][R@6;6 e][R6  
 Summer of Code 2014. U`+`+ Resources]&]
@@ -21,7 +21,7 @@ U`+`+ user wanting to be a mentor, we expect this page will help
 you.]&]
 [s0;#2 &]
 [s0;# [2 And if this information is not enough, just post something 
-in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
+in our ][^https`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 .]&]
 [s0;%- &]
 [ {{10000<192;>192;f0;g0;^l4/67r4/50t4/25b4/25@(240)R(165) [s0;= [*2 Contents]]
 ::t/50b/50@2 [s0;#b17;a17;ph [*2 1. ][*^topic`:`/`/uppweb`/gsoc`/manual2014`$en`-us^2 Manual][2 . 
