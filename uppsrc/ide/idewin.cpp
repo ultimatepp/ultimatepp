@@ -386,7 +386,9 @@ Ide::Ide()
 	DiffDlg::WhenHighlight = callback(sHighlightLine);
 
 	editor.theide = this;
-	editor.WhenSel = THISBACK(SetToolBar);
+	editor.WhenSel << [=] {
+		delayed_toolbar.KillSet(150, [=] { SetToolBar(); });
+	};
 	
 	editormode = false;
 	
