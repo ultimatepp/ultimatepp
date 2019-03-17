@@ -296,4 +296,33 @@ const char *ClipFmtsRTF()
 	return sClipFmtsRTF;
 }
 
+void WriteClipboardHTML(const String& html)
+{
+	String data;
+	
+	data =
+		"Version:0.9\n"
+		"StartHTML:#000001#\n"
+		"EndHTML:#000002#\n"
+		"StartFragment:#000003#\n"
+		"EndFragment:#000004#\n"
+		"StartSelection:#000003#\n"
+		"EndSelection:#000004#\n"
+		"<HTML>\n"
+		"<!--StartFragment -->"
+	    "<!--EndFragment -->\n"
+		"</HTML>\n"
+	;
+	
+	data.Replace("#000001#", Sprintf("%08u", data.Find("<HTML>") + 6));
+	int start = data.Find("<!--StartFragment -->") + 21;
+	data.Replace("#000003#", Sprintf("%08u", start));
+	data.Replace("#000004#", Sprintf("%08u", data.Find("<!--EndFragment -->") + html.GetCount()));
+	data.Replace("#000002#", Sprintf("%08u", data.Find("</HTML>") + html.GetCount()));
+	
+	data.Insert(start, html);
+	
+	WriteClipboard("HTML Format", data);
+}
+
 }

@@ -1667,6 +1667,8 @@ String     EncodeRTF(const RichText& richtext, byte charset, int dot_page_width)
 String     EncodeRTF(const RichText& richtext);
 RichText   ParseRTF(const char *rtf);
 
+void WriteClipboardHTML(const String& html);
+
 #include <CtrlCore/TopWindow.h>
 
 #include GUIPLATFORM_INCLUDE_AFTER
