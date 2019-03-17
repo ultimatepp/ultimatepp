@@ -11,16 +11,15 @@ bigniew Rębacz]&]
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
 Ivica_Puljic, Mathiass_Sund, Andrew_Barilla, Michal_Mierzejewski, 
-Damien_Porquet, Werner_Wenzel, ][%-*^http`:`/`/www`.fallingdutch`.de`/^ Bas_Wegh][* ,
- Fabio_Busetto, Michal_Pekař, Darrin_Scott, Damien_Porquet, 
-James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ Sritharan Sivaguru,][*  
-Artur Bać, Ralf Schneider, Pavel Ostapenko, Raul Ionitoiu, Norbert 
-Hofer, Tomasz Pajak, Benoit Cousson, Trey Van Riper, Peter Berger, 
-Sergey Nikitin, Irenkov Alexander, Gabriel Schmotzer, Domingo 
-Alvarez Duarte, Andrei Cosma, Tom Olá, George Brink, Zbigniew 
-Czapiga, Konstantin Hartwich, Didier Quenouillere, Anthony Paul, 
-Kovalev Sergey, Martin Schut, Ion Lupascu, Frank De prins, Jeff 
-Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
+Damien_Porquet, Werner_Wenzel, ][%-* Bas_Wegh][* , Fabio_Busetto, 
+Michal_Pekař, Darrin_Scott, Damien_Porquet, James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ S
+ritharan Sivaguru,][*  Artur Bać, Ralf Schneider, Pavel Ostapenko, 
+Raul Ionitoiu, Norbert Hofer, Tomasz Pajak, Benoit Cousson, Trey 
+Van Riper, Peter Berger, Sergey Nikitin, Irenkov Alexander, Gabriel 
+Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Tom Olá, George 
+Brink, Zbigniew Czapiga, Konstantin Hartwich, Didier Quenouillere, 
+Anthony Paul, Kovalev Sergey, Martin Schut, Ion Lupascu, Frank 
+De prins, Jeff Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
 akub Pawlewicz][* , Navin Vidhani, Steffen Brummer, Luis Rodriguez, 
 Rakibul Islam, Nahar Pengatteeri, Ralph Klautke, Victor Picheev, 
 Navadvipa Chandra das, Radek Malčic, Amrein`-Marie Christophe, 
