@@ -1085,6 +1085,8 @@ public:
 	void      SetBar();
 	void      SetMenuBar();
 	void      SetToolBar();
+	TimeCallback delayed_toolbar;
+	
 	
 	void      UpdateFormat(CodeEditor& editor);
 	void      UpdateFormat();
