@@ -839,7 +839,7 @@ LAYOUT(SetupSVNLayout, 536, 112)
 	ITEM(Label, dv___10, SetLabel(t_("Revision to checkout")).LeftPosZ(304, 160).TopPosZ(28, 19))
 END_LAYOUT
 
-LAYOUT(SlideShowSettingsLayout, 184, 164)
+LAYOUT(SlideShowSettingsLayout, 184, 188)
 	ITEM(Label, dv___0, SetLabel(t_("Zoom")).LeftPosZ(8, 40).TopPosZ(8, 19))
 	ITEM(Button, zoom_plus, SetLabel(t_("+")).LeftPosZ(124, 24).TopPosZ(8, 19))
 	ITEM(Button, zoom_minus, SetLabel(t_("-")).LeftPosZ(152, 24).TopPosZ(8, 19))
@@ -851,5 +851,6 @@ LAYOUT(SlideShowSettingsLayout, 184, 164)
 	ITEM(Button, title_plus, SetLabel(t_("+")).LeftPosZ(124, 24).TopPosZ(80, 19))
 	ITEM(Button, title_minus, SetLabel(t_("-")).LeftPosZ(152, 24).TopPosZ(80, 19))
 	ITEM(Switch, pointer, SetLabel(t_("Standard pointer\nPointer 1\nPointer 2")).LeftPosZ(8, 120).TopPosZ(108, 52))
+	ITEM(Button, report, SetLabel(t_("Export")).LeftPosZ(8, 104).TopPosZ(164, 20))
 END_LAYOUT
 

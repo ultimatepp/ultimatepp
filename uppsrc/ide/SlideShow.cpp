@@ -37,6 +37,7 @@ struct SlideShow : TopWindow {
 
 	void SetPage();
 	void Settings();
+	void Export();
 	
 	void Serialize(Stream& s);
 
@@ -95,12 +96,38 @@ SlideShow::SlideShow()
 	Add(title);
 	title.SetFrame(NullFrame());
 	title.SizePos();
+	settings.report << [=] { Export(); };
 	LoadFromGlobal(*this, "SlideShow");
 }
 
 SlideShow::~SlideShow()
 {
 	StoreToGlobal(*this, "SlideShow");
+}
+
+void SlideShow::Export()
+{
+	Report r(6074, 3968);
+	bool next = false;
+	for(String p : path) {
+		if(next)
+			r.NewPage();
+		Topic t = ReadTopic(LoadFile(p));
+		String title = "{{1@C~ [*R+" + AsString(3 * titleh / 2) + " \1" + t.title + "\1}}";
+		r << title;
+		Size pgsz = r.GetPageSize();
+		int titlecy = ParseQTF(title).GetHeight(pgsz.cx);
+		RichText txt = ParseQTF(t.text);
+		txt.ApplyZoom(Zoom(zoom, 27));
+		int textcy = txt.GetHeight(pgsz.cx);
+		int cy = pgsz.cy - titlecy;
+		if(cy > textcy)
+			r.SetY(r.GetY() + (cy - textcy) / 2);
+		r.Put(txt);
+		next = true;
+	}
+	Perform(r);
+	Break();
 }
 
 void SlideShow::Settings()
