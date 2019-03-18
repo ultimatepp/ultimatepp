@@ -20,7 +20,8 @@ uses
 	ide/Android,
 	ide/Java,
 	ide/MacroManager,
-	urepo;
+	urepo,
+	Report;
 
 link(WIN32 MSC) /MAP;
 
