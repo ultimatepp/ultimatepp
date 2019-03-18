@@ -323,8 +323,8 @@ void Ide::IdeSetBar()
 void Ide::SetupBars()
 {
 	ClearFrames();
+	
 	int r = HorzLayoutZoom(170);
-	int l = HorzLayoutZoom(350);
 #ifdef PLATFORM_COCOA
 	int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
 	bararea.Add(toolbar.HSizePos(0, r).VCenterPos(tcy));
@@ -333,6 +333,8 @@ void Ide::SetupBars()
 	AddFrame(bararea);
 	toolbar.NoTransparent();
 #else
+	int l = HorzLayoutZoom(350);
+	
 	menubar.Transparent();
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
