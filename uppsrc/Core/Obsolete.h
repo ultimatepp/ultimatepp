@@ -214,16 +214,16 @@ T Find(T ptr, T end, const V& value)
 }
 
 template <class I, class K, class L>
-int BinFindIndex(I begin, I end, const K& key, const L& less)
+size_t BinFindIndex(I begin, I end, const K& key, const L& less)
 {
 	if(begin == end)
 		return 0;
-	int min = 0;
-	int max = end - begin;
+	size_t min = 0;
+	size_t max = end - begin;
 
 	while(min < max)
 	{
-		int mid = (max + min) >> 1;
+		size_t mid = (max + min) >> 1;
 		if(less(*(begin + mid), key))
 			min = mid + 1;
 		else
