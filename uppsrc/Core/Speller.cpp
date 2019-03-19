@@ -124,7 +124,6 @@ void SetSpellPath(const String& p)
 
 static String sZet(FileIn& in, int offset, int len)
 {
-	RTIMING("sZet");
 	in.Seek(offset);
 	return ZDecompress(in.Get(len));
 }
@@ -247,7 +246,6 @@ bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia)
 
 bool AllSpellerWords(int lang, Gate<String> iter)
 {
-	RTIMING("AllSpellerWords");
 	Speller *f = sGetSpeller(lang);
 	if(!f)
 		return false;

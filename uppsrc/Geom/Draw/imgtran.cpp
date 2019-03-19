@@ -548,7 +548,6 @@ static inline Pointf Cvp(double x, double y, double sina, double cosa)
 
 Image BilinearRotate(const Image& m, int angle)
 {
-	RTIMING("Rotate");
 	Size isz = m.GetSize();
 	Point center = isz / 2;
 	Pointf centerf = Pointf(Point(isz)) / 2;
