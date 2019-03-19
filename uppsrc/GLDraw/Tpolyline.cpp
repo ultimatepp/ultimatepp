@@ -4,7 +4,6 @@ namespace Upp {
 
 void Polyline(GLTriangles& tr, const Vector<Pointf>& p, double width, Color color, double alpha, bool close)
 {
-	RTIMING("Polyline");
 	int m = 1;
 	if(p.GetCount() < 2)
 		return;

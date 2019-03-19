@@ -261,7 +261,6 @@ void DrawGL::DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color)
 		n += p.GetCount();
 		if(n > TESS_LIMIT) {
 			Flush();
-			RTIMING("StencilPolygon");
 			GLVertexData data;
 			GLPolygons(data, path);
 			GLDrawPolygons(dd, Pointf(0, 0), data, Sizef(1, 1), color);
@@ -271,7 +270,6 @@ void DrawGL::DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color)
 	Vector<Pointf> vertex;
 	Vector<Tuple<int, int, int>> triangle;
 	sTesselateCounter++;
-	RTIMING("Tesselate");
 	Tesselate(path, vertex, triangle, false);
 	int ii0;
 	for(int i = 0; i < vertex.GetCount(); i++) {

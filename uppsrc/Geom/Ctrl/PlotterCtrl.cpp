@@ -564,7 +564,6 @@ void PlotterCtrl::PostRefresh()
 
 void PlotterCtrl::Paint(Draw& draw)
 {
-	RTIMING("PlotterCtrl::Paint");
 	int level = draw.GetCloffLevel();
 	try {
 		LLOGBLOCK("PlotterCtrl::Paint");
