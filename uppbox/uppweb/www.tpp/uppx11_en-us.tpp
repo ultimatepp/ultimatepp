@@ -1,5 +1,5 @@
 topic "U++ POSIX/X11 installation";
-[b83;*4 $$1,2#07864147445237544204411237157677:title]
+[H4;b83;*4 $$1,2#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [a83;*R6 $$3,2#31310162474203024125188417583966:caption]
 [2 $$4,4#589063B430329DC9D1C058DDB04EA569:code]
@@ -10,7 +10,17 @@ topic "U++ POSIX/X11 installation";
 If you want to run U`+`+ graphical environment (theide) or run 
 U`+`+ command line builder (umk), you will first need to compile 
 and install U`+`+.&]
-[s1; Build Requirements&]
+[s1; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#1^ 1. Build Requirements]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#2^ 2. Compile U`+`+ 
+source code]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#3^ 3. Advanced installation]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^ 4. Troubleshooting]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^ 5. U`+`+ spec file 
+for rpm based distribution]&]
+[s0; &]
+[s1;:1: 1. Build Requirements&]
 [s2; Before compiling U`+`+ source code, you must install a few development 
 packages. Many POSIX/X11 distributions provides development packages 
 with the same names. Sometimes, development package names don`'t 
@@ -68,7 +78,8 @@ this in a terminal:&]
 [s2; if sudo is not available:&]
 [ {{10000@(229) [s4; su `-m root `-c `'pkg install bash gmake gtk2 freetype2 libnotify 
 clang`-devel`']}}&]
-[s1; Compile U`+`+ source code&]
+[s2; &]
+[s1;:2: 2. Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
 [s2; First, uncompress U`+`+ source tarball and change dir to the 
 new created directory.&]
@@ -100,7 +111,7 @@ target:&]
 [s4; # or&]
 [s4; make theide]}}&]
 [s2; &]
-[s1; Advanced installation&]
+[s1;:3: 3. Advanced installation&]
 [s2; You can install umk and theide like most other POSIX project 
 do. If make detects that you has defined the prefix variable, 
 it will switch to standard POSIX installation mode.&]
@@ -109,7 +120,8 @@ it will switch to standard POSIX installation mode.&]
 [s2; You can also use several other standard installation variables 
 in this installation mode: `'DESTDIR`', `'bindir`', `'datadir`', 
 `'mandir`', and `'docdir`'.&]
-[s1; Troubleshooting&]
+[s2; &]
+[s1;:4: 4. Troubleshooting&]
 [s2; If your POSIX/X11 distribution use an old gcc version (< 4.9), 
 U`+`+ compilation will fail because of missing gcc c`+`+11 standard 
 implementation. To solve this, you need to install and use clang`+`+ 
@@ -131,7 +143,8 @@ a recent U`+`+ snapshot. Example (for bash shell):&]
 [s4; make install]}}&]
 [s2; Those file names are already escaped for gmake. This is why 
 they already use two dollars (Dollar `= `$`$).&]
-[s1; U`+`+ spec file for rpm based distribution&]
+[s2; &]
+[s1;:5: 5. U`+`+ spec file for rpm based distribution&]
 [s2; There is an alternative way to build U`+`+ on rpm based distributions. 
 Indeed, U`+`+ POSIX/X11 tarball contains a spec file for you 
 to build a standard rpm binary and source file. To do that, first 
