@@ -46,10 +46,10 @@ That means that nightly builds are usually more stable than stable
 releases, because bugfixes are not backported to stable releases.&]
 [s3; Stable releases&]
 [s4; Stable releases are published at Sourceforge.net. You can download 
-them at [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^ http://sourceforge.net
-/projects/upp/files]. In addition to Windows installer and source 
-tarballs, you can also find here rpm packages for Fedora, OpenSUSE 
-and CentOS.&]
+them at [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/^ https://sourceforge.n
+et/projects/upp/files/]. In addition to Windows installer and 
+source tarballs, you can also find here rpm packages for Fedora, 
+OpenSUSE and CentOS.&]
 [s3; Price&]
 [s4; You do not have to pay anything for Ultimate`+`+, even if you 
 are going to use it for development of commercial applications. 
