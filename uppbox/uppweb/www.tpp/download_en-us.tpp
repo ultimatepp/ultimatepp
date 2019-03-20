@@ -32,21 +32,15 @@ ip][2  (Alpha)]]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]}}&]
 [s3; &]
+[s3; Installation instructions&]
+[s4; The installation instructions for each platform are available 
+on [^topic`:`/`/uppweb`/www`/documentation`_en`-us^ documentation] 
+site under `"Installation and Configuration`" paragraph.&]
 [s3; Nightly builds&]
 [s4; Every night there is automatic release published [%DE-DE^topic`:`/`/uppweb`/www`/nightly`$en`-us^ t
 opic://uppweb/www/nightly`$en`-us]. Here you can find windows 
 installer (upp`-win`-NNNN.exe, upp`-mingw`-NNNN.exe) and source 
 tarball (upp`-x11`-src`-NNNN.tar.gz). &]
-[s4; If you are using Ubuntu based GNU/Linux distribution, you can 
-find deb packages (and also dsc source packages) of nightly builds 
-at Launchpad PPA [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^ h
-ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly]. Recommended 
-way is to add the archive to your sources and install package 
-`"upp`" using your favorite package manager (e.g. apt`-get, aptitude, 
-...). This will also install Ultimate`+`+ sources, TheIDE and 
-all necessary dependencies. In case you are not familiar with 
-installing software from PPA, you can follow [^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^ t
-his step`-by`-step guide].&]
 [s4; Note that latest builds are generally considered the most stable. 
 That means that nightly builds are usually more stable than stable 
 releases, because bugfixes are not backported to stable releases.&]
@@ -55,12 +49,7 @@ releases, because bugfixes are not backported to stable releases.&]
 them at [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^ http://sourceforge.net
 /projects/upp/files]. In addition to Windows installer and source 
 tarballs, you can also find here rpm packages for Fedora, OpenSUSE 
-and Centos.&]
-[s4; For Ubuntu users who doesn`'t want to update every day from 
-nightly PPA, there is stable releases PPA, [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^ h
-ttps://launchpad.net/`~dolik`-rce/`+archive/upp]. To install Ultimate`+`+ 
-from this archive, use the same procedure as described for nightly 
-builds, just drop the `"`-nightly`" suffix.&]
+and CentOS.&]
 [s3; Price&]
 [s4; You do not have to pay anything for Ultimate`+`+, even if you 
 are going to use it for development of commercial applications. 
