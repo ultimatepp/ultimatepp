@@ -419,7 +419,6 @@ TopWindow& TopWindow::Icon(const Image& smallicon, const Image& _largeicon)
 		largeicon = _largeicon;
 		SyncCaption();
 	}
-	SyncCaption();
 	return *this;
 }
 
