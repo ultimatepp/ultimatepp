@@ -1,5 +1,4 @@
 topic "Examples";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,12 +20,15 @@ topic "Examples";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Examples&]
 [s3; Table of contents&]
-[s5; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#1^ 1. Introduction]&]
-[s5; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#2^ 2. Sample applications]&]
-[s5; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ 3. Reference implementation]&]
+[s0;^topic`:`/`/uppweb`/www`/examples`$en`-us`#1^ &]
+[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#2^ 2. Sample applications]&]
+[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ 3. Reference implementation]&]
+[s0;^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ &]
 [s3;:1: 1. Introduction&]
 [s5; We would like to present to you a complete collection of examples. 
 All examples are written in the pure Ultimate`+`+ framework. 
