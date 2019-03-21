@@ -4,7 +4,7 @@ topic "Ultimate++ MacOS release";
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; Ultimate`+`+ MacOS release&]
+[s1; Ultimate`+`+ MacOS Installation&]
 [s2; 1. Installation&]
 [s3; MacOS version of U`+`+ is released as single .zip file containing 
 .app application bundle of TheIDE development environment.&]

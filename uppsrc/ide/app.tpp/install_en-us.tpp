@@ -19,7 +19,7 @@ topic "Ultimate++ installation guide";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Ultimate`+`+ Windows releases&]
+[s2; Ultimate`+`+ Windows Installation&]
 [s3; 1. Installation&]
 [s5; Windows release a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
 archive. Unpack to directory of your preference, then just run 
