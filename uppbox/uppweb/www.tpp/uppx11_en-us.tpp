@@ -1,11 +1,11 @@
-topic "U++ POSIX/X11 installation";
+topic "U++ POSIX/X11 Tarball Installation";
 [H4;b83;*4 $$1,2#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [a83;*R6 $$3,2#31310162474203024125188417583966:caption]
 [2 $$4,4#589063B430329DC9D1C058DDB04EA569:code]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s3; U`+`+ POSIX/X11 installation&]
+[s3; U`+`+ POSIX/X11 Tarball Installation&]
 [s2; Standard POSIX/X11 distribution of U`+`+ comes as a source tarball. 
 If you want to run U`+`+ graphical environment (theide) or run 
 U`+`+ command line builder (umk), you will first need to compile 
