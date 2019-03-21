@@ -122,27 +122,38 @@ in this installation mode: `'DESTDIR`', `'bindir`', `'datadir`',
 `'mandir`', and `'docdir`'.&]
 [s2; &]
 [s1;:4: 4. Troubleshooting&]
-[s2; If your POSIX/X11 distribution use an old gcc version (< 4.9), 
-U`+`+ compilation will fail because of missing gcc c`+`+11 standard 
-implementation. To solve this, you need to install and use clang`+`+ 
-compiler instead of g`+`+.&]
-[s2; Make search for g`+`+ first and if gcc version is too old, it 
-will automatically search for clang`+`+ and then for any compiler 
+[s2;l160;i150;O0; [* Compilation doesn`'t work, because I have old 
+compiler version. What should I do?]&]
+[s2;l288; If your POSIX/X11 distribution use an old gcc version (< 
+4.9), U`+`+ compilation will fail because of missing gcc c`+`+11 
+standard implementation. To solve this, you need to install and 
+use clang`+`+ compiler instead of g`+`+.&]
+[s2;l288; Make search for g`+`+ first and if gcc version is too old, 
+it will automatically search for clang`+`+ and then for any compiler 
 named `'c`+`+`'. If you still need to force clang`+`+ as default 
 compiler or if clang`+`+ is not in your path or if you want to 
 use another compiler, you can run make with the CXX parameter. 
 Example:&]
-[ {{10000<308;@(229) [s4; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
+[ {{10000<617;@(229) [s4; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
 [s4; make install]}}&]
-[s2; On BSD based distributions, if you use make instead of gmake, 
-U`+`+ compilation will fail because BSD `'make`' needs four dollars 
-(`'`$`$`$`$`') to escape one. To solve this, you can install 
-gmake or you can run make with an extra parameter if you use 
-a recent U`+`+ snapshot. Example (for bash shell):&]
-[ {{10000<308;@(229) [s4; make `'Dollar`=`$`$`$`$`'&]
+[s2;l160;i150;O0; [* I use make on BSD operating like system and the 
+compilation fail. What should I do?]&]
+[s2;l448; On BSD based distributions, if you use make instead of 
+gmake, U`+`+ compilation will fail because BSD `'make`' needs 
+four dollars (`'`$`$`$`$`') to escape one. To solve this, you 
+can install gmake or you can run make with an extra parameter 
+if you use a recent U`+`+ snapshot. Example (for bash shell):&]
+[ {{10000<617;@(229) [s4; make `'Dollar`=`$`$`$`$`'&]
 [s4; make install]}}&]
-[s2; Those file names are already escaped for gmake. This is why 
-they already use two dollars (Dollar `= `$`$).&]
+[s2;l448; Those file names are already escaped for gmake. This is 
+why they already use two dollars (Dollar `= `$`$).&]
+[s2;l160;i150;O0; [* I compiled my app, but the debugger (GDB) doesn`'t 
+start. How can I fix this?]&]
+[s2;l448; You should install GDB package and make sure it is in your 
+system path. You can check if it is install correctly by running 
+following command in your terminal:&]
+[ {{10000<617;@(229) [s4; which gdb]}}&]
+[s2;l448; It should returns valid GDB path like `'/usr/bin/gdb`'.&]
 [s2; &]
 [s1;:5: 5. U`+`+ spec file for rpm based distribution&]
 [s2; There is an alternative way to build U`+`+ on rpm based distributions. 
