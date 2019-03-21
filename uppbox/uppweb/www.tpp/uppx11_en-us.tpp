@@ -12,12 +12,12 @@ U`+`+ command line builder (umk), you will first need to compile
 and install U`+`+.&]
 [s1; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#1^ 1. Build Requirements]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#2^ 2. Compile U`+`+ 
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#1^2 1. Build Requirements]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#2^2 2. Compile U`+`+ 
 source code]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#3^ 3. Advanced installation]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^ 4. Troubleshooting]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^ 5. U`+`+ spec file 
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#3^2 3. Advanced installation]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^2 4. Troubleshooting]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^2 5. U`+`+ spec file 
 for rpm based distribution]&]
 [s0; &]
 [s1;:1: 1. Build Requirements&]
@@ -31,37 +31,37 @@ distribution.&]
 [s2; Build requires:[*  ]g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
  libbz2`-dev  sox&]
 [s2; How to install them:&]
-[s2; if sudo is available and enabled on your distribution, copy/paste 
-this in a terminal:&]
-[ {{10000@(229) [s4; sudo apt`-get install  g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
+[s2;l160;i150;O0;~~~160; if sudo is available and enabled on your 
+distribution, copy/paste this in a terminal:&]
+[ {{10000<617;@(229) [s4; sudo apt`-get install  g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
  libbz2`-dev  sox]}}&]
-[s2; if sudo is not available:&]
-[ {{10000@(229) [s4; su `-c `'apt`-get install  g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
- libbz2`-dev  sox`']}}&]
-[s2; The `'buildrequires.debian`' file in U`+`+ tarball contains 
-apt`-get commands to do the same thing. You can use this file 
-by running `'sh buildrequires.debian`' as root (e.g. `'sudo sh 
-buildrequires.debian`' if sudo is available or `'su `-c `"sh 
-buildrequires.debian`"`' if not).&]
+[s2;l160;i150;O0; if sudo is not available:&]
+[ {{10000<617;@(229) [s4;~~~32~0; su `-c `'apt`-get install  g`+`+  make  libgtk2.0`-dev 
+ libnotify`-dev  libbz2`-dev  sox`']}}&]
+[s2;l160;i150;O0; The [* `'buildrequires.debian`'] file in U`+`+ tarball 
+contains apt`-get commands to do the same thing. You can use 
+this file by running `'sh buildrequires.debian`' as root (e.g. 
+`'sudo sh buildrequires.debian`' if sudo is available or `'su 
+`-c `"sh buildrequires.debian`"`' if not).&]
 [s2; [* Fedora based distributions]&]
 [s2; Build requires:  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel&]
 [s2; How to install them:&]
-[s2; if sudo is available and enabled on your distribution, copy/paste 
-this in a terminal:&]
-[ {{10000@(229) [s4; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
+[s2;l160;i150;O0; if sudo is available and enabled on your distribution, 
+copy/paste this in a terminal:&]
+[ {{10000<617;@(229) [s4; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel]}}&]
-[s2; if sudo is not available:&]
-[ {{10000@(229) [s4; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
+[s2;l160;i150;O0; if sudo is not available:&]
+[ {{10000<617;@(229) [s4; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
  cairo`-devel  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel 
  freetype`-devel  expat`-devel`']}}&]
-[s2; The `'buildrequires.fedora`' file in U`+`+ tarball contains 
-yum commands to do the same thing. You can use this file by running 
-`'sh buildrequires.fedora`' as root (e.g. `'sudo sh buildrequires.fedora`' 
-if sudo is available or `'su `-c `"sh buildrequires.fedora`"`' 
-if not).&]
+[s2;l160;i150;O0; The [* `'buildrequires.fedora`'] file in U`+`+ tarball 
+contains yum commands to do the same thing. You can use this 
+file by running `'sh buildrequires.fedora`' as root (e.g. `'sudo 
+sh buildrequires.fedora`' if sudo is available or `'su `-c `"sh 
+buildrequires.fedora`"`' if not).&]
 [s2; [* Other rpm based distributions]&]
 [s2; Redhat 7 build requires:  gtk2`-devel pango`-devel atk`-devel 
 cairo`-devel libnotify`-devel freetype`-devel expat`-devel bzip2`-devel&]
@@ -72,26 +72,26 @@ libexpat`-devel libbz2`-devel&]
 [s2; Build requires: bash gmake gtk2 freetype2 libnotify clang`-devel 
 (e.g. clang`+`+)&]
 [s2; How to install them:&]
-[s2; if sudo is available and enabled on your distribution, copy/paste 
-this in a terminal:&]
-[ {{10000@(229) [s4; sudo pkg install bash gmake gtk2 freetype2 libnotify clang`-devel]}}&]
-[s2; if sudo is not available:&]
-[ {{10000@(229) [s4; su `-m root `-c `'pkg install bash gmake gtk2 freetype2 libnotify 
+[s2;l160;i150;O0; if sudo is available and enabled on your distribution, 
+copy/paste this in a terminal:&]
+[ {{10000<617;@(229) [s4; sudo pkg install bash gmake gtk2 freetype2 libnotify clang`-devel]}}&]
+[s2;l160;i150;O0; if sudo is not available:&]
+[ {{10000<617;@(229) [s4; su `-m root `-c `'pkg install bash gmake gtk2 freetype2 libnotify 
 clang`-devel`']}}&]
 [s2; &]
 [s1;:2: 2. Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
 [s2; First, uncompress U`+`+ source tarball and change dir to the 
 new created directory.&]
-[s2; Example: for upp`-x11`-src`-[* 10641].tar.gz&]
-[ {{10000@(229) [s4; version`=[* 10641]&]
+[s2; Example (for upp`-x11`-src`-[* 10641].tar.gz):&]
+[ {{10000<308;@(229) [s4; version`=[* 10641]&]
 [s4; tar zxvf upp`-x11`-src`-`$version.tar.gz&]
 [s4; cd upp`-x11`-src`-`$version]}}&]
 [s2; Use `'[* make]`' to compile U`+`+ and generate [* theide] (U`+`+ 
 integrated development environment) and [* umk] (command line tool 
 for building U`+`+ projects) then run `'make install`' to prepare 
 standard U`+`+ environment:&]
-[ {{10000@(229) [s4; make&]
+[ {{10000<308;@(229) [s4; make&]
 [s4; make install]}}&]
 [s2; Now you can start playing with U`+`+ by invoking [* `~/theide].&]
 [s2; You might want to put [* theide] and [* umk] elsewhere later, e.g. 
@@ -107,15 +107,15 @@ sources&]
 Those variables are required by umk and theide&]
 [s2; If you only want to build umk or theide, run make with the corresponding 
 target:&]
-[ {{10000@(229) [s4; make umk&]
+[ {{10000<308;@(229) [s4; make umk&]
 [s4; # or&]
 [s4; make theide]}}&]
 [s2; &]
 [s1;:3: 3. Advanced installation&]
 [s2; You can install umk and theide like most other POSIX project 
 do. If make detects that you has defined the prefix variable, 
-it will switch to standard POSIX installation mode.&]
-[ {{10000@(229) [s4; make&]
+it will switch to standard POSIX installation mode. Example:&]
+[ {{10000<308;@(229) [s4; make&]
 [s4; make install prefix`=`"/usr`"]}}&]
 [s2; You can also use several other standard installation variables 
 in this installation mode: `'DESTDIR`', `'bindir`', `'datadir`', 
@@ -132,14 +132,14 @@ named `'c`+`+`'. If you still need to force clang`+`+ as default
 compiler or if clang`+`+ is not in your path or if you want to 
 use another compiler, you can run make with the CXX parameter. 
 Example:&]
-[ {{10000@(229) [s4; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
+[ {{10000<308;@(229) [s4; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
 [s4; make install]}}&]
 [s2; On BSD based distributions, if you use make instead of gmake, 
 U`+`+ compilation will fail because BSD `'make`' needs four dollars 
 (`'`$`$`$`$`') to escape one. To solve this, you can install 
 gmake or you can run make with an extra parameter if you use 
 a recent U`+`+ snapshot. Example (for bash shell):&]
-[ {{10000@(229) [s4; make `'Dollar`=`$`$`$`$`'&]
+[ {{10000<308;@(229) [s4; make `'Dollar`=`$`$`$`$`'&]
 [s4; make install]}}&]
 [s2; Those file names are already escaped for gmake. This is why 
 they already use two dollars (Dollar `= `$`$).&]
@@ -150,18 +150,18 @@ Indeed, U`+`+ POSIX/X11 tarball contains a spec file for you
 to build a standard rpm binary and source file. To do that, first 
 install U`+`+ build requires and rpm`-build then build U`+`+:&]
 [s2; [* Fedora based distributions]&]
-[s2; if sudo is available and enabled on your distribution, copy/paste 
+[s2; If sudo is available and enabled on your distribution, copy/paste 
 this in a terminal (don`'t forget to modify the version number 
 accordingly):&]
-[ {{10000@(229) [s4; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
+[ {{10000<308;@(229) [s4; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel&]
 [s4; &]
 [s4; sudo yum install  rpm`-build&]
 [s4; version`=[* 10641]&]
 [s4; rpmbuild `-ta upp`-x11`-src`-`$version.tar.gz]}}&]
-[s2; if sudo is not available:&]
-[ {{10000@(229) [s4; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
+[s2; If sudo is not available:&]
+[ {{10000<308;@(229) [s4; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
  cairo`-devel  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel 
  freetype`-devel  expat`-devel`'&]
 [s4; &]
