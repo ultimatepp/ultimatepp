@@ -1,5 +1,3 @@
-/* $Id: tiffconf.wince.h,v 1.1.2.2 2010-06-08 18:50:43 bfriesen Exp $ */
-
 /*
  * Windows CE platform tiffconf.wince.h
  * Created by Mateusz Loskot (mateusz@loskot.net)
@@ -27,32 +25,8 @@
 #ifndef _TIFFCONF_
 #define _TIFFCONF_
 
-/* Define to 1 if the system has the type `int16'. */
-/* #undef HAVE_INT16 */
-
-/* Define to 1 if the system has the type `int32'. */
-/* #undef HAVE_INT32 */
-
-/* Define to 1 if the system has the type `int8'. */
-/* #undef HAVE_INT8 */
-
 /* The size of a `int', as computed by sizeof. */
 #define SIZEOF_INT 4
-
-/* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
-
-/* Signed 64-bit type formatter */
-#define TIFF_INT64_FORMAT "%I64d"
-
-/* Signed 64-bit type */
-#define TIFF_INT64_T signed __int64
-
-/* Unsigned 64-bit type formatter */
-#define TIFF_UINT64_FORMAT "%I64u"
-
-/* Unsigned 64-bit type */
-#define TIFF_UINT64_T unsigned __int64
 
 /* Compatibility stuff. */
 
