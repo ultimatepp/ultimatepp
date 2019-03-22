@@ -7,12 +7,12 @@
 
 namespace Upp {
 
-static voidpf lzma_alloc_new(void *, size_t size) {
+static voidpf lzma_alloc_new(ISzAllocPtr, size_t size) {
 	voidpf t = new byte[size];
 	return t;
 }
 
-static void lzma_free_new(void *, void *address) {
+static void lzma_free_new(ISzAllocPtr, void *address) {
 	if(!address)
 		return;
 	delete[] (byte *)address;
@@ -24,7 +24,7 @@ struct IUppInStream {
 	ISeqInStream s;
 	Stream& in;
 
-	static SRes Read(void *pp, void *buf, size_t *size) {
+	static SRes Read(const ISeqInStream *pp, void *buf, size_t *size) {
 		IUppInStream *p = (IUppInStream *)pp;
 		int64 h = (size_t)p->in.Get64(buf, *size);
 		if(p->in.IsError() || h < 0) {
@@ -45,7 +45,7 @@ struct IUppOutStream {
  	Stream& out;
  	int64   len;
 
-	static size_t Write(void *pp, const void *buf, size_t size) {
+	static size_t Write(const ISeqOutStream *pp, const void *buf, size_t size) {
 		IUppOutStream *p = (IUppOutStream *)pp;
 		p->out.Put64(buf, size);
 		p->len += size;
@@ -143,7 +143,7 @@ struct LUppProgress {
 	Gate2<int64, int64> progress;
 	int64               total;
 	
-	static SRes Progress(void *pp, UInt64 inSize, UInt64)
+	static SRes Progress(const ICompressProgress *pp, UInt64 inSize, UInt64)
 	{
 		LUppProgress *p = (LUppProgress *)pp;
 		return p->progress(inSize, p->total);
