@@ -28,6 +28,7 @@ file
 	lib readonly separator,
 	lib\Version,
 	lib\Copyright,
+	lib\zlib.h,
 	lib\jerror.h,
 	lib\jpeg.patch1,
 	lib\jpeg.patch2,

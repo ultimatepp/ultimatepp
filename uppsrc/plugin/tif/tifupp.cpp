@@ -74,6 +74,14 @@ extern "C" tdata_t _TIFFmalloc(tsize_t s)
 	return (tdata_t)(p + 4);
 }
 
+extern "C" void* _TIFFcalloc(tmsize_t nmemb, tmsize_t siz)
+{
+    if( nmemb == 0 || siz == 0 )
+        return ((void *) NULL);
+
+    return _TIFFmalloc(nmemb * siz);
+}
+
 extern "C" void    _TIFFfree(tdata_t p)
 {
 	if(p) {
