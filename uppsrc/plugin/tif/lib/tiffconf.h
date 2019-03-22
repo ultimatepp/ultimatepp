@@ -24,7 +24,7 @@
 
 #include <stddef.h>
 
-#ifdef _MSC_VER
+#if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
 	#define TIFF_INT32_T long
 	#define TIFF_UINT32_T unsigned long
 	#define TIFF_INT64_T signed __int64
