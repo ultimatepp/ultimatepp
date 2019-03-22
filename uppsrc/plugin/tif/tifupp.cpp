@@ -118,9 +118,9 @@ extern "C" tdata_t _TIFFrealloc(tdata_t p, tsize_t s)
 	return (tdata_t)(newptr + 4);
 }
 
-extern "C" void _TIFFmemset(void* p, int v, tsize_t c)           { memset(p, v, c); }
-extern "C" void _TIFFmemcpy(void* d, const tdata_t s, tsize_t c) { memcpy(d, s, c); }
-extern "C" int  _TIFFmemcmp(const tdata_t p1, const tdata_t p2, tsize_t c) { return memcmp(p1, p2, c); }
+extern "C" void _TIFFmemset(void* p, int v, tmsize_t c)           { memset(p, v, c); }
+extern "C" void _TIFFmemcpy(void* d, const void *s, tmsize_t c) { memcpy(d, s, c); }
+extern "C" int  _TIFFmemcmp(const void *p1, const void *p2, tmsize_t c) { return memcmp(p1, p2, c); }
 
 /*
 static void Blt2to4(byte *dest, const byte *src, unsigned count)
