@@ -73,7 +73,7 @@ void ZstdDecompressStream::Fetch()
 		char *t = w.c;
 		char *te = ~w.c + osz;
 	
-		if(in->Get32le() != ZSTD_MAGICNUMBER) {
+		if(in->Get32le() != (int)ZSTD_MAGICNUMBER) {
 			SetError();
 			return;
 		}
@@ -265,7 +265,7 @@ ZstdDecompressStream::~ZstdDecompressStream()
 bool IsZstd(Stream& s)
 {
 	int64 pos = s.GetPos();
-	bool b = s.Get32le() == 0xFD2FB527;
+	bool b = (dword)s.Get32le() == 0xFD2FB527;
 	s.Seek(pos);
 	return b;
 }

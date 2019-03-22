@@ -422,7 +422,7 @@ MemoryProfile *PeakMemoryProfile()
 	if(sPeak)
 		return sPeak;
 	sPeak = (MemoryProfile *)MemoryAllocPermanent(sizeof(MemoryProfile));
-	memset(sPeak, 0, sizeof(MemoryProfile));
+	memset((void *)sPeak, 0, sizeof(MemoryProfile));
 	return NULL;
 }
 

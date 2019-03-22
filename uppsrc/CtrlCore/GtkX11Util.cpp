@@ -42,10 +42,10 @@ String GetProperty(Window w, Atom property, Atom rtype)
 	long rsize = minmax((long)(XMaxRequestSize(Xdisplay()) - 100), (long)256, (long)65536);
 	while(after > 0) {
 		if(XGetWindowProperty(Xdisplay(), w, property, offset, rsize, 0,
-	                          rtype, &type, &format, &nitems, &after, &data) != Success)
-	    	break;
-	    if(type == None)
-	        break;
+		                      rtype, &type, &format, &nitems, &after, &data) != Success)
+			break;
+		if(type == None)
+		    break;
 		if(data) {
 			int len = format == 32 ? sizeof(unsigned long) * nitems : nitems * (format >> 3);
 			result.Cat(data, len);

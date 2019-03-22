@@ -79,7 +79,7 @@ bool DiffSyntax::IsPattern(const wchar *current, const wchar *end, String patter
 	
 	int i = 0;
 	while((current < end) && (i < pattern.GetCount())) {
-		if(ToLower(*current) !=  ToLower(pattern[i])) {
+		if((int)ToLower(*current) != ToLower(pattern[i])) {
 			containing = false;
 			break;
 		}

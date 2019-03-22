@@ -416,15 +416,15 @@ const TextCtrl::Ln& TextCtrl::GetLn(int i) const
 		int blk = i >> 8;
 		if(view_cache[0].blk != blk)
 			Swap(view_cache[0], view_cache[1]); // trivial LRU
-			if(view_cache[0].blk != blk) {
-				Swap(view_cache[0], view_cache[1]); // trivial LRU
-				view->Seek(offset256[blk]);
-				int64 t = 0;
-				bool b;
-				view_cache[0].line.Clear();
-				view_cache[0].blk = blk;
-				LoadLines(view_cache[0].line, 256, t, *view, charset, 5000, INT_MAX, b);
-			}
+		if(view_cache[0].blk != blk) {
+			Swap(view_cache[0], view_cache[1]); // trivial LRU
+			view->Seek(offset256[blk]);
+			int64 t = 0;
+			bool b;
+			view_cache[0].line.Clear();
+			view_cache[0].blk = blk;
+			LoadLines(view_cache[0].line, 256, t, *view, charset, 5000, INT_MAX, b);
+		}
 		return view_cache[0].line[i & 255];
 	}
 	else

@@ -226,7 +226,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	bool is_comment = false;
 	while(p < e) {
 		int  raw_n = 0;
-		int pair = MAKELONG(p[0], p[1]);
+		dword pair = MAKELONG(p[0], p[1]);
 		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON || comment) {
 			if(!comment) {
 				hls.Put(2, hl_style[INK_COMMENT]);
