@@ -29,21 +29,14 @@ Selfupgrade feature (ide compiles itself and replaces the binary)
 Other:
 
 Improved jpeg EXIF support
-
-RichText now suggests corrections for misspelled words
-
-GLCtrl refactored, changed to use single context per application (allows sharing resources, e.g. textures, between widgets), support for GTK fixed,
-MSAA supported in Win32
-
-VirtualGui is a new package to implement working 'fullscreen' GUI by implementing a SystemDraw
-and a dozen of virtual methods, intended for use with e.g. games. VirtualGUI/SDL2GL is an
-implementation with SDL2.
-
+RichText now suggests corrections for misspelled words.
+RichText now supports .svg images
+GLCtrl refactored, changed to use single context per application (allows sharing resources, e.g. textures, between widgets), support for GTK fixed, MSAA supported in Win32
+VirtualGui is a new package to implement working 'fullscreen' GUI by implementing a SystemDraw and a dozen of virtual methods, intended for use with e.g. games. VirtualGUI/SDL2GL is an implementation with SDL2.
 Painter is heavily optimized for multithreaded rendering.
-
 PostgreSQL now supports RETURNING clause in SqlExp.
-
 New plugin/tess2 package (tesselation) and plugin/glm (OpenGL maths support).
+
 
 Release:
 
