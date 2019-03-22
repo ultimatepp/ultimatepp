@@ -12,6 +12,6 @@ file
 	RegExp.h,
 	RegExp.cpp,
 	lib/config.h,
-	lib.cpp,
+	lib.c,
 	Copying;
 
