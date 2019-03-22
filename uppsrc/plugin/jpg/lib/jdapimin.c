@@ -36,8 +36,6 @@ jpeg_CreateDecompress (j_decompress_ptr cinfo, int version, size_t structsize)
   cinfo->mem = NULL;		/* so jpeg_destroy knows mem mgr not called */
   if (version != JPEG_LIB_VERSION)
     ERREXIT2(cinfo, JERR_BAD_LIB_VERSION, JPEG_LIB_VERSION, version);
-  int h = SIZEOF(struct jpeg_decompress_struct);
-  (cinfo)->err->error_exit;
   if (structsize != SIZEOF(struct jpeg_decompress_struct))
     ERREXIT2(cinfo, JERR_BAD_STRUCT_SIZE, 
 	     (int) SIZEOF(struct jpeg_decompress_struct), (int) structsize);
