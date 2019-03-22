@@ -50,7 +50,10 @@
 /* Unsigned 64-bit type */
 #define TIFF_UINT64_T unsigned __int64
 
-#if _WIN64
+#define TIFF_SSIZE_T ptrdiff_t
+#define TIFF_SIZE_T size_t
+
+#if _WIN64 
 /*
   Windows 64-bit build
 */
@@ -65,14 +68,10 @@
 #  define TIFF_SIZE_FORMAT TIFF_INT64_FORMAT
 
 /* Unsigned size type */
-#  define TIFF_SIZE_T TIFF_UINT64_T
-
 /* Signed size type formatter */
 #  define TIFF_SSIZE_FORMAT TIFF_INT64_FORMAT
 
 /* Signed size type */
-#  define TIFF_SSIZE_T TIFF_INT64_T
-
 #else
 /*
   Windows 32-bit build
@@ -90,15 +89,8 @@
 /* Size type formatter */
 #  define TIFF_SIZE_FORMAT "%u"
 
-/* Unsigned size type */
-#  define TIFF_SIZE_T unsigned int
-
 /* Signed size type formatter */
 #  define TIFF_SSIZE_FORMAT "%d"
-
-/* Signed size type */
-#  define TIFF_SSIZE_T signed int
-
 #endif
 
 /* Set the native cpu bit order */

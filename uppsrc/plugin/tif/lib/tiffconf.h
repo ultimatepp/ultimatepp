@@ -22,49 +22,27 @@
 /* Unsigned 16-bit type */
 #define TIFF_UINT16_T unsigned short
 
-#ifdef PLATFORM_WIN32
+#include <stddef.h>
+
+#ifdef _MSC_VER
 	#define TIFF_INT32_T long
 	#define TIFF_UINT32_T unsigned long
+	#define TIFF_INT64_T signed __int64
+	#define TIFF_UINT64_T unsigned __int64
 #else
 	#define TIFF_INT32_T int
 	#define TIFF_UINT32_T unsigned int
+	#define TIFF_INT64_T long long int
+	#define TIFF_UINT64_T long long unsigned
 #endif
+
+#define TIFF_SSIZE_T ptrdiff_t
+#define TIFF_SIZE_T size_t
 
 #define TIFF_INT32_FORMAT "%d"
 #define TIFF_UINT32_FORMAT "%u"
-
-/* Unsigned 32-bit type */
-
-
-/* Signed 64-bit type formatter */
 #define TIFF_INT64_FORMAT "%I64d"
-
-/* Signed 64-bit type */
-#define TIFF_INT64_T signed __int64
-
-/* Unsigned 64-bit type formatter */
 #define TIFF_UINT64_FORMAT "%I64u"
-
-/* Unsigned 64-bit type */
-#define TIFF_UINT64_T unsigned __int64
-
-#if _WIN64
-/*
-  Windows 64-bit build
-*/
-
-/* Signed size type */
-#  define TIFF_SSIZE_T TIFF_INT64_T
-
-#else
-/*
-  Windows 32-bit build
-*/
-
-/* Signed size type */
-#  define TIFF_SSIZE_T signed int
-
-#endif
 
 /* Compatibility stuff. */
 
