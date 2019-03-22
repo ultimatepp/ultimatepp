@@ -1,7 +1,3 @@
-#include <Core/Core.h>
-
-using namespace Upp;
-
 #define SUPPORT_UTF
 #define SUPPORT_UTF8	//is needed anymore?
 #define SUPPORT_UCP
@@ -11,12 +7,22 @@ using namespace Upp;
 ////#define HAVE_INTTYPES_H 0
 //#undef HAVE_STDINT_H
 //#undef HAVE_INTTYPES_H
-#define int64_t int64
 
+#ifdef _MSC_VER
 
-#ifdef COMPILER_GCC
+typedef __int64            int64;
+typedef unsigned __int64   uint64;
+
+#else
+
+typedef long long int      int64;
+typedef long long unsigned uint64;
+
 #define PCRE_STATIC
+
 #endif
+
+#define int64_t int64
 
 #include "lib/pcre_byte_order.c"
 #include "lib/pcre_chartables.c"
