@@ -247,7 +247,7 @@ void Heap::DbgFreeFillK(void *p, int k)
 void Heap::Make(MemoryProfile& f)
 {
 	Mutex::Lock __(mutex);
-	memset(&f, 0, sizeof(MemoryProfile));
+	memset((void *)&f, 0, sizeof(MemoryProfile));
 	for(int i = 0; i < NKLASS; i++) {
 		int qq = Ksz(i) / 4;
 		Page *p = work[i]->next;

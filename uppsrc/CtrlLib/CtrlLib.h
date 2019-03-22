@@ -4,7 +4,7 @@
 #include <CtrlCore/CtrlCore.h>
 
 #ifdef Status //X11 defines this, likely name clash...
-#undef Status 
+#undef Status
 #endif
 
 namespace Upp {

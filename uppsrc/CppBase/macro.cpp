@@ -73,11 +73,8 @@ String CppMacro::Expand(const Vector<String>& p, const Vector<String>& ep) const
 	String r;
 	const char *s = body;
 	String pp = param;
-	bool variadic = false;
-	if(*pp.Last() == '.') {
-		variadic = true;
+	if(*pp.Last() == '.')
 		pp.Trim(pp.GetCount() - 1);
-	}
 	Index<String> param(Split(pp, ','));
 	static String VA_ARGS("__VA_ARGS__"); // static - Speed optimization
 	while(*s) {
