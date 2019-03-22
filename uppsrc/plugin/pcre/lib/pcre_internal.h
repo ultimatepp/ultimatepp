@@ -2322,7 +2322,7 @@ testing the byte-flipping features. It must also be kept in step.
 *** WARNING ***
 */
 
-typedef struct real_pcre{ //real_pcre8_or_16 {
+typedef struct real_pcre8_or_16 {
   pcre_uint32 magic_number;
   pcre_uint32 size;               /* Total that was malloced */
   pcre_uint32 options;            /* Public options */
@@ -2343,10 +2343,10 @@ typedef struct real_pcre{ //real_pcre8_or_16 {
   pcre_uint16 dummy3;             /* To ensure size is a multiple of 8 */
   const pcre_uint8 *tables;       /* Pointer to tables or NULL for std */
   void             *nullpad;      /* NULL padding */
-} real_pcre; // real_pcre8_or_16;
+} real_pcre8_or_16;
 
-//typedef struct real_pcre8_or_16 real_pcre;
-//typedef struct real_pcre8_or_16 real_pcre16;
+typedef struct real_pcre8_or_16 real_pcre;
+typedef struct real_pcre8_or_16 real_pcre16;
 
 typedef struct real_pcre32 {
   pcre_uint32 magic_number;
@@ -2772,6 +2772,9 @@ extern const pcre_uint8  PRIV(ucd_stage1)[];
 extern const pcre_uint16 PRIV(ucd_stage2)[];
 extern const pcre_uint32 PRIV(ucp_gentype)[];
 extern const pcre_uint32 PRIV(ucp_gbtable)[];
+#ifdef COMPILE_PCRE32
+extern const ucd_record  PRIV(dummy_ucd_record)[];
+#endif
 #ifdef SUPPORT_JIT
 extern const int         PRIV(ucp_typerange)[];
 #endif
@@ -2780,9 +2783,15 @@ extern const int         PRIV(ucp_typerange)[];
 /* UCD access macros */
 
 #define UCD_BLOCK_SIZE 128
-#define GET_UCD(ch) (PRIV(ucd_records) + \
+#define REAL_GET_UCD(ch) (PRIV(ucd_records) + \
         PRIV(ucd_stage2)[PRIV(ucd_stage1)[(int)(ch) / UCD_BLOCK_SIZE] * \
         UCD_BLOCK_SIZE + (int)(ch) % UCD_BLOCK_SIZE])
+
+#ifdef COMPILE_PCRE32
+#define GET_UCD(ch) ((ch > 0x10ffff)? PRIV(dummy_ucd_record) : REAL_GET_UCD(ch))
+#else
+#define GET_UCD(ch) REAL_GET_UCD(ch)
+#endif
 
 #define UCD_CHARTYPE(ch)    GET_UCD(ch)->chartype
 #define UCD_SCRIPT(ch)      GET_UCD(ch)->script
