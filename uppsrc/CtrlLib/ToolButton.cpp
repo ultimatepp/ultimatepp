@@ -162,11 +162,7 @@ ToolButton& ToolButton::Kind(int _kind)
 
 Image ToolButton::GetImage() const
 {
-	UPP::Image m = img;
-	if(IsDarkColorFace() && !nodarkadjust)
-		m = MakeImage(m, AdjustForDarkBk);
-	m = CachedRescale(m, min(m.GetSize(), maxiconsize));
-	return m;
+	return CachedRescale(img, min(m.GetSize(), maxiconsize));
 }
 
 Bar::Item& ToolButton::Image(const UPP::Image& img_)
@@ -268,6 +264,8 @@ void  ToolButton::Paint(Draw& w)
 		w.DrawText(ip.x + isz.cx + 3 + off.x, (sz.cy - tsz.cy) / 2 + off.y, text, style->font, style->textcolor[li]);
 	}
 	UPP::Image img = CachedContrast(image, style->contrast[li]);
+	DDUMP(style->contrast);
+	_DBG_; img = image;
 	if(!IsEnabled())
 		img = DisabledImage(img);
 	if(IsEnabled() && style->light[li])

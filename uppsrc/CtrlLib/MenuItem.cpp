@@ -210,8 +210,6 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 Bar::Item& MenuItem::Image(const UPP::Image& img)
 {
 	licon = img;
-	if(IsDarkColorFace() && !nodarkadjust)
-		licon = MakeImage(licon, AdjustForDarkBk);
 	Refresh();
 	return *this;
 }
@@ -219,8 +217,6 @@ Bar::Item& MenuItem::Image(const UPP::Image& img)
 MenuItem& MenuItem::RightImage(const UPP::Image& img)
 {
 	ricon = img;
-	if(IsDarkColorFace() && !nodarkadjust)
-		ricon = MakeImage(ricon, AdjustForDarkBk);
 	Refresh();
 	return *this;
 }
