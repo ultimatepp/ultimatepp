@@ -437,44 +437,30 @@ Image Colorize(const Image& img, Color color, int alpha)
 	return w;
 }
 
-Image AdjustForDarkBk(const Image& img)
+Image DarkTheme(const Image& img)
 {
-	const RGBA *s = ~img;
-	const RGBA *e = s + img.GetLength();
-	ImageBuffer w(img.GetSize());
-	RGBA *t = w;
+	Image simg = Unmultiply(img);
+	const RGBA *s = simg.begin();
+	const RGBA *e = simg.end();
+
+	ImageBuffer ib(img.GetSize());
+	RGBA *t = ~ib;
+	
 	while(s < e) {
-		RGBA h = *s;
-		Unmultiply(&h, &h, 1);
-		int q = Grayscale(*s);
-		if(q < 40) {
-			int lvl0 = max(s->r, max(s->g, s->b));
-			int l = 255 - lvl0;
-			t->r = Saturate255(l + s->r);
-			t->g = Saturate255(l + s->g);
-			t->b = Saturate255(l + s->b);
-		}
-		else
-		if(q > 216) {
-			int lvl0 = min(s->r, min(s->g, s->b));
-			int l = 255 - lvl0;
-			t->r = Saturate255(l + s->r - lvl0);
-			t->g = Saturate255(l + s->g - lvl0);
-			t->b = Saturate255(l + s->b - lvl0);
-		}
-		else {
-			t->r = s->r;
-			t->g = s->g;
-			t->b = s->b;
-		}
-		t->a = s->a;
-		t++;
-		s++;
+		RGBA h = *s++;
+		byte a = h.a;
+		h.a = 255;
+		h = DarkTheme(Color(h));
+		h.a = a;
+		*t++ = h;
 	}
-	Premultiply(w);
+	
+	Premultiply(ib);
+
 	w.SetHotSpots(img);
 	w.SetResolution(img.GetResolution());
-	return w;
+
+	return ib;
 }
 
 inline
