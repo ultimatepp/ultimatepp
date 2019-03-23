@@ -121,6 +121,8 @@ Image FlipImage(const Image& m, int mode);
 Image Colorize(const Image& img, Color color, int alpha = 100);
 Image Equalight(const Image& img, int thold = 10);
 
+Image DarkTheme(const Image& img);
+
 //Chameleon support
 int   Diff(RGBA a, RGBA b);
 Image Unglyph(const Image& m, Color& c, double& factor);
