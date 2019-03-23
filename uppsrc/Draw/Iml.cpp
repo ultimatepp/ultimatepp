@@ -70,13 +70,14 @@ Image Iml::Get(int i)
 				if(i < d.count) {
 					static const char   *cached_data;
 					static Vector<Image> cached;
-					if(cached_data != d.data) {
+					if(cached_data != d.data) { // cache single .iml
 						cached_data = d.data;
 						cached = UnpackImlData(d.data, d.len);
 						if(premultiply)
 							for(int i = 0; i < cached.GetCount(); i++)
 								cached[i] = Premultiply(cached[i]);
 					}
+					bool gui_image = cached[i].GetResolution() != IMAGE_RESOLUTION_NONE;
 					if(IsUHDMode() && cached[i].GetResolution() == IMAGE_RESOLUTION_STANDARD) {
 						int q = Find(GetId(i) + "__UHD");
 						if(q >= 0) {
@@ -86,6 +87,8 @@ Image Iml::Get(int i)
 						}
 					}
 					m.image = DPI(cached[i]);
+					if(gui_image && IsDark(SColorPaper()))
+						m.image = DarkTheme(m.image);
 					break;
 				}
 				i -= d.count;

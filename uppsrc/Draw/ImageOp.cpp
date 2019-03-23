@@ -457,8 +457,8 @@ Image DarkTheme(const Image& img)
 	
 	Premultiply(ib);
 
-	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
+	ib.SetHotSpots(img);
+	ib.SetResolution(img.GetResolution());
 
 	return ib;
 }
