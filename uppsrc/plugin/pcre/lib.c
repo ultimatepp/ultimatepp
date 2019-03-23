@@ -22,8 +22,6 @@ typedef long long unsigned uint64;
 
 #endif
 
-#define int64_t int64
-
 #include "lib/pcre_byte_order.c"
 #include "lib/pcre_chartables.c"
 #include "lib/pcre_compile.c"
