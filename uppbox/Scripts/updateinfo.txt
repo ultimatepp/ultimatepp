@@ -3,6 +3,10 @@ IDE
 
 Update license agreement year
 
+About, BSD
+
+2019-03-22: 2019
+
 ------------------------------------------------------------------
 mingw64
 
@@ -13,17 +17,20 @@ i686-win32-dwarf
 
 directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
 
-current MinGW-W64 GCC-7.2.0
+initial: MinGW-W64 GCC-7.2.0
+2019-03-22: 8.1.0
+
 ------------------------------------------------------------------
 OpenSSL
 
-http://slproweb.com/products/Win32OpenSSL.html
+https://www.npcglib.org/~stathis/blog/precompiled-openssl/
 
 install 1.0.2? Win32, Win64
 
 Copy corresponding files
 
-current 1.0.2l
+initial: 1.0.2l
+
 ------------------------------------------------------------------
 plugin/jpg
 
@@ -32,8 +39,6 @@ test with ImageView
 http://www.ijg.org/files/
 
 download jpegsr*.zip
-
-rename current lib to lib.bak
 
 remove (delete) files with main:
 remove jmemdos.c
@@ -69,15 +74,60 @@ fix problem with boolean (include from plugin/tif):
 
 remove all files except *.h, *.c and README (put it at the start of package),
 
-current version 9b
+initial: 9b
+2019-03-22: 9c
 -------------------------------------------------------------------
 plugin/tif
 
-test with ImageView
-
-http://dl.maptools.org/dl/libtiff/
+http://download.osgeo.org/libtiff/
 
 current version 3.8.2
+
+keep files from current lib (include redirectors):
+	jpeglib.h
+	jerror.h
+	zlib.h
+
+copy new sources from libtiff
+
+rename:
+	tif_config.vc.h -> tif_config.h
+	tiffconf.vc.h -> tiffconf.h
+
+
+Fix size_t in tif_config.h:
+
+#define TIFF_SSIZE_T ptrdiff_t
+#define TIFF_SIZE_T size_t
+
+Fix macros in libconf.h:
+
+#include <stddef.h>
+
+#if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
+	#define TIFF_INT32_T long
+	#define TIFF_UINT32_T unsigned long
+	#define TIFF_INT64_T signed __int64
+	#define TIFF_UINT64_T unsigned __int64
+#else
+	#define TIFF_INT32_T int
+	#define TIFF_UINT32_T unsigned int
+	#define TIFF_INT64_T long long int
+	#define TIFF_UINT64_T long long unsigned
+#endif
+
+#define TIFF_SSIZE_T ptrdiff_t
+#define TIFF_SIZE_T size_t
+
+#define TIFF_INT32_FORMAT "%d"
+#define TIFF_UINT32_FORMAT "%u"
+#define TIFF_INT64_FORMAT "%I64d"
+#define TIFF_UINT64_FORMAT "%I64u"
+
+Test with ImageView / upptst/data/tif, all platforms and compilers....
+
+2019-03-22: 4.0.10
+
 -------------------------------------------------------------------
 plugin/png
 
@@ -94,13 +144,16 @@ fix problem with zlib.h inclidu:
 #include <plugin/z/lib/zlib.h>
 #endif
 
-current version 1.2.59
+initial: 1.2.59
+2019-03-22: 1.2.59
+
 -------------------------------------------------------------------
 plugin/z
 
 https://zlib.net/
 
 current version 1.2.11
+2019-03-22: 1.2.11
 -------------------------------------------------------------------
 plugin/lz4
 
@@ -114,7 +167,8 @@ lz4.h
 put to Core/lib
 put to lz4/
 
-current 1.7.3
+initial: 1.7.3
+2019-03-22: 1.8.3
 -------------------------------------------------------------------
 Core: xxhash
 
@@ -132,6 +186,8 @@ add zstd.h -> lib
 add all .c and .h files from common, compress, decompress -> lib
 add all lib/.c files to package after lib separator
 
+- problem - API has changed
+
 current 1.3.2
 -------------------------------------------------------------------
 plugin/lzma
@@ -147,15 +203,17 @@ put
 
 to 7zTypes.h (to deactivate MT variant - for now)
 
-current 16.04
+initial: 16.04
+2019-03-22: 19.0
 -------------------------------------------------------------------
 plugin/bz2
 
-http://www.bzip.org/downloads.html
+https://sourceforge.net/projects/bzip2/files/
 
 replace files in lib
 
-current 1.0.6
+initial: 1.0.6
+2019-03-22: 1.0.6
 -------------------------------------------------------------------
 plugin/pcre
 
@@ -163,9 +221,14 @@ ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
 
 download pcre-x.x.zip
 
-replace .c files and udc.h file
+replace .c and .h files, except config.h
 
-current 8.41
+move pcre.h.generic -> pcre.h
+
+fix errors in pcre_compile.c with casts
+
+initial: 8.41
+2019-03-22: 8.43
 ------------------------------------------------------------------
 plugin/Eigen
 
@@ -181,6 +244,7 @@ replace unsupported folder without CMakeLists.txt files
 
 current version 1.2.59
 
+
 ------------------------------------------------------------------
 plugin/sqlite3
 
@@ -188,12 +252,16 @@ https://www.sqlite.org/download.html
 
 Download amalgamation, replace files
 
+2019-03-22: 3.27.2
+
+------------------------------------------------------------------
+plugin/glew
+
 ------------------------------------------------------------------
 plugin/FT_fontsys
 
 lz4plugin/astyle
 plugin/box2d
-plugin/glew
 plugin/ndisasm
 
 ------------------------------------------------------------------
