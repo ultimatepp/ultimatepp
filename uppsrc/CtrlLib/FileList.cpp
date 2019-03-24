@@ -122,7 +122,6 @@ void FileList::Paint(Draw& w, const Rect& r, const Value& q,
 		             Color ink, Color paper, dword style) const
 {
 	const File& m = ValueTo<File>(q);
-	bool dark = Grayscale(paper) < 150;
 	w.DrawRect(r, paper);
 	int x = r.left + 2;
 	w.DrawImage(x, r.top + (r.Height() - m.icon.GetSize().cy) / 2, m.icon);
@@ -131,8 +130,8 @@ void FileList::Paint(Draw& w, const Rect& r, const Value& q,
 	FontInfo fi = m.font.Info();
 	DrawFileName(w, x, r.top + (r.Height() - fi.GetHeight()) / 2,
 	             r.right - x - 2, r.Height(), WString(m.name), m.isdir, m.font,
-	             dark ? SColorHighlightText : m.ink,
-	             dark ? SColorHighlightText : m.extink,
+	             m.ink,
+	             m.extink,
 	             WString(m.desc), m.descfont, justname, m.underline);
 }
 
