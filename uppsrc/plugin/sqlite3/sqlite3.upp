@@ -18,8 +18,6 @@ file
 	Sqlite3.h,
 	Sqlite3Schema.h,
 	Sqlite3upp.cpp,
-	"Original files" readonly separator,
-	lib\sqlite3.c,
-	lib\sqlite3.h,
+	sqlite3.c,
 	Copying;
 
