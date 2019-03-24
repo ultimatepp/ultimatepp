@@ -228,10 +228,12 @@ Color DarkTheme(Color color)
 	v[0] = color.GetR();
 	v[1] = color.GetG();
 	v[2] = color.GetB();
-	
-	static double c[3] = { 0.21, 0.72, 0.07 };
 
-	double m0 = 0.21 * v[0] + 0.72 * v[1] + 0.07 * v[2];
+// this represent physiological perception of brightness of R,G,B. Sum = 1
+//	static double c[3] = { 0.21, 0.72, 0.07 }; // physiologically correct values
+	static double c[3] = { 0.3, 0.5, 0.2 }; // with this set, blues and reds are more pronounced
+
+	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2];
 	double m = 256 - m0;
 	
 	int i0 = 0;
