@@ -99,7 +99,7 @@ HANDLE XpWidget(int widget)
 	return xp_widget_handle[widget];
 }
 
-Image XpImage(int widget, int part, int state, Color color = Null, Size sz = Null)
+Image XpImage0(int widget, int part, int state, Color color, Size sz)
 {
 	HANDLE theme = XpWidget(widget);
 	if(!theme)
@@ -122,6 +122,19 @@ Image XpImage(int widget, int part, int state, Color color = Null, Size sz = Nul
 		c = Black;
 	}
 	return RecreateAlpha(m[0], m[1]);
+}
+
+bool sEmulateDarkTheme;
+
+Color sAdjust(Color c)
+{
+	return sEmulateDarkTheme ? DarkTheme(c) : c;
+}
+
+Image XpImage(int widget, int part, int state, Color color = Null, Size sz = Null)
+{
+	Image m = XpImage0(widget, part, state, color, sz);
+	return sEmulateDarkTheme ? DarkTheme(m) : m;
 }
 
 bool XpIsAvailable(int widget, int part, int state)
@@ -162,7 +175,7 @@ Color XpColor(int widget, int part, int state, int type)
 	if(!theme)
 		return Null;
 	int r = XpTheme().GetThemeColor(theme, part, state, type, &cref);
-	return r == S_OK ? Color::FromCR(cref) : Null;
+	return r == S_OK ? sAdjust(Color::FromCR(cref)) : Null;
 }
 
 int XpInt(int widget, int part, int state, int type)
@@ -204,6 +217,33 @@ void SetXpColors(Color *color, int n, int widget, int part, int state, int type)
 	}
 }
 
+struct Win32ImageMaker : ImageMaker {
+	int        widget;
+	int        part;
+	int        state;
+	Size       sz;
+
+	virtual String Key() const {
+		StringBuffer key;
+		RawCat(key, widget);
+		RawCat(key, part);
+		RawCat(key, state);
+		RawCat(key, sz);
+		return key;
+	}
+	virtual Image Make() const {
+		Rect rr(sz);
+		Image m[2];
+		for(int i = 0; i < 2; i++) {
+			ImageDraw iw(sz);
+			iw.DrawRect(sz, i ? Black() : White());
+			XpTheme().DrawThemeBackground(XpWidget(widget), iw.BeginGdi(), part, state, rr, NULL);
+			iw.EndGdi();
+			m[i] = iw;
+		}
+		return DarkTheme(RecreateAlpha(m[0], m[1]));
+	}
+};
 
 Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op)
 {
@@ -242,11 +282,21 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op)
 				r.bottom++;
 			}
 			if(htheme) {
-				SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
-				if(sw) {
-					HDC hdc = sw->BeginGdi();
-					XpTheme().DrawThemeBackground(htheme, hdc, e.part, e.state, r, NULL);
-					sw->EndGdi();
+				if(sEmulateDarkTheme) {
+					Win32ImageMaker m;
+					m.widget = e.widget;
+					m.part = e.part;
+					m.state = e.state;
+					m.sz = r.GetSize();
+					w.DrawImage(r.left, r.top, MakeImage(m));
+				}
+				else {
+					SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
+					if(sw) {
+						HDC hdc = sw->BeginGdi();
+						XpTheme().DrawThemeBackground(htheme, hdc, e.part, e.state, r, NULL);
+						sw->EndGdi();
+					}
 				}
 			}
 			if(e.whista)
@@ -615,6 +665,9 @@ void ChSysInit()
 		}
 	}
 
+	if(IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW))))
+		sEmulateDarkTheme = true;
+
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
 	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
@@ -656,19 +709,11 @@ void ChSysInit()
 	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
 	
-	bool adjust_dark = false; // IsLight(Color::FromCR(GetSysColor(COLOR_WINDOW))) && IsSystemThemeDark();
-	
-	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) {
-		Color c = Color::FromCR(GetSysColor(s->syscolor));
-		if(adjust_dark)
-			c = DarkTheme(c);
-		(*s->set)(c);
-	}
+	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++)
+		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
+
 	dword x = GetSysColor(COLOR_GRAYTEXT);
-	Color c = x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW));
-	if(adjust_dark)
-		c = DarkTheme(c);
-	SColorDisabled_Write(c);
+	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
 }
 
 #endif

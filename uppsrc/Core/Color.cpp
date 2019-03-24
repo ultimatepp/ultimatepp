@@ -233,8 +233,17 @@ Color DarkTheme(Color color)
 //	static double c[3] = { 0.21, 0.72, 0.07 }; // physiologically correct values
 	static double c[3] = { 0.3, 0.5, 0.2 }; // with this set, blues and reds are more pronounced
 
-	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2];
-	double m = 256 - m0;
+	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2]; // base brightness
+	
+	const int middle = 155; // this value represents gamma-like feature, imbalance of perception of dark vs bright
+	const double up = (256.0 - middle) / middle;
+	const double down = 1 / up;
+
+	double m;
+	if(m0 < middle)
+		m = middle + (middle - m0) * up;
+	else
+		m = middle - (m0 - middle) * down;
 	
 	int i0 = 0;
 	int i1 = 1;
