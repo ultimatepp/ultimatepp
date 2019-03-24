@@ -94,7 +94,7 @@ bool RepoSync::ListSvn(const String& path)
 						if(action == ADD && IsConflictFile(file)) {
 							action = DELETEC;
 							an = "Delete (conflict resolved)";
-							color = Black;
+							color = AdjustIfDark(Black());
 						}
 						else {
 							static const char *as[] = {
@@ -102,7 +102,7 @@ bool RepoSync::ListSvn(const String& path)
 							};
 							static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
 							an = as[action];
-							color = c[action];
+							color = AdjustIfDark(c[action]);
 						}
 					}
 					if(pass == action < 0 && action != DELETEC) {
@@ -157,7 +157,7 @@ bool RepoSync::ListGit(const String& path)
 				};
 				static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
 				an = as[action];
-				color = c[action];
+				color = AdjustIfDark(c[action]);
 			}
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
@@ -200,10 +200,11 @@ void RepoSync::SyncList()
 	for(const auto& w : work) {
 		String path = GetFullPath(w.dir);
 		int hi = list.GetCount();
+		Color bk = AdjustIfDark(LtYellow());
 		list.Add(REPOSITORY, path,
-		         AttrText().Paper(SColorInfo),
-		         AttrText(path).SetFont(ArialZ(20).Bold()).Paper(SColorInfo).Ink(Black),
-		         AttrText().Paper(SColorInfo));
+		         AttrText().Paper(bk),
+		         AttrText(path).SetFont(ArialZ(20).Bold()).Paper(bk),
+		         AttrText().Paper(bk));
 		list.SetLineCy(hi, Zy(26));
 		bool actions;
 		if(w.kind == SVN_DIR) {

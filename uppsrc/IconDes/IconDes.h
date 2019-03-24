@@ -132,7 +132,7 @@ public:
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
-	virtual void  MouseEnter()                             { SyncStatus(); }
+	virtual void  MouseEnter(Point, dword)                 { SyncStatus(); }
 	virtual void  MouseLeave()                             { SyncStatus(); }
 	virtual void  LeftUp(Point p, dword keyflags);
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
