@@ -372,6 +372,9 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO?
 
+inline bool  IsDarkTheme()           { return IsDark(SColorPaper()); }
+inline Color AdjustIfDark(Color c)   { return IsDarkTheme() ? DarkTheme(c) : c; }
+
 Drawing AsDrawing(const Painting& pw);
 
 class Painting : public ValueType<Painting, 48, Moveable<Painting> > {
