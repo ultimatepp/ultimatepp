@@ -289,7 +289,6 @@ enum {
 
 class Image;
 
-//DEPRECATED: TODO
 Color SBlack();
 Color SGray();
 Color SLtGray();
@@ -308,27 +307,25 @@ Color SLtYellow();
 Color SLtBlue();
 Color SLtMagenta();
 Color SLtCyan();
-//END OF DEPRECATED
 
 Color SColorPaper();
 Color SColorText();
+Color SColorFace();
 Color SColorHighlight();
-Color SColorHighlightText();//
+Color SColorHighlightText();
 Color SColorMenu();
 Color SColorMenuText();
 Color SColorInfo();
-Color SColorInfoText();//
+Color SColorInfoText();
 Color SColorMark();
 Color SColorMenuMark();
 Color SColorDisabled();
 Color SColorLight();
-Color SColorFace();
 Color SColorLabel();
 Color SColorShadow();
 
 Color SColorLtFace();
 Color SColorDkShadow();
-
 
 void SBlack_Write(Color c);
 void SGray_Write(Color c);
