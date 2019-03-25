@@ -368,9 +368,7 @@ void SColorShadow_Write(Color c);
 void SColorLtFace_Write(Color c);
 void SColorDkShadow_Write(Color c);
 
-
-inline Color InvertColor() { return Color(255, 0); }
-inline Color DefaultInk() { return Black(); } //TODO?
+inline Color InvertColor() { return Color(255, 0); } // Special color that with DrawRect actually inverts the rectangle
 
 inline bool  IsDarkTheme()           { return IsDark(SColorPaper()); }
 inline Color AdjustIfDark(Color c)   { return IsDarkTheme() ? DarkTheme(c) : c; }
@@ -531,49 +529,49 @@ public:
 	void DrawData(int x, int y, int cx, int cy, const String& data, const char *type);
 	void DrawData(const Rect& r, const String& data, const char *type);
 
-	void DrawLine(int x1, int y1, int x2, int y2, int width = 0, Color color = DefaultInk);
-	void DrawLine(Point p1, Point p2, int width = 0, Color color = DefaultInk);
+	void DrawLine(int x1, int y1, int x2, int y2, int width = 0, Color color = Black());
+	void DrawLine(Point p1, Point p2, int width = 0, Color color = Black());
 
-	void DrawEllipse(const Rect& r, Color color = DefaultInk,
-	                 int pen = Null, Color pencolor = DefaultInk);
-	void DrawEllipse(int x, int y, int cx, int cy, Color color = DefaultInk,
-		             int pen = Null, Color pencolor = DefaultInk);
+	void DrawEllipse(const Rect& r, Color color = Black(),
+	                 int pen = Null, Color pencolor = Black());
+	void DrawEllipse(int x, int y, int cx, int cy, Color color = Black(),
+		             int pen = Null, Color pencolor = Black());
 
-	void DrawArc(const Rect& rc, Point start, Point end, int width = 0, Color color = DefaultInk);
+	void DrawArc(const Rect& rc, Point start, Point end, int width = 0, Color color = Black());
 
 	void DrawPolyPolyline(const Point *vertices, int vertex_count,
 	                      const int *counts, int count_count,
-	                      int width = 0, Color color = DefaultInk, Color doxor = Null);
+	                      int width = 0, Color color = Black(), Color doxor = Null);
 	void DrawPolyPolyline(const Vector<Point>& vertices, const Vector<int>& counts,
-		                  int width = 0, Color color = DefaultInk, Color doxor = Null);
+		                  int width = 0, Color color = Black(), Color doxor = Null);
 	void DrawPolyline(const Point *vertices, int count,
-		              int width = 0, Color color = DefaultInk, Color doxor = Null);
+		              int width = 0, Color color = Black(), Color doxor = Null);
 	void DrawPolyline(const Vector<Point>& vertices,
-		              int width = 0, Color color = DefaultInk, Color doxor = Null);
+		              int width = 0, Color color = Black(), Color doxor = Null);
 
 	void   DrawPolyPolyPolygon(const Point *vertices, int vertex_count,
 		                       const int *subpolygon_counts, int subpolygon_count_count,
 		                       const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
-		                       Color color = DefaultInk, int width = 0, Color outline = Null,
+		                       Color color = Black(), int width = 0, Color outline = Null,
 		                       uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolyPolygon(const Vector<Point>& vertices,
 	                           const Vector<int>& subpolygon_counts,
 	                           const Vector<int>& disjunct_polygon_counts,
-	                           Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                           Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolygon(const Point *vertices, int vertex_count,
 	                       const int *subpolygon_counts, int subpolygon_count_count,
-	                       Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                       Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolygon(const Vector<Point>& vertices, const Vector<int>& subpolygon_counts,
-	                       Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                       Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygons(const Point *vertices, int vertex_count,
 	                    const int *polygon_counts, int polygon_count_count,
-	                    Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                    Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygons(const Vector<Point>& vertices, const Vector<int>& polygon_counts,
-	                    Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                    Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygon(const Point *vertices, int vertex_count,
-	                   Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                   Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygon(const Vector<Point>& vertices,
-	                   Color color = DefaultInk, int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                   Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 
 	void DrawDrawing(const Rect& r, const Drawing& iw) { DrawDrawingOp(r, iw); }
 	void DrawDrawing(int x, int y, int cx, int cy, const Drawing& iw);
@@ -584,29 +582,29 @@ public:
 	void DrawPainting(int x, int y, const Painting& iw);
 
 	void DrawText(int x, int y, int angle, const wchar *text, Font font = StdFont(),
-		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+		          Color ink = Black(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const wchar *text, Font font = StdFont(),
-		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+		          Color ink = Black(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, const WString& text, Font font = StdFont(),
-		          Color ink = DefaultInk, const int *dx = NULL);
+		          Color ink = Black(), const int *dx = NULL);
 	void DrawText(int x, int y, int angle, const WString& text, Font font = StdFont(),
-		          Color ink = DefaultInk, const int *dx = NULL);
+		          Color ink = Black(), const int *dx = NULL);
 
 	void DrawText(int x, int y, int angle, const char *text, byte charset,
-	              Font font = StdFont(), Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+	              Font font = StdFont(), Color ink = Black(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const char *text, byte charset, Font font = StdFont(),
-		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+		          Color ink = Black(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, int angle, const char *text,
-	              Font font = StdFont(), Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+	              Font font = StdFont(), Color ink = Black(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const char *text, Font font = StdFont(),
-		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);
+		          Color ink = Black(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, const String& text, Font font = StdFont(),
-		          Color ink = DefaultInk, const int *dx = NULL);
+		          Color ink = Black(), const int *dx = NULL);
 	void DrawText(int x, int y, int angle, const String& text, Font font = StdFont(),
-		          Color ink = DefaultInk, const int *dx = NULL);
+		          Color ink = Black(), const int *dx = NULL);
 
 	static void SinCos(int angle, double& sina, double& cosa);
 	
