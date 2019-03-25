@@ -98,7 +98,7 @@ bool Form::Generate(Font font)
 		{
 			Label *e = &_Ctrls.Create<Label>((*p)[i].Get("Variable"));
 			e->SetFont(objFont);
-			Color fontColor = DefaultInk();
+			Color fontColor = Black();
 			LoadFromString(fontColor, Decode64((*p)[i].Get("Font.Color",
 				StoreAsString(fontColor))));
 			e->SetInk(fontColor);

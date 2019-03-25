@@ -257,7 +257,7 @@ void PropertiesWindow::Generate(FormObject* pI, int index)
 
 	if (type == "Label")
 	{
-		Color src = DefaultInk();
+		Color src = Black();
 		LoadFromString( src, Decode64(pI->Get("Font.Color", Encode64(StoreAsString(src)))) );
 		Property("Label", t_("Label:"), "EditField", Array<String>() << pI->Get("Label"));
 		Property("Text.Align", t_("Text align:"), "DropList",

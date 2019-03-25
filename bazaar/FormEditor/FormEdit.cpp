@@ -751,7 +751,7 @@ void FormEdit::UpdateChildCount(int count)
 		{
 			Label *b = &_Ctrls.Create<Label>();
 			b->SetFont(font);
-			Color fontColor = DefaultInk();
+			Color fontColor = Black();
 			LoadFromString(fontColor, Decode64((*_View.GetObjects())[i].Get("Font.Color",
 				StoreAsString(fontColor))));
 			b->SetInk(fontColor);

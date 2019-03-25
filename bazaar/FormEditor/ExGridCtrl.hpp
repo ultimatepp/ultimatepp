@@ -11,7 +11,7 @@ class ExGridCtrl : public GridCtrl
 public:
 	ExGridCtrl();
 	virtual void Paint(Draw &w);
-	void SetInfo(const String& info, Font font = StdFont(), Color ink = DefaultInk());
+	void SetInfo(const String& info, Font font = StdFont(), Color ink = Black());
 
 	virtual bool Key(dword key, int count);
 	virtual void LeftDown(Point p, dword keyflags);
