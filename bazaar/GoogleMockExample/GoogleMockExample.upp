@@ -1,4 +1,4 @@
-description "Google mock in action\377";
+description "Google Mock in action\377";
 
 uses
 	plugin/gmock,

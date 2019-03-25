@@ -26,6 +26,8 @@ fn FindInTest(line, type) {
 }
 
 macro "Google Test" : "Launch all tests" Ctrl+R {
+	ClearConsole();
+	
 	Execute(Target());
 }
 
