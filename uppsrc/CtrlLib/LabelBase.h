@@ -12,7 +12,7 @@ String DeAmp(const char *s);
 Size GetSmartTextSize(const char *text, Font font = StdFont(), int cx = INT_MAX);
 int  GetSmartTextHeight(const char *s, int cx, Font font = StdFont());
 void DrawSmartText(Draw& w, int x, int y, int cx, const char *text,
-                   Font font = StdFont(), Color ink = DefaultInk, int accesskey = 0);
+                   Font font = StdFont(), Color ink = SBlack(), int accesskey = 0);
 
 int   ExtractAccessKey(const char *s, String& label);
 bool  CompareAccessKey(int accesskey, dword key);
