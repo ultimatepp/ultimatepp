@@ -26,7 +26,13 @@
 #define _TIFFSwab32BitData gdal__TIFFSwab32BitData
 #define _TIFFSwab64BitData gdal__TIFFSwab64BitData
 
+#define TIFFSwabArrayOfFloat gdal_TIFFSwabArrayOfFloat
+#define TIFFSwabArrayOfLong8 gdal_TIFFSwabArrayOfLong8
+#define TIFFSwabFloat gdal_TIFFSwabFloat
+#define TIFFSwabLong8 gdal_TIFFSwabLong8
+
 /* We define this here in general so that a VC++ build will publically
+
    declare STDCALL interfaces even if an application is built against it
    using MinGW */
 
