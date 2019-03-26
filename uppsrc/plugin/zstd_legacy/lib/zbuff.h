@@ -31,10 +31,6 @@
 #ifndef ZSTD_BUFFERED_H_23987
 #define ZSTD_BUFFERED_H_23987
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
 /* *************************************
 *  Dependencies
 ***************************************/
@@ -188,10 +184,5 @@ ZSTDLIB_API size_t ZBUFF_compressInit_advanced(ZBUFF_CCtx* zbc,
                                                ZSTD_parameters params, unsigned long long pledgedSrcSize);
 
 #endif /* ZBUFF_STATIC_LINKING_ONLY */
-
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif  /* ZSTD_BUFFERED_H_23987 */

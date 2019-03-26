@@ -2,6 +2,8 @@
 
 namespace Upp {
 	
+namespace Legacy {
+	
 // we simply store data as series of complete Zstd frames, as library gives us no easy way
 // to do it in MT
 
@@ -131,5 +133,7 @@ ZstdCompressStream::~ZstdCompressStream()
 {
 	Close();
 }
+
+};
 
 };

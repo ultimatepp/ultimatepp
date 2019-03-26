@@ -4,6 +4,7 @@
 
 namespace Upp {
 
+namespace Legacy {
 
 void ZstdDecompressStream::Init()
 {
@@ -269,5 +270,7 @@ bool IsZstd(Stream& s)
 	s.Seek(pos);
 	return b;
 }
+
+};
 
 };

@@ -35,10 +35,6 @@
 #ifndef MEM_H_MODULE
 #define MEM_H_MODULE
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
 /*-****************************************
 *  Dependencies
 ******************************************/
@@ -368,10 +364,6 @@ MEM_STATIC U32 MEM_readMINMATCH(const void* memPtr, U32 length)
                 return MEM_read32(memPtr)>>8;
     }
 }
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif /* MEM_H_MODULE */
 

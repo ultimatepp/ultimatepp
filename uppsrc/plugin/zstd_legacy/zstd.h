@@ -1,12 +1,14 @@
-#ifndef _plugin_zstd_zstd_h_
-#define _plugin_zstd_zstd_h_
+#ifndef _plugin_zstd_zstd_legacy_h_
+#define _plugin_zstd_zstd_legacy_h_
 
 #include <Core/Core.h>
 
+namespace Upp {
+	
+namespace Legacy {
+
 #define ZSTD_STATIC_LINKING_ONLY
 #include "lib/zstd.h"
-
-namespace Upp {
 
 class ZstdCompressStream : public Stream  {
 public:
@@ -103,16 +105,16 @@ String ZstdCompress(const String& s, Gate<int64, int64> progress = Null);
 String ZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String ZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
 
-#ifdef _MULTITHREADED
 int64 CoZstdCompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 int64 CoZstdDecompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 String CoZstdCompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String CoZstdCompress(const String& s, Gate<int64, int64> progress = Null);
 String CoZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String CoZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
-#endif
 
 bool IsZstd(Stream& s);
+
+}
 
 }
 
