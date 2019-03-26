@@ -96,6 +96,8 @@ CONSOLE_APP_MAIN
 		
 		ff.Next();
 	}
+	
+	RLOG("========================== OK");
 
 	DeleteFolderDeep(outdir);
 	
