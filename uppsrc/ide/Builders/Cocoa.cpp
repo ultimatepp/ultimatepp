@@ -64,7 +64,7 @@ void GccBuilder::CocoaAppBundle()
 			<< "    <key>NSHighResolutionCapable</key>\n"
 		    << "    <string>True</string>\n"
 		    << "	<key>LSMinimumSystemVersion</key>\n"
-			<< "    <string>10.13</string>\n"
+			<< "    <string>10.13.0</string>\n"
 		;
 		if(imgs.GetCount())
 			Info_plist
