@@ -1,9 +1,11 @@
 #include "zstd.h"
 
 namespace Upp {
-	
-void sCompressStreamCopy_(Stream& out, Stream& in, Gate<int64, int64> progress, Stream& orig_in, int64 insz);
 
+void sCompressStreamCopy_(Stream& out, Stream& in, Gate<int64, int64> progress, Stream& orig_in, int64 insz);
+	
+namespace Legacy {
+	
 static int64 sZstdCompress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool co)
 {
 	ZstdCompressStream outs(out);
@@ -103,5 +105,7 @@ String CoZstdDecompress(const String& s, Gate<int64, int64> progress)
 }
 
 #endif
+
+};
 
 };

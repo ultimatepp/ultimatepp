@@ -34,11 +34,6 @@
 #ifndef FSE_H
 #define FSE_H
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
-
 /*-*****************************************
 *  Dependencies
 ******************************************/
@@ -619,10 +614,5 @@ MEM_STATIC unsigned FSE_endOfDState(const FSE_DState_t* DStatePtr)
 
 
 #endif /* FSE_STATIC_LINKING_ONLY */
-
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif  /* FSE_H */

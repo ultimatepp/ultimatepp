@@ -33,11 +33,6 @@
 #ifndef ERROR_PUBLIC_H_MODULE
 #define ERROR_PUBLIC_H_MODULE
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
-
 /* ****************************************
 *  error codes list
 ******************************************/
@@ -68,10 +63,5 @@ typedef enum {
     which can be used to compare directly with enum list published into "error_public.h" */
 ZSTD_ErrorCode ZSTD_getErrorCode(size_t functionResult);
 const char* ZSTD_getErrorString(ZSTD_ErrorCode code);
-
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif /* ERROR_PUBLIC_H_MODULE */

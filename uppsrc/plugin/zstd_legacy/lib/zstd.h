@@ -32,10 +32,6 @@
 #ifndef ZSTD_H_235446
 #define ZSTD_H_235446
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
 /*-*************************************
 *  Dependencies
 ***************************************/
@@ -467,9 +463,5 @@ ZSTDLIB_API size_t ZSTD_insertBlock(ZSTD_DCtx* dctx, const void* blockStart, siz
 
 
 #endif   /* ZSTD_STATIC_LINKING_ONLY */
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif  /* ZSTD_H_235446 */

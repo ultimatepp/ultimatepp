@@ -35,11 +35,6 @@
 #ifndef ERROR_H_MODULE
 #define ERROR_H_MODULE
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-
-
 /* ****************************************
 *  Dependencies
 ******************************************/
@@ -117,9 +112,5 @@ ERR_STATIC const char* ERR_getErrorName(size_t code)
 {
     return ERR_getErrorString(ERR_getErrorCode(code));
 }
-
-#if defined (__cplusplus)
-}
-#endif
 
 #endif /* ERROR_H_MODULE */
