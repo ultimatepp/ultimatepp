@@ -1,0 +1,22 @@
+description "\3770,128,128";
+
+file
+	zstd.h,
+	Compress.cpp,
+	Decompress.cpp,
+	Util.cpp,
+	lib\zstd.h,
+	src.tpp,
+	Copying,
+	lib readonly separator,
+	lib\entropy_common.c,
+	lib\fse_compress.c,
+	lib\fse_decompress.c,
+	lib\huf_compress.c,
+	lib\huf_decompress.c,
+	lib\zbuff_compress.c,
+	lib\zbuff_decompress.c,
+	lib\zstd_common.c,
+	lib\zstd_compress.c,
+	lib\zstd_decompress.c;
+

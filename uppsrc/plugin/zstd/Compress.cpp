@@ -26,14 +26,12 @@ void ZstdCompressStream::Alloc()
 	ptr = ~buffer;
 }
 
-#ifdef _MULTITHREADED
 void ZstdCompressStream::Co(bool b)
 {
 	FlushOut();
 	concurrent = b;
 	Alloc();
 }
-#endif
 
 void ZstdCompressStream::FlushOut()
 {
@@ -47,13 +45,11 @@ void ZstdCompressStream::FlushOut()
 	int   ii = 0;
 	for(byte *s = ~buffer; s < ptr; s += BLOCK_BYTES) {
 		int origsize = min((int)BLOCK_BYTES, int(ptr - s));
-#ifdef _MULTITHREADED
 		if(concurrent)
 			co & [=] {
 				outsz[ii] = (int)ZSTD_compress(t, osz, s, origsize, level);
 			};
 		else
-#endif
 			outsz[ii] = (int)ZSTD_compress(t, osz, s, origsize, level);
 		ii++;
 		t += osz;

@@ -34,45 +34,25 @@
 
 
 /* **************************************************************
-*  Compiler specifics
-****************************************************************/
-#ifdef _MSC_VER    /* Visual Studio */
-#  define FORCE_INLINE static __forceinline
-#  include <intrin.h>                    /* For Visual 2005 */
-#  pragma warning(disable : 4127)        /* disable: C4127: conditional expression is constant */
-#  pragma warning(disable : 4214)        /* disable: C4214: non-int bitfields */
-#else
-#  ifdef __GNUC__
-#    define GCC_VERSION (__GNUC__ * 100 + __GNUC_MINOR__)
-#    define FORCE_INLINE static inline __attribute__((always_inline))
-#  else
-#    define FORCE_INLINE static inline
-#  endif
-#endif
-
-
-/* **************************************************************
 *  Includes
 ****************************************************************/
 #include <stdlib.h>     /* malloc, free, qsort */
 #include <string.h>     /* memcpy, memset */
-#include <stdio.h>      /* printf (debug) */
 #include "bitstream.h"
+#include "compiler.h"
 #define FSE_STATIC_LINKING_ONLY
 #include "fse.h"
+#include "error_private.h"
 
 
 /* **************************************************************
 *  Error Management
 ****************************************************************/
 #define FSE_isError ERR_isError
-#define FSE_STATIC_ASSERT(c) { enum { FSE_static_assert = 1/(int)(!!(c)) }; }   /* use only *after* variable declarations */
+#define FSE_STATIC_ASSERT(c) DEBUG_STATIC_ASSERT(c)   /* use only *after* variable declarations */
 
-
-/* **************************************************************
-*  Complex types
-****************************************************************/
-typedef U32 DTable_max_t[FSE_DTABLE_SIZE_U32(FSE_MAX_TABLELOG)];
+/* check and forward error code */
+#define CHECK_F(f) { size_t const e = f; if (FSE_isError(e)) return e; }
 
 
 /* **************************************************************
@@ -152,7 +132,6 @@ size_t FSE_buildDTable(FSE_DTable* dt, const short* normalizedCounter, unsigned 
                 position = (position + step) & tableMask;
                 while (position > highThreshold) position = (position + step) & tableMask;   /* lowprob area */
         }   }
-
         if (position!=0) return ERROR(GENERIC);   /* position must reach all cells once, otherwise normalizedCounter is incorrect */
     }
 
@@ -160,14 +139,13 @@ size_t FSE_buildDTable(FSE_DTable* dt, const short* normalizedCounter, unsigned 
     {   U32 u;
         for (u=0; u<tableSize; u++) {
             FSE_FUNCTION_TYPE const symbol = (FSE_FUNCTION_TYPE)(tableDecode[u].symbol);
-            U16 nextState = symbolNext[symbol]++;
-            tableDecode[u].nbBits = (BYTE) (tableLog - BIT_highbit32 ((U32)nextState) );
+            U32 const nextState = symbolNext[symbol]++;
+            tableDecode[u].nbBits = (BYTE) (tableLog - BIT_highbit32(nextState) );
             tableDecode[u].newState = (U16) ( (nextState << tableDecode[u].nbBits) - tableSize);
     }   }
 
     return 0;
 }
-
 
 
 #ifndef FSE_COMMONDEFS_ONLY
@@ -219,7 +197,7 @@ size_t FSE_buildDTable_raw (FSE_DTable* dt, unsigned nbBits)
     return 0;
 }
 
-FORCE_INLINE size_t FSE_decompress_usingDTable_generic(
+FORCE_INLINE_TEMPLATE size_t FSE_decompress_usingDTable_generic(
           void* dst, size_t maxDstSize,
     const void* cSrc, size_t cSrcSize,
     const FSE_DTable* dt, const unsigned fast)
@@ -234,8 +212,7 @@ FORCE_INLINE size_t FSE_decompress_usingDTable_generic(
     FSE_DState_t state2;
 
     /* Init */
-    { size_t const errorCode = BIT_initDStream(&bitD, cSrc, cSrcSize);   /* replaced last arg by maxCompressed Size */
-      if (FSE_isError(errorCode)) return errorCode; }
+    CHECK_F(BIT_initDStream(&bitD, cSrc, cSrcSize));
 
     FSE_initDState(&state1, &bitD, dt);
     FSE_initDState(&state2, &bitD, dt);
@@ -243,7 +220,7 @@ FORCE_INLINE size_t FSE_decompress_usingDTable_generic(
 #define FSE_GETSYMBOL(statePtr) fast ? FSE_decodeSymbolFast(statePtr, &bitD) : FSE_decodeSymbol(statePtr, &bitD)
 
     /* 4 symbols per loop */
-    for ( ; (BIT_reloadDStream(&bitD)==BIT_DStream_unfinished) && (op<olimit) ; op+=4) {
+    for ( ; (BIT_reloadDStream(&bitD)==BIT_DStream_unfinished) & (op<olimit) ; op+=4) {
         op[0] = FSE_GETSYMBOL(&state1);
 
         if (FSE_MAX_TABLELOG*2+7 > sizeof(bitD.bitContainer)*8)    /* This test must be static */
@@ -266,18 +243,14 @@ FORCE_INLINE size_t FSE_decompress_usingDTable_generic(
     /* note : BIT_reloadDStream(&bitD) >= FSE_DStream_partiallyFilled; Ends at exactly BIT_DStream_completed */
     while (1) {
         if (op>(omax-2)) return ERROR(dstSize_tooSmall);
-
         *op++ = FSE_GETSYMBOL(&state1);
-
         if (BIT_reloadDStream(&bitD)==BIT_DStream_overflow) {
             *op++ = FSE_GETSYMBOL(&state2);
             break;
         }
 
         if (op>(omax-2)) return ERROR(dstSize_tooSmall);
-
         *op++ = FSE_GETSYMBOL(&state2);
-
         if (BIT_reloadDStream(&bitD)==BIT_DStream_overflow) {
             *op++ = FSE_GETSYMBOL(&state1);
             break;
@@ -301,29 +274,34 @@ size_t FSE_decompress_usingDTable(void* dst, size_t originalSize,
 }
 
 
-size_t FSE_decompress(void* dst, size_t maxDstSize, const void* cSrc, size_t cSrcSize)
+size_t FSE_decompress_wksp(void* dst, size_t dstCapacity, const void* cSrc, size_t cSrcSize, FSE_DTable* workSpace, unsigned maxLog)
 {
     const BYTE* const istart = (const BYTE*)cSrc;
     const BYTE* ip = istart;
     short counting[FSE_MAX_SYMBOL_VALUE+1];
-    DTable_max_t dt;   /* Static analyzer seems unable to understand this table will be properly initialized later */
     unsigned tableLog;
     unsigned maxSymbolValue = FSE_MAX_SYMBOL_VALUE;
 
-    if (cSrcSize<2) return ERROR(srcSize_wrong);   /* too small input size */
-
     /* normal FSE decoding mode */
-    {   size_t const NCountLength = FSE_readNCount (counting, &maxSymbolValue, &tableLog, istart, cSrcSize);
-        if (FSE_isError(NCountLength)) return NCountLength;
-        if (NCountLength >= cSrcSize) return ERROR(srcSize_wrong);   /* too small input size */
-        ip += NCountLength;
-        cSrcSize -= NCountLength;
-    }
+    size_t const NCountLength = FSE_readNCount (counting, &maxSymbolValue, &tableLog, istart, cSrcSize);
+    if (FSE_isError(NCountLength)) return NCountLength;
+    //if (NCountLength >= cSrcSize) return ERROR(srcSize_wrong);   /* too small input size; supposed to be already checked in NCountLength, only remaining case : NCountLength==cSrcSize */
+    if (tableLog > maxLog) return ERROR(tableLog_tooLarge);
+    ip += NCountLength;
+    cSrcSize -= NCountLength;
 
-    { size_t const errorCode = FSE_buildDTable (dt, counting, maxSymbolValue, tableLog);
-      if (FSE_isError(errorCode)) return errorCode; }
+    CHECK_F( FSE_buildDTable (workSpace, counting, maxSymbolValue, tableLog) );
 
-    return FSE_decompress_usingDTable (dst, maxDstSize, ip, cSrcSize, dt);   /* always return, even if it is an error code */
+    return FSE_decompress_usingDTable (dst, dstCapacity, ip, cSrcSize, workSpace);   /* always return, even if it is an error code */
+}
+
+
+typedef FSE_DTable DTable_max_t[FSE_DTABLE_SIZE_U32(FSE_MAX_TABLELOG)];
+
+size_t FSE_decompress(void* dst, size_t dstCapacity, const void* cSrc, size_t cSrcSize)
+{
+    DTable_max_t dt;   /* Static analyzer seems unable to understand this table will be properly initialized later */
+    return FSE_decompress_wksp(dst, dstCapacity, cSrc, cSrcSize, dt, FSE_MAX_TABLELOG);
 }
 
 

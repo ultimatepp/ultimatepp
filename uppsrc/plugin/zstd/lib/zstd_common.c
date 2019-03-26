@@ -1,91 +1,83 @@
 /*
-    Common functions of Zstd compression library
-    Copyright (C) 2015-2016, Yann Collet.
+ * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under both the BSD-style license (found in the
+ * LICENSE file in the root directory of this source tree) and the GPLv2 (found
+ * in the COPYING file in the root directory of this source tree).
+ * You may select, at your option, one of the above-listed licenses.
+ */
 
-    BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
-
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are
-    met:
-    * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following disclaimer
-    in the documentation and/or other materials provided with the
-    distribution.
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-    You can contact the author at :
-    - zstd homepage : http://www.zstd.net/
-*/
 
 
 /*-*************************************
 *  Dependencies
 ***************************************/
-#include <stdlib.h>         /* malloc */
+#include <stdlib.h>      /* malloc, calloc, free */
+#include <string.h>      /* memset */
 #include "error_private.h"
-#define ZSTD_STATIC_LINKING_ONLY
-#include "zstd.h"           /* declaration of ZSTD_isError, ZSTD_getErrorName, ZSTD_getErrorCode, ZSTD_getErrorString, ZSTD_versionNumber */
-#include "zbuff.h"          /* declaration of ZBUFF_isError, ZBUFF_getErrorName */
+#include "zstd_internal.h"
 
 
 /*-****************************************
 *  Version
 ******************************************/
-unsigned ZSTD_versionNumber (void) { return ZSTD_VERSION_NUMBER; }
+unsigned ZSTD_versionNumber(void) { return ZSTD_VERSION_NUMBER; }
+
+const char* ZSTD_versionString(void) { return ZSTD_VERSION_STRING; }
 
 
 /*-****************************************
 *  ZSTD Error Management
 ******************************************/
+#undef ZSTD_isError   /* defined within zstd_internal.h */
 /*! ZSTD_isError() :
-*   tells if a return value is an error code */
+ *  tells if a return value is an error code
+ *  symbol is required for external callers */
 unsigned ZSTD_isError(size_t code) { return ERR_isError(code); }
 
 /*! ZSTD_getErrorName() :
-*   provides error code string from function result (useful for debugging) */
+ *  provides error code string from function result (useful for debugging) */
 const char* ZSTD_getErrorName(size_t code) { return ERR_getErrorName(code); }
 
 /*! ZSTD_getError() :
-*   convert a `size_t` function result into a proper ZSTD_errorCode enum */
+ *  convert a `size_t` function result into a proper ZSTD_errorCode enum */
 ZSTD_ErrorCode ZSTD_getErrorCode(size_t code) { return ERR_getErrorCode(code); }
 
 /*! ZSTD_getErrorString() :
-*   provides error code string from enum */
-const char* ZSTD_getErrorString(ZSTD_ErrorCode code) { return ERR_getErrorName(code); }
+ *  provides error code string from enum */
+const char* ZSTD_getErrorString(ZSTD_ErrorCode code) { return ERR_getErrorString(code); }
 
 
-/* **************************************************************
-*  ZBUFF Error Management
+
+/*=**************************************************************
+*  Custom allocator
 ****************************************************************/
-unsigned ZBUFF_isError(size_t errorCode) { return ERR_isError(errorCode); }
-
-const char* ZBUFF_getErrorName(size_t errorCode) { return ERR_getErrorName(errorCode); }
-
-
-
-void* ZSTD_defaultAllocFunction(void* opaque, size_t size)
+void* ZSTD_malloc(size_t size, ZSTD_customMem customMem)
 {
-    void* address = malloc(size);
-    (void)opaque;
-    /* printf("alloc %p, %d opaque=%p \n", address, (int)size, opaque); */
-    return address;
+    if (customMem.customAlloc)
+        return customMem.customAlloc(customMem.opaque, size);
+    return malloc(size);
 }
 
-void ZSTD_defaultFreeFunction(void* opaque, void* address)
+void* ZSTD_calloc(size_t size, ZSTD_customMem customMem)
 {
-    (void)opaque;
-    /* if (address) printf("free %p opaque=%p \n", address, opaque); */
-    free(address);
+    if (customMem.customAlloc) {
+        /* calloc implemented as malloc+memset;
+         * not as efficient as calloc, but next best guess for custom malloc */
+        void* const ptr = customMem.customAlloc(customMem.opaque, size);
+        memset(ptr, 0, size);
+        return ptr;
+    }
+    return calloc(1, size);
+}
+
+void ZSTD_free(void* ptr, ZSTD_customMem customMem)
+{
+    if (ptr!=NULL) {
+        if (customMem.customFree)
+            customMem.customFree(customMem.opaque, ptr);
+        else
+            free(ptr);
+    }
 }
