@@ -4,7 +4,6 @@
 
 namespace Upp {
 
-
 void ZstdDecompressStream::Init()
 {
 	for(int i = 0; i < 16; i++)
@@ -16,6 +15,8 @@ void ZstdDecompressStream::Init()
 	eof = false;
 	static byte h;
 	ptr = rdlim = buffer = &h;
+	compressed_data.Clear();
+	compressed_at = 0;
 	ClearError();
 }
 
@@ -32,8 +33,8 @@ bool ZstdDecompressStream::Next()
 	ptr = rdlim = buffer;
 	if(ii < count) {
 		const Workblock& w = wb[ii++];
-		ptr = (byte *)~w.d;
-		rdlim = ptr + w.dlen;
+		ptr = (byte *)~w.decompressed_data;
+		rdlim = ptr + w.decompressed_sz;
 		Stream::buffer = ptr;
 		return true;
 	}
@@ -46,159 +47,83 @@ void ZstdDecompressStream::Fetch()
 		return;
 	if(eof)
 		return;
-#ifdef _MULTITHREADED
 	CoWork co;
-#endif
 	bool   error = false;
 	ii = 0;
 	count = concurrent ? 16 : 1;
-	int osz = (int)ZSTD_compressBound(BLOCK_BYTES);
 	for(int i = 0; i < count; i++) {
 		Workblock& w = wb[i];
-		if(in->IsEof()) { // This is EOF
-			eof = true;
-			count = i;
-			break;
-		}
 		
-		if(!w.c)
-			w.c.Alloc(osz);
-		if(!w.d || w.irregular_d) {
-			w.d.Alloc(BLOCK_BYTES);
-			w.irregular_d = false;
-		}
-		
-		w.lc.Clear();
-		
-		char *t = w.c;
-		char *te = ~w.c + osz;
-	
-		if(in->Get32le() != (int)ZSTD_MAGICNUMBER) {
-			SetError();
-			return;
-		}
-		int fhd = in->Get();
-		if(fhd < 0) {
-			SetError();
-			return;
-		}
-		Poke32le(t, ZSTD_MAGICNUMBER);
-		t += 4;
-		*t++ = fhd;
-	    dword dictID= fhd & 3;
-	    dword directMode = (fhd >> 5) & 1;
-	    dword const fcsId = fhd >> 6;
-		static byte ZSTD_fcs_fieldSize[4] = { 0, 2, 4, 8 };
-		static byte ZSTD_did_fieldSize[4] = { 0, 1, 2, 4 };
-		int l = !directMode + ZSTD_did_fieldSize[dictID] + ZSTD_fcs_fieldSize[fcsId] + (directMode && !ZSTD_fcs_fieldSize[fcsId]);
-		if(in->Get(t, l) != l) {
-			SetError();
-			return;
-		}
-		
-		t += l;
-		
-		int64 h = ZSTD_getDecompressedSize(~w.c, t - ~w.c);
-		if(h > 1024*1024*1024) {
-			SetError();
-			return;
-		}
-		
-		w.dlen = (int)h;
-		
+		size_t frameSize;
 		for(;;) {
-			int blkhdr = 0;
-			for(int i = 0; i < 3; i++) {
-				int b = in->Get();
-				if(b < 0) {
-					SetError();
-					return;
-				}
-				if(t && t == te) {
-					w.lc.Cat(~w.c, t);
-					t = NULL;
-				}
-				if(t)
-					*t++ = b;
-				else
-					w.lc.Cat(b);
-				blkhdr = (blkhdr << 8) | b;
-			}
-			
-			int len = blkhdr & ((1 << 22) - 1);
-			
-			blkhdr >>= 22;
-			
-			if(blkhdr == 3) {
-				w.clen = t ? int(t - ~w.c) : w.lc.GetCount();
+			int sz = compressed_data.GetCount() - compressed_at;
+			const char *at = ~compressed_data + compressed_at;
+			frameSize = ZSTD_findFrameCompressedSize(at, sz);
+			if(!ZSTD_isError(frameSize))
 				break;
-			}
-			if(blkhdr == 2)
-				len = 1; // RLE, just single byte to repeat len times
-			
-			if(t && len > te - t) {
-				w.lc.Cat(~w.c, t);
-				t = NULL;
-			}
-			if(t) {
-				if(in->Get(t, len) != len) {
+			// need to read more compressed data
+			if(in->IsEof()) {
+				if(compressed_data.GetCount() != compressed_at) {
 					SetError();
 					return;
 				}
-				t += len;
+
+				eof = true;
+				count = i;
+				goto eof;
 			}
-			else {
-				String h = in->Get(len);
-				if(h.GetCount() != len) {
-					SetError();
-					return;
-				}
-				w.lc.Cat(h);
-			}
+			StringBuffer b(sz + count * BLOCK_BYTES);
+			memcpy(~b, at, sz);
+			b.SetCount(sz + in->Get(~b + sz, count * BLOCK_BYTES));
+			compressed_data = b;
+			compressed_at = 0;
+		}
+		
+		if(frameSize > 1024*1024*1024) {
+			SetError();
+			return;
+		}
+		
+		w.compressed_data = compressed_data;
+		w.frame_at = compressed_at;
+		w.frame_sz = (int)frameSize;
+		
+		compressed_at += w.frame_sz;
+		
+		uint64 sz = ZSTD_getFrameContentSize(w.FramePtr(), w.frame_sz);
+		if(sz == ZSTD_CONTENTSIZE_ERROR || sz > 1024*1024*1024) {
+			SetError();
+			return;
+		}
+		
+		w.decompressed_sz = (int)sz;
+		
+		if(w.decompressed_sz > BLOCK_BYTES) {
+			w.decompressed_data.Alloc(w.decompressed_sz);
+			w.irregular_d = true;
+		}
+		else
+		if(!w.decompressed_data || w.irregular_d) {
+			w.decompressed_data.Alloc(BLOCK_BYTES);
+			w.irregular_d = false;
 		}
 
 		auto decompress = [=] {
 			Workblock& w = wb[i];
-			if(w.dlen == 0) { // decompressed size is not known
-				int n = 2*1024*1024;
-				w.irregular_d = true;
-				for(;;) {
-					if(n >= 1024*1024*1024) {
-						SetError();
-						return;
-					}
-					w.d.Alloc(n);
-					size_t len = ZSTD_decompress(~w.d, n, w.lc.GetCount() ? ~w.lc : ~w.c, w.clen);
-					if(!ZSTD_isError(len)) {
-						w.dlen = (int)len;
-						break;
-					}
-					n += n;
-				}
-			}
-			else {
-				if(w.dlen > BLOCK_BYTES) {
-					w.irregular_d = true;
-					w.d.Alloc(w.dlen);
-				}
-				if(ZSTD_isError(ZSTD_decompress(~w.d, w.dlen, w.lc.GetCount() ? ~w.lc : ~w.c, w.clen))) {
-					SetError();
-					return;
-				}
+			if(ZSTD_isError(ZSTD_decompress(~w.decompressed_data, w.decompressed_sz, w.FramePtr(), w.frame_sz))) {
+				SetError();
+				return;
 			}
 		};
 		
-#ifdef _MULTITHREADED
 		if(concurrent)
 			co & decompress;
 		else
-#endif
 			decompress();
 	}
-#ifdef _MULTITHREADED
+eof:
 	if(concurrent)
 		co.Finish();
-#endif
 	if(error)
 		SetError();
 	else
@@ -265,7 +190,7 @@ ZstdDecompressStream::~ZstdDecompressStream()
 bool IsZstd(Stream& s)
 {
 	int64 pos = s.GetPos();
-	bool b = (dword)s.Get32le() == 0xFD2FB527;
+	bool b = (dword)s.Get32le() == 0xFD2FB528;
 	s.Seek(pos);
 	return b;
 }

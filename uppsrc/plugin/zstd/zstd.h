@@ -56,13 +56,19 @@ protected:
 private:
 	Stream        *in;
 	struct Workblock {
-		Buffer<char> c, d; // compressed, decompressed data
-		int          clen = 0, dlen = 0; // compressed, decompressed len
-		String       lc; // used when compressed length is too big
+		String       compressed_data; // can contain more frames
+		int          frame_at, frame_sz; // position and compressed size of frame
+		int          decompressed_sz;
+		Buffer<char> decompressed_data; // decompressed data
 		bool         irregular_d = false; // d reallocated to accomodate bigger result
 		
-		void Clear() { c.Clear(); d.Clear(); lc.Clear(); }
+		const void *FramePtr() { return ~compressed_data + frame_at; }
+		void Clear()           { compressed_data.Clear(); decompressed_data.Clear(); irregular_d = false; }
 	};
+	
+	String compressed_data; // buffer to store compressed data
+	int    compressed_at; // where are we in above buffer
+	
 	Workblock wb[16];
 	int       count; // count of workblocks fetched
 	int       ii; // next workblock to be read
