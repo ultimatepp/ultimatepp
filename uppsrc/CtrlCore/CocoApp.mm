@@ -48,8 +48,9 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	Ctrl::GlobalBackBuffer();
 	main_coco_pool = [NSAutoreleasePool new];
 	
-	[NSApplication sharedApplication];
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+	
+	[NSApp setHelpMenu: [[NSMenu alloc] initWithTitle:@"Unused"]];
 
 	menubar = [[NSMenu new] autorelease];
 	id appMenuItem = [[NSMenuItem new] autorelease];
