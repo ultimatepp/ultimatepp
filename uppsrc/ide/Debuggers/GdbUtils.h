@@ -21,7 +21,7 @@ public:
 
 class GdbWindowsUtils final : public IGdbUtils {
 public: /* IGdbUtils */
-	String BreakRunning(int pid) override;
+	virtual String BreakRunning(int pid) override;
 	
 private:
 	bool Is64BitIde() const;
@@ -32,7 +32,7 @@ private:
 
 class GdbPosixUtils final : public IGdbUtils {
 public: /* IGdbUtils */
-	String BreakRunning(int pid) override;
+	virtual String BreakRunning(int pid) override;
 };
 
 #endif
