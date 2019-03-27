@@ -238,18 +238,23 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 	IdeHidePtr();
 	String s = Cmd(cmdline);
 	exception.Clear();
-	int q = s.Find("received signal SIG");
-	if(q >= 0) {
-		int l = s.ReverseFind('\n', q);
-		if(l < 0)
-			l = 0;
-		int r = s.Find('\n', q);
-		if(r < 0)
-			r = s.GetCount();
-		if(l < r)
-			exception = s.Mid(l, r - l);
+	if(!running_interrupted) {
+		int q = s.Find("received signal SIG");
+		if(q >= 0) {
+			int l = s.ReverseFind('\n', q);
+			if(l < 0)
+				l = 0;
+			int r = s.Find('\n', q);
+			if(r < 0)
+				r = s.GetCount();
+			if(l < r)
+				exception = s.Mid(l, r - l);
+		}
 	}
-		
+	else {
+		running_interrupted = false;
+	}
+	
 	if(ParsePos(s, file, line, addr)) {
 		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr()
 		                                                : DbgImg::IpLinePtr(), 0);
@@ -425,7 +430,10 @@ void Gdb::BreakRunning()
 	if(!error.IsEmpty()) {
 		Loge() << METHOD_NAME << error;
 		ErrorOK(error);
+		return;
 	}
+	
+	running_interrupted = true;
 }
 
 void Gdb::Run()
@@ -577,6 +585,7 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 		Cmd("set args " + cmdline);
 
 	firstrun = true;
+	running_interrupted = false;
 
 	return true;
 }
