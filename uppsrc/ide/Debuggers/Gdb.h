@@ -5,14 +5,14 @@ class Gdb
 	typedef Gdb CLASSNAME;
 	
 public:
-	virtual void DebugBar(Bar& bar);
-	virtual bool SetBreakpoint(const String& filename, int line, const String& bp);
-	virtual bool RunTo();
-	virtual void Run();
-	virtual bool Key(dword key, int count);
-	virtual void Stop();
-	virtual bool IsFinished();
-	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
+	virtual void DebugBar(Bar& bar) override;
+	virtual bool SetBreakpoint(const String& filename, int line, const String& bp) override;
+	virtual bool RunTo() override;
+	virtual void Run() override;
+	virtual bool Key(dword key, int count) override;
+	virtual void Stop() override;
+	virtual bool IsFinished() override;
+	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt) override;
 
 	void ShowException();
 
@@ -91,7 +91,7 @@ public:
 	TimeCallback periodic; // Period check for killed console
 	void Periodic();
 
-	virtual ~Gdb();
+	virtual ~Gdb() override;
 	Gdb();
 	
 protected:
@@ -129,6 +129,7 @@ protected:
 	
 	String             autoline;
 	bool               firstrun;
+	bool               running_interrupted;
 	
 	int                pid = 0; // debugee pid
 
