@@ -78,7 +78,9 @@ const klass::type& klass::style() \
 \
 void COMBINE5(klass, __, type, __, style)::Init()
 
-#define CH_VAR(chtype, type, name, init) \
+
+// CH_VAR0 allows inserting action into _Write (missing ending '}')
+#define CH_VAR0(chtype, type, name, init) \
 chtype& COMBINE(ch_var__, name)(); \
 void COMBINE(ch_init__, name)() { \
 	COMBINE(ch_var__, name)(); \
@@ -95,7 +97,9 @@ chtype& COMBINE(ch_var__, name)() { \
 } \
 \
 type name() { return COMBINE(ch_var__, name)().value; } \
-void COMBINE(name, _Write)(type v) { COMBINE(ch_var__, name)().Write().value = v; }
+void COMBINE(name, _Write)(type v) { COMBINE(ch_var__, name)().Write().value = v;
+
+#define CH_VAR(chtype, type, name, init) CH_VAR0(chtype, type, name, init) }
 
 struct ChColor : ChStyle<ChColor> { Color value; };
 #define CH_COLOR(name, init) CH_VAR(ChColor, Color, name, init)

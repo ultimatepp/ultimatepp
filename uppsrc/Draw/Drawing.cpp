@@ -107,7 +107,7 @@ Stream& DrawingDraw::DrawingOp(int code)
 
 dword DrawingDraw::GetInfo() const
 {
-	return dots ? DOTS : 0;
+	return DRAWING|(dots ? DOTS : 0);
 }
 
 Size DrawingDraw::GetPageSize() const

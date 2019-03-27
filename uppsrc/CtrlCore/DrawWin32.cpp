@@ -286,7 +286,7 @@ void SystemDraw::InitClip(const Rect& clip)
 
 void SystemDraw::Reset() {
 	GuiLock __;
-	style = GUI;
+	style = 0;
 }
 
 SystemDraw::SystemDraw() {

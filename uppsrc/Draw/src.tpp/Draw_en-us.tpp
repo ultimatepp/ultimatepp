@@ -1,5 +1,4 @@
 topic "Draw";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Draw";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000t/25b/25@3 [s0; [*@(229)4 Draw]]}}&]
 [s3; &]
@@ -372,11 +372,6 @@ mode is active, or Size(600, 600) for physical output or Size(96,
 [s4;%% &]
 [s5;:Draw`:`:Pixels`(`)const: [@(0.0.255) bool]_[* Pixels]()_[@(0.0.255) const]&]
 [s2;%% Same as !Dots(). True for screen output.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:Draw`:`:IsGui`(`)const: [@(0.0.255) bool]_[* IsGui]()_[@(0.0.255) const]&]
-[s2;%% Same as GetInfo() `& GUI. True for standard GUI output (GDI 
-in Win32).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:IsPrinter`(`)const: [@(0.0.255) bool]_[* IsPrinter]()_[@(0.0.255) const]&]
