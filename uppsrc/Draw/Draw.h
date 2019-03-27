@@ -349,11 +349,11 @@ void SLtCyan_Write(Color c);
 void SColorPaper_Write(Color c);
 void SColorText_Write(Color c);
 void SColorHighlight_Write(Color c);
-void SColorHighlightText_Write(Color c);//
+void SColorHighlightText_Write(Color c);
 void SColorMenu_Write(Color c);
 void SColorMenuText_Write(Color c);
 void SColorInfo_Write(Color c);
-void SColorInfoText_Write(Color c);//
+void SColorInfoText_Write(Color c);
 void SColorMark_Write(Color c);
 void SColorMenuMark_Write(Color c);
 void SColorDisabled_Write(Color c);
@@ -366,9 +366,13 @@ void SColorLtFace_Write(Color c);
 void SColorDkShadow_Write(Color c);
 
 inline Color InvertColor() { return Color(255, 0); } // Special color that with DrawRect actually inverts the rectangle
+inline Color DefaultInk() { return Color(254, 0); } // SColorText on screen, Black on other outputs
 
-inline bool  IsDarkTheme()           { return IsDark(SColorPaper()); }
-inline Color AdjustIfDark(Color c)   { return IsDarkTheme() ? DarkTheme(c) : c; }
+extern bool dark_theme__;
+
+inline bool  IsDarkTheme()           { return dark_theme__; }
+
+inline Color AdjustIfDark(Color c)   { return IsDarkTheme() ? DarkThemeCached(c) : c; }
 
 Drawing AsDrawing(const Painting& pw);
 
@@ -417,11 +421,11 @@ class Draw : NoCopy {
 public:
 	enum {
 		DOTS = 0x001,
-		GUI = 0x002,
 		PRINTER = 0x004,
 		NATIVE = 0x008,
 		DATABANDS = 0x010,
 		DRAWTEXTLINES = 0x020,
+		DRAWING = 0x040,
 	};
 
 	virtual dword GetInfo() const = 0;
@@ -479,7 +483,6 @@ public:
 
 	bool  Dots() const                                  { return GetInfo() & DOTS; }
 	bool  Pixels() const                                { return !Dots(); }
-	bool  IsGui() const                                 { return GetInfo() & GUI; }
 	bool  IsPrinter() const                             { return GetInfo() & PRINTER; }
 	bool  IsNative() const                              { return GetInfo() & NATIVE; }
 
@@ -526,49 +529,49 @@ public:
 	void DrawData(int x, int y, int cx, int cy, const String& data, const char *type);
 	void DrawData(const Rect& r, const String& data, const char *type);
 
-	void DrawLine(int x1, int y1, int x2, int y2, int width = 0, Color color = Black());
-	void DrawLine(Point p1, Point p2, int width = 0, Color color = Black());
+	void DrawLine(int x1, int y1, int x2, int y2, int width = 0, Color color = DefaultInk());
+	void DrawLine(Point p1, Point p2, int width = 0, Color color = DefaultInk());
 
-	void DrawEllipse(const Rect& r, Color color = Black(),
-	                 int pen = Null, Color pencolor = Black());
-	void DrawEllipse(int x, int y, int cx, int cy, Color color = Black(),
-		             int pen = Null, Color pencolor = Black());
+	void DrawEllipse(const Rect& r, Color color = DefaultInk(),
+	                 int pen = Null, Color pencolor = DefaultInk());
+	void DrawEllipse(int x, int y, int cx, int cy, Color color = DefaultInk(),
+		             int pen = Null, Color pencolor = DefaultInk());
 
-	void DrawArc(const Rect& rc, Point start, Point end, int width = 0, Color color = Black());
+	void DrawArc(const Rect& rc, Point start, Point end, int width = 0, Color color = DefaultInk());
 
 	void DrawPolyPolyline(const Point *vertices, int vertex_count,
 	                      const int *counts, int count_count,
-	                      int width = 0, Color color = Black(), Color doxor = Null);
+	                      int width = 0, Color color = DefaultInk(), Color doxor = Null);
 	void DrawPolyPolyline(const Vector<Point>& vertices, const Vector<int>& counts,
-		                  int width = 0, Color color = Black(), Color doxor = Null);
+		                  int width = 0, Color color = DefaultInk(), Color doxor = Null);
 	void DrawPolyline(const Point *vertices, int count,
-		              int width = 0, Color color = Black(), Color doxor = Null);
+		              int width = 0, Color color = DefaultInk(), Color doxor = Null);
 	void DrawPolyline(const Vector<Point>& vertices,
-		              int width = 0, Color color = Black(), Color doxor = Null);
+		              int width = 0, Color color = DefaultInk(), Color doxor = Null);
 
 	void   DrawPolyPolyPolygon(const Point *vertices, int vertex_count,
 		                       const int *subpolygon_counts, int subpolygon_count_count,
 		                       const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
-		                       Color color = Black(), int width = 0, Color outline = Null,
+		                       Color color = DefaultInk(), int width = 0, Color outline = Null,
 		                       uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolyPolygon(const Vector<Point>& vertices,
 	                           const Vector<int>& subpolygon_counts,
 	                           const Vector<int>& disjunct_polygon_counts,
-	                           Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                           Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolygon(const Point *vertices, int vertex_count,
 	                       const int *subpolygon_counts, int subpolygon_count_count,
-	                       Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                       Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolyPolygon(const Vector<Point>& vertices, const Vector<int>& subpolygon_counts,
-	                       Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                       Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygons(const Point *vertices, int vertex_count,
 	                    const int *polygon_counts, int polygon_count_count,
-	                    Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                    Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygons(const Vector<Point>& vertices, const Vector<int>& polygon_counts,
-	                    Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                    Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygon(const Point *vertices, int vertex_count,
-	                   Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                   Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 	void   DrawPolygon(const Vector<Point>& vertices,
-	                   Color color = Black(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
+	                   Color color = DefaultInk(), int width = 0, Color outline = Null, uint64 pattern = 0, Color doxor = Null);
 
 	void DrawDrawing(const Rect& r, const Drawing& iw) { DrawDrawingOp(r, iw); }
 	void DrawDrawing(int x, int y, int cx, int cy, const Drawing& iw);
@@ -579,29 +582,29 @@ public:
 	void DrawPainting(int x, int y, const Painting& iw);
 
 	void DrawText(int x, int y, int angle, const wchar *text, Font font = StdFont(),
-		          Color ink = Black(), int n = -1, const int *dx = NULL);
+		          Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const wchar *text, Font font = StdFont(),
-		          Color ink = Black(), int n = -1, const int *dx = NULL);
+		          Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, const WString& text, Font font = StdFont(),
-		          Color ink = Black(), const int *dx = NULL);
+		          Color ink = DefaultInk(), const int *dx = NULL);
 	void DrawText(int x, int y, int angle, const WString& text, Font font = StdFont(),
-		          Color ink = Black(), const int *dx = NULL);
+		          Color ink = DefaultInk(), const int *dx = NULL);
 
 	void DrawText(int x, int y, int angle, const char *text, byte charset,
-	              Font font = StdFont(), Color ink = Black(), int n = -1, const int *dx = NULL);
+	              Font font = StdFont(), Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const char *text, byte charset, Font font = StdFont(),
-		          Color ink = Black(), int n = -1, const int *dx = NULL);
+		          Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, int angle, const char *text,
-	              Font font = StdFont(), Color ink = Black(), int n = -1, const int *dx = NULL);
+	              Font font = StdFont(), Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 	void DrawText(int x, int y, const char *text, Font font = StdFont(),
-		          Color ink = Black(), int n = -1, const int *dx = NULL);
+		          Color ink = DefaultInk(), int n = -1, const int *dx = NULL);
 
 	void DrawText(int x, int y, const String& text, Font font = StdFont(),
-		          Color ink = Black(), const int *dx = NULL);
+		          Color ink = DefaultInk(), const int *dx = NULL);
 	void DrawText(int x, int y, int angle, const String& text, Font font = StdFont(),
-		          Color ink = Black(), const int *dx = NULL);
+		          Color ink = DefaultInk(), const int *dx = NULL);
 
 	static void SinCos(int angle, double& sina, double& cosa);
 	
@@ -611,6 +614,10 @@ public:
 	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 	Size   GetPagePixels() const                        { return GetPageSize(); }
+
+protected:
+	Color ResolveInk(Color c) const                     { return c == DefaultInk() ? GetDefaultInk() : c; }
+	virtual Color GetDefaultInk() const;
 };
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);

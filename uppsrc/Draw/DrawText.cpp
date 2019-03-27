@@ -31,12 +31,8 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		            Color ink, int n, const int *dx)
 {
-#if defined(flagWINGL) || defined(flagLINUXGL)
-	if(IsNull(ink))
-		return;
-	DrawTextOp(x, y, angle, text, font, ink, n, dx);
-#else
 	if(IsNull(ink)) return;
+	ink = ResolveInk(ink);
 	if(n < 0)
 		n = wstrlen(text);
 	Std(font);
@@ -150,8 +146,6 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			);
 		}
 	}
-
-#endif
 }
 
 // ----------------------------

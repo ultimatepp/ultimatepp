@@ -13,6 +13,16 @@ INITBLOCK {
 	Value::Register<Drawing>("Drawing");
 }
 
+Color Draw::GetDefaultInk() const
+{
+	dword w = GetInfo();
+	if(w & DRAWING)
+		return DefaultInk();
+	if(w & DOTS)
+		return Black();
+	return SColorText();
+}
+
 void Draw::SinCos(int angle, double& sina, double& cosa)
 {
 	angle = angle % 3600;
@@ -266,7 +276,7 @@ void Draw::DrawLine(Point p1, Point p2, int width, Color color)
 
 void Draw::DrawLine(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	DrawLineOp(x1, y1, x2, y2, width, color);
+	DrawLineOp(x1, y1, x2, y2, width, ResolveInk(color));
 }
 
 void Draw::DrawPolyPolyline(const Point *vertices, int vertex_count,
@@ -274,7 +284,7 @@ void Draw::DrawPolyPolyline(const Point *vertices, int vertex_count,
                             int width, Color color, Color doxor)
 {
 	DrawPolyPolylineOp(vertices, vertex_count, counts, count_count, width,
-	                 color, doxor);
+	                   ResolveInk(color), doxor);
 }
 
 void Draw::DrawPolyPolyline(const Vector<Point>& vertices, const Vector<int>& counts,
@@ -304,7 +314,7 @@ void Draw::DrawPolyPolyPolygon(const Point *vertices, int vertex_count,
                               int width, Color outline, uint64 pattern, Color doxor)
 {
 	DrawPolyPolyPolygonOp(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
-	                      disjunct_polygon_counts, disjunct_polygon_count_count, color,
+	                      disjunct_polygon_counts, disjunct_polygon_count_count, ResolveInk(color),
 	                      width, outline, pattern, doxor);
 }
 
@@ -375,12 +385,12 @@ void Draw::DrawEllipse(int x, int y, int cx, int cy, Color color, int pen, Color
 
 void Draw::DrawEllipse(const Rect& r, Color color, int pen, Color pencolor)
 {
-	DrawEllipseOp(r, color, pen, pencolor);
+	DrawEllipseOp(r, ResolveInk(color), pen, ResolveInk(pencolor));
 }
 
 void Draw::DrawArc(const Rect& rc, Point start, Point end, int width, Color color)
 {
-	DrawArcOp(rc, start, end, width, color);
+	DrawArcOp(rc, start, end, width, ResolveInk(color));
 }
 
 void Draw::Offset(int x, int y)

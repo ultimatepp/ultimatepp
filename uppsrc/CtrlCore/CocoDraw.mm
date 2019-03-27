@@ -41,7 +41,7 @@ void SystemDraw::SetStroke(Color c)
 
 dword SystemDraw::GetInfo() const
 {
-	return DRAWTEXTLINES;
+	return DRAWTEXTLINES|GUI;
 }
 
 void SystemDraw::Push()

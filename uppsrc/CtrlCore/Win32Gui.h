@@ -142,7 +142,7 @@ public:
 	SystemDraw(HDC hdc);
 	virtual ~SystemDraw();
 	
-	bool CanSetSurface()                 { return IsGui() && IsWinNT(); }
+	bool CanSetSurface()                 { return Pixels() && IsWinNT(); }
 };
 
 #ifndef PLATFORM_WINCE
