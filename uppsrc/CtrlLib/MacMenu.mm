@@ -283,6 +283,9 @@ void TopWindow::SyncMainMenu(bool force)
 		if(current) {
 			CocoMenuBar& bar = *(CocoMenuBar *)current->menubar;
 			[NSApp setMainMenu:bar.cocomenu];
+			static NSMenu *dummy = [[NSMenu alloc] initWithTitle:@"Unused"];
+			ONCELOCK { [dummy retain]; };
+			[NSApp setHelpMenu: dummy]; //Avoid placing spotlight search field into Help
 		}
 	}
 }
