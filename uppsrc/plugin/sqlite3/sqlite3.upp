@@ -14,10 +14,9 @@ options
 options(SQLITE_HAS_CODEC) -DSQLITE_HAS_CODEC;
 
 file
-	Wrapper readonly separator,
 	Sqlite3.h,
 	Sqlite3Schema.h,
 	Sqlite3upp.cpp,
-	sqlite3.c,
+	lib.c,
 	Copying;
 

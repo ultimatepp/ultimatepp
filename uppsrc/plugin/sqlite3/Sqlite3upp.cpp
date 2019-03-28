@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 #include <Sql/Sql.h>
-#include "lib/sqlite3.h"
+#include "lib/sqleet.h"
 #include "Sqlite3.h"
 
 namespace Upp {
