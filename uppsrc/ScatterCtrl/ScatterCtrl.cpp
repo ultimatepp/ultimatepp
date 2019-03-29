@@ -760,6 +760,7 @@ void ScatterCtrl::MouseMove(Point pt, dword keyFlags)
 	case LEFT_DOWN:		mouseAction = LEFT_MOVE;	break;
 	case MIDDLE_DOWN:	mouseAction = MIDDLE_MOVE;	break;
 	case RIGHT_DOWN:	mouseAction = RIGHT_MOVE;	break;
+	default: ; // avoids warning
 	}
 	WhenMouseClick(pt, keyFlags, mouseAction);
 }

@@ -1662,7 +1662,8 @@ void ScatterDraw::Plot(T& w)
 						case ALIGN_LEFT:	ddx = 0;		break;
 						case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
 						case ALIGN_RIGHT:	ddx = -sz.cx;	break;
-						}							
+						default: ; // to avoid warning
+						}
 						double x = points[i].x + dx + ddx;
 						double y = points[i].y + dy + ddy;
 						DrawText(w, x, y, 0, txt, fnt, series[j].labelsColor);

@@ -668,7 +668,7 @@ class TableData : public DataSourceSurf, public TableInterpolate {
 public:
 	typedef double (TableData::*Getdatafun)(int d);
 	
-	TableData() : areas(false), lendata(0), lenxAxis(0), lenyAxis(0) {};
+	TableData() : lendata(0), lenxAxis(0), lenyAxis(0), areas(false) {};
 
 	Interpolate Inter()				{return inter;}
 	void Inter(Interpolate inter)	{this->inter = inter;}
