@@ -1248,6 +1248,9 @@ public:
 	
 	static void SetUHDEnabled(bool set = true);
 	static bool IsUHDEnabled();
+	
+	static void SetDarkThemeEnabled(bool set = true);
+	static bool IsDarkThemeEnabled();
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);

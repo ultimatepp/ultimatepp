@@ -665,7 +665,7 @@ void ChSysInit()
 		}
 	}
 
-	if(IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW))))
+	if(Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW))))
 		sEmulateDarkTheme = true;
 
 	NONCLIENTMETRICS ncm;

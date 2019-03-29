@@ -842,6 +842,20 @@ bool Ctrl::IsUHDEnabled()
 	return ApplicationUHDEnabled;
 }
 
+bool ApplicationDarkThemeEnabled;
+
+void Ctrl::SetDarkThemeEnabled(bool set)
+{
+	ApplicationDarkThemeEnabled = set;
+	ReSkin();
+}
+
+bool Ctrl::IsDarkThemeEnabled()
+{
+	return ApplicationDarkThemeEnabled;
+}
+
+
 Font StdFontZ(int height)   { return FontZ(Font::STDFONT, height); }
 Font SansSerifZ(int height) { return FontZ(Font::SANSSERIF, height); }
 Font SerifZ(int height)     { return FontZ(Font::SERIF, height); }
