@@ -128,15 +128,15 @@ void WorkspaceWork::ScanWorkspace() {
 			fnt.Bold();
 		if(pi.italic)
 			fnt.Italic();
-		package.Add(pk, Null, fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
+		package.Add(pk, Null, fnt, Nvl(AdjustIfDark(pi.ink), SColorText()), false, 0, Null, SColorMark);
 	}
 	if(!organizer) {
 		if(main.GetCount())
-			package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
-		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
-		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
+			package.Add(prjaux, IdeImg::PrjAux(), ListFont(), AdjustIfDark(Magenta));
+		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), AdjustIfDark(Magenta));
+		package.Add(tempaux, IdeImg::TempAux(), ListFont(), AdjustIfDark(Magenta));
 		if(main.GetCount())
-			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
+			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), AdjustIfDark(Red));
 	}
 	package.SetCursor(0);
 	

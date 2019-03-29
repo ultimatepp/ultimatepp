@@ -125,8 +125,9 @@ void AppMain___()
 //	Ctrl::ShowRepaint(50);
 
 	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
-	
+
 	Ctrl::SetUHDEnabled();
+	Ctrl::SetDarkThemeEnabled();
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
