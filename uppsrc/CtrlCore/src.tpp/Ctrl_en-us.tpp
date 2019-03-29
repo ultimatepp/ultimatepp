@@ -2601,6 +2601,20 @@ is true.&]
 [s5;:Upp`:`:Ctrl`:`:IsUHDEnabled`(`):%- [@(0.0.255) bool]_[* IsUHDEnabled]()&]
 [s2; Returns the value set by SetUHDEnabled.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SetDarkThemeEnabled`(bool`):%- [@(0.0.255) static] 
+[@(0.0.255) void]_[* SetDarkThemeEnabled]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])
+&]
+[s2; Hints coloring and skinning algorithms that the application 
+is ready to work in dark theme mode. Currently this enables dark 
+theme in Windows (with other platforms dark theme is enabled 
+by default).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:IsDarkThemeEnabled`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsDa
+rkThemeEnabled]()&]
+[s2; Returns the value set by SetDarkThemeEnabled.&]
+[s3;%- &]
 [s4; &]
 [s5;K:Ctrl`:`:GetWorkArea`(`):%- [*^`:`:Rect^@(64) Rect][*@(64) _][* GetWorkArea][*@(64) ()]&]
 [s2; Returns OS specific working area for the widget `- this is rectangle 
