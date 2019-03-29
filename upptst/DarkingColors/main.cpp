@@ -8,12 +8,12 @@ struct ColorTest : TopWindow {
 	void Paint(Draw& w) override {
 		Size sz = GetSize();
 		w.DrawRect(0, 0, sz.cx, sz.cy / 2, ~color);
-		w.DrawRect(0, sz.cy / 2, sz.cx, sz.cy / 2 + 1, DarkTheme(~color));
+		w.DrawRect(0, sz.cy / 2, sz.cx, sz.cy / 2 + 1, DarkTheme((Color)~color));
 	}
 	
 	ColorTest() {
 		Add(color.LeftPosZ(0, 300).TopPosZ(0, 300));
-		color << [=] { Refresh(); Title(AsString(DarkTheme(~color))); };
+		color << [=] { Refresh(); Title(AsString(DarkTheme((Color)~color))); };
 	}
 };
 
