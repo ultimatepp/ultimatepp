@@ -10,19 +10,19 @@ static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int al
 	Point centre = Point(int(c_x), int(c_y));
 	vP << centre;
 	int ix;
-	int iy;	
+	int iy;
 	for (int i = 0; i <= n; i++) {
 		double x = c_x + r*cos((start+i*dalpha)*M_PI/1800);
-		ix = fround(x);		
+		ix = fround(x);
 		double y = c_y + r*sin((start+i*dalpha)*M_PI/1800);
 		iy = fround(y);
 		double dxy = (x-ix)*(x-ix) + (y-iy)*(y-iy);
-		if(dxy < 0.1 || i == 0 || i == n) 
+		if(dxy < 0.1 || i == 0 || i == n)
 			vP << Point(ix,iy);
-		if(w.IsGui()) 
-			w.DrawRect(ix, iy, 1, 1, Blend(fill, background, 150));			
+		if(w.Pixels())
+			w.DrawRect(ix, iy, 1, 1, Blend(fill, background, 150));
 	}
-	vP << centre;	
+	vP << centre;
 	w.DrawPolygon(vP, fill, width, outline, pattern, Null);
 }
 
