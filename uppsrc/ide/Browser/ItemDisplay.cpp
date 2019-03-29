@@ -4,7 +4,7 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
            int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
 	static int maxascent = MaxAscent(BrowserFont());
-	bool dark = IsDark(SColorPaper());
+	bool dark = IsDarkTheme();
 	for(int i = starti; i < count; i++) {
 		const ItemTextPart& p = n[i];
 		Font f = BrowserFont();
@@ -13,15 +13,15 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 		case ITEM_PNAME:
 			f.Bold();
 		case ITEM_NUMBER:
-			ink = dark ? Color(28, 255, 0) : Red;
+			ink = AdjustIfDark(Red());
 			break;
 		case ITEM_TNAME:
-			ink = dark ? LtGreen : Green;
+			ink = SGreen();
 		case ITEM_NAME:
 			f.Bold();
 			break;
 		case ITEM_UPP:
-			ink = Cyan;
+			ink = AdjustIfDark(Cyan);
 			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
@@ -168,7 +168,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	}
 	PaintText(w, x, y, m, n, 0, starti, focuscursor, _ink);
 	if(m.virt || m.over)
-		w.DrawRect(x0, r.bottom - 2, x - x0, 1, m.over ? m.virt ? LtRed : LtBlue : SColorText);
+		w.DrawRect(x0, r.bottom - 2, x - x0, 1, m.over ? m.virt ? SLtRed() : SLtBlue() : SColorText());
 	if(m.inherited && m.IsType())
 		w.DrawRect(r.left, r.top, r.Width(), 1, SColorDisabled);
 
@@ -187,8 +187,8 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 				Point p(xx + (sz.cx - tsz.cx) / 2, yy + (sz.cy - tsz.cy) / 2);
 				for(int ax = -1; ax <= 1; ax++)
 					for(int ay = -1; ay <= 1; ay++)
-						w.DrawText(p.x + ax, p.y + ay, txt, fnt, White);
-				w.DrawText(p.x, p.y, txt, fnt, Blue);
+						w.DrawText(p.x + ax, p.y + ay, txt, fnt, SWhite());
+				w.DrawText(p.x, p.y, txt, fnt, SBlue());
 			}
 			x += sz.cx + Zx(3);
 		}
