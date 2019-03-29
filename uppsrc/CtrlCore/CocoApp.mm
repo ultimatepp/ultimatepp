@@ -48,6 +48,8 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	Ctrl::GlobalBackBuffer();
 	main_coco_pool = [NSAutoreleasePool new];
 	
+	[NSApplication sharedApplication];
+
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
 	menubar = [[NSMenu new] autorelease];
@@ -65,8 +67,6 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	[NSApp setMainMenu:menubar];
 
 	[NSApp setDelegate:[[AppDelegate alloc] init]];
-
-	[NSApp setHelpMenu: [[NSMenu alloc] initWithTitle:@"Unused"]];
 	
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
