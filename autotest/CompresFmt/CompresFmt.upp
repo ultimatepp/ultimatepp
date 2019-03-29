@@ -5,7 +5,8 @@ uses
 	plugin/lzma,
 	plugin/lz4,
 	plugin/zstd,
-	plugin/bz2;
+	plugin/bz2,
+	plugin/zstd_legacy;
 
 file
 	CompresFmt.cpp;

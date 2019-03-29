@@ -3,6 +3,7 @@
 #include <plugin/lzma/lzma.h>
 #include <plugin/lz4/lz4.h>
 #include <plugin/zstd/zstd.h>
+#include <plugin/zstd_legacy/zstd.h>
 #include <plugin/z/z.h>
 #include <plugin/bz2/bz2.h>
 
@@ -22,7 +23,7 @@ CONSOLE_APP_MAIN
 	ASSERT(ZstdDecompress(ZstdCompress(data)) == data);
 
 
-	if(0 && !FileExists(GetDataFile("alice30.gz"))) {
+	if(!FileExists(GetDataFile("alice30.gz"))) {
 		LOG("Reference files not found. Press a key to create them");
 		ReadStdIn();
 		
@@ -31,6 +32,7 @@ CONSOLE_APP_MAIN
 		SaveDataFile("alice30.lz4", LZ4Compress(data));
 		SaveDataFile("alice30.lzma", LZMACompress(data));
 		SaveDataFile("alice30.zstd", ZstdCompress(data));
+		SaveDataFile("alice30_legacy.zstd", Legacy::ZstdCompress(data));
 	}
 	
 	ASSERT(GZDecompress(LoadDataFile("alice30.gz")) == data);
@@ -38,12 +40,14 @@ CONSOLE_APP_MAIN
 	ASSERT(LZ4Decompress(LoadDataFile("alice30.lz4")) == data);
 	ASSERT(LZMADecompress(LoadDataFile("alice30.lzma")) == data);
 	ASSERT(ZstdDecompress(LoadDataFile("alice30.zstd")) == data);
+	ASSERT(Legacy::ZstdDecompress(LoadDataFile("alice30_legacy.zstd")) == data);
 
 	ASSERT(GZDecompress(GZCompress(data)) == data);
 	ASSERT(BZ2Decompress(BZ2Compress(data)) == data);
 	ASSERT(LZ4Decompress(LZ4Compress(data)) == data);
 	ASSERT(LZMADecompress(LZMACompress(data)) == data);
 	ASSERT(ZstdDecompress(ZstdCompress(data)) == data);
+	ASSERT(Legacy::ZstdDecompress(Legacy::ZstdCompress(data)) == data);
 	
 	LOG("=================== OK");
 }
