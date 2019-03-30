@@ -5,7 +5,11 @@ topic "Ultimate++ MacOS release";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; Ultimate`+`+ MacOS Installation&]
-[s2; 1. Installation&]
+[s2; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/install`_mac`_en`-us`#1^2 1. Installation]&]
+[s0; &]
+[s2;:1: 1. Installation&]
 [s3; MacOS version of U`+`+ is released as single .zip file containing 
 .app application bundle of TheIDE development environment.&]
 [s3; U`+`+ requires C`+`+ toolchain to build applications. You can 

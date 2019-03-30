@@ -20,7 +20,12 @@ topic "Ultimate++ installation guide";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Ultimate`+`+ Windows Installation&]
-[s3; 1. Installation&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/install`_en`-us`#1^ 1. Installation]&]
+[s0; [^topic`:`/`/ide`/app`/install`_en`-us`#2^ 2. Troubleshooting]&]
+[s0; &]
+[s3;:1: 1. Installation&]
 [s5; Windows release a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
 archive. Unpack to directory of your preference, then just run 
 theide.exe (or theide32.exe if you have 32`-bit windows). U`+`+ 
@@ -36,7 +41,7 @@ or 2015 version. The most convenient way is to install Visual
 Studio Build Tools. Please check this [^https`:`/`/blogs`.msdn`.microsoft`.com`/vcblog`/2016`/11`/16`/introducing`-the`-visual`-studio`-build`-tools`/`?`_`_hstc`=268264337`.c396ab304e96089050275a79b106ba49`.1512810082757`.1512810082757`.1512810082757`.1`&`_`_hssc`=268264337`.2`.1512810082757`&`_`_hsfp`=2574008961^ b
 log entry] about this option. When installing, make sure that 
 support for Win32 applications is installed as well.&]
-[s3; 2. Troubleshooting&]
+[s3;:2: 2. Troubleshooting&]
 [s5; The list of common problems related to Windows installation:&]
 [s5;l160;i150;O0; [* Compilation with MinGW causes `"There were errors`" 
 error message.]&]
