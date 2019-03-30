@@ -1,15 +1,38 @@
 topic "Configuring Packages and Assemblies";
-[ $$0,0#00000000000000000000000000000000:Default]
 [=b133;*R5 $$1,2#50732784410233463530219518343157:Heading1]
 [a17;*@(170.42.0) $$2,3#48345324464242285505540720043115:Heading2]
 [2 $$3,3#42410412485283044863419059360682:Body1]
 [a83;*R6 $$4,5#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
-[b83;*4 $$6,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$6,5#07864147445237544204411237157677:title]
 [l321;C@5;1 $$7,7#20902679421464641399138805415013:code]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s4; Configuring Packages `& Assemblies&]
-[s6; Opening a package&]
+[s6; Table of contents&]
+[s0;2 &]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#1^2 1. 
+Opening a package]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#2^2 2. 
+Assembly setup]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#3^2 3. 
+Creating a package]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#4^2 4. 
+Package build configurations]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#5^2 5. 
+Package build settings]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#6^2 6. 
+Adding Dependent Packages]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#7^2 7. 
+Custom Build Steps]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#8^2 8. 
+Adding source files to a package]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#9^2 9. 
+Building packages from an ESC macro]&]
+[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#10^2 10. 
+Binary resource extensions]&]
+[s0;2 &]
+[s6;:1: 1. Opening a package&]
 [s5; To open a package, the [/ Set`-main`-package] option on the File 
 menu in TheIDE is used. The `"Select main package`" dialog will 
 appear.&]
@@ -54,7 +77,7 @@ a package`" below).&]
 [s5; For more detail on the organization of packages, assemblies 
 and nests, [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ see 
 this].&]
-[s6; Assembly setup &]
+[s6;:2: 2. Assembly setup&]
 [s5; From the Select`-main`-package dialog shown above, the settings 
 for an assembly can be changed (or a new assembly created) by 
 right`-clicking on the assembly name and selecting `"edit assembly`" 
@@ -72,7 +95,7 @@ with semicolons.&]
 [s5; When a new assembly is created, the paths that are assigned 
 initially, are copied from whichever assembly was selected before 
 the new assembly was created.&]
-[s6; Creating a package&]
+[s6;:3: 3. Creating a package&]
 [s5; To create a new package, select the assembly in the [/ Select`-main`-package] 
 dialog then click the [* New] button.  The [/ Create`-new`-package] 
 dialog will appear.&]
@@ -119,7 +142,7 @@ is started, a visible window will appear.  If the application
 needs to start without a visible window (or does not always want 
 the same visible window), then you can choose `"Generate layout 
 file`".&]
-[s6; Package build configurations&]
+[s6;:4: 4. Package build configurations&]
 [s5; The left`-hand drop`-down list on TheIDE toolbar shows which 
 build configuration is currently selected. To change the build 
 configurations for the [* main package] use the [/ main`-package`-configuration 
@@ -180,7 +203,7 @@ all of the names that are present in the build configuration
 flags names list, not just predefined names e.g. PRO`_VERSION. 
  By using these names in the package`-organizer dialog, the build 
 process can be customized for each build configuration.&]
-[s6; Package build settings&]
+[s6;:5: 5. Package build settings&]
 [s5; From TheIDE project menu, select [/ package`-organizer.]&]
 [s3; &]
 [s0;= 
@@ -225,7 +248,7 @@ only if listed in the `"accepts`" edit`-box for the used package.
  Build flags from the main package that are not `"dotted`" will 
 be applied to all used packages regardless of whether listed 
 in the `"accepts`" list of a particular package or not.&]
-[s6; Adding Dependent Packages&]
+[s6;:6: 6. Adding Dependent Packages&]
 [s5; If a package uses other packages, then they must be `"added`" 
 to the using package.  For example, the HelloWorld package in 
 the `"examples`" assembly uses the CtrlLib package which you 
@@ -236,7 +259,7 @@ packages and you can also select the order in which the used
 packages are built.  Use mouse right`-click in the `"uses`" pane 
 of the [/ package`-organizer] dialog to do this.  Alternatively 
 you can use `"[/ add package]`" from the Project menu.&]
-[s6; Custom Build Steps&]
+[s6;:7: 7. Custom Build Steps&]
 [s5; Custom build steps allow you to specify how files with a particular 
 extension are `"built`".  For example, you can specify the invocation 
 of a particular assembler for assembler files or the Microsoft 
@@ -266,7 +289,7 @@ executed after linking.  The uppsrc Ole/Ctrl/Calc package uses
 the entry of build flags so that the custom build step can be 
 applied selectively e.g. for one particular compiler or to have 
 separate commands for debug and non`-debug builds.&]
-[s6; Adding source files to a package&]
+[s6;:8: 8. Adding source files to a package&]
 [s5; The source files that belong to a package must be added to the 
 package.  TheIDE will attempt to build all of the files that 
 belong to the package, according to the file extension.  In TheIDE 
@@ -284,7 +307,7 @@ in sub`-directories of the package directory or in any folder
 at all, but it is recommended to keep them in the package folder 
 tree because this makes it easier to move or copy the package 
 and is easier to organize.&]
-[s6; Building packages from an ESC macro&]
+[s6;:9: 9. Building packages from an ESC macro&]
 [s5; You can build a package from a macro. The `"brc`" reference 
 example (in the reference assembly) includes the following macro.&]
 [ {{10000@(255.255.150) [s3; [* macro ]`"Ship`" Ctrl`+Shift`+W `{&]
@@ -338,7 +361,7 @@ application and continues running&]
 [s5;l288;i150;O0; [/ void ClearConsole()] clears the IDE console&]
 [s5;l288;i150;O0; [/ void cout(message)]  `- outputs message to the 
 console.&]
-[s6; Binary resource extensions&]
+[s6;:10: 10. Binary resource extensions&]
 [s5; [*/ BINARY`_MASK(mydir, `"`*.`*`")]&]
 [s5; adds all files matching a given mask to the binary resource 
 file. This behaves more or less like BINARY`_ARRAY, so an array 
@@ -369,4 +392,4 @@ is the shipping application. Note that in the current version,
 during BuildProject, the other application (here the shipping 
 application) inherits Output mode settings (notably the output 
 directory). This shouldn`'t be a big problem but nevertheless 
-this behaviour might change in the future.]]
+this behavior might change in the future.]]
