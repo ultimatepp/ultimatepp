@@ -444,17 +444,17 @@ void  TopicCtrl::BarEx(Bar& bar)
 	   .Check(all);
 	bar.Gap(HorzLayoutZoom(30));
 	bar.Add(search, HorzLayoutZoom(300));
-	bar.Add(search.GetLength(), "Prev", IdeImg::GoPrev(), THISBACK(Prev));
+	bar.Add(search.GetLength(), "Previous", IdeImg::GoPrev(), THISBACK(Prev));
 	bar.Add(search.GetLength(), "Next", IdeImg::GoNext(), THISBACK(Next));
 	
 	bar.AddKey(K_CTRL_F, THISBACK(FocusSearch));
 /*	bar.Add("Highlight search keywords in topic", IdeImg::ShowWords(), THISBACK(ShowWords))
 	   .Check(showwords);*/
-	bar.Add(!internal && GetCurrent().StartsWith("topic:"),
+	bar.Add(!internal && GetCurrent().StartsWith("topic:"), "Display on full screen",
 	        IdeImg::show(), THISBACK(SShow));
 	bar.GapRight();
 	bar.Separator();
-	bar.Add(!internal && GetCurrent().StartsWith("topic:"),
+	bar.Add(!internal && GetCurrent().StartsWith("topic:"), "Edit topic",
 	        TopicImg::Topic(), THISBACK(OpenTopic));
 }
 
