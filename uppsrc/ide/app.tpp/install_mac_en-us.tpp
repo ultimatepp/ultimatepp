@@ -7,7 +7,7 @@ topic "Ultimate++ MacOS Installation";
 [s1; Ultimate`+`+ MacOS Installation&]
 [s2; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/install`_mac`_en`-us`#1^2 1. Installation]&]
+[s0; [^`#1^2 1. Installation]&]
 [s0; &]
 [s2;:1: 1. Installation&]
 [s3; MacOS version of U`+`+ is released as single .zip file containing 
