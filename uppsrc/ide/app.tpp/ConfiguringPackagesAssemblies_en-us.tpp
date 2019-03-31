@@ -11,26 +11,16 @@ topic "Configuring Packages and Assemblies";
 [s4; Configuring Packages `& Assemblies&]
 [s6; Table of contents&]
 [s0;2 &]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#1^2 1. 
-Opening a package]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#2^2 2. 
-Assembly setup]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#3^2 3. 
-Creating a package]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#4^2 4. 
-Package build configurations]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#5^2 5. 
-Package build settings]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#6^2 6. 
-Adding Dependent Packages]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#7^2 7. 
-Custom Build Steps]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#8^2 8. 
-Adding source files to a package]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#9^2 9. 
-Building packages from an ESC macro]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`_en`-us`#10^2 10. 
-Binary resource extensions]&]
+[s0; [^`#1^2 1. Opening a package]&]
+[s0; [^`#2^2 2. Assembly setup]&]
+[s0; [^`#3^2 3. Creating a package]&]
+[s0; [^`#4^2 4. Package build configurations]&]
+[s0; [^`#5^2 5. Package build settings]&]
+[s0; [^`#6^2 6. Adding Dependent Packages]&]
+[s0; [^`#7^2 7. Custom Build Steps]&]
+[s0; [^`#8^2 8. Adding source files to a package]&]
+[s0; [^`#9^2 9. Building packages from an ESC macro]&]
+[s0; [^`#10^2 10. Binary resource extensions]&]
 [s0;2 &]
 [s6;:1: 1. Opening a package&]
 [s5; To open a package, the [/ Set`-main`-package] option on the File 
