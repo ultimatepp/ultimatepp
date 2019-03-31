@@ -150,11 +150,3 @@ TOPIC("videotutorials_en-us")
 #include "videotutorials_en-us.tppi"
 END_TOPIC
 
-TOPIC("vsswing_en-us")
-#include "vsswing_en-us.tppi"
-END_TOPIC
-
-TOPIC("vswx_en-us")
-#include "vswx_en-us.tppi"
-END_TOPIC
-

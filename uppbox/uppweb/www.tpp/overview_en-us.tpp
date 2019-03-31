@@ -32,7 +32,7 @@ appetite]&]
 belongs somewhere]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. Ultimate`+`+ 
 containers]&]
-[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#4^2 4. Who owns widgets]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#4^2 4. Who owns widgets?]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#5^2 5. Dialog templates 
 are C`+`+ templates]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#6^2 6. Value and Null]&]
@@ -142,7 +142,7 @@ some sort of smart pointers (soon to be std`:: boost`::shared`_ptr),
 but both increase code complexity and break the Ultimate`+`+ 
 rule according to which [/ everything belongs somewhere].&]
 [s5; &]
-[s3;:4: 4. Who owns widgets&]
+[s3;:4: 4. Who owns widgets?&]
 [s5; One of the things we discovered over our countless experiments 
 with C`+`+ GUI is the fact that the GUI toolkit should not own 
 widget objects. GUI objects should be always owned by the client, 
