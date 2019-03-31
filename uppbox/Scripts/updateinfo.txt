@@ -29,7 +29,10 @@ install 1.0.2? Win32, Win64
 
 Copy corresponding files
 
+Alternative: Domestic build... (ask Novo :)
+
 initial: 1.0.2l
+2019-03-31: 1.0.2r
 
 ------------------------------------------------------------------
 plugin/jpg
