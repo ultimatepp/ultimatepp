@@ -247,11 +247,14 @@ current version 3.3.7
 ------------------------------------------------------------------
 plugin/sqlite3
 
-https://www.sqlite.org/download.html
+https://github.com/resilar/sqleet/releases/tag/v0.27.2
 
-Download amalgamation, replace files
+Download amalgamation, replace files lib/sqleet.[c|h]
+
+(sqleet has crypto support)
 
 2019-03-22: 3.27.2
+2019-03-22: sqleet 0.27.2
 
 ------------------------------------------------------------------
 plugin/glew
