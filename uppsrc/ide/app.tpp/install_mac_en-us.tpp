@@ -1,4 +1,4 @@
-topic "Ultimate++ MacOS release";
+topic "Ultimate++ MacOS Installation";
 [a83;*R6 $$1,3#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$2,3#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
