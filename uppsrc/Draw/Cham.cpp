@@ -123,7 +123,7 @@ struct sChBorder {
 };
 
 Value ChBorder(const ColorF *colors, const Value& face)
-{
+{ // adds border to face value
 	sChBorder b;
 	b.border = colors;
 	b.face = face;
@@ -155,6 +155,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 		switch(op) {
 		case LOOK_PAINT:
 			ChPaint(w, r.Deflated(n), b.face);
+			// fall through - need to paint border now
 		case LOOK_PAINTEDGE:
 			DrawBorder(w, r, b.border);
 			return 0;
