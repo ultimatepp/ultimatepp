@@ -1,7 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 #include <DropGrid/DropGrid.h>
 #include <GridCtrl/GridCtrl.h>
-#include <plugin/sqlite3/lib/sqlite3.h>
 #include <plugin/sqlite3/Sqlite3.h>
 
 using namespace Upp;
