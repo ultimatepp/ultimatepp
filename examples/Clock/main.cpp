@@ -27,7 +27,6 @@ struct App : TopWindow {
 		w.DrawEllipse(0, 0, sz.cx, sz.cy, SWhite, 3, SBlack);
 		Font fnt = Arial(min(sz.cx, sz.cy) / 10);
 		for(int i = 1; i <= 12; i++) {
-			int d = i % 3 == 0 ? 3 : 2;
 			PaintCenteredText(w, sz2.cx + int(0.8 * sin(i * M_PI / 6) * sz2.cx),
 			                  sz2.cy - int(0.8 * cos(i * M_PI / 6) * sz2.cy),
 			                  AsString(i), i % 3 ? fnt : fnt().Bold(), SBlack);
