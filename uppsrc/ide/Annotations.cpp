@@ -23,7 +23,7 @@ void AssistEditor::Annotate(const String& filename)
 	}
 }
 
-bool IsCodeItem(RichText& txt, int i)
+bool IsCodeItem(const RichTxt& txt, int i)
 {
 	static Uuid codeitem = CodeItemUuid();
 	static Uuid stritem = StructItemUuid();
@@ -93,11 +93,26 @@ void AssistEditor::SyncAnnotationPopup()
 		String path = GetTopicPath(tl);
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
-		
 		RichText result;
 		String cr = coderef;
 		for(int pass = 0; pass < 2; pass++) {
 			for(int i = 0; i < topic_text.GetPartCount(); i++)
+				if(topic_text.IsTable(i)) {
+					const RichTable& t = topic_text.GetTable(i);
+					Size sz = t.GetSize();
+					for(int y = 0; y < sz.cy; y++)
+						for(int x = 0; x < sz.cx; x++) {
+							const RichTxt& txt = t.Get(y, x);
+							for(int i = 0; i < txt.GetPartCount(); i++) {
+								if(txt.IsPara(i) && txt.Get(i, topic_text.GetStyles()).format.label == cr) {
+									RichTable r(t, 1);
+									result.CatPick(pick(r));
+									goto done;
+								}
+							}
+						}
+				}
+				else
 				if(IsCodeItem(topic_text, i) && topic_text.Get(i).format.label == cr) {
 					while(i > 0 && IsCodeItem(topic_text, i)) i--;
 					if(!IsCodeItem(topic_text, i)) i++;
@@ -118,6 +133,7 @@ void AssistEditor::SyncAnnotationPopup()
 			if(pass == 0 && !LegacyRef(cr))
 				break;
 		}
+	done:
 		result.SetStyles(topic_text.GetStyles());
 		annotation_popup.Pick(pick(result), GetRichTextStdScreenZoom());
 	}
