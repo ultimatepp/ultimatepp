@@ -15,11 +15,15 @@ topic "";
 [s0; U`+`+ provides a set of colors that are adjusted according to 
 current settings of host platform. Using these colors makes it 
 easier to adapt the application to host platform settings.&]
+[s0; &]
+[s0; Following table shows colors that represent certain hue. When 
+transformed to dark theme, hue is maintained while brightness 
+of color changes.&]
 [s0;3%- &]
 [ {{3044:3508:1778:1670@7 [s0;%- Color]
 :: [s0;%- Description]
-:: [s0;=%- Win 10 light]
-:: [s0;=%- Win 10 dark]
+:: [s0;=%- Light theme]
+:: [s0;=%- Dark theme]
 ::@2 [s0;:SBlack`(`):%- Color [* SBlack]()]
 :: [s0;%- Possibly theme adjusted color.]
 :: [s0;=%- 
@@ -199,8 +203,16 @@ easier to adapt the application to host platform settings.&]
 :: [s0;=%- 
 @@rawimage:256&96
 (iVBORw0KGgoAAAANSUhEUgAAAIAAAAAwCAYAAADZ9HK+AAAACXBIWXMAAAAAAAAAAAHqZRakAAAApElEQVR4nO3coRGAQAwAwcDQIzVSJWgGz4vbdXkVcRP528zcQ9a+egHWEkCcAOKOz8t1LViD35zna3QB4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiBNAnADiBBAngDgBxAkgTgBxAogTQJwA4gQQJ4A4AcQJIE4AcQKIE0CcAOIEECeAOAHECSBOAHECiNvGX8FpLkCcAOIEEPcA038EXwIEgSEAAAAASUVORK5CYII=)
-]
-:: [s0;:SColorPaper`(`):%- Color [* SColorPaper]()]
+]}}&]
+[s0; &]
+[s0; Following colors provide host platform provided information 
+about colors of GUI element parts:&]
+[s0;%- &]
+[ {{3044:3508:1778:1670@7 [s0;%- Color]
+:: [s0;%- Description]
+:: [s0;=%- Win 10 light]
+:: [s0;=%- Win 10 dark]
+::@2 [s0;:SColorPaper`(`):%- Color [* SColorPaper]()]
 :: [s0;%- Normal background.]
 :: [s0;=%- 
 @@rawimage:256&96
