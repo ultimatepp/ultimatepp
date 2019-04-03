@@ -67,7 +67,7 @@ private:
 	friend class ImageDraw;
 	friend class BackDraw;
 	friend class ViewDraw;
-	friend class BackDraw__;
+	friend struct BackDraw__;
 
 public:
 	void    *GetCGHandle() const      { return handle; }
