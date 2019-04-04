@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 	{
 		FileIn in(cpath);
 		ZDecompressStream z(in);
-		DLOG(z.GetLine());
+		RLOG(z.GetLine());
 	}
 
 	{
@@ -31,19 +31,19 @@ CONSOLE_APP_MAIN
 	{
 		FileIn in(cpath);
 		LZ4DecompressStream z(in);
-		DLOG(z.GetLine());
+		RLOG(z.GetLine());
 	}
 
 	{
 		FileOut out(cpath);
 		ZstdCompressStream z(out);
-		z.Put("Compressed by LZ4");
+		z.Put("Compressed by Zstd");
 	}
 	
 	{
 		FileIn in(cpath);
 		ZstdDecompressStream z(in);
-		DLOG(z.GetLine());
+		RLOG(z.GetLine());
 	}
 	
 	FileDelete(cpath);
