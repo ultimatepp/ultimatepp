@@ -2563,6 +2563,7 @@ be regenerated. By setting this callback to a different function
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenEnterRow: [_^Callback^ Callback]_[* WhenEnterRow]&]
+[s0; [* -|][*/ Deprecated]&]
 [s2; This callback is called every time the cursor location changes 
 to a different row of the array.&]
 [s3; &]
@@ -2583,6 +2584,7 @@ or generally to an external data source.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenKillCursor: [_^Callback^ Callback]_[* WhenKillCursor]&]
+[s0; [* -|][*/ Deprecated]&]
 [s2; This callback is called whenever the cursor is moved away from 
 the table.&]
 [s2; [* Note:] internally, when moving the cursor (e.g. by calling the 
@@ -2593,6 +2595,7 @@ the [* WhenKillCursor] callback is called as a by`-product.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenCursor: [_^Callback^ Callback]_[* WhenCursor]&]
+[s0; [* -|][*/ Deprecated]&]
 [s2; This callback is called every time the cursor row number changes 
 (either when the cursor is removed from the table, or when it 
 has been moved to a different row).&]
@@ -2617,6 +2620,7 @@ been committed.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenSelection: [_^Callback^ Callback]_[* WhenSelection]&]
+[s0; [* -|][*/ Deprecated]&]
 [s2; This callback is called whenever the current array selection 
 changes. This includes changes to the cursor location as the 
 cursor is automatically considered part of the selection.&]

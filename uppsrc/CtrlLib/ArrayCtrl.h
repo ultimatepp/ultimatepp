@@ -351,7 +351,7 @@ protected:
 	void   ClearModify();
 
 public:
-	Event<>           WhenSel; // the most usual ArrayCtrl callbak
+	Event<>           WhenSel; // the most usual ArrayCtrl event
 
 	Event<>           WhenLeftDouble;
 	Event<Point>      WhenMouseMove;
