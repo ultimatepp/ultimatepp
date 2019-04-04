@@ -480,6 +480,7 @@ void ArrayCtrl::Set(int ii, const Value& v) {
 	modify.At(ii, false) = true;
 	InvalidateCache(cursor);
 	RefreshRow(cursor);
+	WhenArrayAction();
 }
 
 void ArrayCtrl::Set(const Id& id, const Value& v) {
@@ -492,6 +493,7 @@ void ArrayCtrl::Set0(int i, int ii, const Value& v) {
 	else
 		SetCtrlValue(i, ii, v);
 	array.At(i).line.At(ii) = v;
+	WhenArrayAction();
 }
 
 void ArrayCtrl::AfterSet(int i)
@@ -533,6 +535,7 @@ void  ArrayCtrl::SetCount(int n) {
 	SyncCtrls();
 	SetSb();
 	PlaceEdits();
+	WhenArrayAction();
 }
 
 Value ArrayCtrl::GetColumn(int row, int col) const {
@@ -1197,6 +1200,7 @@ void ArrayCtrl::Remove0(int i) {
 	SyncInfo();
 	SetSb();
 	selectiondirty = true;
+	WhenArrayAction();
 }
 
 void ArrayCtrl::DisableCtrls() {
@@ -2005,6 +2009,7 @@ void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
 	InvalidateCache(i);
 	SetSb();
 	RefreshRow(i);
+	WhenArrayAction();
 }
 
 void  ArrayCtrl::Add() {
@@ -2023,6 +2028,7 @@ void  ArrayCtrl::Add() {
 		InvalidateCache(i);
 		RefreshRow(i);
 	}
+	WhenArrayAction();
 }
 
 void  ArrayCtrl::Add(const Vector<Value>& v)
@@ -2147,6 +2153,7 @@ void  ArrayCtrl::Insert(int i, int count) {
 	PlaceEdits();
 	SyncCtrls();
 	SyncInfo();
+	WhenArrayAction();
 }
 
 void  ArrayCtrl::Insert(int i)
