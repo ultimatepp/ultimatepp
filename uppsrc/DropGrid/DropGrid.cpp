@@ -194,7 +194,6 @@ void DropGrid::Paint(Draw& w)
 	else
 		clear.Hide();
 	
-	GridDisplay &disp = display ? *display : list.GetDisplay();
 	bool hf = HasFocus();
 	bool isnull = rowid < 0;
 	Color fg = hf ? SColorHighlightText() : IsEnabled() ? SColorText() : SColorDisabled();

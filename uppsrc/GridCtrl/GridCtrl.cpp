@@ -1091,8 +1091,10 @@ GridCtrl::Item& GridCtrl::GetItemSize(int &r, int &c, int &x, int &y, int &cx, i
 		if(skip)
 			return *it;
 
-		while(c >= 0 && items[idy][hitems[c].id].group == group) --c; ++c;
-		while(r >= 0 && items[vitems[r].id][idx].group == group) --r; ++r;
+		while(c >= 0 && items[idy][hitems[c].id].group == group) --c;
+		++c;
+		while(r >= 0 && items[vitems[r].id][idx].group == group) --r;
+		++r;
 
 		dx = it->cx;
 		dy = it->cy;
@@ -2622,12 +2624,14 @@ Rect GridCtrl::GetItemRect(int r, int c, bool hgrid, bool vgrid, bool hrel, bool
 	{
 		int group = it.group;
 
-		while(r > fixed_rows && items[vitems[r].id][idx].group == group) --r; ++r;
+		while(r > fixed_rows && items[vitems[r].id][idx].group == group) --r;
+		++r;
 
 		top = vitems[r].nTop(dy);
 		bottom = vitems[r + it.cy].nBottom(dy);
 
-		while(c > fixed_cols && items[idy][hitems[c].id].group == group) --c; ++c;
+		while(c > fixed_cols && items[idy][hitems[c].id].group == group) --c;
+		++c;
 
 		left = hitems[c].nLeft(dx);
 		right = hitems[c + it.cx].nRight(dx);
@@ -4404,9 +4408,11 @@ void GridCtrl::RefreshRow(int n, bool relative, bool fixed)
 	if(join > 0)
 	{
 		int s = n;
-		while(s >= 0 && vitems[s].join > 0) s--; s++;
+		while(s >= 0 && vitems[s].join > 0) s--;
+		s++;
 		int e = n;
-		while(e < total_rows && vitems[e].join > 0) e++; e--;
+		while(e < total_rows && vitems[e].join > 0) e++;
+		e--;
 		Refresh(Rect(0, vitems[s].nTop(dy), GetSize().cx, vitems[e].nBottom(dy)));
 	}
 	else
