@@ -810,6 +810,7 @@ int TextCtrl::Insert0(int pos, const WString& txt) { // TODO: Do this with utf8
 	total += size;
 	SetSb();
 	Update();
+	ClearSelection();
 	PostInsert(inspos, txt);
 	return size;
 }
@@ -851,6 +852,7 @@ void TextCtrl::Remove0(int pos, int size) {
 		Refresh();
 	}
 	Update();
+	ClearSelection();
 	PostRemove(rmpos, rmsize);
 	SetSb();
 }
@@ -1010,10 +1012,12 @@ void TextCtrl::Redo() {
 }
 
 void  TextCtrl::ClearSelection() {
-	anchor = -1;
-	Refresh();
-	SelectionChanged();
-	WhenSel();
+	if(anchor >= 0) {
+		anchor = -1;
+		Refresh();
+		SelectionChanged();
+		WhenSel();
+	}
 }
 
 void   TextCtrl::SetSelection(int64 l, int64 h) {

@@ -240,9 +240,8 @@ void DocEdit::PlaceCaret(int64 newpos, bool select) {
 		newpos = GetLength32();
 	int z = GetLine(newpos);
 	if(select) {
-		if(anchor < 0) {
+		if(anchor < 0)
 			anchor = cursor;
-		}
 		RefreshLines(z, GetLine(cursor));
 	}
 	else
