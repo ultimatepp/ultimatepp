@@ -245,10 +245,12 @@ class TrayIcon : private Ctrl {
 	NotifyIconNew  nid;
 	HWND           hwnd;
 
-	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	void Notify(dword msg);
 	void DoMenu(Bar& bar);
 	void Message(int type, const char *title, const char *text, int timeout = 10);
+
+protected:
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
 	virtual void    Menu(Bar& bar);
