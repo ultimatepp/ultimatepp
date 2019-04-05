@@ -14,6 +14,7 @@ ScatterDraw::ScatterDraw() {
 	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
 	xRange = yRange = yRange2 = 100.0;
 	xMin = yMin = yMin2 = xMinUnit = yMinUnit = yMinUnit2 = 0;
+	xMinUnit0 = yMinUnit0 = yMinUnit20 = 0;
 	gridColor = SColorDkShadow();
 	gridWidth = 0.5;
 	gridDash = LINE_DOTTED_FINE;
@@ -280,9 +281,9 @@ void ScatterDraw::AdjustMajorUnitY2() {
 }
 
 ScatterDraw &ScatterDraw::SetRange(double rx, double ry, double ry2) {
-	ASSERT(IsNull(rx) || rx > 0);
-	ASSERT(IsNull(ry) || ry > 0);
-	ASSERT(IsNull(ry2) || ry2 > 0);
+	ASSERT(IsNull(rx) || rx  > 0);
+	ASSERT(IsNull(ry) || ry  > 0);
+	ASSERT(IsNull(ry2)|| ry2 > 0);
 	
 	if (!IsNull(rx)) {
 		xRange = rx;
@@ -337,6 +338,7 @@ ScatterDraw &ScatterDraw::SetMajorUnitsNum(int nx, int ny) {
 
 ScatterDraw &ScatterDraw::SetMinUnits(double ux, double uy) {
 	if (!IsNull(ux))
+	if (!IsNull(ux))
 		xMinUnit = xMinUnit0 = ux;
 	if (!IsNull(uy)) {	
 		yMinUnit = yMinUnit0 = uy;
@@ -385,8 +387,12 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 			for (int j = 0; j < series.GetCount(); j++) {
 				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 					continue;
-				minx = min(minx, series[j].PointsData()->MinX());
-				maxx = max(maxx, series[j].PointsData()->MaxX());
+				double mn = series[j].PointsData()->MinX();
+				if (!IsNull(mn))
+					minx = min(minx, mn);
+				double mx = series[j].PointsData()->MaxX();
+				if (!IsNull(mx))
+					maxx = max(maxx, mx);
 			}
 			if (minx != -DOUBLE_NULL) {
 				double deltaX = (maxx - minx)*factor;
@@ -630,6 +636,8 @@ ScatterDraw &ScatterDraw::AddSeries(DataSource &data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
 	s.SetDataSource(&data, false);
+	if (sequentialXAll)
+		s.sequential = true;
 	Refresh();
 	return *this;	
 }

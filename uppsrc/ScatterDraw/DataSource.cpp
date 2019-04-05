@@ -241,6 +241,24 @@ Vector<Pointf> DataSource::Cumulative(Getdatafun getdataY, Getdatafun getdataX) 
 	return ret;
 }
 
+Vector<Pointf> DataSource::CumulativeAverage(Getdatafun getdataY, Getdatafun getdataX) {
+	Vector<Pointf> ret;
+	
+	double acum = 0;
+	int num = 0;
+	for (int i = 0; i < GetCount(); ++i) {
+		double y = Membercall(getdataY)(i);
+		double x = Membercall(getdataX)(i);
+		
+		if (IsNull(x) || IsNull(y))
+			continue;
+		acum += y;
+		num++;
+		ret << Pointf(x, acum/num);
+	}
+	return ret;
+}
+
 Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width) {
 	Vector<Pointf> ret;
 	double width_2 = width/2.;
@@ -677,26 +695,6 @@ bool DataSource::SameX(DataSource &data) {
 	return true;
 }
 
-// |   |        |
-// y2--z12------z22-
-// |   |        |
-// y---|---o    |
-// |   |   |    |
-// |   |   |    |
-// y1--z11-+----z21-
-// |   |   |    |
-// ----x1--x----x2--
-//
-// y11 = y(x1, y1)	y12 = y(x1, y2)	y21 = y(x2, y1)	y22 = y(x2, y2)
-double BilinearInterpolate(double x, double y, double x1, double x2, double y1, double y2, 
-									 		   double z11, double z12, double z21, double z22) {
-	double x_x1 = x - x1;
-	double x2_x = x2 - x;
-	double y_y1 = y - y1;
-	double y2_y = y2 - y;
-	return (z11*x2_x*y2_y + z21*x_x1*y2_y + z12*x2_x*y_y1 + z22*x_x1*y_y1)/(x2 - x1)/(y2 - y1);
-}
-
 void ExplicitData::Init(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY) {
 	ASSERT(maxX >= minX && maxY >= minY);
 	this->funz = funz;
@@ -850,7 +848,8 @@ Pointf SegIntersection(Pointf &a, Pointf &b, Pointf &c, Pointf &d) {
     	((c.x <= inter.x && d.x >= inter.x) || (d.x <= inter.x && c.x >= inter.x)) &&
     	((c.y <= inter.y && d.y >= inter.y) || (d.y <= inter.y && c.y >= inter.y)))
     	return inter;
-	return Null;
+    else
+		return Null;
 }
 
 Vector<Pointf> Intersection(Vector<Pointf> &poly1, Vector<Pointf> &poly2) {
