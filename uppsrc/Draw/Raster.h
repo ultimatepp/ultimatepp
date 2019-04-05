@@ -34,7 +34,7 @@ struct PaletteCv {
 
 class RasterFormat {
 	byte  type;
-	dword rmask, gmask, bmask, amask;
+	dword rmask, gmask, bmask;
 	byte  rpos, gpos, bpos, apos;
 
 	static void TailBits(RGBA *t, const byte *src, int cx, byte andm, byte shift, const RGBA *palette);
