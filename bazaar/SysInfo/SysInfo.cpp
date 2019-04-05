@@ -1,6 +1,8 @@
 #include "SysInfo_in.h"
 
+#if defined(PLATFORM_WIN32)
 #include <iphlpapi.h>
+#endif
 
 #define	IN6ADDRSZ	16
 #define	INT16SZ		 2

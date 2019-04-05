@@ -2,12 +2,12 @@ TOPIC("ChangesLog_en-us")
 #include "ChangesLog_en-us.tppi"
 END_TOPIC
 
-TOPIC("SysInfo_en-us")
-#include "SysInfo_en-us.tppi"
-END_TOPIC
-
 TOPIC("SysInfoDemo_en-us")
 #include "SysInfoDemo_en-us.tppi"
+END_TOPIC
+
+TOPIC("SysInfo_en-us")
+#include "SysInfo_en-us.tppi"
 END_TOPIC
 
 TOPIC("ToDo_en-us")
