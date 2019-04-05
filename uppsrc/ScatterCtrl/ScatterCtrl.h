@@ -370,7 +370,7 @@ private:
 	void Paint0(Draw& w, const Size &sz);
 	
 	void ProcessPopUp(const Point &pt);
-	void ProcessClickSeries(const Point &pt);
+	//void ProcessClickSeries(const Point &pt);
 	
 	void DoMouseAction(bool down, Point pt, ScatterAction action, int wheel);
 	void DoKeyAction(ScatterAction action);

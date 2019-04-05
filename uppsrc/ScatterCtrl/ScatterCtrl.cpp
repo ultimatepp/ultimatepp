@@ -380,13 +380,13 @@ void ScatterCtrl::ProcessPopUp(const Point &pt)
 		popTextEnd.Hide();
 }
 
-void ScatterCtrl::ProcessClickSeries(const Point &pt)
+/*void ScatterCtrl::ProcessClickSeries(const Point &pt)
 {
 	double posx = GetRealPosX(pt.x);
 	double posy = GetRealPosY(pt.y);
 	double dx = 2*GetPixelThickX();
 	double dy = 2*GetPixelThickY();
-}
+}*/
 						
 void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int wheel)
 {

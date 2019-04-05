@@ -111,7 +111,7 @@ ProcessingTab::ProcessingTab()
 	CtrlLayout(tabBestFitRight);
 	splitterTabBestFit.Horz(tabBestFitLeft.SizePos(), tabBestFitRight.SizePos());
 	splitterTabBestFit.SetPos(6000, 0);
-	tab.Add(splitterTabFit.SizePos(), t_("Data fit"));
+	tab.Add(splitterTabFit.SizePos(), t_("Processing"));
 	tab.Add(splitterTabFreq.SizePos(), t_("Frequency"));
 	tab.Add(splitterTabOp.SizePos(), t_("Operations"));
 	tab.Add(splitterTabBestFit.SizePos(), t_("Best fit"));
@@ -143,6 +143,7 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.opMin.WhenAction = THISBACK(OnOp);
 	tabFitRight.opMovAvg.WhenAction = THISBACK(OnOp);
 	tabFitRight.opSecAvg.WhenAction = THISBACK(OnOp);
+	tabFitRight.opCumAvg.WhenAction = THISBACK(OnOp);
 	tabFitRight.butAutoSensSector.WhenAction = THISBACK(OnAutoSensSector);
 	tabFitRight.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
 	tabFitRight.width.WhenAction = THISBACK(OnUpdateSensitivity);
@@ -316,6 +317,7 @@ void ProcessingTab::OnOp()
 	tabFitLeft.scatter.ScatterDraw::Show(9, tabFitRight.opMin);
 	tabFitLeft.scatter.ScatterDraw::Show(10,tabFitRight.opMovAvg);
 	tabFitLeft.scatter.ScatterDraw::Show(11,tabFitRight.opSecAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(12,tabFitRight.opCumAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -435,6 +437,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 						.NoMark().Dash(LINE_DASHED).SetSequentialX(true);
 		tabFitLeft.scatter.AddSeries(movAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
 		tabFitLeft.scatter.AddSeries(secAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("SecAvg")).NoMark();		
+		tabFitLeft.scatter.AddSeries(cumAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("CumAvg")).NoMark();		
 					
 		OnOp();
 	} else {
@@ -450,6 +453,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFitRight.opMin.Enable(false);
 		tabFitRight.opMovAvg.Enable(false);
 		tabFitRight.opSecAvg.Enable(false);
+		tabFitRight.opCumAvg.Enable(false);
 	}
 	
 	Show();	
@@ -490,7 +494,11 @@ void ProcessingTab::OnUpdateSensitivity()
 		secAvg = data.SectorAverageY(tabFitRight.width);
 		refresh = true;
 	}
-		
+	if (tabFitRight.opCumAvg) {
+		cumAvg = data.CumulativeAverageY();
+		refresh = true;
+	}
+			
 	if (refresh)
 		tabFitLeft.scatter.Refresh();
 }
