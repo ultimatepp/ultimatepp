@@ -40,7 +40,6 @@ void PaintArc(Painter &w, double cx, double cy, double R, double ang0, double an
 	
 void EditFileFolder::Init() {
 	WhenEnter = THISBACK1(DoGo, true);
-	//EditString::AddFrame(butBrowseLeft);
 	butBrowseLeft.SetImage(Controls4UImg::Folder());
 	butBrowseLeft.Tip(t_("Browse"));
 	butBrowseLeft <<= THISBACK(DoBrowse);
@@ -1867,7 +1866,7 @@ FileBrowser::FileBrowser() {
 	foldersRect.Background(Null);
 	
 	folder.UseBrowse(false).UseUp(true).UseHistory(true);
-	folder.WhenChange = THISBACK(FolderWhenChange);
+	folder <<= THISBACK(FolderWhenChange);
 	foldersLabel.SetText(t_("Folders"));
 	
 	folders.NoRoot();

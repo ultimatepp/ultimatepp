@@ -46,7 +46,9 @@ public:
 	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
 	void DoGo(bool add = true);
+	void ClearTypes()								{InitFs();	pfs->ClearTypes();}
 	void Type(const char *name, const char *ext)	{InitFs();	pfs->Type(name, ext);}
+	void ActiveType(int type)						{InitFs();	pfs->ActiveType(type);}	
 	void AllFilesType()								{InitFs();	pfs->AllFilesType();}
 	void ActiveDir(const String& d) 				{InitFs();	pfs->ActiveDir(d);}
 	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);}
@@ -55,7 +57,6 @@ public:
 	operator const char *() const					{return Get();}
 	const String operator~() const   				{return Get();}
 	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);}
-	void operator<<=(const String& s)            	{Set(s);}
 	EditFileFolder &operator=(const char *s)  	  	{Set(s); return *this;}
 	EditFileFolder &operator=(const String& s) 		{Set(s); return *this;}
 	bool IsEmpty()									{return GetData().IsNull();}
@@ -67,6 +68,7 @@ public:
 	EditFileFolder &UseBrowse(bool use);
 	EditFileFolder &UseBrowseRight(bool use);
 	EditFileFolder &UseGo(bool use);
+	EditFileFolder &BrowseRightWidth(int w)			{butBrowseRight.Width(w); return *this;}
 	virtual void SetData(const Value& data);
 	
 	Callback WhenChange;
