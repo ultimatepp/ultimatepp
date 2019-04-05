@@ -63,9 +63,4 @@ bool StaticPlugin::_Init(const char *_name, const char *_type) {
 	return false;
 }
 
-/*
-bool StaticPlugin::Init(const char *_name) {
-	return Init(_name, "");
-}
-*/
 

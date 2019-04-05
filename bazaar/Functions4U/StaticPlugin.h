@@ -46,7 +46,7 @@ public:
 		x.Delete = Delete<T>;
 	}
 	bool _Init(const char *_name, const char *_type);
-	//bool Init(const char *_name);
+	
 	#if defined(__MINGW32__)
 		__attribute__ ((deprecated))
 	#else

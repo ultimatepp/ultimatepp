@@ -20,8 +20,7 @@ using namespace Upp;
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
 					 USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
-					 DELETE_READ_ONLY = 4//,
-					 //ASK_BEFORE_DELETE = 8
+					 DELETE_READ_ONLY = 4
 };
 
 String GetDesktopManagerNew();
@@ -39,8 +38,8 @@ bool AppendFile(const char *filename, const char *str);
 
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
-inline String Trim(const String& s) {return TrimBoth(s);}
-inline WString Trim(const WString& s) {return TrimLeft(TrimRight(s));}
+inline String Trim(const String& s)   {return TrimBoth(s);}
+//inline WString Trim(const WString& s) {return TrimLeft(TrimRight(s));}
 
 String FitFileName(String fileName, int len);
 
@@ -263,7 +262,6 @@ template <class T>
 inline T BetweenVal(const T& val, const T& _min, const T& _max) { 
 	return max(_min, min(_max, val));
 }
-
 template <class T> 
 inline bool IsNAN(T val) {return std::isnan(val);}
 
@@ -285,8 +283,12 @@ T AngleAdd360(T ang, T val) {
 }
 
 template <class T> 
+inline const T Norm(const T& dx, const T& dy)  { 
+	return sqrt(dx*dx + dy*dy); }
+	
+template <class T> 
 inline const T Distance(const T& x1, const T& y1, const T& x2, const T& y2)  { 
-	return sqrt(pow2(x1-x2) + pow2(y1-y2)); }
+	return Norm(x1-x2, y1-y2); }
 
 template <class T> 
 inline const T Distance(const Point_<T>& p1, const Point_<T>& p2)  { 
@@ -662,6 +664,15 @@ void Shuffle(C &data, int randomSeed = Null) {
   
 	ShuffleAscending(data, generator);
 	ShuffleDescending(data, generator);	
+}
+
+template <class Range, class V>
+void FindAdd(Range& r, const V& value, int from = 0)
+{
+	for(int i = from; i < r.GetCount(); i++)
+		if(r[i] == value) 
+			return;
+	r.Add(value);
 }
 
 class RealTimeStop {  

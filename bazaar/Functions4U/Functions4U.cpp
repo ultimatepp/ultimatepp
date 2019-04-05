@@ -3,7 +3,6 @@
 
 using namespace Upp;
 
-
 #ifdef PLATFORM_WIN32 // || defined (PLATFORM_WIN64)
 	#define Ptr Ptr_
 	#define byte byte_
@@ -20,8 +19,6 @@ using namespace Upp;
 	#undef byte
 	#undef CY
 #endif
-
-//NAMESPACE_UPP
 
 #define TFILE <Functions4U/Functions4U.t>
 #include <Core/t.h>
@@ -1194,7 +1191,7 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 	int npos = str.Find(separator, pos);
 	int spos = str.Find('\"', pos);
 	if (spos < 0 || spos > npos) {
-		if (npos <= -1) {
+		if (npos < 0) {
 			int lspos = str.Find('\"', spos + 1);
 			if (lspos < 0) 
 				sret = str.Mid(max(pos, spos));
@@ -1202,7 +1199,7 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 				sret = str.Mid(spos + 1, lspos - spos - 1);
 			pos = -1;
 		} else {
-			sret = str.Mid(pos, npos - pos);
+			sret = Trim(str.Mid(pos, npos - pos));
 			pos = npos + 1;
 		}
 	} else {
