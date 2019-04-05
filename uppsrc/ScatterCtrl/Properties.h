@@ -282,7 +282,7 @@ private:
 	SinEquation sinus, sinusTend;
 	SplineEquation spline;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
-	Vector<Pointf> movAvg, secAvg;
+	Vector<Pointf> movAvg, secAvg, cumAvg;
 	DataXRange dataXRange;
 	bool exclamationOpened;
 	double newWidthMax, newWidthMin, newWidthMovAvg;
