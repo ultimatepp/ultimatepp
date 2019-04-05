@@ -695,7 +695,7 @@ public:
 	ScatterDraw &SetDataSecondaryY(bool secondary = true); 	
 	bool IsDataPrimaryY(int index);	
 	
-	void SetSequentialX(int index, bool sequential = true);
+	void SetSequentialX(int index, bool sequential);
 	ScatterDraw &SetSequentialX(bool sequential = true);
 	ScatterDraw &SetSequentialXAll(bool sequential = true);
 	bool GetSequentialX(int index);
@@ -1405,7 +1405,7 @@ void ScatterDraw::Plot(T& w)
 	double d1 = xRange/xMajorUnit;
 	double d2 = yRange/yMajorUnit;
 
-	double left, top, d = min(plotW, plotH), r = d/2.;
+	double left, top, d = min(plotW, plotH);//, r = d/2.;
 	if (!isPolar) {
 		if (!surf)
 			w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
@@ -1445,8 +1445,8 @@ void ScatterDraw::Plot(T& w)
 		}
 		w.DrawEllipse(fround(left), fround(top), fround(d), fround(d), plotAreaColor);
 	}
-	double x_c = plotW/2;
-	double y_c = plotH/2;
+	//double x_c = plotW/2;
+	//double y_c = plotH/2;
 	
 	if (drawVGrid) {
 		if (!isPolar) {

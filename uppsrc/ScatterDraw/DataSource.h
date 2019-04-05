@@ -49,6 +49,7 @@ public:
 	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<Pointf> CumulativeY() 				{return Cumulative(&DataSource::y, &DataSource::x);}
+	virtual Vector<Pointf> CumulativeAverageY() 		{return CumulativeAverage(&DataSource::y, &DataSource::x);}
 	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}
 	virtual Vector<Pointf> SectorAverageY(double width) {return SectorAverage(&DataSource::y, &DataSource::x, width);}	
 	virtual void MaxListY(Vector<int64> &id, double width){MaxList(&DataSource::y, &DataSource::x, id, width);}
@@ -87,6 +88,7 @@ public:
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> Cumulative(Getdatafun getdataY, Getdatafun getdataX);
+	Vector<Pointf> CumulativeAverage(Getdatafun getdataY, Getdatafun getdataX);
 	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> SectorAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	void MaxList(Getdatafun getdataY, Getdatafun getdataX, Vector<int64> &id, double width);
@@ -652,8 +654,31 @@ private:
 	int key;
 };
 
-double BilinearInterpolate(double x, double y, double x1, double x2, double y1, double y2, 
-									 		   double z11, double z12, double z21, double z22);
+template <class T>
+inline T LinearInterpolate(T x, T x0, T x1, T v0, T v1) {
+	ASSERT(x1 != x0);
+  	return ((x1 - x)/(x1 - x0))*v0 + ((x - x0)/(x1 - x0))*v1;
+}
+
+template <class T>
+inline T BilinearInterpolate(T x, T y, T x0, T x1, T y0, T y1, T v00, T v01, T v10, T v11) {
+	T r0 = LinearInterpolate(x, x0, x1, v00, v10);
+	T r1 = LinearInterpolate(x, x0, x1, v01, v11);
+	
+	return LinearInterpolate(y, y0, y1, r0, r1);
+}
+
+template <class T>
+inline T TrilinearInterpolate(T x, T y, T z, T x0, T x1, T y0, T y1, T z0, T z1, T v000, T v001, T v010, T v011, T v100, T v101, T v110, T v111) {
+	T x00 = LinearInterpolate(x, x0, x1, v000, v100);
+	T x10 = LinearInterpolate(x, x0, x1, v010, v110);
+	T x01 = LinearInterpolate(x, x0, x1, v001, v101);
+	T x11 = LinearInterpolate(x, x0, x1, v011, v111);
+	T r0 = LinearInterpolate(y, y0, y1, x00, x01);
+	T r1 = LinearInterpolate(y, y0, y1, x10, x11);
+	
+	return LinearInterpolate(z, z0, z1, r0, r1);
+}
 
 class TableInterpolate {
 public:
@@ -775,7 +800,6 @@ private:
 	double *pyAxis;
 	//int lenyAxis;
 };
-
 
 
 class ExplicitData : public DataSourceSurf {
