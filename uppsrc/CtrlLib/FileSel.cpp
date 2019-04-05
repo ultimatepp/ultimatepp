@@ -459,11 +459,11 @@ Image NativePathIcon0(const char *path, bool folder, bool large)
 #endif
 #ifdef PLATFORM_POSIX
 	String p = path;
-	bool isdrive = folder && ((p == "/media") || (p == "/mnt"));
 	FindFile ff(path);
 #ifdef PLATFORM_COCOA
 	return GetFileIcon(path, folder, ff.GetMode() & 0111, large);
 #else
+	bool isdrive = folder && ((p == "/media") || (p == "/mnt"));
 	return isdrive ? PosixGetDriveImage(GetFileName(path), large)
 				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111, large);
 #endif
@@ -525,7 +525,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			filesystem.Find(AppendFileName(dir, filesystem.IsWin32() ? "*.*" : "*"));
 		if(ffi.IsEmpty())
 			return false;
-	#ifdef PLATFORM_POSIX
+	#if defined(PLATFORM_POSIX) && !defined(PLATFORM_COCOA)
 		bool isdrive = dir == "/media" || dir == "/mnt";
 	#endif
 		for(int t = 0; t < ffi.GetCount(); t++) {

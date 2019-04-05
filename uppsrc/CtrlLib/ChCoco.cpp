@@ -94,7 +94,6 @@ void CocoButton(Button::Style& s, int type, int value)
 {
 	Image h[4];
 	CocoButton(h, type, value);
-	Size sz = h[0].GetSize();
 	for(int i = 0; i < 4; i++) {
 		s.look[i] = h[i];
 		Image gg = CreateImage(h[i].GetSize(), SColorFace());
