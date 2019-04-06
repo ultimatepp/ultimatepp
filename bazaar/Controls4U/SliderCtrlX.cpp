@@ -118,7 +118,7 @@ void	SliderCtrlX::DrawTick( Draw &w, MAJORMINOR Type, HOVE Orientation, int nPos
 	int		nMajorSize = (int)( m_nMajorTickSize / 100.0f * sz * .5 + 0.5f );
 	int		nMinorSize = (int)( m_nMinorTickSize / 100.0f * sz * .5 + 0.5f );
 	int		nMajorWidth = 3;
-	int		TickBottomMaj, TickBottomMin, TickTop;
+	int		TickBottomMaj = 0, TickBottomMin = 0, TickTop = 0;
 
 	String txt;
 	

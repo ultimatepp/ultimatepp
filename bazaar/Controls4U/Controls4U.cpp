@@ -943,29 +943,25 @@ void StaticClock::Paint(Draw& ww) {
 		}
 	}
 	if (numberType != StaticClock::NoNumber) {
-		double numberPos;
+		double numberPos = 0;
 		if (hourType == StaticClock::No) 
 			numberPos = 1;
 		else if (hourType == StaticClock::Square) 
 			numberPos = 0.96;
 		else if (hourType == StaticClock::Rectangle) 
 			numberPos = 0.75;
-		double numberd;
+		double numberd = numberPos - 0.2;
 		Font fnt, fnt4;
 		if (numberType == StaticClock::Small)  {
-			numberd = numberPos - 0.2;	
 			fnt4 = Arial((int)(14*bigF));
 			fnt = Arial((int)(14*bigF));
 		} else if (numberType == StaticClock::Big)  {
-			numberd = numberPos - 0.2;
 			fnt4 = Arial((int)(20*bigF));
 			fnt = Arial((int)(20*bigF));
 		} else if (numberType == StaticClock::BigSmall)  {
-			numberd = numberPos - 0.2;
 			fnt4 = Arial((int)(20*bigF));
 			fnt = Arial((int)(14*bigF));
 		} else if (numberType == StaticClock::Big4)  {
-			numberd = numberPos - 0.2;
 			fnt4 = Arial((int)(20*bigF));
 		}
 		for(int i = 1; i <= 12; i++) {
