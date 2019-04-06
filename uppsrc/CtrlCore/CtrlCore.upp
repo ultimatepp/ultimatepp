@@ -143,8 +143,6 @@ file
 	CocoWnd.cpp,
 	CocoTop.cpp,
 	CocoChSysInit.cpp,
-	cocotodo.txt,
-	uhdtodo.txt,
 	"RTF support" readonly separator,
 	ParseRTF.cpp,
 	EncodeRTF.cpp,
