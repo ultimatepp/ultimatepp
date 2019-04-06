@@ -63,6 +63,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 		plotLeft = int(plotScaleX*hPlotLeft);
 		plotTop = int(plotScaleY*vPlotTop + titleHeight);
 		rectWidth = legendWidth*legendNumCols;
+		rectHeight = 0;
 		topClip = int(plotScaleY*vPlotTop + titleHeight);
 		nlr = legendNumCols;	
 		loclegendRowSpacing = int(legendRowSpacing*textScale);
@@ -86,6 +87,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	case RIGHT_TOP:		rect.Set(right, top, right + rectWidth, top + rectHeight);		break;
 	case LEFT_BOTTOM: 	rect.Set(left, bottom, left + rectWidth, bottom + rectHeight);	break; 
 	case RIGHT_BOTTOM:	rect.Set(right, bottom, right + rectWidth, bottom + rectHeight);break; 
+	default:			rect.Set(0, 0, 0, 0);
 	}
 	
 	w.Clip(int(plotScaleX*hPlotLeft), topClip, plotW, plotH);
@@ -160,6 +162,7 @@ void ScatterDraw::DrawRainbowPalette(Draw& w) const {
 								 int(plotRight - rainbowPosx),
 								 int(plotBottom- rainbowPosy));
 						break;
+	default:			rect.Set(0, 0, 0, 0);
 	}	
 	
 	if (!surfUnits.IsEmpty()) {
