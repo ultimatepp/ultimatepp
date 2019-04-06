@@ -26,6 +26,82 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Roadmap&]
+[s24; Upcoming release&]
+[s3; 2019.1 (Apr 2019)&]
+[s5;* &]
+[s5; [* General improvements]&]
+[s5;l160;i150;O0;~~~192; MacOS X support&]
+[s5;l160;i150;O0;~~~192; Improved support for UHD displays&]
+[s5;l160;i150;O0;~~~192; Improved support for dark themes&]
+[s5; &]
+[s5; [* Core]&]
+[s5;l160;i150;O0;~~~192; Core/SSH: SSH protocol support&]
+[s5;l160;i150;O0;~~~192; XMLRPC improvements (protocol version, support 
+for i8 type)&]
+[s5;l160;i150;O0;~~~192; WebSockets improvements&]
+[s5;l160;i150;O0;~~~192; ToAscii, ToUpperAscii, ToLowerAscii functions 
+optimized&]
+[s5;l160;i150;O0;~~~192; New CoWork variant CoWorkNX solves an compilation 
+problem when using CoWork as member variable&]
+[s5;l160;i150;O0;~~~192; DarkTheme function inverts Color luminosity 
+for dark themes support (dark colors become light, light colors 
+dark, but color remains)&]
+[s5;l160;i150;O0;~~~192; MakeOne is now changed to function&]
+[s5;l160;i150;O0;~~~192; LocalProcess now allows setting current 
+directory for started process&]
+[s5; &]
+[s5; [* Ide]&]
+[s5;l160;i150;O0;~~~192; Various improvements of Image designer&]
+[s5;l160;i150;O0;~~~192; `'Disable UHD mode`' option for testing 
+applications&]
+[s5;l160;i150;O0;~~~192; GDB interface improvements: Now possible 
+to stop running application and to set breakpoints while application 
+runs&]
+[s5;l160;i150;O0;~~~192; Compare with clipboard function&]
+[s5;l160;i150;O0;~~~192; Initial setup improved&]
+[s5;l160;i150;O0;~~~192; New dialog for setting up project assemblies&]
+[s5;l160;i150;O0;~~~192; PDB debugger improvements: now displays INF 
+and NAN for floats, fixed termination issues&]
+[s5;l160;i150;O0;~~~192; Selfupgrade feature (ide compiles itself 
+and replaces the binary)&]
+[s5; &]
+[s5; [* Other]&]
+[s5;l160;i150;O0;~~~192; Improved jpeg EXIF support&]
+[s5;l160;i150;O0;~~~192; RichText now suggests corrections for misspelled 
+words.&]
+[s5;l160;i150;O0;~~~192; RichText now supports .svg images&]
+[s5;l160;i150;O0;~~~192; GLCtrl refactored, changed to use single 
+context per application (allows sharing resources, e.g. textures, 
+between widgets), support for GTK fixed, MSAA supported in Win32&]
+[s5;l160;i150;O0;~~~192; VirtualGui is a new package to implement 
+working `'fullscreen`' GUI by implementing a SystemDraw and a 
+dozen of virtual methods, intended for use with e.g. games. VirtualGUI/SDL2GL 
+is an implementation with SDL2.&]
+[s5;l160;i150;O0;~~~192; Painter is heavily optimized for multithreaded 
+rendering.&]
+[s5;l160;i150;O0;~~~192; PostgreSQL now supports RETURNING clause 
+in SqlExp.&]
+[s5;l160;i150;O0;~~~192; New plugin/tess2 package (tesselation) and 
+plugin/glm (OpenGL maths support).&]
+[s5; &]
+[s5; [* Release]&]
+[s5;l160;i150;O0;~~~192; U`+`+ now ships with speller files for multiple 
+languages&]
+[s5; &]
+[s5; [* Win32 Release]&]
+[s5;l160;i150;O0;~~~192; Now ships with SDL2, MySQL and PostgreSQL 
+client libraries&]
+[s5;l160;i150;O0;~~~192; mingw64 upgraded to 8.1.0&]
+[s5;l160;i150;O0;~~~192; OpenSSL updated 1.0.2r&]
+[s5;l160;i150;O0;~~~192; plugin/jpg updated to 9c&]
+[s5;l160;i150;O0;~~~192; plugin/tif updated to 4.0.10&]
+[s5;l160;i150;O0;~~~192; plugin/lz4 updated to 1.8.3&]
+[s5;l160;i150;O0;~~~192; plugin/zstd updated to 1.3.8&]
+[s5;l160;i150;O0;~~~192; plugin/lzma updated to 19.0&]
+[s5;l160;i150;O0;~~~192; plugin/pcre updated to 8.43&]
+[s5;l160;i150;O0;~~~192; plugin/sqlite3 updated to sqleet 0.27.2&]
+[s5; &]
+[s24; &]
 [s24; Current release&]
 [s3; 2018.1 (rev 11873) (Mar 2018)&]
 [s22; Core&]
