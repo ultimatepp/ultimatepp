@@ -13,11 +13,40 @@ bool SetupSVNTrunk()
 #endif
 	static MapConvert revcv;
 	ONCELOCK {
+		for(int pass = 0; pass < 2; pass++) {
+			HttpRequest r(pass ? "https://www.ultimatepp.org/www$uppweb$RoadmapHistorical$en-us.html"
+			                   : "https://www.ultimatepp.org/www$uppweb$Roadmap$en-us.html");
+			r.GlobalTimeout(10000);
+			StringStream ss(r.Execute());
+			while(!ss.IsEof()) {
+				String l = ss.GetLine();
+				if(l.Find("(rev") >= 0) {
+					String r;
+					int v = 0;
+					for(int c : l)
+						if(c == '<')
+							v++;
+						else
+						if(c == '>')
+							v--;
+						else
+						if(v == 0)
+							r.Cat(c);
+					int q = r.FindAfter("(rev");
+					if(q >= 0) {
+						int rev = atoi(~r + q);
+						revcv.Add(rev, r);
+					}
+				}
+			}
+		}
+#if 0
 		revcv.Add(11873, "2018.1 (rev 11873) (Mar 2018)");
 		revcv.Add(11540, "2017.2 (rev 11540) (Dec 2017)");
 		revcv.Add(10804, "2017.1 (rev 10804) (Jan 2017)");
 		revcv.Add(9251, "2015.2 (rev 9251) (Dec 2015)");
 		revcv.Add(8227, "2015.1 (rev 8227) (Mar 2015)");
+#endif
 	}
 	dlg.revision.SetConvert(revcv);
 	dlg.revision.DropWidthZ(200);

@@ -353,12 +353,6 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	bar.Add(base.IsCursor(), "Remove assembly", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
 	Vector<String> d = GetSvnDirs();
-	if(d.GetCount()) {
-		bar.Separator();
-		for(int i = 0; i < d.GetCount(); i++)
-			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
-		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
-	}
 	if(HasSvn()) {
 		bar.Separator();
 		bar.Add("Checkout and setup U++ SVN trunk sources..", [=] {
@@ -366,6 +360,12 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 			SetupSVNTrunk();
 			SyncBase(vars);
 		});
+	}
+	if(d.GetCount()) {
+		bar.Separator();
+		for(int i = 0; i < d.GetCount(); i++)
+			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
+		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
 	}
 }
 
