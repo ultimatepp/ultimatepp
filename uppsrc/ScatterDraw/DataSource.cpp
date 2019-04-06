@@ -343,7 +343,7 @@ void DataSource::ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool asc
 	zeros.Clear();
 	ids.Clear();
 	
-	double y_prev, x_prev;
+	double y_prev = 0, x_prev = 0;
 	int i0;
 	for (i0 = 0; i0 < GetCount(); ++i0) {
 		y_prev = Membercall(getdataY)(i0);
@@ -389,7 +389,7 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 	double T = 0;
 	int numT = 0;
 	double lastZero = Null;
-	double firstZero;
+	double firstZero = Null;
 	firstId++;
 	for (int64 id = firstId; id < GetCount(); ++id) {
 		if (IsNull(x(id)) || IsNull(y(id)))

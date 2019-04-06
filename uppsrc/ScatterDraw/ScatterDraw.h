@@ -1548,7 +1548,7 @@ void ScatterDraw::Plot(T& w)
 						imin = 0;
 						imax = series[j].PointsData()->GetCount() - 1;
 					}
-					double dxpix;
+					double dxpix = 0;
 					if (fastViewX) 
 						dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
 					int npix = 1;
@@ -1662,7 +1662,7 @@ void ScatterDraw::Plot(T& w)
 						case ALIGN_LEFT:	ddx = 0;		break;
 						case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
 						case ALIGN_RIGHT:	ddx = -sz.cx;	break;
-						default: ; // to avoid warning
+						default: 			ddx = 0; // to avoid warning
 						}
 						double x = points[i].x + dx + ddx;
 						double y = points[i].y + dy + ddy;
