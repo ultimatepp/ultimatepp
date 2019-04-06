@@ -7,12 +7,21 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include <iostream>
+#include <iomanip>
+#include <complex>
+#include <cmath>
+
 namespace Eigen { 
 
 namespace internal {
 
   // This FFT implementation was derived from kissfft http:sourceforge.net/projects/kissfft
   // Copyright 2003-2009 Mark Borgerding
+
+#ifdef Complex
+#undef Complex
+#endif 
 
 template <typename _Scalar>
 struct kiss_cpx_fft
