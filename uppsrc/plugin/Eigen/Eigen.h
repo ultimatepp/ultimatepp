@@ -20,6 +20,7 @@
 
 #define eigen_assert(x) ASSERT(x)
 
+#undef Success  
 #include "Eigen/Eigen"
 #include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
 #include <plugin/Eigen/unsupported/Eigen/FFT>
