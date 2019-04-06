@@ -24,21 +24,8 @@
 #if !defined(__FTPLIB_H)
 #define __FTPLIB_H
 
-#if defined(__unix__) || defined(VMS)
 #define GLOBALDEF
 #define GLOBALREF extern
-#elif defined(_WIN32)
-#define GLOBALDEF
-#define GLOBALREF extern
-/*
-#if defined BUILDING_LIBRARY
-#define GLOBALDEF __declspec(dllexport)
-#define GLOBALREF __declspec(dllexport)
-#else
-#define GLOBALREF __declspec(dllimport)
-#endif
-*/
-#endif
 
 /* FtpAccess() type codes */
 #define FTPLIB_DIR 1

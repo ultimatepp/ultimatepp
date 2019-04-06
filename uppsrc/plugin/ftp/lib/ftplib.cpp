@@ -87,14 +87,14 @@ static const char version[] =
 
 GLOBALDEF int ftplib_debug = 0;
 
-#if defined(__unix__) || defined(VMS)
-#define net_read read
-#define net_write write
-#define net_close close
-#elif defined(_WIN32)
+#ifdef _WIN32
 #define net_read(x,y,z) recv(x,y,z,0)
 #define net_write(x,y,z) send(x,y,z,0)
 #define net_close closesocket
+#else
+#define net_read read
+#define net_write write
+#define net_close close
 #endif
 
 #if defined(NEED_MEMCCPY)
