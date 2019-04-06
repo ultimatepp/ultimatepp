@@ -4,7 +4,7 @@ topic "Ultimate++ MacOS Installation";
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; Ultimate`+`+ MacOS Installation&]
+[s1; Ultimate`+`+ on Mac OS&]
 [s2; Table of contents&]
 [s0; &]
 [s0; [^`#1^2 1. Installation]&]
