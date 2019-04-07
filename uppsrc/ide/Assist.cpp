@@ -104,7 +104,7 @@ int CppItemInfoOrder(const Value& va, const Value& vb) {
 	const CppItemInfo& a = ValueTo<CppItemInfo>(va);
 	const CppItemInfo& b = ValueTo<CppItemInfo>(vb);
 	return CombineCompare(a.name, b.name)(a.natural, b.natural);
-};
+}
 
 void AssistEditor::CloseAssist()
 {

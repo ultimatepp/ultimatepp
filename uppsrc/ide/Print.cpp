@@ -17,7 +17,7 @@ PrinterDlg::PrinterDlg()
 
 INITBLOCK {
 	RegisterGlobalConfig("PrinterDlg");
-};
+}
 
 struct Printer {
 	Draw& w;
