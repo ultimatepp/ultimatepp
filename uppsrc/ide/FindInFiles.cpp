@@ -317,7 +317,7 @@ void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 	}
 	ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
 	ffound.Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
-};
+}
 	
 void Ide::FindString(bool back)
 {
