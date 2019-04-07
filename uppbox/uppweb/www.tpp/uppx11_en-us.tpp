@@ -3,6 +3,7 @@ topic "U++ POSIX/X11 Tarball Installation";
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [a83;*R6 $$3,2#31310162474203024125188417583966:caption]
 [2 $$4,4#589063B430329DC9D1C058DDB04EA569:code]
+[b83;*+117 $$5,5#2AC2FD302E8CD436942CC99374D81489:SubTitle]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s3; U`+`+ POSIX/X11 Tarball Installation&]
@@ -16,8 +17,10 @@ and install U`+`+.&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#2^2 2. Compile U`+`+ 
 source code]&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#3^2 3. Advanced installation]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^2 4. Troubleshooting]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^2 5. U`+`+ spec file 
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^2 4. Additional dependencies]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4`_1^2     4.1 OpenGL]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^2 5. Troubleshooting]&]
+[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#6^2 6. U`+`+ spec file 
 for rpm based distribution]&]
 [s0; &]
 [s1;:1: 1. Build Requirements&]
@@ -121,7 +124,13 @@ it will switch to standard POSIX installation mode. Example:&]
 in this installation mode: `'DESTDIR`', `'bindir`', `'datadir`', 
 `'mandir`', and `'docdir`'.&]
 [s2; &]
-[s1;:4: 4. Troubleshooting&]
+[s1;:4: 4. Additional dependencies&]
+[s5;:4`_1: 4.1 OpenGL&]
+[s2; To develop application that needs to use 3D graphics you should 
+download following packages for your distribution:&]
+[ {{10000<308;@(229) [s4; libgtkglext1`-dev [/@(114) # Debian like distribution]]}}&]
+[s2; &]
+[s1;:5: 5. Troubleshooting&]
 [s2;l160;i150;O0; [* Compilation doesn`'t work, because I have old 
 compiler version. What should I do?]&]
 [s2;l288; If your POSIX/X11 distribution use an old gcc version (< 
@@ -155,7 +164,7 @@ following command in your terminal:&]
 [ {{10000<617;@(229) [s4; which gdb]}}&]
 [s2;l448; It should returns valid GDB path like `'/usr/bin/gdb`'.&]
 [s2; &]
-[s1;:5: 5. U`+`+ spec file for rpm based distribution&]
+[s1;:6: 6. U`+`+ spec file for rpm based distribution&]
 [s2; There is an alternative way to build U`+`+ on rpm based distributions. 
 Indeed, U`+`+ POSIX/X11 tarball contains a spec file for you 
 to build a standard rpm binary and source file. To do that, first 
