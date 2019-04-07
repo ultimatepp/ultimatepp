@@ -50,29 +50,29 @@ topic "Ultimate++ Project Templates";
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#2^ 2. Description]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3^ 3. Ready`-to`-use 
 Templates]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_1^     3.1 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_1^ 3.1 
 Overview]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_2^     3.2 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_2^ 3.2 
 Basic CtrlLib application]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_3^     3.3 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_3^ 3.3 
 Console application (no U`+`+)]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_4^     3.4 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_4^ 3.4 
 Core console project]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_5^     3.5 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_5^ 3.5 
 CtrlLib application with main window]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_6^     3.6 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_6^ 3.6 
 SDL project (no U`+`+)]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_7^     3.7 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_7^ 3.7 
 SDL with Core package]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4^ 4. Template 
 File Layout]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_1^     4.1 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_1^ 4.1 
 Extension]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_2^     4.2 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_2^ 4.2 
 Sections]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_3^     4.3 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_3^ 4.3 
 Section Order]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_4^     4.4 
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_4^ 4.4 
 Size]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5^ 5. Syntax]&]
 [s0;     5.1 Comments&]
