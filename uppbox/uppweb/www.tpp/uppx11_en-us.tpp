@@ -18,7 +18,7 @@ and install U`+`+.&]
 source code]&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#3^2 3. Advanced installation]&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4^2 4. Additional dependencies]&]
-[s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4`_1^2     4.1 OpenGL]&]
+[s0; [2     ][^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#4`_1^2 4.1 OpenGL]&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#5^2 5. Troubleshooting]&]
 [s0; [^topic`:`/`/uppweb`/www`/uppx11`_en`-us`#6^2 6. U`+`+ spec file 
 for rpm based distribution]&]
