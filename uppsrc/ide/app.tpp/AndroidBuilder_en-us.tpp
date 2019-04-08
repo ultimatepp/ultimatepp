@@ -216,6 +216,7 @@ Android `-> SDK Manager].&]
 [s6;l160;i150;O0; The second application you can start directly from 
 TheIDE is AVD Manager. It is available from following TheIDE 
 menubar entry: [/ Setup `-> Android `-> AVD Manager].&]
+[s0; &]
 [s3;:8: 8. Known issues&]
 [s2; The android builder code is not fully complete. Sometimes there 
 are also errors in the code. If you found something disturbing 
