@@ -10,24 +10,23 @@ topic "Android builder";
 [s1; Working with Android builder&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#1^2 1. Introduction]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#2^2 2. Downloading 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#1^2 1. Introduction]&]
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#2^2 2. Downloading 
 Android SDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#3^2 3. Configuring 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#3^2 3. Configuring 
 Android SDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#4^2 4. Creating 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#4^2 4. Creating 
 Android builder]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#5^2 5. Linking 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#5^2 5. Linking 
 Android builder with Android NDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#6^2 6. Configuring 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#6^2 6. Configuring 
 Android builder]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#7^2 7. Tips and 
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#7^2 7. Tips and 
 tricks]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#8^2 8. Known 
-issues]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#`#9^2 9. Appendix]&]
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#8^2 8. Known issues]&]
+[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#9^2 9. Appendix]&]
 [s0; &]
-[s3;:`#1: 1. Introduction&]
+[s3;:1: 1. Introduction&]
 [s2; Android is lead mobile operating system all over the world. 
 In this reference, we want to show you how you can work with 
 its development tools inside TheIDE.&]
@@ -46,7 +45,7 @@ all configuration options related to Android Builder will be
 described. The last chapters refer to things related with this 
 tutorial.&]
 [s0; &]
-[s3;:`#2: 2. Downloading Android SDK&]
+[s3;:2: 2. Downloading Android SDK&]
 [s2; First of all you will need to download Android SDK from the 
 official site. You can do this by clicking on following URL: [^https`:`/`/developer`.android`.com`/studio`/index`.html^ h
 ttps://developer.android.com/studio/index.html]. On the site, 
@@ -64,7 +63,7 @@ operation can be different depending on which platform you are
 using. Sometimes you need to unpack the archive (Linux), another 
 time you need to launch the installer (MS Windows).&]
 [s0; &]
-[s3;:`#3: 3. Configuring Android SDK&]
+[s3;:3: 3. Configuring Android SDK&]
 [s2; When Android SDK is successfully installed, we need to prepare 
 it for our needs.&]
 [s2; One of the essential tool is `"Android SDK Manager`". It helps 
@@ -102,7 +101,7 @@ what are you doing you can select packages manually. In this
 paragraph, we showed the fastest way to the successful configure 
 Android SDK.]&]
 [s0;b42;a42;/2 &]
-[s3;:`#4: 4. Creating Android builder&]
+[s3;:4: 4. Creating Android builder&]
 [s2; The next big step is creating Android builder inside TheIDE. 
 This operation will allow us to write and build an application 
 on Android. To do this, you will need to open `"Build methods`" 
@@ -142,7 +141,7 @@ write core Android applications using Java programming language.&]
 [s0;b42;a42; [/2 Attention: On MS Window may occur problems with 64 
 bit Java version, so please be careful.]&]
 [s0;b42;a42;/2 &]
-[s3;:`#5: 5. Linking Android builder with Android NDK&]
+[s3;:5: 5. Linking Android builder with Android NDK&]
 [s2; Ultimate`+`+ is C`+`+ framework, so it is natural that we want 
 to write applications in that language. To do that we need to 
 link Android builder with Android NDK. NDK by default allows 
@@ -170,7 +169,7 @@ builder, fields `"Toolchain`" and `"C`+`+ runtime`" should be
 detected automatically. At the end, we are saving changes in 
 our build method by clicking `"OK`" button.&]
 [s2; &]
-[s3;:`#6: 6. Configuring Android builder&]
+[s3;:6: 6. Configuring Android builder&]
 [s2; Android builder is a powerful tool, so it allows configuration. 
 Below is a list with all options grouped in two categories. The 
 first group described options related to Android SDK. The second 
@@ -194,7 +193,7 @@ used with C`+`+ source files&]
 [s6;l160;i150;O0;~~~32; Common C options `- compilation flags used 
 with C source files&]
 [s0; &]
-[s3;:`#7: 7. Tips and tricks&]
+[s3;:7: 7. Tips and tricks&]
 [s2; Sometimes you can simplify many things or do things that are 
 not described in the documentation. Below is a list with the 
 most useful:&]
@@ -217,7 +216,7 @@ Android `-> SDK Manager].&]
 [s6;l160;i150;O0; The second application you can start directly from 
 TheIDE is AVD Manager. It is available from following TheIDE 
 menubar entry: [/ Setup `-> Android `-> AVD Manager].&]
-[s3;:`#8: 8. Known issues&]
+[s3;:8: 8. Known issues&]
 [s2; The android builder code is not fully complete. Sometimes there 
 are also errors in the code. If you found something disturbing 
 please let us know about it. You can do this by posting the topic 
@@ -231,6 +230,6 @@ interface.&]
 compatibility we make copy of project files.&]
 [s6;l160;i150;O0; Java sources compile in single thread.&]
 [s0; &]
-[s3;:`#9: 9. Appendix&]
+[s3;:9: 9. Appendix&]
 [s2; In the near future we plan to port the whole Ultimate`+`+ library 
 to Android.]]
