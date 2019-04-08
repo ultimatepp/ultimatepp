@@ -75,55 +75,109 @@ Section Order]&]
 [s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_4^ 4.4 
 Size]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5^ 5. Syntax]&]
-[s0;     5.1 Comments&]
-[s0;     5.2 White Space&]
-[s0;     5.3 Basic Rule&]
-[s0;     5.4 Delimiters&]
-[s0;         5.4.1 `"`@`@`"&]
-[s0;         5.4.2 `"??`"&]
-[s0;     5.5 Expressions&]
-[s0;         5.5.1 Basic Rule&]
-[s0;         5.5.2 `"`@`@[/ filename`_expression]`"&]
-[s0;         5.5.3 `"??[/ expression]`"&]
-[s0;         5.5.4 `"<: ... :>`"&]
-[s0;         5.5.5 `"<:? [/ expression] :> ... <:.:>`"&]
-[s0;         5.5.6 `"<:? [/ expression] :> ... <:/:> ... <:.:>`"&]
-[s0;     5.6 `"PACKAGE`"&]
-[s0;         5.6.1 Description&]
-[s0;         5.6.2 Usage&]
-[s0;     5.7 `"PACKAGE`_TOUPPER`"&]
-[s0;         5.7.1 Description&]
-[s0;         5.7.2 Usage&]
-[s0;     5.8 `"PACKAGE`_TOUPPER`_CAPS`"&]
-[s0;         5.8.1 Description&]
-[s0;         5.8.2 Usage&]
-[s0;     5.9 Header Line&]
-[s0;         5.9.1 Description&]
-[s0;         5.9.2 `"template`"&]
-[s0;         5.9.3 `"[/ Name]`"&]
-[s0;         5.9.4 `"main`", `"sub`"&]
-[s0;         5.9.5 Usage&]
-[s0;     5.10 `"filename`"&]
-[s0;         5.10.1 Description&]
-[s0;         5.10.2 Definition&]
-[s0;         5.10.3 Usage&]
-[s0;     5.11 `"id`"&]
-[s0;         5.11.1 Description&]
-[s0;         5.11.2 Definition&]
-[s0;         5.11.3 Usage&]
-[s0;     5.12 `"option`"&]
-[s0;         5.12.1 Description&]
-[s0;         5.12.2 Definition&]
-[s0;         5.12.3 Usage&]
-[s0;     5.13 `"select`"&]
-[s0;         5.13.1 Description&]
-[s0;         5.13.2 Definition&]
-[s0;         5.13.3 Usage&]
-[s0;     5.14 `"text`"&]
-[s0;         5.14.1 Description&]
-[s0;         5.14.2 Definition&]
-[s0;         5.14.3 Usage&]
-[s0;     5.15 Undefined variables&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_1^ 5.1 
+Comments]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_2^ 5.2 
+White Space]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_3^ 5.3 
+Basic Rule]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4^ 5.4 
+Delimiters]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4`_1^ 5.4.1 
+`"`@`@`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4`_2^ 5.4.2 
+`"??`"]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5^ 5.5 
+Expressions]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_1^ 5.5.1 
+Basic Rule]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ 5.5.2 
+`"`@`@][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ filename`_express
+ion][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ `"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ 5.5.3 
+`"??][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ `"
+]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_4^ 5.5.4 
+`"<: ... :>`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^ 5.5.5 
+`"<:? ][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^  
+:> ... <:.:>`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^ 5.5.6 
+`"<:? ][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^  
+:> ... <:/:> ... <:.:>`"]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6^ 5.6 
+`"PACKAGE`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6`_1^ 5.6.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6`_2^ 5.6.2 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7^ 5.7 
+`"PACKAGE`_TOUPPER`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7`_1^ 5.7.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7`_2^ 5.7.2 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8^ 5.8 
+`"PACKAGE`_TOUPPER`_CAPS`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8`_1^ 5.8.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8`_2^ 5.8.2 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9^ 5.9 
+Header Line]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_1^ 5.9.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_2^ 5.9.2 
+`"template`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ 5.9.3 
+`"][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ Name][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ `"
+]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_4^ 5.9.4 
+`"main`", `"sub`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_5^ 5.9.5 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10^ 5.10 
+`"filename`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_1^ 5.10.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_2^ 5.10.2 
+Definition]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_3^ 5.10.3 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11^ 5.11 
+`"id`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_1^ 5.11.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_2^ 5.11.2 
+Definition]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_3^ 5.11.3 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12^ 5.12 
+`"option`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_1^ 5.12.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_2^ 5.12.2 
+Definition]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_3^ 5.12.3 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13^ 5.13 
+`"select`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_1^ 5.13.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_2^ 5.13.2 
+Definition]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_3^ 5.13.3 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14^ 5.14 
+`"text`"]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_1^ 5.14.1 
+Description]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_2^ 5.14.2 
+Definition]&]
+[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_3^ 5.14.3 
+Usage]&]
+[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_15^ 5.15 
+Undefined variables]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#6^ 6. Template 
 Dialog Layout]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#7^ 7. Deployment]&]
@@ -246,377 +300,265 @@ UPT file.&]
 of the generated file(s) are virtually unlimited.&]
 [s0; &]
 [s3;:5: 5. Syntax&]
-[s23; &]
-[s24; 5.1-|Comments&]
-[s24; &]
-[s28; You can write standard C`+`+ comments (`"/`* ... `*/ and `"//`") 
+[s42;:5`_1: 5.1 Comments&]
+[s5; You can write standard C`+`+ comments (`"/`* ... `*/ and `"//`") 
 as usual. Inside of the variable definition section they behave 
 as expected. Inside of the file definition section they become 
 comments in the generated file. Putting `"/`*`" into the variable 
 definition section and `"`*/`" into the file definition section 
 leads to weird results.&]
-[s28; &]
-[s24; 5.2-|White Space&]
-[s24; &]
-[s28; Inside of the header line and the variable definition section, 
+[s42;:5`_2: 5.2 White Space&]
+[s5; Inside of the header line and the variable definition section, 
 but outside of a word or a number, extra white space doesn`'t 
 count.&]
-[s28; &]
-[s28; Inside of the file definition section and starting with the 
+[s5; Inside of the file definition section and starting with the 
 second line of each file definition the same rule applies inside 
 of expressions. Outside of expressions any white space defines 
 the layout of the respective file. That simply means: white space 
 appears as white space in the generated file.&]
-[s28; &]
-[s24; 5.3-|Basic Rule&]
-[s24; &]
-[s28; Inside of the file definition section any text which is not 
+[s42;:5`_3: 5.3 Basic Rule&]
+[s5; Inside of the file definition section any text which is not 
 part of an expression appears unchanged in the generated file.&]
-[s28; &]
-[s24; 5.4-|Delimiters&]
-[s24; &]
-[s25; 5.4.1-|`"`@`@`"&]
-[s25; &]
-[s30; `"`@`@`" marks the beginning of a file definition. Everything 
+[s42;:5`_4: 5.4 Delimiters&]
+[s42;l160;:5`_4`_1: 5.4.1 `"`@`@`"&]
+[s5;l160; `"`@`@`" marks the beginning of a file definition. Everything 
 up to this delimiter is part of the header line, a variable definition, 
 or a previous file definition.&]
-[s30; &]
-[s30; But `"`@`@`" is a valid delimiter only at the beginning of a 
-line. In this case even white space matters. If `"`@`@`" are 
-not the very first two characters of the line, they represent 
+[s5;l160; But `"`@`@`" is a valid delimiter only at the beginning 
+of a line. In this case even white space matters. If `"`@`@`" 
+are not the very first two characters of the line, they represent 
 just plain text.&]
-[s30; &]
-[s30; `"`@`@`" functions not only as a delimiter but mainly as (the 
-beginning of) an expression.&]
-[s30; &]
-[s25; 5.4.2-|`"??`"&]
-[s25; &]
-[s30; Although `"??`" marks the possible nullification of a file definition, 
-it is more an expression than a delimiter.&]
-[s30; &]
-[s30; It must appear inside of a file definition. If not, the UPT 
-file is classified as invalid and ignored.&]
-[s30; &]
-[s30; `"??`" is a valid delimiter only at the beginning of a line. 
-In this case even white space matters. If `"??`" are not the 
-very first two characters of the line, they represent just plain 
-text.&]
-[s30; &]
-[s30; `"??`" makes sense only in cooperation with an expression. Standing 
-alone it makes its line disappear.&]
-[s30; &]
-[s24; 5.5-|Expressions&]
-[s24; &]
-[s25; 5.5.1-|Basic Rule&]
-[s25; &]
-[s30; As the UPT file is evaluated by CParser, you can use any valid 
-numerical or logical C expression or any combination of them, 
-wherever an expression is permitted. The numeric values are of 
-type `"double`".&]
-[s30; &]
-[s30; Expressions are meant to be used inside of the file definition 
+[s5;l160; `"`@`@`" functions not only as a delimiter but mainly as 
+(the beginning of) an expression.&]
+[s42;l160;:5`_4`_2: 5.4.2 `"??`"&]
+[s5;l160; Although `"??`" marks the possible nullification of a file 
+definition, it is more an expression than a delimiter.&]
+[s5;l160; It must appear inside of a file definition. If not, the 
+UPT file is classified as invalid and ignored.&]
+[s5;l160; `"??`" is a valid delimiter only at the beginning of a 
+line. In this case even white space matters. If `"??`" are not 
+the very first two characters of the line, they represent just 
+plain text.&]
+[s5;l160; `"??`" makes sense only in cooperation with an expression. 
+Standing alone it makes its line disappear.&]
+[s42;:5`_5: 5.5 Expressions&]
+[s42;l160;:5`_5`_1: 5.5.1-|Basic Rule&]
+[s5;l160; As the UPT file is evaluated by CParser, you can use any 
+valid numerical or logical C expression or any combination of 
+them, wherever an expression is permitted. The numeric values 
+are of type `"double`".&]
+[s5;l160; Expressions are meant to be used inside of the file definition 
 section.&]
-[s30; &]
-[s30; You can also use such an expression inside of the variable definition 
-section as a default value for an option variable and a select 
-variable, if this makes sense to you.&]
-[s30; &]
-[s30; NEVER USE AN EXPRESSION TO SET THE DEFAULT VALUE OF A FILENAME 
+[s5;l160; You can also use such an expression inside of the variable 
+definition section as a default value for an option variable 
+and a select variable, if this makes sense to you.&]
+[s5;l160; NEVER USE AN EXPRESSION TO SET THE DEFAULT VALUE OF A FILENAME 
 VARIABLE OR AN ID VARIABLE! YOUR COMPUTER IS LIKELY TO CRASH 
 AS SOON AS YOUR TEMPLATE IS SELECTED.&]
-[s30; &]
-[s25; 5.5.2-|`"`@`@[/ filename`_expression]`"&]
-[s25; &]
-[s30; `"`@`@`" marks the beginning of a file name. The name starts 
+[s42;l160;:5`_5`_2: 5.5.2 `"`@`@[/ filename`_expression]`"&]
+[s5;l160; `"`@`@`" marks the beginning of a file name. The name starts 
 immediately after the second `"`@`" (with the third character 
 of the line) and ends with the last character of the logical 
 line. If you enter a filename as a literal, make sure that it 
 is valid, especially if you use white space. The validity of 
 a filename depends on the OS.&]
-[s30; &]
-[s30; There are three typical patterns (the file extensions are just 
-examples), although other or more complicated expressions are 
-possible:&]
-[s30; &]
-[s34;i150; -|`@`@<:PACKAGE:>.cpp&]
-[s34; -|`@`@<:[/ filename`_variable]:>.hpp&]
-[s34; -|`@`@[/ filename`_literal].txt&]
-[s30;  &]
-[s25; 5.5.3-|`"??[/ expression]`"&]
-[s25; &]
-[s30; `"??`" decides whether a file is to be created. It evaluates 
+[s5;l160; There are three typical patterns (the file extensions are 
+just examples), although other or more complicated expressions 
+are possible:&]
+[s0; [C -|`@`@<:PACKAGE:>.cpp]&]
+[s0; [C -|`@`@<:][/C filename`_variable][C :>.hpp]&]
+[s0; [C -|`@`@][/C filename`_literal][C .txt]&]
+[s42;l160;:5`_5`_3: 5.5.3 `"??[/ expression]`"&]
+[s5;l160; `"??`" decides whether a file is to be created. It evaluates 
 the following expression. If the result is true, the file is 
 created. If the result is false, the entire file is discarded. 
 This holds, even if there are lines above the line containing 
 the `"??`".&]
-[s30; &]
-[s30; `"??`" has a second effect. Beginning with the first file template 
-containing a `"??[/ expression]`" (`"??`" alone does not suffice!) 
-`"<:PACKAGE:>`" retains the path `- if any `- in the variable. 
-Without such a line the path `- if any `- is removed from the 
-variable. That means:&]
-[s30; &]
-[s30; Independent of the value of `"[/ expression]`" the filename templates 
-of all the files preceding the file template containing the first 
-`"??[/ expression]`" don`'t show the path `- if any `- in <: PACKAGE 
-:>.&]
-[s30; &]
-[s30; If `"??[/ expression]`" evaluates to `"true`" `"<:PACKAGE:>`" in 
-the containing file template shows path `- if any `- and filename.&]
-[s30; &]
-[s30; If `"??[/ expression]`" evaluates to `"false`" the containing 
+[s5;l160; `"??`" has a second effect. Beginning with the first file 
+template containing a `"??[/ expression]`" (`"??`" alone does not 
+suffice!) `"<:PACKAGE:>`" retains the path `- if any `- in the 
+variable. Without such a line the path `- if any `- is removed 
+from the variable. That means:&]
+[s5;l160; Independent of the value of `"[/ expression]`" the filename 
+templates of all the files preceding the file template containing 
+the first `"??[/ expression]`" don`'t show the path `- if any `- 
+in <: PACKAGE :>.&]
+[s5;l160; If `"??[/ expression]`" evaluates to `"true`" `"<:PACKAGE:>`" 
+in the containing file template shows path `- if any `- and filename.&]
+[s5;l160; If `"??[/ expression]`" evaluates to `"false`" the containing 
 file template simply doesn`'t show up.&]
-[s30; &]
-[s30; Independent of the value of `"[/ expression]`" the filename templates 
-of all the files following the file template containing the first 
-`"??[/ expression]`" DO show the path `- if any `- in <: PACKAGE 
-:>.&]
-[s30; &]
-[s25; 5.5.4-|`"<: ... :>`"&]
-[s25; &]
-[s30; `"<:`" and `":>`" convert the enclosed literal into an expression 
+[s5;l160; Independent of the value of `"[/ expression]`" the filename 
+templates of all the files following the file template containing 
+the first `"??[/ expression]`" DO show the path `- if any `- in 
+<: PACKAGE :>.&]
+[s42;l160;:5`_5`_4: 5.5.4 `"<: ... :>`"&]
+[s5;l160; `"<:`" and `":>`" convert the enclosed literal into an expression 
 which is evaluated. The result is then displayed without the 
 delimiters.&]
-[s30; &]
-[s30; A string, enclosed in quotation marks, yields exactly this string. 
-Without quotations marks it is considered a variable. If this 
-variable has been defined, its value is displayed. Otherwise, 
+[s5;l160; A string, enclosed in quotation marks, yields exactly this 
+string. Without quotations marks it is considered a variable. 
+If this variable has been defined, its value is displayed. Otherwise, 
 nothing is shown.&]
-[s30; &]
-[s30; You can combine numerical expressions and strings, e.g.:&]
-[s30; &]
-[s36; <:condition`_1 ? `"text`_1`" : `"text`_2`":>&]
-[s30; &]
-[s30; You cannot nest `"<: ... :>`".&]
-[s30; &]
-[s30; `"<: :>`" and a single `"<:`" show a corresponding error message. 
+[s5;l160; You can combine numerical expressions and strings, e.g.:&]
+[s5;l160; <:condition`_1 ? `"text`_1`" : `"text`_2`":>&]
+[s5;l160; You cannot nest `"<: ... :>`".&]
+[s5;l160; `"<: :>`" and a single `"<:`" show a corresponding error message. 
 A single `":>`" is just a plain string.&]
-[s30; &]
-[s25; 5.5.5-|`"<:? [/ expression] :> ... <:.:>`"&]
-[s25; &]
-[s30; This pattern emulates `"if ([/ expression]) ...;`"&]
-[s30; &]
-[s30; White space inside of the `"<`::>`"s doesn`'t matter. Between 
+[s42;l160;:5`_5`_5: 5.5.5 `"<:? [/ expression] :> ... <:.:>`"&]
+[s5;l160; This pattern emulates `"if ([/ expression]) ...;`"&]
+[s5;l160; White space inside of the `"<`::>`"s doesn`'t matter. Between 
 them it does: it produces white space in the resulting file.&]
-[s30; &]
-[s25; 5.5.6-|`"<:? [/ expression] :> ... <:/:> ... <:.:>`"&]
-[s25; &]
-[s30; This pattern emulates `"if ([/ expression]) ...; else ...;`"&]
-[s30; &]
-[s30; White space inside of the `"<`::>`"s doesn`'t matter. Between 
+[s42;l160;:5`_5`_6: 5.5.6-|`"<:? [/ expression] :> ... <:/:> ... <:.:>`"&]
+[s5;l160; This pattern emulates `"if ([/ expression]) ...; else ...;`"&]
+[s5;l160; White space inside of the `"<`::>`"s doesn`'t matter. Between 
 them it does: it produces white space in the resulting file.&]
-[s30; &]
-[s24; 5.6-|`"PACKAGE`"&]
-[s24; &]
-[s25; 5.6.1-|Description&]
-[s25; &]
-[s30; `"PACKAGE`" is the predefined identifier of a variable to which 
-the content of the `"Package name`" input field is assigned.&]
-[s30; &]
-[s25; 5.6.2-|Usage&]
-[s25; &]
-[s30; The input is filtered. Only alphanumeric characters, `"`_`", 
+[s42;:5`_6: 5.6 `"PACKAGE`"&]
+[s42;l160;:5`_6`_1: 5.6.1-|Description&]
+[s5;l160; `"PACKAGE`" is the predefined identifier of a variable 
+to which the content of the `"Package name`" input field is assigned.&]
+[s42;l160;:5`_6`_2: 5.6.2 Usage&]
+[s5;l160; The input is filtered. Only alphanumeric characters, `"`_`", 
 `"/`", and `"`\`" are accepted. That means that you can enter 
 a path but not a drive specification as `":`" is not a valid character 
 (e. g., Windows).  `"`\`" is immediately transformed into `"/`".&]
-[s30; &]
-[s30; Whether the path part in the `"Package name`" input field `- 
-if any `- is shown by <: PACKAGE :> depends on the preceding existence 
-of a `"??[/ expression]`" in the UPT file. Refer to section 5.5.3 
-`"??[/ expression]`".&]
-[s30; &]
-[s35; ... <: PACKAGE :> ...&]
-[s35; &]
-[s24; 5.7-|`"PACKAGE`_TOUPPER`"&]
-[s24; &]
-[s25; 5.7.1-|Description&]
-[s25; &]
-[s30; `"PACKAGE`_TOUPPER`" is the predefined identifier of a variable 
-to which the content of the `"Package name`" input field, transformed 
-into uppercase letters, is assigned. If there were uppercase 
-letters before, they are not changed.&]
-[s30; &]
-[s30; The reason for the existence of this variable is a well`-established 
-practice to write uppercase include guards in .hpp`- (.h`-) files.&]
-[s30; &]
-[s30; `"PACKAGE`_TOUPPER`" is only available with Ultimate`+`+ releases 
-later than `"609`-dev3`".&]
-[s30; &]
-[s25; 5.7.2-|Usage&]
-[s25; &]
-[s30; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`" always contains 
-the path part `- if any `- of the `"Package name`" input field.&]
-[s30; &]
-[s35; ... <: PACKAGE`_TOUPPER :> ...&]
-[s35; &]
-[s24; 5.8-|`"PACKAGE`_TOUPPER`_CAPS`"&]
-[s24; &]
-[s25; 5.8.1-|Description&]
-[s25; &]
-[s30; `"PACKAGE`_TOUPPER`_CAPS`" is the predefined identifier of a 
+[s5;l160; Whether the path part in the `"Package name`" input field 
+`- if any `- is shown by <: PACKAGE :> depends on the preceding 
+existence of a `"??[/ expression]`" in the UPT file. Refer to section 
+5.5.3 `"??[/ expression]`".&]
+[s5;l160; [C ... <: PACKAGE :> ...]&]
+[s42;:5`_7: 5.7 `"PACKAGE`_TOUPPER`"&]
+[s42;l160;:5`_7`_1: 5.7.1 Description&]
+[s5;l160; `"PACKAGE`_TOUPPER`" is the predefined identifier of a 
 variable to which the content of the `"Package name`" input field, 
-transformed into uppercase letters, is assigned. In contrast 
+transformed into uppercase letters, is assigned. If there were 
+uppercase letters before, they are not changed.&]
+[s5;l160; The reason for the existence of this variable is a well`-established 
+practice to write uppercase include guards in .hpp`- (.h`-) files.&]
+[s5;l160; `"PACKAGE`_TOUPPER`" is only available with Ultimate`+`+ 
+releases later than `"609`-dev3`".&]
+[s42;l160;:5`_7`_2: 5.7.2 Usage&]
+[s5;l160; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`" always 
+contains the path part `- if any `- of the `"Package name`" input 
+field.&]
+[s5;l160; [C ... <: PACKAGE`_TOUPPER :> ...]&]
+[s42;:5`_8: 5.8-|`"PACKAGE`_TOUPPER`_CAPS`"&]
+[s42;l160;:5`_8`_1: 5.8.1 Description&]
+[s5;l160; `"PACKAGE`_TOUPPER`_CAPS`" is the predefined identifier 
+of a variable to which the content of the `"Package name`" input 
+field, transformed into uppercase letters, is assigned. In contrast 
 to `"PACKAGE`_TO`_UPPER`" the sequence of a lowercase letter 
 followed by an uppercase letter is separated by `"`_`", but not 
 vice versa. Furthermore `"/`" is replaced by `"`_`", e.g.:&]
-[s30; &]
-[s30; [C MyPath/MyPackage `-> MY`_PATH`_MY`_PACKAGE]&]
-[s30; &]
-[s30; The reason for the existence of this variable is a well`-established 
+[s5;l160; MyPath/MyPackage `-> MY`_PATH`_MY`_PACKAGE&]
+[s5;l160; The reason for the existence of this variable is a well`-established 
 practice to write uppercase include guards in .hpp`- (.h`-) files.&]
-[s30; &]
-[s30; `"PACKAGE`_TOUPPER`_CAPS`" is only available with Ultimate`+`+ 
+[s5;l160; `"PACKAGE`_TOUPPER`_CAPS`" is only available with Ultimate`+`+ 
 releases later than `"609`-dev3`".&]
-[s30; &]
-[s25; 5.8.2-|Usage&]
-[s25; &]
-[s30; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`_CAPS`" always 
-contains the path part `- if any `- of the `"Package name`" input 
-field.&]
-[s30; &]
-[s35; ... <: PACKAGE`_TOUPPER`_CAPS :> ...&]
-[s35; &]
-[s24; 5.9-|Header Line&]
-[s24; &]
-[s25; 5.9.1-|Description&]
-[s25; &]
-[s30; The header line identifies a UPT file as such, names the template 
-and categorizes it.&]
-[s28; &]
-[s25; 5.9.2-|`"template`"&]
-[s25; &]
-[s30; The `"template`" keyword identifies the UPT file as such. If 
-this keyword is not at the beginning of the file `- apart from 
-comments or any white space `-, the file is classified as invalid 
-and ignored. The keyword must no be enclosed in quotation marks.&]
-[s30; &]
-[s25; 5.9.3-|`"[/ Name]`"&]
-[s25; &]
-[s30; This is the name of the UPT file which appears in the template 
+[s42;l160;:5`_8`_2: 5.8.2-|Usage&]
+[s5;l160; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`_CAPS`" 
+always contains the path part `- if any `- of the `"Package name`" 
+input field.&]
+[s5;l160; [C ... <: PACKAGE`_TOUPPER`_CAPS :> ...]&]
+[s42;:5`_9: 5.9 Header Line&]
+[s42;l160;:5`_9`_1: 5.9.1 Description&]
+[s5;l160; The header line identifies a UPT file as such, names the 
+template and categorizes it.&]
+[s42;l160;:5`_9`_2: 5.9.2 `"template`"&]
+[s5;l160; The `"template`" keyword identifies the UPT file as such. 
+If this keyword is not at the beginning of the file `- apart 
+from comments or any white space `-, the file is classified as 
+invalid and ignored. The keyword must no be enclosed in quotation 
+marks.&]
+[s42;l160;:5`_9`_3: 5.9.3 `"[/ Name]`"&]
+[s5;l160; This is the name of the UPT file which appears in the template 
 list of the `"Create new package`" dialog. It must be enclosed 
 in quotation marks. If the name is missing, the file is classified 
 as invalid and ignored.&]
-[s30; &]
-[s25; 5.9.4-|`"main`", `"sub`"&]
-[s25; &]
-[s30; These keywords which must not be enclosed in quotation marks, 
-determine the scope of the UPT file.&]
-[s30; &]
-[s30; The `"Select main package`" window contains the option `"All 
-packages`". If this option is checked, all the `"main`" UPT files 
-only are presented in the template list of the `"Create new package`" 
-dialog. If this option is unchecked all the `"sub`" UPT files 
-only are shown in the template list of the `"Create new package`" 
-dialog.&]
-[s30; &]
-[s30; A UPT file can be both `"main`" and `"sub`".&]
-[s30; &]
-[s30; If neither keyword is used, the UPT file is silently ignored.&]
-[s30; &]
-[s25; 5.9.5-|Usage&]
-[s25; &]
-[s30; The header line is terminated by a semicolon.&]
-[s30; &]
-[s35; template `"[/ name]`" `[main `| sub `| main sub `| sub main`];&]
-[s35; &]
-[s24; 5.10-|`"filename`"&]
-[s24; &]
-[s25; 5.10.1-|Description&]
-[s25; &]
-[s30; `"filename`" defines a variable which is determined to host 
-a filename. Using it makes a named edit field appear. The input 
-is filtered. Only alphanumeric characters, `"`_`", and `".`" 
-are accepted. That means that you cannot enter a path or a drive 
-specification (e. g., Windows).&]
-[s30; &]
-[s25; 5.10.2-|Definition&]
-[s25; &]
-[s30; The keyword and the variable name must not be enclosed in quotation 
-marks, whereas the title must. Doing otherwise results in an 
-error message and the UPT file is ignored. You can set a literal, 
-enclosed in quotation marks, as default. Using a variable name 
-instead, although syntactically correct, doesn`'t work. The variable 
-definition is terminated by a semicolon.&]
-[s30; &]
-[s35; filename `"[/ title]`" [/ variable`_name] `[`= `"[/ default`"]`];&]
-[s35; &]
-[s25; 5.10.3-|Usage&]
-[s25; &]
-[s35; ... <: [/ variable`_name] :> ...&]
-[s35; &]
-[s30; You can compare filename variables and act based on the result 
+[s42;l160;:5`_9`_4: 5.9.4 `"main`", `"sub`"&]
+[s5;l160; These keywords which must not be enclosed in quotation 
+marks, determine the scope of the UPT file.&]
+[s5;l160; The `"Select main package`" window contains the option 
+`"All packages`". If this option is checked, all the `"main`" 
+UPT files only are presented in the template list of the `"Create 
+new package`" dialog. If this option is unchecked all the `"sub`" 
+UPT files only are shown in the template list of the `"Create 
+new package`" dialog.&]
+[s5;l160; A UPT file can be both `"main`" and `"sub`".&]
+[s5;l160; If neither keyword is used, the UPT file is silently ignored.&]
+[s42;l160;:5`_9`_5: 5.9.5 Usage&]
+[s5;l160; The header line is terminated by a semicolon.&]
+[s5;l160; [C template `"][/C name][C `" `[main `| sub `| main sub `| sub 
+main`];]&]
+[s42;:5`_10: 5.10 `"filename`"&]
+[s42;l160;:5`_10`_1: 5.10.1 Description&]
+[s5;l160; `"filename`" defines a variable which is determined to 
+host a filename. Using it makes a named edit field appear. The 
+input is filtered. Only alphanumeric characters, `"`_`", and 
+`".`" are accepted. That means that you cannot enter a path or 
+a drive specification (e. g., Windows).&]
+[s42;l160;:5`_10`_2: 5.10.2 Definition&]
+[s5;l160; The keyword and the variable name must not be enclosed 
+in quotation marks, whereas the title must. Doing otherwise results 
+in an error message and the UPT file is ignored. You can set 
+a literal, enclosed in quotation marks, as default. Using a variable 
+name instead, although syntactically correct, doesn`'t work. 
+The variable definition is terminated by a semicolon.&]
+[s5;l160; [C filename `"][/C title][C `" ][/C variable`_name][C  `[`= `"][/C default`"][C `];]&]
+[s42;l160;:5`_10`_3: 5.10.3-|Usage&]
+[s5;l160; [C ... <: ][/C variable`_name][C  :> ...]&]
+[s5;l160; You can compare filename variables and act based on the 
+result of this comparison.&]
+[s42;:5`_11: 5.11 `"id`"&]
+[s42;l160;:5`_11`_1: 5.11.1 Description&]
+[s5;l160; `"id`" defines a variable which is determined to host a 
+string. Using it makes a named edit field appear. The input is 
+filtered. Only alphanumeric characters and `"`_`" are accepted.&]
+[s42;l160;:5`_11`_2: 5.11.2 Definition&]
+[s5;l160; The keyword and the variable name must not be enclosed 
+in quotation marks, whereas the title must. Doing otherwise results 
+in an error message and the UPT file is ignored. You can set 
+a literal, enclosed in quotation marks, as default. Using a variable 
+name instead, although syntactically correct, doesn`'t work. 
+The variable definition is terminated by a semicolon.&]
+[s5;l160; [C id `"][/C title][C `" ][/C variable`_name][C  `[`= `"][/C default`"][C `];]&]
+[s42;l160;:5`_11`_3: 5.11.3 Usage&]
+[s5;l160; [C ... <: ][/C variable`_name][C  :> ...]&]
+[s5;l160; You can compare id variables and act based on the result 
 of this comparison.&]
-[s35; &]
-[s24; 5.11-|`"id`"&]
-[s24; &]
-[s25; 5.11.1-|Description&]
-[s25; &]
-[s30; `"id`" defines a variable which is determined to host a string. 
-Using it makes a named edit field appear. The input is filtered. 
-Only alphanumeric characters and `"`_`" are accepted.&]
-[s30; &]
-[s25; 5.11.2-|Definition&]
-[s25; &]
-[s30; The keyword and the variable name must not be enclosed in quotation 
-marks, whereas the title must. Doing otherwise results in an 
-error message and the UPT file is ignored. You can set a literal, 
-enclosed in quotation marks, as default. Using a variable name 
-instead, although syntactically correct, doesn`'t work. The variable 
-definition is terminated by a semicolon.&]
-[s30; &]
-[s35; id `"[/ title]`" [/ variable`_name] `[`= `"[/ default`"]`];&]
-[s35; &]
-[s25; 5.11.3-|Usage&]
-[s24; &]
-[s35; ... <: [/ variable`_name] :> ...&]
-[s35; &]
-[s30; You can compare id variables and act based on the result of 
-this comparison.&]
-[s30; &]
-[s24; 5.12-|`"option`"&]
-[s24; &]
-[s25; 5.12.1-|Description&]
-[s25; &]
-[s30; `"option`" defines a variable which is determined to host a 
-boolean value. Using it makes a named option box appear.&]
-[s30; &]
-[s25; 5.12.2-|Definition&]
-[s25; &]
-[s30; The keyword and the variable name must not be enclosed in quotation 
-marks, whereas the title must. Doing otherwise results in an 
-error message and the UPT file is ignored. You can set either 
-`"0`" or `"1`", enclosed in quotation marks or not, as default. 
-Everything else is evaluated as `"false`". Using a variable name 
-instead, although syntactically correct, doesn`'t work. The variable 
-definition is terminated by a semicolon.&]
-[s30; &]
-[s35; option `"[/ title]`" [/ variable`_name] `[`= `[`"`]0 `| 1`[[/ `"]`]`];&]
-[s35; &]
-[s25; 5.12.3-|Usage&]
-[s25; &]
-[s35; ... <: [/ variable`_name] ? [/ number`_1] : [/ number`_2] :> ...&]
-[s35; ... <: [/ variable`_name] ? `"[/ string`_1]`" : `"[/ string`_2]`" :> 
-...&]
-[s35; ... <: ? [/ variable`_name] :>[/ number]<: . :> ...&]
-[s35; ... <: ? [/ variable`_name] :>[/ string]<: . :> ...&]
-[s35; ... <: ? [/ variable`_name] :>[/ number`_1]<: / :>[/ number`_2]<: . :> ...&]
-[s35; ... <: ? [/ variable`_name] :>[/ string`_1]<: / :>[/ string`_2]<: . :> ...&]
-[s35; &]
-[s30; You can compare option variables and act based on the result 
+[s42;:5`_12: 5.12 `"option`"&]
+[s42;l160;:5`_12`_1: 5.12.1 Description&]
+[s5;l160; `"option`" defines a variable which is determined to host 
+a boolean value. Using it makes a named option box appear.&]
+[s42;l160;:5`_12`_2: 5.12.2 Definition&]
+[s5;l160; The keyword and the variable name must not be enclosed 
+in quotation marks, whereas the title must. Doing otherwise results 
+in an error message and the UPT file is ignored. You can set 
+either `"0`" or `"1`", enclosed in quotation marks or not, as 
+default. Everything else is evaluated as `"false`". Using a variable 
+name instead, although syntactically correct, doesn`'t work. 
+The variable definition is terminated by a semicolon.&]
+[s5;l160; option `"[/ title]`" [/ variable`_name] `[`= `[`"`]0 `| 1`[[/ `"]`]`];&]
+[s42;l160;:5`_12`_3: 5.12.3 Usage&]
+[s0;l160; [C ... <: ][/C variable`_name][C  ? ][/C number`_1][C  : ][/C number`_2][C  
+:> ...]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  ? `"][/C string`_1][C `" : `"][/C string`_2][C `" 
+:> ...]&]
+[s0;l160; [C ... <: ? ][/C variable`_name][C  :>][/C number][C <: . :> ...]&]
+[s0;l160; [C ... <: ? ][/C variable`_name][C  :>][/C string][C <: . :> ...]&]
+[s0;l160; [C ... <: ? ][/C variable`_name][C  :>][/C number`_1][C <: / :>][/C number`_2][C <: 
+. :> ...]&]
+[s0;l160; [C ... <: ? ][/C variable`_name][C  :>][/C string`_1][C <: / :>][/C string`_2][C <: 
+. :> ...]&]
+[s5;l160; You can compare option variables and act based on the result 
 of this comparison.&]
-[s30; &]
-[s24; 5.13-|`"select`"&]
-[s24; &]
-[s25; 5.13.1-|Description&]
-[s25; &]
-[s30; `"select`" defines a variable which works like an enumeration. 
+[s42;:5`_13: 5.13 `"select`"&]
+[s42;l160;:5`_13`_1: 5.13.1 Description&]
+[s5;l160; `"select`" defines a variable which works like an enumeration. 
 Integer values, starting with 0, are assigned to named options. 
 Using `"select`" makes a named DropList appear, of which the 
 options can be selected but not edited.&]
-[s30; &]
-[s25; 5.13.2-|Definition&]
-[s25; &]
-[s30; The options must be listed inside of parentheses. The keyword 
+[s42;l160;:5`_13`_2: 5.13.2 Definition&]
+[s5;l160; The options must be listed inside of parentheses. The keyword 
 and the variable name must not be enclosed in quotation marks, 
 whereas the options and the title must. Doing otherwise or giving 
 no option at all, results in an error message and the UPT file 
@@ -628,60 +570,46 @@ else makes no default option appear. The same holds for variables,
 be they defined or not. If you give no default at all, the first 
 option becomes the default. The variable definition is terminated 
 by a semicolon.&]
-[s30; &]
-[s35; option (`"option`_1`", `"option`_2`", ...) `"[/ title]`"[/  variable`_name]&]
-[s35; -|`[`= 0 `| ... `| [/ number`_of`_last`_option `- 1]`];&]
-[s35; &]
-[s25; 5.13.3-|Usage&]
-[s25; &]
-[s35; ... <: [/ variable`_name] `=`= [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; ... <: [/ variable`_name] > [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; ... <: [/ variable`_name] >`= [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; ... <: [/ variable`_name] < [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; ... <: [/ variable`_name] <`= [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; ... <: [/ variable`_name] !`= [/ zero`_based`_option`_index] :> ... 
-<: . :>&]
-[s35; &]
-[s30; You can select filename variables and act based on the result 
+[s5;l160; [C option (`"option`_1`", `"option`_2`", ...) `"][/C title][C `"][/C  
+variable`_name]&]
+[s5;l160; [C -|`[`= 0 `| ... `| ][/C number`_of`_last`_option `- 1][C `];]&]
+[s42;l160;:5`_13`_3: 5.13.3 Usage&]
+[s0;l160; [C ... <: ][/C variable`_name][C  `=`= ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  > ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  >`= ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  < ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  <`= ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s0;l160; [C ... <: ][/C variable`_name][C  !`= ][/C zero`_based`_option`_index][C  
+:> ... <: . :>]&]
+[s5;l160; You can select filename variables and act based on the 
+result of this comparison.&]
+[s42;:5`_14: 5.14 `"text`"&]
+[s42;l160;:5`_14`_1: 5.14.1 Description&]
+[s5;l160; `"text`" defines a variable which is determined to host 
+an arbitrary string. Using it makes a named edit field appear. 
+The input is not filtered. Any character is accepted.&]
+[s42;l160;:5`_14`_2: 5.14.2 Definition&]
+[s5;l160; The keyword and the variable name must not be enclosed 
+in quotation marks, whereas the title must. Doing otherwise results 
+in an error message and the UPT file is ignored. You can set 
+a literal, enclosed in quotation marks, as default. Using a variable 
+name instead, although syntactically correct, doesn`'t work. 
+The variable definition is terminated by a semicolon.&]
+[s5;l160; [C text `"][/C title][C `" ][/C variable`_name][C  `[`= `"][/C default`"][C `];]&]
+[s42;l160;:5`_14`_3: 5.14.3 Usage&]
+[s5;l160; [C ... <: ][/C variable`_name][C  :> ...]&]
+[s5;l160; You can compare text variables and act based on the result 
 of this comparison.&]
-[s30; &]
-[s24; 5.14-|`"text`"&]
-[s24; &]
-[s25; 5.14.1-|Description&]
-[s25; &]
-[s30; `"text`" defines a variable which is determined to host an arbitrary 
-string. Using it makes a named edit field appear. The input is 
-not filtered. Any character is accepted.&]
-[s30; &]
-[s25; 5.14.2-|Definition&]
-[s25; &]
-[s30; The keyword and the variable name must not be enclosed in quotation 
-marks, whereas the title must. Doing otherwise results in an 
-error message and the UPT file is ignored. You can set a literal, 
-enclosed in quotation marks, as default. Using a variable name 
-instead, although syntactically correct, doesn`'t work. The variable 
-definition is terminated by a semicolon.&]
-[s30; &]
-[s35; text `"[/ title]`" [/ variable`_name] `[`= `"[/ default`"]`];&]
-[s35; &]
-[s25; 5.14.3-|Usage&]
-[s24; &]
-[s35; ... <: [/ variable`_name] :> ...&]
-[s35; &]
-[s30; You can compare text variables and act based on the result of 
-this comparison.&]
-[s30; &]
-[s24; 5.15-|Undefined variables&]
-[s24; &]
-[s28; Using undefined variables in syntactically correct places causes 
+[s42;:5`_15: 5.15 Undefined variables&]
+[s5; Using undefined variables in syntactically correct places causes 
 no harm. Nevertheless an undefined variable has no value, even 
 not 0.&]
-[s28; &]
+[s0; &]
 [s3;:6: 6. Template Dialog Layout&]
 [s5; The `"Create in`"`-DropList always shows the currently selected 
 assembly as well as the `"uppsrc`" assembly.&]
