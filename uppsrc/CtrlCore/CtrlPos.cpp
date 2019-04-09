@@ -296,8 +296,8 @@ Ctrl& Ctrl::SetFramePosY(Logc y) {
 void  Ctrl::SetRect(int x, int y, int cx, int cy)
 {
 	LLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
-	LTIMING("SetRect");
-	SetPos(PosLeft(x, cx), PosTop(y, cy));
+	auto clampc = [](int c) { return clamp(c, -10000, 10000); }; // Logc vals only have 15 bits
+	SetPos(PosLeft(clampc(x), clampc(cx)), PosTop(clampc(y), clampc(cy)));
 }
 
 void  Ctrl::SetWndRect(const Rect& r)
