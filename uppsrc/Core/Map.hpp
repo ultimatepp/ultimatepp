@@ -2,7 +2,7 @@ inline int& HashBase::Maph(unsigned _hash) const
 {
 	unsigned h = _hash & ~UNSIGNED_HIBIT;
 #ifdef FOLDHASH
-	return map[mask & (h - SwapEndian32((dword)h))];
+	return map[mask & FoldHash(h)];
 //	return map[(mcount - 1) & (((h >> 23) - (h >> 15) - (h >> 7) - h))];
 #else
 	return map[h % mcount];

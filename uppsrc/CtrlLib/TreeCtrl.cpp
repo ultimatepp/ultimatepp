@@ -479,19 +479,30 @@ void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
 		return;
 	Point org = sb;
 	chldlck = true;
+	Size sz = GetSize();
+	int y0 = 0;
 	for(int i = noroot; i < line.GetCount(); i++) {
 		const Line& l = line[i];
 		Item& m = item[l.itemi];
+		int mcy = l.y - y0;
+		y0 = l.y;
 		if(m.ctrl) {
 			if(add)
 				AddChildBefore(m.ctrl, GetLastChild());
 			if(m.ctrl == restorefocus || m.ctrl->HasChildDeep(restorefocus))
 				restorefocus->SetFocus();
-			Size msz = m.GetSize(display);
-			Size isz = m.image.GetSize();
-			Size csz = m.GetCtrlSize();
-			m.ctrl->SetRect(levelcx + l.level * levelcx + isz.cx + m.margin - org.x,
-			                l.y + (msz.cy - csz.cy) / 2 - org.y, csz.cx, csz.cy);
+			
+			int yy = l.y - org.y;
+			if(yy + mcy < 0 || yy > sz.cy) // not in view, no need to evaluate precisely
+				m.ctrl->SetRect(levelcx + l.level * levelcx + m.margin - org.x,
+				                2 * sz.cy, sz.cx, 32);
+			else {
+				Size msz = m.GetSize(display);
+				Size isz = m.image.GetSize();
+				Size csz = m.GetCtrlSize();
+				m.ctrl->SetRect(levelcx + l.level * levelcx + isz.cx + m.margin - org.x,
+				                l.y + (msz.cy - csz.cy) / 2 - org.y, csz.cx, csz.cy);
+			}
 		}
 	}
 	chldlck = false;
