@@ -34,6 +34,8 @@ iceAutomation]&]
 [s0;l160;i150;O0; [2 Utilities]&]
 [s0;l320;i150;O0;~~~128; [^topic`:`/`/GrabYourScreen`/srcdoc`/GrabYourScreen`$en`-us^2 G
 rabYourScreen]&]
+[s0;l320;i150;O0;~~~128; [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$MathTools`$MathTools`$en`-us`.html^2 M
+athTools]&]
 [s0;l320;~~~128;2 &]
 [s0;l160;i150;O0; [2 Other packages]&]
 [s0;l320;i150;O0; [2 OpenCV]&]
