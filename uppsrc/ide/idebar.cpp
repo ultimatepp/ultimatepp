@@ -401,11 +401,13 @@ void Ide::Setup(Bar& menu)
 		}
 	});
 
+#ifndef PLATFORM_COCOA
 	const Workspace& wspc = IdeWorkspace();
 	if(wspc[0] == "ide")
 		for(int i = 0; i < wspc.GetCount(); i++)
 			if(wspc[i] == "ide/Core")
 				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
+#endif
 
 	if(menu.IsMenuBar())
 		SetupMobilePlatforms(menu);
