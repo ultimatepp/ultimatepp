@@ -216,17 +216,30 @@ int Index<T>::FindPut(T&& key)
 	return FindPut(pick(key), hashfn(key));
 }
 
+#ifdef flagTESTINDEX
+extern int max_collisions;
+#endif
+
 template <class T>
 inline
 int Index<T>::Find(const T& x, unsigned hash_) const {
 	int i0 = hash.Find(hash_);
 	if(i0 >= 0) {
 		int i = i0;
+#ifdef flagTESTINDEX
+		int collisions = 0;
+#endif
 		do {
 			if(x == key[i]) return i;
 			i = hash.GetNext(i);
+#ifdef flagTESTINDEX
+			collisions++;
+#endif
 		}
 		while(i0 != i);
+#ifdef flagTESTINDEX
+		max_collisions = max(max_collisions, collisions);
+#endif
 	}
 	return -1;
 }
