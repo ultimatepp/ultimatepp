@@ -286,5 +286,5 @@ int fast_memcmp(const char *a, const char *b, size_t len)
 
 inline dword FoldHash(dword h)
 {
-	return SwapEndian32(2833151717 * h);
+	return SwapEndian32(0xa3613c16 * h);
 }
