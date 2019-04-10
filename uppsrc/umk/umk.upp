@@ -4,6 +4,7 @@ uses
 	ide\Builders;
 
 file
+	MacOs.cpp,
 	umake.h,
 	Console.cpp,
 	IdeContext.cpp,
