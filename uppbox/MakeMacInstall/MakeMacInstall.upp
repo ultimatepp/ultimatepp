@@ -1,4 +1,4 @@
-description "Install creator - Wine version for nightly builds\377";
+description "Install creator - MacOS U++ installation generator\377";
 
 uses
 	plugin\bz2,
