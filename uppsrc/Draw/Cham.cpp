@@ -184,7 +184,6 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 	}
 	if(IsType<Image>(v)) {
 		Image img = v;
-		img = img;
 		Size isz = img.GetSize();
 		Size sz = r.GetSize();
 		Point p = img.GetHotSpot();
