@@ -1,5 +1,9 @@
 #include "ide.h"
 
+#ifndef bmYEAR
+#include <build_info.h>
+#endif
+
 bool SetupSVNTrunk()
 {
 	WithSetupSVNLayout<TopWindow> dlg;
@@ -13,6 +17,7 @@ bool SetupSVNTrunk()
 #endif
 	static MapConvert revcv;
 	ONCELOCK {
+#if 0 // this requires Core/SSL
 		for(int pass = 0; pass < 2; pass++) {
 			HttpRequest r(pass ? "https://www.ultimatepp.org/www$uppweb$RoadmapHistorical$en-us.html"
 			                   : "https://www.ultimatepp.org/www$uppweb$Roadmap$en-us.html");
@@ -40,7 +45,10 @@ bool SetupSVNTrunk()
 				}
 			}
 		}
-#if 0
+#else
+	#ifdef bmSVN_REVISION
+		revcv.Add(atoi(bmSVN_REVISION), "2019.1 (rev " bmSVN_REVISION ") (Apr 2019)");
+	#endif
 		revcv.Add(11873, "2018.1 (rev 11873) (Mar 2018)");
 		revcv.Add(11540, "2017.2 (rev 11540) (Dec 2017)");
 		revcv.Add(10804, "2017.1 (rev 10804) (Jan 2017)");
