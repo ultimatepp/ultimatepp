@@ -21,8 +21,7 @@ uses
 	ide/Java,
 	ide/MacroManager,
 	urepo,
-	Report,
-	Core/SSL;
+	Report;
 
 link(WIN32 MSC) /MAP;
 
