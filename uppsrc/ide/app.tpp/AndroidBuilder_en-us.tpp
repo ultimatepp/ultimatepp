@@ -10,21 +10,15 @@ topic "Android builder";
 [s1; Working with Android builder&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#1^2 1. Introduction]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#2^2 2. Downloading 
-Android SDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#3^2 3. Configuring 
-Android SDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#4^2 4. Creating 
-Android builder]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#5^2 5. Linking 
-Android builder with Android NDK]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#6^2 6. Configuring 
-Android builder]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#7^2 7. Tips and 
-tricks]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#8^2 8. Known issues]&]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`_en`-us`#9^2 9. Appendix]&]
+[s0; [^`#1^2 1. Introduction]&]
+[s0; [^`#2^2 2. Downloading Android SDK]&]
+[s0; [^`#3^2 3. Configuring Android SDK]&]
+[s0; [^`#4^2 4. Creating Android builder]&]
+[s0; [^`#5^2 5. Linking Android builder with Android NDK]&]
+[s0; [^`#6^2 6. Configuring Android builder]&]
+[s0; [^`#7^2 7. Tips and tricks]&]
+[s0; [^`#8^2 8. Known issues]&]
+[s0; [^`#9^2 9. Appendix]&]
 [s0; &]
 [s3;:1: 1. Introduction&]
 [s2; Android is lead mobile operating system all over the world. 
