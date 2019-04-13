@@ -46,144 +46,77 @@ topic "Ultimate++ Project Templates";
 [s2; Ultimate`+`+ Package Templates&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#1^ 1. Prologue]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#2^ 2. Description]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3^ 3. Ready`-to`-use 
-Templates]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_1^ 3.1 
-Overview]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_2^ 3.2 
-Basic CtrlLib application]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_3^ 3.3 
-Console application (no U`+`+)]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_4^ 3.4 
-Core console project]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_5^ 3.5 
-CtrlLib application with main window]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_6^ 3.6 
-SDL project (no U`+`+)]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#3`_7^ 3.7 
-SDL with Core package]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4^ 4. Template 
-File Layout]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_1^ 4.1 
-Extension]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_2^ 4.2 
-Sections]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_3^ 4.3 
-Section Order]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#4`_4^ 4.4 
-Size]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5^ 5. Syntax]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_1^ 5.1 
-Comments]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_2^ 5.2 
-White Space]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_3^ 5.3 
-Basic Rule]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4^ 5.4 
-Delimiters]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4`_1^ 5.4.1 
-`"`@`@`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_4`_2^ 5.4.2 
-`"??`"]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5^ 5.5 
-Expressions]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_1^ 5.5.1 
-Basic Rule]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ 5.5.2 
-`"`@`@][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ filename`_express
-ion][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_2^ `"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ 5.5.3 
-`"??][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_3^ `"
-]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_4^ 5.5.4 
-`"<: ... :>`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^ 5.5.5 
-`"<:? ][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_5^  
+[s0; [^`#1^ 1. Prologue]&]
+[s0; [^`#2^ 2. Description]&]
+[s0; [^`#3^ 3. Ready`-to`-use Templates]&]
+[s0;     [^`#3`_1^ 3.1 Overview]&]
+[s0;     [^`#3`_2^ 3.2 Basic CtrlLib application]&]
+[s0;     [^`#3`_3^ 3.3 Console application (no U`+`+)]&]
+[s0;     [^`#3`_4^ 3.4 Core console project]&]
+[s0;     [^`#3`_5^ 3.5 CtrlLib application with main window]&]
+[s0;     [^`#3`_6^ 3.6 SDL project (no U`+`+)]&]
+[s0;     [^`#3`_7^ 3.7 SDL with Core package]&]
+[s0; [^`#4^ 4. Template File Layout]&]
+[s0;     [^`#4`_1^ 4.1 Extension]&]
+[s0;     [^`#4`_2^ 4.2 Sections]&]
+[s0;     [^`#4`_3^ 4.3 Section Order]&]
+[s0;     [^`#4`_4^ 4.4 Size]&]
+[s0; [^`#5^ 5. Syntax]&]
+[s0;     [^`#5`_1^ 5.1 Comments]&]
+[s0;     [^`#5`_2^ 5.2 White Space]&]
+[s0;     [^`#5`_3^ 5.3 Basic Rule]&]
+[s0;     [^`#5`_4^ 5.4 Delimiters]&]
+[s0;         [^`#5`_4`_1^ 5.4.1 `"`@`@`"]&]
+[s0;         [^`#5`_4`_2^ 5.4.2 `"??`"]&]
+[s0;     [^`#5`_5^ 5.5 Expressions]&]
+[s0;         [^`#5`_5`_1^ 5.5.1 Basic Rule]&]
+[s0;         [^`#5`_5`_2^ 5.5.2 `"`@`@][/^`#5`_5`_2^ filename`_expression][^`#5`_5`_2^ `"]&]
+[s0;         [^`#5`_5`_3^ 5.5.3 `"??][/^`#5`_5`_3^ expression][^`#5`_5`_3^ `"]&]
+[s0;         [^`#5`_5`_4^ 5.5.4 `"<: ... :>`"]&]
+[s0;         [^`#5`_5`_5^ 5.5.5 `"<:? ][/^`#5`_5`_5^ expression][^`#5`_5`_5^  
 :> ... <:.:>`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^ 5.5.6 
-`"<:? ][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^ expression][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_5`_6^  
+[s0;         [^`#5`_5`_6^ 5.5.6 `"<:? ][/^`#5`_5`_6^ expression][^`#5`_5`_6^  
 :> ... <:/:> ... <:.:>`"]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6^ 5.6 
-`"PACKAGE`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6`_1^ 5.6.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_6`_2^ 5.6.2 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7^ 5.7 
-`"PACKAGE`_TOUPPER`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7`_1^ 5.7.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_7`_2^ 5.7.2 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8^ 5.8 
-`"PACKAGE`_TOUPPER`_CAPS`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8`_1^ 5.8.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_8`_2^ 5.8.2 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9^ 5.9 
-Header Line]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_1^ 5.9.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_2^ 5.9.2 
-`"template`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ 5.9.3 
-`"][/^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ Name][^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_3^ `"
-]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_4^ 5.9.4 
-`"main`", `"sub`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_9`_5^ 5.9.5 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10^ 5.10 
-`"filename`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_1^ 5.10.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_2^ 5.10.2 
-Definition]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_10`_3^ 5.10.3 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11^ 5.11 
-`"id`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_1^ 5.11.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_2^ 5.11.2 
-Definition]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_11`_3^ 5.11.3 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12^ 5.12 
-`"option`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_1^ 5.12.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_2^ 5.12.2 
-Definition]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_12`_3^ 5.12.3 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13^ 5.13 
-`"select`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_1^ 5.13.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_2^ 5.13.2 
-Definition]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_13`_3^ 5.13.3 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14^ 5.14 
-`"text`"]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_1^ 5.14.1 
-Description]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_2^ 5.14.2 
-Definition]&]
-[s0;         [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_14`_3^ 5.14.3 
-Usage]&]
-[s0;     [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#5`_15^ 5.15 
-Undefined variables]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#6^ 6. Template 
-Dialog Layout]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#7^ 7. Deployment]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#8^ 8. Epilogue]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`_en`-us`#9^ 9. UPP File 
-Syntax]&]
+[s0;     [^`#5`_6^ 5.6 `"PACKAGE`"]&]
+[s0;         [^`#5`_6`_1^ 5.6.1 Description]&]
+[s0;         [^`#5`_6`_2^ 5.6.2 Usage]&]
+[s0;     [^`#5`_7^ 5.7 `"PACKAGE`_TOUPPER`"]&]
+[s0;         [^`#5`_7`_1^ 5.7.1 Description]&]
+[s0;         [^`#5`_7`_2^ 5.7.2 Usage]&]
+[s0;     [^`#5`_8^ 5.8 `"PACKAGE`_TOUPPER`_CAPS`"]&]
+[s0;         [^`#5`_8`_1^ 5.8.1 Description]&]
+[s0;         [^`#5`_8`_2^ 5.8.2 Usage]&]
+[s0;     [^`#5`_9^ 5.9 Header Line]&]
+[s0;         [^`#5`_9`_1^ 5.9.1 Description]&]
+[s0;         [^`#5`_9`_2^ 5.9.2 `"template`"]&]
+[s0;         [^`#5`_9`_3^ 5.9.3 `"][/^`#5`_9`_3^ Name][^`#5`_9`_3^ `"]&]
+[s0;         [^`#5`_9`_4^ 5.9.4 `"main`", `"sub`"]&]
+[s0;         [^`#5`_9`_5^ 5.9.5 Usage]&]
+[s0;     [^`#5`_10^ 5.10 `"filename`"]&]
+[s0;         [^`#5`_10`_1^ 5.10.1 Description]&]
+[s0;         [^`#5`_10`_2^ 5.10.2 Definition]&]
+[s0;         [^`#5`_10`_3^ 5.10.3 Usage]&]
+[s0;     [^`#5`_11^ 5.11 `"id`"]&]
+[s0;         [^`#5`_11`_1^ 5.11.1 Description]&]
+[s0;         [^`#5`_11`_2^ 5.11.2 Definition]&]
+[s0;         [^`#5`_11`_3^ 5.11.3 Usage]&]
+[s0;     [^`#5`_12^ 5.12 `"option`"]&]
+[s0;         [^`#5`_12`_1^ 5.12.1 Description]&]
+[s0;         [^`#5`_12`_2^ 5.12.2 Definition]&]
+[s0;         [^`#5`_12`_3^ 5.12.3 Usage]&]
+[s0;     [^`#5`_13^ 5.13 `"select`"]&]
+[s0;         [^`#5`_13`_1^ 5.13.1 Description]&]
+[s0;         [^`#5`_13`_2^ 5.13.2 Definition]&]
+[s0;         [^`#5`_13`_3^ 5.13.3 Usage]&]
+[s0;     [^`#5`_14^ 5.14 `"text`"]&]
+[s0;         [^`#5`_14`_1^ 5.14.1 Description]&]
+[s0;         [^`#5`_14`_2^ 5.14.2 Definition]&]
+[s0;         [^`#5`_14`_3^ 5.14.3 Usage]&]
+[s0;     [^`#5`_15^ 5.15 Undefined variables]&]
+[s0; [^`#6^ 6. Template Dialog Layout]&]
+[s0; [^`#7^ 7. Deployment]&]
+[s0; [^`#8^ 8. Epilogue]&]
+[s0; [^`#9^ 9. UPP File Syntax]&]
 [s0; &]
 [s3;:1: 1. Prologue&]
 [s5; Often projects have the same base, the same structure, and / 
