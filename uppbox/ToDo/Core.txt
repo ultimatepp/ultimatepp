@@ -1,0 +1,33 @@
+Allocator > 64KB
+
+CoDo
+
+oportunity &&
+
+RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
+
+Fix Value::Void::Retain
+
+Index::FirstAdd
+
+kw.Get(r["keywordId"], String())
+
+MoveableAndDeepCopyOption - with base should improve VectorMap sizeof
+
+Vector/Array/Index/Map :: RemoveIf
+
+Remove ArrayIndex
+
+FromSystemCharset
+
+Buffer(size_t size, const T& init) { ptr = new T[size]; Fill(ptr, ptr + size, init); }
+
+String MD5Digest(const void *data, int length);
+
+Remove ValueType uses
+
+InVector::InsertN possibly incorrect (can create small blocks)
+
+Stream& Stream::operator/(int& i) { dword w = 0; if(IsStoring()) w = i + 1; Pack(w); i = w - 1; return *this; }
+
+CoWork pipe max_queue
