@@ -2439,6 +2439,7 @@ void ArrayCtrl::SortA()
 
 void ArrayCtrl::SortB(const Vector<int>& o)
 {
+	DTIMING("SortB");
 	Vector<Line> narray;
 	narray.SetCount(array.GetCount());
 	Vector<Ln> nln;
@@ -2488,7 +2489,8 @@ void ArrayCtrl::Sort(int from, int count, Gate<int, int> order)
 	for(int i = 0; i < array.GetCount(); i++)
 		h.Add(i);
 	SortA();
-	StableSort(SubRange(h, from, count).Write(), order);
+	{ DTIMING("StableSort");
+	StableSort(SubRange(h, from, count).Write(), order); }
 	SortB(h);
 	Refresh();
 	SyncInfo();
@@ -2502,6 +2504,7 @@ void ArrayCtrl::Sort(Gate<int, int> order)
 
 bool ArrayCtrl::OrderPred(int i1, int i2, const ArrayCtrl::Order *o)
 {
+	DTIMING("OrderPred");
 	return (*o)(array[i1].line, array[i2].line);
 }
 
@@ -2522,6 +2525,7 @@ struct sAC_ColumnSort : public ValueOrder {
 	Function<int (const Value& a, const Value& b)> cmp;
 
 	virtual bool operator()(const Value& a, const Value& b) const {
+		DTIMING("Predicated");
 		return descending ? order ? (*order)(b, a) : cmp(b, a) < 0
 		                  : order ? (*order)(a, b) : cmp(a, b) < 0;
 	}

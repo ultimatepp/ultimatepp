@@ -1,3 +1,16 @@
+#ifdef COMPILER_MSC
+
+template <class Range>
+using ValueTypeOf = typename std::remove_reference<decltype(*std::remove_reference<Range>::type().begin())>::type;
+
+template <class Range>
+using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->begin());
+
+template <class Range>
+using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
+
+#else
+
 template <class Range>
 using ValueTypeOf = typename std::remove_reference<decltype(*((typename std::remove_reference<Range>::type *)0)->begin())>::type;
 
@@ -6,6 +19,8 @@ using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->
 
 template <class Range>
 using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
+
+#endif
 
 template <class I>
 class SubRangeClass {
@@ -34,6 +49,7 @@ public:
 
 	SubRangeClass(I begin, int count) : l(begin), count(count)   {}
 	SubRangeClass(I begin, I end) : l(begin), count(int(end - begin)) {}
+	SubRangeClass() {} // MSC bug workaround
 };
 
 template <class I>
@@ -83,6 +99,7 @@ struct ConstRangeClass {
 
 	ConstRangeClass(const T& value, int count) : value(value), count(count) {}
 	ConstRangeClass(int count) : count(count) {}
+	ConstRangeClass() {} // MSC bug workaround
 };
 
 template <class T>
@@ -129,6 +146,7 @@ struct ReverseRangeClass {
 	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	ReverseRangeClass(BaseRange& r) : r(r) {}
+	ReverseRangeClass() {} // MSC bug workaround
 };
 
 template <class BaseRange>
@@ -170,6 +188,7 @@ struct ViewRangeClass {
 	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	ViewRangeClass(BaseRange& r, Vector<int>&& ndx) : r(&r), ndx(pick(ndx)) {}
+	ViewRangeClass() {} // MSC bug workaround
 };
 
 template <class BaseRange>

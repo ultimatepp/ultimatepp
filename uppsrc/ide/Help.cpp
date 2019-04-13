@@ -7,6 +7,9 @@ struct GatherLinksIterator : RichText::Iterator {
 	{
 		for(int i = 0; i < para.GetCount(); i++) {
 			String l = para[i].format.link;
+			int q = l.ReverseFind('#');
+			if(q >= 0)
+				l.Trim(q);
 			if(!IsNull(l))
 				link.FindAdd(l);
 		}
