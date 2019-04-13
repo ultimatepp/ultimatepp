@@ -54,7 +54,9 @@ void SFtpAsyncGet(SshSession& session)
 			if(worker.IsFinished()) {
 				CheckError(worker);
 				workers.Remove(i);
+				break;
 			}
+			Sleep(1);
 		}
 	}
 }
