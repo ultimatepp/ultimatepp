@@ -12,11 +12,7 @@
 #include <map>
 #include <deque>
 #include <string>
-#ifdef CPP_11
 #include <unordered_map>
-#else
-#include <tr1/unordered_map>
-#endif
 
 using namespace std;
 using namespace Upp;
