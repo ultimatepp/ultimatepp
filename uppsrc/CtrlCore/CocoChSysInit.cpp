@@ -1,6 +1,8 @@
-#include <CtrlLib/CtrlLib.h>
+#include <CtrlCore/CtrlCore.h>
 
 #ifdef PLATFORM_COCOA
+
+#include <CtrlLib/CtrlLib.h>
 
 NAMESPACE_UPP
 

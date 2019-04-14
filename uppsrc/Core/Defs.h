@@ -1,6 +1,6 @@
 // #define MEMORY_SHRINK
 
-#ifndef  flagUSEMALLOC
+#if !defined(flagUSEMALLOC) && !defined(flagSO)
 #define UPP_HEAP
 #endif
 
