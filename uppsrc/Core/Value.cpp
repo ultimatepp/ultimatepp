@@ -2,9 +2,7 @@
 
 namespace Upp {
 
-#ifndef flagSO
 const Nuller Null;
-#endif
 
 #define LTIMING(x) // RTIMING(x)
 

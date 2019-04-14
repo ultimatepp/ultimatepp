@@ -193,10 +193,6 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	return Size(sz.cx + isz.cx, max(sz.cy, isz.cy));
 }
 
-#ifdef flagSO
-Display::Display() {}
-#endif
-
 Display::~Display() {}
 
 const Display& StdDisplay()
@@ -206,11 +202,6 @@ const Display& StdDisplay()
 
 const Display& StdCenterDisplay() { static StdDisplayClass h(ALIGN_CENTER); return h; }
 const Display& StdRightDisplay() { static StdDisplayClass h(ALIGN_RIGHT); return h; }
-
-#ifdef flagSO
-ColorDisplayNull::ColorDisplayNull(String nulltext) : nulltext(nulltext) {}
-ColorDisplayNull::~ColorDisplayNull() {}
-#endif
 
 void  ColorDisplayNull::Paint(Draw& w, const Rect& r, const Value& q,
 							 Color ink, Color paper, dword style) const

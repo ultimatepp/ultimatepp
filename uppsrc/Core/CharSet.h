@@ -15,15 +15,11 @@ enum {
 	DEFAULTCHAR = 0x1f
 };
 
-#ifndef flagSO
-
 #define CHRSET_(id, s) extern word CHRTAB_##id[128];
 
 #include "CharSet.i"
 
 #undef CHRSET_
-
-#endif
 
 #include "Utf.hpp"
 
@@ -122,7 +118,6 @@ void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n)
 
 String  ToCharset(byte charset, const String& s, byte scharset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
 
-#ifndef flagSO
 extern word unicode_fast_upper__[2048];
 extern word unicode_fast_lower__[2048];
 extern byte unicode_fast_ascii__[2048];
@@ -147,14 +142,6 @@ inline char  ToLowerAscii(dword c){ return c < 2048 ? unicode_fast_lower_ascii__
 inline bool  IsLower(dword c)     { return c < 2048 ? unicode_fast_info__[c] & 1 : IsLower_(c); }
 inline bool  IsUpper(dword c)     { return c < 2048 ? unicode_fast_info__[c] & 2 : IsUpper_(c); }
 inline bool  IsLetter(dword c)    { return c < 2048 ? unicode_fast_info__[c] & 4 : IsLetter_(c); }
-#else
-bool        IsLetter(int c);
-bool        IsUpper(int c);
-bool        IsLower(int c);
-int         ToUpper(int c);
-int         ToLower(int c);
-int         ToAscii(int c);
-#endif
 
 inline bool IsRTL(dword c)         { return (dword)c >= 1470 && IsRTL_(c); }
 inline bool IsMark(dword c)        { return c < 0x300 ? false : c <= 0x36f ? true : IsMark_(c); }

@@ -109,13 +109,6 @@ void IniSet__(int& version)
 	version = ini_version__;
 }
 
-#ifdef flagSO
-bool IniChanged__(int version)
-{
-	return version != ini_version__;
-}
-#endif
-
 String GetIniFile()
 {
 	return *sIniFile ? sIniFile : ~ConfigFile("q.ini");

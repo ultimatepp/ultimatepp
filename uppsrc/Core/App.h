@@ -28,10 +28,6 @@ int     GetExitCode();
 
 bool    IsMainRunning();
 
-#ifndef flagSO
-//void    Main(); // By console application
-#endif
-
 struct ExitExc {};
 
 void Exit(int code = 1);

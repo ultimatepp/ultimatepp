@@ -244,13 +244,4 @@ bool IsMark_(dword c)
 	return Single<UnicodeInfo>().ismark.Find(c) >= 0;
 }
 
-#ifdef flagSO
-dword ToUpper(dword c)     { return c < 2048 ? unicode_fast_upper__[c] : ToUpperRest_(c); }
-dword ToLower(dword c)     { return c < 2048 ? unicode_fast_lower__[c] : ToLowerRest_(c); }
-dword ToAscii(dword c)     { return c < 2048 ? unicode_fast_ascii__[c] : ToAsciiRest_(c); }
-bool  IsLower(dword c)       { return c < 2048 ? unicode_fast_info__[c] & 1 : IsLower_(c); }
-bool  IsUpper(dword c)       { return c < 2048 ? unicode_fast_info__[c] & 2 : IsUpper_(c); }
-bool  IsLetter(dword c)      { return c < 2048 ? unicode_fast_info__[c] & 4 : IsLetter_(c); }
-#endif
-
 };

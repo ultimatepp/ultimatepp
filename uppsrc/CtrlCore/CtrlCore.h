@@ -164,13 +164,8 @@ public:
 	virtual void FrameRemove();
 	virtual int  OverPaint() const;
 
-#ifdef flagSO
-	CtrlFrame();
-	virtual ~CtrlFrame();
-#else
 	CtrlFrame() {}
 	virtual ~CtrlFrame() {}
-#endif
 
 private:
 	CtrlFrame(const CtrlFrame&);
@@ -195,12 +190,7 @@ protected:
 	const ColorF *border;
 
 public:
-#ifdef flagSO
-	BorderFrame(const ColorF *border);
-	virtual ~BorderFrame();
-#else
 	BorderFrame(const ColorF *border) : border(border) {}
-#endif
 };
 
 CtrlFrame& InsetFrame();
@@ -545,13 +535,8 @@ private:
 	static  Vector<KeyHook>&   keyhook();
 	static  Vector<StateHook>& statehook();
 
-#ifdef flagSO
-	static Ptr<Ctrl> FocusCtrl();
-	static void      FocusCtrl(Ptr<Ctrl> fc);
-#else
 	static Ptr<Ctrl> FocusCtrl() { return focusCtrl; }
 	static void      FocusCtrl(Ptr<Ctrl> fc) { focusCtrl = fc; }
-#endif
 
 	void    StateDeep(int state);
 

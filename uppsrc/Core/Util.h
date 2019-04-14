@@ -44,12 +44,8 @@ String GetIniKey(const char *id);
 
 VectorMap<String, String> GetIniKeys();
 
-#ifdef flagSO
-bool IniChanged__(int version);
-#else
 extern int  ini_version__;
 inline bool IniChanged__(int version) { return version != ini_version__; }
-#endif
 
 struct IniString {
 // "private":

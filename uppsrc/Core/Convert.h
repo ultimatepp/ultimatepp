@@ -72,13 +72,8 @@ public:
 	static int  GetDefaultMin()                   { return -INT_MAX; }
 	static int  GetDefaultMax()                   { return INT_MAX; }
 
-#ifdef flagSO
-	ConvertInt(int minval = -INT_MAX, int maxval = INT_MAX, bool notnull = false);
-	virtual ~ConvertInt();
-#else
 	ConvertInt(int minval = -INT_MAX, int maxval = INT_MAX, bool notnull = false)
 		: minval(minval), maxval(maxval), notnull(notnull) {}
-#endif
 };
 
 const ConvertInt& StdConvertInt();
@@ -94,14 +89,9 @@ struct ConvertInt64 : public ConvertInt {
 	static int64  GetDefaultMin()                   { return -INT64_MAX; }
 	static int64  GetDefaultMax()                   { return INT64_MAX; }
 
-#ifdef flagSO
-	ConvertInt64(int64 minval = -INT64_MAX, int64 maxval = INT64_MAX, bool notnull = false);
-	virtual ~ConvertInt64();
-#else
 	ConvertInt64(int64 minval = -INT64_MAX, int64 maxval = INT64_MAX, bool notnull = false) {
 		MinMax(minval, maxval); NotNull(notnull);
 	}
-#endif
 };
 
 class ConvertDouble : public Convert {
@@ -131,9 +121,6 @@ public:
 
 	ConvertDouble(double minval = DOUBLE_NULL_LIM, double maxval = -DOUBLE_NULL_LIM,
 		          bool notnull = false);
-#ifdef flagSO
-	virtual ~ConvertDouble();
-#endif
 };
 
 const ConvertDouble& StdConvertDouble();
@@ -235,13 +222,8 @@ public:
 	bool           IsTrimLeft() const              { return trimleft; }
 	bool           IsTrimRight() const             { return trimright; }
 
-#ifdef flagSO
-	ConvertString(int maxlen = INT_MAX, bool notnull = false);
-	virtual ~ConvertString();
-#else
 	ConvertString(int maxlen = INT_MAX, bool notnull = false)
 		: maxlen(maxlen), notnull(notnull) { trimleft = trimright = false; }
-#endif
 };
 
 const ConvertString& StdConvertString();
