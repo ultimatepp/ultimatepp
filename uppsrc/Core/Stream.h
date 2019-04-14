@@ -325,9 +325,6 @@ public:
 
 	MemStream();
 	MemStream(void *data, int64 size);
-#ifdef flagSO
-	virtual ~MemStream();
-#endif
 };
 
 class MemReadStream : public MemStream {

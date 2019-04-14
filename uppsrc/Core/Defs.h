@@ -465,11 +465,7 @@ public:
 	Nuller() {}
 };
 
-#ifdef flagSO
-static const Nuller Null;
-#else
 extern const Nuller Null;
-#endif
 
 template <class T> void SetNull(T& x) { x = Null; }
 

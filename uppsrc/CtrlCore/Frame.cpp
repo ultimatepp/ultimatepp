@@ -2,11 +2,6 @@
 
 namespace Upp {
 
-#ifdef flagSO
-CtrlFrame::CtrlFrame() {}
-CtrlFrame::~CtrlFrame() {}
-#endif
-
 void CtrlFrame::FramePaint(Draw& draw, const Rect& r) {}
 void CtrlFrame::FrameAdd(Ctrl& ctrl) {}
 void CtrlFrame::FrameRemove() {}
@@ -17,11 +12,6 @@ void NullFrameClass::FramePaint(Draw& draw, const Rect& r) {}
 void NullFrameClass::FrameAddSize(Size& sz) {}
 
 CtrlFrame& NullFrame() { return Single<NullFrameClass>(); }
-
-#ifdef flagSO
-BorderFrame::BorderFrame(const ColorF *border) : border(border) {}
-BorderFrame::~BorderFrame() {}
-#endif
 
 void BorderFrame::FrameLayout(Rect& r)
 {

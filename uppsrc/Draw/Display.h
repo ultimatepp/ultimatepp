@@ -13,9 +13,7 @@ public:
 		               Color ink, Color paper, dword style) const;
 	virtual Size GetStdSize(const Value& q) const;
 	virtual Size RatioSize(const Value& q, int cx, int cy) const;
-#ifdef flagSO
-	Display();
-#endif
+
 	virtual ~Display();
 };
 
@@ -92,12 +90,7 @@ const Display& DrawingDisplay();
 
 class ColorDisplayNull : public Display {
 public:
-#ifdef flagSO
-	ColorDisplayNull(String nulltext = Null);
-	virtual ~ColorDisplayNull();
-#else
 	ColorDisplayNull(String nulltext = Null) : nulltext(nulltext) {}
-#endif
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,
 		               Color ink, Color paper, dword style) const;
 private:

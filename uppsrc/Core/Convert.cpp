@@ -338,17 +338,6 @@ Value NotNullError() {
 	return ErrorValue(t_("Null value not allowed."));
 }
 
-#ifdef flagSO
-ConvertInt::ConvertInt(int minval, int maxval, bool notnull)
-: minval(minval), maxval(maxval), notnull(notnull) {}
-ConvertInt::~ConvertInt() {}
-
-ConvertInt64::ConvertInt64(int64 minval, int64 maxval, bool notnull) {
-	MinMax(minval, maxval); NotNull(notnull);
-}
-ConvertInt64::~ConvertInt64() {}
-#endif
-
 Value ConvertInt::Scan(const Value& text) const {
 	Value v = UPP::Scan(INT_V, text);
 	if(IsError(v)) return v;
@@ -407,10 +396,6 @@ ConvertDouble& ConvertDouble::Pattern(const char *p)
 	comma = String(Format(1.1)).Find(',') >= 0;
 	return *this;
 }
-
-#ifdef flagSO
-ConvertDouble::~ConvertDouble() {}
-#endif
 
 Date& ConvertDate::default_min()
 {
@@ -506,13 +491,6 @@ Value ConvertTime::Format(const Value& q) const
 	else
 		return Convert::Format(q);
 }
-
-#ifdef flagSO
-ConvertString::ConvertString(int maxlen, bool notnull) : maxlen(maxlen), notnull(notnull) {
-	trimleft = trimright = false;
-}
-ConvertString::~ConvertString() {}
-#endif
 
 Value ConvertString::Scan(const Value& text) const {
 	if(IsError(text)) return text;

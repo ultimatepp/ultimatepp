@@ -1000,10 +1000,6 @@ MemStream::MemStream(void *data, int64 size) {
 
 MemStream::MemStream() {}
 
-#ifdef flagSO
-MemStream::~MemStream() {}
-#endif
-
 // ----------------------- Memory read streamer -------------------------
 
 void MemReadStream::Create(const void *data, int64 size)

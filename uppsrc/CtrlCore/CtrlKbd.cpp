@@ -15,11 +15,6 @@ Ptr<Ctrl>           Ctrl::defferedSetFocus;
 Vector< Ptr<Ctrl> > Ctrl::defferedChildLostFocus;
 
 
-#ifdef flagSO
-Ptr<Ctrl> Ctrl::FocusCtrl() { return focusCtrl; }
-void Ctrl::FocusCtrl(Ptr<Ctrl> fc) { focusCtrl = fc; }
-#endif
-
 static bool s_hotkey;
 
 void Ctrl::RefreshAccessKeys()
