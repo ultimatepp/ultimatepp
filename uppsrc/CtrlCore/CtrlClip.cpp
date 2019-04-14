@@ -296,6 +296,15 @@ const char *ClipFmtsRTF()
 	return sClipFmtsRTF;
 }
 
+#ifdef PLATFORM_POSIX
+
+void WriteClipboardHTML(const String& html)
+{
+    WriteClipboard("text/html", html);
+}
+
+#else
+
 void WriteClipboardHTML(const String& html)
 {
 	String data;
@@ -324,5 +333,7 @@ void WriteClipboardHTML(const String& html)
 	
 	WriteClipboard("HTML Format", data);
 }
+
+#endif
 
 }
