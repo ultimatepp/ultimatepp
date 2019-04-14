@@ -1,7 +1,5 @@
 description "C++ standard library vs. U++ Core benchmark\377";
 
-optimize_speed;
-
 uses
 	Core;
 

@@ -1,7 +1,5 @@
 description "U++ containers demonstration - prints the map of words in the file\377";
 
-optimize_speed;
-
 uses
 	Core;
 
