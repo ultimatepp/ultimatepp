@@ -116,9 +116,12 @@ double Intersect(Plane3 p, Pointf3 la, Pointf3 lb)
 void Box3::Union(Pointf3 pt)
 {
 	double c0 = pt ^ normal[0], c1 = pt ^ normal[1], c2 = pt ^ normal[2];
-	if(c0 < low[0]) low[0] = c0; if(c0 > high[0]) high[0] = c0;
-	if(c1 < low[1]) low[1] = c0; if(c1 > high[1]) high[1] = c0;
-	if(c2 < low[2]) low[2] = c0; if(c2 > high[2]) high[2] = c0;
+	if(c0 < low[0]) low[0] = c0;
+	if(c0 > high[0]) high[0] = c0;
+	if(c1 < low[1]) low[1] = c0;
+	if(c1 > high[1]) high[1] = c0;
+	if(c2 < low[2]) low[2] = c0;
+	if(c2 > high[2]) high[2] = c0;
 }
 
 //////////////////////////////////////////////////////////////////////
