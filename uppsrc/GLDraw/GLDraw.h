@@ -18,6 +18,10 @@
 
 #include <GL/gl.h>
 
+#ifdef Complex
+#undef Complex
+#endif
+
 namespace Upp {
 
 enum {

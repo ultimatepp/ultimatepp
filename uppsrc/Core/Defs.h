@@ -271,7 +271,7 @@ inline T clamp(T x, T _min, T _max)                            { return minmax(x
 inline void findarg_NOP() {} // Only to make List work for findarg
 
 #define E__TL(I)       typename COMBINE(T, I)
-#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return I - 1; findarg_NOP()
+#define E__NFIf(I)     findarg_NOP(); if(x == (decltype(x))COMBINE(p, I)) return I - 1; findarg_NOP()
 #define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I)
 
 #define E__NFBody(I) \

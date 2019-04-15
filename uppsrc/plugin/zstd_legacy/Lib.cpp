@@ -1,3 +1,7 @@
+#include <stdlib.h>     /* malloc, free, qsort */
+#include <string.h>     /* memcpy, memset */
+#include <stdio.h>      /* printf (debug) */
+
 namespace Upp {
 	
 namespace Legacy {
