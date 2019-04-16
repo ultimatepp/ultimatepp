@@ -627,11 +627,8 @@ void Ide::Periodic()
 {
 	CheckFileUpdate();
 	SetIcon();
-	if(debugger && debugger->IsFinished() && !IdeIsDebugLock()) {
-		DDUMP(~debugger);
-		DDUMP(debugger->IsFinished());
+	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
-	}
 }
 
 const Workspace& Ide::IdeWorkspace() const
