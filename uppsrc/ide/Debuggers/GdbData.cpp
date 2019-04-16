@@ -255,7 +255,11 @@ void Gdb::Self()
 
 void Gdb::Cpu()
 {
+#ifdef PLATFORM_WIN32 // mingw dbg is crashing if listing all registers
+	String s = FastCmd("info registers rax rbx rcx rdx rsi rdi rbp rsp r8  r9  r10 r11 r12 r13 r14 r15");
+#else
 	String s = FastCmd("info registers");
+#endif
 	StringStream ss(s);
 	cpu.Clear();
 	bool even = false;
