@@ -163,6 +163,12 @@ struct Ide : public IdeContext, public MakeBuild {
 
 	virtual String    IdeGetIncludePath() { return Null; }
 
+	virtual int       IdeGetHydraThreads() { return CPU_Cores(); }
+	virtual String    IdeGetCurrentBuildMethod() { return Null; }
+	virtual String    IdeGetCurrentMainPackage() { return Null; }
+	virtual void      IdePutErrorLine(const String&) {}
+	virtual void      IdeGotoFileAndId(const String& path, const String& id) {}
+
 	void ExportMakefile(const String& ep);
 	void ExportProject(const String& ep, bool all, bool deletedir = true);
 

@@ -4,8 +4,8 @@ uses
 	ide\Builders;
 
 file
-	MacOs.cpp,
 	umake.h,
+	MacOs.cpp,
 	Console.cpp,
 	IdeContext.cpp,
 	MakeBuild.cpp,
