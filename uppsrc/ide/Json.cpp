@@ -139,21 +139,21 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 	else
 	if(v.Is<ValueMap>()) {
 		ValueMap m = v;
-		parent_id = tree.Add(parent_id, IdeImg::JsonStruct(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeCommonImg::JsonStruct(), id, "[G1 [* " + name);
 		for(int i = 0; i < m.GetCount(); i++)
 			AddNode(parent_id, m.GetKey(i), "[@B \1" + String(m.GetKey(i)) + "\1:]", m.GetValue(i));
 	}
 	else
 	if(v.Is<ValueArray>()) {
-		parent_id = tree.Add(parent_id, IdeImg::JsonArray(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeCommonImg::JsonArray(), id, "[G1 [* " + name);
 		for(int i = 0; i < v.GetCount(); i++)
 			AddNode(parent_id, i, "[@c " + AsString(i) + ":]", v[i]);
 	}
 	else {
 		String qtf = "[G1 [* " + name + "]";
-		Image img = IdeImg::JsonNumber();
+		Image img = IdeCommonImg::JsonNumber();
 		if(IsString(v)) {
-			img = IdeImg::JsonString();
+			img = IdeCommonImg::JsonString();
 			if(IsNull(v))
 				qtf << "[*@g  Null";
 			else
@@ -161,7 +161,7 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 		}
 		else {
 			if(v.Is<bool>())
-				img = IdeImg::JsonBool();
+				img = IdeCommonImg::JsonBool();
 			if(IsNull(v))
 				qtf << "[*@g  Null";
 			else

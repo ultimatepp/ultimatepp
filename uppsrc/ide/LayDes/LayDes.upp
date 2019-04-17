@@ -1,11 +1,13 @@
 description "TheIDE - .lay designer\377B";
 
 uses
-	ide\Common,
 	RichEdit,
 	Esc,
 	IconDes,
-	CodeEditor;
+	CodeEditor,
+	ide/Common,
+	CppBase,
+	ide/Browser;
 
 file
 	LayDes.h options(BUILDER_OPTION) PCH,

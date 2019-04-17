@@ -397,6 +397,12 @@ public:
 
 	virtual   bool      IsPersistentFindReplace();
 
+	virtual   int       IdeGetHydraThreads();
+	virtual   String    IdeGetCurrentBuildMethod();
+	virtual   String    IdeGetCurrentMainPackage();
+	virtual   void      IdePutErrorLine(const String& e);
+	virtual   void      IdeGotoFileAndId(const String& path, const String& id);
+
 	virtual void   ConsoleShow();
 	virtual void   ConsoleSync();
 	virtual void   ConsoleClear();

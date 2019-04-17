@@ -1,7 +1,9 @@
 description "Various small(er) designers (Image viewer, QTF editor, ...)\377B";
 
 uses
-	HexView;
+	HexView,
+	ide/IconDes,
+	ide/Common;
 
 file
 	Designers.h,

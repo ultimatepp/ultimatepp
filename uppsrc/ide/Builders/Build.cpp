@@ -431,7 +431,7 @@ Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
 Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 	const VectorMap<String, String>& bm, String mainparam,
 	Host& host, Builder& builder)
-{ // Warning: This does not seem to do what it is supposed to do...
+{
 	Vector<String> uses = GetAllUses(wspc, index, bm, mainparam, host, builder);
 	uses.Add(wspc[index]);
 	Index<String> libraries;
