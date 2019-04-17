@@ -364,7 +364,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				PutConsole("Creating library...");
 				DeleteFile(hproduct);
 				if(is_shared) {
-					DDUMP(all_uses);
 					for(int i = 0; i < libpath.GetCount(); i++)
 						llib << " -L" << GetHostPathQ(libpath[i]);
 					for(int i = 0; i < all_uses.GetCount(); i++)
