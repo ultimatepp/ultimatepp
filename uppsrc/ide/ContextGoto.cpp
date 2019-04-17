@@ -463,10 +463,3 @@ void Ide::GotoFileAndId(const String& path, const String& id)
 	}
 	AddHistory();
 }
-
-void IdeGotoFileAndId(const String& path, const String& id)
-{
-	Ide *ide = dynamic_cast<Ide *>(TheIde());
-	if(ide)
-		ide->GotoFileAndId(path, id);
-}

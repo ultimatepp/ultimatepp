@@ -93,6 +93,12 @@ public:
 	
 	virtual bool      IsPersistentFindReplace() = 0;
 
+	virtual int       IdeGetHydraThreads() = 0;
+	virtual String    IdeGetCurrentBuildMethod() = 0;
+	virtual String    IdeGetCurrentMainPackage() = 0;
+	virtual void      IdePutErrorLine(const String&) = 0;
+	virtual void      IdeGotoFileAndId(const String& path, const String& id) = 0;
+
 	virtual ~IdeContext() {}
 };
 
@@ -146,6 +152,12 @@ bool      IdeIsDebugLock();
 
 void      IdeSetBar();
 
+void      IdeGotoFileAndId(const String& path, const String& id);
+
+int       IdeGetHydraThreads();
+String    IdeGetCurrentBuildMethod();
+String    IdeGetCurrentMainPackage();
+void      IdePutErrorLine(const String& s);
 void      IdeGotoFileAndId(const String& path, const String& id);
 
 #include "Host.h"

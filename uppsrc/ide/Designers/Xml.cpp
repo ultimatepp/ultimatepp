@@ -1,4 +1,4 @@
-#include <ide/ide.h>
+#include "Designers.h"
 
 void XmlViewDes::CopyPath()
 {
@@ -39,7 +39,7 @@ void XmlViewDes::Load0(int parent, XmlParser& p)
 		String txt = tag;
 		for(int i = 0; i < p.GetAttrCount(); i++)
 			txt << ' ' << p.GetAttr(i) << "=\"" << p[i] << "\"";
-		parent = tree.Add(parent, IdeImg::XmlTag(), tag, txt);
+		parent = tree.Add(parent, IdeCommonImg::XmlTag(), tag, txt);
 		while(!p.End()) {
 			if(p.IsEof())
 				throw XmlError("Unexpected end of text");
@@ -48,16 +48,16 @@ void XmlViewDes::Load0(int parent, XmlParser& p)
 	}
 	else
 	if(p.IsText())
-		tree.Add(parent, IdeImg::XmlText(), Null, NormalizeSpaces(p.ReadText()));
+		tree.Add(parent, IdeCommonImg::XmlText(), Null, NormalizeSpaces(p.ReadText()));
 	else
 	if(p.IsPI())
-		tree.Add(parent, IdeImg::XmlPI(), Null, NormalizeSpaces(p.ReadPI()));
+		tree.Add(parent, IdeCommonImg::XmlPI(), Null, NormalizeSpaces(p.ReadPI()));
 	else
 	if(p.IsDecl())
-		tree.Add(parent, IdeImg::XmlDecl(), Null, NormalizeSpaces(p.ReadDecl()));
+		tree.Add(parent, IdeCommonImg::XmlDecl(), Null, NormalizeSpaces(p.ReadDecl()));
 	else
 	if(p.IsComment())
-		tree.Add(parent, IdeImg::XmlComment(), Null, NormalizeSpaces(p.ReadComment()));
+		tree.Add(parent, IdeCommonImg::XmlComment(), Null, NormalizeSpaces(p.ReadComment()));
 	else
 		throw XmlError("Unexpected input");
 }

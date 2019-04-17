@@ -466,7 +466,7 @@ public:
 
 	virtual bool   IsEmpty() const                   { return key.IsEmpty(); }
 	virtual void   Separator()                       {}
-	virtual void   AddKey(dword key, Event<>  cb);
+	virtual void   AddKey(dword key, Event<> cb);
 
 	bool Do(dword key);
 

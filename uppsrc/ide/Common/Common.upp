@@ -2,7 +2,9 @@ description "TheIDE - common dialogs and interfaces\377B";
 
 uses
 	ide\Core,
-	CtrlLib;
+	CtrlLib,
+	Esc,
+	CodeEditor;
 
 file
 	Common.h options(BUILDER_OPTION) PCH,

@@ -364,6 +364,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				PutConsole("Creating library...");
 				DeleteFile(hproduct);
 				if(is_shared) {
+					DDUMP(all_uses);
 					for(int i = 0; i < libpath.GetCount(); i++)
 						llib << " -L" << GetHostPathQ(libpath[i]);
 					for(int i = 0; i < all_uses.GetCount(); i++)
@@ -414,11 +415,11 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					lib << llib;
 
 				int res = Execute(lib);
-				if(tmpFileName != "")
+				if(tmpFileName.GetCount())
 					FileDelete(tmpFileName);
 #ifdef PLATFORM_POSIX
 				String folder, libF, soF, linkF;
-				if(HasFlag("SO"))
+				if(is_shared)
 				{
 					folder = GetFileFolder(hproduct);
 					libF = GetFileName(hproduct);
@@ -429,7 +430,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				if(res) {
 					DeleteFile(hproduct);
 #ifdef PLATFORM_POSIX
-					if(HasFlag("SO")) {
+					if(is_shared) {
 						DeleteFile(libF);
 						DeleteFile(linkF);
 					}
@@ -437,7 +438,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					return false;
 				}
 #ifdef PLATFORM_POSIX
-				if(HasFlag("SO"))
+				if(is_shared)
 				{
 					int r;
 					r = symlink(libF, soF);

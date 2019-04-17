@@ -299,6 +299,33 @@ String IdeGetLine(int i)
 	return the_ide ? the_ide->IdeGetLine(i) : String(Null);
 }
 
+int IdeGetHydraThreads()
+{
+	return the_ide ? the_ide->IdeGetHydraThreads() : CPU_Cores();
+}
+
+String IdeGetCurrentBuildMethod()
+{
+	return the_ide ? the_ide->IdeGetCurrentBuildMethod() : String();
+}
+
+String IdeGetCurrentMainPackage()
+{
+	return the_ide ? the_ide->IdeGetCurrentMainPackage() : String();
+}
+
+void IdePutErrorLine(const String& s)
+{
+	if(the_ide)
+		the_ide->IdePutErrorLine(s);
+}
+
+void IdeGotoFileAndId(const String& path, const String& id)
+{
+	if(the_ide)
+		the_ide->IdeGotoFileAndId(path, id);
+}
+
 bool SaveChangedFile(const char *path, String data, bool delete_empty)
 {
 	if(LoadFile(path) == data && (FileExists(path) || delete_empty))

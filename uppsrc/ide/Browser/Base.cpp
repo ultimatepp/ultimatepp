@@ -83,7 +83,7 @@ void ReduceCodeBaseCache()
 
 String CodeBaseCacheFile()
 {
-	return AppendFileName(CodeBaseCacheDir(), GetVarsName() + '.' + GetCurrentMainPackage() + '.' + GetCurrentBuildMethod() + ".codebase");
+	return AppendFileName(CodeBaseCacheDir(), GetVarsName() + '.' + IdeGetCurrentMainPackage() + '.' + IdeGetCurrentBuildMethod() + ".codebase");
 }
 
 CppBase& CodeBase()
@@ -93,8 +93,6 @@ CppBase& CodeBase()
 }
 
 static bool   s_console;
-
-void IdePutErrorLine(const String& line);
 
 void BrowserScanError(int line, const String& text, int file)
 {
@@ -155,7 +153,7 @@ void LoadCodeBase()
 {
 	MLOG("LoadCodeBase start: " << MemoryUsedKb());
 	TryLoadCodeBase(CodeBaseCacheFile()) ||
-	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*." + GetCurrentBuildMethod() + ".codebase")) ||
+	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*." + IdeGetCurrentBuildMethod() + ".codebase")) ||
 	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*.codebase")) ||
 	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), "*.codebase"));
 	
@@ -429,7 +427,7 @@ void SyncCodeBase()
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
 	CLOG("============= Sync code base");
-	if(IsNull(GetCurrentMainPackage())) {
+	if(IsNull(IdeGetCurrentMainPackage())) {
 		ClearCodeBase();
 		return;
 	}
@@ -442,7 +440,7 @@ void SyncCodeBase()
 void NewCodeBase()
 {
 	ReduceCodeBaseCache();
-	if(IsNull(GetCurrentMainPackage())) {
+	if(IsNull(IdeGetCurrentMainPackage())) {
 		ClearCodeBase();
 		return;
 	}

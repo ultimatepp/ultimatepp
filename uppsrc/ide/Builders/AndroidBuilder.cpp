@@ -243,7 +243,7 @@ bool AndroidBuilder::Link(
 			ndkBuild.EnableVerbose();
 		}
 		ndkBuild.SetWorkingDir(project->GetDir());
-		ndkBuild.SetJobs(GetHydraThreads());
+		ndkBuild.SetJobs(IdeGetHydraThreads());
 		if(host->Execute(ndkBuild.MakeCmd()) != 0 ) {
 			return false;
 		}

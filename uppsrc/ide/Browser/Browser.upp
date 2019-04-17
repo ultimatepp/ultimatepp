@@ -2,10 +2,10 @@ description "TheIDE - code browser and Topic++\377B";
 
 uses
 	CppBase,
-	ide\Common,
 	PdfDraw,
 	RichEdit,
-	plugin/lz4;
+	plugin/lz4,
+	ide/Common;
 
 file
 	Browser.h options(BUILDER_OPTION) PCH,

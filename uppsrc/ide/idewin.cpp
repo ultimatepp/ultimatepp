@@ -61,16 +61,6 @@ void Ide::SwapPackagesFiles()
 	weframe.Show(weframe.IsShown() ? false : true);
 }
 
-void IdePutErrorLine(const String& line)
-{
-	Ide *ide = dynamic_cast<Ide *>(TheIde());
-	if(ide && ide->console.verbosebuild) {
-		ide->SetBottom(Ide::BERRORS);
-		ide->ConsoleRunEnd();
-		ide->ConsoleLine(line, true);
-	}
-}
-
 void Ide::ConsoleClear()
 {
 	console <<= Null;
@@ -204,22 +194,33 @@ bool Ide::IdeIsDebug() const
 	return debugger;
 }
 
-String GetCurrentBuildMethod()
+int Ide::IdeGetHydraThreads()
 {
-	Ide *ide = dynamic_cast<Ide *>(TheIde());
-	return ide ? ide->method : String();
+	return hydra1_threads;
 }
 
-String GetCurrentMainPackage()
+String Ide::IdeGetCurrentBuildMethod()
 {
-	Ide *ide = dynamic_cast<Ide *>(TheIde());
-	return ide ? ide->main : String();
+	return method;
 }
 
-int GetHydraThreads()
+String Ide::IdeGetCurrentMainPackage()
 {
-	Ide *ide = dynamic_cast<Ide *>(TheIde());
-	return ide ? ide->hydra1_threads : CPU_Cores();
+	return main;
+}
+
+void Ide::IdePutErrorLine(const String& line)
+{
+	if(console.verbosebuild) {
+		SetBottom(Ide::BERRORS);
+		ConsoleRunEnd();
+		ConsoleLine(line, true);
+	}
+}
+
+void Ide::IdeGotoFileAndId(const String& path, const String& id)
+{
+	GotoFileAndId(path, id);
 }
 
 void Ide::IdeEndDebug()

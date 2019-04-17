@@ -2,7 +2,7 @@ description "TheIDE - .iml designer\377B";
 
 uses
 	IconDes,
-	ide\Common;
+	ide/Common;
 
 file
 	IconDes.h,
