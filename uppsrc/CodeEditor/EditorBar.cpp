@@ -506,7 +506,7 @@ void EditorBar::Annotations(int width)
 EditorBar::EditorBar()
 {
 	editor = NULL;
-	LineNumbers(false);
+	line_numbers = false;
 	bingenabled = true;
 	hilite_if_endif = true;
 	line_numbers = false;
