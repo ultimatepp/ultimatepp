@@ -60,7 +60,7 @@ struct PPMacro : Moveable<PPMacro> {
 	void   Serialize(Stream& s) { s % macro % segment_id % line % undef_segment_id; }
 	String ToString() const     { return AsString(macro) + " " + AsString(segment_id); }
 	
-	PPMacro()                   { undef_segment_id = 0; }
+	PPMacro()                   { segment_id = undef_segment_id = 0; }
 };
 
 struct PPFile { // contains "macro extract" of file, only info about macros defined and namespaces

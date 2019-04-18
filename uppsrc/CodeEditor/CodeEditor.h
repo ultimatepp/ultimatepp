@@ -380,7 +380,7 @@ public:
 	static dword find_prev_key;
 	static dword replace_key;
 
-	void   Clear()                    { LineEdit::Clear(); found = notfoundfw = notfoundbk = false; }
+	void   Clear();
 
 	void   Highlight(const String& h);
 	String GetHighlight() const       { return highlight; }

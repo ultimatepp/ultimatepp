@@ -1125,6 +1125,14 @@ void CodeEditor::MouseWheel(Point p, int zdelta, dword keyFlags) {
 		LineEdit::MouseWheel(p, zdelta, keyFlags);
 }
 
+void CodeEditor::Clear()
+{
+	for(SyntaxPos& p : syntax_cache)
+		p.Clear();
+	LineEdit::Clear();
+	found = notfoundfw = notfoundbk = false;
+}
+
 CodeEditor::CodeEditor() {
 	bracket_flash = false;
 	highlight_bracket_pos0 = 0;

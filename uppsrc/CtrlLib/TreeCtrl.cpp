@@ -16,14 +16,14 @@ TreeCtrl::TreeCtrl()
 	accel = false;
 	treesize = Size(0, 0);
 	multiroot = false;
+	chldlck = false;
+	highlight_ctrl = false;
 	Clear();
 	SetFrame(ViewFrame());
 	AddFrame(sb);
 	sb.WhenScroll = THISBACK(Scroll);
 	sb.Box(sb_box);
 	WhenLeftDouble = THISBACK(StdLeftDouble);
-	chldlck = false;
-	highlight_ctrl = false;
 }
 
 TreeCtrl::Node::Node()
