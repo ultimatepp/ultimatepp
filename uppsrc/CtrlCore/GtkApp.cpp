@@ -14,6 +14,7 @@ void CatchError(const gchar *log_domain,
              const gchar *message,
              gpointer user_data)
 {
+	RLOG((const char *)message);
 	__BREAK__;
 }
 #endif

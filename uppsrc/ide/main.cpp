@@ -151,7 +151,6 @@ void AppMain___()
 	String home = Environment().Get("UPP_HOME", Null);
 	if(!IsNull(home))
 		SetHomeDirectory(home);
-	RDUMP(hasvars);
 	if(!hasvars) {
 		if(!Install(hasvars))
 			return;
