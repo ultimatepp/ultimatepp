@@ -12,7 +12,7 @@ void TargetMode::Serialize(Stream& s)
 	s / ver;
 	s % target_override % target;
 	if(ver < 3) {
-		int dummy;
+		int dummy = 0;
 		s % dummy;
 	}
 	if(ver < 1) {
@@ -23,7 +23,7 @@ void TargetMode::Serialize(Stream& s)
 		s % version;
 	s % def % package;
 	if(ver == 2) {
-		int dummy;
+		int dummy = 0;
 		s % dummy;
 	}
 	if(ver >= 3)
