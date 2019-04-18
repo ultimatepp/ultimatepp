@@ -568,7 +568,9 @@ bool Ctrl::IsOcxChild()
 }
 
 Ctrl::Ctrl() {
-	InstallPanicBox();
+	ONCELOCK {
+		InstallPanicBox();
+	}
 	ASSERT_(IsMainRunning(), "GUI widgets cannot be global variables");
 	ASSERT_(ThreadHasGuiLock(), "GUI widgets cannot be initialized in non-main thread without GuiLock");
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!

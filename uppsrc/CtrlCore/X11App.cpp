@@ -400,7 +400,7 @@ void Ctrl::InstallPanicBox()
 
 void Ctrl::InitX11(const char *display)
 {
-	GuiLock __; 
+	GuiLock __;
 
 	XInitThreads();
 

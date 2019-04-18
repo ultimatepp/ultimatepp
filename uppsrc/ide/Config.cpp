@@ -41,7 +41,7 @@ void Ide::SerializeWorkspace(Stream& s) {
 	s % mainconfigparam;
 	s % console.verbosebuild;
 	s % stoponerrors;
-	byte dummy;
+	byte dummy = 0;
 	s % dummy;
 	s % runarg;
 	s % recent_runarg;
@@ -50,7 +50,7 @@ void Ide::SerializeWorkspace(Stream& s) {
 	if(version >= 1)
 		s % runexternal;
 	if(version >= 11) {
-		bool dummy;
+		bool dummy = false;
 		s % dummy;
 	}
 	if(version >= 13)
@@ -75,7 +75,7 @@ void Ide::SerializeWorkspace(Stream& s) {
 		}
 	}
 	if(version >= 8) {
-		bool dummyb;
+		bool dummyb = false;
 		String dummy;
 		s % dummyb;
 		s % dummy;

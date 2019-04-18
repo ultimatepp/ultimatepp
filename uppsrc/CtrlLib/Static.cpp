@@ -348,12 +348,12 @@ SeparatorCtrl& SeparatorCtrl::SetStyle(const Style& s)
 
 SeparatorCtrl::SeparatorCtrl()
 {
+	lmargin = rmargin = 2;
+	size = 7;
 	NoWantFocus();
 	Transparent();
 	Disable();
-	lmargin = rmargin = 2;
-	size = 7;
-	SetStyle(StyleDefault());
+	style = &StyleDefault();
 }
 
 void DisplayCtrl::Paint(Draw& w)

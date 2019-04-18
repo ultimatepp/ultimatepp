@@ -513,6 +513,7 @@ EditorBar::EditorBar()
 	annotations = 0;
 	ignored_next_edit = false;
 	next_age = 0;
+	active_annotation = -1;
 	SyncSize();
 }
 

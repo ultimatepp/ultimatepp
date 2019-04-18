@@ -423,8 +423,6 @@ Ide::Ide()
 	toolbar.WhenHelp = ~statusbar;
 	toolbar.AreaLook(1);
 	toolbar_in_row = false;
-	SetupBars();
-	SetBar();
 	WhenClose = THISBACK(Exit);
 
 	editorsplit.Vert(editor, editor2);
@@ -617,7 +615,6 @@ Ide::Ide()
 
 	default_charset = CHARSET_UTF8;
 
-	HideBottom();
 	TheIde(this);
 
 	targetmode = 0;
@@ -661,6 +658,12 @@ Ide::Ide()
 	editfile_repo = NOT_REPO_DIR;
 	
 	auto_rescan = auto_check = true;
+
+	editfile_line_endings = Null;
+
+	HideBottom();
+	SetupBars();
+	SetBar();
 
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {
