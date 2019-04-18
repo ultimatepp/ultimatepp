@@ -5,7 +5,7 @@
 void SkipGdbInfo(CParser& p)
 {
 	int level = 1;
-	while(level > 0)
+	while(level > 0 && !p.IsEof())
 		if(p.Char('<'))
 			level++;
 		else

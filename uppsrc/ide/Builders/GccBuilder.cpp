@@ -433,7 +433,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 						DeleteFile(libF);
 						DeleteFile(linkF);
 					}
- #endif
+#endif
 					return false;
 				}
 #ifdef PLATFORM_POSIX

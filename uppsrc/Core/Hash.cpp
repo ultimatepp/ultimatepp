@@ -134,7 +134,7 @@ void HashBase::Drop(int n)
 void HashBase::FinishIndex()
 {
 	int q = link.GetCount();
-	link.Reserve(hash.GetAlloc());
+	link.Reserve(hash.GetCount());
 	link.AddN(hash.GetCount() - q);
 	for(int i = q; i < hash.GetCount(); i++)
 		LinkTo(i, link[i], hash[i] & UNSIGNED_HIBIT ? unlinked : Mapi(i));
