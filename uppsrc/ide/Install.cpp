@@ -38,7 +38,7 @@ const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-parentheses -Wno-maybe-uninitialized -Wno-strict-overflow";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";

@@ -340,7 +340,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 #endif//DO_LLOG
 
 	if(cd)
-		chdir(cd);
+		(void)chdir(cd);
 
 	LLOG("running execve, app = " << app << ", #args = " << args.GetCount());
 	if(envptr) {

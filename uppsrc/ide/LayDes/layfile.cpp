@@ -9,7 +9,7 @@ ArrayMap<String, LayDesEditPos>& LayFileDataVar()
 void SerializeLayEditPos(Stream& s)
 {
 	ArrayMap<String, LayDesEditPos>& filedata = LayFileDataVar();
-	int dummy;
+	int dummy = 0;
 	if(s.IsStoring()) {
 		for(int i = 0; i < filedata.GetCount(); i++) {
 			String fn = filedata.GetKey(i);
