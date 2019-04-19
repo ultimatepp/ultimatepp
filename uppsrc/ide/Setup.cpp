@@ -574,20 +574,25 @@ void Ide::SetupFormat() {
 		UpdateFormat();
 		if(c == IDEXIT)
 			break;
+		if(c == 222)
+			hlstyle_is_default = false;
 		if(c == 333 && PromptYesNo("Restore default highlighting colors?")) {
 			editor.DefaultHlStyles();
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
+			hlstyle_is_default = true;
 		}
 		if(c == 334 && PromptYesNo("Set white theme?")) {
 			editor.WhiteTheme();
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
+			hlstyle_is_default = false;
 		}
 		if(c == 335 && PromptYesNo("Set dark theme?")) {
 			editor.DarkTheme();
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
+			hlstyle_is_default = false;
 		}
 	}
 	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
