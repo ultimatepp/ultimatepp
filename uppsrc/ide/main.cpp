@@ -233,7 +233,7 @@ void AppMain___()
 		bool clset = false;
 		
 		ide.LoadConfig();
-
+		
 		if(arg.GetCount() == 1) {
 			if(arg[0].EndsWith(".upp")) {
 				Vector<String> names = Split(arg[0], DIR_SEP);

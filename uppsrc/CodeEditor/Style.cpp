@@ -107,59 +107,59 @@ String HighlightSetup::StoreHlStyles()
 
 void HighlightSetup::DarkTheme()
 {
-	SetHlStyle(INK_NORMAL, Color(113, 255, 255), true);
-	SetHlStyle(PAPER_NORMAL, Color(51, 51, 51));
-	SetHlStyle(INK_SELECTED, White);
-	SetHlStyle(PAPER_SELECTED, Color(0, 120, 215));
-	SetHlStyle(INK_DISABLED, Color(109, 109, 109));
-	SetHlStyle(PAPER_READONLY, Color(240, 240, 240));
-	SetHlStyle(INK_COMMENT, Color(114, 114, 114), false, true);
-	SetHlStyle(INK_COMMENT_WORD, Blue, true, true);
-	SetHlStyle(PAPER_COMMENT_WORD, Yellow);
-	SetHlStyle(INK_CONST_STRING, Color(255, 255, 150));
-	SetHlStyle(INK_RAW_STRING, LtBlue);
-	SetHlStyle(INK_CONST_STRINGOP, LtBlue);
-	SetHlStyle(INK_OPERATOR, White, true);
-	SetHlStyle(INK_KEYWORD, Color(255, 42, 150), true, true);
-	SetHlStyle(INK_UPP, Cyan, true);
-	SetHlStyle(PAPER_LNG, Color(59, 75, 78));
-	SetHlStyle(INK_ERROR, LtRed);
-	SetHlStyle(INK_PAR0, White, true);
-	SetHlStyle(INK_PAR1, Color(233, 126, 117), true);
-	SetHlStyle(INK_PAR2, Color(61, 124, 61), true);
-	SetHlStyle(INK_PAR3, Color(143, 58, 143), true);
-	SetHlStyle(INK_CONST_INT, Color(28, 255, 0), true);
-	SetHlStyle(INK_CONST_FLOAT, Magenta);
-	SetHlStyle(INK_CONST_HEX, Blue);
-	SetHlStyle(INK_CONST_OCT, Blue);
-	SetHlStyle(PAPER_BRACKET0, Color(226, 42, 0), true);
-	SetHlStyle(PAPER_BRACKET, Color(226, 42, 0), true);
-	SetHlStyle(PAPER_BLOCK1, Color(38, 38, 38));
-	SetHlStyle(PAPER_BLOCK2, Color(44, 31, 65));
-	SetHlStyle(PAPER_BLOCK3, Color(18, 55, 2));
-	SetHlStyle(PAPER_BLOCK4, Color(78, 78, 3));
-	SetHlStyle(INK_MACRO, White, true, true);
-	SetHlStyle(PAPER_MACRO, Color(51, 51, 51));
-	SetHlStyle(PAPER_IFDEF, Color(63, 63, 63));
-	SetHlStyle(INK_IFDEF, Color(170, 170, 170));
-	SetHlStyle(INK_UPPER, Color(28, 255, 0));
-	SetHlStyle(INK_SQLBASE, Color(113, 255, 255), true);
-	SetHlStyle(INK_SQLFUNC, Color(113, 255, 255), true);
-	SetHlStyle(INK_SQLBOOL, Color(113, 255, 255), true);
-	SetHlStyle(INK_UPPMACROS, Color(255, 127, 255));
-	SetHlStyle(INK_UPPLOGS, Green);
-	SetHlStyle(INK_DIFF_FILE_INFO, Black, true);
-	SetHlStyle(INK_DIFF_HEADER, Color(28, 127, 200));
-	SetHlStyle(INK_DIFF_ADDED, Color(28, 42, 255));
-	SetHlStyle(INK_DIFF_REMOVED, LtRed);
-	SetHlStyle(INK_DIFF_COMMENT, Green);
-	SetHlStyle(PAPER_SELWORD, Yellow);
-	SetHlStyle(PAPER_ERROR, Red);
-	SetHlStyle(PAPER_WARNING, Brown);
-	SetHlStyle(SHOW_LINE, Color(63, 63, 63));
-	SetHlStyle(SHOW_COLUMN, Color(63, 40, 40));
-	SetHlStyle(WHITESPACE, Color(126, 186, 234));
-	SetHlStyle(WARN_WHITESPACE, Color(191, 126, 126));
+	SetHlStyle(INK_NORMAL,                White);
+	SetHlStyle(PAPER_NORMAL,              Color(1, 1, 1));
+	SetHlStyle(INK_SELECTED,              Color(1, 1, 1));
+	SetHlStyle(PAPER_SELECTED,            Color(97, 217, 255));
+	SetHlStyle(INK_DISABLED,              Color(184, 184, 184));
+	SetHlStyle(PAPER_READONLY,            Color(24, 24, 24));
+	SetHlStyle(INK_COMMENT,               Color(173, 255, 173), false, true);
+	SetHlStyle(INK_COMMENT_WORD,          Color(235, 235, 255), true, true);
+	SetHlStyle(PAPER_COMMENT_WORD,        Color(99, 99, 0));
+	SetHlStyle(INK_CONST_STRING,          Color(248, 162, 162));
+	SetHlStyle(INK_CONST_STRINGOP,        Color(214, 214, 255));
+	SetHlStyle(INK_RAW_STRING,            Color(235, 235, 255));
+	SetHlStyle(INK_OPERATOR,              Color(214, 214, 255));
+	SetHlStyle(INK_KEYWORD,               Color(214, 214, 255), true);
+	SetHlStyle(INK_UPP,                   Color(108, 236, 236));
+	SetHlStyle(PAPER_LNG,                 Color(13, 13, 0));
+	SetHlStyle(INK_ERROR,                 Color(255, 185, 185));
+	SetHlStyle(INK_PAR0,                  White);
+	SetHlStyle(INK_PAR1,                  Color(173, 255, 173));
+	SetHlStyle(INK_PAR2,                  Color(255, 149, 255));
+	SetHlStyle(INK_PAR3,                  Color(214, 214, 86));
+	SetHlStyle(INK_CONST_INT,             Color(255, 137, 137));
+	SetHlStyle(INK_CONST_FLOAT,           Color(255, 149, 255));
+	SetHlStyle(INK_CONST_HEX,             Color(235, 235, 255));
+	SetHlStyle(INK_CONST_OCT,             Color(235, 235, 255));
+	SetHlStyle(PAPER_BRACKET0,            Color(26, 26, 0));
+	SetHlStyle(PAPER_BRACKET,             Color(99, 99, 0), true);
+	SetHlStyle(PAPER_BLOCK1,              Color(16, 16, 31));
+	SetHlStyle(PAPER_BLOCK2,              Color(5, 20, 5));
+	SetHlStyle(PAPER_BLOCK3,              Color(3, 3, 0));
+	SetHlStyle(PAPER_BLOCK4,              Color(20, 5, 20));
+	SetHlStyle(INK_MACRO,                 Color(255, 149, 255));
+	SetHlStyle(PAPER_MACRO,               Color(11, 11, 0));
+	SetHlStyle(PAPER_IFDEF,               Color(0, 18, 18));
+	SetHlStyle(INK_IFDEF,                 Color(131, 131, 131));
+	SetHlStyle(INK_UPPER,                 White);
+	SetHlStyle(INK_SQLBASE,               White);
+	SetHlStyle(INK_SQLFUNC,               White);
+	SetHlStyle(INK_SQLBOOL,               White);
+	SetHlStyle(INK_UPPMACROS,             Color(108, 236, 236));
+	SetHlStyle(INK_UPPLOGS,               Color(173, 255, 173));
+	SetHlStyle(INK_DIFF_FILE_INFO,        White, true);
+	SetHlStyle(INK_DIFF_HEADER,           Color(103, 202, 255));
+	SetHlStyle(INK_DIFF_ADDED,            Color(182, 196, 255));
+	SetHlStyle(INK_DIFF_REMOVED,          Color(255, 185, 185));
+	SetHlStyle(INK_DIFF_COMMENT,          Color(173, 255, 173));
+	SetHlStyle(PAPER_SELWORD,             Color(99, 99, 0));
+	SetHlStyle(PAPER_ERROR,               Color(90, 40, 40));
+	SetHlStyle(PAPER_WARNING,             Color(21, 21, 0));
+	SetHlStyle(SHOW_LINE,                 Color(27, 75, 26));
+	SetHlStyle(SHOW_COLUMN,               Color(56, 33, 29));
+	SetHlStyle(WHITESPACE,                Color(68, 128, 176));
+	SetHlStyle(WARN_WHITESPACE,           Color(206, 141, 141));
 }
 
 void HighlightSetup::WhiteTheme()
@@ -232,7 +232,7 @@ void HighlightSetup::WhiteTheme()
 
 void HighlightSetup::DefaultHlStyles()
 {
-	if(IsDark(SColorPaper()))
+	if(IsDarkTheme())
 		DarkTheme();
 	else
 		WhiteTheme();

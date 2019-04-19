@@ -176,7 +176,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 16;
+	int version = 17;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -308,6 +308,8 @@ void Ide::Serialize(Stream& s)
 	s % sort;
 	s % output_per_assembly;
 	s.Magic();
+	if(version >= 17)
+		s % hlstyle_is_default;
 }
 
 Time Ide::ConfigTime()
@@ -344,7 +346,10 @@ void Ide::LoadConfig()
 		}
 	}
 	RestoreKeys(LoadFile(ConfigFile("ide.key")));
-	editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
+	if(hlstyle_is_default)
+		editor.DefaultHlStyles();
+	else
+		editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
 	config_time = FileGetTime(ConfigFile());
 	UpdateFormat();
 	if(filelist.IsCursor()) {

@@ -669,6 +669,8 @@ public:
 	int           isscanning;
 	
 	String        current_builder;
+	
+	bool          hlstyle_is_default = true; // default style reacts to dark / light theme settings
 
 // ------------------------------------
 
