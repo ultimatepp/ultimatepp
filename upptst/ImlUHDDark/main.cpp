@@ -9,6 +9,10 @@ using namespace Upp;
 #define IMAGECLASS TestImg
 #define IMAGEFILE <ImlUHDDark/Test.iml>
 #define IMAGEFILE_UHD <ImlUHDDark/TestHD.iml>
+
+// #define FIXED_COLORS
+// #define FIXED_SIZE
+
 #include <Draw/iml_source.h>
 
 struct Test : TopWindow {
