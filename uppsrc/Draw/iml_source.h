@@ -46,6 +46,16 @@ UPP::Iml& IMAGECLASS::Iml() {
 	};
 
 	static UPP::Iml iml(init, name, COUNT);
+	
+	#ifdef FIXED_COLORS
+	#undef FIXED_COLORS
+	iml.GlobalFlag(IML_IMAGE_FLAG_FIXED_COLORS);
+	#endif
+
+	#ifdef FIXED_SIZE
+	#undef FIXED_SIZE
+	iml.GlobalFlag(IML_IMAGE_FLAG_FIXED_SIZE);
+	#endif
 
 	#undef IMAGE_PACKED
 	#undef IMAGE_ID

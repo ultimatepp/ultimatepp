@@ -300,6 +300,7 @@ class Iml {
 	VectorMap<String, IImage> map;
 	const Image::Init *img_init;
 	const char **name;
+	dword global_flags = 0;
 	bool  premultiply;
 
 	Index<String> ex_name[3]; // 0 HiDPI - HD, 1 DK - Dark, 2 HDK - HiDPI + dark
@@ -318,13 +319,15 @@ public:
 	int    GetBinSize() const;
 #endif
 
-	void     Premultiplied()                   { premultiply = false; }
 	ImageIml GetRaw(int mode, int i); // tries to get image for mode, can return Null
 	ImageIml GetRaw(int mode, const String& id); // tries to get image for mode by id, can return Null
 
+// these methods serve for .iml import
 	Iml(const Image::Init *img_init, const char **name, int n);//Deprecated - legacy .iml
 	void AddData(const byte *data, int len, int count, int mode = 0);
 	void AddId(int mode1, const char *name);
+	void Premultiplied()                   { premultiply = false; }
+	void GlobalFlag(dword f)               { global_flags |= f; }
 };
 
 void   Register(const char *imageclass, Iml& iml);

@@ -116,9 +116,10 @@ Image Iml::Get(int i)
 					m.image = GetRaw(mode, id).image;
 				if(IsNull(m.image)) {
 					ImageIml im = GetRaw(0, id);
-					if((mode & GUI_MODE_UHD) && !(im.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+					dword f = im.flags | global_flags;
+					if((mode & GUI_MODE_UHD) && !(f & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
 						im.image = Upscale2x(im.image);
-					if((mode & GUI_MODE_DARK) && !(im.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
+					if((mode & GUI_MODE_DARK) && !(f & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
 						im.image = DarkTheme(im.image);
 					m.image = im.image;
 				}
