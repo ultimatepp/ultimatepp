@@ -262,13 +262,33 @@ public:
 Image Premultiply(const Image& img);
 Image Unmultiply(const Image& img);
 
-Vector<Image> UnpackImlData(const void *ptr, int len);
-Vector<Image> UnpackImlData(const String& d);
+struct ImageIml : Moveable<ImageIml> {
+	Image  image;
+	dword  flags = 0;
+};
+
+Vector<ImageIml> UnpackImlData(const void *ptr, int len);
+Vector<ImageIml> UnpackImlData(const String& d);
+
+enum {
+	GUI_MODE_NORMAL   = 0,
+	GUI_MODE_DARK     = 1,
+	GUI_MODE_UHD      = 2,
+	GUI_MODE_DARK_UHD = 3,
+};
+
+enum {
+	IML_IMAGE_FLAG_FIXED        = 0x1,
+	IML_IMAGE_FLAG_FIXED_COLORS = 0x2,
+	IML_IMAGE_FLAG_FIXED_SIZE   = 0x4,
+	IML_IMAGE_FLAG_UHD          = 0x8,
+	IML_IMAGE_FLAG_DARK         = 0x10,
+};
 
 class Iml {
 	struct IImage : Moveable<IImage> {
-		bool  loaded;
-		Image image;
+		std::atomic<bool>  loaded;
+		Image              image;
 
 		IImage() { loaded = false; }
 	};
@@ -276,11 +296,13 @@ class Iml {
 		const char *data;
 		int   len, count;
 	};
-	Vector<Data> data;
+	Vector<Data> data[4]; // 0 normal, 1 HiDPI - HD, 2 DK - Dark, 3 HDK - HiDPI + dark
 	VectorMap<String, IImage> map;
 	const Image::Init *img_init;
 	const char **name;
 	bool  premultiply;
+
+	Index<String> ex_name[3]; // 0 HiDPI - HD, 1 DK - Dark, 2 HDK - HiDPI + dark
 
 	void  Init(int n);
 
@@ -289,16 +311,20 @@ public:
 	int    GetCount() const                  { return map.GetCount(); }
 	String GetId(int i)                      { return map.GetKey(i); }
 	Image  Get(int i);
-	int    Find(const String& s) const       { return map.Find(s); }
+	int    Find(const String& id) const      { return map.Find(id); }
 	void   Set(int i, const Image& img);
-	void   Premultiplied()                   { premultiply = false; }
 
 #ifdef _DEBUG
 	int    GetBinSize() const;
 #endif
 
+	void     Premultiplied()                   { premultiply = false; }
+	ImageIml GetRaw(int mode, int i); // tries to get image for mode, can return Null
+	ImageIml GetRaw(int mode, const String& id); // tries to get image for mode by id, can return Null
+
 	Iml(const Image::Init *img_init, const char **name, int n);//Deprecated - legacy .iml
-	void AddData(const byte *data, int len, int count);
+	void AddData(const byte *data, int len, int count, int mode = 0);
+	void AddId(int mode1, const char *name);
 };
 
 void   Register(const char *imageclass, Iml& iml);

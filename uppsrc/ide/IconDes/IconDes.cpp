@@ -8,13 +8,13 @@ bool IdeIconDes::Load(const char *_filename)
 	Clear();
 	filename = _filename;
 	filetime = FileGetTime(filename);
-	Array<ImlImage> m;
+	Array<ImlImage> iml;
 	int f;
-	if(!LoadIml(LoadFile(filename), m, f))
+	if(!LoadIml(LoadFile(filename), iml, f))
 		return false;
 	format = f;
-	for(int i = 0; i < m.GetCount(); i++)
-		AddImage(m[i].name, m[i].image, m[i].exp);
+	for(const ImlImage& m : iml)
+		AddImage(m.name, m.image, m.exp).flags = m.flags;
 	return true;
 }
 
@@ -44,6 +44,7 @@ void IdeIconDes::Save()
 		c.name = GetName(i);
 		c.image = GetImage(i);
 		c.exp = GetExport(i);
+		c.flags = GetFlags(i);
 		if(c.exp) {
 			Size sz = c.image.GetSize();
 			exp.GetAdd(sz) = c.image;

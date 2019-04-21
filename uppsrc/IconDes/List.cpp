@@ -2,15 +2,25 @@
 
 namespace Upp {
 
-static String sFormatImageName(const String& name, const Image& img, bool exp)
+String IconDes::FormatImageName(const Slot& c)
 {
-	Size sz = img.GetSize();
+	Size sz = c.image.GetSize();
 	String r;
-	r << name << " (" << sz.cx << " x " << sz.cy
-	  << decode(img.GetResolution(), IMAGE_RESOLUTION_UHD, " UHD", IMAGE_RESOLUTION_NONE, " n.r.", "")
-	  << ')';
-	if(exp)
-		r << " ex.";
+	r << c.name << " " << sz.cx << " x " << sz.cy;
+	if(c.flags & IML_IMAGE_FLAG_FIXED)
+		r << " Fxd";
+	else {
+		if(c.flags & IML_IMAGE_FLAG_FIXED_COLORS)
+			r << " Clr";
+		if(c.flags & IML_IMAGE_FLAG_FIXED_SIZE)
+			r << " Sz";
+	}
+	if(c.flags & IML_IMAGE_FLAG_UHD)
+		r << " HD";
+	if(c.flags & IML_IMAGE_FLAG_DARK)
+		r << " Dk";
+	if(c.exp)
+		r << " X";
 	return r;
 }
 
@@ -26,7 +36,7 @@ void IconDes::SyncList()
 	for(int i = 0; i < slot.GetCount(); i++) {
 		Slot& c = slot[i];
 		if(ToUpper(c.name).Find(s) >= 0)
-			ilist.Add(i, sFormatImageName(c.name, c.image, c.exp), c.image);
+			ilist.Add(i, FormatImageName(c), c.image);
 	}
 	ilist.ScrollTo(sc);
 	ilist.FindSetCursor(q);
@@ -69,15 +79,42 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		Size sz = GetImageSize();
 		dlg.cx <<= sz.cx;
 		dlg.cy <<= sz.cy;
-		int resolution = IMAGE_RESOLUTION_STANDARD;
-		if(IsCurrent())
-			resolution = Current().image.GetResolution();
-		dlg.resolution.Set(0, IMAGE_RESOLUTION_STANDARD);
-		dlg.resolution.Set(1, IMAGE_RESOLUTION_UHD);
-		dlg.resolution.Set(2, IMAGE_RESOLUTION_NONE);
-		dlg.resolution <<= resolution;
+
+		dword flags = IsCurrent() ? Current().flags : 0;
+		dlg.fixed <<= !!(flags & IML_IMAGE_FLAG_FIXED);
+		dlg.fixed_colors <<= !!(flags & IML_IMAGE_FLAG_FIXED_COLORS);
+		dlg.fixed_size <<= !!(flags & IML_IMAGE_FLAG_FIXED_SIZE);
+		
+		dlg.uhd <<= !!(flags & IML_IMAGE_FLAG_UHD);
+		dlg.dark <<= !!(flags & IML_IMAGE_FLAG_DARK);
+		
+		dlg.uhd ^= dlg.dark ^= dlg.exp ^= dlg.fixed_colors ^= dlg.fixed_size ^= dlg.fixed ^=
+			[&] { dlg.Break(-1000); };
 	}
 	dlg.name.SetFilter(sCharFilterCid);
+}
+
+void IconDes::SyncDlg(WithImageLayout<TopWindow>& dlg)
+{
+	bool b = !dlg.fixed;
+	dlg.fixed_colors.Enable(b);
+	dlg.fixed_size.Enable(b);
+}
+
+dword IconDes::GetFlags(WithImageLayout<TopWindow>& dlg)
+{
+	dword flags = 0;
+	if(dlg.fixed)
+		flags |= IML_IMAGE_FLAG_FIXED;
+	if(dlg.fixed_colors)
+		flags |= IML_IMAGE_FLAG_FIXED_COLORS;
+	if(dlg.fixed_size)
+		flags |= IML_IMAGE_FLAG_FIXED_SIZE;
+	if(dlg.uhd)
+		flags |= IML_IMAGE_FLAG_UHD;
+	if(dlg.dark)
+		flags |= IML_IMAGE_FLAG_DARK;
+	return flags;
 }
 
 void IconDes::PrepareImageSizeDlg(WithImageSizeLayout<TopWindow>& dlg)
@@ -121,7 +158,7 @@ void SetRes(Image& m, int resolution)
 	m = ib;
 }
 
-void IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
+IconDes::Slot& IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
 {
 	Slot& c = slot.Insert(ii);
 	c.name = name;
@@ -129,29 +166,31 @@ void IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
 	c.exp = exp;
 	SyncList();
 	GoTo(ii);
+	return c;
 }
 
-void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
+IconDes::Slot& IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 {
 	int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
 	if(ii == slot.GetCount() - 1)
 		ii = slot.GetCount();
-	ImageInsert(ii, name, m, exp);
+	return ImageInsert(ii, name, m, exp);
 }
 
 void IconDes::InsertImage()
 {
 	WithImageLayout<TopWindow> dlg;
 	PrepareImageDlg(dlg);
-	dlg.resolution <<= IMAGE_RESOLUTION_STANDARD;
-	do {
-		if(dlg.Run() != IDOK)
+	for(;;) {
+		SyncDlg(dlg);
+		int c = dlg.Run();
+		if(c == IDCANCEL)
 			return;
+		if(c == IDOK && CheckName(dlg))
+			break;
 	}
-	while(!CheckName(dlg));
 	Image m = CreateImage(Size(~dlg.cx, ~dlg.cy), Null);
-	SetRes(m, ~dlg.resolution);
-	ImageInsert(~dlg.name, m, dlg.exp);
+	ImageInsert(~dlg.name, m, dlg.exp).flags = GetFlags(dlg);
 }
 
 void IconDes::Slice()
@@ -169,20 +208,21 @@ void IconDes::Slice()
 	dlg.cx <<= cc;
 	dlg.cy <<= cc;
 	dlg.Title("Slice image");
-	dlg.resolution <<= IMAGE_RESOLUTION_STANDARD;
-	do {
-		if(dlg.Run() != IDOK)
+	for(;;) {
+		SyncDlg(dlg);
+		int c = dlg.Run();
+		if(c == IDCANCEL)
 			return;
+		if(c == IDOK && CheckName(dlg))
+			break;
 	}
-	while(!CheckName(dlg));
 	String s = ~dlg.name;
 	int n = 0;
 	int ii = ilist.GetKey();
 	for(int y = 0; y < isz.cy; y += (int)~dlg.cy)
 		for(int x = 0; x < isz.cx; x += (int)~dlg.cx) {
 			Image m = Crop(src, x, y, ~dlg.cx, ~dlg.cy);
-			SetRes(m, ~dlg.resolution);
-			ImageInsert(++ii, s + AsString(n++), m, ~dlg.exp);
+			ImageInsert(++ii, s + AsString(n++), m, ~dlg.exp).flags = GetFlags(dlg);
 		}
 }
 
@@ -320,11 +360,11 @@ void IconDes::ExportPngs()
 
 void IconDes::InsertIml()
 {
-	Array<ImlImage> m;
+	Array<ImlImage> iml;
 	int f;
-	if(LoadIml(SelectLoadFile("Iml files\t*.iml"), m, f))
-		for(int i = 0; i < m.GetCount(); i++) {
-			ImageInsert(m[i].name, m[i].image, m[i].exp);
+	if(LoadIml(SelectLoadFile("Iml files\t*.iml"), iml, f))
+		for(const ImlImage& m : iml) {
+			ImageInsert(m.name, m.image, m.exp).flags = m.flags;
 			GoTo((int)ilist.GetKey() + 1);
 		}
 }
@@ -381,27 +421,29 @@ void IconDes::EditImage()
 	dlg.name <<= c.name;
 	dlg.exp <<= c.exp;
 	for(;;) {
+		SyncDlg(dlg);
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			c.image = img;
 			Reset();
 			return;
 		case IDOK:
-			if(!CheckName(dlg)) break;
-			c.name = ~dlg.name;
-			c.exp = ~dlg.exp;
-			SetRes(c.image, ~dlg.resolution);
-			ilist.Set(1, sFormatImageName(c.name, c.image, c.exp));
-			int q = ilist.GetKey();
-			Reset();
-			SyncList();
-			GoTo(q);
-			return;
+			if(CheckName(dlg)) {
+				c.name = ~dlg.name;
+				c.exp = ~dlg.exp;
+				c.flags = GetFlags(dlg);
+				ilist.Set(1, FormatImageName(c));
+				int q = ilist.GetKey();
+				Reset();
+				SyncList();
+				GoTo(q);
+				return;
+			}
 		}
-		int r = c.image.GetResolution();
+		c.flags = GetFlags(dlg);
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
+		c.exp = ~dlg.exp;
 		UPP::Copy(c.image, Point(0, 0), img, img.GetSize());
-		SetRes(c.image, r);
 		Reset();
 	}
 }
@@ -462,8 +504,7 @@ void IconDes::ListMenu(Bar& bar)
 			bar.Separator();
 			for(int i = removed.GetCount() - 1; i >= 0; i--) {
 				Slot& r = removed[i];
-				bar.Add("Insert " + sFormatImageName(r.name, r.image, r.exp), r.base_image,
-				        THISBACK1(InsertRemoved, i));
+				bar.Add("Insert " + FormatImageName(r), r.base_image, THISBACK1(InsertRemoved, i));
 			}
 		}
 	}
@@ -482,15 +523,16 @@ void IconDes::Clear()
 	Reset();
 }
 
-void IconDes::AddImage(const String& name, const Image& image, bool exp)
+IconDes::Slot& IconDes::AddImage(const String& name, const Image& image, bool exp)
 {
 	int q = slot.GetCount();
 	Slot& c = slot.Add();
 	c.name = name;
 	c.image = image;
 	c.exp = exp;
-	ilist.Add(q, sFormatImageName(c.name, c.image, c.exp), c.image);
+	ilist.Add(q, FormatImageName(c), c.image);
 	ilist.GoBegin();
+	return c;
 }
 
 int IconDes::GetCount() const
@@ -506,6 +548,11 @@ Image IconDes::GetImage(int ii) const
 String IconDes::GetName(int ii) const
 {
 	return slot[ii].name;
+}
+
+dword IconDes::GetFlags(int ii) const
+{
+	return slot[ii].flags;
 }
 
 bool IconDes::FindName(const String& name)

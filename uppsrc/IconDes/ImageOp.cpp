@@ -154,13 +154,13 @@ void MirrorVert(Image& img, const Rect& rect)
 	img = ib;
 }
 
-String PackImlData(const Vector<Image>& image)
+String PackImlData(const Vector<ImageIml>& image)
 {
 	StringBuffer block;
-	for(int i = 0; i < image.GetCount(); i++) {
-		const Image& img = image[i];
+	for(const ImageIml& m : image) {
+		const Image& img = m.image;
 		StringStream ss;
-		ss.Put(img.GetResolution() << 6);
+		ss.Put((img.GetResolution() << 6) | m.flags);
 		Size sz = img.GetSize();
 		ss.Put16le(sz.cx);
 		ss.Put16le(sz.cy);

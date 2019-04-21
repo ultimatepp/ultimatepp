@@ -100,7 +100,7 @@ void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tol
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
-String PackImlData(const Vector<Image>& image);
+String PackImlData(const Vector<ImageIml>& image);
 Image  DownSample3x(const Image& src);
 Image  DownSample2x(const Image& src);
 
@@ -151,6 +151,7 @@ private:
 		String          undo;
 		String          redo;
 		bool            exp;
+		dword           flags = 0;
 
 		Slot();
 	};
@@ -341,8 +342,10 @@ private:
 	void  ListCursor();
 	void  PrepareImageDlg(WithImageLayout<TopWindow>& dlg);
 	void  PrepareImageSizeDlg(WithImageSizeLayout<TopWindow>& dlg);
-	void  ImageInsert(int ii, const String& name, const Image& m, bool exp = false);
-	void  ImageInsert(const String& name, const Image& m, bool exp = false);
+	void  SyncDlg(WithImageLayout<TopWindow>& dlg);
+	dword GetFlags(WithImageLayout<TopWindow>& dlg);
+	Slot& ImageInsert(int ii, const String& name, const Image& m, bool exp = false);
+	Slot& ImageInsert(const String& name, const Image& m, bool exp = false);
 	void  Slice();
 	void  InsertImage();
 	void  InsertRemoved(int ii);
@@ -360,6 +363,7 @@ private:
 	void  Drag();
 
 	static FileSel& ImgFile();
+	static String FormatImageName(const Slot& c);
 
 public:
 	virtual void ToolEx(Bar& bar);
@@ -385,11 +389,12 @@ public:
 	};
 
 	void   Clear();
-	void   AddImage(const String& name, const Image& image, bool exp = false);
+	Slot&  AddImage(const String& name, const Image& image, bool exp);
 	int    GetCount() const;
 	Image  GetImage(int ii) const;
 	String GetName(int ii) const;
 	bool   GetExport(int ii) const;
+	dword  GetFlags(int ii) const;
 	bool   FindName(const String& name);
 
 	String GetCurrentName() const;
@@ -409,9 +414,8 @@ public:
 	IconDes();
 };
 
-struct ImlImage {
+struct ImlImage : ImageIml {
 	String name;
-	Image  image;
 	bool   exp;
 };
 

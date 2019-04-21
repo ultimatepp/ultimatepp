@@ -439,6 +439,9 @@ Image Colorize(const Image& img, Color color, int alpha)
 
 Image DarkTheme(const Image& img)
 {
+	if(IsNull(img))
+		return img;
+
 	Image simg = Unmultiply(img);
 	const RGBA *s = simg.begin();
 	const RGBA *e = simg.end();

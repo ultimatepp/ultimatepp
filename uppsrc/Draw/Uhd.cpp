@@ -71,6 +71,8 @@ Image Upscale2x(const Image& src, RGBA bg)
 
 Image Upscale2x(const Image& src)
 {
+	if(IsNull(src))
+		return src;
 	Size s2 = src.Get2ndSpot();
 	Image s;
 	if(s2.cx > 0 || s2.cy > 0)  // When 2nd spot is defined, it is likely Chameleon rescaling item (e.g. button)
@@ -104,6 +106,8 @@ Image Upscale2x(const Image& src)
 
 Image Downscale2x(const Image& src)
 {
+	if(IsNull(src))
+		return src;
 	Size s2 = src.Get2ndSpot(); // see above...
 	Image m = RescaleFilter(src, src.GetSize() / 2, s2.cx > 0 || s2.cy > 0 ? FILTER_BILINEAR : FILTER_LANCZOS3);
 	ImageBuffer h(m);

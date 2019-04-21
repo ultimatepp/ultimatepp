@@ -77,7 +77,7 @@ void Ide::InsertLay(const String& fn)
 	editor.Paste(s.ToWString());
 }
 
-void Ide::InsertIml(const String& fn, String classname)
+void Ide::InsertIml(const Package& pkg, const String& fn, String classname)
 {
 	if(editor.IsReadOnly())
 		return;
@@ -85,11 +85,47 @@ void Ide::InsertIml(const String& fn, String classname)
 		return;
 	String h;
 	h << "#define IMAGECLASS " << classname << "\n"
-	  << "#define IMAGEFILE <" << fn << ">\n"
-	  << "#include <Draw/iml";
-	editor.Paste((h + "_header.h>\n").ToWString());
+	  << "#define IMAGEFILE <" << fn << ">\n";
+	editor.Paste((h + "#include <Draw/iml_header.h>\n").ToWString());
 	ClearClipboard();
-	AppendClipboardText((h + "_source.h>\n"));
+	int q = fn.ReverseFind('.');
+	if(q >= 0) {
+		String fn0 = fn.Mid(0, q);
+
+		Index<String> done;
+		auto Variant = [&](const char *add, const char *m) {
+			if(done.Find(m) >= 0)
+				return;
+			String fn = fn0 + add + ".iml";
+			for(int i = 0; i < pkg.GetCount(); i++) {
+				if(fn.EndsWith('/' + pkg[i])) {
+					h << "#define IMAGEFILE" << m << " <" << fn << ">\n";
+					done.Add(m);
+					break;
+				}
+			}
+		};
+		
+		Variant("HD_DARK", "_DARK_UHD");
+		Variant("HD_DK", "_DARK_UHD");
+		Variant("HDDK", "_DARK_UHD");
+		Variant("HDK", "_DARK_UHD");
+
+		Variant("DARK_UHD", "_DARK_UHD");
+		Variant("DK_HD", "_DARK_UHD");
+		Variant("DK_UHD", "_DARK_UHD");
+		Variant("DKHD", "_DARK_UHD");
+		Variant("DKUHD", "_DARK_UHD");
+	
+		Variant("HD", "_UHD");
+		
+		Variant("DK", "_DARK");
+		Variant("DARK", "_DARK");
+	}
+	
+	h << "#include <Draw/iml_source.h>\n";
+	
+	AppendClipboardText(h);
 	PromptOK("The .cpp part was saved to clipboard");
 }
 
@@ -144,7 +180,7 @@ void Ide::InsertMenu(Bar& bar)
 			if(ext == ".iml") {
 				String c = GetFileTitle(fn);
 				c.Set(0, ToUpper(c[0]));
-				bar.Add(fn + " include", THISBACK2(InsertIml, pp, c.EndsWith("Img") ? c : c + "Img"));
+				bar.Add(fn + " include", [=] { InsertIml(IdeWorkspace().GetPackage(pi), pp, c.EndsWith("Img") ? c : c + "Img"); });
 				n++;
 			}
 			if(ext == ".tpp") {

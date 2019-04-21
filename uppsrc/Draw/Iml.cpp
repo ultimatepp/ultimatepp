@@ -2,15 +2,18 @@
 
 namespace Upp {
 
-Vector<Image> UnpackImlData(const void *ptr, int len)
+Vector<ImageIml> UnpackImlData(const void *ptr, int len)
 {
-	Vector<Image> img;
+	Vector<ImageIml> img;
 	String data = ZDecompress(ptr, len);
 	const char *s = data;
 	while(s + 6 * 2 + 1 <= data.End()) {
+		ImageIml& m = img.Add();
 		ImageBuffer ib(Peek16le(s + 1), Peek16le(s + 3));
-		int q = byte(*s) >> 6;
-		ib.SetResolution(decode(q, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
+		m.flags = byte(*s) & 0x3f;
+		ib.SetResolution(decode(byte(*s) >> 6, 0, IMAGE_RESOLUTION_STANDARD,
+		                                       1, IMAGE_RESOLUTION_UHD,
+		                                       IMAGE_RESOLUTION_NONE));
 		ib.SetHotSpot(Point(Peek16le(s + 5), Peek16le(s + 7)));
 		ib.Set2ndSpot(Point(Peek16le(s + 9), Peek16le(s + 11)));
 		s += 13;
@@ -27,12 +30,12 @@ Vector<Image> UnpackImlData(const void *ptr, int len)
 			s += 4;
 			t++;
 		}
-		img.Add() = ib;
+		m.image = ib;
 	}
 	return img;
 }
 
-Vector<Image> UnpackImlData(const String& d)
+Vector<ImageIml> UnpackImlData(const String& d)
 {
 	return UnpackImlData(~d, d.GetLength());
 }
@@ -58,46 +61,70 @@ void Iml::Set(int i, const Image& img)
 
 static StaticMutex sImlLock;
 
+ImageIml Iml::GetRaw(int mode, int i)
+{
+	Mutex::Lock __(sImlLock);
+	if(data[mode].GetCount()) {
+		int ii = 0;
+		for(;;) {
+			const Data& d = data[mode][ii];
+			if(i < d.count) {
+				static const char *cached_data[4];
+				static Vector<ImageIml> cached[4];
+				if(cached_data[mode] != d.data) { // cache single .iml
+					cached_data[mode] = d.data;
+					cached[mode] = UnpackImlData(d.data, d.len);
+					if(premultiply)
+						for(int i = 0; i < cached[mode].GetCount(); i++)
+							cached[mode][i].image = Premultiply(cached[mode][i].image);
+				}
+				return cached[mode][i];
+			}
+			i -= d.count;
+			ii++;
+		}
+	}
+	return ImageIml();
+}
+
+ImageIml Iml::GetRaw(int mode, const String& id)
+{
+	ASSERT(mode >= 0 && mode < 4);
+	int ii = -1;
+	if(mode == 0)
+		ii = map.Find(id);
+	else {
+		ii = ex_name[mode - 1].Find(id);
+	}
+	return ii >= 0 ? GetRaw(mode, ii) : ImageIml();
+}
+
 Image Iml::Get(int i)
 {
 	IImage& m = map[i];
 	if(!m.loaded) {
 		Mutex::Lock __(sImlLock);
-		if(data.GetCount()) {
-			int ii = 0;
-			for(;;) {
-				const Data& d = data[ii];
-				if(i < d.count) {
-					static const char   *cached_data;
-					static Vector<Image> cached;
-					if(cached_data != d.data) { // cache single .iml
-						cached_data = d.data;
-						cached = UnpackImlData(d.data, d.len);
-						if(premultiply)
-							for(int i = 0; i < cached.GetCount(); i++)
-								cached[i] = Premultiply(cached[i]);
-					}
-					bool gui_image = cached[i].GetResolution() != IMAGE_RESOLUTION_NONE;
-					if(IsUHDMode() && cached[i].GetResolution() == IMAGE_RESOLUTION_STANDARD) {
-						int q = Find(GetId(i) + "__UHD");
-						if(q >= 0) {
-							m.image = Get(q);
-							if(m.image.GetResolution() == IMAGE_RESOLUTION_UHD)
-								break;
-						}
-					}
-					m.image = DPI(cached[i]);
-					if(gui_image && IsDark(SColorPaper()))
-						m.image = DarkTheme(m.image);
-					break;
+		if(!m.loaded) {
+			int mode = IsUHDMode() * GUI_MODE_UHD + IsDarkTheme() * GUI_MODE_DARK;
+			String id = GetId(i);
+			if(mode == GUI_MODE_NORMAL)
+				m.image = GetRaw(0, i).image;
+			else {
+				auto Mode = [&](dword m, const char *s) { return mode & m ? String(s) : String(); };
+				m.image = GetRaw(0, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK")).image;
+				if(IsNull(m.image))
+					m.image = GetRaw(mode, id).image;
+				if(IsNull(m.image)) {
+					ImageIml im = GetRaw(0, id);
+					if((mode & GUI_MODE_UHD) && !(im.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+						im.image = Upscale2x(im.image);
+					if((mode & GUI_MODE_DARK) && !(im.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
+						im.image = DarkTheme(im.image);
+					m.image = im.image;
 				}
-				i -= d.count;
-				ii++;
 			}
+			m.loaded = true;
 		}
-		else
-			m.image = Premultiply(Image(img_init[i]));
-		m.loaded = true;
 	}
 	return m.image;
 }
@@ -120,20 +147,24 @@ Iml::Iml(const Image::Init *img_init, const char **name, int n)
 :	img_init(img_init),
 	name(name)
 {
-#ifdef flagCHECKINIT
-	RLOG("Constructing iml " << *name);
-#endif
 	premultiply = true;
 	Init(n);
 }
 
-void Iml::AddData(const byte *_data, int len, int count)
+void Iml::AddData(const byte *s, int len, int count, int mode)
 {
-	Data& d = data.Add();
-	d.data = (const char *)_data;
+	Data& d = data[mode].Add();
+	d.data = (const char *)s;
 	d.len = len;
 	d.count = count;
-	data.Shrink();
+	data[mode].Shrink();
+}
+
+void Iml::AddId(int mode1, const char *name)
+{
+	DDUMP(name);
+	DDUMP(mode1);
+	ex_name[mode1].Add(name);
 }
 
 static StaticCriticalSection sImgMapLock;
