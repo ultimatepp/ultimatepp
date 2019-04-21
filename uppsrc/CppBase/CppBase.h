@@ -384,21 +384,21 @@ struct CppItem {
 	String         tname;
 	String         ctname;
 	String         using_namespaces;
-	byte           access;
-	byte           kind;
-	int16          at;
-	bool           virt;
+	byte           access = PUBLIC;
+	byte           kind = STRUCT;
+	int16          at = 0;
+	bool           virt = false;
 
-	bool           decla;
-	bool           lvalue;
-	bool           isptr;
+	bool           decla = false;
+	bool           lvalue = false;
+	bool           isptr = false;
 	
-	byte           filetype;
-	bool           impl;
-	int            file;
-	int            line;
+	byte           filetype = FILE_OTHER;
+	bool           impl = false;
+	int            file = 0;
+	int            line = 0;
 
-	bool           qualify;
+	bool           qualify = true;
 
 	bool           IsType() const      { return IsCppType(kind); }
 	bool           IsCode() const      { return IsCppCode(kind); }
@@ -410,8 +410,6 @@ struct CppItem {
 	
 	void           Dump(Stream& s) const;
 	String         ToString() const;
-
-	CppItem()      { at = decla = virt = false; qualify = true; isptr = false; }
 };
 
 String CppItemKindAsString(int kind);

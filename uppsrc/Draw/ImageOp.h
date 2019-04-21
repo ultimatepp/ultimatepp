@@ -216,7 +216,7 @@ Image CachedSetColorKeepAlpha(const Image& img, Color color);
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
 Image Upscale2x(const Image& src);
-Image ImlUpscale2x(const Image& src);
+Image Downscale2x(const Image& src);
 
 void SetUHDMode(bool b = true);
 bool IsUHDMode();

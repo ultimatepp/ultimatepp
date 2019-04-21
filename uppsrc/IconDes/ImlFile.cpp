@@ -238,16 +238,16 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 			p.PassChar(')');
 
 			data.Trim(zlen);
-			Vector<Image> m = UnpackImlData(data, data.GetCount());
+			Vector<ImageIml> m = UnpackImlData(data, data.GetCount());
 			if(m.GetCount() != count || ii + count > name.GetCount())
 				p.ThrowError("");
 			for(int i = 0; i < count; i++) {
 				ImlImage& c = img.Add();
+				(ImageIml &)c = m[i];
 				c.name = name[ii];
 				c.exp = exp[ii++];
-				c.image = m[i];
-				if(c.image.GetResolution() == IMAGE_RESOLUTION_UHD)
-					c.name.TrimEnd("__UHD");
+				c.name.TrimEnd("__DARK");
+				c.name.TrimEnd("__UHD");
 				if(premultiply)
 					c.image = Premultiply(c.image);
 			}
@@ -345,8 +345,10 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
 			out << "IMAGE_ID(" << c.name;
-			if(c.image.GetResolution() == IMAGE_RESOLUTION_UHD && std_name.Find(c.name) >= 0)
+			if(c.flags & IML_IMAGE_FLAG_UHD)
 				out << "__UHD";
+			if(c.flags & IML_IMAGE_FLAG_DARK)
+				out << "__DARK";
 			out << ")";
 			if(c.exp)
 				out << " IMAGE_META(\"exp\", \"\")\r\n";
@@ -356,10 +358,16 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 		while(ii < iml.GetCount()) {
 			int bl = 0;
 			int bn = 0;
-			Vector<Image> bimg;
+			Vector<ImageIml> bimg;
 			while(bl < 4096 && ii < iml.GetCount()) {
 				const ImlImage& c = iml[ii++];
-				bimg.Add(c.image);
+				ImageIml& m = bimg.Add();
+				m.image = c.image;
+				m.flags = c.flags;
+				if(c.flags & IML_IMAGE_FLAG_UHD)
+					SetResolution(m.image, IMAGE_RESOLUTION_UHD);
+				if(c.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))
+					SetResolution(m.image, IMAGE_RESOLUTION_NONE);
 				bl += c.image.GetLength();
 				bn++;
 			}

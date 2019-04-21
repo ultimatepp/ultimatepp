@@ -449,13 +449,13 @@ void IconDes::SaveUndo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<Image> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackImlData(c.undo);
 	int maxn = minmax((single_mode ? 4000000 : 400000) / max(c.image.GetLength(), 1), 4, 128);
 	while(undo.GetCount() > maxn)
 		undo.Remove(0);
-	if(undo.GetCount() && undo.Top() == c.image)
+	if(undo.GetCount() && undo.Top().image == c.image)
 		return;
-	undo.Add(c.image);
+	undo.Add().image = c.image;
 	c.undo = PackImlData(undo);
 	c.redo.Clear();
 	SetBar();
@@ -467,12 +467,12 @@ void IconDes::Undo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<Image> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackImlData(c.undo);
 	if(undo.GetCount() == 0)
 		return;
-	Vector<Image> redo = UnpackImlData(c.redo);
-	redo.Add(c.image);
-	c.image = undo.Pop();
+	Vector<ImageIml> redo = UnpackImlData(c.redo);
+	redo.Add().image = c.image;
+	c.image = undo.Pop().image;
 	c.undo = PackImlData(undo);
 	c.redo = PackImlData(redo);
 	SyncImage();
@@ -484,12 +484,12 @@ void IconDes::Redo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<Image> redo = UnpackImlData(c.redo);
+	Vector<ImageIml> redo = UnpackImlData(c.redo);
 	if(redo.GetCount() == 0)
 		return;
-	Vector<Image> undo = UnpackImlData(c.undo);
-	undo.Add(c.image);
-	c.image = redo.Pop();
+	Vector<ImageIml> undo = UnpackImlData(c.undo);
+	undo.Add().image = c.image;
+	c.image = redo.Pop().image;
 	c.undo = PackImlData(undo);
 	c.redo = PackImlData(redo);
 	SyncImage();
