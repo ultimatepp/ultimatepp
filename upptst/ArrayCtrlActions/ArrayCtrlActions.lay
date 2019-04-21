@@ -1,0 +1,5 @@
+LAYOUT(ArrayCtrlActionsLayout, 348, 248)
+	ITEM(ArrayCtrl, list, LeftPosZ(4, 188).TopPosZ(0, 244))
+	ITEM(ArrayCtrl, action, LeftPosZ(196, 150).TopPosZ(0, 244))
+END_LAYOUT
+
