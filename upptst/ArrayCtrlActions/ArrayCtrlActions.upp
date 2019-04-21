@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	ArrayCtrlActions.h,
+	main.cpp,
+	ArrayCtrlActions.lay;
+
+mainconfig
+	"" = "GUI";
+
