@@ -340,7 +340,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 #endif//DO_LLOG
 
 	if(cd)
-		(void)chdir(cd);
+		(void)!chdir(cd); // that (void)! strange thing is to silence GCC warning
 
 	LLOG("running execve, app = " << app << ", #args = " << args.GetCount());
 	if(envptr) {
