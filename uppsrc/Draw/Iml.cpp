@@ -175,8 +175,6 @@ void Iml::AddData(const byte *s, int len, int count, int mode)
 
 void Iml::AddId(int mode1, const char *name)
 {
-	DDUMP(name);
-	DDUMP(mode1);
 	ex_name[mode1].Add(name);
 }
 
