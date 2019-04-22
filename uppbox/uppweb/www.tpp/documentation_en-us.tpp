@@ -82,6 +82,9 @@ Android builder]&]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/overview`$en`-us^+92 Overview]&]
 [s0;l160;~~~1024; [^topic`:`/`/uppweb`/www`/Tutorials`$en`-us^ Tutorials]&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
+[s0;l160; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us^ Supporting 
+UHD displays and Dark theme]&]
+[s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
 [s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
 Ultimate`+`+  packages]&]
 [s0;l160; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]

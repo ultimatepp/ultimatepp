@@ -1,7 +1,14 @@
+global new/delete overload with mingw?
+
+ONCELOCK
+
+Value compare / StableSort
+
 Allocator > 64KB
 
 CoDo
 
+---------------------------------
 oportunity &&
 
 RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
