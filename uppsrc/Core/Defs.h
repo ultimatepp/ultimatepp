@@ -540,3 +540,11 @@ type& GLOBAL_VP_INIT(type, name, param)
 
 #define GLOBAL_V_INIT(type, name)   GLOBAL_VP_INIT(type, name, init_)
 #define GLOBAL_VAR_INIT(type, name) type& GLOBAL_V_INIT(type, name)
+
+#if __GNUC__ > 6
+	#define NOUBSAN __attribute__((no_sanitize_undefined))
+#elif __clang__ > 6
+	#define NOUBSAN __attribute__((no_sanitize("undefined")))
+#else
+	#define NOUBSAN
+#endif

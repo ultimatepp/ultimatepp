@@ -168,10 +168,10 @@ private:
 	Point        startpoint;
 	Rect         m1refresh;
 	void        (IconDes::*tool)(Point p, dword flags);
-	bool         doselection;
-	bool         selectrect;
+	bool         doselection = false;
+	bool         selectrect = false;
 	int          paste_mode;
-	bool         show_small;
+	bool         show_small = false;
 
 	ScrollBars   sb;
 	Scroller     scroller;

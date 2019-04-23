@@ -235,12 +235,14 @@ String QPDecode(const char *s, bool underscore_to_space)
 	return r;
 }
 
-String Base64Encode(const char *b, const char *e)
+String Base64Encode(const char *_b, const char *_e)
 {
 	static const char encoder[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
 		"0123456789+/";
+	const byte *b = (byte *)_b; // avoid left shift of negative value sanitizer issue
+	const byte *e = (byte *)_e;
 	if(b == e)
 		return Null;
 	int out = (int(e - b) + 2) / 3 * 4;

@@ -91,7 +91,7 @@ public:
 	byte       *PutPtr(int size = 1) { ASSERT(size > 0); if(ptr + size <= wrlim) { byte *p = ptr; ptr += size; return p; }; return NULL; }
 	const byte *GetSzPtr(int& size)  { Term(); size = int(rdlim - ptr); byte *p = ptr; ptr += size; return p; }
 
-	void      Put(const void *data, int size)  { ASSERT(size >= 0); if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }
+	void      Put(const void *data, int size)  { ASSERT(size >= 0); if(size) if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }
 	int       Get(void *data, int size)        { ASSERT(size >= 0); if(ptr + size <= rdlim) { memcpy(data, ptr, size); ptr += size; return size; } return _Get(data, size); }
 
 	void      Put(const String& s)   { Put((const char *) s, s.GetLength()); }
@@ -113,10 +113,10 @@ public:
 	bool      GetAll(Huge& h, size_t size);
 
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
-#ifdef CPU_X86
-	int       Get16()                { if(ptr + 1 >= rdlim) return _Get16(); int q = *(word *)ptr; ptr += 2; return q; }
-	int       Get32()                { if(ptr + 3 >= rdlim) return _Get32(); int q = *(dword *)ptr; ptr += 4; return q; }
-	int64     Get64()                { if(ptr + 7 >= rdlim) return _Get64(); int64 q = *(int64 *)ptr; ptr += 8; return q; }
+#if defined(CPU_UNALIGNED) && defined(CPU_LE)
+	NOUBSAN	int   Get16()            { if(ptr + 1 >= rdlim) return _Get16(); int q = *(word *)ptr; ptr += 2; return q; }
+	NOUBSAN	int   Get32()            { if(ptr + 3 >= rdlim) return _Get32(); int q = *(dword *)ptr; ptr += 4; return q; }
+	NOUBSAN	int64 Get64()            { if(ptr + 7 >= rdlim) return _Get64(); int64 q = *(int64 *)ptr; ptr += 8; return q; }
 #else
 	int       Get16()                { return _Get16(); }
 	int       Get32()                { return _Get32(); }
@@ -143,10 +143,10 @@ public:
 
 	String    GetLine();
 
-#ifdef CPU_X86
-	void      Put16(word q)          { if(ptr + 1 < wrlim) { *(word *)ptr = q; ptr += 2; } else Put(&q, 2); }
-	void      Put32(dword q)         { if(ptr + 3 < wrlim) { *(dword *)ptr = q; ptr += 4; } else Put(&q, 4); }
-	void      Put64(int64 q)         { if(ptr + 7 < wrlim) { *(int64 *)ptr = q; ptr += 8; } else Put(&q, 8); }
+#if defined(CPU_UNALIGNED) && defined(CPU_LE)
+	NOUBSAN void Put16(word q)       { if(ptr + 1 < wrlim) { *(word *)ptr = q; ptr += 2; } else Put(&q, 2); }
+	NOUBSAN void Put32(dword q)      { if(ptr + 3 < wrlim) { *(dword *)ptr = q; ptr += 4; } else Put(&q, 4); }
+	NOUBSAN void Put64(int64 q)      { if(ptr + 7 < wrlim) { *(int64 *)ptr = q; ptr += 8; } else Put(&q, 8); }
 #else
 	void      Put16(word q)          { Put(&q, 2); }
 	void      Put32(dword q)         { Put(&q, 4); }

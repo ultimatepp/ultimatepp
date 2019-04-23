@@ -1,11 +1,11 @@
 #if defined(CPU_UNALIGNED) && defined(CPU_LE) || __ARM_ARCH_7A__
-inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }
-inline int    Peek32le(const void *ptr)  { return *(const dword *)ptr; }
-inline int64  Peek64le(const void *ptr)  { return *(const int64 *)ptr; }
+NOUBSAN inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }
+NOUBSAN inline int    Peek32le(const void *ptr)  { return *(const dword *)ptr; }
+NOUBSAN inline int64  Peek64le(const void *ptr)  { return *(const int64 *)ptr; }
 
-inline void   Poke16le(const void *ptr, int val)    { *(word *)ptr = val; }
-inline void   Poke32le(const void *ptr, int val)    { *(dword *)ptr = val; }
-inline void   Poke64le(const void *ptr, int64 val)  { *(int64 *)ptr = val; }
+NOUBSAN inline void   Poke16le(const void *ptr, int val)    { *(word *)ptr = val; }
+NOUBSAN inline void   Poke32le(const void *ptr, int val)    { *(dword *)ptr = val; }
+NOUBSAN inline void   Poke64le(const void *ptr, int64 val)  { *(int64 *)ptr = val; }
 #else
 inline int    Peek16le(const void *ptr)  { return MAKEWORD(((byte *)ptr)[0], ((byte *)ptr)[1]); }
 inline int    Peek32le(const void *ptr)  { return MAKELONG(Peek16le(ptr), Peek16le((byte *)ptr + 2)); }

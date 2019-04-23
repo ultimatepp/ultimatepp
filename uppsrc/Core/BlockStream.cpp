@@ -17,7 +17,7 @@ void BlockStream::SetBufferSize(dword size)
 	while(size >> (n + 1))
 		n++;
 	pagesize = 1 << n;
-	pagemask = (int64)-1 << n;
+	pagemask = (uint64)-1 << n;
 	if(buffer)
 		delete[] buffer;
 	buffer = new byte[pagesize];

@@ -448,29 +448,27 @@ struct Parser {
 	};
 
 	struct Decla {
-		bool    s_static;
-		bool    s_extern;
-		bool    s_register;
-		bool    s_mutable;
-		bool    s_explicit;
-		bool    s_virtual;
+		bool    s_static = false;
+		bool    s_extern = false;
+		bool    s_register = false;
+		bool    s_mutable = false;
+		bool    s_explicit = false;
+		bool    s_virtual = false;
 		String  name;
-		bool    function;
-		bool    type_def;
-		bool    isfriend;
-		bool    istemplate;
-		bool    istructor;
-		bool    isdestructor;
-		bool    isptr;
-		bool    nofn;
-		bool    oper;
-		bool    castoper;
+		bool    function = false;
+		bool    type_def = false;
+		bool    isfriend = false;
+		bool    istemplate = false;
+		bool    istructor = false;
+		bool    isdestructor = false;
+		bool    isptr = false;
+		bool    nofn = false;
+		bool    oper = false;
+		bool    castoper = false;
 
 		String  tnames;
 		String  type;
 		String  natural;
-
-		Decla();
 	};
 
 	struct Decl : Decla {

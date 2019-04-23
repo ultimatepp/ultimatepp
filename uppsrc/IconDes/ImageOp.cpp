@@ -160,7 +160,7 @@ String PackImlData(const Vector<ImageIml>& image)
 	for(const ImageIml& m : image) {
 		const Image& img = m.image;
 		StringStream ss;
-		ss.Put((img.GetResolution() << 6) | m.flags);
+		ss.Put(((dword)img.GetResolution() << 6) | m.flags);
 		Size sz = img.GetSize();
 		ss.Put16le(sz.cx);
 		ss.Put16le(sz.cy);
