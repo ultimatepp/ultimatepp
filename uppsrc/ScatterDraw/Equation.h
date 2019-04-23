@@ -466,12 +466,12 @@ public:
 	
 	void Sum(const doubleUnit &d) {
 		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
-			throw(t_("Units does not match in summation"));
+			throw Exc(t_("Units does not match in summation"));
 		val += d.val;
 	}
 	void Sub(const doubleUnit &d) {
 		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
-			throw(t_("Units does not match in substraction"));
+			throw Exc(t_("Units does not match in substraction"));
 		val -= d.val;
 	}
 	void Mult(const doubleUnit &d) {
@@ -479,27 +479,35 @@ public:
 		val *= d.val;
 	}
 	void Div(const doubleUnit &d) {
-		unit.Div(d.unit);
 		if (d.val < 1e-100)
-			throw(t_("Division by zero"));
+			throw Exc(t_("Division by zero"));
+		unit.Div(d.unit);
 		val /= d.val;
 	}
 	void Exp(const doubleUnit &d) {
 		if (!(IsNull(d.unit) || d.unit.IsAdim()))
-			throw(t_("Exponent cannot have units"));
+			throw Exc(t_("Exponent cannot have units"));
 		unit.Mult(d.unit);
 		val = pow(val, d.val);
 	}
 	void Sqrt() {
 		if (val < 0) 
-			throw(t_("Negative number sqrt"));
+			throw Exc(t_("Negative number sqrt"));
 		val = sqrt(val);
 		unit.Sqrt();
 	}
+	void ResParallel(const doubleUnit &d) {
+		if (val + d.val < 1e-100)
+			throw Exc(t_("Division by zero"));
+		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
+			throw Exc(t_("Units does not match in resistor parallel"));
+		val = val*d.val/(val + d.val);
+	}	
 	void SetNull()                 {val = Null;}
 	bool IsNullInstance() const    {return IsNull(unit) && IsNull(val);}
 };
 
+template<> inline bool IsNull(const doubleUnit& r)  {return r.val < DOUBLE_NULL_LIM;}
 
 
 class EvalExpr {
@@ -516,7 +524,7 @@ public:
 	
 	void SetConstant(String name, doubleUnit value)			{constants.GetAdd(name) = value;}
 	void SetConstant(int id, doubleUnit value)				{constants[id] = value;}
-	const doubleUnit &GetConstant(String name) 				{return constants.Get(name, Null);}
+	const doubleUnit &GetConstant(String name) 				{return constants.Get(name, doubleUnit(Null));}
 	void GetConstant(int id, String &name, doubleUnit &val)	{name = constants.GetKey(id); val = constants[id];}
 	int GetConstantId(String &name)							{return constants.Find(name);}
 	int GetConstantsCount() 								{return constants.GetCount();}
