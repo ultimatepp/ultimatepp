@@ -177,6 +177,12 @@ void Iml::AddId(int mode1, const char *name)
 	ex_name[mode1].Add(name);
 }
 
+void Iml::ResetAll()
+{
+	for(int i = 0; i < GetImlCount(); i++)
+		GetIml(i).Reset();
+}
+
 static StaticCriticalSection sImgMapLock;
 
 static VectorMap<String, Iml *>& sImgMap()

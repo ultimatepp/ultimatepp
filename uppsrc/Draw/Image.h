@@ -328,6 +328,8 @@ public:
 	void AddId(int mode1, const char *name);
 	void Premultiplied()                   { premultiply = false; }
 	void GlobalFlag(dword f)               { global_flags |= f; }
+	
+	static void ResetAll(); // clears all .iml caches
 };
 
 void   Register(const char *imageclass, Iml& iml);

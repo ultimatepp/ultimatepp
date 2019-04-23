@@ -101,7 +101,9 @@ in the icon designer:&]
 [ {{1666:8334^ [s0; Fixed]
 :: [s0; Image is never scaled or darkened to match current mode.]
 :: [s0; Fixed colors]
-:: [s0; Image is never darkened to match current mode.]
+:: [s0; Image is never darkened to match current mode. Set this if the 
+image looks better in the dark mode without actually converting 
+it.]
 :: [s0; Fixed size]
 :: [s0; Image is never scaled to match current mode.]
 :: [s0; UHD variant]

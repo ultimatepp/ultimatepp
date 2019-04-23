@@ -121,8 +121,7 @@ static bool sUHDMode;
 
 void SetUHDMode(bool b)
 {
-	for(int i = 0; i < GetImlCount(); i++)
-		GetIml(i).Reset();
+	Iml::ResetAll();
 	sUHDMode = b;
 }
 
