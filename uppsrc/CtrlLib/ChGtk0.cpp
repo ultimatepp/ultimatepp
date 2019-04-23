@@ -245,6 +245,14 @@ Image GetGTK0(GtkWidget *widget, int state, int shadow, const char *detail, int 
 
 	if(chgtkspy__)
 		chgtkspy__(G_OBJECT_TYPE_NAME(widget), state, shadow, detail, type, cx, cy, sLastImage);
+
+#if 1
+	if(findarg(type & 15, GTK_CHECK, GTK_OPTION, GTK_ICON) >= 0 &&
+	   IsUHDMode() &&
+	   sLastImage.GetWidth() < 23)
+	   sLastImage = Upscale2x(sLastImage);
+#endif
+
 	return sLastImage;
 }
 
