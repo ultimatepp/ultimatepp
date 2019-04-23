@@ -4,6 +4,8 @@ using namespace Upp;
 
 
 GLCanvas::GLCanvas() {
+	WhenGLPaint = THISBACK(OnPaint);
+	
 	WantFocus();
 	
 	trackBall.Init(this);
@@ -76,7 +78,9 @@ void GLCanvas::Layout() {
 	trackBall.Reshape(GetSize().cx, GetSize().cy);
 }
 
-void GLCanvas::GLPaint() {
+void GLCanvas::OnPaint() {	
+	MemoryIgnoreLeaksBlock __; 
+	
 	glClearColor(1, 1, 1, 0);
 	glClearDepth(0); 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

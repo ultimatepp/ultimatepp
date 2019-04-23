@@ -21,10 +21,10 @@ void TrackBall::Init(Ctrl *ow) {
 }
 
 void TrackBall::Matrix() {
-	GLfloat m[4][4];
+	GLdouble m[4][4];
 
 	build_rotmatrix(m, curquat);
-	glMultMatrixf(&m[0][0]);
+	glMultMatrixd(&m[0][0]);
 }
 
 void TrackBall::Reshape(int w, int h) {

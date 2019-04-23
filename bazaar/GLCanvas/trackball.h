@@ -21,13 +21,13 @@ public:
 
 	virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
 	
-	float curquat[4];
+	double curquat[4];
 	
 private:
 	Ctrl *owner;
 
-//	float curquat[4];
-	float lastquat[4];
+//	double curquat[4];
+	double lastquat[4];
 	int beginx, beginy;
 	
 	int width, height;

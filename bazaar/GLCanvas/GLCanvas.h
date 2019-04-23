@@ -48,8 +48,12 @@ public:
 		
 	Function <void()> WhenPaint;	
 	
-	virtual void GLPaint();	
-
+	void OnPaint();	
+	
+	virtual void GLResize(int w, int h) {
+		glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	}
+	
 private:
 	void PaintSurface0(Surface &surf, Color linCol, bool simX, bool simY) {
 		double xsig = simX ? -1 : 1;
