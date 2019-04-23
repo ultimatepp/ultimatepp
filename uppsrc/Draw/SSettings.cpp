@@ -27,6 +27,7 @@ bool dark_theme__;
 
 CH_VAR0(ChColor, Color, SColorPaper, White())
 	dark_theme__ = IsDark(SColorPaper());
+	Iml::ResetAll();
 CH_END
 
 CH_COLOR(SColorFace, LtGray());
