@@ -44,7 +44,7 @@ frFR("")
 
 T_("Unknown error")
 caES("")
-esES("")
+esES("Error desconocido")
 euES("")
 frFR("")
 
@@ -107,7 +107,7 @@ frFR("")
 
 T_("Weibull cumulative")
 caES("")
-esES("")
+esES("Weibull acumulativo")
 euES("")
 frFR("")
 
@@ -131,45 +131,36 @@ frFR("")
 
 T_("Units does not match in summation")
 caES("")
-esES("")
+esES("Unidades no encajan en la suma")
 euES("")
 frFR("")
 
 T_("Units does not match in substraction")
 caES("")
-esES("")
+esES("Unidades no encajan en la resta")
 euES("")
 frFR("")
 
 T_("Division by zero")
 caES("")
-esES("")
+esES("Divisi\303\263n entre cero")
 euES("")
 frFR("")
 
 T_("Exponent cannot have units")
 caES("")
-esES("")
+esES("Exponente no puede tener unidades")
 euES("")
 frFR("")
 
 T_("Negative number sqrt")
 caES("")
-esES("")
+esES("Raiz cuadrada de n\303\272mero negativo")
 euES("")
 frFR("")
 
-
-// Obsolete
-
-T_("No series")
+T_("Units does not match in resistor parallel")
 caES("")
-esES("Sin series")
-euES("")
-frFR("")
-
-T_("Divide by zero")
-caES("")
-esES("Divisi\303\263n entre cero")
+esES("Unidades no encajan en resistencias en paralelo")
 euES("")
 frFR("")

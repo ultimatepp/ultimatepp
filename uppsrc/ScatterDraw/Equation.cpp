@@ -341,6 +341,8 @@ doubleUnit EvalExpr::Mul(CParser& p) {
 	for(;;) {
 		if(p.Char('*'))
 			x.Mult(Pow(p));
+		else if (p.Char2('|', '|')) 
+			x.ResParallel(Pow(p));
 		else if(memcmp(p.GetPtr(), "·", strlen("·")) == 0) {
 			CParser::Pos pos = p.GetPos();
 			pos.ptr += strlen("·");
@@ -397,8 +399,10 @@ doubleUnit EvalExpr::Eval(String line) {
 			}
 		} else
 			return Exp(p);
-	}
-	catch(CParser::Error e) {
+	} catch(CParser::Error e) {
+		lastError = e;
+		return Null;
+	} catch(Exc e) {
 		lastError = e;
 		return Null;
 	}
@@ -494,6 +498,9 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 			return ExpStr(p, numDigits);
 	} catch(CParser::Error e) {
 		lastError = Format(t_("Error evaluating '%s': %s"), line, e);
+		return Null;
+	} catch(Exc e) {
+		lastError = Format(t_("Error: %s"), e);
 		return Null;
 	} catch(String e) {
 		lastError = Format(t_("Error: %s"), e);
