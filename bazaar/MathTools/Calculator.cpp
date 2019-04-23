@@ -202,8 +202,10 @@ String EvalExpr2::Eval2(String line, int numDecimals, int tabChars) {
 		
 		String comment = TrimBoth(line.Mid(int(p.GetPtr() - line.Begin())));
 		newstr << TrimBoth(comment);	
-	}
-	catch(CParser::Error e) {
+	} catch(CParser::Error e) {
+		lastError = e;
+		newstr << line << " " << Format(t_("Error %s"), GetLastError());
+	} catch(Exc e) {
 		lastError = e;
 		newstr << line << " " << Format(t_("Error %s"), GetLastError());
 	}
@@ -231,7 +233,7 @@ void TabCalculator::OnChange() {
 		int errPos = str.Find(t_("Error"));
 		if (errPos >= 0)
 			str = TrimRight(str.Left(errPos));
-			
+		
 		String newstr = eval.Eval2(str, numDecimals, tabChars);
 		code.Insert(pos0, newstr);
 	}
