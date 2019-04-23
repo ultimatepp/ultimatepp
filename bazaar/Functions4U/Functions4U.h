@@ -667,12 +667,21 @@ void Shuffle(C &data, int randomSeed = Null) {
 }
 
 template <class Range, class V>
-void FindAdd(Range& r, const V& value, int from = 0)
-{
+void FindAdd(Range& r, const V& value, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
 		if(r[i] == value) 
 			return;
 	r.Add(value);
+}
+
+template <class Range>
+bool Compare(Range& a, Range& b, int from = 0) {
+	if (a.GetCount() != b.GetCount())
+		return false;
+	for(int i = from; i < a.GetCount(); i++)
+		if(a[i] != b[i]) 
+			return false;
+	return true;
 }
 
 class RealTimeStop {  
@@ -873,5 +882,7 @@ private:
 int LevenshteinDistance(const char *s, const char *t);
 int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength = 256);
 int SentenceSimilitude(const char *s, const char *t);
+
+#define x_(y)	String(y)
 
 #endif
