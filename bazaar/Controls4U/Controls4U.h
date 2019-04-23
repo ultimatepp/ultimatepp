@@ -26,7 +26,7 @@ typedef EditFileFolder CLASSNAME;
 
 protected:
 	FrameLeft<Button> butBrowseLeft, butLeft, butRight, butUp;
-	FrameRight<Button> butBrowseRight;
+	FrameRight<Button> butBrowseRight, butFolder;
 	FrameRight<Button> butGo;
 	
 	FileSel_ *pfs;
@@ -64,11 +64,13 @@ public:
 	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;}
 	EditFileFolder &SetTitle(const char *_title)	{title = _title; return *this;}
 	EditFileFolder &UseHistory(bool use);
+	EditFileFolder &UseOpenFolder(bool use);
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
 	EditFileFolder &UseBrowseRight(bool use);
 	EditFileFolder &UseGo(bool use);
 	EditFileFolder &BrowseRightWidth(int w)			{butBrowseRight.Width(w); return *this;}
+	EditFileFolder &BrowseOpenFolderWidth(int w)	{butFolder.Width(w);  return *this;}
 	virtual void SetData(const Value& data);
 	
 	Callback WhenChange;

@@ -46,7 +46,6 @@ void EditFileFolder::Init() {
 	EditString::AddFrame(butBrowseRight);
 	butBrowseRight.SetImage(Controls4UImg::Folder());
 	butBrowseRight <<= THISBACK(DoBrowse);
-	butBrowseRight.Tip(t_("Browse"));
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
 	butRight.Tip(t_("Go to previous"));
@@ -62,6 +61,7 @@ void EditFileFolder::Init() {
 	//EditString::AddFrame(butGo);
 	butGo.SetImage(CtrlImg::SmallRight()); 
 	butGo <<= THISBACK1(DoGo, true); 
+	butFolder.Tip(t_("Open folder"));
 	isFile = isLoad = true;
 	histInd = -1;
 	pfs = 0;
@@ -77,6 +77,15 @@ void EditFileFolder::InitFs() {
 EditFileFolder::~EditFileFolder() {
 	if (pfs)
 		delete pfs;
+}
+
+EditFileFolder &EditFileFolder::UseOpenFolder(bool use) {
+	if (use) {
+		EditString::InsertFrame(0, butFolder);
+	} else {
+		EditString::RemoveFrame(butFolder);
+	}
+	return *this;
 }
 	
 EditFileFolder &EditFileFolder::UseHistory(bool use) {
@@ -222,12 +231,16 @@ EditFile::EditFile() {
 	isFile = true;		
 	title = t_("Select file");	
 	EditFileFolder();
+	butBrowseRight.Tip(t_("Browse file"));
+	butFolder.WhenAction = [&] {LaunchWebBrowser(GetFileFolder(String(GetData())));};
 }
 
 EditFolder::EditFolder() {
 	isFile = false;	
 	title = t_("Select directory");	
 	EditFileFolder();
+	butBrowseRight.Tip(t_("Browse folder"));
+	butFolder.WhenAction = [&] {LaunchWebBrowser(GetData());};
 }
 
 bool SetFirstChild(Ctrl *ctrl) {
