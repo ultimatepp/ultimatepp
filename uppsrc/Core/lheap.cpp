@@ -43,7 +43,7 @@ void Heap::GlobalLInit()
 		}
 		k = LBINS - 1;
 		for(int i = MAXBLOCK / 8; i >= 0; i--) {
-			while(i * 8 < BinSz[k] && k >= 0) k--;
+			while(k >= 0 && i * 8 < BinSz[k]) k--;
 			BlBin[i] = k;
 		}
 		BlBin[0] = 0;

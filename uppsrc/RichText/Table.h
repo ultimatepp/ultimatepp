@@ -117,7 +117,7 @@ private:
 	};
 
 	struct TabLayout : Layout {
-		bool              hasheader;
+		bool              hasheader = false;
 		Layout            header;
 		Size              sz;
 		PageY             py;

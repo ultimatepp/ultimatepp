@@ -352,15 +352,6 @@ bool Parser::IsNamespace(const String& scope)
 	return memcmp(~context.ns, ~scope, l) == 0 && findarg(context.ns[l], '\0', ':') >= 0;
 }
 
-Parser::Decla::Decla()
-{
-	function = type_def = false;
-	s_static = s_register = s_extern = s_mutable = s_explicit = s_virtual = false;
-	isfriend = istemplate = istructor = isptr = nofn = false;
-	castoper = oper = false;
-}
-
-
 bool Parser::Key(int code)
 {
 	if(lex == code) {

@@ -295,8 +295,9 @@ void HashBase::Swap(HashBase& b) {
 }
 
 
-#ifdef CPU_X86
+#ifdef CPU_UNALIGNED
 
+NOUBSAN // CPU supports unaligned memory access
 unsigned memhash(const void *ptr, size_t count)
 {
 	unsigned hash = 1234567890U;

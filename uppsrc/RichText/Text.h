@@ -2,7 +2,7 @@ class RichText : public RichTxt, public DeepCopyOption<RichText> {
 	mutable Mutex mutex; // To cover all those laze evaluation scenarios
 	RichStyles    style;
 	String        footer_hack; // ugly hack
-	bool          nolinks; // another ugly hack
+	bool          nolinks = false; // another ugly hack
 
 	void       Init();
 

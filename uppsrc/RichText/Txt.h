@@ -114,9 +114,9 @@ protected:
 	int  r_parti;
 	int  r_paraocx;
 	int  r_paraocy;
-	bool r_keep;
-	bool r_keepnext;
-	bool r_newpage;
+	bool r_keep = false;
+	bool r_keepnext = false;
+	bool r_newpage = false;
 
 	void       Init();
 

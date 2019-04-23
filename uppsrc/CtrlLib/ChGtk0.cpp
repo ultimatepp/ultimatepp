@@ -473,6 +473,7 @@ void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int
 	GtkIml(uii + 3, w, shadow, 4, detail, type, cx, cy, rect, maxcx, maxcy);
 }
 
+NOUBSAN // we are treating fg and following GdkColor arrays as single array
 Color ChGtkColor(int ii, GtkWidget *widget)
 {
 	GdkColor cc = ((GtkStyle *)gtk_widget_get_style(widget))->fg[ii];

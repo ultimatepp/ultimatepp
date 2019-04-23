@@ -69,7 +69,7 @@ Zoom RichEdit::GetZoom() const
 
 Size RichEdit::GetZoomedPage() const
 {
-	return Size(GetTextRect().Width(), pagesz.cy == INT_MAX ? INT_MAX : GetZoom() * pagesz.cy);
+	return Size(GetTextRect().Width(), pagesz.cy == INT_MAX ? INT_MAX / 2 : GetZoom() * pagesz.cy);
 }
 
 int  RichEdit::GetPosY(PageY py) const

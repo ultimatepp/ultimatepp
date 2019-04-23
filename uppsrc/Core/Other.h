@@ -284,20 +284,20 @@ protected:
 	void LPN(int i)                      { link_prev[i]->link_next[i] = link_next[i]->link_prev[i] = (T *)this; }
 
 public:
-	T       *GetPtr()                    { return (T *) this; }
+	NOUBSAN	T *GetPtr()                  { return (T *) this; }
 	const T *GetPtr() const              { return (const T *) this; }
 	T       *GetNext(int i = 0)          { return link_next[i]; }
 	T       *GetPrev(int i = 0)          { return link_prev[i]; }
 	const T *GetNext(int i = 0) const    { return link_next[i]; }
 	const T *GetPrev(int i = 0) const    { return link_prev[i]; }
 
-	void LinkSelf(int i = 0)             { link_next[i] = link_prev[i] = (T *)this; }
+	NOUBSAN	void LinkSelf(int i = 0)             { link_next[i] = link_prev[i] = (T *)this; }
 	void LinkSelfAll()                   { for(int i = 0; i < N; i++) LinkSelf(i); }
 	void Unlink(int i = 0)               { link_next[i]->link_prev[i] = link_prev[i]; link_prev[i]->link_next[i] = link_next[i];
 	                                       LinkSelf(i); }
 	void UnlinkAll()                     { for(int i = 0; i < N; i++) Unlink(i); }
-	void LinkBefore(Link *n, int i = 0)  { link_next[i] = (T *)n; link_prev[i] = link_next[i]->link_prev[i]; LPN(i); }
-	void LinkAfter(Link *p, int i = 0)   { link_prev[i] = (T *)p; link_next[i] = link_prev[i]->link_next[i]; LPN(i); }
+	NOUBSAN	void LinkBefore(Link *n, int i = 0)  { link_next[i] = (T *)n; link_prev[i] = link_next[i]->link_prev[i]; LPN(i); }
+	NOUBSAN	void LinkAfter(Link *p, int i = 0)   { link_prev[i] = (T *)p; link_next[i] = link_prev[i]->link_next[i]; LPN(i); }
 
 	T   *InsertNext(int i = 0)           { T *x = new T; x->LinkAfter(this, i); return x; }
 	T   *InsertPrev(int i = 0)           { T *x = new T; x->LinkBefore(this, i); return x; }
