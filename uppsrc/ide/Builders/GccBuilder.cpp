@@ -494,7 +494,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << (!HasFlag("OSX") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)
 				lnk << " -L" << GetHostPathQ(libpath[i]);
-			if(!HasFlag("OSX") && !HasFlag("COCOA"))
+			if(!HasFlag("OSX") && !HasFlag("COCOA") && !HasFlag("CLANG"))
 				lnk << " -Wl,-O,2 ";
 			MergeWith(lnk, " ", linkoptions);
 			String lfilename;
