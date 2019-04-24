@@ -378,7 +378,7 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
 		if(SUCCEEDED(hres)) {
 			hres = ppf->Load(ToSystemCharsetW(linkpath), STGM_READ);
-			if(SUCCEEDED(hres))
+			if(SUCCEEDED(hres)) {
 				if(path) {
 					char fileW[_MAX_PATH] = {0};
 					psl->GetPath(fileW, _MAX_PATH, NULL, 0);
@@ -386,6 +386,7 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 				}
 				else
 					ret = true;
+			}
 			ppf->Release();
 		}
 		psl->Release();

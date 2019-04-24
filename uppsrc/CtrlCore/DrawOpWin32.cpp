@@ -179,7 +179,7 @@ static void DrawPolyPolyPolygonRaw(
 	{
 		int poly = *disjunct_polygon_counts;
 		int sub = 1;
-		if(*subpolygon_counts < poly)
+		if(*subpolygon_counts < poly) {
 			if(disjunct_polygon_count_count > 1)
 			{
 				const int *se = subpolygon_counts;
@@ -190,6 +190,7 @@ static void DrawPolyPolyPolygonRaw(
 			}
 			else
 				sub = subpolygon_count_count;
+		}
 		ASSERT(sizeof(POINT) == sizeof(Point)); // modify algorithm when not
 		if(sub == 1)
 			Polygon(draw, (const POINT *)vertices, poly);
