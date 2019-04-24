@@ -1269,7 +1269,7 @@ String DirectoryUp(String& dir, bool basedir)
 			}
 		else {
 #ifdef PLATFORM_WIN32
-			if(s.GetLength() && s[1] == ':')
+			if(s.GetLength() && s[1] == ':') {
 				if(i > 3) {
 					dir = s.Mid(0, i);
 					name = s.Mid(i + 1);
@@ -1278,7 +1278,8 @@ String DirectoryUp(String& dir, bool basedir)
 					dir = s.Mid(0, 3);
 					name = s.Mid(3);
 				}
-			if(s.GetLength() && s[0] == DIR_SEP && s[1] == DIR_SEP)
+			}
+			if(s.GetLength() && s[0] == DIR_SEP && s[1] == DIR_SEP) {
 				if(i > 2) {
 					dir = s.Mid(0, i);
 					name = s.Mid(i + 1);
@@ -1287,6 +1288,7 @@ String DirectoryUp(String& dir, bool basedir)
 					dir.Clear();
 					name = s;
 				}
+			}
 #endif
 #ifdef PLATFORM_POSIX
 			if(i == 0 && s.GetLength() > 1) {

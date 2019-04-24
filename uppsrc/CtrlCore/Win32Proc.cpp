@@ -387,7 +387,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_SETFOCUS:
 		LLOG("WM_SETFOCUS " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-		if(this != focusCtrlWnd)
+		if(this != focusCtrlWnd) {
 			if(IsEnabled()) {
 				LLOG("WM_SETFOCUS -> ActivateWnd: this != focusCtrlWnd, this = "
 					<< Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
@@ -410,6 +410,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 					::SetFocus(NULL);
 				}
 			}
+		}
 		LLOG("//WM_SETFOCUS " << (void *)hwnd << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		return 0L;
 	case WM_KILLFOCUS:
@@ -472,7 +473,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 */
 	}
-	if(hwnd)
+	if(hwnd) {
 #ifdef PLATFORM_WINCE
 		return DefWindowProc(hwnd, message, wParam, lParam);
 #else
@@ -481,6 +482,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		else
 			return DefWindowProc(hwnd, message, wParam, lParam);
 #endif
+	}
 	return 0L;
 }
 

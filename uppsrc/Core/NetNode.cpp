@@ -97,12 +97,13 @@ Array<NetNode> NetNode::Enum0(HANDLE hEnum)
 				else
 					nn.name = FromSystemCharset(s);
 			}
-			if(n.lpComment && *n.lpComment)
+			if(n.lpComment && *n.lpComment) {
 				if(nn.name.GetCount())
 					nn.name = String().Cat() << FromSystemCharset(n.lpComment)
 					                         << " (" << nn.name << ")";
 				else
 					nn.name = FromSystemCharset(n.lpComment);
+			}
 			if(!(n.dwUsage & RESOURCEUSAGE_CONTAINER))
 				nn.path = FromSystemCharset(n.lpRemoteName);
 		}

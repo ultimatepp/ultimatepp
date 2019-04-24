@@ -75,13 +75,12 @@ void TopWindow::SyncTitle()
 	GuiLock __;
 	LLOG("TopWindow::SyncTitle0 " << UPP::Name(this));
 	HWND hwnd = GetHWND();
-#ifndef PLATFORM_WINCE
-	if(hwnd)
+	if(hwnd) {
 		if(IsWindowUnicode(hwnd))
 			::SetWindowTextW(hwnd, (const WCHAR*)~title);
 		else
-#endif
 			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
+	}
 }
 
 void TopWindow::DeleteIco()
@@ -365,8 +364,8 @@ TopWindow& TopWindow::TopMost(bool b, bool stay_top)
 {
 	GuiLock __;
 	LLOG("TopWindow::TopMost " << UPP::Name(this));
-	HWND hwnd;
-	if(hwnd = GetHWND())
+	HWND hwnd = GetHWND();
+	if(hwnd)
 		SetWindowPos(hwnd, b ? HWND_TOPMOST : (stay_top ? HWND_NOTOPMOST : HWND_BOTTOM),
 		             0,0,0,0,SWP_NOMOVE|SWP_NOSIZE );
 	return ExStyle(b ? GetExStyle() | WS_EX_TOPMOST : GetExStyle() & ~WS_EX_TOPMOST);
