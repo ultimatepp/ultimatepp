@@ -148,12 +148,15 @@ guint           Ctrl::dnd_time;
 String          Ctrl::dnd_data;
 String          Ctrl::dnd_data_fmt;
 bool            Ctrl::dnd_data_wait;
+bool            Ctrl::dnd_events;
 
 Ctrl *Ctrl::DragWnd(gpointer user_data)
 {
 	if(dnd_data_wait) // Do nothing if waiting for data
 		return NULL;
+	dnd_events = true; // prevent mouse up messages to be issued
 	ProcessEvents0(NULL, false); // process any events that are already fetched
+	dnd_events = false;
 	return GetTopCtrlFromId(user_data);
 }
 
@@ -284,7 +287,7 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 		GdkModifierType mod;
 		gdk_window_get_pointer(gdk_get_default_root_window(), &mx, &my, &mod);
 		CurrentState = mod;
-		CurrentMousePos = Point(x, y) + w->GetScreenRect().TopLeft();	
+		CurrentMousePos = Point(x, y) + w->GetScreenRect().TopLeft();
 		w->DnD(CurrentMousePos, clip);
 	}
 	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE
