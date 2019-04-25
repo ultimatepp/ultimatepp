@@ -138,7 +138,6 @@ void SaveGroupInc(const String& grouppath)
 		if(ff.IsFile()) {
 			String p = ff.GetPath();
 			String ext = GetFileExt(p);
-			DDUMP(ext);
 			if(ext == ".tppi")
 				tppi.Add(p);
 			if(ext == ".tpp")
