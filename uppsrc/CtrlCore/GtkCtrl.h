@@ -105,6 +105,7 @@ _DBG_
 	static String          dnd_data;
 	static String          dnd_data_fmt;
 	static bool            dnd_data_wait;
+	static bool            dnd_events;
 	static GtkWidget      *dnd_widget;
 	static GdkDragContext *dnd_context;
 	static guint           dnd_time;

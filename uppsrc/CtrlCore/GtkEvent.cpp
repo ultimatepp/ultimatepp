@@ -377,6 +377,7 @@ void Ctrl::Proc()
 		if(ignoreclick)
 			EndIgnore();
 		else
+		if(!dnd_events)
 			GtkButtonEvent(UP);
 		break;
 	case GDK_SCROLL: {
