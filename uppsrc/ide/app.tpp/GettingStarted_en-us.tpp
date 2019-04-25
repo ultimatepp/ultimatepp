@@ -40,7 +40,7 @@ topic "Getting started with TheIDE";
 [s3;:1: 1. Launching TheIDE&]
 [s5; After installing U`+`+ find the appropriate TheIDE executable 
 file and launch it. By default the file should be localized in 
-the installation directory. However, it can depends on the operating 
+the installation directory. However, it depends on the operating 
 system and the way you installed U`+`+.&]
 [s3;:2: 2. Assemblies and Packages&]
 [s5; In this section we show how to create your own main package. 

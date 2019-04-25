@@ -58,10 +58,6 @@ TOPIC("GettingStarted_en-us")
 #include "GettingStarted_en-us.tppi"
 END_TOPIC
 
-TOPIC("GettingStarted_ru-ru")
-#include "GettingStarted_ru-ru.tppi"
-END_TOPIC
-
 TOPIC("IconDes_en-us")
 #include "IconDes_en-us.tppi"
 END_TOPIC
@@ -86,24 +82,12 @@ TOPIC("PackagesAssembliesAndNests_en-us")
 #include "PackagesAssembliesAndNests_en-us.tppi"
 END_TOPIC
 
-TOPIC("PackagesAssembliesAndNests_ru-ru")
-#include "PackagesAssembliesAndNests_ru-ru.tppi"
-END_TOPIC
-
-TOPIC("Sponsor_en-us")
-#include "Sponsor_en-us.tppi"
-END_TOPIC
-
 TOPIC("Topic_en-us")
 #include "Topic_en-us.tppi"
 END_TOPIC
 
 TOPIC("cmdline_en-us")
 #include "cmdline_en-us.tppi"
-END_TOPIC
-
-TOPIC("esc_en-us")
-#include "esc_en-us.tppi"
 END_TOPIC
 
 TOPIC("importext_en-us")
@@ -114,24 +98,12 @@ TOPIC("index_en-us")
 #include "index_en-us.tppi"
 END_TOPIC
 
-TOPIC("index_ru-ru")
-#include "index_ru-ru.tppi"
-END_TOPIC
-
 TOPIC("install_en-us")
 #include "install_en-us.tppi"
 END_TOPIC
 
 TOPIC("install_mac_en-us")
 #include "install_mac_en-us.tppi"
-END_TOPIC
-
-TOPIC("install_ru-ru")
-#include "install_ru-ru.tppi"
-END_TOPIC
-
-TOPIC("macos_en-us")
-#include "macos_en-us.tppi"
 END_TOPIC
 
 TOPIC("macros_en-us")

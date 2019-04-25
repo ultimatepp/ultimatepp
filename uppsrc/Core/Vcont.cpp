@@ -1,5 +1,7 @@
 #include "Core.h"
 
+#define LLOG(x)
+
 namespace Upp {
 
 struct Vector_ {
@@ -78,10 +80,36 @@ int64 NewInVectorSerial()
 	return x;
 }
 
+
 thread_local int64 invector_cache_serial_;
 thread_local int   invector_cache_blki_;
 thread_local int   invector_cache_offset_;
 thread_local int   invector_cache_end_;
+
+void SetInvectorCache__(int64 serial, int blki, int offset, int end)
+{
+	invector_cache_serial_ = serial;
+	invector_cache_blki_ = blki;
+	invector_cache_offset_ = offset;
+	invector_cache_end_ = end;
+}
+
+void ClearInvectorCache__()
+{
+	invector_cache_serial_ = 0;
+}
+
+int FindInvectorCache__(int64 serial, int& pos, int& off)
+{
+	if(invector_cache_serial_ == serial && pos >= invector_cache_offset_ &&
+	   pos < invector_cache_end_) {
+		LLOG("Found in cache, serial: " << invector_cache_serial_ << ", offset: " << invector_cache_offset_ << ", end: " << invector_cache_end_);
+		off = invector_cache_offset_;
+		pos -= off;
+		return invector_cache_blki_;
+	}
+	return -1;
+}
 
 void Bits::Clear()
 {

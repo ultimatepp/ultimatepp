@@ -34,10 +34,9 @@ void InVector<T>::Clear()
 	ClearCache();
 }
 
-extern thread_local int64 invector_cache_serial_;
-extern thread_local int   invector_cache_blki_;
-extern thread_local int   invector_cache_offset_;
-extern thread_local int   invector_cache_end_;
+void SetInvectorCache__(int64 serial, int blki, int offset, int end);
+void ClearInvectorCache__();
+int  FindInvectorCache__(int64 serial, int& pos, int& off);
 
 template <class T>
 force_inline void InVector<T>::SetCache(int blki, int offset) const
@@ -45,29 +44,20 @@ force_inline void InVector<T>::SetCache(int blki, int offset) const
 #ifdef flagIVTEST
 	Check(0, 0);
 #endif
-	invector_cache_serial_ = serial;
-	invector_cache_blki_ = blki;
-	invector_cache_offset_ = offset;
-	invector_cache_end_ = offset + data[blki].GetCount();
+	SetInvectorCache__(serial, blki, offset, offset + data[blki].GetCount());
 }
 
 template <class T>
 force_inline void InVector<T>::ClearCache() const
 {
-	invector_cache_serial_ = 0;
+	ClearInvectorCache__();
 }
 
 template <class T>
 force_inline int InVector<T>::FindBlock(int& pos, int& off) const
 {
-	if(invector_cache_serial_ == serial && pos >= invector_cache_offset_ &&
-	   pos < invector_cache_end_) {
-		LLOG("Found in cache, serial: " << invector_cache_serial_ << ", offset: " << invector_cache_offset_ << ", end: " << invector_cache_end_);
-		off = invector_cache_offset_;
-		pos -= off;
-		return invector_cache_blki_;
-	}
-	return FindBlock0(pos, off);
+	int i = FindInvectorCache__(serial, pos, off);
+	return i >= 0 ? i : FindBlock0(pos, off);
 }
 
 template <class T>
