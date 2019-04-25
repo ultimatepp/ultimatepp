@@ -131,19 +131,32 @@ void SaveGroupInc(const String& grouppath)
 	if(IsNull(packagedir) || IsNull(group))
 		return;
 	String gh;
-	FindFile ff(AppendFileName(grouppath, "*.tppi"));
-	Vector<String> files;
+	FindFile ff(AppendFileName(grouppath, "*.*"));
+	Vector<String> tppi;
+	Index<String> tpp;
 	while(ff) {
 		if(ff.IsFile()) {
-			files.Add(ff.GetName());
+			String p = ff.GetPath();
+			String ext = GetFileExt(p);
+			DDUMP(ext);
+			if(ext == ".tppi")
+				tppi.Add(p);
+			if(ext == ".tpp")
+				tpp.Add(GetFileTitle(p));
 		}
 		ff.Next();
 	}
-	Sort(files);
-	for(int i = 0; i < files.GetCount(); i++) {
-		gh << "TOPIC(" << AsCString(GetFileTitle(files[i])) << ")\r\n";
-		gh << "#include \"" << files[i] << "\"\r\n";
-		gh << "END_TOPIC\r\n\r\n";
+	Sort(tppi);
+	for(String p : tppi) {
+		String f = GetFileName(p);
+		String t = GetFileTitle(f);
+		if(tpp.Find(t) >= 0) {
+			gh << "TOPIC(" << AsCString(t) << ")\r\n";
+			gh << "#include \"" << f << "\"\r\n";
+			gh << "END_TOPIC\r\n\r\n";
+		}
+		else
+			DeleteFile(p);
 	}
 	String fn = AppendFileName(AppendFileName(packagedir, group + ".tpp"), "all.i");
 	if(LoadFile(fn) != gh) {

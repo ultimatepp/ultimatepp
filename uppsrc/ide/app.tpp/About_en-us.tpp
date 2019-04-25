@@ -4074,4 +4074,107 @@ read]&]
 [s0;%- [C1 <http://www.gnu.org/philosophy/why`-not`-lgpl.html>.]&]
 [s0;C1%- ]}}&]
 [s0;C1%- &]
+[s0;C1%- &]
+[s0;%- [C1 LLVM, lld]&]
+[s0;C1%- &]
+[ {{10000@(255.255.192) [s0;%- [C1 `=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=
+`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=]&]
+[s0;%- [C1 LLVM Release License]&]
+[s0;%- [C1 `=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=
+`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=]&]
+[s0;%- [C1 University of Illinois/NCSA]&]
+[s0;%- [C1 Open Source License]&]
+[s0;C1%- &]
+[s0;%- [C1 Copyright (c) 2003`-2017 University of Illinois at Urbana`-Champaign.]&]
+[s0;%- [C1 All rights reserved.]&]
+[s0;C1%- &]
+[s0;%- [C1 Developed by:]&]
+[s0;C1%- &]
+[s0;%- [C1     LLVM Team]&]
+[s0;C1%- &]
+[s0;%- [C1     University of Illinois at Urbana`-Champaign]&]
+[s0;C1%- &]
+[s0;%- [C1     http://llvm.org]&]
+[s0;C1%- &]
+[s0;%- [C1 Permission is hereby granted, free of charge, to any person 
+obtaining a copy of]&]
+[s0;%- [C1 this software and associated documentation files (the `"Software`"), 
+to deal with]&]
+[s0;%- [C1 the Software without restriction, including without limitation 
+the rights to]&]
+[s0;%- [C1 use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies]&]
+[s0;%- [C1 of the Software, and to permit persons to whom the Software 
+is furnished to do]&]
+[s0;%- [C1 so, subject to the following conditions:]&]
+[s0;C1%- &]
+[s0;%- [C1     `* Redistributions of source code must retain the above 
+copyright notice,]&]
+[s0;%- [C1       this list of conditions and the following disclaimers.]&]
+[s0;C1%- &]
+[s0;%- [C1     `* Redistributions in binary form must reproduce the 
+above copyright notice,]&]
+[s0;%- [C1       this list of conditions and the following disclaimers 
+in the]&]
+[s0;%- [C1       documentation and/or other materials provided with 
+the distribution.]&]
+[s0;C1%- &]
+[s0;%- [C1     `* Neither the names of the LLVM Team, University of 
+Illinois at]&]
+[s0;%- [C1       Urbana`-Champaign, nor the names of its contributors 
+may be used to]&]
+[s0;%- [C1       endorse or promote products derived from this Software 
+without specific]&]
+[s0;%- [C1       prior written permission.]&]
+[s0;C1%- &]
+[s0;%- [C1 THE SOFTWARE IS PROVIDED `"AS IS`", WITHOUT WARRANTY OF 
+ANY KIND, EXPRESS OR]&]
+[s0;%- [C1 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS]&]
+[s0;%- [C1 FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT 
+SHALL THE]&]
+[s0;%- [C1 CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+DAMAGES OR OTHER]&]
+[s0;%- [C1 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ARISING FROM,]&]
+[s0;%- [C1 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS WITH THE]&]
+[s0;%- [C1 SOFTWARE.]&]
+[s0;C1%- &]
+[s0;%- [C1 `=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=
+`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=]&]
+[s0;%- [C1 Copyrights and Licenses for Third Party Software Distributed 
+with LLVM:]&]
+[s0;%- [C1 `=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=
+`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=`=]&]
+[s0;%- [C1 The LLVM software contains code written by third parties. 
+ Such software will]&]
+[s0;%- [C1 have its own individual LICENSE.TXT file in the directory 
+in which it appears.]&]
+[s0;%- [C1 This file will describe the copyrights, license, and restrictions 
+which apply]&]
+[s0;%- [C1 to that code.]&]
+[s0;C1%- &]
+[s0;%- [C1 The disclaimer of warranty in the University of Illinois 
+Open Source License]&]
+[s0;%- [C1 applies to all code in the LLVM Distribution, and nothing 
+in any of the]&]
+[s0;%- [C1 other licenses gives permission to use the names of the 
+LLVM Team or the]&]
+[s0;%- [C1 University of Illinois to endorse or promote products derived 
+from this]&]
+[s0;%- [C1 Software.]&]
+[s0;C1%- &]
+[s0;%- [C1 The following pieces of software have additional or alternate 
+copyrights,]&]
+[s0;%- [C1 licenses, and/or restrictions:]&]
+[s0;C1%- &]
+[s0;%- [C1 Program             Directory]&]
+[s0;%- [C1 `-`-`-`-`-`-`-             `-`-`-`-`-`-`-`-`-]&]
+[s0;%- [C1 Google Test         llvm/utils/unittest/googletest]&]
+[s0;%- [C1 OpenBSD regex       llvm/lib/Support/`{reg`*, COPYRIGHT.regex`}]&]
+[s0;%- [C1 pyyaml tests        llvm/test/YAMLParser/`{`*.data, LICENSE.TXT`}]&]
+[s0;%- [C1 ARM contributions   llvm/lib/Target/ARM/LICENSE.TXT]&]
+[s0;%- [C1 md5 contributions   llvm/lib/Support/MD5.cpp llvm/include/llvm/Support/MD5.h
+]]}}&]
 [s0; ]]
