@@ -1,7 +1,7 @@
 LAYOUT(RepoSyncLayout, 680, 400)
 	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
-	ITEM(Button, credentials, SetLabel(t_("Credentials..")).LeftPosZ(500, 84).BottomPosZ(4, 24))
+	ITEM(Button, credentials, SetLabel(t_("Credentials..")).RightPosZ(96, 84).BottomPosZ(4, 24))
 	ITEM(Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
 END_LAYOUT
 

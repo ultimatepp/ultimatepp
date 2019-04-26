@@ -952,7 +952,14 @@ String AssistEditor::RemoveDefPar(const char *s)
 String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 {
 	String n = TrimLeft(_n);
-	n.Replace("override", "");
+	auto RemoveId = [&](const char *s) {
+		int len = strlen(s);
+		int q = n.Find(s);
+		if(q >= 0 && (q == 0 || !iscid(n[q - 1])) && (q + len >= n.GetCount() || !iscid(n[q + len])))
+			n.Remove(q, len);
+	};
+	RemoveId("override");
+	RemoveId("final");
 	CParser p(n);
 	try {
 		bool dest = false;
