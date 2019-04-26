@@ -2,7 +2,7 @@ topic "Bazaar contributors: Iñaki Zabala (Koldo)";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; Bazaar contributors: Iñaki Zabala (Koldo)&]
+[s1; [A Bazaar contributors: Iñaki Zabala (Koldo)]&]
 [s0; [*2 List of contributions]&]
 [s0;2 &]
 [s0;l160; [*2 U`+`+]&]
