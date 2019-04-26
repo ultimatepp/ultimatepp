@@ -3,8 +3,9 @@ description "TheIDE - debuggers\377B";
 uses
 	ide/Common,
 	HexView,
-	ide/Core,
-	plugin/ndisasm;
+	ide/Core;
+
+uses(!POSIX) plugin/ndisasm;
 
 library(WIN32 GCC) "dbghelp psapi";
 
