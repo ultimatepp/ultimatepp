@@ -1,16 +1,3 @@
-#ifdef COMPILER_MSC
-
-template <class Range>
-using ValueTypeOf = typename std::remove_reference<decltype(*std::remove_reference<Range>::type().begin())>::type;
-
-template <class Range>
-using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->begin());
-
-template <class Range>
-using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
-
-#else
-
 template <class Range>
 using ValueTypeOf = typename std::remove_reference<decltype(*((typename std::remove_reference<Range>::type *)0)->begin())>::type;
 
@@ -19,8 +6,6 @@ using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->
 
 template <class Range>
 using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
-
-#endif
 
 template <class I>
 class SubRangeClass {
