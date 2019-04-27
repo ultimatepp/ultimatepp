@@ -1,9 +1,23 @@
 #include "LayDes.h"
 
+#include <limits>
+
+PropertyPane::PropertyPane()
+	: line_height(std::numeric_limits<int>::max())
+{
+	Clear();
+	SetFrame(sb);
+	sb.AutoHide();
+	sb.WhenScroll = THISBACK(Scroll);
+	Color(SColorFace);
+}
+
 void PropertyPane::Layout()
 {
 	sb.SetTotal(y);
 	sb.SetPage(GetSize().cy);
+	if(line_height < std::numeric_limits<int>::max())
+		sb.SetLine(line_height);
 }
 
 void PropertyPane::Clear()
@@ -18,6 +32,8 @@ void PropertyPane::Add(ItemProperty& c)
 {
 	pane.Add(c);
 	int cy = c.GetHeight();
+	if(cy < line_height)
+		line_height = cy;
 	c.HSizePos().TopPos(y, cy);
 	y += cy;
 	pane.TopPos(0, y);
@@ -40,16 +56,12 @@ void PropertyPane::ChildGotFocus()
 		}
 }
 
+void PropertyPane::MouseWheel(Point, int zdelta, dword)
+{
+	sb.Wheel(zdelta);
+}
+
 void PropertyPane::AfterCreate()
 {
 	Ctrl::Add(pane.HSizePos());
-}
-
-PropertyPane::PropertyPane()
-{
-	Clear();
-	SetFrame(sb);
-	sb.AutoHide();
-	sb.WhenScroll = THISBACK(Scroll);
-	Color(SColorFace);
 }
