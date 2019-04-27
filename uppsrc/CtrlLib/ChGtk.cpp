@@ -209,9 +209,9 @@ void ChHostSkin()
 		po.x = GtkInt("child-displacement-x");
 		po.y = GtkInt("child-displacement-y");
 
-		s.ok = GtkImage("gtk-ok", DPI(4), DPI(16));
-		s.cancel = GtkImage("gtk-cancel", DPI(4), DPI(16));
-		s.exit = GtkImage("gtk-quit", DPI(4), DPI(16));
+		s.ok = GtkImage("gtk-ok", GTK_ICON_SIZE_BUTTON, DPI(16));
+		s.cancel = GtkImage("gtk-cancel", GTK_ICON_SIZE_BUTTON, DPI(16));
+		s.exit = GtkImage("gtk-quit", GTK_ICON_SIZE_BUTTON, DPI(16));
 
 		ChGtkColor(s.textcolor, 0 * 5);
 		s.pressoffset = po;
@@ -698,7 +698,7 @@ void ChHostSkin()
 	};
 
 	for(int i = 0; i < __countof(bimg); i++)
-		(*bimg[i].set)(GtkImage(bimg[i].gtk, 4, 16));
+		(*bimg[i].set)(GtkImage(bimg[i].gtk, GTK_ICON_SIZE_DIALOG,16));
 
 	if(engine != "Redmond")
 		DropEdge_Write(ViewEdge());

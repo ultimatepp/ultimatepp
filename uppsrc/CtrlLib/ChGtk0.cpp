@@ -88,7 +88,7 @@ Image GetGTK0(GtkWidget *widget, int state, int shadow, const char *detail, int 
 			icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), detail,
 			                                state, (GtkIconLookupFlags)0, NULL);
 		else
-			icon = gtk_widget_render_icon(widget, detail, GTK_ICON_SIZE_BUTTON, NULL);
+			icon = gtk_widget_render_icon(widget, detail, (GtkIconSize)state, NULL);
 		if(!icon) return Null;
 		cx = gdk_pixbuf_get_width(icon);
 		cy = gdk_pixbuf_get_height(icon);
