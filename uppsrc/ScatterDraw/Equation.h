@@ -497,11 +497,14 @@ public:
 		unit.Sqrt();
 	}
 	void ResParallel(const doubleUnit &d) {
-		if (val + d.val < 1e-100)
+		if (abs(val + d.val) < 1e-100 && abs(val*d.val) > 1e-100)
 			throw Exc(t_("Division by zero"));
 		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
 			throw Exc(t_("Units does not match in resistor parallel"));
-		val = val*d.val/(val + d.val);
+		if (abs(val*d.val) < 1e-100)
+			val = 0.0;
+		else
+			val = val*d.val/(val + d.val);
 	}	
 	void SetNull()                 {val = Null;}
 	bool IsNullInstance() const    {return IsNull(unit) && IsNull(val);}
