@@ -24,7 +24,7 @@ archive]]
 portable .7z archive]]
 :: [s0;%DE-DE [*2 macOS]]
 :: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
-:: [s0;= [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`%20MacOS`%20Alpha`%200`.1`/upp`_macos`_0`.1`.zip`/download^2 z
+:: [s0;= [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`.1`.rc5`/upp`-macos`-13052`.zip`/download^2 z
 ip][2  (Alpha)]]
 :: [s0;=^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 ]
 :: [s0;%DE-DE [*2 Fedora, OpenSUSE, CentOS]]
