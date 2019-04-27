@@ -265,15 +265,15 @@ struct LayDesEditPos {
 
 class LayDes : public StaticRect {
 public:
-	virtual void   Paint(Draw& w);
-	virtual Image  CursorImage(Point p, dword keyflags);
-	virtual void   LeftDown(Point p, dword keyflags);
-	virtual void   LeftRepeat(Point p, dword keyflags);
-	virtual void   MouseMove(Point p, dword keyflags);
-	virtual void   LeftUp(Point p, dword keyflags);
-	virtual void   RightDown(Point p, dword keyflags);
-	virtual void   Layout();
-	virtual bool   HotKey(dword key);
+	virtual void   Paint(Draw& w) override;
+	virtual Image  CursorImage(Point p, dword keyflags) override;
+	virtual void   LeftDown(Point p, dword keyflags) override;
+	virtual void   LeftRepeat(Point p, dword keyflags) override;
+	virtual void   MouseMove(Point p, dword keyflags) override;
+	virtual void   LeftUp(Point p, dword keyflags) override;
+	virtual void   RightDown(Point p, dword keyflags) override;
+	virtual void   Layout() override;
+	virtual bool   HotKey(dword key) override;
 
 private:
 	bool   DoKey(dword key, int count);
@@ -468,7 +468,7 @@ private:
 	
 	void        FindLayout(const String& name, const String& item_name);
 
-	bool           Load(const char *filename, byte charset);
+	bool        Load(const char *filename, byte charset);
 
 	typedef LayDes CLASSNAME;
 
@@ -484,20 +484,20 @@ class LayDesigner : public IdeDesigner {
 	ParentCtrl     parent;
 
 public:
-	virtual String GetFileName() const        { return designer.filename; }
-	virtual void   Save()                     { designer.Save(); }
-	virtual void   SyncUsc()                  { designer.SyncUsc(); }
-	virtual void   SaveEditPos()              { designer.SaveEditPos(); }
-	virtual void   EditMenu(Bar& menu)        { designer.EditMenu(menu); }
-	virtual int    GetCharset() const         { return designer.charset; }
-	virtual Ctrl&  DesignerCtrl()             { return parent; }
+	virtual String GetFileName() const override { return designer.filename; }
+	virtual void   Save() override              { designer.Save(); }
+	virtual void   SyncUsc() override           { designer.SyncUsc(); }
+	virtual void   SaveEditPos() override       { designer.SaveEditPos(); }
+	virtual void   EditMenu(Bar& menu) override { designer.EditMenu(menu); }
+	virtual int    GetCharset() const override  { return designer.charset; }
+	virtual Ctrl&  DesignerCtrl() override      { return parent; }
 
-	void Serialize(Stream& s)                 { designer.Serialize(s); }
-	bool Load(const char *filename, byte cs)  { return designer.Load(filename, cs); }
+	void Serialize(Stream& s)                   { designer.Serialize(s); }
+	bool Load(const char *filename, byte cs)    { return designer.Load(filename, cs); }
 
 	void FindLayout(const String& name, const String& item) { designer.FindLayout(name, item); }
 
-	LayDesigner()                             { parent.Add(designer.DesignerCtrl().SizePos()); }
+	LayDesigner()                               { parent.Add(designer.DesignerCtrl().SizePos()); }
 };
 
 #endif
