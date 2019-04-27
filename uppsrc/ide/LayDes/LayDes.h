@@ -151,10 +151,15 @@ struct RawProperty : public EditorProperty<EditString>
 	}
 };
 
-struct PropertyPane : public StaticRect {
-	virtual void Layout();
-	virtual void ChildGotFocus();
+class PropertyPane final : public StaticRect {
+public:
+	virtual void Layout() override;
+	virtual void ChildGotFocus() override;
+	virtual void MouseWheel(Point, int zdelta, dword) override;
 
+public:
+	PropertyPane();
+	
 	int        y;
 	StaticRect pane;
 	ScrollBar  sb;
@@ -164,10 +169,11 @@ struct PropertyPane : public StaticRect {
 	void SetSb();
 	void Scroll();
 	void AfterCreate();
-
-	typedef PropertyPane CLASSNAME;
-
-	PropertyPane();
+	
+	using CLASSNAME = PropertyPane;
+	
+private:
+	int        line_height;
 };
 
 struct LayoutItem {
@@ -282,11 +288,11 @@ private:
 	struct KeyMaster : public ParentCtrl {
 		LayDes *d;
 
-		virtual bool HotKey(dword key) {
+		virtual bool HotKey(dword key) override {
 			return d->DoHotKey(key);
 		}
 
-		virtual bool Key(dword key, int count) {
+		virtual bool Key(dword key, int count) override {
 			return d->DoKey(key, count);
 		}
 	};
