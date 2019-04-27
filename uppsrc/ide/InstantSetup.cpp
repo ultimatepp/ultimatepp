@@ -282,6 +282,7 @@ void InstantSetup()
 				bmSet(bm, "RELEASE_FLAGS", "");
 				bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
 				bmSet(bm, "DISABLE_BLITZ", "");
+				bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 				bmSet(bm, "DEBUGGER", findarg(version, BT_2017, BT_2019) >= 0 ? String()
 				                      : GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
 
@@ -330,7 +331,7 @@ void InstantSetup()
 			bmSet(bm, "COMMON_LINK", "");
 			bmSet(bm, "COMMON_FLAGS", "");
 			bmSet(bm, "DEBUG_INFO", "2");
-			bmSet(bm, "DEBUG_BLITZ", "");
+			bmSet(bm, "DEBUG_BLITZ", "1");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
 			bmSet(bm, "DEBUG_OPTIONS", "-O0");
 			bmSet(bm, "DEBUG_FLAGS", "");
@@ -341,7 +342,7 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "-Wl,--stack,20000000");
 			bmSet(bm, "DEBUGGER", "gdb");
-			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "");
+			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 			bmSet(bm, "DISABLE_BLITZ", "");
 			
 	//		bmSet(bm, "LINKMODE_LOCK", "0");
