@@ -1,7 +1,6 @@
 topic "Copyright © 1999-2019 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0;*IGetLocalDir;+117 &]
 [s0; [*+117 Copyright © 1998, 2019 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
@@ -34,9 +33,7 @@ Frederico Rodrigues, Ruben Proost, Willem Kroes]&]
 [s0;i704;O9; U`+`+ Logo:[+117 -|][* Pavel Ostapenko], [* Robert_Vroemisse, 
 ]&]
 [s0;+108 &]
-[ {{3333:6667 [s0; Ultimate`+`+ team email]
-:: [s0; [^mailto`:upp`@ntllib`.org^ upp`@ntllib.org]]
-:: [s0; Ultimate`+`+ home page]
+[ {{3333:6667 [s0; Ultimate`+`+ home page]
 :: [s0; [^http`:`/`/www`.ultimatepp`.org`/^ http://www.ultimatepp.org]]
 :: [s0; Ultimate`+`+ forum]
 :: [s0; [^http`:`/`/www`.ultimatepp`.org`/forums^ http://www.ultimatepp.org/forums]]}}&]
