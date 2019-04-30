@@ -539,7 +539,7 @@ type& GLOBAL_VP_INIT(type, name, param)
 
 #if __GNUC__ > 6
 	#define NOUBSAN __attribute__((no_sanitize_undefined))
-#elif __clang__ > 6
+#elif __clang_major__ > 6
 	#define NOUBSAN __attribute__((no_sanitize("undefined")))
 #else
 	#define NOUBSAN
