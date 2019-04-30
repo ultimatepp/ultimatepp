@@ -151,11 +151,11 @@ struct RawProperty : public EditorProperty<EditString>
 	}
 };
 
-class PropertyPane final : public StaticRect {
+struct PropertyPane : StaticRect {
 public:
-	virtual void Layout() override;
-	virtual void ChildGotFocus() override;
-	virtual void MouseWheel(Point, int zdelta, dword) override;
+	void Layout() override;
+	void ChildGotFocus() override;
+	void MouseWheel(Point, int zdelta, dword) override;
 
 public:
 	PropertyPane();
@@ -169,11 +169,6 @@ public:
 	void SetSb();
 	void Scroll();
 	void AfterCreate();
-	
-	using CLASSNAME = PropertyPane;
-	
-private:
-	int        line_height;
 };
 
 struct LayoutItem {
@@ -482,7 +477,7 @@ private:
 
 public:
 	Ctrl&          DesignerCtrl()             { return km; }
-	void           Serialize(Stream& s);
+	void           Serialize(Stream& s) override;
 };
 
 class LayDesigner : public IdeDesigner {
