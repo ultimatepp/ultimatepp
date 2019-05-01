@@ -34,6 +34,10 @@ TOPIC("SupportedPlatforms_en-us")
 #include "SupportedPlatforms_en-us.tppi"
 END_TOPIC
 
+TOPIC("Tutorials_en-us")
+#include "Tutorials_en-us.tppi"
+END_TOPIC
+
 TOPIC("UppTechnologies_en-us")
 #include "UppTechnologies_en-us.tppi"
 END_TOPIC
