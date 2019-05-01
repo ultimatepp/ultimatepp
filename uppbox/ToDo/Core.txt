@@ -8,6 +8,8 @@ Allocator > 64KB
 
 CoDo
 
+Consider refactoring void VectorReAlloc_(void *v_, int newalloc, int sizeofT) to remove division.
+
 ---------------------------------
 oportunity &&
 

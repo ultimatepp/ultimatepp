@@ -1,5 +1,4 @@
 topic "Ultimate++ FAQ";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b167;*4 $$3,5#07864147445237544204411237157677:title]
@@ -23,35 +22,17 @@ topic "Ultimate++ FAQ";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [l127;b42;a42;ph2 $$22,22#15420321421851854042230329115330:answer]
 [b83;a42;ph*$7;2 $$23,23#AB7631167E16382768E93725BC9AFE82:question]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Ultimate`+`+ FAQ&]
 [s3; Installation (MS Windows)&]
-[s23; What will happen with my sources or programs if I had placed 
-them inside Ultimate directory?&]
-[s22; During un`-installation, the whole directory is deleted, sorry. 
-That is why your sources are put to separate place (default C:`\MyApps.). 
-If you have any valuable files inside the installation directory, 
-backup them first.&]
 [s23; How do I un`-install U`+`+?&]
 [s22; U`+`+ now uses portable approach. All you need to do is just 
-remove directory with U`+`+.&]
+remove directory with U`+`+. Make sure to backup any sources 
+that you have created inside this directory, e.g. in MyApps folder.&]
 [s3; U`+`+ Library&]
 [s23; Is there a complete list of U`+`+ widgets?&]
 [s22; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ Yes.]&]
-[s23; What is the minimal size of U`+`+ GUI application?&]
-[s22; The size of application executable is not the primary design 
-goal. U`+`+ prefers simple maintenance, speed and rapid development 
-of complex applications. We believe that these goals are more 
-important in the age when there are no hard`-drives on the market 
-with less than 20GB.&]
-[s22; Anyway: the size of [^topic`:`/`/uppweb`/examples`/Puzzle`$en`-us^ Puzzle] 
-example, compiled with Microsoft C`+`+ 7.1 with size optimizations 
-is [* 980KB]. This is not great, but you have to consider that 
-this represents self`-contained executable with most U`+`+ features 
-compiled in and that past this point the size tends to grow quite 
-slowly.&]
-[s22; Typical [* complex] U`+`+ application is [* 2`-3MB] long. TheIDE, 
-which is a VERY complex application, has [* 3.5MB].&]
 [s23; Can I create OCX Control using U`+`+?&]
 [s22; [^topic`:`/`/Ole`/srcdoc`/ocx`$en`-us^ Yes you can.]&]
 [s23; When compiling using Visual C`+`+ 2005 compiler, I am getting 

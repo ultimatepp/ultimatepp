@@ -17,6 +17,16 @@ i686-win32-dwarf
 
 directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
 
+
+Now download clang 32/64
+search for ld.ldd.exe 32/64
+
+replace ld.exe in
+
+C:\upp\bin\mingw64\64\x86_64-w64-mingw32\bin
+C:\upp\bin\mingw64\32\i686-w64-mingw32\bin
+
+
 initial: MinGW-W64 GCC-7.2.0
 2019-03-22: 8.1.0
 
