@@ -2,6 +2,7 @@
 IDE
 
 Update license agreement year
+Update year in Copying files - replace "Copyright (c) 1998, 201x, The U++ Project"
 
 About, BSD
 
