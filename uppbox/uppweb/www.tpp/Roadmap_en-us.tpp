@@ -27,7 +27,7 @@ topic "Roadmap";
 [{_}%EN-US 
 [s2; Roadmap&]
 [s24; Current release&]
-[s3; 2019.1 (May 2019)&]
+[s3; 2019.1 (rev 13068) (May 2019)&]
 [s5;* &]
 [s5; [* General improvements]&]
 [s5;l160;i150;O0;~~~192; MacOS X support&]
