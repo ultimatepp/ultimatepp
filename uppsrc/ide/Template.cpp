@@ -107,15 +107,17 @@ void AppPreview::Layout()
 void AppPreview::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	Font fnt = CourierZ(12);
 	int y = 0;
 	int i = sb;
 	while(y < sz.cy) {
-		bool hdr = i < line.GetCount() && line[i].header;
-		w.DrawRect(0, y, sz.cx, fnt.GetCy(), hdr ? LtCyan : SColorPaper);
+		auto is_header = i < line.GetCount() && line[i].header;
+		auto font = is_header ? ArialZ(12).Bold().Italic() : CourierZ(12);
+		auto rect_color = is_header ? (IsDarkTheme() ? DarkTheme(LtCyan) : LtCyan) : SColorPaper;
+		
+		w.DrawRect(0, y, sz.cx, font.GetCy(), rect_color);
 		if(i < line.GetCount())
-			w.DrawText(0, y, line[i].text, hdr ? ArialZ(12).Bold().Italic() : fnt, SColorText);
-		y += fnt.GetCy();
+			w.DrawText(0, y, line[i].text, font, SColorText);
+		y += font.GetCy();
 		i++;
 	}
 }
