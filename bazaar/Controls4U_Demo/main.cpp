@@ -63,6 +63,10 @@ void Controls4U_Demo::Timer() {
 }
 
 GUI_APP_MAIN {
+	ConsoleOutput console(true);
+	
+	printf("Controls4U_Demo\n");
+	
 	Controls4U_Demo().Run();
 }
 
@@ -288,6 +292,7 @@ SplitterButton_Demo::SplitterButton_Demo() {
 
 void Controls4U_Demo::OnGridSel() {
 	int row = grid.GetCursor();
+	Cout() << "Selected: " << row << "\n";
 	for (int i = 0; i < controls.GetCount(); ++i) {
 		if (i == row)
 			controls[i]->Show();
