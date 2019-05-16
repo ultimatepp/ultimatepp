@@ -754,8 +754,6 @@ struct ProgramData {
 	}
 };
 
-
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -774,6 +772,10 @@ CONSOLE_APP_MAIN
 	ProgramData data;
 	
 	String configFile = GetHomeDirFile("uppweb.xml");
+	const Vector<String>& cmd = CommandLine();
+	if(cmd.GetCount() && FileExists(cmd[0]))
+		configFile = cmd[0];
+	
 	Cout() << "ConfigFile: " << configFile << "\n";
 	bool cfgloaded = false;
 	if (FileExists(configFile)) {
