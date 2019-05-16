@@ -1,3 +1,5 @@
+#ifndef flagSKELETON
+
 #include <CtrlLib/CtrlLib.h>
 #include <CtrlCore/CocoMM.h>
 
@@ -340,5 +342,7 @@ NSMenu *Cocoa_DockMenu() {
 }
 
 };
+
+#endif
 
 #endif
