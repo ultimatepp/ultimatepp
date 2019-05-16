@@ -3,8 +3,6 @@
 
 #include <Functions4U/Functions4U.h>
 
-using namespace Upp;
-
 
 inline const RGBA *GetPixel(const Image &img, int x, int y) {
 	return &img[y][x];
@@ -93,5 +91,19 @@ void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &colo
 void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color);
 
 int GetEditWidth(const String str);
+
+class ConsoleOutput {
+public:
+	ConsoleOutput() 				{Init();}
+	ConsoleOutput(bool forceWindow) {Init(forceWindow);}
+	~ConsoleOutput(); 
+	
+	bool Init(bool forceWindow = false);
+
+private:
+#ifdef PLATFORM_WIN32
+	bool ownConsole;
+#endif
+};
 
 #endif

@@ -4,7 +4,6 @@
 #include <float.h>
 #include <Draw/Draw.h>
 #ifdef flagGUI
-//#include <CtrlLib/CtrlLib.h>
 #include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
@@ -236,6 +235,8 @@ inline bool Even(int val) 	  		{return !Odd(val);}
 inline int RoundEven(int val) 		{return Even(val) ? val : val+1;}
 template<class T>
 inline int Sign(T a) 				{return (a > 0) - (a < 0);}
+template<class T>
+inline T Neg(T a) 					{return a > 0 ? -a : a;}
 template<class T>
 inline T Average(T a, T b) 			{return T(a+b)/2;}
 template<class T>
@@ -672,6 +673,24 @@ void FindAdd(Range& r, const V& value, int from = 0) {
 		if(r[i] == value) 
 			return;
 	r.Add(value);
+}
+
+template <class Range, class V>
+int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0)
+{
+	for(int i = from; i < r.GetCount(); i++) 
+		if(abs(r[i] - value) <= delta) 
+			return i;
+	return -1;
+}
+
+template <class Range, class V>
+int FindIndexRatio(const Range& r, const V& value, const V& ratio, int from = 0)
+{
+	for(int i = from; i < r.GetCount(); i++)
+		if(abs((r[i] - value)/value) <= ratio) 
+			return i;
+	return -1;
 }
 
 template <class Range>

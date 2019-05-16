@@ -1,14 +1,12 @@
 #ifdef flagGUI
 
-#include <CtrlLib/CtrlLib.h>
 #include <plugin/tif/tif.h>
 #include <plugin/jpg/jpg.h>
 #include <plugin/gif/gif.h>
 #include <plugin/bmp/bmp.h>
 
+#include <CtrlLib/CtrlLib.h>
 #include <Functions4U/Functions4U_Gui.h>
-
-using namespace Upp;
 
 
 Image NativePathIconX(const char *path, bool folder, int flags)
@@ -145,6 +143,54 @@ int GetEditWidth(const String str) {
 	for (int i = 0; i < str.GetCount(); ++i)
 		ret += font.GetWidth(str[i]);
 	return ret;
+}
+
+
+bool ConsoleOutput::Init(bool forceWindow) {
+#ifdef PLATFORM_WIN32	
+	ownConsole = true;
+    if (!AttachConsole(ATTACH_PARENT_PROCESS)) {
+        if (GetLastError() != ERROR_ACCESS_DENIED) {
+            if (!AttachConsole(GetCurrentProcessId())) {
+                if (GetLastError() != ERROR_ACCESS_DENIED) {
+                    ownConsole = false;
+                    if (!forceWindow)
+                    	return false;
+                    
+					if (!AllocConsole())
+						return false;
+					AttachConsole(GetCurrentProcessId()) ;
+                }
+            }
+        }
+    }
+	freopen("CONIN$",  "r", stdin); 
+	freopen("CONOUT$", "w", stdout); 
+	freopen("CONOUT$", "w", stderr); 
+	
+	return true;
+#else
+	if (forceWindow)
+		return false;
+	return true;
+#endif	
+}
+
+ConsoleOutput::~ConsoleOutput() {
+#ifdef PLATFORM_WIN32
+	if (ownConsole && (GetConsoleWindow() == GetForegroundWindow())) {
+		INPUT input;
+		input.type = INPUT_KEYBOARD;
+		input.ki.wScan = 0; 
+		input.ki.time = 0;
+		input.ki.dwExtraInfo = 0;
+		input.ki.wVk = K_ENTER; 
+		input.ki.dwFlags = 0; 
+		SendInput(1, &input, sizeof(INPUT));
+		input.ki.dwFlags = KEYEVENTF_KEYUP; 
+		SendInput(1, &input, sizeof(INPUT));
+	}
+#endif
 }
 
 

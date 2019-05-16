@@ -859,23 +859,31 @@ void StringToHMS(String durat, int &hour, int &min, double &seconds) {
 	s3 = duration.GetText();
 	
 	if (s3 != "") {
-		hour = atoi(s1);
-		min = atoi(s2);
-		seconds = atof(s3);
+		hour = ScanInt(s1);
+		min = ScanInt(s2);
+		seconds = ScanDouble(s3);
 	} else if (s2 != "") {
 		hour = 0;
-		min = atoi(s1);
-		seconds = atof(s2);
+		min = ScanInt(s1);
+		seconds = ScanDouble(s2);
 	} else {
 		hour = 0;
 		min = 0;
-		seconds = atof(s1);		
+		seconds = ScanDouble(s1);		
+	}
+	if (IsNull(hour) || IsNull(min) || IsNull(seconds)) {
+		hour = min = Null;
+		seconds = Null;
+	} else if (hour < 0 || min < 0 || seconds < 0) {
+		hour = Neg(hour);
+		min = Neg(min);
+		seconds = Neg(seconds);
 	}
 }
 double StringToSeconds(String duration) {
 	int hour, min;
 	double secs;
-	StringToHMS(duration, hour, min, secs);
+	StringToHMS(duration, hour, min, secs); 
 	return 3600.*hour + 60.*min + secs;
 }
 
@@ -921,6 +929,7 @@ String HMSToString0(int hour, int min, double seconds, bool units, int dec) {
 String HMSToString(int hour, int min, double seconds, int dec, bool units, bool space, bool tp, 
 					bool longUnits, bool forcesec) {
 	String ret;
+	bool isneg = hour < 0 || min < 0 || seconds < 0;
 	
 	if (hour > 0) {
 		ret << hour;
@@ -933,9 +942,10 @@ String HMSToString(int hour, int min, double seconds, int dec, bool units, bool 
 	}
 	
 	if (min > 0) {
-		if (tp)
-			ret << Format("%02d", min);
-		else
+		if (tp) {
+			String fmt = hour > 0 ? "%02d" : "%d";
+			ret << Format(fmt, min);
+		} else
 			ret << (ret.IsEmpty() ? "" : " ") << min;
 		if (space)
 			ret << " ";
@@ -944,18 +954,23 @@ String HMSToString(int hour, int min, double seconds, int dec, bool units, bool 
 		if (units)
 			ret << (longUnits ? ((min > 1) ? t_("mins") : t_("min")) : t_("m"));
 	} else if (tp) {
-		ret << "00";
-		if (forcesec)
-			ret << ":";
+		if (hour > 0) {
+			ret << "00";
+			if (forcesec)
+				ret << ":";
+		}
 	}
 	
 	if (forcesec || (hour == 0 && (seconds > 1 || (seconds > 0 && dec > 0)))) {
-		ret << (ret.IsEmpty() ? "" : " ") << formatSeconds(seconds, dec, false);
+		ret << (ret.IsEmpty() || tp ? "" : " ") << formatSeconds(seconds, dec, tp);
 		if (space)
 			ret << " ";
 		if (units)
  			ret << (longUnits ? ((seconds > 1) ? t_("secs") : t_("sec")) : t_("s"));
 	}
+	
+	if (isneg)
+		ret = "-" + ret;
 	return ret;
 }
 
