@@ -63,12 +63,12 @@ public:
 	EditFileFolder &NotNull(bool b)					{EditString::NotNull(b);  return *this;}
 	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;}
 	EditFileFolder &SetTitle(const char *_title)	{title = _title; return *this;}
-	EditFileFolder &UseHistory(bool use);
-	EditFileFolder &UseOpenFolder(bool use);
-	EditFileFolder &UseUp(bool use);
-	EditFileFolder &UseBrowse(bool use);
-	EditFileFolder &UseBrowseRight(bool use);
-	EditFileFolder &UseGo(bool use);
+	EditFileFolder &UseHistory(bool use = true);
+	EditFileFolder &UseOpenFolder(bool use = true);
+	EditFileFolder &UseUp(bool use = true);
+	EditFileFolder &UseBrowse(bool use = true);
+	EditFileFolder &UseBrowseRight(bool use = true);
+	EditFileFolder &UseGo(bool use = true);
 	EditFileFolder &BrowseRightWidth(int w)			{butBrowseRight.Width(w); return *this;}
 	EditFileFolder &BrowseOpenFolderWidth(int w)	{butFolder.Width(w);  return *this;}
 	virtual void SetData(const Value& data);

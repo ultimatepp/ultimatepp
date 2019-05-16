@@ -48,7 +48,7 @@ void EditFileFolder::Init() {
 	butBrowseRight <<= THISBACK(DoBrowse);
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
-	butRight.Tip(t_("Go to previous"));
+	butLeft.Tip(t_("Go to previous"));
 	butLeft.Enable(false);
 	butRight.SetImage(CtrlImg::SmallRight());
 	butRight <<= THISBACK(DoRight);
@@ -197,6 +197,7 @@ void EditFileFolder::DoGo(bool add) {
 			butRight.Enable(false);
 	}
 	WhenChange();
+	WhenAction();
 	Accept();
 }
 
@@ -232,7 +233,17 @@ EditFile::EditFile() {
 	title = t_("Select file");	
 	EditFileFolder();
 	butBrowseRight.Tip(t_("Browse file"));
-	butFolder.WhenAction = [&] {LaunchWebBrowser(GetFileFolder(String(GetData())));};
+	butFolder.WhenAction = [&] {
+		String folder = GetFileFolder(String(GetData()));
+		if (!DirectoryExists(folder))
+			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
+		else {
+			if (folder.StartsWith("\\"))
+				system("explorer " + folder);
+			else
+				LaunchWebBrowser(folder);
+		}
+	};
 }
 
 EditFolder::EditFolder() {
@@ -240,7 +251,12 @@ EditFolder::EditFolder() {
 	title = t_("Select directory");	
 	EditFileFolder();
 	butBrowseRight.Tip(t_("Browse folder"));
-	butFolder.WhenAction = [&] {LaunchWebBrowser(GetData());};
+	butFolder.WhenAction = [&] {
+		String folder = GetData();
+		if (!DirectoryExists(folder))
+			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
+		else
+			LaunchWebBrowser(folder);};
 }
 
 bool SetFirstChild(Ctrl *ctrl) {
