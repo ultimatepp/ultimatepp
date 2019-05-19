@@ -1,0 +1,34 @@
+description "MATLAB MAT file I/O library\3770,128,128";
+
+uses
+	Core;
+
+options
+	-DHAVE_ZLIB;
+
+file
+	matio.cpp,
+	matio.h,
+	matio.tpp,
+	lib\mat.c,
+	lib\matio.h,
+	lib\endian.c,
+	lib\exact-int.h,
+	lib\inflate.c,
+	lib\io.c,
+	lib\mat4.c,
+	lib\mat4.h,
+	lib\mat5.c,
+	lib\mat5.h,
+	lib\mat73.c,
+	lib\mat73.h,
+	lib\matio_private.h,
+	lib\matvar_cell.c,
+	lib\matvar_struct.c,
+	lib\read_data.c,
+	lib\safe-math.h,
+	lib\snprintf.c,
+	lib\matio_pubconf.h,
+	lib\matioConfig.h,
+	Copying;
+
