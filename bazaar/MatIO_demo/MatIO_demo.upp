@@ -1,0 +1,13 @@
+description "MATLAB MAT file I/O library demo\377";
+
+uses
+	Core,
+	plugin/matio;
+
+file
+	MatIO_demo.cpp,
+	data.brc;
+
+mainconfig
+	"" = "";
+
