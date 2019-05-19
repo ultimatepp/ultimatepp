@@ -156,7 +156,7 @@ void TopicCtrl::SyncDocTree()
 	int ide = 0;
 	bool idefirst = true;
 	if(MatchTopicLink(sTopicHome, sdx)) {
-		ide = AddTree(0, IdeImg::MainPackage(), sTopicHome, s_idehelp);
+		ide = AddTree(0, IdeImg::book(), sTopicHome, s_idehelp);
 		idefirst = false;
 	}
 	for(int i = 0; i < idelink.GetCount(); i++) {
@@ -210,14 +210,14 @@ void TopicCtrl::SyncDocTree()
 						int pd;
 						if(used.Find(tl.package) >= 0) {
 							if(usedfirst) {
-								usid = AddTree(0, IdeImg::MainPackage(), Null, s_usedpackages);
+								usid = AddTree(0, IdeImg::book(), Null, s_usedpackages);
 								usedfirst = false;
 							}
 							pd = usid;
 						}
 						else {
 							if(otherfirst) {
-								otid = AddTree(0, IdeImg::MainPackage(), Null, s_otherpackages);
+								otid = AddTree(0, IdeImg::book(), Null, s_otherpackages);
 								otherfirst = false;
 							}
 							pd = otid;
