@@ -23,8 +23,8 @@ topic "Tutorial";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; [+184 MatIO]&]
-[s2; [*A^https`:`/`/github`.com`/tbeu`/matio^2 Matio ][*A2 is an open`-source 
-C library for reading and writing binary ][*A^https`:`/`/www`.mathworks`.com`/products`/matlab`.html^2 M
+[s2; [*A^https`:`/`/github`.com`/tbeu`/matio^2 Matio ][*A2 is a multiplatform 
+open`-source C library for reading and writing binary ][*A^https`:`/`/en`.wikipedia`.org`/wiki`/MATLAB^2 M
 ATLAB ][*A2 MAT files. This library is designed for use by programs/libraries 
 that do not have access or do not want to rely on MATLAB`'s shared 
 libraries.]&]

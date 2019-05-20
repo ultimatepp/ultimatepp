@@ -166,7 +166,11 @@
 #endif
 
 /* Define to 1 if the system has the type `uintptr_t'. */
+#if defined(__linux__)
+#undef HAVE_UINTPTR_T
+#else
 #define HAVE_UINTPTR_T 1
+#endif
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
@@ -187,7 +191,9 @@
 /* Define to 1 if you have the `va_copy' function or macro. */
 #if defined(_MSC_VER) && _MSC_VER >= 1800
 #define HAVE_VA_COPY 1
-#else
+#elif defined(__linux__)
+#define HAVE_VA_COPY 1
+#else 
 #undef HAVE_VA_COPY
 #endif
 
@@ -213,6 +219,8 @@
 #   define MATIO_PLATFORM "x86_64-pc-windows"
 #elif defined(_WIN32)
 #   define MATIO_PLATFORM "i686-pc-windows"
+#elif defined(__linux__)
+#   define MATIO_PLATFORM "posix"
 #endif
 
 /* Debug disabled */
