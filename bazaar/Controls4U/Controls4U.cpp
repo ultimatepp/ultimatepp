@@ -46,6 +46,7 @@ void EditFileFolder::Init() {
 	EditString::AddFrame(butBrowseRight);
 	butBrowseRight.SetImage(Controls4UImg::Folder());
 	butBrowseRight <<= THISBACK(DoBrowse);
+	butBrowseRight.Width(40);
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
 	butLeft.Tip(t_("Go to previous"));
@@ -62,9 +63,11 @@ void EditFileFolder::Init() {
 	butGo.SetImage(CtrlImg::SmallRight()); 
 	butGo <<= THISBACK1(DoGo, true); 
 	butFolder.Tip(t_("Open folder"));
+	butFolder.Width(10);
 	isFile = isLoad = true;
 	histInd = -1;
 	pfs = 0;
+	Dropping(false);
 }
 
 void EditFileFolder::InitFs() {

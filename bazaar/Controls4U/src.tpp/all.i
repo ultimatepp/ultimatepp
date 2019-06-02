@@ -1,7 +1,3 @@
-TOPIC("AboutUpp1_en-us")
-#include "AboutUpp1_en-us.tppi"
-END_TOPIC
-
 TOPIC("AboutUpp_en-us")
 #include "AboutUpp_en-us.tppi"
 END_TOPIC

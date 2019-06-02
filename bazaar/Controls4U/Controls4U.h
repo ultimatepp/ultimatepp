@@ -21,7 +21,7 @@ public:
 	String GetBaseDir()	{return basedir;}	
 };
 
-class EditFileFolder : public EditString {
+class EditFileFolder : public WithDropChoice<EditString> {
 typedef EditFileFolder CLASSNAME;
 
 protected:
@@ -37,15 +37,16 @@ protected:
 	int histInd;
 	
 	void InitFs();
+	
+	void DoLeft(), DoRight(), DoUp();
+	void DoBrowse();
+	void DoGo(bool add = true);
 		
 public:
 	EditFileFolder() 								{Init();};
 	virtual ~EditFileFolder();
 	
 	void Init();
-	void DoLeft(), DoRight(), DoUp();
-	void DoBrowse();
-	void DoGo(bool add = true);
 	void ClearTypes()								{InitFs();	pfs->ClearTypes();}
 	void Type(const char *name, const char *ext)	{InitFs();	pfs->Type(name, ext);}
 	void ActiveType(int type)						{InitFs();	pfs->ActiveType(type);}	
@@ -69,11 +70,53 @@ public:
 	EditFileFolder &UseBrowse(bool use = true);
 	EditFileFolder &UseBrowseRight(bool use = true);
 	EditFileFolder &UseGo(bool use = true);
-	EditFileFolder &BrowseRightWidth(int w)			{butBrowseRight.Width(w); return *this;}
-	EditFileFolder &BrowseOpenFolderWidth(int w)	{butFolder.Width(w);  return *this;}
+	EditFileFolder &BrowseRightWidth(int w)			{butBrowseRight.Width(w); 	return *this;}
+	EditFileFolder &BrowseOpenFolderWidth(int w)	{butFolder.Width(w);  		return *this;}
+	EditFileFolder &UseDropping(bool use = true)	{Dropping(use);				return *this;}
+	EditFileFolder &BrowseDroppingWidth(int w)		{DropWidth(w);		  		return *this;}
 	virtual void SetData(const Value& data);
 	
 	Callback WhenChange;
+	
+	virtual void  Serialize(Stream& s) {
+		WithDropChoice::Serialize(s);
+		if (s.IsLoading()) {
+			if (select.GetCount() > 0)
+				SetData(select.Get(0));
+		}
+	}
+	virtual void  Jsonize(JsonIO& jio) {
+		Vector<String> list;
+		if (!jio.IsLoading()) {
+			for (int i = 0; i < select.GetCount(); ++i)
+				list << select.Get(i);
+		}
+		jio
+			("list", list)
+		;
+		if (jio.IsLoading()) {
+			for (int i = 0; i < list.GetCount(); ++i)
+				select.Add(list[i]);
+			if (list.GetCount() > 0)
+				SetData(list[0]);
+		}
+	}
+	virtual void  Xmlize(XmlIO& xio) {
+		Vector<String> list;
+		if (!xio.IsLoading()) {
+			for (int i = 0; i < select.GetCount(); ++i)
+				list << select.Get(i);
+		}
+		xio
+			("list", list)
+		;
+		if (xio.IsLoading()) {
+			for (int i = 0; i < list.GetCount(); ++i)
+				select.Add(list[i]);
+			if (list.GetCount() > 0)
+				SetData(list[0]);
+		}
+	}
 };
 
 class EditFile : public EditFileFolder {
