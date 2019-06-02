@@ -40,7 +40,6 @@ protected:
 	
 	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
-	void DoGo(bool add = true);
 		
 public:
 	EditFileFolder() 								{Init();};
@@ -76,6 +75,8 @@ public:
 	EditFileFolder &BrowseDroppingWidth(int w)		{DropWidth(w);		  		return *this;}
 	virtual void SetData(const Value& data);
 	
+	void DoGo(bool add = true);
+		
 	Callback WhenChange;
 	
 	virtual void  Serialize(Stream& s) {
