@@ -65,7 +65,7 @@ void Controls4U_Demo::Timer() {
 GUI_APP_MAIN {
 	ConsoleOutput console(true);
 	
-	printf("Controls4U_Demo\n");
+	printf("Controls4U_Demo\nConsoleOutput opened this window\n");
 	
 	Controls4U_Demo().Run();
 }
