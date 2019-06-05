@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	Vector.cpp;
+	IndexMem.cpp;
 
 mainconfig
 	"" = "";
