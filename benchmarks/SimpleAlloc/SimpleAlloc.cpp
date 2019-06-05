@@ -57,7 +57,7 @@ void Consumer()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-#if 0
+#if 1
 	if(1) {
 		for(auto m : { 50, 200, 500, 5000 }) {
 			for(int i = 0; i < NMIX; i++)

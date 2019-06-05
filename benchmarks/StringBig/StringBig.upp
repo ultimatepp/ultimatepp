@@ -1,0 +1,12 @@
+description "Testing realloc\377";
+
+uses
+	Core;
+
+file
+	StringBig.cpp;
+
+mainconfig
+	"" = "",
+	"" = "NOREALLOC";
+
