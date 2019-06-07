@@ -330,6 +330,8 @@ private:
 	void   SyncInfo();
 	void   SortA();
 	void   SortB(const Vector<int>& o);
+
+	void   SelectOne(int i, bool sel = true, bool raise = true);
 	
 	int    AsNdx(const String& id)              { return id_ndx.FindAdd(id); }
 
@@ -452,7 +454,7 @@ public:
 
 	int        GetSelectCount() const;
 	bool       IsSelection() const                              { return GetSelectCount(); }
-	void       SelectOne(int i, bool sel = true, bool raise = true);
+	void       Select(int i, bool sel = true)                   { SelectOne(i, sel); }
 	void       Select(int i, int count, bool sel = true);
 	bool       IsSelected(int i) const                          { return i < array.GetCount() && array[i].select; }
 	void       ClearSelection(bool raise = true);

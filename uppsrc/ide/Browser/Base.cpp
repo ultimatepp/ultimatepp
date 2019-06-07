@@ -8,10 +8,10 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
-// #define HAS_CLOG
+#define HAS_CLOG
 
 #ifdef HAS_CLOG
-#define CLOG(x)          RLOG(x)
+#define CLOG(x)       // RLOG(x)
 #else
 #define CLOG(x)
 #endif
@@ -321,9 +321,11 @@ void UpdateCodeBase2(Progress& pi)
 
 	base.Sweep(keep_file);
 
-	for(int i = 0; i < source_file.GetCount(); i++)
-		if(keep_file.Find(i) < 0 && parse_file.Find(i) < 0 && !source_file.IsUnlinked(i))
+	for(int i = 0; i < source_file.GetCount(); i++) {
+		if(keep_file.Find(i) < 0 && parse_file.Find(i) < 0 && !source_file.IsUnlinked(i)) {
 			source_file.Unlink(i);
+		}
+	}
 
 #ifdef HAS_CLOG
 	for(int i = 0; i < source_file.GetCount(); i++)

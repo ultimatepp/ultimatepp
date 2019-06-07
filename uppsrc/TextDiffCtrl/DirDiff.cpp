@@ -162,8 +162,8 @@ DirDiffDlg::DirDiffDlg()
 	
 	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, Zx(70)));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
-	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, 22).HSizePos());
-	files_pane.Add(find.HSizePosZ(4, 4).BottomPosZ(4, 19));
+	files_pane.Add(files.VSizePosZ(3 * cy + bcy + 4 * div, 24).HSizePos());
+	files_pane.Add(find.BottomPosZ(4, 19).HSizePosZ());
 
 	Add(files_diff.SizePos());
 	files_diff.Set(files_pane, diff);

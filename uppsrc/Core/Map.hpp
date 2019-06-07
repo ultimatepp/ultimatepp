@@ -66,10 +66,6 @@ int AMap<K, T, V>::FindPut_(KK&& k)
 	int i = key.FindPut(std::forward<KK>(k));
 	if(i >= value.GetCount())
 		value.Add();
-	else {
-		Destroy(&value[i], &value[i] + 1);
-		Construct(&value[i], &value[i] + 1);
-	}
 	return i;
 }
 

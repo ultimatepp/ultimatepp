@@ -404,6 +404,7 @@ void FileSelButton::OnAction()
 	{
 		*owner <<= Get();
 		owner->Action();
+		WhenSelected();
 	}
 }
 
