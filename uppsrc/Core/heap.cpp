@@ -8,6 +8,25 @@ namespace Upp {
 
 #define LLOG(x) //  LOG((void *)this << ' ' << x)
 
+const char *asString(int i)
+{
+	static thread_local char h[4][1024];
+	static thread_local int ii;
+	ii = (ii + 1) & 3;
+	sprintf(h[ii], "%d", i);
+	return h[ii];
+}
+
+const char *asString(void *ptr)
+{
+	static thread_local char h[4][1024];
+	static thread_local int ii;
+	ii = (ii + 1) & 3;
+	sprintf(h[ii], "%p", ptr);
+	return h[ii];
+}
+
+
 Heap::DLink Heap::big[1];
 Heap        Heap::aux;
 StaticMutex Heap::mutex;
@@ -26,11 +45,8 @@ void Heap::Init()
 		work[i]->klass = i;
 		cachen[i] = 3500 / Ksz(i);
 	}
-	GlobalLInit();
-	for(int i = 0; i < LBINS; i++)
-		freebin[i]->LinkSelf();
+	LInit();
 	large->LinkSelf();
-	lcount = 0;
 	if(this != &aux && !aux.initialized) {
 		Mutex::Lock __(mutex);
 		aux.Init();
@@ -38,7 +54,6 @@ void Heap::Init()
 	initialized = true;
 	out_ptr = out;
 	out_size = 0;
-	PROFILEMT(mutex);
 }
 
 void Heap::FreeRemoteRaw()
@@ -86,21 +101,19 @@ void Heap::Shutdown()
 			LLOG("Orphan empty " << (void *)empty[i]);
 		}
 	}
-	while(large != large->next) {
-		Header *bh = (Header *)((byte *)large->next + LARGEHDRSZ);
-		LLOG("Orphan large block " << (void *)large->next << " size: " << bh->size);
-		if(bh->size == MAXBLOCK && bh->free)
-			MoveToEmpty(large->next, bh);
-		else
-			MoveLarge(&aux, large->next);
+	while(large != large->next) { // Move all large pages to aux (some heap will pick them later)
+		DLink *ml = large->next;
+		ml->Unlink();
+		ml->Link(aux.large);
+		LBlkHeader *h = ml->GetFirst();
+		for(;;) {
+			h->heap = &aux;
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader();
+		}
 	}
 	memset(this, 0, sizeof(Heap));
-}
-
-void Heap::Assert(bool b)
-{
-	if(!b)
-		Panic("Heap is corrupted!");
 }
 
 void Heap::DblCheck(Page *p)
@@ -157,17 +170,19 @@ void Heap::Check() {
 		}
 		CheckFree(cache[i], i);
 	}
+
 	DLink *l = large->next;
 	while(l != large) {
-		Header *bh = (Header *)((byte *)l + LARGEHDRSZ);
-		while(bh->size) {
-			Assert((byte *)bh >= (byte *)l + LARGEHDRSZ && (byte *)bh < (byte *)l + 65536);
-			if(bh->free)
-				DbgFreeCheck(bh->GetBlock() + 1, bh->size - sizeof(DLink));
-			bh = bh->Next();
-		}
+		lheap.BlkCheck(l->GetFirst(), 255, true);
 		l = l->next;
 	}
+
+	HugePage *pg = huge_pages;
+	while(pg) {
+		BlkCheck(pg->page, HPAGE);
+		pg = pg->next;
+	}
+
 	if(this != &aux)
 		aux.Check();
 }

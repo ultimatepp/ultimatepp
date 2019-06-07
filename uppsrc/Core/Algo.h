@@ -180,6 +180,16 @@ Vector<int> FindAll(const Range& r, Predicate match, int from = 0)
 	return ndx;
 }
 
+template <class Range, class Predicate>
+Vector<int> FindAlli(const Range& r, Predicate match, int from = 0)
+{
+	Vector<int> ndx;
+	for(int i = from; i < r.GetCount(); i++)
+		if(match(i))
+			ndx.Add(i);
+	return ndx;
+}
+
 template <class Range, class T, class Less>
 int FindLowerBound(const Range& r, const T& val, const Less& less)
 {

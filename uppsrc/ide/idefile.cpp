@@ -789,6 +789,8 @@ void Ide::CheckFileUpdate()
 	ReloadFile();
 }
 
+typedef Index<dword> HashBase;
+
 static void GetLineIndex(String file, HashBase& hash, Vector<String>& lines)
 {
 	const char *p = file;

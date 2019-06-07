@@ -1,5 +1,4 @@
 topic "Huge";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,16 +8,17 @@ topic "Huge";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Huge]]}}&]
 [s3;%- &]
 [s1;:Upp`:`:Huge`:`:class:%- [@(0.0.255)3 class][3 _][*3 Huge]&]
-[s2; This class is intended for dealing of raw binary data bigger 
-than 2GB. The main use is supposed to be in serialization loading, 
-where it is used to preload large binary data (e.g. String or 
-Image) as means for protection against invalid input `- Huge 
-is storing data in 1MB chunks, so is likely to run to the end 
-of stream without allocating invalid amounts of data.&]
+[s2; This class is intended for dealing of large raw binary data. 
+The main use is supposed to be in serialization loading, where 
+it is used to preload large binary data (e.g. String or Image) 
+as means for protection against invalid input `- Huge is storing 
+data in 1MB chunks, so is likely to run to the end of stream 
+without allocating invalid amounts of data.&]
 [s2; To explain further, the problem we are trying to solve here 
 is&]
 [s2; &]

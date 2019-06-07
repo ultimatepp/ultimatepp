@@ -10,28 +10,6 @@ namespace Upp {
 
 #include "HeapImp.h"
 
-void *MemoryAllocPermanentRaw(size_t size)
-{
-	if(size >= 256)
-		return malloc(size);
-	static byte *ptr = NULL;
-	static byte *limit = NULL;
-	ASSERT(size < INT_MAX);
-	if(ptr + size >= limit) {
-		ptr = (byte *)AllocRaw4KB((int)size);
-		limit = ptr + 4096;
-	}
-	void *p = ptr;
-	ptr += size;
-	return p;
-}
-
-void *MemoryAllocPermanent(size_t size)
-{
-	Mutex::Lock __(Heap::mutex);
-	return MemoryAllocPermanentRaw(size);
-}
-
 void OutOfMemoryPanic(size_t size)
 {
 	char h[200];
@@ -40,9 +18,18 @@ void OutOfMemoryPanic(size_t size)
 	Panic(h);
 }
 
-int sKB;
+size_t Heap::huge_4KB_count;
+size_t Heap::free_4KB;
+size_t Heap::big_size;
+size_t Heap::big_count;
+size_t Heap::sys_size;
+size_t Heap::sys_count;
+size_t Heap::huge_chunks;
 
-int   MemoryUsedKb() { return sKB; }
+int MemoryUsedKb()
+{
+	return int(4 * (Heap::huge_4KB_count - Heap::free_4KB));
+}
 
 int sKBLimit = INT_MAX;
 
@@ -57,36 +44,27 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 {
 	size_t rsz = int(((size + 4095) & ~4095) >> 10);
 	void *ptr = NULL;
-	for(int pass = 0; pass < 2; pass++) {
-		if(sKB + (int)rsz < sKBLimit) {
-		#ifdef PLATFORM_WIN32
-			ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-		#elif PLATFORM_LINUX
-			ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-			if(ptr == MAP_FAILED)
-				ptr = NULL;
-		#else
-			ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
-			if(ptr == MAP_FAILED)
-				ptr = NULL;
-		#endif
-			if(ptr)
-				break;
-		}
-	#ifdef MEMORY_SHRINK
-		MemoryShrink(); // Freeing large / small empty might help
+	if(MemoryUsedKb() < sKBLimit) {
+	#ifdef PLATFORM_WIN32
+		ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+	#elif PLATFORM_LINUX
+		ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+		if(ptr == MAP_FAILED)
+			ptr = NULL;
+	#else
+		ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+		if(ptr == MAP_FAILED)
+			ptr = NULL;
 	#endif
 	}
 	if(!ptr)
 		OutOfMemoryPanic(size/*reqsize*/);
-	sKB += (int)rsz;
 	DoPeakProfile();
 	return ptr;
 }
 
 void  SysFreeRaw(void *ptr, size_t size)
 {
-	sKB -= int(((size + 4095) & ~4095) >> 10);
 #ifdef PLATFORM_WIN32
 	VirtualFree(ptr, 0, MEM_RELEASE);
 #else
@@ -94,111 +72,22 @@ void  SysFreeRaw(void *ptr, size_t size)
 #endif
 }
 
-int s4kb__;
-int s64kb__;
-int s256kb__;
-
-#ifdef MEMORY_SHRINK
-void *AllocRaw4KB(int reqsize)
+void *MemoryAllocPermanent(size_t size)
 {
-	static int   left;
-	static byte *ptr;
-	static int   n = 32;
-	if(left == 0) {
-		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 4096, reqsize);
+	Mutex::Lock __(Heap::mutex);
+	if(size > 10000)
+		return SysAllocRaw(size, size);
+	static byte *ptr = NULL;
+	static byte *limit = NULL;
+	ASSERT(size < INT_MAX);
+	if(ptr + size >= limit) {
+		ptr = (byte *)SysAllocRaw(16384, 16384);
+		limit = ptr + 16384;
 	}
-	n = n + 1;
-	if(n > 4096) n = 4096;
 	void *p = ptr;
-	ptr += 4096;
-	left--;
-	s4kb__++;
-	DoPeakProfile();
+	ptr += size;
 	return p;
 }
-
-void *AllocRaw64KB(int reqsize)
-{
-	void *ptr = (byte *)SysAllocRaw(65536, reqsize);
-	s64kb__++;
-	DoPeakProfile();
-	return ptr;
-}
-
-#if 0
-void FreeRaw4KB(void *ptr)
-{
-	SysFreeRaw(ptr, 4096);
-	s4kb__--;
-}
-#endif
-
-void FreeRaw64KB(void *ptr)
-{
-	SysFreeRaw(ptr, 65536);
-	s64kb__--;
-}
-
-#else
-
-void *AllocRaw4KB(int reqsize)
-{
-	static int   left;
-	static byte *ptr;
-	static int   n = 32;
-	if(left == 0) {
-		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 4096, reqsize);
-	}
-	n = n + 1;
-	if(n > 4096) n = 4096;
-	void *p = ptr;
-	ptr += 4096;
-	left--;
-	s4kb__++;
-	DoPeakProfile();
-	return p;
-}
-
-void *AllocRaw64KB(int reqsize)
-{
-	static int   left;
-	static byte *ptr;
-	static int   n = 32;
-	if(left == 0) {
-		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 65536, reqsize);
-	}
-	n = n + 1;
-	if(n > 256) n = 256;
-	void *p = ptr;
-	ptr += 65536;
-	left--;
-	s64kb__++;
-	DoPeakProfile();
-	return p;
-}
-
-void *AllocRaw256KB(int reqsize)
-{
-	static int   left;
-	static byte *ptr;
-	static int   n = 32;
-	if(left == 0) {
-		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 256*1024, reqsize);
-	}
-	n = n + 1;
-	if(n > 64) n = 64;
-	void *p = ptr;
-	ptr += 256*1024;
-	left--;
-	s256kb__++;
-	DoPeakProfile();
-	return p;
-}
-#endif
 
 void HeapPanic(const char *text, void *pos, int size)
 {
@@ -208,23 +97,6 @@ void HeapPanic(const char *text, void *pos, int size)
 }
 
 #ifdef HEAPDBG
-
-void Heap::DbgFreeFill(void *p, size_t size)
-{
-	size_t count = size >> 2;
-	dword *ptr = (dword *)p;
-	while(count--)
-		*ptr++ = 0x65657246;
-}
-
-void Heap::DbgFreeCheck(void *p, size_t size)
-{
-	size_t count = size >> 2;
-	dword *ptr = (dword *)p;
-	while(count--)
-		if(*ptr++ != 0x65657246)
-			HeapPanic("Writes to freed blocks detected", p, (int)(uintptr_t)size);
-}
 
 void *Heap::DbgFreeCheckK(void *p, int k)
 {
@@ -253,7 +125,7 @@ void Heap::Make(MemoryProfile& f)
 		Page *p = work[i]->next;
 		while(p != work[i]) {
 			f.allocated[qq] += p->active;
-			f.fragmented[qq] += p->Count() - p->active;
+			f.fragments[qq] += p->Count() - p->active;
 			p = p->next;
 		}
 		p = full[i]->next;
@@ -271,37 +143,95 @@ void Heap::Make(MemoryProfile& f)
 	}
 	int ii = 0;
 	int fi = 0;
-	DLink *m = big->next;
-	while(m != big) {
-		f.big_count++;
-		f.big_size += ((BigHdr *)m)->size;
-		m = m->next;
-	}
-	m = large->next;
+	DLink *m = large->next;
 	while(m != large) {
-		Header *h = (Header *)((byte *)m + LARGEHDRSZ);
-		while(h->size) {
-			if(h->free) {
-				f.large_free_count++;
-				f.large_free_total += h->size;
-				if(fi < 1024)
-					f.large_free_size[fi++] = h->size;
+		LargeHeap::BlkHeader *h = m->GetFirst();
+		for(;;) {
+			if(h->IsFree()) {
+				f.large_fragments_count++;
+				int sz = LUNIT * h->GetSize();
+				f.large_fragments_total += sz;
+				if(h->size < 2048)
+					f.large_fragments[sz >> 8]++;
 			}
 			else {
 				f.large_count++;
-				f.large_total += h->size;
-				if(ii < 1024)
-					f.large_size[ii++] = h->size;
+				f.large_total += LUNIT * h->size;
 			}
-			h = h->Next();
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader();
 		}
 		m = m->next;
 	}
-	m = lempty->next;
-	while(m != lempty) {
-		f.large_empty++;
-		m = m->next;
+
+	f.sys_count = (int)sys_count;
+	f.sys_total = sys_size;
+	
+	f.huge_count = int(big_count - sys_count);
+	f.huge_total = 4096 * max((int)big_size - (int)sys_size, 0); // this is not 100% correct, but approximate
+	
+	f.master_chunks = (int)huge_chunks;
+
+	HugePage *pg = huge_pages;
+	while(pg) {
+		BlkPrefix *h = (BlkPrefix *)pg->page;
+		for(;;) {
+			if(h->IsFree()) {
+				word sz = h->GetSize();
+				f.huge_fragments[sz]++;
+				f.huge_fragments_count++;
+				f.huge_fragments_total += sz;
+			}
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader(4096);
+		}
+		pg = pg->next;
 	}
+}
+
+String AsString(const MemoryProfile& mem)
+{
+	String text;
+#ifdef UPP_HEAP
+	int acount = 0;
+	size_t asize = 0;
+	int fcount = 0;
+	size_t fsize = 0;
+	for(int i = 0; i < 1024; i++)
+		if(mem.allocated[i]) {
+			int sz = 4 * i;
+			text << Format("%4d B, %7d allocated (%6d KB), %6d fragments (%6d KB)\n",
+			              sz, mem.allocated[i], (mem.allocated[i] * sz) >> 10,
+			              mem.fragments[i], (mem.fragments[i] * sz) >> 10);
+			acount += mem.allocated[i];
+			asize += mem.allocated[i] * sz;
+			fcount += mem.fragments[i];
+			fsize += mem.fragments[i] * sz;
+		}
+	text << Format(" TOTAL, %7d allocated (%6d KB), %6d fragments (%6d KB)\n",
+	              acount, int(asize >> 10), fcount, int(fsize >> 10));
+	text << "Empty 4KB pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\n";
+	text << "Large block count " << mem.large_count
+	     << ", total size " << (mem.large_total >> 10) << " KB\n";
+	text << "Large fragments count " << mem.large_fragments_count
+	     << ", total size " << (mem.large_fragments_total >> 10) << " KB\n";
+	text << "Huge block count " << mem.huge_count
+	     << ", total size " << int(mem.huge_total >> 10) << " KB\n";
+	text << "Sys block count " << mem.sys_count
+	     << ", total size " << int(mem.sys_total >> 10) << " KB\n";
+	text << Heap::HPAGE * 4 / 1024 << "MB master blocks " << mem.master_chunks << "\n";
+	text << "\nLarge fragments:\n";
+	for(int i = 0; i < 2048; i++)
+		if(mem.large_fragments[i])
+			text << 256.0 * i / 1024 << " KB: " << mem.large_fragments[i] << "\n";
+	text << "\nHuge fragments:\n";
+	for(int i = 0; i < 65535; i++)
+		if(mem.huge_fragments[i])
+			text << i * 4 << " KB: " << mem.huge_fragments[i] << "\n";
+#endif
+	return text;
 }
 
 #ifdef flagHEAPSTAT

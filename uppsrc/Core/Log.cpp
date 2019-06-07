@@ -305,55 +305,6 @@ void  LogStream::_Put(const void *data, dword size)
 		sTh.Put(*q++);
 }
 
-String AsString(const MemoryProfile& mem)
-{
-	String text;
-#ifdef UPP_HEAP
-	int acount = 0;
-	size_t asize = 0;
-	int fcount = 0;
-	size_t fsize = 0;
-	for(int i = 0; i < 1024; i++)
-		if(mem.allocated[i]) {
-			int sz = 4 * i;
-			text << Format("%4d B, %6d allocated (%5d KB), %6d fragmented (%5d KB)\n",
-			              sz, mem.allocated[i], (mem.allocated[i] * sz) >> 10,
-			              mem.fragmented[i], (mem.fragmented[i] * sz) >> 10);
-			acount += mem.allocated[i];
-			asize += mem.allocated[i] * sz;
-			fcount += mem.fragmented[i];
-			fsize += mem.fragmented[i] * sz;
-		}
-	text << Format(" TOTAL, %6d allocated (%5d KB), %6d fragmented (%5d KB)\n",
-	              acount, int(asize >> 10), fcount, int(fsize >> 10));
-	text << "Free 4KB pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\n";
-	text << "Large block count " << mem.large_count
-	     << ", total size " << (mem.large_total >> 10) << " KB\n";
-	text << "Large fragments count " << mem.large_free_count
-	     << ", total size " << (mem.large_free_total >> 10) << " KB\n";
-	text << "Large free 64KB pages " << mem.large_empty
-	     << ", total size " << 64 * mem.large_empty << " KB\n";
-	text << "Big block count " << mem.big_count
-	     << ", total size " << int(mem.big_size >> 10) << " KB\n";
-#endif
-	return text;
-}
-
-int64 GetAllocatedBytes(const MemoryProfile& mem)
-{
-	int64 asize = 0;
-#ifdef UPP_HEAP
-	for(int i = 0; i < 1024; i++)
-		if(mem.allocated[i]) {
-			int sz = 4 * i;
-			asize += mem.allocated[i] * sz;
-		}
-	asize += mem.large_total;
-	asize += mem.big_size;
-#endif
-	return asize;
-}
-
 #ifdef flagCHECKINIT
 
 void InitBlockBegin__(const char *fn, int line) {

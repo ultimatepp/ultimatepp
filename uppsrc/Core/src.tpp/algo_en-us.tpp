@@ -190,7 +190,18 @@ nt]>_[* FindAll]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r],
 [*@4 Predicate]_[*@3 match], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2;%% Returns the Vector of indices of  [/ ALL] elements for which 
 [%-*@3 match] is true. Returned Vector is sorted in ascending order. 
-Search starts at index [%-*@3 from].&]
+Search starts at index [%-*@3 from]. The [%-*@3 match] parameter 
+is an element.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FindAlli`(const Range`&`,Predicate`,int`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
+nt]>_[* FindAlli]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
+[*@4 Predicate]_[*@3 match], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2;%% Returns the Vector of indices of  [/ ALL] elements for which 
+[%-*@3 match] is true. Returned Vector is sorted in ascending order. 
+Search starts at index [%-*@3 from]. Unlike FindAll, the parameter 
+to [%-*@3 match] is index of element.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:FindLowerBound`(const Range`&`,const T`&`,const Less`&`): [@(0.0.255) templ

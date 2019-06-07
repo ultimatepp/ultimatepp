@@ -104,13 +104,10 @@ char *String0::Alloc(int count, char& kind)
 	}
 	size_t sz = sizeof(Rc) + count + 1;
 	Rc *rc = (Rc *)MemoryAllocSz(sz);
-	if(count == INT_MAX)
-		rc->alloc = INT_MAX;
-	else
-		rc->alloc = (int)sz - sizeof(Rc) - 1;
+	rc->alloc = count == INT_MAX ? INT_MAX : (int)sz - sizeof(Rc) - 1;
 	rc->refcount = 1;
 	kind = min(rc->alloc, 255);
-	return (char *)(rc + 1);
+	return rc->GetPtr();
 }
 
 char *String0::Insert(int pos, int count, const char *s)
@@ -385,23 +382,38 @@ void StringBuffer::Realloc(dword n, const char *cat, int l)
 	size_t ep = pend - pbegin;
 	if(n > INT_MAX)
 		n = INT_MAX;
-	char *p = Alloc(n, al);
-	memcpy(p, pbegin, min((dword)GetLength(), n));
+	bool realloced = false;
+	char *p;
+	if((int)(limit - pbegin) > 800) {
+		size_t sz = sizeof(Rc) + n + 1;
+		Rc *rc = (Rc *)pbegin - 1;
+		if(MemoryTryRealloc(rc, sz)) {
+			realloced = true;
+			al = rc->alloc = (int)min((size_t)INT_MAX, sz - sizeof(Rc) - 1);
+			p = pbegin;
+		}
+	}
+	if(!realloced) {
+		p = Alloc(n, al);
+		memcpy(p, pbegin, min((dword)GetLength(), n));
+	}
 	if(cat) {
 		if(ep + l > INT_MAX)
-			Panic("StringBuffer is too big!");
+			Panic("StringBuffer is too big (>2GB)!");
 		memcpy(p + ep, cat, l);
 		ep += l;
 	}
-	Free();
-	pbegin = p;
+	if(!realloced) {
+		Free();
+		pbegin = p;
+	}
 	pend = pbegin + ep;
 	limit = pbegin + al;
 }
 
 void StringBuffer::Expand()
 {
-	Realloc(GetLength() * 2);
+	Realloc(GetLength() * 3 / 2);
 	if(pend == limit)
 		Panic("StringBuffer is too big!");
 }

@@ -84,19 +84,21 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 
 	void     Free();
 	void     __DeepCopy(const Vector& src);
-	T&       Get(int i) const        { ASSERT(i >= 0 && i < items); return vector[i]; }
-	void     ReAlloc(int alloc);
+	T&       Get(int i) const                { ASSERT(i >= 0 && i < items); return vector[i]; }
+	bool     ReAlloc(int alloc);
 	void     ReAllocF(int alloc);
-	void     Grow();
+	bool     GrowSz();
 	void     GrowF();
 	T&       GrowAdd(const T& x);
-	T&       GrowAddPick(T&& x);
+	T&       GrowAdd(T&& x);
 	void     RawInsert(int q, int count);
+
+	template <class U> friend class Index;
 
 public:
 	T&       Add()                           { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
 	T&       Add(const T& x)                 { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
-	T&       Add(T&& x)                      { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       Add(T&& x)                      { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAdd(pick(x)); }
 	template <class... Args>
 	T&       Create(Args&&... args)          { if(items >= alloc) GrowF(); return *(::new(Rdd()) T(std::forward<Args>(args)...)); }
 	void     AddN(int n);
@@ -129,6 +131,8 @@ public:
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
+	template <class Condition>
+	void     RemoveIf(Condition c);
 
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
@@ -161,11 +165,11 @@ public:
 	Vector&  operator<<(const T& x)  { Add(x); return *this; }
 
 #ifdef UPP
-	void     Serialize(Stream& s)    { StreamContainer(s, *this); }
+	void     Serialize(Stream& s)                        { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	dword    GetHashValue() const                        { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -273,6 +277,8 @@ public:
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
+	template <class Condition>
+	void     RemoveIf(Condition c);
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count);

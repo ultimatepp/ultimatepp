@@ -709,7 +709,6 @@ Vector<Value> DbfStream::FetchRow(int row)
 
 void DbfStream::WriteRow(int row, const Vector<Value>& values)
 {
-	RTIMING("DbfStream::WriteRow");
 	ASSERT(row >= 0);
 	FlushRow();
 	if(values.GetCount() < fields.GetCount())
