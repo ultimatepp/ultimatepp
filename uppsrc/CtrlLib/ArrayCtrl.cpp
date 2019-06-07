@@ -1432,11 +1432,14 @@ bool ArrayCtrl::SetCursor0(int i, bool dosel) {
 	if(dosel && multiselect) {
 		ClearSelection(false);
 		anchor = cursor;
-		Select(cursor, true, false);
+		SelectOne(cursor, true, false);
 		sel = true;
 	}
-	if(sel)
+	if(sel) {
+		selectiondirty = true;
+		WhenSelection();
 		WhenSel();
+	}
 	SyncInfo();
 	return true;
 }
@@ -1496,7 +1499,7 @@ int ArrayCtrl::GetSelectCount() const
 	return selectcount;
 }
 
-void ArrayCtrl::Select(int i, bool sel, bool raise)
+void ArrayCtrl::SelectOne(int i, bool sel, bool raise)
 {
 	array.At(i).select = sel;
 	selectiondirty = true;
@@ -1505,6 +1508,18 @@ void ArrayCtrl::Select(int i, bool sel, bool raise)
 		WhenSelection();
 		WhenSel();
 	}
+	SyncInfo();
+}
+
+void ArrayCtrl::Select(int i, int count, bool sel)
+{
+	while(count--) {
+		array.At(i).select = sel;
+		RefreshRow(i++);
+	}
+	selectiondirty = true;
+	WhenSelection();
+	WhenSel();
 	SyncInfo();
 }
 
@@ -1536,18 +1551,6 @@ bool ArrayCtrl::IsLineVisible(int i) const
 	bool b = IsLineVisible0(i);
 	WhenLineVisible(i, b);
 	return b;
-}
-
-void ArrayCtrl::Select(int i, int count, bool sel)
-{
-	while(count--) {
-		array.At(i).select = sel;
-		RefreshRow(i++);
-	}
-	selectiondirty = true;
-	WhenSelection();
-	WhenSel();
-	SyncInfo();
 }
 
 void ArrayCtrl::ClearSelection(bool raise)
@@ -1661,7 +1664,7 @@ void ArrayCtrl::ClickSel(dword flags)
 {
 	if(cursor >= 0 && multiselect) {
 		if(flags & K_CTRL) {
-			Select(cursor, !IsSelected(cursor), false);
+			SelectOne(cursor, !IsSelected(cursor));
 			anchor = cursor;
 		}
 		else {
@@ -1670,7 +1673,7 @@ void ArrayCtrl::ClickSel(dword flags)
 				Select(min(anchor, cursor), abs(anchor - cursor) + 1, true);
 			else {
 				anchor = cursor;
-				Select(cursor, true, false);
+				SelectOne(cursor, true);
 			}
 		}
 		Action();
@@ -1803,7 +1806,7 @@ void ArrayCtrl::RightDown(Point p, dword flags) {
 		if(cursor >= 0 && multiselect) {
 			if(!IsSelected(cursor)) {
 				ClearSelection();
-				Select(anchor = cursor);
+				SelectOne(anchor = cursor);
 			}
 			Action();
 		}
@@ -1858,7 +1861,7 @@ void ArrayCtrl::KeyMultiSelect(int aanchor, dword key)
 	else
 	if(cursor >= 0) {
 		anchor = cursor;
-		Select(anchor);
+		SelectOne(anchor);
 	}
 }
 
