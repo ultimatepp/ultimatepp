@@ -1,0 +1,9 @@
+LAYOUT(ArrayCtrlSelLayout, 468, 212)
+	ITEM(ArrayCtrl, list, LeftPosZ(8, 150).TopPosZ(8, 196))
+	ITEM(Label, counter, LeftPosZ(164, 296).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("IsSel")).LeftPosZ(164, 56).TopPosZ(32, 20))
+	ITEM(Label, sel, LeftPosZ(224, 236).TopPosZ(32, 19))
+	ITEM(Label, dv___4, SetLabel(t_("IsSelected")).LeftPosZ(164, 52).TopPosZ(56, 20))
+	ITEM(Label, selected, LeftPosZ(224, 236).TopPosZ(56, 19))
+END_LAYOUT
+
