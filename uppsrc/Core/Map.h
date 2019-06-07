@@ -34,6 +34,18 @@ class AMap {
 protected:
 	Index<K> key;
 	V        value;
+	
+	template <class KK>           int FindAdd_(KK&& k);
+	template <class KK, class TT> int FindAdd_(KK&& k, TT&& init);
+	template <class KK>           T&  Put_(KK&& k);
+	template <class KK, class TT> int Put_(KK&& k, TT&& x);
+	template <class KK>           int PutDefault_(KK&& k);
+	template <class KK>           int FindPut_(KK&& k);
+	template <class KK, class TT> int FindPut_(KK&& k, TT&& init);
+	template <class KK>           T&  GetAdd_(KK&& k);
+	template <class KK, class TT> T&  GetAdd_(KK&& k, TT&& init);
+	template <class KK>           T&  GetPut_(KK&& k);
+	template <class KK, class TT> T&  GetPut_(KK&& k, TT&& init);
 
 public:
 	T&       Add(const K& k, const T& x)            { key.Add(k); return value.Add(x); }
@@ -43,139 +55,124 @@ public:
 	T&       Add(K&& k, T&& x)                      { key.Add(pick(k)); return value.Add(pick(x)); }
 	T&       Add(K&& k)                             { key.Add(pick(k)); return value.Add(); }
 
-	int      Find(const K& k, unsigned h) const     { return key.Find(k, h); }
 	int      Find(const K& k) const                 { return key.Find(k); }
 	int      FindNext(int i) const                  { return key.FindNext(i); }
-	int      FindLast(const K& k, unsigned h) const { return key.FindLast(k, h); }
 	int      FindLast(const K& k) const             { return key.FindLast(k); }
 	int      FindPrev(int i) const                  { return key.FindPrev(i); }
 
-	int      FindAdd(const K& k);
-	int      FindAdd(const K& k, const T& init);
-	int      FindAdd(const K& k, T&& init);
-	int      FindAdd(K&& k);
-	int      FindAdd(K&& k, const T& init);
-	int      FindAdd(K&& k, T&& init);
+	int      FindAdd(const K& k)                    { return FindAdd_(k); }
+	int      FindAdd(const K& k, const T& init)     { return FindAdd_(k, init); }
+	int      FindAdd(const K& k, T&& init)          { return FindAdd_(k, pick(init)); }
+	int      FindAdd(K&& k)                         { return FindAdd_(pick(k)); }
+	int      FindAdd(K&& k, const T& init)          { return FindAdd_(pick(k), init); }
+	int      FindAdd(K&& k, T&& init)               { return FindAdd_(pick(k), pick(init)); }
 
-	T&       Put(const K& k);
-	T&       Put(K&& k);
+	T&       Put(const K& k)                        { return Put_(k); }
+	int      Put(const K& k, const T& x)            { return Put_(k, x); }
+	int      Put(const K& k, T&& x)                 { return Put_(k, pick(x)); }
+	T&       Put(K&& k)                             { return Put_(pick(k)); }
+	int      Put(K&& k, const T& x)                 { return Put_(pick(k), x); }
+	int      Put(K&& k, T&& x)                      { return Put_(pick(k), pick(x)); }
 
-	int      Put(const K& k, const T& x);
-	int      Put(const K& k, T&& x);
-	int      Put(K&& k, const T& x);
-	int      Put(K&& k, T&& x);
+	int      PutDefault(const K& k)                 { return PutDefault_(k); }
+	int      PutDefault(K&& k)                      { return PutDefault_(pick(k)); }
 
-	int      PutDefault(const K& k);
-	int      PutDefault(K&& k);
+	int      FindPut(const K& k)                    { return FindPut_(k); }
+	int      FindPut(const K& k, const T& init)     { return FindPut_(k, init); }
+	int      FindPut(const K& k, T&& init)          { return FindPut_(k, pick(init)); }
+	int      FindPut(K&& k)                         { return FindPut_(pick(k)); }
+	int      FindPut(K&& k, const T& init)          { return FindPut_(pick(k), init); }
+	int      FindPut(K&& k, T&& init)               { return FindPut_(pick(k), pick(init)); }
 
-	int      FindPut(const K& k);
-	int      FindPut(const K& k, const T& init);
-	int      FindPut(const K& k, T&& init);
-	int      FindPut(K&& k);
-	int      FindPut(K&& k, const T& init);
-	int      FindPut(K&& k, T&& init);
+	T&       Get(const K& k)                        { return value[Find(k)]; }
+	const T& Get(const K& k) const                  { return value[Find(k)]; }
+	const T& Get(const K& k, const T& d) const      { int i = Find(k); return i >= 0 ? value[i] : d; }
 
-	T&       Get(const K& k)                     { return value[Find(k)]; }
-	const T& Get(const K& k) const               { return value[Find(k)]; }
-	const T& Get(const K& k, const T& d) const   { int i = Find(k); return i >= 0 ? value[i] : d; }
+	T&       GetAdd(const K& k)                     { return GetAdd_(k); }
+	T&       GetAdd(const K& k, const T& x)         { return GetAdd_(k, x); }
+	T&       GetAdd(const K& k, T&& x)              { return GetAdd_(k, pick(x)); }
+	T&       GetAdd(K&& k)                          { return GetAdd_(pick(k)); }
+	T&       GetAdd(K&& k, const T& x)              { return GetAdd_(pick(k), x); }
+	T&       GetAdd(K&& k, T&& x)                   { return GetAdd_(pick(k), pick(x)); }
 
-	T&       GetAdd(const K& k);
-	T&       GetAdd(const K& k, const T& x);
-	T&       GetAdd(const K& k, T&& x);
-	T&       GetAdd(K&& k);
-	T&       GetAdd(K&& k, const T& x);
-	T&       GetAdd(K&& k, T&& x);
+	T&       GetPut(const K& k)                     { return GetPut_(k); }
+	T&       GetPut(const K& k, const T& x)         { return GetPut_(k, x); }
+	T&       GetPut(const K& k, T&& x)              { return GetPut_(k, pick(x)); }
+	T&       GetPut(K&& k)                          { return GetPut_(pick(k)); }
+	T&       GetPut(K&& k, const T& x)              { return GetPut_(pick(k), x); }
+	T&       GetPut(K&& k, T&& x)                   { return GetPut_(pick(k), pick(x)); }
 
-	T&       GetPut(const K& k);
-	T&       GetPut(const K& k, const T& x);
-	T&       GetPut(const K& k, T&& x);
-	T&       GetPut(K&& k);
-	T&       GetPut(K&& k, const T& x);
-	T&       GetPut(K&& k, T&& x);
+	void     SetKey(int i, const K& k)              { key.Set(i, k); }
+	void     SetKey(int i, K&& k)                   { key.Set(i, pick(k)); }
 
-	void     SetKey(int i, const K& k)            { key.Set(i, k); }
-	void     SetKey(int i, K&& k)                 { key.Set(i, pick(k)); }
+	T       *FindPtr(const K& k)                    { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
+	const T *FindPtr(const K& k) const              { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
 
-	T       *FindPtr(const K& k)                  { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
-	const T *FindPtr(const K& k) const            { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
+	T       *FindLastPtr(const K& k)                { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
+	const T *FindLastPtr(const K& k) const          { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
 
-	T       *FindLastPtr(const K& k)              { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
-	const T *FindLastPtr(const K& k) const        { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
-
-	void     Unlink(int i)                        { key.Unlink(i); }
-	int      UnlinkKey(const K& k, unsigned h)    { return key.UnlinkKey(k, h); }
-	int      UnlinkKey(const K& k)                { return key.UnlinkKey(k); }
-	bool     IsUnlinked(int i) const              { return key.IsUnlinked(i); }
+	void     Unlink(int i)                          { key.Unlink(i); }
+	int      UnlinkKey(const K& k, unsigned h)      { return key.UnlinkKey(k, h); }
+	int      UnlinkKey(const K& k)                  { return key.UnlinkKey(k); }
+	bool     IsUnlinked(int i) const                { return key.IsUnlinked(i); }
 	void     Sweep();
-	bool     HasUnlinked() const                  { return key.HasUnlinked(); }
+	bool     HasUnlinked() const                    { return key.HasUnlinked(); }
 
-	T&       Insert(int i, const K& k)             { key.Insert(i, k); return value.Insert(i); }
-	T&       Insert(int i, const K& k, const T& x) { key.Insert(i, k); return value.Insert(i, x); }
-	T&       Insert(int i, const K& k, T&& x)      { key.Insert(i, k); return value.Insert(i, pick(x)); }
-	T&       Insert(int i, K&& k)                  { key.Insert(i, pick(k)); return value.Insert(i); }
-	T&       Insert(int i, K&& k, const T& x)      { key.Insert(i, pick(k)); return value.Insert(i, x); }
-	T&       Insert(int i, K&& k, T&& x)           { key.Insert(i, pick(k)); return value.Insert(i, pick(x)); }
+	const T& operator[](int i) const                { return value[i]; }
+	T&       operator[](int i)                      { return value[i]; }
+	int      GetCount() const                       { return value.GetCount(); }
+	bool     IsEmpty() const                        { return value.IsEmpty(); }
+	void     Clear()                                { key.Clear(); value.Clear(); }
+	void     Shrink()                               { value.Shrink(); key.Shrink(); }
+	void     Reserve(int xtra)                      { value.Reserve(xtra); key.Reserve(xtra); }
+	int      GetAlloc() const                       { return value.GetAlloc(); }
 
-	void     Remove(int i)                         { key.Remove(i); value.Remove(i); }
-	void     Remove(int i, int count)              { key.Remove(i, count); value.Remove(i, count); }
-	void     Remove(const int *sl, int n)          { key.Remove(sl, n); value.Remove(sl, n); }
-	void     Remove(const Vector<int>& sl)         { Remove(sl, sl.GetCount()); }
-	int      RemoveKey(const K& k);
+	unsigned GetHash(int i) const                   { return key.GetHash(i); }
 
-	const T& operator[](int i) const               { return value[i]; }
-	T&       operator[](int i)                     { return value[i]; }
-	int      GetCount() const                      { return value.GetCount(); }
-	bool     IsEmpty() const                       { return value.IsEmpty(); }
-	void     Clear()                               { key.Clear(); value.Clear(); }
-	void     Shrink()                              { value.Shrink(); key.Shrink(); }
-	void     Reserve(int xtra)                     { value.Reserve(xtra); key.Reserve(xtra); }
-	int      GetAlloc() const                      { return value.GetAlloc(); }
+	void     Drop(int n = 1)                        { key.Drop(n); value.Drop(n); }
+	T&       Top()                                  { return value.Top(); }
+	const T& Top() const                            { return value.Top(); }
+	const K& TopKey() const                         { return key.Top(); }
+//	T        Pop()                                  { T h = Top(); Drop(); return h; }
+	K        PopKey()                               { K h = TopKey(); Drop(); return h; }
+	void     Trim(int n)                            { key.Trim(n); value.SetCount(n); }
 
-	unsigned GetHash(int i) const                  { return key.GetHash(i); }
+	const K& GetKey(int i) const                    { return key[i]; }
 
-	void     Drop(int n = 1)                       { key.Drop(n); value.Drop(n); }
-	T&       Top()                                 { return value.Top(); }
-	const T& Top() const                           { return value.Top(); }
-	const K& TopKey() const                        { return key.Top(); }
-//	T        Pop()                                 { T h = Top(); Drop(); return h; }
-	K        PopKey()                              { K h = TopKey(); Drop(); return h; }
-	void     Trim(int n)                           { key.Trim(n); value.SetCount(n); }
+	void     Remove(const int *sl, int n)           { key.Remove(sl, n); value.Remove(sl, n); }
+	void     Remove(const Vector<int>& sl)          { Remove(sl, sl.GetCount()); }
+	template <typename P> void RemoveIf(P p)        { Remove(FindAlli(p)); }
 
-	const K& GetKey(int i) const                   { return key[i]; }
-
-#ifdef UPP
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio);
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
-	bool     operator==(const AMap& b) const       { ASSERT(!HasUnlinked()); return IsEqualMap(*this, b); }
-	bool     operator!=(const AMap& b) const       { return !operator==(b); }
-	int      Compare(const AMap& b) const          { ASSERT(!HasUnlinked()); return CompareMap(*this, b); }
-	bool     operator<=(const AMap& x) const       { return Compare(x) <= 0; }
-	bool     operator>=(const AMap& x) const       { return Compare(x) >= 0; }
-	bool     operator<(const AMap& x) const        { return Compare(x) < 0; }
-	bool     operator>(const AMap& x) const        { return Compare(x) > 0; }
-#endif
+	dword    GetHashValue() const                   { return HashBySerialize(*this); }
+	bool     operator==(const AMap& b) const        { ASSERT(!HasUnlinked()); return IsEqualMap(*this, b); }
+	bool     operator!=(const AMap& b) const        { return !operator==(b); }
+	int      Compare(const AMap& b) const           { ASSERT(!HasUnlinked()); return CompareMap(*this, b); }
+	bool     operator<=(const AMap& x) const        { return Compare(x) <= 0; }
+	bool     operator>=(const AMap& x) const        { return Compare(x) >= 0; }
+	bool     operator<(const AMap& x) const         { return Compare(x) < 0; }
+	bool     operator>(const AMap& x) const         { return Compare(x) > 0; }
 
-	void     Swap(AMap& x)                         { UPP::Swap(value, x.value);
-	                                                 UPP::Swap(key, x.key); }
-	const Index<K>&  GetIndex() const              { return key; }
-	Index<K>         PickIndex()                   { return pick(key); }
+	void     Swap(AMap& x)                          { UPP::Swap(value, x.value); UPP::Swap(key, x.key); }
+	const Index<K>&  GetIndex() const               { return key; }
+	Index<K>         PickIndex()                    { return pick(key); }
 
-	const Vector<K>& GetKeys() const               { return key.GetKeys(); }
-	Vector<K>        PickKeys()                    { return key.PickKeys(); }
+	const Vector<K>& GetKeys() const                { return key.GetKeys(); }
+	Vector<K>        PickKeys()                     { return key.PickKeys(); }
 
-	const V&         GetValues() const             { return value; }
-	V&               GetValues()                   { return value; }
-	V                PickValues()                  { return pick(value); }
+	const V&         GetValues() const              { return value; }
+	V&               GetValues()                    { return value; }
+	V                PickValues()                   { return pick(value); }
 	
-	MapKVRange<AMap, K, T> operator~()             { return MapKVRange<AMap, K, T>(*this); }
+	MapKVRange<AMap, K, T> operator~()                   { return MapKVRange<AMap, K, T>(*this); }
 	MapKVRange<const AMap, K, const T> operator~() const { return MapKVRange<const AMap, K, const T>(*this); }
 	
-	AMap& operator()(const K& k, const T& v)       { Add(k, v); return *this; }
+	AMap& operator()(const K& k, const T& v)        { Add(k, v); return *this; }
 
-	AMap()                                         {}
+	AMap()                                          {}
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	AMap(Index<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
@@ -184,10 +181,10 @@ public:
 	typedef IteratorOf<V>           Iterator;
 	typedef ConstIteratorOf<V>      ConstIterator;
 
-	Iterator         begin()                                      { return value.begin(); }
-	Iterator         end()                                        { return value.end(); }
-	ConstIterator    begin() const                                { return value.begin(); }
-	ConstIterator    end() const                                  { return value.end(); }
+	Iterator         begin()                        { return value.begin(); }
+	Iterator         end()                          { return value.end(); }
+	ConstIterator    begin() const                  { return value.begin(); }
+	ConstIterator    end() const                    { return value.end(); }
 
 #ifdef DEPRECATED
 	typedef V                          ValueContainer;
@@ -211,6 +208,17 @@ public:
 
 	KeyConstIterator KeyBegin() const                             { return key.begin(); }
 	KeyConstIterator KeyEnd() const                               { return key.end(); }
+
+	T&       Insert(int i, const K& k)             { key.Insert(i, k); return value.Insert(i); }
+	T&       Insert(int i, const K& k, const T& x) { key.Insert(i, k); return value.Insert(i, x); }
+	T&       Insert(int i, const K& k, T&& x)      { key.Insert(i, k); return value.Insert(i, pick(x)); }
+	T&       Insert(int i, K&& k)                  { key.Insert(i, pick(k)); return value.Insert(i); }
+	T&       Insert(int i, K&& k, const T& x)      { key.Insert(i, pick(k)); return value.Insert(i, x); }
+	T&       Insert(int i, K&& k, T&& x)           { key.Insert(i, pick(k)); return value.Insert(i, pick(x)); }
+
+	void     Remove(int i)                         { key.Remove(i); value.Remove(i); }
+	void     Remove(int i, int count)              { key.Remove(i, count); value.Remove(i, count); }
+	int      RemoveKey(const K& k);
 #endif
 };
 

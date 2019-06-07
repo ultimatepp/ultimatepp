@@ -3,22 +3,282 @@ void  OutOfMemoryPanic(size_t size);
 void *SysAllocRaw(size_t size, size_t reqsize);
 void  SysFreeRaw(void *ptr, size_t size);
 
-void *AllocRaw4KB(int reqsize);
-void *AllocRaw64KB(int reqsize);
-void *LAlloc(size_t& size);
-void  LFree(void *ptr);
+const char *asString(int i);
+const char *asString(void *ptr);
 
-#ifdef MEMORY_SHRINK
-#if 0
-void  FreeRaw4KB(void *ptr); // Win32 does not allow simple support here
-#endif
-void  FreeRaw64KB(void *ptr);
+struct Heap;
+
+// This is used internally by U++ to manage large (64KB) and huge (up to 256MB) blocks
+
+struct BlkPrefix { // this part is at the start of Blk allocated block, client must not touch it
+	word        prev_size;
+	word        size;
+	bool        free;
+	bool        last;
+	Heap       *heap; // we need this for 4KB pages and large blocks, NULL for Huge blocks
+#ifdef CPU_32
+	dword       filler;
 #endif
 
-struct Heap {
+	void  SetSize(word sz)           { size = sz; }
+	void  SetPrevSize(word sz)       { prev_size = sz; }
+	void  SetFree(bool b)            { free = b; }
+	void  SetLast(bool b)            { last = b; }
+
+	word  GetSize()                  { return size; }
+	word  GetPrevSize()              { return prev_size; }
+	bool  IsFirst()                  { return GetPrevSize() == 0; }
+	bool  IsFree()                   { return free; }
+	bool  IsLast()                   { return last; }
+
+	BlkPrefix *GetPrevHeader(int BlkSize) { return (BlkPrefix *)((byte *)this - BlkSize * GetPrevSize()); }
+	BlkPrefix *GetNextHeader(int BlkSize) { return (BlkPrefix *)((byte *)this + BlkSize * GetSize()); }
+};
+
+template <int BlkSize>
+struct BlkHeader_ : BlkPrefix { // free block record
+	BlkHeader_ *prev; // linked list of free blocks
+	BlkHeader_ *next; // linked list of free blocks
+
+	BlkHeader_ *GetPrevHeader()      { return (BlkHeader_ *)BlkPrefix::GetPrevHeader(BlkSize); }
+	BlkHeader_ *GetNextHeader()      { return (BlkHeader_ *)BlkPrefix::GetNextHeader(BlkSize); }
+
+	void  SetNextPrevSz()            { if(!IsLast()) GetNextHeader()->SetPrevSize(GetSize()); }
+
+	void  UnlinkFree()               { Dbl_Unlink(this); }
+};
+
+template <typename Detail, int BlkSize>
+struct BlkHeap : Detail {
+	typedef BlkHeader_<BlkSize> BlkHeader;
+	typedef Detail D;
+
+	bool       JoinNext(BlkHeader *h, word needs_count = 0);
+	void       Split(BlkHeader *h, word wcount, bool fill = false);
+	void       AddChunk(BlkHeader *h, int count);
+	void      *MakeAlloc(BlkHeader *h, word wcount);
+	BlkHeader *Free(BlkHeader *h); // returns final joined block
+	bool       TryRealloc(void *ptr, size_t count, size_t& n);
+	void       BlkCheck(void *page, int size, bool check_heap = false);
+
+	static void  Assert(bool b);
+#ifdef HEAPDBG
+	static void  DbgFreeFill(void *ptr, size_t size);
+	static void  DbgFreeCheck(void *ptr, size_t size);
+	static void  FillFree(BlkHeader *h);
+	static void  CheckFree(BlkHeader *h);
+#else
+	static void  DbgFreeFill(void *ptr, size_t size) {}
+	static void  DbgFreeCheck(void *ptr, size_t size) {}
+	static void  FillFree(BlkHeader *h) {}
+	static void  CheckFree(BlkHeader *h) {}
+#endif
+};
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::Assert(bool b)
+{
+	if(!b)
+		Panic("Heap is corrupted!");
+}
+
+#ifdef HEAPDBG
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::DbgFreeFill(void *p, size_t size)
+{
+	size_t count = size >> 2;
+	dword *ptr = (dword *)p;
+	while(count--)
+		*ptr++ = 0x65657246;
+}
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::DbgFreeCheck(void *p, size_t size)
+{
+	size_t count = size >> 2;
+	dword *ptr = (dword *)p;
+	while(count--)
+		if(*ptr++ != 0x65657246)
+			Panic("Writes to freed blocks detected");
+}
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::FillFree(BlkHeader *h)
+{
+	if(BlkSize == 4096) // it is too slow to check huge blocks
+		return;
+	DbgFreeFill(h + 1, h->GetSize() * BlkSize - sizeof(BlkHeader));
+}
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::CheckFree(BlkHeader *h)
+{
+	if(BlkSize == 4096) // it is too slow to check huge blocks
+		return;
+	DbgFreeCheck(h + 1, h->GetSize() * BlkSize - sizeof(BlkHeader));
+}
+
+#endif
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::BlkCheck(void *page, int page_size, bool check_heap)
+{
+	#define CLOG(x) // LOG(x)
+	CLOG("=== " << asString(page_size) << " " << AsString(page));
+	BlkPrefix *h = (BlkPrefix *)page;
+	int size = 0;
+	int psize = 0;
+	Assert(h->IsFirst());
+	for(;;) {
+		size += h->GetSize();
+		CLOG("h: " << AsString(h) << ", GetSize: " << asString(h->GetSize())
+		     << ", size: " << asString(size) << ", islast: " << asString(h->IsLast()));
+		Assert(h->GetSize());
+		Assert(h->GetPrevSize() == psize);
+		Assert(!check_heap || h->IsFree() || h->heap);
+		if(h->IsFree())
+			CheckFree((BlkHeader *)h);
+		psize = h->GetSize();
+		if(h->IsLast() && size == page_size)
+			return;
+		Assert(size < page_size);
+		h = h->GetNextHeader(BlkSize);
+	}
+	#undef CLOG
+}
+
+template <typename Detail, int BlkSize>
+force_inline
+bool BlkHeap<Detail, BlkSize>::JoinNext(BlkHeader *h, word needs_count)
+{ // try to join with next header if it is free, does not link it to free
+	if(h->IsLast())
+		return false;
+	BlkHeader *nh = h->GetNextHeader();
+	if(!nh->IsFree() || h->GetSize() + nh->GetSize() < needs_count)
+		return false;
+	CheckFree(nh);
+	h->SetLast(nh->IsLast());
+	nh->UnlinkFree();
+	word nsz = h->GetSize() + nh->GetSize();
+	h->SetSize(nsz);
+	h->SetNextPrevSz();
+	return true;
+}
+
+template <typename Detail, int BlkSize>
+force_inline
+void BlkHeap<Detail, BlkSize>::Split(BlkHeader *h, word wcount, bool fill)
+{ // splits the block if bigger, links new block to free
+	ASSERT(BlkSize != 4096 || ((dword)(uintptr_t)h & 4095) == 0);
+	BlkHeader *h2 = (BlkHeader *)((byte *)h + BlkSize * (int)wcount);
+	word nsz = h->GetSize() - wcount;
+	if(nsz == 0) // nothing to split
+		return;
+
+	h2->SetFree(true);
+	h2->SetLast(h->IsLast());
+	h2->SetSize(nsz);
+	h2->SetPrevSize(wcount);
+	h2->SetNextPrevSz();
+	D::LinkFree(h2);
+	if(fill)
+		FillFree(h2);
+
+	h->SetSize(wcount);
+	h->SetLast(false);
+}
+
+template <typename Detail, int BlkSize>
+void BlkHeap<Detail, BlkSize>::AddChunk(BlkHeader *h, int count)
+{
+	h->SetSize(count);
+	h->SetPrevSize(0); // is first
+	h->SetLast(true);
+	h->SetFree(true);
+	D::LinkFree(h);
+	FillFree(h);
+}
+
+template <typename Detail, int BlkSize>
+force_inline
+void *BlkHeap<Detail, BlkSize>::MakeAlloc(BlkHeader *h, word wcount)
+{
+	h->UnlinkFree();
+	h->SetFree(false);
+	Split(h, wcount);
+	CheckFree(h);
+	return h;
+}
+
+template <typename Detail, int BlkSize>
+bool BlkHeap<Detail, BlkSize>::TryRealloc(void *ptr, size_t count, size_t& n)
+{
+	ASSERT(count);
+	
+	BlkHeader *h = (BlkHeader *)ptr;
+	if(h->size == 0)
+		return false;
+	
+	word sz = h->GetSize();
+	if(sz != count) {
+		if(!JoinNext(h, (word)count) && count > sz)
+			return false;
+		Split(h, (word)count, true);
+		n = n - sz + count;
+	}
+	return true;
+}
+
+template <typename Detail, int BlkSize>
+force_inline
+typename BlkHeap<Detail, BlkSize>::BlkHeader *BlkHeap<Detail, BlkSize>::Free(BlkHeader *h)
+{
+	ASSERT(BlkSize != 4096 || ((dword)(uintptr_t)h & 4095) == 0);
+	JoinNext(h);
+	if(!h->IsFirst()) { // try to join with previous header if it is free
+		BlkHeader *ph = h->GetPrevHeader();
+		if(ph->IsFree()) {
+			ph->UnlinkFree(); // remove because size will change, might end in another bucket then
+			word nsz = ph->GetSize() + h->GetSize();
+			ph->SetSize(nsz);
+			ph->SetLast(h->IsLast());
+			ph->SetNextPrevSz();
+			h = ph;
+		}
+	}
+	h->SetFree(true);
+	D::LinkFree(h); // was not joined with previous header
+	FillFree(h);
+	return h;
+}
+
+struct HugeHeapDetail {
+	static BlkHeader_<4096> freelist[2][1];
+
+	static void LinkFree(BlkHeader_<4096> *h)     { Dbl_LinkAfter(h, freelist[h->GetSize() >= 16]); }
+	static void NewFreeSize(BlkHeader_<4096> *h)  {}
+};
+
+struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	enum {
+	#ifdef CPU_64
+		HPAGE = 7 * 8192, // number of 4KB pages in huge page (also limit for sys allocation) (224MB)
+	#else
+		HPAGE = 8192, // number of 4KB pages in huge page (also limit for sys allocation) (32MB)
+	#endif
+		LUNIT = 256, // granularity of large blocks (size always a multiple of this)
+		LPAGE = LUNIT - 1, // number of LUNITs in large page
+		LOFFSET = 64, // offset from 64KB start to the first block header
+
 		NKLASS = 23, // number of small size classes
+
+		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
+
+	void *HugeAlloc(size_t count); // count in 4KB, client needs to not touch HugePrefix
+	int   HugeFree(void *ptr);
+	bool  HugeTryRealloc(void *ptr, size_t count);
 
 	static int Ksz(int k) {
 		static int sz[] = {
@@ -36,8 +296,7 @@ struct Heap {
 		FreeLink *next;
 	};
 
-	struct Page { // small block Page
-		Heap        *heap;     // pointer to Heap
+	struct Page : BlkPrefix { // small block Page
 		byte         klass;    // size class
 		word         active;   // number of used (active) blocks in this page
 		FreeLink    *freelist; // single linked list of free blocks in Page
@@ -54,53 +313,41 @@ struct Heap {
 		byte *End()                        { return (byte *)this + 4096; }
 		int   Count()                      { return (int)(uintptr_t)(End() - Begin()) / Ksz(klass); }
 	};
+	
+	struct LargeHeapDetail {
+		BlkHeader_<LUNIT> freelist[6][1]; // <1KB, <2KB, <4KB, <8KB, >= 8KB
+		static int Cv(int n) { return min(n >> 2, 4); }
 
-	struct Header;
-
-	struct DLink {
+		void Free64KB(BlkHeader_<LUNIT> *h);
+		void LinkFree(BlkHeader_<LUNIT> *h) {
+			Dbl_LinkAfter(h, freelist[Cv(h->GetSize())]);
+		}
+	};
+	
+	struct LargeHeap : BlkHeap<LargeHeapDetail, LUNIT> {};
+	
+	typedef LargeHeap::BlkHeader LBlkHeader;
+	
+	struct DLink : BlkPrefix { // Large Page header / big block header
 		DLink       *next;
 		DLink       *prev;
+		size_t       size; // only used for big header
+	#ifdef CPU_64
+		dword        filler[6]; // sizeof need to be 64 because of alignment
+	#else
+		dword        filler[9];
+	#endif
 
 		void         LinkSelf()            { Dbl_Self(this); }
 		void         Unlink()              { Dbl_Unlink(this); }
 		void         Link(DLink *lnk)      { Dbl_LinkAfter(this, lnk);  }
-
-		Header      *GetHeader()           { return (Header *)this - 1; }
+		
+		LargeHeap::BlkHeader *GetFirst()   { return (LargeHeap::BlkHeader *)((byte *)this + LOFFSET); } // pointer to data area
 	};
 
-	struct Header { // Large block header
-		byte    free;
-		byte    filler1, filler2, filler3;
-		word    size;
-		word    prev;
-		Heap   *heap;
-	#ifdef CPU_32
-		dword   filler4;
-	#endif
-
-		Header     *Next()                 { return (Header *)((byte *)this + size) + 1; }
-		Header     *Prev()                 { return (Header *)((byte *)this - prev) - 1; }
-
-		DLink      *GetBlock()             { return (DLink *)(this + 1); }
-	};
+	static_assert(sizeof(BlkPrefix) == 16, "Wrong sizeof(BlkPrefix)");
+	static_assert(sizeof(DLink) == 64, "Wrong sizeof(DLink)");
 	
-	struct BigHdr : DLink {
-		size_t       size;
-	};
-
-	enum {
-		LARGEHDRSZ = 32, // size of large block header, causes 16 byte disalignment
-		BIGHDRSZ = 48, // size of huge block header
-		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
-
-		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
-		LBINS = 77, // number of large size bins
-	};
-
-	static_assert(sizeof(Header) == 16, "Wrong sizeof(Header)");
-	static_assert(sizeof(DLink) <= 16, "Wrong sizeof(DLink)");
-	static_assert(sizeof(BigHdr) + sizeof(Header) < BIGHDRSZ, "Big header sizeof issue");
-
 	static StaticMutex mutex;
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
@@ -111,14 +358,8 @@ struct Heap {
 
 	bool      initialized;
 
-	static word  BinSz[LBINS];   // block size for bin
-	static byte  SzBin[MAXBLOCK / 8 + 1]; // maps size/8 to bin
-	static byte  BlBin[MAXBLOCK / 8 + 1]; // Largest bin less or equal to size/8 (free -> bin)
-
-	DLink  large[1]; // all large chunks that belong to this heap
-	int    lcount; // count of large chunks
-	DLink  freebin[LBINS][1]; // all free blocks by bin
-	static DLink lempty[1]; // shared global list of all empty large blocks
+	LargeHeap lheap;
+	DLink     large[1]; // all large 64KB chunks that belong to this heap
 	
 	void     *out[REMOTE_OUT_SZ / 8 + 1];
 	void    **out_ptr;
@@ -129,17 +370,28 @@ struct Heap {
 	FreeLink *small_remote_list; // list of remotely freed small blocks for lazy reclamation
 	FreeLink *large_remote_list; // list of remotely freed large blocks for lazy reclamation
 
-	static DLink big[1]; // List of all big blocks
-	static Heap  aux;    // Single global auxiliary heap to store orphans and global list of free pages
+	struct HugePage { // to store the list of all huge pages in permanent storage
+		void     *page;
+		HugePage *next;
+	};
+	
+	static HugePage *huge_pages;
+	
+	static DLink  big[1]; // List of all big blocks
+	static Heap   aux;    // Single global auxiliary heap to store orphans and global list of free pages
+
+	static size_t huge_4KB_count; // total number of 4KB pages in small/large/huge blocks
+	static size_t free_4KB; // empty 4KB pages
+	static size_t big_size; // blocks >~64KB
+	static size_t big_count;
+	static size_t sys_size;  // blocks allocated directly from system (included in big too)
+	static size_t sys_count;
+	static size_t huge_chunks; // 32MB master pages
 
 #ifdef HEAPDBG
-	static void  DbgFreeFill(void *ptr, size_t size);
-	static void  DbgFreeCheck(void *ptr, size_t size);
 	static void  DbgFreeFillK(void *ptr, int k);
 	static void *DbgFreeCheckK(void *p, int k);
 #else
-	static void  DbgFreeFill(void *ptr, size_t size) {}
-	static void  DbgFreeCheck(void *ptr, size_t size) {}
 	static void  DbgFreeFillK(void *ptr, int k) {}
 	static void *DbgFreeCheckK(void *p, int k) { return p; }
 #endif
@@ -154,7 +406,6 @@ struct Heap {
 
 	static int   CheckFree(FreeLink *l, int k);
 	void  Check();
-	static void  Assert(bool b);
 	static void  DblCheck(Page *p);
 	static void  AssertLeaks(bool b);
 	
@@ -167,20 +418,17 @@ struct Heap {
 	void *Allok(int k);
 	void  Free(void *ptr, Page *page, int k);
 	void  Free(void *ptr, int k);
-	void  MoveLarge(Heap *dest, DLink *l);
-	void  MoveToEmpty(DLink *l, Header *bh);
 
-	static void GlobalLInit();
-	static int  SizeToBin(int n) { return SzBin[(n - 1) >> 3]; }
+	static bool FreeSmallEmpty(int size4KB, int count = INT_MAX);
 
-	void   LinkFree(DLink *b, int size);
-	DLink *AddChunk(int reqsize);
-	void  *DivideBlock(DLink *b, int size);
-	void  *TryLAlloc(int ii, size_t size);
+	void   LInit();
+	void  *TryLAlloc(int i0, word wcount);
 	void  *LAlloc(size_t& size);
+	void   FreeLargePage(DLink *l);
 	void   LFree(void *ptr);
+	bool   LTryRealloc(void *ptr, size_t& newsize);
 	size_t LGetBlockSize(void *ptr);
-	bool   LTryRealloc(void *ptr, size_t newsize);
+
 	void   Make(MemoryProfile& f);
 
 	static void Shrink();
@@ -209,7 +457,7 @@ struct Heap {
 	void  *Alloc48();
 	void   Free48(void *ptr);
 
-	bool   TryRealloc(void *ptr, size_t newsize);
+	bool   TryRealloc(void *ptr, size_t& newsize);
 };
 
 force_inline

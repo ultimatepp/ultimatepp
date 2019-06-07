@@ -425,24 +425,22 @@ inline unsigned GetHashValue(const T& x)                            { return x.G
 struct CombineHash {
 	unsigned hash;
 
-	enum { INIT = 1234567890 };
-
 	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
 
 public:
-	CombineHash& Put(unsigned h)                                    { hash = ((hash << 4) + hash) ^ h; return *this; }
+	CombineHash& Put(unsigned h)                                    { hash = (0xacf34ce7 * hash) ^ h; return *this; }
 
 	operator unsigned() const                                       { return hash; }
 
-	CombineHash()                                                   { hash = INIT; }
+	CombineHash()                                                   { hash = 0; }
 	template <class T>
-	CombineHash(const T& h1)                                        { hash = INIT; Do(h1); }
+	CombineHash(const T& h1)                                        { hash = 0; Do(h1); }
 	template <class T, class U>
-	CombineHash(const T& h1, const U& h2)                           { hash = INIT; Do(h1); Do(h2); }
+	CombineHash(const T& h1, const U& h2)                           { hash = 0; Do(h1); Do(h2); }
 	template <class T, class U, class V>
-	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = INIT; Do(h1); Do(h2); Do(h3); }
+	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = 0; Do(h1); Do(h2); Do(h3); }
 	template <class T, class U, class V, class W>
-	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = INIT; Do(h1); Do(h2); Do(h3); Do(h4); }
+	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = 0; Do(h1); Do(h2); Do(h3); Do(h4); }
 
 	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
 };

@@ -240,6 +240,7 @@ typedef int SOCKET;
 #include <type_traits>
 #include <atomic>
 #include <chrono>
+#include <utility>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
@@ -349,6 +350,7 @@ class JsonIO;
 #include "Win32Util.h"
 
 #include "Vcont.hpp"
+#include "Index.hpp"
 #include "Map.hpp"
 #include "InVector.hpp"
 #include "InMap.hpp"

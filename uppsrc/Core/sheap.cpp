@@ -60,6 +60,7 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 		if(!page && aux.empty[k]) { // Try hot empty page of the same klass
 			page = aux.empty[k];
 			aux.empty[k] = page->next;
+			free_4KB--;
 			LLOG("AllocK - empty aux page available of the same format " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 		}
 		if(!page)
@@ -67,12 +68,13 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 				if(aux.empty[i]) {
 					page = aux.empty[i];
 					aux.empty[i] = page->next;
+					free_4KB--;
 					page->Format(k);
 					LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 					break;
 				}
-		if(!page) { // No free memory was found, ask system for the new page
-			page = (Page *)AllocRaw4KB(Ksz(k));
+		if(!page) { // No free memory was found, ask huge for the new page
+			page = (Page *)HugeAlloc(1);
 			LLOG("AllocK - allocated new system page " << (void *)page << " " << k);
 			page->Format(k);
 		}
@@ -185,6 +187,7 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 				empty[k]->heap = &aux;
 				empty[k]->next = aux.empty[k];
 				aux.empty[k] = empty[k];
+				free_4KB++;
 			}
 			empty[k] = page;
 		}
@@ -196,12 +199,10 @@ void Heap::Free(void *ptr, Page *page, int k)
 {
 	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
-#ifdef _MULTITHREADED
 	if(page->heap != this) { // freeing page allocated in different thread
 		RemoteFree(ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
 		return;
 	}
-#endif
 	DbgFreeFillK(ptr, k);
 	if(cachen[k]) {
 		cachen[k]--;
@@ -238,17 +239,6 @@ size_t Heap::GetBlockSize(void *ptr)
 	return LGetBlockSize(ptr);
 }
 
-bool Heap::TryRealloc(void *ptr, size_t newsize)
-{
-	if(!ptr) return 0;
-	LLOG("GetBlockSize " << ptr);
-	if(IsSmall(ptr)) {
-		Page *page = GetPage(ptr);
-		int k = page->klass;
-		return newsize <= (size_t)Ksz(k);
-	}
-	return LTryRealloc(ptr, newsize);
-}
 
 void Heap::SmallFreeDirect(void *ptr)
 { // does not need to check for target heap or small vs large
@@ -260,6 +250,25 @@ void Heap::SmallFreeDirect(void *ptr)
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
 	DbgFreeFillK(ptr, k);
 	FreeK(ptr, page, k);
+}
+
+bool Heap::FreeSmallEmpty(int size4KB, int count)
+{ // attempt to release small 4KB pages to gain count4KB space or count of releases
+	bool released;
+	do {
+		released = false;
+		for(int i = 0; i < NKLASS; i++)
+			if(aux.empty[i]) {
+				Page *q = aux.empty[i];
+				aux.empty[i] = q->next;
+				free_4KB--;
+				if(aux.HugeFree(q) >= size4KB || --count <= 0) // HugeFree is really static, aux needed just to compile
+					return true;
+				released = true;
+			}
+	}
+	while(released);
+	return false;
 }
 
 force_inline
@@ -294,14 +303,56 @@ void Heap::Free48(void *ptr)
 	Free(ptr, KLASS_48);
 }
 
+#if defined(COMPILER_GCC) && defined(PLATFORM_WIN32)  // Workaround for MINGW inneficient storage
+struct TEB_ {
+  PVOID Reserved1[12];
+  PVOID ProcessEnvironmentBlock;
+  PVOID Reserved2[399];
+  BYTE  Reserved3[1952];
+  PVOID TlsSlots[64];
+  BYTE  Reserved4[8];
+  PVOID Reserved5[26];
+  PVOID ReservedForOle;
+  PVOID Reserved6[4];
+  PVOID TlsExpansionSlots;
+};
+
+dword TlsPointerNdx = TlsAlloc();
+
+void SetTlsPointer(void *ptr)
+{
+	TlsSetValue(TlsPointerNdx, ptr);
+}
+
+force_inline
+void *GetTlsPointer()
+{
+#ifdef CPU_64
+	TEB_ *teb = (TEB_ *)__readgsqword(0x30);
+#else
+	TEB_ *teb = (TEB_ *)__readfsdword(0x18);
+#endif
+	return teb->TlsSlots[TlsPointerNdx];
+}
+#endif
+
 force_inline
 Heap *ThreadHeap()
 {
 #if defined(COMPILER_GCC) && defined(PLATFORM_WIN32)  // Workaround for MINGW bug
 	thread_local byte sHeap[sizeof(Heap)];
+#if 1
+	Heap *heap = (Heap *)GetTlsPointer();
+	if(!heap) {
+		heap = (Heap *)sHeap;
+		SetTlsPointer(heap);
+		ASSERT(GetTlsPointer() == heap);
+	}
+#else
 	thread_local Heap *heap;
 	if(!heap)
 		heap = (Heap *)sHeap;
+#endif
 	return heap;
 #else
 	thread_local Heap heap[1];
@@ -321,7 +372,7 @@ void *MemoryAllok__(int klass)
 
 #if defined(HEAPDBG)
 
-void *MemoryAlloc_(size_t sz)
+void *MemoryAllocSz_(size_t& sz)
 {
 	return ThreadHeap()->AllocSz(sz);
 }
@@ -329,6 +380,11 @@ void *MemoryAlloc_(size_t sz)
 void  MemoryFree_(void *ptr)
 {
 	ThreadHeap()->Free(ptr);
+}
+
+bool  MemoryTryRealloc_(void *ptr, size_t& size)
+{
+	return ThreadHeap()->TryRealloc(ptr, size);
 }
 
 size_t GetMemoryBlockSize_(void *ptr)
@@ -363,7 +419,7 @@ size_t GetMemoryBlockSize(void *ptr)
 	return ThreadHeap()->GetBlockSize(ptr);
 }
 
-bool   TryRealloc(void *ptr, size_t size)
+bool MemoryTryRealloc__(void *ptr, size_t& size)
 {
 	return ThreadHeap()->TryRealloc(ptr, size);
 }

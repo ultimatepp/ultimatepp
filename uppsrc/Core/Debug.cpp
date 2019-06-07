@@ -47,8 +47,8 @@ TimingInspector::TimingInspector(const char *_name) {
 }
 
 TimingInspector::~TimingInspector() {
-	Mutex::Lock __(mutex);
 	if(this == &s_zero) return;
+	Mutex::Lock __(mutex);
 	StdLog() << Dump() << "\r\n";
 }
 

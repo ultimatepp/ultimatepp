@@ -321,6 +321,14 @@ sorted`_list.GetCount())].&]
 [s7; [*C@3 sorted`_list]-|Sorted Vector of positions to remove.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Array`:`:RemoveIf`(Condition`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
+ondition]>_[@(0.0.255) void]_[* RemoveIf]([*@4 Condition]_[*@3 c])&]
+[s2; Removes elements where condition [%-*@3 c] is satisfied. Condition 
+is a callable (usually lambda) that accepts (int i) as parameter 
+and returns either true or false.&]
+[s6; Invalidates iterators to the Array.&]
+[s3; &]
+[s4;%- &]
 [s5;:Array`:`:InsertN`(int`,int`):%- [@(0.0.255) void]_[* InsertN]([@(0.0.255) int]_[*@3 i], 
 [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
 [s2; Inserts a specified number of default constructed elements at 

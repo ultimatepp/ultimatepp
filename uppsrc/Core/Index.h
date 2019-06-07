@@ -1,167 +1,142 @@
-#define FOLDHASH
+struct IndexCommon {
+	enum { HIBIT = 0x80000000 };
 
-enum { UNSIGNED_HIBIT = 0x80000000 };
-
-class HashBase : Moveable<HashBase> {
-	struct Link : Moveable<Link> {
-		int   next;
+	struct Hash : Moveable<Hash> {
+		int   next; // also link for unlinked items...
+		dword hash;
 		int   prev;
 	};
-	Vector<unsigned> hash;
-	Vector<Link>     link;
-	int             *map;
-	int              mask;
-	int              unlinked;
+	
+	int         *map;
+	Hash        *hash;
+	dword        mask;
+	int          unlinked;
 
-	void  LinkBefore(int i, Link& l, int bi);
-	void  LinkTo(int i, Link& l, int& m);
-	void  Unlink(int i, Link& l, int& mi);
-	void  Unlink(int i, Link& l);
-	int&  Maph(unsigned _hash) const;
-	int&  Mapi(int i) const;
-	void  FinishIndex();
-	void  Zero();
-	void  Free();
+	
+	static int empty[1];
 
-public:
-	void  ClearIndex();
-	void  Reindex(int n);
-	void  Reindex();
+	static dword Smear(dword h)          { return FoldHash(h) | HIBIT; }
 
-	void  Add(unsigned hash);
-	void  Set(int i, unsigned hash);
-	void  SetUn(int i, unsigned hash);
-	unsigned operator [] (int i) const      { return hash[i]; }
-	int   Find(unsigned hash) const;
-	int   GetNext(int i) const              { return link[i].next; }
-	int   FindNext(int i, int first) const;
-	int   FindNext(int i) const;
-	int   FindLast(unsigned hash) const;
-	int   FindPrev(int i) const;
-	int   Put(unsigned hash);
+	void Link(int& m, Hash& hh, int ii);
+	void Link(int ii, dword sh);
+	void Del(int& m, Hash& hh, int ii);
+	void Ins(int& m, Hash& hh, int ii);
 
-	bool  IsUnlinked(int i) const           { return hash[i] & UNSIGNED_HIBIT; }
-	void  Unlink(int i);
+	void MakeMap(int count);
+	void Remap(int count);
+	void Reindex(int count);
+	void GrowMap(int count);
+	void FreeMap();
+	void Free();
+
+	void Set(int ii, dword h);
+	
 	Vector<int> GetUnlinked() const;
-	bool  HasUnlinked() const				{ return unlinked >= 0; }
-
-	void  Remove(int i);
-	void  Remove(int i, int count);
-	void  Remove(const int *sorted_list, int count);
-	void  Insert(int i, unsigned hash);
-
-	int   GetCount() const                  { return hash.GetCount(); }
-	void  Trim(int count);
-	void  Drop(int n);
-	void  Clear()                           { hash.Clear(); ClearIndex(); }
-
-	void  Reserve(int n);
-	void  Shrink();
-
-#ifdef UPP
-	void  Serialize(Stream& s);
-#endif
-
-	HashBase();
-	~HashBase();
-
-	HashBase(HashBase&& b);
-	void operator=(HashBase&& b);
-	HashBase(const HashBase& b, int);
-	void operator<<=(const HashBase& b);
-
-	const unsigned *begin() const           { return hash.begin(); }
-	const unsigned *end() const             { return hash.end(); }
-
-	void Swap(HashBase& b);
+	
+	void Clear();
+	void Trim(int n, int count);
+	void Sweep(int n);
+	void Reserve(int n);
+	void Shrink();
+	void AdjustMap(int count, int alloc);
+	
+	void Copy(const IndexCommon& b, int count);
+	void Pick(IndexCommon& b);
+	void Swap(IndexCommon& b);
+	
+	IndexCommon();
+	~IndexCommon();
 };
 
-template <class T>
-class Index : MoveableAndDeepCopyOption<Index<T>> {
-protected:
-	Vector<T> key;
-	HashBase  hash;
+template <class K, class T, class V> class AMap;
 
-	int      Find0(const T& x, int i) const {
-		while(i >= 0 && !(x == key[i])) i = hash.FindNext(i);
-		return i;
-	}
-	int      FindB(const T& x, int i) const {
-		while(i >= 0 && !(x == key[i])) i = hash.FindPrev(i);
-		return i;
-	}
-	void     Hash();
+template <class T>
+class Index : MoveableAndDeepCopyOption<Index<T>>, IndexCommon {
+	Vector<T> key;
+
+	static dword Smear(const T& k)   { return IndexCommon::Smear(GetHashValue(k)); }
+
+	int  FindFrom(int i, dword sh, const T& k, int end) const;
+	int  FindBack(int i, dword sh, const T& k, int end) const;
+
+
+	void ReallocHash(int n);
+	template <typename U> void GrowAdd(U&& k, dword sh);
+	template <typename U> void AddS(int& m, U&& k, dword sh);
+	template <typename U> void AddS(U&& k, dword sh);
+
+	template <class OP, class U> int FindAdd(U&& k, OP add_op);
+	template <class U> int FindPut0(U&& k);
+
+	template <typename U> int Put0(U&& k, dword sh);
+	template <typename U> void Set0(int i, U&& k);
+
+	template <typename, typename, typename> friend class AMap;
+	
+	void        FixHash(bool makemap = true);
 
 public:
-	unsigned hashfn(const T& x) const       { return GetHashValue(x); }
+	void        Add(const T& k)             { AddS(k, Smear(k)); }
+	void        Add(T&& k)                  { AddS(pick(k), Smear(k)); }
+	Index&      operator<<(const T& x)      { Add(x); return *this; }
+	Index&      operator<<(T&& x)           { Add(pick(x)); return *this; }
 
-	T&       Add(const T& x, unsigned _hash);
-	T&       Add(T&& x, unsigned _hash);
-	T&       Add(const T& x);
-	T&       Add(T&& x);
-	Index&   operator<<(const T& x)         { Add(x); return *this; }
-	Index&   operator<<(T&& x)              { Add(pick(x)); return *this; }
-
-	int      FindAdd(const T& key, unsigned _hash);
-	int      FindAdd(const T& key);
-	int      FindAdd(T&& key, unsigned _hash);
-	int      FindAdd(T&& key);
-
-	int      Put(const T& x, unsigned _hash);
-	int      Put(const T& x);
-	int      Put(T&& x, unsigned _hash);
-	int      Put(T&& x);
-
-	int      FindPut(const T& key, unsigned _hash);
-	int      FindPut(const T& key);
-	int      FindPut(T&& key, unsigned _hash);
-	int      FindPut(T&& key);
-
-	int      Find(const T& x, unsigned _hash) const;
-	int      Find(const T& x) const;
-	int      FindNext(int i) const;
-	int      FindLast(const T& x, unsigned _hash) const;
-	int      FindLast(const T& x) const;
-	int      FindPrev(int i) const;
-
-	T&       Set(int i, const T& x, unsigned _hash);
-	T&       Set(int i, const T& x);
-	T&       Set(int i, T&& x, unsigned _hash);
-	T&       Set(int i, T&& x);
-
-	const T& operator[](int i) const         { return key[i]; }
-	int      GetCount() const                { return key.GetCount(); }
-	bool     IsEmpty() const                 { return key.IsEmpty(); }
+	int         Find(const T& k) const;
+	int         FindNext(int i) const;
+	int         FindLast(const T& k) const;
+	int         FindPrev(int i) const;
 	
-	unsigned GetHash(int i) const            { return hash[i]; }
+	int         FindAdd(const T& k)         { return FindAdd(k, []{}); }
+	int         FindAdd(T&& k)              { return FindAdd(pick(k), []{}); }
 
-	void     Clear()                         { hash.Clear(); key.Clear(); }
+	int         Put(const T& k)             { return Put0(k, Smear(k)); }
+	int         Put(T&& k)                  { return Put0(pick(k), Smear(k)); }
+	int         FindPut(const T& k)         { return FindPut0(k); }
+	int         FindPut(T&& k)              { return FindPut0(pick(k)); }
 
-	void     Unlink(int i)                   { hash.Unlink(i); }
-	int      UnlinkKey(const T& k, unsigned h);
-	int      UnlinkKey(const T& k);
-	bool     IsUnlinked(int i) const         { return hash.IsUnlinked(i); }
-	Vector<int> GetUnlinked() const          { return hash.GetUnlinked(); }
-	void     Sweep();
-	bool     HasUnlinked() const             { return hash.HasUnlinked(); }
+	void        Unlink(int i);
+	int         UnlinkKey(const T& k);
+	bool        IsUnlinked(int i) const      { return hash[i].hash == 0; }
+	bool        HasUnlinked() const          { return unlinked >= 0; }
+	Vector<int> GetUnlinked() const          { return IndexCommon::GetUnlinked(); }
 
-	T&       Insert(int i, const T& k, unsigned h);
-	T&       Insert(int i, const T& k);
-	void     Remove(int i);
-	void     Remove(int i, int count);
+	void        Sweep();
+
+	void        Set(int i, const T& k)       { Set0(i, k); }
+	void        Set(int i, T&& k)            { Set0(i, pick(k)); }
+
+	const T&    operator[](int i) const      { return key[i]; }
+	int         GetCount() const             { return key.GetCount(); }
+	bool        IsEmpty() const              { return key.IsEmpty(); }
+	
+	void        Clear()                      { key.Clear(); IndexCommon::Clear(); }
+
+	void        Trim(int n = 0)              { IndexCommon::Trim(n, GetCount()); key.Trim(n); }
+	void        Drop(int n = 1)              { Trim(GetCount() - 1); }
+	const T&    Top() const                  { return key.Top(); }
+	T           Pop()                        { T x = pick(Top()); Drop(); return x; }
+
+	void        Reserve(int n);
+	void        Shrink();
+	int         GetAlloc() const             { return key.GetAlloc(); }
+
+	Vector<T>        PickKeys()              { Vector<T> r = pick(key); Clear(); return r; }
+	const Vector<T>& GetKeys() const         { return key; }
+
 	void     Remove(const int *sorted_list, int count);
-	void     Remove(const Vector<int>& sorted_list);
-	int      RemoveKey(const T& k, unsigned h);
-	int      RemoveKey(const T& k);
+	void     Remove(const Vector<int>& sorted_list)         { Remove(sorted_list, sorted_list.GetCount()); }
+	template <typename Pred> void RemoveIf(Pred p)          { Remove(FindAlli(key, p)); }
+	
+	Index()                                                 {}
+	Index(Index&& s) : key(pick(s.key))                     { IndexCommon::Pick(s); }
+	Index(const Index& s, int) : key(s.key, 0)              { ReallocHash(0); IndexCommon::Copy(s, key.GetCount()); } // TODO: Unlinked!
+	explicit Index(Vector<T>&& s) : key(pick(s))            { FixHash(); }
+	Index(const Vector<T>& s, int) : key(s, 0)              { FixHash(); }
 
-	void     Trim(int n)                     { key.SetCount(n); hash.Trim(n); }
-	void     Drop(int n = 1)                 { key.Drop(n); hash.Drop(n); }
-	const T& Top() const                     { return key.Top(); }
-	T        Pop()                           { T x = pick(Top()); Drop(); return x; }
+	Index& operator=(Vector<T>&& x)                         { key = pick(x); FixHash(); return *this; }
+	Index& operator=(Index<T>&& x)                          { key = pick(x.key); IndexCommon::Pick(x); return *this; }
 
-	void     Reserve(int n)                  { key.Reserve(n); hash.Reserve(n); }
-	void     Shrink()                        { key.Shrink(); hash.Shrink(); }
-	int      GetAlloc() const                { return key.GetAlloc(); }
+	Index(std::initializer_list<T> init) : key(init)        { FixHash(); }
 
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key");
@@ -175,38 +150,30 @@ public:
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
 	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
-	Vector<T>        PickKeys()                          { Vector<T> r = pick(key); Clear(); return r; }
-	const Vector<T>& GetKeys() const                     { return key; }
-
-	Index()                                               {}
-	Index(Index&& s) : key(pick(s.key)), hash(pick(s.hash)) {}
-	Index(const Index& s, int) : key(s.key, 0), hash(s.hash, 0) {}
-	explicit Index(Vector<T>&& s) : key(pick(s))          { Hash(); }
-	Index(const Vector<T>& s, int) : key(s, 0)            { Hash(); }
-
-	Index& operator=(Vector<T>&& x)                       { key = pick(x); Hash(); return *this; }
-	Index& operator=(Index<T>&& x)                        { key = pick(x.key); hash = pick(x.hash); return *this; }
-
-	Index(std::initializer_list<T> init) : key(init)      { Hash(); }
-
-	typedef ConstIteratorOf<Vector<T>> ConstIterator;
-
 // Standard container interface
-	ConstIterator begin() const                           { return key.Begin(); }
-	ConstIterator end() const                             { return key.End(); }
+	typedef ConstIteratorOf<Vector<T>> ConstIterator;
+	ConstIterator begin() const                             { return key.begin(); }
+	ConstIterator end() const                               { return key.end(); }
 
-	friend void Swap(Index& a, Index& b)                  { UPP::Swap(a.hash, b.hash);
-	                                                        UPP::Swap(a.key, b.key); }
+	friend void Swap(Index& a, Index& b)                    { a.IndexCommon::Swap(b); UPP::Swap(a.key, b.key); }
 
+// deprecated:
 #ifdef DEPRECATED
-	Index& operator<<=(const Vector<T>& s)                { *this = clone(s); return *this; }
+	T&       Insert(int i, const T& k)                      { key.Insert(i, k); FixHash(); return key[i]; }
+	void     Remove(int i, int count)                       { key.Remove(i, count); FixHash(); }
+	void     Remove(int i)                                  { Remove(i, 1); }
+	int      RemoveKey(const T& k)                          { int i = Find(k); if(i >= 0) Remove(i); return i; }
+
+	unsigned GetHash(int i) const                           { return hash[i].hash; }
+
+	Index& operator<<=(const Vector<T>& s)                  { *this = clone(s); return *this; }
 	typedef T                ValueType;
 	typedef Vector<T>        ValueContainer;
-	ConstIterator  GetIter(int pos) const                 { return key.GetIter(pos); }
+	ConstIterator  GetIter(int pos) const                   { return key.GetIter(pos); }
 
-	void     ClearIndex()                    { hash.ClearIndex(); }
-	void     Reindex(int n)                  { hash.Reindex(n); }
-	void     Reindex()                       { hash.Reindex(); }
+	void     ClearIndex()                    {}
+	void     Reindex(int n)                  {}
+	void     Reindex()                       {}
 
 	typedef T             value_type;
 	typedef ConstIterator const_iterator;
@@ -218,5 +185,9 @@ public:
 	void                  clear()                { Clear(); }
 	size_type             size()                 { return GetCount(); }
 	bool                  empty() const          { return IsEmpty(); }
+#endif
+
+#ifdef _DEBUG
+	String Dump() const;
 #endif
 };

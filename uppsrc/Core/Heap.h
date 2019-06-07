@@ -16,7 +16,20 @@ int   MemoryUsedKb();
 void  MemoryLimitKb(int kb);
 
 size_t GetMemoryBlockSize(void *ptr);
-bool   TryRealloc(void *ptr, size_t newsize);
+
+bool MemoryTryRealloc__(void *ptr, size_t& newsize);
+
+#ifdef _DEBUG
+inline // in DEBUG test for small block is moved inside, because debug adds diagnostics header
+bool  MemoryTryRealloc(void *ptr, size_t& newsize) {
+	return MemoryTryRealloc__(ptr, newsize);
+}
+#else
+inline
+bool  MemoryTryRealloc(void *ptr, size_t& newsize) {
+	return (((dword)(uintptr_t)ptr) & 16) && MemoryTryRealloc__(ptr, newsize);
+}
+#endif
 
 #ifdef MEMORY_SHRINK
 void  MemoryShrink();
@@ -26,14 +39,6 @@ void  MemoryBreakpoint(dword serial);
 
 void  MemoryInitDiagnostics();
 void  MemoryDumpLeaks();
-
-enum MemoryProbeFlags {
-	MEMORY_PROBE_FULL    = 1,
-	MEMORY_PROBE_FREE    = 2,
-	MEMORY_PROBE_MIXED   = 4,
-	MEMORY_PROBE_LARGE   = 8,
-	MEMORY_PROBE_SUMMARY = 16,
-};
 
 #ifdef HEAPDBG
 void  MemoryIgnoreLeaksBegin();
@@ -48,18 +53,22 @@ inline void  MemoryCheckDebug() {}
 #endif
 
 struct MemoryProfile {
-	int    allocated[1024];
-	int    fragmented[1024];
-	int    freepages;
-	int    large_count;
-	size_t large_size[1024];
-	size_t large_total;
-	int    large_free_count;
-	size_t large_free_size[1024];
-	int    large_free_total;
-	int    large_empty;
-	int    big_count;
-	size_t big_size;
+	int    allocated[1024]; // active small blocks (index is size in bytes)
+	int    fragments[1024]; // unallocated small blocks (index is size in bytes)
+	int    freepages; // empty 4KB pages (can be recycled)
+	int    large_count; // count of large (~ 1 - 64KB) active blocks
+	size_t large_total; // ^ total size
+	int    large_fragments_count; // count of unused large blocks
+	size_t large_fragments_total; // ^ total size
+	int    large_fragments[2048]; // * 256
+	int    huge_count; // bigger blocks managed by U++ heap (<= 32MB)
+	size_t huge_total; // ^total size
+	int    huge_fragments_count; // count of unused large blocks
+	size_t huge_fragments_total; // ^ total size
+	int    huge_fragments[65536]; // * 256
+	int    sys_count; // blocks directly allocated from the system (>32MB
+	size_t sys_total; // ^total size
+	int    master_chunks; // master blocks
 
 	MemoryProfile();
 };

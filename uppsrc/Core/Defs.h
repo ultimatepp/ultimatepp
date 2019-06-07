@@ -416,10 +416,13 @@ template<class T> class Function;
 
 #ifdef COMPILER_MSC
 #define force_inline __forceinline
+#define never_inline __declspec(noinline)
 #elif defined(COMPILER_GCC)
 #define force_inline __attribute__((always_inline)) inline
+#define never_inline __attribute__((noinline))
 #else
 #define force_inline inline
+#define never_inline
 #endif
 
 #define BINARY(i, f) \

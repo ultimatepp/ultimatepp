@@ -422,8 +422,8 @@ struct CppBase : ArrayMap<String, Array<CppItem> > {
 	Index<String>  namespaces;
 
 	bool           IsType(int i) const;
-	void           Sweep(const Index<int>& keep_file);
-	void           RemoveFiles(const Index<int>& remove_file);
+	void           Sweep(const Index<int>& file, bool keep = true);
+	void           RemoveFiles(const Index<int>& remove_file) { Sweep(remove_file, false); }
 	void           RemoveFile(int filei);
 
 	void           Dump(Stream& s);
