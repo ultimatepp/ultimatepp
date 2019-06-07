@@ -68,6 +68,8 @@ public:
 	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
 };
 
+template <class U> class Index;
+
 template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	T       *vector;
@@ -209,7 +211,7 @@ public:
 #ifdef DEPRECATED
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
-	T&       AddPick(T&& x)             { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       AddPick(T&& x)             { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAdd(pick(x)); }
 	int      GetIndex(const T& item) const;
 	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
