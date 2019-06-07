@@ -118,6 +118,9 @@ ModePane::ModePane()
 	     .Add(1, "Minimal")
 	     .Add(2, "Full");
 	target_browse.Attach(target);
+	target_browse.WhenSelected << [=] {
+		target_override <<= true;
+	};
 }
 
 struct OutMode : WithOutputModeLayout<TopWindow> {

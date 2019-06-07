@@ -494,6 +494,8 @@ public:
 	void               Detach();
 	void               Title(String t)      { title = t; }
 	String             GetTitle() const     { return title; }
+	
+	Event<>            WhenSelected;
 
 private:
 	void               OnAction();
