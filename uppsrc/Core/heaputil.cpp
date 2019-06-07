@@ -42,7 +42,6 @@ void DoPeakProfile();
 
 void *SysAllocRaw(size_t size, size_t reqsize)
 {
-	size_t rsz = int(((size + 4095) & ~4095) >> 10);
 	void *ptr = NULL;
 	if(MemoryUsedKb() < sKBLimit) {
 	#ifdef PLATFORM_WIN32
@@ -141,8 +140,6 @@ void Heap::Make(MemoryProfile& f)
 			p = p->next;
 		}
 	}
-	int ii = 0;
-	int fi = 0;
 	DLink *m = large->next;
 	while(m != large) {
 		LargeHeap::BlkHeader *h = m->GetFirst();
