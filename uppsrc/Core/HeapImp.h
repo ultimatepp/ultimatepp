@@ -1,4 +1,4 @@
-void  OutOfMemoryPanic(size_t size);
+void  OutOfMemoryPanic();
 
 void *SysAllocRaw(size_t size, size_t reqsize);
 void  SysFreeRaw(void *ptr, size_t size);
@@ -387,6 +387,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	static size_t sys_size;  // blocks allocated directly from system (included in big too)
 	static size_t sys_count;
 	static size_t huge_chunks; // 32MB master pages
+	static size_t huge_4KB_count_max; // peak huge memory allocated
 
 #ifdef HEAPDBG
 	static void  DbgFreeFillK(void *ptr, int k);

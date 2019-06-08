@@ -39,6 +39,36 @@ inline void DeepCopyConstruct(T *t, const S *s, const S *end) {
 template <class T>
 class Buffer : Moveable< Buffer<T> > {
 	T *ptr;
+	
+	void Malloc(size_t size) {
+		if(std::is_trivially_destructible<T>::value)
+			ptr = (T *)MemoryAlloc(size * sizeof(T));
+		else {
+			void *p = MemoryAlloc(size * sizeof(T) + 16);
+			*(size_t *)p = size;
+			ptr = (T *)((byte *)p + 16);
+		}
+	}
+	void New(size_t size) {
+		Malloc(size);
+		Construct(ptr, ptr + size);
+	}
+	void New(size_t size, const T& in) {
+		Malloc(size);
+		DeepCopyConstructFill(ptr, ptr + size, in);
+	}
+	void Free() {
+		if(ptr) {
+			if(std::is_trivially_destructible<T>::value)
+				MemoryFree(ptr);
+			else {
+				void *p = (byte *)ptr - 16;
+				size_t size = *(size_t *)p;
+				Destroy(ptr, ptr + size);
+				MemoryFree(p);
+			}
+		}
+	}
 
 public:
 	operator T*()                        { return ptr; }
@@ -48,22 +78,22 @@ public:
 	T          *Get()                    { return ptr; }
 	const T    *Get() const              { return ptr; }
 
-	void Alloc(size_t size)              { Clear(); ptr = new T[size]; }
-	void Alloc(size_t size, const T& in) { Clear(); ptr = new T[size]; Fill(ptr, ptr + size, in); }
+	void Alloc(size_t size)              { Clear(); New(size); }
+	void Alloc(size_t size, const T& in) { Clear(); New(size, in); }
 
-	void Clear()                         { if(ptr) delete[] ptr; ptr = NULL; }
+	void Clear()                         { Free(); ptr = NULL; }
 	bool IsEmpty() const                 { return ptr == NULL; }
 
 	Buffer()                             { ptr = NULL; }
-	Buffer(size_t size)                  { ptr = new T[size]; }
-	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
-	~Buffer()                            { if(ptr) delete[] ptr; }
+	Buffer(size_t size)                  { New(size); }
+	Buffer(size_t size, const T& init)   { New(size, init); }
+	~Buffer()                            { Free(); }
 
 	void operator=(Buffer&& v)           { if(&v != this) { Clear(); ptr = v.ptr; v.ptr = NULL; } }
 	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
 
-	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
-		T *t = ptr; for(const auto& i : init) new (t++) T(i);
+	Buffer(size_t size, std::initializer_list<T> init) {
+		T *t = Malloc(size); for(const auto& i : init) new (t++) T(i);
 	}
 	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
 };

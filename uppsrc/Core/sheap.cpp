@@ -465,23 +465,6 @@ MemoryProfile::MemoryProfile()
 	ThreadHeap()->Make(*this);
 }
 
-static MemoryProfile *sPeak;
-
-void DoPeakProfile()
-{
-	if(sPeak)
-		ThreadHeap()->Make(*sPeak);
-}
-
-MemoryProfile *PeakMemoryProfile()
-{
-	if(sPeak)
-		return sPeak;
-	sPeak = (MemoryProfile *)MemoryAllocPermanent(sizeof(MemoryProfile));
-	memset((void *)sPeak, 0, sizeof(MemoryProfile));
-	return NULL;
-}
-
 #endif
 
 }
