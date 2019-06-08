@@ -9,7 +9,9 @@ void Test(int ini, int re)
 	byte *h = new byte[ini];
 
 	RDUMP(GetMemoryBlockSize(h));
-	RDUMP(TryRealloc(h, re));
+	size_t sz = re;
+	RDUMP(MemoryTryRealloc(h, sz));
+	RDUMP(sz);
 	RDUMP(GetMemoryBlockSize(h));
 	
 	delete[] h;
@@ -17,6 +19,8 @@ void Test(int ini, int re)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Test(200, 220);
 	Test(194, 204);
 	Test(2000, 2070);
