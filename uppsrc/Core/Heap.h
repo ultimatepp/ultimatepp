@@ -12,7 +12,7 @@ void  MemoryFree48(void *ptr);
 void  MemoryFreeThread();
 void  MemoryCheck();
 int   MemoryUsedKb();
-
+int   MemoryUsedKbMax();
 void  MemoryLimitKb(int kb);
 
 size_t GetMemoryBlockSize(void *ptr);

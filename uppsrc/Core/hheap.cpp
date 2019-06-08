@@ -30,6 +30,24 @@ EXITBLOCK {
 }
 #endif
 
+int sKBLimit = INT_MAX;
+
+void  MemoryLimitKb(int kb)
+{
+	sKBLimit = kb;
+}
+
+static MemoryProfile *sPeak;
+
+MemoryProfile *PeakMemoryProfile()
+{
+	if(sPeak)
+		return sPeak;
+	sPeak = (MemoryProfile *)MemoryAllocPermanent(sizeof(MemoryProfile));
+	memset((void *)sPeak, 0, sizeof(MemoryProfile));
+	return NULL;
+}
+
 void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 {
 	ASSERT(count);
@@ -40,6 +58,14 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 #endif
 
 	huge_4KB_count += count;
+	
+	if(huge_4KB_count > huge_4KB_count_max) {
+		huge_4KB_count_max = huge_4KB_count;
+		if(MemoryUsedKb() > sKBLimit)
+			Panic("MemoryLimitKb breached!");
+		if(sPeak)
+			Make(*sPeak);
+	}
 
 	if(!D::freelist[0]->next) { // initialization
 		for(int i = 0; i < 2; i++)

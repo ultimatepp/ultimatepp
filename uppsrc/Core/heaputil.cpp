@@ -13,8 +13,7 @@ namespace Upp {
 void OutOfMemoryPanic(size_t size)
 {
 	char h[200];
-	sprintf(h, "Out of memory!\nRequested size: %lld B\nU++ allocated memory: %d KB",
-	        (long long)size, MemoryUsedKb());
+	sprintf(h, "Out of memory!\nnU++ allocated memory: %d KB", MemoryUsedKb());
 	Panic(h);
 }
 
@@ -25,40 +24,34 @@ size_t Heap::big_count;
 size_t Heap::sys_size;
 size_t Heap::sys_count;
 size_t Heap::huge_chunks;
+size_t Heap::huge_4KB_count_max;
 
 int MemoryUsedKb()
 {
 	return int(4 * (Heap::huge_4KB_count - Heap::free_4KB));
 }
 
-int sKBLimit = INT_MAX;
-
-void  MemoryLimitKb(int kb)
+int MemoryUsedKbMax()
 {
-	sKBLimit = kb;
+	return int(4 * Heap::huge_4KB_count_max);
 }
-
-void DoPeakProfile();
 
 void *SysAllocRaw(size_t size, size_t reqsize)
 {
 	void *ptr = NULL;
-	if(MemoryUsedKb() < sKBLimit) {
-	#ifdef PLATFORM_WIN32
-		ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-	#elif PLATFORM_LINUX
-		ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-		if(ptr == MAP_FAILED)
-			ptr = NULL;
-	#else
-		ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
-		if(ptr == MAP_FAILED)
-			ptr = NULL;
-	#endif
-	}
+#ifdef PLATFORM_WIN32
+	ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+#elif PLATFORM_LINUX
+	ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+	if(ptr == MAP_FAILED)
+		ptr = NULL;
+#else
+	ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+	if(ptr == MAP_FAILED)
+		ptr = NULL;
+#endif
 	if(!ptr)
-		OutOfMemoryPanic(size/*reqsize*/);
-	DoPeakProfile();
+		OutOfMemoryPanic(size);
 	return ptr;
 }
 
@@ -196,6 +189,7 @@ String AsString(const MemoryProfile& mem)
 	size_t asize = 0;
 	int fcount = 0;
 	size_t fsize = 0;
+	text << "Memory peak " << MemoryUsedKbMax() << "\n";
 	for(int i = 0; i < 1024; i++)
 		if(mem.allocated[i]) {
 			int sz = 4 * i;
