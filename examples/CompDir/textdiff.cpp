@@ -61,8 +61,8 @@ private:
 	void                  Split(Array<TextSection>& dest, int start1, int end1, int start2, int end2) const;
 
 private:
-	Vector<HashBase>      hash1;
-	Vector<HashBase>      hash2;
+	Vector<Index<dword>>  hash1;
+	Vector<Index<dword>>  hash2;
 	const Vector<String>& file1;
 	const Vector<String>& file2;
 };
@@ -72,10 +72,10 @@ Array<TextSection> CompareLineMaps(const Vector<String>& s1, const Vector<String
 	return TextComparator(s1, s2).GetSections();
 }
 
-static void CalcHash(Vector<HashBase>& hash, const Vector<String>& file, int limit)
+static void CalcHash(Vector<Index<dword>>& hash, const Vector<String>& file, int limit)
 {
 	{ // 1st row
-		HashBase& first = hash.Add();
+		Index<dword>& first = hash.Add();
 		for(int i = 0; i < file.GetCount(); i++)
 			first.Add(GetHashValue(file[i]));
 	}
@@ -88,8 +88,8 @@ static void CalcHash(Vector<HashBase>& hash, const Vector<String>& file, int lim
 	};
 	const int *pp = prime;
 	for(int l = 1; l < limit; l <<= 1) {
-		HashBase& nhash = hash.Add();
-		const HashBase& ohash = hash[hash.GetCount() - 2];
+		Index<dword>& nhash = hash.Add();
+		const Index<dword>& ohash = hash[hash.GetCount() - 2];
 		int pri = *pp++;
 		int t;
 		for(t = l; t < ohash.GetCount(); t++)
@@ -141,8 +141,8 @@ bool TextComparator::Find(int start1, int end1, int start2, int end2, int& best_
 	int lvl = GetHashLevel(best_count + 1, hash1.GetCount());
 	int chunk = 1 << lvl;
 	int last = max(best_count - chunk + 1, 0);
-	const HashBase *hp1 = &hash1[lvl];
-	const HashBase *hp2 = &hash2[lvl];
+	const Index<dword> *hp1 = &hash1[lvl];
+	const Index<dword> *hp2 = &hash2[lvl];
 	const unsigned *h1 = hp1->begin() + start1;
 
 	int i = hp2->Find(*h1);
