@@ -131,12 +131,14 @@ inline void   MemoryInitDiagnostics()      {}
 inline void   MemoryCheck() {}
 inline void   MemoryCheckDebug() {}
 inline int    MemoryUsedKb() { return 0; }
+inline int    MemoryUsedKbMax() { return 0; }
 
-inline void  MemoryIgnoreLeaksBegin() {}
-inline void  MemoryIgnoreLeaksEnd() {}
+inline void   MemoryIgnoreLeaksBegin() {}
+inline void   MemoryIgnoreLeaksEnd() {}
 
 inline size_t GetMemoryBlockSize(void *ptr) { return 0; }
-inline bool   TryRealloc(void *ptr, size_t newsize) { return false; }
+
+inline bool   MemoryTryRealloc(void *ptr, size_t& newsize) { return false; }
 
 struct MemoryProfile {
 	int empty__;
