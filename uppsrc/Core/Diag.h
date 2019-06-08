@@ -240,7 +240,11 @@ void DumpMap(Stream& s, const T& t) {
 	s << LOG_END;
 }
 
+#ifdef flagUSEMALLOC
+inline String AsString(const MemoryProfile&) { return "Using malloc - no memory profile available"; }
+#else
 String AsString(const MemoryProfile& mem);
+#endif
 
 String CppDemangle(const char* name);
 
