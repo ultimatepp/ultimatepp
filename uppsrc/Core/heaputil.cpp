@@ -159,7 +159,7 @@ void Heap::Make(MemoryProfile& f)
 	f.sys_total = sys_size;
 	
 	f.huge_count = int(big_count - sys_count);
-	f.huge_total = 4096 * max((int)big_size - (int)sys_size, 0); // this is not 100% correct, but approximate
+	f.huge_total = big_size - sys_size; // this is not 100% correct, but approximate
 	
 	f.master_chunks = (int)huge_chunks;
 
@@ -210,6 +210,14 @@ String AsString(const MemoryProfile& mem)
 	     << ", total size " << (mem.large_fragments_total >> 10) << " KB\n";
 	text << "Huge block count " << mem.huge_count
 	     << ", total size " << int(mem.huge_total >> 10) << " KB\n";
+	size_t hf = 0;
+	int    cnt = 0;
+	for(int i = 0; i < 65535; i++) {
+		hf += 4 * mem.huge_fragments[i];
+		cnt += !!mem.huge_fragments[i];
+	}
+	text << "Huge fragments count " << cnt
+	     << ", total size " << hf << " KB\n";
 	text << "Sys block count " << mem.sys_count
 	     << ", total size " << int(mem.sys_total >> 10) << " KB\n";
 	text << Heap::HPAGE * 4 / 1024 << "MB master blocks " << mem.master_chunks << "\n";
