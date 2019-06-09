@@ -123,7 +123,7 @@ int Heap::HugeFree(void *ptr)
 		LTIMING("Sys Free");
 		byte *sysblk = (byte *)h - 4096;
 		size_t count = *((size_t *)sysblk);
-		SysFreeRaw(sysblk, count);
+		SysFreeRaw(sysblk, (count + 1) * 4096);
 		huge_4KB_count -= count;
 		sys_count--;
 		sys_size -= 4096 * count;
