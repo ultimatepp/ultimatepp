@@ -9,13 +9,14 @@ MatFile::MatStatic MatFile::cons;
 
 
 MatVar::~MatVar() {
-	if (var != NULL)
+	if (var != NULL && del)
 		Mat_VarFree(var);
 }
 
 MatVar::MatVar(mat_t *mat, String name) {
 	ASSERT(mat != NULL);
 	
+	del = true;
 	var = Mat_VarReadInfo(mat, name);
 	if (var == NULL) 
 		return;
@@ -43,6 +44,8 @@ int MatVar::GetCount() {
 		ret *= GetDimCount(i);
 	return ret;
 }
+
+
 
 MatFile::~MatFile() {
 	if (mat != NULL)

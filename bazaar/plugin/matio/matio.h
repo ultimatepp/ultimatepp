@@ -3,10 +3,43 @@
 
 #include "./lib/matio.h"
 
+
+template<class T> void GetTypeCode 				(enum matio_classes &class_type, enum matio_types &data_type) {
+	NEVER_("Class unsupported");
+}
+
+template<> void inline GetTypeCode<double>		(enum matio_classes &class_type, enum matio_types &data_type) {
+	class_type = MAT_C_DOUBLE;		
+	data_type  = MAT_T_DOUBLE;
+}
+
+template<> void inline GetTypeCode<float>		(enum matio_classes &class_type, enum matio_types &data_type) {
+	class_type = MAT_C_SINGLE;		
+	data_type  = MAT_T_SINGLE;
+}
+
+template<> void inline GetTypeCode<int>			(enum matio_classes &class_type, enum matio_types &data_type) {
+	class_type = MAT_C_INT64;		
+	data_type  = MAT_T_INT64;
+}
+
+template<> void inline GetTypeCode<String>		(enum matio_classes &class_type, enum matio_types &data_type) {
+	class_type = MAT_C_CHAR;		
+	data_type  = MAT_T_UTF8;
+}
+
+template<> void inline GetTypeCode<const char *> (enum matio_classes &class_type, enum matio_types &data_type) {
+	class_type = MAT_C_CHAR;		
+	data_type  = MAT_T_UTF8;
+}
+
 template <class T>
 class MatMatrix {
 public:
 	MatMatrix() : rows(0), cols(0) {}
+	MatMatrix(const Nuller&)               	{rows = cols = 0;}
+	bool IsNullInstance() const    			{return rows == 0 && cols == 0; }
+	
 	void Alloc(int size) {
 		data.Alloc(size); 
 		this->rows = size;
@@ -31,16 +64,39 @@ public:
 	int GetRows() 							{return rows;}
 	int GetCols() 							{return cols;}
 			
-private:
+	void Print() {
+		for(int r = 0; r < GetRows(); r++) {
+			Cout() << "\n";
+			for(int c = 0; c < GetCols(); c++)
+				Cout() << operator()(r, c) << "  ";
+		}	
+		Cout() << "\n";
+	}
+	
+//private:
 	Buffer<T> data;
 	int rows, cols;
 };
 
 class MatVar {
 public:
-	MatVar() : var(NULL) {}
+	MatVar() : var(NULL), del(true) {}
+	MatVar(const Nuller&)			{var = 0;} 
+	bool IsNullInstance() const    	{return var == 0;}
+	
+	MatVar(String name, int rows, int cols, Vector<String> &elements) {
+		Buffer<size_t> dim(2);
+		dim[0] = rows;
+		dim[1] = cols;
+		
+		Buffer<const char *> names(elements.GetCount());
+		for (int i = 0; i < elements.GetCount(); ++i)
+			names[i] = ~(elements[i]);
+		var = Mat_VarCreateStruct(name, 2, dim, names, elements.GetCount());
+		this->del = false;
+	}
+	
 	~MatVar();
-	MatVar(mat_t *mat, String name);
 	
 	const char *GetName()		{ASSERT(var != NULL); return var->name;}
 	
@@ -48,14 +104,82 @@ public:
 	
 	const char* GetTypeString();
 
-	int GetDimCount()			{ASSERT(var != NULL); return var->rank;}
+	int GetDimCount() const			{ASSERT(var != NULL); return var->rank;}
 	
-	int GetDimCount(int dim)	{ASSERT(var != NULL); return (int)var->dims[dim];}
+	int GetDimCount(int dim) const	{ASSERT(var != NULL); return (int)var->dims[dim];}
 	
 	int GetCount();
 	
+	int GetFieldCount() {
+		ASSERT(var != NULL); 
+		ASSERT(var->class_type == MAT_C_STRUCT);
+		
+		return Mat_VarGetNumberOfFields(var);
+	}
+	const char *GetFieldName(int id) {	
+		ASSERT(var != NULL); 
+		ASSERT(var->class_type == MAT_C_STRUCT);
+		
+		return Mat_VarGetStructFieldnames(var)[id];
+	}
+	
+	MatVar GetVar(String name) {
+		ASSERT(var != NULL); 
+		ASSERT(var->class_type == MAT_C_STRUCT);
+		
+		return MatVar(Mat_VarGetStructFieldByName(var, name, 0), false);
+	}
+	
+	bool IsLoaded() {return var != 0;}
+	
+	
+	bool VarWriteStruct(String name, MatVar &val) {
+		return NULL != Mat_VarSetStructFieldByName(var, name, 0, val.var); 
+	}
+	
+	template <class T>
+	bool VarWriteStruct(String name, void *data, int numRows, int numCols, int index) {
+		int numDim = 2;
+		if (IsNull(numCols)) 
+			numDim = 1;
+			
+		Buffer<size_t> dims(numDim);
+		dims[0] = numRows;
+		if (!IsNull(numCols)) 
+			dims[1] = numCols;
+		
+		enum matio_classes class_type;
+		enum matio_types data_type;
+		GetTypeCode<T>(class_type, data_type);
+		
+		matvar_t *variable = Mat_VarCreate(name, class_type, data_type, numDim, dims, data, 0);
+		return NULL != Mat_VarSetStructFieldByName(var, name, index, variable); 
+	}
+
+	template <class T>
+	bool VarWriteStruct(String name, MatMatrix<T> &data, int index = 0) {
+		return VarWriteStruct<T>(name, data, data.GetRows(), data.GetCols(), index);
+	}
+	
+	bool VarWriteStruct(String name, String data, int index = 0) {
+		return VarWriteStruct<String>(name, (void *)data.Begin(), 1, data.GetCount(), index);
+	}
+
+	bool VarWriteStruct(String name, const char *data, int index = 0) {
+		return VarWriteStruct<String>(name, (void *)data, 1, (int)strlen(data), index);
+	}
+
+	template <class T>
+	bool VarWriteStruct(String name, T data, int index = 0) {
+		return VarWriteStruct<T>(name, &data, 1, Null, index);
+	}
+	
 private:
+	MatVar(mat_t *mat, String name);
+	MatVar(matvar_t *var, bool del) {this->var = var; this->del = del;}
+	
 	matvar_t *var;
+	bool del;
 	
 	friend class MatFile;
 };
@@ -119,13 +243,50 @@ public:
 	bool VarDelete(String name) {
 		ASSERT(mat != NULL);
 		
-		return 0 == Mat_VarDelete(mat, name);
+		int ret = Mat_VarDelete(mat, name);
+		if (ret == 0) {
+			GetVarList();
+			return 0;
+		}
+		return ret;
 	}
 	
 	MatVar GetVar(String name) {return MatVar(mat, name);}
-				
+
+	template <class T> inline
+	T VarRead(const MatVar &var) {
+		ASSERT(mat != NULL);
+	
+		T ret = Null;
+			
+		int numDim = var.GetDimCount();	
+		if (numDim > 2)
+			return ret;
+			
+		Buffer<int> start(numDim, 0);
+		Buffer<int> stride(numDim, 1);
+		Buffer<int> edge(numDim);
+	
+		for (int i = 0; i < numDim; ++i)
+			edge[i] = var.GetDimCount(i);
+	
+		if (0 != Mat_VarReadData(mat, var.var, &ret, start, stride, edge)) 
+			return ret;
+		
+		return ret;	
+	}
+	
+
+	template <class T> inline
+	T VarRead(String name) {
+		MatVar var = GetVar(name);
+		if (IsNull(var))
+			return Null;
+		return VarRead<T>(var);
+	}
+	
 	template <class T>
-	MatMatrix<T> VarRead(MatVar &var) {
+	MatMatrix<T> VarReadMat(MatVar &var) {
 		ASSERT(mat != NULL);
 	
 		MatMatrix<T> ret;
@@ -146,25 +307,69 @@ public:
 		if (0 != Mat_VarReadData(mat, var.var, ret, start, stride, edge)) {
 			ret.Clear();
 			return ret;
+		}	
+		return ret;	
+	}	
+	
+	template <class T>
+	MatMatrix<std::complex<T>> VarReadMatComplex(MatVar &var) {
+		ASSERT(mat != NULL);
+	
+		MatMatrix<std::complex<T>> ret;
+			
+		int numDim = var.GetDimCount();	
+		if (numDim > 2)
+			return ret;
+			
+		Buffer<int> start(numDim, 0);
+		Buffer<int> stride(numDim, 1);
+		Buffer<int> edge(numDim);
+	
+		for (int i = 0; i < numDim; ++i)
+			edge[i] = var.GetDimCount(i);
+	
+		ret.Alloc((int)var.GetDimCount(0), (int)var.GetDimCount(1));
+	
+		Buffer<T> real(var.GetCount()), imag(var.GetCount());
+		
+		struct mat_complex_split_t data = {real, imag};
+		
+		if (0 != Mat_VarReadData(mat, var.var, &data, start, stride, edge)) {
+			ret.Clear();
+			return ret;
+		}	
+		
+		for (int i = 0; i < var.GetCount(); ++i) {
+			ret(i).real(real[i]);
+			ret(i).imag(imag[i]);
 		}
-		return ret;			
+		return ret;	
 	}
 	
 	template <class T>
-	MatMatrix<T> VarRead(String name) {
+	MatMatrix<T> VarReadMat(String name) {
 		MatVar var = GetVar(name);
-		return VarRead<T>(var);
+		if (IsNull(var))
+			return Null;
+		return VarReadMat<T>(var);
 	}
 	
-	template<class T> void inline GetTypeCode(enum matio_classes &class_type, enum matio_types &data_type) const {
-		NEVER_("Unsupported type in matio");		
+	bool VarWrite(MatVar &var, bool compression = true) {
+		if (0 != Mat_VarWrite(mat, var.var, MAT_COMPRESSION_NONE))
+			return false;
+		return true;
 	}
-	
+		
 	template <class T>
-	bool VarWrite(String name, MatMatrix<T> &data, bool compression = true) {
-		Buffer<size_t> dims(2);
-		dims[0] = data.GetRows();
-		dims[1] = data.GetCols();
+	bool VarWrite(String name, void *data, int numRows, int numCols, bool compression = true) {
+		int numDim = 2;
+		if (IsNull(numCols)) 
+			numDim = 1;
+			
+		Buffer<size_t> dims(numDim);
+		dims[0] = numRows;
+		if (!IsNull(numCols)) 
+			dims[1] = numCols;
 		
 		enum matio_classes class_type;
 		enum matio_types data_type;
@@ -173,7 +378,7 @@ public:
 		if (VarExists(name))
 			if (0 != Mat_VarDelete(mat, name))
 				return false;
-		matvar_t *var = Mat_VarCreate(name, class_type, data_type, 2, dims, data, MAT_F_DONT_COPY_DATA);
+		matvar_t *var = Mat_VarCreate(name, class_type, data_type, numDim, dims, data, MAT_F_DONT_COPY_DATA);
 		if (var == NULL)
 			return false;
 		if (0 != Mat_VarWrite(mat, var, MAT_COMPRESSION_NONE))
@@ -182,24 +387,19 @@ public:
 	}
 	
 	template <class T>
-	bool VarWrite(String name, T data, bool compression = true) {
-		Buffer<size_t> dims(1);
-		dims[0] = 1;
-		
-		enum matio_classes class_type;
-		enum matio_types data_type;
-		GetTypeCode<T>(class_type, data_type);
-		
-		if (VarExists(name))
-			Mat_VarDelete(mat, name);
-		matvar_t *var = Mat_VarCreate(name, class_type, data_type, 1, dims, &data, MAT_F_DONT_COPY_DATA);
-		if (var == NULL)
-			return false;
-		if (0 != Mat_VarWrite(mat, var, MAT_COMPRESSION_NONE))
-			return false;
-		return true;
+	bool VarWrite(String name, MatMatrix<T> &data, bool compression = true) {
+		return VarWrite<T>(name, data, data.GetRows(), data.GetCols(), compression);
 	}
-		
+	
+	template <class T>
+	bool VarWrite(String name, T data, bool compression = true) {
+		return VarWrite<T>(name, data, 1, Null, compression);
+	}
+	
+	bool VarWrite(String name, String data, bool compression = true) {
+		return VarWrite<String>(name, (void *)data.Begin(), 1, data.GetCount(), compression);
+	}
+
 	static String GetLastError()	{return cons.lastError;}
 	
 	struct MatStatic {
@@ -227,10 +427,8 @@ private:
 	void GetVarList() {
 		ASSERT(mat != NULL);
 		
-		if (listVar == NULL) {
-			numVar = 0; 
-			listVar = Mat_GetDir(mat, &numVar);
-		}
+		numVar = 0; 
+		listVar = Mat_GetDir(mat, &numVar);
 	}
 	
 	static MatStatic cons;
@@ -241,19 +439,41 @@ private:
 	}
 };
 
-template<> void inline MatFile::GetTypeCode<double>	(enum matio_classes &class_type, enum matio_types &data_type) const {
-	class_type = MAT_C_DOUBLE;		
-	data_type  = MAT_T_DOUBLE;
+template <> inline
+String MatFile::VarRead<String>(const MatVar &var) {
+	ASSERT(mat != NULL);
+		
+	int numDim = var.GetDimCount();	
+	if (numDim > 2)
+		return String();
+		
+	Buffer<int> start(numDim, 0);
+	Buffer<int> stride(numDim, 1);
+	Buffer<int> edge(numDim);
+
+	for (int i = 0; i < numDim; ++i)
+		edge[i] = var.GetDimCount(i);
+
+	String ret(0, 1 + var.GetDimCount(0)*var.GetDimCount(1));
+
+	var.var->class_type = MAT_C_INT8;
+	var.var->data_type  = MAT_T_INT8;
+
+	if (0 != Mat_VarReadData(mat, var.var, (void *)ret.Begin(), start, stride, edge)) 
+		return String();
+	
+	return ret;	
 }
 
-template<> void inline MatFile::GetTypeCode<float>	(enum matio_classes &class_type, enum matio_types &data_type) const {
-	class_type = MAT_C_SINGLE;		
-	data_type  = MAT_T_SINGLE;
-}
+template <> inline
+MatMatrix<std::complex<float>> MatFile::VarReadMat(MatVar &var) {return VarReadMatComplex<float>(var);}
 
-template<> void inline MatFile::GetTypeCode<int>	(enum matio_classes &class_type, enum matio_types &data_type) const {
-	class_type = MAT_C_INT64;		
-	data_type  = MAT_T_INT64;
-}
+template <> inline
+MatMatrix<std::complex<double>> MatFile::VarReadMat(MatVar &var) {return VarReadMatComplex<double>(var);}
 
+template <> inline
+MatMatrix<std::complex<long double>> MatFile::VarReadMat(MatVar &var) {return VarReadMatComplex<long double>(var);}
+
+	
 #endif
+
