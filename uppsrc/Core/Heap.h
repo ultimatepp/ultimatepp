@@ -11,6 +11,7 @@ void *MemoryAlloc48();
 void  MemoryFree48(void *ptr);
 void  MemoryFreeThread();
 void  MemoryCheck();
+void  MemoryDump();
 int   MemoryUsedKb();
 int   MemoryUsedKbMax();
 void  MemoryLimitKb(int kb);

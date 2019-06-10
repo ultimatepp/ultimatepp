@@ -254,10 +254,18 @@ typename BlkHeap<Detail, BlkSize>::BlkHeader *BlkHeap<Detail, BlkSize>::Free(Blk
 }
 
 struct HugeHeapDetail {
+#if 0
 	static BlkHeader_<4096> freelist[2][1];
 
 	static void LinkFree(BlkHeader_<4096> *h)     { Dbl_LinkAfter(h, freelist[h->GetSize() >= 16]); }
 	static void NewFreeSize(BlkHeader_<4096> *h)  {}
+#else
+	static BlkHeader_<4096> freelist[20][1];
+
+	static int  Cv(int n)                         { return n < 16 ? 0 : SignificantBits(n - 16) + 1; }
+	static void LinkFree(BlkHeader_<4096> *h)     { Dbl_LinkAfter(h, freelist[Cv(h->GetSize())]); }
+	static void NewFreeSize(BlkHeader_<4096> *h)  {}
+#endif
 };
 
 struct Heap : BlkHeap<HugeHeapDetail, 4096> {
@@ -269,6 +277,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	#endif
 		LUNIT = 256, // granularity of large blocks (size always a multiple of this)
 		LPAGE = LUNIT - 1, // number of LUNITs in large page
+		LCVCOUNT = 9, // SignificantBits(LPAGE) + 1
 		LOFFSET = 64, // offset from 64KB start to the first block header
 
 		NKLASS = 23, // number of small size classes
@@ -315,8 +324,11 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	};
 	
 	struct LargeHeapDetail {
-		BlkHeader_<LUNIT> freelist[6][1]; // <1KB, <2KB, <4KB, <8KB, >= 8KB
-		static int Cv(int n) { return min(n >> 2, 4); }
+//		BlkHeader_<LUNIT> freelist[6][1]; // <1KB, <2KB, <4KB, <8KB, >= 8KB
+//		static int Cv(int n) { return min(n >> 2, 4); }
+
+		BlkHeader_<LUNIT> freelist[LCVCOUNT][1];
+		static int Cv(int n) { return SignificantBits(n); }
 
 		void Free64KB(BlkHeader_<LUNIT> *h);
 		void LinkFree(BlkHeader_<LUNIT> *h) {
@@ -431,6 +443,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	size_t LGetBlockSize(void *ptr);
 
 	void   Make(MemoryProfile& f);
+	void   Dump();
 
 	static void Shrink();
 

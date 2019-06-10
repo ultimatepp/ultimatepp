@@ -181,6 +181,35 @@ void Heap::Make(MemoryProfile& f)
 	}
 }
 
+void Heap::Dump()
+{
+	Mutex::Lock __(mutex);
+	DLink *m = large->next;
+	while(m != large) {
+		LargeHeap::BlkHeader *h = m->GetFirst();
+		RLOG("--------------------------");
+		for(;;) {
+			RLOG(asString(h) << " " << h->GetSize() << (h->IsFree() ? " FREE" : ""));
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader();
+		}
+		m = m->next;
+	}
+	HugePage *pg = huge_pages;
+	while(pg) {
+		BlkPrefix *h = (BlkPrefix *)pg->page;
+		RLOG("==========================");
+		for(;;) {
+			RLOG(asString(h) << " " << h->GetSize() << (h->IsFree() ? " FREE" : ""));
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader(4096);
+		}
+		pg = pg->next;
+	}
+}
+
 String AsString(const MemoryProfile& mem)
 {
 	String text;
@@ -189,7 +218,7 @@ String AsString(const MemoryProfile& mem)
 	size_t asize = 0;
 	int fcount = 0;
 	size_t fsize = 0;
-	text << "Memory peak " << MemoryUsedKbMax() << "\n";
+	text << "Memory peak: " << MemoryUsedKbMax() << " KB, current: " << MemoryUsedKb() << "KB \n";
 	for(int i = 0; i < 1024; i++)
 		if(mem.allocated[i]) {
 			int sz = 4 * i;
@@ -210,14 +239,8 @@ String AsString(const MemoryProfile& mem)
 	     << ", total size " << (mem.large_fragments_total >> 10) << " KB\n";
 	text << "Huge block count " << mem.huge_count
 	     << ", total size " << int(mem.huge_total >> 10) << " KB\n";
-	size_t hf = 0;
-	int    cnt = 0;
-	for(int i = 0; i < 65535; i++) {
-		hf += 4 * mem.huge_fragments[i];
-		cnt += !!mem.huge_fragments[i];
-	}
-	text << "Huge fragments count " << cnt
-	     << ", total size " << hf << " KB\n";
+	text << "Huge fragments count " << mem.huge_fragments_count
+	     << ", total size " << 4 * mem.huge_fragments_total << " KB\n";
 	text << "Sys block count " << mem.sys_count
 	     << ", total size " << int(mem.sys_total >> 10) << " KB\n";
 	text << Heap::HPAGE * 4 / 1024 << "MB master blocks " << mem.master_chunks << "\n";

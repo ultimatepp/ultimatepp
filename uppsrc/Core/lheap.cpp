@@ -135,7 +135,7 @@ void Heap::LFree(void *ptr)
 	if(h->heap == NULL) { // this is big block
 		LTIMING("Big Free");
 		DLink *d = (DLink *)h - 1;
-		big_size -= h->size;
+		big_size -= d->size;
 		big_count--;
 		d->Unlink();
 		LLOG("Big free " << (void *) ptr << " size " << h->size);
@@ -182,9 +182,9 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		size_t count = (newsize + sizeof(DLink) + sizeof(BlkPrefix) + 4095) >> 12;
 		
 		if(HugeTryRealloc(d, count)) {
-			big_size -= h->size;
+			big_size -= d->size;
 			d->size = newsize = (count << 12) - sizeof(DLink) - sizeof(BlkPrefix);
-			big_size += h->size;
+			big_size += d->size;
 			return true;
 		}
 	}

@@ -288,3 +288,14 @@ inline dword FoldHash(dword h)
 {
 	return SwapEndian32(0xa3613c16 * h);
 }
+
+force_inline
+int SignificantBits(dword x)
+{ // basically log2(x) + 1 except that for 0 this is 0, number of significant bits of x
+#ifdef COMPILER_MSC
+	DWORD index;
+	return _BitScanReverse(&index, x) ? index + 1 : 0;
+#else
+	return x ? 32 - __builtin_clz(x) : 0;
+#endif
+}

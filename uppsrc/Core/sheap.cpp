@@ -465,6 +465,11 @@ MemoryProfile::MemoryProfile()
 	ThreadHeap()->Make(*this);
 }
 
+void MemoryDump()
+{
+	ThreadHeap()->Dump();
+}
+
 #endif
 
 }
