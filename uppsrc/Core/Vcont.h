@@ -93,7 +93,7 @@ public:
 	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
 
 	Buffer(size_t size, std::initializer_list<T> init) {
-		T *t = Malloc(size); for(const auto& i : init) new (t++) T(i);
+		Malloc(size); T *t = ptr; for(const auto& i : init) new (t++) T(i);
 	}
 	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
 };
