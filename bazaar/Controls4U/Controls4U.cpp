@@ -167,15 +167,21 @@ void EditFileFolder::DoBrowse() {
 		}
 	}
 	if (isFile && isLoad) {
-		if (fs.ExecuteOpen(title)) 
+		if (fs.ExecuteOpen(title)) {
 			SetData(~fs);
+			WhenAction();
+		}
 	} else if (isFile && !isLoad)  {
-		if (fs.ExecuteSaveAs(title)) 
+		if (fs.ExecuteSaveAs(title)) {
 			SetData(~fs);
+			WhenAction();
+		}
 	} else if (!isFile) {
 		fs.ClearFiles();
-		if (fs.ExecuteSelectDir(title)) 
+		if (fs.ExecuteSelectDir(title)) {
 			SetData(~fs);
+			WhenAction();
+		}
 	}
 }
 
@@ -185,7 +191,8 @@ void EditFileFolder::SetData(const Value& data) {
 }
 
 void EditFileFolder::DoGo(bool add) {
-	Set(GetData());			// Write Edit to FileSel
+	InitFs();
+	pfs->Set(GetData());			// Write Edit to FileSel
 	if (!IsRootFolder(GetData().ToString()))
 		butUp.Enable(true);
 	else
@@ -200,7 +207,7 @@ void EditFileFolder::DoGo(bool add) {
 			butRight.Enable(false);
 	}
 	WhenChange();
-	WhenAction();
+	//WhenAction();
 	Accept();
 }
 

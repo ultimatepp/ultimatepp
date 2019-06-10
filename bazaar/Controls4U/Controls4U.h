@@ -56,9 +56,14 @@ public:
 	String Get() const                           	{return GetData();}
 	operator const char *() const					{return Get();}
 	const String operator~() const   				{return Get();}
-	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);}
-	EditFileFolder &operator=(const char *s)  	  	{Set(s); return *this;}
-	EditFileFolder &operator=(const String& s) 		{Set(s); return *this;}
+	void Set(const String& s)						{InitFs();	
+	pfs->Set(s); 
+	EditString::SetData(s); 
+	AddHistory();
+	}
+	void operator<<=(const char *s)   				{Set(s);}
+	void operator<<=(const String& s)   			{Set(s);}
+	Callback operator<<=(Callback  action) 			{WhenAction = action; return action;}
 	bool IsEmpty()									{return GetData().IsNull();}
 	EditFileFolder &NotNull(bool b)					{EditString::NotNull(b);  return *this;}
 	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;}
@@ -89,6 +94,7 @@ public:
 	virtual void  Jsonize(JsonIO& jio) {
 		Vector<String> list;
 		if (!jio.IsLoading()) {
+			AddHistory();
 			for (int i = 0; i < select.GetCount(); ++i)
 				list << select.Get(i);
 		}
@@ -105,6 +111,7 @@ public:
 	virtual void  Xmlize(XmlIO& xio) {
 		Vector<String> list;
 		if (!xio.IsLoading()) {
+			AddHistory();
 			for (int i = 0; i < select.GetCount(); ++i)
 				list << select.Get(i);
 		}
