@@ -124,6 +124,10 @@ void AppMain___()
 {
 //	Ctrl::ShowRepaint(50);
 
+#ifdef flagPEAKMEM
+	PeakMemoryProfile();
+#endif
+
 	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
 
 	Ctrl::SetUHDEnabled();
@@ -331,3 +335,11 @@ void AppMain___()
 #endif
 #endif
 }
+
+#ifdef flagPEAKMEM
+EXITBLOCK {
+	RDUMP(*PeakMemoryProfile());
+	RDUMP(MemoryProfile());
+	MemoryDump();
+}
+#endif

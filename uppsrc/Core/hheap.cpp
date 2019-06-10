@@ -14,7 +14,7 @@ namespace Upp {
 // used as manager of huge memory blocks. 4KB and 64KB blocks are allocated from here too
 // also able to deal with bigger blocks, those are directly allocated / freed from system
 
-BlkHeader_<4096> HugeHeapDetail::freelist[2][1]; // only single global Huge heap...
+BlkHeader_<4096> HugeHeapDetail::freelist[20][1]; // only single global Huge heap...
 Heap::HugePage *Heap::huge_pages;
 
 #ifdef LSTAT
@@ -58,17 +58,19 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 #endif
 
 	huge_4KB_count += count;
-	
-	if(huge_4KB_count > huge_4KB_count_max) {
-		huge_4KB_count_max = huge_4KB_count;
-		if(MemoryUsedKb() > sKBLimit)
-			Panic("MemoryLimitKb breached!");
-		if(sPeak)
-			Make(*sPeak);
-	}
+
+	auto MaxMem = [&] {
+		if(huge_4KB_count > huge_4KB_count_max) {
+			huge_4KB_count_max = huge_4KB_count;
+			if(MemoryUsedKb() > sKBLimit)
+				Panic("MemoryLimitKb breached!");
+			if(sPeak)
+				Make(*sPeak);
+		}
+	};
 
 	if(!D::freelist[0]->next) { // initialization
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < __countof(D::freelist); i++)
 			Dbl_Self(D::freelist[i]);
 	}
 		
@@ -80,6 +82,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		*((size_t *)sysblk) = count;
 		sys_count++;
 		sys_size += 4096 * count;
+		MaxMem();
 		return h;
 	}
 	
@@ -91,13 +94,16 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		FreeSmallEmpty(INT_MAX, int(free_4KB - huge_4KB_count / 32));
 	
 	for(int pass = 0; pass < 2; pass++) {
-		for(int i = count >= 16; i < 2; i++) {
+		for(int i = Cv(count); i < __countof(D::freelist); i++) {
 			BlkHeader *l = D::freelist[i];
 			BlkHeader *h = l->next;
 			while(h != l) {
 				word sz = h->GetSize();
-				if(sz >= count)
-					return MakeAlloc(h, wcount);
+				if(sz >= count) {
+					void *ptr = MakeAlloc(h, wcount);
+					MaxMem();
+					return ptr;
+				}
 				h = h->next;
 			}
 		}

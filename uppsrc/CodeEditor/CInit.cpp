@@ -41,7 +41,7 @@ void CSyntax::InitKeywords()
 		"do", "__int64", "static", "volatile",
 		"double", "__leave", "static_cast",
 		"dynamic_cast", "long", "__stdcall", "while",
-		"force_inline",
+		"force_inline", "never_inline",
 		"and", "bitor", "or", "xor",
 		"compl", "bitand", "and_eq", "or_eq",
 		"xor_eq", "not", "not_eq",
