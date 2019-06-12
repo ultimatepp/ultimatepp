@@ -10,9 +10,15 @@ namespace Upp {
 #define LTIMING(x)    // RTIMING(x)
 #define LHITCOUNT(x)  // RHITCOUNT(x)
 
+#ifdef COMPILER_MINGW
+FastMingwTls<bool>     CoWork::Pool::finlock;
+FastMingwTls<int>      CoWork::worker_index;
+FastMingwTls<CoWork *> CoWork::current;
+#else
 thread_local bool    CoWork::Pool::finlock;
 thread_local int     CoWork::worker_index = -1;
 thread_local CoWork *CoWork::current;
+#endif
 
 CoWork::Pool& CoWork::GetPool()
 {
@@ -78,7 +84,7 @@ CoWork::Pool::~Pool()
 
 void CoWork::FinLock()
 {
-	if(current) {
+	if(current && !Pool::finlock) {
 		Pool::finlock = true;
 		GetPool().lock.Enter();
 	}
@@ -86,18 +92,33 @@ void CoWork::FinLock()
 
 void CoWork::Pool::DoJob(MJob& job)
 {
-	job.UnlinkAll();
 	LLOG("DoJob (CoWork " << FormatIntHex(job.work) << ")");
 	finlock = false;
-	Function<void ()> fn = pick(job.fn);
+
 	CoWork *work = job.work;
 	CoWork::current = work;
 	bool looper = job.looper;
-	Free(job); // using 'job' after this point is grave error....
+	Function<void ()> fn;
+	if(looper) {
+		ASSERT(work);
+		if(--work->looper_count <= 0) {
+			job.UnlinkAll();
+			Free(job);
+		}
+	}
+	else {
+		job.UnlinkAll();
+		fn = pick(job.fn);
+		Free(job); // using 'job' after this point is grave error....
+	}
+
 	lock.Leave();
 	std::exception_ptr exc;
 	try {
-		fn();
+		if(looper)
+			work->looper_fn();
+		else
+			fn();
 	}
 	catch(...) {
 		LLOG("DoJob caught exception");
@@ -160,10 +181,18 @@ void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work, bool looper)
 	job.LinkAfter(&jobs);
 	if(work)
 		job.LinkAfter(&work->jobs, 1);
-	job.fn = pick(fn);
 	job.work = work;
 	job.looper = looper;
+	if(looper) {
+		work->looper_fn = pick(fn);
+		work->looper_count = GetPoolSize();
+	}
+	else
+		job.fn = pick(fn);
 	LLOG("Adding job");
+	if(looper)
+		waitforjob.Broadcast();
+	else
 	if(waiting_threads) {
 		LTIMING("Releasing thread waiting for job");
 		LLOG("Releasing thread waiting for job, waiting threads: " << waiting_threads);
@@ -204,15 +233,17 @@ void CoWork::Do0(Function<void ()>&& fn, bool looper)
 		return;
 	}
 	p.PushJob(pick(fn), this, looper);
-	todo++;
+	if(looper)
+		todo += GetPoolSize();
+	else
+		++todo;
 	p.lock.Leave();
 }
 
 void CoWork::Loop(Function<void ()>&& fn)
 {
 	index = 0;
-	for(int i = 0; i < GetPoolSize(); i++)
-		Do0(clone(fn), true);
+	Do0(pick(fn), true);
 	Finish();
 }
 
@@ -224,8 +255,11 @@ void CoWork::Cancel0()
 		LHITCOUNT("CoWork::Canceling scheduled Job");
 		MJob& job = *jobs.GetNext(1);
 		job.UnlinkAll();
+		if(job.looper)
+			todo -= job.work->looper_count;
+		else
+			--todo;
 		p.Free(job);
-		--todo;
 	}
 }
 
@@ -323,6 +357,11 @@ void CoWork::Reset()
 	catch(...) {}
 	todo = 0;
 	canceled = false;
+}
+
+int CoWork::GetWorkerIndex()
+{
+	return worker_index;
 }
 
 CoWork::CoWork()

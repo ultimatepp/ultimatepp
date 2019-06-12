@@ -299,3 +299,46 @@ int SignificantBits(dword x)
 	return x ? 32 - __builtin_clz(x) : 0;
 #endif
 }
+
+#ifdef COMPILER_MINGW
+
+// This is hopefully a temporary fix for abysmal MINGW thread_local implementation
+// IMPORTANT: There are some mingw/lld issues that prevent TLS stuff to be used in inlines
+
+template <class T>
+class FastMingwTls {
+	int ndx = -1;
+
+	struct TEB_ {
+	  PVOID Reserved1[12];
+	  PVOID ProcessEnvironmentBlock;
+	  PVOID Reserved2[399];
+	  BYTE  Reserved3[1952];
+	  PVOID TlsSlots[64];
+	  BYTE  Reserved4[8];
+	  PVOID Reserved5[26];
+	  PVOID ReservedForOle;
+	  PVOID Reserved6[4];
+	  PVOID TlsExpansionSlots;
+	};
+
+	force_inline
+	PVOID& Slot() const {
+	#ifdef CPU_64
+		TEB_ *teb = (TEB_ *)__readgsqword(0x30);
+	#else
+		TEB_ *teb = (TEB_ *)__readfsdword(0x18);
+	#endif
+		return teb->TlsSlots[ndx];
+	}
+
+public:
+	void operator=(T x)        { Slot() = (PVOID)(uintptr_t)x; }
+	T operator->()             { return (T)(uintptr_t)Slot(); }
+	const T operator->() const { return (T)(uintptr_t)Slot(); }
+	operator T() const         { return (T)(uintptr_t)Slot(); }
+	
+	FastMingwTls()             { ndx = TlsAlloc(); ASSERT(ndx < 60); }
+};
+
+#endif
