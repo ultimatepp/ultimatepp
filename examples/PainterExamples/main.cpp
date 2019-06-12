@@ -182,6 +182,8 @@ App::App() {
 	for(int i = 0; i < Examples().GetCount(); i++)
 		list.Add(Examples()[i].name);
 	list.FindSetCursor(LoadFile(ConfigFile("last")));
+	if(!list.IsCursor())
+		list.FindSetCursor("Lion");
 	Sync();
 	Sizeable().Zoomable();
 	ctrl.Height(ctrl.GetLayoutSize().cy);
