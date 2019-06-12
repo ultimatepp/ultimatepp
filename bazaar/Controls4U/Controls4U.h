@@ -56,10 +56,11 @@ public:
 	String Get() const                           	{return GetData();}
 	operator const char *() const					{return Get();}
 	const String operator~() const   				{return Get();}
-	void Set(const String& s)						{InitFs();	
-	pfs->Set(s); 
-	EditString::SetData(s); 
-	AddHistory();
+	void Set(const String& s) {
+		InitFs();	
+		pfs->Set(s); 
+		EditString::SetData(s); 
+		AddHistory();
 	}
 	void operator<<=(const char *s)   				{Set(s);}
 	void operator<<=(const String& s)   			{Set(s);}
