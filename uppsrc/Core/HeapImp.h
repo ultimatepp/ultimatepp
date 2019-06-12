@@ -254,18 +254,11 @@ typename BlkHeap<Detail, BlkSize>::BlkHeader *BlkHeap<Detail, BlkSize>::Free(Blk
 }
 
 struct HugeHeapDetail {
-#if 0
-	static BlkHeader_<4096> freelist[2][1];
-
-	static void LinkFree(BlkHeader_<4096> *h)     { Dbl_LinkAfter(h, freelist[h->GetSize() >= 16]); }
-	static void NewFreeSize(BlkHeader_<4096> *h)  {}
-#else
 	static BlkHeader_<4096> freelist[20][1];
 
 	static int  Cv(int n)                         { return n < 16 ? 0 : SignificantBits(n - 16) + 1; }
 	static void LinkFree(BlkHeader_<4096> *h)     { Dbl_LinkAfter(h, freelist[Cv(h->GetSize())]); }
 	static void NewFreeSize(BlkHeader_<4096> *h)  {}
-#endif
 };
 
 struct Heap : BlkHeap<HugeHeapDetail, 4096> {
@@ -324,9 +317,6 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	};
 	
 	struct LargeHeapDetail {
-//		BlkHeader_<LUNIT> freelist[6][1]; // <1KB, <2KB, <4KB, <8KB, >= 8KB
-//		static int Cv(int n) { return min(n >> 2, 4); }
-
 		BlkHeader_<LUNIT> freelist[LCVCOUNT][1];
 		static int Cv(int n) { return SignificantBits(n); }
 

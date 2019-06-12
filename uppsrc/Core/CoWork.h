@@ -30,8 +30,12 @@ public:
 
 		Pool();
 		~Pool();
-		
+	
+	#ifdef COMPILER_MINGW
+		static FastMingwTls<bool>   finlock;
+	#else
 		static thread_local bool    finlock;
+	#endif
 
 		bool DoJob();
 		static void ThreadRun(int tno);
@@ -41,14 +45,21 @@ public:
 
 	static Pool& GetPool();
 
+#ifdef COMPILER_MINGW
+	static FastMingwTls<int>      worker_index;
+	static FastMingwTls<CoWork *> current;
+#else
 	static thread_local int worker_index;
 	static thread_local CoWork *current;
+#endif
 
 	ConditionVariable  waitforfinish;
 	Link<MJob, 2>      jobs; // global stack and CoWork stack as double-linked lists
 	int                todo;
 	bool               canceled;
 	std::exception_ptr exc;
+	Function<void ()>  looper_fn;
+	int                looper_count;
 
 	void Do0(Function<void ()>&& fn, bool looper);
 
@@ -97,7 +108,7 @@ public:
 	void Reset();
 
 	static bool IsWorker()                                    { return worker_index >= 0; }
-	static int  GetWorkerIndex()                              { return worker_index; }
+	static int  GetWorkerIndex();
 	static int  GetPoolSize();
 	static void SetPoolSize(int n);
 
@@ -108,6 +119,23 @@ public:
 struct CoWorkNX : CoWork {
 	~CoWorkNX() noexcept(true) {}
 };
+
+inline
+void CoDo(Function<void ()>&& fn)
+{
+	CoWork co;
+	co * fn;
+}
+
+template <typename Fn>
+void CoFor(int n, Fn iterator)
+{
+	std::atomic<int> ii = 0;
+	CoDo([&] {
+		for(int i = ii++; i < n; i = ii++)
+			iterator(i);
+	});
+}
 
 template <class T>
 class CoWorkerResources {
