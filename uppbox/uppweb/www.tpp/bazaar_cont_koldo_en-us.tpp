@@ -40,6 +40,40 @@ athTools]&]
 [s0;l160;i150;O0; [2 Other packages]&]
 [s0;l320;i150;O0; [2 OpenCV]&]
 [s0;l320;i150;O0; [2 SDLCtrl]&]
+[s0;l320;2 &]
+[s0;l320;2 &]
+[s0; [*2 Other relevant links]&]
+[s0;l320;2 &]
+[s0;l160; [*2 Professional projects]&]
+[s0;l160; [^http`:`/`/www`.poweroilandgas`.sener`/project`/software`-senerwave`-developed`-sener^2 S
+ENERWave][2 .]&]
+[s0;l160;2 &]
+[s0;l160; [*2 Presentations, publications and patents]&]
+[s0;l160; [2 Presentations]&]
+[s0;l160;i150;O0; [^http`:`/`/www`.bcamath`.org`/documentos`_public`/archivos`/actividades`_cientificas`/TalkHyWec`_Zabala`.pdf^2 H
+YWEC 2017][2 , ][^https`:`/`/www`.researchgate`.net`/publication`/323385070`_Analisis`_de`_prestaciones`_de`_dispositivos`_marinos^2 E
+NERMAR 2017][2  (][^http`:`/`/mastermore`.eus`/offshore`-renewable`-training`-in`-enermar`-marine`-renewable`-energies`-2017`/^2 p
+icture][2 ), ][^https`:`/`/www`.researchgate`.net`/profile`/Inaki`_Zabala`/publication`/319650620`_Assessment`_of`_a`_Spar`_Buoy`_Oscillating`-Water`-Column`_Wave`_Energy`_Converter`_Including`_a`_Fully`_Dynamic`_Model`/links`/59b7f51aaca2722453a6cc60`/Assessment`-of`-a`-Spar`-Buoy`-Oscillating`-Water`-Column`-Wave`-Energy`-Converter`-Including`-a`-Fully`-Dynamic`-Model`.pdf^2 E
+WTEC 2017][2  (][^http`:`/`/www`.engineeringandconstruction`.sener`/event`/european`-wave`-and`-tidal`-energy`-conference`-ewtec`-2017^2 r
+eference][2 ).]&]
+[s0;l160;2 &]
+[s0;l160; [2 Publications]&]
+[s0;l160;i150;O0; [^https`:`/`/www`.igi`-global`.com`/chapter`/lattice`-boltzmann`-shallow`-water`-simulation`-with`-surface`-pressure`/203093^2 L
+attice Boltzmann Shallow Water Simulation With Surface Pressure]&]
+[s0;l160;i150;O0; [^https`:`/`/www`.igi`-global`.com`/chapter`/large`-eddy`-simulation`-turbulence`-model`-applied`-to`-the`-lattice`-boltzmann`-method`/203094^2 L
+arge Eddy Simulation Turbulence Model Applied to the Lattice 
+Boltzmann Method]&]
+[s0;l160;i150;O0; [^https`:`/`/www`.sciencedirect`.com`/science`/article`/pii`/S1364032119303405^2 W
+ave`-induced real`-fluid effects in marine energy converters: 
+Review and application to OWC devices]&]
+[s0;l160;^https`:`/`/www`.sciencedirect`.com`/science`/article`/pii`/S1364032119303405^2 &]
+[s0;l160; [2 Patents]&]
+[s0;l160;i150;O0; [^https`:`/`/worldwide`.espacenet`.com`/publicationDetails`/originalDocument`?FT`=D`&date`=20151119`&DB`=`&locale`=en`_EP`&CC`=WO`&NR`=2015173235A1`&KC`=A1`&ND`=4`#^2 W
+O2015173235][2 : Device for capturing wave energy ]&]
+[s0;l160;i150;O0; [^https`:`/`/worldwide`.espacenet`.com`/publicationDetails`/originalDocument`?CC`=WO`&NR`=2015181357A1`&KC`=A1`&FT`=D`&ND`=4`&date`=20151203`&DB`=`&locale`=en`_EP`#^2 W
+O2015181357][2 : Turbine for harnessing wave energy with oscillating 
+water column devices ]&]
+[s0;l160;2 &]
 [s0;l160; [*2 Other links]&]
 [s0;l160; [^https`:`/`/www`.linkedin`.com`/in`/i`%C3`%B1aki`-zabala`-8982b095`/^2 Linke
 dIn][2 , ][^https`:`/`/www`.researchgate`.net`/profile`/Inaki`_Zabala^2 ResearchGate][2 .
