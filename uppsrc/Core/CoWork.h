@@ -30,7 +30,7 @@ public:
 
 		Pool();
 		~Pool();
-	
+
 	#ifdef COMPILER_MINGW
 		static FastMingwTls<bool>   finlock;
 	#else
@@ -99,7 +99,7 @@ public:
 	static void FinLock();
 	
 	void Cancel();
-	static bool IsCanceled()                                  { return current && current->canceled; }
+	static bool IsCanceled();
 
 	void Finish();
 	
@@ -107,7 +107,7 @@ public:
 	
 	void Reset();
 
-	static bool IsWorker()                                    { return worker_index >= 0; }
+	static bool IsWorker()                                    { return GetWorkerIndex() >= 0; }
 	static int  GetWorkerIndex();
 	static int  GetPoolSize();
 	static void SetPoolSize(int n);

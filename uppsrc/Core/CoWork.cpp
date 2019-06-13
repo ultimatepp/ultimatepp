@@ -12,7 +12,7 @@ namespace Upp {
 
 #ifdef COMPILER_MINGW
 FastMingwTls<bool>     CoWork::Pool::finlock;
-FastMingwTls<int>      CoWork::worker_index;
+FastMingwTls<int>      CoWork::worker_index = -1;
 FastMingwTls<CoWork *> CoWork::current;
 #else
 thread_local bool    CoWork::Pool::finlock;
@@ -357,6 +357,11 @@ void CoWork::Reset()
 	catch(...) {}
 	todo = 0;
 	canceled = false;
+}
+
+bool CoWork::IsCanceled()
+{
+	return current && current->canceled;
 }
 
 int CoWork::GetWorkerIndex()
