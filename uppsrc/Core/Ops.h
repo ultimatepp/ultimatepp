@@ -303,10 +303,10 @@ int SignificantBits(dword x)
 #ifdef COMPILER_MINGW
 
 // This is hopefully a temporary fix for abysmal MINGW thread_local implementation
-// IMPORTANT: There are some mingw/lld issues that prevent TLS stuff to be used in inlines
+// ALSO IMPORTANT: There are some mingw/lld issues that prevent TLS stuff to be used in inlines
 
 template <class T>
-class FastMingwTls {
+struct FastMingwTls {
 	int ndx = -1;
 
 	struct TEB_ {
@@ -333,12 +333,13 @@ class FastMingwTls {
 	}
 
 public:
-	void operator=(T x)        { Slot() = (PVOID)(uintptr_t)x; }
-	T operator->()             { return (T)(uintptr_t)Slot(); }
-	const T operator->() const { return (T)(uintptr_t)Slot(); }
-	operator T() const         { return (T)(uintptr_t)Slot(); }
+	void operator=(T x)                { Slot() = (PVOID)(uintptr_t)x; }
+	T operator->()                     { return (T)(uintptr_t)Slot(); }
+	const T operator->() const         { return (T)(uintptr_t)Slot(); }
+	operator T() const                 { return (T)(uintptr_t)Slot(); }
 	
-	FastMingwTls()             { ndx = TlsAlloc(); ASSERT(ndx < 60); }
+	FastMingwTls()                     { ndx = TlsAlloc(); ASSERT(ndx < 60); }
+	FastMingwTls(T x) : FastMingwTls() { operator=(x); }
 };
 
 #endif
