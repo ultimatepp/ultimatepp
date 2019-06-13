@@ -8,7 +8,7 @@ namespace Upp {
 
 static StaticMutex sGLock;
 
-static thread__ int sGLockLevel = 0;
+static thread_local int sGLockLevel = 0;
 
 void EnterGuiMutex()
 {

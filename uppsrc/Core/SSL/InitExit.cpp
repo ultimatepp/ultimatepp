@@ -98,8 +98,8 @@ EXITBLOCK
 
 #if defined(_MULTITHREADED) && OPENSSL_VERSION_NUMBER < 0x10100000L
 
-static thread__ bool sThreadInit;
-static thread__ void (*sPrevExit)();
+static thread_local bool sThreadInit;
+static thread_local void (*sPrevExit)();
 
 static void sslExitThread()
 {

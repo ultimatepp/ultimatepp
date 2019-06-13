@@ -433,7 +433,7 @@ CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
 	return e;
 }
 
-thread__ CharEntry fc_cache[512];
+thread_local CharEntry fc_cache[512];
 
 GlyphInfo GetGlyphInfo(Font font, int chr)
 {
@@ -504,7 +504,7 @@ struct FontEntry {
 	int64          font;
 };
 
-thread__ FontEntry fi_cache[63];
+thread_local FontEntry fi_cache[63];
 
 const CommonFontInfo& GetFontInfo(Font font)
 {
@@ -531,20 +531,12 @@ int Font::GetRightSpace(int c) const {
 	return GetGlyphMetrics(*this, c).rspc;
 }
 
-thread__ int64 lastFiFont = INT_MIN;
-thread__ CommonFontInfo lastFontInfo;
-thread__ int64 lastStdFont = INT_MIN;
-
+thread_local int64 lastFiFont = INT_MIN;
+thread_local CommonFontInfo lastFontInfo;
+thread_local int64 lastStdFont = INT_MIN;
 
 const CommonFontInfo& Font::Fi() const
 {
-#ifdef PLATFORM_OSX11
-// known leak on MacOSX here: getAllCarbonLazyValues2000 calls Core.h op new()
-// should not call UPP op new()
-// from GetFontInfo() ... XftFontOpenPattern() ... getAllCarbonLazyValues2000() -> new()
-	MemoryIgnoreLeaksBlock __;
-#endif
-
 	if(lastStdFont != AStdFont.AsInt64()) {
 		lastFiFont = INT_MIN;
 		lastStdFont = AStdFont.AsInt64();
