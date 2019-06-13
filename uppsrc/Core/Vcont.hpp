@@ -672,7 +672,7 @@ String Array<T>::ToString() const
 template <class T>
 void BiVector<T>::ReAlloc(int newalloc) {
 	ASSERT(items <= newalloc && items >= 0);
-	T *newvector = newalloc ? (T *) new byte[newalloc * sizeof(T)] : NULL;
+	T *newvector = newalloc ? (T *) MemoryAlloc(newalloc * sizeof(T)) : NULL;
 	if(items) {
 		int end = start + items;
 		if(end <= alloc)
@@ -681,7 +681,7 @@ void BiVector<T>::ReAlloc(int newalloc) {
 			memcpy((void *)newvector, (void *)(vector + start), (alloc - start) * sizeof(T));
 			memcpy((void *)(newvector + alloc - start), (void *)vector, (end - alloc) * sizeof(T));
 		}
-		delete[] (byte *)vector;
+		MemoryFree(vector);
 	}
 	vector = newvector;
 	alloc = newalloc;
@@ -745,7 +745,7 @@ void BiVector<T>::Free() {
 			Destroy(vector + start, vector + alloc);
 			Destroy(vector, vector + end - alloc);
 		}
-		delete[] (byte *)vector;
+		MemoryFree(vector);
 	}
 }
 

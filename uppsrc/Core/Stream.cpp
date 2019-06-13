@@ -1147,14 +1147,14 @@ void CompareStream::_Put(int w) {
 OutStream::OutStream()
 {
 	const int bsz = 64 * 1024;
-	h = new byte[bsz];
+	h = (byte *)MemoryAlloc(bsz);
 	buffer = ptr = h;
 	wrlim = h + bsz;
 }
 
 OutStream::~OutStream()
 {	// Note: cannot call Close here !
-	delete[] h;
+	MemoryFree(h);
 }
 
 void OutStream::_Put(int w)

@@ -17,12 +17,12 @@ namespace Upp {
 
 static voidpf zalloc_new(voidpf opaque, uInt items, uInt size)
 {
-	return new byte[items * size];
+	return MemoryAlloc(items * size);
 }
 
 static void zfree_new(voidpf opaque, voidpf address)
 {
-	delete[] (byte *)address;
+	MemoryFree(address);
 }
 
 enum

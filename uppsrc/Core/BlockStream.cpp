@@ -19,8 +19,8 @@ void BlockStream::SetBufferSize(dword size)
 	pagesize = 1 << n;
 	pagemask = (uint64)-1 << n;
 	if(buffer)
-		delete[] buffer;
-	buffer = new byte[pagesize];
+		MemoryFree(buffer);
+	buffer = (byte *)MemoryAlloc(pagesize);
 	pos = 0;
 	ptr = rdlim = wrlim = buffer;
 	pagepos = -1;
@@ -36,7 +36,7 @@ BlockStream::BlockStream()
 BlockStream::~BlockStream()
 {
 	if(buffer)
-		delete[] buffer;
+		MemoryFree(buffer);
 }
 
 int64 BlockStream::GetSize() const {
