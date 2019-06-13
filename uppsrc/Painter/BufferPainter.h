@@ -7,13 +7,13 @@ class ClippingLine : NoCopy {
 	byte *data;
 	
 public:
-	void Clear()                     { if(!IsFull()) delete[] data; data = NULL; }
-	void Set(const byte *s, int len) { data = new byte[len]; memcpy(data, s, len); }
-	void SetFull()                   { ASSERT(!data); data = (byte *)1; }
+	void Clear()                         { if(!IsFull()) MemoryFree(data); data = NULL; }
+	void Set(const byte *s, int len)     { data = (byte *)MemoryAlloc(len); memcpy(data, s, len); }
+	void SetFull()                       { ASSERT(!data); data = (byte *)1; }
 
-	bool IsEmpty() const             { return !data; }
-	bool IsFull() const              { return data == (byte *)1; }
-	operator const byte*() const     { return data; }
+	bool IsEmpty() const                 { return !data; }
+	bool IsFull() const                  { return data == (byte *)1; }
+	operator const byte*() const         { return data; }
 	
 	ClippingLine()                       { data = NULL; }
 	~ClippingLine()                      { Clear(); }
