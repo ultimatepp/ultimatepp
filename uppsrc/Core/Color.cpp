@@ -304,7 +304,14 @@ Color DarkThemeCached(Color c)
 				ocolor[i] = Color(255, 255, 255);
 			}
 		}
-	} cache;
+	}
+#ifdef COMPILER_MINGW
+	tcache;
+	static FastMingwTls<Cache *> tls_cache = &tcache;
+	Cache& cache = *tls_cache;
+#else
+	cache;
+#endif
 	#define DO(i) if(cache.icolor[i] == c) return cache.ocolor[i];
 	DO(0); DO(1); DO(2); DO(3); DO(4); DO(5); DO(6); DO(7);
 	cache.ii = (cache.ii + 1) & (N - 1);
