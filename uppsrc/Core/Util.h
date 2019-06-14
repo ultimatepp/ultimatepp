@@ -265,11 +265,11 @@ inline void Dbl_Self(T *x)
 
 #define ZeroArray(x)       memset((x), 0, sizeof(x))
 
-dword  Random();
-dword  Random(dword n);
-qword  Random64();
-qword  Random64(qword n);
-double Randomf();
+dword   Random();
+dword   Random(dword n);
+uint64  Random64();
+uint64  Random64(uint64 n);
+double  Randomf();
 
 void  SeedRandom(dword *seed, int len);
 void  SeedRandom(dword seed);

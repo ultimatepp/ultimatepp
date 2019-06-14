@@ -1,5 +1,4 @@
 topic "Math utility";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Math utility";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Math utility]]}}&]
 [s3; &]
@@ -81,22 +81,37 @@ topic "Math utility";
 [s3; &]
 [s5;:Random`(`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
 word]_[* Random]()&]
-[s2;%% Returns the next random generated number. MT safe and efficient 
-variant of Merssene twister MT19937 by Takuji Nishimura and Makoto 
-Matsumoto is used to get random numbers, with the seed obtained 
-from host platform specific resources (`'/dev/urandom`' in Posix 
-systems, GUID generator in Win32).&]
+[s2;%% Returns the next random generated number. Algorithm used is 
+xoshiro256`*`*, with seed obtained from host platform specific 
+resources (`'/dev/urandom`' in Posix systems, GUID generator 
+in Win32).&]
 [s3;%% &]
 [s4; &]
-[s5;:SeedRandom`(dword`*`,int`): [@(0.0.255) void]_[* SeedRandom]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
-word]_`*[*@3 seed],[@(0.0.255) int]_[*@3 len])&]
-[s2;%% Seeds random with buffer.&]
+[s5;:Random`(dword`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* Random]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 n])&]
+[s2; Returns random generated number smaller than [*@3 n].&]
+[s3;%% &]
+[s4; &]
+[s5;:Random64`(`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
+word]_[* Random64]()&]
+[s2;%% Returns 64bit random number.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Random64`(Upp`:`:uint64`): [_^Upp`:`:uint64^ uint64]_[* Random64]([_^Upp`:`:uint64^ u
+int64]_[*@3 n])&]
+[s2; [%% Returns the 64bit random number] smaller than [*@3 n].&]
+[s3; &]
+[s4; &]
+[s5;:Randomf`(`): [@(0.0.255) double]_[* Randomf]()&]
+[s2;%% Returns the floating point number <0, 1).&]
 [s3;%% &]
 [s4; &]
 [s5;:SeedRandom`(dword`): [@(0.0.255) void]_[* SeedRandom]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
 word]_[*@3 seed])&]
 [s2;%% Seeds random with single value [%-*@3 seed]. This is good to 
-get always the same sequence of numbers (for the same seed).&]
+get always the same sequence of numbers (for the same seed). 
+Usually used for testing.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SeedRandom`(`): [@(0.0.255) void]_[* SeedRandom]()&]
@@ -106,27 +121,6 @@ Random after seeding it with fixed value.&]
 [s4; &]
 [s5;:ZeroArray`(x`): [* ZeroArray]([*@3 x])&]
 [s2;%% Fills C array [%-*@3 x] with zeros.&]
-[s3;%% &]
-[s4; &]
-[s5;:Random`(dword`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
-word]_[* Random]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
-word]_[*@3 n])&]
-[s2; Returns the next random generated number smaller than [*@3 n].&]
-[s3;%% &]
-[s4; &]
-[s5;:Random64`(`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
-word]_[* Random64]()&]
-[s2;%% Returns the 64bit random number.&]
-[s3; &]
-[s4; &]
-[s5;:Random64`(qword`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
-word]_[* Random64]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
-word]_[*@3 n])&]
-[s2; [%% Returns the 64bit random number] smaller than [*@3 n].&]
-[s3;%% &]
-[s4; &]
-[s5;:Randomf`(`): [@(0.0.255) double]_[* Randomf]()&]
-[s2;%% Returns the floating point number 0..1.&]
 [s3; &]
 [s4; &]
 [s5;:sqr`(double`): [@(0.0.255) double]_[* sqr]_([@(0.0.255) double]_[*@3 a])&]
