@@ -1,24 +1,24 @@
 struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
-	dword a, b, c, d;
+	uint64 v[2];
 
 	void Serialize(Stream& s);
 	void Xmlize(XmlIO& xio);
 	void Jsonize(JsonIO& jio);
-	bool IsNullInstance() const   { return a == 0 && b == 0 && c == 0 && d == 0; }
-	void SetNull()                { a = b = c = d = 0; }
+	bool IsNullInstance() const   { return (v[0] | v[1]) == 0; }
+	void SetNull()                { v[0] = v[1] = 0; }
 
 	operator Value() const        { return RichToValue(*this); }
 	Uuid(const Value& q)          { *this = q.Get<Uuid>(); }
 	Uuid(const Nuller&)           { SetNull(); }
 	Uuid()                        {}
 
-	unsigned GetHashValue() const { return CombineHash(a, b, c, d); }
+	unsigned GetHashValue() const { return CombineHash(v[0], v[1]); }
 	String   ToString() const;
 	String   ToStringWithDashes() const;
 	
-	void     New()                { *this = Create(); }
+	void     New();
 
-	static Uuid Create();
+	static Uuid Create()          { Uuid uuid; uuid.New(); return uuid; }
 };
 
 String Format(const Uuid& id);
@@ -26,7 +26,7 @@ String FormatWithDashes(const Uuid& id);
 Uuid   ScanUuid(const char *s);
 
 inline bool  operator==(const Uuid& u, const Uuid& w) {
-	return ((u.a ^ w.a) | (u.b ^ w.b) | (u.c ^ w.c) | (u.d ^ w.d)) == 0;
+	return ((u.v[0] ^ w.v[0]) | (u.v[1] ^ w.v[1])) == 0;
 }
 
 inline bool  operator!=(const Uuid& u, const Uuid& w) {

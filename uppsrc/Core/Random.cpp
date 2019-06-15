@@ -100,6 +100,14 @@ uint64 Random64(void) {
 }
 
 never_inline
+void Random64(uint64 *t, int n) {
+	uint64 *s = sState();
+	while(n-- > 0)
+		*t++ = sNext(s);
+}
+
+
+never_inline
 dword Random(dword n) {
 	ASSERT(n);
 	uint64 *s = sState();
@@ -136,7 +144,8 @@ void SeedRandom()
 
 void SeedRandom(dword seed) {
 	uint64 *s = sState();
-	s[0] = s[1] = s[2] = s[3] = seed + 12345678;
+	for(int i = 0; i < 4; i++)
+		s[i] = seed + i * seed;
 }
 
 }

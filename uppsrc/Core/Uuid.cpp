@@ -10,7 +10,7 @@ INITBLOCK {
 
 void Uuid::Serialize(Stream& s) {
 	int version = 0;
-	s / version % a % b %c % d;
+	s / version % v[0] % v[1];
 }
 
 void Uuid::Jsonize(JsonIO& jio)
@@ -24,24 +24,23 @@ void Uuid::Jsonize(JsonIO& jio)
 		*this = ScanUuid((String)jio.Get());
 }
 
-Uuid Uuid::Create() {
-	Uuid ud;
-	ud.a = Random();
-	ud.b = Random();
-	ud.c = Random();
-	ud.d = Random();
-	return ud;
+void Uuid::New()
+{
+	do
+		Random64(v, 2);
+	while(IsNullInstance());
 }
 
 String Format(const Uuid& id) {
-	return Sprintf("%08X%08X%08X%08X", id.a, id.b, id.c, id.d);
+	return Sprintf("%08X%08X%08X%08X", LODWORD(id.v[0]), HIDWORD(id.v[0]), LODWORD(id.v[1]), HIDWORD(id.v[1]));
 }
 
 String FormatWithDashes(const Uuid& id) {
-	return Sprintf("%08X-%04X-%04X-%04X-%04X%08X", id.a, (id.b & 0xFFFF0000) >> 16, id.b & 0x0000FFFF,
-		(id.c & 0xFFFF0000) >> 16, id.c & 0x0000FFFF, id.d);
+	return Sprintf("%08X-%04X-%04X-%04X-%04X%08X", LODWORD(id.v[0]),
+	               HIWORD(HIDWORD(id.v[0])), LOWORD(HIDWORD(id.v[0])),
+	               HIWORD(LODWORD(id.v[1])), LOWORD(LODWORD(id.v[1])),
+	               HIDWORD(id.v[1]));
 }
-
 
 dword scanX(const char *s)
 {
@@ -66,10 +65,8 @@ Uuid ScanUuid(const char *s)
 	}
 	if(xu.GetCount() < 32)
 		return Null;
-	id.a = scanX(~xu);
-	id.b = scanX(~xu + 8);
-	id.c = scanX(~xu + 16);
-	id.d = scanX(~xu + 24);
+	id.v[0] = MAKEQWORD(scanX(~xu), scanX(~xu + 8));
+	id.v[1] = MAKEQWORD(scanX(~xu + 16), scanX(~xu + 24));
 	return id;
 }
 
