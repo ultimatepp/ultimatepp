@@ -130,7 +130,8 @@ void CoDo(Function<void ()>&& fn)
 template <typename Fn>
 void CoFor(int n, Fn iterator)
 {
-	std::atomic<int> ii = 0;
+	std::atomic<int> ii;
+	ii = 0;
 	CoDo([&] {
 		for(int i = ii++; i < n; i = ii++)
 			iterator(i);
