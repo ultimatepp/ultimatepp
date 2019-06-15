@@ -89,25 +89,22 @@ static uint64 *sState()
 	return s;
 }
 
-never_inline
-dword Random(void) {
+dword Random()
+{
 	return (dword)sNext(sState());
 }
 
-never_inline
-uint64 Random64(void) {
+uint64 Random64()
+{
 	return sNext(sState());
 }
 
-never_inline
 void Random64(uint64 *t, int n) {
 	uint64 *s = sState();
 	while(n-- > 0)
 		*t++ = sNext(s);
 }
 
-
-never_inline
 dword Random(dword n) {
 	ASSERT(n);
 	uint64 *s = sState();
@@ -119,7 +116,6 @@ dword Random(dword n) {
 	return r;
 }
 
-never_inline
 uint64 Random64(uint64 n) {
 	ASSERT(n);
 	uint64 *s = sState();
@@ -131,7 +127,6 @@ uint64 Random64(uint64 n) {
 	return r;
 }
 
-never_inline
 double Randomf()
 {
 	return (sNext(sState()) >> 11) * (1. / (UINT64_C(1) << 53));
