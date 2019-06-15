@@ -269,6 +269,7 @@ dword   Random();
 dword   Random(dword n);
 uint64  Random64();
 uint64  Random64(uint64 n);
+void    Random64(uint64 *t, int n);
 double  Randomf();
 
 void  SeedRandom(dword *seed, int len);

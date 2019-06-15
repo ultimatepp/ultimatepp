@@ -101,6 +101,11 @@ word]_[* Random64]()&]
 [s5;:Upp`:`:Random64`(Upp`:`:uint64`): [_^Upp`:`:uint64^ uint64]_[* Random64]([_^Upp`:`:uint64^ u
 int64]_[*@3 n])&]
 [s2; [%% Returns the 64bit random number] smaller than [*@3 n].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Random64`(Upp`:`:uint64`*`,int`): [@(0.0.255) void]_[* Random64]([_^Upp`:`:uint64^ u
+int64]_`*[*@3 t], [@(0.0.255) int]_[*@3 n])&]
+[s2;%% Sets [%-*@3 n] random 64bit numbers to [%-*@3 t] array.&]
 [s3; &]
 [s4; &]
 [s5;:Randomf`(`): [@(0.0.255) double]_[* Randomf]()&]
