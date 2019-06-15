@@ -1018,7 +1018,7 @@ void Parser::ReadMods(Decla& d)
 		if(Key(tk_virtual))
 			d.s_virtual = true;
 		else
-		if(!(Key(tk_inline) || Key(tk_force_inline) || Key(tk___inline) || VCAttribute()))
+		if(!(Key(tk_inline) || Key(tk_force_inline) || Key(tk_never_inline) || Key(tk___inline) || VCAttribute()))
 			break;
 	}
 }

@@ -86,6 +86,7 @@ CPPID(SKYLARK)
 CPPID(RPC_METHOD)
 CPPID(RPC_GMETHOD)
 CPPID(force_inline)
+CPPID(never_inline)
 
 CPPID(rval_)
 
