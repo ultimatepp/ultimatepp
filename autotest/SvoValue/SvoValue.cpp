@@ -50,10 +50,8 @@ CONSOLE_APP_MAIN
 	CheckType(Rectf(0, 0, 123, 123), true);
 	CheckType(Blue(), true);
 	Uuid uuid;
-	uuid.a = 11234;
-	uuid.b = 321;
-	uuid.c = 1111;
-	uuid.d = 19999;
+	uuid.v[0] = MAKEQWORD(11234, 321);
+	uuid.v[1] = MAKEQWORD(1111, 19999);
 	CheckType(uuid, true);
 	CheckType(Arial(50).Bold().Strikeout(), true);
 
