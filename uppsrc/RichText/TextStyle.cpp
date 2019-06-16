@@ -10,10 +10,7 @@ const RichStyle& RichStyle::GetDefault()
 Uuid  RichStyle::GetDefaultId()
 {
 	Uuid id;
-	id.a = 0;
-	id.b = 0;
-	id.c = 0;
-	id.d = 0;
+	id.SetNull();
 	return id;
 }
 
