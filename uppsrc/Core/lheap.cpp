@@ -177,7 +177,6 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		LTIMING("Big Free");
 
 		DLink *d = (DLink *)h - 1;
-		BlkPrefix *h = (BlkPrefix *)(d + 1);
 
 		size_t count = (newsize + sizeof(DLink) + sizeof(BlkPrefix) + 4095) >> 12;
 		
