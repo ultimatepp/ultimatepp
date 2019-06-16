@@ -251,7 +251,7 @@ class GridClipboard : Moveable<GridClipboard>
 				s % a.imgspc;
 			}
 			
-			virtual void Serialize(Stream &s)
+			void Serialize(Stream &s)
 			{
 				s % col % row;
 				dword type = IsType<AttrText>(v) ? 1 : 0;
