@@ -142,7 +142,11 @@ void    AssertFailed(const char *file, int line, const char *cond)
 	if(s_assert_hook)
 		(*s_assert_hook)(s);
 	RLOG("****************** ASSERT FAILED: " << s << "\n");
+#ifdef PLATFORM_POSIX
+	RLOG("LastErrorMessage: " << strerror(errno)); // do not translate
+#else
 	RLOG("LastErrorMessage: " << GetLastErrorMessage());
+#endif
 
 	PanicMessageBox("Fatal error", s);
 
