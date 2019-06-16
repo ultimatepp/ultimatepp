@@ -302,6 +302,10 @@ void CarpetBombing()
 		Check(x);
 	}
 
+	x.Clear();
+	for(int i = 0; i < 20; i++)
+		x.Add(Random(Q));
+
 	for(int i = 0; i < COUNT; i++) {
 		if(i % 100000 == 0)
 			LOG("Set " << i);
