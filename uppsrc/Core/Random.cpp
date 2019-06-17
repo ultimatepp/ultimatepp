@@ -140,7 +140,7 @@ void SeedRandom()
 void SeedRandom(dword seed) {
 	uint64 *s = sState();
 	for(int i = 0; i < 4; i++)
-		s[i] = seed + i * seed;
+		s[i] = 12345678 + seed + i; // xoshiro does not work well if all is zero
 }
 
 }
