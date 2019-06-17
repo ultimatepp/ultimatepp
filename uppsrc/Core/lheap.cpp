@@ -89,7 +89,7 @@ void *Heap::LAlloc(size_t& size)
 	aux.LargeFreeRemoteRaw();
 #if 1
 	ptr = aux.TryLAlloc(i0, wcount);
-	if(ptr) {
+	if(ptr) { // found in aux, we need to move large page from aux to this heap
 		LLOG("Found in aux");
 		BlkPrefix *h = (BlkPrefix *)ptr - 1;
 		while(!h->IsFirst()) // find the start of large page to get page header
