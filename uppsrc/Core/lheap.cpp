@@ -88,11 +88,7 @@ void *Heap::LAlloc(size_t& size)
 	Mutex::Lock __(mutex);
 	aux.LargeFreeRemoteRaw();
 	if(aux.large->next != aux.large) {
-		while(aux.large->next != aux.large) { // adopt all abandoned large blocks
-			DLink *ml = aux.large->next;
-			ml->Unlink();
-			ml->Link(large);
-		}
+		aux.MoveLargeTo(this); // adopt all abandoned large blocks
 		ptr = TryLAlloc(i0, wcount);
 		if(ptr)
 			return ptr;

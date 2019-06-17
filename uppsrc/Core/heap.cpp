@@ -6,7 +6,7 @@ namespace Upp {
 
 #include "HeapImp.h"
 
-#define LLOG(x) //  LOG((void *)this << ' ' << x)
+#define LLOG(x) //  DLOG(x) // LOG((void *)this << ' ' << x)
 
 const char *asString(int i)
 {
@@ -63,15 +63,37 @@ void Heap::FreeRemoteRaw()
 	LargeFreeRemoteRaw();
 }
 
+void Heap::MoveLargeTo(Heap *to_heap)
+{
+	while(large != large->next) {
+		DLink *ml = large->next;
+		LLOG("Large page " << asString(ml));
+		ml->Unlink();
+		ml->Link(to_heap->large);
+		LBlkHeader *h = ml->GetFirst();
+		for(;;) {
+			LLOG("Large block " << asString(h) << " size " << AsString(h->GetSize() * 256) << (h->IsFree() ? " free" : ""));
+			h->heap = to_heap;
+			if(h->IsFree()) {
+				h->UnlinkFree(); // will link it when adopting
+				to_heap->lheap.LinkFree(h);
+			}
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader();
+		}
+	}
+}
+
 void Heap::Shutdown()
 { // Move all active blocks, "orphans", to global aux heap
-	LLOG("Shutdown");
+	LLOG("**** Shutdown heap " << asString(this));
 	Mutex::Lock __(mutex);
 	Init();
 	RemoteFlushRaw(); // Move remote blocks to originating heaps
 	FreeRemoteRaw(); // Free all remotely freed blocks
-	for(int i = 0; i < NKLASS; i++) {
-		LLOG("Free cache " << i);
+	for(int i = 0; i < NKLASS; i++) { // move all small pages to aux (some heap will pick them later)
+		LLOG("Free cache " << asString(i));
 		FreeLink *l = cache[i];
 		while(l) {
 			FreeLink *h = l;
@@ -101,19 +123,9 @@ void Heap::Shutdown()
 			LLOG("Orphan empty " << (void *)empty[i]);
 		}
 	}
-	while(large != large->next) { // Move all large pages to aux (some heap will pick them later)
-		DLink *ml = large->next;
-		ml->Unlink();
-		ml->Link(aux.large);
-		LBlkHeader *h = ml->GetFirst();
-		for(;;) {
-			h->heap = &aux;
-			if(h->IsLast())
-				break;
-			h = h->GetNextHeader();
-		}
-	}
+	MoveLargeTo(&aux); // move all large pages to aux, some heap will pick them later
 	memset(this, 0, sizeof(Heap));
+	LLOG("++++ Done Shutdown heap " << asString(this));
 }
 
 void Heap::DblCheck(Page *p)

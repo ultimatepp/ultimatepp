@@ -876,7 +876,7 @@ void FileSel::LIThread()
 	Image result;
 	if(path.GetCount())
 		li(path, result);
-	if(!IsNull(result) && result.GetWidth() > DPI(16) || result.GetHeight() > DPI(16))
+	if(!IsNull(result) && max(result.GetWidth(), result.GetHeight()) > DPI(16))
 		result = Rescale(result, DPI(16), DPI(16));
 	{
 		Mutex::Lock __(li_mutex);
