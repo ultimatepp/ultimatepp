@@ -852,9 +852,7 @@ void FileSel::SearchLoad()
 #ifdef GUI_WIN
 	lazyicons.Start(list, d, WhenIcon);
 #endif
-#ifdef _MULTITHREADED
 	StartLI();
-#endif
 }
 
 #ifdef _MULTITHREADED
