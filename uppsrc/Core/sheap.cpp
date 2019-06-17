@@ -127,6 +127,7 @@ void *Heap::Allok(int k)
 force_inline
 void *Heap::AllocSz(size_t& sz)
 {
+	LLOG("Alloc " << asString(sz));
 	Stat(sz);
 	if(sz <= 384) {
 		if(sz == 0)
@@ -307,16 +308,17 @@ force_inline
 Heap *ThreadHeap()
 {
 #ifdef COMPILER_MINGW
-	thread_local byte sHeap[sizeof(Heap)];
 	static FastMingwTls<Heap *> heap_tls;
-	Heap *heap = heap_tls;
-	if(!heap)
-		heap_tls = heap = (Heap *)sHeap;
-	return heap;
 #else
-	thread_local Heap heap[1];
-	return heap;
+	thread_local Heap *heap_tls;
 #endif
+	Heap *heap = heap_tls;
+	if(!heap) { // we definitely need a lock here because some Shutdown can be in progress
+		Mutex::Lock __(Heap::mutex);
+		thread_local byte sHeap[sizeof(Heap)];
+		heap_tls = heap = (Heap *)sHeap;
+	}
+	return heap;
 }
 
 void MemoryFreek__(int klass, void *ptr)
