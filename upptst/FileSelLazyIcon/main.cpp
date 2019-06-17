@@ -1,4 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
+#include <plugin/jpg/jpg.h>
 
 using namespace Upp;
 
