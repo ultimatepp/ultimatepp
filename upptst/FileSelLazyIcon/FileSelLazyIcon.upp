@@ -6,5 +6,6 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI MT";
+	"" = "GUI",
+	"" = "GUI USEMALLOC";
 
