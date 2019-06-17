@@ -144,7 +144,7 @@ bool PNGRaster::Create()
 	if(height <= 0 || width <= 0)
 		return false;
 	data->size.cx = width;
-	data->size.cy = height;	
+	data->size.cy = height;
 	data->info.bpp = bit_depth;
 	data->info.colors = (bit_depth < 8 ? 1 << bit_depth : 0);
 	data->info.hotspot = Point(0, 0);

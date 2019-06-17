@@ -558,10 +558,11 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 						 StdFont().Bold(fi.is_directory),
 						 nd ? SColorDisabled : fi.is_hidden ? Blend(SColorText, Gray, 200) : SColorText, fi.is_directory,
 						 fi.is_directory ? -1 : fi.length,
-						 Null, nd ? SColorDisabled
-						          : fi.is_directory ? SColorText
-						                            : fi.is_hidden ? Blend(SColorMark, Gray, 200)
-						                                           : SColorMark,
+						 fi.last_write_time,
+						 nd ? SColorDisabled
+						    : fi.is_directory ? SColorText
+						                      : fi.is_hidden ? Blend(SColorMark, Gray, 200)
+						                                     : SColorMark,
 				         Null, Null, Null, Null,
 #ifdef PLATFORM_WIN32
                          false,
@@ -690,52 +691,6 @@ void LazyExeFileIcons::Start(FileList& list_, const String& dir_, Event<bool, co
 	ReOrder();
 }
 #endif
-
-class FileListSortName : public FileList::Order {
-public:
-	virtual bool operator()(const FileList::File& a, const FileList::File& b) const {
-		if(a.isdir != b.isdir)
-			return a.isdir;
-		if(a.name == "..")
-			return b.name != "..";
-		if(b.name == "..")
-			return false;
-		return stricmp(a.name, b.name) < 0;
-	}
-};
-
-void SortByName(FileList& list)
-{
-	list.Sort(FileListSortName());
-}
-
-class FileListSortExt : public FileList::Order {
-public:
-	virtual bool operator()(const FileList::File& a, const FileList::File& b) const {
-		if(a.isdir != b.isdir)
-			return a.isdir;
-		if(a.name == "..")
-			return b.name != "..";
-		if(b.name == "..")
-			return false;
-		const char *ae = strrchr(a.name, '.');
-		const char *be = strrchr(b.name, '.');
-		int q;
-		if(ae == NULL || be == NULL) {
-			if(ae) return false;
-			if(be) return true;
-			q = 0;
-		}
-		else
-			q = stricmp(ae, be);
-		return (q ? q : stricmp(a.name, b.name)) < 0;
-	}
-};
-
-void SortByExt(FileList& list)
-{
-	list.Sort(FileListSortExt());
-}
 
 String FileSel::GetDir() {
 	String s = ~dir;
@@ -891,12 +846,8 @@ void FileSel::SearchLoad()
 		if(!IsEmpty(basedir) && String(~dir).IsEmpty())
 			dirup.Disable();
 	olddir = ~dir;
-	if(olddir.GetCount() || basedir.GetCount()) {
-		if(sortext && mode != SELECTDIR)
-			SortByExt(list);
-		else
-			SortByName(list);
-	}
+	if(olddir.GetCount() || basedir.GetCount())
+		SortBy(list, ~sortby);
 	Update();
 #ifdef GUI_WIN
 	lazyicons.Start(list, d, WhenIcon);
@@ -927,8 +878,8 @@ void FileSel::LIThread()
 	Image result;
 	if(path.GetCount())
 		li(path, result);
-	if(!IsNull(result) && result.GetWidth() > 16 || result.GetHeight() > 16)
-		result = Rescale(result, 16, 16);
+	if(!IsNull(result) && result.GetWidth() > DPI(16) || result.GetHeight() > DPI(16))
+		result = Rescale(result, DPI(16), DPI(16));
 	{
 		Mutex::Lock __(li_mutex);
 		li_result = result;
@@ -1701,7 +1652,7 @@ bool FileSel::Execute(int _mode) {
 		type_lbl.Hide();
 		file.Hide();
 		file_lbl.Hide();
-		sortext.Hide();
+		sortby.Hide();
 		sort_lbl.Hide();
 		ok.SetLabel(t_("&Select"));
 		Logc p = filename.GetPos().y;
@@ -1925,7 +1876,7 @@ void FileSel::Serialize(Stream& s) {
 		s % lru;
 	}
 	if(version >= 5) {
-		s % sortext;
+		s % sortby;
 	}
 	if(version >= 6) {
 		if(version >= 9)
@@ -2150,8 +2101,8 @@ FileSel::FileSel()
 	list.WhenLeftDouble = THISBACK(OpenItem2);
 	dirup <<= THISBACK(DirUp);
 	Add(dirup);
-	sortext <<= THISBACK(SearchLoad);
-	Add(sortext);
+	sortby <<= THISBACK(SearchLoad);
+	Add(sortby);
 	hidden <<= THISBACK(SearchLoad);
 	Add(hidden);
 	hiddenfiles <<= THISBACK(SearchLoad);
@@ -2181,7 +2132,15 @@ FileSel::FileSel()
 	toggle.SetImage(CtrlImg::Toggle()).NoWantFocus();
 	toggle.Tip(t_("Toggle files"));
 	type <<= THISBACK(Load);
-	sortext <<= 0;
+	for(int pass = 0; pass < 2; pass++) {
+		int k = pass * FILELISTSORT_DESCENDING;
+		String d = pass ? t_(" descending") : "";
+		sortby.Add(FILELISTSORT_NAME|k, t_("Name") + d);
+		sortby.Add(FILELISTSORT_EXT|k, t_("Extension") + d);
+		sortby.Add(FILELISTSORT_TIME|k, t_("Last change") + d);
+		sortby.Add(FILELISTSORT_SIZE|k, t_("Size") + d);
+	}
+	sortby <<= FILELISTSORT_NAME;
 
 	search.NullText(t_("Search"), StdFont().Italic(), SColorDisabled());
 	search.SetFilter(CharFilterDefaultToUpperAscii);
@@ -2233,9 +2192,7 @@ FileSel::FileSel()
 	list.AutoHideSb();
 	places.AutoHideSb();
 
-#ifdef _MULTITHREADED	
 	WhenIconLazy = NULL;
-#endif
 }
 
 FileSel::~FileSel() {}

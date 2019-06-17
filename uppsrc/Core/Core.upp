@@ -29,6 +29,8 @@ library(OSX) pthread;
 
 library(ANDROID) atomic;
 
+library(WIN32) "ole32 oleaut32 uuid ws2_32";
+
 static_library(ANDROID) cpufeatures;
 
 options(XGNU) -O0;
