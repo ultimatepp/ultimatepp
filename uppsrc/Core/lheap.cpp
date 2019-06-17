@@ -87,12 +87,24 @@ void *Heap::LAlloc(size_t& size)
 
 	Mutex::Lock __(mutex);
 	aux.LargeFreeRemoteRaw();
+#if 1
+	ptr = aux.TryLAlloc(i0, wcount);
+	if(ptr) {
+		LLOG("Found in aux");
+		BlkPrefix *h = (BlkPrefix *)ptr - 1;
+		while(!h->IsFirst()) // find the start of large page to get page header
+			h = h->GetPrevHeader(LUNIT);
+		MoveLargeTo((DLink *)((byte *)h - LOFFSET), this);
+		return ptr;
+	}
+#else
 	if(aux.large->next != aux.large) {
 		aux.MoveLargeTo(this); // adopt all abandoned large blocks
 		ptr = TryLAlloc(i0, wcount);
 		if(ptr)
 			return ptr;
 	}
+#endif
 
 	LTIMING("Large More");
 	DLink *ml = (DLink *)HugeAlloc(((LPAGE + 1) * LUNIT) / 4096);
