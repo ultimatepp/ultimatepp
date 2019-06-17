@@ -1,5 +1,6 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	plugin/jpg;
 
 file
 	main.cpp;
