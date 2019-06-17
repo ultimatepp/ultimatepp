@@ -63,26 +63,29 @@ void Heap::FreeRemoteRaw()
 	LargeFreeRemoteRaw();
 }
 
+void Heap::MoveLargeTo(DLink *ml, Heap *to_heap)
+{
+	LLOG("MoveLargePage " << asString(ml) << " to " << asString(to_heap));
+	ml->Unlink();
+	ml->Link(to_heap->large);
+	LBlkHeader *h = ml->GetFirst();
+	for(;;) {
+		LLOG("Large block " << asString(h) << " size " << AsString(h->GetSize() * 256) << (h->IsFree() ? " free" : ""));
+		h->heap = to_heap;
+		if(h->IsFree()) {
+			h->UnlinkFree(); // will link it when adopting
+			to_heap->lheap.LinkFree(h);
+		}
+		if(h->IsLast())
+			break;
+		h = h->GetNextHeader();
+	}
+}
+
 void Heap::MoveLargeTo(Heap *to_heap)
 {
-	while(large != large->next) {
-		DLink *ml = large->next;
-		LLOG("Large page " << asString(ml));
-		ml->Unlink();
-		ml->Link(to_heap->large);
-		LBlkHeader *h = ml->GetFirst();
-		for(;;) {
-			LLOG("Large block " << asString(h) << " size " << AsString(h->GetSize() * 256) << (h->IsFree() ? " free" : ""));
-			h->heap = to_heap;
-			if(h->IsFree()) {
-				h->UnlinkFree(); // will link it when adopting
-				to_heap->lheap.LinkFree(h);
-			}
-			if(h->IsLast())
-				break;
-			h = h->GetNextHeader();
-		}
-	}
+	while(large != large->next)
+		MoveLargeTo(large->next, to_heap);
 }
 
 void Heap::Shutdown()

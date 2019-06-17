@@ -449,6 +449,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	void LargeFreeRemoteRaw() { LargeFreeRemoteRaw(large_remote_list); large_remote_list = NULL; }
 	void LargeFreeRemote();
 	void FreeRemoteRaw();
+	static void MoveLargeTo(DLink *ml, Heap *to_heap);
 	void MoveLargeTo(Heap *to_heap);
 
 	void Shutdown();
