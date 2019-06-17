@@ -94,7 +94,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		FreeSmallEmpty(INT_MAX, int(free_4KB - huge_4KB_count / 32));
 	
 	for(int pass = 0; pass < 2; pass++) {
-		for(int i = Cv(count); i < __countof(D::freelist); i++) {
+		for(int i = Cv(wcount); i < __countof(D::freelist); i++) {
 			BlkHeader *l = D::freelist[i];
 			BlkHeader *h = l->next;
 			while(h != l) {

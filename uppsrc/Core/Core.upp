@@ -5,10 +5,6 @@ acceptflags
 
 uses(WIN32) plugin\z;
 
-library(MSC !MSC8ARM) "kernel32 user32 ws2_32";
-
-library(WIN32 !GUI !GNU !GCC !CLANG) "ole32 oleaut32 oldnames";
-
 library(LINUX !ANDROID) "pthread dl rt";
 
 library(BSD !OSX) "pthread rt execinfo";
@@ -17,19 +13,13 @@ library(WIN32 !MSC8ARM) "advapi32 shell32 winmm mpr";
 
 library(SOLARIS) "posix4 dl";
 
-library(WIN32 GCC) "ole32 oleaut32 uuid ws2_32";
-
-library(WIN32 CLANG) "ole32 oleaut32 uuid ws2_32";
-
-library(MSC8ARM WIN32) "coredll.lib corelibc.lib ole32.lib oleaut32.lib uuid.lib commctrl.lib ccrtrtti.lib";
-
 library(!WIN32) z;
 
 library(OSX) pthread;
 
 library(ANDROID) atomic;
 
-library(WIN32) "ole32 oleaut32 uuid ws2_32";
+library(WIN32) "kernel32 user32 ole32 oleaut32 uuid ws2_32";
 
 static_library(ANDROID) cpufeatures;
 
