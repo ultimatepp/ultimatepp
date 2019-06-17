@@ -37,8 +37,7 @@ ing[@(0.0.255) `&]_path, Image[@(0.0.255) `&]_result)&]
 [s2;%% When not NULL, this function is called in separate thread 
 for additional resolving of file icon. Note that FileSel, when 
 closed/destroyed, does not wait for this function to finish, 
-so it should not rely on any data outside of function. Only available 
-when MT is active. &]
+so it should not rely on any data outside of function.&]
 [s3; &]
 [s4; &]
 [s5;:FileSel`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&

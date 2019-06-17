@@ -124,8 +124,22 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs = f
           Event<bool, const String&, Image&> WhenIcon = Null,
           FileSystemInfo& filesystem = StdFileSystemInfo(), const String& search = String(),
           bool hidden = true, bool hiddenfiles = true, bool lazyicons = false);
-void SortByName(FileList& list);
-void SortByExt(FileList& list);
+
+
+enum {
+	FILELISTSORT_NAME,
+	FILELISTSORT_EXT,
+	FILELISTSORT_TIME,
+	FILELISTSORT_SIZE,
+	FILELISTSORT_DESCENDING = 0x8000,
+};
+
+void SortBy(FileList& list, int kind);
+
+// deprecated, use Sort above
+inline void SortByName(FileList& list) { SortBy(list, FILELISTSORT_NAME); }
+inline void SortByExt(FileList& list) { SortBy(list, FILELISTSORT_EXT); }
+inline void SortByTime(FileList& list) { SortBy(list, FILELISTSORT_TIME); }
 
 #ifdef GUI_WIN
 // Helper class for lazy (using aux thread) evaluation of .exe icons in Win32
@@ -262,9 +276,7 @@ protected:
 
 public:
 	Event<bool, const String&, Image&> WhenIcon;
-#ifdef _MULTITHREADED
 	void (*WhenIconLazy)(const String& path, Image& result);
-#endif
 
 	void        Serialize(Stream& s);
 

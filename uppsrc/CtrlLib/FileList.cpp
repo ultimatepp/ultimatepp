@@ -383,4 +383,43 @@ FileList::FileList() {
 
 FileList::~FileList() {}
 
+struct FileListSort : public FileList::Order {
+	int  kind;
+
+	virtual bool operator()(const FileList::File& a, const FileList::File& b) const {
+		if(a.isdir != b.isdir)
+			return a.isdir;
+		if(a.name == "..")
+			return b.name != "..";
+		if(b.name == "..")
+			return false;
+		int q = 0;
+		int k = kind & ~FILELISTSORT_DESCENDING;
+		if(k == FILELISTSORT_TIME)
+			q = SgnCompare(a.time, b.time);
+		else
+		if(k == FILELISTSORT_SIZE)
+			q = SgnCompare(a.length, b.length);
+		else
+		if(k == FILELISTSORT_EXT) {
+			const char *ae = strrchr(a.name, '.');
+			const char *be = strrchr(b.name, '.');
+			if(ae == NULL || be == NULL)
+				q = ae ? -1 : be ? 1 : 0;
+			else
+				q = stricmp(ae, be);
+		}
+		if(!q)
+			q = stricmp(a.name, b.name);
+		return kind & FILELISTSORT_DESCENDING ? q > 0 : q < 0;
+	}
+};
+
+void SortBy(FileList& list, int kind)
+{
+	FileListSort fs;
+	fs.kind = kind;
+	list.Sort(fs);
+}
+
 }
