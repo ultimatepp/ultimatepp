@@ -7,10 +7,6 @@ namespace Upp {
 
 class AndroidDevice : public Moveable<AndroidDevice> {
 public:
-	AndroidDevice() {}
-	virtual ~AndroidDevice() {}
-	
-public:
 	String GetSerial() const { return serial; }
 	String GetState() const  { return state; }
 	String GetUsb() const    { return usb; }
@@ -33,10 +29,6 @@ private:
 };
 
 class AndroidVirtualDevice : public Moveable<AndroidVirtualDevice> {
-public:
-	AndroidVirtualDevice() {}
-	virtual ~AndroidVirtualDevice() {}
-	
 public:
 	String GetName() const       { return name; }
 	String GetDeviceType() const { return deviceType; }
