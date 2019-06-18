@@ -468,6 +468,8 @@ ArrayMap<int, LanguageInfo>& LangMap()
 
 StaticMutex sLanguageInfoMutex;
 
+static std::atomic<const LanguageInfo *> sCurrentLangInfo;
+
 const LanguageInfo& GetLanguageInfo(int lang)
 {
 	Mutex::Lock __(sLanguageInfoMutex);
@@ -483,9 +485,16 @@ const LanguageInfo& GetLanguageInfo(int lang)
 	return f;
 }
 
+void SyncLngInfo__()
+{
+	sCurrentLangInfo = &GetLanguageInfo(GetCurrentLanguage());
+}
+
 const LanguageInfo& GetLanguageInfo()
 {
-	return GetLanguageInfo(GetCurrentLanguage());
+	if(!sCurrentLangInfo)
+		SyncLngInfo__();
+	return *sCurrentLangInfo;
 }
 
 void SetLanguageInfo(int lang, const LanguageInfo& lf)

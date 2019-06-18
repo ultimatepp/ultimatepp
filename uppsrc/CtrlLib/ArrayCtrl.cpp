@@ -2491,7 +2491,7 @@ void ArrayCtrl::Sort(int from, int count, Gate<int, int> order)
 	for(int i = 0; i < array.GetCount(); i++)
 		h.Add(i);
 	SortA();
-	StableSort(SubRange(h, from, count).Write(), order);
+	CoStableSort(SubRange(h, from, count).Write(), order);
 	SortB(h);
 	Refresh();
 	SyncInfo();
