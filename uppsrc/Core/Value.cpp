@@ -102,10 +102,19 @@ int Value::PolyCompare(const Value& v) const
 	return 0;
 }
 
-int Value::Compare(const Value& v) const
+int Value::Compare2(const Value& v) const
 {
 	if(IsString() && v.IsString())
 		return SgnCompare(data, v.data);
+	dword stw = data.GetStW();
+	if(stw == v.data.GetStW()) {
+		if(stw == String::StW(INT64_V))
+			return SgnCompare(GetSmallRaw<int64>(), v.GetSmallRaw<int64>());
+		if(stw == String::StW(DATE_V))
+			return SgnCompare(GetSmallRaw<Date>(), v.GetSmallRaw<Date>());
+		if(stw == String::StW(TIME_V))
+			return SgnCompare(GetSmallRaw<Time>(), v.GetSmallRaw<Time>());
+	}
 	bool a = IsNull();
 	bool b = v.IsNull();
 	if(a || b)

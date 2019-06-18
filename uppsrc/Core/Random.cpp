@@ -63,7 +63,7 @@ static void sSeed(uint64 *s)
 				CoCreateGuid((GUID *)&uuid);
 				h = (h << 32) | GetHashValue(uuid);
 			}
-			s[i] ^= h;
+			s[i] ^= (h ^ GetSysTime().Get());
 		}
 	}
 #endif
@@ -82,7 +82,7 @@ static uint64 *sState()
 		s = state;
 		sSeed(s);
 #ifdef PLATFORM_POSIX
-		if(Thread::IsMain()) // non-main threads do now work with fork anyway
+		if(Thread::IsMain()) // non-main threads do not work with fork anyway
 			pthread_atfork(NULL, NULL, [] { sSeed(s); }); // reseed random generator after fork
 #endif
 	}

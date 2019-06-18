@@ -175,6 +175,7 @@ protected:
 	String  GetName() const;
 	
 	int     PolyCompare(const Value& v) const;
+	int     Compare2(const Value& v) const;
 
 	Vector<Value>&  UnShareArray();
 

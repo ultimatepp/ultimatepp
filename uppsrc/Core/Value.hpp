@@ -266,6 +266,16 @@ inline bool Value::Is() const
 	return t < 255 && Is((byte)t);
 }
 
+inline
+int Value::Compare(const Value& v) const
+{
+	if(Is(INT_V) && v.Is(INT_V))
+		return SgnCompare(GetSmallRaw<int>(), v.GetSmallRaw<int>());
+	if(Is(DOUBLE_V) && v.Is(DOUBLE_V))
+		return SgnCompare(GetSmallRaw<double>(), v.GetSmallRaw<double>());
+	return Compare2(v);
+}
+
 template <class T>
 const T& GetStaticNull()
 {

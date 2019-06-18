@@ -228,12 +228,14 @@ class String0 : Moveable<String0> {
 
 	void Swap(String0& b)         { UPP::Swap(q[0], b.q[0]); UPP::Swap(q[1], b.q[1]); Dsyn(); b.Dsyn(); }
 	
-	void SetSpecial0(byte st)     { w[3] = MAKE4B(0, st, 0, 0); }
+	static dword StW(byte st)     { return MAKE4B(0, st, 0, 0); }
+	void SetSpecial0(byte st)     { w[3] = StW(st); }
 	void SetSpecial(byte st)      { ASSERT(IsSmall() && GetCount() == 0); SetSpecial0(st); }
 	byte GetSpecial() const       { return (chr[SLEN] | chr[KIND]) == 0 ? chr[SPECIAL] : 0; }
 	byte GetSt() const            { return chr[SPECIAL]; }
+	dword GetStW() const           { return w[3]; }
 	bool IsSpecial() const        { return !v[7] && v[6]; }
-	bool IsSpecial(byte st) const { return w[3] == MAKE4B(0, st, 0, 0); }
+	bool IsSpecial(byte st) const { return w[3] == StW(st); }
 	
 	friend class String;
 	friend class StringBuffer;
