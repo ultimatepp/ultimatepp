@@ -267,6 +267,7 @@ void SetCurrentLanguage(int lang)
 				sLangMap()[i].Clear();
 			}
 		}
+		SyncLngInfo__();
 	}
 	SetDateFormat(t_("date-format\a%2:02d/%3:02d/%1:4d"));
 	SetDateScan(t_("date-scan\amdy"));

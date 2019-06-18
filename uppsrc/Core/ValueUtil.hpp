@@ -5,6 +5,43 @@ void ValueMap::Add(const Value& key, const Value& value) {
 	d.value.Add(value);
 }
 
+inline
+int StdValueCompare(const Value& a, const Value& b, const LanguageInfo& f)
+{
+	return IsString(a) && IsString(b) ? CompareStrings(a, b, f) : a.Compare(b);
+}
+
+inline
+int StdValueCompare(const Value& a, const Value& b, int language)
+{
+	return StdValueCompare(a, b, GetLanguageInfo(language));
+}
+
+inline
+int StdValueCompare(const Value& a, const Value& b)
+{
+	return StdValueCompare(a, b, GetLanguageInfo());
+}
+
+inline
+int StdValueCompareDesc(const Value& a, const Value& b, const LanguageInfo& f)
+{
+	return -StdValueCompare(a, b, f);
+}
+
+inline
+int StdValueCompareDesc(const Value& a, const Value& b, int language)
+{
+	return -StdValueCompare(a, b, language);
+}
+
+inline
+int StdValueCompareDesc(const Value& a, const Value& b)
+{
+	return -StdValueCompare(a, b);
+}
+
+
 #ifdef DEPRECATED
 template <class T>
 struct RawRef : public RefManager {

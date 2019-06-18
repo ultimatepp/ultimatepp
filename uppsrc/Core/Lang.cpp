@@ -156,6 +156,10 @@ void SetLanguage(int lang) {
 	SetCurrentLanguage(lang);
 }
 
+INITBLOCK {
+	SetLanguage(LNG_('E', 'N', 'U', 'S'));
+}
+
 void SetLanguage(const char *s)
 {
 	SetLanguage(LNGFromText(s));

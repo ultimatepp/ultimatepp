@@ -8,8 +8,6 @@
 int     LNGFromText(const char *s);
 String  LNGAsText(int d);
 
-Convert& LNGConvert();
-
 byte    GetLNGCharset(int d);
 int     SetLNGCharset(int lng, byte chrset);
 
@@ -111,3 +109,5 @@ struct LangTextRecord {
 
 void AddLangModule(const char *file, const char *modulename, int masterlang, const LangModuleRecord *module);
 void AddLanguage(const char *modulename, int lang, const LangTextRecord *langtext);
+
+void SyncLngInfo__();

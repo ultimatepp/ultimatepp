@@ -299,3 +299,5 @@ private:
 public:
 	void   SetFormat(const char *fmt)           { format = fmt; }
 };
+
+Convert& LNGConvert();

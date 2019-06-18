@@ -299,6 +299,8 @@ class JsonIO;
 
 #include "Other.h"
 
+#include "Lang.h"
+
 #include "Value.h"
 #include "ValueUtil.h"
 
@@ -332,7 +334,6 @@ class JsonIO;
 #include "Xmlize.h"
 
 #include "Gtypes.h"
-#include "Lang.h"
 #include "i18n.h"
 #include "Topic.h"
 

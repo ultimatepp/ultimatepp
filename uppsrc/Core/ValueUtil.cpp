@@ -596,55 +596,6 @@ Value ValueMap::GetAndClear(const Value& key)
 
 // ----------------------------------
 
-int StdValueCompare(const Value& a, const Value& b, int language)
-{
-	LTIMING("StdValueCompare");
-
-	bool na = IsNull(a), nb = IsNull(b);
-	if(na || nb)
-		return !na ? 1 : !nb ? -1 : 0;
-	dword ta = a.GetType(), tb = b.GetType();
-	if((ta == INT_V || ta == BOOL_V) && (tb == INT_V || tb == BOOL_V))
-		return cmp<int>(a, b);
-	if((ta == BOOL_V || ta == INT_V || ta == INT64_V || ta == DOUBLE_V)
-	&& (tb == BOOL_V || tb == INT_V || tb == INT64_V || tb == DOUBLE_V))
-		return cmp<double>(a, b);
-	if(ta == DATE_V && tb == DATE_V)
-		return cmp<Date>(a, b);
-	if((ta == DATE_V || ta == TIME_V) && (tb == DATE_V || tb == TIME_V))
-		return cmp<Time>(a, b);
-	if((ta == STRING_V || ta == WSTRING_V) && (tb == STRING_V || tb == WSTRING_V))
-		return GetLanguageInfo(language).Compare(WString(a), WString(b));
-	return a.Compare(b);
-}
-
-int StdValueCompare(const Value& a, const Value& b)
-{
-	return StdValueCompare(a, b, GetCurrentLanguage());
-}
-
-int StdValueCompareDesc(const Value& a, const Value& b, int language)
-{
-	return -StdValueCompare(a, b, language);
-}
-
-int StdValueCompareDesc(const Value& a, const Value& b)
-{
-	return -StdValueCompare(a, b);
-}
-
-StdValueOrder::StdValueOrder(int l) : language(l) {}
-
-bool StdValueOrder::operator()(const Value& a, const Value& b) const
-{
-	return StdValueCompare(a, b, language) < 0;
-}
-
-bool FnValueOrder::operator()(const Value& a, const Value& b) const
-{
-	return (*fn)(a, b) < 0;
-}
-
 bool StdValuePairOrder::operator()(const Value& k1, const Value& v1, const Value& k2, const Value& v2) const
 {
 	int q = StdValueCompare(k1, k2, language);
@@ -655,6 +606,11 @@ bool StdValuePairOrder::operator()(const Value& k1, const Value& v1, const Value
 bool FnValuePairOrder::operator()(const Value& keya, const Value& valuea, const Value& keyb, const Value& valueb) const
 {
 	return (*fn)(keya, valuea, keyb, valueb) < 0;
+}
+
+int CompareStrings(const Value& a, const Value& b, const LanguageInfo& f)
+{
+	return f.Compare(WString(a), WString(b));
 }
 
 void Complex::Xmlize(XmlIO& xio)

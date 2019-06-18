@@ -1,9 +1,3 @@
-#ifndef _DEBUG
-inline void AssertST() {}
-#endif
-
-#ifdef _MULTITHREADED
-
 #ifdef DEPRECATED
 #define thread__ thread_local
 #endif
@@ -114,7 +108,10 @@ private:
 
 #ifdef _DEBUG
 inline void AssertST() { ASSERT(Thread::IsST()); }
+#else
+inline void AssertST() {}
 #endif
+
 
 class Semaphore : NoCopy {
 #ifdef PLATFORM_WIN32
@@ -410,106 +407,6 @@ struct H_l_ : Mutex::Lock {
 
 #define INTERLOCKED_(cs) \
 for(UPP::H_l_ i_ss_lock__(cs); i_ss_lock__.b; i_ss_lock__.b = false)
-	
-#else
-
-inline bool IsMainThread() { return true; }
-
-#define thread__
-
-#define PROFILEMT(mutex)
-#define PROFILEMT_(mutex, id)
-
-class Mutex : NoCopy {
-public:
-	bool  TryEnter()             { return true; }
-	void  Enter()                {}
-	void  Leave()                {}
-
-	class Lock;
-};
-
-typedef Mutex StaticMutex;
-
-class Mutex::Lock : NoCopy {
-public:
-	Lock(Mutex&) {}
-	~Lock()                {}
-};
-
-class RWMutex : NoCopy {
-public:
-	void EnterWrite() {}
-	void LeaveWrite() {}
-
-	void EnterRead() {}
-	void LeaveRead() {}
-
-	class ReadLock;
-	class WriteLock;
-};
-
-class RWMutex::ReadLock : NoCopy {
-public:
-	ReadLock(RWMutex&) {}
-	~ReadLock()        {}
-};
-
-class RWMutex::WriteLock : NoCopy {
-public:
-	WriteLock(RWMutex&) {}
-	~WriteLock()        {}
-};
-
-typedef RWMutex StaticRWMutex;
-
-class LazyUpdate {
-	mutable bool  dirty;
-
-public:
-	void Invalidate()              { dirty = true; }
-	bool BeginUpdate() const       { return dirty; }
-	void EndUpdate() const         { dirty = false; }
-
-	LazyUpdate()                   { dirty = true; }
-};
-
-struct SpinLock {
-	bool TryEnter() { return true; }
-	void Leave()    {}
-	void Enter()    {}
-	
-	class Lock;
-
-	SpinLock()      {}
-};
-
-class SpinLock::Lock : NoCopy {
-public:
-	Lock(SpinLock& s) {}
-	~Lock()           {}
-};
-
-#ifdef _DEBUG
-inline void AssertST() {}
-#endif
-
-#define INTERLOCKED
-#define INTERLOCKED_(x) { x.Enter(); }
-
-#define ONCELOCK \
-for(static bool o_b_; !o_b_; o_b_ = true)
-
-#define ONCELOCK_(o_b_) \
-for(; !o_b_; o_b_ = true) \
-
-#define ONCELOCK_PTR(ptr, init) \
-if(!ptr) ptr = init;
-
-inline void ReadMemoryBarrier() {}
-inline void WriteMemoryBarrier() {}
-
-#endif
 
 #ifdef DEPRECATED
 typedef Mutex CriticalSection;

@@ -20,9 +20,11 @@ inline T              Nvl(T a, T b, T c, T d)                  { return Nvl(Nvl(
 template <class T>
 inline T              Nvl(T a, T b, T c, T d, T e)             { return Nvl(Nvl(a, b), c, d, e); }
 
+int StdValueCompare(const Value& a, const Value& b, const LanguageInfo& f);
 int StdValueCompare(const Value& a, const Value& b, int language);
 int StdValueCompare(const Value& a, const Value& b);
 
+int StdValueCompareDesc(const Value& a, const Value& b, const LanguageInfo& f);
 int StdValueCompareDesc(const Value& a, const Value& b, int language);
 int StdValueCompareDesc(const Value& a, const Value& b);
 
@@ -34,15 +36,15 @@ struct ValueOrder {
 struct StdValueOrder : ValueOrder {
 	int language;
 
-	virtual bool operator()(const Value& a, const Value& b) const;
+	virtual bool operator()(const Value& a, const Value& b) const { return StdValueCompare(a, b, language) < 0; }
 
-	StdValueOrder(int l = -1);
+	StdValueOrder(int l = -1) : language(l) {}
 };
 
 struct FnValueOrder : ValueOrder {
 	int (*fn)(const Value& a, const Value& b);
 
-	virtual bool operator()(const Value& a, const Value& b) const;
+	virtual bool operator()(const Value& a, const Value& b) const { return (*fn)(a, b) < 0; }
 
 	FnValueOrder(int (*fn)(const Value& a, const Value& b)) : fn(fn) {}
 };
@@ -67,6 +69,8 @@ struct FnValuePairOrder : ValuePairOrder {
 
 	FnValuePairOrder(int (*fn)(const Value& k1, const Value& v1, const Value& k2, const Value& v2)) : fn(fn) {}
 };
+
+int CompareStrings(const Value& a, const Value& b, const LanguageInfo& f); // used by StdCompareValue
 
 class Id : Moveable<Id> {
 	String id;
