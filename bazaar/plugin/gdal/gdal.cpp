@@ -310,7 +310,7 @@ bool Gdal::Open(const char *fn)
 		GDALRegister_MFF();
 		GDALRegister_HKV();
 //		GDALRegister_PNG();
-		GDALRegister_JPEG();
+//		GDALRegister_JPEG();
 //		GDALRegister_JPEG2000();
 //		GDALRegister_JP2KAK();
 		GDALRegister_MEM();

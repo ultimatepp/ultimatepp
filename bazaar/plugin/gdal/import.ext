@@ -59,6 +59,7 @@ exclude
 	frmts/jpeg2000/*
 	frmts/kea/*
 	frmts/jpegls/*
+	frmts/jpeg/*
 	frmts/mrsid_lidar/*
 	frmts/msgn/*
 	frmts/mrsid/*
