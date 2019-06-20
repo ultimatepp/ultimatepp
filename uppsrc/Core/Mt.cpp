@@ -4,8 +4,6 @@ namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
-#ifdef _MULTITHREADED
-
 static Mutex& sMutexLock()
 { // this is Mutex intended to synchronize initialization of other primitives
 	static Mutex m;
@@ -702,8 +700,6 @@ void SpinLock::Wait()
 			Sleep(0);
 	}
 }
-
-#endif
 
 bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr)
 {

@@ -1,4 +1,5 @@
 #include "Core.h"
+
 namespace Upp {
 
 #ifdef CPU_X86
