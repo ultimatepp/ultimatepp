@@ -73,7 +73,7 @@ force_inline
 static uint64 *sState()
 {
 #ifdef COMPILER_MINGW
-	FastMingwTls<uint64 *> s;
+	static FastMingwTls<uint64 *> s;
 #else
 	thread_local uint64 *s;
 #endif
