@@ -492,7 +492,7 @@ void SyncLngInfo__()
 
 const LanguageInfo& GetLanguageInfo()
 {
-	if(!sCurrentLangInfo)
+	if(!sCurrentLangInfo.load())
 		SyncLngInfo__();
 	return *sCurrentLangInfo;
 }
