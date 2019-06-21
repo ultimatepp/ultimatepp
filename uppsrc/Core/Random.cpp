@@ -57,13 +57,14 @@ static void sSeed(uint64 *s)
 #else
 	for(int pass = 0; pass < 4; pass++) {
 		for(int i = 0; i < 4; i++) {
-			uint64 h = 0;
+			CombineHash h;
+			h << GetSysTime().Get() << usecs() << msecs();
 			for(int p = 0; p < 2; p++) {
 				Uuid uuid;
-				CoCreateGuid((GUID *)&uuid);
-				h = (h << 32) | GetHashValue(uuid);
+				CoCreateGuid((GUID *)&uuid); // GUID is basically a random number...
+				h << uuid.v[0] << uuid.v[1];
 			}
-			s[i] ^= (h ^ GetSysTime().Get());
+			s[i] ^= h;
 		}
 	}
 #endif
