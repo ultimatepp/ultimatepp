@@ -622,7 +622,7 @@ String LazyExeFileIcons::Path()
 	if(ii < 0 || ii >= list->GetCount())
 		return Null;
 	const FileList::File& f = list->Get(ii);
-	return ToSystemCharset(AppendFileName(dir, f.name));
+	return ToSystemCharset(NormalizePath(AppendFileName(dir, f.name)));
 }
 
 void LazyExeFileIcons::Do()
