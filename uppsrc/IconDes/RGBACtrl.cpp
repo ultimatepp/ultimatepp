@@ -41,22 +41,44 @@ Color RGBACtrl::GetColor(int i) const
 
 void RGBACtrl::Layout()
 {
-	Size sz = GetSize();
-	int ah = IconDesImg::Alpha().GetHeight() + 20;
+	DoLayout(GetSize(), true);
+}
+
+int RGBACtrl::DoLayout(Size sz, bool set)
+{
+	int ah = IconDesImg::Alpha().GetHeight() + DPI(20);
 	int th = text.GetStdHeight(text.GetFont());
-	int eh = 4 - 20 - ah - th - 4;
+	int eh = DPI(4 - 20) - ah - th - DPI(4);
 	int rh = min(sz.cx - (sz.cx >> 3), sz.cy - eh);
-	ramp.BottomPos(0, rh).HSizePos();
-	int y = sz.cy - rh - 4 - ah;
-	alpha.TopPos(y, ah).HSizePos(1, 0);
-	text.TopPos((y -= 4 + th), th).HSizePos(1, 0);
-	cbox.cx = (sz.cx - 3) / 18;
-	cbox.cy = minmax(cbox.cx, 4, Zy(16));
-	int ch = 14 * cbox.cy;
-	cs.x = (sz.cx - 18 * cbox.cx) / 2 + 1;
-	cs.y = (y -= ch + 4);
-	if(subctrl)
-		subctrl->TopPos(0, y - 4).HSizePos(1, 0);
+	if(set)
+		ramp.BottomPos(0, rh).HSizePos();
+	int y = sz.cy - rh - DPI(4) - ah;
+	if(set)
+		alpha.TopPos(y, ah).HSizePos(1, 0);
+	y -= DPI(4) + th;
+	if(set)
+		text.TopPos(y, th).HSizePos(1, 0);
+	int cbcy = minmax(cbox.cx, 4, Zy(16));
+	int ch = 14 * cbcy;
+	y -= ch + DPI(4);
+	if(set) {
+		cbox.cx = (sz.cx - 3) / 18;
+		cbox.cy = cbcy;
+		int ch = 14 * cbox.cy;
+		cs.x = (sz.cx - 18 * cbox.cx) / 2 + 1;
+		cs.y = y;
+	}
+	if(subctrl) {
+		if(set)
+			subctrl->TopPos(0, y - DPI(4)).HSizePos(1, 0);
+		y -= DPI(4);
+	}
+	return y;
+}
+
+int RGBACtrl::GetHeight(int cx)
+{
+	return 100000 - DoLayout(Size(cx, 100000), false);
 }
 
 void RGBACtrl::Paint(Draw& w)

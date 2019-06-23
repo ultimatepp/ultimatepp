@@ -4,10 +4,12 @@ class InsertColorDlg : public WithInsertColorLayout<TopWindow> {
 	typedef InsertColorDlg CLASSNAME;
 
 	String r[5];
-	bool canceled;
+	bool canceled = true;
 	
 	void Sync();
 	void Select(int i);
+	
+	RGBACtrl rgbactrl;
 
 public:
 	String result;
@@ -40,7 +42,7 @@ void InsertColorDlg::Sync()
 	qtf.SetLabel(r[4]);
 }
 
-InsertColorDlg::InsertColorDlg() : canceled(true)
+InsertColorDlg::InsertColorDlg()
 {
 	CtrlLayoutCancel(*this, "Insert color");
 	rgbactrl <<= THISBACK(Sync);
@@ -50,6 +52,16 @@ InsertColorDlg::InsertColorDlg() : canceled(true)
 	hex <<= THISBACK1(Select, 3);
 	qtf <<= THISBACK1(Select, 4);
 	Sync();
+
+	int m = color.GetRect().top;
+	int cx = color.GetRect().left - 2 * m;
+	int cy = rgbactrl.GetHeight(cx);
+	Rect r = GetRect();
+	r.bottom = r.top + cy + 2 * m;
+	rgbactrl.SetRect(m, m, cx, cy);
+	Add(rgbactrl);
+	SetMinSize(r.GetSize());
+	SetRect(r);
 }
 
 bool InsertColorDlg::IsCanceled()
