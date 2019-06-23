@@ -53,12 +53,12 @@ InsertColorDlg::InsertColorDlg()
 	qtf <<= THISBACK1(Select, 4);
 	Sync();
 
-	int m = color.GetRect().top;
-	int cx = color.GetRect().left - 2 * m;
-	int cy = rgbactrl.GetHeight(cx);
+	int m = color.GetPos().y.GetA();
+	int cx = color.GetPos().x.GetA();
+	int cy = rgbactrl.GetHeight(cx - 2 * m);
 	Rect r = GetRect();
 	r.bottom = r.top + cy + 2 * m;
-	rgbactrl.SetRect(m, m, cx, cy);
+	rgbactrl.SetRect(m, m, cx - 2 * m, cy);
 	Add(rgbactrl);
 	SetMinSize(r.GetSize());
 	SetRect(r);
