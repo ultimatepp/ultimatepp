@@ -5,7 +5,8 @@ void SomeRocks(Painter& sw)
 	static Painting rocks;
 
 	ONCELOCK {
-		rocks.Serialize(FileIn(GetDataFile("SomeRocks.painting")));
+		FileIn in(GetDataFile("SomeRocks.painting"));
+		rocks.Serialize(in);
 	}
 	
 	sw.EvenOdd();
