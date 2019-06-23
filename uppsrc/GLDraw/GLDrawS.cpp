@@ -280,6 +280,25 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 #endif
 }
 
+static float *sMakePartial(float *partial, Size isz, const Rect& s)
+{
+	Sizef iszf = isz;
+	Rectf h;
+	h.left = s.left / iszf.cx;
+	h.right = s.right / iszf.cx;
+	h.top = s.top / iszf.cy;
+	h.bottom = s.bottom / iszf.cy;
+	partial[0] = (float)h.left;
+	partial[1] = (float)h.top;
+	partial[2] = (float)h.left;
+	partial[3] = (float)h.bottom;
+	partial[4] = (float)h.right;
+	partial[5] = (float)h.bottom;
+	partial[6] = (float)h.right;
+	partial[7] = (float)h.top;
+	return partial;
+}
+
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	LTIMING("PutImage");
@@ -300,6 +319,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	};
 
 	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+	float  partial[8];
 
 	const float *tc;
 
@@ -312,21 +332,8 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		};
 		tc = fixed;
 	}
-	else {
-		Sizef iszf = isz;
-		Rectf h;
-		h.left = s.left / iszf.cx;
-		h.right = s.right / iszf.cx;
-		h.top = s.top / iszf.cy;
-		h.bottom = s.bottom / iszf.cy;
-		float partial[] = {
-			(float)h.left, (float)h.top,
-			(float)h.left, (float)h.bottom,
-			(float)h.right, (float)h.bottom,
-			(float)h.right, (float)h.top,
-		};
-		tc = partial;
-	}
+	else
+		tc = sMakePartial(partial, isz, s);
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	glEnableVertexAttribArray(ATTRIB_TEXPOS);
@@ -368,6 +375,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 	};
 
 	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+	float  partial[8];
 
 	const float *tc;
 	
@@ -380,21 +388,8 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 		};
 		tc = fixed;
 	}
-	else {
-		Sizef iszf = isz;
-		Rectf h;
-		h.left = s.left / iszf.cx;
-		h.right = s.right / iszf.cx;
-		h.top = s.top / iszf.cy;
-		h.bottom = s.bottom / iszf.cy;
-		float partial[] = {
-		    (float)h.left, (float)h.top,
-		    (float)h.left, (float)h.bottom,
-		    (float)h.right, (float)h.bottom,
-		    (float)h.right, (float)h.top,
-		};
-		tc = partial;
-	}
+	else
+		tc = sMakePartial(partial, isz, s);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnableVertexAttribArray(ATTRIB_TEXPOS);
