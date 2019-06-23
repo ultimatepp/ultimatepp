@@ -58,13 +58,13 @@ int RGBACtrl::DoLayout(Size sz, bool set)
 	y -= DPI(4) + th;
 	if(set)
 		text.TopPos(y, th).HSizePos(1, 0);
-	int cbcy = minmax(cbox.cx, 4, Zy(16));
-	int ch = 14 * cbcy;
+	Size cbx;
+	cbx.cx = (sz.cx - 3) / 18;
+	cbx.cy = minmax(cbx.cx, 4, Zy(16));
+	int ch = 14 * cbx.cy;
 	y -= ch + DPI(4);
 	if(set) {
-		cbox.cx = (sz.cx - 3) / 18;
-		cbox.cy = cbcy;
-		int ch = 14 * cbox.cy;
+		cbox = cbx;
 		cs.x = (sz.cx - 18 * cbox.cx) / 2 + 1;
 		cs.y = y;
 	}
