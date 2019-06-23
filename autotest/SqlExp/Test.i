@@ -1895,10 +1895,10 @@
 		"select `COL` from ((select `COL` from `TABLE1`) as `TABLE2`)"); // select `COL` from ((select `COL` from `TABLE1`) as `TABLE2`)
 	TEST(SQLITE3,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
-		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") as "TABLE2")
+		"select \"COL\" from (select \"COL\" from \"TABLE1\") as \"TABLE2\""); // select "COL" from (select "COL" from "TABLE1") as "TABLE2"
 	TEST(ORACLE,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
-		"select \"COL\" from ((select \"COL\" from \"TABLE1\") \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") as "TABLE2")
+		"select \"COL\" from ((select \"COL\" from \"TABLE1\") \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") "TABLE2")
 	TEST(MSSQL,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
 		"select \"COL\" from (select \"COL\" from \"TABLE1\") as \"TABLE2\""); // select "COL" from (select "COL" from "TABLE1") as "TABLE2"
@@ -1939,10 +1939,10 @@
 		"select `COL` from `TABLE1` left outer join ((select `COL` from `TABLE1`) as `TABLE2`) on `TABLE1`.`COL` = `TABLE1`.`COLUMN1`"); // select `COL` from `TABLE1` left outer join ((select `COL` from `TABLE1`) as `TABLE2`) on `TABLE1`.`COL` = `TABLE1`.`COLUMN1`
 	TEST(SQLITE3,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
-		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") as "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
+		"select \"COL\" from \"TABLE1\" left outer join (select \"COL\" from \"TABLE1\") as \"TABLE2\" on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join (select "COL" from "TABLE1") as "TABLE2" on "TABLE1"."COL" = "TABLE1"."COLUMN1"
 	TEST(ORACLE,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
-		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") as "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
+		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
 	TEST(MSSQL,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
 		"select \"COL\" from \"TABLE1\" left outer join (select \"COL\" from \"TABLE1\") as \"TABLE2\" on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join (select "COL" from "TABLE1") as "TABLE2" on "TABLE1"."COL" = "TABLE1"."COLUMN1"
@@ -2115,10 +2115,10 @@
 		"select * from `ID` inner join ((select * from `ID` where `ID` >= '2014-01-01 00:00:00' group by `ID`) as `ID`)"); // select * from `ID` inner join ((select * from `ID` where `ID` >= '2014-01-01 00:00:00' group by `ID`) as `ID`)
 	TEST(SQLITE3,
 		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
-		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID")
+		"select * from \"ID\" inner join (select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\""); // select * from "ID" inner join (select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID"
 	TEST(ORACLE,
 		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
-		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by \"ID\") \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by "ID") as "ID")
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by \"ID\") \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by "ID") "ID")
 	TEST(MSSQL,
 		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
 		"select * from \"ID\" inner join (select * from \"ID\" where \"ID\" >= convert(datetime, '2014/1/1', 120) group by \"ID\") as \"ID\""); // select * from "ID" inner join (select * from "ID" where "ID" >= convert(datetime, '2014/1/1', 120) group by "ID") as "ID"
@@ -2263,4 +2263,26 @@
 	TEST(DB2,
 		Update(TABLE1)(COLUMN1, TABLE2(COLUMN2)).From(TABLE2).On(TABLE1(ID) == TABLE2(TABLE1_ID)),
 		"update \"TABLE1\" set \"COLUMN1\" = \"TABLE2\".\"COLUMN2\"from \"TABLE2\" on \"TABLE1\".\"ID\" = \"TABLE2\".\"TABLE1_ID\""); // update "TABLE1" set "COLUMN1" = "TABLE2"."COLUMN2"from "TABLE2" on "TABLE1"."ID" = "TABLE2"."TABLE1_ID"
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select `A`.* from `USERS` `A` inner join ((select count(*), `USERNAME`, `EMAIL` from `USERS` group by `USERNAME`, `EMAIL` having count(*) > 1) as `B`) on `A`.`USERNAME` = `B`.`USERNAME` and `A`.`EMAIL` = `B`.`EMAIL`"); // select `A`.* from `USERS` `A` inner join ((select count(*), `USERNAME`, `EMAIL` from `USERS` group by `USERNAME`, `EMAIL` having count(*) > 1) as `B`) on `A`.`USERNAME` = `B`.`USERNAME` and `A`.`EMAIL` = `B`.`EMAIL`
+	TEST(SQLITE3,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" \"A\" inner join (select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) as \"B\" on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" "A" inner join (select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) as "B" on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
+	TEST(ORACLE,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" \"A\" inner join ((select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) \"B\") on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" "A" inner join ((select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) "B") on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
+	TEST(MSSQL,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" as \"A\" inner join (select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) as \"B\" on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" as "A" inner join (select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) as "B" on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
+	TEST(PGSQL,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" as \"A\" inner join (select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) as \"B\" on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" as "A" inner join (select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) as "B" on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
+	TEST(FIREBIRD,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" \"A\" inner join ((select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) as \"B\") on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" "A" inner join ((select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) as "B") on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
+	TEST(DB2,
+		Select(A(SqlAll())).From(USERS.As(A)) .InnerJoin( Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS) .GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1) .AsTable(B) ) .On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL)),
+		"select \"A\".* from \"USERS\" \"A\" inner join ((select count(*), \"USERNAME\", \"EMAIL\" from \"USERS\" group by \"USERNAME\", \"EMAIL\" having count(*) > 1) as \"B\") on \"A\".\"USERNAME\" = \"B\".\"USERNAME\" and \"A\".\"EMAIL\" = \"B\".\"EMAIL\""); // select "A".* from "USERS" "A" inner join ((select count(*), "USERNAME", "EMAIL" from "USERS" group by "USERNAME", "EMAIL" having count(*) > 1) as "B") on "A"."USERNAME" = "B"."USERNAME" and "A"."EMAIL" = "B"."EMAIL"
 // ---------------------------------

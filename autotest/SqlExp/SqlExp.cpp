@@ -28,6 +28,9 @@ SQLID(KONTO_CON)
 SQLID(B)
 SQLID(C)
 SQLID(OBEXPBI)
+SQLID(USERNAME)
+SQLID(EMAIL)
+SQLID(USERS)
 
 SQLID(TN)
 SQLID(TNSIZE)
@@ -297,6 +300,16 @@ CONSOLE_APP_MAIN
 	EXP(Temporary("TT").As(Select(NAME, LASTNAME).From(TABLE1).Where(COLUMN1 == 12)));
 
 	EXP(Update(TABLE1)(COLUMN1, TABLE2(COLUMN2)).From(TABLE2).On(TABLE1(ID) == TABLE2(TABLE1_ID)));
+	
+	EXP(
+		Select(A(SqlAll())).From(USERS.As(A))
+		.InnerJoin(
+			Select(Count(SqlAll()), USERNAME, EMAIL).From(USERS)
+			.GroupBy(USERNAME, EMAIL).Having(Count(SqlAll()) > 1)
+			.AsTable(B)
+		)
+		.On(A(USERNAME) == B(USERNAME) && A(EMAIL) == B(EMAIL))
+	);
 
 	LOG("\n\n\n=========================================================================");
 	#include "Test.i"
