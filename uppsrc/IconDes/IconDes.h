@@ -69,6 +69,7 @@ private:
 	void  Ramp();
 	void  Alpha();
 	void  SyncText();
+	int   DoLayout(Size sz, bool set);
 
 public:
 	typedef RGBACtrl CLASSNAME;
@@ -83,6 +84,8 @@ public:
 	void Mask(bool b);
 
 	void SubCtrl(Ctrl *c);
+	
+	int  GetHeight(int cx);
 
 	RGBACtrl();
 };

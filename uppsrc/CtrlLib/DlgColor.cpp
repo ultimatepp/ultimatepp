@@ -257,7 +257,7 @@ Color HSV16toRGB(int h16, int s16, int v16)
 static void PaintArrowRaw(Draw& draw, const Rect& rc, int y)
 {
 	Size size = CtrlImg::column_cursor().GetSize();
-	draw.DrawImage(rc.left - size.cx - 2, y - (size.cy >> 1), CtrlImg::column_cursor());
+	draw.DrawImage(rc.left - size.cx - DPI(2), y - (size.cy >> 1), CtrlImg::column_cursor());
 }
 
 static void PaintArrow(Draw& draw, const Rect& rc, int pos)
@@ -294,21 +294,21 @@ WheelRampCtrl::~WheelRampCtrl()
 
 void WheelRampCtrl::Layout()
 {
-	Size size = max(GetSize(), Size(10, 10));
+	Size size = max(GetSize(), DPI(Size(10, 10)));
 	round_step = 1;
-	if(size.cx <= 20)
+	if(size.cx <= DPI(20))
 		column_rect = Null;
 	else
 	{
 		int col_wd = size.cx >> 3;
 		column_rect = Rect(size.cx - col_wd, 0, size.cx, size.cy);
-		column_rect.Deflate(1, 5);
-		size.cx -= col_wd + 8;
+		column_rect.Deflate(1, DPI(5));
+		size.cx -= col_wd + DPI(8);
 		while(round_step < 32768 && round_step * column_rect.Height() <= 65535)
 			round_step <<= 1;
 	}
 	wheel_rect = Rect(size);
-	wheel_rect.Deflate(1, 5);
+	wheel_rect.Deflate(1, DPI(5));
 	Refresh();
 }
 
