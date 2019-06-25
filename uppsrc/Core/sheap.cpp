@@ -191,6 +191,8 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 				free_4KB++;
 			}
 			empty[k] = page;
+			if(16 * free_4KB > huge_4KB_count) // keep number of free 4KB blocks in check
+				FreeSmallEmpty(INT_MAX, int(free_4KB - huge_4KB_count / 32));
 		}
 	}
 }

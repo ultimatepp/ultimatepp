@@ -15,6 +15,15 @@ namespace Upp {
 // also able to deal with bigger blocks, those are directly allocated / freed from system
 
 word Heap::HPAGE = 16 * 256; // 16MB default value
+word Heap::sys_block_limit = 16 * 256; // 16MB default value
+int  Heap::max_free_hpages = 4; // default value
+
+void MemorySetOptions(const MemoryOptions& opt)
+{
+	Heap::HPAGE = (word)clamp(opt.master_block / 4, 256, 65535);
+	Heap::sys_block_limit = (word)clamp((int)opt.sys_block_limit / 4, 16, (int)Heap::HPAGE);
+	Heap::max_free_hpages = opt.master_reserve;
+}
 
 BlkHeader_<4096> HugeHeapDetail::freelist[20][1]; // only single global Huge heap...
 Heap::HugePage *Heap::huge_pages;
@@ -79,7 +88,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 			Dbl_Self(D::freelist[i]);
 	}
 		
-	if(count > HPAGE) { // we are wasting 4KB to store just 4 bytes here, but this is >32MB after all..
+	if(count > sys_block_limit) { // we are wasting 4KB to store just 4 bytes here, but this is n MB after all..
 		LTIMING("SysAlloc");
 		byte *sysblk = (byte *)SysAllocRaw((count + 1) * 4096, 0);
 		BlkHeader *h = (BlkHeader *)(sysblk + 4096);
@@ -95,9 +104,6 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 
 	word wcount = (word)count;
 	
-	if(16 * free_4KB > huge_4KB_count) // keep number of free 4KB blocks in check
-		FreeSmallEmpty(INT_MAX, int(free_4KB - huge_4KB_count / 32));
-	
 	for(int pass = 0; pass < 2; pass++) {
 		for(int i = Cv(wcount); i < __countof(D::freelist); i++) {
 			BlkHeader *l = D::freelist[i];
@@ -105,7 +111,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 			while(h != l) {
 				word sz = h->GetSize();
 				if(sz >= count) {
-					if(h->IsFirst() && h->IsLast())
+					if(h->IsFirst() && h->IsLast()) // this is whole free page
 						free_hpages--;
 					void *ptr = MakeAlloc(h, wcount);
 					MaxMem();
@@ -153,9 +159,11 @@ int Heap::HugeFree(void *ptr)
 	}
 	LTIMING("Huge Free");
 	huge_4KB_count -= h->GetSize();
-	int sz = BlkHeap::Free(h)->GetSize();
-	if(h->IsFirst() && h->IsLast()) {
-		if(0) {
+	h = BlkHeap::Free(h);
+	int sz = h->GetSize();
+	if(h->IsFirst() && h->IsLast())
+		if(free_hpages >= max_free_hpages) { // we have enough pages in the reserve, return to the system
+			h->UnlinkFree();
 			HugePage *p = NULL;
 			while(huge_pages) { // remove the page from the set of huge pages
 				HugePage *n = huge_pages->next;
@@ -166,10 +174,11 @@ int Heap::HugeFree(void *ptr)
 				huge_pages = n;
 			}
 			huge_pages = p;
+			huge_chunks--;
 			SysFreeRaw(h, sz * 4096);
 		}
-		free_hpages++;
-	}
+		else
+			free_hpages++;
 	return sz;
 }
 

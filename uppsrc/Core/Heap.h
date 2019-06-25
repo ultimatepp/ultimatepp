@@ -1,5 +1,6 @@
-struct MemoryOptions {
-	int master_block = 16; // master block size
+struct MemoryOptions { // sizes are in KB
+	int master_block = 16384; // master block size
+	int sys_block_limit = 16384; // > that this: allocate directly from the system
 	int master_reserve = 1; // free master blocks kept in reserve
 };
 
@@ -127,6 +128,8 @@ void TinyFree(int size, void *ptr)
 }
 
 #else
+
+inline void   MemorySetOptions(const MemoryOptions& opt) {}
 
 inline void  *MemoryAllocPermanent(size_t size)                { return malloc(size); }
 inline void  *MemoryAlloc(size_t size)     { return new byte[size]; }
