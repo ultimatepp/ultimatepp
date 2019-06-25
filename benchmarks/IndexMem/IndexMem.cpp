@@ -43,4 +43,5 @@ CONSOLE_APP_MAIN
 	RLOG("Index<int> Sweep: " << ts);
 	RDUMP(MemoryUsedKb());
 	RLOG(MemoryProfile());
+	MemoryDumpHuge();
 }
