@@ -431,6 +431,11 @@ void MemoryDump()
 	ThreadHeap()->Dump();
 }
 
+void MemoryDumpHuge()
+{
+	ThreadHeap()->DumpHuge();
+}
+
 #endif
 
 }

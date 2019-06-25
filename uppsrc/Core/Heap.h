@@ -1,4 +1,11 @@
+struct MemoryOptions {
+	int master_block = 16; // master block size
+	int master_reserve = 1; // free master blocks kept in reserve
+};
+
 #ifdef UPP_HEAP
+
+void  MemorySetOptions(const MemoryOptions& opt);
 
 void *MemoryAllocPermanent(size_t size);
 
@@ -12,6 +19,7 @@ void  MemoryFree48(void *ptr);
 void  MemoryFreeThread();
 void  MemoryCheck();
 void  MemoryDump();
+void  MemoryDumpHuge();
 int   MemoryUsedKb();
 int   MemoryUsedKbMax();
 void  MemoryLimitKb(int kb);
