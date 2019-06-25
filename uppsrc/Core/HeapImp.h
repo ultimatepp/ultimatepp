@@ -273,8 +273,10 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
 	
+	// allocator options:
 	static word HPAGE; // size of master page, in 4KB units
 	static int  max_free_hpages; // maximum free master pages kept in reserve (if more, they are returned to the system)
+	static int  max_free_spages; // maximum free small pages kept in reserve (but HugeAlloc also converts them)
 	static word sys_block_limit; // > this (in 4KB) blocks are managed directly by system
 
 	void *HugeAlloc(size_t count); // count in 4KB, client needs to not touch HugePrefix

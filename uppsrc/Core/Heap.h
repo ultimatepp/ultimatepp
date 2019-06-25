@@ -2,6 +2,7 @@ struct MemoryOptions { // sizes are in KB
 	int master_block = 16384; // master block size
 	int sys_block_limit = 16384; // > that this: allocate directly from the system
 	int master_reserve = 1; // free master blocks kept in reserve
+	int small_reserve = 256; // free formatted small block pages kept in reserve
 };
 
 #ifdef UPP_HEAP
