@@ -185,14 +185,16 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 			if(empty[k]) { // Keep one hot empty page per klass in thread, put rest to 'aux' global storage
 				LLOG("Global free " << k << " " << (void *)empty[k]);
 				Mutex::Lock __(mutex);
-				empty[k]->heap = &aux;
-				empty[k]->next = aux.empty[k];
-				aux.empty[k] = empty[k];
-				free_4KB++;
+				if(free_4KB < max_free_spages) {
+					empty[k]->heap = &aux;
+					empty[k]->next = aux.empty[k];
+					aux.empty[k] = empty[k];
+					free_4KB++;
+				}
+				else
+					aux.HugeFree(empty[k]);
 			}
 			empty[k] = page;
-			if(16 * free_4KB > huge_4KB_count) // keep number of free 4KB blocks in check
-				FreeSmallEmpty(INT_MAX, int(free_4KB - huge_4KB_count / 32));
 		}
 	}
 }
@@ -241,7 +243,6 @@ size_t Heap::GetBlockSize(void *ptr)
 	}
 	return LGetBlockSize(ptr);
 }
-
 
 void Heap::SmallFreeDirect(void *ptr)
 { // does not need to check for target heap or small vs large
