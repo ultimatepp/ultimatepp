@@ -210,6 +210,27 @@ void Heap::Dump()
 	}
 }
 
+void Heap::DumpHuge()
+{
+	Mutex::Lock __(mutex);
+	HugePage *pg = huge_pages;
+	auto& out = VppLog();
+	while(pg) {
+		BlkPrefix *h = (BlkPrefix *)pg->page;
+		out << h << ": ";
+		for(;;) {
+			if(h->IsFree())
+				out << "#";
+			out << 4 * h->GetSize() << ' ';
+			if(h->IsLast())
+				break;
+			h = h->GetNextHeader(4096);
+		}
+		out << "\r\n";
+		pg = pg->next;
+	}
+}
+
 String AsString(const MemoryProfile& mem)
 {
 	String text;

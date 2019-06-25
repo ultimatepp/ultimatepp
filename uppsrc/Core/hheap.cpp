@@ -9,10 +9,12 @@ namespace Upp {
 
 #include "HeapImp.h"
 
-// this part reserves very large (224MB for 64bit CPUs, 32MB otherwise)
+// this part reserves very large (HPAGE*4 MB, default 16MB)
 // chunks form the system and then serves as 4KB rounded allocator
 // used as manager of huge memory blocks. 4KB and 64KB blocks are allocated from here too
 // also able to deal with bigger blocks, those are directly allocated / freed from system
+
+word Heap::HPAGE = 16 * 256; // 16MB default value
 
 BlkHeader_<4096> HugeHeapDetail::freelist[20][1]; // only single global Huge heap...
 Heap::HugePage *Heap::huge_pages;
@@ -47,6 +49,9 @@ MemoryProfile *PeakMemoryProfile()
 	memset((void *)sPeak, 0, sizeof(MemoryProfile));
 	return NULL;
 }
+
+Heap::HugePage *Heap::free_huge_pages;
+int             Heap::free_hpages;
 
 void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 {
@@ -100,6 +105,8 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 			while(h != l) {
 				word sz = h->GetSize();
 				if(sz >= count) {
+					if(h->IsFirst() && h->IsLast())
+						free_hpages--;
 					void *ptr = MakeAlloc(h, wcount);
 					MaxMem();
 					return ptr;
@@ -109,13 +116,22 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		}
 
 		if(!FreeSmallEmpty(wcount, INT_MAX)) { // try to coalesce 4KB small free blocks back to huge storage
-			void *ptr = SysAllocRaw(HPAGE * 4096, 0);
-			HugePage *pg = (HugePage *)MemoryAllocPermanent(sizeof(HugePage));
+			void *ptr = SysAllocRaw(HPAGE * 4096, 0); // failed, add HPAGE from the system
+
+			HugePage *pg; // record in set of huge pages
+			if(free_huge_pages) {
+				pg = free_huge_pages;
+				free_huge_pages = free_huge_pages->next;
+			}
+			else
+				pg = (HugePage *)MemoryAllocPermanent(sizeof(HugePage));
+
 			pg->page = ptr;
 			pg->next = huge_pages;
 			huge_pages = pg;
-			AddChunk((BlkHeader *)ptr, HPAGE); // failed, add 32MB from the system
 			huge_chunks++;
+			free_hpages++;
+			AddChunk((BlkHeader *)ptr, HPAGE);
 		}
 	}
 	Panic("Out of memory");
@@ -137,7 +153,24 @@ int Heap::HugeFree(void *ptr)
 	}
 	LTIMING("Huge Free");
 	huge_4KB_count -= h->GetSize();
-	return BlkHeap::Free(h)->GetSize();
+	int sz = BlkHeap::Free(h)->GetSize();
+	if(h->IsFirst() && h->IsLast()) {
+		if(0) {
+			HugePage *p = NULL;
+			while(huge_pages) { // remove the page from the set of huge pages
+				HugePage *n = huge_pages->next;
+				if(huge_pages->page != h) {
+					huge_pages->next = p;
+					p = huge_pages;
+				}
+				huge_pages = n;
+			}
+			huge_pages = p;
+			SysFreeRaw(h, sz * 4096);
+		}
+		free_hpages++;
+	}
+	return sz;
 }
 
 bool Heap::HugeTryRealloc(void *ptr, size_t count)

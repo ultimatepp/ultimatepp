@@ -263,11 +263,6 @@ struct HugeHeapDetail {
 
 struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	enum {
-	#ifdef CPU_64
-		HPAGE = 7 * 8192, // number of 4KB pages in huge page (also limit for sys allocation) (224MB)
-	#else
-		HPAGE = 8192, // number of 4KB pages in huge page (also limit for sys allocation) (32MB)
-	#endif
 		LUNIT = 256, // granularity of large blocks (size always a multiple of this)
 		LPAGE = LUNIT - 1, // number of LUNITs in large page
 		LCVCOUNT = 9, // SignificantBits(LPAGE) + 1
@@ -277,6 +272,8 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
+	
+	static word HPAGE;
 
 	void *HugeAlloc(size_t count); // count in 4KB, client needs to not touch HugePrefix
 	int   HugeFree(void *ptr);
@@ -390,6 +387,8 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	static size_t sys_count;
 	static size_t huge_chunks; // 32MB master pages
 	static size_t huge_4KB_count_max; // peak huge memory allocated
+	static HugePage *free_huge_pages; // list of records of freed hpages (to be reused)
+	static int       free_hpages;
 
 #ifdef HEAPDBG
 	static void  DbgFreeFillK(void *ptr, int k);
@@ -434,6 +433,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 
 	void   Make(MemoryProfile& f);
 	void   Dump();
+	void   DumpHuge();
 
 	static void Shrink();
 
