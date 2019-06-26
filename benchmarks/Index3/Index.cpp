@@ -6,12 +6,12 @@ using namespace Upp;
 CONSOLE_APP_MAIN
 {
 #ifdef _DEBUG
-	const int v_num = 10000;
+	const int v_num = 50000;
 #else
-	const int v_num = 100000;
+	const int v_num = 5000;
 #endif
 
-	const int isize = 100;
+	const int isize = 1000;
 	
 	Vector<String> data;
 	for(int i = 0; i < isize; i++)
@@ -26,7 +26,6 @@ CONSOLE_APP_MAIN
 				for (int i = 0; i < isize; ++i)
 					v[j].FindAdd(data[i]);
 		}
-		return;
 		{
 			RTIMING("UnlinkKey v_num outer");
 			for (int j = 0; j < v_num; ++j)
@@ -45,7 +44,6 @@ CONSOLE_APP_MAIN
 			RTIMING("FindAdd v_num inner");
 			for (int i = 0; i < isize; ++i)
 				for (int j = 0; j < v_num; ++j) {
-					RTIMING("2");
 					v[j].FindAdd(data[i]);
 				}
 		}
