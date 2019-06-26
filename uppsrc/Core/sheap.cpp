@@ -429,9 +429,9 @@ MemoryProfile::MemoryProfile()
 	ThreadHeap()->Make(*this);
 }
 
-void MemoryDump()
+void MemoryDumpLarge()
 {
-	ThreadHeap()->Dump();
+	ThreadHeap()->DumpLarge();
 }
 
 void MemoryDumpHuge()
