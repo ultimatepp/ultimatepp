@@ -209,6 +209,15 @@ CONSOLE_APP_MAIN
 			dst[i & 15].xxx = src[i & 15].xxx * n;
 		}
 	}
+
+	{
+		int n = Random();
+		RTIMING("Add");
+		for(int i = 0; i < N; i++) {
+			dst[i & 15].xxx = src[i & 15].xxx + n;
+		}
+	}
+
 	{
 		RTIMING("Zero 10000");
 		for(int i = 0; i < N; i++)
