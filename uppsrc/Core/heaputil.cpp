@@ -181,32 +181,24 @@ void Heap::Make(MemoryProfile& f)
 	}
 }
 
-void Heap::Dump()
+void Heap::DumpLarge()
 {
 	Mutex::Lock __(mutex);
 	DLink *m = large->next;
+	auto& out = VppLog();
 	while(m != large) {
 		LargeHeap::BlkHeader *h = m->GetFirst();
-		RLOG("--------------------------");
+		out << h << ": ";
 		for(;;) {
-			RLOG(asString(h) << " " << h->GetSize() << (h->IsFree() ? " FREE" : ""));
+			if(h->IsFree())
+				out << "#";
+			out << h->GetSize() * 0.25 << ' ';
 			if(h->IsLast())
 				break;
 			h = h->GetNextHeader();
 		}
+		out << "\r\n";
 		m = m->next;
-	}
-	HugePage *pg = huge_pages;
-	while(pg) {
-		BlkPrefix *h = (BlkPrefix *)pg->page;
-		RLOG("==========================");
-		for(;;) {
-			RLOG(asString(h) << " " << h->GetSize() << (h->IsFree() ? " FREE" : ""));
-			if(h->IsLast())
-				break;
-			h = h->GetNextHeader(4096);
-		}
-		pg = pg->next;
 	}
 }
 

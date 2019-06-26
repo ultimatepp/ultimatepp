@@ -11,8 +11,31 @@ namespace Upp {
 
 #include "HeapImp.h"
 
+int Heap::lclass[] = { 0, 4, 5, 6, 7, 8, 9, 11, 13, 15, 18, 22, 27, 33, 40, 49, 60, 73, 89, 109, 134, 164, 201, 225, 255 };
+int Heap::free_lclass[255]; // free block size -> lclass, size is >= class sz
+int Heap::alloc_lclass[255]; // allocation size -> lclass, size <= class sz
+
+
+void Heap::LargeHeapDetail::LinkFree(BlkHeader_<LUNIT> *h)
+{
+	Dbl_LinkAfter(h, freelist[free_lclass[h->GetSize()]]);
+}
+
 void Heap::LInit()
 {
+	ASSERT(__countof(lheap.freelist) == __countof(lclass));
+	ONCELOCK {
+		int ai = 0;
+		int fi = 0;
+		for(int i = 0; i <= 255; i++) {
+			if(i > lclass[ai])
+				ai++;
+			if(i >= lclass[fi + 1])
+				fi++;
+			alloc_lclass[i] = ai;
+			free_lclass[i] = fi;
+		}
+	}
 	for(int i = 0; i <= __countof(lheap.freelist); i++)
 		Dbl_Self(lheap.freelist[i]);
 	big->LinkSelf();
@@ -31,6 +54,10 @@ void *Heap::TryLAlloc(int i0, word wcount)
 				return (BlkPrefix *)h + 1;
 			}
 			h = h->next;
+			RHITCOUNT("next");
+			static int q = 0;
+			if(++q < 1000)
+				RLOG(asString(sz) << " " << asString(wcount));
 		}
 	}
 	return NULL;
@@ -76,7 +103,7 @@ void *Heap::LAlloc(size_t& size)
 #endif
 
 	size = ((int)wcount * LUNIT) - sizeof(BlkPrefix);
-	int i0 = lheap.Cv(wcount);
+	int i0 = alloc_lclass[wcount];
 
 	if(large_remote_list)  // there might be blocks of this heap freed in other threads
 		LargeFreeRemote(); // free them first

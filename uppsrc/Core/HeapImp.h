@@ -265,7 +265,6 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	enum {
 		LUNIT = 256, // granularity of large blocks (size always a multiple of this)
 		LPAGE = LUNIT - 1, // number of LUNITs in large page
-		LCVCOUNT = 9, // SignificantBits(LPAGE) + 1
 		LOFFSET = 64, // offset from 64KB start to the first block header
 
 		NKLASS = 23, // number of small size classes
@@ -318,13 +317,8 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	};
 	
 	struct LargeHeapDetail {
-		BlkHeader_<LUNIT> freelist[LCVCOUNT][1];
-		static int Cv(int n) { return SignificantBits(n); }
-
-		void Free64KB(BlkHeader_<LUNIT> *h);
-		void LinkFree(BlkHeader_<LUNIT> *h) {
-			Dbl_LinkAfter(h, freelist[Cv(h->GetSize())]);
-		}
+		BlkHeader_<LUNIT> freelist[25][1];
+		void LinkFree(BlkHeader_<LUNIT> *h);
 	};
 	
 	struct LargeHeap : BlkHeap<LargeHeapDetail, LUNIT> {};
@@ -347,6 +341,10 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		
 		LargeHeap::BlkHeader *GetFirst()   { return (LargeHeap::BlkHeader *)((byte *)this + LOFFSET); } // pointer to data area
 	};
+
+	static int lclass[];
+	static int free_lclass[255];
+	static int alloc_lclass[255];
 
 	static_assert(sizeof(BlkPrefix) == 16, "Wrong sizeof(BlkPrefix)");
 	static_assert(sizeof(DLink) == 64, "Wrong sizeof(DLink)");
@@ -436,7 +434,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	size_t LGetBlockSize(void *ptr);
 
 	void   Make(MemoryProfile& f);
-	void   Dump();
+	void   DumpLarge();
 	void   DumpHuge();
 
 	static void Shrink();
