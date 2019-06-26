@@ -63,6 +63,7 @@ private:
 	ColorRampCtrl ramp;
 	AlphaCtrl     alpha;
 	EditString    text;
+	FrameRight<Button> setcolor;
 	Ptr<Ctrl>     subctrl;
 
 	Color GetColor(int i) const;

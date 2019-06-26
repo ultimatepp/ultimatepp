@@ -216,6 +216,21 @@ RGBACtrl::RGBACtrl()
 	text.SetFont(CourierZ(11));
 	text.NoWantFocus();
 	text.SetReadOnly();
+	text.SetFrame(BlackFrame());
+	text.AddFrame(setcolor);
+	setcolor.Width(CtrlImg::color_edit().GetSize().cx + DPI(8));
+	setcolor.SetImage(CtrlImg::color_edit());
+	setcolor << [=] {
+		String text;
+		if(!IsNull(color) && color != VoidColor())
+			text = ColorToHtml(color);
+		EditText(text, "Set Color", "Color value");
+		Color c = ColorFromText(text);
+		if(IsNull(c))
+			return;
+		Set(c);
+		UpdateActionRefresh();
+	};
 	Add(text);
 	SyncText();
 }
