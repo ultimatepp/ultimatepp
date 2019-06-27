@@ -19,11 +19,11 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 			String(instruction, instruction_len),
 			String(prompts[i].text, prompts[i].length)
 		);
-#ifdef flagUSEMALLOC
-		auto *r = strdup(~response);
-#else
+#ifdef UPP_HEAP
 		auto *r = (char*) ssh_malloc(response.GetLength(), abstract);
 		memcpy(r, response.Begin(), response.GetLength());
+#else
+		auto *r = strdup(~response);
 #endif
 		if(r) {
 			responses[i].text   = r;
@@ -150,12 +150,12 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	}
 	
 	if(!Run([=] () mutable {
-#ifdef flagUSEMALLOC
-			LLOG("Using libssh2's memory managers.");
-			ssh->session = libssh2_session_init_ex(nullptr, nullptr, nullptr, this);
-#else
+#ifdef UPP_HEAP
 			LLOG("Using Upp's memory managers.");
 			ssh->session = libssh2_session_init_ex((*ssh_malloc), (*ssh_free), (*ssh_realloc), this);
+#else
+			LLOG("Using libssh2's memory managers.");
+			ssh->session = libssh2_session_init_ex(nullptr, nullptr, nullptr, this);
 #endif
 			if(!ssh->session)
 				SetError(-1, "Failed to initalize libssh2 session.");
