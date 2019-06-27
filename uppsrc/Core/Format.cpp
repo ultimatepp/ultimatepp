@@ -7,12 +7,22 @@ namespace Upp {
 
 String  VFormat(const char *fmt, va_list ptr) {
 	int limit = 2 * (int)strlen(fmt) + 1024;
-	Buffer<char> buffer(limit);
-	vsprintf(buffer, fmt, ptr);
-	va_end(ptr);
-	int len = (int)strlen(buffer);
-	ASSERT(len <= limit);
-	return String(buffer, len);
+	if(limit < 1500) {
+		char buffer[1500];
+		vsprintf(buffer, fmt, ptr);
+		va_end(ptr);
+		int len = (int)strlen(buffer);
+		ASSERT(len <= limit);
+		return String(buffer, len);
+	}
+	else {
+		Buffer<char> buffer(limit);
+		vsprintf(buffer, fmt, ptr);
+		va_end(ptr);
+		int len = (int)strlen(buffer);
+		ASSERT(len <= limit);
+		return String(buffer, len);
+	}
 }
 
 // Formatting routines ---------------------------

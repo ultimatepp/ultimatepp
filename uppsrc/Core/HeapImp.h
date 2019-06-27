@@ -382,7 +382,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	static Heap   aux;    // Single global auxiliary heap to store orphans and global list of free pages
 
 	static size_t huge_4KB_count; // total number of 4KB pages in small/large/huge blocks
-	static size_t free_4KB; // empty 4KB pages
+	static int    free_4KB; // empty 4KB pages
 	static size_t big_size; // blocks >~64KB
 	static size_t big_count;
 	static size_t sys_size;  // blocks allocated directly from system (included in big too)
@@ -390,7 +390,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	static size_t huge_chunks; // 32MB master pages
 	static size_t huge_4KB_count_max; // peak huge memory allocated
 	static HugePage *free_huge_pages; // list of records of freed hpages (to be reused)
-	static int       free_hpages;
+	static int       free_hpages; // empty huge pages (in reserve)
 
 #ifdef HEAPDBG
 	static void  DbgFreeFillK(void *ptr, int k);

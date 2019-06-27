@@ -209,8 +209,14 @@ void LogOut::Line(const char *s, int len, int depth)
 	int count = (int)(p - h);
 	if(count == 0) return;
 	if(options & LOG_COUT)
-		Cout().Put(h, count);
+		for(const char *s = beg; *s; s++)
+			putchar(*s);
 	if(options & LOG_CERR)
+		for(const char *s = beg; *s; s++)
+			putc(*s, stderr);
+	if(options & LOG_COUTW)
+		Cout().Put(h, count);
+	if(options & LOG_CERRW)
 		Cerr().Put(h, count);
 #ifdef PLATFORM_WIN32
 	if(options & LOG_FILE)

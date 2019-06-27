@@ -43,7 +43,7 @@ EXITBLOCK {
 }
 #endif
 
-int sKBLimit = INT_MAX;
+size_t sKBLimit = INT_MAX;
 
 void  MemoryLimitKb(int kb)
 {
@@ -66,6 +66,7 @@ int             Heap::free_hpages;
 
 void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 {
+	LTIMING("HugeAlloc");
 	ASSERT(count);
 
 #ifdef LSTAT
@@ -78,7 +79,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 	auto MaxMem = [&] {
 		if(huge_4KB_count > huge_4KB_count_max) {
 			huge_4KB_count_max = huge_4KB_count;
-			if(MemoryUsedKb() > sKBLimit)
+			if(4 * (Heap::huge_4KB_count - Heap::free_4KB) > sKBLimit)
 				Panic("MemoryLimitKb breached!");
 			if(sPeak)
 				Make(*sPeak);
@@ -148,6 +149,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 
 int Heap::HugeFree(void *ptr)
 {
+	LTIMING("HugeFree");
 	BlkHeader *h = (BlkHeader *)ptr;
 	if(h->size == 0) {
 		LTIMING("Sys Free");
@@ -165,6 +167,7 @@ int Heap::HugeFree(void *ptr)
 	int sz = h->GetSize();
 	if(h->IsFirst() && h->IsLast())
 		if(free_hpages >= max_free_hpages) { // we have enough pages in the reserve, return to the system
+			LTIMING("Free Huge Page");
 			h->UnlinkFree();
 			HugePage *p = NULL;
 			while(huge_pages) { // remove the page from the set of huge pages

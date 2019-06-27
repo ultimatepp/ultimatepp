@@ -44,9 +44,9 @@ bit flags:&]
 :: [s0; Output log to file (this is default). The default path of file 
 is ConfigFile(`"[/ program`_name].log`").]
 :: [s0; LOG`_COUT ]
-:: [s0; Output log to standard output.]
+:: [s0; Output log to standard output, using plain putchar.]
 :: [s0; LOG`_CERR ]
-:: [s0; Output log to error output.]
+:: [s0; Output log to error output, using plain putc.]
 :: [s0; LOG`_DBG ]
 :: [s0; Output log to debugger (Win32 specific).]
 :: [s0; LOG`_SYS ]
@@ -68,7 +68,15 @@ of replacing it.]
 (renamed with extension `'.1`', `'.2`' etc...).]
 :: [s0; LOG`_ROTATE`_GZIP]
 :: [s0; Older preserved log files are compressed using gzip (except 
-the most recent log `'.1`'.]}}&]
+the most recent log `'.1`'.]
+:: [s0; LOG`_COUTW]
+:: [s0; Output log to standard output, using Cout. This provides eventual 
+conversion of UTF8 characters, at the price of using heap (so 
+cannot be used to e.g. LOG inside heap routines).]
+:: [s0; LOG`_CERRW]
+:: [s0; Output log to standard output, using Cerr. This provides eventual 
+conversion of UTF8 characters, at the price of using heap (so 
+cannot be used to e.g. LOG inside heap routines).]}}&]
 [s3; &]
 [s4;%- &]
 [s5;:StdLog`(`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* StdLog]()&]

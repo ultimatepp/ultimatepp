@@ -123,6 +123,7 @@ void Heap::Shutdown()
 			empty[i]->heap = &aux;
 			empty[i]->next = aux.empty[i];
 			aux.empty[i] = empty[i];
+			free_4KB++;
 			LLOG("Orphan empty " << (void *)empty[i]);
 		}
 	}

@@ -1,5 +1,7 @@
 #include <Core/Core.h>
 
+#define LTIMING(x) // RTIMING(x)
+
 namespace Upp {
 
 #ifdef UPP_HEAP
@@ -57,19 +59,21 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 			page->Unlink();
 			LLOG("AllocK - adopting aux page " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 		}
-		if(!page && aux.empty[k]) { // Try hot empty page of the same klass
+		if(!page && aux.empty[k]) { // Try free page of the same klass (no need to format it)
 			page = aux.empty[k];
 			aux.empty[k] = page->next;
 			free_4KB--;
+			ASSERT(free_4KB < max_free_spages);
 			LLOG("AllocK - empty aux page available of the same format " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 		}
 		if(!page)
-			for(int i = 0; i < NKLASS; i++) // Finally try to to find hot page of different klass
+			for(int i = 0; i < NKLASS; i++) // Finally try to find free page of different klass
 				if(aux.empty[i]) {
 					page = aux.empty[i];
 					aux.empty[i] = page->next;
 					free_4KB--;
 					page->Format(k);
+					ASSERT(free_4KB < max_free_spages);
 					LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 					break;
 				}
@@ -127,6 +131,7 @@ void *Heap::Allok(int k)
 force_inline
 void *Heap::AllocSz(size_t& sz)
 {
+	LTIMING("Alloc");
 	LLOG("Alloc " << asString(sz));
 	Stat(sz);
 	if(sz <= 384) {
@@ -177,15 +182,16 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 		LLOG("Free page is empty " << (void *)page);
 		page->Unlink();
 		if(this == &aux) {
-			LLOG("...is aux");
+			LLOG("...is aux " << asString(free_4KB));
 			page->next = empty[k];
 			empty[k] = page;
+			free_4KB++;
 		}
 		else {
 			if(empty[k]) { // Keep one hot empty page per klass in thread, put rest to 'aux' global storage
 				LLOG("Global free " << k << " " << (void *)empty[k]);
 				Mutex::Lock __(mutex);
-				if(free_4KB < max_free_spages) {
+				if(free_4KB < max_free_spages) { // only keep max_free_spages, release if more
 					empty[k]->heap = &aux;
 					empty[k]->next = aux.empty[k];
 					aux.empty[k] = empty[k];
@@ -204,7 +210,7 @@ void Heap::Free(void *ptr, Page *page, int k)
 {
 	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
-	if(page->heap != this) { // freeing page allocated in different thread
+	if(page->heap != this) { // freeing block allocated in different thread
 		RemoteFree(ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
 		return;
 	}
@@ -266,6 +272,7 @@ bool Heap::FreeSmallEmpty(int size4KB, int count)
 				Page *q = aux.empty[i];
 				aux.empty[i] = q->next;
 				free_4KB--;
+				ASSERT(free_4KB < max_free_spages);
 				if(aux.HugeFree(q) >= size4KB || --count <= 0) // HugeFree is really static, aux needed just to compile
 					return true;
 				released = true;
@@ -357,8 +364,6 @@ size_t GetMemoryBlockSize_(void *ptr)
 }
 
 #else
-
-#define LTIMING(x) // RTIMING(x)
 
 void *MemoryAlloc(size_t sz)
 {
