@@ -1,13 +1,12 @@
 #include "Core.h"
-#include "Core.h"
 
-#define LTIMING(x)  // RTIMING(x)
+#define LTIMING(x)   // RTIMING(x)
+#define LHITCOUNT(x) // RHITCOUNT(x)
+#define LLOG(x) //  LOG((void *)this << ' ' << x)
 
 namespace Upp {
 
 #ifdef UPP_HEAP
-
-#define LLOG(x) //  LOG((void *)this << ' ' << x)
 
 #include "HeapImp.h"
 
@@ -43,6 +42,7 @@ void Heap::LInit()
 
 void *Heap::TryLAlloc(int i0, word wcount)
 {
+	LTIMING("TryLAlloc");
 	for(int i = i0; i < __countof(lheap.freelist); i++) {
 		LBlkHeader *l = lheap.freelist[i];
 		LBlkHeader *h = l->next;
@@ -180,6 +180,7 @@ void Heap::LFree(void *ptr)
 
 bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 {
+	LTIMING("TryRealloc");
 	ASSERT(ptr);
 
 #ifdef _DEBUG
@@ -196,13 +197,14 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		size_t dummy;
 		if(wcount == h->GetSize() || lheap.TryRealloc(h, wcount, dummy)) {
 			newsize = ((int)wcount * LUNIT) - sizeof(BlkPrefix);
+			LHITCOUNT("Large realloc true");
 			return true;
 		}
 	}
 	
 	Mutex::Lock __(mutex);
 	if(h->heap == NULL) { // this is big block
-		LTIMING("Big Free");
+		LTIMING("Big realloc");
 
 		DLink *d = (DLink *)h - 1;
 

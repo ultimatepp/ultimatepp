@@ -18,7 +18,7 @@ void OutOfMemoryPanic(size_t size)
 }
 
 size_t Heap::huge_4KB_count;
-size_t Heap::free_4KB;
+int    Heap::free_4KB;
 size_t Heap::big_size;
 size_t Heap::big_count;
 size_t Heap::sys_size;
