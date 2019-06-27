@@ -47,17 +47,10 @@ void *Heap::TryLAlloc(int i0, word wcount)
 		LBlkHeader *l = lheap.freelist[i];
 		LBlkHeader *h = l->next;
 		while(h != l) {
-			word sz = h->GetSize();
-			if(sz >= wcount) {
-				lheap.MakeAlloc(h, wcount);
-				h->heap = this;
-				return (BlkPrefix *)h + 1;
-			}
-			h = h->next;
-			RHITCOUNT("next");
-			static int q = 0;
-			if(++q < 1000)
-				RLOG(asString(sz) << " " << asString(wcount));
+			ASSERT(h->GetSize() >= wcount);
+			lheap.MakeAlloc(h, wcount);
+			h->heap = this;
+			return (BlkPrefix *)h + 1;
 		}
 	}
 	return NULL;
