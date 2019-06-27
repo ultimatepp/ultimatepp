@@ -2,7 +2,8 @@ uses
 	Core;
 
 file
-	Index.cpp;
+	Index.cpp,
+	info.txt;
 
 mainconfig
 	"" = "USEMALLOC",

@@ -1,0 +1,22 @@
+* C:\upp\out\benchmarks\MSVS17x64.Debug_Full.Release\Index3.exe 27.06.2019 18:06:11, user: cxl
+
+TIMING erase v_num inner: 367.00 ms - 367.00 ms (367.00 ms / 1 ), min: 367.00 ms, max: 367.00 ms, nesting: 0 - 1
+TIMING insert v_num inner: 312.00 ms - 312.00 ms (312.00 ms / 1 ), min: 312.00 ms, max: 312.00 ms, nesting: 0 - 1
+TIMING erase v_num outer: 752.00 ms - 752.00 ms (752.00 ms / 1 ), min: 752.00 ms, max: 752.00 ms, nesting: 0 - 1
+TIMING insert v_num outer: 490.00 ms - 490.00 ms (490.00 ms / 1 ), min: 490.00 ms, max: 490.00 ms, nesting: 0 - 1
+TIMING Sweep v_num inner: 12.00 ms - 12.00 ms (12.00 ms / 1 ), min: 12.00 ms, max: 12.00 ms, nesting: 0 - 1
+TIMING UnlinkKey v_num inner: 552.00 ms - 552.00 ms (552.00 ms / 1 ), min: 552.00 ms, max: 552.00 ms, nesting: 0 - 1
+TIMING FindAdd v_num inner: 569.00 ms - 569.00 ms (569.00 ms / 1 ), min: 569.00 ms, max: 569.00 ms, nesting: 0 - 1
+TIMING Big Free       :  0.00 ns -  0.00 ns ( 0.00 ns / 4 ), min:  0.00 ns, max:  0.00 ns, nesting: 0 - 4
+TIMING FreeLargePage  : 26.89 ms -  4.25 us (27.00 ms / 6323 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 6323
+TIMING Sweep v_num outer: 12.00 ms - 12.00 ms (12.00 ms / 1 ), min: 12.00 ms, max: 12.00 ms, nesting: 0 - 1
+TIMING UnlinkKey v_num outer: 110.00 ms - 110.00 ms (110.00 ms / 1 ), min: 110.00 ms, max: 110.00 ms, nesting: 0 - 1
+TIMING FindAdd v_num outer: 156.00 ms - 156.00 ms (156.00 ms / 1 ), min: 156.00 ms, max: 156.00 ms, nesting: 0 - 1
+TIMING Big alloc      :  0.00 ns -  0.00 ns ( 0.00 ns / 4 ), min:  0.00 ns, max:  0.00 ns, nesting: 0 - 4
+TIMING Large Free     : 34.43 ms - 226.47 ns (37.00 ms / 152010 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 152010
+TIMING MakeAlloc      : 16.53 ms - 113.47 ns (19.00 ms / 145690 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 145690
+HITCOUNT Large realloc true: hit count = 18008
+TIMING TryRealloc     : 12.97 ms - 108.05 ns (15.00 ms / 120014 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 120014
+TIMING Large More     :  8.89 ms -  1.41 us ( 9.00 ms / 6324 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 6324
+HITCOUNT TryLAlloc 2: hit count = 698554
+TIMING TryLAlloc      : 22.32 ms - 140.95 ns (25.00 ms / 158338 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 158338
