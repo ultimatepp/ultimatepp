@@ -1,8 +1,8 @@
 #include "Core.h"
 
-#define LTIMING(x)   // RTIMING(x)
-#define LHITCOUNT(x) // RHITCOUNT(x)
-#define LLOG(x) //  LOG((void *)this << ' ' << x)
+#define LTIMING(x)    // RTIMING(x)
+#define LHITCOUNT(x)  // RHITCOUNT(x)
+#define LLOG(x)       //  LOG((void *)this << ' ' << x)
 
 namespace Upp {
 
@@ -11,8 +11,8 @@ namespace Upp {
 #include "HeapImp.h"
 
 int Heap::lclass[] = { 0, 4, 5, 6, 7, 8, 9, 11, 13, 15, 18, 22, 27, 33, 40, 49, 60, 73, 89, 109, 134, 164, 201, 225, 255 };
-int Heap::free_lclass[255]; // free block size -> lclass, size is >= class sz
-int Heap::alloc_lclass[255]; // allocation size -> lclass, size <= class sz
+int Heap::free_lclass[LPAGE + 1]; // free block size -> lclass, size is >= class sz
+int Heap::alloc_lclass[LPAGE + 1]; // allocation size -> lclass, size <= class sz
 
 
 void Heap::LargeHeapDetail::LinkFree(BlkHeader_<LUNIT> *h)
@@ -46,12 +46,14 @@ void *Heap::TryLAlloc(int i0, word wcount)
 	for(int i = i0; i < __countof(lheap.freelist); i++) {
 		LBlkHeader *l = lheap.freelist[i];
 		LBlkHeader *h = l->next;
-		while(h != l) {
+		if(h != l) {
 			ASSERT(h->GetSize() >= wcount);
+			RTIMING("MakeAlloc");
 			lheap.MakeAlloc(h, wcount);
 			h->heap = this;
 			return (BlkPrefix *)h + 1;
 		}
+		LHITCOUNT("TryLAlloc 2");
 	}
 	return NULL;
 }
