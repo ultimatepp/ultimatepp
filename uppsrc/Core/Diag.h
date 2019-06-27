@@ -240,10 +240,10 @@ void DumpMap(Stream& s, const T& t) {
 	s << LOG_END;
 }
 
-#ifdef flagUSEMALLOC
-inline String AsString(const MemoryProfile&) { return "Using malloc - no memory profile available"; }
-#else
+#ifdef UPP_HEAP
 String AsString(const MemoryProfile& mem);
+#else
+inline String AsString(const MemoryProfile&) { return "Using malloc - no memory profile available"; }
 #endif
 
 String CppDemangle(const char* name);

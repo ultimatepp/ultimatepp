@@ -42,10 +42,6 @@ bool  MemoryTryRealloc(void *ptr, size_t& newsize) {
 }
 #endif
 
-#ifdef MEMORY_SHRINK
-void  MemoryShrink();
-#endif
-
 void  MemoryBreakpoint(dword serial);
 
 void  MemoryInitDiagnostics();
@@ -130,6 +126,8 @@ void TinyFree(int size, void *ptr)
 
 #else
 
+#ifndef flagHEAPOVERRIDE
+
 inline void   MemorySetOptions(const MemoryOptions& opt) {}
 
 inline void  *MemoryAllocPermanent(size_t size)                { return malloc(size); }
@@ -162,6 +160,8 @@ inline MemoryProfile *PeakMemoryProfile() { return NULL; }
 inline void *TinyAlloc(int size) { return MemoryAlloc(size); }
 
 inline void TinyFree(int, void *ptr) { return MemoryFree(ptr); }
+
+#endif
 
 #endif
 
