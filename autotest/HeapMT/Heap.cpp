@@ -70,6 +70,7 @@ void DoTest()
 	queue.Clear();
 	LOG("Round shutdown");
 	DUMP(MemoryUsedKb());
+	DUMP(MemoryProfile());
 }
 
 CONSOLE_APP_MAIN
