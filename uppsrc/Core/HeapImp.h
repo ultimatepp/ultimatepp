@@ -264,7 +264,7 @@ struct HugeHeapDetail {
 struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	enum {
 		LUNIT = 256, // granularity of large blocks (size always a multiple of this)
-		LPAGE = 255, // number of LUNITs in large page
+		LPAGE = LUNIT - 1, // number of LUNITs in large page
 		LOFFSET = 64, // offset from 64KB start to the first block header
 
 		NKLASS = 23, // number of small size classes
@@ -343,8 +343,8 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	};
 
 	static int lclass[];
-	static int free_lclass[LPAGE + 1];
-	static int alloc_lclass[LPAGE + 1];
+	static int free_lclass[256];
+	static int alloc_lclass[256];
 
 	static_assert(sizeof(BlkPrefix) == 16, "Wrong sizeof(BlkPrefix)");
 	static_assert(sizeof(DLink) == 64, "Wrong sizeof(DLink)");
@@ -457,6 +457,9 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	void Shutdown();
 	static void AuxFinalCheck();
 
+#ifdef flagHEAPLOG
+	void  *AllocSz0(size_t& sz);
+#endif
 	void  *AllocSz(size_t& sz);
 	void   Free(void *ptr);
 	size_t GetBlockSize(void *ptr);

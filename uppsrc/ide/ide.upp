@@ -125,7 +125,8 @@ mainconfig
 	"" = "GUI MT NOGTK",
 	"" = "GUI NOGTK",
 	"" = "GUI MT TEST_HIDPI",
-	"" = "GUI PEAKMEM";
+	"" = "GUI PEAKMEM",
+	"" = "GUI HEAPLOG";
 
 custom() "",
 	"ASDFASDFASDF",
