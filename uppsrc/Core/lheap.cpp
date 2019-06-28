@@ -153,7 +153,6 @@ void Heap::LFree(void *ptr)
 	if(h->heap == this) {
 		LTIMING("Large Free");
 		LBlkHeader *fh = lheap.Free((LBlkHeader *)h);
-		RLOG(asSring(fh->GetSize()))jane
 		if(fh->GetSize() == LPAGE) {
 			LTIMING("FreeLargePage");
 			fh->UnlinkFree();

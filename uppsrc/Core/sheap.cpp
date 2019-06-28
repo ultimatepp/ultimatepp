@@ -182,7 +182,7 @@ void *Heap::AllocSz(size_t& sz)
 	size_t sz0 = sz;
 	void *ptr = AllocSz0(sz);
 	if(sLog)
-		fprintf(sLog, "%X %zX %p\n", Thread::GetCurrentId(), sz, ptr);
+		fprintf(sLog, "%x %zx %p\n", Thread::GetCurrentId(), sz, ptr);
 	return ptr;
 }
 
@@ -254,7 +254,7 @@ void Heap::Free(void *ptr)
 {
 #ifdef flagHEAPLOG
 	if(sLog)
-		fprintf(sLog, "%p\n", ptr);
+		fprintf(sLog, "-%x %p\n", Thread::GetCurrentId(), ptr);
 #endif
 	if(!ptr) return;
 	LLOG("Free " << ptr);
