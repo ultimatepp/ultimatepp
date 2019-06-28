@@ -128,6 +128,12 @@ void *Heap::Allok(int k)
 	return DbgFreeCheckK(AllocK(k), k);
 }
 
+#ifdef flagHEAPLOG
+
+#define AllocSz AllocSz0
+
+#endif
+
 force_inline
 void *Heap::AllocSz(size_t& sz)
 {
@@ -163,6 +169,24 @@ void *Heap::AllocSz(size_t& sz)
 	}
 	return LAlloc(sz);
 }
+
+#ifdef flagHEAPLOG
+
+#undef AllocSz
+
+static FILE *sLog = fopen(GetExeDirFile("heap.log"), "w");
+
+force_inline
+void *Heap::AllocSz(size_t& sz)
+{
+	size_t sz0 = sz;
+	void *ptr = AllocSz0(sz);
+	if(sLog)
+		fprintf(sLog, "%X %zX %p\n", Thread::GetCurrentId(), sz, ptr);
+	return ptr;
+}
+
+#endif
 
 force_inline
 void Heap::FreeK(void *ptr, Page *page, int k)
@@ -228,6 +252,10 @@ void Heap::Free(void *ptr, Page *page, int k)
 force_inline
 void Heap::Free(void *ptr)
 {
+#ifdef flagHEAPLOG
+	if(sLog)
+		fprintf(sLog, "%p\n", ptr);
+#endif
 	if(!ptr) return;
 	LLOG("Free " << ptr);
 	if(IsSmall(ptr)) {
