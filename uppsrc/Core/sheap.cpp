@@ -174,6 +174,8 @@ void *Heap::AllocSz(size_t& sz)
 
 #undef AllocSz
 
+StaticMutex sHeapLogLock;
+
 static FILE *sLog = fopen(GetExeDirFile("heap.log"), "w");
 
 force_inline
@@ -181,8 +183,10 @@ void *Heap::AllocSz(size_t& sz)
 {
 	size_t sz0 = sz;
 	void *ptr = AllocSz0(sz);
-	if(sLog)
+	if(sLog) {
+		Mutex::Lock __(sHeapLogLock);
 		fprintf(sLog, "%x %zx %p\n", Thread::GetCurrentId(), sz, ptr);
+	}
 	return ptr;
 }
 
@@ -253,8 +257,10 @@ force_inline
 void Heap::Free(void *ptr)
 {
 #ifdef flagHEAPLOG
-	if(sLog)
+	if(sLog) {
+		Mutex::Lock __(sHeapLogLock);
 		fprintf(sLog, "-%x %p\n", Thread::GetCurrentId(), ptr);
+	}
 #endif
 	if(!ptr) return;
 	LLOG("Free " << ptr);
