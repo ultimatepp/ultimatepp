@@ -52,7 +52,7 @@ public:
 
 	FixedAMap()                                         {}
 	FixedAMap(const FixedAMap& s, int) : key(s.key, 0), value(s.value, 0) {}
-	FixedAMap(Vector<K>&& key, V&& val) : key(pick(key)), value(val) {}
+	FixedAMap(Vector<K>&& key, V&& val) : key(pick(key)), value(pick(val)) {}
 
 	typedef ConstIteratorOf<V>  ConstIterator;
 	typedef IteratorOf<V>       Iterator;
