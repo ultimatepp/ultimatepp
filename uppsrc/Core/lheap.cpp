@@ -48,7 +48,6 @@ void *Heap::TryLAlloc(int i0, word wcount)
 		LBlkHeader *h = l->next;
 		if(h != l) {
 			ASSERT(h->GetSize() >= wcount);
-			RTIMING("MakeAlloc");
 			lheap.MakeAlloc(h, wcount);
 			h->heap = this;
 			return (BlkPrefix *)h + 1;
