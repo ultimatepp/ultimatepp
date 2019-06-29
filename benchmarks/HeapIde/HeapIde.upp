@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	HeapIde.cpp;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC";
+
