@@ -128,12 +128,6 @@ void *Heap::Allok(int k)
 	return DbgFreeCheckK(AllocK(k), k);
 }
 
-#ifdef flagHEAPLOG
-
-#define AllocSz AllocSz0
-
-#endif
-
 force_inline
 void *Heap::AllocSz(size_t& sz)
 {
@@ -169,28 +163,6 @@ void *Heap::AllocSz(size_t& sz)
 	}
 	return LAlloc(sz);
 }
-
-#ifdef flagHEAPLOG
-
-#undef AllocSz
-
-StaticMutex sHeapLogLock;
-
-static FILE *sLog = fopen(GetExeDirFile("heap.log"), "w");
-
-force_inline
-void *Heap::AllocSz(size_t& sz)
-{
-	size_t sz0 = sz;
-	void *ptr = AllocSz0(sz);
-	if(sLog) {
-		Mutex::Lock __(sHeapLogLock);
-		fprintf(sLog, "%x %zx %p\n", Thread::GetCurrentId(), sz, ptr);
-	}
-	return ptr;
-}
-
-#endif
 
 force_inline
 void Heap::FreeK(void *ptr, Page *page, int k)
@@ -256,12 +228,6 @@ void Heap::Free(void *ptr, Page *page, int k)
 force_inline
 void Heap::Free(void *ptr)
 {
-#ifdef flagHEAPLOG
-	if(sLog) {
-		Mutex::Lock __(sHeapLogLock);
-		fprintf(sLog, "-%x %p\n", Thread::GetCurrentId(), ptr);
-	}
-#endif
 	if(!ptr) return;
 	LLOG("Free " << ptr);
 	if(IsSmall(ptr)) {
@@ -399,21 +365,56 @@ size_t GetMemoryBlockSize_(void *ptr)
 
 #else
 
+
+#ifdef flagHEAPLOG
+
+#undef AllocSz
+
+StaticMutex sHeapLogLock;
+
+static FILE *sLog = fopen(GetExeDirFile("heap.log"), "w");
+
+void LogFree(void *ptr)
+{
+	if(sLog) {
+		Mutex::Lock __(sHeapLogLock);
+		fprintf(sLog, "-%x %p\n", Thread::GetCurrentId(), ptr);
+	}
+}
+
+void *LogAlloc(void *ptr, size_t sz)
+{
+	if(sLog) {
+		Mutex::Lock __(sHeapLogLock);
+		fprintf(sLog, "%x %zx %p\n", Thread::GetCurrentId(), sz, ptr);
+	}
+	return ptr;
+}
+
+#else
+
+inline void LogFree(void *ptr) {}
+
+inline void *LogAlloc(void *ptr, size_t sz) { return ptr; }
+
+#endif
+ 
 void *MemoryAlloc(size_t sz)
 {
 	LTIMING("MemoryAlloc");
-	return ThreadHeap()->AllocSz(sz);
+	return LogAlloc(ThreadHeap()->AllocSz(sz), sz);
 }
 
 void *MemoryAllocSz(size_t& sz)
 {
 	LTIMING("MemoryAllocSz");
-	return ThreadHeap()->AllocSz(sz);
+	return LogAlloc(ThreadHeap()->AllocSz(sz), sz);
 }
 
 void  MemoryFree(void *ptr)
 {
 	LTIMING("MemoryFree");
+	LogFree(ptr);
 	ThreadHeap()->Free(ptr);
 }
 
@@ -430,24 +431,26 @@ bool MemoryTryRealloc__(void *ptr, size_t& size)
 void *MemoryAlloc32()
 {
 	LTIMING("MemoryAlloc32");
-	return ThreadHeap()->Alloc32();
+	return LogAlloc(ThreadHeap()->Alloc32(), 32);
 }
 
 void  MemoryFree32(void *ptr)
 {
 	LTIMING("MemoryFree32");
+	LogFree(ptr);
 	ThreadHeap()->Free32(ptr);
 }
 
 void *MemoryAlloc48()
 {
 	LTIMING("MemoryAlloc48");
-	return ThreadHeap()->Alloc48();
+	return LogAlloc(ThreadHeap()->Alloc48(), 48);
 }
 
 void  MemoryFree48(void *ptr)
 {
 	LTIMING("MemoryFree48");
+	LogFree(ptr);
 	ThreadHeap()->Free48(ptr);
 }
 

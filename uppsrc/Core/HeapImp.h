@@ -457,9 +457,6 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	void Shutdown();
 	static void AuxFinalCheck();
 
-#ifdef flagHEAPLOG
-	void  *AllocSz0(size_t& sz);
-#endif
 	void  *AllocSz(size_t& sz);
 	void   Free(void *ptr);
 	size_t GetBlockSize(void *ptr);
