@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <plugin/lzma/lzma.h>
 
 using namespace Upp;
 
@@ -6,12 +7,12 @@ CONSOLE_APP_MAIN
 {
 	SetVppLogSizeLimit(INT_MAX);
 
-	FileIn in("C:/upp/heap.log");
-	FileOut out("C:/xxx/heap.bog");
-	
+	FileIn in("C:/xxx/heap.log");
+
 	Index<int> th;
 	Index<int64> ps;
-	
+
+	StringStream out;
 	while(!in.IsEof()) {
 		String s = in.GetLine();
 		CParser p(s);
@@ -37,6 +38,9 @@ CONSOLE_APP_MAIN
 			out.Put64(sz);
 		}
 	}
-	RDUMP(ps.GetCount());
-	RDUMP(th.GetCount());
+	Cout() << "Pointers: " << ps.GetCount() << ", threads: " << th.GetCount() << '\n';
+	Cout() << "Compressing\n";
+	String s = LZMACompress(out.GetResult());
+	Cout() << "Compressed length: " << s.GetCount() << "\n";
+	SaveFile("c:/xxx/heap.lzma", s);
 }
