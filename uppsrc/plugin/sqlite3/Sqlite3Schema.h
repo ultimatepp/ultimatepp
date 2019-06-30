@@ -52,19 +52,19 @@
                                              "drop index IDX_@x;")
 
 #ifndef REFERENCES
-#define REFERENCES(x)
+#define REFERENCES(n, x)            INLINE_ATTRIBUTE("REFERENCES " #n)
 #endif
 
 #ifndef REFERENCES_CASCADE
-#define REFERENCES_CASCADE(x)
+#define REFERENCES_CASCADE(n, x)    INLINE_ATTRIBUTE("REFERENCES " #n " ON DELETE CASCADE")
 #endif
 
 #ifndef REFERENCES_
-#define REFERENCES_(n, x)
+#define REFERENCES_(n, x)           INLINE_ATTRIBUTE("REFERENCES " #n "(" #x ")")
 #endif
 
 #ifndef REFERENCES_CASCADE_
-#define REFERENCES_CASCADE_(n, x)
+#define REFERENCES_CASCADE_(n, x)   INLINE_ATTRIBUTE("REFERENCES " #n "(" #x ") ON DELETE CASCADE")
 #endif
 
 #define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE(", primary key (" #k1 ", " #k2 ")")
