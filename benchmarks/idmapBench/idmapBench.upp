@@ -11,5 +11,6 @@ mainconfig
 	"" = "USEMALLOC",
 	"" = "MT",
 	"" = "USEMALLOC MT",
-	"" = "USEMALLOC MEMORYTEST";
+	"" = "USEMALLOC MEMORYTEST",
+	"" = "HEAPLOG";
 

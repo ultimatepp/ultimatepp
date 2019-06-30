@@ -1,5 +1,6 @@
 uses
-	Core;
+	Core,
+	plugin/lzma;
 
 file
 	HeapLog.cpp;
