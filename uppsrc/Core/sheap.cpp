@@ -119,6 +119,7 @@ void *Heap::AllocK(int k)
 force_inline
 void *Heap::Allok(int k)
 { // Try to alloc from the front-cache first
+	LTIMING("Allok");
 	FreeLink *ptr = cache[k];
 	if(ptr) {
 		cachen[k]++;
@@ -208,6 +209,7 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 force_inline
 void Heap::Free(void *ptr, Page *page, int k)
 {
+	LTIMING("Small Free");
 	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
 	if(page->heap != this) { // freeing block allocated in different thread

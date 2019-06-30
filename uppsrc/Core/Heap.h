@@ -1,13 +1,15 @@
 struct MemoryOptions { // sizes are in KB
-	int master_block = 16384; // master block size
-	int sys_block_limit = 16384; // > that this: allocate directly from the system
-	int master_reserve = 1; // free master blocks kept in reserve
-	int small_reserve = 256; // free formatted small block pages kept in reserve
+	int master_block; // master block size
+	int sys_block_limit; // > that this: allocate directly from the system
+	int master_reserve; // free master blocks kept in reserve
+	int large_reserve; // free large blocks kept in reserve
+	int small_reserve; // free formatted small block pages kept in reserve
+	
+	MemoryOptions(); // loads default options
+	~MemoryOptions(); // sets options
 };
 
 #ifdef UPP_HEAP
-
-void  MemorySetOptions(const MemoryOptions& opt);
 
 void *MemoryAllocPermanent(size_t size);
 
@@ -126,9 +128,10 @@ void TinyFree(int size, void *ptr)
 
 #else
 
-#ifndef flagHEAPOVERRIDE
+inline MemoryOptions::MemoryOptions() {}
+inline MemoryOptions::~MemoryOptions() {}
 
-inline void   MemorySetOptions(const MemoryOptions& opt) {}
+#ifndef flagHEAPOVERRIDE
 
 inline void  *MemoryAllocPermanent(size_t size)                { return malloc(size); }
 inline void  *MemoryAlloc(size_t size)     { return new byte[size]; }
