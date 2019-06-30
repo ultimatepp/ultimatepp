@@ -8,6 +8,30 @@ namespace Upp {
 
 #define LLOG(x) //  DLOG(x) // LOG((void *)this << ' ' << x)
 
+word Heap::HPAGE = 16 * 256; // 16MB default value
+word Heap::sys_block_limit = 16 * 256; // 16MB default value
+int  Heap::max_free_hpages = 1; // default value
+int  Heap::max_free_lpages = 2; // default value
+int  Heap::max_free_spages = 256; // default value (1MB)
+
+MemoryOptions::MemoryOptions()
+{
+	master_block = 4 * Heap::HPAGE;
+	sys_block_limit = 4 * Heap::sys_block_limit;
+	master_reserve = Heap::max_free_hpages;
+	small_reserve = Heap::max_free_spages;
+	large_reserve = Heap::max_free_lpages;
+}
+
+MemoryOptions::~MemoryOptions()
+{
+	Heap::HPAGE = (word)clamp(master_block / 4, 256, 65535);
+	Heap::sys_block_limit = (word)clamp((int)sys_block_limit / 4, 16, (int)Heap::HPAGE);
+	Heap::max_free_hpages = master_reserve;
+	Heap::max_free_spages = small_reserve;
+	Heap::max_free_lpages = large_reserve;
+}
+
 const char *asString(int i)
 {
 	static thread_local char h[4][1024];
