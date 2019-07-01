@@ -1,0 +1,11 @@
+uses
+	Core,
+	plugin/lzma;
+
+file
+	HeapIde.cpp;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC";
+
