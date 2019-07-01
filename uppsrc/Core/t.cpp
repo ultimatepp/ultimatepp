@@ -110,7 +110,7 @@ void AddModule(const LngEntry__* l, const char *name)
 			r.text = GetENUSc(l->text);
 		}
 		else
-		if(l->text && *l->text) {
+		if(l->text && *l->text && lr) {
 			LngRec& r = lr->Add();
 			r.lang = l->lang;
 			r.text = l->text;
