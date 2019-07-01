@@ -52,11 +52,11 @@
                                              "drop index IDX_@x;")
 
 #ifndef REFERENCES
-#define REFERENCES(n, x)            INLINE_ATTRIBUTE("REFERENCES " #n)
+#define REFERENCES(n)               INLINE_ATTRIBUTE("REFERENCES " #n)
 #endif
 
 #ifndef REFERENCES_CASCADE
-#define REFERENCES_CASCADE(n, x)    INLINE_ATTRIBUTE("REFERENCES " #n " ON DELETE CASCADE")
+#define REFERENCES_CASCADE(n)       INLINE_ATTRIBUTE("REFERENCES " #n " ON DELETE CASCADE")
 #endif
 
 #ifndef REFERENCES_

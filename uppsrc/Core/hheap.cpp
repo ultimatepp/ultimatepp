@@ -152,7 +152,7 @@ int Heap::HugeFree(void *ptr)
 	huge_4KB_count -= h->GetSize();
 	h = BlkHeap::Free(h);
 	int sz = h->GetSize();
-	if(h->IsFirst() && h->IsLast())
+	if(h->IsFirst() && h->IsLast()) {
 		if(free_hpages >= max_free_hpages) { // we have enough pages in the reserve, return to the system
 			LTIMING("Free Huge Page");
 			h->UnlinkFree();
@@ -171,6 +171,7 @@ int Heap::HugeFree(void *ptr)
 		}
 		else
 			free_hpages++;
+	}
 	return sz;
 }
 
