@@ -13,25 +13,13 @@ void Ide::Valgrind()
 {
 	if(!IsValgrind())
 		return;
-	static String ValgrindLogFile;
-	if(IsNull(ValgrindLogFile)) {
-		StringStream ss;
-		CreateHostRunDir()->Execute("valgrind --help", ss);
-		String txt = ss;
-		if(txt.Find("--log-file-exactly") > 0)
-		   ValgrindLogFile = "--log-file-exactly=";
-		else
-		   ValgrindLogFile = "--log-file=";
-		if(txt.Find("--xml-file") > 0)
-		   ValgrindLogFile = "--xml-file=";
-	}
 	if(!Build())
 		return;
 	One<Host> h = CreateHostRunDir();
 	h->ChDir(Nvl(rundir, GetFileFolder(target)));
 	String cmdline;
 	String fn = GetTempFileName();
-	cmdline << "valgrind --xml=yes --num-callers=40 " << ValgrindLogFile << fn << ' ';
+	cmdline << "valgrind --xml=yes --num-callers=40 --xml-file=" << fn << ' ';
 	String ValgSupp = ConfigFile("valgrind.supp");
 	if(!IsNull(LoadFile(ValgSupp)))
 		cmdline << "--suppressions=" << ValgSupp << ' ';
@@ -47,6 +35,19 @@ void Ide::Valgrind()
 	Sync();
 	String txt = LoadFile(fn);
 	DeleteFile(fn);
+	
+	VectorMap<String, bool> file_exists;
+	auto FileExistsCached = [&] (const String& s) {
+		int ii = file_exists.Find(s);
+		if(ii < 0) {
+			ii = file_exists.GetCount();
+			file_exists.Add(s, FileExists(s));
+		}
+		return file_exists[ii];
+	};
+
+	ClearErrorsPane();
+	
 	try {
 		XmlParser p(txt);
 		while(!p.IsTag())
@@ -55,9 +56,9 @@ void Ide::Valgrind()
 		while(!p.End()) {
 			if(p.Tag("error")) {
 				String hdr = "Error (missing description)";
-				String pos;
-				Vector<String> ln;
-				bool src = false;
+				ValueArray notes;
+				String     path;
+				int        lineno = Null;
 				while(!p.End()) {
 					if(p.Tag("what")) {
 						hdr = p.ReadText();
@@ -66,27 +67,16 @@ void Ide::Valgrind()
 					else
 					if(p.Tag("stack")) {
 						while(!p.End()) {
-							String ip = "?";
 							String obj;
 							String fn;
 							String dir;
 							String file;
-							String line;
+							int    line;
 							if(p.Tag("frame")) {
-								bool hasdir = false;
-								bool hasfile = false;
-								bool hasline = false;
-								bool haspos = false;
 								while(!p.End()) {
-									if(p.Tag("ip")) {
-										ip = p.ReadText();
-										p.SkipEnd();
-									}
-									else
 									if(p.Tag("obj")) {
 										obj = p.ReadText();
 										p.SkipEnd();
-										haspos = true;
 									}
 									else
 									if(p.Tag("fn")) {
@@ -97,37 +87,36 @@ void Ide::Valgrind()
 									if(p.Tag("dir")) {
 										dir = p.ReadText();
 										p.SkipEnd();
-										hasdir = true;
 									}
 									else
 									if(p.Tag("file")) {
 										file = p.ReadText();
 										p.SkipEnd();
-										hasfile = true;
 									}
 									else
 									if(p.Tag("line")) {
-										line = p.ReadText();
+										line = StrInt(p.ReadText());
 										p.SkipEnd();
-										hasline = true;
 									}
 									else
 										p.Skip();
 								}
-								src = src || hasline && hasdir && hasfile;
-								if(pos.IsEmpty() && haspos)
-									pos << fn << ' ' << ip << ' '<< obj;
-								if(hasline && hasdir && hasfile)
-									ln.Add(AppendFileName(dir, file) + ':' + line);
-								else {
-									String h;
-									h << fn << ' ' << ip << ' ' << obj;
-									if(hasdir && hasfile)
-										h << AppendFileName(dir, file);
-									else
-										h << file << ' ';
-									h << line;
-									ln.Add(h);
+								if(dir.GetCount() && file.GetCount() && !IsNull(line)) {
+									ErrorInfo f;
+									String p = AppendFileName(dir, file);
+									f.lineno = Null;
+									if(FileExistsCached(p)) {
+										f.file = p;
+										f.lineno = line;
+										if(IsNull(path)) {
+											path = p;
+											lineno = line;
+										}
+									}
+									f.linepos = 0;
+									f.kind = 0;
+									f.message << fn << ' ' << obj;
+									notes.Add(RawToValue(f));
 								}
 							}
 							else
@@ -137,11 +126,18 @@ void Ide::Valgrind()
 					else
 						p.Skip();
 				}
-				PutConsole(hdr);
-				PutConsole("  " + pos);
-				if(src)
-					for(int i = 0; i < ln.GetCount(); i++)
-						PutConsole("     " + ln[i]);
+				ErrorInfo f;
+				f.file = path;
+				f.lineno = lineno;
+				f.linepos = 0;
+				f.kind = 0;
+				f.message = hdr;
+				int linecy;
+				error.Add(f.file, f.lineno,
+				          AttrText(FormatErrorLine(f.message, linecy)).NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color),
+				          RawToValue(f));
+				error.Set(error.GetCount() - 1, "NOTES", notes);
+				error.SetLineCy(error.GetCount() - 1, linecy);
 			}
 			else
 				p.Skip();
@@ -149,5 +145,12 @@ void Ide::Valgrind()
 	}
 	catch(XmlError) {
 		PutConsole("Error parsing valgrind output");
+		return;
 	}
+	if(error.GetCount()) {
+		PutConsole("Done.");
+		SetBottom(BERRORS);
+	}
+	else
+		PutConsole("Done - no errors found.");
 }
