@@ -867,12 +867,8 @@ XmlNode& XmlNode::GetAdd(const char *tag)
 
 const XmlNode& XmlNode::Void()
 {
-	static XmlNode *h;
-	ONCELOCK {
-		static XmlNode empty;
-		h = &empty;
-	}
-	return *h;
+	static XmlNode h;
+	return h;
 }
 
 const XmlNode& XmlNode::operator[](const char *tag) const

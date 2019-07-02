@@ -205,7 +205,7 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		if(newsize > LUNIT * LPAGE - sizeof(BlkPrefix))
 			return false;
 		word wcount = word(((newsize ? newsize : 1) + sizeof(BlkPrefix) + LUNIT - 1) >> 8);
-		size_t dummy;
+		size_t dummy = 0;
 		if(wcount == h->GetSize() || lheap.TryRealloc(h, wcount, dummy)) {
 			newsize = ((int)wcount * LUNIT) - sizeof(BlkPrefix);
 			LHITCOUNT("Large realloc true");
