@@ -738,12 +738,8 @@ Value ErrorValue(const char *s) {
 }
 
 const Value& ErrorValue() {
-	static Value *p;
-	ONCELOCK {
-		static Value v = ErrorValue(String());
-		p = &v;
-	}
-	return *p;
+	static Value v = ErrorValue(String());
+	return v;
 }
 
 String GetErrorText(const Value& v) {

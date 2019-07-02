@@ -66,7 +66,7 @@ bool Vector<T>::ReAlloc(int newalloc)
 		newvector = newalloc ? MemoryAllocSz(sz) : NULL;
 	alloc = newalloc == INT_MAX ? INT_MAX // maximum alloc reached
 	        : (int)((sz - sz0) / sizeof(T) + newalloc); // adjust alloc to real memory size
-	if(vector)
+	if(vector && newvector)
 		memcpy(newvector, vector, (size_t)items * sizeof(T));
 	vector = (T *)newvector;
 	return alloced;
