@@ -354,8 +354,15 @@ void IconDes::ExportPngs()
 {
 	String dir = SelectDirectory();
 	if(!dir.IsEmpty())
-		for(int i = 0; i < GetCount(); i++)
-			PNGEncoder().SaveFile(AppendFileName(dir, GetName(i) + ".png"), GetImage(i));
+		for(int i = 0; i < GetCount(); i++) {
+			dword f = GetFlags(i);
+			String n = GetName(i);
+			if(f & IML_IMAGE_FLAG_UHD)
+				n << ".uhd";
+			if(f & IML_IMAGE_FLAG_DARK)
+				n << ".dark";
+			PNGEncoder().SaveFile(AppendFileName(dir, n + ".png"), GetImage(i));
+		}
 }
 
 void IconDes::InsertIml()
