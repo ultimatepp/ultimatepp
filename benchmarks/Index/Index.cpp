@@ -17,54 +17,53 @@ CONSOLE_APP_MAIN
 		Vector<Index<int> > v;
 		v.SetCount(v_num);
 		{
-			RTIMING("FindAdd v_num outer");
-			for (int j = 0; j < v_num; ++j)
-				for (int i = 0; i < isize; ++i)
+			RTIMING("inner FindAdd");
+			for (int i = 0; i < isize; ++i)
+				for (int j = 0; j < v_num; ++j)
 					v[j].FindAdd(i);
 		}
 		{
-			RTIMING("UnlinkKey v_num outer");
-			for (int j = 0; j < v_num; ++j)
-				for (int i = 0; i < isize; ++i)
+			RTIMING("inner UnlinkKey");
+			for (int i = 0; i < isize; ++i)
+				for (int j = 0; j < v_num; ++j)
 					v[j].UnlinkKey(i);
 		}
-		RTIMING("Sweep v_num outer");
-		const int jsize = v_num;
-		for (int j = 0; j < jsize; ++j)
-			v[j].Sweep();
+	//	RTIMING("inner Sweep");
+	//	const int jsize = v_num;
+	//	for (int j = 0; j < jsize; ++j)
+	//		v[j].Sweep();
 	}
 	{
 		Vector<Index<int> > v;
 		v.SetCount(v_num);
 		{
-			RTIMING("FindAdd v_num inner");
-			for (int i = 0; i < isize; ++i)
-				for (int j = 0; j < v_num; ++j)
+			RTIMING("outer FindAdd");
+			for (int j = 0; j < v_num; ++j)
+				for (int i = 0; i < isize; ++i)
 					v[j].FindAdd(i);
 		}
 		{
-			RTIMING("UnlinkKey v_num inner");
-			for (int i = 0; i < isize; ++i)
-				for (int j = 0; j < v_num; ++j)
+			RTIMING("outer UnlinkKey");
+			for (int j = 0; j < v_num; ++j)
+				for (int i = 0; i < isize; ++i)
 					v[j].UnlinkKey(i);
 		}
-		RTIMING("Sweep v_num inner");
-		const int jsize = v_num;
-		for (int j = 0; j < jsize; ++j)
-			v[j].Sweep();
+	//	RTIMING("Sweep v_num outer");
+	//	const int jsize = v_num;
+	//	for (int j = 0; j < jsize; ++j)
+	//		v[j].Sweep();
 	}
-
 	{
 		std::set<int> *v = new std::set<int>[v_num];
 		{
-			RTIMING("insert v_num outer");
+			RTIMING("outer insert");
 			for (int j = 0; j < v_num; ++j)
 				for (int i = 0; i < isize; ++i)
 					v[j].insert(i);
 		}
 	
 		{
-			RTIMING("erase v_num outer");
+			RTIMING("outer erase");
 			for (int j = 0; j < v_num; ++j)
 				for (int i = 0; i < isize; ++i)
 					v[j].erase(i);
@@ -75,14 +74,14 @@ CONSOLE_APP_MAIN
 	{
 		std::set<int> *v = new std::set<int>[v_num];
 		{
-			RTIMING("insert v_num inner");
+			RTIMING("inner insert");
 			for (int i = 0; i < isize; ++i)
 				for (int j = 0; j < v_num; ++j)
 					v[j].insert(i);
 		}
 	
 		{
-			RTIMING("erase v_num inner");
+			RTIMING("inner erase");
 			for (int i = 0; i < isize; ++i)
 				for (int j = 0; j < v_num; ++j)
 					v[j].erase(i);
