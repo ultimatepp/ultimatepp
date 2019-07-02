@@ -8,11 +8,11 @@ CONSOLE_APP_MAIN
 #ifdef _DEBUG
 	const int v_num = 10000;
 #else
-	const int v_num = 1000;
+	const int v_num = 1000000;
 #endif
 
-	const int isize = 100;
-	const int N = 100;
+	const int isize = 10;
+	const int N = 1;
 	
 	Vector<int> data;
 	for(int i = 0; i < isize * v_num; i++)
@@ -23,51 +23,51 @@ CONSOLE_APP_MAIN
 			Vector<Index<int> > v;
 			v.SetCount(v_num);
 			{
-				RTIMING("inner FindAdd v_num");
+				RTIMING("inner FindAdd");
 				int *s = data;
 				for (int i = 0; i < isize; ++i)
 					for (int j = 0; j < v_num; ++j)
 						v[j].FindAdd(*s++);
 			}
 			{
-				RTIMING("inner UnlinkKey v_num");
+				RTIMING("inner UnlinkKey");
 				int *s = data;
 				for (int i = 0; i < isize; ++i)
 					for (int j = 0; j < v_num; ++j)
 						v[j].UnlinkKey(*s++);
 			}
-			RTIMING("inner Sweep v_num");
-			const int jsize = v_num;
-			for (int j = 0; j < jsize; ++j)
-				v[j].Sweep();
+		//	RTIMING("inner Sweep");
+		//	const int jsize = v_num;
+		//	for (int j = 0; j < jsize; ++j)
+		//		v[j].Sweep();
 		}
 		{
 			Vector<Index<int> > v;
 			v.SetCount(v_num);
 			{
-				RTIMING("outer FindAdd v_num");
+				RTIMING("outer FindAdd");
 				int *s = data;
 				for (int j = 0; j < v_num; ++j)
 					for (int i = 0; i < isize; ++i)
 						v[j].FindAdd(*s++);
 			}
 			{
-				RTIMING("outer UnlinkKey v_num");
+				RTIMING("outer UnlinkKey");
 				int *s = data;
 				for (int j = 0; j < v_num; ++j)
 					for (int i = 0; i < isize; ++i)
 						v[j].UnlinkKey(*s++);
 			}
-			RTIMING("outer Sweep v_num");
-			const int jsize = v_num;
-			for (int j = 0; j < jsize; ++j)
-				v[j].Sweep();
+		//	RTIMING("outer Sweep");
+		//	const int jsize = v_num;
+		//	for (int j = 0; j < jsize; ++j)
+		//		v[j].Sweep();
 		}
 	
 		{
 			std::set<int> *v = new std::set<int>[v_num];
 			{
-				RTIMING("outer insert v_num");
+				RTIMING("outer insert");
 				int *s = data;
 				for (int j = 0; j < v_num; ++j)
 					for (int i = 0; i < isize; ++i)
@@ -75,7 +75,7 @@ CONSOLE_APP_MAIN
 			}
 		
 			{
-				RTIMING("outer erase v_num");
+				RTIMING("outer erase");
 				int *s = data;
 				for (int j = 0; j < v_num; ++j)
 					for (int i = 0; i < isize; ++i)
@@ -87,7 +87,7 @@ CONSOLE_APP_MAIN
 		{
 			std::set<int> *v = new std::set<int>[v_num];
 			{
-				RTIMING("inner insert v_num");
+				RTIMING("inner insert");
 				int *s = data;
 				for (int i = 0; i < isize; ++i)
 					for (int j = 0; j < v_num; ++j)
@@ -95,7 +95,7 @@ CONSOLE_APP_MAIN
 			}
 		
 			{
-				RTIMING("inner erase v_num");
+				RTIMING("inner erase");
 				int *s = data;
 				for (int i = 0; i < isize; ++i)
 					for (int j = 0; j < v_num; ++j)
