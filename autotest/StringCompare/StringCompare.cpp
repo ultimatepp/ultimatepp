@@ -16,6 +16,10 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	String a = "1911s";
+	String b = "1911–12 in Scottish football";
+	ASSERT(a < b);
+
 	for(int q = 0; q < N; q++) {
 		LDUMP(q);
 		if(q % 10000 == 0)
