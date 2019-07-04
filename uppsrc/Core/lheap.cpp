@@ -48,7 +48,7 @@ void *Heap::TryLAlloc(int i0, word wcount)
 		LBlkHeader *h = l->next;
 		if(h != l) {
 			ASSERT(h->GetSize() >= wcount);
-			if(h->GetSize() == LPAGE) {
+			if(h->GetSize() == LPAGE && this != &aux) {
 				free_lpages--;
 				ASSERT(free_lpages >= 0);
 			}
@@ -61,7 +61,7 @@ void *Heap::TryLAlloc(int i0, word wcount)
 	return NULL;
 }
 
-#if 0
+#ifdef LSTAT
 int stat[65536];
 
 EXITBLOCK {
@@ -96,7 +96,7 @@ void *Heap::LAlloc(size_t& size)
 
 	word wcount = word((size + sizeof(BlkPrefix) + LUNIT - 1) >> 8);
 
-#if 0
+#ifdef LSTAT
 	stat[wcount]++;
 #endif
 
@@ -114,7 +114,6 @@ void *Heap::LAlloc(size_t& size)
 
 	Mutex::Lock __(mutex);
 	aux.LargeFreeRemoteRaw();
-#if 1 // only adopt abandoned blocks that we need
 	ptr = aux.TryLAlloc(i0, wcount);
 	if(ptr) { // found in aux, we need to move large page from aux to this heap
 		LLOG("Found in aux");
@@ -124,14 +123,6 @@ void *Heap::LAlloc(size_t& size)
 		MoveLargeTo((DLink *)((byte *)h - LOFFSET), this);
 		return ptr;
 	}
-#else
-	if(aux.large->next != aux.large) {
-		aux.MoveLargeTo(this); // adopt all abandoned large blocks
-		ptr = TryLAlloc(i0, wcount);
-		if(ptr)
-			return ptr;
-	}
-#endif
 
 	LTIMING("Large More");
 	DLink *ml = (DLink *)HugeAlloc(((LPAGE + 1) * LUNIT) / 4096);
@@ -159,7 +150,7 @@ void Heap::LFree(void *ptr)
 		LTIMING("Large Free");
 		LBlkHeader *fh = lheap.Free((LBlkHeader *)h);
 		if(fh->GetSize() == LPAGE) {
-			if(free_lpages >= max_free_lpages) {
+			if(free_lpages >= max_free_lpages || this == &aux) {
 				LTIMING("FreeLargePage");
 				fh->UnlinkFree();
 				FreeLargePage((DLink *)((byte *)fh - LOFFSET));
