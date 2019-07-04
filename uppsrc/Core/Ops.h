@@ -273,7 +273,7 @@ int fast_memcmp(const char *a, const char *b, size_t len)
 		b += 2;
 	}
 	if((len & 1) != 0 && *a != *b)
-		return *a < *b ? -1 : 1;
+		return (byte)*a < (byte)*b ? -1 : 1;
 	return 0;
 }
 #else
