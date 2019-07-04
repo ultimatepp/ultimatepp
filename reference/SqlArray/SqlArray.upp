@@ -1,4 +1,4 @@
-description "Example of editing SQL table using SqlArray";
+description "Example of editing SQL table using SqlArray\377";
 
 uses
 	CtrlLib,
