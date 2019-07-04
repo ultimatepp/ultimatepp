@@ -279,8 +279,13 @@ int Value::Compare(const Value& v) const
 template <class T>
 const T& GetStaticNull()
 {
-	static T q;
-	return q;
+	static T *q;
+	ONCELOCK {
+		static T x;
+		SetNull(x);
+		q = &x;
+	}
+	return *q;
 }
 
 template <class T>
