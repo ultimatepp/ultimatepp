@@ -1,0 +1,12 @@
+description "Using CtrlMapper to edit C++ structure in dialog\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	CtrlMapper.lay;
+
+mainconfig
+	"" = "GUI";
+
