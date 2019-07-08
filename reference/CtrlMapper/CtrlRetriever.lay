@@ -1,0 +1,7 @@
+LAYOUT(CtrlRetrieverLayout, 200, 88)
+	ITEM(Label, dv___0, SetLabel(t_("Text")).LeftPosZ(8, 32).TopPosZ(8, 19))
+	ITEM(EditString, text, LeftPosZ(44, 152).TopPosZ(8, 19))
+	ITEM(Option, option, SetLabel(t_("Option")).LeftPosZ(44, 108).TopPosZ(36, 15))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(132, 64).TopPosZ(60, 24))
+END_LAYOUT
+
