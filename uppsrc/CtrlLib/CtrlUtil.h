@@ -428,9 +428,9 @@ private:
 
 	Array<Item> item;
 
+public:
 	void Put(Item *newitem)                       { item.Add(newitem); }
 
-public:
 	template <class T>
 	void Put(Ctrl& ctrl, T& val);
 
