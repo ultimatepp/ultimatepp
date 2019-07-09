@@ -851,7 +851,7 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 	int x = itemx - (levelcx >> 1);
 	itemclickpos.x = p.x - itemx;
 	itemclickpos.y = p.y + org.y - l.y;
-	if(p.x > x - 6 && p.x < x + 6) {
+	if(p.x > x - DPI(6) && p.x < x + DPI(6)) {
 		if(down)
 			Open(l.itemi, !IsOpen(l.itemi));
 	}
