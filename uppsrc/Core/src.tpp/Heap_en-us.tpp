@@ -130,10 +130,10 @@ the standard log.&]
 [s5;:Upp`:`:MemoryLimitKb`(int`): [@(0.0.255) void]_[* MemoryLimitKb]([@(0.0.255) int]_[*@3 k
 b])&]
 [s2;%% This debug / diagnostics function limits memory usage to [%-*@3 kb] 
-KBs. If application allocates more, it stops with error.&]
-[s0;%% &]
+KBs. If the application allocates more, it stops with error.&]
+[s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Heap tuning]]}}&]
 [s0;%% &]
 [s0;%% Heap tuning is provided through MemoryOptions class. Constructor 
-of this class sets the defualt values to individual parameters, 
+of this class sets the default values to individual parameters, 
 destructor applies them to the heap subsystem.]]
