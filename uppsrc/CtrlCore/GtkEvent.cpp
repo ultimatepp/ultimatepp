@@ -73,7 +73,7 @@ Ctrl *Ctrl::GetTopCtrlFromId(int id)
 	int q = FindId(id);
 	if(q >= 0) {
 		Ctrl *p = wins[q].ctrl;
-		if(p && p->top)50
+		if(p && p->top)
 			return p;
 	}
 	return NULL;

@@ -144,7 +144,7 @@ String Patch::GetPatchedFile(int i) const
 	String path = GetPath(i);
 	if(FileExists(path)) {
 		String s = LoadFile(GetPath(i));
-		bool crlf = s.Find('\r') >= 0;
+		crlf = s.Find('\r') >= 0;
 		lines = Split(Filter(s, [](int c) { return c == '\r' ? 0 : c; }), '\n', false);
 	}
 
