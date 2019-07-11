@@ -159,7 +159,6 @@ String Patch::GetPatchedFile(int i) const
 				if(li < 0)
 					return false;
 				for(int i = 0; i < ch.orig.GetCount(); i++) {
-					if(li + i < lines.GetCount()) DDUMP(lines[li + i]);
 					if(li + i >= lines.GetCount() || ch.orig[i] != lines[li + i])
 						return false;
 				}
