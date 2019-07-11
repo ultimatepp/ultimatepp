@@ -128,7 +128,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
 int PatchDiff::GetFileIndex() const
 {
 	int ii = files.GetCursor();
-	return ii >= 0 ? files.Get(ii).data : -1;
+	return ii >= 0 ? (int)files.Get(ii).data : -1;
 }
 
 void PatchDiff::File()
