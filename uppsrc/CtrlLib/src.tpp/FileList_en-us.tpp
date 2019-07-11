@@ -58,6 +58,8 @@ nt]_[*@3 ii], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon])&]
 [s2;%% Replaces an icon of file item.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:FileList`:`:Add`(const Upp`:`:FileList`:`:File`&`): [@(0.0.255) void]_[* Add](
+[@(0.0.255) const]_[_^Upp`:`:FileList`:`:File^ File][@(0.0.255) `&]_[*@3 f])&]
 [s5;:FileList`:`:Add`(const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`,bool`): [@(0.0.255) v
 oid]_[* Add]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name], 
 [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 

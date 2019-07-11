@@ -787,7 +787,6 @@ public:
 		String LoadConflictFile(const String& n);
 		void   GotoDiffLeft(int line, DiffDlg *df);
 		void   GotoDiffRight(int line, FileDiff *df);
-		void   Patch();
 		void   SvnHistory();
 
 	void      Edit(Bar& menu);
@@ -947,6 +946,7 @@ public:
 		void  GotoDirDiffLeft(int line, DirDiffDlg *df);
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
+		void  DoPatchDiff();
 		void  AsErrors();
 		void  RemoveDs();
 

@@ -738,14 +738,6 @@ void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const
 	diff.Execute();
 }
 
-void Ide::Patch()
-{
-	if(IsNull(editfile))
-		return;
-	PatchDiff diffdlg(AnySourceFs());
-	diffdlg.Execute(editfile);
-}
-
 void Ide::SvnHistory()
 {
 	if(IsNull(editfile))
