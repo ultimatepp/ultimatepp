@@ -523,7 +523,6 @@ void Ide::DoPatchDiff()
 	if(!dlg.IsOpen()) {
 		dlg.SetFont(veditorfont);
 		dlg.Maximize();
-		dlg.Title("Compare directories");
 		dlg.Open(patch, dir.GetKeys());
 		dlg.OpenMain();
 	}
