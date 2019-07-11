@@ -489,8 +489,6 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	    .Help("Convert actual file to different encoding");
 	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
 	    .Help("Show differences between the project and arbitrary files");
-	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
-	    .Help("Show differences with patch file applied");
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
 		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
@@ -770,6 +768,7 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
 		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
+		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));
 	}
 }
 

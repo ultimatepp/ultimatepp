@@ -19,7 +19,7 @@ TextCompareCtrl::TextCompareCtrl()
 	maxwidth = 0;
 	tabsize = 4;
 	gutter_width = 0;
-	gutter_bg = Color(151, 190, 239);
+	gutter_bg = AdjustIfDark(Color(151, 190, 239));
 	gutter_fg = SGreen;
 	cursor = anchor = Null;
 	gutter_capture = false;
@@ -264,7 +264,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
 	
-	Color diffpaper = Blend(LtRed(), White(), 192);
+	Color diffpaper = SYellow;
 
 	int n_width = show_line_number ? number_width : 0;
 	if(show_line_number) {
@@ -272,7 +272,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
 			Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
-			Color ink = l.diff ? Red(): Gray();
+			Color ink = l.diff ? SRed(): SGray();
 			draw.DrawRect(0, y, n_width, letter.cy, paper);
 			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
 			if(!IsNull(l.number))

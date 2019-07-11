@@ -507,6 +507,30 @@ void Ide::DoDirDiff()
 		dlg.SetFocus();
 }
 
+void Ide::DoPatchDiff()
+{
+	String patch = SelectFileOpen("Patch files (*.diff *.patch)\t*.diff *.patch\nAll files\t*.*");
+	if(IsNull(patch))
+		return;
+	Index<String> dir;
+	if(editfile.GetCount())
+		dir.Add(GetFileFolder(editfile));
+	Vector<String> d = GetUppDirs();
+	for(int i = 0; i < d.GetCount(); i++)
+		dir.FindAdd(d[i]);
+	static PatchDiff dlg;
+	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
+	if(!dlg.IsOpen()) {
+		dlg.SetFont(veditorfont);
+		dlg.Maximize();
+		dlg.Title("Compare directories");
+		dlg.Open(patch, dir.GetKeys());
+		dlg.OpenMain();
+	}
+	else
+		dlg.SetFocus();
+}
+
 void Ide::AsErrors()
 {
 	ClearErrorsPane();

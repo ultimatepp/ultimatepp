@@ -6,7 +6,8 @@ file
 	TextDiff.cpp,
 	TextCtrl.cpp,
 	DiffCtrl.cpp,
-	PatchDiff.cpp,
 	DirDiff.cpp,
+	patch.cpp,
+	PatchDiff.cpp,
 	Diff.iml;
 

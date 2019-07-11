@@ -209,15 +209,6 @@ struct FileDiff : DiffDlg {
 	FileSel& fs;
 };
 
-struct PatchDiff : FileDiff {
-	PatchDiff(FileSel& fs) : FileDiff(fs) {}
-
-	virtual void Open();
-
-	void Copy(FileIn& in, FileIn& oin, int& l, int ln, int n);
-	void LoadDiff(const char *fn);
-};
-
 class DirDiffDlg : public TopWindow {
 public:
 	virtual bool HotKey(dword key);
@@ -243,7 +234,11 @@ private:
 	EditString                 lfile, rfile;
 	Button                     copyleft, copyright;
 	
+	enum { NORMAL_FILE, DELETED_FILE, NEW_FILE, FAILED_FILE, PATCHED_FILE };
+	
 	Array<Tuple<String, String, String, int>> list;
+
+	static bool FileEqual(const String& f1, const String& f2, int& n);
 
 	void GatherFilesDeep(Index<String>& files, const String& base, const String& path);
 	void Compare();
@@ -251,8 +246,13 @@ private:
 	void ClearFiles();
 	void File();
 	void Copy(bool left);
+	FileList::File MakeFile(int i);
+	
+	friend class PatchDiff;
 
 public:
+	Function<Image(const char *path)> WhenIcon;
+
 	TextDiffCtrl               diff;
 
 	typedef DirDiffDlg CLASSNAME;
@@ -269,6 +269,57 @@ public:
 	DirDiffDlg();
 };
 
+struct Patch {
+	struct Chunk {
+		int            line;
+		Vector<String> orig;
+		Vector<String> patch;
+		String         src;
+	};
+	
+	VectorMap<String, Array<Chunk>> file;
+	String  common_path;
+	String  target_dir;
+
+	static int MatchLen(const String& a, const String& b);
+	int        MatchCount(const char *dir);
+
+public:
+	bool Load(Stream& in, Progress& pi);
+	bool Load(const char *fn, Progress& pi);
+	bool MatchFiles(const Vector<String>& dir, Progress& pi);
+	void SetTargetDir(const char *dir) { target_dir = AppendFileName(dir, common_path); }
+	
+	int    GetCount() const            { return file.GetCount(); }
+	String GetTargetDir() const        { return target_dir; }
+	String GetFile(int i) const        { return file.GetKey(i); }
+	String GetPath(int i) const        { return AppendFileName(target_dir, file.GetKey(i)); }
+	String GetPatch(int i) const;
+	String GetPatchedFile(int i) const;
+};
+
+class PatchDiff : public DirDiffDlg {
+	Patch  patch;
+	String file_path;
+	String patched_file;
+	
+	EditString patch_file;
+	EditString target_dir;
+	Label      failed;
+
+	OpenFileButton  selfile;
+	SelectDirButton seldir;
+	
+	int             failed_count = 0;
+	
+	void File();
+	int  GetFileIndex() const;
+
+public:
+	bool Open(const char *patch_path, const Vector<String>& target_dirs);
+	
+	PatchDiff();
+};
 
 };
 

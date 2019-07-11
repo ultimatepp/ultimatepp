@@ -298,6 +298,14 @@ void FileList::SetIcon(int ii, const Image& icon)
 	KillEdit();
 }
 
+void FileList::Add(const File& f)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m = f;
+	ColumnList::Add(v, !m.isdir);
+}
+
 void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
 				   const String& desc, Font descfont, Value data, Color uln,
