@@ -378,7 +378,6 @@ void Ide::SetupFormat() {
 	ide.gnome.Hide();
 	ide.xterm.Hide();
 	ide.mate.Hide();
-	
 #endif
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
@@ -544,6 +543,17 @@ void Ide::SetupFormat() {
 	String usc_path = GetHomeDirFile("usc.path");
 	ide.uscpath <<= LoadFile(usc_path);
 	
+	fnt.defaults << [&] {
+		Ide def;
+
+		ed.Set(def.editorfont);
+		vf.Set(def.veditorfont);
+		con.Set(def.consolefont);
+		tf.Set(def.tfont);
+		f1.Set(def.font1);
+		f2.Set(def.font2);
+	};
+
 	for(;;) {
 		int c = dlg.Run();
 		if(IsNull(ide.uscpath))

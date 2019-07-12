@@ -466,7 +466,7 @@ LAYOUT(StatLayout, 732, 552)
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(SetupFontLayout, 528, 148)
+LAYOUT(SetupFontLayout, 528, 176)
 	ITEM(Label, dv___0, SetLabel(t_("Normal")).LeftPosZ(4, 48).TopPosZ(4, 19))
 	ITEM(DropList, face, HSizePosZ(52, 268).TopPosZ(4, 19))
 	ITEM(DropList, height, RightPosZ(210, 50).TopPosZ(4, 19))
@@ -503,6 +503,7 @@ LAYOUT(SetupFontLayout, 528, 148)
 	ITEM(Option, tbold, SetLabel(t_("Bold")).RightPosZ(162, 44).TopPosZ(124, 18))
 	ITEM(Option, titalic, SetLabel(t_("Italic")).RightPosZ(114, 44).TopPosZ(124, 18))
 	ITEM(Option, tnaa, SetLabel(t_("NonAntiAliased")).RightPosZ(8, 100).TopPosZ(124, 18))
+	ITEM(Button, defaults, SetLabel(t_("Restore defaults")).LeftPosZ(412, 116).TopPosZ(152, 24))
 END_LAYOUT
 
 LAYOUT(SetupHlLayout, 544, 300)
