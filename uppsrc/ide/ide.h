@@ -52,7 +52,7 @@ void Puts(const char *s);
 
 Display& BoldDisplay();
 
-class Console : public LineEdit {
+class Console : public CodeEditor {
 public:
 	virtual bool Key(dword key, int count);
 	virtual void LeftDouble(Point p, dword);

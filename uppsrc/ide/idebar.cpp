@@ -868,6 +868,10 @@ void Ide::ConsoleMenu(Bar& menu)
 		.Key(K_CTRL_V)
 		.Help("Append selection to system console");
 	menu.Separator();
+	menu.Add(AK_FIND, [=] {
+		console.FindReplace(false, true, false);
+	});
+	menu.Separator();
 	menu.Add("Clear", THISBACK(ConsoleClear))
 		.Help("Empty system console");
 }

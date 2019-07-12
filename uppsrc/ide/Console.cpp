@@ -16,7 +16,7 @@ Console::Console() {
 	console = false;
 	SetReadOnly();
 	NoHorzScrollbar();
-	SetColor(PAPER_READONLY, SColorPaper);
+	SetColor(LineEdit::PAPER_READONLY, SColorPaper);
 	input.Height(EditString::GetStdHeight());
 	input.SetFrame(Single<TopTextFrame>());
 	AddFrame(input);
@@ -99,7 +99,7 @@ bool Console::Key(dword key, int count) {
 			WhenSelect();
 		return true;
 	}
-	return LineEdit::Key(key, count);
+	return MenuBar::Scan(WhenBar, key) || LineEdit::Key(key, count);
 }
 
 void Console::ToErrors(const String& s)
