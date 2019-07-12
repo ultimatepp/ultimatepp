@@ -7,7 +7,7 @@
 
 #ifdef PLATFORM_WIN32
 
-#include <TlHelp32.h>
+#include <tlhelp32.h>
 
 Vector<DWORD> GetChildProcessList(DWORD processId) {
 	Vector<DWORD> child, all, parents;
