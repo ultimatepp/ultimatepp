@@ -2,25 +2,7 @@
 
 namespace Upp {
 
-int Patch::MatchLen(const String& a, const String& b)
-{
-	int n = min(a.GetLength(), b.GetLength());
-	for(int i = 0; i < n; i++)
-		if(a[i] != b[i])
-			return i;
-	return n;
-}
-
-int Patch::MatchCount(const char *dir)
-{
-	int count = 0;
-	for(const String& p : file.GetKeys())
-		if(FileExists(AppendFileName(dir, p)))
-			count++;
-	return count;
-}
-
-bool Patch::Load(Stream& in, Progress& pi)
+bool Patch::Load0(Stream& in, Progress& pi)
 {
 	pi.SetText("Loading patch file");
 	target_dir.Clear();
@@ -40,7 +22,7 @@ bool Patch::Load(Stream& in, Progress& pi)
 		int q = ln.Find('\t');
 		if(q >= 0)
 			ln.Trim(q);
-		String fn = UnixPath(ln);
+		String fn = UnixPath(TrimLeft("\"", TrimRight("\"", ln)));
 		Array<Chunk>& fp = file.GetAdd(fn);
 		while(!ln.StartsWith("@@")) {
 			if(pi.StepCanceled())
@@ -81,11 +63,15 @@ bool Patch::Load(Stream& in, Progress& pi)
 			}
 		}
 	}
+
 	return ok;
 }
 
-bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
+bool Patch::Load(Stream& in, Progress& pi)
 {
+	common_path.Clear();
+	if(!Load0(in, pi))
+		return false;
 	const Vector<String>& h = file.GetKeys();
 	if(h.GetCount() == 0)
 		return false;
@@ -96,7 +82,34 @@ bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
 	common_path.TrimStart("/");
 	for(int i = 0; i < h.GetCount(); i++)
 		file.SetKey(i, h[i].Mid(common_path.GetCount() + 1));
+	return true;
+}
 
+int Patch::MatchLen(const String& a, const String& b)
+{
+	int n = min(a.GetLength(), b.GetLength());
+	int q = 0;
+	for(int i = 0; i < n; i++) {
+		if(a[i] != b[i])
+			return q;
+		if(a[i] == '/')
+			q = i;
+	}
+	return a[n] || b[n] ? b[n] == '/' || a[n] == '/' ? n : q : n;
+}
+
+int Patch::MatchCount(const char *dir)
+{
+	int count = 0;
+	for(const String& p : file.GetKeys()) {
+		if(FileExists(AppendFileName(dir, p)))
+			count++;
+	}
+	return count;
+}
+
+bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
+{
 	pi.SetText("Matching directories");
 	int best = 0;
 	String com_path = common_path;
