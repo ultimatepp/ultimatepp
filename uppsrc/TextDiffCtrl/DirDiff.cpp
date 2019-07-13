@@ -6,6 +6,7 @@ DirDiffDlg::DirDiffDlg()
 {
 	int div = HorzLayoutZoom(4);
 	int cy = dir1.GetStdSize().cy;
+
 	int bcx = GetTextSize(t_("Compare"), StdFont()).cx * 12 / 10 + 2 * div;
 
 	hidden.SetLabel(t_("Hidden"));
@@ -15,7 +16,7 @@ DirDiffDlg::DirDiffDlg()
 	removed.SetColor(Red()).SetLabel(t_("Removed"));
 	
 	compare.SetLabel(t_("Compare"));
-	int bcy = compare.GetStdSize().cy;
+	int bcy = max(cy, compare.GetStdSize().cy);
 	
 	files_pane.Add(dir1.TopPos(0, cy).HSizePos());
 	files_pane.Add(dir2.TopPos(cy + div, cy).HSizePos());

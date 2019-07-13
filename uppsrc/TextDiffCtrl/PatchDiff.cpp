@@ -85,11 +85,15 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
 	target_dir <<= Null;
 
 	Progress pi;
-	if(!patch.Load(patch_path, pi))
+	if(!patch.Load(patch_path, pi)) {
+		Exclamation("Failed to load the patch file!");
 		return false;
+	}
 	
-	if(!patch.MatchFiles(target_dirs, pi))
-		return false;
+	if(!patch.MatchFiles(target_dirs, pi)) {
+		Exclamation("Unable to match the directory structure!");
+		return true;
+	}
 
 	String target_dir = patch.GetTargetDir();
 

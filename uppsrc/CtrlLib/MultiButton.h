@@ -115,7 +115,7 @@ private:
 	void GetPos(int ii, int& x, int& cx);
 	int  ChState(int i);
 	Rect GetMargin();
-	void Lay(Rect& r);
+	void Lay(Rect& r, bool minsize = false);
 	bool ComplexFrame();
 	bool Metrics(int& border, int& lx, int &rx, const Rect& r);
 	bool Metrics(int& border, int& lx, int &rx);

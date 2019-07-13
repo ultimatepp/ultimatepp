@@ -523,8 +523,8 @@ void Ide::DoPatchDiff()
 	if(!dlg.IsOpen()) {
 		dlg.SetFont(veditorfont);
 		dlg.Maximize();
-		dlg.Open(patch, dir.GetKeys());
-		dlg.OpenMain();
+		if(dlg.Open(patch, dir.GetKeys()))
+			dlg.OpenMain();
 	}
 	else
 		dlg.SetFocus();
