@@ -173,9 +173,6 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool absolute) = 0;
 
 protected:
-	static bool   ReadBool(CParser& p);
-	static double ReadDouble(CParser& p);
-	static Pointf ReadPoint(CParser& p, Pointf current, bool rel);
 	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
 	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,

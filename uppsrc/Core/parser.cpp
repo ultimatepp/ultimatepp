@@ -306,6 +306,22 @@ uint64  CParser::ReadNumber64(int base)
 	return n;
 }
 
+bool CParser::IsDouble2() const
+{
+	const char *t = term;
+	if(*t == '-' || *t == '+') {
+		t++;
+		while(*t <= ' ')
+			t++;
+	}
+	if(*t == '.') {
+		t++;
+		while(*t <= ' ')
+			t++;
+	}
+	return IsDigit(*t);
+}
+
 double CParser::ReadDouble()
 {
 	LTIMING("ReadDouble");

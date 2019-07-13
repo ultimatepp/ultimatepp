@@ -61,7 +61,7 @@ public:
 	uint32 ReadNumber(int base = 10);
 	uint64 ReadNumber64(int base = 10);
 	bool   IsDouble() const                   { return IsInt(); }
-	bool   IsDouble2() const                  { return IsInt() || IsChar('.'); }
+	bool   IsDouble2() const;
 	double ReadDouble();
 	bool   IsString() const                   { return IsChar('\"'); };
 	String ReadOneString(bool chkend = true);

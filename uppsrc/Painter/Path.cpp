@@ -68,7 +68,6 @@ void BufferPainter::DoMove0()
 
 void BufferPainter::LineOp(const Pointf& p, bool rel)
 {
-	LLOG("@ LineOp " << p << ", " << rel);
 	DoMove0();
 	LinearData h;
 	PathAdd<LinearData>(LINE).p = ccontrol = qcontrol = EndPoint(p, rel);

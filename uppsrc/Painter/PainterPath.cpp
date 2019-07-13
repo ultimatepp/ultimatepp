@@ -2,30 +2,6 @@
 
 namespace Upp {
 
-bool Painter::ReadBool(CParser& p)
-{
-	while(p.Char(','));
-	if(p.Char('1')) return true;
-	p.Char('0');
-	return false;
-}
-
-double Painter::ReadDouble(CParser& p)
-{
-	while(p.Char(','));
-	return p.IsDouble2() ? p.ReadDouble() : 0;
-}
-
-Pointf Painter::ReadPoint(CParser& p, Pointf current, bool rel)
-{
-	Pointf t;
-	t.x = ReadDouble(p);
-	t.y = ReadDouble(p);
-	if(rel)
-		t += current;
-	return t;
-}
-
 Painter& Painter::Path(CParser& p)
 {
 	Pointf current(0, 0);
@@ -35,13 +11,26 @@ Painter& Painter::Path(CParser& p)
 		p.Spaces();
 		bool rel = IsLower(c);
 		Pointf t, t1, t2;
+		auto ReadDouble = [&] {
+			while(p.Char(','));
+			return p.IsDouble2() ? p.ReadDouble() : 0;
+		};
+		auto ReadPointP = [&](Pointf current, bool rel) {
+			Pointf t;
+			t.x = ReadDouble();
+			t.y = ReadDouble();
+			if(rel)
+				t += current;
+			return t;
+		};
+		auto ReadPoint = [&]() { return ReadPointP(current, rel); };
 		switch(ToUpper(c)) {
 		case 'M':
-			current = ReadPoint(p, current, rel);
+			current = ReadPoint();
 			Move(current);
 		case 'L':
 			while(p.IsDouble2()) {
-				current = ReadPoint(p, current, rel);
+				current = ReadPoint();
 				Line(current);
 			}
 			done = true;
@@ -66,43 +55,49 @@ Painter& Painter::Path(CParser& p)
 			break;
 		case 'C':
 			while(p.IsDouble2()) {
-				t1 = ReadPoint(p, current, rel);
-				t2 = ReadPoint(p, current, rel);
-				current = ReadPoint(p, current, rel);
+				t1 = ReadPoint();
+				t2 = ReadPoint();
+				current = ReadPoint();
 				Cubic(t1, t2, current);
 				done = true;
 			}
 			break;
 		case 'S':
 			while(p.IsDouble2()) {
-				t2 = ReadPoint(p, current, rel);
-				current = ReadPoint(p, current, rel);
+				t2 = ReadPoint();
+				current = ReadPoint();
 				Cubic(t2, current);
 				done = true;
 			}
 			break;
 		case 'Q':
 			while(p.IsDouble2()) {
-				t1 = ReadPoint(p, current, rel);
-				current = ReadPoint(p, current, rel);
+				t1 = ReadPoint();
+				current = ReadPoint();
 				Quadratic(t1, current);
 				done = true;
 			}
 			break;
 		case 'T':
 			while(p.IsDouble2()) {
-				current = ReadPoint(p, current, rel);
+				current = ReadPoint();
 				Quadratic(current);
 				done = true;
 			}
 			break;
 		case 'A':
 			while(p.IsDouble2()) {
-				t1 = ReadPoint(p, Pointf(0, 0), false);
-				double xangle = ReadDouble(p);
-				bool large = ReadBool(p);
-				bool sweep = ReadBool(p);
-				current = ReadPoint(p, current, rel);
+				t1 = ReadPointP(Pointf(0, 0), false);
+				double xangle = ReadDouble();
+				auto ReadBool = [&] {
+					while(p.Char(','));
+					if(p.Char('1')) return true;
+					p.Char('0');
+					return false;
+				};
+				bool large = ReadBool();
+				bool sweep = ReadBool();
+				current = ReadPoint();
 				SvgArc(t1, xangle * M_PI / 180.0, large, sweep, current);
 				done = true;
 			}

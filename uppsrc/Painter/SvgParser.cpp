@@ -286,7 +286,7 @@ Rectf GetSvgViewBox(const String& v)
 			r.left = ReadNumber(p);
 			r.top = ReadNumber(p);
 			r.right = r.left + ReadNumber(p);
-			r.bottom = r.right + ReadNumber(p);
+			r.bottom = r.top + ReadNumber(p);
 		}
 		catch(CParser::Error) {
 			r = Null;
@@ -456,9 +456,17 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 		const XmlNode *idn = idmap.Get(Nvl(n.Attr("href"), n.Attr("xlink:href")), NULL);
 		if(idn) {
 			StartElement(n);
+			Rectf vr = GetSvgViewBox(*idn);
+			Sizef sz = GetSvgSize(*idn);
 			bp.Translate(Dbl("x"), Dbl("y"));
+			if(!IsNull(vr) && !IsNull(sz)) {
+				bp.Rectangle(0, 0, sz.cx, sz.cy).Clip();
+				sz /= vr.GetSize();
+				bp.Scale(sz.cx, sz.cy);
+				bp.Translate(-vr.left, -vr.top);
+			}
 			Element(*idn, depth + 1, true);
-			FinishElement();
+			EndElement();
 		}
 	}
 	else
@@ -589,6 +597,7 @@ Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader)
 	Size isz((int)ceil(iszf.cx), (int)ceil(iszf.cy));
 	if(isz.cx <= 0 || isz.cy <= 0)
 		return Null;
+	RLOG("===================== PAINT");
 	ImageBuffer ib(isz);
 	BufferPainter sw(ib);
 	sw.Clear(White());
