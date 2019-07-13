@@ -17,15 +17,15 @@ void BoundsPainter::Bounds(Pointf p)
 	boundingbox.Union(p);
 }
 
-void BoundsPainter::MoveOp(const Pointf& p, bool)
+void BoundsPainter::MoveOp(const Pointf& p, bool rel)
 {
-	sw.Move(p);
+	sw.Move(p, rel);
 	qcontrol = ccontrol = current = p;
 }
 
-void BoundsPainter::LineOp(const Pointf& p, bool)
+void BoundsPainter::LineOp(const Pointf& p, bool rel)
 {
-	sw.Line(p);
+	sw.Line(p, rel);
 	Bounds(current);
 	Bounds(p);
 	ccontrol = qcontrol = p;
@@ -159,6 +159,11 @@ void BoundsPainter::CloseOp()
 void BoundsPainter::DivOp()
 {
 	sw.Div();
+}
+
+void BoundsPainter::ClipOp()
+{
+	sw.Clip();
 }
 
 void BoundsPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)

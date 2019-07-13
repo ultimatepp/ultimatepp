@@ -10,8 +10,10 @@ struct BoundsPainter : public NilPainter {
 	                        const Pointf& p, bool rel);
 	virtual void   CloseOp();
 	virtual void   DivOp();
+	
+	virtual void   ClipOp();
 
-	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
+	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1,
 	                      const double *dx = NULL);
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
 

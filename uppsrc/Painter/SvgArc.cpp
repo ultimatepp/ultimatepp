@@ -32,7 +32,7 @@ void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	Pointf r(fabs(rr.x), fabs(rr.y));
 	Xform2D m = Xform2D::Rotation(-xangle);
 	Pointf d1 = m.Transform(0.5 * (p0 - p1));
-	Pointf pr = r * r; 
+	Pointf pr = r * r;
 	Pointf p = d1 * d1;
 	double check = p.x / pr.x + p.y / pr.y;
 	if(check > 1)
