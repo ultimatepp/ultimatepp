@@ -283,6 +283,7 @@ struct Patch {
 
 	static int MatchLen(const String& a, const String& b);
 	int        MatchCount(const char *dir);
+	bool       Load0(Stream& in, Progress& pi);
 
 public:
 	bool Load(Stream& in, Progress& pi);

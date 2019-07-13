@@ -90,6 +90,8 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
 		return false;
 	}
 	
+	patch_file <<= patch_path;
+
 	if(!patch.MatchFiles(target_dirs, pi)) {
 		Exclamation("Unable to match the directory structure!");
 		return true;
@@ -97,7 +99,6 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
 
 	String target_dir = patch.GetTargetDir();
 
-	patch_file <<= patch_path;
 	this->target_dir <<= target_dir;
 
 	list.Clear();
