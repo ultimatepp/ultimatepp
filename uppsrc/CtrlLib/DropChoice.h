@@ -230,7 +230,6 @@ public:
 	virtual void   GotFocus();
 	virtual void   LostFocus();
 
-
 protected:
 	DropChoice      select;
 	String          appends;
@@ -288,12 +287,12 @@ public:
 
 template <class T>
 WithDropChoice<T>::WithDropChoice() {
-	select.AddTo(*this);
 	select.WhenDrop = callback(this, &WithDropChoice::DoWhenDrop);
 	select.WhenSelect = callback(this, &WithDropChoice::DoWhenSelect);
 	appends = String::GetVoid();
 	withwheel = true;
 	SetStyle(StyleDefault());
+	select.AddTo(*this);
 }
 
 template <class T>

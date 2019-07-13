@@ -27,12 +27,13 @@ bool Patch::Load(Stream& in, Progress& pi)
 	file.Clear();
 	String ln0;
 	String ln = in.GetLine();
+	bool ok = false; // at least one hunk was loaded
 	for(;;) {
 		while(!ln.TrimStart("--- ")) {
 			if(pi.StepCanceled())
 				return false;
 			if(in.IsEof())
-				return true;
+				return ok;
 			ln = in.GetLine();
 		}
 		ln = TrimLeft(ln);
@@ -45,7 +46,7 @@ bool Patch::Load(Stream& in, Progress& pi)
 			if(pi.StepCanceled())
 				return false;
 			if(in.IsEof())
-				return true;
+				return ok;
 			ln0 = ln = in.GetLine();
 		}
 		while(ln.TrimStart("@@")) {
@@ -60,7 +61,7 @@ bool Patch::Load(Stream& in, Progress& pi)
 					if(pi.StepCanceled())
 						return false;
 					if(in.IsEof())
-						return true;
+						return ok;
 					ln0 = ln = in.GetLine();
 					if(*ln == ' ') {
 						ch.orig.Add(ln.Mid(1));
@@ -74,12 +75,13 @@ bool Patch::Load(Stream& in, Progress& pi)
 						ch.orig.Add(ln.Mid(1));
 					else
 						break;
+					ok = true;
 					ch.src << ln << "\n";
 				}
 			}
 		}
 	}
-	return true;
+	return ok;
 }
 
 bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)

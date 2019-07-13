@@ -307,7 +307,7 @@ Rect MultiButton::GetMargin()
 	return m;
 }
 
-void MultiButton::Lay(Rect& r)
+void MultiButton::Lay(Rect& r, bool minsize)
 {
 	int border, lx, rx;
 	bool frm = Metrics(border, lx, rx);
@@ -325,7 +325,7 @@ void MultiButton::Lay(Rect& r)
 	}
 	else
 	if(frm) {
-		Rect m = GetMargin();
+		Rect m = minsize ? style->margin : GetMargin();
 		r = Rect(r.left + max(lx, m.left), r.top + m.top, min(rx, r.right - m.right), r.bottom - m.bottom);
 	}
 	else {
@@ -749,7 +749,7 @@ void MultiButtonFrame::FrameLayout(Rect& r)
 void MultiButtonFrame::FrameAddSize(Size& sz)
 {
 	Rect r(0, 0, 100, 100);
-	Lay(r);
+	Lay(r, true);
 	sz.cx += r.left + 100 - r.right;
 	sz.cy += r.top + 100 - r.bottom;
 }
