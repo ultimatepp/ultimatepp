@@ -1763,6 +1763,14 @@ bool FileSel::Execute(int _mode) {
 		px += dp;
 	}
 	dir.HSizePos(dr.left, px + 4);
+	if(preselect.GetCount()) {
+		for(int i = 0; i < mask.GetCount(); i++) {
+			if(PatternMatchMulti(mask[i], preselect)) {
+				ActiveType(i);
+				break;
+			}
+		}
+	}
 	int q = type.FindValue(activetype);
 	if(q >= 0)
 		type <<= q;
@@ -1782,12 +1790,15 @@ bool FileSel::Execute(int _mode) {
 	}
 	list.SetSbPos(lastsby);
 	if(preselect.GetCount()) {
-		for(int i = 0; i < list.GetCount(); i++)
-		    if(list[i].name == preselect) {
-				list.SetCursor(i);
-				ActiveFocus(list);
-				break;
-			}
+		if(mode == SAVEAS)
+			file <<= preselect;
+		else
+			for(int i = 0; i < list.GetCount(); i++)
+			    if(list[i].name == preselect) {
+					list.SetCursor(i);
+					ActiveFocus(list);
+					break;
+				}
 		preselect.Clear();
 	}
 	FileUpdate();
