@@ -37,6 +37,19 @@ void Ide::RunArgs() {
 	dlg.utf8 <<= console_utf8;
 	dlg.runmode <<= dlg.Breaker(222);
 	dlg.disable_uhd <<= disable_uhd;
+
+	auto Ins = [&](bool file) {
+		int l, h;
+		dlg.arg.GetSelection(l, h);
+		String s = file ? SelectFileOpen("All files\t*.*") : SelectDirectory();
+		dlg.arg.SetSelection(l, h);
+		if(s.GetCount())
+			dlg.arg.Insert(s);
+	};
+	dlg.ifile.SetImage(CtrlImg::File());
+	dlg.ifile << [&] { Ins(true); };
+	dlg.idir.SetImage(CtrlImg::Dir());
+	dlg.idir << [&] { Ins(false); };
 	
 	for(;;) {
 		bool b = ~dlg.runmode == RUN_FILE;
