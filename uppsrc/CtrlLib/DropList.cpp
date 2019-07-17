@@ -130,6 +130,13 @@ DropList& DropList::Add(const Value& _key, const Value& text, bool enable)
 	return *this;
 }
 
+DropList& DropList::Add(std::initializer_list<std::pair<Value, Value>> init)
+{
+	for(const auto& i : init)
+		Add(i.first, i.second);
+	return *this;
+}
+
 struct DummyValue__ {};
 
 DropList& DropList::AddSeparator()

@@ -1,5 +1,4 @@
 topic "DropList";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "DropList";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@(229)4 DropList]]}}&]
 [s3; &]
@@ -62,6 +62,12 @@ list. If [%-*@3 enable] is false, DropList can be assigned this
 [%-*@3 key]and displays corresponding [%-*@3 value], but does not 
 include it in drop list popup.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:DropList`:`:Add`(std`:`:initializer`_list`<std`:`:pair`<Upp`:`:Value`,Upp`:`:Value`>`>`): [_^Upp`:`:DropList^ D
+ropList][@(0.0.255) `&]_[* Add]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ s
+td`::pair]<[_^Upp`:`:Value^ Value], [_^Upp`:`:Value^ Value]>>_[*@3 init])&]
+[s2;%% Adds [%-*@3 init] to the list.&]
+[s3;%% &]
 [s4; &]
 [s5;:DropList`:`:Add`(const Value`&`): [_^DropList^ DropList][@(0.0.255) `&]_[* Add]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]

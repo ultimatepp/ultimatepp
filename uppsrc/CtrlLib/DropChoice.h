@@ -76,6 +76,8 @@ public:
 
 	DropList&     Add(const Value& key, const Value& value, bool enable = true);
 	DropList&     Add(const Value& value)         { return Add(value, value); }
+	DropList&     Add(std::initializer_list<std::pair<Value, Value>> init);
+
 	void          Remove(int i);
 	void          ClearList();
 	void          Clear();
