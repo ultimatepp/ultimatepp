@@ -112,9 +112,9 @@
                                              "(" #k1 ", " #k2 ");",\
                                              "alter table @t drop constraint DK_@t;")
 
-#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("alter table @t add constraint DQ_@t unique "\
+#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("alter table @t add constraint DQ_@t$" #k1 "$" #k2 " unique "\
                                              "(" #k1 ", " #k2 ");",\
-                                             "alter table @t drop constraint DQ_@t;")
+                                             "alter table @t drop constraint DQ_@t$" #k1 "$" #k2 ";")
 
 #define SQLCHECK(name, chk)        ATTRIBUTE("alter table @t add constraint CHK_@t$" #name " check "\
                                              "(" chk ");",\
