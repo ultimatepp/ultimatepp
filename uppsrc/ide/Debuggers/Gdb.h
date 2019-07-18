@@ -53,6 +53,7 @@ public:
 	void      LoadFrames();
 	
 	void      SwitchFrame();
+	void      FrameUpDown(int dir);
 	void      SwitchThread();
 	
 	void      ClearCtrls();
@@ -106,6 +107,7 @@ protected:
 	EditString         watchedit;
 	DropList           threads;
 	DropList           frame;
+	Button             frame_up, frame_down;
 	TabCtrl            tab;
 	ArrayCtrl          locals;
 	ArrayCtrl          watches;
