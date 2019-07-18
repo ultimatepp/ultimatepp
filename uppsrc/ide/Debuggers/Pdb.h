@@ -211,6 +211,7 @@ struct Pdb : Debugger, ParentCtrl {
 	TabCtrl            tab;
 	DropList           threadlist;
 	DropList           framelist;
+	Button             frame_up, frame_down;
 	Label              dlock;
 	ArrayCtrl          locals;
 	ArrayCtrl          self;
@@ -341,6 +342,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       Sync0(Thread& ctx);
 	void       Sync();
 	void       SetThread();
+	void       FrameUpDown(int dir);
 	void       SetFrame();
 	bool       Step(bool over);
 	void       Trace(bool over);

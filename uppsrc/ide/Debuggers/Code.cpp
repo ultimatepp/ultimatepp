@@ -92,6 +92,8 @@ void Pdb::SetThread()
 void Pdb::SetFrame()
 {
 	int fi = ~framelist;
+	frame_up.Enable(fi > 0);
+	frame_down.Enable(fi < framelist.GetCount() - 1);
 	if(fi >= 0 && fi < frame.GetCount()) {
 		Frame& f = frame[fi];
 		current_frame = &f;
@@ -128,6 +130,15 @@ void Pdb::SetFrame()
 		if(df)
 			disas.SetFocus();
 		Data();
+	}
+}
+
+void Pdb::FrameUpDown(int dir)
+{
+	int q = framelist.GetIndex() + dir;
+	if(q >= 0 && q < framelist.GetCount()) {
+		framelist.SetIndex(q);
+		SetFrame();
 	}
 }
 

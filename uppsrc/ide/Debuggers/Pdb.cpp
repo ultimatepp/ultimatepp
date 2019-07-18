@@ -46,7 +46,7 @@ Vector<DWORD> GetChildProcessList(DWORD processId) {
 		init = count;
 	}
 	child.Remove(0);
-	return child;	
+	return child;
 }
 
 void TerminateChildProcesses(DWORD dwProcessId, UINT uExitCode) {
@@ -337,7 +337,15 @@ Pdb::Pdb()
 
 	pane.Add(tab.SizePos());
 	pane.Add(threadlist.LeftPosZ(380, 60).TopPos(2, EditField::GetStdHeight()));
-	pane.Add(framelist.HSizePosZ(444, 0).TopPos(2, EditField::GetStdHeight()));
+	int bcx = min(EditField::GetStdHeight(), DPI(16));
+	pane.Add(framelist.HSizePos(Zx(444), 2 * bcx).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
+	frame_up.SetImage(DbgImg::FrameUp());
+	frame_up << [=] { FrameUpDown(-1); };
+	pane.Add(frame_down.RightPos(0, bcx).TopPos(2, EditField::GetStdHeight()));
+	frame_down.SetImage(DbgImg::FrameDown());
+	frame_down << [=] { FrameUpDown(1); };
+	
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
 	Add(split);

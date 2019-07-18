@@ -508,6 +508,17 @@ void Gdb::SwitchFrame()
 	Cmdp("frame " + AsString(i), i, false);
 }
 
+void Gdb::FrameUpDown(int dir)
+{
+	if(frame.GetCount() < 2)
+		LoadFrames();
+	int q = frame.GetIndex() + dir;
+	if(q >= 0 && q < frame.GetCount()) {
+		frame.SetIndex(q);
+		SwitchFrame();
+	}
+}
+
 void Gdb::SwitchThread()
 {
 	int i = ~threads;
@@ -637,7 +648,18 @@ Gdb::Gdb()
 	tab.Add(self.SizePos(), "this");
 	tab.Add(cpu.SizePos(), "CPU");
 	pane.Add(threads.LeftPosZ(250, 150).TopPos(2));
-	pane.Add(frame.HSizePosZ(404, 0).TopPos(2));
+
+
+	int bcx = min(EditField::GetStdHeight(), DPI(16));
+	pane.Add(frame.HSizePos(Zx(404), 2 * bcx).TopPos(2));
+	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
+	frame_up.SetImage(DbgImg::FrameUp());
+	frame_up << [=] { FrameUpDown(-1); };
+	pane.Add(frame_down.RightPos(0, bcx).TopPos(2, EditField::GetStdHeight()));
+	frame_down.SetImage(DbgImg::FrameDown());
+	frame_down << [=] { FrameUpDown(1); };
+
+
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
 	Add(split);
