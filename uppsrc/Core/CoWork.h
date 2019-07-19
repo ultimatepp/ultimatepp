@@ -57,7 +57,7 @@ public:
 	Link<MJob, 2>      jobs; // global stack and CoWork stack as double-linked lists
 	int                todo;
 	bool               canceled;
-	std::exception_ptr exc;
+	std::exception_ptr exc = nullptr; // workaround for sanitizer bug(?)
 	Function<void ()>  looper_fn;
 	int                looper_count;
 

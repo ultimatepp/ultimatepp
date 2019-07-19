@@ -113,7 +113,7 @@ void CoWork::Pool::DoJob(MJob& job)
 	}
 
 	lock.Leave();
-	std::exception_ptr exc;
+	std::exception_ptr exc = nullptr;
 	try {
 		if(looper)
 			work->looper_fn();
