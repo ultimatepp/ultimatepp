@@ -76,7 +76,10 @@ public:
 	void      SetTree(ArrayCtrl *a);
 	void      OnTreeBar(Bar& bar);
 	void      OnTreeExpand(int node);
-	
+	void      MemoryGoto();
+	void      MemoryLoad(const String& adr, int count, bool showerror);
+	void      Memory();
+
 	void      OnValueCopyToClipboard(const Value& val);
 	
 	Value     ObtainValueFromTreeCursor(int cursor) const;
@@ -86,12 +89,12 @@ public:
 	void      CopyDisas();
 	
 	void      BreakRunning();
-
+	
 	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
 	
 	TimeCallback periodic; // Period check for killed console
 	void Periodic();
-
+	
 	virtual ~Gdb() override;
 	Gdb();
 	
@@ -118,7 +121,14 @@ protected:
 	StaticRect         pane;
 	Splitter           split;
 	TreeCtrl           tree;
-	
+	struct GdbHexView : HexView {
+		uint64       start;
+		Vector<byte> data;
+
+		virtual int Byte(int64 i)            { return i >= 0 && i < data.GetCount() ? data[(int)i] : 0; }
+	}
+	memory;
+
 	VectorMap<String, String> expression_cache;
 
 	WithQuickwatchLayout<TopWindow> quickwatch;

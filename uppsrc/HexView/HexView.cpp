@@ -52,7 +52,7 @@ void HexViewInfo::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	w.DrawRect(sz, SColorLtFace);
-	if(mode < 1)
+	if(mode < 1 || empty)
 		return;
 	Size fsz = GetTextSize("X", font);
 	char h[17];
@@ -149,11 +149,15 @@ void HexView::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	w.DrawRect(sz, SColorPaper);
+	if(!total) {
+		w.DrawText(Zx(10), Zx(10), "No data", ArialZ(20).Italic(), SRed());
+		return;
+	}
 	int y = 0;
-	int64 adr = sc;
+	uint64 adr = sc;
 	while(y < sz.cy) {
 		char h[17];
-		FormatHex(h, adr, IsLongMode() ? 16 : 8);
+		FormatHex(h, adr + start, IsLongMode() ? 16 : 8);
 		w.DrawText(0, y, h, font);
 		int x = (IsLongMode() ? 17 : 9) * fsz.cx;
 		int tx = x + columns * fcx3;
@@ -212,9 +216,10 @@ void HexView::MouseWheel(Point, int zdelta, dword)
 void HexView::SetSb()
 {
 	sbm = 0;
-	while((total >> sbm) > (1 << 30))
+	uint64 sz = total;
+	while((sz >> sbm) > (1 << 30))
 		sbm++;
-	sb.SetTotal(int(total >> sbm) / columns + 2);
+	sb.SetTotal(int(sz >> sbm) / columns + 2);
 	sb.SetPage(int(rows >> sbm));
 	sb.Set(int(sc >> sbm) / columns + 1);
 }
@@ -228,7 +233,16 @@ void HexView::Layout()
 	SetSb();
 }
 
-void HexView::SetTotal(int64 _total)
+void HexView::SetStart(uint64 start_)
+{
+	start = start_;
+	Layout();
+	SetSb();
+	Refresh();
+	RefreshInfo();
+}
+
+void HexView::SetTotal(uint64 _total)
 {
 	total = _total;
 	Layout();
@@ -237,9 +251,9 @@ void HexView::SetTotal(int64 _total)
 	RefreshInfo();
 }
 
-void HexView::SetSc(int64 address)
+void HexView::SetSc(uint64 address)
 {
-	sc = minmax(address, (int64)0, total);
+	sc = minmax(address, start, total);
 	SetSb();
 	Refresh();
 }
@@ -256,14 +270,19 @@ void HexView::Scroll()
 
 void HexView::RefreshInfo()
 {
-	info.SetPos(cursor, IsLongMode());
-	for(int i = 0; i < 80; i++)
-		info.Set(i, Byte(cursor + i));
+	if(total) {
+		info.SetPos(cursor + start, IsLongMode());
+		for(int i = 0; i < 80; i++)
+			info.Set(i, Byte(cursor + i));
+	}
+	else
+		info.SetEmpty();
 }
 
-void HexView::SetCursor(int64 _cursor)
+void HexView::SetCursor(uint64 _cursor)
 {
 	cursor = _cursor;
+	
 	if(cursor > total)
 		cursor = total - 1;
 	if(cursor < 0)
@@ -294,7 +313,7 @@ void HexView::LeftDown(Point p, dword)
 		x = p.x - x;
 		int q = x / fcx3;
 		if(x - q * fcx3 < 2 * fsz.cx && q < columns) {
-			int64 c = sc + rowi * columns + q;
+			uint64 c = sc + rowi * columns + q;
 			if(c < total)
 				SetCursor(c);
 		}
@@ -303,7 +322,7 @@ void HexView::LeftDown(Point p, dword)
 	if(p.x >= tx) {
 		int q = (p.x - tx) / fsz.cx;
 		if(q >= 0 && q < columns) {
-			int64 c = sc + rowi * columns + q;
+			uint64 c = sc + rowi * columns + q;
 			if(c < total)
 				SetCursor(c);
 		}
@@ -383,7 +402,7 @@ void HexView::StdGoto(const String& s)
 	if(p.Char2('0', 'x') || p.Char('$') || p.Char('#'))
 		n = 16;
 	if(p.IsNumber(n)) {
-		int64 a = p.ReadNumber(n);
+		uint64 a = p.ReadNumber(n);
 		if(a >= 0 && a < total) {
 			SetCursor(a);
 			SetSc(a);
@@ -435,7 +454,7 @@ void HexView::CharsetMenu(Bar& bar)
 
 void HexView::StdMenu(Bar& bar)
 {
-	bar.Add("Go to..", THISBACK(Goto))
+	bar.Add("Go to..", [=] { WhenGotoDlg(); })
 	   .Key(K_CTRL_G);
 	bar.Add("Columns", THISBACK(ColumnsMenu));
 	bar.Add("Charset", THISBACK(CharsetMenu));
@@ -489,6 +508,7 @@ HexView::HexView()
 	WhenBar = THISBACK(StdMenu);
 	CtrlLayoutOKCancel(go, "Go to");
 	WhenGoto = THISBACK(StdGoto);
+	WhenGotoDlg = THISBACK(Goto);
 }
 
 }

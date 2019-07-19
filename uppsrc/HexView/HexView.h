@@ -17,11 +17,13 @@ private:
 	int   data[80];
 	int   mode;
 	bool  longmode;
+	bool  empty = false;
 
 	void  PrintValue(Draw& w, int x, int y, int bytes, bool be);
 
 public:
-	void  SetPos(int64 p, bool lm)     { pos = p; longmode = lm; }
+	void  SetEmpty()                   { empty = true; Refresh(); }
+	void  SetPos(int64 p, bool lm)     { pos = p; longmode = lm; empty = false; Refresh(); }
 	void  Set(int i, int d)            { ASSERT(i >= 0 && i < 80); data[i] = d; Refresh(); }
 	void  SetMode(int m);
 	int   GetMode() const              { return mode; }
@@ -45,7 +47,10 @@ private:
 	int       fixed;
 	int       columns, rows, bytes;
 	int       sbm;
-	int64     sc, cursor, total;
+	uint64    sc = 0;
+	uint64    cursor = 0;
+	uint64    total = 0;
+	uint64    start = 0;
 	byte      charset;
 	ScrollBar sb;
 
@@ -66,24 +71,26 @@ public:
 
 	Event<Bar&>          WhenBar;
 	Event<const String&> WhenGoto;
+	Event<>              WhenGotoDlg;
 
-	void  ColumnsMenu(Bar& bar);
-	void  CharsetMenu(Bar& bar);
-	void  InfoMenu(Bar& bar);
-	void  StdMenu(Bar& bar);
+	void   ColumnsMenu(Bar& bar);
+	void   CharsetMenu(Bar& bar);
+	void   InfoMenu(Bar& bar);
+	void   StdMenu(Bar& bar);
 
-	void  StdGoto(const String& text);
+	void   StdGoto(const String& text);
 
-	void  GotoAddHistory()            { go.text.AddHistory(); }
+	void   GotoAddHistory()            { go.text.AddHistory(); }
 
-	bool  IsLongMode() const          { return total > 0xffffffff; }
-	void  SetTotal(int64 _total);
-	void  SetSc(int64 address);
-	int64 GetSc() const               { return sc; }
-	void  SetCursor(int64 address);
-	int64 GetCursor() const           { return cursor; }
+	bool   IsLongMode() const          { return total > 0xffffffff; }
+	void   SetStart(uint64 start);
+	void   SetTotal(uint64 _total);
+	void   SetSc(uint64 address);
+	uint64 GetSc() const               { return sc; }
+	void   SetCursor(uint64 address);
+	uint64 GetCursor() const           { return cursor; }
 
-	void  SerializeSettings(Stream& s);
+	void   SerializeSettings(Stream& s);
 
 	HexView& SetFont(Font fnt);
 	HexView& Charset(byte chrset)     { charset = chrset; Refresh(); return *this; }

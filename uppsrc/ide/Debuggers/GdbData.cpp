@@ -280,6 +280,7 @@ void Gdb::ObtainData()
 	case 2: Watches(); break;
 	case 3: Self(); break;
 	case 4: Cpu(); break;
+	case 5: Memory(); break;
 	}
 }
 
