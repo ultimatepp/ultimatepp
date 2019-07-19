@@ -391,7 +391,7 @@ void Pdb::CopyStackAll()
 	for(int i = 0; i < threads.GetCount(); i++) {
 		int thid = threads.GetKey(i);
 		s << "----------------------------------\r\n"
-		  << "Thread ID: " << FormatIntHex(Format("0x%x", thid)) << "\r\n\r\n";
+		  << "Thread ID: " << Format("0x%x", thid) << "\r\n\r\n";
 		for(const auto& f : Backtrace(threads[i]))
 			s << f.text << "\r\n";
 		s << "\r\n";
