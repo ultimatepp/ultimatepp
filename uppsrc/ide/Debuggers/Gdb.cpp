@@ -617,27 +617,40 @@ void Gdb::Periodic()
 Gdb::Gdb()
 	: gdb_utils(GdbUtilsFactory().Create())
 {
+	auto Mem = [=](Bar& bar, ArrayCtrl& h) {
+		String s = h.GetKey();
+		if(s.GetCount()) {
+			if(!IsAlpha(*s))
+				s = '(' + s + ')';
+			bar.Add("Memory at &&" + s, [=] { tab.Set(memory); MemoryLoad('&' + s, 2048, true); });
+			bar.Add("Memory at " + s, [=] { tab.Set(memory); MemoryLoad(s, 2048, true); });
+		}
+	};
 	locals.NoHeader();
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 6);
 	locals.EvenRowColor();
 	locals.WhenSel = THISBACK1(SetTree, &locals);
+	locals.WhenBar = [=](Bar& bar) { Mem(bar, locals); };
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
 	watches.EvenRowColor();
 	watches.WhenSel = THISBACK1(SetTree, &watches);
+	watches.WhenBar = [=](Bar& bar) { Mem(bar, watches); };
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
 	autos.EvenRowColor();
 	autos.WhenSel = THISBACK1(SetTree, &autos);
+	autos.WhenBar = [=](Bar& bar) { Mem(bar, autos); };
 	self.NoHeader();
 	self.AddColumn("", 1);
 	self.AddColumn("", 6);
 	self.EvenRowColor();
 	self.WhenSel = THISBACK1(SetTree, &self);
+	self.WhenBar = [=](Bar& bar) { Mem(bar, self); };
 	cpu.Columns(3);
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
 
@@ -647,11 +660,13 @@ Gdb::Gdb()
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(self.SizePos(), "this");
 	tab.Add(cpu.SizePos(), "CPU");
-	pane.Add(threads.LeftPosZ(250, 150).TopPos(2));
+	tab.Add(memory.SizePos(), "Memory");
+	pane.Add(threads.LeftPosZ(330, 150).TopPos(2));
 
+	memory.WhenGotoDlg = [=] { MemoryGoto(); };
 
 	int bcx = min(EditField::GetStdHeight(), DPI(16));
-	pane.Add(frame.HSizePos(Zx(404), 2 * bcx).TopPos(2));
+	pane.Add(frame.HSizePos(Zx(484), 2 * bcx).TopPos(2));
 	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_up.SetImage(DbgImg::FrameUp());
 	frame_up << [=] { FrameUpDown(-1); };

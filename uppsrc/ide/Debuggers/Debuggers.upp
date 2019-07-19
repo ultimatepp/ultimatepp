@@ -20,6 +20,7 @@ file
 	GdbCmd.cpp,
 	GdbData.cpp,
 	Gdb.cpp,
+	GdbMem.cpp,
 	GdbUtils.h,
 	GdbUtils.cpp,
 	PDB readonly separator,
