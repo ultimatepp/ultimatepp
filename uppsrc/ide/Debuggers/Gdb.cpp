@@ -622,8 +622,7 @@ Gdb::Gdb()
 		if(s.GetCount()) {
 			if(!IsAlpha(*s))
 				s = '(' + s + ')';
-			bar.Add("Memory at &&" + s, [=] { tab.Set(memory); MemoryLoad('&' + s, 2048, true); });
-			bar.Add("Memory at " + s, [=] { tab.Set(memory); MemoryLoad(s, 2048, true); });
+			MemoryMenu(bar, s);
 		}
 	};
 	locals.NoHeader();

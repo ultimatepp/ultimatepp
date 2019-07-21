@@ -79,6 +79,7 @@ public:
 	void      MemoryGoto();
 	void      MemoryLoad(const String& adr, int count, bool showerror);
 	void      Memory();
+	void      MemoryMenu(Bar& bar, const String& exp);
 
 	void      OnValueCopyToClipboard(const Value& val);
 	

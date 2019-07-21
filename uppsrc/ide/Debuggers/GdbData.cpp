@@ -392,10 +392,26 @@ void Gdb::OnTreeBar(Bar& bar)
 	if(tree.GetChildCount(cursor) > 0)
 		return;
 	
-	auto val = ObtainValueFromTreeCursor(cursor);
-	auto has_value = val.IsNull();
+	Value val = ObtainValueFromTreeCursor(cursor);
 	
-	bar.Add(t_("Copy value to clipboard"), [this, val]() { OnValueCopyToClipboard(val); }).Enable(!has_value);
+	bar.Add(t_("Copy value to clipboard"), [this, val]() { OnValueCopyToClipboard(val); }).Enable(!val.IsNull());
+	
+	String var;
+	while(cursor >= 0) {
+		String s = tree.GetValue(cursor);
+		try {
+			CParser p(s);
+			if(p.IsId())
+				var = Merge(".", p.ReadId(), var);
+			cursor = tree.GetParent(cursor);
+		}
+		catch(CParser::Error) {
+			break;
+		}
+	}
+
+	if(var.GetCount())
+		MemoryMenu(bar, var);
 }
 
 void Gdb::OnValueCopyToClipboard(const Value& val)
