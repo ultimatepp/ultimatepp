@@ -77,26 +77,26 @@ void HexViewInfo::Paint(Draw& w)
 		x += 32 * fsz.cx;
 		y += fsz.cy;
 	}
-	wchar wh[40];
-	memset(wh, 0, sizeof(wh));
-	int i = 0;
-	for(i = 0; i < 40; i++) {
-		if(data[2 * i] < 0 || data[2 * i + 1] < 0)
-			break;
-		wh[i] = MAKEWORD(data[2 * i], data[2 * i + 1]);
-	}
-	w.DrawText(x, 0, wh, font, Cyan, i);
-	if(mode < 2)
-		return;
 	char sh[80];
 	memset(sh, 0, sizeof(sh));
+	int i;
 	for(i = 0; i < 80; i++) {
 		if(data[i] < 0)
 			break;
 		sh[i] = data[i];
 	}
 	WString ws = FromUtf8(sh, i);
-	w.DrawText(x, fsz.cy, ws, font, Cyan, i);
+	w.DrawText(x, 0, ws, font, Cyan, i);
+	if(mode < 2)
+		return;
+	wchar wh[40];
+	memset(wh, 0, sizeof(wh));
+	for(i = 0; i < 40; i++) {
+		if(data[2 * i] < 0 || data[2 * i + 1] < 0)
+			break;
+		wh[i] = MAKEWORD(data[2 * i], data[2 * i + 1]);
+	}
+	w.DrawText(x, fsz.cy, wh, font, Cyan, i);
 	String txt;
 	String ftxt;
 	i = 0;
