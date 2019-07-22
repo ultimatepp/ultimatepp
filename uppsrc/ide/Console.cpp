@@ -22,6 +22,7 @@ Console::Console() {
 	AddFrame(input);
 	input.Hide();
 	serial = 0;
+	HideBar();
 }
 
 void Console::LeftDouble(Point p, dword) {
