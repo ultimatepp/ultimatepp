@@ -98,13 +98,25 @@ or].&]
 [s5;:ScatterCtrl`:`:SetSaveSize`(Upp`:`:Size`&`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* Set
 SaveSize]([_^Upp`:`:Size^ Size]_`&[*@3 size])&]
 [s3; Sets the Size [%-*@3 size] to save the control as a bitmap either 
-to file or to clipboard..&]
+to file or to clipboard.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:GetSaveSize`(`):%- [_^Upp`:`:Size^ Size]_`&[* GetSaveSize]()&]
 [s3; Returns control size to save as a bitmap either to file or to 
 clipboard..&]
 [s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetSaveSizeX`(int`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* SetSaveSizeX
+]([@(0.0.255) int]_[*@3 cx])&]
+[s3; Sets the width [%-*@3 cx]  to save the control as a bitmap either 
+to file or to clipboard.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetSaveSizeY`(int`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* SetSaveSizeY
+]([@(0.0.255) int]_[*@3 cy])&]
+[s3; Sets the width [%-*@3 cy]  to save the control as a bitmap either 
+to file or to clipboard.&]
+[s1; &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:SetJPGQuality`(int`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* SetJPGQuali
 ty]([@(0.0.255) int]_[*@3 quality])&]

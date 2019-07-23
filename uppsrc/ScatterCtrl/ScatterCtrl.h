@@ -293,6 +293,8 @@ public:
 	
 	ScatterCtrl &SetSaveSize(Size &size) 	{saveSize = size; return *this;}
 	Size &GetSaveSize() 					{return saveSize;}
+	ScatterCtrl &SetSaveSizeX(int cx) 		{saveSize.cx = cx; return *this;}
+	ScatterCtrl &SetSaveSizeY(int cy) 		{saveSize.cy = cy; return *this;}
 	ScatterCtrl &SetJPGQuality(int quality) {jpgQuality = quality; return *this;}
 	int GetJPGQuality() 					{return jpgQuality;}
 
