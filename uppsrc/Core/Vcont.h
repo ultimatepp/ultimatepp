@@ -129,7 +129,7 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 
 public:
 	T&       Add()                           { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
-	T&       Add(const T& x)                 { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
+	T&       Add(const T& x)                 { return items < alloc ? *(new(Rdd()) T(x)) : GrowAdd(x); }
 	T&       Add(T&& x)                      { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAdd(pick(x)); }
 	template <class... Args>
 	T&       Create(Args&&... args)          { if(items >= alloc) GrowF(); return *(::new(Rdd()) T(std::forward<Args>(args)...)); }

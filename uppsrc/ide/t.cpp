@@ -568,7 +568,7 @@ void Ide::SyncT(int kind)
 					int idx = map.Find(pmap.GetKey(iEntry));
 					if(idx < 0)
 					{
-						map.Add(pmap.GetKey(iEntry), pmap[iEntry]);
+						map.Add(pmap.GetKey(iEntry), clone(pmap[iEntry]));
 						idx = map.GetCount() - 1;
 					}
 					LngEntry &entry = map[idx];
