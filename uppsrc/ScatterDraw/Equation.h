@@ -38,6 +38,7 @@ public:
 	friend struct Equation_functor;
 	
 	const Vector<double> &GetCoeff()			{return coeff;}
+	double GetCoeff(int i)						{return coeff[i];}
 
 	template<class T>	
 	static void Register(const String& name) {

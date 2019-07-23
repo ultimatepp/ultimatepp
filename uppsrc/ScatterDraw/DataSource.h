@@ -391,7 +391,7 @@ private:
 	int64 numData;
 	
 public:
-	VectorVectorY() : data(0), useRows(true), beginData(0), numData(Null), idx(0), idy(1) {}
+	VectorVectorY() : data(0), useRows(true), idx(0), idy(1), beginData(0), numData(Null) {}
 	VectorVectorY(Vector<Vector<Y> > &data, int idx, int idy, 
 				  Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, 
 				  bool useRows = true, int beginData = 0, int numData = Null) {
@@ -656,7 +656,8 @@ private:
 
 template <class T>
 inline T LinearInterpolate(T x, T x0, T x1, T v0, T v1) {
-	ASSERT(x1 != x0);
+	if (x0 == x1)
+		return (v0 + v1)/T(2);
   	return ((x1 - x)/(x1 - x0))*v0 + ((x - x0)/(x1 - x0))*v1;
 }
 
@@ -674,8 +675,8 @@ inline T TrilinearInterpolate(T x, T y, T z, T x0, T x1, T y0, T y1, T z0, T z1,
 	T x10 = LinearInterpolate(x, x0, x1, v010, v110);
 	T x01 = LinearInterpolate(x, x0, x1, v001, v101);
 	T x11 = LinearInterpolate(x, x0, x1, v011, v111);
-	T r0 = LinearInterpolate(y, y0, y1, x00, x01);
-	T r1 = LinearInterpolate(y, y0, y1, x10, x11);
+	T r0  = LinearInterpolate(y, y0, y1, x00,  x01);
+	T r1  = LinearInterpolate(y, y0, y1, x10,  x11);
 	
 	return LinearInterpolate(z, z0, z1, r0, r1);
 }

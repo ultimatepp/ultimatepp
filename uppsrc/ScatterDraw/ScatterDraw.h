@@ -79,7 +79,7 @@ public:
 	#define LINE_DOTTED 	  "4 10"
 	#define LINE_DOTTED_SEP	  "4 20"
 	#define LINE_DASHED 	  "12 12"
-	#define LINE_DASH_DOT 	  "20 10 5 10"
+	#define LINE_DASH_DOT 	  "12 8 3 8"	// Reduced. Previous was too long
 	
 protected:
 	class ScatterBasicSeries {
