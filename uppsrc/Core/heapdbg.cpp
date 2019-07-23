@@ -10,6 +10,8 @@ int sMemDiagInitCount;
 
 namespace Upp {
 
+extern bool AppNormalExit;
+
 #if defined(UPP_HEAP)
 
 #include "HeapImp.h"
@@ -192,6 +194,10 @@ void MemoryDumpLeaks()
 {
 	if(PanicMode)
 		return;
+	if(!AppNormalExit) {
+		VppLog() << "Application was terminated in a non-standard way (e.g. exit(x) call or Ctrl+C)\n";
+		return;
+	}
 #ifndef PLATFORM_POSIX
 	if(s_ignoreleaks)
 		Panic("Ignore leaks Begin/End mismatch!");

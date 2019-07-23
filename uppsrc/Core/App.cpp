@@ -337,6 +337,8 @@ void Exit(int code)
 	throw ExitExc();
 }
 
+bool AppNormalExit;
+
 void AppExecute__(void (*app)())
 {
 	try {
@@ -345,6 +347,7 @@ void AppExecute__(void (*app)())
 	catch(ExitExc) {
 		return;
 	}
+	AppNormalExit = true;
 }
 
 #ifdef PLATFORM_POSIX
