@@ -18,23 +18,17 @@ ScatterDraw::ScatterDraw() {
 	gridColor = SColorDkShadow();
 	gridWidth = 0.5;
 	gridDash = LINE_DOTTED_FINE;
-	//gridColor2 = SColorDkShadow();
-	//gridWidth2 = 0.5;
-	//gridDash2 = LINE_DOTTED_FINER;
 	drawXReticle = drawYReticle = true;
 	drawY2Reticle = false;
 	reticleFont = GetStdFont();
 	reticleColor = Black;
 	drawVGrid = drawHGrid = showLegend = true;
-	//drawVGrid2 = drawHGrid2 = true;
-	//freqGrid2 = 5;
 	minXRange = maxXRange = minYRange = maxYRange = -1;
 	minXmin = minYmin = maxXmax = maxYmax = Null;
 	fastViewX = false;
 	sequentialXAll = false;
 	zoomStyleX = zoomStyleY = TO_CENTER;
 	SetMajorUnitsNum(5, 10);
-	Color(graphColor);	
 	isPolar = false;
 	lastxRange = xRange;
 	lastyRange = yRange;
@@ -1005,31 +999,7 @@ const String ScatterDraw::GetUnitsY(int index) {
 	ASSERT(IsValid(index));
 	return series[index].unitsY;
 }
-/*
-ScatterDraw& ScatterDraw::SetDataColor(int index, const Color& color) {
-	ASSERT(IsValid(index));
-	series[index].color = color;
-	Refresh();
-	return *this;
-}
 
-Color ScatterDraw::GetDataColor(int index) const {
-	ASSERT(IsValid(index));
-	return series[index].color;
-}
-
-ScatterDraw& ScatterDraw::SetDataThickness(int index, double thickness) {
-	ASSERT(IsValid(index));
-	series[index].thickness = thickness;
-	Refresh();
-	return *this;
-}
-
-double ScatterDraw::GetDataThickness(int index) const {
-	ASSERT(IsValid(index));
-	return series[index].thickness;
-}
-*/
 ScatterDraw& ScatterDraw::SetFillColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].fillColor = color;
