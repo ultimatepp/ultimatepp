@@ -59,6 +59,9 @@ ctrl ScatterCtrl {
 	Frame  SetFrame;
 	Color  SetColor = :White;
 	
+	int SetSaveSizeX = 1000;
+	int SetSaveSizeY = 800;
+	
 	Paint(w) {          
 		r = GetRect();
 		w.DrawRect(r, .SetColor);

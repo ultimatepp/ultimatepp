@@ -1014,7 +1014,7 @@ ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 	showLoadData = showSaveData = false;
 	defaultCSVseparator = ";";
 	rotate = Angle_0;
-	Color(graphColor);	
+	//Color(graphColor);	
 	BackPaint();
 	popTextBegin.SetColor(SColorFace);  
 	popTextVert.SetColor(SColorFace);  
