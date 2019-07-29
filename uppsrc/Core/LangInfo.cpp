@@ -244,7 +244,7 @@ LanguageInfo::LanguageInfo()
 void LanguageInfo::Set(int lang_)
 {
 	language = lang_;
-	dword q = sGetLanguageDetails(language, &english_name, &native_name);	
+	dword q = sGetLanguageDetails(language, &english_name, &native_name);
 	if(!q)
 		return;
 
@@ -254,6 +254,10 @@ void LanguageInfo::Set(int lang_)
 		getindexletter = CSCZGetIndexLetter;
 		compare = CSCZLanguageCompare;
 	}
+
+	decimal_point = ".";
+	thousand_separator = ",";
+
 #ifdef PLATFORM_WIN32
 	LCID lcid = q;
 	thousand_separator = GetLocaleInfoA(lcid, LOCALE_STHOUSAND);
@@ -299,16 +303,9 @@ void LanguageInfo::Set(int lang_)
 
 #if defined(PLATFORM_POSIX) && !defined(PLATFORM_ANDROID)
 	String langtext = LNGAsText(language);
-	char ltext[6];
-	ltext[0] = ToLower(langtext[0]);
-	ltext[1] = ToLower(langtext[1]);
-	ltext[2] = '_';
-	ltext[3] = ToUpper(langtext[3]);
-	ltext[4] = ToUpper(langtext[4]);
-	ltext[5] = 0;
+	String ltext = Format("%c%c_%c%c", ToLower(langtext[0]), ToLower(langtext[1]), ToUpper(langtext[3]), ToUpper(langtext[4]));
 	String oldloc = setlocale(LC_ALL, NULL);
-	if(setlocale(LC_ALL, ltext))
-	{
+	if(setlocale(LC_ALL, ltext + ".utf8") || setlocale(LC_ALL, ltext + ".UTF-8") || setlocale(LC_ALL, ltext)) {
 		const struct lconv *lc = localeconv();
 		decimal_point = lc->decimal_point;
 		thousand_separator = lc->thousands_sep;
@@ -344,6 +341,7 @@ void LanguageInfo::Set(int lang_)
 
 		setlocale(LC_ALL, oldloc);
 	}
+	
 #endif
 	for(int i = 0; i < 12; i++) {
 		month[i] = month_names[i].ToString();

@@ -194,7 +194,7 @@ void MemoryDumpLeaks()
 {
 	if(PanicMode)
 		return;
-	if(!AppNormalExit) {
+	if(IsMainRunning()) {
 		VppLog() << "Application was terminated in a non-standard way (e.g. exit(x) call or Ctrl+C)\n";
 		return;
 	}
