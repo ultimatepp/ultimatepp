@@ -195,6 +195,18 @@ xt]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 ext])&]
 is specified.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:FileSel`:`:Sort`(int`): [_^Upp`:`:FileSel^ FileSel][@(0.0.255) `&]_[* Sort]([@(0.0.255) i
+nt]_[*@3 kind])&]
+[s2;%% Sets the sorting mode, [%-*@3 kind] can be one of FILELISTSORT`_NAME, 
+FILELISTSORT`_EXT, FILELISTSORT`_TIME, FILELISTSORT`_SIZE, potentially 
+combined (with binary or) with flag FILELISTSORT`_DESCENDING.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FileSel`:`:Columns`(int`): [_^Upp`:`:FileSel^ FileSel][@(0.0.255) `&]_[* Column
+s]([@(0.0.255) int]_[*@3 n])&]
+[s2;%% Sets the number of columns.&]
+[s3;%% &]
+[s4; &]
 [s5;:FileSel`:`:Multi`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Multi]([@(0.0.255) bool
 ]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% In this mode, more than single file can be selected. Default 
