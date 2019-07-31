@@ -662,10 +662,9 @@ void Ctrl::Close()
 	DoRemove();
 	if(parent) return;
 	StateH(CLOSE);
-	bool vis = visible;
 	USRLOG("   CLOSE " + Desc(this));
 	WndDestroy();
-	visible = vis;
+	visible = true;
 	popup = false;
 }
 
