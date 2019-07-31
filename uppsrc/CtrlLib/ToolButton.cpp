@@ -155,8 +155,10 @@ ToolButton& ToolButton::Label(const char *text)
 
 ToolButton& ToolButton::Kind(int _kind)
 {
-	if(kind != _kind)
+	if(kind != _kind) {
+		kind = _kind;
 		Refresh();
+	}
 	return *this;
 }
 
