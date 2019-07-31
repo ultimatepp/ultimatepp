@@ -500,13 +500,13 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	if(IsWinNT() && (!parent || IsWindowUnicode(parent)))
 		top->hwnd = CreateWindowExW(exstyle,
 		                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-		                                         : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
+		                                     : dropshadow ? L"UPP-CLASS-DS-W" : L"UPP-CLASS-W",
 		                            L"", style, 0, 0, 0, 0,
 		                            parent, NULL, hInstance, this);
 	else
 		top->hwnd = CreateWindowEx(exstyle,
 		                           savebits ? dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
-		                                        : dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
+		                                    : dropshadow ? "UPP-CLASS-DS-A" : "UPP-CLASS-A",
 		                           "", style, 0, 0, 0, 0,
 		                           parent, NULL, hInstance, this);
 
@@ -1255,7 +1255,7 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	LLOG("PopoUp " << UPP::Name(this));
+	LLOG("PopUpHWND " << UPP::Name(this) << ", owner: " << owner);
 	popup = false;
 	Create(owner, WS_POPUP, topmost ? WS_EX_TOPMOST : 0, savebits,
 	       owner || !activate ? SW_SHOWNOACTIVATE : SW_SHOW,
