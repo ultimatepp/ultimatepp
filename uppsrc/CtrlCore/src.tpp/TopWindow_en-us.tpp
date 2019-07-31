@@ -210,7 +210,9 @@ word]_[*@3 `_exstyle])&]
 [s3;%% &]
 [s4; &]
 [s5;:TopWindow`:`:Open`(Ctrl`*`): [@(0.0.255) void]_[* Open]([_^Ctrl^ Ctrl]_`*[*@3 owner])&]
-[s2;%% Opens TopWindow as window in host GUI with specified owner.&]
+[s2;%% Opens TopWindow as window in host GUI with specified owner. 
+Window can be open as hidden is visibility flag is set to false 
+(Hide()), however on closing, window is set to visible.&]
 [s7;%% [%-*C@3 owner]-|Owner of window. If NULL, window has no owner.&]
 [s3;%% &]
 [s4; &]
