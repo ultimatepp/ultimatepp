@@ -23,11 +23,6 @@ void TagSyntax::Put0(int ink, int n, int paper)
 		hout->Put(n, hl_style[ink], hl_style[paper]);
 }
 
-inline static bool IsXmlNameChar(int c)
-{
-	return IsAlNum(c) || c == '.' || c == '-' || c == '_' || c == ':';
-}
-
 const wchar *TagSyntax::Spaces(const wchar *s, const wchar *e)
 {
 	while(s < e && IsSpace(*s)) {

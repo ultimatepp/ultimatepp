@@ -321,24 +321,6 @@ Image::~Image()
 		data->Release();
 }
 
-Image::Image(const Init& init)
-{ // Legacy (before cca 2008) iml support
-	ASSERT(init.info[0] >= 1);
-	Size sz;
-	sz.cx = Peek32le(init.info + 1);
-	sz.cy = Peek32le(init.info + 5);
-	ImageBuffer b(sz);
-	int i = 0;
-	while(i < init.scan_count) {
-		UnpackRLE(b[i], (const byte *)init.scans[i], sz.cx);
-		i++;
-	}
-	while(i < sz.cy)
-		memset(b[i++], 0, sizeof(RGBA) * sz.cx);
-	b.SetHotSpot(Point(Peek32le(init.info + 9), Peek32le(init.info + 13)));
-	Set(b);
-}
-
 String Image::ToString() const
 {
 	return String("Image ").Cat() << GetSize();
