@@ -46,7 +46,7 @@ int ImageSizeAdjuster(const Image& img)
 }
 
 void SysImageRealized(const Image& img)
-{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is paintonly kind
+{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is Fpaintonly kind
 	Mutex::Lock __(sMakeImage);
 	if(sFinished)
 		return;
@@ -76,7 +76,7 @@ void SysImageReleased(const Image& img)
 	Mutex::Lock __(sMakeImage);
 	if(sFinished)
 		return;
-	if(!~img) {
+	if(!~img) { // No data -> this is paintonly image
 		ImageRemover ir;
 		ir.serial_id = img.GetSerialId();
 		LLOG("SysImageReleased " << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
