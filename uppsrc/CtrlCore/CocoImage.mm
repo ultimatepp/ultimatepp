@@ -26,17 +26,20 @@ struct ImageSysData {
 	~ImageSysData();
 };
 
+// Note: Coca U++ has to ignore paintonly flag as the data of image are directly referenced by
+// data provider
+
 void ImageSysData::Init(const Image& m)
 {
 	img = m;
 	cgimg = createCGImage(img);
-	SysImageRealized(img);
+	// Do not call SysImageRealized(img) here
 }
 
 ImageSysData::~ImageSysData()
 {
 	SysImageReleased(img);
-    CGImageRelease(cgimg);
+    // Do not call CGImageRelease(cgimg); here
 }
 
 struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
