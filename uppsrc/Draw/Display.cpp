@@ -227,10 +227,6 @@ void  SizeTextDisplayCls::Paint(Draw& w, const Rect& r, const Value& q,
 
 const Display& SizeTextDisplay() { return Single<SizeTextDisplayCls>(); }
 
-static inline int NScale(int sz, int r) {
-	return sz ? sz < r ? r / sz * sz : r : 0;
-}
-
 class CenteredImageDisplayCls : public Display {
 public:
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,

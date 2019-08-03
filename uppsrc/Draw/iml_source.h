@@ -31,13 +31,6 @@
 
 
 UPP::Iml& IMAGECLASS::Iml() {
-	static UPP::Image::Init init[] = { // legacy format
-	#define IMAGE_PACKED(n, d) { COMBINE(COMBINE(IMAGECLASS, _), n##__scans__), __countof(COMBINE(COMBINE(IMAGECLASS, _), n##__scans__)), d },
-		#include IMAGEFILE
-		{ NULL }
-	#undef  IMAGE_PACKED
-	};
-
 	static const char *name[IMAGECLASS::COUNT] = {
 	#define IMAGE_PACKED(n, d) #n,
 	#undef IMAGE_ID
@@ -45,7 +38,7 @@ UPP::Iml& IMAGECLASS::Iml() {
 		#include IMAGEFILE
 	};
 
-	static UPP::Iml iml(init, name, COUNT);
+	static UPP::Iml iml(name, COUNT);
 	
 	#ifdef FIXED_COLORS
 	#undef FIXED_COLORS

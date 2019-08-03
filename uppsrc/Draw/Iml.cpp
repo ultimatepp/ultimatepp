@@ -155,9 +155,8 @@ int  Iml::GetBinSize() const
 }
 #endif
 
-Iml::Iml(const Image::Init *img_init, const char **name, int n)
-:	img_init(img_init),
-	name(name)
+Iml::Iml(const char **name, int n)
+:	name(name)
 {
 	premultiply = true;
 	Init(n);

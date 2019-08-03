@@ -50,11 +50,12 @@ PatchDiff::PatchDiff()
 				return;
 			String h = patch.GetPatchedFile(i);
 			String p = patch.GetPath(i);
-			if(!h.IsVoid())
+			if(!h.IsVoid()) {
 				if(IsNull(h))
 					FileDelete(p);
 				else
 					SaveFile(p, h);
+			}
 		}
 		Break(IDOK);
 	};
