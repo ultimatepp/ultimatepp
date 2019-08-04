@@ -141,20 +141,6 @@ Image Iml::Get(int i)
 	return m.image;
 }
 
-#ifdef _DEBUG
-int  Iml::GetBinSize() const
-{
-	int size = 0;
-	for(int i = 0; i < map.GetCount(); i++) {
-		const Image::Init& init = img_init[i];
-		size += (int)strlen(name[i]) + 1 + 24;
-		for(int q = 0; q < init.scan_count; q++)
-			size += (int)strlen(init.scans[q]);
-	}
-	return size;
-}
-#endif
-
 Iml::Iml(const char **name, int n)
 :	name(name)
 {

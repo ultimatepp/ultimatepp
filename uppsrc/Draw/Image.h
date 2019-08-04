@@ -306,10 +306,6 @@ public:
 	int    Find(const String& id) const      { return map.Find(id); }
 	void   Set(int i, const Image& img);
 
-#ifdef _DEBUG
-	int    GetBinSize() const;
-#endif
-
 	ImageIml GetRaw(int mode, int i); // tries to get image for mode, can return Null
 	ImageIml GetRaw(int mode, const String& id); // tries to get image for mode by id, can return Null
 
