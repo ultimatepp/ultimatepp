@@ -129,7 +129,7 @@ void CocoMenuBar::MenuAction(id sender)
 	for(const Item& m : item)
 		if(m.nsitem == sender) {
 			ResetCocoaMouse();
-			m.cb();
+			PostCallback(m.cb);
 			break;
 		}
 }
