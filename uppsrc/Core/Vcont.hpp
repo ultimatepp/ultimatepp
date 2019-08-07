@@ -155,7 +155,7 @@ template <class T>
 T& Vector<T>::GrowAdd(const T& x) {
 	T *prev = vector;
 	bool b = GrowSz();
-	T *q = new(Rdd()) T(clone(x));
+	T *q = new(Rdd()) T(x);
 	if(b) RawFree(prev);
 	return *q;
 }
