@@ -278,7 +278,7 @@ protected:
 
 public:
 	T&       Add()                           { T *q = new T; vector.Add(q); return *q; }
-	T&       Add(const T& x)                 { T *q = new T(clone(x)); vector.Add(q); return *q; }
+	T&       Add(const T& x)                 { T *q = new T(x); vector.Add(q); return *q; }
 	T&       Add(T&& x)                      { T *q = new T(pick(x)); vector.Add(q); return *q; }
 	T&       Add(T *newt)                    { vector.Add(newt); return *newt; }
 	template<class TT, class... Args>
