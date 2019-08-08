@@ -9,6 +9,11 @@ struct MemoryOptions { // sizes are in KB
 	~MemoryOptions(); // sets options
 };
 
+enum {
+	UPP_HEAP_ALIGNMENT = 16,
+	UPP_HEAP_MINBLOCK = 32,
+};
+
 #ifdef UPP_HEAP
 
 void *MemoryAllocPermanent(size_t size);

@@ -522,16 +522,17 @@ rray][@(0.0.255) `&]_[*@3 b])&]
 [s4;%- &]
 [s5;:Array`:`:operator`<`<`(const T`&`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Operator replacement of [* void Add(const T`&x)]. By returning 
-a reference to the Array it allows adding more elements in a 
-single expression, thus e.g. allowing to construct a temporary 
-Array as part of an expression like Foo((Array<int>() << 1 << 
-2 << 4)).&]
+[s5;:Upp`:`:Array`:`:operator`<`<`(T`&`&`):%- [_^Upp`:`:Array^ Array][@(0.0.255) `&]_[* ope
+rator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s2; Operator replacement of [* Add]. By returning a reference to the 
+Array it allows adding more elements in a single expression, 
+thus e.g. allowing to construct a temporary Array as part of 
+an expression like Foo((Array<int>() << 1 << 2 << 4)).&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the Array.&]
-[s7; [*C@3 x]-|The value that is copied to newly created element.&]
+[s7; [*C@3 x]-|The value that is transferred to newly created element.&]
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Array`:`:operator`<`<`(T`*`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[* operator<<]([*@4 T]_`*[*@3 newt])&]
@@ -542,24 +543,6 @@ an expression like Foo((Array<Bar>() << new Bar << new DerivedFromBar)).&]
 [s6; Invalidates iterators to the Array.&]
 [s7; [*C@3 newt]-|Object to be added.&]
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Array`:`:operator`|`(pick`_ T`&`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
-rray][@(0.0.255) `&]_[* operator`|]([@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Operator replacement of [* void AddPick(pick`_ T`&x)]. By returning 
-a reference to the Array it allows adding more elements in a 
-single expression, thus e.g. allowing to construct a temporary 
-Array as part of an expression.&]
-[s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators to the Array.&]
-[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
-[s7; [*/ Return value]-|Reference to Array (`*this).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Array`:`:IsPicked`(`)const:%- [@(0.0.255) bool]_[* IsPicked]()_[@(0.0.255) const]&]
-[s2; Returns [* true] if the Array is in picked state.&]
-[s7; [*/ Return value]-|[* true] if the Array is in picked state, [* false] 
-otherwise.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`$en`-us`#Stream`:`:class^ S
