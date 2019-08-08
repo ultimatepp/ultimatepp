@@ -344,6 +344,7 @@ public:
 	void     Swap(Array& b)             { Swap(vector, b.vector); }
 
 	Array& operator<<(const T& x)       { Add(x); return *this; }
+	Array& operator<<(T&& x)            { Add(pick(x)); return *this; }
 	Array& operator<<(T *newt)          { Add(newt); return *this; }
 
 	void     Serialize(Stream& s)       { StreamContainer(s, *this); }

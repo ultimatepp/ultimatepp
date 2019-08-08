@@ -31,7 +31,9 @@ checks.&]
 ize`_t][@(0.0.255) `&]_[*@3 size])&]
 [s2;%% Allocates a memory block of at least [%-*@3 size] bytes. [%-*@3 size] 
 is set to the real number of bytes in the block that can be used 
-by an application.&]
+by an application. Guaranteed alignment is specified in [* UPP`_HEAP`_ALIGNMENT] 
+constant (currently 16). The minimal real size of returned block 
+in release mode is [* UPP`_HEAP`_MINBLOCK] (currently 32).&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:MemoryAlloc`(size`_t`): [@(0.0.255) void]_`*[* MemoryAlloc]([_^size`_t^ size`_t
