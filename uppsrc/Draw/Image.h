@@ -118,6 +118,10 @@ public:
 	const RGBA *Begin() const           { return pixels; }
 	RGBA *End()                         { return pixels + GetLength(); }
 	const RGBA *End() const             { return pixels + GetLength(); }
+	RGBA *begin()                       { return pixels; }
+	const RGBA *begin() const           { return pixels; }
+	RGBA *end()                         { return pixels + GetLength(); }
+	const RGBA *end() const             { return pixels + GetLength(); }
 
 	void  Create(int cx, int cy);
 	void  Create(Size sz)               { Create(sz.cx, sz.cy); }
