@@ -80,6 +80,9 @@ private:
 		void Destroy();
 		
 		void ActivateContext();
+
+		void ExecuteGL(HDC hdc, Event<> paint, bool swap_buffers);
+		void ExecuteGL(Event<> paint, bool swap_buffers);
 	};
 #endif
 
@@ -129,6 +132,8 @@ public:
 	static void SetCurrentViewport(); // intended to restore viewport after changing it in e.g. TextureDraw
 	
 	GLCtrl& RedirectMouse(Ctrl *target)           { mouseTarget = target; return *this; }
+	
+	void ExecuteGL(Event<> gl, bool swap_buffers = false);
 
 	GLCtrl()                                      { Init(); }
 
