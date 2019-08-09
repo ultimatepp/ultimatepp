@@ -1,8 +1,21 @@
-global new/delete overload with mingw?
-
 ONCELOCK
 
+THREADINIT
+THREADEXIT
+
 Value compare / StableSort
+	
+---------------------------------
+mingw TLS:
+	Random
+	glyph/font?
+
+Buffer:
+	BlockStream
+	OutStream
+
+new/delete:
+	ClippingLine
 
 Allocator > 64KB
 
@@ -10,7 +23,6 @@ CoDo
 
 Consider refactoring void VectorReAlloc_(void *v_, int newalloc, int sizeofT) to remove division.
 
----------------------------------
 oportunity &&
 
 RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
