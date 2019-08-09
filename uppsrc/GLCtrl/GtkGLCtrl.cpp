@@ -33,6 +33,8 @@ EXITBLOCK {
 
 void GLCtrl::Create()
 {
+	MemoryIgnoreLeaksBlock __;
+
 	Ctrl *top = GetTopCtrl();
 	if(!top)
 		return;
@@ -136,11 +138,9 @@ void GLCtrl::State(int reason)
 	}
 }
 
-void GLCtrl::Paint(Draw& w)
+void GLCtrl::ExecuteGL(Event<> paint, bool swap_buffers)
 {
-	Size sz = GetSize();
-	if(!s_GLXContext || sz.cx == 0 || sz.cy == 0)
-		return;
+	MemoryIgnoreLeaksBlock __;
 
 	glXMakeCurrent(s_Display, win, s_GLXContext);
 
@@ -148,14 +148,23 @@ void GLCtrl::Paint(Draw& w)
 		glewInit();
 	}
 
-	DoGLPaint();
+	paint();
 
-	if(doubleBuffering)
+	if(swap_buffers)
 		glXSwapBuffers(s_Display, win);
 	else
 		glFlush();
 
 	glXMakeCurrent(s_Display, None, NULL);
+}
+
+void GLCtrl::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(!s_GLXContext || sz.cx == 0 || sz.cy == 0)
+		return;
+
+	ExecuteGL([&] { DoGLPaint(); }, doubleBuffering);
 }
 
 }
