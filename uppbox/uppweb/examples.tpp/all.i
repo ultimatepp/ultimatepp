@@ -114,7 +114,3 @@ TOPIC("XmlView_en-us")
 #include "XmlView_en-us.tppi"
 END_TOPIC
 
-TOPIC("clock_en-us")
-#include "clock_en-us.tppi"
-END_TOPIC
-

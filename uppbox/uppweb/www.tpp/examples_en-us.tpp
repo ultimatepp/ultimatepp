@@ -27,7 +27,7 @@ topic "Examples";
 [s0;^topic`:`/`/uppweb`/www`/examples`$en`-us`#1^ &]
 [s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#1^ 1. Introduction]&]
 [s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#2^ 2. Sample applications]&]
-[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ 3. Reference implementation]&]
+[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ 3. Reference examples]&]
 [s0;^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ &]
 [s3;:1: 1. Introduction&]
 [s5; We would like to present to you a complete collection of examples. 
@@ -39,9 +39,8 @@ will show you on how many real world scenario Ultimate`+`+ can
 be used.&]
 [s5; The whole page is divided into two sections. The first one `"Sample 
 applications`" shows the complex usage of the framework. in the 
-real world application. The second `"Reference implementation`" 
-presents how certain topic should be implemented. This section 
-is designed for more advanced users.&]
+real world application. The second `"Reference examples`" demonstrates 
+how certain features are supposed to be used.&]
 [s5; You can click on each example to display its source code with 
 additional information such as:&]
 [s5;l160;i150;O0; a short description that explains what the application 
