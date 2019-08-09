@@ -100,26 +100,44 @@ void GLCtrl::GLPane::State(int reason)
 	}
 }
 
+void GLCtrl::GLPane::ExecuteGL(HDC hDC, Event<> paint, bool swap_buffers)
+{
+	wglMakeCurrent(hDC, s_openGLContext);
+	paint();
+	if(swap_buffers)
+		SwapBuffers(hDC);
+	else
+		glFlush();
+	wglMakeCurrent(NULL, NULL);
+}
+
+void GLCtrl::GLPane::ExecuteGL(Event<> paint, bool swap_buffers)
+{
+	HWND hwnd = GetHWND();
+	GLCtrl::CreateContext();
+	HDC hDC = GetDC(hwnd);
+	ExecuteGL(hDC, paint, swap_buffers);
+	ReleaseDC(hwnd, hDC);
+}
+
 LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if(message == WM_PAINT && s_openGLContext) {
 		PAINTSTRUCT ps;
 		HWND hwnd = GetHWND();
 		BeginPaint(hwnd, &ps);
-		HDC hDC = ps.hdc;
-		wglMakeCurrent(hDC, s_openGLContext);
-		ctrl->DoGLPaint();
-		if(ctrl->doubleBuffering)
-			SwapBuffers(hDC);
-		else
-			glFlush();
-		wglMakeCurrent(NULL, NULL);
-		ReleaseDC(hwnd, hDC);
+		ExecuteGL(ps.hdc, [&] { ctrl->DoGLPaint(); }, ctrl->doubleBuffering);
+		ReleaseDC(hwnd, ps.hdc);
 		EndPaint(hwnd, &ps);
 		return 0;
 	}
 	
 	return DHCtrl::WindowProc(message, wParam, lParam);
+}
+
+void GLCtrl::ExecuteGL(Event<> paint, bool swap_buffers)
+{
+	pane.ExecuteGL(paint, swap_buffers);
 }
 
 #endif
