@@ -60,6 +60,34 @@ struct OpenGLExample : GLCtrl {
 		glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	}
 
+	virtual void LeftDown(Point, dword)
+	{ // Demonstrates how to create a screenshot of opengl widget
+		ExecuteGL([&] {
+			Size sz=GetSize();
+			ImageBuffer ib(sz);
+	
+			glReadPixels(0,0,sz.cx,sz.cy,GL_BGRA_EXT,GL_UNSIGNED_BYTE,(GLvoid*)~ib);
+			if(!glGetError()){
+				// Flip
+				Buffer<RGBA> temp(sz.cx);
+				for(int i = 0; i < sz.cy / 2; i++){
+					memcpy(temp, ib[i], sz.cx * sizeof(RGBA));
+					memcpy(ib[i], ib[sz.cy - 1 - i], sz.cx * sizeof(RGBA));
+					memcpy(ib[sz.cy - 1 - i], temp, sz.cx * sizeof(RGBA));
+				}
+				
+				// Flatten alpha channel
+				for(RGBA& t : ib)
+					t.a = 255;
+		
+				// Save image
+				String p = SelectFileSaveAs("Portable Network Graphics (*.png)\t*.png");
+				if(p.GetCount())
+					PNGEncoder().SaveFile(p, ib);
+			}
+		});
+	}
+
 	virtual void MouseMove(Point p, dword) {
 		point = p;
 		Refresh();
