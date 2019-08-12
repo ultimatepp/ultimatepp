@@ -64,6 +64,11 @@ bool ThreadHasGuiLock()
 	return Thread::IsMain() || sGLockLevel;
 }
 
+int  GetGuiLockLevel()
+{
+	return sGLockLevel;
+}
+
 void WakeUpGuiThread();
 
 struct Ctrl::CallBox {
