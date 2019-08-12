@@ -60,6 +60,7 @@ int  LeaveGuiMutexAll();
 void EnterGuiMutex(int n);
 
 bool ThreadHasGuiLock();
+int  GetGuiLockLevel();
 #else
 inline void EnterGuiMutex() {}
 inline void LeaveGuiMutex() {}
