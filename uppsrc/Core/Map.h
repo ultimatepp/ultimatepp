@@ -176,7 +176,7 @@ public:
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	AMap(Index<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
-	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, clone(i.second)); }
+	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(clone(i.first), clone(i.second)); }
 
 	typedef IteratorOf<V>           Iterator;
 	typedef ConstIteratorOf<V>      ConstIterator;
