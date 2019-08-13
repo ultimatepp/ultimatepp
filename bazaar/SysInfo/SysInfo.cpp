@@ -41,7 +41,7 @@ REFCLSID ___CLSID_WbemAdministrativeLocator =
 #define ___CLSID_WbemAdministrativeLocator CLSID_WbemAdministrativeLocator
 #endif
 
-bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
+bool GetWMIInfo(String system, Vector <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
 	HRESULT hRes;
 	
 	hRes = CoInitialize(NULL);
@@ -154,7 +154,7 @@ bool GetWMIInfo(String system, String data, Value &res, String nameSpace = "root
 	Array <Value> arrRes;
 	Array <Value> *arrResP[1];
 	arrResP[0] = &arrRes;
-	Array <String> arrData;
+	Vector <String> arrData;
 	arrData.Add(data);
 	bool ret = GetWMIInfo(system, arrData, arrResP, nameSpace);
 	if (ret)
@@ -414,7 +414,7 @@ bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value>
 	res[2] = &videoProcessor;
 	res[3] = &ram;
 	res[4] = &videoMode;
-	Array <String> data;
+	Vector <String> data;
 	data.Add("Name");
 	data.Add("Description");
 	data.Add("VideoProcessor");
@@ -439,7 +439,7 @@ Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, 
 	res[4] = &caption;	
 	res[5] = &description;	
 	res[6] = &state;	
-	Array <String> data;
+	Vector <String> data;
 	data.Add("Name");
 	data.Add("Version");
 	data.Add("Vendor");
