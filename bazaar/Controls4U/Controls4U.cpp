@@ -43,7 +43,7 @@ void EditFileFolder::Init() {
 	butBrowseLeft.SetImage(Controls4UImg::Folder());
 	butBrowseLeft.Tip(t_("Browse"));
 	butBrowseLeft <<= THISBACK(DoBrowse);
-	EditString::AddFrame(butBrowseRight);
+	AddFrame(butBrowseRight);
 	butBrowseRight.SetImage(Controls4UImg::Folder());
 	butBrowseRight <<= THISBACK(DoBrowse);
 	butBrowseRight.Width(40);
@@ -61,7 +61,7 @@ void EditFileFolder::Init() {
 	butUp.Enable(false);
 	//EditString::AddFrame(butGo);
 	butGo.SetImage(CtrlImg::SmallRight()); 
-	butGo <<= THISBACK1(DoGo, true); 
+	butGo <<= THISBACK1(DoGo, true);
 	butFolder.Tip(t_("Open folder"));
 	butFolder.Width(10);
 	isFile = isLoad = true;
@@ -83,11 +83,10 @@ EditFileFolder::~EditFileFolder() {
 }
 
 EditFileFolder &EditFileFolder::UseOpenFolder(bool use) {
-	if (use) {
-		EditString::InsertFrame(0, butFolder);
-	} else {
-		EditString::RemoveFrame(butFolder);
-	}
+	if (use) 
+		InsertFrame(0, butFolder);
+	else
+		RemoveFrame(butFolder);
 	return *this;
 }
 	
@@ -167,21 +166,15 @@ void EditFileFolder::DoBrowse() {
 		}
 	}
 	if (isFile && isLoad) {
-		if (fs.ExecuteOpen(title)) {
+		if (fs.ExecuteOpen(title)) 
 			SetData(~fs);
-			WhenAction();
-		}
 	} else if (isFile && !isLoad)  {
-		if (fs.ExecuteSaveAs(title)) {
+		if (fs.ExecuteSaveAs(title)) 
 			SetData(~fs);
-			WhenAction();
-		}
 	} else if (!isFile) {
 		fs.ClearFiles();
-		if (fs.ExecuteSelectDir(title)) {
+		if (fs.ExecuteSelectDir(title)) 
 			SetData(~fs);
-			WhenAction();
-		}
 	}
 }
 
@@ -206,6 +199,7 @@ void EditFileFolder::DoGo(bool add) {
 		if (histInd >= history.GetCount()-1)
 			butRight.Enable(false);
 	}
+	AddHistory();
 	WhenChange();
 	//WhenAction();
 	Accept();
