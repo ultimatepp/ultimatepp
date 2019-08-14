@@ -104,7 +104,7 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 		percentage = power.BatteryLifePercent;
 	else
 		percentage = Null;
-	if (discharging && (power.BatteryLifeTime != -1)) 
+	if (discharging && (int(power.BatteryLifeTime) != -1)) 
 		remainingMin = int(power.BatteryLifeTime/60);
 	else
 		remainingMin = Null;

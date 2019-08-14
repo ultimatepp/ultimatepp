@@ -179,7 +179,7 @@ struct SystemSignature : DeepCopyOption<SystemSignature> {
 	int numberOfProcessors;	
 	String hdSerial;
 	String userName;
-	Array <NetAdapter> netAdapters;
+	Upp::Array <NetAdapter> netAdapters;
 	
 	void Load();
 	String ToString() const			{return StoreAsJson(*this, true);}
