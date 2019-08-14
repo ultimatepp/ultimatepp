@@ -255,6 +255,11 @@ template<class T>
 inline T pow3(T a) {return a*a*a;}
 template<class T>
 inline T pow4(T a) {return pow2(pow2(a));}
+template<class T>
+inline T fround(T x, int numdec) {
+	int64 mult = 10*numdec;
+	return T(int64(x*mult + .5))/mult;	
+}
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
 	return val >= min && val <= max;
@@ -667,10 +672,29 @@ void Shuffle(C &data, int randomSeed = Null) {
 	ShuffleDescending(data, generator);	
 }
 
+template <class T>
+bool Equal(const T& a, const T& b, const T& ratio) {
+	if (a == 0)
+		return b <= ratio;
+	if (b == 0)
+		return a <= ratio;
+	if(abs((a - b)/b) <= ratio) 
+		return true;
+	return false;
+}
+
 template <class Range, class V>
 void FindAdd(Range& r, const V& value, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
 		if(r[i] == value) 
+			return;
+	r.Add(value);
+}
+
+template <class Range, class V>
+void FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
+	for(int i = from; i < r.GetCount(); i++)
+		if(Equal(r[i], value, ratio)) 
 			return;
 	r.Add(value);
 }
@@ -687,20 +711,34 @@ int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0)
 template <class Range, class V>
 int FindIndexRatio(const Range& r, const V& value, const V& ratio, int from = 0)
 {
-	for(int i = from; i < r.GetCount(); i++)
-		if(abs((r[i] - value)/value) <= ratio) 
+	for(int i = from; i < r.GetCount(); i++) {
+		if (Equal(r[i], value, ratio))
 			return i;
+	}
 	return -1;
 }
 
-template <class Range>
-bool Compare(Range& a, Range& b, int from = 0) {
+template <class Range, class V>
+bool Compare(const Range& a, const Range& b, const V& ratio = 0) {
 	if (a.GetCount() != b.GetCount())
 		return false;
-	for(int i = from; i < a.GetCount(); i++)
-		if(a[i] != b[i]) 
+	for(int i = 0; i < a.GetCount(); i++) {
+		V div = (b[i] != 0) ? b[i] : (a[i] != 0 ? a[i] : 1);
+		if(abs(a[i] - b[i])/div > ratio) 
 			return false;
+	}
 	return true;
+}
+
+template <class Range>
+String ToString(const Range& a) {
+	String ret;
+	for(int i = 0; i < a.GetCount(); i++) {
+		if (i > 0)
+			ret << ";";
+		ret << a[i]; 
+	}
+	return ret;
 }
 
 class RealTimeStop {  

@@ -46,3 +46,4 @@ file
 	Html/htmld.h,
 	Copying;
 
+ spellcheck_comments "EN-GB"

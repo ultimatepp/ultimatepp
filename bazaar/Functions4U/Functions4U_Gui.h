@@ -106,4 +106,8 @@ private:
 #endif
 };
 
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array);
+void ArrayCtrlRowCopy(ArrayCtrl &array, bool header);
+void ArrayCtrlRowSelect(ArrayCtrl &array);
+
 #endif

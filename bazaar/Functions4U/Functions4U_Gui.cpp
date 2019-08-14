@@ -193,5 +193,26 @@ ConsoleOutput::~ConsoleOutput() {
 #endif
 }
 
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array) {
+	menu.Add(t_("Select all"), Null, [&] {ArrayCtrlRowSelect(array);})
+		.Key(K_CTRL_A).Help(t_("Select all rows"));
+								
+	int count = array.GetSelectCount();
+	if (count == 0)
+		menu.Add(t_("No row selected"), Null, Null).Enable(false).Bold(true);
+	else {
+		menu.Add(Format(t_("Selected %d rows"), count), Null, Null).Enable(false).Bold(true);
+		menu.Add(t_("Copy"), Null, [&] {ArrayCtrlRowCopy(array, false);})
+			.Key(K_CTRL_C).Help(t_("Copy selected rows to clipboard"));
+	}
+}
+
+void ArrayCtrlRowCopy(ArrayCtrl &array, bool header) {
+	array.SetClipboard(true, header);
+}
+
+void ArrayCtrlRowSelect(ArrayCtrl &array) {
+	array.Select(0, array.GetCount(), true);
+}
 
 #endif
