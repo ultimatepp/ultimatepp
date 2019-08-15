@@ -275,7 +275,7 @@ public:
 		
 		String text = "Fixed text";
 		Font font = Arial(30);
-		Size sz = GetTextSize(text, font);
+		Size sz = GetTextSizeSpace(text, font);
 		FillRectangleOpa(w, plotW - sz.cx - 10, 10, plotW - 10, 10 + sz.cy, 0.3, Null, LtGreen());
 		DrawText(w, plotW - sz.cx - 10, 10, 0, text, font, Black());
 		
