@@ -376,10 +376,10 @@ void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, double scale, double o
 }
 
 Size GetTextSizeSpace(const String& text, Font font) {
-	Size ret;
-	ret.cx = ret.cy = 0;
-	for (int i = 0; i < text.GetCount(); ++i)  
-		ret.cx += font.GetLeftSpace(text[i]) + font.GetWidth(text[i]);
+	Size ret(0, 0);
+	WString wtext(text);
+	for (int i = 0; i < wtext.GetCount(); ++i)  
+		ret.cx += font.GetLeftSpace(wtext[i]) + font.GetWidth(wtext[i]);
 	ret.cy = font.GetHeight();
 	return ret;
 }
