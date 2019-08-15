@@ -1,8 +1,6 @@
 #include "ScatterDraw.h"
 
 ScatterDraw::ScatterDraw() {
-	mode = MD_ANTIALIASED;
-	size = Size(800, 400);
 	titleColor = SColorText();
 	graphColor = White();
 	titleFont = Roman(20);
@@ -218,6 +216,8 @@ bool ScatterDraw::PointInLegend(Point &pt)
 }
 
 void ScatterDraw::AdjustMinUnitX() {
+	if (SetGridLinesX)
+		return;
 	xMinUnit = xMinUnit0;
 	if (xMajorUnit > 0) {
 		if (xMinUnit < 0)
@@ -228,6 +228,8 @@ void ScatterDraw::AdjustMinUnitX() {
 }
 
 void ScatterDraw::AdjustMinUnitY() {
+	if (SetGridLinesY)
+		return;
 	yMinUnit = yMinUnit0;
 	if (yMajorUnit > 0) {
 		if (yMinUnit < 0)
@@ -238,6 +240,8 @@ void ScatterDraw::AdjustMinUnitY() {
 }
 
 void ScatterDraw::AdjustMinUnitY2() {
+	if (SetGridLinesY)
+		return;
 	yMinUnit2 = yMinUnit20;
 	if (yMajorUnit2 > 0) {
 		if (yMinUnit2 < 0)

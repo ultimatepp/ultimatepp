@@ -374,3 +374,12 @@ void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, double scale, double o
 	w.Opacity(opacity);
 	w.Fill(fillColor);		// Before Stroke()
 }
+
+Size GetTextSizeSpace(const String& text, Font font) {
+	Size ret;
+	ret.cx = ret.cy = 0;
+	for (int i = 0; i < text.GetCount(); ++i)  
+		ret.cx += font.GetLeftSpace(text[i]) + font.GetWidth(text[i]);
+	ret.cy = font.GetHeight();
+	return ret;
+}

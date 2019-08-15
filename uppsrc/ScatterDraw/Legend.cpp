@@ -32,10 +32,10 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 			if (legend.Find('[') < 0 && !series[i].unitsY.IsEmpty())
 				legend += " [" + series[i].unitsY + "]";
 			legends.Add(legend);
-			legendWidth = max<int>(legendWidth, GetTextSize(legend, scaledFont).cx);
+			legendWidth = max<int>(legendWidth, GetTextSizeSpace(legend, scaledFont).cx);
 		}
 	}
-	legendWidth += lineLen + 4*xWidth;
+	legendWidth += lineLen + 3*xWidth;
 	
 	int rowIncSign;
 	int plotW, plotH;
@@ -166,7 +166,7 @@ void ScatterDraw::DrawRainbowPalette(Draw& w) const {
 	}	
 	
 	if (!surfUnits.IsEmpty()) {
-		Size unitsSize = GetTextSize(surfUnits, fnt);	
+		Size unitsSize = GetTextSizeSpace(surfUnits, fnt);	
 		switch (surfUnitsPos) {
 		case UNITS_TOP:		w.DrawText(int(rect.left + rect.GetWidth()/2. - unitsSize.cx/2.), 
 								  	   int(rect.top - unitsSize.cy*1.3), 
@@ -211,7 +211,7 @@ void ScatterDraw::DrawRainbowPalette(Draw& w) const {
 	for (int i = 0; i <= surfNumColor; ++i) {
 		double val = surfMinZ + deltaZ*i;
 		String txt = VariableFormatZ(val);
-		Size textSize = GetTextSize(txt, fnt);
+		Size textSize = GetTextSizeSpace(txt, fnt);
 		double deltax = 0;
 		if (surfLegendPos == LEGEND_LEFT) 
 			deltax = textSize.cx;
