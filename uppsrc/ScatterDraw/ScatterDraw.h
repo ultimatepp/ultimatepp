@@ -315,7 +315,10 @@ public:
 	Callback3<String&, int, double> cbModifFormatY2;
 	Callback3<String&, int, double> cbModifFormatY2GridUnits;
 	Callback3<String&, int, double> cbModifFormatDeltaY2;
-			
+	
+	Callback1<Vector<double>&> SetGridLinesX;
+	Callback1<Vector<double>&> SetGridLinesY;
+	
 	Callback WhenZoomScroll;
 	Callback WhenSetRange;
 	Callback WhenSetXYMin;
@@ -434,28 +437,28 @@ public:
 
 	ScatterDraw& SetRange(double rx, double ry = Null, double ry2 = Null);
 	ScatterDraw& SetRangeLinked(double rx, double ry, double ry2 = 100);
-	double GetXRange()const {return xRange;}
-	double GetYRange()const {return yRange;}
-	double GetY2Range()const {return yRange2;}
+	double GetXRange()const 	{return xRange;}
+	double GetYRange()const 	{return yRange;}
+	double GetY2Range()const 	{return yRange2;}
 	ScatterDraw &SetMajorUnits(double ux, double uy = Null);
 	ScatterDraw &SetMajorUnitsNum(int nx, int ny = Null);
-	double GetMajorUnitsX() {return xMajorUnit;}
-	double GetMajorUnitsY() {return yMajorUnit;}
-	double GetMajorUnitsY2() {return yMajorUnit2;}
+	double GetMajorUnitsX() 	{return xMajorUnit;}
+	double GetMajorUnitsY() 	{return yMajorUnit;}
+	double GetMajorUnitsY2() 	{return yMajorUnit2;}
 	ScatterDraw& SetMinUnits(double ux, double uy = Null);
-	double GetXMinUnit () const {return xMinUnit;}
-	double GetYMinUnit () const {return yMinUnit;}	
-	double GetYMinUnit2 () const {return yMinUnit2;}	
+	double GetXMinUnit() const  {return xMinUnit;}
+	double GetYMinUnit() const  {return yMinUnit;}	
+	double GetYMinUnit2() const {return yMinUnit2;}	
 	
 	ScatterDraw& SetXYMin(double xmin, double ymin = Null, double ymin2 = Null);
 	ScatterDraw& SetXYMinLinked(double xmin, double ymin = Null, double ymin2 = Null);
-	double GetXMin() 	const {return xMin;}
-	double GetYMin() 	const {return yMin;}	
-	double GetYMin2() 	const {return yMin2;}
-	double GetY2Min() 	const {return yMin2;}
-	double GetXMax() 	const {return xMin + xRange;}
-	double GetYMax() 	const {return yMin + yRange;}	
-	double GetY2Max() 	const {return yMin2 + yRange2;}
+	double GetXMin() const 		{return xMin;}
+	double GetYMin() const 		{return yMin;}	
+	double GetYMin2() const 	{return yMin2;}
+	double GetY2Min() const 	{return yMin2;}
+	double GetXMax() const 		{return xMin + xRange;}
+	double GetYMax() const 		{return yMin + yRange;}	
+	double GetY2Max() const 	{return yMin2 + yRange2;}
 	
 	ScatterDraw &Graduation_FormatX(Formats fi);	
 	ScatterDraw &Graduation_FormatY(Formats fi);
@@ -1045,7 +1048,7 @@ protected:
 	ScatterDraw &_AddSeries(DataSource *data);
 	virtual void Refresh() {};
 
-	int mode;
+	int mode{MD_ANTIALIASED};
 	Color graphColor;	
 	String title;
 	Upp::Font titleFont;
@@ -1165,7 +1168,7 @@ protected:
 	void DrawRainbowPalette(Draw& w) const;
 	
 private:
-	Size size;		// Size to be used for all but screen painting
+	Size size{Size(800, 400)};		// Size to be used for all but screen painting
 	double plotScaleX, plotScaleY, plotScaleAvg;
 	bool responsive;
 	double responsivenessFactor;
@@ -1190,7 +1193,6 @@ private:
 	bool labelsChanged;
 	bool stacked;
 	bool serializeFormat;
-	//int selectedSeries;
 };
 
 template <class T>
@@ -1212,16 +1214,15 @@ void ScatterDraw::SetDrawing(T& w, bool ctrl)
 }
 
 template <class T>
-bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
-{
+bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 	if(titleHeight > 0) {
 		Upp::Font fontTitle6;
 		fontTitle6 = titleFont;
 		fontTitle6.Height(titleHeight);
-		Size sz = GetTextSize(title, fontTitle6);
+		Size sz = GetTextSizeSpace(title, fontTitle6);
 		if (sz.cx > size.cx*0.95) {
 			fontTitle6.Height(fround(fontTitle6.GetHeight()*size.cx*(0.95/sz.cx)));
-			sz = GetTextSize(title, fontTitle6);
+			sz = GetTextSizeSpace(title, fontTitle6);
 		}
 		DrawText(w, fround((size.cx - sz.cx)/2.), plotScaleY*2, 0, title, fontTitle6, titleColor);   
 	}	
@@ -1297,9 +1298,9 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 		}						
 		labelsChanged = false;	
 	}
-	Size lx  = GetTextSize(xLabel, 	fontX);
-	Size ly  = GetTextSize(yLabel, 	fontY);
-	Size ly2 = GetTextSize(yLabel2, fontY2);
+	Size lx  = GetTextSizeSpace(xLabel, 	fontX);
+	Size ly  = GetTextSizeSpace(yLabel, 	fontY);
+	Size ly2 = GetTextSizeSpace(yLabel2, fontY2);
 	DrawText(w, (plotW - lx.cx)/2., plotH + plotScaleY*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontX, labelsColor);
 	DrawText(w, plotScaleX*(2 - hPlotLeft), (plotH + ly.cx)/2., 900, yLabel,  fontY, labelsColor);
 	DrawText(w, size.cx - plotScaleX*(2 + hPlotLeft) - ly2.cy, (plotH + ly2.cx)/2., 900, yLabel2, fontY2, labelsColor);
@@ -1319,10 +1320,17 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 	Upp::Font fontY2Num = fontYNum;
 	fontY2Num.Italic();
 
-	if (drawXReticle) 
-		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
-			double reticleX = plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit);
-			double gridX = xMinUnit + i*xMajorUnit + xMin;
+	if (drawXReticle) {
+		Vector<double> unitsX;
+		if (SetGridLinesX)
+			SetGridLinesX(unitsX);
+		else {
+			for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
+				unitsX << xMinUnit + i*xMajorUnit;
+		}
+		for(int i = 0; i < unitsX.GetCount(); ++i) {
+			double reticleX = plotW/xRange*unitsX[i];
+			double gridX = xMin + unitsX[i];
 			String gridLabelX;
 			if (cbModifFormatXGridUnits)
 				cbModifFormatXGridUnits(gridLabelX, i, gridX);
@@ -1345,14 +1353,21 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 						   fround(gridWidth*plotScaleAvg), axisColor);             
 			}
 		}
-	
-	if (drawYReticle)
-		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
-			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));
+	}
+	if (drawYReticle) {
+		Vector<double> unitsY;
+		if (SetGridLinesY)
+			SetGridLinesY(unitsY);
+		else {
+			for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) 
+				unitsY << yMinUnit + i*yMajorUnit;
+		}
+		for(int i = 0; i < unitsY.GetCount(); ++i) {
+			int reticleY = fround(plotH - plotH/yRange*unitsY[i]);
 			w.DrawLine(fround(-plotScaleX*4), reticleY, 0, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
 			if (drawY2Reticle)
 				w.DrawLine(fround(plotW + plotScaleX*4.), reticleY, plotW, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
-			double gridY = yMinUnit + i*yMajorUnit + yMin;
+			double gridY = yMin + unitsY[i];
 			String gridLabelY;
 			if (cbModifFormatYGridUnits)
 				cbModifFormatYGridUnits(gridLabelY, i, gridY);
@@ -1360,7 +1375,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 				cbModifFormatY(gridLabelY, i, gridY);
 			else
 				gridLabelY = VariableFormatY(gridY);
-			Size sz = GetTextSize(gridLabelY, fontYNum);
+			Size sz = GetTextSizeSpace(gridLabelY, fontYNum);
 			DrawText(w, -sz.cx - plotScaleX*6, reticleY - sz.cy/2, 0, gridLabelY, fontYNum, axisColor);
 			if (drawY2Reticle) {
 				double gridY2 = (gridY - yMin)/yRange*yRange2 + yMin2;
@@ -1374,7 +1389,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 				DrawText(w, plotW + plotScaleX*10, reticleY - sz.cy/2, 0, gridLabelY2, fontY2Num, axisColor);
 			}
 		}
-	
+	}
 	int borderWidth = fround(gridWidth*plotScaleAvg);
 #ifdef flagGUI		// Control highlight
 	if (!IsNull(highlight_0)) {
@@ -1401,10 +1416,10 @@ void ScatterDraw::Plot(T& w)
 	
 	w.Offset(Point(fround(plotScaleX*hPlotLeft), fround(plotScaleY*vPlotTop + titleHeight)));
 	Clip(w, 0, 0, plotW, plotH);
-		
-	double d1 = xRange/xMajorUnit;
-	double d2 = yRange/yMajorUnit;
-
+	
+	double factorX = plotW/xRange;
+	double factorY = plotH/yRange;
+	
 	double left, top, d = min(plotW, plotH);//, r = d/2.;
 	if (!isPolar) {
 		if (!surf)
@@ -1413,8 +1428,6 @@ void ScatterDraw::Plot(T& w)
 			ImageBuffer out_image(plotW, plotH);
 			::Fill(~out_image, plotAreaColor, out_image.GetLength());
 
-			double dx = xRange/plotW;
-			double dy = yRange/plotH;
 			double deltaz = surfMaxZ - surfMinZ;
 			if (deltaz == 0) 
 				::Fill(~out_image, GetRainbowColor(0, surfRainbow, 0), out_image.GetLength());	
@@ -1423,8 +1436,8 @@ void ScatterDraw::Plot(T& w)
 				for (int ix = 0; ix < plotW; ++ix) {
 					co & [=, &out_image] {
 						for (int iy = 0; iy < plotH; ++iy) {
-							double x = xMin + (ix + 0.5)*dx;
-							double y = yMin + (iy + 0.5)*dy;
+							double x = xMin + (ix + 0.5)/factorX;
+							double y = yMin + (iy + 0.5)/factorY;
 							double z = surf->z(x, y);
 							if (!IsNull(z))
 								out_image[plotH - iy - 1][ix] = GetRainbowColor((z - surfMinZ)/deltaz, 
@@ -1445,17 +1458,24 @@ void ScatterDraw::Plot(T& w)
 		}
 		w.DrawEllipse(fround(left), fround(top), fround(d), fround(d), plotAreaColor);
 	}
-	//double x_c = plotW/2;
-	//double y_c = plotH/2;
-	
+
 	if (drawVGrid) {
 		if (!isPolar) {
-			double x0 = plotW*xMinUnit/xRange;
-			for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
-				double xg = x0 + i*plotW/d1;
-				if (xg > 2*gridWidth*plotScaleAvg && xg < plotW - 2*gridWidth*plotScaleAvg)
-					DrawLineOpa(w, xg, 0, xg, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+			Vector<double> unitsX;
+			if (SetGridLinesX)
+				SetGridLinesX(unitsX);
+			else {
+				for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
+					unitsX << xMinUnit + i*xMajorUnit;
 			}
+			if (unitsX.GetCount() > 0) {
+				double x0 = -factorX*unitsX[0] + plotW;
+				for(int i = 0; i < unitsX.GetCount(); i++) {
+					double xg = x0 - factorX*unitsX[i];
+					if (xg > 2*gridWidth*plotScaleAvg && xg < plotW - 2*gridWidth*plotScaleAvg) 
+						DrawLineOpa(w, xg, 0, xg, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+				}
+			} 
 		} /*else {
 			double ang0 = 2*M_PI*xMinUnit/xRange;
 			for(double i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
@@ -1466,12 +1486,21 @@ void ScatterDraw::Plot(T& w)
 	}
 	if (drawHGrid) {
 		if (!isPolar) {
-			double y0 = -plotH*yMinUnit/yRange + plotH;
-			for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
-				double yg = y0 - i*plotH/d2;
-				if (yg > 2*gridWidth*plotScaleAvg && yg < plotH - 2*gridWidth*plotScaleAvg) 
-					DrawLineOpa(w, 0, yg, plotW, yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+			Vector<double> unitsY;
+			if (SetGridLinesY)
+				SetGridLinesY(unitsY);
+			else {
+				for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) 
+					unitsY << yMinUnit + i*yMajorUnit;
 			}
+			if (unitsY.GetCount() > 0) {
+				double y0 = -factorY*unitsY[0] + plotH;
+				for(int i = 0; i < unitsY.GetCount(); i++) {
+					double yg = y0 - factorY*unitsY[i];
+					if (yg > 2*gridWidth*plotScaleAvg && yg < plotH - 2*gridWidth*plotScaleAvg) 
+						DrawLineOpa(w, 0, yg, plotW, yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+				}
+			} 
 		} /*else {
 			double y0 = -plotH*yMinUnit/r + plotH;
 			for(double i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
@@ -1655,7 +1684,7 @@ void ScatterDraw::Plot(T& w)
 					fnt.Height(int(fnt.GetHeight()*min(plotScaleX, plotScaleY)));
 					for (int i = 0; i < points.GetCount() && i < series[j].labels->GetCount(); i++) {
 						String txt = (*(series[j].labels))[i];
-						Size sz = GetTextSize(txt, fnt);
+						Size sz = GetTextSizeSpace(txt, fnt);
 						int ddy = -sz.cy/2;
 						int ddx;
 						switch (series[j].labelsAlign) {

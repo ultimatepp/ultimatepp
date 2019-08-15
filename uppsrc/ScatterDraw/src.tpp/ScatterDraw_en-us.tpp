@@ -113,6 +113,20 @@ pop window representing the secondary delta between two Y axis
 points. The input values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:SetGridLinesX:%- [_^Upp`:`:Callback1^ Callback1]<[_^Upp`:`:Vector^ Ve
+ctor]<[@(0.0.255) double]>`&>_[* SetGridLinesX]&]
+[s3; If set this callback will return the locations to set the X 
+axis grid lines, and these values will be used instead of the 
+set by SetMinUnits.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetGridLinesY:%- [_^Upp`:`:Callback1^ Callback1]<[_^Upp`:`:Vector^ Ve
+ctor]<[@(0.0.255) double]>`&>_[* SetGridLinesY]&]
+[s3; If set this callback will return the locations to set the Y 
+axis grid lines, and these values will be used instead of the 
+set by SetMinUnits.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:WhenZoomScroll:%- [_^Callback^ Callback]_[* WhenZoomScroll]&]
 [s3; Callback called when the user does a zoom or a scroll.&]
 [s1;%- &]
@@ -743,6 +757,10 @@ MajorUnitsNum]([@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
 of grid lines.&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:GetMajorUnitsX`(`):%- [@(0.0.255) double]_[* GetMajorUnitsX]()&]
+[s3; Returns the distance between grid lines in X axis.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:GetMajorUnitsY`(`):%- [@(0.0.255) double]_[* GetMajorUnitsY]()&]
 [s3; Returns the distance between grid lines in Y axis.&]
 [s1;%- &]
@@ -755,6 +773,10 @@ of grid lines.&]
 ]_[* SetMinUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
 [s3; Sets with [%-*@3 ux] and [%-*@3 uy] the first X and Y axis grid 
 lines location.&]
+[s3; If [^topic`:`/`/ScatterDraw`/src`/ScatterDraw`_en`-us`#ScatterDraw`:`:SetGridLinesX^ S
+etGridLinesX ]or [^topic`:`/`/ScatterDraw`/src`/ScatterDraw`_en`-us`#ScatterDraw`:`:SetGridLinesY^ S
+etGridLinesY ]callback is set, the values of X or Y axis respectively 
+will not be used.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetXMinUnit`(`)const:%- [@(0.0.255) double]_[* GetXMinUnit]_()_[@(0.0.255) c
@@ -767,9 +789,9 @@ onst]&]
 [s3; Returns the first Y axis grid line location.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:Upp`:`:ScatterDraw`:`:GetYMinUnit2`(`)const:%- [@(0.0.255) double]_[* GetYMinUnit2]_
-()_[@(0.0.255) const]&]
-[s3; Returns the first secondary Y axis grid line location.&]
+[s5;:ScatterDraw`:`:GetYMinUnit2`(`)const:%- [@(0.0.255) double]_[* GetYMinUnit2]_()_[@(0.0.255) c
+onst]&]
+[s3; Returns the first secondary Y axis grid line location`-&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetXYMin`(double`,double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
