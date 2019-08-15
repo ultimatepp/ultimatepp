@@ -21,7 +21,12 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	int rowHeight = int(textScale*scaledFont.GetHeight());
 	int rowAscent = int(textScale*scaledFont.GetAscent());
 	scaledFont.Height(rowHeight);
-	int xWidth = scaledFont.GetWidth('X');
+	
+	Upp::Font boldFont = scaledFont;
+	boldFont.Bold();
+	Upp::Font italic = scaledFont;
+	italic.Italic();
+	int xWidth = boldFont.GetWidth('X');
 	int lineLen = 4*xWidth;
 	
 	Vector<String> legends;
@@ -32,7 +37,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 			if (legend.Find('[') < 0 && !series[i].unitsY.IsEmpty())
 				legend += " [" + series[i].unitsY + "]";
 			legends.Add(legend);
-			legendWidth = max<int>(legendWidth, GetTextSizeSpace(legend, scaledFont).cx);
+			legendWidth = max<int>(legendWidth, GetTextSizeSpace(legend, boldFont).cx);
 		}
 	}
 	legendWidth += lineLen + 3*xWidth;
@@ -98,9 +103,6 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 		if (!IsNull(legendBorderColor)) 
 			DrawRectangle(w, rect, textScale, 1, legendBorderColor);
 	}
-	Upp::Font italic = scaledFont;
-	italic.Italic();
-	scaledFont.Bold();
 	for(int row = 0, start = 0, i = 0, ireal = 0; row <= nrows; row++) {
 		for(; ireal < min(start + nlr, nlab); i++) {
 			if (series[i].showLegend) {
@@ -117,7 +119,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 				if (series[i].markWidth >= 1 && series[i].markPlot)
 					series[i].markPlot->Paint(w, plotScaleAvg, mark_p, series[i].markWidth, series[i].markColor, 
 						series[i].markBorderWidth, series[i].markBorderColor);   
-				Upp::Font &font = series[i].primaryY ? scaledFont : italic;
+				Upp::Font &font = series[i].primaryY ? boldFont : italic;
 				DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3), 0, legends[ireal], font, series[i].color);                   
 				ireal++;
 			} 
