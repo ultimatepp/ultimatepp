@@ -24,10 +24,10 @@ void TabUserEquation::OnUpdate()
 		return;	
 	}
 	
-	userEquation.Init("User equation", ~equation);
+	userEquation.Init("Reach flow (Coull)", ~equation);
 	
 	scatter.RemoveAllSeries();
-	scatter.AddSeries(userEquation).Legend(userEquation.GetFullName()).NoMark().Stroke(2);
+	scatter.AddSeries(userEquation).Legend(userEquation.GetFullName()).NoMark().Stroke(2).Units("m3/s");
 	scatter.SetXYMin(fromX, fromY);
 	scatter.SetRange(toX - fromX, toY - fromY);
 	scatter.ZoomToFit(true, true);

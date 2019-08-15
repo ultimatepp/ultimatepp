@@ -61,11 +61,11 @@ LAYOUT(Tab9Big, 380, 348)
 END_LAYOUT
 
 LAYOUT(Tab10User, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User graph")).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User graph")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(TabUserEquation, 672, 276)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User equation")).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 28))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User equation")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 28))
 	ITEM(Label, dv___1, SetLabel(t_("to")).RightPosZ(140, 16).BottomPosZ(3, 21))
 	ITEM(Label, dv___2, SetLabel(t_("from y =")).RightPosZ(204, 44).BottomPosZ(3, 21))
 	ITEM(Label, dv___3, SetLabel(t_("User equation y = f(x) =")).LeftPosZ(8, 116).BottomPosZ(3, 21))
@@ -80,7 +80,7 @@ LAYOUT(TabUserEquation, 672, 276)
 END_LAYOUT
 
 LAYOUT(Tab11Trend, 504, 468)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Trend Line demo")).SetPlotAreaLeftMargin(35).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetAxisWidth(12).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Trend Line demo")).SetPlotAreaLeftMargin(50).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetAxisWidth(12).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
 	ITEM(ArrayCtrl, grid, HSizePosZ(112, 8).BottomPosZ(4, 100))
 	ITEM(Label, dv___2, SetLabel(t_("Data series:")).LeftPosZ(8, 64).BottomPosZ(55, 21))
 	ITEM(Label, dv___3, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
@@ -122,7 +122,7 @@ LAYOUT(TabBubblePlot, 420, 236)
 END_LAYOUT
 
 LAYOUT(TabUserPaint, 428, 296)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User paint")).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 4))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User paint")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
