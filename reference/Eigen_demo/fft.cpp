@@ -18,7 +18,6 @@ void FFTTests()
 	
 	int numData = 8000;
 	double samplingFrecuency = 14;	
-	String csvSep = ";";
 
     // Filling the data series
     VectorXd timebuf(numData);
@@ -34,7 +33,7 @@ void FFTTests()
     fft.SetFlag(fft.HalfSpectrum);
     fft.fwd(freqbuf, timebuf);
 	
-	// Filter the FFT. Frequemcies between 1/25 and 1/35 Hz are removed
+	// Filter the FFT. Frequencies between 1/25 and 1/35 Hz are removed
 	// Original FFT is not changed for saving it later
 	VectorXcd freqbuf2(freqbuf.size());
 	{
@@ -52,6 +51,8 @@ void FFTTests()
 	VectorXd timebuf2(numData);
 	fft.inv(timebuf2, freqbuf2);
 	
+	String csvSep = ";";
+
 	// Saving original and filtered FFT
 	{
 	    String str;
