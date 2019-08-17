@@ -1328,8 +1328,9 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 			for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
 				unitsX << xMinUnit + i*xMajorUnit;
 		}
+		double factorX = plotW/xRange;
 		for(int i = 0; i < unitsX.GetCount(); ++i) {
-			double reticleX = plotW/xRange*unitsX[i];
+			double reticleX = factorX*unitsX[i];
 			double gridX = xMin + unitsX[i];
 			String gridLabelX;
 			if (cbModifFormatXGridUnits)
@@ -1362,8 +1363,9 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 			for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) 
 				unitsY << yMinUnit + i*yMajorUnit;
 		}
+		double factorY = plotH/yRange;
 		for(int i = 0; i < unitsY.GetCount(); ++i) {
-			int reticleY = fround(plotH - plotH/yRange*unitsY[i]);
+			int reticleY = fround(plotH - factorY*unitsY[i]);
 			w.DrawLine(fround(-plotScaleX*4), reticleY, 0, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
 			if (drawY2Reticle)
 				w.DrawLine(fround(plotW + plotScaleX*4.), reticleY, plotW, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
@@ -1469,9 +1471,8 @@ void ScatterDraw::Plot(T& w)
 					unitsX << xMinUnit + i*xMajorUnit;
 			}
 			if (unitsX.GetCount() > 0) {
-				double x0 = -factorX*unitsX[0] + plotW;
 				for(int i = 0; i < unitsX.GetCount(); i++) {
-					double xg = x0 - factorX*unitsX[i];
+					double xg = factorX*unitsX[i];
 					if (xg > 2*gridWidth*plotScaleAvg && xg < plotW - 2*gridWidth*plotScaleAvg) 
 						DrawLineOpa(w, xg, 0, xg, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 				}
@@ -1494,9 +1495,9 @@ void ScatterDraw::Plot(T& w)
 					unitsY << yMinUnit + i*yMajorUnit;
 			}
 			if (unitsY.GetCount() > 0) {
-				double y0 = -factorY*unitsY[0] + plotH;
+				//double y0 = -factorY*unitsY[0] + plotH;
 				for(int i = 0; i < unitsY.GetCount(); i++) {
-					double yg = y0 - factorY*unitsY[i];
+					double yg = plotH - factorY*unitsY[i];
 					if (yg > 2*gridWidth*plotScaleAvg && yg < plotH - 2*gridWidth*plotScaleAvg) 
 						DrawLineOpa(w, 0, yg, plotW, yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 				}
