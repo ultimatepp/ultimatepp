@@ -1331,27 +1331,29 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 		double factorX = plotW/xRange;
 		for(int i = 0; i < unitsX.GetCount(); ++i) {
 			double reticleX = factorX*unitsX[i];
-			double gridX = xMin + unitsX[i];
-			String gridLabelX;
-			if (cbModifFormatXGridUnits)
-				cbModifFormatXGridUnits(gridLabelX, i, gridX);
-			else if (cbModifFormatX)
-				cbModifFormatX(gridLabelX, i, gridX);
-			else
-				gridLabelX = VariableFormatX(gridX);
-			
-			if (!gridLabelX.IsEmpty()) {
-				Upp::Vector <String> texts;
-				Upp::Vector <Size> sizes;
-				ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
-				for (int ii = 0; ii < texts.GetCount(); ++ii) {
-					int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
-					DrawText(w, reticleX - sizes[ii].cx/2., 
-								plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+			if (reticleX >=0 && reticleX <= plotW) {
+				double gridX = xMin + unitsX[i];
+				String gridLabelX;
+				if (cbModifFormatXGridUnits)
+					cbModifFormatXGridUnits(gridLabelX, i, gridX);
+				else if (cbModifFormatX)
+					cbModifFormatX(gridLabelX, i, gridX);
+				else
+					gridLabelX = VariableFormatX(gridX);
+				
+				if (!gridLabelX.IsEmpty()) {
+					Upp::Vector <String> texts;
+					Upp::Vector <Size> sizes;
+					ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
+					for (int ii = 0; ii < texts.GetCount(); ++ii) {
+						int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
+						DrawText(w, reticleX - sizes[ii].cx/2., 
+									plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+					}
+					w.DrawLine(fround(reticleX), plotH,   
+							   fround(reticleX), fround(plotH + plotScaleY*4.), 
+							   fround(gridWidth*plotScaleAvg), axisColor);             
 				}
-				w.DrawLine(fround(reticleX), plotH,   
-						   fround(reticleX), fround(plotH + plotScaleY*4.), 
-						   fround(gridWidth*plotScaleAvg), axisColor);             
 			}
 		}
 	}
@@ -1472,9 +1474,9 @@ void ScatterDraw::Plot(T& w)
 			}
 			if (unitsX.GetCount() > 0) {
 				for(int i = 0; i < unitsX.GetCount(); i++) {
-					double xg = factorX*unitsX[i];
-					if (xg > 2*gridWidth*plotScaleAvg && xg < plotW - 2*gridWidth*plotScaleAvg) 
-						DrawLineOpa(w, xg, 0, xg, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					double reticleX = factorX*unitsX[i];
+					if (reticleX >=0 && reticleX <= plotW) 
+						DrawLineOpa(w, reticleX, 0, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 				}
 			} 
 		} /*else {
@@ -1495,18 +1497,17 @@ void ScatterDraw::Plot(T& w)
 					unitsY << yMinUnit + i*yMajorUnit;
 			}
 			if (unitsY.GetCount() > 0) {
-				//double y0 = -factorY*unitsY[0] + plotH;
 				for(int i = 0; i < unitsY.GetCount(); i++) {
-					double yg = plotH - factorY*unitsY[i];
-					if (yg > 2*gridWidth*plotScaleAvg && yg < plotH - 2*gridWidth*plotScaleAvg) 
-						DrawLineOpa(w, 0, yg, plotW, yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					double reticleY = plotH - factorY*unitsY[i];
+					if (reticleY > 2*gridWidth*plotScaleAvg && reticleY < plotH - 2*gridWidth*plotScaleAvg) 
+						DrawLineOpa(w, 0, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 				}
 			} 
 		} /*else {
 			double y0 = -plotH*yMinUnit/r + plotH;
 			for(double i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
-				double yg = y0 + i*r*yRange/yMajorUnit;
-				DrawCircleOpa(w, plotW/2, plotH/2, yg, 1, 1, gridWidth, gridColor, gridDash);
+				double reticleY = y0 + i*r*yRange/yMajorUnit;
+				DrawCircleOpa(w, plotW/2, plotH/2, reticleY, 1, 1, gridWidth, gridColor, gridDash);
 			}
 		}*/
 	}
