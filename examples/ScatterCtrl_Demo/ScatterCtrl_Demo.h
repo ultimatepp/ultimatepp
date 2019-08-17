@@ -104,6 +104,8 @@ public:
 	
 	void Init();
 	void FormatX(String& s, int i, double d);	
+	void FormatXGridUnits(String& s, int i, double d);
+	void SetGridLinesX(Vector<double>& unitsX);
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 
 private:
