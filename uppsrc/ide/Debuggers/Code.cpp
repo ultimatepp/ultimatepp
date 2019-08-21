@@ -92,8 +92,8 @@ void Pdb::SetThread()
 void Pdb::SetFrame()
 {
 	int fi = ~framelist;
-	frame_up.Enable(fi > 0);
-	frame_down.Enable(fi < framelist.GetCount() - 1);
+	frame_up.Enable(fi > 0 && lock == 0);
+	frame_down.Enable(fi < framelist.GetCount() - 1 && lock == 0);
 	if(fi >= 0 && fi < frame.GetCount()) {
 		Frame& f = frame[fi];
 		current_frame = &f;
