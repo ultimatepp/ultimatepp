@@ -78,6 +78,8 @@ void Gdb::Lock()
 	watches.Disable();
 	locals.Disable();
 	frame.Disable();
+	frame_up.Disable();
+	frame_down.Disable();
 	dlock.Show();
 }
 
@@ -87,6 +89,8 @@ void Gdb::Unlock()
 		watches.Enable();
 		locals.Enable();
 		frame.Enable();
+		frame_up.Enable();
+		frame_down.Enable();
 		dlock.Hide();
 	}
 }

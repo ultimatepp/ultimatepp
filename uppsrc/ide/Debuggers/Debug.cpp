@@ -150,6 +150,8 @@ void Pdb::Lock()
 		watches.Disable();
 		locals.Disable();
 		framelist.Disable();
+		frame_down.Disable();
+		frame_up.Disable();
 		dlock.Show();
 		IdeSetBar();
 	}
@@ -164,6 +166,8 @@ void Pdb::Unlock()
 		watches.Enable();
 		locals.Enable();
 		framelist.Enable();
+		frame_down.Enable();
+		frame_up.Enable();
 		dlock.Hide();
 		IdeSetBar();
 	}
