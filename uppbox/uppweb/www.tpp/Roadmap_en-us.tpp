@@ -26,6 +26,55 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Roadmap&]
+[s24; Upcoming release&]
+[s24; 2019.2 (October 2019)&]
+[s5;* &]
+[s5; [* Core]&]
+[s5;l160;i150;O0; Allocator huge block handling optimized, memory 
+consumption improved in specific cases&]
+[s5;l160;i150;O0; Index refactored to reduce sizeof and improve performance 
+in specific cases&]
+[s5;l160;i150;O0; Introduced workaround for Mingw TLS performance 
+issue&]
+[s5;l160;i150;O0; pick/clone semantics refined in several places&]
+[s5;l160;i150;O0; Random algorithm changed to xoshiro256`*`*&]
+[s5;l160;i150;O0; Uuid generation optimized&]
+[s5;l160;i150;O0; Fast U`+`+ allocator is now used internally where 
+possible even if standard allocator us used for new/delete (with 
+USEMALLOC flag)&]
+[s5;l160;i150;O0; pick/clone refinements&]
+[s5;l160;i150;O0; Value`::Compare optimized for standard types&]
+[s5;l160;* &]
+[s5; [* Graphics]&]
+[s5;l160;i150;O0; SVG parser improvents&]
+[s5;l160;i150;O0; GLCtrl new method ExecuteGL to execute code with 
+correct GL context&]
+[s5;l160;i150;O0; Font metrics optimized for MingW with TLS optimization 
+workaround&]
+[s5; &]
+[s5; [* CtrlLib]&]
+[s0;l160;i150;phO0; ArrayCtrl sorting improved&]
+[s5;l160;i150;O0; CtrlMapper small helper class&]
+[s5;l160;i150;O0; DropList supports Add with initializer`_list&]
+[s5;l160;i150;O0; FileSelButton WhenSelected Event&]
+[s5;l160;i150;O0; FileSel has now more sorting options, PreSelect 
+now supports Save As too&]
+[s5;l160;* &]
+[s0;ph [* Ide]&]
+[s5;l160;i150;O0; Console output now supports search&]
+[s5;l160;i150;O0; Font settings `'set to defaults`' button&]
+[s5;l160;i150;O0; Debugger now has arrow buttons to change frame 
+without dropping the list&]
+[s5;l160;i150;O0; New GUI patch tool&]
+[s5;l160;i150;O0; GDB debugger frontend now has memory tab&]
+[s5;l160;i150;O0; Icon designer export to .png now exports uhd/dark 
+variants too&]
+[s5;l160;i150;O0; Main config dialog now can drag/drop (or move) 
+lines&]
+[s5;l160;i150;O0; Run options dialog got new buttons to insert file 
+path / directory path into commandline args&]
+[s5;* &]
+[s5;* &]
 [s24; Current release&]
 [s3; 2019.1 (rev 13068) (May 2019)&]
 [s5;* &]

@@ -1,3 +1,146 @@
+Core: Allocator fix
+Core: Allocator improvement
+Core: CoWork improvements, migw TLS workaround FastMingwTLS
+Core: Fixed issue with compilation with USEMALLOC
+Core: flagHEAPOVERRIDE
+Core: Heap improved
+Core: Heap improvements
+Core: pick/clone refinements
+Core: Random refactored with xoshiro256**
+Core: SignificantBits64
+Core: Uuid optimized
+Core: Value::Compare optimised for standard types
+Core: VectorMap/Array map all operator() variants added (via universal reference)
+Core: Vector::Add now correctly follows pick/clone semantics (thanks Novo)
+
+CtrlLib: ArrayCtrl sort improved, Core: GetLanguageInfo() optimized
+CtrlLib: CtrlMapper
+CtrlLib: DropList::Add(initializer_list)
+CtrlLib: FileSelButton::WhenSelected, ide: small improvements
+CtrlLib: FileSel sorting improved
+
+Draw: Font metrics optimised for mingw (using FastMingwTls)
+
+FileSel: PreSelect improved (now supports SaveAs, file type now set correctly)
+
+Painter: SVG fixes
+
+GLCtrl: ExecuteGL in Win32
+
+IconDes: Button to enter color as text
+
+ide: 'never_inline' support in the C++ parser
+ide: Console output now supports search, font settings 'set to defaults' button
+ide: Debugger now has arrow buttons to change frame without dropping the list
+ide: Display/apply patch tool in Assist
+ide: GDB gui now has memory tab
+ide: IconDes export to .png now exports correctly uhd/dark variants
+ide: Main config now can drag/drop (or move) lines
+ide: Run options new buttons to insert file path / directory path into commandline args
+
+
+
+
+
+
+Core: VectorMap/Array map all operator() variants added (via universal reference)
+GLCtrl: ExecuteGL in Win32
+Core: pick/clone refinements
+Core: Vector::Add now correctly follows pick/clone semantics (thanks Novo)
+ide: Main config now can drag/drop (or move) lines
+ide: GDB gui now has memory tab
+ide: Debugger now has arrow buttons to change frame without dropping the list
+ide: Run options new buttons to insert file path / directory path into commandline args
+CtrlLib: DropList::Add(initializer_list)
+FileSel: PreSelect improved (now supports SaveAs, file type now set correctly)
+Painter: SVG fixes
+ide: Console output now supports search, font settings 'set to defaults' button
+ide: Display/apply patch tool in Assist
+CtrlLib: CtrlMapper
+ide: IconDes export to .png now exports correctly uhd/dark variants
+Core: flagHEAPOVERRIDE
+IconDes: Button to enter color as text
+Core: Heap improvements
+CtrlLib: ArrayCtrl sort improved, Core: GetLanguageInfo() optimized
+Core: Value::Compare optimised for standard types
+Draw: Font metrics optimised for mingw (using FastMingwTls)
+Core: Heap improved
+Core: Allocator improvement
+CtrlLib: FileSel sorting improved
+ide: 'never_inline' support in the C++ parser
+Core: Uuid optimized
+Core: Random refactored with xoshiro256**
+Core: SignificantBits64
+Core: CoWork improvements, migw TLS workaround FastMingwTLS
+Core: Allocator fix
+Core: Fixed issue with compilation with USEMALLOC
+CtrlLib: FileSelButton::WhenSelected, ide: small improvements
+
+
+
+
+
+
+
+
+
+
+
+
+ide: Debuggers: frame up/down disabled when running
+----
+*ScatterDraw: Scrolling fixes
+----
+ScatterCtrl_Demo: Modified log example
+----
+*ScatterDraw: Fixed problem un X axis
+----
+*ScatterDraw: Included Maginor fix from https://www.ultimatepp.org/forums/index.php?t=msg&th=10759&start=0&
+----
+*ScatterDraw: Fix to include accented legends
+----
+.Eigen_demo: Tiny fixes
+----
+ScatterCtrl_Demo: Fixed margins
+----
+ScatterDraw: Fixed legend paint. Added callback SetGridLines
+----
+*Controls4U: Added details
+----
+*Functions4U: Added details
+----
+*SysInfo: Added details
+----
+Core: VectorMap/Array map all operator() variants added (via universal reference)
+----
+Core: VectorMap initialization improved
+----
+bazaar: SysInfo cosmetics
+----
+Core: VectorMap initialize issue
+----
+CtrlCore: Gtk GUI_APP_MAIN now correctly handles exceptions
+----
+GLCtrl: ExecuteGL for GTK, static memory leaks in opengl driver now ignored
+----
+Draw: ImageBuffer begin/end
+----
+.reference
+----
+.uppbox
+----
+.reference
+----
+uppbox: ;/usr/include/harfbuzz
+----
+uppbox, ide: added /usr/include/harfbuzz
+----
+GLCtrl: ExecuteGL in Win32
+----
+Core: clone/pick refinements, heap refinements
+----
+Core: pick/clone refinements
+----
 CtrlLib: MacMenu now using postcallback to invoke action to avoid cosmetic issues
 ----
 uppsrc: Removed legacy .iml support, fixed clang warnings
@@ -220,4 +363,5 @@ Core2019 merged to to trunk
 ----
 Ide: Added book icon to TheIDE icon set and use it inside help instead of main package icon.
 ----
+
 
