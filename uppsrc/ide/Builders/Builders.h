@@ -20,7 +20,7 @@ struct CppBuilder : Builder {
 	
 	const Workspace& wspc;
 	Time             targettime;
-	
+
 	String                 GetSharedLibPath(const String& package) const;
 	String                 GetLocalPath(const String& path) const;
 	int                    AllocSlot();
