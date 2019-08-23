@@ -69,12 +69,12 @@ public:
 		f.NonAntiAliased(naa);
 		return f;
 	}
-	void Execute(Ctrl &parent) {
+	void Execute(Ctrl &_parent) {
 		Open(this);
 		Rect rec = GetRect();
 		Size sz = rec.GetSize();
-		rec.left = parent.GetScreenRect().left;
-		rec.top = parent.GetScreenRect().bottom;
+		rec.left = _parent.GetScreenRect().left;
+		rec.top = _parent.GetScreenRect().bottom;
 		rec.right = rec.left + sz.cx;
 		rec.bottom = rec.top + sz.cy;
 		SetRect(rec);
