@@ -443,6 +443,8 @@ struct Builder {
 	bool             allow_pch;
 	FileTime         start_time;
 
+	String                 CmdX(const char *s);
+
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
 	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize)
 	{ return false; }

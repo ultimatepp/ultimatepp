@@ -57,14 +57,31 @@ Time Builder::GetFileTime(const String& path) const
 	return GetFileInfo(path);
 }
 
+String Builder::CmdX(const char *s)
+{ // expand ` character delimited sections by executing them as commands
+	String r, cmd;
+	bool cmdf = false;
+	for(; *s; s++)
+		if(*s == '`') {
+			if(cmdf) {
+				r << Sys(cmd);
+				cmd.Clear();
+			}
+			cmdf = !cmdf;
+		}
+		else
+			(cmdf ? cmd : r).Cat(*s);
+	return r;
+}
+
 int Builder::Execute(const char *cmdline)
 {
-	return host->Execute(cmdline);
+	return host->Execute(CmdX(cmdline));
 }
 
 int Builder::Execute(const char *cl, Stream& out)
 {
-	return host->Execute(cl, out);
+	return host->Execute(CmdX(cl), out);
 }
 
 void Builder::DeleteFile(const Vector<String>& path)

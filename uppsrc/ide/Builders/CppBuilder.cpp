@@ -106,12 +106,12 @@ int CppBuilder::AllocSlot()
 
 bool CppBuilder::Run(const char *cmdline, int slot, String key, int blitz_count)
 {
-	return host->Run(cmdline, slot, key, blitz_count);
+	return host->Run(CmdX(cmdline), slot, key, blitz_count);
 }
 
 bool CppBuilder::Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count)
 {
-	return host->Run(cmdline, out, slot, key, blitz_count);
+	return host->Run(CmdX(cmdline), out, slot, key, blitz_count);
 }
 
 bool CppBuilder::Wait()
