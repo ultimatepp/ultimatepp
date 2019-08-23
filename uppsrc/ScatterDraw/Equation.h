@@ -22,9 +22,9 @@ public:
 	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
 	virtual void GuessCoeff(DataSource &series)	= 0;
 
-	virtual double f(double x1) 			= 0;
-	virtual double f(double x1, double x2) 	{NEVER(); return Null;}
-	virtual double f(Vector <double> x) 	{NEVER(); return Null;}
+	virtual double f(double ) 				= 0;
+	virtual double f(double , double ) 		{NEVER(); return Null;}
+	virtual double f(Vector <double> ) 		{NEVER(); return Null;}
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
@@ -53,7 +53,7 @@ public:
 	static int            	 GetEquationCount()            {return classMap().GetCount();}
 	static ExplicitEquation* Create(int i)                 {return classMap()[i]();}
 	
-	int GetNumCoeff(int num) {return coeff.GetCount();}
+	int GetNumCoeff(int ) 	{return coeff.GetCount();}
 	
 	ExplicitEquation &operator=(ExplicitEquation &other) {
 		if (this != &other) {
@@ -86,7 +86,7 @@ class AvgEquation : public ExplicitEquation {
 public:
 	AvgEquation() 						{SetCoeff(0);}
 	AvgEquation(double c0)				{SetCoeff(c0);}
-	double f(double x) 					{return coeff[0];}
+	double f(double ) 					{return coeff[0];}
 	virtual String GetName() 			{return t_("Average");}
 	virtual String GetEquation(int numDigits = 3) {	
 		String ret = Format("%s", FormatCoeff(0, numDigits));
@@ -109,7 +109,7 @@ public:
 		ret.Replace("+ -", "- ");
 		return ret;
 	}
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )				{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{coeff[0] = series.AvgY();}
 };
 

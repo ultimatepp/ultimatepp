@@ -102,7 +102,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	if(vValues.IsEmpty())
 		return;
 	
-	int alfa0 = -900 + (int)pieAngle;
+	int alfa0 = -900 + static_cast<int>(pieAngle);
 	int a0 = 0;
 	double sum = 0;
 	for(int i = 0; i < vValues.GetCount(); i++)
@@ -137,7 +137,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 		alfa0 += fround(3600.0*vValues[i]/sum);
 	}
 	if(showPercent) {
-		alfa0 = -900 + (int)pieAngle;
+		alfa0 = -900 + static_cast<int>(pieAngle);
 		for(int i = 0; i < vValues.GetCount(); i++) {
 			a0 = alfa0;                            		              
 			alfa0 += fround(3600.0*vValues[i]/sum);
@@ -145,13 +145,13 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 			Upp::Font scaledFont;
 			scaledFont.Height(scale*StdFont().GetHeight());
 			scaledFont.Width(scale*StdFont().GetWidth());
-			Size sz = GetTextSizeSpace(percent, scaledFont);
+			Size szz = GetTextSizeSpace(percent, scaledFont);
 		
-			int px = int(circ_x + scale*circ_r*cos(M_PI*(alfa0+a0)/3600)/1.3 - sz.cx/2.);
-			int py = int(circ_y + scale*circ_r*sin(M_PI*(alfa0+a0)/3600)/1.3 - sz.cy/2.);
-			w.DrawRect(px,   py,   			 sz.cx, 	1, 		 percentBack);
-			w.DrawRect(px-1, py + 1, 		 sz.cx + 2, sz.cy-2, percentBack);
-			w.DrawRect(px,   py + sz.cy - 1, sz.cx, 	1, 		 percentBack);
+			int px = int(circ_x + scale*circ_r*cos(M_PI*(alfa0+a0)/3600)/1.3 - szz.cx/2.);
+			int py = int(circ_y + scale*circ_r*sin(M_PI*(alfa0+a0)/3600)/1.3 - szz.cy/2.);
+			w.DrawRect(px,   py,   			  szz.cx, 	  1, 		percentBack);
+			w.DrawRect(px-1, py + 1, 		  szz.cx + 2, szz.cy-2, percentBack);
+			w.DrawRect(px,   py + szz.cy - 1, szz.cx, 	  1, 		percentBack);
 			w.DrawText(px, py, percent, scaledFont);
 		}
 	}

@@ -3,6 +3,7 @@
 
 #include <Draw/Draw.h>
 #include <Painter/Painter.h>
+#include "Pedantic.h"
 #include "DataSource.h"
 #include "Equation.h"
 
@@ -1586,7 +1587,6 @@ void ScatterDraw::Plot(T& w)
 					for (int64 i = imin; i <= imax; ) {
 						double xx, yy;
 						if (fastViewX && dxpix < 1) {	
-							debug_h();				
 							yy = series[j].PointsData()->y(i);
 							if (IsNull(yy)) {
 								++i;
