@@ -209,12 +209,12 @@ private:
 
 public:
 	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const 
+		const double& , const Color& ) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
 	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const 
+		const double& , const Color& ) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
@@ -290,29 +290,29 @@ private:
 	
 public:
 	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
+		const Vector<int>& dataY, const Vector<double>& , const double& size, 
+		const Color& markColor, const double& , const Color& ) const
 	{
 		DoPaint(p, scale, x, y, dataX, dataY, size, markColor);
 	}
 	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const 
+		const Vector<int>& dataY, const Vector<double>& , const double& size, 
+		const Color& markColor, const double& , const Color& ) const 
 	{
 		DoPaint(p, scale, x, y, dataX, dataY, size, markColor);
 	}
-	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const 
+	void Paint(Draw &, const double& , const Point& , const double& , const Color& ,
+		const double& , const Color& ) const 
 	{}
-	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const  
+	void Paint(Painter &, const double& , const Point& , const double& , const Color& ,
+		const double& , const Color& ) const  
 	{}
 };	
 
 class BubblePlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const double& scale, int x, int y, const Vector<double>& dataFixed, const double& size, 
+	void DoPaint(T& w, const double& scale, int x, int y, const Vector<double>& dataFixed, const double& , 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		if (dataFixed.IsEmpty())

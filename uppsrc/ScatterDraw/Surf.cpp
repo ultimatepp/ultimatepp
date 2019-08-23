@@ -1,12 +1,12 @@
 #include "ScatterDraw.h"
 
 
-ScatterDraw& ScatterDraw::AddSurf(DataSourceSurf &surf) {
-	this->surf = &surf;
+ScatterDraw& ScatterDraw::AddSurf(DataSourceSurf &_surf) {
+	surf = &_surf;
 	if (IsNull(surfMinZ))
-		surfMinZ = surf.MinZ();
+		surfMinZ = _surf.MinZ();
 	if (IsNull(surfMaxZ))
-		surfMaxZ = surf.MaxZ();
+		surfMaxZ = _surf.MaxZ();
 	return *this;
 }
 

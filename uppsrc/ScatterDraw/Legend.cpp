@@ -43,24 +43,24 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	legendWidth += lineLen + 3*xWidth;
 	
 	int rowIncSign;
-	int plotW, plotH;
+	int plotWLeg, plotHLeg;
 	int nlr;					
 	int topClip;
 	int plotLeft, plotTop, rectWidth, rectHeight;	
 	int loclegendRowSpacing;
 	if (legendAnchor == TOP) {
 		plotLeft = plotTop = 0;
-		plotW = size.cx - int((hPlotLeft + hPlotRight)*plotScaleX);
-		plotH = int(plotScaleY*(vPlotTop - 1) + titleHeight);		
+		plotWLeg = size.cx - int((hPlotLeft + hPlotRight)*plotScaleX);
+		plotHLeg = int(plotScaleY*(vPlotTop - 1) + titleHeight);		
 		rowIncSign = -1;
-		rectWidth = plotW;
-		rectHeight = plotH;
+		rectWidth = plotWLeg;
+		rectHeight = plotHLeg;
 		topClip = 0;
 		nlr = fround(rectWidth/legendWidth);	
 		loclegendRowSpacing = 0;
 	} else {
-		plotW = size.cx - int(hPlotLeft*plotScaleX);
-		plotH = size.cy - int((vPlotTop + vPlotBottom)*plotScaleY - titleHeight);
+		plotWLeg = size.cx - int(hPlotLeft*plotScaleX);
+		plotHLeg = size.cy - int((vPlotTop + vPlotBottom)*plotScaleY - titleHeight);
 		rowIncSign = 1;
 		if (IsNull(legendPos))
 			return;
@@ -82,9 +82,9 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 		rectHeight = int(rowHeight*(nrows + 0.2)) + loclegendRowSpacing*nrows;
 	
 	double left = plotLeft + legendPos.x*textScale;
-	double right = plotW + (hPlotLeft - hPlotRight)*plotScaleX - legendPos.x*textScale - rectWidth;
+	double right = plotWLeg + (hPlotLeft - hPlotRight)*plotScaleX - legendPos.x*textScale - rectWidth;
 	double top = plotTop + legendPos.y*textScale;
-	double bottom = plotH - legendPos.y*textScale - rectHeight;
+	double bottom = plotHLeg - legendPos.y*textScale - rectHeight;
 	Rectf rect;
 	switch(legendAnchor) {
 	case TOP:			rect.Set(plotScaleX*hPlotLeft, 0, rectWidth, rectHeight);		break;
@@ -95,7 +95,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	default:			rect.Set(0, 0, 0, 0);
 	}
 	
-	w.Clip(int(plotScaleX*hPlotLeft), topClip, plotW, plotH);
+	w.Clip(int(plotScaleX*hPlotLeft), topClip, plotWLeg, plotHLeg);
 	
 	if (legendAnchor != TOP) {
 		if (!IsNull(legendFillColor))
