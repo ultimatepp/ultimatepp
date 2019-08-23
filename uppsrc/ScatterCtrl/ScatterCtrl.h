@@ -268,7 +268,7 @@ public:
 	int GetLegendNumCols() 										{return ScatterDraw::GetLegendNumCols();}
 	ScatterCtrl& SetLegendRowSpacing(int num) 					{ScatterDraw::SetLegendRowSpacing(num);		return *this;}
 	int GetLegendRowSpacing() 									{return ScatterDraw::GetLegendRowSpacing();}
-	ScatterCtrl& SetLegendAnchor(int anchor) 					{ScatterDraw::SetLegendAnchor((LEGEND_POS)anchor);	return *this;}
+	ScatterCtrl& SetLegendAnchor(int anchor) 					{ScatterDraw::SetLegendAnchor(static_cast<LEGEND_POS>(anchor));	return *this;}
 	int GetLegendAnchor() 										{return ScatterDraw::GetLegendAnchor();}
 	ScatterCtrl& SetLegendFillColor(const Upp::Color &fill)		{ScatterDraw::SetLegendFillColor(fill);		return *this;}
 	ScatterCtrl& SetLegendBorderColor(const Upp::Color &border)	{ScatterDraw::SetLegendBorderColor(border);	return *this;}
@@ -291,7 +291,7 @@ public:
 	ScatterCtrl &SetMouseHandling(bool valx = true, bool valy = false)			{ScatterDraw::SetMouseHandling(valx, valy);			return *this;} 
 	ScatterCtrl &SetMouseHandlingLinked(bool valx = true, bool valy = false) 	{ScatterDraw::SetMouseHandlingLinked(valx, valy);	return *this;}
 	
-	ScatterCtrl &SetSaveSize(Size &size) 	{saveSize = size; return *this;}
+	ScatterCtrl &SetSaveSize(Size &_size) 	{saveSize = _size; return *this;}
 	Size &GetSaveSize() 					{return saveSize;}
 	ScatterCtrl &SetSaveSizeX(int cx) 		{saveSize.cx = cx; return *this;}
 	ScatterCtrl &SetSaveSizeY(int cy) 		{saveSize.cy = cy; return *this;}
@@ -300,7 +300,7 @@ public:
 
 	enum Angle {Angle_0, Angle_90, Angle_180, Angle_270};
 	ScatterCtrl &Rotate(Angle angle)		{rotate = angle; Refresh(); return *this;}
-	Angle GetRotate()						{return (Angle)rotate;}
+	Angle GetRotate()						{return static_cast<Angle>(rotate);}
 
 private:	
 	template <class T>
