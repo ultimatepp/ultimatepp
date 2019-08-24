@@ -413,7 +413,8 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	virtual void PackageCursor();
 
 	enum OptionType {
-		FLAG = 0, USES, TARGET, LIBRARY, STATIC_LIBRARY, LINK, COMPILER, INCLUDE,
+		FLAG = 0, USES, TARGET, LIBRARY, STATIC_LIBRARY, LINK, COMPILER, INCLUDE, PKG_CONFIG,
+		PKG_LAST = PKG_CONFIG,
 		FILEOPTION, FILEDEPENDS
 	};
 

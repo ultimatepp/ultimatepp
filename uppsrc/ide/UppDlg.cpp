@@ -234,7 +234,7 @@ void PackageEditor::PackageCursor()
 		accepts.Enable();
 		option.Enable();
 		option.Clear();
-		for(int i = FLAG; i <= INCLUDE; i++)
+		for(int i = FLAG; i <= PKG_LAST; i++)
 			OptionAdd(i, opt_name[i], *opt[i]);
 	}
 }
@@ -316,7 +316,7 @@ void PackageEditor::RemoveOption()
 	if(!option.IsCursor() || IsNull(actualpackage))
 		return;
 	int type = option.Get(0);
-	if(type >= FLAG && type <= INCLUDE) {
+	if(type >= FLAG && type <= PKG_LAST) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount())
@@ -342,7 +342,7 @@ void PackageEditor::EditOption()
 		}
 		return;
 	}
-	if(type >= FLAG && type <= INCLUDE) {
+	if(type >= FLAG && type <= PKG_LAST) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount()) {
@@ -363,7 +363,7 @@ void PackageEditor::MoveOption(int d)
 	if(!option.IsCursor() || IsNull(actualpackage))
 		return;
 	int type = option.Get(0);
-	if(type >= FLAG && type <= INCLUDE) {
+	if(type >= FLAG && type <= PKG_LAST) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(min(i, i + d) >= 0 && max(i, i + d) < m.GetCount()) {
@@ -378,7 +378,7 @@ void PackageEditor::OptionMenu(Bar& bar)
 {
 	bool b = !IsNull(actualpackage);
 	bar.Add(b, "Add package..", IdeImg::package_add(), THISBACK1(AddOption, USES));
-	for(int j = FLAG; j <= INCLUDE; j++)
+	for(int j = FLAG; j <= PKG_LAST; j++)
 		if(j != USES)
 			bar.Add(b, "New " + opt_name[j] + "..", THISBACK1(AddOption, j));
 	bar.Separator();
@@ -391,7 +391,7 @@ void PackageEditor::OptionMenu(Bar& bar)
 	int type = option.IsCursor() ? (int)option.Get(0) : -1;
 	int i = -1;
 	Array<OptItem> *m = NULL;
-	if(type >= FLAG && type <= INCLUDE) {
+	if(type >= FLAG && type <= PKG_LAST) {
 		m = opt[type];
 		i = option.Get(1);
 	}
@@ -646,6 +646,7 @@ PackageEditor::PackageEditor()
 	Add("Link options", actual.link);
 	Add("Compiler options", actual.option);
 	Add("Internal includes", actual.include);
+	Add("pkg-config", actual.pkg_config);
 
 	Init(option);
 	option.WhenCursor = THISBACK(AdjustPackageOptionCursor);
