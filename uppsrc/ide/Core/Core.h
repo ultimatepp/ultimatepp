@@ -347,6 +347,7 @@ public:
 	Array<OptItem>           link;
 	Array<OptItem>           option;
 	Array<OptItem>           include;
+	Array<OptItem>           pkg_config;
 	Array<File>              file;
 	Array<Config>            config;
 	Array<CustomStep>        custom;
@@ -442,6 +443,8 @@ struct Builder {
 	bool             main_conf;
 	bool             allow_pch;
 	FileTime         start_time;
+	
+	Index<String>    pkg_config; // names of packages for pkg-config
 
 	String                 CmdX(const char *s);
 

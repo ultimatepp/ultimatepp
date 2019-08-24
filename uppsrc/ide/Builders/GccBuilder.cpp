@@ -14,8 +14,10 @@ String GccBuilder::CompilerName() const
 String GccBuilder::CmdLine(const String& package, const Package& pkg)
 {
 	String cc = CompilerName();
-	cc << " -c ";
-	cc << IncludesDefinesTargetTime(package, pkg);
+	cc << " -c";
+	for(String s : pkg_config)
+		cc << " `pkg-config --cflags " << s << "`";
+	cc << ' ' << IncludesDefinesTargetTime(package, pkg);
 	return cc;
 }
 
@@ -127,6 +129,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	String cc = CmdLine(package, pkg);
+	
+	DDUMP(pkg_config);
+	DDUMP(cc);
+	
 	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
 		cc << " -mthreads";
 	if(HasFlag("DEBUG_MINIMAL"))
@@ -523,6 +529,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				}
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
+			for(String s : pkg_config)
+				lnk << " `pkg-config --libs " << s << "`";
 			for(int pass = 0; pass < 2; pass++) {
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];

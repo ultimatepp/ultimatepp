@@ -308,6 +308,10 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	if(!b)
 		return false;
 	b->config = PackageConfig(wspc, pkindex, bm, mainparam, *host, *b);
+	for(int i = 0; i < wspc.GetCount(); i++)
+		for(String h : Split(Gather(wspc.GetPackage(i).pkg_config, b->config.GetKeys()), ' '))
+			b->pkg_config.FindAdd(h);
+	DDUMP(b->pkg_config);
 	const TargetMode& m = targetmode == 0 ? debug : release;
 	b->version = m.version;
 	b->method = method;
