@@ -130,9 +130,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	String cc = CmdLine(package, pkg);
 	
-	DDUMP(pkg_config);
-	DDUMP(cc);
-	
 	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
 		cc << " -mthreads";
 	if(HasFlag("DEBUG_MINIMAL"))

@@ -877,13 +877,23 @@ String Ide::GetIncludePath()
 				MergeWith(include, ";", cppIncludeDir);
 		}
 	}
-	
+
 	const Workspace& wspc = GetIdeWorkspace();
+	LocalHost dummy_host;
+	One<Builder> b = CreateBuilder(&dummy_host);
+	Index<String> pkg_config;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include, ";", SourcePath(wspc[i], pkg.include[j].text));
+			for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
+				pkg_config.FindAdd(h);
 	}
+	
+	for(String s : pkg_config)
+		for(String p : Split(Sys("pkg-config --cflags " + s), ' '))
+			if(p.TrimStart("-I"))
+				MergeWith(include, ";", p);
 
 	return include;
 }
