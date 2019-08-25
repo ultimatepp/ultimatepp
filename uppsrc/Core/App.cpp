@@ -476,6 +476,9 @@ void LaunchWebBrowser(const String& url)
 #ifdef PLATFORM_POSIX
 void    LaunchWebBrowser(const String& url)
 {
+#ifdef PLATFORM_MACOS
+	IGNORE_RESULT(system("open " + url));
+#else
 	const char * browser[] = {
 		"htmlview", "xdg-open", "x-www-browser", "firefox", "konqueror", "opera", "epiphany", "galeon", "netscape"
 	};
@@ -488,6 +491,7 @@ void    LaunchWebBrowser(const String& url)
 			);
 			break;
 		}
+#endif
 }
 #endif
 
