@@ -72,14 +72,21 @@ void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data)
 	}
 }
 
+void Gdb::SyncFrameButtons()
+{
+	int ii = frame.GetIndex();
+	bool lock = IdeIsDebugLock();
+	frame_down.Enable(!lock && ii >= 0 && (ii < frame.GetCount() - 1 || frame.GetCount() == 1));
+	frame_up.Enable(!lock && ii > 0);
+}
+
 void Gdb::Lock()
 {
 	IdeDebugLock();
 	watches.Disable();
 	locals.Disable();
 	frame.Disable();
-	frame_up.Disable();
-	frame_down.Disable();
+	SyncFrameButtons();
 	dlock.Show();
 }
 
@@ -89,8 +96,7 @@ void Gdb::Unlock()
 		watches.Enable();
 		locals.Enable();
 		frame.Enable();
-		frame_up.Enable();
-		frame_down.Enable();
+		SyncFrameButtons();
 		dlock.Hide();
 	}
 }

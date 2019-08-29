@@ -80,6 +80,7 @@ void Pdb::Sync()
 	}
 	SetFrame();
 	IdeActivateBottom();
+	SyncFrameButtons();
 }
 
 void Pdb::SetThread()
@@ -131,6 +132,7 @@ void Pdb::SetFrame()
 			disas.SetFocus();
 		Data();
 	}
+	SyncFrameButtons();
 }
 
 void Pdb::FrameUpDown(int dir)

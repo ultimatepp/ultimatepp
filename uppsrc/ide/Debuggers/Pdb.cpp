@@ -342,9 +342,11 @@ Pdb::Pdb()
 	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_up.SetImage(DbgImg::FrameUp());
 	frame_up << [=] { FrameUpDown(-1); };
+	frame_up.Tip("Previous Frame");
 	pane.Add(frame_down.RightPos(0, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_down.SetImage(DbgImg::FrameDown());
 	frame_down << [=] { FrameUpDown(1); };
+	frame_down.Tip("Next Frame");
 	
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);

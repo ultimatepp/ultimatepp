@@ -270,6 +270,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       SetBreakpoints();
 	void       SaveForeground();
 	void       RestoreForeground();
+	void       SyncFrameButtons();
 
 	adr_t      GetIP();
 

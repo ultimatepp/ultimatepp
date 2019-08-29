@@ -281,6 +281,7 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 		frame.Clear();
 		frame.Add(0, FormatFrame(FastCmd("frame")));
 		frame <<= 0;
+		SyncFrameButtons();
 	}
 	
 	if (dbg->IsRunning()) {
@@ -477,6 +478,7 @@ void Gdb::DropFrames()
 {
 	if(frame.GetCount() < 2)
 		LoadFrames();
+	SyncFrameButtons();
 }
 
 void Gdb::LoadFrames()
@@ -495,6 +497,7 @@ void Gdb::LoadFrames()
 		}
 		frame.Add(i++, s);
 	}
+	SyncFrameButtons();
 }
 
 void Gdb::SwitchFrame()
@@ -506,6 +509,7 @@ void Gdb::SwitchFrame()
 		frame <<= i;
 	}
 	Cmdp("frame " + AsString(i), i, false);
+	SyncFrameButtons();
 }
 
 void Gdb::FrameUpDown(int dir)
@@ -523,6 +527,7 @@ void Gdb::SwitchThread()
 {
 	int i = ~threads;
 	Cmdp("thread " + AsString(i));
+	SyncFrameButtons();
 }
 
 void Gdb::ClearCtrls()
@@ -669,10 +674,11 @@ Gdb::Gdb()
 	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_up.SetImage(DbgImg::FrameUp());
 	frame_up << [=] { FrameUpDown(-1); };
+	frame_up.Tip("Previous Frame");
 	pane.Add(frame_down.RightPos(0, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_down.SetImage(DbgImg::FrameDown());
 	frame_down << [=] { FrameUpDown(1); };
-
+	frame_down.Tip("Next Frame");
 
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
