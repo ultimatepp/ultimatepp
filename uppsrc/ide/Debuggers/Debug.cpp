@@ -142,6 +142,13 @@ bool Pdb::RemoveBp()
 	return true;
 }
 
+void Pdb::SyncFrameButtons()
+{
+	int ii = framelist.GetIndex();
+	frame_down.Enable(!lock && ii >= 0 && ii < framelist.GetCount() - 1);
+	frame_up.Enable(!lock && ii > 0);
+}
+
 void Pdb::Lock()
 {
 	if(lock == 0) {
@@ -150,6 +157,7 @@ void Pdb::Lock()
 		watches.Disable();
 		locals.Disable();
 		framelist.Disable();
+		SyncFrameButtons();
 		frame_down.Disable();
 		frame_up.Disable();
 		dlock.Show();
@@ -166,8 +174,7 @@ void Pdb::Unlock()
 		watches.Enable();
 		locals.Enable();
 		framelist.Enable();
-		frame_down.Enable();
-		frame_up.Enable();
+		SyncFrameButtons();
 		dlock.Hide();
 		IdeSetBar();
 	}

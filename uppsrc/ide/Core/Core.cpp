@@ -230,7 +230,6 @@ void  IdeActivateBottom() {
 	if(the_ide) the_ide->IdeActivateBottom();
 }
 
-
 void IdeRemoveBottom(Ctrl& ctrl)
 {
 	if(the_ide) the_ide->IdeRemoveBottom(ctrl);
