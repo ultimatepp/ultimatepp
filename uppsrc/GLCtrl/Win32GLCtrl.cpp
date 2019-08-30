@@ -28,7 +28,7 @@ void MakeWGLContext(int depthBits, int stencilBits, int samples)
 			if(pass == 0) {
 				s_pfd.nSize = sizeof(s_pfd);
 				s_pfd.nVersion = 1;
-				s_pfd.dwFlags = PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_GENERIC_ACCELERATED|PFD_GENERIC_FORMAT;
+				s_pfd.dwFlags = PFD_DRAW_TO_WINDOW|PFD_SUPPORT_OPENGL|PFD_GENERIC_ACCELERATED|PFD_GENERIC_FORMAT|PFD_DOUBLEBUFFER_DONTCARE;
 				s_pfd.iPixelType = PFD_TYPE_RGBA;
 				s_pfd.cColorBits = 32;
 				s_pfd.cAlphaBits = 8;
@@ -65,18 +65,24 @@ void MakeWGLContext(int depthBits, int stencilBits, int samples)
 			if(!SetPixelFormat(hDC, s_pixelFormatID, &s_pfd))
 				return;
 	
+			s_openGLContext = wglCreateContext(hDC);
+			
+			bool enhanced_mode=false;
+			
 			if(pass == 0) {
 				HGLRC hRC = wglCreateContext(hDC);
-				wglMakeCurrent(hDC, hRC);
+				wglMakeCurrent(hDC, s_openGLContext);
 				glewInit();
+			    
+			    if (glewIsSupported("GL_VERSION_2_1")) enhanced_mode=true;
+			        
 				wglMakeCurrent(NULL, NULL);
-			    wglDeleteContext(hRC);
 			}
-			else
-				s_openGLContext = wglCreateContext(hDC);
 
 		    ReleaseDC(hWND, hDC);
 		    DestroyWindow(hWND);
+		    
+			if(!enhanced_mode) break; // In basic mode, this is it.
 		}
 	}
 }
