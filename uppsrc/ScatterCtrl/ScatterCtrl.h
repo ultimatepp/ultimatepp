@@ -2,9 +2,11 @@
 #define _ScatterCtrl_ScatterCtrl_h
 
 #include <ScatterDraw/ScatterDraw.h>
+#include <ScatterDraw/Unpedantic.h>
 #include <plugin/jpg/jpg.h>
 #include <PdfDraw/PdfDraw.h>
 #include <GridCtrl/GridCtrl.h>
+#include <ScatterDraw/Pedantic.h>
 
 using namespace Upp;
 
@@ -32,17 +34,14 @@ private:
 
 public:
 	ArrayCtrlSource() : data(0), useCols(true), beginData(0), numData(Null) {ids << 0 << 1;}
-	ArrayCtrlSource(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int beginData = 0, int numData = Null) : 
-		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
-		Init(data, idY, idX, useCols, beginData, numData);
+	ArrayCtrlSource(ArrayCtrl &_data, bool _useCols = true, int _idX = 0, int _idY = 1, int _beginData = 0, int _numData = Null) {
+		Init(_data, _idY, _idX, _useCols, _beginData, _numData);
 	}
 	void Init(ArrayCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
 		useCols = _useCols;
 		
-		ids.SetCount(_ids.GetCount());
-		for (int i = 0; i < ids.GetCount(); ++i)
-			ids[i] = _ids[i];
+		ids = clone(_ids);
 		beginData = _beginData;
 		if (IsNull(_numData)) {
 			if (!useCols)
@@ -82,22 +81,18 @@ private:
 
 public:
 	GridCtrlSource() : data(0), useCols(true), beginData(0), numData(Null)  {ids << 0 << 1;}
-	GridCtrlSource(GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int beginData = 0, int numData = Null) : 
-		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
+	GridCtrlSource(GridCtrl &_data, bool _useCols = true, int idX = 0, int idY = 1, int _beginData = 0, int _numData = Null) {
 		ids << idY << idX;
-		Init(data, ids, useCols, beginData, numData);
+		Init(_data, ids, _useCols, _beginData, _numData);
 	}
-	GridCtrlSource(GridCtrl &data, Vector<int> &_ids, bool useCols = true, int beginData = 0, int numData = Null) : 
-		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
-		Init(data, ids, useCols, beginData, numData);
+	GridCtrlSource(GridCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+		Init(_data, _ids, _useCols, _beginData, _numData);
 	}
 	void Init(GridCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
 		useCols = _useCols;
 
-		ids.SetCount(_ids.GetCount());
-		for (int i = 0; i < ids.GetCount(); ++i)
-			ids[i] = _ids[i];
+		ids = clone(_ids);
 		beginData = _beginData;
 		if (IsNull(_numData)) {
 			if (!useCols)
@@ -113,9 +108,9 @@ public:
 		numData -= beginData;
 	}
 	void Init(GridCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
-		Vector<int> ids;
-		ids << idY << idX;
-		Init(_data, ids, _useCols, _beginData, _numData);
+		Vector<int> _ids;
+		_ids << idY << idX;
+		Init(_data, _ids, _useCols, _beginData, _numData);
 	}	
 	double GetVal(int64 id, int idx) {
 		if (IsNull(ids[idx]))
@@ -154,8 +149,8 @@ public:
 	#define SHOW_INFO SHOW_COORDINATES
 	
 	struct MouseBehavior {
-		MouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right, ScatterAction action) : 
-			ctrl(ctrl), alt(alt), shift(shift), left(left), middle(middle), middleWheel(middleWheel), right(right), action(action) {}
+		MouseBehavior(bool _ctrl, bool _alt, bool _shift, bool _left, bool _middle, int _middleWheel, bool _right, ScatterAction _action) : 
+			ctrl(_ctrl), alt(_alt), shift(_shift), left(_left), middle(_middle), middleWheel(_middleWheel), right(_right), action(_action) {}
 		bool ctrl;
 		bool alt;
 		bool shift;
@@ -174,8 +169,8 @@ public:
 	Callback3<Point, dword, MouseAction> WhenMouseClick;
 	
 	struct KeyBehavior {		
-		KeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) : 
-			ctrl(ctrl), alt(alt), shift(shift), key(key), isVirtualKey(isVirtualKey), action(action) {}
+		KeyBehavior(bool _ctrl, bool _alt, bool _shift, int _key, bool _isVirtualKey, ScatterAction _action) : 
+			ctrl(_ctrl), alt(_alt), shift(_shift), key(_key), isVirtualKey(_isVirtualKey), action(_action) {}
 		bool ctrl;
 		bool alt;
 		bool shift;
@@ -205,12 +200,12 @@ public:
 	}
 	void CheckButtonVisible();
 	
-	ScatterCtrl& ShowLoadData(bool showLoadData) {
-		this->showLoadData = showLoadData;
+	ScatterCtrl& ShowLoadData(bool _showLoadData) {
+		this->showLoadData = _showLoadData;
 		return *this;
 	}
-	ScatterCtrl& ShowSaveData(bool showSaveData) {
-		this->showSaveData = showSaveData;
+	ScatterCtrl& ShowSaveData(bool _showSaveData) {
+		this->showSaveData = _showSaveData;
 		return *this;
 	}
 	
@@ -239,14 +234,14 @@ public:
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
-	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
+	ScatterCtrl& SetTitle(const String& _title)		 			{ScatterDraw::SetTitle(_title); 				return *this;};
 	ScatterCtrl& SetTitleFont(const Upp::Font& fontTitle) 		{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
 	ScatterCtrl& SetTitleColor(const Upp::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
 	ScatterCtrl& SetLabelsFont(const Upp::Font& fontLabels) 	{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
 	ScatterCtrl& SetLabelsColor(const Upp::Color& colorLabels)	{ScatterDraw::SetLabelsColor(colorLabels);	return *this;};
-	ScatterCtrl& SetLabelX(const String& xLabel)				{ScatterDraw::SetLabelX(xLabel); 			return *this;};
-	ScatterCtrl& SetLabelY(const String& yLabel)				{ScatterDraw::SetLabelY(yLabel); 			return *this;};
-	ScatterCtrl& SetLabelY2(const String& yLabel)				{ScatterDraw::SetLabelY2(yLabel); 			return *this;};
+	ScatterCtrl& SetLabelX(const String& _xLabel)				{ScatterDraw::SetLabelX(_xLabel); 			return *this;};
+	ScatterCtrl& SetLabelY(const String& _yLabel)				{ScatterDraw::SetLabelY(_yLabel); 			return *this;};
+	ScatterCtrl& SetLabelY2(const String& _yLabel)				{ScatterDraw::SetLabelY2(_yLabel); 			return *this;};
 	ScatterCtrl& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom)
 																{ScatterDraw::SetPlotAreaMargin(hLeft, hRight, vTop, vBottom); return *this;};
 	ScatterCtrl& SetPlotAreaLeftMargin(int margin)				{ScatterDraw::SetPlotAreaLeftMargin(margin);return *this;};
@@ -260,7 +255,7 @@ public:
 	
 	ScatterCtrl& ShowLegend(bool show = true) 					{ScatterDraw::ShowLegend(show); 			return *this;}
 	bool GetShowLegend() 										{return ScatterDraw::GetShowLegend();}
-	ScatterCtrl& SetLegendPos(const Point &pos) 				{ScatterDraw::SetLegendPos(pos);			return *this;}
+	ScatterCtrl& SetLegendPos(const Point &_pos) 				{ScatterDraw::SetLegendPos(_pos);			return *this;}
 	ScatterCtrl& SetLegendPosX(int x)			 				{ScatterDraw::SetLegendPosX(x);				return *this;}
 	ScatterCtrl& SetLegendPosY(int y) 							{ScatterDraw::SetLegendPosY(y);				return *this;}
 	Point& GetLegendPos() 										{return ScatterDraw::GetLegendPos();}
