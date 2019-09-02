@@ -429,7 +429,7 @@ bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value>
 }
 
 bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, 
-Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state)
+		Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state)
 {
 	Array <Value> *res[7];
 	res[0] = &name;

@@ -152,8 +152,6 @@ void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 5
 bool Window_SaveCapture(int64 windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
 Image Window_SaveCapture(int64 windowId, int left = -1, int top = -1, int width = -1, int height = -1);
 
-Rect GetDesktopRect();
-
 bool Snap_Desktop(String fileName);
 bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height);
 bool Snap_Window(String fileName, int64 handle);
