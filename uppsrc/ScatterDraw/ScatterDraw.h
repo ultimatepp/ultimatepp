@@ -16,7 +16,7 @@ using namespace Upp;
 
 Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
-void debug_h();			// Dummy function used to debug .h files
+//void debug_h();			// Dummy function used to debug .h files
 
 class DashStyle {
 public:
@@ -335,8 +335,8 @@ public:
 		return *this;
 	};
 	Size GetSize() const				{return size;};
-	ScatterDraw& Responsive(bool responsive = true, double factor = 1) {
-		this->responsive = responsive;
+	ScatterDraw& Responsive(bool _responsive = true, double factor = 1) {
+		this->responsive = _responsive;
 		responsivenessFactor = factor;
 		plotScaleX   = responsive ? responsivenessFactor*size.cx/600. : 1;
 		plotScaleY   = responsive ? responsivenessFactor*size.cy/400. : 1;
@@ -421,7 +421,7 @@ public:
 	Color& GetLegendFillColor() 							{return legendFillColor;}
 	Color& GetLegendBorderColor() 							{return legendBorderColor;}
 	
-	ScatterDraw& SetMode(int mode = MD_ANTIALIASED)			{this->mode = mode; Refresh(); return *this;};
+	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)			{this->mode = _mode; Refresh(); return *this;};
 	int GetMode()											{return mode;};
 	
 	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
@@ -1116,9 +1116,9 @@ protected:
 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	
-	void ExpFormat(String& s, int i, double d)	{s = FormatDoubleExp(d, 1);}
-	void MonFormat(String& s, int i, double d)	{s = Format("%Mon", int(d));}
-	void DyFormat(String& s, int i, double d)	{s = Format("%Dy", int(d));}
+	void ExpFormat(String& s, int , double d)	{s = FormatDoubleExp(d, 1);}
+	void MonFormat(String& s, int , double d)	{s = Format("%Mon", int(d));}
+	void DyFormat(String& s, int , double d)	{s = Format("%Dy", int(d));}
 	
 	static String VariableFormat(double range, double d);	
 
@@ -1687,7 +1687,7 @@ void ScatterDraw::Plot(T& w)
 					for (int i = 0; i < points.GetCount() && i < series[j].labels->GetCount(); i++) {
 						String txt = (*(series[j].labels))[i];
 						Size sz = GetTextSizeSpace(txt, fnt);
-						int ddy = -sz.cy/2;
+						int ddy = static_cast<int>(-sz.cy/2.);
 						int ddx;
 						switch (series[j].labelsAlign) {
 						case ALIGN_LEFT:	ddx = 0;		break;

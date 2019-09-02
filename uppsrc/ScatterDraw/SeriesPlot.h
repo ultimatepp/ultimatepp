@@ -67,13 +67,13 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double , double , double y0, double , bool isClosed) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0, isClosed);		
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double , double , double y0, double , bool isClosed) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0, isClosed);		
 	}
@@ -111,13 +111,13 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double , double , double y0, double , bool ) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0);
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double , double , double y0, double , bool ) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0);
 	}
@@ -142,13 +142,13 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double fx, double , double y0, double width, bool ) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0, width);
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, bool isClosed) const 
+				const Color &fillColor, double fx, double , double y0, double width, bool ) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0, width);
 	}

@@ -1,6 +1,5 @@
 #include "ScatterDraw.h"
 
-
 ScatterDraw& ScatterDraw::AddSurf(DataSourceSurf &_surf) {
 	surf = &_surf;
 	if (IsNull(surfMinZ))
@@ -36,12 +35,16 @@ Color GetRainbowColor(double frac, RAINBOW rainbow, int numScales) {
 	frac = Filter01(frac);
 	switch (rainbow) { 
 	case BLUE_YELLOW_RED:	frac = 1 - frac;
+							return GetRainbowColor(frac, Color(255,0,0), Color(255,255,0), Color(0,0,255), numScales);
 	case RED_YELLOW_BLUE:	return GetRainbowColor(frac, Color(255,0,0), Color(255,255,0), Color(0,0,255), numScales);
 	case GREEN_YELLOW_RED:	frac = 1 - frac;
+							return GetRainbowColor(frac, Color(255,0,0), Color(255,255,0), Color(0,255,0), numScales);
 	case RED_YELLOW_GREEN:	return GetRainbowColor(frac, Color(255,0,0), Color(255,255,0), Color(0,255,0), numScales);
 	case WHITE_BLACK:		frac = 1 - frac;
+							return GetRainbowColor(frac, Color(0,0,0), Color(255,255,255), numScales);
 	case BLACK_WHITE:		return GetRainbowColor(frac, Color(0,0,0), Color(255,255,255), numScales);
 	case BLUE_WHITE_RED:	frac = 1 - frac;
+							return GetRainbowColor(frac, Color(255,0,0), Color(255,255,255), Color(0,0,255), numScales);
 	case RED_WHITE_BLUE:	return GetRainbowColor(frac, Color(255,0,0), Color(255,255,255), Color(0,0,255), numScales);
 	}
 	return Null;

@@ -210,7 +210,7 @@ bool ScatterDraw::PointInBorder(Point &pt)
 	return !PointInPlot(pt);
 }
 
-bool ScatterDraw::PointInLegend(Point &pt) 
+bool ScatterDraw::PointInLegend(Point &) 
 {
 	return false;
 }
@@ -757,7 +757,6 @@ Value ScatterDraw::GetStringY(int index, int64 idata) {
 	double ret = GetValueY(index, idata);
 	if (IsNull(ret))
 		return Null;
-	String sret;
 	if (cbModifFormatY) {
 		String sret;
 		cbModifFormatY(sret, int(idata), ret);
@@ -1144,7 +1143,7 @@ bool ScatterDraw::IsVisible(int index) {
 	return series[index].opacity > 0;
 }
 
-ScatterDraw &ScatterDraw::ShowAll(bool show) {
+ScatterDraw &ScatterDraw::ShowAll(bool ) {
 	for (int i = 0; i < series.GetCount(); ++i)
 		series[i].opacity = 1;
 	return *this;
@@ -1179,7 +1178,7 @@ void ScatterDraw::RemoveAllSeries() {
 Drawing ScatterDraw::GetDrawing() {
 	DrawingDraw ddw(size);
 	
-	SetDrawing(ddw, true);
+	SetDrawing<DrawingDraw>(ddw, true);
 	PlotTexts(ddw);
 
 	return ddw;

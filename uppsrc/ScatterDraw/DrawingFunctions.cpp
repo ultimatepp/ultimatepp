@@ -163,7 +163,7 @@ void ClipEnd(Draw &w) {
 	w.End();	
 }
 
-void ClipEnd(Painter &w) {
+void ClipEnd(Painter &) {
 	;	
 }
 
@@ -201,7 +201,7 @@ void DashScaled(Painter& w, const String dash, double scale) {
 
 void DrawLineOpa(Painter& w, double x0, double y0, double x1, double y1, double scale, 
 				double opacity, double thick, const Color &color, String dash, 
-				const Color &background) {	
+				const Color &) {	
 	w.Move(Pointf(x0, y0));
 	w.Line(Pointf(x1, y1));
 	DashScaled(w, dash, scale);
@@ -211,7 +211,7 @@ void DrawLineOpa(Painter& w, double x0, double y0, double x1, double y1, double 
 
 void DrawCircleOpa(Painter& w, double x, double y, double r, double scale, 
 				double opacity, double thick, const Color &color, String dash, 
-				const Color &background) {	
+				const Color &) {	
 	w.Circle(x, y, r);
 	DashScaled(w, dash, scale);
 	w.Opacity(opacity);				// Before Stroke()
@@ -332,7 +332,7 @@ void DrawPolylineOpa(Draw& w, const Vector<Pointf> &p, double scale, double opac
 }
 
 void DrawPolylineOpa(Painter& w, const Vector<Pointf> &p, double scale, double opacity, 
-				double thick, const Color &color, String dash, const Color &background) {	
+				double thick, const Color &color, String dash, const Color &) {	
 	ASSERT(!p.IsEmpty());
 	bool broken = true;
 	for (int i = 0; i < p.GetCount(); ++i) {
@@ -351,7 +351,7 @@ void DrawPolylineOpa(Painter& w, const Vector<Pointf> &p, double scale, double o
 	w.Stroke(thick*scale, color);
 }
 
-void FillPolylineOpa(Draw& w, const Vector<Pointf> &p, double scale, double opacity, 
+void FillPolylineOpa(Draw& w, const Vector<Pointf> &p, double , double opacity, 
 				const Color &background, const Color &fillColor) {
 	ASSERT(!p.IsEmpty());
 	Color opacolor = GetOpaqueColor(fillColor, background, opacity) ;
@@ -359,14 +359,14 @@ void FillPolylineOpa(Draw& w, const Vector<Pointf> &p, double scale, double opac
 	Vector<Point> pi;
 	pi.SetCount(p.GetCount());
 	for (int i = 0; i < pi.GetCount(); ++i) {
-		pi[i].x = (int)p[i].x;
-		pi[i].y = (int)p[i].y;
+		pi[i].x = static_cast<int>(p[i].x);
+		pi[i].y = static_cast<int>(p[i].y);
 	}
 	w.DrawPolygon(pi, opacolor);
 }
 
-void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, double scale, double opacity, 
-				const Color &background, const Color &fillColor) {	
+void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, double , double opacity, 
+				const Color &, const Color &fillColor) {	
 	ASSERT(!p.IsEmpty());
 	w.Move(p[0]);
 	for (int i = 1; i < p.GetCount(); ++i) 

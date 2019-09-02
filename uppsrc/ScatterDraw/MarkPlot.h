@@ -5,16 +5,16 @@ class MarkPlot {
 public:
 	MarkPlot() : multiPlot(false), type(0) {}
 	virtual ~MarkPlot() {};	
-	virtual void Paint(Draw &p, const double& scale, const Point& cp, const double& size, 
+	virtual void Paint(Draw &p, const double& , const Point& cp, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const = 0;
-	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {NEVER();};
-	virtual void Paint(Painter &p, const double& scale, const Point& cp, const double& size, 
+	virtual void Paint(Draw &, const double& , int , int , const Vector<int>& , 
+		const Vector<int>& , const Vector<double>& , const double& , 
+		const Color& , const double& , const Color& ) const {NEVER();};
+	virtual void Paint(Painter &p, const double& , const Point& cp, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const = 0;
-	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {NEVER();};
+	virtual void Paint(Painter &, const double& , int , int , const Vector<int>& , 
+		const Vector<int>& , const Vector<double>& , const double& , 
+		const Color& , const double& , const Color& ) const {NEVER();};
 	template<class T>
 	static void Register(const String& name)
 	{
@@ -47,7 +47,7 @@ public:
 	virtual int GetTypeCount()							{return 0;}
 	virtual const char **TypeString()					{return NULL;}
 	
-	void SetTypeType(int type) 							{this->type = type;}
+	void SetTypeType(int _type) 						{this->type = _type;}
 	int GetTypeType() 									{return type;}
  
 protected:
@@ -158,12 +158,12 @@ private:
 
 public:
 	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const  
+		const double& , const Color& ) const  
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
 	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const 
+		const double& , const Color& ) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
@@ -182,12 +182,12 @@ private:
 
 public:
 	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const  
+		const double& , const Color& ) const  
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
 	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const
+		const double& , const Color& ) const
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
@@ -220,7 +220,7 @@ public:
 	}
 };	
 
-void debug_h();			// Dummy function used to debug .h files
+//void debug_h();			// Dummy function used to debug .h files
 
 class RangePlot : public MarkPlot {
 public:
@@ -324,23 +324,23 @@ private:
 	
 public:
 	BubblePlot() {multiPlot = true;}
-	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
+	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& , 
+		const Vector<int>& , const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		DoPaint(p, scale, x, y, dataFixed, size, markColor, markBorderWidth, markBorderColor);
 	}
-	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
-		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
+	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& , 
+		const Vector<int>& , const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, x, y, dataFixed, size, markColor, markBorderWidth, markBorderColor);
 	}
-	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const 
+	void Paint(Draw &, const double& , const Point& , const double& , const Color& ,
+		const double& , const Color& ) const 
 	{}
-	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
-		const double& markBorderWidth, const Color& markBorderColor) const  
+	void Paint(Painter &, const double& , const Point& , const double& , const Color& ,
+		const double& , const Color& ) const  
 	{}
 };	
 					

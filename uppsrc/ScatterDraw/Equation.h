@@ -30,8 +30,8 @@ public:
 	virtual String GetEquation(int numDigits = 3) = 0;
 	virtual inline int64 GetCount()			{return Null;}
 	
-	void SetNumDigits(int n)				{numDigits = n;}
-	int GetNumDigits()						{return numDigits;}
+	//void SetNumDigits(int n)				{numDigits = n;}
+	//int GetNumDigits()						{return numDigits;}
 	void SetMaxFitFunctionEvaluations(int n){maxFitFunctionEvaluations = n;}
 	int GetMaxFitFunctionEvaluations()		{return maxFitFunctionEvaluations;}
 	
@@ -67,7 +67,7 @@ public:
 protected:
 	Vector<double> coeff;
 	int degree;
-	static int numDigits, maxFitFunctionEvaluations;
+	static int /*numDigits,*/ maxFitFunctionEvaluations;
 	
 	void SetNumCoeff(int num);
 	void SetCoeff(const Vector<double>& c)          {coeff = clone(c);}
@@ -88,11 +88,11 @@ public:
 	AvgEquation(double c0)				{SetCoeff(c0);}
 	double f(double ) 					{return coeff[0];}
 	virtual String GetName() 			{return t_("Average");}
-	virtual String GetEquation(int numDigits = 3) {	
-		String ret = Format("%s", FormatCoeff(0, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {	
+		String ret = Format("%s", FormatCoeff(0, _numDigits));
 		return ret;
 	}
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )				{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{coeff[0] = series.AvgY();}
 };
 
@@ -104,8 +104,8 @@ public:
 		return coeff[0] + x*coeff[1];
 	}
 	virtual String GetName() 			{return t_("Linear");}
-	virtual String GetEquation(int numDigits = 3) {	
-		String ret = Format("%s + %s*x", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {	
+		String ret = Format("%s + %s*x", FormatCoeff(0, _numDigits), FormatCoeff(1, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}
@@ -157,13 +157,13 @@ public:
 	void Init(double offset, double A, double w, double phi) 	{coeff.Clear();	coeff << offset << A << w << phi;}
 	double f(double x)				{return coeff[0] + coeff[1]*sin(coeff[2]*x + coeff[3]);}
 	virtual String GetName() 		{return t_("Sine");}
-	virtual String GetEquation(int numDigits = 3) {
-		String ret = Format("%s + %s*sin(%s*t + %s)", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits)
-													, FormatCoeff(2, numDigits), FormatCoeff(3, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {
+		String ret = Format("%s + %s*sin(%s*t + %s)", FormatCoeff(0, _numDigits), FormatCoeff(1, _numDigits)
+													, FormatCoeff(2, _numDigits), FormatCoeff(3, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}													
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )				{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{
 		coeff[0] = series.AvgY();	
 		coeff[1] = series.SinEstim_Amplitude(coeff[0]);
@@ -182,13 +182,13 @@ public:
 	void Init(double offset, double A, double lambda, double w, double phi) 	{coeff.Clear();	coeff << offset << A << lambda << w << phi;}
 	double f(double x)				{return coeff[0] + coeff[1]*exp(-coeff[2]*x)*cos(coeff[3]*x + coeff[4]);}
 	virtual String GetName() 		{return t_("DampedSinusoidal");}
-	virtual String GetEquation(int numDigits = 3) {
-		String ret = Format("%s + %s*e^(-%s*t)*cos(%s*t + %s)", FormatCoeff(0, numDigits), 
-			FormatCoeff(1, numDigits), FormatCoeff(2, numDigits), FormatCoeff(3, numDigits), FormatCoeff(4, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {
+		String ret = Format("%s + %s*e^(-%s*t)*cos(%s*t + %s)", FormatCoeff(0, _numDigits), 
+			FormatCoeff(1, _numDigits), FormatCoeff(2, _numDigits), FormatCoeff(3, _numDigits), FormatCoeff(4, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}													
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )						{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{
 		coeff[0] = series.AvgY();	
 		coeff[2] = series.SinEstim_Amplitude(coeff[0]);
@@ -210,15 +210,15 @@ public:
 								coeff << offset << A1 << w1 << phi1 << A2 << lambda << w2 << phi2;}
 	double f(double x)				{return coeff[0] + coeff[1]*cos(coeff[2]*x + coeff[3]) + coeff[4]*exp(-coeff[5]*x)*cos(coeff[6]*x + coeff[7]);}
 	virtual String GetName() 		{return t_("Sin_DampedSinusoidal");}
-	virtual String GetEquation(int numDigits = 3) {
+	virtual String GetEquation(int _numDigits = 3) {
 		String ret = Format("%s + %s*cos(%s*t + %s) + %s*e^(-%s*t)*cos(%s*t + %s)", 
-			FormatCoeff(0, numDigits), FormatCoeff(1, numDigits), FormatCoeff(2, numDigits), 
-			FormatCoeff(3, numDigits), FormatCoeff(4, numDigits), FormatCoeff(5, numDigits),
-			FormatCoeff(6, numDigits), FormatCoeff(7, numDigits));
+			FormatCoeff(0, _numDigits), FormatCoeff(1, _numDigits), FormatCoeff(2, _numDigits), 
+			FormatCoeff(3, _numDigits), FormatCoeff(4, _numDigits), FormatCoeff(5, _numDigits),
+			FormatCoeff(6, _numDigits), FormatCoeff(7, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}													
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )				{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{
 		coeff[0] = series.AvgY();	
 		coeff[1] = series.SinEstim_Amplitude(coeff[0]);
@@ -273,8 +273,8 @@ public:
 		ret.Replace("+ -", "- ");
 		return ret;
 	}	
-	virtual void GuessCoeff(DataSource &series) {}
-	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &) {}
+	void SetDegree(int )				{NEVER();}
 };
 
 class RealExponentEquation : public ExplicitEquation {
@@ -287,13 +287,13 @@ public:
 		return coeff[0]*pow(x, coeff[1]);
 	}
 	virtual String GetName() 					{return t_("RealExponent");}
-	virtual String GetEquation(int numDigits = 3) {
-		String ret = Format("%s*x^%s", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {
+		String ret = Format("%s*x^%s", FormatCoeff(0, _numDigits), FormatCoeff(1, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}	
-	virtual void GuessCoeff(DataSource &series) {}
-	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &) {}
+	void SetDegree(int )				{NEVER();}
 };
 
 class WeibullCumulativeEquation : public ExplicitEquation {
@@ -315,8 +315,8 @@ public:
 		ret.Replace("+ -", "- ");
 		return ret;
 	}	
-	virtual void GuessCoeff(DataSource &series) {}
-	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &) {}
+	void SetDegree(int )				{NEVER();}
 };
 
 class WeibullEquation : public ExplicitEquation {
@@ -339,7 +339,7 @@ public:
 		ret.Replace("+ -", "- ");
 		return ret;
 	}	
-	virtual void GuessCoeff(DataSource &series) {}
+	virtual void GuessCoeff(DataSource &) {}
 	virtual void _GuessCoeff(DataSource &series) {
 		Vector<Pointf> cumulative = series.CumulativeY();
 		factor = cumulative.Top().y;
@@ -359,7 +359,7 @@ public:
 		return ExplicitEquation::Fit(series, r2);
 	}
 	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
-	void SetDegree(int num)				{NEVER();}
+	void SetDegree(int )					{NEVER();}
 private:
 	double factor;
 };
@@ -370,13 +370,13 @@ public:
 	Rational1Equation(double c0, double c1, double c2)	{SetCoeff(c0, c1, c2);}
 	double f(double x) 					{return coeff[0]/(x + coeff[1]) + coeff[2];}
 	virtual String GetName() 			{return t_("Rational_1");}
-	virtual String GetEquation(int numDigits = 3) {
-		String ret = Format("%s/(x + %s) + %s", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits), FormatCoeff(2, numDigits));
+	virtual String GetEquation(int _numDigits = 3) {
+		String ret = Format("%s/(x + %s) + %s", FormatCoeff(0, _numDigits), FormatCoeff(1, _numDigits), FormatCoeff(2, _numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}			
-	virtual void GuessCoeff(DataSource &series) {}
-	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &) {}
+	void SetDegree(int )				{NEVER();}
 };
 
 class SplineEquation : public ExplicitEquation {
@@ -384,8 +384,8 @@ public:
 	SplineEquation() 					{}
 	double f(double x);
 	virtual String GetName() 			{return t_("Spline");}
-	void SetDegree(int num)				{NEVER();}
-	void GuessCoeff(DataSource &series)	{NEVER();}
+	void SetDegree(int )				{NEVER();}
+	void GuessCoeff(DataSource &)		{NEVER();}
 	String GetEquation(int)				{return t_("Spline");}
 	FitError Fit(DataSource &series, double &r2);
 	FitError Fit(DataSource &series)	{double dummy; return Fit(series, dummy);}
@@ -401,7 +401,7 @@ class Unit : public Moveable<Unit> {
 public:
 	Unit() 							{SetNull();}
 	Unit(const Nuller&)	: Unit()	{}
-	Unit(double m, double l, double t) : m(m), l(l), t(t) {}
+	Unit(double _m, double _l, double _t) : m(_m), l(_l), t(_t) {}
 	String GetString() {
 		if (IsNullInstance())
 			return String();
@@ -459,7 +459,7 @@ public:
 class doubleUnit : public Moveable<doubleUnit> {
 public:
 	doubleUnit() : doubleUnit(0)						{}
-	doubleUnit(double val) : val(val), unit(0, 0, 0)	{}
+	doubleUnit(double _val) : val(_val), unit(0, 0, 0)	{}
 	doubleUnit(const Nuller&) 							{SetNull();}
 	
 	double val;
