@@ -22,6 +22,7 @@ file
 	PieDraw.cpp,
 	PieDraw.h,
 	Pedantic.h,
+	Unpedantic.h,
 	ScatterDraw.t,
 	srcdoc.tpp,
 	src.tpp,

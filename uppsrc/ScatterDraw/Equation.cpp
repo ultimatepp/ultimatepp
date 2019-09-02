@@ -1,6 +1,8 @@
 #include "ScatterDraw.h"
 
+#include <ScatterDraw/Unpedantic.h>
 #include <plugin/Eigen/Eigen.h>
+#include <ScatterDraw/Pedantic.h>
 
 namespace Upp {
 
