@@ -617,7 +617,7 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 	}
 }
 
-bool ScatterCtrl::Key(dword key, int count)
+bool ScatterCtrl::Key(dword key, int )
 {
 	if (!ProcessKey(key)) {
 		if (key == K_CTRL_P)
@@ -781,7 +781,7 @@ void ScatterCtrl::MouseLeave()
 	}
 }
 
-void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver) 
+void ScatterCtrl::MouseZoom(int zdelta, bool , bool ) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
 //	if (hor && (lastxRange < xRange*scale))
@@ -797,7 +797,7 @@ void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver)
 	Zoom(scale, mouseHandlingX, mouseHandlingY);
 }
 
-Image ScatterCtrl::CursorImage(Point p, dword keyflags)
+Image ScatterCtrl::CursorImage(Point , dword )
 {
 	if (isZoomWindow)
 		return ScatterImg::ZoomPlus();
@@ -938,24 +938,24 @@ void ScatterCtrl::SaveToFile(String fileName)
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }
 
-ScatterCtrl &ScatterCtrl::AddSeries(ArrayCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+ScatterCtrl &ScatterCtrl::AddSeries(ArrayCtrl &data, bool useCols, int idX, int idY, int , int beginData, int numData)
 {
 	AddSeries<ArrayCtrlSource>(data, useCols, idX, idY, beginData, numData);
 	return *this;
 }
 
-void ScatterCtrl::InsertSeries(int id, ArrayCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+void ScatterCtrl::InsertSeries(int id, ArrayCtrl &data, bool useCols, int idX, int idY, int , int beginData, int numData)
 {
 	InsertSeries<ArrayCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
 
-ScatterCtrl &ScatterCtrl::AddSeries(GridCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+ScatterCtrl &ScatterCtrl::AddSeries(GridCtrl &data, bool useCols, int idX, int idY, int , int beginData, int numData)
 {
 	AddSeries<GridCtrlSource>(data, useCols, idX, idY, beginData, numData);
 	return *this;
 }
 
-void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, int idY, int , int beginData, int numData)
 {
 	InsertSeries<GridCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
