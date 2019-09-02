@@ -8,6 +8,7 @@
 #include "GatherTpp.h"
 #endif
 
+#include <ScatterDraw/Pedantic.h>
 #include <Functions4U/SvgColors.h>
 #include "StaticPlugin.h"
 #include "LocalProcess2.h"
@@ -116,9 +117,9 @@ struct FileData : Moveable<FileData> {
 	
 	String ToString() const { return Format("%s %0n", fileName, length); }
 
-	FileData(bool isFolder, String fileName, String relFilename, int64 length, 
-		struct Upp::Time t, uint64 id) : isFolder(isFolder), fileName(fileName), 
-		relFilename(relFilename), length(length), t(t), id(id) {}
+	FileData(bool _isFolder, String _fileName, String _relFilename, int64 _length, 
+		struct Upp::Time _t, uint64 _id) : isFolder(_isFolder), fileName(_fileName), 
+		relFilename(_relFilename), length(_length), t(_t), id(_id) {}
 	FileData() {}
 };
 
@@ -290,7 +291,7 @@ T AngleAdd360(T ang, T val) {
 
 template <class T> 
 inline const T Norm(const T& dx, const T& dy)  { 
-	return sqrt(dx*dx + dy*dy); }
+	return static_cast<T>(sqrt(dx*dx + dy*dy)); }
 	
 template <class T> 
 inline const T Distance(const T& x1, const T& y1, const T& x2, const T& y2)  { 
@@ -302,15 +303,15 @@ inline const T Distance(const Point_<T>& p1, const Point_<T>& p2)  {
 
 template <class T> 
 inline const T Distance(const T& x1, const T& y1, const T& z1, const T& x2, const T& y2, const T& z2)  { 
-	return sqrt(pow2(x1-x2) + pow2(y1-y2) + pow2(z1-z2)); }
+	return static_cast<T>(sqrt(pow2(x1-x2) + pow2(y1-y2) + pow2(z1-z2))); }
 	
 template <class T> 
-inline const double Angle(const T& x1, const T& y1, const T& x2, const T& y2)  { 
-	return atan2(y2-y1, x2-x1);
+inline const T Angle(const T& x1, const T& y1, const T& x2, const T& y2)  { 
+	return static_cast<T>(atan2(y2-y1, x2-x1));
 }
 
 template <class T> 
-inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  { 
+inline const T Angle(const Point_<T>& p1, const Point_<T>& p2)  { 
 	return Angle<T>(p1.x, p1.y, p2.x, p2.y);
 }
 
@@ -327,7 +328,7 @@ class StringParse : public String {
 public:
 	void GoInit()	{pos = 0; lastSeparator='\0';};
 	StringParse():String("") {GoInit();};
-	StringParse(String s): String(s) {GoInit();};
+	StringParse(String _s): String(_s) {GoInit();};
 	bool GoBefore(const String text) {
 		if (pos >= GetLength()) {
 			pos = GetLength()-1;
@@ -461,9 +462,9 @@ public:
 		return ret;
 	}
 	double GetDouble(String separators = "")  	{return FixFloat(atof(GetText(separators)));};
-	int GetInt(String separators = "")			{return int(FixFloat(atof(GetText(separators))));};
-	long GetLong(String separators = "")		{return long(FixFloat(atof(GetText(separators))));};
-	uint64 GetUInt64(String separators = "")	{return (uint64)(FixFloat(atof(GetText(separators))));};
+	int GetInt(String separators = "")			{return static_cast<int>(FixFloat(atof(GetText(separators))));};
+	long GetLong(String separators = "")		{return static_cast<long>(FixFloat(atof(GetText(separators))));};
+	uint64 GetUInt64(String separators = "")	{return static_cast<uint64>(FixFloat(atof(GetText(separators))));};
 	
 	String Right() 			{return String::Mid(pos+1);}
 	int GetLastSeparator() 	{return lastSeparator;}
@@ -488,12 +489,12 @@ public:
 	{
 		return pos >= GetCount();
 	}
-	unsigned Count(String s)
+	unsigned Count(String _s)
 	{
 		int from = 0;
 		unsigned count = 0;
 		
-		while ((from = ToString().Find(s, from)) >= 0) {
+		while ((from = ToString().Find(_s, from)) >= 0) {
 			count++;
 			from++;
 		}
@@ -509,9 +510,6 @@ Value GetVARIANT(VARIANT &result);
 String WideToString(LPCWSTR wcs, int len = -1);
 #endif
  
-//#ifdef CTRLLIB_H
-//	#include "Functions4U/Functions4U_Gui.h"
-//#endif
 
 String GetExtExecutable(const String ext);
 
@@ -546,15 +544,15 @@ bool BSDiff(String oldfile, String newfile, String patchfile);
 template <class T>
 Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
 {
-	double frameAspect  = frame.cx/(double)frame.cy; 
-	double objectAspect = object.cx/(double)object.cy;	
+	double frameAspect  = frame.cx/static_cast<double>(frame.cy); 
+	double objectAspect = object.cx/static_cast<double>(object.cy);	
 	
 	if (frameAspect > objectAspect) {
 		double x = (frame.cx - objectAspect*frame.cy)/2.;
-		return Rect_<T>((T)x, 0, (T)(x + objectAspect*frame.cy), frame.cy);
+		return Rect_<T>(static_cast<T>(x), 0, static_cast<T>(x + objectAspect*frame.cy), frame.cy);
 	} else {
 		double y = (frame.cy - frame.cx/objectAspect)/2.;
-		return Rect_<T>(0, (T)y, frame.cx, (T)(y + frame.cx/objectAspect));
+		return Rect_<T>(0, static_cast<T>(y), frame.cx, static_cast<T>(y + frame.cx/objectAspect));
 	}
 }
 
@@ -684,11 +682,12 @@ bool Equal(const T& a, const T& b, const T& ratio) {
 }
 
 template <class Range, class V>
-void FindAdd(Range& r, const V& value, int from = 0) {
+int FindAdd(Range& r, const V& value, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
 		if(r[i] == value) 
-			return;
+			return i;
 	r.Add(value);
+	return r.GetCount()-1;
 }
 
 template <class Range, class V>
@@ -830,8 +829,8 @@ public:
 	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
 	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
-	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, 
-		double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
+	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, 
+		double _maxTimeWithoutOutput = -1, double _maxRunTime = -1, bool convertcharset = true) {
 		status = STOP_OK;
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Start();
@@ -839,9 +838,9 @@ public:
 		if(!p.Start(cmd, envptr, dir))
 			return false;
 		status = RUNNING;
-		this->maxTimeWithoutOutput = maxTimeWithoutOutput;
-		this->maxRunTime = maxRunTime;
-		this->refreshTime = refreshTime;
+		maxTimeWithoutOutput = _maxTimeWithoutOutput;
+		maxRunTime = _maxRunTime;
+		refreshTime = _refreshTime;
 	
 #ifdef CTRLLIB_H
 		if (refreshTime > 0) {
@@ -892,10 +891,10 @@ public:
 		}
 #endif
 	}
-	void Stop(ProcessStatus status = STOP_USER) {
+	void Stop(ProcessStatus _status = STOP_USER) {
 		if (!IsRunning())
 			return;
-		this->status = status;
+		status = _status;
 		p.Kill();		
 #ifdef CTRLLIB_H		
 		if (callbackOn) {

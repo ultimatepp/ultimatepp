@@ -62,7 +62,7 @@ Honza
 // LaunchFile
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-bool LaunchFileCreateProcess(const char *file, const char *params, const char *directory) {
+bool LaunchFileCreateProcess(const char *file, const char *, const char *directory) {
 	STARTUPINFOW startInfo;
     PROCESS_INFORMATION procInfo;
 
@@ -269,7 +269,7 @@ bool DirectoryExistsX_Each(const char *name) {
 	NETRESOURCE nr;
 	memset(&nr, 0, sizeof(NETRESOURCE));
 	nr.dwType = RESOURCETYPE_DISK;
-	nr.lpLocalName = (char *)localName.Begin();
+	nr.lpLocalName = const_cast<char *>(localName.Begin());
 	nr.lpRemoteName = remoteName;
 	nr.lpProvider = NULL;
     DWORD dwFlags = CONNECT_UPDATE_PROFILE;
@@ -358,7 +358,7 @@ bool SetReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly, readOnly, readOnly);
 }
 
-bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
+bool SetReadOnly(const char *path, bool usr, bool , bool ) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
@@ -624,7 +624,7 @@ String GetExtExecutable(const String _ext)
 	WString fileW(file);
 	WCHAR exe[1024];
 	ret = FindExecutableW(fileW, NULL, exe);
-	if ((uint64)ret > 32)
+	if (reinterpret_cast<uint64>(ret) > 32)
 		exeFile = WString(exe).ToString();
 	DeleteFile(file);
 #endif
@@ -896,7 +896,7 @@ String formatSeconds(double seconds, int dec, bool fill) {
 		ret = FormatInt(iseconds);
 	double decs = seconds - iseconds;
 	if (decs > 0 && dec > 0) 
-		ret << "." << FormatIntDec((int)(decs*pow(10, dec)), dec, '0');
+		ret << "." << FormatIntDec(static_cast<int>(decs*pow(10, dec)), dec, '0');
 	return ret;
 }
 /*
@@ -977,9 +977,9 @@ String HMSToString(int hour, int min, double seconds, int dec, bool units, bool 
 String SecondsToString(double seconds, int dec, bool units, bool space, bool tp, 
 					bool longUnits, bool forcesec) {
 	int hour, min;
-	hour = (int)(seconds/3600.);
+	hour = static_cast<int>(seconds/3600.);
 	seconds -= hour*3600;
-	min = (int)(seconds/60.);
+	min = static_cast<int>(seconds/60.);
 	seconds -= min*60;	
 	return HMSToString(hour, min, seconds, dec, units, space, tp, longUnits, forcesec);
 }
@@ -1885,7 +1885,7 @@ FileDataArray::FileDataArray(bool use, int _fileFlags)
 	fileFlags = _fileFlags;
 }
 
-bool FileDataArray::Init(String folder, FileDataArray &orig, FileDiffArray &diff)
+bool FileDataArray::Init(String , FileDataArray &orig, FileDiffArray &diff)
 {
 	basePath = orig.basePath;
 	fileCount = orig.fileCount;
@@ -2081,7 +2081,7 @@ bool operator<(const FileData& a, const FileData& b)
 		return a.isFolder;
 }
 
-bool CheckFileData(FileData &data, String &relFileName, String &fileName, String &lowrelFileName, String &lowfileName, bool isFolder) {
+bool CheckFileData(FileData &data, String &, String &, String &lowrelFileName, String &lowfileName, bool isFolder) {
 	if (data.isFolder == isFolder) {
 		if (ToLower(data.fileName) == lowfileName) {
 			if (ToLower(data.relFilename) == lowrelFileName) 
@@ -2349,8 +2349,8 @@ String WinLastError() {
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
         		  FORMAT_MESSAGE_IGNORE_INSERTS,
         		  NULL, ::GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        		  (LPTSTR) &lpMsgBuf, 0, NULL);
-  	ret = (char *)lpMsgBuf;
+        		  reinterpret_cast<LPTSTR>(&lpMsgBuf), 0, NULL);
+  	ret = static_cast<char *>(lpMsgBuf);
   	LocalFree(lpMsgBuf);	
 	return ret;
 }
@@ -2503,7 +2503,7 @@ Value GetVARIANT(VARIANT &result)
          ret = result.iVal;
          break;
 	case VT_I4:
-		ret = (int64)result.lVal; 
+		ret = static_cast<int64>(result.lVal); 
 		break;
 	case VT_R4:
 		ret = AsString(result.fltVal);
@@ -2517,17 +2517,18 @@ Value GetVARIANT(VARIANT &result)
 	case VT_LPSTR:
          //ret = result.pszVal;
          ret = "Unknown VT_LPSTR";
+         break;
     case VT_DATE:
   		SYSTEMTIME stime;
      	VariantTimeToSystemTime(result.date, &stime);
      	{
 	     	Time t;
-	     	t.day    = (Upp::byte)stime.wDay;
-	     	t.month  = (Upp::byte)stime.wMonth;
+	     	t.day    = static_cast<Upp::byte>(stime.wDay);
+	     	t.month  = static_cast<Upp::byte>(stime.wMonth);
 	     	t.year   = stime.wYear;
-	     	t.hour   = (Upp::byte)stime.wHour; 
-	     	t.minute = (Upp::byte)stime.wMinute;
-	     	t.second = (Upp::byte)stime.wSecond;		
+	     	t.hour   = static_cast<Upp::byte>(stime.wHour); 
+	     	t.minute = static_cast<Upp::byte>(stime.wMinute);
+	     	t.second = static_cast<Upp::byte>(stime.wSecond);		
 			ret = t;
      	}
     	break;
@@ -2581,7 +2582,7 @@ bool Dl::Load(const String &fileDll) {
 void *Dl::GetFunction(const String &functionName) {
 	if (!hinstLib) 
 		return NULL;
-	return (void *)GetProcAddress(hinstLib, functionName);
+	return reinterpret_cast<void *>(GetProcAddress(hinstLib, functionName));
 }
 
 #else
@@ -2778,4 +2779,4 @@ int SentenceSimilitude(const char *s, const char *t) {
 // Dummy functions added after TheIDE change
 Upp::String GetCurrentMainPackage() {return "dummy";}
 Upp::String GetCurrentBuildMethod()	{return "dummy";}
-void IdePutErrorLine(const Upp::String& line) {}
+void IdePutErrorLine(const Upp::String& ) {}

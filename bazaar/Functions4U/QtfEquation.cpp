@@ -21,7 +21,7 @@ String CParserPlus::ReadIdPlus() {
 		p++;
 	term = p;
 	DoSpaces();
-	return String(b, (int)(uintptr_t)(p - b));
+	return String(b, static_cast<int>(p - b));
 }
 
 Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, double betw) {
@@ -226,7 +226,7 @@ Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup) {
 	
 	DrawingDraw dw(width, height);
 	
-	dw.DrawDrawing(0, 		0, (int)(szLeft.cx*1.5),  height, left);
+	dw.DrawDrawing(0, 		0, static_cast<int>(szLeft.cx*1.5),  height, left);
 	dw.DrawDrawing(sqWidth, 0, szRight.cx, 			  height, right);
 	
 	return dw;	
@@ -245,7 +245,7 @@ Drawing EquationDraw::Summat(Drawing &data, Drawing &sub, Drawing &sup) {
 	
 	DrawingDraw dw(width, height);
 	
-	dw.DrawDrawing(0, 0, (int)(szLeft.cx*1.1),  height, left);
+	dw.DrawDrawing(0, 0, static_cast<int>(szLeft.cx*1.1),  height, left);
 	dw.DrawDrawing(sqWidth, 0, szRight.cx, height, right);
 	
 	return dw;
