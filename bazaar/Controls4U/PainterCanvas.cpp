@@ -103,8 +103,8 @@ String GetValueStringXml(String str, const char* var) {
 }
 
 Color HtmlToColor(const char *str) {
-	int col;
-	sscanf(str+1, "%x", (unsigned int *)&col);
+	unsigned col;
+	sscanf(str+1, "%x", &col);
 	return Color(col >> 16, (col >> 8) & 255, col & 255);
 }
 
@@ -405,7 +405,7 @@ void SvgGet_G(GraphElemList &elems, XmlParser &xp, const char *svgFolder) {
 	elem.SetLimits();
 }
 
-void ParseG(GraphElemList &elems, XmlParser &xp, Svg2DTransform transf, SvgStyle style, const char *svgFolder) {
+void ParseG(GraphElemList &elems, XmlParser &xp, Svg2DTransform , SvgStyle , const char *svgFolder) {
 	if(xp.TagE("rect"))  
 		SvgGet_Rect(elems, xp);
 	else if(xp.TagE("ellipse"))
@@ -962,7 +962,7 @@ void PainterCanvas::SaveToFile(String fileName) {
 		Exclamation(Format(t_("File format \"%s\" not found"), ext));
 }      
                           
-Image PainterCanvas::CursorImage(Point p, dword keyflags) {
+Image PainterCanvas::CursorImage(Point , dword ) {
 	return cursorImage;
 }
 

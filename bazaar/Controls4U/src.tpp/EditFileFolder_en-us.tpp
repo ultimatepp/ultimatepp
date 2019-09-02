@@ -180,10 +180,11 @@ Width]([@(0.0.255) int]_[*@3 w])&]
 [s2; Set the width of the drop down list to [%-*@3 w] .&]
 [s3; &]
 [s4;%- &]
-[s5;:WhenChange:%- [_^Callback^ Callback]_[* WhenChange]&]
+[s5;:WhenChange:%- [_^Callback^ Function<bool ()>]_[* WhenChange]&]
 [s2; Function to be called when path has been selected with FileSel 
 window, right button is pressed or ENTER key is entered with 
 cursor into field.&]
+[s2; If WhenChange returns false, the path is not added to drop list.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Serialize`(Upp`:`:Stream`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Serialize]([_^Upp`:`:Stream^ S

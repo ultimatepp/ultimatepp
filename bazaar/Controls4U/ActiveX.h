@@ -21,7 +21,7 @@ static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0x
 
 class FirefoxBrowser : public DHCtrlActiveX {
 public:
-	FirefoxBrowser(bool status = true) : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox", status) {};
+	FirefoxBrowser(bool _status = true) : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox", _status) {};
 	virtual ~FirefoxBrowser() {};
 	
 	bool Browse(const String &url);
@@ -42,7 +42,7 @@ private:
 	public:
 		IIWebBrowser(FirefoxBrowser *obj) {
 			if (obj->GetStatus())
-				web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+				web = static_cast<IWebBrowser2 *>(obj->QueryInterface(IID_IWebBrowser2));
 			else
 				web = 0;
 		}
@@ -59,7 +59,7 @@ private:
 
 class InternetExplorerBrowser : public DHCtrlActiveX {
 public:
-	InternetExplorerBrowser(bool status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", status) {};
+	InternetExplorerBrowser(bool _status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", _status) {};
 	virtual ~InternetExplorerBrowser() {};
 
 	bool Browse(const String &url);
@@ -80,7 +80,7 @@ private:
 	public:
 		IIWebBrowser(InternetExplorerBrowser *obj) {
 			if (obj->GetStatus())
-				web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+				web = static_cast<IWebBrowser2 *>(obj->QueryInterface(IID_IWebBrowser2));
 			else
 				web = 0;
 		}
@@ -100,7 +100,7 @@ static const CLSID CLSID_VLCPLayer = {0x9BE31822, 0xFDAD, 0x461B, {0xAD, 0x51, 0
 
 class VLCPlayer : public DHCtrlActiveX {
 public:
-	VLCPlayer(bool status = true) : DHCtrlActiveX(CLSID_VLCPLayer, "VLCPlayer", status) {};
+	VLCPlayer(bool _status = true) : DHCtrlActiveX(CLSID_VLCPLayer, "VLCPlayer", _status) {};
 	virtual ~VLCPlayer() {};
 
 	bool AddTarget(const String movie);
@@ -124,7 +124,7 @@ private:
 	public:
 		IIVLC(VLCPlayer *obj) {
 			if (obj->GetStatus())
-				vlc = (IVLCControl *)obj->QueryInterface(IID_IVLCControl);
+				vlc = static_cast<IVLCControl *>(obj->QueryInterface(IID_IVLCControl));
 			else
 				vlc = 0;
 		}

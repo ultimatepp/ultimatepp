@@ -24,7 +24,7 @@ public:
 	operator BSTR *() {return &bstr;}
 	operator BSTR ()  {return bstr;}
 	String ToString() {
-		WString ret((wchar *)bstr);
+		WString ret(static_cast<wchar *>(bstr));
 		return ret.ToString();
 	}
 private:
@@ -34,7 +34,7 @@ private:
 class AXClientSite : public IOleClientSite, public IOleInPlaceFrame, public IOleInPlaceSite {
 public:
 	AXClientSite()	{}
-	AXClientSite(HWND hwnd):hwnd(hwnd){}
+	AXClientSite(HWND _hwnd) : hwnd(_hwnd){}
 
 	virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void __RPC_FAR *__RPC_FAR *ppvObject);
 	virtual ULONG STDMETHODCALLTYPE AddRef();

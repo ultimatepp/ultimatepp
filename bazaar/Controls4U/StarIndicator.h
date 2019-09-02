@@ -21,12 +21,12 @@ public:
 	virtual StarIndicator&	AlwaysShowValue(bool b)		{ m_bAlwaysShowValue=b; return *this; }
 	virtual void	MouseEnter(Point p, dword keyflags);
 	virtual void	MouseLeave();
-	virtual void	MouseMove(Point p, dword keyflags)	{ Refresh(); }
+	virtual void	MouseMove(Point , dword )		{ Refresh(); }
 	virtual void	Paint(Draw& draw);
 	virtual void	Layout();
 	virtual StarIndicator&	SetFontColor(Color c)	{ m_FontColor=c; return *this; }
 	virtual void	Set(double n);
-	virtual void	Set(int n)						{ return Set((double)n); }
+	virtual void	Set(int n)						{ return Set(static_cast<double>(n)); }
 	virtual void	Set(int n, int tot)				{ return ProgressIndicator::Set(n, tot); }
 	virtual StarIndicator&	SetVotes(int n);
 	virtual StarIndicator&	SetVotesHigh(int n)		{ m_nVotesHigh=n; return *this; }

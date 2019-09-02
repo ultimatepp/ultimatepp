@@ -129,7 +129,7 @@ public:
 		if (y < top)
 			top = y;
 	}
-	void Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel) {
+	void Cubic(const Pointf& /*p1*/, const Pointf& p2, const Pointf& p, bool /*rel*/) {
 		/*DoMove0();
 		CubicData& m = PathAdd<CubicData>(CUBIC);
 		m.p1 = PathPoint(p1, rel);
@@ -146,7 +146,7 @@ public:
 	GraphElem() {}
 	GraphElem(const GraphElem &graph);
 	
-	virtual void Paint(Painter &sw, Svg2DTransform transf, SvgStyle style, bool firstLayer) {};
+	virtual void Paint(Painter &, Svg2DTransform , SvgStyle , bool ) {};
 	virtual void SetLimits() {};
 	virtual void PaintLimits(Painter &sw) {
 		if (limits == GraphElemLimits())
@@ -185,7 +185,7 @@ public:
 		limits.right = x2;
 		limits.bottom = y2;
 	}
-	LineElem(double x1, double y1, double x2, double y2) : x1(x1), y1(y1), x2(x2), y2(y2) {SetLimits();}
+	LineElem(double _x1, double _y1, double _x2, double _y2) : x1(_x1), y1(_y1), x2(_x2), y2(_y2) {SetLimits();}
 	LineElem() {x1 = x2 = y1 = y2 = 0;}
 	virtual ~LineElem() {};
 	
@@ -211,7 +211,7 @@ public:
 		limits.right = x + width;
 		limits.bottom = y + height;
 	}
-	RectElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();}
+	RectElem(double _x, double _y, double _width, double _height) : x(_x), y(_y), width(_width), height(_height) {SetLimits();}
 	RectElem(const Rect &rect) : x(rect.left), y(rect.top), width(rect.right - rect.left), height(rect.bottom - rect.top) {SetLimits();}
 	RectElem() {x = y = width = height = 0;}
 	virtual ~RectElem() {};
@@ -238,7 +238,7 @@ public:
 		limits.right = x + width;
 		limits.bottom = y + height;
 	}
-	EllipseElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();} 
+	EllipseElem(double _x, double _y, double _width, double _height) : x(_x), y(_y), width(_width), height(_height) {SetLimits();} 
 	EllipseElem() {x = y = width = height = 0;}
 	virtual ~EllipseElem() {};
 
@@ -266,8 +266,8 @@ public:
 		limits.right = x + width;
 		limits.bottom = y + height;
 	}
-	ImageElem(double x, double y, double width, double height, String fileName) : x(x), y(y), 
-					width(width), height(height), fileName(fileName) {img = Null; SetLimits();}
+	ImageElem(double _x, double _y, double _width, double _height, String _fileName) : 
+		x(_x), y(_y), width(_width), height(_height), fileName(_fileName) {img = Null; SetLimits();}
 	ImageElem() {x = y = width = height = 0; img = Null;}
 	virtual ~ImageElem() {};
 
@@ -329,7 +329,7 @@ public:
 			limits.right += fi[wtext[i]];
 		limits.bottom = limits.top + f.GetHeight();
 	}
-	TextElem(double x, double y, String text, Font f) : x(x), y(y), text(text), f(f) {factor = 1; SetLimits();}
+	TextElem(double _x, double _y, String _text, Font _f) : x(_x), y(_y), text(_text), f(_f) {factor = 1; SetLimits();}
 	TextElem() {	
 		factor = 1;
 		f.Face(Font::ARIAL);
@@ -387,6 +387,7 @@ public:
 				t = ReadPoint(p);
 				//Move(t, rel);
 				limits.UpdateLimits(t);
+				break;
 			case 'L':
 				while(p.IsDouble()) {
 					t = ReadPoint(p);

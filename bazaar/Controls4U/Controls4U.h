@@ -83,7 +83,7 @@ public:
 	
 	void DoGo(bool add = true);
 		
-	Callback WhenChange;
+	Function<bool ()> WhenChange;
 	
 	virtual void  Serialize(Stream& s) {
 		WithDropChoice::Serialize(s);
@@ -208,8 +208,8 @@ public:
 	Image &Get()							{return origImage;}
 	void SetData(const Value& data)			{Set(data.ToString());}
 	
-	void  operator=(String fileName)      	{Set(fileName);}
-	void  operator=(Image image)       		{Set(image);}	
+	void  operator=(String _fileName)      	{Set(_fileName);}
+	void  operator=(Image _image)       	{Set(_image);}	
 
 	StaticImage& SetAngle(int _angle);
 	StaticImage& SetFit(int _fit)				{fit = _fit; 		  Refresh(); return *this;}
@@ -245,7 +245,7 @@ protected:
 public:
 	bool  Add(String fileName);
 	bool  Add(Image image);
-	Image &Get(int id)						{return images[id];}
+	Image &Get(int _id)						{return images[_id];}
 	Vector<Image> &GetImages()				{return images;}
 	void SetActive(int _id)					{id = _id; Refresh();}
 	StaticImageSet& SetBackground(Color c) 	{background = c; Refresh(); return *this;}
@@ -328,8 +328,8 @@ class StaticLine : public Ctrl, public CtrlFrame {
 typedef StaticLine CLASSNAME;
 	
 public:
-	virtual void FrameAddSize(Size& sz) {}
-	virtual void FrameLayout(Rect& r) {}
+	virtual void FrameAddSize(Size& ) {}
+	virtual void FrameLayout(Rect& ) {}
 	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual int OverPaint() const { return 20; }
 	
@@ -353,8 +353,8 @@ public:
 class StaticArrow : public Ctrl, public CtrlFrame  {
 typedef StaticArrow CLASSNAME;	
 public:
-	virtual void FrameAddSize(Size& sz) {}
-	virtual void FrameLayout(Rect& r) {}
+	virtual void FrameAddSize(Size& ) {}
+	virtual void FrameLayout(Rect& ) {}
 	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual int OverPaint() const { return 20; }
 	
@@ -690,7 +690,7 @@ private:
 	
 	void FileNameWhenChanged();
 	
-	void AddFolder(String folder, String &myFolders, TreeCtrl &folders, int id);
+	void AddFolder(String folder, String &myFolders, int id);
 	
 public: 
 	FileBrowser();
@@ -737,8 +737,8 @@ public:
 
 private:
 	String hyperlink;
-	virtual Image CursorImage(Point p, dword keyflags) 	{return Image::Hand();}
-	virtual void LeftDown(Point p, dword keyflags) 		{LaunchWebBrowser(hyperlink);}
+	virtual Image CursorImage(Point , dword ) 	{return Image::Hand();}
+	virtual void LeftDown(Point , dword ) 		{LaunchWebBrowser(hyperlink);}
 };
 
 class BarDisplay : public Display {

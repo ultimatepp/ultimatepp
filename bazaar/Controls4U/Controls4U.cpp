@@ -106,8 +106,8 @@ EditFileFolder &EditFileFolder::UseHistory(bool use) {
 EditFileFolder &EditFileFolder::UseUp(bool use) {
 	if (use) {
 		if (EditString::FindFrame(butUp) == -1) {
-			int pos = EditString::FindFrame(butRight);
-			EditString::InsertFrame(pos+1, butUp);
+			int _pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(_pos+1, butUp);
 		}
 	} else 
 		EditString::RemoveFrame(butUp);
@@ -117,10 +117,10 @@ EditFileFolder &EditFileFolder::UseUp(bool use) {
 EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 	if (use) {
 		if (EditString::FindFrame(butBrowseLeft) == -1) {
-			int pos = EditString::FindFrame(butUp);
-			if (pos == -1) 
-				pos = EditString::FindFrame(butRight);
-			EditString::InsertFrame(pos+1, butBrowseLeft);
+			int _pos = EditString::FindFrame(butUp);
+			if (_pos == -1) 
+				_pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(_pos+1, butBrowseLeft);
 		}
 	} else 
 		EditString::RemoveFrame(butBrowseLeft);	
@@ -130,8 +130,8 @@ EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 EditFileFolder &EditFileFolder::UseBrowseRight(bool use) {
 	if (use) {
 		if (EditString::FindFrame(butBrowseRight) == -1) {
-			int pos = EditString::FindFrame(butRight);
-			EditString::InsertFrame(pos+1, butBrowseRight);
+			int _pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(_pos+1, butBrowseRight);
 		}
 	} else 
 		EditString::RemoveFrame(butBrowseRight);	
@@ -141,8 +141,8 @@ EditFileFolder &EditFileFolder::UseBrowseRight(bool use) {
 EditFileFolder &EditFileFolder::UseGo(bool use) {
 	if (use) {
 		if (EditString::FindFrame(butGo) == -1) {
-			int pos = EditString::FindFrame(butRight);
-			EditString::InsertFrame(pos+1, butGo);
+			int _pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(_pos+1, butGo);
 		}
 	} else 
 		EditString::RemoveFrame(butGo);
@@ -199,10 +199,11 @@ void EditFileFolder::DoGo(bool add) {
 		if (histInd >= history.GetCount()-1)
 			butRight.Enable(false);
 	}
-	AddHistory();
-	WhenChange();
-	//WhenAction();
-	Accept();
+	if (WhenChange()) {
+		AddHistory();
+		//WhenAction();
+		Accept();
+	}
 }
 
 void EditFileFolder::DoLeft() {
@@ -238,8 +239,11 @@ EditFile::EditFile() {
 	EditFileFolder();
 	butBrowseRight.Tip(t_("Browse file"));
 	butFolder.WhenAction = [&] {
-		String folder = GetFileFolder(String(GetData()));
-		if (!DirectoryExists(folder))
+		String fileName = GetData();
+		String folder = GetFileFolder(fileName);
+		if (Trim(fileName).IsEmpty())
+			Exclamation(t_("No file set"));
+		else if (!DirectoryExists(folder))
 			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
 		else {
 			if (folder.StartsWith("\\"))
@@ -252,12 +256,14 @@ EditFile::EditFile() {
 
 EditFolder::EditFolder() {
 	isFile = false;	
-	title = t_("Select directory");	
+	title = t_("Select folder");	
 	EditFileFolder();
 	butBrowseRight.Tip(t_("Browse folder"));
 	butFolder.WhenAction = [&] {
 		String folder = GetData();
-		if (!DirectoryExists(folder))
+		if (Trim(folder).IsEmpty())
+			Exclamation(t_("No folder set"));
+		else if (!DirectoryExists(folder))
 			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
 		else
 			LaunchWebBrowser(folder);};
@@ -280,8 +286,8 @@ void ImagePopUp::Paint(Draw &w) {
 	
 	switch (fit) {
 	case StaticImage::BestFit: {
-		Rect rect = FitInFrame(sz, imagesize);
-		sz = rect.GetSize();
+		Rect _rect = FitInFrame(sz, imagesize);
+		sz = _rect.GetSize();
 		w.DrawImage(sz, image);
 		break; }
 	case StaticImage::FillFrame:
@@ -292,8 +298,8 @@ void ImagePopUp::Paint(Draw &w) {
 		break;		
 	case StaticImage::RepeatToFill:
 		for (int left = 0; left < sz.cx; left += imagesize.cx) 
-			for (int top = 0; top < sz.cy; top += imagesize.cy) 
-				w.DrawImage(left, top, image);
+			for (int _top = 0; _top < sz.cy; _top += imagesize.cy) 
+				w.DrawImage(left, _top, image);
 		break;	
 	}
 	
@@ -390,7 +396,7 @@ void ImagePopUp::Close() {
 	Ctrl::Close();
 }
 
-void StaticImage::MouseEnter(Point pos, dword keyflags) {
+void StaticImage::MouseEnter(Point, dword) {
 	if (isPopUp) { 
 		Point pt = GetScreenRect().TopLeft();		
 		popup.PopUp(this, pt.x, pt.y, szPopUp.cx, szPopUp.cy, origImage, angle, fit);
@@ -405,7 +411,7 @@ void StaticImage::MouseLeave() {
 void StaticImage::Layout() {
    	if (useAsBackground) {
   		//Ctrl *q = GetFirstChild(); 
-		SetFirstChild((Ctrl *)this);
+		SetFirstChild(static_cast<Ctrl *>(this));
 		SizePos();
 	}
 } 
@@ -449,8 +455,8 @@ void StaticImage::Paint(Draw& w) {
 		break;		
 	case StaticImage::RepeatToFill:
 		for (int left = 0; left < sz.cx; left += imagesize.cx) 
-			for (int top = 0; top < sz.cy; top += imagesize.cy) 
-				w.DrawImage(left, top, *imageView);
+			for (int _top = 0; _top < sz.cy; _top += imagesize.cy) 
+				w.DrawImage(left, _top, *imageView);
 		break;	
 	}	
 }
@@ -492,21 +498,21 @@ StaticImage& StaticImage::SetAngle(int _angle) {
 	return *this;
 }	
 	
-void  StaticImage::RightDown(Point pos, dword keyflags) {
+void  StaticImage::RightDown(Point , dword ) {
 	if(!IsEditable())
 		return;
 
 	WhenRightDown();
 }
 
-void  StaticImage::LeftDown(Point pos, dword keyflags) {
+void  StaticImage::LeftDown(Point , dword ) {
 	if(!IsEditable())
 		return;
 
 	WhenLeftDown();
 }
 
-void  StaticImage::LeftDouble(Point pos, dword keyflags) {
+void  StaticImage::LeftDouble(Point , dword ) {
 	if(!IsEditable())
 		return;
 
@@ -540,7 +546,7 @@ void StaticImageSet::Paint(Draw& w) {
 	w.DrawImage(FitInFrame(sz, imagesize), images[id]);
 }
 
-void  StaticImageSet::LeftDown(Point pos, dword keyflags)
+void  StaticImageSet::LeftDown(Point , dword )
 {
 	if(!IsEditable())
 		return;
@@ -552,13 +558,13 @@ void  StaticImageSet::LeftDown(Point pos, dword keyflags)
 	Refresh();	
 }
 
-void  StaticImageSet::LeftRepeat(Point pos, dword keyflags)
+void  StaticImageSet::LeftRepeat(Point _pos, dword keyflags)
 {
 	if(!HasCapture())
-		LeftDown(pos, keyflags);
+		LeftDown(_pos, keyflags);
 }
 
-void  StaticImageSet::LeftUp(Point pos, dword keyflags)
+void  StaticImageSet::LeftUp(Point , dword )
 {
 	if (!HasCapture())
 		return;
@@ -566,7 +572,7 @@ void  StaticImageSet::LeftUp(Point pos, dword keyflags)
 	Refresh();
 }
 
-void  StaticImageSet::MouseMove(Point pos, dword keyflags)
+void  StaticImageSet::MouseMove(Point , dword )
 {
 	if(!HasCapture()) 
 		return;
@@ -739,7 +745,7 @@ void PaintArrowEnd(Painter &sw, double x0, double y0, double x1, double y1, int 
 		sw.Move(x0, y0).Line(x0 + alen, y0 - awidth).Line(x0 + alen, y0 + awidth).Line(x0, y0);
 		sw.Fill(color);
 	} else {
-		double t = atan((y1-y0)/(double)(x1-x0));
+		double t = atan((y1-y0)/static_cast<double>(x1-x0));
 		double xa = alen*cos(t);
 		double ya = alen*sin(t);
 		double xb = awidth*sin(t);
@@ -817,7 +823,7 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 			x0 += 8*width;
 		} else { 
 			PaintArrowEnd(sw, x0, y0, x1, y1, width, color, true);
-			double t = atan((y1-y0)/(double)(x1-x0));
+			double t = atan((y1-y0)/static_cast<double>(x1-x0));
 			x0 += 8*width*cos(t);
 			y0 += 8*width*sin(t);
 		}
@@ -831,7 +837,7 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 			x1 -= 8*width;
 		} else { 
 			PaintArrowEnd(sw, x1, y1, x0, y0, width, color, false);
-			double t = atan((y1-y0)/(double)(x1-x0));
+			double t = atan((y1-y0)/static_cast<double>(x1-x0));
 			x1 -= 8*width*cos(t);
 			y1 -= 8*width*sin(t);			
 		}
@@ -909,9 +915,9 @@ StaticArrow::StaticArrow() {
 	ends = EndLeft;
 }
 
-void StaticClock::PaintPtr(BufferPainter &w, double cmx, double cmy, double pos, double m, double d, Color color, double cf) {
-	double dx = m * sin(pos * 2 * M_PI);
-	double dy = m * cos(pos * 2 * M_PI);
+void StaticClock::PaintPtr(BufferPainter &w, double cmx, double cmy, double _pos, double m, double d, Color color, double cf) {
+	double dx = m * sin(_pos * 2 * M_PI);
+	double dy = m * cos(_pos * 2 * M_PI);
 
 	double sx = cmx - dx * 35 / 2.0;
 	double sy = cmy + dy * 35 / 2.0;
@@ -986,16 +992,16 @@ void StaticClock::Paint(Draw& ww) {
 		double numberd = numberPos - 0.2;
 		Font fnt, fnt4;
 		if (numberType == StaticClock::Small)  {
-			fnt4 = Arial((int)(14*bigF));
-			fnt = Arial((int)(14*bigF));
+			fnt4 = Arial(static_cast<int>(14*bigF));
+			fnt = Arial(static_cast<int>(14*bigF));
 		} else if (numberType == StaticClock::Big)  {
-			fnt4 = Arial((int)(20*bigF));
-			fnt = Arial((int)(20*bigF));
+			fnt4 = Arial(static_cast<int>(20*bigF));
+			fnt = Arial(static_cast<int>(20*bigF));
 		} else if (numberType == StaticClock::BigSmall)  {
-			fnt4 = Arial((int)(20*bigF));
-			fnt = Arial((int)(14*bigF));
+			fnt4 = Arial(static_cast<int>(20*bigF));
+			fnt = Arial(static_cast<int>(14*bigF));
 		} else if (numberType == StaticClock::Big4)  {
-			fnt4 = Arial((int)(20*bigF));
+			fnt4 = Arial(static_cast<int>(20*bigF));
 		}
 		for(int i = 1; i <= 12; i++) {
 			double x = cmx + (numberd * sin(i * M_PI / 6.0) * cf);
@@ -1043,7 +1049,7 @@ StaticClock& StaticClock::SetImage(String _fileName) {
 }
 
 void StaticClock::SetData(const Value& v) {
-	SetTime((Time) v);
+	SetTime(static_cast<Time>(v));
 }
 
 void StaticClock::SetTime(const Time& tm) {
@@ -1149,16 +1155,16 @@ StaticClock::~StaticClock() {
 }
 
 void Meter::PaintMarks(BufferPainter &w, double cx, double cy, double R, double ang0, 
-			double ang1, int direction, double step, double bigF, Color color) {
+			double ang1, int direction, double _step, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
 	ang0 = ToRad(ang0);
 	ang1 = ToRad(ang1);
-	step = ToRad(step);
+	_step = ToRad(_step);
 	if (ang0 > ang1)
 		ang1 += 2*M_PI;
 	double width = 6*bigF;
-	for (double i = ang0; i <= ang1+0.1; i += step) {
+	for (double i = ang0; i <= ang1+0.1; i += _step) {
 		double x0 = cx + R*cos(i);
 		double y0 = cy - R*sin(i);
 		double x1 = cx + 0.93*R*cos(i);
@@ -1168,25 +1174,25 @@ void Meter::PaintMarks(BufferPainter &w, double cx, double cy, double R, double 
 }
 
 void Meter::PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
-	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
+	double _step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
 {
 	a0 = ToRad(a0);
-	step = ToRad(step);
-	Font fnt = Arial((int)(13*bigF));
+	_step = ToRad(_step);
+	Font fnt = Arial(static_cast<int>(13*bigF));
 	while (minv <= maxv) {
 		double x = cx + 0.8*R*cos(a0);
 		double y = cy - 0.8*R*sin(a0);
 		PaintCenterText(w, x, y, FormatDouble(minv), fnt, color);
-		a0 += step*direction;
+		a0 += _step*direction;
 		minv += stepv;
 	}
 }
 
 void Meter::PaintHand(BufferPainter &w, double cx, double cy, double R, double val, 
-					  double bigF, int colorType)
+					  double bigF, int _colorType)
 {
 	Color letterColor;
-	if (colorType == WhiteType) {
+	if (_colorType == WhiteType) {
 		letterColor = Black();
 	} else {
 		letterColor = White();
@@ -1291,9 +1297,9 @@ void Meter::Paint(Draw& ww) {
 	if (peak < max && peak > min) {
 		double valpk = peak*maxgrad/(max-min);
 		for (double i = 0.93; i < 0.98; i+= 0.004)
-			PaintArc(w, cx, cy, i*R, a + valpk*direction, b, direction, (int)(2*bigF), LtRed());
+			PaintArc(w, cx, cy, i*R, a + valpk*direction, b, direction, static_cast<int>(2*bigF), LtRed());
 		double fsize = 7*Upp::min(bigF, bigH);
-		Font fnt = Arial((int)fsize);
+		Font fnt = Arial(static_cast<int>(fsize));
 		double txtx = cx + R*cos(ToRad(b))/2;
 		double txty = cy - R*sin(ToRad(b))/2;
 		PaintCenterText(w, txtx, txty, "  PEAK", fnt, Gray());
@@ -1302,14 +1308,15 @@ void Meter::Paint(Draw& ww) {
 			light = Controls4UImg::LightOff();
 		else
 			light = Controls4UImg::LightOn();
-		w.DrawImage((int)(txtx - fsize*2/3.), (int)(txty + fsize), (int)(1.8*fsize), (int)(1.8*fsize), light);	
+		w.DrawImage(static_cast<int>(txtx - fsize*2/3.), static_cast<int>(txty + fsize), 
+					static_cast<int>(1.8*fsize), 		 static_cast<int>(1.8*fsize), light);	
 	}
 	double stepa = step*maxgrad/(max-min);	
 	PaintMarks(w, cx, cy, R, a, b, direction, stepa, bigF, letterColor);
 	if (number)
 		PaintNumbers(w, cx, cy, R, a, stepa, direction, min, max, step, bigF, letterColor);
 		             
-	Font fnt = Arial((int)(20*Upp::min(bigF, bigH)));
+	Font fnt = Arial(static_cast<int>(20*Upp::min(bigF, bigH)));
 	double angtxt = ToRad(a + maxgrad*direction/2);
 	double txtx = cx + R*cos(angtxt)/2;
 	double txty = cy - R*sin(angtxt)/2;
@@ -1342,7 +1349,7 @@ void Meter::Paint(Draw& ww) {
 void MeterThread(Meter *gui, double newValue) {
 	double delta = Sign(newValue-gui->value)*(gui->max - gui->min)/gui->sensibility;
 	long deltaT = labs(long(1000.*delta*gui->speed/(gui->max - gui->min)));
-	int maxi = (int)(fabs((newValue-gui->value)/delta));
+	int maxi = static_cast<int>(fabs((newValue-gui->value)/delta));
 	
 	//long t0 = GetTickCount();
 	for (int i = 0; i < maxi; ++i, gui->value += delta) {
@@ -1409,11 +1416,11 @@ Knob::Knob() : value(0), minv(0), maxv(100), minorstep(10), majorstep(20), keySt
 }
 
 void Knob::PaintMarks(BufferPainter &w, double cx, double cy, double R, double begin, double end, 
-		double ang0, double ang1, int direction, double minorstep, double bigF, Color color) {
+		double ang0, double ang1, int direction, double _minorstep, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
 	ang0 = ToRad(ang0);
-	minorstep = ToRad(minorstep);
+	minorstep = ToRad(_minorstep);
 	double width = bigF;
 	int inum = 0;
 	int imin = nminor;
@@ -1436,20 +1443,20 @@ void Knob::PaintMarks(BufferPainter &w, double cx, double cy, double R, double b
 }
 
 void Knob::PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
-	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color) {
-	double range = maxv - minv;
+	double step, int direction, double _minv, double _maxv, double stepv, double bigF, Color color) {
+	double range = _maxv - _minv;
 	a0 = ToRad(a0);
 	step = ToRad(step);
-	Font fnt = Arial(3+(int)(4*bigF));
+	Font fnt = Arial(3+static_cast<int>(4*bigF));
 	String strminv;
-	String strmaxv = FormatDoubleAdjust(maxv, range);
+	String strmaxv = FormatDoubleAdjust(_maxv, range);
 	while (strminv != strmaxv) {
 		double x = cx + 0.8*R*cos(a0);
 		double y = cy - 0.8*R*sin(a0);
-		strminv = FormatDoubleAdjust(minv, range);
+		strminv = FormatDoubleAdjust(_minv, range);
 		PaintCenterText(w, x, y, strminv, fnt, color);
 		a0 += step*direction;
-		minv += stepv;
+		_minv += stepv;
 	}
 }
 
@@ -1544,28 +1551,28 @@ void Knob::Layout() {
 			}
 		}
 		{
-			ImageBuffer ib(int(2*r)+1, int(2*r)+1);
-			BufferPainter sw(ib);	
-			sw.Clear(RGBAZero());
+			ImageBuffer _ib(int(2*r)+1, int(2*r)+1);
+			BufferPainter _sw(_ib);	
+			_sw.Clear(RGBAZero());
 			
 			if (colorType == WhiteType) {
 				if (mark == Circle) 
-					sw.Circle(r, r, r).Fill(1.5*r, 1.5*r, White(), r, r, r, LtGray());
+					_sw.Circle(r, r, r).Fill(1.5*r, 1.5*r, White(), r, r, r, LtGray());
 			} else if (colorType == BlackType) {
 				if (mark == Circle) {
 					Color lineColor = (colorType == WhiteType) ? Black() : White();
 					Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
-					sw.Circle(r, r, r).Fill(fill);	
-					sw.Begin();
-						sw.BeginMask();
-							sw.Circle(r, r, r).Fill(almostColor);
-						sw.End();
-						sw.Ellipse(r, r + r/2,   r, r/2).Fill(lineColor);
-						sw.Ellipse(r, r - r*0.9, r, r/2).Fill(lineColor);
-					sw.End();		
+					_sw.Circle(r, r, r).Fill(fill);	
+					_sw.Begin();
+						_sw.BeginMask();
+							_sw.Circle(r, r, r).Fill(almostColor);
+						_sw.End();
+						_sw.Ellipse(r, r + r/2,   r, r/2).Fill(lineColor);
+						_sw.Ellipse(r, r - r*0.9, r, r/2).Fill(lineColor);
+					_sw.End();		
 				}
 			}
-			imgMark = ib;
+			imgMark = _ib;
 		}
 	}
 	img = ib;
@@ -1699,18 +1706,18 @@ bool Knob::Key(dword key, int repcnt) {
 	return Ctrl::Key(key, repcnt);
 }
 
-double Knob::SliderToClient(Point pos) {
+double Knob::SliderToClient(Point _pos) {
 	double r = min(GetSize().cx/2., GetSize().cy/2.);
-	double rx = r-pos.x;
-	double ry = r-pos.y;
+	double rx = r-_pos.x;
+	double ry = r-_pos.y;
 	if (rx*rx + ry*ry > r*r)
 		return Null;
 	double angle = atan(fabs(ry/rx))*180/M_PI;
-	if (pos.x > r) {
-		if (pos.y > r)
+	if (_pos.x > r) {
+		if (_pos.y > r)
 			angle = 360 - angle;
 	} else {
-		if (pos.y > r)
+		if (_pos.y > r)
 			angle += 180;
 		else
 			angle = 180 - angle;
@@ -1718,11 +1725,11 @@ double Knob::SliderToClient(Point pos) {
 	return angle;
 }	
 
-void Knob::LeftDown(Point pos, dword keyflags) {
+void Knob::LeftDown(Point _pos, dword ) {
 	if(!IsEditable())
 		return;
 	SetWantFocus();
-	angleClick = SliderToClient(pos);
+	angleClick = SliderToClient(_pos);
 	if (IsNull(angleClick))
 		return;
 	SetCapture();
@@ -1734,7 +1741,7 @@ void Knob::LeftRepeat(Point p, dword f) {
 		LeftDown(p, f);
 }
 
-void Knob::LeftUp(Point pos, dword keyflags) {
+void Knob::LeftUp(Point , dword ) {
 	if (HasCapture()) {
 		if (interlocking)
 			value = minorstep*fround((value-minv)/minorstep);
@@ -1743,10 +1750,10 @@ void Knob::LeftUp(Point pos, dword keyflags) {
 	Refresh();
 }
 
-void Knob::MouseMove(Point pos, dword keyflags) {
+void Knob::MouseMove(Point _pos, dword ) {
 	if(!HasCapture()) 
 		return;
-	double angle = SliderToClient(pos);
+	double angle = SliderToClient(_pos);
 	if (IsNull(angle)) {
 		angleClick = Null;
 		return;
@@ -1815,11 +1822,11 @@ void Knob::LostFocus() {
 }
 
 
-void FileBrowser::AddFolder(String folder, String &myFolders, TreeCtrl &folders, int id) {
-	if (!folder.IsEmpty() && DirectoryExists(folder))
-		if (myFolders.Find(folder + ";") < 0) {
-			folders.Add(id, NativePathIconX(folder, true, flags), folder, GetFileName(folder), true);	
-			myFolders << folder << ";";		
+void FileBrowser::AddFolder(String _folder, String &myFolders, int id) {
+	if (!_folder.IsEmpty() && DirectoryExists(_folder))
+		if (myFolders.Find(_folder + ";") < 0) {
+			folders.Add(id, NativePathIconX(_folder, true, flags), _folder, GetFileName(_folder), true);	
+			myFolders << _folder << ";";		
 		}
 }
 
@@ -1834,14 +1841,14 @@ struct DisplayNameIcon : public Display {
 		sz.cy = max(sz.cy, 16);
 		return sz;
 	}
-	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword ) const {
 		ValueArray va = q;
 		String fileName = GetFileName(String(va[0]));
 		Image icon = va[1];
 		w.DrawRect(r, paper);
 		w.DrawImage(r.left, r.top + (r.Height() - 16) / 2, IsNull(icon) ? Null : icon);
 		w.DrawText(r.left + 20, r.top + (r.Height() - Draw::GetStdFontCy()) / 2, fileName, fnt, ink);
-		if (GetTextSize(fileName, fnt).cx + 5 > (r.GetWidth() - (int)(0.8*EditString::GetStdHeight()))) {
+		if (GetTextSize(fileName, fnt).cx + 5 > (r.GetWidth() - static_cast<int>(0.8*EditString::GetStdHeight()))) {
 			Image rightIcon = CtrlImg::right_arrow();
 			w.DrawRect(r.right - 6, r.top, r.right, r.bottom, paper);			
 			w.DrawImage(r.right - 10, r.top + rightIcon.GetHeight()/2, rightIcon);	
@@ -1914,13 +1921,13 @@ FileBrowser::FileBrowser() {
 	
 	String myFolders = desktopFolder + ";";
 	
-	AddFolder(GetPersonalFolder(), myFolders, folders, id);
-	AddFolder(GetMusicFolder(), myFolders, folders, id);
-	AddFolder(GetPicturesFolder(), myFolders, folders, id);
-	AddFolder(GetVideoFolder(), myFolders, folders, id);
-	AddFolder(GetDownloadFolder(), myFolders, folders, id);
-	AddFolder(GetAppDataFolder(), myFolders, folders, id);
-	AddFolder(GetTemplatesFolder(), myFolders, folders, id);
+	AddFolder(GetPersonalFolder(), myFolders, id);
+	AddFolder(GetMusicFolder(), myFolders, id);
+	AddFolder(GetPicturesFolder(), myFolders, id);
+	AddFolder(GetVideoFolder(), myFolders, id);
+	AddFolder(GetDownloadFolder(), myFolders, id);
+	AddFolder(GetAppDataFolder(), myFolders, id);
+	AddFolder(GetTemplatesFolder(), myFolders, id);
 	
 	for (int i = 0; i < ds.GetCount(); ++i) 
 		folders.Add(0, NativePathIconX(ds[i], true, flags), ds[i], ds[i], true);
@@ -1939,7 +1946,7 @@ FileBrowser::FileBrowser() {
 	files.BackPaintHint();
 	files.AddIndex();
 	files.VertGrid(false).HorzGrid(false);
-	files.SetLineCy((int)(0.85*EditString::GetStdHeight()));
+	files.SetLineCy(static_cast<int>(0.85*EditString::GetStdHeight()));
 	files.HeaderTab(0).SetRatio(10);
 	files.ColumnWidths("200 60 120");
 	files.EvenRowColor(Blend(SColorMark, SColorPaper, 240));
@@ -2043,7 +2050,7 @@ void FileBrowser::FilesList(String folderName, bool &thereIsAFolder) {
 	}
 }
 
-bool HasSubfolders(String folder, int flags) {
+bool HasSubfolders(String folder, int ) {
 	FindFile ff(AppendFileName(folder, "*.*"));
 	while(ff) {
 		if (DirectoryExistsX(AppendFileName(folder, ff.GetName())))
