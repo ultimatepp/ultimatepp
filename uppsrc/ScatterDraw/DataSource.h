@@ -411,12 +411,12 @@ public:
 		this->numData = _numData;
 		if (IsNull(numData)) {
 			if (!useRows) {
-				if (data.IsEmpty())
+				if (_data.IsEmpty())
 					this->numData = 0;
 				else	
 					this->numData = data[0].GetCount() - beginData;
 			} else
-				this->numData = data.GetCount() - beginData;
+				this->numData = _data.GetCount() - beginData;
 		}
 	}
 	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {
