@@ -409,14 +409,14 @@ public:
 		this->idsFixed = clone(_idsFixed);
 		this->beginData = _beginData;
 		this->numData = _numData;
-		if (IsNull(numData)) {
-			if (!useRows) {
+		if (IsNull(_numData)) {
+			if (!_useRows) {
 				if (_data.IsEmpty())
 					this->numData = 0;
 				else	
-					this->numData = data[0].GetCount() - beginData;
+					this->numData = _data[0].GetCount() - _beginData;
 			} else
-				this->numData = _data.GetCount() - beginData;
+				this->numData = _data.GetCount() - _beginData;
 		}
 	}
 	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {

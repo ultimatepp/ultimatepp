@@ -338,9 +338,9 @@ public:
 	ScatterDraw& Responsive(bool _responsive = true, double factor = 1) {
 		this->responsive = _responsive;
 		responsivenessFactor = factor;
-		plotScaleX   = responsive ? responsivenessFactor*size.cx/600. : 1;
-		plotScaleY   = responsive ? responsivenessFactor*size.cy/400. : 1;
-		plotScaleAvg = responsive ? (plotScaleX + plotScaleY)/2. : 1;
+		plotScaleX   = _responsive ? responsivenessFactor*size.cx/600. : 1;
+		plotScaleY   = _responsive ? responsivenessFactor*size.cy/400. : 1;
+		plotScaleAvg = _responsive ? (plotScaleX + plotScaleY)/2. : 1;
 		return *this;
 	}
 	bool IsResponsive()		{return responsive;}
@@ -421,7 +421,7 @@ public:
 	Color& GetLegendFillColor() 							{return legendFillColor;}
 	Color& GetLegendBorderColor() 							{return legendBorderColor;}
 	
-	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)			{this->mode = _mode; Refresh(); return *this;};
+	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)		{this->mode = _mode; Refresh(); return *this;};
 	int GetMode()											{return mode;};
 	
 	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
