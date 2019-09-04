@@ -12,7 +12,7 @@ void PropertiesDlg::Init(ScatterCtrl& scatter)
 	CtrlLayoutExit(*this, t_("Scatter properties"));
 	Sizeable().Zoomable();
 
-	this->scatter = &scatter;
+	this->pscatter = &scatter;
 	
 	tab.Add(measures, t_("Measures"));
 	tab.Add(texts, t_("Texts"));
@@ -33,15 +33,15 @@ void PropertiesDlg::Set(int itab)
 void PropertiesDlg::OnTab()
 {
 	if (tab.IsAt(measures))
-		measures.Init(*scatter);
+		measures.Init(*pscatter);
 	else if (tab.IsAt(texts))
-		texts.Init(*scatter);
+		texts.Init(*pscatter);
 	else if (tab.IsAt(legend))
-		legend.Init(*scatter);
+		legend.Init(*pscatter);
 	else if (tab.IsAt(series))
-		series.Init(*scatter);
+		series.Init(*pscatter);
 	else if (tab.IsAt(general))
-		general.Init(*scatter);
+		general.Init(*pscatter);
 }
 
 void ProcessingDlg::Init(ScatterCtrl& scatter) 
@@ -56,7 +56,7 @@ void ProcessingDlg::Init(ScatterCtrl& scatter)
 	splitter.SetPos(1500, 0);
 	Sizeable().Zoomable();
 	
-	this->scatter = &scatter;
+	this->pscatter = &scatter;
 	
 	list.list.Reset();
 	list.list.SetLineCy(EditField::GetStdHeight());
