@@ -697,21 +697,21 @@ bool DataSource::SameX(DataSource &data) {
 	return true;
 }
 
-void ExplicitData::Init(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY) {
+void ExplicitData::Init(Function<double (double x, double y)> _funz, double _minX, double _maxX, double _minY, double _maxY) {
 	ASSERT(maxX >= minX && maxY >= minY);
-	this->funz = funz;
-	this->minX = minX;
-	this->maxX = maxX;
-	this->minY = minY;
-	this->maxY = maxY;
+	this->funz = _funz;
+	this->minX = _minX;
+	this->maxX = _maxX;
+	this->minY = _minY;
+	this->maxY = _maxY;
 	
 	minZ = -DOUBLE_NULL_LIM;
 	maxZ = DOUBLE_NULL_LIM;
-	double deltax = (maxX - minX)/100.;
-	double deltay = (maxY - minY)/100.;
-	for (double x = minX; x <= maxX; x += deltax) {
-		for (double y = minY; y <= maxY; y += deltay) {
-			double z = funz(x, y);
+	double deltax = (_maxX - _minX)/100.;
+	double deltay = (_maxY - _minY)/100.;
+	for (double x = _minX; x <= _maxX; x += deltax) {
+		for (double y = _minY; y <= _maxY; y += deltay) {
+			double z = _funz(x, y);
 			if (!IsNull(z)) {
 				minZ = min(minZ, z);
 				maxZ = max(maxZ, z);
