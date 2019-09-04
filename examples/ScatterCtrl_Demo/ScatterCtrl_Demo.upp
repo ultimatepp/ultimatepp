@@ -33,5 +33,6 @@ file
 	symbol.iml;
 
 mainconfig
-	"" = "GUI MT";
+	"" = "GUI MT",
+	"" = "GUI MT PEDANTIC";
 
