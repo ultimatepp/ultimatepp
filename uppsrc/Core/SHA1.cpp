@@ -227,7 +227,7 @@ void SHA1Final(byte *digest, UPP_SHA1_CTX *context)
 
 void Sha1Stream::Out(const void *data, dword length)
 {
-	SHA1Update(ctx, buffer, length);
+	SHA1Update(ctx, (unsigned char *)data, length);
 }
 
 void Sha1Stream::Finish(byte *hash20)
