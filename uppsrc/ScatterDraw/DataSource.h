@@ -388,7 +388,7 @@ private:
 	int idx = 0, idy = 1;
 	Vector<int> idsx, idsy, idsFixed;
 	int beginData = 0;
-	int64 numData = Null;
+	int numData = Null;
 	
 public:
 	VectorVectorY() {}
