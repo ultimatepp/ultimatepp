@@ -211,13 +211,13 @@ public:
 	void OnTab();
 	void Perform();
 	virtual void Close() {	
-		if (scatter->GetCount() == 0)
+		if (pscatter->GetCount() == 0)
 			RejectBreak(IDOK);
 		TopWindow::Close();
 	}
 		
 private:
-	ScatterCtrl* scatter;
+	ScatterCtrl* pscatter;
 	MeasuresTab measures;
 	TextsTab texts;
 	LegendTab legend;
@@ -296,7 +296,7 @@ public:
 	virtual ~ProcessingDlg() {};
 
 private:
-	ScatterCtrl* scatter;
+	ScatterCtrl* pscatter;
 	Upp::Array<ProcessingTab> tabs;
 	WithProcessingLeft<StaticRect> list; 
 	WithProcessingRight<StaticRect> right;
