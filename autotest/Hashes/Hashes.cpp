@@ -15,6 +15,8 @@ CONSOLE_APP_MAIN
 	TEST(SHA1String(""), "da39a3ee5e6b4b0d3255bfef95601890afd80709");
 	TEST(SHA1StringS(""), "da39a3ee 5e6b4b0d 3255bfef 95601890 afd80709");
 	TEST(SHA1String("Hello world"), "7b502c3a1f48c8609ae212cdfb639dee39673f5e");
+	TEST(SHA1StringS("abc"), "a9993e36 4706816a ba3e2571 7850c26c 9cd0d89d");
+	TEST(SHA1StringS(String('a', 1000000)), "34aa973c d4c4daa4 f61eeb2b dbad2731 6534016f");
 	
 	{
 		Sha1Stream sha1;

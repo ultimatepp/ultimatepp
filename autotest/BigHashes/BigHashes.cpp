@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-// #define ETALONS
+#define ETALONS
 
 const String etalons[] = {
 	"886052cf6394b49259fed024cc9c2485",
