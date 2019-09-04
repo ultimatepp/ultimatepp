@@ -16,7 +16,7 @@ using namespace Upp;
 
 Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
-//void debug_h();			// Dummy function used to debug .h files
+void debug_h();			// Dummy function used to debug .h files
 
 class DashStyle {
 public:
@@ -1566,7 +1566,8 @@ void ScatterDraw::Plot(T& w)
 								if (IsNull(imin)) {
 									if (xx >= xMin) 
 										imin = i;
-								} else if (IsNull(imax)) {
+								}
+								if (IsNull(imax)) {
 									if (xx >= xMin + xRange) 
 										imax = i;
 								}
