@@ -26,7 +26,6 @@ topic "U++ Core Tutorial";
 [s2;%% U`+`+ Core Tutorial&]
 [s22; Table of contents&]
 [s0;3 &]
-[s0;3 &]
 [s0; [^`#Chapter`_1^ 1. Basics]&]
 [s0; ___[^`#Section`_1`_1^ 1.1 Logging]&]
 [s0; ___[^`#Section`_1`_2^ 1.2 String]&]
@@ -125,8 +124,8 @@ variable name and value:&]
 [s7; DUMPHEX(h);&]
 [s0; &]
 [s17; x `= 0x7b&]
-[s17; h `= Memory at 0x025BFCF8, size 0x3 `= 3&]
-[s17;     `+0 0x025BFCF8 66 6F 6F                                 
+[s17; h `= Memory at 0x02C7F688, size 0x3 `= 3&]
+[s17;     `+0 0x02C7F688 66 6F 6F                                 
            foo             &]
 [s0; &]
 [s5; To log the value of a container (or generic Range), you can 
@@ -370,8 +369,8 @@ data, including zeroes:&]
 [s7; &]
 [s7; DUMPHEX(a);&]
 [s0; &]
-[s17; a `= Memory at 0x025BFD58, size 0x5 `= 5&]
-[s17;     `+0 0x025BFD58 31 32 33 34 00                           
+[s17; a `= Memory at 0x02C7F6E8, size 0x5 `= 5&]
+[s17;     `+0 0x02C7F6E8 31 32 33 34 00                           
            1234.           &]
 [s0; &]
 [s3;H4;:Section`_1`_3: 1.3 StringBuffer&]
@@ -603,11 +602,11 @@ time:&]
 [s7; DUMP((int)time.minute);&]
 [s7; DUMP((int)time.second);&]
 [s0; &]
-[s17; time `= 09/05/2019 14:48:55&]
+[s17; time `= 09/05/2019 15:00:18&]
 [s17; (Date)time `= 09/05/2019&]
-[s17; (int)time.hour `= 14&]
-[s17; (int)time.minute `= 48&]
-[s17; (int)time.second `= 55&]
+[s17; (int)time.hour `= 15&]
+[s17; (int)time.minute `= 0&]
+[s17; (int)time.second `= 18&]
 [s0; &]
 [s5; Times can be compared:&]
 [s0; &]
@@ -634,10 +633,10 @@ but numbers represent seconds (using [*C@5 int64] datatype):&]
 is in days&]
 [s7; DUMP(time `- ToTime(date)); // Time `- Time is in seconds&]
 [s0; &]
-[s17; time `+ 1 `= 09/05/2019 14:48:56&]
-[s17; time `+ 24 `* 3600 `= 09/06/2019 14:48:55&]
+[s17; time `+ 1 `= 09/05/2019 15:00:19&]
+[s17; time `+ 24 `* 3600 `= 09/06/2019 15:00:18&]
 [s17; time `- date `= 0&]
-[s17; time `- ToTime(date) `= 53335&]
+[s17; time `- ToTime(date) `= 54018&]
 [s0; &]
 [s5; [*C@5 Time] defines era limits too:&]
 [s0; &]
@@ -693,8 +692,8 @@ items predefined by U`+`+:&]
 [s7; DUMP(sout);&]
 [s0; &]
 [s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 09/05/2019 09/05/2019 
-14:48:55&]
-[s17; sout `= 1.23 09/05/2019 09/05/2019 14:48:55&]
+15:00:18&]
+[s17; sout `= 1.23 09/05/2019 09/05/2019 15:00:18&]
 [s0; &]
 [s5; Getting client types involved into this schema is not too difficult, 
 all you need to do is to add [*C@5 ToString] method:&]
@@ -1069,8 +1068,8 @@ in both little`-endian and big`-endian modes:&]
 [s7; ss.Put32be(0x12345678);&]
 [s7; DUMPHEX(ss.GetResult());&]
 [s0; &]
-[s17; ss.GetResult() `= Memory at 0x025BF828, size 0x8 `= 8&]
-[s17;     `+0 0x025BF828 78 56 34 12 12 34 56 78                  
+[s17; ss.GetResult() `= Memory at 0x02C7F1B8, size 0x8 `= 8&]
+[s17;     `+0 0x02C7F1B8 78 56 34 12 12 34 56 78                  
            xV4..4Vx        &]
 [s0; &]
 [s0; &]
@@ -1119,11 +1118,11 @@ them via [*C@5 Out] virtual method:&]
 [s7; os << `"This is a test `" << 12345;&]
 [s7; os.Close();&]
 [s0; &]
-[s17; String((const char `*)data, size) `= Memory at 0x0750F7D0, size 
+[s17; String((const char `*)data, size) `= Memory at 0x07A3F7D0, size 
 0x14 `= 20&]
-[s17;     `+0 0x0750F7D0 54 68 69 73 20 69 73 20 61 20 74 65 73 74 
+[s17;     `+0 0x07A3F7D0 54 68 69 73 20 69 73 20 61 20 74 65 73 74 
 20 31     This is a test 1&]
-[s17;    `+16 0x0750F7E0 32 33 34 35                              
+[s17;    `+16 0x07A3F7E0 32 33 34 35                              
            2345            &]
 [s0; &]
 [s5; [*C@5 TeeStream] sends output data to two separate streams:&]
@@ -1147,11 +1146,11 @@ block to stream data:&]
 [s7; while(!ms.IsEof())&]
 [s7; -|DUMPHEX(ms.GetLine());&]
 [s0; &]
-[s17; ms.GetLine() `= Memory at 0x025BF6AC, size 0x9 `= 9&]
-[s17;     `+0 0x025BF6AC 53 6F 6D 65 20 6C 69 6E 65               
+[s17; ms.GetLine() `= Memory at 0x02C7F03C, size 0x9 `= 9&]
+[s17;     `+0 0x02C7F03C 53 6F 6D 65 20 6C 69 6E 65               
            Some line       &]
-[s17; ms.GetLine() `= Memory at 0x025BF6AC, size 0xC `= 12&]
-[s17;     `+0 0x025BF6AC 41 6E 6F 74 68 65 72 20 6C 69 6E 65      
+[s17; ms.GetLine() `= Memory at 0x02C7F03C, size 0xC `= 12&]
+[s17;     `+0 0x02C7F03C 41 6E 6F 74 68 65 72 20 6C 69 6E 65      
            Another line    &]
 [s0; &]
 [s3;H4;:Section`_2`_3: 2.3 Binary serialization&]
@@ -1396,7 +1395,7 @@ to this value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[986, 977, 1018, 957, 1004, 1023, 986, 992, 996, 1061`]&]
+[s17; v `= `[957, 1010, 1043, 993, 999, 1014, 1008, 1022, 962, 992`]&]
 [s0; &]
 [s5; Referencing invalid index is undefined operation. Sometimes 
 however it is useful to return the element value if index is 
@@ -1407,7 +1406,7 @@ with two parameter Get method:&]
 [s7; DUMP(v.Get(`-10, 0));&]
 [s7; DUMP(v.Get(13, `-1));&]
 [s0; &]
-[s17; v.Get(4, 0) `= 1004&]
+[s17; v.Get(4, 0) `= 999&]
 [s17; v.Get(`-10, 0) `= 0&]
 [s17; v.Get(13, `-1) `= `-1&]
 [s0; &]
@@ -1417,7 +1416,7 @@ with two parameter Get method:&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[957, 977, 986, 986, 992, 996, 1004, 1018, 1023, 1061`]&]
+[s17; v `= `[957, 962, 992, 993, 999, 1008, 1010, 1014, 1022, 1043`]&]
 [s0; &]
 [s3;H4;:Section`_3`_3: 3.3 Transfer issues&]
 [s5; Often you need to pass content of one container to another of 
@@ -1523,15 +1522,15 @@ to it:&]
 [s7; DUMPC(dist);&]
 [s0; &]
 [s17; dist:&]
-[s17; -|`[0`] `= Test 5: `[1986, 2026, 1997, 2016, 1975`]&]
-[s17; -|`[1`] `= Test 6: `[1632, 1655, 1692, 1633, 1677, 1711`]&]
-[s17; -|`[2`] `= Test 7: `[1441, 1397, 1423, 1502, 1423, 1393, 1421`]&]
-[s17; -|`[3`] `= Test 8: `[1245, 1276, 1280, 1252, 1247, 1222, 1197, 
-1281`]&]
-[s17; -|`[4`] `= Test 9: `[1132, 1146, 1139, 1135, 1070, 1138, 1092, 
-1050, 1098`]&]
-[s17; -|`[5`] `= Test 10: `[999, 1083, 934, 909, 983, 1013, 1031, 1048, 
-975, 1025`]&]
+[s17; -|`[0`] `= Test 5: `[1910, 2006, 2086, 2051, 1947`]&]
+[s17; -|`[1`] `= Test 6: `[1674, 1651, 1651, 1732, 1640, 1652`]&]
+[s17; -|`[2`] `= Test 7: `[1479, 1430, 1452, 1368, 1437, 1409, 1425`]&]
+[s17; -|`[3`] `= Test 8: `[1213, 1245, 1217, 1272, 1276, 1259, 1253, 
+1265`]&]
+[s17; -|`[4`] `= Test 9: `[1088, 1117, 1105, 1073, 1143, 1130, 1135, 
+1102, 1107`]&]
+[s17; -|`[5`] `= Test 10: `[998, 1035, 1015, 1004, 1021, 939, 979, 971, 
+1022, 1016`]&]
 [s0; &]
 [s5; Another possibility is to use [*C@5 Vector`::Add(T`&`&)] method, 
 which uses pick`-constructor instead of deep`-copy constructor. 
@@ -3353,16 +3352,16 @@ thread to [*C@5 Wait] for its completion:&]
 [s0; &]
 [s17; In the main thread 0&]
 [s17; In the thread 0&]
-[s17; In the thread 1&]
 [s17; In the main thread 1&]
-[s17; In the thread 2&]
+[s17; In the thread 1&]
 [s17; In the main thread 2&]
-[s17; In the thread 3&]
+[s17; In the thread 2&]
 [s17; In the main thread 3&]
-[s17; In the thread 4&]
+[s17; In the thread 3&]
 [s17; In the main thread 4&]
-[s17; In the thread 5&]
+[s17; In the thread 4&]
 [s17; About to wait for thread to finish&]
+[s17; In the thread 5&]
 [s17; In the thread 6&]
 [s17; In the thread 7&]
 [s17; In the thread 8&]
@@ -3410,7 +3409,7 @@ code demonstrates why:&]
 [s7; t.Wait();&]
 [s7; DUMP(sum);&]
 [s0; &]
-[s17; sum `= 1041445&]
+[s17; sum `= 1038148&]
 [s0; &]
 [s5; While the expected value is 2000000, produced value is different. 
 The problem is that both thread read / modify / write [*C@5 sum] 
@@ -3535,13 +3534,13 @@ testing data&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
-esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
-ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, consequat, 
-Duis, aute, irure, in, reprehenderit, voluptate, velit, officia, 
-deserunt, mollit, anim, id, est, laborum, sint, occaecat, cupidatat, 
-non, proident, sunt, culpa, qui, sed, do, eiusmod, tempor, incididunt, 
-labore, et, magna`]&]
+elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
+magna, Duis, aute, irure, in, reprehenderit, voluptate, velit, 
+ullamco, laboris, nisi, aliquip, ex, ea, commodo, consequat, 
+aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
+esse, cillum, eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, 
+cupidatat, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Adding words to [*C@5 w] requires [*C@5 Mutex]. Alternative to this 
 `'result gathering`' [*C@5 Mutex] is [*C@5 CoWork`::FinLock]. The 
@@ -3569,13 +3568,13 @@ end of CoWork job&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
-esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
-ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, consequat, 
-Duis, aute, irure, in, reprehenderit, voluptate, velit, officia, 
-deserunt, mollit, anim, id, est, laborum, sint, occaecat, cupidatat, 
-non, proident, sunt, culpa, qui, sed, do, eiusmod, tempor, incididunt, 
-labore, et, magna`]&]
+elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
+magna, Duis, aute, irure, in, reprehenderit, voluptate, velit, 
+ullamco, laboris, nisi, aliquip, ex, ea, commodo, consequat, 
+aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
+esse, cillum, eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, 
+cupidatat, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Of course, the code performed after [*C@5 FinLock] should not 
 take long, otherwise there is negative impact on all [*C@5 CoWork] 
@@ -3781,7 +3780,9 @@ for scheduling the work. [*C@5 CoDo] waits for all started threads
 to finish. Scheduling is the responsibility of client code, but 
 can be easily managed using the std`::atomic counter. This way, 
 the overhead associated with creating lambdas and scheduling 
-them is kept to the minimum (basically the cost of atomic increment).&]
+them is kept to the minimum (basically the cost of atomic increment). 
+Once again, CoDo is based on CoWork, so [*C@5 CoWork`::FinLock] 
+is available.&]
 [s0; &]
 [s7; Vector<String> data;&]
 [s7; for(int i `= 0; i < 100; i`+`+)&]
