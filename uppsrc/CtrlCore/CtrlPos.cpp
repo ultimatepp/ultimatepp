@@ -302,13 +302,13 @@ void  Ctrl::SetRect(int x, int y, int cx, int cy)
 
 void  Ctrl::SetWndRect(const Rect& r)
 {
-	DLOG("SetWndRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
+	LLOG("SetWndRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
 	SetPos0(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);
 }
 
 void Ctrl::SetRect(const Rect& r)
 {
-	DLOG("SetRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
+	LLOG("SetRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
 	SetRect(r.left, r.top, r.Width(), r.Height());
 }
 
