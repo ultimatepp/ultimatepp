@@ -8,6 +8,13 @@ struct App : TopWindow {
 		SetRect(0, 0, 640, 480);
 		Sizeable().Zoomable().CenterScreen();
 	}
+	
+	void Paint(Draw& w) {
+		Rect r = GetRect();
+		Size sz = GetSize();
+		w.DrawRect(sz, White());
+		w.DrawText(40, 40, String() << r << " " << sz);
+	}
 
 	bool Key(dword key, int count) override
 	{
@@ -27,8 +34,16 @@ struct App : TopWindow {
 		else
 		if(key == K_SPACE)
 			r.right += 10;	// See especially this. Even this one moves the window downwards on GTK.
+		else
+		if(key == K_DELETE)
+			r = Rect(0, 0, 640, 480);
+		else
+		if(key == K_INSERT)
+			r = Rect(0, 10, 640, 480);
 
+		r.SetSize(Size(640, 480));
 		SetRect(r);
+		Refresh();
 		return true;
 	}
 };
