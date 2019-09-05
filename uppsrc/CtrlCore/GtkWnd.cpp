@@ -432,7 +432,8 @@ void Ctrl::WndSetPos(const Rect& rect)
 		return;
 //	gtk_window_move(gtk(), rect.left, rect.top);
 //	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
-	gdk_window_move_resize(gdk(), rect.left, rect.top, rect.GetWidth(), rect.GetHeight());
+	Rect m = GetFrameMargins();
+	gdk_window_move_resize(gdk(), rect.left - m.left, rect.top - m.top, rect.GetWidth(), rect.GetHeight());
 	int t0 = msecs();
 	do { // Wait up to 500ms for corresponding GDK_CONFIGURE to arrive
 		if(SweepConfigure(true))
