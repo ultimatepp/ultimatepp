@@ -9,7 +9,7 @@ void CoLoopTutorial()
 	/// all started threads to finish. Scheduling is the responsibility of client code, but can
 	/// be easily managed using the std::atomic counter. This way, the overhead associated with
 	/// creating lambdas and scheduling them is kept to the minimum (basically the cost of
-	/// atomic increment).
+	/// atomic increment). Once again, CoDo is based on CoWork, so `CoWork::FinLock` is available.
 	
 	Vector<String> data;
 	for(int i = 0; i < 100; i++)
