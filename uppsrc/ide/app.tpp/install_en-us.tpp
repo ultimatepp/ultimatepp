@@ -37,10 +37,10 @@ out of the box operation&]
 [s5; Both variants are able (on first install, when installation 
 is moved or on demand `- menu Setup/Instant setup) to detect 
 and use Miscrosoft Windows SDK and C`+`+ compiler, either 2017 
-or 2015 version. The most convenient way is to install Visual 
-Studio Build Tools. Please check this [^https`:`/`/blogs`.msdn`.microsoft`.com`/vcblog`/2016`/11`/16`/introducing`-the`-visual`-studio`-build`-tools`/`?`_`_hstc`=268264337`.c396ab304e96089050275a79b106ba49`.1512810082757`.1512810082757`.1512810082757`.1`&`_`_hssc`=268264337`.2`.1512810082757`&`_`_hsfp`=2574008961^ b
-log entry] about this option. When installing, make sure that 
-support for Win32 applications is installed as well.&]
+or 2015 version. The most convenient way is to install [^https`:`/`/visualstudio`.microsoft`.com`/cs`/downloads`/^ B
+uild Tools for Visual Studio 2019]. (in [* Tools for Visual Studio 
+2019] subsection, in the installer, select [* C`+`+ build tools], 
+default options for C`+`+ build tools are OK).&]
 [s3;:2: 2. Troubleshooting&]
 [s5; The list of common problems related to Windows installation:&]
 [s5;l160;i150;O0; [* Compilation with MinGW causes `"There were errors`" 
@@ -48,6 +48,6 @@ error message.]&]
 [s5;l320; To solve this problem please make sure your upp installation 
 path doesn`'t posses any special characters like diacritical 
 marks (á, ą etc.). To avoid problems, we highly recommended 
-to keep MinGW installation in relatively simply location (ASCII 
+to keep MinGW installation in relatively simple location (ASCII 
 path) like `"C:`\Prototable`\upp`".&]
 [s5;~~~320; ]]
