@@ -105,7 +105,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 	while(*s) {
 		const char *w = bew(qname, s);
 		byte c = *s;
-		if(w && !iscid(*w)) {
+		if(w && w > s && !iscid(*w)) {
 			if(iscid(*res.Last()))
 				res.Cat(' ');
 			res.Cat(name);

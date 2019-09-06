@@ -190,6 +190,7 @@ void PPFile::Parse(Stream& in)
 	bool was_namespace = false;
 	int  level = 0;
 	bool incomment = false;
+	bool do_pp = true;
 	Vector<int> namespace_block;
 	bool next_segment = true;
 	Index<int> local_segments;
@@ -198,6 +199,11 @@ void PPFile::Parse(Stream& in)
 	Md5Stream md5;
 	while(!in.IsEof()) {
 		String l = in.GetLine();
+		const char *ll = l;
+		while(*ll == ' ' || *ll == '\t')
+			ll++;
+		if(ll[0] == '/' && ll[1] == '/' && ll[2] == '$')
+			do_pp = decode(ll[3], '+', true, '-', false, do_pp);
 		while(*l.Last() == '\\' && !in.IsEof()) {
 			l.Trim(l.GetLength() - 1);
 			l.Cat(in.GetLine());
@@ -206,66 +212,68 @@ void PPFile::Parse(Stream& in)
 		try {
 			CParser p(l);
 			if(p.Char('#')) {
-				if(p.Id("define")) {
-					if(next_segment) {
-						PPItem& m = item.Add();
-						m.type = PP_DEFINES;
-						m.segment_id = ++sPPserial;
-						next_segment = false;
-						local_segments.Add(sPPserial);
-					}
-					CppMacro def;
-					String   id = def.Define(p.GetPtr());
-					if(id.GetCount()) {
-						PPMacro m;
-						m.segment_id = sPPserial;
-						m.line = linei;
-						m.macro = def;
-						ppmacro.Add(sAllMacros.Put(id, m));
-						md5.Put("#", 1);
-						md5.Put(id);
-						md5.Put(0);
-						md5.Put(m.macro.md5, 16);
-					}
-				}
-				else
-				if(p.Id("undef")) {
-					if(p.IsId()) {
-						String id = p.ReadId();
-						md5.Put("#", 1);
-						md5.Put(id);
-						md5.Put(1);
-						int segmenti = -1;
-						PPMacro *um = FindPPMacro(id, local_segments, segmenti);
-						if(um && segmenti) { // heuristic: only local undefs are allowed
+				if(do_pp) {
+					if(p.Id("define")) {
+						if(next_segment) {
 							PPItem& m = item.Add();
 							m.type = PP_DEFINES;
 							m.segment_id = ++sPPserial;
-							um->undef_segment_id = m.segment_id;
-							next_segment = true;
+							next_segment = false;
 							local_segments.Add(sPPserial);
-							if(id.GetCount()) {
-								PPMacro m;
-								m.segment_id = sPPserial;
-								m.line = linei;
-								m.macro.SetUndef();
-								ppmacro.Add(sAllMacros.Put(id, m));
+						}
+						CppMacro def;
+						String   id = def.Define(p.GetPtr());
+						if(id.GetCount()) {
+							PPMacro m;
+							m.segment_id = sPPserial;
+							m.line = linei;
+							m.macro = def;
+							ppmacro.Add(sAllMacros.Put(id, m));
+							md5.Put("#", 1);
+							md5.Put(id);
+							md5.Put(0);
+							md5.Put(m.macro.md5, 16);
+						}
+					}
+					else
+					if(p.Id("undef")) {
+						if(p.IsId()) {
+							String id = p.ReadId();
+							md5.Put("#", 1);
+							md5.Put(id);
+							md5.Put(1);
+							int segmenti = -1;
+							PPMacro *um = FindPPMacro(id, local_segments, segmenti);
+							if(um && segmenti) { // heuristic: only local undefs are allowed
+								PPItem& m = item.Add();
+								m.type = PP_DEFINES;
+								m.segment_id = ++sPPserial;
+								um->undef_segment_id = m.segment_id;
+								next_segment = true;
+								local_segments.Add(sPPserial);
+								if(id.GetCount()) {
+									PPMacro m;
+									m.segment_id = sPPserial;
+									m.line = linei;
+									m.macro.SetUndef();
+									ppmacro.Add(sAllMacros.Put(id, m));
+								}
 							}
 						}
 					}
-				}
-				else
-				if(p.Id("include")) {
-					PPItem& m = item.Add();
-					next_segment = true;
-					m.type = PP_INCLUDE;
-					m.text = TrimBoth(p.GetPtr());
-					if(IsNull(m.text))
-						item.Drop();
 					else
-						includes.FindAdd(m.text);
-					md5.Put('@');
-					md5.Put(m.text);
+					if(p.Id("include")) {
+						PPItem& m = item.Add();
+						next_segment = true;
+						m.type = PP_INCLUDE;
+						m.text = TrimBoth(p.GetPtr());
+						if(IsNull(m.text))
+							item.Drop();
+						else
+							includes.FindAdd(m.text);
+						md5.Put('@');
+						md5.Put(m.text);
+					}
 				}
 			}
 			else {

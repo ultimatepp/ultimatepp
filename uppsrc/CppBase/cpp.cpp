@@ -247,6 +247,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 	result.Reserve(16384);
 	int lineno = 0;
 	bool incomment = false;
+	bool do_pp = true;
 	int segment_serial = 0;
 	segment_id.Add(--segment_serial);
 #ifdef IGNORE_ELSE
@@ -254,8 +255,10 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 #endif
 	while(!in.IsEof()) {
 		String l = prefix_macro + in.GetLine();
-		if(l.StartsWith("//$")) { // Do not remove assist++ parser directives
+		String ll = TrimLeft(l);
+		if(ll.StartsWith("//$")) { // Do not remove assist++ parser directives
 			result.Cat(l + "\n");
+			do_pp = decode(ll[3], '+', true, '-', false, do_pp);
 			continue;
 		}
 		prefix_macro.Clear();
@@ -268,7 +271,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 		}
 		RemoveComments(l, incomment);
 		CParser p(l);
-		if(p.Char('#')) {
+		if(p.Char('#') && do_pp) {
 			if(p.Id("define")) {
 				result.Cat(l + "\n");
 				CppMacro m;
