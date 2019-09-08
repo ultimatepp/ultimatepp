@@ -17,7 +17,7 @@ void CoLoopTutorial()
 	
 	double sum = 0;
 
-	std::atomic<int> ii = 0;
+	std::atomic<int> ii(0);
 
 	CoDo([&] {
 		double m = 0;
