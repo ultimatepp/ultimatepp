@@ -77,6 +77,7 @@ max (A, B)
 macro
 something
 //$- comment
+//$+
 
 #define mm(a, b, c, d) (d) [c] {b} <a>
 
