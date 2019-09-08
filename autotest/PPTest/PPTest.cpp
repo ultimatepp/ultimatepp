@@ -16,9 +16,11 @@ CONSOLE_APP_MAIN
 	
 	String s = cpp.output;
 	String opath = GetDataFile("test.out");
+	
+	SaveFile("/home/cxl/outs", s);
 
 	LOG("======================");
-	LOG(cpp.output);
+	LOG(s);
 
 #ifdef flagSAVE
 	SaveFile(opath, s);
