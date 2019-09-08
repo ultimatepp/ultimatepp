@@ -271,50 +271,52 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 		}
 		RemoveComments(l, incomment);
 		CParser p(l);
-		if(p.Char('#') && do_pp) {
-			if(p.Id("define")) {
-				result.Cat(l + "\n");
-				CppMacro m;
-				String id = m.Define(p.GetPtr());
-				if(id.GetCount()) {
-					PPMacro& pp = macro.Add(id);
-					pp.macro = m;
-					pp.segment_id = segment_serial;
-					notmacro.Trim(kw.GetCount());
+		if(p.Char('#')) {
+			if(do_pp) {
+				if(p.Id("define")) {
+					result.Cat(l + "\n");
+					CppMacro m;
+					String id = m.Define(p.GetPtr());
+					if(id.GetCount()) {
+						PPMacro& pp = macro.Add(id);
+						pp.macro = m;
+						pp.segment_id = segment_serial;
+						notmacro.Trim(kw.GetCount());
+					}
 				}
-			}
-			else
-			if(p.Id("undef")) {
-				result.Cat(l + "\n");
-				if(p.IsId()) {
-					segment_id.Add(--segment_serial);
-					PPMacro& m = macro.Add(p.ReadId());
-					m.segment_id = segment_serial;
-					m.macro.SetUndef();
-					notmacro.Trim(kw.GetCount());
-					segment_id.Add(--segment_serial);
-				}
-			}
-			else {
-				result.Cat('\n');
-			#ifdef IGNORE_ELSE
-				if(ignore_else) {
-					if(p.Id("if") || p.Id("ifdef") || p.Id("ifndef"))
-						ignore_else++;
-					else
-					if(p.Id("endif"))
-						ignore_else--;
+				else
+				if(p.Id("undef")) {
+					result.Cat(l + "\n");
+					if(p.IsId()) {
+						segment_id.Add(--segment_serial);
+						PPMacro& m = macro.Add(p.ReadId());
+						m.segment_id = segment_serial;
+						m.macro.SetUndef();
+						notmacro.Trim(kw.GetCount());
+						segment_id.Add(--segment_serial);
+					}
 				}
 				else {
-					if(p.Id("else") || p.Id("elif"))
-						ignore_else = 1;
-				}
-			#endif
-				if(p.Id("include")) {
-					LTIMING("Expand include");
-					String s = GetIncludePath(p.GetPtr(), current_folder);
-					DoFlatInclude(s);
-					segment_id.Add(--segment_serial);
+					result.Cat('\n');
+				#ifdef IGNORE_ELSE
+					if(ignore_else) {
+						if(p.Id("if") || p.Id("ifdef") || p.Id("ifndef"))
+							ignore_else++;
+						else
+						if(p.Id("endif"))
+							ignore_else--;
+					}
+					else {
+						if(p.Id("else") || p.Id("elif"))
+							ignore_else = 1;
+					}
+				#endif
+					if(p.Id("include")) {
+						LTIMING("Expand include");
+						String s = GetIncludePath(p.GetPtr(), current_folder);
+						DoFlatInclude(s);
+						segment_id.Add(--segment_serial);
+					}
 				}
 			}
 		}
