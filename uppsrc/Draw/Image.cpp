@@ -221,7 +221,8 @@ int Image::GetKind() const
 
 void Image::Serialize(Stream& s)
 {
-	int version = 1;
+	Point spot2 = Get2ndSpot();
+	int version = spot2.x || spot2.y; // version 1 only if we need 2nd spot, to improve BW compatibility
 	s / version;
 	Size sz = GetSize();
 	Point p = GetHotSpot();
@@ -229,7 +230,7 @@ void Image::Serialize(Stream& s)
 	s % sz % p % dots;
 	Point p2(0, 0);
 	if(version >= 1) {
-		p2 = Get2ndSpot();
+		p2 = spot2;
 		s % p2;
 	}
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
