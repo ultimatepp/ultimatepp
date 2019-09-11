@@ -128,7 +128,7 @@ void FileList::Paint(Draw& w, const Rect& r, const Value& q,
 	x += iconwidth;
 	x += 2;
 	FontInfo fi = m.font.Info();
-	bool inv = (style & (Display::CURSOR|Display::SELECT)) && (style & Display::FOCUS);
+	bool inv = (style & Display::SELECT) && (style & Display::FOCUS);
 	DrawFileName(w, x, r.top + (r.Height() - fi.GetHeight()) / 2,
 	             r.right - x - 2, r.Height(), WString(m.name), m.isdir, m.font,
 	             inv ? SColorHighlightText : m.ink,
