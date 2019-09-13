@@ -285,8 +285,6 @@ void HexView::SetCursor(uint64 _cursor)
 	
 	if(cursor > total)
 		cursor = total - 1;
-	if(cursor < 0)
-		cursor = 0;
 	int q = int(sc % columns);
 	if(cursor >= sc + bytes)
 		sc = cursor - bytes + columns;
@@ -297,8 +295,6 @@ void HexView::SetCursor(uint64 _cursor)
 		sc = (sc - q) / columns * columns + q;
 	if(sc >= total)
 		sc = total - 1;
-	if(sc < 0)
-		sc = 0;
 	SetSb();
 	Refresh();
 	RefreshInfo();
@@ -403,7 +399,7 @@ void HexView::StdGoto(const String& s)
 		n = 16;
 	if(p.IsNumber(n)) {
 		uint64 a = p.ReadNumber(n);
-		if(a >= 0 && a < total) {
+		if(a < total) {
 			SetCursor(a);
 			SetSc(a);
 			return;
