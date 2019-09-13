@@ -129,7 +129,10 @@ void CocoMenuBar::MenuAction(id sender)
 	for(const Item& m : item)
 		if(m.nsitem == sender) {
 			ResetCocoaMouse();
-			PostCallback(m.cb);
+			if(GetParent()) // If not context menu use PostCallback to avoid visual glitches
+				PostCallback(m.cb);
+			else
+				m.cb();
 			break;
 		}
 }
