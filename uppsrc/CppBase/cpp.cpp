@@ -319,6 +319,8 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 					}
 				}
 			}
+			else
+				result.Cat('\n');
 		}
 		else {
 			LTIMING("Expand expand");
