@@ -122,13 +122,13 @@ void FileList::Paint(Draw& w, const Rect& r, const Value& q,
 		             Color ink, Color paper, dword style) const
 {
 	const File& m = ValueTo<File>(q);
-	w.DrawRect(r, paper);
+	bool inv = ((style & Display::SELECT) || (style & Display::CURSOR)) && (style & Display::FOCUS);
+	w.DrawRect(r, inv ? SColorHighlight() : paper);
 	int x = r.left + 2;
 	w.DrawImage(x, r.top + (r.Height() - m.icon.GetSize().cy) / 2, m.icon);
 	x += iconwidth;
 	x += 2;
 	FontInfo fi = m.font.Info();
-	bool inv = (style & Display::SELECT) && (style & Display::FOCUS);
 	DrawFileName(w, x, r.top + (r.Height() - fi.GetHeight()) / 2,
 	             r.right - x - 2, r.Height(), WString(m.name), m.isdir, m.font,
 	             inv ? SColorHighlightText : m.ink,
