@@ -29,6 +29,7 @@ void     SetVppLog(Stream& log);
 
 void     SetVppLogName(const String& file);
 void     SetVppLogSizeLimit(int limit);
+void     SetVppLogNoDeleteOnStartup();
 
 void     HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize);
 void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
