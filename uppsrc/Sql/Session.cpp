@@ -141,6 +141,8 @@ void SqlSession::PerThread(bool b)
 }
 #endif
 
+#ifndef NOAPPSQL
+
 void Sql::operator=(SqlSession& s)
 {
 	Mutex::Lock __(sDefs);
@@ -211,5 +213,7 @@ Sql& AppCursorR()
 	}
 	return *empty;
 }
+
+#endif
 
 }
