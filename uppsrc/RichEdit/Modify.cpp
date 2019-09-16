@@ -301,9 +301,19 @@ void RichEdit::PasteText(const RichText& text)
 	SetModify();
 	modified = true;
 	RemoveSelection();
-	Insert(cursor, text, false);
-	ReadStyles();
-	Move(cursor + text.GetLength(), false);
+	int n = text.GetPartCount() - 1;
+	if(!text.IsPara(0) || !text.IsPara(n)) { // inserted section must start/end with para
+		RichText pp = clone(text);
+		pp.Normalize();
+		Insert(cursor, pp, false);
+		ReadStyles();
+		Move(cursor + pp.GetLength(), false);
+	}
+	else {
+		Insert(cursor, text, false);
+		ReadStyles();
+		Move(cursor + text.GetLength(), false);
+	}
 }
 
 struct ToParaIterator : RichText::Iterator {
