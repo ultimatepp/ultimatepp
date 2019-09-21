@@ -68,6 +68,7 @@ bool MySqlSession::DoConnect()
 		sql.Execute("SET CHARACTER SET utf8");
 		return true;
 	}
+	SetError(mysql_error(mysql), "", mysql_errno(mysql));
 	Close();
 	return false;
 }
