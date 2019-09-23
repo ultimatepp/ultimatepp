@@ -2,7 +2,6 @@
 
 #include "StaticPlugin.h"
 
-//NAMESPACE_UPP
 using namespace Upp;
 
 Array<StaticPlugin::PluginData>& StaticPlugin::Plugins() {

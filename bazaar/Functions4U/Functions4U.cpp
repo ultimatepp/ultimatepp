@@ -358,7 +358,7 @@ bool SetReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly, readOnly, readOnly);
 }
 
-bool SetReadOnly(const char *path, bool usr, bool , bool ) {
+bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
@@ -2597,7 +2597,7 @@ Dl::Dl() {
 Dl::~Dl() {
 	if (hinstLib) 
 		if (dlclose(hinstLib) == 0)
-			throw Exc(t_("Dl cannot be released"));
+			;	// Dl cannot be released
 }
 
 bool Dl::Load(const String &fileDll) {

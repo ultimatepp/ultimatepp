@@ -60,8 +60,8 @@ struct ScanTopicIterator : RichText::Iterator {
 	String link;
 	StaticCriticalSection reflink_lock;
 	
-	ScanTopicIterator(VectorMap<String, String> *reflink) : reflink(reflink) {};
-	virtual bool operator()(int pos, const RichPara& para)
+	ScanTopicIterator(VectorMap<String, String> *_reflink) : reflink(_reflink) {};
+	virtual bool operator()(int , const RichPara& para)
 	{
 		if(!IsNull(para.format.label)) 
 			reflink->Add(para.format.label, link);
@@ -102,8 +102,8 @@ struct GatherLinkIterator : RichText::Iterator {
 	VectorMap<String, String> *reflink;
 	Index<String> link;
 
-	GatherLinkIterator(VectorMap<String, String> *reflink) : reflink(reflink) {};
-	virtual bool operator()(int pos, const RichPara& para)
+	GatherLinkIterator(VectorMap<String, String> *_reflink) : reflink(_reflink) {};
+	virtual bool operator()(int , const RichPara& para)
 	{
 		for(int i = 0; i < para.GetCount(); i++) {
 			String l = para[i].format.link;
@@ -175,11 +175,11 @@ bool EndsWith(const String &source, const String &pattern)
 }
 
 String GatherTpp::QtfAsHtml(const char *qtf, Index<String>& css,
-                 const VectorMap<String, String>& links,
-                 const VectorMap<String, String>& labels,
+                 const VectorMap<String, String>& _links,
+                 const VectorMap<String, String>& _labels,
                  const String& outdir, const String& fn)
 {
-	return EncodeHtml(ParseQTF(qtf), css, links, labels, outdir, fn, Zoom(8, 40), escape, 40);
+	return EncodeHtml(ParseQTF(qtf), css, _links, _labels, outdir, fn, Zoom(8, 40), escape, 40);
 }
 
 String GetText(const char *s)
@@ -187,7 +187,7 @@ String GetText(const char *s)
 	return GetTopic(s).text;
 }
 
-void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
+void GatherTpp::ExportPage(int i, String htmlFolder, String _keywords)
 {
 	Index<String> css;
 	String path = links.GetKey(i);
@@ -244,7 +244,7 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 			"a.l2:hover   { color:#BC0624; }\n"
 			"a.l2:active  { color:#BC0024; }\n",
 			"<META NAME=\"keywords\" "
-			"CONTENT=\"" + keywords + "\">"
+			"CONTENT=\"" + _keywords + "\">"
 	        "<META name=\"robots\" content=\"index,follow\">"
 		)
 	    .BgColor(bg)
@@ -291,7 +291,7 @@ String GetTopicLanguage(const String &topic) {
 	return topic.Mid(pos+1, 5); 
 }
 
-String GatherTpp::GatherTopics(const char *topic, String& title)
+String GatherTpp::GatherTopics(const char *topic, String& _title)
 {
 	static StaticCriticalSection mapl;
 	int q;
@@ -299,15 +299,15 @@ String GatherTpp::GatherTopics(const char *topic, String& title)
 		q = tt.Find(topic);
 	if(q < 0) {
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
-		title = p.title;
+		_title = p.title;
 		String t = p;
 		if(IsNull(t)) {
 			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));		
 			p = ReadTopic(LoadFile(TopicFileName(topicEng)));
-			String tt = p;
-			if(IsNull(tt)) 
+			String _tt = p;
+			if(IsNull(_tt)) 
 				return "index.html";
-			title = p.title;
+			_title = p.title;
 			p.title += " (translated)";			
 			String help = "topic://uppweb/www/contribweb$" + GetTopicLanguage(topic);
 			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
@@ -327,7 +327,7 @@ String GatherTpp::GatherTopics(const char *topic, String& title)
 #endif
 	} else {
 		INTERLOCKED_(mapl)
-			title = tt[q].title;
+			_title = tt[q].title;
 	}
 	return TopicFileNameHtml(topic);
 }

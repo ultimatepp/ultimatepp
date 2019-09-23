@@ -151,7 +151,7 @@ Color GetSvgColor(const char *color) {
 					{"whitesmoke", 245, 245, 245}, 
 					{"yellow", 255, 255, 0}, 
 					{"yellowgreen", 154, 205, 50}, 
-					{""}};
+					{"", 0, 0, 0}};
 	
 	for (int i = 0; colors[i].name[0] != '\0'; ++i)		// Naive algorithm to get the color
 		if (strcmp(color, colors[i].name) == 0) 

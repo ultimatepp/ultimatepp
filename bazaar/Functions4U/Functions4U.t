@@ -150,6 +150,42 @@ esES("Imprimiendo documento")
 euES("")
 frFR("")
 
+T_("Select all")
+caES("Seleccionar tot")
+esES("Seleccionar todo")
+euES("")
+frFR("")
+
+T_("Select all rows")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("No row selected")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Selected %d rows")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Copy")
+caES("Copiar")
+esES("Copiar")
+euES("")
+frFR("")
+
+T_("Copy selected rows to clipboard")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 
 // GatherTpp.cpp
 

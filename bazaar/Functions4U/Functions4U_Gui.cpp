@@ -207,12 +207,21 @@ void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array) {
 	}
 }
 
-void ArrayCtrlRowCopy(ArrayCtrl &array, bool header) {
+void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header) {
 	array.SetClipboard(true, header);
 }
 
 void ArrayCtrlRowSelect(ArrayCtrl &array) {
 	array.Select(0, array.GetCount(), true);
+}
+
+Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array) {
+	Vector<int> selected;
+	for (int r = 0; r < array.GetCount(); ++r) {
+		if (array.IsSel(r))	
+			selected << r;
+	}
+	return selected;
 }
 
 #endif

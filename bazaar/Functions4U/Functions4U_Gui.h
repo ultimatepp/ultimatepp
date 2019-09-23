@@ -107,7 +107,8 @@ private:
 };
 
 void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array);
-void ArrayCtrlRowCopy(ArrayCtrl &array, bool header);
+void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header);
 void ArrayCtrlRowSelect(ArrayCtrl &array);
-
+Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array);
+	
 #endif

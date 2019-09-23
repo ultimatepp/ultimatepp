@@ -118,7 +118,7 @@ struct FileData : Moveable<FileData> {
 	String ToString() const { return Format("%s %0n", fileName, length); }
 
 	FileData(bool _isFolder, String _fileName, String _relFilename, int64 _length, 
-		struct Upp::Time _t, uint64 _id) : isFolder(_isFolder), fileName(_fileName), 
+		struct Upp::Time _t, int64 _id) : isFolder(_isFolder), fileName(_fileName), 
 		relFilename(_relFilename), length(_length), t(_t), id(_id) {}
 	FileData() {}
 };
@@ -671,7 +671,20 @@ void Shuffle(C &data, int randomSeed = Null) {
 }
 
 template <class T>
-bool Equal(const T& a, const T& b, const T& ratio) {
+inline T TruncDecimals(T num, int decimals) {
+	long double val = num*10*decimals;
+	long int ival = static_cast<long int>(val);
+	val = ival;
+	return static_cast<T>(val/(10*decimals));
+}
+
+template <class T>
+inline String RoundDecimals(T num, int decimals) {
+	return FormatDouble(num, decimals);
+}
+
+template <class T>
+bool EqualRatio(const T& a, const T& b, const T& ratio) {
 	if (a == 0)
 		return b <= ratio;
 	if (b == 0)
@@ -693,14 +706,13 @@ int FindAdd(Range& r, const V& value, int from = 0) {
 template <class Range, class V>
 void FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
-		if(Equal(r[i], value, ratio)) 
+		if(EqualRatio(r[i], value, ratio)) 
 			return;
 	r.Add(value);
 }
 
 template <class Range, class V>
-int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0)
-{
+int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++) 
 		if(abs(r[i] - value) <= delta) 
 			return i;
@@ -708,10 +720,45 @@ int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0)
 }
 
 template <class Range, class V>
-int FindIndexRatio(const Range& r, const V& value, const V& ratio, int from = 0)
-{
+int FindIndexRoundDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
+	String svalue = RoundDecimals(value, numDecimals);
 	for(int i = from; i < r.GetCount(); i++) {
-		if (Equal(r[i], value, ratio))
+		String s = RoundDecimals(r[i], numDecimals);
+		if(s == svalue) 
+			return i;
+	}
+	return -1;
+}
+
+template <class Range, class V>
+int FindIndexTruncDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
+	V svalue = TruncDecimals(value, numDecimals);
+	for(int i = from; i < r.GetCount(); i++) {
+		V s = TruncDecimals(r[i], numDecimals);
+		if(s == svalue) 
+			return i;
+	}
+	return -1;
+}
+
+template <class Range, class V>
+int FindIndexCloser(const Range& r, const V& value, int from = 0) {
+	int minId = -1;
+	V minDiff = FLT_MAX;
+	for(int i = from; i < r.GetCount(); i++) {
+		V diff = abs(value - r[i]);
+		if (diff < minDiff) {
+			minDiff = diff;	
+			minId = i;		
+		}
+	}
+	return minId;
+}
+
+template <class Range, class V>
+int FindIndexRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
+	for(int i = from; i < r.GetCount(); i++) {
+		if (EqualRatio(r[i], value, ratio))
 			return i;
 	}
 	return -1;
