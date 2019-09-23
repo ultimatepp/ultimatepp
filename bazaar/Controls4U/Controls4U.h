@@ -646,12 +646,12 @@ private:
 				return ArrayCtrl::Key(key, count);
 		}
 		virtual void DragAndDrop(Point p, PasteClip& d) {
-			Vector<String> files;
+			Vector<String> fls;
 			
 			if (AcceptFiles(d)) {
-				files = GetFiles(d);
+				fls = GetFiles(d);
 				Refresh();
-				PromptOK(DeQtf(files[0]));
+				PromptOK(DeQtf(fls[0]));
 			} else
 				ArrayCtrl::DragAndDrop(p, d);
 		}

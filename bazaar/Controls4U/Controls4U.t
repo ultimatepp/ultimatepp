@@ -45,21 +45,33 @@ esES("Buscar fichero")
 euES("")
 frFR("")
 
+T_("No file set")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Folder '%s' does not exist")
 caES("")
 esES("La carpeta '%s' no existe")
 euES("")
 frFR("")
 
-T_("Select directory")
+T_("Select folder")
 caES("")
-esES("Seleccionar directorio")
+esES("")
 euES("")
 frFR("")
 
 T_("Browse folder")
 caES("")
 esES("Buscar carpeta")
+euES("")
+frFR("")
+
+T_("No folder set")
+caES("")
+esES("")
 euES("")
 frFR("")
 
@@ -279,5 +291,14 @@ frFR("")
 T_("Function not implemented")
 caES("")
 esES("Funci\303\263n no implementada")
+euES("")
+frFR("")
+
+
+// Obsolete
+
+T_("Select directory")
+caES("")
+esES("Seleccionar directorio")
 euES("")
 frFR("")

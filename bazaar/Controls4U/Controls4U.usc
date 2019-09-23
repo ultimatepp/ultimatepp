@@ -168,10 +168,10 @@ ctrl EditFile {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 10; return sz; }
 	
-	Text  SetTitle @1;
-	bool  SelLoad = false @2;
-	Font  SetFont = StdFont() @3;
-	bool  SetEditable = true @4 ? "Editable";
+	//Text  SetTitle @1;
+	bool  SelLoad = false @1;
+	Font  SetFont = StdFont() @2;
+	bool  SetEditable = true @3 ? "Editable";
 	bool  UseDropping = false;
 	bool  UseOpenFolder = false;
 	int   BrowseOpenFolderWidth = 10;
@@ -181,9 +181,9 @@ ctrl EditFile {
 	bool  UseBrowseRight = true;
 	int   BrowseRightWidth = 40;
 	bool  UseHistory = false;
-	Frame SetFrame = InsetFrame() @5;
-	Text  Tip @6;
-	bool  WantFocus = true @7;
+	Frame SetFrame = InsetFrame() @4;
+	Text  Tip @5;
+	bool  WantFocus = true @6;
 	bool  NotNull = false;
 
 	Paint(w) {
@@ -198,10 +198,10 @@ ctrl EditFolder {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 10; return sz; }
 	
-	Text  SetTitle @1;
-	bool  SelLoad = false @2;
-	Font  SetFont = StdFont() @3;
-	bool  SetEditable = true @4 ? "Editable";
+	//Text  SetTitle @1;
+	bool  SelLoad = false @1;
+	Font  SetFont = StdFont() @2;
+	bool  SetEditable = true @3 ? "Editable";
 	bool  UseDropping = false;
 	bool  UseOpenFolder = false;
 	int   BrowseOpenFolderWidth = 10;
@@ -211,9 +211,9 @@ ctrl EditFolder {
 	bool  UseBrowseRight = true;
 	int   BrowseRightWidth = 40;
 	bool  UseHistory = false;
-	Frame SetFrame = InsetFrame() @5;
-	Text  Tip @6;
-	bool  WantFocus = true @7;
+	Frame SetFrame = InsetFrame() @4;
+	Text  Tip @5;
+	bool  WantFocus = true @6;
 	bool  NotNull = false;
 
 	Paint(w) {

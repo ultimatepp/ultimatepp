@@ -16,6 +16,9 @@ public:
 	SplitterButton &SetPositions(int pos1);
 	SplitterButton &SetPositions(int pos1, int pos2);
 	SplitterButton &SetPositions(int pos1, int pos2, int pos3);
+	const Vector<int> &GetPositions() const {return positions;}
+	
+	int GetPos()							{return splitter.GetPos();}
 	
 	SplitterButton &SetInitialPositionId(int id);
 	
@@ -26,6 +29,9 @@ public:
 		return *this;
 	}
 		
+	SplitterButton &SetButtonWidth(int width) {buttonWidth = width; return *this;}
+	void SetButton(int id);
+	
 private:
 	bool movingRight;		
 	int buttonWidth;
@@ -41,12 +47,11 @@ private:
 			WhenLayout(PosToClient(GetPos()));
 		}
 	};
-	
 	SplitterLay splitter;
+	
 	Button button1, button2;
 	
 	void OnLayout(int pos);
-	void OnButton(int id);
 	void SetArrows();
 };
 

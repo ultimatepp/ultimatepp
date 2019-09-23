@@ -11,8 +11,8 @@ SplitterButton::SplitterButton() {
 	Add(button2.LeftPosZ(80, 10).TopPosZ(30, 40));
 	
 	splitter.WhenLayout = THISBACK(OnLayout);
-	button1.WhenAction = THISBACK1(OnButton, 0);
-	button2.WhenAction = THISBACK1(OnButton, 1);
+	button1.WhenAction = THISBACK1(SetButton, 0);
+	button2.WhenAction = THISBACK1(SetButton, 1);
 	
 	movingRight = true;
 	buttonWidth = int(2.5*splitter.GetSplitWidth());
@@ -25,6 +25,8 @@ SplitterButton::SplitterButton() {
 SplitterButton& SplitterButton::Horz(Ctrl &left, Ctrl &right) {
 	splitter.Horz(left, right);	
 	
+	SetPositions(0, 5000, 10000);
+	SetInitialPositionId(1);
 	SetArrows();
 	
 	return *this;
@@ -33,6 +35,8 @@ SplitterButton& SplitterButton::Horz(Ctrl &left, Ctrl &right) {
 SplitterButton& SplitterButton::Vert(Ctrl& top, Ctrl& bottom) {
 	splitter.Vert(top, bottom);
 	
+	SetPositions(0, 5000, 10000);
+	SetInitialPositionId(1);
 	SetArrows();
 	
 	return *this;
@@ -117,9 +121,10 @@ void SplitterButton::OnLayout(int pos) {
 			button2.SetPos(PosLeft(posx, buttonWidth), PosTop(posy + widthy/2, widthy));
 		}
 	}
+	WhenAction();
 }
 
-void SplitterButton::OnButton(int id) {
+void SplitterButton::SetButton(int id) {
 	ASSERT(positions.GetCount() > 1);
 	
 	int pos = splitter.GetPos();
@@ -158,6 +163,7 @@ void SplitterButton::OnButton(int id) {
 	}
 	splitter.SetPos(positions[positionId]);
 	SetArrows();
+	WhenAction();
 }
 
 void SplitterButton::SetArrows() {
