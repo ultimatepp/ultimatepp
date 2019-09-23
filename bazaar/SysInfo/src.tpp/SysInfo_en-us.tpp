@@ -1,5 +1,4 @@
 topic "Function reference";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Function reference";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 SysInfo]]}}&]
 [s0; &]
@@ -390,15 +390,15 @@ indowId])&]
 [s0; &]
 [ {{10000@1 [s0; [* Mouse and keyboard handling]]}}&]
 [s3; &]
-[s5;:Mouse`_GetPos`(long`&`,long`&`):%- [@(0.0.255) bool]_[* Mouse`_GetPos]([@(0.0.255) lon
-g]_`&[*@3 x], [@(0.0.255) long]_`&[*@3 y])&]
+[s5;:Mouse`_GetPos`(int`&`,int`&`):%- [@(0.0.255) bool]_[* Mouse`_GetPos]([@(0.0.255) int]_
+`&[*@3 x], [@(0.0.255) int]_`&[*@3 y])&]
 [s2; Gets the mouse position [%-*@3 x, y].in screen pixels where upper 
 left corner is (0, 0).&]
 [s2; Returns true if the operation has been done successfully.&]
 [s3; &]
 [s4; &]
-[s5;:Mouse`_SetPos`(long`,long`,int64`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) l
-ong]_[*@3 x], [@(0.0.255) long]_[*@3 y], [@(0.0.255) int64]_[*@3 windowId])&]
+[s5;:Mouse`_SetPos`(int`,int`,int64`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) in
+t]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int64]_[*@3 windowId])&]
 [s2; Sets the mouse position to [%-*@3 x] [%-*@3 y] referenced to the 
 upper left vertex of window with window handle [%-*@3 windowId].&]
 [s2; Returns true if the operation has been done successfully.&]
@@ -585,8 +585,8 @@ mouse movement if [%-*@3 viewMouse].is true.&]
 [s0; &]
 [ {{10000@1 [s0; [* Miscellaneous functions]]}}&]
 [s4;%- &]
-[s5;:SetDesktopWallPaper`(const char`*`):%- [@(0.0.255) void]_[* SetDesktopWallPaper]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 path])&]
+[s5;:SetDesktopWallPaper`(char`*`):%- [@(0.0.255) void]_[* SetDesktopWallPaper]([@(0.0.255) c
+har]_`*[*@3 path])&]
 [s2; Sets [%-*@3 path].file as desktop wallpaper. Supports Gnome, Kde 
 v3 and Windows desktops.&]
 [s0;l288; &]

@@ -223,7 +223,7 @@ bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
 
 #ifdef PLATFORM_POSIX
 
-bool Mouse_GetPos(long &x, long &y) {
+bool Mouse_GetPos(int &x, int &y) {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {

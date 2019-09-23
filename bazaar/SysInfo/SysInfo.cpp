@@ -314,7 +314,7 @@ Array <NetAdapter> GetAdapterInfo() {
 	
 	for (PIP_ADAPTER_ADDRESSES pAdd = pAddresses; pAdd; pAdd = pAdd->Next) {
 		NetAdapter &adapter = ret.Add();
-		int len = min((DWORD)6, pAdd->PhysicalAddressLength);
+		int len = min(static_cast<DWORD>(6), pAdd->PhysicalAddressLength);
 		if (len > 0)
 			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
 		adapter.description = Trim(WideToString(pAdd->Description));
@@ -329,11 +329,11 @@ Array <NetAdapter> GetAdapterInfo() {
    		if (pGateway != NULL) {
    			for (int i = 0; pGateway != NULL; i++) {
    				if (pGateway->Address.lpSockaddr->sa_family == AF_INET) {
-           			sockaddr_in *sa_in = (sockaddr_in *)pGateway->Address.lpSockaddr;
-					adapter.gatewayip4 = inet_ntop4((const unsigned char *)&(sa_in->sin_addr));
+           			sockaddr_in *sa_in = reinterpret_cast<sockaddr_in *>(pGateway->Address.lpSockaddr);
+					adapter.gatewayip4 = inet_ntop4(reinterpret_cast<const unsigned char *>(&(sa_in->sin_addr)));
                	} else if (pGateway->Address.lpSockaddr->sa_family == AF_INET6) {
-					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pGateway->Address.lpSockaddr;
-					adapter.gatewayip6 = inet_ntop6((const unsigned char *)&(sa_in6->sin6_addr));
+					sockaddr_in6 *sa_in6 = reinterpret_cast<sockaddr_in6 *>(pGateway->Address.lpSockaddr);
+					adapter.gatewayip6 = inet_ntop6(reinterpret_cast<const unsigned char *>(&(sa_in6->sin6_addr)));
                	} 
    				pGateway = pGateway->Next;
    			}
@@ -342,11 +342,11 @@ Array <NetAdapter> GetAdapterInfo() {
     	if (pUnicast != NULL) {
           	for (int i = 0; pUnicast != NULL; i++) {
            		if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
-           			sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
-					adapter.ip4 = inet_ntop4((const unsigned char *)&(sa_in->sin_addr));
+           			sockaddr_in *sa_in = reinterpret_cast<sockaddr_in *>(pUnicast->Address.lpSockaddr);
+					adapter.ip4 = inet_ntop4(reinterpret_cast<const unsigned char *>(&(sa_in->sin_addr)));
                	} else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
-					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
-					adapter.ip6 = inet_ntop6((const unsigned char *)&(sa_in6->sin6_addr));
+					sockaddr_in6 *sa_in6 = reinterpret_cast<sockaddr_in6 *>(pUnicast->Address.lpSockaddr);
+					adapter.ip6 = inet_ntop6(reinterpret_cast<const unsigned char *>(&(sa_in6->sin6_addr)));
                	} 
             	pUnicast = pUnicast->Next;
          	}
@@ -1980,9 +1980,9 @@ void SetDesktopWallPaper(const char *path)
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
-void SetDesktopWallPaper(const char *path)
+void SetDesktopWallPaper(char *path)
 {
-    if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (LPVOID)path, SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
+    if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, static_cast<LPVOID>(path), SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
         throw Exc(String(t_("Impossible to change Desktop bitmap")) + ": " + AsString(GetLastError()));
 }
 #endif
@@ -2200,15 +2200,15 @@ int GetAvailableSocketPort(int from) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD size = sizeof(MIB_TCPTABLE);
 	Buffer<char> table(size);
-	MIB_TCPTABLE *pTable = (MIB_TCPTABLE*)~table;
+	MIB_TCPTABLE *pTable = reinterpret_cast<MIB_TCPTABLE*>(~table);
 	if (GetTcpTable(pTable, &size, TRUE) == ERROR_INSUFFICIENT_BUFFER) 
 		table.Alloc(size);
-	pTable = (MIB_TCPTABLE*)~table;	
+	pTable = reinterpret_cast<MIB_TCPTABLE*>(~table);	
     if (GetTcpTable(pTable, &size, TRUE) != NO_ERROR) {
     	return Null;
     }
-  	for (int i = 0; i < (int)pTable->dwNumEntries; i++) 
-  		ports.FindAdd(ntohs((u_short)pTable->table[i].dwLocalPort));
+  	for (int i = 0; i < static_cast<int>(pTable->dwNumEntries); i++) 
+  		ports.FindAdd(ntohs(static_cast<u_short>(pTable->table[i].dwLocalPort)));
 #else
 	GetPorts(ports, "tcp");
 	GetPorts(ports, "raw");
@@ -2243,7 +2243,7 @@ bool IsPortFree(int port) {
     service.sin_port = htons(port);
     
     bool ret = true;
-    if(bind(socket_desc,(struct sockaddr *)&service , sizeof(service)) < 0) 
+    if(bind(socket_desc, reinterpret_cast<struct sockaddr *>(&service), sizeof(service)) < 0) 
         ret = false;
 #ifdef PLATFORM_WIN32
  	closesocket(socket_desc);

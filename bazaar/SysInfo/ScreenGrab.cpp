@@ -32,7 +32,7 @@ bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #if defined(__MINGW32__) 
-	#define labs(x)	labs((Upp::int64)(x))
+	#define labs(x)	labs(static_cast<Upp::int64>(x))
 #elif defined(_MSC_VER)
 	#define labs(x)	abs(x)
 #endif
@@ -87,7 +87,7 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 		ReleaseDC(0, hDC);
 		return Null;
 	}
-	if ((oldBM = (HBITMAP)SelectObject(memDC, hb)) == NULL) {
+	if ((oldBM = static_cast<HBITMAP>(SelectObject(memDC, hb))) == NULL) {
 		DeleteObject(hb);
 		DeleteDC(memDC);
 		ReleaseDC(0, hDC);
@@ -117,7 +117,7 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 	bmi.bmiHeader.biBitCount = 32;
 
 	ImageBuffer b(width, height);
-	if (GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmi.bmiHeader, DIB_RGB_COLORS))
+	if (GetDIBits(hDC, hb, 0, height, ~b, &bmi, DIB_RGB_COLORS))
 		img = b;
 	
 	SelectObject(hDC, oldBM);
@@ -221,7 +221,7 @@ bool ScreenGrab::AVIOpen(bool create)
       	tAVIHdr.fccType = streamtypeVIDEO;
         tAVIHdr.fccHandler = 0;
        	tAVIHdr.dwScale = 100;		
-       	tAVIHdr.dwRate = (DWORD)(tAVIHdr.dwScale*frameRate);	
+       	tAVIHdr.dwRate = static_cast<DWORD>(tAVIHdr.dwScale*frameRate);	
        	//tAVIHdr.dwQuality = -1;
        	tAVIHdr.dwSuggestedBufferSize = tBmpInfo.bmiHeader.biSizeImage;
         SetRect(&(tAVIHdr.rcFrame), 0, 0, tBmpInfo.bmiHeader.biWidth, tBmpInfo.bmiHeader.biHeight);

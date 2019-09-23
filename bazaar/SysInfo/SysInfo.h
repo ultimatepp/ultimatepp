@@ -170,7 +170,7 @@ bool Record_Window(String fileName, int duration, int64 handle, double secsFrame
 
 #endif
 
-void SetDesktopWallPaper(const char *path);
+void SetDesktopWallPaper(char *path);
 
 struct SystemSignature : DeepCopyOption<SystemSignature> {
 	String manufacturer, productName, version, mbSerial;

@@ -277,7 +277,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
    	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
    	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-   	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+   	pGNSI = reinterpret_cast<PGNSI>(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"));
 	if(NULL != pGNSI)
    		pGNSI(&si);
    	else 
@@ -294,10 +294,10 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 
    	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
-   	if(!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *)&osvi)))
+   	if(!(bOsVersionInfoEx = GetVersionEx(reinterpret_cast<OSVERSIONINFO *>(&osvi))))
       	return false;
       		
-	kerVersion = Format("%d.%d", (int)osvi.dwMajorVersion, (int)osvi.dwMinorVersion);
+	kerVersion = Format("%d.%d", static_cast<int>(osvi.dwMajorVersion), static_cast<int>(osvi.dwMinorVersion));
 	kernel = "Windows";
 
    	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4) {
@@ -328,7 +328,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
          		else
          			kernel.Cat(" Server 2008");
 			}
-         	pGPI = (PGPI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
+         	pGPI = reinterpret_cast<PGPI>(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo"));
          	DWORD dwType;
          	if (pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType)) {
 	         	switch(dwType) {
@@ -478,7 +478,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
       	if(osvi.wServicePackMajor > 0)
 			kerVersion.Cat(Format(" %s", osvi.szCSDVersion));
 
-      	kerVersion.Cat(Format(" (Build %d)", (int)osvi.dwBuildNumber));
+      	kerVersion.Cat(Format(" (Build %d)", static_cast<int>(osvi.dwBuildNumber)));
  	} else if (osvi.dwPlatformId == 1) {
  		switch(osvi.dwMinorVersion) {
  		case 0:

@@ -1,6 +1,6 @@
 topic "OS and Desktop implementation";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R6 SysInfo. OS and Desktop implementation]&]
 [s0;2 &]
