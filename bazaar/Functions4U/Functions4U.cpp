@@ -382,7 +382,8 @@ bool SetReadOnly(const char *path, bool usr, bool , bool ) {
 	if(0 != stat(ToSystemCharset(path), &buffer))
 		return false;
 	
-	mode_t newmode = (usr & S_IRUSR) | (grp & S_IRGRP) | (oth & S_IROTH);
+	mode_t m = buffer.st_mode;
+	mode_t newmode = (m & S_IRUSR) | (m & S_IRGRP) | (m & S_IROTH);
 	
 	if (newmode != buffer.st_mode)
 		return 0 == chmod(ToSystemCharset(path), newmode);
