@@ -68,10 +68,7 @@ bool Ssh::Do(Gate<>& fn)
 	Check();
 	if(!ssh->init)
 		ssh->init = Init();
-	if(ssh->init && fn())
-		return false;
-	Wait();
-	return true;
+	return !ssh->init || !fn();
 }
 
 bool Ssh::Run(Gate<>&& fn)
@@ -81,7 +78,7 @@ bool Ssh::Run(Gate<>&& fn)
 		ssh->start_time = msecs();
 
 		while(Do(fn))
-			;
+			Wait();
 
 		ssh->status = IDLE;
 	}
