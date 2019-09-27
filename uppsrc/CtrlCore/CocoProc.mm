@@ -169,7 +169,17 @@ struct MMImp {
 		Flags(e);
 		if(!ctrl->IsEnabled())
 			return false;
-		Upp::dword k = (e.keyCode == kVK_ANSI_KeypadEnter ? K_ENTER : e.keyCode)|K_DELTA|up;
+		Upp::dword k = e.keyCode;
+		WString x = ToWString((CFStringRef)(e.charactersIgnoringModifiers));
+		if(x.GetCount() == 1)
+		#define KEY(x) case #x[0]: k = kVK_ANSI_##x; break;
+			switch(ToUpper(x[0])) {
+				KEY(A); KEY(B); KEY(C); KEY(D); KEY(E); KEY(F); KEY(G); KEY(H); KEY(I); KEY(J);
+				KEY(K); KEY(L); KEY(M); KEY(N); KEY(O); KEY(P); KEY(Q); KEY(R); KEY(S); KEY(T);
+				KEY(U); KEY(V); KEY(W); KEY(X); KEY(Y); KEY(Z);
+			}
+		#undef KEY
+		k = (k == kVK_ANSI_KeypadEnter ? K_ENTER : k)|K_DELTA|up;
 		if(GetCtrl())
 			k |= K_CTRL;
 		if(GetShift())
