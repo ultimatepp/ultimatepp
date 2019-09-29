@@ -57,6 +57,7 @@ bool DirectoryMove(const char *dir, const char *newPlace);
 bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
+bool DeleteFolderDeepWildcardsX(const char *path, const char *name, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteFolderDeepX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
 bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -986,6 +987,6 @@ int LevenshteinDistance(const char *s, const char *t);
 int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength = 256);
 int SentenceSimilitude(const char *s, const char *t);
 
-#define x_(y)	String(y)
+#define S(y)	String(y)
 
 #endif

@@ -358,7 +358,7 @@ bool SetReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly, readOnly, readOnly);
 }
 
-bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
+bool SetReadOnly(const char *path, bool usr, bool, bool) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
@@ -1605,6 +1605,12 @@ bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags)
 {
 	return DeleteDeepWildcardsX(path, false, flags);
 }
+
+bool DeleteFolderDeepWildcardsX(const char *path, const char *name, EXT_FILE_FLAGS flags) 	
+{
+	return DeleteDeepWildcardsX(path, name, false, flags);
+}
+
 
 bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
 {
