@@ -292,7 +292,11 @@ EvalExpr::EvalExpr() {
 }
 
 doubleUnit EvalExpr::Term(CParser& p) {
-	if(p.IsId()) {
+	if (p.Char('-')) {
+		doubleUnit x = Exp(p);
+		x.Neg();
+		return x;		
+	} else if (p.IsId()) {
 		String strId = p.ReadId();
 		if(doubleUnit (*function)(doubleUnit) = functions.Get(strId, 0)) {
 			p.PassChar('(');
@@ -318,7 +322,7 @@ doubleUnit EvalExpr::Term(CParser& p) {
 			}
 		}
 		return ret;
-	} else if(p.Char('(')) {
+	} else if (p.Char('(')) {
 		doubleUnit x = Exp(p);
 		p.PassChar(')');
 		return x;

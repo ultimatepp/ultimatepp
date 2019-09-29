@@ -485,6 +485,9 @@ public:
 		unit.Div(d.unit);
 		val /= d.val;
 	}
+	void Neg() {
+		val = -val;
+	}
 	void Exp(const doubleUnit &d) {
 		if (!(IsNull(d.unit) || d.unit.IsAdim()))
 			throw Exc(t_("Exponent cannot have units"));

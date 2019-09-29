@@ -697,6 +697,43 @@ bool DataSource::SameX(DataSource &data) {
 	return true;
 }
 
+Vector<double> DataSource::SortData(Getdatafun getdata) {
+	Vector<double> ret;
+	int count = 0;
+	for (int64 i = 0; i < GetCount(); ++i) {
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d)) {
+			ret << d;
+			count++;
+		}
+	}
+	if (count == 0) 
+		return ret;
+	
+	Sort(ret);
+	
+	return ret;	
+}
+
+Vector<double> DataSource::Percentile(Getdatafun getdata, double rate) {
+	Vector<double> data = SortData(getdata);
+	int num = static_cast<int>(data.GetCount()*rate);
+	Vector<double> ret;
+	for (int i = 0; i < num; ++i) {
+		double val = data[i];
+		ret << data[i];	
+	}
+	return ret;
+}
+
+double DataSource::PercentileAvg(Getdatafun getdata, double rate) {
+	Vector<double> data = Percentile(getdata, rate);	
+	double ret = 0;
+	for (int i = 0; i < data.GetCount(); ++i)
+		ret += data[i];
+	return ret/data.GetCount();
+}
+
 void ExplicitData::Init(Function<double (double x, double y)> _funz, double _minX, double _maxX, double _minY, double _maxY) {
 	ASSERT(maxX >= minX && maxY >= minY);
 	this->funz = _funz;

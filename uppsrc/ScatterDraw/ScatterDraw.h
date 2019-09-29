@@ -60,6 +60,7 @@ class ScatterDraw {
 public:
 	typedef ScatterDraw CLASSNAME;
 	ScatterDraw();
+	virtual ~ScatterDraw() {}
 	
 	enum Formats {
 		EXP,
