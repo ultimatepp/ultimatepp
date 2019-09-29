@@ -1752,7 +1752,7 @@ bool Shutdown(String action) {
 #endif
 
 
-void GetCompilerInfoAux(String &name, int &version, Upp::Time &time, String &mode, int &bits, const char *sdate, const char *stime) {	
+void GetCompilerInfoAux(String &name, int &version, Upp::Time &time, String &mode, int &bits, const char *, const char *) {	
 	time = FileGetTime(GetExeFilePath());		
 	
 	name = "";
@@ -1847,7 +1847,7 @@ int Window_GetStatus(int64 windowId)
 
 bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom)
 {
-	RECT rcNormalPosition = {0};
+	RECT rcNormalPosition = {0, 0, 0, 0};
     POINT ptMinPosition, ptMaxPosition;
     long showcmd;	
     

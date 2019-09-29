@@ -85,7 +85,7 @@ KeyCodes keyCodes[60] = {
 	"RMENU",	VK_RMENU, 		"NUMPAD6",	VK_NUMPAD6,
 	/*"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down
 	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace	*/
-	""
+	"", 0
 };
 
 void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false) {    
@@ -101,10 +101,10 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
         nExtended = 0;
     
     if (!release)
-        keybd_event((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
+        keybd_event(static_cast<BYTE>(keyVK), static_cast<BYTE>(nScan), nExtended, 0);
     
     if (!hold)
-        keybd_event((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
+        keybd_event(static_cast<BYTE>(keyVK), static_cast<BYTE>(nScan), KEYEVENTF_KEYUP | nExtended, 0);
 }
 
 
@@ -126,9 +126,9 @@ void PressKey(wchar key, bool hold = false, bool release = false) {
     	SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
     	UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
 		if (!release) 
-        	keybd_event((BYTE)nVK, (BYTE)nScan, 0, 0);
+        	keybd_event(static_cast<BYTE>(nVK), static_cast<BYTE>(nScan), 0, 0);
     	if (!hold) 
-        	keybd_event((BYTE)nVK, (BYTE)nScan, KEYEVENTF_KEYUP, 0);
+        	keybd_event(static_cast<BYTE>(nVK), static_cast<BYTE>(nScan), KEYEVENTF_KEYUP, 0);
 	} else {
 		String numStr = FormatIntDec(key, 5, '0');
 		PressKeyVK(VK_LMENU, true);

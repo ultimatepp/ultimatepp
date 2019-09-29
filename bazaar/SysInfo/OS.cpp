@@ -2,7 +2,6 @@
 
 using namespace Upp;
 
-
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #ifndef PRODUCT_UNLICENSED
@@ -261,23 +260,20 @@ using namespace Upp;
 	#define VER_SUITE_WH_SERVER		0x00008000
 #endif
 
-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
-
+//typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+//typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 
 bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, 
 			   String &distVersion, String &desktop, String &deskVersion)
 {
    	OSVERSIONINFOEX osvi;
    	SYSTEM_INFO si;
-   	PGNSI pGNSI;
-   	PGPI pGPI;
    	BOOL bOsVersionInfoEx;
 
    	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
    	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-   	pGNSI = reinterpret_cast<PGNSI>(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"));
+   	PGNSI pGNSI = Get_GetNativeSystemInfo();
 	if(NULL != pGNSI)
    		pGNSI(&si);
    	else 
@@ -328,7 +324,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
          		else
          			kernel.Cat(" Server 2008");
 			}
-         	pGPI = reinterpret_cast<PGPI>(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo"));
+         	PGPI pGPI = Get_GetProductInfo();
          	DWORD dwType;
          	if (pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType)) {
 	         	switch(dwType) {

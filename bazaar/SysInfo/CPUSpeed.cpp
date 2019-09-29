@@ -3,35 +3,34 @@
 using namespace Upp;
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-uint64 start, end;
-unsigned long nCtr, nFreq, nCtrStop;
 
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) && !defined (__MINGW64__)
 uint64 __rdtsc() {
-	#if defined(__MINGW64__)	// It does not work for now
+/*	#if defined(__MINGW64__)	// Now it is unnecessary
       	unsigned int lo, hi;
       	__asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
       	return uint64(lo) | (uint64(hi) << 32); 
-	#else
+	#else*/
       	unsigned int lo, hi;
       	__asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
       	return uint64(lo) | (uint64(hi) << 32); 
-	#endif
+//	#endif
 }
 #endif
 
 int GetCpuSpeed()
 {
-    if(!QueryPerformanceFrequency((LARGE_INTEGER *) &nFreq)) 
+	LARGE_INTEGER nFreq, nCtrStop, nCtr;
+    if(!QueryPerformanceFrequency(&nFreq)) 
     	return 0;
-    QueryPerformanceCounter((LARGE_INTEGER *) &nCtrStop);
-    nCtrStop += nFreq;								
+    QueryPerformanceCounter(&nCtrStop);
+    nCtrStop.QuadPart += nFreq.QuadPart;								
     
-    start = __rdtsc();
+    unsigned __int64 start = __rdtsc();
     do 
-         QueryPerformanceCounter((LARGE_INTEGER *) &nCtr);
-    while (nCtr < nCtrStop);
-    end = __rdtsc();
+        QueryPerformanceCounter(&nCtr);
+    while (nCtr.QuadPart < nCtrStop.QuadPart);
+    unsigned __int64 end = __rdtsc();
 	return int((end - start)/1000000);
 }
 
