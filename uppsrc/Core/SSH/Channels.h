@@ -16,8 +16,8 @@ public:
     bool                RequestExec(const String& cmdline)                                  { return Request("exec", cmdline); }
     bool                RequestShell()                                                      { return Request("shell", Null); }
     bool                RequestSubsystem(const String& subsystem)                           { return Request("subsystem", subsystem); }
-    bool                RequestTerminal(const String& term, int width, int height);
-    bool                RequestTerminal(const String& term, Size sz)                        { return RequestTerminal(term, sz.cx, sz.cy); }
+    bool                RequestTerminal(const String& term, int width, int height, const String& tmodes);
+    bool                RequestTerminal(const String& term, Size sz, const String& tmodes)   { return RequestTerminal(term, sz.cx, sz.cy, tmodes); }
     bool                SetEnv(const String& variable, const String& value);
 
     int                 Get(void *ptr, int size, int sid = 0);
@@ -122,10 +122,10 @@ private:
 
 class SshShell : public SshChannel {
 public:
-    bool        Run(const String& terminal, Size pagesize)                                              { return Run(GENERIC, terminal, pagesize); }
-    bool        Run(const String& terminal, int width, int height)                                      { return Run(GENERIC, terminal, {width, height}); }
-
-    bool        Console(const String& terminal)                                                         { return Run(CONSOLE, terminal, GetConsolePageSize()); }
+    bool        Run(const String& terminal, Size pagesize, const String& tmodes = Null)                 { return Run(GENERIC, terminal, pagesize, tmodes);  }
+    bool        Run(const String& terminal, int width, int height, const String& tmodes = Null)         { return Run(GENERIC, terminal, {width, height}, tmodes); }
+    
+    bool        Console(const String& terminal, const String& tmodes = Null)                            { return Run(CONSOLE, terminal, GetConsolePageSize(), tmodes); }
 
     SshShell&   ForwardX11(const String& host = Null, int display = 0, int screen = 0, int bufsize = 1024 * 1024);
     bool        AcceptX11(SshX11Handle xhandle);
@@ -149,7 +149,7 @@ public:
 
 protected:
     void    ReadWrite(String& in, const void* out, int out_len) override;
-    virtual bool Run(int mode_, const String& terminal, Size pagesize);
+    virtual bool Run(int mode_, const String& terminal, Size pagesize, const String& tmodes);
 
     void    Resize();
     bool    ConsoleInit();

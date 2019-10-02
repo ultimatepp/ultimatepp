@@ -189,27 +189,38 @@ into blocking mode if it is not planned to run as a timed session.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:Upp`:`:SshShell`:`:Run`(const Upp`:`:String`&`,Upp`:`:Size`):%- [@(0.0.255) bool]_
-[* Run]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal], 
-[_^Upp`:`:Size^ Size]_[*@3 pagesize])&]
-[s5;:Upp`:`:SshShell`:`:Run`(const Upp`:`:String`&`,int`,int`):%- [@(0.0.255) bool]_[* Ru
-n]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal], 
-[@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height])&]
-[s2; Runs a generic remote command line interface. Returns true on 
-successful exit. [%-*@3 terminal] should be set to preferred terminal 
-emulation (ansi, vt100, xterm, etc.). The dimensions of the terminal 
-view (as character cells) can be set using the [%-*@3 width ]and 
-[%-*@3 height], or [%-*@3 pagesize] parameters.&]
+[s5;:Upp`:`:SshShell`:`:Run`(const Upp`:`:String`&`,Upp`:`:Size`,const Upp`:`:String`&`):%- [@(0.0.255) b
+ool]_[* Run]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal], 
+[_^Upp`:`:Size^ Size]_[*@3 pagesize], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 tmodes]_`=_Null)&]
+[s5;:Upp`:`:SshShell`:`:Run`(const Upp`:`:String`&`,int`,int`,const Upp`:`:String`&`):%- [@(0.0.255) b
+ool]_[* Run]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal], 
+[@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height], [@(0.0.255) const]_[_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 tmodes]_`=_Null)&]
+[s0;l288; Runs a generic remote command line interface. Returns true 
+on successful exit. [%-*@3 terminal] should be set to preferred 
+terminal emulation (ansi, vt100, xterm, etc.). The dimensions 
+of the terminal view (as character cells) can be set using the 
+[%-*@3 width ]and [%-*@3 height], or [%-*@3 pagesize] parameters. Terminal 
+modes can be specified using the [%-*@3 tmodes] string. This string 
+consists of opcode`-argument pairs wherein the opcode is a byte 
+value.representing the byte encoded stream of terminal modes. 
+(See [^https`:`/`/tools`.ietf`.org`/html`/rfc4254^ RFC`-4254] for 
+details.).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:SshShell`:`:Console`(const Upp`:`:String`&`):%- [@(0.0.255) bool]_[* Console](
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal])&]
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 terminal], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 tmodes]_`=_Null)&]
 [s6;%- Requires console`-based applications.&]
 [s2; Runs a console`-based remote command line interface. Returns 
 true on successful exit. [%-*@3 terminal] should be set to preferred 
-terminal emulation (ansi, vt100, xterm, etc.). Note that in console 
-mode SShShell automatically takes care of the local console page 
-resizing.&]
+terminal emulation (ansi, vt100, xterm, etc.). Terminal modes 
+can be specified using the [%-*@3 tmodes] string. This string consists 
+of opcode`-argument pairs wherein the opcode is a byte value.representing 
+the byte encoded stream of terminal modes. (See [^https`:`/`/tools`.ietf`.org`/html`/rfc4254^ R
+FC`-4254] for details.). Note that in console mode SshShell automatically 
+takes care of the local console page resizing. &]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:SshShell`:`:ForwardX11`(const Upp`:`:String`&`,int`,int`,int`):%- [_^Upp`:`:SshShell^ S

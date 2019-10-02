@@ -5,12 +5,12 @@ namespace Upp {
 #define LLOG(x)       do { if(SSH::sTrace) RLOG(SSH::GetName(ssh->otype, ssh->oid) << x); } while(false)
 #define LDUMPHEX(x)	  do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
 
-bool SshShell::Run(int mode_, const String& terminal, Size pagesize)
+bool SshShell::Run(int mode_, const String& terminal, Size pagesize, const String& tmodes)
 {
 	mode  = mode_;
 	psize = pagesize;
 	
-	if(RequestTerminal(terminal, psize) && X11Init() && RequestShell() && ConsoleInit())
+	if(RequestTerminal(terminal, psize, tmodes) && X11Init() && RequestShell() && ConsoleInit())
 		ProcessEvents(queue);
 	return Shut(IsError() ? GetErrorDesc() : Null);
 }
