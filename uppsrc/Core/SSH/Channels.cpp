@@ -83,15 +83,15 @@ bool SshChannel::Request(const String& request, const String& params)
 	});
 }
 
-bool SshChannel::RequestTerminal(const String& term, int width, int height)
+bool SshChannel::RequestTerminal(const String& term, int width, int height, const String& modes)
 {
 	return Run([=]() mutable {
 		int rc = libssh2_channel_request_pty_ex(
 			*channel,
 			~term,
 			term.GetLength(),
-			nullptr,
-			0,
+			~modes,
+			modes.GetLength(),
 			width,
 			height,
 			LIBSSH2_TERM_WIDTH_PX,
