@@ -589,7 +589,19 @@ private:
 							} else 												\
 								return v
 
-
+template <class T>
+struct TempAssign {
+	TempAssign(T &_val, T set) {
+		old = _val;
+		_val = set;
+		val = &_val;
+	}
+	~TempAssign() {
+		*val = old;
+	}
+	
+	T *val, old;
+};
 
 template <class T>
 class ThreadSafe {
