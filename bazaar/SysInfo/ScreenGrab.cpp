@@ -589,6 +589,7 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 			(row + x)->r = red;
 			(row + x)->g = green;
 			(row + x)->b = blue;
+			(row + x)->a = 0xff;
 		}
 	}
 	XCloseDisplay(dpy);
