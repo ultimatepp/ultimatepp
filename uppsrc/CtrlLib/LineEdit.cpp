@@ -1098,12 +1098,16 @@ LineEdit::EditPos LineEdit::GetEditPos() const {
 }
 
 void LineEdit::SetEditPos(const LineEdit::EditPos& pos) {
-	sb.SetY(minmax(pos.sby, 0, GetLineCount() - 1));
+	SetEditPosSbOnly(pos);
 	SetCursor(pos.cursor);
 }
 
 void LineEdit::SetEditPosSb(const LineEdit::EditPos& pos) {
 	SetCursor(pos.cursor);
+	SetEditPosSbOnly(pos);
+}
+
+void LineEdit::SetEditPosSbOnly(const LineEdit::EditPos& pos) {
 	sb.SetY(minmax(pos.sby, 0, GetLineCount() - 1));
 }
 

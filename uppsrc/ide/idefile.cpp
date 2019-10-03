@@ -580,6 +580,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
+		editor.SetEditPosSbOnly(fd.editpos);
 		if(!editor.IsView()) {
 			editor.SetPickUndoData(pick(fd.undodata));
 			editor.SetLineInfo(fd.lineinfo);
