@@ -432,6 +432,7 @@ public:
 	EditPos GetEditPos() const;
 	void    SetEditPos(const EditPos& pos);
 	void    SetEditPosSb(const LineEdit::EditPos& pos);
+	void SetEditPosSbOnly(const LineEdit::EditPos& pos);
 
 	void    ScrollIntoCursor();
 
