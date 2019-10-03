@@ -237,7 +237,7 @@ void MenuBar::SetupRestoreFocus()
 
 void MenuBar::PostDeactivate()
 {
-	LLOG("PostDeactivate");
+	LLOG("MenuBar::PostDeactivate");
 	MenuBar *q = GetLastSubmenu();
 	MenuBar *u = q;
 	while(q && q->IsPopUp()) {
@@ -250,16 +250,18 @@ void MenuBar::PostDeactivate()
 			u = u->parentmenu;
 		Ctrl *w = GetActiveCtrl();
 		while(w) {
-			if(w == u) return;
+			if(w == u)
+				return;
 			w = w->GetOwner();
 		}
 	}
 	CloseMenu();
+	Refresh();
 }
 
 void MenuBar::Deactivate()
 {
-	LLOG("Deactivate");
+	LLOG("MenuBar::Deactivate");
 	if(IsOpen())
 		SetTimeCallback(0, THISBACK(PostDeactivate), TIMEID_STOP);
 }
@@ -530,6 +532,7 @@ DWORD WINAPI PlaySoundThread(LPVOID)
 
 void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 {
+	LLOG("Menubar::Popup");
 	bool szcx = true;
 	bool szcy = true;
 	bool szx = false;

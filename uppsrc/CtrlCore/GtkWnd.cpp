@@ -352,10 +352,12 @@ bool Ctrl::HasWndFocus() const
 void Ctrl::FocusSync()
 {
 	GuiLock __;
-	if(focusCtrlWnd && focusCtrlWnd->IsOpen() && gtk_window_is_active(focusCtrlWnd->gtk()))
-		return;
-	Ptr<Ctrl> focus = NULL;
 	static Ptr<Ctrl> ctrl;
+	if(focusCtrlWnd && focusCtrlWnd->IsOpen() && gtk_window_is_active(focusCtrlWnd->gtk())) {
+		ctrl = focusCtrlWnd;
+		return;
+	}
+	Ptr<Ctrl> focus = NULL;
 	for(int i = 0; i < wins.GetCount(); i++)
 		if(gtk_window_is_active((GtkWindow *)wins[i].gtk)) {
 			focus = wins[i].ctrl;

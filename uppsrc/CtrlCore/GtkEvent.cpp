@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
+#define LLOG(x)  //  DLOG(rmsecs() << ' ' << x)
 //_DBG_ #define LOG_EVENTS
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
@@ -28,7 +28,7 @@ Point GetMousePos() { return Ctrl::CurrentMousePos; }
 Tuple2<int, const char *> xEvent[] = {
 	{ GDK_NOTHING, "GDK_NOTHING" },
 	{ GDK_DELETE, "GDK_DELETE" },
-	{ GDK_DESTROY, "GDK_DESTROY" },
+	{ GDK_DESTROY, "GDK_DESTROY" },id
 	{ GDK_EXPOSE, "GDK_EXPOSE" },
 	{ GDK_MOTION_NOTIFY, "GDK_MOTION_NOTIFY" },
 	{ GDK_BUTTON_PRESS, "GDK_BUTTON_PRESS" },
@@ -123,12 +123,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_DELETE:
 		break;
 	case GDK_FOCUS_CHANGE:
+		LLOG("Focus Change " << GetSysTime());
 		if(p) {
 			if(((GdkEventFocus *)event)->in)
 				gtk_im_context_focus_in(p->top->im_context);
 			else
 				gtk_im_context_focus_out(p->top->im_context);
-			AddEvent(user_data, EVENT_NONE, value, event);
+			AddEvent(user_data, EVENT_FOCUS_CHANGE, value, event);
 		}
 		return false;
 	case GDK_LEAVE_NOTIFY:
@@ -492,6 +493,10 @@ void Ctrl::Proc()
 			DispatchKey(h[i], 1);
 		break;
 	}
+	case EVENT_FOCUS_CHANGE:
+		LLOG("FOCUS_CHANGE setting NULL");
+		activeCtrl = NULL;
+		break;
 	case GDK_DELETE: {
 		TopWindow *w = dynamic_cast<TopWindow *>(this);
 		if(w) {
