@@ -886,8 +886,8 @@ String Ide::GetIncludePath()
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include, ";", SourcePath(wspc[i], pkg.include[j].text));
-			for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
-				pkg_config.FindAdd(h);
+		for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
+			pkg_config.FindAdd(h);
 	}
 	
 	for(String s : pkg_config)

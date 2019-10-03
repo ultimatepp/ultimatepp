@@ -30,6 +30,7 @@ _DBG_
 	enum {
 		EVENT_NONE = -15321,
 		EVENT_TEXT,
+		EVENT_FOCUS_CHANGE,
 	};
 	
 	struct GEvent0 {
@@ -74,7 +75,7 @@ _DBG_
 	static Ptr<Ctrl>           grabwindow;
 	static Ptr<Ctrl>           grabpopup;
 	static Ptr<Ctrl>           sel_ctrl;
-	static Ptr<Ctrl>           activeCtrl;
+	static Ptr<Ctrl>           activeCtrl; // this is used to hold focus when popup is destroyed
 
 	static int FindId(int id);
 	static int FindCtrl(Ctrl *ctrl);
