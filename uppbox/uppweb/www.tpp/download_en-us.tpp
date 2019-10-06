@@ -6,6 +6,9 @@ topic "Ultimate++ download";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2;= U`+`+ download&]
+[s3; Instant download&]
+[s4; [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/latest`/download^ https://sour
+ceforge.net/projects/upp/files/latest/download]&]
 [s3; Quick overview&]
 [s1;#b0; &]
 [ {{2222:1111:3333:3334<50;>50;f0;g0;h1;l8/25r8/25t8/15b8/15@(229)R(128) [s0; [*+92 Operating system]]
