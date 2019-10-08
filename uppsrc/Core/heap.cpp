@@ -144,10 +144,7 @@ void Heap::Shutdown()
 		if(empty[i]) {
 			ASSERT(empty[i]->freelist);
 			ASSERT(empty[i]->active == 0);
-			empty[i]->heap = &aux;
-			empty[i]->next = aux.empty[i];
-			aux.empty[i] = empty[i];
-			free_4KB++;
+			Free4KB(i, empty[i]);
 			LLOG("Orphan empty " << (void *)empty[i]);
 		}
 	}

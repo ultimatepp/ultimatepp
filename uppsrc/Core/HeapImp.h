@@ -283,7 +283,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	int   HugeFree(void *ptr);
 	bool  HugeTryRealloc(void *ptr, size_t count);
 
-	static int Ksz(int k) {
+	static int Ksz(int k) { // small block size classes
 		static int sz[] = {
 		//  0   1   2   3    4    5    6    7    8    9    10   11
 			32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384,
@@ -384,7 +384,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	static Heap   aux;    // Single global auxiliary heap to store orphans and global list of free pages
 
 	static size_t huge_4KB_count; // total number of 4KB pages in small/large/huge blocks
-	static int    free_4KB; // empty 4KB pages
+	static int    free_4KB; // number of empty 4KB pages (linked in aux.empty)
 	static size_t big_size; // blocks >~64KB
 	static size_t big_count;
 	static size_t sys_size;  // blocks allocated directly from system (included in big too)
@@ -424,6 +424,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	void *Allok(int k);
 	void  Free(void *ptr, Page *page, int k);
 	void  Free(void *ptr, int k);
+	void  Free4KB(int k, Page *page);
 
 	static bool FreeSmallEmpty(int size4KB, int count = INT_MAX);
 

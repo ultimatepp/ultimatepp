@@ -184,25 +184,32 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 		page->Unlink();
 		if(this == &aux) {
 			LLOG("...is aux " << asString(free_4KB));
-			page->next = empty[k];
-			empty[k] = page;
-			free_4KB++;
+			Mutex::Lock __(mutex);
+			Free4KB(k, page);
 		}
 		else {
 			if(empty[k]) { // Keep one hot empty page per klass in thread, put rest to 'aux' global storage
-				LLOG("Global free " << k << " " << (void *)empty[k]);
 				Mutex::Lock __(mutex);
-				if(free_4KB < max_free_spages) { // only keep max_free_spages, release if more
-					empty[k]->heap = &aux;
-					empty[k]->next = aux.empty[k];
-					aux.empty[k] = empty[k];
-					free_4KB++;
-				}
-				else
-					aux.HugeFree(empty[k]);
+				Free4KB(k, empty[k]); // Free current hot page to reserve/huge
 			}
-			empty[k] = page;
+			empty[k] = page; // this empty page is now hot
 		}
+	}
+}
+
+void Heap::Free4KB(int k, Page *page)
+{ // put empty 4KB to aux reserve or back to huge blocks if the reserve is full
+	LLOG("Global Free4KB " << k << " " << (void *)empty);
+	if(free_4KB < max_free_spages) { // only keep max_free_spages, release if more
+		page->heap = &aux;
+		page->next = aux.empty[k];
+		aux.empty[k] = page;
+		free_4KB++;
+		LLOG("Reserve 4KB " << asString(free_4KB));
+	}
+	else {
+		aux.HugeFree(page);
+		LLOG("HugeFree 4KB " << asString(free_4KB));
 	}
 }
 
