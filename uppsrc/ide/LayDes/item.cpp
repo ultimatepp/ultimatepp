@@ -204,7 +204,7 @@ String LayoutItem::SaveProperties(int y) const
 	return out;
 }
 
-String LayoutItem::Save(int i, int y) const
+String LayoutItem::Save(int i, int y, const String& eol) const
 {
 	String out;
 	if(type.IsEmpty())
@@ -212,7 +212,7 @@ String LayoutItem::Save(int i, int y) const
 	else
 		out << "\tITEM(" << type << ", ";
 	String var = variable.IsEmpty() ? Format("dv___%d", i) : variable;
-	out << var << ", " << SaveProperties(y) << ")\r\n";
+	out << var << ", " << SaveProperties(y) << ")" << eol;
 	return out;
 }
 

@@ -546,4 +546,6 @@ public:
 void RegisterPCHFile(const String& pch_file);
 void DeletePCHFiles();
 
+String GetLineEndings(const String& data, const String& default_eol = "\r\n");
+
 #endif

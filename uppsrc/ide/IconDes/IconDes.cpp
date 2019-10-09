@@ -10,7 +10,9 @@ bool IdeIconDes::Load(const char *_filename)
 	filetime = FileGetTime(filename);
 	Array<ImlImage> iml;
 	int f;
-	if(!LoadIml(LoadFile(filename), iml, f))
+	String s = LoadFile(filename);
+	EOL = GetLineEndings(s);
+	if(!LoadIml(s, iml, f))
 		return false;
 	format = f;
 	for(const ImlImage& m : iml)
@@ -53,7 +55,7 @@ void IdeIconDes::Save()
 			                png.SaveString(c.image));
 		}
 	}
-	String d = SaveIml(m, format);
+	String d = SaveIml(m, format, EOL);
 	if(!SaveChangedFileFinish(filename, d))
 		return;
 	filetime = FileGetTime(filename);

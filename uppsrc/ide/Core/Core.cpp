@@ -640,3 +640,15 @@ void DeletePCHFiles()
 	for(int i = 0; i < pch_files.GetCount(); i++)
 		FileDelete(pch_files[i]);
 }
+
+String GetLineEndings(const String& data, const String& default_eol)
+{
+	int q = data.ReverseFind("\n");
+	if(q >= 0) {
+		if(data.Mid(q - 1, 1) == "\r")
+			return "\r\n";
+		else
+			return "\n";
+	}
+	return default_eol;
+}

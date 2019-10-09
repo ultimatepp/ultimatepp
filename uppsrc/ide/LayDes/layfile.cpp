@@ -107,6 +107,7 @@ bool LayDes::Load(const char *file, byte _charset)
 		newfile = false;
 		filetime = in.GetTime();
 		fileerror.Clear();
+		EOL = GetLineEndings(layfile);
 		try {
 			CParser p(layfile);
 			if(p.Char('#') && p.Id("ifdef")) {
@@ -129,6 +130,7 @@ bool LayDes::Load(const char *file, byte _charset)
 	else {
 		newfile = true;
 		filetime = Null;
+		EOL = "\r\n";
 	}
 	search <<= Null;
 	SyncLayoutList();
@@ -149,7 +151,7 @@ void LayDes::Save()
 	String r;
 	for(int i = 0; i < layout.GetCount(); i++) {
 		layout[i].SetCharset(charset);
-		r << layout[i].Save(0) << "\r\n";
+		r << layout[i].Save(0, EOL) << EOL;
 	}
 	layfile = r;
 	if(!SaveChangedFileFinish(filename, r))

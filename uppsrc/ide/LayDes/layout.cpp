@@ -91,26 +91,26 @@ void  LayoutData::Read(CParser& p)
 	p.PassId("END_LAYOUT");
 }
 
-String LayoutData::Save(int y)
+String LayoutData::Save(int y, const String& eol)
 {
 	String out;
-	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")\r\n";
+	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")" << eol;
 	for(int i = 0; i < item.GetCount(); i++) {
-		out << item[i].Save(i, y);
+		out << item[i].Save(i, y, eol);
 	}
-	out << "END_LAYOUT\r\n";
+	out << "END_LAYOUT" << eol;
 	return out;
 }
 
-String LayoutData::Save(const Vector<int>& sel, int y)
+String LayoutData::Save(const Vector<int>& sel, int y, const String& eol)
 {
 	Vector<int> cs(sel, 1);
 	Sort(cs);
 	String out;
-	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")\r\n";
+	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")" << eol;
 	for(int i = 0; i < cs.GetCount(); i++)
-		out << item[cs[i]].Save(cs[i], y);
-	out << "END_LAYOUT\r\n";
+		out << item[cs[i]].Save(cs[i], y, eol);
+	out << "END_LAYOUT" << eol;
 	return out;
 }
 
@@ -118,7 +118,7 @@ String LayoutData::MakeState()
 {
 	byte cs = charset;
 	SetCharset(CHARSET_UTF8);
-	String out = Save(0);
+	String out = Save(0, "\r\n");
 	SetCharset(cs);
 	return out;
 }

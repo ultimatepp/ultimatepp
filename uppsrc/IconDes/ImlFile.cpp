@@ -271,13 +271,13 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 	return true;
 }
 
-static void PutOctalString(Stream& out, const char *b, const char *e, bool split = false)
+static void PutOctalString(Stream& out, const char *b, const char *e, const String& eol, bool split = false)
 {
 	out.Put('\"');
 	int64 start = out.GetPos();
 	while(b < e) {
 		if(split && out.GetPos() >= start + 200u) {
-			out.Put("\"\r\n\t\"");
+			out << "\"" << eol << "\t\"";
 			start = out.GetPos();
 		}
 		if((byte)*b >= ' ' && *b != '\x7F' && *b != '\xFF') {
@@ -293,13 +293,13 @@ static void PutOctalString(Stream& out, const char *b, const char *e, bool split
 	out.Put('\"');
 }
 
-String SaveIml(const Array<ImlImage>& iml, int format) {
+String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 	StringStream out;
 	if(format == 1) {
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
 			if(c.exp)
-				out << "IMAGE_META(\"exp\", \"\")\r\n";
+				out << "IMAGE_META(\"exp\", \"\")" << eol;
 			String name = c.name;
 			Image buffer = c.image;
 			if(IsNull(name))
@@ -313,8 +313,8 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 					for(; last < i; last++)
 						out.PutLine("\tIMAGE_SCAN(\"\")");
 					out.Put("\tIMAGE_SCAN(");
-					PutOctalString(out, scan.Begin(), scan.End(), true);
-					out.Put(")\r\n");
+					PutOctalString(out, scan.Begin(), scan.End(), eol, true);
+					out << ")" << eol;
 					last = i + 1;
 				}
 			}
@@ -330,12 +330,12 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 			datastrm % size % hotspot % encoding;
 			ASSERT(!datastrm.IsError());
 			String s = datastrm.GetResult();
-			PutOctalString(out, s.Begin(), s.End());
-			out.Put(")\r\n");
+			PutOctalString(out, s.Begin(), s.End(), eol);
+			out << ")" << eol;
 		}
 	}
 	else {
-		out << "PREMULTIPLIED\r\n";
+		out << "PREMULTIPLIED" << eol;
 		Index<String> std_name;
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
@@ -351,8 +351,8 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 				out << "__DARK";
 			out << ")";
 			if(c.exp)
-				out << " IMAGE_META(\"exp\", \"\")\r\n";
-			out << "\r\n";
+				out << " IMAGE_META(\"exp\", \"\")" << eol;
+			out << eol;
 		}
 		int ii = 0;
 		while(ii < iml.GetCount()) {
@@ -372,7 +372,7 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 				bn++;
 			}
 			String bs = PackImlData(bimg);
-			out << "\r\nIMAGE_BEGIN_DATA\r\n";
+			out << eol << "IMAGE_BEGIN_DATA" << eol;
 			bs.Cat(0, ((bs.GetCount() + 31) & ~31) - bs.GetCount());
 			const byte *s = bs;
 			for(int n = bs.GetCount() / 32; n--;) {
@@ -381,9 +381,9 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 					if(j) out << ',';
 					out << (int)*s++;
 				}
-				out << ")\r\n";
+				out << ")" << eol;
 			}
-			out << "IMAGE_END_DATA(" << bs.GetCount() << ", " << bn << ")\r\n";
+			out << "IMAGE_END_DATA(" << bs.GetCount() << ", " << bn << ")" << eol;
 		}
 	}
 	return out.GetResult();

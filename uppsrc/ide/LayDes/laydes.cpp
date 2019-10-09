@@ -966,7 +966,7 @@ void LayDes::Delete()
 
 String LayDes::SaveSelection(bool scrolled)
 {
-	return CurrentLayout().Save(cursor, scrolled * ZPoint(sb).y) + "\r\n";
+	return CurrentLayout().Save(cursor, scrolled * ZPoint(sb).y, "\r\n") + "\r\n";
 }
 
 LayoutData LayDes::LoadLayoutData(const String& s)
@@ -1425,7 +1425,7 @@ void LayDes::DuplicateLayout()
 			break;
 		Exclamation("Invalid name!");
 	}
-	String data = c.Save(0);
+	String data = c.Save(0, "\r\n");
 	CParser p(data);
 	int next = currentlayout + 1;
 	LayoutData& d = layout.Insert(next);
