@@ -424,7 +424,7 @@ struct ImlImage : ImageIml {
 };
 
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
-String SaveIml(const Array<ImlImage>& iml, int format);
+String SaveIml(const Array<ImlImage>& iml, int format, const String& eol = "\r\n");
 
 void SetRes(Image& m, int resolution);
 

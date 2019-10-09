@@ -17,6 +17,7 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	int     format;
 	String  filename;
 	Time    filetime;
+	String  EOL = "\r\n";
 
 	virtual void   ToolEx(Bar& bar);
 	virtual void   ListMenuEx(Bar& bar);

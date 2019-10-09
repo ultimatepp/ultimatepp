@@ -200,7 +200,7 @@ public:
 	void     SetCharset(byte charset);
 	void     ReadProperties(CParser& p, bool addunknow = true);
 	String   SaveProperties(int y = 0) const;
-	String   Save(int i, int y) const;
+	String   Save(int i, int y, const String& eol) const;
 
 	rval_default(LayoutItem);
 
@@ -239,8 +239,8 @@ private:
 public:
 	void        SetCharset(byte charset);
 	void        Read(CParser& p);
-	String      Save(int y);
-	String      Save(const Vector<int>& sel, int y);
+	String      Save(int y, const String& eol);
+	String      Save(const Vector<int>& sel, int y, const String& eol);
 	void        SaveState();
 	bool        IsUndo();
 	void        Undo();
@@ -339,6 +339,8 @@ private:
 
 	WithMatrixLayout<TopWindow>  matrix;
 	WithSettingLayout<TopWindow> setting;
+
+	String EOL = "\r\n";
 
 	struct TempGroup {
 		String temp;
