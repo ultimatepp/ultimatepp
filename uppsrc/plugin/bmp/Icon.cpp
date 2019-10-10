@@ -159,7 +159,7 @@ String WriteIcon(const Vector<Image>& icons, int flags)
 			out.Cat((const char *)&bmih, sizeof(bmih));
 			if(bits <= 8) {
 				int ncolors = 1 << bits;
-				Buffer<RGBA> palette(ncolors);
+				Buffer<RGBA> palette(ncolors, RGBAZero());
 				ImageRaster ir(img);
 				CreatePalette(ir, ~palette, ncolors);
 				cv = new PaletteCv();
