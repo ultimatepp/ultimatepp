@@ -175,14 +175,19 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			return true;
 	})) goto Bailout;
 
-	if(!Run([=] () mutable {
-			if(session->iomethods.IsEmpty())
-				return true;
-			int rc = libssh2_session_method_pref(ssh->session, session->iomethods.GetKey(0), ~GetMethodNames(0));
+	while(!session->iomethods.IsEmpty()) {
+		if(!Run([=] () mutable {
+			int    method = session->iomethods.GetKey(0);
+			String mnames = GetMethodNames(method);
+			int rc = libssh2_session_method_pref(ssh->session, method, ~mnames);
 			if(!WouldBlock(rc) && rc < 0) SetError(rc);
-			if(!rc)	LLOG("Transport methods are successfully set.");
+			if(!rc && !session->iomethods.IsEmpty()) {
+				LLOG("Transport method: #" << method << " is set to [" << mnames << "]");
+				session->iomethods.Remove(0);
+			}
 			return !rc;
-	})) goto Bailout;
+		})) goto Bailout;
+	}
 	
 	if(!Run([=] () mutable {
 			int rc = libssh2_session_handshake(ssh->session, session->socket.GetSOCKET());
@@ -196,8 +201,10 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	
 	if(!Run([=] () mutable {
 			session->fingerprint = libssh2_hostkey_hash(ssh->session, session->hashtype);
-			if(session->fingerprint.IsEmpty()) LLOG("Warning: Fingerprint is not available!.");
-			LDUMPHEX(session->fingerprint);
+			if(session->fingerprint.IsEmpty())
+				LLOG("Warning: Fingerprint is not available!.");
+			else
+				LLOG("Fingerprint: " << HexString(session->fingerprint, 1, ':'));
 			if(WhenVerify && !WhenVerify(host, port))
 				SetError(-1);
 			return true;
@@ -206,7 +213,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	if(!Run([=] () mutable {
 			session->authmethods = libssh2_userauth_list(ssh->session, user, user.GetLength());
 			if(session->authmethods.IsEmpty()) { if(!WouldBlock()) SetError(-1); return false; }
-			LLOG("Authentication methods successfully retrieved.");
+			LLOG("Authentication methods list successfully retrieved: [" << session->authmethods << "]");
 			WhenAuth();
 			return true;
 	})) goto Bailout;
@@ -341,9 +348,12 @@ ValueMap SshSession::GetMethods()
 String SshSession::GetMethodNames(int type)
 {
 	String names;
-	const auto& v = session->iomethods[type];
-	for(int i = 0; i < v.GetCount(); i++)
-		names << v[i].To<String>() << (i < v.GetCount() - 1 ? "," : "");
+	const Value& v = session->iomethods[type];
+	if(IsValueArray(v)) {
+		for(int i = 0; i < v.GetCount(); i++)
+			names << v[i].To<String>() << (i < v.GetCount() - 1 ? "," : "");
+	}
+	else names << v;
 	return pick(names);
 }
 
