@@ -29,7 +29,7 @@ public:
     SshSession&         HashType(Hash h)                        { session->hashtype = h == HASH_SHA1 ? LIBSSH2_HOSTKEY_HASH_SHA1 : LIBSSH2_HOSTKEY_HASH_MD5; return *this; }
 
     SshSession&         Keys(const String& prikey, const String& pubkey, const String& phrase, bool fromfile = true);
-    SshSession&         Method(int type, Value method)          { session->iomethods(type) = pick(method); return *this; }
+    SshSession&         Method(int type, Value method)          { session->iomethods(type) << pick(method); return *this; }
     SshSession&         Methods(ValueMap methods)               { session->iomethods = pick(methods); return *this; }
 
     SshSession&         PasswordAuth()                          { session->authmethod = PASSWORD;  return *this; }
