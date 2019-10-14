@@ -59,12 +59,13 @@ public:
     
     Event<>             WhenConfig;
     Event<>             WhenAuth;
+    Function<String()>  WhenPasswordChange;
     Event<int>          WhenPhase;
     Gate<String, int>   WhenVerify;
     Gate<>              WhenProxy;
     Event<SshX11Handle> WhenX11;
     Function<String(String, String, String)>  WhenKeyboard;
-
+    
     SshSession();
     virtual ~SshSession();
 
