@@ -377,6 +377,7 @@ bool Sqlite3Session::Open(const char* filename, const String& password) {
 void Sqlite3Session::Close() {
 	sql.Clear();
 	if (NULL != db) {
+		SessionClose();
 		int retval;
 #ifndef flagNOAPPSQL
 		if(SQL.IsOpen() && &SQL.GetSession() == this)
