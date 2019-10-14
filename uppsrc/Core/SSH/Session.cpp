@@ -225,11 +225,25 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	
 	if(!Run([=] () mutable {
 			session->authmethods = libssh2_userauth_list(ssh->session, user, user.GetLength());
-			if(session->authmethods.IsEmpty()) { if(!WouldBlock()) SetError(-1); return false; }
+			if(IsNull(session->authmethods)) {
+				if(libssh2_userauth_authenticated(ssh->session)) {
+					LLOG("This server does not require authentication!");
+					session->connected = true;
+					return session->connected;
+				}
+				else
+				if(!WouldBlock())
+					SetError(-1);
+				return false;
+			}
 			LLOG("Authentication methods list successfully retrieved: [" << session->authmethods << "]");
-			WhenAuth();
 			return true;
 	})) goto Bailout;
+	
+	if(session->connected)
+		goto Finalize;
+	
+	WhenAuth();
 	
 	if(!Run([=] () mutable {
 			int rc = -1;
@@ -288,21 +302,21 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 					NEVER();
 
 			}
-			if(!WouldBlock(rc) && rc != 0) {
+			if(rc != 0 && !WouldBlock(rc))
 				SetError(rc);
-			}
 			if(rc == 0 && libssh2_userauth_authenticated(ssh->session)) {
-				LLOG("Client succesfully authenticated and connected.");
-#ifdef PLATFORM_POSIX
-			libssh2_session_callback_set(ssh->session, LIBSSH2_CALLBACK_X11, (void*) ssh_x11_request);
-			LLOG("X11 dispatcher is set.");
-#endif
+				LLOG("Client succesfully authenticated.");
 				session->connected = true;
-				WhenPhase(PHASE_SUCCESS);
 			}
 			return	session->connected;
 	})) goto Bailout;
-	
+
+Finalize:
+#ifdef PLATFORM_POSIX
+	libssh2_session_callback_set(ssh->session, LIBSSH2_CALLBACK_X11, (void*) ssh_x11_request);
+	LLOG("X11 dispatcher is set.");
+#endif
+	WhenPhase(PHASE_SUCCESS);
 	return true;
 	
 Bailout:
@@ -356,7 +370,7 @@ ValueMap SshSession::GetMethods()
 {
 	ValueMap methods;
 	if(ssh->session) {
-		for(int i = METHOD_EXCHANGE; i < METHOD_SCOMPRESSION; i++) {
+		for(int i = METHOD_EXCHANGE; i <= METHOD_SCOMPRESSION; i++) {
 			const char **p = nullptr;
 			auto rc = libssh2_session_supported_algs(ssh->session, i, &p);
 			if(rc > 0) {

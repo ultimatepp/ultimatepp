@@ -110,7 +110,7 @@ NULL on failure.&]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:GetBanner`(`)const: [_^Upp`:`:String^ String]_[* GetBanner]()_[@(0.0.255) c
 onst]&]
-[s2;%% Returns the servers banner if available.&]
+[s2;%% Returns the server`'s banner if available.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:GetFingerprint`(`)const: [_^Upp`:`:String^ String]_[* GetFinger
@@ -140,7 +140,10 @@ tring]>_[* GetAuthMethods]()&]
 [s0;l288;%% Returns a list of supported user authentication methods. 
 Returns an empty vector on failure. The following four authentication 
 methods are currently supported: `"password`", `"publickey`", 
-`"hostbased`", `"keyboard`-interactive`".&]
+`"hostbased`", `"keyboard`-interactive`", and `"none`". The `"none`" 
+method allows logging in without an authentication scheme. It 
+is rarely used by the servers, and handled automatically by the 
+session.&]
 [s3;^Upp`:`:SFtp^ &]
 [s4;^Upp`:`:SFtp^ &]
 [s5;:Upp`:`:SshSession`:`:CreateSFtp`(`): [_^Upp`:`:SFtp^ SFtp]_[* CreateSFtp]()&]
