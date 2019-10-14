@@ -1496,7 +1496,7 @@ void FileSel::FileUpdate() {
 }
 
 void FileSel::Rename(const String& on, const String& nn) {
-	
+	if(on == nn) return;
 #ifdef PLATFORM_WIN32
 	if(FileMove(FilePath(on), FilePath(nn)))
 #else
