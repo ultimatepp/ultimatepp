@@ -201,6 +201,13 @@ authentication phase to allow user to query or set the authentication
 method(s)&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:SshSession`:`:WhenPasswordChange: [_^Upp`:`:Function^ Function]<String([@(0.0.255) v
+oid])>_[* WhenPasswordChange]&]
+[s2;%% If this function is defined it will be invoked when a password 
+change request is issued by the server. Client should return 
+the new password. Returning an empty string is also allowed.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:SshSession`:`:WhenPhase: [_^Upp`:`:Event^ Event]<[@(0.0.255) int]>_[* WhenPhase
 ]&]
 [s2;%% This event is invoked at certain phases of connection process, 

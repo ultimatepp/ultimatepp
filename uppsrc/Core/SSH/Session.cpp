@@ -12,7 +12,7 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 	int instruction_len, int num_prompts, const LIBSSH2_USERAUTH_KBDINT_PROMPT *prompts,
 	LIBSSH2_USERAUTH_KBDINT_RESPONSE *responses, void **abstract)
 {
-	SshSession* session = static_cast<SshSession*>(*abstract);
+	SshSession *session = static_cast<SshSession*>(*abstract);
 	for(auto i = 0; i < num_prompts; i++) {
 		auto response = session->WhenKeyboard(
 			String(name, name_len),
@@ -30,6 +30,19 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 			responses[i].length = response.GetLength();
 		}
 	}
+}
+
+// ssh_password_change: Requests that the client's password be changed.
+
+static void ssh_password_change(LIBSSH2_SESSION *session, char **pwd, int *len, void **abstract)
+{
+	String newpwd = static_cast<SshSession*>(*abstract)->WhenPasswordChange();
+#ifdef UPP_HEAP
+		*pwd = (char*) ssh_malloc(newpwd.GetLength(), abstract);
+		memcpy(*pwd, ~newpwd, newpwd.GetLength());
+#else
+		*pwd = strdup(~newpwd);
+#endif
 }
 
 // ssh_x11_request: Dispatches incoming X11 requests.
@@ -222,16 +235,26 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			int rc = -1;
 			switch(session->authmethod) {
 				case PASSWORD:
-					rc = libssh2_userauth_password(ssh->session, ~user, ~password);
+					rc = libssh2_userauth_password_ex(
+							ssh->session,
+							~user,
+							 user.GetLength(),
+							~password,
+							 password.GetLength(),
+							 WhenPasswordChange
+								? &ssh_password_change
+									: nullptr);
 					break;
 				case PUBLICKEY:
 					rc = session->keyfile
-					?	libssh2_userauth_publickey_fromfile(ssh->session,
+					?	libssh2_userauth_publickey_fromfile(
+							ssh->session,
 							~user,
 							~session->pubkey,
 							~session->prikey,
 							~session->phrase)
-					:	libssh2_userauth_publickey_frommemory(ssh->session,
+					:	libssh2_userauth_publickey_frommemory(
+							ssh->session,
 							~user,
 							 user.GetLength(),
 							~session->pubkey,
@@ -244,7 +267,8 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 					if(!session->keyfile)
 						SetError(-1, "Keys cannot be loaded from memory.");
 					else
-					rc = libssh2_userauth_hostbased_fromfile(ssh->session,
+					rc = libssh2_userauth_hostbased_fromfile(
+							ssh->session,
 							~user,
 							~session->pubkey,
 							~session->prikey,
@@ -252,7 +276,9 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 							~host);
 					break;
 				case KEYBOARD:
-					rc = libssh2_userauth_keyboard_interactive(ssh->session, ~user,
+					rc = libssh2_userauth_keyboard_interactive(
+						ssh->session,
+						~user,
 						&ssh_keyboard_callback);
 					break;
 				case SSHAGENT:
