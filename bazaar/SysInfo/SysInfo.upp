@@ -19,8 +19,6 @@ file
 	SysInfo.h,
 	SysInfo_in.h,
 	OS.cpp,
-	OSwin.c,
-	OSwin.h,
 	srcdoc.tpp,
 	ScreenGrab.cpp,
 	MouseKey.cpp,
