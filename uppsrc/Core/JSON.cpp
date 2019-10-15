@@ -140,7 +140,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		r << "]";
 		return r;
 	}
-	if(IsNumber(v) && (IsNull(v) || IsNaN(v)))
+	if(IsNumber(v) && (IsNull(v) || IsNaN((double)v)))
 		return "null";
 	if(v.GetType() == INT_V)
 		return Format("%d", (int)v);

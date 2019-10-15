@@ -368,3 +368,5 @@ String      GetErrorText(const Value& v);
 
 inline bool          IsNull(const Value& v)               { return v.IsNull(); }
 inline const Value&  Nvl(const Value& a, const Value& b)  { return IsNull(a) ? b : a; }
+
+inline bool          IsNaN(const Value& v)                { return v.Is<double>() && IsNaN((double)v); }
