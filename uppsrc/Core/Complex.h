@@ -47,5 +47,9 @@ inline int  PolyCompare(const Complex& a, const Value& b)
 	NEVER(); return 0;
 }
 
+inline bool IsNaN(const Complex& x)        { return IsNaN(x.real()) || IsNaN(x.imag()); }
+inline bool IsInf(const Complex& x)        { return IsInf(x.real()) || IsInf(x.imag()); }
+inline bool IsFin(const Complex& x)        { return IsFin(x.real()) && IsFin(x.imag()); }
+
 VALUE_COMPARE(Complex)
 NTL_MOVEABLE(Complex)
