@@ -46,4 +46,5 @@ Reference examples:
 -------------------
 
 - SshBasics:    Demonstrates basic capabilities of SSH package.
-- SFtpBrowser:  Demonstrates a basic sftp browser with GUI.                
+- SFtpFileSel:  Demonstrates FileSel integration of SFtp class, using FileSystemInfo interface.
+- SFtpBrowser:  Demonstrates a basic sftp browser with GUI.    
