@@ -1582,15 +1582,11 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 		String full = AppendFileName(path, name);
 		if (PatternMatch(namewc, name)) {
 			if (ff.IsFolder() && !filefolder) {
-				if (!DeleteFolderDeepX(full, flags)) {
-					//dword error = GetLastError();
+				if (!DeleteFolderDeepX(full, flags)) 
 					return false;
-				}
 			} else if (ff.IsFile() && filefolder) {
-				if (!FileDeleteX(full, flags)) {
-					//dword error = GetLastError();
+				if (!FileDeleteX(full, flags)) 
 					return false;
-				}
 			}
 		} else if(ff.IsFolder()) {
 			if (!DeleteDeepWildcardsX(full, namewc, filefolder, flags))
@@ -1652,10 +1648,8 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 		}
 		if (PatternMatch(namewc, name)) {
 			if ((ff.IsFolder() && forfolder) || (ff.IsFile() && forfile)) {
-				if (!FileMoveX(full, AppendFileName(path, newname)), flags) {
-					//dword error = GetLastError();
+				if (!FileMoveX(full, AppendFileName(path, newname)), flags) 
 					return false;
-				}
 			}
 		}
 		ff.Next();

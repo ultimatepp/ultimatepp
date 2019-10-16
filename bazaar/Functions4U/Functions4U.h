@@ -698,10 +698,15 @@ inline String RoundDecimals(T num, int decimals) {
 
 template <class T>
 bool EqualRatio(const T& a, const T& b, const T& ratio) {
-	if (a == 0)
-		return b <= ratio;
-	if (b == 0)
-		return a <= ratio;
+	if (a == 0) {
+		if (b == 0)
+			return true;
+	} else if (b == 0) {
+		if(abs((a - b)/a) <= ratio) 
+			return true;
+		else
+			return false;
+	}
 	if(abs((a - b)/b) <= ratio) 
 		return true;
 	return false;
