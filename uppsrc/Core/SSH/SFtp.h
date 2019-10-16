@@ -1,12 +1,12 @@
 class SFtp : public Ssh {
 public:
-  enum Flags {
+    enum Flags {
         READ        = LIBSSH2_FXF_READ,
         WRITE       = LIBSSH2_FXF_WRITE,
         APPEND      = LIBSSH2_FXF_APPEND,
         CREATE      = LIBSSH2_FXF_CREAT,
         TRUNCATE    = LIBSSH2_FXF_TRUNC,
-        EXCLUSIVE   = LIBSSH2_FXF_EXCL,
+        EXCLUSIVE   = LIBSSH2_FXF_EXCL
      };
 
     enum Permissions {
