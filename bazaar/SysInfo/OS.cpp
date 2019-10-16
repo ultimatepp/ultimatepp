@@ -260,8 +260,8 @@ using namespace Upp;
 	#define VER_SUITE_WH_SERVER		0x00008000
 #endif
 
-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
+//typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
+//typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 
 bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, 
 			   String &distVersion, String &desktop, String &deskVersion)
@@ -273,7 +273,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
    	ZeroMemory(&si, sizeof(SYSTEM_INFO));
 
    	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-   	static PGNSI pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
+   	PGNSI pGNSI = Get_GetNativeSystemInfo();
 	if(NULL != pGNSI)
    		pGNSI(&si);
    	else 
@@ -324,7 +324,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
          		else
          			kernel.Cat(" Server 2008");
 			}
-         	static PGPI pGPI = (PGPI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
+         	PGPI pGPI = Get_GetProductInfo();
          	DWORD dwType;
          	if (pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType)) {
 	         	switch(dwType) {

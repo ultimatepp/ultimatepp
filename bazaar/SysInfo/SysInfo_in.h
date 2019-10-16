@@ -69,5 +69,7 @@
 
 #define _Browser_Browser_h
 #include "SysInfo.h"
-
+#ifdef _WIN32
+#include "OSwin.h"
+#endif
 #endif
