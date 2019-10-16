@@ -8,7 +8,7 @@ namespace Upp {
 
 // ssh_keyboard_callback: Authenticates a session, using keyboard-interactive authentication.
 
-static void ssh_keyboard_callback(const char *name, int name_len, const char *instruction, 
+static void ssh_keyboard_callback(const char *name, int name_len, const char *instruction,
 	int instruction_len, int num_prompts, const LIBSSH2_USERAUTH_KBDINT_PROMPT *prompts,
 	LIBSSH2_USERAUTH_KBDINT_RESPONSE *responses, void **abstract)
 {
@@ -68,7 +68,7 @@ void SshSession::Exit()
 {
 	if(!session)
 		return;
-	
+
 	Run([=]() mutable {
 		if(!ssh->session)
 			return true;
@@ -113,7 +113,7 @@ bool SshSession::Connect(const String& url)
 bool SshSession::Connect(const String& host, int port, const String& user, const String& password)
 {
 	IpAddrInfo ipinfo;
-	
+
 	if(!Run([=, &ipinfo] () mutable {
 		if(host.IsEmpty())
 			SetError(-1, "Host is not specified.");
@@ -128,7 +128,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 		WhenPhase(WhenProxy ? PHASE_CONNECTION : PHASE_DNS);
 		return true;
 	})) goto Bailout;
-	
+
 	if(!WhenProxy) {
 		if(!Run([=, &ipinfo] () mutable {
 			if(ipinfo.InProgress())
@@ -138,14 +138,14 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			WhenPhase(PHASE_CONNECTION);
 			return true;
 		})) goto Bailout;
-		
+
 		if(!Run([=, &ipinfo] () mutable {
 			if(!session->socket.Connect(ipinfo))
 				return false;
 			ipinfo.Clear();
 			return true;
 		})) goto Bailout;
-		
+
 		if(!Run([=, &ipinfo] () mutable {
 			if(!session->socket.WaitConnect())
 				return false;
@@ -161,7 +161,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			return true;
 		})) goto Bailout;
 	}
-	
+
 	if(!Run([=] () mutable {
 #ifdef UPP_HEAP
 			LLOG("Using Upp's memory managers.");
@@ -201,7 +201,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			return !rc;
 		})) goto Bailout;
 	}
-	
+
 	if(!Run([=] () mutable {
 			int rc = libssh2_session_handshake(ssh->session, session->socket.GetSOCKET());
 			if(!WouldBlock(rc) && rc < 0) SetError(rc);
@@ -211,23 +211,35 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			}
 			return !rc;
 	})) goto Bailout;
-	
+
 	if(!Run([=] () mutable {
-			session->fingerprint = libssh2_hostkey_hash(ssh->session, session->hashtype);
-			if(session->fingerprint.IsEmpty())
-				LLOG("Warning: Fingerprint is not available!.");
-			else
-				LLOG("Fingerprint: " << HexString(session->fingerprint, 1, ':'));
+			switch(session->hashtype) {  // TODO: Remove this block along with the deprecated Hashtype()
+			case HASH_MD5:               //       and  GetFingerprint() methods, in the future versions.
+				session->fingerprint = GetMD5Fingerprint();
+				LLOG("MD5 fingerprint of " << host << ": " << HexString(session->fingerprint, 1, ':'));
+				break;
+			case HASH_SHA1:
+				session->fingerprint = GetSHA1Fingerprint();
+				LLOG("SHA1 fingerprint of " << host << ": " << HexString(session->fingerprint, 1, ':'));
+				break;
+			case HASH_SHA256:
+				session->fingerprint = GetSHA256Fingerprint();
+				LLOG("SHA256 fingerprint of " << host << ": " << Base64Encode(session->fingerprint));
+				break;
+			default:
+				break;
+			}
 			if(WhenVerify && !WhenVerify(host, port))
 				SetError(-1);
 			return true;
 	})) goto Bailout;
-	
+
 	if(!Run([=] () mutable {
 			session->authmethods = libssh2_userauth_list(ssh->session, user, user.GetLength());
 			if(IsNull(session->authmethods)) {
 				if(libssh2_userauth_authenticated(ssh->session)) {
-					LLOG("This server does not require authentication!");
+					LLOG("Server @" << host << " does not require authentication!");
+					WhenPhase(PHASE_SUCCESS);
 					session->connected = true;
 					return session->connected;
 				}
@@ -237,14 +249,13 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 				return false;
 			}
 			LLOG("Authentication methods list successfully retrieved: [" << session->authmethods << "]");
+			WhenAuth();
 			return true;
 	})) goto Bailout;
-	
+
 	if(session->connected)
 		goto Finalize;
-	
-	WhenAuth();
-	
+
 	if(!Run([=] () mutable {
 			int rc = -1;
 			switch(session->authmethod) {
@@ -306,6 +317,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 				SetError(rc);
 			if(rc == 0 && libssh2_userauth_authenticated(ssh->session)) {
 				LLOG("Client succesfully authenticated.");
+				WhenPhase(PHASE_SUCCESS);
 				session->connected = true;
 			}
 			return	session->connected;
@@ -316,9 +328,8 @@ Finalize:
 	libssh2_session_callback_set(ssh->session, LIBSSH2_CALLBACK_X11, (void*) ssh_x11_request);
 	LLOG("X11 dispatcher is set.");
 #endif
-	WhenPhase(PHASE_SUCCESS);
 	return true;
-	
+
 Bailout:
 	LLOG("Connection attempt failed. Bailing out...");
 	Exit();
@@ -366,11 +377,22 @@ SshShell SshSession::CreateShell()
 	return pick(SshShell(*this));
 }
 
-ValueMap SshSession::GetMethods()
+String SshSession::GetHostKeyHash(int type, int length) const
+{
+	String hash;
+	if(ssh->session) {
+		hash = libssh2_hostkey_hash(ssh->session, type);
+		if(hash.GetLength() > length)
+			hash.TrimLast(hash.GetLength() - length);
+	}
+	return hash;
+}
+
+ValueMap SshSession::GetMethods() const
 {
 	ValueMap methods;
 	if(ssh->session) {
-		for(int i = METHOD_EXCHANGE; i <= METHOD_SCOMPRESSION; i++) {
+		for(int i = METHOD_EXCHANGE; i <= METHOD_SLANGUAGE; i++) {
 			const char **p = nullptr;
 			auto rc = libssh2_session_supported_algs(ssh->session, i, &p);
 			if(rc > 0) {
@@ -385,7 +407,7 @@ ValueMap SshSession::GetMethods()
 	return pick(methods);
 }
 
-String SshSession::GetMethodNames(int type)
+String SshSession::GetMethodNames(int type) const
 {
 	String names;
 	const Value& v = session->iomethods[type];
@@ -412,7 +434,7 @@ int SshSession::TryAgent(const String& username)
 		SetError(-1, "Couldn't request identities to ssh-agent.");
 	}
 	libssh2_agent_publickey *id = nullptr, *previd = nullptr;
-	
+
 	for(;;) {
 		auto rc = libssh2_agent_get_identity(agent, &id, previd);
 		if(rc < 0) {
@@ -465,7 +487,7 @@ SshSession::SshSession()
     session->authmethod = PASSWORD;
     session->connected  = false;
     session->keyfile    = true;
-    session->hashtype   = LIBSSH2_HOSTKEY_HASH_SHA1;
+    session->hashtype   = HASH_SHA256;
  }
 
 SshSession::~SshSession()

@@ -1,6 +1,6 @@
 class SshSession : public Ssh {
 public:
-    enum Methods {
+    enum Methods : int {
         METHOD_EXCHANGE = 0,
         METHOD_HOSTKEY,
         METHOD_CENCRYPTION,
@@ -8,14 +8,11 @@ public:
         METHOD_CMAC,
         METHOD_SMAC,
         METHOD_CCOMPRESSION,
-        METHOD_SCOMPRESSION
+        METHOD_SCOMPRESSION,
+        METHOD_CLANGUAGE,
+        METHOD_SLANGUAGE
     };
 
-    enum Hash {
-        HASH_MD5,
-        HASH_SHA1
-    };
-    
     enum Phase : int {
         PHASE_DNS,
         PHASE_CONNECTION,
@@ -26,8 +23,7 @@ public:
     
 public:
     SshSession&         Timeout(int ms)                         { ssh->timeout = ms; return *this; }
-    SshSession&         HashType(Hash h)                        { session->hashtype = h == HASH_SHA1 ? LIBSSH2_HOSTKEY_HASH_SHA1 : LIBSSH2_HOSTKEY_HASH_MD5; return *this; }
-
+ 
     SshSession&         Keys(const String& prikey, const String& pubkey, const String& phrase, bool fromfile = true);
     SshSession&         Method(int type, Value method)          { session->iomethods(type) << pick(method); return *this; }
     SshSession&         Methods(ValueMap methods)               { session->iomethods = pick(methods); return *this; }
@@ -41,10 +37,12 @@ public:
     LIBSSH2_SESSION*    GetHandle()                             { return ssh->session; }
     
     String              GetBanner() const                       { return ssh->session ? pick(String(libssh2_session_banner_get(ssh->session))) : Null; }
-    String              GetFingerprint() const                  { return session->fingerprint; }
+    String              GetMD5Fingerprint() const               { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_MD5, 16);    }
+    String              GetSHA1Fingerprint() const              { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_SHA1, 20);   }
+    String              GetSHA256Fingerprint() const            { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_SHA256, 32); }
     Vector<String>      GetAuthMethods()                        { return pick(Split(session->authmethods, ' ')); }
     TcpSocket&          GetSocket()                             { return session->socket;  }
-    ValueMap            GetMethods();
+    ValueMap            GetMethods() const;
 
     SFtp                CreateSFtp();
     SshChannel          CreateChannel();
@@ -72,9 +70,15 @@ public:
     SshSession(SshSession&&) = default;
     SshSession& operator=(SshSession&&) = default;
 
+    // DEPRECATED stuff. Use GetxxxFingerprint() methods instead.
+    enum Hash           { HASH_MD5, HASH_SHA1, HASH_SHA256 };
+    String              GetFingerprint() const              { return session->fingerprint; }
+    SshSession&         HashType(Hash h)                    { session->hashtype = h; return *this; }
+
 private:
     void                Exit() override;
-    String              GetMethodNames(int type);
+    String              GetHostKeyHash(int type, int length) const;
+    String              GetMethodNames(int type) const;
     int                 TryAgent(const String& username);
     void                FreeAgent(SshAgent* agent);
     
