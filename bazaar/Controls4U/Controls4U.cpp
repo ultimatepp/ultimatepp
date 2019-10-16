@@ -432,23 +432,37 @@ StaticImage& StaticImage::SetPopUpSize(Size sz) {
 
 void StaticImage::Paint(Draw& w) {
 	Size sz = GetSize();
-
-	w.DrawRect(sz, background);
-	if (!origImage) 
-		return;
 	if (sz.cx == 0 || sz.cy == 0) 
 		return;
-	Size imagesize = origImage.GetSize();	
+	
+	w.DrawRect(sz, background);
+	
+	Image image, imageGet, *imageView;
+	
+	if (!origImage) {
+		if (GetImage) {
+			imageGet = GetImage();
+			if (!imageGet)
+				return;
+		}
+	} 
+	imageView = origImage ? &origImage : &imageGet;
+	
+	if (angle != StaticImage::Angle_0) {
+		switch (angle) {
+		case Angle_90:	image = RotateClockwise(*imageView);
+						break;
+		case Angle_180:	image = Rotate180(*imageView);
+						break;
+		case Angle_270:	image = RotateAntiClockwise(*imageView);
+						break;
+		}
+		imageView = &image;
+	}
+	Size imagesize = imageView->GetSize();
 	if (imagesize.cx == 0 || imagesize.cy == 0) 
 		return;
 	
-	Image *imageView;
-	if (angle == StaticImage::Angle_0)
-		imageView = &origImage;
-	else {
-		imageView = &image;
-		imagesize = imageView->GetSize();
-	}
 	switch (fit) {
 	case StaticImage::BestFit:
 		w.DrawImage(FitInFrame(sz, imagesize), *imageView);
@@ -489,18 +503,8 @@ bool StaticImage::Set(Image _image) {
 }
 
 StaticImage& StaticImage::SetAngle(int _angle) {
-	angle = _angle; 
-	if (origImage) {
-		switch (angle) {
-		case Angle_90:	image = RotateClockwise(origImage);
-						break;
-		case Angle_180:	image = Rotate180(origImage);
-						break;
-		case Angle_270:	image = RotateAntiClockwise(origImage);
-						break;
-		}
-		Refresh(); 
-	}
+	angle = _angle; 	
+	Refresh();
 	return *this;
 }	
 	

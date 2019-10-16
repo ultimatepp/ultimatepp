@@ -183,27 +183,9 @@ public:
 	enum ImageAngle {Angle_0, Angle_90, Angle_180, Angle_270};
 	enum ImageFit   {BestFit, FillFrame, NoScale, RepeatToFill};
 
-protected:
-	virtual void Paint(Draw& draw);
-	virtual void Layout();
-	virtual void RightDown(Point pos, dword keyflags);
-	virtual void LeftDown(Point pos, dword keyflags);
-	virtual void LeftDouble(Point pos, dword keyflags);
-	virtual void MouseEnter(Point pos, dword keyflags);
-	virtual void MouseLeave();
-	
-	String fileName;
-	Image image, origImage;
-	Color background;
-	int angle, fit;
-	bool useAsBackground;
-	ImagePopUp popup;
-	bool isPopUp;
-	Size szPopUp;
-
-public:
 	bool Set(String fileName);
 	bool Set(Image image);
+	Function<Image ()> GetImage;
 	void Clear()							{Set(Image());}
 	Image &Get()							{return origImage;}
 	void SetData(const Value& data)			{Set(data.ToString());}
@@ -223,6 +205,24 @@ public:
 	Callback WhenLeftDouble;
 	Callback WhenLeftDown;
 	Callback WhenRightDown;
+
+protected:
+	virtual void Paint(Draw& draw);
+	virtual void Layout();
+	virtual void RightDown(Point pos, dword keyflags);
+	virtual void LeftDown(Point pos, dword keyflags);
+	virtual void LeftDouble(Point pos, dword keyflags);
+	virtual void MouseEnter(Point pos, dword keyflags);
+	virtual void MouseLeave();
+	
+	String fileName;
+	Image origImage;
+	Color background;
+	int angle, fit;
+	bool useAsBackground;
+	ImagePopUp popup;
+	bool isPopUp;
+	Size szPopUp;
 };
 
 class StaticImageSet : public Ctrl {
