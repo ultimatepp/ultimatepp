@@ -223,34 +223,29 @@ protected:
 		
 	class ScatterSeries : public Moveable<ScatterSeries>, public ScatterBasicSeries {
 	public:
-		ScatterSeries()	: userpD(0), owns(false), serializeData(false), pD(0) {dataS.Init(&data);}
+		typedef ScatterSeries CLASSNAME;
+		
+		ScatterSeries()	: owns(false), serializeData(false) {dataS.Init(&data);}
 		void SetDataSource(DataSource *pointsData, bool ownsData = true) {
 			DeletePD();
-			pD = userpD = pointsData; 
+			pD = pointsData; 
 			owns = ownsData;
-		}
-		void SetDataSource() {
-			pD = userpD;
 		}
 		void SetDataSource_Internal(bool copy = true) {
 			pD = &dataS;
 			if (copy) 
 				CopyInternal();
 		}
-		DataSource &GetDataSource() {return *pD;}
-		inline DataSource *PointsData()	{
-			ASSERT_(!pD || !pD->IsDeleted(), "DataSource in ScatterCtrl/Draw has been deleted.\nIt has been probably declared in a function.");	
-			return pD;
-		}
-		~ScatterSeries()   {DeletePD();}
+		DataSource &Data()		 				{return *(~pD);}
+		const DataSource &Data() const	 		{return *(~pD);}
+		bool IsDeleted() const					{return ~pD == 0;}
+		virtual ~ScatterSeries()   				{DeletePD();}
 		void SerializeData(bool ser = true) 	{serializeData = ser;}
 		void SerializeFormat(bool ser = false) 	{serializeFormat = ser;}
-		void Xmlize(XmlIO& xio) {
-			XmlizeByJsonize(xio, *this);
-		}
+		void Xmlize(XmlIO& xio) 				{XmlizeByJsonize(xio, *this);}
 		void Jsonize(JsonIO& json) {
 			ScatterBasicSeries::Jsonize(json);
-			if (json.IsStoring() && userpD) 
+			if (json.IsStoring() && pD) 
 				CopyInternal();
 			json("data", data);
 			if (json.IsLoading()) {
@@ -262,7 +257,7 @@ protected:
 		}
 		void Serialize(Stream& s) { 
 			ScatterBasicSeries::Serialize(s);
-			if (s.IsStoring() && userpD) 
+			if (s.IsStoring() && pD) 
 				CopyInternal();
 			s % data;
 			if (s.IsLoading()) {
@@ -274,25 +269,24 @@ protected:
 		}
 		
 	private:
-		DataSource *userpD;
+		Ptr<DataSource> pD;
 		bool owns;
 		Vector<Pointf> data;
 		VectorPointf dataS;
 		bool serializeData, serializeFormat;
-		DataSource *pD;
 	
 		void CopyInternal() {
-			int64 sz = userpD->GetCount();
+			int64 sz = pD->GetCount();
 			data.SetCount(int(sz));
 			for (int64 i = 0; i < sz; ++i) {
-				data[int(i)].x = userpD->x(i);
-				data[int(i)].y = userpD->y(i);
+				data[int(i)].x = pD->x(i);
+				data[int(i)].y = pD->y(i);
 			}
 		}
 		void DeletePD() {
-			if(userpD && owns) {
-				delete userpD;
-				userpD = 0;
+			if(pD && owns) {
+				delete pD;
+				pD = 0;
 			}
 		}
 	};
@@ -534,8 +528,9 @@ public:
 	template <class X, class Y>
 	ScatterDraw &AddSeries(ArrayMap<X, Y> &data)	{return _AddSeries(new ArrayMapXY<X, Y>(data));}
 	
-	DataSource &GetSeries(int index);
-		
+	DataSource &GetDataSource(int index) 	{ASSERT(IsValid(index));ASSERT(!series[index].IsDeleted());	return series[index].Data();}
+	bool IsDeletedDataSource(int index) 	{return series[index].IsDeleted();}	
+	
 	ScatterDraw &InsertSeries(int index, double *yData, int numData, double x0 = 0, double deltaX = 1);
 	ScatterDraw &InsertSeries(int index, double *xData, double *yData, int numData);
 	ScatterDraw &InsertSeries(int index, Vector<double> &xData, Vector<double> &yData);
@@ -653,7 +648,7 @@ public:
 	
 	ScatterDraw &ShowSeriesLegend(int index, bool show = false);
 	ScatterDraw &ShowSeriesLegend(bool show = false)	{return ShowSeriesLegend(series.GetCount() - 1, show);}
-	bool GetShowSeriesLegend(int index)					{return series[index].showLegend;}
+	bool GetShowSeriesLegend(int index)					{ASSERT(IsValid(index));ASSERT(!series[index].IsDeleted());return series[index].showLegend;}
 		
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
 	ScatterDraw &Legend(const String legend);
@@ -758,10 +753,16 @@ public:
 	double GetPosY2(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
 	double GetSizeY2(double cy) {return plotH*cy/yRange2;}
 	
-	double GetRealPosX(int x) 	{return xMin + (x - hPlotLeft*plotScaleX)*xRange/plotW;}
-	double GetRealPosY(int y)	{return yMin + yRange - (y - plotScaleY*vPlotTop - titleHeight)*yRange/plotH;}		
-	double GetRealPosY2(int y)	{return yMin2 + yRange2 - (y - plotScaleY*vPlotTop - titleHeight)*yRange2/plotH;}		
+	double GetRealPosX(double x) 	{return xMin + (x - hPlotLeft*plotScaleX)*xRange/plotW;}
+	double GetRealPosY(double y)	{return yMin + yRange - (y - plotScaleY*vPlotTop - titleHeight)*yRange/plotH;}		
+	double GetRealPosY2(double y)	{return yMin2 + yRange2 - (y - plotScaleY*vPlotTop - titleHeight)*yRange2/plotH;}		
 	
+	double GetScatterPosX(double x) {return (x - xMin)*plotW/xRange + hPlotLeft*plotScaleX;}
+	double GetScatterPosY(double y) {return (yMin + yRange - y)*plotH/yRange + plotScaleY*vPlotTop + titleHeight;}
+	double GetScatterPosY2(double y){return (yMin2 + yRange2 - y)*plotH/yRange2 + plotScaleY*vPlotTop + titleHeight;}
+	double GetScatterDistance(double dx, double dy)  {return sqrt(sqr(GetScatterPosX(dx)) + sqr(GetScatterPosY(dy)));}
+	double GetScatterDistance2(double dx, double dy) {return sqrt(sqr(GetScatterPosX(dx)) + sqr(GetScatterPosY2(dy)));}
+		
 	double GetPixelThickX()		{return xRange/plotW;}
 	double GetPixelThickY()		{return yRange/plotH;}
 	
@@ -817,7 +818,10 @@ public:
 		return AddLabelSeries(index, labels, dx, dy, font, align, color);
 	}
 	ScatterDraw& AddLabelSeries(int index, Vector<String> &labels, int dx = 0, int dy = 0, Font font = StdFont(), 
-					Alignment align = ALIGN_CENTER, Color color = Black()) {		
+					Alignment align = ALIGN_CENTER, Color color = Black()) {	
+		ASSERT(IsValid(index));
+		ASSERT(!series[index].IsDeleted());
+		
 		series[index].labels = &labels;
 		series[index].labelsDx = dx;
 		series[index].labelsDy = dy;
@@ -828,23 +832,30 @@ public:
 	}
 	
 	ScatterDraw& SetDataSource_Internal(bool copy = true) {
-		for (int i = 0; i < series.GetCount(); ++i)
-			series[i].SetDataSource_Internal(copy);
-		return *this;
-	}
-	ScatterDraw& SetDataSource() {
-		for (int i = 0; i < series.GetCount(); ++i)
-			series[i].SetDataSource();
+		for (int i = 0; i < series.GetCount(); ++i) {
+			ScatterSeries &serie = series[i]; 
+			if (serie.IsDeleted())
+				continue;
+			serie.SetDataSource_Internal(copy);
+		}
 		return *this;
 	}
 	ScatterDraw& SerializeData(bool ser = true) {
-		for (int i = 0; i < series.GetCount(); ++i)
-			series[i].SerializeData(ser);
+		for (int i = 0; i < series.GetCount(); ++i) {
+			ScatterSeries &serie = series[i]; 
+			if (serie.IsDeleted())
+				continue;
+			serie.SerializeData(ser);
+		}
 		return *this;
 	}
 	ScatterDraw& SerializeFormat(bool ser = true) {
-		for (int i = 0; i < series.GetCount(); ++i)
-			series[i].SerializeFormat(ser);
+		for (int i = 0; i < series.GetCount(); ++i) {
+			ScatterSeries &serie = series[i]; 
+			if (serie.IsDeleted())
+				continue;
+			serie.SerializeFormat(ser);
+		}
 		serializeFormat = ser;
 		return *this;
 	}
@@ -1198,8 +1209,7 @@ private:
 };
 
 template <class T>
-void ScatterDraw::SetDrawing(T& w, bool ctrl)
-{
+void ScatterDraw::SetDrawing(T& w, bool ctrl) {
 	w.DrawRect(size, graphColor);
 	
 	titleHeight = !title.IsEmpty() ? fround(min(plotScaleX, plotScaleY)*titleFont.GetHeight()) : 0;
@@ -1258,7 +1268,9 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 		String yLabelLegends, yLabelLegends2;
 		Upp::Index<String> xUnits, yUnits, yUnits2;
 		for (int i = 0; i < series.GetCount(); ++i) {
-			ScatterSeries &serie = series[i];
+			const ScatterSeries &serie = series[i]; 
+			if (serie.IsDeleted())
+				continue;
 			if (serie.primaryY) {
 				if (yLabel.IsEmpty()) {
 					if (!yLabelLegends.IsEmpty())
@@ -1514,199 +1526,202 @@ void ScatterDraw::Plot(T& w)
 		}*/
 	}
 
-	if (!series.IsEmpty()) {
-		try {
-			for (int j = 0; j < series.GetCount(); j++) {
-				if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || 
-					(!series[j].PointsData()->IsExplicit() && series[j].PointsData()->GetCount() == 0))
-					continue;
-				Vector<Pointf> points;
-				if (series[j].PointsData()->IsParam()) {
-					double xmin = 0;
-					double xmax = double(series[j].PointsData()->GetCount());
-					for (double x = xmin; x <= xmax; x++) {
-						double xx = series[j].PointsData()->x(x);
-						double yy = series[j].PointsData()->y(x);
+	try {
+		for (int j = 0; j < series.GetCount(); j++) {
+			ScatterSeries &serie = series[j]; 
+			if (serie.IsDeleted())
+				continue;
+			DataSource &data = serie.Data();
+			if (serie.opacity == 0 || (!serie.seriesPlot && !serie.markPlot) || 
+				(!data.IsExplicit() && data.GetCount() == 0))
+				continue;
+			Vector<Pointf> points;
+			if (data.IsParam()) {
+				double xmin = 0;
+				double xmax = double(data.GetCount());
+				for (double x = xmin; x <= xmax; x++) {
+					double xx = data.x(x);
+					double yy = data.y(x);
+					if (IsNull(xx) || IsNull(yy)) 
+						points << Null;
+					else {
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iy;
+						if (serie.primaryY)
+							iy = fround(plotH*(yy - yMin)/yRange);
+						else
+							iy = fround(plotH*(yy - yMin2)/yRange2);
+						points << Point(ix, plotH - iy);
+					}
+				}
+			} else if (data.IsExplicit()) {
+				double xmin = xMin - 1;
+				double xmax = xMin + xRange + 1; 	
+				double dx = double(xmax - xmin)/plotW;		
+				for (double xx = xmin; xx < xmax; xx += dx) {
+					double yy = data.f(xx);
+					if (IsNull(yy))
+						points << Null;
+					else {
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iy;
+						if (serie.primaryY)
+							iy = fround(plotH*(yy - yMin)/yRange);
+						else
+							iy = fround(plotH*(yy - yMin2)/yRange2);
+						points << Point(ix, plotH - iy);
+					}
+				}
+			} else {
+				int64 imin, imax;
+				if (serie.sequential) {
+					imin = imax = Null;
+					for (int64 i = 0; i < data.GetCount(); ++i) {
+						double xx = data.x(i);
+						if (!IsNull(xx)) {
+							if (IsNull(imin)) {
+								if (xx >= xMin) 
+									imin = i;
+							}
+							if (IsNull(imax)) {
+								if (xx >= xMin + xRange) 
+									imax = i;
+							}
+						}
+					}
+					if (IsNull(imin))
+					    imin = 0;
+					if (IsNull(imax))
+					    imax = data.GetCount() - 1;
+				} else {
+					imin = 0;
+					imax = data.GetCount() - 1;
+				}
+				double dxpix = 0;
+				if (fastViewX) 
+					dxpix = (data.x(imax) - data.x(imin))/plotW;			
+				int npix = 1;
+				for (int64 i = imin; i <= imax; ) {
+					double xx, yy;
+					if (fastViewX && dxpix < 1) {	
+						yy = data.y(i);
+						if (IsNull(yy)) {
+							++i;
+							continue;
+						}
+						int64 ii;
+						double maxv = data.x(imin) + dxpix*npix; 
+						double maxY = yy, minY = yy;
+						for (ii = 1; i + ii < imax && data.x(i + ii) < maxv; ++ii) {
+							double dd = data.y(i + ii);
+							if (IsNull(dd))
+								continue;
+							maxY = max(maxY, dd);
+							minY = min(minY, dd);
+						}
+						xx = data.x(i);
+						if (IsNull(xx)) {
+							++i;
+							continue;
+						}
+						i += ii;
+						npix++;
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iMax, iMin;
+						if (serie.primaryY) {
+							iMax = fround(plotH*(maxY - yMin)/yRange);
+							iMin = fround(plotH*(minY - yMin)/yRange);
+						} else {
+							iMax = fround(plotH*(maxY - yMin2)/yRange2);
+							iMin = fround(plotH*(minY - yMin2)/yRange2);
+						}
+						points << Point(ix, plotH - iMax);
+						if (iMax != iMin)
+							points << Point(ix, plotH - iMin);	
+					} else {
+						xx = data.x(i);
+						yy = data.y(i);
+						++i;
 						if (IsNull(xx) || IsNull(yy)) 
 							points << Null;
 						else {
 							int ix = fround(plotW*(xx - xMin)/xRange);
 							int iy;
-							if (series[j].primaryY)
+							if (serie.primaryY)
 								iy = fround(plotH*(yy - yMin)/yRange);
 							else
 								iy = fround(plotH*(yy - yMin2)/yRange2);
 							points << Point(ix, plotH - iy);
 						}
-					}
-				} else if (series[j].PointsData()->IsExplicit()) {
-					double xmin = xMin - 1;
-					double xmax = xMin + xRange + 1; 	
-					double dx = double(xmax - xmin)/plotW;		
-					for (double xx = xmin; xx < xmax; xx += dx) {
-						double yy = series[j].PointsData()->f(xx);
-						if (IsNull(yy))
-							points << Null;
-						else {
-							int ix = fround(plotW*(xx - xMin)/xRange);
-							int iy;
-							if (series[j].primaryY)
-								iy = fround(plotH*(yy - yMin)/yRange);
-							else
-								iy = fround(plotH*(yy - yMin2)/yRange2);
-							points << Point(ix, plotH - iy);
-						}
-					}
-				} else {
-					int64 imin, imax;
-					if (series[j].sequential) {
-						imin = imax = Null;
-						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
-							double xx = series[j].PointsData()->x(i);
-							if (!IsNull(xx)) {
-								if (IsNull(imin)) {
-									if (xx >= xMin) 
-										imin = i;
-								}
-								if (IsNull(imax)) {
-									if (xx >= xMin + xRange) 
-										imax = i;
-								}
-							}
-						}
-						if (IsNull(imin))
-						    imin = 0;
-						if (IsNull(imax))
-						    imax = series[j].PointsData()->GetCount() - 1;
-					} else {
-						imin = 0;
-						imax = series[j].PointsData()->GetCount() - 1;
-					}
-					double dxpix = 0;
-					if (fastViewX) 
-						dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
-					int npix = 1;
-					for (int64 i = imin; i <= imax; ) {
-						double xx, yy;
-						if (fastViewX && dxpix < 1) {	
-							yy = series[j].PointsData()->y(i);
-							if (IsNull(yy)) {
-								++i;
-								continue;
-							}
-							int64 ii;
-							double maxv = series[j].PointsData()->x(imin) + dxpix*npix; 
-							double maxY = yy, minY = yy;
-							for (ii = 1; i + ii < imax && series[j].PointsData()->x(i + ii) < maxv; ++ii) {
-								double dd = series[j].PointsData()->y(i + ii);
-								if (IsNull(dd))
-									continue;
-								maxY = max(maxY, dd);
-								minY = min(minY, dd);
-							}
-							xx = series[j].PointsData()->x(i);
-							if (IsNull(xx)) {
-								++i;
-								continue;
-							}
-							i += ii;
-							npix++;
-							int ix = fround(plotW*(xx - xMin)/xRange);
-							int iMax, iMin;
-							if (series[j].primaryY) {
-								iMax = fround(plotH*(maxY - yMin)/yRange);
-								iMin = fround(plotH*(minY - yMin)/yRange);
-							} else {
-								iMax = fround(plotH*(maxY - yMin2)/yRange2);
-								iMin = fround(plotH*(minY - yMin2)/yRange2);
-							}
-							points << Point(ix, plotH - iMax);
-							if (iMax != iMin)
-								points << Point(ix, plotH - iMin);	
-						} else {
-							xx = series[j].PointsData()->x(i);
-							yy = series[j].PointsData()->y(i);
-							++i;
-							if (IsNull(xx) || IsNull(yy)) 
-								points << Null;
-							else {
-								int ix = fround(plotW*(xx - xMin)/xRange);
-								int iy;
-								if (series[j].primaryY)
-									iy = fround(plotH*(yy - yMin)/yRange);
-								else
-									iy = fround(plotH*(yy - yMin2)/yRange2);
-								points << Point(ix, plotH - iy);
-							}
-						}
-					}
-				}
-				if (!points.IsEmpty() && series[j].seriesPlot && series[j].thickness > 0) 
-					series[j].seriesPlot->Paint(w, points, plotScaleAvg, series[j].opacity, 
-												series[j].thickness, series[j].color, 
-												series[j].dash, plotAreaColor, series[j].fillColor, plotW/xRange, plotH/yRange, 
-												plotH*(1 + yMin/yRange), series[j].barWidth, 
-												series[j].isClosed);
-			
-				if (series[j].markWidth >= 1 && series[j].markPlot) {
-					if (!series[j].markPlot->IsMultiPlot()) {
-						for (int i = 0; i < points.GetCount(); i++) 
-							series[j].markPlot->Paint(w, plotScaleAvg, points[i], 
-								series[j].markWidth, series[j].markColor, 
-								series[j].markBorderWidth, series[j].markBorderColor);              
-					} else {
-						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
-							int ix = fround(plotW*(series[j].PointsData()->x(i) - xMin)/xRange);
-							int iy;
-							if (series[j].primaryY)
-								iy = plotH - fround(plotH*(series[j].PointsData()->y(i) - yMin)/yRange);
-							else
-								iy = plotH - fround(plotH*(series[j].PointsData()->y(i) - yMin2)/yRange2);
-							Vector<int> dataX, dataY;
-							Vector<double> dataFixed;
-							for (int ii = 0; ii < series[j].PointsData()->GetznxCount(i); ++ii) 
-								dataX << fround(plotW*(series[j].PointsData()->znx(ii, i) - xMin)/xRange);
-							if (series[j].primaryY) {
-								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(i); ++ii) 
-									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin)/yRange));
-							} else {
-								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(i); ++ii) 
-									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin2)/yRange2));
-							}
-							for (int ii = 0; ii < series[j].PointsData()->GetznFixedCount(); ++ii) 
-								dataFixed << series[j].PointsData()->znFixed(ii, i);
-							series[j].markPlot->Paint(w, plotScaleAvg, ix, iy, dataX, dataY, dataFixed, 
-								series[j].markWidth, series[j].markColor, 
-								series[j].markBorderWidth, series[j].markBorderColor);   
-						}
-					}
-				}
-				if (series[j].labels) {
-					int dx = int(series[j].labelsDx*plotScaleX);
-					int dy = int(series[j].labelsDy*plotScaleY);
-					Font fnt = series[j].labelsFont;
-					fnt.Height(int(fnt.GetHeight()*min(plotScaleX, plotScaleY)));
-					for (int i = 0; i < points.GetCount() && i < series[j].labels->GetCount(); i++) {
-						String txt = (*(series[j].labels))[i];
-						Size sz = GetTextSizeSpace(txt, fnt);
-						int ddy = static_cast<int>(-sz.cy/2.);
-						int ddx;
-						switch (series[j].labelsAlign) {
-						case ALIGN_LEFT:	ddx = 0;		break;
-						case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
-						case ALIGN_RIGHT:	ddx = -sz.cx;	break;
-						default: 			ddx = 0; // to avoid warning
-						}
-						double x = points[i].x + dx + ddx;
-						double y = points[i].y + dy + ddy;
-						DrawText(w, x, y, 0, txt, fnt, series[j].labelsColor);
 					}
 				}
 			}
-		} catch(ValueTypeError error) {
-			ASSERT_(true, error);
+			if (!points.IsEmpty() && serie.seriesPlot && serie.thickness > 0) 
+				serie.seriesPlot->Paint(w, points, plotScaleAvg, serie.opacity, 
+											serie.thickness, serie.color, 
+											serie.dash, plotAreaColor, serie.fillColor, plotW/xRange, plotH/yRange, 
+											plotH*(1 + yMin/yRange), serie.barWidth, 
+											serie.isClosed);
+		
+			if (serie.markWidth >= 1 && serie.markPlot) {
+				if (!serie.markPlot->IsMultiPlot()) {
+					for (int i = 0; i < points.GetCount(); i++) 
+						serie.markPlot->Paint(w, plotScaleAvg, points[i], 
+							serie.markWidth, serie.markColor, 
+							serie.markBorderWidth, serie.markBorderColor);              
+				} else {
+					for (int64 i = 0; i < data.GetCount(); ++i) {
+						int ix = fround(plotW*(data.x(i) - xMin)/xRange);
+						int iy;
+						if (serie.primaryY)
+							iy = plotH - fround(plotH*(data.y(i) - yMin)/yRange);
+						else
+							iy = plotH - fround(plotH*(data.y(i) - yMin2)/yRange2);
+						Vector<int> dataX, dataY;
+						Vector<double> dataFixed;
+						for (int ii = 0; ii < data.GetznxCount(i); ++ii) 
+							dataX << fround(plotW*(data.znx(ii, i) - xMin)/xRange);
+						if (serie.primaryY) {
+							for (int ii = 0; ii < data.GetznyCount(i); ++ii) 
+								dataY << (plotH - fround(plotH*(data.zny(ii, i) - yMin)/yRange));
+						} else {
+							for (int ii = 0; ii < data.GetznyCount(i); ++ii) 
+								dataY << (plotH - fround(plotH*(data.zny(ii, i) - yMin2)/yRange2));
+						}
+						for (int ii = 0; ii < data.GetznFixedCount(); ++ii) 
+							dataFixed << data.znFixed(ii, i);
+						serie.markPlot->Paint(w, plotScaleAvg, ix, iy, dataX, dataY, dataFixed, 
+							serie.markWidth, serie.markColor, 
+							serie.markBorderWidth, serie.markBorderColor);   
+					}
+				}
+			}
+			if (serie.labels) {
+				int dx = int(serie.labelsDx*plotScaleX);
+				int dy = int(serie.labelsDy*plotScaleY);
+				Font fnt = serie.labelsFont;
+				fnt.Height(int(fnt.GetHeight()*min(plotScaleX, plotScaleY)));
+				for (int i = 0; i < points.GetCount() && i < serie.labels->GetCount(); i++) {
+					String txt = (*(serie.labels))[i];
+					Size sz = GetTextSizeSpace(txt, fnt);
+					int ddy = static_cast<int>(-sz.cy/2.);
+					int ddx;
+					switch (serie.labelsAlign) {
+					case ALIGN_LEFT:	ddx = 0;		break;
+					case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
+					case ALIGN_RIGHT:	ddx = -sz.cx;	break;
+					default: 			ddx = 0; // to avoid warning
+					}
+					double x = points[i].x + dx + ddx;
+					double y = points[i].y + dy + ddy;
+					DrawText(w, x, y, 0, txt, fnt, serie.labelsColor);
+				}
+			}
 		}
+	} catch(ValueTypeError error) {
+		ASSERT_(true, error);
 	}
+	
 	WhenPaint(w);
 	ClipEnd(w);
 	w.End();

@@ -25,10 +25,12 @@ public:
 	virtual double f(double ) 				= 0;
 	virtual double f(double , double ) 		{NEVER(); return Null;}
 	virtual double f(Vector <double> ) 		{NEVER(); return Null;}
+	virtual double x(int64 ) 			{NEVER(); return Null;}
+	virtual double y(int64 ) 			{NEVER(); return Null;}	
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
-	virtual inline int64 GetCount()			{return Null;}
+	virtual inline int64 GetCount() const	{return Null;}
 	
 	//void SetNumDigits(int n)				{numDigits = n;}
 	//int GetNumDigits()						{return numDigits;}
@@ -480,7 +482,7 @@ public:
 		val *= d.val;
 	}
 	void Div(const doubleUnit &d) {
-		if (d.val < 1e-100)
+		if (abs(d.val) < 1e-100)
 			throw Exc(t_("Division by zero"));
 		unit.Div(d.unit);
 		val /= d.val;
@@ -611,7 +613,7 @@ public:
 				coeff << 0.1;	
 		}
 	}
-	double f(double x) {
+	double f(double x)  {
 		eval.SetConstant(idx, doubleUnit(x));
 		for (int i = 0; i < coeff.GetCount(); ++i) 
 			eval.SetVariable(varNames[i], coeff[i]);
