@@ -3,7 +3,10 @@
 int ScatterDraw::NumSeriesLegend() const {
 	int num = 0;
 	for (int i = 0; i < series.GetCount(); ++i) {
-		if (series[i].showLegend)
+		const ScatterSeries &serie = series[i]; 
+		if (serie.IsDeleted() || serie.opacity == 0)
+			continue;
+		if (serie.showLegend)
 			num++;
 	}
 	return num;
@@ -32,10 +35,13 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	Vector<String> legends;
 	int legendWidth = 0;
 	for (int i = 0; i < series.GetCount(); ++i) {
-		if (series[i].showLegend) {
-			String legend = series[i].legend;
-			if (legend.Find('[') < 0 && !series[i].unitsY.IsEmpty())
-				legend += " [" + series[i].unitsY + "]";
+		const ScatterSeries &serie = series[i]; 
+		if (serie.IsDeleted() || serie.opacity == 0)
+			continue;
+		if (serie.showLegend) {
+			String legend = serie.legend;
+			if (legend.Find('[') < 0 && !serie.unitsY.IsEmpty())
+				legend += " [" + serie.unitsY + "]";
 			legends.Add(legend);
 			legendWidth = max<int>(legendWidth, GetTextSizeSpace(legend, boldFont).cx);
 		}
@@ -105,22 +111,25 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	}
 	for(int row = 0, start = 0, i = 0, ireal = 0; row <= nrows; row++) {
 		for(; ireal < min(start + nlr, nlab); i++) {
-			if (series[i].showLegend) {
+			const ScatterSeries &serie = series[i]; 
+			if (serie.IsDeleted() || serie.opacity == 0)
+				continue;
+			if (serie.showLegend) {
 				double lx = rect.left + (ireal - start)*legendWidth + xWidth;
 				double ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
 						 rowIncSign*int(rowHeight*(row + 0.6) + loclegendRowSpacing*(row + 0.5));
 				Vector <Pointf> line;
-				double dashLen = GetDashLength(series[i].dash)*textScale;
+				double dashLen = GetDashLength(serie.dash)*textScale;
 				double realLineLen = lineLen/dashLen > 1 ? dashLen*int(lineLen/dashLen) : lineLen;
 				line << Pointf(lx, ly) << Pointf(lx + realLineLen, ly);
-				if (series[i].opacity > 0 && series[i].seriesPlot)
-					DrawPolylineOpa(w, line, textScale, 1, series[i].thickness, series[i].color, series[i].dash);
+				if (serie.opacity > 0 && serie.seriesPlot)
+					DrawPolylineOpa(w, line, textScale, 1, serie.thickness, serie.color, serie.dash);
 				Pointf mark_p(lx + xWidth, ly);
-				if (series[i].markWidth >= 1 && series[i].markPlot)
-					series[i].markPlot->Paint(w, plotScaleAvg, mark_p, series[i].markWidth, series[i].markColor, 
-						series[i].markBorderWidth, series[i].markBorderColor);   
-				Upp::Font &font = series[i].primaryY ? boldFont : italic;
-				DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3), 0, legends[ireal], font, series[i].color);                   
+				if (serie.markWidth >= 1 && serie.markPlot)
+					serie.markPlot->Paint(w, plotScaleAvg, mark_p, serie.markWidth, serie.markColor, 
+						serie.markBorderWidth, serie.markBorderColor);   
+				Upp::Font &font = serie.primaryY ? boldFont : italic;
+				DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3), 0, legends[ireal], font, serie.color);                   
 				ireal++;
 			} 
 		}

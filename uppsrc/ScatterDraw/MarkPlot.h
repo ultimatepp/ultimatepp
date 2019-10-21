@@ -40,7 +40,7 @@ public:
 	static Vector<String> GetTypes()                    {return clone(typeMap()).PickValues();}
 	int GetType() const {return typeMap().Find(typeid(*this).name());}
 	MarkPlot* Copy()const;
-	bool IsMultiPlot() 	{return multiPlot;}
+	bool IsMultiPlot() const 	{return multiPlot;}
 
 	static int GetTypeCount(int iM)                 	{return typeNumber()[iM];}
 	static String TypeString(int iM, int iT)			{return typeString()[iM][iT];}

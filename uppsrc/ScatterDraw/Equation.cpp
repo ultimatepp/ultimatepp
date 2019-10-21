@@ -30,13 +30,13 @@ void ExplicitEquation::SetNumCoeff(int num) {
 		coeff[i] = 0;
 }
 
-ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2) {
+ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &serie, double &r2) {
 	r2 = Null;
 	
-	if (series.IsExplicit() || series.IsParam())
+	if (serie.IsExplicit() || serie.IsParam())
 		return InadequateDataSource;
 	
-	if (series.GetCount() < coeff.GetCount())
+	if (serie.GetCount() < coeff.GetCount())
 		return SmallDataSource;
 	
 	ptrdiff_t numUnknowns = coeff.GetCount();
@@ -46,10 +46,10 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 		x(i) = coeff[i];
 	
 	Equation_functor functor;	
-	functor.series = &series;
+	functor.series = &serie;
 	functor.fSource = this;
 	functor.unknowns = numUnknowns;
-	functor.datasetLen = series.GetCount();
+	functor.datasetLen = serie.GetCount();
 	
 	NumericalDiff<Equation_functor> numDiff(functor);
 	LevenbergMarquardt<NumericalDiff<Equation_functor> > lm(numDiff);
@@ -64,19 +64,19 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 	if (ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
 		return TooManyFunctionEvaluation;
 
-	r2 = R2Y(series);
+	r2 = R2Y(serie);
 
 	return NoError;
 }
 
-double ExplicitEquation::R2Y(DataSource &series, double mean) {
+double ExplicitEquation::R2Y(DataSource &serie, double mean) {
 	if (IsNull(mean))
-		mean = series.AvgY();
+		mean = serie.AvgY();
 	double sse = 0, sst = 0;
-	for (int64 i = 0; i < series.GetCount(); ++i) {
-		double y = series.y(i);
+	for (int64 i = 0; i < serie.GetCount(); ++i) {
+		double y = serie.y(i);
 		if (!IsNull(y)) {
-			double err = y - f(series.x(i));
+			double err = y - f(serie.x(i));
 			sse += err*err;
 			double d = y - mean;
 			sst += d*d;
