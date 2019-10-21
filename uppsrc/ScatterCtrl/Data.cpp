@@ -29,10 +29,10 @@ void DataDlg::Init(ScatterCtrl& scatter)
 	OnTab();
 	
 	bool addedAll = false;
-	DataSource &serie0 = scatter.GetSeries(0);
+	DataSource &serie0 = scatter.GetDataSource(0);
 	for(int c = 1; c < scatter.GetCount(); c++) {
 		if (!IsNull(scatter.GetCount(c))) {
-			DataSource &serie = scatter.GetSeries(c);
+			DataSource &serie = scatter.GetDataSource(c);
 			if (serie0.SameX(serie)) {
 				if (!addedAll) {
 					addedAll = true;
@@ -51,7 +51,7 @@ void DataDlg::Init(ScatterCtrl& scatter)
 
 Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
-	if (int(q) >= pscatter->GetSeries(index).GetCount())
+	if (int(q) >= pscatter->GetDataSource(index).GetCount())
 		return Null;
 	Value ret = pscatter->GetStringX(index, q);
 	if (ret.Is<String>()) {
@@ -64,7 +64,7 @@ Value DataDlg::DataSourceX::Format(const Value& q) const
 
 Value DataDlg::DataSourceY::Format(const Value& q) const 
 {
-	if (int(q) >= pscatter->GetSeries(index).GetCount())
+	if (int(q) >= pscatter->GetDataSource(index).GetCount())
 		return Null;
 	Value ret = pscatter->GetStringY(index, q);
 	if (ret.Is<String>()) {

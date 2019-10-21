@@ -7,6 +7,8 @@
 #define TFILE <ScatterCtrl/ScatterCtrl.t>
 #include <Core/t.h>
 
+Vector<ScatterCtrl *> ScatterCtrl::instances;	
+
 #ifdef PLATFORM_WIN32
 
 void ScatterCtrl::SaveAsMetafile(const char* file)
@@ -193,7 +195,6 @@ void ScatterCtrl::SaveControl() {
 }
 
 void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
-	GuiLock __;
 	if (IsNull(highlight_0) && highlighting) {
 		highlighting = false;
 		KillTimeCallback();
@@ -233,6 +234,8 @@ void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
 		
 			
 void ScatterCtrl::Paint(Draw& w) {
+	GuiLock __;
+	
 	if (rotate == Angle_0)
 		Paint0(w, GetSize());
 	else if (rotate == Angle_90) {
@@ -257,14 +260,56 @@ void ScatterCtrl::TimerCallback() {
 	Refresh();
 }
 
-void ScatterCtrl::ProcessPopUp(const Point &pt)
-{
+void ScatterCtrl::Closest(double &x, double &y, double &y2) {
+	double minD = DBL_MAX;
+	double retx, rety, rety2;
+	
+	for (int i = 0; i < series.GetCount(); ++i) {
+		ScatterSeries &serie = series[i]; 
+		if (serie.IsDeleted() || serie.opacity == 0 || serie.Data().IsExplicit())
+			continue;	
+		DataSource &data = serie.Data();
+		double d;
+		int64 id;
+		if (serie.primaryY) {
+			id = data.Closest(x, y);
+			d = GetScatterDistance(x - data.x(id), y - data.y(id));
+		} else  {
+			id = data.Closest(x, y);
+			d = GetScatterDistance2(x - data.x(id), y - data.y(id));
+		}
+		if (minD > d) {
+			minD = d;
+			retx = data.x(id);	
+			if (serie.primaryY) {
+				rety = data.y(id);	
+				rety2 = GetRealPosY2(GetScatterPosY(data.y(id)));
+			} else {
+				rety2 = data.y(id);	
+				rety = GetRealPosY(GetScatterPosY2(data.y(id)));
+			}
+		}
+	}
+	if (minD == DBL_MAX)
+		x = y = y2 = Null;
+	else {
+		x = retx;
+		y = rety;
+		y2 = rety2;
+	}
+}
+
+void ScatterCtrl::ProcessPopUp(Point &pt) {
 	double _x  = GetRealPosX(popLT.x);
 	double _y  = GetRealPosY(popLT.y);
 	double _y2 = GetRealPosY2(popLT.y);
 	double x   = GetRealPosX(pt.x);
 	double y   = GetRealPosY(pt.y);
 	double y2  = GetRealPosY2(pt.y);
+	
+	if (IsNull(popLT))
+		popLT = pt;
+	popRB = pt;
 	
 	double dx  = fabs(x  - _x);
 	double dy  = fabs(y  - _y);
@@ -379,14 +424,6 @@ void ScatterCtrl::ProcessPopUp(const Point &pt)
 	} else
 		popTextEnd.Hide();
 }
-
-/*void ScatterCtrl::ProcessClickSeries(const Point &pt)
-{
-	double posx = GetRealPosX(pt.x);
-	double posy = GetRealPosY(pt.y);
-	double dx = 2*GetPixelThickX();
-	double dy = 2*GetPixelThickY();
-}*/
 						
 void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int wheel)
 {
@@ -520,8 +557,9 @@ bool ScatterCtrl::ProcessKey(int key)
 	return processed;
 }
 
-void ScatterCtrl::LabelPopUp(bool down, Point &pt) 
-{
+void ScatterCtrl::LabelPopUp(bool down, Point &pt) {
+	GuiLock __;
+	
 	if (down) {
 		if(showInfo && PointInPlot(pt)) {
 			popTextBegin.AppearOnly(this);
@@ -530,16 +568,6 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			popTextEnd.AppearOnly(this);
 			
 			isLabelPopUp = true;
-			if (IsNull(popLT))
-				popLT = pt;
-			popRB = pt;
-			/*Rect wa = GetWorkArea();
-			Rect rc = GetScreenRect();
-			if (wa.right - (rc.left + pt.x) < 200)
-				pt.x -= 200;
-			if (wa.bottom - (rc.top + pt.y) < 200)
-				pt.y -= 200;*/
-			//ProcessClickSeries(pt); TBD
 			ProcessPopUp(pt);		
 		} 
 	} else {
@@ -555,8 +583,7 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 	}
 }
 
-void ScatterCtrl::ZoomWindow(bool down, Point &pt) 
-{
+void ScatterCtrl::ZoomWindow(bool down, Point &pt) {
 	if (down) {
 		if (PointInPlot(pt)) {
 			isZoomWindow = true;
@@ -565,7 +592,7 @@ void ScatterCtrl::ZoomWindow(bool down, Point &pt)
 			popRB = pt;
 		}
 	} else {
-		if(isZoomWindow) {
+		if (isZoomWindow) {
 			isLabelPopUp = isZoomWindow = false;
 			
 			if (popLT.x > popRB.x)
@@ -625,7 +652,7 @@ bool ScatterCtrl::Key(dword key, int )
 		else if (key == K_CTRL_D)
 			DoShowData();
 		else if (key == K_CTRL_C)
-			SaveToClipboard(true);
+			SaveToClipboard(false);
 		else if (key == K_CTRL_S)
 			SaveToFile(Null);
 		else
@@ -722,6 +749,8 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 
 void ScatterCtrl::MouseMove(Point pt, dword keyFlags)
 {
+	GuiLock __;
+	
 	MousePointRot(pt);
 	if (isScrolling) {
 		double factorX = 0, factorY = 0;
@@ -738,9 +767,6 @@ void ScatterCtrl::MouseMove(Point pt, dword keyFlags)
 	} 
 	if(isLabelPopUp) {
 		if (showInfo && PointInPlot(pt)) {
-			if (IsNull(popLT))
-				popLT = pt;
-			popRB = pt;
 			ProcessPopUp(pt);
 			popTextBegin.AppearOnlyOpen(this);
 			popTextHoriz.AppearOnlyOpen(this);
@@ -886,6 +912,7 @@ void ScatterCtrl::OnTypeImage(FileSel *_fs)
 void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
+	
 	if (IsNull(fileName)) {
 		FileSel fs;
 		fs.Type(Format(t_("%s bitmap file"), "jpeg"), "*.jpg");
@@ -1067,5 +1094,7 @@ ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 	AddKeyBehavior(true,  false, false, K_UP,   	true, 	ScatterCtrl::SCROLL_UP);
 	AddKeyBehavior(true,  false, false, K_DOWN, 	true, 	ScatterCtrl::SCROLL_DOWN);
 	AddKeyBehavior(true,  false, false, K_F, 		true, 	ScatterCtrl::ZOOM_FIT);
+	
+	AddInstance(this);
 }
 

@@ -198,7 +198,7 @@ void ProcessingTab::OnArrayBar(Bar &menu) {
 void ProcessingTab::OnFit() {
 	WaitCursor waitcursor;
 	
-	DataSource &ds = pscatter->GetSeries(id);
+	DataSource &ds = pscatter->GetDataSource(id);
 	
 	userEquation->Init("User", ~tabBestFitRight.userFormula, "x");
 	
@@ -230,7 +230,7 @@ void ProcessingTab::OnFit() {
 
 void ProcessingTab::OnOp() 
 {
-	DataSource &data = tabFitLeft.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (data.IsParam() || data.IsExplicit()) 
 		return;
@@ -326,7 +326,7 @@ void ProcessingTab::OnOp()
 
 void ProcessingTab::OnAutoSensSector() 
 {
-	DataSource &data = tabFitLeft.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	Vector<Pointf> secAvg;
 	double baseWidth;
 	
@@ -363,7 +363,7 @@ void ProcessingTab::OnOperation()
 		}
 	}
 	exclamationOpened = false;
-	dataXRange.Init(pscatter->GetSeries(id), tabOpRight.xLow, tabOpRight.xHigh);
+	dataXRange.Init(pscatter->GetDataSource(id), tabOpRight.xLow, tabOpRight.xHigh);
 	tabOpLeft.scatter.Refresh();
 }
 
@@ -373,7 +373,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	name.SetText(_name);
 	
 	tabFitLeft.scatter.RemoveAllSeries();
-	tabFitLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+	tabFitLeft.scatter.AddSeries(pscatter->GetDataSource(id)).SetSequentialX(pscatter->GetSequentialX())
 				   .Legend(pscatter->GetLegend(id));
 	tabFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
@@ -400,7 +400,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	
 	tabFitLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	
-	DataSource &data = tabFitLeft.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (!data.IsParam()/* && !data.IsExplicit()*/) {	
 		double avg = data.AvgY();
@@ -461,7 +461,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 
 void ProcessingTab::OnUpdateSensitivity() 
 {
-	DataSource &data = tabFitLeft.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	bool refresh = false;
 	if (tabFitRight.opMax && newWidthMax != tabFitRight.width) {
@@ -505,7 +505,7 @@ void ProcessingTab::OnUpdateSensitivity()
 
 void ProcessingTab::OnSet() 
 {
-	DataSource &data = tabFitLeft.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (tabFreqFirst && tab.Get() == 1) {
 		tabFreqFirst = false;
@@ -538,19 +538,19 @@ void ProcessingTab::OnSet()
 		
 		tabOpLeft.scatter.RemoveAllSeries();
 		String legend = pscatter->GetLegend(id);
-		double xLow = pscatter->GetSeries(id).MinX();
+		double xLow = pscatter->GetDataSource(id).MinX();
 		if (IsNull(xLow))
 			xLow = pscatter->GetXMin();
 		tabOpRight.xLow <<= xLow;
-		double xHigh = pscatter->GetSeries(id).MaxX();
+		double xHigh = pscatter->GetDataSource(id).MaxX();
 		if (IsNull(xHigh))
 			xHigh = pscatter->GetXMin() + pscatter->GetXRange();
 		tabOpRight.xHigh <<= xHigh;
-		dataXRange.Init(pscatter->GetSeries(id), xLow, xHigh);
+		dataXRange.Init(pscatter->GetDataSource(id), xLow, xHigh);
 		tabOpLeft.scatter.AddSeries(dataXRange).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend + String("-") + t_("Processed")).NoMark()
 					   .Stroke(8, Upp::Color(115, 214, 74));				   
-		tabOpLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+		tabOpLeft.scatter.AddSeries(pscatter->GetDataSource(id)).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend).NoMark().Stroke(2, Blue());				   
 		tabOpLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
@@ -571,7 +571,7 @@ void ProcessingTab::OnSet()
 		tabBestFitLeft.scatter.RemoveAllSeries();
 		String legend = pscatter->GetLegend(id);
 		
-		tabBestFitLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+		tabBestFitLeft.scatter.AddSeries(pscatter->GetDataSource(id)).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend).NoMark().Stroke(2);				   
 		tabBestFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
@@ -636,7 +636,7 @@ void ProcessingTab::OnFFT()
 	{
 		WaitCursor waitcursor;
 		
-		DataSource &data = tabFitLeft.scatter.GetSeries(0);
+		DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 		
 		Vector<Pointf> orderedSeries;
 		for (int64 i = 0; i < data.GetCount(); ++i) {		// Clean Nulls

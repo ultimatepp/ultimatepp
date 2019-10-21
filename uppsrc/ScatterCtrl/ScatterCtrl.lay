@@ -105,6 +105,7 @@ LAYOUT(General, 340, 188)
 	ITEM(OptionBox, opResponsive, AutoBox(true).SetLabel(t_("Responsive")).LeftPosZ(136, 112).TopPosZ(32, 44))
 	ITEM(Label, dv___12, SetLabel(t_("JPG quality:")).LeftPosZ(136, 64).TopPosZ(80, 19))
 	ITEM(EditDouble, editSensitivity, Min(0).LeftPosZ(216, 24).TopPosZ(48, 19))
+	ITEM(Button, butApplyToAll, SetLabel(t_("Apply to all plots")).RightPosZ(8, 96).BottomPosZ(8, 20))
 END_LAYOUT
 
 LAYOUT(SeriesLeft, 128, 228)
