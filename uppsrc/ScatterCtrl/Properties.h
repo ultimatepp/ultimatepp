@@ -164,6 +164,7 @@ private:
 	ScatterCtrl *pscatter;
 	
 	void Change();
+	void ChangeAll();
 };
 
 class DataDlg : public WithData<TopWindow> {

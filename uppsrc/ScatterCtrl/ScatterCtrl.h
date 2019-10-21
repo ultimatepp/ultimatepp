@@ -60,15 +60,15 @@ public:
 		ids << idY << idX;
 		Init(_data, ids, _useCols, _beginData, _numData);
 	}
-	virtual inline double y(int64 id)	{return useCols ? data->Get(beginData + int(id), ids[0]) : data->Get(ids[0], beginData + int(id));};
-	virtual inline double x(int64 id) {
+	virtual inline double y(int64 id) 	{return useCols ? data->Get(beginData + int(id), ids[0]) : data->Get(ids[0], beginData + int(id));};
+	virtual inline double x(int64 id)  {
 		if (IsNull(ids[1]))
 			return double(id);
 		else
 			return useCols ? data->Get(beginData + int(id), ids[1]) : data->Get(ids[1], beginData + int(id));
 	}
 	virtual inline double xn(int n, int64 id)	{return useCols ? data->Get(beginData + int(id), ids[n]) : data->Get(ids[n], beginData + int(id));}
-	virtual inline int64 GetCount()	{return numData;};
+	virtual inline int64 GetCount() const		{return numData;};
 };
 
 class GridCtrlSource : public DataSource {
@@ -112,7 +112,7 @@ public:
 		_ids << idY << idX;
 		Init(_data, _ids, _useCols, _beginData, _numData);
 	}	
-	double GetVal(int64 id, int idx) {
+	double GetVal(int64 id, int idx) const {
 		if (IsNull(ids[idx]))
 			return double(id);
 		else {
@@ -131,10 +131,10 @@ public:
 				return ScanDouble(val.ToString());
 		}	
 	}
-	virtual inline double y(int64 id) {return GetVal(id, 0);}
-	virtual inline double x(int64 id) {return GetVal(id, 1);}
+	virtual inline double y(int64 id)  {return GetVal(id, 0);}
+	virtual inline double x(int64 id)  {return GetVal(id, 1);}
 	virtual inline double xn(int n, int64 id)	{return useCols ? data->Get(beginData + int(id), ids[n]) : data->Get(ids[n], beginData + int(id));}
-	virtual inline int64 GetCount()	{return numData;};
+	virtual inline int64 GetCount() const		{return numData;};
 };
 
 class ScatterCtrl : public Ctrl, public ScatterDraw {
@@ -142,10 +142,11 @@ public:
 	typedef ScatterCtrl CLASSNAME;
 	
 	ScatterCtrl();
-	virtual ~ScatterCtrl() {};
+	virtual ~ScatterCtrl() {RemoveInstance(this);};
 	
-	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
-					  SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN, ZOOM_FIT};
+	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, 
+						SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
+					  	SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN, ZOOM_FIT};
 	#define SHOW_INFO SHOW_COORDINATES
 	
 	struct MouseBehavior {
@@ -277,6 +278,11 @@ public:
 	void InsertSeries(int id, ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	void InsertSeries(int id, GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	
+	void RemoveAllSeries() {
+		GuiLock __;
+		ScatterDraw::RemoveAllSeries();
+	}
+		
 	ScatterCtrl& SetMaxRefreshTime(int _maxRefresh_ms) 	{maxRefresh_ms = _maxRefresh_ms; return *this;}
 	int GetMaxRefreshTime() 							{return maxRefresh_ms;}
 	
@@ -336,6 +342,9 @@ public:
 	virtual bool Key(dword key, int count);
 	virtual void GotFocus();
 	virtual void LostFocus();
+	
+	static int GetInstancesCount()			{return instances.GetCount();}	
+	static ScatterCtrl &GetInstance(int i)	{return *(instances[i]);}	
 		
 private:
 	bool showInfo;
@@ -366,8 +375,7 @@ private:
 	
 	void Paint0(Draw& w, const Size &sz);
 	
-	void ProcessPopUp(const Point &pt);
-	//void ProcessClickSeries(const Point &pt);
+	void ProcessPopUp(Point &pt);
 	
 	void DoMouseAction(bool down, Point pt, ScatterAction action, int wheel);
 	void DoKeyAction(ScatterAction action);
@@ -383,6 +391,8 @@ private:
 	void DoShowData();
 	void DoProcessing();
 	
+	void Closest(double &x, double &y, double &y2);
+		
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
@@ -404,7 +414,13 @@ private:
 	
 	int rotate;
 	Point &MousePointRot(Point &pt);		
-	Point &MousePointUnrot(Point &pt);		
+	Point &MousePointUnrot(Point &pt);	
+	
+	static Vector<ScatterCtrl *> instances;	
+	static void AddInstance(ScatterCtrl *instance) {instances << instance;}
+	static void RemoveInstance(ScatterCtrl *instance) {
+		instances.RemoveIf([&](int i) {return instance == instances[i];});
+	}
 };
 
 template <class T>

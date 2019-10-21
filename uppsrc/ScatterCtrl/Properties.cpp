@@ -324,6 +324,8 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	editSensitivity <<= THISBACK(Change);
 	editJpgQ <<= THISBACK(Change);
 	
+	butApplyToAll <<= THISBACK(ChangeAll);
+	
 	Change();
 }
 	
@@ -340,6 +342,23 @@ void GeneralTab::Change()
     
 	scatter.SetModify();
 	scatter.Refresh();
+}
+
+void GeneralTab::ChangeAll() 
+{
+	for (int i = 0; i < ScatterCtrl::GetInstancesCount(); ++i) {
+		ScatterCtrl &scatter = ScatterCtrl::GetInstance(i);
+		
+	    scatter.SetMode(~dropResolution);
+	    scatter.Rotate((ScatterCtrl::Angle)(int)dropRotate.GetData());
+	    Size size(~editWidth, ~editHeight);
+	    scatter.SetSaveSize(size);
+	    scatter.ScatterDraw::Responsive(~opResponsive, ~editSensitivity);
+	    scatter.SetJPGQuality(~editJpgQ);
+	    
+		scatter.SetModify();
+		scatter.Refresh();
+	}
 }
 
 void SeriesTab::Init(ScatterCtrl& scatter) 
