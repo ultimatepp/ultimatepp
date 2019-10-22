@@ -13,8 +13,17 @@
 #pragma clang diagnostic ignored "-Wdeprecated"
 #endif
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 #ifdef __clang__
 #pragma clang diagnostic pop
