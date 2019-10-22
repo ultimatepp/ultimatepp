@@ -41,10 +41,20 @@ class SshTunnel;
 class SshShell;
 class SshHosts;
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdefaulted-function-deleted" // FIXME: Temporary suppression.
+#endif
+
 #include "Core.h"
 #include "Session.h"
 #include "SFtp.h"
 #include "Channels.h"
 #include "Hosts.h"
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
 }
 #endif
