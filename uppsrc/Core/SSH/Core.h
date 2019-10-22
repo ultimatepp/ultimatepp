@@ -24,7 +24,6 @@ public:
     virtual ~Ssh();
 
     Ssh(Ssh&&) = default;
-    Ssh& operator=(Ssh&&) = default;
 
     struct Error : Exc {
         int code;

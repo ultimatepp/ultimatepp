@@ -145,7 +145,6 @@ public:
     virtual ~SFtp();
 
     SFtp(SFtp&&) = default;
-    SFtp& operator=(SFtp&&) = default;
 
 private:
     bool                    Init() override;
