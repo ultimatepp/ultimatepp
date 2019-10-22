@@ -45,7 +45,6 @@ public:
     virtual ~SshChannel();
 
     SshChannel(SshChannel&&) = default;
-    SshChannel& operator=(SshChannel&&) = default;
 
 protected:
     bool                Init() override;
@@ -107,7 +106,6 @@ public:
     virtual ~SshTunnel()                                                                    { Exit(); }
 
     SshTunnel(SshTunnel&&) = default;
-    SshTunnel& operator=(SshTunnel&&) = default;
 
 private:
     void Exit() override;
@@ -145,7 +143,6 @@ public:
     virtual ~SshShell();
 
     SshShell(SshShell&&) = default;
-    SshShell& operator=(SshShell&&) = default;
 
 protected:
     void    ReadWrite(String& in, const void* out, int out_len) override;

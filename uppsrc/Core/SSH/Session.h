@@ -68,7 +68,6 @@ public:
     virtual ~SshSession();
 
     SshSession(SshSession&&) = default;
-    SshSession& operator=(SshSession&&) = default;
 
     // DEPRECATED stuff. Use GetxxxFingerprint() methods instead.
     enum Hash           { HASH_MD5, HASH_SHA1, HASH_SHA256 };
