@@ -41,7 +41,7 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 	cliprect = Sizef(sz);
 	Init();
-	Reset();
+	Reset(); // TODO: Can be removed (cell is just constructed, Init called above)
 }
 
 void Rasterizer::Free()
