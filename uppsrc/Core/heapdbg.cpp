@@ -149,7 +149,7 @@ bool MemoryTryRealloc_(void *ptr, size_t& newsize);
 
 bool MemoryTryRealloc__(void *ptr, size_t& newsize)
 {
-	if(!ptr) return false;
+	if(!ptr || PanicMode) return false;
 	Mutex::Lock __(sHeapLock2);
 	DbgBlkHeader *p = (DbgBlkHeader *)ptr - 1;
 	DbgCheck(p);
@@ -179,6 +179,8 @@ void  MemoryFree48(void *ptr)     { return MemoryFree(ptr); }
 
 void MemoryCheckDebug()
 {
+	if(PanicMode)
+		return;
 	MemoryCheck();
 	Mutex::Lock __(sHeapLock2);
 	DbgBlkHeader *p = dbg_live.next;
