@@ -385,7 +385,7 @@ void Ide::TopAlignedDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color
 WString Ide::FormatErrorLine(const String& text, int& linecy)
 {
 	WString txt;
-	int cx = error.HeaderObject().GetTabWidth(2) - error.HeaderTab(2).GetMargin() * 2;
+	int cx = max(GetStdFontCy() * 30, error.HeaderObject().GetTabWidth(2) - error.HeaderTab(2).GetMargin() * 2);
 	int x = 0;
 	Font fnt = StdFont();
 	WString h = text.ToWString();
@@ -499,6 +499,7 @@ void ElepDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color
 
 void Ide::ConsoleLine(const String& line, bool assist)
 {
+	DDUMP(line);
 	if(linking) {
 		linking_line.Add(line);
 		return;
