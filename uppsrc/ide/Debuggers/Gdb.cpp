@@ -2,6 +2,13 @@
 
 #define METHOD_NAME UPP_METHOD_NAME("Gdb")
 
+void Gdb::WatchMenu(Bar& bar)
+{
+	bool b = !IdeIsDebugLock();
+	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
+	bar.Add(b, AK_ADDWATCH, THISBACK(QuickWatch));
+}
+
 void Gdb::DebugBar(Bar& bar)
 {
 	using namespace PdbKeys;
@@ -23,8 +30,7 @@ void Gdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
 	bar.Add(b, AK_THISS, THISBACK1(SetTab, 2));
 	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 3));
-	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
-	bar.Add(b, AK_ADDWATCH, THISBACK(QuickWatch));
+	WatchMenu(bar);
 	bar.Add(b, AK_CPU, THISBACK1(SetTab, 4));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
@@ -536,7 +542,6 @@ void Gdb::ClearCtrls()
 	disas.Clear();
 	
 	locals.Clear();
-	watches.Clear();
 	autos.Clear();
 	self.Clear();
 	cpu.Clear();
@@ -608,6 +613,10 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 
 Gdb::~Gdb()
 {
+	StringStream ss;
+	Store(callback(this, &Gdb::SerializeSession), ss);
+	WorkspaceConfigData("gdb-debugger") = ss;
+
 	IdeRemoveBottom(*this);
 	IdeRemoveRight(disas);
 	KillDebugTTY();
@@ -617,6 +626,22 @@ void Gdb::Periodic()
 {
 	if(TTYQuit())
 		Stop();
+}
+
+void Gdb::SerializeSession(Stream& s)
+{
+	int version = 0;
+	s / version;
+	int n = watches.GetCount();
+	s / n;
+	for(int i = 0; i < n; i++) {
+		String w;
+		if(s.IsStoring())
+			w = watches.Get(i, 0);
+		s % w;
+		if(s.IsLoading())
+			watches.Add(w);
+	}
 }
 
 Gdb::Gdb()
@@ -642,7 +667,7 @@ Gdb::Gdb()
 	watches.Inserting().Removing();
 	watches.EvenRowColor();
 	watches.WhenSel = THISBACK1(SetTree, &watches);
-	watches.WhenBar = [=](Bar& bar) { Mem(bar, watches); };
+	watches.WhenBar = [=](Bar& bar) { Mem(bar, watches); WatchMenu(bar); };
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
@@ -704,6 +729,9 @@ Gdb::Gdb()
 	Transparent();
 
 	periodic.Set(-50, THISBACK(Periodic));
+
+	StringStream ss(WorkspaceConfigData("gdb-debugger"));
+	Load(callback(this, &Gdb::SerializeSession), ss);
 }
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
