@@ -58,7 +58,7 @@ void Console::Append(const String& s) {
 	SetEditable();
 	MoveTextEnd();
 	WString t = Filter(s, sAppf).ToWString();
-	int mg = sb.GetReducedViewSize().cx / GetFont().GetAveWidth();
+	int mg = max(40, sb.GetReducedViewSize().cx / GetFont().GetAveWidth());
 	if(wrap_text && mg > 4) {
 		int x = GetColumnLine(GetCursor32()).x;
 		WStringBuffer tt;
