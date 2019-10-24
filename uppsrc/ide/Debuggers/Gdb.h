@@ -77,6 +77,7 @@ public:
 	void      SetTab(int q);
 	void      SetTree(ArrayCtrl *a);
 	void      OnTreeBar(Bar& bar);
+	void      WatchMenu(Bar& bar);
 	void      OnTreeExpand(int node);
 	void      MemoryGoto();
 	void      MemoryLoad(const String& adr, int count, bool showerror);
@@ -97,6 +98,8 @@ public:
 	
 	TimeCallback periodic; // Period check for killed console
 	void Periodic();
+
+	void SerializeSession(Stream& s);
 	
 	virtual ~Gdb() override;
 	Gdb();
