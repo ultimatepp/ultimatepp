@@ -499,7 +499,6 @@ void ElepDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color
 
 void Ide::ConsoleLine(const String& line, bool assist)
 {
-	DDUMP(line);
 	if(linking) {
 		linking_line.Add(line);
 		return;
