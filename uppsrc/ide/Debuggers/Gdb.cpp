@@ -5,8 +5,8 @@
 void Gdb::WatchMenu(Bar& bar)
 {
 	bool b = !IdeIsDebugLock();
-	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
-	bar.Add(b, AK_ADDWATCH, THISBACK(QuickWatch));
+	bar.Add(b, PdbKeys::AK_CLEARWATCHES, THISBACK(ClearWatches));
+	bar.Add(b, PdbKeys::AK_ADDWATCH, THISBACK(QuickWatch));
 }
 
 void Gdb::DebugBar(Bar& bar)
