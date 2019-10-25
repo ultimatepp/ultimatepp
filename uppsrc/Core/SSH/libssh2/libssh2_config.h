@@ -83,9 +83,9 @@
 #ifdef flagPOSIX
 #define HAVE_POLL
 #endif
-
+#ifdef flagGCC
 #define HAVE_GETTIMEOFDAY
-
+#endif
 //#define HAVE_INET_ADDR
 #define HAVE_SELECT
 #define HAVE_SOCKET
