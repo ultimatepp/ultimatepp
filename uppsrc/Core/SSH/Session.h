@@ -40,7 +40,7 @@ public:
     String              GetMD5Fingerprint() const               { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_MD5, 16);    }
     String              GetSHA1Fingerprint() const              { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_SHA1, 20);   }
     String              GetSHA256Fingerprint() const            { return GetHostKeyHash(LIBSSH2_HOSTKEY_HASH_SHA256, 32); }
-    Vector<String>      GetAuthMethods()                        { return pick(Split(session->authmethods, ' ')); }
+    Vector<String>      GetAuthMethods()                        { return pick(Split(session->authmethods, ',')); }
     TcpSocket&          GetSocket()                             { return session->socket;  }
     ValueMap            GetMethods() const;
 
