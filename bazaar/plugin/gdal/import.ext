@@ -76,6 +76,7 @@ exclude
 	frmts/pdf/*
 	frmts/pcidsk/*
 	frmts/png/*
+	frmts/zlib/*
 
 	*/ogr_capi_test.c*
 	*/test_geo_utils.c*
