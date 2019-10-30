@@ -93,7 +93,7 @@ public:
 	operator bool() const                     { return *term; }
 
 	int    GetLine() const                    { return line; }
-	int    GetColumn(int tabsize) const;
+	int    GetColumn(int tabsize = 4) const;
 	String GetFileName() const                { return fn; }
 
 	static String LineInfoComment(const String& filename, int line = 1, int column = 1);
