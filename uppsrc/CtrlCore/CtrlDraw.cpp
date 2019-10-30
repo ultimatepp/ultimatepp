@@ -691,8 +691,10 @@ void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 	ASSERT(q);
 	LLOG("DoSync " << UPP::Name(q) << " " << r);
 	Ctrl *top = q->GetTopRect(r, inframe);
-	top->SyncScroll();
-	top->WndUpdate(r);
+	if(top && top->IsOpen()) {
+		top->SyncScroll();
+		top->WndUpdate(r);
+	}
 }
 
 void  Ctrl::Sync()
