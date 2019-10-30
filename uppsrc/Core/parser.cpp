@@ -83,7 +83,10 @@ bool CParser::Spaces0() {
 					else if(term[0] == '/' && term[1] == '*')
 						count++;
 					
-					if(*term++ == '\n') line++;
+					if(*term++ == '\n') {
+						line++;
+						lineptr = term;
+					}
 				}
 			}
 			else {
@@ -93,7 +96,10 @@ bool CParser::Spaces0() {
 						term += 2;
 						break;
 					}
-					if(*term++ == '\n') line++;
+					if(*term++ == '\n') {
+						line++;
+						lineptr = term;
+					}
 				}
 			}
 		}
@@ -481,8 +487,10 @@ String CParser::ReadString(bool chkend)
 char CParser::GetChar()
 {
 	char c = *term++;
-	if(c == '\n')
+	if(c == '\n') {
 		line++;
+		lineptr = term;
+	}
 	return c;
 }
 
@@ -504,8 +512,10 @@ void CParser::SkipTerm()
 		ReadString('\'', false);
 	else		
 	if(*term) {
-		if(*term == '\n')
+		if(*term == '\n') {
 			line++;
+			lineptr = term + 1;
+		}
 		term++;
 	}
 	DoSpaces();
