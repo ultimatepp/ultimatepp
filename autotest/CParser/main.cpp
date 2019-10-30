@@ -78,5 +78,13 @@ CONSOLE_APP_MAIN
 	CHECK_OVERFLOW("-1e500", ReadDouble(), true);
 	CHECK_OVERFLOW(String('0', 500), ReadDouble(), true);
 	
+	{
+		CParser p("+ /* \n  */ a");
+		p.Char('+');
+		ASSERT(p.GetLine() == 2);
+		ASSERT(p.GetColumn() == 6);
+		ASSERT(p.ReadId() == "a");
+	}
+	
 	LOG("=========== OK");
 }
