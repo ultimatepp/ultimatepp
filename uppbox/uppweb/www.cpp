@@ -850,7 +850,7 @@ CONSOLE_APP_MAIN
 	Cout() << "Gather ref links " << AppendFileName(rootdir, "bazaar") << "\n";
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 	
-	if (outHtl)
+	if (outHtml)
 		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
 	String release = "13664";
