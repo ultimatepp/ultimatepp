@@ -25,6 +25,45 @@ topic "Historical roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Historical roadmap&]
+[s3; 2018.1 (rev 11873) (Mar 2018)&]
+[s23; Core&]
+[s5;l160;i150;O0; New low`-overhead CoWork [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_7`_7^ p
+arallelization method / pattern `- Loop]&]
+[s5;l160;i150;O0; Throughout the Core, many rvalue / universal reference 
+related optimizations&]
+[s5;l160;i150;O0; CoPartition optimized to perform the work in calling 
+thread if data size is small&]
+[s5;l160;i150;O0; SeedRandom without parameter now reseeds the random 
+with host entropy&]
+[s5;l160;i150;O0; Array/Vector new [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_3`_2^ G
+et/Set] methods&]
+[s5;l160;i150;O0; New features for WebSocket client mode&]
+[s23; plugin/bz2&]
+[s5;l160;i150;O0; plugin/bz2: Streaming support&]
+[s23; Painter&]
+[s5;l160;i150;O0; Co Option to run parallel&]
+[s5;l160;i150;O0; BufferPainter`::PreClipDashed&]
+[s23; PdfDraw&]
+[s5;l160;i150;O0; PdfDraw: DrawJPEG to directly embed JPEG compressed 
+images into PDF&]
+[s23; GUI programming&]
+[s5;l160;i150;O0; In Windows, owned windows now have minimize box 
+disabled (as minimizing of owned windows leads to strange behaviour)&]
+[s5;l160;i150;O0; LineEdit`::WhenScroll event&]
+[s5;l160;i150;O0; New OptionBox widget (Option with LabelBox like 
+graphics, also able to automatically enable/disable contained 
+widgets)&]
+[s5;l160;i150;O0; FileSel now has option to add widgets into the 
+dialog (e.g. to specify save format)&]
+[s23; TheIDE&]
+[s5;l160;i150;O0; Very long files (>400MB) are now opened for view 
+rather than edit.&]
+[s5;l160;i150;O0; Some trivial merge conflict helper tools&]
+[s5;l160;i150;O0; IconDes improvements&]
+[s5;l160;i150;O0; Esc scripting language now has `'continue`' statement&]
+[s5;l160;i150;O0; Debugger now can copy the back`-trace of [/ all] 
+threads to the clipboard&]
+[s0; &]
 [s3; 2017.2 (rev 11540) (Dec 2017)&]
 [s23; Core&]
 [s5;l160;i150;O0; New [* AsyncWork ]class `- U`+`+ future`-alike tool&]
