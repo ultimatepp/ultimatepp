@@ -26,8 +26,8 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Roadmap&]
-[s24; Upcoming release&]
-[s24; 2019.2 (October 2019)&]
+[s24; Current release&]
+[s3; 2019.2 (rev 13664[3 ) ](October 2019)&]
 [s5;* &]
 [s5; [* Core]&]
 [s5;l160;i150;O0; Allocator huge block handling optimized, memory 
@@ -77,9 +77,8 @@ lines&]
 [s5;l160;i150;O0; Run options dialog got new buttons to insert file 
 path / directory path into commandline args&]
 [s5;l160;i150;O0; pkg`-config support&]
-[s5;* &]
-[s5;* &]
-[s24; Current release&]
+[s0; &]
+[s24; Previous release&]
 [s3; 2019.1 (rev 13068) (May 2019)&]
 [s5;* &]
 [s5; [* General improvements]&]
@@ -155,47 +154,6 @@ with mingw are now practically zero&]
 [s5;l160;i150;O0;~~~192; plugin/lzma updated to 19.0&]
 [s5;l160;i150;O0;~~~192; plugin/pcre updated to 8.43&]
 [s5;l160;i150;O0;~~~192; plugin/sqlite3 updated to 3.27.2&]
-[s5; &]
-[s24; Previous release&]
-[s3; 2018.1 (rev 11873) (Mar 2018)&]
-[s22; Core&]
-[s5;l160;i150;O0; New low`-overhead CoWork [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_7`_7^ p
-arallelization method / pattern `- Loop]&]
-[s5;l160;i150;O0; Throughout the Core, many rvalue / universal reference 
-related optimizations&]
-[s5;l160;i150;O0; CoPartition optimized to perform the work in calling 
-thread if data size is small&]
-[s5;l160;i150;O0; SeedRandom without parameter now reseeds the random 
-with host entropy&]
-[s5;l160;i150;O0; Array/Vector new [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_3`_2^ G
-et/Set] methods&]
-[s5;l160;i150;O0; New features for WebSocket client mode&]
-[s22; plugin/bz2&]
-[s5;l160;i150;O0; plugin/bz2: Streaming support&]
-[s22; Painter&]
-[s5;l160;i150;O0; Co Option to run parallel&]
-[s5;l160;i150;O0; BufferPainter`::PreClipDashed&]
-[s22; PdfDraw&]
-[s5;l160;i150;O0; PdfDraw: DrawJPEG to directly embed JPEG compressed 
-images into PDF&]
-[s22; GUI programming&]
-[s5;l160;i150;O0; In Windows, owned windows now have minimize box 
-disabled (as minimizing of owned windows leads to strange behaviour)&]
-[s5;l160;i150;O0; LineEdit`::WhenScroll event&]
-[s5;l160;i150;O0; New OptionBox widget (Option with LabelBox like 
-graphics, also able to automatically enable/disable contained 
-widgets)&]
-[s5;l160;i150;O0; FileSel now has option to add widgets into the 
-dialog (e.g. to specify save format)&]
-[s22; TheIDE&]
-[s5;l160;i150;O0; Very long files (>400MB) are now opened for view 
-rather than edit.&]
-[s5;l160;i150;O0; Some trivial merge conflict helper tools&]
-[s5;l160;i150;O0; IconDes improvements&]
-[s5;l160;i150;O0; Esc scripting language now has `'continue`' statement&]
-[s5;l160;i150;O0; Debugger now can copy the back`-trace of [/ all] 
-threads to the clipboard&]
-[s0; &]
 [s0; &]
 [s3;H4; Archival releases:&]
 [s5; If you are looking for informations about archival releases 
