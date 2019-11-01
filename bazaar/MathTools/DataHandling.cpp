@@ -271,7 +271,7 @@ void TabData::OnOpen(bool force, bool updateButtons) {
 			Exclamation(t_("Problem reading binary file"));
 			return;
 		}
-		if (data.GetCount() == 0 || data.GetSeries(0).GetCount() == 0) {
+		if (data.GetCount() == 0 || data.GetDataSource(0).GetCount() == 0) {
 			Exclamation(t_("Data table not found"));
 			return;
 		}
