@@ -588,6 +588,12 @@ esES("Calidad JPG:")
 euES("")
 frFR("")
 
+T_("Apply to all plots")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Remove")
 caES("")
 esES("Borrar")
