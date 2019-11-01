@@ -141,13 +141,21 @@ void DrawHArrow(Painter &w, double x0, double y0, double x1, double y1, double w
 }
 
 void DrawText(Draw &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
-	w.DrawText(int(x), int(y), angle, text, font, color);
+	Vector<String> str = Split(text, '\n');
+	int h = font.GetHeight();
+	for (int i = 0; i < str.GetCount(); ++i)
+		w.DrawText(int(x), int(y + h*i), angle, str[i], font, color);
 }
 
 void DrawText(Painter &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
+	Vector<String> str = Split(text, '\n');
+	int h = font.GetHeight();
 	w.Begin();
 	w.Translate(x, y).Rotate(-angle*M_PI/1800.);
-	w.Text(0, 0, text, font).Fill(color);
+	for (int i = 0; i < str.GetCount(); ++i) {
+		w.Text(0, 0, str[i], font).Fill(color);
+		w.Translate(0, h);
+	}
 	w.End();
 }
 
