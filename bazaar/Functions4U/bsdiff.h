@@ -8,7 +8,7 @@ using namespace Upp;
 
 
 extern String errMsg;
-String BsGetLastError();
+//String BsGetLastError();
 bool Err(String str);
 
 #if defined(_WINDOWS_) || defined(__MINGW32__)

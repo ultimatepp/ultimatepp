@@ -1006,4 +1006,22 @@ int SentenceSimilitude(const char *s, const char *t);
 
 #define S(y)	String(y)
 
+namespace Upp {
+	
+template<class T>
+void Jsonize(JsonIO& io, std::complex<T>& var) {
+	T re, im;
+	if (io.IsStoring()) {
+		re = var.real();
+		im = var.imag();
+	}
+	io("re", re)("im", im);
+	if (io.IsLoading()) {
+		var.real(re);
+		var.imag(im);
+	}
+}
+
+}
+
 #endif

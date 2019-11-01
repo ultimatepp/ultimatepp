@@ -2775,7 +2775,6 @@ int SentenceSimilitude(const char *s, const char *t) {
 	}
 	return (100*mind)/ls;
 }
-
   
 // Dummy functions added after TheIDE change
 Upp::String GetCurrentMainPackage() {return "dummy";}

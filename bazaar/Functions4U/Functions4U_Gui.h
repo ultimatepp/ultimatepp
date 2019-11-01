@@ -90,7 +90,7 @@ void DrawRectLine(Draw& w, int x, int y, int width, int height, int lineWidth, c
 void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &color);
 void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color);
 
-int GetEditWidth(const String str);
+int GetEditWidth(const String &str, const Font font);
 
 class ConsoleOutput {
 public:
@@ -110,5 +110,7 @@ void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array);
 void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header);
 void ArrayCtrlRowSelect(ArrayCtrl &array);
 Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array);
+Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr);
+void ArrayCtrlSet(ArrayCtrl &array, const Vector<Vector<Value>> &vals, int fromRow = 0, int fromCol = 0);
 	
 #endif

@@ -81,10 +81,10 @@ void GatherTpp::GatherRefLinks(const char *upp)
 				if(ff.IsFolder()) {
 					String group = GetFileTitle(ff.GetName()	);
 					tl.group = group;
-					String dir = AppendFileName(pdir, ff.GetName());
+					String _dir = AppendFileName(pdir, ff.GetName());
 					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next()) {
 						if(ft.IsFile()) {
-							String path = AppendFileName(dir, ft.GetName());
+							String path = AppendFileName(_dir, ft.GetName());
 							tl.topic = GetFileTitle(ft.GetName());
 							String link = TopicLinkString(tl);
 							ScanTopicIterator sti(&reflink);
