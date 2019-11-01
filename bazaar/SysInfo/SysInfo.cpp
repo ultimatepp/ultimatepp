@@ -56,7 +56,7 @@ bool GetWMIInfo(String system, Vector <String> &data, Array <Value> *ret[], Stri
 	}
 	IWbemLocator* pIWbemLocator = NULL;
 	if (CoCreateInstance(___CLSID_WbemAdministrativeLocator, NULL, 
-		CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void **)&pIWbemLocator) != S_OK) {
+		CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, reinterpret_cast<void **>(&pIWbemLocator)) != S_OK) {
 		CoUninitialize();
 		return false;
 	}
@@ -245,7 +245,7 @@ String inet_ntop6(const unsigned char *src) {
 
 	memset(words, 0, sizeof words);
 	for (int i = 0; i < IN6ADDRSZ; i++) 
-		words[int(i / INT16SZ)] |= ((uint8_t)src[i] << ((1 - (i % INT16SZ)) << 3));
+		words[int(i / INT16SZ)] |= (static_cast<uint8_t>(src[i]) << ((1 - (i % INT16SZ)) << 3));
 	
 	best.base = -1;
 	cur.base = -1;
@@ -302,7 +302,7 @@ Array <NetAdapter> GetAdapterInfo() {
 	switch (GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen)) {
 	case ERROR_BUFFER_OVERFLOW:
 		pBuffer.Alloc(outBufLen);
-		pAddresses = (PIP_ADAPTER_ADDRESSES)~pBuffer;
+		pAddresses = reinterpret_cast<PIP_ADAPTER_ADDRESSES>(~pBuffer);
 		break;
 	case ERROR_NO_DATA:
 	case ERROR_INVALID_FUNCTION:
@@ -519,10 +519,11 @@ bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
 	
 	struct hostent *host = gethostbyname(sname);
 	domain = host->h_name;
+	unsigned char *h_addr_list = reinterpret_cast<unsigned char *>(*host->h_addr_list);
 	
 #ifdef _WIN32
-	ip4 = inet_ntop4((const unsigned char *)((struct in_addr *)*host->h_addr_list));
-	ip6 = inet_ntop6((const unsigned char *)((struct in_addr *)*host->h_addr_list));
+	ip4 = inet_ntop4(h_addr_list);
+	ip6 = inet_ntop6(h_addr_list);
 #else
 	Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN) + 1);
 	inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, ~str, INET_ADDRSTRLEN);
@@ -1027,15 +1028,14 @@ String GetProcessFileName(int64 processID)
 }
 
 
-ULONGLONG SubtractFILETIME(FILETIME &hasta, FILETIME &desde) {
-	__int64 timeDesde = ((__int64)desde.dwHighDateTime << 32) + desde.dwLowDateTime;
-	__int64 timeHasta = ((__int64)hasta.dwHighDateTime << 32) + hasta.dwLowDateTime;
-	__int64 delta = timeHasta - timeDesde;
+ULONGLONG SubtractFILETIME(FILETIME &to, FILETIME &from) {
+	__int64 timeFrom = (static_cast<__int64>(from.dwHighDateTime) << 32) + from.dwLowDateTime;
+	__int64 timeTo   = (static_cast<__int64>(to.dwHighDateTime) << 32) + to.dwLowDateTime;
+	__int64 delta = timeTo - timeFrom;
 	return delta;
 }
 
-int GetProcessCPUUsage(int64 pid)
-{
+int GetProcessCPUUsage(int64 pid) {
 	HANDLE hp = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, DWORD(pid));
 	if (hp == NULL)
 	    return Null;
@@ -1067,7 +1067,7 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 		return TRUE;		// Not a window
 	if (GetParent(hWnd) != 0)
 		return TRUE;		// Child window
-	Array<int64> *ret = (Array<int64> *)lParam;
+	Array<int64> *ret = reinterpret_cast<Array<int64> *>(lParam);
 	ret->Add(reinterpret_cast<int64>(hWnd));
 	return TRUE;
 }
@@ -1075,21 +1075,21 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption, bool getAll)
 {
 	HANDLE hProcess;
-	DWORD /*dwThreadId, */dwProcessId;
+	DWORD dwProcessId;
 	HINSTANCE hInstance;
 	WCHAR str[MAX_PATH];
 	int count;
 	
-	EnumWindows(EnumGetWindowsList, (LPARAM)&hWnd);	
+	EnumWindows(EnumGetWindowsList, reinterpret_cast<LPARAM>(&hWnd));	
 	for (int i = 0; i < hWnd.GetCount(); ++i) {
 		if (!getAll) {
 			LONG_PTR style = GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWL_STYLE);
-			if (style & WS_ICONIC || style & WS_MINIMIZE)
+			if (style & WS_MINIMIZE)	// WS_ICONIC == WS_MINIMIZE
 				continue;
 		}
 		String sstr;
-		hInstance = (HINSTANCE)GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWLP_HINSTANCE);
-		/* dwThreadId = */GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
+		hInstance = reinterpret_cast<HINSTANCE>(GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWLP_HINSTANCE));
+		GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
 		processId.Add(dwProcessId);
 		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
 		if ((count = GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))) {
@@ -1107,7 +1107,7 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 		if (sstr == "TPClnt.dll")		// VMWare Thinprint crashes SendMessageW()
 			caption << "";	
 		else if (IsWindowVisible(reinterpret_cast<HWND>(hWnd[i]))) {
-			count = int(SendMessageW(reinterpret_cast<HWND>(hWnd[i]), WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str));
+			count = int(SendMessageW(reinterpret_cast<HWND>(hWnd[i]), WM_GETTEXT, sizeof(str)/sizeof(WCHAR), reinterpret_cast<LPARAM>(str)));
 			caption << WString(str, count).ToString();	
 		} else
 			caption << "";	
@@ -1117,15 +1117,15 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 Array<int64> GetWindowsList()
 {
 	Array<int64> ret;
-	EnumWindows(EnumGetWindowsList, (LPARAM)&ret);	
+	EnumWindows(EnumGetWindowsList, reinterpret_cast<LPARAM>(&ret));	
 	return ret;
 }
 
 BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
 {
-	DWORD dwID ;
+	DWORD dwID;
   	GetWindowThreadProcessId(hwnd, &dwID);
-  	if(dwID == (DWORD)lParam)
+  	if(dwID == DWORD(lParam))
      	PostMessage(hwnd, WM_CLOSE, 0, 0);
   	return TRUE;
 }
@@ -1135,7 +1135,7 @@ bool ProcessTerminate(int64 pId, int timeout)
   	HANDLE hProc = ::OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE, DWORD(pId));
   	if(hProc == NULL)
     	return false;
-  	::EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)pId) ;
+  	::EnumWindows(reinterpret_cast<WNDENUMPROC>(TerminateAppEnum), static_cast<LPARAM>(pId));
 
 	int ret;
   	DWORD state = ::WaitForSingleObject(hProc, timeout);
@@ -1530,16 +1530,18 @@ int64    GetProcessId()			{return getpid();}
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 bool GetDriveSpace(String drive, 
-	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
 	uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
 	uint64 &totalBytesUser, // Total number of bytes on a disk that are available to the user who is associated with the calling thread.
 	uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
 {
 	StringBuffer sb(drive);	
+	ULARGE_INTEGER _freeBytesUser, _totalBytesUser, _totalFreeBytes;
 	
-	if(!GetDiskFreeSpaceEx(sb, (PULARGE_INTEGER)&freeBytesUser, (PULARGE_INTEGER)&totalBytesUser, (PULARGE_INTEGER)&totalFreeBytes))
+	if(!GetDiskFreeSpaceExA(sb, &_freeBytesUser, &_totalBytesUser, &_totalFreeBytes))
 		return false;
-	//totalBytes = 0;
+	freeBytesUser = uint64(_freeBytesUser.QuadPart);
+	totalBytesUser = uint64(_totalBytesUser.QuadPart);
+	totalFreeBytes = uint64(_totalFreeBytes.QuadPart);
 	return true;
 }
 
@@ -1567,10 +1569,10 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
     case DRIVE_RAMDISK: 	type = "RAM";		break;
    	}
    	char vol[MAX_PATH], fs[MAX_PATH];
-   	long flags;
-   	uint64 serial;
-   	uint64 _maxName;
-   	if(!::GetVolumeInformation(sb, vol, MAX_PATH, (LPDWORD)&serial, (LPDWORD)&_maxName, (LPDWORD)&flags, fs, MAX_PATH)) {
+   	DWORD flags;
+   	DWORD serial;
+   	DWORD _maxName;
+   	if(!::GetVolumeInformation(sb, vol, MAX_PATH, &serial, &_maxName, &flags, fs, MAX_PATH)) {
    		if (type == "Optical") {
    			volume = "";
    			fileSystem = "";
@@ -1581,7 +1583,7 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
    	}
    	volume = vol;
    	fileSystem = fs;
-   	maxName = (int)_maxName;
+   	maxName = int(_maxName);
    	
    	return true;
 }
@@ -1833,7 +1835,7 @@ int Window_GetStatus(int64 windowId)
     WINDOWPLACEMENT place;
     
     place.length = sizeof(place);
-    bool ret = GetWindowPlacement((HWND)windowId, &place);
+    bool ret = GetWindowPlacement(reinterpret_cast<HWND>(windowId), &place);
     if (!ret) {
         return Null;
     }
