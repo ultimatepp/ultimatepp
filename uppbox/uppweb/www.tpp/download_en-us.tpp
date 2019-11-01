@@ -28,7 +28,7 @@ portable .7z archive]]
 :: [s0;%DE-DE [*2 macOS]]
 :: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
 :: [s0;=2 ]
-:: [s0;= [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`.1`/upp`-macos`-13068`.zip`/download^2 a
+:: [s0;= [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`.2`/upp`-macos`-13664`.zip`/download^2 a
 pplication bundle zip][2  ]]
 :: [s0;%DE-DE [*2 Fedora, OpenSUSE, CentOS]]
 :: [s0;=2 ]
