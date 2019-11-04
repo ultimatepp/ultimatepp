@@ -13,29 +13,21 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	menu.Separator();
 	menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
 	menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
+	menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
+	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
 	menu.Add(b, "Delete package", THISBACK(DeletePackage));
 }
 
-bool RenamePackageFs(const String& upp, const String& newname, bool duplicate)
+bool RenamePackageFs(const String& upp, const String& npf, const String& nupp, bool copy)
 {
-	if(IsNull(newname)) {
-		Exclamation("Wrong name.");
-		return false;
-	}
 	String pf = GetFileFolder(upp);
-	String npf = AppendFileName(GetPackagePathNest(pf), newname);
-	String nupp = npf + "/" + GetFileName(newname) + ".upp";
-	if(FileExists(nupp)) {
-		Exclamation("Package [* \1" + newname + "\1] already exists!");
-		return false;
-	}
 	String temp_pf = AppendFileName(GetFileFolder(pf), AsString(Random()) + AsString(Random()));
 	if(!FileMove(pf, temp_pf)) {
 		Exclamation("Operation has failed.");
 		return false;
 	}
 	RealizePath(GetFileFolder(npf));
-	if(duplicate) {
+	if(copy) {
 		bool b = CopyFolder(npf, temp_pf);
 		FileMove(temp_pf, pf);
 		if(!b) {
@@ -59,6 +51,23 @@ bool RenamePackageFs(const String& upp, const String& newname, bool duplicate)
 	return true;
 }
 
+bool RenamePackageFs(const String& upp, const String& newname, bool duplicate)
+{
+	if(IsNull(newname)) {
+		Exclamation("Wrong name.");
+		return false;
+	}
+	String npf = AppendFileName(GetPackagePathNest(GetFileFolder(upp)), newname);
+	String nupp = npf + "/" + GetFileName(newname) + ".upp";
+
+	if(FileExists(nupp)) {
+		Exclamation("Package [* \1" + newname + "\1] already exists!");
+		return false;
+	}
+
+	return RenamePackageFs(upp, npf, nupp, duplicate);
+}
+
 void SelectPackageDlg::RenamePackage(bool duplicate)
 {
 	String n = GetCurrentName();
@@ -70,6 +79,65 @@ again:
 	if(!RenamePackageFs(PackagePath(GetCurrentName()), n, duplicate))
 		goto again;
 	Load(n);
+}
+
+void SelectPackageDlg::MovePackage(bool copy)
+{
+	WithMoveCopyPackageLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, copy ? "Copy package to" : "Move package to");
+
+	String d0;
+	for(int pass = 0; pass < 2; pass++) {
+		Index<String> udir;
+		FindFile ff(ConfigFile("*.var"));
+		while(ff) {
+			if(int(GetFileTitle(ff.GetName()) != base.GetKey()) == pass) {
+				VectorMap<String, String> var;
+				LoadVarFile(ff.GetPath(), var);
+				for(String d : Split(var.Get("UPP", ""), ';'))
+					if(DirectoryExists(d)) {
+						udir.FindAdd(d);
+						d0 = Nvl(d0, d);
+					}
+			}
+			ff.Next();
+		}
+		
+		Vector<String> sd = pick(udir.PickKeys());
+		Sort(sd, [](const String& a, const String& b) { return ToUpper(a) < ToUpper(b); });
+		for(String d : sd)
+			dlg.dir.AddList(d);
+	}
+
+	dlg.dir <<= d0;
+	dlg.select.SetImage(CtrlImg::Dir());
+	dlg.select << [&] { String d = SelectDirectory(); if(d.GetCount()) dlg.dir <<= d; };
+
+	dlg.name <<= GetCurrentName();
+
+again:
+	if(dlg.Run() != IDOK)
+		return;
+	
+	String dir = ~dlg.dir;
+	if(!DirectoryExists(dir)) {
+		Exclamation("Invalid target directory!");
+		goto again;
+	}
+	String pkg = AppendFileName(dir, ~~dlg.name);
+	if(DirectoryExists(pkg)) {
+		Exclamation("Target package directory already exists!");
+		goto again;
+	}
+	if(FileExists(pkg)) {
+		Exclamation("Invalid target package directory - it is a file!");
+		goto again;
+	}
+
+	if(!RenamePackageFs(PackagePath(GetCurrentName()), pkg, pkg + "/" + GetFileName(~~dlg.name) + ".upp", copy))
+		goto again;
+
+	Load(~~dlg.name);
 }
 
 void SelectPackageDlg::DeletePackage()
