@@ -261,8 +261,12 @@ protected:
 	void        Load();
 	String      FilePath(const String& fn);
 	void        SetDir(const String& dir);
-	String      GetDir();
+	String      GetDir() const;
 	void        AddName(Vector<String>& fn, String& o);
+	bool        IsLnkFile(const String& p) const;
+	String      ResolveLnk(const String& name) const;
+	String      ResolveLnkDir(const String& name) const;
+	String      ResolveLnkFile(const String& name) const;
 	void        Finish();
 	bool        Execute(int mode);
 	bool        IsMulti()                                     { return multi && mode == OPEN; }
