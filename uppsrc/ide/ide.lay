@@ -129,6 +129,16 @@ LAYOUT(UppLayout, 936, 576)
 	ITEM(EditIntSpin, tabsize, RightPosZ(6, 50).TopPosZ(28, 19))
 END_LAYOUT
 
+LAYOUT(MoveCopyPackageLayout, 408, 80)
+	ITEM(Label, dv___0, SetLabel(t_("Target directory")).LeftPosZ(4, 88).TopPosZ(4, 19))
+	ITEM(WithDropChoice<EditString>, dir, NotNull(true).LeftPosZ(96, 284).TopPosZ(4, 19))
+	ITEM(Button, select, LeftPosZ(380, 20).TopPosZ(4, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Target name")).LeftPosZ(4, 88).TopPosZ(32, 19))
+	ITEM(EditString, name, NotNull(true).LeftPosZ(96, 64).TopPosZ(32, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(6, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
+END_LAYOUT
+
 LAYOUT(NewPackageLayout, 892, 560)
 	ITEM(Label, dv___0, SetLabel(t_("Package name")).LeftPosZ(8, 80).TopPosZ(4, 19))
 	ITEM(EditString, package, LeftPosZ(88, 268).TopPosZ(4, 19))

@@ -223,6 +223,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           RenamePackage(bool duplicate);
 	void           DeletePackage();
 	void           PackageMenu(Bar& bar);
+	void           MovePackage(bool copy);
 	
 	enum {
 		MAIN = 1, FIRST = 2
