@@ -66,13 +66,13 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 		m.exe = true;
 	}
 	else
-	if(ext == ".exe")
+	if(findarg(ext, ".exe", ".lnk") >= 0)
 		m.exe = true;
 	else
-		m.file = "x." + ext;
+		m.file = "x" + ext;
 	if(quick) {
 		m.exe = false;
-		m.file = "x." + ext;
+		m.file = "x" + ext;
 	}
 	return MakeImage(m);
 }
@@ -668,12 +668,12 @@ void LazyExeFileIcons::Do()
 }
 
 void LazyExeFileIcons::ReOrder()
-{ // gather .exe files; sort based on length so that small .exe get resolved first
+{ // gather .exe and .lnk files; sort based on length so that small .exe get resolved first
 	ndx.Clear();
 	Vector<int> len;
 	for(int i = 0; i < list->GetCount(); i++) {
 		const FileList::File& f = list->Get(i);
-		if(ToLower(GetFileExt(f.name)) == ".exe" && !f.isdir) {
+		if(findarg(ToLower(GetFileExt(f.name)), ".exe", ".lnk") && !f.isdir) {
 			ndx.Add(i);
 			len.Add((int)min((int64)INT_MAX, f.length));
 		}
@@ -692,7 +692,8 @@ void LazyExeFileIcons::Start(FileList& list_, const String& dir_, Event<bool, co
 }
 #endif
 
-String FileSel::GetDir() {
+String FileSel::GetDir() const
+{
 	String s = ~dir;
 	if(s.IsEmpty()) return basedir;
 	if(basedir.IsEmpty()) return s;
@@ -985,6 +986,41 @@ void FileSel::AddName(Vector<String>& fn, String& f) {
 	f.Clear();
 }
 
+bool FileSel::IsLnkFile(const String& p) const
+{
+	int l = p.GetLength() - 4;
+	return l >= 0 && p[l] == '.' && ToLower(p[l + 1]) == 'l' && ToLower(p[l + 2]) == 'n' && ToLower(p[l + 3]) == 'k';
+}
+
+String FileSel::ResolveLnk(const String& name) const
+{
+#ifdef PLATFORM_WIN32
+	if(IsLnkFile(name))
+		return GetSymLinkPath(AppendFileName(GetDir(), name));
+#endif
+	return Null;
+}
+
+String FileSel::ResolveLnkDir(const String& name) const
+{
+#ifdef PLATFORM_WIN32
+	String p = ResolveLnk(name);
+	if(p.GetCount() && DirectoryExists(p))
+		return p;
+#endif
+	return Null;
+}
+
+String FileSel::ResolveLnkFile(const String& name) const
+{
+#ifdef PLATFORM_WIN32
+	String p = ResolveLnk(name);
+	if(p.GetCount() && FileExists(p))
+		return p;
+#endif
+	return Null;
+}
+
 void FileSel::Finish() {
 	if(filesystem->IsWin32())
 		if(GetDir().IsEmpty()) {
@@ -1000,6 +1036,13 @@ void FileSel::Finish() {
 					const FileList::File& m = list[i];
 					if(m.isdir)
 						fn.Add(AppendFileName(p, m.name));
+				#ifdef PLATFORM_WIN32
+					else {
+						String p = ResolveLnkDir(m.name);
+						if(p.GetCount())
+							fn.Add(p);
+					}
+				#endif
 				}
 		}
 		else {
@@ -1008,6 +1051,13 @@ void FileSel::Finish() {
 				const FileList::File& m = list[list.GetCursor()];
 				if(m.isdir)
 					p = AppendFileName(p, m.name);
+			#ifdef PLATFORM_WIN32
+				else {
+					String pp = ResolveLnkDir(m.name);
+					if(p.GetCount())
+						p = pp;
+				}
+			#endif
 			}
 			fn.Add(p);
 		}
@@ -1087,6 +1137,7 @@ bool FileSel::OpenItem() {
 		}
 	#endif
 		const FileList::File& m = list.Get(list.GetCursor());
+		String path = AppendFileName(~dir, m.name);
 	#ifdef PLATFORM_WIN32
 		if(IsNull(dir) && m.name == t_("Network")) {
 			netnode = NetNode::EnumRoot();
@@ -1094,9 +1145,16 @@ bool FileSel::OpenItem() {
 			LoadNet();
 			return true;
 		}
+		if(GetFileExt(path) == ".lnk") {
+			String p = ResolveLnkDir(m.name);
+			if(p.GetCount()) {
+				SetDir(p);
+				return true;
+			}
+		}
 	#endif
 		if(m.isdir) {
-			SetDir(AppendFileName(~dir, m.name));
+			SetDir(path);
 			return true;
 		}
 	}
@@ -1911,6 +1969,10 @@ String FileSel::GetFile(int i) const {
 		if(!IsFullPath(p))
 			p = AppendFileName(dir.GetData(), p);
 	}
+#ifdef PLATFORM_WIN32
+	if(IsLnkFile(p))
+		p = Nvl(GetSymLinkPath(p), p);
+#endif
 	return p;
 }
 
