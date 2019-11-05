@@ -134,7 +134,7 @@ LAYOUT(MoveCopyPackageLayout, 408, 80)
 	ITEM(WithDropChoice<EditString>, dir, NotNull(true).LeftPosZ(96, 284).TopPosZ(4, 19))
 	ITEM(Button, select, LeftPosZ(380, 20).TopPosZ(4, 19))
 	ITEM(Label, dv___3, SetLabel(t_("Target name")).LeftPosZ(4, 88).TopPosZ(32, 19))
-	ITEM(EditString, name, NotNull(true).LeftPosZ(96, 64).TopPosZ(32, 19))
+	ITEM(EditString, name, NotNull(true).LeftPosZ(96, 156).TopPosZ(32, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
 END_LAYOUT
