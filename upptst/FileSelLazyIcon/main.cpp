@@ -12,6 +12,7 @@ GUI_APP_MAIN
 {
 	FileSel fs;
 	fs.AllFilesType();
+	fs.Type("Text", "*.txt");
 	fs.WhenIconLazy = sLoadImage;
 	fs.ExecuteOpen();
 }
