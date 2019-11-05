@@ -32,6 +32,11 @@ resolution with light theme, standard resolution with dark theme,
 UHD resolution with light theme, UHD resolution with dark theme.&]
 [s5; [* IsUHDMode() ]and [* IsDarkTheme() ]functions return respective 
 current GUI status.&]
+[s3; Activating Dark mode support&]
+[s0;b42;a42; On some platforms (Win32), application needs to call 
+Ctrl`::SetDarkThemeEnabled(); at the starth of GUI`_APP`_MAIN 
+to actually allow dark mode. This is make sure that application 
+behaves correctly with dark colors.&]
 [s3; Scaling GUI for actual GUI font and UHD resolution&]
 [s5; U`+`+ coordinates in drawing operations are always in real pixels 
 for screen targets. U`+`+ provides various functions to adjust 
