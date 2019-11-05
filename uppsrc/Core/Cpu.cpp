@@ -171,4 +171,33 @@ void EndianSwap(int *v, size_t count) ENDIAN_SWAP
 void EndianSwap(int64 *v, size_t count) ENDIAN_SWAP
 void EndianSwap(uint64 *v, size_t count) ENDIAN_SWAP
 
+#ifdef COMPILER_MINGW
+
+static int fast_mingw_tlsndx = 0;
+
+void PreallocateFastMingwTls()
+{ // preallocate "simple" tls entries so that they are not used up by other code
+	ONCELOCK { // Preallocate
+		fast_mingw_tlsndx = TlsAlloc();
+		while(TlsAlloc() < 60);
+	}
+}
+
+INITBLOCK {
+	PreallocateFastMingwTls();
+}
+
+int FastMingwTlsAlloc()
+{
+	int ndx;
+	INTERLOCKED {
+		PreallocateFastMingwTls();
+		ndx = fast_mingw_tlsndx++;
+		ASSERT(ndx <= 60);
+	}
+	return ndx;
+}
+
+#endif
+
 }

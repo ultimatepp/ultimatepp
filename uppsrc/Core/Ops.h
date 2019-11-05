@@ -323,6 +323,8 @@ int SignificantBits64(uint64 x)
 // This is hopefully a temporary fix for abysmal MINGW thread_local implementation
 // ALSO IMPORTANT: There are some mingw/lld issues that prevent TLS stuff to be used in inlines
 
+int FastMingwTlsAlloc();
+
 template <class T>
 struct FastMingwTls {
 	int ndx = -1;
@@ -356,7 +358,7 @@ public:
 	const T operator->() const         { return (T)(uintptr_t)Slot(); }
 	operator T() const                 { return (T)(uintptr_t)Slot(); }
 	
-	FastMingwTls()                     { ndx = TlsAlloc(); ASSERT(ndx < 60); }
+	FastMingwTls()                     { ndx = FastMingwTlsAlloc(); }
 	FastMingwTls(T x) : FastMingwTls() { operator=(x); }
 };
 
