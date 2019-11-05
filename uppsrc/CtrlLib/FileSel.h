@@ -263,7 +263,6 @@ protected:
 	void        SetDir(const String& dir);
 	String      GetDir() const;
 	void        AddName(Vector<String>& fn, String& o);
-	bool        IsLnkFile(const String& p) const;
 	String      ResolveLnk(const String& name) const;
 	String      ResolveLnkDir(const String& name) const;
 	String      ResolveLnkFile(const String& name) const;
@@ -282,6 +281,8 @@ protected:
 	typedef FileSel CLASSNAME;
 
 public:
+	static bool IsLnkFile(const String& p);
+
 	Event<bool, const String&, Image&> WhenIcon;
 	void (*WhenIconLazy)(const String& path, Image& result);
 

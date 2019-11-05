@@ -536,8 +536,12 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				show = true;
 			if(!show && hiddenfiles && fi.is_file)
 				show = true;
-			if(fi.filename != "." && fi.filename != ".." != 0 &&
+			if(fi.filename != "." && fi.filename != ".." &&
+			#ifdef PLATFORM_WIN32
+			   (fi.is_directory || FileSel::IsLnkFile(fi.filename) || PatternMatchMulti(patterns, fi.filename)) &&
+			#else
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
+			#endif
 			   MatchSearch(fi.filename, search) && show) {
 				Image img;
 			#ifdef PLATFORM_POSIX
@@ -591,7 +595,7 @@ static auxthread_t auxthread__ sExeIconThread(void *)
 	strncpy(path, sExePath, 1024);
 	sExeMutex.Leave();
 	AvoidPaintingCheck__();
-	SHGetFileInfo(sExePath, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON|SHGFI_SMALLICON);
+	SHGetFileInfo(path, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON|SHGFI_SMALLICON);
 	sExeMutex.Enter();
 	memcpy(&sExeInfo, &info, sizeof(info));
 	sExeRunning = false;
@@ -608,9 +612,11 @@ void LazyExeFileIcons::Done(Image img)
 		return;
 	const FileList::File& f = list->Get(ii);
 	WhenIcon(false, f.name, img);
-	if(f.hidden)
-		img = Contrast(img, 200);
-	list->SetIcon(ii, img);
+	if(!IsNull(img)) {
+		if(f.hidden)
+			img = Contrast(img, 200);
+		list->SetIcon(ii, img);
+	}
 	pos++;
 }
 
@@ -986,7 +992,7 @@ void FileSel::AddName(Vector<String>& fn, String& f) {
 	f.Clear();
 }
 
-bool FileSel::IsLnkFile(const String& p) const
+bool FileSel::IsLnkFile(const String& p)
 {
 	int l = p.GetLength() - 4;
 	return l >= 0 && p[l] == '.' && ToLower(p[l + 1]) == 'l' && ToLower(p[l + 2]) == 'n' && ToLower(p[l + 3]) == 'k';
@@ -1145,12 +1151,10 @@ bool FileSel::OpenItem() {
 			LoadNet();
 			return true;
 		}
-		if(GetFileExt(path) == ".lnk") {
-			String p = ResolveLnkDir(m.name);
-			if(p.GetCount()) {
-				SetDir(p);
-				return true;
-			}
+		String p = ResolveLnkDir(m.name);
+		if(p.GetCount()) {
+			SetDir(p);
+			return true;
 		}
 	#endif
 		if(m.isdir) {
