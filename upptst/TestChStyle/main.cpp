@@ -39,9 +39,14 @@ TestChStyle::TestChStyle()
 	classic << [] { Ctrl::SetSkin(ChClassicSkin); };
 	host << [] { Ctrl::SetSkin(ChHostSkin); };
 #endif
+
+	for(int i = 0; i < 100; i++)
+		tab.Add("Tab " + AsString(i));
 }
 
 GUI_APP_MAIN
 {
+	Ctrl::SetDarkThemeEnabled();
+	
 	TestChStyle().Run();
 }
