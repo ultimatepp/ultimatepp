@@ -83,7 +83,7 @@ void Calendar::Reset()
 Calendar& Calendar::SetStyle(const Style& s)
 {
 	style = &s;
-	nbg = Colorize(CtrlImg::Bg(), s.header, 150);
+	nbg = CtrlImg::Bg();
 	Refresh();
 	return *this;
 }
@@ -494,7 +494,7 @@ void Calendar::Paint(Draw &w)
 		}
 		d = GetDaysOfMonth(m, y) - fd + 1;
 	}
-
+	
 	for(int i = 0; i < rows; i++)
 	{
 		int yp = 2 + (int) ((i + 1) * rowh + hs);
@@ -529,11 +529,11 @@ void Calendar::Paint(Draw &w)
 				{
 					Day(j, i) = d;
 
-					fg = Black;
+					fg = SBlack;
 
 					if(j == 6)
 					{
-						fg = Red;
+						fg = SRed;
 					}
 					if(d == 1)
 					{
@@ -584,7 +584,7 @@ void Calendar::Paint(Draw &w)
 				w.DrawRect(xp, yp, cw, rh, bg);
 				if(special)
 				{
-					DrawFrame(w, xp + 1, yp + 1, cw - 2, rh - 2, Black);
+					DrawFrame(w, xp + 1, yp + 1, cw - 2, rh - 2, SBlack);
 					DrawFrame(w, xp, yp, cw, rh, st.bgmain);
 				}
 
@@ -800,7 +800,7 @@ LineCtrl::LineCtrl()
 Clock& Clock::SetStyle(const Style& s)
 {
 	style = &s;
-	nbg = Colorize(CtrlImg::Bg(), s.header, 150);
+	nbg = CtrlImg::Bg();
 	Refresh();
 	return *this;
 }
@@ -1518,10 +1518,10 @@ CH_STYLE(Clock, Style, StyleDefault)
 	header        = SColorHighlight;
 	bgmain        = SColorPaper;
 	fgmain        = SColorText;
-	arrowhl       = Green;
-	arrowhour     = Red;
-	arrowminute   = Blue;
-	arrowsecond   = Black;
+	arrowhl       = SGreen;
+	arrowhour     = SRed;
+	arrowminute   = SBlue;
+	arrowsecond   = SBlack;
 	font          = StdFont();
 }
 
@@ -1531,19 +1531,19 @@ CH_STYLE(Calendar, Style, StyleDefault)
 
 	bgmain        = SColorPaper;
 	bgtoday       = SColorPaper;
-	bgselect      = Color(255, 254, 220);
+	bgselect      = AdjustIfDark(Color(255, 254, 220));
 
 	fgmain        = SColorText;
-	fgtoday       = Black;
-	fgselect      = Black;
+	fgtoday       = SBlack;
+	fgselect      = SBlack;
 
-	outofmonth    = Color(180, 180, 180);
-	curdate       = White;
+	outofmonth    = AdjustIfDark(Color(180, 180, 180));
+	curdate       = SWhite;
 	today         = SColorText;
 	selecttoday   = SColorMark;
 	cursorday     = SColorText;
 	selectday     = SColorMark;
-	line          = Gray;
+	line          = SGray;
 	dayname       = SColorText;
 	week          = SColorText;
 	font          = StdFont();
