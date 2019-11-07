@@ -158,7 +158,7 @@ class LazyExeFileIcons {
 
 	void   Do();
 	void   Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyExeFileIcons::Do)); }
-	String Path();
+	WString Path();
 	void   Done(Image img);
 
 public:
