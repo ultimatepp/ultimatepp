@@ -218,6 +218,3 @@ PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black),
 					pieMarginRight(40), pieMarginBottom(40)
 {}
 
-PieDraw::~PieDraw(){}
-
-

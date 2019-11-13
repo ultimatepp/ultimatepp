@@ -9,7 +9,7 @@ public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
 
 	DataSource() : isParam(false), isExplicit(false) {}
-	virtual ~DataSource() 						{}	
+	virtual ~DataSource() noexcept				{magic = 4321234;}	
 	virtual double y(int64 ) = 0;
 	virtual double x(int64 ) = 0;
 	virtual double znx(int , int64 ) 			{NEVER();	return Null;}
@@ -121,13 +121,16 @@ public:
 	Vector<double> SortData(Getdatafun getdata);
 	Vector<double> Percentile(Getdatafun getdata, double rate);
 	double PercentileAvg(Getdatafun getdata, double rate);
-		
+	
+	bool IsMagic() 				{return magic == 1234321;}		// Temporal use, just for testing
+	
 protected:
 	bool isParam, isExplicit;
 	
 private:
 	Function <void(void)> OnDestructor;
 	Vector<int64> Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, bool (*fun)(double a, double b));
+	int magic = 1234321;
 };
 
 class DataXRange : public DataSource {
@@ -655,7 +658,7 @@ struct PointfLess {
 class DataSourceSurf {
 public:
 	DataSourceSurf() : isExplicit(false), key(1212121) {}
-	virtual ~DataSourceSurf() 			{key = 0;}	
+	virtual ~DataSourceSurf() noexcept	{key = 1231231;}	
 	virtual double z(double x, double y)= 0;
 	
 	virtual bool IsEmpty()				= 0;
@@ -680,10 +683,31 @@ private:
 };
 
 template <class T>
-inline T LinearInterpolate(T x, T x0, T x1, T v0, T v1) {
-	if (x0 == x1)
-		return (v0 + v1)/T(2);
-  	return ((x1 - x)/(x1 - x0))*v0 + ((x - x0)/(x1 - x0))*v1;
+inline T LinearInterpolate(T x, T x0, T x1, T y0, T y1) {
+	T x1_0 = x1 - x0;
+	if (abs(x1_0) < T(FLT_EPSILON))
+		return (y0 + y1)/T(2);
+	
+  	return ((x1 - x)/x1_0)*y0 + ((x - x0)/x1_0)*y1;
+}
+
+template <class T>
+inline T QuadraticInterpolate(T x, T x0, T x1, T x2, T y0, T y1, T y2) {
+	T x0_1 = x0 - x1;
+	T x0_2 = x0 - x2;
+	T x1_2 = x1 - x2;
+	if (abs(x0_1) < T(FLT_EPSILON))
+		return LinearInterpolate(x, x0, x2, (y0 + y1)/T(2), y2);
+	else if (abs(x0_2) < T(FLT_EPSILON))
+		return LinearInterpolate(x, x0, x1, (y0 + y2)/T(2), y1);
+	else if (abs(x1_2) < T(FLT_EPSILON))
+		return LinearInterpolate(x, x0, x1, y0, (y1 + y2)/T(2));
+	
+	T x_0 = x - x0;
+	T x_1 = x - x1;
+	T x_2 = x - x2;
+	
+  	return ((x_1*x_2)/(x0_1*x0_2))*y0 - ((x_0*x_2)/(x0_1*x1_2))*y1 + ((x_0*x_1)/(x0_2*x1_2))*y2;
 }
 
 template <class T>

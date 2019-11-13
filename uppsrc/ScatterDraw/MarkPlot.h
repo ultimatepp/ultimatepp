@@ -4,7 +4,7 @@
 class MarkPlot {
 public:
 	MarkPlot() : multiPlot(false), type(0) {}
-	virtual ~MarkPlot() {};	
+	virtual ~MarkPlot() noexcept {};	
 	virtual void Paint(Draw &p, const double& , const Point& cp, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const = 0;
 	virtual void Paint(Draw &, const double& , int , int , const Vector<int>& , 
