@@ -132,9 +132,7 @@ public:
 	typedef SeriesTab CLASSNAME;
 	
 	SeriesTab() : dashCount(DashStyle::GetCount()) {}
-	virtual ~SeriesTab() {
-		DashStyle::UnregisterFrom(dashCount);
-	}
+	virtual ~SeriesTab() noexcept {DashStyle::UnregisterFrom(dashCount);}
 	void Init(ScatterCtrl& scatter);
 	
 private:
@@ -172,7 +170,7 @@ public:
 	typedef DataDlg CLASSNAME;
 	
 	void Init(ScatterCtrl& scatter);
-	virtual ~DataDlg() {};
+	virtual ~DataDlg() noexcept {};
 	
 	void OnTab();
 	void OnArrayBar(Bar &menu);
@@ -206,7 +204,7 @@ public:
 	typedef PropertiesDlg CLASSNAME;
 	
 	void Init(ScatterCtrl& scatter);
-	virtual ~PropertiesDlg() {};
+	virtual ~PropertiesDlg() noexcept {};
 	
 	void Set(int tab);
 	void OnTab();
@@ -232,7 +230,7 @@ public:
 	typedef ProcessingTab CLASSNAME;
 
 	ProcessingTab();
-	virtual ~ProcessingTab() {};
+	virtual ~ProcessingTab() noexcept {};
 	
 	void Init(ScatterCtrl& scatter) {pscatter = &scatter;}
 	void UpdateField(const String name, int id);
@@ -294,7 +292,7 @@ public:
 	typedef ProcessingDlg CLASSNAME;
 
 	void Init(ScatterCtrl& scatter);
-	virtual ~ProcessingDlg() {};
+	virtual ~ProcessingDlg() noexcept {};
 
 private:
 	ScatterCtrl* pscatter;

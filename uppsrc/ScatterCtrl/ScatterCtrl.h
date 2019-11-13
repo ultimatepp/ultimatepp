@@ -142,7 +142,7 @@ public:
 	typedef ScatterCtrl CLASSNAME;
 	
 	ScatterCtrl();
-	virtual ~ScatterCtrl() {RemoveInstance(this);};
+	virtual ~ScatterCtrl() noexcept {RemoveInstance(this);};
 	
 	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, 
 						SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
@@ -349,30 +349,34 @@ public:
 	void SetPopUp(bool _pop)				{pop = _pop;}
 	
 private:
-	bool showInfo;
+	bool showInfo = false;
 	PopUpInfo popInfoBegin, popInfoVert, popInfoHoriz, popInfoEnd;
 	PopUpText popTextBegin, popTextVert, popTextHoriz, popTextEnd;
-	String popTextX, popTextY, popTextY2, popTextZ;
-	Point popLT, popRB;
+	String popTextX  = t_("x"), 
+		   popTextY  = t_("y"), 
+		   popTextY2 = t_("y right"), 
+		   popTextZ  = t_("z");
+	Point popLT = Null, popRB = Null;
 	bool pop;
-	bool isZoomWindow;
-	const Point popOffset;
-	MouseAction mouseAction;
+	bool isZoomWindow = false;
+	const Point popOffset = Point(10, 12);
+	MouseAction mouseAction = NONE;
 	
 	int butDownX, butDownY;
-	bool isScrolling, isLabelPopUp;
+	bool isScrolling = false, 
+		 isLabelPopUp = false;
 	
-	bool showContextMenu;
-	bool showPropDlg;
-	bool showProcessDlg;
-	bool showButtons;
-	bool showLoadData, showSaveData;
+	bool showContextMenu = false,
+		 showPropDlg = false,
+		 showProcessDlg = false,
+		 showButtons = false,
+		 showLoadData = false, showSaveData = false;
 	
-	int lastRefresh_ms;
+	int lastRefresh_ms = Null;
 	dword lastRefresh0_ms;
-	int maxRefresh_ms;
+	int maxRefresh_ms = 500;
 	
-	bool highlighting;
+	bool highlighting = false;
 	
 	Upp::Array<MouseBehavior> mouseBehavior; 
 	Upp::Array<KeyBehavior> keyBehavior;
@@ -403,7 +407,7 @@ private:
 	void SetDrawing(T& w, const Size &sz, bool ctrl = true);	
 	void TimerCallback();	
 	
-	String defaultCSVseparator;
+	String defaultCSVseparator = ";";
 
 	String defaultFileNamePlot;	
 	void OnTypeImage(FileSel *_fs);
@@ -413,10 +417,10 @@ private:
 	
 	Button processButton, dataButton, propertiesButton;
 	
-	Size saveSize;
-	int jpgQuality;
+	Size saveSize = Size(1000, 800);
+	int jpgQuality = 90;
 	
-	int rotate;
+	int rotate = Angle_0;
 	Point &MousePointRot(Point &pt);		
 	Point &MousePointUnrot(Point &pt);	
 	

@@ -1091,23 +1091,9 @@ inline Point &ScatterCtrl::MousePointUnrot(Point &pt) {
 	return pt;
 }
 
-ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
-{
-	showInfo = isScrolling = isLabelPopUp = isZoomWindow = false;
+ScatterCtrl::ScatterCtrl() {
 	WantFocus();
-	popTextX = t_("x");
-	popTextY = t_("y");
-	popTextY2 = t_("y right");
-	popTextZ = t_("z");
-	popLT = popRB = Null;
-	showContextMenu = false;
-	showPropDlg = false;
-	showProcessDlg = false;
-	showButtons = false;
-	showLoadData = showSaveData = false;
-	defaultCSVseparator = ";";
-	rotate = Angle_0;
-	//Color(graphColor);	
+		
 	BackPaint();
 	popInfoBegin.SetColor(SColorFace);  
 	popInfoVert.SetColor(SColorFace);  
@@ -1122,12 +1108,7 @@ ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 #else
 	pop = false;
 #endif
-	saveSize = Size(1000, 800);
-	jpgQuality = 90;
 	
-	lastRefresh_ms = Null;
-	maxRefresh_ms = 500;
-	highlighting = false;
 	ShowInfo().ShowContextMenu().ShowPropertiesDlg();
 	
 	Add(processButton.RightPosZ(0, 15).TopPosZ(0, 15));
