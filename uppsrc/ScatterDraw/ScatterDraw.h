@@ -60,7 +60,7 @@ class ScatterDraw {
 public:
 	typedef ScatterDraw CLASSNAME;
 	ScatterDraw();
-	virtual ~ScatterDraw() {}
+	virtual ~ScatterDraw() noexcept {}
 	
 	enum Formats {
 		EXP,
@@ -238,8 +238,14 @@ protected:
 		}
 		DataSource &Data()		 				{return *(~pD);}
 		const DataSource &Data() const	 		{return *(~pD);}
-		bool IsDeleted() const					{return ~pD == 0;}
-		virtual ~ScatterSeries()   				{DeletePD();}
+		bool IsDeleted() const {
+			bool isnullptr = ~pD == nullptr;
+			bool ismagic = (~pD)->IsMagic();
+			ASSERT(isnullptr == !ismagic);
+			ASSERT(!isnullptr == ismagic);
+			return ~pD == nullptr && !(~pD)->IsMagic();
+		}
+		virtual ~ScatterSeries() noexcept		{DeletePD();}
 		void SerializeData(bool ser = true) 	{serializeData = ser;}
 		void SerializeFormat(bool ser = false) 	{serializeFormat = ser;}
 		void Xmlize(XmlIO& xio) 				{XmlizeByJsonize(xio, *this);}
@@ -1062,67 +1068,67 @@ protected:
 	virtual void Refresh() {};
 
 	int mode{MD_ANTIALIASED};
-	Color graphColor;	
+	Color graphColor = White();	
 	String title;
-	Upp::Font titleFont;
-	Color titleColor;
+	Upp::Font titleFont = Roman(20);
+	Color titleColor = SColorText();
 	int titleHeight;
 	
 	String xLabel, yLabel, yLabel2;
 	String xLabel_base, yLabel_base, yLabel2_base;
-	Upp::Font labelsFont;
-	Color labelsColor;
+	Upp::Font labelsFont = GetStdFont();
+	Color labelsColor = SColorText();
 	
-	int   hPlotLeft, hPlotRight, vPlotTop, vPlotBottom;
-	Color plotAreaColor;
+	int   hPlotLeft = 30, hPlotRight = 30, 
+		  vPlotTop = 30, vPlotBottom = 30;
+	Color plotAreaColor = White();
 	
-	bool fastViewX, sequentialXAll;
+	bool fastViewX = false, sequentialXAll = false;
 	
-	Color axisColor;
-	int axisWidth;
+	Color axisColor = SColorText();
+	int axisWidth = 6;
 	
-	double xRange, yRange, yRange2;
-	double xMin, yMin, yMin2;
+	double xRange = 100., yRange = 100., yRange2 = 100.;
+	double xMin = 0, yMin = 0, yMin2 = 0;
 	double xMajorUnit, yMajorUnit, yMajorUnit2;
 	double xMajorUnitNum, yMajorUnitNum;
-	double xMinUnit, yMinUnit, yMinUnit2;
-	double xMinUnit0, yMinUnit0, yMinUnit20;
-	double minXRange, maxXRange, minYRange, maxYRange;
-	double minXmin, minYmin, maxXmax, maxYmax;
+	double xMinUnit = 0, yMinUnit = 0, yMinUnit2 = 0;
+	double xMinUnit0 = 0, yMinUnit0 = 0, yMinUnit20 = 0;
+	double minXRange = -1, maxXRange = -1, minYRange = -1, maxYRange = -1;
+	double minXmin = Null, minYmin = Null, maxXmax = Null, maxYmax = Null;
 	double lastxRange, lastyRange;
-	bool drawXReticle, drawYReticle, drawY2Reticle;	
-	Font reticleFont;
-	Color reticleColor;
+	bool drawXReticle = true, drawYReticle = true, drawY2Reticle = false;	
+	Font reticleFont = GetStdFont();
+	Color reticleColor = Black;
 	
-	//int maxMajorUnitsX, maxMajorUnitsY;
-	
-	Color gridColor;
-	double gridWidth;
-	String gridDash;
-	bool drawVGrid, drawHGrid;	
+	Color gridColor = SColorDkShadow();
+	double gridWidth = 0.5;
+	String gridDash = LINE_DOTTED_FINE;
+	bool drawVGrid = true, drawHGrid = true;	
 	
 	bool drawVGrid2, drawHGrid2;
 	
 	int butDownX, butDownY;
 	bool isScrolling, isLabelPopUp;
-	ZoomStyle zoomStyleX, zoomStyleY;	
+	ZoomStyle zoomStyleX = TO_CENTER, 
+			  zoomStyleY = TO_CENTER;	
 	
 	Upp::Array<ScatterSeries> series;
 	
-	bool showLegend;
+	bool showLegend = true;
 	
-	bool isPolar;
+	bool isPolar = false;
 	
 	int lastRefresh_sign;
-	int highlight_0;
+	int highlight_0 = Null;
 	
-	Point legendPos;
-	int legendNumCols;
-	LEGEND_POS legendAnchor;
-	int legendRowSpacing;
-	Color legendFillColor;
-	Color legendBorderColor;
-	Font legendFont;
+	Point legendPos = Point(5, 5);
+	int legendNumCols = 1;
+	LEGEND_POS legendAnchor = RIGHT_TOP;
+	int legendRowSpacing = 5;
+	Color legendFillColor = White();
+	Color legendBorderColor = Black();
+	Font legendFont = GetStdFont();
 	
 	void DrawLegend(Draw& w) const;
 
@@ -1152,39 +1158,39 @@ protected:
 	bool PointInLegend(Point &pt);
 	
 	Upp::Index<ScatterDraw *> linkedCtrls;
-	ScatterDraw *linkedMaster;
+	ScatterDraw *linkedMaster = nullptr;
 	
 	void ChangeMouseHandlingX()					{mouseHandlingX = !mouseHandlingX;}
 	void ChangeMouseHandlingY()					{mouseHandlingY = !mouseHandlingY;}
 	
-	bool mouseHandlingX, mouseHandlingY;
+	bool mouseHandlingX = true, mouseHandlingY = true;
 	
-	DataSourceSurf *surf;
-	RAINBOW surfRainbow;
-	int surfNumColor;
-	bool continuousColor;
-	double surfMinZ, surfMaxZ;
+	DataSourceSurf *surf = nullptr;
+	RAINBOW surfRainbow = BLUE_YELLOW_RED;
+	int surfNumColor = 4;
+	bool continuousColor = true;
+	double surfMinZ = Null, surfMaxZ = Null;
 	String surfUnits;
-	SURF_UNITS_POS surfUnitsPos;
-	SURF_LEGEND_POS surfLegendPos;
+	SURF_UNITS_POS surfUnitsPos = UNITS_TOP;
+	SURF_LEGEND_POS surfLegendPos = LEGEND_RIGHT;
 	//Vector<Pointf> isolines;
 	//int isolinesId;
 	
-	bool showRainbow;
-	Point rainbowPos;
-	Size rainbowSize;
-	LEGEND_POS rainbowAnchor;
-	Color rainbowBorderColor;
-	Font rainbowPaletteFont;
-	Color rainbowPaletteTextColor;
+	bool showRainbow = true;
+	Point rainbowPos = Point(5, 5);
+	Size rainbowSize = Size(10, 50);
+	LEGEND_POS rainbowAnchor = RIGHT_BOTTOM;
+	Color rainbowBorderColor = Black;
+	Font rainbowPaletteFont = StdFont();
+	Color rainbowPaletteTextColor = Black;
 	
 	void DrawRainbowPalette(Draw& w) const;
 	
 private:
 	Size size{Size(800, 400)};		// Size to be used for all but screen painting
-	double plotScaleX, plotScaleY, plotScaleAvg;
-	bool responsive;
-	double responsivenessFactor;
+	double plotScaleX = 1, plotScaleY = 1, plotScaleAvg = 1;
+	bool responsive = false;
+	double responsivenessFactor = 1;
 	
 	static void ParseTextMultiline(const String &text, Upp::Font &fnt, 
 								   Upp::Vector <String> &texts, Upp::Vector <Size> &sizes);
@@ -1202,10 +1208,10 @@ private:
 	
 	int NumSeriesLegend() const;
 		
-	int plotW, plotH;
-	bool labelsChanged;
-	bool stacked;
-	bool serializeFormat;
+	int plotW = Null, plotH = Null;
+	bool labelsChanged = false;
+	bool stacked = false;
+	bool serializeFormat = true;
 };
 
 template <class T>
@@ -1345,7 +1351,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 		double factorX = plotW/xRange;
 		for(int i = 0; i < unitsX.GetCount(); ++i) {
 			double reticleX = factorX*unitsX[i];
-			if (reticleX >=0 && reticleX <= plotW) {
+			if (reticleX >=0 && reticleX <= plotW+0.001) {
 				double gridX = xMin + unitsX[i];
 				String gridLabelX;
 				if (cbModifFormatXGridUnits)
@@ -1597,14 +1603,11 @@ void ScatterDraw::Plot(T& w)
 					imin = 0;
 					imax = data.GetCount() - 1;
 				}
-				double dxpix = 0;
-				if (fastViewX) 
-					dxpix = (data.x(imax) - data.x(imin))/plotW;			
-				int npix = 1;
-				for (int64 i = imin; i <= imax; ) {
-					double xx, yy;
-					if (fastViewX && dxpix < 1) {	
-						yy = data.y(i);
+				if (fastViewX) {
+					double dxpix = (data.x(imax) - data.x(imin))/plotW;
+					int npix = 1;
+					for (int64 i = imin; i <= imax; ) {						
+						double yy = data.y(i);
 						if (IsNull(yy)) {
 							++i;
 							continue;
@@ -1619,7 +1622,7 @@ void ScatterDraw::Plot(T& w)
 							maxY = max(maxY, dd);
 							minY = min(minY, dd);
 						}
-						xx = data.x(i);
+						double xx = data.x(i);
 						if (IsNull(xx)) {
 							++i;
 							continue;
@@ -1638,9 +1641,11 @@ void ScatterDraw::Plot(T& w)
 						points << Point(ix, plotH - iMax);
 						if (iMax != iMin)
 							points << Point(ix, plotH - iMin);	
-					} else {
-						xx = data.x(i);
-						yy = data.y(i);
+					} 
+				} else {
+					for (int64 i = imin; i <= imax; ) {	
+						double xx = data.x(i);
+						double yy = data.y(i);
 						++i;
 						if (IsNull(xx) || IsNull(yy)) 
 							points << Null;

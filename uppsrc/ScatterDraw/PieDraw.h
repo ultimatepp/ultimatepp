@@ -13,7 +13,7 @@ class PieDraw {
 public:
 	typedef PieDraw CLASSNAME;
 	PieDraw();
-	~PieDraw();
+	virtual ~PieDraw() noexcept {};
 	
 	enum titlePosition {BOTTOM, TOP};
 	

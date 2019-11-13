@@ -3,7 +3,7 @@
 
 class SeriesPlot {
 public:
-	virtual ~SeriesPlot() 	{};	
+	virtual ~SeriesPlot() noexcept 	{};	
 	virtual void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
 				const Color &fillColor, double fx, double fy, double y0, double width, 

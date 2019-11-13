@@ -1,74 +1,13 @@
 #include "ScatterDraw.h"
 
 ScatterDraw::ScatterDraw() {
-	titleColor = SColorText();
-	graphColor = White();
-	titleFont = Roman(20);
-	labelsFont = GetStdFont();
-	labelsColor = SColorText();
-	plotAreaColor = White();
-	axisColor = SColorText();
-	axisWidth = 6;
-	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
-	xRange = yRange = yRange2 = 100.0;
-	xMin = yMin = yMin2 = xMinUnit = yMinUnit = yMinUnit2 = 0;
-	xMinUnit0 = yMinUnit0 = yMinUnit20 = 0;
-	gridColor = SColorDkShadow();
-	gridWidth = 0.5;
-	gridDash = LINE_DOTTED_FINE;
-	drawXReticle = drawYReticle = true;
-	drawY2Reticle = false;
-	reticleFont = GetStdFont();
-	reticleColor = Black;
-	drawVGrid = drawHGrid = showLegend = true;
-	minXRange = maxXRange = minYRange = maxYRange = -1;
-	minXmin = minYmin = maxXmax = maxYmax = Null;
-	fastViewX = false;
-	sequentialXAll = false;
-	zoomStyleX = zoomStyleY = TO_CENTER;
 	SetMajorUnitsNum(5, 10);
-	isPolar = false;
 	lastxRange = xRange;
 	lastyRange = yRange;
-	highlight_0 = Null;
-	labelsChanged = false;
-	legendAnchor = RIGHT_TOP;
-	legendPos = Point(5, 5);
-	legendNumCols = 1;
-	legendFillColor = White();
-	legendBorderColor = Black();
-	legendRowSpacing = 5;
-	legendFont = GetStdFont();
-	linkedMaster = 0;
-	plotW = plotH = Null;
-	stacked = false;
-	serializeFormat = true;
-	responsive = false;
-	responsivenessFactor = 1;
-	plotScaleX = 1;
-	plotScaleY = 1;
-	plotScaleAvg = 1;
-	surf = 0;
-	surfRainbow = BLUE_YELLOW_RED;
-	surfNumColor = 4;
-	continuousColor = true;
-	surfMinZ = surfMaxZ = Null;
-	surfUnitsPos = UNITS_TOP;
-	surfLegendPos = LEGEND_RIGHT;
-	
-	showRainbow = true;;
-	rainbowPos = Point(5, 5);
-	rainbowSize = Size(10, 50);
-	rainbowAnchor = RIGHT_BOTTOM;
-	rainbowBorderColor = Black;
-	rainbowPaletteFont = StdFont();
-	rainbowPaletteTextColor = Black;
-	
-	mouseHandlingX = mouseHandlingY = true;
 }
 
 void debug_h() {
-	;			// It does nothing. Just to set a breakpoint in templated functions
+	;			// It does nothing. It just serves to set a breakpoint in templated functions
 }
 
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
@@ -335,7 +274,6 @@ ScatterDraw &ScatterDraw::SetMajorUnitsNum(int nx, int ny) {
 }
 
 ScatterDraw &ScatterDraw::SetMinUnits(double ux, double uy) {
-	if (!IsNull(ux))
 	if (!IsNull(ux))
 		xMinUnit = xMinUnit0 = ux;
 	if (!IsNull(uy)) {	
