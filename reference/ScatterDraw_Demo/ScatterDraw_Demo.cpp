@@ -38,12 +38,14 @@ CONSOLE_APP_MAIN
 		Cout() << "\nPreparing scatter";
 		
 		s1 << Pointf(10,14) << Pointf(20,25) << Pointf(30,29) << Pointf(40,24) << Pointf(50,36);
+		
 		scatter.AddSeries(s1).Legend("Series 1").NoMark().Units("ºC", "seg");
 		
 		scatter.AddSeries(x, y, 5).Units("ºC", "seg").Legend("Series 2").Stroke(5, Null)
 			   .Dash(LINE_DASHED).MarkStyle<SquareMarkPlot>().MarkWidth(12);
 		
-		scatter.ZoomToFit();
+		scatter.SetXYMin(10, 0).SetRange(50, 100).SetMinUnits(20, 0).SetMajorUnits(10, 20);
+		//scatter.ZoomToFit();
 		
 		scatter.SetTitle("ScatterDraw_Demo").SetTitleFont(SansSerif(14).Bold());
 		scatter.SetLabelY("Temperature").SetLabelX("Time").SetLabelsFont(SansSerif(12));
