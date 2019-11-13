@@ -591,7 +591,7 @@ static auxthread_t auxthread__ sExeIconThread(void *)
 {
 	SHFILEINFOW info;
 	wchar path[1025];
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CoInitialize(NULL);
 	sExeMutex.Enter();
 	wcscpy(path, sExePath);
 	sExeMutex.Leave();

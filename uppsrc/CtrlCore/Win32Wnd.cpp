@@ -317,6 +317,7 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	ReSkin();
 
 	OleInitialize(NULL);
+	CoInitialize(NULL);
 
 /* TRC 05/11/14: moved to GuiSleep to avoid thread creation in OCX DllMain
 	DWORD dummy;

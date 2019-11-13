@@ -393,7 +393,6 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 
 void AppInitEnvironment__()
 {
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	SetLanguage(LNG_('E', 'N', 'U', 'S'));
 	int nArgs;
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
