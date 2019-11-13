@@ -371,7 +371,7 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 	HRESULT hres;
 	IShellLink* psl;
 	IPersistFile* ppf;
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CoInitialize(NULL);
 	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
 	                        (PVOID *) &psl);
 	if(SUCCEEDED(hres)) {
