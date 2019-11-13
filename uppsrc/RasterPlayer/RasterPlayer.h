@@ -23,7 +23,7 @@ private:
 
 public:
 	RasterPlayer();
-	~RasterPlayer();
+	virtual ~RasterPlayer() noexcept;
 
 	bool Load(const String &fileName);
 	bool LoadBuffer(const String &buffer);
