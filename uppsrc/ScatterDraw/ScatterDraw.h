@@ -82,6 +82,7 @@ public:
 	#define LINE_DOTTED_SEP	  "4 20"
 	#define LINE_DASHED 	  "12 12"
 	#define LINE_DASH_DOT 	  "12 8 3 8"	// Reduced. Previous was too long
+	#define LINE_BEGIN_END	  "-"
 	
 protected:
 	class ScatterBasicSeries {
@@ -1495,8 +1496,13 @@ void ScatterDraw::Plot(T& w)
 			if (unitsX.GetCount() > 0) {
 				for(int i = 0; i < unitsX.GetCount(); i++) {
 					double reticleX = factorX*unitsX[i];
-					if (reticleX >=0 && reticleX <= plotW) 
-						DrawLineOpa(w, reticleX, 0, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					if (reticleX >=0 && reticleX <= plotW) {
+						if (gridDash.GetCount() == 1 && gridDash[0] == '-') {
+							DrawLineOpa(w, reticleX, 0, reticleX, 8*plotScaleAvg, plotScaleAvg, 1, gridWidth, gridColor, "");
+							DrawLineOpa(w, reticleX, plotH-8*plotScaleAvg, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, "");
+						} else
+							DrawLineOpa(w, reticleX, 0, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					}
 				}
 			} 
 		} /*else {
@@ -1519,8 +1525,13 @@ void ScatterDraw::Plot(T& w)
 			if (unitsY.GetCount() > 0) {
 				for(int i = 0; i < unitsY.GetCount(); i++) {
 					double reticleY = plotH - factorY*unitsY[i];
-					if (reticleY > 2*gridWidth*plotScaleAvg && reticleY < plotH - 2*gridWidth*plotScaleAvg) 
-						DrawLineOpa(w, 0, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					if (reticleY > 2*gridWidth*plotScaleAvg && reticleY < plotH - 2*gridWidth*plotScaleAvg) {
+						if (gridDash.GetCount() == 1 && gridDash[0] == '-') {
+							DrawLineOpa(w, 0, reticleY, 8*plotScaleAvg, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+							DrawLineOpa(w, plotW-8*plotScaleAvg, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+						} else 
+							DrawLineOpa(w, 0, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					}
 				}
 			} 
 		} /*else {
