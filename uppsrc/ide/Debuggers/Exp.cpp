@@ -67,7 +67,7 @@ case q: { \
 } \
 
 Pdb::Val Pdb::GetRVal(Pdb::Val v, Thread& ctx)
-{
+{ // read data from debugee
 	if(v.rvalue)
 		return v;
 	v.rvalue = true;
@@ -76,12 +76,12 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v, Thread& ctx)
 		v.ref++;
 	}
 	else
-	if(v.ref) {
+	if(v.ref) { // Fetch pointer from the debugee memory
 		if(!Copy(v.address, &v.address, win64 ? 8 : 4))
 			ThrowError("??");
 	}
 	else
-	if(v.bitcnt) {
+	if(v.bitcnt) { // Fetch bitfield from debugee memory
 		dword w;
 		if(!Copy(v.address, &w, win64 ? 8 : 4))
 			ThrowError("??");
@@ -95,7 +95,7 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v, Thread& ctx)
 			v.ival = w;
 	}
 	else
-		switch(v.type) {
+		switch(v.type) { // resolve primitive value
 		READINT(BOOL1, bool)
 		READINT(UINT1, byte);
 		READINT(SINT1, int8);
