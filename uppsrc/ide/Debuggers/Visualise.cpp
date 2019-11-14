@@ -50,7 +50,7 @@ bool IsOk(const String& q)
 
 void Pdb::CatInt(Visual& result, int64 val)
 {
-	result.Cat(IntFormat(val), Red);
+	result.Cat(IntFormat(val), SRed);
 }
 
 void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen)
@@ -59,11 +59,16 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 	const int maxlen = 300;
 	if(result.length > maxlen)
 		return;
-	if(val.ref > 0 || val.type < 0)
+	if(val.ref > 0 || val.type < 0) // if pointer or primitive type, fetch it from the memory
 		val = GetRVal(val, ctx);
 	if(val.ref > 0) {
-		result.Cat(Hex(val.address), LtMagenta);
-		if(val.type == UINT1 || val.type == SINT1) {
+		result.Cat(Hex(val.address), SLtMagenta);
+		while(val.ref > 1) {
+			val = GetRVal(DeRef(val, ctx), ctx);
+			result.Cat("->");
+			result.Cat(Hex(val.address), SLtMagenta);
+		}
+		if(val.type == UINT1 || val.type == SINT1) { // show string at [unsigned] char *
 			if(Byte(val.address) < 0)
 				result.Cat("??", SColorDisabled);
 			else {
@@ -74,17 +79,29 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 					dt = "..";
 				}
 				result.Cat(" ");
-				result.Cat(AsCString(x) + dt, Red);
+				result.Cat(AsCString(x), SRed);
+				result.Cat(dt, SGray);
 			}
 			return;
 		}
-		if(expandptr > 0 && (val.type != UNKNOWN || val.ref > 1) && val.address) {
+		if(expandptr > 0 && val.type != UNKNOWN && val.address) {
 			result.Cat("->", SColorMark);
-			Visualise(result, DeRef(val, ctx), ctx, expandptr - 1, slen);
+			String dt = "..";
+			for(int i = 0; i < 40; i++) {
+				if(i)
+					result.Cat(", ", SGray);
+				Visualise(result, DeRef(val, ctx), ctx, expandptr - 1, slen);
+				val.address += SizeOfType(val.type);
+				if(Byte(val.address) < 0) {
+					dt.Clear();
+					break;
+				}
+			}
+			result.Cat(dt, SGray);
 		}
 		return;
 	}
-	if(val.type < 0) {
+	if(val.type < 0) { // Display primitive type
 		#define RESULTINT(x, type) case x: CatInt(result, (type)val.ival); break;
 		#define RESULTINTN(x, type, t2) case x:  if(IsNull((t2)val.ival)) result.Cat("Null ", Magenta); CatInt(result, (type)val.ival); break;
 		switch(val.type) {
@@ -100,18 +117,18 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		case DBL:
 		case FLT:
 			if(IsNull(val.fval))
-				result.Cat("Null", Magenta);
+				result.Cat("Null", SMagenta);
 			else
 			if(IsInf(val.fval))
-				result.Cat("INF", Magenta);
+				result.Cat("INF", SMagenta);
 			else
 			if(IsNaN(val.fval))
-				result.Cat("NAN", Magenta);
+				result.Cat("NAN", SMagenta);
 			else
-				result.Cat(AsString(val.fval), Red);
+				result.Cat(AsString(val.fval), SRed);
 			break;
 		case PFUNC: {
-			result.Cat(Hex(val.address), Red);
+			result.Cat(Hex(val.address), SRed);
 			FnInfo fi = GetFnInfo(val.address);
 			if(!IsNull(fi.name)) {
 				result.Cat("->", SColorMark);

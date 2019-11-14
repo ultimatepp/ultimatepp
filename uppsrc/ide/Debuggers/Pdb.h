@@ -75,9 +75,9 @@ struct Pdb : Debugger, ParentCtrl {
 
 	struct Val : Moveable<Val> {
 		int    type;
-		int    ref;
+		int    ref; // this is pointer (or reference)
 		bool   array:1;
-		bool   rvalue:1;
+		bool   rvalue:1; // data is loaded from debugee (if false, data pointed to by address)
 		byte   bitpos;
 		byte   bitcnt;
 		union {
