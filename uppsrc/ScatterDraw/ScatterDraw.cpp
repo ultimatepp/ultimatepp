@@ -1545,4 +1545,5 @@ INITBLOCK {
 	DashStyle::Register("LINE_DOTTED_SEP", LINE_DOTTED_SEP);
 	DashStyle::Register("LINE_DASHED", LINE_DASHED);
 	DashStyle::Register("LINE_DASH_DOT", LINE_DASH_DOT);
+	DashStyle::Register("-    -", LINE_BEGIN_END);
 }
