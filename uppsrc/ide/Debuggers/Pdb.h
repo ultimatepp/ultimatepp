@@ -74,23 +74,26 @@ struct Pdb : Debugger, ParentCtrl {
 	enum { UNKNOWN = -99, BOOL1, SINT1, UINT1, SINT2, UINT2, SINT4, UINT4, SINT8, UINT8, FLT, DBL, PFUNC };
 
 	struct Val : Moveable<Val> {
-		int    type;
-		int    ref; // this is pointer (or reference)
-		bool   array:1;
-		bool   rvalue:1; // data is loaded from debugee (if false, data pointed to by address)
-		byte   bitpos;
-		byte   bitcnt;
+		int    type = UNKNOWN;
+		int    ref = 0; // this is pointer (or reference)
+		bool   array = false;
+		bool   rvalue = false; // data is loaded from debugee (if false, data pointed to by address)
+		byte   bitpos = 0;
+		byte   bitcnt = 0;
+		int    reported_size = 0; // size of symbol, can be 0 - unknown, useful for C fixed size arrays
 		union {
 			adr_t  address;
 			int64  ival;
 			double fval;
 		};
+
+		Val At(int i, Thread& ctx) const;
 		
 #ifdef _DEBUG
 		String ToString() const;
 #endif
 
-		Val() { type = UNKNOWN; rvalue = false; ref = 0; array = false; bitcnt = 0; address = 0; }
+		Val() { address = 0; }
 	};
 
 	struct NamedVal : Moveable<NamedVal> {
@@ -189,7 +192,8 @@ struct Pdb : Debugger, ParentCtrl {
 	Index<adr_t>                breakpoint;
 	Vector<String>              breakpoint_cond;
 
-	ArrayMap<int, Type>         type;
+	ArrayMap<int, Type>         type; // maps pdb pSym->TypeIndex to type data
+	VectorMap<String, int>      type_name; // maps the name of type to above 'type' index
 
 	String                      disas_name;
 
@@ -235,6 +239,8 @@ struct Pdb : Debugger, ParentCtrl {
 	VectorMap<String, Val> global;
 	
 	bool       break_running; // Needed for Wow64 BreakRunning to avoid ignoring breakpoint
+	
+	bool       show_type = false;
 
 	void       Error(const char *s = NULL);
 	
@@ -279,13 +285,14 @@ struct Pdb : Debugger, ParentCtrl {
 // mem
 	int        Byte(adr_t addr);
 	bool       Copy(adr_t addr, void *ptr, int count);
-	String     ReadString(adr_t addr, int maxlen = INT_MAX);
-	WString    ReadWString(adr_t addr, int maxlen = INT_MAX);
+	String     ReadString(adr_t addr, int maxlen, bool allowzero = false);
+	WString    ReadWString(adr_t addr, int maxlen, bool allowzero = false);
 
 // sym
 	struct LocalsCtx;
 	static BOOL CALLBACK  EnumLocals(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext);
 	static BOOL CALLBACK  EnumGlobals(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext);
+	static BOOL CALLBACK  EnumTypeByName(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext);
 	void                  TypeVal(Pdb::Val& v, int typeId, adr_t modbase);
 	String                GetSymName(adr_t modbase, dword typeindex);
 	dword                 GetSymInfo(adr_t modbase, dword typeindex, IMAGEHLP_SYMBOL_TYPE_INFO info);
@@ -301,6 +308,7 @@ struct Pdb : Debugger, ParentCtrl {
 	                                VectorMap<String, Pdb::Val>& param,
 	                                VectorMap<String, Pdb::Val>& local);
 	String                TypeAsString(int ti, bool deep = true);
+	int                   FindType(adr_t modbase, const String& name);
 
 // exp
 	void       ThrowError(const char *s);
@@ -328,12 +336,18 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Exp0(CParser& p, Thread& ctx);
 	Val        Exp(CParser& p, Thread& ctx);
 
+	Val        GetAttr(Pdb::Val record, int i);
+	Val        GetAttr(Pdb::Val record, const String& id);
+	Val        At(Pdb::Val val, int i, Pdb::Thread& ctx);
+	Val        At(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx);
+	int        IntAt(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx);
 	void       CatInt(Visual& result, int64 val);
 	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, Thread& ctx, int expandptr, int slen, bool& cm, int depth);
 	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen);
 	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr);
 	Visual     Visualise(Val v, Thread& ctx);
 	Visual     Visualise(const String& rexp, Thread& ctx);
+	bool       Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen);
 
 // code
 	Thread&    Current();

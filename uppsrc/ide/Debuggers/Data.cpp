@@ -369,6 +369,8 @@ void Pdb::DataMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 {
 	bar.Add("Explore", THISBACK1(ExploreKey, &array));
 	MemMenu(array, bar, exp);
+	bar.Separator();
+	bar.Add("Show type", [=] { show_type = !show_type; Data(); }).Check(show_type);
 }
 
 void Pdb::AutosMenu(Bar& bar)

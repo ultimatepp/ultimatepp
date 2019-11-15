@@ -53,6 +53,52 @@ void Pdb::CatInt(Visual& result, int64 val)
 	result.Cat(IntFormat(val), SRed);
 }
 
+Pdb::Val Pdb::GetAttr(Pdb::Val record, int i)
+{
+	const Type& t = GetType(record.type);
+	Val r;
+	if(i < t.member.GetCount()) {
+		r = t.member[i];
+		r.address += record.address;
+	}
+	return r;
+}
+
+Pdb::Val Pdb::GetAttr(Pdb::Val record, const String& id)
+{
+	const Type& t = GetType(record.type);
+	int q = t.member.Find(id);
+	if(q >= 0)
+		return GetAttr(record, q);
+	for(int i = 0; i < t.base.GetCount(); i++) {
+		Val b = t.base[i];
+		b.address += record.address;
+		Val v = GetAttr(b, id);
+		if(v.type != UNKNOWN)
+			return v;
+	}
+	return Val();
+}
+
+Pdb::Val Pdb::At(Pdb::Val val, int i, Pdb::Thread& ctx)
+{ // get n-th element relative to val
+	if(val.ref)
+		val = DeRef(val, ctx);
+	val.address += i * SizeOfType(val.type);
+	val.array = false;
+	return val;
+}
+
+Pdb::Val Pdb::At(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx)
+{
+	return At(GetAttr(record, id), i, ctx);
+}
+
+int Pdb::IntAt(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx)
+{
+	return (int)GetInt(At(record, id, i, ctx), ctx);
+}
+
 void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen)
 {
 	DR_LOG("Visualise");
@@ -86,12 +132,20 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		}
 		if(expandptr > 0 && val.type != UNKNOWN && val.address) {
 			result.Cat("->", SColorMark);
+			int sz = SizeOfType(val.type);
+			int n = 40;
 			String dt = "..";
-			for(int i = 0; i < 40; i++) {
+			if(val.reported_size > sz && sz > 0) {
+				n = val.reported_size / sz;
+				if(n <= 40)
+					dt.Clear();
+				n = min(40, n);
+			}
+			for(int i = 0; i < n; i++) {
 				if(i)
 					result.Cat(", ", SGray);
 				Visualise(result, DeRef(val, ctx), ctx, expandptr - 1, slen);
-				val.address += SizeOfType(val.type);
+				val.address += sz;
 				if(Byte(val.address) < 0) {
 					dt.Clear();
 					break;
@@ -146,6 +200,13 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		result.Cat(Nvl(GetFnInfo(val.address).name, "??"), SColorText);
 		return;
 	}
+	
+	if(show_type)
+		result.Cat(t.name + ' ', SGreen);
+	
+	if(Pretty(result, val, ctx, expandptr, slen))
+		return;
+	
 	result.Cat("{ ", SColorMark);
 	bool cm = false;
 	for(int i = 0; i < t.member.GetCount(); i++) {
@@ -158,8 +219,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		}
 		result.Cat(t.member.GetKey(i));
 		result.Cat("=", SColorMark);
-		Val r = t.member[i];
-		r.address += val.address;
+		Val r = GetAttr(val, i);
 		try {
 			Visualise(result, r, ctx, max(expandptr - 1, 0), slen);
 		}
