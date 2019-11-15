@@ -40,19 +40,21 @@ bool    Pdb::Copy(adr_t addr, void *ptr, int count)
 	return true;
 }
 
-String Pdb::ReadString(adr_t addr, int maxlen)
+String Pdb::ReadString(adr_t addr, int maxlen, bool allowzero)
 {
 	String r;
 	while(r.GetLength() < maxlen) {
 		int q = Byte(addr++);
-		if(q <= 0)
+		if(q < 0)
+			break;
+		if(!q && !allowzero)
 			break;
 		r.Cat(q);
 	}
 	return r;
 }
 
-WString Pdb::ReadWString(adr_t addr, int maxlen)
+WString Pdb::ReadWString(adr_t addr, int maxlen, bool allowzero)
 {
 	WString r;
 	while(r.GetLength() < maxlen) {
@@ -63,7 +65,7 @@ WString Pdb::ReadWString(adr_t addr, int maxlen)
 		if(w < 0)
 			break;
 		w = MAKEWORD(q, w);
-		if(w == 0)
+		if(w == 0 && !allowzero)
 			break;
 		r.Cat(w);
 	}

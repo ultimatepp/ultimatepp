@@ -130,9 +130,8 @@ void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 	adr_t tag;
 	for(;;) {
 		tag = GetSymInfo(modbase, typeId, TI_GET_SYMTAG);
-		if(tag == SymTagPointerType) {
+		if(tag == SymTagPointerType)
 			v.ref++;
-		}
 		else
 		if(tag == SymTagArrayType)
 			v.array = true;
@@ -208,6 +207,7 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE)
 		v.address += c.frame;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
+	v.reported_size = pSym->Size;
 	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }
@@ -257,6 +257,7 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 #endif
 	Val& v = c.pdb->global.GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;
+	v.reported_size = pSym->Size;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
 	return TRUE;
 }
@@ -308,6 +309,7 @@ const Pdb::Type& Pdb::GetType(int ti)
 	int typeindex = type.GetKey(ti);
 	if(t.size < 0) {
 		t.name = GetSymName(t.modbase, typeindex);
+		type_name.GetAdd(t.name) = ti;
 		ULONG64 sz = 0;
 		SymGetTypeInfo(hProcess, t.modbase, typeindex, TI_GET_LENGTH, &sz);
 		t.size = (dword)sz;
@@ -368,6 +370,39 @@ const Pdb::Type& Pdb::GetType(int ti)
 		}
 	}
 	return t;
+}
+
+BOOL CALLBACK Pdb::EnumTypeByName(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
+{
+	*(int *)UserContext = pSym->TypeIndex;
+	return FALSE;
+}
+
+int Pdb::FindType(adr_t modbase, const String& name)
+{
+	static VectorMap<String, int> primitive = {
+		{ "bool", BOOL1 },
+		{ "byte", SINT1 },
+		{ "unsigned byte", UINT1 },
+		{ "short", SINT2 },
+		{ "unsigned short", UINT2 },
+		{ "int", SINT4 },
+		{ "unsigned int", UINT4 },
+		{ "float", FLT },
+		{ "double", DBL },
+	};
+	
+	int q = primitive.Get(name, Null);
+	if(!IsNull(q))
+		return q;
+	q = type_name.Get(name, Null);
+	if(!IsNull(q))
+		return q;
+	int ndx = Null;
+	SymEnumTypesByName(hProcess, modbase, ~name, EnumTypeByName, &ndx);
+	if(IsNull(ndx))
+		return Null;
+	return GetTypeIndex(modbase, ndx);
 }
 
 #ifdef _DEBUG

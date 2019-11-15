@@ -130,6 +130,7 @@ void Pdb::Serialize(Stream& s)
 	s / version;
 	memory.SerializeSettings(s);
 	s % split;
+	s % show_type;
 }
 
 INITBLOCK
