@@ -16,7 +16,7 @@ TheIDE can work with GCC, MinGW and Visual C++ and contains a full featured debu
 You can use both, or you can use whichever you need.
 
 ## Supported platforms
-U++ is avaliable on following platforms: Windows, macOS, GNU/Linux & FreeBSD
+U++ is avaliable on following platforms: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
 
 ## License
 U++ uses BSD license.
@@ -65,7 +65,7 @@ GUI_APP_MAIN
 
 ### Additional examples
 
-More examples you can find directly on special section of U++ framework website deticated to [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be find in **examples** and **references** directories of this repository.
+More examples you can find directly on special section of U++ framework website deticated to [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be find in **examples** and **references** directories located in this repository.
 
 # Repository
 
