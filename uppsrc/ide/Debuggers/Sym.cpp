@@ -208,6 +208,7 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 		v.address += c.frame;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
 	v.reported_size = pSym->Size;
+	v.context = c.context;
 	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }

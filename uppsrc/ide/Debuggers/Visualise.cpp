@@ -80,37 +80,37 @@ Pdb::Val Pdb::GetAttr(Pdb::Val record, const String& id)
 	return Val();
 }
 
-Pdb::Val Pdb::At(Pdb::Val val, int i, Pdb::Thread& ctx)
+Pdb::Val Pdb::At(Pdb::Val val, int i)
 { // get n-th element relative to val
 	if(val.ref)
-		val = DeRef(val, ctx);
+		val = DeRef(val);
 	val.address += i * SizeOfType(val.type);
 	val.array = false;
 	return val;
 }
 
-Pdb::Val Pdb::At(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx)
+Pdb::Val Pdb::At(Pdb::Val record, const char *id, int i)
 {
-	return At(GetAttr(record, id), i, ctx);
+	return At(GetAttr(record, id), i);
 }
 
-int Pdb::IntAt(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx)
+int Pdb::IntAt(Pdb::Val record, const char *id, int i)
 {
-	return (int)GetInt(At(record, id, i, ctx), ctx);
+	return (int)GetInt(At(record, id, i));
 }
 
-void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen)
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 {
 	DR_LOG("Visualise");
 	const int maxlen = 300;
 	if(result.length > maxlen)
 		return;
 	if(val.ref > 0 || val.type < 0) // if pointer or primitive type, fetch it from the memory
-		val = GetRVal(val, ctx);
+		val = GetRVal(val);
 	if(val.ref > 0) {
 		result.Cat(Hex(val.address), SLtMagenta);
 		while(val.ref > 1) {
-			val = GetRVal(DeRef(val, ctx), ctx);
+			val = GetRVal(DeRef(val));
 			result.Cat("->");
 			result.Cat(Hex(val.address), SLtMagenta);
 		}
@@ -144,7 +144,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 			for(int i = 0; i < n; i++) {
 				if(i)
 					result.Cat(", ", SGray);
-				Visualise(result, DeRef(val, ctx), ctx, expandptr - 1, slen);
+				Visualise(result, DeRef(val), expandptr - 1, slen);
 				val.address += sz;
 				if(Byte(val.address) < 0) {
 					dt.Clear();
@@ -204,7 +204,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 	if(show_type)
 		result.Cat(t.name + ' ', SGreen);
 	
-	if(Pretty(result, val, ctx, expandptr, slen))
+	if(Pretty(result, val, expandptr, slen))
 		return;
 	
 	result.Cat("{ ", SColorMark);
@@ -221,7 +221,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		result.Cat("=", SColorMark);
 		Val r = GetAttr(val, i);
 		try {
-			Visualise(result, r, ctx, max(expandptr - 1, 0), slen);
+			Visualise(result, r, max(expandptr - 1, 0), slen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);
@@ -238,17 +238,17 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, in
 		result.Cat(t.static_member.GetKey(i));
 		result.Cat("=", SColorMark);
 		try {
-			Visualise(result, t.static_member[i], ctx, max(expandptr - 1, 0), slen);
+			Visualise(result, t.static_member[i], max(expandptr - 1, 0), slen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);
 		}
 	}
-	BaseFields(result, t, val, ctx, expandptr, slen, cm, 0);
+	BaseFields(result, t, val, expandptr, slen, cm, 0);
 	result.Cat(" }", SColorMark);
 }
 
-void Pdb::BaseFields(Visual& result, const Type& t, Pdb::Val val, Thread& ctx, int expandptr, int slen, bool& cm, int depth)
+void Pdb::BaseFields(Visual& result, const Type& t, Pdb::Val val, int expandptr, int slen, bool& cm, int depth)
 {
 	for(int i = 0; i < t.base.GetCount(); i++) {
 		const Val& b = t.base[i];
@@ -268,14 +268,14 @@ void Pdb::BaseFields(Visual& result, const Type& t, Pdb::Val val, Thread& ctx, i
 				Val r = t.member[i];
 				r.address += adr;
 				try {
-					Visualise(result, r, ctx, max(expandptr - 1, 0), slen);
+					Visualise(result, r, max(expandptr - 1, 0), slen);
 				}
 				catch(CParser::Error e) {
 					result.Cat(e, SColorDisabled);
 				}
 			}
 			if(depth < 30)
-				BaseFields(result, t, val, ctx, expandptr, slen, cm, depth + 1);
+				BaseFields(result, t, val, expandptr, slen, cm, depth + 1);
 		}
 	}
 }
@@ -288,7 +288,7 @@ Size Pdb::Visual::GetSize() const
 	return Size(cx, StdFont().Info().GetHeight());
 }
 
-void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr)
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 {
 	int cx = autos.HeaderObject().GetTabWidth(1);
 	int l = 30;
@@ -296,7 +296,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr)
 	for(int i = 0; i < 8; i++) { // try to reduce size of strings so that value fits better
 		int slen = (l + h) / 2;
 		result.Clear();
-		Visualise(result, val, ctx, expandptr, slen);
+		Visualise(result, val, expandptr, slen);
 		int x = result.GetSize().cx;
 		if(x < cx)
 			l = slen;
@@ -307,11 +307,11 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr)
 	}
 }
 
-Pdb::Visual Pdb::Visualise(Val v, Thread& ctx)
+Pdb::Visual Pdb::Visualise(Val v)
 {
 	Visual r;
 	try {
-		Visualise(r, v, ctx, 2);
+		Visualise(r, v, 2);
 	}
 	catch(CParser::Error e) {
 		r.Cat(e, SColorDisabled);
@@ -319,13 +319,13 @@ Pdb::Visual Pdb::Visualise(Val v, Thread& ctx)
 	return r;
 }
 
-Pdb::Visual Pdb::Visualise(const String& exp, Thread& ctx)
+Pdb::Visual Pdb::Visualise(const String& exp)
 {
 	Visual r;
 	try {
 		CParser p(exp);
-		Val v = Exp(p, ctx);
-		Visualise(r, v, ctx, 2);
+		Val v = Exp(p);
+		Visualise(r, v, 2);
 	}
 	catch(CParser::Error e) {
 		r.Cat(e, SColorDisabled);

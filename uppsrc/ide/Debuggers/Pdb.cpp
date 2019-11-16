@@ -482,7 +482,7 @@ struct PDBExpressionDlg : WithEditPDBExpressionLayout<TopWindow> {
 void PDBExpressionDlg::Sync()
 {
 	if(pdb)
-		value <<= RawPickToValue(pick(pdb->Visualise(~text, pdb->Current())));
+		value <<= RawPickToValue(pick(pdb->Visualise(~text)));
 }
 
 PDBExpressionDlg::PDBExpressionDlg(const char *title, String& brk, Pdb *pdb)
