@@ -240,11 +240,11 @@ protected:
 		DataSource &Data()		 				{return *(~pD);}
 		const DataSource &Data() const	 		{return *(~pD);}
 		bool IsDeleted() const {
-			bool isnullptr = ~pD == nullptr;
+			if (~pD == nullptr)
+				return true;
 			bool ismagic = (~pD)->IsMagic();
-			ASSERT(isnullptr == !ismagic);
-			ASSERT(!isnullptr == ismagic);
-			return ~pD == nullptr && !(~pD)->IsMagic();
+			ASSERT(ismagic);
+			return !(~pD)->IsMagic();
 		}
 		virtual ~ScatterSeries() noexcept		{DeletePD();}
 		void SerializeData(bool ser = true) 	{serializeData = ser;}
@@ -385,7 +385,7 @@ public:
 	Color& GetPlotAreaColor()						{return plotAreaColor;}
 	
 	ScatterDraw& SetAxisColor(const Color& axis_color);
-	ScatterDraw& SetAxisWidth(int axis_width);
+	ScatterDraw& SetAxisWidth(double axis_width);
 	
 	ScatterDraw& SetGridColor(const Color& grid_color) 	{gridColor = grid_color;	return *this;}
 	Color &GetGridColor() 								{return gridColor;}
@@ -674,6 +674,12 @@ public:
 	bool GetDrawXReticle()							{return drawXReticle;}
 	bool GetDrawYReticle()							{return drawYReticle;}
 	bool GetDrawY2Reticle()							{return drawY2Reticle;}
+	ScatterDraw &SetDrawXReticleNumbers(bool set = true) {drawXReticleNumbers = set;	return *this;}
+	ScatterDraw &SetDrawYReticleNumbers(bool set = true) {drawYReticleNumbers = set;	return *this;}
+	ScatterDraw &SetDrawY2ReticleNumbers(bool set = true){drawY2ReticleNumbers = set;	return *this;}
+	bool GetDrawXReticleNumbers()						{return drawXReticleNumbers;}
+	bool GetDrawYReticleNumbers()						{return drawYReticleNumbers;}
+	bool GetDrawY2ReticleNumbers()						{return drawY2ReticleNumbers;}
 	ScatterDraw &SetReticleFont(const Font &fnt)	{reticleFont = fnt;		return *this;}
 	Font &GetReticleFont()							{return reticleFont;}
 	ScatterDraw &SetReticleColor(const Color &col)	{reticleColor = col;	return *this;}
@@ -928,6 +934,9 @@ public:
 				("drawXReticle", drawXReticle)
 				("drawYReticle", drawYReticle)
 				("drawY2Reticle", drawY2Reticle)
+				("drawXReticleNumbers", drawXReticleNumbers)
+				("drawYReticleNumbers", drawYReticleNumbers)
+				("drawY2ReticleNumbers", drawY2ReticleNumbers)
 				("reticleFont", reticleFont)
 				("reticleColor", reticleColor)
 				("gridColor", gridColor)
@@ -1043,6 +1052,9 @@ public:
 				% surfUnits
 				% intsurfUnitsPos
 				% intsurfLegendPos
+				% drawXReticleNumbers
+				% drawYReticleNumbers
+				% drawY2ReticleNumbers
 			;
 			if (s.IsLoading()) {
 				labelsChanged = true;
@@ -1087,18 +1099,19 @@ protected:
 	bool fastViewX = false, sequentialXAll = false;
 	
 	Color axisColor = SColorText();
-	int axisWidth = 6;
+	double axisWidth = 0.5;
 	
 	double xRange = 100., yRange = 100., yRange2 = 100.;
 	double xMin = 0, yMin = 0, yMin2 = 0;
-	double xMajorUnit, yMajorUnit, yMajorUnit2;
-	double xMajorUnitNum, yMajorUnitNum;
+	double xMajorUnit = 10, yMajorUnit = 10, yMajorUnit2 = 10;
+	double xMajorUnitNum = 5, yMajorUnitNum = 5;
 	double xMinUnit = 0, yMinUnit = 0, yMinUnit2 = 0;
 	double xMinUnit0 = 0, yMinUnit0 = 0, yMinUnit20 = 0;
 	double minXRange = -1, maxXRange = -1, minYRange = -1, maxYRange = -1;
 	double minXmin = Null, minYmin = Null, maxXmax = Null, maxYmax = Null;
 	double lastxRange, lastyRange;
-	bool drawXReticle = true, drawYReticle = true, drawY2Reticle = false;	
+	bool drawXReticle = true, drawYReticle = true, drawY2Reticle = false;
+	bool drawXReticleNumbers = true, drawYReticleNumbers = true, drawY2ReticleNumbers = false;
 	Font reticleFont = GetStdFont();
 	Color reticleColor = Black;
 	
@@ -1329,6 +1342,9 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 	drawXReticle  &= (xRange != 0  && xMajorUnit != 0);
 	drawYReticle  &= (yRange != 0  && yMajorUnit != 0);
 	drawY2Reticle &= (yRange2 != 0 && yMajorUnit != 0);
+	drawXReticleNumbers  &= (xRange != 0  && xMajorUnit != 0);
+	drawYReticleNumbers  &= (yRange != 0  && yMajorUnit != 0);
+	drawY2ReticleNumbers &= (yRange2 != 0 && yMajorUnit != 0);
 	
 	Upp::Font standard6 = reticleFont;
 	standard6.Height(fround(min(plotScaleX, plotScaleY)*standard6.GetHeight()));
@@ -1341,7 +1357,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 	Upp::Font fontY2Num = fontYNum;
 	fontY2Num.Italic();
 
-	if (drawXReticle) {
+	if (drawXReticle || drawXReticleNumbers) {
 		Vector<double> unitsX;
 		if (SetGridLinesX)
 			SetGridLinesX(unitsX);
@@ -1363,22 +1379,23 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 					gridLabelX = VariableFormatX(gridX);
 				
 				if (!gridLabelX.IsEmpty()) {
-					Upp::Vector <String> texts;
-					Upp::Vector <Size> sizes;
-					ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
-					for (int ii = 0; ii < texts.GetCount(); ++ii) {
-						int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
-						DrawText(w, reticleX - sizes[ii].cx/2., 
-									plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+					if (drawXReticleNumbers) {
+						Upp::Vector <String> texts;
+						Upp::Vector <Size> sizes;
+						ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
+						for (int ii = 0; ii < texts.GetCount(); ++ii) {
+							int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
+							DrawText(w, reticleX - sizes[ii].cx/2., 
+										plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+						}
 					}
-					w.DrawLine(fround(reticleX), plotH,   
-							   fround(reticleX), fround(plotH + plotScaleY*4.), 
-							   fround(gridWidth*plotScaleAvg), axisColor);             
+					if (drawXReticle) 
+						DrawLineOpa(w, reticleX, plotH, reticleX, plotH + plotScaleY*4, plotScaleAvg, 1, axisWidth, axisColor, LINE_SOLID);
 				}
 			}
 		}
 	}
-	if (drawYReticle) {
+	if (drawYReticle || drawYReticleNumbers || drawY2ReticleNumbers) {
 		Vector<double> unitsY;
 		if (SetGridLinesY)
 			SetGridLinesY(unitsY);
@@ -1388,21 +1405,24 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 		}
 		double factorY = plotH/yRange;
 		for(int i = 0; i < unitsY.GetCount(); ++i) {
-			int reticleY = fround(plotH - factorY*unitsY[i]);
-			w.DrawLine(fround(-plotScaleX*4), reticleY, 0, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
+			double reticleY = plotH - factorY*unitsY[i];
+			if (drawYReticle)
+				DrawLineOpa(w, -plotScaleX*4, reticleY, 0, reticleY, plotScaleAvg, 1, axisWidth, axisColor, LINE_SOLID);
 			if (drawY2Reticle)
-				w.DrawLine(fround(plotW + plotScaleX*4.), reticleY, plotW, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
+				DrawLineOpa(w, plotW+plotScaleX*4, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, axisColor, LINE_SOLID);
 			double gridY = yMin + unitsY[i];
-			String gridLabelY;
-			if (cbModifFormatYGridUnits)
-				cbModifFormatYGridUnits(gridLabelY, i, gridY);
-			else if (cbModifFormatY)
-				cbModifFormatY(gridLabelY, i, gridY);
-			else
-				gridLabelY = VariableFormatY(gridY);
-			Size sz = GetTextSizeSpace(gridLabelY, fontYNum);
-			DrawText(w, -sz.cx - plotScaleX*6, reticleY - sz.cy/2, 0, gridLabelY, fontYNum, axisColor);
-			if (drawY2Reticle) {
+			if (drawYReticleNumbers) {
+				String gridLabelY;
+				if (cbModifFormatYGridUnits)
+					cbModifFormatYGridUnits(gridLabelY, i, gridY);
+				else if (cbModifFormatY)
+					cbModifFormatY(gridLabelY, i, gridY);
+				else
+					gridLabelY = VariableFormatY(gridY);
+				Size sz = GetTextSizeSpace(gridLabelY, fontYNum);
+				DrawText(w, -sz.cx - plotScaleX*6, reticleY - sz.cy/2, 0, gridLabelY, fontYNum, axisColor);
+			}
+			if (drawY2ReticleNumbers) {
 				double gridY2 = (gridY - yMin)/yRange*yRange2 + yMin2;
 				String gridLabelY2;
 				if (cbModifFormatY2GridUnits)
@@ -1411,6 +1431,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 					cbModifFormatY2(gridLabelY2, i, gridY2);
 				else
 					gridLabelY2 = VariableFormatY2(gridY2);
+				Size sz = GetTextSizeSpace(gridLabelY2, fontY2Num);
 				DrawText(w, plotW + plotScaleX*10, reticleY - sz.cy/2, 0, gridLabelY2, fontY2Num, axisColor);
 			}
 		}
@@ -1490,16 +1511,18 @@ void ScatterDraw::Plot(T& w)
 			if (SetGridLinesX)
 				SetGridLinesX(unitsX);
 			else {
-				for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
-					unitsX << xMinUnit + i*xMajorUnit;
+				if (xMajorUnit > 0) {
+					for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
+						unitsX << xMinUnit + i*xMajorUnit;
+				}
 			}
 			if (unitsX.GetCount() > 0) {
 				for(int i = 0; i < unitsX.GetCount(); i++) {
 					double reticleX = factorX*unitsX[i];
 					if (reticleX >=0 && reticleX <= plotW) {
 						if (gridDash.GetCount() == 1 && gridDash[0] == '-') {
-							DrawLineOpa(w, reticleX, 0, reticleX, 8*plotScaleAvg, plotScaleAvg, 1, gridWidth, gridColor, "");
-							DrawLineOpa(w, reticleX, plotH-8*plotScaleAvg, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, "");
+							DrawLineOpa(w, reticleX, 0, reticleX, 8*plotScaleAvg, plotScaleAvg, 1, gridWidth, gridColor, LINE_SOLID);
+							DrawLineOpa(w, reticleX, plotH-8*plotScaleAvg, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, LINE_SOLID);
 						} else
 							DrawLineOpa(w, reticleX, 0, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 					}
@@ -1519,16 +1542,18 @@ void ScatterDraw::Plot(T& w)
 			if (SetGridLinesY)
 				SetGridLinesY(unitsY);
 			else {
-				for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) 
-					unitsY << yMinUnit + i*yMajorUnit;
+				if (yMajorUnit > 0) {
+					for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) 
+						unitsY << yMinUnit + i*yMajorUnit;
+				}
 			}
 			if (unitsY.GetCount() > 0) {
 				for(int i = 0; i < unitsY.GetCount(); i++) {
 					double reticleY = plotH - factorY*unitsY[i];
 					if (reticleY > 2*gridWidth*plotScaleAvg && reticleY < plotH - 2*gridWidth*plotScaleAvg) {
 						if (gridDash.GetCount() == 1 && gridDash[0] == '-') {
-							DrawLineOpa(w, 0, reticleY, 8*plotScaleAvg, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
-							DrawLineOpa(w, plotW-8*plotScaleAvg, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+							DrawLineOpa(w, 0, reticleY, 8*plotScaleAvg, reticleY, plotScaleAvg, 1, gridWidth, gridColor, LINE_SOLID);
+							DrawLineOpa(w, plotW-8*plotScaleAvg, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, LINE_SOLID);
 						} else 
 							DrawLineOpa(w, 0, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 					}

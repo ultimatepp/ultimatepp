@@ -364,8 +364,8 @@ s`_color])&]
 &]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetAxisWidth`(int`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* S
-etAxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
+[s5;:ScatterDraw`:`:SetAxisWidth`(double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetAxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
 [s3; Sets [%-*@3 axis`_width] as the width of the axis in pixels.&]
 [s1; &]
 [s6;%- &]
@@ -772,9 +772,9 @@ of grid lines.&]
 [s5;:ScatterDraw`:`:SetMinUnits`(double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetMinUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
 [s3; Sets with [%-*@3 ux] and [%-*@3 uy] the first X and Y axis grid 
-lines location. If either [%-*@3 ux] or [%-*@3 uy] is not visible, 
-it ensures that values obtained adding or substracting SetMajorUnits() 
-values will be visible.&]
+lines location in real units from the lower left corner. If either 
+[%-*@3 ux] or [%-*@3 uy] is not visible, it ensures that values obtained 
+adding or substracting SetMajorUnits() values will be visible.&]
 [s3; If [^topic`:`/`/ScatterDraw`/src`/ScatterDraw`_en`-us`#ScatterDraw`:`:SetGridLinesX^ S
 etGridLinesX ]or [^topic`:`/`/ScatterDraw`/src`/ScatterDraw`_en`-us`#ScatterDraw`:`:SetGridLinesY^ S
 etGridLinesY ]callback is set, the values of X or Y axis respectively 

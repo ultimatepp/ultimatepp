@@ -1,7 +1,6 @@
 #include "ScatterDraw.h"
 
 ScatterDraw::ScatterDraw() {
-	SetMajorUnitsNum(5, 10);
 	lastxRange = xRange;
 	lastyRange = yRange;
 }
@@ -108,7 +107,7 @@ ScatterDraw& ScatterDraw::SetAxisColor(const Color& axis_color) {
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetAxisWidth(int axis_width) {
+ScatterDraw& ScatterDraw::SetAxisWidth(double axis_width) {
 	axisWidth = axis_width;
 	return *this;
 }
@@ -1088,7 +1087,7 @@ void ScatterDraw::SetDataSecondaryY(int index, bool secondary) {
 	
 	series[index].primaryY = !secondary;
 	if (secondary)
-		SetDrawY2Reticle(true);
+		SetDrawY2Reticle().SetDrawY2ReticleNumbers();
 	Refresh();
 }
 
