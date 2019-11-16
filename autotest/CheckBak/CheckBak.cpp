@@ -49,7 +49,7 @@ CONSOLE_APP_MAIN
 	ASSERT(d >= GetSysDate() - 1);
 	ASSERT(tm >= GetSysDate() - 1);
 	len = len >> 20;
-	ASSERT(len > 2000 && len < 4200);
+	ASSERT(len > 2000 && len < 5500);
 
 	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/big/bak", ';')) {
 		FileIn in1(fn);
