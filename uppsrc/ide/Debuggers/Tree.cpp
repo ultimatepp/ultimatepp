@@ -9,7 +9,7 @@ void Pdb::TreeNode(int parent, const String& name, Pdb::Val val)
 	NamedVal nv;
 	nv.name = name;
 	nv.val = val;
-	tree.Add(parent, Null, RawToValue(nv), name + "=" + Visualise(val, Current()).GetString(), val.type >= 0 || val.ref > 0);
+	tree.Add(parent, Null, RawToValue(nv), name + "=" + Visualise(val).GetString(), val.type >= 0 || val.ref > 0);
 }
 
 void Pdb::TreeExpand(int node)
@@ -22,7 +22,7 @@ void Pdb::TreeExpand(int node)
 	const NamedVal& nv = ValueTo<NamedVal>(tree.Get(node));
 	Val val = nv.val;
 	if(nv.val.ref > 0) {
-		val = DeRef(val, Current());
+		val = DeRef(val);
 		if(val.type < 0 || val.ref > 0) {
 			TreeNode(node, '*' + nv.name, val);
 			SaveTree();
@@ -40,7 +40,7 @@ void Pdb::TreeExpand(int node)
 		prtti.ref = 1;
 		prtti.type = UINT4;
 		prtti.address = val.address - 4;
-		Val rtti = GetRVal(prtti, Current());
+		Val rtti = GetRVal(prtti);
 		FnInfo rtf = GetFnInfo(rtti.address);
 		TreeNode(node, rtf.name, prtti);
 		for(int i = 0; i < count; i++) {
@@ -180,7 +180,7 @@ void Pdb::SetTree(const String& exp)
 	NamedVal nv;
 	try {
 		CParser p(exp);
-		nv.val = Exp(p, Current());
+		nv.val = Exp(p);
 	}
 	catch(CParser::Error) {
 		return;
@@ -189,7 +189,7 @@ void Pdb::SetTree(const String& exp)
 	String n = exp;
 	if(nv.val.type >= 0)
 		n = GetType(nv.val.type).name;
-	tree.SetRoot(Null, RawToValue(nv), n + '=' + Visualise(nv.val, Current()).GetString());
+	tree.SetRoot(Null, RawToValue(nv), n + '=' + Visualise(nv.val).GetString());
 	if(nv.val.type >= 0) {
 		String w = treetype.Get(n, Null);
 		LOG("SetTree " << n << ' ' << w);

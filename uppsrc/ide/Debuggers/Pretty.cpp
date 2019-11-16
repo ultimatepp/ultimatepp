@@ -1,6 +1,37 @@
 #include "Debuggers.h"
 
-bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen)
+#if 0
+bool Pdb::PrettyVector(Pdb::Val val, const String& type, const Vector<String>& tparam,
+                       Thread& Pretty& p, int from, int count)
+{
+	if(type == "Upp::Vector" && HasT(0)) {
+		p.count = GetInt(GetAttr(val, "items"), ctx);
+	
+		Val item = DeRef(GetAttr(val, "vector"), ctx);
+		int sz = SizeOfType(tparam[0]);
+		p.type.Add(tparam[0]);
+		
+		for(int i = 0; i < count; i++)
+			p.address.Add(item.address + (i + from) * count);
+		return true;
+	}
+	
+	return false;
+}
+
+bool Pdb::PrettyIndex(Pdb::Val val, const String& type, const Vector<String>& tparam,
+                      Thread& Pretty& p, int from, int count)
+{
+}
+
+	if(type == "Upp::Index" && HasT(0)) {
+		val = GetAttr(val, "key");
+		type = "Upp::Vector";
+		return PrettyVector
+	}
+#endif
+
+bool Pdb::Pretty(Visual& result, Pdb::Val val, int expandptr, int slen)
 {
 	const Type& t = GetType(val.type);
 
@@ -20,18 +51,18 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 	};
 
 	if(t.name == "Upp::String") {
-		bool small = IntAt(val, "chr", 14, ctx) == 0;
-		count = small ? IntAt(val, "chr", 15, ctx) : IntAt(val, "w", 2, ctx);
+		bool small = IntAt(val, "chr", 14) == 0;
+		count = small ? IntAt(val, "chr", 15) : IntAt(val, "w", 2);
 		ResultCount(count);
-		ResultText(ReadString((small ? GetAttr(val, "chr") : DeRef(GetAttr(val, "ptr"), ctx)).address,
+		ResultText(ReadString((small ? GetAttr(val, "chr") : DeRef(GetAttr(val, "ptr"))).address,
 		                      min(count, 200), true));
 		return true;
 	}
 
 	if(t.name == "Upp::WString") {
-		count = GetInt(GetAttr(val, "length"), ctx);
+		count = GetInt(GetAttr(val, "length"));
 		ResultCount(count);
-		ResultText(ReadWString(DeRef(GetAttr(val, "ptr"), ctx).address, min(count, 200), true).ToString());
+		ResultText(ReadWString(DeRef(GetAttr(val, "ptr")).address, min(count, 200), true).ToString());
 		return true;
 	}
 	
@@ -88,10 +119,10 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 	}
 	
 	if(type == "Upp::Vector" && HasT(0)) {
-		count = GetInt(GetAttr(val, "items"), ctx);
+		count = GetInt(GetAttr(val, "items"));
 		ResultCount(count);
 
-		Val item = DeRef(GetAttr(val, "vector"), ctx);
+		Val item = DeRef(GetAttr(val, "vector"));
 		item.type = tparam[0];
 		item.ref = tref[0];
 		int sz = SizeOfType(item.type);
@@ -100,7 +131,7 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 		for(int i = 0; i < n; i++) {
 			if(i)
 				result.Cat(", ", SGray);
-			Visualise(result, item, ctx, expandptr - 1, slen);
+			Visualise(result, item, expandptr - 1, slen);
 			item.address += sz;
 		}
 
@@ -114,15 +145,15 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 		Val key = GetAttr(GetAttr(val, "key"), "key");
 		Val value = GetAttr(val, "value");
 
-		count = GetInt(GetAttr(key, "items"), ctx);
+		count = GetInt(GetAttr(key, "items"));
 		ResultCount(count);
 		
-		Val key_item = DeRef(GetAttr(key, "vector"), ctx);
+		Val key_item = DeRef(GetAttr(key, "vector"));
 		key_item.type = tparam[0];
 		key_item.ref = tref[0];
 		int key_sz = SizeOfType(key_item.type);
 		
-		Val item = DeRef(GetAttr(value, "vector"), ctx);
+		Val item = DeRef(GetAttr(value, "vector"));
 		item.type = tparam[1];
 		item.ref = tref[1];
 		int sz = SizeOfType(item.type);
@@ -131,10 +162,10 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 		for(int i = 0; i < n; i++) {
 			if(i)
 				result.Cat(", ", SGray);
-			Visualise(result, key_item, ctx, expandptr - 1, slen);
+			Visualise(result, key_item, expandptr - 1, slen);
 			result.Cat(": ", SGray);
 			key_item.address += key_sz;
-			Visualise(result, item, ctx, expandptr - 1, slen);
+			Visualise(result, item, expandptr - 1, slen);
 			item.address += sz;
 		}
 
@@ -146,10 +177,10 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 	
 	if(type == "Upp::Array" && HasT(0)) {
 		Val vector = GetAttr(val, "vector");
-		count = GetInt(GetAttr(vector, "items"), ctx);
+		count = GetInt(GetAttr(vector, "items"));
 		ResultCount(count);
 
-		Val item = DeRef(GetAttr(vector, "vector"), ctx);
+		Val item = DeRef(GetAttr(vector, "vector"));
 		item.type = tparam[0];
 		item.ref = tref[0] + 1;
 
@@ -157,7 +188,7 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 		for(int i = 0; i < n; i++) {
 			if(i)
 				result.Cat(", ", SGray);
-			Visualise(result, DeRef(item, ctx), ctx, expandptr - 1, slen);
+			Visualise(result, DeRef(item), expandptr - 1, slen);
 			item.address += win64 ? 8 : 4;
 		}
 
@@ -170,17 +201,17 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 	if(type == "Upp::ArrayMap" && HasT(0) && HasT(1)) {
 		Val key = GetAttr(GetAttr(val, "key"), "key");
 
-		count = GetInt(GetAttr(key, "items"), ctx);
+		count = GetInt(GetAttr(key, "items"));
 		ResultCount(count);
 		
-		Val key_item = DeRef(GetAttr(key, "vector"), ctx);
+		Val key_item = DeRef(GetAttr(key, "vector"));
 		key_item.type = tparam[0];
 		key_item.ref = tref[0];
 		int key_sz = SizeOfType(key_item.type);
 		
 		Val value = GetAttr(val, "value");
 		Val vector = GetAttr(value, "vector");
-		Val item = DeRef(GetAttr(vector, "vector"), ctx);
+		Val item = DeRef(GetAttr(vector, "vector"));
 		item.type = tparam[1];
 		item.ref = tref[1] + 1;
 		
@@ -188,10 +219,10 @@ bool Pdb::Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int s
 		for(int i = 0; i < n; i++) {
 			if(i)
 				result.Cat(", ", SGray);
-			Visualise(result, key_item, ctx, expandptr - 1, slen);
+			Visualise(result, key_item, expandptr - 1, slen);
 			result.Cat(": ", SGray);
 			key_item.address += key_sz;
-			Visualise(result, DeRef(item, ctx), ctx, expandptr - 1, slen);
+			Visualise(result, DeRef(item), expandptr - 1, slen);
 			item.address += win64 ? 8 : 4;
 		}
 

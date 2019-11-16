@@ -73,6 +73,17 @@ struct Pdb : Debugger, ParentCtrl {
 
 	enum { UNKNOWN = -99, BOOL1, SINT1, UINT1, SINT2, UINT2, SINT4, UINT4, SINT8, UINT8, FLT, DBL, PFUNC };
 
+	struct Context {
+	#ifdef CPU_64
+		union {
+			CONTEXT context64;
+			WOW64_CONTEXT context32;
+		};
+	#else
+		CONTEXT context32;
+	#endif
+	};
+
 	struct Val : Moveable<Val> {
 		int    type = UNKNOWN;
 		int    ref = 0; // this is pointer (or reference)
@@ -86,8 +97,9 @@ struct Pdb : Debugger, ParentCtrl {
 			int64  ival;
 			double fval;
 		};
+		Context *context = NULL;
 
-		Val At(int i, Thread& ctx) const;
+		Val At(int i) const;
 		
 #ifdef _DEBUG
 		String ToString() const;
@@ -149,20 +161,16 @@ struct Pdb : Debugger, ParentCtrl {
 	                       Color ink, Color paper, dword style) const;
 	};
 	
-	struct Context {
-	#ifdef CPU_64
-		union {
-			CONTEXT context64;
-			WOW64_CONTEXT context32;
-		};
-	#else
-		CONTEXT context32;
-	#endif
-	};
-
 	struct Thread : Context {
 		HANDLE  hThread;
 		adr_t   sp;
+	};
+	
+	struct Pretty { // used to pretty-display containers, Strings etc...
+		bool           text;
+		int            count;
+		Vector<String> type;
+		Vector<uint64> address;
 	};
 
 	int                         lock;
@@ -202,7 +210,6 @@ struct Pdb : Debugger, ParentCtrl {
 	String                      autotext;
 	
 	VectorMap<adr_t, FnInfo>    fninfo_cache;
-
 
 	DbgDisas           disas;
 
@@ -313,41 +320,41 @@ struct Pdb : Debugger, ParentCtrl {
 // exp
 	void       ThrowError(const char *s);
 	int        SizeOfType(int ti);
-	Val        GetRVal(Val v, Thread& ctx);
-	Val        DeRef(Val v, Thread& ctx);
+	Val        GetRVal(Val v);
+	Val        DeRef(Val v);
 	Val        Ref(Val v);
-	int64      GetInt(Val v, Thread& ctx);
-	double     GetFlt(Val v, Thread& ctx);
+	int64      GetInt(Val v);
+	double     GetFlt(Val v);
 	void       ZeroDiv(double x);
-	Val        Compute(Val v1, Val v2, int oper, Thread& ctx);
+	Val        Compute(Val v1, Val v2, int oper);
 	Val        RValue(int64 v);
 	Val        Field0(Pdb::Val v, const String& field);
 	Val        Field(Pdb::Val v, const String& field);
-	Val        Term(CParser& p, Thread& ctx);
-	Val        Post(CParser& p, Thread& ctx);
-	Val        Unary(CParser& p, Thread& ctx);
-	Val        Additive(CParser& p, Thread& ctx);
-	Val        Multiplicative(CParser& p, Thread& ctx);
-	Val        Compare(Val v, CParser& p, int r1, int r2, Thread& ctx);
-	void       GetBools(Val v1, Val v2, bool& a, bool& b, Thread& ctx);
-	Val        LogAnd(CParser& p, Thread& ctx);
-	Val        LogOr(CParser& p, Thread& ctx);
-	Val        Comparison(CParser& p, Thread& ctx);
-	Val        Exp0(CParser& p, Thread& ctx);
-	Val        Exp(CParser& p, Thread& ctx);
+	Val        Term(CParser& p);
+	Val        Post(CParser& p);
+	Val        Unary(CParser& p);
+	Val        Additive(CParser& p);
+	Val        Multiplicative(CParser& p);
+	Val        Compare(Val v, CParser& p, int r1, int r2);
+	void       GetBools(Val v1, Val v2, bool& a, bool& b);
+	Val        LogAnd(CParser& p);
+	Val        LogOr(CParser& p);
+	Val        Comparison(CParser& p);
+	Val        Exp0(CParser& p);
+	Val        Exp(CParser& p);
 
 	Val        GetAttr(Pdb::Val record, int i);
 	Val        GetAttr(Pdb::Val record, const String& id);
-	Val        At(Pdb::Val val, int i, Pdb::Thread& ctx);
-	Val        At(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx);
-	int        IntAt(Pdb::Val record, const char *id, int i, Pdb::Thread& ctx);
+	Val        At(Pdb::Val val, int i);
+	Val        At(Pdb::Val record, const char *id, int i);
+	int        IntAt(Pdb::Val record, const char *id, int i);
 	void       CatInt(Visual& result, int64 val);
-	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, Thread& ctx, int expandptr, int slen, bool& cm, int depth);
-	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen);
-	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr);
-	Visual     Visualise(Val v, Thread& ctx);
-	Visual     Visualise(const String& rexp, Thread& ctx);
-	bool       Pretty(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen);
+	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, int expandptr, int slen, bool& cm, int depth);
+	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen);
+	void       Visualise(Visual& result, Pdb::Val val, int expandptr);
+	Visual     Visualise(Val v);
+	Visual     Visualise(const String& rexp);
+	bool       Pretty(Visual& result, Pdb::Val val, int expandptr, int slen);
 
 // code
 	Thread&    Current();

@@ -193,7 +193,7 @@ bool Pdb::ConditionalPass()
 					Array<Frame> frame = Backtrace(ctx, true);
 					current_frame = &frame[0];
 					CParser p(exp);
-					if(!GetInt(Exp(p, ctx), ctx)) {
+					if(!GetInt(Exp(p))) {
 						current_frame = NULL;
 						return true;
 					}
