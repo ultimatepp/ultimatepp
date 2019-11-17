@@ -8,15 +8,14 @@ The U++ integrated development environment, TheIDE, introduces modular concepts 
 
 TheIDE can work with GCC, MinGW and Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
 
+U++ supports following platforms on the production level: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
+
 ## What you can get with Ultimate++?
 
 * A very effective C++ library for cross-platform development in source form.
 * A good integrated development environment, designed for developing large C++ applications.
 
 You can use both, or you can use whichever you need.
-
-## Supported platforms
-U++ is avaliable on following platforms: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
 
 ## License
 U++ uses BSD license.
