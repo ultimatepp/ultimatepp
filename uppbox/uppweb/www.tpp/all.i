@@ -62,6 +62,10 @@ TOPIC("bugreports_en-us")
 #include "bugreports_en-us.tppi"
 END_TOPIC
 
+TOPIC("chss_en-us")
+#include "chss_en-us.tppi"
+END_TOPIC
+
 TOPIC("codestyle_en-us")
 #include "codestyle_en-us.tppi"
 END_TOPIC
