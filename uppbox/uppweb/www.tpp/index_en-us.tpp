@@ -28,7 +28,7 @@ like code completion, navigation and transformation.&]
 and contains a full featured debugger. TheIDE can also be used 
 to develop non`-U`+`+ applications.&]
 [s2;r58;%% U`+`+ supports following platforms on the production level: 
-Windows, GNU/Linux `& FreeBSD.&]
+Windows, macOS, GNU/Linux `& FreeBSD.&]
 [s2;r58;%% [* What you can get with the Ultimate`+`+ download in plain 
 English?]&]
 [s2;l160;r58;i150;O0;%% Very effective C`+`+ library for cross`-platform 
@@ -103,7 +103,7 @@ is your place]]
 management (Redmine)]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ SVN install 
 and permissions]&]
-[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us^ GIT Mirror]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us^ GIT]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Bug reports 
 and patch submission]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^ Web page]&]
