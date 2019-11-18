@@ -192,6 +192,8 @@ inline bool IsXDigit(int c)        { return IsDigit(c) || c >= 'A' && c <= 'F' |
 
 inline bool IsCJKIdeograph(int c)  { return c >= 0x2e80 && c <= 0xdfaf || c >= 0xf900 && c <= 0xfaff; }
 
+bool IsDoubleWidth(int c);
+
 word UnicodeCombine(word chr, word combine);
 
 String Utf8ToAscii(const String& src);

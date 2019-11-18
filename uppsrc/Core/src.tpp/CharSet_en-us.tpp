@@ -398,6 +398,11 @@ character.&]
 [s2;%% Returns true if [%-*@3 c].is in UNICODE code`-point for CJK 
 ideogram.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:IsDoubleWidth`(int`): [@(0.0.255) bool]_[* IsDoubleWidth]([@(0.0.255) int]_[*@3 c
+])&]
+[s2;%% Returns true if [%-*@3 c] is a double`-width UNICODE character.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:UnicodeCombine`(word`,word`): [_^word^ word]_[* UnicodeCombine]([_^word^ word]_[*@3 chr],
  [_^word^ word]_[*@3 combine])&]
