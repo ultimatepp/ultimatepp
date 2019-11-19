@@ -172,16 +172,18 @@ void CParser::PassChar3(char c1, char c2, char c3) {
 }
 
 String CParser::ReadId() {
-	LTIMING("ReadId");
+	RTIMING("ReadId");
 	if(!IsId())
 		ThrowError("missing id");
 	String result;
+	RTIMING("ReadId1");
 	const char *b = term;
 	const char *p = b;
 	while(iscid(*p))
 		p++;
 	term = p;
 	DoSpaces();
+	RTIMING("ReadId2");
 	return String(b, (int)(uintptr_t)(p - b));
 }
 
@@ -510,7 +512,7 @@ void CParser::SkipTerm()
 	else
 	if(IsChar('\''))
 		ReadString('\'', false);
-	else		
+	else
 	if(*term) {
 		if(*term == '\n') {
 			line++;

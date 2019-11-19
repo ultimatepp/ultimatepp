@@ -99,7 +99,7 @@ int Pdb::IntAt(Pdb::Val record, const char *id, int i)
 	return (int)GetInt(At(record, id, i));
 }
 
-void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, bool pretty)
 {
 	DR_LOG("Visualise");
 	const int maxlen = 300;
@@ -204,7 +204,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 	if(show_type)
 		result.Cat(t.name + ' ', SGreen);
 	
-	if(Pretty(result, val, expandptr, slen))
+	if(pretty && PrettyData(result, val, expandptr, slen))
 		return;
 	
 	result.Cat("{ ", SColorMark);
