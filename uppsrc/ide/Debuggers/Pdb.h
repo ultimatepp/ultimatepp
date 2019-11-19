@@ -333,6 +333,7 @@ struct Pdb : Debugger, ParentCtrl {
 	TypeInfo              GetTypeInfo(const String& name) { return GetTypeInfo(current_modbase, name); } // only in Pretty...
 
 // exp
+	Val        MakeVal(const String& type, adr_t address);
 	void       ThrowError(const char *s);
 	int        SizeOfType(int ti);
 	int        SizeOfType(const String& name);
