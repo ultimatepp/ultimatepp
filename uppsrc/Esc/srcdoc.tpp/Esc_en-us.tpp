@@ -1,8 +1,8 @@
 topic "Esc scripting language";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [b133;a83;*+117 $$1,0#31310162474203024125188417583966:subtitle]
 [b83;*+150 $$2,0#07864147445237544204411237157677:title]
 [l321;C@5;1 $$3,3#20902679421464641399138805415013:code]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R8 Esc scripting language]&]
 [s0; &]
@@ -47,7 +47,7 @@ brackets:&]
 [s3; `[ 1, 2, 3 `* alfa `]-|[@4 // expressions can be used as well]&]
 [s0; &]
 [s0; Number of elements in the array can be retrieved by standard 
-function count.&]
+function [*C count].&]
 [s0; &]
 [s0; Accessing elements of arrays is provided by subscript [@(128.0.255) `[ 
 `]] operator:&]

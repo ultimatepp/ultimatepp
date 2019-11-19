@@ -383,14 +383,18 @@ int Pdb::FindType(adr_t modbase, const String& name)
 {
 	static VectorMap<String, int> primitive = {
 		{ "bool", BOOL1 },
-		{ "byte", SINT1 },
-		{ "unsigned byte", UINT1 },
+		{ "char", SINT1 },
+		{ "unsigned char", UINT1 },
 		{ "short", SINT2 },
 		{ "unsigned short", UINT2 },
 		{ "int", SINT4 },
 		{ "unsigned int", UINT4 },
 		{ "float", FLT },
 		{ "double", DBL },
+		{ "int64", SINT8 },
+		{ "uint64", UINT8 },
+		{ "__int64", SINT8 },
+		{ "unsigned __int64", UINT8 },
 	};
 	
 	int q = primitive.Get(name, Null);
@@ -404,6 +408,64 @@ int Pdb::FindType(adr_t modbase, const String& name)
 	if(IsNull(ndx))
 		return Null;
 	return GetTypeIndex(modbase, ndx);
+}
+
+String Pdb::TypeInfoAsString(TypeInfo tf)
+{
+	static VectorMap<int, String> primitive = { // todo: UINT8
+		{ BOOL1, "bool" },
+		{ SINT1, "char" },
+		{ UINT1, "unsigned char" },
+		{ SINT2, "short" },
+		{ UINT2, "unsigned short" },
+		{ SINT4, "int" },
+		{ UINT4, "unsigned int"  },
+		{ SINT8, "int64" },
+		{ UINT8, "uint64"  },
+		{ FLT, "float" },
+		{ DBL, "double" },
+	};
+	
+	String r = primitive.Get(tf.type, Null);
+	if(IsNull(r))
+		r = GetType(tf.type).name;
+
+	while(tf.ref > 0) {
+		r << "*";
+		tf.ref--;
+	}
+	
+	return r;
+}
+
+Pdb::TypeInfo Pdb::GetTypeInfo(adr_t modbase, const String& name)
+{
+	int q = typeinfo_cache.Find(name);
+	if(q >= 0)
+		return typeinfo_cache[q];
+	
+	TypeInfo r;
+	String tp;
+	bool spc = false;
+	for(const char *s = name; *s; s++)
+		if(*s == '*')
+			r.ref++;
+		else
+		if(*s == ' ') {
+			if(!spc) {
+				tp.Cat(' ');
+				spc = true;
+			}
+		}
+		else {
+			tp.Cat(*s);
+			spc = false;
+		}
+	while(tp.Find(" const ") >= 0)
+		tp.Replace(" const ", " ");
+	r.type = FindType(modbase, TrimBoth(tp));
+	typeinfo_cache.Add(name, r);
+	return r;
 }
 
 #ifdef _DEBUG

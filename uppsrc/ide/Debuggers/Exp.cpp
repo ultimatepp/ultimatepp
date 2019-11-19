@@ -43,6 +43,14 @@ int Pdb::SizeOfType(int ti)
 	return 0;
 }
 
+int Pdb::SizeOfType(const String& name)
+{
+	TypeInfo f = GetTypeInfo(name);
+	if(f.ref)
+		return win64 ? 8 : 4;
+	return SizeOfType(f.type);
+}
+
 #define READINT0(type) { \
 	type x; \
 	if(v.address < 10000) \
@@ -66,6 +74,30 @@ case q: { \
 	break; \
 } \
 
+adr_t Pdb::PeekPtr(adr_t address)
+{
+	adr_t r = 0;
+	if(!Copy(address, &r, win64 ? 8 : 4))
+		ThrowError("??");
+	return r;
+}
+
+byte Pdb::PeekByte(adr_t address)
+{
+	byte b;
+	if(!Copy(address, &b, 1))
+		ThrowError("??");
+	return b;
+}
+
+word Pdb::PeekWord(adr_t address)
+{
+	word w;
+	if(!Copy(address, &w, 2))
+		ThrowError("??");
+	return w;
+}
+
 Pdb::Val Pdb::GetRVal(Pdb::Val v)
 { // read data from debugee
 	if(v.rvalue)
@@ -77,8 +109,7 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v)
 	}
 	else
 	if(v.ref) { // Fetch pointer from the debugee memory
-		if(!Copy(v.address, &v.address, win64 ? 8 : 4))
-			ThrowError("??");
+		v.address = PeekPtr(v.address);
 	}
 	else
 	if(v.bitcnt) { // Fetch bitfield from debugee memory

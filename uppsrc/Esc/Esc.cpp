@@ -17,6 +17,7 @@ void Esc::OutOfMemory()
 
 void Esc::TestLimit()
 {
+	LTIMING("TestLimit");
 	if(!IsNull(op_limit))
 		if(op_limit < 0)
 			ThrowError("out of operations limit - considered frozen");
@@ -293,7 +294,7 @@ void Esc::Subscript(Esc::SRVal& r)
 
 void Esc::Term(SRVal& r)
 {
-	LTIMING("Term");
+	RTIMING("Term");
 
 	r.sbs = EscValue();
 
@@ -378,6 +379,7 @@ void Esc::Term(SRVal& r)
 		Subscript(r);
 		return;
 	}
+
 	SRVal _self;
 	bool  _global = false;
 	if(Char('.')) {
@@ -389,6 +391,7 @@ void Esc::Term(SRVal& r)
 	if(Char(':'))
 		_global = true;
 	if(IsId()) {
+		RTIMING("Id1");
 		String id = ReadId();
 		EscValue method;
 		int locali = var.Find(id);
@@ -422,6 +425,7 @@ void Esc::Term(SRVal& r)
 		else
 			r.lval = &var.GetPut(id);
 
+		RTIMING("Id2");
 		try {
 			Subscript(r, _self, id);
 		}
@@ -607,7 +611,7 @@ void Esc::Add(Esc::SRVal& r)
 			if(!(v.IsArray() && b.IsVoid())) {
 				if(v.IsInt64() && b.IsInt64())
 					r = Int(v, "+") + Int(b, "+");
-				else 
+				else
 					r = Number(v, "+") + Number(b, "+");
 			}
 		}
