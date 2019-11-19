@@ -72,13 +72,16 @@ void Pdb::PrettyArrayMap(Pdb::Val val, const Vector<String>& tparam, int from, i
 
 void Pdb::PrettyValue(Pdb::Val val, const Vector<String>& tparam, int from, int count, Pdb::Pretty& p)
 {
-	p.kind = SINGLE_VALUE;
 	val = GetAttr(val, "data");
 	adr_t a = val.address;
 	p.data_ptr << a;
 	if(PeekWord(a + 12) && !PeekWord(a + 14)) { // this is not String
 		int st = PeekByte(a + 13);
-	
+//		if(st == 9) {
+//			PrettyVector(MakeVal("Upp::Vector<Upp::Value>", PeekPtr(a)), { "Upp::Value" }, from, count, p);
+//			return;
+//		}
+		p.kind = SINGLE_VALUE;
 		String t = decode(st, 1, "int", 2, "double", 4, "Upp::Date", 5, "Upp::Time",
 		                      10, "int64", 11, "bool", "");
 		if(t.GetCount())
@@ -86,6 +89,14 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>& tparam, int from, int 
 	}
 	else
 		p.data_type << "Upp::String";
+}
+
+Pdb::Val Pdb::MakeVal(const String& type, adr_t address)
+{
+	Val item;
+	(TypeInfo &)item = GetTypeInfo(type);
+	item.address = address;
+	return item;
 }
 
 bool Pdb::PrettyData(Visual& result, Pdb::Val val, int expandptr, int slen)
@@ -167,7 +178,7 @@ bool Pdb::PrettyData(Visual& result, Pdb::Val val, int expandptr, int slen)
 		pretty.Add("Upp::VectorMap", { 2, THISFN(PrettyVectorMap) });
 		pretty.Add("Upp::ArrayMap", { 2, THISFN(PrettyArrayMap) });
 	}
-DDUMP(type);
+
 	int ii = pretty.Find(type);
 	while(ii >= 0) {
 		auto pr = pretty[ii];
@@ -197,12 +208,8 @@ DDUMP(type);
 			else
 			if(p.kind == SINGLE_VALUE) {
 				pr.b(val, type_param, 0, 1, p);
-				if(p.data_type.GetCount() && p.data_ptr.GetCount()) {
-					Val item;
-					(TypeInfo &)item = GetTypeInfo(p.data_type[0]);
-					item.address = p.data_ptr[0];
-					Visualise(result, item, expandptr - 1, slen);
-				}
+				if(p.data_type.GetCount() && p.data_ptr.GetCount())
+					Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), expandptr - 1, slen);
 				else
 					Visualise(result, val, expandptr - 1, slen, false);
 			}
