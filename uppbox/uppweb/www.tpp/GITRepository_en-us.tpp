@@ -1,4 +1,4 @@
-topic "GIT Mirror";
+topic "GIT Repository";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -22,34 +22,46 @@ topic "GIT Mirror";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; GIT Mirror&]
-[s3;:1: Table of contents&]
+[s2; GIT Repository&]
+[s3; Table of contents&]
 [s0;^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#1^ &]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#2^ 1. Introduction]&]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#3^ 2. Cloning repository]&]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#4^ 3. Useful links]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITRepository`_en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITRepository`_en`-us`#2^ 2. Cloning 
+repository]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITRepository`_en`-us`#3^ 3. Forking 
+repository]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITRepository`_en`-us`#4^ 4. Useful 
+links]&]
 [s0; &]
 [s3;:1: 1. Introduction&]
 [s5; Currently, our main source control version tool is SVN. However, 
-we provide a [^https`:`/`/github`.com`/ultimatepp`/mirror^ GIT 
-mirror] on GitHub that is in accordance with SVN trunk. The synchronization 
-is being done after each commit.&]
+we provide a full functional [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ GIT 
+repository] on GitHub that is in accordance with SVN trunk. The 
+synchronization is being done after each commit. We accept and 
+handle pull requests (PR`'s), so you can freely contribute using 
+this mechanism.&]
 [s5; More information related to U`+`+`'s SVN is located in this 
 [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us^ article].&]
 [s5; Please, do not forget to star our project on GitHub!&]
 [s3;:2: 2. Cloning repository&]
-[s5; To clone our GIT mirror, you have to execute the following command 
-in your terminal:&]
+[s5; To clone our GIT repository, you have to execute the following 
+command in your terminal:&]
 [s0; &]
-[s0;l256; [C$7 git clone https://github.com/ultimatepp/mirror.git]&]
+[s0;l256; [C$7 git clone https://github.com/ultimatepp/ultimatepp.git]&]
 [s5; &]
 [s5; The repository is visible for everyone, so there is not need 
 to provide any credentials.&]
-[s3;:3: 3. Useful links&]
+[s3;:3: 3. Forking repository&]
+[s5; To create PR, you need firstly fork our repository. Just click 
+on fork button in one of our repositories. After that you can 
+create separate branch on your fork and make contribution. At 
+the end you need to create PR from branch you created.&]
+[s3;:4: 4. Useful links&]
 [s5; External links:&]
 [s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp^ https://github.com/ultimatepp] 
-`- Ultimate`+`+ project on GitHub&]
-[s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/mirror^ https://github.com/ultim
-atepp/mirror] `- GIT mirror&]
-[s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/mirror`/commits`/master^ https:/
-/github.com/ultimatepp/mirror/commits/master] `- Latest changes]]
+`- Ultimate`+`+ organization on GitHub&]
+[s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ https://github.com/u
+ltimatepp/ultimatepp] `- GIT repository&]
+[s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/ultimatepp`/commits`/master^ ht
+tps://github.com/ultimatepp/ultimatepp/commits/master] `- Latest 
+changes]]
