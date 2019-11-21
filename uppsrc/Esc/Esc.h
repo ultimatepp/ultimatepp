@@ -158,7 +158,7 @@ public:
 	Vector<bool>          inout;
 	String                code;
 	EscHandle            *handle;
-	Event<EscEscape&> escape;
+	Event<EscEscape&>     escape;
 	bool                  varargs;
 	String                filename;
 	int                   line;

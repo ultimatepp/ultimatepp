@@ -118,7 +118,6 @@ inline unsigned ValueGetHashValue(const WString& x) {
 template <class T>
 class RawValueRep : public Value::Void {
 public:
-	virtual dword GetType() const             { return GetValueTypeNo<T>(); }
 	virtual bool  IsNull() const              { return false; }
 
 	T v;
@@ -257,7 +256,7 @@ template <class T>
 inline bool Value::Is() const
 {
 	dword t = GetValueTypeNo<T>();
-	if(IsRef() && ptr()->GetType() == t)
+	if(IsRef() && GetRefType() == t)
 		return true;
 	if(t == STRING_V)
 		return IsString();
@@ -342,35 +341,35 @@ const Value& Value::operator[](const Id& key) const
 template <class T>
 inline Value RawToValue(const T& data)
 {
-	return Value(new RawValueRep<T>(data));
+	return Value(new RawValueRep<T>(data), GetValueTypeNo<T>());
 }
 
 template <class T>
 inline Value RawPickToValue(T&& data)
 {
 	typedef RawValueRep<T> R;
-	return Value(new R(pick(data), R::PICK));
+	return Value(new R(pick(data), R::PICK), GetValueTypeNo<T>());
 }
 
 template <class T>
 inline Value RawDeepToValue(const T& data)
 {
 	typedef RawValueRep<T> R;
-	return Value(new R(data, R::DEEP));
+	return Value(new R(data, R::DEEP), GetValueTypeNo<T>());
 }
 
 template <class T>
 inline T& CreateRawValue(Value& v) {
 	typedef RawValueRep<T> R;
 	R *r = new R;
-	v = Value(r);
+	v = Value(r, GetValueTypeNo<T>());
 	return r->Get();
 }
 
 template <class T>
 inline Value RichToValue(const T& data)
 {
-	return Value(new RichValueRep<T>(data));
+	return Value(new RichValueRep<T>(data), GetValueTypeNo<T>());
 }
 
 template <>

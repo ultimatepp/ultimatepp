@@ -201,7 +201,6 @@ ValueType<T, type, B>::operator ValueTypeRef()
 
 class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
 	struct Data : Value::Void {
-		virtual dword        GetType() const             { return VALUEARRAY_V; }
 		virtual bool         IsNull() const;
 		virtual void         Serialize(Stream& s);
 		virtual void         Xmlize(XmlIO& xio);
@@ -304,7 +303,6 @@ String AsString(const ValueArray& v);
 
 class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	struct Data : Value::Void {
-		virtual dword      GetType() const             { return VALUEMAP_V; }
 		virtual bool       IsNull() const;
 		virtual void       Serialize(Stream& s);
 		virtual void       Xmlize(XmlIO& xio);
