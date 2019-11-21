@@ -291,7 +291,7 @@ void HexView::SetCursor(uint64 _cursor)
 	if(cursor < sc) {
 		sc = cursor;
 	}
-	if(sc > q)
+	if(sc > (uint64)q)
 		sc = (sc - q) / columns * columns + q;
 	if(sc >= total)
 		sc = total - 1;
