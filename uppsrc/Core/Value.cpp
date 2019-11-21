@@ -54,7 +54,7 @@ dword Value::GetType() const
 	if(IsString())
 		return STRING_V;
 	byte st = data.GetSt();
-	return st == REF ? ptr()->GetType() : st == VOIDV ? VOID_V : st;
+	return st == REF ? GetRefType() : st == VOIDV ? VOID_V : st;
 }
 
 bool Value::IsNull() const
@@ -152,7 +152,7 @@ bool Value::IsSame(const Value& b) const
 		return a == b;
 }
 
-Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); Magic(); }
+Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s), WSTRING_V); Magic(); }
 
 Value::operator WString() const
 {
@@ -360,7 +360,7 @@ void Value::Serialize(Stream& s) {
 			if(cr) {
 				Void *p = (**cr)();
 				p->Serialize(s);
-				InitRef(p);
+				InitRef(p, type);
 			}
 			else {
 				Free();
@@ -459,7 +459,7 @@ void Value::Xmlize(XmlIO& xio)
 				if(cr) {
 					Void *p = (**cr)();
 					p->Xmlize(xio);
-					InitRef(p);
+					InitRef(p, type);
 				}
 				else
 					throw XmlError("invalid Value type");
@@ -548,7 +548,7 @@ void Value::Jsonize(JsonIO& jio)
 						if(cr) {
 							Void *p = (**cr)();
 							p->Jsonize(hio);
-							InitRef(p);
+							InitRef(p, type);
 						}
 						else
 							throw JsonizeError("invalid Value type");
@@ -584,7 +584,7 @@ String  Value::ToString() const {
 int Value::GetCount() const
 {
 	if(IsRef()) {
-		dword t = ptr()->GetType();
+		dword t = GetRefType();
 		if(t == VALUEARRAY_V)
 			return ((ValueArray::Data *)ptr())->data.GetCount();
 		if(t == VALUEMAP_V)
@@ -596,7 +596,7 @@ int Value::GetCount() const
 const Value& Value::operator[](int i) const
 {
 	if(IsRef()) {
-		dword t = ptr()->GetType();
+		dword t = GetRefType();
 		if(t == VALUEARRAY_V)
 			return ((ValueArray::Data *)ptr())->data[i];
 		if(t == VALUEMAP_V)
@@ -608,7 +608,7 @@ const Value& Value::operator[](int i) const
 const Vector<Value>& Value::GetVA() const
 {
 	if(IsRef()) {
-		dword t = ptr()->GetType();
+		dword t = GetRefType();
 		if(t == VALUEARRAY_V)
 			return ((ValueArray::Data *)ptr())->data;
 	}
@@ -634,7 +634,7 @@ Value& Value::At(int i)
 	if(IsNull())
 		*this = ValueArray();
 	ASSERT(i >= 0 && IsRef());
-	dword t = ptr()->GetType();
+	dword t = GetRefType();
 	if(t == VALUEMAP_V) {
 		ValueArray& va = ValueMap::UnShare((ValueMap::Data*&)ptr()).value;
 		ASSERT(i < va.GetCount());
@@ -650,17 +650,17 @@ void Value::Add(const Value& s)
 		if(IsRef()) RefRelease();
 		ValueArray::Data *d = new ValueArray::Data;
 		d->data.Add(s);
-		InitRef(d);
+		InitRef(d, VALUEARRAY_V);
 		Magic();
 		return;
 	}
-	ASSERT(IsRef() && ptr()->GetType() == VALUEARRAY_V);
+	ASSERT(IsRef() && GetRefType() == VALUEARRAY_V);
 	UnShareArray().Add(s);
 }
 
 const Value& Value::operator[](const String& key) const
 {
-	if(IsRef() && ptr()->GetType() == VALUEMAP_V)
+	if(IsRef() && GetRefType() == VALUEMAP_V)
 		return ((ValueMap::Data *)ptr())->Get(key);
 	return ErrorValue();
 }
@@ -671,7 +671,7 @@ Value& Value::GetAdd(const Value& key)
 		if(IsRef()) RefRelease();
 		ValueMap::Data *d = new ValueMap::Data;
 		Value& h = d->GetAdd(key);
-		InitRef(d);
+		InitRef(d, VALUEMAP_V);
 		Magic();
 		return h;
 	}
@@ -730,7 +730,7 @@ public:
 };
 
 Value ErrorValue(const String& s) {
-	return Value(new ValueErrorCls(s));
+	return Value(new ValueErrorCls(s), ERROR_V);
 }
 
 Value ErrorValue(const char *s) {

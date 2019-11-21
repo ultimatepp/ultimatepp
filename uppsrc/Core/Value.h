@@ -86,7 +86,6 @@ public:
 		void               Release()                   { if(AtomicDec(refcount) == 0) delete this; }
 		int                GetRefCount() const         { return refcount; }
 
-		virtual dword      GetType() const             { return VOID_V; }
 		virtual bool       IsNull() const              { return true; }
 		virtual void       Serialize(Stream& s)        {}
 		virtual void       Xmlize(XmlIO& xio)          {}
@@ -135,16 +134,18 @@ protected:
 	String   data;
 	Void    *&ptr()                  { ASSERT(IsRef()); return *(Void **)&data; }
 	Void     *ptr() const            { ASSERT(IsRef()); return *(Void **)&data; }
-	
 
-	bool     IsString() const        { return !data.IsSpecial(); }
-	bool     Is(byte v) const        { return data.IsSpecial(v); }
-	bool     IsRef() const           { return Is(REF); }
-	void     InitRef(Void *p)        { data.SetSpecial(REF); ptr() = p; }
+	void     SetRefType(dword type)  { ASSERT(IsRef()); ((int *)&data)[2] = type; }
+	dword    GetRefType() const      { ASSERT(IsRef()); return ((int *)&data)[2]; }
+
+	bool     IsString() const          { return !data.IsSpecial(); }
+	bool     Is(byte v) const          { return data.IsSpecial(v); }
+	bool     IsRef() const             { return Is(REF); }
+	void     InitRef(Void *p, dword t) { data.SetSpecial(REF); ptr() = p; SetRefType(t); }
 	void     RefRelease();
 	void     RefRetain();
-	void     FreeRef()               { if(IsRef()) RefRelease(); }
-	void     Free()                  { FreeRef(); data.Clear(); }
+	void     FreeRef()                 { if(IsRef()) RefRelease(); }
+	void     Free()                    { FreeRef(); data.Clear(); }
 	void     SetLarge(const Value& v);
 
 	template <class T>
@@ -193,6 +194,8 @@ protected:
 #ifndef DEPRECATED
 	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
 #endif
+
+	Value(Void *p) = delete;
 
 public:
 	template <class T>
@@ -275,7 +278,7 @@ public:
 	Value()                               : data((int)Null, VOIDV, String::SPECIAL) { Magic(); }
 	~Value()                              { ClearMagic(); if(IsRef()) RefRelease(); }
 
-	Value(Void *p)                        { InitRef(p); Magic(); }
+	Value(Void *p, dword type)            { InitRef(p, type); Magic(); }
 	const Void *GetVoidPtr() const        { ASSERT(IsRef()); return ptr(); }
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }

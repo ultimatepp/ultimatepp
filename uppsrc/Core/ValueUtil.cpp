@@ -137,7 +137,7 @@ ValueArray::ValueArray(const Vector<Value>& v, int deep)
 
 ValueArray::operator Value() const {
 	data->Retain();
-	return Value(data);
+	return Value(data, VALUEARRAY_V);
 }
 
 ValueArray::ValueArray(const Value& src)
@@ -470,7 +470,7 @@ VectorMap<Value, Value> ValueMap::Pick()
 
 ValueMap::operator Value() const {
 	data->Retain();
-	return Value(data);
+	return Value(data, VALUEMAP_V);
 }
 
 void ValueMap::FromArray(const ValueArray& va)
