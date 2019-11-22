@@ -238,23 +238,14 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 	LLOG("GLOBAL: " << pSym->Name << " " << Format64Hex(pSym->Address));
 
 #if 0
-	DDUMP(pSym->Scope);
-	DDUMP(pSym->Flags);
-	DDUMP(pSym->Tag);
-	DDUMP(pSym->TypeIndex);
 
 	DWORD dummy;
 	IMAGEHLP_LINE ln;
 	ln.SizeOfStruct = sizeof(ln);
 	ln.Address = pSym->Address;
 	if(SymGetLineFromAddr(c.pdb->hProcess, (uintptr_t)pSym->Address, &dummy, &ln)) {
-		DDUMP(ln.FileName);
-		DDUMP(ln.Address);
-		DDUMP(ln.LineNumber);
 	}
 	else
-		DLOG("GetSymLineFromAddr failed!");
-	DLOG("=========================");
 #endif
 	Val& v = c.pdb->global.GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;

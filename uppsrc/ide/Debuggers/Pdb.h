@@ -246,14 +246,17 @@ struct Pdb : Debugger, ParentCtrl {
 	VectorMap<String, TypeInfo> typeinfo_cache;
 	
 	enum { SINGLE_VALUE, TEXT, CONTAINER };
+	
+	struct LengthLimit {};
 
 	struct Pretty {
 		int            kind; // VARIABLE, TEXT or CONTAINER
 		int64          data_count; // number of entries
 		Vector<String> data_type; // type of data items (usuallt type_param)
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
+		String         text;
 	};
-	
+
 	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int, int, Pdb::Pretty&>>> pretty;
 	
 	bool       break_running; // Needed for Wow64 BreakRunning to avoid ignoring breakpoint
@@ -340,10 +343,12 @@ struct Pdb : Debugger, ParentCtrl {
 	adr_t      PeekPtr(adr_t address);
 	byte       PeekByte(adr_t address);
 	word       PeekWord(adr_t address);
+	dword      PeekDword(adr_t address);
 	Val        GetRVal(Val v);
 	Val        DeRef(Val v);
 	Val        Ref(Val v);
-	int64      GetInt(Val v);
+	int64      GetInt64(Val v);
+	int        GetInt(Val v)                                 { return (int)GetInt64(v); }
 	double     GetFlt(Val v);
 	void       ZeroDiv(double x);
 	Val        Compute(Val v1, Val v2, int oper);
@@ -365,27 +370,37 @@ struct Pdb : Debugger, ParentCtrl {
 
 	Val        GetAttr(Pdb::Val record, int i);
 	Val        GetAttr(Pdb::Val record, const String& id);
+	int64      GetInt64Attr(Pdb::Val v, const char *a);
+	int        GetIntAttr(Pdb::Val v, const char *a)         { return (int)GetInt64Attr(v, a); }
 	Val        At(Pdb::Val val, int i);
 	Val        At(Pdb::Val record, const char *id, int i);
 	int        IntAt(Pdb::Val record, const char *id, int i);
-	void       CatInt(Visual& result, int64 val);
-	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, int expandptr, int slen, bool& cm, int depth);
-	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, bool pretty = true);
-	void       Visualise(Visual& result, Pdb::Val val, int expandptr);
+	String     IntFormat(int64 i, dword flags = 0);
+	void       CatInt(Visual& result, int64 val, dword flags = 0);
+
+	enum       { MEMBER = 1, RAW = 2 };
+	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, dword flags, bool& cm, int depth);
+	void       Visualise(Visual& result, Pdb::Val val, dword flags);
 	Visual     Visualise(Val v);
 	Visual     Visualise(const String& rexp);
 
-	bool       PrettyData(Visual& result, Pdb::Val val, int expandptr, int slen);
+	bool       PrettyData(Visual& result, Pdb::Val val, dword flags);
 
-	void       PrettyString(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyWString(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyVector(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyArray(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyIndex(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
+	void       PrettyString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyWString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyVector(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyArray(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyIndex(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyMap(Pretty& p, Pretty& key, Pretty& value);
-	void       PrettyVectorMap(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyArrayMap(Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
-	void       PrettyValue(Pdb::Val val, const Vector<String>& tparam, int from, int count, Pretty& p);
+	void       PrettyVectorMap(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyArrayMap(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyDate(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyTime(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyValueArray_(adr_t a, Pdb::Pretty& p);
+	void       PrettyValueArray(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyValue(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyValueMap_(adr_t a, Pdb::Pretty& p, int64 from, int count);
+	void       PrettyValueMap(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 
 // code
 	Thread&    Current();

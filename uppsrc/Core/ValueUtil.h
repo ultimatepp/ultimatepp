@@ -329,7 +329,6 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 			return value.At(i);
 		}
 
-
 		Index<Value> key;
 		ValueArray   value;
 	};

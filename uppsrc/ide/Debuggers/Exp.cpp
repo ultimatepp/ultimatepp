@@ -98,6 +98,14 @@ word Pdb::PeekWord(adr_t address)
 	return w;
 }
 
+dword Pdb::PeekDword(adr_t address)
+{
+	dword w;
+	if(!Copy(address, &w, 4))
+		ThrowError("??");
+	return w;
+}
+
 Pdb::Val Pdb::GetRVal(Pdb::Val v)
 { // read data from debugee
 	if(v.rvalue)
@@ -159,7 +167,7 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v)
 
 #define GETINT(q, type) case q: return (type)v.ival;
 
-int64 Pdb::GetInt(Pdb::Val v)
+int64 Pdb::GetInt64(Pdb::Val v)
 {
 	v = GetRVal(v);
 	switch(v.type) {
@@ -181,6 +189,11 @@ int64 Pdb::GetInt(Pdb::Val v)
 	return 0;
 }
 
+int64 Pdb::GetInt64Attr(Pdb::Val v, const char *a)
+{
+	return GetInt64(GetAttr(v, a));
+}
+
 #define GETINT(q, type) case q: return (type)v.ival;
 
 double Pdb::GetFlt(Pdb::Val v)
@@ -188,7 +201,7 @@ double Pdb::GetFlt(Pdb::Val v)
 	v = GetRVal(v);
 	if(v.type == DBL || v.type == FLT)
 		return v.fval;
-	return (double)GetInt(v);
+	return (double)GetInt64(v);
 }
 
 void Pdb::ZeroDiv(double x)
@@ -203,7 +216,7 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 	LLOG("v1: " << v1);
 	LLOG("v2: " << v2);
 	if(v1.ref || v1.array) {
-		int q = (int)GetInt(v2) * (v1.ref > 1 ? 4 : SizeOfType(v1.type));
+		int q = (int)GetInt64(v2) * (v1.ref > 1 ? 4 : SizeOfType(v1.type));
 		v1 = GetRVal(v1);
 		switch(oper) {
 		case '+': v1.address += q; break;
@@ -213,7 +226,7 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 		return v1;
 	}
 	if(v2.ref || v2.array) {
-		int q = (int)GetInt(v1) * (v2.ref ? 4 : SizeOfType(v2.type));
+		int q = (int)GetInt64(v1) * (v2.ref ? 4 : SizeOfType(v2.type));
 		v2 = GetRVal(v2);
 		if(oper == '+')
 			v2.address += q;
@@ -236,8 +249,8 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 		}
 	}
 	else {
-		int64 a = GetInt(v1);
-		int64 b = GetInt(v2);
+		int64 a = GetInt64(v1);
+		int64 b = GetInt64(v2);
 		switch(oper) {
 		case '+': res.ival = a + b; break;
 		case '-': res.ival = a - b; break;
@@ -438,7 +451,7 @@ Pdb::Val Pdb::Post(CParser& p)
 			v = Field(v.ref ? DeRef(v) : v, p.ReadId());
 		else
 		if(p.Char('[')) {
-			int i = (int)GetInt(Exp0(p));
+			int i = (int)GetInt64(Exp0(p));
 			p.Char(']');
 			v = DeRef(Compute(v, RValue(i), '+'));
 		}
@@ -463,7 +476,7 @@ Pdb::Val Pdb::Unary(CParser& p)
 		if(v.type == FLT || v.type == DBL)
 			return RValue(!GetFlt(v));
 		else
-			return RValue(!GetInt(v));
+			return RValue(!GetInt64(v));
 	}
 	return Post(p);
 }
@@ -508,7 +521,7 @@ Pdb::Val Pdb::Compare(Val v1, CParser& p, int r1, int r2)
 	if(findarg(max(v1.type, v2.type), DBL, FLT) >= 0)
 		q = SgnCompare(GetFlt(v1), GetFlt(v2));
 	else
-		q = SgnCompare(GetInt(v1), GetInt(v2));
+		q = SgnCompare(GetInt64(v1), GetInt64(v2));
 	q = sgn(q);
 	return RValue(q == r1 || q == r2);
 }
@@ -547,8 +560,8 @@ void Pdb::GetBools(Val v1, Val v2, bool& a, bool& b)
 		b = (bool)GetFlt(v2);
 	}
 	else {
-		a = (bool)GetInt(v1);
-		b = (bool)GetInt(v2);
+		a = (bool)GetInt64(v1);
+		b = (bool)GetInt64(v2);
 	}
 }
 
