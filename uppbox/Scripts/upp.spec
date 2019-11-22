@@ -225,7 +225,11 @@ rm -fr %{buildroot}
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
 
+* Thu Oct 31 2019 Amrein-Marie Christophe <camreinmarie@free.fr> 2019.2-1
+- New release (rev 13664)
+
 * Mon Apr 01 2019 Amrein-Marie Christophe <camreinmarie@free.fr> 2019.1-1
+- New release (rev 13068)
 - Rename main package (upp-devel -> upp)
 - Add devel package containing source only
 - Add dictionary files used by theide speller
