@@ -102,8 +102,9 @@ void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
 		try {
 			CParser p(exp);
 			Val v = Exp(p);
-			Visualise(r, v, 2);
+			Visualise(r, v, 0);
 		}
+		catch(LengthLimit) {}
 		catch(CParser::Error) {
 			r.Clear();
 		}
@@ -143,6 +144,7 @@ void Pdb::Autos()
 				p.SkipTerm();
 		autos.Sort();
 	}
+	catch(LengthLimit) {}
 	catch(CParser::Error) {}
 }
 
@@ -292,6 +294,7 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 			return true;
 		}
 	}
+	catch(LengthLimit) {}
 	catch(CParser::Error) {}
 	DR_LOG("Pdb::Tip false");
 	return false;
@@ -319,7 +322,7 @@ void Pdb::MemoryGoto(const String& exp)
 			adr = GetRVal(v).address;
 		else
 		if(v.rvalue)
-			adr = (adr_t)GetInt(v);
+			adr = (adr_t)GetInt64(v);
 		else
 			adr = v.address;
 		memory.SetCursor(adr);
@@ -351,7 +354,7 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 			if(sep)
 				bar.Separator();
 			sep = false;
-			bar.Add("Memory at 0x" + FormatIntHex((dword)GetInt(v)), THISBACK1(MemoryGoto, "&" + exp));
+			bar.Add("Memory at 0x" + FormatIntHex((dword)GetInt64(v)), THISBACK1(MemoryGoto, "&" + exp));
 		}
 		if(!v.rvalue) {
 			if(sep)
