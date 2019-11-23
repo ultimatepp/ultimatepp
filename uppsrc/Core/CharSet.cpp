@@ -2296,4 +2296,25 @@ String ToLowerAscii(const String& s, byte charset)
 	return r;
 }
 
+bool IsDoubleWidth(int c)
+{
+	// This function is taken from Markus Kuhn's wcwidth implementation.
+	// For license and implementation details, see:
+	// https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
+	
+	return  c >= 0x1100
+		&& (c <= 0x115F										// Hangul Jamo init. consonants
+			||  c == 0x2329
+			||  c == 0x232A
+			|| (c >= 0x2E80 && c <= 0xA4CF && c != 0x303F)	// CJK ... Yi
+			|| (c >= 0xAC00 && c <= 0xD7A3)					// Hangul syllables
+			|| (c >= 0xF900 && c <= 0xFAFF)					// CJK compatibility ideographs
+			|| (c >= 0xFE10 && c <= 0xFE19)					// Vertical forms
+			|| (c >= 0xFE30 && c <= 0xFE6F)					// CJK compatibility forms
+			|| (c >= 0xFF00 && c <= 0xFF60)					// Fullwidth forms
+			|| (c >= 0xFFE0 && c <= 0xFFE6)
+			|| (c >= 0x20000 && c <= 0x2FFFD)
+			|| (c >= 0x30000 && c <= 0x3FFFD)
+			);
+}
 }

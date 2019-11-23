@@ -480,7 +480,7 @@ void   LineEdit::Paint0(Draw& w) {
 							x = fsz.cx * gp;
 						}
 						else
-						if(IsCJKIdeograph(chr)) {
+						if(IsDoubleWidth(chr)) {
 							x += 2 * fsz.cx;
 							gp += 2;
 						}
@@ -508,7 +508,7 @@ void   LineEdit::Paint0(Draw& w) {
 							h.ink = color[INK_SELECTED];
 						}
 						int x = gp * fsz.cx - scx;
-						bool cjk = IsCJKIdeograph(h.chr);
+						bool cjk = IsDoubleWidth(h.chr);
 						int xx = x + (gp + 1 + cjk) * fsz.cx;
 						if(h.chr == '\t') {
 							int ngp = (gp + tabsize) / tabsize * tabsize;
@@ -679,7 +679,7 @@ int64  LineEdit::GetGPos(int ln, int cl) const {
 				if(*s == '\t')
 					gl = (gl + tabsize) / tabsize * tabsize;
 				else
-					gl += 1 + IsCJKIdeograph(*s);
+					gl += 1 + IsDoubleWidth(*s);
 				if(cl < gl) break;
 				s++;
 			}
@@ -704,7 +704,7 @@ Point LineEdit::GetColumnLine(int64 pos) const {
 		if(*s == '\t')
 			p.x = (p.x + tabsize) / tabsize * tabsize;
 		else
-			p.x += 1 + IsCJKIdeograph(*s);
+			p.x += 1 + IsDoubleWidth(*s);
 		s++;
 	}
 	return p;
@@ -1125,7 +1125,7 @@ void LineEdit::SetHBar()
 				if(*s == '\t')
 					pos = (pos + tabsize) / tabsize * tabsize;
 				else
-					pos += 1 + IsCJKIdeograph(*s);
+					pos += 1 + IsDoubleWidth(*s);
 				s++;
 			}
 			mpos = max(mpos, pos);
