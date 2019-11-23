@@ -36,6 +36,19 @@ void Pdb::PrettyVector(Pdb::Val val, const Vector<String>& tparam, int64 from, i
 		p.data_ptr.Add(item.address + (i + from) * sz);
 }
 
+void Pdb::PrettyBiVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	p.data_count = GetInt64(GetAttr(val, "items"));
+	int start = GetInt(GetAttr(val, "items"));
+	int alloc = GetInt(GetAttr(val, "alloc"));
+	Val item = DeRef(GetAttr(val, "vector"));
+	int sz = SizeOfType(tparam[0]);
+	for(int i = 0; i < count; i++) {
+		int ii = i + start < alloc ? i + start : i + start - alloc;
+		p.data_ptr.Add(item.address + (ii + from) * sz);
+	}
+}
+
 void Pdb::PrettyIndex(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
 	return PrettyVector(GetAttr(val, "key"), tparam, from, count, p);
@@ -44,6 +57,13 @@ void Pdb::PrettyIndex(Pdb::Val val, const Vector<String>& tparam, int64 from, in
 void Pdb::PrettyArray(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
 	PrettyVector(GetAttr(val, "vector"), { "int *" }, from, count, p);
+	for(adr_t& a : p.data_ptr)
+		a = PeekPtr(a);
+}
+
+void Pdb::PrettyBiArray(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	PrettyBiVector(GetAttr(val, "bv"), { "int *" }, from, count, p);
 	for(adr_t& a : p.data_ptr)
 		a = PeekPtr(a);
 }
@@ -234,7 +254,9 @@ bool Pdb::PrettyData(Visual& result, Pdb::Val val, dword flags)
 		pretty.Add("Upp::String", { 0, THISFN(PrettyString) });
 		pretty.Add("Upp::WString", { 0, THISFN(PrettyWString) });
 		pretty.Add("Upp::Vector", { 1, THISFN(PrettyVector) });
+		pretty.Add("Upp::BiVector", { 1, THISFN(PrettyBiVector) });
 		pretty.Add("Upp::Array", { 1, THISFN(PrettyArray) });
+		pretty.Add("Upp::BiArray", { 1, THISFN(PrettyBiArray) });
 		pretty.Add("Upp::Index", { 1, THISFN(PrettyIndex) });
 		pretty.Add("Upp::VectorMap", { 2, THISFN(PrettyVectorMap) });
 		pretty.Add("Upp::ArrayMap", { 2, THISFN(PrettyArrayMap) });

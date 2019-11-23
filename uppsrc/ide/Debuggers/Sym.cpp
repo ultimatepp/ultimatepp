@@ -297,6 +297,8 @@ int Pdb::GetTypeIndex(adr_t modbase, dword typeindex)
 
 const Pdb::Type& Pdb::GetType(int ti)
 {
+	if(ti < 0 || ti >= type.GetCount())
+		ThrowError("Invalid type");
 	Type& t = type[ti];
 	int typeindex = type.GetKey(ti);
 	if(t.size < 0) {

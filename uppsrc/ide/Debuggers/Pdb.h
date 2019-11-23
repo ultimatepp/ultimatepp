@@ -390,6 +390,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyWString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyVector(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyArray(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
+	void       PrettyBiVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyBiArray(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyIndex(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyMap(Pretty& p, Pretty& key, Pretty& value);
 	void       PrettyVectorMap(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
