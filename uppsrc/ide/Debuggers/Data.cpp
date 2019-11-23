@@ -373,6 +373,7 @@ void Pdb::DataMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 	MemMenu(array, bar, exp);
 	bar.Separator();
 	bar.Add("Show type", [=] { show_type = !show_type; Data(); }).Check(show_type);
+	bar.Add("No pretty-printing", [=] { raw = !raw; Data(); }).Check(raw);
 }
 
 void Pdb::AutosMenu(Bar& bar)

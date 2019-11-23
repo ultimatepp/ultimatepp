@@ -262,6 +262,7 @@ struct Pdb : Debugger, ParentCtrl {
 	bool       break_running; // Needed for Wow64 BreakRunning to avoid ignoring breakpoint
 	
 	bool       show_type = false;
+	bool       raw = false;
 
 	void       Error(const char *s = NULL);
 

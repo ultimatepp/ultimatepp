@@ -210,7 +210,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 	if(show_type)
 		result.Cat(t.name + ' ', SGreen);
 	
-	if(!(flags & RAW))
+	if(!(flags & RAW) && !raw)
 		try {
 			if(PrettyData(result, val, flags))
 				return;
