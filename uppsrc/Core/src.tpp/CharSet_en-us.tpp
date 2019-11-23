@@ -393,10 +393,11 @@ character.&]
 [s5;:IsXDigit`(int`): [@(0.0.255) bool]_[* IsXDigit]([@(0.0.255) int]_[*@3 c])&]
 [s2;%% Returns true [%-*@3 c].is hexadecimal digit (0`-9, a`-f, A`-F).&]
 [s3;%% &]
-[s4;%% &]
-[s5;:IsCJKIdeograph`(int`): [@(0.0.255) bool]_[* IsCJKIdeograph]([@(0.0.255) int]_[*@3 c])&]
-[s2;%% Returns true if [%-*@3 c].is in UNICODE code`-point for CJK 
-ideogram.&]
+[s4; &]
+[s5;:Upp`:`:IsDoubleWidth`(int`): [@(0.0.255) bool]_[* IsDoubleWidth]([@(0.0.255) int]_[*@3 c
+])&]
+[s2;%% Returns true if [%-*@3 c] is a double`-width UNICODE character 
+(like CJK ideograph).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:UnicodeCombine`(word`,word`): [_^word^ word]_[* UnicodeCombine]([_^word^ word]_[*@3 chr],
