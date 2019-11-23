@@ -3,7 +3,7 @@
 
 #include <TextDiffCtrl/TextDiffCtrl.h>
 
-using namespace Upp;
+namespace Upp {
 
 #define LAYOUTFILE <urepo/urepo.lay>
 #include <CtrlCore/lay.h>
@@ -104,5 +104,7 @@ public:
 void EditCredentials(RepoSync& rs);
 
 void RunRepoDiff(const String& filepath);
+
+};
 
 #endif

@@ -1,5 +1,7 @@
 #include "urepo.h"
 
+using namespace Upp;
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 {

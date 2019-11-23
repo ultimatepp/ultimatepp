@@ -1,5 +1,7 @@
 #include "urepo.h"
 
+namespace Upp {
+
 UrepoConsole::UrepoConsole()
 {
 	CtrlLayoutExit(*this, "System Console");
@@ -84,3 +86,5 @@ int UrepoConsole::Git(const char *dir, const char *command)
 	SetCurrentDirectory(h);
 	return code;
 }
+
+};

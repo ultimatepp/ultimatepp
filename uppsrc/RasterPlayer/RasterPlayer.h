@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
+namespace Upp {
 
 class RasterPlayer : public Ctrl {
 private:
@@ -52,5 +52,6 @@ protected:
 	volatile Atomic running, kill;
 };
 
+};
 
 #endif
