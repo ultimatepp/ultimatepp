@@ -1,5 +1,7 @@
 #include "urepo.h"
 
+namespace Upp {
+
 RepoSync::RepoSync()
 {
 	CtrlLayoutOKCancel(*this, "Version control repository synchronize");
@@ -516,3 +518,5 @@ int GetRepoKind(const String& p)
 	}
 	return NOT_REPO_DIR;
 }
+
+};
