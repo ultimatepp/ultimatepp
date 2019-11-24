@@ -1,6 +1,8 @@
 #ifndef _ScatterDraw_DrawingFunctions_h_
 #define _ScatterDraw_DrawingFunctions_h_
 
+namespace Upp {
+	
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color);
 void DrawLine(Painter &w, double x0, double y0, double x1, double y1, double width, const Color &color);
 void DrawRectangle(Draw &w, double x0, double y0, double x1, double y1, double scale, 
@@ -40,5 +42,7 @@ void ClipEnd(Painter &w);
 double GetDashLength(const char *dash);
 
 Size GetTextSizeSpace(const String& text, Font font);
+	
+}
 	
 #endif

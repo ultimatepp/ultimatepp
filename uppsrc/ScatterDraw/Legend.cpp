@@ -1,5 +1,7 @@
 #include "ScatterDraw.h"
 
+namespace Upp {
+
 int ScatterDraw::NumSeriesLegend() const {
 	int num = 0;
 	for (int i = 0; i < series.GetCount(); ++i) {
@@ -234,3 +236,4 @@ void ScatterDraw::DrawRainbowPalette(Draw& w) const {
 	}
 }
 
+}

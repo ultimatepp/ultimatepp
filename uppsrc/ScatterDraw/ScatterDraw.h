@@ -6,13 +6,11 @@
 #include "Pedantic.h"
 #include "DataSource.h"
 #include "Equation.h"
-
-using namespace Upp;
-
 #include "DrawingFunctions.h"
 #include "SeriesPlot.h"
 #include "MarkPlot.h"
 
+namespace Upp {
 
 Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
@@ -386,13 +384,14 @@ public:
 	
 	ScatterDraw& SetAxisColor(const Color& axis_color);
 	ScatterDraw& SetAxisWidth(double axis_width);
+	double GetAxisWidth()							{return axisWidth;}
 	
-	ScatterDraw& SetGridColor(const Color& grid_color) 	{gridColor = grid_color;	return *this;}
-	Color &GetGridColor() 								{return gridColor;}
-	ScatterDraw& SetGridWidth(double grid_width)		{gridWidth = grid_width;	return *this;}
-	double GetGridWidth() 								{return gridWidth;}
-	ScatterDraw& SetGridDash(const char *dash)			{gridDash = dash;			return *this;}
-	const char *GetGridDash()							{return gridDash;}
+	ScatterDraw& SetGridColor(const Color& grid_color){gridColor = grid_color;	return *this;}
+	Color &GetGridColor() 							{return gridColor;}
+	ScatterDraw& SetGridWidth(double grid_width)	{gridWidth = grid_width;	return *this;}
+	double GetGridWidth() 							{return gridWidth;}
+	ScatterDraw& SetGridDash(const char *dash)		{gridDash = dash;			return *this;}
+	const char *GetGridDash()						{return gridDash;}
 	
 	ScatterDraw& ShowVGrid(bool show);
 	ScatterDraw& ShowHGrid(bool show);
@@ -937,6 +936,7 @@ public:
 				("drawXReticleNumbers", drawXReticleNumbers)
 				("drawYReticleNumbers", drawYReticleNumbers)
 				("drawY2ReticleNumbers", drawY2ReticleNumbers)
+				("axisWidth", axisWidth)
 				("reticleFont", reticleFont)
 				("reticleColor", reticleColor)
 				("gridColor", gridColor)
@@ -1055,6 +1055,7 @@ public:
 				% drawXReticleNumbers
 				% drawYReticleNumbers
 				% drawY2ReticleNumbers
+				% axisWidth
 			;
 			if (s.IsLoading()) {
 				labelsChanged = true;
@@ -1472,11 +1473,11 @@ void ScatterDraw::Plot(T& w)
 			w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
 		else {
 			ImageBuffer out_image(plotW, plotH);
-			::Fill(~out_image, plotAreaColor, out_image.GetLength());
+			Upp::Fill(~out_image, plotAreaColor, out_image.GetLength());
 
 			double deltaz = surfMaxZ - surfMinZ;
 			if (deltaz == 0) 
-				::Fill(~out_image, GetRainbowColor(0, surfRainbow, 0), out_image.GetLength());	
+				Upp::Fill(~out_image, GetRainbowColor(0, surfRainbow, 0), out_image.GetLength());	
 			else {
 				CoWork co;
 				for (int ix = 0; ix < plotW; ++ix) {
@@ -1766,6 +1767,8 @@ void ScatterDraw::Plot(T& w)
 	WhenPaint(w);
 	ClipEnd(w);
 	w.End();
+}
+		
 }
 		
 #endif

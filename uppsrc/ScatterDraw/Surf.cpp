@@ -1,5 +1,7 @@
 #include "ScatterDraw.h"
 
+namespace Upp {
+
 ScatterDraw& ScatterDraw::AddSurf(DataSourceSurf &_surf) {
 	surf = &_surf;
 	if (IsNull(surfMinZ))
@@ -244,4 +246,6 @@ double TableData::MaxZ(Getdatafun getdata) {
 	if (ret == DOUBLE_NULL)
 		return Null;
 	return ret;
+}
+
 }

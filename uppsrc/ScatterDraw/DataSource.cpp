@@ -6,7 +6,6 @@
 
 namespace Upp {
 
-using namespace Eigen;
 
 #define Membercall(fun)	(this->*fun)
 

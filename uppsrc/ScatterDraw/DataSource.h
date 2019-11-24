@@ -3,7 +3,6 @@
 
 namespace Upp {
 
-
 class DataSource : public Pte<DataSource>  {
 public:
 	typedef double (DataSource::*Getdatafun)(int64 id);

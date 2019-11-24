@@ -1,6 +1,8 @@
 #ifndef _ScatterDraw_SeriesPlot_h_
 #define _ScatterDraw_SeriesPlot_h_
 
+namespace Upp {
+	
 class SeriesPlot {
 public:
 	virtual ~SeriesPlot() noexcept 	{};	
@@ -154,5 +156,6 @@ public:
 	}
 };	
 
+}
 
 #endif
