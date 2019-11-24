@@ -16,8 +16,8 @@ String GetP7Signature_imp(const void *data, int length, const String& cert_pem, 
 
     PKCS7 *p7 = PKCS7_sign(x509, pkey, NULL, in, PKCS7_DETACHED|PKCS7_BINARY|PKCS7_STREAM);
 
-    if (!p7)
-        return Null;
+	if (!p7)
+		return Null;
 
 	SslStream out;
 	out.CreateBuffer();
