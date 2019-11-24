@@ -1,5 +1,7 @@
 #include "ScatterDraw.h"
 
+namespace Upp {
+	
 ScatterDraw::ScatterDraw() {
 	lastxRange = xRange;
 	lastyRange = yRange;
@@ -1545,4 +1547,6 @@ INITBLOCK {
 	DashStyle::Register("LINE_DASHED", LINE_DASHED);
 	DashStyle::Register("LINE_DASH_DOT", LINE_DASH_DOT);
 	DashStyle::Register("-    -", LINE_BEGIN_END);
+}
+
 }

@@ -1,6 +1,8 @@
 #include "PieDraw.h"
 #include "DrawingFunctions.h"
 
+namespace Upp {
+	
 static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int alpha, int width = 0, 
 					Color fill = Null, Color outline = Black, uint64 pattern = 0, Color background = White) {
 	const int dalpha = 1;
@@ -218,3 +220,4 @@ PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black),
 					pieMarginRight(40), pieMarginBottom(40)
 {}
 
+}

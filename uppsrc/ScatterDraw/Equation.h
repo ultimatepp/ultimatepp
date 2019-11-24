@@ -633,7 +633,6 @@ private:
 	int idx;
 };
 
-
 }
 
 #endif

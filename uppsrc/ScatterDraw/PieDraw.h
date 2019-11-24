@@ -7,7 +7,7 @@
 #include <ScatterDraw/Pedantic.h>
 #include "DataSource.h"
 
-using namespace Upp;
+namespace Upp {
 
 class PieDraw {
 public:
@@ -96,5 +96,6 @@ private:
 	String GetPercent(double a, double total);
 };
 
-		
+}
+
 #endif

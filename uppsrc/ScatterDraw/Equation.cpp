@@ -6,8 +6,6 @@
 
 namespace Upp {
 
-using namespace Eigen;
-
 struct Equation_functor : NonLinearOptimizationFunctor<double> {
 	DataSource *series;
 	ExplicitEquation *fSource;

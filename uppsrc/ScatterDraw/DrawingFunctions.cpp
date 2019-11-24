@@ -1,5 +1,7 @@
 #include "ScatterDraw.h"
 
+namespace Upp {
+	
 inline bool Even(int val)	  	{return !(val%2);}
 
 Vector <double> GetLineDash(String dash) {
@@ -390,4 +392,6 @@ Size GetTextSizeSpace(const String& text, Font font) {
 		ret.cx += font.GetLeftSpace(wtext[i]) + font.GetWidth(wtext[i]);
 	ret.cy = font.GetHeight();
 	return ret;
+}
+
 }

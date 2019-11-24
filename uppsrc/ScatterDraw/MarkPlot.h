@@ -1,6 +1,8 @@
 #ifndef _ScatterDraw_MarkPlot_h_
 #define _ScatterDraw_MarkPlot_h_
 
+namespace Upp {
+	
 class MarkPlot {
 public:
 	MarkPlot() : multiPlot(false), type(0) {}
@@ -344,5 +346,6 @@ public:
 	{}
 };	
 					
+}
 
 #endif
