@@ -1,6 +1,8 @@
 #ifndef _ScatterCtrl_Properties_h_
 #define _ScatterCtrl_Properties_h_
 
+namespace Upp {
+	
 #define  LAYOUTFILE <ScatterCtrl/ScatterCtrl.lay>
 #include <CtrlCore/lay.h>
 
@@ -8,6 +10,7 @@
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml_header.h>
 
+	
 class FontSelect : public WithFontSelector<TopWindow> {
 typedef FontSelect CLASSNAME;
 public:
@@ -303,5 +306,7 @@ private:
 	
 	void UpdateFields();
 };
+
+}
 
 #endif

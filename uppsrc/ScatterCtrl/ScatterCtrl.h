@@ -8,10 +8,10 @@
 #include <GridCtrl/GridCtrl.h>
 #include <ScatterDraw/Pedantic.h>
 
-using namespace Upp;
-
 #include "PopUpText.h"
 
+namespace Upp {
+	
 class EditDoubleLostFocus : public EditDouble {
 public:
 	Callback WhenLostFocus;
@@ -235,7 +235,7 @@ public:
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
-	ScatterCtrl& SetTitle(const String& _title)		 			{ScatterDraw::SetTitle(_title); 				return *this;};
+	ScatterCtrl& SetTitle(const String& _title)		 			{ScatterDraw::SetTitle(_title); 			return *this;};
 	ScatterCtrl& SetTitleFont(const Upp::Font& fontTitle) 		{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
 	ScatterCtrl& SetTitleColor(const Upp::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
 	ScatterCtrl& SetLabelsFont(const Upp::Font& fontLabels) 	{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
@@ -469,6 +469,9 @@ void ScatterCtrl::SetDrawing(T& w, const Size &sz, bool ctrl) {
 	} 
 }
 
+}
+
 #include "Properties.h"
+
 
 #endif

@@ -1,5 +1,6 @@
 #include "ScatterCtrl.h"
 
+	
 #define IMAGECLASS ScatterImg
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml.h>
@@ -7,6 +8,9 @@
 #define TFILE <ScatterCtrl/ScatterCtrl.t>
 #include <Core/t.h>
 
+namespace Upp {	
+	
+	
 Vector<ScatterCtrl *> ScatterCtrl::instances;	
 
 #ifdef PLATFORM_WIN32
@@ -648,7 +652,7 @@ void ScatterCtrl::ZoomWindow(bool down, Point &pt) {
 			isLabelPopUp = isZoomWindow = false;
 			
 			if (popLT.x > popRB.x)
-				::Swap(popLT, popRB);
+				Upp::Swap(popLT, popRB);
 			double LTx, LTy, LTy2, RBx, RBy, RBy2;
 			LTx = (popLT.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
 			LTy = -(popLT.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
@@ -1153,3 +1157,4 @@ ScatterCtrl::ScatterCtrl() {
 	AddInstance(this);
 }
 
+}

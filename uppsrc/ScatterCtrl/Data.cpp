@@ -1,5 +1,7 @@
 #include "ScatterCtrl.h"
 
+namespace Upp {
+
 void ScatterCtrl::DoShowData()
 {
 	DataDlg dlg;
@@ -29,9 +31,11 @@ void DataDlg::Init(ScatterCtrl& scatter)
 	OnTab();
 	
 	bool addedAll = false;
+	if (scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &serie0 = scatter.GetDataSource(0);
 	for(int c = 1; c < scatter.GetCount(); c++) {
-		if (!IsNull(scatter.GetCount(c))) {
+		if (!IsNull(scatter.GetCount(c) && !scatter.IsDeletedDataSource(c))) {
 			DataSource &serie = scatter.GetDataSource(c);
 			if (serie0.SameX(serie)) {
 				if (!addedAll) {
@@ -51,6 +55,8 @@ void DataDlg::Init(ScatterCtrl& scatter)
 
 Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
+	if (pscatter->IsDeletedDataSource(index))
+		return Null;
 	if (int(q) >= pscatter->GetDataSource(index).GetCount())
 		return Null;
 	Value ret = pscatter->GetStringX(index, q);
@@ -64,6 +70,8 @@ Value DataDlg::DataSourceX::Format(const Value& q) const
 
 Value DataDlg::DataSourceY::Format(const Value& q) const 
 {
+	if (pscatter->IsDeletedDataSource(index))
+		return Null;
 	if (int(q) >= pscatter->GetDataSource(index).GetCount())
 		return Null;
 	Value ret = pscatter->GetStringY(index, q);
@@ -183,4 +191,6 @@ void DataDlg::OnArrayBar(Bar &menu)
 		menu.Add(t_("Save to file"), ScatterImgP::Save(), THISBACK1(ArraySaveToFile, Null)).Key(K_CTRL_S)
 									.Help(t_("Save to .csv file"));
 	}
+}
+
 }
