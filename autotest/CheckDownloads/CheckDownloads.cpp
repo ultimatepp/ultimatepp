@@ -4,6 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Date d;
 	String downloads = HttpRequest("http://www.ultimatepp.org/www$uppweb$nightly$en-us.html").Execute();
 	int q = downloads.Find("<a href=\"downloads/upp-x11-src-");
@@ -26,4 +28,5 @@ CONSOLE_APP_MAIN
 
 	LOG("downloads last date: " << d);
 	ASSERT(d >= GetSysDate() - 1);
+	LOG("============== OK");
 }
