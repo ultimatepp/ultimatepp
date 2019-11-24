@@ -11,7 +11,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 
-using namespace Upp;
+namespace Upp {
 
 int GetKeyCodeX(int key) {
 	_XDisplay *dpy = XOpenDisplay(NULL);
@@ -27,5 +27,7 @@ int GetKeyCodeX(int key) {
  	XCloseDisplay(dpy);
  	return key;
 }
-	
+
+}
+
 #endif

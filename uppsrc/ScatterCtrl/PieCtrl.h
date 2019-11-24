@@ -5,7 +5,7 @@
 #include <ScatterDraw/PieDraw.h>
 #include <plugin/jpg/jpg.h>
 
-using namespace Upp;
+namespace Upp {
 
 
 class PieCtrl: public StaticRect, public PieDraw {
@@ -48,6 +48,7 @@ public:
 	PieCtrl& SetLegendTop(const int& v)					{PieDraw::SetLegendTop(v); 				return *this;}
 };
 
+}
 
 #endif
 

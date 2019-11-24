@@ -1,5 +1,7 @@
 #include "ScatterCtrl.h"
 
+namespace Upp {
+	
 void ScatterCtrl::DoProcessing() 
 {
 	ProcessingDlg dlg;
@@ -125,7 +127,7 @@ ProcessingTab::ProcessingTab()
 	
 	for (int i = 0; i < DataSource::GetFFTWindowCount(); ++i)
 		tabFreqRight.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
-	tabFreqRight.window.SetIndex(0);
+	tabFreqRight.window.SetIndex(1);
 	tabFreqRight.window.WhenAction = THISBACK(OnFFT);
 	tabFreqRight.num <<= 1;
 	tabFreqRight.overlapping <<= 0.1;
@@ -198,6 +200,8 @@ void ProcessingTab::OnArrayBar(Bar &menu) {
 void ProcessingTab::OnFit() {
 	WaitCursor waitcursor;
 	
+	if (pscatter->IsDeletedDataSource(id))
+		return;
 	DataSource &ds = pscatter->GetDataSource(id);
 	
 	userEquation->Init("User", ~tabBestFitRight.userFormula, "x");
@@ -230,6 +234,8 @@ void ProcessingTab::OnFit() {
 
 void ProcessingTab::OnOp() 
 {
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (data.IsParam() || data.IsExplicit()) 
@@ -326,6 +332,8 @@ void ProcessingTab::OnOp()
 
 void ProcessingTab::OnAutoSensSector() 
 {
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	Vector<Pointf> secAvg;
 	double baseWidth;
@@ -363,6 +371,8 @@ void ProcessingTab::OnOperation()
 		}
 	}
 	exclamationOpened = false;
+	if (pscatter->IsDeletedDataSource(id))
+		return;
 	dataXRange.Init(pscatter->GetDataSource(id), tabOpRight.xLow, tabOpRight.xHigh);
 	tabOpLeft.scatter.Refresh();
 }
@@ -373,6 +383,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	name.SetText(_name);
 	
 	tabFitLeft.scatter.RemoveAllSeries();
+	if (pscatter->IsDeletedDataSource(id))
+		return;
 	tabFitLeft.scatter.AddSeries(pscatter->GetDataSource(id)).SetSequentialX(pscatter->GetSequentialX())
 				   .Legend(pscatter->GetLegend(id));
 	tabFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
@@ -400,6 +412,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	
 	tabFitLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (!data.IsParam()/* && !data.IsExplicit()*/) {	
@@ -411,7 +425,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		double val;
 		val = data.MaxY(idmx);
 		if (!IsNull(val)) {
-			tabFitRight.eMax = Format("(%f,%f)", data.x(idmx), val);
+			tabFitRight.eMax <<= Format("(%f,%f)", data.x(idmx), val);
 			Pointf p = data.MaxSubDataImpY(idmx, 3);
 			if (!IsNull(p))
 				tabFitRight.eMaxImp = Format("(%f,%f)", p.x, p.y);
@@ -461,6 +475,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 
 void ProcessingTab::OnUpdateSensitivity() 
 {
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	bool refresh = false;
@@ -505,6 +521,8 @@ void ProcessingTab::OnUpdateSensitivity()
 
 void ProcessingTab::OnSet() 
 {
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	if (tabFreqFirst && tab.Get() == 1) {
@@ -534,6 +552,9 @@ void ProcessingTab::OnSet()
 			tabFreqRight.samplingTime = (maxdT + mindT)/2.;
 		}
 	} else if (tabOpFirst && tab.Get() == 2) {
+		if (pscatter->IsDeletedDataSource(id))
+			return;
+		
 		tabOpFirst = false; 
 		
 		tabOpLeft.scatter.RemoveAllSeries();
@@ -566,6 +587,9 @@ void ProcessingTab::OnSet()
 		
 		tabOpLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
 	} else if (tabBestFitFirst && tab.Get() == 3) {
+		if (pscatter->IsDeletedDataSource(id))
+			return;
+				
 		tabBestFitFirst = false; 
 		
 		tabBestFitLeft.scatter.RemoveAllSeries();
@@ -636,6 +660,8 @@ void ProcessingTab::OnFFT()
 	{
 		WaitCursor waitcursor;
 		
+		if (tabFitLeft.scatter.IsDeletedDataSource(0))
+			return;
 		DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 		
 		Vector<Pointf> orderedSeries;
@@ -670,10 +696,9 @@ void ProcessingTab::OnFFT()
 		fft = series.FFTY(samplingTime, tabFreqRight.opXAxis == 1, tabFreqRight.type, 
 							tabFreqRight.window.GetIndex(), tabFreqRight.num, tabFreqRight.overlapping);
 		VectorPointf fftData(fft);
-		fftData.MaxY(idMaxFFT);
-		Pointf p = fftData.MaxSubDataImpY(idMaxFFT, 3);
-		if (!IsNull(p))
-			tabFreqRight.eMax = Format("(%f,%f)", p.x, p.y);
+		double mxy = fftData.MaxY(idMaxFFT);
+		if (!IsNull(mxy))
+			tabFreqRight.eMax <<= Format("(%f,%f)", fftData.x(idMaxFFT), mxy);
 		
 		if (tabFreqRight.type == DataSource::T_PSD) {
 			double m_1, m0, m1, m2;
@@ -711,4 +736,6 @@ void ProcessingTab::OnFFT()
 		tabFreqLeft.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
 	
 	tabFreqLeft.comments.SetText(errText);
+}
+
 }

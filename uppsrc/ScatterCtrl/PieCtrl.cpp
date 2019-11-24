@@ -4,7 +4,8 @@
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml.h>
 
-
+namespace Upp {
+	
 PieCtrl::PieCtrl() : copyRatio(1) {
 	Transparent();
 	BackPaint();
@@ -99,4 +100,6 @@ void PieCtrl::SaveToFile(String fileName)
 		encoder.SaveFile(fileName, GetImage(copyRatio));		
 	} else
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+}
+
 }

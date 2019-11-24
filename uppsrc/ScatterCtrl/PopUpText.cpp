@@ -1,9 +1,9 @@
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
-
 #include "PopUpText.h"
-
+	
+namespace Upp {
+		
 static Size GetEditSize(const String &_str, const Font &font) {
 	WString str(_str);
 	Size ret(0, 0);
@@ -42,4 +42,6 @@ PopUpInfo::PopUpInfo(): color(SColorInfo()) {
 	SetAlign(ALIGN_CENTER);
 	SetFrame(BlackFrame());
 	opened = false;
+}
+
 }

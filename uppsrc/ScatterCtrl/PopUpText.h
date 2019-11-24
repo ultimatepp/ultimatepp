@@ -1,6 +1,8 @@
 #ifndef _PopUpText_PopUpText_h
 #define _PopUpText_PopUpText_h
 
+namespace Upp {
+	
 class PopUpText {
 public:
 	Point pos;
@@ -73,6 +75,8 @@ public:
 		SetRect(owner->GetScreenRect().left+p.x,owner->GetScreenRect().top+p.y,GetMinSize().cx+8+gx,GetMinSize().cy+4+gy);
 	}	
 };
+
+}
 
 #endif
 

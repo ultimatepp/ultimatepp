@@ -1,8 +1,11 @@
 #include "ScatterCtrl.h"
 
+namespace Upp {
+
 #define IMAGECLASS ScatterImgP
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml_source.h>
+
 
 void ScatterCtrl::DoShowEditDlg(int itab) 
 {
@@ -42,13 +45,17 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	opReticleX <<= scatter.GetDrawXReticle();
 	opReticleY <<= scatter.GetDrawYReticle();
 	opReticleY2 <<= scatter.GetDrawY2Reticle();
+	opReticleXNumbers <<= scatter.GetDrawXReticleNumbers();
+	opReticleYNumbers <<= scatter.GetDrawYReticleNumbers();
+	opReticleY2Numbers <<= scatter.GetDrawY2ReticleNumbers();
+	reticlethickness <<= scatter.GetAxisWidth();
 	
 	linethickness <<= scatter.GetGridWidth();
 	linecolor <<= scatter.GetGridColor();
 	dashStyle.Clear();
 	for(int i = 0; i < DashStyle::GetCount(); i++)
 		dashStyle.Add(DashStyle::TypeName(i));
-
+	
 	int id = DashStyle::StyleIndex(scatter.GetGridDash());
 	if (id < 0) {
 		id = DashStyle::Register(Format(t_("Dash \"%s\""), scatter.GetGridDash()), scatter.GetGridDash());
@@ -72,6 +79,10 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	opReticleX.WhenAction = THISBACK(Change);
 	opReticleY.WhenAction = THISBACK(Change);
 	opReticleY2.WhenAction = THISBACK(Change);
+	opReticleXNumbers.WhenAction = THISBACK(Change);
+	opReticleYNumbers.WhenAction = THISBACK(Change);
+	opReticleY2Numbers.WhenAction = THISBACK(Change);
+	reticlethickness <<= THISBACK(Change);
 	
 	linecolor <<= THISBACK(Change);
 	linethickness <<= THISBACK(Change);
@@ -104,9 +115,10 @@ void MeasuresTab::Change()
 
 	scatter.SetMouseHandlingLinked(!opAttachX, !opAttachY);
 	scatter.SetDrawXReticle(opReticleX).SetDrawYReticle(opReticleY).SetDrawY2Reticle(opReticleY2);
+	scatter.SetDrawXReticleNumbers(opReticleXNumbers).SetDrawYReticleNumbers(opReticleYNumbers).SetDrawY2ReticleNumbers(opReticleY2Numbers);
+	scatter.SetAxisWidth(~reticlethickness);
 	
     scatter.SetXYMinLinked(xMin, yMin, yMin2);
-    //scatter.SetMinUnits(xMin, yMin);
 	scatter.SetRangeLinked(xMax - xMin, yMax - yMin, yMax2 - yMin2);
 
 	scatter.SetMinUnits(xMinUnit, yMinUnit);
@@ -114,7 +126,7 @@ void MeasuresTab::Change()
 
 	scatter.SetGridDash(DashStyle::Style(DashStyle::TypeIndex(~dashStyle)));
 	scatter.SetGridColor(~linecolor);
-	scatter.SetGridWidth(linethickness);
+	scatter.SetGridWidth(~linethickness);
 
 	scatter.SetModify();
 	scatter.Refresh();
@@ -574,4 +586,4 @@ void SeriesTab::OnDelete()
 	scatter.Refresh();
 }
 	
-	
+}	
