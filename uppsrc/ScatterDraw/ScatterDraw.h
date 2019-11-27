@@ -242,7 +242,7 @@ protected:
 				return true;
 			bool ismagic = (~pD)->IsMagic();
 			ASSERT(ismagic);
-			return !(~pD)->IsMagic();
+			return !ismagic;
 		}
 		virtual ~ScatterSeries() noexcept		{DeletePD();}
 		void SerializeData(bool ser = true) 	{serializeData = ser;}
