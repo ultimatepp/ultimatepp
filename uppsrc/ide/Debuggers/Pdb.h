@@ -257,7 +257,7 @@ struct Pdb : Debugger, ParentCtrl {
 		String         text;
 	};
 
-	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int, int, Pdb::Pretty&>>> pretty;
+	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int64, int, Pdb::Pretty&>>> pretty;
 	
 	bool       break_running; // Needed for Wow64 BreakRunning to avoid ignoring breakpoint
 	
@@ -385,8 +385,9 @@ struct Pdb : Debugger, ParentCtrl {
 	Visual     Visualise(Val v);
 	Visual     Visualise(const String& rexp);
 
-	bool       PrettyData(Visual& result, Pdb::Val val, dword flags);
+	bool       VisualisePretty(Visual& result, Pdb::Val val, dword flags);
 
+	bool       PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p);
 	void       PrettyString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyWString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyVector(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
@@ -404,6 +405,9 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyValue(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyValueMap_(adr_t a, Pdb::Pretty& p, int64 from, int count);
 	void       PrettyValueMap(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+
+	void       PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 
 // code
 	Thread&    Current();
