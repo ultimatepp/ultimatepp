@@ -1,10 +1,10 @@
-LAYOUT(EditPDBExpressionLayout, 604, 356)
+LAYOUT(EditPDBExpressionLayout, 604, 484)
 	ITEM(Label, lbl, SetLabel(t_("Expression")).LeftPosZ(4, 64).TopPosZ(8, 19))
 	ITEM(EditString, text, HSizePosZ(72, 8).TopPosZ(8, 19))
 	ITEM(Label, value_lbl, SetLabel(t_("  current value")).LeftPosZ(4, 80).TopPosZ(32, 19))
 	ITEM(DataPusher, value, SetEditable(false).HSizePosZ(88, 8).TopPosZ(32, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 190).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
-	ITEM(RichTextCtrl, help, LeftPosZ(4, 592).TopPosZ(52, 268))
+	ITEM(RichTextCtrl, help, LeftPosZ(4, 592).TopPosZ(52, 396))
 END_LAYOUT
 

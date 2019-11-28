@@ -281,7 +281,7 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("std::vector", { 1, THISFN(PrettyStdVector) });
 		pretty.Add("std::basic_string", { 1, THISFN(PrettyStdString) });
 	}
-
+	
 	int ii = pretty.Find(type);
 	if(ii >= 0) {
 		const auto& pr = pretty[ii];
