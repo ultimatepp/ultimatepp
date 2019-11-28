@@ -175,6 +175,7 @@ void Pdb::ExpandTreeType(int parent, CParser& p)
 
 void Pdb::SetTree(const String& exp)
 {
+	tree_exp = exp;
 	SaveTree();
 	tree.Clear();
 	NamedVal nv;
@@ -207,6 +208,7 @@ void Pdb::SetTree(const String& exp)
 		}
 		catch(CParser::Error) {}
 	}
+	SyncTreeDisas();
 }
 
 void Pdb::SetTreeA(ArrayCtrl *array)

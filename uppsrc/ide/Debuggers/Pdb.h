@@ -229,9 +229,9 @@ struct Pdb : Debugger, ParentCtrl {
 	EditString         expexp;
 	Button             exback, exfw;
 	StaticRect         explorer_pane;
-	StaticRect         pane;
-	Splitter           split;
+	StaticRect         pane, rpane;
 	TreeCtrl           tree;
+	String             tree_exp;
 	bool               first_exception = true;
 
 	VectorMap<String, String> treetype;
@@ -483,6 +483,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void      LocalsMenu(Bar& bar);
 	void      WatchesMenu(Bar& bar);
 	void      ExplorerMenu(Bar& bar);
+	
+	void      SyncTreeDisas();
 
 	void      Tab();
 
