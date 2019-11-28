@@ -81,6 +81,7 @@ void Pdb::Sync()
 	SetFrame();
 	IdeActivateBottom();
 	SyncFrameButtons();
+	SyncTreeDisas();
 }
 
 void Pdb::SetThread()

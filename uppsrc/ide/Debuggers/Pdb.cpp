@@ -104,6 +104,14 @@ void Pdb::Tab()
 	case TAB_MEMORY: memory.SetFocus(); break;
 	}
 	Data();
+	SyncTreeDisas();
+}
+
+void Pdb::SyncTreeDisas()
+{
+	bool d = tab.Get() == TAB_CPU || IsNull(tree_exp);
+	disas.Show(d);
+	tree.Show(!d);
 }
 
 bool Pdb::Key(dword key, int count)
@@ -129,7 +137,8 @@ void Pdb::Serialize(Stream& s)
 	int version = 0;
 	s / version;
 	memory.SerializeSettings(s);
-	s % split;
+	Splitter dummy;
+	s % dummy;
 	s % show_type;
 }
 
@@ -187,9 +196,11 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	
 	CloseHandle(pi.hThread);
 
+	IdeSetRight(rpane);
 	IdeSetBottom(*this);
-	IdeSetRight(disas);
-
+	
+	SyncTreeDisas();
+	
 	LoadFromGlobal(*this, CONFIGNAME);
 
 	if(!SymInitialize(hProcess, 0, FALSE)) {
@@ -348,10 +359,8 @@ Pdb::Pdb()
 	frame_down.SetImage(DbgImg::FrameDown());
 	frame_down << [=] { FrameUpDown(1); };
 	frame_down.Tip("Next Frame");
-	
-	split.Horz(pane, tree.SizePos());
-	split.SetPos(8000);
-	Add(split);
+
+	Add(pane.SizePos());
 
 	disas.WhenCursor = THISBACK(DisasCursor);
 	disas.WhenFocus = THISBACK(DisasFocus);
@@ -364,6 +373,9 @@ Pdb::Pdb()
 	threadlist <<= THISBACK(SetThread);
 
 	tree.WhenOpen = THISBACK(TreeExpand);
+	
+	rpane.Add(disas.SizePos());
+	rpane.Add(tree.SizePos());
 
 	FileIn in(ConfigFile("TreeTypes.txt"));
 	while(!in.IsEof()) {
@@ -441,7 +453,7 @@ void Pdb::Stop()
 		}
 		StoreToGlobal(*this, CONFIGNAME);
 		IdeRemoveBottom(*this);
-		IdeRemoveRight(disas);
+		IdeRemoveRight(rpane);
 	}
 }
 
