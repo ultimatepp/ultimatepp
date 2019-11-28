@@ -380,6 +380,7 @@ int Pdb::FindType(adr_t modbase, const String& name)
 		{ "unsigned char", UINT1 },
 		{ "short", SINT2 },
 		{ "unsigned short", UINT2 },
+		{ "wchar_t", UINT2 },
 		{ "int", SINT4 },
 		{ "unsigned int", UINT4 },
 		{ "float", FLT },

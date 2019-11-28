@@ -444,17 +444,48 @@ Pdb::Val Pdb::Post(CParser& p)
 	Val v = Term(p);
 	LLOG("Post: " << v);
 	for(;;) {
+		auto DoIndex = [&](bool key) {
+			int ech = key ? ')' : ']';
+			int64 i = Null;
+			if(!p.Char(ech))
+				i = (int)GetInt64(Exp0(p));
+			p.Char(ech);
+			Pretty p;
+			if(PrettyVal(v, 0, 0, p) && p.kind != SINGLE_VALUE && p.data_type.GetCount() &&
+			   (IsNull(i) && p.data_count || abs(i) < p.data_count)) {
+			    if(IsNull(i))
+			        i = p.data_count - 1;
+			    else
+			    if(i < 0)
+			        i = p.data_count + i;
+			    Pretty p;
+				PrettyVal(v, i, 1, p);
+				Val item;
+				int q = 0;
+				if(p.data_type.GetCount() > 1) {
+					if(!key)
+						q = 1;
+				}
+				(TypeInfo &)item = GetTypeInfo(p.data_type[q]);
+				item.context = v.context;
+				item.address = q < p.data_ptr.GetCount() ? p.data_ptr[q] : 0;
+				v = item;
+			}
+			else
+				v = DeRef(Compute(v, RValue(Nvl(i)), '+'));
+		};
+		
 		if(p.Char(':'))
 			v = Field(v.ref ? DeRef(v) : v, ReadType(p));
 		else
 		if(p.Char('.') || p.Char2(':', ':') || p.Char2('-', '>'))
 			v = Field(v.ref ? DeRef(v) : v, p.ReadId());
 		else
-		if(p.Char('[')) {
-			int i = (int)GetInt64(Exp0(p));
-			p.Char(']');
-			v = DeRef(Compute(v, RValue(i), '+'));
-		}
+		if(p.Char('['))
+			DoIndex(false);
+		else
+		if(p.Char('('))
+			DoIndex(true);
 		else
 			break;
 	}
@@ -467,6 +498,12 @@ Pdb::Val Pdb::Unary(CParser& p)
 		return Compute(RValue(0), Unary(p), '-');
 	if(p.Char('+'))
 		return GetRVal(Unary(p));
+	if(p.Char('#')) {
+		Pretty pp;
+		if(PrettyVal(Unary(p), 0, 0, pp))
+			return RValue((int)pp.data_count);
+		ThrowError("Value not recognized as high-level type");
+	}
 	if(p.Char('*'))
 		return DeRef(Unary(p));
 	if(p.Char('&'))

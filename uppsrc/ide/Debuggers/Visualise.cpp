@@ -215,7 +215,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 			if(VisualisePretty(result, val, flags))
 				return;
 		}
-		catch(CParser::Error e) { DDUMP(e); } // if failed, display as raw data
+		catch(CParser::Error e) {} // if failed, display as raw data
 	
 	result.Cat("{ ", SColorMark);
 	bool cm = false;
