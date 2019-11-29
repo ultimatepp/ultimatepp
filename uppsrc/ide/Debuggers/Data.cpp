@@ -308,6 +308,7 @@ void Pdb::Data()
 	case TAB_EXPLORER: Explorer(); break;
 	case TAB_MEMORY: memory.Refresh(); break;
 	}
+	SetTree(tree_exp);
 }
 
 void Pdb::MemoryGoto(const String& exp)

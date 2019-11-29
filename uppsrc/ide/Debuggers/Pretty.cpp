@@ -228,6 +228,11 @@ Pdb::Val Pdb::MakeVal(const String& type, adr_t address)
 
 bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 {
+	ASSERT(count < 100000);
+	
+	if(val.type < 0)
+		return false;
+
 	const Type& t = GetType(val.type);
 	
 	current_modbase = t.modbase; // so that we do not need to pass it as parameter in Pretty routines
