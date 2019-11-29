@@ -4,8 +4,67 @@
 
 #define LLOG(x) // LOG(x)
 
+void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
+{
+	try {
+		Pretty pp;
+		if(PrettyVal(val, 0, 0, pp) && pp.kind == CONTAINER) {
+			int n = int(min(pp.data_count, from + 10000) - from);
+			Pretty p;
+			PrettyVal(val, from, n, p);
+
+			if(p.data_type.GetCount()) {
+				Buffer<Val> item(p.data_type.GetCount());
+				for(int i = 0; i < p.data_type.GetCount(); i++) {
+					(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
+					item[i].context = val.context;
+				}
+				int ii = 0;
+				int n = p.data_ptr.GetCount() / p.data_type.GetCount();
+				for(int i = 0; i < n; i++) {
+					NamedVal nv;
+					nv.name << '[' << i + from << ']';
+					nv.val = val;
+					Visual result;
+					try {
+						for(int j = 0; j < p.data_type.GetCount(); j++) {
+							if(j)
+								result.Cat(": ");
+							item[j].address = p.data_ptr[ii++];
+							nv.val = item[j];
+							if(p.data_type.GetCount() > 1 && j == 0)
+								nv.key = item[0];
+							Visualise(result, item[j], 0);
+						}
+					}
+					catch(LengthLimit) {}
+					catch(CParser::Error e) {
+						result.Cat("??");
+					}
+					tree.Add(parent, Null, RawToValue(nv), nv.name + ' ' + result.GetString(),
+					         nv.key.type != UNKNOWN || nv.val.type > 0);
+				}
+				if(pp.data_count > n && from == 0) {
+					NamedVal nv;
+					nv.name << "..";
+					nv.val = val;
+					int64 ii = n;
+					while(ii < pp.data_count) {
+						nv.from = ii;
+						tree.Add(parent, Null, RawToValue(nv), String() << "[" << ii << ".." << min(pp.data_count - 1, ii + 9999) << "]", true);
+						ii += 10000;
+					}
+				}
+			}
+		}
+	}
+	catch(LengthLimit) {}
+	catch(CParser::Error e) {}
+}
+
 void Pdb::TreeNode(int parent, const String& name, Pdb::Val val)
 {
+	PrettyTreeNode(parent, val);
 	NamedVal nv;
 	nv.name = name;
 	nv.val = val;
@@ -21,6 +80,15 @@ void Pdb::TreeExpand(int node)
 		return;
 	const NamedVal& nv = ValueTo<NamedVal>(tree.Get(node));
 	Val val = nv.val;
+	if(nv.key.type != UNKNOWN) {
+		TreeNode(node, "key", nv.key);
+		TreeNode(node, "value", val);
+		return;
+	}
+	if(nv.from > 0) {
+		PrettyTreeNode(node, val, nv.from);
+		return;
+	}
 	if(nv.val.ref > 0) {
 		val = DeRef(val);
 		if(val.type < 0 || val.ref > 0) {
@@ -57,21 +125,6 @@ void Pdb::TreeExpand(int node)
 		vtbl.address = val.address + t.vtbl_offset;
 		vtbl.type = t.vtbl_typeindex;
 		TreeNode(node, "virtual", vtbl);
-/*
-		Val vloc = GetRVal(vtbl);
-		FnInfo vtbl_type = GetFnInfo(vloc.address);
-		const char *p = vtbl_type.name, *e = p;
-		while(*e && !(*e == ':' && e[1] == ':'))
-			e++;
-		String fullsym(p, e);
-		FnInfo ffs = GetFnInfo(fullsym);
-		if(ffs.pdbtype) {
-			Val typeval;
-			typeval.address = val.address;
-			TypeVal(typeval, ffs.pdbtype, t.modbase);
-			TreeNode(node, String().Cat() << '[' << ffs.name << ']', typeval);
-		}
-*/
 	}
 	for(int i = 0; i < t.base.GetCount(); i++) {
 		Val r = t.base[i];
@@ -191,6 +244,7 @@ void Pdb::SetTree(const String& exp)
 	if(nv.val.type >= 0)
 		n = GetType(nv.val.type).name;
 	tree.SetRoot(Null, RawToValue(nv), n + '=' + Visualise(nv.val).GetString());
+	PrettyTreeNode(0, nv.val);
 	if(nv.val.type >= 0) {
 		String w = treetype.Get(n, Null);
 		LOG("SetTree " << n << ' ' << w);

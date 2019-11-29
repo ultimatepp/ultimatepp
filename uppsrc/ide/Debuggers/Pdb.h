@@ -114,6 +114,8 @@ struct Pdb : Debugger, ParentCtrl {
 	struct NamedVal : Moveable<NamedVal> {
 		String name;
 		Val    val;
+		Val    key;
+		int64  from = 0;
 	};
 
 	struct Type : Moveable<Type> {
@@ -382,8 +384,8 @@ struct Pdb : Debugger, ParentCtrl {
 	enum       { MEMBER = 1, RAW = 2 };
 	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, dword flags, bool& cm, int depth);
 	void       Visualise(Visual& result, Pdb::Val val, dword flags);
-	Visual     Visualise(Val v);
-	Visual     Visualise(const String& rexp);
+	Visual     Visualise(Val v, dword flags = 0);
+	Visual     Visualise(const String& rexp, dword flags = 0);
 
 	bool       VisualisePretty(Visual& result, Pdb::Val val, dword flags);
 
@@ -465,6 +467,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void      SetTree(const String& exp);
 	void      SetTreeA(ArrayCtrl *data);
+	void      PrettyTreeNode(int parent, Pdb::Val val, int64 from = 0);
 	void      TreeNode(int parent, const String& name, Val val);
 	void      TreeExpand(int node);
 	String    StoreTree(int parent);

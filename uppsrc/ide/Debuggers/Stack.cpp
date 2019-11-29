@@ -75,7 +75,7 @@ Array<Pdb::Frame> Pdb::Backtrace(Thread& ctx, bool single_frame)
 			for(int i = 0; i < f.param.GetCount(); i++) {
 				if(i)
 					f.text << ", ";
-				f.text << f.param.GetKey(i) << "=" << Visualise(f.param[i]).GetString();
+				f.text << f.param.GetKey(i) << "=" << Visualise(f.param[i], MEMBER).GetString();
 			}
 			f.text << ')';
 		}

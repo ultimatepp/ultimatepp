@@ -9,7 +9,7 @@ void Pdb::Visual::Cat(const String& text, Color ink)
 	p.ink = ink;
 	p.mark = false;
 	length += text.GetLength();
-	if(length > 250)
+	if(length > 500)
 		throw LengthLimit();
 }
 
@@ -298,7 +298,7 @@ Size Pdb::Visual::GetSize() const
 	return Size(cx, StdFont().Info().GetHeight());
 }
 
-Pdb::Visual Pdb::Visualise(Val v)
+Pdb::Visual Pdb::Visualise(Val v, dword flags)
 {
 	Visual r;
 	try {
@@ -311,7 +311,7 @@ Pdb::Visual Pdb::Visualise(Val v)
 	return r;
 }
 
-Pdb::Visual Pdb::Visualise(const String& exp)
+Pdb::Visual Pdb::Visualise(const String& exp, dword flags)
 {
 	Visual r;
 	try {
