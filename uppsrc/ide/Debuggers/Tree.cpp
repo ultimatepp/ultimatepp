@@ -34,7 +34,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 							nv.val = item[j];
 							if(p.data_type.GetCount() > 1 && j == 0)
 								nv.key = item[0];
-							Visualise(result, item[j], 0);
+							Visualise(result, item[j], MEMBER);
 						}
 					}
 					catch(LengthLimit) {}
