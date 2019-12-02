@@ -14,8 +14,6 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
-
 #include "SliderCtrlX.h"
 
 
@@ -23,6 +21,8 @@ using namespace Upp;
 #define IMAGEFILE <Controls4U/SliderCtrlX.iml>
 #include <Draw/iml.h>
 
+namespace Upp {
+	
 SliderCtrlX::SliderCtrlX()
 : m_nMin(0)
 , m_nMax(100)
@@ -575,3 +575,4 @@ int SliderCtrlX::SliderToClient(int v) const
 	return v;
 }
 
+}

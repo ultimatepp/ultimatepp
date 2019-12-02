@@ -2,6 +2,8 @@
 #define _Controls4U_SplitterButton_h_
 
 
+namespace Upp {
+	
 class SplitterButton : public StaticRect {
 public:
 	typedef SplitterButton CLASSNAME;
@@ -55,5 +57,6 @@ private:
 	void SetArrows();
 };
 
+}
 
 #endif

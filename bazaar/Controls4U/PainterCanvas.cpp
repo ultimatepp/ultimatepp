@@ -1,8 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 #include "Controls4U.h"
 
-using namespace Upp;
-
 #include <plugin/jpg/jpg.h>
 
 #define TFILE <Controls4U/Controls4U.t>
@@ -12,6 +10,9 @@ using namespace Upp;
 #define IMAGEFILE <Controls4U/Controls4U.iml>
 #include <Draw/iml.h>
 
+
+namespace Upp {
+	
 String GetValueStringXml(String str, const char* var);
 Color GetColorXml(String text);
 void ParseG(GraphElemList &elems, XmlParser &xp, Svg2DTransform transf, SvgStyle style, const char *svgFolder);
@@ -118,7 +119,7 @@ Color GetColorXml(String text) {
 		return GetSvgColor(text);
 }
 
-Array<double> GetTransformArgs(String str, const char *command) {
+static Array<double> GetTransformArgs(String str, const char *command) {
 	Array<double> args;
 	int pos, endpos;
 
@@ -999,5 +1000,7 @@ INITBLOCK{
 	GraphElem::Register<LineElem>("LineElem");
 	GraphElem::Register<RectElem>("RectElem");
 	
-	// Falta el resto	
+
+}
+
 }

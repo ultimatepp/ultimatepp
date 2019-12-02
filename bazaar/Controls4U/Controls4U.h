@@ -12,7 +12,8 @@
 #include "Controls4U/StarIndicator.h"
 #include "Controls4U/SplitterButton.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 double AngAdd(double ang, double val);
 
@@ -851,5 +852,6 @@ private:
 	TextDisplay text;
 };
 	
+}
 	
 #endif

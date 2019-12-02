@@ -1,8 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 #include "Controls4U.h"
 
-using namespace Upp;
-
 #define TFILE <Controls4U/Controls4U.t>
 #include <Core/t.h>
 
@@ -14,6 +12,8 @@ using namespace Upp;
 #include <Core/topic_group.h>
 
 
+namespace Upp {
+	
 void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
 	Size sz = GetTextSize(text, fnt);
 	w.Text(x - sz.cx / 2., y - sz.cy / 2., text, fnt).Fill(color);
@@ -250,7 +250,7 @@ EditFile::EditFile() {
 		if (Trim(fileName).IsEmpty())
 			Exclamation(t_("No file set"));
 		else if (!DirectoryExists(folder))
-			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
+			Exclamation(Upp::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
 		else {
 			if (folder.StartsWith("\\"))
 				system("explorer " + folder);
@@ -270,7 +270,7 @@ EditFolder::EditFolder() {
 		if (Trim(folder).IsEmpty())
 			Exclamation(t_("No folder set"));
 		else if (!DirectoryExists(folder))
-			Exclamation(::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
+			Exclamation(Upp::Format(t_("Folder '%s' does not exist"), DeQtf(folder)));
 		else
 			LaunchWebBrowser(folder);};
 }
@@ -391,7 +391,7 @@ void ImagePopUp::PopUp(Ctrl *owner, int x, int y, int width, int height, Image &
 		SetRect(r);
 	
 	ctrl = owner;
-	image = ::GetRect(_image, _image.GetSize());
+	image = Upp::GetRect(_image, _image.GetSize());
 	angle = _angle;
 	fit = _fit;
 	Ctrl::PopUp(owner, true, false, GUI_DropShadows());
@@ -2176,3 +2176,4 @@ AboutUpp::AboutUpp() {
 	Add(about.SizePos());
 }
 	
+}

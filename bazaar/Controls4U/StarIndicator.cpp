@@ -21,13 +21,13 @@
 #include <CtrlLib/CtrlLib.h>
 #include "StarIndicator.h"
 
-using namespace Upp;
-
-
 #define IMAGECLASS StarsImg
 #define IMAGEFILE <Controls4U/StarIndicator.iml>
 #include <Draw/iml.h>
 
+
+namespace Upp {
+	
 StarIndicator::StarIndicator()
 :ProgressIndicator()
 , m_bAlwaysShowValue(false)
@@ -181,3 +181,4 @@ StarIndicator&	StarIndicator::SetVotes(int n)
 	return *this;
 }
 
+}

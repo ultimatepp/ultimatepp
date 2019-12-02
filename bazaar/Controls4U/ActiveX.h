@@ -17,6 +17,8 @@
 #include "plugin/vlc/axvlc_idl.h"
 
 
+namespace Upp {
+	
 static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};	//http://www.iol.ie/~locka/mozilla/control.htm
 
 class FirefoxBrowser : public DHCtrlActiveX {
@@ -138,5 +140,7 @@ private:
 		IVLCControl *vlc;
 	};
 };
+
+}
 
 #endif

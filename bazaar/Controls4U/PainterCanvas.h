@@ -1,7 +1,8 @@
 #ifndef _Controls4U_PainterCanvas_h_
 #define _Controls4U_PainterCanvas_h_
 
-using namespace Upp;
+
+namespace Upp {
 
 class Svg2DTransform {
 public:
@@ -638,6 +639,8 @@ private:
 	String legendText;
 	Size legendLastSize;
 };
+	
+}
 	
 #endif
 

@@ -3,7 +3,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include "ActiveX.h" 
 
-using namespace Upp;
+
+namespace Upp {
 
 bool FirefoxBrowser::Browse(const String &strurl) {
 	IIWebBrowser webBrowser(this);
@@ -182,5 +183,6 @@ bool FirefoxBrowser::SetSilent(bool val) {
 	return false;
 }
 
+}
 
 #endif

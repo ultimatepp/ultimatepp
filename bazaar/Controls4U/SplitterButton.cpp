@@ -1,9 +1,9 @@
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
-
 #include "SplitterButton.h"
 
+
+namespace Upp {
 
 SplitterButton::SplitterButton() {
 	Add(splitter.SizePos());
@@ -184,3 +184,4 @@ void SplitterButton::SetArrows() {
 	}
 }
 		
+}

@@ -3,7 +3,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include "ActiveX.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 bool BSTRSet(const String str, BSTR &bstr) {
 	wchar_t *buffer;
@@ -371,6 +372,8 @@ HRESULT STDMETHODCALLTYPE AXClientSite::DeactivateAndUndo() {
 
 HRESULT STDMETHODCALLTYPE AXClientSite::OnPosRectChange(LPCRECT lprcPosRect) {
 	return S_OK;
+}
+
 }
 
 #endif

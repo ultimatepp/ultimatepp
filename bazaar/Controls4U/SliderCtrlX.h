@@ -1,4 +1,6 @@
 
+namespace Upp {
+
 class SliderCtrlX : public Ctrl {
 	static const int BORDER_SIZE = 2;
 	static const int BORDER1 = BORDER_SIZE;
@@ -111,3 +113,4 @@ public:
 	SliderCtrlX&	UseCustomThumbs( bool b = true )	{ m_bUseCustomThumbs = b; return *this; };
 };
 
+}

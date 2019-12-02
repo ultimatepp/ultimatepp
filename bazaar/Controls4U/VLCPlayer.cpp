@@ -3,7 +3,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include "ActiveX.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 bool VLCPlayer::AddTarget(const String movie) {
 	if (IsPlaying())
@@ -174,5 +175,6 @@ int VLCPlayer::GetLength() {
 	return seconds;
 }
 
+}
 
 #endif

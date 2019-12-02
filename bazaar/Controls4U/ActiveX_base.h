@@ -1,7 +1,8 @@
 #ifndef _hdIE_ActiveX_Support_h_
 #define _hdIE_ActiveX_Support_h_
 
-using namespace Upp;
+
+namespace Upp {
 
 bool BSTRSet(const String str, BSTR &bstr);
 String BSTRGet(BSTR &bstr);
@@ -96,7 +97,7 @@ public:
 class DHCtrlActiveX : public DHCtrl {
 public:
 	DHCtrlActiveX(CLSID, const String, bool status = true);
-	~DHCtrlActiveX(void);
+	virtual ~DHCtrlActiveX();
 	
 	bool Attach(HWND hwnd);
 	void *QueryInterface(const IID iid);
@@ -119,5 +120,6 @@ private:
 	AXClientSite pClientSite;
 };
 
+}
 
 #endif
