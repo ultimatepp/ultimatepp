@@ -1,7 +1,8 @@
 #ifndef __Html_htmld__
 #define __Html_htmld__
 
-using namespace Upp;
+
+namespace Upp {
 
 String      ToHtmlD(const char *s);
 
@@ -303,5 +304,6 @@ HtmlTagD HtmlArialD();
 HtmlTagD HtmlRomanD();
 HtmlTagD HtmlFntSizeD(int size);
 
+}
 
 #endif

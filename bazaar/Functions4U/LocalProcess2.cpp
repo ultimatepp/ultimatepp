@@ -1,7 +1,6 @@
 #include <Core/Core.h>
 #include "LocalProcess2.h"
 
-using namespace Upp;
 
 #ifdef PLATFORM_WIN32
 #include <TlHelp32.h>
@@ -13,6 +12,8 @@ using namespace Upp;
 #include <sys/wait.h>
 #endif
 
+namespace Upp {
+	
 #define LLOG(x) // DLOG(x)
 
 void LocalProcess2::Init() {
@@ -710,4 +711,4 @@ void LocalProcess2::Pause() {
 }
 #endif
 
-
+}

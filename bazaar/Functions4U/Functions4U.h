@@ -14,7 +14,7 @@
 #include "LocalProcess2.h"
 #include <random>
 
-using namespace Upp;
+namespace Upp {
 
 
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
@@ -36,7 +36,15 @@ int64 FindStringInFile(const char *file, const String text, int64 pos0 = 0);
 bool FileStrAppend(const char *file, const char *str);
 bool AppendFile(const char *filename, const char *str);
 
-String AppendFileName(const String& path1, const char *path2, const char *path3);
+template<typename T>
+String AppendFileNameX(T t) {
+    return t;
+}
+
+template<typename T, typename... Args>
+String AppendFileNameX(T t, Args... args) {
+    return AppendFileName(t, AppendFileNameX(args...));
+}
 	
 inline String Trim(const String& s)   {return TrimBoth(s);}
 //inline WString Trim(const WString& s) {return TrimLeft(TrimRight(s));}
@@ -520,7 +528,7 @@ Vector<String> GetDriveList();
 class Dl {
 public:
 	Dl();
-	~Dl();
+	virtual ~Dl();
 	bool Load(const String &fileDll);
 	void *GetFunction(const String &functionName);
 	
@@ -570,7 +578,7 @@ int SysX(const char *cmd, String& out, String& err, double timeOut = Null,
 class _NRFuse {
 public:
 	_NRFuse(bool *_inside) {inside = _inside; failed = true;}
-	~_NRFuse() 			   {if (!failed) *inside = false;}
+	virtual ~_NRFuse() 			   {if (!failed) *inside = false;}
 	bool failed;
 private:
 	bool *inside;
@@ -596,7 +604,7 @@ struct TempAssign {
 		_val = set;
 		val = &_val;
 	}
-	~TempAssign() {
+	virtual ~TempAssign() {
 		*val = old;
 	}
 	
@@ -892,7 +900,7 @@ class LocalProcessX
 typedef LocalProcessX CLASSNAME;
 public:
 	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
-	~LocalProcessX() 				  {Stop();}
+	virtual ~LocalProcessX() 		{Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, 
 		double _maxTimeWithoutOutput = -1, double _maxRunTime = -1, bool convertcharset = true) {
@@ -1004,9 +1012,8 @@ int LevenshteinDistance(const char *s, const char *t);
 int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength = 256);
 int SentenceSimilitude(const char *s, const char *t);
 
-#define S(y)	String(y)
+#define S(y)	Upp::String(y)
 
-namespace Upp {
 	
 template<class T>
 void Jsonize(JsonIO& io, std::complex<T>& var) {

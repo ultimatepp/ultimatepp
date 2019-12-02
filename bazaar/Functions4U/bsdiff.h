@@ -4,8 +4,7 @@
 #define ftello 	ftell
 #define fseeko 	fseek
 
-using namespace Upp;
-
+namespace Upp {
 
 extern String errMsg;
 //String BsGetLastError();
@@ -29,5 +28,6 @@ bool Err(String str);
 	#endif
 #endif
 
+}
 
 #endif

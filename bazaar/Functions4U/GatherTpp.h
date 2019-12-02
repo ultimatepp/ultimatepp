@@ -1,7 +1,7 @@
 #ifndef _GatherTpp_h_
 #define _GatherTpp_h_
 
-using namespace Upp;
+namespace Upp {
 
 class GatherTpp {
 public:
@@ -46,5 +46,6 @@ private:
 
 String ChangeTopicLanguage(const String &topic, int lang);
 	
+}
 
 #endif

@@ -8,6 +8,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Functions4U/Functions4U_Gui.h>
 
+namespace Upp {
  
 Image NativePathIconX(const char *path, bool folder, int flags)
 {
@@ -209,17 +210,21 @@ ConsoleOutput::~ConsoleOutput() {
 #endif
 }
 
-void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array) {
-	menu.Add(t_("Select all"), Null, [&] {ArrayCtrlRowSelect(array);})
-		.Key(K_CTRL_A).Help(t_("Select all rows"));
-								
-	int count = array.GetSelectCount();
-	if (count == 0)
-		menu.Add(t_("No row selected"), Null, Null).Enable(false).Bold(true);
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header) {
+	if (array.GetCount() == 0)
+		menu.Add(t_("Empty list"), Null, Null).Enable(false).Bold(true);
 	else {
-		menu.Add(Format(t_("Selected %d rows"), count), Null, Null).Enable(false).Bold(true);
-		menu.Add(t_("Copy"), Null, [&] {ArrayCtrlRowCopy(array, false);})
-			.Key(K_CTRL_C).Help(t_("Copy selected rows to clipboard"));
+		menu.Add(t_("Select all"), Null, [&] {ArrayCtrlRowSelect(array);})
+			.Key(K_CTRL_A).Help(t_("Select all rows"));
+		
+		int count = array.GetSelectCount();
+		if (count == 0)
+			menu.Add(t_("No row selected"), Null, Null).Enable(false).Bold(true);
+		else {
+			menu.Add(Format(t_("Selected %d rows"), count), Null, Null).Enable(false).Bold(true);
+			menu.Add(t_("Copy"), Null, [&] {ArrayCtrlRowCopy(array, header);})
+				.Key(K_CTRL_C).Help(t_("Copy selected rows to clipboard"));
+		}
 	}
 }
 
@@ -257,5 +262,6 @@ void ArrayCtrlSet(ArrayCtrl &arr, const Vector<Vector<Value>> &vals, int fromRow
 	}
 }
 
+}
 
 #endif

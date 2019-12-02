@@ -2,7 +2,7 @@
 
 #include "StaticPlugin.h"
 
-using namespace Upp;
+namespace Upp {
 
 Array<StaticPlugin::PluginData>& StaticPlugin::Plugins() {
 	static Array<PluginData> x;
@@ -62,4 +62,4 @@ bool StaticPlugin::_Init(const char *_name, const char *_type) {
 	return false;
 }
 
-
+}

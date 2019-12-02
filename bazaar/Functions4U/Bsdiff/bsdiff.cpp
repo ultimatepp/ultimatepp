@@ -35,8 +35,8 @@ __FBSDID("$FreeBSD: src/usr.bin/bsdiff/bsdiff/bsdiff.c,v 1.1 2005/08/06 01:59:05
 
 #include "../bsdiff.h"
 
-//NAMESPACE_UPP
-using namespace Upp;
+
+namespace Upp {
 
 #define bsmin(x,y) (((x)<(y)) ? (x) : (y))
 
@@ -435,3 +435,4 @@ bool BSDiff(String oldfile, String newfile, String patchfile)
 	return 1;
 }
 
+}

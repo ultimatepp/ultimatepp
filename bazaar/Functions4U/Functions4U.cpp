@@ -1,7 +1,6 @@
 #include <Core/Core.h>
 #include "Functions4U.h"
 
-using namespace Upp;
 
 #ifdef PLATFORM_WIN32 // || defined (PLATFORM_WIN64)
 	#define Ptr Ptr_
@@ -58,6 +57,8 @@ Best regards,
 Honza
 */
 
+namespace Upp {
+	
 /////////////////////////////////////////////////////////////////////
 // LaunchFile
 
@@ -169,17 +170,6 @@ bool FileStrAppend(const char *file, const char *str) {
 }
 
 bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);}
-
-String AppendFileName(const String& path1, const char *path2, const char *path3) {
-	String result = path1;
-	if(result.GetLength() && *result.Last() != DIR_SEP && *path2 != DIR_SEP)
-		result += DIR_SEP;
-	result += path2;
-	if(result.GetLength() && *result.Last() != DIR_SEP && *path3 != DIR_SEP)
-		result += DIR_SEP;
-	result += path3; 
-	return result;
-}
 
 String FormatLong(long a) { 
 	return Sprintf("%ld", a);
@@ -2160,7 +2150,7 @@ bool FileDataArray::SaveFile(const char *fileName) {
 }
 
 bool FileDataArray::AppendFile(const char *fileName) {
-	return ::AppendFile(fileName, GetFileText());
+	return Upp::AppendFile(fileName, GetFileText());
 }
 
 bool FileDataArray::LoadFile(const char *fileName)
@@ -2780,3 +2770,5 @@ int SentenceSimilitude(const char *s, const char *t) {
 Upp::String GetCurrentMainPackage() {return "dummy";}
 Upp::String GetCurrentBuildMethod()	{return "dummy";}
 void IdePutErrorLine(const Upp::String& ) {}
+
+}

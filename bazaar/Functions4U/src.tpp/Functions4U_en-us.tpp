@@ -50,13 +50,12 @@ onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[@(0.0.255) char]_`
 [s2; Returns true in case of success.&]
 [s3; &]
 [s4;%- &]
-[s5;:AppendFileName`(const String`&`,const char`*`,const char`*`):%- [_^String^ String]_
-[* AppendFileName]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path1], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path2], [@(0.0.255) const]_[@(0.0.255) char]_`*
-[*@3 path3])&]
-[s2; Like AppendFileName() but joining three paths. &]
+[s5;:Upp`:`:AppendFileNameX`(T`,Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) ty
+pename]_[*@4 T], [@(0.0.255) typename...]_[*@4 Args]>_[_^Upp`:`:String^ String]_[* AppendFi
+leNameX]([*@4 T]_[*@3 t], [*@4 Args][@(0.0.255) ...]_args)&]
+[s2; [%-@N Like AppendFileName() but joining any number of paths] .&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:GetUpperFolder`(const char`*`):%- [_^String^ String]_[* GetUpperFolder]([@(0.0.255) co
 nst]_[@(0.0.255) char]_`*[*@3 folderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]

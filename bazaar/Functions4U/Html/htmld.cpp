@@ -1,7 +1,8 @@
 #include <Core/Core.h>
 #include "htmld.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 String ToHtmlD(const char *s)
 {
@@ -656,3 +657,4 @@ HtmlTagD HtmlFntSizeD(int size)
 	return HtmlTagD("span").Attr("style", Sprintf("font-size: %dpt", size));
 }
 
+}

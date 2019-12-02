@@ -3,6 +3,7 @@
 
 #include <Functions4U/Functions4U.h>
 
+namespace Upp {
 
 inline const RGBA *GetPixel(const Image &img, int x, int y) {
 	return &img[y][x];
@@ -96,7 +97,7 @@ class ConsoleOutput {
 public:
 	ConsoleOutput() 				{Init();}
 	ConsoleOutput(bool forceWindow) {Init(forceWindow);}
-	~ConsoleOutput(); 
+	virtual ~ConsoleOutput(); 
 	
 	bool Init(bool forceWindow = false);
 
@@ -106,11 +107,13 @@ private:
 #endif
 };
 
-void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array);
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header = true);
 void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header);
 void ArrayCtrlRowSelect(ArrayCtrl &array);
 Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array);
 Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr);
 void ArrayCtrlSet(ArrayCtrl &array, const Vector<Vector<Value>> &vals, int fromRow = 0, int fromCol = 0);
-	
+
+}
+
 #endif

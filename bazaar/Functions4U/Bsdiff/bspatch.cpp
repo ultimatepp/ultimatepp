@@ -35,8 +35,7 @@ __FBSDID("$FreeBSD: src/usr.bin/bsdiff/bspatch/bspatch.c,v 1.1 2005/08/06 01:59:
 
 #include "../bsdiff.h"
 
-//NAMESPACE_UPP
-using namespace Upp;
+namespace Upp {
 
 static off_t offtin(u_char *buf)
 {
@@ -248,3 +247,4 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 	return 1;
 }
 
+}
