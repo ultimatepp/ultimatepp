@@ -207,4 +207,4 @@ void RasterPlayer::NextFrame() {
 	Refresh();
 }
 
-};
+}

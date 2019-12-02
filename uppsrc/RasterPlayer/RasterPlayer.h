@@ -52,6 +52,6 @@ protected:
 	volatile Atomic running, kill;
 };
 
-};
+}
 
 #endif
