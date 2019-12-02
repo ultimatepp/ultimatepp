@@ -23,9 +23,10 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 				int n = p.data_ptr.GetCount() / p.data_type.GetCount();
 				for(int i = 0; i < n; i++) {
 					NamedVal nv;
+					Visual result;
 					nv.name << '[' << i + from << ']';
 					nv.val = val;
-					Visual result;
+					result.Cat(nv.name + ' ', SGray);
 					try {
 						for(int j = 0; j < p.data_type.GetCount(); j++) {
 							if(j)
@@ -41,7 +42,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 					catch(CParser::Error e) {
 						result.Cat("??");
 					}
-					tree.Add(parent, Null, RawToValue(nv), nv.name + ' ' + result.GetString(),
+					tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(result)),
 					         nv.key.type != UNKNOWN || nv.val.type > 0);
 				}
 				if(pp.data_count > n && from == 0) {
@@ -51,7 +52,9 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 					int64 ii = n;
 					while(ii < pp.data_count) {
 						nv.from = ii;
-						tree.Add(parent, Null, RawToValue(nv), String() << "[" << ii << ".." << min(pp.data_count - 1, ii + 9999) << "]", true);
+						Visual v;
+						v.Cat(String() << "[" << ii << ".." << min(pp.data_count - 1, ii + 9999) << "]", SGray);
+						tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(v)), true);
 						ii += 10000;
 					}
 				}
@@ -68,7 +71,16 @@ void Pdb::TreeNode(int parent, const String& name, Pdb::Val val)
 	NamedVal nv;
 	nv.name = name;
 	nv.val = val;
-	tree.Add(parent, Null, RawToValue(nv), name + "=" + Visualise(val).GetString(), val.type >= 0 || val.ref > 0);
+	Visual v;
+	try {
+		v.Cat(name + "=", SGray);
+		Visualise(v, val, 0);
+	}
+	catch(LengthLimit) {}
+	catch(CParser::Error e) {
+		v.Cat(e, SColorDisabled);
+	}
+	tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(v)), val.type >= 0 || val.ref > 0);
 }
 
 void Pdb::TreeExpand(int node)
@@ -243,11 +255,23 @@ void Pdb::SetTree(const String& exp)
 	String n = exp;
 	if(nv.val.type >= 0)
 		n = GetType(nv.val.type).name;
-	tree.SetRoot(Null, RawToValue(nv), n + '=' + Visualise(nv.val).GetString());
+	tree.SetDisplay(Single<VisualDisplay>());
+
+	Visual v;
+	try {
+		v.Cat(n + "=", SGray);
+		Visualise(v, nv.val, 0);
+	}
+	catch(LengthLimit) {}
+	catch(CParser::Error e) {
+		v.Cat(e, SColorDisabled);
+	}
+
+	tree.SetRoot(Null, RawToValue(nv), RawPickToValue(pick(v)));
 	PrettyTreeNode(0, nv.val);
 	if(nv.val.type >= 0) {
 		String w = treetype.Get(n, Null);
-		LOG("SetTree " << n << ' ' << w);
+		LLOG("SetTree " << n << ' ' << w);
 		tree.Open(0);
 		CParser p(w);
 		try {
@@ -257,7 +281,7 @@ void Pdb::SetTree(const String& exp)
 			int cursor = p.ReadInt();
 			ExpandTreeType(0, p);
 			tree.ScrollTo(sc);
-			if(cursor >= 0)
+			if(cursor >= 0 && tree.IsValid(cursor))
 				tree.SetCursor(cursor);
 		}
 		catch(CParser::Error) {}

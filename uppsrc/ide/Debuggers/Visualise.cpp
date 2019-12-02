@@ -326,22 +326,33 @@ Pdb::Visual Pdb::Visualise(const String& exp, dword flags)
 	return r;
 }
 
+Size Pdb::VisualDisplay::GetStdSize(const Value& q) const
+{
+	if(!IsType<Visual>(q))
+		return StdDisplay().GetStdSize(q);
+	Size sz(0, GetStdFontCy());
+	if(IsType<Visual>(q))
+		for(const VisualPart& p : ValueTo<Visual>(q).part)
+			sz.cx += GetTextSize(p.text, StdFont()).cx;
+	return sz;
+}
+
 void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q,
                                Color ink, Color paper, dword style) const
 {
+	if(!IsType<Visual>(q)) {
+		StdDisplay().Paint(w, r, q, ink, paper, style);
+		return;
+	}
 	int x = r.left;
 	int y = r.top + (r.Height() - Draw::GetStdFontCy()) / 2;
 	bool blue = (style & (Display::CURSOR|Display::FOCUS)) == (Display::CURSOR|Display::FOCUS);
-	if(IsType<Visual>(q)) {
-		const Visual& v = ValueTo<Visual>(q);
-		for(int i = 0; i < v.part.GetCount() && x < r.right; i++) {
-			const VisualPart& p = v.part[i];
-			Size sz = GetTextSize(p.text, StdFont());
-			w.DrawRect(x, y, sz.cx, r.Height(),
-			           blue || !p.mark ? paper : HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
-			w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
-			x += sz.cx;
-		}
+	for(const VisualPart& p : ValueTo<Visual>(q).part) {
+		Size sz = GetTextSize(p.text, StdFont());
+		w.DrawRect(x, y, sz.cx, r.Height(),
+		           blue || !p.mark ? paper : HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
+		w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
+		x += sz.cx;
 	}
 	w.DrawRect(x, y, r.right - x, r.Height(), paper);
 }
