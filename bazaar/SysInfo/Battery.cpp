@@ -1,6 +1,7 @@
 #include "SysInfo_in.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 #ifdef PLATFORM_POSIX
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
@@ -170,3 +171,4 @@ bool CloseCDTray(String drive)
 
 #endif
 
+}

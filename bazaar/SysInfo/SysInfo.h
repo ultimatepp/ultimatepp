@@ -3,7 +3,7 @@
 
 #include "Functions4U/Functions4U.h"
 
-using namespace Upp;
+namespace Upp {
 
 /////////////////////////////////////////////////////////////////////
 // Processor Info
@@ -224,6 +224,7 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Serialize(Stream &stream);
 };
 
+}
 
 #endif
 

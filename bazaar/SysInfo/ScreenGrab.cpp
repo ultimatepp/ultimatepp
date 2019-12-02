@@ -4,8 +4,8 @@
 #include <plugin/jpg/jpg.h>
 #include <plugin/bmp/bmp.h>
 
-using namespace Upp;
 
+namespace Upp {
 
 bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
 {
@@ -164,7 +164,7 @@ private:
 
 public:
 	ScreenGrab(String fileName, double secsFrame = 1, bool viewMouse = true);
-	~ScreenGrab();
+	virtual ~ScreenGrab();
 	
 	bool IniGrabDesktop();
 	bool IniGrabWindow(uint64 handle);
@@ -632,3 +632,4 @@ Image Snap_Window(int64 handle)
 	return Window_SaveCapture(handle);
 }
 
+}

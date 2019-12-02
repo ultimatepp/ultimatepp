@@ -21,7 +21,7 @@
 #endif
 #endif
 
-using namespace Upp;
+namespace Upp {
 
 #define TFILE <SysInfo/SysInfo.t>
 #include <Core/t.h>
@@ -2260,3 +2260,4 @@ bool IsPortFree(int port) {
     return ret;
 }
 
+}

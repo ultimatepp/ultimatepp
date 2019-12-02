@@ -1,7 +1,7 @@
 #include "SysInfo.h"
 
-using namespace Upp;
-
+namespace Upp {
+	
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #if defined(__MINGW32__) && !defined (__MINGW64__)
@@ -18,6 +18,7 @@ uint64 __rdtsc() {
 }
 #endif
 
+	
 int GetCpuSpeed()
 {
 	LARGE_INTEGER nFreq, nCtrStop, nCtr;
@@ -27,9 +28,9 @@ int GetCpuSpeed()
     nCtrStop.QuadPart += nFreq.QuadPart;								
     
     unsigned __int64 start = __rdtsc();
-    do 
+    do {
         QueryPerformanceCounter(&nCtr);
-    while (nCtr.QuadPart < nCtrStop.QuadPart);
+    } while (nCtr.QuadPart < nCtrStop.QuadPart);
     unsigned __int64 end = __rdtsc();
 	return int((end - start)/1000000);
 }
@@ -60,4 +61,7 @@ int GetCpuSpeed()
 
   	return int((end-start)/10000);
 }
+
 #endif
+
+}

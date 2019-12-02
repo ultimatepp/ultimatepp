@@ -1,7 +1,7 @@
 #include "SysInfo_in.h"
 
-using namespace Upp;
-
+namespace Upp {
+	
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #ifndef PRODUCT_UNLICENSED
@@ -263,6 +263,7 @@ using namespace Upp;
 //typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
 //typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 
+	
 bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, 
 			   String &distVersion, String &desktop, String &deskVersion)
 {
@@ -679,3 +680,4 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 
 #endif
 
+}

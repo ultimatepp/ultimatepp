@@ -1,6 +1,7 @@
 #include "SysInfo_in.h"
 
-using namespace Upp;
+
+namespace Upp {
 
 struct KeyCodes {
 	String key; 
@@ -528,6 +529,8 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 		PressKeyVK(virt[i], false, true);
 #endif
 	Sleep(finalDelay);
+}
+
 }
 
 #endif
