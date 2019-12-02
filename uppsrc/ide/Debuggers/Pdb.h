@@ -162,6 +162,7 @@ struct Pdb : Debugger, ParentCtrl {
 	};
 
 	struct VisualDisplay : Display {
+		virtual Size GetStdSize(const Value& q) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                       Color ink, Color paper, dword style) const;
 	};
