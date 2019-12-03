@@ -410,6 +410,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyTime(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyFont(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyValueArray_(adr_t a, Pdb::Pretty& p);
 	void       PrettyValueArray(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyValue(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);

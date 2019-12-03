@@ -152,6 +152,15 @@ void Pdb::PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count,
 	p.kind = SINGLE_VALUE;
 }
 
+void Pdb::PrettyFont(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	int64 data = GetInt64Attr(val, "data");
+	Font fnt;
+	memcpy(&fnt, &data, 8);
+	p.Text(AsString(fnt));
+	p.kind = SINGLE_VALUE;
+}
+
 void Pdb::PrettyValueArray_(adr_t a, Pdb::Pretty& p)
 {
 	Val v = GetAttr(MakeVal("Upp::ValueArray::Data", PeekPtr(a)), "data");
@@ -202,6 +211,17 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 				PrettyValueArray_(a, p);
 			if(st == 12)
 				PrettyValueMap_(a, p, from, count);
+
+			static VectorMap<int, String> single {
+				{ 20, "Upp::Complex" }, { 40, "Upp::Font" },
+				{ 48, "Upp::Painting" }, { 49, "Upp::Drawing" }, { 150, "Upp::Image" }
+			};
+			
+			String t = single.Get(st, Null);
+			if(t.GetCount()) {
+				p.data_type << t;
+				p.data_ptr << PeekPtr(a) + (win64 ? 16 : 8);
+			}
 			return;
 		}
 		p.data_ptr << a;
@@ -209,9 +229,11 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 			p.Text("void", SCyan);
 			return;
 		}
-		String t = decode(st, 1, "int", 2, "double", 4, "Upp::Date", 5, "Upp::Time",
-		                      10, "int64", 11, "bool", 39, "Upp::Color",
-		                      "");
+		static VectorMap<int, String> single {
+			{ 1, "int" }, { 2, "double" }, { 4, "Upp::Date" }, { 5, "Upp::Time" }, { 10, "int64" },
+			{ 11, "bool" }, {39, "Upp::Color" }
+		};
+		String t = single.Get(st, Null);
 		if(t.GetCount())
 			p.data_type << t;
 	}
@@ -303,6 +325,7 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("Upp::Time", { 0, THISFN(PrettyTime) });
 		pretty.Add("Upp::Color", { 0, THISFN(PrettyColor) });
 		pretty.Add("Upp::RGBA", { 0, THISFN(PrettyRGBA) });
+		pretty.Add("Upp::Font", { 0, THISFN(PrettyFont) });
 		pretty.Add("Upp::ValueArray", { 0, THISFN(PrettyValueArray) });
 		pretty.Add("Upp::ValueMap", { 0, THISFN(PrettyValueMap) });
 		pretty.Add("Upp::Value", { 0, THISFN(PrettyValue) });
