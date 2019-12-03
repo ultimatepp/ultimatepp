@@ -4,8 +4,6 @@
 
 // THIS is currently hardwired to the current version of U++ Core...
 
-// TODO: from->int64
-
 void Pdb::PrettyString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
 	bool small = IntAt(val, "chr", 14) == 0;
@@ -99,10 +97,10 @@ void Pdb::PrettyDate(Pdb::Val val, const Vector<String>&, int64 from, int count,
 	int year = GetIntAttr(val, "year");
 	p.kind = SINGLE_VALUE;
 	if(year < -20000)
-		p.text = "Null";
+		p.SetNull();
 	else
 	if(day >= 0 && day <= 31 && month >= 1 && month <= 12 && year > 1900 && year < 3000)
-		p.text = Format("%04d/%02d/%02d", year, month, day);
+		p.Text(Format("%04d/%02d/%02d", year, month, day));
 }
 
 void Pdb::PrettyTime(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
@@ -115,11 +113,43 @@ void Pdb::PrettyTime(Pdb::Val val, const Vector<String>&, int64 from, int count,
 	int second = GetIntAttr(val, "second");
 	p.kind = SINGLE_VALUE;
 	if(year < -20000)
-		p.text = "Null";
+		p.SetNull();
 	else
 	if(day >= 1 && day <= 31 && month >= 1 && month <= 12 && year > 1900 && year < 3000 &&
 	   hour >= 0 && hour <= 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60)
-		p.text = Format("%04d/%02d/%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
+		p.Text(Format("%04d/%02d/%02d %02d:%02d:%02d", year, month, day, hour, minute, second));
+}
+
+void Pdb::PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	dword color = GetIntAttr(val, "color");
+	Color c = Color::FromRaw(color);
+	if(IsNull(c))
+		p.SetNull();
+	else {
+		p.Text("\1", c);
+		p.Text(" ");
+		p.Text(ColorToHtml(c));
+	}
+	p.kind = SINGLE_VALUE;
+}
+
+void Pdb::PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	RGBA rc;
+	rc.r = GetIntAttr(val, "r");
+	rc.g = GetIntAttr(val, "g");
+	rc.b = GetIntAttr(val, "b");
+	rc.a = 255;
+	
+	Color c(rc);
+
+	p.Text("\1", c);
+	p.Text(" ");
+	p.Text(ColorToHtml(c));
+	p.Text(", a: " + AsString(GetIntAttr(val, "a")));
+	
+	p.kind = SINGLE_VALUE;
 }
 
 void Pdb::PrettyValueArray_(adr_t a, Pdb::Pretty& p)
@@ -176,11 +206,12 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 		}
 		p.data_ptr << a;
 		if(st == 3) {
-			p.text = "void";
+			p.Text("void", SCyan);
 			return;
 		}
 		String t = decode(st, 1, "int", 2, "double", 4, "Upp::Date", 5, "Upp::Time",
-		                      10, "int64", 11, "bool", "");
+		                      10, "int64", 11, "bool", 39, "Upp::Color",
+		                      "");
 		if(t.GetCount())
 			p.data_type << t;
 	}
@@ -270,6 +301,8 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 	if(pretty.GetCount() == 0) {
 		pretty.Add("Upp::Date", { 0, THISFN(PrettyDate) });
 		pretty.Add("Upp::Time", { 0, THISFN(PrettyTime) });
+		pretty.Add("Upp::Color", { 0, THISFN(PrettyColor) });
+		pretty.Add("Upp::RGBA", { 0, THISFN(PrettyRGBA) });
 		pretty.Add("Upp::ValueArray", { 0, THISFN(PrettyValueArray) });
 		pretty.Add("Upp::ValueMap", { 0, THISFN(PrettyValueMap) });
 		pretty.Add("Upp::Value", { 0, THISFN(PrettyValue) });
@@ -336,8 +369,9 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 		if(p.kind == SINGLE_VALUE) {
 			Pretty p;
 			PrettyVal(val, 0, 1, p);
-			if(p.text.GetCount())
-				result.Cat(p.text, SRed);
+			if(p.text.part.GetCount())
+				for(const VisualPart& vp : p.text.part)
+					result.Cat(vp.text, vp.ink);
 			else
 			if(p.data_type.GetCount() && p.data_ptr.GetCount())
 				Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);

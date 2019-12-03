@@ -146,6 +146,8 @@ struct Pdb : Debugger, ParentCtrl {
 		String  text;
 		Color   ink;
 		bool    mark;
+		
+		Size    GetSize() const;
 	};
 
 	struct Visual {
@@ -257,7 +259,10 @@ struct Pdb : Debugger, ParentCtrl {
 		int64          data_count; // number of entries
 		Vector<String> data_type; // type of data items (usuallt type_param)
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
-		String         text;
+		Visual         text;
+
+		void           Text(const char *s, Color color = SRed) { text.Cat(s, color); }
+		void           SetNull()                               { Text("Null", SCyan); }
 	};
 
 	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int64, int, Pdb::Pretty&>>> pretty;
@@ -403,6 +408,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyArrayMap(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyDate(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyTime(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyValueArray_(adr_t a, Pdb::Pretty& p);
 	void       PrettyValueArray(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyValue(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);

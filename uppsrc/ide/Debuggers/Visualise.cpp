@@ -163,7 +163,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 	}
 	if(val.type < 0) { // Display primitive type
 		#define RESULTINT(x, type) case x: CatInt(result, (type)val.ival, flags); break;
-		#define RESULTINTN(x, type, t2) case x:  if(IsNull((t2)val.ival)) result.Cat("Null ", Magenta); CatInt(result, (type)val.ival, flags); break;
+		#define RESULTINTN(x, type, t2) case x:  if(IsNull((t2)val.ival)) result.Cat("Null ", SCyan); CatInt(result, (type)val.ival, flags); break;
 		switch(val.type) {
 		RESULTINT(BOOL1, bool)
 		RESULTINT(UINT1, byte)
@@ -177,7 +177,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 		case DBL:
 		case FLT:
 			if(IsNull(val.fval))
-				result.Cat("Null", SMagenta);
+				result.Cat("Null", SCyan);
 			else
 			if(IsInf(val.fval))
 				result.Cat("INF", SMagenta);
@@ -326,6 +326,11 @@ Pdb::Visual Pdb::Visualise(const String& exp, dword flags)
 	return r;
 }
 
+Size Pdb::VisualPart::GetSize() const
+{
+	return GetTextSize(*text < 32 ? "MM" : ~text, StdFont());
+}
+
 Size Pdb::VisualDisplay::GetStdSize(const Value& q) const
 {
 	if(!IsType<Visual>(q))
@@ -333,7 +338,7 @@ Size Pdb::VisualDisplay::GetStdSize(const Value& q) const
 	Size sz(0, GetStdFontCy());
 	if(IsType<Visual>(q))
 		for(const VisualPart& p : ValueTo<Visual>(q).part)
-			sz.cx += GetTextSize(p.text, StdFont()).cx;
+			sz.cx += p.GetSize().cx;
 	return sz;
 }
 
@@ -348,10 +353,18 @@ void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 	int y = r.top + (r.Height() - Draw::GetStdFontCy()) / 2;
 	bool blue = (style & (Display::CURSOR|Display::FOCUS)) == (Display::CURSOR|Display::FOCUS);
 	for(const VisualPart& p : ValueTo<Visual>(q).part) {
-		Size sz = GetTextSize(p.text, StdFont());
+		Size sz = p.GetSize();
 		w.DrawRect(x, y, sz.cx, r.Height(),
 		           blue || !p.mark ? paper : HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
-		w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
+		if(*p.text == '\1') { // Color support
+			Rect r = RectC(x, y, sz.cx, sz.cy);
+			r.Deflate(DPI(1));
+			w.DrawRect(r, SBlack);
+			r.Deflate(DPI(1));
+			w.DrawRect(r, p.ink);
+		}
+		else
+			w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
 		x += sz.cx;
 	}
 	w.DrawRect(x, y, r.right - x, r.Height(), paper);
