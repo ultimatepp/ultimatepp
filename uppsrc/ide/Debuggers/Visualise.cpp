@@ -212,8 +212,9 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 	
 	if(!(flags & RAW) && !raw)
 		try {
-			if(VisualisePretty(result, val, flags))
+			if(VisualisePretty(result, val, flags) && (flags & MEMBER))
 				return;
+			result.Cat(" ");
 		}
 		catch(CParser::Error e) {} // if failed, display as raw data
 	
@@ -237,6 +238,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 			result.Cat(e, SColorDisabled);
 		}
 	}
+#if 0
 	for(int i = 0; i < t.static_member.GetCount(); i++) {
 		if(cm)
 			result.Cat(", ");
@@ -254,6 +256,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 			result.Cat(e, SColorDisabled);
 		}
 	}
+#endif
 	BaseFields(result, t, val, flags, cm, 0);
 	result.Cat(" }", SColorMark);
 }
