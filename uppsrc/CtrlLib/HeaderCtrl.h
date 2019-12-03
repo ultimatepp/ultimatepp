@@ -44,9 +44,9 @@ public:
 		friend class HeaderCtrl;
 
 	public:
-		Event<>         WhenLeftClick;
-		Event<>         WhenLeftDouble;
-		Event<>         WhenAction;
+		Event<>     WhenLeftClick;
+		Event<>     WhenLeftDouble;
+		Event<>     WhenAction;
 		Event<Bar&> WhenBar;
 
 		Column&  Min(int _min)                     { min = _min; return *this; }
@@ -56,7 +56,7 @@ public:
 		Column&  Tip(const char *s)                { tip = s; return *this; }
 		Column&  SetPaper(Color c)                 { paper = c; return *this; }
 		Column&  SetRatio(double ratio);
-		Column&  SetMargin(int m)      ;
+		Column&  SetMargin(int m);
 
 		void     Show(bool b = true);
 		void     Hide()                            { Show(false); }
