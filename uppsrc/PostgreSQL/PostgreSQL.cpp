@@ -513,11 +513,17 @@ bool PostgreSQLConnection::Execute()
 			s = PostgreSQLReadString(s, query);
 		else {
 			if(*s == '?' && !noquestionparams) {
-				if(pi >= param.GetCount()) {
-					session.SetError("Invalid number of parameters", statement);
-					return false;
+				if(s[1] == '?') {
+					query.Cat('?');
+					s++;
 				}
-				query.Cat(param[pi++]);
+				else {
+					if(pi >= param.GetCount()) {
+						session.SetError("Invalid number of parameters", statement);
+						return false;
+					}
+					query.Cat(param[pi++]);
+				}
 			}
 			else
 				query.Cat(*s);
