@@ -59,6 +59,7 @@ private:
 	String                conns;
 	bool                  keepalive;
 	bool                  hex_blobs;
+	bool                  noquestionparams = false;
 	
 	VectorMap<String, String> pkache;
 
@@ -86,6 +87,7 @@ public:
 
 	void                  SetCharset(byte chrset)         { charset = chrset; }
 	void                  KeepAlive(bool b = true)        { keepalive = b; DoKeepAlive(); }
+	void                  NoQuestionParams(bool b = true) { noquestionparams = b; }
 
 	String                GetUser()                       { return PQuser(conn); }
 	operator PGconn *     ()                              { return conn; }
