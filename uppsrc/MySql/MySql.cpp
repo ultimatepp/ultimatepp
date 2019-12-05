@@ -275,6 +275,9 @@ void MySqlConnection::SetParam(int i, const Value& r) {
 		case INT_V:
 			p = Format("%d", int(r));
 			break;
+		case INT64_V:
+			p = IntStr64(r);
+			break;
 		case DOUBLE_V:
 			p = FormatDouble(double(r), 20);
 			break;
