@@ -384,7 +384,6 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        At(Pdb::Val val, int i);
 	Val        At(Pdb::Val record, const char *id, int i);
 	int        IntAt(Pdb::Val record, const char *id, int i);
-	String     IntFormat(int64 i, dword flags = 0);
 	void       CatInt(Visual& result, int64 val, dword flags = 0);
 
 	enum       { MEMBER = 1, RAW = 2 };

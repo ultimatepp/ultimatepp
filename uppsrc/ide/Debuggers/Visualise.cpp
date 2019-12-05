@@ -84,23 +84,16 @@ int Pdb::IntAt(Pdb::Val record, const char *id, int i)
 	return (int)GetInt(At(record, id, i));
 }
 
-String Pdb::IntFormat(int64 i, dword flags)
-{
-	String r;
-	if(i < 0)
-		r << '-' << Format64(-i);
-	else
-		r << Format64(i);
-	if(i >= 32 && i < 128)
-		r << " \'" << (char)i << '\'';
-	return r;
-}
-
 void Pdb::CatInt(Visual& result, int64 val, dword flags)
 {
-	result.Cat(IntFormat(val), SRed);
+	if(val < 0)
+		result.Cat("-" + Format64(-val), SRed);
+	else
+		result.Cat(Format64(val), SRed);
 	if(flags & MEMBER)
 		return;
+	if(val >= 32 && val < 128)
+		result.Cat(String() << " \'" << (char)val << '\'', SRed);
 	result.Cat(" 0x" + Format64Hex(val), SMagenta);
 }
 
@@ -212,9 +205,11 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 	
 	if(!(flags & RAW) && !raw)
 		try {
-			if(VisualisePretty(result, val, flags) && (flags & MEMBER))
-				return;
-			result.Cat(" ");
+			if(VisualisePretty(result, val, flags)) {
+				if(flags & MEMBER)
+					return;
+				result.Cat(", raw: ", SGray);
+			}
 		}
 		catch(CParser::Error e) {} // if failed, display as raw data
 	

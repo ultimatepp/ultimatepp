@@ -214,7 +214,11 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 
 			static VectorMap<int, String> single {
 				{ 20, "Upp::Complex" }, { 40, "Upp::Font" },
-				{ 48, "Upp::Painting" }, { 49, "Upp::Drawing" }, { 150, "Upp::Image" }
+				{ 48, "Upp::Painting" }, { 49, "Upp::Drawing" }, { 150, "Upp::Image" },
+				{ POINT64_V, "Upp::Point_<__int64>" }, { POINTF_V, "Upp::Point_<double>" },
+				{ SIZE64_V, "Upp::Size_<__int64>" }, { SIZEF_V, "Upp::Size_<double>" },
+				{ RECT_V, "Upp::Rect_<int>" },
+				{ RECT64_V, "Upp::Rect_<__int64>" }, { RECTF_V, "Upp::Rect_<double>" },
 			};
 			
 			String t = single.Get(st, Null);
@@ -231,7 +235,8 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 		}
 		static VectorMap<int, String> single {
 			{ 1, "int" }, { 2, "double" }, { 4, "Upp::Date" }, { 5, "Upp::Time" }, { 10, "int64" },
-			{ 11, "bool" }, {39, "Upp::Color" }
+			{ 11, "bool" }, {39, "Upp::Color" },
+			{ POINT_V, "Upp::Point_<int>" }, { SIZE_V, "Upp::Size_<int>" }
 		};
 		String t = single.Get(st, Null);
 		if(t.GetCount())
