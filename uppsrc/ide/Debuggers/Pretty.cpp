@@ -388,7 +388,7 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 						ws.Cat(PeekWord(a));
 				}
 				ResultCount(p.data_count);
-				result.Cat(AsCString(sz == 1 ? s : ws.ToString()), SRed);
+				result.Cat(FormatString(sz == 1 ? s : ws.ToString()), SRed);
 				if(p.data_count > p.data_ptr.GetCount())
 					result.Cat("..", SGray);
 			}

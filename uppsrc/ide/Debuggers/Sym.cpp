@@ -128,6 +128,12 @@ Pdb::FnInfo Pdb::GetFnInfo(adr_t address)
 void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 {
 	adr_t tag;
+
+	BOOL reference;
+	dword dw = 0;
+	SymGetTypeInfo(hProcess, modbase, typeId, TI_GET_IS_REFERENCE, &reference);
+	v.reference = reference;
+
 	for(;;) {
 		tag = GetSymInfo(modbase, typeId, TI_GET_SYMTAG);
 		if(tag == SymTagPointerType)
@@ -206,17 +212,16 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	else
 	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE)
 		v.address += c.frame;
+	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
 	v.reported_size = pSym->Size;
 	v.context = c.context;
-	DLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }
 
 void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>& param,
                     VectorMap<String, Pdb::Val>& local)
 {
-	DLOG("============ GetLocals");
 	static IMAGEHLP_STACK_FRAME f;
 	f.InstructionOffset = frame.pc;
 	SymSetContext(hProcess, &f, 0);
@@ -227,7 +232,6 @@ void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>&
 	SymEnumSymbols(hProcess, 0, 0, &EnumLocals, &c);
 	param = pick(c.param);
 	local = pick(c.local);
-	DLOG("...");
 }
 
 BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
