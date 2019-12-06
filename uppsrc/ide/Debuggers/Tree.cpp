@@ -251,6 +251,10 @@ void Pdb::SetTree(const String& exp)
 	catch(CParser::Error) {
 		return;
 	}
+	if(nv.val.reference) {
+		nv.val = DeRef(nv.val);
+		nv.val.reference = false;
+	}
 	nv.name = exp;
 	String n = exp;
 	if(nv.val.type >= 0)
