@@ -84,7 +84,6 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 3));
 	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
 	bar.Add(b, AK_ADDWATCH, THISBACK(AddWatch));
-	bar.Add(b, AK_EXPLORER, THISBACK(DoExplorer));
 	bar.Add(b, AK_CPU, THISBACK1(SetTab, 5));
 	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 6));
 	bar.MenuSeparator();
@@ -100,7 +99,6 @@ void Pdb::Tab()
 	case TAB_LOCALS: locals.SetFocus(); break;
 	case TAB_THIS: self.SetFocus(); break;
 	case TAB_WATCHES: watches.SetFocus(); break;
-	case TAB_EXPLORER: explorer.SetFocus(); break;
 	case TAB_MEMORY: memory.SetFocus(); break;
 	}
 	Data();
@@ -121,10 +119,6 @@ bool Pdb::Key(dword key, int count)
 		Ctrl* f = GetFocusCtrl();
 		if(f && watches.HasChildDeep(f))
 			f->Key(key, count);
-		return true;
-	}
-	if(key == K_ENTER && expexp.HasFocus()) {
-		Explore(~expexp);
 		return true;
 	}
 	return Ctrl::Key(key, count);
@@ -277,7 +271,6 @@ Pdb::Pdb()
 	locals.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
 	locals.WhenEnterRow = THISBACK1(SetTreeA, &locals);
 	locals.WhenBar = THISBACK(LocalsMenu);
-	locals.WhenLeftDouble = THISBACK1(ExploreKey, &locals);
 	locals.EvenRowColor();
 
 	self.NoHeader();
@@ -285,7 +278,6 @@ Pdb::Pdb()
 	self.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
 	self.WhenEnterRow = THISBACK1(SetTreeA, &self);
 	self.WhenBar = THISBACK(LocalsMenu);
-	self.WhenLeftDouble = THISBACK1(ExploreKey, &self);
 	self.EvenRowColor();
 
 	watches.NoHeader();
@@ -294,7 +286,6 @@ Pdb::Pdb()
 	watches.Moving();
 	watches.WhenEnterRow = THISBACK1(SetTreeA, &watches);
 	watches.WhenBar = THISBACK(WatchesMenu);
-	watches.WhenLeftDouble = THISBACK1(ExploreKey, &watches);
 	watches.WhenAcceptEdit = THISBACK(Data);
 	watches.WhenDrop = THISBACK(DropWatch);
 	watches.EvenRowColor();
@@ -304,33 +295,12 @@ Pdb::Pdb()
 	autos.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
 	autos.WhenEnterRow = THISBACK1(SetTreeA, &autos);
 	autos.WhenBar = THISBACK(AutosMenu);
-	autos.WhenLeftDouble = THISBACK1(ExploreKey, &autos);
 	autos.EvenRowColor();
-
-	int c = EditField::GetStdHeight();
-	explorer.AddColumn("", 1);
-	explorer.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
-	explorer_pane.Add(exback.LeftPos(0, c).TopPos(0, c));
-	explorer_pane.Add(exfw.LeftPos(c + 2, c).TopPos(0, c));
-	explorer_pane.Add(expexp.HSizePos(2 * c + 4).TopPos(0, c));
-	explorer_pane.Add(explorer.HSizePos().VSizePos(EditField::GetStdHeight(), 0));
-	explorer.NoHeader();
-	explorer.WhenEnterRow = THISBACK(ExplorerTree);
-	explorer.WhenLeftDouble = THISBACK(ExpExp);
-	explorer.WhenBar = THISBACK(ExplorerMenu);
-
-	exback.SetImage(DbgImg::ExplorerBack());
-	exback <<= THISBACK(ExBack);
-	exfw.SetImage(DbgImg::ExplorerFw());
-	exfw <<= THISBACK(ExFw);
-	exback.Disable();
-	exfw.Disable();
 
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), "Locals");
 	tab.Add(self.SizePos(), "this");
 	tab.Add(watches.SizePos(), "Watches");
-	tab.Add(explorer_pane.SizePos(), "Explorer");
 	tab.Add(cpu.SizePos(), "CPU");
 	tab.Add(memory.SizePos(), "Memory");
 
@@ -348,9 +318,9 @@ Pdb::Pdb()
 	framelist.Ctrl::Add(dlock.SizePos());
 
 	pane.Add(tab.SizePos());
-	pane.Add(threadlist.LeftPosZ(380, 60).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(threadlist.LeftPosZ(340, 60).TopPos(2, EditField::GetStdHeight()));
 	int bcx = min(EditField::GetStdHeight(), DPI(16));
-	pane.Add(framelist.HSizePos(Zx(444), 2 * bcx).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(framelist.HSizePos(Zx(404), 2 * bcx).TopPos(2, EditField::GetStdHeight()));
 	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_up.SetImage(DbgImg::FrameUp());
 	frame_up << [=] { FrameUpDown(-1); };

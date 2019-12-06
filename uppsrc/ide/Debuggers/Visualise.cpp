@@ -142,6 +142,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 				n = 1;
 				dt.Clear();
 			}
+			else
 			if(val.reported_size > sz && sz > 0) {
 				n = val.reported_size / sz;
 				if(n <= 40)

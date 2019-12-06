@@ -289,8 +289,12 @@ Pdb::Val Pdb::Ref(Pdb::Val v)
 {
 	if(v.rvalue)
 		ThrowError("R-value cannot be referenced");
-	v.rvalue = true;
-	v.ref++;
+	if(v.reference)
+		v.reference = false;
+	else {
+		v.rvalue = true;
+		v.ref++;
+	}
 	return v;
 }
 

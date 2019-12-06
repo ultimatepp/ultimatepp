@@ -218,7 +218,7 @@ struct Pdb : Debugger, ParentCtrl {
 	EditString         watchedit;
 	
 	enum { // Order in this enum has to be same as order of tab.Add
-		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_EXPLORER, TAB_CPU, TAB_MEMORY
+		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_CPU, TAB_MEMORY
 	};
 
 	TabCtrl            tab;
@@ -230,7 +230,6 @@ struct Pdb : Debugger, ParentCtrl {
 	ArrayCtrl          self;
 	ArrayCtrl          watches;
 	ArrayCtrl          autos;
-	ArrayCtrl          explorer;
 	ColumnList         cpu;
 	EditString         expexp;
 	Button             exback, exfw;
@@ -457,16 +456,6 @@ struct Pdb : Debugger, ParentCtrl {
 	void      AddThis(const VectorMap<String, Val>& m, adr_t address, const VectorMap<String, Value>& prev);
 	void      AddThis(int type, adr_t address, const VectorMap<String, Value>& prev);
 	void      This();
-	void      Explore(const Val& val, const VectorMap<String, Value>& prev);
-	void      Explore(const String& exp);
-	void      ExploreKey(ArrayCtrl *a);
-	void      Explorer();
-	void      ExpExp();
-	void      ExBack();
-	void      ExFw();
-	void      DoExplorer();
-	String    GetExpExp();
-	void      ExplorerTree();
 	void      Data();
 	void      ClearWatches();
 	void      DropWatch(PasteClip& clip);
@@ -496,7 +485,6 @@ struct Pdb : Debugger, ParentCtrl {
 	void      AutosMenu(Bar& bar);
 	void      LocalsMenu(Bar& bar);
 	void      WatchesMenu(Bar& bar);
-	void      ExplorerMenu(Bar& bar);
 	
 	void      SyncTreeDisas();
 
