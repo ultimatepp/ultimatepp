@@ -135,7 +135,7 @@ public:
 	const K& TopKey() const                         { return key.Top(); }
 //	T        Pop()                                  { T h = Top(); Drop(); return h; }
 	K        PopKey()                               { K h = TopKey(); Drop(); return h; }
-	void     Trim(int n)                            { key.Trim(n); value.SetCount(n); }
+	void     Trim(int n)                            { key.Trim(n); value.Trim(n); }
 
 	const K& GetKey(int i) const                    { return key[i]; }
 
