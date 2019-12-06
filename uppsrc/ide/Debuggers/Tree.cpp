@@ -215,7 +215,7 @@ void Pdb::ExpandTreeType(int parent, CParser& p)
 				id << AsString(p.ReadInt());
 			else
 			if(p.IsString())
-				id << '\"' << AsCString(p.ReadString()) << '\"';
+				id << '\"' << FormatString(p.ReadString()) << '\"';
 			else
 			if(p.IsId())
 				id << p.ReadId();

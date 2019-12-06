@@ -86,7 +86,8 @@ struct Pdb : Debugger, ParentCtrl {
 	
 	struct TypeInfo : Moveable<TypeInfo> {
 		int    type = UNKNOWN;
-		int    ref = 0; // this is pointer (or reference)
+		int    ref = 0; // this is pointer or reference
+		bool   reference = false; // this is reference
 	};
 
 	struct Val : Moveable<Val, TypeInfo> {
@@ -343,6 +344,8 @@ struct Pdb : Debugger, ParentCtrl {
 	String                TypeInfoAsString(TypeInfo tf);
 	TypeInfo              GetTypeInfo(adr_t modbase, const String& name);
 	TypeInfo              GetTypeInfo(const String& name) { return GetTypeInfo(current_modbase, name); } // only in Pretty...
+	
+	static String FormatString(const String& x) { return AsCString(x, INT_MAX, NULL, CheckUtf8(x) ? 0 : ASCSTRING_OCTALHI); }
 
 // exp
 	Val        MakeVal(const String& type, adr_t address);
