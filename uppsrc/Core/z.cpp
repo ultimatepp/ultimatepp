@@ -427,7 +427,7 @@ bool GZCompressFile(const char *dstfile, const char *srcfile, Gate<int64, int64>
 	FileOut out(dstfile);
 	if(!out)
 		return false;
-	if(GZCompress(out, in, (int)in.GetLeft(), progress) < 0)
+	if(GZCompress(out, in, in.GetLeft(), progress) < 0)
 		return false;
 	out.Close();
 	return !out.IsError();
@@ -446,7 +446,7 @@ bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate<int64, int6
 	FileOut out(dstfile);
 	if(!out)
 		return false;
-	if(GZDecompress(out, in, (int)in.GetLeft(), progress) < 0)
+	if(GZDecompress(out, in, in.GetLeft(), progress) < 0)
 		return false;
 	out.Close();
 	return !out.IsError();
@@ -468,7 +468,13 @@ bool GZDecompressFile(const char *srcfile, Gate<int64, int64>progress)
 Gate<int64, int64> AsGate64(Gate<int, int> gate)
 {
 	Gate<int64, int64> h;
-	h << [=](int64 a, int64 b) { return gate((int)a, (int)b); };
+	h << [=](int64 a, int64 b) {
+		if(b > ((int64)INT_MAX << 10))
+			return gate((int)(a>>32), (int)(b>>32));
+		if(b > INT_MAX)
+			return gate((int)(a>>22), (int)(b>>22));
+		return gate((int)a, (int)b);
+	};
 	return h;
 }
 
