@@ -512,7 +512,7 @@ bool PostgreSQLConnection::Execute()
 		if(*s == '\'' || *s == '\"')
 			s = PostgreSQLReadString(s, query);
 		else {
-			if(*s == '?' && !noquestionparams) {
+			if(*s == '?' && !session.noquestionparams) {
 				if(s[1] == '?') {
 					query.Cat('?');
 					s++;
