@@ -4,8 +4,10 @@ namespace Upp {
 
 GLVertexData::GLVertexData(const GLVertexData& src)
 {
-	data = src.data;
-	data->refcount++;
+	if(src.data) {
+		data = src.data;
+		data->refcount++;
+	}
 }
 
 GLVertexData& GLVertexData::operator=(const GLVertexData& src)
