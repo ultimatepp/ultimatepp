@@ -113,10 +113,16 @@ ProcessingTab::ProcessingTab()
 	CtrlLayout(tabBestFitRight);
 	splitterTabBestFit.Horz(tabBestFitLeft.SizePos(), tabBestFitRight.SizePos());
 	splitterTabBestFit.SetPos(6000, 0);
+	CtrlLayout(tabHistLeft);
+	CtrlLayout(tabHistRight);
+	splitterTabHist.Horz(tabHistLeft.SizePos(), tabHistRight.SizePos());
+	splitterTabHist.SetPos(8000, 0);	
+	
 	tab.Add(splitterTabFit.SizePos(), t_("Processing"));
 	tab.Add(splitterTabFreq.SizePos(), t_("Frequency"));
 	tab.Add(splitterTabOp.SizePos(), t_("Operations"));
 	tab.Add(splitterTabBestFit.SizePos(), t_("Best fit"));
+	tab.Add(splitterTabHist.SizePos(), t_("Histogram"));
 	tab.WhenSet = THISBACK(OnSet);
 	
 	tabFreqRight.butFFT.WhenAction = THISBACK(OnFFT);
@@ -177,7 +183,18 @@ ProcessingTab::ProcessingTab()
 	tabBestFitRight.butFit.Tip(t_("It tries to fit the series with the supported equations"));
 	tabBestFitRight.butFit.WhenPush = THISBACK(OnFit);
 	
-	tabFreqFirst = tabOpFirst = tabBestFitFirst = true;
+	tabHistRight.axis.Add(t_("X"));
+	tabHistRight.axis.Add(t_("Y"));
+	tabHistRight.axis.SetIndex(1);
+	tabHistRight.axis.WhenAction = THISBACK(OnSet);
+	tabHistRight.butHist <<= THISBACK(OnHist);
+	tabHistRight.numVals <<= 30;
+	tabHistRight.valNormalize <<= 100;
+	
+	//tabHistRight.opNormalize.WhenAction   = [&] {tabHistRight.valNormalize.Enable(~tabHistRight.opNormalize);};
+	//tabHistRight.opNormalize.WhenAction();
+	
+	tabFreqFirst = tabOpFirst = tabBestFitFirst = tabHistFirst = true;
 	avgFirst = linearFirst = cuadraticFirst = cubicFirst = sinusFirst = sinusTendFirst = splineFirst = true;
 
 	exclamationOpened = false;
@@ -241,43 +258,43 @@ void ProcessingTab::OnOp()
 	if (data.IsParam() || data.IsExplicit()) 
 		return;
 	
-	if (tabFitRight.opAverage && avgFirst) {	
+	if (~tabFitRight.opAverage && avgFirst) {	
 		double r2;
 		average.Fit(data, r2);
 		avgFirst = false;
 	}
-	if (tabFitRight.opLinear && linearFirst) {	
+	if (~tabFitRight.opLinear && linearFirst) {	
 		if (linear.Fit(data, r2Linear) < 0) {
-			tabFitRight.opLinear = false;
+			tabFitRight.opLinear <<= false;
 			tabFitRight.opLinear.Enable(false);
 		} else
 			linearFirst = false;
 	}
-	if (tabFitRight.opCuadratic && cuadraticFirst) {		
+	if (~tabFitRight.opCuadratic && cuadraticFirst) {		
 		cuadratic.GuessCoeff(data);
 		if (cuadratic.Fit(data, r2Cuadratic) < 0) {
-			tabFitRight.opCuadratic = false;
+			tabFitRight.opCuadratic <<= false;
 			tabFitRight.opCuadratic.Enable(false);
 		} else
 			cuadraticFirst = false;
 	}
-	if (tabFitRight.opCubic && cubicFirst) {		
+	if (~tabFitRight.opCubic && cubicFirst) {		
 		cubic.GuessCoeff(data);
 		if (cubic.Fit(data, r2Cubic) < 0) {
-			tabFitRight.opCubic = false;
+			tabFitRight.opCubic <<= false;
 			tabFitRight.opCubic.Enable(false);
 		} else
 			cubicFirst = false;
 	}
-	if (tabFitRight.opSinus && sinusFirst) {		
+	if (~tabFitRight.opSinus && sinusFirst) {		
 		sinus.GuessCoeff(data);
 		if (sinus.Fit(data, r2Sinus) < 0) {
-			tabFitRight.opSinus = false;
+			tabFitRight.opSinus <<= false;
 			tabFitRight.opSinus.Enable(false);
 		} else
 			sinusFirst = false;
 	}
-	if (tabFitRight.opSinusTend && sinusTendFirst) {
+	if (~tabFitRight.opSinusTend && sinusTendFirst) {
 		DataXRange dataXRange;
 		dataXRange.Init(data, Null, Null);		
 		double r2SinusTendBest = Null;
@@ -294,7 +311,7 @@ void ProcessingTab::OnOp()
 			sinusTendBest = sinusTend;
 		}
 		if (IsNull(r2SinusTendBest)) {
-			tabFitRight.opSinusTend = false;
+			tabFitRight.opSinusTend <<= false;
 			tabFitRight.opSinusTend.Enable(false);
 		} else {
 			splineFirst = false;
@@ -302,9 +319,9 @@ void ProcessingTab::OnOp()
 			sinusTend = sinusTendBest;
 		}
 	} 
-	if (tabFitRight.opSpline && splineFirst) {		
+	if (~tabFitRight.opSpline && splineFirst) {		
 		if (spline.Fit(data) < 0) {
-			tabFitRight.opSpline = false;
+			tabFitRight.opSpline <<= false;
 			tabFitRight.opSpline.Enable(false);
 		} else
 			splineFirst = false;
@@ -328,7 +345,6 @@ void ProcessingTab::OnOp()
 	UpdateEquations();
 	OnShowEquation();
 }
-
 
 void ProcessingTab::OnAutoSensSector() 
 {
@@ -525,7 +541,7 @@ void ProcessingTab::OnSet()
 		return;
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
-	if (tabFreqFirst && tab.Get() == 1) {
+	if (tabFreqFirst && tab.IsAt(splitterTabFreq)) {
 		tabFreqFirst = false;
 		if (data.IsParam() || data.IsExplicit()) {
 			tabFreqLeft.comments.SetText(t_("Impossible to calculate FFT from a not sampled series"));
@@ -551,7 +567,7 @@ void ProcessingTab::OnSet()
 				tabFreqLeft.comments.SetText("");
 			tabFreqRight.samplingTime = (maxdT + mindT)/2.;
 		}
-	} else if (tabOpFirst && tab.Get() == 2) {
+	} else if (tabOpFirst && tab.IsAt(splitterTabOp)) {
 		if (pscatter->IsDeletedDataSource(id))
 			return;
 		
@@ -586,7 +602,7 @@ void ProcessingTab::OnSet()
 		tabOpLeft.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
 		tabOpLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
-	} else if (tabBestFitFirst && tab.Get() == 3) {
+	} else if (tabBestFitFirst && tab.IsAt(splitterTabBestFit)) {
 		if (pscatter->IsDeletedDataSource(id))
 			return;
 				
@@ -610,6 +626,23 @@ void ProcessingTab::OnSet()
 		tabBestFitLeft.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
 		tabBestFitLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
+	} else if (tab.IsAt(splitterTabHist)) {
+		//tabHistFirst = false;
+		if (data.IsParam() || data.IsExplicit()) {
+			tabHistLeft.comments.SetText(t_("Impossible to calculate histogram from a not sampled series"));
+			tabHistRight.butHist.Enable(false);
+		} else if (data.GetCount() < 5) {
+			tabHistLeft.comments.SetText(t_("Insufficient data to calculate histogram"));
+			tabHistRight.butHist.Enable(false);
+		} else {
+			if (~tabHistRight.axis == t_("Y")) {
+				tabHistRight.minVal <<= data.MinY();	
+				tabHistRight.maxVal <<= data.MaxY();
+			} else {
+				tabHistRight.minVal <<= data.MinX();	
+				tabHistRight.maxVal <<= data.MaxX();
+			}
+		}
 	}
 }
 
@@ -736,6 +769,40 @@ void ProcessingTab::OnFFT()
 		tabFreqLeft.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
 	
 	tabFreqLeft.comments.SetText(errText);
+}
+
+void ProcessingTab::OnHist() {
+	tabHistLeft.scatter.RemoveAllSeries();
+
+	if (tabFitLeft.scatter.IsDeletedDataSource(0))
+		return;
+	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
+
+	double minVal = ~tabHistRight.minVal;
+	double maxVal = ~tabHistRight.maxVal;
+	if (minVal >= maxVal) {
+		Exclamation(Format(t_("Min val %d has to be lower than Max val %f"), minVal, maxVal));
+		return;
+	}
+	int numVals = ~tabHistRight.numVals;
+	bool normalize = ~tabHistRight.opNormalize;
+	double valNormalize = ~tabHistRight.valNormalize;
+	bool isY = ~tabHistRight.axis == t_("Y");
+	
+	histogram.Create(data, minVal, maxVal, numVals, isY).Accumulative(~tabHistRight.opAccumulative);
+	
+	if (normalize)
+		histogram.Normalize(valNormalize);
+	
+	String legend = tabFitLeft.scatter.GetLegend(0) + String("-") + t_("Histogram");
+	tabHistLeft.scatter.AddSeries(histogram).Legend(legend).Units("#", isY ? tabFitLeft.scatter.GetUnitsY(0) : tabFitLeft.scatter.GetUnitsX(0));
+	tabHistLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
+	tabHistLeft.scatter.SetLabelX(isY ? tabFitLeft.scatter.GetLegend(0) : tabFitLeft.scatter.GetLabelX());
+	tabHistLeft.scatter.SetLabelY(t_("Number"));
+	tabHistLeft.scatter.ZoomToFit(true, true);
+	double ymax = tabHistLeft.scatter.GetYMax();
+	tabHistLeft.scatter.SetXYMin(Null, 0);
+	tabHistLeft.scatter.SetRange(Null, ymax);
 }
 
 }
