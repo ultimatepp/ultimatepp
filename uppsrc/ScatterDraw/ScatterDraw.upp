@@ -16,6 +16,8 @@ file
 	DrawingFunctions.cpp,
 	DrawingFunctions.h,
 	SeriesPlot.h,
+	Histogram.cpp,
+	Histogram.h,
 	MarkPlot.h,
 	Legend.cpp,
 	Surf.cpp,

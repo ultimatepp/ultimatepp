@@ -1290,7 +1290,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 		Upp::Index<String> xUnits, yUnits, yUnits2;
 		for (int i = 0; i < series.GetCount(); ++i) {
 			const ScatterSeries &serie = series[i]; 
-			if (serie.IsDeleted())
+			if (serie.IsDeleted() || serie.opacity == 0)
 				continue;
 			if (serie.primaryY) {
 				if (yLabel.IsEmpty()) {
