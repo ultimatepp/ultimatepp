@@ -191,8 +191,11 @@ ProcessingTab::ProcessingTab()
 	tabHistRight.numVals <<= 30;
 	tabHistRight.valNormalize <<= 100;
 	
-	//tabHistRight.opNormalize.WhenAction   = [&] {tabHistRight.valNormalize.Enable(~tabHistRight.opNormalize);};
-	//tabHistRight.opNormalize.WhenAction();
+	tabHistRight.opNormalize.WhenAction   = [&] {
+		tabHistRight.valNormalize.Enable(~tabHistRight.opNormalize);
+		tabHistRight.labNormalize.Enable(~tabHistRight.opNormalize);
+	};
+	tabHistRight.opNormalize.WhenAction();
 	
 	tabFreqFirst = tabOpFirst = tabBestFitFirst = tabHistFirst = true;
 	avgFirst = linearFirst = cuadraticFirst = cubicFirst = sinusFirst = sinusTendFirst = splineFirst = true;
@@ -795,7 +798,9 @@ void ProcessingTab::OnHist() {
 		histogram.Normalize(valNormalize);
 	
 	String legend = tabFitLeft.scatter.GetLegend(0) + String("-") + t_("Histogram");
-	tabHistLeft.scatter.AddSeries(histogram).Legend(legend).Units("#", isY ? tabFitLeft.scatter.GetUnitsY(0) : tabFitLeft.scatter.GetUnitsX(0));
+	tabHistLeft.scatter.AddSeries(histogram).Legend(legend).Units(normalize ? "%" : "#", isY ? tabFitLeft.scatter.GetUnitsY(0) : tabFitLeft.scatter.GetUnitsX(0));
+	if (~tabHistRight.opStaggered)
+		tabHistLeft.scatter.PlotStyle<StaggeredSeriesPlot>().Dash("").NoMark().Fill(Blue()).Opacity(0.3).Stroke(2, LtBlue());
 	tabHistLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	tabHistLeft.scatter.SetLabelX(isY ? tabFitLeft.scatter.GetLegend(0) : tabFitLeft.scatter.GetLabelX());
 	tabHistLeft.scatter.SetLabelY(t_("Number"));
