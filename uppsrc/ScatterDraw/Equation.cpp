@@ -624,6 +624,7 @@ INITBLOCK {
 	ExplicitEquation::Register<FourierEquation4>("FourierEquation4");
 	ExplicitEquation::Register<WeibullEquation>("WeibullEquation");
 	ExplicitEquation::Register<WeibullCumulativeEquation>("WeibullCumulativeEquation");
+	ExplicitEquation::Register<NormalEquation>("NormalEquation");
 }
 
 }

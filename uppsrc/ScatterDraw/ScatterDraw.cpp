@@ -477,9 +477,9 @@ String ScatterDraw::VariableFormat(double range, double d) {
 Color ScatterDraw::GetNewColor(int index, int version) {
 	Color old[20] = {LtBlue(), LtRed(), LtGreen(), Black(), LtGray(), Brown(), Blue(), Red(), Green(), Gray(), 
 					 LtBlue(), LtRed(), LtGreen(), Black(), LtGray(), Brown(), Blue(), Red(), Green(), Gray()};
-	// Colors from http://tools.medialab.sciences-po.fr/iwanthue/
+	// Colours from http://tools.medialab.sciences-po.fr/iwanthue/
 	Color nwc[20] = {Color(197,127,117), Color(115,214,74), Color(205,80,212), Color(124,193,215), Color(85,82,139),
-					 Color(63,72,41), Color(109,212,161), Color(207,72,48), Color(209,206,59), Color(194,134,55),
+					 Color(109,212,161), Color(207,72,48), Color(209,206,59), Color(194,134,55), Color(63,72,41), 
 					 Color(201,63,109), Color(193,192,158), Color(91,134,56), Color(105,48,38), Color(201,170,200),
 					 Color(86,117,119), Color(188,91,165), Color(124,120,216), Color(195,208,119), Color(79,46,75)};
 	if (index < 20) {
@@ -1145,6 +1145,7 @@ void ScatterDraw::Show(int index, bool show) {
 	ASSERT(!series[index].IsDeleted());
 	
 	series[index].opacity = show ? 1 : 0;
+	labelsChanged = true;
 	Refresh();
 }
 

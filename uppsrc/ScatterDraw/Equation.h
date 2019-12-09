@@ -366,6 +366,40 @@ private:
 	double factor;
 };
 
+class NormalEquation : public ExplicitEquation {
+public:
+	NormalEquation() 						{SetCoeff(1, 1, 1);}
+	NormalEquation(double c, double mean, double std)	{SetCoeff(c, mean, std);}
+	double f(double x) {
+		double c    = coeff[0];
+		double mean = coeff[1];
+		double std  = coeff[2];
+		return c*exp(-0.5*sqr((x - mean)/std))/(std*sqrt(2*M_PI));
+	}
+	virtual String GetName() 					{return t_("Normal");}
+	virtual String GetEquation(int numDigits = 3) {
+		String c = FormatCoeff(0, numDigits);
+		String mean = FormatCoeff(1, numDigits);
+		String std = FormatCoeff(2, numDigits);
+		String ret = Format("%s/(%s*sqrt(2*PI))*e^(-1/2((x-%s)/%s))", c, std, mean, std);
+		ret.Replace("+ -", "- ");
+		return ret;
+	}	
+	virtual void GuessCoeff(DataSource &) {}
+	virtual void _GuessCoeff(DataSource &series) {
+		double mean = series.AvgX();
+		double std = series.StdDevX();
+		double c = series.MaxY()*std*sqrt(2*M_PI);
+		SetCoeff(c, mean, std);
+	}
+	FitError Fit(DataSource &series, double &r2) {
+		_GuessCoeff(series);
+		return ExplicitEquation::Fit(series, r2);
+	}
+	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
+	void SetDegree(int )					{NEVER();}
+};
+
 class Rational1Equation : public ExplicitEquation {
 public:
 	Rational1Equation() 				{SetCoeff(1, 0, 0);}
