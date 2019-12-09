@@ -287,6 +287,27 @@ LAYOUT(ProcessingTabBestFitRight, 332, 428)
 	ITEM(Label, dv___7, SetLabel(t_("User equation:")).LeftPosZ(4, 88).BottomPosZ(5, 19))
 END_LAYOUT
 
+LAYOUT(ProcessingTabHistogramLeft, 428, 420)
+	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaBottomMargin(40).ShowContextMenu(true).ShowPropertiesDlg(true).ShowProcessDlg(true).ShowButtons(true).HSizePosZ(0, 0).VSizePosZ(0, 20))
+	ITEM(Label, comments, HSizePosZ(0, 4).BottomPosZ(1, 19))
+END_LAYOUT
+
+LAYOUT(ProcessingTabHistogramRight, 124, 424)
+	ITEM(Label, dv___0, SetLabel(t_("Max:")).HSizePosZ(4, 68).TopPosZ(96, 19))
+	ITEM(EditDouble, maxVal, HSizePosZ(56, 4).TopPosZ(96, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Min:")).HSizePosZ(4, 68).TopPosZ(72, 19))
+	ITEM(EditDouble, minVal, HSizePosZ(56, 4).TopPosZ(72, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Number: ")).HSizePosZ(4, 68).TopPosZ(48, 19))
+	ITEM(EditInt, numVals, Min(1).HSizePosZ(56, 4).TopPosZ(48, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Axis")).HSizePosZ(4, 4).TopPosZ(4, 19))
+	ITEM(DropList, axis, HSizePosZ(4, 4).TopPosZ(24, 19))
+	ITEM(Button, butHist, SetLabel(t_("Histogram")).HSizePosZ(4, 4).TopPosZ(200, 20))
+	ITEM(Label, dv___9, SetLabel(t_("Val:")).LeftPosZ(12, 36).TopPosZ(164, 19))
+	ITEM(EditDouble, valNormalize, Min(0).HSizePosZ(56, 12).TopPosZ(164, 19))
+	ITEM(OptionBox, opNormalize, AutoBox(true).SetLabel(t_("Normalize")).HSizePosZ(4, 4).TopPosZ(144, 48))
+	ITEM(Option, opAccumulative, SetLabel(t_("Accumulative")).LeftPosZ(4, 88).TopPosZ(120, 16))
+END_LAYOUT
+
 LAYOUT(FontSelector, 208, 76)
 	ITEM(DropList, face, LeftPosZ(4, 140).TopPosZ(4, 19))
 	ITEM(DropList, height, LeftPosZ(148, 54).TopPosZ(4, 19))
