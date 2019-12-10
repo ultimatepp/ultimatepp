@@ -93,6 +93,7 @@ struct Pdb : Debugger, ParentCtrl {
 	struct Val : Moveable<Val, TypeInfo> {
 		bool   array = false;
 		bool   rvalue = false; // data is loaded from debugee (if false, data pointed to by address)
+		bool   udt = false; // user defined type (e.g. struct..)
 		byte   bitpos = 0;
 		byte   bitcnt = 0;
 		int    reported_size = 0; // size of symbol, can be 0 - unknown, useful for C fixed size arrays
