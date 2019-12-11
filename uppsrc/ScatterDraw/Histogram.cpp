@@ -106,7 +106,7 @@ Histogram &Histogram::Create(DataSource &data, double min, double max, int numVa
 	ranges[0].SetCount(numVals);
 	double delta = (max - min)/numVals;
 	for (int ii = 0; ii < numVals; ++ii) 
-		ranges[0][ii] = (ii + 1)*delta;
+		ranges[0][ii] = min + (ii + 0.5)*delta;
 	
 	int64 total = data.GetCount();
 	totalVals = 0;
