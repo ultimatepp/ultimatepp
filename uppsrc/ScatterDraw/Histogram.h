@@ -125,7 +125,7 @@ public:
 	}
 	inline double x(int64 id) {
 		ASSERT(values.size());	
-		return id == 0 ? ranges[0][0]/2 : (ranges[0][int(id)] + ranges[0][int(id)-1])/2.;
+		return ranges[0][int(id)];
 	}
 	inline virtual int64 GetCount() const {return !values.size() ? 0 : values.size();};
 	
