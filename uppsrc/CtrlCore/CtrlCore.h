@@ -912,6 +912,8 @@ public:
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;
+	template <class T>
+	T               *GetAscendant() const;
 
 	int              GetViewChildIndex(const Ctrl *child) const;
 	int              GetViewChildCount() const;
@@ -1661,6 +1663,16 @@ void WriteClipboardHTML(const String& html);
 #include <CtrlCore/TopWindow.h>
 
 #include GUIPLATFORM_INCLUDE_AFTER
+
+template <class T>
+T *Ctrl::GetAscendant() const
+{
+	T *main;
+	for(Ctrl *p = GetParent(); p; p = p->GetParent())
+		if(T *a = dynamic_cast<T*>(p))
+			return a;
+	return NULL;
+}
 
 }
 
