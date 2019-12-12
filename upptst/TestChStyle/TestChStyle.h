@@ -11,6 +11,10 @@ using namespace Upp;
 class TestChStyle : public WithTestChStyleLayout<TopWindow> {
 public:
 	typedef TestChStyle CLASSNAME;
+	
+	ToolBar bar;
+	MenuBar menu;
+
 	TestChStyle();
 };
 
