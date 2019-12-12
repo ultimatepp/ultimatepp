@@ -42,6 +42,9 @@ TestChStyle::TestChStyle()
 
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
+	
+	AddFrame(bar);
+	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {}).Tip("This is test"); });
 }
 
 GUI_APP_MAIN
