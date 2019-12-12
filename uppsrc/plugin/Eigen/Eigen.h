@@ -7,10 +7,10 @@
 #define EIGEN_DENSEBASE_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
 #define EIGEN_TENSOR_PLUGIN		<plugin/Eigen/ToStringPlugin.h>
 
-#ifndef flagSSE2
- #define EIGEN_DONT_VECTORIZE
- #define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
-#endif
+//#ifndef flagSSE2
+// #define EIGEN_DONT_VECTORIZE
+// #define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+//#endif
 
 #ifndef _DEBUG
 #define EIGEN_NO_DEBUG
@@ -26,20 +26,19 @@
 #include <plugin/Eigen/unsupported/Eigen/FFT>
 #include <plugin/Eigen/unsupported/Eigen/CXX11/Tensor>
 
+
 namespace Upp {
 
-using namespace Eigen;
-
-template<typename _Scalar, ptrdiff_t nx = Dynamic, ptrdiff_t ny = Dynamic>
+template<typename _Scalar, ptrdiff_t nx = Eigen::Dynamic, ptrdiff_t ny = Eigen::Dynamic>
 struct NonLinearOptimizationFunctor {
 	typedef _Scalar Scalar;
 	enum {
 		InputsAtCompileTime = nx,
 		ValuesAtCompileTime = ny
 	};
-	typedef Matrix<double, InputsAtCompileTime, 1> InputType;
-	typedef Matrix<double, ValuesAtCompileTime, 1> ValueType;
-	typedef Matrix<double, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
+	typedef Eigen::Matrix<double, InputsAtCompileTime, 1> InputType;
+	typedef Eigen::Matrix<double, ValuesAtCompileTime, 1> ValueType;
+	typedef Eigen::Matrix<double, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
 	
 	int64 unknowns, datasetLen;
 	
@@ -48,7 +47,7 @@ struct NonLinearOptimizationFunctor {
 	
 	ptrdiff_t inputs() const {return ptrdiff_t(unknowns);}
 	ptrdiff_t values() const {return ptrdiff_t(datasetLen);}
-	virtual void operator() (const InputType& x, ValueType* v, JacobianType* j = 0) const {};
+	virtual void operator() (const InputType& , ValueType* , JacobianType*  = 0) const {};
 };
 
 template <class T>

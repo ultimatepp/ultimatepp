@@ -329,6 +329,7 @@ file
 	unsupported/Eigen/src/SparseExtra/SimplicialCholesky.h,
 	unsupported/Eigen/src/SparseExtra/Solve.h,
 	unsupported/Eigen/src/SparseExtra/SparseLDLTLegacy.h,
+	unsupported\Eigen\CXX11\Tensor,
 	unsupported/Eigen/src/SparseExtra/SparseLLT.h,
 	unsupported/Eigen/src/SparseExtra/SparseLU.h,
 	unsupported/Eigen/src/SparseExtra/SuperLUSupport.h,
