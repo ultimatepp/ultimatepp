@@ -83,7 +83,7 @@ public:
 		{GetSpectralMoments(&DataSource::y, &DataSource::x, frequency, m_1, m0, m1, m2);}
 		
 	Vector<double> SortDataY() 				{return SortData(&DataSource::y);}
-	Vector<double> PercentileY(double rate) 	{return Percentile(&DataSource::y, rate);}
+	Vector<double> PercentileY(double rate) {return Percentile(&DataSource::y, rate);}
 	double PercentileAvgY(double rate) 		{return PercentileAvg(&DataSource::y, rate);}
 	
 	double Min(Getdatafun getdata, int64& id);

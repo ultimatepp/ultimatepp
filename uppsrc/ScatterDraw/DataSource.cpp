@@ -5,7 +5,7 @@
 #include <ScatterDraw/Pedantic.h>
 
 namespace Upp {
-
+using namespace Eigen;
 
 #define Membercall(fun)	(this->*fun)
 
@@ -500,7 +500,7 @@ Vector<Pointf> FFTSimple(VectorXd &data, double tSample, bool frequency, int typ
     Vector<Pointf> res;
     VectorXcd freqbuf;
     try {
-	    Eigen::FFT<double> fft;
+	    FFT<double> fft;
 	    fft.SetFlag(fft.HalfSpectrum);
 	    fft.fwd(freqbuf, data);
     } catch(...) {
@@ -755,7 +755,8 @@ Vector<double> DataSource::Percentile(Getdatafun getdata, double rate) {
 	Vector<double> ret;
 	for (int i = 0; i < num; ++i) {
 		double val = data[i];
-		ret << data[i];	
+		if (!IsNull(val))
+			ret << data[i];	
 	}
 	return ret;
 }
@@ -763,8 +764,11 @@ Vector<double> DataSource::Percentile(Getdatafun getdata, double rate) {
 double DataSource::PercentileAvg(Getdatafun getdata, double rate) {
 	Vector<double> data = Percentile(getdata, rate);	
 	double ret = 0;
-	for (int i = 0; i < data.GetCount(); ++i)
-		ret += data[i];
+	for (int i = 0; i < data.GetCount(); ++i) {
+		double val = data[i];
+		if (!IsNull(val))
+			ret += val;
+	}
 	return ret/data.GetCount();
 }
 
