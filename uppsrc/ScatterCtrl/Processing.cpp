@@ -190,6 +190,7 @@ ProcessingTab::ProcessingTab()
 	tabHistRight.butHist <<= THISBACK(OnHist);
 	tabHistRight.numVals <<= 30;
 	tabHistRight.valNormalize <<= 100;
+	tabHistRight.opStaggered <<= true;
 	
 	tabHistRight.opNormalize.WhenAction   = [&] {
 		tabHistRight.valNormalize.Enable(~tabHistRight.opNormalize);
@@ -798,7 +799,10 @@ void ProcessingTab::OnHist() {
 		histogram.Normalize(valNormalize);
 	
 	String legend = tabFitLeft.scatter.GetLegend(0) + String("-") + t_("Histogram");
-	tabHistLeft.scatter.AddSeries(histogram).Legend(legend).Units(normalize ? "%" : "#", isY ? tabFitLeft.scatter.GetUnitsY(0) : tabFitLeft.scatter.GetUnitsX(0));
+	tabHistLeft.scatter.AddSeries(histogram).Legend(legend).NoMark().
+		Units(normalize ? "x" + FormatDouble(valNormalize) : "#", isY ? 
+											tabFitLeft.scatter.GetUnitsY(0) : 
+											tabFitLeft.scatter.GetUnitsX(0));
 	if (~tabHistRight.opStaggered)
 		tabHistLeft.scatter.PlotStyle<StaggeredSeriesPlot>().Dash("").NoMark().Fill(Blue()).Opacity(0.3).Stroke(2, LtBlue());
 	tabHistLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
