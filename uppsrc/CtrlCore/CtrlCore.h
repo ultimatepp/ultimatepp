@@ -1667,7 +1667,6 @@ void WriteClipboardHTML(const String& html);
 template <class T>
 T *Ctrl::GetAscendant() const
 {
-	T *main;
 	for(Ctrl *p = GetParent(); p; p = p->GetParent())
 		if(T *a = dynamic_cast<T*>(p))
 			return a;

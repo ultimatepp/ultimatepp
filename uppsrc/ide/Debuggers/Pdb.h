@@ -469,7 +469,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      SetTree(const String& exp);
 	void      SetTreeA(ArrayCtrl *data);
 	void      PrettyTreeNode(int parent, Pdb::Val val, int64 from = 0);
-	void      TreeNode(int parent, const String& name, Val val);
+	bool      TreeNode(int parent, const String& name, Val val, int64 from = 0);
 	void      TreeExpand(int node);
 	String    StoreTree(int parent);
 	void      SaveTree();

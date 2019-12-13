@@ -65,22 +65,29 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 	catch(CParser::Error e) {}
 }
 
-void Pdb::TreeNode(int parent, const String& name, Pdb::Val val)
+bool Pdb::TreeNode(int parent, const String& name, Pdb::Val val, int64 from)
 {
 	PrettyTreeNode(parent, val);
 	NamedVal nv;
 	nv.name = name;
 	nv.val = val;
+	nv.from = from;
 	Visual v;
+	bool r = true;
 	try {
-		v.Cat(name + "=", SGray);
-		Visualise(v, val, 0);
+		v.Cat(name);
+		if(!from) {
+			v.Cat("=", SGray);
+			Visualise(v, val, 0);
+		}
 	}
 	catch(LengthLimit) {}
 	catch(CParser::Error e) {
 		v.Cat(e, SColorDisabled);
+		r = false;
 	}
 	tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(v)), val.type >= 0 || val.ref > 0);
+	return r;
 }
 
 void Pdb::TreeExpand(int node)
@@ -97,17 +104,27 @@ void Pdb::TreeExpand(int node)
 		TreeNode(node, "value", val);
 		return;
 	}
+	if(nv.val.ref > 0) {
+		Val val0 = val;
+		val = DeRef(val);
+		if(val.type < 0 || val.ref > 0) {
+			int sz = SizeOfType(val.type);
+			val.address += sz * nv.from;
+			for(int i = 0; i < (nv.from ? 10000 : 20); i++) {
+				if(!TreeNode(node, String() << "[" << i + nv.from << "]" , val)) {
+					SaveTree();
+					return;
+				}
+				val.address += sz;
+			}
+			TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 20);
+			return;
+		}
+	}
+	else
 	if(nv.from > 0) {
 		PrettyTreeNode(node, val, nv.from);
 		return;
-	}
-	if(nv.val.ref > 0) {
-		val = DeRef(val);
-		if(val.type < 0 || val.ref > 0) {
-			TreeNode(node, '*' + nv.name, val);
-			SaveTree();
-			return;
-		}
 	}
 	if(val.type < 0) {
 		SaveTree();
@@ -263,7 +280,8 @@ void Pdb::SetTree(const String& exp)
 
 	Visual v;
 	try {
-		v.Cat(n + "=", SGray);
+		v.Cat(n, SBlack);
+		v.Cat("=", SGray);
 		Visualise(v, nv.val, 0);
 	}
 	catch(LengthLimit) {}
