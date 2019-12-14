@@ -148,7 +148,11 @@ void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 
 	BOOL reference;
 	dword dw = 0;
+#ifdef COMPILER_MINGW
+	SymGetTypeInfo(hProcess, modbase, typeId, (IMAGEHLP_SYMBOL_TYPE_INFO)31, &reference);
+#else
 	SymGetTypeInfo(hProcess, modbase, typeId, TI_GET_IS_REFERENCE, &reference);
+#endif
 	v.reference = reference;
 
 	for(;;) {
