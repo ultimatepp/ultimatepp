@@ -293,7 +293,6 @@ void Pdb::SetTree(const String& exp)
 	String n = exp;
 	if(nv.val.type >= 0)
 		n = GetType(nv.val.type).name;
-	tree.SetDisplay(Single<VisualDisplay>());
 
 	Visual v;
 	try {
@@ -305,6 +304,7 @@ void Pdb::SetTree(const String& exp)
 	catch(CParser::Error e) {
 		v.Cat(e, SColorDisabled);
 	}
+	tree.SetDisplay(Single<VisualDisplay>());
 
 	tree.SetRoot(Null, RawToValue(nv), RawPickToValue(pick(v)));
 	if(nv.val.type >= 0) {
@@ -344,6 +344,32 @@ void Pdb::SetTree(const String& exp)
 void Pdb::SetTreeA(ArrayCtrl *array)
 {
 	SetTree(array->Get(0));
+}
+
+String Pdb::GetTreeText(int id)
+{
+	return tree.GetValue(id).To<Visual>().GetString();
+}
+
+void Pdb::GetTreeText(String& r, int id, int depth) {
+	int n = tree.GetChildCount(id);
+	r << String('\t', depth) << GetTreeText(id) << "\n";
+	for(int i = 0; i < n; i++)
+		GetTreeText(r, tree.GetChild(id, i), depth + 1);
+}
+
+void Pdb::TreeMenu(Bar& bar)
+{
+	bar.Add(tree.IsCursor(), "Copy", [=] {
+		ClearClipboard();
+		AppendClipboardText(GetTreeText(tree.GetCursor()));
+	});
+	bar.Add(tree.IsCursor(), "Copy all", [=] {
+		ClearClipboard();
+		String r;
+		GetTreeText(r, 0, 0);
+		AppendClipboardText(r);
+	});
 }
 
 #endif
