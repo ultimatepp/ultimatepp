@@ -472,6 +472,9 @@ struct Pdb : Debugger, ParentCtrl {
 	void      PrettyTreeNode(int parent, Pdb::Val val, int64 from = 0);
 	bool      TreeNode(int parent, const String& name, Val val, int64 from = 0);
 	void      TreeExpand(int node);
+	String    GetTreeText(int id);
+	void      GetTreeText(String& r, int id, int depth);
+	void      TreeMenu(Bar& bar);
 	void      StoreTree(StringBuffer& r, int parent);
 	void      SaveTree();
 	int       FindChild(int parent, String id);

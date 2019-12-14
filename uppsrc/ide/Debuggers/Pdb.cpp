@@ -343,6 +343,7 @@ Pdb::Pdb()
 	threadlist <<= THISBACK(SetThread);
 
 	tree.WhenOpen = THISBACK(TreeExpand);
+	tree.WhenBar = THISFN(TreeMenu);
 	
 	rpane.Add(disas.SizePos());
 	rpane.Add(tree.SizePos());
