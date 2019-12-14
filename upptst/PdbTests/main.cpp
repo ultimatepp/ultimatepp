@@ -270,7 +270,7 @@ GUI_APP_MAIN
 		WString h = "test";
 		std::wstring x = h.ToStd();
 		for(int i = 0; i < 10; i++)
-			x.append(~h);
+			x.append((wchar_t*)~h);
 	}
 	
 	{
