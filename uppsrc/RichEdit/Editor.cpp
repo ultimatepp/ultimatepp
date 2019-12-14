@@ -124,6 +124,8 @@ void RichEdit::Paint(Draw& w)
 		pi.sizetracking = sizetracking;
 		pi.showcodes = showcodes;
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
+		pi.hyperlink = LtBlue; // because we have white paper even in dark mode
+		
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
 		if(IsSelection()) {
