@@ -135,7 +135,7 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v)
 	}
 	else {
 		if(v.address < 10000 && !v.context)
-			ThrowError("Register value is missing context");
+			ThrowError("??"); // Register value is missing context
 		switch(v.type) { // resolve primitive value
 		READINT(BOOL1, bool)
 		READINT(UINT1, byte);

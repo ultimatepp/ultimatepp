@@ -143,7 +143,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 				dt.Clear();
 			}
 			else
-			if(val.reported_size > sz && sz > 0) {
+			if(val.reported_size > sz && sz > 0 && val.array) {
 				n = val.reported_size / sz;
 				if(n <= 40)
 					dt.Clear();

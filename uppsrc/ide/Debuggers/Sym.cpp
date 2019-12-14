@@ -248,7 +248,7 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	
 	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
-	if(param && v.udt && v.ref == 0) { // dbghelp.dll incorrectly does not report pointer for (copied) value struct params
+	if(param && v.udt && v.ref == 0 && c.pdb->win64) { // dbghelp.dll incorrectly does not report pointer for (copied) value struct params
 		v.ref++;
 		v.reference = true;
 	}
@@ -282,16 +282,6 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 
 	LLOG("GLOBAL: " << pSym->Name << " " << Format64Hex(pSym->Address));
 
-#if 0
-
-	DWORD dummy;
-	IMAGEHLP_LINE ln;
-	ln.SizeOfStruct = sizeof(ln);
-	ln.Address = pSym->Address;
-	if(SymGetLineFromAddr(c.pdb->hProcess, (uintptr_t)pSym->Address, &dummy, &ln)) {
-	}
-	else
-#endif
 	Val& v = c.pdb->global.GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;
 	v.reported_size = pSym->Size;
