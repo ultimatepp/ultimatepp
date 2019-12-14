@@ -241,6 +241,7 @@ struct Pdb : Debugger, ParentCtrl {
 	bool               first_exception = true;
 
 	VectorMap<String, String> treetype;
+	int restoring_tree = 0;
 
 	Vector<String>      exprev, exnext;
 
@@ -471,8 +472,9 @@ struct Pdb : Debugger, ParentCtrl {
 	void      PrettyTreeNode(int parent, Pdb::Val val, int64 from = 0);
 	bool      TreeNode(int parent, const String& name, Val val, int64 from = 0);
 	void      TreeExpand(int node);
-	String    StoreTree(int parent);
+	void      StoreTree(StringBuffer& r, int parent);
 	void      SaveTree();
+	int       FindChild(int parent, String id);
 	void      ExpandTreeType(int parent, CParser& p);
 
 	void      CopyStack();

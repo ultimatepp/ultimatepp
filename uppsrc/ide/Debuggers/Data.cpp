@@ -219,31 +219,40 @@ void Pdb::MemoryGoto(const String& exp)
 	}
 }
 
-
 void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 {
 	if(bar.IsScanKeys())
 		return;
+	auto CopyLine = [&](int i, ArrayCtrl& array) {
+		return String() << array.Get(i, 0) << '=' << array.Get(i, 1).To<Visual>().GetString();
+	};
+	ArrayCtrl *ap = &array;
+	bar.Add(array.IsCursor(), "Copy", [=] {
+		ClearClipboard();
+		AppendClipboardText(CopyLine(ap->GetCursor(), *ap));
+	});
+	bar.Add("Copy all", [=] {
+		ClearClipboard();
+		String s;
+		for(int i = 0; i < ap->GetCount(); i++)
+			MergeWith(s, "\n", CopyLine(i, *ap));
+		AppendClipboardText(s);
+	});
+	bar.Separator();
 	try {
 		CParser p(exp);
 		Val v = Exp(p);
 		bool sep = true;
 		if(v.ref > 0 && !v.reference) {
-			if(sep)
-				bar.Separator();
 			sep = false;
 			bar.Add("Memory at " + exp, THISBACK1(MemoryGoto, exp));
 		}
 		else
 		if(v.rvalue) {
-			if(sep)
-				bar.Separator();
 			sep = false;
 			bar.Add("Memory at 0x" + FormatIntHex((dword)GetInt64(v)), THISBACK1(MemoryGoto, "&" + exp));
 		}
 		if(!v.rvalue) {
-			if(sep)
-				bar.Separator();
 			sep = false;
 			bar.Add("Memory at &&" + exp, THISBACK1(MemoryGoto, "&" + exp));
 		}

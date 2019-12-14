@@ -8,7 +8,24 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 {
 	try {
 		Pretty pp;
-		if(PrettyVal(val, 0, 0, pp) && pp.kind == CONTAINER) {
+		if(!PrettyVal(val, 0, 0, pp))
+			return;
+		if(pp.kind == SINGLE_VALUE) {
+			Pretty p;
+			PrettyVal(val, 0, 1, p);
+			if(p.text.part.GetCount()) {
+				NamedVal nv;
+				Visual result;
+				nv.name = "$$";
+				for(const VisualPart& vp : p.text.part)
+					result.Cat(vp.text, vp.ink);
+				tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(result)), false);
+			}
+			else
+			if(p.data_type.GetCount() && p.data_ptr.GetCount())
+				PrettyTreeNode(parent, MakeVal(p.data_type[0], p.data_ptr[0]), from);
+		}
+		if(pp.kind == CONTAINER) {
 			int n = int(min(pp.data_count, from + 10000) - from);
 			Pretty p;
 			PrettyVal(val, from, n, p);
@@ -94,164 +111,164 @@ void Pdb::TreeExpand(int node)
 {
 	if(tree.GetChildCount(node))
 		return;
-	Value v = tree.Get(node);
-	if(!v.Is<NamedVal>())
-		return;
-	const NamedVal& nv = ValueTo<NamedVal>(tree.Get(node));
-	Val val = nv.val;
-	if(nv.key.type != UNKNOWN) {
-		TreeNode(node, "key", nv.key);
-		TreeNode(node, "value", val);
-		return;
-	}
-	if(nv.val.ref > 0) {
-		Val val0 = val;
-		val = DeRef(val);
-		if(val.type < 0 || val.ref > 0) {
-			int sz = SizeOfType(val.type);
-			val.address += sz * nv.from;
-			for(int i = 0; i < (nv.from ? 10000 : 20); i++) {
-				if(!TreeNode(node, String() << "[" << i + nv.from << "]" , val)) {
-					SaveTree();
-					return;
-				}
-				val.address += sz;
-			}
-			TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 20);
+	try {
+		Value v = tree.Get(node);
+		if(!v.Is<NamedVal>())
+			return;
+		const NamedVal& nv = ValueTo<NamedVal>(tree.Get(node));
+		Val val = nv.val;
+		if(nv.key.type != UNKNOWN) {
+			TreeNode(node, "key", nv.key);
+			TreeNode(node, "value", val);
+			SaveTree();
 			return;
 		}
-	}
-	else
-	if(nv.from > 0) {
-		PrettyTreeNode(node, val, nv.from);
-		return;
-	}
-	if(val.type < 0) {
+		if(nv.val.ref > 0) {
+			Val val0 = val;
+			val = DeRef(val);
+			if(val.type < 0 || val.ref > 0) {
+				int sz = SizeOfType(val.type);
+				val.address += sz * nv.from;
+				for(int i = 0; i < (nv.from ? 10000 : 40); i++) {
+					if(!TreeNode(node, String() << "[" << i + nv.from << "]" , val)) {
+						SaveTree();
+						return;
+					}
+					val.address += sz;
+				}
+				TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 20);
+				SaveTree();
+				return;
+			}
+		}
+		else
+		if(nv.from > 0) {
+			PrettyTreeNode(node, val, nv.from);
+			SaveTree();
+			return;
+		}
+		if(val.type < 0) {
+			SaveTree();
+			return;
+		}
+		PrettyTreeNode(node, val, 0);
+		const Type& t = GetType(val.type);
+		if(t.vtbl_typeindex == -2) {
+			int count = GetSymInfo(t.modbase, type.GetKey(val.type), TI_GET_COUNT);
+			Val prtti;
+			prtti.ref = 1;
+			prtti.type = UINT4;
+			prtti.address = val.address - 4;
+			Val rtti = GetRVal(prtti);
+			FnInfo rtf = GetFnInfo(rtti.address);
+			TreeNode(node, rtf.name, prtti);
+			for(int i = 0; i < count; i++) {
+				Val ventry;
+				ventry.type = PFUNC;
+				ventry.address = val.address + 4 * i;
+				TreeNode(node, NFormat("[%d]", i), ventry);
+			}
+			SaveTree();
+			return;
+		}
+		if(t.vtbl_typeindex >= 0) {
+			Val vtbl;
+			vtbl.ref = 1;
+			vtbl.address = val.address + t.vtbl_offset;
+			vtbl.type = t.vtbl_typeindex;
+			TreeNode(node, "virtual", vtbl);
+		}
+		for(int i = 0; i < t.base.GetCount(); i++) {
+			Val r = t.base[i];
+			r.address += val.address;
+			if(r.type >= 0) {
+				const Type& bt = GetType(r.type);
+				TreeNode(node, bt.name, r);
+			}
+		}
+		for(int i = 0; i < t.member.GetCount(); i++) {
+			Val r = t.member[i];
+			r.address += val.address;
+			TreeNode(node, t.member.GetKey(i), r);
+		}
+		for(int i = 0; i < t.static_member.GetCount(); i++) {
+			Val r = t.static_member[i];
+			TreeNode(node, t.static_member.GetKey(i), r);
+		}
 		SaveTree();
-		return;
 	}
-	const Type& t = GetType(val.type);
-	if(t.vtbl_typeindex == -2) {
-		int count = GetSymInfo(t.modbase, type.GetKey(val.type), TI_GET_COUNT);
-		Val prtti;
-		prtti.ref = 1;
-		prtti.type = UINT4;
-		prtti.address = val.address - 4;
-		Val rtti = GetRVal(prtti);
-		FnInfo rtf = GetFnInfo(rtti.address);
-		TreeNode(node, rtf.name, prtti);
-		for(int i = 0; i < count; i++) {
-			Val ventry;
-			ventry.type = PFUNC;
-			ventry.address = val.address + 4 * i;
-			TreeNode(node, NFormat("[%d]", i), ventry);
-		}
-		return;
-	}
-	if(t.vtbl_typeindex >= 0) {
-		Val vtbl;
-		vtbl.ref = 1;
-		vtbl.address = val.address + t.vtbl_offset;
-		vtbl.type = t.vtbl_typeindex;
-		TreeNode(node, "virtual", vtbl);
-	}
-	for(int i = 0; i < t.base.GetCount(); i++) {
-		Val r = t.base[i];
-		r.address += val.address;
-		if(r.type >= 0) {
-			const Type& bt = GetType(r.type);
-			TreeNode(node, bt.name, r);
-		}
-	}
-	for(int i = 0; i < t.member.GetCount(); i++) {
-		Val r = t.member[i];
-		r.address += val.address;
-		TreeNode(node, t.member.GetKey(i), r);
-	}
-	for(int i = 0; i < t.static_member.GetCount(); i++) {
-		Val r = t.static_member[i];
-		TreeNode(node, t.static_member.GetKey(i), r);
-	}
+	catch(LengthLimit) {}
+	catch(CParser::Error e) {}
 }
 
-String Pdb::StoreTree(int parent)
+void Pdb::StoreTree(StringBuffer& result, int parent)
 {
-	String result;
 	int n = tree.GetChildCount(parent);
 	for(int i = 0; i < n; i++) {
 		int child = tree.GetChild(parent, i);
+		bool first = true;
 		if(tree.IsOpen(child)) {
 			const NamedVal& nv = ValueTo<NamedVal>(tree.Get(child));
-			if(!IsNull(result))
-				result << ';';
-			result << nv.name;
-			String w = StoreTree(child);
-			if(!IsNull(w))
-				result << '{' << w << '}';
+			if(!first)
+				result << ";";
+			first = false;
+			result << " " << AsCString(nv.name) << " {";
+			StoreTree(result, child);
+			result << "}";
 		}
 	}
-	return result;
 }
 
 void Pdb::SaveTree()
 {
+	if(restoring_tree)
+		return;
 	Value v = tree.Get(0);
 	if(!IsType<NamedVal>(v))
 		return;
 	const NamedVal& nv = ValueTo<NamedVal>(v);
 	if(nv.val.type < 0)
 		return;
-	String w;
+	StringBuffer w;
 	Point p = tree.GetScroll();
-	w << p.x << ' ' << p.y << ' ' << tree.GetCursor() << ' ' << StoreTree(0);
-	treetype.GetAdd(GetType(nv.val.type).name) = w;
-	LOG("SaveTree " << GetType(nv.val.type).name << ' ' << w);
+	w << p.x << ' ' << p.y << ' ';
+	int id = tree.GetCursor();
+	Vector<String> cursor;
+	while(id >= 0) {
+		const NamedVal& nv = ValueTo<NamedVal>(tree.Get(id));
+		cursor.Add(AsCString(nv.name));
+		id = tree.GetParent(id);
+	}
+	Reverse(cursor);
+	w << Join(cursor, ";") << ": ";
+	StoreTree(w, 0);
+	String r = w;
+	treetype.GetAdd(GetType(nv.val.type).name) = r;
+	LOG("SaveTree " << GetType(nv.val.type).name << ' ' << r);
+}
+
+int Pdb::FindChild(int parent, String id)
+{
+	int n = tree.GetChildCount(parent);
+	for(int i = 0; i < n; i++) {
+		int child = tree.GetChild(parent, i);
+		const NamedVal& nv = ValueTo<NamedVal>(tree.Get(child));
+		if(nv.name == id)
+			return child;
+	}
+	return -1;
 }
 
 void Pdb::ExpandTreeType(int parent, CParser& p)
 {
-	for(;;) {
-		String id;
-		if(p.Char('*'))
-			id = "*";
-		if(p.IsId())
-			id << p.ReadId();
-		else
-			break;
-		for(;;)
-			if(p.Char('<'))
-				id << '<';
-			else
-			if(p.Char('>'))
-				id << '>';
-			else
-			if(p.Char(','))
-				id << ',';
-			else
-			if(p.IsInt())
-				id << AsString(p.ReadInt());
-			else
-			if(p.IsString())
-				id << '\"' << FormatString(p.ReadString()) << '\"';
-			else
-			if(p.IsId())
-				id << p.ReadId();
-			else
-				break;
-		int n = tree.GetChildCount(parent);
-		for(int i = 0; i < n; i++) {
-			int child = tree.GetChild(parent, i);
-			const NamedVal& nv = ValueTo<NamedVal>(tree.Get(child));
-			if(nv.name == id) {
-				tree.Open(child);
-				if(p.Char('{')) {
-					ExpandTreeType(child, p);
-					p.PassChar('}');
-				}
-				break;
-			}
+	while(p.IsString()) {
+		int child = FindChild(parent, p.ReadString());
+		if(child >= 0) {
+			tree.Open(child);
+			p.Char('{');
+			ExpandTreeType(child, p);
+			p.Char('}');
 		}
-		p.Char(';');
 	}
 }
 
@@ -290,21 +307,34 @@ void Pdb::SetTree(const String& exp)
 	}
 
 	tree.SetRoot(Null, RawToValue(nv), RawPickToValue(pick(v)));
-	PrettyTreeNode(0, nv.val);
 	if(nv.val.type >= 0) {
 		String w = treetype.Get(n, Null);
-		LLOG("SetTree " << n << ' ' << w);
+		LOG("SetTree " << n << ' ' << w);
 		tree.Open(0);
 		CParser p(w);
 		try {
 			Point sc;
 			sc.x = p.ReadInt();
 			sc.y = p.ReadInt();
-			int cursor = p.ReadInt();
+			Vector<String> cursor;
+			while(!p.Char(':')) {
+				cursor.Add(p.ReadString());
+				p.Char(';');
+			}
+			restoring_tree++;
 			ExpandTreeType(0, p);
+			restoring_tree--;
 			tree.ScrollTo(sc);
-			if(cursor >= 0 && tree.IsValid(cursor))
-				tree.SetCursor(cursor);
+			if(cursor.GetCount()) {
+				int ii = 0;
+				for(int i = 1; i < cursor.GetCount(); i++) {
+					ii = FindChild(ii, cursor[i]);
+					if(ii < 0)
+						break;
+				}
+				if(ii >= 0)
+					tree.SetCursor(ii);
+			}
 		}
 		catch(CParser::Error) {}
 	}
