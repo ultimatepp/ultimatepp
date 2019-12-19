@@ -540,10 +540,10 @@ void ConditionVariable::Wait(Mutex& m)
 	}
 }
 
-void ConditionVariable::Wait(Mutex& m, int timeout_ms)
+bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
 	if(InitializeConditionVariable)
-		SleepConditionVariableCS(cv, &m.section, timeout_ms);
+		return SleepConditionVariableCS(cv, &m.section, timeout_ms);
 	else { // WindowsXP implementation
 		static thread_local byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
 		WaitingThread *w = new(buffer) WaitingThread;
@@ -557,9 +557,10 @@ void ConditionVariable::Wait(Mutex& m, int timeout_ms)
 			tail = w;
 		}
 		m.Leave();
-		w->sem.Wait(timeout_ms);
+		bool r = w->sem.Wait(timeout_ms);
 		m.Enter();
 		w->WaitingThread::~WaitingThread();
+		return r;
 	}
 }
 
