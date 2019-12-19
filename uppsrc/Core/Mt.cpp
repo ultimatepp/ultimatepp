@@ -637,7 +637,7 @@ RWMutex::~RWMutex()
 	pthread_rwlock_destroy(rwlock);
 }
 
-void ConditionVariable::Wait(Mutex& m, int timeout_ms)
+bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
 	struct timespec until;
 	clock_gettime(CLOCK_REALTIME, &until);
@@ -648,7 +648,7 @@ void ConditionVariable::Wait(Mutex& m, int timeout_ms)
 	until.tv_sec += until.tv_nsec / 1000000000;
 	until.tv_nsec %= 1000000000;
 
-	return pthread_cond_timedwait(cv, m.mutex, &until);
+	return pthread_cond_timedwait(cv, m.mutex, &until) == 0;
 }
 
 #ifdef PLATFORM_OSX
