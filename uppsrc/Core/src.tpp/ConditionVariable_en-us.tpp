@@ -1,5 +1,4 @@
 topic "ConditionVariable";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "ConditionVariable";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000t/25b/25@(113.42.0) [s0; [*@7;4 ConditionVariable]]}}&]
 [s3; &]
@@ -27,6 +27,12 @@ avoid possible race conditions when entering suspended state.&]
 or Broadcast. ][*@3 m][%%  has to be owned by calling thread before 
 invoking. When Signal or Broadcast are received, resumes execution 
 and reacquires ][*@3 m].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ConditionVariable`:`:Wait`(Upp`:`:Mutex`&`,int`): [@(0.0.255) void]_[* Wait](
+[_^Upp`:`:Mutex^ Mutex][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 timeout`_ms])&]
+[s2;%% Similar to single parameter Wait, but only waits for [%-*@3 timeout`_ms] 
+milliseconds before returning false on failure.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ConditionVariable`:`:Signal`(`): [@(0.0.255) void]_[* Signal]()&]
@@ -64,4 +70,4 @@ Variable`&]()&]
 [s5;:StaticConditionVariable`:`:Broadcast`(`): [@(0.0.255) void]_[* Broadcast]()&]
 [s2;%% Calls respective ConditionVariable methods.&]
 [s3; &]
-[s0; ]
+[s0; ]]

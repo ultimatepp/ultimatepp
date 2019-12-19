@@ -540,6 +540,29 @@ void ConditionVariable::Wait(Mutex& m)
 	}
 }
 
+void ConditionVariable::Wait(Mutex& m, int timeout_ms)
+{
+	if(InitializeConditionVariable)
+		SleepConditionVariableCS(cv, &m.section, timeout_ms);
+	else { // WindowsXP implementation
+		static thread_local byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
+		WaitingThread *w = new(buffer) WaitingThread;
+		{
+			Mutex::Lock __(mutex);
+			w->next = NULL;
+			if(head)
+				tail->next = w;
+			else
+				head = w;
+			tail = w;
+		}
+		m.Leave();
+		w->sem.Wait(timeout_ms);
+		m.Enter();
+		w->WaitingThread::~WaitingThread();
+	}
+}
+
 void ConditionVariable::Signal()
 {
 	if(InitializeConditionVariable)
@@ -612,6 +635,20 @@ RWMutex::RWMutex()
 RWMutex::~RWMutex()
 {
 	pthread_rwlock_destroy(rwlock);
+}
+
+void ConditionVariable::Wait(Mutex& m, int timeout_ms)
+{
+	struct timespec until;
+	clock_gettime(CLOCK_REALTIME, &until);
+	
+	until.tv_sec += timeout_ms / 1000;
+	timeout_ms %= 1000;
+	until.tv_nsec += timeout_ms * 1000000;
+	until.tv_sec += until.tv_nsec / 1000000000;
+	until.tv_nsec %= 1000000000;
+
+	return pthread_cond_timedwait(cv, m.mutex, &until);
 }
 
 #ifdef PLATFORM_OSX
