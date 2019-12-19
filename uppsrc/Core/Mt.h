@@ -124,6 +124,7 @@ class Semaphore : NoCopy {
 
 public:
 	void       Wait();
+	bool       Wait(int timeout_ms);
 	void       Release();
 #ifdef PLATFORM_WIN32
 	void       Release(int n);
