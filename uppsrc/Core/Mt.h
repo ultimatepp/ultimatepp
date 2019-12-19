@@ -205,6 +205,7 @@ class ConditionVariable {
 	
 public:
 	void Wait(Mutex& m);
+	void Wait(Mutex& m, int timeout_ms);
 	void Signal();
 	void Broadcast();
 	
@@ -261,6 +262,7 @@ class ConditionVariable {
 	
 public:
 	void Wait(Mutex& m)  { pthread_cond_wait(cv, m.mutex); }
+	void Wait(Mutex& m, int timeout_ms);
 
 	void Signal()        { pthread_cond_signal(cv); }
 	void Broadcast()     { pthread_cond_broadcast(cv); }
