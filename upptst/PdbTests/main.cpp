@@ -39,7 +39,7 @@ struct Val : Moveable<Val, TypeInfo> {
 Val DeRef(Val val_v)
 {
 	DDUMP(&val_v);
-	val_v.ref--;
+	val_v.ref--; // todo; DBGHELP problem here
 	val_v.rvalue = false;
 	return val_v;
 }
@@ -71,9 +71,22 @@ void Test3(String *ptr_s)
 	DDUMP(ptr_s);
 	DUMP(*ptr_s);
 }
-
 GUI_APP_MAIN
 {
+	{
+		Vector<int> x;
+		for(int i = 0; i < 100000; i++)
+			x.Add(i);
+		int *h = x;
+		h = NULL;
+	}
+	{
+		Tuple<int, int *> h;
+		int q[] = { 1, 2, 3, 4, 5 };
+		h.b = q;
+		h.a = 123456789;
+		h.b = NULL;
+	}
 	{
 		Value a = Rectf(1, 1, 1, 1);
 		Value b = Rectf(1, 2, 3, 4);
