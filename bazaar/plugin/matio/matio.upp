@@ -32,3 +32,4 @@ file
 	lib\matioConfig.h,
 	Copying;
 
+ spellcheck_comments "EN-GB"

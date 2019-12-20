@@ -3,6 +3,7 @@
 
 #include "./lib/matio.h"
 
+namespace Upp {
 
 template<class T> void GetTypeCode 				(enum matio_classes &class_type, enum matio_types &data_type) {
 	NEVER_("Class unsupported");
@@ -36,7 +37,8 @@ template<> void inline GetTypeCode<const char *> (enum matio_classes &class_type
 template <class T>
 class MatMatrix {
 public:
-	MatMatrix() : rows(0), cols(0) {}
+	MatMatrix() : rows(0), cols(0) 			{}
+	MatMatrix(int rows, int cols)  			{Alloc(rows, cols);}
 	MatMatrix(const Nuller&)               	{rows = cols = 0;}
 	bool IsNullInstance() const    			{return rows == 0 && cols == 0; }
 	
@@ -100,7 +102,7 @@ public:
 	
 	const char *GetName()		{ASSERT(var != NULL); return var->name;}
 	
-	enum matio_types GetType() 	{ASSERT(var != NULL); return var->data_type;}
+	enum matio_classes GetType() 	{ASSERT(var != NULL); return var->class_type;}
 	
 	const char* GetTypeString();
 
@@ -133,12 +135,12 @@ public:
 	bool IsLoaded() {return var != 0;}
 	
 	
-	bool VarWriteStruct(String name, MatVar &val) {
-		return NULL != Mat_VarSetStructFieldByName(var, name, 0, val.var); 
+	void VarWriteStruct(String name, MatVar &val) {
+		Mat_VarSetStructFieldByName(var, name, 0, val.var); 
 	}
 	
 	template <class T>
-	bool VarWriteStruct(String name, void *data, int numRows, int numCols, int index) {
+	void VarWriteStruct(String name, void *data, int numRows, int numCols, int index) {
 		int numDim = 2;
 		if (IsNull(numCols)) 
 			numDim = 1;
@@ -153,25 +155,25 @@ public:
 		GetTypeCode<T>(class_type, data_type);
 		
 		matvar_t *variable = Mat_VarCreate(name, class_type, data_type, numDim, dims, data, 0);
-		return NULL != Mat_VarSetStructFieldByName(var, name, index, variable); 
+		Mat_VarSetStructFieldByName(var, name, index, variable); 
 	}
 
 	template <class T>
-	bool VarWriteStruct(String name, MatMatrix<T> &data, int index = 0) {
-		return VarWriteStruct<T>(name, data, data.GetRows(), data.GetCols(), index);
+	void VarWriteStruct(String name, MatMatrix<T> &data, int index = 0) {
+		VarWriteStruct<T>(name, data, data.GetRows(), data.GetCols(), index);
 	}
 	
-	bool VarWriteStruct(String name, String data, int index = 0) {
-		return VarWriteStruct<String>(name, (void *)data.Begin(), 1, data.GetCount(), index);
+	void VarWriteStruct(String name, String data, int index = 0) {
+		VarWriteStruct<String>(name, (void *)data.Begin(), 1, data.GetCount(), index);
 	}
 
-	bool VarWriteStruct(String name, const char *data, int index = 0) {
-		return VarWriteStruct<String>(name, (void *)data, 1, (int)strlen(data), index);
+	void VarWriteStruct(String name, const char *data, int index = 0) {
+		VarWriteStruct<String>(name, (void *)data, 1, (int)strlen(data), index);
 	}
 
 	template <class T>
-	bool VarWriteStruct(String name, T data, int index = 0) {
-		return VarWriteStruct<T>(name, &data, 1, Null, index);
+	void VarWriteStruct(String name, T data, int index = 0) {
+		VarWriteStruct<T>(name, &data, 1, Null, index);
 	}
 	
 private:
@@ -190,10 +192,19 @@ public:
 	~MatFile();
 	
 	bool Create(String fileName, mat_ft version = MAT_FT_MAT5);
+	void Close();
 	
 	bool OpenRead(String fileName) 	{return Open(fileName, MAT_ACC_RDONLY);}
 	bool OpenWrite(String fileName) {return Open(fileName, MAT_ACC_RDWR);}
 	bool IsOpen()					{return !!mat;}
+	bool OpenCreate(String fileName, enum mat_ft mat_file_ver) {
+		if (mat != NULL)
+			Mat_Close(mat);
+	
+		mat = Mat_CreateVer(fileName, "BEMRosetta", mat_file_ver);
+			    
+    	return !!mat;
+	}
 	
 	mat_ft GetVersion() {
 		ASSERT(mat != NULL);
@@ -355,7 +366,7 @@ public:
 	}
 	
 	bool VarWrite(MatVar &var, bool compression = true) {
-		if (0 != Mat_VarWrite(mat, var.var, MAT_COMPRESSION_NONE))
+		if (0 != Mat_VarWrite(mat, var.var, compression ? MAT_COMPRESSION_NONE : MAT_COMPRESSION_ZLIB))
 			return false;
 		return true;
 	}
@@ -381,7 +392,7 @@ public:
 		matvar_t *var = Mat_VarCreate(name, class_type, data_type, numDim, dims, data, MAT_F_DONT_COPY_DATA);
 		if (var == NULL)
 			return false;
-		if (0 != Mat_VarWrite(mat, var, MAT_COMPRESSION_NONE))
+		if (0 != Mat_VarWrite(mat, var, compression ? MAT_COMPRESSION_NONE : MAT_COMPRESSION_ZLIB))
 			return false;
 		return true;
 	}
@@ -393,7 +404,7 @@ public:
 	
 	template <class T>
 	bool VarWrite(String name, T data, bool compression = true) {
-		return VarWrite<T>(name, data, 1, Null, compression);
+		return VarWrite<T>(name, &data, 1, Null, compression);
 	}
 	
 	bool VarWrite(String name, String data, bool compression = true) {
@@ -474,6 +485,7 @@ MatMatrix<std::complex<double>> MatFile::VarReadMat(MatVar &var) {return VarRead
 template <> inline
 MatMatrix<std::complex<long double>> MatFile::VarReadMat(MatVar &var) {return VarReadMatComplex<long double>(var);}
 
+}
 	
 #endif
 

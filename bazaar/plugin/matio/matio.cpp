@@ -1,10 +1,10 @@
 #include <Core/Core.h>
 
-using namespace Upp;
-
 #include "matio.h"
 #include "lib/matioConfig.h"
 
+namespace Upp {
+	
 MatFile::MatStatic MatFile::cons;
 
 
@@ -45,11 +45,15 @@ int MatVar::GetCount() {
 	return ret;
 }
 
-
-
 MatFile::~MatFile() {
-	if (mat != NULL)
+	Close();
+}
+
+void MatFile::Close() {
+	if (mat != NULL) {
 		Mat_Close(mat);
+		mat = NULL;
+	}
 }
 
 bool MatFile::Create(String fileName, mat_ft version) {
@@ -64,4 +68,6 @@ bool MatFile::Create(String fileName, mat_ft version) {
 	mat = Mat_CreateVer(fileName, header, version);
 	
 	return !!mat;
+}
+
 }

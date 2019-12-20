@@ -1122,7 +1122,9 @@ Mat_VarDelete(mat_t *mat, const char *name)
 
             Mat_Rewind(mat);
             while ( NULL != (matvar = Mat_VarReadNext(mat)) ) {
-                if ( 0 != strcmp(matvar->name,name) )
+                if (matvar->name == NULL)		// Added to avoid exception in strcmp() when name == NULL
+                    ;
+                else if ( 0 != strcmp(matvar->name,name) )
                     Mat_VarWrite(tmp,matvar,matvar->compression);
                 else
                     err = 0;
