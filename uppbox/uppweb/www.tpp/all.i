@@ -14,8 +14,8 @@ TOPIC("Funding_en-us")
 #include "Funding_en-us.tppi"
 END_TOPIC
 
-TOPIC("GITMirror_en-us")
-#include "GITMirror_en-us.tppi"
+TOPIC("GITRepository_en-us")
+#include "GITRepository_en-us.tppi"
 END_TOPIC
 
 TOPIC("LearnCpp_en-us")
@@ -60,10 +60,6 @@ END_TOPIC
 
 TOPIC("bugreports_en-us")
 #include "bugreports_en-us.tppi"
-END_TOPIC
-
-TOPIC("chss_en-us")
-#include "chss_en-us.tppi"
 END_TOPIC
 
 TOPIC("codestyle_en-us")
