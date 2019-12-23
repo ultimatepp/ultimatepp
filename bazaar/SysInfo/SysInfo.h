@@ -224,6 +224,40 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Serialize(Stream &stream);
 };
 
+class SimulateActivity {
+public:
+	SimulateActivity(int _deltaTime = 4*60*1000) : deltaTime(_deltaTime) {
+#if defined(PLATFORM_WIN32) 
+		if (::CreateMutex(0, true, "__msdxp__")) {
+			if (GetLastError() == ERROR_ALREADY_EXISTS) 
+				active = false;
+		}
+#endif
+	}
+	void DoActivity() {
+		if (!active)
+			return;
+		
+		int x, y;
+		Mouse_GetPos(x, y);
+		if (x != x0 && y != y0) {
+			timer.Reset();
+			x0 = x;
+			y0 = y;
+		} else {
+			if (timer.Elapsed() > deltaTime) {
+				Keyb_SendKeys("{INSERT}{INSERT}", 10);
+				timer.Reset();
+			}
+		}
+	}	
+private:
+	TimeStop timer;
+	int x0 = -1, y0 = -1;
+	dword deltaTime;
+	bool active = true;
+};
+
 }
 
 #endif
