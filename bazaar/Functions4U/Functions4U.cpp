@@ -1559,12 +1559,12 @@ bool CreateFolderDeep(const char *dir)
 		return false;
 }*/
 
-bool DeleteDeepWildcardsX(const char *pathwc, bool filefolder, EXT_FILE_FLAGS flags)
+bool DeleteDeepWildcardsX(const char *pathwc, bool filefolder, EXT_FILE_FLAGS flags, bool deep)
 {
-	return DeleteDeepWildcardsX(GetFileFolder(pathwc), GetFileName(pathwc), filefolder, flags);	
+	return DeleteDeepWildcardsX(GetFileFolder(pathwc), GetFileName(pathwc), filefolder, flags, deep);	
 }
 
-bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags)
+bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags, bool deep)
 {
 	FindFile ff(AppendFileName(path, "*.*"));
 	while(ff) {
@@ -1578,7 +1578,7 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 				if (!FileDeleteX(full, flags)) 
 					return false;
 			}
-		} else if(ff.IsFolder()) {
+		} else if(deep && ff.IsFolder()) {
 			if (!DeleteDeepWildcardsX(full, namewc, filefolder, flags))
 				return false;
 		}	
@@ -1589,18 +1589,22 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 
 bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
 {
-	return DeleteDeepWildcardsX(path, false, flags);
+	return DeleteDeepWildcardsX(path, false, flags, true);
 }
 
 bool DeleteFolderDeepWildcardsX(const char *path, const char *name, EXT_FILE_FLAGS flags) 	
 {
-	return DeleteDeepWildcardsX(path, name, false, flags);
+	return DeleteDeepWildcardsX(path, name, false, flags, true);
 }
-
 
 bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
 {
-	return DeleteDeepWildcardsX(path, true, flags);
+	return DeleteDeepWildcardsX(path, true, flags, true);
+}
+
+bool DeleteFileWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
+{
+	return DeleteDeepWildcardsX(path, true, flags, false);
 }
 
 bool DeleteFolderDeepX_Folder(const char *dir, EXT_FILE_FLAGS flags)

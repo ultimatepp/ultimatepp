@@ -113,6 +113,18 @@ void ArrayCtrlRowSelect(ArrayCtrl &array);
 Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array);
 Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr);
 void ArrayCtrlSet(ArrayCtrl &array, const Vector<Vector<Value>> &vals, int fromRow = 0, int fromCol = 0);
+		
+template <class T>
+T &GetDefinedParent(Ctrl *ths) {
+	T *main;
+	while (ths->GetParent() != nullptr) {
+		ths = ths->GetParent();
+		if ((main = dynamic_cast<T*>(ths)) != nullptr)
+			return *main;
+	}
+	NEVER_("Parent does not found in GetDefinedParent()");
+	return *main;
+}
 
 }
 

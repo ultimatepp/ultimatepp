@@ -17,10 +17,10 @@ library(WIN32) oleaut32;
 file
 	Functions4U.cpp,
 	Functions4U.h,
-	LocalProcess2.cpp,
-	LocalProcess2.h,
 	Functions4U_Gui.cpp,
 	Functions4U_Gui.h,
+	LocalProcess2.cpp,
+	LocalProcess2.h,
 	QtfEquation.cpp,
 	srcdoc.tpp,
 	src.tpp,

@@ -150,6 +150,12 @@ esES("Imprimiendo documento")
 euES("")
 frFR("")
 
+T_("Empty list")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Select all")
 caES("Seleccionar tot")
 esES("Seleccionar todo")
