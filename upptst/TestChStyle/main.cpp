@@ -17,6 +17,12 @@ void Dc(WithDropChoice<EditString>& dc)
 
 TestChStyle::TestChStyle()
 {
+	AddFrame(menu);
+	menu.Sub("Something", [=](Bar& bar) { bar.Add("Foo", [] {}); });
+
+	AddFrame(bar);
+	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {}).Tip("This is test"); });
+	
 	CtrlLayout(*this, "Window title");
 	
 	normal.NullText("Normal");
@@ -43,8 +49,15 @@ TestChStyle::TestChStyle()
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
 	
-	AddFrame(bar);
-	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {}).Tip("This is test"); });
+	
+	list.HeaderObject().Absolute();
+	list.AddColumn("Col", 50);
+	list.AddColumn("Col", 50);
+	list.AddColumn("Col", 50);
+	list.AddColumn("Col", 50);
+	list.AddColumn("Col", 50);
+	for(int i = 0; i < 50; i++)
+		list.Add(i);
 }
 
 GUI_APP_MAIN
