@@ -2,6 +2,7 @@
 #define CTRLLIB_H
 
 #include <CtrlCore/CtrlCore.h>
+#include <Painter/Painter.h>
 
 #ifdef Status //X11 defines this, likely name clash...
 #undef Status
