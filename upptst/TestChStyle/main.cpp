@@ -18,7 +18,12 @@ void Dc(WithDropChoice<EditString>& dc)
 TestChStyle::TestChStyle()
 {
 	AddFrame(menu);
-	menu.Sub("Something", [=](Bar& bar) { bar.Add("Foo", [] {}); });
+	menu.Sub("Something", [=](Bar& bar) {
+		bar.Add("Foo", [] {});
+		bar.Add(false, "Disabled", [] {});
+		static bool check;
+		bar.Add("Check", [] { check = !check; }).Check(check);
+	});
 
 	AddFrame(bar);
 	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {}).Tip("This is test"); });
