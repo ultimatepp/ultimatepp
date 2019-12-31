@@ -22,6 +22,9 @@ LAYOUT(TestChStyleLayout, 484, 376)
 	ITEM(Button, standard, SetLabel(t_("Standard")).LeftPosZ(12, 80).TopPosZ(348, 20))
 	ITEM(Button, classic, SetLabel(t_("Classic")).LeftPosZ(100, 80).TopPosZ(348, 20))
 	ITEM(Button, host, SetLabel(t_("Host")).LeftPosZ(188, 80).TopPosZ(348, 20))
-	ITEM(Label, dv___23, SetLabel(t_("Label")).LeftPosZ(324, 40).TopPosZ(52, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(308, 80).TopPosZ(348, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(396, 80).TopPosZ(348, 20))
+	ITEM(Label, dv___25, SetLabel(t_("Label")).LeftPosZ(324, 40).TopPosZ(52, 19))
+	UNTYPED(sample, LeftPosZ(192, 272).TopPosZ(244, 80))
 END_LAYOUT
 
