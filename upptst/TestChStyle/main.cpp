@@ -59,6 +59,7 @@ TestChStyle::TestChStyle()
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
 	
+	tm.Set(-20, [=] { pi.Set(GetTickCount() / 10 % 100, 100); });
 	
 	list.HeaderObject().Absolute();
 	list.AddColumn("Col", 50);

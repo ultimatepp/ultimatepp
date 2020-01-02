@@ -19,6 +19,8 @@ public:
 	ToolBar bar;
 	MenuBar menu;
 	Sample  sample;
+	
+	TimeCallback tm;
 
 	TestChStyle();
 };
