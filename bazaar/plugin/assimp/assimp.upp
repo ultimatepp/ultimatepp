@@ -21,6 +21,7 @@ include
 	.\contrib\zlib;
 
 file
+	assimp.tpp,
 	assimp.h,
 	config.h,
 	Include readonly separator,
