@@ -31,7 +31,11 @@ TestChStyle::TestChStyle()
 	});
 
 	AddFrame(bar);
-	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {}).Tip("This is test"); });
+	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {
+		FileSelector fs;
+		fs.AllFilesType();
+		fs.ExecuteOpen();
+	}).Tip("This is test"); });
 	
 	CtrlLayoutOKCancel(*this, "Window title");
 	
