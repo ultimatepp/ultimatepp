@@ -26,7 +26,7 @@ public:
 
 protected:
 	RichEdit   editor;
-	MenuBar    menubar	;
+	MenuBar    menubar;
 	ToolBar    toolbar;
 	StatusBar  statusbar;
 	String     filename;
