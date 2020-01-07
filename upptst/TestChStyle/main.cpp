@@ -66,11 +66,11 @@ TestChStyle::TestChStyle()
 	tm.Set(-20, [=] { pi.Set(GetTickCount() / 10 % 100, 100); });
 	
 	list.HeaderObject().Absolute();
-	list.AddColumn("Col", 50);
-	list.AddColumn("Col", 50);
-	list.AddColumn("Col", 50);
-	list.AddColumn("Col", 50);
-	list.AddColumn("Col", 50);
+	list.AddColumn("Col", 50).Sorting();
+	list.AddColumn("Col", 50).Sorting();
+	list.AddColumn("Col", 50).Sorting();
+	list.AddColumn("Col", 50).Sorting();
+	list.AddColumn("Col", 50).Sorting();
 	for(int i = 0; i < 50; i++)
 		list.Add(i);
 }
