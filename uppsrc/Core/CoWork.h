@@ -171,6 +171,7 @@ class AsyncWork {
 		template<class Function, class... Args>
 		void        Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
 		const Ret2& Get()                            { return ret; }
+		Ret2        Pick()                           { return pick(ret); }
 	};
 
 	struct ImpVoid {
@@ -179,6 +180,7 @@ class AsyncWork {
 		template<class Function, class... Args>
 		void        Do(Function&& f, Args&&... args) { co.Do([=]() { f(args...); }); }
 		void        Get()                            {}
+		void        Pick()                           {}
 	};
 	
 	using ImpType = typename std::conditional<std::is_void<Ret>::value, ImpVoid, Imp<Ret>>::type;
@@ -194,6 +196,7 @@ public:
 	bool        IsFinished()                        { return imp && imp->co.IsFinished(); }
 	Ret         Get()                               { ASSERT(imp); imp->co.Finish(); return imp->Get(); }
 	Ret         operator~()                         { return Get(); }
+	Ret         Pick()                              { ASSERT(imp); imp->co.Finish(); return imp->Pick(); }
 	
 	AsyncWork& operator=(AsyncWork&&) = default;
 	AsyncWork(AsyncWork&&) = default;
