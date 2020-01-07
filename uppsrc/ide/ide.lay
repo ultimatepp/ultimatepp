@@ -59,8 +59,8 @@ LAYOUT(RunLayout, 560, 200)
 	ITEM(Option, utf8, SetLabel(t_("Output is UTF-8")).LeftPosZ(320, 104).TopPosZ(76, 20))
 	ITEM(Option, disable_uhd, SetLabel(t_("Disable UHD mode")).LeftPosZ(120, 120).TopPosZ(148, 20))
 	ITEM(Label, console_label, SetLabel(t_("Open console:")).LeftPosZ(4, 112).TopPosZ(124, 20))
-	ITEM(Button, ifile, LeftPosZ(512, 20).TopPosZ(4, 19))
-	ITEM(Button, idir, LeftPosZ(532, 20).TopPosZ(4, 19))
+	ITEM(Button, ifile, RightPosZ(28, 20).TopPosZ(4, 19))
+	ITEM(Button, idir, RightPosZ(8, 20).TopPosZ(4, 19))
 END_LAYOUT
 
 LAYOUT(FindInFilesLayout, 568, 152)
