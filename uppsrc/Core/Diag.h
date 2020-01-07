@@ -65,10 +65,10 @@ void __LOGF__(const char *format, ...);
 #define QUOTE(a)         { LOG(#a); a; }
 #define LOGSRCPOS()      UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
 #define DUMP(a)          UPP::VppLog() << #a << " = " << (a) << UPP::EOL
-#define DUMPC(c)         UPP::DumpContainer(VppLog() << #c << ':' << UPP::EOL, (c))
-#define DUMPCC(c)        UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c))
-#define DUMPCCC(c)       UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c))
-#define DUMPM(c)         UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPC(c)         UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPCC(c)        UPP::DumpContainer2(UPP::VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPCCC(c)       UPP::DumpContainer3(UPP::VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPM(c)         UPP::DumpMap(UPP::VppLog() << #c << ':' << UPP::EOL, (c))
 #define DUMPHEX(x)       UPP::VppLog() << #x << " = ", UPP::LogHex(x)
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
