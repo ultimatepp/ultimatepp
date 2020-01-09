@@ -77,6 +77,9 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
+	DDUMP(GTK_MAJOR_VERSION);
+	DDUMP(GTK_MINOR_VERSION);
+	
 	Ctrl::SetDarkThemeEnabled();
 	
 	TestChStyle().Run();
