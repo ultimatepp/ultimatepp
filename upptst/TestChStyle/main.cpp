@@ -80,6 +80,9 @@ GUI_APP_MAIN
 	DDUMP(GTK_MAJOR_VERSION);
 	DDUMP(GTK_MINOR_VERSION);
 	
+	DDUMP(DPI(1));
+	DDUMP(Ctrl::SCL(1));
+	
 	Ctrl::SetDarkThemeEnabled();
 	
 	TestChStyle().Run();
