@@ -284,6 +284,13 @@ struct OneFileHost : Host {
 	}
 };
 
+void MakeBuild::PkgConfig(const Workspace& wspc, const Index<String>& config, Index<String>& pkg_config)
+{
+	for(int i = 0; i < wspc.GetCount(); i++)
+		for(String h : Split(Gather(wspc.GetPackage(i).pkg_config, config.GetKeys()), ' '))
+			pkg_config.FindAdd(h);
+}
+
 bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, int pkcount,
 	String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
 	String& linkopt, bool link)
@@ -308,9 +315,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	if(!b)
 		return false;
 	b->config = PackageConfig(wspc, pkindex, bm, mainparam, *host, *b);
-	for(int i = 0; i < wspc.GetCount(); i++)
-		for(String h : Split(Gather(wspc.GetPackage(i).pkg_config, b->config.GetKeys()), ' '))
-			b->pkg_config.FindAdd(h);
+	PkgConfig(wspc, b->config, b->pkg_config);
 	const TargetMode& m = targetmode == 0 ? debug : release;
 	b->version = m.version;
 	b->method = method;
@@ -634,11 +639,14 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	Workspace wspc;
 	wspc.Scan(GetMain(), allconfig.GetKeys());
 
-	for(int i = 1; i < wspc.GetCount(); i++) {
+	Index<String> pkg_config;
+	for(int i = 0; i < wspc.GetCount(); i++) {
 		Index<String> modconfig = PackageConfig(wspc, i, bm, mainconfigparam, *host, *b);
-		for(int a = allconfig.GetCount(); --a >= 0;)
-			if(modconfig.Find(allconfig[a]) < 0)
-				allconfig.Remove(a);
+		PkgConfig(wspc, modconfig, pkg_config);
+		if(i)
+			for(int a = allconfig.GetCount(); --a >= 0;)
+				if(modconfig.Find(allconfig[a]) < 0)
+					allconfig.Remove(a);
 	}
 
 	if(!exporting)
@@ -649,10 +657,14 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		}
 	else
 		inclist << "-I./";
+
+	for(String s : pkg_config)
+		inclist << " `pkg-config --cflags " << s << "`";
+
 	Vector<String> includes = SplitDirs(bm.Get("INCLUDE",""));
 	for(int i = 0; i < includes.GetCount(); i++)
 		inclist << " -I" << includes[i];
-
+	
 	makefile << "\n"
 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
@@ -663,6 +675,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	makefile << "\n";
 
 	String output, config, install, rules, linkdep, linkfiles, linkfileend;
+
+	for(String s : pkg_config)
+		linkfileend << " \\\n\t\t\t`pkg-config --libs " << s << "`";
 
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		b->config = PackageConfig(wspc, i, bm, mainconfigparam, *host, *b);
@@ -720,7 +735,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		linkfiles << mf.linkfiles;
 		linkfileend << mf.linkfileend;
 	}
-
+	
 	makefile
 		<< config
 		<< install

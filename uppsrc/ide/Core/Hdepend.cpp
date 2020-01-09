@@ -75,7 +75,7 @@ public:
 	bool                  BlitzApproved(const String& path);
 	String                FindIncludeFile(const char *s, const String& filedir) { return ::FindIncludeFile(s, filedir, incdir); }
 	const Vector<String>& GetDefines(const String& path);
-	Vector<String>        GetDependencies(const String& path);
+	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
 	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
 };
 
@@ -358,14 +358,18 @@ Time Hdepend::FileTime(int ii)
 	return time;
 }
 
-Vector<String> Hdepend::GetDependencies(const String& path)
+Vector<String> Hdepend::GetDependencies(const String& path, bool bydefine_too)
 {
 	ClearFlag();
 	Index<int> out;
 	out.Add(File(path));
 	for(int i = 0; i < out.GetCount(); i++)
-		if(out[i] >= 0)
-			FindAppend(out, map[out[i]].depend);
+		if(out[i] >= 0) {
+			Info& f = map[out[i]];
+			for(int i = 0; i < f.depend.GetCount(); i++)
+				if(bydefine_too || !f.bydefine[i])
+					out.FindAdd(f.depend[i]);
+		}
 	Vector<String> outnames;
 	for(int i = 1; i < out.GetCount(); i++)
 		if(out[i] >= 0)
@@ -477,9 +481,9 @@ const Vector<String>& HdependGetDefines(const String& path)
 	return Single<Hdepend>().GetDefines(path);
 }
 
-Vector<String> HdependGetDependencies(const String& file)
+Vector<String> HdependGetDependencies(const String& file, bool bydefine_too)
 {
-	return Single<Hdepend>().GetDependencies(file);
+	return Single<Hdepend>().GetDependencies(file, bydefine_too);
 }
 
 void  HdependClearDependencies()
