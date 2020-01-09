@@ -172,7 +172,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 				outfile << makefile.outdir << AdjustMakePath(GetFileTitle(fn)) << (isrc ? "_rc" : "") << objext;
 				String srcfile = GetMakePath(MakeSourcePath(src, fn, false, exporting));
 				makefile.rules << outfile << ": " << srcfile;
-				Vector<String> dep = HdependGetDependencies(fn);
+				Vector<String> dep = HdependGetDependencies(fn, false);
 				Sort(dep, GetLanguageInfo());
 				for(int d = 0; d < dep.GetCount(); d++) {
 					String dfn = MakeSourcePath(src, dep[d], true, exporting);

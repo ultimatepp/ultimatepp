@@ -496,7 +496,7 @@ void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);
 Time                  HdependFileTime(const String& path);
-Vector<String>        HdependGetDependencies(const String& path);
+Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
 String                FindIncludeFile(const char *s, const String& filedir);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
