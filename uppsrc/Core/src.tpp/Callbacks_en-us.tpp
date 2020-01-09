@@ -1,5 +1,4 @@
 topic "Callbacks";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,10 +8,11 @@ topic "Callbacks";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Callbacks]]}}&]
-[s9; [/ Note: Callbacks are now deprecated. Use Function/Event/Gate 
-instead!]&]
+[s9; [*/^topic`:`/`/Core`/src`/Function`_en`-us^ Callbacks are now 
+deprecated. Use Function/Event/Gate instead!]&]
 [s9; Callbacks can be described as a very generalized form of function 
 pointers. Each Callback represents some kind of action (usually 
 calling a certain function or a certain object method) that can 
@@ -103,16 +103,6 @@ Callback takes over its ownership.&]
 st_[%%*/@(128.0.255) CallbackType]`&_[*@3 c])&]
 [s2; Copy constructor. &]
 [s7; [%-*C@3 c]-|Source callback.&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:Callback`:`:Callback`(Upp`:`:AnyLambda`<T`>`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[%%*/@(128.0.255) CallbackType]([_^Upp`:`:AnyLambda^ AnyLambda]<[*@4 T]>_[*@3 l
-])&]
-[s2; Constructor from C`+`+11 lambda. Note that AnyLambda intermediate 
-type is necessarry as std`::function appears to have `"catch all`" 
-templated constructor, which creates overloading problems. Use 
-`'lambda`' helper function to convert lambda to AnyLambda (or 
-use operator<<).&]
 [s3; &]
 [s4; &]
 [s0;:`:`:Callback1`:`:`~Callback1`(`):%- `~[%%*/@(128.0.255) CallbackType]()&]
