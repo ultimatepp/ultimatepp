@@ -14,14 +14,6 @@ namespace Upp {
 
 void ChSysInit();
 
-void ChStdSkin()
-{
-	ChSysInit();
-	GUI_GlobalStyle_Write(GUISTYLE_XP);
-	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
-	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
-}
-
 void SbWc(Value *look)
 {
 	Color wc = Blend(SColorFace(), SColorPaper(), 170);
@@ -128,7 +120,7 @@ void RoundedRect(Painter& w, Rectf r, double rx, double ry, dword corner)
 	RoundedRect(w, r.left, r.top, r.GetWidth(), r.GetHeight(), rx, ry, corner);
 }
 
-Image MakeElement(Size sz, double radius, const Image& face, int border_width, Color border_color, Event<Painter&, const Rectf&> shape)
+Image MakeElement(Size sz, double radius, const Image& face, double border_width, Color border_color, Event<Painter&, const Rectf&> shape)
 {
 	Rectf r(0, 0, sz.cx, sz.cy);
 	ImagePainter w(r.GetSize());
@@ -147,7 +139,7 @@ Image MakeElement(Size sz, double radius, const Image& face, int border_width, C
 	return m;
 }
 
-Image MakeButton(int radius, const Image& face, int border_width, Color border_color, dword corner)
+Image MakeButton(int radius, const Image& face, double border_width, Color border_color, dword corner)
 {
 	int q = radius + border_width + DPI(16);
 	return MakeElement(Size(q, q), radius, face, border_width, border_color, [&](Painter& w, const Rectf& r) {
@@ -155,7 +147,7 @@ Image MakeButton(int radius, const Image& face, int border_width, Color border_c
 	});
 }
 
-Image MakeButton(int radius, Color face, int border_width, Color border_color, dword corner)
+Image MakeButton(int radius, Color face, double border_width, Color border_color, dword corner)
 {
 	return MakeButton(radius, CreateImage(Size(DPI(10), DPI(5)), face), border_width, border_color, corner);
 }
@@ -381,7 +373,6 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 		}
 		{
 			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-			int adj = 8;
 			auto Face = [](int adj) {
 				Color c = SColorFace();
 				return Color(clamp(c.GetR() + adj, 0, 255),
@@ -400,6 +391,118 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 			s.text_color[i] = SColorText();
 		}
 	}
+}
+
+void ChStdSkin()
+{
+	ChSysInit();
+	
+	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+
+/*
+	Gtk_New("radiobutton radio");
+	SOImages(CtrlsImg::I_S0, GTK_STATE_FLAG_NORMAL);
+	SOImages(CtrlsImg::I_S1, GTK_STATE_FLAG_CHECKED);
+	Gtk_New("checkbutton check");
+	SOImages(CtrlsImg::I_O0, GTK_STATE_FLAG_NORMAL);
+	SOImages(CtrlsImg::I_O1, GTK_STATE_FLAG_CHECKED);
+	SOImages(CtrlsImg::I_O2, GTK_STATE_FLAG_INCONSISTENT);
+
+	CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
+	CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
+	CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
+	CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
+*/
+	for(int i = 0; i < 6; i++)
+		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
+
+		
+	int c = DPI(16);
+
+	Color text[4];
+	Color face[4];
+	Image button[4];
+	auto Adjust = [](Color c, int adj) {
+		return Color(clamp(c.GetR() + adj, 0, 255),
+		             clamp(c.GetG() + adj, 0, 255),
+		             clamp(c.GetB() + adj, 0, 255));
+	};
+	
+	Color border = Gray();
+		
+	{
+		for(int pass = 0; pass < 2; pass++) {
+			Button::Style& s = pass ? Button::StyleOk().Write() : Button::StyleNormal().Write();
+			int roundness = DPI(3);
+			for(int i = 0; i < 4; i++) {
+				static int adj[] = { 10, 20, 5, -10 };
+				Color f = Adjust(SColorFace(), adj[i]);
+				Color ink = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
+				s.look[i] = MakeButton(roundness, f, DPI(1 + pass), border);
+				text[i] = s.monocolor[i] = s.textcolor[i] = ink;
+				if(pass == 0) {
+					button[i] = MakeButton(DPI(1), f, DPI(1 + pass), border);
+					{
+						for(int opt = 0; opt < 2; opt++) {
+							ImagePainter p(c, c);
+							p.Scale(DPI(1));
+							p.Clear(RGBAZero());
+							p.Circle(8, 8, 6).Fill(f).Stroke(1, border);
+							if(opt)
+								p.Circle(8, 8, 4).Fill(ink);
+							CtrlsImg::Set((opt ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + i, p);
+						}
+					}
+					{
+						for(int chk = 0; chk < 3; chk++) {
+							ImagePainter p(c, c);
+							p.Scale(DPI(1));
+							p.Clear(RGBAZero());
+							p.Rectangle(2, 2, 12, 12).Fill(f).Stroke(1, border);
+							if(chk == 1)
+								p.Move(4, 8).Line(7, 11).Line(12, 5).Stroke(2, ink);
+							if(chk == 2)
+								p.Rectangle(4, 4, 8, 8).Fill(border);
+							CtrlsImg::Set(decode(chk, 0, CtrlsImg::I_O0, 1, CtrlsImg::I_O1, CtrlsImg::I_O2) + i, p);
+						}
+					}
+				}
+			}
+		}
+		
+		ChSynthetic(button, text);
+
+		{
+			auto& s = ToolButton::StyleDefault().Write();
+			s.look[CTRL_NORMAL] = Image();
+			s.look[CTRL_HOT] = button[CTRL_HOT];
+			s.look[CTRL_PRESSED] = button[CTRL_PRESSED];
+			s.look[CTRL_DISABLED] = Image();
+			s.look[CTRL_CHECKED] = button[CTRL_PRESSED];
+			s.look[CTRL_HOTCHECKED] = button[CTRL_HOT];
+		}
+
+		CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
+		CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
+		CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
+		CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
+	}
+
+	{
+		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+		ImagePainter p(c, c);
+		p.Rectangle(0, 0, c, c).Fill(0, 0, SColorFace(), c, 0, SColorPaper());
+		Image vtrough = p; // WithLeftLine(p, border);
+
+		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
+			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
+			s.vupper[status] = s.vlower[status] = ChHot(vtrough); // we have problems getting this right for vertical
+			static int adj[] = { 20, 40, 10, -10 };
+			s.hthumb[status] = s.vthumb[status] = Adjust(border, adj[status]);
+		}
+	}
+
+	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 }
 
 }

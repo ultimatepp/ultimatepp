@@ -11,9 +11,9 @@ enum {
 
 void  RoundedRect(Painter& w, double x, double y, double cx, double cy, double rx, double ry, dword corners);
 void  RoundedRect(Painter& w, Rectf r, double rx, double ry, dword corner);
-Image MakeElement(Size sz, double radius, const Image& face, int border_width, Color border_color, Event<Painter&, const Rectf&> shape);
-Image MakeButton(int radius, const Image& face, int border_width, Color border_color = Null, dword corner = 0xff);
-Image MakeButton(int radius, Color face, int border_width, Color border_color = Null, dword corner = 0xff);
+Image MakeElement(Size sz, double radius, const Image& face, double border_width, Color border_color, Event<Painter&, const Rectf&> shape);
+Image MakeButton(int radius, const Image& face, double border_width, Color border_color = Null, dword corner = 0xff);
+Image MakeButton(int radius, Color face, double border_width, Color border_color = Null, dword corner = 0xff);
 
 Image Hot3(const Image& m); // Adds resizing hotspots at 1/3
 Image ChHot(const Image& m, int n = 2); // Adds resizing hotspots DPI(n)
