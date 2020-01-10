@@ -2,6 +2,7 @@
 #define CTRLCORE_H
 
 #include <RichText/RichText.h>
+#include <Painter/Painter.h>
 
 #ifdef  flagNOGTK
 #undef  flagGTK

@@ -353,6 +353,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	GuiLock __;
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
+	LLOG("=== CtrlPaint " << UPP::Name(this) << ", clip: " << clip << ", rect: " << GetRect() << ", view: " << GetView());
 	Rect rect = GetRect().GetSize();
 	Rect orect = rect.Inflated(overpaint);
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
@@ -417,7 +418,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 				Rect ocl = cl - off;
 				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
 					w.Offset(off);
-					q->CtrlPaint(w, cl - off);
+					q->CtrlPaint(w, ocl);
 					w.End();
 				}
 			}
@@ -596,7 +597,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 {
 	GuiLock __;
 	LTIMING("UpdateArea");
-	LLOG("========== UPDATE AREA " << UPP::Name(this) << " " << clip << " ==========");
+	LLOG("========== UPDATE AREA " << UPP::Name(this) << ", clip: " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
 	if(globalbackbuffer) {
 		CtrlPaint(draw, clip);

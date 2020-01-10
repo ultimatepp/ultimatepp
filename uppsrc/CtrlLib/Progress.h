@@ -7,6 +7,7 @@ public:
 	struct Style : ChStyle<Style> {
 		bool  classic;
 		bool  bound;
+		bool  nomargins;
 		Value vlook, vchunk, hlook, hchunk;
 	};
 

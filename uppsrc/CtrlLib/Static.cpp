@@ -111,6 +111,8 @@ Rect LabelBox::GetVoidRect() const
 	return r;
 }
 
+Value LabelBox::LabelBoxLook;
+
 void PaintLabelBox(Draw& w, Size sz, Color color, int d)
 {
 	bool hline = sz.cy < 2 * Draw::GetStdFontCy();
@@ -130,23 +132,31 @@ void PaintLabelBox(Draw& w, Size sz, Color color, int d)
 			w.DrawRect(d + 1, 0, 1, sz.cy, SColorLight);
 		}
 		else {
-			Color c = Nvl(color, LabelBoxColor);
-			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, c);
-			w.DrawRect(sz.cx - 1, d + 2, 1, sz.cy - d - 4, c);
-			w.DrawRect(2, sz.cy - 1, sz.cx - 4, 1, c);
-			w.DrawRect(2, d, sz.cx - 4, 1, c);
-
-			w.DrawRect(1, d + 1, 2, 1, c);
-			w.DrawRect(1, d + 2, 1, 1, c);
-
-			w.DrawRect(sz.cx - 3, d + 1, 2, 1, c);
-			w.DrawRect(sz.cx - 2, d + 2, 1, 1, c);
-
-			w.DrawRect(1, sz.cy - 2, 2, 1, c);
-			w.DrawRect(1, sz.cy - 3, 1, 1, c);
-
-			w.DrawRect(sz.cx - 3, sz.cy - 2, 2, 1, c);
-			w.DrawRect(sz.cx - 2, sz.cy - 3, 1, 1, c);
+			Value look = LabelBox::GetLook();
+			if(IsNull(look) || !IsNull(color)) {
+				Color c = Nvl(color, LabelBoxColor);
+				w.DrawRect(0, d + 2, 1, sz.cy - d - 4, c);
+				w.DrawRect(sz.cx - 1, d + 2, 1, sz.cy - d - 4, c);
+				w.DrawRect(2, sz.cy - 1, sz.cx - 4, 1, c);
+				w.DrawRect(2, d, sz.cx - 4, 1, c);
+	
+				w.DrawRect(1, d + 1, 2, 1, c);
+				w.DrawRect(1, d + 2, 1, 1, c);
+	
+				w.DrawRect(sz.cx - 3, d + 1, 2, 1, c);
+				w.DrawRect(sz.cx - 2, d + 2, 1, 1, c);
+	
+				w.DrawRect(1, sz.cy - 2, 2, 1, c);
+				w.DrawRect(1, sz.cy - 3, 1, 1, c);
+	
+				w.DrawRect(sz.cx - 3, sz.cy - 2, 2, 1, c);
+				w.DrawRect(sz.cx - 2, sz.cy - 3, 1, 1, c);
+			}
+			else {
+				Rect r = sz;
+				r.top = d;
+				ChPaintEdge(w, r, look);
+			}
 		}
 	}
 	else {

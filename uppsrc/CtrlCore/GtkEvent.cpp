@@ -4,8 +4,8 @@
 
 namespace Upp {
 
-#define LLOG(x)  //  DLOG(rmsecs() << ' ' << x)
-//_DBG_ #define LOG_EVENTS
+#define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
+// #define LOG_EVENTS _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -28,7 +28,7 @@ Point GetMousePos() { return Ctrl::CurrentMousePos; }
 Tuple2<int, const char *> xEvent[] = {
 	{ GDK_NOTHING, "GDK_NOTHING" },
 	{ GDK_DELETE, "GDK_DELETE" },
-	{ GDK_DESTROY, "GDK_DESTROY" },id
+	{ GDK_DESTROY, "GDK_DESTROY" },
 	{ GDK_EXPOSE, "GDK_EXPOSE" },
 	{ GDK_MOTION_NOTIFY, "GDK_MOTION_NOTIFY" },
 	{ GDK_BUTTON_PRESS, "GDK_BUTTON_PRESS" },
@@ -57,7 +57,6 @@ Tuple2<int, const char *> xEvent[] = {
 	{ GDK_DROP_FINISHED, "GDK_DROP_FINISHED" },
 	{ GDK_CLIENT_EVENT, "GDK_CLIENT_EVENT" },
 	{ GDK_VISIBILITY_NOTIFY, "GDK_VISIBILITY_NOTIFY" },
-	{ GDK_NO_EXPOSE, "GDK_NO_EXPOSE" },
 	{ GDK_SCROLL, "GDK_SCROLL" },
 	{ GDK_WINDOW_STATE, "GDK_WINDOW_STATE" },
 	{ GDK_SETTING, "GDK_SETTING" },
@@ -79,6 +78,42 @@ Ctrl *Ctrl::GetTopCtrlFromId(int id)
 	return NULL;
 }
 
+gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
+{
+	GuiLock __;
+	Ctrl *p = GetTopCtrlFromId(user_data);
+	if(p) {
+		p->fullrefresh = false;
+		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
+		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
+
+		SystemDraw w(cr);
+		painting = true;
+		double x1, y1, x2, y2;
+		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
+		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
+		w.Clip(r); // Because of IsPainting
+
+		cairo_rectangle_list_t *list = cairo_copy_clip_rectangle_list(cr);
+		if(list->status == CAIRO_STATUS_SUCCESS && list->num_rectangles < 10) {
+			Vector<Rect> clip;
+			for(int i = 0; i < list->num_rectangles; i++) {
+				const cairo_rectangle_t& r = list->rectangles[i];
+				clip.Add(Rect((int)r.x, (int)r.y, (int)(r.x + r.width), (int)(r.y + r.height)));
+			}
+			w.PickInvalid(pick(clip));
+		}
+		cairo_rectangle_list_destroy(list);
+
+		p->UpdateArea(w, r);
+		w.End();
+		if(p->top->dr)
+			DrawDragRect(*p, *p->top->dr);
+		painting = false;
+	}
+	return true;
+}
+
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GuiLock __;
@@ -96,34 +131,9 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 #endif
 
 	switch(event->type) {
-	case GDK_EXPOSE:
-	case GDK_DAMAGE:
-		if(p) {
-#ifdef LOG_EVENTS
-			TimeStop tm;
-#endif
-			p->fullrefresh = false;
-			GdkEventExpose *e = (GdkEventExpose *)event;
-			SystemDraw w(gdk_cairo_create(p->gdk()), p->gdk());
-			painting = true;
-			Rect r = RectC(e->area.x, e->area.y, e->area.width, e->area.height);
-			w.SetInvalid(e->region);
-			w.Clip(r);
-			p->UpdateArea(w, r);
-			w.End();
-			cairo_destroy(w);
-			if(p->top->dr)
-				DrawDragRect(*p, *p->top->dr);
-			painting = false;
-#ifdef LOG_EVENTS
-			LOG("* " << ev << " elapsed " << tm);
-#endif
-		}
-		return true;
 	case GDK_DELETE:
 		break;
 	case GDK_FOCUS_CHANGE:
-		LLOG("Focus Change " << GetSysTime());
 		if(p) {
 			if(((GdkEventFocus *)event)->in)
 				gtk_im_context_focus_in(p->top->im_context);
@@ -152,7 +162,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		break;
 	case GDK_SCROLL: {
 		GdkEventScroll *e = (GdkEventScroll *)event;
-		value = findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) < 0 ? -120 : 120;
+		if(findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) >= 0)
+			value = 120;
+		else
+		if(findarg(e->direction, GDK_SCROLL_DOWN, GDK_SCROLL_RIGHT) >= 0)
+			value = -120;
+		else
+			return false;
 		break;
 	}
 	case GDK_KEY_PRESS:
@@ -169,8 +185,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_CONFIGURE: {
 		retval = false;
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
-		value = RectC(e->x, e->y, e->width, e->height);
-		LLOG("GDK_CONFIGURE " << value);
+		value = SCL(e->x, e->y, e->width, e->height);
 		break;
 	}
 	default:
@@ -232,6 +247,21 @@ void Ctrl::GEvent::operator=(const GEvent& e)
 	Set(e);
 }
 
+Point Ctrl::GetMouseInfo(GdkWindow *win, GdkModifierType& mod)
+{
+#if GTK_CHECK_VERSION(3, 20, 0)
+	GdkDisplay *display = gdk_window_get_display (win);
+	GdkDevice *pointer = gdk_seat_get_pointer (gdk_display_get_default_seat (display));
+	double x, y;
+	gdk_window_get_device_position_double (win, pointer, &x, &y, &mod);
+	return Point((int)SCL(x), (int)SCL(y));
+#else
+	gint x, y;
+	gdk_window_get_pointer(win, &x, &y, &mod);
+	return Point(SCL(x), SCL(y));
+#endif
+}
+
 void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *event)
 {
 	if(Events.GetCount() > 50000)
@@ -240,10 +270,8 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
-	gint x, y;
 	GdkModifierType mod;
-	gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &mod);
-	e.mousepos = Point(x, y);
+	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
 	e.event = NULL;
@@ -494,7 +522,6 @@ void Ctrl::Proc()
 		break;
 	}
 	case EVENT_FOCUS_CHANGE:
-		LLOG("FOCUS_CHANGE setting NULL");
 		activeCtrl = NULL;
 		break;
 	case GDK_DELETE: {
@@ -507,16 +534,8 @@ void Ctrl::Proc()
 		}
 		return;
 	}
-	case GDK_CONFIGURE: {
-			Rect rect = CurrentEvent.value;
-			if(GetRect() != rect)
-				SetWndRect(rect);
-			{
-				TopWindow *w = dynamic_cast<TopWindow *>(this);
-				if(w && w->state == TopWindow::OVERLAPPED)
-					w->overlapped = rect;
-			}
-		}
+	case GDK_CONFIGURE:
+		SyncWndRect(CurrentEvent.value);
 		break;
 	default:
 		return;
@@ -525,6 +544,14 @@ void Ctrl::Proc()
 		_this->PostInput();
 }
 
+void Ctrl::SyncWndRect(const Rect& rect)
+{
+	if(GetRect() != rect)
+		SetWndRect(rect);
+	TopWindow *w = dynamic_cast<TopWindow *>(this);
+	if(w && w->state == TopWindow::OVERLAPPED)
+		w->overlapped = rect;
+}
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 {

@@ -8,10 +8,6 @@ uses
 
 library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
 
-library((LINUX | BSD) & !NOGTK & !RAINBOW & !GTK3 & GUI & !OSX) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
-
-library((LINUX | BSD) & GTK3) "gtk-3.0  gdk-3.0  atk-1.0  gdk_3.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
-
 library(WIN32 !MSC8ARM) "user32 gdi32";
 
 library(LINUX !RAINBOW GUI) "X11 Xrender Xinerama";
@@ -33,6 +29,8 @@ library(POSIX !NOGTK !RAINBOW GUI !OSX) notify;
 library(DRAGONFLY) "Xext Xinerama";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
+
+pkg_config(POSIX !X11) gtk+-3.0;
 
 file
 	Core readonly separator,
@@ -102,6 +100,7 @@ file
 	X11DHCtrl.cpp,
 	X11Event.i,
 	Gtk readonly separator,
+	gtk3-todo.txt,
 	Gtk.h,
 	GtkAfter.h,
 	GtkKeys.h,

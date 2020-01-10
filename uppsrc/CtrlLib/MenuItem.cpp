@@ -182,8 +182,8 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 			w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
 		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
-		if(!opaque && state != PUSH && style->opaquetest) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)]
-			Color c = state == 2 ? SColorHighlight() : bg;
+		if(!opaque && state != 2 && style->opaquetest) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)]
+			Color c = state == 1 && !IsNull(style->topitem[0]) ? SColorHighlight() : bg;
 			int g = Grayscale(c);
 			bool dark = IsDark(c);
 			if(abs(g - Grayscale(txt)) < 70)

@@ -2,28 +2,15 @@
 
 #define PLATFORM_X11 // To keep legacy code happy
 
-#ifdef GDK_KEY_Delete
 #define GDKEY(x) GDK_KEY_##x
-#else
-#define GDKEY(x) GDK_##x
-#endif
 
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #endif
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
 #ifdef __clang__
 #pragma clang diagnostic pop
@@ -69,10 +56,9 @@ private:
 	void  Pop();
 	Vector<Point> offset;
 	Vector<Rect>  clip;
+	Vector<Rect>  invalid; // for IsPainting checks, if empty, only clip extents is checked
 
 	cairo_t      *cr;
-	GdkDrawable  *drawable;
-	GdkRegion    *invalid;
 	
 	struct TextGlyph : Moveable<TextGlyph> {
 		int x;
@@ -100,12 +86,13 @@ public:
 	void  SetColor(Color c);
 	operator cairo_t*()               { return cr; }
 
-	void     SetInvalid(GdkRegion *r) { invalid = r; }
+	void     PickInvalid(Vector<Rect>&& inv)   { invalid = pick(inv); }
 	Point    GetOffset() const;
 	bool     CanSetSurface()          { return true; }
 	static void Flush()               {} // TODO?
 
-	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; invalid = NULL; }
+//	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; invalid = NULL; }
+	SystemDraw(cairo_t *cr) : cr(cr) {}
 	~SystemDraw();
 };
 

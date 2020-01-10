@@ -7,7 +7,7 @@ DropChoice::DropChoice() {
 	AddButton().Main() <<= THISBACK(Drop);
 	NoDisplay();
 	list.Normal();
-	list.WhenSelect = callback(this, &DropChoice::Select);
+	list.WhenSelect = [=] { Select(); };
 	dropfocus = true;
 	EnableDrop(false);
 	dropwidth = 0;

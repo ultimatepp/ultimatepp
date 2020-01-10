@@ -57,11 +57,13 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 	__BREAK__;
 }
 
+int Ctrl::scale;
+
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 #ifdef _MULTITHREADED
-#if !GLIB_CHECK_VERSION(2, 32, 0)
+#if !GTK_CHECK_VERSION(2, 32, 0)
     if(!g_thread_supported())
         g_thread_init(NULL);
 #endif
@@ -70,6 +72,14 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 	EnterGuiMutex();
 #endif
 	gtk_init(&argc, &argv);
+
+	Ctrl::SetUHDEnabled(true);
+	
+	Ctrl::scale = 1;
+#if GTK_CHECK_VERSION(3, 10, 0)
+	Ctrl::scale = gdk_window_get_scale_factor(gdk_screen_get_root_window(gdk_screen_get_default()));
+#endif
+
 	Ctrl::GlobalBackBuffer();
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);

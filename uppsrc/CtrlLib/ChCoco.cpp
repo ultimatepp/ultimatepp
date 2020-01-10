@@ -4,12 +4,6 @@
 
 namespace Upp {
 	
-Image Hot3(const Image& m)
-{
-	Size sz = m.GetSize();
-	return WithHotSpots(m, sz.cx / 3, sz.cy / 3, sz.cx - sz.cx / 3, sz.cy - sz.cy / 3);
-}
-
 Image Coco_ThemeImage(Color bg, int cx, int cy, int margin, int type,
                       int value, int state, bool focus)
 {
@@ -24,29 +18,6 @@ Image Coco_ThemeImage(int cx, int cy, int margin, int type, int value, int state
 {
 	return Hot3(RecreateAlpha(Coco_ThemeImage(White(), cx, cy, margin, type, value, state, focus),
 	                          Coco_ThemeImage(Black(), cx, cy, margin, type, value, state, focus)));
-}
-
-Color AvgColor(const Image& m, const Rect& rr)
-{
-	int n = rr.GetWidth() * rr.GetHeight();
-	if(n <= 0)
-		return White();
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	for(int y = rr.top; y < rr.bottom; y++)
-		for(int x = rr.left; x < rr.right; x++) {
-			RGBA c = m[y][x];
-			r += c.r;
-			g += c.g;
-			b += c.b;
-		}
-	return Color(r / n, g / n, b / n);
-}
-
-Color AvgColor(const Image& m, int margin = 0)
-{
-	return AvgColor(m, Rect(m.GetSize()).Deflated(margin));
 }
 
 void ClampedAutoCrop(Image *h, int count)
