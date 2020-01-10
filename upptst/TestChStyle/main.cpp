@@ -14,7 +14,6 @@ void Dc(WithDropChoice<EditString>& dc)
 	dc <<= "Case1";
 }
 
-
 TestChStyle::TestChStyle()
 {
 	AddFrame(menu);
@@ -53,6 +52,20 @@ TestChStyle::TestChStyle()
 	Dc(dc_readonly);
 	Dc(dc_disabled);
 	dc_disabled.Disable();
+	
+	dis.Disable();
+	
+	option1.Disable();
+	option1 <<= false;
+
+	option2.Disable();
+	option2 <<= Null;
+
+	option3.Disable();
+	option3 <<= true;
+	
+	switch1.Disable();
+	switch1 <<= 1;
 
 #ifdef CPP_11
 	standard << [] { Ctrl::SetSkin(ChStdSkin); };
@@ -77,13 +90,8 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
-	DDUMP(GTK_MAJOR_VERSION);
-	DDUMP(GTK_MINOR_VERSION);
-	
-	DDUMP(DPI(1));
-	DDUMP(Ctrl::SCL(1));
-	
 	Ctrl::SetDarkThemeEnabled();
+	Ctrl::SetSkin(ChStdSkin);
 	
 	TestChStyle().Run();
 }
