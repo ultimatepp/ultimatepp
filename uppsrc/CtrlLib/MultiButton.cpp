@@ -282,7 +282,7 @@ int MultiButton::ChState(int i)
 	if(i == MAIN && frm && style->activeedge) {
 		int q = 0;
 		if(p)
-			q = !p->IsEnabled() || !IsEnabled() || IsReadOnly() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
+			q = !p->IsEnabled() || !IsEnabled() || p->IsReadOnly() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
 			    : p->HasFocus() || push ? CTRL_PRESSED
 			    : p->HasMouse() || hl >= 0 ? CTRL_HOT
 			    : CTRL_NORMAL;

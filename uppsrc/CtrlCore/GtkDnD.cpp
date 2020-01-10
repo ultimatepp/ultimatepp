@@ -22,7 +22,7 @@ Ctrl *Ctrl::GetDragAndDropSource()
 void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
 	if(IsNull(dnd_icon))
-    	gtk_drag_set_icon_default(context);
+		gtk_drag_set_icon_default(context);
 	else {
 		ImageGdk m(dnd_icon);
 		gtk_drag_set_icon_pixbuf(context, m, 0, 0);
@@ -114,16 +114,16 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 		dnd_icon = Null;
 	else {
 		Size sz = sample.GetSize();
-		if(sz.cx > 128)
-			sz.cx = 128;
-		if(sz.cy > 128)
-			sz.cy = 128;
+		int maxsize = DPI(128);
+		if(sz.cx > maxsize)
+			sz.cx = maxsize;
+		if(sz.cy > maxsize)
+			sz.cy = maxsize;
 		sz += 2;
 		ImageDraw iw(sz);
 		iw.DrawRect(sz, White());
 		DrawFrame(iw, sz, Black());
 		iw.DrawImage(1, 1, sz.cx, sz.cy, sample);
-		ImageBuffer b(128, 128);
 		dnd_icon = iw;
 	}
 	gtk_drag_begin(w->top->window, list, GdkDragAction(gdk_actions),
@@ -287,7 +287,7 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 		GdkModifierType mod;
 		gdk_window_get_pointer(gdk_get_default_root_window(), &mx, &my, &mod);
 		CurrentState = mod;
-		CurrentMousePos = Point(x, y) + w->GetScreenRect().TopLeft();
+		CurrentMousePos = Point(SCL(x), SCL(y)) + w->GetScreenRect().TopLeft();
 		w->DnD(CurrentMousePos, clip);
 	}
 	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE

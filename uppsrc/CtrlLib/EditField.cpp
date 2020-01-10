@@ -110,7 +110,7 @@ void ActiveEdgeFrame::FramePaint(Draw& w, const Rect& r)
 {
 	int i = 0;
 	if(ctrl) {
-		i = !ctrl->IsEnabled() ? CTRL_DISABLED
+		i = !ctrl->IsEnabled() || ctrl->IsReadOnly() ? CTRL_DISABLED
 		    : ctrl->HasFocus() ? CTRL_PRESSED
 		    : mousein ? CTRL_HOT
 		    : CTRL_NORMAL;

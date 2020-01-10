@@ -41,10 +41,16 @@ public:
 	virtual void   AssignAccessKeys(dword used);
 	virtual Rect   GetVoidRect() const;
 
+
 	Color color;
 
+	static Value LabelBoxLook;
+
 public:
-	LabelBox& SetColor(Color c)          { color = c; return *this; }
+	static void  SetLook(const Value& v) { LabelBoxLook = v; }
+	static Value GetLook()               { return LabelBoxLook; }
+
+	LabelBox&    SetColor(Color c)       { color = c; return *this; }
 
 	LabelBox();
 	virtual ~LabelBox();

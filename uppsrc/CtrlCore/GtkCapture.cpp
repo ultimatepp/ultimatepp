@@ -9,10 +9,51 @@ namespace Upp {
 Ptr<Ctrl> Ctrl::grabwindow;
 Ptr<Ctrl> Ctrl::grabpopup;
 
+#if GTK_CHECK_VERSION(3, 20, 0)
+GdkSeat *Ctrl::GetSeat()
+{
+	return gdk_display_get_default_seat(gdk_display_get_default());
+}
+#endif
+
+GdkDevice *Ctrl::GetMouseDevice()
+{
+#if GTK_CHECK_VERSION(3, 20, 0)
+	return gdk_seat_get_pointer(GetSeat());
+#else
+	return gdk_device_manager_get_client_pointer(gdk_display_get_device_manager(gdk_display_get_default()));
+#endif
+}
+
+bool Ctrl::MouseIsGrabbed()
+{
+	return gdk_display_device_is_grabbed(gdk_display_get_default(), GetMouseDevice());
+}
+
+bool Ctrl::GrabMouse()
+{
+	return
+#if GTK_CHECK_VERSION(3, 20, 0)
+		gdk_seat_grab(GetSeat(), gdk(), GDK_SEAT_CAPABILITY_ALL_POINTING, true, NULL, NULL, NULL, 0)
+#else
+		gdk_device_grab(GetMouseDevice(), gdk(), GDK_OWNERSHIP_APPLICATION, true, (GdkEventMask)0, NULL, GDK_CURRENT_TIME)
+#endif
+	    == GDK_GRAB_SUCCESS;
+}
+
+void Ctrl::UngrabMouse()
+{
+#if GTK_CHECK_VERSION(3, 20, 0)
+		gdk_seat_ungrab(GetSeat());
+#else
+		gdk_device_ungrab(GetMouseDevice(), GDK_CURRENT_TIME);
+#endif
+}
+
 void Ctrl::StopGrabPopup()
 {
-	if(grabpopup && gdk_pointer_is_grabbed()) {
-		gdk_pointer_ungrab(CurrentTime);
+	if(grabpopup && MouseIsGrabbed()) {
+		UngrabMouse();
 		grabpopup = NULL;
 	}
 }
@@ -23,13 +64,7 @@ void Ctrl::StartGrabPopup()
 		Ctrl *w = activePopup[0];
 		if(w && w->IsOpen()) {
 			ReleaseWndCapture0();
-			static GdkCursor *NormalArrowCursor;
-			ONCELOCK {
-				NormalArrowCursor = gdk_cursor_new(GDK_LEFT_PTR);
-			}
-			if(gdk_pointer_grab(w->gdk(), FALSE,
-							    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-							    NULL, NormalArrowCursor, CurrentTime) == GDK_GRAB_SUCCESS)
+			if(w->GrabMouse())
 				grabpopup = w;
 		}
 	}
@@ -44,9 +79,7 @@ bool Ctrl::SetWndCapture()
 		return false;
 	StopGrabPopup();
 	ReleaseWndCapture();
-	if(gdk_pointer_grab(gdk(), FALSE,
-					    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-					    NULL, NULL, CurrentTime) == GDK_GRAB_SUCCESS) {
+	if(GrabMouse()) {
 		grabwindow = this;
 		return true;
 	}
@@ -59,7 +92,7 @@ bool Ctrl::ReleaseWndCapture0()
 	ASSERT(IsMainThread());
 	LLOG("ReleaseWndCapture");
 	if(grabwindow) {
-		gdk_pointer_ungrab(CurrentTime);
+		UngrabMouse();
 		grabwindow = NULL;
 		StartGrabPopup();
 		return true;
@@ -75,20 +108,15 @@ bool Ctrl::ReleaseWndCapture()
 bool Ctrl::HasWndCapture() const
 {
 	GuiLock __;
-	return this == grabwindow && grabwindow->IsOpen() && gdk_pointer_is_grabbed();
+	return this == grabwindow && grabwindow->IsOpen() && MouseIsGrabbed();
 }
 
 void Ctrl::CaptureSync()
 {
-	if(grabwindow && grabwindow->IsOpen() && !gdk_pointer_is_grabbed()) {
-		if(gdk_pointer_grab(grabwindow->gdk(), FALSE,
-		                    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-		                    NULL, NULL, CurrentTime) != GDK_GRAB_SUCCESS) {
-			grabwindow = NULL;
-		}		
-	}
+	if(grabwindow && grabwindow->IsOpen() && !MouseIsGrabbed() && !grabwindow->GrabMouse())
+		grabwindow = NULL;
 }
 
-}
+};
 
 #endif

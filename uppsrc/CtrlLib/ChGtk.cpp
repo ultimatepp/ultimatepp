@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11 // X11 uses GTK2 for look&feel
 #ifndef flagNOGTK
 
 #include "ChGtk.h"
@@ -716,6 +716,19 @@ void ChHostSkin()
 }
 
 }
+
+#else
+
+namespace Upp {
+
+void ChHostSkin() {}
+
+Image GtkThemeIcon(const char *name, int rsz)
+{
+	return CtrlImg::smallreporticon();
+}
+
+};
 
 #endif
 #endif

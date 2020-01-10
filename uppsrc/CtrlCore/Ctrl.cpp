@@ -991,6 +991,7 @@ void Ctrl::ReSkin()
 		return;
 	lock++;
 	ChReset();
+	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	if(s_chdefault)
 		(*s_chdefault)();
 	if(skin)

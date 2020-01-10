@@ -306,16 +306,25 @@ protected:
 
 public:
 	struct Style : ChStyle<Style> {
-		Value item, topitem[3], topbar;
-		Color menutext, itemtext, topitemtext[3];
-		SeparatorCtrl::Style breaksep;
-		Value look, arealook;
-		Value popupframe, popupbody, popupiconbar;
+		Value item; // hot menu item background in popup menu
+		Value topitem[3]; // top menu item background normal/hot/pressed
+		Value topbar; // deprecated
+		Color menutext; // normal state popup menu item text
+		Color itemtext; // hot state popup menu item text
+		Color topitemtext[3]; // top menu item text normal/hot/pressed
+		SeparatorCtrl::Style breaksep; // separator between menu bars
+		Value look; // top menu background
+		Value arealook; // top menu backgroung if arealook and in frame (can be null, then 'look')
+		Value popupframe; // static frame of whole popup menu
+		Value popupbody; // background of whole popup menu
+		Value popupiconbar; // if there is special icon background in popup menu
 		SeparatorCtrl::Style separator;
-		Size  maxiconsize;
-		int   leftgap, textgap;
-		int   lsepm, rsepm;
-		Point pullshift;
+		Size  maxiconsize; // limit of icon size
+		int   leftgap; // between left border and icon
+		int   textgap;
+		int   lsepm;
+		int   rsepm;
+		Point pullshift; // offset of submenu popup
 		bool  opaquetest; // If true, topmenu item can change hot text color
 	};
 

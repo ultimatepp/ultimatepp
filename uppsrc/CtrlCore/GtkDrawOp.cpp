@@ -119,7 +119,12 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 	cr.Intersect(GetClip());
 	if(cr.IsEmpty())
 		return false;
-	return !invalid || gdk_region_rect_in(invalid, GdkRect(cr)) != GDK_OVERLAP_RECTANGLE_OUT;
+	if(invalid.GetCount() == 0)
+		return true;
+	for(const Rect& ir : invalid)
+		if(cr.Intersects(ir))
+			return true;
+	return false;
 }
 
 Rect SystemDraw::GetPaintRect() const
@@ -134,21 +139,10 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	FlushText();
 	cairo_rectangle(cr, x, y, cx, cy);
 	if(color == InvertColor()) {
-#if GTK_CHECK_VERSION(2,24,0) && (CAIRO_VERSION_MAJOR > 1 || CAIRO_VERSION_MINOR > 9)
 		SetColor(White());
 		cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
 		cairo_fill(cr);
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-#else
-		if(drawable) {
-			GdkGC *gc = gdk_gc_new(drawable);
-	        gdk_gc_set_function(gc, GDK_INVERT);
-	        Point o = GetOffset();
-	        gdk_draw_drawable(drawable, gc, drawable, x + o.x, y + o.y, x + o.x, y + o.y, cx, cy);
-	        gdk_gc_set_function(gc, GDK_COPY);
-	        gdk_gc_destroy(gc);
-		}
-#endif
 	}
 	else {
 		SetColor(color);

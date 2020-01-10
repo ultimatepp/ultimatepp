@@ -56,9 +56,7 @@ bool Ctrl::IsAlphaSupported()
 
 bool Ctrl::IsCompositedGui()
 {
-    GuiLock __;
-    static bool b = gdk_display_supports_composite(gdk_display_get_default());
-    return b;
+	return true; // limits some GUI effects that do not play well with advanced desktops
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
@@ -69,6 +67,8 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 		h.Add(wins[i].ctrl);
 	return h;
 }
+
+cairo_surface_t *CreateCairoSurface(const Image& img);
 
 void  Ctrl::SetMouseCursor(const Image& image)
 {
@@ -88,22 +88,31 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		int64 aux = image.GetAuxData();
 		GdkCursor *c = NULL;
 		if(aux)
-			c = gdk_cursor_new((GdkCursorType)(aux - 1));
+			c = gdk_cursor_new_for_display(gdk_display_get_default(), (GdkCursorType)(aux - 1));
 		else
 		if(IsNull(image))
-			c = gdk_cursor_new(GDK_BLANK_CURSOR);
+			c = gdk_cursor_new_for_display(gdk_display_get_default(), GDK_BLANK_CURSOR);
 		else {
 			Point p = image.GetHotSpot();
+
+#if GTK_CHECK_VERSION(3, 10, 0)
+			cairo_surface_t *surface = CreateCairoSurface(image);
+			double scale = SCL(1);
+			cairo_surface_set_device_scale(surface, scale, scale);
+			c = gdk_cursor_new_from_surface(gdk_display_get_default(), surface, p.x / scale, p.y / scale);
+			cairo_surface_destroy(surface);
+#else
 			ImageGdk m;
 			m.Set(image);
 			GdkPixbuf *pb = m;
 			if(pb)
 				c = gdk_cursor_new_from_pixbuf(gdk_display_get_default(), pb, p.x, p.y);
+#endif
 		}
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
-			gdk_cursor_unref(c);
-			gdk_flush(); // Make it visible immediately
+			g_object_unref(c);
+			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
 	}
 }
@@ -191,14 +200,9 @@ Rect Ctrl::GetWndScreenRect() const
 	if(IsOpen()) {
 		gint x, y;
 		gdk_window_get_position(gdk(), &x, &y);
-	#if GTK_CHECK_VERSION(2, 24, 0)
 		gint width = gdk_window_get_width(gdk());
 		gint height = gdk_window_get_height(gdk());
-	#else
-		gint width, height;
-		gdk_drawable_get_size(gdk(), &width, &height);
-	#endif
-		return RectC(x, y, width, height);
+		return SCL(x, y, width, height);
 	}
 	return Null;
 }
@@ -218,7 +222,7 @@ void Ctrl::WndShow(bool b)
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
-	return top && top->window && top->window->window;
+	return top && top->window && gtk_widget_get_window(top->window);
 }
 
 void Ctrl::SetAlpha(byte alpha)
@@ -243,6 +247,17 @@ Rect Ctrl::GetWorkArea() const
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
+#if GTK_CHECK_VERSION(3, 22, 0)
+	GdkDisplay *s = gdk_display_get_default();
+	int n = gdk_display_get_n_monitors(s);
+	rc.Clear();
+	Vector<int> netwa;
+	for(int i = 0; i < n; i++) {
+		GdkRectangle rr;
+		gdk_monitor_get_workarea(gdk_display_get_monitor(s, i), &rr);
+		rc.Add(SCL(rr.x, rr.y, rr.width, rr.height));
+	}
+#else
 	GdkScreen *s = gdk_screen_get_default();
 	int n = gdk_screen_get_n_monitors(s);
 	rc.Clear();
@@ -250,22 +265,11 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		Rect r;
-#if GTK_CHECK_VERSION (3, 3, 5) // U++ does not work with gtk3 yet, but be prepared
 		gdk_screen_get_monitor_workarea(s, i, &rr);
-		r = RectC(r.x, r.y, r.width, r.height);
-#else
-		gdk_screen_get_monitor_geometry (s, i, &rr);
 		r = RectC(rr.x, rr.y, rr.width, rr.height);
-	#ifdef GDK_WINDOWING_X11
-		if(i == 0)
-			netwa = GetPropertyInts(gdk_screen_get_root_window(gdk_screen_get_default()),
-			                        "_NET_WORKAREA");
-		if(netwa.GetCount())
-			r = r & RectC(netwa[0], netwa[1], netwa[2], netwa[3]);
-	#endif
-#endif
 		rc.Add(r);
 	}
+#endif
 }
 
 Rect Ctrl::GetVirtualWorkArea()
@@ -289,8 +293,8 @@ Rect Ctrl::GetVirtualScreenArea()
 	if(r.right == 0) {
 		gint x, y, width, height;
 		gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-	                            &x, &y, &width, &height, NULL);
-	    r = RectC(x, y, width, height);
+	                            &x, &y, &width, &height);
+	    r = SCL(x, y, width, height);
 	}
 	return r;
 }
@@ -298,18 +302,20 @@ Rect Ctrl::GetVirtualScreenArea()
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
+#if GTK_CHECK_VERSION(3, 22, 0)
+	GdkRectangle rr;
+	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &rr);
+	return SCL(rr.x, rr.y, rr.width, rr.height);
+#else
 	static Rect r;
 	if (r.right == 0) {
 		Array<Rect> rc;
 		GetWorkArea(rc);
-#if GTK_CHECK_VERSION(2, 20, 0)
 		int primary = gdk_screen_get_primary_monitor(gdk_screen_get_default());
-#else
-		int primary = 0;
-#endif
 		primary >= 0 && primary < rc.GetCount() ? r = rc[primary] : r = GetVirtualScreenArea();
 	}
 	return r;
+#endif
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
@@ -392,8 +398,17 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndInvalidateRect " << r);
-	gdk_window_invalidate_rect(gdk(), GdkRect(r), TRUE);
-//	gtk_widget_queue_draw_area(top->window, r.left, r.top, r.GetWidth(), r.GetHeight());
+	Rect rr;
+	if(scale > 1) {
+		rr.left = r.left / 2;
+		rr.top = r.top / 2;
+		rr.right = (r.right + 1) / 2;
+		rr.bottom = (r.bottom + 1) / 2;
+	}
+	else
+		rr = r;
+	
+	gdk_window_invalidate_rect(gdk(), GdkRect(rr), TRUE);
 }
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
@@ -432,10 +447,11 @@ void Ctrl::WndSetPos(const Rect& rect)
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
 	if(!this_ || !IsOpen())
 		return;
+
 	Rect m(0, 0, 0, 0);
 	if(dynamic_cast<TopWindow *>(this))
 		m = GetFrameMargins();
-	gdk_window_move_resize(gdk(), rect.left - m.left, rect.top - m.top, rect.GetWidth(), rect.GetHeight());
+	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
 	int t0 = msecs();
 	do { // Wait up to 500ms for corresponding GDK_CONFIGURE to arrive
 		if(SweepConfigure(true))
@@ -465,9 +481,9 @@ void Ctrl::WndUpdate()
 {
 	GuiLock __;
 	LLOG("WndUpdate0");
-	gdk_window_process_updates(gdk(), TRUE);
+//	gdk_window_process_updates(gdk(), TRUE); // deprecated
 	FetchEvents(FALSE); // Should pickup GDK_EXPOSE and repaint the window
-	gdk_flush();
+	gdk_display_flush(gdk_display_get_default());
 }
 
 Rect Ctrl::GetDefaultWindowRect()

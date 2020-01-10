@@ -26,6 +26,18 @@ _DBG_
 	static void CaptureSync();
 
 	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
+	static gboolean GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer data);
+
+	static Point GetMouseInfo(GdkWindow *win, GdkModifierType& mod);
+	static GdkDevice *GetMouseDevice();
+#if GTK_CHECK_VERSION(3, 20, 0)
+	static GdkSeat   *GetSeat();
+#endif
+	static bool MouseIsGrabbed();
+	bool GrabMouse();
+	static void UngrabMouse();
+	
+	static int scale; // in case GUI is scaling (e.g. in UHD mode)
 
 	enum {
 		EVENT_NONE = -15321,
@@ -65,6 +77,7 @@ _DBG_
 	void   Proc();
 	bool   SweepConfigure(bool wait);
 	bool   SweepFocus(bool wait);
+	void   SyncWndRect(const Rect& rect);
 
 	static BiVector<GEvent>    Events;
 	static Vector< Ptr<Ctrl> > activePopup; // created with 'activate' flag - usually menu
@@ -75,7 +88,7 @@ _DBG_
 	static Ptr<Ctrl>           grabwindow;
 	static Ptr<Ctrl>           grabpopup;
 	static Ptr<Ctrl>           sel_ctrl;
-	static Ptr<Ctrl>           activeCtrl; // this is used to hold focus when popup is destroyed
+	static Ptr<Ctrl>           activeCtrl;
 
 	static int FindId(int id);
 	static int FindCtrl(Ctrl *ctrl);
@@ -170,6 +183,10 @@ public: // really private:
 	static Vector<dword>   keyhot;
 	static Vector<dword>   modhot;
 	static guint           MouseState;
+
+	static int    SCL(int x)                        { return scale * x; }
+	static Rect   SCL(int x, int y, int cx, int cy) { return RectC(SCL(x), SCL(y), SCL(cx), SCL(cy)); }
+	static double LSC(int x)                        { return (double)x / scale; }
             
 public:
 	static void      EndSession()              {}
@@ -181,7 +198,7 @@ public:
 	static guint32   CurrentTime;
 	static GEvent    CurrentEvent;
 
-	GdkWindow *gdk() const { return top ? top->window->window : NULL; }
+	GdkWindow *gdk() const { return top ? gtk_widget_get_window(top->window) : NULL; }
 	GtkWindow *gtk() const { return top ? (GtkWindow *)top->window : NULL; }
 
 	static GdkFilterReturn RootKeyFilter(GdkXEvent *xevent, GdkEvent *event, gpointer data);

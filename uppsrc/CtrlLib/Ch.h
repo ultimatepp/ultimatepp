@@ -11,4 +11,29 @@ enum {
 
 void  RoundedRect(Painter& w, double x, double y, double cx, double cy, double rx, double ry, dword corners);
 void  RoundedRect(Painter& w, Rectf r, double rx, double ry, dword corner);
-Image MakeButton(int radius, const Image& face, int border_width, Color border_color, dword corner);
+Image MakeElement(Size sz, double radius, const Image& face, int border_width, Color border_color, Event<Painter&, const Rectf&> shape);
+Image MakeButton(int radius, const Image& face, int border_width, Color border_color = Null, dword corner = 0xff);
+Image MakeButton(int radius, Color face, int border_width, Color border_color = Null, dword corner = 0xff);
+
+Image Hot3(const Image& m); // Adds resizing hotspots at 1/3
+Image ChHot(const Image& m, int n = 2); // Adds resizing hotspots DPI(n)
+Color AvgColor(const Image& m, const Rect& rr);
+Color AvgColor(const Image& m, int margin = 0);
+
+Color GetInk(const Image& m); // the color that is most different from AvgColor
+int   GetRoundness(const Image& m);
+
+Image WithRect(Image m, int x, int y, int cx, int cy, Color c);
+Image WithLeftLine(const Image& m, Color c, int w = DPI(1));
+Image WithRightLine(const Image& m, Color c, int w = DPI(1));
+Image WithTopLine(const Image& m, Color c, int w = DPI(1));
+Image WithBottomLine(const Image& m, Color c, int w = DPI(1));
+
+// Creates synthetic style based on SColors and basic button face
+void ChSynthetic(Image button100x100[4], Color text[4]);
+
+// for diagnostics purposes
+#ifdef _DEBUG
+void  SetChameleonSample(const Value& m, bool once = true);
+Value GetChameleonSample();
+#endif

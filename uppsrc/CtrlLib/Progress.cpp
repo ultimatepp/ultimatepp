@@ -10,6 +10,7 @@ CH_STYLE(ProgressIndicator, Style, StyleDefault)
 	vlook = CtrlsImg::VPI();
 	vchunk = CtrlsImg::VPIC();
 	bound = false;
+	nomargins = false;
 }
 
 Size ProgressIndicator::GetMsz()
@@ -74,6 +75,8 @@ void ProgressIndicator::Paint(Draw& w) {
 		if(sz.cy > sz.cx) {
 			ChPaint(w, sz, style->vlook);
 			Rect r = ChMargins(style->vlook);
+			if(style->nomargins)
+				r.left = r.right = r.top = r.bottom = 0;
 			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
 			ChPaint(w, r.left, sz.cy - r.bottom - p - p0, sz.cx - r.left - r.right, p,
 			        style->vchunk);
@@ -81,6 +84,8 @@ void ProgressIndicator::Paint(Draw& w) {
 		else {
 			ChPaint(w, sz, style->hlook);
 			Rect r = ChMargins(style->hlook);
+			if(style->nomargins)
+				r.left = r.right = r.top = r.bottom = 0;
 			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
 			ChPaint(w, r.left + p0, r.top, p, sz.cy - r.top - r.bottom, style->hchunk);
 		}

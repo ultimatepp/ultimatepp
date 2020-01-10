@@ -1,8 +1,6 @@
-
-
 #include "CtrlLib.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 #ifdef flagNOGTK
 
 namespace Upp {
@@ -122,7 +120,7 @@ Image GetGTK0(GtkWidget *widget, int state, int shadow, const char *detail, int 
 	if(GTK_IS_RANGE(widget)) {
 		GtkRange *r = GTK_RANGE(widget);
 	#ifndef GTK_NEWSCROLLBAR
-		r->has_stepper_a = r->has_stepper_b = r->has_stepper_c = r->has_stepper_d = 1;
+//		r->has_stepper_a = r->has_stepper_b = r->has_stepper_c = r->has_stepper_d = 1;
 	#endif
 		GdkRectangle cr;
 		cr.x = rect.left;

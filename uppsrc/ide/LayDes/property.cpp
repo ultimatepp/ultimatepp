@@ -185,7 +185,7 @@ struct ColorProperty : public EditorProperty<ColorPusher> {
 
 	ColorProperty() {
 		Add(editor.HSizePosZ(100, 2).TopPos(2));
-		editor.WithText().SColors().NullText("Null").Track();
+		editor.WithText().NullText("Null").Track();
 	}
 
 	static ItemProperty *Create() { return new ColorProperty; }

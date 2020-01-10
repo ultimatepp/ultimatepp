@@ -116,6 +116,7 @@ file
 	ChGtk.h,
 	ChGtk0.cpp,
 	ChGtk.cpp,
+	ChGtk3.cpp,
 	ChCocoMM.h,
 	ChCocoMM.mm,
 	ChCoco.h,
