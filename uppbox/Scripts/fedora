@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yum -y install gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel xorg-x11-server-devel freetype-devel expat-devel
+yum -y install libgtk+3.0-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel xorg-x11-server-devel freetype-devel expat-devel
