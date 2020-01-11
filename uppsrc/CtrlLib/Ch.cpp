@@ -384,7 +384,7 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 			                                               CTRL_HOT, 2,
 			                                               CTRL_PRESSED, 8,
 			                                               -8)), DPI(1), ink, CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
-			s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(2)), DPI(3));
+			s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
 			s.margin = 0;
 			s.sel = Rect(0, DPI(1), 0, DPI(1));
 			s.extendleft = DPI(2);
@@ -393,8 +393,7 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 	}
 }
 
-#if 1
-void ChStdSkin()
+void ChBaseSkin()
 {
 	ChSysInit();
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
@@ -402,12 +401,8 @@ void ChStdSkin()
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 }
 
-#else
-
 void ChStdSkin()
 {
-	ChSysInit();
-	
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
 	for(int i = 0; i < 6; i++)
@@ -416,8 +411,7 @@ void ChStdSkin()
 	int c = DPI(16);
 
 	Color text[4];
-	Color face[4];
-	Image button[4];
+	Image button[4], sbutton[4];
 	auto Adjust = [](Color c, int adj) {
 		return Color(clamp(c.GetR() + adj, 0, 255),
 		             clamp(c.GetG() + adj, 0, 255),
@@ -437,7 +431,8 @@ void ChStdSkin()
 				s.look[i] = MakeButton(roundness, f, DPI(1 + pass), border);
 				text[i] = s.monocolor[i] = s.textcolor[i] = ink;
 				if(pass == 0) {
-					button[i] = MakeButton(DPI(1), f, DPI(1 + pass), border);
+					sbutton[i] = MakeButton(DPI(3), f, DPI(1), border);
+					button[i] = MakeButton(DPI(1), f, DPI(1), border);
 					{
 						for(int opt = 0; opt < 2; opt++) {
 							ImagePainter p(c, c);
@@ -465,8 +460,8 @@ void ChStdSkin()
 				}
 			}
 		}
-		
-		ChSynthetic(button, text);
+
+		ChSynthetic(sbutton, text);
 
 		{
 			auto& s = ToolButton::StyleDefault().Write();
@@ -500,6 +495,20 @@ void ChStdSkin()
 
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 }
+
+#ifdef GUI_X11
+
+void ChHostSkin()
+{
+	int h = Ctrl::GetPrimaryScreenArea().Height();
+	Font::SetDefaultFont(Arial(h > 1300 ? 26 : h > 800 ? 14 : 12));
+	SColorFace_Write(Color(242, 241, 240));
+	SColorMenu_Write(Color(242, 241, 240));
+	SColorHighlight_Write(Color(50, 50, 250));
+
+	ChStdSkin();
+}
+
 #endif
 
 }

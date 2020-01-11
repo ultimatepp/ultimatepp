@@ -4,16 +4,6 @@
 
 #ifdef GUI_X11
 
-#if !defined(flagNOGTK)
-    #include <glib.h>
-    #include <libnotify/notify.h>
-    #ifdef NOTIFY_CHECK_VERSION
-        #if NOTIFY_CHECK_VERSION(0,7,0)
-            #define NOTIFY_VERSION_GT_0_7_0
-        #endif
-    #endif
-#endif
-
 namespace Upp {
 
 Atom TraySelection()
@@ -80,7 +70,6 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 {
 	if(!traywin)
 		return;
-#if defined(flagNOGTK)
 	int len = strlen(text);
 	static int stamp;
 	Call(1, 1000 * timeout, len, ++stamp);
@@ -100,33 +89,7 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 		XSync(Xdisplay, XFalse);
 	}
 	UntrapX11Errors(x11trap);
-#else	
-	if (!notify_is_initted()) {
-		if (!notify_init(title)) {
-			return;
-		}
-	}
-	GError *error = NULL;
-	 
-	NotifyNotification *notification = notify_notification_new (title, text
-					, type == 1 ? "gtk-dialog-info"
-					: type == 2 ? "gtk-dialog-warning"
-					: "gtk-dialog-error"
-#ifndef NOTIFY_VERSION_GT_0_7_0
-					, NULL
-#endif
-					);
-	notify_notification_set_timeout(notification, timeout * 1000);
-	notify_notification_show (notification, &error);
-#endif
 }
-
-#if !defined(flagNOGTK)
-EXITBLOCK {
-	if (notify_is_initted())
-		notify_uninit ();
-}
-#endif
 
 bool TrayIcon::HookProc(XEvent *event)
 {

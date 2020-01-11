@@ -1,3 +1,4 @@
+void ChBaseSkin();
 void ChStdSkin();
 void ChClassicSkin();
 void ChHostSkin();
