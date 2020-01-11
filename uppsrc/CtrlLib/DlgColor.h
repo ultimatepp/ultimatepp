@@ -165,6 +165,7 @@ private:
 
 	int      colori;
 	bool     notnull;
+	bool     scolors;
 	bool     norampwheel;
 	bool     animating;
 	bool     hints;
@@ -195,6 +196,7 @@ public:
 	Color    Get() const;
 	
 	ColorPopUp& NotNull(bool b = true)               { notnull = b; return *this; }
+	ColorPopUp& SColors(bool b = true)               { scolors = b; return *this; }//Deprecated, BUT NEEDED IN THEIDE
 	ColorPopUp& NullText(const char *s)              { nulltext = s; Refresh(); return *this; }
 	ColorPopUp& WithVoid(bool b = true)              { withvoid = b; Refresh(); return *this; }
 	ColorPopUp& VoidText(const char *s)              { voidtext = s; Refresh(); return *this; }
@@ -237,6 +239,7 @@ public:
 	ColorPusher& NotNull(bool b = true)     { colors.NotNull(b); return *this; }
 	ColorPusher& WithVoid(bool b = true)    { colors.WithVoid(b); return *this; }
 	ColorPusher& VoidText(const char *s)    { voidtext = s; colors.VoidText(s); Refresh(); return *this; }
+	ColorPusher& SColors(bool b = true)     { colors.SColors(b); return *this; }
 	ColorPusher& WithText()                 { withtext = true; Refresh(); return *this; }
 	ColorPusher& WithHex()                  { withhex = true; Refresh(); return *this; }
 	ColorPusher& Track(bool b = true)       { track = b; return *this; }
