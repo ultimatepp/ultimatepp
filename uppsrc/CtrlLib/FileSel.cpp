@@ -81,7 +81,7 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 
 #endif
 
-#if defined(PLATFORM_X11) && !defined(flagNOGTK)
+#if defined(GUI_GTK)
 
 Image GtkThemeIcon(const char *name, int sz);
 

@@ -7,12 +7,6 @@
 #define Display XDisplay
 #define Picture XPicture
 
-#ifndef flagNOGTK
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-#include <gdk/gdkprivate.h>
-#endif
-
 #undef Picture
 #undef Time
 #undef Font
@@ -219,26 +213,11 @@ void InitX11Draw(XDisplay *display)
 
 void InitX11Draw(const char *dispname)
 {
-#ifdef flagNOGTK
 	if(!dispname || !*dispname) {
 		int f = Environment().Find("DISPLAY");
 		dispname = (f >= 0 ? ~Environment()[f] : ":0.0");
 	}
 	InitX11Draw(XOpenDisplay(dispname));
-#else
-	MemoryIgnoreLeaksBlock __;
-	const Vector<String>& cmd = CommandLine();
-	char **argv = (char**) MemoryAllocPermanent(sizeof(char *) * cmd.GetCount());
-	for(int i = 0; i < cmd.GetCount(); i++)
-	    argv[i] = PermanentCopy(cmd[i]);
-	int argc = cmd.GetCount();
-	gtk_init (&argc, &argv);
-	GtkWidget *w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	GdkDisplay *d = gtk_widget_get_display(w);
-	gdk_x11_display_get_xdisplay(d);
-	InitX11Draw(gdk_x11_display_get_xdisplay(d));
-	gtk_widget_destroy(w);
-#endif
 }
 
 void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl)
