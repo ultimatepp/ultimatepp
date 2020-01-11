@@ -29,7 +29,7 @@ struct OptionHeaderDisplay : Display {
 		w.Clipoff(r.left + Zx(5), r.top, r.Width() - Zx(10), r.Height());
 		int tcy = GetTLTextHeight(txt, StdFont().Bold());
 		DrawTLText(w, 0, max((r.Height() - tcy) / 2, 0), r.Width(), txt,
-		           StdFont().Bold(), SColorInfoText);
+		           StdFont().Bold(), SColorText());
 		w.End();
 	}
 	virtual Size GetStdSize(const Value& q) const
