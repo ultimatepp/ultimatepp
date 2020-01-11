@@ -202,7 +202,7 @@ struct sCachedRescale : public ImageMaker
 
 Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter)
 {
-	if(m.GetSize() == sz)
+	if(m.GetSize() == sz && src == sz)
 		return m;
 	sCachedRescale cr;
 	cr.sz = sz;
