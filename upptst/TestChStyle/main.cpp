@@ -91,7 +91,7 @@ TestChStyle::TestChStyle()
 GUI_APP_MAIN
 {
 	Ctrl::SetDarkThemeEnabled();
-	Ctrl::SetSkin(ChStdSkin);
+//	Ctrl::SetSkin(ChStdSkin);
 	
 	TestChStyle().Run();
 }
