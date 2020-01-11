@@ -25,11 +25,11 @@ struct OptionHeaderDisplay : Display {
 	                   Color paper, dword style) const
 	{
 		WString txt = q;
-		w.DrawRect(r, SColorInfo);
+		w.DrawRect(r, AdjustIfDark(Color(255, 255, 204)));
 		w.Clipoff(r.left + Zx(5), r.top, r.Width() - Zx(10), r.Height());
 		int tcy = GetTLTextHeight(txt, StdFont().Bold());
 		DrawTLText(w, 0, max((r.Height() - tcy) / 2, 0), r.Width(), txt,
-		           StdFont().Bold(), SColorText);
+		           StdFont().Bold(), SColorInfoText);
 		w.End();
 	}
 	virtual Size GetStdSize(const Value& q) const
