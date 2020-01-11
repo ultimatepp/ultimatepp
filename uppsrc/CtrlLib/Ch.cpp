@@ -134,14 +134,14 @@ Image MakeElement(Size sz, double radius, const Image& face, double border_width
 	if(!IsNull(border_color))
 		w.Stroke(border_width, border_color);
 	Image m = w;
-	Point p1(radius + border_width, radius + border_width);
+	Point p1(int(radius + border_width), int(radius + border_width));
 	SetHotSpots(m, p1, (Point)r.BottomRight() - p1 - Point(1, 1));
 	return m;
 }
 
 Image MakeButton(int radius, const Image& face, double border_width, Color border_color, dword corner)
 {
-	int q = radius + border_width + DPI(16);
+	double q = radius + border_width + DPI(16);
 	return MakeElement(Size(q, q), radius, face, border_width, border_color, [&](Painter& w, const Rectf& r) {
 		RoundedRect(w, r, radius, radius, corner);
 	});

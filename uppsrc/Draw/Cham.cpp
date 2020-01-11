@@ -130,6 +130,58 @@ Value ChBorder(const ColorF *colors, const Value& face)
 	return RawToValue(b);
 }
 
+static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Image& m, bool vert)
+{
+	if(cx <= 0)
+		return;
+	Size isz = m.GetSize();
+	if(vert) {
+		Swap(isz.cx, isz.cy);
+		Swap(cx, cy);
+	}
+	int ecx = isz.cy / 2; // size of 'ending' (can be circular)
+	int ccx = isz.cy; // size of central part, there is sometimes some sort of 'handle'
+	int sl = (isz.cx - 2 * ecx - ccx) / 2; // size of left stretched part source
+	int sr = isz.cx - 2 * ecx - ccx - sl; // size of right stretched part source
+
+	int tel = ecx; // left ending target size
+	int l = (cx - 2 * ecx - ccx) / 2; // size of left stretched part
+	int tccx = ccx; // target center size
+	int r = cx - 2 * ecx - ccx - l; // size of right stretched part
+	int ter = ecx; // size of right stretched part
+
+	if(l < 0 || r < 0) { // if not enough space, remove left stretch and center
+		l = 0;
+		tccx = 0;
+		r = cx - 2 * ecx - tccx - l;
+	}
+	
+	if(r < 0) { // still not enough space, need to resize endings too
+		r = 0;
+		tel = cx / 2;
+		ter = cx = tel;
+	}
+
+	int sx = 0;
+	auto DrawPart = [&](int tcx, int scx) {
+		if(scx)
+			if(vert) {
+				w.DrawImage(x, y, CachedRescale(m, Size(cy, tcx), RectC(0, sx, isz.cy, scx)));
+				y += tcx;
+			}
+			else {
+				w.DrawImage(x, y, CachedRescale(m, Size(tcx, cy), RectC(sx, 0, scx, isz.cy)));
+				x += tcx;
+			}
+		sx += scx;
+	};
+	DrawPart(tel, ecx); // left ending
+	DrawPart(l, sl); // left stretch
+	DrawPart(tccx, ccx); // central part
+	DrawPart(r, sr); // right stretch
+	DrawPart(ter, ecx); // right ending
+}
+
 Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 {
 	if(IsType<sChLookWith>(v)) {
@@ -187,6 +239,13 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 		Size isz = img.GetSize();
 		Size sz = r.GetSize();
 		Point p = img.GetHotSpot();
+		if(p.x == CH_SCROLLBAR_IMAGE) {
+			if(op == LOOK_MARGINS)
+				return Rect(0, 0, 0, 0);
+			if(op == LOOK_PAINT)
+				sDrawScrollbarThumb(w, r.left, r.top, r.GetWidth(), r.GetHeight(), img, isz.cx < isz.cy);
+			return true;
+		}
 		Point p2 = img.Get2ndSpot();
 		int tile = 0;
 		if(p2.x || p2.y) {

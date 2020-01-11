@@ -6,6 +6,10 @@ enum LookOp {
 	LOOK_ISBODYOPAQUE,
 };
 
+enum {
+	CH_SCROLLBAR_IMAGE = -1000 // special Image hotspot x value for ChPaint of scrollbar
+};
+
 void  ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& look, int lookop));
 
 Image AdjustColors(const Image& img);
