@@ -32,5 +32,6 @@ LAYOUT(TestChStyleLayout, 484, 492)
 	ITEM(Label, dv___30, SetLabel(t_("Label")).LeftPosZ(324, 40).TopPosZ(52, 19))
 	UNTYPED(sample, LeftPosZ(228, 232).TopPosZ(360, 80))
 	ITEM(Button, dis, SetLabel(t_("disabled")).LeftPosZ(88, 56).TopPosZ(272, 24))
+	ITEM(Label, dv___33, SetLabel(t_("This is label")).LeftPosZ(16, 168).TopPosZ(240, 19))
 END_LAYOUT
 
