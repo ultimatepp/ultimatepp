@@ -8,5 +8,6 @@ file
 	TestChStyle.lay;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI X11";
 
