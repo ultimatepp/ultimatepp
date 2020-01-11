@@ -372,9 +372,9 @@ void ChHostSkin()
 		GtkSize(sz);
 		
 		s.barsize = s.thumbwidth = DPI(sz.cy);
-		s.thumbmin = max(minslider, s.barsize);
+		s.thumbmin = max(minslider, 2 * s.barsize);
 
-		sz.cx = 2 * sz.cy;
+		sz.cx = 4 * sz.cy;
 
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			Gtk_New("scrollbar.horizontal.bottom", status);
@@ -386,11 +386,9 @@ void ChHostSkin()
 			s.hupper[status] = s.hlower[status] = ChHot(m);
 			s.vupper[status] = s.vlower[status] = ChHot(RotateAntiClockwise(m)); // we have problems getting this right for vertical
 			Gtk_New("scrollbar.horizontal.bottom contents trough slider", status);
-			s.hthumb[status] = ChHot(CairoImage(sz.cx, sz.cy));
-
-			Gtk_New("scrollbar.vertical.right contents trough slider", status);
-			GtkSize(sz);
-			s.vthumb[status] = ChHot(CairoImage(sz.cy, sz.cx));
+			Image thumb = CairoImage(sz.cx, sz.cy);
+			s.hthumb[status] = WithHotSpot(thumb, CH_SCROLLBAR_IMAGE, 0);
+			s.vthumb[status] = WithHotSpot(RotateAntiClockwise(thumb), CH_SCROLLBAR_IMAGE, 0);
 		}
 	}
 	

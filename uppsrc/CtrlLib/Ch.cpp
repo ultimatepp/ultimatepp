@@ -393,29 +393,25 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 	}
 }
 
+#if 1
+void ChStdSkin()
+{
+	ChSysInit();
+	GUI_GlobalStyle_Write(GUISTYLE_XP);
+	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
+	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+}
+
+#else
+
 void ChStdSkin()
 {
 	ChSysInit();
 	
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
-/*
-	Gtk_New("radiobutton radio");
-	SOImages(CtrlsImg::I_S0, GTK_STATE_FLAG_NORMAL);
-	SOImages(CtrlsImg::I_S1, GTK_STATE_FLAG_CHECKED);
-	Gtk_New("checkbutton check");
-	SOImages(CtrlsImg::I_O0, GTK_STATE_FLAG_NORMAL);
-	SOImages(CtrlsImg::I_O1, GTK_STATE_FLAG_CHECKED);
-	SOImages(CtrlsImg::I_O2, GTK_STATE_FLAG_INCONSISTENT);
-
-	CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
-	CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
-	CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
-	CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
-*/
 	for(int i = 0; i < 6; i++)
 		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
-
 		
 	int c = DPI(16);
 
@@ -462,7 +458,7 @@ void ChStdSkin()
 							if(chk == 1)
 								p.Move(4, 8).Line(7, 11).Line(12, 5).Stroke(2, ink);
 							if(chk == 2)
-								p.Rectangle(4, 4, 8, 8).Fill(border);
+								p.Rectangle(4, 7, 8, 2).Fill(ink);
 							CtrlsImg::Set(decode(chk, 0, CtrlsImg::I_O0, 1, CtrlsImg::I_O1, CtrlsImg::I_O2) + i, p);
 						}
 					}
@@ -492,7 +488,7 @@ void ChStdSkin()
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		ImagePainter p(c, c);
 		p.Rectangle(0, 0, c, c).Fill(0, 0, SColorFace(), c, 0, SColorPaper());
-		Image vtrough = p; // WithLeftLine(p, border);
+		Image vtrough = p;
 
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
@@ -504,5 +500,6 @@ void ChStdSkin()
 
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 }
+#endif
 
 }

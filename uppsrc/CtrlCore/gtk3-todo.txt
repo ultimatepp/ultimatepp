@@ -2,8 +2,6 @@
 - Remove warnings
 - Test dark theme
 - Test rect theme
-- Blue Menta ugly scrollbars (round)
-- TraditionalOk ugly scrollbars (centre image)
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - 3.8 theme
@@ -54,3 +52,5 @@ DONE:
 - Scale must not be same as UHD
 - makefile pkg-config support
 - Test with 3.8
+- TraditionalOk ugly scrollbars (centre image)
+- Blue Menta ugly scrollbars (round)
