@@ -5,11 +5,10 @@
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - 3.8 theme
-- CleanTheme for X11
-- libgtk-3-dev to buildrequires
 - test DateTimeCtrl in dark mode
 - check CtrlCore/Ctrl.tpp
 - Check FileSel
+- tooltip issue
 
 NTH:
 - spinbutton cosmetics
@@ -54,3 +53,5 @@ DONE:
 - Test with 3.8
 - TraditionalOk ugly scrollbars (centre image)
 - Blue Menta ugly scrollbars (round)
+- CleanTheme for X11
+- libgtk-3-dev to buildrequires
