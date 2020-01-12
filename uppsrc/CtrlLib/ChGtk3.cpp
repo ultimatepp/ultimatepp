@@ -280,9 +280,14 @@ void ChHostSkin()
 		SColorHighlightText_Write(GetInkColor());
 	Gtk_New("label.view");
 		SColorLabel_Write(GetInkColor());
+#if 0
 	Gtk_New("tooltip.background");
 		SColorInfo_Write(GetBackgroundColor());
 		SColorInfoText_Write(GetInkColor());
+#else
+	SColorInfo_Write(IsDark(SColorText()) ? LtYellow() : GrayColor(79));
+	SColorInfoText_Write(SColorText());
+#endif
 
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
@@ -383,8 +388,8 @@ void ChHostSkin()
 			Over(m, CairoImage(sz.cx, sz.cy));
 			Gtk_New("scrollbar.horizontal.bottom contents trough", status);
 			Over(m, CairoImage(sz.cx, sz.cy));
-			s.hupper[status] = s.hlower[status] = ChHot(m);
-			s.vupper[status] = s.vlower[status] = ChHot(RotateAntiClockwise(m)); // we have problems getting this right for vertical
+			s.hupper[status] = s.hlower[status] = WithHotSpot(m, CH_SCROLLBAR_IMAGE, 0);;
+			s.vupper[status] = s.vlower[status] = WithHotSpot(RotateAntiClockwise(m), CH_SCROLLBAR_IMAGE, 0); // we have problems getting this right for vertical
 			Gtk_New("scrollbar.horizontal.bottom contents trough slider", status);
 			Image thumb = CairoImage(sz.cx, sz.cy);
 			s.hthumb[status] = WithHotSpot(thumb, CH_SCROLLBAR_IMAGE, 0);
