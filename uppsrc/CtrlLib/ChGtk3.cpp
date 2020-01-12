@@ -223,6 +223,8 @@ void SOImages(int imli, dword flags)
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
 		CtrlsImg::Set(imli++, CairoImage(16, 16, [&](cairo_t *cr) {
+			gtk_render_background(sCtx, cr, 0, 0, 16, 16);
+			gtk_render_frame(sCtx, cr,  0, 0, 16, 16);
 			gtk_render_check(sCtx, cr, 0, 0, 16, 16);
 		}));
 	}
@@ -401,7 +403,7 @@ void ChHostSkin()
 		s.pullshift.y = 0;
 
 		Gtk_New("menu");
-		Image m = CairoImage(32, 32);
+		Image m = CairoImage(128, 64);
 		s.pullshift.y = 0;
 		int mg = DPI(2);
 		s.popupframe = WithHotSpot(m, mg, mg);
@@ -420,13 +422,19 @@ void ChHostSkin()
 			s.menutext = IsDark(c) ? White() : Black();
 		s.item = Hot3(CairoImage(32, 16));
 		
+		m = CreateImage(Size(DPI(32), DPI(16)), SColorFace());
+		Gtk_New("frame");
+		Over(m, CairoImage(DPI(32), DPI(16)));
+		Gtk_New("frame border");
+		Over(m, CairoImage(DPI(32), DPI(16)));
 		Gtk_New("menubar");
-		s.look = Hot3(CairoImage(32, 16));
+		Over(m, CairoImage(DPI(32), DPI(16)));
+		s.look = Hot3(m);
 		Color dk = SColorText();
 		Color wh = SColorPaper();
 		if(IsDark(wh))
 			Swap(dk, wh);
-		s.topitemtext[0] = IsDark(AvgColor(sCurrentImage)) ? wh : dk;
+		s.topitemtext[0] = IsDark(AvgColor(m)) ? wh : dk;
 		s.topitem[1] = s.topitem[0] = Null;
 		s.topitemtext[1] = s.topitemtext[0];
 		Gtk_New("menubar menuitem", CTRL_HOT);
