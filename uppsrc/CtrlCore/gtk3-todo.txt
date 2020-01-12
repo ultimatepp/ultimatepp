@@ -1,6 +1,5 @@
 - Issue with editfield text clipping in the right
 - Remove warnings
-- Test dark theme
 - Test rect theme
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
@@ -9,6 +8,8 @@
 - check CtrlCore/Ctrl.tpp
 - Check FileSel
 - tooltip issue
+- disabled color in Breeze-Dark
+- a lot of work in Redmond
 
 NTH:
 - spinbutton cosmetics
@@ -55,3 +56,4 @@ DONE:
 - Blue Menta ugly scrollbars (round)
 - CleanTheme for X11
 - libgtk-3-dev to buildrequires
+- Test dark theme
