@@ -368,9 +368,9 @@ void ChHostSkin()
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		static gboolean stepper;
+		static gint minslider;
 		ONCELOCK {
 			static GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
-			gint minslider;
 			gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
 		}
 		if(!stepper)
