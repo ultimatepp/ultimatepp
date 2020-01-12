@@ -1,18 +1,14 @@
 - Issue with editfield text clipping in the right
 - Remove warnings
-- Test rect theme
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - 3.8 theme
-- test DateTimeCtrl in dark mode
-- check CtrlCore/Ctrl.tpp
-- Check FileSel
-- tooltip issue
 - disabled color in Breeze-Dark
-- a lot of work in Redmond
+- DarkCold: problem slight problem with scrollbars
 
 NTH:
 - spinbutton cosmetics
+- Redmond scrollbars width
 
 PROBABLY DONE:
 - Problem with hot3 in scrollbar horizontal (check in SD)
@@ -57,3 +53,9 @@ DONE:
 - CleanTheme for X11
 - libgtk-3-dev to buildrequires
 - Test dark theme
+- Test rect theme
+- Check FileSel
+- a lot of work in Redmond
+- check CtrlCore/Ctrl.tpp
+- tooltip issue
+- test DateTimeCtrl in dark mode
