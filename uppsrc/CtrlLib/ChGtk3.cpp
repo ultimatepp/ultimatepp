@@ -110,6 +110,20 @@ Image CairoImage(GtkStyleContext *ctx, int cx = 40, int cy = 32)
 	});
 }
 
+Color GetInkColor(GtkStyleContext *ctx, dword flags)
+{
+	GdkRGBA color;
+	gtk_style_context_get_color(ctx, (GtkStateFlags)flags, &color);
+	RGBA rgba;
+	rgba.r = int(255 * color.red);
+	rgba.g = int(255 * color.green);
+	rgba.b = int(255 * color.blue);
+	rgba.a = int(255 * color.alpha);
+	RGBA t = SColorPaper();
+	AlphaBlend(&t, &rgba, 1);
+	return t;
+}
+
 #if GTK_CHECK_VERSION(3, 20, 0)
 
 static GtkStyleContext *sCtx = NULL;
@@ -206,16 +220,7 @@ void GtkSize(Size& sz)
 
 Color GetInkColor()
 {
-	GdkRGBA color;
-	gtk_style_context_get_color(sCtx, sFlags, &color);
-	RGBA rgba;
-	rgba.r = int(255 * color.red);
-	rgba.g = int(255 * color.green);
-	rgba.b = int(255 * color.blue);
-	rgba.a = int(255 * color.alpha);
-	RGBA t = SColorPaper();
-	AlphaBlend(&t, &rgba, 1);
-	return t;
+	GetInkColor(sCtx, sFlags);
 }
 
 void SOImages(int imli, dword flags)
@@ -362,10 +367,12 @@ void ChHostSkin()
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
-		static GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
-		gboolean stepper;
-		gint minslider;
-		gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
+		static gboolean stepper;
+		ONCELOCK {
+			static GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
+			gint minslider;
+			gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
+		}
 		if(!stepper)
 			s.arrowsize = 0;
 		Gtk_New("scrollbar.horizontal.bottom");
@@ -483,6 +490,34 @@ Image GtkThemeIcon(const char *name, int rsz)
 void ChHostSkin()
 {
 	SetupFont();
+#if 0
+	static Color paper;
+	ONCELOCK {
+		GtkStyleContext *ctx = gtk_widget_get_style_context((GtkWidget *)gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+		gtk_style_context_set_state(ctx, GTK_STATE_FLAG_NORMAL);
+		paper = AvgColor(CairoImage(ctx));
+		SetChameleonSample(CairoImage(ctx));
+		DDUMP(paper);
+	}
+	if(IsDark(paper)) {
+		SColorText_Write(White());
+		SColorPaper_Write(Black());
+		SColorMenuText_Write(White());
+		SColorFace_Write(GrayColor(60));
+		SColorMenu_Write(GrayColor(70));
+		SColorHighlight_Write(GrayColor(120));
+		SColorInfo_Write(GrayColor(79));
+		SColorInfoText_Write(SColorText());
+	}
+	else
+#endif
+	{
+		SColorFace_Write(Color(242, 241, 240));
+		SColorMenu_Write(Color(242, 241, 240));
+		SColorHighlight_Write(Color(50, 50, 250));
+	}
+
+	ChStdSkin();
 }
 
 #endif
