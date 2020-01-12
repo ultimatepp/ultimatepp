@@ -165,16 +165,10 @@ void ScrollBar::Paint(Draw& w) {
 		if(style->through)
 			ChPaint(w, sz, l[0][CTRL_DISABLED]);
 		else
-		if(IsHorz()) {
-			ChPaint(w, cc, 0, sz.cx / 2, sz.cy, l[0][CTRL_DISABLED]);
-			ChPaint(w, cc + sz.cx / 2, 0, sz.cx - sz.cx / 2, sz.cy, l[1][CTRL_DISABLED]);
-		}
-		else {
-			ChPaint(w, 0, cc, sz.cx, sz.cy / 2, l[0][CTRL_DISABLED]);
-			ChPaint(w, 0, cc + sz.cy / 2, sz.cx, sz.cy - sz.cy / 2, l[1][CTRL_DISABLED]);
-//			w.DrawRect(0, cc, sz.cx, sz.cy / 2, Red()); _DBG_
-//			w.DrawRect(0, cc + sz.cy / 2, sz.cx, sz.cy - sz.cy / 2, Green()); _DBG_
-		}
+		if(IsHorz())
+			ChPaint(w, cc, 0, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
+		else
+			ChPaint(w, 0, cc, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
 }
 
 
