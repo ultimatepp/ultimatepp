@@ -5,6 +5,7 @@
 - disabled color in Breeze-Dark
 - DarkCold: problem slight problem with scrollbars
 - PopupInfo issue
+- FileSel icons for Video etc
 
 NTH:
 - spinbutton cosmetics
