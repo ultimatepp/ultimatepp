@@ -2,10 +2,8 @@
 - Remove warnings
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
-- disabled color in Breeze-Dark
 - DarkCold: problem slight problem with scrollbars
 - Pushbutton push does not look nice
-- ColumnList selected item background (Mint-X)
 
 NTH:
 - spinbutton cosmetics
@@ -64,3 +62,5 @@ DONE:
 - 3.8 theme
 - PopupInfo issue
 - FileSel icons for Video etc
+- ColumnList selected item background (Mint-X)
+- disabled color in Breeze-Dark
