@@ -190,23 +190,6 @@ void Gtk_New(const char *name, int state = 0, dword flags = 0)
 	sCurrentSize.cy = min_height;
 }
 
-/*
-bool GtkStyleBool(const char *name)
-{
-	return false;
-	gboolean b = false;
-	gtk_style_context_get(sCtx, gtk_style_context_get_state(sCtx), name, &b, NULL);
-	return b;
-}
-
-int GtkStyleInt(const char *name)
-{
-	gint n = 0;
-	gtk_style_context_get(sCtx, gtk_style_context_get_state(sCtx), name, &n, NULL);
-	return n;
-}
-*/
-
 Size GtkSize()
 {
 	return sCurrentSize;
@@ -220,7 +203,7 @@ void GtkSize(Size& sz)
 
 Color GetInkColor()
 {
-	GetInkColor(sCtx, sFlags);
+	return GetInkColor(sCtx, sFlags);
 }
 
 void SOImages(int imli, dword flags)
@@ -282,6 +265,8 @@ void ChHostSkin()
 	Gtk_New("entry");
 		Gtk_State(CTRL_DISABLED);
 		SColorDisabled_Write(GetInkColor());
+		if(Diff(SColorText(), SColorDisabled()) < 30)
+			SColorDisabled_Write(Gray());
 	Gtk_New("entry selection");
 		SColorHighlight_Write(GetBackgroundColor());
 		SColorHighlightText_Write(GetInkColor());
