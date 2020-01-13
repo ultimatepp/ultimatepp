@@ -84,14 +84,19 @@ TestChStyle::TestChStyle()
 	list.AddColumn("Col", 50).Sorting();
 	list.AddColumn("Col", 50).Sorting();
 	list.AddColumn("Col", 50).Sorting();
+	list.Add("Some very very very long text to invoke DisplayPopup");
 	for(int i = 0; i < 50; i++)
 		list.Add(i);
 }
 
 GUI_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 	Ctrl::SetDarkThemeEnabled();
 //	Ctrl::SetSkin(ChStdSkin);
+
+	RDUMP(SColorDisabled());
+	RDUMP(SColorText());
 
 	TestChStyle().Run();
 }
