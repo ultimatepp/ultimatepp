@@ -75,7 +75,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	FocusSync();
 	if(!popup)
 		SetWndFocus();
-	
+
 	SweepConfigure(true);
 	
 	DndInit();

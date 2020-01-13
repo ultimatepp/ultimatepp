@@ -4,8 +4,8 @@
 
 namespace Upp {
 
-#define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
-// #define LOG_EVENTS _DBG_
+#define LLOG(x)    // DLOG(x)
+#define LOG_EVENTS // _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -370,7 +370,7 @@ void Ctrl::Proc()
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
 	if(f)
 		ev = f->b;
-	LOG(rmsecs() << " PROCESS EVENT " << Upp::Name(this) << " " << ev);
+	LOG("> PROCESS EVENT " << Upp::Name(this) << " " << ev);
 	ProcStop tm;
 	tm.ev = ev;
 #endif
@@ -381,10 +381,9 @@ void Ctrl::Proc()
 	int  kv, hw;
 	static int clicktime = msecs() - 100000;
 	switch(CurrentEvent.type) {
-	case GDK_MOTION_NOTIFY: {
+	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
 		break;
-	}
 	case GDK_BUTTON_PRESS:
 		if(!HasWndFocus() && !popup)
 			SetWndFocus();

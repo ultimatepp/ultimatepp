@@ -92,7 +92,7 @@ Image GnomeImage(const char *s, bool large = false)
 
 Image SystemImage(const char *s, bool large = false)
 {
-	return GtkThemeIcon(s, large);
+	return GtkThemeIcon(s, DPI(large ? 48 : 16));
 }
 
 struct ExtToMime {

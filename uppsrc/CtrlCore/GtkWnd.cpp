@@ -452,12 +452,7 @@ void Ctrl::WndSetPos(const Rect& rect)
 	if(dynamic_cast<TopWindow *>(this))
 		m = GetFrameMargins();
 	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
-	int t0 = msecs();
-	do { // Wait up to 500ms for corresponding GDK_CONFIGURE to arrive
-		if(SweepConfigure(true))
-			break;
-	}
-	while(msecs() - t0 < 500);
+	SetWndRect(rect);
 	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
 }
 
