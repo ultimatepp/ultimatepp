@@ -4,12 +4,13 @@
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - disabled color in Breeze-Dark
 - DarkCold: problem slight problem with scrollbars
-- PopupInfo issue
-- FileSel icons for Video etc
+- Pushbutton push does not look nice
+- ColumnList selected item background (Mint-X)
 
 NTH:
 - spinbutton cosmetics
 - Redmond scrollbars width
+- Improve scrollbars borders
 
 PROBABLY DONE:
 - Problem with hot3 in scrollbar horizontal (check in SD)
@@ -61,3 +62,5 @@ DONE:
 - tooltip issue
 - test DateTimeCtrl in dark mode
 - 3.8 theme
+- PopupInfo issue
+- FileSel icons for Video etc
