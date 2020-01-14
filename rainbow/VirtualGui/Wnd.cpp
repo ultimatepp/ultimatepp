@@ -38,9 +38,11 @@ void Ctrl::InitFB()
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 
-// #ifdef PLATFORM_POSIX
 	SetStdFont(ScreenSans(12)); //FIXME general handling
-// #endif
+	SColorFace_Write(Color(242, 241, 240));
+	SColorMenu_Write(Color(242, 241, 240));
+	SColorHighlight_Write(Color(50, 50, 250));
+
 	ChStdSkin();
 
 	static StaticRect x;
