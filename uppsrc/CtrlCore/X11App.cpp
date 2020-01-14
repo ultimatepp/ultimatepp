@@ -17,7 +17,7 @@ Atom XAtomRaw(const char *name)
 
 Atom XAtom(const char *name)
 {
-	GuiLock __; 
+	GuiLock __;
 	Atom x;
 	INTERLOCKED {
 		static VectorMap<String, int> atoms;
@@ -33,14 +33,14 @@ Atom XAtom(const char *name)
 
 String XAtomName(Atom atom)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("GetAtomName");
 	return XGetAtomName(Xdisplay, atom);
 }
 
 String GetProperty(Window w, Atom property, Atom rtype)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("GetProperty");
 	String result;
 	int format;
@@ -52,9 +52,9 @@ String GetProperty(Window w, Atom property, Atom rtype)
 	while(after > 0) {
 		if(XGetWindowProperty(Xdisplay, w, property, offset, rsize, XFalse,
 	                          rtype, &type, &format, &nitems, &after, &data) != Success)
-	    	break;
+			break;
 	    if(type == None)
-	        break;
+			break;
 		if(data) {
 			int len = format == 32 ? sizeof(unsigned long) * nitems : nitems * (format >> 3);
 			result.Cat(data, len);
@@ -70,7 +70,7 @@ String GetProperty(Window w, Atom property, Atom rtype)
 }
 
 bool WaitForEvent(Window w, int type, XEvent& event){
-	GuiLock __; 
+	GuiLock __;
 	for(int i = 0; i < 80; i++) {
 		if(XCheckTypedWindowEvent(Xdisplay, w, type, &event))
 			return true;
@@ -84,7 +84,7 @@ bool WaitForEvent(Window w, int type, XEvent& event){
 
 String ReadPropertyData(Window w, Atom property, Atom rtype)
 {
-	GuiLock __; 
+	GuiLock __;
 	static Atom XA_INCR = XAtom("INCR");
 	Atom type;
 	int format;
@@ -120,7 +120,7 @@ String ReadPropertyData(Window w, Atom property, Atom rtype)
 
 Vector<int> GetPropertyInts(Window w, Atom property, Atom rtype)
 {
-	GuiLock __; 
+	GuiLock __;
 	Vector<int> result;
 	String p = GetProperty(w, property, rtype);
 	const long int *ptr = (const long int *)~p;
@@ -141,7 +141,7 @@ bool X11ErrorTrap;
 
 bool Ctrl::TrapX11Errors()
 {
-	GuiLock __; 
+	GuiLock __;
 	bool b = X11ErrorTrap;
 	X11ErrorTrap = true;
 	return b;
@@ -149,7 +149,7 @@ bool Ctrl::TrapX11Errors()
 
 void Ctrl::UntrapX11Errors(bool b)
 {
-	GuiLock __; 
+	GuiLock __;
 	X11ErrorTrap = b;
 }
 
@@ -445,7 +445,7 @@ void Ctrl::InitX11(const char *display)
 
 void Ctrl::ExitX11()
 {
-	GuiLock __; 
+	GuiLock __;
 //	if(xic)
 //		XDestroyIC(xic);
 	TopWindow::ShutdownWindows();

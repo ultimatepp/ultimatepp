@@ -262,7 +262,7 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			}
 		#ifndef PLATFORM_OSX11
 			if(GetCtrl() || GetAlt()) { // fix Ctrl+Shift+1 etc...
-				keysym = decode(event->xkey.keycode, 0xa, '1', 0xb, '2', 0xc, '3', 0xd, '4',
+				keysym = decode((int)event->xkey.keycode, 0xa, '1', 0xb, '2', 0xc, '3', 0xd, '4',
 				                0xe, '5', 0xf, '6', 0x10, '7', 0x11, '8', 0x12, '9', 0x13, '0',
 				                keysym);
 			}

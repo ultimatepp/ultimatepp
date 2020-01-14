@@ -6,14 +6,15 @@
 - Pushbutton push does not look nice
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
 - Problem with radio buttons in StdStyle - perhaps too big?
+- ide menu in X11 ch
+- disabled combobox issue
+- OpenGL
 
 NTH:
 - spinbutton cosmetics
 - Redmond scrollbars width
-- Improve scrollbars borders
-
-PROBABLY DONE:
-- Problem with hot3 in scrollbar horizontal (check in SD)
+- Improve scrollbars button borders
+- Error state (red) EditField cosmetics
 
 DONE:
 
@@ -66,3 +67,4 @@ DONE:
 - FileSel icons for Video etc
 - ColumnList selected item background (Mint-X)
 - disabled color in Breeze-Dark
+- Problem with hot3 in scrollbar horizontal (check in SD)

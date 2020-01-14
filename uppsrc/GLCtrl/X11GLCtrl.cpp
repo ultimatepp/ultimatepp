@@ -44,6 +44,36 @@ void GLCtrl::GLPane::SetAttributes(unsigned long &ValueMask, XSetWindowAttribute
 	winAttributes.save_under   = XFalse;
 }
 
+void GLCtrl::GLPane::ExecuteGL(Event<> paint, bool swap_buffers)
+{
+	MemoryIgnoreLeaksBlock __;
+
+	glXMakeCurrent((XDisplay*)Xdisplay, GetWindow(), s_GLXContext);
+
+	ONCELOCK {
+		glewInit();
+	}
+
+	paint();
+
+	if(swap_buffers)
+		glXSwapBuffers((XDisplay*)Xdisplay, GetWindow());
+	else
+		glFlush();
+
+	glXMakeCurrent((XDisplay*)Xdisplay, GetWindow(), NULL);
+}
+
+#if 0
+void GLCtrl::GLPane::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(!s_GLXContext || sz.cx == 0 || sz.cy == 0)
+		return;
+
+	ExecuteGL([&] { ctrl->DoGLPaint(); }, doubleBuffering);
+}
+#else
 void GLCtrl::GLPane::Paint(Draw &draw)
 {
 	if(!s_GLXContext)
@@ -63,6 +93,11 @@ void GLCtrl::GLPane::Paint(Draw &draw)
 		glFlush();
 
 	glXMakeCurrent( (XDisplay*)Xdisplay, GetWindow(), NULL);
+}
+#endif
+void GLCtrl::ExecuteGL(Event<> paint, bool swap_buffers)
+{
+	pane.ExecuteGL(paint, swap_buffers);
 }
 
 #endif
