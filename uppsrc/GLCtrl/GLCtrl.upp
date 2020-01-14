@@ -9,7 +9,6 @@ library(LINUX | BSD) "GL GLU";
 file
 	GLCtrl.h,
 	Win32GLCtrl.cpp,
-	X11GLCtrl.cpp,
-	GtkGLCtrl.cpp,
+	XGLCtrl.cpp,
 	GLCtrl.cpp;
 

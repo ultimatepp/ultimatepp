@@ -1,6 +1,6 @@
 #include "GLCtrl.h"
 
-#ifdef GUI_GTK
+#ifdef PLATFORM_POSIX
 
 #include <GL/glx.h>
 #include <GL/gl.h>
@@ -11,7 +11,9 @@
 #define Picture XPicture
 #define Status  int
 
+#ifdef GUI_GTK
 #include <gdk/gdkx.h>
+#endif
 
 #undef Time
 #undef Font
@@ -26,10 +28,14 @@ static Colormap     s_Colormap;
 static GLXContext   s_GLXContext;
 static ::XDisplay  *s_Display;
 
+#ifdef GUI_GTK
 EXITBLOCK {
+	MemoryIgnoreLeaksBlock __;
+
 	if(s_GLXContext)
 		glXDestroyContext(s_Display, s_GLXContext);
 }
+#endif
 
 void GLCtrl::Create()
 {
@@ -38,15 +44,23 @@ void GLCtrl::Create()
 	Ctrl *top = GetTopCtrl();
 	if(!top)
 		return;
-	
+
+#ifdef GUI_GTK
 	GdkWindow *gdk = top->gdk();
 	if(!gdk)
 		return;
 
 	Window w = gdk_x11_window_get_xid(gdk);
-	
+#else
+	Window w = top->GetWindow();
+#endif
+
 	ONCELOCK {
+	#ifdef GUI_GTK
 		s_Display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+	#else
+		s_Display = Xdisplay;
+	#endif
 		int samples = numberOfSamples;
 
 		do {

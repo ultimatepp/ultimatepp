@@ -26,7 +26,7 @@ void GLCtrl::Init()
 {
 	NoWantFocus();
 	Transparent();
-#ifndef GUI_GTK
+#ifdef PLATFORM_WIN32
 	pane.ctrl = this;
 	Add(pane.SizePos());
 #endif
@@ -64,7 +64,7 @@ void GLCtrl::StdView()
 	glLoadIdentity();
 }
 
-#ifndef GUI_GTK
+#ifdef PLATFORM_WIN32
 
 Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
