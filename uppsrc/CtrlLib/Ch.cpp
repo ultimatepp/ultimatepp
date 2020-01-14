@@ -408,7 +408,7 @@ void ChStdSkin()
 	for(int i = 0; i < 6; i++)
 		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 		
-	int c = DPI(16);
+	int c = DPI(14);
 
 	Color text[4];
 	Image button[4], sbutton[4];
@@ -425,7 +425,7 @@ void ChStdSkin()
 			Button::Style& s = pass ? Button::StyleOk().Write() : Button::StyleNormal().Write();
 			int roundness = DPI(3);
 			for(int i = 0; i < 4; i++) {
-				static int adj[] = { 10, 20, 5, -10 };
+				static int adj[] = { 10, 80, -5, -10 };
 				Color f = Adjust(SColorFace(), adj[i]);
 				Color ink = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
 				s.look[i] = MakeButton(roundness, f, DPI(1 + pass), border);
@@ -438,9 +438,9 @@ void ChStdSkin()
 							ImagePainter p(c, c);
 							p.Scale(DPI(1));
 							p.Clear(RGBAZero());
-							p.Circle(8, 8, 6).Fill(f).Stroke(1, border);
+							p.Circle(7, 7, 6).Fill(f).Stroke(1, border);
 							if(opt)
-								p.Circle(8, 8, 4).Fill(ink);
+								p.Circle(7, 7, 4).Fill(ink);
 							CtrlsImg::Set((opt ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + i, p);
 						}
 					}
@@ -449,11 +449,11 @@ void ChStdSkin()
 							ImagePainter p(c, c);
 							p.Scale(DPI(1));
 							p.Clear(RGBAZero());
-							p.Rectangle(2, 2, 12, 12).Fill(f).Stroke(1, border);
+							p.Rectangle(1, 1, 12, 12).Fill(f).Stroke(1, border);
 							if(chk == 1)
-								p.Move(4, 8).Line(7, 11).Line(12, 5).Stroke(2, ink);
+								p.Move(3, 7).Line(7, 10).Line(11, 4).Stroke(2, ink);
 							if(chk == 2)
-								p.Rectangle(4, 7, 8, 2).Fill(ink);
+								p.Rectangle(3, 6, 8, 2).Fill(ink);
 							CtrlsImg::Set(decode(chk, 0, CtrlsImg::I_O0, 1, CtrlsImg::I_O1, CtrlsImg::I_O2) + i, p);
 						}
 					}
