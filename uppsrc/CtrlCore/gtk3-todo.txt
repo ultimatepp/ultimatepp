@@ -36,7 +36,7 @@ DONE:
 - cxZ  Uword - wrong caret
 - Combobox appearance issues (minor, round corners broken on the left)
 - spinbuttons in UWord
-- read-only dropchoice left color
+- read-only dropchoice left colorGUI
 - ColorPopup background
 - Fix IsPainting
 - Header synthetise
