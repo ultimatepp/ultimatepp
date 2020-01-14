@@ -121,7 +121,7 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		ONCELOCK {
 			if(HMODULE hDLL = LoadLibrary ("user32")) {
 				AutoCast(ShutdownBlockReasonCreate, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
-				AutoCast(ShutdownBlockReasonDestroy, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
+				AutoCast(ShutdownBlockReasonDestroy, GetProcAddress(hDLL, "ShutdownBlockReasonDestroy"));
 			}
 		}
 		if(ShutdownBlockReasonCreate)
