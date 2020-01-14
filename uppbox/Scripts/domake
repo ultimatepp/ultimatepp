@@ -402,7 +402,7 @@ then
   then
     requires_libraries="x11 libnotify freetype2"
   else
-    requires_libraries="gtk+-2.0 x11 libnotify freetype2"
+    requires_libraries="gtk+-3.0 x11 libnotify freetype2"
 
   fi
   
@@ -456,8 +456,8 @@ if [[ "$Flags" = *"NOGTK"* ]]
 then
   log_debug_info "Removing references to GTK+"
   sed -i.backup \
-      -e 's/-lgtk-x11-2.0//g'    \
-      -e 's/-lgdk-x11-2.0//g'    \
+      -e 's/-lgtk-x11-3.0//g'    \
+      -e 's/-lgdk-x11-3.0//g'    \
       -e 's/-latk-1.0//g'        \
       -e 's/-lgdk_pixbuf-2.0//g' \
       -e 's/-lpangocairo-1.0//g' \
