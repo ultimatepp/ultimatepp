@@ -18,7 +18,7 @@ Source0:	http://www.ultimatepp.org/downloads/%{name}-x11-src-%{version}.tar.gz
 Obsoletes:	upp-devel < %{version}-%{release}
 
 # Common BuildRequires
-BuildRequires:	gtk2-devel gnome-shell libnotify-devel pkgconfig
+BuildRequires:	gtk3-devel gnome-shell libnotify-devel pkgconfig
 
 # Mandriva specific BuildRequires
 %if 0%{?mandriva_version}
@@ -49,7 +49,7 @@ BuildRequires:	clang xorg-x11-server-devel bzip2-devel
 %endif
 
 # -----
-Requires:	gtk2-devel libnotify-devel
+Requires:	gtk3-devel libnotify-devel
 Requires:	valgrind xterm
 
 # Mandriva specific Requires
@@ -124,8 +124,8 @@ make DESTDIR="%{buildroot}" prefix="%{_prefix}" bindir="%{_bindir}" datadir="%{_
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
 
-INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+INCLUDEDIR=$( pkg-config --cflags gtk+-3.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+LIBDIR=$( pkg-config --libs-only-L gtk+-3.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
 %if 0%{?fedora_version} || 0%{?fedora}
      LINK="$(pkg-config --libs libpng freetype2)"
@@ -224,6 +224,7 @@ rm -fr %{buildroot}
 %changelog
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
+- Use now gtk3
 
 * Thu Oct 31 2019 Amrein-Marie Christophe <camreinmarie@free.fr> 2019.2-1
 - New release (rev 13664)
