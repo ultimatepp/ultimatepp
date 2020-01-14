@@ -41,28 +41,12 @@ class GLCtrl : public Ctrl {
 
 public:
 	Image  MouseEvent(int event, Point p, int zdelta, dword keyflags) override;
-#ifdef GUI_GTK
+#ifdef PLATFORM_POSIX
 	void   Paint(Draw& w) override;
 #endif
 	
 private:
-#ifdef GUI_X11
-	class GLPane : public DHCtrl {
-		friend class GLCtrl;
-		
-		GLCtrl *ctrl;
-		
-		void DoGLPaint();
-		void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes) override;
-		void Paint(Draw &draw) override;
-		XVisualInfo *CreateVisual() override;
-		virtual Image   MouseEvent(int event, Point p, int zdelta, dword keyflags);
-		
-	public:
-		void ExecuteGL(Event<> paint, bool swap_buffers);
-		GLPane() { NoWantFocus(); }
-	};
-#elif defined(PLATFORM_WIN32)
+#ifdef PLATFORM_WIN32
 	struct GLPane : DHCtrl {
 		friend class GLCtrl;
 		
@@ -87,7 +71,7 @@ private:
 	};
 #endif
 
-#ifdef GUI_GTK
+#ifdef PLATFORM_POSIX // we assume X11 or GTK
 	unsigned long win = 0;
 	bool visible;
 	Rect position;
@@ -138,7 +122,7 @@ public:
 
 	GLCtrl()                                      { Init(); }
 
-#ifndef GUI_GTK
+#ifdef PLATFORM_WIN32
 	void Refresh()                                { pane.Refresh(); }
 #endif
 
