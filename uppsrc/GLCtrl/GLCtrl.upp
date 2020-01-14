@@ -6,8 +6,6 @@ library(WIN32 GCC) "glaux glu32 opengl32";
 
 library(LINUX | BSD) "GL GLU";
 
-library((LINUX | BSD) & !X11 & !NOGTK) "gdkglext-x11-1.0 gtkglext-x11-1.0";
-
 file
 	GLCtrl.h,
 	Win32GLCtrl.cpp,

@@ -210,10 +210,10 @@ void SOImages(int imli, dword flags)
 {
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
-		CtrlsImg::Set(imli++, CairoImage(16, 16, [&](cairo_t *cr) {
-			gtk_render_background(sCtx, cr, 0, 0, 16, 16);
-			gtk_render_frame(sCtx, cr,  0, 0, 16, 16);
-			gtk_render_check(sCtx, cr, 0, 0, 16, 16);
+		CtrlsImg::Set(imli++, CairoImage(14, 14, [&](cairo_t *cr) {
+			gtk_render_background(sCtx, cr, 0, 0, 14, 14);
+			gtk_render_frame(sCtx, cr,  0, 0, 14, 14);
+			gtk_render_check(sCtx, cr, 0, 0, 14, 14);
 		}));
 	}
 }

@@ -59,6 +59,7 @@ private:
 		virtual Image   MouseEvent(int event, Point p, int zdelta, dword keyflags);
 		
 	public:
+		void ExecuteGL(Event<> paint, bool swap_buffers);
 		GLPane() { NoWantFocus(); }
 	};
 #elif defined(PLATFORM_WIN32)
