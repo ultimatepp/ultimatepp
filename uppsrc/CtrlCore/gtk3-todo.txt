@@ -4,6 +4,7 @@
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - DarkCold: problem slight problem with scrollbars
 - Pushbutton push does not look nice
+- Problem with radio buttons in StdStyle - perhaps too big?
 
 NTH:
 - spinbutton cosmetics
