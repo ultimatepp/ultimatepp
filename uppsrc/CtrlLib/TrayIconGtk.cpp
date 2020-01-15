@@ -9,6 +9,8 @@
     #endif
 #endif
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
 namespace Upp {
 
 TrayIcon::TrayIcon()
@@ -140,5 +142,7 @@ TrayIcon::~TrayIcon()
 }
 
 }
+
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 #endif
