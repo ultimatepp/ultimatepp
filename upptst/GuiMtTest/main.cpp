@@ -22,20 +22,19 @@ void Ask(bool *result)
 
 void App::Work()
 {
-	int q = 0;
+	int i = 0;
 	while(!Thread::IsShutdownThreads()) {
-		if(++q > 200) {
-			if(PromptYesNo("Do you want to quit?")) {
-				GuiLock __;
-				Break();
-			}
-			q = 0;
-		}
-		for(int i = 0; i < 101; i++) {
+		Sleep(50);
+		if(list.GetCount() > 100) {
 			GuiLock __;
-			list.Set(i, 0, (int)Random());
+			if(PromptYesNo("Do you want to quit?")) {
+				Break();
+				break;
+			}
+			list.Clear();
 		}
-		Sleep(10);
+		GuiLock __;
+		list.Add(i++);
 	}
 }
 
@@ -54,6 +53,7 @@ App::~App()
 
 GUI_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 	App app;
 	app.Run();
 }
