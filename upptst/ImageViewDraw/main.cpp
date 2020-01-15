@@ -9,14 +9,17 @@ struct MyApp : TopWindow
 	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), LtGray());
 		w.DrawImage(0, 0, img);
-		w.DrawRect(DPI(400) - DPI(5), DPI(40) - DPI(5), DPI(210), DPI(90), Red());
+		w.DrawRect(DPI(400), DPI(40), DPI(200), DPI(80), Red());
+		w.DrawText(DPI(400), DPI(40), "Here", Arial(DPI(80)), Yellow());
 	}
 	
 	void LeftDown(Point, dword) override {
 		static int ii;
 		ViewDraw iw(this);
+		iw.DrawRect(GetSize(), LtGray());
 		iw.DrawRect(DPI(400), DPI(40), DPI(200), DPI(80), LtBlue());
-		iw.DrawText(DPI(400), DPI(40), AsString(ii++), Arial(DPI(80)));
+		iw.DrawEllipse(100, 100, 100, 100, Green());
+		iw.DrawText(DPI(400), DPI(40), AsString(ii++), Arial(DPI(80)), Yellow());
 	}
 };
 
