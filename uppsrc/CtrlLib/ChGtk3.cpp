@@ -2,12 +2,6 @@
 
 #ifdef GUI_GTK
 
-/*
-
-TODO: overpaint
-
-*/
-
 namespace Upp {
 
 int GtkSettingsInt(const char *name)

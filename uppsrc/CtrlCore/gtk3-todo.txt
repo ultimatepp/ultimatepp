@@ -5,9 +5,7 @@
 - DarkCold: problem slight problem with scrollbars
 - Pushbutton push does not look nice
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
-- Problem with radio buttons in StdStyle - perhaps too big?
 - ide menu in X11 ch
-- disabled combobox issue
 - OpenGL
 
 NTH:
@@ -68,3 +66,4 @@ DONE:
 - ColumnList selected item background (Mint-X)
 - disabled color in Breeze-Dark
 - Problem with hot3 in scrollbar horizontal (check in SD)
+- Problem with radio buttons in StdStyle - perhaps too big?
