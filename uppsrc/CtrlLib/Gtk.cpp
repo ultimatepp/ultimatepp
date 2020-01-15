@@ -24,8 +24,8 @@ bool FileSelector::Execute(bool open, const char *title)
 	GtkWidget *fc = gtk_file_chooser_dialog_new(title, w ? w->gtk() : NULL,
 	                                            open ? GTK_FILE_CHOOSER_ACTION_OPEN
 	                                                 : GTK_FILE_CHOOSER_ACTION_SAVE,
-	                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	                                            open ? GTK_STOCK_OPEN : GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+	                                            t_("Cancel"), GTK_RESPONSE_CANCEL,
+	                                            open ? t_("Open") : t_("Save"), GTK_RESPONSE_OK,
 	                                            NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(fc), confirm);
 	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(fc), true);

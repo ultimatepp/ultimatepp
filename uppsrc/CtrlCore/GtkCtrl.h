@@ -68,10 +68,11 @@ _DBG_
 	};
 	
 	struct Win : Moveable<Win> {
-		int        id;
-		GtkWidget *gtk;
-		GdkWindow *gdk;
-		Ptr<Ctrl>  ctrl;
+		int          id;
+		GtkWidget   *gtk;
+		GdkWindow   *gdk;
+		Ptr<Ctrl>    ctrl;
+		Vector<Rect> invalid; // areas invalidated to be processed at next opportunity
 	};
 
 	void   Proc();
@@ -79,16 +80,17 @@ _DBG_
 	bool   SweepFocus(bool wait);
 	void   SyncWndRect(const Rect& rect);
 
-	static BiVector<GEvent>    Events;
-	static Vector< Ptr<Ctrl> > activePopup; // created with 'activate' flag - usually menu
-	static Vector< Ptr<Ctrl> > visiblePopup; // any popup visible on screen
-	static Vector<Win>         wins;
-	static int                 WndCaretTime;
-	static bool                WndCaretVisible;
-	static Ptr<Ctrl>           grabwindow;
-	static Ptr<Ctrl>           grabpopup;
-	static Ptr<Ctrl>           sel_ctrl;
-	static Ptr<Ctrl>           activeCtrl;
+	static BiVector<GEvent>  Events;
+	static Vector<Ptr<Ctrl>> activePopup; // created with 'activate' flag - usually menu
+	static Vector<Ptr<Ctrl>> visiblePopup; // any popup visible on screen
+	static Vector<Win>       wins;
+	static int               WndCaretTime;
+	static bool              WndCaretVisible;
+	static Ptr<Ctrl>         grabwindow;
+	static Ptr<Ctrl>         grabpopup;
+	static Ptr<Ctrl>         sel_ctrl;
+	static Ptr<Ctrl>         activeCtrl;
+	static bool              invalids; // there are active invalid areas
 
 	static int FindId(int id);
 	static int FindCtrl(Ctrl *ctrl);
@@ -155,6 +157,7 @@ _DBG_
 	static String DragGet(const char *fmt);
 	static PasteClip GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 	                        guint time, gpointer user_data, bool paste);
+	static bool   ProcessInvalids();
 
 	friend void InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
