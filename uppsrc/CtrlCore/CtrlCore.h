@@ -1220,7 +1220,7 @@ public:
 	static Ctrl *GetDragAndDropTarget();
 	bool   IsDragAndDropSource()    { return this == GetDragAndDropSource(); }
 	bool   IsDragAndDropTarget()    { return this == GetDragAndDropTarget(); }
-	static Size  StdSampleSize()    { return Size(126, 106); }
+	static Size  StdSampleSize()    { return Size(DPI(126), DPI(106)); }
 
 public:
 	static void SetSkin(void (*skin)());

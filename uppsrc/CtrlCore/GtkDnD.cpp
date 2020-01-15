@@ -19,13 +19,19 @@ Ctrl *Ctrl::GetDragAndDropSource()
 	return dnd_source;
 }
 
+cairo_surface_t *CreateCairoSurface(const Image& img);
+
 void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
 	if(IsNull(dnd_icon))
 		gtk_drag_set_icon_default(context);
 	else {
-		ImageGdk m(dnd_icon);
-		gtk_drag_set_icon_pixbuf(context, m, 0, 0);
+		cairo_surface_t *surface = CreateCairoSurface(dnd_icon);
+		double scale = SCL(1);
+		cairo_surface_set_device_scale(surface, scale, scale);
+		cairo_surface_set_device_offset(surface, DPI(8), DPI(8));
+		gtk_drag_set_icon_surface(context, surface);
+		cairo_surface_destroy(surface);
 	}
 	LLOG("GtkDragBegin");
 }
