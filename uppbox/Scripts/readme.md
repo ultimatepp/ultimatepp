@@ -14,18 +14,18 @@ Before compiling U++ source code, you must install a few developpement packages.
 
 #### Debian/apt-get based distributions
 
-Build requires: g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox
+Build requires: g++  make  libgtk-3-dev  libnotify-dev  libbz2-dev  sox
 
 How to install them:
 
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 ```
-sudo apt-get install  g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox
+sudo apt-get install  g++  make  libgtk-3-dev  libnotify-dev  libbz2-dev  sox
 ```
 
 if sudo is not available:
 ```
-su -c 'apt-get install  g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox'
+su -c 'apt-get install  g++  make  libgtk-3-dev  libnotify-dev  libbz2-dev  sox'
 ```
 
 The 'buildrequires.debian' file in U++ tarball contains apt-get commands to do the same thing. You can use this file by running 'sh buildrequires.debian' as root (e.g. 'sudo sh buildrequires.debian' if sudo is available or 'su -c "sh buildrequires.debian"' if not).
@@ -33,17 +33,17 @@ The 'buildrequires.debian' file in U++ tarball contains apt-get commands to do t
 
 #### Fedora based distributions
 
-Build requires:  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+Build requires:  gtk3-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
 
 How to install them:
 
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 ```
-sudo yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+sudo yum install  gtk3-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
 ```
 if sudo is not available:
 ```
-su -c 'yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
+su -c 'yum install  gtk3-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
 ```
 
 The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the same thing. You can use this file by running 'sh buildrequires.fedora' as root (e.g. 'sudo sh buildrequires.fedora' if sudo is available or 'su -c "sh buildrequires.fedora"' if not).
@@ -51,23 +51,23 @@ The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the s
 
 #### Other rpm based distributions
 
-Redhat 7 build requires:  gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
-OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+Redhat 7 build requires:  gtk3-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
+OpenSuse build requires: gtk3-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
 
 #### BSD based distributions
 
-Build requires: bash gmake gtk2 freetype2 libnotify clang-devel (e.g. clang++)
+Build requires: bash gmake gtk3 freetype2 libnotify clang-devel (e.g. clang++)
 
 How to install them:
 
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 ```
-sudo pkg install bash gmake gtk2 freetype2 libnotify clang-devel
+sudo pkg install bash gmake gtk3 freetype2 libnotify clang-devel
 ```
 if sudo is not available:
 ```
-su -m root -c 'pkg install bash gmake gtk2 freetype2 libnotify clang-devel'
+su -m root -c 'pkg install bash gmake gtk3 freetype2 libnotify clang-devel'
 ```
 
 
@@ -145,7 +145,7 @@ There is an alternative way to build U++ on rpm based distributions. Indead, U++
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 
 ```
-sudo yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+sudo yum install  gtk3-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
 sudo yum install  rpm-build
 version=10641
 rpmbuild -ta upp-x11-src-$version.tar.gz
@@ -153,7 +153,7 @@ rpmbuild -ta upp-x11-src-$version.tar.gz
 
 if sudo is not available:
 ```
-su -c 'yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
+su -c 'yum install  gtk3-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
 su -c 'yum install  rpm-build'
 version=10641
 rpmbuild -ta upp-x11-src-$version.tar.gz
