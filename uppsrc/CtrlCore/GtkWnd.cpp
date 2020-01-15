@@ -520,13 +520,29 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 {
 	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
+#if GTK_CHECK_VERSION(3, 22, 0)
+	cairo_rectangle_int_t r;
+	r.x = r.y = 0;
+	r.width = r.height = 100000;
+	cairo_region_t *rg = cairo_region_create_rectangle(&r);
+	ctx = gdk_window_begin_draw_frame(top->gdk(), rg);
+	cairo_region_destroy(rg);
+	cr = gdk_drawing_context_get_cairo_context(ctx);
+#else
 	cr = gdk_cairo_create(top->gdk());
+#endif
+	cairo_scale(cr, Ctrl::LSC(1), Ctrl::LSC(1));
 	Clipoff(ctrl->GetScreenView() - top->GetScreenRect().TopLeft());
 }
 
 ViewDraw::~ViewDraw()
 {
+	FlushText();
+#if GTK_CHECK_VERSION(3, 22, 0)
+	gdk_window_end_draw_frame(gdk_drawing_context_get_window(ctx), ctx);
+#else
 	cairo_destroy(cr);
+#endif
 	LeaveGuiMutex();
 }
 

@@ -1,4 +1,7 @@
 class ViewDraw : public SystemDraw {
+#if GTK_CHECK_VERSION(3, 10, 0)
+	GdkDrawingContext *ctx;
+#endif
 public:
 	ViewDraw(Ctrl *ctrl);
 	~ViewDraw();

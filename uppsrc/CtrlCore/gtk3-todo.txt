@@ -1,12 +1,12 @@
 - Issue with editfield text clipping in the right
-- Remove warnings
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - DarkCold: problem slight problem with scrollbars
 - Pushbutton push does not look nice
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
 - ide menu in X11 ch
-- OpenGL
+- GtkDnD warnings
+- TrayIconGtk warnings
 
 NTH:
 - spinbutton cosmetics
@@ -67,3 +67,5 @@ DONE:
 - disabled color in Breeze-Dark
 - Problem with hot3 in scrollbar horizontal (check in SD)
 - Problem with radio buttons in StdStyle - perhaps too big?
+- OpenGL
+- GtkWnd warnings
