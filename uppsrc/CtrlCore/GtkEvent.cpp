@@ -5,7 +5,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-// #define LOG_EVENTS  _DBG_
+#define LOG_EVENTS  _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -291,13 +291,31 @@ void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 	AddEvent(user_data, EVENT_TEXT, FromUtf8(str), NULL);
 }
 
+bool Ctrl::ProcessInvalids()
+{
+	GuiLock __;
+	if(invalids) {
+		for(Win& win : wins) {
+			for(const Rect& r : win.invalid)
+				gdk_window_invalidate_rect(win.gdk, GdkRect(r), TRUE);
+			win.invalid.Clear();
+		}
+		invalids = false;
+	}
+	return invalids;
+}
+
 void Ctrl::FetchEvents(bool may_block)
 {
 	LLOG("FetchEvents " << may_block);
 	int level = LeaveGuiMutexAll();
-	while(g_main_context_iteration(NULL, may_block))
+	while(g_main_context_iteration(NULL, may_block)) {
 		may_block = false;
+		ProcessInvalids();
+	}
+	ProcessInvalids();
 	EnterGuiMutex(level);
+	ProcessInvalids();
 }
 
 bool Ctrl::IsWaitingEvent0(bool fetch)
@@ -620,9 +638,9 @@ bool Ctrl::ProcessEvents0(bool *quit, bool fetch)
 	for(int i = 0; i < wins.GetCount(); i++)
 		if(wins[i].ctrl)
 			wins[i].ctrl->SyncScroll();
-	gdk_window_process_all_updates();
+	ProcessInvalids();
 	FetchEvents(FALSE); // To perform any pending GDK_EXPOSE
-	gdk_flush();
+	gdk_display_flush(gdk_display_get_default());
 	return r;
 }
 

@@ -26,7 +26,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.id = top->id;
 	w.ctrl = this;
 	w.gtk = top->window;
-	w.gdk = gtk_widget_get_window(top->window);
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(popup && !owner) {
@@ -58,6 +57,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 
 	gtk_widget_realize(top->window);
+	
+	w.gdk = gtk_widget_get_window(top->window);
 
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
@@ -136,7 +137,7 @@ void Ctrl::GuiPlatformRemove()
 			i++;
 	for(int i = 0; i < activePopup.GetCount();)
 		if(activePopup[i] == this) {
-			if(this == grabpopup && gdk_pointer_is_grabbed())
+			if(this == grabpopup && MouseIsGrabbed())
 				StopGrabPopup();
 			activePopup.Remove(i);
 			StartGrabPopup();
