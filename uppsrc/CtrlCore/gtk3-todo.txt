@@ -5,8 +5,8 @@
 - Pushbutton push does not look nice
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
 - ide menu in X11 ch
-- GtkDnD warnings
 - TrayIconGtk warnings
+- DnD Sample size UHD
 
 NTH:
 - spinbutton cosmetics
@@ -69,3 +69,4 @@ DONE:
 - Problem with radio buttons in StdStyle - perhaps too big?
 - OpenGL
 - GtkWnd warnings
+- GtkDnD warnings
