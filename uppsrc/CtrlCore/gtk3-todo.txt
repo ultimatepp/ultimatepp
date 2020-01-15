@@ -6,7 +6,6 @@
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
 - ide menu in X11 ch
 - TrayIconGtk warnings
-- DnD Sample size UHD
 
 NTH:
 - spinbutton cosmetics
@@ -70,3 +69,4 @@ DONE:
 - OpenGL
 - GtkWnd warnings
 - GtkDnD warnings
+- DnD Sample size UHD
