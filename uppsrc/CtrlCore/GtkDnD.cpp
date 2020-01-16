@@ -27,8 +27,9 @@ void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer use
 		gtk_drag_set_icon_default(context);
 	else {
 		cairo_surface_t *surface = CreateCairoSurface(dnd_icon);
-		double scale = SCL(1);
-		cairo_surface_set_device_scale(surface, scale, scale);
+	#if GTK_CHECK_VERSION(3, 10, 0)
+		cairo_surface_set_device_scale(surface, SCL(1), SCL(1));
+	#endif
 		cairo_surface_set_device_offset(surface, DPI(8), DPI(8));
 		gtk_drag_set_icon_surface(context, surface);
 		cairo_surface_destroy(surface);
@@ -79,12 +80,7 @@ Image MakeDragImage(const Image& arrow, Image sample);
 
 Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 {
-#ifdef PLATFORM_WIN32
-	if(IsWin2K())
-		return MakeDragImage(arrow, sample);
-	else
-#endif
-		return arrow98;
+	return arrow98;
 }
 
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
@@ -128,9 +124,14 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 		iw.DrawImage(1, 1, sz.cx, sz.cy, sample);
 		dnd_icon = iw;
 	}
+#if GTK_CHECK_VERSION(3, 10, 0)
 	gtk_drag_begin_with_coordinates(w->top->window, list, GdkDragAction(gdk_actions),
 	                                GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3,
 	                                CurrentEvent.event, -1, -1);
+#else
+	gtk_drag_begin(w->top->window, list, GdkDragAction(gdk_actions),
+	               GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3, CurrentEvent.event);
+#endif
 	while(dnd_source && GetTopCtrls().GetCount())
 		ProcessEvents();
 	dnd_source_data = NULL;

@@ -492,7 +492,11 @@ void ChStdSkin()
 			s.hthumb[status] = s.vthumb[status] = Adjust(border, adj[status]);
 		}
 	}
-
+	
+	{
+		MenuBar::Style& s = MenuBar::StyleDefault().Write();
+		s.topitem[1] = Blend(SColorHighlight(), SColorPaper());
+	}
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 }
 
