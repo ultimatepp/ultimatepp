@@ -245,7 +245,7 @@ struct Win32ImageMaker : ImageMaker {
 	}
 };
 
-Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op)
+Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 {
 	if(IsTypeRaw<XpElement>(v)) {
 		const XpElement& e = ValueTo<XpElement>(v);
