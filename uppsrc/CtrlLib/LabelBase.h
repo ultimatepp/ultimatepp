@@ -110,3 +110,29 @@ public:
 
 	virtual ~LabelBase();
 };
+
+Rect LookMargins(const Rect& r, const Value& ch);
+
+class ActiveEdgeFrame : public CtrlFrame {
+public:
+	virtual void FrameLayout(Rect& r);
+	virtual void FramePaint(Draw& w, const Rect& r);
+	virtual void FrameAddSize(Size& sz);
+
+private:
+	const Value *edge;
+	const Ctrl  *ctrl;
+	Value coloredge;
+	Color color;
+	bool  mousein = false;
+	bool  push = false;
+	bool  button = false;
+
+public:
+	void Set(const Ctrl *ctrl, const Value *edge, bool active);
+	void Mouse(bool in)                     { mousein = in; }
+	void Push(bool b)                       { button = true; push = b; }
+	void SetColor(const Value& ce, Color c) { coloredge = ce; color = c; }
+
+	ActiveEdgeFrame() { edge = NULL; mousein = false; }
+};

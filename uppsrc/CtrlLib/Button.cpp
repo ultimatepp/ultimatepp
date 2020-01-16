@@ -834,19 +834,30 @@ DataPusher::DataPusher()
 {
 	convert = &NoConvert();
 	display = &StdDisplay();
-	SetFrame(EditFieldFrame());
+	SyncEdge();
+	SetFrame(edge);
+}
+
+void DataPusher::SyncEdge()
+{
+	edge.Set(this, EditField::StyleDefault().edge, EditField::StyleDefault().activeedge);
+	edge.Mouse(HasMouse());
+	edge.Push(IsPush());
+	RefreshFrame();
 }
 
 DataPusher::DataPusher(const Convert& convert, const Display& display)
 : convert(&convert), display(&display)
 {
-	SetFrame(EditFieldFrame());
+	SyncEdge();
+	SetFrame(edge);
 }
 
 DataPusher::DataPusher(const Display& display)
 : convert(&NoConvert()), display(&display)
 {
-	SetFrame(EditFieldFrame());
+	SyncEdge();
+	SetFrame(edge);
 }
 
 void DataPusher::PerformAction()
@@ -924,6 +935,16 @@ void DataPusher::SetDataAction(const Value& value)
 {
 	SetData(value);
 	UpdateActionRefresh();
+}
+
+void DataPusher::RefreshPush()
+{
+	SyncEdge();
+}
+
+void DataPusher::RefreshFocus()
+{
+	SyncEdge();
 }
 
 }

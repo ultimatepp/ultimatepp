@@ -10,7 +10,7 @@ enum {
 	CH_SCROLLBAR_IMAGE = -1000 // special Image hotspot x value for ChPaint of scrollbar
 };
 
-void  ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& look, int lookop));
+void  ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& look, int lookop, Color ink));
 
 Image AdjustColors(const Image& img);
 
@@ -20,12 +20,12 @@ void   ColoredOverride(Iml& target, Iml& source);
 void   ChReset();
 void   ChFinish();
 
-void   ChPaint(Draw& w, const Rect& r, const Value& look);
-void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look);
-void   ChPaintEdge(Draw& w, const Rect& r, const Value& look);
-void   ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look);
-void   ChPaintBody(Draw& w, const Rect& r, const Value& look);
-void   ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look);
+void   ChPaint(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void   ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+void   ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void   ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+void   ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
 Rect   ChMargins(const Value& look);
 bool   ChIsOpaque(const Value& look);
 bool   ChIsBodyOpaque(const Value& look);
@@ -116,9 +116,6 @@ struct ChValue : ChStyle<ChValue> { Value value; };
 
 struct ChImage : ChStyle<ChImage> { Image value; };
 #define CH_IMAGE(name, init) CH_VAR(ChImage, Image, name, init)
-
-void ChPaint(Draw& w, const Rect& r, const Value& element);
-void ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& element);
 
 Value ChLookWith(const Value& look, const Image& img, Point offset = Point(0, 0));
 Value ChLookWith(const Value& look, const Image& img, Color color, Point offset = Point(0, 0));
