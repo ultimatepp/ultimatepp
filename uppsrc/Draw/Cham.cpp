@@ -22,55 +22,26 @@ namespace Upp {
 
 #define LTIMING(x) //  RTIMING(x)
 
-struct ChImageMaker : ImageMaker {
-	Size       sz;
-	Rect       sr;
-	Image      img;
-
-	virtual String Key() const;
-	virtual Image  Make() const;
-};
-
-String ChImageMaker::Key() const
-{
-	LTIMING("ChImageMaker::Key");
-	StringBuffer b;
-	int64 id = img.GetSerialId();
-	b.Cat((const char *)&id, sizeof(id));
-	b.Cat((const char *)&sz.cx, sizeof(sz.cx));
-	b.Cat((const char *)&sz.cy, sizeof(sz.cy));
-	b.Cat((const char *)&sr.left, sizeof(sr.left));
-	b.Cat((const char *)&sr.right, sizeof(sr.right));
-	b.Cat((const char *)&sr.top, sizeof(sr.top));
-	b.Cat((const char *)&sr.bottom, sizeof(sr.bottom));
-	return b;
-}
-
-Image ChImageMaker::Make() const
-{
-	LTIMING("ChImageMaker::Make");
-	return Rescale(img, sz, sr);
-}
-
-void  ChDraw(Draw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src)
+void  ChDraw(Draw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src, Color ink)
 {
 	LTIMING("ChDraw");
 	if(cx > 0 && cy > 0) {
-		#if defined(flagWINGL) || defined(flagLINUXGL)
-		w.DrawImage(x, y, cx, cy, img, src);
-		#else
-		ChImageMaker m;
-		m.sz = Size(cx, cy);
-		m.sr = src;
-		m.img = img;
-		w.DrawImage(x, y, MakeImage(m));
-		#endif
+		Image m = CachedRescale(img, Size(cx, cy), src);
+		if(IsNull(ink))
+			w.DrawImage(x, y, m);
+		else
+			w.DrawImage(x, y, m, ink);
 	}
 }
 
-void  ChDraw(Draw& w, const Rect& r, const Image& img, const Rect& src)
+void  ChDraw(Draw& w, int x, int y, const Image& img, const Rect& src, Color ink)
 {
-	ChDraw(w, r.left, r.top, r.GetWidth(), r.GetHeight(), img, src);
+	ChDraw(w, x, y, src.GetWidth(), src.GetHeight(), img, src, ink);
+}
+
+void  ChDraw(Draw& w, const Rect& r, const Image& img, const Rect& src, Color ink)
+{
+	ChDraw(w, r.left, r.top, r.GetWidth(), r.GetHeight(), img, src, ink);
 }
 
 struct sChLookWith {
@@ -115,7 +86,7 @@ Value ChLookWith(const Value& look, const Image& img, Color (*color)(int i), int
 	return RawToValue(x);
 }
 
-Value sChOp(Draw& w, const Rect& r, const Value& v, int op);
+Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink = Null);
 
 struct sChBorder {
 	const ColorF *border;
@@ -182,7 +153,7 @@ static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Ima
 	DrawPart(ter, ecx); // right ending
 }
 
-Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
+Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 {
 	if(IsType<sChLookWith>(v)) {
 		const sChLookWith& x = ValueTo<sChLookWith>(v);
@@ -313,11 +284,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 		}
 		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
 			LTIMING("ChPaint Image");
-			#if defined(flagWINGL) || defined(flagLINUXGL)
-			w.Offset(r.TopLeft());
-			#else
 			w.Clipoff(r);
-			#endif
 			Rect sr(p, p2);
 			Size sz2(isz.cx - sr.right, isz.cy - sr.bottom);
 			Rect r = RectC(p.x, p.y, sz.cx - sr.left - sz2.cx, sz.cy - sr.top - sz2.cy);
@@ -328,15 +295,14 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 			int right = minmax(sz.cx - left, 0, isz.cx);
 			int xx = isz.cx - right;
 			if(!r.IsEmpty()) {
-				w.DrawImage(0, 0, img, RectC(0, 0, p.x, p.y));
-				w.DrawImage(0, r.bottom, img, RectC(0, sr.bottom, p.x, sz2.cy));
-				w.DrawImage(r.right, 0, img, RectC(sr.right, 0, sz2.cx, p.y));
-				w.DrawImage(r.right, r.bottom, img, RectC(sr.right, sr.bottom, sz2.cx, sz2.cy));
-				ChDraw(w, p.x, 0, r.Width(), p.y, img, RectC(p.x, 0, sr.Width(), p.y));
-				ChDraw(w, p.x, r.bottom, r.Width(), sz2.cy, img, RectC(p.x, sr.bottom, sr.Width(), sz2.cy));
-				ChDraw(w, 0, p.y, p.x, r.Height(), img, RectC(0, p.y, p.x, sr.Height()));
-				ChDraw(w, r.right, p.y, sz2.cx, r.Height(), img,
-				       RectC(sr.right, p.y, sz2.cx, sr.Height()));
+				ChDraw(w, 0, 0, img, RectC(0, 0, p.x, p.y), ink);
+				ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, p.x, sz2.cy), ink);
+				ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, p.y), ink);
+				ChDraw(w, r.right, r.bottom, img, RectC(sr.right, sr.bottom, sz2.cx, sz2.cy), ink);
+				ChDraw(w, p.x, 0, r.Width(), p.y, img, RectC(p.x, 0, sr.Width(), p.y), ink);
+				ChDraw(w, p.x, r.bottom, r.Width(), sz2.cy, img, RectC(p.x, sr.bottom, sr.Width(), sz2.cy), ink);
+				ChDraw(w, 0, p.y, p.x, r.Height(), img, RectC(0, p.y, p.x, sr.Height()), ink);
+				ChDraw(w, r.right, p.y, sz2.cx, r.Height(), img, RectC(sr.right, p.y, sz2.cx, sr.Height()), ink);
 				if(op == LOOK_PAINT) {
 					if(IsNull(r) || IsNull(sr)) {
 						w.End();
@@ -348,12 +314,8 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 						Size sz;
 						sz.cx = (tile & 1 ? sr : r).GetWidth();
 						sz.cy = (tile & 2 ? sr : r).GetHeight();
-						#if defined(flagWINGL) || defined(flagLINUXGL)
-						DrawTiles(w, r, img, sz, sr);
-						#else
 						img = Rescale(img, sz, sr);
 						DrawTiles(w, r, img);
-						#endif
 					}
 					else {
 						static VectorMap<int64, int> btc;
@@ -384,19 +346,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 							}
 						case 0:
 						default:
-							ChDraw(w, r, img, sr);
-							break;
-							LTIMING("Ch-linedup");
-							img = CachedRescalePaintOnly(
-									img,
-									Size((q & IMAGECONTENT_HORZDUP) ? max(min(40, r.GetWidth()), sr.GetWidth())
-									                                : r.GetWidth(),
-									     (q & IMAGECONTENT_VERTDUP) ? max(min(40, r.GetHeight()), sr.GetHeight())
-							                                        : r.GetHeight()),
-									sr
-							);
-							LTIMING("Ch-linedup-drawtiles");
-							DrawTiles(w, r, img);
+							ChDraw(w, r, img, sr, ink);
 							break;
 						}
 					}
@@ -404,27 +354,27 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 			}
 			else
 			if(r.left < r.right) {
-				w.DrawImage(0, 0, img, RectC(0, 0, p.x, top));
-				w.DrawImage(0, sz.cy - bottom, img, RectC(0, yy, p.x, bottom));
-				w.DrawImage(r.right, 0, img, RectC(sr.right, 0, sz2.cx, top));
-				w.DrawImage(r.right, sz.cy - bottom, img, RectC(sr.right, yy, sz2.cx, bottom));
-				ChDraw(w, p.x, 0, r.Width(), top, img, RectC(p.x, 0, sr.Width(), top));
-				ChDraw(w, p.x, sz.cy - bottom, r.Width(), bottom, img, RectC(p.x, yy, sr.Width(), bottom));
+				ChDraw(w, 0, 0, img, RectC(0, 0, p.x, top), ink);
+				ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, p.x, bottom), ink);
+				ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, top), ink);
+				ChDraw(w, r.right, sz.cy - bottom, img, RectC(sr.right, yy, sz2.cx, bottom), ink);
+				ChDraw(w, p.x, 0, r.Width(), top, img, RectC(p.x, 0, sr.Width(), top), ink);
+				ChDraw(w, p.x, sz.cy - bottom, r.Width(), bottom, img, RectC(p.x, yy, sr.Width(), bottom), ink);
 			}
 			else
 			if(r.top < r.bottom) {
-				w.DrawImage(0, 0, img, RectC(0, 0, left, p.y));
-				w.DrawImage(0, r.bottom, img, RectC(0, sr.bottom, left, sz2.cy));
-				w.DrawImage(sz.cx - right, 0, img, RectC(xx, 0, right, p.y));
-				w.DrawImage(sz.cx - right, r.bottom, img, RectC(xx, sr.bottom, right, sz2.cy));
-				ChDraw(w, 0, p.y, left, r.Height(), img, RectC(0, p.y, left, sr.Height()));
-				ChDraw(w, sz.cx - right, p.y, right, r.Height(), img, RectC(xx, p.y, right, sr.Height()));
+				ChDraw(w, 0, 0, img, RectC(0, 0, left, p.y), ink);
+				ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, left, sz2.cy), ink);
+				ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, p.y), ink);
+				ChDraw(w, sz.cx - right, r.bottom, img, RectC(xx, sr.bottom, right, sz2.cy), ink);
+				ChDraw(w, 0, p.y, left, r.Height(), img, RectC(0, p.y, left, sr.Height()), ink);
+				ChDraw(w, sz.cx - right, p.y, right, r.Height(), img, RectC(xx, p.y, right, sr.Height()), ink);
 			}
 			else {
-				w.DrawImage(0, 0, img, RectC(0, 0, left, top));
-				w.DrawImage(0, sz.cy - bottom, img, RectC(0, yy, left, top));
-				w.DrawImage(sz.cx - right, 0, img, RectC(xx, 0, right, top));
-				w.DrawImage(sz.cx - right, sz.cy - bottom, img, RectC(xx, yy, right, bottom));
+				ChDraw(w, 0, 0, img, RectC(0, 0, left, top), ink);
+				ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, left, top), ink);
+				ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, top), ink);
+				ChDraw(w, sz.cx - right, sz.cy - bottom, img, RectC(xx, yy, right, bottom), ink);
 			}
 			w.End();
 			return 1;
@@ -433,7 +383,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 	return Null;
 }
 
-typedef Value (*ChPainterFn)(Draw& w, const Rect& r, const Value& v, int op);
+typedef Value (*ChPainterFn)(Draw& w, const Rect& r, const Value& v, int op, Color ink);
 
 Vector<ChPainterFn>& sChps()
 {
@@ -441,7 +391,7 @@ Vector<ChPainterFn>& sChps()
 	return x;
 }
 
-void ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& v, int op))
+void ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& v, int op, Color ink))
 {
 	if(FindIndex(sChps(), fn) < 0)
 		sChps().Add(fn);
@@ -510,50 +460,50 @@ void ChFinish()
 	sLabelTextColorMismatch = IsDark(SColorText()) != IsDark(SColorLabel());
 }
 
-Value sChOp(Draw& w, const Rect& r, const Value& v, int op)
+Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 {
 	Value q;
 	if(!IsNull(v))
 		for(int i = sChps().GetCount() - 1; i >= 0; i--) {
-			q = (*sChps()[i])(w, r, v, op);
+			q = (*sChps()[i])(w, r, v, op, ink);
 			if(!IsNull(q))
 				break;
 		}
 	return q;
 }
 
-void ChPaint(Draw& w, const Rect& r, const Value& look)
+void ChPaint(Draw& w, const Rect& r, const Value& look, Color ink)
 {
-	sChOp(w, r, look, LOOK_PAINT);
+	sChOp(w, r, look, LOOK_PAINT, ink);
 }
 
-void ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look)
+void ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
-	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINT);
+	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINT, ink);
 }
 
-void ChPaintEdge(Draw& w, const Rect& r, const Value& look)
+void ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink)
 {
-	sChOp(w, r, look, LOOK_PAINTEDGE);
+	sChOp(w, r, look, LOOK_PAINTEDGE, ink);
 }
 
-void ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look)
+void ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
-	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINTEDGE);
+	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINTEDGE, ink);
 }
 
-void ChPaintBody(Draw& w, const Rect& r, const Value& look)
+void ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink)
 {
 	Rect m = ChMargins(look);
 	w.Clip(r);
 	ChPaint(w, Rect(r.left - m.left, r.top - m.top, r.right + m.right, r.bottom + m.bottom),
-	        look);
+	        look, ink);
 	w.End();
 }
 
-void ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look)
+void ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
-	ChPaintBody(w, RectC(x, y, cx, cy), look);
+	ChPaintBody(w, RectC(x, y, cx, cy), look, ink);
 }
 
 Rect ChMargins(const Value& look)

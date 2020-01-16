@@ -374,7 +374,13 @@ private:
 	Color          nullink;
 	Font           nullfont;
 	
+	ActiveEdgeFrame edge;
+	
+	void SyncEdge();
+	
 protected:
+	virtual void   RefreshPush();
+	virtual void   RefreshFocus();
 	virtual void   PerformAction();
 	virtual void   DoAction();
 

@@ -181,19 +181,6 @@ Vector<FaceInfo> GetAllFacesSys()
 
 #define GLYPHINFOCACHE 31
 
-#ifdef flagWINGL
-#include <CoreGl/FontGl.h>
-#include <CoreGl/ResGl.h>
-GlyphInfo  GetGlyphInfoSys(Font font, int chr)
-{
-	static GlyphInfo gi;
-	const OpenGLFont& fi = resources.GetFont(font);
-	gi.width = chr < fi.chars.GetCount() ? int(fi.chars[chr].xadvance * fi.scale + 0.5f) : 0;
-	gi.lspc = 0;
-	gi.rspc = 0;
-	return gi;
-}
-#else
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static Font      fnt[GLYPHINFOCACHE];
@@ -265,7 +252,6 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	}
 	return li[q][chr & 255];
 }
-#endif
 
 String GetFontDataSys(Font font)
 {

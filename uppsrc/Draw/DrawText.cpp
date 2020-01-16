@@ -2,11 +2,6 @@
 
 namespace Upp {
 
-#if defined(flagWINGL) || defined(flagLINUXGL)
-#include <CoreGl/FontGl.h>
-#include <CoreGl/ResGl.h>
-#endif
-
 #define LLOG(x)    // LOG(x)
 #define LTIMING(x) // TIMING(x)
 
@@ -215,9 +210,6 @@ void Draw::DrawText(int x, int y, const String& text, Font font, Color ink, cons
 
 Size GetTextSize(const wchar *text, Font font, int n)
 {
-#if defined(flagWINGL) || defined(flagLINUXGL)
-	return GetTextSize(text, resources.GetFont(font), n);
-#else
 	FontInfo fi = font.Info();
 	if(n < 0)
 		n = wstrlen(text);
@@ -232,7 +224,6 @@ Size GetTextSize(const wchar *text, Font font, int n)
 	}
 	sz.cy = fi.GetHeight();
 	return sz;
-#endif
 }
 
 Size GetTextSize(const WString& text, Font font)

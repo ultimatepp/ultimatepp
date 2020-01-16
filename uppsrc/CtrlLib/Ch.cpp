@@ -287,12 +287,18 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 			roundness = GetRoundness(m) ? DPI(3) : 0;
 			CtrlsImg::Set(CtrlsImg::I_EFE, WithHotSpots(MakeButton(roundness, SColorPaper(), DPI(1), ink), DPI(3), DPI(1), 0, 0));
 			CtrlsImg::Set(CtrlsImg::I_VE, WithHotSpots(MakeButton(DPI(0), SColorPaper(), DPI(1), ink), DPI(2), DPI(2), 0, 0));
-			EditField::StyleDefault().Write().edge[CTRL_DISABLED] = WithHotSpots(MakeButton(roundness, SColorFace(), DPI(1), ink), DPI(3), DPI(1), 0, 0);
-			EditField::StyleDefault().Write().activeedge = true;
 			LabelBox::SetLook(WithHotSpots(MakeButton(2 * roundness / 3, Image(), DPI(1), ink), DPI(3), DPI(3), 0, 0));
 		}
 		Size sz = m.GetSize();
 		m = Crop(m, sz.cx / 8, sz.cy / 8, 6 * sz.cx / 8, 6 * sz.cy / 8);
+		{
+			EditField::Style& s = EditField::StyleDefault().Write();
+			s.activeedge = true;
+			s.edge[i] = WithHotSpots(MakeButton(roundness, i == CTRL_DISABLED ? SColorFace() : SColorPaper(), DPI(1), ink),
+			                         DPI(3), DPI(1), 0, 0);
+			if(i == 0)
+				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), DPI(2), Null), DPI(3), DPI(1), 0, 0);
+		}
 		{
 			auto Set = [&](Button::Style& s, const Image& arrow = Null) {
 				Value l = MakeButton(0, m, DPI(1), ink, 0);
