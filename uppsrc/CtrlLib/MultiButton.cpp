@@ -288,10 +288,10 @@ int MultiButton::ChState(int i)
 			    : CTRL_NORMAL;
 		return q;
 	}
-	if(IsTrivial() && !frm)
-		i = 0;
 	if(!IsShowEnabled() || IsReadOnly() || frm && p && p->IsReadOnly() || i >= 0 && !button[i].enabled)
 		return CTRL_DISABLED;
+	if(IsTrivial() && !frm)
+		i = 0;
 	return hl == i ? push ? CTRL_PRESSED
 	                      : CTRL_HOT
 	               : CTRL_NORMAL;

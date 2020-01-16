@@ -1,16 +1,18 @@
 - Issue with editfield text clipping in the right
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
-- 3.8 menu in virtual box is very slow
 - Possible issue with Capture (e.g. ide about box)
+- DnD crash?
+- GUILock docs
 
 CH:
-- spinbutton cosmetics
 - Redmond scrollbars width
+
 - Improve scrollbars button borders
+
+- spinbutton cosmetics
 - Error state (red) EditField cosmetics
 - Pushbutton push does not look nice
-- Disabled empty combobox (FileSel::SelectDir) does not look nice
 - DarkCold: problem slight problem with scrollbars
 
 DONE:
@@ -72,3 +74,4 @@ DONE:
 - DnD Sample size UHD
 - ide menu in X11 ch
 - TrayIconGtk warnings
+- Disabled empty combobox (FileSel::SelectDir) does not look nice
