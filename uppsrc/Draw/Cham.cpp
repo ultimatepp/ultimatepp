@@ -111,7 +111,7 @@ static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Ima
 		Swap(cx, cy);
 	}
 	int ecx = isz.cy / 2; // size of 'ending' (can be circular)
-	int ccx = isz.cy; // size of central part, there is sometimes some sort of 'handle'
+	int ccx = isz.cy / 2; // size of central part, there is sometimes some sort of 'handle'
 	int sl = (isz.cx - 2 * ecx - ccx) / 2; // size of left stretched part source
 	int sr = isz.cx - 2 * ecx - ccx - sl; // size of right stretched part source
 

@@ -8,12 +8,7 @@
 
 CH:
 - Redmond scrollbars width
-
-- Improve scrollbars button borders
-
-- spinbutton cosmetics
-- Pushbutton push does not look nice
-- DarkCold: problem slight problem with scrollbars
+- Improve progress?
 
 DONE:
 
@@ -26,7 +21,7 @@ DONE:
 - toolbar button highlight
 - correct checks in menu
 - uword cannot be resized smaller
-- Scrollbar margins (better fit for slider)
+- Scrollbar margins (better fit for slider)i
 - Scrollbar Correct minsize, barsize...
 - FileSelector
 - Mint-Y disabled color is wrong
@@ -76,3 +71,10 @@ DONE:
 - TrayIconGtk warnings
 - Disabled empty combobox (FileSel::SelectDir) does not look nice
 - Error state (red) EditField cosmetics
+- Pushbutton push does not look nice
+- DropChoice<EditString>::Error problem
+- DarkCold: problem slight problem with scrollbars
+- Improve scrollbars button borders
+- Scrollbars disabled monocolor
+- spinbutton cosmetics
+- ide missing vertical line

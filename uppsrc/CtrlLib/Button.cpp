@@ -456,6 +456,12 @@ CH_STYLE(SpinButtons, Style, StyleDefault)
 	width = Zx(12);
 }
 
+CH_STYLE(SpinButtons, Style, StyleOnSides)
+{
+	Assign(SpinButtons::StyleDefault());
+	onsides = true;
+}
+
 void SpinButtons::FrameLayout(Rect& r)
 {
 	if(!visible) {
@@ -468,24 +474,25 @@ void SpinButtons::FrameLayout(Rect& r)
 	Size sz = r.Size();
 	int h = r.Height();
 	int h7 = min(sz.cx / 2, style->width);
+	int h7o = h7 - style->over;
 
-	if(onsides) {
-		dec.SetFrameRect(r.left, r.top, h7, h);
-		inc.SetFrameRect(r.right - h7, r.top, h7, h);
-		r.left += h7;
-		r.right -= h7;
+	if(style->onsides) {
+		dec.SetFrameRect(r.left - style->over, r.top, h7, h);
+		inc.SetFrameRect(r.right - h7o, r.top, h7, h);
+		r.left += h7o;
+		r.right -= h7o;
 	}
 	else {
 		int h2 = h / 2;
-		inc.SetFrameRect(r.right - h7, r.top, h7, h2);
-		dec.SetFrameRect(r.right - h7, r.top + h2, h7, h - h2);
-		r.right -= h7;
+		inc.SetFrameRect(r.right - h7o, r.top, h7, h2);
+		dec.SetFrameRect(r.right - h7o, r.top + h2, h7, h - h2);
+		r.right -= h7o;
 	}
 }
 
 void SpinButtons::FrameAddSize(Size& sz)
 {
-	sz.cx += (1 + onsides) * min(sz.cx / 2, style->width);
+	sz.cx += (1 + style->onsides) * (min(sz.cx / 2, style->width) - style->over);
 }
 
 void SpinButtons::FrameAdd(Ctrl& ctrl)
@@ -518,7 +525,6 @@ SpinButtons& SpinButtons::SetStyle(const Style& s)
 
 SpinButtons::SpinButtons() {
 	visible = true;
-	onsides = false;
 	inc.NoWantFocus();
 	dec.NoWantFocus();
 	style = NULL;
@@ -834,29 +840,30 @@ DataPusher::DataPusher()
 {
 	convert = &NoConvert();
 	display = &StdDisplay();
-	SyncEdge();
+	RefreshAll();
 	SetFrame(edge);
 }
 
-void DataPusher::SyncEdge()
+void DataPusher::RefreshAll()
 {
 	edge.Set(this, EditField::StyleDefault().edge, EditField::StyleDefault().activeedge);
 	edge.Mouse(HasMouse());
 	edge.Push(IsPush());
+	edge.SetColor(EditField::StyleDefault().coloredge, GetPaper());
 	RefreshFrame();
 }
 
 DataPusher::DataPusher(const Convert& convert, const Display& display)
 : convert(&convert), display(&display)
 {
-	SyncEdge();
+	RefreshAll();
 	SetFrame(edge);
 }
 
 DataPusher::DataPusher(const Display& display)
 : convert(&NoConvert()), display(&display)
 {
-	SyncEdge();
+	RefreshAll();
 	SetFrame(edge);
 }
 
@@ -909,11 +916,16 @@ DataPusher& DataPusher::NullText(const char *text, Color ink)
 	return NullText(text, StdFont(), ink);
 }
 
+Color DataPusher::GetPaper()
+{
+	return (IsPush() ? Blend(SColorHighlight, SColorFace, 235)
+	                 : IsShowEnabled() && !IsReadOnly() ? SColorPaper : SColorFace);
+}
+
 void DataPusher::Paint(Draw& w)
 {
 	Rect rc = GetSize();
-	Color paper = (IsPush() ? Blend(SColorHighlight, SColorFace, 235)
-	                        : IsShowEnabled() && !IsReadOnly() ? SColorPaper : SColorFace);
+	Color paper = GetPaper();
 	w.DrawRect(rc, paper);
 	rc.Deflate(2, 1);
 	if(IsPush() && GUI_GlobalStyle() < GUISTYLE_XP)
@@ -939,12 +951,12 @@ void DataPusher::SetDataAction(const Value& value)
 
 void DataPusher::RefreshPush()
 {
-	SyncEdge();
+	RefreshAll();
 }
 
 void DataPusher::RefreshFocus()
 {
-	SyncEdge();
+	RefreshAll();
 }
 
 }

@@ -158,6 +158,7 @@ public:
 	Event<>                   WhenEnter;
 	Event<WString&>           WhenPasteFilter;
 	Event<Vector<Highlight>&> WhenHighlight;
+	Event<Color>              WhenPaper; // needed to improve visuals of DropChoice
 
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);
