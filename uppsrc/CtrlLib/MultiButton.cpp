@@ -362,6 +362,8 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			w.Clip(l, 0, r - l, sz.cy);
 		}
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
+		if(!IsNull(paper) && !IsNull(style->coloredge))
+			ChPaint(w, sz, style->coloredge, paper);
 		if(style->clipedge)
 			w.End();
 	}

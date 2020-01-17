@@ -113,7 +113,9 @@ bool EditField::FrameIsEdge()
 
 void EditField::RefreshAll()
 {
-	edge.SetColor(style->coloredge, GetPaper());
+	Color paper = GetPaper();
+	edge.SetColor(style->coloredge, paper);
+	WhenPaper(paper);
 	RefreshFrame();
 }
 

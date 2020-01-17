@@ -170,6 +170,7 @@ protected:
 	void        Drop();
 	void        EnableDrop(bool b);
 	void        PseudoPush();
+
 	int         dropwidth;
 
 	typedef DropChoice CLASSNAME;
@@ -194,7 +195,7 @@ public:
 
 	void        AddHistory(const Value& data, int max = 12);
 
-	void        AddTo(Ctrl& _owner)                   { MultiButtonFrame::AddTo(_owner); owner = &_owner; }
+	void        AddTo(Ctrl& _owner);
 	bool        IsActive() const                      { return IsOpen(); }
 
 	Value       Get() const;

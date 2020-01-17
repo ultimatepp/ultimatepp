@@ -19,6 +19,7 @@ public:
 public:
 	struct Style : public ChStyle<Style> {
 		Value edge[4];
+		Value coloredge;
 		bool  activeedge;
 		Value look[4];
 		Value left[4]; // leftmost button on the left side
@@ -99,6 +100,7 @@ private:
 	bool             nobg;
 	String           tip;
 	Rect             pushrect;
+	Color            paper = Null;
 
 	Array<SubButton> button;
 	int              hl;
@@ -153,6 +155,8 @@ public:
 	const Value&   Get() const                       { return value; }
 	
 	void  Error(const Value& v)                      { error = v; Refresh(); }
+	
+	void  SetPaper(Color c)                          { paper = c; }
 
 	MultiButton& SetDisplay(const Display& d);
 	MultiButton& NoDisplay();

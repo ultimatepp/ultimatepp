@@ -585,8 +585,7 @@ Ide::Ide()
 	qtfsel = true;
 	hilite_if_endif = false;
 	thousands_separator = true;
-	hline = true;
-	vline = false;
+	hline = vline = true;
 	wrap_console_text = true;
 	mute_sounds = false;
 	line_numbers = false;

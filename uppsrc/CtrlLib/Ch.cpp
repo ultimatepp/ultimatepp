@@ -300,19 +300,21 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), DPI(2), Null), DPI(3), DPI(1), 0, 0);
 		}
 		{
-			auto Set = [&](Button::Style& s, const Image& arrow = Null) {
-				Value l = MakeButton(0, m, DPI(1), ink, 0);
-				s.look[i] = IsNull(l) ? l : ChLookWith(l, arrow);
+			auto Set = [&](Button::Style& s, const Image& arrow = Null, Color ink = Null, Color border = Null) {
+				Value l = MakeButton(0, m, DPI(1), Nvl(border, ink), 0);
+				s.look[i] = IsNull(l) ? l : ChLookWith(l, arrow, ink);
 			};
 			Set(Button::StyleScroll().Write());
 			Set(Button::StyleEdge().Write());
 			Set(Button::StyleLeftEdge().Write());
 			ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 			
-			Set(s.up, CtrlsImg::UA());
-			Set(s.down, CtrlsImg::DA());
-			Set(s.left, CtrlsImg::LA());
-			Set(s.right, CtrlsImg::RA());
+			Color c = Blend(SColorFace(), ink);
+			Color k = text[i];
+			Set(s.up, CtrlsImg::UA(), k, c);
+			Set(s.down, CtrlsImg::DA(), k, c);
+			Set(s.left, CtrlsImg::LA(), k, c);
+			Set(s.right, CtrlsImg::RA(), k, c);
 		}
 		{
 			MultiButton::Style& s = MultiButton::StyleDefault().Write();
@@ -321,6 +323,8 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 
 			s.left[i] = MakeButton(roundness, m, DPI(1), ink, CORNER_TOP_LEFT|CORNER_BOTTOM_LEFT);
 			s.trivial[i] = s.look[i] = s.right[i] = MakeButton(roundness, m, DPI(1), ink, CORNER_TOP_RIGHT|CORNER_BOTTOM_RIGHT);
+			if(i == 0)
+				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), DPI(2), Null), DPI(3), DPI(1), 0, 0);
 			auto Middle = [&](Image m) {
 				ImageBuffer ib(m);
 				for(int y = 0; y < DPI(1); y++)
@@ -348,7 +352,22 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 			};
 			sp.inc.look[i] = Spin(CORNER_TOP_RIGHT, CtrlImg::spinup());
 			sp.dec.look[i] = Spin(CORNER_BOTTOM_RIGHT, CtrlImg::spindown());
-			sp.width = DPI(14); // DPI(17) - DPI(3) (droplist stdwidth minus frame)
+			sp.width = DPI(16);
+			sp.over = DPI(2);
+		}
+		{
+			SpinButtons::Style& sp = SpinButtons::StyleOnSides().Write();
+			if(i == 0)
+				sp.dec = sp.inc = Button::StyleNormal();
+			auto Spin = [&](dword corners, const Image& sm, bool left) {
+				Image mm = MakeButton(roundness, m, 0, Black(), corners);
+				mm = left ? WithLeftLine(mm, ink) : WithRightLine(mm, ink);
+				return ChLookWith(mm, sm, text[i]);
+			};
+			sp.inc.look[i] = Spin(CORNER_TOP_RIGHT|CORNER_BOTTOM_RIGHT, CtrlImg::plus(), true);
+			sp.dec.look[i] = Spin(CORNER_TOP_LEFT|CORNER_BOTTOM_LEFT, CtrlImg::minus(), false);
+			sp.width = DPI(16);
+			sp.over = DPI(2);
 		}
 		{
 			HeaderCtrl::Style& hs = HeaderCtrl::StyleDefault().Write();

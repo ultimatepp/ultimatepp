@@ -16,6 +16,15 @@ DropChoice::DropChoice() {
 	rodrop = false;
 }
 
+void DropChoice::AddTo(Ctrl& _owner)
+{
+	MultiButtonFrame::AddTo(_owner);
+	owner = &_owner;
+
+	if(auto *ef = dynamic_cast<EditField *>(owner))
+		ef->WhenPaper = [=](Color c) { MultiButtonFrame::SetPaper(c); };
+}
+
 void DropChoice::EnableDrop(bool b)
 {
 	MainButton().Enable(b);
