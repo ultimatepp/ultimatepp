@@ -5,7 +5,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-#define LOG_EVENTS  _DBG_
+// #define LOG_EVENTS  _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -479,7 +479,7 @@ void Ctrl::Proc()
 					for(int i = 1; i < 256; i++) { // Latin keyvals are in 0..255 range
 						GdkKeymapKey *keys;
 						gint n_keys;
-						if(gdk_keymap_get_entries_for_keyval(NULL, i, &keys, &n_keys)) {
+						if(gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(gdk_display_get_default()), i, &keys, &n_keys)) {
 							for(int j = 0; j < n_keys; j++)
 								if(keys[j].group == 0)
 									hwkv.Add(keys[j].keycode, i);
