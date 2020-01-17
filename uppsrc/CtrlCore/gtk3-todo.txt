@@ -1,11 +1,11 @@
 - Possible issue with Capture (e.g. ide about box)
 
 - Issue with editfield text clipping in the right
-- LeftRoundness with DropChoice (DropChoiceRdO)
 - DnD crash?
 - GUILock docs
 
 CH:
+- EditDate / EditTime problems
 - Redmond scrollbars width
 - Improve progress?
 
@@ -78,3 +78,4 @@ DONE:
 - spinbutton cosmetics
 - ide missing vertical line
 - DropChoice STDSIZE (.TopPosZ(10))
+- LeftRoundness with DropChoice (DropChoiceRdO)

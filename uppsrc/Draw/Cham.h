@@ -2,12 +2,11 @@ enum LookOp {
 	LOOK_PAINT,
 	LOOK_MARGINS,
 	LOOK_PAINTEDGE,
-	LOOK_ISOPAQUE,
-	LOOK_ISBODYOPAQUE,
 };
 
 enum {
-	CH_SCROLLBAR_IMAGE = -1000 // special Image hotspot x value for ChPaint of scrollbar
+	CH_SCROLLBAR_IMAGE = -1000, // special Image hotspot x value for ChPaint of scrollbar
+	CH_EDITFIELD_IMAGE = -1001, // special Image hotspot x2 value, y2 is then x and y for the purposes of painting
 };
 
 void  ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& look, int lookop, Color ink));
@@ -27,8 +26,6 @@ void   ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Col
 void   ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink = Null);
 void   ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
 Rect   ChMargins(const Value& look);
-bool   ChIsOpaque(const Value& look);
-bool   ChIsBodyOpaque(const Value& look);
 
 void   DeflateMargins(Rect& r, const Rect& margin);
 void   ChDeflateMargins(Rect& r, const Value& look);

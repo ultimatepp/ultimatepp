@@ -73,7 +73,7 @@ file
 	Chameleon readonly separator,
 	Cham.h,
 	Cham.cpp,
-	SSettings.cpp,
+	SColors.cpp,
 	GTK-dli readonly separator,
 	gobj.dli,
 	gdk.dli,
