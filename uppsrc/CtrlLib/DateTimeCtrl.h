@@ -39,9 +39,9 @@ public:
 	}
 
 	FlatButton& SetLeft()           { left = true;  return *this; }
-	FlatButton& SetRight() 			{ left = false;	return *this; }
-	FlatButton& DrawEdge(bool b) 	{ drawedge = b;	return *this; }
-	FlatButton& Highlight(bool b) 	{ highlight = b;return *this; }
+	FlatButton& SetRight()          { left = false;	return *this; }
+	FlatButton& DrawEdge(bool b)    { drawedge = b;	return *this; }
+	FlatButton& Highlight(bool b)   { highlight = b;return *this; }
 };
 
 class FlatSpin : public Ctrl
@@ -67,7 +67,7 @@ public:
 	void SetFont(const Font& fnt);
 	void SetLeftImage(const Image &img)		{ left.SetImage(img);                    }
 	void SetRightImage(const Image &img)	{ right.SetImage(img);                   }
-	void SetHighlight(bool b) 				{ left.Highlight(b); right.Highlight(b); }
+	void SetHighlight(bool b)               { left.Highlight(b); right.Highlight(b); }
 
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void MouseLeave();
@@ -200,7 +200,7 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 
 	int& Day(int x, int y) { return days[y][x]; }
-	int& Day(Point p) 	   { return Day(p.x, p.y); }
+	int& Day(Point p)      { return Day(p.x, p.y); }
 	Point GetDay(Point p);
 	int GetWeek(Point p);
 
@@ -513,6 +513,9 @@ public:
 		cc.clock      <<= THISBACK(OnClockChoice);
 		cc.WhenPopDown  = THISBACK(OnClose);
 		cc.calendar.WhenSelect = WhenSelect.Proxy();
+		this->WhenPaper = [=](Color c) {
+			drop.SetPaper(c);
+		};
 	}
 
 	virtual void GotFocus()  { T::GotFocus(); drop.RefreshFrame(); }
@@ -523,7 +526,7 @@ public:
 	DateTimeCtrl& SetClockStyle(const Clock::Style& style)         { cc.clock.SetStyle(style); return *this;  }
 	DateTimeCtrl& SetButtonStyle(const MultiButton::Style& style)  { drop.SetStyle(style); return *this; }
 	DateTimeCtrl& SelectAll(bool b = true)                         { cc.calendar.SelectAll(b); return *this;     }
-	DateTimeCtrl& NoSelectAll()     						       { cc.calendar.SelectAll(false); return *this; }
+	DateTimeCtrl& NoSelectAll()                                    { cc.calendar.SelectAll(false); return *this; }
 	DateTimeCtrl& Seconds(bool b = true)                           { cc.clock.Seconds(b); return *this; }
 	DateTimeCtrl& NoSeconds()                                      { cc.clock.Seconds(false); return *this; }
 	DateTimeCtrl& Colon(bool b = true)                             { cc.clock.Colon(b); return *this; }
