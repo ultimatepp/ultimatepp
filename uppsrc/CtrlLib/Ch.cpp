@@ -85,7 +85,7 @@ void ChSysInit()
 void FillImage(Painter& p, const Rectf& r, const Image& m)
 {
 	Xform2D xform = Xform2D::Translation(r.left, r.top);
-	Size isz = m.GetSize();
+	Sizef isz = m.GetSize();
 	xform = Xform2D::Scale(r.GetWidth() / isz.cx, r.GetHeight() / isz.cy) * xform;
 	p.Fill(m, xform);
 }
@@ -276,6 +276,12 @@ Image WithBottomLine(const Image& m, Color c, int w)
 	return WithRect(m, 0, m.GetHeight() - w, m.GetWidth(), w, c);
 }
 
+Color AdjustColor(Color c, int adj) {
+	return Color(clamp(c.GetR() + adj, 0, 255),
+	             clamp(c.GetG() + adj, 0, 255),
+	             clamp(c.GetB() + adj, 0, 255));
+}
+
 void ChSynthetic(Image button100x100[4], Color text[4])
 {
 	int roundness = DPI(3);
@@ -376,7 +382,12 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 		if(i == CTRL_DISABLED) {
 			ProgressIndicator::Style& s = ProgressIndicator::StyleDefault().Write();
 			s.hlook = MakeButton(roundness, m, DPI(1), ink);
-			s.hchunk = MakeButton(roundness, SColorHighlight(), DPI(1), ink);
+			ImageBuffer ib(1, 8);
+			for(int i = 0; i < 8; i++) {
+				int a[] = { 20, 40, 10, 0, -10, -20, -30, -40 };
+				ib[i][0] = AdjustColor(SColorHighlight(), a[i]);
+			}
+			s.hchunk = MakeButton(roundness, Magnify(ib, 10, 1), DPI(1), ink);
 			s.bound = true;
 			s.nomargins = true;
 		}
@@ -398,12 +409,7 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 		}
 		{
 			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-			auto Face = [](int adj) {
-				Color c = SColorFace();
-				return Color(clamp(c.GetR() + adj, 0, 255),
-				             clamp(c.GetG() + adj, 0, 255),
-				             clamp(c.GetB() + adj, 0, 255));
-			};
+			auto Face = [](int adj) { return AdjustColor(SColorFace(), adj); };
 			s.body = MakeButton(0, Face(8), DPI(1), ink);
 			Image t = MakeButton(roundness, Face(decode(i, CTRL_NORMAL, -20,
 			                                               CTRL_HOT, 2,
