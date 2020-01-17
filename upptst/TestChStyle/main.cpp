@@ -87,6 +87,28 @@ TestChStyle::TestChStyle()
 	list.Add("Some very very very long text to invoke DisplayPopup");
 	for(int i = 0; i < 50; i++)
 		list.Add(i);
+	
+	es_error.Error();
+	es_error.NullText(CtrlImg::Computer());
+	
+	dc_error.Error();
+	dc_error.NullText(CtrlImg::Computer());
+
+	dc_error2.Error();
+	dc_error2.NullText(CtrlImg::Computer());
+	dc_error2.AddList("1");
+	
+	spin_sides.OnSides();
+	
+	dis1 <<= 12;
+	dis1.Disable();
+
+	dis2 <<= 12;
+	dis2.OnSides();
+	dis2.Disable();
+	
+	tm_dis.Disable();
+	dt_dis.Disable();
 }
 
 GUI_APP_MAIN
@@ -97,6 +119,6 @@ GUI_APP_MAIN
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());
-
+	
 	TestChStyle().Run();
 }
