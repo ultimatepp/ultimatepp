@@ -156,18 +156,6 @@ int XpMargin(const XpElement& e)
 	return q;
 }
 
-int XpIsOpaque(const XpElement& e)
-{
-	int q = xp_opaque.Find(e);
-	if(q >= 0)
-		return xp_opaque[q];
-	Image m1 = XpImage(e.widget, e.part, e.state, Black, Size(30, 30));
-	Image m2 = XpImage(e.widget, e.part, e.state, White, Size(30, 30));
-	q = m1 == m2;
-	xp_opaque.Add(e, q);
-	return q;
-}
-
 Color XpColor(int widget, int part, int state, int type)
 {
 	COLORREF cref = 0;
@@ -263,8 +251,6 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 			}
 			q = XpMargin(e);
 			return Rect(q, q, q, q);
-		case LOOK_ISOPAQUE:
-			return XpIsOpaque(e);
 		}
 		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
 			LTIMING("XpPaint");
