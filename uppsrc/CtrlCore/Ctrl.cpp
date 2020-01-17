@@ -796,30 +796,28 @@ void Ctrl::GetZoomRatio(Size& m, Size& d)
 int  Ctrl::HorzLayoutZoom(int cx)
 {
 	Csizeinit();
-	return Csize.cx * cx / Dsize.cx;
+	return cx > -16000 ? Csize.cx * cx / Dsize.cx : cx;
 }
 
 double  Ctrl::HorzLayoutZoomf(double cx)
 {
 	Csizeinit();
-	return Csize.cx * cx / Dsize.cx;
+	return cx > -16000 ? Csize.cx * cx / Dsize.cx : cx;
 }
 
 int  Ctrl::VertLayoutZoom(int cy)
 {
 	Csizeinit();
-	return Csize.cy * cy / Dsize.cy;
+	return cy > -16000 ? Csize.cy * cy / Dsize.cy : cy;
 }
 
 Size Ctrl::LayoutZoom(int cx, int cy)
 {
-	Csizeinit();
-	return Size(Csize.cx * cx / Dsize.cx, Csize.cy * cy / Dsize.cy);
+	return Size(HorzLayoutZoom(cx), VertLayoutZoom(cy));
 }
 
 Size Ctrl::LayoutZoom(Size sz)
 {
-	Csizeinit();
 	return LayoutZoom(sz.cx, sz.cy);
 }
 
