@@ -184,9 +184,6 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 			return 0;
 		case LOOK_MARGINS:
 			return Rect(n, n, n, n);
-		case LOOK_ISBODYOPAQUE:
-		case LOOK_ISOPAQUE:
-			return false;
 		}
 	}
 	if(IsType<Color>(v)) {
@@ -200,9 +197,6 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 			return 0;
 		case LOOK_MARGINS:
 			return Rect(1, 1, 1, 1);
-		case LOOK_ISBODYOPAQUE:
-		case LOOK_ISOPAQUE:
-			return !IsNull(c);
 		}
 	}
 	if(IsType<Image>(v)) {
@@ -219,6 +213,11 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 		}
 		Point p2 = img.Get2ndSpot();
 		int tile = 0;
+		if(p2.x == CH_EDITFIELD_IMAGE) {
+			if(op != LOOK_MARGINS)
+				p.x = p.y = p2.y;
+			p2.x = p2.y = 0;
+		}
 		if(p2.x || p2.y) {
 			if(p2.x < p.x) {
 				Swap(p2.x, p.x);
@@ -247,138 +246,103 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 		}
 		if(op == LOOK_MARGINS)
 			return Rect(p.x, p.y, isz.cx - p2.x, isz.cy - p2.y);
-		if(op == LOOK_ISOPAQUE)
-			return img.GetKind() == IMAGE_OPAQUE;
 		if(IsNull(img))
 			return 1;
-		if(op == LOOK_ISBODYOPAQUE) {
-			static VectorMap<int64, bool> btc;
-			int64 key = img.GetSerialId();
-			int q = btc.Find(key);
-			if(q < 0) {
-				bool opaque = true;
-				Rect m = ChMargins(img);
-				Rect r = img.GetSize();
-				r.left += max(m.left, 0);
-				r.right -= max(m.right, 0);
-				r.top += m.top;
-				r.bottom -= m.bottom;
-				int cx = r.right - r.left;
-				if(cx >= 0)
-					for(int y = r.top; y < r.bottom && opaque; y++) {
-						const RGBA *s = img[y] + r.left;
-						const RGBA *e = s + cx;
-						while(s < e) {
-							if(s->a != 255) {
-								opaque = false;
+		LTIMING("ChPaint Image");
+		w.Clipoff(r);
+		Rect sr(p, p2);
+		Size sz2(isz.cx - sr.right, isz.cy - sr.bottom);
+		Rect r = RectC(p.x, p.y, sz.cx - sr.left - sz2.cx, sz.cy - sr.top - sz2.cy);
+		int top = minmax(sz.cy / 2, 0, isz.cy);
+		int bottom = minmax(sz.cy - top, 0, isz.cy);
+		int yy = isz.cy - bottom;
+		int left = minmax(sz.cx / 2, 0, isz.cx);
+		int right = minmax(sz.cx - left, 0, isz.cx);
+		int xx = isz.cx - right;
+		if(!r.IsEmpty()) {
+			ChDraw(w, 0, 0, img, RectC(0, 0, p.x, p.y), ink);
+			ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, p.x, sz2.cy), ink);
+			ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, p.y), ink);
+			ChDraw(w, r.right, r.bottom, img, RectC(sr.right, sr.bottom, sz2.cx, sz2.cy), ink);
+			ChDraw(w, p.x, 0, r.Width(), p.y, img, RectC(p.x, 0, sr.Width(), p.y), ink);
+			ChDraw(w, p.x, r.bottom, r.Width(), sz2.cy, img, RectC(p.x, sr.bottom, sr.Width(), sz2.cy), ink);
+			ChDraw(w, 0, p.y, p.x, r.Height(), img, RectC(0, p.y, p.x, sr.Height()), ink);
+			ChDraw(w, r.right, p.y, sz2.cx, r.Height(), img, RectC(sr.right, p.y, sz2.cx, sr.Height()), ink);
+			if(op == LOOK_PAINT) {
+				if(IsNull(r) || IsNull(sr)) {
+					w.End();
+					return 1;
+				}
+				if(tile) {
+					LTIMING("Ch-Tiles");
+					LTIMING("Ch-Tiles");
+					Size sz;
+					sz.cx = (tile & 1 ? sr : r).GetWidth();
+					sz.cy = (tile & 2 ? sr : r).GetHeight();
+					img = Rescale(img, sz, sr);
+					DrawTiles(w, r, img);
+				}
+				else {
+					static VectorMap<int64, int> btc;
+					int64 key = img.GetSerialId();
+					int q;
+					{
+						LTIMING("Find");
+						q = btc.Find(key);
+					}
+					if(q < 0) {
+						LTIMING("ClassifyContent");
+						q = ClassifyContent(img, sr);
+						if(btc.GetCount() > 100)
+							btc.Clear();
+						btc.Add(key, q);
+					}
+					else
+						q = btc[q];
+					switch(q) {
+					case IMAGECONTENT_VERTDUP|IMAGECONTENT_HORZDUP:
+						{
+							LTIMING("Ch-singlecolor");
+							RGBA c = img[sr.top][sr.left];
+							if(c.a == 255) {
+								w.DrawRect(r, c);
 								break;
 							}
 						}
-					}
-				if(btc.GetCount() > 100)
-					btc.Clear();
-				btc.Add(key, q);
-				return opaque;
-			}
-			return btc[q];
-		}
-		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
-			LTIMING("ChPaint Image");
-			w.Clipoff(r);
-			Rect sr(p, p2);
-			Size sz2(isz.cx - sr.right, isz.cy - sr.bottom);
-			Rect r = RectC(p.x, p.y, sz.cx - sr.left - sz2.cx, sz.cy - sr.top - sz2.cy);
-			int top = minmax(sz.cy / 2, 0, isz.cy);
-			int bottom = minmax(sz.cy - top, 0, isz.cy);
-			int yy = isz.cy - bottom;
-			int left = minmax(sz.cx / 2, 0, isz.cx);
-			int right = minmax(sz.cx - left, 0, isz.cx);
-			int xx = isz.cx - right;
-			if(!r.IsEmpty()) {
-				ChDraw(w, 0, 0, img, RectC(0, 0, p.x, p.y), ink);
-				ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, p.x, sz2.cy), ink);
-				ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, p.y), ink);
-				ChDraw(w, r.right, r.bottom, img, RectC(sr.right, sr.bottom, sz2.cx, sz2.cy), ink);
-				ChDraw(w, p.x, 0, r.Width(), p.y, img, RectC(p.x, 0, sr.Width(), p.y), ink);
-				ChDraw(w, p.x, r.bottom, r.Width(), sz2.cy, img, RectC(p.x, sr.bottom, sr.Width(), sz2.cy), ink);
-				ChDraw(w, 0, p.y, p.x, r.Height(), img, RectC(0, p.y, p.x, sr.Height()), ink);
-				ChDraw(w, r.right, p.y, sz2.cx, r.Height(), img, RectC(sr.right, p.y, sz2.cx, sr.Height()), ink);
-				if(op == LOOK_PAINT) {
-					if(IsNull(r) || IsNull(sr)) {
-						w.End();
-						return 1;
-					}
-					if(tile) {
-						LTIMING("Ch-Tiles");
-						LTIMING("Ch-Tiles");
-						Size sz;
-						sz.cx = (tile & 1 ? sr : r).GetWidth();
-						sz.cy = (tile & 2 ? sr : r).GetHeight();
-						img = Rescale(img, sz, sr);
-						DrawTiles(w, r, img);
-					}
-					else {
-						static VectorMap<int64, int> btc;
-						int64 key = img.GetSerialId();
-						int q;
-						{
-							LTIMING("Find");
-							q = btc.Find(key);
-						}
-						if(q < 0) {
-							LTIMING("ClassifyContent");
-							q = ClassifyContent(img, sr);
-							if(btc.GetCount() > 100)
-								btc.Clear();
-							btc.Add(key, q);
-						}
-						else
-							q = btc[q];
-						switch(q) {
-						case IMAGECONTENT_VERTDUP|IMAGECONTENT_HORZDUP:
-							{
-								LTIMING("Ch-singlecolor");
-								RGBA c = img[sr.top][sr.left];
-								if(c.a == 255) {
-									w.DrawRect(r, c);
-									break;
-								}
-							}
-						case 0:
-						default:
-							ChDraw(w, r, img, sr, ink);
-							break;
-						}
+					case 0:
+					default:
+						ChDraw(w, r, img, sr, ink);
+						break;
 					}
 				}
 			}
-			else
-			if(r.left < r.right) {
-				ChDraw(w, 0, 0, img, RectC(0, 0, p.x, top), ink);
-				ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, p.x, bottom), ink);
-				ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, top), ink);
-				ChDraw(w, r.right, sz.cy - bottom, img, RectC(sr.right, yy, sz2.cx, bottom), ink);
-				ChDraw(w, p.x, 0, r.Width(), top, img, RectC(p.x, 0, sr.Width(), top), ink);
-				ChDraw(w, p.x, sz.cy - bottom, r.Width(), bottom, img, RectC(p.x, yy, sr.Width(), bottom), ink);
-			}
-			else
-			if(r.top < r.bottom) {
-				ChDraw(w, 0, 0, img, RectC(0, 0, left, p.y), ink);
-				ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, left, sz2.cy), ink);
-				ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, p.y), ink);
-				ChDraw(w, sz.cx - right, r.bottom, img, RectC(xx, sr.bottom, right, sz2.cy), ink);
-				ChDraw(w, 0, p.y, left, r.Height(), img, RectC(0, p.y, left, sr.Height()), ink);
-				ChDraw(w, sz.cx - right, p.y, right, r.Height(), img, RectC(xx, p.y, right, sr.Height()), ink);
-			}
-			else {
-				ChDraw(w, 0, 0, img, RectC(0, 0, left, top), ink);
-				ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, left, top), ink);
-				ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, top), ink);
-				ChDraw(w, sz.cx - right, sz.cy - bottom, img, RectC(xx, yy, right, bottom), ink);
-			}
-			w.End();
-			return 1;
 		}
+		else
+		if(r.left < r.right) {
+			ChDraw(w, 0, 0, img, RectC(0, 0, p.x, top), ink);
+			ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, p.x, bottom), ink);
+			ChDraw(w, r.right, 0, img, RectC(sr.right, 0, sz2.cx, top), ink);
+			ChDraw(w, r.right, sz.cy - bottom, img, RectC(sr.right, yy, sz2.cx, bottom), ink);
+			ChDraw(w, p.x, 0, r.Width(), top, img, RectC(p.x, 0, sr.Width(), top), ink);
+			ChDraw(w, p.x, sz.cy - bottom, r.Width(), bottom, img, RectC(p.x, yy, sr.Width(), bottom), ink);
+		}
+		else
+		if(r.top < r.bottom) {
+			ChDraw(w, 0, 0, img, RectC(0, 0, left, p.y), ink);
+			ChDraw(w, 0, r.bottom, img, RectC(0, sr.bottom, left, sz2.cy), ink);
+			ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, p.y), ink);
+			ChDraw(w, sz.cx - right, r.bottom, img, RectC(xx, sr.bottom, right, sz2.cy), ink);
+			ChDraw(w, 0, p.y, left, r.Height(), img, RectC(0, p.y, left, sr.Height()), ink);
+			ChDraw(w, sz.cx - right, p.y, right, r.Height(), img, RectC(xx, p.y, right, sr.Height()), ink);
+		}
+		else {
+			ChDraw(w, 0, 0, img, RectC(0, 0, left, top), ink);
+			ChDraw(w, 0, sz.cy - bottom, img, RectC(0, yy, left, top), ink);
+			ChDraw(w, sz.cx - right, 0, img, RectC(xx, 0, right, top), ink);
+			ChDraw(w, sz.cx - right, sz.cy - bottom, img, RectC(xx, yy, right, bottom), ink);
+		}
+		w.End();
+		return 1;
 	}
 	return Null;
 }
@@ -510,18 +474,6 @@ Rect ChMargins(const Value& look)
 {
 	NilDraw w;
 	return sChOp(w, Null, look, LOOK_MARGINS);
-}
-
-bool ChIsOpaque(const Value& look)
-{
-	NilDraw w;
-	return sChOp(w, Null, look, LOOK_ISOPAQUE);
-}
-
-bool ChIsBodyOpaque(const Value& look)
-{
-	NilDraw w;
-	return sChOp(w, Null, look, LOOK_ISBODYOPAQUE);
 }
 
 void   DeflateMargins(Rect& r, const Rect& m)
