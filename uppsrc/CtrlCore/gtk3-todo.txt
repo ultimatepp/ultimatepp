@@ -5,7 +5,6 @@
 - GUILock docs
 
 CH:
-- EditDate / EditTime problems
 - Redmond scrollbars width
 
 DONE:
@@ -79,3 +78,5 @@ DONE:
 - DropChoice STDSIZE (.TopPosZ(10))
 - LeftRoundness with DropChoice (DropChoiceRdO)
 - Improve progress?
+- EditDate / EditTime problems
+- Ide split buttons look unexpected

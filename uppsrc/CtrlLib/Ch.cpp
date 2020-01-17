@@ -306,17 +306,18 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 				s.coloredge = Espots(MakeButton(roundness, Black(), DPI(2), Null));
 		}
 		{
-			auto Set = [&](Button::Style& s, const Image& arrow = Null, Color ink = Null, Color border = Null) {
-				Value l = MakeButton(0, m, DPI(1), Nvl(border, ink), 0);
-				s.look[i] = IsNull(l) ? l : ChLookWith(l, arrow, ink);
+			auto Set = [&](Button::Style& s, const Image& arrow = Null, Color ink2 = Null, Color border = Null) {
+				Value l = MakeButton(0, m, DPI(1), Nvl(border, Nvl(ink2, ink)), 0);
+				s.look[i] = IsNull(arrow) ? l : ChLookWith(l, arrow, ink2);
 			};
-			Set(Button::StyleScroll().Write());
+			Color c = Blend(SColorFace(), ink);
+			Color k = text[i];
+
+			Set(Button::StyleScroll().Write(), Null, k, c);
 			Set(Button::StyleEdge().Write());
 			Set(Button::StyleLeftEdge().Write());
 			ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 			
-			Color c = Blend(SColorFace(), ink);
-			Color k = text[i];
 			Set(s.up, CtrlsImg::UA(), k, c);
 			Set(s.down, CtrlsImg::DA(), k, c);
 			Set(s.left, CtrlsImg::LA(), k, c);
