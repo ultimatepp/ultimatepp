@@ -2,8 +2,6 @@
 - GUILock docs
 
 CH:
-- WithDropChoice ch issue (again...)
-
 - Redmond scrollbars width
 
 DONE:
@@ -81,3 +79,4 @@ DONE:
 - Ide split buttons look unexpected
 - Issue with editfield text clipping in the right
 - Possible issue with Capture (e.g. ide about box)
+- WithDropChoice ch issue (again...)
