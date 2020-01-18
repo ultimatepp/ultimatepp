@@ -428,6 +428,8 @@ void ChHostSkin()
 		s.topitemtext[2] = GetInkColor();
 	}
 
+	SwapOKCancel_Write(Environment().Get("KDE_FULL_SESSION", String()) != "true");
+
 	Gtk_Free();
 }
 
