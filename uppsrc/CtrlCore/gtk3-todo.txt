@@ -1,9 +1,9 @@
-- Possible issue with Capture (e.g. ide about box)
-
 - DnD crash?
 - GUILock docs
 
 CH:
+- WithDropChoice ch issue (again...)
+
 - Redmond scrollbars width
 
 DONE:
@@ -80,3 +80,4 @@ DONE:
 - EditDate / EditTime problems
 - Ide split buttons look unexpected
 - Issue with editfield text clipping in the right
+- Possible issue with Capture (e.g. ide about box)
