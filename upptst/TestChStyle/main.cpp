@@ -30,11 +30,23 @@ TestChStyle::TestChStyle()
 	});
 
 	AddFrame(bar);
-	bar.Set([](Bar& bar) { bar.Add(CtrlImg::Diskette(), [] {
-		FileSelector fs;
-		fs.AllFilesType();
-		fs.ExecuteOpen();
-	}).Tip("This is test"); });
+	bar.Set([](Bar& bar) {
+		bar.Add(CtrlImg::Diskette(), [] {
+			FileSelector fs;
+			fs.AllFilesType();
+			fs.ExecuteOpen();
+		}).Tip("This is test");
+		bar.Add(CtrlImg::Dir(), [] {
+			ArrayCtrl ar;
+			ar.AddColumn();
+			for(int i = 0; i < 10000; i++)
+				ar.Add(i);
+			TopWindow win;
+			win.Add(ar.SizePos());
+			win.SetRect(0, 0, 400, 400);
+			win.Run();
+		});
+	});
 	
 	CtrlLayoutOKCancel(*this, "Window title");
 	
