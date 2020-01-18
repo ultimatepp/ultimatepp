@@ -1,6 +1,5 @@
 - Possible issue with Capture (e.g. ide about box)
 
-- Issue with editfield text clipping in the right
 - DnD crash?
 - GUILock docs
 
@@ -80,3 +79,4 @@ DONE:
 - Improve progress?
 - EditDate / EditTime problems
 - Ide split buttons look unexpected
+- Issue with editfield text clipping in the right

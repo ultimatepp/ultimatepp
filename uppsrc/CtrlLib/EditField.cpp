@@ -393,7 +393,7 @@ void EditField::Finish(bool refresh)
 	sz.cx -= 2;
 	if(sz.cx <= 0) return;
 	int x = GetCaret(cursor);
-	int wx = x + font.GetRightSpace('o');
+	int wx = x + max(font.GetRightSpace('o'), font.GetCy() / 5); // sometimes RightSpace is not implemented (0)
 	if(wx > sz.cx + sc - 1) {
 		sc = wx - sz.cx + 1;
 		RefreshAll();
