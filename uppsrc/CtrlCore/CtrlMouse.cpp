@@ -591,11 +591,15 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 
 Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	GuiLock __;
+	if(captureCtrl && captureCtrl != this && captureCtrl->IsMouseActive()) {
+		if(captureCtrl->IsEnabled())
+			return captureCtrl->MEvent0(e, p + GetScreenRect().TopLeft() -
+			                            captureCtrl->GetScreenRect().TopLeft(), zd);
+		else
+			return Image::Arrow();
+	}
 	if(!IsEnabled())
 		return Image::Arrow();
-	if(captureCtrl && captureCtrl != this && captureCtrl->IsMouseActive())
-		return captureCtrl->MEvent0(e, p + GetScreenRect().TopLeft() -
-		                            captureCtrl->GetScreenRect().TopLeft(), zd);
 	Ctrl *top = this;
 	if(e == MOUSEWHEEL && !GetParent()) {
 		Ctrl *w = GetFocusCtrl();
