@@ -382,13 +382,15 @@ void ChSynthetic(Image button100x100[4], Color text[4])
 		}
 		if(i == CTRL_DISABLED) {
 			ProgressIndicator::Style& s = ProgressIndicator::StyleDefault().Write();
-			s.hlook = MakeButton(roundness, m, DPI(1), ink);
 			ImageBuffer ib(1, 8);
+			ImageBuffer ibb(1, 8);
 			for(int i = 0; i < 8; i++) {
 				int a[] = { 20, 40, 10, 0, -10, -20, -30, -40 };
 				ib[i][0] = AdjustColor(SColorHighlight(), a[i]);
+				ibb[i][0] = Blend(SColorFace(), SColorPaper(), i * 255 / 7);
 			}
 			s.hchunk = MakeButton(roundness, Magnify(ib, 10, 1), DPI(1), ink);
+			s.hlook = MakeButton(roundness, Magnify(ibb, 10, 1), DPI(1), ink);
 			s.bound = true;
 			s.nomargins = true;
 		}

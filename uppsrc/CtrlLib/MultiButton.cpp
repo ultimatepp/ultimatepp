@@ -358,12 +358,17 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 
 	Color fpaper = Null;
 	Color text = SColorLabel;
+	bool hotpressed = false;
 	if(!nobg && !ComplexFrame() && frm) {
-		if(mst == CTRL_HOT && !IsTrivial())
+		if(mst == CTRL_HOT && !IsTrivial()) {
 			fpaper = Blend(SColorHighlight, SColorPaper, 235);
+			hotpressed = true;
+		}
 		else
-		if(mst == CTRL_PRESSED && !IsTrivial())
+		if(mst == CTRL_PRESSED && !IsTrivial()) {
 			fpaper = Blend(SColorHighlight, SColorFace, 235);
+			hotpressed = true;
+		}
 		else
 		if(HasFocus()) {
 			fpaper = SColorHighlight();
@@ -380,7 +385,9 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			w.Clip(l, 0, r - l, sz.cy);
 		}
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
-		Color p = Nvl(fpaper, paper);
+		Color p = paper;
+		if(hotpressed)
+			p = Nvl(fpaper, paper);
 		if(!IsNull(p) && !IsNull(style->coloredge))
 			ChPaint(w, sz, style->coloredge, p);
 		if(style->clipedge)
