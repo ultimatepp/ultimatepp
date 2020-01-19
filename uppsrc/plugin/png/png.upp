@@ -6,8 +6,6 @@ uses
 	Core,
 	Draw;
 
-library(!WIN32 !OSX) png;
-
 options
 	-DPNG_NO_READ_EXPAND,
 	-DPNG_NO_READ_SHIFT,
@@ -56,7 +54,7 @@ options
 	-DPNG_NO_READ_OPT_PLTE,
 	-DPNG_NO_INFO_IMAGE;
 
-options(MSC8ARM) "-D_WIN32_WCE -DARM -D_ARM_ -DUNDER_CE -DUNICODE -D_UNICODE";
+pkg_config(LINUX|FREEBSD) libpng;
 
 file
 	png.h,

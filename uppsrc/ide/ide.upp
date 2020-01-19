@@ -23,8 +23,6 @@ uses
 	urepo,
 	Report;
 
-link(WIN32 MSC) /MAP;
-
 file
 	IDE readonly separator,
 	ide.h options(BUILDER_OPTION) PCH,
@@ -116,18 +114,12 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "GUI .USEMALLOC",
-	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
 	"" = "GUI CHECKCLIPBOARD",
-	"" = "GUI SVO_VALUE",
-	"" = "GUI GTK",
-	"" = "GUI MT X11",
-	"" = "GUI MT NOGTK",
-	"" = "GUI NOGTK",
-	"" = "GUI MT TEST_HIDPI",
 	"" = "GUI PEAKMEM",
-	"" = "GUI HEAPLOG";
+	"" = "GUI HEAPLOG",
+	"" = "GUI X11";
 
 custom() "",
 	"ASDFASDFASDF",

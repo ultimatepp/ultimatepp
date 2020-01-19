@@ -8,17 +8,9 @@ acceptflags
 uses
 	Core;
 
-library(WIN32 !MSC8ARM) "user32 gdi32";
+library(WIN32) "user32 gdi32";
 
-library(LINUX) "dl freetype";
-
-library(BSD !XLFD !OSX) "fontconfig freetype expat";
-
-library(LINUX !XLFD) "fontconfig expat";
-
-library(OSX11) "fontconfig freetype expat";
-
-library(FREEBSD) xcb;
+pkg_config(LINUX|FREEBSD) "freetype2 x11 fontconfig xcb expat";
 
 file
 	Draw.h options(BUILDER_OPTION) PCH,
