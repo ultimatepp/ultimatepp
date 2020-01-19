@@ -6,31 +6,15 @@ uses
 	RichText,
 	Painter;
 
-library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
+library(WIN32) "advapi32 comdlg32 comctl32";
 
-library(WIN32 !MSC8ARM) "user32 gdi32";
-
-library(LINUX !RAINBOW GUI) "X11 Xrender Xinerama";
-
-library(LINUX  !RAINBOW) dl;
-
-library(LINUX !XLFD  !RAINBOW GUI) Xft;
-
-library(BSD !RAINBOW !OSX) "X11  Xau Xdmcp";
-
-library(BSD !XLFD  !RAINBOW !OSX) "Xft fontconfig Xrender freetype expat";
-
-library(LINUX !XLFD !SHARED  !RAINBOW GUI) "fontconfig Xrender freetype";
-
-library(FREEBSD | DRAGONFLY) xcb;
-
-library(POSIX !NOGTK !RAINBOW GUI !OSX) notify;
-
-library(DRAGONFLY) "Xext Xinerama";
+library(WIN32) "user32 gdi32";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
 
-pkg_config(POSIX !X11) gtk+-3.0;
+pkg_config(LINUX | FREEBSD) "freetype2 x11 xinerama xrender xft xdmpc fontconfig xcb xext";
+
+pkg_config((LINUX | FREEBSD) !X11) "gtk+-3.0 libnotify";
 
 file
 	Core readonly separator,

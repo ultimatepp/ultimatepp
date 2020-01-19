@@ -2,10 +2,6 @@ description "zlib compressor/decompressor and its U++ encapsulation\3770,128,128
 
 options(BUILDER_OPTION) NOWARNINGS;
 
-flags(NOTMFC) "!GUI !CONSOLE";
-
-options(MSC8ARM) -DNO_ERRNO_H;
-
 file
 	z.h,
 	"Original files" readonly separator,
