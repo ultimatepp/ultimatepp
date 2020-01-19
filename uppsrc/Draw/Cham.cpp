@@ -135,7 +135,7 @@ static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Ima
 
 	int sx = 0;
 	auto DrawPart = [&](int tcx, int scx) {
-		if(scx)
+		if(scx) {
 			if(vert) {
 				w.DrawImage(x, y, CachedRescale(m, Size(cy, tcx), RectC(0, sx, isz.cy, scx)));
 				y += tcx;
@@ -144,6 +144,7 @@ static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Ima
 				w.DrawImage(x, y, CachedRescale(m, Size(tcx, cy), RectC(sx, 0, scx, isz.cy)));
 				x += tcx;
 			}
+		}
 		sx += scx;
 	};
 	DrawPart(tel, ecx); // left ending
