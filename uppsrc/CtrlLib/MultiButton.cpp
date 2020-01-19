@@ -386,7 +386,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 		}
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
 		Color p = paper;
-		if(hotpressed)
+		if(hotpressed && (WhenPush || WhenClick))
 			p = Nvl(fpaper, paper);
 		if(!IsNull(p) && !IsNull(style->coloredge))
 			ChPaint(w, sz, style->coloredge, p);

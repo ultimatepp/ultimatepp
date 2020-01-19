@@ -80,3 +80,4 @@ DONE:
 - Issue with editfield text clipping in the right
 - Possible issue with Capture (e.g. ide about box)
 - WithDropChoice ch issue (again...)
+- Problem with multibutton is back again
