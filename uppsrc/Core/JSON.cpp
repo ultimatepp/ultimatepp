@@ -158,6 +158,14 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 	return "null";
 }
 
+void JsonIO::Set(const char *key, const Value& v)
+{
+	ASSERT(IsStoring());
+	if(!map)
+		map.Create();
+	map->Add(key, v);
+}
+
 String AsJSON(const Value& v, bool pretty)
 {
 	return AsJSON(v, String(), pretty);

@@ -96,6 +96,9 @@ public:
 	
 	const Value& Get() const                     { ASSERT(IsLoading()); return *src; }
 	void         Set(const Value& v)             { ASSERT(IsStoring() && !map); tgt = v; }
+	
+	Value        Get(const char *key)            { ASSERT(IsLoading()); return (*src)[key]; }
+	void         Set(const char *key, const Value& v);
 
 	void         Put(Value& v)                   { ASSERT(IsStoring()); if(map) v = *map; else v = tgt; }
 	Value        GetResult() const               { ASSERT(IsStoring()); return map ? Value(*map) : tgt; }
@@ -279,6 +282,9 @@ bool LoadFromJson(T& var, const char *json)
 		if(jv.IsError())
 			return false;
 		LoadFromJsonValue(var, jv);
+	}
+	catch(ValueTypeError) {
+		return false;
 	}
 	catch(JsonizeError) {
 		return false;

@@ -197,6 +197,7 @@ bool DoLoadFromXML(Event<XmlIO> xmlize, const String& xml)
 	try {
 		return LoadFromXML0(xmlize, xml);
 	}
+	catch(ValueTypeError) {}
 	catch(XmlError) {}
 	return false;
 }

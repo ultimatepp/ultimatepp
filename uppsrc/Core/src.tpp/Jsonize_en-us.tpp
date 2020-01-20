@@ -40,6 +40,17 @@ onst]&]
 alue][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Sets the value of JSON node when storing.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:Get`(const char`*`): [_^Upp`:`:Value^ Value]_[* Get]([@(0.0.255) cons
+t]_[@(0.0.255) char]_`*[*@3 key])&]
+[s2;%% Returns the value of JSON subnode [%-*@3 key] when loading.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:Set`(const char`*`,const Upp`:`:Value`&`): [@(0.0.255) void]_[* Set
+]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^Upp`:`:Value^ Val
+ue][@(0.0.255) `&]_[*@3 v])&]
+[s2;%% Sets the value of JSON subnode [%-*@3 key] when storing.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:JsonIO`:`:Put`(Value`&`): [@(0.0.255) void]_[* Put]([_^Value^ Value][@(0.0.255) `&]_[*@3 v
 ])&]
