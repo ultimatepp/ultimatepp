@@ -57,8 +57,8 @@ DEBUGGER = "gdb";
 ALLOW_PRECOMPILED_HEADERS = "0";
 DISABLE_BLITZ = "0";
 PATH = "";
-INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0;/usr/X11R6/include;/usr/X11R6/include/freetype2;/usr/X11R6/include/gtk-2.0;/usr/X11R6/include/glib-2.0;/usr/X11R6/lib/glib-2.0/include;/usr/X11R6/lib/gtk-2.0/include;/usr/X11R6/include/cairo;/usr/X11R6/include/pango-1.0;/usr/X11R6/include/atk-1.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0;/usr/X11R6/include;/usr/X11R6/include/freetype2;/usr/X11R6/include/gtk-2.0;/usr/X11R6/include/glib-2.0;/usr/X11R6/lib/glib-2.0/include;/usr/X11R6/lib/gtk-2.0/include;/usr/X11R6/include/cairo;/usr/X11R6/include/pango-1.0;/usr/X11R6/include/atk-1.0;/usr/include/gdk-pixbuf-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/gtkglext-1.0;/usr/lib/gtkglext-1.0/include;/usr/include/harfbuzz";
-LIB = "/usr/X11R6/lib;/usr/lib";
+INCLUDE = "";
+LIB = "";
 LINKMODE_LOCK = "0";)";
 
 const char *clang_bm =
@@ -84,8 +84,8 @@ DEBUGGER = "gdb";
 ALLOW_PRECOMPILED_HEADERS = "0";
 DISABLE_BLITZ = "0";
 PATH = "";
-INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0;/usr/X11R6/include;/usr/X11R6/include/freetype2;/usr/X11R6/include/gtk-2.0;/usr/X11R6/include/glib-2.0;/usr/X11R6/lib/glib-2.0/include;/usr/X11R6/lib/gtk-2.0/include;/usr/X11R6/include/cairo;/usr/X11R6/include/pango-1.0;/usr/X11R6/include/atk-1.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0;/usr/X11R6/include;/usr/X11R6/include/freetype2;/usr/X11R6/include/gtk-2.0;/usr/X11R6/include/glib-2.0;/usr/X11R6/lib/glib-2.0/include;/usr/X11R6/lib/gtk-2.0/include;/usr/X11R6/include/cairo;/usr/X11R6/include/pango-1.0;/usr/X11R6/include/atk-1.0;/usr/include/gdk-pixbuf-2.0;/usr/lib/x86_64-linux-gnu/glib-2.0/include;/usr/lib/x86_64-linux-gnu/gtk-2.0/include;/usr/include/gtkglext-1.0;/usr/lib/gtkglext-1.0/include;/usr/include/harfbuzz";
-LIB = "/usr/X11R6/lib;/usr/lib";
+INCLUDE = "";
+LIB = "";
 LINKMODE_LOCK = "0";)";
 
 #endif

@@ -12,7 +12,7 @@ library(WIN32) "user32 gdi32";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
 
-pkg_config(LINUX | FREEBSD) "freetype2 x11 xinerama xrender xft xdmpc fontconfig xcb xext";
+pkg_config(LINUX | FREEBSD) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
 
 pkg_config((LINUX | FREEBSD) !X11) "gtk+-3.0 libnotify";
 
