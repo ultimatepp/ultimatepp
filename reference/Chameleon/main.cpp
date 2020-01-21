@@ -14,7 +14,7 @@ struct ChEllipse {
 	Color pen;
 	Color color;
 
-	ChEllipse() : width(width), pen(pen), color(color) {}
+	ChEllipse() {}
 };
 
 Value EllipseLook(int width, Color pen, Color color)
@@ -26,24 +26,22 @@ Value EllipseLook(int width, Color pen, Color color)
 	return RawToValue(e);
 }
 
-Value MyLookFn(Draw& w, const Rect& rect, const Value& v, int op) {
-	if(IsTypeRaw<ChEllipse>(v)) {
-		const ChEllipse& e = ValueTo<ChEllipse>(v);
-		switch(op) {
-		case LOOK_MARGINS:
-			return Rect(e.width, e.width, e.width, e.width);
-		case LOOK_ISOPAQUE:
-			return false;
-		case LOOK_PAINT:
-			w.DrawEllipse(rect, e.color, e.width, e.pen);
-			return 1;
-		}
-	}
-	return Null;
-}
-
 INITBLOCK {
-	ChLookFn(MyLookFn);
+	ChLookFn(
+		[](Draw& w, const Rect& rect, const Value& v, int op, Color) -> Value {
+			if(IsTypeRaw<ChEllipse>(v)) {
+				const ChEllipse& e = ValueTo<ChEllipse>(v);
+				switch(op) {
+				case LOOK_MARGINS:
+					return Rect(e.width, e.width, e.width, e.width);
+				case LOOK_PAINT:
+					w.DrawEllipse(rect.Deflated(e.width), e.color, e.width, e.pen);
+					return 1;
+				}
+			}
+			return Null;
+		}
+	);
 }
 
 Button::Style ColorStyle()
