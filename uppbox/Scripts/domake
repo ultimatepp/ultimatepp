@@ -423,10 +423,10 @@ then
     sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" "$i" > "${i%.in}"
   done
   
-  for i in *.bm.in
-  do
-    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
-  done
+#  for i in *.bm.in
+#  do
+#    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
+#  done
 
 else
   log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
@@ -437,10 +437,10 @@ else
     sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' "$i" > "${i%.in}"
   done
   
-  for i in *.bm.in
-  do
-    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g ${CXXSTD_RE}" "$i" > "${i%.in}"
-  done
+#  for i in *.bm.in
+#  do
+#    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g ${CXXSTD_RE}" "$i" > "${i%.in}"
+#  done
 
 fi
 
