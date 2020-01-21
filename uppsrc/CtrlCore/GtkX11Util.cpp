@@ -106,8 +106,6 @@ dword X11mods(dword key)
 	return mod;
 }
 
-#if 0 // retained for 3.8 compatibility
-
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 	GuiLock __;
@@ -151,8 +149,6 @@ void Ctrl::UnregisterSystemHotKey(int id)
 		hotkey[id].Clear();
 	}
 }
-
-#endif
 
 GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointer data)
 {
