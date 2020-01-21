@@ -78,6 +78,7 @@ void SetupFont()
 }
 
 static Image sCurrentImage;
+static GtkBorder sMargin;
 
 Image CairoImage(int cx, int cy, Event<cairo_t *> draw)
 {
@@ -167,18 +168,19 @@ void Gtk_New(const char *name, int state = 0, dword flags = 0)
 	gtk_style_context_set_scale(sCtx, DPI(1));
 	Gtk_State(state, flags);
 	
-	GtkBorder margin, border, padding;
+	GtkBorder border, padding;
 	int min_width, min_height;
 	
 	GtkStateFlags f = gtk_style_context_get_state(sCtx);
-	gtk_style_context_get_margin (sCtx, f, &margin);
+
+	gtk_style_context_get_margin (sCtx, f, &sMargin);
+
 	gtk_style_context_get_border (sCtx, f, &border);
 	gtk_style_context_get_padding (sCtx, f, &padding);
-
 	gtk_style_context_get(sCtx, f, "min-width", &min_width, "min-height", &min_height, NULL);
 	
-	min_width += margin.left + margin.right + border.left + border.right + padding.left + padding.right;
-	min_height += margin.top + margin.bottom + border.top + border.bottom + padding.top + padding.bottom;
+	min_width += border.left + border.right + padding.left + padding.right;
+	min_height += border.top + border.bottom + padding.top + padding.bottom;
 	
 	sCurrentSize.cx = min_width;
 	sCurrentSize.cy = min_height;
@@ -361,7 +363,7 @@ void ChHostSkin()
 		GtkSize(sz);
 		Gtk_New("scrollbar.horizontal.bottom contents trough slider");
 		GtkSize(sz);
-		
+
 		s.barsize = s.thumbwidth = DPI(sz.cy);
 		s.thumbmin = max(minslider, 2 * s.barsize);
 
@@ -377,7 +379,7 @@ void ChHostSkin()
 			s.hupper[status] = s.hlower[status] = WithHotSpot(m, CH_SCROLLBAR_IMAGE, 0);;
 			s.vupper[status] = s.vlower[status] = WithHotSpot(RotateAntiClockwise(m), CH_SCROLLBAR_IMAGE, 0); // we have problems getting this right for vertical
 			Gtk_New("scrollbar.horizontal.bottom contents trough slider", status);
-			Image thumb = CairoImage(sz.cx, sz.cy);
+			Image thumb = CairoImage(sz.cx, sz.cy- sMargin.top - sMargin.bottom);
 			s.hthumb[status] = WithHotSpot(thumb, CH_SCROLLBAR_IMAGE, 0);
 			s.vthumb[status] = WithHotSpot(RotateClockwise(thumb), CH_SCROLLBAR_IMAGE, 0);
 		}
@@ -477,7 +479,6 @@ void ChHostSkin()
 		gtk_style_context_set_state(ctx, GTK_STATE_FLAG_NORMAL);
 		paper = AvgColor(CairoImage(ctx));
 		SetChameleonSample(CairoImage(ctx));
-		DDUMP(paper);
 	}
 	if(IsDark(paper)) {
 		SColorText_Write(White());
