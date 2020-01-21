@@ -224,7 +224,6 @@ protected:
 	Ctrl       *file_ctrl = NULL;
 	int         file_ctrl_cx;
 
-#ifdef _MULTITHREADED
 	static StaticMutex li_mutex;
 	static void      (*li_current)(const String& path, Image& result);
 	static String      li_path;
@@ -238,7 +237,6 @@ protected:
 	void        StartLI();
 	void        DoLI();
 	void        ScheduleLI()                                 { li_tm.KillSet(0, THISBACK(DoLI)); }
-#endif
 
 	void        LoadNet();
 	void        SelectNet();

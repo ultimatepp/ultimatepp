@@ -863,8 +863,6 @@ void FileSel::SearchLoad()
 	StartLI();
 }
 
-#ifdef _MULTITHREADED
-
 StaticMutex FileSel::li_mutex;
 void      (*FileSel::li_current)(const String& path, Image& result);
 String      FileSel::li_path;
@@ -960,8 +958,6 @@ void FileSel::StartLI()
 		ScheduleLI();
 	}
 }
-
-#endif
 
 String TrimDot(String f) {
 	int i = f.Find('.');

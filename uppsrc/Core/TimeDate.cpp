@@ -74,9 +74,7 @@ static char s_date_format_main[64] = "%2:02d/%3:02d/%1:4d";
 void   SetDateFormat(const char *fmt)
 {
 	strncpy(s_date_format_thread, fmt, 63);
-#ifdef _MULTITHREADED
 	if(Thread::IsMain())
-#endif
 		strncpy(s_date_format_main, fmt, 63);
 }
 
@@ -93,10 +91,8 @@ static char s_date_scan_main[64] = "mdy";
 void   SetDateScan(const char *scan)
 {
 	strncpy(s_date_scan_thread, scan, 63);
-#ifdef _MULTITHREADED
 	if(Thread::IsMain())
-#endif
-		strncpy(s_date_scan_main, scan, 63);	
+		strncpy(s_date_scan_main, scan, 63);
 }
 
 const char *StrToDate(Date& d, const char *s, Date def)
@@ -192,9 +188,7 @@ static char s_date_seps_main[64] = "A/\a .-";
 void   SetDateFilter(const char *seps)
 {
 	strncpy(s_date_seps_thread, seps, 63);
-#ifdef _MULTITHREADED
 	if(Thread::IsMain())
-#endif
 		strncpy(s_date_seps_main, seps, 63);
 }
 

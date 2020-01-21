@@ -250,9 +250,7 @@ void SetCurrentLanguage(int lang)
 		int ii = sLangIndex().FindAdd(lang);
 		sCurrentLangMapPtr = &sLangMap().At(ii);
 		sCurrentSLangMapPtr = &sSLangMap().At(ii);
-	#ifdef _MULTITHREADED
 		if(Thread::IsMain())
-	#endif
 		{
 			main_current_lang = lang;
 			sMainCurrentSLangMapPtr = sCurrentSLangMapPtr;

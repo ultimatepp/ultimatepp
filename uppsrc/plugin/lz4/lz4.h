@@ -50,9 +50,7 @@ protected:
 	void          FlushOut();
 
 public:
-#ifdef _MULTITHREADED
 	void Co(bool b = true);
-#endif
 	void Open(Stream& out_);
 
 	LZ4CompressStream();
@@ -102,9 +100,7 @@ private:
 public:
 	bool Open(Stream& in);
 
-#ifdef _MULTITHREADED
 	void Co(bool b = true)                                  { concurrent = b; }
-#endif
 
 	LZ4DecompressStream();
 	LZ4DecompressStream(Stream& in) : LZ4DecompressStream() { Open(in); }
@@ -120,7 +116,6 @@ String LZ4Compress(const String& s, Gate<int64, int64> progress = Null);
 String LZ4Decompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String LZ4Decompress(const String& s, Gate<int64, int64> progress = Null);
 
-#ifdef _MULTITHREADED
 int64  CoLZ4Compress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 int64  CoLZ4Decompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 String CoLZ4Compress(Stream& in, Gate<int64, int64> progress = Null);
@@ -129,7 +124,6 @@ String CoLZ4Compress(const void *data, int64 len, Gate<int64, int64> progress = 
 String CoLZ4Compress(const String& s, Gate<int64, int64> progress = Null);
 String CoLZ4Decompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String CoLZ4Decompress(const String& s, Gate<int64, int64> progress = Null);
-#endif
 
 bool IsLZ4(Stream& s);
 

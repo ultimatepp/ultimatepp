@@ -4,8 +4,6 @@
 
 namespace Upp {
 
-#ifdef _MULTITHREADED
-
 static StaticMutex sGLock;
 
 static thread_local int sGLockLevel = 0;
@@ -106,14 +104,5 @@ void Ctrl::ShutdownThreads()
 	}
 	Thread::EndShutdownThreads();
 }
-
-#else
-
-void Ctrl::Call(Function<void ()> cb)
-{
-	cb();
-}
-
-#endif
 
 }

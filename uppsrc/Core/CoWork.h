@@ -1,5 +1,3 @@
-#ifdef _MULTITHREADED
-
 class CoWork : NoCopy {
 	struct MJob : Moveable<MJob>, Link<MJob, 2> {
 		Function<void ()> fn;
@@ -223,21 +221,3 @@ Async(Function&& f, Args&&... args)
 	h.Do(f, args...);
 	return pick(h);
 }
-
-#else
-
-class CoWork : NoCopy {
-public:
-	void     Do(Event<>  cb)        { cb(); }
-	CoWork&  operator&(Event<>  cb) { cb(); return *this; }
-	void     Finish()               {}
-	bool     IsFinished()           { return true; }
-
-	static void FinLock()           {}
-
-	static bool IsWorker()          { return false; }
-	static void StartPool(int n)    {}
-	static void ShutdownPool()      {}
-};
-
-#endif

@@ -34,9 +34,7 @@ protected:
 	void          FlushOut();
 
 public:
-#ifdef _MULTITHREADED
 	void Co(bool b = true);
-#endif
 	void Open(Stream& out, int level = 1);
 
 	ZstdCompressStream();
@@ -92,10 +90,7 @@ private:
 
 public:	
 	bool Open(Stream& in);
-
-#ifdef _MULTITHREADED
 	void Co(bool b = true)                                    { concurrent = b; }
-#endif
 
 	ZstdDecompressStream();
 	ZstdDecompressStream(Stream& in) : ZstdDecompressStream() { Open(in); }
@@ -109,14 +104,12 @@ String ZstdCompress(const String& s, Gate<int64, int64> progress = Null);
 String ZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String ZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
 
-#ifdef _MULTITHREADED
 int64 CoZstdCompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 int64 CoZstdDecompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
 String CoZstdCompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String CoZstdCompress(const String& s, Gate<int64, int64> progress = Null);
 String CoZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
 String CoZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
-#endif
 
 bool IsZstd(Stream& s);
 

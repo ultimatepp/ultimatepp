@@ -84,9 +84,7 @@ void LZ4DecompressStream::Fetch()
 		return;
 	if(eof)
 		return;
-#ifdef _MULTITHREADED
 	CoWork co;
-#endif
 	bool   error = false;
 	bool last = false;
 	ii = 0;
@@ -120,7 +118,6 @@ void LZ4DecompressStream::Fetch()
 				SetError();
 				return;
 			}
-#ifdef _MULTITHREADED
 			if(concurrent)
 				co & [=, &error] {
 					Workblock& t = wb[i];
@@ -129,9 +126,7 @@ void LZ4DecompressStream::Fetch()
 					if(t.dlen < 0)
 						error = true;
 				};
-			else
-#endif
-			{
+			else {
 				t.dlen = LZ4_decompress_safe(~t.c, ~t.d, t.clen, maxblock);
 				if(t.dlen < 0)
 					error = true;
@@ -140,10 +135,8 @@ void LZ4DecompressStream::Fetch()
 		if(lz4hdr & LZ4F_BLOCKCHECKSUM)
 			in->Get32le(); // just skip it
 	}
-#ifdef _MULTITHREADED
 	if(concurrent)
 		co.Finish();
-#endif
 	if(error)
 		SetError();
 	else {

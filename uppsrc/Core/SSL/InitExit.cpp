@@ -96,7 +96,7 @@ EXITBLOCK
 	ERR_free_strings();
 }
 
-#if defined(_MULTITHREADED) && OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 
 static thread_local bool sThreadInit;
 static thread_local void (*sPrevExit)();

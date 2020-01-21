@@ -282,7 +282,6 @@ struct ImgPreview : Display {
 	}
 };
 
-#ifdef _MULTITHREADED
 static void sLoadImage(const String& path, Image& result)
 {
 	if(findarg(ToLower(GetFileExt(path)), ".png", ".gif", ".jpeg", ".jpg") < 0)
@@ -298,7 +297,6 @@ static void sLoadImage(const String& path, Image& result)
 		return;
 	result = r->GetImage();
 }
-#endif
 
 FileSel& IconDes::ImgFile()
 {
@@ -307,9 +305,7 @@ FileSel& IconDes::ImgFile()
 		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif *.ico");
 		sel.AllFilesType();
 		sel.Multi();
-#ifdef _MULTITHREADED
 		sel.WhenIconLazy = sLoadImage;
-#endif
 		sel.Preview(Single<ImgPreview>());
 	}
 	return sel;
