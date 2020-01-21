@@ -24,7 +24,6 @@ void GLCtrl::DoGLPaint()
 
 void GLCtrl::Init()
 {
-	NoWantFocus();
 	Transparent();
 #ifdef PLATFORM_WIN32
 	pane.ctrl = this;
