@@ -77,9 +77,7 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 
 void ExitGtkApp()
 {
-#ifdef _MULTITHREADED
 	LeaveGuiMutex();
-#endif
 }
 
 }

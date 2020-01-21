@@ -7,10 +7,8 @@ void sCompressStreamCopy_(Stream& out, Stream& in, Gate<int64, int64> progress, 
 static int64 sZstdCompress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool co)
 {
 	ZstdCompressStream outs(out);
-#ifdef _MULTITHREADED
 	if(co)
 		outs.Co();
-#endif
 	sCompressStreamCopy_(outs, in, progress, in, size);
 	outs.Close();
 	if(!out.IsError() && !outs.IsError())
@@ -21,10 +19,8 @@ static int64 sZstdCompress(Stream& out, Stream& in, int64 size, Gate<int64, int6
 static int64 sZstdDecompress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool co)
 {
 	ZstdDecompressStream ins(in);
-#ifdef _MULTITHREADED
 	if(co)
 		ins.Co();
-#endif
 	sCompressStreamCopy_(out, ins, progress, in, size);
 	ins.Close();
 	if(!out.IsError() && !ins.IsError())
@@ -66,8 +62,6 @@ String ZstdDecompress(const String& s, Gate<int64, int64> progress)
 	return ZstdDecompress(~s, s.GetLength(), progress);
 }
 
-#ifdef _MULTITHREADED
-
 int64 CoZstdCompress(Stream& out, Stream& in, Gate<int64, int64> progress)
 {
 	return sZstdCompress(out, in, in.GetLeft(), progress, true);
@@ -101,7 +95,5 @@ String CoZstdDecompress(const String& s, Gate<int64, int64> progress)
 {
 	return CoZstdDecompress(~s, s.GetLength(), progress);
 }
-
-#endif
 
 };

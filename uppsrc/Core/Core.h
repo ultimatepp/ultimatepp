@@ -7,12 +7,10 @@
 #define flagMT // MT is now always on
 #endif
 
-#if defined(flagMT)
-	#define _MULTITHREADED
-	#define MULTITHREADED
-	#ifdef flagDLL
-		#define flagUSEMALLOC
-	#endif
+#define _MULTITHREADED
+#define MULTITHREADED
+#ifdef flagDLL
+	#define flagUSEMALLOC
 #endif
 
 #ifdef flagDLL

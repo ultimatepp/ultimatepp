@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-#ifdef _MULTITHREADED
-
 #define LLOG(x)       // RLOG(x)
 #define LDUMP(x)      // DDUMP(x)
 
@@ -381,7 +379,5 @@ CoWork::~CoWork() noexcept(false)
 	Finish();
 	LLOG("~CoWork " << FormatIntHex(this));
 }
-
-#endif
 
 }

@@ -52,7 +52,6 @@ namespace Upp {
 
 INITIALIZE(CtrlCore)
 
-#ifdef _MULTITHREADED
 void EnterGuiMutex();
 bool TryEnterGuiMutex();
 void LeaveGuiMutex();
@@ -62,15 +61,6 @@ void EnterGuiMutex(int n);
 
 bool ThreadHasGuiLock();
 int  GetGuiLockLevel();
-#else
-inline void EnterGuiMutex() {}
-inline void LeaveGuiMutex() {}
-inline bool TryEnterGuiMutex() { return true; }
-
-inline int  LeaveGuiMutexAll() { return 0; }
-inline void EnterGuiMutex(int) {}
-inline bool ThreadHasGuiLock() { return true; }
-#endif
 
 struct GuiLock {
 	GuiLock()  { EnterGuiMutex(); }
@@ -1285,10 +1275,8 @@ public:
 
 	static void Call(Function<void ()> cb);
 
-#ifdef _MULTITHREADED
 	static bool IsShutdownThreads()                     { return Thread::IsShutdownThreads(); }
 	static void ShutdownThreads();
-#endif
 	
 	static int64 GetEventId()                           { return eventid; }
 

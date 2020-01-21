@@ -142,7 +142,7 @@ Image MakeElement(Size sz, double radius, const Image& face, double border_width
 Image MakeButton(int radius, const Image& face, double border_width, Color border_color, dword corner)
 {
 	double q = radius + border_width + DPI(16);
-	return MakeElement(Size(q, q), radius, face, border_width, border_color, [&](Painter& w, const Rectf& r) {
+	return MakeElement(Size((int)q, (int)q), radius, face, border_width, border_color, [&](Painter& w, const Rectf& r) {
 		RoundedRect(w, r, radius, radius, corner);
 	});
 }
