@@ -437,12 +437,7 @@ void Semaphore::Release(int n)
 
 bool Semaphore::Wait(int timeout_ms)
 {
-	return WaitForSingleObject(handle, timeout_ms) == WAIT_OBJECT_0;
-}
-
-void Semaphore::Wait()
-{
-	WaitForSingleObject(handle, INFINITE);
+	return WaitForSingleObject(handle, timeout_ms < 0 ? INFINITE : timeout_ms) == WAIT_OBJECT_0;
 }
 
 Semaphore::Semaphore()
@@ -517,33 +512,10 @@ VOID (WINAPI *ConditionVariable::WakeConditionVariable)(PCONDITION_VARIABLE Cond
 VOID (WINAPI *ConditionVariable::WakeAllConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
 BOOL (WINAPI *ConditionVariable::SleepConditionVariableCS)(PCONDITION_VARIABLE ConditionVariable, PCRITICAL_SECTION CriticalSection, DWORD dwMilliseconds);
 
-void ConditionVariable::Wait(Mutex& m)
-{
-	if(InitializeConditionVariable)
-		SleepConditionVariableCS(cv, &m.section, INFINITE);
-	else { // WindowsXP implementation
-		static thread_local byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
-		WaitingThread *w = new(buffer) WaitingThread;
-		{
-			Mutex::Lock __(mutex);
-			w->next = NULL;
-			if(head)
-				tail->next = w;
-			else
-				head = w;
-			tail = w;
-		}
-		m.Leave();
-		w->sem.Wait();
-		m.Enter();
-		w->WaitingThread::~WaitingThread();
-	}
-}
-
 bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
 	if(InitializeConditionVariable)
-		return SleepConditionVariableCS(cv, &m.section, timeout_ms);
+		return SleepConditionVariableCS(cv, &m.section, timeout_ms < 0 ? INFINITE : timeout_ms);
 	else { // WindowsXP implementation
 		static thread_local byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
 		WaitingThread *w = new(buffer) WaitingThread;

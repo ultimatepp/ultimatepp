@@ -21,18 +21,15 @@ avoid possible race conditions when entering suspended state.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:ConditionVariable`:`:Wait`(Mutex`&`): [@(0.0.255) void]_[* Wait]([_^Mutex^ Mutex][@(0.0.255) `&
-]_[*@3 m])&]
-[s2; [%% Atomically unlocks ][*@3 m ][%% and starts waiting for Signal 
-or Broadcast. ][*@3 m][%%  has to be owned by calling thread before 
-invoking. When Signal or Broadcast are received, resumes execution 
-and reacquires ][*@3 m].&]
-[s3;%% &]
-[s4; &]
 [s5;:Upp`:`:ConditionVariable`:`:Wait`(Upp`:`:Mutex`&`,int`): [@(0.0.255) void]_[* Wait](
-[_^Upp`:`:Mutex^ Mutex][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 timeout`_ms])&]
-[s2;%% Similar to single parameter Wait, but only waits for [%-*@3 timeout`_ms] 
-milliseconds before returning false on failure.&]
+[_^Upp`:`:Mutex^ Mutex][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 timeout`_ms]_`=_`-[@3 1
+])&]
+[s2;%% Atomically unlocks [%-*@3 m ]and starts waiting for Signal or 
+Broadcast or until [%-*@3 timeout`_ms] milliseconds elapses. [%-*@3 m] 
+has to be owned by calling thread before invoking. When Signal 
+or Broadcast are received, resumes execution and reacquires [%-*@3 m][%- . 
+]Negative value for [%-*@3 timeout`_ms] means the waiting time 
+is unlimited.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ConditionVariable`:`:Signal`(`): [@(0.0.255) void]_[* Signal]()&]
