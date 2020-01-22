@@ -612,6 +612,10 @@ RWMutex::~RWMutex()
 
 bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
+	if(timeout_ms < 0) {
+		pthread_cond_wait(cv, m.mutex);
+		return true;
+	}
 	struct timespec until;
 	clock_gettime(CLOCK_REALTIME, &until);
 	
@@ -631,14 +635,10 @@ void Semaphore::Release()
 	dispatch_semaphore_signal(sem);
 }
 
-void Semaphore::Wait()
-{
-	dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-}
-
 bool Semaphore::Wait(int timeout_ms)
 {
-	return dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, 1000000 * timeout_ms)) == 0;
+	return dispatch_semaphore_wait(sem, timeout_ms < 0 ? DISPATCH_TIME_FOREVER
+	                                    : dispatch_time(DISPATCH_TIME_NOW, 1000000 * timeout_ms)) == 0;
 }
 
 Semaphore::Semaphore()
@@ -658,13 +658,12 @@ void Semaphore::Release()
 	sem_post(&sem);
 }
 
-void Semaphore::Wait()
-{
-	sem_wait(&sem);
-}
-
 bool Semaphore::Wait(int timeout_ms)
 {
+	if(timeout_ms < 0) {
+		sem_wait(&sem);
+		return true;
+	}
 	struct timespec until;
 	clock_gettime(CLOCK_REALTIME, &until);
 	
