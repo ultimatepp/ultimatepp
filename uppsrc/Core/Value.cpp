@@ -609,8 +609,10 @@ const Vector<Value>& Value::GetVA() const
 {
 	if(IsRef()) {
 		dword t = GetRefType();
-		if(t == VALUEARRAY_V)
+		if(Is<ValueArray>())
 			return ((ValueArray::Data *)ptr())->data;
+		if(Is<ValueMap>())
+			return ((ValueMap::Data *)ptr())->value.data->data;
 	}
 	return ValueArray::VoidData;
 }
