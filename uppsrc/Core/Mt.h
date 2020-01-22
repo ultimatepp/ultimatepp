@@ -123,8 +123,7 @@ class Semaphore : NoCopy {
 #endif
 
 public:
-	void       Wait();
-	bool       Wait(int timeout_ms);
+	bool       Wait(int timeout_ms = -1);
 	void       Release();
 #ifdef PLATFORM_WIN32
 	void       Release(int n);
@@ -204,8 +203,7 @@ class ConditionVariable {
 	WaitingThread *head, *tail;
 	
 public:
-	void Wait(Mutex& m);
-	bool Wait(Mutex& m, int timeout_ms);
+	bool Wait(Mutex& m, int timeout_ms = -1);
 	void Signal();
 	void Broadcast();
 	

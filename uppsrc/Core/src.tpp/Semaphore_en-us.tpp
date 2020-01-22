@@ -23,16 +23,13 @@ by 1.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Semaphore`:`:Wait`(`): [@(0.0.255) void]_[* Wait]()&]
+[s5;:Upp`:`:Semaphore`:`:Wait`(int`): [@(0.0.255) bool]_[* Wait]([@(0.0.255) int]_[*@3 timeou
+t`_ms]_`=_`-[@3 1])&]
 [s2;%% If internal semaphore counter is zero, waits (blocks calling 
 thread) until some other thread increases this counter by 1 calling 
-the Release method. Before returning, decreases counter by 1.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:Semaphore`:`:Wait`(int`): [@(0.0.255) bool]_[* Wait]([@(0.0.255) int]_[*@3 timeou
-t`_ms])&]
-[s2;%% Similar to Wait without timeout, but only waits for [%-*@3 timeout`_ms] 
-milliseconds. Returns false on timeout.&]
+the Release method or until [%-*@3 timeout`_ms] milliseconds elapses. 
+Before returning, decreases counter by 1. Negative value for 
+[%-*@3 timeout`_ms] means the waiting time is unlimited.&]
 [s3;%% &]
 [s4; &]
 [s5;:Semaphore`:`:Release`(`): [@(0.0.255) void]_[* Release]()&]
