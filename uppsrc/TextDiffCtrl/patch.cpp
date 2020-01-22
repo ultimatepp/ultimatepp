@@ -75,7 +75,7 @@ bool Patch::Load(Stream& in, Progress& pi)
 	const Vector<String>& h = file.GetKeys();
 	if(h.GetCount() == 0)
 		return false;
-	common_path = h[0];
+	common_path = GetFileFolder(h[0]);
 	for(int i = 1; i < h.GetCount(); i++)
 		common_path.Trim(MatchLen(common_path, h[i]));
 	common_path.TrimEnd("/");
@@ -113,6 +113,7 @@ bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
 	pi.SetText("Matching directories");
 	int best = 0;
 	String com_path = common_path;
+	com_path.Replace("\\", "/");
 	while(com_path.GetCount()) {
 		for(String d : dir) {
 			while(d.GetCount() > 3) {

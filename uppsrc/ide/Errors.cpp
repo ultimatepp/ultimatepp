@@ -82,14 +82,12 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				}
 				catch(CParser::Error) {}
 				const char *ms = p.GetPtr();
-				f.kind = 3;
-				if(ln.Find("warning") >= 0)
+				if(ln.Find(": warning") >= 0)
 					f.kind = 2;
-				else {
-					int q = ln.Find("error");
-					if(q >= 0 && (q == 0 || !IsAlpha(ln[q - 1])) && (q + 5 >= ln.GetCount() || !IsAlpha(ln[q - 1])))
-						f.kind = 1;
-				}
+				else if(ln.Find(": error") >= 0)
+					f.kind = 1;
+				else
+					f.kind = 3;
 				const char *hs = ms;
 				while(!IsLetter(*hs) && *hs)
 					hs++;
