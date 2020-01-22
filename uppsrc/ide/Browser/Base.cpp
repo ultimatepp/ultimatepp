@@ -8,7 +8,7 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
-#define HAS_CLOG
+// #define HAS_CLOG
 
 #ifdef HAS_CLOG
 #define CLOG(x)       // RLOG(x)
