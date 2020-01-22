@@ -88,7 +88,6 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 	Vector<String> target_dirs;
 	for(String s : target_dirs0)
 		target_dirs.Add(UnixPath(s));
-	DDUMP(target_dirs);
 
 	Progress pi;
 	if(!patch.Load(patch_path, pi)) {
