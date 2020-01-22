@@ -76,7 +76,7 @@ PatchDiff::PatchDiff()
 	Title("Patch");
 }
 
-bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
+bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 {
 	failed_count = 0;
 	list.Clear();
@@ -84,6 +84,11 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs)
 	ShowResult();
 	patch_file <<= Null;
 	target_dir <<= Null;
+	
+	Vector<String> target_dirs;
+	for(String s : target_dirs0)
+		target_dirs.Add(UnixPath(s));
+	DDUMP(target_dirs);
 
 	Progress pi;
 	if(!patch.Load(patch_path, pi)) {
