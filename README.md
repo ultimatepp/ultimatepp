@@ -71,6 +71,6 @@ More examples you can find directly on special section of U++ framework website 
 ## Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
-* examples - exemplary codes of complex applications
-* references - reference implementations
+* **examples** - exemplary codes of complex applications
+* **references** - reference implementations
 * **uppsrc** - main sources of the framework
