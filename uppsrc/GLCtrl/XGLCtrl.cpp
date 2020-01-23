@@ -28,15 +28,6 @@ static Colormap     s_Colormap;
 static GLXContext   s_GLXContext;
 static ::XDisplay  *s_Display;
 
-#ifdef GUI_GTK
-EXITBLOCK {
-	MemoryIgnoreLeaksBlock __;
-
-	if(s_GLXContext)
-		glXDestroyContext(s_Display, s_GLXContext);
-}
-#endif
-
 void GLCtrl::Create()
 {
 	MemoryIgnoreLeaksBlock __;
