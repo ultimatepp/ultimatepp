@@ -458,6 +458,7 @@ void ChStdSkin()
 		for(int pass = 0; pass < 2; pass++) {
 			Button::Style& s = pass ? Button::StyleOk().Write() : Button::StyleNormal().Write();
 			int roundness = DPI(3);
+			s.focusmargin = DPI(4);
 			for(int i = 0; i < 4; i++) {
 				static int adj[] = { 10, 80, -5, -10 };
 				Color f = Adjust(SColorFace(), adj[i]);

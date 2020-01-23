@@ -76,3 +76,5 @@ DONE:
 - WithDropChoice ch issue (again...)
 - Problem with multibutton is back again
 - Redmond scrollbars width
+- Improve focus visuals
+
