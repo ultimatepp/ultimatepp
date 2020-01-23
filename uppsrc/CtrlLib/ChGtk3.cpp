@@ -307,6 +307,7 @@ void ChHostSkin()
 		Image button[4];
 		for(int pass = 0; pass < 2; pass++) {
 			Button::Style& s = pass ? Button::StyleOk().Write() : Button::StyleNormal().Write();
+			s.focusmargin = DPI(4);
 			for(int i = 0; i < 4; i++) {
 				Gtk_State(i);
 				s.look[i] = Hot3(CairoImage());

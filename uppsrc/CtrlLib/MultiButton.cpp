@@ -373,6 +373,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 		if(HasFocus()) {
 			fpaper = SColorHighlight();
 			text = SColorHighlightText();
+			hotpressed = true;
 		}
 		else
 			fpaper = IsEnabled() && IsEditable() ? SColorPaper() : SColorFace();
@@ -386,6 +387,8 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 		}
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
 		Color p = paper;
+		if(frm && style->activeedge && HasFocus())
+			p = SColorHighlight();
 		if(hotpressed && (WhenPush || WhenClick))
 			p = Nvl(fpaper, paper);
 		if(!IsNull(p) && !IsNull(style->coloredge))
