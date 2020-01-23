@@ -4,7 +4,7 @@ uses
 
 library(WIN32 GCC) "glaux glu32 opengl32";
 
-library(LINUX | BSD) "GL GLU";
+pkg_config(LINUX | BSD) "gl glu";
 
 file
 	GLCtrl.h,
