@@ -1,4 +1,5 @@
 #include "ide.h"
+#include "ide.h"
 
 FileSel& sSD()
 {
@@ -121,7 +122,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	f.kind = 0;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
-	ffound.Add(fn, ln, f.message, RawToValue(f));
+	ffound[ffoundi].Add(fn, ln, f.message, RawToValue(f));
 }
 
 bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
@@ -158,7 +159,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	}
 
 	if(sync)
-		ffound.Sync();
+		ffound[ffoundi].Sync();
 
 	in.Close();
 	int ffs = ~ff.style;
@@ -183,8 +184,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 				editor.SelectAll();
 				editor.BlockReplace();
 				SaveFile();
-				ffound.Add(fn, Null, AsString(infile) + " replacements made");
-				ffound.Sync();
+				ffound[ffoundi].Add(fn, Null, AsString(infile) + " replacements made");
+				ffound[ffoundi].Sync();
 			}
 		}
 	}
@@ -195,6 +196,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 void Ide::FindInFiles(bool replace) {
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
+	ff.output <<= ffoundi_next;
 	rf(ff.find, d.find)
 	  (ff.replace, d.replace)
 	  (ff.ignorecase, d.ignorecase)
@@ -226,7 +228,10 @@ void Ide::FindInFiles(bool replace) {
 	if(c == IDOK) {
 		SaveFile();
 
-		ffound.HeaderTab(2).SetText("Source line");
+		ffoundi = ~ff.output;
+		ffoundi_next = (ffoundi + 1) % 3;
+
+		ffound[ffoundi].HeaderTab(2).SetText("Source line");
 		Renumber();
 		ff.find.AddHistory();
 		ff.files.AddHistory();
@@ -273,8 +278,8 @@ void Ide::FindInFiles(bool replace) {
 			else
 				pattern = ~ff.find;
 			pi.SetTotal(files.GetCount());
-			ShowConsole2();
-			ffound.Clear();
+			ShowFindInFiles();
+			ffound[ffoundi].Clear();
 			pi.SetPos(0);
 			int n = 0;
 			for(int i = 0; i < files.GetCount(); i++) {
@@ -291,32 +296,33 @@ void Ide::FindInFiles(bool replace) {
 					f.linepos = 0;
 					f.kind = 0;
 					f.message = files[i];
-					ffound.Add(f.file, 1, f.message, RawToValue(f));
-					ffound.Sync();
+					ffound[ffoundi].Add(f.file, 1, f.message, RawToValue(f));
+					ffound[ffoundi].Sync();
 					n++;
 				}
 			}
 			if(!IsNull(pattern))
-				ffound.Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
+				ffound[ffoundi].Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
 			else
-				ffound.Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
-			ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
+				ffound[ffoundi].Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
+			ffound[ffoundi].HeaderTab(2).SetText(Format("Source line (%d)", ffound[ffoundi].GetCount()));
 		}
 	}
 }
 
 void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 {
-	ShowConsole2();
-	ffound.Clear();
+	ShowFindInFiles();
+	ffoundi = ffoundi_next;
+	ffound[ffoundi].Clear();
 	for(auto pos : f) {
 		editor.CachePos(pos.a);
 		int linei = editor.GetLinePos64(pos.a);
 		WString ln = editor.GetWLine(linei);
 		AddFoundFile(editfile, linei + 1, ln.ToString(), lenAsUtf8(~ln, (int)pos.a), lenAsUtf8(~ln + pos.a, pos.b));
 	}
-	ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
-	ffound.Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
+	ffound[ffoundi].HeaderTab(2).SetText(Format("Source line (%d)", ffound[ffoundi].GetCount()));
+	ffound[ffoundi].Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
 }
 	
 void Ide::FindString(bool back)

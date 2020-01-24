@@ -439,15 +439,17 @@ Ide::Ide()
 	error.ColumnWidths("207 41 834");
 	error.WhenBar = THISBACK(ErrorMenu);
 
-	SetupError(ffound, "Source");
-	ffound.ColumnWidths("207 41 834");
-	ffound.ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
-	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
-	ffound.WhenBar = THISBACK(FFoundMenu);
+	for(int i = 0; i < 3; i++) {
+		SetupError(ffound[i], "Source");
+		ffound[i].ColumnWidths("207 41 834");
+		ffound[i].ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
+		ffound[i].ColumnAt(2).SetDisplay(Single<FoundDisplay>());
+		ffound[i].WhenBar = THISBACK(FFoundMenu);
+		ffound[i].WhenSel = ffound[i].WhenLeftClick = THISBACK(ShowFound);
+	}
 
 	error.WhenSel = THISBACK(SelError);
 	error.WhenLeftClick = THISBACK(ShowError);
-	ffound.WhenSel = ffound.WhenLeftClick = THISBACK(ShowFound);
 	console.WhenLine = THISBACK1(ConsoleLine, false);
 	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
 	
@@ -460,8 +462,9 @@ Ide::Ide()
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
 	bottom.Add(error.SizePos().SetFrame(NullFrame()));
-	bottom.Add(ffound.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
+	for(int i = 0; i < 3; i++)
+		bottom.Add(ffound[i].SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
 

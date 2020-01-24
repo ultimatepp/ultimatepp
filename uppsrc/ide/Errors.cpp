@@ -191,7 +191,7 @@ bool Ide::Next(int tab, ArrayCtrl& a, int d)
 
 void Ide::FindNextError()
 {
-	if(Next(BERRORS, error, 1) || Next(BFINDINFILES, ffound, 1))
+	if(Next(BERRORS, error, 1) || Next(BFINDINFILES1 + ffoundi, ffound[ffoundi], 1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -202,7 +202,7 @@ void Ide::FindNextError()
 }
 
 void Ide::FindPrevError() {
-	if(Next(BERRORS, error, -1) || Next(BFINDINFILES, ffound, -1))
+	if(Next(BERRORS, error, -1) || Next(BFINDINFILES1 + ffoundi, ffound[ffoundi], -1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -319,7 +319,7 @@ bool Ide::FindLineError(int l) {
 	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
 		GoToError(f);
 		console.SetSelection(console.GetPos64(l), console.GetPos64(l + 1));
-		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
+		if(btabs.GetCursor() != BCONSOLE && !BottomIsFindInFiles())
 			ShowConsole();
 		return true;
 	}
@@ -598,17 +598,17 @@ void Ide::ConsoleRunEnd()
 
 void Ide::ShowFound()
 {
-	if(ffound.IsCursor())
-		GoToError(ffound);
+	if(ffound[ffoundi].IsCursor())
+		GoToError(ffound[ffoundi]);
 }
 
 void Ide::CopyFound(bool all)
 {
 	String txt;
-	for(int i = 0; i < ffound.GetCount(); i++) {
+	for(int i = 0; i < ffound[ffoundi].GetCount(); i++) {
 		if(all)
-			txt << ffound.Get(i, 0) << " (" << ffound.Get(i, 1) << "): ";
-		String h = ffound.Get(i, 2);
+			txt << ffound[ffoundi].Get(i, 0) << " (" << ffound[ffoundi].Get(i, 1) << "): ";
+		String h = ffound[ffoundi].Get(i, 2);
 		if(*h == '\1')
 			h = Split(~h + 1, '\1', false).Top();
 		txt << h << "\r\n";

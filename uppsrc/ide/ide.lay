@@ -83,6 +83,8 @@ LAYOUT(FindInFilesLayout, 568, 152)
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
 	ITEM(Option, workspace, SetLabel(t_("In workspace folders")).LeftPosZ(428, 136).TopPosZ(52, 20))
+	ITEM(Label, dv___19, SetLabel(t_("Output")).LeftPosZ(52, 40).TopPosZ(124, 19))
+	ITEM(Switch, output, SetLabel(t_("I\nII\nIII")).LeftPosZ(96, 104).TopPosZ(124, 20))
 END_LAYOUT
 
 LAYOUT(BatchBuildLayout, 276, 276)

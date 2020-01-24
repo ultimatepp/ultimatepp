@@ -446,7 +446,9 @@ public:
 	Splitter    editor_bottom;
 	Console     console;
 	
-	ArrayCtrl   ffound;
+	ArrayCtrl   ffound[3];
+	int         ffoundi = 0; // current target for find in files
+	int         ffoundi_next = 0;
 
 	ArrayCtrl   error;
 	int         error_count;
@@ -460,7 +462,7 @@ public:
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
 
-	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BFINDINFILES, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BFINDINFILES1, BFINDINFILES2, BFINDINFILES3, BCALC, BDEBUG };
 
 	FileOut    stdout_fout;
 
@@ -707,10 +709,11 @@ public:
 	void      ToggleBottom(int i);
 	void      ShowBottom(int i);
 	void      ShowConsole()                      { ShowBottom(1); }
-	void      ShowConsole2()                     { ShowBottom(BFINDINFILES); }
+	void      ShowFindInFiles()                  { ShowBottom(BFINDINFILES1 + ffoundi); }
 	void      ToggleConsole()                    { ToggleBottom(1); }
 	void      SwapBottom();
 	bool      IsBottomShown() const;
+	bool      BottomIsFindInFiles() const        { return findarg(btabs.GetCursor(), BFINDINFILES1, BFINDINFILES2, BFINDINFILES3) >= 0; }
 
 	void      EditorFontScroll(int d);
 
