@@ -152,7 +152,9 @@ void Ide::BTabs()
 	btabs.Add(IdeImg::close, "Close (Esc)");
 	btabs.Add(IdeImg::console, "Console");
 	btabs.Add(IdeImg::errors, "Errors");
-	btabs.Add(IdeImg::console2, "Find in files");
+	btabs.Add(IdeImg::ff1, "Find in files 1");
+	btabs.Add(IdeImg::ff2, "Find in files 2");
+	btabs.Add(IdeImg::ff3, "Find in files 3");
 	btabs.Add(IdeImg::calc, "Calculator");
 	if(bottomctrl)
 		btabs.Add(IdeImg::debug, "Debug");
@@ -169,7 +171,12 @@ void Ide::SyncBottom()
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
 	error.Show(q == BERRORS);
-	ffound.Show(q == BFINDINFILES);
+	for(int i = 0; i < 3; i++) {
+		bool b = q == BFINDINFILES1 + i;
+		ffound[i].Show(b);
+		if(b)
+			ffoundi_next = i;
+	}
 	calc.Show(q == BCALC);
 	if(bottomctrl)
 		bottomctrl->Show(q == BDEBUG);
