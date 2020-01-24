@@ -14,6 +14,8 @@
 #define IMAGEFILE <ide/Browser/Browser.iml>
 #include <Draw/iml_header.h>
 
+INITIALIZE(CodeBase)
+
 class Browser;
 
 void ReduceCacheFolder(const char *path, int max_total);

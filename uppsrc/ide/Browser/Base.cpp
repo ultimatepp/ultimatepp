@@ -20,7 +20,8 @@
 
 #define CPP_CODEBASE_VERSION 3141592
 
-INITBLOCK { // Ugly as hell, but Functions4U are broken, so require this initialization hack instead of INITIALIZER
+INITIALIZER(CodeBase)
+{
 	void InitializeTopicModule();
 	InitializeTopicModule();
 }
