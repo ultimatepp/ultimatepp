@@ -94,6 +94,7 @@ public:
 struct IconShow : public Ctrl {
 	Image image;
 	bool  show_small;
+	bool  show_other;
 
 	void Paint(Draw& w);
 
@@ -175,6 +176,7 @@ private:
 	bool         doselection = false;
 	bool         selectrect = false;
 	int          paste_mode;
+	bool         show_other = false;
 	bool         show_small = false;
 
 	ScrollBars   sb;

@@ -203,8 +203,11 @@ void IconDes::DrawBar(Bar& bar)
        .Key(AK_RESIZEUP3);
 	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
 	   .Key(AK_RESIZEDOWN3);
+	bar.Add("Show UHD/Dark syntetics", IconDesImg::ShowOther(),
+	        [=] { show_other = !show_other; show_small = false; SyncShow(); SetBar(); })
+	   .Check(show_other);
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
-	        [=] { show_small = !show_small; SyncShow(); SetBar(); })
+	        [=] { show_small = !show_small; show_other = false; SyncShow(); SetBar(); })
 	   .Check(show_small);
 	bar.Separator();
 	bar.Add(c, AK_SLICE, IconDesImg::Slice(), THISBACK(Slice));
@@ -278,7 +281,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 4;
+	int version = 5;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -302,6 +305,8 @@ void IconDes::SerializeSettings(Stream& s)
 	}
 	if(version >= 4)
 		s % paste_mode;
+	if(version >= 5)
+		s % show_other;
 }
 
 void IconDes::SyncStatus()
@@ -321,7 +326,6 @@ IconDes::IconDes()
 	sb.WhenScroll = THISBACK(Scroll);
 
 	paste_mode = PASTE_TRANSPARENT;
-	show_small = false;
 	doselection = false;
 
 	tool = &IconDes::FreehandTool;
