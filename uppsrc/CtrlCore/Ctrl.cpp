@@ -308,11 +308,7 @@ void Ctrl::Enable(bool aenable) {
 	GuiLock __;
 	if(enabled != aenable) {
 		enabled = aenable;
-// 01/12/2007 - mdelfede
-// added support for windowed controls
-//		if(!parent) WndEnable(enabled);
 		if(top) WndEnable(enabled);
-// 01/12/2007 - END
 		if(!enabled && parent && HasFocusDeep())
 			IterateFocusForward(this, GetTopCtrl());
 		RefreshFrame();
