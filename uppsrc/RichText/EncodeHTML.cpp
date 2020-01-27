@@ -116,8 +116,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
               HtmlObjectSaver& object_saver)
 {
 	String html;
-	for(int i = 0; i < text.GetPartCount(); i++)
-	{
+	for(int i = 0; i < text.GetPartCount(); i++) {
 		if(text.IsTable(i)) {
 			const RichTable& t = text.GetTable(i);
 			const RichTable::Format& tf = t.GetFormat();
@@ -219,26 +218,26 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			for(int i = 0; i < p.part.GetCount(); i++) {
 				const RichPara::Part& part = p.part[i];
 				int q;
+				String lnk = part.format.link;
+				if(lnk.GetCount()) {
+					int q = links.Find(lnk);
+					if(q < 0) {
+						int q = lnk.ReverseFind('#');
+						if(q >= 0) {
+							String l = lnk.Left(q);
+							lnk = links.Get(l, l) + '#' + lnk.Mid(q + 1);
+						}
+					}
+					else
+						lnk = links[q];
+				}
 				if(part.object)
-					html << object_saver.GetHtml(part.object);
+					html << object_saver.GetHtml(part.object, lnk);
 				else
 				if(part.format.indexentry.GetCount() &&
 				   (q = escape.Find(part.format.indexentry.ToString())) >= 0)
 					html << escape[q];
 				else {
-					String lnk = part.format.link;
-					if(lnk.GetCount()) {
-						int q = links.Find(lnk);
-						if(q < 0) {
-							int q = lnk.ReverseFind('#');
-							if(q >= 0) {
-								String l = lnk.Left(q);
-								lnk = links.Get(l, l) + '#' + lnk.Mid(q + 1);
-							}
-						}
-						else
-							lnk = links[q];
-					}
 					String endtag;
 					if(!lnk.IsEmpty() && lnk[0] != ':') {
 						html << "<a href=\"" << lnk << "\">";
@@ -326,7 +325,7 @@ public:
 	DefaultHtmlObjectSaver(const String& outdir_, const String& namebase_, int imtolerance_, Zoom z_)
 	: outdir(outdir_), namebase(namebase_), z(z_), imtolerance(imtolerance_), im(0) {}
 
-	virtual String GetHtml(const RichObject& object);
+	virtual String GetHtml(const RichObject& object, const String& link);
 
 private:
 	String outdir;
@@ -336,7 +335,7 @@ private:
 	int im;
 };
 
-String DefaultHtmlObjectSaver::GetHtml(const RichObject& object)
+String DefaultHtmlObjectSaver::GetHtml(const RichObject& object, const String& link)
 {
 	StringBuffer html;
 	String name;
@@ -349,11 +348,18 @@ String DefaultHtmlObjectSaver::GetHtml(const RichObject& object)
 		sz = psz;
 	PNGEncoder png;
 	png.SaveFile(AppendFileName(outdir, name), object.ToImage(sz));
-	if(psz.cx * psz.cy != 0)
-		html << "<a href=\"" << lname << "\">";
+	String el = "</a>";
+	if(IsNull(link)) {
+		if(psz.cx * psz.cy)
+			html << "<a href=\"" << lname << "\">";
+		else
+			el.Clear();
+	}
+	else
+		html << "<a href=\"" << link << "\">";
 	html << "<img src=\"" << name << "\" border=\"0\" alt=\"\">";
-	if(psz.cx * psz.cy != 0) {
-		html << "</a>";
+	html << el;
+	if(IsNull(link) && psz.cx * psz.cy) {
 		PNGEncoder png;
 		png.SaveFile(AppendFileName(outdir, lname), object.ToImage(psz));
 	}

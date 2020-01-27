@@ -495,7 +495,8 @@ class HtmlObjectSaver
 public:
 	virtual ~HtmlObjectSaver() {}
 	
-	virtual String GetHtml(const RichObject& object) = 0;
+	virtual String GetHtml(const RichObject& object)                     { return Null; }
+	virtual String GetHtml(const RichObject& object, const String& link) { return GetHtml(object); }
 };
 
 String EncodeHtml(const RichText& text, Index<String>& css,
