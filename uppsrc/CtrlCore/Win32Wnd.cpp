@@ -1066,25 +1066,17 @@ Rect Ctrl::GetPrimaryScreenArea()
 int Ctrl::GetKbdDelay()
 {
 	GuiLock __;
-#ifdef PLATFORM_WINCE
-	return 500;
-#else
 	int a;
 	SystemParametersInfo(SPI_GETKEYBOARDDELAY, 0, &a, 0);
 	return 250 + a * 750 / 4;
-#endif
 }
 
 int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
-#ifdef PLATFORM_WINCE
-	return 1000 / 32;
-#else
 	int a;
 	SystemParametersInfo(SPI_GETKEYBOARDSPEED, 0, &a, 0);
 	return 1000 / (a + 2);
-#endif
 }
 
 void Ctrl::SetWndForeground()
@@ -1255,7 +1247,7 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	LLOG("PopUpHWND " << UPP::Name(this) << ", owner: " << owner);
+	LLOG("PopUpHWND " << UPP::Name(this) << ", owner: " << owner << ", activate: " << activate);
 	popup = false;
 	Create(owner, WS_POPUP, topmost ? WS_EX_TOPMOST : 0, savebits,
 	       owner || !activate ? SW_SHOWNOACTIVATE : SW_SHOW,

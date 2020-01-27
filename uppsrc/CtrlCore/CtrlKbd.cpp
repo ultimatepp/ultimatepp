@@ -310,7 +310,7 @@ void Ctrl::KillFocusWnd()
 void Ctrl::ClickActivateWnd()
 {
 	GuiLock __;
-	LLOG("Ctrl::ClickActivateWnd");
+	LLOG("Ctrl::ClickActivateWnd " << Name(this));
 	if(this == ~focusCtrlWnd && focusCtrl && focusCtrl->GetTopCtrl() != this) {
 		LLOG("Ctrl::ClickActivateWnd -> ActivateWnd");
 		ActivateWnd();

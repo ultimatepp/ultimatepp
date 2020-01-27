@@ -39,8 +39,6 @@ void AvoidPaintingCheck__()
 	Ctrl::painting = false;
 }
 
-void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
-
 dword GetKeyStateSafe(dword what) {
 	bool h = Ctrl::painting;
 	Ctrl::painting = false;
@@ -126,7 +124,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 #ifdef PLARFORM_WINCE
 		wince_mouseleft = true;
 #endif
-		SetWinceMouse(hwnd, lParam);
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
 		DoMouse(LEFTDOWN, Point((dword)lParam), 0);
@@ -200,7 +197,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 #endif
 	case WM_MOUSEMOVE:
-		SetWinceMouse(hwnd, lParam);
 		LLOG("WM_MOUSEMOVE: ignoreclick = " << ignoreclick);
 		if(ignoreclick) {
 			EndIgnore();
@@ -305,10 +301,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		return 1L;
 	case WM_DESTROY:
 		PreDestroy();
-#ifndef PLATFORM_WINCE
 		break;
 	case WM_NCDESTROY:
-#endif
 		if(!hwnd) break;
 		if(HasChildDeep(mouseCtrl) || this == ~mouseCtrl) mouseCtrl = NULL;
 		if(HasChildDeep(focusCtrl) || this == ~focusCtrl) focusCtrl = NULL;
@@ -322,14 +316,10 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(owner && (owner->IsForeground() || IsForeground()) && !owner->SetWantFocus())
 				IterateFocusForward(owner, owner);
 		}
-#ifdef PLATFORM_WINCE
-		DefWindowProc(hwnd, message, wParam, lParam);
-#else
 		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
 			DefWindowProcW(hwnd, message, wParam, lParam);
 		else
 			DefWindowProc(hwnd, message, wParam, lParam);
-#endif
 		hwnd = NULL;
 		return 0L;
 	case WM_CANCELMODE:
@@ -340,13 +330,18 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		visible = (BOOL) wParam;
 		StateH(SHOW);
 		break;
-#ifndef PLATFORM_WINCE
 	case WM_MOUSEACTIVATE:
 		LLOG("WM_MOUSEACTIVATE " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		if(!IsEnabled()) {
 			if(lastActiveWnd && lastActiveWnd->IsEnabled()) {
-				LLOG("WM_MOUSEACTIVATE -> ::SetFocus for " << UPP::Name(lastActiveWnd));
-				::SetFocus(lastActiveWnd->GetHWND());
+				if(focusCtrl) { // this closes popup
+					LLOG("WM_MOUSEACTIVATE -> ClickActivateWnd for " << UPP::Name(lastActiveWnd));
+					lastActiveWnd->ClickActivateWnd();
+				}
+				else { // this makes child dialog active when clicked on disabled parent
+					LLOG("WM_MOUSEACTIVATE -> ::SetFocus for " << UPP::Name(lastActiveWnd));
+					::SetFocus(lastActiveWnd->GetHWND());
+				}
 			}
 			else
 				MessageBeep(MB_OK);
@@ -354,12 +349,10 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		if(IsPopUp()) return MA_NOACTIVATE;
 		break;
-#endif
 	case WM_SIZE:
 	case WM_MOVE:
 		if(hwnd) {
 			Rect rect;
-#ifndef PLATFORM_WINCE
 			if(activex) {
 				WINDOWPLACEMENT wp;
 				wp.length = sizeof(WINDOWINFO);
@@ -367,7 +360,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				rect = wp.rcNormalPosition;
 			}
 			else
-#endif
 				rect = GetScreenClient(hwnd);
 			LLOG("WM_MOVE / WM_SIZE: screen client = " << rect);
 			if(GetRect() != rect)
@@ -387,7 +379,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_SETFOCUS:
 		LLOG("WM_SETFOCUS " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-		if(this != focusCtrlWnd) {
+		if(this != focusCtrlWnd || focusCtrl && focusCtrlWnd != focusCtrl->GetTopCtrl()) { // second condition fixes popup issue when clicking dialog parent
 			if(IsEnabled()) {
 				LLOG("WM_SETFOCUS -> ActivateWnd: this != focusCtrlWnd, this = "
 					<< Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
