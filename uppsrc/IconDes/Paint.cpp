@@ -26,10 +26,20 @@ void IconShow::Paint(Draw& w)
 		int cx = (i + 1) * sz.cx / n - x;
 		w.DrawRect(x, 0, cx, sz.cy, color[i]);
 		if(msz.cx) {
-			w.DrawImage(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2, image);
-			if(show_small) {
-				w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2, m2);
-				w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2 + 2 * msz.cy / 3, m3);
+			if(show_other) {
+				Size osz = 2 * isz;
+				Point c(x + cx / 2, sz.cy / 2);
+				w.DrawImage(c.x - DPI(8) - isz.cx, c.y - DPI(8) - isz.cy, image);
+				w.DrawImage(c.x + DPI(8), c.y - DPI(8) - isz.cy, DarkTheme(image));
+				w.DrawImage(c.x - DPI(8) - isz.cx, c.y + DPI(8), image);
+				w.DrawImage(c.x + DPI(8), c.y + DPI(8), Upscale2x(DarkTheme(image)));
+			}
+			else {
+				w.DrawImage(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2, image);
+				if(show_small) {
+					w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2, m2);
+					w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2 + 2 * msz.cy / 3, m3);
+				}
 			}
 		}
 	}

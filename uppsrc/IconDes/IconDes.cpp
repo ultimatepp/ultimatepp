@@ -45,6 +45,7 @@ void IconDes::SyncShow()
 		Image image = c.image;
 		iconshow.image = image;
 		iconshow.show_small = show_small;
+		iconshow.show_other = show_other;
 		ilist.Set(2, image);
 	}
 	iconshow.Refresh();
