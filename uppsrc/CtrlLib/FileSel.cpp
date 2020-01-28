@@ -813,6 +813,7 @@ void FileSel::SearchLoad()
 #endif
 	String emask = GetMask();
 	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles, true)) {
+		loaded = false;
 		Exclamation(t_("[A3* Unable to read the directory !]&&") + DeQtf((String)~dir) + "&&" +
 		            GetErrorMessage(GetLastError()));
 		if(!basedir.IsEmpty() && String(~dir).IsEmpty()) {
