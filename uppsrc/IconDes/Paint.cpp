@@ -27,7 +27,6 @@ void IconShow::Paint(Draw& w)
 		w.DrawRect(x, 0, cx, sz.cy, color[i]);
 		if(msz.cx) {
 			if(show_other) {
-				Size osz = 2 * isz;
 				Point c(x + cx / 2, sz.cy / 2);
 				w.DrawImage(c.x - DPI(8) - isz.cx, c.y - DPI(8) - isz.cy, image);
 				w.DrawImage(c.x + DPI(8), c.y - DPI(8) - isz.cy, DarkTheme(image));
