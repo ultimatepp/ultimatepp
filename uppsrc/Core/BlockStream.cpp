@@ -470,12 +470,15 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	                    O_RDWR|O_CREAT,
 	              tmode);
 	if(handle >= 0) {
-		if((mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0) {
+		struct stat st[1];
+		fstat(handle, st);
+		if(!(st->st_mode & S_IFREG) ||  // not a regular file, e.g. folder - bad things would happen
+		   (mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0) { // lock if not sharing
 			close(handle);
 			handle = -1;
 			return false;
 		}
-		int64 fsz = LSEEK64_(handle, 0, SEEK_END);
+		int64 fsz = st->st_size;
 		if(fsz >= 0) {
 			OpenInit(mode, fsz);
 			LLOG("OPEN handle " << handle);
