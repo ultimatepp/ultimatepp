@@ -350,7 +350,7 @@ String DefaultHtmlObjectSaver::GetHtml(const RichObject& object, const String& l
 	png.SaveFile(AppendFileName(outdir, name), object.ToImage(sz));
 	String el = "</a>";
 	if(IsNull(link)) {
-		if(psz.cx * psz.cy)
+		if(psz.cx * psz.cy != 0)
 			html << "<a href=\"" << lname << "\">";
 		else
 			el.Clear();
@@ -359,7 +359,7 @@ String DefaultHtmlObjectSaver::GetHtml(const RichObject& object, const String& l
 		html << "<a href=\"" << link << "\">";
 	html << "<img src=\"" << name << "\" border=\"0\" alt=\"\">";
 	html << el;
-	if(IsNull(link) && psz.cx * psz.cy) {
+	if(IsNull(link) && psz.cx * psz.cy != 0) {
 		PNGEncoder png;
 		png.SaveFile(AppendFileName(outdir, lname), object.ToImage(psz));
 	}

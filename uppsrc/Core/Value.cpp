@@ -608,7 +608,6 @@ const Value& Value::operator[](int i) const
 const Vector<Value>& Value::GetVA() const
 {
 	if(IsRef()) {
-		dword t = GetRefType();
 		if(Is<ValueArray>())
 			return ((ValueArray::Data *)ptr())->data;
 		if(Is<ValueMap>())
