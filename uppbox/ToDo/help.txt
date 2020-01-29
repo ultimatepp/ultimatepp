@@ -1,0 +1,6 @@
+git checkout -b theriverman-master master
+git pull https://github.com/theriverman/ultimatepp.git master
+git checkout master
+git merge --no-ff theriverman-master
+git svn dcommit
+
