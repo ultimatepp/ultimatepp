@@ -37,9 +37,9 @@ More information about the framework, can be found on the official [site](https:
 
 ### GUI
 
-Below is the code of trivial GUI application that displays "Hellow World" string inside window:
+Below is the code of trivial GUI application that displays "Hello World" string inside window:
 
-```
+```c++
 #include <CtrlLib/CtrlLib.h>
 
 class MyAppWindow : public Upp::TopWindow {
@@ -64,13 +64,13 @@ GUI_APP_MAIN
 
 ### Additional examples
 
-More examples you can find directly on special section of U++ framework website deticated to [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be find in **examples** and **references** directories located in this repository.
+More examples you can find directly on special section of U++ framework website dedicated to [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be found in the **examples** and **references** directories located in this repository.
 
 # Repository
 
 ## Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
-* examples - examplary code of complex applications
-* references - referential implementation
-* **uppsrc** - contains main sources of the framework
+* **examples** - exemplary codes of complex applications
+* **references** - reference implementations
+* **uppsrc** - main sources of the framework
