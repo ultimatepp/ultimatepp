@@ -15,7 +15,11 @@
 #endif
 
 #ifdef PLATFORM_POSIX
+#ifdef PLATFORM_OSX
+#include <mysql.h>
+#else
 #include <mysql/mysql.h>
+#endif
 #endif
 
 namespace Upp {
