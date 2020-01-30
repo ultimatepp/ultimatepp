@@ -159,6 +159,10 @@
 #define CONFIG(x, d)
 #endif
 
+#ifndef SQL_NAME
+#define SQL_NAME(id)
+#endif
+
 #include MODEL
 
 #undef __NIL
@@ -196,3 +200,4 @@
 #undef SCHEMA
 #undef CONFIG
 #undef UPGRADE
+#undef SQL_NAME

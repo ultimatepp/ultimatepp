@@ -35,6 +35,7 @@ public:
 	void ColumnArray(const char *type, const char *name, int items);
 	void Attribute(const char *attr, const char *drop);
 	void InlineAttribute(const char *attr);
+	void SqlName(const char *name);
 	void EndTable()                                        { FlushTable(); }
 
 	void Config(const char *config, const char *drop);
@@ -127,6 +128,8 @@ struct SchColumnInfo {
 	String name;
 	String references;
 	String foreign_key;
+	
+	String ToString() const { return name; }
 };
 
 ArrayMap< String, Array<SchColumnInfo> > GetSchAll();
