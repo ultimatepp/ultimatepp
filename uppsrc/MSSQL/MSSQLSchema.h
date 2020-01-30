@@ -41,6 +41,9 @@
 #define LONGRAW(x)                 COLUMN("varbinary(max)", String, x, 0, 0)
 #define LONGRAW_(x)                COLUMN_("varbinary(max)", String, x, 0, 0)
 
+#define BLOB(x)                    COLUMN("varbinary(max)", String, x, 0, 0)
+#define BLOB_(x)                   COLUMN_("varbinary(max)", String, x, 0, 0)
+
 #ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")\
                                    ATTRIBUTE("alter table @t add constraint PK_@x primary key "\

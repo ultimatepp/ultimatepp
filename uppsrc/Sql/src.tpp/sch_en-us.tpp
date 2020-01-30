@@ -10,12 +10,39 @@ topic "";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 .sch schema files]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 .sch SQL schema files]]}}&]
 [s0;%% &]
-[s0; [3 SQLID]&]
-[s0; [3 ARRAY]&]
-[s0; [3 COMMENT]&]
-[s0; [3 VAR]&]
+[s0; [3 .sch files represent SQL database schema. These files are included 
+into target application with various definitions of .sch `"keywords`" 
+to provide]&]
+[s0;3 &]
+[s0;i150;O0; [3 SqlId constants]&]
+[s0;i150;O0; [^topic`:`/`/Sql`/src`/S`_type`_en`-us^3 S`_][/^topic`:`/`/Sql`/src`/S`_type`_en`-us^3 t
+ype][3  structures to map table rows into C`+`+ structure]&]
+[s0;i150;O0; [3 .sql scripts to create/upgrade/drop the schema]&]
+[s0;3 &]
+[s0; [3 Example of .sch content:]&]
+[s0;*C@5;3 &]
+[s0; [*C@5;3 TABLE`_(DEMO)]&]
+[s0; [*C@5;3 -|INT`_(ID) PRIMARY`_KEY AUTOINCREMENT]&]
+[s0; [*C@5;3 -|STRING`_(UN, 200) UNIQUE]&]
+[s0; [*C@5;3 -|STRING`_(W, 200) INDEX]&]
+[s0; [*C@5;3 -|INT`_ (F`_ID) REFERENCES(TABLE2)]&]
+[s0; [*C@5;3 END`_TABLE]&]
+[s0;3 &]
+[s0; [3 All .sch keywords that contain the name of table, type or column, 
+have two variants `- simple and with `'`_`' posfix (e.g. TABLE 
+and TABLE`_). Variant with `'`_`' postfix also generates global 
+SqlId variable that has the same name and value as is the name 
+of table/type/column (content can be altered with SQL`_NAME). 
+This prepares column and table names to be used with SQL expressions.]&]
+[s0;3 &]
+[s0; [3 Most column definition keywords come with ARRAY variant, this 
+is not using any SQL engine array capabilities but rather inserts 
+array size count of items with special names to emulate the fixed 
+array.]&]
+[s0;3 &]
+[s0; [3 List of .sch file `"keywords`"]&]
 [s0;3 &]
 [ {{5007:4993^ [s0; [* TABLE(][*/ table][* )]]
 :: [s0; Defines a new table. This creates S`_ structures to map SQL 
@@ -90,13 +117,15 @@ for true). Conversion is provided for S`_ types, but SQL commands
 must account for this. ]
 :: [s0; [* BOOL`_ARRAY(][*/ column`_name][* , items)]]
 :: [s0; Array of bools.]
-:: [s0;* ]
-:: [s0; ]
+:: [s0; [* BIT]]
+:: [s0; 0 or 1. C`+`+ type is int. `[mssql`]]
+:: [s0; [* BIT`_ARRAY]]
+:: [s0; Array of 0 or 1. `[mssql`]]
 :: [s0; [* BLOB(][*/ column`_name][* )]]
-:: [s0; Binary data of unlimited size. C`+`+ type is String. `[sqlite3`] 
-`[mysql`] `[postgresql`]]
+:: [s0; Binary data of unlimited size. C`+`+ type is String.]
 :: [s0; [* CLOB(][*/ column`_name][* )]]
-:: [s0; Text of unlimited size. C`+`+ type is String. `[mysql`] `[postgresql`]]
+:: [s0; Text of unlimited size. C`+`+ type is String. `[mysql`] `[postgresql`] 
+`[oracle`]]
 :: [s0; [* SERIAL(][*/ column`_name][* )]]
 :: [s0; PostgreSQL [* serial] type (equivalent of autoincrement in some 
 other SQL engines). Database type is 32`-bit unsigned integer, 
@@ -142,11 +171,13 @@ C literal. `[sqlite3`]]
 is C literal with expression. `[sqlite3`]]
 :: [s0; [* SQLCHECK(][*/ constraint`_name][* , ][*/ check][* )]]
 :: [s0; Adds named CHECK constraint, [*/ check] is C literal with check 
-expression. `[sqlite3`] `[postgresql`]]
+expression. `[sqlite3`] `[postgresql`] `[mssql`]]
 :: [s0; [* INNODB]]
 :: [s0; Table has INNODB type. `[mysql`]]
 :: [s0; [* SEQUENCE(][*/ sequence`_name][* )]]
-:: [s0; Sequence. `[postgresql`]]}}&]
+:: [s0; Sequence. `[postgresql`] `[mssql`] `[oracle`]]
+:: [s0; [* COMMEN(][*/ comment][* )]]
+:: [s0; Inserts a comment into the script.]}}&]
 [s0;%% &]
 [s0;3 &]
 [s0;3 &]
