@@ -3,6 +3,7 @@
 #define VAR(type, x)                                        schema.Var(SCHEMA_##type, #x);
 #define COLUMN(type, ctype, name, width, prec)              schema.Column(type, #name);
 #define COLUMN_ARRAY(type, ctype, name, width, prec, items) schema.ColumnArray(type, #name, items);
+#define SQL_NAME(name)                                      schema.SqlName(name);
 #define INLINE_ATTRIBUTE(x)                                 schema.InlineAttribute(x);
 #define ATTRIBUTE(x, d)                                     schema.Attribute(x, d);
 #define TABLE_SUFFIX(s)                                     schema.TableSuffix(s);
