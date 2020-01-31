@@ -610,6 +610,10 @@ RWMutex::~RWMutex()
 	pthread_rwlock_destroy(rwlock);
 }
 
+#ifdef PLATFORM_OSX
+#include <time.h>
+#endif
+
 bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
 	if(timeout_ms < 0) {

@@ -18,6 +18,8 @@ library(LINUX MT) "mysqlclient_r ssl";
 
 library(FREEBSD) mysqlclient;
 
+library(OSX) mysqlclient;
+
 link(WIN32 GCC !NOMYSQL) "-Wl,--enable-stdcall-fixup";
 
 link(DEBUG SO) /nodefaultlib:LIBCD;
