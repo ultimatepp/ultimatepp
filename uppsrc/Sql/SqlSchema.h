@@ -225,3 +225,15 @@ struct S_type {
 	S_type(const ValueMap& m);
 };
 #endif
+
+// support for SQL_RENAME
+
+extern const char *RegSqlName__;
+
+struct RegSqlId__ {
+	RegSqlId__(const char *name) { RegSqlName__ = name; }
+};
+
+void SqlRename__(const char *name);
+
+const char *SqlResolveId__(const char *id);

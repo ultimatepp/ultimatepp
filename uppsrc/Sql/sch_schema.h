@@ -1,9 +1,8 @@
 // SCHEMA
 
-#define VAR(type, x)                                        schema.Var(SCHEMA_##type, #x);
-#define COLUMN(type, ctype, name, width, prec)              schema.Column(type, #name);
-#define COLUMN_ARRAY(type, ctype, name, width, prec, items) schema.ColumnArray(type, #name, items);
-#define SQL_NAME(name)                                      schema.SqlName(name);
+#define VAR(type, x)                                        schema.Var(SCHEMA_##type, SqlResolveId__(#x));
+#define COLUMN(type, ctype, name, width, prec)              schema.Column(type, SqlResolveId__(#name));
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items) schema.ColumnArray(type, SqlResolveId__(#name), items);
 #define INLINE_ATTRIBUTE(x)                                 schema.InlineAttribute(x);
 #define ATTRIBUTE(x, d)                                     schema.Attribute(x, d);
 #define TABLE_SUFFIX(s)                                     schema.TableSuffix(s);
@@ -37,7 +36,7 @@ TYPE_II(x, b1, b2) SCHEMA_##b3(schema);
 // TABLE
 
 #define TABLE(x)\
-void TABLE_##x(SqlSchema& schema) { schema.Table(#x); SCHEMA_##x(schema); schema.EndTable(); }
+void TABLE_##x(SqlSchema& schema) { schema.Table(SqlResolveId__(#x)); SCHEMA_##x(schema); schema.EndTable(); }
 
 #define TABLE_I(x, b)             TABLE(x)
 #define TABLE_II(x, b1, b2)       TABLE(x)

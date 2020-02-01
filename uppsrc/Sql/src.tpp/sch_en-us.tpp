@@ -42,7 +42,7 @@ is not using any SQL engine array capabilities but rather inserts
 array size count of items with special names to emulate the fixed 
 array.]&]
 [s0;3 &]
-[s0; [3 List of .sch file `"keywords`"]&]
+[s0; [3 List of .sch file keywords:]&]
 [s0;3 &]
 [ {{5007:4993^ [s0; [* TABLE(][*/ table][* )]]
 :: [s0; Defines a new table. This creates S`_ structures to map SQL 

@@ -140,7 +140,7 @@ public:
 
 	SqlId         operator()(SqlId p) const;
 	SqlId         operator()(const S_info& table) const;
-	
+
 //$-SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
 #define E__SqlId(I)         const SqlId& p##I
@@ -156,12 +156,10 @@ __Expand(E__Of)
 #undef E__PutSqlId
 #undef E__SqlId
 //$+
-	SqlId();
-	SqlId(const char *s);
-	SqlId(const String& s);
-	SqlId(const Id& id);
-
-	static void   RenameLast(const char *s); // to support SQL_RENAME command
+	SqlId()                                      {}
+	SqlId(const char *s) : id(s)                 {}
+	SqlId(const String& s) : id(s)               {}
+	SqlId(const Id& id) : id(id)                 {}
 };
 
 typedef SqlId SqlCol; // Deprecated

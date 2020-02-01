@@ -19,14 +19,18 @@ ArrayMap<String, SchTableInfo>& sSchTableInfo()
 	return x;
 }
 
+static bool sColumn;
+
 void SchDbInfoTable(const char *table)
 {
-	sSchTableInfo().GetAdd(table).is_table = true;
+	sSchTableInfo().Add(table).is_table = true;
+	sColumn = false;
 }
 
 void SchDbInfoType(const char *table)
 {
-	sSchTableInfo().GetAdd(table).is_table = false;
+	sSchTableInfo().Add(table).is_table = false;
+	sColumn = false;
 }
 
 void SchDbInfoColumn(const char *name)
@@ -37,6 +41,7 @@ void SchDbInfoColumn(const char *name)
 	f.ref_column.Add();
 	if(IsNull(f.primary_key))
 		f.primary_key = name;
+	sColumn = true;
 }
 
 void SchDbInfoVar(void (*fn)(), const char *name)
