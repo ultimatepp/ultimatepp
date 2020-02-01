@@ -53,21 +53,6 @@ String SqlId::Quoted() const
 	return id.ToString();
 }
 
-static SqlId *sLastSqlId;
-
-SqlId::SqlId()                                      { sLastSqlId = this; }
-SqlId::SqlId(const char *s) : id(s)                 { sLastSqlId = this; }
-SqlId::SqlId(const String& s) : id(s)               { sLastSqlId = this; }
-SqlId::SqlId(const Id& id) : id(id)                 { sLastSqlId = this; }
-
-void SqlId::RenameLast(const char *s)
-{
-	if(sLastSqlId) {
-		SqlId *h = sLastSqlId;
-		*h = s;
-	}
-}
-
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect, Vector<SqlVal> *split)
 {
 	char quote = dialect == MY_SQL ? '`' : '\"';

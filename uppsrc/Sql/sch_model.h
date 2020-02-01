@@ -160,10 +160,12 @@
 #endif
 
 #ifndef SQL_NAME
-#define SQL_NAME(id)
+#define SQL_NAME(x)
 #endif
 
 #include MODEL
+
+#undef SQL_NAME
 
 #undef __NIL
 
@@ -200,4 +202,3 @@
 #undef SCHEMA
 #undef CONFIG
 #undef UPGRADE
-#undef SQL_NAME

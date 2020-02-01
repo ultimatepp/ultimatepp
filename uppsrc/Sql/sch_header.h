@@ -8,7 +8,7 @@ private: \
 	static const S_info        *info; \
 \
 public: \
-	static const char           TableName[]; \
+	static String               TableName; \
 	static const SqlSet&        ColumnSet()                       { return GetInfo().set; } \
 	static SqlSet               ColumnSet(const String& prefix)   { return GetInfo().GetSet(prefix); } \
 	static SqlSet               Of(SqlId table)                   { return GetInfo().GetOf(table); } \
@@ -64,6 +64,8 @@ static SqlId colid_##name;
  
 #define END_TYPE                 };
 
+#define SQL_NAME(x)
+
 #include SCHEMADIALECT
 
 #undef CODETYPE
@@ -72,7 +74,8 @@ static SqlId colid_##name;
 
 // SqlId
 
-#define DOID(x) extern SqlId ADD_SCHEMA_PREFIX_CPP(x);            
-//#define DOID(x)                  extern SqlId x;
+#define DOID(x) extern SqlId ADD_SCHEMA_PREFIX_CPP(x);
+
+#define SQL_NAME(x)
 
 #include SCHEMADIALECT

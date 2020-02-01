@@ -219,4 +219,29 @@ void operator*(SqlSchema& schema, const SqlInsert& insert) {
 	                    << ";\n";
 }
 
+VectorMap<String, String>& sSqlRename()
+{
+	static VectorMap<String, String> x;
+	return x;
 }
+
+const char *RegSqlName__;
+
+void SqlRename__(const char *name)
+{
+	static auto& rename = sSqlRename();
+	if(RegSqlName__)
+		rename.Add(RegSqlName__, name);
+	RegSqlName__ = NULL;
+}
+
+const char *SqlResolveId__(const char *id)
+{
+	static auto& rename = sSqlRename();
+	int q;
+	if(rename.GetCount() && (q = rename.Find(id)) >= 0)
+		return rename[q];
+	return id; // cannot be conditional expression as we are returning const char * !
+}
+
+};
