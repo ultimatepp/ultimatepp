@@ -32,15 +32,10 @@ CONSOLE_APP_MAIN
 #ifdef _DEBUG
 	SqlSchema sch(SQLITE3);
 	All_Tables(sch);
-//	if(sch.ScriptChanged(SqlSchema::UPGRADE))
-		SqlPerformScript(sch.Upgrade());
-	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES)) {
-		SqlPerformScript(sch.Attributes());
-	}
-	if(sch.ScriptChanged(SqlSchema::CONFIG)) {
-		SqlPerformScript(sch.ConfigDrop());
-		SqlPerformScript(sch.Config());
-	}
+
+	SqlPerformScript(sch.SchemaDrop());
+	SqlPerformScript(sch.Upgrade());
+
 	sch.SaveNormal();
 #endif
 
