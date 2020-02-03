@@ -1,5 +1,13 @@
 #include "Core.h"
 
+#ifdef PLATFORM_OSX
+#include <sys/time.h>
+#endif
+
+#ifdef CPU_X86
+#include <xmmintrin.h>
+#endif
+
 namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
@@ -610,17 +618,13 @@ RWMutex::~RWMutex()
 	pthread_rwlock_destroy(rwlock);
 }
 
-#ifdef PLATFORM_OSX
-#include <time.h>
-#endif
-
 bool ConditionVariable::Wait(Mutex& m, int timeout_ms)
 {
 	if(timeout_ms < 0) {
 		pthread_cond_wait(cv, m.mutex);
 		return true;
 	}
-	struct timespec until;
+	::timespec until;
 	clock_gettime(CLOCK_REALTIME, &until);
 	
 	until.tv_sec += timeout_ms / 1000;
@@ -721,10 +725,6 @@ LazyUpdate::LazyUpdate()
 {
 	dirty = true;
 }
-
-#ifdef CPU_X86
-#include <xmmintrin.h>
-#endif
 
 void SpinLock::Wait()
 {

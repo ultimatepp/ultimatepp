@@ -294,23 +294,7 @@ void Ctrl::SyncCaret() {
 
 Rect Ctrl::GetWorkArea() const
 {
-	return GetPrimaryWorkArea();
-}
-
-void Ctrl::GetWorkArea(Array<Rect>& rc)
-{
-	GuiLock __;
-	rc.Add(GetPrimaryWorkArea());
-}
-
-Rect Ctrl::GetVirtualWorkArea()
-{
-	return GetPrimaryWorkArea();
-}
-
-Rect Ctrl::GetVirtualScreenArea()
-{
-	return GetPrimaryWorkArea();
+	return GetWorkArea(GetScreenRect().TopLeft());
 }
 
 Rect MakeScreenRect(NSScreen *screen, CGRect r)
@@ -319,18 +303,53 @@ Rect MakeScreenRect(NSScreen *screen, CGRect r)
 	return MakeRect(r, DPI(1));
 }
 
+void Ctrl::GetWorkArea(Array<Rect>& rc)
+{
+	GuiLock __;
+	for(NSScreen *screen in [NSScreen screens])
+		rc.Add(MakeScreenRect(screen, [screen visibleFrame]));
+}
+
+
+Rect Ctrl::GetVirtualWorkArea()
+{
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	Rect r(0, 0, 0, 0);
+	for(int i = 0; i < rc.GetCount(); i++)
+		if(i)
+			r = r | rc[i];
+		else
+			r = rc[0];
+	return r;
+}
+
+Rect Ctrl::GetVirtualScreenArea()
+{
+	bool first = true;
+	Rect r(0, 0, 0, 0);
+	for(NSScreen *screen in [NSScreen screens]) {
+		Rect sr = MakeScreenRect(screen, [screen frame]);
+		if(first)
+			r = sr;
+		else
+			r = r | sr;
+		first = false;
+	}
+	return r;
+}
+
 Rect Ctrl::GetPrimaryWorkArea()
 {
-	for (NSScreen *screen in [NSScreen screens])
-		return MakeScreenRect(screen, [screen visibleFrame]);
-	return Rect(0, 0, 1024, 768);
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	return rc.GetCount() ? rc[0] : Rect(0, 0, 0, 0);
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
 		return MakeScreenRect(screen, [screen frame]);
-	return Rect(0, 0, 1024, 768);
 }
 
 bool Ctrl::IsCompositedGui()

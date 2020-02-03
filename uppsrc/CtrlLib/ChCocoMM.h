@@ -31,6 +31,6 @@ enum ChCocoNSColor {
 void Coco_ThemePaint(void *cgcontext, const Upp::Rect& where, int type,
                      int value, int status, bool focus);
 
-int  Coco_Metric(int k);
+	int  Coco_Metric(int k);
 
 #endif
