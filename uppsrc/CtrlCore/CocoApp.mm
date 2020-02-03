@@ -350,6 +350,7 @@ Rect Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
 		return MakeScreenRect(screen, [screen frame]);
+	return Rect(0, 0, 0, 0);
 }
 
 bool Ctrl::IsCompositedGui()
