@@ -101,6 +101,22 @@ Xform2D Xform2D::Identity()
 	return m;
 }
 
+Xform2D Xform2D::Map(Pointf s1, Pointf s2, Pointf s3)
+{
+	Xform2D s;
+	s.x.x = s1.x - s3.x;
+	s.y.x = s1.y - s3.y;
+	s.x.y = s2.x - s3.x;
+	s.y.y = s2.y - s3.y;
+	s.t = s3;
+	return s;
+}
+
+Xform2D Xform2D::Map(Pointf s1, Pointf s2, Pointf s3, Pointf t1, Pointf t2, Pointf t3)
+{
+	return Inverse(Xform2D::Map(s1, s2, s3)) * Map(t1, t2, t3);
+}
+
 double  Determinant(const Xform2D& m)
 {
 	return m.x.x * m.y.y - m.y.x * m.x.y;

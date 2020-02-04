@@ -41,6 +41,8 @@ struct Xform2D {
 	static Xform2D Scale(double scale);
 	static Xform2D Rotation(double fi);
 	static Xform2D Sheer(double fi);
+	static Xform2D Map(Pointf s1, Pointf s2, Pointf s3); // maps 0,0 -> s3, 1,0 -> s1, 0,1 -> s2
+	static Xform2D Map(Pointf s1, Pointf s2, Pointf s3, Pointf t1, Pointf t2, Pointf t3);
 	
 	Xform2D();
 };
@@ -371,7 +373,7 @@ public:
 	ImagePainter(Size sz, int mode = MODE_ANTIALIASED);
 	ImagePainter(int cx, int cy, int mode = MODE_ANTIALIASED);
 	
-	Image GetResult() { return ImageBuffer__::ib; }
+	Image GetResult() { Finish(); return ImageBuffer__::ib; }
 	operator Image()  { return GetResult(); }
 };
 
