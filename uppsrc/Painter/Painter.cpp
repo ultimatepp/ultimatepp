@@ -365,6 +365,7 @@ DrawPainter::DrawPainter(Draw& w, Size sz, int mode)
 
 DrawPainter::~DrawPainter()
 {
+	Finish();
 	w.DrawImage(0, 0, *this);
 }
 	
