@@ -288,7 +288,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Blitz b;
 	if(blitz) {
 		BlitzBuilderComponent bc(this);
-		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".obj", noblitz);
+		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".obj", noblitz, package);
 		recompile = b.build;
 	}
 
