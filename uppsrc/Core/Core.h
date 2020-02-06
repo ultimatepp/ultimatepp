@@ -92,7 +92,6 @@
 	#ifdef PLATFORM_OSX
 		#include <dispatch/dispatch.h>
 	#endif
-	#include <time.h>
 #endif //PLATFORM_POSIX
 
 #ifdef PLATFORM_POSIX
