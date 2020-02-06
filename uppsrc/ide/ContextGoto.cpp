@@ -91,12 +91,35 @@ String RemoveTemplateParams(const String& s)
 	return ParseTemplatedType(s, dummy);
 }
 
+bool Ide::OpenLink(const String& s, int pos)
+{ // try to find link at cursor, either http, https or file
+	auto IsLinkChar = [](int c) { return findarg(c, '\'', '\"', '\t', ' ', '\0') < 0; };
+	int b = pos;
+	while(b > 0 && IsLinkChar(s[b - 1]))
+		b--;
+	int e = pos;
+	while(IsLinkChar(s[e]))
+		e++;
+	String link = s.Mid(b, e - b);
+	if(link.StartsWith("http://") || link.StartsWith("https://"))
+		LaunchWebBrowser(link);
+	else
+	if(FileExists(link))
+		EditFile(link);
+	else
+		return false;
+	return true;
+}
+
 void Ide::ContextGoto0(int pos)
 {
 	if(designer)
 		return;
-	int li = editor.GetLine(pos);
+	int lp = pos;
+	int li = editor.GetLinePos(lp);
 	String l = editor.GetUtf8Line(li);
+	if(OpenLink(l, lp))
+		return;
 	if(IsPif(l) || IsPelse(l)) {
 		int lvl = 0;
 		while(li + 1 < editor.GetLineCount()) {

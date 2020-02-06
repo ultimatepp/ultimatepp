@@ -939,6 +939,7 @@ public:
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
 		void  FindId(const String& id);
+		bool  OpenLink(const String& s, int pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  GoToLine();
