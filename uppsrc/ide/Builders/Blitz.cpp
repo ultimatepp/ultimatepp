@@ -44,7 +44,8 @@ BlitzBuilderComponent::BlitzBuilderComponent(Builder* builder)
 Blitz BlitzBuilderComponent::MakeBlitzStep(
 	Vector<String>& sourceFiles, Vector<String>& soptions,
 	Vector<String>& obj, Vector<String>& immfile,
-	const char *objext, const Index<String>& noblitz)
+	const char *objext, const Index<String>& noblitz,
+	const String& package)
 {
 	Blitz b;
 	b.count = 0;
@@ -53,6 +54,9 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 	if(!IsBuilder())
 		return b;
 	
+	if(package.GetCount())
+		blitzFileName = package + "$blitz";
+
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
 	b.object = CatAnyPath(workingDir, blitzFileName + String(objext));

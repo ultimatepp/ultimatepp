@@ -40,7 +40,8 @@ public:
 	Blitz MakeBlitzStep(
 		Vector<String>& sfile, Vector<String>& soptions,
 		Vector<String>& obj, Vector<String>& immfile,
-		const char *objext, const Index<String>& noblitz);
+		const char *objext, const Index<String>& noblitz,
+		const String& package = Null);
 	                    
 private:
 	String workingDir;
