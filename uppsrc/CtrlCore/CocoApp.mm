@@ -72,12 +72,12 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	
 	Ctrl::SetUHDEnabled(true);
-
-	for (NSScreen *screen in [NSScreen screens])
-		if([screen backingScaleFactor] > 1 && Ctrl::IsUHDEnabled()) {
+	for (NSScreen *screen in [NSScreen screens]) {
+		if([screen backingScaleFactor] > 1) {
 			SetUHDMode(true);
 			break;
 		}
+	}
 
 	Font::SetDefaultFont(StdFont(fceil(DPI([sysfont pointSize]))));
 	

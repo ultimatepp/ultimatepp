@@ -9,10 +9,9 @@
 
 void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 {
-	auto cg = (CGContextRef) cgcontext	;
+	auto cg = (CGContextRef) cgcontext;
 	if(Upp::IsUHDMode())
 		CGContextScaleCTM(cg, 2, 2);
-	CGRect cr = CGRectMake(0, 0, 140, 140);
 	if(type == COCO_NSCOLOR) {
 		CGContextSaveGState(cg);
 		CGContextSetFillColorWithColor(cg, Upp::decode(value,
@@ -50,7 +49,7 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 		    scroller.knobProportion = 1;
 			scroller.knobStyle = NSScrollerKnobStyleDefault;
 			scroller.scrollerStyle = NSScrollerStyleLegacy;
-			scroller.frame = cr;
+			scroller.frame = CGRectMake(0, 0, 140, 140);
 			if(type == COCO_SCROLLTHUMB)
 				[scroller drawKnob];
 			else
@@ -62,7 +61,7 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 			bc.allowsMixedState = type == COCO_CHECKBOX;
 			bc.title = @"";
 			bc.controlSize = type == COCO_RADIOBUTTON ? NSControlSizeSmall : NSControlSizeRegular;
-			bc.frame = cr;
+			bc.frame = CGRectMake(0, 0, 140, 40);
 			bc.buttonType = Upp::decode(type, COCO_CHECKBOX, NSButtonTypeSwitch, COCO_RADIOBUTTON, NSButtonTypeRadio, NSButtonTypePushOnPushOff);
 			bc.bezelStyle = type == COCO_BUTTON ? NSBezelStyleRounded : NSBezelStyleRegularSquare;
 			bc.state = Upp::decode(value, 0, NSControlStateValueOff, 1, NSControlStateValueOn, NSControlStateValueMixed);
@@ -71,10 +70,14 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 			[bc drawRect:dirtyRect];
 			[bc release];
 		}
-	
-	    [NSGraphicsContext restoreGraphicsState];
-	    CGContextRestoreGState(cg);
 	}
+}
+
+int   Coco_Metric(int k)
+{
+	SInt32 m;
+	GetThemeMetric(k, &m);
+	return m;
 }
 
 #endif
