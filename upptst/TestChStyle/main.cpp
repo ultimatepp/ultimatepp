@@ -32,9 +32,11 @@ TestChStyle::TestChStyle()
 	AddFrame(bar);
 	bar.Set([](Bar& bar) {
 		bar.Add(CtrlImg::Diskette(), [] {
+		#ifndef PLATFORM_OSX
 			FileSelector fs;
 			fs.AllFilesType();
 			fs.ExecuteOpen();
+		#endif
 		}).Tip("This is test");
 		bar.Add(CtrlImg::Dir(), [] {
 			ArrayCtrl ar;
@@ -125,9 +127,12 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
-	StdLogSetup(LOG_FILE|LOG_ELAPSED);
-	Ctrl::SetDarkThemeEnabled();
+//	StdLogSetup(LOG_FILE|LOG_ELAPSED);
+//	Ctrl::SetDarkThemeEnabled();
 //	Ctrl::SetSkin(ChStdSkin);
+
+	RDUMPM(Environment());
+	RDUMP(IsUHDMode());
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());
