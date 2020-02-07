@@ -31,7 +31,7 @@ Image WithTopLine(const Image& m, Color c, int w = DPI(1));
 Image WithBottomLine(const Image& m, Color c, int w = DPI(1));
 
 // Creates synthetic style based on SColors and basic button face
-void ChSynthetic(Image button100x100[4], Color text[4]);
+void ChSynthetic(Image *button100x100, Color *text, bool macos = false);
 
 // for diagnostics purposes
 #ifdef _DEBUG
