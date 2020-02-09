@@ -261,6 +261,11 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 	x += cx;
 }
 
+void EditField::State(int)
+{
+	RefreshAll();
+}
+
 Color EditField::GetPaper()
 {
 	bool enabled = IsShowEnabled();

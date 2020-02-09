@@ -1,0 +1,2 @@
+- <-|-> cursor looks bad in dark mode
+- TestChStyle problem with EditDate drop (needs one more click)

@@ -106,6 +106,7 @@ file
 	GtkDnD.cpp,
 	GtkApp.cpp,
 	Cocoa readonly separator,
+	ToDo.txt,
 	Coco.h,
 	CocoCode.h,
 	CocoAfter.h,
