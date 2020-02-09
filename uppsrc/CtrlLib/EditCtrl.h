@@ -62,6 +62,7 @@ public:
 	virtual Value GetData() const;
 	virtual void  CancelMode();
 	virtual String GetSelectionData(const String& fmt) const;
+	virtual void   State(int);
 
 public:
 	struct Style : ChStyle<Style> {

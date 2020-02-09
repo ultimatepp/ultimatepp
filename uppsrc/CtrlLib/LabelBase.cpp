@@ -479,6 +479,10 @@ void ActiveEdgeFrame::FramePaint(Draw& w, const Rect& r)
 		    : CTRL_NORMAL;
 	}
 	ChPaintEdge(w, r, edge[i]);
+//	if(i == CTRL_DISABLED) {
+//		DLOG(!IsNull(coloredge) << " " << color);
+//		ASSERT(color.GetR() != 255);
+//	}
 	if(!IsNull(coloredge))
 		ChPaintEdge(w, r, coloredge, color);
 }
