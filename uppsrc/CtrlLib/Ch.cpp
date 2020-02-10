@@ -128,6 +128,7 @@ Image MakeElement(Size sz, double radius, const Image& face, double border_width
 	Rectf dr = r.Deflated(border_width / 2.0);
 	if(!IsNull(face)) {
 		shape(w, dr);
+		w.Fill(SColorFace());
 		FillImage(w, r.Deflated(border_width / 2.0 - 1), face);
 	}
 	shape(w, dr);
@@ -339,7 +340,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			s.left[i] = MakeButton(roundness, m2, lw, ink, CORNER_TOP_LEFT|CORNER_BOTTOM_LEFT);
 			s.trivial[i] = s.look[i] = s.right[i] = MakeButton(roundness, m2, lw, ink, CORNER_TOP_RIGHT|CORNER_BOTTOM_RIGHT);
 			if(i == 0)
-				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), DPI(2), Null), DPI(3), lw, 0, 0);
+				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), lw, Null), DPI(3), lw, 0, 0);
 			auto Middle = [&](Image m) {
 				ImageBuffer ib(m);
 				for(int y = 0; y < lw; y++)
@@ -389,7 +390,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			Image h = m;
 			if(macos)
 				h = CreateImage(Size(10, 10), Face(decode(i, CTRL_NORMAL, 10,
-			                                                 CTRL_HOT, 0,
+			                                                 CTRL_HOT, IsDarkTheme() ? 15 : 0,
 			                                                 CTRL_PRESSED, -5,
 			                                                 -8)));
 			hs.look[i] = ChHot(WithBottomLine(WithRightLine(h, ink, 1), ink));
@@ -410,7 +411,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			s.nomargins = true;
 		}
 		if(i == CTRL_NORMAL || i == CTRL_PRESSED) {
-			Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness, m, DPI(1), ink, [&](Painter& w, const Rectf& r) {
+			Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness, m2, lw, ink, [&](Painter& w, const Rectf& r) {
 				double cx = r.GetWidth();
 				double cy = r.GetHeight();
 				double uy = 0.4 * cy;

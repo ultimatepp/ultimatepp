@@ -134,6 +134,23 @@ void ChHostSkin()
 		}
 	}
 
+	auto field = [](int type) {
+		Image m = CocoImg(SColorFace(), type, 0, 0);
+		Rect r = m.GetSize();
+		r.left = r.top = DPI(5);
+		r.right = min(r.left + DPI(10), r.right);
+		r.bottom = min(r.top + DPI(5), r.bottom);
+		return AvgColor(m, r);
+	};
+	{
+		EditString::Style& s = EditString::StyleDefault().Write();
+		s.focus = s.paper = field(COCO_TEXTFIELD);
+	}
+	{
+		MultiButton::Style& s = MultiButton::StyleDefault().Write();
+		s.paper = field(COCO_POPUPBUTTON);
+	}
+	
 	auto nsimg = [](int ii) { return CocoImg(COCO_NSIMAGE, ii); };
 	CtrlImg::Set(CtrlImg::I_information, nsimg(1));
 	CtrlImg::Set(CtrlImg::I_question, nsimg(0));

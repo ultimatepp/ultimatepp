@@ -57,8 +57,18 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 				[scroller drawKnobSlotInRect:dirtyRect highlight:YES];
 			[scroller release];
 		}
+		else
+		if(type == COCO_TEXTFIELD) {
+			NSTextField *tf = [[NSTextField alloc] init];
+			tf.enabled = YES;
+			tf.editable = YES;
+			tf.bezeled = YES;
+			tf.frame = CGRectMake(0, 0, 140, 40);
+			[tf drawRect:dirtyRect];
+			[tf release];
+		}
 		else {
-			NSButton *bc = [[NSButton alloc] init];
+			NSButton *bc = type == COCO_POPUPBUTTON ? [[NSPopUpButton alloc] init] : [[NSButton alloc] init];
 			bc.allowsMixedState = type == COCO_CHECKBOX;
 			bc.title = @"";
 			bc.controlSize = type == COCO_RADIOBUTTON ? NSControlSizeSmall : NSControlSizeRegular;
