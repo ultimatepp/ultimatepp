@@ -36,7 +36,6 @@ void Ide::RunArgs() {
 	dlg.consolemode = consolemode;
 	dlg.utf8 <<= console_utf8;
 	dlg.runmode <<= dlg.Breaker(222);
-	DLOG("dlg.disable_uhd <<= " << disable_uhd);
 	dlg.disable_uhd <<= disable_uhd;
 
 	auto Ins = [&](bool file) {
@@ -68,7 +67,6 @@ void Ide::RunArgs() {
 			consolemode = dlg.consolemode;
 			console_utf8 = ~dlg.utf8;
 			stdout_file = ~dlg.stdout_file;
-			DDUMP(~dlg.disable_uhd);
 			disable_uhd = ~dlg.disable_uhd;
 			dlg.arg.AddHistory();
 			{
@@ -91,7 +89,6 @@ void Ide::RunArgs() {
 
 One<Host> Ide::CreateHostRunDir()
 {
-	DDUMP(disable_uhd);
 	One<Host> h = CreateHost(false, disable_uhd);
 	if(IsNull(rundir))
 		h->ChDir(GetFileFolder(target));

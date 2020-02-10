@@ -363,7 +363,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			if(i == 0)
 				sp.dec = sp.inc = Button::StyleNormal();
 			auto Spin = [&](dword corners, const Image& sm) {
-				return ChLookWith(WithLeftLine(MakeButton(roundness, m, 0, Black(), corners), ink), sm, text[i]);
+				return ChLookWith(WithLeftLine(MakeButton(roundness2, m, 0, Black(), corners), ink, lw), sm, text[i]);
 			};
 			sp.inc.look[i] = Spin(CORNER_TOP_RIGHT, CtrlImg::spinup());
 			sp.dec.look[i] = Spin(CORNER_BOTTOM_RIGHT, CtrlImg::spindown());
@@ -375,8 +375,8 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			if(i == 0)
 				sp.dec = sp.inc = Button::StyleNormal();
 			auto Spin = [&](dword corners, const Image& sm, bool left) {
-				Image mm = MakeButton(roundness, m, 0, Black(), corners);
-				mm = left ? WithLeftLine(mm, ink) : WithRightLine(mm, ink);
+				Image mm = MakeButton(roundness2, m, 0, Black(), corners);
+				mm = left ? WithLeftLine(mm, ink, lw) : WithRightLine(mm, ink, lw);
 				return ChLookWith(mm, sm, text[i]);
 			};
 			sp.inc.look[i] = Spin(CORNER_TOP_RIGHT|CORNER_BOTTOM_RIGHT, CtrlImg::plus(), true);
