@@ -1,2 +1,11 @@
 - <-|-> cursor looks bad in dark mode
 - TestChStyle problem with EditDate drop (needs one more click)
+- U++ menu has some issues
+
+NTH:
+
+
+DONE:
+
+- Slider in dark mode is transparent
+- spin buttons slight visual problem in dark mode

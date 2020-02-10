@@ -25,6 +25,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 	usetrivial = false;
 	overpaint = loff = roff = 0;
 	error = Blend(LtRed(), Red());
+	paper = SColorPaper();
 }
 
 CH_STYLE(MultiButton, Style, StyleFrame)
@@ -376,7 +377,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			hotpressed = true;
 		}
 		else
-			fpaper = IsEnabled() && IsEditable() ? SColorPaper() : SColorFace();
+			fpaper = IsEnabled() && IsEditable() ? style->paper : SColorFace();
 	}
 
 	if(frm && !nobg && !getcr) {
@@ -391,6 +392,8 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			p = SColorHighlight();
 		if(hotpressed && (WhenPush || WhenClick))
 			p = Nvl(fpaper, paper);
+		if(IsEnabled() && IsEditable())
+			p = Nvl(p, style->paper);
 		if(!IsNull(p) && !IsNull(style->coloredge))
 			ChPaint(w, sz, style->coloredge, p);
 		if(style->clipedge)
@@ -475,7 +478,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 	if(!nobg) {
 		if(ComplexFrame()) {
 			r = cr;
-			paper = HasFocus() ? SColorHighlight() : SColorPaper();
+			paper = HasFocus() ? SColorHighlight() : style->paper;
 			if(HasFocus())
 				text = SColorHighlightText();
 			w.DrawRect(r, paper);
@@ -546,7 +549,7 @@ void MultiButton::SyncInfo()
 			int cm = DPI(2);
 			r.left -= cm;
 			r.right += cm;
-			info.Set(this, r, value, display, SColorText, SColorPaper, 0, DPI(2));
+			info.Set(this, r, value, display, SColorText, style->paper, 0, DPI(2));
 			return;
 		}
 	}

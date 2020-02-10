@@ -43,6 +43,7 @@ public:
 		int   loff, roff;
 		Color error;
 		bool  clipedge; // Clip border edge so that it does not paint area where are buttons
+		Color paper; // normal paper color for DropList (std SColorPaper)
 	};
 
 	class SubButton {
