@@ -261,6 +261,20 @@ struct ThreadLog {
 
 static thread_local ThreadLog sTh;
 
+static void sStdLogLine(const char *buffer, int len, int line_depth)
+{
+	sLog.Line(buffer, len, line_depth);
+}
+
+static void (*sLogLine)(const char *, int, int) = sStdLogLine;
+
+LogLineFn SetUppLog(LogLineFn log_line)
+{
+	auto h = sLogLine;
+	sLogLine = log_line;
+	return h;
+}
+
 void ThreadLog::Put(int w)
 {
 	if(w == LOG_BEGIN)
@@ -271,7 +285,7 @@ void ThreadLog::Put(int w)
 	else {
 		buffer[len++] = w;
 		if(w == '\n' || len > 500) {
-			sLog.Line(buffer, len, line_depth);
+			sLogLine(buffer, len, line_depth);
 			len = 0;
 		}
 		if(w != '\r')
