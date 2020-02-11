@@ -3,6 +3,7 @@ uses
 
 file
 	TestChStyle.h,
+	Test.iml,
 	Sample.cpp,
 	main.cpp,
 	TestChStyle.lay;
