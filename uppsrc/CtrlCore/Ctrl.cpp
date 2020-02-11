@@ -984,21 +984,15 @@ void Ctrl::ReSkin()
 	if(lock)
 		return;
 	lock++;
-	DLOG("============== Reskin");
-	DDUMP(SColorPaper());
 	ChReset();
-	DDUMP(SColorPaper());
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	if(s_chdefault)
 		(*s_chdefault)();
-	DDUMP(SColorPaper());
 	if(skin)
 		(*skin)();
-	DDUMP(SColorPaper());
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
-	DDUMP(SColorPaper());
 	Vector<Ctrl *> ctrl = GetTopCtrls();
 	for(int i = 0; i < ctrl.GetCount(); i++) {
 		ctrl[i]->RefreshLayoutDeep();

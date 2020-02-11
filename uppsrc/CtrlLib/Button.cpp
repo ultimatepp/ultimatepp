@@ -641,7 +641,7 @@ void Option::Paint(Draw& w) {
 		              ds || IsReadOnly() ? SColorDisabled : Nvl(color, GetLabelTextColor(this)),
 		              VisibleAccessKeys() ? accesskey : 0);
 		if(HasFocus())
-			DrawFocus(w, RectC(isz.cx + DPI(2), ty - DPI(1), tsz.cx + DPI(3), tsz.cy + DPI(2)) & sz);
+			DrawFocus(w, RectC(ix + isz.cx + DPI(2), ty - DPI(1), tsz.cx + DPI(3), tsz.cy + DPI(2)) & sz);
 	}
 	
 	if(box) {
@@ -746,7 +746,7 @@ void  ButtonOption::Paint(Draw& w) {
 
 CH_STYLE(ButtonOption, Style, StyleDefault)
 {
-	const Button::Style& bs = Button::StyleNormal(); 
+	const Button::Style& bs = Button::StyleNormal();
 	for (int i = 0; i < 4; i++)
 	{
 		look[i] = bs.look[i];
@@ -757,7 +757,7 @@ CH_STYLE(ButtonOption, Style, StyleDefault)
 
 CH_STYLE(ButtonOption, Style, StyleFlat)
 {
-	const ToolButton::Style& tbs = ToolButton::StyleDefault(); 
+	const ToolButton::Style& tbs = ToolButton::StyleDefault();
 	for (int i = 0; i < 4; i++)
 	{
 		look[i] = tbs.look[i];
