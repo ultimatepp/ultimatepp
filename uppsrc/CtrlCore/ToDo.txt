@@ -2,8 +2,7 @@
 - U++ menu has some issues
 - Vertical centering of DropList text is a bit off
 - Classic is broken
-- Standard visual glitches in dark theme
-- Option box focus issue
+- Inactive doc icon is not updated - [B] does not blink anymore
 
 NTH:
 
@@ -13,3 +12,5 @@ DONE:
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
 - <-|-> cursor looks bad in dark mode
+- Standard visual glitches in dark theme
+- Option box focus issue
