@@ -1,4 +1,3 @@
-- <-|-> cursor looks bad in dark mode
 - TestChStyle problem with EditDate drop (needs one more click)
 - U++ menu has some issues
 - Vertical centering of DropList text is a bit off
@@ -13,3 +12,4 @@ DONE:
 
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
+- <-|-> cursor looks bad in dark mode
