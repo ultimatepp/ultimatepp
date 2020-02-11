@@ -108,6 +108,21 @@ tabulator of indentation to all subsequent lines (moves text
 [s2; Sets the current log stream to [%-*@3 log] (must be an object 
 with global lifetime).&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SetUppLog`(Upp`:`:LogLineFn`):%- [_^Upp`:`:LogLineFn^ LogLineFn]_[* SetUppLog
+]([_^Upp`:`:LogLineFn^ LogLineFn]_[*@3 log`_line])&]
+[s0;l288; Similar to SetUppLog with Stream parameter, but instead 
+of replacing the whole stream, it just replaces the final routine 
+to write the single line, while returning its previous definition 
+(as function pointer). LogLineFn is defined as&]
+[s0;l288; &]
+[s0;l288; [C typedef void (`*LogLineFn)(const char `*buffer, int len, 
+int depth);]&]
+[s2; &]
+[s2; where dept is incremented by LOG`_BEGIN character and decremented 
+by LOG`_END `- standard logging stream inserts equivalent number 
+of tabs at the beginning of line.&]
+[s3; &]
 [s0; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Logging macros]]}}&]
