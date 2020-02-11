@@ -527,11 +527,11 @@ Image HeaderCtrl::CursorImage(Point p, dword) {
 	if(mode == FIXED)
 		return Image::Arrow();
 	if(HasCapture())
-		return split >= 0 ? CtrlsImg::HorzPos() : Image::Arrow();
+		return split >= 0 ? CtrlImg::HorzPos() : Image::Arrow();
 	int q = GetSplit(p.x);
 	return q < 0 ? Image::Arrow()
-	             : GetTabWidth(q) < 4 ? CtrlsImg::HorzSplit()
-	                                  : CtrlsImg::HorzPos();
+	             : GetTabWidth(q) < 4 ? CtrlImg::HorzSplit()
+	                                  : CtrlImg::HorzPos();
 }
 
 void HeaderCtrl::LeftDown(Point p, dword keyflags) {
