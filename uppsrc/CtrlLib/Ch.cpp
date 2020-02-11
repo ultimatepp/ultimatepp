@@ -4,10 +4,13 @@ namespace Upp {
 
 #define LLOG(x)  // RLOG(x)
 
+#define FIXED_COLORS
 #define IMAGECLASS CtrlsImg
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_source.h>
 
+#define FIXED_COLORS
+#define FIXED_SIZE
 #define IMAGECLASS ClassicCtrlsImg
 #define IMAGEFILE <CtrlLib/ClassicCtrls.iml>
 #include <Draw/iml_source.h>

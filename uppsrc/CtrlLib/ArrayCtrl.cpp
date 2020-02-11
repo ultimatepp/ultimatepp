@@ -1796,7 +1796,7 @@ Image ArrayCtrl::CursorImage(Point p, dword)
 	if(!IsNull(cursor_override))
 		return cursor_override;
 	return header.GetSplit(p.x) < 0 || header.GetMode() == HeaderCtrl::FIXED ? Image::Arrow()
-	                                                                         : CtrlsImg::HorzPos();
+	                                                                         : CtrlImg::HorzPos();
 }
 
 void ArrayCtrl::RightDown(Point p, dword flags) {
