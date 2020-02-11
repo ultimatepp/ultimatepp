@@ -132,6 +132,9 @@ GUI_APP_MAIN
 //	Ctrl::SetSkin(ChStdSkin);
 //	Ctrl::SetSkin(ChClassicSkin);
 
+	#ifdef UPP_HEAP
+	#endif
+
 	RDUMPM(Environment());
 	RDUMP(IsUHDMode());
 
