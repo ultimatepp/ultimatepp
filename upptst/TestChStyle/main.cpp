@@ -83,11 +83,9 @@ TestChStyle::TestChStyle()
 	switch1.Disable();
 	switch1 <<= 1;
 
-#ifdef CPP_11
-	standard << [] { Ctrl::SetSkin(ChStdSkin); };
-	classic << [] { Ctrl::SetSkin(ChClassicSkin); };
-	host << [] { Ctrl::SetSkin(ChHostSkin); };
-#endif
+	standard << [=] { Ctrl::SetSkin(ChStdSkin); Break(IDOK); };
+	classic << [=] { Ctrl::SetSkin(ChClassicSkin); Break(IDOK); };
+	host << [=] { Ctrl::SetSkin(ChHostSkin); Break(IDOK); };
 
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
@@ -131,7 +129,8 @@ GUI_APP_MAIN
 {
 //	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 //	Ctrl::SetDarkThemeEnabled();
-	Ctrl::SetSkin(ChStdSkin);
+//	Ctrl::SetSkin(ChStdSkin);
+//	Ctrl::SetSkin(ChClassicSkin);
 
 	RDUMPM(Environment());
 	RDUMP(IsUHDMode());
@@ -141,5 +140,5 @@ GUI_APP_MAIN
 	
 	RDUMP(EditField::StyleDefault().disabled);
 	
-	TestChStyle().Run();
+	while(TestChStyle().Run() == IDOK);
 }
