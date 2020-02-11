@@ -18,7 +18,7 @@ void Sample::Paint(Draw& w)
 #ifdef _DEBUG
 //	w.DrawImage(10, 10, (Image)GetChameleonSample());
 //	w.DrawImage(200, 10, Magnify((Image)GetChameleonSample(), 4, 4));
-	w.DrawImage(200, 10, CtrlsImg::HorzPos());
+	w.DrawImage(200, 10, CtrlImg::HorzPos());
 	w.DrawImage(10, 10, TestImg::Test());
 	
 #endif

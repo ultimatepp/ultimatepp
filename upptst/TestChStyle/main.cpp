@@ -131,7 +131,7 @@ GUI_APP_MAIN
 {
 //	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 //	Ctrl::SetDarkThemeEnabled();
-//	Ctrl::SetSkin(ChStdSkin);
+	Ctrl::SetSkin(ChStdSkin);
 
 	RDUMPM(Environment());
 	RDUMP(IsUHDMode());
