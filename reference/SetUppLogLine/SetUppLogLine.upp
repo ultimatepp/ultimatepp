@@ -1,0 +1,11 @@
+description "Changing final line output routine in logging system\377";
+
+uses
+	Core;
+
+file
+	SetUppLogLine.cpp;
+
+mainconfig
+	"" = "";
+
