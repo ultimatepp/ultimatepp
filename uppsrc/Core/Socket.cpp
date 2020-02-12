@@ -657,7 +657,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 	}
 }
 
- TcpSocket& TcpSocket::GlobalTimeout(int ms)
+TcpSocket& TcpSocket::GlobalTimeout(int ms)
 {
 	start_time = msecs();
 	global_timeout = ms;
