@@ -4,6 +4,9 @@
 - Classic is broken
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
+- ClassicCtrlsImg
+- FileChooser
+- Remove menu slide effect
 
 NTH:
 

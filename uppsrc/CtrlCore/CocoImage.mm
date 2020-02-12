@@ -26,7 +26,7 @@ struct ImageSysData {
 	~ImageSysData();
 };
 
-// Note: Coca U++ has to ignore paintonly flag as the data of image are directly referenced by
+// Note: Cocoa U++ has to ignore paintonly flag as the data of image are directly referenced by
 // data provider
 
 void ImageSysData::Init(const Image& m)
