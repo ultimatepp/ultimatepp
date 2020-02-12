@@ -596,6 +596,8 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	GuiPlatformAfterMenuPopUp();
 	if(eff)
 		Animate(*this, p.x, p.y, sz.cx, sz.cy);
+	sz = GetSize(); // final size can be a bit bigger, e.g. in macos
+	pane.RightPos(0, sz.cx).BottomPos(0, sz.cy);
 }
 
 bool MenuBar::IsEmpty() const
