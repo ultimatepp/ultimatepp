@@ -8,9 +8,7 @@ library(WIN32) "ws2_32 psapi gdi32 vfw32 oleaut32 iphlpapi PowrProf netapi32 wbe
 
 library(POSIX | LINUX | FREEBSD) X11;
 
-library(POSIX | NO_XTEST) ;
-
-library(POSIX) Xtst;
+library(POSIX & !NO_XTEST) Xtst;
 
 options(MSC) "/D PSAPI_VERSION=1";
 
