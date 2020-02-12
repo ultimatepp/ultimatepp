@@ -88,7 +88,7 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		dlg.uhd <<= !!(flags & IML_IMAGE_FLAG_UHD);
 		dlg.dark <<= !!(flags & IML_IMAGE_FLAG_DARK);
 		
-		dlg.uhd ^= dlg.dark ^= dlg.exp ^= dlg.fixed_colors ^= dlg.fixed_size ^= dlg.fixed ^=
+		dlg.uhd ^= dlg.dark ^= dlg.exp ^= dlg.fixed_colors ^= dlg.fixed_size ^= dlg.fixed ^= dlg.name ^=
 			[&] { dlg.Break(-1000); };
 	}
 	dlg.name.SetFilter(sCharFilterCid);
@@ -419,6 +419,10 @@ void IconDes::EditImage()
 	dlg.Breaker(dlg.cx);
 	dlg.Breaker(dlg.cy);
 	Image img = c.image;
+	dword flags = c.flags;
+	bool exp = c.exp;
+	String name = c.name;
+	
 	dlg.cx <<= img.GetWidth();
 	dlg.cy <<= img.GetHeight();
 	dlg.name <<= c.name;
@@ -428,6 +432,9 @@ void IconDes::EditImage()
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			c.image = img;
+			c.flags = flags;
+			c.exp = exp;
+			c.name = name;
 			Reset();
 			return;
 		case IDOK:
@@ -443,10 +450,12 @@ void IconDes::EditImage()
 				return;
 			}
 		}
+		c.name = ~dlg.name;
 		c.flags = GetFlags(dlg);
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
 		c.exp = ~dlg.exp;
 		UPP::Copy(c.image, Point(0, 0), img, img.GetSize());
+		SetHotSpots(c.image, img.GetHotSpot(), img.Get2ndSpot());
 		Reset();
 	}
 }
