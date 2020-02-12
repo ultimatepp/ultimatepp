@@ -145,7 +145,19 @@ void CocoMenuBar::Separator()
 
 CocoMenuBar::Item& CocoMenuBar::Item::Text(const char *text)
 {
-	NSString *s = [NSString stringWithUTF8String:text];
+	String h;
+	while(*text) {
+		if(*text == '&') {
+			text++;
+			if(*text == '&') {
+				h.Cat('&');
+				text++;
+			}
+		}
+		else
+			h.Cat(*text++);
+	}
+	NSString *s = [NSString stringWithUTF8String:~h];
 	nsitem.title = s;
 	if(submenu)
 		submenu->cocomenu.title = s;

@@ -3,6 +3,7 @@
 - Vertical centering of DropList text is a bit off
 - Classic is broken
 - Inactive doc icon is not updated - [B] does not blink anymore
+- Make allocator work
 
 NTH:
 
