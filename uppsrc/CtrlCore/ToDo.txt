@@ -1,12 +1,10 @@
 - TestChStyle problem with EditDate drop (needs one more click)
-- U++ menu has some issues
 - Vertical centering of DropList text is a bit off
 - Classic is broken
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - ClassicCtrlsImg
 - FileChooser
-- Remove menu slide effect
 
 NTH:
 
@@ -18,3 +16,5 @@ DONE:
 - <-|-> cursor looks bad in dark mode
 - Standard visual glitches in dark theme
 - Option box focus issue
+- Remove menu slide effect
+- U++ menu has some issues
