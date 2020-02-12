@@ -52,6 +52,19 @@ AddressBook::AddressBook()
 	search.search ^= THISFN(Search);
 	SetupSearch();
 	fs.AllFilesType();
+#ifdef PLATFORM_COCOA
+	SetMainMenu([=](Bar& bar) {
+		bar.Sub("File", [=](Bar& bar) {
+			bar.Add("Open..", CtrlImg::open(), THISFN(Open));
+			bar.Add("Save", CtrlImg::save(), THISFN(Save));
+			bar.Add("Save as..", CtrlImg::save_as(), THISFN(SaveAs));
+			bar.Separator();
+			bar.Add("Print", CtrlImg::print(), THISFN(Print));
+			bar.Separator();
+			bar.Add("Quit", THISFN(Quit));
+		});
+	});
+#else
 	menu.Set([=](Bar& bar) {
 		bar.Sub("File", [=](Bar& bar) {
 			bar.Add("Open..", CtrlImg::open(), THISFN(Open));
@@ -63,6 +76,7 @@ AddressBook::AddressBook()
 			bar.Add("Quit", THISFN(Quit));
 		});
 	});
+#endif
 }
 
 void AddressBook::SetupSearch()
