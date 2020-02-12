@@ -74,9 +74,10 @@ void ChHostSkin()
 	ChReset();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
+	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
 
 	SwapOKCancel_Write(true);
-	SColorFace_Write(CocoColor(COCO_WINDOW, White())); // ThemeBrushDialogBackgroundActive
+	SColorFace_Write(CocoColor(COCO_WINDOW, White()));
 	SColorHighlight_Write(CocoColor(COCO_SELECTEDPAPER));
 	SColorHighlightText_Write(CocoColor(COCO_SELECTEDTEXT));
 	SColorText_Write(CocoColor(COCO_TEXT));
