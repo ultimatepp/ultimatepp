@@ -18,6 +18,7 @@ pkg_config((LINUX | FREEBSD) !X11) "gtk+-3.0 libnotify";
 
 file
 	Core readonly separator,
+	ToDo.txt,
 	CtrlCore.h options(BUILDER_OPTION) PCH,
 	MKeys.h,
 	stdids.h,
@@ -84,7 +85,6 @@ file
 	X11DHCtrl.cpp,
 	X11Event.i,
 	Gtk readonly separator,
-	gtk3-todo.txt,
 	Gtk.h,
 	GtkAfter.h,
 	GtkKeys.h,
@@ -106,7 +106,6 @@ file
 	GtkDnD.cpp,
 	GtkApp.cpp,
 	Cocoa readonly separator,
-	ToDo.txt,
 	Coco.h,
 	CocoCode.h,
 	CocoAfter.h,

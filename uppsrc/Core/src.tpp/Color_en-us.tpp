@@ -47,6 +47,7 @@ serialization etc.).&]
 [s3; &]
 [s4;%- &]
 [s5;:Color`:`:Color`(Color`(`*`)`(`)`):%- [* Color]([* Color]_(`*[*@3 fn])())&]
+[s6;%- `[deprecated`]&]
 [s2; This constructor allows using a pointer to a function returning 
 Colors instead of Colors in many places. Global functions returning 
 Color are needed instead of global Color constants on many platforms, 
@@ -57,12 +58,6 @@ libraries.&]
 [s4;%- &]
 [s5;:Color`:`:Color`(RGBA`):%- [* Color]([_^RGBA^ RGBA]_[*@3 rgba])&]
 [s2; Conversion from a RGBA structure [%-*@3 rgba].&]
-[s3; &]
-[s4;%- &]
-[s5;:Color`:`:Color`(int`,int`):%- [* Color]([@(0.0.255) int]_[*@3 n], 
-[@(0.0.255) int])&]
-[s2; Constructs a Color from an integer representation of that colors 
-RGB code.&]
 [s3; &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
@@ -127,6 +122,18 @@ word]_[*@3 co])&]
 [s7; [%-*C@3 co]-|Raw dword value.&]
 [s7; [*/ Return value]-|Color.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Color`:`:Special`(int`):%- [@(0.0.255) static] [_^Upp`:`:Color^ Color]_[* Speci
+al]([@(0.0.255) int]_[*@3 n])&]
+[s2; Creates special color [%-*@3 n]. Special colors are application 
+defined, sort of `"escape`" color in situation where something 
+else has to be stored in Color, e.g. index of some color palette.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Color`:`:GetSpecial`(`)const:%- [@(0.0.255) int]_[* GetSpecial]()_[@(0.0.255) c
+onst]&]
+[s2; Returns special color value or `-1 if Color is not special.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:Color`:`:operator COLORREF`(`)const:%- [* operator_COLORREF]()_[@(0.0.255) const]&]
 [s6;%- Win32 specific.&]

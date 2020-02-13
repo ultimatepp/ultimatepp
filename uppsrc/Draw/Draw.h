@@ -365,8 +365,8 @@ void SColorShadow_Write(Color c);
 void SColorLtFace_Write(Color c);
 void SColorDkShadow_Write(Color c);
 
-inline Color InvertColor() { return Color(255, 0); } // Special color that with DrawRect actually inverts the rectangle
-inline Color DefaultInk() { return Color(254, 0); } // SColorText on screen, Black on other outputs
+inline Color InvertColor() { return Color::Special(255); } // Special color that with DrawRect actually inverts the rectangle
+inline Color DefaultInk() { return Color::Special(254); } // SColorText on screen, Black on other outputs
 
 extern bool dark_theme__;
 

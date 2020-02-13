@@ -16,15 +16,25 @@ void ColorPusher::Paint(Draw& w)
 	if(color == VoidColor)
 		w.DrawText(max(2, (sz.cx - GetTextSize(nulltext, StdFont()).cx) / 2), ty,
 		           voidtext, StdFont(), SColorText());
-	else
-	if(withtext || withhex) {
-		w.DrawRect(2, 2, sz.cy - 4, sz.cy - 4, color);
-		DrawFrame(w, 1, 1, sz.cy - 2, sz.cy - 2, SColorText);
-		w.DrawText(sz.cy + 2, ty, withhex ? ColorToHtml(color) : FormatColor(color), StdFont(), SColorText());
-	}
 	else {
-		w.DrawRect(2, 2, sz.cx - 4, sz.cy - 4, color);
-		DrawFrame(w, 1, 1, sz.cx - 2, sz.cy - 2, SColorText);
+		auto DrawColor = [&](int x, int y, int cx, int cy) {
+			if(color.GetSpecial() >= 0) {
+				Color c = RealizeColor(color);
+				w.DrawRect(x, y, cx / 2, cy, c);
+				w.DrawRect(x + cx / 2, y, cx - cx / 2, cy, DarkTheme(c));
+			}
+			else
+				w.DrawRect(x, y, cx, cy, color);
+		};
+		if(withtext || withhex) {
+			DrawColor(2, 2, sz.cy - 4, sz.cy - 4);
+			DrawFrame(w, 1, 1, sz.cy - 2, sz.cy - 2, SColorText);
+			w.DrawText(sz.cy + 2, ty, withhex ? ColorToHtml(color) : FormatColor(color), StdFont(), SColorText());
+		}
+		else {
+			DrawColor(2, 2, sz.cx - 4, sz.cy - 4);
+			DrawFrame(w, 1, 1, sz.cx - 2, sz.cy - 2, SColorText);
+		}
 	}
 	if(HasFocus())
 		DrawFocus(w, GetSize());

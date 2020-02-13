@@ -4,47 +4,46 @@ namespace Upp {
 
 static struct {
 	const char  *name;
-	ColorF color;
+	Color        color;
 }
 s_colors[] = {
-	{ "Black", &Black },
-	{ "Red", &Red },
-	{ "Green", &Green },
-	{ "Brown", &Brown },
-	{ "Blue", &Blue },
-	{ "Magenta", &Magenta },
-	{ "Cyan", &Cyan },
-	{ "Gray", &Gray },
-	{ "LtGray", &LtGray },
-	{ "LtRed", &LtRed },
-	{ "LtGreen", &LtGreen },
-	{ "LtYellow", &LtYellow },
-	{ "LtBlue", &LtBlue },
-	{ "LtMagenta", &LtMagenta },
-	{ "LtCyan", &LtCyan },
-	{ "Yellow", &Yellow },
-	{ "WhiteGray", &WhiteGray },
-	{ "White", &White },
+	{ "SBlack", Color::Special(0) },
+	{ "SRed", Color::Special(1) },
+	{ "SGreen", Color::Special(2) },
+	{ "SBrown", Color::Special(3) },
+	{ "SBlue", Color::Special(4) },
+	{ "SMagenta", Color::Special(5) },
+	{ "SCyan", Color::Special(6) },
+	{ "SGray", Color::Special(7) },
+	{ "SLtGray", Color::Special(8) },
+	{ "SLtRed", Color::Special(9) },
+	{ "SLtGreen", Color::Special(10) },
+	{ "SLtYellow", Color::Special(11) },
+	{ "SLtBlue", Color::Special(12) },
+	{ "SLtMagenta", Color::Special(13) },
+	{ "SLtCyan", Color::Special(14) },
+	{ "SYellow", Color::Special(15) },
+	{ "SWhiteGray", Color::Special(16) },
+	{ "SWhite", Color::Special(17) },
 
-//deprecated: (TODO)
-	{ "SBlack", &Black },
-	{ "SRed", &Red },
-	{ "SGreen", &Green },
-	{ "SBrown", &Brown },
-	{ "SBlue", &Blue },
-	{ "SMagenta", &Magenta },
-	{ "SCyan", &Cyan },
-	{ "SGray", &Gray },
-	{ "SLtGray", &LtGray },
-	{ "SLtRed", &LtRed },
-	{ "SLtGreen", &LtGreen },
-	{ "SLtYellow", &LtYellow },
-	{ "SLtBlue", &LtBlue },
-	{ "SLtMagenta", &LtMagenta },
-	{ "SLtCyan", &LtCyan },
-	{ "SYellow", &Yellow },
-	{ "SWhiteGray", &WhiteGray },
-	{ "SWhite", &White },
+	{ "Black", Black },
+	{ "Red", Red },
+	{ "Green", Green },
+	{ "Brown", Brown },
+	{ "Blue", Blue },
+	{ "Magenta", Magenta },
+	{ "Cyan", Cyan },
+	{ "Gray", Gray },
+	{ "LtGray", LtGray },
+	{ "LtRed", LtRed },
+	{ "LtGreen", LtGreen },
+	{ "LtYellow", LtYellow },
+	{ "LtBlue", LtBlue },
+	{ "LtMagenta", LtMagenta },
+	{ "LtCyan", LtCyan },
+	{ "Yellow", Yellow },
+	{ "WhiteGray", WhiteGray },
+	{ "White", White },
 };
 
 Color ColorPopUp::hint[18];
@@ -72,12 +71,18 @@ void ColorPopUp::Hint(Color c)
 	hint[0] = c;
 }
 
+Color RealizeColor(Color c)
+{
+	int i = c.GetSpecial();
+	return i >= 0 && i < 18 ? s_colors[i + 18].color : c;
+}
+
 String FormatColor(Color c)
 {
 	if(IsNull(c))
 		return "Null";
 	for(int i = 0; i < __countof(s_colors); i++)
-		if((*s_colors[i].color)() == c)
+		if(s_colors[i].color == c)
 			return s_colors[i].name;
 	return Format("Color(%d, %d, %d)", c.GetR(), c.GetG(), c.GetB());
 }
@@ -86,7 +91,7 @@ Color ReadColor(CParser& p)
 {
 	for(int i = 0; i < __countof(s_colors); i++)
 		if(p.Id(s_colors[i].name))
-			return (*s_colors[i].color)();
+			return s_colors[i].color;
 	p.PassId("Color");
 	p.PassChar('(');
 	int r = p.ReadInt();
@@ -110,7 +115,7 @@ Color ColorPopUp::GetColor(int i) const
 	if(!scolors)
 		i += 18;
 	if(i < 36)
-		return *s_colors[i].color;
+		return s_colors[i].color;
 	i -= 36;
 	if(i < 18)
 		return GrayColor(255 * (i + 1) / 20);
@@ -206,9 +211,10 @@ void ColorPopUp::Paint(Draw& w)
 				return;
 			}
 
-			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, GetColor(i));
+			Color c = RealizeColor(GetColor(i));
+			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, c);
 			if(i < 18 && scolors)
-				DrawFrame(w, x + DPI(2), y + DPI(1), DPI(12), DPI(12), Blend(SColorLight, SColorHighlight));
+				w.DrawRect(x + DPI(2) + DPI(6), y + DPI(1), DPI(6), DPI(12), DarkThemeCached(c));
 
 			if(i == colori) {
 				if(GetMouseLeft())
