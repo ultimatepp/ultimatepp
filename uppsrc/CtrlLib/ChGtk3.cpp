@@ -293,6 +293,50 @@ void ChHostSkin()
 	SOImages(CtrlsImg::I_O2, GTK_STATE_FLAG_INCONSISTENT);
 
 	CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
+	{
+		MenuBar::Style& s = MenuBar::StyleDefault().Write();
+		s.pullshift.y = 0;
+
+		Gtk_New("menu");
+		Image m = CairoImage(128, 64);
+		s.pullshift.y = 0;
+		int mg = DPI(2);
+		s.popupframe = WithHotSpot(m, mg, mg);
+		Size sz = m.GetSize();
+		s.popupbody = Crop(m, mg, mg, sz.cx - 2 * mg, sz.cy - 2 * mg);
+		s.leftgap = DPI(16) + Zx(6);
+		SColorMenu_Write(GetBackgroundColor());
+		SColorMenuText_Write(s.menutext);
+		
+		Gtk_New("menu menuitem");
+		s.menutext = GetInkColor();
+		Gtk_State(CTRL_HOT);
+		s.itemtext = GetInkColor();
+		Color c = AvgColor(m);
+		if(Diff(c, s.menutext) < 100) // menutext color too close to background color, fix it
+			s.menutext = IsDark(c) ? White() : Black();
+		s.item = Hot3(CairoImage(32, 16));
+		
+		m = CreateImage(Size(DPI(32), DPI(16)), SColorFace());
+		Gtk_New("frame");
+		Over(m, CairoImage(DPI(32), DPI(16)));
+		Gtk_New("frame border");
+		Over(m, CairoImage(DPI(32), DPI(16)));
+		Gtk_New("menubar");
+		Over(m, CairoImage(DPI(32), DPI(16)));
+		s.look = Hot3(m);
+		Color dk = SColorText();
+		Color wh = SColorPaper();
+		if(IsDark(wh))
+			Swap(dk, wh);
+		s.topitemtext[0] = IsDark(AvgColor(m)) ? wh : dk;
+		s.topitem[1] = s.topitem[0] = Null;
+		s.topitemtext[1] = s.topitemtext[0];
+		Gtk_New("menubar menuitem", CTRL_HOT);
+		s.topitem[0] = Null;
+		s.topitem[2] = Hot3(CairoImage(32, 16));
+		s.topitemtext[2] = GetInkColor();
+	}
 	CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
 	CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
 	CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
