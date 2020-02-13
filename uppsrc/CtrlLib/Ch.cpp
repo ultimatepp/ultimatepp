@@ -416,16 +416,19 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			s.nomargins = true;
 		}
 		if(i == CTRL_NORMAL || i == CTRL_PRESSED) {
-			Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness, m, lw, ink, [&](Painter& w, const Rectf& r) {
+			Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness,
+			                       CreateImage(Size(10, 10), GrayColor(224 - 20 * i)),
+			                       lw, ink, [&](Painter& w, const Rectf& r) {
 				double cx = r.GetWidth();
 				double cy = r.GetHeight();
 				double uy = 0.4 * cy;
+				double by = 0.85 * cy;
 				double uq = 0.5 * uy;
-				w.Move(r.left, r.top + cy)
+				w.Move(r.left, r.top + by)
 				 .Line(r.left, r.top + uy)
 				 .Quadratic(r.left, r.top + uq, r.left + cx / 2, r.top)
 				 .Quadratic(r.left + cx, r.top + uq, r.left + cx, r.top + uy)
-				 .Line(r.left + cx, r.top + cy)
+				 .Line(r.left + cx, r.top + by)
 				 .Close();
 			});
 			CtrlImg::Set(i == CTRL_PRESSED ? CtrlImg::I_hthumb1 : CtrlImg::I_hthumb, sm);
