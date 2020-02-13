@@ -314,7 +314,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			EditField::Style& s = EditField::StyleDefault().Write();
 			s.activeedge = true;
 			s.edge[i] = Espots(MakeButton(roundness2,
-			                              i == CTRL_DISABLED ? SColorFace() : SColorPaper(), lw,
+			                              i == CTRL_DISABLED ? SColorFace() : SColorPaper(), macos && i == CTRL_PRESSED ? DPI(2) : lw,
 			                              i == CTRL_PRESSED ? SColorHighlight() : ink));
 			if(i == 0)
 				s.coloredge = Espots(MakeButton(roundness2, Black(), DPI(2), Null));
