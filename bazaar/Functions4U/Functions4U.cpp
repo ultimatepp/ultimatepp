@@ -2614,7 +2614,7 @@ void *Dl::GetFunction(const String &functionName) {
 #endif
 
 Color RandomColor() {
-	return Color(Random(), 0);
+	return Color::FromRaw(Random() & 0xffffff);
 }
 
 Image GetRect(const Image& orig, const Rect &r) {
