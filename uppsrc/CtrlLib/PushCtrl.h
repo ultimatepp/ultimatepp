@@ -139,8 +139,8 @@ public:
 		Button::Style inc;
 		Button::Style dec;
 		int           width;
-		int           over = 0;
-		bool          onsides = false;
+		int           over;
+		bool          onsides;
 	};
 
 private:
