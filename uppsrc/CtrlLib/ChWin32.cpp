@@ -433,6 +433,11 @@ void ChHostSkin()
 			s.width = FrameButtonWidth();
 		}
 		{
+			SpinButtons::Style& s = SpinButtons::StyleOnSides().Write();
+			Win32Look(s.inc.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
+			Win32Look(s.dec.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
+		}
+		{
 			MultiButton::Style& s = MultiButton::StyleDefault().Write();
 			s.usetrivial = true;
 			if(vista_aero) {

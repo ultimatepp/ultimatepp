@@ -273,5 +273,6 @@ public:
 
 String FormatColor(Color c);
 Color  ReadColor(CParser& p);
+Color  RealizeColor(Color c);
 
 #endif//__TCtrlLib_DlgColor__

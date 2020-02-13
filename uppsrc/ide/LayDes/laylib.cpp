@@ -42,6 +42,8 @@ Image GetUscImage(const String& id)
 EscValue EscColor(Color c)
 {
 	EscValue v;
+	if(c.GetSpecial() >= 0)
+		c = AdjustIfDark(RealizeColor(c));
 	if(!IsNull(c)) {
 		v.MapSet("r", c.GetR());
 		v.MapSet("g", c.GetG());
@@ -285,24 +287,24 @@ void LayLib()
 	global.Add("LtBlue", EscColor(LtBlue));
 	global.Add("LtMagenta", EscColor(LtMagenta));
 	global.Add("LtCyan", EscColor(LtCyan));
-	global.Add("SBlack", EscColor(Black));
-	global.Add("SGray", EscColor(Gray));
-	global.Add("SLtGray", EscColor(LtGray));
-	global.Add("SWhiteGray", EscColor(WhiteGray));
-	global.Add("SWhite", EscColor(White));
-	global.Add("SRed", EscColor(Red));
-	global.Add("SGreen", EscColor(Green));
-	global.Add("SBrown", EscColor(Brown));
-	global.Add("SBlue", EscColor(Blue));
-	global.Add("SMagenta", EscColor(Magenta));
-	global.Add("SCyan", EscColor(Cyan));
-	global.Add("SYellow", EscColor(Yellow));
-	global.Add("SLtRed", EscColor(LtRed));
-	global.Add("SLtGreen", EscColor(LtGreen));
-	global.Add("SLtYellow", EscColor(LtYellow));
-	global.Add("SLtBlue", EscColor(LtBlue));
-	global.Add("SLtMagenta", EscColor(LtMagenta));
-	global.Add("SLtCyan", EscColor(LtCyan));
+	global.Add("SBlack", EscColor(SBlack));
+	global.Add("SGray", EscColor(SGray));
+	global.Add("SLtGray", EscColor(SLtGray));
+	global.Add("SWhiteGray", EscColor(SWhiteGray));
+	global.Add("SWhite", EscColor(SWhite));
+	global.Add("SRed", EscColor(SRed));
+	global.Add("SGreen", EscColor(SGreen));
+	global.Add("SBrown", EscColor(SBrown));
+	global.Add("SBlue", EscColor(SBlue));
+	global.Add("SMagenta", EscColor(SMagenta));
+	global.Add("SCyan", EscColor(SCyan));
+	global.Add("SYellow", EscColor(SYellow));
+	global.Add("SLtRed", EscColor(SLtRed));
+	global.Add("SLtGreen", EscColor(SLtGreen));
+	global.Add("SLtYellow", EscColor(SLtYellow));
+	global.Add("SLtBlue", EscColor(SLtBlue));
+	global.Add("SLtMagenta", EscColor(SLtMagenta));
+	global.Add("SLtCyan", EscColor(SLtCyan));
 
 	global.Add("IntNull", (int)Null);
 	global.Add("DblNullLim", DOUBLE_NULL_LIM);

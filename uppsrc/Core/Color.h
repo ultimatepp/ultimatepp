@@ -58,7 +58,6 @@ public:
 
 	Color()                            { SetNull(); }
 	Color(int r, int g, int b)         { color = RGB(r, g, b); }
-	Color(int n, int)                  { color = 0x80000000 | n; }
 
 	Color(const Nuller&)               { SetNull(); }
 
@@ -71,6 +70,9 @@ public:
 	Color(Color (*fn)())               { color = (*fn)().color; }
 
 	static Color FromRaw(dword co)     { Color c; c.color = co; return c; }
+	static Color Special(int n)        { Color c; c.color = 0x80000000 | n; return c; }
+	
+	int  GetSpecial() const            { return color & 0x80000000 ? color & 0x7fffffff : -1; }
 
 #ifdef PLATFORM_WIN32
 	operator COLORREF() const          { return (COLORREF) Get(); }

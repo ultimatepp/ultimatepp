@@ -462,6 +462,10 @@ CH_STYLE(SpinButtons, Style, StyleOnSides)
 {
 	Assign(SpinButtons::StyleDefault());
 	onsides = true;
+	for(int i = 0; i < 4; i++) {
+		inc.look[i] = Button::StyleEdge().look[i];
+		dec.look[i] = Button::StyleLeftEdge().look[i];
+	}
 }
 
 void SpinButtons::FrameLayout(Rect& r)
