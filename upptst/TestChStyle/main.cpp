@@ -25,6 +25,8 @@ TestChStyle::TestChStyle()
 		bar.Add(false, "Disabled", [] {});
 		static bool check;
 		bar.Add("Check", [] { check = !check; }).Check(check);
+		static bool radio;
+		bar.Add("Radio", [] { radio = !radio; }).Radio(radio);
 		bar.Separator();
 		bar.Sub("Submenu", [](Bar& bar) { bar.Add("Something", []{}); });
 	});
