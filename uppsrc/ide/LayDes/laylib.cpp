@@ -305,6 +305,10 @@ void LayLib()
 	global.Add("SLtBlue", EscColor(SLtBlue));
 	global.Add("SLtMagenta", EscColor(SLtMagenta));
 	global.Add("SLtCyan", EscColor(SLtCyan));
+	global.Add("SColorFace", EscColor(SColorFace));
+	global.Add("SColorText", EscColor(SColorText));
+	global.Add("SColorPaper", EscColor(SColorPaper));
+	global.Add("SColorHighlight", EscColor(SColorHighlight));
 
 	global.Add("IntNull", (int)Null);
 	global.Add("DblNullLim", DOUBLE_NULL_LIM);

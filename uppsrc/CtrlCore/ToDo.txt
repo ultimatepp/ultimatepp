@@ -8,13 +8,14 @@
 
 - Win32 - always use dark mode, always use UHD
 
-- Some problem when switching skin should be solved
+- InsetFrame vs DefaultFrame
 
 NTH:
 
 
 DONE:
 
+- Some problem when switching skin should be solved
 - Win32 menu checkbox
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode

@@ -43,12 +43,14 @@ fn DrawBorder(w, &r, ...)
 
 fn DrawButtonFrame(w, &r)
 {
-	DrawBorder(w, r, :SWhite, :Black, :WhiteGray, :Gray);
+//	DrawBorder(w, r, :SWhite, :Black, :WhiteGray, :Gray);
+	DrawBorder(w, r, :Gray, :Gray, :Gray, :Gray);
 }
 
 fn DrawEdgeButtonFrame(w, &r)
 {
-	DrawBorder(w, r, :SWhiteGray, :Black, :White, :Gray);
+	DrawBorder(w, r, :SWhite, :SWhite, :Gray, :Gray);
+//	DrawBorder(w, r, :SWhiteGray, :Black, :White, :Gray);
 }
 
 fn DrawEdgeButton(w, &r)
@@ -59,7 +61,7 @@ fn DrawEdgeButton(w, &r)
 
 fn DrawInsetFrame(w, &r)
 {
-	DrawBorder(w, r, :SGray, :White, :SBlack, :LtGray);
+	DrawButtonFrame(w, r);
 }
 
 fn DrawCtrlFrame(w, &r, frame)
@@ -68,7 +70,7 @@ fn DrawCtrlFrame(w, &r, frame)
 	height = r.bottom - r.top;
 	switch(frame) {
 	case "FieldFrame()":
-	case "InsetFrame()": DrawInsetFrame(w, r); break;
+	case "InsetFrame()": DrawBorder(w, r, :SGray, :SGray, :SGray, :SGray); break;
 	case "OutsetFrame()": DrawBorder(w, r, :LtGray, :Black, :White, :Gray); break;
 	case "ButtonFrame()": DrawButtonFrame(w, r); break;
 	case "ThinInsetFrame()": DrawBorder(w, r, :Gray, :White); break;
@@ -116,16 +118,42 @@ fn min(a, b)
 	return a < b ? a : b;
 }
 
+fn abs(a)
+{
+	return a < 0 ? -a : a;
+}
+
+fn DrawVertArrowFromTip(w, tipx, tipy, dir, l, color)
+{
+	for(i = 0; i < l; i++) {
+		w.DrawRect(tipx - i, tipy, 2 * i + 1, 1, color);
+		tipy += dir;
+	}
+}
+
+fn DrawVertArrow(ww, r, size, dir)
+{
+	w = r.right - r.left;
+	h = r.bottom - r.top;
+	
+	y = r.top + (h - size) / 2;
+	DrawVertArrowFromTip(ww, r.left + w / 2, dir > 0 ? y : y + size, dir, size, :SBlack);
+}
+
 fn DrawSpinButtons(w, r)
 {
 	h = r.bottom - r.top;
 	h2 = int(h / 2);
 	h7 = int(7 * h / 10);
 	x = r.right - h7;
-	DrawEdgeButton(w, RectC(x, r.top, h7, h2));
-	w.DrawImage((h7 - 5) / 2 + x, (h2 - 3) / 2 + r.top, "CtrlsImg::SpU");
-	DrawEdgeButton(w, RectC(x, r.top + h2, h7, h - h2));
-	w.DrawImage((h7 - 5) / 2 + x, (h - h2 - 3) / 2 + r.top + h2, "CtrlsImg::SpD");
+	ah = int(h / 6);
+	ax = x + h7 / 2;
+	rr = RectC(x, r.top, h7, h2);
+	DrawEdgeButton(w, rr);
+	DrawVertArrow(w, rr, h / 6, 1);
+	rr = RectC(x, r.top + h2, h7, h - h2);
+	DrawEdgeButton(w, rr);
+	DrawVertArrow(w, rr, h / 6, -1);
 }
 
 fn XMinSize()
@@ -276,23 +304,23 @@ ctrl LabelBox {
 			d = sz.cy / 2;
 			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
 			w.DrawRect(1, d, d - 1, 1, :Gray);
-			w.DrawRect(1, d + 1, d - 1, 1, :White);
+			w.DrawRect(1, d + 1, d - 1, 1, :Gray);
 		}
 		else {
 			w.DrawSmartText(d, 0, .SetLabel, .SetFont, .SetInk, sz.cx);
 			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :White);
+			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :Gray);
 			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :White);
+			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :Gray);
 			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :White);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :White);
+			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :Gray);
+			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :Gray);
 			w.DrawRect(1, d, d - 1, 1, :Gray);
-			w.DrawRect(1, d + 1, d - 1, 1, :White);
+			w.DrawRect(1, d + 1, d - 1, 1, :Gray);
 			w.DrawRect(0, d, 1, 2, :Gray);
 		}
 		w.DrawRect(d + ts.cx, d, sz.cx - ts.cx - d - 2, 1, :Gray);
-		w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :White);
+		w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :Gray);
 	}
 }
 
@@ -331,7 +359,7 @@ ctrl Button {
 		DrawButtonFrame(w, r);
 		sz = Size(r.right - r.left, r.bottom - r.top);
 		n = int(sz.cy / 8);
-		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SLtGray);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhiteGray);
 		textsize = GetSmartTextSize(.SetLabel, .SetFont);
 		py = (sz.cy - textsize.cy) / 2;
 		if(count(.SetLabel) && (.SetLabel)[0] == 1)
@@ -385,18 +413,21 @@ ctrl Option {
 
 			d = textsize.cy / 2;
 			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :White);
+			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :Gray);
 			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :White);
+			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :Gray);
 			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :White);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :White);
-			w.DrawRect(1, d, d - 1, 1, :Gray);
-			w.DrawRect(1, d + 1, d - 1, 1, :White);
+			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :Gray);
+			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :Gray);
+			q = d - 1;
+			if(q > 5)
+				q = 5;
+			w.DrawRect(1, d, 8, 1, :Gray);
+			w.DrawRect(1, d + 1, 8, 1, :Gray);
 			w.DrawRect(0, d, 1, 2, :Gray);
 			x = textsize.cx + imagesize.cx + 8;
 			w.DrawRect(d + x, d, sz.cx - d - x, 1, :Gray);
-			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :White);
+			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :Gray);
 		}
 		else {
 			w.DrawImage(0, (sz.cy - imagesize.cy) / 2, img);
@@ -733,6 +764,12 @@ ctrl EditTimeSpin {
 	}
 }
 
+fn DrawDropButton(w, rr)
+{
+	DrawEdgeButton(w, rr);
+	DrawVertArrow(w, rr, (rr.right - rr.left) / 5, -1);
+}
+
 ctrl DropList {
 	group "Input fields";
 
@@ -753,8 +790,7 @@ ctrl DropList {
 		DrawCtrlFrame(w, r, .SetFrame);
 		w.DrawRect(r, :SWhite);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
 			(.SetEditable ? "" : "R/O ") + "DropList", Arial(10), :SMagenta);
 	}
@@ -781,8 +817,7 @@ ctrl DropTree {
 		DrawCtrlFrame(w, r, .SetFrame);
 		w.DrawRect(r, :SWhite);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
 			(.SetEditable ? "" : "R/O ") + "DropTree", Arial(10), :SMagenta);
 	}
@@ -799,8 +834,7 @@ template WithDropChoice {
 		r = GetRect();
 		DrawCtrlFrame(w, r, .SetFrame);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 	}
 };
 
@@ -816,13 +850,13 @@ fn PaintTabItemFrame(w, rc)
 {
 	size = Size(rc.right - rc.left, rc.bottom - rc.top);
 	w.DrawRect(rc.left, rc.top, 1, size.cy - 1, :SLtGray);
-	w.DrawRect(rc.left + 1, rc.top + 2, 1, size.cy - 2, :SWhite);
-	w.DrawRect(rc.left + 2, rc.top + 1, 1, 1, :SWhite);
-	w.DrawRect(rc.left + 2, rc.top + 2, 1, size.cy - 2, :SLtGray);
-	w.DrawRect(rc.left + 3, rc.top, size.cx - 5, 1, :SWhite);
-	w.DrawRect(rc.left + 3, rc.top + 1, size.cx - 5, size.cy - 1, :SLtGray);
-	w.DrawRect(rc.right - 2, rc.top, 1, size.cy, :SBlack);
-	w.DrawRect(rc.right - 1, rc.top + 2, 1, size.cy - 2, :SBlack);
+	w.DrawRect(rc.left + 1, rc.top + 2, 1, size.cy - 2, :Gray);
+	w.DrawRect(rc.left + 2, rc.top + 1, 1, 1, :Gray);
+	w.DrawRect(rc.left + 2, rc.top + 2, 1, size.cy - 2, :Gray);
+	w.DrawRect(rc.left + 3, rc.top, size.cx - 5, 1, :Gray);
+	w.DrawRect(rc.left + 3, rc.top + 1, size.cx - 5, size.cy - 1, :Gray);
+	w.DrawRect(rc.right - 2, rc.top, 1, size.cy, :SGray);
+	w.DrawRect(rc.right - 1, rc.top + 2, 1, size.cy - 2, :SGray);
 }
 
 fn PaintTabItem(w, rc, text, font, active)
@@ -830,8 +864,8 @@ fn PaintTabItem(w, rc, text, font, active)
 	if(active)
 		font = font.Bold();
 	else {
-		w.DrawRect(rc.left, rc.bottom - 1, rc.right - rc.left, 1, :SWhite);
-		w.DrawRect(rc.left, rc.bottom - 2, rc.right - rc.left, 1, :SLtGray);
+		w.DrawRect(rc.left, rc.bottom - 1, rc.right - rc.left, 1, :Gray);
+		w.DrawRect(rc.left, rc.bottom - 2, rc.right - rc.left, 1, :Gray);
 		rc.left += 2;
 		rc.top += 2;
 		rc.right -= 2;
@@ -875,8 +909,8 @@ ctrl TabCtrl {
 		PaintTabItem(w, r3, text3, StdFont(), 0);
 		PaintTabItem(w, r2, text2, StdFont(), 0);
 		PaintTabItem(w, r1, text1, StdFont(), 1);
-		w.DrawRect(r.left, r1.bottom, 1, r.bottom - r1.bottom, :SWhite);
-		w.DrawRect(r3.right, r1.bottom - 1, r.right - r3.right, 1, :SWhite);
+		w.DrawRect(r.left, r1.bottom, 1, r.bottom - r1.bottom, :Gray);
+		w.DrawRect(r3.right, r1.bottom - 1, r.right - r3.right, 1, :Gray);
 		w.DrawRect(r.right - 1, r1.bottom, 1, r.bottom - r1.bottom, :SGray);
 		w.DrawRect(r.left, r.bottom - 1, r.right - r.left, 1, :SGray);
 	}
@@ -1065,8 +1099,7 @@ ctrl DropDate {
 		DrawCtrlFrame(w, r, .SetFrame);
 		w.DrawRect(r, :SWhite);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
 			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "01/05/2007", Arial(10), :SMagenta);
 	}
@@ -1094,8 +1127,7 @@ ctrl DropTime {
 		DrawCtrlFrame(w, r, .SetFrame);
 		w.DrawRect(r, :SWhite);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
 			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "01/05/2007 10:34:58", Arial(10), :SMagenta);
 	}
