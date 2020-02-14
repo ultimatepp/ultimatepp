@@ -170,6 +170,29 @@ void Ide::InsertFilePath(bool c)
 	}
 }
 
+void Ide::InsertFileBase64()
+{
+	if(editor.IsReadOnly())
+		return;
+	String path = SelectFileOpen("All files\t*.*");
+	path.Replace("\\", "/");
+	if(path.GetCount()) {
+		if(GetFileLength(path) >= 100*1024) {
+			Exclamation("File is too big!&(Limit is 100KB.)");
+			return;
+		}
+		String s = Encode64(LoadFile(path));
+		int i = 0;
+		while(i < s.GetLength()) {
+			int n = min(s.GetCount() - i, 2000);
+			if(i)
+				editor.Paste("\n");
+			editor.Paste(AsCString(s.Mid(i, n)).ToWString());
+			i += n;
+		}
+	}
+}
+
 void Ide::InsertMenu(Bar& bar)
 {
 	if(bar.IsScanKeys())
@@ -215,6 +238,7 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert clipboard as C string", THISBACK(InsertCString));
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
+	bar.Add("Insert file as C string Base64 encoded..", THISBACK(InsertFileBase64));
 }
 
 void Ide::InsertInclude(Bar& bar)

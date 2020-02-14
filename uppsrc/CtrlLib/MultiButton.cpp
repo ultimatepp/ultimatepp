@@ -26,6 +26,8 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 	overpaint = loff = roff = 0;
 	error = Blend(LtRed(), Red());
 	paper = SColorPaper();
+	coloredge = Null;
+	clipedge = false;
 }
 
 CH_STYLE(MultiButton, Style, StyleFrame)

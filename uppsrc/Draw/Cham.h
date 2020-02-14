@@ -118,6 +118,8 @@ Value ChLookWith(const Value& look, const Image& img, Point offset = Point(0, 0)
 Value ChLookWith(const Value& look, const Image& img, Color color, Point offset = Point(0, 0));
 Value ChLookWith(const Value& look, const Image& img, Color (*color)(int i), int i, Point offset = Point(0, 0));
 
+void  ChLookWith(Value *look, const Image& image, const Color *color, int n = 4);
+
 //private:
 void ChRegisterStyle__(byte& state, byte& registered, void (*init)());
 

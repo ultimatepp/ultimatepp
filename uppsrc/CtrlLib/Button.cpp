@@ -450,9 +450,9 @@ Button::~Button() {}
 
 CH_STYLE(SpinButtons, Style, StyleDefault)
 {
-	inc = dec = Button::StyleNormal();
-	CtrlsImageLook(inc.look, CtrlsImg::I_EB, CtrlsImg::SpU(), inc.monocolor);
-	CtrlsImageLook(dec.look, CtrlsImg::I_EB, CtrlsImg::SpD(), dec.monocolor);
+	inc = dec = Button::StyleEdge();
+	ChLookWith(inc.look, CtrlsImg::SpU(), inc.monocolor);
+	ChLookWith(dec.look, CtrlsImg::SpD(), dec.monocolor);
 	width = Zx(12);
 	over = 0;
 	onsides = false;
@@ -462,10 +462,9 @@ CH_STYLE(SpinButtons, Style, StyleOnSides)
 {
 	Assign(SpinButtons::StyleDefault());
 	onsides = true;
-	for(int i = 0; i < 4; i++) {
-		inc.look[i] = Button::StyleEdge().look[i];
-		dec.look[i] = Button::StyleLeftEdge().look[i];
-	}
+	inc = dec = Button::StyleEdge();
+	ChLookWith(inc.look, CtrlImg::plus(), inc.monocolor);
+	ChLookWith(dec.look, CtrlImg::minus(), dec.monocolor);
 }
 
 void SpinButtons::FrameLayout(Rect& r)

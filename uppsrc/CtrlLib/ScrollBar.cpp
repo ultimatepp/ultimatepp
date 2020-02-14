@@ -7,7 +7,7 @@ namespace Upp {
 void Sb(Button::Style& bs, const Image& img)
 {
 	bs = Button::StyleNormal();
-	CtrlsImageLook(bs.look, CtrlsImg::I_SB, img, bs.monocolor);
+	ChLookWith(bs.look, img, bs.monocolor);
 }
 
 CH_STYLE(ScrollBar, Style, StyleDefault)
