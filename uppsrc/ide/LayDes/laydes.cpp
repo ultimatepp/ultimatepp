@@ -177,7 +177,7 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 		Rect r = CtrlRectZ(m.pos, size);
 		String dummy;
 		int lr = ParseLayoutRef(m.type, dummy);
-		DrawFrame(w, r, WhiteGray);
+		DrawFrame(w, r, IsDarkTheme() ? Blend(Gray(), Blue()) : Blend(WhiteGray(), LtBlue()));
 		w.Clipoff(r);
 		if(lr < 0)
 			m.Paint(w, r.Size());

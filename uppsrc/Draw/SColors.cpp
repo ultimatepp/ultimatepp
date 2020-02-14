@@ -45,7 +45,7 @@ CH_COLOR(SColorMark, IsDark(SColorPaper()) ? DarkTheme(LtBlue()) : LtBlue());
 CH_COLOR(SColorMenuMark, IsDark(SColorMenu()) ? DarkTheme(LtBlue()) : LtBlue());
 
 CH_COLOR(SColorLtFace, Blend(SColorFace, SColorLight));
-CH_COLOR(SColorDkShadow, Blend(SColorShadow, SColorText));
+CH_COLOR(SColorDkShadow, Blend(SColorShadow, Black));
 CH_COLOR(SColorLabel, SColorText());
 
 }

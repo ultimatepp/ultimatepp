@@ -9,6 +9,8 @@
 - Win32 menu checkbox
 - Win32 - always use dark mode, always use UHD
 
+- Some problem when switching skin should be solved
+
 NTH:
 
 

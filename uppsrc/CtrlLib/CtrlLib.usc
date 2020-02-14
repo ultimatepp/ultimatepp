@@ -43,12 +43,12 @@ fn DrawBorder(w, &r, ...)
 
 fn DrawButtonFrame(w, &r)
 {
-	DrawBorder(w, r, :SWhite, :SBlack, :SWhiteGray, :SGray);
+	DrawBorder(w, r, :SWhite, :Black, :WhiteGray, :Gray);
 }
 
 fn DrawEdgeButtonFrame(w, &r)
 {
-	DrawBorder(w, r, :SWhiteGray, :SBlack, :SWhite, :SGray);
+	DrawBorder(w, r, :SWhiteGray, :Black, :White, :Gray);
 }
 
 fn DrawEdgeButton(w, &r)
@@ -59,7 +59,7 @@ fn DrawEdgeButton(w, &r)
 
 fn DrawInsetFrame(w, &r)
 {
-	DrawBorder(w, r, :SGray, :SWhite, :SBlack, :SLtGray);
+	DrawBorder(w, r, :SGray, :White, :SBlack, :LtGray);
 }
 
 fn DrawCtrlFrame(w, &r, frame)
@@ -69,29 +69,29 @@ fn DrawCtrlFrame(w, &r, frame)
 	switch(frame) {
 	case "FieldFrame()":
 	case "InsetFrame()": DrawInsetFrame(w, r); break;
-	case "OutsetFrame()": DrawBorder(w, r, :SLtGray, :SBlack, :SWhite, :SGray); break;
+	case "OutsetFrame()": DrawBorder(w, r, :LtGray, :Black, :White, :Gray); break;
 	case "ButtonFrame()": DrawButtonFrame(w, r); break;
-	case "ThinInsetFrame()": DrawBorder(w, r, :SGray, :SWhite); break;
-	case "ThinOutsetFrame()": DrawBorder(w, r, :SWhite, :SGray); break;
+	case "ThinInsetFrame()": DrawBorder(w, r, :Gray, :White); break;
+	case "ThinOutsetFrame()": DrawBorder(w, r, :White, :Gray); break;
 	case "BlackFrame()": DrawBorder(w, r, :SBlack, :SBlack); break;
 	case "TopSeparatorFrame()":
-		w.DrawRect(r.left, r.top, width, 1, :SGray);
-		w.DrawRect(r.left, r.top + 1, width, 1, :SWhite);
+		w.DrawRect(r.left, r.top, width, 1, :Gray);
+		w.DrawRect(r.left, r.top + 1, width, 1, :White);
 		r.top += 2;
 		break;
 	case "BottomSeparatorFrame()":
-		w.DrawRect(r.left, r.bottom - 2, width, 1, :SGray);
-		w.DrawRect(r.left, r.bottom - 1, width, 1, :SWhite);
+		w.DrawRect(r.left, r.bottom - 2, width, 1, :Gray);
+		w.DrawRect(r.left, r.bottom - 1, width, 1, :White);
 		r.bottom -= 2;
 		break;
 	case "LeftSeparatorFrame()":
-		w.DrawRect(r.left, r.top, 1, height, :SGray);
-		w.DrawRect(r.left + 1, r.top, 1, height, :SWhite);
+		w.DrawRect(r.left, r.top, 1, height, :Gray);
+		w.DrawRect(r.left + 1, r.top, 1, height, :White);
 		r.left += 2;
 		break;
 	case "RightSeparatorFrame()":
-		w.DrawRect(r.right - 2, r.top, 1, height, :SGray);
-		w.DrawRect(r.right - 1, r.top, 1, height, :SWhite);
+		w.DrawRect(r.right - 2, r.top, 1, height, :Gray);
+		w.DrawRect(r.right - 1, r.top, 1, height, :White);
 		r.right -= 2;
 		break;
 	}
@@ -275,24 +275,24 @@ ctrl LabelBox {
 		if(2 * GetSmartTextSize("X").cy > sz.cy) {
 			d = sz.cy / 2;
 			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
-			w.DrawRect(1, d, d - 1, 1, :SGray);
-			w.DrawRect(1, d + 1, d - 1, 1, :SWhite);
+			w.DrawRect(1, d, d - 1, 1, :Gray);
+			w.DrawRect(1, d + 1, d - 1, 1, :White);
 		}
 		else {
 			w.DrawSmartText(d, 0, .SetLabel, .SetFont, .SetInk, sz.cx);
-			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :SGray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :SWhite);
-			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :SGray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :SWhite);
-			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :SGray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :SWhite);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :SWhite);
-			w.DrawRect(1, d, d - 1, 1, :SGray);
-			w.DrawRect(1, d + 1, d - 1, 1, :SWhite);
-			w.DrawRect(0, d, 1, 2, :SGray);
+			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
+			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :White);
+			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
+			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :White);
+			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
+			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :White);
+			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :White);
+			w.DrawRect(1, d, d - 1, 1, :Gray);
+			w.DrawRect(1, d + 1, d - 1, 1, :White);
+			w.DrawRect(0, d, 1, 2, :Gray);
 		}
-		w.DrawRect(d + ts.cx, d, sz.cx - ts.cx - d - 2, 1, :SGray);
-		w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :SWhite);
+		w.DrawRect(d + ts.cx, d, sz.cx - ts.cx - d - 2, 1, :Gray);
+		w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :White);
 	}
 }
 
@@ -384,19 +384,19 @@ ctrl Option {
 			w.DrawSmartText(imagesize.cx + 14, 0, .SetLabel, .SetFont);
 
 			d = textsize.cy / 2;
-			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :SGray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :SWhite);
-			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :SGray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :SWhite);
-			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :SGray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :SWhite);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :SWhite);
-			w.DrawRect(1, d, d - 1, 1, :SGray);
-			w.DrawRect(1, d + 1, d - 1, 1, :SWhite);
-			w.DrawRect(0, d, 1, 2, :SGray);
+			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
+			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :White);
+			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
+			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :White);
+			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
+			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :White);
+			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :White);
+			w.DrawRect(1, d, d - 1, 1, :Gray);
+			w.DrawRect(1, d + 1, d - 1, 1, :White);
+			w.DrawRect(0, d, 1, 2, :Gray);
 			x = textsize.cx + imagesize.cx + 8;
-			w.DrawRect(d + x, d, sz.cx - d - x, 1, :SGray);
-			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :SWhite);
+			w.DrawRect(d + x, d, sz.cx - d - x, 1, :Gray);
+			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :White);
 		}
 		else {
 			w.DrawImage(0, (sz.cy - imagesize.cy) / 2, img);

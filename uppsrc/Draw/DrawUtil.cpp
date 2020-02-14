@@ -210,12 +210,14 @@ const ColorF *WhiteBorder()
 	return data;
 }
 
+#define SColorEdge Black // for now
+
 const ColorF *DefButtonBorder()
 {
 	static ColorF data[] = {
 		(ColorF)3,
-		&SColorText, &SColorText, &SColorText, &SColorText,
-		&SColorLight, &SColorLight, &SColorText, &SColorText,
+		&SColorEdge, &SColorEdge, &SColorEdge, &SColorEdge,
+		&SColorLight, &SColorLight, &SColorEdge, &SColorEdge,
 		&SColorLtFace, &SColorLtFace, &SColorShadow, &SColorShadow,
 	};
 	return data;
@@ -225,7 +227,7 @@ const ColorF *ButtonBorder()
 {
 	static ColorF data[] = {
 		(ColorF)2,
-		&SColorLight, &SColorLight, &SColorText, &SColorText,
+		&SColorLight, &SColorLight, &SColorEdge, &SColorEdge,
 		&SColorLtFace, &SColorLtFace, &SColorShadow, &SColorShadow,
 	};
 	return data;
@@ -235,7 +237,7 @@ const ColorF *EdgeButtonBorder()
 {
 	static ColorF data[] = {
 		(ColorF)2,
-		&SColorLtFace, &SColorLtFace, &SColorText, &SColorText,
+		&SColorLtFace, &SColorLtFace, &SColorEdge, &SColorEdge,
 		&SColorLight, &SColorLight, &SColorShadow, &SColorShadow,
 	};
 	return data;
@@ -245,8 +247,8 @@ const ColorF *ButtonPushBorder()
 {
 	static ColorF data[] = {
 		(ColorF)2,
-		&SColorText, &SColorText, &SColorText, &SColorText,
-		&SColorShadow, &SColorShadow, &SColorText, &SColorText
+		&SColorEdge, &SColorEdge, &SColorEdge, &SColorEdge,
+		&SColorShadow, &SColorShadow, &SColorEdge, &SColorEdge
 	};
 	return data;
 }
@@ -256,7 +258,7 @@ const ColorF *InsetBorder()
 	static ColorF data[] = {
 		(ColorF)2,
 		&SColorShadow, &SColorShadow, &SColorLight, &SColorLight,
-		&SColorText, &SColorText, &SColorFace, &SColorFace
+		&SColorEdge, &SColorEdge, &SColorFace, &SColorFace
 	};
 	return data;
 }
@@ -265,7 +267,7 @@ const ColorF *OutsetBorder()
 {
 	static ColorF data[] = {
 		(ColorF)2,
-		&SColorFace, &SColorFace, &SColorText, &SColorText,
+		&SColorFace, &SColorFace, &SColorEdge, &SColorEdge,
 		&SColorLight, &SColorLight, &SColorShadow, &SColorShadow,
 	};
 	return data;
