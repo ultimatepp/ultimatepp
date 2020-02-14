@@ -334,6 +334,7 @@ Ctrl& Ctrl::SetEditable(bool aeditable) {
 
 void Ctrl::SetModify()
 {
+	GuiLock __;
 	modify = true;
 }
 
@@ -341,14 +342,27 @@ void Ctrl::ClearModify()
 {
 	GuiLock __;
 	modify = false;
+}
+
+void Ctrl::ClearModifyDeep()
+{
+	GuiLock __;
+	ClearModify();
 	for(Ctrl *q = firstchild; q; q = q->next)
 		q->ClearModify();
 }
 
+
 bool Ctrl::IsModified() const
 {
 	GuiLock __;
-	if(IsModifySet()) return true;
+	return modify;
+}
+
+bool Ctrl::IsModifiedDeep() const
+{
+	GuiLock __;
+	if(IsModified()) return true;
 	for(Ctrl *q = firstchild; q; q = q->next)
 		if(q->IsModified()) return true;
 	return false;

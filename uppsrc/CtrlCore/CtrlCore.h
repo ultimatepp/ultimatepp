@@ -1111,8 +1111,9 @@ public:
 	bool    IsEditable() const                 { return editable; }
 	bool    IsReadOnly() const                 { return !editable; }
 
-	void    ResetModify()                      { modify = false; }
-	bool    IsModifySet() const                { return modify; }
+	void    ClearModifyDeep();
+	bool    IsModifiedDeep() const;
+	bool    IsModifySet() const                { return modify; } // deprecated
 
 	void    UpdateRefresh();
 	void    Update();

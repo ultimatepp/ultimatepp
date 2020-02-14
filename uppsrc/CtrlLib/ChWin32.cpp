@@ -510,6 +510,10 @@ void ChHostSkin()
 				s.separator.l2 = SColorLight();
 			}
 			Win32Look(s.arealook, XP_REBAR, 0, 1);
+			CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
+			CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
+			CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
+			CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
 		}
 
 /*		CtrlImg::Set("hthumb", XpImage(XP_TRACKBAR, TKP_THUMB, TUS_NORMAL, Null, Size(10, 20)));
