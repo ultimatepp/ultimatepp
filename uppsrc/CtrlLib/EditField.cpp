@@ -104,6 +104,7 @@ CH_STYLE(EditField, Style, StyleDefault)
 		edge[i] = CtrlsImg::EFE();
 	activeedge = false;
 	vfm = 2;
+	coloredge = Null;
 }
 
 bool EditField::FrameIsEdge()

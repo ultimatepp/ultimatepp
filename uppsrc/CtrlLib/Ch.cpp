@@ -17,13 +17,50 @@ namespace Upp {
 
 void ChSysInit();
 
-void SbWc(Value *look)
+Color AdjustColor(Color c, int adj)
 {
-	Color wc = Blend(SColorFace(), SColorPaper(), 170);
-	look[CTRL_NORMAL] = wc;
-	look[CTRL_HOT] = wc;
-	look[CTRL_PRESSED] = SColorText();
-	look[CTRL_DISABLED] = wc;
+	return Color(clamp(c.GetR() + adj, 0, 255),
+	             clamp(c.GetG() + adj, 0, 255),
+	             clamp(c.GetB() + adj, 0, 255));
+};
+
+Color FaceColor(int adj)
+{
+	return AdjustColor(SColorFace(), adj);
+};
+
+void SyntheticTab(int i, int roundness, Color ink)
+{
+	TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
+	s.body = MakeButton(0, FaceColor(8), DPI(1), ink);
+	Image t = MakeButton(roundness, FaceColor(decode(i, CTRL_NORMAL, -20,
+	                                                    CTRL_HOT, 2,
+	                                                    CTRL_PRESSED, 8,
+	                                                    -8)), DPI(1), ink,
+	                                                    CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
+	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
+	s.margin = 0;
+	s.sel = Rect(0, DPI(1), 0, DPI(1));
+	s.extendleft = DPI(2);
+	s.text_color[i] = SColorText();
+}
+
+void  DrawClassicButton(Draw& w, const Rect& r_, Color tl1, Color br1, Color tl2, Color br2, Color face)
+{
+	Rect r = r_;
+	DrawFrame(w, r, tl1, br1);
+	r.Deflate(1);
+	DrawFrame(w, r, tl2, br2);
+	r.Deflate(1);
+	w.DrawRect(r, face);
+}
+
+Image MakeClassicButton(Color tl1, Color br1, Color tl2, Color br2, Color face)
+{
+	Rect r = Size(8, 8);
+	ImageDraw iw(r.GetSize());
+	DrawClassicButton(iw, r, tl1, br1, tl2, br2, face);
+	return WithHotSpot(iw, 2, 2);
 }
 
 void ChClassicSkin()
@@ -34,19 +71,46 @@ void ChClassicSkin()
 	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	
-	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
-	for(int q = 0; q < 4; q++)
-		CtrlsImg::Set(CtrlsImg::I_HTB + q, AdjustColors(CtrlsImg::Get(ClassicCtrlsImg::I_B + q)));
+//	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
+//	for(int q = 0; q < 4; q++)
+//		CtrlsImg::Set(CtrlsImg::I_HTB + q, AdjustColors(CtrlsImg::Get(ClassicCtrlsImg::I_B + q)));
 
+
+	DLOG("ChClassicSkin");
+
+	Image edge = MakeClassicButton(SGray(), White(), SBlack(), LtGray(), SColorFace());
+	CtrlsImg::Set(CtrlsImg::I_EFE, edge);
+	CtrlsImg::Set(CtrlsImg::I_VE, edge);
+
+	Color wg = Blend(SColorFace(), WhiteGray());
 	{
 		Button::Style& s = Button::StyleNormal().Write();
+		s.look[CTRL_HOT] = s.look[CTRL_NORMAL] = MakeClassicButton(SWhite(), Black(), wg, Gray(), SColorFace());
+		s.look[CTRL_PRESSED] = MakeClassicButton(Gray(), Gray(), Gray(), Gray(), Blend(SColorFace(), SGray()));
+		s.look[CTRL_DISABLED] = MakeClassicButton(SWhite(), Black(), wg, Gray(), SColorFace());
 		s.monocolor[0] = s.monocolor[1] = s.monocolor[2] = s.monocolor[3] = SColorText();
 		s.pressoffset.x = s.pressoffset.y = 1;
 		s.transparent = false;
+
+		Button::Style& es = Button::StyleEdge().Write();
+		es.look[CTRL_HOT] = es.look[CTRL_NORMAL] = MakeClassicButton(wg, Black(), White(), Gray(), SColorFace());
+		es.look[CTRL_PRESSED] = s.look[CTRL_PRESSED];
+		es.look[CTRL_DISABLED] = s.look[CTRL_DISABLED];
+		
+		for(int i = 0; i < 4; i++)
+			Button::StyleOk().Write().look[i] = Button::StyleLeftEdge().Write().look[i] = Button::StyleScroll().Write().look[i] = es.look[i];
 	}
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+		auto SbWc = [&](Value *look) {
+			Color wc = Blend(SColorFace(), SColorPaper(), 170);
+			look[CTRL_NORMAL] = wc;
+			look[CTRL_HOT] = wc;
+			look[CTRL_PRESSED] = SColorText();
+			look[CTRL_DISABLED] = wc;
+		};
+		
 		SbWc(s.hupper);
 		SbWc(s.hlower);
 		SbWc(s.vupper);
@@ -70,8 +134,40 @@ void ChClassicSkin()
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.popupbody = SColorFace();
 	}
-
-//	LabelBoxTextColor_Write(SColorText());
+	
+	int c = DPI(14);
+	for(int i = 0; i < 4; i++) {
+		SyntheticTab(i, 0, Gray());
+		static int adj[] = { 10, 80, -5, -10 };
+		Color f = FaceColor(adj[i]);
+		{
+			for(int opt = 0; opt < 2; opt++) {
+				ImagePainter p(c, c);
+				p.Clear(RGBAZero());
+				p.Circle(DPI(7), DPI(7), DPI(6)).Fill(f).Stroke(2, Pointf(DPI(2), DPI(2)), SGray(), Pointf(DPI(14), DPI(14)), White());
+				p.Circle(DPI(7), DPI(7), DPI(6) - 1).Fill(f).Stroke(1, Pointf(DPI(2) + 1, DPI(2) + 1), SBlack(), Pointf(DPI(14) - 2, DPI(14) - 2), SColorFace());
+				if(opt)
+					p.Circle(DPI(7), DPI(7), DPI(4)).Fill(SColorText());
+				CtrlsImg::Set((opt ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + i, p);
+			}
+		}
+		{
+			for(int chk = 0; chk < 3; chk++) {
+				ImagePainter p(c, c);
+				p.Clear(RGBAZero());
+				DrawClassicButton(p, Size(c, c), SGray(), White(), SBlack(), LtGray(), f);
+				p.Scale(DPI(1));
+				if(chk == 1)
+					p.Move(3, 7).Line(7, 10).Line(11, 4).Stroke(2, SColorText());
+				if(chk == 2)
+					p.Rectangle(3, 6, 8, 2).Fill(SColorText());
+				CtrlsImg::Set(decode(chk, 0, CtrlsImg::I_O0, 1, CtrlsImg::I_O1, CtrlsImg::I_O2) + i, p);
+			}
+		}
+	}
+	
+	for(int i : { CtrlsImg::I_O0, CtrlsImg::I_O2, CtrlsImg::I_S0 }) _DBG_
+		PNGEncoder().SaveFile(String() << "c:/xxx/I" << i << ".png", CtrlsImg::Get(i));
 }
 
 #ifdef PLATFORM_X11
@@ -280,12 +376,6 @@ Image WithBottomLine(const Image& m, Color c, int w)
 	return WithRect(m, 0, m.GetHeight() - w, m.GetWidth(), w, c);
 }
 
-Color AdjustColor(Color c, int adj) {
-	return Color(clamp(c.GetR() + adj, 0, 255),
-	             clamp(c.GetG() + adj, 0, 255),
-	             clamp(c.GetB() + adj, 0, 255));
-}
-
 void ChSynthetic(Image *button100x100, Color *text, bool macos)
 {
 	int roundness = DPI(3);
@@ -296,7 +386,6 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 		Image m = button100x100[i];
 		Image m2 = macos ? button100x100[i + 4] : m;
 		auto Espots = [=](const Image& m) { return WithHotSpots(m, DPI(3), DPI(1), CH_EDITFIELD_IMAGE, DPI(3)); };
-		auto Face = [](int adj) { return AdjustColor(SColorFace(), adj); };
 		if(i == 0) {
 			ink = GetInk(m);
 			if(macos && IsDarkTheme())
@@ -395,10 +484,10 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			HeaderCtrl::Style& hs = HeaderCtrl::StyleDefault().Write();
 			Image h = m;
 			if(macos)
-				h = CreateImage(Size(10, 10), Face(decode(i, CTRL_NORMAL, 10,
-			                                                 CTRL_HOT, IsDarkTheme() ? 15 : 0,
-			                                                 CTRL_PRESSED, -5,
-			                                                 -8)));
+				h = CreateImage(Size(10, 10), FaceColor(decode(i, CTRL_NORMAL, 10,
+			                                                      CTRL_HOT, IsDarkTheme() ? 15 : 0,
+			                                                      CTRL_PRESSED, -5,
+			                                                      -8)));
 			hs.look[i] = ChHot(WithBottomLine(WithRightLine(h, ink, 1), ink));
 		}
 		if(i == CTRL_DISABLED) {
@@ -436,17 +525,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			CtrlImg::Set(i == CTRL_PRESSED ? CtrlImg::I_vthumb1 : CtrlImg::I_vthumb, RotateClockwise(sm));
 		}
 		{
-			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-			s.body = MakeButton(0, Face(8), DPI(1), ink);
-			Image t = MakeButton(roundness, Face(decode(i, CTRL_NORMAL, -20,
-			                                               CTRL_HOT, 2,
-			                                               CTRL_PRESSED, 8,
-			                                               -8)), DPI(1), ink, CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
-			s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
-			s.margin = 0;
-			s.sel = Rect(0, DPI(1), 0, DPI(1));
-			s.extendleft = DPI(2);
-			s.text_color[i] = SColorText();
+			SyntheticTab(i, roundness, ink);
 		}
 	}
 }
@@ -470,12 +549,7 @@ void ChStdSkin()
 
 	Color text[4];
 	Image button[4], sbutton[4];
-	auto Adjust = [](Color c, int adj) {
-		return Color(clamp(c.GetR() + adj, 0, 255),
-		             clamp(c.GetG() + adj, 0, 255),
-		             clamp(c.GetB() + adj, 0, 255));
-	};
-	
+
 	Color border = Gray();
 		
 	{
@@ -485,7 +559,7 @@ void ChStdSkin()
 			s.focusmargin = DPI(4);
 			for(int i = 0; i < 4; i++) {
 				static int adj[] = { 10, 80, -5, -10 };
-				Color f = Adjust(SColorFace(), adj[i]);
+				Color f = FaceColor(adj[i]);
 				Color ink = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
 				s.look[i] = MakeButton(roundness, f, DPI(1 + pass), border);
 				text[i] = s.monocolor[i] = s.textcolor[i] = ink;
@@ -548,7 +622,7 @@ void ChStdSkin()
 			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
 			s.vupper[status] = s.vlower[status] = ChHot(vtrough); // we have problems getting this right for vertical
 			static int adj[] = { 20, 40, 10, -10 };
-			s.hthumb[status] = s.vthumb[status] = Adjust(border, adj[status]);
+			s.hthumb[status] = s.vthumb[status] = AdjustColor(border, adj[status]);
 		}
 	}
 	

@@ -86,6 +86,12 @@ Value ChLookWith(const Value& look, const Image& img, Color (*color)(int i), int
 	return RawToValue(x);
 }
 
+void ChLookWith(Value *look, const Image& image, const Color *color, int n)
+{
+	for(int i = 0; i < n; i++)
+		look[i] = ChLookWith(look[i], image, color[i]);
+}
+
 Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink = Null);
 
 struct sChBorder {
@@ -427,6 +433,8 @@ void ChFinish()
 
 Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 {
+	if(r.right < r.left || r.bottom < r.top)
+		return Rect(0, 0, 0, 0);
 	Value q;
 	if(!IsNull(v))
 		for(int i = sChps().GetCount() - 1; i >= 0; i--) {

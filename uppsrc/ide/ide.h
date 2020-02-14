@@ -814,6 +814,7 @@ public:
 		void  InsertText(const String& text);
 		void  InsertCString();
 		void  InsertFilePath(bool c);
+		void  InsertFileBase64();
 		void  InsertMenu(Bar& bar);
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);

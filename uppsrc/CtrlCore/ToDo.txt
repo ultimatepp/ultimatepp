@@ -6,7 +6,6 @@
 - ClassicCtrlsImg
 - FileChooser
 
-- Win32 menu checkbox
 - Win32 - always use dark mode, always use UHD
 
 - Some problem when switching skin should be solved
@@ -16,6 +15,7 @@ NTH:
 
 DONE:
 
+- Win32 menu checkbox
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
 - <-|-> cursor looks bad in dark mode
