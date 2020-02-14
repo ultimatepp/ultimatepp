@@ -15,7 +15,7 @@ MyApp::MyApp()
 {
 	CtrlLayout(*this, "Window title");
 	c0.SColors(false);
-	c1.SColors(true);
+	c1.WithText().SColors(true);
 	c2.NotNull();
 	c3.NoRampWheel();
 	c4.NotNull().NoRampWheel();
