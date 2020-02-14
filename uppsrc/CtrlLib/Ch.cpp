@@ -71,13 +71,6 @@ void ChClassicSkin()
 	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	
-//	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
-//	for(int q = 0; q < 4; q++)
-//		CtrlsImg::Set(CtrlsImg::I_HTB + q, AdjustColors(CtrlsImg::Get(ClassicCtrlsImg::I_B + q)));
-
-
-	DLOG("ChClassicSkin");
-	
 	Color grayface = Blend(SColorFace(), Gray());
 
 	Image edge = IsDarkTheme() ? MakeClassicButton(grayface, White(), Gray(), LtGray(), grayface)
@@ -169,9 +162,6 @@ void ChClassicSkin()
 			}
 		}
 	}
-	
-	for(int i : { CtrlsImg::I_O0, CtrlsImg::I_O2, CtrlsImg::I_S0 }) _DBG_
-		PNGEncoder().SaveFile(String() << "c:/xxx/I" << i << ".png", CtrlsImg::Get(i));
 }
 
 #ifdef PLATFORM_X11
