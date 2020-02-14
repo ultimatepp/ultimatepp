@@ -77,23 +77,27 @@ void ChClassicSkin()
 
 
 	DLOG("ChClassicSkin");
+	
+	Color grayface = Blend(SColorFace(), Gray());
 
-	Image edge = MakeClassicButton(SGray(), White(), SBlack(), LtGray(), SColorFace());
+	Image edge = IsDarkTheme() ? MakeClassicButton(grayface, White(), Gray(), LtGray(), grayface)
+	                           : MakeClassicButton(Gray(), White(), Black(), LtGray(), SColorFace());
 	CtrlsImg::Set(CtrlsImg::I_EFE, edge);
 	CtrlsImg::Set(CtrlsImg::I_VE, edge);
 
 	Color wg = Blend(SColorFace(), WhiteGray());
 	{
 		Button::Style& s = Button::StyleNormal().Write();
-		s.look[CTRL_HOT] = s.look[CTRL_NORMAL] = MakeClassicButton(SWhite(), Black(), wg, Gray(), SColorFace());
-		s.look[CTRL_PRESSED] = MakeClassicButton(Gray(), Gray(), Gray(), Gray(), Blend(SColorFace(), SGray()));
+		Image edge = MakeClassicButton(wg, IsDarkTheme() ? Blend(Gray(), Black()) : Black(), White(), Gray(), SColorFace());
+		s.look[CTRL_HOT] = s.look[CTRL_NORMAL] = IsDarkTheme() ? edge : MakeClassicButton(White(), Black(), wg, Gray(), SColorFace());
+		s.look[CTRL_PRESSED] = MakeClassicButton(Gray(), Gray(), Gray(), Gray(), grayface);
 		s.look[CTRL_DISABLED] = MakeClassicButton(SWhite(), Black(), wg, Gray(), SColorFace());
 		s.monocolor[0] = s.monocolor[1] = s.monocolor[2] = s.monocolor[3] = SColorText();
 		s.pressoffset.x = s.pressoffset.y = 1;
 		s.transparent = false;
 
 		Button::Style& es = Button::StyleEdge().Write();
-		es.look[CTRL_HOT] = es.look[CTRL_NORMAL] = MakeClassicButton(wg, Black(), White(), Gray(), SColorFace());
+		es.look[CTRL_HOT] = es.look[CTRL_NORMAL] = edge;
 		es.look[CTRL_PRESSED] = s.look[CTRL_PRESSED];
 		es.look[CTRL_DISABLED] = s.look[CTRL_DISABLED];
 		
@@ -104,7 +108,7 @@ void ChClassicSkin()
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		auto SbWc = [&](Value *look) {
-			Color wc = Blend(SColorFace(), SColorPaper(), 170);
+			Color wc = Blend(SColorFace(), Gray());
 			look[CTRL_NORMAL] = wc;
 			look[CTRL_HOT] = wc;
 			look[CTRL_PRESSED] = SColorText();
