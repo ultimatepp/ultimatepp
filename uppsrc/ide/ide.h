@@ -447,7 +447,6 @@ public:
 	Console     console;
 	
 	ArrayCtrl   ffound[3];
-	int         ffoundi = 0; // current target for find in files
 	int         ffoundi_next = 0;
 
 	ArrayCtrl   error;
@@ -709,7 +708,6 @@ public:
 	void      ToggleBottom(int i);
 	void      ShowBottom(int i);
 	void      ShowConsole()                      { ShowBottom(1); }
-	void      ShowFindInFiles()                  { ShowBottom(BFINDINFILES1 + ffoundi); }
 	void      ToggleConsole()                    { ToggleBottom(1); }
 	void      SwapBottom();
 	bool      IsBottomShown() const;
@@ -833,7 +831,7 @@ public:
 		void  EditFindNext()            { editor.FindNext(); }
 		void  EditFindPrevious()        { editor.FindPrev(); }
 		void  EditPaste()               { editor.Paste(); }
-		bool  Next(int tab, ArrayCtrl& ctrl, int d);
+		bool  Next(ArrayCtrl& ctrl, int d);
 		void  FindNextError();
 		void  FindPrevError();
 	
@@ -1027,6 +1025,8 @@ public:
 	void      CopyError(bool all);
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();
+	void      SetFFound(int ii);
+	ArrayCtrl& FFound();
 	void      ShowFound();
 	void      CopyFound(bool all);
 	void      FFoundMenu(Bar& bar);

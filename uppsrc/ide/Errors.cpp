@@ -164,9 +164,9 @@ void Ide::FindError()
 	FindLineError(console.GetLine(console.GetCursor()));
 }
 
-bool Ide::Next(int tab, ArrayCtrl& a, int d)
+bool Ide::Next(ArrayCtrl& a, int d)
 {
-	if(btabs.GetCursor() == tab) {
+	if(a.IsVisible()) {
 		int c = a.GetCursor();
 		for(;;) {
 			c += d;
@@ -191,7 +191,7 @@ bool Ide::Next(int tab, ArrayCtrl& a, int d)
 
 void Ide::FindNextError()
 {
-	if(Next(BERRORS, error, 1) || Next(BFINDINFILES1 + ffoundi, ffound[ffoundi], 1))
+	if(Next(error, 1) || Next(FFound(), 1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -202,7 +202,7 @@ void Ide::FindNextError()
 }
 
 void Ide::FindPrevError() {
-	if(Next(BERRORS, error, -1) || Next(BFINDINFILES1 + ffoundi, ffound[ffoundi], -1))
+	if(Next(error, -1) || Next(FFound(), -1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -598,28 +598,8 @@ void Ide::ConsoleRunEnd()
 
 void Ide::ShowFound()
 {
-	if(ffound[ffoundi].IsCursor())
-		GoToError(ffound[ffoundi]);
-}
-
-void Ide::CopyFound(bool all)
-{
-	String txt;
-	for(int i = 0; i < ffound[ffoundi].GetCount(); i++) {
-		if(all)
-			txt << ffound[ffoundi].Get(i, 0) << " (" << ffound[ffoundi].Get(i, 1) << "): ";
-		String h = ffound[ffoundi].Get(i, 2);
-		if(*h == '\1')
-			h = Split(~h + 1, '\1', false).Top();
-		txt << h << "\r\n";
-	}
-	WriteClipboardText(txt);
-}
-
-void Ide::FFoundMenu(Bar& bar)
-{
-	bar.Add("Copy text", THISBACK1(CopyFound, false));
-	bar.Add("Copy all", THISBACK1(CopyFound, true));
+	if(FFound().IsCursor())
+		GoToError(FFound());
 }
 
 void Ide::CopyError(bool all)

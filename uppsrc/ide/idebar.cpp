@@ -656,7 +656,7 @@ void Ide::BuildMenu(Bar& menu)
 
 	bool ff = BottomIsFindInFiles();
 	String hh = ff ? "position" : "error line";
-	bool ffb = ff ? ffound[ffoundi].GetCount() : error.GetCount();
+	bool ffb = ff ? FFound().GetCount() : error.GetCount();
 	menu.Add(ffb, AK_FINDNEXTERROR, THISBACK(FindNextError))
 		.Help("Find next " + hh + "according to console pane");
 	menu.Add(ffb, AK_FINDPREVERROR, THISBACK(FindPrevError))
