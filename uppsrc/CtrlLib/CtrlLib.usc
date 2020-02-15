@@ -1290,7 +1290,7 @@ ctrl Calendar {
 				if(d == 19)
 				{
 					w.DrawRect(r.left + sw + i * sw + 0, r.top + sh + j * sh + 0, sw, sh, :SBlack);
-					w.DrawRect(r.left + sw + i * sw + 1, r.top + sh + j * sh + 1, sw - 2, sh - 2, Color(255, 254, 220));
+					w.DrawRect(r.left + sw + i * sw + 1, r.top + sh + j * sh + 1, sw - 2, sh - 2, :SYellow);
 					fnt = f.Bold(1);
 				}
 				day = to_string(d);
