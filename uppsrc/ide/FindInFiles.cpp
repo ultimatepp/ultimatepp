@@ -122,7 +122,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	f.kind = 0;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
-	ffound[ffoundi].Add(fn, ln, f.message, RawToValue(f));
+	FFound().Add(fn, ln, f.message, RawToValue(f));
 }
 
 bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
@@ -159,7 +159,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	}
 
 	if(sync)
-		ffound[ffoundi].Sync();
+		FFound().Sync();
 
 	in.Close();
 	int ffs = ~ff.style;
@@ -184,8 +184,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 				editor.SelectAll();
 				editor.BlockReplace();
 				SaveFile();
-				ffound[ffoundi].Add(fn, Null, AsString(infile) + " replacements made");
-				ffound[ffoundi].Sync();
+				FFound().Add(fn, Null, AsString(infile) + " replacements made");
+				FFound().Sync();
 			}
 		}
 	}
@@ -228,10 +228,9 @@ void Ide::FindInFiles(bool replace) {
 	if(c == IDOK) {
 		SaveFile();
 
-		ffoundi = ~ff.output;
-		ffoundi_next = (ffoundi + 1) % 3;
+		SetFFound(~ff.output);
 
-		ffound[ffoundi].HeaderTab(2).SetText("Source line");
+		FFound().HeaderTab(2).SetText("Source line");
 		Renumber();
 		ff.find.AddHistory();
 		ff.files.AddHistory();
@@ -278,8 +277,7 @@ void Ide::FindInFiles(bool replace) {
 			else
 				pattern = ~ff.find;
 			pi.SetTotal(files.GetCount());
-			ShowFindInFiles();
-			ffound[ffoundi].Clear();
+			FFound().Clear();
 			pi.SetPos(0);
 			int n = 0;
 			for(int i = 0; i < files.GetCount(); i++) {
@@ -296,33 +294,33 @@ void Ide::FindInFiles(bool replace) {
 					f.linepos = 0;
 					f.kind = 0;
 					f.message = files[i];
-					ffound[ffoundi].Add(f.file, 1, f.message, RawToValue(f));
-					ffound[ffoundi].Sync();
+					FFound().Add(f.file, 1, f.message, RawToValue(f));
+					FFound().Sync();
 					n++;
 				}
 			}
 			if(!IsNull(pattern))
-				ffound[ffoundi].Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
+				FFound().Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
 			else
-				ffound[ffoundi].Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
-			ffound[ffoundi].HeaderTab(2).SetText(Format("Source line (%d)", ffound[ffoundi].GetCount()));
+				FFound().Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
+			FFound().HeaderTab(2).SetText(Format("Source line (%d)", FFound().GetCount()));
 		}
 	}
 }
 
+
 void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 {
-	ShowFindInFiles();
-	ffoundi = ffoundi_next;
-	ffound[ffoundi].Clear();
+	SetFFound(ffoundi_next);
+	FFound().Clear();
 	for(auto pos : f) {
 		editor.CachePos(pos.a);
 		int linei = editor.GetLinePos64(pos.a);
 		WString ln = editor.GetWLine(linei);
 		AddFoundFile(editfile, linei + 1, ln.ToString(), lenAsUtf8(~ln, (int)pos.a), lenAsUtf8(~ln + pos.a, pos.b));
 	}
-	ffound[ffoundi].HeaderTab(2).SetText(Format("Source line (%d)", ffound[ffoundi].GetCount()));
-	ffound[ffoundi].Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
+	FFound().HeaderTab(2).SetText(Format("Source line (%d)", FFound().GetCount()));
+	FFound().Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
 }
 	
 void Ide::FindString(bool back)
@@ -456,4 +454,37 @@ bool FindInFilesDlg::Key(dword key, int count)
 		}
 	}
 	return TopWindow::Key(key, count);
+}
+
+void Ide::SetFFound(int ii)
+{
+	ii = clamp(ii, 0, 2);
+	SetBottom(BFINDINFILES1 + ii);
+	ffoundi_next = (ii + 1) % 3;
+}
+	
+ArrayCtrl& Ide::FFound()
+{
+	int i = btabs.GetCursor() - BFINDINFILES1;
+	return i >= 0 && i < 3 ? ffound[i] : ffound[0];
+}
+
+void Ide::CopyFound(bool all)
+{
+	String txt;
+	for(int i = 0; i < FFound().GetCount(); i++) {
+		if(all)
+			txt << FFound().Get(i, 0) << " (" << FFound().Get(i, 1) << "): ";
+		String h = FFound().Get(i, 2);
+		if(*h == '\1')
+			h = Split(~h + 1, '\1', false).Top();
+		txt << h << "\r\n";
+	}
+	WriteClipboardText(txt);
+}
+
+void Ide::FFoundMenu(Bar& bar)
+{
+	bar.Add("Copy text", THISBACK1(CopyFound, false));
+	bar.Add("Copy all", THISBACK1(CopyFound, true));
 }
