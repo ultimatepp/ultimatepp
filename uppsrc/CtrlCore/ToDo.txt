@@ -1,9 +1,7 @@
 - TestChStyle problem with EditDate drop (needs one more click)
 - Vertical centering of DropList text is a bit off
-- Classic is broken
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
-- ClassicCtrlsImg
 - FileChooser
 
 - Win32 - always use dark mode, always use UHD
@@ -17,6 +15,11 @@ DONE:
 
 - Some problem when switching skin should be solved
 - Win32 menu checkbox
+- Classic is broken
+- ClassicCtrlsImg
+
+macos done:
+
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
 - <-|-> cursor looks bad in dark mode
@@ -24,7 +27,6 @@ DONE:
 - Option box focus issue
 - Remove menu slide effect
 - U++ menu has some issues
-
 
 gtk3 DONE:
 

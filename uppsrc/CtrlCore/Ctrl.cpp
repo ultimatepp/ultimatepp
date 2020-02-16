@@ -851,7 +851,7 @@ bool Ctrl::IsUHDEnabled()
 	return ApplicationUHDEnabled;
 }
 
-bool ApplicationDarkThemeEnabled;
+bool ApplicationDarkThemeEnabled = true;
 
 void Ctrl::SetDarkThemeEnabled(bool set)
 {
