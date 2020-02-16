@@ -133,8 +133,29 @@ void ChClassicSkin()
 	}
 	
 	int c = DPI(14);
+
 	for(int i = 0; i < 4; i++) {
-		SyntheticTab(i, 0, Gray());
+		{
+			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
+			s.body = MakeClassicButton(White(), Black(), wg, Gray(), SColorFace());
+			Color f = i == CTRL_PRESSED ? SColorFace : grayface;
+			Image t = MakeClassicButton(White(), Black(), wg, Gray(), f);
+			Size isz = t.GetSize();
+			isz.cy -= 2;
+			ImageDraw iw(isz);
+			iw.DrawImage(0, 0, t);
+			if(i == CTRL_PRESSED) { // the active tab
+				iw.DrawRect(isz.cx - 1, isz.cy - 2, 2, 1, White());
+				iw.DrawRect(isz.cx - 2, isz.cy - 1, 2, 1, wg);
+			}
+			t = iw;
+			SetHotSpots(t, Point(2, 2));
+			s.first[i] = s.last[i] = s.both[i] = s.normal[i] = t;
+			s.margin = 0;
+			s.sel = Rect(0, DPI(1), 0, DPI(1));
+			s.extendleft = DPI(2);
+			s.text_color[i] = SColorText();
+		}
 		static int adj[] = { 10, 80, -5, -10 };
 		Color f = FaceColor(adj[i]);
 		{

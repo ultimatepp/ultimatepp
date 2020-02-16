@@ -2601,7 +2601,8 @@ ize]_[*@3 sz])&]
 [s5;:Upp`:`:Ctrl`:`:SetUHDEnabled`(bool`):%- [@(0.0.255) void]_[* SetUHDEnabled]([@(0.0.255) b
 ool]_[*@3 set])&]
 [s2; Informs host platform that application is UHD ready. Default 
-is true.&]
+is true. Disabling UHD mode has to be done before GUI`_APP`_MAIN, 
+e.g. in INITBLOCK.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:IsUHDEnabled`(`):%- [@(0.0.255) bool]_[* IsUHDEnabled]()&]
@@ -2614,7 +2615,8 @@ is true.&]
 [s2; Hints coloring and skinning algorithms that the application 
 is ready to work in dark theme mode. Currently this enables dark 
 theme in Windows (with other platforms dark theme is enabled 
-by default).&]
+by default). Default value is true. Disabling dark theme has 
+to be done before GUI`_APP`_MAIN, e.g. in INITBLOCK.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:IsDarkThemeEnabled`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsDa

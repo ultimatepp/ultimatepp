@@ -1,4 +1,5 @@
 #include "CtrlLib.h"
+#include "CtrlLib.h"
 
 namespace Upp {
 
@@ -579,9 +580,9 @@ TabCtrl::TabCtrl()
 	Ctrl::Add(tabs);
 	Ctrl::Add(pane);
 	tabs.BackPaint().IgnoreMouse();
-	Ctrl::Add(left.SetImage(CtrlsImg::SLA()).ScrollStyle().NoWantFocus());
+	Ctrl::Add(left.SetMonoImage(CtrlsImg::SLA()).ScrollStyle().NoWantFocus());
 	left <<= THISBACK(Left);
-	Ctrl::Add(right.SetImage(CtrlsImg::SRA()).ScrollStyle().NoWantFocus());
+	Ctrl::Add(right.SetMonoImage(CtrlsImg::SRA()).ScrollStyle().NoWantFocus());
 	right <<= THISBACK(Right);
 	Transparent().NoWantFocus();
 	tabs.Transparent().NoWantFocus();
