@@ -16,8 +16,8 @@ struct Example {
 };
 
 	
-Array<Example>& Examples() {
-	static Array<Example> x;
+Upp::Array<Example>& Examples() {
+	static Upp::Array<Example> x;
 	return x;
 }
 

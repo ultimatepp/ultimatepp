@@ -106,10 +106,10 @@ private:
 	WithTabData_Down_L<StaticRect> downL;
 	WithTabData_Down_R<StaticRect> downR;
 	
-	Array<EditString> editGrid;
+	Upp::Array<EditString> editGrid;
 	EditInt xCell, xFrom, xTo, yCell, yFrom, yTo;
 	Option option;
-	Array<GridCtrlSource> ds;
+	Upp::Array<GridCtrlSource> ds;
 	bool notFirstTime;
 	
 	OpenFileButton openMenuButton;

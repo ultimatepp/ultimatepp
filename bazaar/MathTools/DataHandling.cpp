@@ -321,7 +321,7 @@ void TabData::OnChangeFile(int delta) {
 	
 	String ext = GetFileExt(fileName);
 	FindFile ff(AppendFileName(GetFileFolder(fileName), "*" + ext));
-	Index<String> fileList;
+	Upp::Index<String> fileList;
 	do {
 		if (ff.IsFile()) 
 			fileList << ff.GetPath();

@@ -20,7 +20,7 @@ LAYOUT(TabCalculator, 712, 360)
 END_LAYOUT
 
 LAYOUT(TabData_Up, 472, 332)
-	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetAxisWidth(12).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(0, 0).VSizePosZ(0, 0))
+	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(0, 0).VSizePosZ(0, 0))
 END_LAYOUT
 
 LAYOUT(TabData_Down, 564, 288)
