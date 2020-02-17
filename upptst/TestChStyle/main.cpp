@@ -132,7 +132,7 @@ GUI_APP_MAIN
 //	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 //	Ctrl::SetDarkThemeEnabled();
 //	Ctrl::SetSkin(ChStdSkin);
-	Ctrl::SetSkin(ChClassicSkin);
+//	Ctrl::SetSkin(ChClassicSkin);
 
 	#ifdef UPP_HEAP
 	#endif
