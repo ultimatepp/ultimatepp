@@ -205,6 +205,7 @@ void OutMode::ConfigChange()
 class CmdBuildOptionsWindow : public WithCmdBuildOptionsLayout<TopWindow> {
 private:
 	String cmdAssembly, cmdBuildMode, cmdPackage, cmdMethod, cmdMainConfig;
+	bool useTarget;
 
 	struct PathConvert : ConvertString {
 		virtual int Filter(int chr) const
@@ -218,8 +219,8 @@ public:
 	typedef CmdBuildOptionsWindow CLASSNAME;
 
 	CmdBuildOptionsWindow(const String& package, const String& method, const String& mainconfigparam, const String& output,
-		int targetmode, int hydra1_threads, int linkmode, bool blitzbuild, bool createmap, bool verbosebuild) :
-		cmdPackage(package), cmdMethod(method)
+		int targetmode, int hydra1_threads, int linkmode, bool blitzbuild, bool createmap, bool verbosebuild, bool use_target) :
+		cmdPackage(package), cmdMethod(method), useTarget(use_target)
 	{
 		CtrlLayout(*this, t_("Command line options for building"));
 		MinimizeBox().CloseBoxRejects();
@@ -242,7 +243,7 @@ public:
 		verbose <<= verbosebuild;
 		out <<= output;
 		out.SetConvert(Single<PathConvert>());
-		outoption <<= true;
+		outoption <<= !useTarget;
 		umk <<= true;
 
 		rebuild.WhenAction = blitz.WhenAction = msgonfail.WhenAction = silent.WhenAction =
@@ -263,6 +264,7 @@ public:
 		if (rebuild) cmdBuild << 'a';
 		if (blitz) cmdBuild << 'b';
 		if (!umk && msgonfail) cmdBuild << 'e';
+		if (useTarget) cmdBuild << 'u';
 		if (silent) cmdBuild << 'l';
 		if (map) cmdBuild << 'm';
 		cmdBuild << cmdBuildMode;
@@ -328,7 +330,7 @@ void OutMode::CmdOptions()
 	bool blitzbuild = !wspc.package[pi].noblitz && pane.blitz
 		&& (IsNull(blitzpackage) ? true : blitzpackage);
 	CmdBuildOptionsWindow window(p, ~method, ~config, output,
-		~mode, ide.hydra1_threads, pane.linkmode, blitzbuild, pane.map, ide.console.verbosebuild);
+		~mode, ide.hydra1_threads, pane.linkmode, blitzbuild, pane.map, ide.console.verbosebuild, ide.use_target);
 	LoadFromGlobal(window, "CmdBuildOptionsWindow");
 	window.GenerateCmd();
 	window.Run();

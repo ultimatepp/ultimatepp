@@ -3,9 +3,6 @@
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - FileChooser
-
-- Win32 - always use dark mode, always use UHD
-
 - InsetFrame vs DefaultFrame
 
 NTH:
@@ -13,6 +10,7 @@ NTH:
 
 DONE:
 
+- Win32 - always use dark mode, always use UHD
 - Some problem when switching skin should be solved
 - Win32 menu checkbox
 - Classic is broken

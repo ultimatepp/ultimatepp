@@ -147,6 +147,7 @@ CONSOLE_APP_MAIN
 		ide.debug.linkmode = ide.release.linkmode = 0;
 		ide.release.createmap = ide.debug.createmap = false;
 		ide.targetmode = 0;
+		ide.use_target = false;
 		bool clean = false;
 		bool makefile = false;
 		bool deletedir = true;
@@ -203,6 +204,9 @@ CONSOLE_APP_MAIN
 							ide.console.SetSlots(x[++i] - '0');
 						else
 							ide.console.SetSlots(1);
+						break;
+					case 'u':
+						ide.use_target = true;
 						break;
 					default:
 						SilentMode = false;
