@@ -450,7 +450,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 			s.left[i] = MakeButton(roundness, m2, lw, ink, CORNER_TOP_LEFT|CORNER_BOTTOM_LEFT);
 			s.trivial[i] = s.look[i] = s.right[i] = MakeButton(roundness, m2, lw, ink, CORNER_TOP_RIGHT|CORNER_BOTTOM_RIGHT);
 			if(i == 0)
-				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), macos ? lw : DPI(2), Null), DPI(3), lw, 0, 0);
+				s.coloredge = WithHotSpots(MakeButton(roundness, Black(), DPI(2), Null), DPI(3), lw, 0, 0);
 			auto Middle = [&](Image m) {
 				ImageBuffer ib(m);
 				for(int y = 0; y < lw; y++)

@@ -117,7 +117,7 @@ int  Font::FindFaceNameIndex(const String& name) {
 void Font::SyncStdFont()
 {
 	Mutex::Lock __(sFontLock);
-	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
+	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().GetCy());
 	LLOG("SyncStdFont " << StdFontSize);
 	SyncUHDMode();
 }
