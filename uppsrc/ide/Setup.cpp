@@ -123,6 +123,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
+	editor.ShowSpaces(show_spaces);
 	editor.ShowLineEndings(show_tabs);
 	editor.WarnWhiteSpace(warnwhitespace);
 	editor.NoParenthesisIndent(no_parenthesis_indent);
@@ -445,6 +446,7 @@ void Ide::SetupFormat() {
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
+		(edt.showspaces, show_spaces)
 		(edt.warnwhitespace, warnwhitespace)
 		(edt.lineends, line_endings)
 		(edt.numbers, line_numbers)

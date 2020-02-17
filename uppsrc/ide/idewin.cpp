@@ -529,6 +529,7 @@ Ide::Ide()
 	indent_spaces = false;
 	show_status_bar = false;
 	show_tabs = false;
+	show_spaces = false;
 	warnwhitespace = true;
 	tabs_icons = false;
 	tabs_crosses = AlignedFrame::RIGHT;

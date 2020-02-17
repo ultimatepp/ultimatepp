@@ -1,5 +1,4 @@
 - TestChStyle problem with EditDate drop (needs one more click)
-- Vertical centering of DropList text is a bit off
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - FileChooser
@@ -14,6 +13,7 @@ NTH:
 
 DONE:
 
+- Vertical centering of DropList text is a bit off
 - Win32 - always use dark mode, always use UHD
 - Some problem when switching skin should be solved
 - Win32 menu checkbox

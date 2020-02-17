@@ -570,6 +570,7 @@ public:
 	bool      show_status_bar;
 	bool      toolbar_in_row;
 	bool      show_tabs;
+	bool      show_spaces;
 	bool      warnwhitespace;
 	int       line_endings;
 	bool      tabs_icons;
