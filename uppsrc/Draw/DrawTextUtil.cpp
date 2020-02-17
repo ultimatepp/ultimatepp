@@ -41,7 +41,7 @@ void DrawTextEllipsis(Draw& w, int x, int y, int cx, const char *text, const cha
 Size GetTLTextSize(const wchar *text, Font font)
 {
 	Size sz(0, 0);
-	int cy = font.Info().GetHeight();
+	int cy = font.GetCy();
 	const wchar *s = text;
 	const wchar *t = s;
 	for(;;) {
@@ -70,19 +70,12 @@ Size GetTLTextSize(const wchar *text, Font font)
 
 int GetTLTextHeight(const wchar *s, Font font)
 {
-	int cy = font.Info().GetHeight();
-	int h = cy;
-	while(*s) {
-		if(*s == '\n')
-			h += cy;
-		s++;
-	}
-	return h;
+	return GetTLTextSize(s, font).cy;
 }
 
 void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
                 Font font, Color ink, int accesskey) {
-	int cy = font.Info().GetHeight();
+	int cy = font.GetCy(); // Bold to have the same height as with GetStdFontCy()
 	const wchar *s = text;
 	const wchar *t = s;
 	int apos = HIWORD(accesskey);

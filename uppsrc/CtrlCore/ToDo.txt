@@ -4,6 +4,10 @@
 - Make allocator work
 - FileChooser
 - InsetFrame vs DefaultFrame
+- MacOS crash when addint Label to TestChStyles
+- Ide: When dark editor in light theme, svn history is invisible (as text is white)
+- LayDes .usc: Small defect in  slider thumb in SD mode
+- Laydes Rect is still to aggresive
 
 NTH:
 

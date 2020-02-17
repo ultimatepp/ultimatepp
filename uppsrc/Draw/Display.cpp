@@ -152,7 +152,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 		x = r.right - tsz.cx;
 	if(a == ALIGN_CENTER)
 		x += (width - tsz.cx) / 2;
-	int tcy = GetTLTextHeight(txt, font);
+	int tcy = tsz.cy;
 	int tt = r.top + (tcy < 4 * r.GetHeight() / 3 ?  (r.Height() - tcy) / 2 : 0); // allow negative tt if only slightly bigger
 	if(tsz.cx > width) {
 		Size isz = DrawImg::threedots().GetSize();
