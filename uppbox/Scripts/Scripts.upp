@@ -23,6 +23,7 @@ file
 	upp.xml,
 	win,
 	www,
+	git-merge.txt,
 	updateinfo.txt;
 
 mainconfig

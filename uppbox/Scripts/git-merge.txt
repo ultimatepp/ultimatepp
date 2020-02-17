@@ -1,0 +1,15 @@
+cd ~/upp.git
+
+# copy this text from from github:
+
+git checkout -b <source-branch-name> master
+git pull https://github.com/theriverman/ultimatepp.git master
+
+# (it will need to merge to current master)
+
+# now merge and commit to svn
+
+git checkout master
+git merge --no-ff <source-branch-name>
+git svn dcommit
+
