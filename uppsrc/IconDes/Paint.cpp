@@ -30,7 +30,7 @@ void IconShow::Paint(Draw& w)
 				Point c(x + cx / 2, sz.cy / 2);
 				w.DrawImage(c.x - DPI(8) - isz.cx, c.y - DPI(8) - isz.cy, image);
 				w.DrawImage(c.x + DPI(8), c.y - DPI(8) - isz.cy, DarkTheme(image));
-				w.DrawImage(c.x - DPI(8) - isz.cx, c.y + DPI(8), image);
+				w.DrawImage(c.x - DPI(8) - isz.cx, c.y + DPI(8), Upscale2x(image));
 				w.DrawImage(c.x + DPI(8), c.y + DPI(8), Upscale2x(DarkTheme(image)));
 			}
 			else {
