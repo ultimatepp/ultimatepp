@@ -1,8 +1,8 @@
 - TestChStyle problem with EditDate drop (needs one more click)
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
-- FileChooser
 - MacOS crash when adding Label to TestChStyles
+- Unknown layout type should have better visual
 
 NTH:
 
@@ -22,6 +22,7 @@ DONE:
 
 macos done:
 
+- FileChooser
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
 - <-|-> cursor looks bad in dark mode

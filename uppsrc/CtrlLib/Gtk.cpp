@@ -4,18 +4,18 @@ namespace Upp {
 
 #ifdef GUI_GTK
 
-FileSelector::FileSelector()
+FileSelNative::FileSelNative()
 {
 	confirm = true;
 	multi = hidden = false;
 	activetype = 0;
 }
 
-FileSelector& FileSelector::AllFilesType() {
+FileSelNative& FileSelNative::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
 
-bool FileSelector::Execute(bool open, const char *title)
+bool FileSelNative::Execute(bool open, const char *title)
 {
 	Ctrl::ReleaseCtrlCapture();
 	if(!title)
