@@ -33,12 +33,17 @@ TestChStyle::TestChStyle()
 
 	AddFrame(bar);
 	bar.Set([](Bar& bar) {
-		bar.Add(CtrlImg::Diskette(), [] {
-		#ifndef PLATFORM_OSX
-			FileSelector fs;
+		bar.Add(CtrlImg::open(), [] {
+			FileSelNative fs;
 			fs.AllFilesType();
-			fs.ExecuteOpen();
-		#endif
+			if(fs.ExecuteOpen())
+				PromptOK(~fs);
+		}).Tip("This is test");
+		bar.Add(CtrlImg::save_as(), [] {
+			FileSelNative fs;
+			fs.AllFilesType();
+			if(fs.ExecuteSaveAs())
+				PromptOK(~fs);
 		}).Tip("This is test");
 		bar.Add(CtrlImg::Dir(), [] {
 			ArrayCtrl ar;
