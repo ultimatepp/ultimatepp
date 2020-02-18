@@ -1,5 +1,6 @@
-library
-	"SDL2 SDL2main";
+library(WIN32) SDL2.lib;
+
+library(POSIX) SDL2;
 
 file
 	Synth.h,
