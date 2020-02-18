@@ -264,14 +264,24 @@ void TextCompareCtrl::Paint(Draw& draw)
 		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
 	
-	Color diffpaper = SYellow;
+	WString test = "č"; // read text/paper colors from highlighting scheme using likely non-highlighted text
+	Vector<LineEdit::Highlight> th;
+	th.SetCount(2);
+	th[0].ink = SColorText();
+	th[0].paper = SColorPaper();
+	WhenHighlight(th, test);
+	Color text_color = th[0].ink;
+	Color paper_color = th[0].paper;
+
+	Color diffpaper = IsDark(paper_color) ? Magenta() : Yellow();
+	Color missingpaper = IsDark(paper_color) ? Gray() : LtGray();
 
 	int n_width = show_line_number ? number_width : 0;
 	if(show_line_number) {
 		for(int i = first_line; i <= last_line; i++) {
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
-			Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
+			Color paper = IsNull(l.number) ? missingpaper : l.diff ? diffpaper : SColorPaper();
 			Color ink = l.diff ? SRed(): SGray();
 			draw.DrawRect(0, y, n_width, letter.cy, paper);
 			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
@@ -283,21 +293,12 @@ void TextCompareCtrl::Paint(Draw& draw)
 
 	int sell, selh;
 	GetSelection(sell, selh);
-
-	WString test = "č"; // read text/paper colors from highlighting scheme using likely non-highlighted text
-	Vector<LineEdit::Highlight> th;
-	th.SetCount(2);
-	th[0].ink = SColorText();
-	th[0].paper = SColorPaper();
-	WhenHighlight(th, test);
-	Color text_color = th[0].ink;
-	Color paper_color = th[0].paper;
 	
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
 		Color ink = text_color;
-		Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : paper_color;
+		Color paper = IsNull(l.number) ? missingpaper : l.diff ? diffpaper : paper_color;
 		bool sel = l.number >= sell && l.number <= selh;
 		if(sel) {
 			ink = SColorHighlightText;
@@ -333,10 +334,10 @@ void TextCompareCtrl::Paint(Draw& draw)
 				ln_diff = ExpandTabs(ln_diff);
 				if(ln_diff.GetCount() * ln.GetCount() < 50000) {
 					if(left)
-						ldiff = LineDiff(true, hln, SColorPaper(),
+						ldiff = LineDiff(true, hln, paper_color,
 						                 ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
 					else
-						ldiff = LineDiff(false, hln, SColorPaper(),
+						ldiff = LineDiff(false, hln, paper_color,
 						                 ~ln_diff, 0, ln_diff.GetCount(), ~ln, 0, ln.GetCount(), 0);
 				}
 			}
@@ -346,14 +347,14 @@ void TextCompareCtrl::Paint(Draw& draw)
 					if (ln[i] == 0)
 						continue;
 					if(ln[i] == 32)
-						h.paper = Red();
+						h.paper = IsDark(paper_color) ? LtRed() : Red();
 					else
 						break;
 				}
 			}
 			
 			if(ldiff)
-				paper = SColorPaper();
+				paper = paper_color;
 		}
 
 		draw.DrawRect(0, y, sz.cx, letter.cy, paper); // paint the end of line

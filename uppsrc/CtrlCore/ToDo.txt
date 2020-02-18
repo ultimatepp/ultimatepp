@@ -3,7 +3,7 @@
 - Make allocator work
 - FileChooser
 - InsetFrame vs DefaultFrame
-- MacOS crash when addint Label to TestChStyles
+- MacOS crash when adding Label to TestChStyles
 
 NTH:
 
