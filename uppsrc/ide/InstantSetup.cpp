@@ -367,7 +367,7 @@ void InstantSetup()
 			libs.At(0) = mingw + "/lib";
 			libs.At(1) = binx + "/opt/lib";
 			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
 			libs.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 	
 			bm.GetAdd("PATH") = Join(bins, ";");

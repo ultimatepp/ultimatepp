@@ -4,11 +4,9 @@ acceptflags
 uses
 	Sql;
 
-library(WIN32 !NOPOSTGRESQL MSC) libpq;
+library(WIN32) libpq.lib;
 
-library(WIN32 !NOPOSTGRESQL GCC) libpq.dll;
-
-library(POSIX !NOPOSTGRESQL) pq;
+library(POSIX) pq;
 
 file
 	PostgreSQL.h,

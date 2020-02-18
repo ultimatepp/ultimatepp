@@ -8,9 +8,7 @@ uses
 	Sql,
 	plugin\z;
 
-library(WIN32 !NOMYSQL MSC) libmysql;
-
-library(WIN32 GCC !NOMYSQL) libmysql.dll;
+library(WIN32) libmysql.lib;
 
 library(LINUX !MT) "mysqlclient ssl";
 
@@ -19,8 +17,6 @@ library(LINUX MT) "mysqlclient_r ssl";
 library(FREEBSD) mysqlclient;
 
 library(OSX) mysqlclient;
-
-link(WIN32 GCC !NOMYSQL) "-Wl,--enable-stdcall-fixup";
 
 link(DEBUG SO) /nodefaultlib:LIBCD;
 

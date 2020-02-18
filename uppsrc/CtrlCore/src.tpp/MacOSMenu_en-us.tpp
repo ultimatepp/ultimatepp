@@ -12,7 +12,7 @@ topic "";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 MacOS menu support]]}}&]
 [s0; &]
-[s0; U`+`+ applications wihout changes to support MacOS application 
+[s0; U`+`+ applications without changes to support MacOS application 
 menu will run with menu inside the window.&]
 [s0; &]
 [s0; To properly support MacOS menu, application needs to provide 
