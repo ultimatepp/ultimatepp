@@ -18,24 +18,24 @@ namespace Upp {
 
 #define LLOG(x)
 
-FileSelector::FileSelector() {
+FileSelNative::FileSelNative() {
 	activetype = 0;
 	readonly = rdonly = multi = false;
 	asking = true;
 }
 
-FileSelector& FileSelector::Type(const char *name, const char *ext) {
+FileSelNative& FileSelNative::Type(const char *name, const char *ext) {
 	FileType& t = type.Add();
 	t.name = ToSystemCharset(name);
 	t.ext = ToSystemCharset(ext);
 	return *this;
 }
 
-FileSelector& FileSelector::AllFilesType() {
+FileSelNative& FileSelNative::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
 
-void FileSelector::Serialize(Stream& s) {
+void FileSelNative::Serialize(Stream& s) {
 	int version = 2;
 	s / version;
 	s / activetype % activedir;
@@ -45,7 +45,7 @@ void FileSelector::Serialize(Stream& s) {
 	}
 }
 
-String FileSelector::Get() const {
+String FileSelNative::Get() const {
 	return filename.GetCount() ? filename[0] : String::GetVoid();
 }
 
@@ -97,7 +97,7 @@ static UINT_PTR CALLBACK sCenterHook(HWND hdlg, UINT msg, WPARAM wParam, LPARAM 
 #define OFN_ENABLESIZING             0x00800000
 #endif
 
-bool FileSelector::Execute(bool open, const char *dlgtitle) {
+bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 	String filter;
 	for(int i = 0; i < type.GetCount(); i++) {
 		filter.Cat(type[i].name);

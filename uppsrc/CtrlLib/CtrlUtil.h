@@ -290,7 +290,7 @@ public:
 	~TrayIcon();
 };
 
-class FileSelector {
+class FileSelNative {
 protected:
 	struct FileType : Moveable<FileType> {
 		String name;
@@ -333,28 +333,30 @@ public:
 	bool   GetReadOnly() const                   { return readonly; }
 	String GetActiveDir() const                  { return activedir; }
 
-	FileSelector& Type(const char *name, const char *ext);
-	FileSelector& AllFilesType();
-	FileSelector& ActiveDir(const String& dir)   { activedir = dir; return *this; }
-	FileSelector& ActiveType(int i)              { activetype = i; return *this;  }
-	FileSelector& DefaultExt(const char *ext)    { defext = ext; return *this; }
-	FileSelector& Multi(bool b = true)           { multi = b; return *this; }
-	FileSelector& ReadOnlyOption(bool b = true)  { rdonly = b; return *this; }
-	FileSelector& Asking(bool b = true)          { asking = b; return *this; }
-	FileSelector& NoAsking()                     { return Asking(false); }
+	FileSelNative& Type(const char *name, const char *ext);
+	FileSelNative& AllFilesType();
+	FileSelNative& ActiveDir(const String& dir)   { activedir = dir; return *this; }
+	FileSelNative& ActiveType(int i)              { activetype = i; return *this;  }
+	FileSelNative& DefaultExt(const char *ext)    { defext = ext; return *this; }
+	FileSelNative& Multi(bool b = true)           { multi = b; return *this; }
+	FileSelNative& ReadOnlyOption(bool b = true)  { rdonly = b; return *this; }
+	FileSelNative& Asking(bool b = true)          { asking = b; return *this; }
+	FileSelNative& NoAsking()                     { return Asking(false); }
 
-	FileSelector();
+	FileSelNative();
 };
+
+typedef FileSelector FileSelNative;
 
 #endif
 #endif
 
 #ifdef GUI_X11
-typedef FileSel FileSelector;
+typedef FileSel FileSelNative;
 #endif
 
-#ifdef GUI_GTK
-class FileSelector {
+#if defined(GUI_GTK) || defined(PLATFORM_COCOA)
+class FileSelNative {
 	Vector<String> path;
 	Vector< Tuple2<String, String> > type;
 	
@@ -380,17 +382,19 @@ public:
 	int    GetCount() const                               { return path.GetCount(); }
 	const  String& operator[](int i) const                { return path[i]; }
 
-	FileSelector& Type(const char *name, const char *ext) { type.Add(MakeTuple(String(name), String(ext))); return *this; }
-	FileSelector& AllFilesType();
-	FileSelector& Asking(bool b = true)                   { confirm = b; return *this; }
-	FileSelector& NoAsking()                              { return Asking(false); }
-	FileSelector& Multi(bool b = true)                    { multi = b; return *this; }
-	FileSelector& ShowHidden(bool b = true)               { hidden = b; return *this; }
-	FileSelector& ActiveDir(const String& dir)            { ipath = dir; return *this; }
-	FileSelector& ActiveType(int i)                       { activetype = i; return *this; }
+	FileSelNative& Type(const char *name, const char *ext) { type.Add(MakeTuple(String(name), String(ext))); return *this; }
+	FileSelNative& AllFilesType();
+	FileSelNative& Asking(bool b = true)                   { confirm = b; return *this; }
+	FileSelNative& NoAsking()                              { return Asking(false); }
+	FileSelNative& Multi(bool b = true)                    { multi = b; return *this; }
+	FileSelNative& ShowHidden(bool b = true)               { hidden = b; return *this; }
+	FileSelNative& ActiveDir(const String& dir)            { ipath = dir; return *this; }
+	FileSelNative& ActiveType(int i)                       { activetype = i; return *this; }
 
-	FileSelector();
+	FileSelNative();
 };
+
+typedef FileSelector FileSelNative;
 #endif
 
 class CtrlMapper {

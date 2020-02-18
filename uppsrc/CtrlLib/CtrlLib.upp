@@ -95,6 +95,7 @@ file
 	Windows.cpp,
 	Win32.cpp,
 	Gtk.cpp,
+	Cocoa.mm,
 	TrayIconWin32.cpp,
 	TrayIconX11.cpp,
 	TrayIconGtk.cpp,
