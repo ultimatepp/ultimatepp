@@ -43,14 +43,12 @@ fn DrawBorder(w, &r, ...)
 
 fn DrawButtonFrame(w, &r)
 {
-//	DrawBorder(w, r, :SWhite, :Black, :WhiteGray, :Gray);
 	DrawBorder(w, r, :Gray, :Gray, :Gray, :Gray);
 }
 
 fn DrawEdgeButtonFrame(w, &r)
 {
 	DrawBorder(w, r, :SWhite, :SWhite, :Gray, :Gray);
-//	DrawBorder(w, r, :SWhiteGray, :Black, :White, :Gray);
 }
 
 fn DrawButton(w, r)
@@ -311,22 +309,15 @@ ctrl LabelBox {
 			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
 			w.DrawRect(1, d, d - 1, 1, :Gray);
 			w.DrawRect(1, d + 1, d - 1, 1, :Gray);
+			w.DrawRect(d + ts.cx, d, sz.cx - ts.cx - d - 2, 1, :Gray);
+			w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :Gray);
 		}
 		else {
-			w.DrawSmartText(d, 0, .SetLabel, .SetFont, .SetInk, sz.cx);
-			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :Gray);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :Gray);
-			w.DrawRect(1, d, d - 1, 1, :Gray);
-			w.DrawRect(1, d + 1, d - 1, 1, :Gray);
-			w.DrawRect(0, d, 1, 2, :Gray);
+			d = ts.cy / 2;
+			DrawButtonFrame(w, RectC(0, d, sz.cx, sz.cy - d));
+			w.DrawRect(8, 0, ts.cx + 4, ts.cy, :SLtGray);
+			w.DrawSmartText(10, 0, .SetLabel, .SetFont);
 		}
-		w.DrawRect(d + ts.cx, d, sz.cx - ts.cx - d - 2, 1, :Gray);
-		w.DrawRect(d + ts.cx, d + 1, sz.cx - ts.cx - d - 2, 1, :Gray);
 	}
 }
 
@@ -459,26 +450,12 @@ ctrl Option {
 		textsize = GetSmartTextSize(.SetLabel, .SetFont);
 		
 		if(.Box || .AutoBox) {
-			DrawOption(w, 10, (textsize.cy - osz) / 2, kind);
-			w.DrawSmartText(osz + 14, 0, .SetLabel, .SetFont);
-
 			d = textsize.cy / 2;
-			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :Gray);
-			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :Gray);
-			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :Gray);
-			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :Gray);
-			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :Gray);
-			q = d - 1;
-			if(q > 5)
-				q = 5;
-			w.DrawRect(1, d, 8, 1, :Gray);
-			w.DrawRect(1, d + 1, 8, 1, :Gray);
-			w.DrawRect(0, d, 1, 2, :Gray);
-			x = textsize.cx + osz + 8;
-			w.DrawRect(d + x, d, sz.cx - d - x, 1, :Gray);
-			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :Gray);
+			DrawButtonFrame(w, RectC(0, d, sz.cx, sz.cy - d));
+			d = (textsize.cy - osz) / 2;
+			w.DrawRect(8, 0, osz + textsize.cx + 8, textsize.cy, :SLtGray);
+			DrawOption(w, 10, d, kind);
+			w.DrawSmartText(osz + 14, 0, .SetLabel, .SetFont);
 		}
 		else {
 			DrawOption(w, 0, (sz.cy - osz) / 2, kind);
@@ -1345,8 +1322,8 @@ ctrl SliderCtrl {
 		halfY = int(r.top + r.bottom) >> 1;
 		
 		osz = 3 * OptionSize() / 2;
-		osz2 = osz / 2;
-		osz4 = osz / 4;
+		osz2 = int(osz / 2);
+		osz4 = int(osz / 4);
 
 		if (sz.cx < sz.cy) {
 			DrawInsetFrame(w, Rect(halfX - 2, r.top + 2, halfX + 2, r.bottom - 2));

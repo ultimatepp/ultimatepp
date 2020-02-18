@@ -283,11 +283,21 @@ void TextCompareCtrl::Paint(Draw& draw)
 
 	int sell, selh;
 	GetSelection(sell, selh);
+
+	WString test = "č"; // read text/paper colors from highlighting scheme using likely non-highlighted text
+	Vector<LineEdit::Highlight> th;
+	th.SetCount(2);
+	th[0].ink = SColorText();
+	th[0].paper = SColorPaper();
+	WhenHighlight(th, test);
+	Color text_color = th[0].ink;
+	Color paper_color = th[0].paper;
+	
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
-		Color ink = SColorText();
-		Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
+		Color ink = text_color;
+		Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : paper_color;
 		bool sel = l.number >= sell && l.number <= selh;
 		if(sel) {
 			ink = SColorHighlightText;

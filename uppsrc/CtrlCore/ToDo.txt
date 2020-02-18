@@ -4,21 +4,21 @@
 - FileChooser
 - InsetFrame vs DefaultFrame
 - MacOS crash when addint Label to TestChStyles
-- Ide: When dark editor in light theme, svn history is invisible (as text is white)
-- LayDes .usc: Small defect in  slider thumb in SD mode
-- Laydes Rect is still to aggresive
 
 NTH:
 
 
 DONE:
 
+- LayDes .usc: Small defect in  slider thumb in SD mode
+- Laydes Rect is still to aggresive
 - Vertical centering of DropList text is a bit off
 - Win32 - always use dark mode, always use UHD
 - Some problem when switching skin should be solved
 - Win32 menu checkbox
 - Classic is broken
 - ClassicCtrlsImg
+- Ide: When dark editor in light theme, svn history is invisible (as text is white)
 
 macos done:
 
