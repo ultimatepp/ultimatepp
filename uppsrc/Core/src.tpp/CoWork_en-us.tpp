@@ -195,6 +195,19 @@ exception handling is required, you need to use Finish (not depend
 on destructor to call it).&]
 [s0; &]
 [s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Loop parallelisation functions]]}}&]
+[s3; &]
+[s5;:Upp`:`:CoDo`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo]([_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s2;%% Creates CoWork and calls Loop([%-*@3 fn]). This is the most 
+effective way to parallelise iteration.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoFor`(int`,Fn`): [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 Fn]>_[@(0.0.255) v
+oid]_[* CoFor]([@(0.0.255) int]_[*@3 n], [*@4 Fn]_[*@3 iterator])&]
+[s2;%% Based on CoDo, runs in parallel [%-*@3 iterator] for values 
+0..[%-*@3 n] passing the value as argument.&]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkerResources]]}}&]
 [s3; &]
 [s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
@@ -206,6 +219,10 @@ In single`-threaded code, a single instance of such model would
 be used over the whole loop, however in multi`-threaded code, 
 each worker thread, plus thread that created CoWork need its 
 own instance. CoWorkerResources helps to manage such situation.&]
+[s0;%% &]
+[s2;%% NOTE: The problem that this helper class solves is in majority 
+better solved by using CoDo function.&]
+[s0;%% &]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]

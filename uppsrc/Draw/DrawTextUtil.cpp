@@ -75,7 +75,7 @@ int GetTLTextHeight(const wchar *s, Font font)
 
 void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
                 Font font, Color ink, int accesskey) {
-	int cy = font.GetCy(); // Bold to have the same height as with GetStdFontCy()
+	int cy = font.GetCy();
 	const wchar *s = text;
 	const wchar *t = s;
 	int apos = HIWORD(accesskey);

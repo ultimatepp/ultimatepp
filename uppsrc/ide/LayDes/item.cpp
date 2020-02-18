@@ -218,13 +218,13 @@ String LayoutItem::Save(int i, int y, const String& eol) const
 
 void LayoutItem::UnknownPaint(Draw& w)
 {
-	DrawFrame(w, 0, 0, csize.cx, csize.cy, SColorShadow);
+	DrawFatFrame(w, 0, 0, csize.cx, csize.cy, SGray(), 2);
 	int q = FindProperty("SetLabel");
 	if(q >= 0 && IsString(~property[q]))
 		DrawSmartText(w, 0, 0, csize.cx, ToUtf8((WString)~property[q]));
 	Size tsz = GetTextSize(type, LayFont());
-	w.DrawRect(csize.cx - tsz.cx, csize.cy - tsz.cy, tsz.cx, tsz.cy, SColorShadow);
-	w.DrawText(csize.cx - tsz.cx, csize.cy - tsz.cy, type, LayFont(), SColorLight);
+	w.DrawRect(csize.cx - tsz.cx - tsz.cy, csize.cy - tsz.cy, tsz.cx + tsz.cy, tsz.cy, SGray());
+	w.DrawText(csize.cx - tsz.cx - tsz.cy / 2, csize.cy - tsz.cy, type, LayFont(), White());
 }
 
 void LayoutItem::CreateMethods(EscValue& ctrl, const String& type, bool copy) const
@@ -341,9 +341,9 @@ void LayoutItem::Paint(Draw& w, Size sz, bool sample)
 			}
 			catch(CParser::Error e) {
 				PutConsole(e);
-				DrawingDraw edw;
-				edw.DrawRect(0, 0, csize.cx, csize.cy, Red);
-				edw.DrawText(2, 2, e, LayFont().Bold(), Yellow);
+				DrawingDraw edw(csize);
+				edw.DrawRect(0, 0, csize.cx, csize.cy, Red());
+				DrawSmartText(edw, 2, 2, csize.cx - 4, "\1[g@Y \1" + e, LayFont(), Yellow());
 				cache = edw;
 			}
 		}

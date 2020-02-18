@@ -66,4 +66,5 @@ constructor to pass the return value.&]
 [s5;:Upp`:`:Async`(Upp`:`:Function`&`&`,Args`&`&`.`.`.args`): [@(0.0.255) auto]_[* Async](
 [_^Upp`:`:Function^ Function][@(0.0.255) `&`&]_[*@3 f], Args[@(0.0.255) `&`&...]_args)&]
 [s2;%% Returns AsyncWork for given job [%-*@3 f] with [%- args].&]
+[s3;%% &]
 [s0;@(0.0.255)3 ]]
