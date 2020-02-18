@@ -463,15 +463,23 @@ onst]&]
 [s4;%- &]
 [s5;:Vector`:`:operator`<`<`(const T`&`):%- [_^Vector^ Vector][@(0.0.255) `&]_[* operator<<
 ]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Operator replacement of [* void Add(const T`&x)]. By returning 
+[s2; Operator equivalent of [* void Add(const T`&x)]. By returning 
 reference to to Vector allows adding more elements in single 
 expression, thus e.g. allowing to construct temporary Vector 
 as part of expression like Foo((Vector<int>() << 1 << 2 << 4)).&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators and references to Vector.&]
-[s7; [*C@3 x]-|The value that is copied to newly created element.&]
-[s7; [*/ Return value]-|Reference to Vector (`*this).&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:operator`<`<`(T`&`&`):%- [_^Upp`:`:Vector^ Vector][@(0.0.255) `&]_[* o
+perator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s2; Operator equivalent of [* void Add(TT`&x)]. By returning reference 
+to to Vector allows adding more elements in single expression, 
+thus e.g. allowing to construct temporary Vector as part of expression 
+like.&]
+[s6; Requires T to have deep copy constructor.&]
+[s6; Invalidates iterators and references to Vector.&]
+[s3; &]
 [s4;%- &]
 [s5;:Vector`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Converts container into String, mostly for debugging purposes.&]

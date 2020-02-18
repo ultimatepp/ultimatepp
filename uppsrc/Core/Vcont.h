@@ -195,6 +195,7 @@ public:
 	operator const T*() const        { return (T*)vector; }
 
 	Vector&  operator<<(const T& x)  { Add(x); return *this; }
+	Vector&  operator<<(T&& x)            { Add(pick(x)); return *this; }
 
 #ifdef UPP
 	void     Serialize(Stream& s)                        { StreamContainer(s, *this); }

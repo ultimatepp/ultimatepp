@@ -2,7 +2,6 @@
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - MacOS crash when adding Label to TestChStyles
-- Unknown layout type should have better visual
 
 NTH:
 
@@ -19,6 +18,7 @@ DONE:
 - Classic is broken
 - ClassicCtrlsImg
 - Ide: When dark editor in light theme, svn history is invisible (as text is white)
+- Unknown layout type should have better visual
 
 macos done:
 

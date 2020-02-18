@@ -346,7 +346,7 @@ public:
 	FileSelNative();
 };
 
-typedef FileSelector FileSelNative;
+typedef FileSelNative FileSelector;
 
 #endif
 #endif
@@ -394,7 +394,7 @@ public:
 	FileSelNative();
 };
 
-typedef FileSelector FileSelNative;
+typedef FileSelNative FileSelector;
 #endif
 
 class CtrlMapper {

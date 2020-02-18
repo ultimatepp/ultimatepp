@@ -222,9 +222,17 @@ void LayoutItem::UnknownPaint(Draw& w)
 	int q = FindProperty("SetLabel");
 	if(q >= 0 && IsString(~property[q]))
 		DrawSmartText(w, 0, 0, csize.cx, ToUtf8((WString)~property[q]));
-	Size tsz = GetTextSize(type, LayFont());
+	Font fnt = LayFont();
+	String s = type;
+	Color ink = White();
+	if(IsNull(s)) {
+		s = "Untyped";
+		fnt.Italic();
+		ink = LtCyan();
+	}
+	Size tsz = GetTextSize(s, fnt);
 	w.DrawRect(csize.cx - tsz.cx - tsz.cy, csize.cy - tsz.cy, tsz.cx + tsz.cy, tsz.cy, SGray());
-	w.DrawText(csize.cx - tsz.cx - tsz.cy / 2, csize.cy - tsz.cy, type, LayFont(), White());
+	w.DrawText(csize.cx - tsz.cx - tsz.cy / 2, csize.cy - tsz.cy, s, fnt, ink);
 }
 
 void LayoutItem::CreateMethods(EscValue& ctrl, const String& type, bool copy) const
