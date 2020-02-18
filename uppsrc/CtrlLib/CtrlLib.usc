@@ -10,7 +10,8 @@ enum_property Frame {
 	"TopSeparatorFrame()",
 	"BottomSeparatorFrame()",
 	"LeftSeparatorFrame()",
-	"RightSeparatorFrame()"
+	"RightSeparatorFrame()",
+	"default"
 };
 
 enum_property Align {
@@ -74,7 +75,8 @@ fn DrawCtrlFrame(w, &r, frame)
 	height = r.bottom - r.top;
 	switch(frame) {
 	case "FieldFrame()":
-	case "InsetFrame()": DrawBorder(w, r, :SGray, :SGray, :SGray, :SGray); break;
+	case "default":  DrawBorder(w, r, :SGray, :SGray, :SGray, :SGray); break;
+	case "InsetFrame()": DrawBorder(w, r, :Gray, :White, :Black, :LtGray); break;
 	case "OutsetFrame()": DrawBorder(w, r, :LtGray, :Black, :White, :Gray); break;
 	case "ButtonFrame()": DrawButtonFrame(w, r); break;
 	case "ThinInsetFrame()": DrawBorder(w, r, :Gray, :White); break;
@@ -327,7 +329,7 @@ ctrl DataPusher {
 	GetStdSize() { return Size(64, 24); }
 
 	>Base;
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @1;
 	Text  Tip;
 
@@ -527,7 +529,7 @@ ctrl EditField {
 	int   MaxChars @2;
 	bool  AlignRight @1;
 	bool  SetEditable = true @4 ? "Editable";
-	Frame SetFrame = InsetFrame() @5;
+	Frame SetFrame = default @5;
 	Text  Tip @6;
 	bool  WantFocus = true @7;
 
@@ -555,7 +557,7 @@ ctrl DocEdit {
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
 	Font  SetFont = StdFont();
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @1 ? "Editable";
 	bool  WantFocus = true;
 	Text  Tip;
@@ -588,7 +590,7 @@ ctrl LineEdit {
 //	int   MaxChars @2;
 //	bool  AlignRight @1;
 	bool  SetEditable = true @4 ? "Editable";
-	Frame SetFrame = InsetFrame() @5;
+	Frame SetFrame = default @5;
 	Text  Tip @6;
 	bool  WantFocus = true @7;
 
@@ -808,7 +810,7 @@ ctrl DropList {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
 	bool  WantFocus = true;
 	bool  DisplayAll = false;
@@ -834,7 +836,7 @@ ctrl DropTree {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
 	bool  WantFocus = true;
 	bool  DisplayAll = false;
@@ -942,7 +944,7 @@ ctrl ArrayCtrl {
 	group "Complex";
 
 	GetStdSize() { return Size(150, 100); }
-	Frame SetFrame = InsetFrame() @1;
+	Frame SetFrame = default @1;
 	bool AutoHideSb = false;
 	bool Header = true;
 	bool Inserting = false;
@@ -1016,7 +1018,7 @@ ctrl RichTextView {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
-	Frame SetFrame = InsetFrame() @1;
+	Frame SetFrame = default @1;
 	Color Background = :SWhite;
 	bool  VCenter = false;
 	bool  NoSb = false;
@@ -1063,7 +1065,7 @@ ctrl DropDate {
 	bool  SwapMonthYear = false;
 	bool  OneButton = false;
 	bool  NotNull = false;
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
 	bool  WantFocus = true;
 	Text  Tip;
@@ -1091,7 +1093,7 @@ ctrl DropTime {
 	bool  DayEnd = false;
 	bool  TimeAlways = false;
 	bool  NotNull = false;
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
 	bool  WantFocus = true;
 	Text  Tip;

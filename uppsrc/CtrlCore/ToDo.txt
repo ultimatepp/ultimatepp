@@ -2,7 +2,6 @@
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - FileChooser
-- InsetFrame vs DefaultFrame
 - MacOS crash when adding Label to TestChStyles
 
 NTH:
@@ -10,6 +9,7 @@ NTH:
 
 DONE:
 
+- InsetFrame vs DefaultFrame
 - LayDes .usc: Small defect in  slider thumb in SD mode
 - Laydes Rect is still to aggresive
 - Vertical centering of DropList text is a bit off
