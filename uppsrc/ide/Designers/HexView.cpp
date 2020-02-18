@@ -39,6 +39,10 @@ void FileHexView::RestoreEditPos()
 		SetSc(p->a);
 		SetCursor(p->b);
 	}
+	else {
+		SetSc(0);
+		SetCursor(0);
+	}
 }
 
 void FileHexView::SaveEditPos()
