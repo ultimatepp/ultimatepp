@@ -1333,7 +1333,7 @@ void CalendarClock::Deactivate()
 	if(IsOpen() && IsPopUp())
 	{
 		WhenPopDown();
-		IgnoreMouseClick();
+		IgnoreMouseUp();
 		Close();
 		calendar.SetPopUp(false);
 		clock.SetPopUp(false);

@@ -105,8 +105,9 @@ struct MMImp {
 		Flags(e);
 		sCurrentMouseEvent__ = e;
 		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
-			Ctrl::EndIgnore();
-//			Upp::Ctrl::ReleaseCtrlCapture();
+			Ctrl::KillRepeat();
+			Ctrl::ignoreclick = false;
+			Ctrl::ignoremouseup = false;
 			return false;
 		}
 		if(GetAlt()) { // Emulate right click
