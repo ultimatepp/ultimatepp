@@ -1,11 +1,9 @@
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - MacOS crash when adding Label to TestChStyles
+- Mingw: Make things run with F5 even in release mode, "Failed to obtain" should only be shown when debugger stops and even then things should work
+- Mingw: Release mode theide crash, symptom missing doc points
 
-- LayDes menu background color
-- usc color pusher
-- usc treectrl
-- usc columnlist
 - Remove ClassicCtrls, AmbientCtrls
 
 NTH:
@@ -13,6 +11,8 @@ NTH:
 
 DONE:
 
+- usc columnlist
+- usc color pusher
 - UHD tree [-] [+]
 - InsetFrame vs DefaultFrame
 - LayDes .usc: Small defect in  slider thumb in SD mode
@@ -25,6 +25,8 @@ DONE:
 - ClassicCtrlsImg
 - Ide: When dark editor in light theme, svn history is invisible (as text is white)
 - Unknown layout type should have better visual
+- LayDes menu background color
+- usc treectrl
 
 macos done:
 

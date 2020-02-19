@@ -340,6 +340,39 @@ ctrl DataPusher {
 	}
 };
 
+ctrl ColorPusher {
+	group "Push";
+
+	GetStdSize() { return Size(64, 24); }
+
+	>Base;
+	Frame SetFrame = default;
+	bool  SetEditable = true @1;
+	Text  Tip;
+	bool  NotNull = false;
+	bool  WithVoid = false;
+	bool  SColors = false;
+	bool  WithText = false;
+	bool  WithHex = false;
+	bool  Track = false;
+	bool  NoRampWheel = false;
+	Text  NullText;
+	Text  VoidText;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DeflateRect(r);
+		w.DrawRect(r, :LtBlue);
+		DrawFrame(w, r, :SBlack, :SBlack);
+		if(.WithText || .WithHex) {
+			text = .WithText ? "LtBlue" : "#0000FF";
+			w.DrawText(r.left + 6, (r.top + r.bottom - GetSmartTextSize(text, StdFont()).cy) / 2,
+			           text, StdFont(), :White);
+		}
+	}
+};
 
 ctrl Button {
 	group "Push";
@@ -350,7 +383,7 @@ ctrl Button {
 	Text   SetLabel ? "Button label";
 	Font   SetFont = StdFont();
 	Frame  SetFrame @1;
-	Text  Tip;
+	Text   Tip;
 
 	Paint(w) {
 		r = GetRect();
@@ -1009,6 +1042,62 @@ ctrl ArrayCtrl {
 				w.DrawRect(r.left + i * third - 1, celltop, 1, cellht, :SLtGray);
 		}
 		w.DrawRect(r.left, cellbot, wd, r.bottom - cellbot, :SWhite.r < 50 ? Color(90, 90, 90) : Color(160, 160, 160));
+		w.DrawText(3, r.bottom - fontcy, "ArrayCtrl", Arial(10), :SMagenta);
+	}
+};
+
+fn DrawTreeItem(w, x, y, text, kind)
+{
+	osz = OptionSize();
+	textsize = GetTextSize(text);
+	if(kind)
+		DrawOption(w, x, y + (textsize.cy - osz) / 2, 1);
+	w.DrawText(x + osz + 2, y, text, StdFont(), :SBlack);
+}
+
+ctrl TreeCtrl {
+	group "Complex";
+
+	GetStdSize() { return Size(150, 100); }
+	Frame SetFrame = default @1;
+
+//	Qtf  SetInfo @1 ? "Info of control" ;
+
+	Paint(w) {
+		r = GetRect();
+		w.DrawRect(r, :SWhite);
+		fontcy = GetTextSize("X").cy;
+		DrawCtrlFrame(w, r, .SetFrame);
+		rsb = r;
+		r.right = rsb.left = rsb.right - fontcy - 4;
+		PaintVScrollBar(w, rsb);
+		w.DrawText(3, r.bottom - fontcy, "TreeCtrl", Arial(10), :SMagenta);
+		DeflateRect(r);
+		DeflateRect(r);
+		DrawTreeItem(w, r.left + 2 + 0 * fontcy, r.top + 2 + 0 * fontcy, "Root", 1);
+		DrawTreeItem(w, r.left + 2 + 1 * fontcy, r.top + 2 + 1 * fontcy, "Node 1", 0);
+		DrawTreeItem(w, r.left + 2 + 1 * fontcy, r.top + 2 + 2 * fontcy, "Node 2", 1);
+		DrawTreeItem(w, r.left + 2 + 2 * fontcy, r.top + 2 + 3 * fontcy, "Node 3", 0);
+	}
+};
+
+ctrl ColumnList {
+	group "Complex";
+
+	GetStdSize() { return Size(150, 100); }
+	Frame SetFrame = default @1;
+
+//	Qtf  SetInfo @1 ? "Info of control" ;
+
+	Paint(w) {
+		r = GetRect();
+		w.DrawRect(r, :SWhite);
+		fontcy = GetTextSize("X").cy;
+		DrawCtrlFrame(w, r, .SetFrame);
+		rsb = r;
+		r.right = rsb.left = rsb.right - fontcy - 4;
+		PaintVScrollBar(w, rsb);
+		w.DrawText(3, 3, "ColumnList", Arial(10), :SMagenta);
 	}
 };
 
