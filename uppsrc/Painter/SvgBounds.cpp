@@ -74,8 +74,8 @@ int SolveQuadraticEquation(double a, double b, double c, double *r)
 	if(a == 0) {
 		if(b == 0)
 			return 0;
-  		r[0] = r[1] = -c / b;
-  		return 1;
+		r[0] = r[1] = -c / b;
+		return 1;
     }
 	double d = b * b - 4 * a * c;
 	if (d < 0)

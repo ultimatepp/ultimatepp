@@ -461,6 +461,7 @@ bool  RenderSVG(Painter& p, const char *svg);
 
 void  GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox);
 Rectf GetSVGBoundingBox(const char *svg);
+Rectf GetSVGPathBoundingBox(const char *path);
 
 Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader);
 Image RenderSVGImage(Size sz, const char *svg);

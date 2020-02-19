@@ -29,6 +29,12 @@ z], [_^Rectf^ Rectf][@(0.0.255) `&]_[*@3 viewbox])&]
 onst]_[@(0.0.255) char]_`*[*@3 svg])&]
 [s3; Computes the complete bounding box of SVG.&]
 [s4; &]
+[s1;%- &]
+[s2;:Upp`:`:GetSVGPathBoundingBox`(const char`*`):%- [_^Upp`:`:Rectf^ Rectf]_[* GetSVGPat
+hBoundingBox]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path])&]
+[s3; Returns the bounding box of [%-*@3 SVG] path stored in path element 
+format.&]
+[s4; &]
 [s1; &]
 [s2;:RenderSVGImage`(Size`,const char`*`,Callback2`<String`,String`&`>`&`): [_^Image^ I
 mage]_[* RenderSVGImage]([_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s
