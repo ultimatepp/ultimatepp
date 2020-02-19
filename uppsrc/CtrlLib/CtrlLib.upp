@@ -119,8 +119,6 @@ file
 	ChCocoMM.mm,
 	ChCoco.h,
 	ChCoco.cpp,
-	ClassicCtrls.iml,
-	AmbientCtrls.iml,
 	Meta readonly separator,
 	Normal.upt,
 	Complex.upt,
