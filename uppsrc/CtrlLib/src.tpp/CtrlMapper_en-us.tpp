@@ -1,4 +1,4 @@
-topic "class CtrlMapper";
+topic "CtrlMapper";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -16,6 +16,7 @@ topic "class CtrlMapper";
 [s2;%% Trivial utility class for mapping values to widgets and back. 
 It is sort of similar to CtrlRetriever, but does immediate transfer 
 of values based on flag&]
+[s2;%% &]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]

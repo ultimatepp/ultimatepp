@@ -1,5 +1,4 @@
 topic "Color widgets";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Color widgets";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 ColorPopUp]]}}&]
 [s3;%- &]
@@ -152,16 +152,15 @@ setting is SColors(false).&]
 [s7; [*/ Return value]-|`*this.&]
 [s3; &]
 [s4;%- &]
-[s5;:ColorPusher`:`:WithText`(`):%- [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* WithText
-]()&]
-[s2; Setups displaying of text representation of color.&]
-[s7; [*/ Return value]-|`*this.&]
+[s5;:Upp`:`:ColorPusher`:`:WithText`(bool`):%- [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
+]_[* WithText]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; ColorPusher will display text representation of color (either 
+known name, or numbers).&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ColorPusher`:`:WithHex`(`):%- [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
-]_[* WithHex]()&]
-[s2; Setups displaying of text representation of color in HTML hexadecimal 
-format.&]
+[s5;:Upp`:`:ColorPusher`:`:WithHex`(bool`):%- [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
+]_[* WithHex]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; ColorPusher will hexadecimal representation of color.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:ColorPusher`:`:Track`(bool`):%- [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* Track](
