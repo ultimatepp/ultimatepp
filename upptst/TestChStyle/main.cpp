@@ -130,6 +130,13 @@ TestChStyle::TestChStyle()
 	
 	tm_dis.Disable();
 	dt_dis.Disable();
+	
+	auto FillTree = [](TreeCtrl& tree) {
+		tree.SetRoot(Null, "Root");
+		tree.Add(0, Null, "Node");
+	};
+	
+	FillTree(droptree.TreeObject());
 }
 
 GUI_APP_MAIN
