@@ -19,10 +19,6 @@ INITIALIZE(CtrlLib);
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_header.h>
 
-#define IMAGECLASS ClassicCtrlsImg
-#define IMAGEFILE <CtrlLib/ClassicCtrls.iml>
-#include <Draw/iml_header.h>
-
 class Bar;
 
 #include <CtrlLib/LabelBase.h>

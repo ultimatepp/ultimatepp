@@ -340,12 +340,10 @@ String XpThemeInfo(LPCWSTR pszPropertyName)
 
 void ChHostSkin()
 {
-	ChSysInit();
 	if(XpWidget(XP_BUTTON)) {
 		LLOG("XP theme !");
+		ChSysInit();
 		GUI_GlobalStyle_Write(GUISTYLE_XP);
-		ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
-		CtrlsImg::Reset();
 		EditFieldIsThin_Write(1);
 
 		bool vista_aero = IsWinVista() && XpThemeInfo(L"ThemeName") == "Aero";
@@ -559,7 +557,7 @@ void ChHostSkin()
 			double gf;
 			m = Unglyph(m, c, gf);
 			if(i == 0 && (gf > 150 || vista_aero))
-				CtrlsImg::Set(CtrlsImg::I_DA, ClassicCtrlsImg::DA());
+				CtrlsImg::Set(CtrlsImg::I_DA, CtrlsImg::kDA());
 			Button::StyleEdge().Write().look[i] = m;
 			if(cbs)
 				Button::StyleLeftEdge().Write().look[i] = m;
@@ -642,11 +640,6 @@ bool IsSystemThemeDark()
 
 void ChSysInit()
 {
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
-	ChReset();
-	XpClear();
-
 	if(Ctrl::IsUHDEnabled()) {
 		HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
 		DllFn(SetProcessDpiAwareness, "Shcore.dll", "SetProcessDpiAwareness");
@@ -662,6 +655,14 @@ void ChSysInit()
 
 	if(Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW))))
 		sEmulateDarkTheme = true;
+
+	CtrlImg::Reset();
+	CtrlsImg::Reset();
+	ChReset();
+	XpClear();
+
+	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
+		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
@@ -703,9 +704,6 @@ void ChSysInit()
 
 	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
-	
-	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++)
-		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
 	dword x = GetSysColor(COLOR_GRAYTEXT);
 	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
