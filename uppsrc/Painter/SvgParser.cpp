@@ -626,4 +626,12 @@ bool IsSVG(const char *svg)
 	return false;
 }
 
+Rectf GetSVGPathBoundingBox(const char *path)
+{
+	NilPainter nilp;
+	BoundsPainter p(nilp);
+	p.Path(path).Fill(Black());
+	return p.Get();
+}
+
 }
