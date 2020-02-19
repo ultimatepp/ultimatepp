@@ -1,5 +1,6 @@
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
+
 - MacOS crash when adding Label to TestChStyles
 - Mingw: Make things run with F5 even in release mode, "Failed to obtain" should only be shown when debugger stops and even then things should work
 - Mingw: Release mode theide crash, symptom missing doc points
