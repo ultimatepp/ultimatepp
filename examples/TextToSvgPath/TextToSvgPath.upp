@@ -1,0 +1,15 @@
+description "GUI application that converts text to SVG path\377";
+
+uses
+	CtrlLib,
+	RichEdit;
+
+file
+	TextToSvgPath.h,
+	ToSvg.cpp,
+	main.cpp,
+	TextToSvgPath.lay;
+
+mainconfig
+	"" = "GUI";
+
