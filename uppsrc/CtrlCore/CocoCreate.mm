@@ -202,24 +202,6 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = true;
 	if(activate && IsEnabled())
 		SetFocus();
-	#if 0
-		NSWindow *window = top->coco->window;
-		[window setBackgroundColor:[NSColor clearColor]];
-		[window setOpaque:NO];
-		[window setStyleMask:NSResizableWindowMask | NSTitledWindowMask | NSFullSizeContentViewWindowMask];
-		[window setMovableByWindowBackground:YES];
-		[window setTitlebarAppearsTransparent:YES];
-		[window setTitleVisibility:NSWindowTitleHidden];
-		[window setShowsToolbarButton:NO];
-		[window standardWindowButton:NSWindowFullScreenButton].hidden = YES;
-		[window standardWindowButton:NSWindowMiniaturizeButton].hidden = YES;
-		[window standardWindowButton:NSWindowCloseButton].hidden = YES;
-		[window standardWindowButton:NSWindowZoomButton].hidden = YES;
-		[window makeKeyWindow];
-	//	[window setHasShadow:YES];
-		ActivateWnd();
-	}
-	#endif
 }
 
 dword TopWindow::GetMMStyle() const

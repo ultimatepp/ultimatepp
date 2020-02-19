@@ -1,13 +1,19 @@
-- TestChStyle problem with EditDate drop (needs one more click)
 - Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 - MacOS crash when adding Label to TestChStyles
+
+- LayDes menu background color
+- usc color pusher
+- usc treectrl
+- usc columnlist
+- Remove ClassicCtrls, AmbientCtrls
 
 NTH:
 
 
 DONE:
 
+- UHD tree [-] [+]
 - InsetFrame vs DefaultFrame
 - LayDes .usc: Small defect in  slider thumb in SD mode
 - Laydes Rect is still to aggresive
@@ -22,6 +28,7 @@ DONE:
 
 macos done:
 
+- TestChStyle problem with EditDate drop (needs one more click)
 - FileChooser
 - Slider in dark mode is transparent
 - spin buttons slight visual problem in dark mode
