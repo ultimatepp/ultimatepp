@@ -42,9 +42,6 @@ void TextToSvgPathDlg::Render()
 	Font fnt(~face, ~height);
 	fnt.Bold(~bold);
 	fnt.Italic(~italic);
-	fnt.Underline(~underline);
-	fnt.Strikeout(~strikeout);
-	fnt.NonAntiAliased(~nonaa);
 
 	svgpath <<= preview.svgpath = TextToSvgPath(0, 0, (String)~text, fnt, ~singleline);
 	preview.Refresh();
