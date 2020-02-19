@@ -22,6 +22,7 @@ TestChStyle::TestChStyle()
 		bar.Add("Information..", [] { PromptOK("information."); });
 		bar.Add("Exclamation..", [] { Exclamation("exclamation!"); });
 		bar.Add("Question..", [] { PromptYesNo("question?"); });
+		bar.Add("Error..", [] { ErrorYesNo("error?"); });
 		bar.Add(false, "Disabled", [] {});
 		static bool check;
 		bar.Add("Check", [] { check = !check; }).Check(check);
