@@ -38,6 +38,14 @@ void Gdb::DebugBar(Bar& bar)
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
 }
 
+String FirstLine(const String& s)
+{
+	int q = s.Find('\r');
+	if(q < 0)
+		q = s.Find('\n');
+	return q >= 0 ? s.Mid(0, q) : s;
+}
+
 String FormatFrame(const char *s)
 {
 	if(*s++ != '#')
@@ -173,7 +181,7 @@ void Gdb::SetDisas(const String& text)
 		String code, args;
 		if(s[0] == '0' && ToLower(s[1]) == 'x')
 			adr = (adr_t)ScanInt64(s + 2, NULL, 16);
-		int q = ln.Find(">:");
+		int q = nodebuginfo ? ln.Find(":\t") : ln.Find(">:");
 		if(q >= 0) {
 			s = ~ln + q + 2;
 			while(IsSpace(*s))
@@ -275,17 +283,22 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 	else {
 		file = Null;
 		try {
-			CParser pa(s);
-			pa.Char2('0', 'x');
-			if(pa.IsNumber(16))
+			int q = s.ReverseFind("0x");
+			if(q >= 0) {
+				CParser pa(~s + q + 2);
 				addr = (adr_t)pa.ReadNumber64(16);
+				SetDisas(FastCmd(String() << "disas 0x" << FormatHex((void *)addr) << ",+1024"));
+				disas.SetCursor(addr);
+				disas.SetIp(addr, DbgImg::IpLinePtr());
+			}
 		}
 		catch(CParser::Error) {}
-		SyncDisas(fr);
 	}
+
 	if(setframe) {
 		frame.Clear();
-		frame.Add(0, FormatFrame(FastCmd("frame")));
+		String f = FastCmd("frame");
+		frame.Add(0, nodebuginfo ? FirstLine(f) : FormatFrame(f));
 		frame <<= 0;
 		SyncFrameButtons();
 	}
@@ -356,17 +369,6 @@ String Gdb::ObtainThreadsInfo()
 		
 	if(active_thread >= 0)
 		threads <<= active_thread;
-	if(threads.GetCount() == 0) {
-		String error = t_(
-			"Failed to obtain information about threads. "
-			"Make sure your application posses debug info. "
-			"The debugger and debugge proceses will be stoped!");
-		
-		Loge() << METHOD_NAME << error;
-		ErrorOK(error);
-		
-		Stop();
-	}
 	
 	return output;
 }
@@ -382,10 +384,23 @@ String Gdb::DoRun()
 {
 	if(firstrun) {
 		firstrun = false;
-		Cmd("start");
-		String s = Cmd("info inferior");
-		int q = s.FindAfter("process");
-		pid = atoi(~s + q);
+		nodebuginfo_bg.Hide();
+		nodebuginfo = false;
+		if(Cmd("start").Find("No symbol") >= 0) {
+			nodebuginfo_bg.Show();
+			nodebuginfo = true;
+			String t = Cmd("run");
+			int q = t.ReverseFind("exited normally");
+			if(t.GetLength() - q < 20) {
+				Stop();
+				return Null;
+			}
+		}
+		if(!IsFinished()) {
+			String s = Cmd("info inferior");
+			int q = s.FindAfter("process");
+			pid = atoi(~s + q);
+		}
 		IdeSetBar();
 	}
 	
@@ -405,7 +420,7 @@ String Gdb::DoRun()
 
 bool Gdb::RunTo()
 {
-	if(IdeIsDebugLock())
+	if(IdeIsDebugLock() || nodebuginfo)
 		return false;
 	String bi;
 	bool df = disas.HasFocus();
@@ -494,7 +509,24 @@ void Gdb::LoadFrames()
 	int i = frame.GetCount();
 	int n = 0;
 	for(;;) {
-		String s = FormatFrame(FastCmd(Sprintf("frame %d", i)));
+		String f = FastCmd(Sprintf("frame %d", i));
+		String s;
+		if(nodebuginfo) {
+			s = FirstLine(f);
+			int q = s.Find("0x");
+			if(q < 0)
+				break;
+			try {
+				CParser p(~s + q + 2);
+				if(p.ReadNumber64(16) == 0)
+					break;
+			}
+			catch(CParser::Error) {
+				break;
+			}
+		}
+		else
+			s = nodebuginfo ? FirstLine(f) : FormatFrame(f);
 		if(IsNull(s))
 			break;
 		if(n++ >= max_stack_trace_size) {
@@ -732,6 +764,17 @@ Gdb::Gdb()
 
 	StringStream ss(WorkspaceConfigData("gdb-debugger"));
 	Load(callback(this, &Gdb::SerializeSession), ss);
+
+	const char *text = "No symbolic information available";
+	Size sz = GetTextSize(text, StdFont().Italic().Bold());
+	nodebuginfo_bg.Background(Gray())
+	              .RightPos(0, sz.cx + DPI(8))
+	              .BottomPos(0, sz.cy + DPI(6))
+	              .Add(nodebuginfo_text.SizePos());
+	nodebuginfo_text = text;
+	nodebuginfo_text.AlignCenter().SetInk(Yellow()).SetFont(StdFont().Italic().Bold());
+	
+	pane.Add(nodebuginfo_bg);
 }
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
