@@ -113,6 +113,10 @@ protected:
 
 	DbgDisas           disas;
 
+	bool               nodebuginfo = false;
+	StaticRect         nodebuginfo_bg;
+	StaticText         nodebuginfo_text;
+
 	EditString         watchedit;
 	DropList           threads;
 	DropList           frame;
