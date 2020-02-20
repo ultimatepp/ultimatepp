@@ -428,6 +428,11 @@ String GetSpecialDirectory(int i)
 	return Null;
 };
 
+void CocoBeep()
+{
+	NSBeep();
+}
+
 };
 
 #endif

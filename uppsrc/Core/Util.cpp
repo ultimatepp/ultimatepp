@@ -837,10 +837,16 @@ static void LinuxBeep(const char *name)
 
 #endif
 
+#ifdef PLATFORM_COCOA
+void CocoBeep();
+#endif
+
 void BeepInformation()
 {
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONINFORMATION);
+#elif defined(PLATFORM_COCOA)
+	CocoBeep();
 #else
 	LinuxBeep("information");
 #endif
@@ -850,6 +856,8 @@ void BeepExclamation()
 {
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONEXCLAMATION);
+#elif defined(PLATFORM_COCOA)
+	CocoBeep();
 #else
 	LinuxBeep("warning");
 #endif
@@ -859,6 +867,8 @@ void BeepError()
 {
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONERROR);
+#elif defined(PLATFORM_COCOA)
+	CocoBeep();
 #else
 	LinuxBeep("error");
 #endif
@@ -868,6 +878,8 @@ void BeepQuestion()
 {
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONQUESTION);
+#elif defined(PLATFORM_COCOA)
+	CocoBeep();
 #else
 	LinuxBeep("question");
 #endif

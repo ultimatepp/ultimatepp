@@ -41,3 +41,5 @@ enum {
 };
 
 String GetSpecialDirectory(int i);
+
+void   CocoBeep();
