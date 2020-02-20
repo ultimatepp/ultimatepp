@@ -119,7 +119,7 @@ file
 	CocoCtrl.h,
 	CocoTop.h,
 	CocoApp.mm,
-	CocoCreate.mm,
+	CocoWin.mm,
 	CocoProc.mm,
 	CocoClip.mm,
 	CocoCtrl.cpp,

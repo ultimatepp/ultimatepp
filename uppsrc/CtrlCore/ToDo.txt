@@ -1,4 +1,3 @@
-- Inactive doc icon is not updated - [B] does not blink anymore
 - Make allocator work
 
 - MacOS crash when adding Label to TestChStyles
@@ -31,6 +30,7 @@ DONE:
 
 macos done:
 
+- Inactive doc icon is not updated - [B] does not blink anymore
 - TestChStyle problem with EditDate drop (needs one more click)
 - FileChooser
 - Slider in dark mode is transparent
