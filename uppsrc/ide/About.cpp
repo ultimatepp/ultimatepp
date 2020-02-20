@@ -71,7 +71,12 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		total += cpp[i].GetCount();
 	String h;
 	h << GenerateVersionInfo() << "\n";
-	h << "Using: " << MemoryUsedKb() << " KB\n";
+	h << "Using: " << MemoryUsedKb()
+#ifdef PLATFORM_COCOA
+		<< " KB of U++ heap\n";
+#else
+		<< " KB\n";
+#endif
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	if(IsUHDMode())
