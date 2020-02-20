@@ -46,7 +46,7 @@
 			#define PLATFORM_MACOS 1
 			#define PLATFORM_OSX 1
 			#ifndef flagUSEMALLOC
-				#define flagUSEMALLOC // TODO: investigate why is this necessary...
+				#define STD_NEWDELETE
 			#endif
 		#else
 			// zvzv mod
@@ -161,6 +161,7 @@
 
 #ifdef  flagCLR
 #define flagUSEMALLOC
+#define STD_NEWDELETE
 #endif
 
 #if __cplusplus >= 201100

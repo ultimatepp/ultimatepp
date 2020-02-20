@@ -291,7 +291,7 @@ void MemoryShrink()
 
 }
 
-#ifdef UPP_HEAP
+#if defined(UPP_HEAP) && !defined(STD_NEWDELETE)
 #include <new>
 
 #ifdef COMPILER_GCC

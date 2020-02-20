@@ -11,6 +11,7 @@
 #define MULTITHREADED
 #ifdef flagDLL
 	#define flagUSEMALLOC
+	#define STD_NEWDELETE
 #endif
 
 #ifdef flagDLL
