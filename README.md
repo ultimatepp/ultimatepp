@@ -1,6 +1,10 @@
 # Ultimate++
 
+<<<<<<< HEAD
 ![alt text](uppbox/uppweb/Resources/Images/Logo.png?raw=true& "Ultimate++ Logo")
+=======
+![alt text](uppbox/uppweb/Resources/Images/Logo.png?raw=true "Ultimate++ Logo")
+>>>>>>> Added logo to README.md
 
 Ultimate++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, etc.), and an integrated development environment.
 
