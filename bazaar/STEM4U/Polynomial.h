@@ -15,22 +15,6 @@ public:
 		Append(val);
     	Append(args...);
 	}
-	void Set(T val) {
-		Append(val);
-	}
-	template<typename... Args>
-	void Set(T val, Args... args) {
-		Append(val);
-    	Append(args...);
-	}
-	void Append(T val) {
-		c << val;
-	}
-	template<typename... Args>
-	void Append(T val, Args... args) {
-		c << val;
-    	Append(args...);
-	}
 	T &operator[](int i) {
 		if (i >= c.GetCount())
 			c.SetCount(i+1);
@@ -149,6 +133,16 @@ public:
     
 private:
 	Upp::Vector<T> c;
+
+	void Append() {}
+	void Append(T val) {
+		c << val;
+	}
+	template<typename... Args>
+	void Append(T val, Args... args) {
+		c << val;
+    	Append(args...);
+	}
 };
 
 template<typename T>

@@ -12,7 +12,7 @@ public:
 	}
 	template <typename T>
 	Rational(T v) {
-		*this = V;
+		*this = v;
 	}
 	template <typename T>
 	Rational(T n, T d) {
