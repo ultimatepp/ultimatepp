@@ -1,0 +1,38 @@
+topic "class intInf";
+[i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
+[ $$0,0#00000000000000000000000000000000:Default]
+[{_}%EN-US 
+[ {{10000@3 [s0; [*@7;4 intInf]]}}&]
+[s1;@(0.0.255)0%- &]
+[s1;:Upp`:`:intInf`:`:class:%- [@(0.0.255) class]_[* intInf]&]
+[s2; &]
+[s3; [2 An integer type with ][^https`:`/`/en`.wikipedia`.org`/wiki`/Arbitrary`-precision`_arithmetic^2 a
+rbitrary`-precision][2  including the usual arithmetic.]&]
+[s0;2 &]
+[s3;%- &]
+[ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
+[s4; &]
+[s5;:Upp`:`:intInf`:`:intInf`(`):%- [* intInf]()&]
+[s2; Class default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:intInf`:`:intInf`(const char`*`):%- [* intInf]([@(0.0.255) const]_[@(0.0.255) c
+har`*]_[*@3 c])&]
+[s2; Constructor from an integer included in string [%-*@3 c]..&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:intInf`:`:intInf`(const Upp`:`:String`&`):%- [* intInf]([@(0.0.255) const]_[_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
+[s2; Constructor from an integer included in string [%-*@3 s].&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
+[s4;%- &]
+[s5;:Upp`:`:intInf`:`:operator`=`(const char`*`):%- [@(0.0.255) const]_[_^Upp`:`:intInf^ i
+ntInf][@(0.0.255) `&]_[* operator`=]([@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 c])&]
+[s2; Logical operator equal to string [%-*@3 c].&]
+[s3; &]
+[s0; ]]

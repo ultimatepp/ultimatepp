@@ -1,0 +1,15 @@
+description "Science, technology, engineering, and mathematics libraries\377";
+
+uses
+	Core;
+
+file
+	STEM4U.h,
+	Rational.cpp,
+	Rational.h,
+	IntInf.h,
+	Polynomial.h,
+	src.tpp,
+	srcdoc.tpp,
+	Copying;
+
