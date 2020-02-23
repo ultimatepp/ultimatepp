@@ -128,7 +128,7 @@ int fceil(double value)
 
 int64 fround64(double value)
 {
-	return value >= INT64_MAX ? INT64_MAX : value <= INT64_MIN ? INT64_MIN
+	return value >= (double)INT64_MAX ? INT64_MAX : value <= (double)INT64_MIN ? INT64_MIN
 		: (int64)floor(value + 0.5);
 }
 
@@ -136,7 +136,7 @@ int64 fround64(double value)
 
 int64 ffloor64(double value)
 {
-	return value >= INT64_MAX ? INT64_MAX : value <= INT64_MIN ? INT64_MIN
+	return value >= (double)INT64_MAX ? INT64_MAX : value <= (double)INT64_MIN ? INT64_MIN
 		: (int64)floor(value);
 }
 

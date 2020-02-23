@@ -100,7 +100,7 @@ inline unsigned ValueGetHashValue(const int& x) {
 
 template<>
 inline unsigned ValueGetHashValue(const double& x) {
-	if(x >= INT64_MIN && x <= INT64_MAX && (int64)x == x)
+	if(x >= (double)INT64_MIN && x <= (double)INT64_MAX && (int64)x == x)
 		return UPP::GetHashValue((int64)x);
 	return UPP::GetHashValue(x);
 }

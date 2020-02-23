@@ -18,7 +18,6 @@ pkg_config((LINUX | FREEBSD) !X11) "gtk+-3.0 libnotify";
 
 file
 	Core readonly separator,
-	ToDo.txt,
 	CtrlCore.h options(BUILDER_OPTION) PCH,
 	MKeys.h,
 	stdids.h,

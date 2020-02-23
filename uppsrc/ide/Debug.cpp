@@ -246,27 +246,8 @@ void Ide::BuildAndDebug0(const String& srcfile)
 		One<Host> h = CreateHostRunDir();
 		h->ChDir(GetFileFolder(target));
 		VectorMap<String, String> bm = GetMethodVars(method);
-		String dbg = bm.Get("DEBUGGER", Null);
-		if(IsNull(dbg)) {
-			if(bm.Get("BUILDER", Null) == "MSC71") {
-				String sln = ForceExt(target, ".sln");
-				if(GetFileLength(sln) > 0)
-					h->Launch("devenv \"" + h->GetHostPath(sln) + "\" "
-					// + "\"" + h->GetHostPath(srcfile) + "\"" //TRC, 2011/09/26: wrong devenv argument
-					);
-				else
-					h->Launch("devenv \"" + h->GetHostPath(target)
-					//+ "\" \"" + h->GetHostPath(srcfile) //TRC, 2011/09/26: wrong devenv argument
-					+ "\" /debugexe "
-					);
-				return;
-			}
-			dbg = "gdb";
-		}
-		else
-			h->Launch('\"' + dbg + "\" \""
-//			          + h->GetHostPath(srcfile) + ' '
-			          + h->GetHostPath(target) + "\"", true);
+		String dbg = Nvl(bm.Get("DEBUGGER", Null), "gdb");
+		h->Launch('\"' + dbg + "\" \"" + h->GetHostPath(target) + "\"", true);
 	}
 }
 
@@ -311,13 +292,12 @@ void Ide::BuildAndDebug(bool runto)
 
 	bool console = ShouldHaveConsole();
 
-	if(findarg(builder, "GCC", "CLANG") >= 0) {
-		debugger = GdbCreate(pick(host), target, runarg, console);
-	}
 #ifdef PLATFORM_WIN32
-	else
+	if(findarg(builder, "GCC", "CLANG") < 0 || bm.Get("DEBUG_OPTIONS", String()).Find("-gcodeview") >= 0) // llvm-mingw can generate pdb symbolic info
 		debugger = PdbCreate(pick(host), target, runarg);
+	else
 #endif
+		debugger = GdbCreate(pick(host), target, runarg, console);
 
 	if(!debugger) {
 		IdeEndDebug();

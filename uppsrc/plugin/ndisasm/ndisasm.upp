@@ -2,9 +2,6 @@ description "Disassembler\3770,128,128";
 
 options(BUILDER_OPTION) NOWARNINGS;
 
-uses
-	Core;
-
 file
 	ndisasm.h,
 	ndisupp.cpp,

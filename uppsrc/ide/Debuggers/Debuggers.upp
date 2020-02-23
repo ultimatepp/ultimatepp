@@ -7,7 +7,7 @@ uses
 
 uses(!POSIX) plugin/ndisasm;
 
-library(WIN32 GCC) "dbghelp psapi";
+library(WIN32 (GCC | CLANG)) "dbghelp psapi";
 
 file
 	Debuggers.h options(BUILDER_OPTION) PCH,
