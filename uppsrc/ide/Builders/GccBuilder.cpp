@@ -481,12 +481,20 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -static";
 			if(HasFlag("WINCE"))
 				lnk << " -mwindowsce";
-			else if(HasFlag("WIN32") && !HasFlag("CLANG")) {
-				lnk << " -mwindows";
-				// if(HasFlag("MT"))
-					lnk << " -mthreads";
-				if(!HasFlag("GUI"))
-					lnk << " -mconsole";
+			else if(HasFlag("WIN32")) {
+				lnk << " -mthreads";
+				if(HasFlag("CLANG")) {
+					if(HasFlag("GUI"))
+						lnk << " -mwindows";
+					else
+						lnk << " -mconsole";
+				}
+				else {
+					lnk << " -mwindows";
+					// if(HasFlag("MT"))
+					if(!HasFlag("GUI"))
+						lnk << " -mconsole";
+				}
 			}
 			lnk << " -o " << GetHostPathQ(target);
 			if(createmap)

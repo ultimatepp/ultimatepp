@@ -53,9 +53,6 @@
    be able to #ifdef them... */
 #else
 /* Default these to unsupported unless we have config.h */
-# ifndef inline
-#  define inline
-# endif
 # ifndef restrict
 #  define restrict
 # endif
