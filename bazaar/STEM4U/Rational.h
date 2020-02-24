@@ -6,9 +6,9 @@ namespace Upp {
 class Rational : public Moveable<Rational> {
 public:
 	Rational() : num(0), den(1) {}
-	Rational(const Rational& d) {
-		num = d.num;
-		den = d.den;
+	Rational(const Rational& v) {
+		num = v.num;
+		den = v.den;
 	}
 	template <typename T>
 	Rational(T v) {
@@ -16,8 +16,13 @@ public:
 	}
 	template <typename T>
 	Rational(T n, T d) {
-		num = n;
-		den = d;
+		if (d < 0) {	
+			num = -n;
+			den = -d;
+		} else {
+			num = n;
+			den = d;
+		}
 	}
 	Rational(double n, double d) {
 		*this = Rational(n)/Rational(d);
@@ -56,8 +61,8 @@ public:
 		return num > den*intInf(right);
 	}
 	template <typename T>
-  	const Rational& operator=(T d) {
-  		num = d;
+  	const Rational& operator=(T v) {
+  		num = v;
   		den = 1;
   		return *this;
   	}
@@ -101,11 +106,16 @@ public:
   		den *= right.den; 	
   	}
   	void operator/=(const Rational& right) {
-  		if (&right == this) {
+  		if (&right == this)
   			num = den = 1;
-  		} else {
-	  		den *= right.num; 	
-	  		num *= right.den;
+  		else {
+  			if (right.num < 0) {
+		  		den *= -right.num; 	
+		  		num *= -right.den;
+  			} else {
+  				den *= right.num; 	
+		  		num *= right.den;
+  			}
   		}
   	}
   	bool operator==(Rational& right) const {
@@ -145,16 +155,14 @@ public:
 private:
 	intInf num, den;
 	
-	template <typename T>
-	void SimplifyVal(T val) {
-		intInf vval = val;
-		while (num%vval == 0 && den%vval == 0) {
-			num /= vval;
-			den /= vval;
+	void SimplifyVal(const intInf &val) {
+		while (num%val == 0 && den%val == 0) {
+			num /= val;
+			den /= val;
 		}
 	}
 	
-	friend Rational abs(const Rational &l);
+	friend Rational abs(const Rational &rat);
 	friend Rational pow(const Rational &l, int e);
 	friend Rational sqrt(const Rational &l);
 	friend String FormatRational(const Rational &d, int numDec = Null);
@@ -239,6 +247,10 @@ Rational operator/(T left, const Rational& right) {
 	Rational ret;
 	ret.num = right.den*left;
 	ret.den = right.num; 	
+	if (ret.den < 0) {
+		ret.num = -ret.num;
+		ret.den = -ret.den;
+	}
 	return ret;
 }
 
@@ -246,10 +258,14 @@ template <typename T>
 Rational operator/(const Rational& left, T right) {
 	Rational ret;
 	ret.num = left.num;
-	ret.den = left.den*right; 	
+	ret.den = left.den*right;
+	if (ret.den < 0) {
+		ret.num = -ret.num;
+		ret.den = -ret.den;
+	}
 	return ret;
 }
-
+ 
 }
-  
+ 
 #endif

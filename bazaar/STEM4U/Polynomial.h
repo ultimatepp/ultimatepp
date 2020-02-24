@@ -132,7 +132,7 @@ public:
     }
     
 private:
-	Upp::Vector<T> c;
+	Vector<T> c;
 
 	void Append() {}
 	void Append(T val) {
