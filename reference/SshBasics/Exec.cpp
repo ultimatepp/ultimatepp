@@ -17,4 +17,7 @@ void ExecListDir(SshSession& session)
 		return;
 	}
 	LOG(exec.GetErrorDesc());
+	
+	// Or you can use one of the helper functions instead:
+	// LOG("Stdout:\n" << SshExecute(session, cmdline));
 }
