@@ -318,8 +318,9 @@ int SignificantBits64(uint64 x)
 #endif
 }
 
-#ifdef COMPILER_MINGW
+#if defined(COMPILER_MINGW) && !defined(COMPILER_CLANG)
 
+#define MINGW_TLS_PATCH
 // This is hopefully a temporary fix for abysmal MINGW thread_local implementation
 // ALSO IMPORTANT: There are some mingw/lld issues that prevent TLS stuff to be used in inlines
 

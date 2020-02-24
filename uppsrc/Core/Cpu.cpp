@@ -171,7 +171,7 @@ void EndianSwap(int *v, size_t count) ENDIAN_SWAP
 void EndianSwap(int64 *v, size_t count) ENDIAN_SWAP
 void EndianSwap(uint64 *v, size_t count) ENDIAN_SWAP
 
-#ifdef COMPILER_MINGW
+#ifdef MINGW_TLS_PATCH
 
 static int fast_mingw_tlsndx = 0;
 

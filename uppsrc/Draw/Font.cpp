@@ -433,7 +433,7 @@ CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
 	return e;
 }
 
-#ifdef COMPILER_MINGW
+#ifdef MINGW_TLS_PATCH
 struct FontEntry {
 	CommonFontInfo info;
 	int64          font;

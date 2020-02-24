@@ -197,11 +197,15 @@ int64 usecs(int64 prev)
 	return std::chrono::duration_cast<std::chrono::microseconds>(p2.time_since_epoch()).count() - prev;
 }
 
+int msecs(int from) { return GetTickCount() - (dword)from; }
+
+/* // it looks like there might be a problem with std::chrono in llvm-mingw, reverting to original implementation for now
 int msecs(int prev)
 {
 	auto p2 = std::chrono::steady_clock::now();
 	return (int)std::chrono::duration_cast<std::chrono::milliseconds>(p2.time_since_epoch()).count() - prev;
 }
+*/
 
 void TimeStop::Reset()
 {

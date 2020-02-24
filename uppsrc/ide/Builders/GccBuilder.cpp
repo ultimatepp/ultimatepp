@@ -198,7 +198,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 		sb << Join(cc, cpp_options) << " -x c++-header " << GetHostPathQ(pch_header) << " -o " << GetHostPathQ(pch_file);
 
-		PutConsole("PCH: " + GetFileName(pch_header));
+		PutConsole("Precompiling header: " + GetFileName(pch_header));
 		if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_file), 1))
 			error = true;
 		Wait();

@@ -167,7 +167,7 @@ String MscBuilder::Pdb(String package, int slot, bool separate_pdb) const
 void DeletePCHFile(const String& pch_file)
 {
 	DeleteFile(pch_file);
-	PutVerbose("Deleting PCH: " + pch_file);
+	PutVerbose("Deleting precompiled header: " + pch_file);
 }
 
 bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
@@ -316,7 +316,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			StringBuffer sb;
 			sb << Join(cc, cpp_options) << Pdb(package, pch_slot, false) << " -Yc" << pch_common
 			   << " -Tp " << GetHostPathQ(pch_header) << " -Fo" + GetHostPathQ(pch_obj);
-			PutConsole("PCH: " + GetFileName(pch_header));
+			PutConsole("Precompiling header: " + GetFileName(pch_header));
 			if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_obj), 1))
 				error = true;
 			Wait();
