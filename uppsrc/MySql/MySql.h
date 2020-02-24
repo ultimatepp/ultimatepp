@@ -11,7 +11,7 @@
 #ifndef IPPROTO_IP
 #include <winsock2.h>
 #endif
-#include <MySql.h>
+#include <mysql.h>
 #endif
 
 #ifdef PLATFORM_POSIX
