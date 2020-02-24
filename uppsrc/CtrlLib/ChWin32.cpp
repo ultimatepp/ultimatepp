@@ -653,8 +653,7 @@ void ChSysInit()
 		}
 	}
 
-	if(Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW))))
-		sEmulateDarkTheme = true;
+	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
 
 	CtrlImg::Reset();
 	CtrlsImg::Reset();

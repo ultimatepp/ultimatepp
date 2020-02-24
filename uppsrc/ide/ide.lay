@@ -239,7 +239,7 @@ END_LAYOUT
 
 LAYOUT(BuildMethodsDefaultBuilderSetupLayout, 648, 500)
 	ITEM(Label, dv___0, SetLabel(t_("Compiler name")).LeftPosZ(0, 104).TopPosZ(4, 19))
-	ITEM(EditString, compiler, LeftPosZ(132, 516).TopPosZ(4, 19))
+	ITEM(EditString, compiler, HSizePosZ(132, 0).TopPosZ(4, 19))
 	ITEM(Label, dv___2, SetLabel(t_("External debugger")).LeftPosZ(0, 100).TopPosZ(24, 19))
 	ITEM(EditString, debugger, HSizePosZ(132, 0).TopPosZ(24, 19))
 	ITEM(Label, dv___4, SetLabel(t_("Common options")).LeftPosZ(0, 112).TopPosZ(44, 19))
