@@ -92,8 +92,10 @@ data transfer.&]
 ][*@3;3 SshChannel]&]
 [s0;#l288; This class encapsulates an SSH2 remote process execution 
 (exec) channel. It provides a means for executing a single shell 
-command on a remote host. If you need to run a real`-time, interactive 
-command line interface, you should consider using [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ S
+command on a remote host. Note that SshExec objects can only 
+be used once, since the protocol does not allow the reuse of 
+exec channels. If you need to run a real`-time, interactive command 
+line interface, you should consider using [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ S
 shShell] class instead. SshExec class is derived from SshChannel 
 class, and has pick semantics. &]
 [s3;%- &]
@@ -109,7 +111,8 @@ nt]_[* operator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[
 ]_[*@3 err])&]
 [s0;l288; Executes a remote process defined by the [%-*@3 cmd] command 
 line,returns its standard output in [%-*@3 out], its standard error 
-output in [%-*@3 err], and its exit code as the return value.&]
+output in [%-*@3 err], and its exit code as the return value. A 
+negative return value means protocol or internal error.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
@@ -117,6 +120,40 @@ output in [%-*@3 err], and its exit code as the return value.&]
 shSession][@(0.0.255) `&]_[*@3 session])&]
 [s0;l288; Constructor. Binds the SshExec instance to [%-*@3 session].&]
 [s3;%- &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Helper functions]]}}&]
+[s3;%- &]
+[s5;:Upp`:`:SshExecute`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) i
+nt]_[* SshExecute]([_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&]_[*@3 session], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd], 
+[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 err])&]
+[s2; Executes a remote process defined by the [%-*@3 cmd] command line, 
+returns its standard output in [%-*@3 out], its standard error 
+output in [%-*@3 err], and its exit code as the return value. A 
+negative return value means protocol or internal error. This 
+helper function will use the timeout value provided by the session.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SshExecute`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) i
+nt]_[* SshExecute]([_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&]_[*@3 session], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd], 
+[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 out])&]
+[s2; Executes a remote process defined by the [%-*@3 cmd] command line, 
+returns its output (stdout/stderr) in [%-*@3 out], and its exit 
+code as the return value. A negative return value means protocol 
+or internal error. This helper function will use the timeout 
+value provided by the session.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SshExecute`(Upp`:`:SshSession`&`,const Upp`:`:String`&`):%- [_^Upp`:`:String^ S
+tring]_[* SshExecute]([_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&]_[*@3 session], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd])&]
+[s2; Executes a remote process defined by the [%-*@3 cmd] command line. 
+and returns its output on success, and String`::GetVoid() on failure. 
+This helper function will use the timeout value provided by the 
+session.&]
+[s3; &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 SshTunnel]]}}&]
 [s3;%- &]

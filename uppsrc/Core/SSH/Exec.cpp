@@ -13,4 +13,25 @@ int SshExec::Execute(const String& cmd, String& out, String& err)
 	}
 	return GetError();
 }
+
+int SshExecute(SshSession& session, const String& cmd, String& out, String& err)
+{
+	return SshExec(session).Execute(cmd, out, err);
+}
+
+int SshExecute(SshSession& session, const String& cmd, String& out)
+{
+	String err;
+	int rc = SshExec(session).Execute(cmd, out, err);
+	if(!IsNull(err))
+		out.Cat(err);
+	return rc;
+}
+
+String SshExecute(SshSession& session, const String& cmd)
+{
+	String out, err;
+	return SshExecute(session, cmd, out, err) ? String::GetVoid(): out;
+}
+
 }

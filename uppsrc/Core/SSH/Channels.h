@@ -76,6 +76,10 @@ public:
     SshExec(SshSession& session) : SshChannel(session)                                      { ssh->otype = EXEC; };
 };
 
+int     SshExecute(SshSession& session, const String& cmd, String& out, String& err);
+int     SshExecute(SshSession& session, const String& cmd, String& out);
+String  SshExecute(SshSession& session, const String& cmd);
+
 class Scp : public SshChannel {
 public:
     bool   SaveFile(const char *path, const String& data);
