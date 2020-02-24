@@ -1,8 +1,8 @@
 #include <Core/Core.h>
+#include <STEM4U/STEM4U.h>
 
 using namespace Upp;
 
-#include <STEM4U/STEM4U.h>
 
 #ifdef flagTEST
 
