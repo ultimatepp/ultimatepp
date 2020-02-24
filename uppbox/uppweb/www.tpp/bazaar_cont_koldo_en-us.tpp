@@ -27,6 +27,7 @@ Glatt.]&]
 [s0;l320;i150;O0; [^topic`:`/`/Media`/srcdoc`/Media`$en`-us^2 Media]&]
 [s0;l320;i150;O0; [^topic`:`/`/OfficeAutomation`/srcdoc`/OfficeAutomation`$en`-us^2 Off
 iceAutomation]&]
+[s0;l320;i150;O0; [^topic`:`/`/STEM4U`/srcdoc`/STEM4U`$en`-us^2 STEM4U]&]
 [s0;l320;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfo`$en`-us^2 SysInfo]&]
 [s0;l320;i150;O0; [^topic`:`/`/Tcc`/srcdoc`/Tcc`$en`-us^2 Tcc]&]
 [s0;l320;i150;O0; [2 UltimateBook]&]
