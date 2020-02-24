@@ -305,7 +305,7 @@ Color DarkThemeCached(Color c)
 			}
 		}
 	}
-#ifdef COMPILER_MINGW
+#ifdef MINGW_TLS_PATCH
 	tcache;
 	static FastMingwTls<Cache *> tls_cache = &tcache;
 	Cache& cache = *tls_cache;

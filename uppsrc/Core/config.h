@@ -15,6 +15,11 @@
 
 	#define COMPILER_GCC 1
 	
+	#ifdef __clang__
+	#define COMPILER_CLANG 1
+	#endif
+	
+	
 	#if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
 		#define COMPILER_MINGW 1
 		#define PLATFORM_WIN32 1

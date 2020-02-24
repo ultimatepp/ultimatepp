@@ -326,7 +326,7 @@ void Heap::Free48(void *ptr)
 force_inline
 Heap *ThreadHeap()
 {
-#ifdef COMPILER_MINGW
+#ifdef MINGW_TLS_PATCH
 	static FastMingwTls<Heap *> heap_tls;
 #else
 	thread_local Heap *heap_tls;

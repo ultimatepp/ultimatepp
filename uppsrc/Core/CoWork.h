@@ -29,7 +29,7 @@ public:
 		Pool();
 		~Pool();
 
-	#ifdef COMPILER_MINGW
+	#ifdef MINGW_TLS_PATCH
 		static FastMingwTls<bool>   finlock;
 	#else
 		static thread_local bool    finlock;
@@ -43,7 +43,7 @@ public:
 
 	static Pool& GetPool();
 
-#ifdef COMPILER_MINGW
+#ifdef MINGW_TLS_PATCH
 	static FastMingwTls<int>      worker_index;
 	static FastMingwTls<CoWork *> current;
 #else
