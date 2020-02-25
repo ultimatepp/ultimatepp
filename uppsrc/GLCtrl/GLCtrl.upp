@@ -2,7 +2,7 @@ uses
 	CtrlCore,
 	plugin/glew;
 
-library(WIN32 GCC) "glaux glu32 opengl32";
+library(WIN32 (GCC | CLANG)) "glaux glu32 opengl32";
 
 pkg_config(LINUX | BSD) "gl glu";
 
