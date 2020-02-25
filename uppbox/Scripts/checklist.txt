@@ -2,3 +2,5 @@
 - Check dialog icons in win32 (TestChStyle)
 - Check examples/ImageView
 - Check app icon linking in Win32
+- Check OpenGl
+- Check SDLSoundDemo
