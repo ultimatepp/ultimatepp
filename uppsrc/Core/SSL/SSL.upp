@@ -2,15 +2,9 @@ description "OpenSSL based SSL support for Core\3770,128,128";
 
 library(POSIX) "crypto ssl";
 
-library(WIN32 MSC !SHARED) "libeay32MT ssleay32MT";
-
-library(WIN32 MSC SHARED) "libeay32MD ssleay32MD";
+library(WIN32 (MSC | CLANG)) "libeay32MT.lib ssleay32MT.lib";
 
 library(WIN32 GCC) "ssl crypto";
-
-library(WIN32) gdi32;
-
-link(WIN32 MSC SO) /nodefaultlib:libc;
 
 file
 	SSL.h,
