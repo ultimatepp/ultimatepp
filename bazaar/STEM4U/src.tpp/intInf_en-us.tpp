@@ -10,8 +10,10 @@ topic "class intInf";
 [s1;@(0.0.255)0%- &]
 [s1;:Upp`:`:intInf`:`:class:%- [@(0.0.255) class]_[* intInf]&]
 [s2; &]
-[s3; [2 An integer type with ][^https`:`/`/en`.wikipedia`.org`/wiki`/Arbitrary`-precision`_arithmetic^2 a
+[s3; [2 A signed integer type with ][^https`:`/`/en`.wikipedia`.org`/wiki`/Arbitrary`-precision`_arithmetic^2 a
 rbitrary`-precision][2  including the usual arithmetic.]&]
+[s0; [2 Arbitrary precision means that the type is never out of bounds.]&]
+[s0; [2 This feature comes with a huge performance penalty.]&]
 [s0;2 &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]

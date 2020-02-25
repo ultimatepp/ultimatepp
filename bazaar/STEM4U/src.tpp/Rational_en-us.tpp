@@ -11,9 +11,15 @@ topic "class Rational : public Moveable<Rational> ";
 [s1;:Upp`:`:Rational`:`:class:%- [@(0.0.255) class]_[* Rational]_:_[@(0.0.255) public]_[*@3 Mo
 veable]<[* Rational]>_&]
 [s2; &]
-[s0; [2 An arbitrary integer precision ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 r
-ational number][2  type based on intInf]&]
-[s0;2 &]
+[s0; [^topic`:`/`/STEM4U`/srcimp`/ArbitraryPrecision`_en`-us^2 An arbitrary 
+integer precision][2  ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 rati
+onal number][2  type based on intInf.]&]
+[s0; [2 Arbitrary precision means that the type is never out of bounds.]&]
+[s0; [2 A rational number means that it is a fraction of a numerator 
+and denominator.]&]
+[s0; [2 The goal of this focus is to allow ][*2 to handle almost infinite 
+precision lossless floating numbers]&]
+[s0; [2 This feature comes with a huge performance penalty.]&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s4;%- &]

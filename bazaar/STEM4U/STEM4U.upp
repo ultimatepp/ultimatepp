@@ -9,6 +9,7 @@ file
 	Rational.h,
 	IntInf.h,
 	Polynomial.h,
+	srcimp.tpp,
 	src.tpp,
 	srcdoc.tpp,
 	Copying;

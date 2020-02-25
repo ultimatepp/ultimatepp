@@ -15,8 +15,9 @@ who want to make a better world through science and technology.]&]
 :: [s0; [2 A templated polynomial type able to handle coefficients of 
 any type including arbitrary precision rational numbers]]
 :: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Rational`_en`-us^2 Rational]]
-:: [s0; [2 An arbitrary integer precision ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 r
-ational number][2  type based on intInf]]
+:: [s0; [^topic`:`/`/STEM4U`/srcimp`/ArbitraryPrecision`_en`-us^2 An arbitrary 
+integer precision][2  ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 rati
+onal number][2  type based on intInf]]
 :: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/intInf`_en`-us^2 intInf]]
 :: [s0; [2 An integer type with ][^https`:`/`/en`.wikipedia`.org`/wiki`/Arbitrary`-precision`_arithmetic^2 a
 rbitrary`-precision][2  including the usual arithmetic.]]}}&]
@@ -24,5 +25,5 @@ rbitrary`-precision][2  including the usual arithmetic.]]}}&]
 [s0; [2 STEM4U`_DemoTest allows to demonstrate some libraries features. 
 When TEST flag is set, it allows to test libraries.]&]
 [s0;2 &]
-[s0; [2 To know about used libraries, you can read ][^topic`:`/`/STEM4U`/srcdoc`/Credits`_en`-us^2 c
-redits][2 .]]]
+[s0; [2 To know about the libraries internally used, you can read the 
+][^topic`:`/`/STEM4U`/srcdoc`/Credits`_en`-us^2 credits][2 .]]]

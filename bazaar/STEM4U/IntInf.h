@@ -73,8 +73,8 @@ public:
     const intInf& operator+=(const intInf& right);
     const intInf& operator-=(const intInf& right);
     const intInf& operator*=(const intInf& right);
-    const intInf& operator/=(const intInf& right); // throw
-    const intInf& operator%=(const intInf& right); // throw
+    const intInf& operator/=(const intInf& right);
+    const intInf& operator%=(const intInf& right);
     const intInf& operator*=(ELEM_TYPE right);
 
     /* operations */
@@ -82,8 +82,8 @@ public:
     intInf operator+(const intInf& right) const;
     intInf operator-(const intInf& right) const;
     intInf operator*(const intInf& right) const;
-    intInf operator/(const intInf& right) const; // throw
-    intInf operator%(const intInf& right) const; // throw
+    intInf operator/(const intInf& right) const; 
+    intInf operator%(const intInf& right) const; 
     intInf operator*(ELEM_TYPE right) const;
 
 	template <typename T>
@@ -115,10 +115,10 @@ public:
 	}
 			
     /* integer square root */
-    intInf intSqrt() const; // throw
+    intInf intSqrt() const; 
 
     /* digit operations */
-    char digitAt(int i) const; // throw
+    char digitAt(int i) const; 
     int numberOfDigits() const;
 
     /* size in bytes */
@@ -128,12 +128,12 @@ public:
     String ToString() const;
 
     /* conversion to primitive types */
-    int toInt() const; // throw
-    long toLong() const; // throw
-    long long toLongLong() const; // throw
-    unsigned int toUnsignedInt() const; // throw
-    unsigned long toUnsignedLong() const; // throw
-    unsigned long long toUnsignedLongLong() const; // throw
+    int toInt() const; 
+    long toLong() const; 
+    long long toLongLong() const; 
+    unsigned int toUnsignedInt() const; 
+    unsigned long toUnsignedLong() const; 
+    unsigned long long toUnsignedLongLong() const; 
 
 	operator int() 					{return toInt();}
 	operator long() 				{return toLong();}
@@ -366,7 +366,7 @@ inline const intInf& intInf::operator*=(const intInf& right) {
 
 inline const intInf& intInf::operator/=(const intInf& right) {
     if (right == 0)
-        throw std::domain_error("division by zero");
+        throw Exc("division by zero");
 
     intInf R, D = (right.pos ? right : -right), N = (pos ? *this : -*this);
     bool oldpos = pos;
@@ -458,7 +458,7 @@ inline intInf intInf::operator*(const intInf& right) const {
 
 inline intInf intInf::operator/(const intInf& right) const {
     if (right == 0)
-        throw std::domain_error("division by zero");
+        throw Exc("division by zero");
 
     intInf Q, R, D = (right.pos ? right : -right), N = (pos ? *this : -*this);
     Q.val.SetCount(N.val.GetCount(), 0);
@@ -476,7 +476,7 @@ inline intInf intInf::operator/(const intInf& right) const {
 
 inline intInf intInf::operator%(const intInf& right) const {
     if (right == 0)
-        throw std::domain_error("division by zero");
+        throw Exc("division by zero");
 
     intInf R, D = (right.pos ? right : -right), N = (pos ? *this : -*this);
     for (int i = (int) N.val.GetCount() - 1; i >= 0; --i) {
