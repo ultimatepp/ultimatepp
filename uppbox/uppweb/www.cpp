@@ -714,7 +714,7 @@ String Downloads()
 		r << "::@W ";
 		bool next = false;
 		for(int i = 0; i < min(39, fn.GetCount()); i++)
-			if(fn[i].StartsWith(pass ? "upp-win" : "upp-x11")) {
+			if(fn[i].StartsWith(pass ? "upp-x11" : "upp-win")) {
 				if(next) r << "&[A0 &]";
 				next = true;
 				r << Format("%04d-%02d-%02d %02d:%02d",
