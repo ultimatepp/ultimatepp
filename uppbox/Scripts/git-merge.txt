@@ -1,4 +1,4 @@
-cd ~/upp.git
+cd ~/pr.upp.git # do not do this in upp.git
 
 # copy this text from from github:
 
