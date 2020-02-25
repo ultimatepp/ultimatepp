@@ -102,7 +102,7 @@ ctrl GridCtrl {
 
 
 	GetStdSize() { return Size(150, 100); }
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = default;
 
 	bool Indicator = false;
 	bool SelectRow = true;
