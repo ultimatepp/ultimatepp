@@ -24,7 +24,8 @@ file
 	win,
 	www,
 	git-merge.txt,
-	updateinfo.txt;
+	updateinfo.txt,
+	checklist.txt;
 
 mainconfig
 	"" = "SCRIPTS";
