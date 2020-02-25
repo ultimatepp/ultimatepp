@@ -3018,7 +3018,7 @@ String ArrayCtrl::AsText(String (*format)(const Value&), bool sel,
 	bool next = false;
 	for(int r = 0; r < GetCount(); r++)
 		if(!sel || IsSel(r)) {
-			if(next)
+			if(!next)
 				txt << row;
 			for(int i = 0; i < GetColumnCount(); i++) {
 				if(i)
