@@ -41,9 +41,12 @@ Frederico Rodrigues, Ruben Proost, Willem Kroes]&]
 [s0;+92 &]
 [s0; [+92 Ultimate`+`+ includes sources of following libraries and 
 resources:]&]
-[ {{2168:7832h1;@(204) [s0; [+75 Library]]
+[ {{3799:6201h1;@(204) [s0; [+75 Library / project]]
 :: [s0; [+75 Authors]]
-::^@2 [s0; [+75 zlib]]
+::^@2 [s0; [^https`:`/`/github`.com`/mstorsjo`/llvm`-mingw^+75 llvm`-mingw 
+(CLANG toolchain for Win32)]]
+::= [s0; [+75 Martin Storsjö]]
+::^ [s0; [+75 zlib]]
 ::= [s0; [+75 Jean`-loup Gailly and Mark Adler]]
 ::^ [s0; [+75 IJG JPEG library]]
 ::= [s0; [+75 Tom Lane, Philip Gladstone, Jim Boucher, Lee Crocker, Julian 
