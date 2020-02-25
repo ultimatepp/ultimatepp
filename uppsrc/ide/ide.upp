@@ -32,7 +32,7 @@ file
 	SelectPkg.cpp,
 	UppWspc.cpp,
 	NewPackageFile.cpp,
-	UppDlg.cpp,
+	Organizer.cpp,
 	Template.cpp,
 	ide.key,
 	Console.cpp,

@@ -439,10 +439,11 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 
 	void OptionAdd(int type, const char *title, const Array<OptItem>& o);
 	void AdjustPackageOptionCursor();
+	void Prepare(WithUppOptDlg<TopWindow>& dlg, int type);
 	void AddOption(int type);
 	void OptionMenu(Bar& bar);
 	void RemoveOption();
-	void EditOption();
+	void EditOption(bool duplicate);
 	void MoveOption(int d);
 
 	void AdjustFileOptionCursor();

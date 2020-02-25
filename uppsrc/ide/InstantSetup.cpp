@@ -143,7 +143,7 @@ void InstantSetup()
 			                                 "MSC19"
 			                 ) + ToUpper(x64s);
 		
-		#ifdef _DEBUG
+		#ifdef INSTANT_TESTING
 			method << "Test";
 		#endif
 	
@@ -153,7 +153,7 @@ void InstantSetup()
 			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		#ifndef _DEBUG
+		#ifdef INSTANT_TESTING
 			if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
 				if(!x64)
 					default_method = x86method;
@@ -196,7 +196,7 @@ void InstantSetup()
 
 				String& sslbin = bins.At(2);
 				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
-					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin64" : "bin/OpenSSL-Win/bin");
+					sslbin = GetExeDirFile(x64 ? "bin/openssl/bin64" : "bin/openssl/bin");
 
 				String& sdlbin = bins.At(3);
 				if(IsNull(sdlbin) || ToLower(sdlbin).Find("sdl2") >= 0)
@@ -225,7 +225,7 @@ void InstantSetup()
 	
 				String& sslinc = incs.At(4);
 				if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
-					sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
+					sslinc = GetExeDirFile("bin/openssl/include");
 
 				String& sdlinc = incs.At(5);
 				if(IsNull(sdlinc) || ToLower(sdlinc).Find("sdl2") >= 0)
@@ -250,7 +250,7 @@ void InstantSetup()
 				}
 				String& ssllib = libs.At(ii++);
 				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib64" : "bin/OpenSSL-Win/lib");
+					ssllib = GetExeDirFile(x64 ? "bin/openssl/lib64" : "bin/openssl/lib32");
 				
 				String& sdllib = libs.At(ii++);
 				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
@@ -304,10 +304,11 @@ void InstantSetup()
 		}
 
 	String bin = GetExeDirFile("bin");
-	if(DirectoryExists(bin + "/mingw64"))
+
+	if(DirectoryExists(bin + "/clang")) // hopefully deprecated, but keep it for now
 		for(int x64 = 0; x64 < 2; x64++) {
-			String method = x64 ? "MINGWx64" : "MINGW";
-		#ifdef _DEBUG
+			String method = x64 ? "CLANGx64" : "CLANG";
+		#ifdef INSTANT_TESTING
 			method << "Test";
 		#endif
 			VectorMap<String, String> bm = GetMethodVars(method);
@@ -315,7 +316,83 @@ void InstantSetup()
 			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		#ifndef _DEBUG
+		#ifdef INSTANT_TESTING
+			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
+				if(!x64)
+					default_method = Nvl(default_method, method);
+				continue;
+			}
+		#endif
+	
+			bmSet(bm, "BUILDER", "CLANG");
+			bmSet(bm, "COMPILER", x64 ? "" : "i686-w64-mingw32-c++");
+			bmSet(bm, "COMMON_OPTIONS", "");
+			bmSet(bm, "COMMON_CPP_OPTIONS", "");
+			bmSet(bm, "COMMON_C_OPTIONS", "");
+			bmSet(bm, "COMMON_LINK", "");
+			bmSet(bm, "COMMON_FLAGS", "");
+			bmSet(bm, "DEBUG_INFO", "2");
+			bmSet(bm, "DEBUG_BLITZ", "1");
+			bmSet(bm, "DEBUG_LINKMODE", "0");
+			bmSet(bm, "DEBUG_OPTIONS", "-O0 -g -gcodeview");
+			bmSet(bm, "DEBUG_FLAGS", "");
+			bmSet(bm, "DEBUG_LINK", "-Wl,-pdb= -Wl,--stack,20000000");
+			bmSet(bm, "RELEASE_BLITZ", "");
+			bmSet(bm, "RELEASE_LINKMODE", "0");
+			bmSet(bm, "RELEASE_OPTIONS", "-O3 ");
+			bmSet(bm, "RELEASE_FLAGS", "");
+			bmSet(bm, "RELEASE_LINK", "Wl,-pdb= -Wl,--stack,20000000");
+			bmSet(bm, "DEBUGGER", "gdb");
+			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
+			bmSet(bm, "DISABLE_BLITZ", "");
+			
+	//		bmSet(bm, "LINKMODE_LOCK", "0");
+	
+			String clang = bin + "/clang";
+
+			bins.At(0) = clang + "/bin";
+			bins.At(1) = clang + (x64 ? "/x86_64-w64-mingw32/bin" : "/i686-w64-mingw32/bin");
+			bins.At(2) = bin + (x64 ? "/openssl/bin64" : "/openssl/bin32");
+			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			bins.At(4) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+			bins.At(5) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+
+			incs.At(0) = clang + "/include";
+			incs.At(1) = bin + "/openssl/include";
+			incs.At(2) = GetExeDirFile("bin/SDL2/include");
+			incs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
+			incs.At(4) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
+
+			libs.At(0) = clang + "/lib";
+			libs.At(1) = bin + (x64 ? "/openssl/lib64" : "/openssl/lib32");;
+			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
+			libs.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+	
+			bm.GetAdd("PATH") = Join(bins, ";");
+			bm.GetAdd("INCLUDE") = Join(incs, ";");
+			bm.GetAdd("LIB") = Join(libs, ";");
+			
+			SaveVarFile(ConfigFile(method + ".bm"), bm);
+			dirty = true;
+	
+			if(!x64)
+				default_method = Nvl(default_method, method);
+		}
+
+
+	if(DirectoryExists(bin + "/mingw64")) // hopefully deprecated, but keep it for now
+		for(int x64 = 0; x64 < 2; x64++) {
+			String method = x64 ? "MINGWx64" : "MINGW";
+		#ifdef INSTANT_TESTING
+			method << "Test";
+		#endif
+			VectorMap<String, String> bm = GetMethodVars(method);
+	
+			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
+			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
+			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+		#ifdef INSTANT_TESTING
 			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
 				if(!x64)
 					default_method = Nvl(default_method, method);
