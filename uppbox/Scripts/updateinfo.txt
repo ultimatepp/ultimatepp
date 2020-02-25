@@ -18,22 +18,26 @@ i686-win32-dwarf
 
 directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
 
-
-Now download clang 32/64
-search for ld.ldd.exe 32/64
+http://releases.llvm.org/download.html
+Now download clang 64
+search for ld.ldd.exe in bin
 
 replace ld.exe in
 
 C:\upp\bin\mingw64\64\x86_64-w64-mingw32\bin
 C:\upp\bin\mingw64\32\i686-w64-mingw32\bin
 
+Check MingwCatchTest
+Check exe icon issue
 
 initial: MinGW-W64 GCC-7.2.0
 2019-03-22: 8.1.0
+2020-02-13: ldd.exe update to clang 9.0.0
 
 ------------------------------------------------------------------
 OpenSSL
 
+// deprecated
 https://www.npcglib.org/~stathis/blog/precompiled-openssl/
 
 install 1.0.2? Win32, Win64
@@ -45,6 +49,16 @@ Alternative: Domestic build... (ask Novo :)
 initial: 1.0.2l
 2019-03-31: 1.0.2r
 
+// new
+
+From https://slproweb.com/products/Win32OpenSSL.html
+download and install
+
+Win32 OpenSSL v1.0.2?
+Win64 OpenSSL v1.0.2?
+
+Copy corresponding files (minimum of them)
+Test CLANG/CLANGx64/MSBT/MSBTx64
 ------------------------------------------------------------------
 plugin/jpg
 

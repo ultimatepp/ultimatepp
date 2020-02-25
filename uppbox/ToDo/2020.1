@@ -1,0 +1,145 @@
+- Report chrono issue
+
+- MacOS crash when adding Label to TestChStyles
+- Update credits
+- Run options - if path has spaces in it, " should be added
+- reference/Watermark @N does not work
+- add .ddl to theide
+
+NTH:
+
+REJECTED as we are going to use clang:
+
+- Mingw: Release mode theide crash, symptom missing doc points
+- Mingw compiled theide, TestChStyle, breakpoint 699 ChWin32.cpp - no info about local variables (also in Console, seems consistent)
+- runtime .dll (?) - UCRT is OK for now
+
+DONE:
+
+- clang autosetup
+- Ide not blinking while building win32/clang build - SOMETIMES :(
+- Linked in (-30:-39.-52) (related to ^^^?)
+- clang problem with stopping the debugger via Shift+F5 (Console test, )
+- Build methods: compiler name, debugger to separated lines
+- Mingw: Make things run with F5 even in release mode, "Failed to obtain" should only be shown when debugger stops and even then things should work
+- Remove ClassicCtrls, AmbientCtrls
+- usc columnlist
+- usc color pusher
+- UHD tree [-] [+]
+- InsetFrame vs DefaultFrame
+- LayDes .usc: Small defect in  slider thumb in SD mode
+- Laydes Rect is still to aggresive
+- Vertical centering of DropList text is a bit off
+- Win32 - always use dark mode, always use UHD
+- Some problem when switching skin should be solved
+- Win32 menu checkbox
+- Classic is broken
+- ClassicCtrlsImg
+- Ide: When dark editor in light theme, svn history is invisible (as text is white)
+- Unknown layout type should have better visual
+- LayDes menu background color
+- usc treectrl
+
+CLANG done:
+- clang32
+- idmapBench still does not compile
+- remove mingw thread_local hacks
+- plugin/tif
+- ImageView
+- clang -mconsole / -mwindows
+
+
+macos done:
+
+- Make allocator work
+- Inactive doc icon is not updated - [B] does not blink anymore
+- TestChStyle problem with EditDate drop (needs one more click)
+- FileChooser
+- Slider in dark mode is transparent
+- spin buttons slight visual problem in dark mode
+- <-|-> cursor looks bad in dark mode
+- Standard visual glitches in dark theme
+- Option box focus issue
+- Remove menu slide effect
+- U++ menu has some issues
+
+gtk3 DONE:
+
+- Resizing delay
+- Refresh issue
+- Test & Fix filesel & fileselector
+- Combobox push is weird
+- right scrollbar
+- Test grip resize
+- toolbar button highlight
+- correct checks in menu
+- uword cannot be resized smaller
+- Scrollbar margins (better fit for slider)i
+- Scrollbar Correct minsize, barsize...
+- FileSelector
+- Mint-Y disabled color is wrong
+- Mint-Y tooltip color is wrong
+- .iml cursors in UHD are wrong (e.g. header <-|->)
+- cxZ  Uword - wrong caret
+- Combobox appearance issues (minor, round corners broken on the left)
+- spinbuttons in UWord
+- read-only dropchoice left colorGUI
+- ColorPopup background
+- Fix IsPainting
+- Header synthetise
+- Resizing fix black
+- Slider thumb
+- Remove DDUMPs
+- TabBar synthetise
+- Problem with theide menu
+- LabelBox
+- GtkStyleBool("has-backward-stepper")
+- DropChoice read only active edge
+- Scale must not be same as UHD
+- makefile pkg-config support
+- Test with 3.8
+- TraditionalOk ugly scrollbars (centre image)
+- Blue Menta ugly scrollbars (round)
+- CleanTheme for X11
+- libgtk-3-dev to buildrequires
+- Test dark theme
+- Test rect theme
+- Check FileSel
+- a lot of work in Redmond
+- check CtrlCore/Ctrl.tpp
+- tooltip issue
+- test DateTimeCtrl in dark mode
+- 3.8 theme
+- PopupInfo issue
+- FileSel icons for Video etc
+- ColumnList selected item background (Mint-X)
+- disabled color in Breeze-Dark
+- Problem with hot3 in scrollbar horizontal (check in SD)
+- Problem with radio buttons in StdStyle - perhaps too big?
+- OpenGL
+- GtkWnd warnings
+- GtkDnD warnings
+- DnD Sample size UHD
+- ide menu in X11 ch
+- TrayIconGtk warnings
+- Disabled empty combobox (FileSel::SelectDir) does not look nice
+- Error state (red) EditField cosmetics
+- Pushbutton push does not look nice
+- DropChoice<EditString>::Error problem
+- DarkCold: problem slight problem with scrollbars
+- Improve scrollbars button borders
+- Scrollbars disabled monocolor
+- spinbutton cosmetics
+- ide missing vertical line
+- DropChoice STDSIZE (.TopPosZ(10))
+- LeftRoundness with DropChoice (DropChoiceRdO)
+- Improve progress?
+- EditDate / EditTime problems
+- Ide split buttons look unexpected
+- Issue with editfield text clipping in the right
+- Possible issue with Capture (e.g. ide about box)
+- WithDropChoice ch issue (again...)
+- Problem with multibutton is back again
+- Redmond scrollbars width
+- Improve focus visuals
+
