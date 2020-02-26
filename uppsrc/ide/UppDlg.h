@@ -240,7 +240,7 @@ int FlagFilter(int c);
 int FlagFilterM(int c);
 
 struct UsesDlg : public WithUppOptPushDlg<TopWindow> {
-	void New();
+	bool New();
 
 	typedef UsesDlg CLASSNAME;
 

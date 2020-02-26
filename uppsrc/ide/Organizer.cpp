@@ -104,9 +104,11 @@ int CondFilter(int c) {
 	return c == '!' || c == '(' || c == ')' || c == '&' || c == '|' ? c : FlagFilter(c);
 }
 
-void UsesDlg::New()
+bool UsesDlg::New()
 {
-	text <<= SelectPackage("Select package");
+	String s = SelectPackage("Select package");
+	text <<= s;
+	return !IsNull(s);
 }
 
 UsesDlg::UsesDlg()
@@ -114,7 +116,7 @@ UsesDlg::UsesDlg()
 	CtrlLayoutOKCancel(*this, "Uses");
 	when.SetFilter(CondFilter);
 	text.SetDisplay(Single<UsesDisplay>());
-	text.WhenPush = THISBACK(New);
+	text.WhenPush = [=] { New(); };
 }
 
 void PackageEditor::SaveOptions() {
@@ -304,8 +306,7 @@ void PackageEditor::AddOption(int type)
 		return;
 	if(type == USES) {
 		UsesDlg dlg;
-		dlg.New();
-		if(dlg.Run() == IDOK)
+		if(dlg.New() && dlg.Run() == IDOK)
 			SetOpt(option, USES, actual.uses.Add(), ~dlg.when, ~dlg.text);
 		return;
 	}
