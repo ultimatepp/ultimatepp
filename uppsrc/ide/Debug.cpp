@@ -43,8 +43,11 @@ void Ide::RunArgs() {
 		dlg.arg.GetSelection(l, h);
 		String s = file ? SelectFileOpen("All files\t*.*") : SelectDirectory();
 		dlg.arg.SetSelection(l, h);
-		if(s.GetCount())
+		if(s.GetCount()) {
+			if(s.Find(' ') >= 0)
+				s = '\"' + s + '\"';
 			dlg.arg.Insert(s);
+		}
 	};
 	dlg.ifile.SetImage(CtrlImg::File());
 	dlg.ifile << [&] { Ins(true); };
