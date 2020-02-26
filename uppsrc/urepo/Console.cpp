@@ -32,7 +32,7 @@ int UrepoConsole::System(const char *cmd)
 {
 	if(!IsOpen())
 		Open();
-	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));
+	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(SLtBlue()));
 	int ii = list.GetCount();
 	LocalProcess p;
 	if(!p.Start(cmd))
@@ -60,7 +60,7 @@ int UrepoConsole::System(const char *cmd)
 	int code = canceled ? -1 : p.GetExitCode();
 	if(code)
 		while(ii < list.GetCount()) {
-			list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(LtRed));
+			list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(SLtRed()));
 			ii++;
 		}
 	return code;
