@@ -829,13 +829,44 @@ ctrl EditTimeSpin {
 fn DrawArrowButton(w, rr, dir)
 {
 	DrawEdgeButton(w, rr);
-	DrawVertArrow(w, rr, (rr.right - rr.left) / 5, dir);
+	DrawVertArrow(w, rr, OptionSize() / 3, dir);
+}
+
+fn DrawHArrowButton(w, rr, dir)
+{
+	DrawEdgeButton(w, rr);
+	DrawHorzArrow(w, rr, dir);
 }
 
 fn DrawDropButton(w, rr)
 {
 	DrawArrowButton(w, rr, -1);
 }
+
+fn PaintVScrollBar(w, r)
+{
+	wd = r.right - r.left;
+	up = r;
+	r.top = (up.bottom = up.top + wd);
+	down = r;
+	r.bottom = (down.top = down.bottom - wd);
+	DrawArrowButton(w, up, 1);
+	DrawArrowButton(w, down, -1);
+	w.DrawRect(r, :SWhiteGray);
+}
+
+fn PaintHScrollBar(w, r)
+{
+	hg = r.bottom - r.top;
+	left = r;
+	r.left = (left.right = left.left + hg);
+	right = r;
+	r.right = (right.left = right.right - hg);
+	DrawHArrowButton(w, left, 1);
+	DrawHArrowButton(w, right, -1);
+	w.DrawRect(r, :SWhiteGray);
+}
+
 
 ctrl DropList {
 	group "Input fields";
@@ -959,18 +990,6 @@ fn PaintCenterText(w, x, y, text, fnt, color)
 {
 	sz = GetTextSize(text, fnt);
 	w.DrawText(x - sz.cx / 2, y - sz.cy / 2, text, fnt, color);
-}
-
-fn PaintVScrollBar(w, r)
-{
-	wd = r.right - r.left;
-	up = r;
-	r.top = (up.bottom = up.top + wd);
-	down = r;
-	r.bottom = (down.top = down.bottom - wd);
-	DrawArrowButton(w, up, 1);
-	DrawArrowButton(w, down, -1);
-	w.DrawRect(r, :SWhiteGray);
 }
 
 ctrl ArrayCtrl {

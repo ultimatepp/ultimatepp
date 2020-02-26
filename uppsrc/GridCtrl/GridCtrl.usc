@@ -1,30 +1,11 @@
 fn PaintVertSb(w, r)
 {
-	wd = r.right - r.left;
-	up = r;
-	r.top = (up.bottom = up.top + wd);
-	down = r;
-	r.bottom = (down.top = down.bottom - wd);
-	DrawButtonFrame(w, up);
-	PaintRcCenterImage(w, up, "ClassicCtrlsImg::UA");
-	DrawButtonFrame(w, down);
-	PaintRcCenterImage(w, down, "ClassicCtrlsImg::DA");
-	w.DrawRect(r, :SWhiteGray);
+	PaintVScrollBar(w, r);
 }
 
 fn PaintHorzSb(w, r)
 {
-	hg = r.bottom - r.top;
-	left = r;
-	r.left = (left.right = left.left + hg);
-	right = r;
-	r.right = (right.left = right.right - hg);
-	w.DrawRect(left, :SLtGray);
-	DrawButtonFrame(w, left);
-	PaintRcCenterImage(w, left, "ClassicCtrlsImg::LA");
-	DrawButtonFrame(w, right);
-	PaintRcCenterImage(w, right, "ClassicCtrlsImg::RA");
-	w.DrawRect(r, :SWhiteGray);
+	PaintHScrollBar(w, r);
 }
 
 fn PaintHeader(w, r, text, sorting = 0)
