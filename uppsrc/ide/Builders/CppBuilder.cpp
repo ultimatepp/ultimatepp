@@ -411,15 +411,6 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	return cc;
 }
 
-String CppBuilder::IncludesShort(const char *sep, const String& package, const Package& pkg)
-{
-	String cc;
-	for(int i = 0; i < include.GetCount(); i++)
-		cc << sep << GetHostPathShortQ(include[i]);
-	cc << sep << GetHostPathShortQ(outdir);
-	return cc;
-}
-
 bool IsSvnDir2(const String& p)
 { // this is a cope of usvn/IsSvnDir to avoid modular issues
 	if(IsNull(p))

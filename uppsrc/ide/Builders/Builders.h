@@ -34,7 +34,6 @@ struct CppBuilder : Builder {
 	Vector<String>         CustomStep(const String& path, const String& package, bool& error);
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
-	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);
 	void                   SaveBuildInfo(const String& package);
 	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);

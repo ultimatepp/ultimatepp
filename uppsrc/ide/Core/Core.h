@@ -469,9 +469,7 @@ struct Builder {
 	// TODO: move other methods if needed
 	void                   ChDir(const String& path);
 	String                 GetHostPath(const String& path) const;
-	String                 GetHostPathShort(const String& path) const;
 	String                 GetHostPathQ(const String& path) const;
-	String                 GetHostPathShortQ(const String& path) const;
 	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
 	Host::FileInfo         GetFileInfo(const String& path) const;
 	Time                   GetFileTime(const String& path) const;
