@@ -279,7 +279,7 @@ void TopicEditor::FormatMenu(Bar& bar)
 	bar.Separator();
 	editor.IndexEntryTool(bar);
 	bar.Break();
-	editor.HyperlinkTool(bar, 300, K_CTRL_H);
+	editor.HyperlinkTool(bar, Zx(300), K_CTRL_H);
 	bar.Separator();
 	editor.ParaTools(bar);
 }
