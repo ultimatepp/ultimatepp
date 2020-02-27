@@ -416,13 +416,14 @@ bool Pdb::RunToException()
 #else
 						   && bp_set.Find(t.context32.Eip - 1) >= 0
 #endif
-						) // We have stopped at breakpoint, need to move address back
+						) { // We have stopped at breakpoint, need to move address back
 					#ifdef CPU_64
 							if(win64)
 								t.context64.Rip--;
 							else
 					#endif
 								t.context32.Eip--;
+						}
 						context = t;
 					}
 				}

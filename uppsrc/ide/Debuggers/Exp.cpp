@@ -182,7 +182,7 @@ int64 Pdb::GetInt64(Pdb::Val v)
 	GETINT(SINT8, int64);
 	case FLT:
 	case DBL:
-		if(v.fval >= _I64_MIN && v.fval <= _I64_MAX)
+		if(FitsInInt64(v.fval))
 			return (int64)v.fval;
 	}
 	ThrowError("Invalid operand");

@@ -341,7 +341,7 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O3 ");
 			bmSet(bm, "RELEASE_FLAGS", "");
-			bmSet(bm, "RELEASE_LINK", "Wl,-pdb= -Wl,--stack,20000000");
+			bmSet(bm, "RELEASE_LINK", "-Wl,--stack,20000000");
 			bmSet(bm, "DEBUGGER", "gdb");
 			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 			bmSet(bm, "DISABLE_BLITZ", "");

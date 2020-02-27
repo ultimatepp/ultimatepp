@@ -541,7 +541,7 @@ void PdfDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	if(fill)   PutrgColor(color, pattern);
 	if(stroke) { PutRGColor(outline); PutLineWidth(width); }
 	if(!fill && !stroke) return;
-	const char *closeop = (fill & stroke ? "B*" : fill ? "f*" : "S");
+	const char *closeop = fill && stroke ? "B*" : fill ? "f*" : "S";
 	while(--disjunct_polygon_count_count >= 0) {
 		int disj = *disjunct_polygon_counts++;
 		while(disj > 0) {
