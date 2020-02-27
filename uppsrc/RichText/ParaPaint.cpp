@@ -13,7 +13,7 @@ Color PaintInfo::ResolveInk(Color ink) const
 
 Color PaintInfo::ResolvePaper(Color paper) const
 {
-	return darktheme ? Nvl(DarkThemeCached(paper), SColorPaper()) : Nvl(paper, SColorPaper());
+	return IsNull(paper) ? paper : darktheme ? DarkThemeCached(paper) : paper;
 }
 
 RichPara::Lines RichPara::Begin(RichContext& rc) const
