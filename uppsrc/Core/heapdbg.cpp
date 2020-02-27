@@ -46,7 +46,7 @@ struct alignas(16) DbgBlkHeader {
 
 static const char *DbgFormat(char *b, DbgBlkHeader *p)
 {
-	sprintf(b, "--memory-breakpoint__ %u ", (dword)~(p->serial ^ (uintptr_t)p));
+	sprintf(b, "--memory-breakpoint__ %u ", (unsigned int)~(p->serial ^ (uintptr_t)p));
 	return b;
 }
 

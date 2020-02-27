@@ -318,6 +318,11 @@ int SignificantBits64(uint64 x)
 #endif
 }
 
+inline bool FitsInInt64(double x)
+{
+	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
+}
+
 #if defined(COMPILER_MINGW) && !defined(COMPILER_CLANG)
 
 #define MINGW_TLS_PATCH

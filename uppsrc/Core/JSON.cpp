@@ -262,7 +262,7 @@ template<> void Jsonize(JsonIO& io, int64& var)
 		}
 		if(IsNumber(v)) {
 			double d = v;
-			if(d >= INT64_MIN && d <= INT64_MAX) {
+			if(FitsInInt64(d)) {
 				var = (int64)d;
 				return;
 			}

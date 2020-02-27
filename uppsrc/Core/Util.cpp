@@ -762,7 +762,7 @@ AbortExc::AbortExc() :
 
 String GetErrorMessage(DWORD dwError) {
 	char h[2048];
-	sprintf(h, "%08x", dwError);
+	sprintf(h, "%08x", (int)dwError);
 #ifdef PLATFORM_WINCE //TODO
 	return h;
 #else

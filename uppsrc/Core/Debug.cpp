@@ -247,7 +247,7 @@ LONG __stdcall sDumpHandler(LPEXCEPTION_POINTERS ep) {
 	char h[200];
 	sprintf(h, "CRASH: %d-%02d-%02d %02d:%02d:%02d code: 0x%X  address: 0x%p",
 	        st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond,
-	        er->ExceptionCode, er->ExceptionAddress);
+	        (int)er->ExceptionCode, er->ExceptionAddress);
 	RLOG("============ CRASH ================================================");
 	RLOG(h);
 	return sPrev ? (*sPrev)(ep) : 0 /*EXCEPTION_CONTINUE_SEARCH*/;

@@ -4,6 +4,13 @@
 
 namespace Upp {
 
+#ifdef COMPILER_CLANG
+#define CLANG_NOTHROW __attribute__((nothrow))
+#else
+#define CLANG_NOTHROW
+#endif
+
+
 #define LLOG(x)  // DLOG(x)
 
 int  GetClipboardFormatCode(const char *format_id);
@@ -82,7 +89,7 @@ String Get(UDropTarget *dt, const char *fmt)
 	return dt->Get(fmt);
 }
 
-STDMETHODIMP UDropTarget::QueryInterface(REFIID iid, void ** ppv)
+STDMETHODIMP CLANG_NOTHROW UDropTarget::QueryInterface(REFIID iid, void ** ppv)
 {
 	if(iid == IID_IUnknown || iid == IID_IDropTarget) {
 		*ppv = this;
@@ -152,7 +159,7 @@ void UDropTarget::Repeat()
 	Ctrl::DnDRepeat();
 }
 
-STDMETHODIMP UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
+STDMETHODIMP CLANG_NOTHROW UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
 	GuiLock __;
 	LLOG("DragEnter " << pt);
@@ -177,7 +184,7 @@ STDMETHODIMP UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, PO
 }
 
 
-STDMETHODIMP UDropTarget::DragOver(DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
+STDMETHODIMP CLANG_NOTHROW UDropTarget::DragOver(DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
 	LLOG("DragOver " << pt << " keys: " << grfKeyState);
 	DnD(pt, false, pdwEffect, grfKeyState);
@@ -197,7 +204,7 @@ void UDropTarget::EndDrag()
 	Ctrl::DnDLeave();
 }
 
-STDMETHODIMP UDropTarget::DragLeave()
+STDMETHODIMP CLANG_NOTHROW UDropTarget::DragLeave()
 {
 	LLOG("DragLeave");
 	EndDrag();
@@ -205,7 +212,7 @@ STDMETHODIMP UDropTarget::DragLeave()
 	return NOERROR;
 }
 
-STDMETHODIMP UDropTarget::Drop(LPDATAOBJECT, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
+STDMETHODIMP CLANG_NOTHROW UDropTarget::Drop(LPDATAOBJECT, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
 	LLOG("Drop");
 	if(Ctrl::GetDragAndDropSource())
@@ -285,7 +292,7 @@ struct UDropSource : public IDropSource {
 	UDropSource() { rc = 1; }
 };
 
-STDMETHODIMP UDataObject::QueryInterface(REFIID iid, void ** ppv)
+STDMETHODIMP CLANG_NOTHROW UDataObject::QueryInterface(REFIID iid, void ** ppv)
 {
 	if(iid == IID_IUnknown || iid == IID_IDataObject) {
 		*ppv = this;
@@ -311,7 +318,7 @@ void SetMedium(STGMEDIUM *medium, const String& data)
 	}
 }
 
-STDMETHODIMP UDataObject::GetData(FORMATETC *fmtetc, STGMEDIUM *medium)
+STDMETHODIMP CLANG_NOTHROW UDataObject::GetData(FORMATETC *fmtetc, STGMEDIUM *medium)
 {
 	String fmt = FromWin32CF(fmtetc->cfFormat);
 	ClipData *s = data.FindPtr(fmt);
@@ -323,17 +330,17 @@ STDMETHODIMP UDataObject::GetData(FORMATETC *fmtetc, STGMEDIUM *medium)
 	return DV_E_FORMATETC;
 }
 
-STDMETHODIMP UDataObject::GetDataHere(FORMATETC *, STGMEDIUM *)
+STDMETHODIMP CLANG_NOTHROW UDataObject::GetDataHere(FORMATETC *, STGMEDIUM *)
 {
     return DV_E_FORMATETC;
 }
 
-STDMETHODIMP UDataObject::QueryGetData(FORMATETC *fmtetc)
+STDMETHODIMP CLANG_NOTHROW UDataObject::QueryGetData(FORMATETC *fmtetc)
 {
 	return data.Find(FromWin32CF(fmtetc->cfFormat)) >= 0 ? S_OK : DV_E_FORMATETC;
 }
 
-STDMETHODIMP UDataObject::GetCanonicalFormatEtc(FORMATETC *, FORMATETC *pformatetcOut)
+STDMETHODIMP CLANG_NOTHROW UDataObject::GetCanonicalFormatEtc(FORMATETC *, FORMATETC *pformatetcOut)
 {
     pformatetcOut->ptd = NULL;
     return E_NOTIMPL;
@@ -345,7 +352,7 @@ static int CF_PERFORMEDDROPEFFECT = RegisterClipboardFormat(_T("Performed DropEf
 static int CF_PERFORMEDDROPEFFECT = RegisterClipboardFormat("Performed DropEffect");
 #endif
 
-STDMETHODIMP UDataObject::SetData(FORMATETC *fmtetc, STGMEDIUM *medium, BOOL release)
+STDMETHODIMP CLANG_NOTHROW UDataObject::SetData(FORMATETC *fmtetc, STGMEDIUM *medium, BOOL release)
 {
 	if(fmtetc->cfFormat == CF_PERFORMEDDROPEFFECT && medium->tymed == TYMED_HGLOBAL) {
         DWORD *val = (DWORD*)GlobalLock(medium->hGlobal);
@@ -358,7 +365,7 @@ STDMETHODIMP UDataObject::SetData(FORMATETC *fmtetc, STGMEDIUM *medium, BOOL rel
 	return E_NOTIMPL;
 }
 
-STDMETHODIMP UDataObject::EnumFormatEtc(DWORD dwDirection, IEnumFORMATETC **ief)
+STDMETHODIMP CLANG_NOTHROW UDataObject::EnumFormatEtc(DWORD dwDirection, IEnumFORMATETC **ief)
 {
 	UEnumFORMATETC *ef = new UEnumFORMATETC;
 	ef->data = this;
@@ -367,23 +374,23 @@ STDMETHODIMP UDataObject::EnumFormatEtc(DWORD dwDirection, IEnumFORMATETC **ief)
 	return S_OK;
 }
 
-STDMETHODIMP UDataObject::DAdvise(FORMATETC *, DWORD, IAdviseSink *, DWORD *)
+STDMETHODIMP CLANG_NOTHROW UDataObject::DAdvise(FORMATETC *, DWORD, IAdviseSink *, DWORD *)
 {
 	return OLE_E_ADVISENOTSUPPORTED;
 }
 
 
-STDMETHODIMP UDataObject::DUnadvise(DWORD)
+STDMETHODIMP CLANG_NOTHROW UDataObject::DUnadvise(DWORD)
 {
 	return OLE_E_ADVISENOTSUPPORTED;
 }
 
-STDMETHODIMP UDataObject::EnumDAdvise(LPENUMSTATDATA FAR*)
+STDMETHODIMP CLANG_NOTHROW UDataObject::EnumDAdvise(LPENUMSTATDATA FAR*)
 {
 	return OLE_E_ADVISENOTSUPPORTED;
 }
 
-STDMETHODIMP UEnumFORMATETC::QueryInterface(REFIID riid, void FAR* FAR* ppvObj)
+STDMETHODIMP CLANG_NOTHROW UEnumFORMATETC::QueryInterface(REFIID riid, void FAR* FAR* ppvObj)
 {
 	if (riid == IID_IUnknown || riid == IID_IEnumFORMATETC) {
 		*ppvObj = this;
@@ -394,7 +401,7 @@ STDMETHODIMP UEnumFORMATETC::QueryInterface(REFIID riid, void FAR* FAR* ppvObj)
 	return ResultFromScode(E_NOINTERFACE);
 }
 
-STDMETHODIMP UEnumFORMATETC::Next(ULONG n, FORMATETC *t, ULONG *fetched) {
+STDMETHODIMP CLANG_NOTHROW UEnumFORMATETC::Next(ULONG n, FORMATETC *t, ULONG *fetched) {
 	if(t == NULL)
 		return E_INVALIDARG;
 	if(fetched) *fetched = 0;
@@ -406,20 +413,20 @@ STDMETHODIMP UEnumFORMATETC::Next(ULONG n, FORMATETC *t, ULONG *fetched) {
 	return n ? S_FALSE : NOERROR;
 }
 
-STDMETHODIMP UEnumFORMATETC::Skip(ULONG n) {
+STDMETHODIMP CLANG_NOTHROW UEnumFORMATETC::Skip(ULONG n) {
 	ii += n;
 	if(ii >= data->data.GetCount())
 		return S_FALSE;
 	return NOERROR;
 }
 
-STDMETHODIMP UEnumFORMATETC::Reset()
+STDMETHODIMP CLANG_NOTHROW UEnumFORMATETC::Reset()
 {
     ii = 0;
     return NOERROR;
 }
 
-STDMETHODIMP UEnumFORMATETC::Clone(IEnumFORMATETC **newEnum)
+STDMETHODIMP CLANG_NOTHROW UEnumFORMATETC::Clone(IEnumFORMATETC **newEnum)
 {
 	if(newEnum == NULL)
 		return E_INVALIDARG;
@@ -431,7 +438,7 @@ STDMETHODIMP UEnumFORMATETC::Clone(IEnumFORMATETC **newEnum)
 	return NOERROR;
 }
 
-STDMETHODIMP UDropSource::QueryInterface(REFIID riid, void **ppvObj)
+STDMETHODIMP CLANG_NOTHROW UDropSource::QueryInterface(REFIID riid, void **ppvObj)
 {
 	if (riid == IID_IUnknown || riid == IID_IDropSource) {
 		*ppvObj = this;
@@ -442,7 +449,7 @@ STDMETHODIMP UDropSource::QueryInterface(REFIID riid, void **ppvObj)
 	return ResultFromScode(E_NOINTERFACE);
 }
 
-STDMETHODIMP UDropSource::QueryContinueDrag(BOOL fEscapePressed, DWORD grfKeyState)
+STDMETHODIMP CLANG_NOTHROW UDropSource::QueryContinueDrag(BOOL fEscapePressed, DWORD grfKeyState)
 {
 	if(fEscapePressed)
 		return DRAGDROP_S_CANCEL;
@@ -453,7 +460,7 @@ STDMETHODIMP UDropSource::QueryContinueDrag(BOOL fEscapePressed, DWORD grfKeySta
 	return NOERROR;
 }
 
-STDMETHODIMP UDropSource::GiveFeedback(DWORD dwEffect)
+STDMETHODIMP CLANG_NOTHROW UDropSource::GiveFeedback(DWORD dwEffect)
 {
 	LLOG("GiveFeedback");
 	Image m = IsNull(move) ? copy : move;

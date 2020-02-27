@@ -46,7 +46,7 @@ void ESC_to_number(EscEscape& e)
 	if(e[0].IsArray()) {
 		double d = ScanDouble((String)e[0]);
 		if(!IsNull(d)) {
-			if(d <= INT64_MAX && d >= INT64_MIN)
+			if(FitsInInt64(d))
 				e = ScanInt64((String)e[0]);
 			else
 				e = d;

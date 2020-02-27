@@ -212,7 +212,7 @@ String EscValue::ToString(int maxlen, int indent_step, bool hex, int indent) con
 				s << FormatInt64((int64)number);
 			else
 				s << Format("%.8g", number);
-			if(hex && number >= INT64_MIN && number <= INT64_MAX && (int64)number == number)
+			if(hex && FitsInInt64(number) && (int64)number == number)
 				s << " 0x" << Format64Hex((int64)number);
 			if(hex && number >= 0 && number < 65536 && (int)number == number)
 				s << ' ' << AsCString(ToUtf8(WString((int)number, 1)));
