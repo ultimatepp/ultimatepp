@@ -237,10 +237,14 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			bool execerr = false;
 			if(rc) {
 				String exec;
-				exec << GetHostPathShort(FindInDirs(host->GetExecutablesDirs(), "windres.exe")) << " -i " << GetHostPathQ(fn);
+				String windres = "windres.exe";
+				int q = compiler.ReverseFind('-'); // clang32 windres name is i686-w64-mingw32-windres.exe
+				if(q > 0)
+					windres = compiler.Mid(0, q + 1) + windres;
+				exec << GetHostPath(FindInDirs(host->GetExecutablesDirs(), windres)) << " -i " << GetHostPathQ(fn);
 				if(cc.Find(" -m32 ") >= 0)
 					exec << " --target=pe-i386 ";
-				exec << " -o " << GetHostPathQ(objfile) << IncludesShort(" --include-dir=", package, pkg)
+				exec << " -o " << GetHostPathQ(objfile) << Includes(" --include-dir=", package, pkg)
 				     << DefinesTargetTime(" -D", package, pkg) + (HasFlag("DEBUG")?" -D_DEBUG":"");
 				PutVerbose(exec);
 				int slot = AllocSlot();

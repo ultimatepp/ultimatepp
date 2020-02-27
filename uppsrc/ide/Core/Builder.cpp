@@ -10,21 +10,6 @@ String Builder::GetHostPath(const String& path) const
 	return host->GetHostPath(path);
 }
 
-String Builder::GetHostPathShort(const String& path) const
-{
-#ifdef PLATFORM_WIN32
-	dword length = ::GetShortPathName(static_cast<LPCTSTR>(path), nullptr, 0);
-	if(length == 0)
-		return path;
-	Buffer<char> shortPathBuffer(length);
-	length = ::GetShortPathName(
-		static_cast<LPCTSTR>(path), static_cast<LPTSTR>(~shortPathBuffer), length);
-	if(length > 0)
-		return String(shortPathBuffer, length);
-#endif
-	return path;
-}
-
 String TrimSlash(String s)
 {
 	while(findarg(*s.Last(), '/', '\\') >= 0)
@@ -35,11 +20,6 @@ String TrimSlash(String s)
 String Builder::GetHostPathQ(const String& path) const
 {
 	return '\"' + TrimSlash(GetHostPath(path)) + '\"';
-}
-
-String Builder::GetHostPathShortQ(const String& path) const
-{
-	return '\"' + TrimSlash(GetHostPathShort(path)) + '\"';
 }
 
 Vector<Host::FileInfo> Builder::GetFileInfo(const Vector<String>& path) const
