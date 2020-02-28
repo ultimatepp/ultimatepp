@@ -148,15 +148,6 @@ void Ide::InsertText(const String& text)
 	editor.Paste(text.ToWString());
 }
 
-void Ide::InsertCString()
-{
-	if(editor.IsReadOnly())
-		return;
-	String txt = ReadClipboardText();
-	if(txt.GetCount())
-		editor.Paste(AsCString(txt).ToWString());
-}
-
 void Ide::InsertFilePath(bool c)
 {
 	if(editor.IsReadOnly())
@@ -170,6 +161,53 @@ void Ide::InsertFilePath(bool c)
 	}
 }
 
+
+void Ide::InsertAs(const String& data)
+{
+	WithInsertAsLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Insert data");
+	if(data.GetCount() > 20*1024)
+		Exclamation("Data size is too big!&(Limit is 20KB.)");
+	String f[6];
+	f[0] = data;
+	f[1] = Encode64(data);
+	f[2] = data;
+	f[3] = LZ4Compress(data);
+	f[4] = ZCompress(data);
+	f[5] = LZMACompress(data);
+	for(int i = 0; i < 6; i++)
+		dlg.format.SetLabel(i, dlg.format.GetLabel(i) + " (" + AsString(f[i].GetCount()) + ")");
+	
+	if(dlg.Execute() != IDOK)
+		return;
+	int i = ~dlg.format;
+	if(i < 0 || i >= 6)
+		return;
+	String d = f[i];
+	WriteClipboardText(AsString(d.GetCount()));
+	if(i == 0 || i == 1)
+		editor.Paste(AsCString(d).ToWString());
+	else {
+		for(int i = 0; i < d.GetCount(); i += 256) {
+			int e = min(i + 256, d.GetCount());
+			String h;
+			for(int j = i; j < e; j++)
+				h << AsString((int)(byte)d[j]) << ',';
+			h << '\n';
+			editor.Paste(h.ToWString());
+		}
+	}
+}
+
+void Ide::InsertAs()
+{
+	if(editor.IsReadOnly())
+		return;
+	String txt = ReadClipboardText();
+	if(txt.GetCount())
+		InsertAs(txt);
+}
+
 void Ide::InsertFileBase64()
 {
 	if(editor.IsReadOnly())
@@ -177,11 +215,13 @@ void Ide::InsertFileBase64()
 	String path = SelectFileOpen("All files\t*.*");
 	path.Replace("\\", "/");
 	if(path.GetCount()) {
-		if(GetFileLength(path) >= 100*1024) {
-			Exclamation("File is too big!&(Limit is 100KB.)");
+		if(GetFileLength(path) >= 20*1024) {
+			Exclamation("File is too big!&(Limit is 20KB.)");
 			return;
 		}
-		String s = Encode64(LoadFile(path));
+		InsertAs(LoadFile(path));
+	}
+/*		String s = Encode64(LoadFile(path));
 		int i = 0;
 		while(i < s.GetLength()) {
 			int n = min(s.GetCount() - i, 2000);
@@ -190,7 +230,7 @@ void Ide::InsertFileBase64()
 			editor.Paste(AsCString(s.Mid(i, n)).ToWString());
 			i += n;
 		}
-	}
+	}*/
 }
 
 void Ide::InsertMenu(Bar& bar)
@@ -235,10 +275,10 @@ void Ide::InsertMenu(Bar& bar)
 			bar.Add(s, THISBACK1(InsertText, s));
 		}
 	}
-	bar.Add("Insert clipboard as C string", THISBACK(InsertCString));
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
-	bar.Add("Insert file as C string Base64 encoded..", THISBACK(InsertFileBase64));
+	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
+	bar.Add("Insert file as..", THISBACK(InsertFileBase64));
 }
 
 void Ide::InsertInclude(Bar& bar)

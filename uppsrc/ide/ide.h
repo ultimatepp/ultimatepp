@@ -811,7 +811,8 @@ public:
 		void  InsertLay(const String& fn);
 		void  InsertIml(const Package& pkg, const String& fn, String classname);
 		void  InsertText(const String& text);
-		void  InsertCString();
+		void  InsertAs(const String& data);
+		void  InsertAs();
 		void  InsertFilePath(bool c);
 		void  InsertFileBase64();
 		void  InsertMenu(Bar& bar);
