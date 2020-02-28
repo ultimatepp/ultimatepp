@@ -295,7 +295,9 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 	
 	current_modbase = t.modbase; // so that we do not need to pass it as parameter in Pretty routines
 
-	String type = t.name;
+	String type = Filter(t.name, [](int c) { return c != ' ' ? c : 0; });
+	if(type.TrimStart("Upp::WithDeepCopy<"))
+		type.TrimEnd(">");
 	Vector<String> type_param;
 	int q = type.Find('<');
 	if(q >= 0) {
