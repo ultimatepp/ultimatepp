@@ -869,3 +869,10 @@ LAYOUT(SlideShowSettingsLayout, 184, 188)
 	ITEM(Button, report, SetLabel(t_("Export")).LeftPosZ(8, 104).TopPosZ(164, 20))
 END_LAYOUT
 
+LAYOUT(InsertAsLayout, 276, 168)
+	ITEM(Switch, format, SetLabel(t_("C string\nBase64 encoded text\nByte values\nLZ4 compressed byte values\nZ compressed byte values\n7z compressed byte values")).LeftPosZ(8, 260).TopPosZ(8, 96))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Label, dv___3, SetLabel(t_("Data length will be put into the clipboard")).LeftPosZ(8, 260).TopPosZ(108, 19))
+END_LAYOUT
+
