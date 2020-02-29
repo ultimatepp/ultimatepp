@@ -250,10 +250,18 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 
 void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
-	Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+	Val begin, end;
+	DDUMP(HasAttr(val, "__begin_"));
+	if(HasAttr(val, "__begin_")) { // CLANG's std::vector
+		begin = DeRef(GetAttr(val, "__begin_"));
+		end = DeRef(GetAttr(val, "__end_"));
+	}
+	else {
+		Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+		begin = DeRef(GetAttr(q, "_Myfirst"));
+		end = DeRef(GetAttr(q, "_Mylast"));
+	}
 	int sz = SizeOfType(tparam[0]);
-	Val begin = DeRef(GetAttr(q, "_Myfirst"));
-	Val end = DeRef(GetAttr(q, "_Mylast"));
 	p.data_count = (end.address - begin.address) / sz;
 	for(int i = 0; i < count; i++)
 		p.data_ptr.Add(begin.address + (i + from) * sz);
@@ -298,6 +306,7 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 	String type = Filter(t.name, [](int c) { return c != ' ' ? c : 0; });
 	if(type.TrimStart("Upp::WithDeepCopy<"))
 		type.TrimEnd(">");
+	type.Replace("::__1", "");
 	Vector<String> type_param;
 	int q = type.Find('<');
 	if(q >= 0) {
