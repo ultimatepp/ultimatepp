@@ -49,6 +49,22 @@ Pdb::Val Pdb::GetAttr(Pdb::Val record, int i)
 	return r;
 }
 
+bool Pdb::HasAttr(Pdb::Val record, const String& id)
+{
+	const Type& t = GetType(record.type);
+	int q = t.member.Find(id);
+	if(q >= 0)
+		return true;
+	for(int i = 0; i < t.base.GetCount(); i++) {
+		Val b = t.base[i];
+		b.address += record.address;
+		Val v = GetAttr(b, id);
+		if(v.type != UNKNOWN)
+			return true;
+	}
+	return false;
+}
+
 Pdb::Val Pdb::GetAttr(Pdb::Val record, const String& id)
 {
 	const Type& t = GetType(record.type);

@@ -381,6 +381,7 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Exp0(CParser& p);
 	Val        Exp(CParser& p);
 
+	bool       HasAttr(Pdb::Val record, const String& id);
 	Val        GetAttr(Pdb::Val record, int i);
 	Val        GetAttr(Pdb::Val record, const String& id);
 	int64      GetInt64Attr(Pdb::Val v, const char *a);
