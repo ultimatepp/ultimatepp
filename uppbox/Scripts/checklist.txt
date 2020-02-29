@@ -4,3 +4,4 @@
 - Check app icon linking in Win32
 - Check OpenGl
 - Check SDLSoundDemo
+- Check PDB tests in all configs
