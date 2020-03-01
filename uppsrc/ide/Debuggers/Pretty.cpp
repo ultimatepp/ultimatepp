@@ -251,7 +251,6 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
 	Val begin, end;
-	DDUMP(HasAttr(val, "__begin_"));
 	if(HasAttr(val, "__begin_")) { // CLANG's std::vector
 		begin = DeRef(GetAttr(val, "__begin_"));
 		end = DeRef(GetAttr(val, "__end_"));
