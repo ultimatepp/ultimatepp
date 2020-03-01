@@ -25,7 +25,6 @@ void Ide::UpgradeTheIDE()
 	
 	targetmode = 1;
 
-	Clean();
 	if(Build()) {
 		FileDelete(bakpath);
 		if(FileExists(bakpath))
