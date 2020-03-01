@@ -73,7 +73,7 @@ String bin = "u:/upp.bin";
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
-void Make(String pkg, String exe, String method)
+void Make(String pkg, String exe, String method = "CLANGx64")
 {
 	Syx("c:/upp/umk " + ass + " " + pkg + " c:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
@@ -103,7 +103,7 @@ CONSOLE_APP_MAIN
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	Make("ide", "theide.exe", "CLANGx64");
+	Make("ide", "theide.exe");
 	Make("umk", "umk.exe");
 
 	SetCurrentDirectory(upptmp);
