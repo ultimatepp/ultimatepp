@@ -4,7 +4,7 @@ set -e
 # u:/ is set to be the home folder of account responsible for building
 # wine and SDK is installed there...
 
-wine c:/upp/umk u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall5 c:/upp/MINGW.bm -ar u:/mku.exe
+wine c:/upp/umk u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall6 c:/upp/MINGW.bm -ar u:/mku.exe
 wine u:/mku.exe
 
 #~/bin/upload
