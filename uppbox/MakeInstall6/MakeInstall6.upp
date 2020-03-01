@@ -1,0 +1,14 @@
+description "Install creator - Wine version for nightly builds - for clang\377";
+
+uses
+	plugin\bz2,
+	Core,
+	plugin\ftp;
+
+file
+	README,
+	Main.cpp;
+
+mainconfig
+	"" = "";
+
