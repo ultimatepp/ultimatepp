@@ -226,6 +226,10 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE);
 	DDUMP(pSym->Register == CV_ALLREG_VFRAME);
 	DDUMP(pSym->Register);
+	DDUMP(pSym->Scope);
+	DDUMP(pSym->Value);
+	DDUMP(pSym->ModBase);
+	DDUMPHEX((adr_t)pSym->Address);
 #endif
 
 	bool param = pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER;
@@ -241,7 +245,7 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 				v.address += c.pdb->GetCpuRegister(*c.context, CV_AMD64_RBP);
 			else
 		#endif
-				v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, CV_REG_EBP);
+				v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, CV_REG_EBP) - 4 * c.pdb->clang; // Workaround for supposed clang/win32 issue
 		}
 		else
 			v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, pSym->Register);
@@ -250,7 +254,6 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE)
 		v.address += c.frame;
 	
-	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
 	if(param && v.udt && v.ref == 0 && c.pdb->win64) { // dbghelp.dll incorrectly does not report pointer for (copied) value struct params
 		v.ref++;
@@ -258,6 +261,7 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	}
 	v.reported_size = pSym->Size;
 	v.context = c.context;
+	LLOG("LOCAL " << c.pdb->GetType(v.type).name << " " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }
 
@@ -275,6 +279,7 @@ void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>&
 	SymEnumSymbols(hProcess, 0, 0, &EnumLocals, &c);
 	param = pick(c.param);
 	local = pick(c.local);
+	LLOG("===========================");
 }
 
 BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)

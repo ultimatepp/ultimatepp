@@ -121,7 +121,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	f.len = count;
 	f.kind = 0;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
-	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
+	            AsString(pos) + "\1" + AsString(count) + "\1" + (line.GetCount() > 300 ? line.Mid(0, 300) : line);
 	FFound().Add(fn, ln, f.message, RawToValue(f));
 }
 

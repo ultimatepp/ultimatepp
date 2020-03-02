@@ -268,14 +268,32 @@ void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from
 
 void Pdb::PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
-	Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+	adr_t a;
+	int size;
 	bool w = tparam[0] == "wchar_t";
-	int size = GetIntAttr(q, "_Mysize");
-	int res = GetIntAttr(q, "_Myres");
+	if(HasAttr(val, "__r_")) { // CLANG variant
+		Val r = GetAttr(GetAttr(val, "__r_"), "__value_");
+		Val s = GetAttr(r, "__s");
+		size = GetByteAttr(s, "__size_");
+		if(size & 1) {
+			Val l = GetAttr(r, "__l");
+			size = GetIntAttr(l, "__size_");
+			a = DeRef(GetAttr(l, "__data_")).address;
+		}
+		else {
+			size = size >> 1;
+			a = s.address + 1 + w;
+		}
+	}
+	else {
+		Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+		int size = GetIntAttr(q, "_Mysize");
+		int res = GetIntAttr(q, "_Myres");
+		a = GetAttr(GetAttr(q, "_Bx"), "_Buf").address;
+		if(res >= (w ? 8 : 16))
+			a = PeekPtr(a);
+	}
 	p.data_count = size;
-	adr_t a = GetAttr(GetAttr(q, "_Bx"), "_Buf").address;
-	if(res >= (w ? 8 : 16))
-		a = PeekPtr(a);
 	p.data_type << (w ? "short int" : "char");
 	int sz = w + 1;
 	for(int i = 0; i < count; i++)
