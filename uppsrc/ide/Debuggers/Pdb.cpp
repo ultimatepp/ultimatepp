@@ -141,7 +141,7 @@ INITBLOCK
 	RegisterGlobalConfig(CONFIGNAME);
 }
 
-bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
+bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline, bool clang_)
 {
 	STARTUPINFO si;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
@@ -154,6 +154,8 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 		cl << exefile;
 	if(!IsNull(cmdline))
 		cl << ' ' << cmdline;
+	
+	clang = clang_;
 
 	Buffer<char> cmd(cl.GetLength() + 1);
 	memcpy(cmd, cl, cl.GetLength() + 1);
@@ -438,10 +440,10 @@ Pdb::~Pdb()
 	Stop();
 }
 
-One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline)
+One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool clang)
 {
 	One<Debugger> dbg;
-	if(!dbg.Create<Pdb>().Create(pick(host), exefile, cmdline))
+	if(!dbg.Create<Pdb>().Create(pick(host), exefile, cmdline, clang))
 		dbg.Clear();
 	return dbg;
 }

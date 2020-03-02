@@ -265,10 +265,9 @@ void Ide::BuildAndExtDebugFile()
 }
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
-One<Debugger> Gdb_MI2Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
+
 #ifdef PLATFORM_WIN32
-One<Debugger> CdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
-One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
+One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool clang);
 #endif
 
 void Ide::BuildAndDebug(bool runto)
@@ -297,7 +296,7 @@ void Ide::BuildAndDebug(bool runto)
 
 #ifdef PLATFORM_WIN32
 	if(findarg(builder, "GCC", "CLANG") < 0 || bm.Get("DEBUG_OPTIONS", String()).Find("-gcodeview") >= 0) // llvm-mingw can generate pdb symbolic info
-		debugger = PdbCreate(pick(host), target, runarg);
+		debugger = PdbCreate(pick(host), target, runarg, builder == "CLANG");
 	else
 #endif
 		debugger = GdbCreate(pick(host), target, runarg, console);
