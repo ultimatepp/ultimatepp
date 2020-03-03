@@ -287,7 +287,7 @@ void Pdb::PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from
 	}
 	else {
 		Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
-		int size = GetIntAttr(q, "_Mysize");
+		size = GetIntAttr(q, "_Mysize");
 		int res = GetIntAttr(q, "_Myres");
 		a = GetAttr(GetAttr(q, "_Bx"), "_Buf").address;
 		if(res >= (w ? 8 : 16))
