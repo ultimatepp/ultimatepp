@@ -286,7 +286,7 @@ public:
 
 	Pointf        Intersect(VecLine another) const;
 	VecLine&      SetClip(const Rectf& rect);
-	VecLine       Clip(const Rectf& rect) const            { return VecLine(*this).Clip(rect); }
+	VecLine       Clip(const Rectf& rect) const            { return VecLine(*this).SetClip(rect); }
 
 	double        Distance(Pointf point, double *arg = NULL) const;
 
