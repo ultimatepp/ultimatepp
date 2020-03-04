@@ -34,7 +34,7 @@ guide]&]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 POSIX/X11 Tarball 
 Installation guide]&]
 [s0;l160; [*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 MacOS Installation 
-guild]&]
+guide]&]
 [s0;l160;*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 &]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
 and development cycle guide]&]

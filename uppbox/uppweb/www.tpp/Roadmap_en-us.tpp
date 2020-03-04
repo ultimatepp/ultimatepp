@@ -26,6 +26,77 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Roadmap&]
+[s24; Upcoming release&]
+[s3; 2020.1 (?April 2020)&]
+[s5;* &]
+[s5; [* Release highlights]&]
+[s5;l160;i150;O0; gtk3 replaces gtk2 as default linux backend&]
+[s5;l160;i150;O0; Visual look`&feel refactored in Linux and MacOS, 
+improved dark theme support&]
+[s5;l160;i150;O0; In Win32, PDB debugger now has support to display 
+various U`+`+ and standard library containers nicely&]
+[s5;l160;i150;O0; Win32 release now ships with CLANG with llvm`-mingw 
+toolchain&]
+[s5; &]
+[s5; [* Core]&]
+[s5;l160;i150;O0; SshExec improvements&]
+[s5;l160;i150;O0; ConditionVariable and Semapthore now have Wait 
+variant with timeout&]
+[s5;l160;i150;O0; IsDoubleWidth function to detect double`-width 
+UNICODE glyphs&]
+[s5;l160;i150;O0; MacOS is now using fast U`+`+ heap when possible 
+(not for new/delete)&]
+[s5; &]
+[s24;l160; CtrlCore&]
+[s5;l160;i150;O0; Ctrl`::GetAscendant utility method to get parent 
+based on its type&]
+[s5;l160;i150;O0; Dark mode is now enabled by default, CtrlLib: classic 
+skin improvements&]
+[s5;l160;i150;O0; MacOS multimonitor support and other fixes&]
+[s5; &]
+[s5; [* CtrlLib]&]
+[s5;l160;i150;O0; Modernized widgets look in layout designer&]
+[s5;l160;i150;O0; Added some less often used widgets like ColorPusher, 
+TreeCtrl or ColumnList that were not previously directly supported 
+in layout designer&]
+[s5;l160;i150;O0; FileSel support of .lnk files in Win32&]
+[s5;l160;i150;O0; Host native file selecteor, FileSelector, is now 
+renamed to FileSelNative and is now available in MacOS too (in 
+addition to Win32 and gtk3)&]
+[s5;l160;i150;O0; GLCtrl in OpenGL/X11 refactored&]
+[s5; &]
+[s5; [* Ide]&]
+[s5;l160;i150;O0; umk now implements use target directory flag (thanks 
+Novo)&]
+[s5;l160;i150;O0; Context goto (Alt`+J) now able to detect files 
+/ links (and open the file / link in browser)&]
+[s5;l160;i150;O0; Gdb frontend now can better handle executables 
+without debug info&]
+[s5;l160;i150;O0; Icon designer now can show synthetised UHD/Dark 
+images&]
+[s5;l160;i150;O0; New Insert file/clipboard as.. function allows 
+insertion of clipboard or files directly to the text in various 
+formats (C string, Base64 encode, raw byte values, compressed 
+byte values using LZ4 or Zlib or LZMA).&]
+[s5;l160;i150;O0; Move/Copy package function&]
+[s5;l160;i150;O0; Find in files now has 3 output panes&]
+[s5; &]
+[s5; [* Painter]&]
+[s5;l160;i150;O0; GetSVGPathBoundingBox function that gets bounding 
+box of SVG path&]
+[s5;l160;i150;O0; Xform2D`::Map function creates matrix for affinity 
+triangle`->triangle mapping&]
+[s5; &]
+[s5; [* SQL]&]
+[s5;l160;i150;O0; PGSQL got now can escape ? as ?? or use NoQuestionParams 
+method to avoid interpreting ? as parameter holder&]
+[s5;l160;i150;O0; SQL`_RENAME .sch `'command`' can be used to have 
+different name of column in DB and code.&]
+[s5; &]
+[s5; [* uppsrc]&]
+[s5;l160;i150;O0; In POSIX, external library dependencies are now 
+refactored with pkg`-config&]
+[s24; &]
 [s24; Current release&]
 [s3; 2019.2 (rev 13664[3 ) ](October 2019)&]
 [s5;* &]
@@ -154,8 +225,4 @@ with mingw are now practically zero&]
 [s5;l160;i150;O0;~~~192; plugin/lzma updated to 19.0&]
 [s5;l160;i150;O0;~~~192; plugin/pcre updated to 8.43&]
 [s5;l160;i150;O0;~~~192; plugin/sqlite3 updated to 3.27.2&]
-[s0; &]
-[s3;H4; Archival releases:&]
-[s5; If you are looking for informations about archival releases 
-`- you can find them on the following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
-ite].]]
+[s5; [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ more..]]]
