@@ -47,7 +47,7 @@ UNICODE glyphs&]
 [s5;l160;i150;O0; MacOS is now using fast U`+`+ heap when possible 
 (not for new/delete)&]
 [s5; &]
-[s24;l160; CtrlCore&]
+[s5; [* CtrlCore]&]
 [s5;l160;i150;O0; Ctrl`::GetAscendant utility method to get parent 
 based on its type&]
 [s5;l160;i150;O0; Dark mode is now enabled by default, CtrlLib: classic 
