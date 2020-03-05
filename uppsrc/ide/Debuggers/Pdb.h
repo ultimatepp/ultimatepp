@@ -104,8 +104,6 @@ struct Pdb : Debugger, ParentCtrl {
 		};
 		Context *context = NULL; // needed to retrieve register variables
 
-		Val At(int i) const;
-		
 #ifdef _DEBUG
 		String ToString() const;
 #endif
@@ -425,6 +423,8 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void       PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       TraverseTree(bool set, Val head, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
+	void       PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 
 // code
 	Thread&    Current();
