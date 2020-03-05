@@ -531,7 +531,6 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 	Sleep(finalDelay);
 }
 
-}
-
 #endif
+}
 
