@@ -216,22 +216,6 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	if(pSym->Tag == SymTagFunction)
 		return TRUE;
 
-#if 0
-	DLOG("------");
-	DDUMP(pSym->Name);
-	DDUMPHEX(pSym->Flags);
-	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER);
-	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER);
-	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGRELATIVE);
-	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE);
-	DDUMP(pSym->Register == CV_ALLREG_VFRAME);
-	DDUMP(pSym->Register);
-	DDUMP(pSym->Scope);
-	DDUMP(pSym->Value);
-	DDUMP(pSym->ModBase);
-	DDUMPHEX((adr_t)pSym->Address);
-#endif
-
 	bool param = pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER;
 	Val& v = (param ? c.param : c.local).Add(pSym->Name);
 	v.address = (adr_t)pSym->Address;
@@ -245,7 +229,12 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 				v.address += c.pdb->GetCpuRegister(*c.context, CV_AMD64_RBP);
 			else
 		#endif
-				v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, CV_REG_EBP) - 4 * c.pdb->clang; // Workaround for supposed clang/win32 issue
+			{
+				adr_t ebp = (adr_t)c.pdb->GetCpuRegister(*c.context, CV_REG_EBP);
+				if(c.pdb->clang)
+					ebp &= ~(adr_t)7;  // Workaround for supposed clang/win32 issue
+				v.address += ebp;
+			}
 		}
 		else
 			v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, pSym->Register);
@@ -261,6 +250,23 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	}
 	v.reported_size = pSym->Size;
 	v.context = c.context;
+#if 0
+	DLOG("------");
+	DDUMP(pSym->Name);
+	DLOG("TYPE: " << (v.type >= 0 ? c.pdb->GetType(v.type).name : "primitive"));
+	DDUMPHEX(pSym->Flags);
+	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER);
+	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER);
+	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGRELATIVE);
+	DDUMP(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE);
+	DDUMP(pSym->Register == CV_ALLREG_VFRAME);
+	DDUMP(pSym->Register);
+	DDUMP(pSym->Scope);
+	DDUMP(pSym->Value);
+	DDUMP(pSym->ModBase);
+	DDUMPHEX((adr_t)pSym->Address);
+#endif
+
 	LLOG("LOCAL " << c.pdb->GetType(v.type).name << " " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }
