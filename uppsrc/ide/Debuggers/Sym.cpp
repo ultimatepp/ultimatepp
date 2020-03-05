@@ -449,8 +449,14 @@ int Pdb::FindType(adr_t modbase, const String& name)
 		return q;
 	int ndx = Null;
 	SymEnumTypesByName(hProcess, modbase, ~name, EnumTypeByName, &ndx);
-	if(IsNull(ndx))
+	if(IsNull(ndx)) {
+		DDUMP(name);
+		SymEnumTypes(hProcess, modbase, [](PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext) {
+			DDUMP(pSym->Name);
+			return TRUE;
+		}, NULL);
 		return Null;
+	}
 	return GetTypeIndex(modbase, ndx);
 }
 
