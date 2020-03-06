@@ -1,6 +1,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include <string>
 #include <vector>
+#include <map>
+#include <set>
 
 using namespace Upp;
 
@@ -71,8 +73,39 @@ void Test3(String *ptr_s)
 	DDUMP(ptr_s);
 	DUMP(*ptr_s);
 }
+
+void TestF()
+{
+	std::string ss = "key2";
+	std::string ss2 = "key2";
+}
+
 GUI_APP_MAIN
 {
+	{
+		std::set<std::string> st;
+		for(int i = 0; i < 10000; i++)
+			st.insert(AsString(i).ToStd());
+	}
+	{
+		std::map<std::string, std::string> mp;
+		for(int i = 0; i < 10000; i++)
+			mp[~AsString(i)] = ~AsString(i);
+	}
+	{
+		std::multiset<std::string> mst;
+		for(int i = 0; i < 10000; i++)
+			mst.insert(AsString(i).ToStd());
+	}
+	{
+		std::multimap<std::string, int> mmp;
+		for(int i = 0; i < 10000; i++)
+			mmp.insert(std::make_pair(~AsString(i), i));
+	}
+	{
+		std::string ss = "key2";
+//		std::string ss2 = "key2";
+	}
 	{
 		Vector<int> x;
 		for(int i = 0; i < 100000; i++)
@@ -281,9 +314,9 @@ GUI_APP_MAIN
 
 	{
 		WString h = "test";
-		std::wstring x = h.ToStd();
+		std::wstring wx = h.ToStd();
 		for(int i = 0; i < 10; i++)
-			x.append((wchar_t*)~h);
+			wx.append((wchar_t*)~h);
 	}
 	
 	{
