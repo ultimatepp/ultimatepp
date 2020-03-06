@@ -303,20 +303,13 @@ void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from
 
 void Pdb::TraverseTree(bool set, Pdb::Val head, Val node, int64& from, int& count, Pdb::Pretty& p, int depth)
 {
-	DLOG("----");
-	DDUMP(depth);
-	DDUMPHEX(node.address);
-	DDUMP(from);
-	DDUMP(count);
 	if(depth > 40) // avoid problems if tree is damaged
 		return;
 	if(depth && node.address == head.address || count <= 0) // we are at the end
 		return;
 	TraverseTree(set, head, DeRef(GetAttr(node, "_Left")), from, count, p, depth + 1);
 	if(node.address != head.address) {
-		DLOG("ADD1");
 		if(from == 0) {
-			DLOG("ADD2");
 			Val v = GetAttr(node, "_Myval");
 			if(set)
 				p.data_ptr.Add(v.address);
@@ -336,12 +329,9 @@ void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, in
 {
 	/* TODO: CLANG */
 	{
-		DLOG("======");
 		val = GetAttr(GetAttr(GetAttr(val, "_Mypair"), "_Myval2"), "_Myval2");
-		DDUMPHEX(val.address);
 		p.data_count = GetIntAttr(val, "_Mysize");
 		Val head = DeRef(GetAttr(val, "_Myhead")); // points to leftmost element (!)
-		DDUMPHEX(head.address);
 		Val top = DeRef(GetAttr(head, "_Left"));
 		for(int i = 0; i < 40; i++) { // find topmost node, i is depth limit
 			Val v = DeRef(GetAttr(top, "_Parent"));
@@ -370,7 +360,6 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 
 	const Type& t = GetType(val.type);
 	
-	DDUMP(t.name);
 	
 	current_modbase = t.modbase; // so that we do not need to pass it as parameter in Pretty routines
 
@@ -438,8 +427,6 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
 	type.Replace("::__1", ""); // CLANG has some weird stuff in names...
 	
-	DDUMP(type);
-	DDUMP(type_param);
 
 	int ii = pretty.Find(type);
 	if(ii >= 0) {
@@ -466,7 +453,6 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 	
 	Pretty p;
 	if(PrettyVal(val, 0, 0, p)) {
-		DDUMP(p.data_type);
 		if(p.kind == TEXT) {
 			int count = (int)min(p.data_count, (int64)200);
 			Pretty p;
@@ -509,7 +495,6 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 			if(p.data_type.GetCount()) {
 				Buffer<Val> item(p.data_type.GetCount());
 				for(int i = 0; i < p.data_type.GetCount(); i++) {
-					DDUMP(p.data_type[i]);
 					(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
 					item[i].context = val.context;
 				}
@@ -522,13 +507,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 						if(j)
 							result.Cat(": ", SBlue);
 						item[j].address = p.data_ptr[ii++];
-						DLOG("Visualise key/value:");
-						DDUMP(item[j].type);
 						if(item[j].type >= 0)
-							DDUMP(GetType(item[j].type).name);
-						DDUMPHEX(item[j].address);
 						Visualise(result, item[j], flags | MEMBER);
-						DLOG("...done");
 					}
 				}
 			}
