@@ -20,6 +20,11 @@ enum_property Align {
 	"ALIGN_RIGHT"
 };
 
+fn IsUHD()
+{
+	return GetTextSize("X", StdFont()).cy > 24;
+}
+
 fn DeflateRect(&r)
 {
 	r.top++;
@@ -44,7 +49,10 @@ fn DrawBorder(w, &r, ...)
 
 fn DrawButtonFrame(w, &r)
 {
-	DrawBorder(w, r, :Gray, :Gray, :Gray, :Gray);
+	if(IsUHD())
+		DrawBorder(w, r, :Gray, :Gray, :Gray, :Gray);
+	else
+		DrawBorder(w, r, :Gray, :Gray);
 }
 
 fn DrawEdgeButtonFrame(w, &r)
@@ -75,7 +83,7 @@ fn DrawCtrlFrame(w, &r, frame)
 	height = r.bottom - r.top;
 	switch(frame) {
 	case "FieldFrame()":
-	case "default":  DrawBorder(w, r, :SGray, :SGray, :SGray, :SGray); break;
+	case "default": IsUHD() ? DrawBorder(w, r, :SGray, :SGray, :SGray, :SGray) : DrawBorder(w, r, :SGray, :SGray); break;
 	case "InsetFrame()": DrawBorder(w, r, :Gray, :White, :Black, :LtGray); break;
 	case "OutsetFrame()": DrawBorder(w, r, :LtGray, :Black, :White, :Gray); break;
 	case "ButtonFrame()": DrawButtonFrame(w, r); break;
@@ -421,7 +429,7 @@ fn DrawCircle(w, xx, yy, c, color)
 
 fn OptionSize()
 {
-	return GetTextSize("X", StdFont()).cy < 24 ? 11 : 24;
+	return IsUHD() ? 24 : 11;
 }
 
 fn DrawOption(w, x, y, kind)
@@ -970,8 +978,11 @@ ctrl TabCtrl {
 		r.top += tsz.cy;
 		DrawButton(w, r);
 		PaintTab(w, x0, y, "Tab 1", :SWhiteGray);
-		w.DrawRect(2, r.top - 2, tsz.cx, 4, :SWhiteGray);
-	}
+		if(IsUHD())
+			w.DrawRect(2, r.top - 2, tsz.cx, 4, :SWhiteGray);
+		else
+			w.DrawRect(1, r.top - 1, tsz.cx + 2, 2, :SWhiteGray);
+}
 };
 
 fn PaintHeaderTab(w, r, text)
