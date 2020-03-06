@@ -667,7 +667,7 @@ void ChStdSkin()
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
 			s.vupper[status] = s.vlower[status] = ChHot(vtrough); // we have problems getting this right for vertical
-			static int adj[] = { 20, 40, 10, -10 };
+			static int adj[] = { 70, 80, 60, -10 };
 			s.hthumb[status] = s.vthumb[status] = AdjustColor(border, adj[status]);
 		}
 	}
