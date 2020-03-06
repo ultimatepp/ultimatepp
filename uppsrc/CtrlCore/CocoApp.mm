@@ -433,6 +433,12 @@ void CocoBeep()
 	NSBeep();
 }
 
+extern void (*CocoBeepFn)();
+
+INITBLOCK {
+	CocoBeepFn = CocoBeep;
+}
+
 };
 
 #endif
