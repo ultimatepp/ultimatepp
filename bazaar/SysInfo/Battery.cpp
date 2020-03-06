@@ -89,7 +89,9 @@ bool CloseCDTray(String drive)
 }
 
 #endif
+
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 {
 	SYSTEM_POWER_STATUS power;

@@ -158,8 +158,10 @@ Image Snap_Desktop();
 Image Snap_DesktopRectangle(int left, int top, int width, int height);
 Image Snap_Window(int64 handle);
 
+#if !defined(flagNO_XTEST)
 bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 bool SetKeyLockStatus(bool caps, bool num, bool scroll);
+#endif
 
 #if defined(PLATFORM_WIN32)
 
@@ -224,6 +226,8 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Serialize(Stream &stream);
 };
 
+#if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
+
 class SimulateActivity {
 public:
 	SimulateActivity(int _deltaTime = 4*60*1000) : deltaTime(_deltaTime) {
@@ -257,6 +261,7 @@ private:
 	dword deltaTime;
 	bool active = true;
 };
+#endif
 
 }
 

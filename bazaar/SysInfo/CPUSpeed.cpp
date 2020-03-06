@@ -5,6 +5,7 @@ namespace Upp {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #if defined(__MINGW32__) && !defined (__MINGW64__)
+
 uint64 __rdtsc() {
 /*	#if defined(__MINGW64__)	// Now it is unnecessary
       	unsigned int lo, hi;
@@ -16,6 +17,7 @@ uint64 __rdtsc() {
       	return uint64(lo) | (uint64(hi) << 32); 
 //	#endif
 }
+
 #endif
 
 	

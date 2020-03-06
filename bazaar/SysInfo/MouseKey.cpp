@@ -141,64 +141,6 @@ void PressKey(wchar key, bool hold = false, bool release = false) {
 		PressKeyVK(VK_LMENU, false, true);
 	}
 }
-/*
-void PressKey(wchar key, bool hold = false, bool release = false)
-{
-	bool caps, num, scroll;
-	if (IsLetter(key)) {
-    	GetKeyLockStatus(caps, num, scroll);
-    	if (caps) 
-    		SetKeyLockStatus(false, num, scroll);	
-    }
-	HKL hKeyboardLayout = ::GetKeyboardLayout(0);
-	if (hKeyboardLayout) {		// Last resource !!
-		String numStr = FormatIntDec(key, 4, '0');
-		PressKeyVK(VK_LMENU, true);
-		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
-		PressKeyVK(VK_LMENU, false, true);
-    	return;
-	}
-    UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
-    long nExtended = 0;
-    if (nScan == 0)
-        nExtended = KEYEVENTF_EXTENDEDKEY;
-    
-    nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_VSC, hKeyboardLayout);
-    
-    bool shift, ctrl, alt;
-    
-    shift = nVK & 0x100;
-    ctrl  = nVK & 0x200;
-    alt   = nVK & 0x400;    
-    nVK   = nVK & 0xFF;
-    
-    if (!release) {
-        if (shift)
-            keybd_event (VK_SHIFT, 0, 0, 0);
-        if (ctrl)
-            keybd_event (VK_CONTROL, 0, 0, 0);
-        if (alt)
-            keybd_event (VK_MENU, 0, 0, 0);
-    
-        keybd_event ((BYTE)nVK, (BYTE)nScan, nExtended, 0);
-    }
-    if (!hold) {
-        keybd_event ((BYTE)nVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
-    
-   		if (shift)
-            keybd_event (VK_SHIFT, 0, KEYEVENTF_KEYUP, 0);
-        if (ctrl)
-            keybd_event (VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
-        if (alt)
-            keybd_event (VK_MENU, 0, KEYEVENTF_KEYUP, 0);
-    }
-    if (IsLetter(key) && caps) 
-    	SetKeyLockStatus(true, num, scroll);	
-}
-*/
 
 bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
     caps = GetKeyState(VK_CAPITAL);
@@ -271,8 +213,10 @@ bool Mouse_SetPos(int x, int y, int64 windowId) {
 	return true;
 }
 
+#endif
+
 // libxtst-dev
-#if !defined(flagNO_XTEST)
+#if defined(PLATFORM_POSIX) && !defined(flagNO_XTEST)
 
 void Mouse_FakeClick(int button, int press) {
 	_XDisplay *dpy = XOpenDisplay(NULL);
@@ -353,8 +297,6 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
 	}
 }
 
-#endif
-
 bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, _XDisplay *dpy) {
 	int x, y, xx, yy;
 	Window dm1, dm2;
@@ -383,8 +325,6 @@ bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
 	XCloseDisplay(dpy);
 	return true;
 }
-
-#if !defined(flagNO_XTEST)
 
 bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
 	_XDisplay *dpy;
@@ -442,8 +382,6 @@ KeyCodes keyCodes[] = {
 	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace,
 	""
 };
-#endif
-
 #endif
 
 #if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
@@ -531,7 +469,9 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 	Sleep(finalDelay);
 }
 
+#endif
+
 }
 
-#endif
+
 
