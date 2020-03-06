@@ -118,19 +118,22 @@ public:
   			}
   		}
   	}
-  	bool operator==(Rational& right) const {
+  	bool operator==(Rational& right) {
+  		Simplify();
+  		right.Simplify();
   		return num == right.num && den == right.den;
   	}
   	template <typename T>
-  	bool operator==(T right) const {
+  	bool operator==(T right) {
+  		Simplify();
   		if (den == 1)
   			return num == intInf(right);
   		else 
 			return T(num/den) == right;
   	}
-    bool operator!=(Rational& right) const {return !operator==(right);}
+    bool operator!=(Rational& right) {return !operator==(right);}
   	template <typename T>
-  	bool operator!=(T right) const 		 {return !operator==(right);}
+  	bool operator!=(T right)  		 {return !operator==(right);}
   	    
   	template <typename T>
 	operator T() {
