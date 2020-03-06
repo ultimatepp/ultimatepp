@@ -813,6 +813,7 @@ String GetLastErrorMessage() {
 #endif
 
 #ifdef PLATFORM_POSIX
+#ifndef PLATFORM_COCOA
 
 String CurrentSoundTheme = "freedesktop";
 
@@ -840,9 +841,17 @@ static void LinuxBeep(const char *name)
 }
 
 #endif
+#endif
 
 #ifdef PLATFORM_COCOA
-void CocoBeep();
+void (*CocoBeepFn)();
+
+void DoCocoBeep()
+{
+	if(CocoBeepFn)
+		(*CocoBeepFn)();
+}
+
 #endif
 
 void BeepInformation()
@@ -850,7 +859,7 @@ void BeepInformation()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONINFORMATION);
 #elif defined(PLATFORM_COCOA)
-	CocoBeep();
+	DoCocoBeep();
 #else
 	LinuxBeep("information");
 #endif
@@ -861,7 +870,7 @@ void BeepExclamation()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONEXCLAMATION);
 #elif defined(PLATFORM_COCOA)
-	CocoBeep();
+	DoCocoBeep();
 #else
 	LinuxBeep("warning");
 #endif
@@ -872,7 +881,7 @@ void BeepError()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONERROR);
 #elif defined(PLATFORM_COCOA)
-	CocoBeep();
+	DoCocoBeep();
 #else
 	LinuxBeep("error");
 #endif
@@ -883,7 +892,7 @@ void BeepQuestion()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONQUESTION);
 #elif defined(PLATFORM_COCOA)
-	CocoBeep();
+	DoCocoBeep();
 #else
 	LinuxBeep("question");
 #endif
