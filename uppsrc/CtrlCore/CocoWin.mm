@@ -91,7 +91,7 @@ NSRect DesktopRect(const Rect& r)
 {
 	double scalei = 1.0 / DPI(1);
 	return NSMakeRect(scalei * r.left,
-	                  scalei * (Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight()),
+	                  scalei * (Ctrl::GetScreenArea(r.TopLeft()).GetHeight() - r.top - r.GetHeight()),
 	                  scalei * r.GetWidth(), scalei * r.GetHeight());
 }
 

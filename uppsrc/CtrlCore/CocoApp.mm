@@ -348,11 +348,22 @@ Rect Ctrl::GetPrimaryWorkArea()
 	return rc.GetCount() ? rc[0] : Rect(0, 0, 0, 0);
 }
 
+Rect Ctrl::GetScreenArea(Point pt)
+{
+	GuiLock __;
+	for(NSScreen *screen in [NSScreen screens]) {
+		Rect rc = MakeScreenRect(screen, [screen frame]);
+		if(rc.Contains(pt))
+			return rc;
+	}
+	return GetPrimaryScreenArea();
+}
+
 Rect Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
 		return MakeScreenRect(screen, [screen frame]);
-	return Rect(0, 0, 0, 0);
+	return Rect(0, 0, 1024, 768);
 }
 
 bool Ctrl::IsCompositedGui()
