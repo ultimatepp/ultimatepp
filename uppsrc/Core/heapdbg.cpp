@@ -196,10 +196,12 @@ void MemoryDumpLeaks()
 {
 	if(PanicMode)
 		return;
+#ifndef PLATFORM_MACOS
 	if(IsMainRunning()) {
 		VppLog() << "Application was terminated in a non-standard way (e.g. exit(x) call or Ctrl+C)\n";
 		return;
 	}
+#endif
 #ifndef PLATFORM_POSIX
 	if(s_ignoreleaks)
 		Panic("Ignore leaks Begin/End mismatch!");
