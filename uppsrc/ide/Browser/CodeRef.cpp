@@ -325,13 +325,13 @@ void TopicEditor::InsertItem()
 	if(ref.item.IsSelection()) {
 		for(int i = 0; i < ref.item.GetCount(); i++)
 			if(ref.item.IsSelected(i)) {
-				const CppItemInfo& m = ref.GetItemInfo(i);
+				CppItemInfo m = ref.GetItemInfo(i);
 				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m, GetLang());
 			}
 	}
 	else
 	if(ref.item.IsCursor()) {
-		const CppItemInfo& m = ref.GetItemInfo();
+		CppItemInfo m = ref.GetItemInfo();
 		qtf << CreateQtf(ref.GetCodeRef(), m.name, m, GetLang());
 	}
 	else
