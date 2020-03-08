@@ -232,12 +232,12 @@ String CodeBrowser::GetCodeRef() const
 	return item.IsCursor() ? GetCodeRef(item.GetCursor()) : String();
 }
 
-const CppItemInfo& CodeBrowser::GetItemInfo(int i) const
+CppItemInfo CodeBrowser::GetItemInfo(int i) const
 {
 	return ValueTo<CppItemInfo>(item.Get(i, 1));
 }
 
-const CppItemInfo& CodeBrowser::GetItemInfo() const
+CppItemInfo CodeBrowser::GetItemInfo() const
 {
 	return GetItemInfo(item.GetCursor());
 }
