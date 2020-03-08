@@ -24,7 +24,6 @@ class FontSelectManager {
 	DropList *height;
 	Option   *bold;
 	Option   *italic;
-	Option   *naa;
 
 	void FaceSelect();
 	void Select();
@@ -35,7 +34,7 @@ public:
 	typedef FontSelectManager CLASSNAME;
 
 	void Set(DropList& _face, DropList& _height,
-	         Option& _bold, Option& _italic, Option& _naa);
+	         Option& _bold, Option& _italic, bool gui = false);
 	void Set(Font f);
 	Font Get();
 };
@@ -61,7 +60,7 @@ void LoadFonts(DropList *face, Index<String>& fni, bool fixed)
 }
 
 void FontSelectManager::Set(DropList& _face, DropList& _height,
-                            Option& _bold, Option& _italic, Option& _naa) {
+                            Option& _bold, Option& _italic, bool gui) {
 	face = &_face;
 	face->WhenAction = THISBACK(FaceSelect);
 	height = &_height;
@@ -70,15 +69,24 @@ void FontSelectManager::Set(DropList& _face, DropList& _height,
 	bold->WhenAction = THISBACK(Select);
 	italic = &_italic;
 	italic->WhenAction = THISBACK(Select);
-	naa = &_naa;
-	naa->WhenAction = THISBACK(Select);
 	face->Clear();
-	Index<String> fni;
-	LoadFonts(face, fni, true);
-	face->AddSeparator();
-	LoadFonts(face, fni, false);
-	face->SetIndex(0);
-	height->ClearList();
+	if(gui) {
+		face->Add(Font::ARIAL);
+		face->Add(Font::ROMAN);
+		face->Add(Font::COURIER);
+		for(int i = Font::COURIER + 1; i < Font::GetFaceCount(); i++)
+			if(Font::GetFaceInfo(i) & Font::SCALEABLE)
+				face->Add(i);
+		SetupFaceList(*face);
+	}
+	else {
+		Index<String> fni;
+		LoadFonts(face, fni, true);
+		face->AddSeparator();
+		LoadFonts(face, fni, false);
+		face->SetIndex(0);
+		height->ClearList();
+	}
 	for(int i = 6; i < 64; i++)
 		height->Add(i);
 	FaceSelect();
@@ -105,14 +113,12 @@ void FontSelectManager::Set(Font f) {
 	}
 	*bold = f.IsBold();
 	*italic = f.IsItalic();
-	*naa = f.IsNonAntiAliased();
 }
 
 Font FontSelectManager::Get() {
 	Font f(face->GetData(), height->GetData());
 	if(*bold) f.Bold();
 	if(*italic) f.Italic();
-	if(*naa) f.NonAntiAliased();
 	return f;
 }
 
@@ -410,19 +416,24 @@ void Ide::SetupFormat() {
 	dlg.Add(ide, "IDE");
 	dlg.Add(ast, "Code formatting");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
-	FontSelectManager ed, vf, con, f1, f2, tf;
-	ed.Set(fnt.face, fnt.height, fnt.bold, fnt.italic, fnt.naa);
-	vf.Set(fnt.vface, fnt.vheight, fnt.vbold, fnt.vitalic, fnt.vnaa);
-	con.Set(fnt.cface, fnt.cheight, fnt.cbold, fnt.citalic, fnt.cnaa);
-	tf.Set(fnt.tface, fnt.theight, fnt.tbold, fnt.titalic, fnt.tnaa);
-	f1.Set(fnt.face1, fnt.height1, fnt.bold1, fnt.italic1, fnt.naa1);
-	f2.Set(fnt.face2, fnt.height2, fnt.bold2, fnt.italic2, fnt.naa2);
+
+	FontSelectManager ed, vf, con, f1, f2, tf, gui;
+	ed.Set(fnt.face, fnt.height, fnt.bold, fnt.italic);
+	vf.Set(fnt.vface, fnt.vheight, fnt.vbold, fnt.vitalic);
+	con.Set(fnt.cface, fnt.cheight, fnt.cbold, fnt.citalic);
+	tf.Set(fnt.tface, fnt.theight, fnt.tbold, fnt.titalic);
+	f1.Set(fnt.face1, fnt.height1, fnt.bold1, fnt.italic1);
+	f2.Set(fnt.face2, fnt.height2, fnt.bold2, fnt.italic2);
+	gui.Set(ide.face, ide.height, ide.bold, ide.italic, true);
+
 	ed.Set(editorfont);
 	vf.Set(veditorfont);
 	con.Set(consolefont);
 	tf.Set(tfont);
 	f1.Set(font1);
 	f2.Set(font2);
+	gui.Set(gui_font);
+
 	DlCharset(edt.charset);
 	edt.tabsize.MinMax(1, 100).NotNull();
 	edt.tabsize <<= editortabsize;
@@ -491,6 +502,7 @@ void Ide::SetupFormat() {
 		(ide.console, LinuxHostConsole)
 		(ide.output_per_assembly, output_per_assembly)
 		(ide.setmain_newide, setmain_newide)
+		(ide.gui_font, gui_font_override)
 
 		(ast.BracketIndent,					astyle_BracketIndent)
 		(ast.NamespaceIndent,               astyle_NamespaceIndent)
@@ -568,6 +580,8 @@ void Ide::SetupFormat() {
 		consolefont = con.Get();
 		font1 = f1.Get();
 		font2 = f2.Get();
+		gui_font = gui.Get();
+		
 		editortabsize = Nvl((int)~edt.tabsize, 4);
 		rtvr.Retrieve();
 		console.SetSlots(minmax(hydra1_threads, 1, 256));

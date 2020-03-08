@@ -231,6 +231,13 @@ void AppMain___()
 		void RegisterIconDes(); RegisterIconDes();
 
 		splash_screen = true;
+		
+		String font_override_path = ConfigFile("gui_font");
+		if(FileExists(font_override_path)) {
+			Font f;
+			if(LoadFromFile(f, font_override_path))
+				SetStdFont(f);
+		}
 
 		Ide ide;
 		ide.Maximize();

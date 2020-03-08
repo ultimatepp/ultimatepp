@@ -680,6 +680,12 @@ Ide::Ide()
 Ide::~Ide()
 {
 	TheIde(NULL);
+	// we need to store font override so that it be loaded before Ide constructor:
+	String font_override_path = ConfigFile("gui_font");
+	if(gui_font_override)
+		StoreToFile(gui_font, font_override_path);
+	else
+		DeleteFile(font_override_path);
 }
 
 void Ide::Paint(Draw&) {}

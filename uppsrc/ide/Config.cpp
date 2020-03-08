@@ -176,7 +176,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 18;
+	int version = 19;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -312,6 +312,8 @@ void Ide::Serialize(Stream& s)
 	s.Magic();
 	if(version >= 17)
 		s % hlstyle_is_default;
+	if(version >= 19)
+		s % gui_font % gui_font_override;
 }
 
 Time Ide::ConfigTime()

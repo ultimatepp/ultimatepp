@@ -603,6 +603,8 @@ public:
 	bool      wordwrap_comments;
 	bool      wordwrap;
 	bool      setmain_newide;
+	bool      gui_font_override = false;
+	Font      gui_font = StdFont();
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
