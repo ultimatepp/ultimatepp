@@ -17,6 +17,8 @@ NAMESPACE_UPP
 
 //For ValuePacker / RichValue<Value> and GCC
 template<> inline bool IsNull(const Value& v)       { return v.IsNull(); }
+template<> inline int  PolyCompare(const Value& v, const Value& x) { return v.Compare(x); }
+
 
 VectorMap<int, String>& GetValueTypeNoNameMap();
 #define ADDVALUETYPENO(x) GetAdd(x, ASSTRING(x))
@@ -254,7 +256,7 @@ public:
 		{
 			k << Get(i, 0); vv << Get(i, 1);
 		}
-		return ValueMap(k, pick(vv));
+		return ValueMap(pick(k), pick(vv));
 	}
 
 	virtual void SetData(const Value& v)

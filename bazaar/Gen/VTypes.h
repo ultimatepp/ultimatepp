@@ -29,7 +29,7 @@ inline bool operator!=(const Ctrl::LogPos& x, const Value& v)   { return RichVal
 
 inline int  SgnCompare(const Ctrl::LogPos&, const Ctrl::LogPos&)  { return 0; }
 
-template<> int  PolyCompare(const Ctrl::LogPos&, const Value&) { return 0; }
+template<> inline int  PolyCompare(const Ctrl::LogPos&, const Value&) { return 0; }
 
 template<> String AsString(const Ctrl::LogPos& pos);
 

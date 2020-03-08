@@ -105,10 +105,10 @@ void CtrlPos::DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& 
 }
 
 //remove each element of _c in c, if found
-void CtrlPos::CombineSubtract(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c)
+void CtrlPos::CombineSubtract(Vector<Ctrl*>& c, Vector<Ctrl*>&& _c)
 {
 	//top is the currently editable ctrl
-	Vector<Ctrl*> __c(_c);
+	Vector<Ctrl*> __c = pick(_c);
 	while(__c.GetCount() > 0)
 	{
 		int i = FindIndex(c, __c.Top()); //with this we are O(N^2)
@@ -117,7 +117,7 @@ void CtrlPos::CombineSubtract(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c)
 	}
 }
 
-void CtrlPos::CombineAdd(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c)
+void CtrlPos::CombineAdd(Vector<Ctrl*>& c, Vector<Ctrl*>&& _c)
 {
 	//top is the currently editable ctrl
 
@@ -265,12 +265,12 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		{
 			//add or remove probable found additional controls
 			if(keyflags & K_SHIFT)
-				CombineSubtract(ctrls, _ctrls);
+				CombineSubtract(ctrls, pick(_ctrls));
 			else
-				CombineAdd(ctrls, _ctrls);
+				CombineAdd(ctrls, pick(_ctrls));
 		}
 		else
-			ctrls = _ctrls;
+			ctrls = pick(_ctrls);
 		if(!ctrls.IsEmpty())
 			WhenLeftSelectMulti(&ctrls, r, keyflags);
 	}
@@ -288,12 +288,12 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		{
 			//add or remove probable found additional controls
 			if(keyflags & K_SHIFT)
-				CombineSubtract(ctrls, _ctrls);
+				CombineSubtract(ctrls, pick(_ctrls));
 			else
-				CombineAdd(ctrls, _ctrls);
+				CombineAdd(ctrls, pick(_ctrls));
 		}
 		else
-			ctrls = _ctrls;
+			ctrls = pick(_ctrls);
 		if(!ctrls.IsEmpty())
 			WhenLeftSelect(*ctrls.Top(), p, keyflags);
 	}

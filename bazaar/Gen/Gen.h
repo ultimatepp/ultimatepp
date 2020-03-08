@@ -5,7 +5,15 @@
 
 NAMESPACE_UPP
 
-//copyable interface, implementing the Copy function, used i.e. by PolyDeepCopyNew
+template <class T, class B = EmptyClass>
+class WithPolyClone : public B
+{
+public:
+//	friend T *DeepCopyNew(const T& t)              { return t.Copy(); }
+	friend T  do_clone(const T& src) { return src.Copy(); }
+};
+
+//copyable interface, implementing the Copy function, used i.e. by WithPolyClone
 template<class T, class B = EmptyClass>
 class Copyable : public B
 {
@@ -31,7 +39,7 @@ public:
 //copyable interface defining the common base class C, without implementing Copy
 //makes possible to clone things and accessing some defined interface
 template<class C, class B = EmptyClass>
-class PolyCopyableHook : public PolyDeepCopyNew<PolyCopyableHook<C,B>, TypeHook<C, Copyable<PolyCopyableHook<C,B>, B> > >
+class PolyCopyableHook : public WithPolyClone<PolyCopyableHook<C,B>, TypeHook<C, Copyable<PolyCopyableHook<C,B>, B> > >
 {
 };
 
@@ -39,7 +47,7 @@ class PolyCopyableHook : public PolyDeepCopyNew<PolyCopyableHook<C,B>, TypeHook<
 //B is the derived type, i.e. EditInt, C is common base class, i.e. Ctrl
 //forward another baseclass CB to extend CopyableC interface
 template<class T, class B, class C, class CB = EmptyClass>
-class PolyElement : public PolyDeepCopyNew<T, B>, public PolyCopyableHook<C, CB>
+class PolyElement : public WithPolyClone<T, B>, public PolyCopyableHook<C, CB>
 {
 public:
 	virtual const C& GetT() const              { return *this; }

@@ -428,7 +428,7 @@ Value Form::GetData(const String& var)
 Ctrl* Form::GetCtrl(const String& var)
 {
 	if (!IsLayout())
-		return false;
+		return NULL;
 
 	Vector<FormObject>* p = &_Layouts[_Current].GetObjects();
 	for (int i = 0; i < p->GetCount(); ++i)

@@ -39,7 +39,7 @@ void TimerTest::Test()
 	
 #ifdef REPEAT_TEST
 #else
-	t.SetTimeCallback(TIMEOUT, THISBACK(Test), (int)this);
+	t.SetTimeCallback(TIMEOUT, THISBACK(Test), (intptr_t)this);
 #endif
 }
 
@@ -52,8 +52,8 @@ void TimerTest::Close()
 
 void TimerTest::Close0()
 {
-	while(AtomicRead(demo) > 0) Sleep(1);
-	ASSERT(AtomicRead(demo)==0);
+	while(demo > 0) Sleep(1);
+	ASSERT((demo)==0);
 	TopWindow::Close();
 }
 

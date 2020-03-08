@@ -21,7 +21,7 @@ public:
 
 	CtrlPos();
 
-	virtual void Paint(Draw& w);	
+	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void LeftUp(Point p, dword keyflags);
@@ -39,8 +39,8 @@ public:
 	static void GetAlignRects(const Ctrl& ctxuser, const Ctrl& finalctx, Rect& r, Rect& _r);
 	static void DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol, const CtrlFilterType& filter, int flags);
 
-	void CombineAdd(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c);
-	void CombineSubtract(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c);
+	void CombineAdd(Vector<Ctrl*>& c, Vector<Ctrl*>&& _c);
+	void CombineSubtract(Vector<Ctrl*>& c, Vector<Ctrl*>&& _c);
 
 	Callback WhenLeftDouble;
 

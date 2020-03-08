@@ -13,7 +13,7 @@ public:
 public:
 	virtual bool Key(dword key, int count)
 	{
-		Callback cb = B::WhenAction;
+		Event<> cb = B::WhenAction;
 		bool up = key & K_KEYUP;
 		dword purekey = key & ~K_KEYUP;
 

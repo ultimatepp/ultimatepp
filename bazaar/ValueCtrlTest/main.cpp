@@ -8,7 +8,7 @@ ValueCtrlTest::ValueCtrlTest()
 	vc <<= THISBACK(ActionCB);
 	Add(vc.HSizePos().BottomPos(0, 20));
 
-	Value v = ValueArray(Vector<Value>() << 123.8 << "Test");
+	Value v = ValueArray(pick(Vector<Value>() << 123.8 << "Test"));
 	vc.SetData(v);
 }
 

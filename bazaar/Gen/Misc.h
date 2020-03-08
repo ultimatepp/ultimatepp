@@ -17,7 +17,7 @@ public:
 	inline void Disable()                      { return Enable(false); }
 	virtual bool IsEnabled() const             { return enabled; }
 protected:
-	bool enabled;	
+	bool enabled;
 };
 
 //notificator interface

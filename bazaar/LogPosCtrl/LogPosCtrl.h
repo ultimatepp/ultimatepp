@@ -23,10 +23,10 @@ public:
 	static Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Ctrl& c);
 
 	virtual void Updated();
-	virtual Value GetData() const { return RichToValue(pos); }
-	virtual void SetData(const Value& v) { if(!v.Is<Ctrl::LogPos>()) return; Set(RichValue<Ctrl::LogPos>::Extract(v)); Update(); }
+	virtual Value GetData() const;
+	virtual void SetData(const Value& v);
 
-	Ctrl::LogPos Generate() const; 	//obsolete
+	Ctrl::LogPos Generate() const; //obsolete
 	Ctrl::LogPos Get() const { return pos; }
 	void Set(const Ctrl::LogPos& p);
 
@@ -80,8 +80,8 @@ public:
 	void ClearBaseSize() { bsz = Null; }
 	Size GetBaseSize() const { return bsz; }
 
-	virtual Value GetData() const { return RichToValue(pos); }
-	virtual void SetData(const Value& v) { if(!v.Is<Ctrl::LogPos>()) return; pos = RichValue<Ctrl::LogPos>::Extract(v); Update(); }
+	virtual Value GetData() const;
+	virtual void SetData(const Value& v);
 
 	Ctrl::LogPos Get() const { return pos; }
 	void Set(const Ctrl::LogPos& p, const Size& sz = Null) { pos = p; bsz = sz; Update(); }

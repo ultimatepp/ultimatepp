@@ -88,7 +88,7 @@ Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Ctrl& c)
 
 void LogPosPopUp::Set(const Ctrl::LogPos& p)
 {
-	pos = p;	
+	pos = p;
 	xa <<= pos.x.GetA(); xb <<= pos.x.GetB();
 	
 	switch(pos.x.GetAlign())
@@ -130,6 +130,18 @@ void LogPosPopUp::Updated()
 	}
 }
 
+Value LogPosPopUp::GetData() const
+{
+	return RichToValue(pos);
+}
+
+void LogPosPopUp::SetData(const Value& v)
+{
+	if(!v.Is<Ctrl::LogPos>())
+		return; Set(RichValue<Ctrl::LogPos>::Extract(v));
+	Update();
+}
+
 //obsolete
 Ctrl::LogPos LogPosPopUp::Generate() const
 {
@@ -162,7 +174,7 @@ Ctrl::LogPos LogPosPopUp::Generate() const
 	}
 	pos.y.SetA(ya); pos.y.SetB(yb);
 
-	return pos; 
+	return pos;
 }
 
 void LogPosPopUp::XaCB()
@@ -271,7 +283,20 @@ void LogPosCtrl::LeftDown(Point p, dword keyflags)
 {
 	if(IsReadOnly() || !IsEnabled()) return;
 	if(!HasFocus()) SetFocus();
-	Drop();	
+	Drop();
+}
+
+Value LogPosCtrl::GetData() const
+{
+	return RichToValue(pos);
+}
+
+void LogPosCtrl::SetData(const Value& v)
+{
+	if(!v.Is<Ctrl::LogPos>())
+		return;
+	pos = RichValue<Ctrl::LogPos>::Extract(v);
+	Update();
 }
 
 void LogPosCtrl::Drop()
