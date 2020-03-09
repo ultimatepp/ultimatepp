@@ -108,7 +108,7 @@ file
 	Lang readonly separator,
 	Lang.h,
 	LNGCtrl.cpp,
-	Ch readonly separator,
+	Chameleon readonly separator,
 	Ch.h,
 	Ch.cpp,
 	Ctrls.iml,

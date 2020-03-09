@@ -30,22 +30,22 @@ CH_VAR0(ChColor, Color, SColorPaper, White())
 	Iml::ResetAll();
 CH_END
 
-CH_COLOR(SColorFace, LtGray());
-CH_COLOR(SColorText, Black());
-CH_COLOR(SColorHighlight, Blue());
-CH_COLOR(SColorHighlightText, White());
-CH_COLOR(SColorMenu, LtGray());
-CH_COLOR(SColorMenuText, Black());
-CH_COLOR(SColorInfo, LtYellow());
-CH_COLOR(SColorInfoText, Black());
-CH_COLOR(SColorDisabled, Gray());
-CH_COLOR(SColorLight, White());
-CH_COLOR(SColorShadow, Gray());
+CH_COLOR(SColorFace, SLtGray());
+CH_COLOR(SColorText, SBlack());
+CH_COLOR(SColorHighlight, SBlue());
+CH_COLOR(SColorHighlightText, SWhite());
+CH_COLOR(SColorMenu, SLtGray());
+CH_COLOR(SColorMenuText, SBlack());
+CH_COLOR(SColorInfo, SLtYellow());
+CH_COLOR(SColorInfoText, SBlack());
+CH_COLOR(SColorDisabled, SGray());
+CH_COLOR(SColorLight, SWhite());
+CH_COLOR(SColorShadow, SGray());
 CH_COLOR(SColorMark, IsDark(SColorPaper()) ? DarkTheme(LtBlue()) : LtBlue());
 CH_COLOR(SColorMenuMark, IsDark(SColorMenu()) ? DarkTheme(LtBlue()) : LtBlue());
 
 CH_COLOR(SColorLtFace, Blend(SColorFace, SColorLight));
-CH_COLOR(SColorDkShadow, Blend(SColorShadow, Black));
+CH_COLOR(SColorDkShadow, Blend(SColorShadow, SBlack));
 CH_COLOR(SColorLabel, SColorText());
 
 }

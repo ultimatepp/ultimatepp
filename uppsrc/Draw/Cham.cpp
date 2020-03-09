@@ -417,6 +417,7 @@ bool IsDarkColorFace()
 
 void ChReset()
 {
+	dark_theme__ = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		*sChStyle()[i].status = 0;
 	ChLookFn(StdChLookFn);

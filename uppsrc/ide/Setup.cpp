@@ -544,11 +544,9 @@ void Ide::SetupFormat() {
 	hlt.hl_restore <<= dlg.Breaker(333);
 	hlt.hl_restore_white <<= dlg.Breaker(334);
 	hlt.hl_restore_dark <<= dlg.Breaker(335);
-	ide.chstyle.Add(0, "Host platform");
-	ide.chstyle.Add(1, "Standard");
-	ide.chstyle.Add(2, "Classic");
-	ide.chstyle.Add(3, "Host platform, blue bars");
-	ide.chstyle.Add(4, "Standard, blue bars");
+	
+	for(auto sk : GetAllChSkins())
+		ide.chstyle.Add(ide.chstyle.GetCount(), sk.b);
 
 	FrameRight<Button> uscBrowse;
 	uscBrowse.SetImage(CtrlImg::right_arrow());

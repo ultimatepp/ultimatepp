@@ -107,6 +107,9 @@ void ChClassicSkin()
 	CtrlsImg::Set(CtrlsImg::I_EFE, edge);
 	CtrlsImg::Set(CtrlsImg::I_VE, edge);
 
+	for(int i = 0; i < 6; i++)
+		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
+
 	Color wg = Blend(SColorFace(), WhiteGray());
 	{
 		Button::Style& s = Button::StyleNormal().Write();
@@ -185,13 +188,14 @@ void ChClassicSkin()
 			s.extendleft = DPI(2);
 			s.text_color[i] = SColorText();
 		}
-		static int adj[] = { 10, 80, -5, -10 };
-		Color f = FaceColor(adj[i]);
+//		static int adj[] = { 10, 80, -5, -10 };
+//		Color f = FaceColor(adj[i]);
+		Color f = decode(i, 0, SColorPaper(), 1, Blend(SColorPaper(), SColorFace()), 2, SColorFace(), SColorFace());
 		{
 			for(int opt = 0; opt < 2; opt++) {
 				ImagePainter p(c, c);
 				p.Clear(RGBAZero());
-				p.Circle(DPI(7), DPI(7), DPI(6)).Fill(f).Stroke(2, Pointf(DPI(2), DPI(2)), SGray(), Pointf(DPI(14), DPI(14)), White());
+				p.Circle(DPI(7), DPI(7), DPI(6)).Fill(f).Stroke(2, Pointf(DPI(2), DPI(2)), SGray(), Pointf(DPI(14), DPI(14)), SWhite());
 				p.Circle(DPI(7), DPI(7), DPI(6) - 1).Fill(f).Stroke(1, Pointf(DPI(2) + 1, DPI(2) + 1), SBlack(), Pointf(DPI(14) - 2, DPI(14) - 2), SColorFace());
 				if(opt)
 					p.Circle(DPI(7), DPI(7), DPI(4)).Fill(SColorText());
@@ -202,7 +206,7 @@ void ChClassicSkin()
 			for(int chk = 0; chk < 3; chk++) {
 				ImagePainter p(c, c);
 				p.Clear(RGBAZero());
-				DrawClassicButton(p, Size(c, c), SGray(), White(), SBlack(), LtGray(), f);
+				DrawClassicButton(p, Size(c, c), SGray(), SWhite(), SBlack(), SLtGray(), f);
 				p.Scale(DPI(1));
 				if(chk == 1)
 					p.Move(3, 7).Line(7, 10).Line(11, 4).Stroke(2, SColorText());
@@ -584,8 +588,10 @@ void ChBaseSkin()
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 }
 
-void ChStdSkin()
+void ChMakeSkin(int roundness, Color button_face, Color thumb, int *adj)
 {
+	GUI_GlobalStyle_Write(GUISTYLE_XP);
+
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
 	for(int i = 0; i < 6; i++)
@@ -597,21 +603,22 @@ void ChStdSkin()
 	Image button[4], sbutton[4];
 
 	Color border = Gray();
+	
+	roundness = DPI(roundness);
 		
 	{
 		for(int pass = 0; pass < 2; pass++) {
 			Button::Style& s = pass ? Button::StyleOk().Write() : Button::StyleNormal().Write();
-			int roundness = DPI(3);
 			s.focusmargin = DPI(4);
 			for(int i = 0; i < 4; i++) {
-				static int adj[] = { 10, 80, -5, -10 };
-				Color f = FaceColor(adj[i]);
+				Color f = AdjustColor(button_face, adj[i]);
 				Color ink = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
 				s.look[i] = MakeButton(roundness, f, DPI(1 + pass), border);
 				text[i] = s.monocolor[i] = s.textcolor[i] = ink;
 				if(pass == 0) {
-					sbutton[i] = MakeButton(DPI(3), f, DPI(1), border);
-					button[i] = MakeButton(DPI(1), f, DPI(1), border);
+					sbutton[i] = MakeButton(roundness, f, DPI(1), border);
+					button[i] = MakeButton(roundness ? DPI(1) : 0, f, DPI(1), border);
+					Color f = decode(i, 0, SColorPaper(), 1, Blend(SColorPaper(), SColorFace()), 2, SColorFace(), SColorFace());
 					{
 						for(int opt = 0; opt < 2; opt++) {
 							ImagePainter p(c, c);
@@ -661,14 +668,14 @@ void ChStdSkin()
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		ImagePainter p(c, c);
-		p.Rectangle(0, 0, c, c).Fill(0, 0, SColorFace(), c, 0, SColorPaper());
+		p.Rectangle(0, 0, c, c).Fill(0, 0, IsDarkTheme() ? SColorFace() : AdjustColor(thumb, 40), c, 0, IsDarkTheme() ? LtGray() : SColorPaper());
 		Image vtrough = p;
 
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
-			s.vupper[status] = s.vlower[status] = ChHot(vtrough); // we have problems getting this right for vertical
-			static int adj[] = { 70, 80, 60, -10 };
-			s.hthumb[status] = s.vthumb[status] = AdjustColor(border, adj[status]);
+			s.vupper[status] = s.vlower[status] = ChHot(vtrough);
+			static int adj[] = { 0, 10, -10, -20 };
+			s.hthumb[status] = s.vthumb[status] = AdjustColor(thumb, adj[status]);
 		}
 	}
 	
@@ -679,6 +686,62 @@ void ChStdSkin()
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	
 	MakeDialogIcons();
+}
+
+void ChStdSkin()
+{
+	ChReset();
+	static int adj[] = { 10, 80, -5, -10 };
+	SColorFace_Write(Color(240, 240, 240));
+	SColorMenu_Write(Color(240, 240, 240));
+	SColorHighlight_Write(Color(50, 50, 250));
+	ChMakeSkin(3, SColorFace(), SLtGray(), adj);
+}
+
+void ChGraySkin()
+{
+	ChReset();
+	static int adj[] = { 0, 70, -15, -20 };
+	SColorHighlight_Write(Gray());
+	ChMakeSkin(3, SWhiteGray(), SLtGray(), adj);
+}
+
+void ChDarkSkin()
+{
+	ChReset();
+	static int adj[] = { 10, 80, -5, -10 };
+	SColorPaper_Write(Black());
+	SColorHighlight_Write(Gray());
+	SColorHighlightText_Write(White());
+	ChMakeSkin(3, SWhiteGray(), SWhiteGray(), adj);
+}
+
+void ChFlatSkin()
+{
+	ChReset();
+	static int adj[] = { 10, 80, -5, -10 };
+	SColorFace_Write(Color(240, 240, 240));
+	SColorMenu_Write(Color(240, 240, 240));
+	SColorHighlight_Write(Color(50, 50, 250));
+	ChMakeSkin(0, SColorFace(), SLtGray(), adj);
+}
+
+void ChFlatGraySkin()
+{
+	ChReset();
+	static int adj[] = { 0, 70, -15, -20 };
+	SColorHighlight_Write(Gray());
+	ChMakeSkin(0, SWhiteGray(), SLtGray(), adj);
+}
+
+void ChFlatDarkSkin()
+{
+	ChReset();
+	static int adj[] = { 10, 80, -5, -10 };
+	SColorPaper_Write(Black());
+	SColorHighlight_Write(Gray());
+	SColorHighlightText_Write(White());
+	ChMakeSkin(0, SWhiteGray(), SWhiteGray(), adj);
 }
 
 #ifdef GUI_X11
@@ -695,5 +758,19 @@ void ChHostSkin()
 }
 
 #endif
+
+Vector<Tuple<void (*)(), String>> GetAllChSkins()
+{
+	return Vector<Tuple<void (*)(), String>> {
+		{ ChHostSkin, "Host platform" },
+	    { ChClassicSkin, "Classic" },
+		{ ChStdSkin, "Standard" },
+		{ ChGraySkin, "Gray" },
+		{ ChDarkSkin, "Dark" },
+		{ ChFlatSkin, "Flat" },
+		{ ChFlatGraySkin, "Flat Gray" },
+		{ ChFlatDarkSkin, "Flat Dark" }
+	};
+}
 
 }

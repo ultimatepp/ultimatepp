@@ -27,23 +27,8 @@ void ChClassicSkinBlue()
 
 void Ide::SyncCh()
 {
-	switch(chstyle) {
-	case 0:
-		SetSkin(ChHostSkin);
-		break;
-	case 1:
-		SetSkin(ChStdSkin);
-		break;
-	case 2:
-		SetSkin(ChClassicSkin);
-		break;
-	case 3:
-		SetSkin(ChHostSkinBlue);
-		break;
-	case 4:
-		SetSkin(ChStdSkinBlue);
-		break;
-	}
+	auto v = GetAllChSkins();
+	SetSkin(v[clamp(chstyle, 0, v.GetCount() - 1)].a);
 }
 
 void Ide::ToggleVerboseBuild() {
