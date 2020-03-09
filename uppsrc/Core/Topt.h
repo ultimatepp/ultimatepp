@@ -202,7 +202,7 @@ NTL_MOVEABLE(wchar_t)
 template <class T, class B = EmptyClass>
 class WithClone : public B {
 public:
-	friend T do_clone(const T& src) { T c(src, 1); return c; }
+	friend T clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T, class B = EmptyClass>
@@ -212,7 +212,7 @@ public:
 	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->~T(); ::new(&dest) T(src, 1); } return dest; }
 #endif
-	friend T  do_clone(const T& src) { T c(src, 1); return c; }
+	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T, class B = EmptyClass>
