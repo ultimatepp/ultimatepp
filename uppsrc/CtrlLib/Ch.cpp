@@ -682,6 +682,7 @@ void ChMakeSkin(int roundness, Color button_face, Color thumb, int *adj)
 	{
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.topitem[1] = Blend(SColorHighlight(), SColorPaper());
+		s.icheck = button[CTRL_PRESSED];
 	}
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	

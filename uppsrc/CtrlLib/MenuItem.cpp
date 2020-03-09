@@ -309,16 +309,19 @@ void MenuItem::Paint(Draw& w)
 	int x = max(Zx(3), (leftgap + textgap - isz.cx) / 2);
 	if(!licon.IsEmpty() && type) {
 		chk = type == CHECK1 || type == RADIO1;
+		Rect rr = RectC(x - Zx(2), iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4));
 		if(GUI_GlobalStyle() >= GUISTYLE_XP) {
-			if(chk && !hl)
-				DrawXPButton(w, RectC(x - Zx(2), iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4)),
-				             BUTTON_EDGE|BUTTON_CHECKED);
+			if(chk && !hl) {
+				if(IsNull(style->icheck))
+					DrawXPButton(w, rr, BUTTON_EDGE|BUTTON_CHECKED);
+				else
+					ChPaint(w, rr, style->icheck);
+			}
 		}
 		else {
 			w.DrawRect(x - Zx(1), iy - Zy(1), isz.cx + Zx(2), isz.cy + Zy(2),
 			           chk ? Blend(SColorFace, SColorLight) : SColorFace);
-			DrawBorder(w, x - Zx(2), iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4),
-			           chk ? ThinInsetBorder : ThinOutsetBorder);
+			DrawBorder(w, rr, chk ? ThinInsetBorder : ThinOutsetBorder);
 		}
 	}
 	if(isenabled)
