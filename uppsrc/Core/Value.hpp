@@ -74,6 +74,7 @@ inline int PolyCompare(const int64& x, const Value& v) {
 	     : 0;
 }
 
+template<>
 inline int PolyCompare(const double& x, const Value& v) {
 	return IsNumber(v) ? SgnCompare((double)x, (double)v) : 0;
 }
