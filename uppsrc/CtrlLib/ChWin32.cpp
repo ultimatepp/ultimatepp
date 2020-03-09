@@ -338,11 +338,69 @@ String XpThemeInfo(LPCWSTR pszPropertyName)
 	return FromUnicode(h);
 }
 
+struct sysColor {
+	void (*set)(Color c);
+	int syscolor;
+};
+
+static sysColor sSysColor[] = {
+	{ SColorFace_Write, COLOR_3DFACE },
+	{ SColorPaper_Write, COLOR_WINDOW },
+	{ SColorText_Write, COLOR_WINDOWTEXT },
+	{ SColorHighlight_Write, COLOR_HIGHLIGHT },
+	{ SColorHighlightText_Write, COLOR_HIGHLIGHTTEXT },
+	{ SColorMenu_Write, COLOR_MENU },
+	{ SColorMenuText_Write, COLOR_MENUTEXT },
+	{ SColorInfo_Write, COLOR_INFOBK },
+	{ SColorInfoText_Write, COLOR_INFOTEXT },
+	{ SColorLight_Write, COLOR_3DHILIGHT },
+	{ SColorShadow_Write, COLOR_3DSHADOW },
+};
+
+bool IsSysFlag(dword flag)
+{
+	BOOL b;
+	return SystemParametersInfo(flag, 0, &b, 0) && b;
+}
+
 void ChHostSkin()
 {
+	XpClear();
+
+	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
+		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
+
+	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
+	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);
+#ifndef PLATFORM_WINCE
+	GUI_DragFullWindow_Write(IsSysFlag(SPI_GETDRAGFULLWINDOWS));
+#endif
+	GUI_PopUpEffect_Write(IsSysFlag(0x1002 /*SPI_GETMENUANIMATION*/) ?
+	                      IsSysFlag(0x1012 /*SPI_GETMENUFADE*/) ? GUIEFFECT_FADE
+	                                                            : GUIEFFECT_SLIDE
+	                                                            : GUIEFFECT_NONE);
+	GUI_DropShadows_Write(IsSysFlag(0x1024 /*SPI_GETDROPSHADOW*/));
+	GUI_AltAccessKeys_Write(!IsSysFlag(0x100A /*SPI_GETKEYBOARDCUES*/));
+	GUI_AKD_Conservative_Write(0);
+	GUI_DragDistance_Write(GetSystemMetrics(SM_CXDRAG));
+	GUI_DblClickTime_Write(GetDoubleClickTime());
+
+	int slines;
+	SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &slines, 0);
+	GUI_WheelScrollLines_Write(slines);
+
+	CtrlImg::Set(CtrlImg::I_information, Win32Icon(IDI_INFORMATION));
+	CtrlImg::Set(CtrlImg::I_question, Win32Icon(IDI_QUESTION));
+	CtrlImg::Set(CtrlImg::I_exclamation, Win32Icon(IDI_EXCLAMATION));
+	CtrlImg::Set(CtrlImg::I_error, Win32Icon(IDI_ERROR));
+
+	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
+	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
+
+	dword x = GetSysColor(COLOR_GRAYTEXT);
+	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
+
 	if(XpWidget(XP_BUTTON)) {
-		LLOG("XP theme !");
-		ChSysInit();
 		GUI_GlobalStyle_Write(GUISTYLE_XP);
 		EditFieldIsThin_Write(1);
 
@@ -607,31 +665,6 @@ void ChHostSkin()
 		ChClassicSkin();
 }
 
-struct sysColor {
-	void (*set)(Color c);
-	int syscolor;
-};
-
-static sysColor sSysColor[] = {
-	{ SColorFace_Write, COLOR_3DFACE },
-	{ SColorPaper_Write, COLOR_WINDOW },
-	{ SColorText_Write, COLOR_WINDOWTEXT },
-	{ SColorHighlight_Write, COLOR_HIGHLIGHT },
-	{ SColorHighlightText_Write, COLOR_HIGHLIGHTTEXT },
-	{ SColorMenu_Write, COLOR_MENU },
-	{ SColorMenuText_Write, COLOR_MENUTEXT },
-	{ SColorInfo_Write, COLOR_INFOBK },
-	{ SColorInfoText_Write, COLOR_INFOTEXT },
-	{ SColorLight_Write, COLOR_3DHILIGHT },
-	{ SColorShadow_Write, COLOR_3DSHADOW },
-};
-
-bool IsSysFlag(dword flag)
-{
-	BOOL b;
-	return SystemParametersInfo(flag, 0, &b, 0) && b;
-}
-
 bool IsSystemThemeDark()
 {
 	String s = GetWinRegString("AppsUseLightTheme", "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", HKEY_CURRENT_USER);
@@ -658,10 +691,6 @@ void ChSysInit()
 	CtrlImg::Reset();
 	CtrlsImg::Reset();
 	ChReset();
-	XpClear();
-
-	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
-		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
@@ -676,36 +705,6 @@ void ChSysInit()
 	int q = Font::FindFaceNameIndex(name);
 	if(height > 0 && height < 200) // sanity..
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
-	
-	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
-	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);
-#ifndef PLATFORM_WINCE
-	GUI_DragFullWindow_Write(IsSysFlag(SPI_GETDRAGFULLWINDOWS));
-#endif
-	GUI_PopUpEffect_Write(IsSysFlag(0x1002 /*SPI_GETMENUANIMATION*/) ?
-	                      IsSysFlag(0x1012 /*SPI_GETMENUFADE*/) ? GUIEFFECT_FADE
-	                                                            : GUIEFFECT_SLIDE
-	                                                            : GUIEFFECT_NONE);
-	GUI_DropShadows_Write(IsSysFlag(0x1024 /*SPI_GETDROPSHADOW*/));
-	GUI_AltAccessKeys_Write(!IsSysFlag(0x100A /*SPI_GETKEYBOARDCUES*/));
-	GUI_AKD_Conservative_Write(0);
-	GUI_DragDistance_Write(GetSystemMetrics(SM_CXDRAG));
-	GUI_DblClickTime_Write(GetDoubleClickTime());
-
-	int slines;
-	SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &slines, 0);
-	GUI_WheelScrollLines_Write(slines);
-
-	CtrlImg::Set(CtrlImg::I_information, Win32Icon(IDI_INFORMATION));
-	CtrlImg::Set(CtrlImg::I_question, Win32Icon(IDI_QUESTION));
-	CtrlImg::Set(CtrlImg::I_exclamation, Win32Icon(IDI_EXCLAMATION));
-	CtrlImg::Set(CtrlImg::I_error, Win32Icon(IDI_ERROR));
-
-	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
-	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
-
-	dword x = GetSysColor(COLOR_GRAYTEXT);
-	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
 }
 
 #endif

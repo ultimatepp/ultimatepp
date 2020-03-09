@@ -1,7 +1,15 @@
 void ChBaseSkin();
-void ChStdSkin();
-void ChClassicSkin();
+
 void ChHostSkin();
+void ChClassicSkin();
+void ChStdSkin();
+void ChDarkSkin();
+void ChGraySkin();
+void ChFlatSkin();
+void ChFlatDarkSkin();
+void ChFlatGraySkin();
+
+Vector<Tuple<void (*)(), String>> GetAllChSkins();
 
 enum {
 	CORNER_TOP_LEFT = 0x01,

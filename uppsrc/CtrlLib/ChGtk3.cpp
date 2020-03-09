@@ -523,7 +523,6 @@ void ChHostSkin()
 		GtkStyleContext *ctx = gtk_widget_get_style_context((GtkWidget *)gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 		gtk_style_context_set_state(ctx, GTK_STATE_FLAG_NORMAL);
 		paper = AvgColor(CairoImage(ctx));
-		SetChameleonSample(CairoImage(ctx));
 	}
 	if(IsDark(paper)) {
 		SColorText_Write(White());
