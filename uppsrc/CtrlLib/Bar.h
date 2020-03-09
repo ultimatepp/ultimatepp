@@ -326,6 +326,7 @@ public:
 		int   rsepm;
 		Point pullshift; // offset of submenu popup
 		bool  opaquetest; // If true, topmenu item can change hot text color
+		Value icheck; // background of Check (or Radio) item with image
 	};
 
 private:
