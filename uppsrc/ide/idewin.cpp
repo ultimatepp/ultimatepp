@@ -5,26 +5,6 @@
 #define IMAGEFILE  <ide/ide.iml>
 #include <Draw/iml_source.h>
 
-#include <art/BlueBar/BlueBar.h>
-
-void ChStdSkinBlue()
-{
-	ChStdSkin();
-	InstallBlueBar();
-}
-
-void ChHostSkinBlue()
-{
-	ChHostSkin();
-	InstallBlueBar();
-}
-
-void ChClassicSkinBlue()
-{
-	ChClassicSkin();
-	InstallBlueBar();
-}
-
 void Ide::SyncCh()
 {
 	auto v = GetAllChSkins();
