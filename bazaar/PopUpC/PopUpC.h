@@ -35,20 +35,20 @@ public:
 	void Backup()
 	{
 		StringStream s;
-		this->Serialize(s);
+		Serialize(s);
 		backup = s;
 	}
 	
 	void Restore()
 	{
 		StringStream s(backup);
-		this->Serialize(s);
+		Serialize(s);
 	}
 
-	Callback WhenBreak;
-	Callback WhenAccept;
-	Callback WhenReject;
-	Callback WhenDeactivate;
+	Event<> WhenBreak;
+	Event<> WhenAccept;
+	Event<> WhenReject;
+	Event<> WhenDeactivate;
 
 protected:
 	String backup;

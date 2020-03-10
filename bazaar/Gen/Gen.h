@@ -10,7 +10,7 @@ class WithPolyClone : public B
 {
 public:
 //	friend T *DeepCopyNew(const T& t)              { return t.Copy(); }
-	friend T  do_clone(const T& src) { return src.Copy(); }
+	friend T  clone(const T& src) { return src.Copy(); }
 };
 
 //copyable interface, implementing the Copy function, used i.e. by WithPolyClone
