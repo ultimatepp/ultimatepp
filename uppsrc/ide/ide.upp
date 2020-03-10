@@ -12,7 +12,6 @@ uses
 	CtrlLib,
 	plugin\bz2,
 	HexView,
-	art\BlueBar,
 	plugin/astyle,
 	TextDiffCtrl,
 	TabBar,
