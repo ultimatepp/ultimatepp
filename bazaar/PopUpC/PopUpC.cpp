@@ -19,8 +19,8 @@ void PopUpC::Break(int ID)
 bool PopUpC::AcceptBreak(int ID)
 {
 	if(Accept()) {
-		WhenAccept();
 		Break(ID);
+		WhenAccept();
 		return true;
 	}
 	return false;
@@ -29,8 +29,8 @@ bool PopUpC::AcceptBreak(int ID)
 void PopUpC::RejectBreak(int ID)
 {
 	Reject();
-	WhenReject();
 	Break(ID);
+	WhenReject();
 }
 
 void PopUpC::PopUp(Ctrl* owner)
@@ -46,6 +46,9 @@ void PopUpC::PopUp(Ctrl* owner)
 		y = r.top - sz.cy;
 
 	Rect rt = RectC(x, y, sz.cx, sz.cy);
+	
+	Backup();
+	
 	if(GUI_PopUpEffect()) {
 		sPaintRedirectCtrl pb;
 		pb.ctrl = this;
