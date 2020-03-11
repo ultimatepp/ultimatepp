@@ -1425,11 +1425,11 @@ void Knob::PaintMarks(BufferPainter &w, double cx, double cy, double R, double b
 	if (direction == -1) 
 		Swap(ang0, ang1);
 	ang0 = ToRad(ang0);
-	minorstep = ToRad(_minorstep);
+	double minorstepRad = ToRad(_minorstep);
 	double width = bigF;
 	int inum = 0;
 	int imin = nminor;
-	for (double iang = ang0; inum < nmajor+2; iang += minorstep) {
+	for (double iang = ang0; inum < nmajor+2; iang += minorstepRad) {
 		if (imin >= nminor) {
 			imin = 0;
 			double x0 = cx + end*R*cos(iang);
@@ -1491,7 +1491,7 @@ void Knob::Layout() {
 		dangle = angleBegin - dangle;
 	else
 		dangle = angleBegin + dangle;
-	//double angle = ToRad(dangle);
+	
 	ImageBuffer ib(int(2*R), int(2*R));
 	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
@@ -1508,14 +1508,12 @@ void Knob::Layout() {
 	if (minorstep > majorstep || minorstep == 0)
 		minorstep = majorstep;
 		
-	if (minorstep == 0) {
+	if (minorstep == 0) 
 		nminor = 0;
-	} else {
+	else {
 		nminor = int(majorstep/minorstep) - 1;
 		minorstep = majorstep/int(majorstep/minorstep);
 	}
-	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	//majorstep = (maxv-minv)/(nmajor+1);
 	nmajor = int((maxv-minv)/majorstep) - 1;
 	
 	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
@@ -1543,8 +1541,6 @@ void Knob::Layout() {
 			if (colorType == WhiteType) {
 				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(dx+R/2, dx+R/2, White(), dx+R, dx+R, R, LtGray());
 			} else if (colorType == BlackType) {
-				//Color lineColor = (colorType == WhiteType) ? Black() : White();
-				//Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(fill);	
 				sw.Begin();
 					sw.BeginMask();
@@ -1603,31 +1599,20 @@ void Knob::Paint(Draw& w) {
 	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
 	
-/*	int direction;
-	if (clockWise)
-		direction = -1;
-	else
-		direction = 1;*/
-
-	if (majorstep == 0)
-		majorstep = maxv - minv;
-	majorstep = (maxv-minv)/int((maxv-minv)/majorstep);
+	//if (majorstep == 0)
+	//	majorstep = maxv - minv;
+	//majorstep = (maxv-minv)/int((maxv-minv)/majorstep);
 		
-	if (minorstep > majorstep || minorstep == 0)
-		minorstep = majorstep;
+	//if (minorstep > majorstep || minorstep == 0)
+	//	minorstep = majorstep;
 		
-	if (minorstep == 0) {
-		nminor = 0;
-	} else {
-		nminor = int(majorstep/minorstep) - 1;
-		minorstep = majorstep/int(majorstep/minorstep);
-	}
-	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	//majorstep = (maxv-minv)/(nmajor+1);
-	nmajor = int((maxv-minv)/majorstep) - 1;
-	
-	//double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
-	//double majorstepa = majorstep*maxgrad/(maxv - minv);	
+	//if (minorstep == 0) {
+	//	nminor = 0;
+	//} else {
+	//	nminor = int(majorstep/minorstep) - 1;
+	//	minorstep = majorstep/int(majorstep/minorstep);
+	//}
+	//nmajor = int((maxv-minv)/majorstep) - 1;
 
 	if (HasFocus()) {
 		if (number)
@@ -1671,7 +1656,6 @@ void Knob::Paint(Draw& w) {
 			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(1, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
 		Color lineColor = (colorType == WhiteType) ? Black() : White();
-		//Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 		if (mark == Line)
 			sw.Move(cx+realR*cos(angle), cy-realR*sin(angle))
 			  .Line(cx+0.5*r*cos(angle), cy-0.5*r*sin(angle)).Stroke(r/25., lineColor);
@@ -1870,6 +1854,8 @@ struct FileNameConvert : public Convert {
 		return GetFileName(String(va[0]));
 	}
 	Value Scan(const Value& text) const {
+		if (values.IsEmpty())
+			values.SetCount(1, String(""));
 		values.Set(0, AppendFileName(GetFileDirectory(String(values[0])), String(text)));
 		return values;
 	}

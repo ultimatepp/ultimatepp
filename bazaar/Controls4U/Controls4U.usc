@@ -67,7 +67,7 @@ fn PaintEllipse(w, left, top, right, bottom, width, color)
 	}
 }
 
-fn DrawCircle(w, cx, cy, R, width, color) {
+fn DrawCircle2(w, cx, cy, R, width, color) {
 	PaintEllipse(w, cx-R-width/2., cy-R-width/2., cx+R+width/2., cy+R+width/2., width, color);
 }
 
@@ -1253,7 +1253,7 @@ ctrl Knob {
 				w.DrawLine(cx+(r-capt)*cos(angle), cy-(r-capt)*sin(angle), 
 						    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
 			else if (.SetMark == "2")
-				DrawCircle(w, cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r, 1, lineColor);
+				DrawCircle2(w, cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r, 1, lineColor);
 		} else if (.SetColorType == "2" || .SetColorType == "3") {
 			wm = sz.cx;
 			if (.SetColorType == "2")
