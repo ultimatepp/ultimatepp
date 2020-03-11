@@ -8,7 +8,7 @@ class EditFileFolder_Demo : public WithEditFileFolder<StaticRect> {
 public:
 	typedef EditFileFolder_Demo CLASSNAME;
 	EditFileFolder_Demo();
-	void OnNewFile();
+	bool OnNewFile();
 	void ChangeProperties();
 };
 

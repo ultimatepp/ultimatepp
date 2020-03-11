@@ -1,8 +1,8 @@
 #include <CtrlLib/CtrlLib.h>
+#include <Controls4U/Controls4U.h>
 
 using namespace Upp;
 
-#include <Controls4U/Controls4U.h>
 
 #if defined(PLATFORM_WIN32) 	
 #include "Controls4U_Demo_win.h"
@@ -84,13 +84,17 @@ EditFileFolder_Demo::EditFileFolder_Demo() {
 	
 	back.Set(Images::paper());
 }
-void EditFileFolder_Demo::OnNewFile() {
+bool EditFileFolder_Demo::OnNewFile() {
 	if (!clipImage.Set(~FileName)) {
-		if (FileExists(~FileName))
+		if (FileExists(~FileName)) {
 			Exclamation("File not found");
-		else	
+			return false;
+		} else {	
 			Exclamation("File format is not supported");
+			return false;
+		}
 	}
+	return true;
 }
 void EditFileFolder_Demo::ChangeProperties() {
 	clipImage.SetAngle(~angleList);

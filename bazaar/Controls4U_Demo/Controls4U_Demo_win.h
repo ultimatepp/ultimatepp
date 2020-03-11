@@ -41,7 +41,7 @@ public:
 	typedef VLC_Demo CLASSNAME;
 	VLC_Demo();
 	
-	void Load();
+	bool Load();
 	void Play();
 	void Pause();
 	void Stop();

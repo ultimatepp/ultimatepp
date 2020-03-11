@@ -3,6 +3,7 @@
 
 using namespace Upp;
 
+
 #if defined(PLATFORM_WIN32) 
 
 #include "Controls4U_Demo_win.h"
@@ -209,10 +210,13 @@ void VLC_Demo::SwitchOn() {
 	}
 }
 
-void VLC_Demo::Load() {
-	if (!player.IsLoaded())
+bool VLC_Demo::Load() {
+	if (!player.IsLoaded()) {
 		Exclamation("Sorry. ActiveX or program not available");	
+		return false;
+	}
 	player.AddTarget(~file);
+	return true;
 }
 
 void VLC_Demo::Play() {
