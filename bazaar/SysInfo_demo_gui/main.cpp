@@ -1,20 +1,19 @@
 #include <CtrlLib/CtrlLib.h>
 
-#include "SysInfo/SysInfo.h"
-#include "SysInfo_demo_gui.h"
+#include <SysInfo/SysInfo.h>
 #include <DropGrid/DropGrid.h>
+
+using namespace Upp;
+
+#include "SysInfo_demo_gui.h"
 
 #define IMAGEFILE <SysInfo_demo_gui/SysInfo_demo_gui.iml>
 #define IMAGECLASS Images
 #include <Draw/iml.h>
 #define LAYOUTFILE <SysInfo_demo_gui/SysInfo_demo_gui.lay>
-
-using namespace Upp;
-
+	
 	
 GUI_APP_MAIN { 
-	String pepe = "frefre fproforwejifpoijrfoijrwopjwoerhghgihfdiuhiuwrgi rtgwiuhgiuh iwurhgiuhgiuwhreigu wuireh giwu ghowituhiuwthuiuohoi uhre";
-	
 	SysInfoDemo program;
 	
 	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));

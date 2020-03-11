@@ -8,8 +8,7 @@ struct SpecialFolders : WithSpecialFolders<StaticRect> {
 
 	typedef SpecialFolders CLASSNAME;
 
-	SpecialFolders()
-	{
+	SpecialFolders() {
 		CtrlLayout(*this);
 	}
 	void Fill();
@@ -19,8 +18,7 @@ struct SystemInfo : WithSystemInfo<StaticRect> {
 
 	typedef SystemInfo CLASSNAME;
 
-	SystemInfo()
-	{
+	SystemInfo() {
 		CtrlLayout(*this);
 	}
 	void Fill();
@@ -30,8 +28,7 @@ struct WindowsList_ : WithWindowsList<StaticRect> {
 
 	typedef WindowsList_ CLASSNAME;
 
-	WindowsList_()
-	{
+	WindowsList_() {
 		CtrlLayout(*this);
 	}
 	void Fill();
@@ -46,8 +43,7 @@ struct ProcessList : WithProcessList<StaticRect> {
 
 	typedef ProcessList CLASSNAME;
 
-	ProcessList()
-	{
+	ProcessList() {
 		CtrlLayout(*this);
 	}
 	void Fill();
@@ -57,8 +53,7 @@ struct ScreenGrabTab : WithScreenGrabTab<StaticRect> {
 
 	typedef ScreenGrabTab CLASSNAME;
 
-	ScreenGrabTab()
-	{
+	ScreenGrabTab() {
 		CtrlLayout(*this);
 	}
 	void Fill();
@@ -70,8 +65,7 @@ struct MouseKeyboard : WithMouseKeyboard<StaticRect> {
 
 	typedef MouseKeyboard CLASSNAME;
 
-	MouseKeyboard()
-	{
+	MouseKeyboard() {
 		CtrlLayout(*this);
 	}
 	void Fill();
