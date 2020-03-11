@@ -74,11 +74,11 @@ void FilesDemo() {
 		Cout() << "\nGetRelativePath(\"" << from << "\", \"" << path << "\")\n= \"" << ret << "\" (should be: Null)";
 	}
 	
-	String filename1 = AppendFileName(GetDesktopFolder(), "Demo", "file1.txt");
+	String filename1 = AppendFileNameX(GetDesktopFolder(), "Demo", "file1.txt");
 	RealizePath(filename1);
 	String str1 = "This is the First string";
 	SaveFile(filename1, str1);
-	String filename2 = AppendFileName(GetDesktopFolder(), "Demo", "file2.txt");
+	String filename2 = AppendFileNameX(GetDesktopFolder(), "Demo", "file2.txt");
 	String str2 = "This is the Second string";
 	SaveFile(filename2, str2);
 	
