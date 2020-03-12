@@ -20,6 +20,8 @@ public:
 	MenuBar menu;
 	Sample  sample;
 	
+	Vector<void (*)()> skin_fn;
+	
 	TimeCallback tm;
 
 	TestChStyle();

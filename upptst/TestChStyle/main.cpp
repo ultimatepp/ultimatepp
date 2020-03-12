@@ -26,6 +26,7 @@ TestChStyle::TestChStyle()
 		bar.Add(false, "Disabled", [] {});
 		static bool check;
 		bar.Add("Check", [] { check = !check; }).Check(check);
+		bar.Add("Check", CtrlImg::open(), [] { check = !check; }).Check(check);
 		static bool radio;
 		bar.Add("Radio", [] { radio = !radio; }).Radio(radio);
 		bar.Separator();
@@ -90,10 +91,20 @@ TestChStyle::TestChStyle()
 	
 	switch1.Disable();
 	switch1 <<= 1;
+	
+	auto AddSkin = [=](void (*fn)(), const char *name) {
+		skin.Add(skin_fn.GetCount(), name);
+		skin_fn.Add(fn);
+	};
+	
+	for(auto sk : GetAllChSkins()) {
+		skin.Add(skin_fn.GetCount(), sk.b);
+		skin_fn.Add(sk.a);
+	}
+	
+	skin <<= 0;
 
-	standard << [=] { Ctrl::SetSkin(ChStdSkin); Break(IDOK); };
-	classic << [=] { Ctrl::SetSkin(ChClassicSkin); Break(IDOK); };
-	host << [=] { Ctrl::SetSkin(ChHostSkin); Break(IDOK); };
+	skin << [=] { Ctrl::SetSkin(skin_fn[(int)~skin]); };
 
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
