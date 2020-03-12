@@ -13,7 +13,6 @@ CGImageRef createCGImage(const Image& img)
 	CGDataProvider *dataProvider = CGDataProviderCreateWithData(NULL, ~img, img.GetLength() * sizeof(RGBA), NULL);
 	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
 	Upp::Size isz = img.GetSize();
-	ASSERT(isz.cx * isz.cy);
     CGImageRef cg_img = CGImageCreate(isz.cx, isz.cy, 8, 32, isz.cx * sizeof(RGBA),
                                       colorSpace, kCGImageAlphaPremultipliedFirst,
                                       dataProvider, 0, false, kCGRenderingIntentDefault);
