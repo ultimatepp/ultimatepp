@@ -55,6 +55,8 @@ int Ctrl::scale;
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
+	gdk_set_allowed_backends("x11"); // this fixes wayland issues
+
 	EnterGuiMutex();
 	gtk_init(&argc, &argv);
 
