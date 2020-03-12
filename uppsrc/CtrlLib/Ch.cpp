@@ -182,10 +182,17 @@ void ChClassicSkin()
 			}
 			t = iw;
 			SetHotSpots(t, Point(2, 2));
-			s.first[i] = s.last[i] = s.both[i] = s.normal[i] = t;
+			s.first[i] = s.both[i] = t;
+			ImageDraw iw2(isz);
+			iw2.DrawImage(0, 0, t);
+			if(i == CTRL_PRESSED) // the active tab
+				iw2.DrawRect(0, isz.cy - 1, 1, 1, wg);
+			t = iw2;
+			SetHotSpots(t, Point(2, 2));
+			s.last[i] = s.normal[i] = t;
 			s.margin = 0;
-			s.sel = Rect(0, DPI(1), 0, DPI(1));
-			s.extendleft = DPI(2);
+			s.sel = Rect(0, 2, 0, 2);
+			s.extendleft = 2;
 			s.text_color[i] = SColorText();
 		}
 //		static int adj[] = { 10, 80, -5, -10 };
