@@ -8,9 +8,12 @@ namespace Upp {
 
 CGImageRef createCGImage(const Image& img)
 {
+	if(IsNull(img))
+		return NULL;
 	CGDataProvider *dataProvider = CGDataProviderCreateWithData(NULL, ~img, img.GetLength() * sizeof(RGBA), NULL);
 	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
 	Upp::Size isz = img.GetSize();
+	ASSERT(isz.cx * isz.cy);
     CGImageRef cg_img = CGImageCreate(isz.cx, isz.cy, 8, 32, isz.cx * sizeof(RGBA),
                                       colorSpace, kCGImageAlphaPremultipliedFirst,
                                       dataProvider, 0, false, kCGRenderingIntentDefault);
@@ -76,13 +79,15 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = IsNull(color) ? img : CachedSetColorKeepAlpha(img, color); // TODO: Can setcolor be optimized out? By masks e.g.?
 	ImageSysData& sd = cg_image_cache.Get(m);
-	Size isz = img.GetSize();
-	CGContextSaveGState(cgHandle);
-	Point off = GetOffset();
-	CGContextTranslateCTM(cgHandle, x + off.x, y + off.y);
-	CGContextScaleCTM(cgHandle, 1.0, -1.0);
-	CGContextDrawImage(cgHandle, CGRectMake(0, -isz.cy, isz.cx, isz.cy), sd.cgimg);
-    CGContextRestoreGState(cgHandle);
+	if(sd.cgimg) {
+		Size isz = img.GetSize();
+		CGContextSaveGState(cgHandle);
+		Point off = GetOffset();
+		CGContextTranslateCTM(cgHandle, x + off.x, y + off.y);
+		CGContextScaleCTM(cgHandle, 1.0, -1.0);
+		CGContextDrawImage(cgHandle, CGRectMake(0, -isz.cy, isz.cx, isz.cy), sd.cgimg);
+	    CGContextRestoreGState(cgHandle);
+	}
 	cg_image_cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
