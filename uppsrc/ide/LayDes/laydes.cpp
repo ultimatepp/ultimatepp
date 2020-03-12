@@ -756,7 +756,8 @@ void LayDes::Group(Bar& bar, const String& group)
 	Sort(type);
 	int h = 3 * StdFont().Info().GetHeight() / 2;
 	int w = 8 * h / 3;
-	((MenuBar&)bar).LeftGap(w + 6);
+	if(auto *mb = dynamic_cast<MenuBar *>(&bar))
+		mb->LeftGap(w + 6);
 	int q = 0;
 	for(i = 0; i < type.GetCount(); i++) {
 		bar.Add(type[i], GetTypeIcon(type[i], w, h, 0, SLtGray),
@@ -778,7 +779,8 @@ void LayDes::TemplateGroup(Bar& bar, TempGroup tg)
 	Sort(type);
 	int h = 3 * StdFont().Info().GetHeight() / 2;
 	int w = 8 * h / 3;
-	((MenuBar&)bar).LeftGap(w + 2);
+	if(auto *mb = dynamic_cast<MenuBar *>(&bar))
+		mb->LeftGap(w + 6);
 	int q = 0;
 	for(i = 0; i < type.GetCount(); i++) {
 		bar.Add(type[i], GetTypeIcon(type[i], w, h, 0, SLtGray),
@@ -794,7 +796,8 @@ void LayDes::Template(Bar& bar, const String& temp)
 	Vector<String> type;
 	int h = 3 * StdFont().Info().GetHeight() / 2;
 	int w = 8 * h / 3;
-	((MenuBar&)bar).LeftGap(w + 2);
+	if(auto *mb = dynamic_cast<MenuBar *>(&bar))
+		mb->LeftGap(w + 6);
 	int i;
 	for(i = 0; i < LayoutTypes().GetCount(); i++) {
 		LayoutType& m = LayoutTypes()[i];

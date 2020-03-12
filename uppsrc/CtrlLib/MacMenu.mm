@@ -80,8 +80,8 @@ struct CocoMenuBar : public Bar {
 		return m;
 	}
 
-	virtual void   AddCtrl(Ctrl *ctrl, int gapsize) { NEVER(); }
-	virtual void   AddCtrl(Ctrl *ctrl, Size sz) { NEVER(); }
+	virtual void   AddCtrl(Ctrl *ctrl, int gapsize) {}
+	virtual void   AddCtrl(Ctrl *ctrl, Size sz) {}
 
 	virtual bool   IsEmpty() const;
 	virtual void   Separator();
