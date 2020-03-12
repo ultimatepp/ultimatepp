@@ -198,6 +198,7 @@ Vector<FaceInfo> GetAllFacesSys()
 		CFRef<CFStringRef> fs = CFStringCreateWithCString(NULL, ~s, kCFStringEncodingUTF8);
 		CFRef<CTFontRef> ctfont = CTFontCreateWithName(fs, 12, NULL);
 		dword traits = CTFontGetSymbolicTraits(ctfont);
+		fi.info = Font::SCALEABLE;
 		if(traits & kCTFontMonoSpaceTrait)
 			fi.info |= Font::FIXEDPITCH;
 		switch(traits & kCTFontClassMaskTrait) {
