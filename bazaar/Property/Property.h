@@ -8,8 +8,8 @@ NAMESPACE_UPP
 template<class T>
 struct Property
 {
-	typedef Callback1<const T&> S;
-	typedef Callback1<T&> G;
+	typedef Function<void (const T&)> S;
+	typedef Function<void (T&)> G;
 
 	Property(const S& s, const G& g)
 		: set(s), get(g) {}
@@ -31,8 +31,8 @@ typedef Property<Value> ValueProperty;
 template<class T>
 struct Accessor
 {
-	typedef Gate1<const T&> S;
-	typedef Gate1<T&> G;
+	typedef Function<bool (const T&)> S;
+	typedef Function<bool (T&)> G;
 
 	Accessor(const S& s, const G& g)
 		: set(s), get(g) {}
@@ -134,8 +134,8 @@ void PropKeeper<KLASS>::SetupAccessorMap(C& o, AccessorMap& am) \
 		const PropTyper<C>::TH& t = m[i]; \
 		am.Add(m.GetKey(i) \
 			, new Accessor<Value>( \
-				((t.a)?(callback1<const Value&, C&, C&>(t.a, o)):(Accessor<Value>::S::Empty())) \
-				, ((t.b)?(callback1<Value&, const C&, const C&>(t.b, o)):(Accessor<Value>::G::Empty())) \
+				[&o, &t](const Value& v) -> bool { return t.a(v, o); }, \
+				[&o, &t](Value& v) -> bool { return t.b(v, o); } \
 			) \
 		); \
 	} \

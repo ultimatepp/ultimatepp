@@ -50,7 +50,7 @@ void ValueAccessorCtrl::UpdateTarget()
 		ASSERT(0); //Property without accessors
 		return;
 	}
-	(*oc) <<= THISBACK(OnAction);
+	(*oc).WhenAction = THISBACK(OnAction);
 	Add(oc->SizePos());
 }
 
@@ -127,7 +127,7 @@ void AccessorMapCtrl::UpdateMap()
 		ASSERT(ep);
 		ep->SetTarget(&a);
 
-		(*ep) <<= Proxy(WhenAction);
+		(*ep).WhenAction = Proxy(WhenAction);
 		ValueAccessorEdit& c = avae.Add(tag, ep);
 		ac.SetCtrl(i, 1, c, false); //independant control
 	}

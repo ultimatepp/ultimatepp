@@ -15,7 +15,7 @@ bool PropFocus(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; bool b 
 bool PropHasFocus(Value& v, const Ctrl& o) { v = o.HasFocus(); return true; }
 bool PropModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; bool b = v; if(b) o.SetModify(); else o.ClearModify(); return true; }
 bool PropIsModified(Value& v, const Ctrl& o) { v = o.IsModified(); return true; }
-bool PropResetModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; if(bool(v)) o.ResetModify(); return true; }
+//bool PropResetModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; if(bool(v)) o.ResetModify(); return true; }
 bool PropSetTip(const Value& v, Ctrl& o) { o.Tip(AsString(v)); return true; }
 bool PropGetTip(Value& v, const Ctrl& o) { v = o.GetTip(); return true; }
 bool PropWantFocus(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; o.WantFocus(v); return true; }
@@ -43,7 +43,7 @@ PROPERTY("editable", PropEditable, PropIsEditable)
 PROPERTY("logpos", PropSetLogPos, PropGetLogPos)
 PROPERTY("focus", PropFocus, PropHasFocus)
 PROPERTY("modify", PropModify, PropIsModified)
-PROPERTY_SET("refresh", PropResetModify)
+//PROPERTY_SET("refresh", PropResetModify)
 PROPERTY("tip", PropSetTip, PropGetTip)
 PROPERTY("wantfocus", PropWantFocus, PropIsWantFocus)
 PROPERTY("initFocus", PropInitFocus, PropIsInitFocus)
