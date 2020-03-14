@@ -34,9 +34,9 @@ ctrl ScatterCtrl {
 	Font SetLabelsFont;
 	Color SetLabelsColor = :Black;
 	Color SetAxisColor = :Black;
-	int SetAxisWidth = 6;
+	double SetAxisWidth = 0.5;
 	Color SetGridColor = :Color(102,102,102);
-	int SetGridWidth = 1;
+	double SetGridWidth = 1;
 	bool ShowHGrid = true;
 	bool ShowVGrid = true;
 	bool ShowInfo = true;
