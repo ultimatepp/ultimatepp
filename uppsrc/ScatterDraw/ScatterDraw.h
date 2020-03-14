@@ -784,6 +784,7 @@ public:
 	bool GetMouseHandlingY()	{return mouseHandlingY;}
 	
 	ScatterDraw& AddSurf(DataSourceSurf &surf);
+	ScatterDraw& RemoveSurf()					{surf = nullptr;	return *this;}
 	ScatterDraw& SetSurfMinZ(double val)		{surfMinZ = val;	return *this;}
 	double GetSurfMinZ() const					{return surfMinZ;}
 	ScatterDraw& SetSurfMaxZ(double val)		{surfMaxZ = val;	return *this;}
@@ -1410,7 +1411,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 			if (drawYReticle)
 				DrawLineOpa(w, -plotScaleX*4, reticleY, 0, reticleY, plotScaleAvg, 1, axisWidth, axisColor, LINE_SOLID);
 			if (drawY2Reticle)
-				DrawLineOpa(w, plotW+plotScaleX*4, reticleY, plotW, reticleY, plotScaleAvg, 1, gridWidth, axisColor, LINE_SOLID);
+				DrawLineOpa(w, plotW+plotScaleX*4, reticleY, plotW, reticleY, plotScaleAvg, 1, axisWidth, axisColor, LINE_SOLID);
 			double gridY = yMin + unitsY[i];
 			if (drawYReticleNumbers) {
 				String gridLabelY;

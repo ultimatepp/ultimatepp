@@ -1,7 +1,6 @@
 #include "ScatterDraw.h"
 
 #include <ScatterDraw/Unpedantic.h>
-#include <plugin/Eigen/Eigen.h>
 #include <ScatterDraw/Pedantic.h>
 
 namespace Upp {
@@ -750,27 +749,193 @@ Vector<double> DataSource::SortData(Getdatafun getdata) {
 }
 
 Vector<double> DataSource::Percentile(Getdatafun getdata, double rate) {
+	ASSERT(rate >= 0 && rate <= 1);
 	Vector<double> data = SortData(getdata);
-	int num = static_cast<int>(data.GetCount()*rate);
-	Vector<double> ret;
-	for (int i = 0; i < num; ++i) {
-		double val = data[i];
-		if (!IsNull(val))
-			ret << data[i];	
-	}
-	return ret;
+	int num = int(data.GetCount()*rate) + 1;
+	if (num < data.GetCount())
+		data.Remove(num, data.GetCount()-num);
+	return data;
 }
 
-double DataSource::PercentileAvg(Getdatafun getdata, double rate) {
-	Vector<double> data = Percentile(getdata, rate);	
-	double ret = 0;
-	for (int i = 0; i < data.GetCount(); ++i) {
-		double val = data[i];
-		if (!IsNull(val))
-			ret += val;
-	}
-	return ret/data.GetCount();
+double DataSource::PercentileVal(Getdatafun getdata, double rate) {
+	ASSERT(rate >= 0 && rate <= 1);
+	
+	Vector<double> data = SortData(getdata);
+	int num = int(data.GetCount()*rate);
+	return LinearInterpolate<double>(data.GetCount()*rate, num, num+1, data[num-1], data[num]);
 }
+
+Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, int orderDer, int orderAcc) {
+	ASSERT(orderDer >= 1 && orderDer <= 2);
+	ASSERT(orderAcc == 2 || orderAcc == 4 || orderAcc == 6 || orderAcc == 8);
+	
+	int numData = int(GetCount());
+
+    Vector<Pointf> data;
+    data.SetCount(numData);
+    int num = 0;
+    for (int i = 0; i < numData; ++i) {
+        double y = Membercall(getdataY)(i);
+        double x = Membercall(getdataX)(i);
+        if (!IsNull(y) && !IsNull(x)) {
+			data[i].y = y;
+			data[i].x = x;
+			num++;
+        }
+    }
+  	numData = num;
+    
+    Vector<Pointf> res;	
+    if (numData < orderAcc+1)
+        return res;
+    data.SetCount(numData);
+	
+	double minD = -DOUBLE_NULL_LIM, maxD = DOUBLE_NULL_LIM;
+	for (int i = 0; i < numData-1; ++i) {
+		double d = data[i+1].x - data[i].x;
+		minD = min(minD, d);
+		maxD = max(maxD, d);
+	}
+	if ((maxD - minD)/minD > 0.0001)
+		return res;
+		
+	double h = (minD + maxD)/2; 
+	
+	VectorXd origE(numData);
+	for (int i = 0; i < numData; ++i) 
+		origE(i) = data[i].y;
+	
+	// From https://en.wikipedia.org/wiki/Finite_difference_coefficient
+	double kernels1[4][9] = {{-1/2., 0, 1/2.},
+		{1/12., -2/3., 0, 2/3., -1/12.},
+		{-1/60., 3/20., -3/4., 0,  3/4., -3/20., 1/60.},
+		{1/280., -4/105., 1/5., -4/5., 0., 4/5., -1/5., 4/105., -1/280.}};
+	double kernels2[4][9] = {{1, -2, 1},
+		{-1/12., 4/3., -5/2., 4/3., -1/12.},
+		{1/90., -3/20., 3/2., -49/18., 3/2., -3/20., 1/90.},
+		{-1/560., 8/315., -1/5., 8/5., -205/72., 8/5., -1/5., 8/315., -1/560.}};					
+	
+	int idkernel = orderAcc/2-1;
+	
+	double factor;
+	VectorXd kernel;
+	if (orderDer == 1) {
+		factor = 1/h;
+		kernel = Map<MatrixXd>(kernels1[idkernel], orderAcc+1, 1);
+	} else if (orderDer == 2) { 	
+		factor = 1/h/h;
+		kernel = Map<MatrixXd>(kernels2[idkernel], orderAcc+1, 1);
+	} else
+		return res;
+	
+	VectorXd resE = Convolution(origE, kernel, factor);
+	
+	res.SetCount(numData-orderAcc);
+	int frame = orderAcc/2 + 1;
+	for (int i = 0; i < numData-orderAcc; ++i) {
+		res[i].y = resE(i);
+		res[i].x = data[i+frame].x;
+	}
+	return res;
+}
+
+bool SavitzkyGolay_CheckParams(int nleft, int nright, int deg, int der) {
+	return nleft >= 0 && nright >= 0 && der <= deg && nleft + nright >= deg;
+}
+
+VectorXd SavitzkyGolay_Coeff(int nleft, int nright, int deg, int der) {
+    ASSERT(SavitzkyGolay_CheckParams(nleft, nright, deg, der));
+	
+	int cols = deg + 1;
+    MatrixXd A(cols, cols);
+    
+    for(int ipj = 0; ipj <= (deg << 1); ipj++) {
+        double sum = ipj ? 0 : 1;
+        for(int k = 1; k <= nright; k++) 
+        	sum += pow(k, ipj);
+        for(int k = 1; k <= nleft; k++) 
+        	sum += pow(-k, ipj);
+        int mm = min(ipj, 2 * deg - ipj);
+        for(int imj = -mm; imj <= mm; imj += 2) 
+        	A((ipj+imj)/2, (ipj-imj)/2) = sum;
+    }
+    
+    MatrixXd At = A.transpose();
+	VectorXd B(VectorXd::Zero(cols));
+    B[der] = 1;
+    VectorXd y = (At * A).inverse() * (At * B);
+    
+    VectorXd coeff(nleft + nright + 1);
+    double factor = der > 0 ? pow(2, der-1) : 1;
+    coeff.setZero();
+    int ic = 0;
+    for(int k = -nleft; k <= nright; k++) {
+        double sum = y[0];
+        double fac = 1;
+        for(int mm = 1; mm <= deg; mm++) 
+        	sum += y[mm]*(fac *= k);
+        coeff[ic++] = sum*factor;
+    }
+    return coeff;
+}
+
+bool SavitzkyGolay_Check(const VectorXd &coeff) {
+	double unity = coeff.sum();
+	return abs(1-unity) < 0.0000001;  
+}
+
+Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdataX, int deg, int size, int der) {
+	int numData = int(GetCount());
+
+    Vector<Pointf> data;
+    data.SetCount(numData);
+    int num = 0;
+    for (int i = 0; i < numData; ++i) {
+        double y = Membercall(getdataY)(i);
+        double x = Membercall(getdataX)(i);
+        if (!IsNull(y) && !IsNull(x)) {
+			data[i].y = y;
+			data[i].x = x;
+			num++;
+        }
+    }
+  	numData = num;
+    
+    Vector<Pointf> res;	
+    if (numData < size)
+        return res;
+    data.SetCount(numData);
+	
+	double minD = -DOUBLE_NULL_LIM, maxD = DOUBLE_NULL_LIM;
+	for (int i = 0; i < numData-1; ++i) {
+		double d = data[i+1].x - data[i].x;
+		minD = min(minD, d);
+		maxD = max(maxD, d);
+	}
+	if ((maxD - minD)/minD > 0.0001)
+		return res;
+		
+	double h = (minD + maxD)/2; 
+	
+    VectorXd coeff = SavitzkyGolay_Coeff(size/2, size/2, deg, der);
+	if (!SavitzkyGolay_Check(coeff))
+		return res;
+		
+	VectorXd origE(numData);
+	for (int i = 0; i < numData; ++i) 
+		origE[i] = data[i].y;
+		
+	VectorXd resE = Convolution(origE, coeff, 1/pow(h, der));
+
+	res.SetCount(numData-size);
+	int frame = size/2;
+	for (int i = 0; i < numData-size; ++i) {
+		res[i].y = resE(i);
+		res[i].x = data[i+frame].x;
+	}
+	return res;
+}
+
 
 void ExplicitData::Init(Function<double (double x, double y)> _funz, double _minX, double _maxX, double _minY, double _maxY) {
 	ASSERT(maxX >= minX && maxY >= minY);

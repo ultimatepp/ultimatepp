@@ -1,7 +1,10 @@
 #ifndef _ScatterDraw_DataSource_h_
 #define _ScatterDraw_DataSource_h_
 
+#include <plugin/Eigen/Eigen.h>
+
 namespace Upp {
+using namespace Eigen;
 
 class DataSource : public Pte<DataSource>  {
 public:
@@ -84,8 +87,11 @@ public:
 		
 	Vector<double> SortDataY() 				{return SortData(&DataSource::y);}
 	Vector<double> PercentileY(double rate) {return Percentile(&DataSource::y, rate);}
-	double PercentileAvgY(double rate) 		{return PercentileAvg(&DataSource::y, rate);}
+	double PercentileValY(double rate) 		{return PercentileVal(&DataSource::y, rate);}
 	
+	Vector<Pointf> DerivativeY(int orderDer, int orderAcc)	  {return Derivative(&DataSource::y, &DataSource::x, orderDer, orderAcc);}
+	Vector<Pointf> SavitzkyGolayY(int deg, int size, int der) {return SavitzkyGolay(&DataSource::y, &DataSource::x, deg, size, der);}
+		
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
@@ -120,7 +126,9 @@ public:
 	bool SameX(DataSource &data);
 	Vector<double> SortData(Getdatafun getdata);
 	Vector<double> Percentile(Getdatafun getdata, double rate);
-	double PercentileAvg(Getdatafun getdata, double rate);
+	double PercentileVal(Getdatafun getdata, double rate);
+	Vector<Pointf> Derivative(Getdatafun getdataY, Getdatafun getdataX, int orderDer, int orderAcc);
+	Vector<Pointf> SavitzkyGolay(Getdatafun getdataY, Getdatafun getdataX, int deg, int size, int der);
 	
 	bool IsMagic() 				{return magic == 1234321;}		// Temporal use, just for testing
 	
@@ -661,16 +669,16 @@ public:
 	virtual ~DataSourceSurf() noexcept	{key = 1231231;}	
 	virtual double z(double x, double y)= 0;
 	
-	virtual bool IsEmpty()				= 0;
-	bool IsDeleted()					{return key != 1212121;}
-	bool IsExplicit()					{return isExplicit;}
-	
-	virtual double MinX()				= 0;
-	virtual double MaxX()				= 0;
-	virtual double MinY()				= 0;
-	virtual double MaxY()				= 0;
-	virtual double MinZ()				= 0;
-	virtual double MaxZ()				= 0;
+	virtual bool IsEmpty() = 0;
+	bool IsDeleted()	   {return key != 1212121;}
+	bool IsExplicit()	   {return isExplicit;}
+ 	
+	virtual double MinX() = 0;
+	virtual double MaxX() = 0;
+	virtual double MinY() = 0;
+	virtual double MaxY() = 0;
+	virtual double MinZ() = 0;
+	virtual double MaxZ() = 0;
 
 	Vector<Pointf> GetIsoline(double thres, const Rectf &area, double deltaX, double deltaY);
 	Vector<Pointf> GetIsolines(const Vector<double> &vals, const Rectf &area, double deltaX, double deltaY);
@@ -728,6 +736,18 @@ inline T TrilinearInterpolate(T x, T y, T z, T x0, T x1, T y0, T y1, T z0, T z1,
 	T r1  = LinearInterpolate(y, y0, y1, x10,  x11);
 	
 	return LinearInterpolate(z, z0, z1, r0, r1);
+}
+
+template <class T>
+T LinearInterpolate(const T x, const Vector<T> &vecx, const Vector<T> &vecy) {
+	ASSERT(vecx.GetCount() > 1 && vecy.GetCount() > 1);
+	if (x < vecx[0])
+		return vecx[0];
+	for (int i = 0; i < vecx.GetCount()-1; ++i) {
+		if (vecx[i+1] >= x && vecx[i] <= x) 
+			return LinearInterpolate(x, vecx[i], vecx[i+1], vecy[i], vecy[i+1]);
+	}
+	return vecx[vecx.GetCount()-1];
 }
 
 class TableInterpolate {
@@ -878,6 +898,45 @@ private:
 
 Vector<Pointf> Intersection(Vector<Pointf> &poly1, Vector<Pointf> &poly2);
 void Simplify(Vector<Pointf> &poly, double dx, double dy);
+
+bool SavitzkyGolay_CheckParams(int nleft, int nright, int deg, int der);
+VectorXd SavitzkyGolay_Coeff(int nleft, int nright, int deg, int der);
+
+template<class T>
+typename T::PlainObject Convolution(const MatrixBase<T>& orig, const MatrixBase<T>& kernel, const double factor = 1) {
+	const Eigen::Index ksize = kernel.size();
+	
+	ASSERT_(ksize % 2 != 0, "Only support odd sized kernels");
+	ASSERT(orig.size() > ksize);
+	
+	typename T::PlainObject dest(orig.size() - 2 * (ksize/2));
+	
+	for (typename T::Index row = 0; row < dest.size(); ++row)
+	  	dest(row) = orig.segment(row, ksize).cwiseProduct(kernel).sum();
+	if (factor != 1)
+		dest *= factor;
+	return dest;
+}
+
+template<class T>
+typename T::PlainObject Convolution2D(const MatrixBase<T>& orig, const MatrixBase<T>& kernel, const double factor = 1) {
+	const Eigen::Index krows = kernel.rows();
+	const Eigen::Index kcols = kernel.cols();
+	
+	ASSERT_(krows % 2 != 0, "Only support odd sized kernels (even rows)");
+	ASSERT_(kcols % 2 != 0, "Only support odd sized kernels (even cols)");
+	ASSERT(orig.rows() > krows);
+	ASSERT(orig.cols() > kcols);
+	
+	typename T::PlainObject dest(orig.rows() - 2*(krows/2), orig.cols() - 2*(kcols/2));
+	
+	for (typename T::Index row = 0; row < dest.rows(); ++row)
+		for (typename T::Index col = 0; col < dest.cols(); ++col) 
+	  		dest(row, col) = orig.block(row, col, krows, kcols).cwiseProduct(kernel).sum();
+	if (factor != 1)
+		dest *= factor;
+	return dest;
+}
 	
 }
 
