@@ -1,8 +1,10 @@
 #ifndef _ScatterDraw_Equation_h_
 #define _ScatterDraw_Equation_h_
 
-namespace Upp {
+#include <plugin/Eigen/Eigen.h>
 
+namespace Upp {
+using namespace Eigen;
 
 #define FormatCoeff(id, numDigits)		(IsNull(numDigits) ? (String("C") + FormatInt(id)) : FormatDoubleFix(coeff[id], numDigits))
 
@@ -25,15 +27,15 @@ public:
 	virtual double f(double ) 				= 0;
 	virtual double f(double , double ) 		{NEVER(); return Null;}
 	virtual double f(Vector <double> ) 		{NEVER(); return Null;}
-	virtual double x(int64 ) 			{NEVER(); return Null;}
-	virtual double y(int64 ) 			{NEVER(); return Null;}	
+	virtual double x(int64 ) 				{NEVER(); return Null;}
+	virtual double y(int64 ) 				{NEVER(); return Null;}	
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
 	virtual inline int64 GetCount() const	{return Null;}
 	
 	//void SetNumDigits(int n)				{numDigits = n;}
-	//int GetNumDigits()						{return numDigits;}
+	//int GetNumDigits()					{return numDigits;}
 	void SetMaxFitFunctionEvaluations(int n){maxFitFunctionEvaluations = n;}
 	int GetMaxFitFunctionEvaluations()		{return maxFitFunctionEvaluations;}
 	
@@ -415,23 +417,28 @@ public:
 	void SetDegree(int )				{NEVER();}
 };
 
-class SplineEquation : public ExplicitEquation {
+class Spline {
+public:
+	void Fit(const Vector<Pointf> &series);
+	double f(double x);
+	
+private:
+	struct Coeff {double a, b, c, d, x;};
+    Buffer<Coeff> coeff;
+    int ncoeff;
+};
+
+class SplineEquation : public ExplicitEquation, public Spline {
 public:
 	SplineEquation() 					{}
-	double f(double x);
+	double f(double x)					{return Spline::f(x);}
 	virtual String GetName() 			{return t_("Spline");}
 	void SetDegree(int )				{NEVER();}
 	void GuessCoeff(DataSource &)		{NEVER();}
 	String GetEquation(int)				{return t_("Spline");}
 	FitError Fit(DataSource &series, double &r2);
 	FitError Fit(DataSource &series)	{double dummy; return Fit(series, dummy);}
-		
-private:
-	struct Coeff{double a, b, c, d, x;};
-    Buffer<Coeff> coeff;
-    int ncoeff;
 };
-
 
 class Unit : public Moveable<Unit> {
 public:

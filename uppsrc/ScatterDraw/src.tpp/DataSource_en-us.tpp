@@ -145,4 +145,66 @@ equation.&]
 [s5;:DataSource`:`:IsExplicit`(`):%- [@(0.0.255) bool]_[* IsExplicit]()&]
 [s2; Returns true if the data source is a explicit equation.&]
 [s3;%- &]
-[s0;*%- ]]
+[ {{10000F(128)G(128)@1 [s0; [* Public Functions]]}}&]
+[s5;:Upp`:`:Convolution`(const Eigen`:`:MatrixBase`<T`>`&`,const Eigen`:`:MatrixBase`<T`>`&`,const double`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) typename]_T`::PlainObject_[* Convolution
+]([@(0.0.255) const]_[_^Eigen`:`:MatrixBase^ Eigen`::MatrixBase]<[*@4 T]>`&_[*@3 orig], 
+[@(0.0.255) const]_[_^Eigen`:`:MatrixBase^ Eigen`::MatrixBase]<[*@4 T]>`&_[*@3 kernel], 
+[@(0.0.255) const]_[@(0.0.255) double]_[*@3 factor]_`=_[@3 1])&]
+[s2; Applies on [%-*@3 orig] the [^https`:`/`/en`.wikipedia`.org`/wiki`/Convolution^ conv
+olution] [%-*@3 kernel], multiplying [%-*@3 factor] on each value 
+of the convolution result.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Convolution2D`(const Eigen`:`:MatrixBase`<T`>`&`,const Eigen`:`:MatrixBase`<T`>`&`,const double`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) typename]_T`::PlainObject_[* Convolution
+2D]([@(0.0.255) const]_[_^Eigen`:`:MatrixBase^ Eigen`::MatrixBase]<[*@4 T]>`&_[*@3 orig], 
+[@(0.0.255) const]_[_^Eigen`:`:MatrixBase^ Eigen`::MatrixBase]<[*@4 T]>`&_[*@3 kernel], 
+[@(0.0.255) const]_[@(0.0.255) double]_[*@3 factor]_`=_[@3 1])&]
+[s2; Applies on [%-*@3 orig] the 2D [^https`:`/`/en`.wikipedia`.org`/wiki`/Convolution^ c
+onvolution] [%-*@3 kernel], multiplying [%-*@3 factor] on each value 
+of the convolution result.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:SavitzkyGolay`_CheckParams`(int`,int`,int`,int`):%- [@(0.0.255) bool]_[* Savi
+tzkyGolay`_CheckParams]([@(0.0.255) int]_[*@3 nleft], [@(0.0.255) int]_[*@3 nright], 
+[@(0.0.255) int]_[*@3 deg], [@(0.0.255) int]_[*@3 der])&]
+[s2;  Returns true if Savitzsky`-Golay filter arguments are correct. 
+They are:&]
+[s0;l288;i150;O0; [%-*@3 nleft]: Number of leftward data points&]
+[s2;i150;O0; [%-*@3 nright]: Number of rightward data points&]
+[s2;i150;O0; [%-*@3 deg]: Order of the smoothing polynomial&]
+[s2;i150;O0; [%-*@3 der]: Order of the derivative. 0 means smoothed 
+function, 1 means smoothed first derivative, ...&]
+[s2; Valid arguments have to comply with nleft >`= 0 `&`& nright 
+>`= 0 `&`& der <`= deg `&`& nleft `+ nright >`= deg.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:SavitzkyGolay`_Coeff`(int`,int`,int`,int`):%- VectorXd_[* SavitzkyGolay`_Co
+eff]([@(0.0.255) int]_[*@3 nleft], [@(0.0.255) int]_[*@3 nright], [@(0.0.255) int]_[*@3 deg],
+ [@(0.0.255) int]_[*@3 der])&]
+[s2;%- Savitzky–Golay is a digital filter applied by convolution 
+of successive sub`-sets of adjacent data points with a low`-degree 
+polynomial by the method of linear least squares. When the data 
+points are equally spaced, an analytical solution to the least`-squares 
+equations can be found, in the form of a single set of `"convolution 
+coefficients`", to give estimates of the smoothed signal, (or 
+derivatives of the smoothed signal) at the central point of each 
+sub`-set. The method, was popularized by Abraham Savitzky and 
+Marcel J. E. Golay in 1964. This function obtains the filter 
+coefficients, and has to be applied just once for any dataset, 
+as the coefficients do not depend on data but in the conditions 
+defined by arguments. Arguments are explained in [*^Upp`:`:SavitzkyGolay`_CheckParams`(int`,int`,int`,int`)^ S
+avitzkyGolay`_CheckParams][^Upp`:`:SavitzkyGolay`_CheckParams`(int`,int`,int`,int`)^ (
+)]. Filter has to be appplied using [*^Upp`:`:Convolution`(const Eigen`:`:VectorXd`&`,const T`&`,int`,double`)^ C
+onvolution][^Upp`:`:Convolution`(const Eigen`:`:VectorXd`&`,const T`&`,int`,double`)^ (
+)] on input data.&]
+[s2;%- &]
+[s2;%- [%% References: ][%%^https`:`/`/en`.wikipedia`.org`/wiki`/Savitzky`%E2`%80`%93Golay`_filter^ S
+avitzky–Golay filter (Wikipedia)][%% , Savitzky, A.; Golay, M.J.E. 
+(1964). `"Smoothing and Differentiation of Data by Simplified 
+Least Squares Procedures`". Analytical Chemistry. 36 (8): 1627–39, 
+][%%^http`:`/`/www`.nrbook`.com`/a`/bookcpdf`.php^ Numerical Recipes 
+in C, Second Edition (1992), ]Schafer, R.W. What [/ Is ]a Savitzky`-Golay 
+Filter?, IEEE Signal Processing Magazine [@(153) `[]116`] (2011)[+59 .]&]
+[s3; ]]

@@ -521,8 +521,7 @@ void EvalExpr::ClearVariables() {
 }
 
 
-ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
-{	
+ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {	
 	Vector<Pointf> seriesRaw;
 	for (int64 i = 0; i < data.GetCount(); ++i) {		// Remove Nulls	
 		if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
@@ -531,10 +530,12 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
 
 	if(seriesRaw.IsEmpty())
         return SmallDataSource;
-        	
+      
+    r2 = 0;
+    
 	PointfLess less;
 	Sort(seriesRaw, less);								// Sort
-	
+
 	Vector<Pointf> series;
 	series << seriesRaw[0];
 	for (int i = 1; i < seriesRaw.GetCount(); ++i) {	// Remove points with duplicate x
@@ -544,55 +545,53 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
 	
 	if (series.GetCount() < 2)
 		return SmallDataSource;
+		
+	Spline::Fit(series);
 	
-	r2 = 0;
-	
-    int n = int(series.GetCount()) - 1;
-    
-    Buffer<double> h(n);
-    for(int i = 0; i < n; ++i)
-        h[i] = (series[i+1].x - series[i].x);
+	return NoError;
+}
 
-    Buffer<double> alpha(n);
-    for(int i = 1; i < n; ++i)
+void Spline::Fit(const Vector<Pointf> &series) {
+    int ncoeff = int(series.GetCount()) - 1;
+    
+    Buffer<double> h(ncoeff);
+    for(int i = 0; i < ncoeff; ++i)
+        h[i] = series[i+1].x - series[i].x;
+
+    Buffer<double> alpha(ncoeff);
+    for(int i = 1; i < ncoeff; ++i)
         alpha[i] = 3*(series[i+1].y - series[i].y)/h[i] - 3*(series[i].y - series[i-1].y)/h[i-1];
 
-    Buffer<double> c(n+1), l(n+1), mu(n+1), z(n+1);
+    Buffer<double> c(ncoeff+1), l(ncoeff+1), mu(ncoeff+1), z(ncoeff+1);
     l[0] = 1;
     mu[0] = 0;
     z[0] = 0;
 
-    for(int i = 1; i < n; ++i) {
-        l[i] = 2.*(series[i+1].x - series[i-1].x) - h[i-1]*mu[i-1];
+    for(int i = 1; i < ncoeff; ++i) {
+        l[i] = 2*(series[i+1].x - series[i-1].x) - h[i-1]*mu[i-1];
         mu[i] = h[i]/l[i];
         z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
     }
 
-    l[n] = 1;
-    z[n] = 0;
-    c[n] = 0;
+    l[ncoeff] = 1;
+    z[ncoeff] = 0;
+    c[ncoeff] = 0;
 
-	Buffer<double> b(n), d(n);
-    for(int i = n-1; i >= 0; --i) {
+	coeff.Alloc(ncoeff);
+    for(int i = ncoeff-1; i >= 0; --i) {
         c[i] = z[i] - mu[i] * c[i+1];
-        b[i] = (series[i+1].y - series[i].y)/h[i] - h[i]*(c[i+1] + 2*c[i])/3.;
-        d[i] = (c[i+1] - c[i])/3./h[i];
+        coeff[i].b = (series[i+1].y - series[i].y)/h[i] - h[i]*(c[i+1] + 2*c[i])/3;
+        coeff[i].d = (c[i+1] - c[i])/3/h[i];
     }
 
-	ncoeff = n;
-    coeff.Alloc(ncoeff);
-    for(int i = 0; i < n; ++i) {
+    for(int i = 0; i < ncoeff; ++i) {
         coeff[i].x = series[i].x;
         coeff[i].a = series[i].y;
-        coeff[i].b = b[i];
         coeff[i].c = c[i];
-        coeff[i].d = d[i];
     }
-    return NoError;
 }
 
-double SplineEquation::f(double x)
-{
+double Spline::f(double x) {
     int j;
     for (j = 0; j < ncoeff; j++) {
         if(coeff[j].x > x) {
