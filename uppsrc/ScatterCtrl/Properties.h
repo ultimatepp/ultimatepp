@@ -286,6 +286,8 @@ private:
 	PolynomialEquation3 cubic;
 	SinEquation sinus, sinusTend;
 	SplineEquation spline;
+	Vector<Pointf> derivative;
+	Vector<Pointf> sg;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
 	Vector<Pointf> movAvg, secAvg, cumAvg;
 	DataXRange dataXRange;

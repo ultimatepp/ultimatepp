@@ -147,6 +147,13 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.opSinus.WhenAction = THISBACK(OnOp);
 	tabFitRight.opSinusTend.WhenAction = THISBACK(OnOp);
 	tabFitRight.opSpline.WhenAction = THISBACK(OnOp);
+	tabFitRight.opDerivative.WhenAction = THISBACK(OnOp);
+	tabFitRight.derOrder.WhenAction = THISBACK(OnOp);
+	tabFitRight.derAccuracy.WhenAction = THISBACK(OnOp);
+	tabFitRight.opSG.WhenAction = THISBACK(OnOp);
+	tabFitRight.sgOrder.WhenAction = THISBACK(OnOp);
+	tabFitRight.sgSize.WhenAction = THISBACK(OnOp);
+	tabFitRight.sgDeg.WhenAction = THISBACK(OnOp);
 	tabFitRight.opMax.WhenAction = THISBACK(OnOp);
 	tabFitRight.opMin.WhenAction = THISBACK(OnOp);
 	tabFitRight.opMovAvg.WhenAction = THISBACK(OnOp);
@@ -156,6 +163,20 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
 	tabFitRight.width.WhenAction = THISBACK(OnUpdateSensitivity);
 	
+	tabFitRight.opDerivative.Tip(t_("Numerical derivative including derivative order and accuracy (related to window size)"));
+	tabFitRight.derOrder <<= 1;
+	tabFitRight.derOrder.Tip(t_("Implemented orders are 1 (first) and 2 (second derivative)"));
+	tabFitRight.derAccuracy <<= 6;
+	tabFitRight.derAccuracy.SetInc(2);
+	tabFitRight.derAccuracy.Tip(t_("Implemented accuracies are 2, 4, 6 and 8"));
+	tabFitRight.opSG.Tip(t_("Savitzky–Golay filter including derivative order, window size and polynomial degree"));
+	tabFitRight.sgOrder <<= 0;
+	tabFitRight.sgOrder.Tip(t_("Implemented orders are 0 (just filter), 1 (first) and 2 (second derivative)"));
+	tabFitRight.sgSize <<= 5;
+	//tabFitRight.sgSize.SetInc(2);
+	tabFitRight.sgSize.Tip(t_("Window size"));
+	tabFitRight.sgDeg <<= 3;
+	tabFitRight.sgDeg.Tip(t_("Polynomial degree"));
 	tabFitRight.numDecimals <<= 3;
 	tabFitRight.numDecimals.WhenAction = THISBACK(UpdateEquations);
 	tabFitRight.showEquation.WhenAction = THISBACK(OnShowEquation);
@@ -340,11 +361,13 @@ void ProcessingTab::OnOp()
 	tabFitLeft.scatter.ScatterDraw::Show(5, tabFitRight.opSinus);
 	tabFitLeft.scatter.ScatterDraw::Show(6, tabFitRight.opSinusTend);
 	tabFitLeft.scatter.ScatterDraw::Show(7, tabFitRight.opSpline);
-	tabFitLeft.scatter.ScatterDraw::Show(8, tabFitRight.opMax);
-	tabFitLeft.scatter.ScatterDraw::Show(9, tabFitRight.opMin);
-	tabFitLeft.scatter.ScatterDraw::Show(10,tabFitRight.opMovAvg);
-	tabFitLeft.scatter.ScatterDraw::Show(11,tabFitRight.opSecAvg);
-	tabFitLeft.scatter.ScatterDraw::Show(12,tabFitRight.opCumAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(8, tabFitRight.opDerivative);
+	tabFitLeft.scatter.ScatterDraw::Show(9, tabFitRight.opSG);
+	tabFitLeft.scatter.ScatterDraw::Show(10,tabFitRight.opMax);
+	tabFitLeft.scatter.ScatterDraw::Show(11,tabFitRight.opMin);
+	tabFitLeft.scatter.ScatterDraw::Show(12,tabFitRight.opMovAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(13,tabFitRight.opSecAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(14,tabFitRight.opCumAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -465,6 +488,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFitLeft.scatter.AddSeries(sinus).NoMark().Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(sinusTend).NoMark().Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(spline).NoMark().Dash(LINE_SOLID).Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(derivative).NoMark().Dash(LINE_SOLID).Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(sg).NoMark().Dash(LINE_SOLID).Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Max"))
 						.NoMark().Dash(LINE_DASHED).Stroke(1.5).SetSequentialX(true);
 		tabFitLeft.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
@@ -483,6 +508,11 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFitRight.opSinus.Enable(false);
 		tabFitRight.opSinusTend.Enable(false);
 		tabFitRight.opSpline.Enable(false);
+		tabFitRight.opDerivative.Enable(false);
+		tabFitRight.derOrder.Enable(false);
+		tabFitRight.derAccuracy.Enable(false);
+		tabFitRight.opSG.Enable(false);
+		tabFitRight.sgOrder.Enable(false);
 		tabFitRight.opMax.Enable(false);
 		tabFitRight.opMin.Enable(false);
 		tabFitRight.opMovAvg.Enable(false);
@@ -500,6 +530,24 @@ void ProcessingTab::OnUpdateSensitivity()
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	bool refresh = false;
+	if (tabFitRight.opDerivative) {
+		bool isOdd = int(~(tabFitRight.derAccuracy))%2;
+		if (IsNull(tabFitRight.derAccuracy) || isOdd)
+			derivative.Clear();
+		else
+			derivative = data.DerivativeY(~tabFitRight.derOrder, ~tabFitRight.derAccuracy);
+
+		refresh = true;
+	}
+	if (tabFitRight.opSG) {
+		int side = int(~tabFitRight.sgSize)/2;
+		if (!SavitzkyGolay_CheckParams(side, side, ~tabFitRight.sgDeg, ~tabFitRight.sgOrder))
+			sg.Clear();
+		else
+			sg = data.SavitzkyGolayY(~tabFitRight.sgDeg, ~tabFitRight.sgSize, ~tabFitRight.sgOrder);
+
+		refresh = true;
+	}
 	if (tabFitRight.opMax && newWidthMax != tabFitRight.width) {
 		newWidthMax = tabFitRight.width;
 		
@@ -681,6 +729,8 @@ void ProcessingTab::OnShowEquation()
 	tabFitLeft.scatter.Legend(6, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opSinusTend ? sinusTend.GetEquation(tabFitRight.numDecimals) : String(t_("Sinusoidal tend"))));
 	tabFitLeft.scatter.Legend(7, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
+	tabFitLeft.scatter.Legend(8, pscatter->GetLegend(id) + String("-") + String(Format(t_("Der_%d"), ~tabFitRight.derOrder)));
+	tabFitLeft.scatter.Legend(9, pscatter->GetLegend(id) + String("-") + String(Format(t_("S_G_%d"), ~tabFitRight.sgOrder)));
 	tabFitLeft.scatter.Refresh();
 }
 
