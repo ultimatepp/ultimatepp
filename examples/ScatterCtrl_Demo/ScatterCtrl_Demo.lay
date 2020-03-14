@@ -19,7 +19,7 @@ LAYOUT(Tab2Functions, 380, 292)
 END_LAYOUT
 
 LAYOUT(Tab3ParametricFunctions, 384, 284)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Parametric functions demo")).SetTitleColor(White).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetLabelsColor(White).SetAxisColor(Color(28, 212, 0)).SetAxisWidth(12).SetGridColor(Color(28, 127, 0)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetColor(Color(198, 212, 255)).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Parametric functions demo")).SetTitleColor(White).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetLabelsColor(White).SetAxisColor(Color(28, 212, 0)).SetGridColor(Color(28, 127, 0)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetColor(Color(198, 212, 255)).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab4Formatting, 400, 316)
@@ -80,7 +80,7 @@ LAYOUT(TabUserEquation, 672, 276)
 END_LAYOUT
 
 LAYOUT(Tab11Trend, 504, 468)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Trend Line demo")).SetPlotAreaLeftMargin(50).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetAxisWidth(12).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Trend Line demo")).SetPlotAreaLeftMargin(50).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
 	ITEM(ArrayCtrl, grid, HSizePosZ(112, 8).BottomPosZ(4, 100))
 	ITEM(Label, dv___2, SetLabel(t_("Data series:")).LeftPosZ(8, 64).BottomPosZ(55, 21))
 	ITEM(Label, dv___3, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
@@ -98,18 +98,18 @@ LAYOUT(TabRangePlot, 420, 236)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
-LAYOUT(TabSurf, 468, 236)
+LAYOUT(TabSurf, 468, 292)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("2D Surface")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(132, 4).VSizePosZ(4, 4))
-	ITEM(LabelBox, dv___1, SetLabel(t_("Data source")).LeftPosZ(4, 124).TopPosZ(0, 64))
-	ITEM(Switch, dataType, SetLabel(t_("Data set simple\nData set\nExplicit equation")).LeftPosZ(12, 108).TopPosZ(16, 48))
-	ITEM(EditIntSpin, numColor, Min(0).NotNull(true).LeftPosZ(72, 56).TopPosZ(112, 19))
-	ITEM(Label, labelInterpolation, SetLabel(t_("Data set interpolation")).LeftPosZ(4, 120).TopPosZ(68, 19))
-	ITEM(Label, dv___5, SetLabel(t_("Num. color:")).LeftPosZ(4, 68).TopPosZ(112, 19))
-	ITEM(DropList, interpolation, LeftPosZ(4, 124).TopPosZ(88, 19))
-	ITEM(Label, dv___7, SetLabel(t_("Rainbow style")).LeftPosZ(4, 100).TopPosZ(156, 19))
-	ITEM(DropList, rainbow, LeftPosZ(4, 124).TopPosZ(176, 19))
-	ITEM(Option, zoom, SetLabel(t_("Zoom to fit")).LeftPosZ(4, 104).TopPosZ(200, 16))
-	ITEM(Option, opContinuous, SetLabel(t_("Continuous")).LeftPosZ(4, 88).TopPosZ(136, 16))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Data source")).LeftPosZ(4, 124).TopPosZ(0, 76))
+	ITEM(Switch, dataType, SetLabel(t_("Data set simple\nData set\nExplicit equation\nNo surface")).LeftPosZ(12, 108).TopPosZ(16, 60))
+	ITEM(EditIntSpin, numColor, Min(0).NotNull(true).LeftPosZ(72, 56).TopPosZ(124, 19))
+	ITEM(Label, labelInterpolation, SetLabel(t_("Data set interpolation")).LeftPosZ(4, 120).TopPosZ(80, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Num. color:")).LeftPosZ(4, 68).TopPosZ(124, 19))
+	ITEM(DropList, interpolation, LeftPosZ(4, 124).TopPosZ(100, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Rainbow style")).LeftPosZ(4, 100).TopPosZ(168, 19))
+	ITEM(DropList, rainbow, LeftPosZ(4, 124).TopPosZ(188, 19))
+	ITEM(Option, zoom, SetLabel(t_("Zoom to fit")).LeftPosZ(4, 104).TopPosZ(212, 16))
+	ITEM(Option, opContinuous, SetLabel(t_("Continuous")).LeftPosZ(4, 88).TopPosZ(148, 16))
 END_LAYOUT
 
 LAYOUT(TabStackedPlot, 420, 244)

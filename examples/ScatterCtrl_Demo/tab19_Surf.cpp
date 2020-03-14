@@ -10,8 +10,8 @@ void Tab19_Surf::Init()
 	numColor <<= THISBACK(OnChange);
 	opContinuous <<= true;
 	opContinuous <<= THISBACK(OnChange);
-	dataType = 0;//2;
-	dataType << THISBACK(OnChange);
+	dataType = 0;;
+	dataType <<= THISBACK(OnChange);
 	rainbow.Add(BLUE_YELLOW_RED, "BLUE_YELLOW_RED").Add(RED_YELLOW_BLUE, "RED_YELLOW_BLUE")
 		   .Add(GREEN_YELLOW_RED, "GREEN_YELLOW_RED").Add(RED_YELLOW_GREEN, "RED_YELLOW_GREEN")
 		   .Add(WHITE_BLACK, "WHITE_BLACK").Add(BLACK_WHITE, "BLACK_WHITE");
@@ -83,16 +83,19 @@ void Tab19_Surf::Init()
 }
 
 void Tab19_Surf::OnChange() {
-	labelInterpolation.Enable(dataType != 2);
-	interpolation.Enable(dataType != 2);
+	labelInterpolation.Enable(dataType < 2);
+	interpolation.Enable(dataType < 2);
 	
 	scatter.SurfNumColor(~numColor, ~opContinuous).SurfRainbow((RAINBOW)int(rainbow.GetKey(rainbow.GetIndex())));
 	if (dataType == 0)
 		Init_DatasetSimple();
 	else if (dataType == 1)
 		Init_Dataset();
-	else
+	else if (dataType == 2)
 		Init_DataExplicit();
+	else 
+		scatter.RemoveSurf();
+	
 	if (zoom)
 		scatter.ZoomToFit(true, true);
 	

@@ -18,14 +18,14 @@ void Tab6_Logarithmic::Init()
 	scatter.SetGridLinesX = THISBACK(SetGridLinesX);
 }
 
-void Tab6_Logarithmic::FormatX(String& s, int i, double d)
+void Tab6_Logarithmic::FormatX(String& s, int , double d)
 {
 	double val = pow(10, d);
 	if (val >= 1 && val <= 1e5)
 		s = FormatDoubleExp(val, 0);
 }
 
-void Tab6_Logarithmic::FormatXGridUnits(String& s, int i, double d)
+void Tab6_Logarithmic::FormatXGridUnits(String& s, int , double d)
 {
 	double val = pow(10, d);
 	int valint = fround(val);

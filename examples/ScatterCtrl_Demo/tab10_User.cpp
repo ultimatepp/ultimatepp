@@ -27,14 +27,14 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, 
-				bool isClosed) const {
+				const Color &fillColor, double , double , double y0, double , 
+				bool ) const {
 		DoPaint(w, scale, p, opacity, fround(thick), color, pattern, background, fillColor, y0);		
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, double y0, double width, 
-				bool isClosed) const {
+				const Color &fillColor, double , double , double y0, double , 
+				bool ) const {
 		DoPaint(w, scale, p, opacity, fround(thick), color, pattern, background, fillColor, y0);		
 	}
 };
@@ -42,7 +42,7 @@ public:
 class MyMark : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor) const {
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& , const Color& ) const {
 		Size bugSize = Symbol::bug().GetSize()*scale;
 		w.DrawImage(cp.x - bugSize.cx/2, cp.y - bugSize.cy/2, bugSize.cx, bugSize.cy, Symbol::bug());
 	}
