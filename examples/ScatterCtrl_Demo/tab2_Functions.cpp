@@ -1,11 +1,11 @@
 #include "ScatterCtrl_Demo.h"
 
 
-double funct1(double x)	{return 3;}
+double funct1(double )	{return 3;}
 double funct2(double x)	{return (x*x-5);}
 double funct3(double x)	{return (-x*x-5);}
 
-void   vfunct1(double& y, double x) {y = 0;}
+void   vfunct1(double& y, double )  {y = 0;}
 void   vfunct2(double& y, double x) {y = x*x;}
 void   vfunct3(double& y, double x) {y = -x*x;}
 
