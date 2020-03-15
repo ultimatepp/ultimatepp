@@ -204,6 +204,8 @@ struct Pdb : Debugger, ParentCtrl {
 
 	ArrayMap<int, Type>         type; // maps pdb pSym->TypeIndex to type data
 	VectorMap<String, int>      type_name; // maps the name of type to above 'type' index
+	Index<adr_t>                type_bases; // index of modbases for types (usually one)
+	VectorMap<String, int>      type_index; // maps the name of type to TypeIndex, loaded by SymEnumTypes
 
 	String                      disas_name;
 
@@ -257,8 +259,8 @@ struct Pdb : Debugger, ParentCtrl {
 
 	struct Pretty {
 		int            kind; // VARIABLE, TEXT or CONTAINER
-		int64          data_count; // number of entries
-		Vector<String> data_type; // type of data items (usuallt type_param)
+		int64          data_count = 0; // number of entries
+		Vector<String> data_type; // type of data items (usually type_param)
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
 		Visual         text;
 
@@ -323,7 +325,6 @@ struct Pdb : Debugger, ParentCtrl {
 	struct LocalsCtx;
 	static BOOL CALLBACK  EnumLocals(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext);
 	static BOOL CALLBACK  EnumGlobals(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext);
-	static BOOL CALLBACK  EnumTypeByName(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext);
 	void                  TypeVal(Pdb::Val& v, int typeId, adr_t modbase);
 	String                GetSymName(adr_t modbase, dword typeindex);
 	dword                 GetSymInfo(adr_t modbase, dword typeindex, IMAGEHLP_SYMBOL_TYPE_INFO info);
@@ -424,6 +425,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       TraverseTree(bool set, Val head, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
+	void       TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
 	void       PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 
 // code
