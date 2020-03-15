@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <list>
 
 using namespace Upp;
 
@@ -29,6 +30,7 @@ GUI_APP_MAIN
 	std::string std_string = "Hello world!";
 	std::wstring std_wstring = wstring.ToStd();
 	std::vector<std::string> std_vector { "I", "II", "III", "IV", "V" };
+	std::list<std::string> std_list { "I", "II", "III", "IV", "V" };
 	std::set<std::string> std_set { "I", "II", "III", "IV", "V" };
 	std::multiset<std::string> std_multiset { "I", "II", "III", "IV", "V" };
 	std::map<int, std::string> std_map { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
