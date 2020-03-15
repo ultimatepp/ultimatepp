@@ -368,7 +368,7 @@ void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, in
 		}
 		Val tree = GetAttr(val, "__tree_");
 		Val value = GetAttr(GetAttr(tree, "__pair1_"), "__value_");
-		p.data_count =GetInt64Attr(GetAttr(tree, "__pair3_"), "__value_");
+		p.data_count = GetIntAttr(GetAttr(tree, "__pair3_"), "__value_");
 		Val node = DeRef(GetAttr(value, "__left_"));
 		TraverseTreeClang(set, GetTypeInfo(nodet).type, node, from, count, p, 0);
 	}
@@ -384,6 +384,40 @@ void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, in
 			top = v;
 		}
 		TraverseTree(set, head, top, from, count, p, 0);
+	}
+}
+
+void Pdb::PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	if(HasAttr(val, "__end_")) {
+		p.data_count = GetIntAttr(GetAttr(val, "__size_alloc_"), "__value_");
+		int node_type = GetTypeInfo("std::__1::__list_node<" + tparam[0] + ",void *>").type;
+		Val next = DeRef(GetAttr(GetAttr(val, "__end_"), "__next_"));
+		while(count > 0) {
+			if(from == 0) {
+				Val h = next;
+				h.type = node_type;
+				p.data_ptr.Add(GetAttr(h, "__value_").address);
+				count--;
+			}
+			else
+				from--;
+			next = DeRef(GetAttr(next, "__next_"));
+		}
+	}
+	else {
+		val = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+		p.data_count = GetIntAttr(val, "_Mysize");
+		Val next = DeRef(GetAttr(val, "_Myhead"));
+		while(count > 0) {
+			next = DeRef(GetAttr(next, "_Next"));
+			if(from == 0) {
+				p.data_ptr.Add(GetAttr(next, "_Myval").address);
+				count--;
+			}
+			else
+				from--;
+		}
 	}
 }
 
@@ -466,11 +500,11 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("std::multiset", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, true, tparam, from, count, p); }});
 		pretty.Add("std::map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
+		pretty.Add("std::list", { 1, THISFN(PrettyStdList) });
 	}
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
 	type.Replace("::__1", ""); // CLANG has some weird stuff in names...
-	
 
 	int ii = pretty.Find(type);
 	if(ii >= 0) {
