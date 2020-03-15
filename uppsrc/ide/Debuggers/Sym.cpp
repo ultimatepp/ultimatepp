@@ -448,6 +448,7 @@ int Pdb::FindType(adr_t modbase, const String& name)
 			type_index->GetAdd(pSym->Name) = pSym->TypeIndex;
 			return TRUE;
 		}, &type_index);
+	//	DDUMPM(type_index);
 	}
 	int ndx = type_index.Get(name, Null);
 	if(IsNull(ndx))
