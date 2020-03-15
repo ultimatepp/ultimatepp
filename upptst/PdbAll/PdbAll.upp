@@ -1,0 +1,10 @@
+uses
+	Core,
+	CtrlLib;
+
+file
+	PdbAll.cpp;
+
+mainconfig
+	"" = "GUI";
+
