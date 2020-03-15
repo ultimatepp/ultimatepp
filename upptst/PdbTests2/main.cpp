@@ -3,11 +3,13 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <list>
 
 using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	VectorMap<int, String> vectormap { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
-	std::map<int, std::string> std_map { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
+//	std::set<int> s;
+	std::list<int> l0;
+	std::list<int> l = { 1, 2, 3, 4 };
 }
