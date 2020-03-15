@@ -305,7 +305,7 @@ void Pdb::TraverseTree(bool set, Pdb::Val head, Val node, int64& from, int& coun
 {
 	if(depth > 40) // avoid problems if tree is damaged
 		return;
-	if(depth && node.address == head.address || count <= 0) // we are at the end
+	if(depth && node.address == head.address || count <= 0) // we are at the end or have read enough items
 		return;
 	TraverseTree(set, head, DeRef(GetAttr(node, "_Left")), from, count, p, depth + 1);
 	if(node.address != head.address) {
@@ -325,10 +325,54 @@ void Pdb::TraverseTree(bool set, Pdb::Val head, Val node, int64& from, int& coun
 	TraverseTree(set, head, DeRef(GetAttr(node, "_Right")), from, count, p, depth + 1);
 }
 
+void Pdb::TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth)
+{
+	if(depth > 40 || count <= 0) // avoid problems if tree is damaged
+		return;
+
+	Val left = DeRef(GetAttr(node, "__left_"));
+	if(left.address)
+		TraverseTreeClang(set, nodet, left, from, count, p, depth + 1);
+
+	node.type = nodet;
+	Val data = GetAttr(node, "__value_");
+	if(from == 0) {
+		if(set)
+			p.data_ptr.Add(data.address);
+		else {
+			Val cc = GetAttr(data, "__cc");
+			p.data_ptr.Add(GetAttr(cc, "first").address);
+			p.data_ptr.Add(GetAttr(cc, "second").address);
+		}
+		count--;
+	}
+	else
+		from--;
+
+	Val right = DeRef(GetAttr(node, "__right_"));
+	if(right.address)
+		TraverseTreeClang(set, nodet, right, from, count, p, depth + 1);
+}
+
 void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
-	/* TODO: CLANG */
-	{
+	if(HasAttr(val, "__tree_")) {
+		String nodet;
+		if(set)
+			nodet << "std::__1::__tree_node<" << tparam[0] << ",void *>";
+		else {
+			nodet = "std::__1::__tree_node<std::__1::__value_type<" << tparam[0] << "," << tparam[1];
+			if(*nodet.Last() == '>')
+				nodet << ' ';
+			nodet << ">,void *>";
+		}
+		Val tree = GetAttr(val, "__tree_");
+		Val value = GetAttr(GetAttr(tree, "__pair1_"), "__value_");
+		p.data_count =GetInt64Attr(GetAttr(tree, "__pair3_"), "__value_");
+		Val node = DeRef(GetAttr(value, "__left_"));
+		TraverseTreeClang(set, GetTypeInfo(nodet).type, node, from, count, p, 0);
+	}
+	else {
 		val = GetAttr(GetAttr(GetAttr(val, "_Mypair"), "_Myval2"), "_Myval2");
 		p.data_count = GetIntAttr(val, "_Mysize");
 		Val head = DeRef(GetAttr(val, "_Myhead")); // points to leftmost element (!)
@@ -418,10 +462,10 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 
 		pretty.Add("std::basic_string", { 1, THISFN(PrettyStdString) });
 		pretty.Add("std::vector", { 1, THISFN(PrettyStdVector) });
-		pretty.Add("std::map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::set", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, true, tparam, from, count, p); }});
-		pretty.Add("std::multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::multiset", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, true, tparam, from, count, p); }});
+		pretty.Add("std::map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
+		pretty.Add("std::multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 	}
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
@@ -507,8 +551,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 						if(j)
 							result.Cat(": ", SBlue);
 						item[j].address = p.data_ptr[ii++];
-						if(item[j].type >= 0)
-						Visualise(result, item[j], flags | MEMBER);
+						if(item[j].type != UNKNOWN)
+							Visualise(result, item[j], flags | MEMBER);
 					}
 				}
 			}

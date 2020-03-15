@@ -416,12 +416,6 @@ const Pdb::Type& Pdb::GetType(int ti)
 	return t;
 }
 
-BOOL CALLBACK Pdb::EnumTypeByName(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
-{
-	*(int *)UserContext = pSym->TypeIndex;
-	return FALSE;
-}
-
 int Pdb::FindType(adr_t modbase, const String& name)
 {
 	static VectorMap<String, int> primitive = {
@@ -447,8 +441,15 @@ int Pdb::FindType(adr_t modbase, const String& name)
 	q = type_name.Get(name, Null);
 	if(!IsNull(q))
 		return q;
-	int ndx = Null;
-	SymEnumTypesByName(hProcess, modbase, ~name, EnumTypeByName, &ndx);
+	if(type_bases.Find(modbase) < 0) {
+		type_bases.Add(modbase);
+		SymEnumTypes(hProcess, current_modbase, [](PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)->int {
+			auto type_index = (VectorMap<String, int> *)UserContext;
+			type_index->GetAdd(pSym->Name) = pSym->TypeIndex;
+			return TRUE;
+		}, &type_index);
+	}
+	int ndx = type_index.Get(name, Null);
 	if(IsNull(ndx))
 		return Null;
 	return GetTypeIndex(modbase, ndx);
@@ -489,24 +490,14 @@ Pdb::TypeInfo Pdb::GetTypeInfo(adr_t modbase, const String& name)
 		return typeinfo_cache[q];
 	
 	TypeInfo r;
-	String tp;
+	String tp = name;
 	bool spc = false;
-	for(const char *s = name; *s; s++)
-		if(*s == '*')
+	for(;;)
+		if(tp.TrimEnd("*") || tp.TrimEnd("&"))
 			r.ref++;
 		else
-		if(*s == ' ') {
-			if(!spc) {
-				tp.Cat(' ');
-				spc = true;
-			}
-		}
-		else {
-			tp.Cat(*s);
-			spc = false;
-		}
-	while(tp.Find(" const ") >= 0)
-		tp.Replace(" const ", " ");
+		if(!tp.TrimEnd(" ") && !tp.TrimEnd("const"))
+			break;
 	r.type = FindType(modbase, TrimBoth(tp));
 	typeinfo_cache.Add(name, r);
 	return r;
