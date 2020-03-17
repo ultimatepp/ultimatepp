@@ -33,7 +33,10 @@ void SetupFont()
 	bool italic = false;
 
 	String font_name = GtkSettingsString("gtk-font-name");
-	int xdpi = Nvl(GtkSettingsInt("gtk-xft-dpi"), 72 * 1024);
+
+//	double xdpi = Nvl(GtkSettingsInt("gtk-xft-dpi"), 72 * 1024);
+	
+	double xdpi = gdk_screen_get_resolution(gdk_display_get_default_screen(gdk_display_get_default()));
 	
 	const char *q = strrchr(font_name, ' ');
 	if(q) {
@@ -72,8 +75,7 @@ void SetupFont()
 			}
 		}
 	}
-	
-	Font gui_font = Font(fontface, fround(Ctrl::SCL(fontheight) * xdpi + 512*72.0) / (1024*72)).Bold(bold).Italic(italic);
+	Font gui_font = Font(fontface, fround(Ctrl::SCL(fontheight) * xdpi / 72 + 0.5)).Bold(bold).Italic(italic);
 	Font::SetDefaultFont(gui_font);
 }
 
@@ -249,6 +251,21 @@ Image Gtk_Icon(const char *icon_name, int size)
 	return Null;
 }
 
+Image Gtk_IconAdjusted(const char *icon_name, int size)
+{ // checks that icons is visible over SColorFace, fixes it if not (by painting it gray)
+	Image m = Gtk_Icon(icon_name, size);
+	if(Diff(AvgColor(m), SColorFace()) > 80)
+		return m;
+	Color ink = Gray();
+	if(Diff(ink, SColorFace()) > 100)
+		ink = GrayColor(IsDarkTheme() ? 200 : 50);
+	ImagePainter iw(m.GetSize());
+	iw.Clear(RGBAZero());
+	iw.DrawImage(0, 0, m, ink);
+	m = iw;
+	return m;
+}
+
 void ChHostSkin()
 {
 	SetupFont();
@@ -261,7 +278,7 @@ void ChHostSkin()
 	Gtk_New("entry");
 		Gtk_State(CTRL_DISABLED);
 		SColorDisabled_Write(GetInkColor());
-		if(Diff(SColorText(), SColorDisabled()) < 30)
+		if(Diff(SColorText(), SColorDisabled()) < 30 || Diff(SColorFace(), SColorDisabled()) < 70)
 			SColorDisabled_Write(Gray());
 	Gtk_New("entry selection");
 		SColorHighlight_Write(GetBackgroundColor());
@@ -361,9 +378,9 @@ void ChHostSkin()
 					text[i] = GetInkColor();
 				}
 			}
-			s.ok = Gtk_Icon("gtk-ok", DPI(16));
-			s.cancel = Gtk_Icon("gtk-cancel", DPI(16));
-			s.exit = Gtk_Icon("gtk-quit", DPI(16));
+			s.ok = Gtk_IconAdjusted("gtk-ok", DPI(16));
+			s.cancel = Gtk_IconAdjusted("gtk-cancel", DPI(16));
+			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
 		ChSynthetic(button, text);
@@ -385,10 +402,10 @@ void ChHostSkin()
 	DialogIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
 	DialogIcon(CtrlImg::I_error, "gtk-dialog-error");
 	
-	YesButtonImage_Write(Gtk_Icon("gtk-yes", DPI(16)));
-	NoButtonImage_Write(Gtk_Icon("gtk-no", DPI(16)));
-	AbortButtonImage_Write(Gtk_Icon("gtk-stop", DPI(16)));
-	RetryButtonImage_Write(Gtk_Icon("gtk-refresh", DPI(16)));
+	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
+	NoButtonImage_Write(Gtk_IconAdjusted("gtk-no", DPI(16)));
+	AbortButtonImage_Write(Gtk_IconAdjusted("gtk-stop", DPI(16)));
+	RetryButtonImage_Write(Gtk_IconAdjusted("gtk-refresh", DPI(16)));
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
@@ -436,6 +453,10 @@ void ChHostSkin()
 
 		Gtk_New("menu");
 		Image m = CairoImage(128, 64);
+		ImageDraw im(m.GetSize());
+		im.DrawRect(m.GetSize(), SColorFace()); // fix dark corners in some themes
+		im.DrawImage(0, 0, m);
+		m = im;
 		s.pullshift.y = 0;
 		int mg = DPI(2);
 		s.popupframe = WithHotSpot(m, mg, mg);

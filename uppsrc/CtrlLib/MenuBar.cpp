@@ -92,6 +92,7 @@ void MenuBar::Paint(Draw& w)
 {
 	if(IsTransparent())
 		return;
+	w.DrawRect(GetSize(), SColorFace()); // avoid dark corners in some themes
 	if(GetParent())
 		if(!IsNull(style->arealook) && (arealook < 0 ? InFrame() : arealook)) {
 			PaintBarArea(w, this, style->arealook, (GetAlign() != BAR_TOP) ? GetScreenRect().bottom : Null);
