@@ -20,7 +20,6 @@ file
 	CodeBrowser.cpp,
 	Browser.lay,
 	Browser.iml,
-	todo.txt,
 	Topic readonly separator,
 	TopicBase.cpp,
 	Reference.cpp,

@@ -643,7 +643,6 @@ void Ide::FinishConfig()
 		FileCursor();
 	}
 	SaveLoadPackage();
-	SyncCh();
 }
 
 bool Ide::IsPersistentFindReplace()

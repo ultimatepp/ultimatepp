@@ -1127,8 +1127,6 @@ public:
 
 	void      SetupBars();
 
-	void      SyncCh();
-
 	EscValue  MacroEditor();
 		void  MacroGetLength(EscEscape& e);
 		void  MacroGetLineCount(EscEscape& e);

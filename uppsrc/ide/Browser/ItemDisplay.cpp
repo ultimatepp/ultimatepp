@@ -13,7 +13,7 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 		case ITEM_PNAME:
 			f.Bold();
 		case ITEM_NUMBER:
-			ink = AdjustIfDark(Red());
+			ink = SRed();
 			break;
 		case ITEM_TNAME:
 			ink = SGreen();
@@ -21,12 +21,12 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 			f.Bold();
 			break;
 		case ITEM_UPP:
-			ink = AdjustIfDark(Cyan);
+			ink = SCyan();
 			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
 		case ITEM_SIGN:
-			ink = dark ? Color(255, 42, 150) : LtBlue;
+			ink = SLtBlue();
 			break;
 		}
 		if(italic)
