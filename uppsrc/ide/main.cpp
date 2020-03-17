@@ -232,11 +232,13 @@ void AppMain___()
 
 		splash_screen = true;
 		
-		String font_override_path = ConfigFile("gui_font");
-		if(FileExists(font_override_path)) {
-			Font f;
-			if(LoadFromFile(f, font_override_path))
-				SetStdFont(f);
+		{ // setup skin and font before the 'real' Ide gets constructed
+			Ide h;
+			LoadFromFile(h);
+			if(h.gui_font_override)
+				SetStdFont(h.gui_font);
+			auto v = GetAllChSkins();
+			Ctrl::SetSkin(v[clamp(h.chstyle, 0, v.GetCount() - 1)].a);
 		}
 
 		Ide ide;
@@ -269,7 +271,6 @@ void AppMain___()
 		}
 		
 		ide.LoadAbbr();
-		ide.SyncCh();
 
 		DelTemps();
 

@@ -361,5 +361,4 @@ void Ide::LoadConfig()
 		FileCursor();
 	}
 	SaveLoadPackage();
-	SyncCh();
 }

@@ -55,7 +55,7 @@ void EditorBar::sPaintImage(Draw& w, int y, int fy, const Image& img)
 
 void EditorBar::Paint(Draw& w)
 {
-	Color bg = IsDarkTheme() ? GrayColor(70)dne : SColorLtFace();
+	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
 	Size sz = GetSize();
 	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 	if(!editor) return;
