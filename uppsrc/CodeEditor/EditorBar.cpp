@@ -55,8 +55,9 @@ void EditorBar::sPaintImage(Draw& w, int y, int fy, const Image& img)
 
 void EditorBar::Paint(Draw& w)
 {
+	Color bg = IsDarkTheme() ? GrayColor(70)dne : SColorLtFace();
 	Size sz = GetSize();
-	w.DrawRect(0, 0, sz.cx, sz.cy, SColorLtFace);
+	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 	if(!editor) return;
 	int fy = editor->GetFontSize().cy;
 	int hy = fy >> 1;
@@ -86,12 +87,12 @@ void EditorBar::Paint(Draw& w)
 			ann = l.annotation;
 		}
 		if(editor->GetCaret().top == y && editor->barline)
-			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), SColorLtFace(), 200));
+			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), bg, 200));
 		if(line_numbers && i < editor->GetLineCount()) {
 			String n = AsString((i + 1) % 1000000);
 			Font fnt = editor->GetFont();
 			Size tsz = GetTextSize(n, fnt);
-			w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
+			w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, SBrown());
 		}
 		if(hi_if) {
 			Vector<IfState> nextif;
@@ -128,10 +129,10 @@ void EditorBar::Paint(Draw& w)
 			if(edit)
 			{
 				int age = (int)(log((double)(editor->GetUndoCount() + 1 - edit)) * 30);
-				w.DrawRect(0, y, width, fy, Blend(LtBlue, SColorLtFace(), min(220, age)));
+				w.DrawRect(0, y, width, fy, Blend(SLtBlue(), bg, min(220, age)));
 			}
 			if(err)
-				w.DrawRect(width, y, width, fy, err == 1 ? LtRed : (err == 2 ? Color(255, 175, 0) : Green));
+				w.DrawRect(width, y, width, fy, err == 1 ? LtRed() : (err == 2 ? Color(255, 175, 0) : SGreen()));
 		}
 
 		if(!b.IsEmpty())
