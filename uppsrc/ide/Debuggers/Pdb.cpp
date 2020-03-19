@@ -84,8 +84,8 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 3));
 	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
 	bar.Add(b, AK_ADDWATCH, THISBACK(AddWatch));
-	bar.Add(b, AK_CPU, THISBACK1(SetTab, 5));
-	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 6));
+	bar.Add(b, AK_CPU, THISBACK1(SetTab, 4));
+	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 5));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
