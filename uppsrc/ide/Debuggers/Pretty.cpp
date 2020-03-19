@@ -421,6 +421,63 @@ void Pdb::PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, 
 	}
 }
 
+void Pdb::PrettyStdForwardList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	String value, next;
+	p.data_count = 0;
+	if(HasAttr(val, "__before_begin_")) {
+		val = DeRef(GetAttr(GetAttr(GetAttr(val, "__before_begin_"), "__value_"), "__next_"));
+		value = "__value_";
+		next = "__next_";
+	}
+	else {
+		val = DeRef(GetAttr(GetAttr(GetAttr(val, "_Mypair"), "_Myval2"), "_Myhead"));
+		value = "_Myval";
+		next = "_Next";
+	}
+	while(val.address) {
+		if(from == 0) {
+			if(count) {
+				p.data_ptr.Add(GetAttr(val, value).address);
+				count--;
+			}
+		}
+		else
+			from--;
+		val = DeRef(GetAttr(val, next));
+		p.data_count++;
+		if(count == 0 && p.data_count > 10000) {
+			p.data_count = INT64_MAX;
+			break;
+		}
+	}
+}
+
+void Pdb::PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	int sz = SizeOfType(tparam[0]);
+	int block_size, start;
+	adr_t map;
+	if(HasAttr(val, "__size_")) {
+		p.data_count = GetIntAttr(GetAttr(val, "__size_"), "__value_");
+		block_size = sz < 256 ? 4096 / sz : 16;
+		start = GetIntAttr(val, "__start_");
+		map = DeRef(GetAttr(GetAttr(val, "__map_"), "__begin_")).address;
+	}
+	else {
+		val = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
+		p.data_count = GetIntAttr(val, "_Mysize");
+		block_size = sz <= 1 ? 16 : sz <= 2 ? 8 : sz <= 4 ? 4 : sz <= 8 ? 2 : 1;
+		start = GetIntAttr(val, "_Myoff");
+		map = DeRef(GetAttr(val, "_Map")).address;
+	}
+	
+	for(int i = 0; i < count; i++) {
+		int q = i + from + start;
+		p.data_ptr.Add(PeekPtr(map + (q / block_size) * (win64 ? 8 : 4)) + q % block_size * sz);
+	}
+}
+
 Pdb::Val Pdb::MakeVal(const String& type, adr_t address)
 {
 	Val item;
@@ -501,6 +558,8 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("std::map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::list", { 1, THISFN(PrettyStdList) });
+		pretty.Add("std::forward_list", { 1, THISFN(PrettyStdForwardList) });
+		pretty.Add("std::deque", { 1, THISFN(PrettyStdDeque) });
 	}
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
@@ -524,7 +583,7 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 	auto ResultCount = [&](int64 count) {
 		if(!(flags & MEMBER)) {
 			result.Cat("[", SLtBlue);
-			result.Cat(AsString(count), SRed);
+			result.Cat(count == INT64_MAX ? ">10000" : AsString(count), SRed);
 			result.Cat("] ", SLtBlue);
 		}
 	};

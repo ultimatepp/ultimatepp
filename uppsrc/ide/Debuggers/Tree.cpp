@@ -62,7 +62,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 					tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(result)),
 					         nv.key.type != UNKNOWN || nv.val.type > 0);
 				}
-				if(pp.data_count > n && from == 0) {
+				if(pp.data_count > n && from == 0 && pp.data_count != INT64_MAX) {
 					NamedVal nv;
 					nv.name << "..";
 					nv.val = val;
