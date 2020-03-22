@@ -4,6 +4,10 @@
 #include <map>
 #include <set>
 #include <list>
+#include <forward_list>
+#include <deque>
+#include <unordered_set>
+#include <unordered_map>
 
 using namespace Upp;
 
@@ -30,9 +34,15 @@ GUI_APP_MAIN
 	std::string std_string = "Hello world!";
 	std::wstring std_wstring = wstring.ToStd();
 	std::vector<std::string> std_vector { "I", "II", "III", "IV", "V" };
+	std::deque<std::string> std_deqeue { "I", "II", "III", "IV", "V" };
 	std::list<std::string> std_list { "I", "II", "III", "IV", "V" };
+	std::forward_list<std::string> std_forward_list { "I", "II", "III", "IV", "V" };
 	std::set<std::string> std_set { "I", "II", "III", "IV", "V" };
 	std::multiset<std::string> std_multiset { "I", "II", "III", "IV", "V" };
 	std::map<int, std::string> std_map { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
 	std::multimap<int, std::string> std_multimap { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
+	std::unordered_set<std::string> std_unordered_set { "I", "II", "III", "IV", "V" };
+	std::unordered_multiset<std::string> std_unordered_multiset { "I", "II", "III", "IV", "V" };
+	std::unordered_map<int, std::string> std_unordered_map { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
+	std::unordered_multimap<int, std::string> std_unordered_multimap { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
 }
