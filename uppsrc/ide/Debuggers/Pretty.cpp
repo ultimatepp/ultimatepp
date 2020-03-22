@@ -387,7 +387,7 @@ void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, in
 	}
 }
 
-void Pdb::PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+void Pdb::PrettyStdListM(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p, bool map)
 {
 	if(HasAttr(val, "__end_")) {
 		p.data_count = GetIntAttr(GetAttr(val, "__size_alloc_"), "__value_");
@@ -411,14 +411,25 @@ void Pdb::PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, 
 		Val next = DeRef(GetAttr(val, "_Myhead"));
 		while(count > 0) {
 			next = DeRef(GetAttr(next, "_Next"));
+			Val v = GetAttr(next, "_Myval");
 			if(from == 0) {
-				p.data_ptr.Add(GetAttr(next, "_Myval").address);
+				if(map) { // support for MS std::unordered_map
+					p.data_ptr.Add(GetAttr(v, "first").address);
+					p.data_ptr.Add(GetAttr(v, "second").address);
+				}
+				else
+					p.data_ptr.Add(GetAttr(next, "_Myval").address);
 				count--;
 			}
 			else
 				from--;
 		}
 	}
+}
+
+void Pdb::PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	PrettyStdListM(val, tparam, from, count, p);
 }
 
 void Pdb::PrettyStdForwardList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
@@ -476,6 +487,39 @@ void Pdb::PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from,
 		int q = i + from + start;
 		p.data_ptr.Add(PeekPtr(map + (q / block_size) * (win64 ? 8 : 4)) + q % block_size * sz);
 	}
+}
+
+void Pdb::PrettyStdUnordered(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	if(HasAttr(val, "__table_")) {
+		val = GetAttr(val, "__table_");
+		p.data_count = GetIntAttr(GetAttr(val, "__p2_"), "__value_");
+		String nodet = set ? "std::__1::__hash_node<" << tparam[0] << ",void *>"
+		                   : "std::__1::__hash_node<std::__1::__hash_value_type<"
+		                      << tparam[0] << "," << tparam[1] << " >,void *>";
+		int ntype = GetTypeInfo(nodet).type;
+		adr_t next = DeRef(GetAttr(GetAttr(GetAttr(val, "__p1_"), "__value_"), "__next_")).address;
+		while(next && count > 0) {
+			Val v = val;
+			v.type = ntype;
+			v.address = next;
+			if(from == 0) {
+				Val vl = GetAttr(v, "__value_");
+				if(set)
+					p.data_ptr.Add(vl.address);
+				else {
+					vl = GetAttr(vl, "__cc");
+					p.data_ptr.Add(GetAttr(vl, "first").address);
+					p.data_ptr.Add(GetAttr(vl, "second").address);
+				}
+			}
+			else
+				from--;
+			next = DeRef(GetAttr(v, "__next_")).address;
+		}
+	}
+	else
+		PrettyStdListM(GetAttr(val, "_List"), tparam, from, count, p, !set);
 }
 
 Pdb::Val Pdb::MakeVal(const String& type, adr_t address)
@@ -553,13 +597,17 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 
 		pretty.Add("std::basic_string", { 1, THISFN(PrettyStdString) });
 		pretty.Add("std::vector", { 1, THISFN(PrettyStdVector) });
+		pretty.Add("std::list", { 1, THISFN(PrettyStdList) });
+		pretty.Add("std::forward_list", { 1, THISFN(PrettyStdForwardList) });
+		pretty.Add("std::deque", { 1, THISFN(PrettyStdDeque) });
 		pretty.Add("std::set", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, true, tparam, from, count, p); }});
 		pretty.Add("std::multiset", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, true, tparam, from, count, p); }});
 		pretty.Add("std::map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
 		pretty.Add("std::multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdTree(val, false, tparam, from, count, p); }});
-		pretty.Add("std::list", { 1, THISFN(PrettyStdList) });
-		pretty.Add("std::forward_list", { 1, THISFN(PrettyStdForwardList) });
-		pretty.Add("std::deque", { 1, THISFN(PrettyStdDeque) });
+		pretty.Add("std::unordered_set", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, true, tparam, from, count, p); }});
+		pretty.Add("std::unordered_multiset", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, true, tparam, from, count, p); }});
+		pretty.Add("std::unordered_map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, false, tparam, from, count, p); }});
+		pretty.Add("std::unordered_multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, false, tparam, from, count, p); }});
 	}
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });

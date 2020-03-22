@@ -427,9 +427,11 @@ struct Pdb : Debugger, ParentCtrl {
 	void       TraverseTree(bool set, Val head, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
 	void       TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
 	void       PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyStdListM(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p, bool map = false);
 	void       PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdForwardList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyStdUnordered(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 
 // code
 	Thread&    Current();
