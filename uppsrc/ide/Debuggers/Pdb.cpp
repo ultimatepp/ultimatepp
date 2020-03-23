@@ -263,28 +263,28 @@ struct CpuRegisterDisplay : Display {
 };
 
 Pdb::Pdb()
-{
+:	visual_display(this) {
 	hWnd = NULL;
 	hProcess = INVALID_HANDLE_VALUE;
 	current_frame = NULL;
 
 	locals.NoHeader();
 	locals.AddColumn("", 1);
-	locals.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
+	locals.AddColumn("", 6).SetDisplay(visual_display);
 	locals.WhenEnterRow = THISBACK1(SetTreeA, &locals);
 	locals.WhenBar = THISBACK(LocalsMenu);
 	locals.EvenRowColor();
 
 	self.NoHeader();
 	self.AddColumn("", 1);
-	self.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
+	self.AddColumn("", 6).SetDisplay(visual_display);
 	self.WhenEnterRow = THISBACK1(SetTreeA, &self);
 	self.WhenBar = THISBACK(LocalsMenu);
 	self.EvenRowColor();
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
-	watches.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
+	watches.AddColumn("", 6).SetDisplay(visual_display);
 	watches.Moving();
 	watches.WhenEnterRow = THISBACK1(SetTreeA, &watches);
 	watches.WhenBar = THISBACK(WatchesMenu);
@@ -294,7 +294,7 @@ Pdb::Pdb()
 
 	autos.NoHeader();
 	autos.AddColumn("", 1);
-	autos.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
+	autos.AddColumn("", 6).SetDisplay(visual_display);
 	autos.WhenEnterRow = THISBACK1(SetTreeA, &autos);
 	autos.WhenBar = THISBACK(AutosMenu);
 	autos.EvenRowColor();
@@ -479,7 +479,7 @@ PDBExpressionDlg::PDBExpressionDlg(const char *title, String& brk, Pdb *pdb)
 	help.SetFrame(ViewFrame());
 	text <<= brk;
 	text <<= THISBACK(Sync);
-	value.SetDisplay(Single<Pdb::VisualDisplay>());
+	value.SetDisplay(pdb->visual_display);
 	value.Show(pdb);
 	value_lbl.Show(pdb);
 	Sync();

@@ -118,38 +118,6 @@ void Pdb::PrettyTime(Pdb::Val val, const Vector<String>&, int64 from, int count,
 		p.Text(Format("%04d/%02d/%02d %02d:%02d:%02d", year, month, day, hour, minute, second));
 }
 
-void Pdb::PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
-{
-	dword color = GetIntAttr(val, "color");
-	Color c = Color::FromRaw(color);
-	if(IsNull(c))
-		p.SetNull();
-	else {
-		p.Text("\1", c);
-		p.Text(" ");
-		p.Text(ColorToHtml(c));
-	}
-	p.kind = SINGLE_VALUE;
-}
-
-void Pdb::PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
-{
-	RGBA rc;
-	rc.r = GetIntAttr(val, "r");
-	rc.g = GetIntAttr(val, "g");
-	rc.b = GetIntAttr(val, "b");
-	rc.a = 255;
-	
-	Color c(rc);
-
-	p.Text("\1", c);
-	p.Text(" ");
-	p.Text(ColorToHtml(c));
-	p.Text(", a: " + AsString(GetIntAttr(val, "a")));
-	
-	p.kind = SINGLE_VALUE;
-}
-
 void Pdb::PrettyFont(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
 {
 	int64 data = GetInt64Attr(val, "data");
@@ -244,6 +212,77 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 		p.data_ptr << a;
 		p.data_type << "Upp::String";
 	}
+}
+
+void Pdb::PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	dword color = GetIntAttr(val, "color");
+	Color c = Color::FromRaw(color);
+	if(IsNull(c))
+		p.SetNull();
+	else {
+		p.Text("\1", c);
+		p.Text(" ");
+		p.Text(ColorToHtml(c));
+	}
+	p.kind = SINGLE_VALUE;
+}
+
+void Pdb::PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	RGBA rc;
+	rc.r = GetIntAttr(val, "r");
+	rc.g = GetIntAttr(val, "g");
+	rc.b = GetIntAttr(val, "b");
+	rc.a = 255;
+	
+	Color c(rc);
+
+	p.Text("\1", c);
+	p.Text(" ");
+	p.Text(ColorToHtml(c));
+	p.Text(", a: " + AsString(GetIntAttr(val, "a")));
+	
+	p.kind = SINGLE_VALUE;
+}
+
+void Pdb::PrettyImageBuffer(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p)
+{
+	p.kind = SINGLE_VALUE;
+
+	Val sz = GetAttr(val, "size");
+	String h;
+	h.Cat("\2");
+	PrettyImage img;
+	img.size.cx = (int)GetIntAttr(sz, "cx");
+	img.size.cy = (int)GetIntAttr(sz, "cy");
+	img.pixels = DeRef(GetAttr(GetAttr(val, "pixels"), "ptr")).address;
+
+	if(img.pixels && img.size.cx * img.size.cy) {
+		RawCat(h, img);
+		p.Text(h);
+	}
+	else
+		p.SetNull();
+
+	bool error = img.size.cx < 0 || img.size.cx > 10000 || img.size.cy < 0 || img.size.cy > 10000 || !img.pixels;
+	Color c1 = error ? SLtRed() : SLtBlue();
+	Color c2 = error ? SLtRed() : SRed();
+	p.Text(" [", c1);
+	p.Text(AsString(img.size.cx), c2);
+	p.Text("x", c1);
+	p.Text(AsString(img.size.cy), c2);
+	p.Text("]", c1);
+}
+
+void Pdb::PrettyImg(Pdb::Val val, const Vector<String>& t, int64 from, int count, Pdb::Pretty& p)
+{
+	p.kind = SINGLE_VALUE;
+	val = DeRef(GetAttr(val, "data"));
+	if(val.address)
+		PrettyImageBuffer(GetAttr(val, "buffer"), t, from, count, p);
+	else
+		p.SetNull();
 }
 
 #endif

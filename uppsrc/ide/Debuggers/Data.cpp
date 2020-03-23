@@ -178,7 +178,7 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 	if(r.part.GetCount()) {
 		mt.sz = r.GetSize() + Size(4, 4);
 		mt.value = RawPickToValue(pick(r));
-		mt.display = &Single<VisualDisplay>();
+		mt.display = &visual_display;
 		DR_LOG("Pdb::Tip true");
 		return true;
 	}

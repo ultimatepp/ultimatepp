@@ -61,6 +61,8 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("Upp::Time", { 0, THISFN(PrettyTime) });
 		pretty.Add("Upp::Color", { 0, THISFN(PrettyColor) });
 		pretty.Add("Upp::RGBA", { 0, THISFN(PrettyRGBA) });
+		pretty.Add("Upp::ImageBuffer", { 0, THISFN(PrettyImageBuffer) });
+		pretty.Add("Upp::Image", { 0, THISFN(PrettyImg) });
 		pretty.Add("Upp::Font", { 0, THISFN(PrettyFont) });
 		pretty.Add("Upp::ValueArray", { 0, THISFN(PrettyValueArray) });
 		pretty.Add("Upp::ValueMap", { 0, THISFN(PrettyValueMap) });
