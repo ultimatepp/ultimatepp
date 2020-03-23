@@ -18,6 +18,10 @@ GUI_APP_MAIN
 	Color color = LtRed();
 	RGBA rgba = LtRed();
 	Font fnt = Arial();
+	Image img = CtrlImg::exclamation();
+	ImageBuffer ib(img);
+	img = CtrlImg::exclamation();
+	Value img_value = img;
 	String string = "Hello world!";
 	WString wstring = "Hello world!";
 	Vector<String> vector { "I", "II", "III", "IV", "V" };
