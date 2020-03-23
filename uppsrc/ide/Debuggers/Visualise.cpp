@@ -387,6 +387,29 @@ void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 			w.DrawRect(r, p.ink);
 		}
 		else
+		if(*p.text == '\2') { // Image support
+			PrettyImage img;
+			memcpy(&img, ~p.text + 1, sizeof(PrettyImage));
+			Rect r = RectC(x, y, sz.cx, sz.cy);
+			Image m = DbgImg::Img();
+			if(img.size.cx < 0 || img.size.cx > 10000 || img.size.cy < 0 || img.size.cy > 10000)
+				m = DbgImg::ErrImg();
+			else {
+				int len = img.size.cx * img.size.cy;
+				if(len < 70 * 70) {
+					ImageBuffer ib(img.size);
+					if(pdb->Copy(img.pixels, ~ib, len * 4)) {
+						m = ib;
+						m = Rescale(m, GetFitSize(m.GetSize(), sz));
+					}
+					else
+						m = DbgImg::ErrImg();
+				}
+			}
+			Size isz = m.GetSize();
+			w.DrawImage(x + (sz.cx - isz.cx) / 2, y + (sz.cy - isz.cy) / 2, m);
+		}
+		else
 			w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
 		x += sz.cx;
 	}

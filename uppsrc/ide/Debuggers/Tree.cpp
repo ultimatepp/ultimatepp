@@ -304,7 +304,7 @@ void Pdb::SetTree(const String& exp)
 	catch(CParser::Error e) {
 		v.Cat(e, SColorDisabled);
 	}
-	tree.SetDisplay(Single<VisualDisplay>());
+	tree.SetDisplay(visual_display);
 
 	tree.SetRoot(Null, RawToValue(nv), RawPickToValue(pick(v)));
 	if(nv.val.type >= 0) {

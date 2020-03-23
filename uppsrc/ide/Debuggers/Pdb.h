@@ -164,9 +164,18 @@ struct Pdb : Debugger, ParentCtrl {
 	};
 
 	struct VisualDisplay : Display {
+		Pdb *pdb;
+
 		virtual Size GetStdSize(const Value& q) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                       Color ink, Color paper, dword style) const;
+
+		VisualDisplay(Pdb *pdb) : pdb(pdb) {}
+	} visual_display;
+
+	struct PrettyImage {
+		Size  size;
+		adr_t pixels;
 	};
 	
 	struct Thread : Context {
@@ -264,8 +273,9 @@ struct Pdb : Debugger, ParentCtrl {
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
 		Visual         text;
 
-		void           Text(const char *s, Color color = SRed) { text.Cat(s, color); }
-		void           SetNull()                               { Text("Null", SCyan); }
+		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); }
+		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); }
+		void           SetNull()                                 { Text("Null", SCyan); }
 	};
 
 	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int64, int, Pdb::Pretty&>>> pretty;
@@ -415,6 +425,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyTime(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyColor(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyRGBA(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyImageBuffer(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
+	void       PrettyImg(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyFont(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyValueArray_(adr_t a, Pdb::Pretty& p);
 	void       PrettyValueArray(Pdb::Val val, const Vector<String>&, int64 from, int count, Pdb::Pretty& p);
