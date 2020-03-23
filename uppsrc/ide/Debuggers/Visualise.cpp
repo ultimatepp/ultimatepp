@@ -22,7 +22,8 @@ String Pdb::Visual::GetString() const
 {
 	String r;
 	for(int i = 0; i < part.GetCount(); i++)
-		r << part[i].text;
+		if((byte)*part[i].text >= 32)
+			r << part[i].text;
 	return r;
 }
 
