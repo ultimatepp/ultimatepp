@@ -65,10 +65,10 @@ Size BarPane::LayOut(bool horz, int maxsize, bool repos)
 	Size asz(0, 0);
 	VeHo(asz) = bmargin;
 	auto q = item.begin();
-	while(q < item.end()) {
+	while(q != item.end()) {
 		Size psz(0, 0);
 		auto f = q;
-		while(q < item.end()) {
+		while(q != item.end()) {
 			if(q->ctrl == NULL && IsNull(q->gapsize)) {
 				q++;
 				break;
@@ -79,23 +79,29 @@ Size BarPane::LayOut(bool horz, int maxsize, bool repos)
 					q++;
 					break;
 				}
-				gapsize = 0;
+				int rsz = 0;
 				auto w = q + 1;
 				while(w < item.end()) {
 					if(!w->ctrl) break;
 					Size sz = w->ctrl->GetMinSize();
-					if(HoVe(psz) + gapsize + HoVe(sz) > maxsize) break;
-					gapsize += HoVe(sz);
+//					if(HoVe(psz) + gapsize + HoVe(sz) > maxsize) break;
+					rsz += HoVe(sz);
 					w++;
 				}
-				gapsize = maxsize - gapsize - HoVe(psz);
+				if(rsz > maxsize)
+					gapsize = 0;
+				else {
+					gapsize = maxsize - rsz - HoVe(psz);
+					if(gapsize < 0)
+						gapsize = maxsize - rsz;
+				}
 			}
 			Size sz = q->ctrl ? q->ctrl->GetMinSize()
 			                  : Size(horz ? gapsize : 0, horz ? 0 : gapsize);
 			if(HoVe(sz) == INT_MAX)
 				HoVe(sz) = maxsize - HoVe(psz);
 			if(HoVe(psz) + HoVe(sz) > maxsize && HoVe(psz)) {
-				while(q < item.end() && q->ctrl == NULL && !IsNull(q->gapsize))
+				while(q < item.end() && q->ctrl == NULL && !IsNull(q->gapsize) && q->gapsize != INT_MAX)
 					q++;
 				break;
 			}

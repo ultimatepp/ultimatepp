@@ -855,6 +855,10 @@ void Ide::MainTool(Bar& bar)
 		bar.Separator();
 	}
 	HelpMenu(bar);
+#ifdef PLATFORM_COCOA
+	bar.GapRight();
+	bar.Add(display, HorzLayoutZoom(170));
+#endif
 }
 
 void Ide::ConsoleMenu(Bar& menu)
