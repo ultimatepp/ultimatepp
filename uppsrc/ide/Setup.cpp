@@ -52,7 +52,8 @@ void LoadFonts(DropList *face, Index<String>& fni, bool fixed)
 	for(int i = 0; i < Font::GetFaceCount(); i++)
 		if(!!(Font::GetFaceInfo(i) & Font::FIXEDPITCH) == fixed) {
 			String n = Font::GetFaceName(i);
-			if(fni.Find(n) < 0) {
+			if(fni.Find(n)
+			 < 0) {
 				fni.Add(n);
 				face->Add(i, n);
 			}
