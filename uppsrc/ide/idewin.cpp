@@ -286,13 +286,6 @@ void Ide::SetupBars()
 	
 	int r = HorzLayoutZoom(170);
 #ifdef PLATFORM_COCOA
-/*	int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
-	bararea.Add(toolbar.HSizePos(0, r).VCenterPos(tcy));
-	bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
-	bararea.Height(tcy);
-	AddFrame(bararea);
-	toolbar.NoTransparent();
-*/
 	AddFrame(toolbar);
 	display.RightPos(4, r).VSizePos(2, 3);
 #else

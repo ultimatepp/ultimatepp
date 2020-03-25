@@ -219,10 +219,8 @@ void Pdb::MemoryGoto(const String& exp)
 	}
 }
 
-void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
+void Pdb::CopyMenu(ArrayCtrl& array, Bar& bar)
 {
-	if(bar.IsScanKeys())
-		return;
 	auto CopyLine = [&](int i, ArrayCtrl& array) {
 		return String() << array.Get(i, 0) << '=' << array.Get(i, 1).To<Visual>().GetString();
 	};
@@ -231,7 +229,7 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 		ClearClipboard();
 		AppendClipboardText(CopyLine(ap->GetCursor(), *ap));
 	});
-	bar.Add("Copy all", [=] {
+	bar.Add(array.GetCount(), "Copy all", [=] {
 		ClearClipboard();
 		String s;
 		for(int i = 0; i < ap->GetCount(); i++)
@@ -239,6 +237,16 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 		AppendClipboardText(s);
 	});
 	bar.Separator();
+	bar.Add("Show type", [=] { show_type = !show_type; Data(); }).Check(show_type);
+	bar.Add("No pretty-printing", [=] { raw = !raw; Data(); }).Check(raw);
+}
+
+void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
+{
+	if(bar.IsScanKeys())
+		return;
+	if(IsNull(exp))
+		return;
 	try {
 		CParser p(exp);
 		Val v = Exp(p);
@@ -261,32 +269,35 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 	}
 }
 
-void Pdb::DataMenu(ArrayCtrl& array, Bar& bar, const String& exp)
+void Pdb::WatchMenu(Bar& bar, const String& exp)
 {
+	bar.Add(exp.GetCount(), "Watch", [=] { AddWatch(exp); }).Key(IK_DBL_CLICK);
+}
+
+void Pdb::DataMenu(ArrayCtrl& array, Bar& bar)
+{
+	String exp = array.GetKey();
+	WatchMenu(bar, exp);
 	MemMenu(array, bar, exp);
 	bar.Separator();
-	bar.Add("Show type", [=] { show_type = !show_type; Data(); }).Check(show_type);
-	bar.Add("No pretty-printing", [=] { raw = !raw; Data(); }).Check(raw);
+	CopyMenu(autos, bar);
 }
 
-void Pdb::AutosMenu(Bar& bar)
+void Pdb::AddWatch(const String& s)
 {
-	DataMenu(autos, bar, autos.GetKey());
-}
-
-void Pdb::LocalsMenu(Bar& bar)
-{
-	DataMenu(locals, bar, locals.GetKey());
+	if(s.GetCount()) {
+		SetTab(3);
+		if(!watches.FindSetCursor(s))
+			watches.Add(s);
+		Data();
+	}
 }
 
 void Pdb::AddWatch()
 {
 	String s;
-	if(EditPDBExpression("Add watch", s, this)) {
-		SetTab(3);
-		watches.Add(s);
-		Data();
-	}
+	if(EditPDBExpression("Add watch", s, this))
+		AddWatch(s);
 }
 
 void Pdb::EditWatch()
@@ -299,23 +310,25 @@ void Pdb::EditWatch()
 	}
 }
 
-void Pdb::RemoveWatch()
-{
-	watches.DoRemove();
-	Data();
-}
-
 void Pdb::WatchesMenu(Bar& bar)
 {
 	String exp = watches.GetKey();
 	if(!IsNull(exp))
 		exp = "(" + exp + ")";
-	DataMenu(watches, bar, exp);
+	MemMenu(watches, bar, exp);
 	bar.Separator();
-	bar.Add(AK_ADDWATCH, THISBACK(AddWatch));
+	CopyMenu(autos, bar);
+	bar.Separator();
+	bar.Add(AK_ADDWATCH, [=] { AddWatch(); });
 	bool b = watches.IsCursor();
 	bar.Add(b, "Edit watch..", THISBACK(EditWatch));
-	bar.Add(b, "Remove watch..", THISBACK(RemoveWatch));
+	bar.Add(b, "Remove watch..", [=] {
+		watches.DoRemove();
+		Data();
+	});
+	bar.Add(b, "Remove all watches..", [=] {
+		if(PromptYesNo("Remove all watches?")) { watches.Clear(); Data(); }
+	});
 	bar.Separator();
 	watches.StdBar(bar);
 }

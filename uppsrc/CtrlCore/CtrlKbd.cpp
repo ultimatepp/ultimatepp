@@ -392,6 +392,7 @@ Tuple<dword, const char *> KeyNames__[ ] = {
 #ifdef PLATFORM_COCOA
 	{ K_OPTION_KEY, tt_("key\vOption") },
 #endif
+	{ IK_DBL_CLICK, tt_("key\v[double-click]") },
 	{ 0, NULL }
 };
 

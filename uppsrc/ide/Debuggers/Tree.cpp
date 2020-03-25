@@ -8,7 +8,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 {
 	try {
 		Pretty pp;
-		if(!PrettyVal(val, 0, 0, pp))
+		if(val.ref || !PrettyVal(val, 0, 0, pp))
 			return;
 		if(pp.kind == SINGLE_VALUE) {
 			Pretty p;
@@ -43,6 +43,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 					Visual result;
 					nv.name << '[' << i + from << ']';
 					nv.val = val;
+					nv.exp = true;
 					result.Cat(nv.name + ' ', SGray);
 					try {
 						for(int j = 0; j < p.data_type.GetCount(); j++) {
@@ -82,17 +83,18 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 	catch(CParser::Error e) {}
 }
 
-bool Pdb::TreeNode(int parent, const String& name, Pdb::Val val, int64 from)
+bool Pdb::TreeNode(int parent, const String& name, Pdb::Val val, int64 from, Color ink, bool exp)
 {
 	PrettyTreeNode(parent, val);
 	NamedVal nv;
 	nv.name = name;
 	nv.val = val;
 	nv.from = from;
+	nv.exp = exp;
 	Visual v;
 	bool r = true;
 	try {
-		v.Cat(name);
+		v.Cat(name, ink);
 		if(!from) {
 			v.Cat("=", SGray);
 			Visualise(v, val, 0);
@@ -105,6 +107,11 @@ bool Pdb::TreeNode(int parent, const String& name, Pdb::Val val, int64 from)
 	}
 	tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(v)), val.type >= 0 || val.ref > 0);
 	return r;
+}
+
+bool Pdb::TreeNodeExp(int parent, const String& name, Val val, int64 from, Color ink)
+{
+	return TreeNode(parent, name, val, from, ink, true);
 }
 
 void Pdb::TreeExpand(int node)
@@ -130,7 +137,7 @@ void Pdb::TreeExpand(int node)
 				int sz = SizeOfType(val.type);
 				val.address += sz * nv.from;
 				for(int i = 0; i < (nv.from ? 10000 : 40); i++) {
-					if(!TreeNode(node, String() << "[" << i + nv.from << "]" , val)) {
+					if(!TreeNodeExp(node, String() << "[" << i + nv.from << "]" , val, 0, SLtMagenta())) {
 						SaveTree();
 						return;
 					}
@@ -189,11 +196,11 @@ void Pdb::TreeExpand(int node)
 		for(int i = 0; i < t.member.GetCount(); i++) {
 			Val r = t.member[i];
 			r.address += val.address;
-			TreeNode(node, t.member.GetKey(i), r);
+			TreeNodeExp(node, t.member.GetKey(i), r);
 		}
 		for(int i = 0; i < t.static_member.GetCount(); i++) {
 			Val r = t.static_member[i];
-			TreeNode(node, t.static_member.GetKey(i), r);
+			TreeNodeExp(node, t.static_member.GetKey(i), r);
 		}
 		SaveTree();
 	}
@@ -360,16 +367,36 @@ void Pdb::GetTreeText(String& r, int id, int depth) {
 
 void Pdb::TreeMenu(Bar& bar)
 {
+	bar.Add(tree.IsCursor(), "Watch", [=] { TreeWatch(); });
 	bar.Add(tree.IsCursor(), "Copy", [=] {
 		ClearClipboard();
 		AppendClipboardText(GetTreeText(tree.GetCursor()));
 	});
-	bar.Add(tree.IsCursor(), "Copy all", [=] {
+	bar.Add(tree.GetLineCount(), "Copy all", [=] {
 		ClearClipboard();
 		String r;
 		GetTreeText(r, 0, 0);
 		AppendClipboardText(r);
 	});
+}
+
+void Pdb::TreeWatch()
+{
+	int id = tree.GetCursor();
+	String exp;
+	while(id >= 0) {
+		Value v = tree.Get(id);
+		if(!v.Is<NamedVal>())
+			break;
+		const NamedVal& nv = v.To<NamedVal>();
+		if(nv.exp) {
+			if(IsAlpha(*exp))
+				exp = '.' + exp;
+			exp = nv.name + exp;
+		}
+		id = tree.GetParent(id);
+	}
+	AddWatch(tree_exp + "." + exp);
 }
 
 #endif
