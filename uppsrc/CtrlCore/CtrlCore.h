@@ -102,6 +102,8 @@ enum {
 #ifdef PLATFORM_COCOA
 	K_OPTION       = 0x4000000,
 #endif
+
+	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
 };
 
 #include "MKeys.h"

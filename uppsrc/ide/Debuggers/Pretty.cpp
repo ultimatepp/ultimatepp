@@ -111,11 +111,9 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 {
 	auto ResultCount = [&](int64 count) {
-		if(!(flags & MEMBER)) {
-			result.Cat("[", SLtBlue);
-			result.Cat(count == INT64_MAX ? ">10000" : AsString(count), SRed);
-			result.Cat("] ", SLtBlue);
-		}
+		result.Cat("[", SLtBlue);
+		result.Cat(count == INT64_MAX ? ">10000" : AsString(count), SRed);
+		result.Cat("] ", SLtBlue);
 	};
 	
 	Pretty p;
@@ -134,7 +132,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 					else
 						ws.Cat(PeekWord(a));
 				}
-				ResultCount(p.data_count);
+				if(!(flags & MEMBER))
+					ResultCount(p.data_count);
 				result.Cat(FormatString(sz == 1 ? s : ws.ToString()), SRed);
 				if(p.data_count > p.data_ptr.GetCount())
 					result.Cat("..", SGray);
@@ -167,6 +166,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 				}
 				int ii = 0;
 				int n = p.data_ptr.GetCount() / p.data_type.GetCount();
+				Color bc = decode(bc_lvl++ & 3, 0, SGray(), 1, SCyan(), 2, SBrown(), SGreen());
+				result.Cat("{", bc);
 				for(int i = 0; i < n; i++) {
 					if(i)
 						result.Cat(", ", SGray);
@@ -178,6 +179,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 							Visualise(result, item[j], flags | MEMBER);
 					}
 				}
+				result.Cat("}", bc);
+				bc_lvl--;
 			}
 	
 			if(p.data_count > count)

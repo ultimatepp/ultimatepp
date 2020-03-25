@@ -116,6 +116,7 @@ struct Pdb : Debugger, ParentCtrl {
 		Val    val;
 		Val    key;
 		int64  from = 0;
+		bool   exp = false;
 	};
 
 	struct Type : Moveable<Type> {
@@ -284,6 +285,8 @@ struct Pdb : Debugger, ParentCtrl {
 	
 	bool       show_type = false;
 	bool       raw = false;
+	
+	int        bc_lvl = 0; // For coloring { } in pretty container display
 
 	void       Error(const char *s = NULL);
 
@@ -484,19 +487,21 @@ struct Pdb : Debugger, ParentCtrl {
 	void      ClearWatches();
 	void      DropWatch(PasteClip& clip);
 	void      AddWatch();
+	void      AddWatch(const String& s);
 	void      EditWatch();
-	void      RemoveWatch();
 
 	void      SetTab(int i);
 
 	void      SetTree(const String& exp);
 	void      SetTreeA(ArrayCtrl *data);
 	void      PrettyTreeNode(int parent, Pdb::Val val, int64 from = 0);
-	bool      TreeNode(int parent, const String& name, Val val, int64 from = 0);
+	bool      TreeNode(int parent, const String& name, Val val, int64 from = 0, Color ink = SColorText(), bool exp = false);
+	bool      TreeNodeExp(int parent, const String& name, Val val, int64 from = 0, Color ink = SColorText());
 	void      TreeExpand(int node);
 	String    GetTreeText(int id);
 	void      GetTreeText(String& r, int id, int depth);
 	void      TreeMenu(Bar& bar);
+	void      TreeWatch();
 	void      StoreTree(StringBuffer& r, int parent);
 	void      SaveTree();
 	int       FindChild(int parent, String id);
@@ -508,10 +513,10 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void      MemoryGoto(const String& exp);
 	
+	void      CopyMenu(ArrayCtrl& array, Bar& bar);
 	void      MemMenu(ArrayCtrl& array, Bar& bar, const String& exp);
-	void      DataMenu(ArrayCtrl& array, Bar& bar, const String& exp);
-	void      AutosMenu(Bar& bar);
-	void      LocalsMenu(Bar& bar);
+	void      DataMenu(ArrayCtrl& array, Bar& bar);
+	void      WatchMenu(Bar& bar, const String& exp);
 	void      WatchesMenu(Bar& bar);
 	
 	void      SyncTreeDisas();
