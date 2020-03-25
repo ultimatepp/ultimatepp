@@ -77,11 +77,13 @@ void ChHostSkin()
 	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
 
 	SwapOKCancel_Write(true);
+
+	SColorPaper_Write(CocoColor(COCO_PAPER));
+
 	SColorFace_Write(CocoColor(COCO_WINDOW, White()));
 	SColorHighlight_Write(CocoColor(COCO_SELECTEDPAPER));
 	SColorHighlightText_Write(CocoColor(COCO_SELECTEDTEXT));
 	SColorText_Write(CocoColor(COCO_TEXT));
-	SColorPaper_Write(CocoColor(COCO_PAPER));
 	SColorDisabled_Write(CocoColor(COCO_DISABLED));
 
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
