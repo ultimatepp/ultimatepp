@@ -31,15 +31,15 @@ match. You will have to find the corresponding names for your
 distribution.&]
 [s2; [*3 Build requires per distribution]&]
 [s2; [* Debian/apt`-get based distributions]&]
-[s2; Build requires:[*  ]g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
+[s2; Build requires:[*  ]g`+`+  make  libgtk`-3`-dev  libnotify`-dev 
  libbz2`-dev  sox&]
 [s2; How to install them:&]
 [s2;l160;i150;O0;~~~160; if sudo is available and enabled on your 
 distribution, copy/paste this in a terminal:&]
-[ {{10000<617;@(229) [s4; sudo apt`-get install  g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
+[ {{10000<617;@(229) [s4; sudo apt`-get install  g`+`+  make  libgtk`-3`-dev  libnotify`-dev 
  libbz2`-dev  sox]}}&]
 [s2;l160;i150;O0; if sudo is not available:&]
-[ {{10000<617;@(229) [s4;~~~32~0; su `-c `'apt`-get install  g`+`+  make  libgtk2.0`-dev 
+[ {{10000<617;@(229) [s4;~~~32~0; su `-c `'apt`-get install  g`+`+  make  libgtk`-3`-dev 
  libnotify`-dev  libbz2`-dev  sox`']}}&]
 [s2;l160;i150;O0; The [* `'buildrequires.debian`'] file in U`+`+ tarball 
 contains apt`-get commands to do the same thing. You can use 
@@ -47,17 +47,17 @@ this file by running `'sh buildrequires.debian`' as root (e.g.
 `'sudo sh buildrequires.debian`' if sudo is available or `'su 
 `-c `"sh buildrequires.debian`"`' if not).&]
 [s2; [* Fedora based distributions]&]
-[s2; Build requires:  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
+[s2; Build requires:  gtk3`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel&]
 [s2; How to install them:&]
 [s2;l160;i150;O0; if sudo is available and enabled on your distribution, 
 copy/paste this in a terminal:&]
-[ {{10000<617;@(229) [s4; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
+[ {{10000<617;@(229) [s4; sudo yum install  gtk3`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel]}}&]
 [s2;l160;i150;O0; if sudo is not available:&]
-[ {{10000<617;@(229) [s4; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
+[ {{10000<617;@(229) [s4; su `-c `'yum install  gtk3`-devel  pango`-devel  atk`-devel 
  cairo`-devel  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel 
  freetype`-devel  expat`-devel`']}}&]
 [s2;l160;i150;O0; The [* `'buildrequires.fedora`'] file in U`+`+ tarball 
@@ -66,13 +66,13 @@ file by running `'sh buildrequires.fedora`' as root (e.g. `'sudo
 sh buildrequires.fedora`' if sudo is available or `'su `-c `"sh 
 buildrequires.fedora`"`' if not).&]
 [s2; [* Other rpm based distributions]&]
-[s2; Redhat 7 build requires:  gtk2`-devel pango`-devel atk`-devel 
+[s2; Redhat 7 build requires:  gtk3`-devel pango`-devel atk`-devel 
 cairo`-devel libnotify`-devel freetype`-devel expat`-devel bzip2`-devel&]
-[s2; OpenSuse build requires: gtk2`-devel pango`-devel atk`-devel 
+[s2; OpenSuse build requires: gtk3`-devel pango`-devel atk`-devel 
 cairo`-devel libnotify`-devel xorg`-x11`-devel freetype2`-devel 
 libexpat`-devel libbz2`-devel&]
 [s2; [* BSD based distributions]&]
-[s2; Build requires: bash gmake gtk2 freetype2 libnotify clang`-devel 
+[s2; Build requires: bash gmake gtk3 freetype2 libnotify clang`-devel 
 (e.g. clang`+`+)&]
 [s2; How to install them:&]
 [s2;l160;i150;O0; if sudo is available and enabled on your distribution, 
