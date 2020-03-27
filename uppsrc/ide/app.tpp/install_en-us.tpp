@@ -20,34 +20,9 @@ topic "Ultimate++ Windows Installation";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Ultimate`+`+ Windows Installation&]
-[s3; Table of contents&]
-[s0; &]
-[s0; [^`#1^ 1. Installation]&]
-[s0; [^`#2^ 2. Troubleshooting]&]
-[s0; &]
-[s3;:1: 1. Installation&]
-[s5; Windows release a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
+[s5;~~~320; Windows release is a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
 archive. Unpack to directory of your preference, then just run 
-theide.exe (or theide32.exe if you have 32`-bit windows). U`+`+ 
-does not write anything to registry or outside its directory.&]
-[s5; U`+`+ comes in two variants:&]
-[s5;l160;i150;O0; [* upp`-mingw] contains mingw64 compiler system for 
-out of the box operation&]
-[s5;l160;i150;O0; [* upp`-win] comes without compiler/SDK,&]
-[s5; Both variants are able (on first install, when installation 
-is moved or on demand `- menu Setup/Instant setup) to detect 
-and use Miscrosoft Windows SDK and C`+`+ compiler, either 2017 
-or 2015 version. The most convenient way is to install [^https`:`/`/visualstudio`.microsoft`.com`/cs`/downloads`/^ B
-uild Tools for Visual Studio 2019]. (in [* Tools for Visual Studio 
-2019] subsection, in the installer, select [* C`+`+ build tools], 
-default options for C`+`+ build tools are OK).&]
-[s3;:2: 2. Troubleshooting&]
-[s5; The list of common problems related to Windows installation:&]
-[s5;l160;i150;O0; [* Compilation with MinGW causes `"There were errors`" 
-error message.]&]
-[s5;l320; To solve this problem please make sure your upp installation 
-path doesn`'t posses any special characters like diacritical 
-marks (á, ą etc.). To avoid problems, we highly recommended 
-to keep MinGW installation in relatively simple location (ASCII 
-path) like `"C:`\Prototable`\upp`".&]
-[s5;~~~320; ]]
+theide.exe. U`+`+ does not write anything to registry or outside 
+its directory. The archive contains CLANG based Win32 toolchain 
+and also SDL 2, OpenSSL, MySql and PostgreSQL client libraries. 
+]]
