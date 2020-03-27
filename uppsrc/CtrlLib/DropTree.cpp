@@ -214,7 +214,6 @@ DropTree& DropTree::ValueDisplay(const Display& d)
 
 DropTree::DropTree()
 {
-	displayall = false;
 	valuedisplay = NULL;
 	dropfocus = false;
 	notnull = false;
