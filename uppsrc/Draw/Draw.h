@@ -117,8 +117,8 @@ public:
 	bool   IsItalic() const         { return v.flags & FONT_ITALIC; }
 	bool   IsUnderline() const      { return v.flags & FONT_UNDERLINE; }
 	bool   IsStrikeout() const      { return v.flags & FONT_STRIKEOUT; }
-	bool   IsNonAntiAliased() const { return v.flags & FONT_NON_ANTI_ALIASED; }
-	bool   IsTrueTypeOnly() const   { return v.flags & FONT_TRUE_TYPE_ONLY; }
+	bool   IsNonAntiAliased() const { return v.flags & FONT_NON_ANTI_ALIASED; } // deprecated
+	bool   IsTrueTypeOnly() const   { return v.flags & FONT_TRUE_TYPE_ONLY; } // deprecated
 	String GetFaceName() const;
 	String GetFaceNameStd() const;
 	dword  GetFaceInfo() const;
@@ -142,11 +142,11 @@ public:
 	Font& NoStrikeout()             { v.flags &= ~FONT_STRIKEOUT; return *this; }
 	Font& Strikeout(bool b)         { return b ? Strikeout() : NoStrikeout(); }
 	Font& NonAntiAliased()          { v.flags |= FONT_NON_ANTI_ALIASED; return *this; }
-	Font& NoNonAntiAliased()        { v.flags &= ~FONT_NON_ANTI_ALIASED; return *this; }
-	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); }
-	Font& TrueTypeOnly()            { v.flags |= FONT_TRUE_TYPE_ONLY; return *this; }
-	Font& NoTrueTypeOnly()          { v.flags &= ~FONT_TRUE_TYPE_ONLY; return *this; }
-	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); }
+	Font& NoNonAntiAliased()        { v.flags &= ~FONT_NON_ANTI_ALIASED; return *this; } // deprecated
+	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); } // deprecated
+	Font& TrueTypeOnly()            { v.flags |= FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
+	Font& NoTrueTypeOnly()          { v.flags &= ~FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
+	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); } // deprecated
 
 	Font& FaceName(const String& name);
 
@@ -247,7 +247,7 @@ String AsString(const Font& f);
 
 inline void SetStdFont(Font font)                   { Font::SetStdFont(font); }
 inline Font GetStdFont()                            { return Font::GetStdFont(); }
-inline Size GetStdFontSize()                        { return Font::GetStdFontSize(); }
+inline Size GetStdFontSize()                        { return Font::GetStdFontSize(); } // deprecated
 inline int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 
 Font StdFont();
@@ -258,13 +258,13 @@ inline Font Serif(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
 inline Font SansSerif(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
 inline Font Monospace(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
 
-inline Font Roman(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
-inline Font Arial(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
-inline Font Courier(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
+inline Font Roman(int n = -32000) { return Font(Font::SCREEN_SERIF, n); } // deprecated
+inline Font Arial(int n = -32000) { return Font(Font::SCREEN_SANS, n); } // deprecated
+inline Font Courier(int n = -32000) { return Font(Font::SCREEN_FIXED, n); } // deprecated
 
-inline Font ScreenSerif(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
-inline Font ScreenSans(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
-inline Font ScreenFixed(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
+inline Font ScreenSerif(int n = -32000) { return Font(Font::SCREEN_SERIF, n); } // deprecated
+inline Font ScreenSans(int n = -32000) { return Font(Font::SCREEN_SANS, n); } // deprecated
+inline Font ScreenFixed(int n = -32000) { return Font(Font::SCREEN_FIXED, n); } // deprecated
 
 #ifdef PLATFORM_WIN32 // backward comaptibility
 inline Font Tahoma(int n = -32000) { return Font(Font::TAHOMA, n); }
@@ -929,6 +929,16 @@ void DrawHighlightImage(Draw& w, int x, int y, const Image& img, bool highlight 
 
 Color GradientColor(Color fc, Color tc, int i, int n);
 
+void DrawTextEllipsis(Draw& w, int x, int y, int cx, const char *text, const char *ellipsis,
+				      Font font = StdFont(), Color ink = SColorText(), int n = -1);
+void DrawTextEllipsis(Draw& w, int x, int y, int cx, const wchar *text, const char *ellipsis,
+				      Font font = StdFont(), Color ink = SColorText(), int n = -1);
+
+Size GetTLTextSize(const wchar *text, Font font = StdFont());
+int  GetTLTextHeight(const wchar *s, Font font = StdFont());
+void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text, Font font = StdFont(),
+                Color ink = SColorText(), int accesskey = 0);
+
 enum {
 	BUTTON_NORMAL, BUTTON_OK, BUTTON_HIGHLIGHT, BUTTON_PUSH, BUTTON_DISABLED, BUTTON_CHECKED,
 	BUTTON_VERTICAL = 0x100,
@@ -938,16 +948,6 @@ enum {
 };
 
 void DrawXPButton(Draw& w, Rect r, int type);
-
-void DrawTextEllipsis(Draw& w, int x, int y, int cx, const char *text, const char *ellipsis,
-				      Font font = StdFont(), Color ink = SColorText(), int n = -1);
-void DrawTextEllipsis(Draw& w, int x, int y, int cx, const wchar *text, const char *ellipsis,
-				      Font font = StdFont(), Color ink = SColorText(), int n = -1);
-Size GetTLTextSize(const wchar *text, Font font = StdFont());
-int  GetTLTextHeight(const wchar *s, Font font = StdFont());
-void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text, Font font = StdFont(),
-                Color ink = SColorText(), int accesskey = 0);
-
 
 struct PdfSignatureInfo;
 typedef String (*DrawingToPdfFnType)(const Array<Drawing>& report, Size pagesize, int margin,
