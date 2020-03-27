@@ -166,6 +166,7 @@ normally returns), it is replaced with standard font height.&]
 [s5;:Font`:`:NoNonAntiAliased`(`): [_^Font^ Font][@(0.0.255) `&]_[* NoNonAntiAliased]()&]
 [s5;:Font`:`:NonAntiAliased`(bool`): [_^Font^ Font][@(0.0.255) `&]_[* NonAntiAliased]([@(0.0.255) b
 ool]_[@3 b])&]
+[s6; `[deprecated`]&]
 [s2;%% Sets/unsets non`-anti`-aliased flag. This indicates that anti`-aliasing 
 should not be used when painting the font.&]
 [s3; &]
@@ -391,22 +392,22 @@ curves.&]
 not active.&]
 [s3; &]
 [s4; &]
-[s5;:Font`:`:Font`(int`,int`): Font([@(0.0.255) int]_[@3 face], [@(0.0.255) int]_[@3 height])
-&]
+[s5;:Font`:`:Font`(int`,int`): [* Font]([@(0.0.255) int]_[*@3 face], [@(0.0.255) int]_[*@3 heig
+ht])&]
 [s2;%% Initializes font to [%-*@3 face] index and [%-*@3 height].&]
 [s3; &]
 [s4; &]
-[s5;:Font`:`:Font`(const Nuller`&`): Font([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
+[s5;:Font`:`:Font`(const Nuller`&`): [* Font]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
 ])&]
 [s2;%% Sets the font Null.&]
 [s3; &]
 [s4; &]
-[s5;:Font`:`:operator Value`(`)const: operator_Value()[@(64) _][@(0.0.255) const]&]
+[s5;:Font`:`:operator Value`(`)const: [* operator_Value]()[@(64) _][@(0.0.255) const]&]
 [s2;%% Converts the Font to the Value (font is rich Value).&]
 [s3; &]
 [s4; &]
-[s5;:Font`:`:Font`(const Value`&`): Font([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_
-[@3 q])&]
+[s5;:Font`:`:Font`(const Value`&`): [* Font]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[@3 q])&]
 [s2;%% Converts the Value to the Font.&]
 [s3; &]
 [s0; ]]
