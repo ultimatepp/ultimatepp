@@ -394,13 +394,29 @@ any background it needs. Returns `*this for method chaining.&]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:Multi`(bool`): [_^Upp`:`:ColumnList^ ColumnList][@(0.0.255) `&]_
 [* Multi]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ColumnList`:`:MultiSelect`(bool`): [_^Upp`:`:ColumnList^ ColumnList][@(0.0.255) `&
+]_[* MultiSelect]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Enables or disables multiselection of items. Returns `*this 
 for method chaining.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:IsMulti`(`)const: [@(0.0.255) bool]_[* IsMulti]()_[@(0.0.255) con
 st]&]
+[s5;:Upp`:`:ColumnList`:`:IsMultiSelect`(`)const: [@(0.0.255) bool]_[* IsMultiSelect]()_[@(0.0.255) c
+onst]&]
 [s2;%% Returns the status of multiselection mode.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:ColumnList`:`:PopUpEx`(bool`): [_^Upp`:`:ColumnList^ ColumnList][@(0.0.255) `&
+]_[* PopUpEx]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, enlarged small popup is displayed when mouse hovers 
+over items that do not fit designated area (the area is smalled 
+than Display`::GetMinSize). Default is active.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ColumnList`:`:NoPopUpEx`(`): [_^Upp`:`:ColumnList^ ColumnList][@(0.0.255) `&]_
+[* NoPopUpEx]()&]
+[s2;%% Same as PopUpEx(false).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:AutoHideSb`(bool`): [_^Upp`:`:ColumnList^ ColumnList][@(0.0.255) `&
