@@ -33,8 +33,8 @@ topic "Roadmap";
 [s5;l160;i150;O0; gtk3 replaces gtk2 as default linux backend&]
 [s5;l160;i150;O0; Visual look`&feel refactored in Linux and MacOS, 
 improved dark theme support&]
-[s5;l160;i150;O0; In Win32, PDB debugger now has support to display 
-various U`+`+ and standard library containers nicely&]
+[s5;l160;i150;O0; In Win32, PDB debugger now displays various U`+`+ 
+and standard library containers and types nicely&]
 [s5;l160;i150;O0; Win32 release now ships with CLANG with llvm`-mingw 
 toolchain&]
 [s5; &]
