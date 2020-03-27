@@ -445,13 +445,11 @@ public:
 	DropTree& AutoResize(bool b = true)             { tree.AutoResize(b); return *this; }
 
 	DropTree& ValueDisplay(const Display& d);
-	DropTree& DisplayAll(bool b = true)             { displayall = b; return *this; }
 	DropTree& DropFocus(bool b = true)              { dropfocus = b; return *this; }
 	DropTree& NoDropFocus()                         { return DropFocus(false); }
-	DropTree& AlwaysDrop(bool e);
 	DropTree& SetDropLines(int d)                   { tree.SetDropLines(d); return *this; }
 	DropTree& DropWidth(int w)                      { dropwidth = w; return *this; }
-	DropTree& DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
+	DropTree& DropWidthZ(int w)                     { return DropWidth(Zx(w)); }
 
 	DropTree();
 };
