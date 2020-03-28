@@ -401,11 +401,11 @@ do
   cp -a "$i" "${i%.in}"
 done
 
-#for i in *.bm.in
-#do
+for i in *.bm.in
+do
 ##  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
-#  cp -a "$i" "${i%.in}"
-#done
+  cp -a "$i" "${i%.in}"
+done
 
 if [ "$platform" = "Darwin" ]
 then
