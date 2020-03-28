@@ -10,7 +10,6 @@
 ### Variables
 
 project_name="upp"
-#package_name="$project_name-devel"
 package_name="$project_name"
 
 show_debug_info="true"
@@ -322,8 +321,11 @@ log_debug_info "Cleaning source code"
   rm -r "$DESTDIR$prefix/upp/uppsrc/umk.out"
 #<end> TODO
 
+  if [ "$(ls *.bm 2>/dev/null)" != "" ]
+  then
 log_debug_info "Copying" *.bm
-  cp -p *.bm  "$DESTDIR$prefix/.upp/theide"
+    cp -p *.bm  "$DESTDIR$prefix/.upp/theide"
+  fi
 
   if [ "$(ls *.udc 2>/dev/null)" != "" ]
   then
@@ -386,18 +388,6 @@ log_debug_info "Copying theide and umk"
   install ./theide "$DESTDIR$bindir/theide"
   install ./umk    "$DESTDIR$bindir/umk"
 
-# log_debug_info "Adding symbolic link ( $project_name -> $datadir/$package_name )"
-#   if [ ! -e "$DESTDIR$datadir/$project_name" ]
-#   then
-#     ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
-#   elif [ -h "$DESTDIR$datadir/$project_name" ]
-#   then
-#     rm -f "$DESTDIR$datadir/$project_name"
-#     ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
-#   else
-#     log_debug_error "Already exist: $DESTDIR$datadir/$project_name"
-#   fi
-
 log_debug_info "Copying man pages"
   cp -p "uppsrc/ide/theide.1" "$DESTDIR$mandir/man1/"
   cp -p "uppsrc/umk/umk.1"    "$DESTDIR$mandir/man1/"
@@ -423,15 +413,24 @@ log_debug_info "Cleaning source code"
   rm -f  "$DESTDIR$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
+  if [ "$(ls *.bm 2>/dev/null)" != "" ]
+  then
 log_debug_info "Copying" *.bm
-  cp -p *.bm  "$DESTDIR$datadir/$package_name/"
+    cp -p *.bm  "$DESTDIR$datadir/$package_name/"
+  fi
 
   if [ "$(ls *.udc 2>/dev/null)" != "" ]
   then
 log_debug_info "Copying" *.udc
     cp -p *.udc "$DESTDIR$datadir/$package_name/speller/"
   fi
-  
+
+#   if [ "$(ls *.scd 2>/dev/null)" != "" ]
+#   then
+# log_debug_info "Copying" *.scd
+#     cp -p *.scd "$DESTDIR$datadir/$package_name/speller/"
+#   fi
+
   if [ "$installdoc" = "true" ]
   then
 log_debug_info "Copying readme.md and license"

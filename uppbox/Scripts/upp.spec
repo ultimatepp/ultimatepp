@@ -121,76 +121,6 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make DESTDIR="%{buildroot}" prefix="%{_prefix}" bindir="%{_bindir}" datadir="%{_datadir}" mandir="%{_mandir}" docdir="%{_datadir}/doc" install
 
-# We create our own GCC.bm
-# cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
-
-INCLUDEDIR=$( pkg-config --cflags gtk+-3.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LIBDIR=$( pkg-config --libs-only-L gtk+-3.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-
-%if 0%{?fedora_version} || 0%{?fedora}
-     LINK="$(pkg-config --libs libpng freetype2)"
-%else
-     LINK=""
-%endif
-
-cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
-BUILDER			= "GCC";
-COMPILER		= "g++";
-COMMON_CPP_OPTIONS	= "-std=c++11";
-DEBUG_INFO		= "2";
-DEBUG_BLITZ		= "1";
-DEBUG_LINKMODE		= "1";
-DEBUG_LINK		= "$LINK";
-DEBUG_OPTIONS		= "-O0";
-DEBUG_FLAGS		= "";
-RELEASE_BLITZ		= "0";
-RELEASE_LINKMODE	= "1";
-RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
-RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
-RELEASE_FLAGS		= "";
-RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER		= "gdb";
-PATH			= "";
-INCLUDE			= "$INCLUDEDIR";
-LIB			= "$LIBDIR";
-REMOTE_HOST		= "";
-REMOTE_OS		= "";
-REMOTE_TRANSFER		= "";
-REMOTE_MAP		= "";
-LINKMODE_LOCK		= "0";
-EOF
-
-cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm << EOF
-BUILDER			= "CLANG";
-COMPILER		= "clang++";
-COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
-COMMON_CPP_OPTIONS	= "-std=c++11";
-COMMON_C_OPTIONS	= "";
-COMMON_FLAGS		= "";
-DEBUG_INFO		= "2";
-DEBUG_BLITZ		= "1";
-DEBUG_LINKMODE		= "1";
-DEBUG_OPTIONS		= "-O0";
-DEBUG_FLAGS		= "";
-DEBUG_LINK		= "$LINK";
-RELEASE_BLITZ		= "0";
-RELEASE_LINKMODE	= "1";
-RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
-RELEASE_SIZE_OPTIONS	= "-Os -ffunction-sections -fdata-sections";
-RELEASE_FLAGS		= "";
-RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER		= "gdb";
-PATH			= "";
-INCLUDE			= "$INCLUDEDIR";
-LIB			= "$LIBDIR";
-REMOTE_HOST		= "";
-REMOTE_OS		= "";
-REMOTE_TRANSFER		= "";
-REMOTE_MAP		= "";
-LINKMODE_LOCK		= "0";
-ALLOW_PRECOMPILED_HEADERS	= "0";
-EOF
-
 #-----
 %clean
 rm -fr %{buildroot}
@@ -207,8 +137,6 @@ rm -fr %{buildroot}
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/CLANG.bm
-%{_datadir}/%{name}/GCC.bm
 %dir %{_datadir}/%{name}/speller
 %{_datadir}/%{name}/speller/*
 
@@ -224,7 +152,11 @@ rm -fr %{buildroot}
 %changelog
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
-- Use now gtk3
+
+* Sat Mar 28 2020 Amrein-Marie Christophe <camreinmarie@free.fr> 14196-1
+- Remove gcc.bm and clang.bm file generation as U++ use pkg-config now
+- Use gtk3
+- Fix domake and doinstall
 
 * Thu Oct 31 2019 Amrein-Marie Christophe <camreinmarie@free.fr> 2019.2-1
 - New release (rev 13664)
