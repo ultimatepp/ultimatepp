@@ -137,6 +137,8 @@ rm -fr %{buildroot}
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
 %dir %{_datadir}/%{name}
+%{_datadir}/%{name}/CLANG.bm
+%{_datadir}/%{name}/GCC.bm
 %dir %{_datadir}/%{name}/speller
 %{_datadir}/%{name}/speller/*
 
