@@ -392,58 +392,20 @@ then
   log_debug_info "Extra parameters will supersede default parameters"
 fi
 
-
 log_debug_info "Configuring" uppsrc/*Makefile.in *.bm.in "with pkg-config"
 
-if which pkg-config
-then
+library_list=""
+for i in uppsrc/*Makefile.in
+do
+  # sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" "$i" > "${i%.in}"
+  cp -a "$i" "${i%.in}"
+done
 
-  if [[ "$Flags" = *"NOGTK"* ]]
-  then
-    requires_libraries="x11 libnotify freetype2"
-  else
-    requires_libraries="gtk+-3.0 x11 libnotify freetype2"
-
-  fi
-  
-  library_list=""
-  for i in $requires_libraries
-  do
-    if pkg-config --exists $i
-    then
-      library_list="$library_list $i"
-      log_debug_info "pkg-config: Found library $i"
-    else
-      log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i development package?"
-    fi
-  done
-
-  for i in uppsrc/*Makefile.in
-  do
-    sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" "$i" > "${i%.in}"
-  done
-  
-#  for i in *.bm.in
-#  do
-#    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
-#  done
-
-else
-  log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
-  log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting"
-  
-  for i in uppsrc/*Makefile.in
-  do
-    sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' "$i" > "${i%.in}"
-  done
-  
-#  for i in *.bm.in
-#  do
-#    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g ${CXXSTD_RE}" "$i" > "${i%.in}"
-#  done
-
-fi
-
+#for i in *.bm.in
+#do
+##  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
+#  cp -a "$i" "${i%.in}"
+#done
 
 if [ "$platform" = "Darwin" ]
 then
@@ -466,6 +428,8 @@ then
       -e 's/-lgmodule-2.0//g'    \
       -e 's/-lglib-2.0//g'       \
       -e 's/-lnotify//g'         \
+      -e 's/`pkg-config --libs gtk+-3.0`//g'         \
+      -e 's/`pkg-config --libs libnotify`//g'         \
       uppsrc/*Makefile
 fi
 
