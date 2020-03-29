@@ -211,6 +211,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 		Size isz = img.GetSize();
 		Size sz = r.GetSize();
 		Point p = img.GetHotSpot();
+		bool areaimage = false;
 		if(p.x == CH_SCROLLBAR_IMAGE) {
 			if(op == LOOK_MARGINS)
 				return Rect(0, 0, 0, 0);
@@ -290,37 +291,26 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 					DrawTiles(w, r, img);
 				}
 				else {
-					static VectorMap<int64, int> btc;
+					static VectorMap<int64, bool> single_color_body_cache;
 					int64 key = img.GetSerialId();
-					int q;
-					{
-						LTIMING("Find");
-						q = btc.Find(key);
-					}
+					bool single_color_body;
+					int q = single_color_body_cache.Find(key);
 					if(q < 0) {
 						LTIMING("ClassifyContent");
-						q = ClassifyContent(img, sr);
-						if(btc.GetCount() > 100)
-							btc.Clear();
-						btc.Add(key, q);
+						single_color_body = IsSingleColor(img, sr);
+						if(single_color_body_cache.GetCount() > 1000)
+							single_color_body_cache.Clear();
+						single_color_body_cache.Add(key, q);
 					}
 					else
-						q = btc[q];
-					switch(q) {
-					case IMAGECONTENT_VERTDUP|IMAGECONTENT_HORZDUP:
-						{
-							LTIMING("Ch-singlecolor");
-							RGBA c = img[sr.top][sr.left];
-							if(c.a == 255) {
-								w.DrawRect(r, c);
-								break;
-							}
-						}
-					case 0:
-					default:
-						ChDraw(w, r, img, sr, ink);
-						break;
+						single_color_body = single_color_body_cache[q];
+					RGBA c = img[sr.top][sr.left];
+					if(single_color_body && c.a == 255) {
+						LTIMING("Ch-singlecolor");
+						w.DrawRect(r, c);
 					}
+					else
+						ChDraw(w, r, img, sr, ink);
 				}
 			}
 		}

@@ -439,6 +439,7 @@ Image Colorize(const Image& img, Color color, int alpha)
 
 Image DarkTheme(const Image& img)
 {
+	RTIMING("DarkTheme");
 	if(IsNull(img))
 		return img;
 

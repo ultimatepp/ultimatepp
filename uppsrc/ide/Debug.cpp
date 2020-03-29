@@ -1,5 +1,9 @@
 #include "ide.h"
 
+namespace Upp {
+	bool IsSystemThemeDark();
+};
+
 void Ide::RunArgs() {
 	WithRunLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Run options");
@@ -8,6 +12,16 @@ void Ide::RunArgs() {
 #ifndef PLATFORM_POSIX
 	dlg.consolemode.Hide();
 	dlg.console_label.Hide();
+#endif
+
+#ifndef PLATFORM_WIN32
+	dlg.advanced_label.Hide();
+	dlg.disable_uhd.Hide();
+	dlg.darkmode.Hide();
+#endif
+
+#ifdef PLATFORM_WIN32
+	dlg.darkmode.SetLabel(IsSystemThemeDark() ? "Run in light mode" : "Run in dark mode");
 #endif
 
 	SelectDirButton dir_browse("Run in folder");
@@ -37,6 +51,7 @@ void Ide::RunArgs() {
 	dlg.utf8 <<= console_utf8;
 	dlg.runmode <<= dlg.Breaker(222);
 	dlg.disable_uhd <<= disable_uhd;
+	dlg.darkmode <<= darkmode;
 
 	auto Ins = [&](bool file) {
 		int l, h;
@@ -71,6 +86,7 @@ void Ide::RunArgs() {
 			console_utf8 = ~dlg.utf8;
 			stdout_file = ~dlg.stdout_file;
 			disable_uhd = ~dlg.disable_uhd;
+			darkmode = ~dlg.darkmode;
 			dlg.arg.AddHistory();
 			{
 				StringStream ss;
@@ -92,7 +108,7 @@ void Ide::RunArgs() {
 
 One<Host> Ide::CreateHostRunDir()
 {
-	One<Host> h = CreateHost(false, disable_uhd);
+	One<Host> h = CreateHost(darkmode, disable_uhd);
 	if(IsNull(rundir))
 		h->ChDir(GetFileFolder(target));
 	else
@@ -230,7 +246,7 @@ void Ide::ExecuteApk()
 	if(!select.GetDeviceCount())
 		return;
 	
-	One<Host> host = CreateHost(false, disable_uhd);
+	One<Host> host = CreateHost(darkmode, disable_uhd);
 	Apk apk(target, sdk);
 	String packageName = apk.FindPackageName();
 	String activityName = apk.FindLaunchableActivity();
@@ -398,7 +414,7 @@ void Ide::ConditionalBreak()
 		brk = "1";
 
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
-	                                  *CreateHost(true, disable_uhd), *CreateBuilder(~CreateHostRunDir()));
+	                                  *CreateHost(darkmode, disable_uhd), *CreateBuilder(~CreateHostRunDir()));
 #ifdef PLATFORM_WIN32
 	if(cfg.Find("MSC") >= 0) {
 		if(EditPDBExpression("Conditional breakpoint", brk, NULL))
