@@ -140,41 +140,20 @@ bool EqLine(const Image& m, int l1, int l2)
 	return EqLine(m, l1, l2, 0, m.GetWidth());
 }
 
-bool EqColumn(const Image& m, int c1, int c2, int y, int height)
-{
-	int cx = m.GetWidth();
-	const RGBA *a = m[y] + c1;
-	const RGBA *b = m[y] + c2;
-	for(int w = 0; w < height; w++) {
-		if(*a != *b)
-			return false;
-		a += cx;
-		b += cx;
-	}
-	return true;
-}
-
-bool EqColumn(const Image& m, int c1, int c2)
-{
-	return EqColumn(m, c1, c2, 0, m.GetHeight());
-}
-
-int ClassifyContent(const Image& m, const Rect& rect_)
+bool IsSingleColor(const Image& m, const Rect& rect_)
 {
 	Rect rect = rect_;
 	rect.Intersect(m.GetSize());
 	if(IsNull(rect))
-		return 0;
-	bool vdup = true;
-	for(int q = rect.top + 1; q < rect.bottom; q++)
-		if(!EqLine(m, q, rect.top, rect.left, rect.GetWidth())) {
-			vdup = false;
-			break;
-		}
-	for(int q = rect.left + 1; q < rect.right; q++)
-		if(!EqColumn(m, rect.left, q, rect.top, rect.GetHeight()))
-			return vdup;
-	return 2 + vdup;
+		return true;
+	RGBA c = m[rect.top][rect.left];
+	for(int y = rect.top; y < rect.bottom; y++) {
+		const RGBA *line = m[y];
+		for(int x = rect.left; x < rect.right; x++)
+			if(line[x] != c)
+				return false;
+	}
+	return true;
 }
 
 Image RecreateAlpha(const Image& overwhite, const Image& overblack)

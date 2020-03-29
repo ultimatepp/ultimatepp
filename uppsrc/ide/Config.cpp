@@ -4,7 +4,7 @@
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 17;
+	int version = 18;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -59,6 +59,8 @@ void Ide::SerializeWorkspace(Stream& s) {
 		s % console_utf8;
 	if(version >= 17)
 		s % disable_uhd;
+	if(version >= 18)
+		s % darkmode;
 	s % editfile;
 	for(i = 0; i < 10; i++)
 		s % bookmark[i];

@@ -363,6 +363,16 @@ bool IsSysFlag(dword flag)
 	return SystemParametersInfo(flag, 0, &b, 0) && b;
 }
 
+void ToImageIfDark(Value& v)
+{ // Optimize performance - ChPaint will pick single-color body and use DrawRect
+	if(sEmulateDarkTheme) {
+		ImageDraw iw(64, 64);
+		ChPaint(iw, Size(64, 64), v);
+		Image m = iw;
+		v = WithHotSpot(m, 8, 8);
+	}
+}
+
 void ChHostSkin()
 {
 	XpClear();
@@ -399,6 +409,8 @@ void ChHostSkin()
 
 	dword x = GetSysColor(COLOR_GRAYTEXT);
 	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
+
+	ChLookFn(XpLookFn);
 
 	if(XpWidget(XP_BUTTON)) {
 		GUI_GlobalStyle_Write(GUISTYLE_XP);
@@ -460,6 +472,7 @@ void ChHostSkin()
 			Win32Look(s.buttonstyle.look, 6, XP_TOOLBAR, 1, 1);
 			Win32Look(ToolButton::StyleDefault().Write().look, 6, XP_TOOLBAR, 1, 1);
 			Win32Look(s.arealook, XP_REBAR, 0, 1);
+			ToImageIfDark(s.arealook);
 			s.breaksep.l2 = SColorLight();
 		}
 		Win32Look(StatusBar::StyleDefault().Write().look, XP_STATUS, 0, 1);
@@ -481,6 +494,7 @@ void ChHostSkin()
 			Win32Look(s.last, 4, XP_TAB, TABP_TABITEM);
 			Win32Look(s.both, 4, XP_TAB, TABP_TABITEMBOTHEDGE);
 			Win32Look(s.body, XP_TAB, TABP_PANE);
+			ToImageIfDark(s.body);
 		}
 		{
 			SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
@@ -566,6 +580,7 @@ void ChHostSkin()
 				s.separator.l2 = SColorLight();
 			}
 			Win32Look(s.arealook, XP_REBAR, 0, 1);
+			ToImageIfDark(s.arealook);
 			CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
 			CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
 			CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
@@ -658,8 +673,6 @@ void ChHostSkin()
 
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));
-
-		ChLookFn(XpLookFn);
 	}
 	else
 		ChClassicSkin();

@@ -184,7 +184,7 @@ void Ide::Preprocess(bool asmout) {
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= wspc.GetCount())
 		return;
-	One<Host> host = CreateHost(true, disable_uhd);
+	One<Host> host = CreateHost(darkmode, disable_uhd);
 	One<Builder> b = CreateBuilder(~host);
 	Vector<String> linkfile;
 	String linkopt;

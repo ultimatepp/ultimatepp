@@ -89,7 +89,7 @@ String NoCr(const char *s)
 	return out;
 }
 
-One<Host> MakeBuild::CreateHost(bool sync_files, bool disable_uhd)
+One<Host> MakeBuild::CreateHost(bool darkmode, bool disable_uhd)
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -103,6 +103,8 @@ One<Host> MakeBuild::CreateHost(bool sync_files, bool disable_uhd)
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
 		if(disable_uhd)
 			env.GetAdd("UPP_DISABLE_UHD__") = "1";
+		if(darkmode)
+			env.GetAdd("UPP_DARKMODE__") = "1";
 		
 		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
 #ifdef PLATFORM_POSIX

@@ -132,13 +132,7 @@ Image VertBlend(Image img1, Image img2, int y0, int y1);
 Image HorzBlend(Image img1, Image img2, int x0, int x1);
 Image HorzSymm(Image src);
 
-enum {
-	IMAGECONTENT_VERTDUP = 1,
-	IMAGECONTENT_HORZDUP = 2,
-	IMAGECONTENT_OPAQUEBODY = 4,
-};
-
-int    ClassifyContent(const Image& m, const Rect& rect);
+bool   IsSingleColor(const Image& m, const Rect& rect);
 
 Image  RecreateAlpha(const Image& overwhite, const Image& overblack);
 int    ImageMargin(const Image& m, int p, int dist);

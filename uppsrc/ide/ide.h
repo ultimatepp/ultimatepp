@@ -545,6 +545,7 @@ public:
 	bool      console_utf8;
 	int       consolemode;
 	bool      disable_uhd = false;
+	bool      darkmode = false;
 	String    stdout_file;
 	String    recent_stdout_file;
 

@@ -69,7 +69,7 @@ public:
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
 	                            String mainparam, Host& host, Builder& b, String *target = NULL);
 //	bool SyncHostFiles(RemoteHost& host);
-	One<Host> CreateHost(bool sync_files, bool disable_uhd);
+	One<Host> CreateHost(bool darkmode, bool disable_uhd);
 	One<Builder> CreateBuilder(Host *host);
 	String OutDir(const Index<String>& cfg, const String& package,
 	              const VectorMap<String, String>& bm, bool use_target = false);
