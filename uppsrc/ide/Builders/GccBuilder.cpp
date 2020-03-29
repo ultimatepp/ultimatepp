@@ -472,7 +472,9 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		return false;
 	PutLinking();
 	int time = msecs();
+#ifdef PLATFORM_COCOA
 	CocoaAppBundle();
+#endif
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;

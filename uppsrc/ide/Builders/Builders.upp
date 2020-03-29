@@ -6,9 +6,11 @@ uses
 	ide\Core,
 	ide/Android,
 	ide/Java,
-	ide/Android,
-	Draw,
-	plugin/png;
+	ide/Android;
+
+uses(OSX) plugin/png;
+
+uses(OSX) Draw;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,
@@ -38,6 +40,7 @@ file
 	Blitz.cpp,
 	Build.h,
 	Build.cpp,
+	Install.cpp,
 	Helpers readonly separator,
 	BuilderUtils.h,
 	BuilderUtils.cpp,

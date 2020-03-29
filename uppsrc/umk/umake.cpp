@@ -66,9 +66,12 @@ String GetAndroidSDKPath()
 
 CONSOLE_APP_MAIN
 {
+
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
+	CreateBuildMethods();
 #endif
+
 	Ide ide;
 	TheIde(&ide);
 	ide.console.SetSlots(CPU_Cores());
