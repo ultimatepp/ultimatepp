@@ -1,4 +1,7 @@
 #include "Builders.h"
+
+#ifdef PLATFORM_COCOA
+
 #include <Draw/Draw.h>
 #include <plugin/png/png.h>
 
@@ -84,3 +87,5 @@ void GccBuilder::CocoaAppBundle()
 		PutConsole("Saving " << Info_plist_path);
 	}
 }
+
+#endif

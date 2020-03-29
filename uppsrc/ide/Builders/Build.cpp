@@ -763,4 +763,3 @@ String MakeBuild::GetInvalidBuildMethodError(const String& method)
 {
 	return "Invalid build method " + method + " (" + GetMethodPath(method) + ").";
 }
- 
