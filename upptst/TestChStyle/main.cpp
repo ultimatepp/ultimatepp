@@ -57,6 +57,13 @@ TestChStyle::TestChStyle()
 			win.SetRect(0, 0, 400, 400);
 			win.Run();
 		});
+		bar.GapRight();
+		bar.Add(CtrlImg::save_as(), [] {
+			FileSelNative fs;
+			fs.AllFilesType();
+			if(fs.ExecuteSaveAs())
+				PromptOK(~fs);
+		}).Tip("This is test");
 	});
 	
 	CtrlLayoutOKCancel(*this, "Window title");
