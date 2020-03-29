@@ -13,15 +13,5 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-//	std::set<int> s;
-	std::unordered_map<int, std::string> l0;
-	std::unordered_map<int, std::string> l;
-
-	for(int i = 0; i < 5; i++)
-		l[i] = AsString(i).ToStd();
-	
-	int n = l.size();
-	for(auto i : l) {
-		;
-	}
+	Vector<Vector<int>> x { { 1, 2, 3 }, {}, { 4, 5 }};
 }
