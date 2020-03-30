@@ -392,18 +392,12 @@ then
   log_debug_info "Extra parameters will supersede default parameters"
 fi
 
-log_debug_info "Configuring" uppsrc/*Makefile.in *.bm.in "with pkg-config"
+log_debug_info "Configuring" uppsrc/*Makefile.in
 
 library_list=""
 for i in uppsrc/*Makefile.in
 do
   # sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" "$i" > "${i%.in}"
-  cp -a "$i" "${i%.in}"
-done
-
-for i in *.bm.in
-do
-##  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
   cp -a "$i" "${i%.in}"
 done
 
