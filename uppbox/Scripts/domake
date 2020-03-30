@@ -392,6 +392,37 @@ then
   log_debug_info "Extra parameters will supersede default parameters"
 fi
 
+log_debug_info "Using pkg-config to find available libraries"
+
+if which pkg-config
+then
+
+  if [[ "$Flags" = *"NOGTK"* ]]
+  then
+    requires_libraries="x11 libnotify freetype2"
+  else
+    requires_libraries="gtk+-2.0 x11 libnotify freetype2"
+
+  fi
+  
+  library_list=""
+  for i in $requires_libraries
+  do
+    if pkg-config --exists $i
+    then
+      library_list="$library_list $i"
+      log_debug_info "pkg-config: Found library $i"
+    else
+      log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i development package?"
+    fi
+  done
+
+else
+  log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
+  log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting"
+  
+fi
+
 log_debug_info "Configuring" uppsrc/*Makefile.in
 
 library_list=""
