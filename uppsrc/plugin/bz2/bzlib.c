@@ -1,4 +1,4 @@
-#ifdef flagWIN32
+#if defined(flagWIN32) || defined(flagNOSO)
 
 #include "lib/blocksort.c"
 #include "lib/bzlib.c"

@@ -5,7 +5,7 @@ options(BUILDER_OPTION) NOWARNINGS;
 uses
 	Core;
 
-library(POSIX) bz2;
+library(POSIX & !NOSO) bz2;
 
 file
 	bz2.h,
