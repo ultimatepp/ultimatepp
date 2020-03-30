@@ -321,11 +321,6 @@ log_debug_info "Cleaning source code"
   rm -r "$DESTDIR$prefix/upp/uppsrc/umk.out"
 #<end> TODO
 
-  if [ "$(ls *.bm 2>/dev/null)" != "" ]
-  then
-log_debug_info "Copying" *.bm
-    cp -p *.bm  "$DESTDIR$prefix/.upp/theide"
-  fi
 
   if [ "$(ls *.udc 2>/dev/null)" != "" ]
   then

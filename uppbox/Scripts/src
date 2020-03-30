@@ -33,8 +33,6 @@ cp -p ~/Scripts/readme.md ~/upp.tmp/upp
 cp -p ~/Scripts/upp.spec ~/upp.tmp/upp
 cp -p ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
 cp -p ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
-cp -p ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
-cp -p ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
 
 svn_snapshot_version=$(svnversion ~/upp.src)
 current_date=$(LC_TIME=En date '+%a %b %d %Y')
