@@ -3,7 +3,7 @@ description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, 
 acceptflags
 	USEMALLOC;
 
-uses(WIN32) plugin\z;
+uses(WIN32 | NOSO) plugin\z;
 
 library(LINUX !ANDROID) "pthread dl rt";
 
@@ -11,7 +11,7 @@ library(BSD !OSX) "pthread rt execinfo";
 
 library(SOLARIS) "posix4 dl";
 
-library(!WIN32) z;
+library(!WIN32 & !NOSO) z;
 
 library(OSX) pthread;
 
