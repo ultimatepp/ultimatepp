@@ -19,8 +19,6 @@ struct Preview : Ctrl {
 
 struct TextToSvgPathDlg : public WithTextToSvgPathLayout<TopWindow> {
 	Preview preview;
-
-	void Render();
 	
 	TextToSvgPathDlg();
 };

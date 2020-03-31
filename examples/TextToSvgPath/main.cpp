@@ -10,31 +10,12 @@ void Preview::Paint(Draw& w)
 TextToSvgPathDlg::TextToSvgPathDlg()
 {
 	CtrlLayout(*this, "Text to SVG path converter");
-	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
-		if(!dynamic_cast<Button *>(q))
-			q->WhenAction = [=] { Render(); };
 	
-	face.Add(Font::ARIAL);
-	face.Add(Font::ROMAN);
-	face.Add(Font::COURIER);
-	for(int i = Font::COURIER + 1; i < Font::GetFaceCount(); i++)
-		if(Font::GetFaceInfo(i) & Font::SCALEABLE)
-			face.Add(i);
+    for(int i = 1; i < Font::GetFaceCount(); i++)
+        if(Font::GetFaceInfo(i) & Font::SCALEABLE)
+            face.Add(i, Font::GetFaceName(i));
 
-	struct DisplayFace : public Display {
-		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
-			int ii = q;
-			Font fnt = StdFont();
-			if(!(Font::GetFaceInfo(ii) & Font::SPECIAL))
-				fnt.Face(ii);
-			w.DrawRect(r, paper);
-			w.DrawText(r.left, r.top + (r.Height() - fnt.Info().GetHeight()) / 2,
-			           Font::GetFaceName((int)q), fnt, ink);
-		}
-	};
-	face.SetDisplay(Single<DisplayFace>());
-	
-	face <<= Font::ARIAL;
+	face <<= Font::SANSSERIF;
 	height.MinMax(6, 500);
 	
 	for(int i = 4; i < 500; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
@@ -43,21 +24,24 @@ TextToSvgPathDlg::TextToSvgPathDlg()
 	
 	svgpath.SetReadOnly();
 	preview.SetFrame(ViewFrame());
+
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
+		if(!dynamic_cast<Button *>(q))
+			*q << [=] {
+				Font fnt(~face, ~height);
+				fnt.Bold(~bold);
+				fnt.Italic(~italic);
+			
+				svgpath <<= preview.svgpath = TextToSvgPath(0, 0, (String)~text, fnt, ~singleline);
+				preview.Refresh();
+			 };
 	
 	copy.SetImage(CtrlImg::copy());
 	copy << [=] {
 		WriteClipboardText(preview.svgpath);
 	};
-}
-
-void TextToSvgPathDlg::Render()
-{
-	Font fnt(~face, ~height);
-	fnt.Bold(~bold);
-	fnt.Italic(~italic);
-
-	svgpath <<= preview.svgpath = TextToSvgPath(0, 0, (String)~text, fnt, ~singleline);
-	preview.Refresh();
+	
+	Sizeable().Zoomable();
 }
 
 GUI_APP_MAIN

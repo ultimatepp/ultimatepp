@@ -233,7 +233,6 @@ void GeoFun::SaveToAutoCadScript ( String fileName )
 		fo.Put ( sScr );
 		fo.Close();
 	}
-
 }
 
 
@@ -284,7 +283,6 @@ void GeoFun::SaveToSVG ( String fileName )
 		fo.Put ( sXML );
 		fo.Close();
 	}
-
 }
 
 void GeoFun::Print()
@@ -309,14 +307,13 @@ void GeoFun::Print()
 
 
 // This function calculates curve data points for display
-void GeoFun::PrepareData0()
+void GeoFun::PrepareData()
 {
 	int p, q, pw;
 
 	double a, b, h ;
 	double x, y;
 	double Period, step, t ;
-	static int prepd = 0;
 
 	step = 1.0 ; // value in deg
 
@@ -405,8 +402,6 @@ void GeoFun::PrepareData0()
 
 	InputPane.RollingRad = "Rolling Radius : " + Format ( "%0.2f", b ) ;
 
-//	ShowAnimation = ~InputPane.optAnimate ;
-
 	dc1.Zoomed = InputPane.optZoom.GetData();
 
 	if ( dc1.Zoomed )
@@ -479,19 +474,14 @@ void GeoFun::PrepareData0()
 	p1.x = dc1.data[0].point[0].x ;
 	p1.y = dc1.data[0].point[0].y ;
 	dc1.data[0].point.Add ( p1 );
-	prepd++;
-}
 
-void GeoFun::PrepareData()
-{
-	PrepareData0();
 	dc1.Refresh();
 }
+
 
 void GeoFun::ShowAnimated()
 {
 	int MaxCnt = dc1.data[0].point.GetCount();
-//	static dword LastTickCount = GetTickCount() ;
 
 	if ( dc1.ShowAnimation )
 	{
@@ -499,17 +489,17 @@ void GeoFun::ShowAnimated()
 		{
 			dc1.Refresh();
 			dc1.ShowTo += dc1.AnimSpeed ;
+			DUMP("Animation");
 		}
 		else
 		{
 			dc1.ShowAnimation = false ;
 			dc1.ColorFill = ~InputPane.optColorFill ;
 			dc1.Refresh();
+			Animate.Kill();
+			DUMP("End Animation");
 		}
 	}
-
-//	RLOG("TickCount - " <<( GetTickCount() - LastTickCount));
-//	LastTickCount = GetTickCount();
 }
 
 void GeoFun::SetAnimation()
@@ -518,6 +508,7 @@ void GeoFun::SetAnimation()
 	dc1.ShowTo = 5 ;
 	dc1.ShowAnimation = true ;
 	dc1.ColorFill = false ;
+	Animate.KillSet(-50, THISBACK(ShowAnimated));
 
 }
 
@@ -525,7 +516,9 @@ void GeoFun::FirstDraw()
 {
 	First = false ;
 	PrepareData();
-	SetTimeCallback ( -30, THISBACK ( ShowAnimated ), 50 );
+//	SetTimeCallback ( 1030, THISBACK ( ShowAnimated ), 50 );
+//	Animate.KillSet(-50, THISBACK(ShowAnimated));
+	DUMP("First Draw");
 }
 
 
@@ -562,7 +555,7 @@ void GeoFun::Layout()
 {
 	if ( !First )
 	{
-		PrepareData0();
+		PrepareData();
 	}
 
 	TopWindow::Layout();
@@ -570,23 +563,19 @@ void GeoFun::Layout()
 
 void GeoFun::About()
 {
-
 	WithAboutLayout<TopWindow> dlg;
 	dlg.AboutText = GetTopic ( "topic://GeoFun/app/About$en-us" ).text;
 	CtrlLayoutOK ( dlg, "About" );
 	dlg.CenterScreen();
 	dlg.Run();
-
 }
 
 
 void GeoFun::Help()
 {
-
 	HelpWindow helpme;
 	helpme.GoTo ( "topic://GeoFun/app/Help$en-us" );
 	helpme.Execute();
-
 }
 
 
@@ -598,11 +587,8 @@ void GeoFun::Exit()
 void GeoFun::SetAnimationSpeed()
 {
 	dc1.AnimSpeed = InputPane.edAnimSpeed.GetData();
-
 	if ( dc1.AnimSpeed < 1 ) dc1.AnimSpeed = 1;
-
 	if ( dc1.AnimSpeed > 20 ) dc1.AnimSpeed = 20;
-
 	InputPane.edAnimSpeed.SetData ( dc1.AnimSpeed );
 }
 
@@ -637,16 +623,11 @@ void GeoFun::SetCurveType ( int CrvType )
 	SetCurveTypeMenu ( CrvType );
 }
 
-void GeoFun::SetCurveTypeMenu1 ( )
-{
-	int CrvType = InputPane.CurveType.GetData();
-	SetCurveTypeMenu ( CrvType );
-}
 
 void GeoFun::SetCurveTypeMenu ( int CrvType )
 {
 	EpiCyclo = HypoCyclo = EpiTroch = HypoTroch = false ;
-	switch ( CrvType ) 
+	switch ( CrvType )
 	{
 		case 1 : HypoCyclo = true ; break ;
 		case 2 : EpiTroch = true ; break ;
@@ -761,7 +742,7 @@ GeoFun::GeoFun()
 		InputPane.CurveType.SetData ( 2 );
 	}
 
-	InputPane.CurveType.WhenAction << THISBACK (SetCurveTypeMenu1);
+	InputPane.CurveType.WhenAction << THISBACK1 (SetCurveTypeMenu,(int)InputPane.CurveType.GetData());
 
 	InputPane.optGradient.WhenAction << THISBACK ( PrepareData );
 	InputPane.optColorFill.WhenAction << THISBACK ( PrepareData );
@@ -794,7 +775,6 @@ GUI_APP_MAIN
 	gf.First = true ;
 	String cfgfile = ConfigFile();
 
-
 	if ( FileExists ( cfgfile ) )
 	{
 		cfgAvailable = true ;
@@ -809,8 +789,6 @@ GUI_APP_MAIN
 	{
 		cfgAvailable = false ;
 	}
-
-//	gf.Icon(Image::(5555, true), Image::ICON(5555, false));
 
 	gf.Run();
 
