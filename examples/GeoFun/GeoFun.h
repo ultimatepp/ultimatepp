@@ -65,6 +65,8 @@ class GeoFun : public WithGeoFunLayout<TopWindow> {
 
 		Splitter sp1;
 		QtfRichObject qtfim;
+		
+		TimeCallback Animate;
 
 		int ValP, ValQ, PenW, CurvT, GradientY;
 		Color PenC, M1C, M2C, B1C, B2C;
@@ -90,7 +92,7 @@ class GeoFun : public WithGeoFunLayout<TopWindow> {
 		void OptionZoom();
 
 		void PrepareData();
-		void PrepareData0();
+
 		void Print();
 
 		void SaveToImageFile ( String fileName );
@@ -99,7 +101,7 @@ class GeoFun : public WithGeoFunLayout<TopWindow> {
 		void SetAnimation();
 		void SetAnimationSpeed();
 		void SetCurveType ( int CrvType );
-		void SetCurveTypeMenu1 ( );
+		
 		void SetCurveTypeMenu ( int CrvType );
 		void Serialize ( Stream& s );
 		void ShowAnimated();

@@ -1,7 +1,7 @@
 #include "TextToSvgPath.h"
 
 struct TextToSvg : FontGlyphConsumer {
-	String t;
+	String t; // here we accumulate the SVG path text
 	
 	void Put(Pointf p);
 	
@@ -55,7 +55,7 @@ String TextToSvgPath(double x, double y, const char *text, Font fnt, bool single
 	TextToSvg t;
 	for(const wchar *s = ~ws; *s; s++) {
 		fnt.Render(t, x, y, *s);
-		x += fnt[*s];
+		x += fnt[*s]; // move the reference point
 		if(!singleline)
 			t.t << "\n";
 	}
