@@ -5,6 +5,9 @@ String  GetExeTitle();
 String  GetExeFolder();
 String  GetExeDirFile(const char *fp);
 
+String GetAppName();
+void SetAppName(const String& name);
+
 String  GetHomeDirFile(const char *fp);
 String  GetHomeDirectory();
 

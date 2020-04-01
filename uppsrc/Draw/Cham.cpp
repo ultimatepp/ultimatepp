@@ -211,7 +211,6 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 		Size isz = img.GetSize();
 		Size sz = r.GetSize();
 		Point p = img.GetHotSpot();
-		bool areaimage = false;
 		if(p.x == CH_SCROLLBAR_IMAGE) {
 			if(op == LOOK_MARGINS)
 				return Rect(0, 0, 0, 0);
@@ -300,7 +299,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 						single_color_body = IsSingleColor(img, sr);
 						if(single_color_body_cache.GetCount() > 1000)
 							single_color_body_cache.Clear();
-						single_color_body_cache.Add(key, q);
+						single_color_body_cache.Add(key, single_color_body);
 					}
 					else
 						single_color_body = single_color_body_cache[q];

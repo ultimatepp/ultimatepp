@@ -5,12 +5,26 @@
 
 bool Install(bool& hasvars)
 {
-	String out = GetHomeDirFile("out");
 	String ass = GetConfigFolder();
-	String myapps = GetHomeDirFile("MyApps");
-	RealizeDirectory(out);
+
+	String myapps = DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile("MyApps") : GetHomeDirFile("MyApps");
 
 	String uppsrc;
+	
+	String out;
+	String p = GetExeFolder();
+	while(p.GetCount() > 1 && DirectoryExists(p)) {
+		String h = AppendFileName(p, ".cache");
+		if(DirectoryExists(h)) {
+			out = h;
+			break;
+		}
+		p = GetFileFolder(p);
+	}
+	
+	out = Nvl(out, GetHomeDirFile(".cache")) + "/upp.out";
+	
+	RealizeDirectory(out);
 
 	auto MakeAssembly = [&](String b, String name = Null) {
 		name = Nvl(name, GetFileTitle(b));
@@ -53,6 +67,8 @@ bool Install(bool& hasvars)
 	}
 #endif
 
+	Scan(GetExeFolder() + "/uppsrc");
+	Scan(GetExeFolder() + "/*");
 	Scan(GetHomeDirFile("upp.src/uppsrc"));
 	Scan(GetHomeDirFile("upp.src/*"));
 	Scan(GetHomeDirFile("upp/uppsrc"));
