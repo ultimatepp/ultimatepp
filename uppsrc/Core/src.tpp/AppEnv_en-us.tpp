@@ -53,6 +53,17 @@ name of the file&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:GetAppName`(`): [_^Upp`:`:String^ String]_[* GetAppName]()&]
+[s2;%% Returns the name of the application. Default value is GetExeTitle, 
+but it can be changed with SetAppName. This values is used e.g. 
+as the name of configuration folder.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:SetAppName`(const Upp`:`:String`&`): [@(0.0.255) void]_[* SetAppName]([@(0.0.255) c
+onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 name])&]
+[s2;%% Overrides the name of the application.&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:GetTempDirectory`(`): [_^Upp`:`:String^ String]_[* GetTempDirectory]()&]
 [s2;%% Return the temporary directory.&]
 [s3; &]
@@ -76,19 +87,30 @@ binary resides.&]
 home folder (true) or application folder (false)&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:SetConfigDirectory`(const Upp`:`:String`&`): [@(0.0.255) void]_[* SetConfigDi
+rectory]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Overrides the directory where configuration files are stored.&]
+[s3;%% &]
+[s4; &]
 [s5;:ConfigFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file])&]
-[s2;%% Returns the absolute path of a configuration file found in 
-the configuration files search path.&]
-[s2;%% [*@(129.0.0) file]...............................................the 
-name of the file&]
+[s2;%% Returns the absolute path of a configuration file. The directory 
+depends on host platform and other settings. If one was set with 
+SetConfigDirectory, it is used. Otherwise, in POSIX, function 
+searches for .config folder starting with directory of binary, 
+then goes up until root. If none is found, XDG`_CONFIG`_HOME 
+is used. If that does not exist, `~/.config is used. Function 
+then appends GetAppName() to this directory and makes sure it 
+exists (with RealizeDirectory). In Win32, this is either the 
+directory of .exe file, or if UseHomeDirectoryConfig is set, 
+user`'s home directory.&]
 [s3; &]
 [s4; &]
 [s5;:ConfigFile`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]_
 [* ConfigFile]()&]
 [s2;%% Returns the default configuration file from the configuration 
-files search path. The default configuration file is called [*/ `[application 
-title`]][* .cfg].&]
+files search path. The default configuration file is called [*/ `[GetAppName()`]][* .
+cfg].&]
 [s3; &]
 [s4; &]
 [s5;:CommandLine`(`): [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V

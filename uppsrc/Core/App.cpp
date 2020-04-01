@@ -138,6 +138,18 @@ String GetExeTitle()
 	return GetFileTitle(GetExeFilePath());
 }
 
+static String sAppName;
+
+String GetAppName()
+{
+	return Nvl(sAppName, GetExeTitle());
+}
+
+void SetAppName(const String& name)
+{
+	sAppName = name;
+}
+
 String GetTempDirectory()
 {
 	return GetTempPath();
@@ -169,12 +181,21 @@ String  GetHomeDirFile(const char *fp) {
 
 static bool sHomecfg;
 
-void    UseHomeDirectoryConfig(bool b)
+void UseHomeDirectoryConfig(bool b)
 {
 	sHomecfg = b;
 }
 
+static String sConfigFolder;
+
+void SetConfigDirectory(const String& s)
+{
+	sConfigFolder = s;
+}
+
 String  ConfigFile(const char *file) {
+	if(sConfigFolder.GetCount())
+		return AppendFileName(sConfigFolder, file);
 #if defined(PLATFORM_WIN32)
 	if(sHomecfg) {
 		String p = GetHomeDirFile(GetExeTitle());
@@ -184,13 +205,29 @@ String  ConfigFile(const char *file) {
 	}
 	return GetExeDirFile(file);
 #elif defined(PLATFORM_POSIX)
-	String p = GetHomeDirFile(".upp/" + GetExeTitle());
-	ONCELOCK
-		RealizeDirectory(p);
-	return AppendFileName(p, file);
+	static String cfgdir;
+	ONCELOCK {
+		String h = GetExeFolder();
+		if(!sHomecfg)
+			while(h.GetCount() > 1 && DirectoryExists(h)) {
+				String pp = AppendFileName(h, ".config");
+				if(DirectoryExists(pp)) {
+					cfgdir = pp;
+					break;
+				}
+				h = GetFileFolder(h);
+			}
+		if(IsNull(cfgdir))
+			cfgdir = GetEnv("XDG_CONFIG_HOME");
+		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
+			cfgdir = GetHomeDirFile(".config");
+	}
+	String pp = AppendFileName(cfgdir, GetAppName());
+	RealizeDirectory(pp);
+	return AppendFileName(pp, file);
 #else
-#error ConfigFile not implemented for this platform, comment this line to get input string back
-	return file;
+	NEVER();
+	return GetExeDirFile(file);
 #endif//PLATFORM
 }
 
@@ -200,7 +237,7 @@ String GetConfigFolder()
 }
 
 String  ConfigFile() {
-	return ConfigFile(GetExeTitle() + ".cfg");
+	return ConfigFile(GetAppName() + ".cfg");
 }
 
 Vector<WString>& coreCmdLine__()
