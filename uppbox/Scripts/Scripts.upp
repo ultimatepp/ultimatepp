@@ -8,6 +8,7 @@ file
 	domake,
 	douninstall,
 	do-xdg-desktop-menu,
+	opensuse,
 	fedora,
 	function_library,
 	GCCMK.bm,

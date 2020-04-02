@@ -1,0 +1,11 @@
+sudo zypper -n install gtk3-devel
+
+libbz2-devel
+ne xorg-x11-server-devel
+ne expat?
+ne sox
+ssl-devel
+gcc-c++
+make
+libXdmcp-devel
+clang
