@@ -11,20 +11,7 @@ bool Install(bool& hasvars)
 
 	String uppsrc;
 	
-	String out;
-	String p = GetExeFolder();
-	while(p.GetCount() > 1 && DirectoryExists(p)) {
-		String h = AppendFileName(p, ".cache");
-		if(DirectoryExists(h)) {
-			out = h;
-			break;
-		}
-		p = GetFileFolder(p);
-	}
-	
-	out = Nvl(out, GetHomeDirFile(".cache")) + "/upp.out";
-	
-	RealizeDirectory(out);
+	String out = GetDefaultUppOut();
 
 	auto MakeAssembly = [&](String b, String name = Null) {
 		name = Nvl(name, GetFileTitle(b));

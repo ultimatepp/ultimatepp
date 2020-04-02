@@ -198,7 +198,7 @@ String  ConfigFile(const char *file) {
 		return AppendFileName(sConfigFolder, file);
 #if defined(PLATFORM_WIN32)
 	if(sHomecfg) {
-		String p = GetHomeDirFile(GetExeTitle());
+		String p = GetHomeDirFile(GetAppName());
 		ONCELOCK
 			RealizeDirectory(p);
 		return AppendFileName(p, file);
@@ -211,7 +211,8 @@ String  ConfigFile(const char *file) {
 		if(!sHomecfg)
 			while(h.GetCount() > 1 && DirectoryExists(h)) {
 				String pp = AppendFileName(h, ".config");
-				if(DirectoryExists(pp)) {
+				FindFile ff(pp);
+				if(ff && ff.IsFolder() && ff.CanWrite()) {
 					cfgdir = pp;
 					break;
 				}

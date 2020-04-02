@@ -632,7 +632,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	String makefile;
 
 	Vector<String> uppdirs = GetUppDirs();
-	String uppout = exporting ? host->GetHostPath(GetVar("OUTPUT")) : "_out/";
+	String uppout = exporting ? host->GetHostPath(GetVar("OUTPUT")) : ".cache/upp.out";
 	String inclist;
 
 	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, *host, *b);
@@ -657,8 +657,6 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			makefile << "UPPDIR" << (i + 1) << " = " << srcdir << "\n";
 			inclist << " -I$(UPPDIR" << (i + 1) << ")";
 		}
-	else
-		inclist << "-I./";
 
 	for(String s : pkg_config)
 		inclist << " `pkg-config --cflags " << s << "`";
@@ -666,6 +664,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	Vector<String> includes = SplitDirs(bm.Get("INCLUDE",""));
 	for(int i = 0; i < includes.GetCount(); i++)
 		inclist << " -I" << includes[i];
+
+	inclist << " -I./";
+	inclist << " -I" << uppout; // build_info.h is created there
 	
 	makefile << "\n"
 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
@@ -702,11 +703,14 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			output = Nvl(trg, mf.output);
 			if(exporting)
 				output = wspc[i] + ".out";
+			else
+				output = "./" + wspc[0];
 			StringStream ss;
 			Vector<String> bi = SvnInfo(wspc[i]);
 			String svn_info;
+			String build_info = '\"' + uppout + "/build_info.h\"";
 			for(int i = 0; i < bi.GetCount(); i++)
-				svn_info << "	echo '" << bi[i] << "' >> build_info.h\n";
+				svn_info << "	echo '" << bi[i] << "' >> " << build_info << "\n";
 			install << "\n"
 				"OutDir = " << tdir << "\n"
 				"OutFile = " << output << "\n"
@@ -724,7 +728,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				"#define bmSECOND  %-S%n"
 				"#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' && \\\n"
 				"	echo '#define bmMACHINE \"'`hostname`'\"' && \\\n"
-				"	echo '#define bmUSER    \"'`whoami`'\"') > build_info.h\n"
+				"	echo '#define bmUSER    \"'`whoami`'\"') > " << build_info << "\n"
 				<< svn_info <<
 				"\n"
 				".PHONY: prepare\n"
