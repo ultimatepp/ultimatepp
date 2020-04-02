@@ -16,12 +16,12 @@ fi
 
 if [ -x "$(command -v yum)" ]; then
   echo 'Fedora packaging system (yum) detected'
-  DEP="yum -y install gcc-c++ clang make libgtk+3.0-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel xorg-x11-server-devel freetype-devel"
+  DEP="yum -y install gcc-c++ clang make gtk3-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel freetype-devel"
 fi
 
 if [ -x "$(command -v dnf)" ]; then
   echo 'Fedora packaging system (dnf) detected'
-  DEP="dnf -y install gcc-c++ clang make libgtk+3.0-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel xorg-x11-server-devel freetype-devel"
+  DEP="dnf -y install gcc-c++ clang make gtk3-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel freetype-devel"
 fi
 
 if [ -x "$(command -v zypper)" ]; then
