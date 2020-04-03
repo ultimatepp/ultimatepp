@@ -401,7 +401,7 @@ then
   then
     requires_libraries="x11 libnotify freetype2"
   else
-    requires_libraries="gtk+-2.0 x11 libnotify freetype2"
+    requires_libraries="gtk+-3.0 x11 libnotify freetype2"
 
   fi
   
