@@ -150,6 +150,18 @@ void SetAppName(const String& name)
 	sAppName = name;
 }
 
+static String sConfigGroup = "u++";
+
+void SetConfigGroup(const char *group)
+{
+	sConfigGroup = group;
+}
+
+String GetConfigGroup()
+{
+	return sConfigGroup;
+}
+
 String GetTempDirectory()
 {
 	return GetTempPath();
@@ -222,6 +234,8 @@ String  ConfigFile(const char *file) {
 			cfgdir = GetEnv("XDG_CONFIG_HOME");
 		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
 			cfgdir = GetHomeDirFile(".config");
+		if(sConfigGroup.GetCount())
+			cfgdir = AppendFileName(cfgdir, sConfigGroup);
 	}
 	String pp = AppendFileName(cfgdir, GetAppName());
 	RealizeDirectory(pp);

@@ -1,7 +1,7 @@
 #include "ide.h"
 //#include "Install.h"
 
-#ifndef PLATFORM_WIN32
+#ifdef PLATFORM_POSIX
 
 bool Install(bool& hasvars)
 {

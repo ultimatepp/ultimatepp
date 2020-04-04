@@ -127,4 +127,11 @@ String GetDefaultUppOut()
 	return out;
 }
 
+#else
+
+String GetDefaultUppOut()
+{
+	return ConfigFile("_out");
+}
+
 #endif
