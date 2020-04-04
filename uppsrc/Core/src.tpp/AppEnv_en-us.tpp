@@ -64,6 +64,19 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 name])&]
 [s2;%% Overrides the name of the application.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:SetConfigGroup`(const char`*`): [@(0.0.255) void]_[* SetConfigGroup]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 group])&]
+[s2;%% In POSIX systems, ConfigFile function default path is inside 
+`".cache`" directory. This function allows to set a name of subdirectory 
+of this directory where the another subdirectory named GetAppName() 
+specific to the application will store the configuration. Setting 
+group empty just removes whole level. Default value is `"u`+`+`".&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:GetConfigGroup`(`): [_^Upp`:`:String^ String]_[* GetConfigGroup]()&]
+[s2;%% Returns current config group.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:GetTempDirectory`(`): [_^Upp`:`:String^ String]_[* GetTempDirectory]()&]
 [s2;%% Return the temporary directory.&]
 [s3; &]

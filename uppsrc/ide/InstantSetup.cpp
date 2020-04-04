@@ -126,7 +126,7 @@ void InstantSetup()
 	
 	String bin = GetExeDirFile("bin");
 
-	if(DirectoryExists(bin + "/clang")) // hopefully deprecated, but keep it for now
+	if(DirectoryExists(bin + "/clang"))
 		for(int x64 = 0; x64 < 2; x64++) {
 			String method = x64 ? "CLANGx64" : "CLANG";
 		#ifdef INSTANT_TESTING
