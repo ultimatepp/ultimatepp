@@ -138,6 +138,8 @@ String GetExeTitle()
 	return GetFileTitle(GetExeFilePath());
 }
 
+void SyncLogPath__();
+
 static String sAppName;
 
 String GetAppName()
@@ -148,6 +150,7 @@ String GetAppName()
 void SetAppName(const String& name)
 {
 	sAppName = name;
+	SyncLogPath__();
 }
 
 static String sConfigGroup = "u++";
@@ -155,6 +158,7 @@ static String sConfigGroup = "u++";
 void SetConfigGroup(const char *group)
 {
 	sConfigGroup = group;
+	SyncLogPath__();
 }
 
 String GetConfigGroup()
@@ -203,6 +207,7 @@ static String sConfigFolder;
 void SetConfigDirectory(const String& s)
 {
 	sConfigFolder = s;
+	SyncLogPath__();
 }
 
 String  ConfigFile(const char *file) {
