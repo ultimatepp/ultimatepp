@@ -421,14 +421,12 @@ void RepoSyncDirs(const Vector<String>& working)
 //		return;
 	Ptr<Ctrl> f = Ctrl::GetFocusCtrl();
 	RepoSync repo;
-	String msgs;
-	LoadFromGlobal(msgs, "svn-msgs");
-	repo.SetMsgs(msgs);
+	String repocfg = ConfigFile("repo.cfg");
+	repo.SetMsgs(LoadFile(repocfg));
 	for(int i = 0; i < working.GetCount(); i++)
 		repo.Dir(working[i]);
 	repo.DoSync();
-	msgs = repo.GetMsgs();
-	StoreToGlobal(msgs, "svn-msgs");
+	SaveFile(repocfg, repo.GetMsgs());
 	if(f)
 		f->SetFocus();
 }
