@@ -14,8 +14,24 @@ String Ide::GetTargetLogPath()
 #ifdef PLATFORM_WIN32
 	return ForceExt(target, ".log");
 #else
-	String p = GetFileTitle(target);
-	return GetHomeDirFile(".upp/" + p + "/" + p + ".log");
+	String title = GetFileTitle(target);
+	String pp;
+	String h = GetFileFolder(target);
+	while(h.GetCount() > 1 && DirectoryExists(h)) {
+		String pp = AppendFileName(h, ".config");
+		FindFile ff(pp);
+		if(ff && ff.IsFolder() && ff.CanWrite()) {
+			pp = pp;
+			break;
+		}
+		h = GetFileFolder(h);
+	}
+	if(IsNull(pp))
+		pp = GetEnv("XDG_CONFIG_HOME");
+	if(IsNull(pp) || !DirectoryExists(pp))
+		pp = GetHomeDirFile(".config");
+	pp << "/u++/" << title << '/' << title << ".log";
+	return FileExists(pp) ? pp : GetHomeDirFile(".upp/" + title + "/" + title + ".log");
 #endif
 }
 

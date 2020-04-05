@@ -362,34 +362,28 @@ static void sLogFile(char *fn, const char *app = ".log")
 		;
 	strcpy(*s == '.' ? s : e, app);
 }
+
+void SyncLogPath__() {}
+
 #endif
 
 #ifdef PLATFORM_POSIX
-const char *procexepath_();
-extern char Argv0__[_MAX_PATH + 1];
+
+static char sLogPath[1024];
+
+void SyncLogPath__()
+{
+	Mutex::Lock __(log_mutex);
+	strcpy(sLogPath, ConfigFile(GetExeTitle()));
+}
 
 static void sLogFile(char *fn, const char *app = ".log")
 {
-	char *path = fn;
-	const char *ehome = getenv("HOME");
-	strcpy(fn, ehome ? ehome : "/root");
-	if(!*fn || (fn += strlen(fn))[-1] != '/')
-		*fn++ = '/';
-	*fn = '\0';
-	strcat(path, ".upp/");
-	const char *exe = procexepath_();
-	if(!*exe)
-		exe = Argv0__;
-	const char *q = strrchr(exe, '/');
-	if(q)
-		exe = q + 1;
-	if(!*exe)
-		exe = "upp";
-	strcat(path, exe);
-	mkdir(path, 0755);
-	strcat(path, "/");
-	strcat(path, exe);
-	strcat(path, app);
+	Mutex::Lock __(log_mutex);
+	if(!*sLogPath)
+		SyncLogPath__();
+	strcpy(fn, sLogPath);
+	strcat(fn, app);
 }
 #endif
 

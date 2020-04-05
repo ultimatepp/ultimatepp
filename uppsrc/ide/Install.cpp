@@ -54,6 +54,10 @@ bool Install(bool& hasvars)
 	}
 #endif
 
+	MakeAssembly(myapps);
+	uppsrc = GetHomeDirFile("bazaar") + ';' + uppsrc;
+	MakeAssembly(myapps, "MyApps-bazaar");
+
 	Scan(GetExeFolder() + "/uppsrc");
 	Scan(GetExeFolder() + "/*");
 	Scan(GetHomeDirFile("upp.src/uppsrc"));
@@ -65,9 +69,6 @@ bool Install(bool& hasvars)
 		if(ff.IsFolder())
 			Scan(ff.GetPath() + "/*");
 	
-	MakeAssembly(myapps);
-	uppsrc = GetHomeDirFile("bazaar") + ';' + uppsrc;
-	MakeAssembly(myapps, "MyApps-bazaar");
 	CreateBuildMethods();
 	return true;
 }
