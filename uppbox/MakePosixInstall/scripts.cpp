@@ -16,22 +16,22 @@ fi
 
 if [ -x "$(command -v yum)" ]; then
   echo 'Fedora packaging system (yum) detected'
-  DEP="yum install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel"
+  DEP="yum install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 fi
 
 if [ -x "$(command -v dnf)" ]; then
   echo 'Fedora packaging system (dnf) detected'
-  DEP="dnf install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel"
+  DEP="dnf install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 fi
 
 if [ -x "$(command -v urpmi)" ]; then
   echo 'Mandriva packaging system (urpmi) detected'
-  DEP="urpmi install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel"
+  DEP="urpmi install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 fi
 
 if [ -x "$(command -v zypper)" ]; then
-  echo 'Zypper packaging system (dnf) detected'
-  DEP="sudo zypper -n install  clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel"
+  echo 'Zypper packaging system (zypper) detected'
+  DEP="sudo zypper install clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 fi
 
 #add more packaging systems / distros here
@@ -58,6 +58,7 @@ else
      fi
   else
      echo Please make sure that build dependecies are satisfied.
+     AskContinue
   fi
 fi
 

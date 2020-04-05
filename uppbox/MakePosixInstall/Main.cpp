@@ -62,23 +62,20 @@ String release_dir = GetHomeDirFile("release");
 String release = release_dir + "/upp";
 String upp_src = GetHomeDirFile("upp.src");
 
-int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
-int FilterVersion(int c) { return c == ':' ? '_' : c; }
-
-void Make(String pkg, String exe, String method = "MINGW")
-{
-//	Syx("c:/upp/umk " + ass + " " + pkg + " c:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
-//	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
-}
-
 extern const char *install_script;
 extern const char *clean_script;
+extern const char *readme;
 
-void SaveScript(const char *name, const char *text)
+String SaveText(const char *name, const char *text)
 {
 	String t = release + "/" + name;
 	SaveFile(t, Filter(text, [](int c) { return c == '\r' ? 0 : c; }));
-	Syx("chmod +x " + t);
+	return t;
+}
+
+void SaveScript(const char *name, const char *text)
+{
+	Syx("chmod +x " + SaveText(name, text));
 }
 
 CONSOLE_APP_MAIN
@@ -86,7 +83,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	Syx("svn update " + upp_src);
-	Vector<String> s = Split(Syx("svnversion " + upp_src), NoDigit);
+	Vector<String> s = Split(Syx("svnversion " + upp_src), [](int c) { return IsDigit(c) ? 0 : c; });
 	if(s.GetCount() == 0)
 		Error("Invalid version");
 	String version = s.Top();
@@ -113,6 +110,7 @@ CONSOLE_APP_MAIN
 	
 	SaveScript("install", install_script);
 	SaveScript("clean", clean_script);
+	SaveText("README", readme);
 
 #ifdef _DEBUG
 	#define OPTS " -rvb "
