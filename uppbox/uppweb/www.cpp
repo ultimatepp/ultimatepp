@@ -692,8 +692,8 @@ String Downloads()
 {
 	String r;
 	r << "{{1:1^@L "
-	     "[^app$ide$instalpoiyu;lkfhjxcb,.m  l$en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^www$uppweb$uppx11$en-us.html^ POSIX/X11 tarball]";
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows (with CLANG)]:: "
+	     "[^www$uppweb$posix$en-us.html^ U++ for POSIX]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;
@@ -714,7 +714,7 @@ String Downloads()
 		r << "::@W ";
 		bool next = false;
 		for(int i = 0; i < min(39, fn.GetCount()); i++)
-			if(fn[i].StartsWith(pass ? "upp-x11" : "upp-win")) {
+			if(fn[i].Find(pass ? "posix" : "win") >= 0) {
 				if(next) r << "&[A0 &]";
 				next = true;
 				r << Format("%04d-%02d-%02d %02d:%02d",
