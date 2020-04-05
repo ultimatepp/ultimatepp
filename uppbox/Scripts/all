@@ -15,7 +15,7 @@ mkdir ~/upp.tmp || true
 
 bash ~/Scripts/win
 
-bash ~/Scripts/src
+bash ~/Scripts/posix
 
 # bash ~/Scripts/deb64
 
