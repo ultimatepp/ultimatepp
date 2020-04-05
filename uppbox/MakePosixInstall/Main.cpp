@@ -25,7 +25,7 @@ void CopyFolder(const char *src, const char *dst, bool deep = true)
 {
 	if(GetFileName(src) == ".svn")
 		return;
-	Cout() << Sprintf("Directory %s\n", src);
+	RLOG("Directory " << src);
 	RealizeDirectory(dst);
 	FindFile ff(String(src) + "/*.*");
 	while(ff) {
@@ -68,6 +68,7 @@ extern const char *readme;
 
 String SaveText(const char *name, const char *text)
 {
+	RLOG("File " << name);
 	String t = release + "/" + name;
 	SaveFile(t, Filter(text, [](int c) { return c == '\r' ? 0 : c; }));
 	return t;
