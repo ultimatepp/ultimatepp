@@ -101,7 +101,7 @@ build_info:
 	(date '+#define bmYEAR    %y%n#define bmMONTH   %-m%n#define bmDAY     %-d%n#define bmHOUR    %-H%n#define bmMINUTE  %-M%n#define bmSECOND  %-S%n#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' && \
 	echo '#define bmMACHINE "'`hostname`'"' && \
 	echo '#define bmUSER    "'`whoami`'"') > ".cache/upp.out/build_info.h"
-	echo '#define bmSVN_REVISION "14254"' >> ".cache/upp.out/build_info.h"
+	echo '#define bmSVN_REVISION "14256"' >> ".cache/upp.out/build_info.h"
 	echo '#define bmSVN_URL "svn://www.ultimatepp.org/upp/trunk/uppsrc/ide"' >> ".cache/upp.out/build_info.h"
 
 .PHONY: prepare
