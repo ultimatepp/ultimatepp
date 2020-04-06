@@ -1,5 +1,5 @@
 class ViewDraw : public SystemDraw {
-#if GTK_CHECK_VERSION(3, 10, 0)
+#if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDrawingContext *ctx;
 #endif
 public:
