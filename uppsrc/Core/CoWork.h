@@ -125,6 +125,12 @@ void CoDo(Function<void ()>&& fn)
 	co * fn;
 }
 
+inline
+void CoDo_ST(Function<void ()>&& fn)
+{
+	fn();
+}
+
 template <typename Fn>
 void CoFor(int n, Fn iterator)
 {

@@ -191,16 +191,22 @@ nt]_[*@3 n])&]
 [s2;%% This simple helper class just removes `"noexcept(false)`" 
 from CoWork destructor, removing exception throws from the destructor 
 and allowing it to be used as member variable. Obviously, if 
-exception handling is required, you need to use Finish (not depend 
-on destructor to call it).&]
-[s0; &]
-[s0; &]
+exception handling is required, you need to use Finish (not to 
+depend on destructor to call it).&]
+[s3; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Loop parallelisation functions]]}}&]
 [s3; &]
 [s5;:Upp`:`:CoDo`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo]([_^Upp`:`:Function^ F
 unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
 [s2;%% Creates CoWork and calls Loop([%-*@3 fn]). This is the most 
 effective way to parallelise iteration.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoDo`_ST`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo`_ST]([_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s2;%% This function simply calls [%-*@3 fn]. It is diagnostics tool 
+`- it allows to change CoDo parallel iteration into serial one 
+by adding `"`_ST`" text.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoFor`(int`,Fn`): [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 Fn]>_[@(0.0.255) v
