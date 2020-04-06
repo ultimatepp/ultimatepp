@@ -31,7 +31,7 @@ fi
 
 if [ -x "$(command -v zypper)" ]; then
   echo 'Zypper packaging system (zypper) detected'
-  DEP="sudo zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="sudo zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 fi
 
 if [ -x "$(command -v pkg)" ]; then
