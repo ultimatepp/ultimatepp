@@ -31,12 +31,17 @@ fi
 
 if [ -x "$(command -v zypper)" ]; then
   echo 'Zypper packaging system (zypper) detected'
-  DEP="sudo zypper install clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="sudo zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 fi
 
 if [ -x "$(command -v pkg)" ]; then
-  echo 'FreeBSD detected'
+  echo 'FreeBSD detected (pkg)'
   DEP="sudo pkg install bash gmake gtk3 libnotify clang-devel"
+fi
+
+if [ -x "$(command -v pkg_add)" ]; then
+  echo 'OpenBSD detected (pkg_add)'
+  DEP="sudo pkg_add bash gmake gtk3 libnotify clang-devel"
 fi
 
 #add more packaging systems / distros here
