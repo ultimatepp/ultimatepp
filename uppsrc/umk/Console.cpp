@@ -282,12 +282,8 @@ void Console::CheckEndGroup()
 			if(p < 0) {
 				if(group.count > 0) {
 					int duration = msecs(group.start_time);
-					String msg = NFormat("%s: %d file(s) built in %s, %d msecs / file, duration = %d msecs",
-						gname, group.count, PrintTime(group.msecs), group.msecs / group.count, duration);
-					if(processes.GetCount() > 1) {
-						int k = 100 * processes.GetCount() / (processes.GetCount() - 1);
-						msg << NFormat(", parallelization %d%%", minmax(k - group.msecs * k / max(group.raw_msecs, 1), 0, 100));
-					}
+					String msg = NFormat("%s: %d file(s) built in %s, %d msecs / file",
+						gname, group.count, PrintTime(group.msecs), group.msecs / group.count);
 					msg << '\n';
 					spooled_output.Cat(msg);
 					if(console_lock < 0) {
