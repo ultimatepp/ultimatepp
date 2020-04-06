@@ -233,7 +233,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	String lc;
 	static const char *term[] = {
 		"/usr/bin/mate-terminal -x",
-		"/usr/bin/gnome-terminal -x",
+		"/usr/bin/gnome-terminal --window -x",
 		"/usr/bin/konsole -e",
 		"/usr/bin/xterm -e",
 	};
