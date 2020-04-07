@@ -1,4 +1,4 @@
-UPPDIR1 = /home/cxl/upp.src/uppsrc/
+UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
 CINC   =  -I$(UPPDIR1) -I./ -I.cache/upp.out
