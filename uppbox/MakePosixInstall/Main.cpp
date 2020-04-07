@@ -119,11 +119,11 @@ CONSOLE_APP_MAIN
 	#define OPTS " -arvb "
 #endif
 
-	Syx(GetHomeDirFile("bin/umk") + " uppsrc umk GCC32 " OPTS  + release + "/umks32");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
 	
-	Syx(GetHomeDirFile("bin/umk") + " uppsrc umk GCC -rvsM");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
 	SaveFile(release + "/uMakefile", LoadFile(release + "/Makefile"));
-	Syx(GetHomeDirFile("bin/umk") + " uppsrc ide GCC -rvsM theide");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
 	
 	system("cp " + GetHomeDirFile("upp.bin") + "/" + "*.udc " + release);
 
