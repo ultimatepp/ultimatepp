@@ -210,6 +210,25 @@ void SetConfigDirectory(const String& s)
 	SyncLogPath__();
 }
 
+void CopyFolder(const char *dst, const char *src)
+{
+	RealizeDirectory(dst);
+	FindFile ff(String(src) + "/*.*");
+	while(ff) {
+		String s = AppendFileName(src, ff.GetName());
+		String d = AppendFileName(dst, ff.GetName());
+		if(ff.IsFile()) {
+			FileIn in(s);
+			FileOut out(d);
+			CopyStream(out, in);
+		}
+		else
+		if(ff.IsFolder() && *ff.GetName() != '.')
+			CopyFolder(s, d);
+		ff.Next();
+	}
+}
+
 String  ConfigFile(const char *file) {
 	if(sConfigFolder.GetCount())
 		return AppendFileName(sConfigFolder, file);
@@ -243,7 +262,13 @@ String  ConfigFile(const char *file) {
 			cfgdir = AppendFileName(cfgdir, sConfigGroup);
 	}
 	String pp = AppendFileName(cfgdir, GetAppName());
+	bool exists = DirectoryExists(pp);
 	RealizeDirectory(pp);
+	if(!exists) { // migrate config files from the old path
+		String old = GetHomeDirFile(".upp/" + GetExeTitle());
+		if(DirectoryExists(old))
+			CopyFolder(pp, old);
+	}
 	return AppendFileName(pp, file);
 #else
 	NEVER();
