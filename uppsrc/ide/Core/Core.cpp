@@ -62,15 +62,13 @@ String FindCommand(const Vector<String>& exedir, const String& cmdline)
 String GetMakePath(String fn, bool win32)
 {
 	fn = UnixPath(fn);
-	if(!win32)
-		return fn;
-	String out;
-	for(const char *p = fn; *p; p++)
-		if(*p == '/')
-			out << "\\\\";
-		else
-			out.Cat(*p);
-	return out;
+	String cd = UnixPath(GetCurrentDirectory());
+	int q = cd.GetCount();
+	if(fn.StartsWith(cd) && fn[q] == '/') {
+		fn.Remove(0, q);
+		fn.Insert(0, '.');
+	}
+	return fn;
 }
 
 String AdjustMakePath(const char *fn)

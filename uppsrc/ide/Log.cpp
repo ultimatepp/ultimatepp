@@ -18,10 +18,10 @@ String Ide::GetTargetLogPath()
 	String pp;
 	String h = GetFileFolder(target);
 	while(h.GetCount() > 1 && DirectoryExists(h)) {
-		String pp = AppendFileName(h, ".config");
-		FindFile ff(pp);
+		String p = AppendFileName(h, ".config");
+		FindFile ff(p);
 		if(ff && ff.IsFolder() && ff.CanWrite()) {
-			pp = pp;
+			pp = p;
 			break;
 		}
 		h = GetFileFolder(h);

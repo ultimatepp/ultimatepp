@@ -95,7 +95,7 @@ CONSOLE_APP_MAIN
 				}
 			}
 		String v = GetUmkFile(arg[0] + ".var");
-		if(IsNull(v) || !FileExists(v)) {
+		if(*arg[0] == '.' || IsNull(v) || !FileExists(v)) {
 		#ifdef PLATFORM_POSIX
 			Vector<String> h = Split(arg[0], IsCommaOrColon);
 		#else
@@ -157,6 +157,7 @@ CONSOLE_APP_MAIN
 		ide.release.createmap = ide.debug.createmap = false;
 		ide.targetmode = 0;
 		ide.use_target = false;
+		ide.makefile_svn_revision = false;
 		bool clean = false;
 		bool makefile = false;
 		bool deletedir = true;

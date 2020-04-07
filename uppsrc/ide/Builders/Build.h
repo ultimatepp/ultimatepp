@@ -64,6 +64,8 @@ public:
 	String       main_conf;
 	Index<String> cfg;
 	FileTime     start_time;
+	
+	bool         makefile_svn_revision = true;
 
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,

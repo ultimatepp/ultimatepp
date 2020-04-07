@@ -1,4 +1,4 @@
-description "This package is only useful for translating U++ to other languages\377";
+description "This package serves to gather all sources for language localisation\377";
 
 uses
 	CtrlLib,
