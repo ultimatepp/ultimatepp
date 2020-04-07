@@ -10,41 +10,22 @@ AskContinue()
 }
 
 if [ -x "$(command -v apt-get)" ]; then
-  echo 'Debian packaging system (apt-get) detected'
   DEP="apt-get install g++ clang make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev"
-fi
-
-if [ -x "$(command -v yum)" ]; then
-  echo 'Fedora packaging system (yum) detected'
+elif [ -x "$(command -v yum)" ]; then
   DEP="yum install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
-fi
-
-if [ -x "$(command -v dnf)" ]; then
-  echo 'Fedora packaging system (dnf) detected'
+elif [ -x "$(command -v dnf)" ]; then
   DEP="dnf install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
-fi
-
-if [ -x "$(command -v urpmi)" ]; then
-  echo 'Mandriva packaging system (urpmi) detected'
+elif [ -x "$(command -v urpmi)" ]; then
   DEP="urpmi install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+elif [ -x "$(command -v zypper)" ]; then
+  DEP="zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
+elif [ -x "$(command -v pacman)" ]; then
+  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang"
+elif [ -x "$(command -v pkg)" ]; then
+  DEP="pkg install bash gmake gtk3 libnotify clang-devel"
+elif [ -x "$(command -v pkg_add)" ]; then
+  DEP="pkg_add bash gmake gtk3 libnotify clang-devel"
 fi
-
-if [ -x "$(command -v zypper)" ]; then
-  echo 'Zypper packaging system (zypper) detected'
-  DEP="sudo zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
-fi
-
-if [ -x "$(command -v pkg)" ]; then
-  echo 'FreeBSD detected (pkg)'
-  DEP="sudo pkg install bash gmake gtk3 libnotify clang-devel"
-fi
-
-if [ -x "$(command -v pkg_add)" ]; then
-  echo 'OpenBSD detected (pkg_add)'
-  DEP="sudo pkg_add bash gmake gtk3 libnotify clang-devel"
-fi
-
-#add more packaging systems / distros here
 
 if [ -z "$DEP" ]; then
   echo Packaging system was not identified.
