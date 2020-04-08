@@ -2221,11 +2221,11 @@ FileSel::FileSel()
 	search <<= THISBACK(SearchLoad);
 
 	filename.SetFont(StdFont());
-	filename.SetFrame(ThinInsetFrame());
+	filename.SetFrame(ViewFrame());
 	filesize.SetFont(StdFont()).SetAlign(ALIGN_RIGHT);
-	filesize.SetFrame(ThinInsetFrame());
+	filesize.SetFrame(ViewFrame());
 	filetime.SetFont(StdFont());
-	filetime.SetFrame(ThinInsetFrame());
+	filetime.SetFrame(ViewFrame());
 
 	dir <<= THISBACK(Choice);
 	dir.DisplayAll();
