@@ -231,6 +231,7 @@ String  ConfigFile(const char *file) {
 	return GetExeDirFile(file);
 #elif defined(PLATFORM_POSIX)
 	static char cfgd[_MAX_PATH + 1];
+	static bool sandboxed = true;
 	ONCELOCK {
 		String cfgdir;
 		String h = GetExeFolder();
@@ -244,8 +245,10 @@ String  ConfigFile(const char *file) {
 				}
 				h = GetFileFolder(h);
 			}
-		if(IsNull(cfgdir))
+		if(IsNull(cfgdir)) {
+			sandboxed = false;
 			cfgdir = GetEnv("XDG_CONFIG_HOME");
+		}
 		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
 			cfgdir = GetHomeDirFile(".config");
 		if(*sConfigGroup)
@@ -255,7 +258,7 @@ String  ConfigFile(const char *file) {
 	String pp = AppendFileName(cfgd, GetAppName());
 	bool exists = DirectoryExists(pp);
 	RealizeDirectory(pp);
-	if(!exists) { // migrate config files from the old path
+	if(!exists && !sandboxed) { // migrate config files from the old path
 		String old = GetHomeDirFile(".upp/" + GetExeTitle());
 		if(DirectoryExists(old))
 			CopyFolder(pp, old);
