@@ -1,4 +1,4 @@
-description "Demostrates how to add watermark image to Report\377";
+description "Demonstrates how to add watermark image to Report\377";
 
 uses
 	CtrlLib,
