@@ -16,6 +16,6 @@ GUI_APP_MAIN
 
 	dt.AutoResize();
 	
-	win.Add(dt.HSizePos().TopPos(0, Ctrl::STDSIZE));
+	win.Add(dt.LeftPosZ(10, 200).TopPosZ(10));
 	win.Run();
 }
