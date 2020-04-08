@@ -153,17 +153,21 @@ void SetAppName(const String& name)
 	SyncLogPath__();
 }
 
-static String sConfigGroup = "u++";
+static String sConfigGroup()
+{
+	static String x = "u++";
+	return x;
+}
 
 void SetConfigGroup(const char *group)
 {
-	sConfigGroup = group;
+	sConfigGroup() = group;
 	SyncLogPath__();
 }
 
 String GetConfigGroup()
 {
-	return sConfigGroup;
+	return sConfigGroup();
 }
 
 String GetTempDirectory()
@@ -202,11 +206,15 @@ void UseHomeDirectoryConfig(bool b)
 	sHomecfg = b;
 }
 
-static String sConfigFolder;
+static String& sConfigFolder()
+{
+	static String x;
+	return x;
+}
 
 void SetConfigDirectory(const String& s)
 {
-	sConfigFolder = s;
+	sConfigFolder() = s;
 	SyncLogPath__();
 }
 
@@ -230,8 +238,8 @@ void CopyFolder(const char *dst, const char *src)
 }
 
 String  ConfigFile(const char *file) {
-	if(sConfigFolder.GetCount())
-		return AppendFileName(sConfigFolder, file);
+	if(sConfigFolder().GetCount())
+		return AppendFileName(sConfigFolder(), file);
 #if defined(PLATFORM_WIN32)
 	if(sHomecfg) {
 		String p = GetHomeDirFile(GetAppName());
@@ -258,8 +266,8 @@ String  ConfigFile(const char *file) {
 			cfgdir = GetEnv("XDG_CONFIG_HOME");
 		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
 			cfgdir = GetHomeDirFile(".config");
-		if(sConfigGroup.GetCount())
-			cfgdir = AppendFileName(cfgdir, sConfigGroup);
+		if(sConfigGroup().GetCount())
+			cfgdir = AppendFileName(cfgdir, sConfigGroup());
 	}
 	String pp = AppendFileName(cfgdir, GetAppName());
 	bool exists = DirectoryExists(pp);
