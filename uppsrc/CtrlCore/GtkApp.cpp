@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-#define CATCH_ERRORS 0
+#define CATCH_ERRORS 1
 
 namespace Upp {
 
