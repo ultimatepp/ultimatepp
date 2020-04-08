@@ -7,28 +7,33 @@ bool Install(bool& hasvars)
 {
 	String ass = GetConfigFolder();
 
-	String myapps = DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile("MyApps") : GetHomeDirFile("MyApps");
+	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
+	
 
-	String uppsrc;
+	String uppsrc, bazaar;
 	
 	String out = GetDefaultUppOut();
+	
+	int pass = 0;
 
 	auto MakeAssembly = [&](String b, String name = Null) {
 		name = Nvl(name, GetFileTitle(b));
 		String a = ass + '/' + name + ".var";
-		if(name == "uppsrc")
-			uppsrc = Nvl(uppsrc, b);
-		else {
-			if(uppsrc.GetCount() == 0)
-				uppsrc = FileExists(GetHomeDirFile("upp.src/uppsrc/ide/ide.upp"))
-				         ? GetHomeDirFile("upp.src/uppsrc") : GetHomeDirFile("uppsrc");
-			b << ';' << uppsrc;
+		if(pass == 0) {
+			if(name == "uppsrc" && IsNull(uppsrc))
+				uppsrc = b;
+			if(name == "bazaar" && IsNull(bazaar))
+				bazaar = b;
 		}
-		if(!FileExists(a))
-			SaveFile(a,
-				"UPP = " + AsCString(b) + ";\r\n"
-				"OUTPUT = " + AsCString(out) + ";\r\n"
-			);
+		else {
+			if(name != "uppsrc")
+				b << ';' << uppsrc;
+			if(!FileExists(a))
+				SaveFile(a,
+					"UPP = " + AsCString(b) + ";\r\n"
+					"OUTPUT = " + AsCString(out) + ";\r\n"
+				);
+		}
 	};
 	
 	auto Scan = [&](String p) {
@@ -54,20 +59,25 @@ bool Install(bool& hasvars)
 	}
 #endif
 
-	MakeAssembly(myapps);
-	uppsrc = GetHomeDirFile("bazaar") + ';' + uppsrc;
-	MakeAssembly(myapps, "MyApps-bazaar");
+	for(pass = 0; pass < 2; pass++) {
+		if(pass) {
+			MakeAssembly(myapps);
+			uppsrc = bazaar + ';' + uppsrc;
+			MakeAssembly(myapps, "MyApps-bazaar");
+		}
+		Scan(GetExeFolder() + "/uppsrc");
+		Scan(GetExeFolder() + "/*");
+		Scan(GetHomeDirFile("upp.src/uppsrc"));
+		Scan(GetHomeDirFile("upp.src/*"));
+		Scan(GetHomeDirFile("upp/uppsrc"));
+		Scan(GetHomeDirFile("upp/*"));
+		Scan(GetHomeDirFile("*"));
+		for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
+			if(ff.IsFolder())
+				Scan(ff.GetPath() + "/*");
+	}
+	
 
-	Scan(GetExeFolder() + "/uppsrc");
-	Scan(GetExeFolder() + "/*");
-	Scan(GetHomeDirFile("upp.src/uppsrc"));
-	Scan(GetHomeDirFile("upp.src/*"));
-	Scan(GetHomeDirFile("upp/uppsrc"));
-	Scan(GetHomeDirFile("upp/*"));
-	Scan(GetHomeDirFile("*"));
-	for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
-		if(ff.IsFolder())
-			Scan(ff.GetPath() + "/*");
 	
 	CreateBuildMethods();
 	return true;
