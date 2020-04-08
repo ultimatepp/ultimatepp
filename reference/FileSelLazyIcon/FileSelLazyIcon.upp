@@ -1,7 +1,8 @@
 description "Demostrates FileSel features that uses separate thread to resolve file image\377";
 
 uses
-	CtrlLib;
+	CtrlLib,
+	plugin/jpg;
 
 file
 	main.cpp;
