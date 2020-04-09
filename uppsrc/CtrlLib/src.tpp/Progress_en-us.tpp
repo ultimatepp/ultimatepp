@@ -1,5 +1,4 @@
 topic "Progress";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Progress";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 Progress]]}}&]
 [s3; &]
@@ -58,18 +58,21 @@ active window is used as owner.&]
 [s4;%- &]
 [s5;:Progress`:`:Set`(int`,int`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 pos], 
 [@(0.0.255) int]_[*@3 total])&]
-[s2; Sets the current progress position and total.&]
+[s2; Sets the current progress position and total. This method can 
+be called from non`-main thread without restriction.&]
 [s3; &]
 [s4;%- &]
 [s5;:Progress`:`:SetPos`(int`):%- [@(0.0.255) void]_[* SetPos]([@(0.0.255) int]_[*@3 pos])&]
-[s2; Sets the current progress position.&]
+[s2; Sets the current progress position. This method can be called 
+from non`-main thread without restriction.&]
 [s3; &]
 [s4;%- &]
 [s5;:Progress`:`:SetText`(const char`*`):%- [@(0.0.255) void]_[* SetText]([@(0.0.255) const
 ]_[@(0.0.255) char]_`*[*@3 s])&]
 [s5;:Progress`:`:SetText`(const String`&`):%- [@(0.0.255) void]_[* SetText]([@(0.0.255) con
 st]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
-[s2; Sets the text to be displayed in dialog.&]
+[s2; Sets the text to be displayed in dialog. This method can be 
+called from non`-main thread without restriction.&]
 [s3; &]
 [s4;%- &]
 [s5;:Progress`:`:SetTotal`(int`):%- [@(0.0.255) void]_[* SetTotal]([@(0.0.255) int]_[*@3 tota
@@ -80,7 +83,8 @@ l])&]
 [s5;:Progress`:`:Step`(int`):%- [@(0.0.255) void]_[* Step]([@(0.0.255) int]_[*@3 steps]_`=_[@3 1
 ])&]
 [s2; Advances progress by [%-*@3 steps]. If total number of steps is 
-zero, `"running bar`" is displayed.&]
+zero, `"running bar`" is displayed. This method can be called 
+from non`-main thread without restriction.&]
 [s3; &]
 [s4;%- &]
 [s5;:Progress`:`:GetPos`(`)const:%- [@(0.0.255) int]_[* GetPos]()_[@(0.0.255) const]&]
@@ -97,7 +101,11 @@ zero, `"running bar`" is displayed.&]
 [s4;%- &]
 [s5;:Progress`:`:Canceled`(`):%- [@(0.0.255) bool]_[* Canceled]()&]
 [s2; Shows a Cancel button if not shown yet. If this button is pressed, 
-sets dialog to canceled mode. Returns true if dialog was canceled.&]
+sets dialog to canceled mode. Returns true if dialog was canceled. 
+This method can be called from non`-main thread without restriction. 
+Calling this method from the main thread also invokes processing 
+GUI events, including paint event, so calling this as often as 
+once per 1ms is desirable.&]
 [s3; &]
 [s4;%- &]
 [s5;:Progress`:`:SetCanceled`(int`,int`):%- [@(0.0.255) bool]_[* SetCanceled]([@(0.0.255) i

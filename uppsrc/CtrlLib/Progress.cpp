@@ -196,6 +196,8 @@ void Progress::Create() {
 
 void Progress::Process()
 {
+	if(!IsMainThread())
+		return;
 	if(!IsOpen()) {
 		dword t = msecs();
 		if((int)(t - show_time) >= show_delay) {
@@ -209,6 +211,13 @@ void Progress::Process()
 	}
 }
 
+void Progress::SetText(const String& s)
+{
+	GuiLock __;
+	text = s;
+	Setxt();
+}
+
 void Progress::Setxt()
 {
 	info = Format(text, pos);
@@ -216,8 +225,11 @@ void Progress::Setxt()
 }
 
 void Progress::Set(int apos, int atotal) {
+	GuiLock __;
 	pos = apos;
 	total = atotal;
+	if(!IsMainThread())
+		return;
 	dword t = msecs();
 	if(abs((int)(t - set_time)) < granularity)
 		return;
@@ -229,6 +241,7 @@ void Progress::Set(int apos, int atotal) {
 	pi.Set(apos, atotal);
 	Setxt();
 	Sync();
+	
 	Process();
 }
 
@@ -242,6 +255,7 @@ void Progress::SetPos(int apos) {
 
 void Progress::Step(int n)
 {
+	GuiLock __;
 	Set(pos + n, total);
 }
 
@@ -258,13 +272,16 @@ void Progress::Cancel() {
 
 bool Progress::Canceled()
 {
-	stop.Show();
-	Process();
+	if(IsMainThread()) {
+		stop.Show();
+		Process();
+	}
 	return cancel;
 }
 
 bool Progress::SetCanceled(int pos, int total)
 {
+	GuiLock __;
 	stop.Show();
 	Set(pos, total);
 	return cancel;
@@ -272,6 +289,7 @@ bool Progress::SetCanceled(int pos, int total)
 
 bool Progress::SetPosCanceled(int pos)
 {
+	GuiLock __;
 	stop.Show();
 	SetPos(pos);
 	return cancel;
@@ -279,6 +297,7 @@ bool Progress::SetPosCanceled(int pos)
 
 bool Progress::StepCanceled(int n)
 {
+	GuiLock __;
 	stop.Show();
 	Step(n);
 	return cancel;

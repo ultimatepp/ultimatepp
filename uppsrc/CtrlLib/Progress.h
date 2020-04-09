@@ -75,8 +75,8 @@ public:
 
 	void     Set(int pos, int total);
 	void     SetPos(int pos);
-	void     SetText(const char *s)        { text = s; Setxt(); Sync(); }
-	void     SetText(const String& s)      { text = s; Setxt(); Sync(); }
+	void     SetText(const char *s)        { SetText((String)s); }
+	void     SetText(const String& s);
 	void     SetTotal(int total);
 	void     Step(int steps = 1);
 	int      GetPos() const                { return pos; }
