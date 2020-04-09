@@ -1,0 +1,11 @@
+description "CoDo Parallel loop with progress indicator\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
