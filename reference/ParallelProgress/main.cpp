@@ -9,7 +9,7 @@ GUI_APP_MAIN
 	CoDo([&] {
 		for(int i = ii++; i < 100; i = ii++) {
 			for(int q = 0; q < 1000; q++) {
-				if(pi.Canceled()) // ideally call canceled every 1-10ms
+				if(pi.Canceled()) // ideally call Canceled every 1-10ms
 					return;
 				Sleep(1); // work simulation
 			}
