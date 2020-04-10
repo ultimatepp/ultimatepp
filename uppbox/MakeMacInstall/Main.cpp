@@ -105,6 +105,9 @@ CONSOLE_APP_MAIN
 	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc ide CLANG -abrvs " + release_app);
 	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc umk CLANG -abrvs " + release + "/umk");
 #endif
+
+	system("cp " + GetHomeDirFile("upp.bin") + "/" + "*.udc " + release);
+
 	chdir(release_dir);
 	String upload = GetHomeDirFile("upload");
 	RealizeDirectory(upload);
