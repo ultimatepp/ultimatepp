@@ -14,8 +14,9 @@ void Error(const char *e)
 	abort();
 }
 
-String Syx(const char *s)
+String Syx(String s)
 {
+	s.Replace("~", GetHomeDirectory());
 	Log(s);
 	String r;
 	int q = Sys(s, r);
@@ -64,17 +65,12 @@ void CopyFolders(const char *src, const char *dst, const char *folders, bool dee
 }
 
 String release_dir = GetHomeDirFile("release");
-String release = release_dir + "/theide.app";
+String release = release_dir + "/upp";
+String release_app = release + "/theide.app";
 String upp_src = GetHomeDirFile("upp.src");
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
-
-void Make(String pkg, String exe, String method = "MINGW")
-{
-//	Syx("c:/upp/umk " + ass + " " + pkg + " c:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
-//	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
-}
 
 CONSOLE_APP_MAIN
 {
@@ -85,22 +81,32 @@ CONSOLE_APP_MAIN
 	String version = s.Top();
 	Log("version: " + version);
 	
-	String contents = release + "/Contents";
-	String dst_src = contents + "/SharedSupport";
-	DeleteFolderDeep(dst_src);
-	RealizeDirectory(dst_src);
+	DeleteFolderDeep(release);
+	RealizeDirectory(release);
 
 	String uppsrc = upp_src + "/uppsrc";
-	String dstsrc = dst_src + "/uppsrc";
+	String dstsrc = release + "/uppsrc";
 
 	CopyFolders(uppsrc, dstsrc, uppsrc + "/packages");
 	CopyFolders(uppsrc, dstsrc, uppsrc + "/packages1", false);
-	CopyFolders(upp_src, dst_src, uppsrc + "/assemblies");
+	CopyFolders(upp_src, release, uppsrc + "/assemblies");
+
 	SaveFile(dstsrc + "/guiplatform.h", "");
 	SaveFile(dstsrc + "/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
 	SaveFile(dstsrc + "/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	
-	Syx(GetHomeDirFile("bin/umk") + " uppsrc ide CLANG -arvs " + release);
+
+	RealizeDirectory(release + "/.config");
+	RealizeDirectory(release + "/.cache");
+
+#ifdef _DEBUG
+	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc ide CLANG -brvs " + release_app);
+	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc umk CLANG -brvs " + release + "/umk");
+#else
+	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc ide CLANG -abrvs " + release_app);
+	Syx(GetHomeDirFile("bin/umk") + " ~/upp.src/uppsrc umk CLANG -abrvs " + release + "/umk");
+#endif
 	chdir(release_dir);
-	Syx("zip -r9 upp-macos-" + version + ".zip theide.app");
+	String upload = GetHomeDirFile("upload");
+	RealizeDirectory(upload);
+	Syx("tar cfJ " + upload + "/upp-macos-" + version + ".tar.xz upp");
 }
