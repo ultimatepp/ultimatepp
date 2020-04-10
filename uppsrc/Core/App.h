@@ -5,6 +5,10 @@ String  GetExeTitle();
 String  GetExeFolder();
 String  GetExeDirFile(const char *fp);
 
+#ifdef PLATFORM_COCOA
+String GetAppFolder();
+#endif
+
 String GetAppName();
 void SetAppName(const String& name);
 

@@ -142,6 +142,14 @@ String GetExeTitle()
 	return GetFileTitle(GetExeFilePath());
 }
 
+#ifdef PLATFORM_COCOA
+String GetAppFolder()
+{
+	String p = GetExeFolder();
+	return p.TrimEnd("/Contents/MacOS") && GetFileExt(p) == ".app" ? p : String();
+}
+#endif
+
 void SyncLogPath__();
 
 static char sAppName[256];
