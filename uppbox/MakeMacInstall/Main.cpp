@@ -103,35 +103,4 @@ CONSOLE_APP_MAIN
 	Syx(GetHomeDirFile("bin/umk") + " uppsrc ide CLANG -arvs " + release);
 	chdir(release_dir);
 	Syx("zip -r9 upp-macos-" + version + ".zip theide.app");
-
-#if 0
-	DeleteFolderDeep(tmp);
-	RealizeDirectory(tmp);
-	
-	RealizeDirectory("u:/upload");
-
-	CopyFolder(bin, upptmp, false);
-	CopyFolder(bin + "/win32", upptmp + "/bin");
-	SaveFile(upptmp + "/README", LoadDataFile("README"));
-	
-	CopyFolders(uppsrc, ass, uppsrc + "/packages");
-	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
-	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
-	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
-	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
-	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	Make("ide", "theide32.exe");
-	Make("ide", "theide.exe", "MINGWx64");
-	Make("umk", "umk.exe");
-
-	SetCurrentDirectory(upptmp);
-	
-	SaveFile("license.chk", "1");
-
-	Syx("c:/upp/7-zip/7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
-	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
-	DeleteFolderDeep(upptmp + "/bin/mingw64");
-	Syx("c:/upp/7-zip/7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
-	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
-#endif
 }
