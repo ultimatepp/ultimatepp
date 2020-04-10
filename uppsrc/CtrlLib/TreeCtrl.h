@@ -420,7 +420,6 @@ private:
 	const Display     *valuedisplay;
 	DisplayWithIcon    icond;
 	int                dropwidth;
-	bool               displayall;
 	bool               dropfocus;
 	bool               notnull;
 	

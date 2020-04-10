@@ -53,6 +53,12 @@ name of the file&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:GetAppFolder`(`): [_^Upp`:`:String^ String]_[* GetAppFolder]()&]
+[s6; `[MacOS only`]&]
+[s2;%% This funtion returns the path to the application folder, if 
+the the executable is in one.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:GetAppName`(`): [_^Upp`:`:String^ String]_[* GetAppName]()&]
 [s2;%% Returns the name of the application. Default value is GetExeTitle, 
 but it can be changed with SetAppName. This values is used e.g. 

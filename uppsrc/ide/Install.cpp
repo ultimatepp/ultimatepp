@@ -7,9 +7,6 @@ bool Install(bool& hasvars)
 {
 	String ass = GetConfigFolder();
 
-	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
-	
-
 	String uppsrc, bazaar;
 	
 	String out = GetDefaultUppOut();
@@ -59,12 +56,25 @@ bool Install(bool& hasvars)
 	}
 #endif
 
+	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
+
 	for(pass = 0; pass < 2; pass++) {
 		if(pass) {
 			MakeAssembly(myapps);
+			String h = uppsrc;
 			uppsrc = bazaar + ';' + uppsrc;
 			MakeAssembly(myapps, "MyApps-bazaar");
+			uppsrc = h;
 		}
+	#ifdef PLATFORM_COCOA
+		String app = GetAppFolder();
+		if(app.GetCount()) {
+			String f = GetFileFolder(app);
+			Scan(f + "/uppsrc");
+			Scan(f + "/*");
+			myapps = f + "/MyApps";
+		}
+	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));
