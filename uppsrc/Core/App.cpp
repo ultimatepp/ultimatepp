@@ -1,5 +1,8 @@
 #include "Core.h"
+
+#ifdef PLATFORM_MACOS
 #include <mach-o/dyld.h>
+#endif
 
 #ifdef PLATFORM_WIN32
 #define Ptr Ptr_
@@ -85,7 +88,7 @@ const char *procexepath_() {
 	static char h[_MAX_PATH + 1];
 	ONCELOCK {
 		char link[1024];
-#ifdef PLATFORM_COCOA
+#ifdef PLATFORM_MACOS
 		uint32_t sz = 1024;
 		if(_NSGetExecutablePath(link, &sz))
 			*link = 0;
