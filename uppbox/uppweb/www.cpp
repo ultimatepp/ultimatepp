@@ -691,9 +691,10 @@ void ExportPage(int i)
 String Downloads()
 {
 	String r;
-	r << "{{1:1^@L "
+	r << "{{1:1:1^@L "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^www$uppweb$posix$en-us.html^ U`+`+ for Linux/FreeBSD]";
+	     "[^www$uppweb$posix$en-us.html^ U`+`+ for Linux/FreeBSD]:: "
+	     "[^www$uppweb$macos$en-us.html^ U`+`+ for MacOS]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;
@@ -710,11 +711,11 @@ String Downloads()
 	}
 	IndexSort3(tm, fn, path, len, StdGreater<Time>());
 	
-	for(int pass = 0; pass < 2; pass++) {
+	for(int pass = 0; pass < 3; pass++) {
 		r << "::@W ";
 		bool next = false;
 		for(int i = 0; i < min(39, fn.GetCount()); i++)
-			if(fn[i].Find(pass ? "posix" : "win") >= 0) {
+			if(fn[i].Find(decode(pass, 0, "posix", 1, "win", "macos")) >= 0) {
 				if(next) r << "&[A0 &]";
 				next = true;
 				r << Format("%04d-%02d-%02d %02d:%02d",
@@ -766,6 +767,7 @@ CONSOLE_APP_MAIN
 	outHtml = true;
 	doSvn = true;
 
+
 	RLOG("--- uppweb started at " << GetSysTime());
 	
 	ProgramData data;
@@ -806,6 +808,11 @@ CONSOLE_APP_MAIN
 	Cout() << "TargetDir: " << targetdir << "\n";
 	Cout() << "OutPdf: " << outPdf << "\n";
 	Cout() << "PdfDir: " << pdfdir << "\n";
+
+#ifdef _DEBUG
+	doSvn = false;
+	outPdf = false;
+#endif
 
 	String downloads = Downloads();
 	
