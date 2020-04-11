@@ -62,6 +62,7 @@ protected:
 	dword    show_time;
 	Ctrl    *owner;
 	Modality modality;
+	Mutex    mtx;
 
 	void     Setxt();
 	void     Init();
