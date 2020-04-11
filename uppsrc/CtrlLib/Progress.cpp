@@ -213,7 +213,7 @@ void Progress::Process()
 
 void Progress::SetText(const String& s)
 {
-	GuiLock __;
+	Mutex::Lock __(mtx);
 	text = s;
 	Setxt();
 }
@@ -225,9 +225,11 @@ void Progress::Setxt()
 }
 
 void Progress::Set(int apos, int atotal) {
-	GuiLock __;
-	pos = apos;
-	total = atotal;
+	{
+		Mutex::Lock __(mtx);
+		pos = apos;
+		total = atotal;
+	}
 	if(!IsMainThread())
 		return;
 	dword t = msecs();
@@ -255,7 +257,7 @@ void Progress::SetPos(int apos) {
 
 void Progress::Step(int n)
 {
-	GuiLock __;
+	Mutex::Lock __(mtx);
 	Set(pos + n, total);
 }
 
@@ -281,24 +283,27 @@ bool Progress::Canceled()
 
 bool Progress::SetCanceled(int pos, int total)
 {
-	GuiLock __;
-	stop.Show();
+	if(IsMainThread())
+		stop.Show();
+	Mutex::Lock __(mtx);
 	Set(pos, total);
 	return cancel;
 }
 
 bool Progress::SetPosCanceled(int pos)
 {
-	GuiLock __;
-	stop.Show();
-	SetPos(pos);
+	if(IsMainThread())
+		stop.Show();
+	Mutex::Lock __(mtx);
+	Set(pos, total);
 	return cancel;
 }
 
 bool Progress::StepCanceled(int n)
 {
-	GuiLock __;
-	stop.Show();
+	if(IsMainThread())
+		stop.Show();
+	Mutex::Lock __(mtx);
 	Step(n);
 	return cancel;
 }
