@@ -715,7 +715,7 @@ String Downloads()
 		r << "::@W ";
 		bool next = false;
 		for(int i = 0; i < min(39, fn.GetCount()); i++)
-			if(fn[i].Find(decode(pass, 0, "posix", 1, "win", "macos")) >= 0) {
+			if(fn[i].Find(decode(pass, 0, "win", 1, "posix", "macos")) >= 0) {
 				if(next) r << "&[A0 &]";
 				next = true;
 				r << Format("%04d-%02d-%02d %02d:%02d",
