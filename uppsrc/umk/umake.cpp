@@ -163,6 +163,7 @@ CONSOLE_APP_MAIN
 		bool deletedir = true;
 		int  exporting = 0;
 		String mkf;
+
 		for(int i = 3; i < arg.GetCount(); i++)
 			if(arg[i][0] == '+' || arg[i][0] == '>')
 				ide.mainconfigparam = Filter(~arg[i] + 1, CommaSpace);
@@ -230,6 +231,7 @@ CONSOLE_APP_MAIN
 				ide.debug.target = ide.release.target = NormalizePath(arg[i]);
 				PutVerbose("Target override: " << ide.debug.target);
 			}
+
 		if(clean)
 			ide.Clean();
 		if(exporting) {
