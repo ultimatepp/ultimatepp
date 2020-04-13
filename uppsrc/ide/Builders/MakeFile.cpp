@@ -339,11 +339,12 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				else if(trg.Find(win32 ? '\\' : '/') < 0)
 					trg.Insert(0, "$(OutDir)");
 			}
-			output = Nvl(trg, mf.output);
-			if(exporting)
-				output = wspc[i] + ".out";
 			else
-				output = "./" + wspc[0];
+			if(exporting)
+				trg = wspc[i] + ".out";
+			else
+				trg = "./" + wspc[0];
+			output = Nvl(trg, mf.output);
 			while(DirectoryExists(output))
 				output << ".out";
 			StringStream ss;
