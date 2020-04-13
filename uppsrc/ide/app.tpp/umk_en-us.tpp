@@ -18,30 +18,37 @@ topic "UMK - Command line builder";
 [s11; [* UMK] (U`+`+ MaKe) is a command line utility to build the U`+`+ 
 program, with U`+`+ assembly/package/build method system.&]
 [s0; &]
-[s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package build`_method][*C@4;3  
-][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s
-][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]
-`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]][*C@4;3  
-][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]...`]][*C@4;3  
-][*C3 `[][*C@(0.0.255)3 out][*C3 `]]&]
+[s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package ][*C3 `[][*C@(0.0.255)3 build`_method][*C3 `]
+][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[
+][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M
+][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X
+][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 F
+LAG][*C3 `]..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@4;3 !][*C3  
+`[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
 [s0;3 &]
-[s11; [*@(0.0.255) assembly] can be a predefined assembly (in .var file) 
-which is in Win32 in directory where is located umk.exe or in 
-POSIX systems in directories [@3 `~], [@3 `~/.upp/umk], [@3 `~/.upp/theide] 
-or [@3 `~/.upp/theide]. Alternatively, it is a direct set of directories 
-that represent U`+`+ assembly separated by `',`'.&]
+[s11; [*@(0.0.255) assembly] is a direct set of package nest directories 
+relative to working directory that represent U`+`+ assembly separated 
+by `',`'. Alternatively it can be a predefined assembly (in .var 
+file) which is in Win32 in directory where is located umk.exe 
+or in POSIX systems in directories [@3 .config/u`+`+/umk ]or [@3 .config/u`+`+/theide
+] or direct path to .var file.&]
 [s11; [*@(0.0.255) package ]is the main package (a program to build).&]
 [s11; [*@(0.0.255) build`_method] is build method that is to be used 
 to build the resulting executable, specified either as name of 
-build method (which is then searched for in [@3 `~], [@3 `~/.upp/umk], 
-[@3 `~/.upp/theide] [@3 `~/.upp/theide] directories) or it is a direct 
-path to the .bm file.&]
+build method (which is then searched for in [@3 .config/u`+`+/umk 
+]or [@3 .config/u`+`+/theide] directories) or it is a direct path 
+to the .bm file. If not specified, [* CLANG] build method is assumed. 
+Note that in POSIX, umk automatically creates [* CLANG] and [* GCC] 
+build methods if they do not exist.&]
 [s11; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compilation 
 flags]. If flags are not specified, the first main configuration 
 entry in .upp file is used.&]
-[s11; [*@(0.0.255) out] is output file or directory.&]
+[s11; [*@(0.0.255) out] overrides output name, file or directory.&]
+[s11; [*C@4;3 !] means the the resulting binary should be also executed 
+after successful build, using optional arguments after [*C@4;3 !] 
+as its arguments.&]
 [s0;*C@4;3 &]
-[ {{1089:8911h1;@1 [s0; [3 Option]]
+[ {{1914:8086h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
 ::^@2 [s0; [*C@4;3 a]]
 ::= [s0; [3 Rebuild all.]]
@@ -54,7 +61,7 @@ entry in .upp file is used.&]
 ::^ [s0; [*C@4;3 m]]
 ::= [s0; [3 Create a map file.]]
 ::^ [s0; [*C@4;3 r]]
-::= [s0; [3 Release mode]]
+::= [s0; [3 Release mode (default is debug mode with full debug).]]
 ::^ [s0; [*C@4;3 d]]
 ::= [s0; [3 Debug mode without debug symbols.]]
 ::^ [s0; [*C@4;3 s]]
@@ -64,19 +71,12 @@ entry in .upp file is used.&]
 ::^ [s0; [*C@4;3 v]]
 ::= [s0; [3 Be verbose.]]
 ::^ [s0; [*C@4;3 M]]
-::= [s0; [3 Create makefile (to file ][*@4;3 out][3 ).]]
-::^ [s0; [*C@4;3 x]]
-::= [s0; [3 Export project (to directory ][*@4;3 out][3 ), export only files 
-used.]]
-::^ [s0; [*C@4;3 X]]
-::= [s0; [3 Export project (to directory ][*@4;3 out][3 ), export all files.]]
-::^ [s0; [*C@4;3 xM]]
-::= [s0; [3 Export makefile (to directory ][*@4;3 out][3 ).]]
-::^ [s0;%- [*C@4;3 k]]
-::= [s0; [3 Do not delete target directory ][*@4;3 out][3  when exporting.]]
+::= [s0; [3 Create makefile (to file ][*3 Makefile][3 ).]]
+::^ [s0; [%-*C@4;3 M`=][*/C@3;3 makefile]]
+::= [s0; [3 Create mafile with given name.]]
 ::^ [s0;%- [*C@4;3 H][*/C@3;3 n]]
-::= [s0; [3 Number of threads used for building (single digit). Default 
-is number of logical cores available.]]}}&]
+::= [s0; [3 Number of threads used for building. Default is number of logical 
+cores available.]]}}&]
 [s12; &]
 [s12; 2. Examples&]
 [s0;*C@5+92 &]
