@@ -248,15 +248,6 @@ of the cone corresponds to the black RBG cube vertex, the opposite
 circle of the HSV cone and the remaining six RGB cube vertices 
 get projected on the circumference of the cone base as explained 
 in the preceding paragraph.&]
-[s2; &]
-[s7; [%-*C@3 r]-|input red component `[0..1`]&]
-[s7; [%-*C@3 g]-|input green component `[0..1`]&]
-[s7; [%-*C@3 b]-|input blue component `[0..1`]&]
-[s7; [%-*C@3 h]-|output hue `[0..1`], i.e. color tint&]
-[s7; [%-*C@3 s]-|output saturation `[0..1`]. Maximum saturation (1) 
-corresponds to the `"purest`" basic color (one of the six), whereas 
-minimum saturation (0) is gray or white.&]
-[s7; [%-*C@3 v]-|output brightness `[0..1`].&]
 [s3; &]
 [s4;%- &]
 [s5;:HSVtoRGB`(double`,double`,double`,double`&`,double`&`,double`&`):%- [@(0.0.255) vo
@@ -267,22 +258,41 @@ id]_[* HSVtoRGB]([@(0.0.255) double]_[*@3 h], [@(0.0.255) double]_[*@3 s],
 to lie in the interval `[0..1`]) into an RGB triplet (again with 
 component ranges `[0..1`]). This projects the HSV cone (as explained 
 in the preceding section) back onto the RGB cube.&]
-[s7; [%-*C@3 h]-|input hue, i.e. color tint `[0..1`]&]
-[s7; [%-*C@3 s]-|input saturation, i.e. color `"purity`" `[0..1`]&]
-[s7; [%-*C@3 v]-|value `- luminance or brightness `[0..1`]&]
-[s7; [%-*C@3 r]-|output red component `[0..1`]&]
-[s7; [%-*C@3 g]-|output green component `[0..1`]&]
-[s7; [%-*C@3 b]-|output blue component `[0..1`]&]
 [s3; &]
 [s4;%- &]
 [s5;:HsvColorf`(double`,double`,double`):%- [_^Color^ Color]_[* HsvColorf]([@(0.0.255) doub
 le]_[*@3 h], [@(0.0.255) double]_[*@3 s], [@(0.0.255) double]_[*@3 v])&]
 [s2; Converts an HSV color triplet into a [* Color] object. The H, 
 S, and V components are supposed to be in the range `[0..1`].&]
-[s7; [%-*C@3 h]-|input hue `[0..1`]&]
-[s7; [%-*C@3 s]-|input saturation `[0..1`]&]
-[s7; [%-*C@3 v]-|input value aka brightness `[0..1`]&]
-[s7; [*/ Return value]-|the [* Color] object with the given HSV components&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:CMYKtoRGB`(double`,double`,double`,double`,double`&`,double`&`,double`&`):%- [@(0.0.255) v
+oid]_[* CMYKtoRGB]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], 
+[@(0.0.255) double]_[*@3 y], [@(0.0.255) double]_[*@3 k], [@(0.0.255) double`&]_[*@3 r], 
+[@(0.0.255) double`&]_[*@3 g], [@(0.0.255) double`&]_[*@3 b])&]
+[s2; Converts CMYK color definition to RGB (all components are in 
+`[0..1`] range).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:RGBtoCMYK`(double`,double`,double`,double`&`,double`&`,double`&`,double`&`):%- [@(0.0.255) v
+oid]_[* RGBtoCMYK]([@(0.0.255) double]_[*@3 r], [@(0.0.255) double]_[*@3 g], 
+[@(0.0.255) double]_[*@3 b], [@(0.0.255) double`&]_[*@3 c], [@(0.0.255) double`&]_[*@3 m], 
+[@(0.0.255) double`&]_[*@3 y], [@(0.0.255) double`&]_[*@3 k])&]
+[s2; Converts RGB color definition to CMYK (all components are in 
+`[0..1`] range).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:CmykColorf`(double`,double`,double`,double`):%- [_^Upp`:`:Color^ Color]_[* Cm
+ykColorf]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) double]_[*@3 y
+], [@(0.0.255) double]_[*@3 k])&]
+[s2; Converts CMYK color definition to RGB (all components are in 
+`[0..1`] range).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:CmyColorf`(double`,double`,double`):%- [_^Upp`:`:Color^ Color]_[* CmyColorf](
+[@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) double]_[*@3 y])&]
+[s2; Converts CMY color definition to RGB (all components are in 
+`[0..1`] range).&]
 [s3; &]
 [s4;%- &]
 [s5;:Blend`(Color`,Color`,int`):%- [_^Color^ Color]_[* Blend]([_^Color^ Color]_[*@3 c1], 
