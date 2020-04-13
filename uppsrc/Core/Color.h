@@ -125,6 +125,11 @@ void   HSVtoRGB(double h, double s, double v, double& r, double& g, double& b);
 
 Color  HsvColorf(double h, double s, double v);
 
+void   CMYKtoRGB(double c, double m, double y, double k, double& r, double& g, double& b);
+void   RGBtoCMYK(double r, double g, double b, double& c, double& m, double& y, double& k);
+
+Color  CmykColorf(double c, double m, double y, double k = 0);
+
 Color  Blend(Color c1, Color c2, int alpha = 128);
 
 String ColorToHtml(Color color);

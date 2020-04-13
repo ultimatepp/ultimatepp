@@ -53,6 +53,29 @@ Color HsvColorf(double h, double s, double v)
 	return Color(min(int(r * 255), 255), min(int(g * 255), 255), min(int(b * 255), 255));
 }
 
+void CMYKtoRGB(double c, double m, double y, double k, double& r, double& g, double& b)
+{
+	k = clamp(k, 0.0, 1.0);
+	r = (1 - c) * (1 - k);
+	g = (1 - m) * (1 - k);
+	b = (1 - y) * (1 - k);
+}
+
+void RGBtoCMYK(double r, double g, double b, double& c, double& m, double& y, double& k)
+{
+	k = 1 - max(max(r, g), b);
+	c = (1 - r - k) / (1 - k);
+	m = (1 - g - k) / (1 - k);
+	y = (1 - b - k) / (1 - k);
+}
+
+Color CmykColorf(double c, double m, double y, double k)
+{
+	double r, g, b;
+	CMYKtoRGB(c, m, y, k, r, g, b);
+	return Color(min(int(r * 255), 255), min(int(g * 255), 255), min(int(b * 255), 255));
+}
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
