@@ -8,7 +8,7 @@ CONSOLE_APP_MAIN
 
 	Date d;
 	String downloads = HttpRequest("http://www.ultimatepp.org/www$uppweb$nightly$en-us.html").Execute();
-	int q = downloads.Find("<a href=\"downloads/upp-x11-src-");
+	int q = downloads.Find("<a href=\"downloads/upp-posix");
 	ASSERT(q > 0);
 	q = downloads.ReverseFind(">", q - 1);
 	ASSERT(q > 0);
