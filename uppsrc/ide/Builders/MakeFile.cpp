@@ -344,6 +344,8 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				output = wspc[i] + ".out";
 			else
 				output = "./" + wspc[0];
+			while(DirectoryExists(output))
+				output << ".out";
 			StringStream ss;
 			String svn_info;
 			String build_info = "\"$(UPPOUT)/build_info.h\"";
