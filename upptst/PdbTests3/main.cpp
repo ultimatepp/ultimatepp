@@ -14,7 +14,8 @@ GUI_APP_MAIN
 	c.b = Cyan();
 
 //	ImageBuffer ib = Rescale(CtrlImg::exclamation(), 500, 500);
-	ImageBuffer ib = CtrlImg::exclamation();
+	Image h = CtrlImg::exclamation();
+	ImageBuffer ib(h);
 	Fn(Red(), ib);
 	Image img = CtrlImg::exclamation();
 	Value v = img;
