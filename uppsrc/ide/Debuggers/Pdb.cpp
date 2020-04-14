@@ -90,6 +90,7 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
+	bar.Add(b, "Copy modules", THISBACK(CopyModules));
 }
 
 void Pdb::Tab()
@@ -394,6 +395,15 @@ void Pdb::CopyStackAll()
 void Pdb::CopyDisas()
 {
 	disas.WriteClipboard();
+}
+
+void Pdb::CopyModules()
+{
+	String s;
+	for(const ModuleInfo& f : module)
+		s << f.path << ", base 0x" << FormatIntHex((void *)f.base)
+		  << ", size: 0x" << FormatIntHex(f.size) << "\n";
+	WriteClipboardText(s);
 }
 
 void Pdb::Stop()

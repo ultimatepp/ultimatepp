@@ -510,6 +510,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      CopyStack();
 	void      CopyStackAll();
 	void      CopyDisas();
+	void      CopyModules();
 
 	void      MemoryGoto(const String& exp);
 	
