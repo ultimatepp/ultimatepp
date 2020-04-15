@@ -1,7 +1,7 @@
-class ViewDraw : public SystemDraw {
+class TopFrameDraw : public SystemDraw {
 public:
-	ViewDraw(Ctrl *ctrl);
-	~ViewDraw();
+	TopFrameDraw(Ctrl *ctrl, const Rect& r);
+	~TopFrameDraw();
 };
 
 Vector<WString>& coreCmdLine__();

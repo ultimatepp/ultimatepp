@@ -396,22 +396,22 @@ void MMCtrl::SyncRect(CocoView *view)
 	view->ctrl->SetWndRect(MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 
-ViewDraw::ViewDraw(Ctrl *ctrl)
+TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 {
 	EnterGuiMutex();
+	ctrl = ctrl->GetTopCtrl();
 	ASSERT(ctrl->top->coco);
-	Rect tr = ctrl->GetTopCtrl()->GetScreenRect();
-	Rect r = ctrl->GetScreenView();
+	Rect tr = ctrl->GetScreenRect();
 	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->top->coco->window];
 	Init([gc CGContext], NULL);
 
 	CGContextTranslateCTM(cgHandle, 0, tr.GetHeight());
 	CGContextScaleCTM(cgHandle, 1, -1);
 
-	Clipoff(Rect(r.TopLeft() - tr.TopLeft(), r.GetSize()));
+	Clipoff(r);
 }
 
-ViewDraw::~ViewDraw()
+TopFrameDraw::~TopFrameDraw()
 {
 	End();
 	CGContextFlush(cgHandle);

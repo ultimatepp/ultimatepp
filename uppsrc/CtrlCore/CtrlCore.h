@@ -675,6 +675,7 @@ private:
 	friend dword GetKeyStateSafe(dword what);
 	friend void  CtrlSetDefaultSkin(void (*_skin)());
 	friend class DHCtrl;
+	friend class TopFrameDraw;
 	friend class ViewDraw;
 	friend class TopWindow;
 	friend class TrayIcon;
@@ -1667,7 +1668,8 @@ T *Ctrl::GetAscendant() const
 
 #ifdef HAS_TopFrameDraw
 
-struct ViewDraw : public TopFrameDraw {
+class ViewDraw : public TopFrameDraw {
+public:
 	ViewDraw(Ctrl *ctrl, const Rect& r);
 	ViewDraw(Ctrl *ctrl) : ViewDraw(ctrl, ctrl->GetSize()) {}
 	ViewDraw(Ctrl *ctrl, int x, int y, int cx, int cy) : ViewDraw(ctrl, RectC(x, y, cx, cy)) {}
