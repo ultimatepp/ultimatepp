@@ -361,3 +361,5 @@ inline unsigned GetHashValue(const HWND& hwnd)
 #endif
 
 #define GUIPLATFORM_INCLUDE_AFTER "Win32GuiA.h"
+
+#define HAS_TopFrameDraw

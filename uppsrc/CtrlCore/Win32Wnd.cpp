@@ -1297,17 +1297,17 @@ Rect Ctrl::GetDefaultWindowRect() {
 #endif
 }
 
-ViewDraw::ViewDraw(Ctrl *ctrl)
+TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 {
 	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
 	hwnd = top->GetHWND();
 	ASSERT(hwnd);
 	Attach(GetDC(hwnd));
-	Clipoff(ctrl->GetScreenView() - top->GetScreenRect().TopLeft());
+	Clipoff(r);
 }
 
-ViewDraw::~ViewDraw()
+TopFrameDraw::~TopFrameDraw()
 {
 	End();
 	HDC hdc = Detach();
