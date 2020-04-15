@@ -1115,11 +1115,10 @@ void Ctrl::SyncNativeWindows(void)
 
 // 01/12/2007 - END
 
-ViewDraw::ViewDraw(Ctrl *ctrl)
+TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 {
 	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
-	Rect r = ctrl->GetScreenView() - top->GetScreenRect().TopLeft();
 	Vector<Rect> clip;
 	clip.Add(r);
 	dw = top->GetWindow();
@@ -1129,7 +1128,7 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 	Init(clip, r.TopLeft());
 }
 
-ViewDraw::~ViewDraw()
+TopFrameDraw::~TopFrameDraw()
 {
 	XFreeGC(Xdisplay, gc);
 	LeaveGuiMutex();

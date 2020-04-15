@@ -382,6 +382,7 @@ class DrawPainter : public ImagePainter {
 
 public:
 	DrawPainter(Draw& w, Size sz, int mode = MODE_ANTIALIASED);
+	DrawPainter(Draw& w, int cx, int cy, int mode = MODE_ANTIALIASED) : DrawPainter(w, Size(cx, cy), mode) {}
 	~DrawPainter();
 };
 

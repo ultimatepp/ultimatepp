@@ -75,7 +75,7 @@ private:
 	
 	friend class ImageDraw;
 	friend class BackDraw;
-	friend class ViewDraw;
+	friend class TopFrameDraw;
 
 	Rect     GetClip() const;
 	void     FlushText();
@@ -210,3 +210,5 @@ int rmsecs();
 }
 
 #define GUIPLATFORM_INCLUDE_AFTER <CtrlCore/GtkAfter.h>
+
+#define HAS_TopFrameDraw

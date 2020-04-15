@@ -516,15 +516,17 @@ Rect Ctrl::GetDefaultWindowRect()
 	return RectC(r.left + pos + 20, r.top + pos + 20, cx, cy);
 }
 
-ViewDraw::ViewDraw(Ctrl *ctrl)
+TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 {
 	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
 #if GTK_CHECK_VERSION(3, 22, 0)
-	cairo_rectangle_int_t r;
-	r.x = r.y = 0;
-	r.width = r.height = 100000;
-	cairo_region_t *rg = cairo_region_create_rectangle(&r);
+	cairo_rectangle_int_t rr;
+	rr.x = Ctrl::LSC(r.left);
+	rr.y = Ctrl::LSC(r.top);
+	rr.width = Ctrl::LSC(r.GetWidth());
+	rr.height = Ctrl::LSC(r.GetHeight());
+	cairo_region_t *rg = cairo_region_create_rectangle(&rr);
 	ctx = gdk_window_begin_draw_frame(top->gdk(), rg);
 	cairo_region_destroy(rg);
 	cr = gdk_drawing_context_get_cairo_context(ctx);
@@ -532,10 +534,10 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 	cr = gdk_cairo_create(top->gdk());
 #endif
 	cairo_scale(cr, Ctrl::LSC(1), Ctrl::LSC(1));
-	Clipoff(ctrl->GetScreenView() - top->GetScreenRect().TopLeft());
+	Clipoff(r);
 }
 
-ViewDraw::~ViewDraw()
+TopFrameDraw::~TopFrameDraw()
 {
 	FlushText();
 #if GTK_CHECK_VERSION(3, 22, 0)

@@ -1081,4 +1081,16 @@ int    Ctrl::GetExitCode() const
 	return exitcode;
 }
 
+#ifdef HAS_TopFrameDraw
+
+ViewDraw::ViewDraw(Ctrl *ctrl, const Rect& r)
+:	TopFrameDraw(ctrl, (ctrl->GetScreenView() & (r + ctrl->GetScreenView().TopLeft()))
+                       - ctrl->GetTopCtrl()->GetScreenRect().TopLeft())
+{
+	Point p = r.TopLeft();
+	Offset(min(p.x, 0), min(p.y, 0));
+}
+
+#endif
+
 }
