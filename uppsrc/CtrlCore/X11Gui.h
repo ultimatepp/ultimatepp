@@ -121,7 +121,7 @@ private:
 	friend class  ImageDraw;
 	friend class  FontInfo;
 	friend class  Font;
-	friend class  ViewDraw;
+	friend class  TopFrameDraw;
 
 	friend void StaticExitDraw_();
 	friend Font StdFont();
@@ -258,5 +258,7 @@ Index<Atom>& _NET_Supported();
 #include "stdids.h"
 
 #define GUIPLATFORM_INCLUDE_AFTER "X11GuiA.h"
+
+#define HAS_TopFrameDraw
 
 }

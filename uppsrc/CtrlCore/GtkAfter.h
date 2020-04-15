@@ -1,10 +1,10 @@
-class ViewDraw : public SystemDraw {
+class TopFrameDraw : public SystemDraw {
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDrawingContext *ctx;
 #endif
 public:
-	ViewDraw(Ctrl *ctrl);
-	~ViewDraw();
+	TopFrameDraw(Ctrl *ctrl, const Rect& r);
+	~TopFrameDraw();
 };
 
 void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f);
