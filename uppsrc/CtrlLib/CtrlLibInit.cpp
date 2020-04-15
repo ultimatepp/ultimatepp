@@ -5,8 +5,10 @@ namespace Upp {
 #define  TFILE <CtrlLib/CtrlLib.t>
 #include <Core/t.h>
 
+void CtrlSetDefaultSkin(void (*_skin)());
+
 INITIALIZER(CtrlLib) {
-	Ctrl::SetSkin(ChHostSkin);
+	CtrlSetDefaultSkin(ChHostSkin);
 };
 
 }

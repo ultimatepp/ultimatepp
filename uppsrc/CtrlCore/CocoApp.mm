@@ -97,7 +97,7 @@ void CocoInit(int argc, const char **argv, const char **envptr)
     
     sClipFmtsRTF = "rtf";
     
-    Ctrl::Csizeinit();
+    Ctrl::ReSkin();
 }
 
 int Ctrl::GetKbdDelay()
