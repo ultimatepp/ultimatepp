@@ -9,8 +9,6 @@ namespace Upp {
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_source.h>
 
-void ChSysInit();
-
 Color AdjustColor(Color c, int adj)
 {
 	return Color(clamp(c.GetR() + adj, 0, 255),
@@ -96,7 +94,8 @@ void ChClassicSkin()
 {
 	LLOG("ChInitWinClassic");
 
-	ChSysInit();
+	ChBaseSkin();
+
 	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	
@@ -226,17 +225,6 @@ void ChClassicSkin()
 	
 	MakeDialogIcons();
 }
-
-#ifdef PLATFORM_X11
-
-void ChSysInit()
-{
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
-	ChReset();
-}
-
-#endif
 
 void FillImage(Painter& p, const Rectf& r, const Image& m)
 {
@@ -589,7 +577,6 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 
 void ChBaseSkin()
 {
-	ChSysInit();
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());

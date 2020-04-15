@@ -294,7 +294,7 @@ void ChHostSkin()
 	SColorInfoText_Write(SColorText());
 #endif
 
-	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+	ChBaseSkin();
 
 #if 0 // TODO (?)
 		{ SColorLight_Write, 2*5 + 0 },

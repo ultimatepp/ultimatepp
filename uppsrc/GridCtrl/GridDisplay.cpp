@@ -198,7 +198,7 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 	if(moved)
 	    DrawBorder(w, x, y, cx, cy, BlackBorder);
 
-	Color col = style & GD::READONLY ? Gray : Black;
+	Color col = style & GD::READONLY ? SGray() : SBlack();
 
 	if(sortmode > 0)
 	{
@@ -220,7 +220,6 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 		bool asc = sortmode == 1;
 		if(reverse_sort_icon)
 			asc = !asc;
-		
 		w.DrawImage(xf, yf, asc ? GridImg::SortAsc() : GridImg::SortDsc(), col);
 
 		tx += 3;
