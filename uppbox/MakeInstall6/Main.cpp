@@ -94,7 +94,7 @@ CONSOLE_APP_MAIN
 
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
-	CopyFolder(bin + "/win32/clang/x86_64-w64-mingw32/bin", upptmp);
+	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32/clang/x86_64-w64-mingw32/bin/dbghelp.dll"));
 	SaveFile(upptmp + "/README", LoadDataFile("README"));
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
