@@ -974,6 +974,11 @@ INITBLOCK {
 
 void (*Ctrl::skin)();
 
+void CtrlSetDefaultSkin(void (*_skin)())
+{
+	Ctrl::skin = _skin;
+}
+
 void Ctrl::SetSkin(void (*_skin)())
 {
 	GuiLock __;

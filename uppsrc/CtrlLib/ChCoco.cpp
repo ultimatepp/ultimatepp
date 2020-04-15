@@ -67,8 +67,6 @@ void CocoButton(Button::Style& s, int type, int value)
 
 void ChHostSkin()
 {
-	TIMING("ChHostSkin");
-
 	CtrlImg::Reset();
 	CtrlsImg::Reset();
 	ChReset();
