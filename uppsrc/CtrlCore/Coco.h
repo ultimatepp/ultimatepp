@@ -66,7 +66,7 @@ private:
 	
 	friend class ImageDraw;
 	friend class BackDraw;
-	friend class ViewDraw;
+	friend class TopFrameDraw;
 	friend struct BackDraw__;
 
 public:
@@ -174,3 +174,5 @@ friend struct MMImp;
 };
 
 #define GUIPLATFORM_INCLUDE_AFTER <CtrlCore/CocoAfter.h>
+
+#define HAS_TopFrameDraw
