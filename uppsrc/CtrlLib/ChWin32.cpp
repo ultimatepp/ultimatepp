@@ -1,32 +1,9 @@
 #include "CtrlLib.h"
 
-namespace Upp {
+#ifdef GUI_WIN
 
 #define LLOG(x)   // RLOG(x)
 #define LTIMING(x) // RTIMING(x)
-
-void ChSysInit();
-
-#ifdef GUI_WIN
-
-#ifdef PLATFORM_WINCE
-
-void ChSysInit()
-{
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
-	ChReset();
-	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
-}
-
-void ChHostSkin()
-{
-	ChClassicSkin();
-}
-
-#else
-
-}
 
 #include <uxtheme.h>
 #if defined(_MSC_VER) && _MSC_VER > 1400	// Visual C > 2005
@@ -344,8 +321,8 @@ struct sysColor {
 };
 
 static sysColor sSysColor[] = {
-	{ SColorFace_Write, COLOR_3DFACE },
 	{ SColorPaper_Write, COLOR_WINDOW },
+	{ SColorFace_Write, COLOR_3DFACE },
 	{ SColorText_Write, COLOR_WINDOWTEXT },
 	{ SColorHighlight_Write, COLOR_HIGHLIGHT },
 	{ SColorHighlightText_Write, COLOR_HIGHLIGHTTEXT },
@@ -373,12 +350,50 @@ void ToImageIfDark(Value& v)
 	}
 }
 
+bool IsSystemThemeDark()
+{
+	String s = GetWinRegString("AppsUseLightTheme", "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", HKEY_CURRENT_USER);
+	bool b = s.GetCount() && *s == 0;
+	return GetEnv("UPP_DARKMODE__") == "1" ? !b : b;
+}
+
 void ChHostSkin()
 {
+	if(Ctrl::IsUHDEnabled()) {
+		HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
+		DllFn(SetProcessDpiAwareness, "Shcore.dll", "SetProcessDpiAwareness");
+		if(SetProcessDpiAwareness)
+			SetProcessDpiAwareness(1);
+		else {
+			BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
+			DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
+			if(SetProcessDPIAware)
+				(*SetProcessDPIAware)();
+		}
+	}
+
+	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
+
+	NONCLIENTMETRICS ncm;
+#if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
+	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
+#else
+	ncm.cbSize = sizeof(ncm);
+#endif
+	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
+	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
+	int height = abs((int)ncm.lfMenuFont.lfHeight);
+	
+	int q = Font::FindFaceNameIndex(name);
+	if(height > 0 && height < 200) // sanity..
+		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
+
 	XpClear();
 
 	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
 		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
+
+	ChBaseSkin();
 
 	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
 	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);
@@ -678,50 +693,6 @@ void ChHostSkin()
 		ChClassicSkin();
 }
 
-bool IsSystemThemeDark()
-{
-	String s = GetWinRegString("AppsUseLightTheme", "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", HKEY_CURRENT_USER);
-	return s.GetCount() && *s == 0;
-}
-
-void ChSysInit()
-{
-	if(Ctrl::IsUHDEnabled()) {
-		HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
-		DllFn(SetProcessDpiAwareness, "Shcore.dll", "SetProcessDpiAwareness");
-		if(SetProcessDpiAwareness)
-			SetProcessDpiAwareness(1);
-		else {
-			BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
-			DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-			if(SetProcessDPIAware)
-				(*SetProcessDPIAware)();
-		}
-	}
-
-	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
-
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
-	ChReset();
-
-	NONCLIENTMETRICS ncm;
-#if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
-	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
-#else
-	ncm.cbSize = sizeof(ncm);
-#endif
-	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
-	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
-	int height = abs((int)ncm.lfMenuFont.lfHeight);
-	
-	int q = Font::FindFaceNameIndex(name);
-	if(height > 0 && height < 200) // sanity..
-		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 }
 
 #endif
-
-#endif
-
-}

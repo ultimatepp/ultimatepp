@@ -864,7 +864,6 @@ bool Ctrl::IsDarkThemeEnabled()
 	return ApplicationDarkThemeEnabled;
 }
 
-
 Font StdFontZ(int height)   { return FontZ(Font::STDFONT, height); }
 Font SansSerifZ(int height) { return FontZ(Font::SANSSERIF, height); }
 Font SerifZ(int height)     { return FontZ(Font::SERIF, height); }
@@ -973,16 +972,7 @@ INITBLOCK {
 	whenSetStdFont = &Ctrl::ReSkin;
 }
 
-void (*s_chdefault)();
-
 void (*Ctrl::skin)();
-
-void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)())
-{
-	GuiLock __;
-	s_chdefault = fn1;
-	Ctrl::skin = fn2;
-}
 
 void Ctrl::SetSkin(void (*_skin)())
 {
@@ -999,9 +989,8 @@ void Ctrl::ReSkin()
 		return;
 	lock++;
 	ChReset();
+	Iml::ResetAll();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
-	if(s_chdefault)
-		(*s_chdefault)();
 	if(skin)
 		(*skin)();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
