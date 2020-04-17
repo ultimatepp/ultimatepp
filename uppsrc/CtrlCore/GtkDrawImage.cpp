@@ -101,7 +101,8 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 		cairo_set_source_surface(cr, sd.surface, x, y);
 		cairo_paint(cr);
 	}
-	cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
+	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
+	cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
 Draw& ImageDraw::Alpha()

@@ -1,4 +1,4 @@
-template "Basic CtrlLib application" main;
+template "U++ Basic CtrlLib application" main;
 
 option "Create header" header;
 

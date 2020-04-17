@@ -1,4 +1,4 @@
-template "Skylark Web application" main;
+template "U++ Skylark Web application" main;
 
 id     "Application name"    classname = PACKAGE;
 id     "Main page root path" root = PACKAGE;

@@ -1,4 +1,4 @@
-template "Core console project" main;
+template "U++ Core console project" main;
 
 option "Create header" header;
 option "Commandline loop" cmdline;
