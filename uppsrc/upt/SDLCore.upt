@@ -1,4 +1,4 @@
-template "SDL with Core package" main;
+template "U++ Core with SDL" main;
 
 option "Create header" header;
 option "Initialize video" video;

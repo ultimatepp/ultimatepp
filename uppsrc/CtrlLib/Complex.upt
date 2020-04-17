@@ -1,4 +1,4 @@
-template "CtrlLib application with main window" main;
+template "U++ CtrlLib application with main window" main;
 
 id     "Main window class name" classname = PACKAGE;
 select("No layouts", "Generate layout file", "Main window has layout", "Main window has OK/Cancel")
