@@ -88,7 +88,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	    CGContextRestoreGState(cgHandle);
 	}
 	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
-	cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
+	cg_image_cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
 // TODO: https://stackoverflow.com/questions/10733228/native-osx-lion-resize-cursor-for-custom-nswindow-or-nsview
