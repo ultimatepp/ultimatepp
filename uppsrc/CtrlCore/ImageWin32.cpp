@@ -253,6 +253,7 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	Size ssz = sr.Size();
 	if(sr.IsEmpty())
 		return;
+#if 0
 	int kind = img.GetKind();
 
 //	DDUMP(GetDeviceCaps(dc, RASTERCAPS) & RC_BITBLT);
@@ -267,6 +268,7 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	if(kind == IMAGE_OPAQUE && (paintcount == 0 || w.IsPrinter()) && sr == Rect(sz) &&
 	   (GetDeviceCaps(dc, RASTERCAPS) & RC_DIBTODEV)) {
 		LTIMING("Image Opaque direct set");
+		RLOG("SetSurface");
 		SetSurface(w, x, y, sz.cx, sz.cy, ~img);
 		paintcount++;
 		return;
@@ -284,6 +286,7 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		SysImageRealized(img);
 		return;
 	}
+#endif
 	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack &&
 	   !(w.IsPrinter() && (GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)) !=
 	                     (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA))) {

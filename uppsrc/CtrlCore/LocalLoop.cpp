@@ -3,6 +3,8 @@
 namespace Upp {
 
 #define LLOG(x) // DLOG(x)
+#define LDUMP(x) // DDUMP(x)
+#define LTIMESTOP(x)  // DTIMESTOP(x)
 
 void LocalLoop::Run()
 {
@@ -27,8 +29,11 @@ void LocalLoop::CancelMode()
 
 RectTracker::RectTracker(Ctrl& master)
 {
+	op = GetMousePos();
 	SetMaster(master);
 	if(master.IsVisible()) {
+		LTIMESTOP("--- snapshot");
+		LDUMP(master.GetSize());
 		ImageDraw iw(master.GetSize());
 		master.Paint(iw);
 		master_image = iw;
@@ -71,16 +76,19 @@ void RectTracker::DrawRect(Draw& w, Rect r)
 void RectTracker::Paint(Draw& w)
 {
 	{
-		TIMESTOP("DrawImage");
+		LTIMESTOP("DrawImage");
 		w.DrawImage(0, 0, master_image);
 	}
 	w.Clip(clip & GetMaster().GetSize());
 	Rect r = rect;
 	if(ty < 0)
 		r.left = r.right - 1;
+	else
 	if(tx < 0)
 		r.top = r.bottom - 1;
-	DrawRect(w, rect);
+	else
+		r.Normalize();
+	DrawRect(w, r);
 	w.End();
 }
 
@@ -91,7 +99,6 @@ Rect RectTracker::Track(const Rect& r, int _tx, int _ty)
 	ty = _ty;
 	org = rect;
 	o = rect;
-	op = GetMousePos();
 	Run();
 	return rect;
 }
