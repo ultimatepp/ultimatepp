@@ -13,11 +13,11 @@ int64 usecs(int64 prev = 0);
 int msecs(int prev = 0);
 
 class TimeStop : Moveable<TimeStop> {
-	dword starttime;
+	double starttime;
 
 public:
-	dword  Elapsed() const           { return GetTickCount() - starttime; }
-	double Seconds() const           { return (double)Elapsed() / 1000; }
+	double Elapsed() const           { return usecs() - starttime; }
+	double Seconds() const           { return (double)Elapsed() / 1000000; }
 	String ToString() const;
 	void   Reset();
 

@@ -209,7 +209,7 @@ int msecs(int prev)
 
 void TimeStop::Reset()
 {
-	starttime = GetTickCount();
+	starttime = usecs();
 }
 
 TimeStop::TimeStop()
@@ -219,8 +219,12 @@ TimeStop::TimeStop()
 
 String TimeStop::ToString() const
 {
-	dword time = Elapsed();
-	return Format("%d.%03d", int(time / 1000), int(time % 1000));
+	double time = Elapsed();
+	if(time < 1e3)
+		return String() << time << " us";
+	if(time < 1e6)
+		return String() << time / 1e3 << " ms";
+	return String() << time / 1e6 << " s";
 }
 
 int RegisterTypeNo__(const char *type)
