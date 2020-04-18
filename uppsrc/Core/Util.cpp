@@ -209,7 +209,7 @@ int msecs(int prev)
 
 void TimeStop::Reset()
 {
-	starttime = usecs();
+	starttime = (double)usecs();
 }
 
 TimeStop::TimeStop()

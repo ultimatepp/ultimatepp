@@ -83,7 +83,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 #endif
 	case WM_PAINT:
-		DLOG("WM_PAINT " << Name(this));
 		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
 		if(hwnd) {
