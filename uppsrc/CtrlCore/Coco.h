@@ -133,18 +133,6 @@ public:
 	~BackDraw();
 };
 
-
-struct DrawDragRectInfo {
-	Rect  rect1, rect2, clip;
-	int   n;
-	Color color;
-	int   type;
-	int   animation;
-};
-
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
-
 Image GetIconForFile(const char *path);
 
 #ifndef PLATFORM_WIN32

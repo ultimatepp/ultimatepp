@@ -173,14 +173,6 @@ GdkAtom GAtom(const String& id);
 Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 #endif
 
-struct DrawDragRectInfo {
-	Rect  rect1, rect2, clip;
-	int   n;
-	Color color;
-	int   type;
-	int   animation;
-};
-
 #ifndef PLATFORM_WIN32
 #include <CtrlCore/stdids.h>
 #endif
@@ -192,7 +184,6 @@ struct DrawDragRectInfo {
 	GtkWidget            *window; \
 	GtkIMContext         *im_context; \
 	int64                 cursor_id; \
-	One<DrawDragRectInfo> dr; \
 	int                   id; \
 //$ }
 

@@ -4,51 +4,6 @@
 
 namespace Upp {
 
-void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
-{
-	ViewDraw w(&q);
-	w.Clip(f.clip);
-	static int dashes[3][3] = {
-		{ 32, 32, 0 },
-		{ 1, 1, 1 },
-		{ 5, 1, 2 },
-	};
-	const int *dash = dashes[minmax(f.type, 0, 2)];
-	Color color = InvertColor;
-	DrawDragFrame(w, f.rect1, f.n, dash, color, f.animation);
-	DrawDragFrame(w, f.rect2, f.n, dash, color, f.animation);
-	w.End();
-}
-
-void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, int type, int animation)
-{
-	Ctrl *top = q.GetTopCtrl();
-	if(top && top->top) {
-		Rect sv = q.GetScreenView();
-		Rect tv = top->GetScreenView();
-		Point off = sv.TopLeft() - tv.TopLeft();
-		DrawDragRectInfo& f = top->top->dr.Create();
-		f.rect1 = rect1 + off;
-		f.rect2 = rect2 + off;
-		f.clip = (clip & q.GetSize()) + off;
-		f.n = n;
-		f.color = color;
-		f.type = type;
-		f.animation = animation;
-		DrawDragRect(*top, f);
-	}
-}
-
-void FinishDragRect(Ctrl& q)
-{
-	Ctrl *top = q.GetTopCtrl();
-	if(top && top->top && top->top->dr) {
-		DrawDragRect(*top, *top->top->dr);
-		top->top->dr.Clear();
-	}
-}
-
 GdkRect::GdkRect(const Rect& r)
 {
 	x = r.left;
