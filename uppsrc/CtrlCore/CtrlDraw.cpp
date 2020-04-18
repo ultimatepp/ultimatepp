@@ -286,8 +286,11 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	Rect oview = view.Inflated(overpaint);
 	bool hasviewctrls = false;
 	bool viewexcluded = false;
+	bool hiddenbychild = false;
 	for(q = firstchild; q; q = q->next)
 		if(q->IsShown()) {
+			if(q->GetRect().Contains(orect) && !q->IsTransparent())
+				hiddenbychild = true;
 			if(q->InFrame()) {
 				if(!viewexcluded && IsTransparent() && q->GetRect().Intersects(view)) {
 					w.Begin();
@@ -306,23 +309,21 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	if(viewexcluded)
 		w.End();
 	DOLEVELCHECK;
-	if(!oview.IsEmpty()) {
-		if(oview.Intersects(clip) && w.IsPainting(oview)) {
-			LEVELCHECK(w, this);
-			if(overpaint) {
-				w.Clip(oview);
-				w.Offset(view.left, view.top);
-				Paint(w);
-				PaintCaret(w);
-				w.End();
-				w.End();
-			}
-			else {
-				w.Clipoff(view);
-				Paint(w);
-				PaintCaret(w);
-				w.End();
-			}
+	if(!hiddenbychild && !oview.IsEmpty() && oview.Intersects(clip) && w.IsPainting(oview)) {
+		LEVELCHECK(w, this);
+		if(overpaint) {
+			w.Clip(oview);
+			w.Offset(view.left, view.top);
+			Paint(w);
+			PaintCaret(w);
+			w.End();
+			w.End();
+		}
+		else {
+			w.Clipoff(view);
+			Paint(w);
+			PaintCaret(w);
+			w.End();
 		}
 	}
 	if(hasviewctrls && !view.IsEmpty()) {
