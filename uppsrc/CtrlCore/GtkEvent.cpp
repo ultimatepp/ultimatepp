@@ -107,8 +107,6 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		p->UpdateArea(w, r);
 		w.End();
-		if(p->top->dr)
-			DrawDragRect(*p, *p->top->dr);
 		painting = false;
 	}
 	return true;

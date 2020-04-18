@@ -88,8 +88,8 @@ PageY RichEdit::GetPageY(int y) const
 
 static void sPaintHotSpot(Draw& w, int x, int y)
 {
-	w.DrawRect(x + 1, y + 1, 6, 6, LtRed);
-	DrawFrame(w, x, y, 8, 8, SColorText);
+	w.DrawRect(x, y, DPI(8), DPI(8), LtRed);
+	DrawFrame(w, x, y, DPI(8), DPI(8), SColorText);
 }
 
 void RichEdit::Paint(Draw& w)
@@ -145,14 +145,14 @@ void RichEdit::Paint(Draw& w)
 		Rect r = objectrect;
 		r.Offset(tr.left, -sb);
 		DrawFrame(w, r, SColorText);
-		r.Deflate(1);
-		DrawFatFrame(w, r, Blend(SColorHighlight, SColorLight), 2);
-		r.Deflate(2);
+		r.Deflate(DPI(1));
+		DrawFatFrame(w, r, Blend(SColorHighlight, SColorLight), DPI(2));
+		r.Deflate(DPI(2));
 		DrawFrame(w, r, SColorText);
-		r.Deflate(1);
-		sPaintHotSpot(w, r.left + r.Width() / 2 - 3, r.bottom - 7);
-		sPaintHotSpot(w, r.right - 7, r.bottom - 7);
-		sPaintHotSpot(w, r.right - 7, r.top + r.Height() / 2 - 3);
+		r.Deflate(DPI(1));
+		sPaintHotSpot(w, r.left + r.Width() / 2 - DPI(3), r.bottom - DPI(7));
+		sPaintHotSpot(w, r.right - DPI(7), r.bottom - DPI(7));
+		sPaintHotSpot(w, r.right - DPI(7), r.top + r.Height() / 2 - DPI(3));
 		w.Clip(r);
 		w.End();
 	}
@@ -169,12 +169,12 @@ int RichEdit::GetHotSpot(Point p) const
 	if(objectpos < 0) return -1;
 	Rect r = objectrect;
 	r.Offset(GetTextRect().left, -sb);
-	r.Deflate(4, 4);
-	if(RectC(r.right - 7, r.bottom - 7, 8, 12).Contains(p))
+	r.Deflate(DPI(4), DPI(4));
+	if(RectC(r.right - DPI(7), r.bottom - DPI(7), DPI(8), DPI(12)).Contains(p))
 		return 0;
-	if(RectC(r.left + r.Width() / 2 - 3, r.bottom - 7, 12, 12).Contains(p))
+	if(RectC(r.left + r.Width() / 2 - DPI(3), r.bottom - DPI(7), DPI(12), DPI(12)).Contains(p))
 		return 1;
-	if(RectC(r.right - 7, r.top + r.Height() / 2 - 3, 12, 8).Contains(p))
+	if(RectC(r.right - DPI(7), r.top + r.Height() / 2 - DPI(3), DPI(12), DPI(8)).Contains(p))
 		return 2;
 	return -1;
 }

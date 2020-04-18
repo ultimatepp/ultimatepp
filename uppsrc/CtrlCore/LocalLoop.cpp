@@ -70,7 +70,6 @@ void RectTracker::DrawRect(Draw& w, Rect r)
 
 void RectTracker::Paint(Draw& w)
 {
-	DLOG("RectTrackerPaint");
 	w.DrawImage(0, 0, master_image);
 	w.Clip(clip & GetMaster().GetSize());
 	DrawRect(w, rect);
@@ -177,7 +176,6 @@ void RectTracker::MouseMove(Point, dword)
 		rect = Round(rect);
 		if(rect != o) {
 			Refresh();
-			DLOG("Rfresh");
 			sync(rect);
 			o = rect;
 		}
