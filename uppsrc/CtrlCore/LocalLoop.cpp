@@ -72,6 +72,11 @@ void RectTracker::Paint(Draw& w)
 {
 	w.DrawImage(0, 0, master_image);
 	w.Clip(clip & GetMaster().GetSize());
+	Rect r = rect;
+	if(ty < 0)
+		r.left = r.right - 1;
+	if(tx < 0)
+		r.top = r.bottom - 1;
 	DrawRect(w, rect);
 	w.End();
 }
