@@ -331,6 +331,53 @@ void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn)
 	DrawRect(w, rect.left, rect.top, rect.Width(), rect.Height(), img, ralgn);
 }
 
+void DrawDragLine(Draw& w, bool horz, int x, int y, int len, int n, const int *pattern, Color color, int animation)
+{
+	if(len <= 0)
+		return;
+	if(horz)
+		w.Clip(x, y, len, n);
+	else
+		w.Clip(x, y, n, len);
+	
+	(horz ? x : y) -= animation;
+	len += animation;
+	bool ch = false;
+	while(len > 0) {
+		int segment = pattern[ch];
+		int d = segment + pattern[2];
+		if(horz) {
+			w.DrawRect(x, y, segment, n, color);
+			x += d;
+		}
+		else {
+			w.DrawRect(x, y, n, segment, color);
+			y += d;
+		}
+		len -= d;
+		ch = !ch;
+	}
+	w.End();
+}
+
+void DrawDragFrame(Draw& w, const Rect& r, int n, const int *pattern, Color color, int animation)
+{
+	DrawDragLine(w, true, r.left, r.top, r.GetWidth(), n, pattern, color, animation);
+	DrawDragLine(w, false, r.left, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
+	DrawDragLine(w, false, r.right - n, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
+	DrawDragLine(w, true, r.left, r.bottom - n, r.GetWidth(), n, pattern, color, animation);
+}
+
+void DrawDragFrame(Draw& w, const Rect& r, int n, int pattern, Color color, int animation)
+{
+	static int dashes[3][3] = {
+		{ 32, 32, 0 },
+		{ 1, 1, 1 },
+		{ 5, 1, 2 },
+	};
+	DrawDragFrame(w, r, n, dashes[clamp(pattern, 0, 2)], color, animation);
+}
+
 void DrawTiles(Draw& w, int x, int y, int cx, int cy, const Image& img) {
 	w.Clip(x, y, cx, cy);
 	Size sz = img.GetSize();

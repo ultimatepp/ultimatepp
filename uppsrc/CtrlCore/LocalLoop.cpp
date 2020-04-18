@@ -8,6 +8,7 @@ void LocalLoop::Run()
 {
 	ASSERT(master);
 	master->AddChild(this);
+	SizePos();
 	Ptr<Ctrl> focus = GetFocusCtrl();
 	SetCapture();
 	SetFocus();
@@ -24,6 +25,27 @@ void LocalLoop::CancelMode()
 	EndLoop();
 }
 
+RectTracker::RectTracker(Ctrl& master)
+{
+	SetMaster(master);
+	if(master.IsVisible()) {
+		ImageDraw iw(master.GetSize());
+		master.Paint(iw);
+		master_image = iw;
+	}
+	Clip(Rect(0, 0, 100000, 100000));
+	width = 1;
+	minsize = Size(0, 0);
+	maxsize = Size(100000, 100000);
+	maxrect = Rect(-100000, -100000, 100000, 100000);
+	keepratio = false;
+	cursorimage = Image::Arrow();
+	color = InvertColor;
+	pattern = DRAWDRAGRECT_NORMAL;
+	animation = 0;
+	rounder = NULL;
+}
+
 void RectTracker::LeftUp(Point, dword)
 {
 	EndLoop();
@@ -37,47 +59,22 @@ void RectTracker::RightUp(Point, dword)
 Image RectTracker::CursorImage(Point, dword)
 {
 	if(animation)
-		DrawRect(rect, rect);
+		Refresh();
 	return cursorimage;
 }
 
-RectTracker::RectTracker(Ctrl& master)
+void RectTracker::DrawRect(Draw& w, Rect r)
 {
-	SetMaster(master);
-	Clip(Rect(0, 0, 100000, 100000));
-	width = 1;
-	minsize = Size(0, 0);
-	maxsize = Size(100000, 100000);
-	maxrect = Rect(-100000, -100000, 100000, 100000);
-	keepratio = false;
-	cursorimage = Image::Arrow();
-	color = SColorPaper;
-	pattern = DRAWDRAGRECT_NORMAL;
-	animation = 0;
-	rounder = NULL;
+	DrawDragFrame(w, r, width, pattern, color, animation ? (msecs() / animation) % 8 : 0);
 }
 
-RectTracker::~RectTracker() {}
-
-void RectTracker::DrawRect(Rect r1, Rect r2)
+void RectTracker::Paint(Draw& w)
 {
-	if(ty < 0) {
-		r1.left = r1.right - 1;
-		r2.left = r2.right - 1;
-	}
-	if(tx < 0) {
-		r1.top = r1.bottom - 1;
-		r2.top = r2.bottom - 1;
-	}
-	Rect c = clip & GetMaster().GetSize();
-	if(animation) {
-		int nanim = (msecs() / animation) % 8;
-		DrawDragRect(GetMaster(), Rect(0, 0, 0, 0), r2, c, width, color, pattern, nanim);
-		DrawDragRect(GetMaster(), r1, Rect(0, 0, 0, 0), c, width, color, pattern, panim);
-		panim = nanim;
-	}
-	else
-		DrawDragRect(GetMaster(), r1, r2, c, width, color, pattern, 0);
+	DLOG("RectTrackerPaint");
+	w.DrawImage(0, 0, master_image);
+	w.Clip(clip & GetMaster().GetSize());
+	DrawRect(w, rect);
+	w.End();
 }
 
 Rect RectTracker::Track(const Rect& r, int _tx, int _ty)
@@ -88,11 +85,7 @@ Rect RectTracker::Track(const Rect& r, int _tx, int _ty)
 	org = rect;
 	o = rect;
 	op = GetMousePos();
-	GetMaster().Sync();
-	DrawRect(Rect(0, 0, 0, 0), rect);
 	Run();
-	DrawRect(o, Rect(0, 0, 0, 0));
-	FinishDragRect(GetMaster());
 	return rect;
 }
 
@@ -183,7 +176,8 @@ void RectTracker::MouseMove(Point, dword)
 	if(rect != o) {
 		rect = Round(rect);
 		if(rect != o) {
-			DrawRect(o, rect);
+			Refresh();
+			DLOG("Rfresh");
 			sync(rect);
 			o = rect;
 		}

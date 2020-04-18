@@ -4,43 +4,6 @@
 
 namespace Upp {
 
-void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, const int *pattern, Color color, int animation)
-{
-	if(len <= 0)
-		return;
-	if(horz)
-		w.Clip(x, y, len, n);
-	else
-		w.Clip(x, y, n, len);
-	
-	(horz ? x : y) -= animation;
-	len += animation;
-	bool ch = false;
-	while(len > 0) {
-		int segment = pattern[ch];
-		int d = segment + pattern[2];
-		if(horz) {
-			w.DrawRect(x, y, segment, n, color);
-			x += d;
-		}
-		else {
-			w.DrawRect(x, y, n, segment, color);
-			y += d;
-		}
-		len -= d;
-		ch = !ch;
-	}
-	w.End();
-}
-
-void DrawDragFrame(SystemDraw& w, const Rect& r, int n, const int *pattern, Color color, int animation)
-{
-	DrawDragLine(w, true, r.left, r.top, r.GetWidth(), n, pattern, color, animation);
-	DrawDragLine(w, false, r.left, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
-	DrawDragLine(w, false, r.right - n, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
-	DrawDragLine(w, true, r.left, r.bottom - n, r.GetWidth(), n, pattern, color, animation);
-}
-
 void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 {
 	ViewDraw w(&q);
