@@ -144,11 +144,11 @@ void RichEdit::Paint(Draw& w)
 	if(objectpos >= 0) {
 		Rect r = objectrect;
 		r.Offset(tr.left, -sb);
-		DrawFrame(w, r, SColorText);
+		DrawFrame(w, r, Black());
 		r.Deflate(DPI(1));
-		DrawFatFrame(w, r, Blend(SColorHighlight, SColorLight), DPI(2));
+		DrawFatFrame(w, r, White(), DPI(2));
 		r.Deflate(DPI(2));
-		DrawFrame(w, r, SColorText);
+		DrawFrame(w, r, Black());
 		r.Deflate(DPI(1));
 		sPaintHotSpot(w, r.left + r.Width() / 2 - DPI(3), r.bottom - DPI(7));
 		sPaintHotSpot(w, r.right - DPI(7), r.bottom - DPI(7));
