@@ -106,6 +106,7 @@ void  Filter(RasterEncoder& target, Raster& src, ImageFilter9& filter);
 Image Etched(const Image& img);
 Image Sharpen(const Image& img, int amount = 100);
 Image Dither(const Image& m, int dival = 394);
+Image GaussianBlur(const Image& img, int radius, bool co = false);
 
 Image RotateClockwise(const Image& img);
 Image RotateAntiClockwise(const Image& img);

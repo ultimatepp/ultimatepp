@@ -258,6 +258,13 @@ dithering is using for printing on purely monochromatic (without
 half`-toning support) printers.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:GaussianBlur`(const Upp`:`:Image`&`,int`): [_^Upp`:`:Image^ Image]_[* Gaussia
+nBlur]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) int]_[*@3 radius])&]
+[s2; [@N An implementation of well known fast box and gaussian blur 
+approximation algorithms by Wojciech Jarosz and Peter Kovesi.]&]
+[s3;%% &]
+[s4; &]
 [s5;:Etched`(const Image`&`): [_^Image^ Image]_[* Etched]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
 ]_[*@3 img])&]
 [s2;%% `"Etching`" effect.&]
