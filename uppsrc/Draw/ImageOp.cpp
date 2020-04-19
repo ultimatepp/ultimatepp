@@ -1066,8 +1066,16 @@ Image GaussianBlur(const Image& img, int radius, bool co)
 			}
 		};
 
-		if(co)
-			CoFor(sz.cx, [&](int i) { DoColumn(i); });
+		if(co) {
+			std::atomic<int> ii(0);
+			CoDo([&] {
+				for(int i = 16 * ii++; i < sz.cx; i = 16 * ii++) { // go by cacheline
+					int e = min(i + 16, sz.cx);
+					for(int j = i; j < e; j++)
+						DoColumn(j);
+				}
+			});
+		}
 		else
 			for(int i = 0; i < sz.cx; i++)
 				DoColumn(i);
