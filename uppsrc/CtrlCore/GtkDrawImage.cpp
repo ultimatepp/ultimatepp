@@ -41,10 +41,11 @@ struct ImageSysData {
 cairo_surface_t *CreateCairoSurface(const Image& img)
 {
 	Size isz = img.GetSize();
-	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
+	cairo_format_t fmt = CAIRO_FORMAT_ARGB32;
+	cairo_surface_t *surface = cairo_image_surface_create(fmt, isz.cx, isz.cy);
 	cairo_surface_flush(surface);
 	byte *a = (byte *)cairo_image_surface_get_data(surface);
-	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, isz.cx);
+	int stride = cairo_format_stride_for_width(fmt, isz.cx);
 	for(int yy = 0; yy < isz.cy; yy++) {
 		Copy((RGBA *)a, img[yy], isz.cx);
 		a += stride;
@@ -98,11 +99,14 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 		cairo_mask_surface(cr, sd.surface, x, y);
 	}
 	else {
+		RTIMESTOP("cairo_paint");
 		cairo_set_source_surface(cr, sd.surface, x, y);
 		cairo_paint(cr);
 	}
-	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
-	cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
+	static Size ssz;
+	if(ssz.cx == 0)
+		ssz = Ctrl::GetVirtualScreenArea().GetSize();
+	cache.Shrink(4 * ssz.cx * ssz.cy, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
 Draw& ImageDraw::Alpha()
@@ -135,12 +139,15 @@ void CairoGet(ImageBuffer& b, Size isz, cairo_surface_t *surface, cairo_surface_
 				(t++)->a = (ss++)->r;
 			}
 			aa += stride;
+			b.SetKind(IMAGE_ALPHA);
 		}
-		else
+		else {
 			while(s < e) {
 				*t = *s++;
 				(t++)->a = 255;
 			}
+			b.SetKind(IMAGE_OPAQUE);
+		}
 		a += stride;
 	}
 }
