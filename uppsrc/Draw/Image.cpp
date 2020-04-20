@@ -9,18 +9,19 @@ int ImageBuffer::ScanKind() const
 	bool a255 = false;
 	bool a0 = false;
 	const RGBA *s = pixels;
-	const RGBA *e = s + GetLength();
+	const RGBA *ee = pixels + (GetLength() & ~3);
+	while(s < ee) {
+		if((s[0].a & s[1].a & s[2].a & s[3].a) != 255)
+			return IMAGE_ALPHA;
+		s += 4;
+	}
+	const RGBA *e = pixels + GetLength();
 	while(s < e) {
-		if(s->a == 0)
-			a0 = true;
-		else
-		if(s->a == 255)
-			a255 = true;
-		else
+		if(s->a != 255)
 			return IMAGE_ALPHA;
 		s++;
 	}
-	return a255 ? a0 ? IMAGE_MASK : IMAGE_OPAQUE : IMAGE_EMPTY;
+	return IMAGE_OPAQUE;
 }
 
 void ImageBuffer::SetHotSpots(const Image& src)
@@ -201,7 +202,7 @@ int Image::GetResolution() const
 
 int Image::GetKindNoScan() const
 {
-	return data ? data->buffer.GetKind() : IMAGE_EMPTY;
+	return data ? data->buffer.GetKind() : IMAGE_ALPHA;
 }
 
 int Image::Data::GetKind()

@@ -1,5 +1,4 @@
 topic "ImageBuffer";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "ImageBuffer";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ImageBuffer]]}}&]
 [s3; &]
@@ -23,18 +23,17 @@ drawing. Possible classifications are&]
 [s2;%% &]
 [ {{2913:7087<288;>416; [s0;%% [* IMAGE`_UNKNOWN]]
 :: [s0;%% The image kind is unknown.]
-:: [s0;%% [* IMAGE`_EMPTY]]
-:: [s0;%% The image is empty (all alpha values are 0).]
 :: [s0;%% [* IMAGE`_ALPHA]]
-:: [s0;%% The image has alpha values different from 255 and 0.]
-:: [s0;%% [* IMAGE`_MASK]]
-:: [s0;%% The image has alpha values 0 or 255 only.]
+:: [s0;%% The image has some alpha values that are not 255.]
 :: [s0;%% [* IMAGE`_OPAQUE]]
-:: [s0;%% The image has all alpha values 255.]}}&]
+:: [s0;%% The image has all alpha values 255.]
+:: [s0;%% [* IMAGE`_EMPTY]]
+:: [s0;%% [@5 `[deprecated`]]]
+:: [s0;%% [* IMAGE`_MASK]]
+:: [s0;%% [@5 `[deprecated`]]]}}&]
 [s2;%% &]
-[s9;%% Note that is the kind of image is unknown, painting routine 
-determines it automatically by scanning pixels and stores the 
-result.&]
+[s9;%% To optimize drawing performance, is advisable to set kind 
+to IMAGE`_OPAQUE if it is a known fact.&]
 [s9;%% Pixels of image are organized in simple continual POD array, 
 first pixel being top`-left.&]
 [s9;%% U`+`+ expects pixels to be in premultiplied alpha format.&]
@@ -60,6 +59,11 @@ detection.&]
 onst]&]
 [s2;%% If kind set by SetKind is other than IMAGE`_UNKNOWN, returns 
 it, otherwise calls ScanKind().&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:ImageBuffer`:`:Opaque`(`): [_^Upp`:`:ImageBuffer^ ImageBuffer][@(0.0.255) `&]_
+[* Opaque]()&]
+[s2;%% Same as SetKind(IMAGE`_OPAQUE).&]
 [s3; &]
 [s4; &]
 [s5;:ImageBuffer`:`:SetHotSpot`(Point`): [*@(0.0.255) void][* _SetHotSpot(][*_^Point^ Point
