@@ -253,40 +253,18 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	Size ssz = sr.Size();
 	if(sr.IsEmpty())
 		return;
-#if 0
-	int kind = img.GetKind();
 
-//	DDUMP(GetDeviceCaps(dc, RASTERCAPS) & RC_BITBLT);
-//	DDUMP(GetDeviceCaps(dc, RASTERCAPS) & RC_DI_BITMAP);
-	
-	if(kind == IMAGE_EMPTY)
-		return;
+	int kind = img.GetKindNoScan();
 	if(kind == IMAGE_OPAQUE && !IsNull(c)) {
 		w.DrawRect(x, y, sz.cx, sz.cy, c);
 		return;
 	}
-	if(kind == IMAGE_OPAQUE && (paintcount == 0 || w.IsPrinter()) && sr == Rect(sz) &&
-	   (GetDeviceCaps(dc, RASTERCAPS) & RC_DIBTODEV)) {
+	if(kind == IMAGE_OPAQUE && (GetDeviceCaps(dc, RASTERCAPS) & RC_DIBTODEV)) {
 		LTIMING("Image Opaque direct set");
-		RLOG("SetSurface");
 		SetSurface(w, x, y, sz.cx, sz.cy, ~img);
 		paintcount++;
 		return;
 	}
-	if(kind == IMAGE_OPAQUE) {
-		if(!hbmp) {
-			LTIMING("Image Opaque create");
-			CreateHBMP(dc, ~img);
-		}
-		LTIMING("Image Opaque blit");
-		HDC dcMem = w.GetCompatibleDC();
-		HBITMAP o = (HBITMAP)::SelectObject(dcMem, hbmp);
-		::BitBlt(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, SRCCOPY);
-		::SelectObject(dcMem, o);
-		SysImageRealized(img);
-		return;
-	}
-#endif
 	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack &&
 	   !(w.IsPrinter() && (GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)) !=
 	                     (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA))) {
@@ -303,12 +281,10 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		bf.BlendFlags = 0;
 		bf.SourceConstantAlpha = 255;
 		bf.AlphaFormat = AC_SRC_ALPHA;
-//		HDC dcMem = ::CreateCompatibleDC(dc);
 		HDC dcMem = w.GetCompatibleDC();
 		HBITMAP o = (HBITMAP)::SelectObject(dcMem, himg);
 		fnAlphaBlend()(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, ssz.cx, ssz.cy, bf);
 		::SelectObject(dcMem, o);
-//		::DeleteDC(dcMem);
 		SysImageRealized(img);
 	}
 	else {

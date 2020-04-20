@@ -2,9 +2,9 @@
 
 enum ImageKind {
 	IMAGE_UNKNOWN,
-	IMAGE_EMPTY,
+	IMAGE_EMPTY, // deprecated
 	IMAGE_ALPHA,
-	IMAGE_MASK,
+	IMAGE_MASK, // deprecated
 	IMAGE_OPAQUE,
 };
 

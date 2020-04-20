@@ -122,6 +122,8 @@ Image Raster::GetImage(int x, int y, int cx, int cy, const Gate<int, int> progre
 	b.SetHotSpot(f.hotspot - Point(x, y0));
 	if(size.cx && size.cy)
 		b.SetDots(Size(f.dots.cx * cx / size.cx, f.dots.cy * cy / size.cy));
+	b.SetKind(f.kind);
+
 	if(IsError())
 		return Image();
 	

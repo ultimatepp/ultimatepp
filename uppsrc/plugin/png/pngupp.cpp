@@ -207,7 +207,7 @@ bool PNGRaster::Create()
 		}
 		Premultiply(data->palette, data->palette, pal_count);
 		if(trans_alpha)
-			data->info.kind = IMAGE_MASK;
+			data->info.kind = IMAGE_ALPHA;
 
 	}
 	else if(!(color_type & PNG_COLOR_MASK_COLOR)) { // grayscale
