@@ -198,9 +198,12 @@ CONSOLE_APP_MAIN
 			SetExitCode(4);
 			return;
 		}
-		const Array<Package::Config>& f = wspc.GetPackage(0).config;
-		if(f.GetCount())
-			ide.mainconfigparam = f[0].param;
+		if(IsNull(ide.mainconfigparam)) {
+			const Array<Package::Config>& f = wspc.GetPackage(0).config;
+			if(f.GetCount())
+				ide.mainconfigparam = f[0].param;
+		}
+		PutVerbose("Build flags: " << ide.mainconfigparam);
 		String m = 2 < param.GetCount() ? param[2] : "CLANG";
 		String bp = GetBuildMethodPath(m);
 		PutVerbose("Build method: " + bp);
