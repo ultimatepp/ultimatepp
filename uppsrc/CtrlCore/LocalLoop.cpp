@@ -45,7 +45,7 @@ RectTracker::RectTracker(Ctrl& master)
 	maxrect = Rect(-100000, -100000, 100000, 100000);
 	keepratio = false;
 	cursorimage = Image::Arrow();
-	color = InvertColor;
+	color = Black();
 	pattern = DRAWDRAGRECT_NORMAL;
 	animation = 0;
 	rounder = NULL;

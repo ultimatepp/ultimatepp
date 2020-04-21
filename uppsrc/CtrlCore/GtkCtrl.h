@@ -160,9 +160,6 @@ _DBG_
 	static bool   ProcessInvalids();
 
 	friend void InitGtkApp(int argc, char **argv, const char **envptr);
-	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                             Color color, int type, int animation);
-	friend void FinishDragRect(Ctrl& q);
 	friend void GuiPlatformGripResize(TopWindow *q);
 
 public: // really private:
