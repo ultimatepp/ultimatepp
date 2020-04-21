@@ -115,7 +115,7 @@ void  HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize) {
 			sprintf(h, "%+6d 0x%08X%08X ", a, (int)(aa >> 32), (int)aa);
 			s.Put(h);
 		#else
-			sprintf(h, "%+6d 0x%08X ", a, a + dword(ptr));
+			sprintf(h, "%+6d 0x%08X ", a, int(a + dword(ptr)));
 			s.Put(h);
 		#endif
 		}
