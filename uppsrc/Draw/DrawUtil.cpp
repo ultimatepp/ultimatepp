@@ -369,8 +369,10 @@ void DrawDragFrame(Draw& w, const Rect& r, int n, const int *pattern, Color colo
 {
 	DrawDragLine(w, true, r.left, r.top, r.GetWidth(), n, pattern, color, animation);
 	DrawDragLine(w, false, r.left, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
-	DrawDragLine(w, false, r.right - n, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
-	DrawDragLine(w, true, r.left, r.bottom - n, r.GetWidth(), n, pattern, color, animation);
+	if(r.right - n != r.left)
+		DrawDragLine(w, false, r.right - n, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
+	if(r.bottom - n != r.top)
+		DrawDragLine(w, true, r.left, r.bottom - n, r.GetWidth(), n, pattern, color, animation);
 }
 
 void DrawDragFrame(Draw& w, const Rect& r, int n, int pattern, Color color, int animation)

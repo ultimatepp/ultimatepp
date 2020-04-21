@@ -6,6 +6,8 @@ library(WIN32 (MSC | CLANG)) "libeay32MT.lib ssleay32MT.lib";
 
 library(WIN32 GCC) "ssl crypto";
 
+library(WIN32) gdi32;
+
 file
 	SSL.h,
 	Util.cpp,
