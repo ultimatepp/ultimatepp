@@ -186,7 +186,6 @@ struct ImageSysData {
 	HBITMAP     hmask;
 	HBITMAP     himg;
 	RGBA       *section;
-	int         paintcount;
 	
 	void Init(const Image& img);
 	void CreateHBMP(HDC dc, const RGBA *data);
@@ -199,7 +198,6 @@ void ImageSysData::Init(const Image& _img)
 {
 	img = _img;
 	hbmp = hmask = himg = NULL;
-	paintcount = 0;
 	LLOG("ImageSysData::Init " << img.GetSerialId() << " " << img.GetSize());
 }
 
@@ -254,17 +252,6 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	if(sr.IsEmpty())
 		return;
 
-	int kind = img.GetKindNoScan();
-	if(kind == IMAGE_OPAQUE && !IsNull(c)) {
-		w.DrawRect(x, y, sz.cx, sz.cy, c);
-		return;
-	}
-	if(kind == IMAGE_OPAQUE && (GetDeviceCaps(dc, RASTERCAPS) & RC_DIBTODEV)) {
-		LTIMING("Image Opaque direct set");
-		SetSurface(w, x, y, sz.cx, sz.cy, ~img);
-		paintcount++;
-		return;
-	}
 	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack &&
 	   !(w.IsPrinter() && (GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)) !=
 	                     (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA))) {
@@ -312,10 +299,24 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 
 void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
 {
+	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << img.GetSize());
+
 	GuiLock __;
 	if(img.GetLength() == 0)
 		return;
-	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << img.GetSize());
+
+	Size sz = img.GetSize();
+	int kind = img.GetKindNoScan();
+	if(kind == IMAGE_OPAQUE && !IsNull(color)) {
+		DrawRect(x, y, sz.cx, sz.cy, color);
+		return;
+	}
+	if(kind == IMAGE_OPAQUE && (!IsPrinter() || (GetDeviceCaps(GetHandle(), RASTERCAPS) & RC_DIBTODEV))) {
+		LTIMING("Image Opaque direct set");
+		SetSurface(*this, x, y, sz.cx, sz.cy, ~img);
+		return;
+	}
+
 	ImageSysDataMaker m;
 	static LRUCache<ImageSysData, int64> cache;
 	static int Rsz;
@@ -325,7 +326,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 		cache.Remove([](const ImageSysData& object) { return object.img.GetRefCount() == 1; });
 	}
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
-	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
+	sz = Ctrl::GetVirtualScreenArea().GetSize();
 	m.img = IsPrinter() && GetDeviceCaps(GetHandle(), NUMCOLORS) == 2 ? Dither(img, 360) : img; // If printer does not support color, dither
 	cache.Get(m).Paint(*this, x, y, src, color);
 	cache.Shrink(4 * sz.cx * sz.cy, IsWinNT() ? 1000 : 100);

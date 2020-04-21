@@ -312,7 +312,7 @@ void operator  delete[](void *ptr, const std::nothrow_t&) noexcept { UPP::Memory
 
 #if defined(PLATFORM_WIN32) && defined(COMPILER_CLANG)
 // this is temporary fix before llvm-mingw fixes weak references
-void __attribute__((__noreturn__)) std::__throw_bad_alloc (void) { throw bad_alloc(); }
+// void __attribute__((__noreturn__)) std::__throw_bad_alloc (void) { throw bad_alloc(); }
 #endif
 
 #endif
