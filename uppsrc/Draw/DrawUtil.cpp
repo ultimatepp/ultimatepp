@@ -340,21 +340,26 @@ void DrawDragLine(Draw& w, bool horz, int x, int y, int len, int n, const int *p
 	else
 		w.Clip(x, y, n, len);
 	
+	Color color2 = IsDark(color) ? White() : Black();
 	(horz ? x : y) -= animation;
 	len += animation;
 	bool ch = false;
 	while(len > 0) {
 		int segment = pattern[ch];
-		int d = segment + pattern[2];
+		int pause = pattern[2];
 		if(horz) {
 			w.DrawRect(x, y, segment, n, color);
-			x += d;
+			x += segment;
+			w.DrawRect(x, y, pause, n, color2);
+			x += pause;
 		}
 		else {
 			w.DrawRect(x, y, n, segment, color);
-			y += d;
+			y += segment;
+			w.DrawRect(x, y, n, pause, color2);
+			y += pause;
 		}
-		len -= d;
+		len -= pause + segment;
 		ch = !ch;
 	}
 	w.End();

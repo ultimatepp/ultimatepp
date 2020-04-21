@@ -32,17 +32,18 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz,
 
 struct ImageSysData {
 	Image            img;
-	cairo_surface_t *surface;
+	cairo_surface_t *surface = NULL;
 	
-	void Init(const Image& img);
+	void Init(const Image& m, cairo_surface_t *other);
 	~ImageSysData();
 };
 
-cairo_surface_t *CreateCairoSurface(const Image& img)
+cairo_surface_t *CreateCairoSurface(const Image& img, cairo_surface_t *other)
 {
 	Size isz = img.GetSize();
 	cairo_format_t fmt = CAIRO_FORMAT_ARGB32;
-	cairo_surface_t *surface = cairo_image_surface_create(fmt, isz.cx, isz.cy);
+	cairo_surface_t *surface = other ? cairo_surface_create_similar_image(other, fmt, isz.cx, isz.cy)
+	                                 : cairo_image_surface_create(fmt, isz.cx, isz.cy);
 	cairo_surface_flush(surface);
 	byte *a = (byte *)cairo_image_surface_get_data(surface);
 	int stride = cairo_format_stride_for_width(fmt, isz.cx);
@@ -54,10 +55,15 @@ cairo_surface_t *CreateCairoSurface(const Image& img)
 	return surface;
 }
 
-void ImageSysData::Init(const Image& m)
+cairo_surface_t *CreateCairoSurface(const Image& img)
+{
+	return CreateCairoSurface(img, NULL);
+}
+
+void ImageSysData::Init(const Image& m, cairo_surface_t *other)
 {
 	img = m;
-	surface = CreateCairoSurface(img);
+	surface = CreateCairoSurface(m, other);
 	SysImageRealized(img);
 }
 
@@ -69,9 +75,10 @@ ImageSysData::~ImageSysData()
 
 struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 	Image img;
+	cairo_surface_t *other;
 
 	virtual int64  Key() const                      { return img.GetSerialId(); }
-	virtual int    Make(ImageSysData& object) const { object.Init(img); return img.GetLength(); }
+	virtual int    Make(ImageSysData& object) const { object.Init(img, other); return img.GetLength(); }
 };
 
 void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
@@ -93,13 +100,13 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	}
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
+	m.other = cairo_get_target(cr);
 	ImageSysData& sd = cache.Get(m);
 	if(!IsNull(color)) {
 		SetColor(color);
 		cairo_mask_surface(cr, sd.surface, x, y);
 	}
 	else {
-		RTIMESTOP("cairo_paint");
 		cairo_set_source_surface(cr, sd.surface, x, y);
 		cairo_paint(cr);
 	}

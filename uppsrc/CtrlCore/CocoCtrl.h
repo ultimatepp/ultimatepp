@@ -3,10 +3,6 @@ private:
 	friend struct MMCtrl;
 	friend struct MMImp;
 
-	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                             Color color, int type, int animation);
-	friend void FinishDragRect(Ctrl& q);
-
 	static int                 WndCaretTime;
 	static bool                WndCaretVisible;
 	static bool                local_dnd_copy;
