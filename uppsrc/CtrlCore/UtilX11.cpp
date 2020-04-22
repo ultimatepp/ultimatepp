@@ -41,4 +41,6 @@ Vector<Rect> Xor(const Vector<Rect>& r1, const Vector<Rect>& r2)
 	return q;
 }
 
+}
+
 #endif
