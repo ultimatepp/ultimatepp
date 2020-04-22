@@ -173,22 +173,17 @@ void InstantSetup()
 
 			bins.At(0) = clang + "/bin";
 			bins.At(1) = clang + (x64 ? "/x86_64-w64-mingw32/bin" : "/i686-w64-mingw32/bin");
-			bins.At(2) = bin + (x64 ? "/openssl/bin64" : "/openssl/bin32");
-			bins.At(3) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-			bins.At(4) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
-			bins.At(5) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+			bins.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			bins.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
+			bins.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 
-			incs.At(0) = clang + "/include";
-			incs.At(1) = bin + "/openssl/include";
-			incs.At(2) = GetExeDirFile("bin/SDL2/include");
-			incs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
-			incs.At(4) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
+			incs.At(0) = GetExeDirFile("bin/SDL2/include");
+			incs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
+			incs.At(2) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
 
-			libs.At(0) = clang + "/lib";
-			libs.At(1) = bin + (x64 ? "/openssl/lib64" : "/openssl/lib32");;
-			libs.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-			libs.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
-			libs.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+			libs.At(0) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+			libs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
+			libs.At(2) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
