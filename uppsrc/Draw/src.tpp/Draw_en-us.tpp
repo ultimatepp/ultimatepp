@@ -152,7 +152,8 @@ rectangle.&]
 ] using [%-*@3 color]. As special addition, if Draw represents 
 screen output in Ctrl`::Paint, [%-*@3 color] can be assigned special 
 value InvertColor() causing invertion of all pixels in target 
-area.&]
+area. Note: On some platform, using InvertColor might results 
+in suboptimal performance.&]
 [s3;%% &]
 [s4; &]
 [s5;:Draw`:`:SysDrawImageOp`(int`,int`,const Image`&`,Color`): [@(0.0.255) virtual] 
@@ -494,7 +495,8 @@ nst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], [_^Color^ Color]_[*@3 color])&]
 using [%-*@3 color]. As special addition, if Draw represents screen 
 output in Ctrl`::Paint, [%-*@3 color] can be assigned special value 
 InvertColor() causing invertion of all pixels in target area. 
-Frontend to DrawRectOp.&]
+Frontend to DrawRectOp. Note: On some platform, using InvertColor 
+might results in suboptimal performance.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawImage`(int`,int`,int`,int`,const Image`&`,const Rect`&`): [@(0.0.255) v
