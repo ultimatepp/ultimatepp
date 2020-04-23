@@ -133,7 +133,9 @@
 /* we need to define it manually */
 #if defined(__MINGW32__)
 #ifndef __MSVCRT_VERSION__
+#ifndef __clang__
 #define __MSVCRT_VERSION__ 0x0601
+#endif
 #endif
 #endif
 
