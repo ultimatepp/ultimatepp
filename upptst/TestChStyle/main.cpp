@@ -116,7 +116,15 @@ TestChStyle::TestChStyle()
 	for(int i = 0; i < 100; i++)
 		tab.Add("Tab " + AsString(i));
 	
-	tm.Set(-20, [=] { pi.Set(GetTickCount() / 10 % 100, 100); });
+	tm.Set(-20, [=] {
+		pi1.Set(GetTickCount() / 20 % 120, 100);
+		pi2.Set(GetTickCount() * 5, 0);
+		pi3.Set(GetTickCount() / 20 % 120, 100);
+		pi4.Set(GetTickCount() * 5, 0);
+		pi5.Set(GetTickCount() / 20 % 120, 100);
+	});
+	
+	pi5.Percent();
 	
 	list.HeaderObject().Absolute();
 	list.AddColumn("Col", 50).Sorting();
