@@ -1,7 +1,7 @@
 topic "Copyright © 1999-2020 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*+117 Copyright © 1998, 2020 Ultimate`+`+ team]&]
+[s0; [*+117 Copyright © 1998, 2020 U`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
@@ -33,14 +33,13 @@ Frederico Rodrigues, Ruben Proost, Willem Kroes]&]
 [s0;i704;O9; U`+`+ Logo:[+117 -|][* Pavel Ostapenko], [* Robert_Vroemisse, 
 ]&]
 [s0;+108 &]
-[ {{3333:6667 [s0; Ultimate`+`+ home page]
+[ {{3333:6667 [s0; U`+`+ home page]
 :: [s0; [^http`:`/`/www`.ultimatepp`.org`/^ http://www.ultimatepp.org]]
-:: [s0; Ultimate`+`+ forum]
+:: [s0; U`+`+ forum]
 :: [s0; [^http`:`/`/www`.ultimatepp`.org`/forums^ http://www.ultimatepp.org/forums]]}}&]
 [s0;+108 &]
 [s0;+92 &]
-[s0; [+92 Ultimate`+`+ includes sources of following libraries and 
-resources:]&]
+[s0; [+92 U`+`+ includes sources of following libraries and resources:]&]
 [ {{3799:6201h1;@(204) [s0; [+75 Library / project]]
 :: [s0; [+75 Authors]]
 ::^@2 [s0; [^https`:`/`/github`.com`/mstorsjo`/llvm`-mingw^+75 llvm`-mingw 
@@ -75,7 +74,7 @@ Alexei Frounze]]
 Refer there for licenses, however all libraries have BSD`-compatible 
 license.]&]
 [s0;+108 &]
-[s0; [+108 Ultimate`+`+ has BSD license:]&]
+[s0; [+108 U`+`+ has BSD license:]&]
 [ {{10000@(254.255.232) [s0; [0 Copyright (c) 1998, 2014, The U`+`+ Project]&]
 [s0; [0 All rights reserved.]&]
 [s0;0 &]
