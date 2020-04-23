@@ -100,6 +100,7 @@ exclude
 	*/nitf_gcprpc.c*
 	*/gt_jpeg_copy.c*
 	*/gdalrasterfpolygonenumerator.c*
+	*/xmlreformat.c*
 ;
 
 includes *.h *.hpp;
