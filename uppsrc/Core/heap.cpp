@@ -311,8 +311,8 @@ void *operator new[](size_t size, const std::nothrow_t&) noexcept  { void *ptr =
 void operator  delete[](void *ptr, const std::nothrow_t&) noexcept { UPP::MemoryFree(ptr); }
 
 #if defined(PLATFORM_WIN32) && defined(COMPILER_CLANG)
-// this is temporary fix before llvm-mingw fixes weak references
-// void __attribute__((__noreturn__)) std::__throw_bad_alloc (void) { throw bad_alloc(); }
+//  this is temporary fix before llvm-mingw fixes weak references
+ void __attribute__((__noreturn__)) std::__throw_bad_alloc (void) { throw bad_alloc(); }
 #endif
 
 #endif

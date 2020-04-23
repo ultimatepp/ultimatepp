@@ -129,7 +129,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	String cc = CmdLine(package, pkg);
-	
+
+	if(IsVerbose())
+		cc << " -v";
 	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
 		cc << " -mthreads";
 	if(HasFlag("DEBUG_MINIMAL"))
@@ -478,7 +480,9 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
-			String lnk = CompilerName();
+			String lnk;
+			if(IsVerbose())
+				lnk << " -v";
 			if(HasFlag("GCC32"))
 				lnk << " -m32";
 			if(HasFlag("DLL"))
@@ -578,6 +582,16 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			PutConsole("Linking...");
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
+			if(lnk.GetCount() < 8000)
+				lnk = CompilerName() + " " + lnk;
+			else {
+				String rn = CatAnyPath(outdir, "link");
+				PutVerbose("Generating response file: " << rn);
+				PutVerbose(lnk);
+				lnk.Replace("\\", "/");
+				SaveFile(rn, lnk);
+				lnk = CompilerName() + " @" + rn;
+			}
 			if(!error && Execute(lnk) == 0) {
 				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length

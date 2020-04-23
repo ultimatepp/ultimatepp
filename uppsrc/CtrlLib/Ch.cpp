@@ -545,8 +545,12 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 				ib[i][0] = AdjustColor(c, a[i]);
 				ibb[i][0] = Blend(SColorFace(), SColorPaper(), i * 255 / 7);
 			}
-			s.hchunk = MakeButton(roundness, Magnify(ib, 10, 1), DPI(1), ink);
-			s.hlook = MakeButton(roundness, Magnify(ibb, 10, 1), DPI(1), ink);
+			Image m = MakeButton(roundness, Magnify(ib, 10, 1), DPI(1), ink);
+			s.hchunk = m;
+			s.vchunk = RotateAntiClockwise(m);
+			m = MakeButton(roundness, Magnify(ibb, 10, 1), DPI(1), ink);
+			s.hlook = m;
+			s.vlook = RotateAntiClockwise(m);
 			s.bound = true;
 			s.nomargins = true;
 		}

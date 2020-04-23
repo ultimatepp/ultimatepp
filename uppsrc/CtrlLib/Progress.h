@@ -18,6 +18,7 @@ protected:
 	const Style *style;
 	Color color;
 
+	Rect GetMargins();
 	Size GetMsz();
 
 public:

@@ -13,11 +13,21 @@ CH_STYLE(ProgressIndicator, Style, StyleDefault)
 	nomargins = false;
 }
 
+Rect ProgressIndicator::GetMargins()
+{
+	if(style->classic || percent || !IsNull(color))
+		return ChMargins(ViewEdge());
+	Size sz = GetSize();
+	Rect r = ChMargins(sz.cx > sz.cy ? style->hlook : style->vlook);
+	if(style->nomargins)
+		r.left = r.right = r.top = r.bottom = 0;
+	return r;
+}
+
 Size ProgressIndicator::GetMsz()
 {
 	Size sz = GetSize();
-	Rect mg = ChMargins(style->classic || percent || !IsNull(color) ? EditFieldEdge()
-	                    : sz.cx > sz.cy ? style->hlook : style->vlook);
+	Rect mg = GetMargins();
 	sz.cx -= mg.left + mg.right;
 	sz.cy -= mg.top + mg.bottom;
 	return sz;
@@ -38,8 +48,8 @@ void ProgressIndicator::Paint(Draw& w) {
 		}
 	}
 	if(style->classic || percent || !IsNull(color)) {
-		ChPaintEdge(w, sz, EditFieldEdge());
-		Rect mg = ChMargins(EditFieldEdge());
+		ChPaintEdge(w, sz, ViewEdge());
+		Rect mg = GetMargins();
 		sz -= Size(mg.left + mg.right, mg.top + mg.bottom);
 		Rect r1, r2, r3;
 		r1 = r2 = r3 = RectC(mg.left, mg.top, sz.cx, sz.cy);
@@ -47,12 +57,10 @@ void ProgressIndicator::Paint(Draw& w) {
 		if(sz.cx > sz.cy) {
 			r1.right = r2.left = min(p, sz.cx) + mg.left + p0;
 			r3.right = mg.left + p0;
-			r3.bottom = r1.bottom;
 		}
 		else {
-			r2.bottom = r1.top = sz.cy - min(p, sz.cy) + mg.left + p0;
-			r3.bottom = mg.top + p0;
-			r3.right = r1.right;
+			r2.bottom = r1.top = sz.cy - min(p, sz.cy) + mg.top - p0;
+			r3.top = r3.bottom - p0;
 		}
 		w.DrawRect(r1, Nvl(color, SColorHighlight()));
 		w.DrawRect(r2, SColorPaper);
@@ -72,22 +80,16 @@ void ProgressIndicator::Paint(Draw& w) {
 		w.End();
 	}
 	else {
-		if(sz.cy > sz.cx) {
-			ChPaint(w, sz, style->vlook);
-			Rect r = ChMargins(style->vlook);
-			if(style->nomargins)
-				r.left = r.right = r.top = r.bottom = 0;
-			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
-			ChPaint(w, r.left, sz.cy - r.bottom - p - p0, sz.cx - r.left - r.right, p,
-			        style->vchunk);
-		}
-		else {
+		Rect r = GetMargins();
+		if(sz.cx > sz.cy) {
 			ChPaint(w, sz, style->hlook);
-			Rect r = ChMargins(style->hlook);
-			if(style->nomargins)
-				r.left = r.right = r.top = r.bottom = 0;
 			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
 			ChPaint(w, r.left + p0, r.top, p, sz.cy - r.top - r.bottom, style->hchunk);
+		}
+		else {
+			ChPaint(w, sz, style->vlook);
+			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
+			ChPaint(w, r.left, sz.cy - r.bottom - p - p0, sz.cx - r.left - r.right, p, style->vchunk);
 		}
 		w.End();
 	}
