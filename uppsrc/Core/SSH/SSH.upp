@@ -15,7 +15,7 @@ library(WIN32 MSC !SHARED) "libeay32MT ssleay32MT crypt32";
 
 library(WIN32 MSC SHARED) "libeay32MD ssleay32MD crypt32";
 
-library(WIN32 GCC) "ssl crypto";
+library(WIN32 (GCC | CLANG)) "ssl crypto";
 
 library(WIN32) "gdi32 ws2_32";
 
