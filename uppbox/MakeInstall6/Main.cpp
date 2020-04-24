@@ -98,7 +98,7 @@ CONSOLE_APP_MAIN
 	SaveFile(upptmp + "/README",
 R"--(Ultimate++ Windows releases
 
-Windows release a simple archive .7z archive. Unpack to directory of your
+Windows release a simple .7z archive. Unpack to directory of your
 preference, then just run theide.exe. U++ does not write anything to registry
 or outside its directory.)--");
 	
