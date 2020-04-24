@@ -17,9 +17,6 @@ const char *score_qsf =
 	)";
 
 
-struct MyApp : TopWindow {
-};
-
 GUI_APP_MAIN
 {
 	InitSoundSynth();
@@ -27,7 +24,7 @@ GUI_APP_MAIN
 	SoundSequence s = ParseQSF(score_qsf);
 	PlaySequence(s);
 
-	MyApp().Run();
+	TopWindow().Run();
 
 	CloseSoundSynth();
 }
