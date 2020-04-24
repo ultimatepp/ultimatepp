@@ -93,9 +93,14 @@ CONSOLE_APP_MAIN
 	RealizeDirectory("u:/upload");
 
 	CopyFolder(bin, upptmp, false);
-	CopyFolder(bin + "/win32", upptmp + "/bin");
-	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32/clang/x86_64-w64-mingw32/bin/dbghelp.dll"));
-	SaveFile(upptmp + "/README", LoadDataFile("README"));
+	CopyFolder(bin + "/win32", upptmp + "/bin");mc
+	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32.dlls/dbghelp.dll"));
+	SaveFile(upptmp + "/README",
+R"--(Ultimate++ Windows releases
+
+Windows release a simple archive .7z archive. Unpack to directory of your
+preference, then just run theide.exe. U++ does not write anything to registry
+or outside its directory.)--");
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
