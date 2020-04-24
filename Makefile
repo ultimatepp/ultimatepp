@@ -1,7 +1,7 @@
 UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I./ -I.cache/upp.out
+CINC   =  -I$(UPPDIR1) `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I/usr/local/lib -I./ -I.cache/upp.out
 Macro  =  -DflagGUI -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
