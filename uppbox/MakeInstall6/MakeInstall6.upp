@@ -6,7 +6,6 @@ uses
 	plugin\ftp;
 
 file
-	README,
 	Main.cpp;
 
 mainconfig
