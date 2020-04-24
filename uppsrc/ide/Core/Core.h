@@ -444,6 +444,8 @@ struct Builder {
 	
 	Index<String>    pkg_config; // names of packages for pkg-config
 
+	VectorMap<String, int> tmpfilei; // for naming automatic response files
+
 	String                 CmdX(const char *s);
 
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,

@@ -51,6 +51,15 @@ String Builder::CmdX(const char *s)
 		}
 		else
 			(cmdf ? cmd : r).Cat(*s);
+	int q = r.Find(' ');
+	if(r.GetCount() > 8000 && q >= 0) {
+		String rn = CatAnyPath(outdir, AsString(tmpfilei.GetAdd(outdir, 0)++) + ".cmd");
+		PutVerbose("Generating response file: " << rn);
+		PutVerbose(r);
+		r.Replace("\\", "/"); // clang win32 needs this
+		SaveFile(rn, r.Mid(q + 1));
+		r = r.Mid(0, q) + " @" + rn;
+	}
 	return r;
 }
 
