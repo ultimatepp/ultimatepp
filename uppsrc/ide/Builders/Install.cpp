@@ -96,14 +96,24 @@ void CreateBuildMethods()
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, clang_bm);
 #else
+	bool openbsd = ToLower(Sys("uname")).Find("openbsd") >= 0;
+	auto Fix = [=](const char *s) {
+		String r = s;
+		if(openbsd) {
+			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/include\";");
+			r.Replace("LIB = \"\";", "LIB = \"/usr/local/lib\";");
+		}
+		return r;
+	};
+
 	String bm = ConfigFile("GCC.bm");
 	if(IsNull(LoadFile(bm)))
-		SaveFile(bm, gcc_bm);
+		SaveFile(bm, Fix(gcc_bm));
 
 	if(Sys("clang --version").GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
-			SaveFile(bm, clang_bm);
+			SaveFile(bm, Fix(clang_bm));
 	}
 #endif
 }
