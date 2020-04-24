@@ -54,7 +54,7 @@ options
 	-DPNG_NO_READ_OPT_PLTE,
 	-DPNG_NO_INFO_IMAGE;
 
-pkg_config(LINUX|FREEBSD) libpng;
+pkg_config(LINUX | FREEBSD | OPENBSD) libpng;
 
 file
 	png.h,

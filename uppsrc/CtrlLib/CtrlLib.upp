@@ -6,7 +6,7 @@ acceptflags
 uses
 	CtrlCore;
 
-uses(POSIX | LINUX | FREEBSD) PdfDraw;
+uses(POSIX | LINUX | FREEBSD | OPENBSD) PdfDraw;
 
 file
 	CtrlLib.h options(BUILDER_OPTION) PCH,

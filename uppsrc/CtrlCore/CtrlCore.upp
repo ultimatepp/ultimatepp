@@ -12,9 +12,9 @@ library(WIN32) "user32 gdi32";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
 
-pkg_config(LINUX | FREEBSD) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
+pkg_config(LINUX | FREEBSD | OPENBSD) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
 
-pkg_config((LINUX | FREEBSD) !X11) "gtk+-3.0 libnotify";
+pkg_config((LINUX | FREEBSD | OPENBSD) !X11) "gtk+-3.0 libnotify";
 
 file
 	Core readonly separator,
