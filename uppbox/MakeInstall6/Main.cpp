@@ -93,7 +93,7 @@ CONSOLE_APP_MAIN
 	RealizeDirectory("u:/upload");
 
 	CopyFolder(bin, upptmp, false);
-	CopyFolder(bin + "/win32", upptmp + "/bin");mc
+	CopyFolder(bin + "/win32", upptmp + "/bin");
 	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32.dlls/dbghelp.dll"));
 	SaveFile(upptmp + "/README",
 R"--(Ultimate++ Windows releases
