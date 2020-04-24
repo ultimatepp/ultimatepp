@@ -9,56 +9,99 @@ About, BSD
 2019-03-22: 2019
 
 ------------------------------------------------------------------
-mingw64
+CLANG
 
-https://sourceforge.net/projects/mingw-w64/files/mingw-w64/
+https://github.com/mstorsjo/llvm-mingw/releases
 
-x86_64-win32-seh
-i686-win32-dwarf
-
-directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
-
-http://releases.llvm.org/download.html
-Now download clang 64
-search for ld.ldd.exe in bin
-
-replace ld.exe in
-
-C:\upp\bin\mingw64\64\x86_64-w64-mingw32\bin
-C:\upp\bin\mingw64\32\i686-w64-mingw32\bin
-
-Check MingwCatchTest
-Check exe icon issue
-
-initial: MinGW-W64 GCC-7.2.0
-2019-03-22: 8.1.0
-2020-02-13: ldd.exe update to clang 9.0.0
+Copy to bin
+rename old clang to clang.old before deleting
+rename to clang
+delete aarch and arm7 folders and .exe from bin
 
 ------------------------------------------------------------------
 OpenSSL
 
-// deprecated
-https://www.npcglib.org/~stathis/blog/precompiled-openssl/
+==== Building openssl for win32 clang/mingw:
 
-install 1.0.2? Win32, Win64
+Install msys2 into c:/msys64, user cxl
+Install pacman -S perl
 
-Copy corresponding files
+Start msys2 mingw 64
 
-Alternative: Domestic build... (ask Novo :)
+Copy current clang to ~
 
-initial: 1.0.2l
-2019-03-31: 1.0.2r
+download 1.1.1 openssl, unpack to ~
 
-// new
+edit .bashrc, add 
 
-From https://slproweb.com/products/Win32OpenSSL.html
-download and install
+export PATH=/home/cxl/clang/bin:$PATH
 
-Win32 OpenSSL v1.0.2?
-Win64 OpenSSL v1.0.2?
+test clang, clang++
 
-Copy corresponding files (minimum of them)
-Test CLANG/CLANGx64/MSBT/MSBTx64
+in openssl dir
+
+./config CC=clang CXX=clang++
+make
+
+copy ./include/openssl to C:\upp\bin\clang\include
+copy ./libcrypto.a and ./libssl.a to C:\upp\bin\clang\x86_64-w64-mingw32\lib
+
+test upptst/Https with CLANGx64, release, debug
+
+close msys2
+
+start msys2 mingw 32
+
+check that i686-w64-mingw32-clang works
+cd openssl...
+make clean
+./config CC=clang CXX=clang++ --cross-compile-prefix=i686-w64-mingw32-
+make
+copy ./libcrypto.a and ./libssl.a to C:\upp\bin\clang\i686-w64-mingw32\lib
+
+test upptst/Https with CLANG, release, debug
+
+==== MSC static versions
+
+netasm, strawberry perl
+
+make sure Scripts folder is on path
+
+from perl prompt run
+
+vc32.bat
+
+cd .../openssl...
+
+perl ./Configure VC-WIN32
+
+edit Makefile
+
+CNF_CFLAGS=/Gs0 /GF /Gy /MT
+LIB_CFLAGS=$(CNF_CFLAGS) $(CFLAGS)
+
+to remove debug info and make it link with the right library
+
+nmake
+libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib32/crypto.lib, ssl.lib
+openssl -> bin/openssl/include
+
+close perl / reopen perl to clean PATH
+
+vc64.bat
+
+nmake clean
+
+perl ./Configure VC-WIN64A
+
+edit Makefile
+
+CNF_CFLAGS=/Gs0 /GF /Gy /MT
+LIB_CFLAGS=$(CNF_CFLAGS) $(CFLAGS)
+
+nmake
+libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
+
 ------------------------------------------------------------------
 plugin/jpg
 
@@ -319,3 +362,35 @@ current 6.1.11 Jule 13 2017
 GLM
 
 https://github.com/g-truc/glm
+
+
+
+====================================================================
+DEPRECATED (NOT USED ANYMORE)
+
+------------------------------------------------------------------
+mingw64 (not anymore...)
+
+https://sourceforge.net/projects/mingw-w64/files/mingw-w64/
+
+x86_64-win32-seh
+i686-win32-dwarf
+
+directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
+
+http://releases.llvm.org/download.html
+Now download clang 64
+search for ld.ldd.exe in bin
+
+replace ld.exe in
+
+C:\upp\bin\mingw64\64\x86_64-w64-mingw32\bin
+C:\upp\bin\mingw64\32\i686-w64-mingw32\bin
+
+Check MingwCatchTest
+Check exe icon issue
+
+initial: MinGW-W64 GCC-7.2.0
+2019-03-22: 8.1.0
+2020-02-13: ldd.exe update to clang 9.0.0
+

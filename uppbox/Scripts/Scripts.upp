@@ -26,7 +26,11 @@ file
 	win,
 	www,
 	git-merge.txt,
+	win32 readonly separator,
 	updateinfo.txt,
+	clang-win.txt,
+	vc32.bat,
+	vc64.bat,
 	checklist.txt;
 
 mainconfig
