@@ -163,11 +163,9 @@ Ssh::~Ssh()
 }
 
 INITIALIZER(SSH) {
-	RLOG("Initializing libssh2...");
 	libssh2_init(0);
 }
 EXITBLOCK {
-	RLOG("Deinitializing libssh2...");
 	libssh2_exit();
 }
 }
