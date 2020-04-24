@@ -1,4 +1,4 @@
-topic "Copyright (C) 2005 Mirek Fidler, Tomas Rylek and various contributors (see AUTHORS)";
+topic "Copyright (C) 2020 U++ Team";
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
