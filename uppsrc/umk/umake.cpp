@@ -59,7 +59,6 @@ String GetAndroidSDKPath()
 
 CONSOLE_APP_MAIN
 {
-
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
 	CreateBuildMethods();
