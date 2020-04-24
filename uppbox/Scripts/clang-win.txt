@@ -1,0 +1,10 @@
+NOT USED NOW:
+
+- install msys2, start mingw-msys2
+- pacman -S git subversion mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja mingw-w64-x86_64-cmake make mingw-w64-x86_64-python3
+- git clone https://github.com/mstorsjo/llvm-mingw.git
+
+build-all.sh:
+./build-mingw-w64.sh $PREFIX --with-default-msvcrt=msvcrt
+
+--------------------------------
