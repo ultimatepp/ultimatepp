@@ -480,7 +480,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
-			String lnk;
+			String lnk = CompilerName();
 			if(IsVerbose())
 				lnk << " -v";
 			if(HasFlag("GCC32"))
@@ -582,16 +582,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			PutConsole("Linking...");
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
-			if(lnk.GetCount() < 8000)
-				lnk = CompilerName() + " " + lnk;
-			else {
-				String rn = CatAnyPath(outdir, "link");
-				PutVerbose("Generating response file: " << rn);
-				PutVerbose(lnk);
-				lnk.Replace("\\", "/");
-				SaveFile(rn, lnk);
-				lnk = CompilerName() + " @" + rn;
-			}
 			if(!error && Execute(lnk) == 0) {
 				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
