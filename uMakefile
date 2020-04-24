@@ -1,14 +1,14 @@
 UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) -I/usr/local/lib -I./ -I.cache/upp.out
+CINC   =  -I$(UPPDIR1) -I/usr/local/include -I./ -I.cache/upp.out
 Macro  =  -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
 CFLAGS = -O3 -ffunction-sections -fdata-sections 
 CXXFLAGS = -O3 -ffunction-sections -fdata-sections  -std=c++14
 LDFLAGS = -Wl,--gc-sections $(LINKOPTIONS)
-LIBPATH =
+LIBPATH = -L"/usr/local/lib"
 AR = ar -sr
 
 OutDir_umk = $(UPPOUT)umk/GCC-Gcc-Linux-Main-Posix-Shared/
