@@ -6,8 +6,6 @@ namespace Upp {
 
 int ImageBuffer::ScanKind() const
 {
-	bool a255 = false;
-	bool a0 = false;
 	const RGBA *s = pixels;
 	const RGBA *ee = pixels + (GetLength() & ~3);
 	while(s < ee) {
