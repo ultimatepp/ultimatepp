@@ -30,6 +30,8 @@ struct MyApp : TopWindow {
 		if((keyflags & K_CTRL) && (keyflags & K_ALT)) {
 			tr.Dashed();
 			tr.MinSize(Size(-10000, -10000)); // allow negative size
+			tr.Width(DPI(4));
+			tr.SetColor(Yellow());
 			rect = tr.Track(rect, ALIGN_RIGHT, ALIGN_BOTTOM);
 			rect.Normalize();
 		}
