@@ -11,7 +11,7 @@ struct MyApp : TopWindow {
 	
 	void Sync() {
 		double tm = (double)usecs();
-		imgb = Grayscale(img); // GaussianBlur(img, ~radius, co);
+		imgb = GaussianBlur(img, ~radius, co);
 		tm = (double)usecs() - tm;
 		Title(String() << tm << " us");
 		Refresh();
