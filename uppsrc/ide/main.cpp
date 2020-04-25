@@ -143,9 +143,9 @@ void AppMain___()
 
 	SetVppLogSizeLimit(200000000);
 	
-#ifdef PLATFORM_WIN32
 	if(!CheckLicense())
 		return;
+#ifdef PLATFORM_WIN32
 	AutoInstantSetup();
 #endif
 
