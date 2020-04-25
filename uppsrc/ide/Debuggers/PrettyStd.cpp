@@ -238,7 +238,7 @@ void Pdb::PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from,
 	}
 	
 	for(int i = 0; i < count; i++) {
-		int q = i + from + start;
+		int64 q = i + from + start;
 		p.data_ptr.Add(PeekPtr(map + (q / block_size) * (win64 ? 8 : 4)) + q % block_size * sz);
 	}
 }

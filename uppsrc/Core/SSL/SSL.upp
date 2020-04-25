@@ -7,6 +7,7 @@ library(WIN32) gdi32;
 
 file
 	SSL.h,
+	SSL.upp,
 	Util.cpp,
 	InitExit.cpp,
 	Socket.cpp,
