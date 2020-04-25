@@ -1095,7 +1095,7 @@ Image GaussianBlur(const Image& img, int radius, bool co)
 	Vector<int> sizes;
 	Image t = img;
 	for (int i = 0; i < 3; i++)
-		t = ApplyBoxBlur(t, ((i < m ? wl : wu) - 1) / 2);
+		t = ApplyBoxBlur(t, int(((i < m ? wl : wu) - 1) / 2));
 	return pick(t);
 }
 

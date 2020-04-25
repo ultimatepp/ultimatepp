@@ -362,7 +362,7 @@ void InstantSetup()
 				dirty = true;
 	
 				if(!x64)
-					default_method = x86method;
+					default_method = Nvl(default_method, x86method);
 	
 				DUMP(ConfigFile(method + ".bm"));
 				DUMPC(incs);
