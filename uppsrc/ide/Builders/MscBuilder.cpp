@@ -279,10 +279,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	String cc_size = cc;
 	String cc_speed = cc;
 
-	if(!release)
-		cc << "d " << debug_options;
-	else
+	if(release)
 		cc << ' ' << release_options;
+	else
+		cc << "d " << debug_options;
 	
 	int recompile = 0;
 	Blitz b;

@@ -991,27 +991,27 @@ Image GaussianBlur(const Image& img, int radius, bool co)
 			for(int j = 0; j <= r; j++) {
 				const RGBA& p = src[i][ri++];
 				RGBA& q       = tmp[i][ti++];
-				q.r = (rsum += p.r - fv.r) * avg;
-				q.g = (gsum += p.g - fv.g) * avg;
-				q.b = (bsum += p.b - fv.b) * avg;
-				q.a = (asum += p.a - fv.a) * avg;
+				q.r = byte((rsum += p.r - fv.r) * avg);
+				q.g = byte((gsum += p.g - fv.g) * avg);
+				q.b = byte((bsum += p.b - fv.b) * avg);
+				q.a = byte((asum += p.a - fv.a) * avg);
 			}
 			for(int j = r + 1; j < sz.cx - r; j++) {
 				const RGBA& p = src[i][ri++];
 				const RGBA& q = src[i][li++];
 				RGBA& t       = tmp[i][ti++];
-				t.r = (rsum += p.r - q.r) * avg;
-				t.g = (gsum += p.g - q.g) * avg;
-				t.b = (bsum += p.b - q.b) * avg;
-				t.a = (asum += p.a - q.a) * avg;
+				t.r = byte((rsum += p.r - q.r) * avg);
+				t.g = byte((gsum += p.g - q.g) * avg);
+				t.b = byte((bsum += p.b - q.b) * avg);
+				t.a = byte((asum += p.a - q.a) * avg);
 			}
 			for(int j = sz.cx - r; j < sz.cx ; j++) {
 				const RGBA& p = src[i][li++];
 				RGBA& q       = tmp[i][ti++];
-				q.r = (rsum += lv.r - p.r) * avg;
-				q.g = (gsum += lv.g - p.g) * avg;
-				q.b = (bsum += lv.b - p.b) * avg;
-				q.a = (asum += lv.a - p.a) * avg;
+				q.r = byte((rsum += lv.r - p.r) * avg);
+				q.g = byte((gsum += lv.g - p.g) * avg);
+				q.b = byte((bsum += lv.b - p.b) * avg);
+				q.a = byte((asum += lv.a - p.a) * avg);
 			}
 		};
 
@@ -1042,27 +1042,27 @@ Image GaussianBlur(const Image& img, int radius, bool co)
 			for(int j = 0; j <= r; j++) {
 				const RGBA& p = tmp[ri++][i];
 				RGBA& q       = out[ti++][i];
-				q.r = (rsum += p.r - fv.r) * avg;
-				q.g = (gsum += p.g - fv.g) * avg;
-				q.b = (bsum += p.b - fv.b) * avg;
-				q.a = (asum += p.a - fv.a) * avg;
+				q.r = byte((rsum += p.r - fv.r) * avg);
+				q.g = byte((gsum += p.g - fv.g) * avg);
+				q.b = byte((bsum += p.b - fv.b) * avg);
+				q.a = byte((asum += p.a - fv.a) * avg);
 			}
 			for(int j = r + 1; j < sz.cy - r; j++) {
 				const RGBA& p = tmp[ri++][i];
 				const RGBA& q = tmp[li++][i];
 				RGBA&       t = out[ti++][i];
-				t.r = (rsum += p.r - q.r) * avg;
-				t.g = (gsum += p.g - q.g) * avg;
-				t.b = (bsum += p.b - q.b) * avg;
-				t.a = (asum += p.a - q.a) * avg;
+				t.r = byte((rsum += p.r - q.r) * avg);
+				t.g = byte((gsum += p.g - q.g) * avg);
+				t.b = byte((bsum += p.b - q.b) * avg);
+				t.a = byte((asum += p.a - q.a) * avg);
 			}
 			for(int j = sz.cy - r; j < sz.cy; j++) {
 				const RGBA& p = tmp[li++][i];
 				RGBA& q       = out[ti++][i];
-				q.r = (rsum += lv.r - p.r) * avg;
-				q.g = (gsum += lv.g - p.g) * avg;
-				q.b = (bsum += lv.b - p.b) * avg;
-				q.a = (asum += lv.a - p.a) * avg;
+				q.r = byte((rsum += lv.r - p.r) * avg);
+				q.g = byte((gsum += lv.g - p.g) * avg);
+				q.b = byte((bsum += lv.b - p.b) * avg);
+				q.a = byte((asum += lv.a - p.a) * avg);
 			}
 		};
 
