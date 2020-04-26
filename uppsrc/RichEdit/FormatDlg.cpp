@@ -389,7 +389,7 @@ void StyleManager::SaveStyle()
 	if(list.IsCursor()) {
 		Uuid id = list.GetKey();
 		RichStyle& s = style.Get(list.GetKey());
-		if(Ctrl::IsModified() || para.IsChanged()) {
+		if(Ctrl::IsModifiedDeep() || para.IsChanged()) {
 			dirty.FindAdd(id);
 			RichText::FormatInfo f;
 			para.Get(f);
@@ -479,7 +479,7 @@ void StyleManager::Set(const char *qtf)
 
 bool StyleManager::IsChanged() const
 {
-	return dirty.GetCount() || IsModified();
+	return dirty.GetCount() || IsModifiedDeep();
 }
 
 void StyleManager::Get(RichText& text)
