@@ -68,7 +68,7 @@ String upptmp = tmp + "/upp";
 String ass = upptmp + "/uppsrc";
 String upp = "u:/upp.src";
 String uppsrc = upp + "/uppsrc";
-String bin = "u:/upp.bin";
+String bin = "u:/upp.bin";M
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
@@ -94,7 +94,7 @@ CONSOLE_APP_MAIN
 
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
-	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32.dlls/dbghelp.dll"));
+	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32_dlls/dbghelp.dll"));
 	SaveFile(upptmp + "/README",
 R"--(Ultimate++ Windows releases
 
