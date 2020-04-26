@@ -112,7 +112,7 @@ void RichEdit::Styles()
 	NextUndo();
 	StyleManager s;
 	s.Setup(ffs, unit);
-	s.Set(text);
+	s.Set(text, formatinfo.styleid);
 	if(s.Execute() != IDOK || !s.IsChanged())
 		return;
 	SaveStylesUndo();

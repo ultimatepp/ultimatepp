@@ -185,7 +185,7 @@ private:
 	typedef StyleManager CLASSNAME;
 
 public:
-	void     Set(const RichText& text);
+	void     Set(const RichText& text, const Uuid& current = Null);
 	void     Set(const char *qtf);
 	bool     IsChanged() const;
 	void     Get(RichText& text);
