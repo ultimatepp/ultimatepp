@@ -1024,7 +1024,7 @@ CONSOLE_APP_MAIN
 		else if (tt[i].title == "Svn Upp major releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));		
 		else
-		if(tt[i].title == "Nightly builds")
+		if(tt[i].title == "Nightly builds" || tt[i].title.Find("download") >= 0)
 			tt[i].text.Replace(String("<#downloads#>"), downloads);
 		else if (links[i].Find("index") >= 0) {
 			String win32 = "upp-win32-RELEASE.exe";
