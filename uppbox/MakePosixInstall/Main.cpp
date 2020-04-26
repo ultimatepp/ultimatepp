@@ -125,7 +125,7 @@ CONSOLE_APP_MAIN
 	SaveFile(release + "/uMakefile", LoadFile(release + "/Makefile"));
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
 
-	SaveFile("license.chk", "1");
+	SaveFile(release + "/license.chk", "1");
 	
 	system("cp " + GetHomeDirFile("upp.bin") + "/" + "*.udc " + release);
 
