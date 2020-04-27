@@ -110,7 +110,7 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 		return Null;		
 	}
    	if(bmi.bmiHeader.biSizeImage <= 0)
-     	bmi.bmiHeader.biSizeImage = bmi.bmiHeader.biWidth*labs(bmi.bmiHeader.biHeight)*
+     	bmi.bmiHeader.biSizeImage = bmi.bmiHeader.biWidth*abs(bmi.bmiHeader.biHeight)*
      									(bmi.bmiHeader.biBitCount+7)/8;
 	bmi.bmiHeader.biCompression = BI_RGB;
 	bmi.bmiHeader.biHeight = -height;

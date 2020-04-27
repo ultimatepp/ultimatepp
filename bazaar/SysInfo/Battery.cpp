@@ -150,7 +150,7 @@ bool DriveOpenClose(String drive, bool open)
 			return false;
 	}
 	HANDLE hDrive;
-	hDrive = CreateFile("\\\\.\\" + drive, GENERIC_READ || GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hDrive = CreateFile("\\\\.\\" + drive, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (hDrive == INVALID_HANDLE_VALUE)
 		return false;
 	bool ret = false;

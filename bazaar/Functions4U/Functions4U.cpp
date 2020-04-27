@@ -1642,7 +1642,7 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 		}
 		if (PatternMatch(namewc, name)) {
 			if ((ff.IsFolder() && forfolder) || (ff.IsFile() && forfile)) {
-				if (!FileMoveX(full, AppendFileName(path, newname)), flags) 
+				if (!FileMoveX(full, AppendFileName(path, newname), flags))
 					return false;
 			}
 		}

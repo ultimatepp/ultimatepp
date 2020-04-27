@@ -1984,7 +1984,7 @@ void SetDesktopWallPaper(const char *path)
 
 void SetDesktopWallPaper(char *path)
 {
-    if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, static_cast<LPVOID>(path), SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
+    if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, static_cast<LPVOID>(path), SPIF_UPDATEINIFILE|SPIF_SENDWININICHANGE))
         throw Exc(String(t_("Impossible to change Desktop bitmap")) + ": " + AsString(GetLastError()));
 }
 #endif
