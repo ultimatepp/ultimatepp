@@ -44,7 +44,7 @@ GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 		if(p.Id("sampler2D") || p.Id("sampler3D")) {
 			int n;
 			String id = readID(n);
-			if(id.GetCount())
+			if(id.GetCount()) {
 				if(n) {
 					for(int i = 0; i < n; i++) {
 						ASSERT(GetUniform(id + '[' + AsString(i) + ']') >= 0);
@@ -53,6 +53,7 @@ GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 				}
 				else
 					glUniform1i(GetUniform(id), ti++);
+			}
 		}
 		else
 			p.SkipTerm();
