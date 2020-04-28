@@ -921,6 +921,7 @@ public:
 		void  Abbreviations();
 		void  DoMacroManager();
 		void  UpgradeTheIDE();
+		void  InstallDesktop();
 	
 	void      SetupMobilePlatforms(Bar& bar);
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);

@@ -41,3 +41,27 @@ void Ide::UpgradeTheIDE()
 	LoadFromString(release, tmbak);
 	targetmode = tbak;
 }
+
+void Ide::InstallDesktop()
+{
+	String apps = GetHomeDirFile(".local/share/applications");
+	if(PromptYesNo("Write theide.desktop to&" + apps + "?&"
+	               "That should make theide available through desktop menu.")) {
+		String icon = ConfigFile("theide.png");
+		PNGEncoder().SaveFile(icon, IdeImg::PackageLarge());
+		Upp::SaveFile(apps + "/theide.desktop",
+			"[Desktop Entry]\n"
+			"Encoding=UTF-8\n"
+			"Name=TheIDE\n"
+			"GenericName=TheIDE\n"
+			"Comment=U++ IDE\n"
+			"MimeType=application/x-upp;\n"
+			"Exec=" + GetExeFilePath() + "\n"
+			"Icon=" + icon + "\n"
+			"Terminal=false\n"
+			"Type=Application\n"
+			"Categories=Development;IDE\n"
+			"StartupNotify=false\n"
+		);
+	}
+}

@@ -407,6 +407,9 @@ void Ide::Setup(Bar& menu)
 		for(int i = 0; i < wspc.GetCount(); i++)
 			if(wspc[i] == "ide/Core")
 				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
+#ifdef PLATFORM_POSIX
+	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
+#endif
 #endif
 
 	if(menu.IsMenuBar())
