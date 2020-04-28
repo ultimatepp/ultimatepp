@@ -114,6 +114,10 @@ TOPIC("linkExamples_en-us")
 #include "linkExamples_en-us.tppi"
 END_TOPIC
 
+TOPIC("nightly_en-us")
+#include "nightly_en-us.tppi"
+END_TOPIC
+
 TOPIC("overview_en-us")
 #include "overview_en-us.tppi"
 END_TOPIC

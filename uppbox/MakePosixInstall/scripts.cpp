@@ -72,7 +72,27 @@ $UMK ./uppsrc ide CLANG -brs ./theide
 $UMK ./uppsrc umk CLANG -brs ./umk
 
 if [ -x ./theide ]; then
-  echo Install process has been finished, TheIDE is built as ./theide
+  (echo [Desktop Entry];\
+   echo Encoding=UTF-8;\
+   echo Name=TheIDE;\
+   echo GenericName=TheIDE;\
+   echo Comment=U++ IDE;\
+   echo MimeType=application/x-upp;\
+   echo Exec=$PWD/theide;\
+   echo Icon=$PWD/theide.png;\
+   echo Terminal=false;\
+   echo Type=Application;\
+   echo "Categories=Development;IDE";\
+   echo StartupNotify=false;) >theide.desktop
+
+  cp uppsrc/ide/theide-48.png ./theide.png
+
+  echo TheIDE is built as $PWD/theide
+  echo Do you want to copy the theide.desktop file to
+  read -p "~/.local/share/applications to put theide to your desktop menu? (Y/n)" answer
+  if [ "$answer" == "${answer//[nN]/x}" ]; then
+     cp theide.desktop ~/.local/share/applications
+  fi
   read -p "Do you want to start TheIDE now? (Y/n):" answer
   if [ "$answer" == "${answer//[nN]/x}" ]; then
      ./theide
