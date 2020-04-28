@@ -6,3 +6,5 @@
 - Check SDLSoundDemo
 - Check PDB tests in all configs
 - Check RectTracker, Posix / MacOS / Win32
+- Check SSL (GuiWebCrawler)
+- Check in Win32 CLANG debugger works in Debug/Release
