@@ -33,6 +33,7 @@ CONSOLE_APP_MAIN
 	//	for (int j = 0; j < jsize; ++j)
 	//		v[j].Sweep();
 	}
+	return;
 	{
 		Vector<Index<int> > v;
 		v.SetCount(v_num);

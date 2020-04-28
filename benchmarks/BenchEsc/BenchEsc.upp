@@ -1,0 +1,11 @@
+uses
+	Core,
+	Esc;
+
+file
+	test.esc,
+	Esc.cpp;
+
+mainconfig
+	"" = "";
+

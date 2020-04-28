@@ -1,0 +1,14 @@
+sieve()
+{
+	N = 2000;
+	sieve = N * [1];
+	prime = [];
+	for(i = 2; i < N; i++) {
+		if(sieve[i]) {
+			prime[] = i;
+			for(j = i; j < N; j += i)
+				sieve[j] = 0;
+		}
+	}
+	return prime;
+}
