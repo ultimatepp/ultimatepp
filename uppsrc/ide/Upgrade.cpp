@@ -45,7 +45,7 @@ void Ide::UpgradeTheIDE()
 void Ide::InstallDesktop()
 {
 	String apps = GetHomeDirFile(".local/share/applications");
-	if(PromptYesNo("Write theide.desktop to&" + apps + "?&"
+	if(PromptYesNo("Write theide.desktop to&[* \1" + apps + "\1]?&"
 	               "That should make theide available through desktop menu.")) {
 		String icon = ConfigFile("theide.png");
 		PNGEncoder().SaveFile(icon, IdeImg::PackageLarge());
