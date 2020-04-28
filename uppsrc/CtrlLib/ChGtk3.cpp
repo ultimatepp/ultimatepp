@@ -229,6 +229,20 @@ Color GetBackgroundColor()
 	return AvgColor(b);
 }
 
+Color GetInkColorBk()
+{
+	Color ink = GetInkColor();
+	Color bk = GetBackgroundColor();
+	if(Diff(ink, bk) < 100) {
+		Color dk = SColorText();
+		Color wh = SColorPaper();
+		if(IsDark(wh))
+			Swap(dk, wh);
+		return IsDark(bk) ? wh : dk;
+	}
+	return ink;
+}
+
 Image Gtk_Icon(const char *icon_name, int size)
 {
 	GdkPixbuf *pixbuf = gtk_icon_theme_load_icon_for_scale(gtk_icon_theme_get_default(), icon_name,
@@ -372,10 +386,11 @@ void ChHostSkin()
 			for(int i = 0; i < 4; i++) {
 				Gtk_State(i);
 				s.look[i] = Hot3(CairoImage());
-				s.monocolor[i] = s.textcolor[i] = GetInkColor();
+				Color ink = GetInkColorBk();
+				s.monocolor[i] = s.textcolor[i] = ink;
 				if(pass == 0) {
 					button[i] = WithHotSpots(CairoImage(100, 100), DPI(4), DPI(4), 0, 0);
-					text[i] = GetInkColor();
+					text[i] = ink;
 				}
 			}
 			s.ok = Gtk_IconAdjusted("gtk-ok", DPI(16));
