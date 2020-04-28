@@ -130,14 +130,15 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	String cc = CmdLine(package, pkg);
 
-	if(IsVerbose())
-		cc << " -v";
+//	if(IsVerbose())
+//		cc << " -v";
 	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
 		cc << " -mthreads";
-	if(HasFlag("DEBUG_MINIMAL"))
-		cc << (HasFlag("WIN32") ? " -g1" : " -ggdb -g1");
-	if(HasFlag("DEBUG_FULL"))
-		cc << (HasFlag("WIN32") ? " -g2" : " -ggdb -g2");
+
+	if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL")) {
+		cc << (HasFlag("WIN32") && HasFlag("CLANG") ? " -gcodeview -fno-limit-debug-info" : " -ggdb");
+		cc << (HasFlag("DEBUG_FULL") ? " -g2" : " -g1");
+	}
 	String fuse_cxa_atexit;
 	if(is_shared /*&& !HasFlag("MAIN")*/) {
 		cc << " -shared -fPIC";
@@ -481,8 +482,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
 			String lnk = CompilerName();
-			if(IsVerbose())
-				lnk << " -v";
+//			if(IsVerbose())
+//				lnk << " -v";
 			if(HasFlag("GCC32"))
 				lnk << " -m32";
 			if(HasFlag("DLL"))
@@ -510,7 +511,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(createmap)
 				lnk << " -Wl,-Map," << GetHostPathQ(GetFileDirectory(target) + GetFileTitle(target) + ".map");
 			if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
-				lnk << " -ggdb";
+				lnk << (HasFlag("CLANG") && HasFlag("WIN32") ? " -Wl,-pdb=" : " -ggdb");
 			else
 				lnk << (!HasFlag("OSX") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)

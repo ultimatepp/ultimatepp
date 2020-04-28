@@ -311,7 +311,7 @@ void Ide::BuildAndDebug(bool runto)
 	bool console = ShouldHaveConsole();
 
 #ifdef PLATFORM_WIN32
-	if(findarg(builder, "GCC", "CLANG") < 0 || bm.Get("DEBUG_OPTIONS", String()).Find("-gcodeview") >= 0) // llvm-mingw can generate pdb symbolic info
+	if(findarg(builder, "GCC") < 0) // llvm-mingw can generate pdb symbolic info
 		debugger = PdbCreate(pick(host), target, runarg, builder == "CLANG");
 	else
 #endif

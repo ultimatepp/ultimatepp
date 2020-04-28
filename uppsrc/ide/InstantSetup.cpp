@@ -155,9 +155,9 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_INFO", "2");
 			bmSet(bm, "DEBUG_BLITZ", "1");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
-			bmSet(bm, "DEBUG_OPTIONS", "-O0 -g -gcodeview -fno-limit-debug-info");
+			bmSet(bm, "DEBUG_OPTIONS", "");
 			bmSet(bm, "DEBUG_FLAGS", "");
-			bmSet(bm, "DEBUG_LINK", "-Wl,-pdb= -Wl,--stack,20000000");
+			bmSet(bm, "DEBUG_LINK", "-Wl,--stack,20000000");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O3 ");
