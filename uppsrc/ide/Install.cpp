@@ -46,7 +46,7 @@ bool Install(bool& hasvars)
 		else {
 			if(name != "uppsrc")
 				b << ';' << uppsrc;
-			if(!FileExists(a))
+			if(!FileExists(a) && name != "bazaar")
 				SaveFile(a,
 					"UPP = " + AsCString(b) + ";\r\n"
 					"OUTPUT = " + AsCString(out) + ";\r\n"
@@ -80,12 +80,10 @@ bool Install(bool& hasvars)
 	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
 
 	for(pass = 0; pass < 2; pass++) {
-		if(pass) {
+		if(pass && bazaar.GetCount()) {
+			MakeAssembly(bazaar, "examples-bazaar");
 			MakeAssembly(myapps);
-			String h = uppsrc;
-			uppsrc = bazaar + ';' + uppsrc;
-			MakeAssembly(myapps, "MyApps-bazaar");
-			uppsrc = h;
+			MakeAssembly(myapps + ";" + bazaar, "MyApps-bazaar");
 		}
 	#ifdef PLATFORM_COCOA
 		String app = GetAppFolder();
