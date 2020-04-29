@@ -1,5 +1,0 @@
-LIBRARY	     "wisapi"
-
-EXPORTS
-	HttpExtensionProc
-	GetExtensionVersion

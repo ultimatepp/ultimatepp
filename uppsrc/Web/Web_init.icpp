@@ -1,8 +1,0 @@
-#include "Web.h"
-
-namespace Upp {
-
-#define TFILE <Web/Web.t>
-#include <Core/t.h>
-
-}
