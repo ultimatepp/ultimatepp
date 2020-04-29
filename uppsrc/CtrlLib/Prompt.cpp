@@ -68,7 +68,7 @@ int Prompt(Event<const String&> WhenLink,
 	qtfctrl.WhenLink = WhenLink;
 	icon.SetImage(iconbmp);
 	Button b1, b2, b3;
-	qtfctrl.SetQTF(String("[G1 ") + qtf, GetRichTextStdScreenZoom());
+	qtfctrl.SetQTF(String("[g ") + qtf, GetRichTextStdScreenZoom());
 	int bcy = Ctrl::VertLayoutZoom(24);
 	int bcx = Ctrl::HorzLayoutZoom(72);
 	if(button1)
