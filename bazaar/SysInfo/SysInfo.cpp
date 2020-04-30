@@ -1696,7 +1696,7 @@ bool Shutdown(String action) {
  
    	// Get the shutdown privilege for this process. 
    	AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, 
-        (PTOKEN_PRIVILEGES)NULL, 0); 
+        PTOKEN_PRIVILEGES(NULL), 0); 
  
    	if (GetLastError() != ERROR_SUCCESS) 
       	return false; 

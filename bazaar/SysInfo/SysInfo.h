@@ -230,16 +230,23 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 
 class SimulateActivity {
 public:
-	SimulateActivity(int _deltaTime = 4*60*1000) : deltaTime(_deltaTime) {
+	SimulateActivity(int _deltaTime, 
+		int _fromH = Null, int _fromM = Null, int _toH = Null, int _toM = Null) : 
+		deltaTime(_deltaTime), fromH(_fromH), fromM(_fromM), toH(_toH), toM(_toM), rng(123987) {
 #if defined(PLATFORM_WIN32) 
 		if (::CreateMutex(0, true, "__msdxp__")) {
 			if (GetLastError() == ERROR_ALREADY_EXISTS) 
 				active = false;
 		}
 #endif
+		nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
 	}
 	void DoActivity() {
 		if (!active)
+			return;
+		
+		Time tm = GetSysTime();
+		if (!IsNull(fromH) && (tm.hour > fromH && tm.minute > fromM) && (tm.hour < toH && tm.minute < toM))
 			return;
 		
 		int x, y;
@@ -248,17 +255,26 @@ public:
 			timer.Reset();
 			x0 = x;
 			y0 = y;
+			nextDeltaTime = deltaTimeFast + std::uniform_int_distribution<int>(5*1000, 10*1000)(rng);
 		} else {
-			if (timer.Elapsed() > deltaTime) {
+			if (timer.Elapsed() > nextDeltaTime) {
 				Keyb_SendKeys("{INSERT}{INSERT}", 10);
 				timer.Reset();
+				std::uniform_int_distribution<int> rand1min(53*1000, 67*1000);	
+				nextDeltaTime = deltaTime + std::uniform_int_distribution<int>(53*1000, 67*1000)(rng);
 			}
 		}
 	}	
+	bool IsActive() {return active;}
+	
+	std::mt19937 rng;
+	
 private:
 	TimeStop timer;
 	int x0 = -1, y0 = -1;
-	dword deltaTime;
+	dword deltaTime, nextDeltaTime;
+	dword deltaTimeFast = 20*1000;
+	int fromH, fromM, toH, toM;
 	bool active = true;
 };
 #endif
