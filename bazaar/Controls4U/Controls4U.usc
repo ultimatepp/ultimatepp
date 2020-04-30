@@ -985,7 +985,7 @@ ctrl FileBrowser {
 		DeflateRect(r);
 		
 		re = RectC(r.left, r.top, r.right, r.top+20);
-		DrawEditField(w, re, 20, "Folder name", 1, 1, 1, 0, 1, 1);
+		DrawEditField(w, re, 20, "Folder name", 1, 1, 1, 0, 1, 1, 1, 1);
 		
 		r.top += 24;
 		sz = Size(r.right - r.left, r.bottom - r.top);

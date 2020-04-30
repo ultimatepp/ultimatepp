@@ -42,7 +42,7 @@ protected:
 	void DoLeft(), DoRight(), DoUp();
 		
 public:
-	EditFileFolder() 								{Init();};
+	EditFileFolder() 								{};
 	virtual ~EditFileFolder();
 	
 	void Init();
@@ -198,8 +198,9 @@ public:
 	StaticImage& SetFit(int _fit)				{fit = _fit; 		  Refresh(); return *this;}
 	StaticImage& SetBackground(Color c) 		{background = c; 	  Refresh(); return *this;}
 	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
-	StaticImage& SetPopUp(bool pop = true)		{isPopUp = pop;	return *this;}
+	StaticImage& SetPopUp(bool pop = true)		{isPopUp = pop;		return *this;}
 	StaticImage& SetPopUpSize(Size sz);
+	StaticImage& SetHyperlink(String link)		{hyperlink = link;	return *this;}
 	StaticImage();
 	virtual ~StaticImage() {};
 	
@@ -214,7 +215,8 @@ protected:
 	virtual void LeftDown(Point pos, dword keyflags);
 	virtual void LeftDouble(Point pos, dword keyflags);
 	virtual void MouseEnter(Point pos, dword keyflags);
-	virtual void MouseLeave();
+	virtual void MouseLeave();	
+	virtual Image CursorImage(Point, dword);
 	
 	String fileName;
 	Image origImage;
@@ -224,6 +226,7 @@ protected:
 	ImagePopUp popup;
 	bool isPopUp;
 	Size szPopUp;
+	String hyperlink;
 };
 
 class StaticImageSet : public Ctrl {

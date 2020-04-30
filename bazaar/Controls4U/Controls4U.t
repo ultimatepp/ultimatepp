@@ -57,6 +57,12 @@ esES("La carpeta '%s' no existe")
 euES("")
 frFR("")
 
+T_("Impossible to open file browser")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Select folder")
 caES("")
 esES("")
