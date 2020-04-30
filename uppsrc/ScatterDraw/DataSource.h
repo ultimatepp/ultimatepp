@@ -742,12 +742,12 @@ template <class T>
 T LinearInterpolate(const T x, const Vector<T> &vecx, const Vector<T> &vecy) {
 	ASSERT(vecx.GetCount() > 1 && vecy.GetCount() > 1);
 	if (x < vecx[0])
-		return vecx[0];
+		return vecy[0];
 	for (int i = 0; i < vecx.GetCount()-1; ++i) {
 		if (vecx[i+1] >= x && vecx[i] <= x) 
 			return LinearInterpolate(x, vecx[i], vecx[i+1], vecy[i], vecy[i+1]);
 	}
-	return vecx[vecx.GetCount()-1];
+	return vecy[vecx.GetCount()-1];
 }
 
 class TableInterpolate {
