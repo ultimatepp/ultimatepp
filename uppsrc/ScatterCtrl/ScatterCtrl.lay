@@ -1,6 +1,6 @@
 LAYOUT(Properties, 548, 408)
 	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
-	ITEM(Button, exit, SetLabel(t_("OK")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
+	ITEM(Button, butOK, SetLabel(t_("OK")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(Measures, 608, 380)
@@ -63,12 +63,14 @@ LAYOUT(Texts, 504, 284)
 	ITEM(ColorPusher, colorLabel, RightPosZ(220, 20).BottomPosZ(12, 20))
 	ITEM(ColorPusher, backcolor, HSizePosZ(80, 88).VSizePosZ(40, 36))
 	ITEM(LabelBox, dv___15, HSizePosZ(4, 8).VSizePosZ(0, 4))
-	ITEM(Label, dv___16, SetLabel(t_("Left margin:")).LeftPosZ(12, 64).BottomPosZ(67, 21))
+	ITEM(Label, dv___16, SetLabel(t_("Click to set background color")).SetInk(White).LeftPosZ(88, 152).TopPosZ(68, 21))
 	ITEM(Label, dv___17, SetLabel(t_("Right margin:")).RightPosZ(12, 72).BottomPosZ(67, 21))
 	ITEM(Label, dv___18, SetLabel(t_("Bottom margin:")).RightPosZ(128, 88).BottomPosZ(11, 21))
 	ITEM(Button, butFontLabel, RightPosZ(244, 20).BottomPosZ(12, 20))
 	ITEM(ColorPusher, colorTitle, RightPosZ(204, 20).TopPosZ(16, 20))
 	ITEM(Button, butFontTitle, RightPosZ(228, 20).TopPosZ(16, 20))
+	ITEM(Label, dv___22, SetLabel(t_("Left margin:")).LeftPosZ(12, 64).BottomPosZ(67, 21))
+	ITEM(Label, dv___23, SetLabel(t_("Click to set background color")).LeftPosZ(88, 152).TopPosZ(48, 21))
 END_LAYOUT
 
 LAYOUT(Legend, 340, 188)
@@ -159,7 +161,7 @@ END_LAYOUT
 
 LAYOUT(Data, 552, 312)
 	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
-	ITEM(Button, exit, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
+	ITEM(Button, butOK, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(ProcessingLeft, 128, 412)
@@ -168,7 +170,7 @@ END_LAYOUT
 
 LAYOUT(ProcessingRight, 504, 320)
 	ITEM(StaticRect, rect, HSizePosZ(0, 0).VSizePosZ(0, 28))
-	ITEM(Button, exit, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(8, 68).BottomPosZ(4, 20))
+	ITEM(Button, butOK, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(8, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(ProcessingTab, 504, 320)
@@ -180,7 +182,7 @@ LAYOUT(ProcessingTabFitLeft, 356, 281)
 	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaBottomMargin(50).ShowContextMenu(true).ShowPropertiesDlg(true).ShowProcessDlg(true).ShowButtons(true).HSizePosZ(0, 1).VSizePosZ(0, 0))
 END_LAYOUT
 
-LAYOUT(ProcessingTabFitRight, 280, 484)
+LAYOUT(ProcessingTabFitRight, 284, 500)
 	ITEM(Option, opSeries, SetLabel(t_("Series")).LeftPosZ(4, 84).TopPosZ(3, 19))
 	ITEM(Option, opAverage, SetLabel(t_("Average")).LeftPosZ(4, 64).TopPosZ(23, 19))
 	ITEM(Option, opLinear, SetLabel(t_("Linear")).LeftPosZ(4, 64).TopPosZ(43, 19))

@@ -254,9 +254,11 @@ private:
 	
 	WithProcessingTabFitLeft<StaticRect> tabFitLeft;
 	WithProcessingTabFitRight<StaticRect> tabFitRight;
+	CtrlScroll tabFitRightScroll;
 	Splitter splitterTabFit;
 	WithProcessingTabFrequencyLeft<StaticRect> tabFreqLeft;
 	WithProcessingTabFrequencyRight<StaticRect> tabFreqRight;
+	CtrlScroll tabFreqRightScroll;
 	Splitter splitterTabFreq;
 	WithProcessingTabOpLeft<StaticRect> tabOpLeft;
 	WithProcessingTabOpRight<StaticRect> tabOpRight;
@@ -305,7 +307,7 @@ public:
 	virtual ~ProcessingDlg() noexcept {};
 
 private:
-	ScatterCtrl* pscatter;
+	ScatterCtrl *pscatter;
 	Upp::Array<ProcessingTab> tabs;
 	WithProcessingLeft<StaticRect> list; 
 	WithProcessingRight<StaticRect> right;
