@@ -1539,6 +1539,8 @@ String GetUpperFolder(const String &folderName) {
 	if (IsRootFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
+	if (len == 0)
+		return String();
 	if (folderName[len-1] == DIR_SEP)
 		len--;
 	int pos = folderName.ReverseFind(DIR_SEP, len-1);
@@ -1642,7 +1644,7 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 		}
 		if (PatternMatch(namewc, name)) {
 			if ((ff.IsFolder() && forfolder) || (ff.IsFile() && forfile)) {
-				if (!FileMoveX(full, AppendFileName(path, newname), flags))
+				if (!FileMoveX(full, AppendFileName(path, newname), flags)) 
 					return false;
 			}
 		}
@@ -2738,7 +2740,7 @@ int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength)
     for(int i = 1; i <= lens; i++) {
       	int DB = 0;
       	for(int j = 1; j <= lent; j++) {
-	        int i1 = DA[t[j-1]];
+	        int i1 = DA[int(t[j-1])];
 	        int j1 = DB;
 	        int cost = (s[i-1] == t[j-1]) ? 0 : 1;
 	        if(cost == 0) 
@@ -2749,7 +2751,7 @@ int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength)
 	              H[lent2*i     + j+1] + 1, 
 	              H[lent2*i1    + j1] + (i-i1-1) + 1 + (j-j1-1));
 	  	}
-      	DA[s[i-1]] = i;
+      	DA[int(s[i-1])] = i;
     }
     return H[lent2*(lens+1)+lent+1];
 }

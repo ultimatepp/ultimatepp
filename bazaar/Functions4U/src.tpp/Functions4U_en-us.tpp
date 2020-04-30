@@ -643,6 +643,11 @@ eWidth], [@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
 Size [%-*@3 s][%-  or Rect ][%-*@3 r][%- , with line width] [%-*@3 lineWidth] 
 and Color [%-*@3 color].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:GetDefinedParent`(Upp`:`:Ctrl`*`):%- [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 T]>_[*@4 T]_`&[* GetDefinedParent]([_^Upp`:`:Ctrl^ Ctrl]_`*[*@3 ths])&]
+[s2; Search for the parent Ctrl of [%-*@3 ths] whose type is [%-*@4 T].&]
+[s3; &]
 [s4; &]
 [s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
@@ -752,6 +757,111 @@ oid]_[* Shuffle]([*@4 C]_`&[*@3 data], [@(0.0.255) int]_[*@3 randomSeed]_`=_Null
 the random number generator.&]
 [s2; If [%-*@3 randomSeed] is Null or not included, a new random seed 
 is used every function call..&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:EqualRatio`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) bool]_[* EqualRatio]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 a
+], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
+[*@3 ratio])&]
+[s2; Returns true if the difference ratio between [%-*@3 a] and [%-*@3 b] 
+is lower than [%-*@3 ratio].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Find`(Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* Find]([*@4 Range][@(0.0.255) `&]_[*@3 r
+], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])
+&]
+[s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
+[%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from]. If nothing 
+is found it returns `-1.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindAdd`(Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) clas
+s]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAdd]([*@4 Range][@(0.0.255) `&
+]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=
+_[@3 0])&]
+[s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
+[%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from], adding 
+it if is new.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindRatio`(const Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) templa
+te]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindRati
+o]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
+]_[*@3 value], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) int]_[*@3 fro
+m]_`=_[@3 0])&]
+[s2; Returns the element of Range (Vector<>, Array<>, ...) [%-*@3 r] 
+whose difference ratio with [%-*@3 value] is lower than [%-*@3 ratio] 
+searching from id [%-*@3 from]. If nothing is found it returns 
+`-1.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindAddRatio`(Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) template]_
+<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAddRatio
+]([*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
+[%-*@3 r] whose difference ratio with [%-*@3 value] is lower than 
+[%-*@3 ratio] searching from id [%-*@3 from], adding it if is new.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindDelta`(const Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) templa
+te]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindDelt
+a]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
+]_[*@3 value], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 delta], [@(0.0.255) int]_[*@3 fro
+m]_`=_[@3 0])&]
+[s2; Returns the element of Range (Vector<>, Array<>, ...) [%-*@3 r] 
+whose difference with [%-*@3 value] is lower than [%-*@3 delta] searching 
+from id [%-*@3 from]. If nothing is found it returns `-1.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindAddDelta`(Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) template]_
+<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAddDelta
+]([*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 delta], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
+[%-*@3 r] whose difference with [%-*@3 value] is lower than [%-*@3 delta] 
+searching from id [%-*@3 from], adding it if is new.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindRoundDecimals`(const Range`&`,const V`&`,int`,int`):%- [@(0.0.255) temp
+late]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindRo
+undDecimals]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V
+][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 numDecimals], [@(0.0.255) int]_[*@3 from]_
+`=_[@3 0])&]
+[s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
+[%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from], rounding 
+[%-*@3 numDecimals] decimals. If nothing is found it returns `-1.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindClosest`(const Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindClosest]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value],
+ [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Returns the id of the closest element of Range (Vector<>, Array<>, 
+...) [%-*@3 r] to [%-*@3 value] counting from id [%-*@3 from].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Compare`(const Range`&`,const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range]>_[@(0.0.255) bool]_[* Compare]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&
+]_[*@3 a], [@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 b])&]
+[s2; Returns true if Ranges (Vector<>, Array<>, ...) [%-*@3 a] and 
+[%-*@3 b] are equal.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CompareRatio`(const Range`&`,const Range`&`,const V`&`):%- [@(0.0.255) temp
+late]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) bool]_[* Compa
+reRatio]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[*@4 Range
+][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 ratio])&]
+[s2;%- [%% Returns true if the elements of Ranges (Vector<>, Array<>, 
+...) ][*@3 a][%%  and ][*@3 b][%%  are closer than ][*@3 ratio.]&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ToString`(const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Ran
+ge]>_[_^Upp`:`:String^ String]_[* ToString]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 a
+])&]
+[s2; Returns a String from a Range (Vector<>, Array<>, ...) [%-*@3 a] 
+with elements separated with `';`'.&]
 [s3; &]
 [s4;%- &]
 [s5;:DamerauLevenshteinDistance`(const char`*`,const char`*`,int`):%- [@(0.0.255) int]_

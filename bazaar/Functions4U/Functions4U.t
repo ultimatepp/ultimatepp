@@ -192,6 +192,63 @@ esES("")
 euES("")
 frFR("")
 
+T_("Paste")
+caES("Enganxa")
+esES("Pegar")
+euES("")
+frFR("")
+
+T_("Paste rows from clipboard")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Append")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Append row")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Remove")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Remove selected rows")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Remove all")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Remove all rows")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+
+// Functions4U_Gui.h
+
+T_("Parent does not found in GetDefinedParent()")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 
 // GatherTpp.cpp
 

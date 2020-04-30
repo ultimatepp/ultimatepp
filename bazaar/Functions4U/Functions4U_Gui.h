@@ -107,10 +107,12 @@ private:
 #endif
 };
 
-void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header = true);
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header = true, bool edit = false);
 void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header);
+void ArrayCtrlRowPaste(ArrayCtrl &array);
 void ArrayCtrlRowSelect(ArrayCtrl &array);
-Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array);
+Vector<int> ArrayCtrlSelectedGet(const ArrayCtrl &array);
+int ArrayCtrlSelectedGetCount(const ArrayCtrl &array);
 Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr);
 void ArrayCtrlSet(ArrayCtrl &array, const Vector<Vector<Value>> &vals, int fromRow = 0, int fromCol = 0);
 		
@@ -122,8 +124,9 @@ T &GetDefinedParent(Ctrl *ths) {
 		if ((main = dynamic_cast<T*>(ths)) != nullptr)
 			return *main;
 	}
-	NEVER_("Parent does not found in GetDefinedParent()");
-	return *main;
+	NEVER_(t_("Parent does not found in GetDefinedParent()"));
+	throw Exc(t_("Parent does not found in GetDefinedParent()"));
+	//return *main;
 }
 
 }

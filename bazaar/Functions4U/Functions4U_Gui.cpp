@@ -210,8 +210,9 @@ ConsoleOutput::~ConsoleOutput() {
 #endif
 }
 
-void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header) {
-	if (array.GetCount() == 0)
+void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header, bool edit) {
+	int num = array.GetCount();
+	if (num == 0)
 		menu.Add(t_("Empty list"), Null, Null).Enable(false).Bold(true);
 	else {
 		menu.Add(t_("Select all"), Null, [&] {ArrayCtrlRowSelect(array);})
@@ -224,7 +225,24 @@ void ArrayCtrlWhenBar(Bar &menu, ArrayCtrl &array, bool header) {
 			menu.Add(Format(t_("Selected %d rows"), count), Null, Null).Enable(false).Bold(true);
 			menu.Add(t_("Copy"), Null, [&] {ArrayCtrlRowCopy(array, header);})
 				.Key(K_CTRL_C).Help(t_("Copy selected rows to clipboard"));
-		}
+		}	
+	}
+	if (edit) {
+			menu.Add(t_("Paste"), Null, [&] {ArrayCtrlRowPaste(array);})
+				.Key(K_CTRL_V).Help(t_("Paste rows from clipboard"));
+			menu.Add(t_("Append"), Null, [&] {array.Add();})
+				.Key(K_CTRL_INSERT).Help(t_("Append row"));
+			if (num > 0) {
+				menu.Add(t_("Remove"), Null, [&] {
+					for (int r = array.GetCount()-1; r >= 0; --r)
+						if (array.IsSelected(r))
+							array.Remove(r);
+				}).Key(K_DELETE).Help(t_("Remove selected rows"));
+				menu.Add(t_("Remove all"), Null, [&] {
+					for (int r = array.GetCount()-1; r >= 0; --r)
+						array.Remove(r);
+				}).Help(t_("Remove all rows"));
+			}
 	}
 }
 
@@ -232,17 +250,40 @@ void ArrayCtrlRowCopy(const ArrayCtrl &array, bool header) {
 	array.SetClipboard(true, header);
 }
 
+void ArrayCtrlRowPaste(ArrayCtrl &array) {
+	String str = ReadClipboardText();
+	int numcol = array.GetColumnCount();
+	Vector<String> split = Split(str, "\r\n");
+	for (int r = 0; r < split.GetCount(); ++r) {
+		array.Add();
+		int rr = array.GetCount()-1;
+		Vector<String> cells = Split(split[r], "\t");
+		int mincol = min(cells.GetCount(), numcol);
+		for (int c = 0; c < mincol; ++c) 
+			array.Set(rr, c, cells[c]);
+	}
+}
+
 void ArrayCtrlRowSelect(ArrayCtrl &array) {
 	array.Select(0, array.GetCount(), true);
 }
 
-Vector<int> ArrayCtrlGetSelected(const ArrayCtrl &array) {
+Vector<int> ArrayCtrlSelectedGet(const ArrayCtrl &array) {
 	Vector<int> selected;
 	for (int r = 0; r < array.GetCount(); ++r) {
-		if (array.IsSel(r))	
+		if (array.IsSelected(r))	
 			selected << r;
 	}
 	return selected;
+}
+
+int ArrayCtrlSelectedGetCount(const ArrayCtrl &array) {
+	int num = 0;
+	for (int r = 0; r < array.GetCount(); ++r) {
+		if (array.IsSelected(r))	
+			num++;
+	}
+	return num;
 }
 
 Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr) {

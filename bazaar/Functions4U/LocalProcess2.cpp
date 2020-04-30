@@ -19,7 +19,7 @@ namespace Upp {
 void LocalProcess2::Init() {
 #ifdef PLATFORM_WIN32
 	hProcess = hOutputRead = hErrorRead = hInputWrite = NULL;
-	dwProcessId = (DWORD)NULL;
+	dwProcessId = DWORD(NULL);
 #endif
 #ifdef PLATFORM_POSIX
 	pid = 0;

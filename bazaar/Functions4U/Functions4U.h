@@ -4,7 +4,7 @@
 #include <float.h>
 #include <Draw/Draw.h>
 #ifdef flagGUI
-#include <Web/Web.h>
+//#include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
 
@@ -612,6 +612,7 @@ struct TempAssign {
 	T *val, old;
 };
 
+/*						Replaced with std::atomic
 template <class T>
 class ThreadSafe {
 public:
@@ -662,7 +663,7 @@ public:
 private:
 	Mutex mutex;
 	T val;
-};
+};*/
 
 template <class C>
 static void ShuffleAscending(C &data, std::default_random_engine &generator) {
@@ -693,25 +694,18 @@ void Shuffle(C &data, int randomSeed = Null) {
 }
 
 template <class T>
-inline T TruncDecimals(T num, int decimals) {
-	long double val = num*10*decimals;
-	long int ival = static_cast<long int>(val);
-	val = ival;
-	return static_cast<T>(val/(10*decimals));
-}
-
-template <class T>
-inline String RoundDecimals(T num, int decimals) {
-	return FormatDouble(num, decimals);
-}
-
-template <class T>
-bool EqualRatio(const T& a, const T& b, const T& ratio) {
-	if (a == 0) {
-		if (b == 0)
+bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
+	if (abs(a) <= zero) {
+		if (abs(b) <= zero)
 			return true;
-	} else if (b == 0) {
-		if(abs((a - b)/a) <= ratio) 
+		else {
+			if(abs((zero - b)/b) <= ratio) 
+				return true;
+			else
+				return false;
+		}
+	} else if (abs(b) <= zero) {
+		if(abs((a - zero)/a) <= ratio) 
 			return true;
 		else
 			return false;
@@ -722,24 +716,42 @@ bool EqualRatio(const T& a, const T& b, const T& ratio) {
 }
 
 template <class Range, class V>
-int FindAdd(Range& r, const V& value, int from = 0) {
+int Find(Range& r, const V& value, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
 		if(r[i] == value) 
 			return i;
+	return -1;
+}
+
+template <class Range, class V>
+int FindAdd(Range& r, const V& value, int from = 0) {
+	int id = Find(r, value, from);
+	if (id >= 0)
+		return id; 
 	r.Add(value);
 	return r.GetCount()-1;
 }
 
 template <class Range, class V>
-void FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
-	for(int i = from; i < r.GetCount(); i++)
-		if(EqualRatio(r[i], value, ratio)) 
-			return;
-	r.Add(value);
+int FindRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
+	for(int i = from; i < r.GetCount(); i++) {
+		if (EqualRatio(r[i], value, ratio))
+			return i;
+	}
+	return -1;
 }
 
 template <class Range, class V>
-int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0) {
+int FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
+	int id = FindRatio(r, value, ratio, from);
+	if (id >= 0)
+		return id; 
+	r.Add(value);
+	return r.GetCount()-1;
+}
+
+template <class Range, class V>
+int FindDelta(const Range& r, const V& value, const V& delta, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++) 
 		if(abs(r[i] - value) <= delta) 
 			return i;
@@ -747,18 +759,25 @@ int FindIndexDelta(const Range& r, const V& value, const V& delta, int from = 0)
 }
 
 template <class Range, class V>
-int FindIndexRoundDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
-	String svalue = RoundDecimals(value, numDecimals);
-	for(int i = from; i < r.GetCount(); i++) {
-		String s = RoundDecimals(r[i], numDecimals);
-		if(s == svalue) 
-			return i;
-	}
-	return -1;
+int FindAddDelta(Range& r, const V& value, const V& delta, int from = 0) {
+	int id = FindDelta(r, value, delta, from);
+	if (id >= 0)
+		return id; 
+	r.Add(value);
+	return r.GetCount()-1;
 }
 
 template <class Range, class V>
-int FindIndexTruncDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
+int FindRoundDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
+	String svalue = FormatDouble(value, numDecimals);
+	for(int i = from; i < r.GetCount(); i++) 
+		if(FormatDouble(r[i], numDecimals) == svalue) 
+			return i;
+	return -1;
+}
+/*
+template <class Range, class V>
+int FindTruncDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
 	V svalue = TruncDecimals(value, numDecimals);
 	for(int i = from; i < r.GetCount(); i++) {
 		V s = TruncDecimals(r[i], numDecimals);
@@ -766,10 +785,10 @@ int FindIndexTruncDecimals(const Range& r, const V& value, int numDecimals, int 
 			return i;
 	}
 	return -1;
-}
+}*/
 
 template <class Range, class V>
-int FindIndexCloser(const Range& r, const V& value, int from = 0) {
+int FindClosest(const Range& r, const V& value, int from = 0) {
 	int minId = -1;
 	V minDiff = FLT_MAX;
 	for(int i = from; i < r.GetCount(); i++) {
@@ -782,24 +801,24 @@ int FindIndexCloser(const Range& r, const V& value, int from = 0) {
 	return minId;
 }
 
-template <class Range, class V>
-int FindIndexRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
-	for(int i = from; i < r.GetCount(); i++) {
-		if (EqualRatio(r[i], value, ratio))
-			return i;
-	}
-	return -1;
-}
-
-template <class Range, class V>
-bool Compare(const Range& a, const Range& b, const V& ratio = 0) {
+template <class Range>
+bool Compare(const Range& a, const Range& b) {
 	if (a.GetCount() != b.GetCount())
 		return false;
 	for(int i = 0; i < a.GetCount(); i++) {
-		V div = (b[i] != 0) ? b[i] : (a[i] != 0 ? a[i] : 1);
-		if(abs(a[i] - b[i])/div > ratio) 
+		if(a[i] != b[i]) 
 			return false;
 	}
+	return true;
+}
+	
+template <class Range, class V>
+bool CompareRatio(const Range& a, const Range& b, const V& ratio) {
+	if (a.GetCount() != b.GetCount())
+		return false;
+	for(int i = 0; i < a.GetCount(); i++) 
+		if (!EqualRatio(a[i], b[i], ratio)) 
+			return false;
 	return true;
 }
 
