@@ -192,7 +192,7 @@ RasterPlayer& RasterPlayer::SetMT(bool _mt)	{
 	return *this;
 }
 
-RasterPlayer::~RasterPlayer() {
+RasterPlayer::~RasterPlayer() noexcept {
 	Stop();	
 }
 

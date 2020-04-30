@@ -20,7 +20,6 @@ private:
 	TimeStop tTime;
 	dword tFrame;
 
-
 public:
 	RasterPlayer();
 	virtual ~RasterPlayer() noexcept;
@@ -30,6 +29,7 @@ public:
 
 	void Play();
 	void Stop();
+	bool IsRunning()	{return running;}
 	void NextFrame();
 	inline void NextPage() {NextFrame();};
 	RasterPlayer& SetBackground(Color c)	{background = c; Refresh(); return *this;}
