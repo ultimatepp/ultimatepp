@@ -11,19 +11,20 @@ void ScatterCtrl::DoProcessing()
 
 void PropertiesDlg::Init(ScatterCtrl& scatter) 
 {
-	CtrlLayoutExit(*this, t_("Scatter properties"));
+	CtrlLayout(*this, t_("Scatter properties"));
 	Sizeable().Zoomable();
 
 	this->pscatter = &scatter;
 	
 	tab.Add(measures, t_("Measures"));
-	tab.Add(texts, t_("Texts"));
-	tab.Add(legend, t_("Legend"));
-	tab.Add(series, t_("Series"));
-	tab.Add(general, t_("General"));
+	tab.Add(texts, 	  t_("Texts"));
+	tab.Add(legend,   t_("Legend"));
+	tab.Add(series,   t_("Series"));
+	tab.Add(general,  t_("General"));
 	OnTab();
 	
 	tab <<= THISBACK(OnTab);
+	butOK.WhenAction = [=] {Close();};
 }
 
 void PropertiesDlg::Set(int itab)
@@ -49,8 +50,7 @@ void PropertiesDlg::OnTab()
 void ProcessingDlg::Init(ScatterCtrl& scatter) 
 {
 	Title(Nvl(scatter.GetTitle(), "Data") + " processing");
-	Acceptor(right.exit, IDEXIT);
-	right.exit.Exit();
+	
 	Add(splitter.SizePos());
 	CtrlLayout(list);
 	CtrlLayout(right);
@@ -78,6 +78,8 @@ void ProcessingDlg::Init(ScatterCtrl& scatter)
 		list.list.SetCursor(0);
 	list.list.WhenSel = THISBACK(UpdateFields);
 	UpdateFields();
+	
+	right.butOK.WhenAction = [=] {Close();};
 }
 
 void ProcessingDlg::UpdateFields() 
@@ -99,11 +101,12 @@ ProcessingTab::ProcessingTab()
 	
 	CtrlLayout(tabFitLeft);
 	CtrlLayout(tabFitRight);
-	splitterTabFit.Horz(tabFitLeft.SizePos(), tabFitRight.SizePos());
+	
+	splitterTabFit.Horz(tabFitLeft.SizePos(), tabFitRightScroll.AddPaneV(tabFitRight).SizePos());
 	splitterTabFit.SetPos(7000, 0);
 	CtrlLayout(tabFreqLeft);
 	CtrlLayout(tabFreqRight);
-	splitterTabFreq.Horz(tabFreqLeft.SizePos(), tabFreqRight.SizePos());
+	splitterTabFreq.Horz(tabFreqLeft.SizePos(), tabFreqRightScroll.AddPaneV(tabFreqRight).SizePos());
 	splitterTabFreq.SetPos(8000, 0);
 	CtrlLayout(tabOpLeft);
 	CtrlLayout(tabOpRight);
@@ -118,11 +121,11 @@ ProcessingTab::ProcessingTab()
 	splitterTabHist.Horz(tabHistLeft.SizePos(), tabHistRight.SizePos());
 	splitterTabHist.SetPos(8000, 0);	
 	
-	tab.Add(splitterTabFit.SizePos(), t_("Processing"));
-	tab.Add(splitterTabFreq.SizePos(), t_("Frequency"));
-	tab.Add(splitterTabOp.SizePos(), t_("Operations"));
-	tab.Add(splitterTabBestFit.SizePos(), t_("Best fit"));
-	tab.Add(splitterTabHist.SizePos(), t_("Histogram"));
+	tab.Add(splitterTabFit.SizePos(),  		t_("Processing"));
+	tab.Add(splitterTabFreq.SizePos(), 		t_("Frequency"));
+	tab.Add(splitterTabOp.SizePos(),   		t_("Operations"));
+	tab.Add(splitterTabBestFit.SizePos(), 	t_("Best fit"));
+	tab.Add(splitterTabHist.SizePos(), 		t_("Histogram"));
 	tab.WhenSet = THISBACK(OnSet);
 	
 	tabFreqRight.butFFT.WhenAction = THISBACK(OnFFT);

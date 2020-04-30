@@ -26,6 +26,31 @@ public:
 
 typedef WithSpin<double, EditDoubleLostFocus> EditDoubleLostFocusSpin;
 
+class CtrlScroll : public StaticRect {
+public:
+	typedef CtrlScroll CLASSNAME;
+	CtrlScroll();
+
+	CtrlScroll &AddPane(Ctrl& c, bool scrollH = true, bool scrollV = true);
+	CtrlScroll &AddPaneH(Ctrl& c) 	{return AddPane(c, true, false);}
+	CtrlScroll &AddPaneV(Ctrl& c)	{return AddPane(c, false, true);}
+	inline bool HasPane() const 	{return (~pane != NULL);}
+
+	Event<> WhenScrolled;
+	
+private:
+	virtual void Layout();
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+
+	void Scroll(const Point& p);
+	void OnScroll();
+
+	ScrollBars scroll;
+
+	Ptr<Ctrl> pane;
+	bool hsizepos, vsizepos;
+};
+
 class ArrayCtrlSource : public DataSource {
 private:
 	ArrayCtrl *data;

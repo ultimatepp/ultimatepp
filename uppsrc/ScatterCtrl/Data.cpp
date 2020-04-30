@@ -11,7 +11,7 @@ void ScatterCtrl::DoShowData()
 
 void DataDlg::Init(ScatterCtrl& scatter) 
 {
-	CtrlLayoutExit(*this, t_("Scatter data"));
+	CtrlLayout(*this, t_("Scatter data"));
 	Sizeable().Zoomable();
 	
 	this->pscatter = &scatter;
@@ -51,6 +51,7 @@ void DataDlg::Init(ScatterCtrl& scatter)
 	}
 	
 	tab <<= THISBACK(OnTab);
+	butOK.WhenAction = [=] {Close();};
 }
 
 Value DataDlg::DataSourceX::Format(const Value& q) const 

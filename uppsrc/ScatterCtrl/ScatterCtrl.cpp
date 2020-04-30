@@ -88,6 +88,67 @@ String FixPathName(const String &path) {
 
 #endif
 
+CtrlScroll::CtrlScroll() {
+	AddFrame(scroll);
+	scroll.AutoHide();
+	scroll.WhenScroll = THISBACK(OnScroll);
+	hsizepos = vsizepos = false;
+}
+
+CtrlScroll &CtrlScroll::AddPane(Ctrl& c, bool scrollH, bool scrollV) { 
+	pane = &c; 
+	if (scrollH) 
+		scroll.x.Enable();
+	else {
+		c.HSizePos();
+		hsizepos = true;
+	}
+	if (scrollV) 
+		scroll.y.Enable();	
+	else {
+		c.VSizePos();
+		vsizepos = true;
+	}
+	Add(c); 
+	return *this;
+}
+	
+void CtrlScroll::Scroll(const Point& p) {
+	if(!HasPane()) 
+		return;
+	Rect _r = pane->GetRect();
+	Rect r(-p, _r.GetSize());
+	pane->SetRect(r);
+	if (hsizepos)
+		pane->HSizePos();
+	if (vsizepos)
+		pane->VSizePos();
+	WhenScrolled();
+}
+
+void CtrlScroll::OnScroll() {
+	Scroll(scroll.Get());
+}
+
+void CtrlScroll::Layout() {
+	if(!HasPane()) 
+		return;
+	Size psz = GetSize();
+	Size tsz = pane->GetSize();
+	scroll.Set(Point(0, 0), psz, tsz);
+}
+
+void CtrlScroll::MouseWheel(Point, int zdelta, dword) {
+	Rect _r = pane->GetRect();
+	int num = int(_r.GetSize().cy/10);
+	for (int i = 0; i < num; ++i) {
+		if (zdelta > 0)
+			scroll.LineUp();
+		else
+			scroll.LineDown();
+	}
+}
+	
 void ScatterCtrl::LoadControl() {
 	GuiLock __;
 	
@@ -233,7 +294,7 @@ void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
 			w.DrawLine(0, sz.cy+delta, sz.cx, sz.cy+delta, 2, LtGray());
 		}
 	}
-	lastRefresh_ms = t.Elapsed();
+	lastRefresh_ms = int(t.Elapsed());
 }
 		
 			
@@ -936,14 +997,14 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	{
 		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P)
 									.Help(t_("Plot properties dialog"));
-		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D)
+		bar.Add(t_("View Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D)
 									.Help(t_("Raw data table"));
 	}
 #ifndef _DEBUG
 	if (showProcessDlg)
 #endif
 	{
-		bar.Add(t_("Process"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P)
+		bar.Add(t_("Data Analysis"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P)
 									.Help(t_("Data processing dialog"));
 	}
 #ifndef _DEBUG
@@ -1115,19 +1176,26 @@ ScatterCtrl::ScatterCtrl() {
 	
 	ShowInfo().ShowContextMenu().ShowPropertiesDlg();
 	
-	Add(processButton.RightPosZ(0, 15).TopPosZ(0, 15));
+	int posx = 0;
+	int buttonHeight = 18;
+	int buttonWidthProcess = 100;
+	Add(processButton.RightPosZ(posx, buttonWidthProcess).TopPosZ(0, buttonHeight));
 	processButton.Show(false);
-	processButton.SetImage(ScatterImg::chart_curve_edit()).Tip(t_("Data processing dialog"));
+	processButton.SetImage(ScatterImg::chart_curve_edit()).SetLabel(t_("Data Analysis")).Tip(t_("Data processing dialog"));
 	processButton.WhenAction = THISBACK(DoProcessing);
 	
-	Add(dataButton.RightPosZ(15, 15).TopPosZ(0, 15));
+	posx += buttonWidthProcess;
+	int buttonWidthData = 80;
+	Add(dataButton.RightPosZ(posx, buttonWidthData).TopPosZ(0, buttonHeight));
 	dataButton.Show(false);
-	dataButton.SetImage(ScatterImg::Database()).Tip(t_("Raw data table"));
+	dataButton.SetImage(ScatterImg::Database()).SetLabel(t_("View Data")).Tip(t_("Show raw data table"));
 	dataButton.WhenAction = THISBACK(DoShowData);
 	
-	Add(propertiesButton.RightPosZ(30, 15).TopPosZ(0, 15));
+	posx += buttonWidthData;
+	int buttonWidthProperties = 80;
+	Add(propertiesButton.RightPosZ(posx, buttonWidthProperties).TopPosZ(0, buttonHeight));
 	propertiesButton.Show(false);
-	propertiesButton.SetImage(ScatterImg::Gear()).Tip(t_("Plot properties dialog"));
+	propertiesButton.SetImage(ScatterImg::Gear()).SetLabel(t_("Properties")).Tip(t_("Plot properties dialog"));
 	propertiesButton.WhenAction = THISBACK1(DoShowEditDlg, 0);
 	
 	AddMouseBehavior(false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES); 
