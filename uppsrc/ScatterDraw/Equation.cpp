@@ -291,11 +291,8 @@ EvalExpr::EvalExpr() {
 }
 
 doubleUnit EvalExpr::Term(CParser& p) {
-	if (p.Char('-')) {
-		doubleUnit x = Exp(p);
-		x.Neg();
-		return x;		
-	} else if (p.IsId()) {
+	bool isneg = p.Char('-');
+	if (p.IsId()) {
 		String strId = p.ReadId();
 		if(doubleUnit (*function)(doubleUnit) = functions.Get(strId, 0)) {
 			p.PassChar('(');
@@ -304,6 +301,8 @@ doubleUnit EvalExpr::Term(CParser& p) {
 			doubleUnit ret = function(x);
 			if (IsNull(ret))
 				EvalThrowError(p, Format(t_("Error in %s(%f)"), strId, x.val));	
+			if (isneg)
+				ret.Neg();
 			return ret;
 		}	
 		String strsearch;
@@ -320,13 +319,21 @@ doubleUnit EvalExpr::Term(CParser& p) {
 				ret = variables.GetAdd(strsearch, 0);
 			}
 		}
+		if (isneg)
+			ret.Neg();
 		return ret;
 	} else if (p.Char('(')) {
 		doubleUnit x = Exp(p);
 		p.PassChar(')');
+		if (isneg)
+			x.Neg();
 		return x;
-	} else
-		return doubleUnit(p.ReadDouble());
+	} else {
+		doubleUnit x = doubleUnit(p.ReadDouble());
+		if (isneg)
+			x.Neg();
+		return x;
+	}
 }
 
 doubleUnit EvalExpr::Pow(CParser& p) {
