@@ -90,7 +90,6 @@ void TopicLinkDlg::Label()
 void TopicEditor::Hyperlink(String& link, WString& text)
 {
 	TopicLinkDlg d;
-	d.link <<= link;
 	String label;
 	TopicLink tl;
 	int q = link.ReverseFind('#');
@@ -111,6 +110,8 @@ void TopicEditor::Hyperlink(String& link, WString& text)
 		d.topic.FindSetCursor(tl.topic) &&
 		d.label.FindSetCursor(label);
 	}
+	if(link.GetCount())
+		d.link <<= link;
 	int c = d.Run();
 	if(c == IDCANCEL)
 		return;
