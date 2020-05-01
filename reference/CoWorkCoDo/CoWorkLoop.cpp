@@ -14,18 +14,17 @@ CONSOLE_APP_MAIN
 	}
 	
 	double sum = 0;
-	CoWork co;
-	co * [&] {
+	std::atomic<int> ii(0);
+	CoDo([&] {
 		double m = 0;
-		int i;
-		while((i = co.Next()) < data.GetCount()) {
+		for(int i = ii++; i < data.GetCount(); i = ii++) {
 			CParser p(data[i]);
 			while(!p.IsEof())
 				m += p.ReadDouble();
 		}
 		CoWork::FinLock();
 		sum += m;
-	};
+	});
 
 	RDUMP(sum);
 }
