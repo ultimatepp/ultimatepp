@@ -120,7 +120,7 @@ public:
 #else
 	int       Get16()                { return _Get16(); }
 	int       Get32()                { return _Get32(); }
-	int       Get64()                { return _Get32(); }
+	int64     Get64()                { return _Get64(); }
 #endif
 
 #ifdef CPU_LE

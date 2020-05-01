@@ -2667,14 +2667,14 @@ void TabBar::Serialize(Stream& s)
 	
 	int n = groups.GetCount();
 	s % n;
-	groups.SetCount(n);
+	groups.SetCount(clamp(n, 0, 10000));
 	
 	for(int i = 0; i < groups.GetCount(); i++)
 		s % groups[i];
 	
 	n = tabs.GetCount();
 	s % n;
-	tabs.SetCount(n);
+	tabs.SetCount(clamp(n, 0, 10000));
 	
 	for(int i = 0; i < tabs.GetCount(); i++)
 		s % tabs[i];

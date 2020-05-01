@@ -490,7 +490,7 @@ public:
 		String            file;
 		LineEdit::EditPos pos;
 
-		void Serialize(Stream& s)        { s % file % pos; }
+		void Serialize(Stream& s)        { s % file; s % pos; }
 	}
 	bookmark[10];
 
