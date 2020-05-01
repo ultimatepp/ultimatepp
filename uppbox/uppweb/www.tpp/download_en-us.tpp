@@ -16,6 +16,14 @@ topic "Ultimate++ download";
 [s4;po &]
 [s4;b0;a0;po <#downloads#>&]
 [s1;#b0; &]
+[s0; &]
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_win32`_en`-us^ Win32 Installation 
+guide]&]
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_posix`_en`-us^ POSIX Installation 
+guide]&]
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^ MacOS Installation 
+guide]&]
+[s0; &]
 [s3; Sources&]
 [s0; &]
 [s0; Sources are available on [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ github].
