@@ -104,7 +104,7 @@ inline void   EndianSwap(uint64& v)   { v = SwapEndian64(v); }
 
 #else
 
-#ifdef COMPILE_GCC
+#ifdef COMPILER_GCC
 
 inline uint64  SwapEndian64(uint64 v) { return __builtin_bswap64(v); }
 inline int64   SwapEndian64(int64 v)  { return __builtin_bswap64(v); }
