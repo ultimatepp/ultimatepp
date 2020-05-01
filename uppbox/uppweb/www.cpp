@@ -692,9 +692,9 @@ String Downloads()
 {
 	String r;
 	r << "{{1:1:1^@L "
-	     "[^app$ide$install$en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^www$uppweb$posix$en-us.html^ U`+`+ for Linux/FreeBSD]:: "
-	     "[^www$uppweb$macos$en-us.html^ U`+`+ for MacOS]";
+	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
+	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/FreeBSD]:: "
+	     "[^app$ide$install_macos_en-us.html^ U`+`+ for MacOS]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;

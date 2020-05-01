@@ -24,16 +24,14 @@ topic "Documentation";
 not everything is documented yet.&]
 [s5; Ultimate`+`+ community is ready to provide an excellent support 
 in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
-[s5; This a documentation for current release. I you would like to 
-see the documentation for development version, go [^https`:`/`/www`.ultimatepp`.org`/trunk`/www`$uppweb`$documentation`$en`-us`.html^ h
-ere].&]
+[s5; &]
 [s3; [4 Installation and Configuration]&]
 [s5; &]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation 
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_win32`_en`-us^3 Win32 Installation 
 guide]&]
-[s0;l160; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 POSIX/X11 Tarball 
-Installation guide]&]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 MacOS Installation 
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_posix`_en`-us^3 POSIX Installation 
+guide]&]
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^3 MacOS Installation 
 guide]&]
 [s0;l160;*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 &]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
