@@ -1,0 +1,11 @@
+description "Demonstrates CoDo parallelization\377";
+
+uses
+	Core;
+
+file
+	CoWorkLoop.cpp;
+
+mainconfig
+	"" = "";
+
