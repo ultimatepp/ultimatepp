@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Serialize.cpp;
+
+mainconfig
+	"" = "";
+
