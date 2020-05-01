@@ -326,11 +326,7 @@ void Heap::Free48(void *ptr)
 force_inline
 Heap *ThreadHeap()
 {
-#ifdef MINGW_TLS_PATCH
-	static FastMingwTls<Heap *> heap_tls;
-#else
 	thread_local Heap *heap_tls;
-#endif
 	Heap *heap = heap_tls;
 	if(!heap) { // we definitely need a lock here because some Shutdown can be in progress
 		Mutex::Lock __(Heap::mutex);

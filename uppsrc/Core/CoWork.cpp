@@ -8,15 +8,9 @@ namespace Upp {
 #define LTIMING(x)    // RTIMING(x)
 #define LHITCOUNT(x)  // RHITCOUNT(x)
 
-#ifdef MINGW_TLS_PATCH
-FastMingwTls<bool>     CoWork::Pool::finlock;
-FastMingwTls<int>      CoWork::worker_index = -1;
-FastMingwTls<CoWork *> CoWork::current;
-#else
 thread_local bool    CoWork::Pool::finlock;
 thread_local int     CoWork::worker_index = -1;
 thread_local CoWork *CoWork::current;
-#endif
 
 CoWork::Pool& CoWork::GetPool()
 {

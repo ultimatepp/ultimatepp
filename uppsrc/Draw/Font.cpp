@@ -433,69 +433,6 @@ CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
 	return e;
 }
 
-#ifdef MINGW_TLS_PATCH
-struct FontEntry {
-	CommonFontInfo info;
-	int64          font;
-};
-
-struct FontInfoTls {
-	CharEntry      fc_cache[512];
-	FontEntry      fi_cache[63];
-	int64          lastFiFont = INT_MIN;
-	CommonFontInfo lastFontInfo;
-	int64          lastStdFont = INT_MIN;
-};
-
-thread_local static FontInfoTls sFontInfoTls;
-static FastMingwTls<FontInfoTls *> sFontInfoTlsPtr;
-
-force_inline static FontInfoTls& sTls()
-{
-	if(!sFontInfoTlsPtr)
-		sFontInfoTlsPtr = &sFontInfoTls;
-	return *sFontInfoTlsPtr;
-}
-
-GlyphInfo GetGlyphInfo(Font font, int chr)
-{
-	FontInfoTls& tls = sTls();
-	font.RealizeStd();
-	unsigned hash = GlyphHash(font, chr);
-	CharEntry& e = tls.fc_cache[hash & 511];
-	if(e.font != font.AsInt64() || e.chr != chr)
-		e = GetGlyphEntry(font, chr, hash);
-	return e.info;
-}
-
-const CommonFontInfo& GetFontInfo(Font font)
-{
-	FontInfoTls& tls = sTls();
-	font.RealizeStd();
-	unsigned hash = FoldHash(font.GetHashValue()) % 63;
-	FontEntry& e = tls.fi_cache[hash];
-	if(e.font != font.AsInt64()) {
-		Mutex::Lock __(sFontLock);
-		e.font = font.AsInt64();
-		e.info = GetFontInfoSys(font);
-	}
-	return e.info;
-}
-
-const CommonFontInfo& Font::Fi() const
-{
-	FontInfoTls& tls = sTls();
-	if(tls.lastStdFont != AStdFont.AsInt64()) {
-		tls.lastFiFont = INT_MIN;
-		tls.lastStdFont = AStdFont.AsInt64();
-	}
-	if(AsInt64() == tls.lastFiFont)
-		return tls.lastFontInfo;
-	tls.lastFontInfo = GetFontInfo(*this);
-	tls.lastFiFont = AsInt64();
-	return tls.lastFontInfo;
-}
-#else
 thread_local CharEntry fc_cache[512];
 
 GlyphInfo GetGlyphInfo(Font font, int chr)
@@ -544,7 +481,6 @@ const CommonFontInfo& Font::Fi() const
 	lastFiFont = AsInt64();
 	return lastFontInfo;
 }
-#endif
 
 bool Font::IsNormal(int ch) const
 {
