@@ -123,7 +123,7 @@ void TopicEditor::MainTool(Bar& bar)
 	bar.Gap();
 	editor.IndexEntryTool(bar);
 	bar.Break();
-	editor.HyperlinkTool(bar, 300, K_CTRL_H);
+	editor.HyperlinkTool(bar, Zx(300), K_CTRL_H);
 	bar.Gap();
 	editor.ParaTools(bar);
 	bar.Gap();
@@ -133,7 +133,7 @@ void TopicEditor::MainTool(Bar& bar)
 	   .Key(K_CTRL_P);
 	bar.GapRight();
 	bar.Break();
-	editor.LabelTool(bar, 500, K_CTRL_M, "Code reference");
+	editor.LabelTool(bar, Zx(300), K_CTRL_M, "Code reference");
 	bar.Gap();
 	Tools(bar);
 	bar.Gap();
