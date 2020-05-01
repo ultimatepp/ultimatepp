@@ -235,6 +235,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		"/usr/bin/mate-terminal -x",
 		"/usr/bin/gnome-terminal --window -x",
 		"/usr/bin/konsole -e",
+		"/usr/bin/lxterminal -e",
 		"/usr/bin/xterm -e",
 	};
 	int ii = 0;

@@ -4,7 +4,7 @@
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 18;
+	int version = 19;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -62,8 +62,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	if(version >= 18)
 		s % darkmode;
 	s % editfile;
-	for(i = 0; i < 10; i++)
+	for(i = 0; i < 10; i++) {
 		s % bookmark[i];
+	}
 	editor.Serialize(s);
 	if(version >= 5)
 		s % editorsplit;
@@ -107,9 +108,11 @@ void Ide::SerializeWorkspace(Stream& s) {
 	SerializeOutputMode(s);
 	SerializeClosed(s);
 	if(version >= 10) {
-		if(tabs_serialize) {
+		bool dotabs = tabs_serialize;
+		if(version >= 19)
+			s % dotabs;
+		if(dotabs)
 			s % tabs;
-		}
 	}
 	if(version >= 11) {
 		s % find_file_search_string;

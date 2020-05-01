@@ -34,6 +34,7 @@ String CreateDebugTTY()
 		"/usr/bin/mate-terminal -e 'tail -f /dev/null'",
 		"/usr/bin/gnome-terminal -e 'tail -f /dev/null'",
 		"/usr/bin/konsole -e 'tail -f /dev/null'",
+		"/usr/bin/lxterminal -e 'tail -f /dev/null'",
 		"/usr/bin/xterm -e 'tail -f /dev/null'",
 	};
 	

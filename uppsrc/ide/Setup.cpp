@@ -398,10 +398,12 @@ void Ide::SetupFormat() {
 	ide.gnome.Hide();
 	ide.xterm.Hide();
 	ide.mate.Hide();
+	ide.lxde.Hide();
 #endif
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
+	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
 	
 	edt.lineends
