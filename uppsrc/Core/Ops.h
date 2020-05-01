@@ -314,7 +314,7 @@ int SignificantBits64(uint64 x)
 		return SignificantBits((DWORD)x);
 #endif
 #else
-	return x ? 64 - __builtin_clzl(x) : 0;
+	return x ? 64 - __builtin_clzll(x) : 0;
 #endif
 }
 
