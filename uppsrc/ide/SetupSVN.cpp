@@ -47,8 +47,11 @@ bool SetupSVNTrunk()
 		}
 #else
 	#ifdef bmSVN_REVISION
-		revcv.Add(atoi(bmSVN_REVISION), "2019.1 (rev " bmSVN_REVISION ") (Apr 2019)");
+		revcv.Add(atoi(bmSVN_REVISION), "2020.1 (rev " bmSVN_REVISION ") (May 2020)");
 	#endif
+		revcv.Add(13664, "2019.2 (rev 13664) (Oct 2019)");
+		revcv.Add(13068, "2019.1 (rev 13068) (Apr 2019)");
+		revcv.Add(11873, "2018.1 (rev 11873) (Mar 2018)");
 		revcv.Add(11873, "2018.1 (rev 11873) (Mar 2018)");
 		revcv.Add(11540, "2017.2 (rev 11540) (Dec 2017)");
 		revcv.Add(10804, "2017.1 (rev 10804) (Jan 2017)");
