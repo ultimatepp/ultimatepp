@@ -29,11 +29,7 @@ public:
 		Pool();
 		~Pool();
 
-	#ifdef MINGW_TLS_PATCH
-		static FastMingwTls<bool>   finlock;
-	#else
 		static thread_local bool    finlock;
-	#endif
 
 		bool DoJob();
 		static void ThreadRun(int tno);
@@ -43,13 +39,8 @@ public:
 
 	static Pool& GetPool();
 
-#ifdef MINGW_TLS_PATCH
-	static FastMingwTls<int>      worker_index;
-	static FastMingwTls<CoWork *> current;
-#else
 	static thread_local int worker_index;
 	static thread_local CoWork *current;
-#endif
 
 	ConditionVariable  waitforfinish;
 	Link<MJob, 2>      jobs; // global stack and CoWork stack as double-linked lists

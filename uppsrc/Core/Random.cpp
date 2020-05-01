@@ -73,11 +73,7 @@ static void sSeed(uint64 *s)
 force_inline
 static uint64 *sState()
 {
-#ifdef MINGW_TLS_PATCH
-	static FastMingwTls<uint64 *> s;
-#else
 	thread_local uint64 *s;
-#endif
 	if(!s) {
 		thread_local uint64 state[4];
 		s = state;
