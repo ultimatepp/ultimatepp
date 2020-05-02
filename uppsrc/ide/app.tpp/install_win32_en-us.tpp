@@ -20,12 +20,14 @@ topic "Ultimate++ Windows Installation";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; U`+`+ Windows Installation&]
-[s5;po~~~320; Windows release is a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
+[s5; Windows release is a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
 archive. Unpack to directory of your preference, then just run 
 theide.exe. U`+`+ does not write anything to registry or outside 
 its directory.&]
-[s5;po~~~320; The archive contains CLANG based Win32 toolchain and 
-also SDL 2, OpenSSL, MySql and PostgreSQL client libraries.&]
-[s5;po~~~320; U`+`+ minimum requirement is Windows 7 64 with latest 
-patches for theide to run and Windows 7 64 or 32 with latest 
-patches for applications.]]
+[s5; The archive contains CLANG based Win32 toolchain and also SDL 
+2, OpenSSL, MySql and PostgreSQL client libraries. TheIDE will 
+also setup Microsoft C`+`+ compiler if it finds one.&]
+[s5; U`+`+ minimum requirement is Windows 7 64 with latest patches 
+for theide to run and Windows 7 64 or 32 with latest patches 
+for applications.&]
+[s5; ]]
