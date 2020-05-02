@@ -5,7 +5,11 @@
 
 using namespace Upp;
 
+#ifdef CPU_ARM
+#define N 2000000
+#else
 #define N 10000000
+#endif
 
 int RandomChar()
 {

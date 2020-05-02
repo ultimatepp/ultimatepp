@@ -8,6 +8,11 @@ using namespace Upp;
 #define N 20
 #endif
 
+#ifdef CPU_ARM
+#undef N
+#define N 1
+#endif
+
 template <class C1, class C2>
 void Compare(C1& a, C2& b)
 {

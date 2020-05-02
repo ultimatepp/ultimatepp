@@ -2,7 +2,11 @@
 
 using namespace Upp;
 
+#ifdef CPU_ARM
+#define N 1000000
+#else
 #define N 10000000
+#endif
 
 CONSOLE_APP_MAIN
 {

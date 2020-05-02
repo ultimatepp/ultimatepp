@@ -9,8 +9,13 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	SeedRandom();
-	
-	for(int ii = 0; ii < 200; ii++) {
+
+#ifdef CPU_ARM
+	for(int ii = 0; ii < 10; ii++)
+#else
+	for(int ii = 0; ii < 200; ii++)
+#endif
+	{
 		DUMP(ii);
 		int N = Random(20000000);
 		int mod = 6 * Random(50000) + 1;
