@@ -98,10 +98,6 @@ TOPIC("index_en-us")
 #include "index_en-us.tppi"
 END_TOPIC
 
-TOPIC("install_en-us")
-#include "install_en-us.tppi"
-END_TOPIC
-
 TOPIC("install_macos_en-us")
 #include "install_macos_en-us.tppi"
 END_TOPIC
