@@ -65,6 +65,9 @@ int RndSize()
 
 void HeapTest(int cnt, int N, bool chk)
 {
+#ifdef CPU_ARM
+	N = N / 20;
+#endif
 	int mask = cnt - 1;
 	count = cnt;
 	memset(ptr, 0, sizeof(ptr));

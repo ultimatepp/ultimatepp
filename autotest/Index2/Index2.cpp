@@ -274,6 +274,10 @@ void CarpetBombing()
 	int Q = 20;
 	int COUNT = 10000000;
 
+#ifdef CPU_ARM
+	COUNT /= 20;
+#endif
+
 	for(int i = 0; i < COUNT; i++)
 	{
 		if(i % 100000 == 0)

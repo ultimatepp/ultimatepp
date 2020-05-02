@@ -1,6 +1,10 @@
 #include <Core/Core.h>
 
+#ifdef CPU_ARM
+#define N 1000 * 5
+#else
 #define N 1000 * 100
+#endif
 
 #define THREADS 5
 

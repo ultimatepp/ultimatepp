@@ -12,8 +12,13 @@ CONSOLE_APP_MAIN
 	Array<int> a;
 	InVector<int> iv;
 	InArray<int> av;
-	
-	for(int i = 0; i < 10000; i++) {
+
+#ifdef CPU_ARM
+	for(int i = 0; i < 500; i++)
+#else
+	for(int i = 0; i < 10000; i++)
+#endif
+	{
 		if(v.GetCount() > 100000) {
 			int pos = Random(v.GetCount() + 1);
 			int count = Random(v.GetCount() - pos);

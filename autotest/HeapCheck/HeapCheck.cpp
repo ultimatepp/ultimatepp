@@ -2,7 +2,11 @@
 
 using namespace Upp;
 
+#ifdef CPU_ARM
+#define N 5000
+#else
 #define N 100000
+#endif
 
 #define LLOG(x) // LOG(x)
 

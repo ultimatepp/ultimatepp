@@ -22,7 +22,12 @@ CONSOLE_APP_MAIN
 	LOG("FindAdd passed");
 	SortedIndex<int> si;
 	int count = 0;
-	for(int i = 0; i < 1000000; i++) {
+#ifdef CPU_ARM
+	for(int i = 0; i < 100000; i++)
+#else
+	for(int i = 0; i < 1000000; i++)
+#endif
+	{
 		if(i % 1000 == 0)
 			LOG(i);
 		if(si.GetCount() > 1000 && Random(1000) == 0) {

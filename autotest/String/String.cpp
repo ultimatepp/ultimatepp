@@ -10,7 +10,11 @@ using namespace Upp;
 #define N 5
 #endif
 
+#ifdef CPU_ARM
+#define STEPS 40000 * N
+#else
 #define STEPS 400000 * N
+#endif
 
 namespace Upp {
 typedef wchar *HT;
