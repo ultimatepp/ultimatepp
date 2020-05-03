@@ -26,7 +26,7 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2020.1 (?May 2020)&]
+[s3; 2020.1 (May 2020)&]
 [s5;po &]
 [s5;po [*/ Upcoming release]&]
 [s5;po* &]
@@ -42,12 +42,17 @@ easier and faster installation&]
 [s5;po &]
 [s5;po [* Core]&]
 [s5;l160;i150;poO0; SshExec improvements&]
-[s5;l160;i150;poO0; ConditionVariable and Semapthore now have Wait 
+[s5;l160;i150;poO0; ConditionVariable and Semaphore now have Wait 
 variant with timeout&]
 [s5;l160;i150;poO0; IsDoubleWidth function to detect double`-width 
 UNICODE glyphs&]
 [s5;l160;i150;poO0; MacOS is now using fast U`+`+ heap when possible 
 (not for new/delete)&]
+[s5;l160;i150;poO0; U`+`+ now using `~/.config and `~/.cache folders 
+to store things&]
+[s5;po &]
+[s5;po [* Draw]&]
+[s5;l160;i150;poO0; GaussianBlur function added&]
 [s5;po &]
 [s5;po [* CtrlCore]&]
 [s5;l160;i150;poO0; Ctrl`::GetAscendant utility method to get parent 
