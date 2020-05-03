@@ -1,3 +1,5 @@
+description "VirtualGui/SDL2GL demonstration\377";
+
 uses
 	CtrlLib,
 	RichEdit,
