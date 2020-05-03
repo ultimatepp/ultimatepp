@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CleftSN", "EN-US", "\1left\1 (\1string\1 [/ text], \1integer\1 [/ character_count]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns first ][/A@0+84 character`_count][A@0+84  \r\n"
+	"characters of its argument ][/A@0+84 text][A@0+84 . If the number \r\n"
+	"of characters is less or equal to 0, the function returns an \r\n"
+	"empty string. If the character count is greater than the string \r\n"
+	"length, the function will return the original argument unchanged.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: left(`\"hello world`\", 7) `= `\"hello \r\n"
+	"w`\"]]\r\n")
+HELP_END

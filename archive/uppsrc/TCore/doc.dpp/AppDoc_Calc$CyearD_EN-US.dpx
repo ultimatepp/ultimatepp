@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CyearD", "EN-US", "")
+	HELP_TEXT(
+	"The function returns the year number of its argument.\r\n"
+	"&\r\n"
+	"&[* Example[* : rok(27.5.1984) = 1984]]")
+HELP_END

@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnlsrN", "EN-US", "")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Converts its numeric value to text according to current regional \r\n"
+	"settings (delimiters of thousands, delimiter of decimal part). \r\n"
+	"The number is rounded to 3 significant digits and insignificant \r\n"
+	"zeroes are ignored.]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: nlsr(1272.3) `= `\"1 272.3`\"]]\r\n"
+	"]")
+HELP_END

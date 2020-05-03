@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsqrN", "CS-CZ windows-1250", "\1sqr\1 (\1reálné èíslo\1 [/ x]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Druhá mocnina. Funkce vrátí hodnotu ][*A@0+84 sqr(][*/A@0+84 x][*A@0+84 )\r\n"
+	" `= ][*/A@0+84 x][*A@0+84  `* ][*/A@0+84 x][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: sqr(12) `= 144]]\r\n")
+HELP_END

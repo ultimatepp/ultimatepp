@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CceilrNN", "EN-US", "\1ceilr\1(\1real number\1 [/ value], \1integer\1 [/ significant_digits]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Rounding up (towards plus infinity) to the stated number \r\n"
+	"of significant digits. The function returns the lowest integral \r\n"
+	"multiple of ][*2 10 `*`* ][/2 (ceil(log(value))`-significant`_digits)][2  \r\n"
+	"not lower than the original ][/2 value][2 .]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: ceilr(47.32, 3) `= 47.4, ceilr(117, 1) `= 200.]]\r\n"
+	"]")
+HELP_END

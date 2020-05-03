@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CxmaxR", "EN-US", "\1xmax\1 (\1obdélník\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Horní mez x souøadnice obdélníku.]]\r\n")
+HELP_END

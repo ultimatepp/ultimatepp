@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtopR", "EN-US", "\1top\1 (\1obdélník\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Dolní mez y souøadnice obdélníku.]]\r\n")
+HELP_END

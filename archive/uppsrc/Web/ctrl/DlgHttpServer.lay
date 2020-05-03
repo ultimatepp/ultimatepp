@@ -1,0 +1,16 @@
+LAYOUT(HttpServerLayout, 250, 144)
+	ITEM(Label, semaphore, LeftPosZ(24, 30).TopPosZ(12, 48))
+	ITEM(Label, dv___1, SetLabel(t_("Hit count:")).LeftPosZ(80, 76).TopPosZ(4, 19))
+	ITEM(EditField, hits, LeftPosZ(156, 90).TopPosZ(4, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Response:")).LeftPosZ(80, 76).TopPosZ(26, 19))
+	ITEM(EditField, response, LeftPosZ(156, 90).TopPosZ(26, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Lagging:")).LeftPosZ(80, 76).TopPosZ(48, 19))
+	ITEM(EditField, trailing, LeftPosZ(156, 90).TopPosZ(48, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Elapsed time:")).LeftPosZ(4, 74).TopPosZ(70, 19))
+	ITEM(EditField, elapsed_time, LeftPosZ(80, 166).TopPosZ(70, 19))
+	ITEM(Label, dv___9, SetLabel(t_("Startup time:")).LeftPosZ(4, 74).TopPosZ(92, 19))
+	ITEM(EditField, run_time, LeftPosZ(80, 166).TopPosZ(92, 19))
+	ITEM(Button, ok, SetLabel(t_("Hide")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Stop")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+

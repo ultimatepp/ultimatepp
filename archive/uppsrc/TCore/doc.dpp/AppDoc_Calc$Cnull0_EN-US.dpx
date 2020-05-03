@@ -1,0 +1,16 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cnull0", "EN-US", "\1null\1 [S ®] \1empty value\1")
+	HELP_TEXT(
+	"[ [A@0+84 Null value. During calculation the null value usually \r\n"
+	"propagates from the subexpression`: if any of the operands or \r\n"
+	"function parameters contains the null value, the result of the \r\n"
+	"operation or of the function is null as well. A few exceptions \r\n"
+	"to this rule include special operators ][*A@0+84 ?`:][A@0+84 , \r\n"
+	"][*A@0+84 `|`|][A@0+84 , ][*A@0+84 `&`&][A@0+84 , ][*A@0+84 `=`=][A@0+84 , \r\n"
+	"][*A@0+84 `!`=][A@0+84  and also the functions ][*A@0+84 is_number][A@0+84 , \r\n"
+	"][*A@0+84 is_text][A@0+84 , ][*A@0+84 is_date][A@0+84 , and_][*A@0+84 is_null][A@0+84 ,\r\n"
+	" which process null values differently.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 10 `+ null `= null]]\r\n")
+HELP_END

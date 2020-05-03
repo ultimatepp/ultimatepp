@@ -1,0 +1,37 @@
+#if LANGUAGE == LNGC_('C', 'S', 'C', 'Z', 15)
+
+// DlgHelpView.cpp
+
+txt(DlgHelpTopicToolBack, "Pøedchozí")
+txt(DlgHelpTopicToolBackHelp, "Návrat na pøedchozí téma nápovìdy")
+txt(DlgHelpTopicToolForward, "Další")
+txt(DlgHelpTopicToolForwardHelp, "Posuv na další téma nápovìdy v "
+	"poøadí prohlížení")
+txt(DlgHelpTopicToolIndex, "Rejstøík")
+txt(DlgHelpTopicToolIndexHelp, "Zobrazit / vyhledat téma podle "
+	"rejstøíkového odkazu")
+txt(DlgHelpTopicToolPrint, "Tisk")
+txt(DlgHelpTopicToolPrintHelp, "Tisk tématu nápovìdy na tiskárnu")
+txt(DlgHelpTopicToolBook, "Pøíruèka")
+txt(DlgHelpTopicToolBookHelp, "Zalomit pøíruèku pro tisk nebo export "
+	"ve standardním formátu")
+
+#elif LANGUAGE == LNG_('E', 'N', 'U', 'S')
+
+// DlgHelpView.cpp
+
+txt(DlgHelpTopicToolBack, "Previous")
+txt(DlgHelpTopicToolBackHelp, "Return to previous help topic")
+txt(DlgHelpTopicToolForward, "Next")
+txt(DlgHelpTopicToolForwardHelp, "Move forward in order of viewing "
+	"help topics")
+txt(DlgHelpTopicToolIndex, "Search index")
+txt(DlgHelpTopicToolIndexHelp, "Show / select theme from the "
+	"alphabetic index")
+txt(DlgHelpTopicToolPrint, "Print")
+txt(DlgHelpTopicToolPrintHelp, "Print current topic on the printer")
+txt(DlgHelpTopicToolBook, "Manual")
+txt(DlgHelpTopicToolBookHelp, "Prepare printable manual in the "
+	"standard format")
+
+#endif

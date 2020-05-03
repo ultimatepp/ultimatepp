@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CltNN", "CS-CZ windows-1250", "operátor \1<\1  (\1reálné èíslo\1, \1reálné èíslo\1) [S ®] \1logická hodnota\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Operátor porovná dvojici èísel a_vrátí hodnotu 1 ([/ pravda]), \r\n"
+	"pokud [* x < y].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ](10 < 20) = 1")
+HELP_END

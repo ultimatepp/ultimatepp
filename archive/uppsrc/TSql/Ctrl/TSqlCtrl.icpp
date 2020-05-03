@@ -1,0 +1,9 @@
+#include "TSqlCtrl.h"
+#pragma hdrstop
+
+namespace Upp {
+
+#define TFILE <TSql/Ctrl/TSqlCtrl.t>
+#include <Core/t.h>
+
+}

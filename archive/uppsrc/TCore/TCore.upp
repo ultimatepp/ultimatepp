@@ -1,0 +1,47 @@
+description "Experimental (sometimes obsolete) non-GUI code\377";
+
+charset "windows-1250";
+
+uses
+	Core,
+	Web,
+	plugin\dbf;
+
+file
+	TCore.h,
+	TCore.t charset "UTF-8",
+	tcore.usc,
+	TCore_init.icpp,
+	template.h,
+	util.h,
+	util.cpp,
+	setop.h,
+	nls_bw.h,
+	nls_bw.hpp,
+	globcfg.h,
+	globcfg.cpp,
+	xmlparse.h,
+	xmlparse.cpp,
+	"Basic help support" readonly separator,
+	help.h,
+	help.cpp,
+	"Expression Calculator" readonly separator,
+	TCoreCalc.h,
+	CalcType.h,
+	CalcType.cpp,
+	CalcNode.h,
+	CalcNode.cpp,
+	CalcBasic.h,
+	CalcBasic.cpp,
+	"File-based Database" readonly separator,
+	TCoreDb.h,
+	datafile.h,
+	datafile.cpp,
+	database.h,
+	database.cpp,
+	datatest.cpp,
+	dd_h.h,
+	dd_cpp.h,
+	Info readonly separator,
+	Copying;
+

@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$CdayD", "EN-US", "")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 The function returns the day number of its argument.]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: day(27.5.1984) `= 27]]\r\n"
+	"]")
+HELP_END

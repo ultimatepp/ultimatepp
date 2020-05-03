@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtextR", "CS-CZ windows-1250", "\1text\1 (\1obdélník\1) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[ [A@0+84 Vrátí textový øetìzec s mezemi obdélníku.]]\r\n")
+HELP_END

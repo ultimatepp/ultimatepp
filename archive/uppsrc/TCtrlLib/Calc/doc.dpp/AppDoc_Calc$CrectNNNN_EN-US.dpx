@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrectNNNN", "EN-US", "\1rect\1 (\1real number\1 [/ xmin], \1real number\1 [/ ymin], \1real number\1 [/ xmax], \1real number\1 [/ ymax]) [S ®] \1obdélník\1")
+	HELP_TEXT(
+	"[ [A@0+84 Vrátí obdélník se zadanými souøadnicemi.]]\r\n")
+HELP_END

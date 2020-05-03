@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsumA", "EN-US", "\1sum\1 (\1pole hodnot\1) [S ®] \1any data type\1")
+	HELP_TEXT(
+	"\r\n")
+HELP_END

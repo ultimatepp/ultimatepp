@@ -1,0 +1,156 @@
+#if LANGUAGE == LNG_CZECH
+
+// wisapi.cpp
+
+txt(WIsapiClientConnStatusResponseError, "Chybná odpovìï serveru: ")
+txt(WIsapiClientConnStatusOpenError, "Socket %s:%d nelze otevøít: %s")
+txt(WIsapiClientConnRunError, "Neplatná odezva ze serveru: %s\n"
+	"<br>...\n")
+txt(WIsapiClientNoConnError, "V tuto chvíli nejsou pøipojeny žádné "
+	"servery.\n"
+	"Nastavení mùžete provést pomocí ")
+txt(WIsapiClientNoConnConfigRef, "konfiguraèní stránky")
+txt(WIsapiClientConnAllError, "Žádný z pøipojených serverù není "
+	"schopen zpracovat zadaný dotaz.")
+txt(WIsapiClientConfigTitle, "Konfigurace konektoru internetového "
+	"serveru")
+txt(WIsapiClientConfigIsapiPath, "Umístìní knihovny: ")
+txt(WIsapiClientConfigVersion, "Verze: <B>")
+txt(WIsapiClientConfigReleaseDate, "</B>, datum výroby: <B>")
+txt(WIsapiClientConfigConfiguration, "Konfigurace")
+txt(WIsapiClientConfigStatistics, "Statistika")
+txt(WIsapiClientConfigErrorRow, "Chyba: ")
+txt(WIsapiClientConfigEnglish, "Jazyk knihovny ISAPI: ")
+txt(WIsapiClientConfigLogFile, "Log-soubor: ")
+txt(WIsapiClientConfigLogNo, "ne")
+txt(WIsapiClientConfigLogYes, "ano")
+txt(WIsapiClientConfigLogOff, "Vypnout")
+txt(WIsapiClientConfigLogOn, "Zapnout")
+txt(WIsapiClientConfigHeaders, "Zobrazit hlavièky pøi chybì: ")
+txt(WIsapiClientConfigRemoteAdminOff, "vypnutá")
+txt(WIsapiClientConfigRemoteAdmin, "Vzdálená správa: ")
+txt(WIsapiClientConfigRemoteAdminWarn, "Po potvrzení bude vzdálená "
+	"zpráva trvale odpojena. Vzdálenou zprávu mùžete znovu aktivovat "
+	"smazáním øádku ADMIN=0 z konfiguraèního souboru ")
+txt(WIsapiClientConfigRemoteAdminConfirm, " Potvrdit ")
+txt(WIsapiClientConfigRemoteAdminOn, "zapnutá")
+txt(WIsapiClientConfigRemoteAdminDisable, "  Vypnout  ")
+txt(WIsapiClientConfigTimeout, "Vnitøní timeout (ms): ")
+txt(WIsapiClientConfigTimeoutSet, " Zmìnit ")
+txt(WIsapiClientConfigNoGen, "V tuto chvíli nejsou pøipojeny žádné "
+	"generátory.")
+txt(WIsapiClientConfigGenerator, "Generátor")
+txt(WIsapiClientConfigState, "Akt. stav")
+txt(WIsapiClientConfigWorking, "(pracuje) ")
+txt(WIsapiClientConfigRemove, "Smazat")
+txt(WIsapiClientConfigAdd, "Pøidat generátor: ")
+txt(WIsapiClientConfigAddButton, "  Vložit  ")
+txt(WIsapiClientConfigGenRunnnig, "Aktivní generátory")
+txt(WIsapiClientConfigWritePwd, "Heslo pro zápis")
+txt(WIsapiClientConfigPassword, "Heslo:")
+txt(WIsapiClientConfigSec, " s")
+txt(WIsapiClientConfigMin, " min, ")
+txt(WIsapiClientConfigHours, " h, ")
+txt(WIsapiClientConfigStatGlobal, "Celková statistika")
+txt(WIsapiClientConfigRunTime, "Spuštìní serveru:")
+txt(WIsapiClientConfigElapsedTime, "Doba bìhu:")
+txt(WIsapiClientConfigHitCount, "Poèet dotazù:")
+txt(WIsapiClientConfigErrorCount, "Poèet chyb:")
+txt(WIsapiClientConfigDataLength, "Pøenesená data (KB):")
+txt(WIsapiClientConfigResponse, "Prùmìrná odezva (ms):")
+txt(WIsapiClientConfigMaxResponse, "Nejdelší odezva (ms):")
+txt(WIsapiClientConfigGenStat, "Statistika po generátorech")
+txt(WIsapiClientConfigRequests, "Dotazy")
+txt(WIsapiClientConfigDataSize, "Data (KB)")
+txt(WIsapiClientConfigResponseTime, "Odezva (ms)")
+txt(WIsapiClientConfigResponseMaxTime, "Max (ms)")
+txt(WIsapiClientConfigErrors, "Chyby")
+txt(WIsapiClientConfigWritePwdError, "Pøi zápisu zmìn musíte zadat "
+	"platné heslo.")
+txt(WIsapiClientConfigBadPwdError, "Neplatné heslo; zkontrolujte "
+	"nastavení klávesnice.")
+txt(WIsapiClientConfigGenAlreadyPresent, "Generátor '%s' je již "
+	"pøipojen.")
+txt(WIsapiClientConfigServerNotFound, "Server '%s' nebyl nalezen.")
+txt(WIsapiClientConfigServerBusy, "Server '%s' nelze odpojit, dokud "
+	"vyøizuje požadavek.")
+txt(WIsapiClientConfigSaveConfigError, "Nelze uložit soubor '%s'.")
+
+#elif LANGUAGE == LNG_('E', 'N', 'U', 'S')
+
+// wisapi.cpp
+
+txt(WIsapiClientConnStatusResponseError, "Invalid server response: ")
+txt(WIsapiClientConnStatusOpenError, "Error opening socket %s:%d: %s")
+txt(WIsapiClientConnRunError, "Invalid server response: %s\n"
+	"<br>...\n")
+txt(WIsapiClientNoConnError, "Currently there are no servers "
+	"connected.\n"
+	"You can connect servers using ")
+txt(WIsapiClientNoConnConfigRef, "the configuration page")
+txt(WIsapiClientConnAllError, "No connected server can process the "
+	"current request.")
+txt(WIsapiClientConfigTitle, "Web server connector configuration")
+txt(WIsapiClientConfigIsapiPath, "Library location: ")
+txt(WIsapiClientConfigVersion, "Version: <B>")
+txt(WIsapiClientConfigReleaseDate, "</B>, release date: <B>")
+txt(WIsapiClientConfigConfiguration, "Configuration")
+txt(WIsapiClientConfigStatistics, "Statistics")
+txt(WIsapiClientConfigErrorRow, "Error: ")
+txt(WIsapiClientConfigEnglish, "ISAPI library language: ")
+txt(WIsapiClientConfigLogFile, "Log-file: ")
+txt(WIsapiClientConfigLogNo, "no")
+txt(WIsapiClientConfigLogYes, "yes")
+txt(WIsapiClientConfigLogOff, "Disable")
+txt(WIsapiClientConfigLogOn, "Enable")
+txt(WIsapiClientConfigHeaders, "Show headers on error: ")
+txt(WIsapiClientConfigRemoteAdminOff, "off")
+txt(WIsapiClientConfigRemoteAdmin, "Remote administration: ")
+txt(WIsapiClientConfigRemoteAdminWarn, "After confirmation the remote "
+	"administration option will be disabled. You can re-enable remote "
+	"administration by removing the line ADMIN=0 from the "
+	"configuration file ")
+txt(WIsapiClientConfigRemoteAdminConfirm, " Confirm ")
+txt(WIsapiClientConfigRemoteAdminOn, "on")
+txt(WIsapiClientConfigRemoteAdminDisable, "  Disable  ")
+txt(WIsapiClientConfigTimeout, "Internal timeout (msec):")
+txt(WIsapiClientConfigTimeoutSet, " Commit ")
+txt(WIsapiClientConfigNoGen, "Currently no generators are connected.")
+txt(WIsapiClientConfigGenerator, "Generator")
+txt(WIsapiClientConfigState, "Active state")
+txt(WIsapiClientConfigWorking, "(working)")
+txt(WIsapiClientConfigRemove, "Remove")
+txt(WIsapiClientConfigAdd, "Add generator: ")
+txt(WIsapiClientConfigAddButton, "  Insert  ")
+txt(WIsapiClientConfigGenRunnnig, "Active generators")
+txt(WIsapiClientConfigWritePwd, "Admin password")
+txt(WIsapiClientConfigPassword, "Password:")
+txt(WIsapiClientConfigSec, " sec")
+txt(WIsapiClientConfigMin, " min, ")
+txt(WIsapiClientConfigHours, " hrs, ")
+txt(WIsapiClientConfigStatGlobal, "Overall statistics")
+txt(WIsapiClientConfigRunTime, "Server started:")
+txt(WIsapiClientConfigElapsedTime, "Running time:")
+txt(WIsapiClientConfigHitCount, "Hit count:")
+txt(WIsapiClientConfigErrorCount, "Error count:")
+txt(WIsapiClientConfigDataLength, "Transferred data (KB):")
+txt(WIsapiClientConfigResponse, "Average response (msecs):")
+txt(WIsapiClientConfigMaxResponse, "Slowest response (msecs):")
+txt(WIsapiClientConfigGenStat, "Statistics by generators")
+txt(WIsapiClientConfigRequests, "Requests")
+txt(WIsapiClientConfigDataSize, "Data (KB)")
+txt(WIsapiClientConfigResponseTime, "Response (msec)")
+txt(WIsapiClientConfigResponseMaxTime, "Max (msec)")
+txt(WIsapiClientConfigErrors, "Errors")
+txt(WIsapiClientConfigWritePwdError, "To commit changes you must "
+	"enter the password.")
+txt(WIsapiClientConfigBadPwdError, "Password invalid; check keyboard "
+	"settings.")
+txt(WIsapiClientConfigGenAlreadyPresent, "Generator '%s' is already "
+	"connected.")
+txt(WIsapiClientConfigServerNotFound, "Server '%s' not found.")
+txt(WIsapiClientConfigServerBusy, "Cannot disconnect server '%s' "
+	"while it's processing a request.")
+txt(WIsapiClientConfigSaveConfigError, "Error saving file '%s'.")
+
+#endif

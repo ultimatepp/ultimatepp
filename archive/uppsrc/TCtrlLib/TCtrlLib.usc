@@ -1,0 +1,28 @@
+ctrl ArrayPair {
+	> ArrayCtrl;
+	bool Vert = false;
+	group "Complex";
+
+	Paint(w) {
+		r = GetRect();
+		mx = (r.left + r.right) / 2;
+		my = (r.top + r.bottom) / 2;
+		HGAP = 4;
+		VGAP = 4;
+		BGAP = 2 * VGAP;
+		BUTTON = 24;
+		if(.Vert) {
+			PaintArray(w, Rect(r.left, r.top, r.right, my - (BUTTON >> 1) - VGAP));
+			PaintArray(w, Rect(r.left, my + (BUTTON >> 1) + VGAP, r.right, r.bottom));
+		}
+		else {
+			PaintArray(w, Rect(r.left, r.top, mx - (BUTTON >> 1) - HGAP, r.bottom));
+			PaintArray(w, Rect(mx + (BUTTON >> 1) + HGAP, r.top, r.right, r.bottom));
+		}
+	}
+}
+
+ctrl ValueArrayCtrl {
+	> ArrayCtrl;
+	group "Complex";
+}

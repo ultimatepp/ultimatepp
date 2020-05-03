@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CchrN", "CS-CZ windows-1250", "\1chr\1 (\1celé èíslo\1 [/ ascii]) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí jednoznakový øetìzec, obsahující znak s_ASCII-kódem \r\n"
+	"[/ ascii].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]chr(66) = \"B\".")
+HELP_END

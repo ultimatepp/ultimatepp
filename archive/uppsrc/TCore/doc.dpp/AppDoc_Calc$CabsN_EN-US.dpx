@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CabsN", "EN-US", "\1abs\1 (\1real number\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Absolute value. If the number is positive, its absolute \r\n"
+	"value is equal to it. The absolute value of a negative number \r\n"
+	"is its inverse.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: abs(`-10.5) `= 10.5, abs(12) `= \r\n"
+	"12.]]\r\n")
+HELP_END

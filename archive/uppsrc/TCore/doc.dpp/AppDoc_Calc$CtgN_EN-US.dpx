@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtgN", "EN-US", "\1tg\1 (\1real number\1 [/ [S a]]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Tangent of an angle is the ratio of the length of the \r\n"
+	"opposite leg and the length of the adjacent leg right`-angled \r\n"
+	"triangle with the leg angle ][S@0+84 a][A@0+84 . The input angle \r\n"
+	"is assumed to be in radians (the perigon equals 2][S@0+84 p][A@0+84 ).]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: tg(pi `/ 4) `= 1]]\r\n")
+HELP_END

@@ -1,0 +1,15 @@
+HELP_TOPIC("AppDoc", "", "Calc$Citext0NN", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí øetìzec obsahující desítkový zápis zadaného celého \r\n"
+	"èísla [* hodnota]. Pokud poèet znakù tohoto zápisu je menší než \r\n"
+	"hodnota parametru [* šíøka], doplní se zápis èísla zleva èíslicemi \r\n"
+	"0 (nula) na šíøku [* šíøka].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Poznámka: ]pokud je textový zápis èísla delší než [* šíøka], \r\n"
+	"funkce vrátí celý øetìzec (oøíznutí na zadanou šíøku se neprovede). \r\n"
+	"&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]itext0(138, 5) = \"00138\"")
+HELP_END

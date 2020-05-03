@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$CminSS", "CS-CZ windows-1250", "\1min\1 (\1øetìzec\1, \1øetìzec\1) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí minimum z_dvou øetìzcù v lexikografickém uspoøádání, \r\n"
+	"tedy ten z obou øetìzcù, který by ve slovníku byl blíže zaèátku.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]min(\"pole\", \"Rudolf\") = \"pole\"&]\r\n"
+	"[s0;*2 ")
+HELP_END

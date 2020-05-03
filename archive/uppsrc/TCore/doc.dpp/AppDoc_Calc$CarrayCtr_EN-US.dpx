@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CarrayCtr", "EN-US", "")
+	HELP_TEXT(
+	"The array constructor creates an array containing the given sequence of elements.\r\n"
+	"&\r\n"
+	"&[* Example:[*  `[1+2, 1+3, \"a\" + \"b\"`] = `[3, 4, \"ab\"`]]]")
+HELP_END

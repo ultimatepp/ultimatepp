@@ -1,0 +1,20 @@
+LAYOUT(DocListWindowsLayout, 400, 200)
+	ITEM(ArrayCtrl, window_list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Button, ok, SetLabel(t_("&Activate")).LeftPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(Button, close, SetLabel(t_("&Close window")).LeftPosZ(89, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Close &list")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(DocListSaveLayout, 276, 296)
+	ITEM(Label, dv___0, SetLabel(t_("Some files have been changed since last save.\nSelect files you want to save to the disk.")).HSizePosZ(4, 4).TopPosZ(2, 30))
+	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(36, 32))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(Button, no, SetLabel(t_("&Don't save")).LeftPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(DocListNewLayout, 234, 110)
+	ITEM(ArrayCtrl, types, AutoHideSb(true).HSizePosZ(4, 92).VSizePosZ(4, 4))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(4, 80).TopPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).TopPosZ(30, 22))
+END_LAYOUT

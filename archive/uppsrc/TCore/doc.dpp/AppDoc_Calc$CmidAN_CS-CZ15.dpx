@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmidAN", "CS-CZ windows-1250", "\1mid\1 (\1pole hodnot\1, \1celé èíslo\1 [/ i]) [S ®] \1pole hodnot\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí ze zadaného pole [* i]-tý až poslední prvek. První \r\n"
+	"prvek pole má index 0.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]mid(`[\"A\", \"B\", \"C\", \"D\", \"E\"`], 2) = `[\"C\", \"D\", \r\n"
+	"\"E\"`]&]\r\n"
+	"[s0;*2 ")
+HELP_END

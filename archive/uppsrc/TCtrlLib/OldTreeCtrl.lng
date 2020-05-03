@@ -1,0 +1,23 @@
+#if LANGUAGE == LNGC_('C', 'S', 'C', 'Z', 15)
+
+txt(TreeCtrlClose, "Zavøít")
+txt(TreeCtrlOpen, "Otevøít")
+txt(TreeCtrlCloseHelp, "Schovat podøízené položky")
+txt(TreeCtrlOpenHelp, "Rozbalit podøízené položky")
+txt(TreeCtrlOpenAll, "Otevøít všechno")
+txt(TreeCtrlOpenAllHelp, "Rozbalit celý podstrom položky")
+txt(TreeCtrlCloseAll, "Zavøít všechno")
+txt(TreeCtrlCloseAllHelp, "Zavøít a schovat všechny podøízené položky")
+
+#elif LANGUAGE == LNG_('E', 'N', 'U', 'S')
+
+txt(TreeCtrlClose, "Close")
+txt(TreeCtrlOpen, "Open")
+txt(TreeCtrlCloseHelp, "Close child items")
+txt(TreeCtrlOpenHelp, "Open child items")
+txt(TreeCtrlOpenAll, "Open all")
+txt(TreeCtrlOpenAllHelp, "Open the whole subtree")
+txt(TreeCtrlCloseAll, "Close all")
+txt(TreeCtrlCloseAllHelp, "Close the whole subtree")
+
+#endif

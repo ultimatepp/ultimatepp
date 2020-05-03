@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsumASC", "EN-US", "\1sum\1(\1pole hodnot\1, \1string\1 [/ identifier], \1lambda-výraz\1) [S ®] \1any data type\1")
+	HELP_TEXT(
+	"Function adds / concatenates values calculated from the members of its input array using a given [/ "
+	"lambda-expression]. [/ Lambda-expressions] may use the given [/ identifier] to access the current ar"
+	"ray element. The calculated values must be of one of the supported types:\r\n"
+	"&\r\n"
+	"&[i150o*+-83 numbers[*  - function returns the arithmetic sum of all such numbers; elements containi"
+	"ng the ]null[*  value are ignored]]\r\n"
+	"&[i150o*+-83 strings[*  - function returns the string concatenation of all string values]]\r\n"
+	"&[i150o*+-83 arrays[*  - function returns the array concatenation of all arrays]]\r\n"
+	"&[*+-83 ]\r\n"
+	"&[* Example:[*  ][*+-83 `[1, 4, 7`].sum(\"X\", #(X*X)) = 66, `[1, 4, 7`].sum(\"T\", #(T.text)) = \"147\"]]")
+HELP_END

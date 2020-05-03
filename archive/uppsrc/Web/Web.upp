@@ -1,0 +1,40 @@
+description "TCP/IP related stuff (DEPRECATED!)\377128,0,0";
+
+uses
+	Core;
+
+library(SOLARIS) "nsl socket";
+
+library(WIN32) ws2_32;
+
+file
+	Web.h options(BUILDER_OPTION) PCH,
+	Package readonly separator,
+	Web.t charset "UTF-8",
+	Web_init.icpp,
+	Code readonly separator,
+	util.h,
+	util.cpp,
+	md5.cpp,
+	html.h,
+	html.cpp,
+	socket.h,
+	socket.cpp,
+	httpsrv.h,
+	httpsrv.cpp,
+	httpcli.h,
+	httpcli.cpp,
+	auth.h,
+	auth.cpp,
+	smtp.h,
+	smtp.cpp,
+	sproc.h,
+	sproc.cpp,
+	ScgiServer.h,
+	ScgiServer.cpp,
+	src.tpp,
+	srcdoc.tpp,
+	srcimp.tpp,
+	Info readonly separator,
+	Copying;
+

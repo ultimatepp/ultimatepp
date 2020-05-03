@@ -1,0 +1,18 @@
+description "Experimental (sometimes obsolete) painting code\377";
+
+uses
+	Draw,
+	Geom,
+	TCore;
+
+library(WIN32) comdlg32;
+
+file
+	TDraw.h,
+	util.h,
+	util.cpp,
+	formula.h,
+	formula.cpp,
+	Info readonly separator,
+	Copying;
+

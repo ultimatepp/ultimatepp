@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CascS", "EN-US", "\1asc\1 (\1string\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function will return ASCII`-code of the first character \r\n"
+	"of its string argument. If the argument is empty, the function \r\n"
+	"will return 0.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: asc(`\"hello`\") `= 104 ][/A@0+84 (ASCII \r\n"
+	"code of the character `'h`')][A@0+84 .]]\r\n")
+HELP_END

@@ -1,0 +1,59 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(HelpEditLayout, 700, 480)
+	ITEM(ArrayCtrl, modules, LeftPosZ(4, 300).TopPosZ(4, 200))
+	ITEM(ArrayCtrl, texts, LeftPosZ(4, 300).VSizePosZ(208, 32))
+	ITEM(DocEdit, src_text, HSizePosZ(308, 4).TopPosZ(4, 200))
+	ITEM(DocEdit, dest_text, HSizePosZ(308, 4).VSizePosZ(208, 32))
+	ITEM(Label, dv___4, SetLabel(t_("&From language:")).LeftPosZ(4, 80).BottomPosZ(6, 19))
+	ITEM(DropList, src_lang, LeftPosZ(86, 118).BottomPosZ(6, 19))
+	ITEM(Label, dv___6, SetLabel(t_("&To language:")).LeftPosZ(208, 80).BottomPosZ(6, 19))
+	ITEM(DropList, dest_lang, LeftPosZ(290, 118).BottomPosZ(6, 19))
+	ITEM(Button, load, SetLabel(t_("&Load")).RightPosZ(178, 80).BottomPosZ(4, 22))
+	ITEM(Button, save, SetLabel(t_("&Save")).RightPosZ(94, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpDirtyLayout, 446, 212)
+	ITEM(WithKeyMap<ArrayCtrl>, dirty_files, LeftPosZ(4, 100).VSizePosZ(4, 32))
+	ITEM(Button, add, SetLabel(t_(">")).LeftPosZ(108, 24).TopPosZ(40, 22))
+	ITEM(Button, add_all, SetLabel(t_(">>")).LeftPosZ(108, 24).TopPosZ(66, 22))
+	ITEM(Button, remove, SetLabel(t_("<")).LeftPosZ(108, 24).TopPosZ(100, 22))
+	ITEM(Button, remove_all, SetLabel(t_("<<")).LeftPosZ(108, 24).TopPosZ(126, 22))
+	ITEM(WithKeyMap<ArrayCtrl>, save_files, HSizePosZ(136, 4).VSizePosZ(4, 32))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpOpenLayout, 236, 56)
+	ITEM(Label, dv___0, SetLabel(t_("&Destination language:")).LeftPosZ(4, 106).TopPosZ(4, 19))
+	ITEM(DropList, lang, LeftPosZ(112, 120).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpLangLayout, 400, 200)
+	ITEM(ArrayCtrl, ext_lang, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Label, dv___1, SetLabel(t_("&App language:")).LeftPosZ(4, 80).BottomPosZ(6, 19))
+	ITEM(DropList, init_lang, LeftPosZ(88, 100).BottomPosZ(6, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpRenameLayout, 524, 448)
+	ITEM(ArrayCtrl, unmatched, LeftPosZ(4, 240).TopPosZ(4, 200))
+	ITEM(Button, assign, SetLabel(t_("<")).LeftPosZ(250, 24).TopPosZ(90, 22))
+	ITEM(ArrayCtrl, existing, RightPosZ(4, 240).TopPosZ(4, 200))
+	ITEM(ArrayCtrl, aliased, HSizePosZ(4, 4).TopPosZ(210, 200))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpRenameFindLayout, 214, 58)
+	ITEM(Label, dv___0, SetLabel(t_("&Find:")).LeftPosZ(4, 42).TopPosZ(4, 19))
+	ITEM(EditField, find, HSizePosZ(46, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+#endif

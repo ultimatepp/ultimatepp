@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmaxTT", "EN-US", "\1max\1 (\1date/time\1, \1date/time\1) [S ®] \1date/time\1")
+	HELP_TEXT(
+	"[ [A@0+84 Minimum. The function will return the bigger of its \r\n"
+	"arguments. Texts are compared lexicographically (the function \r\n"
+	"will return text which would be closer to the end in a dictionary).]]\r\n")
+HELP_END

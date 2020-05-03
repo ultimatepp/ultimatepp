@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cpi0", "EN-US", "\1pi\1 [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Ludolf number ][S@0+84 p][A@0+84  represents half the \r\n"
+	"circumference of the unit circle (][*A@0+84 l_`= 2][*S@0+84 p][*A@0+84 r][A@0+84 )\r\n"
+	".]]\r\n")
+HELP_END
