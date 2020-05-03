@@ -6,13 +6,14 @@ topic "U++ POSIX/X11 Tarball Installation";
 [b83;*+117 $$5,5#2AC2FD302E8CD436942CC99374D81489:SubTitle]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; U`+`+ POSIX Tarball Installation&]
+[s1; U`+`+ POSIX Installation&]
 [s2; U`+`+ for POSIX (OpenBSD, FreeBSD) comes as single sandboxed 
 archive. After downloading, you need to unpack this archive to 
 suitable location with&]
-[ {{10000G1@7 [s4; tar xf upp`-posix`-14411.tar.xz]}}&]
-[s2; (replace 14411 with the revision you have downloaded). Of course, 
-you can use your desktop environment desktop utility as well.&]
+[ {{10000G1@7 [s4; tar xf upp`-posix`-[/ 14411].tar.xz]}}&]
+[s2; (replace [/ 14411] with the revision you have downloaded). Of 
+course, you can use your desktop environment desktop GUI utility 
+as well.&]
 [s2; This will produce `"upp`" folder full of files.&]
 [ {{10000G1@7 [s4; cd upp]}}&]
 [s2; to get into it. Now you have two options:&]
