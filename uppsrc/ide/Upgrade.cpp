@@ -49,7 +49,9 @@ void Ide::InstallDesktop()
 	               "That should make theide available through desktop menu.")) {
 		String icon = ConfigFile("theide.png");
 		PNGEncoder().SaveFile(icon, IdeImg::PackageLarge());
-		Upp::SaveFile(apps + "/theide.desktop",
+		String path = apps + "/theide.desktop";
+		RealizePath(path);
+		Upp::SaveFile(path,
 			"[Desktop Entry]\n"
 			"Encoding=UTF-8\n"
 			"Name=TheIDE\n"

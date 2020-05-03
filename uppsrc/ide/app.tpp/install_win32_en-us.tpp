@@ -29,5 +29,5 @@ its directory.&]
 also setup Microsoft C`+`+ compiler if it finds one.&]
 [s5; U`+`+ minimum requirement is Windows 7 64 with latest patches 
 for theide to run and Windows 7 64 or 32 with latest patches 
-for applications.&]
+for compiled applications.&]
 [s5; ]]
