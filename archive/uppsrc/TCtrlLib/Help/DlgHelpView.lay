@@ -1,0 +1,24 @@
+LAYOUT(HelpTopicTabLayout, 388, 452)
+	ITEM(TabCtrl, tab, HSizePosZ(4, 4).VSizePosZ(4, 34))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpTopicIndexLayout, 400, 200)
+	ITEM(EditField, search, HSizePosZ(0, 0).TopPosZ(0, 19))
+	ITEM(ArrayCtrl, list, HorzGrid(false).VertGrid(false).Header(false).AutoHideSb(true).HSizePosZ(0, 0).VSizePosZ(22, 0))
+END_LAYOUT
+
+LAYOUT(HelpTopicSelectLayout, 400, 200)
+	ITEM(ArrayCtrl, list, HorzGrid(false).VertGrid(false).Header(false).AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 34))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(HelpLangLayout, 400, 200)
+	ITEM(ArrayCtrl, ext_lang, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Label, dv___1, SetLabel(t_("&App language:")).LeftPosZ(4, 80).BottomPosZ(6, 19))
+	ITEM(DropList, init_lang, LeftPosZ(88, 100).BottomPosZ(6, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT

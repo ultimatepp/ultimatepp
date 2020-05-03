@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtextD", "CS-CZ windows-1250", "\1text\1 (\1datum/èas\1) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[ [A@0+84 Pøevod hodnoty na text. Pøi pøevodu èísla na text je \r\n"
+	"výsledkem textová reprezentace tohoto èísla, poøízená na 10 platných \r\n"
+	"èíslic. Pokud je parametrem text, funkce ponechá tento text beze \r\n"
+	"zmìny. Pøi pøevodu data na text se do øetìzce datum uloží v bìžném \r\n"
+	"tvaru ][*A@0+84 den.mìsíc.rok][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: text(1 `/ 3) `= `\"0.3333333333`\", \r\n"
+	"text(`\"ahoj`\") `= `\"ahoj`\", text(26.7.1971) `= `\"26.07.1971`\"]]\r\n")
+HELP_END

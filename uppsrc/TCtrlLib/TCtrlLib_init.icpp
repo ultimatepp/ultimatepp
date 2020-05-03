@@ -1,8 +1,0 @@
-#include "TCtrlLib.h"
-
-namespace Upp {
-
-#define TFILE <TCtrlLib/TCtrlLib.t>
-#include <Core/t.h>
-
-}

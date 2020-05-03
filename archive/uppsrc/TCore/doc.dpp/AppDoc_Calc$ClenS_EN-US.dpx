@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClenS", "EN-US", "\1len\1 (\1string\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function will return the length (number of characters) \r\n"
+	"of its string argument. If the string is empty the function returns \r\n"
+	"0.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: len(`\"simple text`\") `= 11.]]\r\n")
+HELP_END

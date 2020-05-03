@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CcenterleftR", "EN-US", "\1centerleft\1 (\1obdélník\1) [S ®] \1bod\1")
+	HELP_TEXT(
+	"[ [A@0+84 Støed levé strany obdélníku.]]\r\n")
+HELP_END

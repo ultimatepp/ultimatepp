@@ -1,0 +1,16 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmidSNN", "EN-US", "\1mid\1 (\1string\1 [/ text], \1integer\1 [/ beginning], \1integer\1 [/ character_count]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns ][/A@0+84 character`_count][A@0+84  \r\n"
+	"characters from the string ][/A@0+84 text][A@0+84  starting at \r\n"
+	"position ][/A@0+84 beginning][A@0+84 . The first character in \r\n"
+	"the string has the position number 0, the second character has \r\n"
+	"the number 1 etc., the last character has the position ][*A@0+84 len(][*/A@0+84 t\r\n"
+	"ext][*A@0+84  `- 1)][A@0+84 . If the character count is omitted \r\n"
+	"the function returns all characters from the position ][/A@0+84 beginning][A@0+84  \r\n"
+	"until the end of the string.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: mid(`\"hello world`\", 4, 3) `= `\"o \r\n"
+	"w`\"]]\r\n")
+HELP_END

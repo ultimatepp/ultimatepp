@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CdivNN", "EN-US", "operator \1/\1  (\1real number\1, \1real number\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Real number division. If the right operand equals zero, \r\n"
+	"the computation aborts with the error ][*A@0+84 division by zero][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 3.7 `/ 2.5 `= 1.48.]]\r\n")
+HELP_END

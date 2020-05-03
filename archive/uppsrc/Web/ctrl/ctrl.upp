@@ -1,0 +1,18 @@
+description "DEPRECATED!\377";
+
+uses
+	Web,
+	TCtrlLib,
+	TDraw;
+
+file
+	WebCtrl.h,
+	DlgHttpServer.h,
+	DlgHttpServer.cpp,
+	DlgHttpServer.lay,
+	DlgHttpServer.lng,
+	web.iml,
+	WebImg.h,
+	Info readonly separator,
+	Copying;
+

@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CbitNotN", "EN-US", "operator \1~\1  (\1integer\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 Bit negation. The result is the integer whose binary \r\n"
+	"representation consists of ones on those positions on which there \r\n"
+	"are zeroes and vice versa in binary representation of the argument. \r\n"
+	"As integer calculations are performed in 0`'s complement code, \r\n"
+	"it is always true that ][*A@0+84 `%01`~x_`= `-1 `- x`%01][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: `~14 `= `-15.]]\r\n")
+HELP_END

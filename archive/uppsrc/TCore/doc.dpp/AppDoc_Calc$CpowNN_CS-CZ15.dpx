@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CpowNN", "CS-CZ windows-1250", "\1pow\1 (\1reálné èíslo\1 [/ základ], \1reálné èíslo\1 [/ exponent]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Reálná mocnina. Pokud je [/ exponent] celoèíselný, smí být [/ základ] \r\n"
+	"mocniny i_záporný. &]\r\n"
+	"[s0;*2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]pow(3, 4) = 81")
+HELP_END

@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cday_of_weekD", "EN-US", "\1day_of_week\1 (\1date\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns the index of day in week for its \r\n"
+	"date argument. The functions returns 0 for Sunday, 1 for Monday \r\n"
+	"etc. through 6 for Saturday.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: day`_of`_week(][A@0+84 20.06.2003][A@0+84 ) \r\n"
+	"`= ][A@0+84 5]]\r\n")
+HELP_END

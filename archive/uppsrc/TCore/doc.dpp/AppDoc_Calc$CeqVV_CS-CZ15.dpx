@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CeqVV", "CS-CZ windows-1250", "operátor \1==\1  (\1libovolný typ\1, \1libovolný typ\1) [S ®] \1logická hodnota\1")
+	HELP_TEXT(
+	"[3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0} \r\n"
+	"[s0;2 Operátor porovná dvì libovolné hodnoty. Výsledkem je [/ pravda] \r\n"
+	"(1), pokud se hodnoty rovnají, jinak [/ nepravda].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Upozornìní:] pøi porovnávání se nejprve testují datové typy \r\n"
+	"porovnávaných objektù. Pokud se tyto typy neshodují, funkce vrátí \r\n"
+	"hodnotu [/ nepravda]. Napøíklad test \"10\" == 10 vrátí logickou \r\n"
+	"hodnotu nepravda z_dùvodu neshody typù, pøestože øetìzec na levé \r\n"
+	"stranì obsahuje desítkový zápis èísla na pravé stranì operátoru.")
+HELP_END

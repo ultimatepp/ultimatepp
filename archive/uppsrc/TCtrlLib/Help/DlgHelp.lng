@@ -1,0 +1,216 @@
+#if LANGUAGE == LNGC_('C', 'S', 'C', 'Z', 15)
+
+// (unused)
+
+txt(DlgHelpEditorFileOpenHxxFilter, "Soubory nápovìdy (*.hxx)")
+txt(DlgHelpEditorSystemExportProjectCountFilesInfo, "%d "
+	"zmìnìn%1:[100%1:ý;2,3,4:é;ých]s soubor%1:[100%1:;2,3,4:y;ù]s nápovìdy "
+	"byl%1:[100%1:;2,3,4:y;o]s korektnì exportován%1:[100%1:;2,3,4:y;o]s do "
+	"projektu.")
+txt(DlgHelpEditorSystemExportProjectOldFileNotFoundError, "Soubor [* "
+	"\1%s\1] nebyl nalezen.")
+txt(DlgHelpEditorSystemExportProjectProgress, "Pøipravuji export")
+txt(DlgHelpEditorToolEditShowMaster, "Snímky")
+txt(DlgHelpEditorFileOpenError, "[* \1%s\1]: \1%s")
+txt(DlgHelpEditorFileSaveFileSelTitle, "Uložit jako")
+txt(LoadAppHelpFileError, "Chyba pøi naèítání souboru nápovìdy [* "
+	"\1%s\1]: \1%s")
+txt(HelpStyleHelpTitle, "Seznam použitých stylù odstavcù")
+txt(DlgHelpEditorFileOpenHxxMask, "*.hxx")
+txt(DlgHelpEditorFileOpenCreateColumn, "Vytvoøit")
+txt(DlgHelpEditorFileOpenTopicColumn, "Téma")
+txt(DlgHelpEditorToolEditShowMasterHelp, "Zobrazit /skrýt snímky "
+	"aktivního dialogu pod editorem tématu")
+
+// DlgHelp.cpp
+
+txt(DlgHelpEditorLinkHelpTitle, "Odkaz na téma")
+txt(DlgHelpEditorEditGotoCode, "Kód")
+txt(DlgHelpEditorEditGotoTopic, "Název tématu")
+txt(DlgHelpEditorNewTopicHelpTitle, "Nové téma nápovìdy")
+txt(DlgHelpEditorHelpTitle, "Editor aplikaèní dokumentace")
+txt(DlgHelpEditorTopicListTopicColumn, "Téma")
+txt(DlgHelpEditorTopicListParaColumn, "Odst")
+txt(DlgHelpEditorTopicListIndexColumn, "Index")
+txt(DlgHelpEditorTabScreenshot, "Snímek")
+txt(DlgHelpEditorTabText, "Text")
+txt(DlgHelpEditorTabIcons, "Ikony")
+txt(DlgHelpEditorDPPNamespaceTag, "Kategorie: ")
+txt(DlgHelpEditorDPPNestingTag, "Kontext: ")
+txt(DlgHelpEditorDPPNamespaceAll, "(všechno)")
+txt(DlgHelpEditorToolFile, "Soubor")
+txt(DlgHelpEditorToolFileHelp, "Práce se zdrojovými soubory nápovìdy")
+txt(DlgHelpEditorToolEdit, "Edit")
+txt(DlgHelpEditorToolEditHelp, "Editace témat nápovìdy")
+txt(DlgHelpEditorToolSystem, "Systém")
+txt(DlgHelpEditorToolSystemHelp, "Systémové nástroje")
+txt(DlgHelpEditorToolFileOpen, "Otevøít")
+txt(DlgHelpEditorToolFileOpenHelp, "Naèíst nápovìdu ze zadaného "
+	"souboru")
+txt(DlgHelpEditorMissingTopicsHelpTitle, "Soubor obsahuje neznámá "
+	"témata")
+txt(DlgHelpEditorFileOpenFileSelTitle, "Otevøít")
+txt(DlgHelpEditorFileOpenLoadError, "chyba pøi naèítání souboru")
+txt(DlgHelpEditorToolFileSave, "Uložit")
+txt(DlgHelpEditorToolFileSaveHelp, "Uložit témata nápovìdy do "
+	"spoleèného aplikaèního souboru")
+txt(DlgHelpEditorFileSaveWriteError, "Chyba pøi zápisu nápovìdy do "
+	"složky [* \1%s\1].")
+txt(DlgHelpEditorToolFileSaveAs, "Uložit jako")
+txt(DlgHelpEditorToolFileSaveAsHelp, "Uložit témata nápovìdy do "
+	"spoleèného souboru se zadaným názvem")
+txt(DlgHelpEditorToolFileTopicIndex, "Obsah, rejstøík")
+txt(DlgHelpEditorToolFileTopicIndexHelp, "Zobrazit obsah a rejstøík "
+	"nápovìdy")
+txt(DlgHelpEditorToolFileClose, "Zavøít")
+txt(DlgHelpEditorToolFileCloseHelp, "Zavøít okno editoru dokumentace")
+txt(DlgHelpEditorPromptSave, "Chcete uložit provedené zmìny v "
+	"dokumentaci?")
+txt(DlgHelpEditorToolEditUp, "Pøedchozí téma")
+txt(DlgHelpEditorToolEditUpHelp, "Pøejít na pøedchozí téma nápovìdy v "
+	"seznamu")
+txt(DlgHelpEditorToolEditDown, "Další téma")
+txt(DlgHelpEditorToolEditDownHelp, "Pøejít na další téma nápovìdy v "
+	"seznamu")
+txt(DlgHelpEditorToolEditGoto, "Pøejít na...")
+txt(DlgHelpEditorToolEditGotoHelp, "Vyhledat téma nápovìdy podle "
+	"poèáteèních písmen nebo masky (*, ?)")
+txt(DlgHelpEditorGotoHelpTitle, "Pøejít na téma")
+txt(DlgHelpEditorToolEditFormula, "Výraz")
+txt(DlgHelpEditorToolEditFormulaHelp, "Otevøít editor matematických "
+	"výrazù")
+txt(DlgHelpEditorToolSystemExport, "Export")
+txt(DlgHelpEditorToolSystemExportHelp, "Exportovat témata nápovìdy do "
+	"souborù po jednotlivých modulech")
+txt(DlgHelpEditorSystemExportDirSelTitle, "Cílová složka")
+txt(DlgHelpEditorSystemExportProgress, "Exportuji zmìnìné soubory...")
+txt(DlgHelpEditorSystemExportSaveError, "Chyba pøi exportu složky [* "
+	"\1%s\1]: [* \1%s\1]. Pokraèovat?")
+txt(DlgHelpEditorSystemExportAbort, "Export byl stornován.")
+txt(DlgHelpEditorSystemExportCountInfo, "%d zmìnìných souborù "
+	"nápovìdy bylo korektnì exportováno do složky [* \1%s\1].")
+txt(DlgHelpEditorSystemExportProject, "Export do projektu")
+txt(DlgHelpEditorSystemExportProjectHelp, "Exportovat témata nápovìdy "
+	"do zdrojových modulù aplikace")
+txt(DlgHelpEditorProjectExportHelpTitle, "Export nápovìdy do projektu")
+txt(DlgHelpEditorSystemExportNoFilesError, "Nebyly nalezeny žádné "
+	"soubory nápovìdy.")
+txt(DlgHelpEditorSystemExportProjectFileColumn, "Složka")
+txt(DlgHelpEditorSystemExportProjectLengthColumn, "Délka")
+txt(DlgHelpEditorSystemExportProjectNewColumn, "Nová")
+txt(DlgHelpEditorSystemExportProjectOverwriteColumn, "Pøepsat")
+txt(DlgHelpEditorSystemExportProjectAbort, "Export dat byl pøerušen "
+	"uživatelem.")
+txt(DlgHelpEditorSystemExportProjectProgressExport, "Exportuji "
+	"zmìnìné soubory")
+txt(DlgHelpEditorSystemExportProjectNoFilesInfo, "Nebyly uloženy "
+	"žádné soubory nápovìdy.")
+txt(DlgHelpEditorTopicAppTitle, "%s: %s - editor dokumentace")
+txt(DlgHelpEditorDefaultAppTitle, "Editor dokumentace")
+txt(DlgHelpEditorDPPNestingAll, "(všechno)")
+
+#elif LANGUAGE == LNG_('E', 'N', 'U', 'S')
+
+// (unused)
+
+txt(DlgHelpEditorFileOpenHxxFilter, "Help files (*.hxx)")
+txt(DlgHelpEditorSystemExportProjectCountFilesInfo, "%d changed "
+	"file%1:[1:;s]s w%1:[1:as;ere]s exported into project source file "
+	"folders.")
+txt(DlgHelpEditorSystemExportProjectOldFileNotFoundError, "File [* "
+	"\1%s\1] not found.")
+txt(DlgHelpEditorSystemExportProjectProgress, "Preparing export")
+txt(DlgHelpEditorToolEditShowMaster, "Screenshot")
+txt(DlgHelpEditorFileOpenError, "[* \1%s\1]: \1%s")
+txt(DlgHelpEditorFileSaveFileSelTitle, "Save as")
+txt(LoadAppHelpFileError, "Error reading help file [* \1%s\1]: \1%s")
+txt(HelpStyleHelpTitle, "Paragraph styles for the documentation")
+txt(DlgHelpEditorFileOpenHxxMask, "*.hxx")
+txt(DlgHelpEditorFileOpenCreateColumn, "Create")
+txt(DlgHelpEditorFileOpenTopicColumn, "Topic")
+txt(DlgHelpEditorToolEditShowMasterHelp, "Show / hide active dialog "
+	"screenshot below theme editor")
+
+// DlgHelp.cpp
+
+txt(DlgHelpEditorLinkHelpTitle, "Link to topic")
+txt(DlgHelpEditorEditGotoCode, "Code")
+txt(DlgHelpEditorEditGotoTopic, "Topic name")
+txt(DlgHelpEditorNewTopicHelpTitle, "New help topic")
+txt(DlgHelpEditorHelpTitle, "Application documentation editor")
+txt(DlgHelpEditorTopicListTopicColumn, "Topic")
+txt(DlgHelpEditorTopicListParaColumn, "Para")
+txt(DlgHelpEditorTopicListIndexColumn, "Index")
+txt(DlgHelpEditorTabScreenshot, "Screenshot")
+txt(DlgHelpEditorTabText, "Text")
+txt(DlgHelpEditorTabIcons, "Icons")
+txt(DlgHelpEditorDPPNamespaceTag, "Namespace: ")
+txt(DlgHelpEditorDPPNestingTag, "Nesting: ")
+txt(DlgHelpEditorDPPNamespaceAll, "(all)")
+txt(DlgHelpEditorToolFile, "File")
+txt(DlgHelpEditorToolFileHelp, "Help files maintenance")
+txt(DlgHelpEditorToolEdit, "Edit")
+txt(DlgHelpEditorToolEditHelp, "Edit theme topics")
+txt(DlgHelpEditorToolSystem, "System")
+txt(DlgHelpEditorToolSystemHelp, "System tools")
+txt(DlgHelpEditorToolFileOpen, "Open")
+txt(DlgHelpEditorToolFileOpenHelp, "Read help files from a given disk "
+	"file")
+txt(DlgHelpEditorMissingTopicsHelpTitle, "File contains unknown "
+	"topics")
+txt(DlgHelpEditorFileOpenFileSelTitle, "Open")
+txt(DlgHelpEditorFileOpenLoadError, "error loading file")
+txt(DlgHelpEditorToolFileSave, "Save")
+txt(DlgHelpEditorToolFileSaveHelp, "Save help topics into a common "
+	"application file")
+txt(DlgHelpEditorFileSaveWriteError, "Error writing help into folder "
+	"[* \1%s\1].")
+txt(DlgHelpEditorToolFileSaveAs, "Save as ")
+txt(DlgHelpEditorToolFileSaveAsHelp, "Save all changed help topics "
+	"into given file")
+txt(DlgHelpEditorToolFileTopicIndex, "Contents, index")
+txt(DlgHelpEditorToolFileTopicIndexHelp, "Show help contents and "
+	"search index")
+txt(DlgHelpEditorToolFileClose, "Close")
+txt(DlgHelpEditorToolFileCloseHelp, "Close documentation editor")
+txt(DlgHelpEditorPromptSave, "Do you want to save changes to the "
+	"documentation?")
+txt(DlgHelpEditorToolEditUp, "Previous theme")
+txt(DlgHelpEditorToolEditUpHelp, "Go up one theme in the list")
+txt(DlgHelpEditorToolEditDown, "Next topic")
+txt(DlgHelpEditorToolEditDownHelp, "Go down one topic in the list")
+txt(DlgHelpEditorToolEditGoto, "Go to...")
+txt(DlgHelpEditorToolEditGotoHelp, "Locate help topic using initial "
+	"letters or wildcard mask (*, ?)")
+txt(DlgHelpEditorGotoHelpTitle, "Go to topic")
+txt(DlgHelpEditorToolEditFormula, "Formula")
+txt(DlgHelpEditorToolEditFormulaHelp, "Open formula editor")
+txt(DlgHelpEditorToolSystemExport, "Export")
+txt(DlgHelpEditorToolSystemExportHelp, "Export changed help files by "
+	"application modules")
+txt(DlgHelpEditorSystemExportDirSelTitle, "Destination folder")
+txt(DlgHelpEditorSystemExportProgress, "Exporting changed files...")
+txt(DlgHelpEditorSystemExportSaveError, "Error exporting folder [* "
+	"\1%s\1]: [* \1%s\1]. Continue?")
+txt(DlgHelpEditorSystemExportAbort, "Export aborted.")
+txt(DlgHelpEditorSystemExportCountInfo, "%s changed help files were "
+	"saved into the [* \1%s\1] folder.")
+txt(DlgHelpEditorSystemExportProject, "Export into project")
+txt(DlgHelpEditorSystemExportProjectHelp, "Export help topics into "
+	"the application source code")
+txt(DlgHelpEditorProjectExportHelpTitle, "Export help into project")
+txt(DlgHelpEditorSystemExportNoFilesError, "No help files found.")
+txt(DlgHelpEditorSystemExportProjectFileColumn, "Folder")
+txt(DlgHelpEditorSystemExportProjectLengthColumn, "Length")
+txt(DlgHelpEditorSystemExportProjectNewColumn, "New")
+txt(DlgHelpEditorSystemExportProjectOverwriteColumn, "Overwrite")
+txt(DlgHelpEditorSystemExportProjectAbort, "Export aborted by user.")
+txt(DlgHelpEditorSystemExportProjectProgressExport, "Exporting "
+	"changed files")
+txt(DlgHelpEditorSystemExportProjectNoFilesInfo, "No help files were "
+	"saved.")
+txt(DlgHelpEditorTopicAppTitle, "%s: %s - documentation editor")
+txt(DlgHelpEditorDefaultAppTitle, "Documentation editor")
+txt(DlgHelpEditorDPPNestingAll, "(all)")
+
+#endif

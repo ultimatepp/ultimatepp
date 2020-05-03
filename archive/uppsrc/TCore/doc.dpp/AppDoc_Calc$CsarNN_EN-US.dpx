@@ -1,0 +1,15 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsarNN", "EN-US", "operator \1>>\1  (\1integer\1, \1integer\1 [/ bit_count]) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 Arithmetic shift to the right. The result is the integer \r\n"
+	"whose binary representation will be made by shifting the binary \r\n"
+	"representation of its left operand to the right (towards lower \r\n"
+	"bits) ][/A@0+84 bit`_count][A@0+84  times, discarding lowest \r\n"
+	"bits as necessary and duplicating the highest bit (sign bit) \r\n"
+	"of the left operand. As integer calculations are performed in \r\n"
+	"0`'s complement code, the arithmetic shift to the right by a \r\n"
+	"bit equals division by two with rounding towards minus infinity.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 12 `>`> 2 `= 3, `-14 `>`> 3 `= `-2.]]\r\n")
+HELP_END

@@ -1,0 +1,13 @@
+uses
+	TCtrlLib;
+
+file
+	TCtrlLibCalc.h,
+	TCtrlLibCalc.t charset "UTF-8",
+	TCtrlLibCalc_init.icpp,
+	CalcGuiType.h,
+	CalcGuiType.cpp,
+	DlgCalc.cpp,
+	DlgCalc.lay,
+	CalcHelp.cpp;
+

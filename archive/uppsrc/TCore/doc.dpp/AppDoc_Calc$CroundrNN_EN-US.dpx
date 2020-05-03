@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CroundrNN", "EN-US", "\1roundr\1(\1real number\1 [/ value], \1integer\1 [/ significant_digits]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Rounding to the stated number of significant digits. The \r\n"
+	"direction of rounding is towards the nearest integral multiple \r\n"
+	"of ][*2 10 `*`* ][/2 (ceil(log(value)`-significant`_digits)][2 . \r\n"
+	"If the number lies exactly in the middle between two such nearest \r\n"
+	"numbers, it is rounded up (towards positive infinity).]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: roundr(47.32, 3) `= 47.3, roundr(117, 1) `= 100.]]\r\n"
+	"]")
+HELP_END

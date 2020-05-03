@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CminNN", "EN-US", "\1min\1 (\1real number\1, \1real number\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"\r\n")
+HELP_END

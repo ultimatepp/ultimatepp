@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnlsrNN", "CS-CZ windows-1250", "\1nlsr\1(\1reálné èíslo\1 [/ èíslo], \1celé èíslo\1 [/ platných_èíslic]) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Pøevod èíselné hodnoty na text s využitím národních zvyklostí \r\n"
+	"pro formátování èísel (oddìlovaèe tisícù, oddìlovaè desetinné \r\n"
+	"èásti) na zadaný poèet [/ platných èíslic]. Pokud je poèet platných \r\n"
+	"èíslic kladný, z_desetinné èásti èísla se odstraní nevýznamné \r\n"
+	"nuly; pokud je poèet míst záporný, nevýznamné nuly se v_èísle \r\n"
+	"ponechají.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]nlsr(1272.3, -3) = \"1 270\", nlsr(1.2023, -3) = \"1,20\"")
+HELP_END

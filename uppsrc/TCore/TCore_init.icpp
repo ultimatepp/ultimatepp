@@ -1,8 +1,0 @@
-#include "TCore.h"
-
-namespace Upp {
-
-#define TFILE <TCore/TCore.t>
-#include <Core/t.h>
-
-}

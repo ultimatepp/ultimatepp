@@ -1,0 +1,18 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsubDD", "CS-CZ windows-1250", "operátor \1-\1  (\1datum/èas\1 [/ datum1], \1datum/èas\1 [/ datum2]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Unární operátor ][*A@0+84 `-][A@0+84  obrátí znaménko \r\n"
+	"svého argumentu.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [A@0+84 Binární operátor ][*A@0+84 `-][A@0+84  odeète své operandy. \r\n"
+	"V_pøípadì dvojice èísel je výsledkem bìžný èíselný rozdíl hodnot. \r\n"
+	"V_pøípadì rozdílu data a_celého èísla se od data odeète zadaný \r\n"
+	"poèet dní. Výsledkem rozdílu dvou dat je poèet dní mezi nimi. \r\n"
+	"Poèet je kladný, pokud je první datum pozdìjší než druhé.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: 137 `- 95 `= 42, 27.12.1999 `- 5 \r\n"
+	"`= 22.12.1999, 4.1.2000 `- 28.12.1999 `= 7]]\r\n")
+HELP_END

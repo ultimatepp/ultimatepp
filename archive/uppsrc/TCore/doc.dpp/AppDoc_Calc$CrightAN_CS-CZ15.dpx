@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrightAN", "CS-CZ windows-1250", "\1right\1 (\1pole hodnot\1, \1celé èíslo\1 [/ poèet]) [S ®] \1pole hodnot\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí posledních [* poèet] hodnot z_konce zadaného pole. \r\n"
+	"Pokud je [* poèet <= 0], funkce vrátí prázdné pole. Je-li [* poèet \r\n"
+	"]vìtší nebo roven poètu prvkù vstupního pole, funkce vrátí toto \r\n"
+	"pole beze zmìny.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad:] right(`[1..5`], 3) = `[3, 4, 5`]&]\r\n"
+	"[s0;*2 ")
+HELP_END

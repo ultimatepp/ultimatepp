@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CarccosN", "EN-US", "\1arccos\1 (\1real number\1 [/ x]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Arccosine returns such an angle ][S@0+84 a][A@0+84  \r\n"
+	"in the range ][*A@0+84 `[0, ][*S@0+84 p][*A@0+84 )][A@0+84  for \r\n"
+	"which ][*A@0+84 cos(][*/S@0+84 a][*A@0+84 ) `= ][*/A@0+84 x][A@0+84 . \r\n"
+	"The angle is returned in radians. If the function argument lies \r\n"
+	"outside the interval ][*A@0+84 `[`-1,1`]][A@0+84 , the computation \r\n"
+	"is aborted with the error message ][A@0+84 real number operation \r\n"
+	"error][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: arccos(`-0.5) `= ][A@0+84 2.094395102]]\r\n")
+HELP_END

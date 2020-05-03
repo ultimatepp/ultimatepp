@@ -10,7 +10,7 @@ GUI_APP_MAIN
 	
 	Buffer<RGBA> b(len);
 
-	for(int i = 0; i < 1000; i++) {
+	for(int i = 0; i < 10; i++) {
 		{
 			RTIMING("memsetd");
 			memsetd(b, *(dword*)&(c), len);

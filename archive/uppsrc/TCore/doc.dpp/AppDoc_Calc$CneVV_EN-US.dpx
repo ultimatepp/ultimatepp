@@ -1,0 +1,20 @@
+HELP_TOPIC("AppDoc", "", "Calc$CneVV", "EN-US", "operator \1!=\1  (\1any data type\1, \1any data type\1) [S ®] \1logical value\1")
+	HELP_TEXT(
+	"[ [A@0+84 Equality `/ inequality. The operator ][*A@0+84 `=`=][A@0+84  \r\n"
+	"(equality) will return the logical value 1 (][*A@0+84 true][A@0+84 ), \r\n"
+	"if operands on both sides are of the same type and are identical. \r\n"
+	"The operator ][*A@0+84 `!`=][A@0+84  (inequality) will always \r\n"
+	"return the opposite logical value than operator ][*A@0+84 `=`=][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Note][A@0+84 `: This definition of equality implies \r\n"
+	"that if, for instance, on the one side of the comparison is the \r\n"
+	"text `\"300`\" and the number 300 on the other, the operator ][*A@0+84 `=`=][A@0+84  \r\n"
+	"will return the logical value ][*A@0+84 false][A@0+84 , even \r\n"
+	"though the text on the left`-hand side is identical with the \r\n"
+	"text representation of the number on the right`-hand side. If \r\n"
+	"you want to compare values of different types, convert them first \r\n"
+	"into the same type (e.g. using the ][*A@0+84 text][A@0+84  (viz \r\n"
+	"str._96)][A@0+84  function).]]\r\n")
+HELP_END

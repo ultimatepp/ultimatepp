@@ -1,0 +1,15 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsarNN", "CS-CZ windows-1250", "operátor \1>>\1  (\1celé èíslo\1, \1celé èíslo\1 [/ poèet_bitù]) [S ®] \1celé èíslo\1")
+	HELP_TEXT(
+	"[3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0} \r\n"
+	"[s0;2 Aritmetický posuv vpravo. Výsledkem operace je celé èíslo, \r\n"
+	"jehož dvojková reprezentace vznikne posuvem dvojkové reprezentace \r\n"
+	"èísla na levé stranì operátoru vpravo (smìrem k_nižším bitùm) \r\n"
+	"o_poèet bitù urèený operandem na pravé stranì. Nejvyšší (znaménkový) \r\n"
+	"bit èísla se pøi posuvu kopíruje do nižších bitù, nejnižší bity \r\n"
+	"èísla se ztratí. Vzhledem k_tomu, že celoèíselné výpoèty probíhají \r\n"
+	"v_doplòkovém kódu, odpovídá aritmetický posuv o_bit vpravo dìlení \r\n"
+	"dvìma se zaokrouhlováním smìrem dolù.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad]: 13 >> 2 = 3, -14 >> 3 = -2.")
+HELP_END

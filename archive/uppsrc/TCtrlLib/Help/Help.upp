@@ -1,0 +1,33 @@
+uses
+	TCtrlLib,
+	RichText;
+
+file
+	Aux readonly separator,
+	TCtrlLibHelp.h,
+	layh.h,
+	lls.h,
+	lls_header.h,
+	lls_source.h,
+	lly.h,
+	lly_header.h,
+	lly_source.h,
+	llyh.h,
+	llyh_header.h,
+	llyh_source.h,
+	Base readonly separator,
+	dynahelp.h,
+	dynahelp.cpp,
+	dynaattr.h,
+	dynaattr.cpp,
+	DlgHelp readonly separator,
+	DlgHelp.cpp,
+	DlgHelp.lay,
+	DlgHelp.lng,
+	DlgHelp_lng.cpp,
+	DlgHelpEdit readonly separator,
+	DlgHelpEdit.cpp,
+	DlgHelpEdit.lay,
+	DlgHelpEdit.lng,
+	DlgHelpEdit_lng.cpp,
+	End readonly separator;

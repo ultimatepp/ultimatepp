@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CarcsinN", "EN-US", "\1arcsin\1 (\1real number\1 [/ x]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Arcsine returns such an angle ][S@0+84 a][A@0+84  in \r\n"
+	"the range ][*A@0+84 `[`-][*S@0+84 p][*A@0+84  `/ 2, ][*S@0+84 p][*A@0+84  \r\n"
+	"`/ 2)][A@0+84  for which ][*A@0+84 sin(][*/S@0+84 a][*A@0+84 ) \r\n"
+	"`= ][*/A@0+84 x][A@0+84 . The angle is returned in radians. If \r\n"
+	"the function argument lies outside the interval ][*A@0+84 `[`-1,1`]][A@0+84 , \r\n"
+	"the computation is aborted with the error message ][A@0+84 real \r\n"
+	"number operation error][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: arcsin(0.5) `= ][A@0+84 0.5235987756]]\r\n")
+HELP_END

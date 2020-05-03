@@ -1,0 +1,19 @@
+HELP_TOPIC("AppDoc", "", "Calc$CneVV", "CS-CZ windows-1250", "operátor \1!=\1  (\1libovolný typ\1, \1libovolný typ\1) [S ®] \1logická hodnota\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Rovnost / nerovnost. Operátor [* ==] (rovnost) vrátí logickou \r\n"
+	"hodnotu 1 ([* pravda]), pokud operandy na obou stranách jsou stejného \r\n"
+	"typu a_jsou shodné. Operátor [* !=] (nerovnost) vrací vždy opaènou \r\n"
+	"logickou hodnotu než operátor [* ==].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Upozornìní]: z_této definice rovnosti vyplývá, že pokud napøíklad \r\n"
+	"na jedné stranì porovnání stojí text [* \"300\"] a_na druhé stranì \r\n"
+	"èíslo [* 300], operátor [* ==] vrátí logickou hodnotu [* nepravda], \r\n"
+	"pøestože text na levé stranì je shodný s_textovou reprezentací \r\n"
+	"èísla na pravé stranì. Pokud chcete porovnávat hodnoty rùzných \r\n"
+	"typù, pøeveïte je nejprve na spoleèný typ, napøíklad pomocí funkce \r\n"
+	"[* \r\n"
+	"{:LINK:dpp`:`/`/AppDoc`/`/`:`:`/`/Calc`$CtextN\ttext\t:}\r\n"
+	"].")
+HELP_END

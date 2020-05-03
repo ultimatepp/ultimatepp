@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CltNN", "EN-US", "operator \1<\1  (\1real number\1, \1real number\1) [S ®] \1logical value\1")
+	HELP_TEXT(
+	"[ [A@0+84 The operator will compare its operands returning the \r\n"
+	"value 1 if the relation holds, 0 when not. String values are \r\n"
+	"compared lexicographically (][/A@0+84 dictionary][A@0+84  organization).]]\r\n")
+HELP_END

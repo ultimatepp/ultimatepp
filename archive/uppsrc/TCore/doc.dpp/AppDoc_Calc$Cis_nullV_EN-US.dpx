@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cis_nullV", "EN-US", "\1is_null\1 (\1any data type\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns the logical value 1 (][*A@0+84 true][A@0+84 ) \r\n"
+	"if its parameter is of type][*A@0+84 null][A@0+84 ; otherwise \r\n"
+	"the logical value 0 (][*A@0+84 false][A@0+84 ) is returned.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: is_null(10.5) `= 0, is_null(null) \r\n"
+	"`= 1]]\r\n")
+HELP_END

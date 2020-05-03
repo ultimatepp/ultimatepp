@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsalNN", "EN-US", "operator \1<<\1  (\1integer\1, \1integer\1 [/ bit_count]) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 Arithmetic shift to the left. The result is the integer \r\n"
+	"whose binary representation can be obtained by shifting the binary \r\n"
+	"representation of the left operand ][/A@0+84 bit`_count][A@0+84  \r\n"
+	"times to the left (towards higher bits), adding zeroes to the \r\n"
+	"right. As integer calculations are performed in 0`'s complement \r\n"
+	"code, it is always true (except when the result overflows valid \r\n"
+	"integer range) that ][*A@0+84 a_`<`< b_`= a_`* 2 `*`* b][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 3 `<`< 2 `= 12 (11 `<`< 2 `= 1100).]]\r\n")
+HELP_END

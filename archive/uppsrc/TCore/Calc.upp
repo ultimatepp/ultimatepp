@@ -1,0 +1,12 @@
+acceptflags
+	NOHELP;
+
+file
+	Calc.h,
+	CalcType.h,
+	CalcType.cpp,
+	CalcNode.h,
+	CalcNode.cpp,
+	CalcNode.lng,
+	CalcBasic.cpp,
+	CalcBasic.lng;

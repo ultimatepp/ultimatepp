@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CxminR", "EN-US", "\1xmin\1 (\1obdélník\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Dolní mez x souøadnice obdélníku.]]\r\n")
+HELP_END

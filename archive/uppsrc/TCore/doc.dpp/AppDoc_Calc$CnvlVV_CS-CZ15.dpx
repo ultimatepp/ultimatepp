@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnvlVV", "CS-CZ windows-1250", "\1nvl\1 (\1libovolný typ\1, \1libovolný typ\1) [S ®] \1libovolný typ\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce vrátí hodnotu svého prvního parametru, tato hodnota \r\n"
+	"není prázdná (][*A@0+84 null][A@0+84 ). Pokud první parametr \r\n"
+	"obsahuje prázdnou hodnotu, funkce vrátí hodnotu druhého parametru.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: nvl(`\"prvni`\", `\"druhy`\") `= `\"prvni`\", \r\n"
+	"nvl(`\"`\", `\"druhy`\") `= `\"druhy`\"]]\r\n")
+HELP_END

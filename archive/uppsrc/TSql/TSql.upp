@@ -1,0 +1,19 @@
+description "Experimental (sometimes obsolete) SQL code\377";
+
+uses
+	Sql,
+	TCore;
+
+file
+	TSql.h,
+	TSql.t charset "UTF-8",
+	TSql_init.icpp,
+	template.h,
+	util.h,
+	util.cpp,
+	id.h,
+	dict.h,
+	dict.cpp,
+	Info readonly separator,
+	Copying;
+

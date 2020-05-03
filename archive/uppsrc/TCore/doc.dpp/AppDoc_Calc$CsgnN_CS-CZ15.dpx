@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsgnN", "CS-CZ windows-1250", "\1sgn\1 (\1reálné èíslo\1 [/ x]) [S ®] \1celé èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Znaménko. Výpoèet znaménka probíhá podle následující \r\n"
+	"tabulky`:]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: sgn(`-13.5) `= `-1, sgn(0) `= 0, \r\n"
+	"sgn(10) `= `+1.]]\r\n")
+HELP_END

@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CyearD", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"Funkce vrátí èíslo roku pro zadané datum.\r\n"
+	"&\r\n"
+	"&[* Pøíklad[* : rok(27.5.1984) = 1984]]")
+HELP_END

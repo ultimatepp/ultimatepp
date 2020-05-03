@@ -1,0 +1,60 @@
+description "Experimental (sometimes obsolete) GUI code\377";
+
+charset "windows-1250";
+
+uses
+	TDraw,
+	CtrlLib,
+	RichEdit,
+	plugin\gif,
+	PdfDraw,
+	DocTypes;
+
+library(WIN32) shell32;
+
+file
+	TCtrlLib.h,
+	TCtrlLib.t charset "UTF-8",
+	TCtrlLib_init.icpp,
+	Miscellaneous readonly separator,
+	tctrllib.iml,
+	TCtrlImg.h,
+	TCtrlImg.cpp,
+	util.h,
+	util.cpp,
+	template.h,
+	TCtrlLib.usc font 2,
+	TreeCtrl readonly separator,
+	OldTreeCtrl.h,
+	OldTreeCtrl.cpp,
+	OldTreeCtrl.iml,
+	CtrlArray readonly separator,
+	CtrlArray.h,
+	CtrlArray.cpp,
+	Ruler readonly separator,
+	Ruler.h,
+	Ruler.cpp,
+	DocMgr readonly separator,
+	DocMgr.h,
+	DocMgr.cpp,
+	DocMgr.lay,
+	"Help support" readonly separator,
+	Help\notes.txt,
+	Help\TCtrlLibHelp.h,
+	Help\helputil.h,
+	Help\helputil.cpp,
+	Help\helpgen.cpp,
+	DlgFormula readonly separator,
+	Help\richform.cpp,
+	Help\DlgFormula.cpp,
+	Help\DlgFormula.lay,
+	DlgShot readonly separator,
+	Help\DlgShot.cpp,
+	Help\DlgShot.lay,
+	DlgHelpView readonly separator,
+	Help\DlgHelpView.cpp,
+	Help\DlgHelpView.lay,
+	Help\DlgHelpView.iml,
+	Info readonly separator,
+	Copying;
+

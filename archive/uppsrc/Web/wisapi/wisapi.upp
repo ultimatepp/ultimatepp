@@ -1,0 +1,24 @@
+uses
+	Web,
+	TCore;
+
+target(MSC9X64) wisapi64.dll;
+
+target(!MSC9X64) wisapi.dll;
+
+link(MAIN DLL) /DEF:wisapi.def;
+
+link(!DEBUG) /MAP;
+
+file
+	version.h,
+	wisapi.t charset "UTF-8",
+	wisapi.cpp,
+	wisapi.def,
+	Info readonly separator,
+	Copying;
+
+custom() "pre-link",
+	"restserv w3svc",
+	"";
+

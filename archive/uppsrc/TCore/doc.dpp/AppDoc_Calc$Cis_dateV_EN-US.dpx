@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cis_dateV", "EN-US", "\1is_date\1 (\1any data type\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns the logical value 1 (][*A@0+84 true][A@0+84 ) \r\n"
+	"if its argument is a date. If the argument is of a different \r\n"
+	"type or if it contains the null value, the function returns 0 \r\n"
+	"(][*A@0+84 false][A@0+84 ).]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: is`_date(10.5) `= 0, is`_date(23.5.1997) \r\n"
+	"`= 1, is`_date(`\"hi`\") `= 0]]\r\n")
+HELP_END

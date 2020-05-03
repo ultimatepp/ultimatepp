@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClnN", "EN-US", "\1ln\1 (\1real number\1 [/ x]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Natural (hyperbolic) logarithm. The function will calculate \r\n"
+	"the logarithm of the parameter ][/A@0+84 x][A@0+84  with ][*A@0+84 e][A@0+84  \r\n"
+	"as its base, i.e. such real number ][/A@0+84 a][A@0+84  for which \r\n"
+	"][*/A@0+84 x][*A@0+84  `= exp(][*/A@0+84 a][*A@0+84 )][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: ln(100) `= ][A@0+84 4.605170186]]\r\n")
+HELP_END

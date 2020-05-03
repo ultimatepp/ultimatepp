@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsgnN", "EN-US", "\1sgn\1 (\1real number\1 [/ x]) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 Sign. The sign computation is based on the following \r\n"
+	"table`:]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: sgn(`-13.5) `= `-1, sgn(0) `= 0, \r\n"
+	"sgn(10) `= `+1.]]\r\n")
+HELP_END

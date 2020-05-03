@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CroundNN", "EN-US", "\1round\1 (\1real number\1 [/ value], \1integer\1 [/ decimals]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Rounding to the stated number of decimal places (0 by \r\n"
+	"default). The direction of rounding is towards the nearest integral \r\n"
+	"multiple of ][*A@0+84 10_`*`*_][/A@0+84 `-decimals][A@0+84 . \r\n"
+	"If the number lies exactly in the middle between two such numbers, \r\n"
+	"it is rounded up (towards positive infinity).]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: round(`-2.5) `= `-2, round(47.32, \r\n"
+	"1) `= 47.3, round(117, `-1) `= 120.]]\r\n")
+HELP_END

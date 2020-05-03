@@ -1,0 +1,8 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsecondT", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"[{0}\r\n"
+	"[s0; [2 Funkce vrátí poèet sekund ze zadaného údaje typu datum`/èas.]]\r\n"
+	"&\r\n"
+	"[s0; ]\r\n"
+	"]")
+HELP_END

@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmulNS", "EN-US", "operator \1*\1  (\1integer\1 [/ count], \1string\1 [/ text]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 Text repetition. The result of a multiplying a ][*A@0+84 text][A@0+84  \r\n"
+	"value by an integer value ][*A@0+84 count][A@0+84  is a string \r\n"
+	"containing the original ][*A@0+84 text][A@0+84  repeated ][*A@0+84 count][A@0+84  \r\n"
+	"times. When ][*A@0+84 count][A@0+84  `<`= 0, the result is the \r\n"
+	"empty string.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: `\"text`\" `* 5 `= `\"texttexttexttexttext`\".]]\r\n")
+HELP_END

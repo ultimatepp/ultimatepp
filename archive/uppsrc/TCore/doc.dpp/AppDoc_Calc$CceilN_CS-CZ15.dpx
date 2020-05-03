@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CceilN", "CS-CZ windows-1250", "\1ceil\1 (\1reálné èíslo\1) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Zaokrouhlení smìrem nahoru. Funkce nalezne nejmenší celé èíslo, \r\n"
+	"které není menší než pùvodní [/ hodnota].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]ceil(-2.5) = -2")
+HELP_END

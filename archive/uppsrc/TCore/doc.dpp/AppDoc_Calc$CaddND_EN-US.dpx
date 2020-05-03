@@ -1,0 +1,19 @@
+HELP_TOPIC("AppDoc", "", "Calc$CaddND", "EN-US", "operator \1+\1  (\1real number\1, \1date/time\1) [S ®] \1date/time\1")
+	HELP_TEXT(
+	"[ [A@0+84 The unary operator ][*A@0+84 `+][A@0+84  leaves its \r\n"
+	"argument unchanged. The operator serves only as a symmetric complement \r\n"
+	"of the operator ][*A@0+84 `-][A@0+84  to increase readability \r\n"
+	"of certain formulas.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [A@0+84 Binary operator ][*A@0+84 `+][A@0+84  adds up its operands. \r\n"
+	"In case of strings, the strings will be concatenated. When a \r\n"
+	"number is added to a date value, the date will be moved forward \r\n"
+	"or back by given number of days (forward if it is positive).]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 27 `+ 35 `= 62, `\"a piece `\" `+ \r\n"
+	"`\"of text`\" `= `\"a piece of text`\", 27.12.1999 `+ 7 `= 3.1.2000]]\r\n")
+HELP_END

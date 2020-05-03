@@ -1,0 +1,8 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmulAC", "EN-US", "")
+	HELP_TEXT(
+	"The binary operator [* *] evaluates the [/ lambda-expression] for each element of the original array"
+	" and returns an array composed of the results. The output array has always the same number of elemen"
+	"ts as the input array. During evaluation of the lambda-expression for each input array element the c"
+	"alculator variable [* I] is set to the index of the current array element (first array element has i"
+	"ndex 0) and the variable [* A] contains the value of the array element being processed.")
+HELP_END

@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmodNN", "EN-US", "operator \1%\1  (\1real number\1 [/ a], \1real number\1 [/ b]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Division remainder. The operator determines the least \r\n"
+	"non`-negative real number which can be obtained by adding or \r\n"
+	"subtraction any integral multiples of ][/A@0+84 b][A@0+84  to \r\n"
+	"value ][/A@0+84 a][A@0+84 . If ][/A@0+84 b][A@0+84  zero, the \r\n"
+	"computation aborts with the error ][*A@0+84 division by zero][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 10.5 `% 2.4 `= 0.9 (10.5 `= 4 `* \r\n"
+	"2.4 `+ 0.9).]]\r\n")
+HELP_END

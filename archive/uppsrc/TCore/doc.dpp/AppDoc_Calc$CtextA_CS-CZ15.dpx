@@ -1,0 +1,8 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtextA", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"Funkce pøevede zadané pole na standardní textovou reprezentaci ve tvaru\r\n"
+	"&\r\n"
+	"&`[[/ první prvek, druhý prvek, tøetí prvek...]`]\r\n"
+	"&\r\n"
+	"&[* Pøíklad:[*  `[0.0, 1.0, 2.5`].text = \"`[0, 1, 2.5`]\"]]")
+HELP_END

@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmodNN", "CS-CZ windows-1250", "operátor \1%\1  (\1reálné èíslo\1 [/ a], \1reálné èíslo\1 [/ b]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Zbytek po dìlení. Operátor urèí nejmenší nezáporné èíslo \r\n"
+	"ze všech èísel, která lze získat pøiètením nebo odeètením celoèíselného \r\n"
+	"násobku hodnoty ][/A@0+84 b][A@0+84  k_hodnotì ][/A@0+84 a][A@0+84 . \r\n"
+	"Pokud je na pravé stranì operátoru nula, výpoèet výrazu ohlásí \r\n"
+	"chybu ][*A@0+84 dìlení nulou][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: 10.5 `% 2.4 `= 0.9 (10.5 `= 4 `* \r\n"
+	"2.4 `+ 0.9).]]\r\n")
+HELP_END

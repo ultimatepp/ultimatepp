@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CaddDN", "EN-US", "operator \1+\1  (\1date/time\1, \1real number\1) [S ®] \1date/time\1")
+	HELP_TEXT(
+	"\r\n")
+HELP_END
