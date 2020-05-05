@@ -66,7 +66,6 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(Vector<int>));
 	RDUMP(sizeof(Array<int>));
 	RDUMP(sizeof(Index<int>));
-	RDUMP(sizeof(ArrayIndex<int>));
 	RDUMP(sizeof(ArrayMap<int, int>));
 	RDUMP(sizeof(VectorMap<int, int>));
 	RDUMP(sizeof(BiArray<int>));
