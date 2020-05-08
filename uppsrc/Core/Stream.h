@@ -113,60 +113,46 @@ public:
 	bool      GetAll(Huge& h, size_t size);
 
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
-#if defined(CPU_UNALIGNED) && defined(CPU_LE)
-	NOUBSAN	int   Get16()            { if(ptr + 1 >= rdlim) return _Get16(); int q = *(word *)ptr; ptr += 2; return q; }
-	NOUBSAN	int   Get32()            { if(ptr + 3 >= rdlim) return _Get32(); int q = *(dword *)ptr; ptr += 4; return q; }
-	NOUBSAN	int64 Get64()            { if(ptr + 7 >= rdlim) return _Get64(); int64 q = *(int64 *)ptr; ptr += 8; return q; }
-#else
-	int       Get16()                { return _Get16(); }
-	int       Get32()                { return _Get32(); }
-	int64     Get64()                { return _Get64(); }
-#endif
-
-#ifdef CPU_LE
-	int       Get16le()              { return Get16(); }
-	int       Get32le()              { return Get32(); }
-	int64     Get64le()              { return Get64(); }
-	int       Get16be();
-	int       Get32be();
-	int64     Get64be();
-#else
-	int       Get16le();
-	int       Get32le();
-	int64     Get64le();
-	int       Get16be()              { return Get16(); }
-	int       Get32be()              { return Get32(); }
-	int64     Get64be()              { return Get64(); }
-#endif
+	int       Get16()                { if(ptr + 1 >= rdlim) return _Get16(); int q = Peek16(ptr); ptr += 2; return q; }
+	int       Get32()                { if(ptr + 3 >= rdlim) return _Get32(); int q = Peek32(ptr); ptr += 4; return q; }
+	int64     Get64()                { if(ptr + 7 >= rdlim) return _Get64(); int64 q = Peek64(ptr); ptr += 8; return q; }
 
 	int       GetUtf8();
 
 	String    GetLine();
 
-#if defined(CPU_UNALIGNED) && defined(CPU_LE)
-	NOUBSAN void Put16(word q)       { if(ptr + 1 < wrlim) { *(word *)ptr = q; ptr += 2; } else Put(&q, 2); }
-	NOUBSAN void Put32(dword q)      { if(ptr + 3 < wrlim) { *(dword *)ptr = q; ptr += 4; } else Put(&q, 4); }
-	NOUBSAN void Put64(int64 q)      { if(ptr + 7 < wrlim) { *(int64 *)ptr = q; ptr += 8; } else Put(&q, 8); }
-#else
-	void      Put16(word q)          { Put(&q, 2); }
-	void      Put32(dword q)         { Put(&q, 4); }
-	void      Put64(int64 q)         { Put(&q, 8); }
-#endif
+	void      Put16(word q)          { if(ptr + 1 < wrlim) { Poke16(ptr, q); ptr += 2; } else Put(&q, 2); }
+	void      Put32(dword q)         { if(ptr + 3 < wrlim) { Poke32(ptr, q); ptr += 4; } else Put(&q, 4); }
+	void      Put64(int64 q)         { if(ptr + 7 < wrlim) { Poke64(ptr, q); ptr += 8; } else Put(&q, 8); }
 
 #ifdef CPU_LE
-	void      Put16le(word q)        { Put(&q, 2); }
-	void      Put32le(dword q)       { Put(&q, 4); }
-	void      Put64le(int64 q)       { Put(&q, 8); }
-	void      Put16be(word q);
-	void      Put32be(dword q);
-	void      Put64be(int64 q);
+	int       Get16le()              { return Get16(); }
+	int       Get32le()              { return Get32(); }
+	int64     Get64le()              { return Get64(); }
+	int       Get16be()              { return SwapEndian16(Get16()); }
+	int       Get32be()              { return SwapEndian32(Get32()); }
+	int64     Get64be()              { return SwapEndian64(Get64()); }
+
+	void      Put16le(word q)        { Put16(q); }
+	void      Put32le(dword q)       { Put32(q); }
+	void      Put64le(int64 q)       { Put64(q); }
+	void      Put16be(word q)        { Put16(SwapEndian16(q)); }
+	void      Put32be(dword q)       { Put32(SwapEndian32(q)); }
+	void      Put64be(int64 q)       { Put64(SwapEndian64(q)); }
 #else
-	void      Put16le(word q);
-	void      Put32le(dword q);
-	void      Put64le(int64 q);
-	void      Put16be(word q)        { Put(&q, 2); }
-	void      Put32be(dword q)       { Put(&q, 4); }
-	void      Put64be(int64 q)       { Put(&q, 8); }
+	int       Get16le()              { return SwapEndian16(Get16()); }
+	int       Get32le()              { return SwapEndian32(Get32()); }
+	int64     Get64le()              { return SwapEndian64(Get64()); }
+	int       Get16be()              { return Get16(); }
+	int       Get32be()              { return Get32(); }
+	int64     Get64be()              { return Get64(); }
+
+	void      Put16le(word q)        { Put16(SwapEndian16(q)); }
+	void      Put32le(dword q)       { Put32(SwapEndian32(q)); }
+	void      Put64le(int64 q)       { Put64(SwapEndian64(q)); }
+	void      Put16be(word q)        { Put16(q); }
+	void      Put32be(dword q)       { Put32(q); }
+	void      Put64be(int64 q)       { Put64(q); }
 #endif
 
 	void      PutUtf8(int c);
