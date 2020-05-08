@@ -55,9 +55,9 @@ public:
 		ASSERT(refcount == 0);
 	}
 
-	void           AddRef() const      { if(this) AtomicInc(refcount); }
+	void           AddRef() const      { AtomicInc(refcount); }
 	int            GetRefCount() const { return refcount; }
-	void           Release() const     { if(this && !AtomicDec(refcount)) delete this; }
+	void           Release() const     { if(!AtomicDec(refcount)) delete this; }
 #ifdef REF_DEBUG
 	int            GetAllocIndex() const { return allocindex; }
 #endif//REF_DEBUG
