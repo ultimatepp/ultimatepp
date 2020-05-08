@@ -2,7 +2,8 @@ uses
 	Core;
 
 file
-	StreamGet32.cpp;
+	StreamGet32.cpp,
+	info.txt;
 
 mainconfig
 	"" = "";
