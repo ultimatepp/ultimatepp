@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	StreamGet32.cpp;
+
+mainconfig
+	"" = "";
+
