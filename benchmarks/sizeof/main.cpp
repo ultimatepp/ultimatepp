@@ -18,6 +18,12 @@ CONSOLE_APP_MAIN
 #ifdef CPP_11
 	RLOG("CPP_11");
 #endif
+#ifdef CPU_X86
+	RLOG("CPU_X86");
+#endif
+#ifdef CPU_ARM
+	RLOG("CPU_ARM");
+#endif
 	RLOG("========================");
 	RDUMP(sizeof(bool));
 	RDUMP(sizeof(int));
