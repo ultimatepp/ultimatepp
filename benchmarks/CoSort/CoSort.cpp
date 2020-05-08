@@ -5,7 +5,7 @@ using namespace Upp;
 #ifdef _DEBUG
 #define N 10000
 #else
-#define N 10000000
+#define N 100000000
 #endif
 
 CONSOLE_APP_MAIN
@@ -30,7 +30,7 @@ CONSOLE_APP_MAIN
 		RLOG("CoSort " << tm);
 	}
 
-#ifdef CPU_64
+#if 0
 	{
 		CoWork::SetPoolSize(400);
 		auto h1 = clone(h);
@@ -39,7 +39,5 @@ CONSOLE_APP_MAIN
 		RLOG("CoSort (big pool) " << tm);
 	}
 #endif
-	
-	Thread::ShutdownThreads();
 	RLOG("Exit");
 }
