@@ -1,0 +1,11 @@
+* C:\upp\out\benchmarks\MSBT19x64\StreamGet32.exe 08.05.2020 10:13:35, user: cxl
+
+TIMING Time           : 179.99 ms - 179.99 us (180.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+
+* C:\upp\out\benchmarks\CLANGx64.Debug_Full.Release\StreamGet32.exe 08.05.2020 10:25:56, user: cxl
+
+TIMING Time           : 513.98 ms - 513.98 us (514.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+
+
+
+
