@@ -122,9 +122,6 @@ inline int64   SwapEndian64(int64 v)  { return _byteswap_uint64(v); }
 inline void   EndianSwap(int64& v)    { v = SwapEndian64(v); }
 inline void   EndianSwap(uint64& v)   { v = SwapEndian64(v); }
 
-inline word   SwapEndian16(int w)     { return SwapEndian16((word)w); }
-inline word   SwapEndian16(dword w)   { return SwapEndian16((word)w); }
-
 #else
 
 #ifdef COMPILER_GCC
@@ -142,6 +139,9 @@ inline int64  SwapEndian64(int64 v)   { EndianSwap(v); return v; }
 inline uint64 SwapEndian64(uint64 v)  { EndianSwap(v); return v; }
 #endif
 #endif
+
+inline word   SwapEndian16(int w)     { return SwapEndian16((word)w); }
+inline word   SwapEndian16(dword w)   { return SwapEndian16((word)w); }
 
 void EndianSwap(word *v, size_t count);
 void EndianSwap(int16 *v, size_t count);
