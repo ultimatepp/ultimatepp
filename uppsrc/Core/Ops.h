@@ -1,4 +1,4 @@
-#if defined(CPU_UNALIGNED) && defined(CPU_LE) || __ARM_ARCH_7A__
+#if defined(CPU_UNALIGNED) && defined(CPU_LE)
 NOUBSAN inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }
 NOUBSAN inline int    Peek32le(const void *ptr)  { return *(const dword *)ptr; }
 NOUBSAN inline int64  Peek64le(const void *ptr)  { return *(const int64 *)ptr; }
@@ -32,6 +32,7 @@ inline void   Poke64be(const void *ptr, int64 val)  { Poke32be(ptr, HIDWORD(val)
 inline int    Peek16(const void *ptr)  { return Peek16le(ptr); }
 inline int    Peek32(const void *ptr)  { return Peek32le(ptr); }
 inline int64  Peek64(const void *ptr)  { return Peek64le(ptr); }
+
 inline void   Poke16(const void *ptr, int val)    { Poke16le(ptr, val); }
 inline void   Poke32(const void *ptr, int val)    { Poke32le(ptr, val); }
 inline void   Poke64(const void *ptr, int64 val)  { Poke64le(ptr, val); }
@@ -44,13 +45,14 @@ inline void   Poke64(const void *ptr, int64 val)  { Poke64le(ptr, val); }
 inline int    Peek16(const void *ptr)  { return Peek16be(ptr); }
 inline int    Peek32(const void *ptr)  { return Peek32be(ptr); }
 inline int64  Peek64(const void *ptr)  { return Peek64be(ptr); }
+
 inline void   Poke16(const void *ptr, int val)    { Poke16be(ptr, val); }
 inline void   Poke32(const void *ptr, int val)    { Poke32be(ptr, val); }
 inline void   Poke64(const void *ptr, int64 val)  { Poke64be(ptr, val); }
 
 #endif
 
-#if defined(CPU_X86) && (defined(COMPILER_GCC) || defined(COMPILER_MSC))
+#if defined(CPU_X86) && defined(COMPILER_MSC)
 #ifdef COMPILER_GCC
 #ifdef CPU_64
 inline word   SwapEndian16(word v)    { __asm__("xchgb %b0,%h0" : "=Q" (v) :  "0" (v)); return v; }
@@ -119,6 +121,9 @@ inline int64   SwapEndian64(int64 v)  { return _byteswap_uint64(v); }
 
 inline void   EndianSwap(int64& v)    { v = SwapEndian64(v); }
 inline void   EndianSwap(uint64& v)   { v = SwapEndian64(v); }
+
+inline word   SwapEndian16(int w)     { return SwapEndian16((word)w); }
+inline word   SwapEndian16(dword w)   { return SwapEndian16((word)w); }
 
 #else
 
