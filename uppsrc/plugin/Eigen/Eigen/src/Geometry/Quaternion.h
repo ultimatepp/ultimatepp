@@ -169,20 +169,38 @@ class QuaternionBase : public RotationBase<Derived, 3>
   /** return the result vector of \a v through the rotation*/
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Vector3 _transformVector(const Vector3& v) const;
 
+  #ifdef EIGEN_PARSED_BY_DOXYGEN
   /** \returns \c *this with scalar type casted to \a NewScalarType
     *
     * Note that if \a NewScalarType is equal to the current scalar type of \c *this
     * then this function smartly returns a const reference to \c *this.
     */
   template<typename NewScalarType>
-  EIGEN_DEVICE_FUNC inline typename internal::cast_return_type<Derived,Quaternion<NewScalarType> >::type cast() const
+  EIGEN_DEVICE_FUNC inline typename internal::cast_return_type<Derived,Quaternion<NewScalarType> >::type cast() const;
+
+  #else
+
+  template<typename NewScalarType>
+  EIGEN_DEVICE_FUNC inline 
+  typename internal::enable_if<internal::is_same<Scalar,NewScalarType>::value,const Derived&>::type cast() const
   {
-    return typename internal::cast_return_type<Derived,Quaternion<NewScalarType> >::type(derived());
+    return derived();
   }
+
+  template<typename NewScalarType>
+  EIGEN_DEVICE_FUNC inline 
+  typename internal::enable_if<!internal::is_same<Scalar,NewScalarType>::value,Quaternion<NewScalarType> >::type cast() const
+  {
+    return Quaternion<NewScalarType>(coeffs().template cast<NewScalarType>());
+  }
+  #endif
 
 #ifdef EIGEN_QUATERNIONBASE_PLUGIN
 # include EIGEN_QUATERNIONBASE_PLUGIN
 #endif
+protected:
+  EIGEN_DEFAULT_COPY_CONSTRUCTOR(QuaternionBase)
+  EIGEN_DEFAULT_EMPTY_CONSTRUCTOR_AND_DESTRUCTOR(QuaternionBase)
 };
 
 /***************************************************************************
@@ -275,6 +293,21 @@ public:
   template<typename OtherScalar, int OtherOptions>
   EIGEN_DEVICE_FUNC explicit inline Quaternion(const Quaternion<OtherScalar, OtherOptions>& other)
   { m_coeffs = other.coeffs().template cast<Scalar>(); }
+
+#if EIGEN_HAS_RVALUE_REFERENCES
+  // We define a copy constructor, which means we don't get an implicit move constructor or assignment operator.
+  /** Default move constructor */
+  EIGEN_DEVICE_FUNC inline Quaternion(Quaternion&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_constructible<Scalar>::value)
+    : m_coeffs(std::move(other.coeffs()))
+  {}
+
+  /** Default move assignment operator */
+  EIGEN_DEVICE_FUNC Quaternion& operator=(Quaternion&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
+  {
+    m_coeffs = std::move(other.coeffs());
+    return *this;
+  }
+#endif
 
   EIGEN_DEVICE_FUNC static Quaternion UnitRandom();
 
@@ -628,7 +661,7 @@ EIGEN_DEVICE_FUNC Quaternion<Scalar,Options> Quaternion<Scalar,Options>::UnitRan
   const Scalar u1 = internal::random<Scalar>(0, 1),
                u2 = internal::random<Scalar>(0, 2*EIGEN_PI),
                u3 = internal::random<Scalar>(0, 2*EIGEN_PI);
-  const Scalar a = sqrt(1 - u1),
+  const Scalar a = sqrt(Scalar(1) - u1),
                b = sqrt(u1);
   return Quaternion (a * sin(u2), a * cos(u2), b * sin(u3), b * cos(u3));
 }
