@@ -7,11 +7,6 @@
 #define EIGEN_DENSEBASE_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
 #define EIGEN_TENSOR_PLUGIN		<plugin/Eigen/ToStringPlugin.h>
 
-//#ifndef flagSSE2
-// #define EIGEN_DONT_VECTORIZE
-// #define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
-//#endif
-
 #ifndef _DEBUG
 #define EIGEN_NO_DEBUG
 #endif
@@ -40,7 +35,7 @@ struct NonLinearOptimizationFunctor {
 	typedef Eigen::Matrix<double, ValuesAtCompileTime, 1> ValueType;
 	typedef Eigen::Matrix<double, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
 	
-	int64 unknowns, datasetLen;
+	Eigen::Index unknowns, datasetLen;
 	
 	NonLinearOptimizationFunctor() : unknowns(InputsAtCompileTime), datasetLen(ValuesAtCompileTime) {}
 	NonLinearOptimizationFunctor(int unknowns, int datasetLen) : unknowns(unknowns), datasetLen(datasetLen) {}
@@ -49,6 +44,27 @@ struct NonLinearOptimizationFunctor {
 	ptrdiff_t values() const {return ptrdiff_t(datasetLen);}
 	virtual void operator() (const InputType& , ValueType* , JacobianType*  = 0) const {};
 };
+
+struct Basic_functor : NonLinearOptimizationFunctor<double> {
+	Basic_functor(Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &err)> _function) : function(_function) {}
+	int operator()(const Eigen::VectorXd &b, Eigen::VectorXd &fvec) const {return function(b, fvec);}
+	Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &err)> function;
+};
+
+template <class T>
+bool NonLinearOptimization(T &coeff, int numData, Function <int(const T &b, T &err)>function) {
+	Basic_functor functor(function);
+	functor.unknowns = coeff.size();
+	functor.datasetLen = numData;
+	Eigen::NumericalDiff<Basic_functor> numDiff(functor);
+	Eigen::LevenbergMarquardt<Eigen::NumericalDiff<Basic_functor> > lm(numDiff);
+	int ret = lm.minimize(coeff);
+	if (ret == Eigen::LevenbergMarquardtSpace::ImproperInputParameters || 
+		ret == Eigen::LevenbergMarquardtSpace::TooManyFunctionEvaluation)
+		return false;
+	return true;
+}
+
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
