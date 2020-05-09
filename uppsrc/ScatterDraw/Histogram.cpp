@@ -27,7 +27,7 @@ void Histogram::Clear() {
 	values.resize(0);
 }
 
-Histogram &Histogram::Create2D(Vector<Vector<double> > &_ranges, Vector<double> &data, double total) {
+Histogram &Histogram::Create2D(const Vector<Vector<double> > &_ranges, const Vector<double> &data, double total) {
 	Clear();
 	
 	int numAxis = 2;

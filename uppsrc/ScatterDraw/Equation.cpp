@@ -60,7 +60,7 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &serie, double &r2) 
 	int ret = lm.minimize(x);
 	if (ret == LevenbergMarquardtSpace::ImproperInputParameters)
 		return ExplicitEquation::ImproperInputParameters;
-	if (ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
+	else if (ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
 		return TooManyFunctionEvaluation;
 
 	r2 = R2Y(serie);

@@ -609,11 +609,11 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
 
 double DataSource::Integral(double from, double to, double n) {
 	double h = (to - from)/n;
-	double h2 = h/2;
+	double h_2 = h/2;
 	   
    	double sum1 = 0, sum2 = 0;
    	for(int i = 0; i < n; i++) {
-      	sum1 += f(from + h*i + h2);
+      	sum1 += f(from + h*i + h_2);
       	sum2 += f(from + h*i);
    	}
    	return h/6*(f(from) + f(to) + 4*sum1 + 2*sum2);

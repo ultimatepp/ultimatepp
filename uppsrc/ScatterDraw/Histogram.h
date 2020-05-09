@@ -24,7 +24,7 @@ public:
 		axisDim[0] = dimX;
 		axisDim[1] = dimY;
 	}
-	const Upp::Vector<int> &GetAxisDim()	{return axisDim;};
+	Upp::Vector<int> &GetAxisDim()	{return axisDim;};
 	int GetIndex(Vector<int> &index) {
 		ASSERT_(index[0] >= 0 && index[0] < axisDim[0], Format("index[0]=%d", index[0]));
 		int ret = index[0];
@@ -99,14 +99,14 @@ public:
 	
 	Histogram &Create(DataSource &data, double min, double max, int numVals, bool isY);
 	Histogram &Create(Upp::Array<HistogramDataAxis> &dataAxis, bool isY);
-	Histogram &Create2D(Vector<Vector<double> > &_ranges, Vector<double> &data, double total);
+	Histogram &Create2D(const Vector<Vector<double> > &_ranges, const Vector<double> &data, double total);
 
 	Histogram &Normalize(double val = 1);
 	Histogram &Accumulative(bool _accum = true)	{accumulative = _accum;	return *this;}
 	
 	double Compare(const Histogram &hist);
 	
-	inline double &GetRange(int dim, int i)	{return ranges[dim][i];};
+	inline const double &GetRange(int dim, int i)	{return ranges[dim][i];};
 	inline int64 GetCount(int dim) const	{return ranges[dim].GetCount();}
 	inline double GetValue(int index)		{return y(index);}
 	inline double GetValue(int c, int r)	{return y(valuesIdx.GetIndex(c, r));}
