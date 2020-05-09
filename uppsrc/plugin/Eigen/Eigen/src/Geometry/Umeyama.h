@@ -137,7 +137,7 @@ umeyama(const MatrixBase<Derived>& src, const MatrixBase<OtherDerived>& dst, boo
   VectorType S = VectorType::Ones(m);
 
   if  ( svd.matrixU().determinant() * svd.matrixV().determinant() < 0 )
-    S(m-1) = -1;
+    S[m-1] = -1;
 
   // Eq. (40) and (43)
   Rt.block(0,0,m,m).noalias() = svd.matrixU() * S.asDiagonal() * svd.matrixV().transpose();
