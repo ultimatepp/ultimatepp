@@ -4,7 +4,6 @@
 #include <plugin/Eigen/Eigen.h>
 
 namespace Upp {
-using namespace Eigen;
 
 #define FormatCoeff(id, numDigits)		(IsNull(numDigits) ? (String("C") + FormatInt(id)) : FormatDoubleFix(coeff[id], numDigits))
 
@@ -309,7 +308,7 @@ public:
 			return 0;
 		double k =  coeff[0];
 		double lambda = coeff[1];
-		return 1 - exp(-pow(x/lambda, k));
+		return 1 - exp(double(-pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull cumulative");}
 	virtual String GetEquation(int numDigits = 3) {
@@ -332,7 +331,7 @@ public:
 			return 0;
 		double k =  coeff[0];
 		double lambda = coeff[1];
-		return factor*(k/lambda)*(pow(x/lambda, k-1))*exp(-pow(x/lambda, k));
+		return factor*(k/lambda)*(pow(x/lambda, k-1))*exp(double(-pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull");}
 	virtual String GetEquation(int numDigits = 3) {

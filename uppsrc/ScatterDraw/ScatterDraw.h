@@ -472,6 +472,10 @@ public:
 														{return AddSeries<CArray>(yData, numData, x0, deltaX);}
 	ScatterDraw &AddSeries(double *xData, double *yData, int numData)
 														{return AddSeries<CArray>(yData, xData, numData);}
+	ScatterDraw &AddSeries(Eigen::VectorXd &yData, double x0, double deltaX)
+														{return AddSeries<EigenVector>(yData, x0, deltaX);}
+	ScatterDraw &AddSeries(Eigen::VectorXd &xData, Eigen::VectorXd &yData)
+														{return AddSeries<EigenVector>(yData, xData);}
 	ScatterDraw &AddSeries(Vector<double> &xData, Vector<double> &yData)
 														{return AddSeries<VectorDouble>(yData, xData);}
 	ScatterDraw &AddSeries(Upp::Array<double> &xData, Upp::Array<double> &yData)

@@ -4,7 +4,6 @@
 #include <plugin/Eigen/Eigen.h>
 
 namespace Upp {
-using namespace Eigen;
 
 class DataSource : public Pte<DataSource>  {
 public:
@@ -350,13 +349,34 @@ private:
 	
 public:
 	CArray(double *_yData, int _numData, double _x0, double _deltaX) : yData(_yData), numData(_numData), x0(_x0), deltaX(_deltaX) {xData = NULL;}
-	CArray(double *_yData, double *_xData, int _numData) : yData(_yData), xData(_xData), numData(_numData) {zData = NULL; x0 = deltaX = 0;}
+	CArray(double *_yData, double *_xData, int _numData) : yData(_yData), xData(_xData), numData(_numData) {zData = nullptr; x0 = deltaX = 0;}
 	CArray(double *_yData, double *_xData, double *_zData, int _numData) : yData(_yData), xData(_xData), zData(_zData), numData(_numData) {x0 = deltaX = 0;}
 	virtual inline double y(int64 id)  	{return yData[ptrdiff_t(id)];}
 	virtual inline double x(int64 id)  	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
 	virtual double znFixed(int n, int64 id); 
 	virtual int GetznFixedCount()				{return 1;}
 	virtual inline int64 GetCount() const		{return numData;}
+};
+
+class EigenVector : public DataSource {
+private:
+	Eigen::VectorXd *yData, *xData, *zData;
+	double x0, deltaX;
+	
+public:
+	EigenVector(Eigen::VectorXd &_yData, double _x0, double _deltaX) : yData(&_yData), x0(_x0), deltaX(_deltaX) {xData = nullptr;}
+	EigenVector(Eigen::VectorXd &_yData, Eigen::VectorXd &_xData) : yData(&_yData), xData(&_xData) {zData = nullptr; x0 = deltaX = 0;}
+	EigenVector(Eigen::VectorXd &_yData, Eigen::VectorXd &_xData, Eigen::VectorXd &_zData) : yData(&_yData), xData(&_xData), zData(&_zData) {x0 = deltaX = 0;}
+	virtual inline double y(int64 id)  	{return (*yData)(id);}
+	virtual inline double x(int64 id)  	{return xData ? (*xData)(id) : id*deltaX + x0;}
+	virtual double znFixed(int n, int64 id) {
+		if (n == 0)
+			return (*zData)(id);
+		NEVER();
+		return Null;
+	}
+	virtual int GetznFixedCount()				{return 1;}
+	virtual inline int64 GetCount() const		{return yData->size();}
 };
 
 template <class Y>
@@ -738,8 +758,8 @@ inline T TrilinearInterpolate(T x, T y, T z, T x0, T x1, T y0, T y1, T z0, T z1,
 	return LinearInterpolate(z, z0, z1, r0, r1);
 }
 
-template <class T>
-T LinearInterpolate(const T x, const Vector<T> &vecx, const Vector<T> &vecy) {
+template <class Range, class T>
+T LinearInterpolate(const T x, const Range &vecx, const Range &vecy) {
 	ASSERT(vecx.GetCount() > 1 && vecy.GetCount() > 1);
 	if (x < vecx[0])
 		return vecy[0];
@@ -900,10 +920,10 @@ Vector<Pointf> Intersection(Vector<Pointf> &poly1, Vector<Pointf> &poly2);
 void Simplify(Vector<Pointf> &poly, double dx, double dy);
 
 bool SavitzkyGolay_CheckParams(int nleft, int nright, int deg, int der);
-VectorXd SavitzkyGolay_Coeff(int nleft, int nright, int deg, int der);
+Eigen::VectorXd SavitzkyGolay_Coeff(int nleft, int nright, int deg, int der);
 
 template<class T>
-typename T::PlainObject Convolution(const MatrixBase<T>& orig, const MatrixBase<T>& kernel, const double factor = 1) {
+typename T::PlainObject Convolution(const Eigen::MatrixBase<T>& orig, const Eigen::MatrixBase<T>& kernel, const double factor = 1) {
 	const Eigen::Index ksize = kernel.size();
 	
 	ASSERT_(ksize % 2 != 0, "Only support odd sized kernels");
@@ -919,7 +939,7 @@ typename T::PlainObject Convolution(const MatrixBase<T>& orig, const MatrixBase<
 }
 
 template<class T>
-typename T::PlainObject Convolution2D(const MatrixBase<T>& orig, const MatrixBase<T>& kernel, const double factor = 1) {
+typename T::PlainObject Convolution2D(const Eigen::MatrixBase<T>& orig, const Eigen::MatrixBase<T>& kernel, const double factor = 1) {
 	const Eigen::Index krows = kernel.rows();
 	const Eigen::Index kcols = kernel.cols();
 	
