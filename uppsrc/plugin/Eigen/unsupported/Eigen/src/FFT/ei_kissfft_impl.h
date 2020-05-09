@@ -7,21 +7,12 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <iostream>
-#include <iomanip>
-#include <complex>
-#include <cmath>
-
 namespace Eigen { 
 
 namespace internal {
 
   // This FFT implementation was derived from kissfft http:sourceforge.net/projects/kissfft
   // Copyright 2003-2009 Mark Borgerding
-
-#ifdef Complex
-#undef Complex
-#endif 
 
 template <typename _Scalar>
 struct kiss_cpx_fft
@@ -325,8 +316,8 @@ struct kissfft_impl
 
         // use optimized mode for even real
         fwd( dst, reinterpret_cast<const Complex*> (src), ncfft);
-        Complex dc = dst[0].real() +  dst[0].imag();
-        Complex nyquist = dst[0].real() -  dst[0].imag();
+        Complex dc(dst[0].real() +  dst[0].imag());
+        Complex nyquist(dst[0].real() -  dst[0].imag());
         int k;
         for ( k=1;k <= ncfft2 ; ++k ) {
           Complex fpk = dst[k];
