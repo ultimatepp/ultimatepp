@@ -61,6 +61,20 @@ CONSOLE_APP_MAIN
 	}
 	Cout() << "\n\nAssignment and resizing";
 	{
+		double _dat[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};// Assignment from C vector
+		VectorXd dat = Map<VectorXd>(_dat, sizeof(_dat)/sizeof(double));  
+		Cout() << "\nC array data is " << dat.transpose();
+		
+		const int dec = 5;
+    	VectorXd decimated = Map<VectorXd, 0, InnerStride<dec>>(dat.data(), 1+((dat.size()-1)/dec));
+    	Cout() << "\nDecimated " << decimated.transpose();
+		
+		VectorXd even = Map<VectorXd, 0, InnerStride<2>>(dat.data(), (dat.size()+1)/2);
+		Cout() << "\nEven " << even.transpose();
+		
+		VectorXd odd = Map<VectorXd, 0, InnerStride<2>>(dat.data()+1, dat.size()/2);
+		Cout() << "\nOdd  " << odd.transpose();
+	
 		MatrixXf a(2,2);
 		Cout() << "\na is of size " << a.rows() << "x" << a.cols();
 		MatrixXf b(3,3);
