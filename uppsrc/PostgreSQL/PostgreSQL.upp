@@ -6,7 +6,7 @@ uses
 
 library(WIN32) libpq.lib;
 
-library(POSIX) pq;
+pkg_config(LINUX | FREEBSD | OPENBSD) libpq;
 
 file
 	PostgreSQL.h,

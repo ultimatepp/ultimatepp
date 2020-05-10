@@ -11,16 +11,9 @@
 #ifndef IPPROTO_IP
 #include <winsock2.h>
 #endif
-#include <mysql.h>
 #endif
 
-#ifdef PLATFORM_POSIX
-#ifdef PLATFORM_OSX
 #include <mysql.h>
-#else
-#include <mysql/mysql.h>
-#endif
-#endif
 
 namespace Upp {
 

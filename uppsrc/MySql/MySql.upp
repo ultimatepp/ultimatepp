@@ -10,19 +10,9 @@ uses
 
 library(WIN32) libmysql.lib;
 
-library(LINUX !MT) "mysqlclient ssl";
-
-library(LINUX MT) "mysqlclient_r ssl";
-
-library(FREEBSD) mysqlclient;
-
 library(OSX) mysqlclient;
 
-link(DEBUG SO) /nodefaultlib:LIBCD;
-
-link(SHARED SO) /nodefaultlib:LIBCMT;
-
-link(FREEBSD) -L/usr/local/lib/mysql;
+pkg_config(LINUX | FREEBSD | OPENBSD) mysqlclient;
 
 file
 	MySql.h,
