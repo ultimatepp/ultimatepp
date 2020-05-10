@@ -1,7 +1,7 @@
 UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I./ -I.cache/upp.out
+CINC   =  -I$(UPPDIR1) `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I./ -I$(UPPOUT)
 Macro  =  -DflagGUI -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
@@ -98,9 +98,9 @@ all: prepare $(OutFile)
 
 .PHONY: build_info
 build_info:
-	(date '+#define bmYEAR    %y%n#define bmMONTH   %-m%n#define bmDAY     %-d%n#define bmHOUR    %-H%n#define bmMINUTE  %-M%n#define bmSECOND  %-S%n#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' && \
+	(date '+#define bmYEAR    %y%n#define bmMONTH   %m%n#define bmDAY     %d%n#define bmHOUR    %H%n#define bmMINUTE  %M%n#define bmSECOND  %S%n#define bmTIME    Time( %y, %m, %d, %H, %M, %S )' | sed 's| 0\([[:digit:]]\)| \1|g' && \
 	echo '#define bmMACHINE "'`hostname`'"' && \
-	echo '#define bmUSER    "'`whoami`'"') > ".cache/upp.out/build_info.h"
+	echo '#define bmUSER    "'`whoami`'"') > "$(UPPOUT)/build_info.h"
 
 .PHONY: prepare
 prepare: \
@@ -72305,5 +72305,4 @@ $(OutDir_plugin_png)png.a: \
 
 .PHONY: clean
 clean:
-	if [ -d "$(UPPOUT)" ]; then rm -rf "$(UPPOUT)" ; fi
-	if [ -f build_info.h ]; then rm -f build_info.h ; fi
+	if [ "$(UPPOUT)" != "" -a "$(UPPOUT)" != "/" -a -d "$(UPPOUT)" ] ; then rm -fr "$(UPPOUT)" ; fi
