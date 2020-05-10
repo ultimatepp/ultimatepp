@@ -527,7 +527,7 @@ bool MySqlPerformScript(const String& txt, StatementExecutor& se, Gate<int, int>
 			else
 				stmt.Cat(*text++);
 		}
-		if(progress_canceled(text - txt.Begin(), txt.GetLength()))
+		if(progress_canceled(int(text - txt.Begin()), txt.GetLength()))
 			return false;
 		if(!se.Execute(stmt))
 			return false;
