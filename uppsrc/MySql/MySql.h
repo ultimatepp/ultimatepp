@@ -15,6 +15,10 @@
 
 #include <mysql.h>
 
+#ifndef MYSQL_PORT // missing in mariadb client
+#define MYSQL_PORT 3306
+#endif
+
 namespace Upp {
 
 const char *MySqlReadString(const char *s, String& stmt);

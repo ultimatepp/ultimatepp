@@ -12,7 +12,7 @@ library(WIN32) libmysql.lib;
 
 library(OSX) mysqlclient;
 
-pkg_config(LINUX | FREEBSD | OPENBSD) mysqlclient;
+pkg_config(LINUX | FREEBSD | OPENBSD) "mysqlclient mariadb";
 
 file
 	MySql.h,
