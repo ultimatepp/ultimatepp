@@ -28,8 +28,8 @@ topic "Roadmap";
 [s2; Release history&]
 [s3; 2020.1 (May 2020)&]
 [s5;po &]
-[s5;po [*/ Upcoming release]&]
-[s5;po* &]
+[s5;po [*/ Current stable release]&]
+[s5;po &]
 [s5;po [* Release highlights]&]
 [s5;l160;i150;poO0; gtk3 replaces gtk2 as default linux backend&]
 [s5;l160;i150;poO0; Visual look`&feel refactored in Linux and MacOS, 
@@ -106,7 +106,6 @@ refactored with pkg`-config&]
 [s24; &]
 [s3; 2019.2 (rev 13664[3 ) ](October 2019)&]
 [s5;po* &]
-[s5;po [*/ Current stable release]&]
 [s5;po* &]
 [s5;po [* Core]&]
 [s5;l160;i150;poO0; Allocator huge block handling optimized, memory 
