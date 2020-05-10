@@ -386,7 +386,7 @@ void ChHostSkin()
 			for(int i = 0; i < 4; i++) {
 				Gtk_State(i);
 				s.look[i] = Hot3(CairoImage());
-				Color ink = GetInkColorBk();
+				Color ink = i == CTRL_DISABLED ? GetInkColor() : GetInkColorBk();
 				s.monocolor[i] = s.textcolor[i] = ink;
 				if(pass == 0) {
 					button[i] = WithHotSpots(CairoImage(100, 100), DPI(4), DPI(4), 0, 0);
