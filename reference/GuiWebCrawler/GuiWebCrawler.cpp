@@ -35,7 +35,9 @@ void WebCrawler::ExtractUrls(const String& html, int srci)
 {
 	int q = 0;
 	while(q < html.GetCount()) {
-		q = html.Find("http://", q);
+		int http = html.Find("http://", q);
+		int https = html.Find("https://", q);
+		q = min(http < 0 ? https : http, https < 0 ? http : https);
 		if(q < 0)
 			return;
 		int b = q;
