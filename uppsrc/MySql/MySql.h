@@ -6,13 +6,6 @@
 #ifndef flagNOMYSQL
 
 #include <Sql/Sql.h>
-
-#ifdef PLATFORM_WIN32
-#ifndef IPPROTO_IP
-#include <winsock2.h>
-#endif
-#endif
-
 #include <mysql.h>
 
 #ifndef MYSQL_PORT // missing in mariadb client
