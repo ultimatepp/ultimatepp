@@ -1,0 +1,16 @@
+description "Demonstrates how to handle multiple database connections\377";
+
+uses
+	Core,
+	MySql,
+	plugin/sqlite3;
+
+file
+	mysql_schema.sch,
+	sqlite3_schema.sch,
+	multidb.h,
+	main.cpp;
+
+mainconfig
+	"" = "";
+
