@@ -90,7 +90,7 @@ lor]([_^Color^ Color]_[*@3 c])&]
 [s3;%% &]
 [s4; &]
 [s5;:RectTracker`:`:Normal`(`): [_^RectTracker^ RectTracker][@(0.0.255) `&]_[* Normal]()&]
-[s2;%% Same as Pattern(DRAWDRAGRECT`_NORMAL).&]
+[s2;%% Same as Pattern(DRAWDRAGRECT`_NORMAL). This is default.&]
 [s3; &]
 [s4; &]
 [s5;:RectTracker`:`:Animation`(int`): [_^RectTracker^ RectTracker][@(0.0.255) `&]_[* Animat
@@ -156,7 +156,7 @@ specify which edge or corner of rectangle is being changed:&]
 [s5;:RectTracker`:`:TrackHorzLine`(int`,int`,int`,int`): [@(0.0.255) int]_[* TrackHorzLin
 e]([@(0.0.255) int]_[*@3 x0], [@(0.0.255) int]_[*@3 y0], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 line])&]
-[s2;%% Performs tracking look of horizontal line. [%-*@3 x0], [%-*@3 y0] 
+[s2;%% Performs tracking loop of horizontal line. [%-*@3 x0], [%-*@3 y0] 
 is base point, [%-*@3 cx] the width of line, [%-*@3 line] the current 
 position. Returns the new position.&]
 [s3;%% &]
@@ -164,9 +164,15 @@ position. Returns the new position.&]
 [s5;:RectTracker`:`:TrackVertLine`(int`,int`,int`,int`): [@(0.0.255) int]_[* TrackVertLin
 e]([@(0.0.255) int]_[*@3 x0], [@(0.0.255) int]_[*@3 y0], [@(0.0.255) int]_[*@3 cy], 
 [@(0.0.255) int]_[*@3 line])&]
-[s2;%% Performs tracking look of vertical line. [%-*@3 x0], [%-*@3 y0] 
-is base point, [%-*@3 cy] the height of line, [%-*@3 line] the current 
+[s2;%% Performs tracking loop of vertical line. [%-*@3 x0], [%-*@3 y0] 
+is base point, [%-*@3 cy] the width of line, [%-*@3 line] the current 
 position. Returns the new position.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:RectTracker`:`:TrackLine`(int`,int`): [_^Upp`:`:Point^ Point]_[* TrackLine]([@(0.0.255) i
+nt]_[*@3 x0], [@(0.0.255) int]_[*@3 y0])&]
+[s2;%% Performs tracking loop of line from the point [%-*@3 x0] [%-*@3 y0]. 
+Returns the new endpoint.&]
 [s3;%% &]
 [s4; &]
 [s5;:RectTracker`:`:RectTracker`(Ctrl`&`): [* RectTracker]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 m

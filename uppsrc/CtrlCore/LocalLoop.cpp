@@ -27,6 +27,19 @@ void LocalLoop::CancelMode()
 	EndLoop();
 }
 
+static void sPaintView(Draw& w, Ctrl& m)
+{
+	m.Paint(w);
+	for(Ctrl *q = m.GetFirstChild(); q; q = q->GetNext()) {
+		Rect r = q->GetRect();
+		if(q->IsShown() && q->InView() && w.IsPainting(r)) {
+			w.Offset(r.TopLeft());
+			sPaintView(w, *q);
+			w.End();
+		}
+	}
+}
+
 RectTracker::RectTracker(Ctrl& master)
 {
 	op = GetMousePos();
@@ -35,7 +48,7 @@ RectTracker::RectTracker(Ctrl& master)
 		LTIMESTOP("--- snapshot");
 		LDUMP(master.GetSize());
 		ImageDraw iw(master.GetSize());
-		master.Paint(iw);
+		sPaintView(iw, master);
 		master_image = iw;
 	}
 	Clip(Rect(0, 0, 100000, 100000));
@@ -68,6 +81,22 @@ Image RectTracker::CursorImage(Point, dword)
 	return cursorimage;
 }
 
+void RectTracker::RefreshRect(const Rect& old, const Rect& r)
+{
+	if(r.Normalized() == r && (tx >= 0 || ty >= 0)) {
+		auto Ref = [&](const Rect& r) {
+			Refresh(r.left, r.top, r.Width(), width);
+			Refresh(r.left, r.top, width, r.GetHeight());
+			Refresh(r.left, r.bottom - width, r.Width(), width);
+			Refresh(r.right - width, r.top, width, r.GetHeight());
+		};
+		Ref(old);
+		Ref(r);
+	}
+	else
+		Refresh();
+}
+
 void RectTracker::DrawRect(Draw& w, Rect r)
 {
 	DrawDragFrame(w, r, width, pattern, color, animation ? (msecs() / animation) % 8 : 0);
@@ -81,14 +110,25 @@ void RectTracker::Paint(Draw& w)
 	}
 	w.Clip(clip & GetMaster().GetSize());
 	Rect r = rect;
-	if(ty < 0)
-		r.left = r.right - 1;
-	else
-	if(tx < 0)
-		r.top = r.bottom - 1;
-	else
-		r.Normalize();
-	DrawRect(w, r);
+	if(tx < 0 && ty < 0) {
+		if(width > 1 || pattern == DRAWDRAGRECT_SOLID)
+			w.DrawLine(r.TopLeft(), r.BottomRight(), width, color);
+		else {
+			Color color2 = IsDark(color) ? White() : Black();
+			w.DrawLine(r.TopLeft(), r.BottomRight(), 1, color2);
+			w.DrawLine(r.TopLeft(), r.BottomRight(), pattern == DRAWDRAGRECT_DASHED ? PEN_DASH : PEN_DOT, color);
+		}
+	}
+	else {
+		if(ty < 0)
+			r.left = r.right - 1;
+		else
+		if(tx < 0)
+			r.top = r.bottom - 1;
+		else
+			r.Normalize();
+		DrawRect(w, r);
+	}
 	w.End();
 }
 
@@ -113,6 +153,11 @@ int RectTracker::TrackVertLine(int x0, int y0, int cy, int line)
 	return Track(RectC(x0, y0, line + 1, cy), ALIGN_RIGHT, -1).right - 1;
 }
 
+Point RectTracker::TrackLine(int x0, int y0)
+{
+	return Track(Rect(x0, y0, x0, y0), -1, -1).BottomRight();
+}
+
 Rect RectTracker::Round(const Rect& r)
 {
 	Rect h = r;
@@ -121,11 +166,16 @@ Rect RectTracker::Round(const Rect& r)
 	return rounder ? rounder->Round(h) : h;
 }
 
-void RectTracker::MouseMove(Point, dword)
+void RectTracker::MouseMove(Point mp, dword)
 {
 	Point p = GetMousePos();
 	rect = org;
-	if(tx == ALIGN_CENTER && ty == ALIGN_CENTER) {
+	if(tx < 0 && ty < 0) { // free line mode
+		rect.right = mp.x;
+		rect.bottom = mp.y;
+	}
+	else
+	if(tx == ALIGN_CENTER && ty == ALIGN_CENTER) { // move rectangle
 		int x = org.left - op.x + p.x;
 		int y = org.top - op.y + p.y;
 		if(x + org.Width() > maxrect.right)
@@ -190,7 +240,7 @@ void RectTracker::MouseMove(Point, dword)
 	if(rect != o) {
 		rect = Round(rect);
 		if(rect != o) {
-			Refresh();
+			RefreshRect(rect, o);
 			sync(rect);
 			o = rect;
 		}
