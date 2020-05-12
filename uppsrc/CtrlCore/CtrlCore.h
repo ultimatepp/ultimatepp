@@ -1520,6 +1520,7 @@ protected:
 
 	Rect            Round(const Rect& r);
 
+	virtual void    RefreshRect(const Rect& old, const Rect& r);
 	virtual void    DrawRect(Draw& w, Rect r1);
 
 public:
@@ -1543,9 +1544,10 @@ public:
 
 	Rect            Get()                          { return rect; }
 
-	Rect Track(const Rect& r, int tx = ALIGN_RIGHT, int ty = ALIGN_BOTTOM);
-	int  TrackHorzLine(int x0, int y0, int cx, int line);
-	int  TrackVertLine(int x0, int y0, int cy, int line);
+	Rect  Track(const Rect& r, int tx = ALIGN_RIGHT, int ty = ALIGN_BOTTOM);
+	int   TrackHorzLine(int x0, int y0, int cx, int line);
+	int   TrackVertLine(int x0, int y0, int cy, int line);
+	Point TrackLine(int x0, int y0);
 
 	RectTracker(Ctrl& master);
 };
