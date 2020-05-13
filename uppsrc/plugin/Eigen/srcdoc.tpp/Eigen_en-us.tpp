@@ -31,7 +31,9 @@ to ease its use for U`+`+ users. It has many samples from Eigen
 library and nonlinear equation solving and optimization like 
 ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/eckerle4`.shtml^2 Eckerl
 e4][2  and ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/thurber`.shtml^2 T
-hurber][2  (see the graphs).]&]
+hurber][2  (see the graphs). To simplify access to these features, 
+][^topic`:`/`/plugin`/Eigen`/src`/NonLinear`_en`-us^2 simple functions][2  
+have been added.]&]
 [s0;#2 &]
 [s0;= [2 
 @@image:1272&1104

@@ -51,20 +51,8 @@ struct Basic_functor : NonLinearOptimizationFunctor<double> {
 	Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &err)> function;
 };
 
-template <class T>
-bool NonLinearOptimization(T &coeff, int numData, Function <int(const T &b, T &err)>function) {
-	Basic_functor functor(function);
-	functor.unknowns = coeff.size();
-	functor.datasetLen = numData;
-	Eigen::NumericalDiff<Basic_functor> numDiff(functor);
-	Eigen::LevenbergMarquardt<Eigen::NumericalDiff<Basic_functor> > lm(numDiff);
-	int ret = lm.minimize(coeff);
-	if (ret == Eigen::LevenbergMarquardtSpace::ImproperInputParameters || 
-		ret == Eigen::LevenbergMarquardtSpace::TooManyFunctionEvaluation)
-		return false;
-	return true;
-}
-
+bool NonLinearOptimization(Eigen::VectorXd &y, int numData, Function <int(const Eigen::VectorXd &y, Eigen::VectorXd &residual)>residual);
+bool NonLinearSolver(Eigen::VectorXd &y, Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &residual)> Residual);
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
