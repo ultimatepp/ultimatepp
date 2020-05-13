@@ -6,9 +6,10 @@ uses
 	plugin/sqlite3;
 
 file
+	multidb.h,
 	mysql_schema.sch,
 	sqlite3_schema.sch,
-	multidb.h,
+	db2schema.cpp,
 	main.cpp;
 
 mainconfig
