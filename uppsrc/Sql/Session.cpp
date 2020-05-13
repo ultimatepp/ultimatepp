@@ -84,6 +84,8 @@ void SqlSession::InstallErrorHandler(bool (*handler)(String error, String stmt, 
 	error_handler = handler;
 }
 
+void Detach_SQL();
+
 void SqlSession::SessionClose()
 {
 	if(sql) {
@@ -94,6 +96,13 @@ void SqlSession::SessionClose()
 		sqlr->Cancel();
 		sqlr.Clear();
 	}
+#ifndef flagNOAPPSQL
+	if(SQL.IsOpen() && &SQL.GetSession() == this) {
+		SQL.Cancel();
+		SQL.Detach();
+		Detach_SQL();
+	}
+#endif
 }
 
 Sql& SqlSession::GetSessionSql()
@@ -143,24 +152,28 @@ void SqlSession::PerThread(bool b)
 
 #ifndef NOAPPSQL
 
+void Detach_SQL()
+{
+	if(sPerThread)
+		sThreadSessionR = sThreadSession = NULL;
+	else
+		sGlobalSessionR = sGlobalSession = NULL;
+}
+
 void Sql::operator=(SqlSession& s)
 {
 	Mutex::Lock __(sDefs);
 	if(this == &AppCursor()) {
-	#ifdef _MULTITHREADED
 		if(sPerThread)
 			sThreadSession = &s;
 		else
-	#endif
 			sGlobalSession = &s;
 		return;
 	}
 	if(this == &AppCursorR()) {
-	#ifdef _MULTITHREADED
 		if(sPerThread)
 			sThreadSessionR = &s;
 		else
-	#endif
 			sGlobalSessionR = &s;
 		return;
 	}
