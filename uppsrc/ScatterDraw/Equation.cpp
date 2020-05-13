@@ -538,7 +538,7 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {
 	if(seriesRaw.IsEmpty())
         return SmallDataSource;
       
-    r2 = 0;
+    r2 = 1;
     
 	PointfLess less;
 	Sort(seriesRaw, less);								// Sort
@@ -559,7 +559,7 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {
 }
 
 void Spline::Fit(const Vector<Pointf> &series) {
-    int ncoeff = int(series.GetCount()) - 1;
+    ncoeff = int(series.GetCount()) - 1;
     
     Buffer<double> h(ncoeff);
     for(int i = 0; i < ncoeff; ++i)
@@ -601,8 +601,8 @@ void Spline::Fit(const Vector<Pointf> &series) {
 double Spline::f(double x) {
     int j;
     for (j = 0; j < ncoeff; j++) {
-        if(coeff[j].x > x) {
-            if(j == 0)
+        if (coeff[j].x > x) {
+            if (j == 0)
                 j = 1;
             break;
         }

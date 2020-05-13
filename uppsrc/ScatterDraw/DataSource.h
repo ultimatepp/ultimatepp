@@ -13,8 +13,8 @@ public:
 	virtual ~DataSource() noexcept				{magic = 4321234;}	
 	virtual double y(int64 ) = 0;
 	virtual double x(int64 ) = 0;
-	virtual double znx(int , int64 ) 			{NEVER();	return Null;}
-	virtual double zny(int , int64 ) 			{NEVER();	return Null;}
+	virtual double znx(int , int64 ) const		{NEVER();	return Null;}
+	virtual double zny(int , int64 ) const		{NEVER();	return Null;}
 	virtual double znFixed(int , int64 )		{NEVER();	return Null;}
 	virtual double y(double ) 					{NEVER();	return Null;}
 	virtual double x(double ) 					{NEVER();	return Null;}
@@ -22,9 +22,9 @@ public:
 	virtual double f(Vector<double> ) 			{NEVER();	return Null;}
 	virtual int64 GetCount() const = 0;
 	bool IsEmpty() const						{return GetCount() == 0;}
-	virtual int GetznxCount(int64 ) 			{return 0;}
-	virtual int GetznyCount(int64 ) 			{return 0;}
-	virtual int GetznFixedCount() 				{return 0;}
+	virtual int GetznxCount(int64 ) const		{return 0;}
+	virtual int GetznyCount(int64 ) const		{return 0;}
+	virtual int GetznFixedCount() const			{return 0;}
 	bool IsParam() const						{return isParam;}
 	bool IsExplicit() const						{return isExplicit;}
 
@@ -354,7 +354,7 @@ public:
 	virtual inline double y(int64 id)  	{return yData[ptrdiff_t(id)];}
 	virtual inline double x(int64 id)  	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
 	virtual double znFixed(int n, int64 id); 
-	virtual int GetznFixedCount()				{return 1;}
+	virtual int GetznFixedCount() const			{return 1;}
 	virtual inline int64 GetCount() const		{return numData;}
 };
 
@@ -375,7 +375,7 @@ public:
 		NEVER();
 		return Null;
 	}
-	virtual int GetznFixedCount()				{return 1;}
+	virtual int GetznFixedCount() const			{return 1;}
 	virtual inline int64 GetCount() const		{return yData->size();}
 };
 
@@ -484,20 +484,22 @@ public:
 	virtual inline double x(int64 id)  {return useRows ? (*data)[beginData + int(id)][idx] : (*data)[idx][beginData + int(id)];}
 	//virtual inline double xn(int n, int64 id) 	{return useRows ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
 	virtual inline int64 GetCount() const	{return numData;};
-	virtual double znx(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsx[n]] : (*data)[idsx[n]][beginData + int(id)];}
+	virtual double znx(int n, int64 id)	const {
+		return useRows ? (*data)[beginData + int(id)][idsx[n]] : (*data)[idsx[n]][beginData + int(id)];}
 	virtual double zny(int n, int64 id)	const {
 		if (!IsNull(idy) && idy < 0) 
 			return useRows ? (*data)[beginData + int(id)][n - idy] : (*data)[n - idy][beginData + int(id)];	
 		return useRows ? (*data)[beginData + int(id)][idsy[n]] : (*data)[idsy[n]][beginData + int(id)];
 	}
 	virtual double znFixed(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsFixed[n]] : (*data)[idsFixed[n]][beginData + int(id)];}
-	int GetznxCount()						{return idsx.GetCount();}
+	virtual int GetznxCount(int64) const	{
+		return idsx.GetCount();}
 	virtual int GetznyCount(int64 id) const {
 		if (!IsNull(idy) && idy < 0) 
 			return (useRows ? (*data)[beginData + int(id)].GetCount() : (*data).GetCount()) + idy;
 		return idsy.GetCount();
 	}
-	virtual int GetznFixedCount()		{return idsFixed.GetCount();}
+	virtual int GetznFixedCount() const		{return idsFixed.GetCount();}
 };
 
 class VectorDouble : public DataSource {
