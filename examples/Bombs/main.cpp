@@ -23,7 +23,6 @@ private:
 		BOMB = 32,
 		MARK = 64,
 		EXPLODED = 128,
-
 	};
 	
 	int UNIT = 30;
