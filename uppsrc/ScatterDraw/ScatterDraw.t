@@ -6,7 +6,7 @@
 T_("No mark")
 caES("Sense marca")
 esES("Sin marca")
-euES("Marka gabe")
+euES("Marka gabe")D
 frFR("Sans marque")
 
 

@@ -25,7 +25,7 @@ public:
 		axisDim[1] = dimY;
 	}
 	Upp::Vector<int> &GetAxisDim()	{return axisDim;};
-	int GetIndex(Vector<int> &index) {
+	int GetIndex(const Vector<int> &index) const {
 		ASSERT_(index[0] >= 0 && index[0] < axisDim[0], Format("index[0]=%d", index[0]));
 		int ret = index[0];
 		int factor = 1;
@@ -37,7 +37,7 @@ public:
 		return ret;
 	}
 	template<typename T, typename... Args>
-	int GetIndex(T t, Args... args) {
+	int GetIndex(T t, Args... args) const {
 		Vector<int> index;
 		
 		index << t;
@@ -45,14 +45,14 @@ public:
 	
 	    return GetIndex(index);
 	}
-	inline int GetIndex(int x, int y) {
+	inline int GetIndex(int x, int y) const  {
 		ASSERT(IsValid(x, y));
 		return x + axisDim[0]*y;
 	}	
-	inline bool IsValid(int x, int y) {
+	inline bool IsValid(int x, int y) const  {
 		return x >= 0 && x < axisDim[0] && y >= 0 && y < axisDim[1];
 	}
-	inline int GetNumAxis() {return axisDim.GetCount();}
+	inline int GetNumAxis() const  {return axisDim.GetCount();}
 	
 	void Xmlize(XmlIO xml) {
 		xml

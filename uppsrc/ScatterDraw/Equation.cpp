@@ -1,8 +1,5 @@
 #include "ScatterDraw.h"
-
-#include <ScatterDraw/Unpedantic.h>
 #include <plugin/Eigen/Eigen.h>
-#include <ScatterDraw/Pedantic.h>
 
 namespace Upp {
 using namespace Eigen;
@@ -543,31 +540,36 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {
 	PointfLess less;
 	Sort(seriesRaw, less);								// Sort
 
-	Vector<Pointf> series;
-	series << seriesRaw[0];
+	Vector<double> x, y;
+	x.Reserve(seriesRaw.GetCount());
+	y.Reserve(seriesRaw.GetCount());
+	x << seriesRaw[0].x;
+	y << seriesRaw[0].y;
 	for (int i = 1; i < seriesRaw.GetCount(); ++i) {	// Remove points with duplicate x
-		if (seriesRaw[i].x != seriesRaw[i - 1].x)
-			series << seriesRaw[i];	
+		if (seriesRaw[i].x != seriesRaw[i - 1].x) {
+			x << seriesRaw[i].x;
+			y << seriesRaw[i].y;
+		}
 	}
 	
-	if (series.GetCount() < 2)
+	if (x.GetCount() < 2)
 		return SmallDataSource;
 		
-	Spline::Fit(series);
+	Spline::Fit(x, y);
 	
 	return NoError;
 }
 
-void Spline::Fit(const Vector<Pointf> &series) {
-    ncoeff = int(series.GetCount()) - 1;
+void Spline::Fit(const double *x, const double *y, int num) {
+    ncoeff = num - 1;
     
     Buffer<double> h(ncoeff);
     for(int i = 0; i < ncoeff; ++i)
-        h[i] = series[i+1].x - series[i].x;
+        h[i] = x[i+1] - x[i];
 
     Buffer<double> alpha(ncoeff);
     for(int i = 1; i < ncoeff; ++i)
-        alpha[i] = 3*(series[i+1].y - series[i].y)/h[i] - 3*(series[i].y - series[i-1].y)/h[i-1];
+        alpha[i] = 3*(y[i+1] - y[i])/h[i] - 3*(y[i] - y[i-1])/h[i-1];
 
     Buffer<double> c(ncoeff+1), l(ncoeff+1), mu(ncoeff+1), z(ncoeff+1);
     l[0] = 1;
@@ -575,7 +577,7 @@ void Spline::Fit(const Vector<Pointf> &series) {
     z[0] = 0;
 
     for(int i = 1; i < ncoeff; ++i) {
-        l[i] = 2*(series[i+1].x - series[i-1].x) - h[i-1]*mu[i-1];
+        l[i] = 2*(x[i+1] - x[i-1]) - h[i-1]*mu[i-1];
         mu[i] = h[i]/l[i];
         z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
     }
@@ -587,13 +589,13 @@ void Spline::Fit(const Vector<Pointf> &series) {
 	coeff.Alloc(ncoeff);
     for(int i = ncoeff-1; i >= 0; --i) {
         c[i] = z[i] - mu[i] * c[i+1];
-        coeff[i].b = (series[i+1].y - series[i].y)/h[i] - h[i]*(c[i+1] + 2*c[i])/3;
+        coeff[i].b = (y[i+1] - y[i])/h[i] - h[i]*(c[i+1] + 2*c[i])/3;
         coeff[i].d = (c[i+1] - c[i])/3/h[i];
     }
 
     for(int i = 0; i < ncoeff; ++i) {
-        coeff[i].x = series[i].x;
-        coeff[i].a = series[i].y;
+        coeff[i].x = x[i];
+        coeff[i].a = y[i];
         coeff[i].c = c[i];
     }
 }
