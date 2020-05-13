@@ -8,7 +8,6 @@
 #include "GatherTpp.h"
 #endif
 
-#include <ScatterDraw/Pedantic.h>
 #include <Functions4U/SvgColors.h>
 #include "StaticPlugin.h"
 #include "LocalProcess2.h"
@@ -716,7 +715,7 @@ bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
 }
 
 template <class Range, class V>
-int Find(Range& r, const V& value, int from = 0) {
+int Find(const Range& r, const V& value, int from = 0) {
 	for(int i = from; i < r.GetCount(); i++)
 		if(r[i] == value) 
 			return i;
