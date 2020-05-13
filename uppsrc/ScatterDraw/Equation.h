@@ -418,7 +418,9 @@ public:
 
 class Spline {
 public:
-	void Fit(const Vector<Pointf> &series);
+	void Fit(const Vector<double> &x, const Vector<double> &y)	 {Fit(x.begin(), y.begin(), x.GetCount());}
+	void Fit(const Eigen::VectorXd &x, const Eigen::VectorXd &y) {Fit(x.data(), y.data(), int(x.size()));}
+	void Fit(const double *x, const double *y, int n);
 	double f(double x);
 	
 private:

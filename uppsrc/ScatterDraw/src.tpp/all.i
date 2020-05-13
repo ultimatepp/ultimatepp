@@ -26,6 +26,10 @@ TOPIC("LinearEquation_en-us")
 #include "LinearEquation_en-us.tppi"
 END_TOPIC
 
+TOPIC("MultiDimMatrixIndex_en-us")
+#include "MultiDimMatrixIndex_en-us.tppi"
+END_TOPIC
+
 TOPIC("PolynomialEquation_en-us")
 #include "PolynomialEquation_en-us.tppi"
 END_TOPIC
@@ -44,6 +48,10 @@ END_TOPIC
 
 TOPIC("SinEquation_en-us")
 #include "SinEquation_en-us.tppi"
+END_TOPIC
+
+TOPIC("Spline_en-us")
+#include "Spline_en-us.tppi"
 END_TOPIC
 
 TOPIC("UserEquation_en-us")

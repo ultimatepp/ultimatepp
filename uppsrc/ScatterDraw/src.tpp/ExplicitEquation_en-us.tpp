@@ -1,10 +1,10 @@
 topic "2.1 ExplicitEquation";
-[ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
 [H6;0 $$3,0#05600065144404261032431302351956:begin]
 [l288;2 $$4,4#27521748481378242620020725143825:desc]
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 ExplicitEquation]]}}&]
 [s1; &]
@@ -31,7 +31,6 @@ n][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 , ][^topic`:`/`/Scatt
 xponentialEquation][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 , 
 ][^topic`:`/`/ScatterDraw`/src`/UserEquation`$en`-us^2 UserEquation][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 .
 ]&]
-[s0;2 &]
 [s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
 [s3; &]

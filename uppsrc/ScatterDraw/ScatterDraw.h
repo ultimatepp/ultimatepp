@@ -3,7 +3,6 @@
 
 #include <Draw/Draw.h>
 #include <Painter/Painter.h>
-#include "Pedantic.h"
 #include "DataSource.h"
 #include "Equation.h"
 #include "DrawingFunctions.h"

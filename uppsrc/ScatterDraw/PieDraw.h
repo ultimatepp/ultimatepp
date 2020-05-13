@@ -3,8 +3,6 @@
 
 #include <Draw/Draw.h>
 #include <Painter/Painter.h>
-
-#include <ScatterDraw/Pedantic.h>
 #include "DataSource.h"
 
 namespace Upp {
