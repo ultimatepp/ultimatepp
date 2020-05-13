@@ -379,10 +379,6 @@ void Sqlite3Session::Close() {
 	if (NULL != db) {
 		SessionClose();
 		int retval;
-#ifndef flagNOAPPSQL
-		if(SQL.IsOpen() && &SQL.GetSession() == this)
-			SQL.Cancel();
-#endif
 		retval = sqlite3_close(db);
 		// If this function fails, that means that some of the
 		// prepared statements have not been finalized.
