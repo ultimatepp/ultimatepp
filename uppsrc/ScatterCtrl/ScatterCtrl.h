@@ -2,13 +2,11 @@
 #define _ScatterCtrl_ScatterCtrl_h
 
 #include <ScatterDraw/ScatterDraw.h>
-#include <ScatterDraw/Unpedantic.h>
 #include <plugin/jpg/jpg.h>
 #include <PdfDraw/PdfDraw.h>
 #include <GridCtrl/GridCtrl.h>
 #include <plugin/Eigen/Eigen.h>
 #include <ScatterDraw/Histogram.h>
-#include <ScatterDraw/Pedantic.h>
 
 #include "PopUpText.h"
 
