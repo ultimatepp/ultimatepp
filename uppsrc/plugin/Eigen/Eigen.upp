@@ -13,6 +13,7 @@ file
 	Eigen.cpp,
 	Eigen.h,
 	ToStringPlugin.h,
+	src.tpp,
 	srcdoc.tpp,
 	Copying,
 	Eigen readonly separator,
