@@ -459,7 +459,7 @@ bool Ctrl::SweepConfigure(bool wait)
 
 void Ctrl::WndSetPos(const Rect& rect)
 {
-	LLOG("WndSetPos0 " << rect);
+	LLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	GuiLock __;
 	if(!IsOpen())
 		return;
@@ -471,9 +471,11 @@ void Ctrl::WndSetPos(const Rect& rect)
 	Rect m(0, 0, 0, 0);
 	if(dynamic_cast<TopWindow *>(this))
 		m = GetFrameMargins();
-	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
 	SetWndRect(rect);
-	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
+	if(TopWindow *tw = dynamic_cast<TopWindow *>(this))
+		tw->SyncSizeHints();
+	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
+	LLOG("-- WndSetPos0 " << rect);
 }
 
 void Ctrl::WndEnable(bool b)
