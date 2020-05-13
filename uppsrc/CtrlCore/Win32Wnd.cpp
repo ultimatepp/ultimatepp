@@ -1183,7 +1183,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
-	LLOG("WndSetPos " << UPP::Name(this));
+	LLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		Rect r = rect;
