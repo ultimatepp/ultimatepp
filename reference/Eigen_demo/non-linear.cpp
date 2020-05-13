@@ -69,32 +69,36 @@ void NonLinearOptimization() {
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 1.4635887487E-03))
 				Cout() << "\nNorm^2 is right";
+			else
+				Cout() << "\nNorm^2 is NOT right";
 			if (VerifyIsApprox(x[0], 1.5543827178) &&
 				VerifyIsApprox(x[1], 4.0888321754) &&
 				VerifyIsApprox(x[2], 4.5154121844E+02))
 				Cout() << "\nNon-linear function optimization is right!";
+			else
+				Cout() << "\nNon-linear function optimization is NOT right!";
 		}
 	}
 	{
 		Cout() << "\n\nThis is a simpler way, using NonLinearOptimization()";
 		double x[] = {400.0, 405.0, 410.0, 415.0, 420.0, 425.0, 430.0, 435.0, 436.5, 438.0, 439.5, 441.0, 442.5, 444.0, 445.5, 447.0, 448.5, 450.0, 451.5, 453.0, 454.5, 456.0, 457.5, 459.0, 460.5, 462.0, 463.5, 465.0, 470.0, 475.0, 480.0, 485.0, 490.0, 495.0, 500.0};
-		double y[] = {0.0001575, 0.0001699, 0.0002350, 0.0003102, 0.0004917, 0.0008710, 0.0017418, 0.0046400, 0.0065895, 0.0097302, 0.0149002, 0.0237310, 0.0401683, 0.0712559, 0.1264458, 0.2073413, 0.2902366, 0.3445623, 0.3698049, 0.3668534, 0.3106727, 0.2078154, 0.1164354, 0.0616764, 0.0337200, 0.0194023, 0.0117831, 0.0074357, 0.0022732, 0.0008800, 0.0004579, 0.0002345, 0.0001586, 0.0001143, 0.0000710 };	
+		double f[] = {0.0001575, 0.0001699, 0.0002350, 0.0003102, 0.0004917, 0.0008710, 0.0017418, 0.0046400, 0.0065895, 0.0097302, 0.0149002, 0.0237310, 0.0401683, 0.0712559, 0.1264458, 0.2073413, 0.2902366, 0.3445623, 0.3698049, 0.3668534, 0.3106727, 0.2078154, 0.1164354, 0.0616764, 0.0337200, 0.0194023, 0.0117831, 0.0074357, 0.0022732, 0.0008800, 0.0004579, 0.0002345, 0.0001586, 0.0001143, 0.0000710};	
 		int num = sizeof(x)/sizeof(double);
-		VectorXd coeff(3);
-		coeff << 1., 10., 500.;
-		if(!NonLinearOptimization<VectorXd>(coeff, num, [&](const VectorXd &b, VectorXd &err)->int {
+		VectorXd y(3);
+		y << 1., 10., 500.;
+		if(!NonLinearOptimization(y, num, [&](const VectorXd &y, VectorXd &residual)->int {
 			for(int i = 0; i < num; i++)
-				err[i] = b[0]/b[1] * exp(-0.5*(x[i]-b[2])*(x[i]-b[2])/(b[1]*b[1])) - y[i];
+				residual[i] = y[0]/y[1] * exp(-0.5*(x[i]-y[2])*(x[i]-y[2])/(y[1]*y[1])) - f[i];
 			return 0;	
 		}))
 			Cout() << "\nNo convergence!";
 		else {
-			if (VerifyIsApprox(coeff[0], 1.5543827178) &&
-				VerifyIsApprox(coeff[1], 4.0888321754) &&
-				VerifyIsApprox(coeff[2], 4.5154121844E+02))
+			if (VerifyIsApprox(y[0], 1.5543827178) &&
+				VerifyIsApprox(y[1], 4.0888321754) &&
+				VerifyIsApprox(y[2], 4.5154121844E+02))
 				Cout() << "\nNon-linear function optimization is right!";
 			else
-				Cout() << "\nBad results??";
+				Cout() << "\nNon-linear function optimization is NOT right!";
 		}
 	}
 	{
@@ -115,6 +119,8 @@ void NonLinearOptimization() {
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 5.6427082397E+03))
 				Cout() << "\nNorm^2 is right";
+			else
+				Cout() << "\nNorm^2 is NOT right";
 			if (VerifyIsApprox(x[0], 1.2881396800E+03) &&
 			    VerifyIsApprox(x[1], 1.4910792535E+03) &&
 			    VerifyIsApprox(x[2], 5.8323836877E+02) &&
@@ -123,6 +129,8 @@ void NonLinearOptimization() {
 			    VerifyIsApprox(x[5], 3.9797285797E-01) &&
 			    VerifyIsApprox(x[6], 4.9727297349E-02))
 				Cout() << "\nNon-linear function optimization is right!";
+			else
+				Cout() << "\nNon-linear function optimization FAILED!";
 		}
 	}
 }
@@ -167,10 +175,10 @@ void NonLinearSolving() {
 	    ret == HybridNonLinearSolverSpace::NotMakingProgressIterations)
 		Cout() << "\nNo convergence!: " << ret;
 	else {
-		if (solver.nfev != 14)
-			Cout() << "\nError with nfev!";
 		if (VerifyIsApprox(solver.fvec.blueNorm(), 1.192636e-08))
 			Cout() << "\nNorm is right";
+		else
+			Cout() << "\nNorm is NOT right";
 		if (VerifyIsApprox(x[0], -0.5706545) && 
 		    VerifyIsApprox(x[1], -0.6816283) &&     
 		    VerifyIsApprox(x[2], -0.7017325) && 
@@ -181,7 +189,44 @@ void NonLinearSolving() {
 		    VerifyIsApprox(x[7], -0.5960342) &&  
 		    VerifyIsApprox(x[8], -0.4164121))
 			Cout() << "\nEquation solving is right!";
+		else
+			Cout() << "\nEquation solving FAILED!";
 	}
+	
+	Cout() << "\n\nThis is a simpler way, using NonLinearSolver()";
+	
+	x.setConstant(n, -1.);		// Initial values
+	
+	if (!NonLinearSolver(x, [&](const VectorXd &x, VectorXd &residual)->int {
+		const ptrdiff_t n = x.size();
+		
+		ASSERT(residual.size() == n);
+		for (ptrdiff_t k = 0; k < n; k++) {
+			double temp1 = 0.;
+			if (k) 
+				temp1 = x[k-1];
+			double temp2 = 0.;
+			if (k != n-1) 
+				temp2 = x[k+1];
+			residual[k] = (3. - 2.*x[k])*x[k] - temp1 - 2.*temp2 + 1.;
+		}
+		return 0;
+	}))
+		Cout() << "\nNo convergence!: ";
+	else {
+		if (VerifyIsApprox(x[0], -0.5706545) && 
+		    VerifyIsApprox(x[1], -0.6816283) &&     
+		    VerifyIsApprox(x[2], -0.7017325) && 
+		    VerifyIsApprox(x[3], -0.7042129) &&  
+		    VerifyIsApprox(x[4], -0.701369) && 
+		    VerifyIsApprox(x[5], -0.6918656) && 
+		    VerifyIsApprox(x[6], -0.665792) && 
+		    VerifyIsApprox(x[7], -0.5960342) &&  
+		    VerifyIsApprox(x[8], -0.4164121))
+			Cout() << "\nEquation solving is right!";
+		else
+			Cout() << "\nEquation solving FAILED!";
+	}	
 }
 
 void NonLinearTests() {
