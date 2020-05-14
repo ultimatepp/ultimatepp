@@ -122,6 +122,15 @@ void CoDo_ST(Function<void ()>&& fn)
 	fn();
 }
 
+inline
+void CoDo(bool co, Function<void ()>&& fn)
+{
+	if(co)
+		CoDo(pick(fn));
+	else
+		CoDo_ST(pick(fn));
+}
+
 template <typename Fn>
 void CoFor(int n, Fn iterator)
 {
@@ -130,6 +139,22 @@ void CoFor(int n, Fn iterator)
 		for(int i = ii++; i < n; i = ii++)
 			iterator(i);
 	});
+}
+
+template <typename Fn>
+void CoFor_ST(int n, Fn iterator)
+{
+	for(int i = 0; i < n; i++)
+		iterator(i);
+}
+
+template <typename Fn>
+void CoFor(bool co, int n, Fn iterator)
+{
+	if(co)
+		CoFor(n, iterator);
+	else
+		CoFor_ST(n, iterator);
 }
 
 template <class T>

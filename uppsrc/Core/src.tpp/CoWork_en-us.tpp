@@ -209,10 +209,29 @@ unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
 by adding `"`_ST`" text.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CoDo`(bool`,Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo]([@(0.0.255) b
+ool]_[*@3 co], [_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s2;%% If [%-*@3 co] is true, calls CoDo([%-*@3 fn]), otherwise CoDo`_ST([%-*@3 fn]). 
+This allows to parametrize algorithms with respect to parallelization.&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:CoFor`(int`,Fn`): [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 Fn]>_[@(0.0.255) v
 oid]_[* CoFor]([@(0.0.255) int]_[*@3 n], [*@4 Fn]_[*@3 iterator])&]
 [s2;%% Based on CoDo, runs in parallel [%-*@3 iterator] for values 
 0..[%-*@3 n] passing the value as argument.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoFor`_ST`(int`,Fn`): [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 Fn]>_[@(0.0.255) v
+oid]_[* CoFor`_ST]([@(0.0.255) int]_[*@3 n], [*@4 Fn]_[*@3 iterator])&]
+[s2;%% Single threaded variant of CoFor, for diagnostics purposes.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoFor`(bool`,int`,Fn`): [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 Fn]>_
+[@(0.0.255) void]_[* CoFor]([@(0.0.255) bool]_[*@3 co], [@(0.0.255) int]_[*@3 n], 
+[*@4 Fn]_[*@3 iterator])&]
+[s2;%% Calls CoFor([%-*@3 n], [%-*@3 iterator]) if [%-*@3 co] is true, 
+CoFor`_ST([%-*@3 n], [%-*@3 iterator]) otherwise. This allows to 
+parametrize algorithms with respect to parallelization.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkerResources]]}}&]
 [s3; &]
@@ -235,7 +254,7 @@ better solved by using CoDo function.&]
 [s5;:Upp`:`:CoWorkerResources`:`:CoWorkerResources`(`): [* CoWorkerResources]()&]
 [s2;%% Creates a required number of instances so that each sub`-job 
 of CoWork has its unique instance.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWorkerResources`:`:CoWorkerResources`(Upp`:`:Event`<T`&`>`): [* CoWorkerR
 esources]([_^Upp`:`:Event^ Event]<[*@4 T][@(0.0.255) `&]>_[*@3 initializer])&]

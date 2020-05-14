@@ -42,7 +42,6 @@ file
 	ImageOp.cpp,
 	ImageChOp.cpp,
 	ImageScale.cpp,
-	BiCubic.cpp,
 	RescaleFilter.cpp,
 	MakeCache.cpp,
 	DrawRasterData.cpp,
