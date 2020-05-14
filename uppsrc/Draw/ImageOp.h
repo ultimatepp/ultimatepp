@@ -52,6 +52,8 @@ Image Contrast(const Image& img, int amount = 256);
 Image HorzFadeOut(int cx, int cy, Color color);
 Image HorzFadeOut(Size sz, Color color);
 
+void DrawRasterData(Draw& w, int x, int y, int cx, int cy, const String& data);
+
 class RescaleImage {
 	Raster       *src;
 	Size          tsz;
@@ -85,9 +87,9 @@ class RescaleImage {
 public:
 	void Create(Size sz, Raster& src, const Rect& src_rc);
 	void Get(RGBA *line);
+	
+	Image CoRescale(Size sz, const Image& img, const Rect& src_rc);
 };
-
-void DrawRasterData(Draw& w, int x, int y, int cx, int cy, const String& data);
 
 bool  Rescale(RasterEncoder& tgt, Size sz, Raster& src, const Rect& src_rc,
               Gate<int, int> progress = Null);
@@ -179,11 +181,14 @@ void  SetMakeImageCacheMax(int m);
 Image MakeImagePaintOnly(const ImageMaker& m);
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
-                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress,
+                    bool co);
 Image RescaleFilter(const Image& img, Size sz,
-                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress,
+                    bool co);
 Image RescaleFilter(const Image& img, int cx, int cy,
-                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress,
+                    bool co);
 
 enum {
 	FILTER_NEAREST = 0,
@@ -198,9 +203,13 @@ enum {
 	FILTER_LANCZOS5 = 9,
 };
 
-Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress = Null);
+Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress = Null, bool co = false);
 Image RescaleFilter(const Image& img, Size sz, int filter, Gate<int, int> progress = Null);
 Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate<int, int> progress = Null);
+
+Image CoRescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress = Null);
+Image CoRescaleFilter(const Image& img, Size sz, int filter, Gate<int, int> progress = Null);
+Image CoRescaleFilter(const Image& img, int cx, int cy, int filter, Gate<int, int> progress = Null);
 
 Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter = Null);
 Image CachedRescale(const Image& m, Size sz, int filter = Null);
