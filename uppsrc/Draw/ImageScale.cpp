@@ -31,7 +31,9 @@ static const byte *GetStretchCurve()
 }
 
 Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
-	                   int smin, int smax, int sclipmin, int sclipmax, int times, int avail)
+	                   int smin, int smax, int sclipmin, int sclipmax, int times, int avail,
+	                   int& itemsz
+	                   )
 {
 	Vector<dword> map;
 	if(dmax == dmin || smax == smin)
@@ -80,7 +82,8 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 	bool bigseg = (span >= MAXAA);
 	int segment = (bigseg ? MAXAA : span);
 	int segstep = span / segment;
-	map.SetCount(4 + count * (bigseg ? 1 : 1 + segment));
+	itemsz = bigseg ? 1 : 1 + segment;
+	map.SetCount(4 + count * itemsz);
 	map[MAP_COUNT] = dword(count);
 	map[MAP_SEGMENT] = dword(segment);
 	map[MAP_BLOCK] = 1 + (bigseg ? 0 : segment);
@@ -359,12 +362,12 @@ void RescaleImage::Create(Size _tsz, Raster& _src, const Rect& src_rc)
 
 	Rect dr = tsz;
 	horz = AAGetMap(dr.left, dr.right, dr.left, dr.right,
-	                src_rc.left, src_rc.right, 0, size.cx, 1, 0x100);
+	                src_rc.left, src_rc.right, 0, size.cx, 1, 0x100, itemsz);
 	if(horz.IsEmpty())
 		return;
 
 	vert = AAGetMap(dr.top, dr.bottom, dr.top, dr.bottom,
-	                src_rc.top, src_rc.bottom, 0, size.cy, 1, 0x100);
+	                src_rc.top, src_rc.bottom, 0, size.cy, 1, 0x100, itemsz);
 	if(vert.IsEmpty())
 		return;
 
@@ -412,12 +415,21 @@ const RGBA *RescaleImage::GetLine(int ii)
 
 void RescaleImage::Get(RGBA *tgt)
 {
+	const dword *offsets = this->offsets + itemsz * y;
 	if(y < 0 || offsets >= vert.End()) {
 		memset(tgt, 0, sizeof(RGBA) * tsz.cx);
 		return;
 	}
+	Get(y, tgt, offsets);
+	y++;
+}
+
+void RescaleImage::Get(int y, RGBA *tgt, const dword *offsets)
+{
+	DDUMP(*offsets);
 	offset += *offsets++;
 	ASSERT(offset >= 0 && offset + segspan <= size.cy);
+	DDUMP(segment);
 	if(bigseg) {
 		row_proc(&row_buffers[0 * cx4], GetLine(offset + 0 * step), horz);
 		row_proc(&row_buffers[1 * cx4], GetLine(offset + 1 * step), horz);
