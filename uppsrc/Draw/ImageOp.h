@@ -85,7 +85,7 @@ class RescaleImage {
 	int           cii;
 	const RGBA   *GetLine(int i);
 
-	void Get(int y, RGBA *tgt, const dword *offsets);
+	void Get(int y, RGBA *tgt);
 
 public:
 	void Create(Size sz, Raster& src, const Rect& src_rc);
