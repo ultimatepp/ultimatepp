@@ -90,7 +90,6 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 	map[MAP_STEP] = (span / segment) * times;
 	dword *out = map.Begin() + MAP_DATA;
 	int sendoffset = (smax - (segment - 1) * segstep - 1) * times;
-	int last = 0;
 
 	if(smax - smin == 1)
 	{
@@ -116,7 +115,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 //			DUMP(end);
 			if(pb >= send)
 			{
-				last += *out++ = sendoffset - last;
+				*out++ = sendoffset;
 				if(!bigseg)
 				{
 					int i = segment - 1;
@@ -129,7 +128,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 			{ // 1 source pixel only
 //				ASSERT(!bigseg);
 				int scomp = minmax(start + segment - smax, 0, start - smin);
-				last += *out++ = (start - scomp) * times - last;
+				*out++ = (start - scomp) * times;
 				if(!bigseg)
 				{
 					int i = scomp;
@@ -147,7 +146,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 				if(!delta)
 					start++;
 				int scomp = minmax(start + span - smax, 0, start - smin);
-				last += *out++ = (start - scomp) * times - last;
+				*out++ = (start - scomp) * times;
 				if(!bigseg)
 				{
 					int i = scomp;
@@ -192,13 +191,13 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 		{
 			if(spos <= sbegin)
 			{
-				last += out[0] = smin * times - last;
+				out[0] = smin * times;
 				out[1] = avail;
 				out[2] = 0;
 			}
 			else if(spos >= send)
 			{
-				last += out[0] = sendoffset - last;
+				out[0] = sendoffset;
 				out[1] = 0;
 				out[2] = avail;
 			}
@@ -206,32 +205,22 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 			{
 				int pos = spos / dw;
 				int rel = spos % dw;
-				last += out[0] = pos * times - last;
+				out[0] = pos * times;
 				out[1] = avail - (out[2] = curve[rel * COUNT_STRETCH_CURVE / dw]);
 			}
 			out += 3;
 		}
 	}
 
-#ifdef _DEBUG
-	ASSERT(out == map.End());
-	int offs = 0, step = map[MAP_BLOCK], segspan = (map[MAP_SEGMENT] - 1) * map[MAP_STEP] + 1;
-	for(int t = 0; t < (int)map[MAP_COUNT]; t++)
-	{
-		offs += map[MAP_DATA + t * step];
-		ASSERT(offs >= times * smin && offs + segspan <= times * smax);
-	}
-#endif
-
 	return map;
 }
 
-static void BltAAMapRGBA1(dword *dest, const RGBA *s, const dword *map)
+static void BltAAMapRGBA1(dword *dest, const RGBA *s0, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		s += map[0];
+		const RGBA *s = s0 + map[0];
 		dest[0] = s->b << 8;
 		dest[1] = s->g << 8;
 		dest[2] = s->r << 8;
@@ -241,12 +230,12 @@ static void BltAAMapRGBA1(dword *dest, const RGBA *s, const dword *map)
 	}
 }
 
-static void BltAAMapRGBA2(dword *dest, const RGBA *s, const dword *map)
+static void BltAAMapRGBA2(dword *dest, const RGBA *s0, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		s += map[0];
+		const RGBA *s = s0 + map[0];
 		dest[0] = s[0].b * map[1] + s[1].b * map[2];
 		dest[1] = s[0].g * map[1] + s[1].g * map[2];
 		dest[2] = s[0].r * map[1] + s[1].r * map[2];
@@ -257,12 +246,12 @@ static void BltAAMapRGBA2(dword *dest, const RGBA *s, const dword *map)
 }
 
 
-static void BltAAMapRGBA3(dword *dest, const RGBA *s, const dword *map)
+static void BltAAMapRGBA3(dword *dest, const RGBA *s0, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		s += map[0];
+		const RGBA *s = s0 + map[0];
 		dest[0] = s[0].b * map[1] + s[1].b * map[2] + s[2].b * map[3];
 		dest[1] = s[0].g * map[1] + s[1].g * map[2] + s[2].g * map[3];
 		dest[2] = s[0].r * map[1] + s[1].r * map[2] + s[2].r * map[3];
@@ -272,13 +261,13 @@ static void BltAAMapRGBA3(dword *dest, const RGBA *s, const dword *map)
 	}
 }
 
-static void BltAAMapRGBA4(dword *dest, const RGBA *s, const dword *map)
+static void BltAAMapRGBA4(dword *dest, const RGBA *s0, const dword *map)
 {
 	int step = map[MAP_STEP];
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		s += map[0];
+		const RGBA *s = s0 + map[0];
 		dest[0] = (s[0].b + s[step].b + s[2 * step].b + s[3 * step].b) << 6;
 		dest[1] = (s[0].g + s[step].g + s[2 * step].g + s[3 * step].g) << 6;
 		dest[2] = (s[0].r + s[step].r + s[2 * step].r + s[3 * step].r) << 6;
@@ -415,21 +404,18 @@ const RGBA *RescaleImage::GetLine(int ii)
 
 void RescaleImage::Get(RGBA *tgt)
 {
-	const dword *offsets = this->offsets + itemsz * y;
-	if(y < 0 || offsets >= vert.End()) {
+	Get(y++, tgt);
+}
+
+void RescaleImage::Get(int y, RGBA *tgt)
+{
+	const dword *map = offsets + itemsz * y;
+	if(y < 0 || map >= vert.End()) {
 		memset(tgt, 0, sizeof(RGBA) * tsz.cx);
 		return;
 	}
-	Get(y, tgt, offsets);
-	y++;
-}
-
-void RescaleImage::Get(int y, RGBA *tgt, const dword *offsets)
-{
-	DDUMP(*offsets);
-	offset += *offsets++;
+	offset = *map++;
 	ASSERT(offset >= 0 && offset + segspan <= size.cy);
-	DDUMP(segment);
 	if(bigseg) {
 		row_proc(&row_buffers[0 * cx4], GetLine(offset + 0 * step), horz);
 		row_proc(&row_buffers[1 * cx4], GetLine(offset + 1 * step), horz);
@@ -457,26 +443,26 @@ void RescaleImage::Get(int y, RGBA *tgt, const dword *offsets)
 		switch(segment) {
 		case 1:
 			BltAAFix2(tgt, &row_buffers[offset % segment * cx4], tsz.cx);
-			offsets++;
+			map++;
 			break;
 		case 2:
-			if(offsets[0] == 0)
+			if(map[0] == 0)
 				BltAAFix2(tgt, &row_buffers[(offset + 1) % segment * cx4], tsz.cx);
 			else
-			if(offsets[1] == 0)
+			if(map[1] == 0)
 				BltAAFix2(tgt, &row_buffers[offset % segment * cx4], tsz.cx);
 			else
-				BltAASet2Fix(tgt, &row_buffers[(offset + 0) % segment * cx4], offsets[0],
-					              &row_buffers[(offset + 1) % segment * cx4], offsets[1],
+				BltAASet2Fix(tgt, &row_buffers[(offset + 0) % segment * cx4], map[0],
+					              &row_buffers[(offset + 1) % segment * cx4], map[1],
 					         tsz.cx);
-			offsets += 2;
+			map += 2;
 			break;
 		case 3:
 			BltAASet3Fix(tgt,
-			             &row_buffers[(offset + 0) % segment * cx4], offsets[0],
-			             &row_buffers[(offset + 1) % segment * cx4], offsets[1],
-			             &row_buffers[(offset + 2) % segment * cx4], offsets[2], tsz.cx);
-			offsets += 3;
+			             &row_buffers[(offset + 0) % segment * cx4], map[0],
+			             &row_buffers[(offset + 1) % segment * cx4], map[1],
+			             &row_buffers[(offset + 2) % segment * cx4], map[2], tsz.cx);
+			map += 3;
 			break;
 		default:
 			NEVER();
