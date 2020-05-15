@@ -6,6 +6,8 @@ dword qqq;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	String s;
 	for(int i = 0; i < 1000000; i++)
 		s.Cat(i);
