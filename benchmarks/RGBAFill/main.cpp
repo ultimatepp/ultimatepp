@@ -2,6 +2,20 @@
 
 using namespace Upp;
 
+void CoFill(RGBA *t, RGBA c, int len)
+{
+	const int CHUNK = 1024;
+	std::atomic<int> ii(0);
+	CoDo([&] {
+		for(;;) {
+			int pos = CHUNK * ii++;
+			if(pos >= len)
+				break;
+			Fill(t + pos, c, min(CHUNK, len - pos));
+		}
+	});
+}
+
 GUI_APP_MAIN
 {
 	Color c = Red();
@@ -18,6 +32,10 @@ GUI_APP_MAIN
 		{
 			RTIMING("Fill");
 			Fill(b, c, len);
+		}
+		{
+			RTIMING("CoFill");
+			CoFill(b, c, len);
 		}
 	}
 }
