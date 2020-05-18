@@ -28,7 +28,6 @@ force_inline
 static uint64 sNext(uint64 *s)
 {
 	const uint64_t result_starstar = s_rotl(s[1] * 5, 7) * 9;
-
 	const uint64_t t = s[1] << 17;
 
 	s[2] ^= s[0];
@@ -57,14 +56,16 @@ static void sSeed(uint64 *s)
 #else
 	for(int pass = 0; pass < 4; pass++) {
 		for(int i = 0; i < 4; i++) {
-			CombineHash h;
-			h << GetSysTime().Get() << usecs() << msecs();
-			for(int p = 0; p < 2; p++) {
-				Uuid uuid;
-				CoCreateGuid((GUID *)&uuid); // GUID is basically a random number...
-				h << uuid.v[0] << uuid.v[1];
+			CombineHash h[2];
+			for(int j = 0; j < 2; j++) {
+				h[j] << GetSysTime().Get() << usecs() << msecs() << j << pass << i;
+				for(int p = 0; p < 2; p++) {
+					Uuid uuid;
+					CoCreateGuid((GUID *)&uuid); // GUID is basically a random number...
+					h[j] << uuid.v[0] << uuid.v[1];
+				}
 			}
-			s[i] ^= h;
+			s[i] ^= MAKEQWORD(h[0], h[1]);
 		}
 	}
 #endif
