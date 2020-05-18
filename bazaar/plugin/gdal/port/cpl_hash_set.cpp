@@ -379,7 +379,11 @@ int CPLHashSetRemove(CPLHashSet* set, const void* elt)
 
 unsigned long CPLHashSetHashPointer(const void* elt)
 {
+#ifdef PLATFORM_POSIX
+    return (unsigned long)(GUIntBig) elt;
+#else
     return (unsigned long)(GUIntBig) (uintptr_t)elt;
+#endif
 }
 
 /************************************************************************/
