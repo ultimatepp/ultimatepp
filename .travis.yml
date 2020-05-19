@@ -16,10 +16,11 @@ matrix:
       osx_image: xcode11.4
 
 install:
-  - if [ "$TRAVIS_OS_NAME" = "linux " ] ; then
-  -   sudo apt-get update
-  -   sudo apt-get -y install libgtk-3-dev libnotify-dev libbz2-dev libssl-dev
-  - fi
+  - |
+    if [ "$TRAVIS_OS_NAME" = "linux " ] ; then
+      sudo apt-get update
+      sudo apt-get -y install libgtk-3-dev libnotify-dev libbz2-dev libssl-dev
+    fi
 
 script:
   make -j$(nproc)
