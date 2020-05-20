@@ -183,11 +183,13 @@ void PaintLion(Painter& sw)
 	for(int i = 0; i < l.GetCount(); i++) {
 		Vector<Pointf>& p = l[i].point;
 		sw.Move(p[0]);
-		for(int j = 1; j < p.GetCount(); j++) {
-//			RTIMING("Line");
+		for(int j = 1; j < p.GetCount(); j++)
 			sw.Line(p[j]);
-		}
-//		sw.Stroke(2, l[i].color);
 		sw.Fill(l[i].color);
 	}
+}
+
+void PaintLionLarge(Painter& sw) {
+	sw.Scale(3);
+	PaintLion(sw);
 }

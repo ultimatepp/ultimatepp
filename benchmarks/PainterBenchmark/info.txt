@@ -1,0 +1,36 @@
+NEW:
+
+PaintLionLarge 1K: 0.803 ms
+PaintLionLarge 1K Co: 0.222 ms
+PaintLionLarge 1K PreClip: 0.809 ms
+PaintLionLarge 1K PreClip Co: 0.214 ms
+PaintLionLarge 1K Cleared: 0.820 ms
+PaintLionLarge 1K Cleared Co: 0.287 ms
+PaintLionLarge 1K Cleared PreClip: 0.813 ms
+PaintLionLarge 1K Cleared PreClip Co: 0.278 ms
+PaintLionLarge 4K: 1.916 ms
+PaintLionLarge 4K Co: 0.370 ms
+PaintLionLarge 4K PreClip: 1.894 ms
+PaintLionLarge 4K PreClip Co: 0.406 ms
+PaintLionLarge 4K Cleared: 2.793 ms
+PaintLionLarge 4K Cleared Co: 1.094 ms
+PaintLionLarge 4K Cleared PreClip: 2.762 ms
+PaintLionLarge 4K Cleared PreClip Co: 1.048 ms
+
+OLD:
+PaintLionLarge 1K: 0.825 ms
+PaintLionLarge 1K Co: 0.232 ms
+PaintLionLarge 1K PreClip: 0.845 ms
+PaintLionLarge 1K PreClip Co: 0.211 ms
+PaintLionLarge 1K Cleared: 0.850 ms
+PaintLionLarge 1K Cleared Co: 0.296 ms
+PaintLionLarge 1K Cleared PreClip: 0.833 ms
+PaintLionLarge 1K Cleared PreClip Co: 0.290 ms
+PaintLionLarge 4K: 2.008 ms
+PaintLionLarge 4K Co: 0.408 ms
+PaintLionLarge 4K PreClip: 2.024 ms
+PaintLionLarge 4K PreClip Co: 0.383 ms
+PaintLionLarge 4K Cleared: 2.717 ms
+PaintLionLarge 4K Cleared Co: 1.087 ms
+PaintLionLarge 4K Cleared PreClip: 2.778 ms
+PaintLionLarge 4K Cleared PreClip Co: 0.965 ms
