@@ -11,6 +11,7 @@ file
 	Clipping.cpp,
 	PolyPolygon.cpp,
 	TextOnPath.cpp,
+	TextRotated.cpp,
 	SomeRocks.cpp,
 	main.cpp,
 	info.txt;

@@ -1,7 +1,7 @@
 #include "LionBenchmark.h"
 
 #define IMAGECLASS TestImg
-#define IMAGEFILE <LionBenchmark/test.iml>
+#define IMAGEFILE <PainterBenchmark/test.iml>
 #include <Draw/iml_source.h>
 
 void Demo(Painter& sw)
