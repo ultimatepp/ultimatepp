@@ -250,11 +250,7 @@ force_inline void fast_copy128(void *t, const void *s)
 	tt[3] = ss[3];
 }
 
-#if defined(CPU_UNALIGNED) && defined(CPU_LE) && (defined(COMPILER_MSC) || defined(COMPILER_GCC))
-#define FAST_STRING_COMPARE
-#endif
-
-#ifdef FAST_STRING_COMPARE
+#if defined(CPU_UNALIGNED) && defined(CPU_LE)
 force_inline
 int fast_memcmp(const char *a, const char *b, size_t len)
 {
@@ -345,3 +341,81 @@ inline bool FitsInInt64(double x)
 {
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
+
+#ifdef CPU_X86
+
+#include <smmintrin.h>
+
+void huge_memsetd(void *p, dword data, int len);
+
+inline
+void memsetd(void *p, dword data, int len)
+{
+	dword *t = (dword *)p;
+	if(len < 4) {
+		if(len & 2) {
+			t[0] = t[1] = data;
+			t += 2;
+		}
+		if(len & 1)
+			t[0] = data;
+		return;
+	}
+
+	__m128i val4 = _mm_set1_epi32(data);
+	auto Set4 = [&](int at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
+
+	Set4(len - 4); // fill tail
+	if(len >= 32) {
+		if(len >= 1024*1024) { // for really huge data, bypass the cache
+			huge_memsetd(t, data, len);
+			return;
+		}
+		const dword *e = t + len - 32;
+		do {
+			Set4(0); Set4(4); Set4(8); Set4(12);
+			Set4(16); Set4(20); Set4(24); Set4(28);
+			t += 32;
+		}
+		while(t <= e);
+	}
+	if(len & 16) {
+		Set4(0); Set4(4); Set4(8); Set4(12);
+		t += 16;
+	}
+	if(len & 8) {
+		Set4(0); Set4(4);
+		t += 8;
+	}
+	if(len & 4)
+		Set4(0);
+}
+#else
+inline
+void memsetd(void *p, RGBA c, int len)
+{
+	dword *t = (dword *)p;
+	while(len >= 16) {
+		t[0] = c; t[1] = c; t[2] = c; t[3] = c;
+		t[4] = c; t[5] = c; t[6] = c; t[7] = c;
+		t[8] = c; t[9] = c; t[10] = c; t[11] = c;
+		t[12] = c; t[13] = c; t[14] = c; t[15] = c;
+		t += 16;
+		len -= 16;
+	}
+	if(len & 8) {
+		t[0] = t[1] = t[2] = t[3] = t[4] = t[5] = t[6] = t[7] = c;
+		t += 8;
+	}
+	if(len & 4) {
+		t[0] = t[1] = t[2] = t[3] = c;
+		t += 4;
+	}
+	if(len & 2) {
+		t[0] = t[1] = c;
+		t += 2;
+	}
+	if(len & 1)
+		t[0] = c;
+}
+#endif

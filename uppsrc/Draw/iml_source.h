@@ -15,7 +15,6 @@
 #define IMAGE_PACKED(n, d) };
 #define IMAGE_DATA_BEGIN
 
-
 #include IMAGEFILE
 
 #undef  IMAGE_BEGIN
