@@ -20,7 +20,7 @@ inline bool operator!=(const RGBA& a, const RGBA& b)
 
 inline RGBA RGBAZero() { RGBA c; c.r = c.g = c.b = c.a = 0; return c; }
 
-void Fill(RGBA *t, RGBA c, int n);
+inline void Fill(RGBA *t, RGBA c, int n) { memsetd(t, *(dword *)&c, n); }
 
 void Copy(RGBA *t, const RGBA *s, int n);
 

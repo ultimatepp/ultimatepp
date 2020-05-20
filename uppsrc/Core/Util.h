@@ -197,15 +197,6 @@ void memsetw(void *t, word value, int count)
 }
 
 inline
-void memsetd(void *t, dword value, int count)
-{
-	dword *w = (dword *)t;
-	dword *lim = w + count;
-	while(w < lim)
-		*w++ = value;
-}
-
-inline
 void memsetex(void *t, const void *item, int item_size, int count) {
 	ASSERT(count >= 0);
 	byte *q = (byte *)t;
