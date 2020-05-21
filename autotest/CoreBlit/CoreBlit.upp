@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	CoreBlit.cpp;
+
+mainconfig
+	"" = "";
+
