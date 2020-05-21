@@ -229,7 +229,7 @@ void svo_memset(void *p, byte val, size_t len)
 		return;
 	}
 	byte *t = (byte *)p;
-	while(len & 16) {
+	if(len & 16) {
 		t[0] = val; t[1] = val; t[2] = val; t[3] = val;
 		t[4] = val; t[5] = val; t[6] = val; t[7] = val;
 		t[8] = val; t[9] = val; t[10] = val; t[11] = val;
