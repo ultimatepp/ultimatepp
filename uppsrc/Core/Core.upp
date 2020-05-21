@@ -30,6 +30,7 @@ file
 	config.h,
 	Defs.h,
 	Ops.h,
+	Blit.h,
 	Cpu.cpp,
 	Atomic.h,
 	Mt.h,

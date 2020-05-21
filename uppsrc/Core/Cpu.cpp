@@ -150,7 +150,7 @@ void EndianSwap(int64 *v, size_t count) ENDIAN_SWAP
 void EndianSwap(uint64 *v, size_t count) ENDIAN_SWAP
 
 #ifdef CPU_X86
-void huge_memsetd(void *p, dword c, int len)
+void huge_memsetd(void *p, dword c, size_t len)
 { // bypasses the cache, good for >4MB
 	dword *t = (dword *)p;
 	if(((uintptr_t)t & 3) == 0 && len > 64) {
@@ -161,10 +161,7 @@ void huge_memsetd(void *p, dword c, int len)
 			len--;
 		}
 		while(len >= 16) {
-			Set4S(0);
-			Set4S(4);
-			Set4S(8);
-			Set4S(12);
+			Set4S(0); Set4S(4); Set4S(8); Set4S(12);
 			t += 16;
 			len -= 16;
 		}
@@ -172,6 +169,28 @@ void huge_memsetd(void *p, dword c, int len)
 	}
 	while(len--)
 		*t++ = c;
+}
+#endif
+
+#ifdef CPU_UNALIGNED
+never_inline
+void svo_memset_l(byte *t, dword val4, size_t len)
+{
+	const byte *e = t + len;
+	t = (byte *)(((uintptr_t)t | 3) + 1);
+	len = e - t;
+	memsetd(t, val4, len >> 2);
+}
+
+never_inline
+void svo_memcpy_l(byte *t, byte *s, size_t len)
+{
+	const byte *e = t + len;
+	byte *t2 = (byte *)(((uintptr_t)t | 3) + 1);
+	s += t2 - t;
+	t = t2;
+	len = e - t;
+	memcpyd((dword *)t, (dword *)s, len >> 2);
 }
 #endif
 

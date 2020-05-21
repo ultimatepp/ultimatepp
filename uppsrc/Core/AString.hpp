@@ -290,7 +290,7 @@ void String0::Set(const char *s, int len)
 {
 	Clear();
 	if(len < 14) {
-		SVO_MEMCPY(chr, s, len);
+		svo_memcpy(chr, s, len);
 		SLen() = len;
 		Dsyn();
 		return;
