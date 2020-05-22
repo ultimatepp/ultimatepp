@@ -80,6 +80,70 @@ void memcpyd(dword *t, const dword *s, size_t len)
 		Copy4(0);
 }
 
+void memcpyq_l(qword *t, const qword *s, size_t len);
+
+inline
+void memcpyq(qword *t, const qword *s, size_t len)
+{
+	if(len <= 2) {
+		if(len) {
+			if(len > 1) {
+				*(int64 *)t = *(int64 *)s;
+				*(int64 *)(t + len - 1) = *(int64 *)(s + len - 1);
+				return;
+			}
+			*t = *s;
+		}
+		return;
+	}
+
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+
+	Copy4(len - 2); // copy tail
+	if(len >= 8) {
+		memcpyq_l(t, s, len);
+		return;
+	}
+	if(len & 4) {
+		Copy4(0); Copy4(2);
+		t += 4;
+		s += 4;
+	}
+	if(len & 2)
+		Copy4(0);
+}
+
+struct dqword {
+	qword a, b;
+};
+
+static_assert(sizeof(dqword) == 16, "dqword sizeof");
+
+void memcpydq_l(dqword *t, const dqword *s, size_t len);
+
+inline
+void memcpydq(dqword *t, const dqword *s, size_t len)
+{
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+
+	if(len >= 8) {
+		memcpydq_l(t, s, len);
+		return;
+	}
+	if(len & 4) {
+		Copy4(0); Copy4(1); Copy4(2); Copy4(3);
+		t += 4;
+		s += 4;
+	}
+	if(len & 2) {
+		Copy4(0); Copy4(1);
+		t += 2;
+		s += 2;
+	}
+	if(len & 1)
+		Copy4(0);
+}
+
 #else
 inline
 void memsetd(void *p, dword c, size_t len)
@@ -261,6 +325,12 @@ void svo_memcpy(void *p, const void *q, size_t len)
 template <class T>
 void memcpy_t(T *t, const T *s, size_t count)
 {
+	if((sizeof(T) & 15) == 0)
+		memcpydq((dqword *)t, (const dqword *)s, count * (sizeof(T) >> 4));
+	else
+	if((sizeof(T) & 7) == 0)
+		memcpyq((qword *)t, (const qword *)s, count * (sizeof(T) >> 3));
+	else
 	if((sizeof(T) & 3) == 0)
 		memcpyd((dword *)t, (const dword *)s, count * (sizeof(T) >> 2));
 	else

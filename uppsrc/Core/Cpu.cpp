@@ -235,6 +235,64 @@ void memcpyd_l(dword *t, const dword *s, size_t len)
 	if(len & 4)
 		Copy4(0);
 }
+
+void memcpyq_l(qword *t, const qword *s, size_t len)
+{
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+
+	if(len >= 512*1024) { // for really huge data, call memcpy to bypass the cache
+		memcpy(t, s, 8 * len);
+		return;
+	}
+	Copy4(0); // align target data up on next 16 bytes boundary
+	const qword *e = t + len;
+	qword *t1 = (qword *)(((uintptr_t)t | 15) + 1);
+	s += t1 - t;
+	t = t1;
+	len = e - t;
+	e -= 8;
+	while(t <= e) {
+		Copy4(0); Copy4(2); Copy4(4); Copy4(6);
+		t += 8;
+		s += 8;
+	}
+	if(len & 4) {
+		Copy4(0); Copy4(2);
+		t += 4;
+		s += 4;
+	}
+	if(len & 2)
+		Copy4(0);
+}
+
+void memcpydq_l(dqword *t, const dqword *s, size_t len)
+{
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+
+	if(len >= 256*1024) { // for really huge data, call memcpy to bypass the cache
+		memcpy(t, s, 16 * len);
+		return;
+	}
+	Copy4(0); // align target data up on next 16 bytes boundary
+	const dqword *e = t + len;
+	dqword *t1 = (dqword *)(((uintptr_t)t | 15) + 1);
+	s += t1 - t;
+	t = t1;
+	len = e - t;
+	e -= 4;
+	while(t <= e) {
+		Copy4(0); Copy4(1); Copy4(2); Copy4(3);
+		t += 4;
+		s += 4;
+	}
+	if(len & 2) {
+		Copy4(0); Copy4(1);
+		t += 2;
+		s += 2;
+	}
+	if(len & 1)
+		Copy4(0);
+}
 #endif
 
 #ifdef CPU_UNALIGNED
