@@ -1,8 +1,9 @@
 #ifdef CPU_X86
 
-#include <smmintrin.h>
+#include <emmintrin.h>
 
 void huge_memsetd(void *p, dword data, size_t len);
+void memsetd_l(dword *t, dword data, size_t len);
 
 inline
 void memsetd(void *p, dword data, size_t len)
@@ -18,25 +19,14 @@ void memsetd(void *p, dword data, size_t len)
 		return;
 	}
 
-	__m128i val4 = _mm_set1_epi32(data);
-	auto Set4 = [&](int at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
-
-	Set4(len - 4); // fill tail
 	if(len >= 16) {
-		Set4(0); // align up on next 16 bytes boundary
-		const dword *e = t + len;
-		t = (dword *)(((uintptr_t)t | 15) + 1);
-		len = e - t;
-		e -= 16;
-		if(len >= 1024*1024) { // for really huge data, bypass the cache
-			huge_memsetd(t, data, len);
-			return;
-		}
-		while(t <= e) {
-			Set4(0); Set4(4); Set4(8); Set4(12);
-			t += 16;
-		}
+		memsetd_l(t, data, len);
+		return;
 	}
+
+	__m128i val4 = _mm_set1_epi32(data);
+	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
+	Set4(len - 4); // fill tail
 	if(len & 8) {
 		Set4(0); Set4(4);
 		t += 8;
@@ -44,6 +34,8 @@ void memsetd(void *p, dword data, size_t len)
 	if(len & 4)
 		Set4(0);
 }
+
+void memcpyd_l(dword *t, const dword *s, size_t len);
 
 inline
 void memcpyd(dword *t, const dword *s, size_t len)
@@ -75,10 +67,12 @@ void memcpyd(dword *t, const dword *s, size_t len)
 	}
 #endif
 
-	auto Copy4 = [&](int at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
 
 	Copy4(len - 4); // copy tail
 	if(len >= 16) {
+		memcpyd_l(t, s, len);
+	#if 0
 		Copy4(0); // align target data up on next 16 bytes boundary
 		const dword *e = t + len;
 		dword *t1 = (dword *)(((uintptr_t)t | 15) + 1);
@@ -95,6 +89,7 @@ void memcpyd(dword *t, const dword *s, size_t len)
 			t += 16;
 			s += 16;
 		}
+	#endif
 	}
 	if(len & 8) {
 		Copy4(0); Copy4(4);
