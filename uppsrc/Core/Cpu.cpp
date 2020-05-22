@@ -170,6 +170,68 @@ void huge_memsetd(void *p, dword c, size_t len)
 	while(len--)
 		*t++ = c;
 }
+
+void memsetd_l(dword *t, dword data, size_t len)
+{
+	__m128i val4 = _mm_set1_epi32(data);
+	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
+	Set4(len - 4); // fill tail
+	if(len >= 32) {
+		if(len >= 1024*1024) { // for really huge data, bypass the cache
+			huge_memsetd(t, data, len);
+			return;
+		}
+		Set4(0); // align up on 16 bytes boundary
+		const dword *e = t + len;
+		t = (dword *)(((uintptr_t)t | 15) + 1);
+		len = e - t;
+		e -= 32;
+		while(t <= e) {
+			Set4(0); Set4(4); Set4(8); Set4(12);
+			Set4(16); Set4(20); Set4(24); Set4(28);
+			t += 32;
+		}
+	}
+	if(len & 16) {
+		Set4(0); Set4(4); Set4(8); Set4(12);
+		t += 16;
+	}
+	if(len & 8) {
+		Set4(0); Set4(4);
+		t += 8;
+	}
+	if(len & 4)
+		Set4(0);
+}
+
+void memcpyd_l(dword *t, const dword *s, size_t len)
+{
+	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+
+	Copy4(0); // align target data up on next 16 bytes boundary
+	const dword *e = t + len;
+	dword *t1 = (dword *)(((uintptr_t)t | 15) + 1);
+	s += t1 - t;
+	t = t1;
+	len = e - t;
+	e -= 16;
+	if(len >= 1024*1024) { // for really huge data, call memcpy to bypass the cache
+		memcpy(t, s, 4 * len);
+		return;
+	}
+	while(t <= e) {
+		Copy4(0); Copy4(4); Copy4(8); Copy4(12);
+		t += 16;
+		s += 16;
+	}
+	if(len & 8) {
+		Copy4(0); Copy4(4);
+		t += 8;
+		s += 8;
+	}
+	if(len & 4)
+		Copy4(0);
+}
 #endif
 
 #ifdef CPU_UNALIGNED
