@@ -61,6 +61,10 @@
 #include <math.h>
 #include <ctype.h>
 
+#ifdef CPU_X86
+#include <immintrin.h>
+#endif
+
 #if defined(PLATFORM_POSIX)
 	#ifndef __USE_FILE_OFFSET64
 		#define __USE_FILE_OFFSET64

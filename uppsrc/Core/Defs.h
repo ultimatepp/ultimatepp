@@ -479,6 +479,7 @@ bool CpuSSE();
 bool CpuSSE2();
 bool CpuSSE3();
 bool CpuHypervisor();
+bool CpuAVX();
 #endif
 
 int  CPU_Cores();
