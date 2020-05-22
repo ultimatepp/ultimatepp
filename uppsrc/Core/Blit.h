@@ -1,7 +1,4 @@
 #ifdef CPU_X86
-
-#include <emmintrin.h>
-
 void huge_memsetd(void *p, dword data, size_t len);
 void memsetd_l(dword *t, dword data, size_t len);
 

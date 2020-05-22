@@ -14,6 +14,7 @@ static bool sHasMMX;
 static bool sHasSSE;
 static bool sHasSSE2;
 static bool sHasSSE3;
+static bool sHasAVX;
 static bool sHypervisor;
 
 static void sCheckCPU()
@@ -38,6 +39,7 @@ static void sCheckCPU()
 		sHasSSE = edx & (1 << 25);
 		sHasSSE2 = edx & (1 << 26);
 		sHasSSE3 = ecx & 1;
+		sHasAVX = ecx & (1 << 28);
 		sHypervisor = ecx & (1 << 31);
 	}
 }
@@ -50,6 +52,7 @@ bool CpuMMX()        { sCheckCPU(); return sHasMMX; }
 bool CpuSSE()        { sCheckCPU(); return sHasSSE; }
 bool CpuSSE2()       { sCheckCPU(); return sHasSSE2; }
 bool CpuSSE3()       { sCheckCPU(); return sHasSSE3; }
+bool CpuAVX()        { sCheckCPU(); return sHasAVX; }
 bool CpuHypervisor() { sCheckCPU(); return sHypervisor; }
 
 #ifdef PLATFORM_POSIX
