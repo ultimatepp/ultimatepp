@@ -51,18 +51,18 @@ wchar *WString0::Insert(int pos, int count, const wchar *s)
 		length = newlen;
 		ptr[newlen] = 0;
 		if(s)
-			memcpy(ptr + pos, s, count * sizeof(wchar));
+			memcpy_t(ptr + pos, s, count);
 		Dsyn();
 		return ptr + pos;
 	}
 	int all = max(length >= int((int64)2 * INT_MAX / 3) ? INT_MAX : length + (length >> 1), newlen);
 	wchar *p = Alloc(all);
 	if(pos > 0)
-		memcpy(p, ptr, pos * sizeof(wchar));
+		memcpy_t(p, ptr, pos);
 	if(pos < length)
-		memcpy(p + pos + count, ptr + pos, (length - pos) * sizeof(wchar));
+		memcpy_t(p + pos + count, ptr + pos, length - pos);
 	if(s)
-		memcpy(p + pos, s, count * sizeof(wchar));
+		memcpy_t(p + pos, s, count);
 	ASSERT(pos + count <= all);
 	p[newlen] = 0;
 	Free();
@@ -112,7 +112,7 @@ void WString0::Cat(const wchar *s, int l)
 	if(length + l >= alloc || IsShared())
 		Insert(length, l, s);
 	else {
-		memcpy(ptr + length, s, l * sizeof(wchar));
+		memcpy_t(ptr + length, s, l);
 		ptr[length += l] = 0;
 	}
 	Dsyn();
@@ -132,7 +132,7 @@ void WString0::LCat(int c)
 void WString0::Set0(const wchar *s, int l)
 {
 	alloc = length = l;
-	memcpy(ptr = Alloc(alloc), s, l * sizeof(wchar));
+	memcpy_t(ptr = Alloc(alloc), s, l);
 	ptr[l] = 0;
 	Dsyn();
 }
@@ -142,7 +142,7 @@ void WString0::UnShare()
 	if(!IsShared()) return;
 	int al = length;
 	wchar *p = Alloc(al);
-	memcpy(p, ptr, (length + 1) * sizeof(wchar));
+	memcpy_t(p, ptr, length + 1);
 	Free();
 	ptr = p;
 	alloc = al;
@@ -316,11 +316,11 @@ void WStringBuffer::Expand(dword n, const wchar *cat, int l)
 	if(n > INT_MAX)
 		n = INT_MAX;
 	wchar *p = Alloc(n, al);
-	memcpy(p, pbegin, GetLength() * sizeof(wchar));
+	memcpy_t(p, pbegin, GetLength());
 	if(cat) {
 		if(ep + l > INT_MAX)
 			Panic("WStringBuffer is too big!");
-		memcpy(p + ep, cat, l * sizeof(wchar));
+		memcpy_t(p + ep, cat, l);
 		ep += l;
 	}
 	Free();
@@ -348,7 +348,7 @@ void WStringBuffer::Cat(const wchar *s, int l)
 	if(pend + l > limit)
 		Expand(max(GetLength(), l) + GetLength(), s, l);
 	else {
-		memcpy(pend, s, l * sizeof(wchar));
+		memcpy_t(pend, s, l);
 		pend += l;
 	}
 }

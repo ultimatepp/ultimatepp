@@ -77,7 +77,7 @@ void ImageBuffer::DeepCopy(const ImageBuffer& img)
 {
 	Create(img.GetSize());
 	CopyAttrs(img);
-	memcpy(pixels, img.pixels, GetLength() * sizeof(RGBA));
+	memcpy_t(~pixels, ~img.pixels, GetLength());
 }
 
 void ImageBuffer::Set(Image& img)

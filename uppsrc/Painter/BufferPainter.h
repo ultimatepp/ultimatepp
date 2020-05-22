@@ -8,7 +8,7 @@ class ClippingLine : NoCopy {
 	
 public:
 	void Clear()                         { if(!IsFull()) MemoryFree(data); data = NULL; }
-	void Set(const byte *s, int len)     { data = (byte *)MemoryAlloc(len); memcpy(data, s, len); }
+	void Set(const byte *s, int len)     { data = (byte *)MemoryAlloc(len); svo_memcpy(data, s, len); }
 	void SetFull()                       { ASSERT(!data); data = (byte *)1; }
 
 	bool IsEmpty() const                 { return !data; }

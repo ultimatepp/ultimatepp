@@ -411,7 +411,7 @@ void RescaleImage::Get(int y, RGBA *tgt)
 {
 	const dword *map = offsets + itemsz * y;
 	if(y < 0 || map >= vert.End()) {
-		memset(tgt, 0, sizeof(RGBA) * tsz.cx);
+		Fill(tgt, RGBAZero(), tsz.cx);
 		return;
 	}
 	offset = *map++;

@@ -28,7 +28,7 @@ BitmapInfo32__::BitmapInfo32__(int cx, int cy)
 {
 	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
 	BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
-	memset(hi, 0, sizeof(BITMAPINFOHEADER));
+	svo_memset(hi, 0, sizeof(BITMAPINFOHEADER));
 	hi->biSize = sizeof(BITMAPINFOHEADER);
 	hi->biPlanes = 1;
 #ifdef PLATFORM_WINCE
@@ -53,7 +53,7 @@ HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 {
 	LTIMING("CreateBitMask");
 	GuiLock __;
-	memset(ct, 0, tsz.cx * tsz.cy * sizeof(RGBA));
+	Fill(ct, RGBAZero(), tsz.cx * tsz.cy);
 	int linelen = (tsz.cx + 15) >> 4 << 1;
 	Buffer<byte>  mask(tsz.cy * linelen, 0xff);
 	byte *m = mask;
@@ -578,7 +578,7 @@ HICON SystemDraw::IconWin32(const Image& img, bool cursor)
 		HDC dcMem = ::CreateCompatibleDC(NULL);
 		iconinfo.hbmColor = ::CreateDIBSection(dcMem, bi, DIB_RGB_COLORS, (void **)&pixels, NULL, 0);
 		iconinfo.hbmMask = ::CreateBitmap(tsz.cx, tsz.cy, 1, 1, NULL);
-		memset(pixels, 0, tsz.cx * tsz.cy * sizeof(RGBA));
+		Fill(pixels, RGBAZero(), tsz.cx * tsz.cy);
 		for(int y = 0; y < csz.cy; y++)
 			memcpy(pixels + y * tsz.cx, img[y], csz.cx * sizeof(RGBA));
 		::DeleteDC(dcMem);

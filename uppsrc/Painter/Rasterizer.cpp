@@ -89,9 +89,9 @@ Rasterizer::Cell *Rasterizer::AddCells(int y, int n)
 		size_t sz = sizeof(Cell) * (a.alloc + (a.alloc >> 1) + n);
 		Cell *cells = (Cell *)MemoryAllocSz(sz);
 		if(a.alloc == SVO_ALLOC)
-			memcpy(cells, a.svo, a.count * sizeof(Cell));
+			memcpy_t(cells, a.svo, a.count);
 		else {
-			memcpy(cells, a.ptr, a.count * sizeof(Cell));
+			memcpy_t(cells, a.ptr, a.count);
 			MemoryFree(a.ptr);
 		}
 		a.ptr = cells;

@@ -201,7 +201,7 @@ void memsetex(void *t, const void *item, int item_size, int count) {
 	ASSERT(count >= 0);
 	byte *q = (byte *)t;
 	while(count--) {
-		memcpy(q, item, item_size);
+		svo_memcpy(q, item, item_size);
 		q += item_size;
 	}
 }

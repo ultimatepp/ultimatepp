@@ -27,7 +27,7 @@ const byte *UnpackRLE(RGBA *t, const byte *s, int len)
 				s += 3;
 			}
 			count = min<int>(count, (int)(e - t));
-			memsetex(t, &h, sizeof(RGBA), count);
+			Fill(t, h, count);
 			t += count;
 		}
 		else {

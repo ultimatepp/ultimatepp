@@ -114,7 +114,7 @@ Image Raster::GetImage(int x, int y, int cx, int cy, const Gate<int, int> progre
 	while(y < yy) {
 		if(progress(y - y0, yy - y0))
 			return Null;
-		memcpy(t, ~GetLine(y) + x, cx * sizeof(RGBA));
+		memcpy_t(t, ~GetLine(y) + x, cx);
 		t += cx;
 		y++;
 	}
@@ -169,14 +169,14 @@ void MemoryRaster::Load(Raster& raster)
 	size = raster.GetSize();
 	palette.SetCount(raster.GetPaletteCount());
 	if(!palette.IsEmpty())
-		memcpy(palette, raster.GetPalette(), palette.GetCount() * sizeof(RGBA));
+		memcpy_t(palette.begin(), raster.GetPalette(), palette.GetCount());
 	lines.SetCount(size.cy);
 	if(const RasterFormat *fmt = raster.GetFormat()) {
 		format = *fmt;
 		int rowbytes = format.GetByteCount(size.cx);
 		for(int i = 0; i < size.cy; i++) {
 			lines[i].Alloc(rowbytes);
-			memcpy(~lines[i], raster.GetLine(i).GetRawData(), rowbytes);
+			memcpy_t(~lines[i], raster.GetLine(i).GetRawData(), rowbytes);
 		}
 	}
 	else {
@@ -184,7 +184,7 @@ void MemoryRaster::Load(Raster& raster)
 		int rowbytes = sizeof(RGBA) * size.cx;
 		for(int i = 0; i < size.cy; i++) {
 			lines[i].Alloc(rowbytes);
-			memcpy(~lines[i], raster.GetLine(i).GetRGBA(), rowbytes);
+			memcpy_t((RGBA *)~lines[i], raster.GetLine(i).GetRGBA(), rowbytes);
 		}
 	}
 }
