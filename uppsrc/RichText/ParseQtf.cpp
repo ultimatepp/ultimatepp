@@ -723,7 +723,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 					case 'n': format.before_number = GetText(';'); break;
 					case 'm': format.after_number = GetText(';'); break;
 					case 'N': {
-						memset(format.number, 0, sizeof(format.number));
+						svo_memset(format.number, 0, sizeof(format.number));
 						format.reset_number = false;
 						int i = 0;
 						while(i < 8) {

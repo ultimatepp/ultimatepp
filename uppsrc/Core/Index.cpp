@@ -29,13 +29,13 @@ void IndexCommon::Pick(IndexCommon& b)
 
 void IndexCommon::Copy(const IndexCommon& b, int count)
 {
-	memcpy(hash, b.hash, sizeof(Hash) * count);
+	memcpy_t(hash, b.hash, count);
 	mask = b.mask;
 	unlinked = b.unlinked;
 
 	FreeMap();
 	map = (int *)MemoryAlloc((mask + 1) * sizeof(int));
-	memcpy(map, b.map, (mask + 1) * sizeof(int));
+	memcpy_t(map, b.map, mask + 1);
 }
 
 void IndexCommon::Swap(IndexCommon& b)

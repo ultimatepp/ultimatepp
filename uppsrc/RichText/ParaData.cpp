@@ -123,7 +123,7 @@ void   RichPara::Number::Next(const RichPara::NumberFormat& fmt)
 
 RichPara::Number::Number()
 {
-	memset(n, 0, sizeof(n));
+	svo_memset(n, 0, sizeof(n));
 }
 
 bool RichPara::NumberFormat::IsNumbered() const
@@ -174,7 +174,7 @@ RichPara::Format::Format()
 	bullet = 0;
 	keep = newpage = keepnext = orphan = newhdrftr = false;
 	tabsize = 296;
-	memset(number, 0, sizeof(number));
+	svo_memset(number, 0, sizeof(number));
 	reset_number = false;
 	linespacing = 0;
 	tab.Clear();

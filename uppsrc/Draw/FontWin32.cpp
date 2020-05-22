@@ -70,13 +70,13 @@ static void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD fla
 	if(fn)
 		fn(hdc, s, n, r, flag);
 	else
-		memset(r, 0, n * sizeof(WORD));
+		svo_memset(r, 0, n * sizeof(WORD));
 }
 
 CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
-	memset(&fi, 0, sizeof(fi));
+	svo_memset(&fi, 0, sizeof(fi));
 	HFONT hfont = GetWin32Font(font, 0);
 	if(hfont) {
 		HDC hdc = ::CreateIC("DISPLAY", NULL, NULL, NULL);
@@ -201,7 +201,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		HFONT hfont = GetWin32Font(font, 0);
 		if(!hfont) {
 			GlyphInfo n;
-			memset(&n, 0, sizeof(GlyphInfo));
+			svo_memset(&n, 0, sizeof(GlyphInfo));
 			return n;
 		}
 		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
@@ -322,7 +322,7 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		GLYPHMETRICS gm;
 		MAT2 m_matrix;
-		memset(&m_matrix, 0, sizeof(m_matrix));
+		svo_memset(&m_matrix, 0, sizeof(m_matrix));
 		m_matrix.eM11.value = 1;
 		m_matrix.eM22.value = 1;
 		int gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, 0, NULL, &m_matrix);

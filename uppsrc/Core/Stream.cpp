@@ -645,7 +645,7 @@ Stream& Stream::operator%(WString& s) {
 				LoadError();
 			else {
 				WStringBuffer sb(len);
-				memcpy(~sb, ~h, len * sizeof(wchar));
+				svo_memcpy(~sb, ~h, len * sizeof(wchar));
 				s = sb;
 			}
 		}
@@ -761,7 +761,7 @@ void  StringStream::_Put(const void *d, dword sz)
 		SetWriteBuffer();
 		ptr = buffer + p;
 	}
-	memcpy(ptr, d, sz);
+	svo_memcpy(ptr, d, sz);
 	ptr += sz;
 }
 
@@ -784,7 +784,7 @@ dword StringStream::_Get(void *data, dword sz)
 {
 	SetReadMode();
 	dword read = min((dword)(uintptr_t)(rdlim - ptr), sz);
-	memcpy(data, ptr, read);
+	svo_memcpy(data, ptr, read);
 	ptr += read;
 	return read;
 }
@@ -836,7 +836,7 @@ int64 MemStream::GetSize() const {
 dword MemStream::_Get(void *data, dword size) {
 	if(size > (dword)(intptr_t)(rdlim - ptr))
 		size = (dword)(intptr_t)(rdlim - ptr);
-	memcpy(data, ptr, size);
+	svo_memcpy(data, ptr, size);
 	ptr += size;
 	return size;
 }
@@ -846,7 +846,7 @@ void  MemStream::_Put(const void *data, dword size) {
 		SetError(ERROR_NOT_ENOUGH_SPACE);
 		return;
 	}
-	memcpy(ptr, data, size);
+	svo_memcpy(ptr, data, size);
 	ptr += size;
 }
 
@@ -1037,7 +1037,7 @@ void OutStream::_Put(const void *data, dword size)
 		Out(data, size);
 	else
 	if(ptr + size < wrlim) {
-		memcpy(ptr, data, size);
+		svo_memcpy(ptr, data, size);
 		ptr += size;
 	}
 	else {

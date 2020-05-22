@@ -43,7 +43,7 @@ dword InFilterStream::_Get(void *data, dword size)
 {
 	t = (byte *)data;
 	dword sz0 = min(dword(rdlim - ptr), size);
-	memcpy(t, ptr, sz0);
+	svo_memcpy(t, ptr, sz0);
 	t += sz0;
 	ptr += sz0;
 	todo = size - sz0;
@@ -57,7 +57,7 @@ void InFilterStream::Out(const void *p, int size)
 	const byte *s = (byte *)p;
 	if(todo) {
 		dword sz = min(todo, (dword)size);
-		memcpy(t, s, sz);
+		svo_memcpy(t, s, sz);
 		t += sz;
 		s += sz;
 		todo -= sz;
@@ -67,7 +67,7 @@ void InFilterStream::Out(const void *p, int size)
 	if(size) {
 		int l = buffer.GetCount();
 		buffer.SetCountR(l + size);
-		memcpy(buffer.begin() + l, s, size);
+		svo_memcpy(buffer.begin() + l, s, size);
 	}
 	WhenOut();
 }
@@ -153,7 +153,7 @@ void OutFilterStream::_Put(const void *data, dword size)
 	const byte *p = (const byte *)data;
 	for(;;) {
 		int n = min(Avail(), size);
-		memcpy(ptr, p, n);
+		svo_memcpy(ptr, p, n);
 		size -= n;
 		p += n;
 		ptr += n;

@@ -259,7 +259,7 @@ void String0::Reserve(int r)
 void String0::SetL(const char *s, int len)
 {
 	char *p = Alloc(len, chr[KIND]);
-	memcpy(p, s, len);
+	svo_memcpy(p, s, len);
 	p[len] = 0;
 	ptr = p;
 	LLen() = len;
@@ -328,7 +328,7 @@ String::String(StringBuffer& b)
 	int l = b.GetLength();
 	if(l <= 14) {
 		Zero();
-		memcpy(chr, b.pbegin, l);
+		svo_memcpy(chr, b.pbegin, l);
 		SLen() = l;
 		b.Free();
 	}
@@ -395,12 +395,12 @@ void StringBuffer::Realloc(dword n, const char *cat, int l)
 	}
 	if(!realloced) {
 		p = Alloc(n, al);
-		memcpy(p, pbegin, min((dword)GetLength(), n));
+		svo_memcpy(p, pbegin, min((dword)GetLength(), n));
 	}
 	if(cat) {
 		if(ep + l > INT_MAX)
 			Panic("StringBuffer is too big (>2GB)!");
-		memcpy(p + ep, cat, l);
+		svo_memcpy(p + ep, cat, l);
 		ep += l;
 	}
 	if(!realloced) {
@@ -458,7 +458,7 @@ void StringBuffer::Set(String& s)
 	if(s.GetAlloc() == 14) {
 		pbegin = (char *)MemoryAlloc32();
 		limit = pbegin + 31;
-		memcpy(pbegin, s.Begin(), l);
+		svo_memcpy(pbegin, s.Begin(), l);
 		pend = pbegin + l;
 	}
 	else {

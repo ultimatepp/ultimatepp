@@ -41,7 +41,7 @@ void Index<T>::ReallocHash(int n)
 			Hash *h = (Hash *)MemoryAlloc(sz);
 			if(hash) {
 				if(n)
-					memcpy(h, hash, sizeof(Hash) * n);
+					memcpy_t(h, hash, n);
 				MemoryFree(hash);
 			}
 			hash = h;

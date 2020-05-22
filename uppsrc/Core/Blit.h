@@ -69,24 +69,7 @@ void memcpyd(dword *t, const dword *s, size_t len)
 	Copy4(len - 4); // copy tail
 	if(len >= 16) {
 		memcpyd_l(t, s, len);
-	#if 0
-		Copy4(0); // align target data up on next 16 bytes boundary
-		const dword *e = t + len;
-		dword *t1 = (dword *)(((uintptr_t)t | 15) + 1);
-		s += t1 - t;
-		t = t1;
-		len = e - t;
-		e -= 16;
-		if(len >= 1024*1024) { // for really huge data, call memcpy to bypass the cache
-			memcpy(t, s, 4 * len);
-			return;
-		}
-		while(t <= e) {
-			Copy4(0); Copy4(4); Copy4(8); Copy4(12);
-			t += 16;
-			s += 16;
-		}
-	#endif
+		return;
 	}
 	if(len & 8) {
 		Copy4(0); Copy4(4);
@@ -274,3 +257,12 @@ void svo_memcpy(void *p, const void *q, size_t len)
 }
 
 #endif
+
+template <class T>
+void memcpy_t(T *t, const T *s, size_t count)
+{
+	if((sizeof(T) & 3) == 0)
+		memcpyd((dword *)t, (const dword *)s, count * (sizeof(T) >> 2));
+	else
+		svo_memcpy((void *)t, (void *)s, count * sizeof(T));
+}
