@@ -31,9 +31,7 @@ static const byte *GetStretchCurve()
 }
 
 Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
-	                   int smin, int smax, int sclipmin, int sclipmax, int times, int avail,
-	                   int& itemsz
-	                   )
+	                   int smin, int smax, int sclipmin, int sclipmax, int times, int avail)
 {
 	Vector<dword> map;
 	if(dmax == dmin || smax == smin)
@@ -82,14 +80,14 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 	bool bigseg = (span >= MAXAA);
 	int segment = (bigseg ? MAXAA : span);
 	int segstep = span / segment;
-	itemsz = bigseg ? 1 : 1 + segment;
-	map.SetCount(4 + count * itemsz);
+	map.SetCount(4 + count * (bigseg ? 1 : 1 + segment));
 	map[MAP_COUNT] = dword(count);
 	map[MAP_SEGMENT] = dword(segment);
 	map[MAP_BLOCK] = 1 + (bigseg ? 0 : segment);
 	map[MAP_STEP] = (span / segment) * times;
 	dword *out = map.Begin() + MAP_DATA;
 	int sendoffset = (smax - (segment - 1) * segstep - 1) * times;
+	int last = 0;
 
 	if(smax - smin == 1)
 	{
@@ -115,7 +113,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 //			DUMP(end);
 			if(pb >= send)
 			{
-				*out++ = sendoffset;
+				last += *out++ = sendoffset - last;
 				if(!bigseg)
 				{
 					int i = segment - 1;
@@ -128,7 +126,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 			{ // 1 source pixel only
 //				ASSERT(!bigseg);
 				int scomp = minmax(start + segment - smax, 0, start - smin);
-				*out++ = (start - scomp) * times;
+				last += *out++ = (start - scomp) * times - last;
 				if(!bigseg)
 				{
 					int i = scomp;
@@ -146,7 +144,7 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 				if(!delta)
 					start++;
 				int scomp = minmax(start + span - smax, 0, start - smin);
-				*out++ = (start - scomp) * times;
+				last += *out++ = (start - scomp) * times - last;
 				if(!bigseg)
 				{
 					int i = scomp;
@@ -191,13 +189,13 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 		{
 			if(spos <= sbegin)
 			{
-				out[0] = smin * times;
+				last += out[0] = smin * times - last;
 				out[1] = avail;
 				out[2] = 0;
 			}
 			else if(spos >= send)
 			{
-				out[0] = sendoffset;
+				last += out[0] = sendoffset - last;
 				out[1] = 0;
 				out[2] = avail;
 			}
@@ -205,22 +203,32 @@ Vector<dword> AAGetMap(int& dmin, int& dmax, int dclipmin, int dclipmax,
 			{
 				int pos = spos / dw;
 				int rel = spos % dw;
-				out[0] = pos * times;
+				last += out[0] = pos * times - last;
 				out[1] = avail - (out[2] = curve[rel * COUNT_STRETCH_CURVE / dw]);
 			}
 			out += 3;
 		}
 	}
 
+#ifdef _DEBUG
+	ASSERT(out == map.End());
+	int offs = 0, step = map[MAP_BLOCK], segspan = (map[MAP_SEGMENT] - 1) * map[MAP_STEP] + 1;
+	for(int t = 0; t < (int)map[MAP_COUNT]; t++)
+	{
+		offs += map[MAP_DATA + t * step];
+		ASSERT(offs >= times * smin && offs + segspan <= times * smax);
+	}
+#endif
+
 	return map;
 }
 
-static void BltAAMapRGBA1(dword *dest, const RGBA *s0, const dword *map)
+static void BltAAMapRGBA1(dword *dest, const RGBA *s, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		const RGBA *s = s0 + map[0];
+		s += map[0];
 		dest[0] = s->b << 8;
 		dest[1] = s->g << 8;
 		dest[2] = s->r << 8;
@@ -230,12 +238,12 @@ static void BltAAMapRGBA1(dword *dest, const RGBA *s0, const dword *map)
 	}
 }
 
-static void BltAAMapRGBA2(dword *dest, const RGBA *s0, const dword *map)
+static void BltAAMapRGBA2(dword *dest, const RGBA *s, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		const RGBA *s = s0 + map[0];
+		s += map[0];
 		dest[0] = s[0].b * map[1] + s[1].b * map[2];
 		dest[1] = s[0].g * map[1] + s[1].g * map[2];
 		dest[2] = s[0].r * map[1] + s[1].r * map[2];
@@ -246,12 +254,12 @@ static void BltAAMapRGBA2(dword *dest, const RGBA *s0, const dword *map)
 }
 
 
-static void BltAAMapRGBA3(dword *dest, const RGBA *s0, const dword *map)
+static void BltAAMapRGBA3(dword *dest, const RGBA *s, const dword *map)
 {
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		const RGBA *s = s0 + map[0];
+		s += map[0];
 		dest[0] = s[0].b * map[1] + s[1].b * map[2] + s[2].b * map[3];
 		dest[1] = s[0].g * map[1] + s[1].g * map[2] + s[2].g * map[3];
 		dest[2] = s[0].r * map[1] + s[1].r * map[2] + s[2].r * map[3];
@@ -261,13 +269,13 @@ static void BltAAMapRGBA3(dword *dest, const RGBA *s0, const dword *map)
 	}
 }
 
-static void BltAAMapRGBA4(dword *dest, const RGBA *s0, const dword *map)
+static void BltAAMapRGBA4(dword *dest, const RGBA *s, const dword *map)
 {
 	int step = map[MAP_STEP];
 	int count = map[MAP_COUNT];
 	map += 4;
 	while(count--) {
-		const RGBA *s = s0 + map[0];
+		s += map[0];
 		dest[0] = (s[0].b + s[step].b + s[2 * step].b + s[3 * step].b) << 6;
 		dest[1] = (s[0].g + s[step].g + s[2 * step].g + s[3 * step].g) << 6;
 		dest[2] = (s[0].r + s[step].r + s[2 * step].r + s[3 * step].r) << 6;
@@ -351,12 +359,12 @@ void RescaleImage::Create(Size _tsz, Raster& _src, const Rect& src_rc)
 
 	Rect dr = tsz;
 	horz = AAGetMap(dr.left, dr.right, dr.left, dr.right,
-	                src_rc.left, src_rc.right, 0, size.cx, 1, 0x100, itemsz);
+	                src_rc.left, src_rc.right, 0, size.cx, 1, 0x100);
 	if(horz.IsEmpty())
 		return;
 
 	vert = AAGetMap(dr.top, dr.bottom, dr.top, dr.bottom,
-	                src_rc.top, src_rc.bottom, 0, size.cy, 1, 0x100, itemsz);
+	                src_rc.top, src_rc.bottom, 0, size.cy, 1, 0x100);
 	if(vert.IsEmpty())
 		return;
 
@@ -404,17 +412,11 @@ const RGBA *RescaleImage::GetLine(int ii)
 
 void RescaleImage::Get(RGBA *tgt)
 {
-	Get(y++, tgt);
-}
-
-void RescaleImage::Get(int y, RGBA *tgt)
-{
-	const dword *map = offsets + itemsz * y;
-	if(y < 0 || map >= vert.End()) {
-		Fill(tgt, RGBAZero(), tsz.cx);
+	if(y < 0 || offsets >= vert.End()) {
+		memset(tgt, 0, sizeof(RGBA) * tsz.cx);
 		return;
 	}
-	offset = *map++;
+	offset += *offsets++;
 	ASSERT(offset >= 0 && offset + segspan <= size.cy);
 	if(bigseg) {
 		row_proc(&row_buffers[0 * cx4], GetLine(offset + 0 * step), horz);
@@ -443,26 +445,26 @@ void RescaleImage::Get(int y, RGBA *tgt)
 		switch(segment) {
 		case 1:
 			BltAAFix2(tgt, &row_buffers[offset % segment * cx4], tsz.cx);
-			map++;
+			offsets++;
 			break;
 		case 2:
-			if(map[0] == 0)
+			if(offsets[0] == 0)
 				BltAAFix2(tgt, &row_buffers[(offset + 1) % segment * cx4], tsz.cx);
 			else
-			if(map[1] == 0)
+			if(offsets[1] == 0)
 				BltAAFix2(tgt, &row_buffers[offset % segment * cx4], tsz.cx);
 			else
-				BltAASet2Fix(tgt, &row_buffers[(offset + 0) % segment * cx4], map[0],
-					              &row_buffers[(offset + 1) % segment * cx4], map[1],
+				BltAASet2Fix(tgt, &row_buffers[(offset + 0) % segment * cx4], offsets[0],
+					              &row_buffers[(offset + 1) % segment * cx4], offsets[1],
 					         tsz.cx);
-			map += 2;
+			offsets += 2;
 			break;
 		case 3:
 			BltAASet3Fix(tgt,
-			             &row_buffers[(offset + 0) % segment * cx4], map[0],
-			             &row_buffers[(offset + 1) % segment * cx4], map[1],
-			             &row_buffers[(offset + 2) % segment * cx4], map[2], tsz.cx);
-			map += 3;
+			             &row_buffers[(offset + 0) % segment * cx4], offsets[0],
+			             &row_buffers[(offset + 1) % segment * cx4], offsets[1],
+			             &row_buffers[(offset + 2) % segment * cx4], offsets[2], tsz.cx);
+			offsets += 3;
 			break;
 		default:
 			NEVER();

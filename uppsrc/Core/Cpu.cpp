@@ -1,14 +1,14 @@
 #include "Core.h"
 
-namespace Upp {
-
-#ifdef CPU_X86
-
 #ifdef COMPILER_MSC
 #include <intrin.h> 
 #else
 #include <cpuid.h>
 #endif
+
+namespace Upp {
+
+#ifdef CPU_X86
 
 static bool sHasMMX;
 static bool sHasSSE;

@@ -274,7 +274,7 @@ class XmlIO;
 class JsonIO;
 
 #include "Ops.h"
-#include "Blit.h"
+#include "Mem.h"
 #include "Atomic.h"
 #include "Topt.h"
 #include "Mt.h"
