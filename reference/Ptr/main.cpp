@@ -2,6 +2,9 @@
 
 using namespace Upp;
 
+// U++ Ptr class is sort of 'weak pointer' whose main purpose it to become NULL after pointee
+// is destructed
+
 struct Foo : Pte<Foo> {
 	String text;
 };
