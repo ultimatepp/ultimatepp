@@ -130,6 +130,38 @@ int find(const wchar *text, int len, const wchar *needle, int nlen, int from)
 #else
 
 template <class tchar>
+force_inline bool svo_memeq(const tchar *a, const tchar *b, int len)
+{
+	if(len > 11)
+		return memcmp(a, b, len * sizeof(tchar)) == 0;
+	switch(len) {
+	case 11:
+		if(a[10] != b[10]) return false;
+	case 10:
+		if(a[9] != b[9]) return false;
+	case 9:
+		if(a[8] != b[8]) return false;
+	case 8:
+		if(a[7] != b[7]) return false;
+	case 7:
+		if(a[6] != b[6]) return false;
+	case 6:
+		if(a[5] != b[5]) return false;
+	case 5:
+		if(a[4] != b[4]) return false;
+	case 4:
+		if(a[3] != b[3]) return false;
+	case 3:
+		if(a[2] != b[2]) return false;
+	case 2:
+		if(a[1] != b[1]) return false;
+	case 1:
+		if(a[0] != b[0]) return false;
+	}
+	return true;
+}
+
+template <class tchar>
 int t_find(const tchar *ptr, int plen, const tchar *s, int len, int from)
 {
 	ASSERT(from >= 0 && from <= plen);

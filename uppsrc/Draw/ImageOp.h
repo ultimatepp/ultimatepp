@@ -59,7 +59,6 @@ class RescaleImage {
 	Size          tsz;
 	Vector<dword> horz;
 	Vector<dword> vert;
-	int           itemsz; // size of target line info in vert
 	void        (*row_proc)(dword *dest, const RGBA *src, const dword *map);
 	Size          size;
 	int           cx4;
@@ -85,12 +84,10 @@ class RescaleImage {
 	int           cii;
 	const RGBA   *GetLine(int i);
 
-	void Get(int y, RGBA *tgt);
-
 public:
 	void Create(Size sz, Raster& src, const Rect& src_rc);
 	void Get(RGBA *line);
-	
+
 	Image CoRescale(Size sz, const Image& img, const Rect& src_rc);
 };
 

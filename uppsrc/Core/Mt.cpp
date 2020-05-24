@@ -4,10 +4,6 @@
 #include <sys/time.h>
 #endif
 
-#ifdef CPU_X86
-#include <xmmintrin.h>
-#endif
-
 namespace Upp {
 
 #define LLOG(x)  // DLOG(x)

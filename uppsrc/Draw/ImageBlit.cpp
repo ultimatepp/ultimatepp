@@ -2,12 +2,6 @@
 
 namespace Upp {
 
-void Copy(RGBA *t, const RGBA *s, int n)
-{
-	while(n--)
-		*t++ = *s++;
-}
-
 const byte *UnpackRLE(RGBA *t, const byte *s, int len)
 {
 	RGBA *e = t + len;
