@@ -1,9 +1,11 @@
 #include "Core.h"
 
+#ifdef CPU_X86
 #ifdef COMPILER_MSC
 #include <intrin.h> 
 #else
 #include <cpuid.h>
+#endif
 #endif
 
 namespace Upp {
