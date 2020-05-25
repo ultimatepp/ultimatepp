@@ -1,3 +1,7 @@
+struct dqword {
+	qword a, b;
+};
+
 #ifdef CPU_X86
 void huge_memsetd(void *p, dword data, size_t len);
 void memsetd_l(dword *t, dword data, size_t len);
@@ -113,10 +117,6 @@ void memcpyq(qword *t, const qword *s, size_t len)
 		Copy4(0);
 }
 
-struct dqword {
-	qword a, b;
-};
-
 static_assert(sizeof(dqword) == 16, "dqword sizeof");
 
 void memcpydq_l(dqword *t, const dqword *s, size_t len);
@@ -174,7 +174,7 @@ void memsetd(void *p, dword c, size_t len)
 }
 
 inline
-void memcpyd(dword *t, dword *s, size_t len)
+void memcpyd(dword *t, const dword *s, size_t len)
 {
 	if(len >= 16) {
 		memcpy(t, s, 4 * len);
@@ -200,6 +200,7 @@ void memcpyd(dword *t, dword *s, size_t len)
 	if(len & 1)
 		t[0] = s[0];
 }
+
 #endif
 
 #ifdef CPU_UNALIGNED
@@ -325,12 +326,14 @@ void svo_memcpy(void *p, const void *q, size_t len)
 template <class T>
 void memcpy_t(T *t, const T *s, size_t count)
 {
+#ifdef CPU_X86
 	if((sizeof(T) & 15) == 0)
 		memcpydq((dqword *)t, (const dqword *)s, count * (sizeof(T) >> 4));
 	else
 	if((sizeof(T) & 7) == 0)
 		memcpyq((qword *)t, (const qword *)s, count * (sizeof(T) >> 3));
 	else
+#endif
 	if((sizeof(T) & 3) == 0)
 		memcpyd((dword *)t, (const dword *)s, count * (sizeof(T) >> 2));
 	else
