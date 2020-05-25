@@ -73,9 +73,9 @@ void TcpSocketInit();
 
 INITIALIZER(SSL)
 {
+	MemoryIgnoreLeaksBlock __;
 	LLOG("SSL init");
 	TcpSocketInit();
-	MemoryIgnoreLeaksBlock __;
 	CRYPTO_set_mem_functions(SslAlloc, SslRealloc, SslFree);
 	SSL_library_init();
 	SSL_load_error_strings();
@@ -83,6 +83,7 @@ INITIALIZER(SSL)
 
 EXITBLOCK
 {
+	MemoryIgnoreLeaksBlock __;
 	CONF_modules_unload(1);
 	EVP_cleanup();
 	ENGINE_cleanup();
@@ -92,34 +93,36 @@ EXITBLOCK
 	if(pCOMP)
 		sk_SSL_COMP_free( pCOMP );
 	ERR_remove_state(0);
+#else
+	ERR_remove_thread_state(NULL);
+	OPENSSL_thread_stop();
 #endif
 	ERR_free_strings();
 }
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
 
 static thread_local bool sThreadInit;
 static thread_local void (*sPrevExit)();
 
 static void sslExitThread()
 {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 	ERR_remove_state(0);
+#else
+	ERR_remove_thread_state(NULL);
+	OPENSSL_thread_stop();
+#endif
 	if(sPrevExit)
 		(*sPrevExit)();
 }
 
 void SslInitThread()
 {
+	MemoryIgnoreLeaksBlock __;
 	if(sThreadInit || Thread::IsMain())
 		return;
 	sThreadInit = true;
 	sPrevExit = Thread::AtExit(sslExitThread);
 }
-
-#else
-
-void SslInitThread() {}
-
-#endif
 
 }
