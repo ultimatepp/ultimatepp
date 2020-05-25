@@ -688,46 +688,67 @@ void ExportPage(int i)
 	RLOG("Exported page " << AppendFileName(targetdir, links[i]));
 }
 
+struct DownloadItem {
+	Time tm;
+	String fn;
+	String path;
+	int64 len;
+};
+
 String Downloads()
 {
 	String r;
-	r << "{{1:1:1^@L "
+	r << "{{1:1:1:1^@L "
+	     "Date:: "
 	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
 	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/FreeBSD]:: "
 	     "[^app$ide$install_macos_en-us.html^ U`+`+ for MacOS]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
-	Vector<Time> tm;
-	Vector<String> fn;
-	Vector<String> path;
-	Vector<int64> len;
+
+	SortedArrayMap<Date, Array<DownloadItem>> downs;
 	while(ff) {
 		if(ff.IsFile()) {
-			tm.Add(ff.GetLastWriteTime());
-			fn.Add(ff.GetName());
-			path.Add(ff.GetPath());
-			len.Add(ff.GetLength());
+			DownloadItem down;
+			down.tm = ff.GetLastWriteTime();
+			down.fn = ff.GetName();
+			down.path = ff.GetPath();
+			down.len = ff.GetLength();
+			Date date = down.tm;
+			downs.GetAdd(date).Add(down);
 		}
 		ff.Next();
 	}
-	IndexSort3(tm, fn, path, len, StdGreater<Time>());
 	
-	for(int pass = 0; pass < 3; pass++) {
-		r << "::@W ";
-		bool next = false;
-		for(int i = 0; i < min(39, fn.GetCount()); i++)
-			if(fn[i].Find(decode(pass, 0, "win", 1, "posix", "macos")) >= 0) {
-				if(next) r << "&[A0 &]";
-				next = true;
-				r << Format("%04d-%02d-%02d %02d:%02d",
-				            (int)tm[i].year, (int)tm[i].month, (int)tm[i].day,
-				            (int)tm[i].hour, (int)tm[i].minute)
-				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]"
-				  << " (" << (len[i] >> 20) << " MB)";
+	auto FindDown = [](Array<DownloadItem>& a, const char* arch) -> String {
+		String r;
+		for(int i = 0; i < a.GetCount(); i++) {
+			if(a[i].fn.Find(arch) >= 0) {
+				r << FormatTime(a[i].tm, "hh:mm")
+				  << " [^downloads/" << a[i].fn << "^ \1" << a[i].fn << "\1]"
+				  << " (" << (a[i].len >> 20) << " MB)";
+				break;
 			}
+		}
+		return r;
+	};
+	
+	Date d = GetSysDate();
+	
+	for(int i = 0;i < 14; i++, d--) {
+		Array<DownloadItem>& a = downs.GetAdd(d);
+		r << "::@W " << FormatDate(d, "YYYY-MM-DD") << ":: "
+		  << FindDown(a, "win") << ":: "
+		  << FindDown(a, "posix") << ":: "
+		  << FindDown(a, "macos");
 	}
 	r << "}}";
-	for(int i = 39; i < fn.GetCount(); i++)
-		DeleteFile(path[i]);
+	
+	for(int i = 14; i < downs.GetCount(); i++) {
+		if(downs.GetKey(i) < d)
+			for(int j = 0; j < downs[i].GetCount(); j++)
+				DeleteFile(downs[i][j].path);
+	}
+
 	return r;
 }
 
