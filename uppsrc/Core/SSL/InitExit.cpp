@@ -94,7 +94,7 @@ EXITBLOCK
 		sk_SSL_COMP_free( pCOMP );
 	ERR_remove_state(0);
 #else
-	ERR_remove_thread_state(NULL);
+//	ERR_remove_thread_state(NULL);
 	OPENSSL_thread_stop();
 #endif
 	ERR_free_strings();
@@ -109,7 +109,7 @@ static void sslExitThread()
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 	ERR_remove_state(0);
 #else
-	ERR_remove_thread_state(NULL);
+//	ERR_remove_thread_state(NULL);
 	OPENSSL_thread_stop();
 #endif
 	if(sPrevExit)
