@@ -247,6 +247,7 @@ void svo_memcpy(void *p, const void *q, size_t len)
 		*(word *)(t + len - 2) = *(word *)(s + len - 2);
 		return;
 	}
+	// TODO: IMPROVE! use int64
 	*(dword *)t = *(dword *)s;
 	*(dword *)(t + len - 4) = *(dword *)(s + len - 4);
 	if(len > 16) {
