@@ -63,7 +63,7 @@ String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper
 	char *o = out;
 	if(dwd < width)
 		memset(o, lpad, pad);
-	svo_memcpy(o + pad, p, dwd);
+	memcpy8(o + pad, p, dwd);
 	return out;
 }
 

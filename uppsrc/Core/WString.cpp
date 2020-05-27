@@ -357,7 +357,7 @@ void WStringBuffer::Cat(int c, int l)
 {
 	if(pend + l > limit)
 		Expand(max(GetLength(), l) + GetLength(), NULL, l);
-	memsetw(pend, c, l);
+	memset16(pend, c, l);
 	pend += l;
 }
 

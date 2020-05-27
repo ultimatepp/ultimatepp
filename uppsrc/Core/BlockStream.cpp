@@ -155,12 +155,12 @@ void BlockStream::_Put(const void *data, dword size) {
 	wrlim = buffer + pagesize;
 	pagedirty = true;
 	if(pg0 == pg1) {
-		svo_memcpy(buffer + pos0 - pos, data, size);
+		memcpy8(buffer + pos0 - pos, data, size);
 		ptr = buffer + pos1 - pos;
 	}
 	else {
 		int n = int(pos + pagesize - pos0);
-		svo_memcpy(buffer + pos0 - pos, s, n);
+		memcpy8(buffer + pos0 - pos, s, n);
 		s += n;
 		n = dword(pg1 - pg0) - pagesize;
 		streamsize = max(pos + pagesize + n, streamsize);
@@ -173,7 +173,7 @@ void BlockStream::_Put(const void *data, dword size) {
 		if(pos1 > pg1) {
 			wrlim = buffer + pagesize;
 			pagedirty = true;
-			svo_memcpy(buffer, s, int(pos1 - pg1));
+			memcpy8(buffer, s, int(pos1 - pg1));
 		}
 	}
 }
@@ -191,19 +191,19 @@ dword BlockStream::_Get(void *data, dword size) {
 	int64 pg1 = pos1 & pagemask;
 	if(pg0 == pg1) {
 		SyncPage();
-		svo_memcpy(data, buffer + pos0 - pos, size);
+		memcpy8(data, buffer + pos0 - pos, size);
 		ptr = buffer + pos1 - pos;
 		_Term();
 	}
 	else {
 		int last = int(pos1 - pg1);
 		if(pagepos == pg1) {
-			svo_memcpy(t + size - last, buffer, last);
+			memcpy8(t + size - last, buffer, last);
 			last = 0;
 		}
 		SyncPage();
 		int n = int(pos + pagesize - pos0);
-		svo_memcpy(t, buffer + pos0 - pos, n);
+		memcpy8(t, buffer + pos0 - pos, n);
 		dword q = dword(pg1 - pg0) - pagesize;
 		if(q && Read(pos + pagesize, t + n, q) != q) {
 			SetError();
@@ -212,7 +212,7 @@ dword BlockStream::_Get(void *data, dword size) {
 		SetPos(pos0 + size);
 		if(last) {
 			SyncPage();
-			svo_memcpy(t + size - last, buffer, last);
+			memcpy8(t + size - last, buffer, last);
 		}
 	}
 	return size;

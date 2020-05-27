@@ -1,13 +1,59 @@
-struct dqword {
-	qword a, b;
-};
-
 #ifdef CPU_X86
-void huge_memsetd(void *p, dword data, size_t len);
-void memsetd_l(dword *t, dword data, size_t len);
+void memset8__(void *t, __m128i data, size_t len);
 
 inline
-void memsetd(void *p, dword data, size_t len)
+void memset8(void *p, byte data, size_t len)
+{
+	byte *t = (byte *)p;
+	if(len < 2) {
+		if(len)
+			t[0] = data;
+		return;
+	}
+	dword val4 = 0x1010101 * data;
+	if(len <= 4) {
+		*(word *)t = *(word *)(t + len - 2) = (word)val4;
+		return;
+	}
+	if(len > 16) {
+		memset8__(t, _mm_set1_epi32(val4), len);
+		return;
+	}
+	*(dword *)t = *(dword *)(t + len - 4) = val4;
+	if(len > 8)
+		*(dword *)(t + 4) = *(dword *)(t + len - 8) = val4;
+}
+
+inline
+void memset16(void *p, word data, size_t len)
+{
+	word *t = (word *)p;
+	if(len < 2) {
+		if(len)
+			t[0] = data;
+		return;
+	}
+	dword val4 = 0x10001 * data;
+	if(len >= 16) {
+		memset8__(t, _mm_set1_epi32(val4), 2 * len);
+		return;
+	}
+	*(dword *)(t + len - 2) = val4;
+	if(len & 8) {
+		_mm_storeu_si128((__m128i *)t, _mm_set1_epi32(val4));
+		t += 8;
+	}
+	if(len & 4) {
+		*(dword *)t = val4;
+		*(dword *)(t + 2) = val4;
+		t += 4;
+	}
+	if(len & 2)
+		*(dword *)t = val4;
+}
+
+inline
+void memset32(void *p, dword data, size_t len)
 {
 	dword *t = (dword *)p;
 	if(len < 4) {
@@ -19,13 +65,11 @@ void memsetd(void *p, dword data, size_t len)
 			t[0] = data;
 		return;
 	}
-
+	__m128i val4 = _mm_set1_epi32(data);
 	if(len >= 16) {
-		memsetd_l(t, data, len);
+		memset8__(t, val4, 4 * len);
 		return;
 	}
-
-	__m128i val4 = _mm_set1_epi32(data);
 	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
 	Set4(len - 4); // fill tail
 	if(len & 8) {
@@ -36,11 +80,71 @@ void memsetd(void *p, dword data, size_t len)
 		Set4(0);
 }
 
-void memcpyd_l(dword *t, const dword *s, size_t len);
+void memcpy8__(void *p, const void *q, size_t len);
 
 inline
-void memcpyd(dword *t, const dword *s, size_t len)
+void memcpy8(void *p, const void *q, size_t len)
 {
+	byte *t = (byte *)p;
+	byte *s = (byte *)q;
+	if(len <= 4) {
+		if(len < 2) {
+			if(len)
+				t[0] = s[0];
+			return;
+		}
+		*(word *)t = *(word *)s;
+		*(word *)(t + len - 2) = *(word *)(s + len - 2);
+		return;
+	}
+	if(len <= 16) {
+		if(len <= 8) {
+			*(dword *)(t) = *(dword *)(s);
+			*(dword *)(t + len - 4) = *(dword *)(s + len - 4);
+			return;
+		}
+		*(uint64 *)t = *(uint64 *)s;
+		*(uint64 *)(t + len - 8) = *(uint64 *)(s + len - 8);
+		return;
+	}
+	memcpy8__(t, s, len);
+}
+
+inline
+void memcpy16(void *p, const void *q, size_t len)
+{
+	word *t = (word *)p;
+	word *s = (word *)q;
+	if(len <= 4) {
+		if(len < 2) {
+			if(len)
+				t[0] = s[0];
+			return;
+		}
+		*(dword *)t = *(dword *)s;
+		*(dword *)(t + len - 2) = *(dword *)(s + len - 2);
+		return;
+	}
+	if(len <= 16) {
+		if(len <= 8) {
+			*(uint64 *)(t) = *(uint64 *)(s);
+			*(uint64 *)(t + len - 4) = *(uint64 *)(s + len - 4);
+			return;
+		}
+		auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+		Copy128(0);
+		Copy128(len - 8);
+		return;
+	}
+	memcpy8__(t, s, 2 * len);
+}
+
+inline
+void memcpy32(void *p, const void *q, size_t len)
+{
+	dword *t = (dword *)p;
+	dword *s = (dword *)q;
+
 #ifdef CPU_64
 	if(len <= 4) {
 		if(len) {
@@ -68,27 +172,28 @@ void memcpyd(dword *t, const dword *s, size_t len)
 	}
 #endif
 
-	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
 
-	Copy4(len - 4); // copy tail
 	if(len >= 16) {
-		memcpyd_l(t, s, len);
+		memcpy8__(t, s, 4 * len);
 		return;
 	}
+	Copy128(len - 4); // copy tail
 	if(len & 8) {
-		Copy4(0); Copy4(4);
+		Copy128(0); Copy128(4);
 		t += 8;
 		s += 8;
 	}
 	if(len & 4)
-		Copy4(0);
+		Copy128(0);
 }
 
-void memcpyq_l(qword *t, const qword *s, size_t len);
-
 inline
-void memcpyq(qword *t, const qword *s, size_t len)
+void memcpy64(void *p, const void *q, size_t len)
 {
+	qword *t = (qword *)p;
+	qword *s = (qword *)q;
+
 	if(len <= 2) {
 		if(len) {
 			if(len > 1) {
@@ -105,7 +210,7 @@ void memcpyq(qword *t, const qword *s, size_t len)
 
 	Copy4(len - 2); // copy tail
 	if(len >= 8) {
-		memcpyq_l(t, s, len);
+		memcpy8__(t, s, 8 * len);
 		return;
 	}
 	if(len & 4) {
@@ -117,17 +222,20 @@ void memcpyq(qword *t, const qword *s, size_t len)
 		Copy4(0);
 }
 
-static_assert(sizeof(dqword) == 16, "dqword sizeof");
-
-void memcpydq_l(dqword *t, const dqword *s, size_t len);
-
 inline
-void memcpydq(dqword *t, const dqword *s, size_t len)
+void memcpy128(void *p, const void *q, size_t len)
 {
+	struct dqword { qword x[2]; };
+
+	static_assert(sizeof(dqword) == 16, "dqword sizeof");
+
+	dqword *t = (dqword *)p;
+	dqword *s = (dqword *)q;
+
 	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
 
 	if(len >= 8) {
-		memcpydq_l(t, s, len);
+		memcpy8__(t, s, 16 * len);
 		return;
 	}
 	if(len & 4) {
@@ -144,199 +252,112 @@ void memcpydq(dqword *t, const dqword *s, size_t len)
 		Copy4(0);
 }
 
-#else
-inline
-void memsetd(void *p, dword c, size_t len)
+template <class T>
+void memcpy_t(void *t, const T *s, size_t count)
 {
-	dword *t = (dword *)p;
+#ifdef CPU_X86
+	if((sizeof(T) & 15) == 0)
+		memcpy128(t, s, count * (sizeof(T) >> 4));
+	else
+	if((sizeof(T) & 7) == 0)
+		memcpy64(t, s, count * (sizeof(T) >> 3));
+	else
+#endif
+	if((sizeof(T) & 3) == 0)
+		memcpy32(t, s, count * (sizeof(T) >> 2));
+	else
+	if((sizeof(T) & 1) == 0)
+		memcpy16(t, s, count * (sizeof(T) >> 1));
+	else
+		memcpy8(t, s, count * sizeof(T));
+}
+
+#else
+
+template <class T>
+void memset__(void *p, T data, size_t len)
+{
+	T *t = (T *)p;
 	while(len >= 16) {
-		t[0] = c; t[1] = c; t[2] = c; t[3] = c;
-		t[4] = c; t[5] = c; t[6] = c; t[7] = c;
-		t[8] = c; t[9] = c; t[10] = c; t[11] = c;
-		t[12] = c; t[13] = c; t[14] = c; t[15] = c;
+		t[0] = data; t[1] = data; t[2] = data; t[3] = data;
+		t[4] = data; t[5] = data; t[6] = data; t[7] = data;
+		t[8] = data; t[9] = data; t[10] = data; t[11] = data;
+		t[12] = data; t[13] = data; t[14] = data; t[15] = data;
 		t += 16;
 		len -= 16;
 	}
 	if(len & 8) {
-		t[0] = t[1] = t[2] = t[3] = t[4] = t[5] = t[6] = t[7] = c;
+		t[0] = t[1] = t[2] = t[3] = t[4] = t[5] = t[6] = t[7] = data;
 		t += 8;
 	}
 	if(len & 4) {
-		t[0] = t[1] = t[2] = t[3] = c;
+		t[0] = t[1] = t[2] = t[3] = data;
 		t += 4;
 	}
 	if(len & 2) {
-		t[0] = t[1] = c;
+		t[0] = t[1] = data;
 		t += 2;
 	}
 	if(len & 1)
-		t[0] = c;
+		t[0] = data;
 }
 
 inline
-void memcpyd(dword *t, const dword *s, size_t len)
+void memset8(void *p, byte val, size_t len)
 {
-	if(len >= 16) {
-		memcpy(t, s, 4 * len);
-		return;
-	}
-	if(len & 8) {
-		t[0] = s[0]; t[1] = s[1]; t[2] = s[2]; t[3] = s[3];
-		t[4] = s[4]; t[5] = s[5]; t[6] = s[6]; t[7] = s[7];
-		t += 8;
-		s += 8;
-		len -= 8;
-	}
-	if(len & 4) {
-		t[0] = s[0]; t[1] = s[1]; t[2] = s[2]; t[3] = s[3];
-		s += 4;
-		t += 4;
-	}
-	if(len & 2) {
-		t[0] = s[0]; t[1] = s[1];
-		s += 2;
-		t += 2;
-	}
-	if(len & 1)
-		t[0] = s[0];
-}
-
-#endif
-
-#ifdef CPU_UNALIGNED
-
-void svo_memset_l(byte *t, dword val4, size_t len);
-
-inline
-void svo_memset(void *p, byte val, size_t len)
-{
-	byte *t = (byte *)p;
-	if(len < 2) {
-		if(len)
-			t[0] = val;
-		return;
-	}
-	dword val4 = 0x1010101 * val;
-	if(len <= 4) {
-		*(word *)t = *(word *)(t + len - 2) = (word)val4;
-		return;
-	}
-	*(dword *)t = *(dword *)(t + len - 4) = val4; // alignment & fill tail
-	if(len > 16) {
-		svo_memset_l(t, val4, len);
-		return;
-	}
-	if(len > 8)
-		*(dword *)(t + 4) = *(dword *)(t + len - 8) = val4;
-}
-
-void svo_memcpy_l(byte *t, byte *s, size_t len);
-
-inline
-void svo_memcpy(void *p, const void *q, size_t len)
-{
-	byte *t = (byte *)p;
-	byte *s = (byte *)q;
-	if(len < 2) {
-		if(len)
-			t[0] = s[0];
-		return;
-	}
-	if(len <= 4) {
-		*(word *)t = *(word *)s;
-		*(word *)(t + len - 2) = *(word *)(s + len - 2);
-		return;
-	}
-	// TODO: IMPROVE! use int64
-	*(dword *)t = *(dword *)s;
-	*(dword *)(t + len - 4) = *(dword *)(s + len - 4);
-	if(len > 16) {
-		svo_memcpy_l(t, s, len);
-		return;
-	}
-	if(len > 8) {
-		*(dword *)(t + 4) = *(dword *)(s + 4);
-		*(dword *)(t + len - 8) = *(dword *)(s + len - 8);
-	}
-}
-
-#else
-
-inline
-void svo_memset(void *p, byte val, size_t len)
-{
-	if(len >= 32) {
+	if(len >= 64) {
 		memset(p, val, len);
 		return;
 	}
-	byte *t = (byte *)p;
-	if(len & 16) {
-		t[0] = val; t[1] = val; t[2] = val; t[3] = val;
-		t[4] = val; t[5] = val; t[6] = val; t[7] = val;
-		t[8] = val; t[9] = val; t[10] = val; t[11] = val;
-		t[12] = val; t[13] = val; t[14] = val; t[15] = val;
-		t += 16;
-	}
-	if(len & 8) {
-		t[0] = t[1] = t[2] = t[3] = t[4] = t[5] = t[6] = t[7] = val;
-		t += 8;
-	}
-	if(len & 4) {
-		t[0] = t[1] = t[2] = t[3] = val;
-		t += 4;
-	}
-	if(len & 2) {
-		t[0] = t[1] = val;
-		t += 2;
-	}
-	if(len & 1)
-		t[0] = val;
+	memset__<byte>(p, data, len);
 }
 
 inline
-void svo_memcpy(void *p, const void *q, size_t len)
+void memset16(void *p, word val, size_t len)
 {
-	byte *t = (byte *)p;
-	byte *s = (byte *)q;
-	if(len >= 16) {
-		memcpy(t, s, len);
-		return;
-	}
-	if(len & 8) {
-		t[0] = s[0]; t[1] = s[1]; t[2] = s[2]; t[3] = s[3];
-		t[4] = s[4]; t[5] = s[5]; t[6] = s[6]; t[7] = s[7];
-		t += 8;
-		s += 8;
-	}
-	if(len & 4) {
-		t[0] = s[0]; t[1] = s[1]; t[2] = s[2]; t[3] = s[3];
-		t += 4;
-		s += 4;
-	}
-	if(len & 2) {
-		t[0] = s[0]; t[1] = s[1];
-		t += 2;
-		s += 2;
-	}
-	if(len & 1)
-		t[0] = s[0];
+	memset__<word>(p, data, len);
 }
 
-#endif
+inline
+void memset32(void *p, word val, size_t len)
+{
+	memset__<dword>(p, data, len);
+}
+
+inline
+void memcpy8(void *p, const void *q, size_t len)
+{
+	memcpy(p, q, len);
+}
+
+inline
+void memcpy16(void *p, const void *q, size_t len)
+{
+	memcpy(p, q, 2 * len);
+}
+
+inline
+void memcpy32(void *p, const void *q, size_t len)
+{
+	memcpy(p, q, 4 * len);
+}
+
+inline
+void memcpy64(void *p, const void *q, size_t len)
+{
+	memcpy(p, q, 8 * len);
+}
+
+inline
+void memcpy128(void *p, const void *q, size_t len)
+{
+	memcpy(p, q, 16 * len);
+}
 
 template <class T>
-void memcpy_t(T *t, const T *s, size_t count)
+void memcpy_t(void *t, const T *s, size_t count)
 {
-#ifdef CPU_X86
-	if((sizeof(T) & 15) == 0)
-		memcpydq((dqword *)t, (const dqword *)s, count * (sizeof(T) >> 4));
-	else
-	if((sizeof(T) & 7) == 0)
-		memcpyq((qword *)t, (const qword *)s, count * (sizeof(T) >> 3));
-	else
-#endif
-	if((sizeof(T) & 3) == 0)
-		memcpyd((dword *)t, (const dword *)s, count * (sizeof(T) >> 2));
-	else
-		svo_memcpy((void *)t, (void *)s, count * sizeof(T));
+	memcpy8(t, s, count * sizeof(T));
 }
+
+#endif

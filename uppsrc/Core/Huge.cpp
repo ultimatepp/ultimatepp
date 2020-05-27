@@ -27,7 +27,7 @@ void Huge::Get(void *t_, size_t pos, size_t sz) const
 	
 	while(sz > 0) {
 		size_t m = min(sz, CHUNK - blkpos);
-		svo_memcpy(t, data[blki].data + blkpos, m);
+		memcpy8(t, data[blki].data + blkpos, m);
 		t += m;
 		sz -= m;
 		blkpos = 0;

@@ -28,7 +28,7 @@ BitmapInfo32__::BitmapInfo32__(int cx, int cy)
 {
 	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
 	BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
-	svo_memset(hi, 0, sizeof(BITMAPINFOHEADER));
+	memset8(hi, 0, sizeof(BITMAPINFOHEADER));
 	hi->biSize = sizeof(BITMAPINFOHEADER);
 	hi->biPlanes = 1;
 #ifdef PLATFORM_WINCE

@@ -188,20 +188,11 @@ void   BeepQuestion();
 void   BeepError();
 
 inline
-void memsetw(void *t, word value, int count)
-{
-	word *w = (word *)t;
-	word *lim = w + count;
-	while(w < lim)
-		*w++ = value;
-}
-
-inline
 void memsetex(void *t, const void *item, int item_size, int count) {
 	ASSERT(count >= 0);
 	byte *q = (byte *)t;
 	while(count--) {
-		svo_memcpy(q, item, item_size);
+		memcpy8(q, item, item_size);
 		q += item_size;
 	}
 }

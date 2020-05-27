@@ -79,7 +79,7 @@ unsigned String0::LHashValue() const
 	if(l < 15) {
 		dword w[4];
 		w[0] = w[1] = w[2] = w[3] = 0;
-		svo_memcpy((char *)w, ptr, l);
+		memcpy8((char *)w, ptr, l);
 		((byte *)w)[SLEN] = l;
 		return CombineHash(w[0], w[1], w[2], w[3]);
 	}
@@ -127,7 +127,7 @@ char *String0::Insert(int pos, int count, const char *s)
 			LLen() = newlen;
 		str[newlen] = 0;
 		if(s)
-			svo_memcpy(str + pos, s, count);
+			memcpy8(str + pos, s, count);
 		Dsyn();
 		return str + pos;
 	}
@@ -135,11 +135,11 @@ char *String0::Insert(int pos, int count, const char *s)
 	char *p = Alloc(max(len >= int((int64)2 * INT_MAX / 3) ? INT_MAX : len + (len >> 1), newlen),
 	                kind);
 	if(pos > 0)
-		svo_memcpy(p, str, pos);
+		memcpy8(p, str, pos);
 	if(pos < len)
-		svo_memcpy(p + pos + count, str + pos, len - pos);
+		memcpy8(p + pos + count, str + pos, len - pos);
 	if(s)
-		svo_memcpy(p + pos, s, count);
+		memcpy8(p + pos, s, count);
 	p[newlen] = 0;
 	Free();
 	ptr = p;
@@ -156,7 +156,7 @@ void String0::UnShare()
 		int len = LLen();
 		char kind;
 		char *p = Alloc(len, kind);
-		svo_memcpy(p, ptr, len + 1);
+		memcpy8(p, ptr, len + 1);
 		Free();
 		chr[KIND] = kind;
 		ptr = p;
@@ -231,7 +231,7 @@ void String0::Cat(const char *s, int len)
 {
 	if(IsSmall()) {
 		if(SLen() + len < 14) {
-			svo_memcpy(chr + SLen(), s, len);
+			memcpy8(chr + SLen(), s, len);
 			SLen() += len;
 			chr[(int)SLen()] = 0;
 			Dsyn();
@@ -240,7 +240,7 @@ void String0::Cat(const char *s, int len)
 	}
 	else
 		if((int)LLen() + len < LAlloc() && !IsSharedRef()) {
-			svo_memcpy(ptr + LLen(), s, len);
+			memcpy8(ptr + LLen(), s, len);
 			LLen() += len;
 			ptr[LLen()] = 0;
 			Dsyn();
@@ -259,7 +259,7 @@ void String0::Reserve(int r)
 void String0::SetL(const char *s, int len)
 {
 	char *p = Alloc(len, chr[KIND]);
-	svo_memcpy(p, s, len);
+	memcpy8(p, s, len);
 	p[len] = 0;
 	ptr = p;
 	LLen() = len;
@@ -328,7 +328,7 @@ String::String(StringBuffer& b)
 	int l = b.GetLength();
 	if(l <= 14) {
 		Zero();
-		svo_memcpy(chr, b.pbegin, l);
+		memcpy8(chr, b.pbegin, l);
 		SLen() = l;
 		b.Free();
 	}
@@ -395,12 +395,12 @@ void StringBuffer::Realloc(dword n, const char *cat, int l)
 	}
 	if(!realloced) {
 		p = Alloc(n, al);
-		svo_memcpy(p, pbegin, min((dword)GetLength(), n));
+		memcpy8(p, pbegin, min((dword)GetLength(), n));
 	}
 	if(cat) {
 		if(ep + l > INT_MAX)
 			Panic("StringBuffer is too big (>2GB)!");
-		svo_memcpy(p + ep, cat, l);
+		memcpy8(p + ep, cat, l);
 		ep += l;
 	}
 	if(!realloced) {
@@ -438,7 +438,7 @@ void StringBuffer::Cat(const char *s, int l)
 	if(pend + l > limit)
 		Realloc(max(GetLength(), l) + GetLength(), s, l);
 	else {
-		svo_memcpy(pend, s, l);
+		memcpy8(pend, s, l);
 		pend += l;
 	}
 }
@@ -458,7 +458,7 @@ void StringBuffer::Set(String& s)
 	if(s.GetAlloc() == 14) {
 		pbegin = (char *)MemoryAlloc32();
 		limit = pbegin + 31;
-		svo_memcpy(pbegin, s.Begin(), l);
+		memcpy8(pbegin, s.Begin(), l);
 		pend = pbegin + l;
 	}
 	else {

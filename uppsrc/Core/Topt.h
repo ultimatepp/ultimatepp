@@ -116,19 +116,19 @@ inline void Copy(T *dst, const T *src, int n) {
 }
 
 inline void Fill(char *t, const char *lim, const char& x)
-{ svo_memset(t, x, size_t(lim - t)); }
+{ memset8(t, x, size_t(lim - t)); }
 inline void Copy(char *dst, const char *src, const char *lim)
-{ svo_memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
+{ memcpy8(dst, src, size_t((byte *)lim - (byte *)src)); }
 
 inline void Fill(signed char *t, const signed char *lim, const signed char& x)
-{ svo_memset(t, x, size_t(lim - t)); }
+{ memset8(t, x, size_t(lim - t)); }
 inline void Copy(signed char *dst, const signed char *src, const signed char *lim)
-{ svo_memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
+{ memcpy8(dst, src, size_t((byte *)lim - (byte *)src)); }
 
 inline void Fill(unsigned char *t, const unsigned char *lim, const unsigned char& x)
-{ svo_memset(t, x, size_t(lim - t)); }
+{ memset8(t, x, size_t(lim - t)); }
 inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned char *lim)
-{ svo_memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
+{ memcpy8(dst, src, size_t((byte *)lim - (byte *)src)); }
 
 #ifdef NO_MOVEABLE_CHECK
 
