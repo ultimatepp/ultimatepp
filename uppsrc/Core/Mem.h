@@ -303,23 +303,23 @@ void memset__(void *p, T data, size_t len)
 }
 
 inline
-void memset8(void *p, byte val, size_t len)
+void memset8(void *p, byte data, size_t len)
 {
 	if(len >= 64) {
-		memset(p, val, len);
+		memset(p, data, len);
 		return;
 	}
 	memset__<byte>(p, data, len);
 }
 
 inline
-void memset16(void *p, word val, size_t len)
+void memset16(void *p, word data, size_t len)
 {
 	memset__<word>(p, data, len);
 }
 
 inline
-void memset32(void *p, word val, size_t len)
+void memset32(void *p, dword data, size_t len)
 {
 	memset__<dword>(p, data, len);
 }
