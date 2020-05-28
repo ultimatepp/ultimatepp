@@ -61,14 +61,15 @@ bool SFtpStream::Open(SFtp& sftp_, const char *filename, dword mode, int acm)
 }
 
 SFtpStream::SFtpStream(SFtp& sftp, const char *filename, dword mode, int acm)
+: SFtpStream()
 {
-	handle = NULL;
 	Open(sftp, filename, mode, acm);
 }
 
 SFtpStream::SFtpStream()
+: sftp(nullptr)
+, handle(nullptr)
 {
-	handle = NULL;
 }
 
 SFtpStream::~SFtpStream()

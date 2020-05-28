@@ -112,7 +112,7 @@ bool SFtp::Sync(SFtpHandle handle)
 SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 {
 	Run([=] () mutable {
-		//LLOG("Seeking to offset: " << position);
+		LLOG("Seeking to offset: " << position);
 		libssh2_sftp_seek64(handle, position);
 		return true;
 	});
@@ -123,9 +123,9 @@ int64 SFtp::GetPos(SFtpHandle handle)
 {
 	int64 pos = 0;
 
-	return Run([=, &pos] () mutable {
+	Run([=, &pos] () mutable {
 		pos = libssh2_sftp_tell64(handle);
-		//LLOG("File position: " << pos);
+		LLOG("File position: " << pos);
 		return true;
 	});
 	return pos;
@@ -504,6 +504,7 @@ bool SFtp::ModifyAttr(const String& path, int attr, const Value& v)
 
 SFtp::SFtp(SshSession& session)
 : Ssh()
+, done(0)
 {
 	ssh->otype		= SFTP;
 	ssh->session	= session.GetHandle();
@@ -511,7 +512,6 @@ SFtp::SFtp(SshSession& session)
 	ssh->timeout	= session.GetTimeout();
 	ssh->waitstep   = session.GetWaitStep();
 	ssh->whenwait   = Proxy(session.WhenWait);
-	done            = 0;
 }
 
 SFtp::~SFtp()
@@ -653,7 +653,7 @@ Array<FileSystemInfo::FileInfo> SFtpFileSystemInfo::Find(String mask, int max_co
 					pattern = GetFileName(mask);
 				for(int i = 0, j = 0; i < ls.GetCount() && j < max_count; i++) {
 					const SFtp::DirEntry& e = ls[i];
-					if(!haswc || (haswc && PatternMatch(pattern, e.GetName()))) {
+					if(!haswc || PatternMatch(pattern, e.GetName())) {
 						fi.Add(e.ToFileInfo());
 						j++;
 					}

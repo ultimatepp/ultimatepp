@@ -30,14 +30,24 @@ to Null puts the SshSession object into blocking mode. Returns
 inherit their default timeout values from their session.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:SshSession`:`:HashType`(Hash`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
-]_[* HashType](Hash_[*@3 h])&]
-[s2;%% [/^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:GetMD5Fingerprint`(`)const^ D
-eprecated. Use the relevant fingerprint methods][/ .]&]
-[s2;%% Sets the requested hash type for server fingerprint. Can be 
-[C HASH`_MD5, HASH`_SHA1, or HASH`_SHA256]. SHA256 is the default 
-hash algorithm. Returns `*this for method chaining.&]
-[s3;%% &]
+[s5;:Upp`:`:SshSession`:`:Compression`(bool`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
+]_[* Compression]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Enables or disables Z compression for data transfers. Returns 
+`*this for method chaining. Compression is disabled by default. 
+This method affects the whole session. Therefore it must be invoked 
+either before any connection attempt or within the [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:WhenConfig^ W
+henConfig] event. Compression schemes can be specified via the 
+transport method settings.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:SshSession`:`:NoCompression`(`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
+]_[* NoCompression]()&]
+[s2;%% Disables Z compression. Same as Compression(false). Returns 
+`*this for method chaining. Compression is disabled by default. 
+This method affects the whole session. Therefore it must be invoked 
+either before any connection attempt or within the [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:WhenConfig^ W
+henConfig] event.&]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:Keys`(const Upp`:`:String`&`,const Upp`:`:String`&`,const Upp`:`:String`&`,bool`): [_^Upp`:`:SshSession^ S
 shSession][@(0.0.255) `&]_[* Keys]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
@@ -127,16 +137,6 @@ consists of raw binary bytes, not hex digits, so it is not directly
 printable.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:SshSession`:`:GetFingerprint`(`)const: [_^Upp`:`:String^ String]_[* GetFinger
-print]()_[@(0.0.255) const]&]
-[s2;%% [/^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:GetMD5Fingerprint`(`)const^ D
-eprecated. Use the relevant fingerprint methods].&]
-[s2;%% Returns the computed digest of the server`'s host key (in 
-raw bytes) on success, or an empty String on failure (e.g. requested 
-hash algorithm might not be available). Hash type can be set 
-using the HashType() method.&]
-[s3; &]
-[s4; &]
 [s5;:Upp`:`:SshSession`:`:GetSocket`(`): [_^Upp`:`:TcpSocket^ TcpSocket][@(0.0.255) `&]_[* G
 etSocket]()&]
 [s2;%% Returns a reference to the session socket.&]
@@ -155,11 +155,11 @@ all values are in lowercase letters.&]
 tring]>_[* GetAuthMethods]()&]
 [s0;l288;%% Returns a list of supported user authentication methods. 
 Returns an empty vector on failure. The following four authentication 
-methods are currently supported: `"password`", `"publickey`", 
-`"hostbased`", `"keyboard`-interactive`", and `"none`". The `"none`" 
-method allows logging in without an authentication scheme. It 
-is rarely used by the servers, and handled automatically by the 
-session.&]
+methods are currently supported: `"[C password]`", `"[C publickey]`", 
+`"[C hostbased]`", `"[C keyboard`-interactive]`", and `"[C none]`". 
+The `"[C none]`" method allows logging in without an authentication 
+scheme. It is rarely used by the servers, and handled automatically 
+by the session.&]
 [s3;^Upp`:`:SFtp^ &]
 [s4;^Upp`:`:SFtp^ &]
 [s5;:Upp`:`:SshSession`:`:CreateSFtp`(`): [_^Upp`:`:SFtp^ SFtp]_[* CreateSFtp]()&]
@@ -359,7 +359,18 @@ the connection attempt.&]
 :: [s0;%% [C hmac`-ripemd160 (hmac`-ripemd160`@openssh.com)]]
 :: [s0; ]
 :: [s0;%% [C none]]
-::l/26r/26t/14b/14@1-1 [s0;=%% [* Language (Client and/or Server)]]
+::l/26r/26t/14b/14@1-1 [s0;=%% [* Compression (Client and/or Server)]]
+::l/25r/25t/15b/15@2 [s0; ]
+::l/26r/26t/14b/14@(178) [s0;=%% Key]
+:: [s0;=%% Value(s)]
+::@2|2 [s0;=%% [*C SshSession`::METHOD`_SCOMPRESSION]&]
+[s0;=%% [*C SshSession`::METHOD`_CCOMPRESSION]]
+:: [s0;%% [C zlib`@openssh.com]]
+::l/25r/25t/15b/15 [s0; ]
+::l/26r/26t/14b/14 [s0;%% [C zlib]]
+::l/25r/25t/15b/15 [s0; ]
+::l/26r/26t/14b/14 [s0;%% [C none]]
+::@1-1 [s0;=%% [* Language (Client and/or Server)]]
 ::l/25r/25t/15b/15@2 [s0; ]
 ::l/26r/26t/14b/14@(178) [s0;=%% Key]
 :: [s0;=%% Value(s)]

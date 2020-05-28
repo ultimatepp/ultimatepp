@@ -9,6 +9,8 @@ flags(LIBSSH2DEBUG) LIBSSH2DEBUG;
 uses
 	Core;
 
+uses(WIN32 | NOSO) plugin/z;
+
 library(POSIX) "crypto ssl z";
 
 library(WIN32) "ssl crypto";

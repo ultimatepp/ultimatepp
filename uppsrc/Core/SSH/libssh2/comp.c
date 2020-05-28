@@ -37,8 +37,9 @@
  */
 
 #include "libssh2_priv.h"
+
 #ifdef LIBSSH2_HAVE_ZLIB
-# include <zlib.h>
+#include UPP_ZLIB_INCLUDE					/* Upp: Patched 05/27/2020 */
 #endif
 
 #include "comp.h"
