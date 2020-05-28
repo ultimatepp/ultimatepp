@@ -1,6 +1,6 @@
 TODO:
 -----
-
+- Upgrade to libssh2 v1.9
 - Override libssh2 send and recv callbacks to do raw sends/recvs with U++ TcpSocket.
 - Accordingly, move Ssh::Wait() to SshSession.
 - Write a tutorial based on SshBasics example.

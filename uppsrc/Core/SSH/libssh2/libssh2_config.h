@@ -69,9 +69,9 @@
 #endif
 
 /*
-* Z compression requires plugin/z on Windows and static builds.
+* Z compression requires plugin/z on Windows and for static builds.
 * Below patch, which applies to libssh2/comp.c, allows using the
-* Z compression on Upp::SSH Win32 and static builds.
+* Z compression on Upp::SSH Win32 and for static builds.
 */
 #if defined(flagWIN32) || defined(flagNOSO)
 #define UPP_ZLIB_INCLUDE <plugin/z/lib/zlib.h>
