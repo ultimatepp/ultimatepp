@@ -32,11 +32,11 @@ public:
         friend class SFtp;
         public:
             String GetName() const                  { return filename; }
-            int64  GetUid() const                   { return a->flags & LIBSSH2_SFTP_ATTR_UIDGID ? a->uid : -1; }
-            int64  GetGid() const                   { return a->flags & LIBSSH2_SFTP_ATTR_UIDGID ? a->gid : -1; }
-            int64  GetSize() const                  { return a->flags & LIBSSH2_SFTP_ATTR_SIZE ? a->filesize : -1; }
-            Time   GetLastModified() const          { return a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME ? TimeFromUTC(a->mtime) : Null; }
-            Time   GetLastAccessed() const          { return a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME ? TimeFromUTC(a->atime) : Null; }
+            int64  GetUid() const                   { return (a->flags & LIBSSH2_SFTP_ATTR_UIDGID) ? a->uid : -1; }
+            int64  GetGid() const                   { return (a->flags & LIBSSH2_SFTP_ATTR_UIDGID) ? a->gid : -1; }
+            int64  GetSize() const                  { return (a->flags & LIBSSH2_SFTP_ATTR_SIZE) ? a->filesize : -1; }
+            Time   GetLastModified() const          { return (a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME) ? TimeFromUTC(a->mtime) : Null; }
+            Time   GetLastAccessed() const          { return (a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME) ? TimeFromUTC(a->atime) : Null; }
             dword  GetPermissions() const           { return a->permissions; }
             SFtpAttrs& GetAttrs()                   { return *a; }
 

@@ -136,7 +136,7 @@ public:
     void        Send(const char* s)             { Send(String(s));}
     void        Send(const String& s)           { queue.Cat(s);   }
 
-    SshShell&   PageSize(Size sz)               { if((resized = sz != psize)) psize = sz; return *this;}
+    SshShell&   PageSize(Size sz)               { resized = sz != psize; if(resized) psize = sz; return *this;}
     Size        GetPageSize() const             { return psize; }
     Size        GetConsolePageSize();
 

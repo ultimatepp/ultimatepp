@@ -41,7 +41,7 @@
 /* Headers */
 #define HAVE_INTTYPES_H
 #define HAVE_STDLIB_H
-#ifdef flagGCC 
+#if defined(flagGCC) || defined(flagCLANG)
 #define HAVE_ERRNO_H
 #define HAVE_UNISTD_H
 #define HAVE_SYS_TIME_H
@@ -68,9 +68,21 @@
 #define LIBSSH2DEBUG
 #endif
 
-/* Libraries */
-#define HAVE_LIBZ
+/*
+* Z compression requires plugin/z on Windows and static builds.
+* Below patch, which applies to libssh2/comp.c, allows using the
+* Z compression on Upp::SSH Win32 and static builds.
+*/
+#if defined(flagWIN32) || defined(flagNOSO)
+#define UPP_ZLIB_INCLUDE <plugin/z/lib/zlib.h>
+#else
+#define UPP_ZLIB_INCLUDE <zlib.h>
+#endif
 
+/* Let us enable Z compression. */
+#define LIBSSH2_HAVE_ZLIB
+
+/* Upp/SSH package uses OpenSSL by default. */
 #define LIBSSH2_OPENSSL
 
 // #undef LIBSSH2_WINCNG
@@ -83,10 +95,13 @@
 #ifdef flagPOSIX
 #define HAVE_POLL
 #endif
-#ifdef flagGCC
+
+#if defined(flagGCC) || defined(flagCLANG)
 #define HAVE_GETTIMEOFDAY
 #endif
-//#define HAVE_INET_ADDR
+
+/*#define HAVE_INET_ADDR*/
+
 #define HAVE_SELECT
 #define HAVE_SOCKET
 #define HAVE_STRTOLL

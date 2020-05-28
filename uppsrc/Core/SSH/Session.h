@@ -24,16 +24,19 @@ public:
 public:
     SshSession&         Timeout(int ms)                         { ssh->timeout = ms; return *this; }
  
+    SshSession&         Compression(bool b = true)              { session->compression = b; return *this; }
+    SshSession&         NoCompression()                         { return Compression(false); }
+
     SshSession&         Keys(const String& prikey, const String& pubkey, const String& phrase, bool fromfile = true);
     SshSession&         Method(int type, Value method)          { session->iomethods(type) << pick(method); return *this; }
     SshSession&         Methods(ValueMap methods)               { session->iomethods = pick(methods); return *this; }
-
+ 
     SshSession&         PasswordAuth()                          { session->authmethod = PASSWORD;  return *this; }
     SshSession&         PublicKeyAuth()                         { session->authmethod = PUBLICKEY; return *this; }
     SshSession&         HostBasedAuth()                         { session->authmethod = HOSTBASED; return *this; }
     SshSession&         KeyboardAuth()                          { session->authmethod = KEYBOARD;  return *this; }
     SshSession&         AgentAuth()                             { session->authmethod = SSHAGENT;  return *this; }
-
+ 
     LIBSSH2_SESSION*    GetHandle()                             { return ssh->session; }
     
     String              GetBanner() const                       { return ssh->session ? pick(String(libssh2_session_banner_get(ssh->session))) : Null; }
@@ -93,6 +96,7 @@ private:
         String          phrase;
         ValueMap        iomethods;
         bool            connected;
+        bool            compression;
     };
     One<SessionData> session;
 

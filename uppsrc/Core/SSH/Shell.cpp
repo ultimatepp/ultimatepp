@@ -359,23 +359,21 @@ bool SshShell::AcceptX11(SshX11Handle xhandle)
 
 SshShell::SshShell(SshSession& session)
 : SshChannel(session)
-{
-    ssh->otype  = SHELL;
-    ssh->noblock = true;
-    mode        = GENERIC;
-    rawmode     = false;
-    resized     = false;
-    xenabled    = false;
+, mode(GENERIC)
+, rawmode(false)
+, resized(false)
+, xenabled(false)
 #ifdef PLATFORM_POSIX
-    xscreen     = 0;
-    xdisplay    = 0;
-    xenabled    = false;
-    xbuflen     = 1024 * 1024;
+, xscreen(0)
+, xdisplay(0)
+, xbuflen(1024 * 1024)
 #elif PLATFORM_WIN32
-    stdinput    = nullptr;
-    stdoutput   = nullptr;
+, stdinput(nullptr)
+, stdoutput(nullptr)
 #endif
-
+{
+    ssh->otype = SHELL;
+    ssh->noblock = true;
 	Zero(tflags);
 }
 

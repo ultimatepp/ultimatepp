@@ -345,6 +345,7 @@ bool SshChannel::Shut(const String& msg, bool nowait)
 }
 
 SshChannel::SshChannel(SshSession& session)
+: done(0)
 {
 	ssh->otype		= CHANNEL;
 	ssh->session	= session.GetHandle();

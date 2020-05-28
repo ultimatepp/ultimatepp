@@ -184,6 +184,8 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			ssh->socket = &session->socket;
 			LLOG("Session successfully initialized.");
 			WhenConfig();
+			libssh2_session_flag(ssh->session, LIBSSH2_FLAG_COMPRESS, (int) session->compression);
+			LLOG("Compression is " << (session->compression ? "enabled." : "disabled."));
 			WhenPhase(PHASE_HANDSHAKE);
 			return true;
 	})) goto Bailout;
@@ -482,12 +484,13 @@ SshSession::SshSession()
 : Ssh()
 {
     session.Create();
-    ssh->otype          = SESSION;
-    ssh->whenwait       = Proxy(WhenWait);
-    session->authmethod = PASSWORD;
-    session->connected  = false;
-    session->keyfile    = true;
-    session->hashtype   = HASH_SHA256;
+    ssh->otype           = SESSION;
+    ssh->whenwait        = Proxy(WhenWait);
+    session->authmethod  = PASSWORD;
+    session->connected   = false;
+    session->keyfile     = true;
+    session->compression = false;
+    session->hashtype    = HASH_SHA256;
  }
 
 SshSession::~SshSession()
