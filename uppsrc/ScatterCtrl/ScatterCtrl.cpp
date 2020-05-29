@@ -12,7 +12,8 @@ namespace Upp {
 	
 	
 Vector<ScatterCtrl *> ScatterCtrl::instances;	
-
+Array<ScatterWindow> ScatterWindowPool::pool;
+	
 #ifdef PLATFORM_WIN32
 
 void ScatterCtrl::SaveAsMetafile(const char* file)

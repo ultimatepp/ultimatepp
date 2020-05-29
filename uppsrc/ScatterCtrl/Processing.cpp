@@ -803,6 +803,11 @@ void ProcessingTab::OnFFT()
 			tabFreqRight.m1  <<= "";
 			tabFreqRight.m2  <<= "";
 		}
+		tabFreqRight.m_1.Enable(tabFreqRight.type == DataSource::T_PSD);
+		tabFreqRight.m0.Enable(tabFreqRight.type == DataSource::T_PSD);
+		tabFreqRight.m1.Enable(tabFreqRight.type == DataSource::T_PSD);
+		tabFreqRight.m2.Enable(tabFreqRight.type == DataSource::T_PSD);
+		tabFreqRight.labSpectral.Enable(tabFreqRight.type == DataSource::T_PSD);
 	}
 	if (fft.IsEmpty()) {
 		tabFreqLeft.comments.SetText(errText);
