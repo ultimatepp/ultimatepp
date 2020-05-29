@@ -418,6 +418,10 @@ public:
 
 class Spline {
 public:
+	Spline()													 {}
+	Spline(const Vector<double> &x, const Vector<double> &y)	 {Fit(x, y);}
+	Spline(const Eigen::VectorXd &x, const Eigen::VectorXd &y) 	 {Fit(x, y);}
+	Spline(const double *x, const double *y, int n)				 {Fit(x, y, n);}	
 	void Fit(const Vector<double> &x, const Vector<double> &y)	 {Fit(x.begin(), y.begin(), x.GetCount());}
 	void Fit(const Eigen::VectorXd &x, const Eigen::VectorXd &y) {Fit(x.data(), y.data(), int(x.size()));}
 	void Fit(const double *x, const double *y, int n);
@@ -426,7 +430,7 @@ public:
 private:
 	struct Coeff {double a, b, c, d, x;};
     Buffer<Coeff> coeff;
-    int ncoeff;
+    int ncoeff = 0;
 };
 
 class SplineEquation : public ExplicitEquation, public Spline {
