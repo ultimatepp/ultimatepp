@@ -1104,7 +1104,19 @@ bool ScatterDraw::IsDataPrimaryY(int index) {
 	
 	return series[index].primaryY;	
 }
+/*
+void ScatterDraw::SetDataSourceInternal() {
+	for (int i = 0; i < series.GetCount(); ++i)
+		series[i].SetDataSource_Internal(true);
+}*/
 
+bool ScatterDraw::ThereAreSecondaryY() {
+	for (int i = 0; i < series.GetCount(); ++i)
+		if (!series[i].primaryY)
+			return true;
+	return false;
+}
+	
 void ScatterDraw::SetSequentialX(int index, bool sequential) {
 	ASSERT(IsValid(index));
 	ASSERT(!series[index].IsDeleted());
