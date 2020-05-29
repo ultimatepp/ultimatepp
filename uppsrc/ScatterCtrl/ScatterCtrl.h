@@ -506,13 +506,25 @@ public:
 	ScatterCtrl &operator()()		{return scatter;}
 	
 	ScatterWindow &OpenMain() {
+		if(scatter.ThereAreSecondaryY())
+			scatter.SetPlotAreaRightMargin(70);
+		scatter.SetDataSourceInternal();
 		scatter.ZoomToFit(true, true);
 		TopWindow::OpenMain();
+		Ctrl::ProcessEvents();
 		return *this;
 	}
 
 private:	
 	ScatterCtrl scatter;	
+};
+
+class ScatterWindowPool {
+public:
+	static ScatterWindow &Get()	{return pool.Add();}
+
+private:
+	static Array<ScatterWindow> pool;
 };
 
 }
