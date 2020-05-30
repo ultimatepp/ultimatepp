@@ -150,29 +150,6 @@ void EndianSwap(int *v, size_t count);
 void EndianSwap(int64 *v, size_t count);
 void EndianSwap(uint64 *v, size_t count);
 
-force_inline bool fast_equal128(const void *a, const void *b)
-{
-	uint32 *aa = (uint32 *)a;
-	uint32 *bb = (uint32 *)b;
-	return ((aa[0] ^ bb[0]) | (aa[1] ^ bb[1]) | (aa[2] ^ bb[2]) | (aa[3] ^ bb[3])) == 0;
-}
-
-force_inline void fast_zero128(void *t)
-{
-	uint32 *tt = (uint32 *)t;
-	tt[0] = tt[1] = tt[2] = tt[3] = 0;
-}
-
-force_inline void fast_copy128(void *t, const void *s)
-{
-	uint32 *tt = (uint32 *)t;
-	uint32 *ss = (uint32 *)s;
-	tt[0] = ss[0];
-	tt[1] = ss[1];
-	tt[2] = ss[2];
-	tt[3] = ss[3];
-}
-
 #if defined(CPU_UNALIGNED) && defined(CPU_LE)
 force_inline
 int fast_memcmp(const char *a, const char *b, size_t len)

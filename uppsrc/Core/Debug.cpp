@@ -176,6 +176,18 @@ void LogHex(void *p)
 	VppLog() << p << '\n';
 }
 
+#ifdef CPU_X86
+String AsString(__m128i x)
+{
+	dword h[4];
+	memcpy(h, &x, 16);
+	word w[8];
+	memcpy(w, &x, 16);
+	return Sprintf("_%08x_%08x_%08x_%08x (%d, %d, %d, %d) : (%d, %d, %d, %d)",
+	               h[3], h[2], h[1], h[0], w[6], w[5], w[4], w[7], w[2], w[1], w[0], w[3]);
+}
+#endif
+
 void SetMagic(byte *t, int count)
 {
 	for(int i = 0; i < count; i++)

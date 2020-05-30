@@ -254,6 +254,10 @@ inline String AsString(const MemoryProfile&) { return "Using malloc - no memory 
 
 String CppDemangle(const char* name);
 
+#ifdef CPU_X86
+String AsString(__m128i x);
+#endif
+
 #if 0 // rare cases when release-mode DLOG/DDUMP is needed
 
 #undef  DLOG
