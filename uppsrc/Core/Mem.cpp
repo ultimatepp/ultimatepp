@@ -3,20 +3,6 @@
 namespace Upp {
 
 #ifdef CPU_X86
-void huge_memsetd(void *p, dword c, size_t len)
-{ // bypasses the cache, good for >4MB
-	dword *t = (dword *)p;
-}
-
-String AsString(__m128i x)
-{
-	dword h[4];
-	memcpy(h, &x, 16);
-	word w[8];
-	memcpy(w, &x, 16);
-	return Sprintf("_%08x_%08x_%08x_%08x (%d, %d, %d, %d) : (%d, %d, %d, %d)",
-	               h[3], h[2], h[1], h[0], w[6], w[5], w[4], w[7], w[2], w[1], w[0], w[3]);
-}
 
 void memset8__(void *p, __m128i data, size_t len)
 {
@@ -91,6 +77,11 @@ void memcpy8__(void *p, const void *q, size_t len)
 	if(len & 16)
 		Copy128(0*16);
 }
+
+bool memeq8(const void *p, const void *q, size_t len) { return inline_memeq8_aligned(p, q, len); }
+bool memeq16(const void *p, const void *q, size_t len) { return inline_memeq16_aligned(p, q, len); }
+bool memeq32(const void *p, const void *q, size_t len) { return inline_memeq32_aligned(p, q, len); }
+bool memeq64(const void *p, const void *q, size_t len) { return inline_memeq64_aligned(p, q, len); }
 
 #endif
 

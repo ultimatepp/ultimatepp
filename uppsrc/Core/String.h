@@ -243,10 +243,8 @@ class String0 : Moveable<String0> {
 	friend class TextCtrl;
 
 protected:
-//	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
-//	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
-	void Zero()                     { fast_zero128(q); Dsyn(); }
-	void SetSmall(const String0& s) { fast_copy128(q, s.q); }
+	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
 	void Free()                     { if(IsLarge()) LFree(); }
 	void Pick0(String0&& s) {
 		SetSmall(s);
@@ -277,19 +275,13 @@ protected:
 	typedef StringBuffer Buffer;
 	typedef Upp::String  String;
 
+
 public:
+	bool LEq(const String0& s) const;
 	bool IsEqual(const String0& s) const {
-#if 0
-		return (chr[KIND] | s.chr[KIND] ? LEqual(s) : fast_equal128(q, s.q)) == 0;
-#else
-		return (chr[KIND] | s.chr[KIND] ? LEqual(s) :
-		#ifdef CPU_64
-		        ((q[0] ^ s.q[0]) | (q[1] ^ s.q[1]))
-		#else
-		        ((w[0] ^ s.w[0]) | (w[1] ^ s.w[1]) | (w[2] ^ s.w[2]) | (w[3] ^ s.w[3]))
-		#endif
-		       ) == 0;
-#endif
+		uint64 q1 = q[1];
+		uint64 sq1 = s.q[1];
+		return q1 == sq1 && q[0] == s.q[0] || ((q1 | sq1) & I64(0x00ff000000000000)) && LEq(s);
 	}
 
 	int    Compare(const String0& s) const;
@@ -765,7 +757,7 @@ public:
 	int  GetAlloc() const                { return alloc; }
 
 	unsigned GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
-	bool     IsEqual(const WString0& s) const { return s.length == length && memcmp(ptr, s.ptr, length * sizeof(wchar)) == 0; }
+	bool     IsEqual(const WString0& s) const { return s.length == length && memeq16(ptr, s.ptr, length); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);

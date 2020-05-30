@@ -1,4 +1,14 @@
 #ifdef CPU_X86
+
+inline
+bool memeq128(const void *p, const void *q)
+{
+	qword *s = (qword *)p;
+	qword *t = (qword *)q;
+	return s[0] == t[0] && s[1] == t[1];
+//	return _mm_movemask_epi8(_mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)p), _mm_loadu_si128((__m128i *)q))) == 0xffff;
+}
+
 void memset8__(void *t, __m128i data, size_t len);
 
 inline
@@ -78,6 +88,30 @@ void memset32(void *p, dword data, size_t len)
 	}
 	if(len & 4)
 		Set4(0);
+}
+
+inline
+void memset64(void *p, qword data, size_t len)
+{
+	qword *t = (qword *)p;
+	if(len < 2) {
+		if(len)
+			t[0] = data;
+		return;
+	}
+	__m128i val2 = _mm_set1_epi64x(data);
+	if(len >= 8) {
+		memset8__(t, val2, 8 * len);
+		return;
+	}
+	auto Set128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val2); };
+	Set128(len - 2); // fill tail
+	if(len & 4) {
+		Set128(0); Set128(2);
+		t += 4;
+	}
+	if(len & 2)
+		Set128(0);
 }
 
 void memcpy8__(void *p, const void *q, size_t len);
@@ -272,23 +306,116 @@ void memcpy_t(void *t, const T *s, size_t count)
 		memcpy8(t, s, count * sizeof(T));
 }
 
+force_inline
+bool memeq8__(const void *p, const void *q, size_t len)
+{
+	ASSERT(len >= 16);
+	const byte *t = (byte *)p;
+	const byte *s = (byte *)q;
+	
+	auto Cmp128 = [&](int at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
+	auto Neq = [](__m128i v) { return _mm_movemask_epi8(v) != 0xffff; };
+	auto And = [](__m128i a, __m128i b) { return _mm_and_si128(a, b); };
+	
+	if(Neq(And(Cmp128(len - 16), Cmp128(0)))) // tail & alignment, also <= 32
+		return false;
+	
+	if(len <= 32)
+		return true;
+
+	const byte *e = t + len; // align up
+
+	byte *t1 = (byte *)(((uintptr_t)t | 15) + 1);
+	s += t1 - t;
+	t = t1;
+	len = e - t;
+	e -= 32;
+	while(t <= e) {
+		if(Neq(And(Cmp128(0), Cmp128(1*16))))
+			return false;
+		s += 32;
+		t += 32;
+	}
+	if(len & 16)
+		if(Neq(Cmp128(0)))
+			return false;
+	return true;
+}
+
+force_inline
+bool inline_memeq8_aligned(const void *p, const void *q, size_t len)
+{
+	const byte *t = (const byte *)p;
+	const byte *s = (const byte *)q;
+	if(len >= 16) { // 15..31 is the most important range for String, make it fastest
+		auto Cmp128 = [&](int at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
+		return memeq8__(t, s, len);
+	}
+	if(len > 4) {
+		if(len <= 8) // test tail first in case we are searching in sorted list
+			return Peek32(s + len - 4) == Peek32(t + len - 4) && Peek32(s) == Peek32(t);
+		return Peek64(s + len - 8) == Peek64(t + len - 8) && Peek64(s) == Peek64(t);
+	}
+	if(len < 2)
+		return len ? t[0] == s[0] : true;
+	if(Peek16(s + len - 2) != Peek16(t + len - 2))
+		return false;
+	return len > 2 ? Peek16(s) == Peek16(t) : true;
+}
+
+force_inline
+bool inline_memeq16_aligned(const void *p, const void *q, size_t len)
+{
+	const word *t = (const word *)p;
+	const word *s = (const word *)q;
+	if(len <= 2)
+		return len ? Peek16(s + len - 1) == Peek16(t + len - 1) && Peek16(s) == Peek16(t) : true;
+	if(len <= 8) {
+		if(len <= 4)
+			return Peek32(s + len - 2) == Peek32(t + len - 2) && Peek32(s) == Peek32(t);
+		return Peek64(s + len - 4) == Peek64(t + len - 4) && Peek64(s) == Peek64(t);
+	}
+	return memeq8__(t, s, 2 * len);
+}
+
+force_inline
+bool inline_memeq32_aligned(const void *p, const void *q, size_t len)
+{
+	const dword *t = (const dword *)p;
+	const dword *s = (const dword *)q;
+	if(len <= 4) {
+		if(len <= 2)
+			return len ? Peek32(s + len - 1) == Peek32(t + len - 1) && Peek32(s) == Peek32(t) : true;
+		return Peek64(s + len - 2) == Peek64(t + len - 2) && Peek64(s) == Peek64(t);
+	}
+	return memeq8__(t, s, 4 * len);
+}
+
+force_inline
+bool inline_memeq64_aligned(const void *p, const void *q, size_t len)
+{
+	const qword *t = (const qword *)p;
+	const qword *s = (const qword *)q;
+	if(len <= 2)
+		return len ? Peek64(s + len - 1) == Peek64(t + len - 1) && Peek64(s) == Peek64(t) : true;
+	return memeq8__(t, s, 8 * len);
+}
+
+bool memeq8(const void *p, const void *q, size_t len);
+bool memeq16(const void *p, const void *q, size_t len);
+bool memeq32(const void *p, const void *q, size_t len);
+bool memeq64(const void *p, const void *q, size_t len);
+
 #else
 
 template <class T>
 void memset__(void *p, T data, size_t len)
 {
 	T *t = (T *)p;
-	while(len >= 16) {
-		t[0] = data; t[1] = data; t[2] = data; t[3] = data;
-		t[4] = data; t[5] = data; t[6] = data; t[7] = data;
-		t[8] = data; t[9] = data; t[10] = data; t[11] = data;
-		t[12] = data; t[13] = data; t[14] = data; t[15] = data;
-		t += 16;
-		len -= 16;
-	}
-	if(len & 8) {
+	while(len >= 8) {
 		t[0] = t[1] = t[2] = t[3] = t[4] = t[5] = t[6] = t[7] = data;
 		t += 8;
+		len -= 8;
 	}
 	if(len & 4) {
 		t[0] = t[1] = t[2] = t[3] = data;
@@ -358,6 +485,79 @@ template <class T>
 void memcpy_t(void *t, const T *s, size_t count)
 {
 	memcpy8(t, s, count * sizeof(T));
+}
+
+inline
+bool inline_memeq8_aligned(const void *p, const void *q, size_t len)
+{
+	const byte *t = (const byte *)p;
+	const byte *s = (const byte *)q;
+	while(len >= 8) {
+		if(*(qword *)t != *(qword *)s)
+			return false;
+		s += 8;
+		t += 8;
+		len -= 8;
+	}
+	if(len & 4) {
+		if(*(dword *)t != *(dword *)s)
+			return false;
+		s += 4;
+		t += 4;
+	}
+	if(len & 2) {
+		if(*(word *)t != *(word *)s)
+			return false;
+		s += 2;
+		t += 2;
+	}
+	if(len & 2) {
+		if(*t != *s)
+			return false;
+	}
+	return true;
+}
+
+force_inline
+bool inline_memeq16_aligned(const void *p, const void *q, size_t len)
+{
+	return memcmp(p, q, 2 * len) == 0;
+}
+
+force_inline
+bool inline_memeq32_aligned(const void *p, const void *q, size_t len)
+{
+	return memcmp(p, q, 4 * len) == 0;
+}
+
+force_inline
+bool inline_memeq64_aligned(const void *p, const void *q, size_t len)
+{
+	return memcmp(p, q, 8 * len) == 0;
+}
+
+inline
+bool memeq8(const void *p, const void *q, size_t len)
+{
+	return memcmp(p, q, len) == 0;
+}
+
+inline
+bool memeq16(const void *p, const void *q, size_t len)
+{
+	memcmp(p, q, 2 * len) == 0;
+}
+
+inline
+bool memeq32(const void *p, const void *q, size_t len)
+{
+	memcmp(p, q, 4 * len) == 0;
+}
+
+inline
+bool memeq64(const void *p, const void *q, size_t len);
+{
+	memcmp(p, q, 4 * len) == 0;
 }
 
 #endif
