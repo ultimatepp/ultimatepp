@@ -383,7 +383,7 @@ void LogFree(void *ptr)
 {
 	if(sLog) {
 		Mutex::Lock __(sHeapLogLock);
-		fprintf(sLog, "-%x %p\n", Thread::GetCurrentId(), ptr);
+		fprintf(sLog, "-%x %p\n", (int)Thread::GetCurrentId(), ptr);
 	}
 }
 
@@ -391,7 +391,7 @@ void *LogAlloc(void *ptr, size_t sz)
 {
 	if(sLog) {
 		Mutex::Lock __(sHeapLogLock);
-		fprintf(sLog, "%x %zx %p\n", Thread::GetCurrentId(), sz, ptr);
+		fprintf(sLog, "%x %zx %p\n", (int)Thread::GetCurrentId(), sz, ptr);
 	}
 	return ptr;
 }

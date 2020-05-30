@@ -248,43 +248,6 @@ int AString<B>::FindFirstOf(int len, const tchar *s, int from) const
 	return -1;
 }
 
-inline int String0::Compare(const String0& s) const
-{
-#ifdef FAST_STRING_COMPARE
-	if((chr[KIND] | s.chr[KIND]) == 0) {
-	#ifdef CPU_64
-		uint64 a64 = q[0];
-		uint64 b64 = s.q[0];
-		if(a64 != b64)
-			return SwapEndian64(a64) < SwapEndian64(b64) ? -1 : 1;
-		uint32 a32 = w[2];
-		uint32 b32 = s.w[2];
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-	#else
-		uint32 a32 = w[0];
-		uint32 b32 = s.w[0];
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-		a32 = w[1];
-		b32 = s.w[1];
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-		a32 = w[2];
-		b32 = s.w[2];
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-	#endif
-		uint16 a16 = v[6];
-		uint16 b16 = s.v[6];
-		if(a16 != b16)
-			return SwapEndian16(a16) < SwapEndian16(b16) ? -1 : 1;
-		return 0;
-	}
-#endif
-	return LCompare(s);
-}
-
 force_inline
 void String0::Set(const char *s, int len)
 {
