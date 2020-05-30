@@ -1,8 +1,6 @@
 #ifndef _Eigen_Eigen_h
 #define _Eigen_Eigen_h
 
-#include <Core/Core.h>
-
 #define EIGEN_MATRIX_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
 #define EIGEN_DENSEBASE_PLUGIN 	<plugin/Eigen/ToStringPlugin.h>
 #define EIGEN_TENSOR_PLUGIN		<plugin/Eigen/ToStringPlugin.h>
@@ -11,12 +9,10 @@
 #define EIGEN_NO_DEBUG
 #endif
 
-#define EIGEN_EXCEPTIONS
-
 #define eigen_assert(x) ASSERT(x)
 
 #undef Success  
-#include "Eigen/Eigen"
+#include "Eigen/Dense"
 #include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
 #include <plugin/Eigen/unsupported/Eigen/FFT>
 #include <plugin/Eigen/unsupported/Eigen/CXX11/Tensor>
@@ -51,8 +47,8 @@ struct Basic_functor : NonLinearOptimizationFunctor<double> {
 	Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &err)> function;
 };
 
-bool NonLinearOptimization(Eigen::VectorXd &y, int numData, Function <int(const Eigen::VectorXd &y, Eigen::VectorXd &residual)>residual);
-bool NonLinearSolver(Eigen::VectorXd &y, Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &residual)> Residual);
+bool NonLinearOptimization(Eigen::VectorXd &y, Eigen::Index numData, Function <int(const Eigen::VectorXd &y, Eigen::VectorXd &residual)>residual);
+bool SolveNonLinearEquations(Eigen::VectorXd &y, Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &residual)> Residual);
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
