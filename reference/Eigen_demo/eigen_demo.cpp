@@ -125,6 +125,11 @@ CONSOLE_APP_MAIN
 		Cout() << "\nHere is the matrix a^T\n" << a.transpose();
 		Cout() << "\nHere is the conjugate of a\n" << a.conjugate();
 		Cout() << "\nHere is the matrix a^*\n" << a.adjoint();
+		
+		VectorXd v(5);
+		v << 1, 2, 3, 4, 5;
+		Cout() << "\n\nInitial vector  " << v.transpose();
+		Cout() <<   "\nReversed vector " << v.reverse().transpose();
 	}
 	Cout() << "\n\nMatrix-matrix and matrix-vector multiplication";
 	{

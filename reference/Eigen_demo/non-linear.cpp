@@ -193,11 +193,11 @@ void NonLinearSolving() {
 			Cout() << "\nEquation solving FAILED!";
 	}
 	
-	Cout() << "\n\nThis is a simpler way, using NonLinearSolver()";
+	Cout() << "\n\nThis is a simpler way, using SolveNonLinearEquations()";
 	
 	x.setConstant(n, -1.);		// Initial values
 	
-	if (!NonLinearSolver(x, [&](const VectorXd &x, VectorXd &residual)->int {
+	if (!SolveNonLinearEquations(x, [&](const VectorXd &x, VectorXd &residual)->int {
 		const ptrdiff_t n = x.size();
 		
 		ASSERT(residual.size() == n);
