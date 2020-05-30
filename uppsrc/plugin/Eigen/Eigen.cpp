@@ -1,12 +1,11 @@
 #include <Core/Core.h>
 #include <Eigen.h>
 
-
 namespace Upp {
 
 using namespace Eigen;
-
-bool NonLinearOptimization(VectorXd &y, int numData, Function <int(const VectorXd &b, VectorXd &residual)> Residual) {
+	
+bool NonLinearOptimization(VectorXd &y, Eigen::Index numData, Function <int(const VectorXd &b, VectorXd &residual)> Residual) {
 	Basic_functor functor(Residual);
 	functor.unknowns = y.size();
 	functor.datasetLen = numData;
@@ -19,7 +18,7 @@ bool NonLinearOptimization(VectorXd &y, int numData, Function <int(const VectorX
 	return true;
 }
 
-bool NonLinearSolver(VectorXd &y, Function <int(const VectorXd &b, VectorXd &residual)> Residual) {
+bool SolveNonLinearEquations(VectorXd &y, Function <int(const VectorXd &b, VectorXd &residual)> Residual) {
 	Basic_functor functor(Residual);
 	HybridNonLinearSolver<Basic_functor> solver(functor);
 	int ret = solver.solveNumericalDiff(y);
