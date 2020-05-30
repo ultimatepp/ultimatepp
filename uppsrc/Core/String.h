@@ -211,7 +211,6 @@ class String0 : Moveable<String0> {
 	bool   IsSharedRef() const   { return IsRef() && IsShared(); }
 	int    LAlloc() const        { int b = (byte)chr[KIND]; return b == 255 ? Ref()->alloc : b; }
 	dword  LEqual(const String0& s) const;
-	int    LCompare(const String0& s) const;
 
 	void LSet(const String0& s);
 	void LFree();

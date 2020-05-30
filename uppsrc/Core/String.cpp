@@ -65,13 +65,13 @@ unsigned String0::LHashValue() const
 	return memhash(ptr, l);
 }
 
-int String0::LCompare(const String0& s) const
+int String0::Compare(const String0& s) const
 {
 	const char *a = Begin();
 	int la = GetLength();
 	const char *b = s.Begin();
 	int lb = s.GetLength();
-	int q = fast_memcmp(a, b, min(la, lb));
+	int q = inline_memcmp_aligned(a, b, min(la, lb));
 	return q ? q : SgnCompare(la, lb);
 }
 

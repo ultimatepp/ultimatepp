@@ -150,59 +150,6 @@ void EndianSwap(int *v, size_t count);
 void EndianSwap(int64 *v, size_t count);
 void EndianSwap(uint64 *v, size_t count);
 
-#if defined(CPU_UNALIGNED) && defined(CPU_LE)
-force_inline
-int fast_memcmp(const char *a, const char *b, size_t len)
-{
-#ifdef CPU_64
-	while(len >= 8) {
-		uint64 a64 = *(uint64 *)a;
-		uint64 b64 = *(uint64 *)b;
-		if(a64 != b64)
-			return SwapEndian64(a64) < SwapEndian64(b64) ? -1 : 1;
-		a += 8;
-		b += 8;
-		len -= 8;
-	}
-	if(len & 4) {
-		uint32 a32 = *(uint32 *)a;
-		uint32 b32 = *(uint32 *)b;
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-		a += 4;
-		b += 4;
-	}
-#else
-	while(len >= 4) {
-		uint32 a32 = *(uint32 *)a;
-		uint32 b32 = *(uint32 *)b;
-		if(a32 != b32)
-			return SwapEndian32(a32) < SwapEndian32(b32) ? -1 : 1;
-		a += 4;
-		b += 4;
-		len -= 4;
-	}
-#endif
-	if(len & 2) {
-		uint16 a16 = *(uint16 *)a;
-		uint16 b16 = *(uint16 *)b;
-		if(a16 != b16)
-			return SwapEndian16(a16) < SwapEndian16(b16) ? -1 : 1;
-		a += 2;
-		b += 2;
-	}
-	if((len & 1) != 0 && *a != *b)
-		return (byte)*a < (byte)*b ? -1 : 1;
-	return 0;
-}
-#else
-inline
-int fast_memcmp(const char *a, const char *b, size_t len)
-{
-	return memcmp(a, b, len);
-}
-#endif
-
 inline dword FoldHash(dword h)
 {
 	return SwapEndian32(0xa3613c16 * h);
