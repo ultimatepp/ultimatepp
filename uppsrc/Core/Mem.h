@@ -545,19 +545,19 @@ bool memeq8(const void *p, const void *q, size_t len)
 inline
 bool memeq16(const void *p, const void *q, size_t len)
 {
-	memcmp(p, q, 2 * len) == 0;
+	return memcmp(p, q, 2 * len) == 0;
 }
 
 inline
 bool memeq32(const void *p, const void *q, size_t len)
 {
-	memcmp(p, q, 4 * len) == 0;
+	return memcmp(p, q, 4 * len) == 0;
 }
 
 inline
-bool memeq64(const void *p, const void *q, size_t len);
+bool memeq64(const void *p, const void *q, size_t len)
 {
-	memcmp(p, q, 4 * len) == 0;
+	return memcmp(p, q, 8 * len) == 0;
 }
 
 #endif
