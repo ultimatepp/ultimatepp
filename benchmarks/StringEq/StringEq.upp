@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	StringEq.cpp,
+	info.txt;
+
+mainconfig
+	"" = "";
+

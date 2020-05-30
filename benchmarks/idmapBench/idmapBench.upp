@@ -4,6 +4,7 @@ uses
 	Core;
 
 file
+	info.txt,
 	main.cpp;
 
 mainconfig

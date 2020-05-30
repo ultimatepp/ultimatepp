@@ -1,0 +1,57 @@
+OLD
+* C:\upp\out\benchmarks\CLANGx64.Debug_Full.Release\StringEq.exe 29.05.2020 17:58:56, user: cxl
+
+10 bytes 2.6879423828125 ns
+20 bytes 7.9278623046875 ns
+40 bytes 8.4329384765625 ns
+80 bytes 10.6320703125 ns
+Mixed 5.1026875 ns
+
+NEW
+* C:\upp\out\benchmarks\CLANGx64.Debug_Full.Release\StringEq.exe 29.05.2020 17:57:23, user: cxl
+
+10 bytes 2.398326171875 ns
+20 bytes 7.5932763671875 ns
+40 bytes 8.0952783203125 ns
+80 bytes 8.6923046875 ns
+Mixed 3.36159609375 ns
+
+LEq, int64 compare
+10 bytes 2.183017578125 ns
+20 bytes 7.1306259765625 ns
+40 bytes 7.6494228515625 ns
+80 bytes 8.2265615234375 ns
+Mixed 4.9046890625 ns
+
+====================
+OLD
+* C:\upp\out\benchmarks\MSBT19.Debug_Full.Release\StringEq.exe 29.05.2020 18:01:07, user: cxl
+
+10 bytes 3.3761689453125 ns
+20 bytes 8.996029296875 ns
+40 bytes 10.872193359375 ns
+80 bytes 15.7719912109375 ns
+Mixed 7.46995703125 ns
+
+NEW
+
+
+
+===================
+10 bytes 1.8552822265625 ns
+20 bytes 7.9439384765625 ns
+40 bytes 8.4297197265625 ns
+80 bytes 9.12219921875 ns
+Mixed 5.43371484375 ns
+
+10 bytes 1.8308798828125 ns
+20 bytes 7.4739130859375 ns
+40 bytes 8.091583984375 ns
+80 bytes 8.5558212890625 ns
+Mixed 5.6877921875 ns
+
+10 bytes 1.8308798828125 ns
+20 bytes 7.4739130859375 ns
+40 bytes 8.091583984375 ns
+80 bytes 8.5558212890625 ns
+Mixed 5.6877921875 ns

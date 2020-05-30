@@ -328,13 +328,17 @@ CONSOLE_APP_MAIN
 		fn = argv[0];
 
 	LoadFile(fn); // cache the file
+	BenchNTL(fn); // alloc memory
 
 #ifdef UPP_HEAP
 	MemoryProfile f;
 //	RLOG(f);
 //	allocated_bytes0 = GetAllocatedBytes(f);
+
 #endif
 
+
+#if 0
 	{
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
@@ -361,6 +365,7 @@ CONSOLE_APP_MAIN
 			BenchSortedVectorMap(fn);
 		RLOG("SortedVectorMap time: " << tm.Elapsed() << " ms");
 	}
+#endif
 	{
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
