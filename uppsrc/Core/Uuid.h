@@ -12,7 +12,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 	Uuid(const Nuller&)           { SetNull(); }
 	Uuid()                        {}
 
-	unsigned GetHashValue() const { return CombineHash(v[0], v[1]); }
+	hash_t   GetHashValue() const { return CombineHash(v[0], v[1]); }
 	String   ToString() const;
 	String   ToStringWithDashes() const;
 	

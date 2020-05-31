@@ -193,9 +193,9 @@ public:
 	                                        v.width == f.v.width && v.height == f.v.height; }
 	bool  operator!=(Font f) const  { return !operator==(f); }
 
-	dword GetHashValue() const      { return CombineHash(v.width, v.flags, v.height, v.face); }
-	bool  IsNullInstance() const    { return v.face == 0xffff; }
-	void  SetNull()                 { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
+	hash_t GetHashValue() const     { return CombineHash(v.width, v.flags, v.height, v.face); }
+	bool   IsNullInstance() const   { return v.face == 0xffff; }
+	void   SetNull()                { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
 	Font()                          { v.height = v.width = 0; v.face = v.flags = 0; }
 	Font(int face, int height)      { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
 	Font(const Nuller&)             { SetNull(); }
@@ -394,7 +394,7 @@ public:
 	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
 	void    SetNull()                           { size = Null; }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
-	unsigned GetHashValue() const               { return CombineHash(cmd, data); }
+	hash_t  GetHashValue() const                { return CombineHash(cmd, data); }
 	String  ToString() const                    { return "painting " + AsString(size); }
 
 	operator Value() const                      { return RichToValue(*this); }
@@ -668,7 +668,7 @@ public:
 
 	bool    operator==(const Drawing& b) const { return val == b.val && data == b.data && size == b.size; }
 	String  ToString() const                   { return "drawing " + AsString(size); }
-	unsigned GetHashValue() const              { return CombineHash(data, val); }
+	hash_t  GetHashValue() const               { return CombineHash(data, val); }
 
 	operator Value() const                     { return RichToValue(*this); }
 	Drawing(const Value& src)                  { *this = src.Get<Drawing>(); }

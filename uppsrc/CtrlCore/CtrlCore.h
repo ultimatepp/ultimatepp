@@ -1371,9 +1371,9 @@ inline Ctrl *operator<<(Ctrl *parent, Ctrl& child)
 	return parent;
 }
 
-inline unsigned GetHashValue(Ctrl *x)
+inline hash_t GetHashValue(Ctrl *x)
 {
-	return (unsigned)(intptr_t)x;
+	return (hash_t)(intptr_t)x;
 }
 
 String GetKeyDesc(dword key);

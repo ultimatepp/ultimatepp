@@ -90,29 +90,29 @@ inline int PolyCompare(const Time& x, const Value& v) {
 }
 
 template<>
-inline unsigned ValueGetHashValue(const bool& x) {
+inline hash_t ValueGetHashValue(const bool& x) {
 	return UPP::GetHashValue((int64)x);
 }
 
 template<>
-inline unsigned ValueGetHashValue(const int& x) {
+inline hash_t ValueGetHashValue(const int& x) {
 	return UPP::GetHashValue((int64)x);
 }
 
 template<>
-inline unsigned ValueGetHashValue(const double& x) {
+inline hash_t ValueGetHashValue(const double& x) {
 	if(x >= (double)INT64_MIN && x <= (double)INT64_MAX && (int64)x == x)
-		return UPP::GetHashValue((int64)x);
+		return UPP::GetHashValue((int64)x); // we want this to be equal to other number types
 	return UPP::GetHashValue(x);
 }
 
 template<>
-inline unsigned ValueGetHashValue(const Date& x) {
+inline hash_t ValueGetHashValue(const Date& x) {
 	return UPP::GetHashValue(ToTime(x));
 }
 
 template<>
-inline unsigned ValueGetHashValue(const WString& x) {
+inline hash_t ValueGetHashValue(const WString& x) {
 	return UPP::GetHashValue(x.ToString());
 }
 
@@ -142,7 +142,7 @@ public:
 	virtual void       Serialize(Stream& s)          { s % this->v; }
 	virtual void       Xmlize(XmlIO& xio)            { Upp::Xmlize(xio, this->v); }
 	virtual void       Jsonize(JsonIO& jio)          { Upp::Jsonize(jio, this->v); }
-	virtual unsigned   GetHashValue() const          { return UPP::ValueGetHashValue(this->v); }
+	virtual hash_t     GetHashValue() const          { return UPP::ValueGetHashValue(this->v); }
 	virtual bool       IsEqual(const Value::Void *p) { ASSERT(dynamic_cast<const RawValueRep<T> *>(p));
 	                                                   return static_cast<const RawValueRep<T> *>(p)->Get() == this->v; }
 	virtual bool       IsPolyEqual(const Value& b)   { return UPP::IsPolyEqual(this->v, b); }
@@ -163,7 +163,7 @@ struct SvoFn {
 	static void       Serialize(void *p, Stream& s)              { s % *(T*)p; }
 	static void       Xmlize(void *p, XmlIO& xio)                { Upp::Xmlize(xio, *(T*)p); }
 	static void       Jsonize(void *p, JsonIO& jio)              { Upp::Jsonize(jio, *(T*)p); }
-	static unsigned   GetHashValue(const void *p)                { return UPP::ValueGetHashValue(*(T*)p); }
+	static hash_t     GetHashValue(const void *p)                { return UPP::ValueGetHashValue(*(T*)p); }
 	static bool       IsEqual(const void *p1, const void *p2)    { return *(T*)p1 == *(T*)p2; }
 	static bool       IsPolyEqual(const void *p, const Value& v) { return UPP::IsPolyEqual(*(T*)p, v); }
 	static String     AsString(const void *p)                    { return UPP::AsString(*(T*)p); }
@@ -314,7 +314,7 @@ Value::Value(const T& x, VSMALL)
 }
 
 inline
-unsigned Value::GetHashValue() const
+hash_t Value::GetHashValue() const
 {
 	return IsString() ? data.GetCount() ? data.GetHashValue() : 0
 	                  : GetOtherHashValue();

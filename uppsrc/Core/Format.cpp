@@ -511,7 +511,7 @@ struct FormId : Moveable<FormId> {
 	int    type;
 };
 
-unsigned GetHashValue(const FormId& fid)
+hash_t GetHashValue(const FormId& fid)
 {
 	return CombineHash(fid.type, GetHashValue(fid.id));
 }

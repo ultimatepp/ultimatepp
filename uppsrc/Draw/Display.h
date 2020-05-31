@@ -60,9 +60,9 @@ struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
 	bool  operator==(const AttrText& f) const;
 	bool  operator!=(const AttrText& f) const       { return !operator==(f); }
 
-	dword GetHashValue() const                      { return CombineHash(text, font, ink, paper); }
-	bool  IsNullInstance() const                    { return IsNull(text); }
-	void  SetNull()                                 { Init(); img = Null; text = Null; }
+	hash_t GetHashValue() const                     { return CombineHash(text, font, ink, paper); }
+	bool   IsNullInstance() const                   { return IsNull(text); }
+	void   SetNull()                                { Init(); img = Null; text = Null; }
 
 	String   ToString() const                       { return AsString(value); }
 	int      Compare(const AttrText& x) const       { return value.Compare(x.value); }

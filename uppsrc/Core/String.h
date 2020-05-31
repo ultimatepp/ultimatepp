@@ -215,7 +215,7 @@ class String0 : Moveable<String0> {
 	void LSet(const String0& s);
 	void LFree();
 	void LCat(int c);
-	unsigned LHashValue() const;
+	hash_t LHashValue() const;
 
 	void UnShare();
 	void SetSLen(int l);
@@ -285,7 +285,7 @@ public:
 
 	int    Compare(const String0& s) const;
 
-	unsigned GetHashValue() const {
+	hash_t GetHashValue() const {
 		return chr[KIND] ? LHashValue() : (unsigned)CombineHash(w[0], w[1], w[2], w[3]);
 	}
 
@@ -598,7 +598,7 @@ template<>
 inline String AsString(const String& s)     { return s; }
 
 template<>
-inline unsigned GetHashValue(const String& s) { return s.GetHashValue(); }
+inline hash_t GetHashValue(const String& s) { return s.GetHashValue(); }
 
 int CompareNoCase(const String& a, const String& b, byte encoding = 0);
 int CompareNoCase(const String& a, const char *b, byte encoding = 0);
@@ -755,7 +755,7 @@ public:
 	int  GetLength() const               { return length; }
 	int  GetAlloc() const                { return alloc; }
 
-	unsigned GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
+	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
 	bool     IsEqual(const WString0& s) const { return s.length == length && memeq16(ptr, s.ptr, length); }
 	int      Compare(const WString0& s) const;
 
@@ -898,7 +898,7 @@ inline bool  IsNull(const WString& s)       { return s.IsEmpty(); }
 //inline String AsString(const WString& s)     { return s; }
 
 template<>
-inline unsigned GetHashValue(const WString& s) { return memhash(~s, 2 * s.GetLength()); }
+inline hash_t GetHashValue(const WString& s) { return memhash(~s, 2 * s.GetLength()); }
 
 WString TrimLeft(const WString& str);
 WString TrimRight(const WString& s);

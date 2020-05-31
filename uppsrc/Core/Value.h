@@ -60,7 +60,7 @@ public:
 	void     Serialize(Stream& s)                   { NEVER(); }
 	void     Xmlize(XmlIO& xio)                     { NEVER(); }
 	void     Jsonize(JsonIO& jio)                   { NEVER(); }
-	unsigned GetHashValue() const                   { return 0; }
+	hash_t   GetHashValue() const                   { return 0; }
 	bool     operator==(const T&) const             { NEVER(); return false; }
 	String   ToString() const                       { return typeid(T).name(); }
 	int      Compare(const T&) const                { NEVER(); return 0; }
@@ -90,7 +90,7 @@ public:
 		virtual void       Serialize(Stream& s)        {}
 		virtual void       Xmlize(XmlIO& xio)          {}
 		virtual void       Jsonize(JsonIO& jio)        {}
-		virtual unsigned   GetHashValue() const        { return 0; }
+		virtual hash_t     GetHashValue() const        { return 0; }
 		virtual bool       IsEqual(const Void *p)      { return false; }
 		virtual bool       IsPolyEqual(const Value& v) { return false; }
 		virtual String     AsString() const            { return ""; }
@@ -108,7 +108,7 @@ public:
 		void       (*Serialize)(void *p, Stream& s);
 		void       (*Xmlize)(void *p, XmlIO& xio);
 		void       (*Jsonize)(void *p, JsonIO& jio);
-		unsigned   (*GetHashValue)(const void *p);
+		hash_t     (*GetHashValue)(const void *p);
 		bool       (*IsEqual)(const void *p1, const void *p2);
 		bool       (*IsPolyEqual)(const void *p, const Value& v);
 		String     (*AsString)(const void *p);
@@ -162,7 +162,7 @@ protected:
 	Date     GetOtherDate() const;
 	Time     GetOtherTime() const;
 	String   GetOtherString() const;
-	unsigned GetOtherHashValue() const;
+	hash_t   GetOtherHashValue() const;
 
 	bool     IsPolyEqual(const Value& v) const;
 	
@@ -253,7 +253,7 @@ public:
 	void  Xmlize(XmlIO& xio);
 	void  Jsonize(JsonIO& jio);
 
-	unsigned GetHashValue() const;
+	hash_t GetHashValue() const;
 
 	Value& operator=(const Value& v);
 	Value(const Value& v);
@@ -326,7 +326,7 @@ inline bool IsPolyEqual(const T& x, const Value& v) {
 }
 
 template <class T>
-inline unsigned ValueGetHashValue(const T& x) {
+inline hash_t ValueGetHashValue(const T& x) {
 	return UPP::GetHashValue(x);
 }
 

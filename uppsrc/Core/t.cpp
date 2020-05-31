@@ -32,7 +32,7 @@ static bool sIdEq(const char *a, const char *b)
 struct CharS : Moveable<CharS> {
 	const char *s;
 
-	unsigned GetHashValue() const           { return memhash(s, sIdLen(s)); }
+	hash_t GetHashValue() const             { return memhash(s, sIdLen(s)); }
 	bool operator==(const CharS& b) const   { return sIdEq(s, b.s); }
 };
 
@@ -186,7 +186,7 @@ char *ZoneAlloc::Alloc(int sz)
 }
 
 template<>
-inline unsigned GetHashValue(const char * const &s)
+inline hash_t GetHashValue(const char * const &s)
 {
 	return GetPtrHashValue(s);
 }

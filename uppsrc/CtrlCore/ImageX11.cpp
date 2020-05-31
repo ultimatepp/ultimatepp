@@ -125,7 +125,7 @@ inline int s255d16(int x)
 
 static XPicture sGetSolidFill(Color c)
 {
-	int q = GetHashValue(c) % (int)XRSolidFillCount;
+	int q = FoldHash(GetHashValue(c)) % (int)XRSolidFillCount;
 	XRSolidFill& f = sFill[q];
 	if(f.color == c && f.picture)
 		return f.picture;

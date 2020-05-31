@@ -52,7 +52,7 @@ struct XpElement : Moveable<XpElement> {
 		return e.widget == widget && e.part == part && e.state == state;
 	}
 
-	unsigned GetHashValue() const { return widget ^ part ^ state; }
+	hash_t GetHashValue() const { return widget ^ part ^ state; }
 
 	XpElement() { contentm = whista = false; }
 };

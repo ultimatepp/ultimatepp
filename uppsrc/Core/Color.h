@@ -48,7 +48,7 @@ public:
 
 	void     SetNull()                 { color = 0xffffffff; }
 	bool     IsNullInstance() const    { return color == 0xffffffff; }
-	unsigned GetHashValue() const      { return color; }
+	hash_t   GetHashValue() const      { return color; }
 	bool     operator==(Color c) const { return color == c.color; }
 	bool     operator!=(Color c) const { return color != c.color; }
 
@@ -91,7 +91,7 @@ inline Color StraightColor(RGBA rgba)  { return Color(rgba.r, rgba.g, rgba.b); }
 
 typedef Color (*ColorF)();
 
-inline unsigned GetHashValue(Color c)  { return c.GetHashValue(); }
+inline hash_t   GetHashValue(Color c)  { return c.GetHashValue(); }
 inline Color    Nvl(Color a, Color b)  { return IsNull(a) ? b : a; }
 
 template<>

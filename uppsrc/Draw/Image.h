@@ -200,7 +200,7 @@ public:
 
 	bool   operator==(const Image& img) const;
 	bool   operator!=(const Image& img) const;
-	dword  GetHashValue() const;
+	hash_t GetHashValue() const;
 	String ToString() const;
 
 	void  Serialize(Stream& s);

@@ -77,7 +77,7 @@ class Id : Moveable<Id> {
 
 public:
 	const String&  ToString() const              { return id; }
-	dword          GetHashValue() const          { return UPP::GetHashValue(id); }
+	hash_t         GetHashValue() const          { return UPP::GetHashValue(id); }
 	bool           IsNull() const                { return UPP::IsNull(id); }
 
 	operator const String&() const               { return ToString(); }
@@ -205,7 +205,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 		virtual void         Serialize(Stream& s);
 		virtual void         Xmlize(XmlIO& xio);
 		virtual void         Jsonize(JsonIO& jio);
-		virtual unsigned     GetHashValue() const;
+		virtual hash_t       GetHashValue() const;
 		virtual bool         IsEqual(const Value::Void *p);
 		virtual String       AsString() const;
 		virtual int          Compare(const Value::Void *p);
@@ -269,7 +269,7 @@ public:
 	
 	Value& At(int i);
 
-	unsigned GetHashValue() const             { return data->GetHashValue(); }
+	hash_t   GetHashValue() const             { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	void     Jsonize(JsonIO& jio);
 	void     Xmlize(XmlIO& xio);
@@ -307,7 +307,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual void       Serialize(Stream& s);
 		virtual void       Xmlize(XmlIO& xio);
 		virtual void       Jsonize(JsonIO& jio);
-		virtual unsigned   GetHashValue() const;
+		virtual hash_t     GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
 		virtual int        Compare(const Value::Void *p);
@@ -430,7 +430,7 @@ public:
 	
 	Value GetAndClear(const Value& key);
 
-	unsigned GetHashValue() const                   { return data->GetHashValue(); }
+	hash_t   GetHashValue() const                   { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	void     Jsonize(JsonIO& jio);
 	void     Xmlize(XmlIO& xio);

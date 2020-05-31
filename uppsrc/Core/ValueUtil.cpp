@@ -46,7 +46,7 @@ void ValueArray::Data::Xmlize(XmlIO& io)
 	Upp::Xmlize(io, data);
 }
 
-unsigned ValueArray::Data::GetHashValue() const
+hash_t ValueArray::Data::GetHashValue() const
 {
 	CombineHash w(data.GetCount());
 	for(int i = 0; i < data.GetCount(); i++)
@@ -333,7 +333,7 @@ void ValueMap::Data::Jsonize(JsonIO& jio)
 	}
 }
 
-unsigned ValueMap::Data::GetHashValue() const {
+hash_t ValueMap::Data::GetHashValue() const {
 	CombineHash w(key.GetCount());
 	for(int i = 0; i < key.GetCount(); i++)
 		w.Put(key[i].GetHashValue());

@@ -150,10 +150,17 @@ void EndianSwap(int *v, size_t count);
 void EndianSwap(int64 *v, size_t count);
 void EndianSwap(uint64 *v, size_t count);
 
+
+typedef dword hash_t;
+
 inline dword FoldHash(dword h)
 {
 	return SwapEndian32(0xa3613c16 * h);
 }
+
+#define HASH64_CONST1 I64(0xf7c21089bee7c0a5)
+#define HASH64_CONST2 I64(0xc85abc8da7534a4d)
+#define HASH64_CONST3 I64(0x8642b0fe3e86671b)
 
 force_inline
 int SignificantBits(dword x)

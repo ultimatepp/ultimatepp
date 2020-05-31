@@ -147,7 +147,7 @@ public:
 	void     Xmlize(XmlIO& xio);
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	dword    GetHashValue() const                   { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                   { return HashBySerialize(*this); }
 	bool     operator==(const AMap& b) const        { ASSERT(!HasUnlinked()); return IsEqualMap(*this, b); }
 	bool     operator!=(const AMap& b) const        { return !operator==(b); }
 	int      Compare(const AMap& b) const           { ASSERT(!HasUnlinked()); return CompareMap(*this, b); }

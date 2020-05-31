@@ -276,7 +276,7 @@ struct SpellKey : Moveable<SpellKey> {
 	int     lang;
 	WString wrd;
 	
-	unsigned GetHashValue() const { return CombineHash(lang, wrd); }
+	hash_t GetHashValue() const { return CombineHash(lang, wrd); }
 	bool operator==(const SpellKey& b) const { return lang == b.lang && wrd == b.wrd; }
 };
 

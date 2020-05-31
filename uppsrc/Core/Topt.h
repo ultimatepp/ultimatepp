@@ -417,20 +417,24 @@ public:
 unsigned Pow2Bound(unsigned i);
 unsigned PrimeBound(unsigned i);
 
-unsigned memhash(const void *ptr, size_t size);
+hash_t memhash(const void *ptr, size_t size);
 
 template <class T>
-inline unsigned GetHashValue(const T& x)                            { return x.GetHashValue(); }
+inline hash_t GetHashValue(const T& x)                            { return x.GetHashValue(); }
 
 struct CombineHash {
-	unsigned hash;
+	hash_t hash;
 
 	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
 
 public:
-	CombineHash& Put(unsigned h)                                    { hash = (0xacf34ce7 * hash) ^ h; return *this; }
+#ifdef HASH64
+	CombineHash& Put(hash_t h)                                    { hash = (0xacf34ce7bcf34ce7 * hash) ^ h; return *this; }
+#else
+	CombineHash& Put(hash_t h)                                    { hash = (0xacf34ce7 * hash) ^ h; return *this; }
+#endif
 
-	operator unsigned() const                                       { return hash; }
+	operator hash_t() const                                         { return hash; }
 
 	CombineHash()                                                   { hash = 0; }
 	template <class T>
@@ -445,34 +449,33 @@ public:
 	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
 };
 
-template<> inline unsigned GetHashValue(const char& a)           { return (unsigned)a; }
-template<> inline unsigned GetHashValue(const signed char& a)    { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned char& a)  { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const short& a)          { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned short& a) { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const int& a)            { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned int& a)   { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const long& a)           { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned long& a)  { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const bool& a)           { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const wchar_t& a)        { return (const unsigned)a; }
+template<> inline hash_t GetHashValue(const char& a)           { return (hash_t)a; }
+template<> inline hash_t GetHashValue(const signed char& a)    { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const unsigned char& a)  { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const short& a)          { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const unsigned short& a) { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const int& a)            { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const unsigned int& a)   { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const long& a)           { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const unsigned long& a)  { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const bool& a)           { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const wchar_t& a)        { return (const hash_t)a; }
 
-template<> inline unsigned GetHashValue(const int64& a)          { return CombineHash((unsigned)a, (unsigned)(a >> 32)); }
-template<> inline unsigned GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
+// TODO: fix for CPU64
+template<> inline hash_t GetHashValue(const int64& a)          { return CombineHash((hash_t)a, (hash_t)(a >> 32)); }
+template<> inline hash_t GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
 
-unsigned GetHashValue0(const double& a);
-
-template<> inline unsigned GetHashValue(const double& a)         { return GetHashValue0(a); }
-template<> inline unsigned GetHashValue(const float& a)          { double x = a; return GetHashValue0(x); }
+template<> inline hash_t GetHashValue(const double& a)         { return memhash(&a, sizeof(a)); }
+//template<> inline hash_t GetHashValue(const float& a)          { double memhash(&a, sizeof(a)); }
 
 #ifdef CPU_32
-inline unsigned GetPtrHashValue(const void *a)                   { return (int)a; }
+inline hash_t GetPtrHashValue(const void *a)                   { return (int)a; }
 #else
-inline unsigned GetPtrHashValue(const void *a)                   { return CombineHash((unsigned)(uintptr_t)a); }
+inline hash_t GetPtrHashValue(const void *a)                   { return CombineHash((hash_t)(uintptr_t)a); }
 #endif
 
 template <class T>
-inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
+inline hash_t GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
 
 template <int size>
 struct Data_S_ : Moveable< Data_S_<size> >

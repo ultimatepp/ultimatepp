@@ -29,7 +29,7 @@ struct Date : RelOps< Date, Moveable<Date> > {
 	Date(int y, int m, int d)            { day = d; month = m; year = y; }
 };
 
-inline unsigned GetHashValue(Date t) {
+inline hash_t GetHashValue(Date t) {
 	return 512 * t.year + 32 * t.month + t.day;
 }
 
@@ -121,7 +121,7 @@ inline Time ToTime(const Date& d) {
 	return Time(d.year, d.month, d.day);
 }
 
-inline unsigned GetHashValue(Time t) {
+inline hash_t GetHashValue(Time t) {
 	return t.second +
 		   32 * (t.minute + 32 * (t.hour + 16 * (t.day + 32 * (t.month + 8 * t.year))));
 }
