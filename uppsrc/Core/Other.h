@@ -352,7 +352,7 @@ private:
 		const void  *type;
 		
 		bool operator==(const Key& b) const { return key == b.key && type == b.type; }
-		unsigned GetHashValue() const { return CombineHash(key, (uintptr_t)type); }
+		hash_t GetHashValue() const { return CombineHash(key, (uintptr_t)type); }
 	};
 
 	Index<Key>   key;

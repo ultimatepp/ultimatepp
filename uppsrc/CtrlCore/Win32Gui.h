@@ -346,9 +346,9 @@ public:
 
 namespace Upp {
 
-inline unsigned GetHashValue(const HWND& hwnd)
+inline hash_t GetHashValue(const HWND& hwnd)
 {
-	return (unsigned)(intptr_t)hwnd;
+	return (hash_t)(intptr_t)hwnd;
 }
 }
 

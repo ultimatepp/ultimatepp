@@ -67,7 +67,7 @@ struct GlyphKey {
 	bool operator==(const GlyphKey& b) const {
 		return fnt == b.fnt && chr == b.chr && tolerance == b.tolerance;
 	}
-	unsigned GetHashValue() const {
+	hash_t GetHashValue() const {
 		return CombineHash(fnt, chr, tolerance);
 	}
 };

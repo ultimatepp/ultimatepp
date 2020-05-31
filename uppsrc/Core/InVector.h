@@ -132,27 +132,27 @@ public:
 	
 	template <class L>
 	int Find(const T& val, const L& less) const;
-	int Find(const T& val) const                          { return Find(val, StdLess<T>()); }
+	int Find(const T& val) const                         { return Find(val, StdLess<T>()); }
 
-	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
-	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
+	ConstIterator    begin() const                       { ConstIterator it; SetBegin(it); return it; }
+	ConstIterator    end() const                         { ConstIterator it; SetEnd(it); return it; }
 
-	Iterator         begin()                        { Iterator it; SetBegin(it); return it; }
-	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
+	Iterator         begin()                             { Iterator it; SetBegin(it); return it; }
+	Iterator         end()                               { Iterator it; SetEnd(it); return it; }
 
 	InVector();
-	InVector(InVector&& v)                          { Pick(pick(v)); }
-	void operator=(InVector&& v)                    { Pick(pick(v)); }
+	InVector(InVector&& v)                               { Pick(pick(v)); }
+	void operator=(InVector&& v)                         { Pick(pick(v)); }
 	InVector(const InVector& v, int);
-	InVector(std::initializer_list<T> init)         { Init(); for(const auto& i : init) Add(i); }
+	InVector(std::initializer_list<T> init)              { Init(); for(const auto& i : init) Add(i); }
 
 	void Swap(InVector& b);
 
-	void     Serialize(Stream& s)                             { StreamContainer(s, *this); }
+	void     Serialize(Stream& s)                        { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -380,7 +380,7 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -525,7 +525,8 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key")    { iv.Xmlize(xio, itemtag); }
 	void     Jsonize(JsonIO& jio)                               { iv.Jsonize(jio); }
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
+	
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -670,7 +671,7 @@ public:
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio);
 	void     Jsonize(JsonIO& jio);
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                   { return HashBySerialize(*this); }
 #endif
 
 	const InVector<T>& GetValues() const            { return B::value.data; }
@@ -754,7 +755,7 @@ public:
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio);
 	void     Jsonize(JsonIO& jio);
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const                   { return HashBySerialize(*this); }
 #endif
 
 	void     Swap(SortedArrayMap& x);

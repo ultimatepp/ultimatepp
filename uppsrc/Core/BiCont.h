@@ -49,7 +49,7 @@ public:
 
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const    { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -128,7 +128,7 @@ public:
 
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	dword    GetHashValue() const    { return HashBySerialize(*this); }
+	hash_t   GetHashValue() const    { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }

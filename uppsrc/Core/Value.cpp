@@ -9,7 +9,7 @@ const Nuller Null;
 ValueTypeError::ValueTypeError(const String& text, const Value& src, int target)
 :	Exc(text), src(src), target(target) {}
 
-unsigned Value::GetOtherHashValue() const {
+hash_t Value::GetOtherHashValue() const {
 	if(IsNull())
 		return 0;
 	byte st = data.GetSt();
@@ -265,7 +265,7 @@ struct SvoVoidFn {
 	static void       Serialize(void *p, Stream& s)              {}
 	static void       Xmlize(void *p, XmlIO& xio)               {}
 	static void       Jsonize(void *p, JsonIO& jio)             {}
-	static unsigned   GetHashValue(const void *p)                { return 0; }
+	static hash_t     GetHashValue(const void *p)                { return 0; }
 	static bool       IsEqual(const void *p1, const void *p2)    { return true; }
 	static bool       IsPolyEqual(const void *p, const Value& v) { return false; }
 	static String     AsString(const void *p)                    { return String(); }

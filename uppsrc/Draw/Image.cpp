@@ -272,13 +272,14 @@ INITBLOCK {
 
 bool Image::operator==(const Image& img) const
 {
+	static_assert(sizeof(RGBA) == 4, "sizeof(RGBA)");
 	return IsSame(img) ||
 	   GetSize() == img.GetSize() &&
 	   GetHotSpot() == img.GetHotSpot() &&
 	   Get2ndSpot() == img.Get2ndSpot() &&
 	   GetDots() == img.GetDots() &&
 	   GetResolution() == img.GetResolution() &&
-	   memcmp(~*this, ~img, GetLength() * sizeof(RGBA)) == 0;
+	   memeq32(~*this, ~img, GetLength() * sizeof(RGBA));
 }
 
 bool Image::operator!=(const Image& img) const
@@ -286,7 +287,7 @@ bool Image::operator!=(const Image& img) const
 	return !operator==(img);
 }
 
-dword Image::GetHashValue() const
+hash_t Image::GetHashValue() const
 {
 	return memhash(~*this, GetLength() * sizeof(RGBA));
 }

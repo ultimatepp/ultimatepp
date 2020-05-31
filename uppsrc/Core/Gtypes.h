@@ -56,7 +56,7 @@ struct Size_ : Moveable< Size_<T> > {
 	friend T      Squared(Size_ a)             { return a.cx * a.cx + a.cy * a.cy; }
 	friend double Length(Size_ a)              { return hypot(a.cx, a.cy); }
 
-	unsigned      GetHashValue() const         { return CombineHash(cx, cy); }
+	hash_t        GetHashValue() const         { return CombineHash(cx, cy); }
 
 	String        ToString() const;
 
@@ -167,7 +167,7 @@ struct Point_ : Moveable< Point_<T> > {
 
 	friend Point_ Nvl(Point_ a, Point_ b)           { return IsNull(a) ? b : a; }
 
-	unsigned      GetHashValue() const              { return CombineHash(x, y); }
+	hash_t        GetHashValue() const              { return CombineHash(x, y); }
 
 	String        ToString() const;
 
@@ -357,7 +357,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 	friend const Rect_& Nvl(const Rect_& a, const Rect_& b) { return IsNull(a) ? b : a; }
 
-	unsigned     GetHashValue() const                       { return CombineHash(left, top, right, bottom); }
+	hash_t GetHashValue() const                             { return CombineHash(left, top, right, bottom); }
 
 	String ToString() const;
 

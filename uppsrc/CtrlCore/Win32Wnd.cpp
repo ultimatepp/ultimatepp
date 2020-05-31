@@ -15,9 +15,9 @@ namespace Upp {
 #define ELOG(x)    // RLOG(GetSysTime() << ": " << x)
 
 template<>
-unsigned GetHashValue(const HWND& h)
+hash_t GetHashValue(const HWND& h)
 {
-	return (unsigned)(intptr_t)h;
+	return (hash_t)(intptr_t)h;
 }
 
 bool Ctrl::GetMsg(MSG& msg)

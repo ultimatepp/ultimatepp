@@ -52,10 +52,10 @@ bool String0::LEq(const String0& s) const
 	return l == s.GetCount() && inline_memeq8_aligned(begin(), s.begin(), l);
 }
 
-unsigned String0::LHashValue() const
+hash_t String0::LHashValue() const
 {
 	int l = LLen();
-	if(l < 15) {
+	if(l < 15) { // must be the same as small hash
 		dword w[4];
 		w[0] = w[1] = w[2] = w[3] = 0;
 		memcpy8((char *)w, ptr, l);

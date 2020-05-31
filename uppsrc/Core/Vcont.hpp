@@ -22,7 +22,7 @@ void StreamContainer(Stream& s, T& cont)
 }
 
 template <class T>
-dword HashBySerialize(const T& cont)
+hash_t HashBySerialize(const T& cont)
 {
 	TimeStop tm;
 	xxHashStream xxh;

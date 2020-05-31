@@ -140,7 +140,7 @@ public:
 	bool operator<(const Tuple& x) const      { return Compare(x) < 0; }
 	bool operator>(const Tuple& x) const      { return Compare(x) > 0; }
 
-	unsigned GetHashValue() const             { CombineHash h; Base::ToHash(h); return h; }
+	hash_t GetHashValue() const               { CombineHash h; Base::ToHash(h); return h; }
 	
 	void Serialize(Stream& s)                 { Base::Serialize(s); }
 
