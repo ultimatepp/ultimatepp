@@ -85,4 +85,40 @@ bool memeq64(const void *p, const void *q, size_t len) { return inline_memeq64_a
 
 #endif
 
+#ifdef CPU_UNALIGNED
+
+NOUBSAN // CPU supports unaligned memory access
+hash_t memhash(const void *ptr, size_t count)
+{
+	unsigned hash = 1234567890U;
+
+	const unsigned *ds = (unsigned *)ptr;
+	const unsigned *de = ds + (count >> 2);
+	while(ds < de)
+		hash = ((hash << 5) - hash) ^ *ds++;
+
+	const byte *s = (byte *)ds;
+	const byte *e = s + (count & 3);
+	while(s < e)
+		hash = ((hash << 5) - hash) ^ *s++;
+
+	return hash;
+}
+
+#else
+
+hash_t memhash(const void *ptr, size_t count)
+{
+	unsigned hash = 1234567890U;
+
+	const byte *s = (byte *)ptr;
+	const byte *e = s + count;
+	while(s < e)
+		hash = ((hash << 5) - hash) ^ *s++;
+
+	return hash;
+}
+
+#endif
+
 };
