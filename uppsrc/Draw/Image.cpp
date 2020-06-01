@@ -279,7 +279,7 @@ bool Image::operator==(const Image& img) const
 	   Get2ndSpot() == img.Get2ndSpot() &&
 	   GetDots() == img.GetDots() &&
 	   GetResolution() == img.GetResolution() &&
-	   memeq32(~*this, ~img, GetLength() * sizeof(RGBA));
+	   memeq32(~*this, ~img, GetLength());
 }
 
 bool Image::operator!=(const Image& img) const
