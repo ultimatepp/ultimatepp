@@ -102,7 +102,7 @@ public:
 
 	int     GetCount() const;
 
-	unsigned GetHashValue() const;
+	hash_t   GetHashValue() const;
 	bool     operator==(const EscValue& a) const;
 	bool     operator!=(const EscValue& a) const              { return !(*this == a); }
 
@@ -169,7 +169,7 @@ private:
 };
 
 template <>
-inline unsigned GetHashValue(const EscValue& v)
+inline hash_t GetHashValue(const EscValue& v)
 {
 	return v.GetHashValue();
 }

@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#ifdef CPU_X86 // Use unaligned access
+#ifdef CPU_UNALIGNED // Use unaligned access
 
 #ifdef CPU_64
 inline bool equal_back_8(const char *a, const char *b, int len)
