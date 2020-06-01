@@ -27,6 +27,7 @@ static GLuint LoadShader(const char *src, GLenum type) {
 			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
 			error << ~infoLog;
 		}
+		DLOG(error);
 		Panic(error);
 	}
 

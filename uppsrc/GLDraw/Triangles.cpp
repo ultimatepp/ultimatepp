@@ -10,14 +10,15 @@ void GLTriangles::Draw(const GLContext2D& dd)
 	static GLCode program(R"(
 	#version 130
 	    attribute vec3 p;
-	    attribute uvec3 c;
+	    attribute uvec3 col;
 		uniform vec2 offset;
 		uniform vec2 scale;
 		varying vec4 v_color;
 	    void main()
 	    {
 			gl_Position = vec4(scale * p.xy + offset, 0, 1);
-			v_color = vec4(1/255.0 * c.rgb, p.z);
+			vec3 c = col;
+			v_color = vec4(1/255.0 * c.x, 1/255.0 * c.y, 1/255.0 * c.z, p.z);
 	    }
 	)", R"(
 		varying vec4 v_color;
