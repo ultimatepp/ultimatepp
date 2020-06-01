@@ -155,6 +155,20 @@ graphics&]
 [s3; Callback called after ZoomToFit() function.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:WhenRemoveSeries:%- [_^Upp`:`:Function^ Function]_<[@(0.0.255) b
+ool]([@(0.0.255) int])>_[* WhenRemoveSeries]&]
+[s3; Callback called just before a data series is removed. The argument 
+is the data series to remove. If returns false, the series is 
+not removed.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:WhenSwapSeries:%- [_^Upp`:`:Function^ Function]_<[@(0.0.255) b
+ool]([@(0.0.255) int], [@(0.0.255) int])>_[* WhenSwapSeries]&]
+[s3; Callback called just before two data series are swapped. The 
+arguments are the data series to be swapped. If returns false, 
+the series are not swapped.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetSize`(const Upp`:`:Size`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetSize]([_^Size^ Size]_[*@3 sz])&]
 [s3; Sets the control size with [%-*@3 sz]. Functions like GetImage() 
@@ -1094,6 +1108,11 @@ the series data.&]
 [s3; Remove all data series from control. It does not delete the 
 series data.&]
 [s1;%- &]
+[s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:SwapSeries`(int`,int`):%- [@(0.0.255) void]_[* SwapSeries]([@(0.0.255) i
+nt]_[*@3 i1], [@(0.0.255) int]_[*@3 i2])&]
+[s3; Swaps the series [%-*@3 i1] with [%-*@3 i2].&]
+[s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetImage`(`):%- [_^Upp`:`:Image^ Image]_[* GetImage]()&]
 [s3; Returns the scatter plot as an Image.&]

@@ -141,7 +141,6 @@ protected:
 				("markWidth", markWidth)
 				("markColor", markColor)
 				("markBorderWidth", markBorderWidth)
-				("markWidth", markWidth)
 				("markBorderColor", markBorderColor)
 				("fillColor", fillColor)
 				("markBorderColor", markBorderColor)
@@ -190,7 +189,6 @@ protected:
 				% markWidth
 				% markColor
 				% markBorderWidth
-				% markWidth
 				% markBorderColor
 				% fillColor
 				% markBorderColor
@@ -327,6 +325,9 @@ public:
 	Callback1<Painter&> WhenPainter;
 	Callback1<Draw&> WhenDraw;
 	Callback WhenZoomToFit;
+	
+	Function <bool(int)> WhenRemoveSeries;
+	Function <bool(int, int)> WhenSwapSeries;
 	
 	ScatterDraw& SetSize(const Size &sz) {
 		size = sz; 
@@ -728,6 +729,8 @@ public:
 	void RemoveSeries(int index);
 	void RemoveAllSeries();
 	
+	void SwapSeries(int i1, int i2);
+	
 	ScatterDraw& Id(int id);
 	ScatterDraw& Id(int index, int id);
 	int GetId(int index);
@@ -1077,9 +1080,6 @@ public:
 		} else
 			s % series;
 	}
-	
-	void SwapOrder(int i1, int i2)			{series.Swap(i1, i2);}
-	void Remove(int id)						{series.Remove(id);}
 	
 	String VariableFormatX(double d) const  {return VariableFormat(xRange, d);}
 	String VariableFormatY(double d) const  {return VariableFormat(yRange, d);} 
