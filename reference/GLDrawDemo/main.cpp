@@ -19,6 +19,7 @@ struct OpenGLExample : GLCtrl {
 		w.DrawLine(45, 45, 80, 120, 4, Blue);
 		w.DrawLine(80, 90, 400, 0, PEN_DASHDOT);
 		w.DrawImage(200, 10, CtrlImg::reporticon());
+		w.DrawImage(280, 10, CtrlImg::reporticon(), Red());
 		const char *text = "This text is centered";
 		Size tsz = GetTextSize(text, Arial(25).Bold());
 		w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text, Arial(27).Bold(), SBlue);
