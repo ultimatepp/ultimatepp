@@ -878,7 +878,7 @@ VectorXd SavitzkyGolay_Coeff(int nleft, int nright, int deg, int der) {
 
 bool SavitzkyGolay_Check(const VectorXd &coeff) {
 	double unity = coeff.sum();
-	return abs(1-unity) < 0.0000001;  
+	return abs(1-unity) < 0.0000001 || abs(unity) < 0.0000001;  
 }
 
 Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdataX, int deg, int size, int der) {
