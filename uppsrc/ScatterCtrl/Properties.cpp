@@ -539,7 +539,7 @@ void SeriesTab::OnMoveUp()
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
-	scatter.SwapOrder(index, index-1);
+	scatter.SwapSeries(index, index-1);
 	
 	Init0();
 	
@@ -556,7 +556,7 @@ void SeriesTab::OnMoveDown()
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
-	scatter.SwapOrder(index, index+1);
+	scatter.SwapSeries(index, index+1);
 	
 	Init0();
 	
@@ -576,7 +576,7 @@ void SeriesTab::OnDelete()
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
-	scatter.ScatterDraw::Remove(index);
+	scatter.ScatterDraw::RemoveSeries(index);
 	
 	Init0();
 	
