@@ -556,7 +556,8 @@ void SeriesTab::OnMoveDown()
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
-	scatter.SwapSeries(index, index+1);
+	if (!scatter.SwapSeries(index, index+1))
+		return;
 	
 	Init0();
 	
@@ -576,7 +577,8 @@ void SeriesTab::OnDelete()
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
-	scatter.ScatterDraw::RemoveSeries(index);
+	if(!scatter.ScatterDraw::RemoveSeries(index))
+		return;
 	
 	Init0();
 	
