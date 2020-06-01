@@ -30,6 +30,16 @@ static GLuint LoadShader(const char *src, GLenum type) {
 		Panic(error);
 	}
 
+#ifdef _DEBUG
+	GLint infoLen = 0;
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
+	if(infoLen > 1) {
+		Buffer<char> infoLog(infoLen);
+		glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
+		DLOG(~infoLog);
+	}
+#endif
+
 	return shader;
 }
 
