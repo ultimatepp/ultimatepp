@@ -286,7 +286,11 @@ public:
 	int    Compare(const String0& s) const;
 
 	hash_t GetHashValue() const {
-		return chr[KIND] ? LHashValue() : (unsigned)CombineHash(w[0], w[1], w[2], w[3]);
+#ifdef HASH64
+		return chr[KIND] ? LHashValue() : (hash_t)CombineHash(q[0], q[1]);
+#else
+		return chr[KIND] ? LHashValue() : (hash_t)CombineHash(w[0], w[1], w[2], w[3]);
+#endif
 	}
 
 	void Cat(int c) {

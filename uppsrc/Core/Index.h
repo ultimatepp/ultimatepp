@@ -15,7 +15,7 @@ struct IndexCommon {
 	
 	static int empty[1];
 
-	static dword Smear(dword h)          { return FoldHash(h) | HIBIT; }
+	static dword Smear(hash_t h)          { return FoldHash(h) | HIBIT; }
 
 	void Link(int& m, Hash& hh, int ii);
 	void Link(int ii, dword sh);

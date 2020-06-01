@@ -313,7 +313,7 @@ bool memeq8__(const void *p, const void *q, size_t len)
 	const byte *t = (byte *)p;
 	const byte *s = (byte *)q;
 	
-	auto Cmp128 = [&](int at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
+	auto Cmp128 = [&](size_t at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
 	auto Neq = [](__m128i v) { return _mm_movemask_epi8(v) != 0xffff; };
 	auto And = [](__m128i a, __m128i b) { return _mm_and_si128(a, b); };
 	
@@ -348,7 +348,7 @@ bool inline_memeq8_aligned(const void *p, const void *q, size_t len)
 	const byte *t = (const byte *)p;
 	const byte *s = (const byte *)q;
 	if(len >= 16) { // 15..31 is the most important range for String, make it fastest
-		auto Cmp128 = [&](int at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
+		auto Cmp128 = [&](size_t at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
 		return memeq8__(t, s, len);
 	}
 	if(len > 4) {

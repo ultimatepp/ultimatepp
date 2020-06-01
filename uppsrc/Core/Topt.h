@@ -429,22 +429,22 @@ struct CombineHash {
 
 public:
 #ifdef HASH64
-	CombineHash& Put(hash_t h)                                    { hash = (0xacf34ce7bcf34ce7 * hash) ^ h; return *this; }
+	CombineHash& Put(hash_t h)                                      { hash = HASH64_CONST2 * hash + h; return *this; }
 #else
-	CombineHash& Put(hash_t h)                                    { hash = (0xacf34ce7 * hash) ^ h; return *this; }
+	CombineHash& Put(hash_t h)                                      { hash = HASH32_CONST2 * hash + h; return *this; }
 #endif
 
 	operator hash_t() const                                         { return hash; }
 
-	CombineHash()                                                   { hash = 0; }
+	CombineHash()                                                   { hash = HASH64_CONST1; }
 	template <class T>
-	CombineHash(const T& h1)                                        { hash = 0; Do(h1); }
+	CombineHash(const T& h1)                                        { hash = HASH64_CONST1; Do(h1); }
 	template <class T, class U>
-	CombineHash(const T& h1, const U& h2)                           { hash = 0; Do(h1); Do(h2); }
+	CombineHash(const T& h1, const U& h2)                           { hash = HASH64_CONST1; Do(h1); Do(h2); }
 	template <class T, class U, class V>
-	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = 0; Do(h1); Do(h2); Do(h3); }
+	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = HASH64_CONST1; Do(h1); Do(h2); Do(h3); }
 	template <class T, class U, class V, class W>
-	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = 0; Do(h1); Do(h2); Do(h3); Do(h4); }
+	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH64_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
 
 	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
 };
@@ -461,9 +461,13 @@ template<> inline hash_t GetHashValue(const unsigned long& a)  { return (const h
 template<> inline hash_t GetHashValue(const bool& a)           { return (const hash_t)a; }
 template<> inline hash_t GetHashValue(const wchar_t& a)        { return (const hash_t)a; }
 
-// TODO: fix for CPU64
+#ifdef HASH64
+template<> inline hash_t GetHashValue(const int64& a)          { return (const hash_t)a; }
+template<> inline hash_t GetHashValue(const uint64& a)         { return (const hash_t)a; }
+#else
 template<> inline hash_t GetHashValue(const int64& a)          { return CombineHash((hash_t)a, (hash_t)(a >> 32)); }
 template<> inline hash_t GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
+#endif
 
 template<> inline hash_t GetHashValue(const double& a)         { return memhash(&a, sizeof(a)); }
 //template<> inline hash_t GetHashValue(const float& a)          { double memhash(&a, sizeof(a)); }
