@@ -158,6 +158,10 @@ inline dword FoldHash(dword h)
 	return SwapEndian32(0xa3613c16 * h);
 }
 
+#define HASH32_CONST1 0xf7c21089
+#define HASH32_CONST2 0xc85abc8d
+#define HASH32_CONST3 0x8642b0fe
+
 #define HASH64_CONST1 I64(0xf7c21089bee7c0a5)
 #define HASH64_CONST2 I64(0xc85abc8da7534a4d)
 #define HASH64_CONST3 I64(0x8642b0fe3e86671b)
