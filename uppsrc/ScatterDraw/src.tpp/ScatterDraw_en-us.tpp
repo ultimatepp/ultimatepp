@@ -1098,7 +1098,7 @@ ool]_[*@3 show]_`=_[@(0.0.255) true])&]
 If false, the opacity will be set to 0.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:RemoveSeries`(int`):%- [@(0.0.255) void]_[* RemoveSeries]([@(0.0.255) i
+[s5;:ScatterDraw`:`:RemoveSeries`(int`):%- [@(0.0.255) bool]_[* RemoveSeries]([@(0.0.255) i
 nt]_[*@3 index])&]
 [s3; Remove [%-*@3 index] data series from control. It does not delete 
 the series data.&]
@@ -1109,7 +1109,7 @@ the series data.&]
 series data.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:Upp`:`:ScatterDraw`:`:SwapSeries`(int`,int`):%- [@(0.0.255) void]_[* SwapSeries]([@(0.0.255) i
+[s5;:Upp`:`:ScatterDraw`:`:SwapSeries`(int`,int`):%- [@(0.0.255) bool]_[* SwapSeries]([@(0.0.255) i
 nt]_[*@3 i1], [@(0.0.255) int]_[*@3 i2])&]
 [s3; Swaps the series [%-*@3 i1] with [%-*@3 i2].&]
 [s1; &]

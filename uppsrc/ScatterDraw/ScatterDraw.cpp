@@ -1197,15 +1197,16 @@ int ScatterDraw::GetId(int index) {
 	return series[index].id;
 }
 
-void ScatterDraw::RemoveSeries(int index) {
+bool ScatterDraw::RemoveSeries(int index) {
 	ASSERT(IsValid(index));
 	ASSERT(!series[index].IsDeleted());
 	
 	if (WhenRemoveSeries)
 		if (!WhenRemoveSeries(index))
-			return;
+			return false;
 	series.Remove(index);
 	Refresh();
+	return true;
 }
 
 void ScatterDraw::RemoveAllSeries() {
@@ -1213,7 +1214,7 @@ void ScatterDraw::RemoveAllSeries() {
 	Refresh();
 }
 
-void ScatterDraw::SwapSeries(int i1, int i2) {
+bool ScatterDraw::SwapSeries(int i1, int i2) {
 	ASSERT(IsValid(i1));
 	ASSERT(!series[i1].IsDeleted());
 	ASSERT(IsValid(i2));
@@ -1221,9 +1222,10 @@ void ScatterDraw::SwapSeries(int i1, int i2) {
 	
 	if (WhenSwapSeries)
 		if (!WhenSwapSeries(i1, i2))
-			return;
+			return false;
 	series.Swap(i1, i2);
 	Refresh();	
+	return true;
 }
 
 Drawing ScatterDraw::GetDrawing() {
