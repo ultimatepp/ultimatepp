@@ -4,19 +4,56 @@ using namespace Upp;
 
 // TODO: Large array checks
 
+const int MAX = 1024*1024*16;
+
+template <class T, class FN>
+void CheckEq(FN eq)
+{
+	LOG("CheckEq " << sizeof(T));
+	T a[2000], b[2000];
+	auto Rnd = [] { return (T)Random(26) + 'A'; };
+	for(int i = 0; i < 100000; i++) {
+		if(i % 10000 == 0)
+			LOG(i);
+		for(int j = 0; j < 2000; j++)
+			a[j] = b[j] = Rnd();
+		for(int j = 0; j < 1000; j++) {
+			int pos = Random(1000);
+			int len = Random(1000);
+			if(eq(a + pos, b + pos, len) != !memcmp(a + pos, b + pos, sizeof(T) * len)) {
+				RDUMP(i);
+				RDUMP(pos);
+				RDUMP(len);
+				RDUMP(memcmp(a + pos, b + pos, sizeof(T) * len));
+				RDUMP(eq(a + pos, b + pos, len));
+				auto Read = [&](const T *p) {
+					String s;
+					for(int i = 0; i < len; i++)
+						s.Cat((byte)p[i]);
+					return s;
+				};
+				RDUMP(Read(a + pos));
+				RDUMP(Read(b + pos));
+				Panic("Failed");
+			}
+			b[Random(2000)] = Rnd();
+		}
+	}
+}
+
 template <class T, class FN>
 void CheckCopy(FN copy)
 {
 	LOG("CheckCopy " << sizeof(T));
-	Buffer<T> b0(20000), b1(20000), b2(20000);
-	memset(~b0, 0, 20000 * sizeof(T));
-	memset(~b1, 0, 20000 * sizeof(T));
-	memset(~b2, 0, 20000 * sizeof(T));
-	for(int pass = 0; pass < 4; pass++) {
+	Buffer<T> b0(MAX), b1(MAX), b2(MAX);
+	memset(~b0, 0, MAX * sizeof(T));
+	memset(~b1, 0, MAX * sizeof(T));
+	memset(~b2, 0, MAX * sizeof(T));
+	for(int pass = 0; pass < 5; pass++) {
 		LOG(pass);
-		for(int i = 0; i < 500000; i++) {
+		for(int i = 0; i < (pass == 4 ? 100 : 500000); i++) {
 			int pos = Random(200);
-			int len = Random(decode(pass, 0, 20, 1, 200, 2, 2000, 9999));
+			int len = Random(decode(pass, 0, 20, 1, 200, 2, 2000, 3, 9999, 200)) + (pass == 4) * 7*1024*1024;
 			memset(~b0 + pos, i, len * sizeof(T));
 			pos = Random(200);
 			len = Random(200);
@@ -49,8 +86,8 @@ void CheckFill(FN fill)
 				RDUMP(i);
 				RDUMP(pos);
 				RDUMP(len);
-				LOGHEXDUMP(b1 + pos - 4, len + 8);
-				LOGHEXDUMP(b2 + pos - 4, len + 8);
+				LOGHEXDUMP(b1 + pos - 4, sizeof(T) * len + 8);
+				LOGHEXDUMP(b2 + pos - 4, sizeof(T) * len + 8);
 				Panic("Failed");
 			}
 		}
@@ -81,16 +118,16 @@ void CheckFill(FN fill)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-/*	
-	word h[100];
-	memset(h, 0, 200);
-	memset16(h + 30, 12, 42);
-	LOGHEXDUMP(h, 200);
-	return;
-*/
+	
+	CheckEq<byte>(memeq8);
+	CheckEq<word>(memeq16);
+	CheckEq<dword>(memeq32);
+	CheckEq<uint64>(memeq64);
+
 	CheckFill<byte>(memset8);
 	CheckFill<word>(memset16);
 	CheckFill<dword>(memset32);
+	CheckFill<uint64>(memset64);
 
 	struct dqword { qword x[2]; };
 	CheckCopy<byte>(memcpy8);
@@ -98,6 +135,6 @@ CONSOLE_APP_MAIN
 	CheckCopy<dword>(memcpy32);
 	CheckCopy<qword>(memcpy64);
 	CheckCopy<dqword>(memcpy128);
-	
+
 	LOG("============= OK");
 }
