@@ -726,10 +726,10 @@ public:
 	bool IsVisible(int index);
 	ScatterDraw &ShowAll(bool show = true);
 
-	void RemoveSeries(int index);
+	bool RemoveSeries(int index);
 	void RemoveAllSeries();
 	
-	void SwapSeries(int i1, int i2);
+	bool SwapSeries(int i1, int i2);
 	
 	ScatterDraw& Id(int id);
 	ScatterDraw& Id(int index, int id);
