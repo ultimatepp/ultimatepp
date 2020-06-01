@@ -11,6 +11,8 @@ void memset8__(void *p, __m128i data, size_t len)
 	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), data); };
 	Set4(len - 16); // fill tail
 	Set4(0); // align up on the next 16 bytes boundary
+	if(len <= 32)
+		return;
 	const byte *e = t + len;
 	t = (byte *)(((uintptr_t)t | 15) + 1);
 	len = e - t;
@@ -58,6 +60,8 @@ void memcpy8__(void *p, const void *q, size_t len)
 	auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
 	Copy128(len - 16); // copy tail
 	Copy128(0); // align target data up on the next 16 bytes boundary
+	if(len <= 32)
+		return;
 	const byte *e = t + len;
 	byte *t1 = (byte *)(((uintptr_t)t | 15) + 1);
 	s += t1 - t;
@@ -87,6 +91,89 @@ bool memeq64(const void *p, const void *q, size_t len) { return inline_memeq64_a
 
 #ifdef CPU_UNALIGNED
 
+#if 1
+
+#ifdef HASH64
+
+hash_t memhash(const void *ptr, size_t len)
+{
+	const byte *s = (byte *)ptr;
+	uint64 val = HASH64_CONST1;
+	if(len >= 8) {
+		if(len >= 32) {
+			uint64 val1, val2, val3, val4;
+			val1 = val2 = val3 = val4 = HASH64_CONST1;
+			while(len >= 32) {
+				val1 = HASH64_CONST2 * val1 + *(qword *)(s);
+				val2 = HASH64_CONST2 * val2 + *(qword *)(s + 8);
+				val3 = HASH64_CONST2 * val3 + *(qword *)(s + 16);
+				val4 = HASH64_CONST2 * val4 + *(qword *)(s + 24);
+				s += 32;
+				len -= 32;
+			}
+			val = HASH64_CONST2 * val + val1;
+			val = HASH64_CONST2 * val + val2;
+			val = HASH64_CONST2 * val + val3;
+			val = HASH64_CONST2 * val + val4;
+		}
+		const byte *e = s + len - 8;
+		while(s < e) {
+			val = HASH64_CONST2 * val + *(qword *)(s);
+			s += 8;
+		}
+		return HASH64_CONST2 * val + *(qword *)(e);
+	}
+	if(len > 4) {
+		val = HASH64_CONST2 * val + *(dword *)(s);
+		val = HASH64_CONST2 * val + *(dword *)(s + len - 4);
+		return val;
+	}
+	if(len >= 2) {
+		val = HASH64_CONST2 * val + *(word *)(s);
+		val = HASH64_CONST2 * val + *(word *)(s + len - 2);
+		return val;
+	}
+	return len ? HASH64_CONST2 * val + *s : val;
+}
+
+#else
+
+hash_t memhash(const void *ptr, size_t len)
+{
+	const byte *s = (byte *)ptr;
+	dword val = HASH32_CONST1;
+	if(len >= 4) {
+		if(len >= 16) {
+			dword val1, val2;
+			val1 = val2 = HASH32_CONST1;
+			while(len >= 8) {
+				val1 = HASH32_CONST2 * val1 + *(dword *)(s);
+				val2 = HASH32_CONST2 * val2 + *(dword *)(s + 4);
+				s += 8;
+				len -= 8;
+			}
+			val = HASH32_CONST2 * val + val1;
+			val = HASH32_CONST2 * val + val2;
+		}
+		const byte *e = s + len - 4;
+		while(s < e) {
+			val = HASH32_CONST2 * val + *(dword *)(s);
+			s += 4;
+		}
+		return HASH32_CONST2 * val + *(dword *)(e);
+	}
+	if(len >= 2) {
+		val = HASH32_CONST2 * val + *(word *)(s);
+		val = HASH32_CONST2 * val + *(word *)(s + len - 2);
+		return val;
+	}
+	return len ? HASH32_CONST2 * val + *s : val;
+}
+
+#endif
+
+#else
+
 NOUBSAN // CPU supports unaligned memory access
 hash_t memhash(const void *ptr, size_t count)
 {
@@ -104,6 +191,8 @@ hash_t memhash(const void *ptr, size_t count)
 
 	return hash;
 }
+
+#endif
 
 #else
 
