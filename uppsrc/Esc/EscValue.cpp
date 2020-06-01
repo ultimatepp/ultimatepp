@@ -112,7 +112,7 @@ int EscValue::GetCount() const
 	return 1;
 }
 
-unsigned EscValue::GetHashValue() const
+hash_t EscValue::GetHashValue() const
 {
 	LTIMING("GetHashValue");
 	if(hash == 0) {
