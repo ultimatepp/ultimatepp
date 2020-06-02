@@ -56,11 +56,19 @@ hash_t String0::LHashValue() const
 {
 	int l = LLen();
 	if(l < 15) { // must be the same as small hash
-		dword w[4];
-		w[0] = w[1] = w[2] = w[3] = 0;
-		memcpy8((char *)w, ptr, l);
-		((byte *)w)[SLEN] = l;
-		return CombineHash(w[0], w[1], w[2], w[3]);
+#ifdef HASH64
+		qword m[2];
+		m[0] = m[1] = 0;
+		memcpy8((char *)m, ptr, l);
+		((byte *)m)[SLEN] = l;
+		return CombineHash(m[0], m[1]);
+#else
+		dword m[4];
+		m[0] = m[1] = m[2] = m[3] = 0;
+		memcpy8((char *)m, ptr, l);
+		((byte *)m)[SLEN] = l;
+		return CombineHash(m[0], m[1], m[2], m[3]);
+#endif
 	}
 	return memhash(ptr, l);
 }
