@@ -428,23 +428,19 @@ struct CombineHash {
 	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
 
 public:
-#ifdef HASH64
-	CombineHash& Put(hash_t h)                                      { hash = HASH64_CONST2 * hash + h; return *this; }
-#else
-	CombineHash& Put(hash_t h)                                      { hash = HASH32_CONST2 * hash + h; return *this; }
-#endif
+	CombineHash& Put(hash_t h)                                      { hash = HASH_CONST2 * hash + h; return *this; }
 
 	operator hash_t() const                                         { return hash; }
 
-	CombineHash()                                                   { hash = HASH64_CONST1; }
+	CombineHash()                                                   { hash = HASH_CONST1; }
 	template <class T>
-	CombineHash(const T& h1)                                        { hash = HASH64_CONST1; Do(h1); }
+	CombineHash(const T& h1)                                        { hash = HASH_CONST1; Do(h1); }
 	template <class T, class U>
-	CombineHash(const T& h1, const U& h2)                           { hash = HASH64_CONST1; Do(h1); Do(h2); }
+	CombineHash(const T& h1, const U& h2)                           { hash = HASH_CONST1; Do(h1); Do(h2); }
 	template <class T, class U, class V>
-	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = HASH64_CONST1; Do(h1); Do(h2); Do(h3); }
+	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); }
 	template <class T, class U, class V, class W>
-	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH64_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
+	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
 
 	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
 };
