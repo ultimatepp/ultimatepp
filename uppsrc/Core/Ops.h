@@ -162,7 +162,7 @@ typedef qword hash_t;
 
 inline dword FoldHash(qword h)
 {
-	return (dword)SwapEndian64(HASH64_CONST3 * h);
+	return (dword)SwapEndian64(HASH_CONST3 * h);
 }
 
 #else
