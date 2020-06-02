@@ -452,6 +452,12 @@ void memset32(void *p, dword data, size_t len)
 }
 
 inline
+void memset64(void *p, dword data, size_t len)
+{
+	memset__<qword>(p, data, len);
+}
+
+inline
 void memcpy8(void *p, const void *q, size_t len)
 {
 	memcpy(p, q, len);
