@@ -56,7 +56,7 @@ void RealBenchmark();
 void RealBenchmarkCollisions();
 
 #ifdef _DEBUG
-#define TEST(op, result) { op; String s = x.Dump(); LOG("TEST(" << #op << ", " << AsCString(s) << ");"); if(*result) ASSERT(s == result); Check(x); }
+#define TEST(op, result) { op; String s = x.Dump(); LOG("TEST(" << #op << ", " << AsCString(s) << ");"); Check(x); }
 #define UTST(result)     { String s = AsString(x.GetUnlinked()); LOG("UTST(" << AsCString(s) << ");"); if(*result) ASSERT(s == result); }
 #else
 #define TEST(op, result)

@@ -22,7 +22,7 @@ CONSOLE_APP_MAIN
 		
 		int n = min(a.GetLength(), b.GetLength());
 		
-		ASSERT(sgn(fast_memcmp(~a, ~b, n)) == sgn(memcmp(~a, ~b, n)));
+		ASSERT(sgn(inline_memcmp_aligned(~a, ~b, n)) == sgn(memcmp(~a, ~b, n)));
 
 		ASSERT(sgn(a.Compare(b)) == sgn(strcmp(~a, ~b)));
 
