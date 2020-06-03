@@ -167,9 +167,9 @@ inline dword FoldHash(qword h)
 
 #else
 
-#define HASH_CONST1 0xf7c21089
-#define HASH_CONST2 0xc85abc8d
-#define HASH_CONST3 0x8642b0fe
+#define HASH_CONST1 0xbee7c0a5
+#define HASH_CONST2 0xa7534a4d
+#define HASH_CONST3 0x8e86671b
 
 typedef dword hash_t;
 
