@@ -138,22 +138,27 @@ hash_t memhash(const void *ptr, size_t len)
 
 #else
 
+never_inline
 hash_t memhash(const void *ptr, size_t len)
 {
 	const byte *s = (byte *)ptr;
 	dword val = HASH_CONST1;
 	if(len >= 4) {
-		if(len >= 16) {
-			dword val1, val2;
-			val1 = val2 = HASH_CONST1;
-			while(len >= 8) {
+		if(len >= 48) {
+			dword val1, val2, val3, val4;
+			val1 = val2 = val3 = val4 = HASH_CONST1;
+			while(len >= 16) {
 				val1 = HASH_CONST2 * val1 + *(dword *)(s);
 				val2 = HASH_CONST2 * val2 + *(dword *)(s + 4);
-				s += 8;
-				len -= 8;
+				val3 = HASH_CONST2 * val3 + *(dword *)(s + 8);
+				val4 = HASH_CONST2 * val4 + *(dword *)(s + 12);
+				s += 16;
+				len -= 16;
 			}
 			val = HASH_CONST2 * val + val1;
 			val = HASH_CONST2 * val + val2;
+			val = HASH_CONST2 * val + val3;
+			val = HASH_CONST2 * val + val4;
 		}
 		const byte *e = s + len - 4;
 		while(s < e) {
