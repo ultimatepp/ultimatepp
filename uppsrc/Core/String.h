@@ -76,7 +76,7 @@ public:
 	int    Compare(const tchar *s) const;
 
 	bool   IsEqual(const String& s) const                     { return B::IsEqual(s); }
-	bool   IsEqual(const tchar *s) const                      { return Compare(s) == 0; }
+	bool   IsEqual(const tchar *s) const                      { return B::IsEqual(s); }
 
 	String Mid(int pos, int length) const;
 	String Mid(int pos) const                                 { return Mid(pos, GetLength() - pos); }
@@ -150,10 +150,10 @@ public:
 
 	friend bool operator==(const String& a, const String& b)   { return a.IsEqual(b); }
 	friend bool operator!=(const String& a, const String& b)   { return !a.IsEqual(b); }
-	friend bool operator==(const String& a, const tchar *b)    { return a.Compare(b) == 0; }
-	friend bool operator==(const tchar *a, const String& b)    { return b.Compare(a) == 0; }
-	friend bool operator!=(const String& a, const tchar *b)    { return a.Compare(b) != 0; }
-	friend bool operator!=(const tchar *a, const String& b)    { return b.Compare(a) != 0; }
+	friend bool operator==(const String& a, const tchar *b)    { return a.IsEqual(b); }
+	friend bool operator==(const tchar *a, const String& b)    { return b.IsEqual(a); }
+	friend bool operator!=(const String& a, const tchar *b)    { return !a.IsEqual(b); }
+	friend bool operator!=(const tchar *a, const String& b)    { return !b.IsEqual(a); }
 
 	friend String operator+(const String& a, const String& b)  { String c(a); c += b; return c; }
 	friend String operator+(const String& a, const tchar *b)   { String c(a); c += b; return c; }
@@ -282,6 +282,7 @@ public:
 		uint64 sq1 = s.q[1];
 		return q1 == sq1 && q[0] == s.q[0] || ((q1 | sq1) & I64(0x00ff000000000000)) && LEq(s);
 	}
+	bool IsEqual(const char *s) const;
 
 	int    Compare(const String0& s) const;
 
@@ -761,6 +762,7 @@ public:
 
 	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
 	bool     IsEqual(const WString0& s) const { return s.length == length && memeq16(ptr, s.ptr, length); }
+	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq16(begin(), s, l); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);

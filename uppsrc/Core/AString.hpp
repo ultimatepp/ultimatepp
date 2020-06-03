@@ -262,6 +262,15 @@ void String0::Set(const char *s, int len)
 	Dsyn();
 }
 
+inline
+bool String0::IsEqual(const char *s) const
+{ // This optimized for comparison with string literals...
+	int len = strlen(s);
+	if(len != GetCount()) return false;
+	const char *t = begin();
+	return memcmp(begin(), s, len) == 0; // compiler is happy to optimize memcmp out...
+}
+
 force_inline
 String& String::operator=(const char *s)
 {
