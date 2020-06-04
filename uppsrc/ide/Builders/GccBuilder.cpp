@@ -74,9 +74,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	bool blitz = HasFlag("BLITZ");
 	bool release = !HasFlag("DEBUG");
 	bool objectivec = HasFlag("OBJC");
-#ifdef PLATFORM_MACOS
-	objectivec = true;
-#endif
+	
+	if(HasFlag("OSX"))
+		objectivec = true;
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -386,73 +386,77 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 
 				String tmpFileName;
-			#if defined(PLATFORM_LINUX) || defined(PLATFORM_WIN32)
-				if(lib.GetCount() + llib.GetCount() >= 8192)
-				{
-					tmpFileName = GetTempFileName();
-					// we can't simply put all data on a single line
-					// as it has a limit of around 130000 chars too, so we split
-					// in multiple lines
-					FileOut f(tmpFileName);
-					while(llib != "")
+				if(HasFlag("LINUX") || HasFlag("WIN32")) {
+					if(lib.GetCount() + llib.GetCount() >= 8192)
 					{
-						int found = 0;
-						bool quotes = false;
-						int lim = min(8192, llib.GetCount());
-						for(int i = 0; i < lim; i++)
+						tmpFileName = GetTempFileName();
+						// we can't simply put all data on a single line
+						// as it has a limit of around 130000 chars too, so we split
+						// in multiple lines
+						FileOut f(tmpFileName);
+						while(llib != "")
 						{
-							char c = llib[i];
-							if(isspace(c) && !quotes)
-								found = i;
-							else if(c == '"')
-								quotes = !quotes;
+							int found = 0;
+							bool quotes = false;
+							int lim = min(8192, llib.GetCount());
+							for(int i = 0; i < lim; i++)
+							{
+								char c = llib[i];
+								if(isspace(c) && !quotes)
+									found = i;
+								else if(c == '"')
+									quotes = !quotes;
+							}
+							if(!found)
+								found = llib.GetCount();
+	
+							// replace all '\' with '/'`
+							llib = UnixPath(llib);
+							
+							f.PutLine(llib.Left(found));
+							llib.Remove(0, found);
 						}
-						if(!found)
-							found = llib.GetCount();
-
-						// replace all '\' with '/'`
-						llib = UnixPath(llib);
-						
-						f.PutLine(llib.Left(found));
-						llib.Remove(0, found);
+						f.Close();
+						lib << " @" << tmpFileName;
 					}
-					f.Close();
-					lib << " @" << tmpFileName;
+					else
+						lib << llib;
 				}
 				else
-			#endif
 					lib << llib;
 
 				int res = Execute(lib);
 				if(tmpFileName.GetCount())
 					FileDelete(tmpFileName);
-#ifdef PLATFORM_POSIX
 				String folder, libF, soF, linkF;
-				if(is_shared)
-				{
-					folder = GetFileFolder(hproduct);
-					libF = GetFileName(hproduct);
-					soF = AppendFileName(folder, GetSoname(hproduct));
-					linkF = AppendFileName(folder, GetSoLinkName(hproduct));
+				if(HasFlag("POSIX")) {
+					if(is_shared)
+					{
+						folder = GetFileFolder(hproduct);
+						libF = GetFileName(hproduct);
+						soF = AppendFileName(folder, GetSoname(hproduct));
+						linkF = AppendFileName(folder, GetSoLinkName(hproduct));
+					}
 				}
-#endif
 				if(res) {
 					DeleteFile(hproduct);
-#ifdef PLATFORM_POSIX
-					if(is_shared) {
-						DeleteFile(libF);
-						DeleteFile(linkF);
+					if(HasFlag("POSIX")) {
+						if(is_shared) {
+							DeleteFile(libF);
+							DeleteFile(linkF);
+						}
 					}
-#endif
 					return false;
 				}
-#ifdef PLATFORM_POSIX
-				if(is_shared)
-				{
-					int r;
-					r = symlink(libF, soF);
-					r = symlink(libF, linkF);
-					(void)r;
+#ifdef PLATFORM_POSIX // we do not have symlink in Win32....
+				if(HasFlag("POSIX")) {
+					if(is_shared)
+					{
+						int r;
+						r = symlink(libF, soF);
+						r = symlink(libF, linkF);
+						(void)r;
+					}
 				}
 #endif
 				PutConsole(String().Cat() << hproduct << " (" << GetFileInfo(hproduct).length
@@ -475,9 +479,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		return false;
 	PutLinking();
 	int time = msecs();
-#ifdef PLATFORM_COCOA
 	CocoaAppBundle();
-#endif
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
