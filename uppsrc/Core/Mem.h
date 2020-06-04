@@ -1,14 +1,5 @@
 #ifdef CPU_X86
 
-inline
-bool memeq128(const void *p, const void *q)
-{
-	qword *s = (qword *)p;
-	qword *t = (qword *)q;
-	return s[0] == t[0] && s[1] == t[1];
-//	return _mm_movemask_epi8(_mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)p), _mm_loadu_si128((__m128i *)q))) == 0xffff;
-}
-
 void memset8__(void *t, __m128i data, size_t len);
 
 inline

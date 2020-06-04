@@ -1,5 +1,6 @@
 #include "Painter.h"
 #include "Fillers.h"
+#include "AlphaBlend.h"
 
 namespace Upp {
 
@@ -20,12 +21,8 @@ inline RGBA InvertRGBA(const RGBA& c)
 
 void SolidFiller::Render(int val)
 {
-	if(invert) {
-		AlphaBlendCover8(*t, InvertRGBA(*t), val);
-		t++;
-	}
-	else
-		AlphaBlendCover8(*t++, c, val);
+	AlphaBlend(t, invert ? InvertRGBA(*t) : c, val);
+	t++;
 }
 
 void SolidFiller::Render(int val, int len)
@@ -43,25 +40,16 @@ void SolidFiller::Render(int val, int len)
 			}
 		else
 			while(t < e) {
-				AlphaBlendCover8(*t, InvertRGBA(*t), val);
+				AlphaBlend(t, InvertRGBA(*t), val);
 				t++;
 			}
 	}
 	else {
-		if(((val - 256) | (c.a - 255)) == 0) {
+		if(((val - 256) | (c.a - 255)) == 0)
 			Fill(t, c, len);
-			t += len;
-		}
-		else {
-			RGBA c1;
-			if(val != 256)
-				c1 = Mul8(c, val);
-			else
-				c1 = c;
-			RGBA *e = t + len;
-			while(t < e)
-				AlphaBlend(*t++, c1);
-		}
+		else
+			AlphaBlend(t, c, val, len);
+		t += len;
 	}
 }
 
@@ -202,7 +190,7 @@ void SubpixelFiller::Render(int val, int len)
 				}
 			else
 				while(t < e) {
-					AlphaBlend(*t, Mul8(InvertRGBA(*t), val));
+					AlphaBlend(t, InvertRGBA(*t), val);
 					t++;
 				}
 		}
@@ -214,15 +202,15 @@ void SubpixelFiller::Render(int val, int len)
 				}
 				else
 					while(t < e)
-						AlphaBlend(*t++, ss ? Mul8(*s++, alpha) : color);
+						AlphaBlend(t++, ss ? Mul8(*s++, alpha) : color);
 			else
 				if(ss)
 					while(t < e)
-						AlphaBlendCover8(*t++, Mul8(*s++, alpha), val);
+						AlphaBlend(t++, Mul8(*s++, alpha), val);
 				else {
 					RGBA c = Mul8(color, val);
 					while(t < e)
-						AlphaBlend(*t++, c);
+						AlphaBlend(t++, c);
 				}
 		}
 		v = begin = sbuffer + 3;
@@ -241,7 +229,7 @@ void SubpixelFiller::Write(int len)
 		RGBA c = ss ? Mul8(*s++, alpha) : invert ? InvertRGBA(*t) : color;
 		int a;
 		if(t->a != 255)
-			AlphaBlendCover8(*t, c, (q[0] + q[1] + q[2]) / 3);
+			AlphaBlend(t, c, (q[0] + q[1] + q[2]) / 3);
 		else
 		if(c.a == 255) {
 			t->r = (c.r * q[0] >> 8) + ((257 - q[0]) * t->r >> 8);
@@ -278,7 +266,7 @@ void SpanFiller::Render(int val)
 {
 	if(alpha != 256)
 		val = alpha * val >> 8;
-	AlphaBlendCover8(*t++, *s++, val);
+	AlphaBlend(t++, *s++, val);
 }
 
 void SpanFiller::Render(int val, int len)
@@ -290,21 +278,9 @@ void SpanFiller::Render(int val, int len)
 	}
 	if(alpha != 256)
 		val = alpha * val >> 8;
-	if(val == 256) {
-		for(int i = 0; i < len; i++) {
-			if(s[i].a == 255)
-				t[i] = s[i];
-			else
-				AlphaBlend(t[i], s[i]);
-		}
-		t += len;
-		s += len;
-	}
-	else {
-		const RGBA *e = t + len;
-		while(t < e)
-			AlphaBlendCover8(*t++, *s++, val);
-	}
+	AlphaBlend(t, s, val, len);
+	t += len;
+	s += len;
 }
 
 void ClipFiller::Init(int _cx)
