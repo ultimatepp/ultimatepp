@@ -24,6 +24,7 @@ file
 	Rasterizer.cpp,
 	RasterizerClip.cpp,
 	RenderChar.cpp,
+	AlphaBlend.h,
 	Fillers.h,
 	Fillers.cpp,
 	BufferPainter.h,

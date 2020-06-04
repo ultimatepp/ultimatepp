@@ -1,3 +1,14 @@
+force_inline
+RGBA Mul8(const RGBA& s, int mul)
+{
+	RGBA t;
+	t.r = (mul * s.r) >> 8;
+	t.g = (mul * s.g) >> 8;
+	t.b = (mul * s.b) >> 8;
+	t.a = (mul * s.a) >> 8;
+	return t;
+}
+
 struct SpanSource {
 	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 	virtual ~SpanSource() {}
@@ -22,35 +33,6 @@ public:
 struct PainterTarget : LinearPathConsumer {
 	virtual void Fill(double width, SpanSource *ss, const RGBA& color);
 };
-
-inline RGBA Mul8(const RGBA& s, int mul)
-{
-	RGBA t;
-	t.r = (mul * s.r) >> 8;
-	t.g = (mul * s.g) >> 8;
-	t.b = (mul * s.b) >> 8;
-	t.a = (mul * s.a) >> 8;
-	return t;
-}
-
-inline void AlphaBlend(RGBA& t, const RGBA& c)
-{
-	int alpha = 256 - (c.a + (c.a >> 7));
-	t.r = c.r + (alpha * t.r >> 8);
-	t.g = c.g + (alpha * t.g >> 8);
-	t.b = c.b + (alpha * t.b >> 8);
-	t.a = c.a + ((256 - c.a) * t.a >> 8);
-}
-
-inline void AlphaBlendCover8(RGBA& t, const RGBA& c, int cover)
-{
-	int a = c.a * cover >> 8;
-	int alpha = 256 - a - (a >> 7);
-	t.r = (c.r * cover >> 8) + (alpha * t.r >> 8);
-	t.g = (c.g * cover >> 8) + (alpha * t.g >> 8);
-	t.b = (c.b * cover >> 8) + (alpha * t.b >> 8);
-	t.a = a + (alpha * t.a >> 8);
-}
 
 class BufferPainter : public Painter {
 protected:
