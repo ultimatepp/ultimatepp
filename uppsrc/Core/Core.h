@@ -40,6 +40,10 @@
 
 #include "config.h"
 
+#if defined(flagSTD_NEWDELETE) && !defined(STD_NEWDELETE)
+#define STD_NEWDELETE
+#endif
+
 #ifndef CPP_11
 #error This version of U++ REQUIRES C++11
 #endif

@@ -379,7 +379,7 @@ bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
 	static const Index<String> platformFlags = {
 		"WIN32", "POSIX", "LINUX", "ANDROID",
 		"BSD", "FREEBSD", "OPENBSD", "NETBSD",
-		"DRAGONFLY", "SOLARIS", "OSX11"
+		"DRAGONFLY", "SOLARIS", "OSX11", "OSX"
 	};
 
 	for(const String& flag : cfg)
