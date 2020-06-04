@@ -40,5 +40,6 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "GUI TIMING",
-	"" = "GUI USEMALLOC";
+	"" = "GUI USEMALLOC",
+	"" = "GUI TIMING NOSIMD";
 
