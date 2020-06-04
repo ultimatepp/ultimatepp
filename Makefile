@@ -57879,6 +57879,7 @@ $(OutDir_Painter)Fillers.o: $(UPPDIR1)Painter/Fillers.cpp \
 	$(UPPDIR1)Draw/ImageOp.h \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Painter/AlphaBlend.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Fillers.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
