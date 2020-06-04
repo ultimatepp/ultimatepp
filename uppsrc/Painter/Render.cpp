@@ -313,6 +313,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		if(width != ONPATH) {
 			int n = rasterizer.MaxY() - rasterizer.MinY();
 			if(n >= 0) {
+				PAINTER_TIMING("RenderPath2 Fill");
 				if(doco && n > 6) {
 					CoWork co;
 					co * [&] { fill(&co); };
