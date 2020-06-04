@@ -201,6 +201,7 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 
 	virtual void Get(RGBA *span, int x, int y, unsigned len)
 	{
+		PAINTER_TIMING("ImageSpan::Get");
 		interpolator.Begin(x, y, len);
 		fixed = hstyle && vstyle;
 		if(hstyle + vstyle == 0 && fast) {
@@ -237,7 +238,6 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			else {
 				RGBAV v;
 				v.Set(0);
-	//			v.Set(256 * 256 / 2);
 				h.x &= 255;
 				h.y &= 255;
 				Point u = -h + 256;
