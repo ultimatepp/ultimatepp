@@ -134,6 +134,7 @@ Image Iml::Get(int i)
 				}
 				if(!IsNull(m.image) && (mode & GUI_MODE_UHD)) // this is to support legacy code mostly
 					SetResolution(m.image, IMAGE_RESOLUTION_UHD);
+				ScanOpaque(m.image);
 			}
 			m.loaded = true;
 		}

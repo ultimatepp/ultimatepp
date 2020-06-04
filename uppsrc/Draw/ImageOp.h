@@ -11,6 +11,8 @@ void  SetResolution(Image& m, int res);
 Image WithResolution(const Image& m, int res);
 Image WithResolution(const Image& m, const Image& res);
 
+void  ScanOpaque(Image& m);
+
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Over(Image& dest, const Image& src);
 void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
