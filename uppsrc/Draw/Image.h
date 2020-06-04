@@ -186,6 +186,7 @@ public:
 	int   GetKindNoScan() const;
 	int   GetKind() const;
 	int   GetResolution() const;
+	bool  IsOpaque() const                    { return GetKind() == IMAGE_OPAQUE; }
 
 	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; }
 	const RGBA *begin() const                 { return Begin(); }

@@ -61,6 +61,13 @@ Image CreateImage(Size sz, Color color)
 	return CreateImage(sz, (RGBA)color);
 }
 
+void ScanOpaque(Image& m)
+{
+	ImageBuffer ib(m);
+	ib.SetKind(ib.ScanKind());
+	m = ib;
+}
+
 force_inline Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr)
 {
 	if(p.x < 0) {
