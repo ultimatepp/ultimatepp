@@ -54,7 +54,7 @@ void StoreRGBA(RGBA *rgba, __m128i x)
 force_inline
 void StoreRGBA2(RGBA *rgba, __m128i x)
 {
-	_mm_storeu_si64(rgba, PackRGBA(x, _mm_setzero_si128()));
+	_mm_storel_pd((double *)rgba, _mm_castsi128_pd(PackRGBA(x, _mm_setzero_si128())));
 }
 
 force_inline
