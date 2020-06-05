@@ -21,16 +21,17 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	bool sep_line = false;
 	while(s < end) {
 		int c = *s;
-		if(s + 3 <= end && (Is3(s, '-') || Is3(s, '*') || Is3(s, '=') || Is3(s, '+') ||
-		                    Is3(s, '#') || Is3(s, ':') || Is3(s, '%') || Is3(s, '$')))
+		dword pair = MAKELONG(s[0], s[1]);
+	#define P2(x) MAKELONG(x, x)
+		if(s + 3 <= end && findarg(pair, P2('-'), P2('*'), P2('='), P2('+'), P2('#'), P2(':'), P2('%'), P2('$')) >= 0 && s[2] == c)
 			sep_line = true;
-		if(IsDigit(c)) {
-			LTIMING("A");
+		if(findarg(pair, MAKELONG('0', 'x'), MAKELONG('0', 'X'), MAKELONG('0', 'b'), MAKELONG('0', 'B')) >= 0)
+			s = HighlightHexBin(hls, s, 2, thousands_separator);
+		else
+		if(IsDigit(c))
 			s = HighlightNumber(hls, s, thousands_separator, false, false);
-		}
 		else
 		if(c == '\'' || c == '\"') {
-			LTIMING("B");
 			const wchar *s0 = s;
 			s++;
 			for(;;) {
@@ -45,7 +46,6 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 		}
 		else
 		if(IsAlpha(c) || c == '_') {
-			LTIMING("C");
 			static Index<String> rws, sws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "warn" << "failed" << "exit"

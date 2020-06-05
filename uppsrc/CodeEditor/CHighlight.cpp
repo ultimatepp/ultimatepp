@@ -91,6 +91,21 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 	return p;
 }
 
+const wchar *HighlightHexBin(HighlightOutput& hls, const wchar *p, int plen, bool thousands_separator)
+{
+	hls.Put(plen, HighlightSetup::hl_style[HighlightSetup::INK_CONST_HEX]);
+	p += plen;
+	const wchar *t = p;
+	while(IsXDigit(*p))
+		p++;
+	int n = int(p - t);
+	for(int i = 0; i < n; i++) {
+		hls.Put(HighlightSetup::hl_style[HighlightSetup::INK_CONST_HEX],
+		        thousands_separator && ((n - i) & 1) ? LineEdit::SHIFT_L : 0);
+	}
+	return p;
+}
+
 const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wchar *e)
 {
 	WString w;
@@ -333,19 +348,8 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 		else
-		if(highlight == HIGHLIGHT_CSS ? *p == '#' : findarg(pair, MAKELONG('0', 'x'), MAKELONG('0', 'X'), MAKELONG('0', 'b'), MAKELONG('0', 'B')) >= 0) {
-			int pn = 1 + (highlight != HIGHLIGHT_CSS);
-			hls.Put(pn, hl_style[INK_CONST_HEX]);
-			p += pn;
-			const wchar *t = p;
-			while(IsXDigit(*p))
-				p++;
-			int n = int(p - t);
-			for(int i = 0; i < n; i++) {
-				hls.Put(hl_style[INK_CONST_HEX],
-				        thousands_separator && ((n - i) & 1) ? LineEdit::SHIFT_L : 0);
-			}
-		}
+		if(highlight == HIGHLIGHT_CSS ? *p == '#' : findarg(pair, MAKELONG('0', 'x'), MAKELONG('0', 'X'), MAKELONG('0', 'b'), MAKELONG('0', 'B')) >= 0)
+			p = HighlightHexBin(hls, p, 1 + (highlight != HIGHLIGHT_CSS), thousands_separator);
 		else
 		if(IsDigit(*p))
 			p = HighlightNumber(hls, p, thousands_separator, *p == '0', highlight == HIGHLIGHT_CSS);

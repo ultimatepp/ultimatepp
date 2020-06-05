@@ -85,3 +85,4 @@ public:
 };
 
 const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool octal, bool css);
+const wchar *HighlightHexBin(HighlightOutput& hls, const wchar *p, int plen, bool thousands_separator);
