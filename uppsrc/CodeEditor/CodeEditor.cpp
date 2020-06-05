@@ -21,7 +21,7 @@ INITBLOCK {
 
 One<EditorSyntax> CodeEditor::GetSyntax(int line)
 {
-	CTIMING("GetSyntax");
+	LTIMING("GetSyntax");
 	One<EditorSyntax> syntax = EditorSyntax::Create(highlight);
 	syntax->SpellCheckComments(spellcheck_comments);
 	int ln = 0;
