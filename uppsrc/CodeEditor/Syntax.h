@@ -136,7 +136,7 @@ public:
 	static String            GetSyntaxForFilename(const char *fn);
 	static int               GetSyntaxCount()             { return defs().GetCount(); }
 	static String            GetSyntax(int i)             { return defs().GetKey(i); }
-	static String            GetSyntaxDescription(int i)  { return defs()[i].description; }
+	static String            GetSyntaxDescription(int i);
 	static String            GetSyntaxPatterns(int i)     { return defs()[i].patterns; }
 };
 
