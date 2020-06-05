@@ -406,7 +406,7 @@ bool IsNormal(Font font, int chr)
 	return GetGlyphInfoSys(font, chr).IsNormal();
 }
 
-CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
+CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
 {
 	Mutex::Lock __(sFontLock);
 	CharEntry& e = fc_cache_global[hash % 4093];
@@ -438,7 +438,7 @@ thread_local CharEntry fc_cache[512];
 GlyphInfo GetGlyphInfo(Font font, int chr)
 {
 	font.RealizeStd();
-	unsigned hash = GlyphHash(font, chr);
+	hash_t hash = GlyphHash(font, chr);
 	CharEntry& e = fc_cache[hash & 511];
 	if(e.font != font.AsInt64() || e.chr != chr)
 		e = GetGlyphEntry(font, chr, hash);

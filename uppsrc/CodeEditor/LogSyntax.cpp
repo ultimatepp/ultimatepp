@@ -1,6 +1,8 @@
 #include "CodeEditor.h"
 
 namespace Upp {
+	
+#define LTIMING(x) // RTIMING(x)
 
 inline bool Is3(const wchar *s, int c)
 {
@@ -9,6 +11,7 @@ inline bool Is3(const wchar *s, int c)
 
 void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
+	LTIMING("LogSyntax::Highlight");
 	const HlStyle& ink = hl_style[INK_NORMAL];
 	HlStyle err = hl_style[INK_ERROR];
 	err.bold = true;
@@ -18,31 +21,31 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	bool sep_line = false;
 	while(s < end) {
 		int c = *s;
-		const wchar *s0 = s;
 		if(s + 3 <= end && (Is3(s, '-') || Is3(s, '*') || Is3(s, '=') || Is3(s, '+') ||
 		                    Is3(s, '#') || Is3(s, ':') || Is3(s, '%') || Is3(s, '$')))
 			sep_line = true;
-		if(IsDigit(c))
+		if(IsDigit(c)) {
+			LTIMING("A");
 			s = HighlightNumber(hls, s, thousands_separator, false, false);
+		}
 		else
 		if(c == '\'' || c == '\"') {
+			LTIMING("B");
+			const wchar *s0 = s;
 			s++;
 			for(;;) {
-				if(s >= end) {
-					hls.Put(1, ink);
-					s = s0 + 1;
-					break;
-				}
-				if(*s == c) {
+				int c1 = *s;
+				if(s >= end || c1 == c) {
 					s++;
 					hls.Put((int)(s - s0), hl_style[INK_CONST_STRING]);
 					break;
 				}
-				s += 1 + (s[0] == '\\' && s[1] == c);
+				s += 1 + (c1 == '\\' && s[1] == c);
 			}
 		}
 		else
 		if(IsAlpha(c) || c == '_') {
+			LTIMING("C");
 			static Index<String> rws, sws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "warn" << "failed" << "exit"
@@ -57,6 +60,11 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			hls.Put(w.GetCount(), hl ? err : st ? stt : ink);
 			hl_line = hl_line || hl;
 			st_line = st_line || st;
+		}
+		else
+		if(c == '\\' && s[1]) {
+			hls.Put(2, ink);
+			s += 2;
 		}
 		else {
 			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*',
