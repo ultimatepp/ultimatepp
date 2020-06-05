@@ -37,4 +37,15 @@ String EditorSyntax::GetSyntaxForFilename(const char *fn)
 	return Null;
 }
 
+String EditorSyntax::GetSyntaxDescription(int i)
+{
+	String d = defs()[i].description;
+	String x = defs()[i].patterns;
+	if(x.GetCount()) {
+		x.Replace("*", "");
+		d << " (" << TrimBoth(x) << ")";
+	}
+	return d;
+}
+
 }

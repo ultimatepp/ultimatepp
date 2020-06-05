@@ -165,6 +165,7 @@ void Ide::FileProperties()
 		if(desc.GetCount())
 			d.highlight.Add(EditorSyntax::GetSyntax(i), desc);
 	}
+	d.highlight.Add("none", "None");
 	d.tabsize <<= f.tabsize > 0 ? f.tabsize : Null;
 	d.tabsize <<= d.Breaker(111);
 	d.tabsize.MinMax(1, 100);

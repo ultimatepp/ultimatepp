@@ -44,10 +44,10 @@ void RegisterSyntaxModules()
 	RegisterCSyntax("json", CSyntax::HIGHLIGHT_JSON, "*.json", "JSON");
 	RegisterCSyntax("css", CSyntax::HIGHLIGHT_CSS, "*.css", "Cascading Style Sheet");
 	RegisterCSyntax("sql", CSyntax::HIGHLIGHT_SQL, "*.sql *.ddl", "SQL script");
-	RegisterCSyntax("lay", CSyntax::HIGHLIGHT_LAY, "*.lay", "U++ layout (.lay)");
-	RegisterCSyntax("sch", CSyntax::HIGHLIGHT_SCH, "*.sch", "U++ SQL schema (.sch)");
-	RegisterCSyntax("t", CSyntax::HIGHLIGHT_T, "*.t *.jt", "U++ translation (.t)");
-	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions (.usc)");
+	RegisterCSyntax("lay", CSyntax::HIGHLIGHT_LAY, "*.lay", "U++ layout");
+	RegisterCSyntax("sch", CSyntax::HIGHLIGHT_SCH, "*.sch", "U++ SQL schema");
+	RegisterCSyntax("t", CSyntax::HIGHLIGHT_T, "*.t *.jt", "U++ translation");
+	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions");
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	RegisterCSyntax("php", CSyntax::HIGHLIGHT_PHP, "*.php", "PHP");
 	
@@ -55,11 +55,11 @@ void RegisterSyntaxModules()
 	
 	EditorSyntax::Register("python", callback(CreatePythonSyntax), "*.py, *.pyc, *.pyd, *.pyo, *.pyw, *.pyz", "Python");
 	
-	EditorSyntax::Register("xml", callback2(CreateTagSyntax, false, false), "*.xml *.xsd", "XML (.xml)");
-	EditorSyntax::Register("html", callback2(CreateTagSyntax, true, false), "*.html *.htm", "HTML (.html)");
-	EditorSyntax::Register("witz", callback2(CreateTagSyntax, true, true), "*.witz", "Skylark templates (.witz)");
+	EditorSyntax::Register("xml", callback2(CreateTagSyntax, false, false), "*.xml *.xsd", "XML");
+	EditorSyntax::Register("html", callback2(CreateTagSyntax, true, false), "*.html *.htm", "HTML");
+	EditorSyntax::Register("witz", callback2(CreateTagSyntax, true, true), "*.witz", "Skylark templates");
 	
-	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log *.info", "Log (*.log)");
+	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log *.info", "Log");
 }
 
 }
