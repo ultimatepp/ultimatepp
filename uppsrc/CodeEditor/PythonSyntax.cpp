@@ -2,67 +2,63 @@
 
 namespace Upp {
 
-PythonSyntax::PythonSyntax() {}
-
-void PythonSyntax::Highlight(const wchar *start, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
+void PythonSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
-	InitKeywords();
-	
-	bool isComment = false;
-	bool isStr = false;
-	char strOpening;
-	
-	const wchar* p = start;
-	while(p < end) {
-		if((*p == '#' || isComment) && !isStr) {
-			isComment = true;
-			hls.Put(hl_style[INK_COMMENT]);
+	const HlStyle& ink = hl_style[INK_NORMAL];
+	while(s < end) {
+		int c = *s;
+		dword pair = MAKELONG(s[0], s[1]);
+		if(c == '#') {
+			hls.Put(end - s, hl_style[INK_COMMENT]);
+			return;
 		}
 		else
-		if(*p == '\'' || *p == '\"' || isStr) {
-			hls.Put(hl_style[INK_CONST_STRING]);
-			if((*p == '\'' || *p == '\"') && p - 1 != start && *(p - 1) != '\\')
-				if (!isStr || strOpening == *p) {
-					isStr = !isStr;
-					strOpening = (char)*p;
+		if(findarg(pair, MAKELONG('0', 'x'), MAKELONG('0', 'X'), MAKELONG('0', 'b'), MAKELONG('0', 'B'),
+		                 MAKELONG('0', 'o'), MAKELONG('0', 'O')) >= 0)
+			s = HighlightHexBin(hls, s, 2, thousands_separator);
+		else
+		if(IsDigit(c))
+			s = HighlightNumber(hls, s, thousands_separator, false, false);
+		else
+		if(c == '\'' || c == '\"') {
+			const wchar *s0 = s;
+			s++;
+			for(;;) {
+				int c1 = *s;
+				if(s >= end || c1 == c) {
+					s++;
+					hls.Put((int)(s - s0), hl_style[INK_CONST_STRING]);
+					break;
 				}
-		}
-		else
-		if(IsSeparator(p) || p == start) {
-			WString w;
-			bool isW = false;
-			const wchar* bp = (p == start && !IsSeparator(p)) ? p : p + 1;
-			while (bp != end && !IsSeparator(bp))
-				w += *bp++;
-			
-			bool isPutted = false;
-			if(IsSeparator(p)) {
-				hls.Put(hl_style[INK_NORMAL]);
-				isPutted = true;
-			}
-			if(IsKeyword(w)) {
-				hls.Put(w.GetLength(), hl_style[INK_KEYWORD]);
-				isW = true;
-			}
-			else
-			if(IsSpecialVar(w)) {
-				hls.Put(w.GetLength(), hl_style[INK_UPP]);
-				isW = true;
-			}
-			else
-			if(IsNumber(w)) {
-				hls.Put(w.GetLength(), hl_style[INK_CONST_INT]);
-				isW = true;
-			}
-			
-			if(isW) {
-				p += w.GetLength() - (isPutted ? 0 : 1);
+				s += 1 + (c1 == '\\' && s[1] == c);
 			}
 		}
 		else
-			hls.Put(hl_style[INK_NORMAL]);
-		
-		p++;
+		if(IsAlpha(c) || c == '_') {
+			static Index<String> kws = { "False", "await", "else", "import", "pass", "None", "break",
+			                             "except", "in", "raise", "True", "class", "finally", "is",
+			                             "return", "and", "continue", "for", "lambda", "try", "as",
+			                             "def", "from", "nonlocal", "while", "assert", "del", "global",
+			                             "not", "with", "async", "elif", "if", "or", "yield" };
+			static Index<String> sws = { "self", "NotImplemented", "Ellipsis", "__debug__", "__file__", "__name__" };
+			String w;
+			while(s < end && IsAlNum(*s) || *s == '_')
+				w.Cat(*s++);
+			hls.Put(w.GetCount(), kws.Find(w) >= 0 ? hl_style[INK_KEYWORD] :
+			                      sws.Find(w) >= 0 ? hl_style[INK_UPP] :
+			                      ink);
+		}
+		else
+		if(c == '\\' && s[1]) {
+			hls.Put(2, ink);
+			s += 2;
+		}
+		else {
+			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*',
+			                     '#', '@', '\\', '.') >= 0;
+			hls.Put(1, hl ? hl_style[INK_OPERATOR] : ink);
+			s++;
+		}
 	}
 }
 
@@ -85,59 +81,6 @@ void PythonSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 	}
 	if(count > 0)
 		editor.InsertChar(chr, count);
-}
-
-bool PythonSyntax::IsSeparator(const wchar* c)
-{
-	return    *c == ' ' || *c == ':' || *c == ',' || *c == '.' || *c == '('
-	       || *c == ')' || *c == '[' || *c == ']' || *c == '{' || *c == '}'
-	       || *c == '\t';
-}
-
-bool PythonSyntax::IsKeyword(const WString& w)
-{
-	return keywords.Find(w.ToString()) > -1;
-}
-
-bool PythonSyntax::IsSpecialVar(const WString& w)
-{
-	return specialVars.Find(w.ToString()) > -1;
-}
-
-bool PythonSyntax::IsNumber(const WString& w)
-{
-	RegExp exp("^-?[0-9]+$");
-	return exp.Match(w.ToString());
-}
-
-void PythonSyntax::InitKeywords()
-{
-	static const char* pythonKeywords[] = {
-		"and", "as", "assert", "break", "class", "continue", "def",
-		"del", "elif", "else", "except", "finally", "for",
-		"from", "global", "if", "import", "in", "is", "lambda",
-		"not", "or", "pass", "raise", "return", "try",
-		"while", "with", "yield",
-		"None", "True", "False",
-		NULL
-	};
-	static const char* pythonSpecialVars[] = {
-		"self", "NotImplemented", "Ellipsis", "__debug__", "__file__", "__name__",
-		NULL
-	};
-	
-	LoadSyntax(pythonKeywords, pythonSpecialVars);
-}
-
-void PythonSyntax::LoadSyntax(const char* keywordsArray[], const char* specialVarsArray[])
-{
-	keywords.Clear();
-	while(*keywordsArray)
-		keywords.Add(*keywordsArray++);
-	
-	specialVars.Clear();
-	while(*specialVarsArray)
-		specialVars.Add(*specialVarsArray++);
 }
 
 bool PythonSyntax::LineHasColon(const WString& line)
@@ -205,7 +148,7 @@ int PythonSyntax::CalculateSpaceIndetationSize(CodeEditor& editor)
 			break;
 	}
 	
-	// TODO: 4 is magic numer - try to find the way to get this number from ide constants
+	// TODO: 4 is magic number - try to find the way to get this number from ide constants
 	return current > 0 ? current : 4;
 }
 
