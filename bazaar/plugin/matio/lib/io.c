@@ -32,13 +32,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "matio_private.h"
-
+/*
 #if !defined(HAVE_VA_COPY) && defined(HAVE___VA_COPY)
 #    define va_copy(d,s) __va_copy(d,s)
 #elif !defined(HAVE_VA_COPY)
 #    define va_copy(d,s) memcpy(&(d),&(s),sizeof(va_list))
 #endif
-
+*/
 static void (*logfunc)(int log_level, char *message ) = NULL;
 static const char *progname = NULL;
 
