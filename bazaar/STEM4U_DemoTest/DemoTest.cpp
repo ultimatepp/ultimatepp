@@ -1,5 +1,9 @@
 #include <Core/Core.h>
-#include <STEM4U/STEM4U.h>
+#include <plugin/Eigen/Eigen.h>
+#include <STEM4U/IntInf.h>
+#include <STEM4U/Rational.h>
+#include <STEM4U/Polynomial.h>
+#include <STEM4U/sundials.h>
 
 using namespace Upp;
 
@@ -115,7 +119,7 @@ T Loop() {
 		val *= (d+1)/d;
 	return val;
 }
-	
+
 CONSOLE_APP_MAIN 
 {
 	Cout() << "To test rounding errors\n";
@@ -145,6 +149,29 @@ CONSOLE_APP_MAIN
 	Rational sin_1_3 = sinSeries.y(Rational(1, 3));	
 	Cout() << "sin(1/3) = " << sin_1_3 << "\n";		
 	Cout() << "sin(1/3) = " << FormatRational(sin_1_3, 32) << "\n";	
+	
+	// Solves an harmonic oscillator m·d2x + k·x = 0 
+	double y[]  = {2, 0};
+	double dy[] = {0, 0};
+	double m = 1, k = 0.5;
+	SolveDAE(y, dy, 2, 0.1, 10, 
+		[&](double t, const double y[], const double dy[], double residual[])->int {
+			residual[0] = m*dy[1] + k*y[0];
+			residual[1] = y[1] - dy[0];
+			return true;
+		}, 2,
+		[&](double t, const double y[], const double dy[], double residual[])->int {
+			residual[0] = y[0] - 0.0001;
+  			residual[1] = y[1] - 0.0001;
+			return true;
+		},
+		[&](double t, const double y[], const double dy[], bool isZero, int *whichZero)->bool {
+			Cout() << Format("\n>T: %7.4f %8.4f %8.4f %s", t, y[0], y[1], isZero ? "Y" : "");
+			return true;
+		}
+	);
+	
+	ReadStdIn();
 }
 
 #endif
