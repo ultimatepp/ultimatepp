@@ -63,7 +63,7 @@ void EditFileFolder::Init() {
 	butGo <<= THISBACK1(DoGo, true);
 	butFolder.Width(10).Tip(t_("Open folder"));
 	InsertFrame(1, butFolder);
-	isFile = isLoad = true;
+	isLoad = true;
 	histInd = -1;
 	pfs = 0;
 	Dropping(false);
