@@ -1,19 +1,11 @@
-#ifdef PLATFORM_WIN32
-struct RGBA : Moveable<RGBA> {
-	byte b, g, r, a;
-};
-#endif
-
-#ifdef PLATFORM_POSIX
-#if defined(CPU_BE) || defined(PLATFORM_MACOS)
+#ifdef PLATFORM_MACOS
 struct RGBA : Moveable<RGBA> {
         byte a, r, g, b;
 };
 #else
 struct RGBA : Moveable<RGBA> {
-        byte b, g, r, a;
+	byte b, g, r, a;
 };
-#endif
 #endif
 
 inline Stream& operator%(Stream& s, RGBA& c)

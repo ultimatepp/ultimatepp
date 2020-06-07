@@ -338,10 +338,8 @@ bool inline_memeq8_aligned(const void *p, const void *q, size_t len)
 {
 	const byte *t = (const byte *)p;
 	const byte *s = (const byte *)q;
-	if(len >= 16) { // 15..31 is the most important range for String, make it fastest
-		auto Cmp128 = [&](size_t at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
+	if(len >= 16) // 15..31 is the most important range for String, make it fastest
 		return memeq8__(t, s, len);
-	}
 	if(len > 4) {
 		if(len <= 8) // test tail first in case we are searching in sorted list
 			return Peek32(s + len - 4) == Peek32(t + len - 4) && Peek32(s) == Peek32(t);
