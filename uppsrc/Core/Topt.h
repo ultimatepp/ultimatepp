@@ -420,7 +420,7 @@ unsigned PrimeBound(unsigned i);
 hash_t memhash(const void *ptr, size_t size);
 
 template <class T>
-inline hash_t GetHashValue(const T& x)                            { return x.GetHashValue(); }
+inline hash_t GetHashValue(const T& x)                              { return x.GetHashValue(); }
 
 struct CombineHash {
 	hash_t hash;
