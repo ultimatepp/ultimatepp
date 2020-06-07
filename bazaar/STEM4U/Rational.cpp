@@ -1,4 +1,6 @@
-#include "STEM4U.h"
+#include <Core/Core.h>
+#include "IntInf.h"
+#include "Rational.h"
 
 namespace Upp {
 

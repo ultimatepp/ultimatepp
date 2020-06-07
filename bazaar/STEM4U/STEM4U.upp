@@ -1,14 +1,21 @@
 description "Science, technology, engineering, and mathematics libraries\377";
 
+noblitz;
+
 uses
-	Core;
+	Core,
+	plugin/Eigen,
+	plugin/sundials;
 
 file
-	STEM4U.h,
 	Rational.cpp,
 	Rational.h,
 	IntInf.h,
 	Polynomial.h,
+	Integral.cpp,
+	Integral.h,
+	sundials.cpp,
+	sundials.h,
 	srcimp.tpp,
 	src.tpp,
 	srcdoc.tpp,

@@ -168,7 +168,7 @@ private:
 	friend Rational abs(const Rational &rat);
 	friend Rational pow(const Rational &l, int e);
 	friend Rational sqrt(const Rational &l);
-	friend String FormatRational(const Rational &d, int numDec = Null);
+	friend String FormatRational(const Rational &d, int numDec);
 	
 	template <typename T>
 	friend Rational operator+(T left, const Rational &right);
