@@ -1047,6 +1047,149 @@ void Jsonize(JsonIO& io, std::complex<T>& var) {
 	}
 }
 
+class FileInLine : public FileIn {
+public:
+	FileInLine(String _fileName) : FileIn(_fileName), line(0), fileName(_fileName) {};
+	String GetLine() {
+		line++;	
+		return FileIn::GetLine();
+	}
+	void GetLine(int num) {
+		for (int i = 0; i < num; ++i)
+			GetLine();
+	}
+	int GetLineNumber()	const 	{return line;}
+	String Str() const 			{return Format(t_("[File: '%s', line: %d]:"), fileName, line);}
+	
+	struct Pos {
+		Pos() : byt(0), line(0) {}
+		int64 byt;
+		int line;
+	};
+	
+	Pos GetPos() {
+		Pos ret;
+		ret.byt = FileIn::GetPos();
+		ret.line = line;
+		return ret;
+	}
+	
+	void SeekPos(Pos &pos) {
+		FileIn::Seek(pos.byt);
+		line = pos.line;
+	}
+	
+private:
+	int line;
+	String fileName;
+};
+
+class FileInBinary : public FileIn {
+public:
+	FileInBinary()                          	{}
+	FileInBinary(const char *fn) : FileIn(fn)	{}
+	
+	void Read(void *data, size_t sz) {
+		int64 len = Get64(data, sz);
+		if (len != sz)
+			throw Exc(Format(t_("Data not loaded in FileInBinary::Read(%ld)"), int64(sz)));
+	}
+	
+	template <class T>
+	T Read() {
+		T data;
+		Read(&data, sizeof(T));
+		return data;
+	}
+	template <class T, size_t len>
+	T Read() {
+		T data;
+		Read(&data, min(len, sizeof(T)));
+		return data;
+	}
+};
+
+class FileOutBinary : public FileOut {
+public:
+	FileOutBinary(const char *fn) : FileOut(fn)	{}
+	FileOutBinary()                          		{}
+	
+	template <class T>
+	void Write(T data) {
+		Put64(&data, sizeof(T));
+	}
+};
+
+class FieldSplit {
+public:
+	const int FIRST = 0;
+	const int LAST = Null;
+	
+	FieldSplit(FileInLine &_in) {in = &_in;}
+	
+	FieldSplit& Load(String _line) {
+		line = _line;
+		if (IsSeparator)
+			fields = Split(line, IsSeparator, true);
+		else
+			fields = Split(line, defaultIsSeparator, true);
+		return *this;
+	}
+	String GetText() const {
+		return line;
+	}
+	String GetText(int i) const {
+		if (fields.IsEmpty())
+			throw Exc(in->Str() + t_("No data available"));
+		if (IsNull(i))
+			i = fields.GetCount()-1;
+		CheckId(i);
+		return fields[i];
+	}
+	int GetInt(int i) const {
+		if (fields.IsEmpty())
+			throw Exc(in->Str() + t_("No data available"));
+		if (IsNull(i))
+			i = fields.GetCount()-1;
+		CheckId(i);
+		int res = ScanInt(fields[i]);
+		if (IsNull(res))
+			throw Exc(in->Str() + Format(t_("Bad %s '%s' in field #%d, line\n'%s'"), "integer", fields[i], i+1, line));
+		return res; 
+	}
+	double GetDouble(int i) const {
+		if (fields.IsEmpty())
+			throw Exc(in->Str() + t_("No data available"));
+		if (IsNull(i))
+			i = fields.GetCount()-1;
+		CheckId(i);
+		double res = ScanDouble(fields[i]);
+		if (IsNull(res))
+			throw Exc(in->Str() + Format(t_("Bad %s '%s' in field #%d, line\n'%s'"), "double", fields[i], i+1, line));
+		return res;
+	}
+	int GetCount() const {
+		return fields.GetCount();
+	}
+	
+	int (*IsSeparator)(int) = nullptr;
+		
+protected:
+	String line;
+	Upp::Vector<String> fields;
+	FileInLine *in;
+	
+	void CheckId(int i) const {
+		if (i >= fields.GetCount() || i < 0)
+			throw Exc(in->Str() + Format(t_("Field #%d not found in line\n'%s'"), i+1, line));
+	}
+	static int defaultIsSeparator(int c) {
+		if (c == '\t' || c == ' ')
+			return true;
+		return false;
+	}
+};
+
 }
 
 #endif
