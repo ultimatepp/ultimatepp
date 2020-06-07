@@ -60,7 +60,11 @@ void StoreRGBA2(RGBA *rgba, __m128i x)
 force_inline
 __m128i BroadcastAlpha(__m128i x)
 {
+#ifdef PLATFORM_MACOS
+	return _mm_shufflelo_epi16(_mm_shufflehi_epi16(x, 0x00), 0x00);
+#else
 	return _mm_shufflelo_epi16(_mm_shufflehi_epi16(x, 0xff), 0xff);
+#endif
 }
 
 force_inline
@@ -73,7 +77,11 @@ force_inline
 __m128i MakeAlpha(__m128i x)
 {
 	x = BroadcastAlpha(x);
+#ifdef PLATFORM_MACOS
+	x = _mm_srli_epi16(_mm_mullo_epi16(_mm_set_epi16(129, 129, 129, 128, 129, 129, 129, 128), x), 7); // a for alpha, 256*a/255 for color
+#else
 	x = _mm_srli_epi16(_mm_mullo_epi16(_mm_set_epi16(128, 129, 129, 129, 128, 129, 129, 129), x), 7); // a for alpha, 256*a/255 for color
+#endif
 	x = _mm_sub_epi16(_mm_set1_epi16(256), x); // 256 - a for alpha, 256 - 256*a/255 for color;
 	return x;
 }
