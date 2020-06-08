@@ -67,7 +67,9 @@ returned by Maker`::Make).&]
 oid]_[* AdjustSize]([*@4 P]_[*@3 getsize])&]
 [s2;%% Recalculates the total size of data in cache, using [%-*@3 getsize] 
 functional (which should have single const [%-*@4 T][%-@(0.0.255) `&] 
-parameter) to retrieve the size of individual data items.&]
+parameter) to retrieve the size of individual data items. When 
+[%-*@3 getsize] returns negative value, the known size of element 
+is retained, otherwise it is overwritten with the new value.&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:GetLRU`(`): [*@4 T][@(0.0.255) `&]_[* GetLRU]()&]

@@ -7,7 +7,7 @@ namespace Upp {
 static StaticCriticalSection sMakeImage;
 
 // SystemDraw image cache can get destructed later than maker cache invoking SysImageReleased
-static bool sFinished;  
+static bool sFinished;
 
 struct ImageMakeCacheClass : LRUCache<Image> {
 	~ImageMakeCacheClass() { sFinished = true; }
@@ -24,8 +24,10 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	bool  paintonly;
 
 	virtual String Key() const {
-		String s = m->Key();
-		s.Cat(paintonly ? '1' : '0');
+		StringBuffer s;
+		RawCat(s, typeid(*m).hash_code());
+		RawCat(s, paintonly);
+		s.Cat(m->Key());
 		return s;
 	}
 	virtual int    Make(Image& object) const {

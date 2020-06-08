@@ -462,7 +462,10 @@ void LRUCache<T, K>::AdjustSize(P getsize)
 	count = 0;
 	for(int i = 0; i < data.GetCount(); i++)
 		if(!key.IsUnlinked(i)) {
-			size += (data[i].size = getsize(*data[i].data));
+			int sz = getsize(*data[i].data);
+			if(sz >= 0)
+				data[i].size = sz;
+			size += data[i].size;
 			count++;
 		}
 }
@@ -479,7 +482,6 @@ int LRUCache<T, K>::Remove(P predicate)
 			Unlink(i);
 			key.Unlink(i);
 			n++;
-			break;
 		}
 		else
 			i++;
