@@ -484,7 +484,7 @@ bool CpuAVX();
 
 int  CPU_Cores();
 
-bool IsDecentMachine();
+void GetSystemMemoryStatus(uint64& total, uint64& free);
 
 template <class T>
 inline void Swap(T& a, T& b) { T tmp = pick(a); a = pick(b); b = pick(tmp); }
