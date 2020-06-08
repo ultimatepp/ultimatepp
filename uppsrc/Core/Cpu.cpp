@@ -129,21 +129,22 @@ int CPU_Cores()
 
 #endif
 
+void GetSystemMemoryStatus(uint64& total, uint64& free)
+{
 #ifdef PLATFORM_WIN32
-bool IsDecentMachine()
-{
-	if(!IsWin2K())
-		return false;
-	MEMORYSTATUS m;
-	GlobalMemoryStatus(&m);
-	return m.dwTotalPhys > 500 * 1024 * 1024;
-}
+	MEMORYSTATUSEX m;
+	GlobalMemoryStatusEx(&m);
+	total = m.ullTotalPhys;
+	free = m.ullAvailPhys;
+#elif defined(PLATFORM_LINUX)
+	int pgsz = getpagesize();
+	total = sysconf(_SC_PHYS_PAGES) * pgsz;
+	free = sysconf(_SC_AVPHYS_PAGES) * pgsz;
 #else
-bool IsDecentMachine()
-{
-	return true;
-}
+	total = 512*1024*1024;
+	free = 16*1024*1024;
 #endif
+}
 
 #define ENDIAN_SWAP { while(count--) { EndianSwap(*v++); } }
 

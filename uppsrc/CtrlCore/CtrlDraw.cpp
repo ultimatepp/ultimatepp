@@ -697,7 +697,6 @@ void Ctrl::SyncMoves()
 Ctrl& Ctrl::BackPaintHint()
 {
 	GuiLock __;
-	if(IsDecentMachine())
 		BackPaint();
 	return *this;
 }
@@ -710,8 +709,7 @@ void  Ctrl::GlobalBackPaint(bool b)
 
 void  Ctrl::GlobalBackPaintHint()
 {
-	if(IsDecentMachine())
-		GlobalBackPaint();
+	GlobalBackPaint();
 }
 
 void Ctrl::GlobalBackBuffer(bool b)
