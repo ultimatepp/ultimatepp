@@ -1,0 +1,15 @@
+description "Test_painting\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	Test_painting.h,
+	main.cpp,
+	Test_painting.lay,
+	Test_painting.iml;
+
+mainconfig
+	"" = "GUI";
+
