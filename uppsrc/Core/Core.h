@@ -366,6 +366,8 @@ class JsonIO;
 
 #include "Huge.h"
 
+#include "ValueCache.h"
+
 #ifdef PLATFORM_WIN32
 NTL_MOVEABLE(POINT)
 NTL_MOVEABLE(SIZE)
