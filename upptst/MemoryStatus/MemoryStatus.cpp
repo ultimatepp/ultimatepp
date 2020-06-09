@@ -6,9 +6,9 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	uint64 free, total;
-	GetSystemMemoryStatus(total, free);
+	uint64 total, available;
+	GetSystemMemoryStatus(total, available);
 	
 	LOG("Total memory: " << (total >> 20) << " MB");
-	LOG("Free memory: " << (free >> 20) << " MB");
+	LOG("Available memory: " << (available >> 20) << " MB");
 }
