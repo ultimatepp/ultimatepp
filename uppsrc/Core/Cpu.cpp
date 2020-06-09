@@ -155,21 +155,6 @@ void GetSystemMemoryStatus(uint64& total, uint64& available)
 		return;
 	}
 #endif
-#ifdef PLATFORM_FREEBSD
-	int64 page_size;
-    struct vmtotal vmt;
-	size_t vmt_size, uint_size;
-
-    vmt_size = sizeof(vmt);
-    uint_size = sizeof(page_size);
-
-    if(sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) >= 0 &&
-       sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) >= 0) {
-		available = vmt.t_free * page_size;
-		total = vmt.t_avm * page_size;
-		return;
-    }
-#endif
 #ifdef PLATFORM_MACOS
 	mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
 	vm_statistics_data_t vmstat;
@@ -191,6 +176,21 @@ void GetSystemMemoryStatus(uint64& total, uint64& available)
 		total = physical_memory;
 		return;
 	}
+#endif
+#ifdef PLATFORM_FREEBSD
+	int64 page_size;
+    struct vmtotal vmt;
+	size_t vmt_size, uint_size;
+
+    vmt_size = sizeof(vmt);
+    uint_size = sizeof(page_size);
+
+    if(sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) >= 0 &&
+       sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) >= 0) {
+		available = vmt.t_free * page_size;
+		total = vmt.t_avm * page_size;
+		return;
+    }
 #endif
 	total = 256*1024*1024;
 	available = 16*1024*1024;
