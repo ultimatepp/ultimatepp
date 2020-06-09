@@ -9,7 +9,7 @@ namespace Upp {
 
 #include "HeapImp.h"
 
-// this part reserves very large (HPAGE*4 MB, default 16MB)
+// this part reserves very large (HPAGE*4 KB, default 16MB)
 // chunks form the system and then serves as 4KB rounded allocator
 // used as manager of huge memory blocks. 4KB and 64KB blocks are allocated from here too
 // also able to deal with bigger blocks, those are directly allocated / freed from system

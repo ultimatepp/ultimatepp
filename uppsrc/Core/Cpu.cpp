@@ -133,17 +133,40 @@ void GetSystemMemoryStatus(uint64& total, uint64& free)
 {
 #ifdef PLATFORM_WIN32
 	MEMORYSTATUSEX m;
-	GlobalMemoryStatusEx(&m);
-	total = m.ullTotalPhys;
-	free = m.ullAvailPhys;
-#elif defined(PLATFORM_LINUX)
-	int pgsz = getpagesize();
-	total = sysconf(_SC_PHYS_PAGES) * pgsz;
-	free = sysconf(_SC_AVPHYS_PAGES) * pgsz;
-#else
-	total = 512*1024*1024;
-	free = 16*1024*1024;
+	m.dwLength = sizeof(m);
+	if(GlobalMemoryStatusEx(&m)) {
+		total = m.ullTotalPhys;
+		free = m.ullAvailPhys;
+		return;
+	}
 #endif
+#ifdef PLATFORM_LINUX
+	int pgsz = getpagesize();
+	total = sysconf(_SC_PHYS_PAGES);
+	free = sysconf(_SC_AVPHYS_PAGES);
+	if(total >= 0 && free >= 0) {
+		total *= pgsz;
+		free *= pgsz;
+		return;
+	}
+#endif
+#ifdef PLATFORM_FREEBSD
+	int64 page_size;
+    struct vmtotal vmt;
+	size_t vmt_size, uint_size;
+
+    vmt_size = sizeof(vmt);
+    uint_size = sizeof(page_size);
+
+    if(sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) >= 0 &&
+       sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) >= 0) {
+		free = vmt.t_free * page_size;
+		total = vmt.t_avm * page_size;
+		return;
+    }
+#endif
+	total = 256*1024*1024;
+	free = 16*1024*1024;
 }
 
 #define ENDIAN_SWAP { while(count--) { EndianSwap(*v++); } }
