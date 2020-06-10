@@ -99,6 +99,18 @@ bool LinuxFrameBuffer::ProcessEvent(bool *quit)
 			}
 			break;
 				
+			case LIBINPUT_EVENT_POINTER_AXIS:
+			{
+				struct libinput_event_pointer *axis_event = libinput_event_get_pointer_event (event);
+				auto source = libinput_event_pointer_get_axis_source(axis_event);
+				const auto axis = LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
+				if (libinput_event_pointer_has_axis(axis_event, axis) && source == LIBINPUT_POINTER_AXIS_SOURCE_WHEEL){
+					auto delta = libinput_event_pointer_get_axis_value_discrete(axis_event, axis);
+					Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, input.mouse.pos, -120*delta);
+				}
+			}
+			break;
+
 		}
 		
 		libinput_event_destroy(event);
