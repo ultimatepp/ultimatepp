@@ -16,7 +16,8 @@ topic "ImageMaker - image cache system";
 For example, in GUI there might be requirement for monochromatic 
 version of icons to express disabled status. In this case, ImageMaker 
 derived class can be defined to make such Image from color version 
-and by using MakeImage, caching mechanism is introduced. &]
+and by using MakeImage, caching mechanism is introduced. Image 
+cache is using global Value cache as underlying mechanism.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* ImageMaker]]}}&]
 [s0; &]
@@ -63,26 +64,6 @@ onst]_[_^ImageMaker^ ImageMaker][@(0.0.255) `&]_[*@3 m])&]
 [s2;%% Similar to MakeImage, but creates and Image that can only 
 be used in Draw`::DrawImage (this is optimization hint that can 
 save some memory in certain situations).&]
-[s3;%% &]
-[s4; &]
-[s5;:SweepMkImageCache`(`): [@(0.0.255) void]_[* SweepMkImageCache]()&]
-[s2;%% Despite the name, this function in fact clears size counters 
-on the cache. Size of cache is increased according to cache size 
-counter data collected since the last SweepMkImageCache.&]
-[s3; &]
-[s4; &]
-[s5;:SetMakeImageCacheSize`(int`): [@(0.0.255) void]_[* SetMakeImageCacheSize]([@(0.0.255) i
-nt]_[*@3 m])&]
-[s2;%% Sets the amount of images that can be kept in cache. This 
-amount is automatically increased based on size counters of cache. 
-Default value is zero.&]
-[s3;%% &]
-[s4; &]
-[s5;:SetMakeImageCacheMax`(int`): [@(0.0.255) void]_[* SetMakeImageCacheMax]([@(0.0.255) in
-t]_[*@3 m])&]
-[s2;%% Sets the absolute maximum of image data stored in cache. Default 
-is one million pixels.&]
-[s3;%% &]
 [s3;%% &]
 [s4; &]
 [s5;:CachedRescale`(const Image`&`,Size`,const Rect`&`,int`): [_^Image^ Image]_[* CachedR
