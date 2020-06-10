@@ -1,12 +1,12 @@
-typedef LRUCache<Value>::Maker ValueMaker;
-
 extern StaticMutex ValueCacheMutex;
 
 LRUCache<Value>& TheValueCache();
 
-bool IsValueCacheActive();
+typedef LRUCache<Value>::Maker ValueMaker;
 
 Value MakeValue(ValueMaker& m);
+
+bool IsValueCacheActive();
 
 void AdjustValueCache();
 void ShrinkValueCache();

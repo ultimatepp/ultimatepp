@@ -25,7 +25,7 @@ bool IsValueCacheActive()
 
 int ValueCacheMaxSize = 4000000;
 
-int ValueCacheMaxSizeLimitLow = 1000000;
+int ValueCacheMaxSizeLimitLow = 1024*1024;
 int ValueCacheMaxSizeLimitHigh = 0;
 double ValueCacheRatio = 0.125;
 
@@ -45,6 +45,8 @@ void AdjustValueCache()
 void ShrinkValueCache()
 {
 	Mutex::Lock __(ValueCacheMutex);
+	if(!ValueCacheMaxSizeLimitHigh)
+		AdjustValueCache();
 	TheValueCache().Shrink(ValueCacheMaxSize, 2000);
 	LLOG("MakeValue cache size after shrink: " << TheValueCache().GetSize());
 }
