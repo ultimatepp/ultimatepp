@@ -149,7 +149,7 @@ struct RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data, void *context) const;
 	virtual Size   GetPixelSize(const Value& data, void *context) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz, void *context) const;
-	virtual Image  ToImage(const Value& data, Size sz, void *context) const;
+	virtual Image  ToImage(int64 serial_id, const Value& data, Size sz, void *context) const;
 	virtual void   Menu(Bar& bar, RichObject& ex, void *context) const;
 	virtual void   DefaultAction(RichObject& ex, void *context) const;
 	virtual String GetLink(const Value& data, Point pt, Size sz, void *context) const;
@@ -164,7 +164,7 @@ protected:
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz) const;
+	virtual Image  ToImage(int64 serial_id, const Value& data, Size sz) const;
 	virtual void   Menu(Bar& bar, RichObject& ex) const;
 	virtual void   DefaultAction(RichObject& ex) const;
 	virtual String GetLink(const Value& data, Point pt, Size sz) const;
@@ -193,8 +193,8 @@ public:
 	static RichObjectType& GetType(int i)        { return *Map()[i]; }
 	static String GetTypeName(int i)             { return Map().GetKey(i); }
 	
-	void   SetSize(int cx, int cy)               { size = Size(cx, cy); NewSerial(); }
-	void   SetSize(Size sz)                      { size = sz; NewSerial(); }
+	void   SetSize(int cx, int cy)               { size = Size(cx, cy); }
+	void   SetSize(Size sz)                      { SetSize(sz.cx, sz.cy); }
 	Size   GetSize() const                       { return size; }
 	void   Paint(Draw& w, Size sz, void *context = NULL) const;
 	Image  ToImage(Size sz, void *context = NULL) const;

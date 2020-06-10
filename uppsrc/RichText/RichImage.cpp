@@ -10,7 +10,7 @@ struct RichImage : public RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
-	virtual Image  ToImage(const Value& data, Size sz, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
 
 	virtual bool   Accept(PasteClip& clip);
 	virtual Value  Read(PasteClip& clip);
@@ -88,7 +88,7 @@ void   RichImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 	w.DrawImage(0, 0, sz.cx, sz.cy, x);
 }
 
-Image  RichImage::ToImage(const Value& data, Size sz, void *) const
+Image  RichImage::ToImage(int64, const Value& data, Size sz, void *) const
 {
 	return Rescale(LoadImageFromString(data), sz);
 }
@@ -112,7 +112,7 @@ struct RichPNG : public RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
 };
 
 String RichPNG::GetTypeName(const Value& v) const
@@ -162,7 +162,7 @@ void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
 	w.DrawImage(0, 0, outsz.cx, outsz.cy, x);
 }
 
-Image RichPNG::ToImage(const Value& data, Size sz, void *) const
+Image RichPNG::ToImage(int64, const Value& data, Size sz, void *) const
 {
 	if(IsString(data)) {
 		ImageAnyDraw iw(sz);
@@ -185,7 +185,7 @@ struct RichRawImage : public RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
-	virtual Image  ToImage(const Value& data, Size sz, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
 };
 
 String RichRawImage::GetTypeName(const Value& v) const
@@ -254,14 +254,26 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 		w.DrawImage(0, 0, RenderSVGImage(sz, ~data));
 }
 
-Image RichRawImage::ToImage(const Value& data, Size sz, void *) const
+Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, void *) const
 {
 	String s = data;
 	StringStream ss(s);
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
 	if(r) {
-		Image x = r->GetImage();
-		return Rescale(x, sz);
+		struct ImgFormatLoader : ImageMaker {
+			int64  serial_id;
+			String s;
+
+			virtual String Key() const  { String x; RawCat(x, serial_id); return x; }
+			virtual Image  Make() const {
+				StringStream ss(s);
+				One<StreamRaster> r = StreamRaster::OpenAny(ss);
+				return r ? r->GetImage() : Image();
+			}
+		} loader;
+		loader.serial_id = serial_id;
+		loader.s = s;
+		return Rescale(MakeImage(loader), sz);
 	}
 	else
 	if(IsString(data) && IsSVG(~data))
@@ -285,7 +297,7 @@ struct RichImlImage : public RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
 	virtual bool   IsText() const;
 	
 	Image Get(const Value& v) const;
@@ -321,7 +333,7 @@ void RichImlImage::Paint(const Value& data, Draw& w, Size sz) const
 	w.DrawImage(0, 0, sz.cx, sz.cy, Get(data));
 }
 
-Image RichImlImage::ToImage(const Value& data, Size sz, void *) const
+Image RichImlImage::ToImage(int64, const Value& data, Size sz, void *) const
 {
 	return Rescale(Get(data), sz);
 }

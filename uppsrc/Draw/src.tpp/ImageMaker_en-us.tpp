@@ -71,10 +71,6 @@ on the cache. Size of cache is increased according to cache size
 counter data collected since the last SweepMkImageCache.&]
 [s3; &]
 [s4; &]
-[s5;:ClearMakeImageCache`(`): [@(0.0.255) void]_[* ClearMakeImageCache]()&]
-[s2;%% Removes all images from the cache.&]
-[s3; &]
-[s4; &]
 [s5;:SetMakeImageCacheSize`(int`): [@(0.0.255) void]_[* SetMakeImageCacheSize]([@(0.0.255) i
 nt]_[*@3 m])&]
 [s2;%% Sets the amount of images that can be kept in cache. This 
