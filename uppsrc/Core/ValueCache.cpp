@@ -1,11 +1,15 @@
 #include "Core.h"
 
+#define LLOG(x) // LOG(x)
+
 namespace Upp {
 
-bool sFinished;
+StaticMutex ValueCacheMutex;
+
+std::atomic<bool> sValueCacheFinished;
 
 struct ValueMakeCacheClass : LRUCache<Value> {
-	~ValueMakeCacheClass() { sFinished = true; }
+	~ValueMakeCacheClass() { sValueCacheFinished = true; }
 };
 
 LRUCache<Value>& TheValueCache()
@@ -14,23 +18,54 @@ LRUCache<Value>& TheValueCache()
 	return m;
 }
 
-int sMaxSize = 1000000;
+bool IsValueCacheActive()
+{
+	return !sValueCacheFinished;
+}
+
+int ValueCacheMaxSize = 4000000;
+
+int ValueCacheMaxSizeLimitLow = 1000000;
+int ValueCacheMaxSizeLimitHigh = 0;
+double ValueCacheRatio = 0.125;
+
+void AdjustValueCache()
+{
+	Mutex::Lock __(ValueCacheMutex);
+	uint64 total, available;
+	GetSystemMemoryStatus(total, available);
+	if(ValueCacheMaxSizeLimitHigh == 0)
+		ValueCacheMaxSizeLimitHigh = (int)clamp(total / 4, (uint64)16000000, (uint64)2000000000);
+	ValueCacheMaxSize = clamp((int)min((int64)(ValueCacheRatio * available), (int64)2000*1024*1024),
+	                          ValueCacheMaxSizeLimitLow, ValueCacheMaxSizeLimitHigh);
+	LLOG("New MakeValue max size " << ValueCacheMaxSize << " high limit " << ValueCacheMaxSizeLimitHigh);
+	ShrinkValueCache();
+}
 
 void ShrinkValueCache()
 {
-	TheValueCache().Shrink(sMaxSize, 2000);
+	Mutex::Lock __(ValueCacheMutex);
+	TheValueCache().Shrink(ValueCacheMaxSize, 2000);
+	LLOG("MakeValue cache size after shrink: " << TheValueCache().GetSize());
 }
 
-void ShrinkValueCache(int maxsize)
+void SetupValueCache(int limit_low, int limit_high, double ratio)
 {
-	sMaxSize = maxsize;
-	ShrinkValueCache();
+	Mutex::Lock __(ValueCacheMutex);
+
+	ValueCacheMaxSizeLimitLow = 1000000;
+	ValueCacheMaxSizeLimitHigh = 256000000;
+	ValueCacheRatio = 0.125;
 }
 
 Value MakeValue(ValueMaker& m)
 {
+	Mutex::Lock __(ValueCacheMutex);
+	LLOG("MakeValue cache size before make: " << TheValueCache().GetSize());
 	Value v = TheValueCache().Get(m);
+	LLOG("MakeValue cache size after make: " << TheValueCache().GetSize());
 	ShrinkValueCache();
+	LLOG("-------------");
 	return v;
 }
 

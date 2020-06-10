@@ -138,11 +138,9 @@ struct RichObjectImageMaker : ImageMaker {
 String RichObjectImageMaker::Key() const
 {
 	StringBuffer b;
-	int64 id = object.GetSerialId();
-	b.Cat((const char *)&id, sizeof(id));
-	b.Cat((const char *)&sz.cx, sizeof(sz.cx));
-	b.Cat((const char *)&sz.cy, sizeof(sz.cy));
-	b.Cat((const char *)&context, sizeof(context));
+	RawCat(b, object.GetSerialId());
+	RawCat(b, sz);
+	RawCat(b, context);
 	return b;
 }
 

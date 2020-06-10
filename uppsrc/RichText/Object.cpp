@@ -107,12 +107,12 @@ void RichObjectType::Paint(const Value& data, Draw& w, Size sz, void *context) c
 
 void RichObjectType::Paint(const Value& data, Draw& w, Size sz) const {}
 
-Image RichObjectType::ToImage(const Value& data, Size sz) const
+Image RichObjectType::ToImage(int64 serial_id, const Value& data, Size sz) const
 {
-	return ToImage(data, sz, NULL);
+	return ToImage(serial_id, data, sz, NULL);
 }
 
-Image RichObjectType::ToImage(const Value& data, Size sz, void *context) const
+Image RichObjectType::ToImage(int64, const Value& data, Size sz, void *context) const
 {
 	ImageAnyDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
@@ -178,7 +178,7 @@ void RichObject::Paint(Draw& w, Size sz, void *context) const
 Image RichObject::ToImage(Size sz, void *context) const
 {
 	if(type)
-		return type->ToImage(data, sz, context);
+		return type->ToImage(serial, data, sz, context);
 	else {
 		ImageAnyDraw w(sz);
 		Paint(w, sz, context);
@@ -272,7 +272,7 @@ String RichObject::GetTypeName() const
 
 void   RichObject::Clear()
 {
-	NewSerial();
+	serial = 0;
 	keepratio = true;
 	type = NULL;
 	data = Value();

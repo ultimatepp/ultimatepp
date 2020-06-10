@@ -4,6 +4,89 @@ namespace Upp {
 
 #define LLOG(x)  //  DLOG(x)
 
+#if 1
+
+struct scImageMaker : ValueMaker {
+	const ImageMaker *m;
+	bool  paintonly;
+
+	virtual String Key() const {
+		StringBuffer s;
+		s.Cat(typeid(*m).name());
+		RawCat(s, paintonly);
+		s.Cat(m->Key());
+		return s;
+	}
+	virtual int    Make(Value& object) const {
+		Image img = m->Make();
+		LLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
+		if(paintonly && !IsNull(img) && img.GetRefCount() == 1)
+			SetPaintOnly__(img);
+		object = img;
+		return img.GetLength() + 64;
+	}
+};
+
+void SysImageRealized(const Image& img)
+{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is Fpaintonly kind
+	if(!IsValueCacheActive())
+		return;
+	LLOG("SysImageRealized " << img.GetSize());
+	if(img.data && img.data->paintonly) {
+		LLOG("Dropping PAINTONLY pixels of image #" << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", img " << img.GetLength());
+		DropPixels___(img.data->buffer);
+		ValueCacheAdjustSize([](const Value& v) -> int {
+			if(v.Is<Image>()) {
+				const Image& img = v.To<Image>();
+				return 64 + (~img ? img.GetLength() : 0);
+			}
+			return -1;
+		});
+		LLOG("After drop, cache size: " << TheValueCache().GetSize());
+	}
+}
+
+void SysImageReleased(const Image& img)
+{ // CtrlCore removed handle for img, have to remove paintonly
+	if(!IsValueCacheActive())
+		return;
+	if(!~img) { // No data -> this is paintonly image
+		int64 serial_id = img.GetSerialId();
+		LLOG("SysImageReleased " << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
+		int n = ValueCacheRemoveOne([&](const Value& v) -> bool {
+			return v.Is<Image>() && v.To<Image>().GetSerialId() == serial_id;
+		});
+		IGNORE_RESULT(n); // suppress warning about unused 'n' without LLOGs
+		LLOG("SysImageReleased count: " << n);
+		LLOG("SysImageReleased done cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
+	}
+}
+
+void SetMakeImageCacheMax(int m)
+{
+	SetupValueCache(m, 0, 0.125);
+}
+
+void  SetMakeImageCacheSize(int m)
+{
+	SetMakeImageCacheMax(m);
+}
+
+void SweepMkImageCache()
+{
+	AdjustValueCache();
+}
+
+Image MakeImage__(const ImageMaker& m, bool paintonly)
+{
+	scImageMaker cm;
+	cm.m = &m;
+	cm.paintonly = paintonly;
+	return MakeValue(cm);
+}
+
+#else
+
 static StaticCriticalSection sMakeImage;
 
 // SystemDraw image cache can get destructed later than maker cache invoking SysImageReleased
@@ -132,6 +215,7 @@ Image MakeImage__(const ImageMaker& m, bool paintonly)
 		sMaxSize = q;
 	return result;
 }
+#endif
 
 Image MakeImage(const ImageMaker& m)
 {
