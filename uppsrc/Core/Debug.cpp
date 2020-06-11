@@ -183,8 +183,11 @@ String AsString(__m128i x)
 	memcpy(h, &x, 16);
 	word w[8];
 	memcpy(w, &x, 16);
-	return Sprintf("_%08x_%08x_%08x_%08x (%d, %d, %d, %d) : (%d, %d, %d, %d)",
-	               h[3], h[2], h[1], h[0], w[6], w[5], w[4], w[7], w[2], w[1], w[0], w[3]);
+	float f[4];
+	memcpy(f, &x, 16);
+	return Sprintf("_%08x_%08x_%08x_%08x (%d, %d, %d, %d) : (%d, %d, %d, %d) (%f, %f, %f, %f)",
+	               h[3], h[2], h[1], h[0], w[7], w[6], w[5], w[4], w[3], w[2], w[1], w[0],
+	               f[3], f[2], f[1], f[0]);
 }
 #endif
 
