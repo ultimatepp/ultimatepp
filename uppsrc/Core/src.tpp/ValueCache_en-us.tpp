@@ -1,4 +1,4 @@
-topic "";
+topic "Global Value Cache";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -62,9 +62,8 @@ AdjustValueCache call.&]
 is low limit `- cache will never be reduced if its consumption 
 is bellow this limit (default is 4MB). [%-*@3 limit`_high] is upper 
 limit `- cache size will never grow beyond this limit (default 
-is 25% of total system physical memory). [%-*@3 ratio] defines 
-how much available system physical memory can be dedicated to 
-the cache, default is 1/8..&]
+is 2GB). [%-*@3 ratio] defines how much available system physical 
+memory can be dedicated to the cache, default is 12.5%.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ValueCacheRemove`(P`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) i

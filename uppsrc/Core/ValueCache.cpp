@@ -35,7 +35,7 @@ void AdjustValueCache()
 	uint64 total, available;
 	GetSystemMemoryStatus(total, available);
 	if(ValueCacheMaxSizeLimitHigh == 0)
-		ValueCacheMaxSizeLimitHigh = (int)clamp(total / 4, (uint64)16000000, (uint64)2000000000);
+		ValueCacheMaxSizeLimitHigh = INT_MAX;
 	ValueCacheMaxSize = clamp((int)min((int64)(ValueCacheRatio * available), (int64)2000*1024*1024),
 	                          ValueCacheMaxSizeLimitLow, ValueCacheMaxSizeLimitHigh);
 	LLOG("New MakeValue max size " << ValueCacheMaxSize << " high limit " << ValueCacheMaxSizeLimitHigh);

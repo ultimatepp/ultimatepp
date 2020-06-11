@@ -220,18 +220,17 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 		}
 		while(len--) {
 			Point h = interpolator.Get();
-	//		h -= 128;
 			Point l = h >> 8;
 			if(hstyle == FILL_HREPEAT)
 				l.x = (l.x + ax) % cx;
 			if(vstyle == FILL_VREPEAT)
 				l.y = (l.y + ay) % cy;
+			if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
+				*span = RGBAZero();
+			else
 			if(fast) {
 				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy)
 					*span = Pixel(l.x, l.y);
-				else
-				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
-					*span = RGBAZero();
 				else
 					*span = GetPixel(l.x, l.y);
 			}
@@ -247,9 +246,6 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 					v.Put(u.x * h.y, Pixel(l.x, l.y + 1));
 					v.Put(h.x * h.y, Pixel(l.x + 1, l.y + 1));
 				}
-				else
-				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
-					v.Set(0);
 				else {
 					v.Put(u.x * u.y, GetPixel(l.x, l.y));
 					v.Put(h.x * u.y, GetPixel(l.x + 1, l.y));
