@@ -142,6 +142,39 @@ euES("")
 frFR("")
 
 
+// Functions4U.h
+
+T_("[File: '%s', line: %d]:")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Data not loaded in FileInBinary::Read(%ld)")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("No data available")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Bad %s '%s' in field #%d, line\n'%s'")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Field #%d not found in line\n'%s'")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+
 // Functions4U_Gui.cpp
 
 T_("Printing document")

@@ -367,7 +367,7 @@ bool SetReadOnly(const char *path, bool usr, bool, bool) {
 		return true;
 #else
 	struct stat buffer;
-	int status;
+	//int status;
 
 	if(0 != stat(ToSystemCharset(path), &buffer))
 		return false;
@@ -753,10 +753,13 @@ bool SetEnv(const char *id, const char *val)
 
 String GetPathXdg2(String xdgConfigHome, String xdgConfigDirs)
 {
-	String ret = "";
-	if (FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs"))) ;
-  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults"))) ;
-  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs"))) ;
+	String ret;
+	if (FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs"))) 
+		;
+  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
+  		;
+  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
+  		;
   	return ret;
 }
 String GetPathDataXdg2(String fileConfig, const char *folder) 

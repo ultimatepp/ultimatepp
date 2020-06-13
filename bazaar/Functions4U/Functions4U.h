@@ -918,7 +918,7 @@ class LocalProcessX
  {
 typedef LocalProcessX CLASSNAME;
 public:
-	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
+	LocalProcessX() {}
 	virtual ~LocalProcessX() 		{Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, 
@@ -1017,11 +1017,11 @@ public:
 private:
 	LocalProcess2 p;
 	RealTimeStop timeElapsed, timeWithoutOutput;
-	ProcessStatus status;
+	ProcessStatus status = STOP_OK;
 	double maxTimeWithoutOutput, maxRunTime;
 	double refreshTime;
-	bool callbackOn;
 #ifdef CTRLLIB_H	
+	bool callbackOn = false;
 	TimeCallback timeCallback;
 #endif
 };
@@ -1089,22 +1089,22 @@ public:
 	FileInBinary()                          	{}
 	FileInBinary(const char *fn) : FileIn(fn)	{}
 	
-	void Read(void *data, size_t sz) {
+	void ReadB(void *data, size_t sz) {
 		int64 len = Get64(data, sz);
 		if (len != sz)
 			throw Exc(Format(t_("Data not loaded in FileInBinary::Read(%ld)"), int64(sz)));
 	}
 	
 	template <class T>
-	T Read() {
+	T ReadB() {
 		T data;
-		Read(&data, sizeof(T));
+		ReadB(&data, sizeof(T));
 		return data;
 	}
 	template <class T, size_t len>
-	T Read() {
+	T ReadB() {
 		T data;
-		Read(&data, min(len, sizeof(T)));
+		ReadB(&data, min(len, sizeof(T)));
 		return data;
 	}
 };
