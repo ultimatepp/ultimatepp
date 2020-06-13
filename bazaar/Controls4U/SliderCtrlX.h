@@ -36,7 +36,7 @@ private:
 	int				m_nMinorTicks;		// This is the "increment" for minor tix
 	int				m_nMajorTickSize; 	// Percent of the space from the line to the edge, eg 30
 	int				m_nMinorTickSize; 	// Percent of the space from the line to the edge, eg 20
-	int				m_nTextAlign;
+	//int				m_nTextAlign;
 	int				m_nTickPosition;
 	int				m_nThickness;		// Thickness of the thumb guide
 	int				m_nSliderType;		// either a CONTROL / INDICATOR
