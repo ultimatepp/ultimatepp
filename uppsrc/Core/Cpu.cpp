@@ -8,6 +8,11 @@
 #endif
 #endif
 
+#ifdef PLATFORM_MACOS
+#include <mach/mach.h>
+#include <mach/vm_statistics.h>
+#endif
+
 namespace Upp {
 
 #ifdef CPU_X86
@@ -127,11 +132,6 @@ int CPU_Cores()
 }
 #endif
 
-#endif
-
-#ifdef PLATFORM_MACOS
-#include <mach/mach.h>
-#include <mach/vm_statistics.h>
 #endif
 
 void GetSystemMemoryStatus(uint64& total, uint64& available)
