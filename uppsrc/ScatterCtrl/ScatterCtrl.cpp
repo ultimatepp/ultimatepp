@@ -295,7 +295,7 @@ void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
 			w.DrawLine(0, sz.cy+delta, sz.cx, sz.cy+delta, 2, LtGray());
 		}
 	}
-	lastRefresh_ms = int(t.Elapsed());
+	lastRefresh_ms = int(t.Elapsed()/1000);
 }
 		
 			

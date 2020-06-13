@@ -294,7 +294,7 @@ private:
 	Vector<Pointf> movAvg, secAvg, cumAvg;
 	DataXRange dataXRange;
 	bool exclamationOpened;
-	double newWidthMax, newWidthMin, newWidthMovAvg;
+	double newWidthMax, newWidthMin, newWidthMovAvg, mpm;
 	
 	Histogram histogram;
 };
