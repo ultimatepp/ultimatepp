@@ -227,6 +227,7 @@ ProcessingTab::ProcessingTab()
 
 	exclamationOpened = false;
 	newWidthMax = newWidthMin = newWidthMovAvg-1;
+	mpm = Null;
 }
 
 void ProcessingTab::ArrayCopy() {
@@ -556,10 +557,17 @@ void ProcessingTab::OnUpdateSensitivity()
 		
 		upperEnvelope.Clear();
 		Vector<int64> idsUpper = data.UpperEnvelopeY(tabFitRight.width);
+		mpm = data.StdDevY()*sqrt(2*log(idsUpper.GetCount()));
 		for (int i = 0; i < idsUpper.GetCount(); ++i) 
 			upperEnvelope << Pointf(data.x(idsUpper[i]), data.y(idsUpper[i]));
 		refresh = true;
 	}
+	tabFitRight.labNumMax.Enable(tabFitRight.opMax);
+	tabFitRight.numMax.Enable(tabFitRight.opMax);
+	tabFitRight.numMax <<= (tabFitRight.opMax ? upperEnvelope.GetCount() : Null);
+	tabFitRight.labMPM.Enable(tabFitRight.opMax);
+	tabFitRight.eMPM.Enable(tabFitRight.opMax);
+	tabFitRight.eMPM <<= (tabFitRight.opMax ? mpm : Null);
 	if (tabFitRight.opMin && newWidthMin != tabFitRight.width) {
 		newWidthMin = tabFitRight.width;
 		
@@ -568,7 +576,10 @@ void ProcessingTab::OnUpdateSensitivity()
 		for (int i = 0; i < idsLower.GetCount(); ++i) 
 			lowerEnvelope << Pointf(data.x(idsLower[i]), data.y(idsLower[i]));
 		refresh = true;
-	}
+	} 
+	tabFitRight.labNumMin.Enable(tabFitRight.opMin);
+	tabFitRight.numMin.Enable(tabFitRight.opMin);
+	tabFitRight.numMin <<= (tabFitRight.opMin ? lowerEnvelope.GetCount() : Null);
 	if (tabFitRight.opMovAvg && newWidthMovAvg != tabFitRight.width) {
 		newWidthMovAvg = tabFitRight.width;
 		

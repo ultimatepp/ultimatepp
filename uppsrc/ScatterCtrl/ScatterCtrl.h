@@ -510,6 +510,7 @@ public:
 			scatter.SetPlotAreaRightMargin(70);
 		scatter.SetDataSourceInternal();
 		scatter.ZoomToFit(true, true);
+		TopWindow::SetRect(0, 0, 800, 500);
 		TopWindow::OpenMain();
 		Ctrl::ProcessEvents();
 		return *this;
