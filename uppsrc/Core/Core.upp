@@ -163,8 +163,6 @@ file
 	Topic.cpp,
 	CoWork.h,
 	CoWork.cpp,
-	ValueCache.h,
-	ValueCache.cpp,
 	Hash.h,
 	MD5.cpp,
 	SHA1.cpp,
