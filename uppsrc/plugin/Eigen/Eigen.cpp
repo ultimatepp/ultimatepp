@@ -1,5 +1,5 @@
 #include <Core/Core.h>
-#include <Eigen.h>
+#include "Eigen.h"
 
 namespace Upp {
 

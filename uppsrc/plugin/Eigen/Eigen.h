@@ -14,6 +14,7 @@
 #undef Success  
 #include "Eigen/Dense"
 #include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
+#undef Complex
 #include <plugin/Eigen/unsupported/Eigen/FFT>
 #include <plugin/Eigen/unsupported/Eigen/CXX11/Tensor>
 
