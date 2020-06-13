@@ -501,8 +501,11 @@ void NetAdapter::Serialize(Stream &stream) {
 
 bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
 	Buffer<char> sname(255);
-	
+
+#ifdef _WIN32	
 	bool close = false;
+#endif
+
 	if (0 != gethostname(sname, 255)) {
 #ifdef _WIN32
 		WSADATA wsa;
@@ -519,9 +522,9 @@ bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
 	
 	struct hostent *host = gethostbyname(sname);
 	domain = host->h_name;
-	unsigned char *h_addr_list = reinterpret_cast<unsigned char *>(*host->h_addr_list);
 	
 #ifdef _WIN32
+	unsigned char *h_addr_list = reinterpret_cast<unsigned char *>(*host->h_addr_list);
 	ip4 = inet_ntop4(h_addr_list);
 	ip6 = inet_ntop6(h_addr_list);
 #else
@@ -1908,7 +1911,7 @@ bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom
 	}
 	bool ret = false;
 	Window rt;
-	int x, y, rx, ry; 
+	int x, y;//, rx, ry; 
 	unsigned int width, height, bw, depth_; 
 	if (XGetGeometry(dpy, windowId, &rt, &x, &y, &width, &height, &bw, &depth_)) { 
 		left = x;

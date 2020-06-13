@@ -254,7 +254,7 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
 			return;
 		local = true;
 	}
-	wchar k = key;
+	//wchar k = key;
 	if (key > 0x00ff)
     	key = key | 0x01000000;
  	
@@ -349,38 +349,38 @@ bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
 }
 
 KeyCodes keyCodes[] = {
-	"NUMPAD7", 	XK_KP_7,	 	"BACK", 	XK_BackSpace, 
-	"NUMPAD8", 	XK_KP_8,		"TAB", 		XK_Tab,
-	"NUMPAD9", 	XK_KP_9, 		"RETURN", 	XK_Return,
-	"MULTIPLY", XK_KP_Multiply,	"SHIFT",	XK_Shift_Lock,
-	"ADD",		XK_KP_Add, 	 	"CONTROL",	XK_Control_L,
-	"SEPARATOR", XK_KP_Separator,"MENU", 	XK_Super_L,
-	"SUBTRACT", XK_KP_Subtract,	"PAUSE", 	XK_Pause,
-	"DECIMAL",	XK_KP_Decimal,	/*"CAPITAL", 	VK_CAPITAL,*/
-	"DIVIDE",	XK_KP_Divide,	"ESCAPE",	XK_Escape,
-	"F1", 		XK_F1, 			"SPACE", 	XK_KP_Space,
-	"F2", 		XK_F2,	 		"END",		XK_End,
-	"F3",		XK_F3, 			"HOME",		XK_Home,
-	"F4",		XK_F4, 			"LEFT", 	XK_Left,
-	"F5",		XK_F5,		 	"UP", 		XK_Up,
-	"F6",		XK_F6,		 	"RIGHT",	XK_Right,
-	"F7",		XK_F7,		 	"DOWN",		XK_Down,
-	"F8",		XK_F8,		 	"PRINT",	XK_Sys_Req,
-	"F9",		XK_F9,		 	/*"SNAPSHOT",	VK_SNAPSHOT,*/
-	"F10",		XK_F10,		 	"INSERT",	XK_Insert,
-	"F11",		XK_F11,		 	"DELETE",	XK_Delete,
-	"F12",		XK_F12,		 	"LWIN",		XK_Meta_L,
-	"NUMLOCK",	XK_Num_Lock, 	"RWIN",		XK_Meta_R,
-	"SCROLL",	XK_Scroll_Lock,	"NUMPAD0",	XK_KP_0,
-	"LSHIFT",	XK_Shift_L,	 	"NUMPAD1", 	XK_KP_1,
-	"RSHIFT",	XK_Shift_R,	 	"NUMPAD2",	XK_KP_2,
-	"LCONTROL",	XK_Control_L, 	"NUMPAD3",	XK_KP_3,
-	"RCONTROL",	XK_Control_R, 	"NUMPAD4",	XK_KP_4,
-	"LMENU",	XK_Super_L,		"NUMPAD5",	XK_KP_5,
-	"RMENU",	XK_Super_R, 	"NUMPAD6",	XK_KP_6,
-	"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down,
-	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace,
-	""
+	{"NUMPAD7", 	XK_KP_7},	{"BACK", 	XK_BackSpace}, 
+	{"NUMPAD8", 	XK_KP_8},	{"TAB", 	XK_Tab},
+	{"NUMPAD9", 	XK_KP_9}, 	{"RETURN", 	XK_Return},
+	{"MULTIPLY", XK_KP_Multiply},{"SHIFT",	XK_Shift_Lock},
+	{"ADD",		XK_KP_Add}, 	 {"CONTROL",XK_Control_L},
+	{"SEPARATOR", XK_KP_Separator},{"MENU", XK_Super_L},
+	{"SUBTRACT", XK_KP_Subtract},{"PAUSE", 	XK_Pause},
+	{"DECIMAL",	XK_KP_Decimal},	/*"CAPITAL", 	VK_CAPITAL,*/
+	{"DIVIDE",	XK_KP_Divide},	{"ESCAPE",	XK_Escape},
+	{"F1", 		XK_F1}, 		{"SPACE",XK_KP_Space},
+	{"F2", 		XK_F2},	 		{"END",		XK_End},
+	{"F3",		XK_F3}, 		{"HOME",XK_Home},
+	{"F4",		XK_F4}, 		{"LEFT",XK_Left},
+	{"F5",		XK_F5},		 	{"UP", 		XK_Up},
+	{"F6",		XK_F6},		 	{"RIGHT",	XK_Right},
+	{"F7",		XK_F7},		 	{"DOWN",	XK_Down},
+	{"F8",		XK_F8},		 	{"PRINT",	XK_Sys_Req},
+	{"F9",		XK_F9},		 	/*"SNAPSHOT",	VK_SNAPSHOT,*/
+	{"F10",		XK_F10},		{"INSERT",	XK_Insert},
+	{"F11",		XK_F11},		{"DELETE",	XK_Delete},
+	{"F12",		XK_F12},		{"LWIN",	XK_Meta_L},
+	{"NUMLOCK",	XK_Num_Lock}, 	{"RWIN",	XK_Meta_R},
+	{"SCROLL",	XK_Scroll_Lock},{"NUMPAD0",	XK_KP_0},
+	{"LSHIFT",	XK_Shift_L},	{"NUMPAD1", XK_KP_1},
+	{"RSHIFT",	XK_Shift_R},	{"NUMPAD2",	XK_KP_2},
+	{"LCONTROL",	XK_Control_L}, 	{"NUMPAD3",	XK_KP_3},
+	{"RCONTROL",	XK_Control_R}, 	{"NUMPAD4",	XK_KP_4},
+	{"LMENU",	XK_Super_L},	{"NUMPAD5",	XK_KP_5},
+	{"RMENU",	XK_Super_R}, 	{"NUMPAD6",	XK_KP_6},
+	{"PGUP", 	XK_Page_Up}, 	{"PGDOWN", 	XK_Page_Down},
+	{"CAPSLOCK", XK_Caps_Lock},	{"BACKSPACE",XK_BackSpace},
+	{"",0}
 };
 #endif
 

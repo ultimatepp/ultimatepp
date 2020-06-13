@@ -49,10 +49,10 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 	else
 		remainingMin = (int)((60.*remainingCapacity)/presentRate);
 	
-	int designCapacity,lastFullCapacity;
-	String vendor, type, model, serial;
-	if (!GetBatteryInfo(present/*, designCapacity, lastFullCapacity, vendor, type, model, serial*/))
-		percentage = (int)((100.*remainingCapacity)/lastFullCapacity);
+	//int designCapacity,lastFullCapacity;
+	//String vendor, type, model, serial;
+	//if (!GetBatteryInfo(present/*, designCapacity, lastFullCapacity, vendor, type, model, serial*/))
+		//percentage = (int)((100.*remainingCapacity)/lastFullCapacity);
 
 	return true;
 }

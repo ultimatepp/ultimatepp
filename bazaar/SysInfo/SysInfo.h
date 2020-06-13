@@ -267,14 +267,13 @@ public:
 	}	
 	bool IsActive() {return active;}
 	
-	std::mt19937 rng;
-	
 private:
 	TimeStop timer;
 	int x0 = -1, y0 = -1;
 	dword deltaTime, nextDeltaTime;
 	dword deltaTimeFast = 20*1000;
 	int fromH, fromM, toH, toM;
+	std::mt19937 rng;
 	bool active = true;
 };
 #endif
