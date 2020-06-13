@@ -47,7 +47,7 @@ void ShrinkValueCache()
 	Mutex::Lock __(ValueCacheMutex);
 	if(!ValueCacheMaxSizeLimitHigh)
 		AdjustValueCache();
-	TheValueCache().Shrink(ValueCacheMaxSize, 2000);
+	TheValueCache().Shrink(ValueCacheMaxSize, 20000);
 	LLOG("MakeValue cache size after shrink: " << TheValueCache().GetSize());
 }
 

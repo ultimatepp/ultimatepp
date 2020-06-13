@@ -85,7 +85,7 @@ void SystemDraw::FlushText()
 	SetColor(textink);
 	cairo_show_glyphs(cr, gs, textcache.GetCount());
 	
-	cache.Shrink(64);
+	cache.Shrink(INT_MAX, 128);
 
 	textcache.Clear();
 }

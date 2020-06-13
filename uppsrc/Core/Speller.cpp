@@ -294,7 +294,7 @@ static LRUCache<bool, SpellKey> speller_cache;
 
 bool SpellWord(const WString& ws, int lang)
 {
-	speller_cache.Shrink(2000);
+	speller_cache.ShrinkCount(2000);
 	SpellMaker m;
 	m.k.lang = lang;
 	m.k.wrd = ws;
