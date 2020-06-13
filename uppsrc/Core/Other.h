@@ -381,6 +381,7 @@ public:
 	const K& GetLRUKey();
 	void     DropLRU();
 	void     Shrink(int maxsize, int maxcount = 30000);
+	void     ShrinkCount(int maxcount = 30000)          { Shrink(INT_MAX, maxcount); }
 
 	template <class P> int  Remove(P predicate);
 	template <class P> bool RemoveOne(P predicate);

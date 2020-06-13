@@ -45,7 +45,7 @@ nst]_`=_[@3 0]&]
 [s5;:LRUCache`:`:Maker`:`:Make`(T`&`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* Make](
 [*@4 T][@(0.0.255) `&]_[*@3 object])_[@(0.0.255) const]_`=_[@3 0]&]
 [s2;%% Creates the data based on parameters, returns the size of 
-created data.&]
+created data in bytes.&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:Maker`:`:`~Maker`(`): [@(0.0.255) `~][* Maker]()&]
@@ -56,7 +56,8 @@ created data.&]
 [s3; &]
 [s5;:LRUCache`:`:GetSize`(`)const: [@(0.0.255) int]_[* GetSize]()_[@(0.0.255) const]&]
 [s2;%% Returns the total size of data in cache (as sum of numbers 
-returned by Maker`::Make).&]
+returned by Maker`::Make). Note that LRUCache adds and estimate 
+of its internal memory consumption per item as well.&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
@@ -92,6 +93,12 @@ ze], [@(0.0.255) int]_[*@3 maxcount]_`=_[@3 30000])&]
 [s2;%% Reduces the cache to contain no more than [%-*@3 maxsize] data 
 and [%-*@3 maxcount] items removing the least recently used items 
 first.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:LRUCache`:`:ShrinkCount`(int`): [@(0.0.255) void]_[* ShrinkCount]([@(0.0.255) i
+nt]_[*@3 maxcount]_`=_[@3 30000])&]
+[s2;%% Reduces the cache to contain no more than [%-*@3 maxcount] regardless 
+of data size.&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:Remove`(P`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) i

@@ -69,7 +69,7 @@ int FileHexView::Byte(int64 addr)
 {
 	blk = addr >> BLKSHIFT;
 	String h = cache.Get(*this);
-	cache.Shrink(10); // cache only 10 blocks (~150 KB)
+	cache.ShrinkCount(10); // cache only 10 blocks (~150 KB)
 	int ii = addr & (BLKSIZE - 1);
 	return ii < h.GetCount() ? (byte)h[ii] : 0;
 }
