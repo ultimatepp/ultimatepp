@@ -23,6 +23,11 @@ CONSOLE_APP_MAIN{
 	
 	DUMP(decode(2, 1, "one", 2, "two", 3, "three", "?"));
 	DUMP(decode(5, 1, "one", 2, "two", 3, "three", "?"));
+	
+	DUMP(get_i(-1, "zero", "one", "two"));
+	DUMP(get_i(0, "zero", "one", "two"));
+	DUMP(get_i(2, "zero", "one", "two"));
+	DUMP(get_i(3, "zero", "one", "two"));
 
 	Vector<int> data = { 10, 5, 11, 9, 2, 11 };
 	//                   0   1  2   3  4  5
