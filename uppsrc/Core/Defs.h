@@ -329,6 +329,50 @@ __Expand40(E__NFBody)
 #undef E__NFBody
 //$+
 
+//$-T get_i(int i, const T& p0, const T1& p1, ...);
+#define E__TL(I)       typename COMBINE(T, I)
+#define E__NFList(I)   COMBINE(p, I)
+#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I)
+
+#define E__NFBody(I) \
+template <typename T, __List##I(E__TL)> \
+T get_i(int i, const T& p0, __List##I(E__NFValue)) \
+{ \
+	T list[] = { p0, \
+	__List##I(E__NFList) \
+	}; \
+	return list[clamp(i, 0, __countof(list) - 1)]; \
+}
+
+__Expand40(E__NFBody)
+
+#undef E__TL
+#undef E__NFList
+#undef E__NFValue
+#undef E__NFBody
+//$+
+
+//$-const char *get_i(int i, const char *p0, const char *p1, ...);
+#define E__NFList(I)   COMBINE(p, I)
+#define E__NFValue(I)  const char *COMBINE(p, I)
+
+#define E__NFBody(I) \
+inline const char *get_i(int i, const char *p0, __List##I(E__NFValue)) \
+{ \
+	const char *list[] = { p0, \
+	__List##I(E__NFList) \
+	}; \
+	return list[clamp(i, 0, __countof(list) - 1)]; \
+}
+
+__Expand40(E__NFBody)
+
+#undef E__TL
+#undef E__NFList
+#undef E__NFValue
+#undef E__NFBody
+//$+
+
 typedef unsigned char      byte;
 typedef signed char        int8;
 typedef unsigned char      uint8;
