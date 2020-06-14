@@ -143,22 +143,6 @@ String AsString(__m128 x)
 #endif
 
 force_inline
-__m128 LoadRGBAF(const RGBA *s)
-{
-	return _mm_cvtepi32_ps(_mm_unpacklo_epi16(_mm_unpacklo_epi8(_mm_set_epi32(0, 0, 0, *(dword *)s), _mm_setzero_si128()), _mm_setzero_si128()));
-}
-
-force_inline
-void StoreRGBAF(RGBA *t, __m128 s)
-{
-	_mm_store_ss((float *)t, _mm_castsi128_ps(
-		_mm_packus_epi16(
-			_mm_packs_epi32(_mm_cvttps_epi32(s), _mm_setzero_si128()),
-			_mm_setzero_si128()
-		)));
-}
-
-force_inline
 int IntAndFraction(__m128 x, __m128& fraction)
 {
 	x = _mm_add_ps(x, _mm_set1_ps(8000)); // cvttps truncates toward 0, need to fix negatives

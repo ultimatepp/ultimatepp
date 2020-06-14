@@ -90,6 +90,26 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 				*yd++ = minmax(sy + yy, 0, isz.cy - 1) + sr.top;
 			}
 			RGBA *t = ib[y];
+
+	#ifdef CPU_X86
+			for(int x = 0; x < sz.cx; x++) {
+				__m128 rgbaf = _mm_setzero_ps();
+				__m128 w = _mm_setzero_ps();
+				yd = py;
+				int hasalpha = 0;
+				for(int yy = 2 * ay; yy-- > 0;) {
+					int ky = *yd++;
+					const RGBA *l = img[*yd++];
+					for(int xx = 2 * ax; xx-- > 0;) {
+						__m128 s = LoadRGBAF(&l[*xd++]);
+						__m128 weight = _mm_set1_ps(ky * *xd++);
+						rgbaf = _mm_add_ps(rgbaf, _mm_mul_ps(weight, s));
+						w = _mm_add_ps(w, weight);
+					}
+				}
+				StoreRGBAF(t++, ClampRGBAF(_mm_div_ps(rgbaf, w)));
+			}
+	#else
 			for(int x = 0; x < sz.cx; x++) {
 				int red   = 0;
 				int green = 0;
@@ -129,6 +149,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 					t->a = t->r = t->g = t->b = 0;
 				t++;
 			}
+	#endif
 		}
 	});
 	ib.SetResolution(img.GetResolution());
