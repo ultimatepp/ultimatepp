@@ -196,6 +196,7 @@ $(OutDir_umk)MacOs.o: $(UPPDIR1)umk/MacOs.cpp \
 	$(UPPDIR1)Draw/ImageOp.h \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
@@ -1392,6 +1393,7 @@ $(OutDir_ide_Builders)Cocoa.o: $(UPPDIR1)ide/Builders/Cocoa.cpp \
 	$(UPPDIR1)Draw/ImageOp.h \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
