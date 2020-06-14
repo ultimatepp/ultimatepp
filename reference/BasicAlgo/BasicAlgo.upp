@@ -1,4 +1,4 @@
-description "Basic function templates (min/max/sum/findarg/decode)\377";
+description "Basic function templates (min/max/sum/findarg/decode/get_i)\377";
 
 uses
 	Core;
