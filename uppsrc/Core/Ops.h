@@ -26,8 +26,9 @@ inline void   Poke64be(const void *ptr, int64 val)  { Poke32be(ptr, HIDWORD(val)
 
 #ifdef CPU_LITTLE_ENDIAN
 
-#define MAKE2B(b0, b1)                  MAKEWORD(b0, b1);
-#define MAKE4B(b0, b1, b2, b3)          MAKELONG(MAKEWORD(b0, b1), MAKEWORD(b2, b3))
+#define MAKE2B(b0, b1)                            MAKEWORD(b0, b1)
+#define MAKE4B(b0, b1, b2, b3)                    MAKELONG(MAKEWORD(b0, b1), MAKEWORD(b2, b3))
+#define MAKE8B(b0, b1, b2, b3, b4, b5, b6, b7)    MAKEQWORD(MAKE4B(b0, b1, b2, b3), MAKE4B(b4, b5, b6, b7))
 
 inline int    Peek16(const void *ptr)  { return Peek16le(ptr); }
 inline int    Peek32(const void *ptr)  { return Peek32le(ptr); }
@@ -39,8 +40,9 @@ inline void   Poke64(const void *ptr, int64 val)  { Poke64le(ptr, val); }
 
 #else
 
-#define MAKE2B(b0, b1)                  MAKEWORD(b1, b0);
-#define MAKE4B(b0, b1, b2, b3)          MAKELONG(MAKEWORD(b2, b3), MAKEWORD(b0, b1))
+#define MAKE2B(b0, b1)                            MAKEWORD(b1, b0);
+#define MAKE4B(b0, b1, b2, b3)                    MAKELONG(MAKEWORD(b2, b3), MAKEWORD(b0, b1))
+#define MAKE8B(b0, b1, b2, b3, b4, b5, b6, b7)    MAKEQWORD(MAKE4B(b7, b6, b5, b4), MAKE4B(b3, b2, b1, b0))
 
 inline int    Peek16(const void *ptr)  { return Peek16be(ptr); }
 inline int    Peek32(const void *ptr)  { return Peek32be(ptr); }

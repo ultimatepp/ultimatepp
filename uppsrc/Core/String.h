@@ -280,7 +280,7 @@ public:
 	bool IsEqual(const String0& s) const {
 		uint64 q1 = q[1];
 		uint64 sq1 = s.q[1];
-		return q1 == sq1 && q[0] == s.q[0] || ((q1 | sq1) & I64(0x00ff000000000000)) && LEq(s);
+		return q1 == sq1 && q[0] == s.q[0] || ((q1 | sq1) & MAKE8B(0,0,0,0,0,0,255,0)) && LEq(s);
 	}
 	bool IsEqual(const char *s) const;
 

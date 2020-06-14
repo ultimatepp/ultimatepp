@@ -26,7 +26,7 @@ struct scImageMaker : ValueMaker {
 };
 
 void SysImageRealized(const Image& img)
-{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is Fpaintonly kind
+{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is paintonly kind
 	if(!IsValueCacheActive())
 		return;
 	LLOG("SysImageRealized " << img.GetSize());

@@ -263,6 +263,17 @@ the second argument of pair. If no match is found, returns the
 last argument [%-*@3 def].&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:get`_i`(int`,const T`&`,const T1`&`,`.`.`.`): T_[* get`_i]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) const]_T[@(0.0.255) `&]_[*/@3 p][*@3 0], [@(0.0.255) const]_T1[@(0.0.255) `&]_
+[*/@3 p][*@3 1], ...)&]
+[s5;:Upp`:`:get`_i`(int`,const char`*`,const char`*`,`.`.`.`): [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[* get`_i]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p0], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p1], ...)&]
+[s2;%% Returns parameter [%-*/@3 p][%-*@3 i]. If [%-*@3 i] is negative, 
+returns [%-*/@3 p][%-*@3 0], if it is greater then the last parameter, 
+returns the last parameter.&]
+[s3;%% &]
+[s4; &]
 [s5;:CpuSSE`(`): [@(0.0.255) bool]_[* CpuSSE]()&]
 [s2;%% Returns true if CPU has SSE support.&]
 [s3; &]
