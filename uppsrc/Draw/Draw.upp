@@ -30,6 +30,7 @@ file
 	Display.cpp,
 	Image readonly separator,
 	Image.h,
+	SSE2.h,
 	Image.cpp,
 	ImageBlit.cpp,
 	Raster.h,

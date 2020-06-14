@@ -327,3 +327,4 @@ Size   GetImageStringDots(const String& src);
 
 #include "Raster.h"
 #include "ImageOp.h"
+#include "SSE2.h"
