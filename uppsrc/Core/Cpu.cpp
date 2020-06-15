@@ -8,6 +8,9 @@
 #endif
 #endif
 
+#ifdef PLATFORM_FREEBSD
+#include <sys/vmmeter.h>
+#endif
 #ifdef PLATFORM_MACOS
 #include <mach/mach.h>
 #include <mach/vm_statistics.h>

@@ -110,6 +110,30 @@ with results being cached, that can only be used with Draw`::DrawImage(this
 is optimization hint that can save some memory in certain situations).&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Magnify`(const Upp`:`:Image`&`,int`,int`): [_^Upp`:`:Image^ Image]_[* Magnify
+]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
+[s2;%% Multiplies the resolution of [%-*@3 img] by factors [%-*@3 nx] 
+and [%-*@3 ny] by simply repeating the pixels (each pixel becomes 
+[%-*@3 nx] x [%-*@3 ny] same color block).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Minify`(const Upp`:`:Image`&`,int`,int`,bool`): [_^Upp`:`:Image^ Image]_[* Mi
+nify]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny], [@(0.0.255) bool]_[*@3 co]_`=_[@(0.0.255) f
+alse])&]
+[s2;%% Reduces the resolution of [%-*@3 img] by factors [%-*@3 nx] and 
+[%-*@3 ny] by averaging pixel value (each [%-*@3 nx] x [%-*@3 ny] block 
+of pixels is averaged and produces single pixel in the resulting 
+image). If [%-*@3 co] is true, parallel processing is enabled.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:MinifyCached`(const Upp`:`:Image`&`,int`,int`,bool`): [_^Upp`:`:Image^ Imag
+e]_[* MinifyCached]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny], [@(0.0.255) bool]_[*@3 co])&]
+[s2;%%  [%-*@3 img] [%-*@3 nx] [%-*@3 ny] [%-*@3 co] .&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:Upscale2x`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* Upscale2x]([@(0.0.255) c
 onst]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 src])&]
 [s2;%% Doubles the resolution of image, using smart heuristics algorithm 

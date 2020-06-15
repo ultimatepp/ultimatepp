@@ -158,8 +158,6 @@ struct ChPartMaker {
 	ChPartMaker(const Image& m);
 };
 
-Image Magnify(const Image& img, int nx, int ny);
-
 // Image cache
 
 struct ImageMaker {
@@ -220,6 +218,10 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 
 Image CachedSetColorKeepAlpha(const Image& img, Color color);
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
+
+Image Magnify(const Image& img, int nx, int ny);
+Image Minify(const Image& img, int nx, int ny, bool co = false);
+Image MinifyCached(const Image& img, int nx, int ny, bool co);
 
 Image Upscale2x(const Image& src);
 Image Downscale2x(const Image& src);
