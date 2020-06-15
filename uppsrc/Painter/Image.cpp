@@ -2,145 +2,7 @@
 
 namespace Upp {
 
-struct RGBAV {
-	dword r, g, b, a;
-
-	void Set(dword v) { r = g = b = a = v; }
-	void Clear()      { Set(0); }
-	void Put(dword weight, const RGBA& src) {
-		r += weight * src.r;
-		g += weight * src.g;
-		b += weight * src.b;
-		a += weight * src.a;
-	}
-	void Put(const RGBA& src) {
-		r += src.r;
-		g += src.g;
-		b += src.b;
-		a += src.a;
-	}
-	RGBA Get(int div) const {
-		RGBA c;
-		c.r = byte(r / div);
-		c.g = byte(g / div);
-		c.b = byte(b / div);
-		c.a = byte(a / div);
-		return c;
-	}
-};
-
-Image DownScale(const Image& img, int nx, int ny, bool co)
-{
-	ASSERT(nx > 0 && ny > 0);
-	Size ssz = img.GetSize();
-	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
-	ImageBuffer ib(tsz);
-	int scx0 = ssz.cx / nx * nx;
-	auto do_line = [&](int ty, RGBAV *b, int *div) {
-		int yy = ny * ty;
-		for(int i = 0; i < tsz.cx; i++)
-			b[i].Clear();
-		memset(div, 0, tsz.cx * sizeof(int));
-		for(int yi = 0; yi < ny; yi++) {
-			int y = yy + yi;
-			if(y < ssz.cy) {
-				const RGBA *s = img[yy + yi];
-				const RGBA *e = s + scx0;
-				const RGBA *e2 = s + ssz.cx;
-				RGBAV *t = b;
-				int *dv = div;
-				while(s < e) {
-					for(int n = nx; n--;) {
-						t->Put(*s++);
-						(*dv)++;
-					}
-					t++;
-					dv++;
-				}
-				while(s < e2) {
-					t->Put(*s++);
-					(*dv)++;
-				}
-			}
-		}
-		const RGBAV *s = b;
-		const int *dv = div;
-		RGBA *it = ~ib + ty * tsz.cx;
-		for(int x = 0; x < tsz.cx; x++)
-			*it++ = (s++)->Get(*dv++);
-	};
-	if(co) {
-		CoWork cw;
-		cw * [&] {
-			Buffer<int> div(tsz.cx);
-			Buffer<RGBAV> b(tsz.cx);
-			for(;;) {
-				int y = cw.Next();
-				if(y >= tsz.cy)
-					break;
-				do_line(y, b, div);
-			}
-		};
-	}
-	else {
-		Buffer<int> div(tsz.cx);
-		Buffer<RGBAV> b(tsz.cx);
-		for(int y = 0; y < tsz.cy; y++)
-			do_line(y, b, div);
-	}
-	return ib;
-}
-
-struct DownscaleImageMaker : public ImageMaker {
-	Image image;
-	int   nx;
-	int   ny;
-	bool  co;
-
-	virtual String Key() const;
-	virtual Image  Make() const;
-};
-
-String DownscaleImageMaker::Key() const
-{
-	String key;
-	RawCat(key, image.GetSerialId());
-	RawCat(key, nx);
-	RawCat(key, ny);
-	// we are not adding co as that is just a hint for actual image making
-	return key;
-}
-
-Image DownscaleImageMaker::Make() const
-{
-	return DownScale(image, nx, ny, co);
-}
-
-Image DownScaleCached(const Image& img, int nx, int ny, bool co)
-{
-	DownscaleImageMaker m;
-	m.image = img;
-	m.nx = nx;
-	m.ny = ny;
-	m.co = co;
-	return MakeImage(m);
-}
-
 #ifdef CPU_X86
-
-never_inline
-String AsString(__m128 x)
-{
-	float f[4];
-	memcpy(f, &x, 16);
-	return Sprintf("(%f, %f, %f, %f)", f[3], f[2], f[1], f[0]);
-}
-
-#if 1
-#define DUMPS(x) RLOG(#x << " = " << AsString(x));
-#else
-#define DUMPS(x)
-#endif
 
 force_inline
 int IntAndFraction(__m128 x, __m128& fraction)
@@ -185,7 +47,7 @@ struct PainterImageSpanData {
 			xform = Inverse(m);
 		else {
 			if(!fast)
-				image = (imagecache ? DownScaleCached : DownScale)(image, nx, ny, co);
+				image = (imagecache ? MinifyCached : Minify)(image, nx, ny, co);
 			xform = Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny);
 		}
 		cx = image.GetWidth();

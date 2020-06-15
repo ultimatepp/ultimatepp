@@ -859,38 +859,6 @@ Image FlipImage(const Image& m, int mode)
 	              m);
 }
 
-Image Magnify(const Image& img, int nx, int ny)
-{
-	if(nx == 1 && ny == 1)
-		return img;
-	if(nx == 0 || ny == 0)
-		return Image();
-	Size sz = img.GetSize();
-	bool xdown = nx < 0;
-	nx = abs(nx);
-	int ncx = xdown ? sz.cx / nx : sz.cx * nx;
-	ImageBuffer b(ncx, sz.cy * ny);
-	const RGBA *s = ~img;
-	const RGBA *e = s + img.GetLength();
-	RGBA *t = ~b;
-	while(s < e) {
-		RGBA *q = t;
-		const RGBA *le = s + sz.cx;
-		while(s < le) {
-			Fill(q, *s, nx);
-			q += nx;
-			s++;
-		}
-		for(int n = ny - 1; n--;) {
-			memcpy(q, t, ncx * sizeof(RGBA));
-			q += ncx;
-		}
-		t = q;
-	}
-	b.SetResolution(img.GetResolution());
-	return b;
-}
-
 static Pointf Cvp(double x, double y, double sina, double cosa)
 {
 	return Pointf(x * cosa + y * sina, -x * sina + y * cosa);
