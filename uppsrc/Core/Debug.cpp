@@ -179,9 +179,9 @@ void LogHex(void *p)
 #ifdef CPU_X86
 String AsString(__m128i x)
 {
-	dword h[4];
+	int32 h[4];
 	memcpy(h, &x, 16);
-	word w[8];
+	int16 w[8];
 	memcpy(w, &x, 16);
 	float f[4];
 	memcpy(f, &x, 16);
