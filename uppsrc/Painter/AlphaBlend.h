@@ -10,54 +10,6 @@ void AlphaBlend(RGBA *t, const RGBA& c, int alpha, int len);
 #if defined(CPU_SSE2) && !defined(flagNOSIMD)
 
 force_inline
-__m128i LoadRGBA(const RGBA *s)
-{
-	return _mm_unpacklo_epi8(_mm_set_epi32(0, 0, 0, *(dword *)s), _mm_setzero_si128());
-}
-
-force_inline
-__m128i LoadRGBA2(const RGBA& c)
-{
-	return _mm_unpacklo_epi8(_mm_set_epi32(0, 0, *(dword *)&c, *(dword *)&c), _mm_setzero_si128());
-}
-
-force_inline
-__m128i LoadRGBA2(const RGBA *s)
-{
-	return _mm_unpacklo_epi8(_mm_set_epi32(0, 0, *(dword *)(s + 1), *(dword *)s), _mm_setzero_si128());
-}
-
-force_inline
-__m128i LoadRGBAL(__m128i x)
-{
-	return _mm_unpacklo_epi8(x, _mm_setzero_si128());
-}
-
-force_inline
-__m128i LoadRGBAH(__m128i x)
-{
-	return _mm_unpackhi_epi8(x, _mm_setzero_si128());
-}
-
-force_inline
-__m128i PackRGBA(__m128i l, __m128i h)
-{
-	return _mm_packus_epi16(l, h);
-}
-
-force_inline
-void StoreRGBA(RGBA *rgba, __m128i x)
-{
-	_mm_store_ss((float *)rgba, _mm_castsi128_ps(PackRGBA(x, _mm_setzero_si128())));
-}
-
-force_inline
-void StoreRGBA2(RGBA *rgba, __m128i x)
-{
-	_mm_storel_pd((double *)rgba, _mm_castsi128_pd(PackRGBA(x, _mm_setzero_si128())));
-}
-
-force_inline
 __m128i BroadcastAlpha(__m128i x)
 {
 #ifdef PLATFORM_MACOS
