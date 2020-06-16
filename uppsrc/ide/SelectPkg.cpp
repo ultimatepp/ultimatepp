@@ -78,7 +78,9 @@ again:
 		return;
 	if(!RenamePackageFs(PackagePath(GetCurrentName()), n, duplicate))
 		goto again;
+	search <<= Null;
 	Load(n);
+	alist.ScrollIntoCursor();
 }
 
 void SelectPackageDlg::MovePackage(bool copy)

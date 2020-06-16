@@ -148,11 +148,26 @@ void Ide::InsertText(const String& text)
 	editor.Paste(text.ToWString());
 }
 
+String SelectInsertFile()
+{
+	return SelectFileOpen(
+		"All files (*.*)\t*.*\n"
+		"Graphics files (*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg)\t*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg\n"
+		"Source files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js)\t"
+			"*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js\n"
+		"Web files (*.js *.css *.html *.htm *.htmls)\t*.js *.css *.html *.htm *.htmls\n"
+		"Data files (*.csv *.xml *.json)\t*.csv *.xml *.json\n"
+		"Text files (*.txt *.log *.info)\t*.txt *.log *.info\n"
+		"Document files (*.xlsx *.xls *.doc *.qtf *.odt *.ods *.pdf)\t*.xlsx *.xls *.doc *.qtf *.odt *.ods *.pdf\n"
+		"Compressed files (*.zip *.7z *.gz *.xz)\t*.zip *.7z *.gz *.xz\n"
+	);
+}
+
 void Ide::InsertFilePath(bool c)
 {
 	if(editor.IsReadOnly())
 		return;
-	String path = SelectFileOpen("All files\t*.*");
+	String path = SelectInsertFile();
 	path.Replace("\\", "/");
 	if(path.GetCount()) {
 		if(c)
@@ -212,7 +227,7 @@ void Ide::InsertFileBase64()
 {
 	if(editor.IsReadOnly())
 		return;
-	String path = SelectFileOpen("All files\t*.*");
+	String path = SelectInsertFile();
 	path.Replace("\\", "/");
 	if(path.GetCount()) {
 		if(GetFileLength(path) >= 20*1024) {
@@ -221,16 +236,6 @@ void Ide::InsertFileBase64()
 		}
 		InsertAs(LoadFile(path));
 	}
-/*		String s = Encode64(LoadFile(path));
-		int i = 0;
-		while(i < s.GetLength()) {
-			int n = min(s.GetCount() - i, 2000);
-			if(i)
-				editor.Paste("\n");
-			editor.Paste(AsCString(s.Mid(i, n)).ToWString());
-			i += n;
-		}
-	}*/
 }
 
 void Ide::InsertMenu(Bar& bar)
