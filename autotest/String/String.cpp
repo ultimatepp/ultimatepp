@@ -265,6 +265,7 @@ void UnitTest()
 		ASSERT(memcmp(cns.Begin(), css.Begin(), sizeof(tchar) * cns.GetCount() + 1) == 0);
 		ASSERT(GetHashValue(ns) == GetHashValue(NewString(~ns, ns.GetCount())));
 		ASSERT(ns.IsVoid() == ss.IsVoid());
+		ASSERT(ns == ~ns);
 	}
 	Cout() << "Passed";
 	RLOG("Test passed");

@@ -11,7 +11,7 @@ void CheckEq(FN eq)
 {
 	LOG("CheckEq " << sizeof(T));
 	T a[2000], b[2000];
-	auto Rnd = [] { return (T)Random(26) + 'A'; };
+	auto Rnd = [] { return (T)(Random(26) + 'A'); };
 	for(int i = 0; i < 100000; i++) {
 		if(i % 10000 == 0)
 			LOG(i);
@@ -79,7 +79,7 @@ void CheckFill(FN fill)
 		for(int i = 0; i < 500000; i++) {
 			int pos = Random(200);
 			int len = Random(decode(pass, 0, 20, 1, 200, 2, 2000, 9999));
-			fill(~b1 + pos, i, len);
+			fill(~b1 + pos, (T)i, len);
 			for(int j = 0; j < len; j++)
 				b2[pos + j] = i;
 			if(memcmp(b1, b2, sizeof(T) * 20000)) {
@@ -98,7 +98,7 @@ void CheckFill(FN fill)
 	for(int i = 0; i < 100; i++) {
 		int pos = Random(200);
 		int len = 1024*1024*7 + Random(200);
-		fill(~b1 + pos, i, len);
+		fill(~b1 + pos, (T)i, len);
 		for(int j = 0; j < len; j++)
 			b2[pos + j] = i;
 		if(memcmp(b1, b2, sizeof(T) * 1024*1024*16)) {
@@ -115,9 +115,81 @@ void CheckFill(FN fill)
 	}
 }
 
+void CheckMemHash()
+{
+	Buffer<byte> b(2000);
+	for(int i = 0; i < 2000; i++)
+		b[i] = (byte)Random(256);
+
+	int worst = 0;
+	for(int pos = 10; pos < 40; pos++) {
+		for(int len = 0; len < 200; len++) {
+			auto Hash = [&] { return memhash(~b + pos, len); };
+			hash_t h = Hash();
+			for(int i = 0; i < 8; i++) {
+				b[pos - i - 1]++;
+				if(h != Hash()) {
+					RDUMP(pos);
+					RDUMP(len);
+					RDUMP(pos - i - 1);
+					Panic("Failed");
+				}
+				b[pos - i - 1]++;
+				b[pos + len]++;
+				if(h != Hash()) {
+					RDUMP(pos);
+					RDUMP(len);
+					RDUMP(pos + len);
+					Panic("Failed");
+				}
+				b[pos + len]--;
+			}
+			for(int i = 0; i < len; i++) {
+				int ii = pos + i;
+				byte bak = b[ii];
+				bool ok = false;
+				for(int v = 0; v < 256; v++) {
+					b[ii] = v;
+					if(h != Hash()) {
+						ok = true;
+						worst = max(worst, v);
+						break;
+					}
+				}
+				if(!ok) {
+					RDUMP(pos);
+					RDUMP(len);
+					RDUMP(ii);
+					RDUMP(worst);
+					RDUMP(ii - pos);
+					LOGHEXDUMP(~b + pos, len);
+					b[ii] = bak;
+					LOGHEXDUMP(~b + pos, len);
+					Panic("Failed");
+				}
+				b[ii] = bak;
+			}
+		}
+	}
+	LOG("CheckMemHash worst: " << worst);
+}
+
+struct m128n : m128 {
+	m128n(int i) { i64[0] = i, i64[1] = 0; }
+	m128n() {}
+	
+	operator byte() const { return (byte)i64[0]; }
+};
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	SeedRandom(0);
+
+	CheckEq<m128n>(memeq128);
+	
+	CheckMemHash();
 	
 	CheckEq<byte>(memeq8);
 	CheckEq<word>(memeq16);
@@ -128,13 +200,14 @@ CONSOLE_APP_MAIN
 	CheckFill<word>(memset16);
 	CheckFill<dword>(memset32);
 	CheckFill<uint64>(memset64);
+	CheckFill<m128n>(memset128);
 
 	struct dqword { qword x[2]; };
 	CheckCopy<byte>(memcpy8);
 	CheckCopy<word>(memcpy16);
 	CheckCopy<dword>(memcpy32);
 	CheckCopy<qword>(memcpy64);
-	CheckCopy<dqword>(memcpy128);
+	CheckCopy<m128n>(memcpy128);
 
 	LOG("============= OK");
 }
