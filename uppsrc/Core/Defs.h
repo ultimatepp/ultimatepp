@@ -404,6 +404,12 @@ typedef long long unsigned uint64;
 
 typedef uint64             qword;
 
+struct m128 {
+	int64 i64[2];
+	
+	static m128 Zero()             { m128 a; a.i64[0] = a.i64[1] = 0; return a; }
+};
+
 inline bool IsNaN(double d)        { return std::isnan(d); }
 inline bool IsInf(double d)        { return std::isinf(d); }
 inline bool IsFin(double d)        { return !IsNaN(d) && !IsInf(d); }
