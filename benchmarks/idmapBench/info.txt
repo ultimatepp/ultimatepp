@@ -1,2 +1,4 @@
 OLD: VectorMap time: 5742398 ms
 NEW: VectorMap time: 5888610 ms
+
+VectorMap time: 5524707 ms
