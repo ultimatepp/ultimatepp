@@ -256,16 +256,12 @@ void String0::SetL(const char *s, int len)
 void String0::Set0(const char *s, int len)
 {
 	Zero();
-	switch(len) {
-	#define MOV(x) case x: chr[x - 1] = s[x - 1];
-		MOV(14) MOV(13) MOV(12) MOV(11) MOV(10) MOV(9) MOV(8)
-		MOV(7) MOV(6) MOV(5) MOV(4) MOV(3) MOV(2) MOV(1)
-	case 0:
+	if(len <= 14) {
 		SLen() = len;
-		break;
-	default:
+		memcpy8(chr, s, len);
+	}
+	else
 		SetL(s, len);
-	};
 	Dsyn();
 }
 
