@@ -105,6 +105,13 @@ void memset64(void *p, qword data, size_t len)
 		Set128(0);
 }
 
+inline
+void memset128(void *t, m128 data, size_t len)
+{
+	if(len)
+		memset8__(t, *(__m128i *)&data, 16 * len);
+}
+
 void memcpy8__(void *p, const void *q, size_t len);
 
 inline
@@ -390,10 +397,17 @@ bool inline_memeq64_aligned(const void *p, const void *q, size_t len)
 	return memeq8__(t, s, 8 * len);
 }
 
+force_inline
+bool inline_memeq128_aligned(const void *t, const void *s, size_t len)
+{
+	return len == 0 || memeq8__(t, s, 16 * len);
+}
+
 bool memeq8(const void *p, const void *q, size_t len);
 bool memeq16(const void *p, const void *q, size_t len);
 bool memeq32(const void *p, const void *q, size_t len);
 bool memeq64(const void *p, const void *q, size_t len);
+bool memeq128(const void *p, const void *q, size_t len);
 
 #else
 

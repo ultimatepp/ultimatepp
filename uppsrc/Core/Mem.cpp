@@ -86,6 +86,7 @@ bool memeq8(const void *p, const void *q, size_t len) { return inline_memeq8_ali
 bool memeq16(const void *p, const void *q, size_t len) { return inline_memeq16_aligned(p, q, len); }
 bool memeq32(const void *p, const void *q, size_t len) { return inline_memeq32_aligned(p, q, len); }
 bool memeq64(const void *p, const void *q, size_t len) { return inline_memeq64_aligned(p, q, len); }
+bool memeq128(const void *p, const void *q, size_t len) { return inline_memeq128_aligned(p, q, len); }
 
 #endif
 
