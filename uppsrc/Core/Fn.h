@@ -93,13 +93,13 @@ constexpr const char *get_i(int i, const char* p0, const T& ...args)
 template <class F, class V>
 void foreach_arg(F fn, V&& v)
 {
-	fn(v);
+	fn(std::forward<V>(v));
 }
 
 template <class F, class V, typename... Args>
 void foreach_arg(F fn, V&& v, Args&& ...args)
 {
-	fn(v);
+	fn(std::forward<V>(v));
 	foreach_arg(fn, args...);
 }
 
@@ -108,7 +108,7 @@ void foreach_arg(F fn, V&& v, Args&& ...args)
 template <class I, typename... Args>
 void iter_set(I t, Args&& ...args)
 {
-	foreach_arg([&](auto&& v) { *t++ = v; }, args...);
+	foreach_arg([&](auto&& v) { *t++ = std::forward<decltype(v)>(v); }, args...);
 }
 
 template <class I, typename... Args>
