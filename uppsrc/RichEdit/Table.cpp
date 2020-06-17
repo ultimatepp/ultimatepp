@@ -180,7 +180,7 @@ void RichEdit::TableProps()
 						break;
 					}
 			if(!valid) {
-				Exclamation(NFormat(t_("Invalid header row count %d, cell at rw %d, co %d has vspan = %d."),
+				Exclamation(Format(t_("Invalid header row count %d, cell at rw %d, co %d has vspan = %d."),
 					fmt.header, violator.y + 1, violator.x + 1, vspan));
 				continue;
 			}

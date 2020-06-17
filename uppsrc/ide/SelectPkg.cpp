@@ -471,9 +471,9 @@ void SelectPackageDlg::OnBaseRemove()
 		next = base.Get(c - 1);
 	String vars = base.Get(0);
 	String varpath = VarFilePath(vars);
-	if(PromptOKCancel(NFormat("Remove base file [* \1%s\1]?", varpath))) {
+	if(PromptOKCancel(Format("Remove base file [* \1%s\1]?", varpath))) {
 		if(!FileDelete(varpath))
-			Exclamation(NFormat("Error deleting file [* \1%s\1].", varpath));
+			Exclamation(Format("Error deleting file [* \1%s\1].", varpath));
 		else
 			SyncBase(next);
 	}

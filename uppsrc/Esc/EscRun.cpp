@@ -176,7 +176,7 @@ EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
 		String argnames;
 		for(int i = 0; i < l.arg.GetCount(); i++)
 			argnames << (i ? ", " : "") << l.arg[i];
-		throw CParser::Error(NFormat("invalid number of arguments (%d passed, expected: %s)", arg.GetCount(), argnames));
+		throw CParser::Error(Format("invalid number of arguments (%d passed, expected: %s)", arg.GetCount(), argnames));
 	}
 	EscValue ret;
 	{

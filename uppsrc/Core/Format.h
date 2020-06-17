@@ -77,38 +77,38 @@ void RegisterStringFormatter(const char *id, Formatter f);
 void RegisterDateTimeFormatter(const char *id, Formatter f);
 void RegisterValueFormatter(const char *id, Formatter f);
 
-#define E__NFValue(I)  const Value& COMBINE(p, I)
-#define E__NFBody(I) \
-String NFormat(const char *fmt, __List##I(E__NFValue)); \
-String NFormat(int language, const char *fmt, __List##I(E__NFValue));
+String Format(const char *s, const Vector<Value>& v);
+String Format(int language, const char *s, const Vector<Value>& v);
 
-//$-String NFormat(const char *fmt, Value p1, ...);
-//$ String NFormat(int language, const char *fmt, Value p1, ...);
-__Expand20(E__NFBody)
-//$+
+template <typename... Args>
+String Format(int language, const char *s, const Args& ...args)
+{
+	return Format(language, s, gather<Vector<Value>>(args...));
+}
 
-#undef E__NFBody
-#undef E__NFValue
-
-String NFormat(const char *s, const Vector<Value>& v);
-String NFormat(int language, const char *s, const Vector<Value>& v);
+template <typename... Args>
+String Format(const char *s, const Args& ...args)
+{
+	return Format(s, gather<Vector<Value>>(args...));
+}
 
 String VFormat(const char *fmt, va_list args);
 String Sprintf(const char *fmt, ...);
 
-//$-
-
-#define E__NFValue(I)  const Value& COMBINE(p, I)
-#define E__NFBody(I) \
-String Format(const char *fmt, __List##I(E__NFValue)); \
-String Format(int language, const char *fmt, __List##I(E__NFValue));
-
-__Expand20(E__NFBody)
-
-#undef E__NFBody
-#undef E__NFValue
-
-String Format(const char *s, const Vector<Value>& v);
-String Format(int language, const char *s, const Vector<Value>& v);
-
 String DeFormat(const char *text);
+
+// DEPRECATED
+
+/*
+template <typename... Args>
+String NFormat(int language, const char *s, const Args& ...args)
+{
+	return Format(language, s, gather<Vector<Value>>(args...));
+}
+
+template <typename... Args>
+String NFormat(const char *s, const Args& ...args)
+{
+	return Format(s, gather<Vector<Value>>(args...));
+}
+*/

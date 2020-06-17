@@ -430,7 +430,7 @@ Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
 				if(p.uses[fu].text != package)
 					all_uses.FindAdd(p.uses[fu].text);
 				else if(warn) {
-					PutConsole(NFormat("%s: circular 'uses' chain", package));
+					PutConsole(Format("%s: circular 'uses' chain", package));
 					warn = false;
 				}
 			}
@@ -582,7 +582,7 @@ bool MakeBuild::Build()
 
 void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 {
-	PutConsole(NFormat("Cleaning %s", wspc[package]));
+	PutConsole(Format("Cleaning %s", wspc[package]));
 	One<Host> host = CreateHost(false, false);
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)

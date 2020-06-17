@@ -104,8 +104,8 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 						ismf = true;
 						if(manifest >= 0)
 						{
-							PutConsole(NFormat("%s(1): duplicate manifest file", GetHostPath(fn)));
-							PutConsole(NFormat("%s(1): (previous manifest file)", GetHostPath(sfile[manifest])));
+							PutConsole(Format("%s(1): duplicate manifest file", GetHostPath(fn)));
+							PutConsole(Format("%s(1): (previous manifest file)", GetHostPath(sfile[manifest])));
 						}
 						manifest = sfile.GetCount();
 					}
@@ -215,7 +215,7 @@ bool JavaBuilder::PreprocessJava(String file, String target, String options,
 	String prep = LoadFile(prepfile);
 	if(prep.IsEmpty())
 	{
-		PutConsole(NFormat("Error loading preprocessed file %s", prepfile));
+		PutConsole(Format("Error loading preprocessed file %s", prepfile));
 		error = true;
 	}
 	DeleteFile(prepfile);
@@ -223,7 +223,7 @@ bool JavaBuilder::PreprocessJava(String file, String target, String options,
 	{
 		DeleteFile(target);
 		error = true;
-		PutConsole(NFormat("%s: error saving file.", target));
+		PutConsole(Format("%s: error saving file.", target));
 	}
 	PutVerbose("preprocessed in " + GetPrintTime(time));
 	return !error;

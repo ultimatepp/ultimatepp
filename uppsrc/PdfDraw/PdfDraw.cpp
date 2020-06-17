@@ -264,7 +264,7 @@ void  PdfDraw::FlushText(int dx, int fi, int height, const String& txt)
 
 String PdfDraw::PdfColor(Color c)
 {
-	return NFormat("%3nf %3nf %3nf", c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0);
+	return Format("%3nf %3nf %3nf", c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0);
 }
 
 String PdfDraw::PdfString(const char *s)

@@ -251,7 +251,7 @@ Point CppBuilder::ExtractVersion() const
 void CppBuilder::ShowTime(int count, int start_time)
 {
 	if(count)
-		PutConsole(NFormat("%d file(s) compiled in %s %d msec/file",
+		PutConsole(Format("%d file(s) compiled in %s %d msec/file",
 			count, GetPrintTime(start_time), msecs(start_time) / count));
 }
 
@@ -400,9 +400,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	bool sv = ::SaveFile(fn, makefile);
 	if(!exporting) {
 		if(sv)
-			PutConsole(NFormat("%s(1): makefile generation complete", fn));
+			PutConsole(Format("%s(1): makefile generation complete", fn));
 		else
-			PutConsole(NFormat("%s: error writing makefile", fn));
+			PutConsole(Format("%s: error writing makefile", fn));
 	}
 	EndBuilding(true);
 }

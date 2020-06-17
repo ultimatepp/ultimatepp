@@ -76,7 +76,7 @@ template <class T>
 void Vector<T>::ReAllocF(int newalloc)
 {
 	void *prev = vector;
-	if(ReAlloc(newalloc))
+	if(ReAlloc(newalloc) && prev)
 		MemoryFree(prev);
 }
 

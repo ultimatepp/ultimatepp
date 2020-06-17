@@ -52,6 +52,16 @@ uffer] class might be more suitable in these cases.&]
 [s2; Default constructor. Constructs empty Vector.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Vector`:`:Vector`(int`):%- [@(0.0.255) explicit]_[* Vector]([@(0.0.255) int]_[*@3 n
+])&]
+[s2; Creates Vector of [%-*@3 n] default constructed elements.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:Vector`(int`,const T`&`):%- [@(0.0.255) explicit]_[* Vector]([@(0.0.255) i
+nt]_[*@3 n], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s2; Creates Vector of [%-*@3 n] elements copy constructed as [%-*@3 init].&]
+[s3; &]
+[s4;%- &]
 [s5;:Vector`:`:Vector`(pick`_ Vector`&`):%- [* Vector]([@(0.128.128) pick`_]_[* Vector][@(0.0.255) `&
 ]_[*@3 v])&]
 [s2; Pick constructor. Transfers source Vector in low constant time, 

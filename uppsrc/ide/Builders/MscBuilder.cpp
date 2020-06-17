@@ -370,7 +370,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 //					String hfn = GetHostPath(fn);
 					String brcdata = LoadFile(fn);
 					if(brcdata.IsVoid())
-						throw Exc(NFormat("error reading file '%s'", fn));
+						throw Exc(Format("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
 					String fo = BrcToC(parser, GetFileDirectory(fn));
 					String tmpfile = ForceExt(objfile, ".c");
@@ -380,7 +380,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					cmdline << cc << Pdb(package, slot, false)
 					        << " -Tc " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPathQ(objfile);
 					if(slot < 0 || !Run(String(cmdline), slot, GetHostPath(objfile), 1))
-						throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
+						throw Exc(Format("Error compiling binary object '%s'.", objfile));
 				}
 				catch(Exc e) {
 					PutConsole(e);
@@ -500,7 +500,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					String deffile = ForceExt(product, ".def");
 					if(!SaveChangedFile(deffile, def))
 					{
-						PutConsole(NFormat("%s: error saving file", deffile));
+						PutConsole(Format("%s: error saving file", deffile));
 						return false;
 					}
 					lib << " -def:" << GetHostPathQ(deffile);

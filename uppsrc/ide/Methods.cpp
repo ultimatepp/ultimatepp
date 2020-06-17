@@ -486,15 +486,15 @@ void BuildMethods::Import()
 	for(int i = 0; i < fsel.GetCount(); i++) {
 		String f = LoadFile(fsel[i]);
 		if(f.IsVoid()) {
-			if(!PromptOKCancel(NFormat("Failed to load [* \1%s\1]. Continue?", fsel[i])))
+			if(!PromptOKCancel(Format("Failed to load [* \1%s\1]. Continue?", fsel[i])))
 				break;
 			continue;
 		}
 		String nf = ConfigFile(GetFileNamePos(fsel[i]));
-		if(FileExists(nf) && !PromptOKCancel(NFormat("File already exists: [* \1%s\1]. Overwrite?", nf)))
+		if(FileExists(nf) && !PromptOKCancel(Format("File already exists: [* \1%s\1]. Overwrite?", nf)))
 			continue;
 		if(!SaveFile(nf, f))
-			if(!PromptOKCancel(NFormat("Failed to save [* \1%s\1]. Continue?", nf)))
+			if(!PromptOKCancel(Format("Failed to save [* \1%s\1]. Continue?", nf)))
 				break;
 	}
 	Load();

@@ -138,7 +138,7 @@ void Ide::MacroSetSelection(EscEscape& e)
 {
 	int b = e.Int(0), c = e.Int(1);
 	if(b < 0 || b > editor.GetLength() || c < 0 || c > editor.GetLength() || b + c > editor.GetLength())
-		e.ThrowError(NFormat("invalid selection: begin = %d, count = %d (text length = %d)",
+		e.ThrowError(Format("invalid selection: begin = %d, count = %d (text length = %d)",
 			b, c, editor.GetLength()));
 	editor.SetSelection(b, b + c);
 }
@@ -155,7 +155,7 @@ void Ide::MacroGet(EscEscape& e)
 	int pos = e.Int(0);
 	int count = e.GetCount() > 1 ? e.Int(1) : 1;
 	if(pos < 0 || pos > editor.GetLength() || count <= 0 || pos + count > editor.GetLength())
-		e.ThrowError(NFormat("error in Get(%d, %d), text length = %d", pos, count, editor.GetLength()));
+		e.ThrowError(Format("error in Get(%d, %d), text length = %d", pos, count, editor.GetLength()));
 	e = editor.GetW(pos, count);
 }
 
@@ -177,7 +177,7 @@ void Ide::MacroRemove(EscEscape& e)
 		int start = (c > 1 ? e.Int(0) : cur);
 		int count = e.Int(c - 1);
 		if(count < 0 || count > len || start < 0 || start + count > len)
-			e.ThrowError(NFormat("cannot remove %d character(s) at position %d, text length is only %d",
+			e.ThrowError(Format("cannot remove %d character(s) at position %d, text length is only %d",
 				count, start, len));
 		editor.Remove(start, count);
 	}

@@ -12,7 +12,7 @@ static inline void sDeXmlChar(StringBuffer& result, char chr, byte charset, bool
 	else if(chr == '\'') result.Cat("&apos;");
 	else if(chr == '\"') result.Cat("&quot;");
 	else if((byte)chr < ' ' && (escapelf || chr != '\n' && chr != '\t' && chr != '\r'))
-		result.Cat(NFormat("&#x%02x;", (byte)chr));
+		result.Cat(Format("&#x%02x;", (byte)chr));
 	else if(!(chr & 0x80) || charset == CHARSET_UTF8) result.Cat(chr);
 	else result.Cat(ToUtf8(ToUnicode(chr, charset)));
 }
@@ -580,10 +580,10 @@ bool  XmlParser::End()
 		LLOG("EndTag " << tagtext);
 		if(!raw) {
 			if(stack.IsEmpty())
-				throw XmlError(NFormat("Unexpected end-tag: </%s>", tagtext));
+				throw XmlError(Format("Unexpected end-tag: </%s>", tagtext));
 			if(stack.Top().tag != tagtext && !relaxed) {
 				LLOG("Tag/end-tag mismatch: <" << stack.Top().tag << "> </" << tagtext << ">");
-				throw XmlError(NFormat("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, tagtext));
+				throw XmlError(Format("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, tagtext));
 			}
 			stack.Drop();
 		}

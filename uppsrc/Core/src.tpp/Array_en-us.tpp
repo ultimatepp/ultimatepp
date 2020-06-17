@@ -60,6 +60,16 @@ and optional deep copy] transfer semantics.&]
 [s2; Default constructor. Constructs an empty Array.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Array`:`:Array`(int`):%- [@(0.0.255) explicit]_[* Array]([@(0.0.255) int]_[*@3 n])
+&]
+[s2; Creates Array of [%-*@3 n] default constructed elements.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Array`:`:Array`(int`,const T`&`):%- [@(0.0.255) explicit]_[* Array]([@(0.0.255) i
+nt]_[*@3 n], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s2; Creates Array of [%-*@3 n] elements copy constructed as [%-*@3 init].&]
+[s3; &]
+[s4;%- &]
 [s5;:Array`:`:Array`(pick`_ Array`&`):%- [* Array]([@(0.128.128) pick`_]_[* Array][@(0.0.255) `&
 ]_[*@3 v])&]
 [s2; Pick constructor. Transfers the source Array in low constant 

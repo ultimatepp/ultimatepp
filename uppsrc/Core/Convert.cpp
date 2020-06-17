@@ -360,7 +360,7 @@ Value ConvertDouble::Format(const Value& q) const
 {
 	if(IsNull(q))
 		return Null;
-	return UPP::NFormat(pattern, (double)q);
+	return UPP::Format(pattern, (double)q);
 }
 
 Value ConvertDouble::Scan(const Value& txt) const {

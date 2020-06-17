@@ -951,13 +951,13 @@ void WorkspaceWork::RemovePackageMenu(Bar& bar)
 			if(UnixPath(prj.uses[i].text) == active) {
 				usecnt++;
 				bar.Add("Remove from '" + pn + '\'', THISBACK1(RemovePackage, pn))
-					.Help(NFormat("Remove package '%s' from uses section in '%s'", active, pp));
+					.Help(Format("Remove package '%s' from uses section in '%s'", active, pp));
 			}
 	}
 	if(usecnt > 1) {
 		bar.MenuSeparator();
 		bar.Add("Remove all uses", THISBACK1(RemovePackage, String(Null)))
-			.Help(NFormat("Remove package '%s' from all uses in active project and its submodules", active));
+			.Help(Format("Remove package '%s' from all uses in active project and its submodules", active));
 	}
 }
 
@@ -989,7 +989,7 @@ void WorkspaceWork::PackageOp(String active, String from_package, String rename)
 void WorkspaceWork::RemovePackage(String from_package)
 {
 	String active = UnixPath(GetActivePackage());
-	if(IsNull(from_package) && !PromptYesNo(NFormat(
+	if(IsNull(from_package) && !PromptYesNo(Format(
 		"Remove package [* \1%s\1] from uses sections of all current packages ?", active)))
 		return;
 	PackageOp(GetActivePackage(), from_package, Null);
@@ -1047,7 +1047,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 	if(!menu.IsScanKeys()) {
 		bool cando = !IsAux() && package.IsCursor();
 		String act = UnixPath(GetActivePackage());
-		menu.Add(cando, ~NFormat("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
+		menu.Add(cando, ~Format("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
 		RemovePackageMenu(menu);
 		if(menu.IsMenuBar()) {
 			bool main = package.GetCursor() == 0;

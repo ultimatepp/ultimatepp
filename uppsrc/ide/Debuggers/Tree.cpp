@@ -173,7 +173,7 @@ void Pdb::TreeExpand(int node)
 				Val ventry;
 				ventry.type = PFUNC;
 				ventry.address = val.address + 4 * i;
-				TreeNode(node, NFormat("[%d]", i), ventry);
+				TreeNode(node, Format("[%d]", i), ventry);
 			}
 			SaveTree();
 			return;

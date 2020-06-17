@@ -278,12 +278,12 @@ String FormatElapsedTime(double run)
 	String rtime;
 	double hrs = floor(run / 3600);
 	if(hrs > 0)
-		rtime << NFormat("%0n hours, ", hrs);
+		rtime << Format("%0n hours, ", hrs);
 	int minsec = fround(run - 3600 * hrs);
 	int min = minsec / 60, sec = minsec % 60;
 	if(min || hrs)
-		rtime << NFormat("%d min, ", min);
-	rtime << NFormat("%d sec", sec);
+		rtime << Format("%d min, ", min);
+	rtime << Format("%d sec", sec);
 	return rtime;
 }
 

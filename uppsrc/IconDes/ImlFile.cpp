@@ -304,7 +304,7 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 			Image buffer = c.image;
 			if(IsNull(name))
 				name = "im__" + IntStr(i);
-			out.PutLine(NFormat("IMAGE_BEGIN(%s)", name));
+			out.PutLine(Format("IMAGE_BEGIN(%s)", name));
 			int last = 0;
 			for(int i = 0; i < buffer.GetHeight(); i++) {
 				String scan = PackRLE(buffer[i], buffer.GetWidth());

@@ -30,6 +30,7 @@ file
 	config.h,
 	Defs.h,
 	Ops.h,
+	Fn.h,
 	Cpu.cpp,
 	Mem.h,
 	Mem.cpp,

@@ -91,7 +91,7 @@ void ScriptBuilder::CheckParse()
 	{
 		String sdata = LoadFile(script);
 		if(IsNull(sdata))
-			throw Exc(NFormat("%s: not found or empty", script));
+			throw Exc(Format("%s: not found or empty", script));
 		CParser parser(sdata, script, 1);
 		while(!parser.IsEof()) {
 			String id = parser.ReadId();

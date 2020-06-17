@@ -50,92 +50,6 @@ inline  void LOGNOP__() {}
 
 #define __countof(a)          int(sizeof(a) / sizeof(a[0]) )
 
-#define __Expand1(x) x(1)
-#define __Expand2(x)  __Expand1(x) x(2)
-#define __Expand3(x)  __Expand2(x) x(3)
-#define __Expand4(x)  __Expand3(x) x(4)
-#define __Expand5(x)  __Expand4(x) x(5)
-#define __Expand6(x)  __Expand5(x) x(6)
-#define __Expand7(x)  __Expand6(x) x(7)
-#define __Expand8(x)  __Expand7(x) x(8)
-#define __Expand9(x)  __Expand8(x) x(9)
-#define __Expand10(x) __Expand9(x) x(10)
-#define __Expand11(x) __Expand10(x) x(11)
-#define __Expand12(x) __Expand11(x) x(12)
-#define __Expand13(x) __Expand12(x) x(13)
-#define __Expand14(x) __Expand13(x) x(14)
-#define __Expand15(x) __Expand14(x) x(15)
-#define __Expand16(x) __Expand15(x) x(16)
-#define __Expand17(x) __Expand16(x) x(17)
-#define __Expand18(x) __Expand17(x) x(18)
-#define __Expand19(x) __Expand18(x) x(19)
-#define __Expand20(x) __Expand19(x) x(20)
-#define __Expand21(x) __Expand20(x) x(21)
-#define __Expand22(x) __Expand21(x) x(22)
-#define __Expand23(x) __Expand22(x) x(23)
-#define __Expand24(x) __Expand23(x) x(24)
-#define __Expand25(x) __Expand24(x) x(25)
-#define __Expand26(x) __Expand25(x) x(26)
-#define __Expand27(x) __Expand26(x) x(27)
-#define __Expand28(x) __Expand27(x) x(28)
-#define __Expand29(x) __Expand28(x) x(29)
-#define __Expand30(x) __Expand29(x) x(30)
-#define __Expand31(x) __Expand30(x) x(31)
-#define __Expand32(x) __Expand31(x) x(32)
-#define __Expand33(x) __Expand32(x) x(33)
-#define __Expand34(x) __Expand33(x) x(34)
-#define __Expand35(x) __Expand34(x) x(35)
-#define __Expand36(x) __Expand35(x) x(36)
-#define __Expand37(x) __Expand36(x) x(37)
-#define __Expand38(x) __Expand37(x) x(38)
-#define __Expand39(x) __Expand38(x) x(39)
-#define __Expand40(x) __Expand39(x) x(40)
-
-#define __Expand(x)   __Expand40(x)
-
-#define __List1(x) x(1)
-#define __List2(x)  __List1(x), x(2)
-#define __List3(x)  __List2(x), x(3)
-#define __List4(x)  __List3(x), x(4)
-#define __List5(x)  __List4(x), x(5)
-#define __List6(x)  __List5(x), x(6)
-#define __List7(x)  __List6(x), x(7)
-#define __List8(x)  __List7(x), x(8)
-#define __List9(x)  __List8(x), x(9)
-#define __List10(x) __List9(x), x(10)
-#define __List11(x) __List10(x), x(11)
-#define __List12(x) __List11(x), x(12)
-#define __List13(x) __List12(x), x(13)
-#define __List14(x) __List13(x), x(14)
-#define __List15(x) __List14(x), x(15)
-#define __List16(x) __List15(x), x(16)
-#define __List17(x) __List16(x), x(17)
-#define __List18(x) __List17(x), x(18)
-#define __List19(x) __List18(x), x(19)
-#define __List20(x) __List19(x), x(20)
-#define __List21(x) __List20(x), x(21)
-#define __List22(x) __List21(x), x(22)
-#define __List23(x) __List22(x), x(23)
-#define __List24(x) __List23(x), x(24)
-#define __List25(x) __List24(x), x(25)
-#define __List26(x) __List25(x), x(26)
-#define __List27(x) __List26(x), x(27)
-#define __List28(x) __List27(x), x(28)
-#define __List29(x) __List28(x), x(29)
-#define __List30(x) __List29(x), x(30)
-#define __List31(x) __List30(x), x(31)
-#define __List32(x) __List31(x), x(32)
-#define __List33(x) __List32(x), x(33)
-#define __List34(x) __List33(x), x(34)
-#define __List35(x) __List34(x), x(35)
-#define __List36(x) __List35(x), x(36)
-#define __List37(x) __List36(x), x(37)
-#define __List38(x) __List37(x), x(38)
-#define __List39(x) __List38(x), x(39)
-#define __List40(x) __List39(x), x(40)
-
-#define E__p(I)       p##I
-
 #define ASSTRING_(x)  #x
 #define ASSTRING(x)   ASSTRING_(x)
 
@@ -218,160 +132,6 @@ static void COMBINE(MK__s, _fn)() { x } static UPP::Callinit MK__s(COMBINE(MK__s
 #define EXITCODE(x) \
 static void COMBINE(MK__s, _fn)() { x } static UPP::Callexit MK__s(COMBINE(MK__s, _fn));
 #endif
-
-#ifdef min
-#undef min
-#endif
-
-#ifdef max
-#undef max
-#endif
-
-//$-template <class T> inline const T& min(const T& a, const T& b, ...);
-//$-template <class T> inline const T& max(const T& a, const T& b, ...);
-
-template <class T> inline const T& min(const T& a, const T& b) { return a < b ? a : b; }
-template <class T> inline const T& max(const T& a, const T& b) { return a > b ? a : b; }
-
-#define E__MinMaxParam(I)  const T& COMBINE(p, I)
-#define E__MinMaxValue(I)  COMBINE(p, I)
-
-#define E__MinBody(I) \
-template <class T> \
-const T& min(const T& a, const T& b, __List##I(E__MinMaxParam)) \
-{\
-	return min(a, min(b, __List##I(E__MinMaxValue))); \
-} \
-
-__Expand40(E__MinBody)
-
-#define E__MaxBody(I) \
-template <class T> \
-const T& max(const T& a, const T& b, __List##I(E__MinMaxParam)) \
-{\
-	return max(a, max(b, __List##I(E__MinMaxValue))); \
-} \
-
-__Expand40(E__MaxBody)
-
-//$+
-
-
-template <class T> // deprecated name, use clamp
-inline T minmax(T x, T _min, T _max)                           { return min(max(x, _min), _max); }
-
-template <class T>
-inline T clamp(T x, T _min, T _max)                            { return minmax(x, _min, _max); }
-
-//$-int findarg(const T& x, const T1& p0, ...);
-inline void findarg_NOP() {} // Only to make List work for findarg
-
-#define E__TL(I)       typename COMBINE(T, I)
-#define E__NFIf(I)     findarg_NOP(); if(x == (decltype(x))COMBINE(p, I)) return I - 1; findarg_NOP()
-#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I)
-
-#define E__NFBody(I) \
-template <typename T, __List##I(E__TL)> \
-int findarg(const T& x, __List##I(E__NFValue)) \
-{ \
-	__List##I(E__NFIf); \
-	return -1; \
-}
-
-__Expand40(E__NFBody)
-
-#undef E__TL
-#undef E__NFIf
-#undef E__NFValue
-#undef E__NFBody
-
-//$+
-
-//$-D decode(const T& x, const T1& p0, const V1& v0, ...);
-#define E__TL(I)       typename COMBINE(T, I), typename COMBINE(V, I)
-#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return COMBINE(v, I); findarg_NOP()
-#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I), const COMBINE(V, I)& COMBINE(v, I)
-
-#define E__NFBody(I) \
-template <typename T, __List##I(E__TL), typename D> \
-D decode(const T& x, __List##I(E__NFValue), const D& def) \
-{ \
-	__List##I(E__NFIf); \
-	return def; \
-}
-
-__Expand40(E__NFBody)
-
-#undef E__TL
-#undef E__NFIf
-#undef E__NFValue
-#undef E__NFBody
-//$+
-
-//$-const char *decode(const T& x, const T1& p0, const char *v0, ...);
-#define E__TL(I)       typename COMBINE(T, I)
-#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return COMBINE(v, I); findarg_NOP()
-#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I), const char *COMBINE(v, I)
-
-#define E__NFBody(I) \
-template <typename T, __List##I(E__TL)> \
-const char *decode(const T& x, __List##I(E__NFValue), const char *def) \
-{ \
-	__List##I(E__NFIf); \
-	return def; \
-}
-
-__Expand40(E__NFBody)
-
-#undef E__TL
-#undef E__NFIf
-#undef E__NFValue
-#undef E__NFBody
-//$+
-
-//$-T get_i(int i, const T& p0, const T1& p1, ...);
-#define E__TL(I)       typename COMBINE(T, I)
-#define E__NFList(I)   COMBINE(p, I)
-#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I)
-
-#define E__NFBody(I) \
-template <typename T, __List##I(E__TL)> \
-T get_i(int i, const T& p0, __List##I(E__NFValue)) \
-{ \
-	T list[] = { p0, \
-	__List##I(E__NFList) \
-	}; \
-	return list[clamp(i, 0, __countof(list) - 1)]; \
-}
-
-__Expand40(E__NFBody)
-
-#undef E__TL
-#undef E__NFList
-#undef E__NFValue
-#undef E__NFBody
-//$+
-
-//$-const char *get_i(int i, const char *p0, const char *p1, ...);
-#define E__NFList(I)   COMBINE(p, I)
-#define E__NFValue(I)  const char *COMBINE(p, I)
-
-#define E__NFBody(I) \
-inline const char *get_i(int i, const char *p0, __List##I(E__NFValue)) \
-{ \
-	const char *list[] = { p0, \
-	__List##I(E__NFList) \
-	}; \
-	return list[clamp(i, 0, __countof(list) - 1)]; \
-}
-
-__Expand40(E__NFBody)
-
-#undef E__TL
-#undef E__NFList
-#undef E__NFValue
-#undef E__NFBody
-//$+
 
 typedef unsigned char      byte;
 typedef signed char        int8;
@@ -594,3 +354,92 @@ type& GLOBAL_VP_INIT(type, name, param)
 #else
 	#define NOUBSAN
 #endif
+
+// DEPRECATED:
+
+// these are pre-c++ 11 tools to achieve something like variadic templates
+#define __Expand1(x) x(1)
+#define __Expand2(x)  __Expand1(x) x(2)
+#define __Expand3(x)  __Expand2(x) x(3)
+#define __Expand4(x)  __Expand3(x) x(4)
+#define __Expand5(x)  __Expand4(x) x(5)
+#define __Expand6(x)  __Expand5(x) x(6)
+#define __Expand7(x)  __Expand6(x) x(7)
+#define __Expand8(x)  __Expand7(x) x(8)
+#define __Expand9(x)  __Expand8(x) x(9)
+#define __Expand10(x) __Expand9(x) x(10)
+#define __Expand11(x) __Expand10(x) x(11)
+#define __Expand12(x) __Expand11(x) x(12)
+#define __Expand13(x) __Expand12(x) x(13)
+#define __Expand14(x) __Expand13(x) x(14)
+#define __Expand15(x) __Expand14(x) x(15)
+#define __Expand16(x) __Expand15(x) x(16)
+#define __Expand17(x) __Expand16(x) x(17)
+#define __Expand18(x) __Expand17(x) x(18)
+#define __Expand19(x) __Expand18(x) x(19)
+#define __Expand20(x) __Expand19(x) x(20)
+#define __Expand21(x) __Expand20(x) x(21)
+#define __Expand22(x) __Expand21(x) x(22)
+#define __Expand23(x) __Expand22(x) x(23)
+#define __Expand24(x) __Expand23(x) x(24)
+#define __Expand25(x) __Expand24(x) x(25)
+#define __Expand26(x) __Expand25(x) x(26)
+#define __Expand27(x) __Expand26(x) x(27)
+#define __Expand28(x) __Expand27(x) x(28)
+#define __Expand29(x) __Expand28(x) x(29)
+#define __Expand30(x) __Expand29(x) x(30)
+#define __Expand31(x) __Expand30(x) x(31)
+#define __Expand32(x) __Expand31(x) x(32)
+#define __Expand33(x) __Expand32(x) x(33)
+#define __Expand34(x) __Expand33(x) x(34)
+#define __Expand35(x) __Expand34(x) x(35)
+#define __Expand36(x) __Expand35(x) x(36)
+#define __Expand37(x) __Expand36(x) x(37)
+#define __Expand38(x) __Expand37(x) x(38)
+#define __Expand39(x) __Expand38(x) x(39)
+#define __Expand40(x) __Expand39(x) x(40)
+
+#define __Expand(x)   __Expand40(x)
+
+#define __List1(x) x(1)
+#define __List2(x)  __List1(x), x(2)
+#define __List3(x)  __List2(x), x(3)
+#define __List4(x)  __List3(x), x(4)
+#define __List5(x)  __List4(x), x(5)
+#define __List6(x)  __List5(x), x(6)
+#define __List7(x)  __List6(x), x(7)
+#define __List8(x)  __List7(x), x(8)
+#define __List9(x)  __List8(x), x(9)
+#define __List10(x) __List9(x), x(10)
+#define __List11(x) __List10(x), x(11)
+#define __List12(x) __List11(x), x(12)
+#define __List13(x) __List12(x), x(13)
+#define __List14(x) __List13(x), x(14)
+#define __List15(x) __List14(x), x(15)
+#define __List16(x) __List15(x), x(16)
+#define __List17(x) __List16(x), x(17)
+#define __List18(x) __List17(x), x(18)
+#define __List19(x) __List18(x), x(19)
+#define __List20(x) __List19(x), x(20)
+#define __List21(x) __List20(x), x(21)
+#define __List22(x) __List21(x), x(22)
+#define __List23(x) __List22(x), x(23)
+#define __List24(x) __List23(x), x(24)
+#define __List25(x) __List24(x), x(25)
+#define __List26(x) __List25(x), x(26)
+#define __List27(x) __List26(x), x(27)
+#define __List28(x) __List27(x), x(28)
+#define __List29(x) __List28(x), x(29)
+#define __List30(x) __List29(x), x(30)
+#define __List31(x) __List30(x), x(31)
+#define __List32(x) __List31(x), x(32)
+#define __List33(x) __List32(x), x(33)
+#define __List34(x) __List33(x), x(34)
+#define __List35(x) __List34(x), x(35)
+#define __List36(x) __List35(x), x(36)
+#define __List37(x) __List36(x), x(37)
+#define __List38(x) __List37(x), x(38)
+#define __List39(x) __List38(x), x(39)
+#define __List40(x) __List39(x), x(40)
+
+#define E__p(I)       p##I

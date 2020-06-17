@@ -292,7 +292,7 @@ void JPGRaster::Data::ScanMetaData()
 		if(p->marker == JPEG_COM)
 			key = "COM";
 		else if(p->marker >= JPEG_APP0 && p->marker <= JPEG_APP0 + 15) {
-			key = NFormat("APP%d", p->marker - JPEG_APP0);
+			key = Format("APP%d", p->marker - JPEG_APP0);
 			if(p->marker == JPEG_APP0 + 1 && !memcmp(data, "Exif\0\0", 6))
 				ScanExifData(data.GetIter(6), data.end());
 		}
