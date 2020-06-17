@@ -99,7 +99,6 @@ String DeFormat(const char *text);
 
 // DEPRECATED
 
-/*
 template <typename... Args>
 String NFormat(int language, const char *s, const Args& ...args)
 {
@@ -111,4 +110,3 @@ String NFormat(const char *s, const Args& ...args)
 {
 	return Format(s, gather<Vector<Value>>(args...));
 }
-*/
