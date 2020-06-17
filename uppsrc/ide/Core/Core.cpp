@@ -482,9 +482,9 @@ String BrcToC(CParser& binscript, String basedir)
 					fo << "static unsigned char " << ident << "_" << i << "[] = {\n";
 					String data = ::LoadFile(b.file);
 					if(data.IsVoid())
-						throw Exc(NFormat("Error reading file '%s'", b.file));
+						throw Exc(Format("Error reading file '%s'", b.file));
 					if(data.GetLength() != b.length)
-						throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
+						throw Exc(Format("length of file '%s' changed (%d -> %d) during object creation",
 							b.file, b.length, data.GetLength()));
 					b.Compress(data);
 					b.length = data.GetLength();
@@ -518,9 +518,9 @@ String BrcToC(CParser& binscript, String basedir)
 			fo << "static unsigned char " << ident << "_[] = {\n";
 			String data = ::LoadFile(b.file);
 			if(data.IsVoid())
-				throw Exc(NFormat("Error reading file '%s'", b.file));
+				throw Exc(Format("Error reading file '%s'", b.file));
 			if(data.GetLength() != b.length)
-				throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
+				throw Exc(Format("length of file '%s' changed (%d -> %d) during object creation",
 					b.file, b.length, data.GetLength()));
 			b.Compress(data);
 			int b_length = data.GetLength();

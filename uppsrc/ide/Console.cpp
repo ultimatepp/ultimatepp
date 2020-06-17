@@ -391,7 +391,7 @@ void Console::CheckEndGroup()
 			if(p < 0) {
 				if(group.count > 0) {
 					int duration = msecs(group.start_time);
-					String msg = NFormat("%s: %d file(s) built in %s, %d msecs / file",
+					String msg = Format("%s: %d file(s) built in %s, %d msecs / file",
 						                 gname, group.count, PrintTime(duration), duration / group.count);
 					msg << '\n';
 					spooled_output.Cat(msg);

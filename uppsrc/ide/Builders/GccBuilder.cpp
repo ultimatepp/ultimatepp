@@ -31,7 +31,7 @@ void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String based
 	cc << " -c -o " << GetHostPathQ(objfile) << " -x c " << GetHostPathQ(tmpfile);
 	int slot = AllocSlot();
 	if(slot < 0 || !Run(cc, slot, objfile, 1))
-		throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
+		throw Exc(Format("Error compiling binary object '%s'.", objfile));
 }
 
 bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
@@ -257,7 +257,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				try {
 					String brcdata = LoadFile(fn);
 					if(brcdata.IsVoid())
-						throw Exc(NFormat("error reading file '%s'", fn));
+						throw Exc(Format("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
 					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(fn), package, pkg);
 				}

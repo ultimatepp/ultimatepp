@@ -217,61 +217,6 @@ URL that will be opened in the browser&]
 [s5;:CpuMMX`(`): [@(0.0.255) bool]_[* CpuMMX]()&]
 [s2;%% Returns true if CPU has MMX support.&]
 [s3;%% &]
-[s4; &]
-[s5;:Upp`:`:min`(const T`&`,const T`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class
-]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* min]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], ...)&]
-[s2;%% Returns the least of all arguments.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:max`(const T`&`,const T`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class
-]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], ...)&]
-[s2;%% Returns the greatest of all arguments.&]
-[s3;%% &]
-[s4; &]
-[s5;:clamp`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* clamp]([*@4 T
-]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
-[s2;%% Returns [%-*@3 x] if it is between [%-*@3 `_min] and [%-*@3 `_max].&]
-[s2; [%% If ][*@3 x][%%  is lower than ][*@3 `_min][%%  it returns ][*@3 `_min.]&]
-[s0;l288; [%% If ][*@3 x][%%  is higher than ][*@3 `_max][%%  it returns ][*@3 `_max.]&]
-[s3;%% &]
-[s4; &]
-[s5;:findarg`(const T`&`,const T1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T], [@(0.0.255) class]_[*@4 T1], ...>_[@(0.0.255) int]_[* findarg]([@(0.0.255) const]_[*@4 T
-][@(0.0.255) `&]_[*@3 x], [@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], 
-...)&]
-[s2;%% Searches the list of arguments for the value of [%-*@3 x]. If 
-it is found, function returns the index of argument (starting 
-with 0). If not found, `-1 is returned.&]
-[s3;%% &]
-[s4; &]
-[s5;:decode`(const T`&`,const T1`&`,const V1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T], [@(0.0.255) class]_[*@4 T1], [@(0.0.255) class]_[*@4 V1], 
-..., [@(0.0.255) class]_[*@4 D]>&]
-[s5; [*@4 D]_[* decode]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) const]_[*@4 T1
-][@(0.0.255) `&]_[*@3 p0], [@(0.0.255) const]_[*@4 V1][@(0.0.255) `&]_[*@3 v0], 
-..., [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 def])&]
-[s5;:decode`(const T`&`,const T1`&`,const char`*`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T], [@(0.0.255) class]_[*@4 T1], ...>&]
-[s5; [@(0.0.255) const]_[@(0.0.255) char]_`*[* decode]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
-[*@3 x], [@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], [@(0.0.255) const]_[@(0.0.255) ch
-ar]_`*[*@3 v0], ..., [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 def])&]
-[s2;%% Searches the list of argument pairs for the value of [%-*@3 x] 
-to be equal to the first argument in the pair. If found, returns 
-the second argument of pair. If no match is found, returns the 
-last argument [%-*@3 def].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:get`_i`(int`,const T`&`,const T1`&`,`.`.`.`): T_[* get`_i]([@(0.0.255) int]_[*@3 i
-], [@(0.0.255) const]_T[@(0.0.255) `&]_[*/@3 p][*@3 0], [@(0.0.255) const]_T1[@(0.0.255) `&]_
-[*/@3 p][*@3 1], ...)&]
-[s5;:Upp`:`:get`_i`(int`,const char`*`,const char`*`,`.`.`.`): [@(0.0.255) const]_[@(0.0.255) c
-har]_`*[* get`_i]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p0], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p1], ...)&]
-[s2;%% Returns parameter [%-*/@3 p][%-*@3 i]. If [%-*@3 i] is negative, 
-returns [%-*/@3 p][%-*@3 0], if it is greater then the last parameter, 
-returns the last parameter.&]
 [s3;%% &]
 [s4; &]
 [s5;:CpuSSE`(`): [@(0.0.255) bool]_[* CpuSSE]()&]

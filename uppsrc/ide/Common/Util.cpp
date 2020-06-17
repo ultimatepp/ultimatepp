@@ -193,18 +193,18 @@ static void ReadMacro(CParser& p)
 	if(macro.hotkey) {
 		int f = FindFieldIndex(mlist, &IdeMacro::hotkey, macro.hotkey);
 		if(f >= 0) {
-			PutConsole(NFormat("%s(%d): duplicate macro hotkey %s\n", l.filename, l.line, GetKeyDesc(macro.hotkey)));
+			PutConsole(Format("%s(%d): duplicate macro hotkey %s\n", l.filename, l.line, GetKeyDesc(macro.hotkey)));
 			const EscLambda& lambda = UscMacros()[f].code.GetLambda();
-			PutConsole(NFormat("%s(%d): previously defined here\n", lambda.filename, lambda.line));
+			PutConsole(Format("%s(%d): previously defined here\n", lambda.filename, lambda.line));
 		}
 	}
 	if(!IsNull(macro.menu)) {
 		for(int i = 0; i < mlist.GetCount(); i++)
 			if(mlist[i].menu == macro.menu && mlist[i].submenu == macro.submenu) {
-				PutConsole(NFormat("%s(%d): duplicate macro menu item (%s:%s)\n",
+				PutConsole(Format("%s(%d): duplicate macro menu item (%s:%s)\n",
 					l.filename, l.line, macro.menu, macro.submenu));
 				const EscLambda& lambda = UscMacros()[i].code.GetLambda();
-				PutConsole(NFormat("%s(%d): previously defined here\n", lambda.filename, lambda.line));
+				PutConsole(Format("%s(%d): previously defined here\n", lambda.filename, lambda.line));
 				break;
 			}
 	}

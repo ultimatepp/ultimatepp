@@ -224,7 +224,7 @@ void RTFEncoder::PutText(const wchar *text)
 {
 	for(; *text; text++)
 		if((uint16)*text >= 128)
-			stream.Put(NFormat("\\u%d?", (int16)*text));
+			stream.Put(Format("\\u%d?", (int16)*text));
 		else {
 			if(*text == '{' || *text == '}' || *text == '\\')
 				stream.Put('\\');

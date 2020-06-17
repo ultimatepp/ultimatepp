@@ -167,7 +167,7 @@ EscValue Esc::ExecuteLambda(const String& id, EscValue lambda, SRVal self, Vecto
 {
 	LTIMING("ExecuteLambda");
 	if(!lambda.IsLambda())
-		ThrowError(NFormat("'%s' is not a lambda", id));
+		ThrowError(Format("'%s' is not a lambda", id));
 	const EscLambda& l = lambda.GetLambda();
 	if(!l.varargs && arg.GetCount() > l.arg.GetCount()
 	   || arg.GetCount() < l.arg.GetCount() - l.def.GetCount())
@@ -279,7 +279,7 @@ void Esc::Subscript(Esc::SRVal& r, Esc::SRVal _self, String id)
 					r = ExecuteLambda(id, Get(r), _self, arg);
 				}
 				catch(Exc e) {
-					throw Error(NFormat("%s.%s(): %s", Get(r).GetTypeName(), id, e));
+					throw Error(Format("%s.%s(): %s", Get(r).GetTypeName(), id, e));
 				}
 		}
 		else

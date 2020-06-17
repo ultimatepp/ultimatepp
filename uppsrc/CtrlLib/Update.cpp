@@ -55,7 +55,7 @@ void UpdateFile(String dst, String src)
 	FileIn in(src);
 	if(!in)
 	{
-		Exclamation(NFormat(t_("Error opening file [* \1%s\1]."), src));
+		Exclamation(Format(t_("Error opening file [* \1%s\1]."), src));
 		return;
 	}
 	FileDelete(tmp);
@@ -64,7 +64,7 @@ void UpdateFile(String dst, String src)
 	char buffer[2048];
 	if(!out)
 	{
-		Exclamation(NFormat(t_("Error creating file [* \1%s\1]."), tmp));
+		Exclamation(Format(t_("Error creating file [* \1%s\1]."), tmp));
 		return;
 	}
 	for(;;)
@@ -85,12 +85,12 @@ void UpdateFile(String dst, String src)
 	out.Close();
 	if(out.IsError())
 	{
-		Exclamation(NFormat(t_("Error writing file [* \1%s\1]."), tmp));
+		Exclamation(Format(t_("Error writing file [* \1%s\1]."), tmp));
 		FileDelete(tmp);
 		return;
 	}
 	String old = dst + ".old";
-	pi.SetText(NFormat(t_("Overwriting %s"), dst));
+	pi.SetText(Format(t_("Overwriting %s"), dst));
 	pi.SetTotal(10000);
 	int start = msecs();
 	for(;;)

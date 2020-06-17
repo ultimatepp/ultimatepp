@@ -15,7 +15,7 @@ void RichEdit::InsertImage()
 	String data = LoadFile(fn);
 	StringStream ss(data);
 	if(!StreamRaster::OpenAny(ss) && !IsSVG(data)) {
-		Exclamation(NFormat(t_("Unsupported image format in file [* \1%s\1]."), ~imagefs));
+		Exclamation(Format(t_("Unsupported image format in file [* \1%s\1]."), ~imagefs));
 		return;
 	}
 	RichText clip;

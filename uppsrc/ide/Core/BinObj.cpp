@@ -33,7 +33,7 @@ void BinObjInfo::Parse(CParser& binscript, String base_dir)
 				blk.flags |= Block::FLG_ARRAY;
 				blk.index = binscript.ReadInt();
 				if(blk.index < 0 || blk.index > 1000000)
-					binscript.ThrowError(NFormat("invalid array index: %d", blk.index));
+					binscript.ThrowError(Format("invalid array index: %d", blk.index));
 				binscript.PassChar(',');
 			}
 			else if(bm) {
@@ -65,18 +65,18 @@ void BinObjInfo::Parse(CParser& binscript, String base_dir)
 					}
 				while(ff.Next());
 			if(files.IsEmpty())
-				binscript.ThrowError(NFormat("'%s' not found or not a file", file));
+				binscript.ThrowError(Format("'%s' not found or not a file", file));
 			if(!(blk.flags & Block::FLG_MASK) && files.GetCount() > 1)
-				binscript.ThrowError(NFormat("Multiple files found (e.g. %s, %s) in single file mode", files[0], files[1]));
+				binscript.ThrowError(Format("Multiple files found (e.g. %s, %s) in single file mode", files[0], files[1]));
 			IndexSort(files, lengths);
 			for(int i = 0; i < files.GetCount(); i++) {
 				blk.file = AppendFileName(searchdir, files[i]);
 				blk.length = (int)lengths[i];
 				int f = brow.Find(blk.index);
 				if(f >= 0)
-					binscript.ThrowError(NFormat("%s[%d] already seen at line %d", blk.ident, blk.index, brow[f].scriptline));
+					binscript.ThrowError(Format("%s[%d] already seen at line %d", blk.ident, blk.index, brow[f].scriptline));
 				if(blk.index < 0 && !brow.IsEmpty() || blk.index >= 0 && !brow.IsEmpty() && brow[0].index < 0)
-					binscript.ThrowError(NFormat("%s: mixing non-array and array elements", blk.ident));
+					binscript.ThrowError(Format("%s: mixing non-array and array elements", blk.ident));
 				brow.Add(blk.index, blk);
 				if(!(blk.flags & Block::FLG_MASK))
 					break;

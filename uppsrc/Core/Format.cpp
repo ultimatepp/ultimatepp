@@ -946,7 +946,7 @@ INITBLOCK {
 	sRegisterFormatters();
 }
 
-String NFormat0(int language, const char *s, const Value **v, int count)
+String Format(int language, const char *s, const Vector<Value>& v)
 {
 	sRegisterFormatters();
 	Formatting f;
@@ -994,7 +994,7 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 			if(*s == '*') {
 				f.format.Cat(b, (int)(s - b));
 				b = ++s;
-				int i = *v[pos++];
+				int i = v[pos++];
 				if(*s == ':' || *s == '$' || *s == '<' || *s == '>' || *s == '=')
 					n = i;
 				else
@@ -1056,14 +1056,14 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 		while(IsAlpha(*s))
 			s++;
 		f.id = String(b, s);
-		if(pos < 0 || pos >= count)
+		if(pos < 0 || pos >= v.GetCount())
 		{
 			result << "<invalid pos=" << pos << ">";
 			if(*s == '`')
 				s++;
 			continue;
 		}
-		f.arg = *v[pos++];
+		f.arg = v[pos++];
 		String r;
 		if(!nvl_value.IsVoid() && IsNull(f.arg))
 			r = nvl_value;
@@ -1132,78 +1132,7 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 	}
 }
 
-String NFormat0(const char *s, const Value **v, int count)
-{
-	return NFormat0(GetCurrentLanguage(), s, v, count);
-}
-
-String NFormat(int language, const char *s, const Vector<Value>& v)
-{
-	Buffer<const Value *> bv(v.GetCount());
-	for(int i = 0; i < v.GetCount(); i++)
-		bv[i] = &v[i];
-	return NFormat0(language, s, bv, v.GetCount());
-}
-
-String NFormat(const char *s, const Vector<Value>& v) { return NFormat(GetCurrentLanguage(), s, v); }
-
-//$-
-#define E__NFSetArg(I) arg[I - 1] = &COMBINE(p, I)
-#define E__NFValue(I)  const Value& COMBINE(p, I)
-
-#define E__NFBody(I) \
-String NFormat(const char *fmt, __List##I(E__NFValue)) \
-{ \
-	const Value *arg[I]; \
-	__List##I(E__NFSetArg); \
-	return NFormat0(fmt, arg, I); \
-} \
-String NFormat(int language, const char *fmt, __List##I(E__NFValue)) \
-{ \
-	const Value *arg[I]; \
-	__List##I(E__NFSetArg); \
-	return NFormat0(language, fmt, arg, I); \
-}
-
-__Expand10(E__NFBody)
-
-#if 1
-
-#define E__FBody(I) \
-String Format(const char *fmt, __List##I(E__NFValue)) \
-{\
-	const Value *arg[I]; \
-	__List##I(E__NFSetArg); \
-	return NFormat0(fmt, arg, I); \
-} \
-String Format(int language, const char *fmt, __List##I(E__NFValue)) \
-{ \
-	const Value *arg[I]; \
-	__List##I(E__NFSetArg); \
-	return NFormat0(language, fmt, arg, I); \
-}
-
-__Expand20(E__FBody)
-//$+
-String Format(const char *s, const Vector<Value>& v)
-{
-	return NFormat(s, v);
-}
-
-String Format(int language, const char *s, const Vector<Value>& v)
-{
-	return NFormat(language, s, v);
-}
-
-#else
-
-String  Format(const char *fmt, ...) {
-	va_list argptr;
-	va_start(argptr, fmt);
-	return VFormat(fmt, argptr);
-}
-
-#endif
+String Format(const char *s, const Vector<Value>& v) { return Format(GetCurrentLanguage(), s, v); }
 
 String Sprintf(const char *fmt, ...) {
 	va_list argptr;

@@ -294,7 +294,7 @@ void HttpRequest::HttpError(const char *s)
 {
 	if(IsError())
 		return;
-	error = NFormat(t_("%s:%d: ") + String(s), host, port);
+	error = Format(t_("%s:%d: ") + String(s), host, port);
 	LLOGS("HTTP ERROR: " << error);
 	Close();
 	phase = FAILED;

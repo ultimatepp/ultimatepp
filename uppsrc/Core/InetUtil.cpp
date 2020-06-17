@@ -363,7 +363,7 @@ String DeHtml(const char *s)
 			result.Cat("&quot;");
 		else
 		if((byte)*s < ' ')
-			result.Cat(NFormat("&#%d;", (byte)*s));
+			result.Cat(Format("&#%d;", (byte)*s));
 		else
 			result.Cat(*s);
 		s++;

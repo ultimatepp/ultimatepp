@@ -1168,7 +1168,7 @@ void PalCtrl::OnSave()
 		StringStream stream;
 		SerializePalette(stream);
 		if(!SaveFile(recent_file, stream))
-			Exclamation(NFormat(t_("Error writing file [* \1%s\1]."), recent_file));
+			Exclamation(Format(t_("Error writing file [* \1%s\1]."), recent_file));
 	}
 }
 
@@ -1180,14 +1180,14 @@ void PalCtrl::OnLoad()
 		FileIn fi(recent_file);
 		if(!fi.IsOpen())
 		{
-			Exclamation(NFormat(t_("Error opening file [* \1%s\1]."), recent_file));
+			Exclamation(Format(t_("Error opening file [* \1%s\1]."), recent_file));
 			return;
 		}
 		SerializePalette(fi);
 		fi.Close();
 		if(fi.IsError())
 		{
-			Exclamation(NFormat(t_("Error reading palette from file [* \1%s\1]."), recent_file));
+			Exclamation(Format(t_("Error reading palette from file [* \1%s\1]."), recent_file));
 			return;
 		}
 		Refresh();

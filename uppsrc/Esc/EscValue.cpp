@@ -15,7 +15,7 @@ String EscTypeName(int sv_type)
 	case ESC_ARRAY:  return "array";
 	case ESC_MAP:    return "map";
 	case ESC_LAMBDA: return "lambda";
-	default:         return NFormat("unknown(%d)", sv_type);
+	default:         return Format("unknown(%d)", sv_type);
 	}
 }
 
