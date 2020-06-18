@@ -112,17 +112,19 @@ CONSOLE_APP_MAIN
 
 	String a, b, c;
 
-	TEST2(SplitTo("one", ',', a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", ',', a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", ',', false, a, b, c), 0);
+	TEST2(SplitTo("one", ',', a, b, c), "false:::");
+	TEST2(SplitTo("one,two,,three", ',', a, b, c), "true:one:two:three");
+	TEST2(SplitTo("one,two,,three", ',', false, a, b, c), "true:one:two:");
 
-	TEST2(SplitTo("one", ",", a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", ",", a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", ",", false, a, b, c), 0);
+	a = b = c = Null;
+	TEST2(SplitTo("one", ",", a, b, c), "false:::");
+	TEST2(SplitTo("one,two,,three", ",", a, b, c), "true:one:two:three");
+	TEST2(SplitTo("one,two,,three", ",", false, a, b, c), "true:one:two:");
 
-	TEST2(SplitTo("one", CharFilterComma, a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", CharFilterComma, a, b, c), 0);
-	TEST2(SplitTo("one,two,,three", CharFilterComma, false, a, b, c), 0);
+	a = b = c = Null;
+	TEST2(SplitTo("one", CharFilterComma, a, b, c), "false:::");
+	TEST2(SplitTo("one,two,,three", CharFilterComma, a, b, c), "true:one:two:three");
+	TEST2(SplitTo("one,two,,three", CharFilterComma, false, a, b, c), "true:one:two:");
 
 	LOG("===================== OK");	
 }
