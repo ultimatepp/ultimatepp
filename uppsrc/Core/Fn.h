@@ -81,8 +81,8 @@ constexpr A get_i(int i, const A& p0, const T& ...args)
 	return list[clamp(i, 0, (int)sizeof...(args))];
 }
 
-template <typename... T>
-constexpr const char *get_i(int i, const char* p0, const T& ...args)
+template <typename P, typename... T>
+constexpr const P *get_i(int i, const P* p0, const T& ...args)
 {
 	const char *list[] = { p0, args... };
 	return list[clamp(i, 0, (int)sizeof...(args))];
@@ -100,7 +100,7 @@ template <class F, class V, typename... Args>
 void foreach_arg(F fn, V&& v, Args&& ...args)
 {
 	fn(std::forward<V>(v));
-	foreach_arg(fn, args...);
+	foreach_arg(fn, std::forward<Args>(args)...);
 }
 
 //$+
@@ -108,20 +108,20 @@ void foreach_arg(F fn, V&& v, Args&& ...args)
 template <class I, typename... Args>
 void iter_set(I t, Args&& ...args)
 {
-	foreach_arg([&](auto&& v) { *t++ = std::forward<decltype(v)>(v); }, args...);
+	foreach_arg([&](auto&& v) { *t++ = std::forward<decltype(v)>(v); }, std::forward<Args>(args)...);
 }
 
 template <class I, typename... Args>
 void iter_get(I s, Args& ...args)
 {
-	foreach_arg([&](auto&& v) { v = *s++; }, args...);
+	foreach_arg([&](auto& v) { v = *s++; }, args...);
 }
 
 template <class C, typename... Args>
 C gather(Args&& ...args)
 {
 	C x(sizeof...(args));
-	iter_set(x.begin(), args...);
+	iter_set(x.begin(), std::forward<Args>(args)...);
 	return x;
 }
 
