@@ -18,7 +18,7 @@ private:
 	bool mt;
 		
 	TimeStop tTime;
-	dword tFrame;
+	double tFrame_ms;
 
 public:
 	RasterPlayer();
