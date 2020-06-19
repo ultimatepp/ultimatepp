@@ -172,8 +172,7 @@ void LayDes::GotoUsing()
 		for(int i = 0; i < pk.GetCount(); i++) {
 			String path = SourcePath(n, pk.file[i]);
 			if(IsCPPFile(path) || IsHFile(path)) {
-				const PPFile& f = GetPPFile(NormalizeSourcePath(path));
-				if(FindIndex(f.keywords, lid) >= 0) {
+				if(HasCPPFileKeyword(path, lid)) {
 					IdeGotoFileAndId(path, lid);
 					return;
 				}

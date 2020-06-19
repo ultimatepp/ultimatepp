@@ -261,19 +261,16 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 		return tmok;
 	if(!IsNull(f.depends_time) && tmok && f.depends_time == GetDependsTime(f.depends) && f.dependencies_md5sum.GetCount())
 		return true;
-	Cpp pp;
-	FileIn in(path);
-	String npath = NormalizeSourcePath(path);
-	pp.Preprocess(npath, in, GetMasterFile(npath), true);
-	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
+	Index<String> visited;
+	String md5 = GetDependeciesMD5(path, visited);
 	bool r = f.dependencies_md5sum == md5 && tmok;
 #ifdef HAS_CLOG
 	if(!r) CLOG(path << " " << f.dependencies_md5sum << " " << md5);
 #endif
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
-	for(int i = 0; i < pp.visited.GetCount(); i++)
-		f.depends.Add(sTimePath.FindAdd(pp.visited[i]));
+	for(int i = 0; i < visited.GetCount(); i++)
+		f.depends.Add(sTimePath.FindAdd(visited[i]));
 	f.depends_time = GetDependsTime(f.depends);
 	return r;
 }
@@ -350,8 +347,6 @@ void ParseSrc(Stream& in, int file, Event<int, const String&> error)
 	CLOG("====== Parse " << file << ": " << path);
 	Vector<String> pp;
 	String ext = ToLower(GetFileExt(path));
-	int filetype = FILE_OTHER;
-	Cpp cpp;
 	if(ext == ".lay")
 		pp.Add(PreprocessLayFile(path));
 	else
@@ -360,22 +355,11 @@ void ParseSrc(Stream& in, int file, Event<int, const String&> error)
 	else
 	if(ext == ".sch")
 		pp.Append(PreprocessSchFile(path));
-	else {
-		cpp.Preprocess(path, in, GetMasterFile(GetSourceFilePath(file)));
-		filetype = decode(ext, ".h", FILE_H, ".hpp", FILE_HPP,
-		                       ".cpp", FILE_CPP, ".icpp", FILE_CPP, ".c", FILE_C, FILE_OTHER);
-		StringStream pin(cpp.output);
-		Parser p;
-		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
-		     cpp.namespace_stack, cpp.namespace_using);
-	}
+	else
+		PreprocessParse(CodeBase(), in, file, path, error);
 
-	for(int i = 0; i < pp.GetCount(); i++) {
-		StringStream pin(pp[i]);
-		Parser p;
-		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
-		     cpp.namespace_stack, cpp.namespace_using);
-	}
+	for(int i = 0; i < pp.GetCount(); i++)
+		Parse(CodeBase(), pp[i], file, FILE_OTHER, path, error, Vector<String>(), Index<String>());
 }
 
 void CodeBaseScanFile0(Stream& in, const String& fn)
@@ -402,7 +386,7 @@ void CodeBaseScanFile(Stream& in, const String& fn)
 void CodeBaseScanFile(const String& fn, bool auto_check)
 {
 	LLOG("CodeBaseScanFile " << fn);
-	String md5sum = GetPPFile(fn).md5sum;
+	String md5sum = GetPPMD5(fn);
 	FileIn in(fn);
 	CodeBaseScanFile(in, fn);
 	int file = GetSourceFileIndex(fn);

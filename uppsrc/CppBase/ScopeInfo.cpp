@@ -1,9 +1,10 @@
 #include "CppBase.h"
+#include "Internal.h"
 
 namespace Upp {
 
 #define LLOG(x)
-#define LTIMING(x)  // RTIMING(x)
+#define LTIMING(x)  DTIMING(x)
 
 ScopeInfo::ScopeInfo(const CppBase& base, int scopei)
 	: scopei(scopei), base(base)

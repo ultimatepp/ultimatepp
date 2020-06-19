@@ -5,6 +5,7 @@ uses
 
 file
 	CppBase.h options(BUILDER_OPTION) PCH,
+	Internal.h,
 	keyword.i,
 	ppconfig.cpp,
 	macro.cpp,
@@ -20,6 +21,7 @@ file
 	Qualify.cpp,
 	CppItem.cpp,
 	Expression.cpp,
+	Iface.cpp,
 	Info readonly separator,
 	Copying;
 

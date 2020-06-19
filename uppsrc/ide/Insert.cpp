@@ -273,7 +273,7 @@ void Ide::InsertMenu(Bar& bar)
 		}
 	}
 	if(editfile.GetCount()) {
-		Parser ctx;
+		ParserContext ctx;
 		editor.Context(ctx, editor.GetCursor());
 		if(!IsNull(ctx.current_scope) && ctx.current_scope != "::" && !ctx.IsInBody()) {
 			String s = "typedef " + ctx.current_scope + " CLASSNAME;";

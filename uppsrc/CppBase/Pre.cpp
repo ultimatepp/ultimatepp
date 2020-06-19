@@ -1,11 +1,10 @@
 #include "CppBase.h"
+#include "Internal.h"
+
+#define LTIMING(x) DTIMING(x)
+
 
 namespace Upp {
-
-#ifdef _MSC_VER
-#pragma inline_depth(255)
-#pragma optimize("t", on)
-#endif
 
 void SLPos(SrcFile& res)
 {
@@ -21,6 +20,7 @@ SrcFile::SrcFile() :
 
 SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preprocess, only removes (or processes) comment and directives
 {
+	DTIMING("PreProcess");
 	SrcFile res;
 	bool include = true;
 	int lineno = 0;

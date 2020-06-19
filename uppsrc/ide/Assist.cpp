@@ -463,7 +463,7 @@ void AssistEditor::Assist()
 	include_assist = false;
 	if(IncludeAssist())
 		return;
-	Parser parser;
+	ParserContext parser;
 	Context(parser, GetCursor32());
 	Index<String> in_types;
 	while(iscid(Ch(q - 1)) || Ch(q - 1) == '~')

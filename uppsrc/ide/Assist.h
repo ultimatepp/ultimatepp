@@ -201,7 +201,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Complete();
 	void           Abbr();
 
-	void           Context(Parser& parser, int pos);
+	void           Context(ParserContext& parser, int pos);
 	void           ExpressionType(const String& type,
 	                              const String& context_type,
 	                              const String& usings,
@@ -216,9 +216,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	                              Index<String>& typeset, bool variable, int lvl);
 //	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 //	                              Index<String>& typeset);
-	Index<String>  ExpressionType(const Parser& parser, const Vector<String>& xp);
+	Index<String>  ExpressionType(const ParserContext& parser, const Vector<String>& xp);
 
-	Index<String>  EvaluateExpressionType(const Parser& parser, const Vector<String>& xp);
+	Index<String>  EvaluateExpressionType(const ParserContext& parser, const Vector<String>& xp);
 
 	String         RemoveDefPar(const char *s);
 	String         MakeDefinition(const String& cls, const String& _n);
@@ -238,7 +238,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         IdBack(int& qq);
 	String         CompleteIdBack(int& q, const Index<String>& locals);
 
-	void           SwapSContext(Parser& p);
+	void           SwapSContext(ParserContext& p);
 	
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);

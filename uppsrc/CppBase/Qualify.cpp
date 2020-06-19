@@ -1,9 +1,10 @@
 #include "CppBase.h"
+#include "Internal.h"
 
 namespace Upp {
 
 #define LLOG(x)     // DLOG(x)
-#define LTIMING(x)  // RTIMING(x)
+#define LTIMING(x)  DTIMING(x)
 
 bool DoQualify(ScopeInfo& nf, const String& type, const String& usings, String& qt);
 

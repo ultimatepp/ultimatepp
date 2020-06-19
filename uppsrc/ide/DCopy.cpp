@@ -43,7 +43,7 @@ void AssistEditor::DCopy()
 	else
 		decla = true;
 
-	Parser ctx;
+	ParserContext ctx;
 	Context(ctx, l);
 	String txt = Get(l, h - l);
 	String cls = ctx.current_scope;
@@ -60,10 +60,7 @@ void AssistEditor::DCopy()
 	cls.Remove(0, best);
 
 	CppBase cpp;
-	Parser parser; // we do not need/want preprocessing here
-	StringStream ss(txt);
-	parser.Do(ss, cpp, Null, Null, Null, CNULL, Split(cls, ':'),
-	          Vector<String>(), Index<String>());
+	SimpleParse(cpp, txt, cls);
 
 	if(cpp.GetCount() == 0) { // scan for THISBACKs
 		Index<String> id;
