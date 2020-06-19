@@ -84,7 +84,7 @@ constexpr A get_i(int i, const A& p0, const T& ...args)
 template <typename P, typename... T>
 constexpr const P *get_i(int i, const P* p0, const T& ...args)
 {
-	const char *list[] = { p0, args... };
+	const P *list[] = { p0, args... };
 	return list[clamp(i, 0, (int)sizeof...(args))];
 }
 

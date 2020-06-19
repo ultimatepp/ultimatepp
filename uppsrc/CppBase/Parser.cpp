@@ -1,14 +1,10 @@
 #include "CppBase.h"
+#include "Internal.h"
 
 namespace Upp {
 
-#ifdef _MSC_VER
-#pragma inline_depth(255)
-#pragma optimize("t", on)
-#endif
-
 #define LLOG(x)    // DLOG(x)
-#define LTIMING(x) // TIMING(x)
+#define LTIMING(x) DTIMING(x)
 
 void Parser::ThrowError(const String& e)
 {
@@ -1750,6 +1746,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
                  const Vector<String>& namespace_stack,
                  const Index<String>& namespace_using)
 {
+	LTIMING("Parser::Do");
 	LLOG("= C++ Parser ==================================== " << fn);
 	base = &_base;
 	err = _err;
@@ -1808,7 +1805,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 		}
 }
 
-Vector<String> Parser::GetNamespaces() const
+Vector<String> ParserContext::GetNamespaces() const
 {
 	Vector<String> ns;
 	Vector<String> h = Split(current_scope, ':');

@@ -1,8 +1,9 @@
 #include "CppBase.h"
+#include "Internal.h"
 
 namespace Upp {
 
-#define LTIMING(x)  // RTIMING(x)
+#define LTIMING(x)  DTIMING(x)
 #define LLOG(x)     // DLOG(x)
 
 bool IsCPPFile(const String& path)

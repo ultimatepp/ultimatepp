@@ -167,7 +167,7 @@ INITBLOCK
 
 void AssistEditor::Thisbacks()
 {
-	Parser ctx;
+	ParserContext ctx;
 	Context(ctx, GetCursor32());
 	if(IsNull(ctx.current_scope) || !ctx.IsInBody())
 		return;

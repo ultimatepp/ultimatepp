@@ -196,7 +196,7 @@ void Ide::ContextGoto0(int pos)
 	String tp;
 	Vector<String> xp = editor.ReadBack(q, Index<String>()); // try to load expression like "x[i]." or "ptr->"
 	Index<String> type;
-	Parser parser;
+	ParserContext parser;
 	int ci = pos;
 	for(;;) {
 		int c = editor.Ch(ci);

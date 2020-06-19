@@ -34,27 +34,14 @@ void AssistScanError(int line, const String& text)
 #endif
 }
 
-void AssistEditor::Context(Parser& parser, int pos)
+void AssistEditor::Context(ParserContext& parser, int pos)
 {
 	LTIMING("Context");
-	
+	LLOG("---------- Context " << path);
 	
 	theide->ScanFile(true);
-	String s = Get(0, pos);
-	StringStream ss(s);
-
-	String path = NormalizeSourcePath(theide->editfile);
-	LLOG("---------- Context " << path);
-
-	Cpp cpp;
-	cpp.Preprocess(path, ss, GetMasterFile(path));
-
-	parser.dobody = true;
-	StringStream pin(cpp.output);
-	parser.Do(pin, CodeBase(), Null, Null, GetFileTitle(theide->editfile), callback(AssistScanError),
-	          Vector<String>(), cpp.namespace_stack, cpp.namespace_using); // needs CodeBase to identify type names
-
-//	QualifyTypes(CodeBase(), parser.current_scope, parser.current);
+	
+	parser = AssistParse(CodeBase(), Get(0, pos), theide->editfile, AssistScanError);
 	inbody = parser.IsInBody();
 #ifdef _DEBUG
 	PutVerbose("body: " + AsString(inbody));
@@ -65,7 +52,7 @@ void AssistEditor::Context(Parser& parser, int pos)
 #endif
 }
 
-Index<String> AssistEditor::EvaluateExpressionType(const Parser& parser, const Vector<String>& xp)
+Index<String> AssistEditor::EvaluateExpressionType(const ParserContext& parser, const Vector<String>& xp)
 {
 	return GetExpressionType(CodeBase(), parser, xp);
 }

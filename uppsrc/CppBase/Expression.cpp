@@ -1,4 +1,5 @@
 #include "CppBase.h"
+#include "Internal.h"
 
 #if 0
 #define LDUMP(x)     DDUMP(x)
@@ -102,7 +103,7 @@ struct ExpressionTyper {
 	String                usings;
 	const Vector<String>& xp;
 	Index<String>         typeset;
-	const Parser&         parser;
+	const ParserContext&  parser;
 
 	Vector<String>        GetTypeBases(const String& type);
 	String                ResolveReturnType(const CppItem& m, const Vector<String>& tparam);
@@ -116,10 +117,10 @@ struct ExpressionTyper {
 	
 	enum { MAX_COUNT = 1000 };
 
-	ExpressionTyper(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);	                
+	ExpressionTyper(const CppBase& codebase, const ParserContext& parser, const Vector<String>& xp);
 };
 
-ExpressionTyper::ExpressionTyper(const CppBase& codebase, const Parser& parser, const Vector<String>& xp)
+ExpressionTyper::ExpressionTyper(const CppBase& codebase, const ParserContext& parser, const Vector<String>& xp)
 :	codebase(codebase), xp(xp), parser(parser)
 {
 	scan_counter = 0;
@@ -462,7 +463,7 @@ Index<String> ExpressionTyper::ExpressionType()
 	return pick(typeset);
 }
 
-Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp)
+Index<String> GetExpressionType(const CppBase& codebase, const ParserContext& parser, const Vector<String>& xp)
 { // xp is a list of meaningful parts like "foo", "." , "Fn", "()", "->", "m", "[]"
 	return ExpressionTyper(codebase, parser, xp).ExpressionType();
 }

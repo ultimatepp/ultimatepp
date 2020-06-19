@@ -116,7 +116,7 @@ INITBLOCK
 
 void AssistEditor::Virtuals()
 {
-	Parser ctx;
+	ParserContext ctx;
 	Context(ctx, GetCursor32());
 	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || ctx.IsInBody())
 		return;
