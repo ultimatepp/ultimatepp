@@ -112,16 +112,17 @@ bool RasterPlayer::IsKilled() {
 #ifdef _MULTITHREADED
 void RasterPlayerThread(RasterPlayer *animatedClip) {
 	TimeStop t;
-	dword tFrame = 0;
+	double tFrame_ms = 0;
 	while (!animatedClip->IsKilled()) {
 		INTERLOCKED_(mutex) {
 			int ind = animatedClip->ind + 1;
 			if (ind > animatedClip->GetPageCount() - 1)
 				ind = 0;
-			tFrame += dword(animatedClip->delays[ind]/animatedClip->speed);
+			tFrame_ms = animatedClip->delays[ind]/animatedClip->speed;
 		}
-		while (t.Elapsed() < tFrame && !animatedClip->IsKilled())
+		while (t.Elapsed()/1000. < tFrame_ms && !animatedClip->IsKilled())
 			Sleep(10);
+		t.Reset();
 		PostCallback(callback(animatedClip, &RasterPlayer::NextFrame));
 	}
 INTERLOCKED_(mutex) {
@@ -135,12 +136,13 @@ INTERLOCKED_(mutex) {
 	if (kill || !running)
 		return;
 }
-	if (tTime.Elapsed() < tFrame)
+	if (tTime.Elapsed()/1000. < tFrame_ms)
 		return;	 
+	tTime.Reset();
 	int iFrame = ind + 1;
 	if (iFrame > GetPageCount() - 1)
 		iFrame = 0;
-	tFrame += dword(delays[iFrame]/speed);
+	tFrame_ms = delays[iFrame]/speed;
 	NextFrame();
 }
 
@@ -157,7 +159,7 @@ INTERLOCKED_(mutex) {
 	else
 #endif
 	{
-		tFrame = 0;
+		tFrame_ms = 0;
 		tTime.Reset();
 		SetTimeCallback(-50, callback(this, &RasterPlayer::TimerFun), 1);
 	}

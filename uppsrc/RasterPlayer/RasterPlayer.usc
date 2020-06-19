@@ -6,7 +6,7 @@ ctrl RasterPlayer {
 
 	Frame 	SetFrame @1;
 	Color	SetBackground;
-	int		SetSpeed = 1;
+	double	SetSpeed = 1;
 	bool	SetMT = 0;
 
 	Paint(w) {
