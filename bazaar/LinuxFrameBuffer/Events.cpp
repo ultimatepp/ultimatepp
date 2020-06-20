@@ -57,7 +57,9 @@ bool LinuxFrameBuffer::ProcessEvent(bool *quit)
 
                 if (pressed){
                     WString txt = ScanCodeToUtf8(key).ToWString();
-                    for (int i = 0; i < txt.GetCount(); i++) Ctrl::DoKeyFB(txt[i], 1);
+                    for (int i = 0; i < txt.GetCount(); i++) {
+                        if (txt[i] >= ' ')  Ctrl::DoKeyFB(txt[i], 1);
+                    }
                 }
             }
             break;
