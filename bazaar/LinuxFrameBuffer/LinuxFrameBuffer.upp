@@ -12,5 +12,7 @@ file
 	LinuxFrameBuffer.cpp,
 	Keys.cpp,
 	Events.cpp,
-	Draw.cpp;
+	Draw.cpp,
+	VirtualTerminal.h,
+	VirtualTerminal.cpp;
 

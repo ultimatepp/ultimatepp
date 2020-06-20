@@ -4,11 +4,11 @@ using namespace Upp;
 
 SystemDraw& LinuxFrameBuffer::BeginDraw()
 {
-	return screen.sysdraw;
+    return screen.GetSystemDraw();
 }
 
 
 void LinuxFrameBuffer::CommitDraw()
 {
-	memcpy(screen.buffer, ~screen.image, screen.image.GetLength() * sizeof(RGBA));
+    memcpy(screen.GetBuffer(), ~screen.GetImageBuffer(), screen.GetImageBuffer().GetLength() * sizeof(RGBA));
 }
