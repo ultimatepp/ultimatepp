@@ -47,7 +47,7 @@ bool VirtualTerminal::Open(const char * device)
         RLOG("Failed to get keyboard mode: '" << device << "': " << GetLastErrorMessage());
     }
     
-    if (ioctl(handle, KDSKBMUTE, 1) && ioctl(handle, KDSKBMODE, K_RAW)){
+    if (ioctl(handle, KDSKBMUTE, 1) && ioctl(handle, KDSKBMODE, K_OFF)){
         RLOG("Failed to set keyboard mode: '" << device << "': " << GetLastErrorMessage());
     }
     
