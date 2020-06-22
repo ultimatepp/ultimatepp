@@ -3,7 +3,7 @@
 
 namespace Upp {
 
-#define LTIMING(x) DTIMING(x)
+#define LTIMING(x) // DTIMING(x)
 
 static VectorMap<String, String> sSrcFile;
 static Index<uint64>             sIncludes;
@@ -25,6 +25,7 @@ String NormalizeSourcePath(const String& path)
 
 void ClearSources()
 {
+	CppBaseLock __;
 	sSrcFile.Clear();
 	sIncludes.Clear();
 }
@@ -41,6 +42,7 @@ const VectorMap<String, String>& GetAllSourceMasters()
 
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
+	CppBaseLock __;
 	String path = NormalizeSourcePath(path_);
 	if(sSrcFile.Find(path) >= 0)
 		return;
@@ -50,11 +52,15 @@ void GatherSources(const String& master_path, const String& path_, Vector<int>& 
 	sSrcFile.Add(path, master_path);
 	parents.Add(ii);
 	const PPFile& f = GetPPFile(path);
+	Index<String> todo;
 	for(int i = 0; i < f.includes.GetCount(); i++) {
 		String p = GetIncludePath(f.includes[i], GetFileFolder(path));
 		if(p.GetCount())
-			GatherSources(master_path, p, parents);
+			todo.FindAdd(p);
 	}
+	MakePP(todo); // parse PP files in parallel to accelerate things...
+	for(String p : todo)
+		GatherSources(master_path, p, parents);
 	parents.Drop();
 }
 

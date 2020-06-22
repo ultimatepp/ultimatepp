@@ -4,7 +4,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-#define LTIMING(x) DTIMING(x)
+#define LTIMING(x) // DTIMING(x)
 
 void Parser::ThrowError(const String& e)
 {
@@ -27,6 +27,7 @@ inline const char *bew(const char *s, const char *t)
 	return t;
 }
 
+// String == String comparison is likely faster than String == const char * comparison
 static String s_operator("operator");
 static String s_virtual("virtual");
 static String s_inline("inline");

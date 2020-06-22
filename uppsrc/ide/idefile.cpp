@@ -807,7 +807,7 @@ static void GetLineIndex(String file, HashBase& hash, Vector<String>& lines)
 		while(e > b && (byte)e[-1] <= ' ')
 			e--;
 		String s(b, e);
-		hash.Add(GetHashValue(s));
+		hash.Add(FoldHash(GetHashValue(s)));
 		lines.Add(s);
 	}
 }

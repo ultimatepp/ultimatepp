@@ -4,7 +4,7 @@
 namespace Upp {
 
 #define LLOG(x)     // DLOG(x)
-#define LTIMING(x)  DTIMING(x)
+#define LTIMING(x)  // DTIMING(x)
 
 bool DoQualify(ScopeInfo& nf, const String& type, const String& usings, String& qt);
 

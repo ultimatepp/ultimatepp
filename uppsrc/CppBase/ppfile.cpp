@@ -3,87 +3,31 @@
 
 namespace Upp {
 
-#define LTIMING(x)  DTIMING(x)
+#define LTIMING(x)  // DTIMING(x)
 #define LLOG(x)     // DLOG(x)
 
-bool IsCPPFile(const String& path)
-{
-	return findarg(ToLower(GetFileExt(path)) , ".c", ".cpp", ".cc" , ".cxx", ".icpp") >= 0;
-}
+static std::atomic<int> s_PPserial;
+static VectorMap<String, PPMacro>  sAllMacros; // Only MakePP can write to this
+static ArrayMap<String, PPFile>    sPPfile; // Only MakePP can write to this
 
-bool IsHFile(const String& path)
-{
-	return findarg(ToLower(GetFileExt(path)) , ".h", ".hpp", ".hxx" , ".hh") >= 0;
-}
+static VectorMap<String, Time>     s_PathFileTime;
+static StaticMutex                 s_PathFileTimeMutex;
 
-void SetSpaces(String& l, int pos, int count)
-{
-	StringBuffer s(l);
-	memset(~s + pos, ' ', count);
-	l = s;
-}
+static VectorMap<String, String>   s_IncludePath;
+static String                      s_Include_Path;
+static StaticMutex                 s_IncludePathMutex;
 
-const char *SkipString(const char *s)
-{
-	CParser p(s);
-	try {
-		p.ReadOneString(*s);
-	}
-	catch(CParser::Error) {}
-	s = p.GetPtr();
-	while((byte)*(s - 1) <= ' ')
-		s--;
-	return s;
-}
+static StaticMutex                 s_FlatPPMutex;
+static ArrayMap<String, FlatPP>    s_FlatPP; // ArrayMap to allow read access
 
-void RemoveComments(String& l, bool& incomment)
+int  NextPPSerial()
 {
-	int q = -1;
-	int w = -1;
-	if(incomment)
-		q = w = 0;
-	else {
-		const char *s = l;
-		while(*s) {
-			if(*s == '\"')
-				s = SkipString(s);
-			else
-			if(s[0] == '/' && s[1] == '/') {
-				q = int(s - ~l);
-				SetSpaces(l, q, l.GetCount() - q);
-				return;
-			}
-			else
-			if(s[0] == '/' && s[1] == '*') {
-				q = int(s - ~l);
-				break;
-			}
-			else
-				s++;
-		}
-		if(q >= 0)
-			w = q + 2;
-	}
-	while(q >= 0) {
-		int eq = l.Find("*/", w);
-		if(eq < 0) {
-			incomment = true;
-			SetSpaces(l, q, l.GetCount() - q);
-			return;
-		}
-		SetSpaces(l, q, eq + 2 - q);
-		incomment = false;
-		q = l.Find("/*");
-		w = q + 2;
-	}
+	return ++s_PPserial;
 }
-
-static VectorMap<String, PPMacro> sAllMacros;
-static ArrayMap<String, PPFile>   sPPfile;
-static int                        sPPserial;
 
 void SweepPPFiles(const Index<String>& keep)
 {
+	CppBaseLock __;
 	Index<int> pp_segment_id;
 	int unlinked_count = 0;
 	for(int i = 0; i < sPPfile.GetCount(); i++)
@@ -198,6 +142,10 @@ void PPFile::Parse(Stream& in)
 	keywords.Clear();
 	int linei = 0;
 	Md5Stream md5;
+	int current_serial = 0;
+	
+	VectorMap<String, PPMacro> local_macro; // gather all macros first to reduce locking
+	
 	while(!in.IsEof()) {
 		String l = in.GetLine();
 		const char *ll = l;
@@ -218,48 +166,75 @@ void PPFile::Parse(Stream& in)
 						if(next_segment) {
 							PPItem& m = item.Add();
 							m.type = PP_DEFINES;
-							m.segment_id = ++sPPserial;
+							m.segment_id = current_serial = NextPPSerial();
 							next_segment = false;
-							local_segments.Add(sPPserial);
+							local_segments.Add(current_serial);
 						}
 						CppMacro def;
 						String   id = def.Define(p.GetPtr());
 						if(id.GetCount()) {
+							PPMacro& l = local_macro.Add(id);
+							l.segment_id = current_serial;
+							l.line = linei;
+							l.macro = def;
+						/*
 							PPMacro m;
-							m.segment_id = sPPserial;
+							m.segment_id = current_serial;
 							m.line = linei;
 							m.macro = def;
 							ppmacro.Add(sAllMacros.Put(id, m));
+						*/
 							md5.Put("#", 1);
 							md5.Put(id);
 							md5.Put(0);
-							md5.Put(m.macro.md5, 16);
+							md5.Put(l.macro.md5, 16);
 						}
 					}
 					else
 					if(p.Id("undef")) {
 						if(p.IsId()) {
 							String id = p.ReadId();
-							md5.Put("#", 1);
-							md5.Put(id);
-							md5.Put(1);
+							if(id.GetCount()) {
+								md5.Put("#", 1);
+								md5.Put(id);
+								md5.Put(1);
+								int q = local_macro.FindLast(id); // heuristic: only local undefs are allowed
+								while(q >= 0) {
+									PPMacro& um = local_macro[q];
+									if(!um.macro.IsUndef()) { // found corresponding macro to undef
+										PPItem& m = item.Add();
+										m.type = PP_DEFINES;
+										m.segment_id = current_serial = NextPPSerial();
+										um.undef_segment_id = m.segment_id;
+										next_segment = true;
+										local_segments.Add(current_serial);
+										PPMacro& l = local_macro.Add(id);
+										l.segment_id = current_serial;
+										l.line = linei;
+										l.macro.SetUndef();
+									}
+									q = local_macro.FindPrev(q);
+								}
+							}
+						/*
 							int segmenti = -1;
 							PPMacro *um = FindPPMacro(id, local_segments, segmenti);
-							if(um && segmenti) { // heuristic: only local undefs are allowed
+							if(um && segmenti) {
 								PPItem& m = item.Add();
 								m.type = PP_DEFINES;
-								m.segment_id = ++sPPserial;
+								m.segment_id = current_serial = NextPPSerial();
 								um->undef_segment_id = m.segment_id;
 								next_segment = true;
-								local_segments.Add(sPPserial);
+								local_segments.Add(current_serial);
 								if(id.GetCount()) {
 									PPMacro m;
-									m.segment_id = sPPserial;
+									m.segment_id = current_serial;
 									m.line = linei;
 									m.macro.SetUndef();
 									ppmacro.Add(sAllMacros.Put(id, m));
 								}
 							}
+						*/
 						}
 					}
 					else
@@ -365,6 +340,10 @@ void PPFile::Parse(Stream& in)
 			remove.Add(i++);
 	}
 	keywords.Remove(remove);
+	INTERLOCKED { // this is the only place that is allowed to write to sAllMacros
+		for(int i = 0; i < local_macro.GetCount(); i++)
+			ppmacro.Add(sAllMacros.Put(local_macro.GetKey(i), local_macro[i]));
+	}
 }
 
 void PPFile::Dump() const
@@ -387,21 +366,50 @@ void PPFile::Dump() const
 	DUMPC(includes);
 }
 
-static VectorMap<String, String>   sIncludePath;
-static ArrayMap<String, FlatPP>    sFlatPP;
-static String                      sInclude_Path;
-
 void PPSync(const String& include_path)
 {
+	CppBaseLock __;
 	LLOG("* PPSync");
-	sIncludePath.Clear();
-	sFlatPP.Clear();
-	sInclude_Path = include_path;
+	{
+		Mutex::Lock __(s_IncludePathMutex);
+		s_IncludePath.Clear();
+		s_Include_Path = include_path;
+	}
+	{
+		Mutex::Lock __(s_FlatPPMutex);
+		s_FlatPP.Clear();
+	}
+}
+
+void InvalidateFileTimeCache()
+{
+	Mutex::Lock __(s_PathFileTimeMutex);
+	s_PathFileTime.Clear();
+}
+
+void InvalidateFileTimeCache(const String& path)
+{
+	LLOG("InvalidateFileTimeCache " << path);
+	Mutex::Lock __(s_PathFileTimeMutex);
+	s_PathFileTime.UnlinkKey(path);
+}
+
+Time GetFileTimeCached(const String& p)
+{
+	LTIMING("GetFileTimeCached");
+	Mutex::Lock __(s_PathFileTimeMutex);
+	int q = s_PathFileTime.Find(p);
+	if(q >= 0)
+		return s_PathFileTime[q];
+	Time m = FileGetTime(p);
+	s_PathFileTime.Put(p, m);
+	return m;
 }
 
 String GetIncludePath()
 {
-	return sInclude_Path;
+	Mutex::Lock __(s_IncludePathMutex);
+	return s_Include_Path;
 }
 
 String GetIncludePath0(const char *s, const char *filedir)
@@ -432,57 +440,47 @@ String GetIncludePath0(const char *s, const char *filedir)
 	return Null;
 }
 
-static VectorMap<String, Time>     sPathFileTime;
-
-void InvalidateFileTimeCache()
-{
-	sPathFileTime.Clear();
-}
-
-void InvalidateFileTimeCache(const String& path)
-{
-	LLOG("InvalidateFileTimeCache " << path);
-	sPathFileTime.UnlinkKey(path);
-}
-
-Time GetFileTimeCached(const String& p)
-{
-	LTIMING("GetFileTimeCached");
-	int q = sPathFileTime.Find(p);
-	if(q >= 0)
-		return sPathFileTime[q];
-	Time m = FileGetTime(p);
-	sPathFileTime.Put(p, m);
-	return m;
-}
-
 String GetIncludePath(const String& s, const String& filedir)
 {
 	LTIMING("GetIncludePath");
+	Mutex::Lock __(s_IncludePathMutex);
 	String key;
 	key << s << "#" << filedir;
-	int q = sIncludePath.Find(key);
+	int q = s_IncludePath.Find(key);
 	if(q >= 0)
-		return sIncludePath[q];
+		return s_IncludePath[q];
 	LTIMING("GetIncludePath 2");
 	String p = GetIncludePath0(s, filedir);
-	sIncludePath.Add(key, p);
+	s_IncludePath.Add(key, p);
 	LLOG("GetIncludePath " << s << " " << filedir << ": " << p);
 	return p;
+}
+
+void MakePP(const Index<String>& paths)
+{
+	Vector<String> todo;
+	Vector<PPFile *> pp;
+	for(int i = 0; i < paths.GetCount(); i++) {
+		String path = paths[i];
+		PPFile& f = sPPfile.GetPut(path);
+		Time tm = GetFileTimeCached(path);
+		if(f.filetime != tm) {
+			f.filetime = tm;
+			pp.Add(&f);
+			todo.Add(path);
+		}
+	}
+	CoFor(todo.GetCount(), [&](int i) {
+		FileIn in(todo[i]);
+		pp[i]->Parse(in);
+	});
 }
 
 const PPFile& GetPPFile(const char *path)
 {
 	LTIMING("GetPPFile");
-	Time tm = GetFileTimeCached(path);
-	PPFile& f = sPPfile.GetPut(path);
-	LLOG("GetPPFile " << path << ", " << f.filetime << ", " << tm);
-	if(f.filetime != tm) {
-		f.filetime = tm;
-		FileIn in(path);
-		f.Parse(in);
-	}
-	return f;
+	static PPFile zero;
+	return sPPfile.Get(path, zero);
 }
 
 bool IsSameFile(const String& f1, const String& f2)
@@ -494,12 +492,13 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 {
 	LTIMING("GetFlatPPFile");
 	LLOG("GetFlatPPFile " << path);
-	int q = sFlatPP.Find(path);
+	Mutex::Lock __(s_FlatPPMutex);
+	int q = s_FlatPP.Find(path);
 	if(q >= 0) {
 		LLOG("From cache");
-		return sFlatPP[q];
+		return s_FlatPP[q];
 	}
-	FlatPP& fp = sFlatPP.Add(path);
+	FlatPP& fp = s_FlatPP.Add(path);
 	const PPFile& pp = GetPPFile(path);
 	int n = visited.GetCount();
 	visited.FindAdd(path);
@@ -622,21 +621,26 @@ const Index<String>& GetNamespaceEndMacros()
 
 void SetPPDefs(const String& defs)
 {
+	CppBaseLock __;
 	sDefs = defs;
 	LoadPPConfig();
 }
 
 void CleanPP()
 {
+	CppBaseLock __;
 	sAllMacros.Clear();
 	sPPfile.Clear();
-	sPPserial = 0;
+	s_PPserial = 0;
 	LoadPPConfig();
 }
 
 void SerializePPFiles(Stream& s)
 {
+	CppBaseLock __;
+	int sPPserial = s_PPserial;
 	s % sAllMacros % sPPfile % sPPserial;
+	s_PPserial = sPPserial;
 	if(s.IsLoading())
 		LoadPPConfig();
 

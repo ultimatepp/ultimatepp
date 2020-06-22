@@ -1,8 +1,7 @@
 #include "CppBase.h"
 #include "Internal.h"
 
-#define LTIMING(x) DTIMING(x)
-
+#define LTIMING(x) // DTIMING(x)
 
 namespace Upp {
 
@@ -20,7 +19,6 @@ SrcFile::SrcFile() :
 
 SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preprocess, only removes (or processes) comment and directives
 {
-	DTIMING("PreProcess");
 	SrcFile res;
 	bool include = true;
 	int lineno = 0;
@@ -67,12 +65,15 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 			   s[3] == 'i' && s[4] == 'n' && s[5] == 'e' && !iscid(s[6])) {
 				s += 6;
 				while(*s == ' ' || *s == '\t') s++;
-				String macro;
+				const char *b = s;
 				while(iscid(*s))
-					macro.Cat(*s++);
+					s++;
+				String macro(b, s);
 				if(*s == '(') {
+					b = s;
 					while(*s != ')' && *s)
-						macro.Cat(*s++);
+						s++;
+					macro.Cat(b, s);
 					macro << ')';
 				}
 				if(include)

@@ -86,6 +86,12 @@ void CppBase::Sweep(const Index<int>& file, bool keep)
 	Remove(remove);
 }
 
+void CppBase::Append(CppBase&& base)
+{
+	for(int i = 0; i < base.GetCount(); i++)
+		GetAdd(base.GetKey(i)).Append(pick(base[i]));
+}
+
 void CppBase::RemoveFile(int filei)
 {
 	Index<int> h;

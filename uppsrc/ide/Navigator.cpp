@@ -209,6 +209,7 @@ bool Navigator::NavLine::operator<(const NavLine& b) const
 
 Vector<Navigator::NavLine> Navigator::GetNavLines(const NavItem& m)
 {
+	CppBaseLock __;
 	Vector<NavLine> l;
 	int q = CodeBase().Find(m.nest);
 	if(q < 0 || IsNull(m.qitem))
@@ -434,6 +435,7 @@ void Navigator::TriggerSearch()
 
 void Navigator::NavGroup(bool local)
 {
+	CppBaseLock __;
 	for(int i = 0; i < nitem.GetCount(); i++) {
 		NavItem& m = nitem[i];
 		String g = m.nest;
@@ -473,6 +475,7 @@ bool Navigator::SortByNames(const NavItem *a, const NavItem *b)
 
 void Navigator::Search()
 {
+	CppBaseLock __;
 	sortitems.Check(sorting);
 	int sc = scope.GetScroll();
 	String key = scope.GetKey();

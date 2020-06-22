@@ -5,8 +5,11 @@
 
 namespace Upp {
 	
-// Functions in this header can be called without mutexes...
-
+struct CppBaseLock { // Use this in any function that is using CppBase
+	CppBaseLock();
+	~CppBaseLock();
+};
+	
 bool   IsCPPFile(const String& file);
 bool   IsHFile(const String& path);
 
@@ -147,6 +150,7 @@ struct CppBase : ArrayMap<String, Array<CppItem> > {
 	void           Sweep(const Index<int>& file, bool keep = true);
 	void           RemoveFiles(const Index<int>& remove_file) { Sweep(remove_file, false); }
 	void           RemoveFile(int filei);
+	void           Append(CppBase&& base);
 
 	void           Dump(Stream& s);
 };

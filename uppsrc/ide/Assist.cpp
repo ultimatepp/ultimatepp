@@ -1000,6 +1000,7 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 void Ide::IdeGotoCodeRef(String coderef)
 {
 	LLOG("IdeGotoLink " << coderef);
+	CppBaseLock __;
 	if(IsNull(coderef)) return;
 	String scope, item;
 	SplitCodeRef(coderef, scope, item);

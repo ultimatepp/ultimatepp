@@ -2,6 +2,7 @@
 
 void AssistEditor::Annotate(const String& filename)
 {
+	CppBaseLock __;
 	int fi = GetSourceFileIndex(filename);
 	CppBase& base = CodeBase();
 	ClearAnnotations();
