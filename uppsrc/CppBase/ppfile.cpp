@@ -27,7 +27,6 @@ int  NextPPSerial()
 
 void SweepPPFiles(const Index<String>& keep)
 {
-	CppBaseLock __;
 	Index<int> pp_segment_id;
 	int unlinked_count = 0;
 	for(int i = 0; i < sPPfile.GetCount(); i++)
@@ -368,7 +367,6 @@ void PPFile::Dump() const
 
 void PPSync(const String& include_path)
 {
-	CppBaseLock __;
 	LLOG("* PPSync");
 	{
 		Mutex::Lock __(s_IncludePathMutex);
@@ -621,14 +619,12 @@ const Index<String>& GetNamespaceEndMacros()
 
 void SetPPDefs(const String& defs)
 {
-	CppBaseLock __;
 	sDefs = defs;
 	LoadPPConfig();
 }
 
 void CleanPP()
 {
-	CppBaseLock __;
 	sAllMacros.Clear();
 	sPPfile.Clear();
 	s_PPserial = 0;
@@ -637,7 +633,6 @@ void CleanPP()
 
 void SerializePPFiles(Stream& s)
 {
-	CppBaseLock __;
 	int sPPserial = s_PPserial;
 	s % sAllMacros % sPPfile % sPPserial;
 	s_PPserial = sPPserial;

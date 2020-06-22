@@ -5,10 +5,7 @@
 
 namespace Upp {
 	
-struct CppBaseLock { // Use this in any function that is using CppBase
-	CppBaseLock();
-	~CppBaseLock();
-};
+// These functions can only but executed by single thread, unless said otherwise
 	
 bool   IsCPPFile(const String& file);
 bool   IsHFile(const String& path);
@@ -218,9 +215,12 @@ struct ParserContext {
 	bool           IsInBody() const                   { return inbody; }
 };
 
+// Parse CAN be run in parallel
 void Parse(CppBase& base, const String& src, int file, int filetype, const String& path,
            Event<int, const String&> error, const Vector<String>& namespace_stack,
            const Index<String>& namespace_using);
+
+
 void PreprocessParse(CppBase& base, Stream& in, int file, const String& path,
                      Event<int, const String&> error);
 String PreprocessCpp(const String& src, const String& path);

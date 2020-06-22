@@ -625,10 +625,16 @@ void Ide::SetIcon()
 
 void Ide::Periodic()
 {
+	static int h = 0;
+	h = msecs();
 	CheckFileUpdate();
 	SetIcon();
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
+	if(file_scanned) {
+		EditFileAssistSync2();
+		file_scanned = false;
+	}
 }
 
 const Workspace& Ide::IdeWorkspace() const

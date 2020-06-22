@@ -169,7 +169,7 @@ bool IsCodeRefType(const String& type)
 {
 	if(type.GetCount() == 0)
 		return false;
-	CppBaseLock __;
+	CodeBaseLock __;
 	return CodeBase().Find(type) >= 0;
 }
 
@@ -385,7 +385,7 @@ void   TopicEditor::FixTopic()
 	String nest;
 	if(!EditText(nest, "Fix topic", "Nest"))
 		return;
-	CppBaseLock __;
+	CodeBaseLock __;
 	CppBase& base = CodeBase();
 	int q = base.Find(nest);
 	if(q < 0) {

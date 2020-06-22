@@ -23,7 +23,7 @@ void AssistEditor::SwapSContext(ParserContext& p)
 
 bool Ide::SwapSIf(const char *cref)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	if(designer || !editor.assist_active)
 		return false;
 	ParserContext p;

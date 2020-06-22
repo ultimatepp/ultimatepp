@@ -20,7 +20,11 @@ class Browser;
 
 void ReduceCacheFolder(const char *path, int max_total);
 
-// Use CppBaseLock when accessing this
+struct CodeBaseLock { // Use when accessing CodeBase
+	CodeBaseLock();
+	~CodeBaseLock();
+};
+
 CppBase&       CodeBase();
 
 struct SourceFileInfo {
