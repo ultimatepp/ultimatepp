@@ -75,33 +75,6 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 
 #else
 
-struct RGBAV {
-	dword r, g, b, a;
-
-	void Set(dword v) { r = g = b = a = v; }
-	void Clear()      { Set(0); }
-	void Put(dword weight, const RGBA& src) {
-		r += weight * src.r;
-		g += weight * src.g;
-		b += weight * src.b;
-		a += weight * src.a;
-	}
-	void Put(const RGBA& src) {
-		r += src.r;
-		g += src.g;
-		b += src.b;
-		a += src.a;
-	}
-	RGBA Get(int div) const {
-		RGBA c;
-		c.r = byte(r / div);
-		c.g = byte(g / div);
-		c.b = byte(b / div);
-		c.a = byte(a / div);
-		return c;
-	}
-};
-
 Image Minify(const Image& img, int nx, int ny, bool co)
 {
 	ASSERT(nx > 0 && ny > 0);
