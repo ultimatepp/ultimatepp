@@ -420,28 +420,11 @@ struct Parser : ParserContext {
 public:
 	void AddMacro(int lineno, const String& macro);
 
-	struct FunctionStat
-	{
-		FunctionStat(const String & scope,
-		             const CppItem & cppItem,
-		             const LexSymbolStat &symbolStat,
-		             int maxScopeDepth);
-		String scope;
-		const CppItem & cppItem;
-		const LexSymbolStat &symbolStat;
-		int maxScopeDepth;
-	};
-
-	typedef Event<const FunctionStat &> FnEndCallback;
-
 	bool                      dobody;
 	int                       currentScopeDepth;
 	int                       maxScopeDepth;
 	
 	String                    namespace_info;
-
-	FnEndCallback             whenFnEnd;
-	LexSymbolStat             symbolsOutsideFunctions;
 
 	const SrcFile &getPreprocessedFile() { return file; }
 
@@ -451,7 +434,7 @@ public:
 	         const Vector<String>& namespace_stack,
 	         const Index<String>& namespace_using);
 
-	Parser() : dobody(false) { 	lex.WhenError = THISBACK(ThrowError); }
+	Parser() : dobody(false) { lex.WhenError = THISBACK(ThrowError); }
 };
 
 String NoTemplatePars(const String& type);

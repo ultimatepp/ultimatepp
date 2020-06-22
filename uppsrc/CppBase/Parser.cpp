@@ -314,15 +314,6 @@ String Parser::Context::Dump() const
 	return "Scopeing: " + scope;
 }
 
-Parser::FunctionStat::FunctionStat(const String & scope,
-                                   const CppItem & cppItem,
-		                           const LexSymbolStat &symbolStat,
-		                           int maxScopeDepth) :
-	scope(scope), cppItem(cppItem),
-	symbolStat(symbolStat), maxScopeDepth(maxScopeDepth)
-{
-}
-
 static String s_dblcln("::");
 
 inline void ScopeCat(String& scope, const String& s)
@@ -1632,16 +1623,7 @@ void Parser::Do()
 							functionItem = &m;
 						}
 					}
-					if(body && functionItem && whenFnEnd) {
-						symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
-						lex.StartStatCollection(); // start collection of function symbols
-					}
 					EatBody();
-					if(body && functionItem && whenFnEnd) {
-						whenFnEnd(FunctionStat(current_scope, *functionItem,
-						                       lex.FinishStatCollection(), maxScopeDepth));
-						lex.StartStatCollection(); // start collection of orphan symbols
-					}
 					Key(';');
 				}
 				EatBody();
@@ -1725,16 +1707,7 @@ void Parser::Do()
 					}
 				}
 			}
-			if(body && functionItem && whenFnEnd) {
-				symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
-				lex.StartStatCollection(); // start collection of function symbols
-			}
 			EatBody();
-			if(body && functionItem && whenFnEnd) {
-				whenFnEnd(FunctionStat(current_scope, *functionItem,
-				                       lex.FinishStatCollection(), maxScopeDepth));
-				lex.StartStatCollection(); // start collection of orphan symbols
-			}
 			if(Key(';'))
 				SetScopeCurrent(); // need to be after ';' to make class variable definitions work
 		}
@@ -1756,8 +1729,6 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 	title = title_;
 	lpos = 0;
 	line = 0;
-	if(whenFnEnd)
-		lex.StartStatCollection();
 
 	context.namespace_using = Join(namespace_using.GetKeys(), ";");
 	
