@@ -325,7 +325,7 @@ public:
 	void     Insert(int i, const Array& x, int offset, int count);
 	template <class Range>
 	void     InsertRange(int i, const Range& r);
-	void     Insert(int i, Array&& x)             { vector.InsertPick(i, pick(x.vector)); }
+	void     Insert(int i, Array&& x)             { vector.Insert(i, pick(x.vector)); }
 	void     Append(const Array& x)               { Insert(GetCount(), x); }
 	void     Append(const Array& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Array&& x)                    { InsertPick(GetCount(), pick(x)); }

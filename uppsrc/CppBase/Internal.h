@@ -78,7 +78,9 @@ String GetIncludePath();
 
 String GetSegmentFile(int segment_id);
 
-const PPFile& GetPPFile(const char *path);
+void  MakePP(const Index<String>& paths); // this is the only place to change PPFile info, cannot be run concurrently with anything else
+
+const PPFile& GetPPFile(const char *path); // only returns information created by MakePP
 
 String GetIncludePath(const String& s, const String& filedir);
 bool   IncludesFile(const String& parent_path, const String& header_path);

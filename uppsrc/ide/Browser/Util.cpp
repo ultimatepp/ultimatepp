@@ -34,6 +34,7 @@ const CppItem *GetCodeRefItem(const String& ref, const String& rfile)
 	String scope;
 	String item;
 	SplitCodeRef(ref, scope, item);
+	CppBaseLock __;
 	int q = CodeBase().Find(scope);
 	if(q < 0)
 		return NULL;

@@ -160,13 +160,12 @@ void Lex::Next()
 	if(c == '\0') return;
 	switch(c) {
 	case_id: {
-			String x;
-			x.Reserve(12);
-			x.Cat(c);
+			const char *b = ptr - 1;
 			while(iscid(*ptr))
-				x.Cat(*ptr++);
+				ptr++;
+			String x(b, ptr);
 			int q = id.FindAdd(x);
-			if(q == tk_rval_ - 256) { // simple hack for transitionary macro
+			if(q == tk_rval_ - 256) { // simple hack for old rval macro
 				AddCode('&');
 				AddCode('&');
 			}

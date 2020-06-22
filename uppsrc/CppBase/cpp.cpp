@@ -3,7 +3,7 @@
 
 namespace Upp {
 
-#define LTIMING(x)  DTIMING(x)
+#define LTIMING(x)  // DTIMING(x)
 #define LLOG(x)     // DLOG(x)
 
 void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)

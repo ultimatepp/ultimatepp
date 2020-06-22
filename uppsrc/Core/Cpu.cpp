@@ -181,7 +181,7 @@ void GetSystemMemoryStatus(uint64& total, uint64& available)
 	}
 #endif
 #ifdef PLATFORM_FREEBSD
-	int64 page_size;
+	u_int page_size;
     struct vmtotal vmt;
 	size_t vmt_size, uint_size;
 
@@ -190,8 +190,8 @@ void GetSystemMemoryStatus(uint64& total, uint64& available)
 
     if(sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) >= 0 &&
        sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) >= 0) {
-		available = vmt.t_free * page_size;
-		total = vmt.t_avm * page_size;
+		available = vmt.t_free * (u_int64_t)page_size;
+		total = vmt.t_avm * (u_int64_t)page_size;
 		return;
     }
 #endif

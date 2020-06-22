@@ -281,7 +281,7 @@ struct WorkspaceWork {
 		String separator;
 
 		bool operator==(const Sepfo& s) const { return package == s.package && separator == s.separator; }
-		unsigned GetHashValue() const         { return CombineHash(Upp::GetHashValue(package),
+		hash_t GetHashValue() const           { return CombineHash(Upp::GetHashValue(package),
 		                                                           Upp::GetHashValue(separator)); }
 		void Serialize(Stream& s)             { s % package % separator; }
 		Sepfo(const String& package, const String& separator) : package(package), separator(separator) {}

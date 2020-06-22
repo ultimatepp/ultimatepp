@@ -9,6 +9,7 @@ struct AssistItemInfo : CppItem {
 void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
                     Index<String>& done)
 {
+	CppBaseLock __;
 	if(IsNull(scope))
 		return;
 	if(done.Find(scope) >= 0)

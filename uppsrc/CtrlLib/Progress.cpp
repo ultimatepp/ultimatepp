@@ -222,6 +222,8 @@ void Progress::SetText(const String& s)
 
 void Progress::Setxt()
 {
+	if(!IsMainThread())
+		return;
 	info = Format(text, pos);
 	Process();
 }

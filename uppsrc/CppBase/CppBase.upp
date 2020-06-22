@@ -9,6 +9,7 @@ file
 	keyword.i,
 	ppconfig.cpp,
 	macro.cpp,
+	util.cpp,
 	ppfile.cpp,
 	srcfiles.cpp,
 	cpp.cpp,

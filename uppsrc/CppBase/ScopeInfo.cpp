@@ -4,7 +4,7 @@
 namespace Upp {
 
 #define LLOG(x)
-#define LTIMING(x)  DTIMING(x)
+#define LTIMING(x)  // DTIMING(x)
 
 ScopeInfo::ScopeInfo(const CppBase& base, int scopei)
 	: scopei(scopei), base(base)
