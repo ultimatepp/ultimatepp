@@ -12,7 +12,7 @@
 
 bool GetIdScope(String& os, const String& scope, const String& id, Index<String>& done)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	if(done.Find(scope) >= 0)
 		return Null;
 	done.Add(scope);
@@ -114,7 +114,7 @@ bool Ide::OpenLink(const String& s, int pos)
 
 void Ide::ContextGoto0(int pos)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	if(designer)
 		return;
 	int lp = pos;

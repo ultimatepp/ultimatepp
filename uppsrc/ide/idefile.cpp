@@ -277,23 +277,6 @@ bool Ide::IsProjectFile(const String& f) const
 	return false;
 }
 
-void Ide::ScanFile(bool check_includes)
-{
-	if(IsCppBaseFile()) {
-		if(check_includes) {
-			String imd5 = IncludesMD5();
-			if(editfile_includes != imd5) {
-				editfile_includes = imd5;
-				SaveFile(true);
-				return;
-			}
-		}
-		String s = ~editor;
-		StringStream ss(s);
-		CodeBaseScanFile(ss, editfile);
-	}
-}
-
 String ConvertTLine(const String& line, int flag)
 {
 	String r;
@@ -642,17 +625,53 @@ String Ide::IncludesMD5()
 	return md5.FinishString();
 }
 
-void Ide::EditFileAssistSync()
+void Ide::ScanFile(bool check_includes)
 {
-	ScanFile(false);
+	if(IsCppBaseFile()) {
+		if(check_includes) {
+			String imd5 = IncludesMD5();
+			if(editfile_includes != imd5) {
+				editfile_includes = imd5;
+				SaveFile(true);
+				return;
+			}
+		}
+		String s = ~editor;
+		StringStream ss(s);
+		CodeBaseScanFile(ss, editfile);
+	}
+}
+
+void Ide::EditFileAssistSync2()
+{
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
 }
 
+void Ide::EditFileAssistSync()
+{
+	ScanFile(false);
+	EditFileAssistSync2();
+}
+
 void Ide::TriggerAssistSync()
 {
-	if(auto_rescan && editor.GetLength64() < 500000) // Sanity
-		text_updated.KillSet(1000, THISBACK(EditFileAssistSync));
+	if(auto_rescan && editor.GetLength64() < 500000 && !file_scan) {
+		text_updated.KillSet(1000, [=] {
+			if(!file_scan && IsCppBaseFile()) {
+				String s = ~editor;
+				String fn = editfile;
+				file_scan++;
+				if(!CoWork::TrySchedule([=] {
+					StringStream ss(s);
+					CodeBaseScanFile(ss, editfile);
+					file_scan--;
+					file_scanned = true;
+				}))
+					file_scan--;
+			}
+		});
+	}
 }
 
 void Ide::EditAsHex()

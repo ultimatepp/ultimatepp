@@ -78,7 +78,7 @@ void CodeBrowser::Load()
 	Vector<Value>  ndx;
 	Index<int>     fi;
 	Index<String>  fs;
-	CppBaseLock __;
+	CodeBaseLock __;
 	for(int i = 0; i < CodeBase().GetCount(); i++) {
 		String s = CodeBase().GetKey(i);
 		const Array<CppItem>& n = CodeBase()[i];
@@ -152,7 +152,7 @@ int ItemCompareLexical(const Value& v1, const Value& v2)
 
 void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g, Index<String>& done)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	if(done.Find(type) >= 0) return;
 	done.Add(type);
 	int q = CodeBase().Find(type);
@@ -184,7 +184,7 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 
 void CodeBrowser::LoadScope()
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	String find = ToUpper((String)~search);
 	Value key = item.GetKey();
 	int sc = item.GetCursorSc();

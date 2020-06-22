@@ -41,7 +41,7 @@ void ThisbacksDlg::CbEdit(One<Ctrl>& ctrl)
 
 ThisbacksDlg::ThisbacksDlg(const String& scope)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	CtrlLayoutOKCancel(*this, "THISBACKs");
 	list.AddColumn("Defined in");
 	list.AddColumn("Type");
@@ -66,7 +66,7 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
                                    const String& scope, int access)
 {
-	CppBaseLock __;
+	CodeBaseLock __;
 	if(IsNull(scope))
 		return;
 	String h = pfx + scope;

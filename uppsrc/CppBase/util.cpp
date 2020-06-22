@@ -3,22 +3,6 @@
 
 namespace Upp {
 
-static StaticMutex sGLock;
-static thread_local int sGLockLevel = 0;
-	
-CppBaseLock::CppBaseLock()
-{
-	if(sGLockLevel++ == 0)
-		sGLock.Enter();
-}
-
-CppBaseLock::~CppBaseLock()
-{
-	ASSERT(sGLockLevel > 0);
-	if(--sGLockLevel == 0)
-		sGLock.Leave();
-}
-
 bool IsCPPFile(const String& path)
 {
 	return findarg(ToLower(GetFileExt(path)) , ".c", ".cpp", ".cc" , ".cxx", ".icpp") >= 0;

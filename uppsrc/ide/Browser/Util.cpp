@@ -31,10 +31,10 @@ int GetMatchLen(const char *s, const char *t)
 
 const CppItem *GetCodeRefItem(const String& ref, const String& rfile)
 {
+	CodeBaseLock __;
 	String scope;
 	String item;
 	SplitCodeRef(ref, scope, item);
-	CppBaseLock __;
 	int q = CodeBase().Find(scope);
 	if(q < 0)
 		return NULL;

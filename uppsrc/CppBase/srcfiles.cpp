@@ -25,7 +25,6 @@ String NormalizeSourcePath(const String& path)
 
 void ClearSources()
 {
-	CppBaseLock __;
 	sSrcFile.Clear();
 	sIncludes.Clear();
 }
@@ -42,7 +41,6 @@ const VectorMap<String, String>& GetAllSourceMasters()
 
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
-	CppBaseLock __;
 	String path = NormalizeSourcePath(path_);
 	if(sSrcFile.Find(path) >= 0)
 		return;
