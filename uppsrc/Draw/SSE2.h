@@ -15,7 +15,7 @@ __m128i LoadRGBA2(const RGBA& c)
 force_inline
 __m128i LoadRGBA2(const RGBA *s0, const RGBA *s1)
 {
-	return _mm_unpacklo_epi8(_mm_set_epi32(0, 0, *(dword *)s0, *(dword *)s1), _mm_setzero_si128());
+	return _mm_unpacklo_epi8(_mm_set_epi32(0, 0, *(dword *)s1, *(dword *)s0), _mm_setzero_si128());
 }
 
 force_inline
