@@ -230,7 +230,7 @@ struct PainterImageSpanData {
 			xform = Inverse(m);
 		else {
 			if(!fast)
-				image = (imagecache ? DownScaleCached : DownScale)(image, nx, ny, co);
+				image = (imagecache ? MinifyCached : Minify)(image, nx, ny, co);
 			xform = Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny);
 		}
 		cx = image.GetWidth();
