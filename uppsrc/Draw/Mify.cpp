@@ -15,6 +15,7 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		memset(b, 0, tsz.cx * sizeof(__m128));
 		memset(div, 0, tsz.cx * sizeof(__m128));
 		__m128 v1 = _mm_set1_ps(1);
+		__m128 vnx = _mm_set1_ps(nx);
 		int yy = ny * ty;
 		for(int yi = 0; yi < ny; yi++) {
 			int y = yy + yi;
@@ -34,14 +35,17 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 					*t++ = px;
 					*d++ = dv;
 				}
-				__m128 px = _mm_setzero_ps();
-				__m128 dv = _mm_setzero_ps();
-				while(s < e2) {
-					px = _mm_add_ps(px, LoadRGBAF(s++));
-					dv = _mm_add_ps(px, v1);
+				if(s < e2) {
+					__m128 px = _mm_setzero_ps();
+					__m128 dv = _mm_setzero_ps();
+					while(s < e2) {
+						px = _mm_add_ps(px, LoadRGBAF(s++));
+						dv = _mm_add_ps(px, v1);
+					}
+					*t++ = px;
+					*d++ = dv;
 				}
-				*t++ = px;
-				*d++ = dv;
+				ASSERT(t == b + tsz.cx);
 			}
 		}
 		__m128 *s = b;
@@ -65,8 +69,8 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		};
 	}
 	else {
-		Buffer<__m128> div(tsz.cx, _mm_setzero_ps());
-		Buffer<__m128> b(tsz.cx, _mm_setzero_ps());
+		Buffer<__m128> div(tsz.cx);
+		Buffer<__m128> b(tsz.cx);
 		for(int y = 0; y < tsz.cy; y++)
 			do_line(y, b, div);
 	}
