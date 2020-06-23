@@ -27,13 +27,12 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 				__m128 *d = div;
 				while(s < e) {
 					__m128 px = _mm_setzero_ps();
-					__m128 dv = _mm_setzero_ps();
-					for(int n = nx; n--;) {
+					for(int n = nx; n--;)
 						px = _mm_add_ps(px, LoadRGBAF(s++));
-						dv = _mm_add_ps(dv, v1);
-					}
-					*t++ = px;
-					*d++ = dv;
+					*t = _mm_add_ps(*t, px);
+					*d = _mm_add_ps(*d, vnx);
+					t++;
+					d++;
 				}
 				if(s < e2) {
 					__m128 px = _mm_setzero_ps();
@@ -42,8 +41,10 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 						px = _mm_add_ps(px, LoadRGBAF(s++));
 						dv = _mm_add_ps(px, v1);
 					}
-					*t++ = px;
-					*d++ = dv;
+					*t = _mm_add_ps(*t, px);
+					*d = _mm_add_ps(*d, dv);
+					t++;
+					d++;
 				}
 				ASSERT(t == b + tsz.cx);
 			}
