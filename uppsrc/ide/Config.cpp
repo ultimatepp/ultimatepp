@@ -276,7 +276,7 @@ void Ide::Serialize(Stream& s)
 	if(s.IsLoading())
 		console.SetSlots(hydra1_threads);
 	if(version < 14) {
-		int dummy_gdb_selector;
+		int dummy_gdb_selector = 0;
 		s % dummy_gdb_selector;
 	}
 	s % doc;
