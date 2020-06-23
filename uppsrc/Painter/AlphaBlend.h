@@ -22,7 +22,7 @@ __m128i BroadcastAlpha(__m128i x)
 force_inline
 __m128i Mul8(__m128i x, int alpha)
 {
-	return _mm_srli_epi16(_mm_mullo_epi16(_mm_set1_epi16(alpha), x), 8); // int a = c.a * cover >> 8;
+	return _mm_srli_epi16(_mm_mullo_epi16(_mm_set1_epi16(alpha), x), 8); // c.a * alpha >> 8;
 }
 
 force_inline
