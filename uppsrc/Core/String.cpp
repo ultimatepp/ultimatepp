@@ -304,13 +304,13 @@ int String::GetCharCount() const
 
 String::String(StringBuffer& b)
 {
+	Zero();
 	if(b.pbegin == b.buffer) {
 		String0::Set0(b.pbegin, (int)(uintptr_t)(b.pend - b.pbegin));
 		return;
 	}
 	int l = b.GetLength();
 	if(l <= 14) {
-		Zero();
 		memcpy8(chr, b.pbegin, l);
 		SLen() = l;
 		b.Free();
