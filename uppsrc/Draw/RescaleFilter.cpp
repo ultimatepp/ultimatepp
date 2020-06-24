@@ -102,7 +102,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 					const RGBA *l = img[*yd++];
 					for(int xx = 2 * ax; xx-- > 0;) {
 						__m128 s = LoadRGBAF(&l[*xd++]);
-						__m128 weight = _mm_set1_ps(ky * *xd++);
+						__m128 weight = _mm_set1_ps(float(ky * *xd++));
 						rgbaf = _mm_add_ps(rgbaf, _mm_mul_ps(weight, s));
 						w = _mm_add_ps(w, weight);
 					}
