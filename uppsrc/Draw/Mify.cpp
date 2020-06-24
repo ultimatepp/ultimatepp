@@ -15,7 +15,7 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		memset(b, 0, tsz.cx * sizeof(__m128));
 		memset(div, 0, tsz.cx * sizeof(__m128));
 		__m128 v1 = _mm_set1_ps(1);
-		__m128 vnx = _mm_set1_ps(nx);
+		__m128 vnx = _mm_set1_ps((float)nx);
 		int yy = ny * ty;
 		for(int yi = 0; yi < ny; yi++) {
 			int y = yy + yi;
