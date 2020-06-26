@@ -86,7 +86,7 @@ void StoreRGBAF(RGBA *t, __m128 s)
 
 force_inline
 __m128 ClampRGBAF(__m128 p)
-{
+{ // TODO: MacOS
 	__m128 alpha = _mm_shuffle_ps(p, p, _MM_SHUFFLE(3, 3, 3, 3));
 	alpha = _mm_min_ps(alpha, _mm_set1_ps(255.0));
 	return _mm_min_ps(p, alpha);
