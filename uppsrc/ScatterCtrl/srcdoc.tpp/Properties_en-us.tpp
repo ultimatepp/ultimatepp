@@ -1,4 +1,4 @@
-topic "Properties dialog";
+topic "3 Properties dialog";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R+184 Properties dialog]&]
