@@ -129,7 +129,7 @@ protected:
 			if (io.IsStoring()) {
 				if (markPlot)
 					markP = markPlot->GetType();
-				if (seriesP)
+				if (seriesPlot)
 					seriesP = seriesPlot->GetType();
 			}
 			io
