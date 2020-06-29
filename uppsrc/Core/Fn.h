@@ -66,22 +66,22 @@ constexpr const V& decode(const T& sel, const V& def)
 	return def;
 }
 
+template <class T, class K, class V, typename... L>
+constexpr const V& decode(const T& sel, const K& k, const V& v, const L& ...args)
+{
+	return sel == k ? v : decode(sel, args...);
+}
+
 template <class T>
 constexpr const char *decode(const T& sel, const char *def)
 {
 	return def;
 }
 
-template <class T, class K, class V, typename... L>
-constexpr const V& decode(const T& sel, const K& k, const V& v, const L& ...args)
-{
-	return sel == k ? v : (V)decode(sel, args...);
-}
-
 template <class T, class K, typename... L>
 constexpr const char *decode(const T& sel, const K& k, const char *v, const L& ...args)
 {
-	return sel == k ? v : decode(sel, args...);
+	return sel == k ? v : (const char *)decode(sel, args...);
 }
 
 //$-constexpr T get_i(int i, const T& p0, const T1& p1, ...);
