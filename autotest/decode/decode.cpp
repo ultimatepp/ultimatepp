@@ -13,6 +13,9 @@ CONSOLE_APP_MAIN
 	ASSERT(decode(3, 1, "one", 2, "two", 3.0, "three", "unknown") == String("three"));
 	ASSERT(decode(4, 1, "one", 2, "two", 3, "three", "unknown") == String("unknown"));
 
+	String n = " 2";
+	ASSERT(decode(4, 1, "one", 2, "two", 3, "three", "unknown" + n) == String("unknown 2"));
+
 	ASSERT(decode(0, 1, 11, 2, 12, 3, 13, 14) == 14);
 	ASSERT(decode(1, 1, 11, 2, 12, 3, 13, 14) == 11);
 	ASSERT(decode(2, 1, 11, 2, 12, 3, 13, 14) == 12);
