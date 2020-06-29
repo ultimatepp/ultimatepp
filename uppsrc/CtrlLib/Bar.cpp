@@ -717,12 +717,12 @@ void LRUList::Select(String f, Event<const String&> WhenSelect)
 	WhenSelect(f);
 }
 
-void LRUList::operator()(Bar& bar, Event<const String&> WhenSelect)
+void LRUList::operator()(Bar& bar, Event<const String&> WhenSelect, int count, int from)
 {
 	if(bar.IsMenuBar() && !lru.IsEmpty()) {
 		bar.Separator();
 		char n = '1';
-		for(int i = 0; i < lru.GetCount(); i++) {
+		for(int i = from; i < min(from + count, lru.GetCount()); i++) {
 			bar.Add(String("&") + n + ' ' + GetFileName(lru[i]),
 			        THISBACK2(Select, lru[i], WhenSelect));
 			n = n == '9' ? 'A' : n + 1;
