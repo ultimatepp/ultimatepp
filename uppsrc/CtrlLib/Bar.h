@@ -598,7 +598,7 @@ public:
 
 	void        Serialize(Stream& stream);
 
-	void        operator()(Bar& bar, Event<const String&> WhenSelect);
+	void        operator()(Bar& bar, Event<const String&> WhenSelect, int count = INT_MAX, int from = 0);
 
 	void        NewEntry(const String& path);
 	void        RemoveEntry(const String& path);
