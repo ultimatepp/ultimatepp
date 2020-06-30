@@ -67,9 +67,9 @@ constexpr const V& decode(const T& sel, const V& def)
 }
 
 template <class T, class K, class V, typename... L>
-constexpr const V& decode(const T& sel, const K& k, const V& v, const L& ...args)
+constexpr V decode(const T& sel, const K& k, const V& v, const L& ...args)
 {
-	return sel == k ? v : decode(sel, args...);
+	return sel == k ? v : (V)decode(sel, args...);
 }
 
 template <class T>
