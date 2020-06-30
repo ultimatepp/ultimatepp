@@ -5,6 +5,9 @@ using namespace Upp;
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	String n = " 2";
+	enum { A = 0, B = 12 };
 	
 	ASSERT(decode(0, 1, "one", 2, "two", 3, "three", "unknown") == String("unknown"));
 	ASSERT(decode(1, 1, "one", 2, "two", 3, "three", "unknown") == String("one"));
@@ -13,8 +16,19 @@ CONSOLE_APP_MAIN
 	ASSERT(decode(3, 1, "one", 2, "two", 3.0, "three", "unknown") == String("three"));
 	ASSERT(decode(4, 1, "one", 2, "two", 3, "three", "unknown") == String("unknown"));
 
-	String n = " 2";
+	ASSERT(decode(1, 1, "one" + n, 2, "two", 3, "three", "unknown" + n) == String("one 2"));
+	ASSERT(decode(2, 1, "one", 2, "two" + n, 3, "three", "unknown" + n) == String("two 2"));
+	ASSERT(decode(3, 1, "one", 2, "two", 3, "three" + n, "unknown" + n) == String("three 2"));
 	ASSERT(decode(4, 1, "one", 2, "two", 3, "three", "unknown" + n) == String("unknown 2"));
+
+	ASSERT(decode(2, 1, "one" + n, 2, "two", 3, "three", "unknown") == String("two"));
+	ASSERT(decode(3, 1, "one", 2, "two" + n, 3, "three", "unknown") == String("three"));
+	ASSERT(decode(4, 1, "one", 2, "two", 3, "three" + n, "unknown") == String("unknown"));
+	ASSERT(decode(1, 1, "one", 2, "two", 3, "three", "unknown") == String("one"));
+	
+	ASSERT(decode(0, 0, A, 1, 33, B) == 0);
+	ASSERT(decode(A, 0, A, 1, 33, B) == 0);
+	ASSERT(decode(200, 0, A, 1, 33, B) == 12);
 
 	ASSERT(decode(0, 1, 11, 2, 12, 3, 13, 14) == 14);
 	ASSERT(decode(1, 1, 11, 2, 12, 3, 13, 14) == 11);
@@ -29,6 +43,22 @@ CONSOLE_APP_MAIN
 	ASSERT(get_i(2, "one", "two", "three") == String("three"));
 	ASSERT(get_i(3, "one", "two", "three") == String("three"));
 	ASSERT(get_i(30, "one", "two", "three") == String("three"));
+
+	ASSERT(get_i(-1, "one", "two", "three") == String("one"));
+	ASSERT(get_i(0, "one", "two", "three") == String("one"));
+	ASSERT(get_i(1, "one", "two", "three") == String("two"));
+	ASSERT(get_i(2, "one", "two", "three") == String("three"));
+	ASSERT(get_i(3, "one", "two", "three") == String("three"));
+	ASSERT(get_i(30, "one", "two", "three") == String("three"));
+
+	ASSERT(get_i(0, "one" + n, "two") == String("one 2"));
+	ASSERT(get_i(1, "one" + n, "two") == String("two"));
+
+	ASSERT(get_i(0, "one", "two" + n) == String("one"));
+	ASSERT(get_i(1, "one", "two" + n) == String("two 2"));
+	
+	ASSERT(get_i(0, A, B, 44) == 0);
+	ASSERT(get_i(0, A, B, 44) == 0);
 
 	ASSERT(get_i(-1, 1, 2, 3) == 1);
 	ASSERT(get_i(0, 1, 2, 3) == 1);
