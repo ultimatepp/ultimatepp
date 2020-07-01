@@ -42,7 +42,7 @@ void ThisbacksDlg::CbEdit(One<Ctrl>& ctrl)
 ThisbacksDlg::ThisbacksDlg(const String& scope)
 {
 	CodeBaseLock __;
-	CtrlLayoutOKCancel(*this, "THISBACKs");
+	CtrlLayoutOKCancel(*this, "Events");
 	list.AddColumn("Defined in");
 	list.AddColumn("Type");
 	list.AddColumn("Event<> ");

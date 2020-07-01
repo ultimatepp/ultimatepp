@@ -114,7 +114,6 @@ bool Ide::OpenLink(const String& s, int pos)
 
 void Ide::ContextGoto0(int pos)
 {
-	CodeBaseLock __;
 	if(designer)
 		return;
 	int lp = pos;
@@ -211,6 +210,9 @@ void Ide::ContextGoto0(int pos)
 		ci++;
 	}
 	editor.Context(parser, ci);
+
+	CodeBaseLock __;
+
 	if(xp.GetCount()) {
 		type = editor.EvaluateExpressionType(parser, xp);
 		if(type.GetCount() == 0)
