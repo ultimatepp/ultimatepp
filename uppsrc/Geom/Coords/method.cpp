@@ -850,7 +850,7 @@ GisCoords GisCoords::GetEPSG(int code)
 	default:
 		return GisCoords();
 	}
-	gc->ident = NFormat("EPSG:%d", code);
+	gc->ident = Format("EPSG:%d", code);
 	gc->SyncArgs();
 	return GisCoords(gc);
 }
