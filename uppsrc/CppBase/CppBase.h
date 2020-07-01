@@ -221,6 +221,7 @@ void Parse(CppBase& base, const String& src, int file, int filetype, const Strin
            const Index<String>& namespace_using);
 
 
+// PreprocessParse CAN be run in parallel
 void PreprocessParse(CppBase& base, Stream& in, int file, const String& path,
                      Event<int, const String&> error);
 String PreprocessCpp(const String& src, const String& path);
@@ -241,6 +242,8 @@ String ParseTemplatedType(const String& type, Vector<String>& tparam);
 bool HasCPPFileKeyword(const String& path, const String& id);
 
 String GetPPMD5(const String& fn);
+
+// GetDependeciesMD5 CAN be run in parallel
 String GetDependeciesMD5(const String& path, Index<String>& visited);
 
 Index<String> GetExpressionType(const CppBase& codebase, const ParserContext& parser, const Vector<String>& xp);

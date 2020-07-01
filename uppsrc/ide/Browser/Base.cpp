@@ -242,8 +242,6 @@ void BaseInfoSync(Progress& pi)
 	pi.SetText("Gathering files");
 	pi.SetTotal(wspc.GetCount());
 	
-	{
-	RTIMESTOP("GatherSources");
 	for(int pass = 0; pass < 2; pass++)
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			pi.Step();
@@ -256,7 +254,6 @@ void BaseInfoSync(Progress& pi)
 					GatherSources(path, path);
 			}
 		}
-	}
 
 	SweepPPFiles(GetAllSources());
 }
@@ -275,33 +272,16 @@ String GetSourceFilePath(int file)
 	return source_file.GetKey(file);
 }
 
-Index<String> sTimePath;
-
-Time GetDependsTime(const Vector<int>& file)
-{
-	LTIMING("CreateTimePrint");
-	Time tm = Time::Low();
-	INTERLOCKED {
-		static Index<String> path;
-		for(int i = 0; i < file.GetCount(); i++)
-			if(file[i] < sTimePath.GetCount())
-				tm = max(tm, GetFileTimeCached(sTimePath[file[i]]));
-	}
-	return tm;
-}
-
 bool CheckFile0(SourceFileInfo& f, const String& path)
 {
-	static Index<String> sTimePath;
+	static Mutex sTimePathMutex;
+	static Index<String> sTimePath; // map of f.depends indices to real filenames
 	auto GetDependsTime = [&](const Vector<int>& file) {
 		LTIMING("CreateTimePrint");
 		Time tm = Time::Low();
-		INTERLOCKED {
-			static Index<String> path;
-			for(int i = 0; i < file.GetCount(); i++)
-				if(file[i] < sTimePath.GetCount())
-					tm = max(tm, GetFileTimeCached(sTimePath[file[i]]));
-		}
+		for(int i = 0; i < file.GetCount(); i++)
+			if(file[i] < sTimePath.GetCount())
+				tm = max(tm, GetFileTimeCached(sTimePath[file[i]]));
 		return tm;
 	};
 
@@ -310,8 +290,11 @@ bool CheckFile0(SourceFileInfo& f, const String& path)
 	f.time = ftm;
 	if(findarg(ToLower(GetFileExt(path)), ".lay", ".iml", ".sch") >= 0)
 		return tmok;
-	if(!IsNull(f.depends_time) && tmok && f.depends_time == GetDependsTime(f.depends) && f.dependencies_md5sum.GetCount())
-		return true;
+	{
+		Mutex::Lock __(sTimePathMutex);
+		if(!IsNull(f.depends_time) && tmok && f.depends_time == GetDependsTime(f.depends) && f.dependencies_md5sum.GetCount())
+			return true;
+	}
 	Index<String> visited;
 	String md5 = GetDependeciesMD5(path, visited);
 	bool r = f.dependencies_md5sum == md5 && tmok;
@@ -320,6 +303,7 @@ bool CheckFile0(SourceFileInfo& f, const String& path)
 #endif
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
+	Mutex::Lock __(sTimePathMutex);
 	for(int i = 0; i < visited.GetCount(); i++)
 		f.depends.Add(sTimePath.FindAdd(visited[i]));
 	f.depends_time = GetDependsTime(f.depends);
@@ -341,34 +325,38 @@ void UpdateCodeBase2(Progress& pi)
 	Mutex::Lock __(CppBaseMutex);
 	Index<int>  parse_file;
 	{
-		CodeBaseLock __; //TODO: MT?
 		pi.SetText("Checking source files");
+		VectorMap<int, bool> filecheck;
+		{
+			CodeBaseLock __;
+			for(const String& path : GetAllSources())
+				filecheck.GetAdd(GetSourceFileIndex(path));
+		}
+		
 		pi.SetPos(0);
-		Index<int>  keep_file;
-		CLOG("Gathered files: " << GetAllSourceMasters());
-		const Index<String>& src = GetAllSources();
-		pi.SetTotal(src.GetCount());
-		for(int i = 0; i < src.GetCount(); i++) {
-			pi.Step();
-			String path = src[i];
+		pi.SetTotal(filecheck.GetCount());
+		CoFor(filecheck.GetCount(), [&](int i) {
+			int q = filecheck.GetKey(i);
+			filecheck[i] = CheckFile0(source_file[q], source_file.GetKey(q));
+		});
+		
+		CodeBaseLock __;
+
+		Index<int> keep_file;
+
+		for(String path : GetAllSources()) {
 			int q = GetSourceFileIndex(path);
-			SourceFileInfo& f = source_file[q];
-			LLOG("== CHECK == " << q << ": " << path);
-			if(CheckFile0(f, path))
+			if(filecheck.Get(q, false))
 				keep_file.Add(q);
-			else {
-				LLOG("PARSE: " << path);
+			else
 				parse_file.Add(q);
-			}
 		}
 		
 		CodeBase().Sweep(keep_file);
 	
-		for(int i = 0; i < source_file.GetCount(); i++) {
-			if(keep_file.Find(i) < 0 && parse_file.Find(i) < 0 && !source_file.IsUnlinked(i)) {
+		for(int i = 0; i < source_file.GetCount(); i++)
+			if(keep_file.Find(i) < 0 && parse_file.Find(i) < 0 && !source_file.IsUnlinked(i))
 				source_file.Unlink(i);
-			}
-		}
 	}
 
 #ifdef HAS_CLOG
@@ -381,7 +369,6 @@ void UpdateCodeBase2(Progress& pi)
 	pi.SetPos(0);
 	pi.AlignText(ALIGN_LEFT);
 	LLOG("=========================");
-	RTIMESTOP("Parsing files");
 	CoFor(parse_file.GetCount(), [&](int i) {
 		String path = source_file.GetKey(parse_file[i]);
 		pi.SetText(GetFileName(GetFileFolder(path)) + "/" + GetFileName(path));
