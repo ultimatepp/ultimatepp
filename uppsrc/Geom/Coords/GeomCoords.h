@@ -126,7 +126,8 @@ GeomRefCon<T>::~GeomRefCon()
 	if(t && t->GetRefCount() == 1)
 		RefMemStat::App().Remove(typeid(*t).name(), t->GetAllocIndex());
 #endif//REF_DEBUG
-	t->Release();
+	if(t)
+		t->Release();
 }
 
 template <class T>
@@ -139,7 +140,8 @@ GeomRefCon<T>& GeomRefCon<T>::operator = (const GeomRefCon<T>& rp)
 	if(old && old->GetRefCount() == 1)
 		RefMemStat::App().Remove(typeid(*old).name(), old->GetAllocIndex());
 #endif//REF_DEBUG
-	old->Release();
+	if(old)
+		old->Release();
 	return *this;
 }
 
