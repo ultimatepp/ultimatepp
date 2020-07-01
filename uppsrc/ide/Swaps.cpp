@@ -23,11 +23,11 @@ void AssistEditor::SwapSContext(ParserContext& p)
 
 bool Ide::SwapSIf(const char *cref)
 {
-	CodeBaseLock __;
 	if(designer || !editor.assist_active)
 		return false;
 	ParserContext p;
 	editor.SwapSContext(p);
+	CodeBaseLock __;
 	int q = CodeBase().Find(p.current_scope);
 	LLOG("SwapS scope: " << p.current_scope << ", name " << p.current_name << ", key " << p.current_key);
 	if(q < 0)

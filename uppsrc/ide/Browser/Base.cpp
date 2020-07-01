@@ -121,6 +121,7 @@ void BrowserScanError(int line, const String& text, int file)
 
 void SerializeCodeBase(Stream& s)
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	MLOG(s.IsLoading());
 	source_file.Serialize(s);
@@ -133,6 +134,7 @@ void SerializeCodeBase(Stream& s)
 
 void SaveCodeBase()
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	LTIMING("SaveCodeBase");
 	LLOG("Save code base " << CodeBase().GetCount());
@@ -146,6 +148,7 @@ void SaveCodeBase()
 
 bool TryLoadCodeBase(const char *pattern)
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	LLOG("+++ Trying to load " << pattern);
 	FindFile ff(pattern);
@@ -173,6 +176,7 @@ bool TryLoadCodeBase(const char *pattern)
 
 void LoadCodeBase()
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	MLOG("LoadCodeBase start: " << MemoryUsedKb());
 	TryLoadCodeBase(CodeBaseCacheFile()) ||
@@ -187,6 +191,7 @@ void FinishCodeBase()
 {
 	LTIMING("FinishBase");
 
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	Qualify(CodeBase());
 }
@@ -194,6 +199,7 @@ void FinishCodeBase()
 void LoadDefs()
 {
 	LTIMING("LoadDefs");
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	Vector<String> defs;
 	defs.Add(ConfigFile("global.defs"));
@@ -224,6 +230,7 @@ void LoadDefs()
 
 void BaseInfoSync(Progress& pi)
 { // clears temporary caches (file times etc..)
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	PPSync(TheIde()->IdeGetIncludePath());
 
@@ -283,11 +290,8 @@ Time GetDependsTime(const Vector<int>& file)
 	return tm;
 }
 
-bool CheckFile(SourceFileInfo& f, const String& path)
+bool CheckFile0(SourceFileInfo& f, const String& path)
 {
-	LTIMING("CheckFile");
-	Mutex::Lock __(CppBaseMutex);
-
 	static Index<String> sTimePath;
 	auto GetDependsTime = [&](const Vector<int>& file) {
 		LTIMING("CreateTimePrint");
@@ -322,13 +326,22 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	return r;
 }
 
+bool CheckFile(SourceFileInfo& f, const String& path)
+{
+	LTIMING("CheckFile");
+	ASSERT(sGLockLevel == 0);
+	Mutex::Lock __(CppBaseMutex);
+	return CheckFile0(f, path);
+}
+
 void UpdateCodeBase2(Progress& pi)
 {
 	CLOG("============= UpdateCodeBase2 " << GetSysTime());
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	Index<int>  parse_file;
 	{
-		CodeBaseLock __;
+		CodeBaseLock __; //TODO: MT?
 		pi.SetText("Checking source files");
 		pi.SetPos(0);
 		Index<int>  keep_file;
@@ -341,7 +354,7 @@ void UpdateCodeBase2(Progress& pi)
 			int q = GetSourceFileIndex(path);
 			SourceFileInfo& f = source_file[q];
 			LLOG("== CHECK == " << q << ": " << path);
-			if(CheckFile(f, path))
+			if(CheckFile0(f, path))
 				keep_file.Add(q);
 			else {
 				LLOG("PARSE: " << path);
@@ -416,6 +429,7 @@ void CodeBaseScanFile0(Stream& in, const String& fn)
 {
 	LLOG("===== CodeBaseScanFile " << fn);
 
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 
 	InvalidateFileTimeCache(NormalizeSourcePath(fn));
@@ -442,6 +456,7 @@ void CodeBaseScanFile(Stream& in, const String& fn)
 void CodeBaseScanFile(const String& fn, bool auto_check)
 {
 	LLOG("CodeBaseScanFile " << fn);
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	String md5sum = GetPPMD5(fn);
 	FileIn in(fn);
@@ -461,6 +476,7 @@ void CodeBaseScanFile(const String& fn, bool auto_check)
 void ClearCodeBase()
 {
 	// TODO: Create combined defs
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	CleanPP();
 	CodeBase().Clear();
@@ -472,6 +488,7 @@ void SyncCodeBase()
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
 	CLOG("============= Sync code base");
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	if(IsNull(IdeGetCurrentMainPackage())) {
 		ClearCodeBase();
@@ -485,6 +502,7 @@ void SyncCodeBase()
 
 void NewCodeBase()
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	ReduceCodeBaseCache();
 	if(IsNull(IdeGetCurrentMainPackage())) {
@@ -505,6 +523,7 @@ void NewCodeBase()
 
 void RescanCodeBase()
 {
+	ASSERT(sGLockLevel == 0);
 	Mutex::Lock __(CppBaseMutex);
 	ClearCodeBase();
 	s_console = true;
