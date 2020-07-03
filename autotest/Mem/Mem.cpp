@@ -186,8 +186,6 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 	SeedRandom(0);
-
-	CheckEq<m128n>(memeq128);
 	
 	CheckMemHash();
 	
@@ -195,6 +193,7 @@ CONSOLE_APP_MAIN
 	CheckEq<word>(memeq16);
 	CheckEq<dword>(memeq32);
 	CheckEq<uint64>(memeq64);
+	CheckEq<m128n>(memeq128);
 
 	CheckFill<byte>(memset8);
 	CheckFill<word>(memset16);
