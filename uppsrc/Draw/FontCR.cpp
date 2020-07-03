@@ -260,6 +260,7 @@ struct sRFace {
 	{ "PMingLiU", 0xff800000, 0x9ffff001 }, // <--- SHOULD MOVE UP
 	{ "FreeSans", 0xfff23d00, 0xfc00000f },
 	{ "FreeSerif", 0xfffd3938, 0xfc00080f },
+	{ "FreeMono", 0xfffc0000, 0xbc000c01 },
 	{ "Symbol", 0xe4000000, 0x8800000f },
 	{ "NanumGothic", 0xe5800000, 0xae7ff7e1 },
 	{ "WenQuanYi Micro Hei Mono", 0xffe00008, 0xda7ff7e1 },
