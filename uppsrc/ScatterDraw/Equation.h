@@ -324,20 +324,21 @@ public:
 
 class WeibullEquation : public ExplicitEquation {
 public:
-	WeibullEquation() 							{SetCoeff(1, 1); factor = Null;}
-	WeibullEquation(double k, double lambda)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda); factor = Null;}
+	WeibullEquation() 							{SetCoeff(1, 1, 1); factor = Null;}
+	WeibullEquation(double k, double lambda)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda, 1); factor = Null;}
 	double f(double x) {
 		if (x < 0)
 			return 0;
 		double k =  coeff[0];
 		double lambda = coeff[1];
+		double factor = coeff[2];
 		return factor*(k/lambda)*(pow(x/lambda, k-1))*exp(double(-pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull");}
 	virtual String GetEquation(int numDigits = 3) {
-		String sfactor = FormatDoubleFix(factor, numDigits);
 		String k =  FormatCoeff(0, numDigits);
 		String lambda = FormatCoeff(1, numDigits);
+		String sfactor = FormatCoeff(2, numDigits);
 		String ret = Format("%s*(%s/%s)*(x/%s)^(%s-1)*e^(-((x/%s)^%s))", sfactor, k, lambda, lambda, k, lambda, k);
 		ret.Replace("+ -", "- ");
 		return ret;
@@ -345,7 +346,7 @@ public:
 	virtual void GuessCoeff(DataSource &) {}
 	virtual void _GuessCoeff(DataSource &series) {
 		Vector<Pointf> cumulative = series.CumulativeY();
-		factor = cumulative.Top().y;
+		double factor = cumulative.Top().y;
 		for (int i = 0; i < cumulative.GetCount(); ++i)
 			cumulative[i].y /= factor;
 		VectorPointf data(cumulative);
@@ -354,7 +355,7 @@ public:
 		if (error == ExplicitEquation::NoError) {
 			double k = weibullCumulative.GetCoeff()[0];
 			double lambda = weibullCumulative.GetCoeff()[1];
-			SetCoeff(k, lambda);
+			SetCoeff(k, lambda, 1);
 		}
 	}
 	FitError Fit(DataSource &series, double &r2) {

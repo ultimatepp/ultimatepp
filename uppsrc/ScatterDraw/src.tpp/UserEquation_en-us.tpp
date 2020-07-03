@@ -13,7 +13,7 @@ licitEquation]&]
 [s2;%% &]
 [s0; [2 UserEquation permits to enter equations in run time as simple 
 text.]&]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s4; &]
 [s5;:UserEquation`:`:UserEquation`(String`,String`,String`): [* UserEquation]([_^String^ S

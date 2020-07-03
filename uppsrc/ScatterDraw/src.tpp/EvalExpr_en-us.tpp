@@ -12,7 +12,7 @@ topic "3.2 EvalExpr";
 [s2; &]
 [s0;%- [2 It implements a simple expression evaluator including variable 
 handling.]&]
-[s0;%- &]
+[s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
 [s0;%- &]
 [s5;:EvalExpr`:`:EvalExpr`(`):%- [* EvalExpr]()&]
