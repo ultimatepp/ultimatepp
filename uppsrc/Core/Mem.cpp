@@ -4,11 +4,11 @@ namespace Upp {
 
 #ifdef CPU_X86
 
-void memset8__(void *p, __m128i data, size_t len)
+void memset8__(void *p, i16x8 data, size_t len)
 {
 	ASSERT(len >= 16);
 	byte *t = (byte *)p;
-	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), data); };
+	auto Set4 = [&](size_t at) { data.Store(t + at); };
 	Set4(len - 16); // fill tail
 	Set4(0); // align up on the next 16 bytes boundary
 	if(len <= 32)
@@ -18,7 +18,7 @@ void memset8__(void *p, __m128i data, size_t len)
 	len = e - t;
 	e -= 128;
 	if(len >= 1024*1024) { // for really huge data, bypass the cache
-		auto Set4S = [&](int at) { _mm_stream_si128((__m128i *)(t + at), data); };
+		auto Set4S = [&](int at) { data.Stream(t + at); };
 		while(len >= 64) {
 			Set4S(0*16); Set4S(1*16); Set4S(2*16); Set4S(3*16);
 			t += 64;
@@ -57,7 +57,7 @@ void memcpy8__(void *p, const void *q, size_t len)
 		return;
 	}
 
-	auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
 	Copy128(len - 16); // copy tail
 	Copy128(0); // align target data up on the next 16 bytes boundary
 	if(len <= 32)
