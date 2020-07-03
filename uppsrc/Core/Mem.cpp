@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#ifdef CPU_X86
+#ifdef CPU_SIMD
 
 void memset8__(void *p, i16x8 data, size_t len)
 {

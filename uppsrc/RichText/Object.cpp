@@ -247,7 +247,6 @@ bool   RichObject::Set(const String& _type_name, const Value& _data, Size maxsiz
 
 bool   RichObject::Read(const String& _type_name, const String& _data, Size sz, void *context)
 {
-	NewSerial();
 	type_name = _type_name;
 	RichObjectType *t = Map().Get(type_name, NULL);
 	if(t) {
@@ -258,10 +257,12 @@ bool   RichObject::Read(const String& _type_name, const String& _data, Size sz, 
 		pixel_size = type->GetPixelSize(data, context);
 		AdjustPhysicalSize();
 		size = sz;
+		NewSerial();
 		return true;
 	}
 	data = _data;
 	physical_size = pixel_size = size = sz;
+	NewSerial();
 	return false;
 }
 

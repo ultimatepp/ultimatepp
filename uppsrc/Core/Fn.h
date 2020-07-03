@@ -60,18 +60,6 @@ constexpr int findarg(const T& sel, const K& k, const L& ...args)
 
 //$-constexpr auto decode(const T& x, const T1& p0, const V1& v0, ...);
 
-template <class T, class V>
-constexpr const V& decode(const T& sel, const V& def)
-{
-	return def;
-}
-
-template <class T, class K, class V, typename... L>
-constexpr V decode(const T& sel, const K& k, const V& v, const L& ...args)
-{
-	return sel == k ? v : (V)decode(sel, args...);
-}
-
 template <class T>
 constexpr const char *decode_chr_(const T& sel, const char *def)
 {
@@ -88,6 +76,18 @@ template <class T, class K, typename... L>
 constexpr const char *decode(const T& sel, const K& k, const char *v, const L& ...args)
 {
 	return decode_chr_(sel, k, v, args...);
+}
+
+template <class T, class V>
+constexpr const V& decode(const T& sel, const V& def)
+{
+	return def;
+}
+
+template <class T, class K, class V, typename... L>
+constexpr V decode(const T& sel, const K& k, const V& v, const L& ...args)
+{
+	return sel == k ? v : (V)decode(sel, args...);
 }
 
 //$-constexpr T get_i(int i, const T& p0, const T1& p1, ...);
