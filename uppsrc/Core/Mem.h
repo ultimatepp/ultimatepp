@@ -1,6 +1,6 @@
-#ifdef CPU_X86
+#ifdef CPU_SIMD
 
-void memset8__(void *t, __m128i data, size_t len);
+void memset8__(void *t, i16x8 data, size_t len);
 
 inline
 void memset8(void *p, byte data, size_t len)
@@ -17,7 +17,7 @@ void memset8(void *p, byte data, size_t len)
 		return;
 	}
 	if(len > 16) {
-		memset8__(t, _mm_set1_epi32(val4), len);
+		memset8__(t, i32all(val4), len);
 		return;
 	}
 	*(dword *)t = *(dword *)(t + len - 4) = val4;
@@ -36,12 +36,12 @@ void memset16(void *p, word data, size_t len)
 	}
 	dword val4 = 0x10001 * data;
 	if(len >= 16) {
-		memset8__(t, _mm_set1_epi32(val4), 2 * len);
+		memset8__(t, i32all(val4), 2 * len);
 		return;
 	}
 	*(dword *)(t + len - 2) = val4;
 	if(len & 8) {
-		_mm_storeu_si128((__m128i *)t, _mm_set1_epi32(val4));
+		i32all(val4).Store(t);
 		t += 8;
 	}
 	if(len & 4) {
@@ -66,19 +66,19 @@ void memset32(void *p, dword data, size_t len)
 			t[0] = data;
 		return;
 	}
-	__m128i val4 = _mm_set1_epi32(data);
+	i32x4 val4 = i32all(data);
 	if(len >= 16) {
 		memset8__(t, val4, 4 * len);
 		return;
 	}
-	auto Set4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val4); };
-	Set4(len - 4); // fill tail
+	auto Set128 = [&](size_t at) { val4.Store(t + at); };
+	Set128(len - 4); // fill tail
 	if(len & 8) {
-		Set4(0); Set4(4);
+		Set128(0); Set128(4);
 		t += 8;
 	}
 	if(len & 4)
-		Set4(0);
+		Set128(0);
 }
 
 inline
@@ -90,12 +90,12 @@ void memset64(void *p, qword data, size_t len)
 			t[0] = data;
 		return;
 	}
-	__m128i val2 = _mm_set1_epi64x(data);
+	i16x8 val2 = i64all(data);
 	if(len >= 8) {
 		memset8__(t, val2, 8 * len);
 		return;
 	}
-	auto Set128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), val2); };
+	auto Set128 = [&](size_t at) { val2.Store(t + at); };
 	Set128(len - 2); // fill tail
 	if(len & 4) {
 		Set128(0); Set128(2);
@@ -109,7 +109,7 @@ inline
 void memset128(void *t, m128 data, size_t len)
 {
 	if(len)
-		memset8__(t, *(__m128i *)&data, 16 * len);
+		memset8__(t, i16x8().Load(&data), 16 * len);
 }
 
 void memcpy8__(void *p, const void *q, size_t len);
@@ -163,7 +163,7 @@ void memcpy16(void *p, const void *q, size_t len)
 			*(uint64 *)(t + len - 4) = *(uint64 *)(s + len - 4);
 			return;
 		}
-		auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+		auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
 		Copy128(0);
 		Copy128(len - 8);
 		return;
@@ -204,7 +204,7 @@ void memcpy32(void *p, const void *q, size_t len)
 	}
 #endif
 
-	auto Copy128 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
 
 	if(len >= 16) {
 		memcpy8__(t, s, 4 * len);
@@ -238,20 +238,20 @@ void memcpy64(void *p, const void *q, size_t len)
 		return;
 	}
 
-	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
 
-	Copy4(len - 2); // copy tail
+	Copy128(len - 2); // copy tail
 	if(len >= 8) {
 		memcpy8__(t, s, 8 * len);
 		return;
 	}
 	if(len & 4) {
-		Copy4(0); Copy4(2);
+		Copy128(0); Copy128(2);
 		t += 4;
 		s += 4;
 	}
 	if(len & 2)
-		Copy4(0);
+		Copy128(0);
 }
 
 inline
@@ -264,24 +264,24 @@ void memcpy128(void *p, const void *q, size_t len)
 	dqword *t = (dqword *)p;
 	dqword *s = (dqword *)q;
 
-	auto Copy4 = [&](size_t at) { _mm_storeu_si128((__m128i *)(t + at), _mm_loadu_si128((__m128i *)(s + at))); };
+	auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
 
 	if(len >= 8) {
 		memcpy8__(t, s, 16 * len);
 		return;
 	}
 	if(len & 4) {
-		Copy4(0); Copy4(1); Copy4(2); Copy4(3);
+		Copy128(0); Copy128(1); Copy128(2); Copy128(3);
 		t += 4;
 		s += 4;
 	}
 	if(len & 2) {
-		Copy4(0); Copy4(1);
+		Copy128(0); Copy128(1);
 		t += 2;
 		s += 2;
 	}
 	if(len & 1)
-		Copy4(0);
+		Copy128(0);
 }
 
 template <class T>
@@ -311,11 +311,9 @@ bool memeq8__(const void *p, const void *q, size_t len)
 	const byte *t = (byte *)p;
 	const byte *s = (byte *)q;
 	
-	auto Cmp128 = [&](size_t at) { return _mm_cmpeq_epi32(_mm_loadu_si128((__m128i *)(s + at)), _mm_loadu_si128((__m128i *)(t + at))); };
-	auto Neq = [](__m128i v) { return _mm_movemask_epi8(v) != 0xffff; };
-	auto And = [](__m128i a, __m128i b) { return _mm_and_si128(a, b); };
+	auto Cmp128 = [&](size_t at)        { return i16x8(s + at) == i16x8(t + at); };
 	
-	if(Neq(And(Cmp128(len - 16), Cmp128(0)))) // tail & alignment, also <= 32
+	if(!Test(Cmp128(len - 16) & Cmp128(0))) // tail & alignment, also <= 32
 		return false;
 	
 	if(len <= 32)
@@ -329,13 +327,13 @@ bool memeq8__(const void *p, const void *q, size_t len)
 	len = e - t;
 	e -= 32;
 	while(t <= e) {
-		if(Neq(And(Cmp128(0), Cmp128(1*16))))
+		if(!Test(Cmp128(0) & Cmp128(1*16)))
 			return false;
 		s += 32;
 		t += 32;
 	}
 	if(len & 16)
-		if(Neq(Cmp128(0)))
+		if(!Test(Cmp128(0)))
 			return false;
 	return true;
 }

@@ -91,23 +91,23 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 			}
 			RGBA *t = ib[y];
 
-	#ifdef CPU_X86
+	#ifdef CPU_SIMD
 			for(int x = 0; x < sz.cx; x++) {
-				__m128 rgbaf = _mm_setzero_ps();
-				__m128 w = _mm_setzero_ps();
+				f32x4 rgbaf = 0;
+				f32x4 w = 0;
 				yd = py;
 				int hasalpha = 0;
 				for(int yy = 2 * ay; yy-- > 0;) {
 					int ky = *yd++;
 					const RGBA *l = img[*yd++];
 					for(int xx = 2 * ax; xx-- > 0;) {
-						__m128 s = LoadRGBAF(&l[*xd++]);
-						__m128 weight = _mm_set1_ps(float(ky * *xd++));
-						rgbaf = _mm_add_ps(rgbaf, _mm_mul_ps(weight, s));
-						w = _mm_add_ps(w, weight);
+						f32x4 s = LoadRGBAF(&l[*xd++]);
+						f32x4 weight = f32all(float(ky * *xd++));
+						rgbaf += weight * s;
+						w += weight;
 					}
 				}
-				StoreRGBAF(t++, ClampRGBAF(_mm_div_ps(rgbaf, w)));
+				StoreRGBAF(t++, ClampRGBAF(rgbaf / w));
 			}
 	#else
 			for(int x = 0; x < sz.cx; x++) {

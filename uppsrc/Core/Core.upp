@@ -34,6 +34,8 @@ file
 	Cpu.cpp,
 	Mem.h,
 	Mem.cpp,
+	SIMD_SSE2.h,
+	SIMD.cpp,
 	Atomic.h,
 	Mt.h,
 	Mt.cpp,

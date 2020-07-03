@@ -2,7 +2,7 @@
 
 namespace Upp {
 	
-#ifdef CPU_SSE2
+#ifdef CPU_SIMD
 
 Image Minify(const Image& img, int nx, int ny, bool co)
 {
@@ -11,11 +11,11 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
 	ImageBuffer ib(tsz);
 	int scx0 = ssz.cx / nx * nx;
-	auto do_line = [&](int ty, __m128 *b, __m128 *div) {
-		memset(b, 0, tsz.cx * sizeof(__m128));
-		memset(div, 0, tsz.cx * sizeof(__m128));
-		__m128 v1 = _mm_set1_ps(1);
-		__m128 vnx = _mm_set1_ps((float)nx);
+	auto do_line = [&](int ty, f32x4 *b, f32x4 *div) {
+		memset(b, 0, tsz.cx * sizeof(f32x4));
+		memset(div, 0, tsz.cx * sizeof(f32x4));
+		f32x4 v1 = f32all(1);
+		f32x4 vnx = f32all(nx);
 		int yy = ny * ty;
 		for(int yi = 0; yi < ny; yi++) {
 			int y = yy + yi;
@@ -23,44 +23,44 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 				const RGBA *s = img[yy + yi];
 				const RGBA *e = s + scx0;
 				const RGBA *e2 = s + ssz.cx;
-				__m128 *t = b;
-				__m128 *d = div;
+				f32x4 *t = b;
+				f32x4 *d = div;
 				while(s < e) {
-					__m128 px = _mm_setzero_ps();
+					f32x4 px = 0;
 					for(int n = nx; n--;)
-						px = _mm_add_ps(px, LoadRGBAF(s++));
-					*t = _mm_add_ps(*t, px);
-					*d = _mm_add_ps(*d, vnx);
+						px += LoadRGBAF(s++);
+					*t += px;
+					*d += vnx;
 					t++;
 					d++;
 				}
 				if(s < e2) {
-					__m128 px = _mm_setzero_ps();
-					__m128 dv = _mm_setzero_ps();
+					f32x4 px = 0;
+					f32x4 dv = 0;
 					while(s < e2) {
-						px = _mm_add_ps(px, LoadRGBAF(s++));
-						dv = _mm_add_ps(px, v1);
+						px += LoadRGBAF(s++);
+						dv += v1;
 					}
-					*t = _mm_add_ps(*t, px);
-					*d = _mm_add_ps(*d, dv);
+					*t += px;
+					*d += dv;
 					t++;
 					d++;
 				}
 				ASSERT(t == b + tsz.cx);
 			}
 		}
-		__m128 *s = b;
-		__m128 *d = div;
+		f32x4 *s = b;
+		f32x4 *d = div;
 		RGBA *t = ~ib + ty * tsz.cx;
 		RGBA *e = t + tsz.cx;
 		while(t < e)
-			StoreRGBAF(t++, _mm_div_ps(*s++, *d++));
+			StoreRGBAF(t++, *s++ / *d++);
 	};
 	if(co) {
 		CoWork cw;
 		cw * [&] {
-			Buffer<__m128> div(tsz.cx);
-			Buffer<__m128> b(tsz.cx);
+			Buffer<f32x4> div(tsz.cx);
+			Buffer<f32x4> b(tsz.cx);
 			for(;;) {
 				int y = cw.Next();
 				if(y >= tsz.cy)
@@ -70,8 +70,8 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		};
 	}
 	else {
-		Buffer<__m128> div(tsz.cx);
-		Buffer<__m128> b(tsz.cx);
+		Buffer<f32x4> div(tsz.cx);
+		Buffer<f32x4> b(tsz.cx);
 		for(int y = 0; y < tsz.cy; y++)
 			do_line(y, b, div);
 	}
