@@ -1,4 +1,5 @@
 #include <CppBase/CppBase.h>
+#include <CppBase/Internal.h>
 
 using namespace Upp;
 
