@@ -1721,7 +1721,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
                  const Index<String>& namespace_using)
 {
 	LTIMING("Parser::Do");
-	LLOG("= C++ Parser ==================================== " << fn);
+	LLOG("= C++ Parser ==================================== " << title_ << " " << namespace_stack);
 	base = &_base;
 	err = _err;
 	filei = filei_;
