@@ -3,7 +3,7 @@
 using namespace Upp;
 
 const char *font[] = {
-	"sans-serif",
+/*	"sans-serif",
 	"Arial",
 	"Arial Unicode MS",
 	"MS UI Gothic", 
@@ -19,6 +19,8 @@ const char *font[] = {
 	"SimSun",
 	"PMingLiU",
 	"Symbol",
+*/	"FreeMono",
+	"FontAwesome",
 };
 
 GUI_APP_MAIN
