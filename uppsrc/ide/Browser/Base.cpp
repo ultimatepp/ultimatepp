@@ -251,7 +251,7 @@ void BaseInfoSync(Progress& pi)
 				String path = SourcePath(n, pk.file[i]);
 				if(pass ? IsHFile(path)
 				   : IsCPPFile(path) || findarg(ToLower(GetFileExt(path)), ".lay", ".sch", ".iml") >= 0)
-					GatherSources(path, path);
+					GatherSources(path);
 			}
 		}
 
@@ -369,7 +369,7 @@ void UpdateCodeBase2(Progress& pi)
 	pi.SetPos(0);
 	pi.AlignText(ALIGN_LEFT);
 	LLOG("=========================");
-	CoFor(parse_file.GetCount(), [&](int i) {
+	CoFor_ST(parse_file.GetCount(), [&](int i) {
 		String path = source_file.GetKey(parse_file[i]);
 		pi.SetText(GetFileName(GetFileFolder(path)) + "/" + GetFileName(path));
 		pi.Step();

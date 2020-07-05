@@ -72,7 +72,7 @@ String               NormalizeSourcePath(const String& path);
 
 void                 ClearSources();
 const Index<String>& GetAllSources();
-void                 GatherSources(const String& master_path, const String& path_);
+void                 GatherSources(const String& path);
 String               GetMasterFile(const String& file);
 const VectorMap<String, String>& GetAllSourceMasters();
 

@@ -62,11 +62,12 @@ void GatherSources(const String& master_path, const String& path_, Vector<int>& 
 	parents.Drop();
 }
 
-void GatherSources(const String& master_path, const String& path)
+void GatherSources(const String& path)
 {
 	LTIMING("GatherSources");
 	Vector<int> parents;
-	GatherSources(NormalizeSourcePath(master_path), path, parents);
+	MakePP({ path });
+	GatherSources(NormalizeSourcePath(path), path, parents);
 }
 
 String GetMasterFile(const String& file)

@@ -266,6 +266,7 @@ struct sRFace {
 	{ "WenQuanYi Micro Hei Mono", 0xffe00008, 0xda7ff7e1 },
 	{ "NanumMyeongjo", 0xe5800000, 0x8a0007e1 },
 	{ "WenQuanYi Micro Hei", 0xffe00008, 0xda7ff7e1 },
+	{ "FontAwesome", 0xc0000000, 0x88000002 },
 };
 
 struct sFontMetricsReplacement {
@@ -277,14 +278,14 @@ struct sFontMetricsReplacement {
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
 	static Vector<int> rface;
-	static Vector<dword> l, h;
+//	static Vector<dword> l, h;
 	ONCELOCK {
 		for(int i = 0; i < __countof(sFontReplacements) && rface.GetCount() < 20; i++) {
 			int q = Font::FindFaceNameIndex(sFontReplacements[i].name);
 			if(q > 0) {
 				rface.Add(q);
-				l.Add(sFontReplacements[i].l);
-				h.Add(sFontReplacements[i].h);
+//				l.Add(sFontReplacements[i].l);
+//				h.Add(sFontReplacements[i].h);
 			}
 		}
 	}
