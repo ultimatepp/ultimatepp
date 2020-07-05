@@ -44,10 +44,6 @@
 #define STD_NEWDELETE
 #endif
 
-#ifndef CPP_11
-#error This version of U++ REQUIRES C++11
-#endif
-
 #ifdef _MSC_VER
 	#ifndef _CPPRTTI
 		#error  RTTI must be enabled !!!
