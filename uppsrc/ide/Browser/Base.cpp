@@ -369,7 +369,7 @@ void UpdateCodeBase2(Progress& pi)
 	pi.SetPos(0);
 	pi.AlignText(ALIGN_LEFT);
 	LLOG("=========================");
-	CoFor_ST(parse_file.GetCount(), [&](int i) {
+	CoFor(parse_file.GetCount(), [&](int i) {
 		String path = source_file.GetKey(parse_file[i]);
 		pi.SetText(GetFileName(GetFileFolder(path)) + "/" + GetFileName(path));
 		pi.Step();
