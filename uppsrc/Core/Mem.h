@@ -313,7 +313,7 @@ bool memeq8__(const void *p, const void *q, size_t len)
 	
 	auto Cmp128 = [&](size_t at)        { return i16x8(s + at) == i16x8(t + at); };
 	
-	if(!Test(Cmp128(len - 16) & Cmp128(0))) // tail & alignment, also <= 32
+	if(!AllTrue(Cmp128(len - 16) & Cmp128(0))) // tail & alignment, also <= 32
 		return false;
 	
 	if(len <= 32)
@@ -327,13 +327,13 @@ bool memeq8__(const void *p, const void *q, size_t len)
 	len = e - t;
 	e -= 32;
 	while(t <= e) {
-		if(!Test(Cmp128(0) & Cmp128(1*16)))
+		if(!AllTrue(Cmp128(0) & Cmp128(1*16)))
 			return false;
 		s += 32;
 		t += 32;
 	}
 	if(len & 16)
-		if(!Test(Cmp128(0)))
+		if(!AllTrue(Cmp128(0)))
 			return false;
 	return true;
 }
