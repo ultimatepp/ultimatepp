@@ -345,6 +345,7 @@ private:
 	Size         maxiconsize;
 	LookFrame    frame;
 	bool         nodarkadjust;
+	bool         action_taken = false; // local menu resulted in action invoked (not cancel)
 
 #ifdef PLATFORM_COCOA
 	One<Bar>     host_bar;
@@ -353,6 +354,7 @@ private:
 #endif
 
 	friend class MenuItemBase;
+	friend class MenuItem;
 	friend class SubMenuBase;
 	friend class TopSubMenuItem;
 	friend class SubMenuItem;
@@ -393,13 +395,13 @@ public:
 	void     PopUp(Point p)                         { PopUp(GetActiveCtrl(), p); }
 	void     PopUp()                                { PopUp(GetMousePos()); }
 
-	void     Execute(Ctrl *owner, Point p);
-	void     Execute(Point p)                       { Execute(GetActiveCtrl(), p); }
-	void     Execute()                              { Execute(GetMousePos()); }
+	bool     Execute(Ctrl *owner, Point p);
+	bool     Execute(Point p)                       { return Execute(GetActiveCtrl(), p); }
+	bool     Execute()                              { return Execute(GetMousePos()); }
 
-	static void Execute(Ctrl *owner, Event<Bar&> proc, Point p);
-	static void Execute(Event<Bar&> proc, Point p) { Execute(GetActiveCtrl(), proc, p); }
-	static void Execute(Event<Bar&> proc)          { Execute(proc, GetMousePos()); }
+	static bool Execute(Ctrl *owner, Event<Bar&> proc, Point p);
+	static bool Execute(Event<Bar&> proc, Point p)  { return Execute(GetActiveCtrl(), proc, p); }
+	static bool Execute(Event<Bar&> proc)           { return Execute(proc, GetMousePos()); }
 
 	void     Clear();
 

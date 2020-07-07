@@ -307,7 +307,7 @@ void TopWindow::SyncMainMenu(bool force)
 	}
 }
 
-void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
+bool MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 {
 	if(host_bar && owner) {
 		CocoMenuBar& bar = *(CocoMenuBar *)~host_bar;
@@ -326,10 +326,11 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 		
 		ResetCocoaMouse(); // Because we will not get "MouseUp" event...
 
-		[bar.cocomenu popUpMenuPositioningItem:(up ? bar.item.Top().nsitem : nil)
-	                                atLocation:np
-	                                    inView:(NSView *)owner->GetNSView()];
+		return [bar.cocomenu popUpMenuPositioningItem:(up ? bar.item.Top().nsitem : nil)
+	                                       atLocation:np
+	                                           inView:(NSView *)owner->GetNSView()];
 	}
+	return false;
 }
 
 void MenuBar::CreateHostBar(One<Bar>& bar)

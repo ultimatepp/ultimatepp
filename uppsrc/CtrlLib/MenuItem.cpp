@@ -25,16 +25,22 @@ MenuItemBase::MenuItemBase()
 	maxiconsize = Size(INT_MAX, INT_MAX);
 }
 
-bool MenuItemBase::InOpaqueBar() const
+MenuBar *MenuItemBase::GetMenuBar() const
 {
-	const Ctrl *q = GetParent();
+	Ctrl *q = GetParent();
 	while(q) {
-		const MenuBar *bar = dynamic_cast<const MenuBar *>(q);
+		MenuBar *bar = dynamic_cast<MenuBar *>(q);
 		if(bar)
-			return !bar->IsTransparent();
+			return bar;
 		q = q->GetParent();
 	}
-	return true;
+	return NULL;
+}
+
+bool MenuItemBase::InOpaqueBar() const
+{
+	const MenuBar *bar = GetMenuBar();
+	return !(bar && bar->IsTransparent());
 }
 
 Bar::Item& MenuItemBase::Text(const char *s)
@@ -372,6 +378,9 @@ void MenuItem::LeftUp(Point, dword)
 #endif
 	LLOG("Menu Item pre Action");
 	Action();
+	MenuBar *bar = GetMenuBar();
+	if(bar)
+		bar->action_taken = true;
 	LLOG("Menu Item post Action");
 }
 

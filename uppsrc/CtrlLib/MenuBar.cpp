@@ -610,16 +610,17 @@ bool MenuBar::IsEmpty() const
 	return item.IsEmpty();
 }
 
-void MenuBar::Execute(Ctrl *owner, Point p)
+bool MenuBar::Execute(Ctrl *owner, Point p)
 {
 	static Vector<Ctrl *> ows; // Used to prevent another open local menu for single owner to be opened (repeated right-click)
 	int level = ows.GetCount();
 	if(IsEmpty() || FindIndex(ows, owner) >= 0)
-		return;
+		return false;
 	ows.Add(owner);
+	action_taken = false;
 #ifdef PLATFORM_COCOA
 	if(host_bar && !IsChild())
-		ExecuteHostBar(owner, p);
+		action_taken = ExecuteHostBar(owner, p);
 	else
 #endif
 	{
@@ -628,13 +629,14 @@ void MenuBar::Execute(Ctrl *owner, Point p)
 		CloseMenu();
 	}
 	ows.SetCount(level);
+	return action_taken;
 }
 
-void MenuBar::Execute(Ctrl *owner, Event<Bar&> proc, Point p)
+bool MenuBar::Execute(Ctrl *owner, Event<Bar&> proc, Point p)
 {
 	MenuBar bar;
 	proc(bar);
-	bar.Execute(owner, p);
+	return bar.Execute(owner, p);
 }
 
 int MenuBar::GetStdHeight(Font font)
