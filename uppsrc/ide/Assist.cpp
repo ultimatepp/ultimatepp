@@ -726,11 +726,12 @@ void AssistEditor::AssistInsert()
 				Assist();
 				IgnoreMouseUp();
 				return;
-			} else {
-				String pkg = include_path.Left(include_path.GetCount()-1);
+			}
+			else {
+				String pkg = include_path.Left(include_path.GetCount() - 1);
 				Vector<String> nests = SplitDirs(GetVar("UPP"));
 				for(int i = 0; i < nests.GetCount(); i++){
-					if(FileExists(nests[i]+"/"+include_path+GetFileName(pkg)+".upp")) {
+					if(FileExists(nests[i] + "/" + include_path + GetFileName(pkg) + ".upp")) {
 						Ide *ide = dynamic_cast<Ide *>(TheIde());
 						if(ide)
 							ide->AddPackage(pkg);
@@ -771,8 +772,7 @@ void AssistEditor::AssistInsert()
 			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
-				int x = f.natural.ReverseFind('(');
-				if(x >= 0 && f.natural[x + 1] == ')')
+				if(f.natural.EndsWith("()"))
 					SetCursor(GetCursor32() + 1);
 			}
 			else
