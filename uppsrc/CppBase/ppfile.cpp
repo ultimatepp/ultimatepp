@@ -456,6 +456,7 @@ String GetIncludePath(const String& s, const String& filedir)
 
 void MakePP(const Index<String>& paths)
 {
+	LLOG("MakePP " << paths);
 	Vector<String> todo;
 	Vector<PPFile *> pp;
 	for(int i = 0; i < paths.GetCount(); i++) {
@@ -477,6 +478,7 @@ void MakePP(const Index<String>& paths)
 const PPFile& GetPPFile(const char *path)
 {
 	LTIMING("GetPPFile");
+	LLOG("GetPPFile " << path);
 	static PPFile zero;
 	return sPPfile.Get(path, zero);
 }

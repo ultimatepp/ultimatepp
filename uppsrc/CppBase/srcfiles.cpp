@@ -4,6 +4,7 @@
 namespace Upp {
 
 #define LTIMING(x) // DTIMING(x)
+#define LLOG(x) // DLOG(x)
 
 static VectorMap<String, String> sSrcFile;
 static Index<uint64>             sIncludes;
@@ -42,6 +43,7 @@ const VectorMap<String, String>& GetAllSourceMasters()
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
 	String path = NormalizeSourcePath(path_);
+	LLOG("--- GatherSources " << master_path << " " << path);
 	if(sSrcFile.Find(path) >= 0)
 		return;
 	int ii = sSrcFile.GetCount();
@@ -51,8 +53,8 @@ void GatherSources(const String& master_path, const String& path_, Vector<int>& 
 	parents.Add(ii);
 	const PPFile& f = GetPPFile(path);
 	Index<String> todo;
-	for(int i = 0; i < f.includes.GetCount(); i++) {
-		String p = GetIncludePath(f.includes[i], GetFileFolder(path));
+	for(String inc : f.includes) {
+		String p = GetIncludePath(inc, GetFileFolder(path));
 		if(p.GetCount())
 			todo.FindAdd(p);
 	}
@@ -66,7 +68,8 @@ void GatherSources(const String& path)
 {
 	LTIMING("GatherSources");
 	Vector<int> parents;
-	MakePP({ path });
+	LLOG("=== GatherSources " << path);
+	MakePP({ NormalizeSourcePath(path) });
 	GatherSources(NormalizeSourcePath(path), path, parents);
 }
 

@@ -242,7 +242,7 @@ void BaseInfoSync(Progress& pi)
 	pi.SetText("Gathering files");
 	pi.SetTotal(wspc.GetCount());
 	
-	for(int pass = 0; pass < 2; pass++)
+	for(int pass = 0; pass < 2; pass++) // Ignore headers in the first pass to get correct master files
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			pi.Step();
 			const Package& pk = wspc.GetPackage(i);
