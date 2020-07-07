@@ -349,7 +349,7 @@ private:
 
 #ifdef PLATFORM_COCOA
 	One<Bar>     host_bar;
-	void ExecuteHostBar(Ctrl *owner, Point p);
+	bool ExecuteHostBar(Ctrl *owner, Point p);
 	void CreateHostBar(One<Bar>& bar);
 #endif
 

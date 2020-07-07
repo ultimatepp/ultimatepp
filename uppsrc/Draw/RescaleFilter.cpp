@@ -96,7 +96,6 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 				f32x4 rgbaf = 0;
 				f32x4 w = 0;
 				yd = py;
-				int hasalpha = 0;
 				for(int yy = 2 * ay; yy-- > 0;) {
 					int ky = *yd++;
 					const RGBA *l = img[*yd++];
