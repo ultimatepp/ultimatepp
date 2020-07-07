@@ -46,6 +46,8 @@ protected:
 	const MenuBar::Style *style;
 	bool    nodarkadjust;
 
+	MenuBar *GetMenuBar() const;
+
 public:
 	virtual void SyncState() = 0;
 

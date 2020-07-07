@@ -1,5 +1,4 @@
 topic "MenuBar";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "MenuBar";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 MenuBar]]}}&]
 [s3;%- &]
@@ -17,24 +17,7 @@ arCtrl]&]
 [s2; &]
 [s2; 
 @@image:831&643
-‚ƒ…€ç€€€ƒ™ÿ€€€€øœíÏë“Áş”Ç·õßğŸığªŞ¬Ø‹½Èù•ï‚ÂÁ¼îø“ê¥…‰íÈÑªúğ¢¤ôƒ”ƒÇÑë‘¬¼­’Ä€’–”
-ÛŠâ¥…öÚù®Ã¢ëìüÚßÉş˜÷’ü¿¼Â²™ùï®¾ûŞ˜äêöúº¸£‹Û“ÑåÎô¥³óŒã¿ºº£ìæ·îŸÍìÂµıÕæçş·•
-ŠåË÷·ú«²¿¿¾Ãü ¸Ø™ğ°²¹ààåÀÁÊœî¸â´Œ’×¨ÑñÄ’ÂÆ›½¥µÒ…¥ŒÛŞ„‡ûÎ—›ØÖšû„–˜Èø®‘åá’ã£
-Äœğ„·Âœî“¹ğ¨•¬ù¢µ¶Ÿé¶äôúÖ²Û¿ÁŠ”¢»ı’ı¸›ƒ¬å•º¤“¹ç¯ÏµÃ‘‘î•ÇÄí£äıòî³ÏäŸÿá„òªÃ´Æ½
-¼êö”‹Ãá˜ŒÿœùÌ‘¬ğÊ€‡ìÈ¸ô’Ë…ÃÿĞ÷ÿ’ƒÊñ¹Ã¸”Ûˆ¸¼´Å®åÆ†Æ‘Ï¤Ü·¨í¸½æóı­ÑÇÔ¯éÒ»ŸßÏåÅ
-ùë†Õçá€íƒ–‡’²ã‹€ã¢¸Ø™ğû°²¡Æ›çü°’³áˆ¡à’Ó¾¸²¡›ˆğÊŸö…Ç¢õ‹ˆÌ¶ààåÀÁÊ’œÇ ÇÇ§§§ış
-¿ÿìììüüœ€¸èñÄé‡ú­æ³¹µµ ¥ÀœŸŸ‹„¡©ˆÇÒŒÉƒ½·¹æğÍıÖğ©ñ¥¸Ö××ä…‘ÃÔ­Š†ğÄÚï¢ÌÌÌñ¦¶üÒãó
-ç¹Ä¸’œ««ó«ÆÃàèõ®ú§§§ÕãàÜåÆÇòá¨îÕÉğÚëµÚ½ìŞ§Á¡äºñæ«´ÊÙğ¤¦é¢çËÅ™ü’Çæ¬Ú¢®ßºÊ¹³ÃıŸ
-×øÄÅ–‡±œ–Ø’‘Âœ–­Ò·³…İ£Çˆá«Í¶¶ÕØãñì˜Çœ™áÏ÷Ü‘ÛÍâÀ½…Ç«ÕâŠ¿ö˜óßÖ©¦ô–™¾ø¤”éÙî…Æã
-õ‚£ŠâİÈÃ…çæÈÖ†œ‘¬Œ¸Ø™§î¨¤äÏÆß–» Ò²ƒ¸Îèå‰ƒü³Ø€„ÛœĞ˜µ††¿•ƒ‡“€‡«‡«‡à«‡«µğ©
-ÿœ“€ƒ•€ƒ×•ÂàĞ¶—áØóñ·ì‘±øœŒÇ‰½™Ò»ô™ÂŸğå»¤í¸˜€Ãø¯Ò³ÃÒÅˆÃ²‰ÜØ™Œ…Åğ¾ĞÚš¯²¹Š±Í¸ŒÓ­Ÿ
-éèï¹Î¸¦ÚğÑğìë‡­Ÿ¡À‹ÇÌİ¬ìéÓÒÌß¦Ø¤»ìçÃ–•ü¥‰¸ İ»”·ÂãğÜ›’ÆÁğ¸Šö²ßÕÆõÅÁÊö¨Æ«œ—ØÆ
-‡Íìßïî‹•è¿Òœ¾Š¢¹›¹©€ãã¦ĞÓ³àÈóşƒ‚¨¤€ƒ‡•ğ®«‡€«‡«‡«Êùâ ß¹¹Áá–ƒ‡”ÆÀÁ¶ÊÀÁÊÀÁÊ
-ÛÀÁÊÀÁÊ™ôİà •ğå°’Š•«…É®ã³ú›’ØÇœÓ…Éÿ³©ò¨ÀÁÊÅ„¸Œ›ûœÕĞìš”Œ‡ñÓ½ü ï­šÂÑ–«ı•ğ
-€€‡Ÿ±Ü»Ê¤œ÷ì”şíğèìŠÕÎÏ¡ğÀ¥‰«ÑıÉ’ñ¹Çôº…ï¬ĞØ©©ÖÃÍ¡¢‘ş“ŒÒÉ¸öèÿ €Šµì€€Ú‡«¹šğÀÈÌˆãñ
-ÔåÃ¼¦éŞƒû¹­š¬¯¯ø¯¬¬ÌÏÏ‹Îãñï±ûƒ‰Ûãëƒ‰ƒ§ÜŸÎ€İ¾õ³”¦ÉÄ¥ÂÌâÀ´†ŞËË¿ãë£áÕÃ‡ÕµÅÛíùÁõŠ
-ûƒıİå“õÒçÒ’€¨Şå“Ô¯ß¬Í€½¸ªÿ§®É§ğúÚÚú™›ôÎ†µñìö»òãèœ•œ‡‡­ÎÑ¯ß÷ŞışåôöóÃÓñğ÷ãûæ¤Ù³§
-ñÚ–©Ûš–•‘È‹ÁÂÔªş¿Ÿ¼óÖßÁñûğ› ÒÃİÛ•ÕËğ™”ìûıê­Ç§…å‘ÀÿÃ€ˆÅ
+(A4UAZwAAAJn/AAAAAHic7Z3PaxNBFMe39d/wn/Aq3qzYi715FW+CQkG8eJPqpQWJ7VEqevAiJPSUg0dRaxEsLRLEgJKWFIriJYX2ENquQyLr7Pzayf6Y95J8vzzCspmdeW8++96YZOp2Op04jqOL29HlTnSlM3NjP7q6I2xm7p/NDuzCNdVm5/63gZVlnQGOS3c3K7I/v77D/A04WBlwsDLgYGXAwcocOOK0jA2S11FxRJJCxhulNdKFpYxbBIf7zpcb2Br7hBaYSPgR5eGSY6MPHHCEN0Ic7pM5cCgVLHk1th9pNuR0VrJbv8GKlDv9En04mwNlFbqkE7lnz7XDkRHuFcTtniNkffIzz+SeH//hcg+qQzRGPWp2lIvD4Rh/HPnMESxwAIce7Eg49JJLhcN/UHeNkoPK8bnDuJTbiDg8NK5lxgZGEJGk3LeobTi9c/2tUUfUr9I7H99P5cXrBlXnjuGAgxaHkjLji2MiDThYGXCwsiGOxpvnMBKz4Yih4BLTvriyIRtwEEqfdgVHdYsITDbgYGXAwcoSHEdHRycnJ/1+/+zs7Pz8HDhocURpAQctjmazubW1JUAcHx+LBKkIR1IMyQO3Oebwzf1WKXElONbX1wURgUNUrYpwxNpvIkxMcSa2/FJj87nEuBIcq6urjUZD4Oj1eqenp1XjYGVGx/LhKO7JcNprtVq9XifBoWS68WartMrZcCRpoudLRZkeEkfmrNqirrrKubPDfZ/4xMUWhzGcWJKRQpwWLQ63MwXdI8dhK022NlVY8ewYRxyOmc93XBEO280QwD0FR6vVCr92GHPf1qZ0Fpk++CRpWe4FxgFjgiOKYt3Iw+dmyA5WBhysDDhYmScOKKTkzx3G3zugkFKyAzho5YmDfDPYBFsOHFAYNQa/lQMHEwEHKwEHKwEHKwEHKzXwqZyTgIOVgIOVwuBQtgGX2HNxN2yOkfgcDEeJvRk79BlCn3DlpO04mIDDeNKzw9JFiEMJ3FgZjIVFPlBaGq+yuTHNOIxTLR/obznOOKbaUXBsa4etn8ALR0xdrGzTUh2OTN+mJDts54FDlvwliTigXTuUt8LjcFwbRsFwOIp2MtXG9cWdQcooxqscl9jGzezfHW9uDYuV6L9SHD4iuRu5KQAO46ZQUzPgyP6DAiikgIOV8I0uKwEHKwEHKwEHK3niIN85OcGWAwcURsDBSsDBSsDBSsDBSsDBSo30Hl3goBVwsBKKFSuFyQ7jj7N6mxJHHFOFyQ7/qZ5yKMDBSoQ4jBt7HNVsGhQMh3HTjnyg762aQtEWK30PFXAABx8xXDtKHHfsFH7tcGwKVc5PofAlCStRfUmSuUd0OoXvrFgpKVbDTaER/hMMUsk4aP+gAIq17AAOWgEHKzlwwEjMiGNxZUO8Jo9p3vu5LRosLy8vLCzMz8+LY/HvsXsDiePrA4mDJ48fToDdvnWzJknEJcJMYjQGXktLP+Oj4VXDB9W12235QXUKjoP9XeWT9dLSkoAoXuWTL1+sTYA9uH+nLskn8Hpa+hmb9E6Gj3HsdrvyYxwVHIcHrc6PL1933n3+9HbzQ1Px8OP75iTZs6ePWhYpgduaFZHIC8FCVKp+v588c1bB8fvwmyDS3dsVVUtwmWx7/WqtRyflEcB/AUMeCEU=)
 &]
 [s0; &]
 [s9; This class provides the menu hierarchy. It can be used either 
@@ -80,36 +63,41 @@ be defined by issuing individual Add methods before calling PopUp.&]
 [s2; Same as previous method, with p set to the current mouse position.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(Ctrl`*`,Point`):%- [@(0.0.255) void]_[* Execute]([_^Ctrl^ Ctrl]_`*
+[s5;:MenuBar`:`:Execute`(Ctrl`*`,Point`):%- [@(0.0.255) bool]_[* Execute]([_^Ctrl^ Ctrl]_`*
 [*@3 owner], [_^Point^ Point]_[*@3 p])&]
 [s2; Pop`-ups the menu at [%-*@3 p ]in the [%-*@3 owner] view area and 
-performs the modal loop for it.&]
+performs the modal loop for it. Returns false when menu is canceled 
+without performing any action.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(Point`):%- [@(0.0.255) void]_[* Execute]([_^Point^ Point]_[*@3 p])&]
-[s2; Same as Execute(GetActiveWindow(), [%-*@3 p]).&]
+[s5;:MenuBar`:`:Execute`(Point`):%- [@(0.0.255) bool]_[* Execute]([_^Point^ Point]_[*@3 p])&]
+[s2; Same as Execute(GetActiveWindow(), [%-*@3 p]). Returns false when 
+menu is canceled without performing any action.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(`):%- [@(0.0.255) void]_[* Execute]()&]
-[s2; Same as previous method, with p set to the current mouse position.&]
+[s5;:MenuBar`:`:Execute`(`):%- [@(0.0.255) bool]_[* Execute]()&]
+[s2; Same as previous method, with p set to the current mouse position. 
+Returns false when menu is canceled without performing any action.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(Ctrl`*`,Callback1`<Bar`&`>`,Point`):%- [@(0.0.255) static] 
-[@(0.0.255) void]_[* Execute]([_^Ctrl^ Ctrl]_`*[*@3 owner], [_^Callback1^ Callback1][@(0.0.255) <
-]Bar[@(0.0.255) `&>]_[*@3 proc], [_^Point^ Point]_[*@3 p])&]
-[s2; Pop`-ups the menu based on [%-*@3 proc].&]
+[s5;:Upp`:`:MenuBar`:`:Execute`(Upp`:`:Ctrl`*`,Upp`:`:Event`<Upp`:`:Bar`&`>`,Upp`:`:Point`):%- [@(0.0.255) s
+tatic] [@(0.0.255) bool]_[* Execute]([_^Upp`:`:Ctrl^ Ctrl]_`*[*@3 owner], 
+[_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[*@3 proc], [_^Upp`:`:Point^ Point]_[*@3 p])&]
+[s2; Pop`-ups the menu based on [%-*@3 proc]. Returns false when menu 
+is canceled without performing any action.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(Callback1`<Bar`&`>`,Point`):%- [@(0.0.255) static] 
-[@(0.0.255) void]_[* Execute]([_^Callback1^ Callback1][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 p
-roc], [_^Point^ Point]_[*@3 p])&]
-[s2; Same as previous method, using GetActiveWindow() as owner.&]
+[s5;:Upp`:`:MenuBar`:`:Execute`(Upp`:`:Event`<Upp`:`:Bar`&`>`,Upp`:`:Point`):%- [@(0.0.255) s
+tatic] [@(0.0.255) bool]_[* Execute]([_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[*@3 proc],
+ [_^Upp`:`:Point^ Point]_[*@3 p])&]
+[s2; Same as previous method, using GetActiveWindow() as owner. Returns 
+false when menu is canceled without performing any action.&]
 [s3; &]
 [s4;%- &]
-[s5;:MenuBar`:`:Execute`(Callback1`<Bar`&`>`):%- [@(0.0.255) static] 
-[@(0.0.255) void]_[* Execute]([_^Callback1^ Callback1][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 p
-roc])&]
-[s2; Same as previous method, using current mouse position.&]
+[s5;:Upp`:`:MenuBar`:`:Execute`(Upp`:`:Event`<Upp`:`:Bar`&`>`):%- [@(0.0.255) static] 
+[@(0.0.255) bool]_[* Execute]([_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[*@3 proc])&]
+[s2; Same as previous method, using current mouse position. Returns 
+false when menu is canceled without performing any action.&]
 [s3; &]
 [s4;%- &]
 [s5;:MenuBar`:`:IsEmpty`(`):%- [@(0.0.255) bool]_[* IsEmpty]()&]
