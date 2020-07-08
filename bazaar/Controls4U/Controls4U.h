@@ -83,7 +83,10 @@ public:
 	
 	void DoGo(bool add = true);
 	void DoBrowse();
-		
+	
+	void AddHistory(String path = "", int max = 12);
+	void ClearHistory();
+	
 	Function<bool ()> WhenChange;
 	
 	virtual void  Serialize(Stream& s) {

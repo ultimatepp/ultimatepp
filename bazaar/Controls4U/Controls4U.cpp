@@ -176,7 +176,7 @@ void EditFileFolder::DoBrowse() {
 
 void EditFileFolder::SetData(const Value& data) {
 	EditString::SetData(data);
-	DoGo();
+	DoGo(true);
 }
 
 void EditFileFolder::DoGo(bool add) {
@@ -204,11 +204,22 @@ void EditFileFolder::DoGo(bool add) {
 	}
 	if (WhenChange) {
 		if (WhenChange()) {
-			AddHistory();
+			AddHistory(path);
 			Accept();
 		}
 	} else
 		WhenAction();
+}
+
+void EditFileFolder::AddHistory(String path, int max) {
+	if (path.IsEmpty())
+		WithDropChoice::AddHistory(max);
+	else
+		select.AddHistory(path, max); 
+}
+
+void EditFileFolder::ClearHistory() {
+	select.Clear(); 
 }
 
 void EditFileFolder::DoLeft() {
