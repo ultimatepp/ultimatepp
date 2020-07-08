@@ -1047,6 +1047,8 @@ void Jsonize(JsonIO& io, std::complex<T>& var) {
 	}
 }
 
+size_t GetNumLines(Stream &stream);
+
 class FileInLine : public FileIn {
 public:
 	FileInLine(String _fileName) : FileIn(_fileName), line(0), fileName(_fileName) {};
@@ -1129,10 +1131,7 @@ public:
 	
 	FieldSplit& Load(String _line) {
 		line = _line;
-		if (IsSeparator)
-			fields = Split(line, IsSeparator, true);
-		else
-			fields = Split(line, defaultIsSeparator, true);
+		fields = Split(line, IsSeparator, true);
 		return *this;
 	}
 	String GetText() const {
@@ -1172,7 +1171,7 @@ public:
 		return fields.GetCount();
 	}
 	
-	int (*IsSeparator)(int) = nullptr;
+	int (*IsSeparator)(int) = defaultIsSeparator;
 		
 protected:
 	String line;

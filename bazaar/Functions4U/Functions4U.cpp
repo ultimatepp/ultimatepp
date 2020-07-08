@@ -2780,4 +2780,20 @@ Upp::String GetCurrentMainPackage() {return "dummy";}
 Upp::String GetCurrentBuildMethod()	{return "dummy";}
 void IdePutErrorLine(const Upp::String& ) {}
 
+size_t GetNumLines(Stream &stream) {
+	size_t res = 0;
+	int c;
+
+	if ((c = stream.Get()) < 0)
+		return 0;
+	if (c == '\n')
+		res++;
+	while ((c = stream.Get()) > 0)
+		if (c == '\n')
+			res++;
+	if (c != '\n')
+		res++;	
+	return res;	
+}
+
 }
