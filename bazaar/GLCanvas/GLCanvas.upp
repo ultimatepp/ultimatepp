@@ -1,0 +1,16 @@
+description "A basic canvas for OpenGL drawings\377B255,170,0";
+
+uses
+	GLCtrl,
+	Surface;
+
+file
+	GLCanvas.cpp,
+	GLCanvas.h,
+	GLCanvas.iml,
+	trackball.cpp,
+	trackball.h,
+	trkball.c,
+	trkball.h;
+
+ spellcheck_comments "EN-GB"
