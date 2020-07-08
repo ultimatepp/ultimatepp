@@ -1,0 +1,10 @@
+description "Basic surface handling classes\377B255,170,0";
+
+uses
+	Geom;
+
+file
+	Surface.cpp,
+	Surface.h;
+
+ spellcheck_comments "EN-GB"
