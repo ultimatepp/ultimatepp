@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include <Functions4U/Functions4U.h>
 #include <plugin/Eigen/Eigen.h>
-#include "sundials.h"
+#include "Sundials.h"
 
 namespace Upp {
 
@@ -88,13 +88,13 @@ static String GetIdaErrorMsg(int ret) {
  	case IDA_CONSTR_FAIL:	return "the inequality constraints could not be met";	
  	case IDA_LINESEARCH_FAIL:return"the linesearch failed (either on steptol test or on the maxbacks test)";
  	case IDA_CONV_FAIL:		return "the Newton iterations failed to converge";
-	default:				return Format("Unknown SUndoasl eerror %d", ret);
+	default:				return Format("Unknown Sundials error %d", ret);
 	}
 }
                 	
 void SolveDAE(const VectorXd &y, const VectorXd &dy, double dt, double maxt, Upp::Array<VectorXd> &res,  
-		Function <bool(double t, const double y[], const double dy[], double residual[])>Residual, int numZero,
-		Function <bool(double t, const double y[], const double dy[], double residual[])>ResidualZero) {
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])>Residual, int numZero,
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])>ResidualZero) {
 	ASSERT(y.size() == dy.size());
 	Eigen::Index numEq = y.size();
 	res.SetCount(int(numEq));
@@ -102,18 +102,17 @@ void SolveDAE(const VectorXd &y, const VectorXd &dy, double dt, double maxt, Upp
 		res[i].resize(int(maxt/dt)+1);
 		res[i](0) = y[i];
 	}
-	SolveDAE(y.data(), dy.data(), int(numEq), dt, maxt, Residual, numZero, ResidualZero, [&](double t, const double y[], const double dy[], bool isZero, int *whichZero)->int {
-		int iter = int(round(t/dt));
+	SolveDAE(y.data(), dy.data(), int(numEq), dt, maxt, Residual, numZero, ResidualZero, [&](double t, Eigen::Index iiter, const double y[], const double dy[], bool isZero, int *whichZero)->int {
 		for (int i = 0; i < int(numEq); ++i)
-			res[i](iter) = y[i]; 
+			res[i](iiter) = y[i]; 
 		return true;
 	});		
 }
 
 void SolveDAE(const VectorXd &y, const VectorXd &dy, double dt, double maxt, 
 		Upp::Array<VectorXd> &res, Upp::Array<VectorXd> &dres, 
-		Function <bool(double t, const double y[], const double dy[], double residual[])>Residual, int numZero,
-		Function <bool(double t, const double y[], const double dy[], double residual[])>ResidualZero) {
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])>Residual, int numZero,
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])>ResidualZero) {
 	ASSERT(y.size() == dy.size());
 	Eigen::Index numEq = y.size();
 	res.SetCount(int(numEq));
@@ -124,20 +123,19 @@ void SolveDAE(const VectorXd &y, const VectorXd &dy, double dt, double maxt,
 		dres[i].resize(int(maxt/dt)+1);
 		dres[i](0) = dy[i];
 	}
-	SolveDAE(y.data(), dy.data(), int(numEq), dt, maxt, Residual, numZero, ResidualZero, [&](double t, const double y[], const double dy[], bool isZero, int *whichZero)->int {
-		int iter = int(round(t/dt));
+	SolveDAE(y.data(), dy.data(), int(numEq), dt, maxt, Residual, numZero, ResidualZero, [&](double t, Eigen::Index iiter, const double y[], const double dy[], bool isZero, int *whichZero)->int {
 		for (int i = 0; i < int(numEq); ++i) {
-			res[i](iter) = y[i]; 
-			dres[i](iter) = dy[i];
+			res[i](iiter) = y[i]; 
+			dres[i](iiter) = dy[i];
 		}
 		return true;
 	});		
 }
 
 void SolveDAE(const double y[], const double dy[], int numEq, double dt, double maxt, 
-		Function <bool(double t, const double y[], const double dy[], double residual[])> Residual, int numZero,  
-		Function <bool(double t, const double y[], const double dy[], double residual[])> ResidualZero,
-		Function <bool(double t, const double y[], const double dy[], bool isZero, int *whichZero)>OnIteration) {
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])> Residual, int numZero,  
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])> ResidualZero,
+		Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], bool isZero, int *whichZero)>OnIteration) {
 	int retval, retvalr;
 	Buffer<int> rootsfound(numEq);
 	SUNNonlinearSolver NLS = NULL;
@@ -156,24 +154,21 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 		CheckMem((void *)avtol, "N_VNew_Serial");
 	
 	  	/* Create and initialize  y, y', and absolute tolerance vectors. */
-		realtype *yval = N_VGetArrayPointer(yy);
-		memcpy(yval, y, numEq*sizeof(double));
+		memcpy(N_VGetArrayPointer(yy), y,  numEq*sizeof(double));
+		memcpy(N_VGetArrayPointer(yp), dy, numEq*sizeof(double));
 		
-		realtype *ypval = N_VGetArrayPointer(yp);
-		memcpy(ypval, dy, numEq*sizeof(double));
-		
-		realtype rtol = 1.0e-4;
+		realtype rtol = 1.0e-5;
 		
 		realtype *atval = N_VGetArrayPointer(avtol);
 		for (int i = 0; i < numEq; ++i)
 			atval[i] = 1.0e-8;
 	
-	  	/* Integration limits */
 	  	double t0 = 0;
 	
 		struct UserData {
-			Function <bool(double t, const double y[], const double dy[], double residual[])> Residual;
-			Function <bool(double t, const double y[], const double dy[], double residual[])> ResidualZero;
+			Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])> Residual;
+			Function <bool(double t, Eigen::Index iiter, const double y[], const double dy[], double residual[])> ResidualZero;
+			int iiter = 0;
 		} userData;
 		
 		userData.Residual = Residual;
@@ -186,7 +181,7 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 			
 			UserData &userData = *(UserData *)user_data;
 			
-			return userData.Residual(t, y, dy, res) ? 0 : -1;
+			return userData.Residual(t, userData.iiter, y, dy, res) ? 0 : -1;
 		};
 	    auto ResZeroFun = [](realtype t, N_Vector _y, N_Vector _dy, realtype *res, void *user_data) { 
 			realtype *y = N_VGetArrayPointer(_y);
@@ -194,7 +189,7 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 			
 			UserData &userData = *(UserData *)user_data;
 			
-			return userData.ResidualZero(t, y, dy, res) ? 0 : -1;
+			return userData.ResidualZero(t, userData.iiter, y, dy, res) ? 0 : -1;
 		};	
 		
 		/* Call IDACreate and IDAInit to initialize IDA memory */
@@ -243,13 +238,10 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 		retval = IDASetNonlinearSolver(mem, NLS);
 		CheckRet(retval, "IDASetNonlinearSolver");
 		
-		/* In loop, call IDASolve, print results, and test for error.
-		Break out of loop when NOUT preset output times have been reached. */
-	
-		int iiter = 1; 
-		double tnext = dt;
+		userData.iiter = 0; 
+		double tnext = 0.000001;
 		double titer;
-		while(true) {
+		while(tnext <= maxt) {
 			retval = IDASolve(mem, tnext, &titer, yy, yp, IDA_NORMAL);
 			CheckRet(retval, "IDASolve");
 		
@@ -262,16 +254,18 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 				retvalr = IDAGetRootInfo(mem, rootsfound);
 				CheckRet(retvalr, "IDAGetRootInfo");
 				//PrintRootInfo(rootsfound, numEq);
-			} else if (retval == IDA_SUCCESS) {
-				iiter++;
-				tnext = iiter*dt;
-			} else		
+			} else if (retval == IDA_SUCCESS) 
+				;
+			else		
 				throw Exc(Format(t_("Sundials IDA error: %s"), GetIdaErrorMsg(retval)));
 			
-			if(OnIteration && !OnIteration(titer, y, dy, retval == IDA_ROOT_RETURN, rootsfound))
+			if(OnIteration && !OnIteration(titer, userData.iiter, y, dy, retval == IDA_ROOT_RETURN, rootsfound))
 				break;
-			else if (tnext > maxt) 
-				break;
+			
+			if (retval == IDA_SUCCESS) {
+				userData.iiter++;
+				tnext = userData.iiter*dt;
+			}
 	  	}
 	  	//PrintFinalStats(mem);
 	} catch(Exc err) {
@@ -316,7 +310,6 @@ void SolveNonLinearEquationsSun(double y[], int numEq,
 		double fnormtol = 1.e-6;
 		double scsteptol = 1.e-6;
 		int numIteraciones = 500;
-	  	bool ret = true;
 
 	  	kmem = KINCreate();
 	  	CheckMem((void *)kmem, "KINCreate");

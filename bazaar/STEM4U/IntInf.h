@@ -153,8 +153,8 @@ private:
     bool equalizeSigns();
     void removeLeadingZeros();
 
-    Vector<ELEM_TYPE> val; // number with base FACTOR
     bool pos; // true if number is positive
+    Vector<ELEM_TYPE> val; // number with base FACTOR
 };
 
 inline intInf::intInf() : pos(true) {
