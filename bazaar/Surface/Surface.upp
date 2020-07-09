@@ -1,10 +1,11 @@
-description "Basic surface handling classes\377B255,170,0";
+description "Basic 3D primitives and its handling\377B255,170,0";
 
 uses
 	Geom;
 
 file
 	Surface.cpp,
-	Surface.h;
+	Surface.h,
+	stl.cpp;
 
  spellcheck_comments "EN-GB"

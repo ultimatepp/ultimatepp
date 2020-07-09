@@ -390,6 +390,12 @@ private:
 	Vector<int> selPanels, selNodes;
 };
 
+
+void LoadStl(String fileName, Surface &surf, bool &isText, String &header);
+void SaveStlTxt(String fileName, const Surface &surf);
+void SaveStlBin(String fileName, const Surface &surf);
+
+
 }
 
 #endif
