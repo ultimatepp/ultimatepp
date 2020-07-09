@@ -23,7 +23,7 @@ private:
 	int buttonContext;
 	void ExportViewAsImage();
 	
-	VolumeEnvelope *env = 0;
+	VolumeEnvelope *env = nullptr;
 	String defaultFileName;
 	
 	int jpgQuality = 90;
@@ -56,7 +56,7 @@ public:
 	void PaintLine(const Segment3D &p, const Color &color);
 	void PaintQuad(const Point3D &p0, const Point3D &p1, const Point3D &p2, const Point3D &p3, const Color &color, double alpha = 1);
 	void PaintCuboid(const Point3D &p0, const Point3D &p1, const Color &color);	
-	void PaintSurface(const Surface &surf, const Color &linCol, bool showMesh, bool showNormals, bool showWaterLevel, bool showSkewed, bool showFissure, bool showMultiPan);
+	void PaintSurface(const Surface &surf, const Color &linCol, bool showMesh, bool showNormals);
 	void PaintSegments(const Vector<Segment3D>& segs, const Color &color);
 	void PaintAxis(double x, double y, double z, double len);
 	void PaintAxis(const Point3D &p, double len);

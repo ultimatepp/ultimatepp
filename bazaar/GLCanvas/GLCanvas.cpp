@@ -63,6 +63,10 @@ bool GLCanvas::Key(dword key, int ) {
 }
 
 void GLCanvas::ZoomToFit() {
+	if (env == nullptr) {
+		Exclamation(t_("No model is loaded"));
+		return;
+	}
 	double mx = max(max(env->maxX, env->maxY), env->maxZ);
 	SetZoomDistance(2*mx);
 	Refresh();	
@@ -395,18 +399,8 @@ void GLCanvas::PaintSurface0(const Vector<Point3D> &nodes, const Vector<Panel> &
 	}
 }
 
-void GLCanvas::PaintSurface(const Surface &surf, const Color &linCol, 
-		bool showMesh, bool showNormals, bool showWaterLevel, bool showSkewed, bool showFissure, bool showMultiPan) {
+void GLCanvas::PaintSurface(const Surface &surf, const Color &linCol, bool showMesh, bool showNormals) {
 	PaintSurface0(surf.nodes, surf.panels, showMesh, showNormals, surf.avgFacetSideLen, linCol);
-
-	if (showSkewed)
-		PaintSegments(surf.skewed, LtRed());
-	if (showFissure)
-		PaintSegments(surf.segTo1panel, LtRed());
-	if (showWaterLevel)
-		PaintSegments(surf.segWaterlevel, LtBlue());
-	if (showMultiPan)
-		PaintSegments(surf.segTo3panel, Black());
 }
 
 }
