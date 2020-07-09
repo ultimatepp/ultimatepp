@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	GLCanvas;
+
+file
+	main.cpp,
+	GLCanvas_demo.h,
+	GLCanvas_demo.lay;
+
+mainconfig
+	"" = "GUI";
+

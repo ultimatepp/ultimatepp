@@ -1,0 +1,7 @@
+LAYOUT(GLCanvas_demoLayout, 480, 372)
+	ITEM(GLCanvas, canvas, SetFrame(ThinInsetFrame()).HSizePosZ(4, 4).VSizePosZ(24, 4))
+	ITEM(Label, dv___1, SetLabel(t_("File (.stl):")).LeftPosZ(8, 52).TopPosZ(4, 19))
+	ITEM(EditString, filename, HSizePosZ(60, 52).TopPosZ(4, 19))
+	ITEM(Button, butOpen, SetLabel(t_("Open")).RightPosZ(4, 44).TopPosZ(4, 20))
+END_LAYOUT
+
