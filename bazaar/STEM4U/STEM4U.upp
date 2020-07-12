@@ -16,6 +16,8 @@ file
 	Integral.h,
 	Sundials.cpp,
 	Sundials.h,
+	Financial.cpp,
+	Financial.h,
 	Utility.cpp,
 	Utility.h,
 	srcimp.tpp,

@@ -1,5 +1,5 @@
-#ifndef _STEM4U_sundials_h_
-#define _STEM4U_sundials_h_
+#ifndef _STEM4U_Sundials_h_
+#define _STEM4U_Sundials_h_
 
 namespace Upp {
 	
