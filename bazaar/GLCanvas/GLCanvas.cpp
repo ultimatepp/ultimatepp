@@ -122,8 +122,7 @@ void GLCanvas::OnTypeImage(FileSel *_fs) {
 		fs.file = ForceExt(GetFileName(~fs), ".pdf");
 }
 
-void GLCanvas::SaveToFile()
-{
+void GLCanvas::SaveToFile() {
 	GuiLock __;
 
 	Image image = GetImage();

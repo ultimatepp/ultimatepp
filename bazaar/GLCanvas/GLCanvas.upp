@@ -1,10 +1,10 @@
 description "A basic canvas for OpenGL primitives\377B255,170,0";
 
 uses
-	GLCtrl,
 	Surface,
 	plugin/jpg,
-	PdfDraw;
+	PdfDraw,
+	GLCtrl;
 
 file
 	GLCanvas.cpp,
