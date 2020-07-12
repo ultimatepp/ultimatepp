@@ -1046,9 +1046,9 @@ void Surface::CutZ(const Surface &orig, double factor) {
 				panel2.id[1] = nodeFrom[3];
 				panel2.id[2] = nodeFrom[4];
 				panel2.id[3] = nodeFrom[4];
-				TriangleToQuad(panel2); 
+				//TriangleToQuad(panel2); 
 			}
-			TriangleToQuad(panel);
+			//TriangleToQuad(panel);
 		}
 	}
 }
