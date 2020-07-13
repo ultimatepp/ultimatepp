@@ -4,12 +4,20 @@ GLCanvas_demo::GLCanvas_demo()
 {
 	CtrlLayout(*this, "GLCanvas demo. STL viewer");
 	
+	opShowAxis.WhenAction = [&] {canvas.Refresh();};
+	opShowNormals.WhenAction = [&] {canvas.Refresh();};
+	
 	butOpen.WhenAction = [&] {
 		try {
+			WaitCursor waitcursor;
+			
 			bool isText;
 			String header;
 			LoadStl(~filename, surf, isText, header);
+			surf.GetPanelParams();
 			surf.GetLimits();
+			surf.GetSurface();
+			surf.GetVolume();
 			canvas.SetEnv(surf.env);
 		} catch (Exc e) {
 			Exclamation(DeQtf(e));
@@ -17,7 +25,9 @@ GLCanvas_demo::GLCanvas_demo()
 	};
 	
 	canvas.WhenPaint = [&] {
-		canvas.PaintSurface(surf, Green(), true, false);
+		if (opShowAxis)
+			canvas.PaintAxis(0, 0, 0, surf.env.LenRef()/4.);
+		canvas.PaintSurface(surf, Green(), true, ~opShowNormals);
 	};
 	
 	Sizeable().Zoomable();
