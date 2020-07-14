@@ -377,10 +377,13 @@ void MenuItem::LeftUp(Point, dword)
 #endif
 #endif
 	LLOG("Menu Item pre Action");
+	Ptr<MenuItem> p = this; // action can destroy the menu and this instance too
 	Action();
-	MenuBar *bar = GetMenuBar();
-	if(bar)
-		bar->action_taken = true;
+	if(p) {
+		MenuBar *bar = GetMenuBar();
+		if(bar)
+			bar->action_taken = true;
+	}
 	LLOG("Menu Item post Action");
 }
 
