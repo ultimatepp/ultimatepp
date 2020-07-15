@@ -48,7 +48,9 @@ struct Basic_functor : NonLinearOptimizationFunctor<double> {
 	Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &err)> function;
 };
 
-bool NonLinearOptimization(Eigen::VectorXd &y, Eigen::Index numData, Function <int(const Eigen::VectorXd &y, Eigen::VectorXd &residual)>residual);
+bool NonLinearOptimization(Eigen::VectorXd &y, Eigen::Index numData, 
+			Function <int(const Eigen::VectorXd &y, Eigen::VectorXd &residual)>residual,
+			double xtol = Null, double ftol = Null, int maxfev = Null);
 bool SolveNonLinearEquations(Eigen::VectorXd &y, Function <int(const Eigen::VectorXd &b, Eigen::VectorXd &residual)> Residual);
 
 template <class T>
