@@ -97,4 +97,93 @@ void Pdb::Sync0(Thread& ctx)
 	framelist.GoBegin();
 }
 
+void Pdb::BTs()
+{
+	static bool lock;
+	
+	if(lock) return;
+	
+	int cid = bts.GetCursor();
+	Value cursor = bts.Get();
+	Point sc = bts.GetScroll();
+
+	Index<String> open;
+	for(int i = 0; i < bts.GetChildCount(0); i++) {
+		int id = bts.GetChild(0, i);
+		if(bts.IsOpen(id))
+			open.FindAdd(~bts.Get(id));
+	}
+	
+	bts.Clear();
+	bts.NoRoot();
+
+	bts.WhenOpen = [=](int id) {
+		if(bts.GetChildCount(id) == 0) {
+			String thid = ~bts.Get(id);
+			int ii = threads.Find(atoi(thid));
+			if(ii >= 0) {
+				int i = 0;
+				for(const auto& f : Backtrace(threads[ii])) {
+					bts.Add(id, i == 0 ? DbgImg::IpLinePtr() : DbgImg::FrameLinePtr(),
+					        "#" + AsString(i) + "#" + thid, f.text);
+					i++;
+				}
+			}
+		}
+	};
+
+	for(int i = 0; i < threads.GetCount(); i++) {
+		dword thid = threads.GetKey(i);
+		String stid = AsString(thid);
+		int id = bts.Add(0, DbgImg::Thread(), stid, Format("0x%x", (int)thid), true);
+		if(open.Find(stid) >= 0)
+			bts.Open(id);
+	}
+	
+	bts.FindSetCursor(cursor);
+	bts.ScrollTo(sc);
+	
+	bts.WhenBar = [=](Bar& bar) {
+		bar.Add("Open All", [=] {
+			for(int i = 0; i < bts.GetChildCount(0); i++)
+				bts.Open(bts.GetChild(0, i));
+		});
+		bar.Add("Close All", [=] {
+			for(int i = 0; i < bts.GetChildCount(0); i++)
+				bts.Close(bts.GetChild(0, i));
+		});
+	};
+	
+	bts.WhenSel = [=] {
+		String k = ~bts.Get();
+		if(*k == '#') {
+			int id = bts.GetParent(bts.GetCursor());
+			String thid = ~bts.Get(id);
+			int tid = atoi(thid);
+			int ii = threads.Find(tid);
+			if(ii >= 0) {
+				int i = 0;
+				for(auto& f : Backtrace(threads[ii])) {
+					if(k == "#" + AsString(i) + "#" + thid) {
+						int tid = atoi(thid);
+						if(threadlist.HasKey(tid)) {
+							lock = true;
+							threadlist <<= tid;
+							SetThread();
+							if(ii < framelist.GetCount()) {
+								framelist.SetIndex(i);
+								SetFrame();
+								lock = false;
+								return;
+							}
+							lock = false;
+						}
+					}
+					i++;
+				}
+			}
+		}
+	};
+}
+
 #endif

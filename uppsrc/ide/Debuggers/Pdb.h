@@ -230,7 +230,7 @@ struct Pdb : Debugger, ParentCtrl {
 	EditString         watchedit;
 	
 	enum { // Order in this enum has to be same as order of tab.Add
-		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_CPU, TAB_MEMORY
+		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_CPU, TAB_MEMORY, TAB_BTS
 	};
 
 	TabCtrl            tab;
@@ -250,6 +250,7 @@ struct Pdb : Debugger, ParentCtrl {
 	TreeCtrl           tree;
 	String             tree_exp;
 	bool               first_exception = true;
+	TreeCtrl           bts; // backtraces of all threads
 
 	VectorMap<String, String> treetype;
 	int restoring_tree = 0;
@@ -489,6 +490,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      AddWatch();
 	void      AddWatch(const String& s);
 	void      EditWatch();
+	void      BTs();
 
 	void      SetTab(int i);
 
