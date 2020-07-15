@@ -324,8 +324,8 @@ public:
 
 class WeibullEquation : public ExplicitEquation {
 public:
-	WeibullEquation() 							{SetCoeff(1, 1, 1); factor = Null;}
-	WeibullEquation(double k, double lambda)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda, 1); factor = Null;}
+	WeibullEquation() 							{SetCoeff(1, 1, 1);}
+	WeibullEquation(double k, double lambda, double factor)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda, factor);}
 	double f(double x) {
 		if (x < 0)
 			return 0;
@@ -346,9 +346,9 @@ public:
 	virtual void GuessCoeff(DataSource &) {}
 	virtual void _GuessCoeff(DataSource &series) {
 		Vector<Pointf> cumulative = series.CumulativeY();
-		double factor = cumulative.Top().y;
+		double fac = cumulative.Top().y;
 		for (int i = 0; i < cumulative.GetCount(); ++i)
-			cumulative[i].y /= factor;
+			cumulative[i].y /= fac;
 		VectorPointf data(cumulative);
 		WeibullCumulativeEquation weibullCumulative;
 		ExplicitEquation::FitError error = weibullCumulative.Fit(data);
@@ -364,8 +364,6 @@ public:
 	}
 	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
 	void SetDegree(int )					{NEVER();}
-private:
-	double factor;
 };
 
 class NormalEquation : public ExplicitEquation {
@@ -426,7 +424,7 @@ public:
 	void Fit(const Vector<double> &x, const Vector<double> &y)	 {Fit(x.begin(), y.begin(), x.GetCount());}
 	void Fit(const Eigen::VectorXd &x, const Eigen::VectorXd &y) {Fit(x.data(), y.data(), int(x.size()));}
 	void Fit(const double *x, const double *y, int n);
-	double f(double x);
+	double f(double x) const;
 	
 private:
 	struct Coeff {double a, b, c, d, x;};
