@@ -10,7 +10,7 @@ double DataSource::Min(Getdatafun getdata, int64& id) {
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
 		if (!IsNull(d) && minVal > d) {
-			minVal = d;
+			minVal = d;	
 			id = i;
 		}
 	}

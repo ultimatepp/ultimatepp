@@ -343,14 +343,14 @@ protected:
 	
 class CArray : public DataSource {
 private:
-	double *yData, *xData, *zData;
+	const double *yData, *xData, *zData;
 	int64 numData;
 	double x0, deltaX;
 	
 public:
-	CArray(double *_yData, int _numData, double _x0, double _deltaX) : yData(_yData), numData(_numData), x0(_x0), deltaX(_deltaX) {xData = NULL;}
-	CArray(double *_yData, double *_xData, int _numData) : yData(_yData), xData(_xData), numData(_numData) {zData = nullptr; x0 = deltaX = 0;}
-	CArray(double *_yData, double *_xData, double *_zData, int _numData) : yData(_yData), xData(_xData), zData(_zData), numData(_numData) {x0 = deltaX = 0;}
+	CArray(const double *_yData, int _numData, double _x0, double _deltaX) : yData(_yData), numData(_numData), x0(_x0), deltaX(_deltaX) {xData = NULL;}
+	CArray(const double *_yData, const double *_xData, int _numData) : yData(_yData), xData(_xData), numData(_numData) {zData = nullptr; x0 = deltaX = 0;}
+	CArray(const double *_yData, const double *_xData, const double *_zData, int _numData) : yData(_yData), xData(_xData), zData(_zData), numData(_numData) {x0 = deltaX = 0;}
 	virtual inline double y(int64 id)  	{return yData[ptrdiff_t(id)];}
 	virtual inline double x(int64 id)  	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
 	virtual double znFixed(int n, int64 id); 
@@ -360,18 +360,18 @@ public:
 
 class EigenVector : public DataSource {
 private:
-	Eigen::VectorXd *yData, *xData, *zData;
+	const Eigen::VectorXd *yData, *xData, *zData;
 	double x0, deltaX;
 	
 public:
-	EigenVector(Eigen::VectorXd &_yData, double _x0, double _deltaX) : yData(&_yData), x0(_x0), deltaX(_deltaX) {xData = nullptr;}
-	EigenVector(Eigen::VectorXd &_yData, Eigen::VectorXd &_xData) : yData(&_yData), xData(&_xData) {zData = nullptr; x0 = deltaX = 0;}
-	EigenVector(Eigen::VectorXd &_yData, Eigen::VectorXd &_xData, Eigen::VectorXd &_zData) : yData(&_yData), xData(&_xData), zData(&_zData) {x0 = deltaX = 0;}
-	virtual inline double y(int64 id)  	{return (*yData)(id);}
-	virtual inline double x(int64 id)  	{return xData ? (*xData)(id) : id*deltaX + x0;}
+	EigenVector(const Eigen::VectorXd &_yData, double _x0, double _deltaX) : yData(&_yData), x0(_x0), deltaX(_deltaX) {xData = nullptr;}
+	EigenVector(const Eigen::VectorXd &_yData, const Eigen::VectorXd &_xData) : yData(&_yData), xData(&_xData) {zData = nullptr; x0 = deltaX = 0;}
+	EigenVector(const Eigen::VectorXd &_yData, const Eigen::VectorXd &_xData, const Eigen::VectorXd &_zData) : yData(&_yData), xData(&_xData), zData(&_zData) {x0 = deltaX = 0;}
+	virtual inline double y(int64 id)  	{return (*yData)(Eigen::Index(id));}
+	virtual inline double x(int64 id)  	{return xData ? (*xData)(Eigen::Index(id)) : id*deltaX + x0;}
 	virtual double znFixed(int n, int64 id) {
 		if (n == 0)
-			return (*zData)(id);
+			return (*zData)(Eigen::Index(id));
 		NEVER();
 		return Null;
 	}
@@ -382,13 +382,13 @@ public:
 template <class Y>
 class VectorY : public DataSource {
 private:
-	Vector<Y> *yData;
+	const Vector<Y> *yData;
 	double x0, deltaX;
 
 public:
 	VectorY() : yData(0), x0(0), deltaX(0) {}
-	VectorY(Vector<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
-	void Init(Vector<Y> &_yData, double _x0, double _deltaX) {
+	VectorY(const Vector<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
+	void Init(const Vector<Y> &_yData, double _x0, double _deltaX) {
 		this->yData = &_yData;
 		this->x0 = _x0;
 		this->deltaX = _deltaX;
@@ -404,13 +404,13 @@ public:
 template <class Y>
 class ArrayY : public DataSource {
 private:
-	Upp::Array<Y> *yData = 0;
+	const Upp::Array<Y> *yData = 0;
 	double x0 = 0, deltaX = 0;
 
 public:
 	ArrayY() {}
-	ArrayY(Upp::Array<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
-	void Init(Upp::Array<Y> &_yData, double _x0, double _deltaX) {
+	ArrayY(const Upp::Array<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
+	void Init(const Upp::Array<Y> &_yData, double _x0, double _deltaX) {
 		this->yData = &_yData;
 		this->x0 = _x0;
 		this->deltaX = _deltaX;
@@ -426,7 +426,7 @@ public:
 template <class Y>
 class VectorVectorY : public DataSource {
 private:
-	Vector<Vector<Y> > *data = 0;
+	const Vector<Vector<Y> > *data = 0;
 	bool useRows = true;
 	int idx = 0, idy = 1;
 	Vector<int> idsx, idsy, idsFixed;
@@ -435,13 +435,13 @@ private:
 	
 public:
 	VectorVectorY() {}
-	VectorVectorY(Vector<Vector<Y> > &_data, int _idx, int _idy, 
-				  Vector<int> &_idsx, Vector<int> &_idsy, Vector<int> &_idsFixed, 
+	VectorVectorY(const Vector<Vector<Y> > &_data, int _idx, int _idy, 
+				  const Vector<int> &_idsx, const Vector<int> &_idsy, const Vector<int> &_idsFixed, 
 				  bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		Init(_data, _idx, _idy, _idsx, _idsy, _idsFixed, _useRows, _beginData, _numData);
 	}
-	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, Vector<int> &_idsx, Vector<int> &_idsy, Vector<int> &_idsFixed, 
-			  bool _useRows = true, int _beginData = 0, int _numData = Null) {
+	void Init(const Vector<Vector<Y> > &_data, int _idx, int _idy, const Vector<int> &_idsx, const Vector<int> &_idsy, 
+			  const Vector<int> &_idsFixed, bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		this->data = &_data;
 		this->useRows = _useRows;
 		
@@ -462,7 +462,7 @@ public:
 				this->numData = _data.GetCount() - _beginData;
 		}
 	}
-	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {
+	void Init(const Vector<Vector<Y> > &_data, int _idx, int _idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		static Vector<int> idsVoid;
 		Init(_data, _idx, _idy, idsVoid, idsVoid, idsVoid, _useRows, _beginData, _numData);
 	}
@@ -541,10 +541,10 @@ public:
 
 class ArrayPointf : public DataSource {
 private:
-	Upp::Array<Pointf> *data;
+	const Upp::Array<Pointf> *data;
 
 public:
-	ArrayPointf(Upp::Array<Pointf> &_data) : data(&_data) {}
+	ArrayPointf(const Upp::Array<Pointf> &_data) : data(&_data) {}
 	virtual inline double y(int64 id) 		{return (*data)[int(id)].y;}
 	virtual inline double x(int64 id) 	 {return (*data)[int(id)].x;}
 	virtual inline int64 GetCount() const	{return data->GetCount();}
@@ -553,10 +553,10 @@ public:
 template <class X, class Y>
 class VectorMapXY : public DataSource {
 private:
-	VectorMap<X, Y> *data;
+	const VectorMap<X, Y> *data;
 
 public:
-	VectorMapXY(VectorMap<X, Y> &_data) : data(&_data) {}
+	VectorMapXY(const VectorMap<X, Y> &_data) : data(&_data) {}
 	virtual inline double y(int64 id) 			{return (*data)[int(id)];}
 	virtual inline double x(int64 id) 	 	{return (*data).GetKey(int(id));}
 	virtual inline int64 GetCount() const		{return data->GetCount();}
@@ -565,10 +565,10 @@ public:
 template <class X, class Y>
 class ArrayMapXY : public DataSource {
 private:
-	ArrayMap<X, Y> *data;
+	const ArrayMap<X, Y> *data;
 
 public:
-	ArrayMapXY(ArrayMap<X, Y> &_data) : data(&_data) {}
+	ArrayMapXY(const ArrayMap<X, Y> &_data) : data(&_data) {}
 	virtual inline double y(int64 id) 			{return (*data)[int(id)];}
 	virtual inline double x(int64 id) 		 	{return (*data).GetKey(int(id));}
 	virtual inline int64 GetCount() const		{return data->GetCount();}

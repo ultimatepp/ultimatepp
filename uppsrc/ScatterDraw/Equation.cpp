@@ -45,7 +45,7 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &serie, double &r2) 
 	functor.series = &serie;
 	functor.fSource = this;
 	functor.unknowns = numUnknowns;
-	functor.datasetLen = serie.GetCount();
+	functor.datasetLen = Eigen::Index(serie.GetCount());
 	
 	NumericalDiff<Equation_functor> numDiff(functor);
 	LevenbergMarquardt<NumericalDiff<Equation_functor> > lm(numDiff);
@@ -600,7 +600,7 @@ void Spline::Fit(const double *x, const double *y, int num) {
     }
 }
 
-double Spline::f(double x) {
+double Spline::f(double x) const {
     int j;
     for (j = 0; j < ncoeff; j++) {
         if (coeff[j].x > x) {
