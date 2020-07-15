@@ -326,7 +326,7 @@ Pdb::Visual Pdb::Visualise(Val v, dword flags)
 {
 	Visual r;
 	try {
-		Visualise(r, v, 0);
+		Visualise(r, v, flags);
 	}
 	catch(LengthLimit) {}
 	catch(CParser::Error e) {

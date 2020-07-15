@@ -86,6 +86,7 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_ADDWATCH, [=] { AddWatch(); });
 	bar.Add(b, AK_CPU, THISBACK1(SetTab, 4));
 	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 5));
+	bar.Add(b, AK_BTS, THISBACK1(SetTab, 6));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
@@ -101,6 +102,7 @@ void Pdb::Tab()
 	case TAB_THIS: self.SetFocus(); break;
 	case TAB_WATCHES: watches.SetFocus(); break;
 	case TAB_MEMORY: memory.SetFocus(); break;
+	case TAB_BTS: bts.SetFocus(); break;
 	}
 	Data();
 	SyncTreeDisas();
@@ -309,6 +311,7 @@ Pdb::Pdb()
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(cpu.SizePos(), "CPU");
 	tab.Add(memory.SizePos(), "Memory");
+	tab.Add(bts.SizePos(), "Threads");
 
 	cpu.Columns(4);
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
@@ -324,9 +327,9 @@ Pdb::Pdb()
 	framelist.Ctrl::Add(dlock.SizePos());
 
 	pane.Add(tab.SizePos());
-	pane.Add(threadlist.LeftPosZ(340, 60).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(threadlist.LeftPosZ(370, 60).TopPos(2, EditField::GetStdHeight()));
 	int bcx = min(EditField::GetStdHeight(), DPI(16));
-	pane.Add(framelist.HSizePos(Zx(404), 2 * bcx).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(framelist.HSizePos(Zx(434), 2 * bcx).TopPos(2, EditField::GetStdHeight()));
 	pane.Add(frame_up.RightPos(bcx, bcx).TopPos(2, EditField::GetStdHeight()));
 	frame_up.SetImage(DbgImg::FrameUp());
 	frame_up << [=] { FrameUpDown(-1); };
