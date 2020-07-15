@@ -459,10 +459,11 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 		}
 		i++;
 	}
-	const CppItem& pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
+	CppItem pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
 	String path = GetSourceFilePath(pos.file);
 	editastext.RemoveKey(path);
 	editashex.RemoveKey(path);
+	UnlockCodeBaseAll();
 	if(!GotoDesignerFile(path, scope, pos.name, pos.line))
 		GotoCpp(pos);
 }

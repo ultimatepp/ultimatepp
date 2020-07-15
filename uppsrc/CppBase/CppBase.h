@@ -226,7 +226,7 @@ void PreprocessParse(CppBase& base, Stream& in, int file, const String& path,
                      Event<int, const String&> error);
 String PreprocessCpp(const String& src, const String& path);
 
-ParserContext AssistParse(CppBase& base, const String& src, const String& path_, Event<int, const String&> error);
+ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error);
 
 void SimpleParse(CppBase& cpp, const String& txt, const String& cls);
 

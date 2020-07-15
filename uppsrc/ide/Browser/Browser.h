@@ -20,9 +20,13 @@ class Browser;
 
 void ReduceCacheFolder(const char *path, int max_total);
 
+void LockCodeBase();
+void UnlockCodeBase();
+void UnlockCodeBaseAll();
+
 struct CodeBaseLock { // Use when accessing CodeBase
-	CodeBaseLock();
-	~CodeBaseLock();
+	CodeBaseLock()       { LockCodeBase(); }
+	~CodeBaseLock()      { UnlockCodeBase(); }
 };
 
 CppBase&       CodeBase();

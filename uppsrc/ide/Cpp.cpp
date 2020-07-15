@@ -14,16 +14,19 @@
 
 String ResolveTParam(const String& type, const Vector<String>& tparam)
 {
+	CodeBaseLock __;
 	return ResolveTParam(CodeBase(), type, tparam);
 }
 
 void ResolveTParam(Vector<String>& type, const Vector<String>& tparam)
 {
+	CodeBaseLock __;
 	return ResolveTParam(CodeBase(), type, tparam);
 }
 
 String Qualify(const String& scope, const String& type, const String& usings)
 {
+	CodeBaseLock __;
 	return Qualify(CodeBase(), scope, type, usings);
 }
 
@@ -41,7 +44,7 @@ void AssistEditor::Context(ParserContext& parser, int pos)
 	
 	theide->ScanFile(true);
 	
-	parser = AssistParse(CodeBase(), Get(0, pos), theide->editfile, AssistScanError);
+	parser = AssistParse(Get(0, pos), theide->editfile, AssistScanError);
 	inbody = parser.IsInBody();
 #ifdef _DEBUG
 	PutVerbose("body: " + AsString(inbody));
@@ -54,6 +57,7 @@ void AssistEditor::Context(ParserContext& parser, int pos)
 
 Index<String> AssistEditor::EvaluateExpressionType(const ParserContext& parser, const Vector<String>& xp)
 {
+	CodeBaseLock __;
 	return GetExpressionType(CodeBase(), parser, xp);
 }
 
@@ -71,6 +75,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 {
 	LTIMING("GatherItems");
 	LLOG("---- GatherItems " << type);
+	CodeBaseLock __;
 	if(in_types.Find(type) >= 0) {
 		LLOG("-> recursion, exiting");
 		return;

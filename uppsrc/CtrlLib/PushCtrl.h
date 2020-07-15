@@ -58,7 +58,6 @@ public:
 	virtual ~Pusher();
 };
 
-
 class Button : public Pusher {
 public:
 	virtual void   Paint(Draw& draw);

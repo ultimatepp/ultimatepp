@@ -22,18 +22,33 @@
 
 static StaticMutex sGLock;
 static thread_local int sGLockLevel = 0;
-	
-CodeBaseLock::CodeBaseLock()
+
+bool DeadLockCheck()
+{
+	if(sGLockLevel) {
+		PostCallback([] { Exclamation("Internal error (deadlock on sGLock)"); });
+		return true;
+	}
+	return false;
+}
+
+void LockCodeBase()
 {
 	if(sGLockLevel++ == 0)
 		sGLock.Enter();
 }
 
-CodeBaseLock::~CodeBaseLock()
+void UnlockCodeBase()
 {
-	ASSERT(sGLockLevel > 0);
-	if(--sGLockLevel == 0)
+	if(sGLockLevel > 0 && --sGLockLevel == 0)
 		sGLock.Leave();
+}
+
+void UnlockCodeBaseAll()
+{
+	if(sGLockLevel > 0)
+		sGLock.Leave();
+	sGLockLevel = 0; // just in case
 }
 
 INITIALIZER(CodeBase)
@@ -121,7 +136,7 @@ void BrowserScanError(int line, const String& text, int file)
 
 void SerializeCodeBase(Stream& s)
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	MLOG(s.IsLoading());
 	source_file.Serialize(s);
@@ -134,7 +149,7 @@ void SerializeCodeBase(Stream& s)
 
 void SaveCodeBase()
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	LTIMING("SaveCodeBase");
 	LLOG("Save code base " << CodeBase().GetCount());
@@ -148,7 +163,7 @@ void SaveCodeBase()
 
 bool TryLoadCodeBase(const char *pattern)
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return false;
 	Mutex::Lock __(CppBaseMutex);
 	LLOG("+++ Trying to load " << pattern);
 	FindFile ff(pattern);
@@ -176,7 +191,7 @@ bool TryLoadCodeBase(const char *pattern)
 
 void LoadCodeBase()
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	MLOG("LoadCodeBase start: " << MemoryUsedKb());
 	TryLoadCodeBase(CodeBaseCacheFile()) ||
@@ -191,7 +206,7 @@ void FinishCodeBase()
 {
 	LTIMING("FinishBase");
 
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	Qualify(CodeBase());
 }
@@ -199,7 +214,7 @@ void FinishCodeBase()
 void LoadDefs()
 {
 	LTIMING("LoadDefs");
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	Vector<String> defs;
 	defs.Add(ConfigFile("global.defs"));
@@ -230,7 +245,7 @@ void LoadDefs()
 
 void BaseInfoSync(Progress& pi)
 { // clears temporary caches (file times etc..)
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	PPSync(TheIde()->IdeGetIncludePath());
 
@@ -313,7 +328,7 @@ bool CheckFile0(SourceFileInfo& f, const String& path)
 bool CheckFile(SourceFileInfo& f, const String& path)
 {
 	LTIMING("CheckFile");
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return false;
 	Mutex::Lock __(CppBaseMutex);
 	return CheckFile0(f, path);
 }
@@ -321,7 +336,7 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 void UpdateCodeBase2(Progress& pi)
 {
 	CLOG("============= UpdateCodeBase2 " << GetSysTime());
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	Index<int>  parse_file;
 	{
@@ -416,9 +431,6 @@ void CodeBaseScanFile0(Stream& in, const String& fn)
 {
 	LLOG("===== CodeBaseScanFile " << fn);
 
-	ASSERT(sGLockLevel == 0);
-	Mutex::Lock __(CppBaseMutex);
-
 	InvalidateFileTimeCache(NormalizeSourcePath(fn));
 	PPSync(TheIde()->IdeGetIncludePath());
 
@@ -436,6 +448,8 @@ void CodeBaseScanFile0(Stream& in, const String& fn)
 
 void CodeBaseScanFile(Stream& in, const String& fn)
 {
+	if(DeadLockCheck()) return;
+	Mutex::Lock __(CppBaseMutex);
 	CodeBaseScanFile0(in, fn);
 	FinishCodeBase();
 }
@@ -443,11 +457,11 @@ void CodeBaseScanFile(Stream& in, const String& fn)
 void CodeBaseScanFile(const String& fn, bool auto_check)
 {
 	LLOG("CodeBaseScanFile " << fn);
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	String md5sum = GetPPMD5(fn);
 	FileIn in(fn);
-	CodeBaseScanFile(in, fn);
+	CodeBaseScanFile0(in, fn);
 	int file = GetSourceFileIndex(fn);
 	SourceFileInfo& f = source_file[file];
 	CLOG("CodeBaseScanFile " << fn << ", " << md5sum << " " << f.md5sum);
@@ -463,7 +477,7 @@ void CodeBaseScanFile(const String& fn, bool auto_check)
 void ClearCodeBase()
 {
 	// TODO: Create combined defs
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	CleanPP();
 	CodeBase().Clear();
@@ -475,7 +489,7 @@ void SyncCodeBase()
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
 	CLOG("============= Sync code base");
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	if(IsNull(IdeGetCurrentMainPackage())) {
 		ClearCodeBase();
@@ -489,7 +503,7 @@ void SyncCodeBase()
 
 void NewCodeBase()
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	ReduceCodeBaseCache();
 	if(IsNull(IdeGetCurrentMainPackage())) {
@@ -510,7 +524,7 @@ void NewCodeBase()
 
 void RescanCodeBase()
 {
-	ASSERT(sGLockLevel == 0);
+	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
 	ClearCodeBase();
 	s_console = true;
