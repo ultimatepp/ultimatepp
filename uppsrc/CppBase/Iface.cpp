@@ -55,7 +55,7 @@ String PreprocessCpp(const String& src, const String& path)
 	return cpp.output;
 }
 
-ParserContext AssistParse(CppBase& base, const String& src, const String& path_, Event<int, const String&> error)
+ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error)
 {
 	String path = NormalizeSourcePath(path_);
 	Cpp cpp;
@@ -64,7 +64,8 @@ ParserContext AssistParse(CppBase& base, const String& src, const String& path_,
 	Parser parser;
 	parser.dobody = true; // will do bodies and not write anything to base
 	StringStream pin(cpp.output);
-	parser.Do(pin, base, Null, Null, GetFileTitle(path), error,
+	CppBase dummy;
+	parser.Do(pin, dummy, Null, Null, GetFileTitle(path), error,
 	          Vector<String>(), cpp.namespace_stack, cpp.namespace_using); // needs CodeBase to identify type names
 	return pick(parser);
 }

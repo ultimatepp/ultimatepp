@@ -61,7 +61,9 @@ bool Ide::SwapSIf(const char *cref)
 			break;
 		}
 	}
-	GotoCpp(*n[i % n.GetCount()]);
+	CppItem m = *n[i % n.GetCount()];
+	UnlockCodeBaseAll();
+	GotoCpp(m);
 	return true;
 }
 
