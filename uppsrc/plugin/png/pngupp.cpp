@@ -170,11 +170,12 @@ bool PNGRaster::Create()
 		ASSERT(bit_depth >= 8);
 		data->out_bpp = 24;
 		png_set_bgr(data->png_ptr);
-		if(color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
+		if(color_type == PNG_COLOR_TYPE_RGB_ALPHA)
 			data->out_bpp = 32;
-			data->info.kind = IMAGE_ALPHA;
-		}
 	}
+
+	if(color_type & PNG_COLOR_MASK_ALPHA)
+		data->info.kind = IMAGE_ALPHA;
 
 	png_bytep trans_alpha = 0;
 	png_color_16p trans_values = 0;
