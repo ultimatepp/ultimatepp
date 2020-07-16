@@ -1,8 +1,8 @@
 // SCHEMA
 
-#define VAR(type, x)                                        schema.Var(SCHEMA_##type, SqlResolveId__(#x));
-#define COLUMN(type, ctype, name, width, prec)              schema.Column(type, SqlResolveId__(#name));
-#define COLUMN_ARRAY(type, ctype, name, width, prec, items) schema.ColumnArray(type, SqlResolveId__(#name), items);
+#define VAR(type, x)                                        schema.Var(SCHEMA_##type, Upp::SqlResolveId__(#x));
+#define COLUMN(type, ctype, name, width, prec)              schema.Column(type, Upp::SqlResolveId__(#name));
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items) schema.ColumnArray(type, Upp::SqlResolveId__(#name), items);
 #define INLINE_ATTRIBUTE(x)                                 schema.InlineAttribute(x);
 #define ATTRIBUTE(x, d)                                     schema.Attribute(x, d);
 #define TABLE_SUFFIX(s)                                     schema.TableSuffix(s);
@@ -10,18 +10,18 @@
 #ifdef __GNUC__
 
 #define TYPE(x)\
-static void SCHEMA_##x(SqlSchema& schema) __attribute__((unused)); \
-static void SCHEMA_##x(SqlSchema& schema) {
+static void SCHEMA_##x(Upp::SqlSchema& schema) __attribute__((unused)); \
+static void SCHEMA_##x(Upp::SqlSchema& schema) {
 
 #else
 
 #define TYPE(x)\
-static void SCHEMA_##x(SqlSchema& schema) {
+static void SCHEMA_##x(Upp::SqlSchema& schema) {
 
 #endif
 
 #define TYPE_I(x, b1)\
-static void SCHEMA_##x(SqlSchema& schema) { SCHEMA_##b1(schema);
+static void SCHEMA_##x(Upp::SqlSchema& schema) { SCHEMA_##b1(schema);
 
 #define TYPE_II(x, b1, b2)\
 TYPE_I(x, b1) SCHEMA_##b2(schema);
