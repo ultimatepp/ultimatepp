@@ -1,5 +1,4 @@
 topic "GUI Tutorial";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,6 +20,8 @@ topic "GUI Tutorial";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[b83;* $$22,22#78EB85B566C7E078B53494D0FD53D992:subtitle]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; GUI Tutorial&]
 [s5;~~~2240; Welcome in GUI Tutorial! Here you will learn how to 
@@ -61,6 +62,10 @@ logical coordinates]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#15^ 15. Font`-zoomed 
 logical coordinates]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#16^ 16. Layouts]&]
+[s0;     [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#16`.1^ 16.1 
+Referral implementation]&]
+[s0;     [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#16`.2^ 16.2 
+Upp namespace agnostic implementation]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#17^ 17. Value 
 of widget]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#18^ 18. Accepting 
@@ -816,6 +821,7 @@ is fixed to the default Windows font):&]
 &]
 [s5; &]
 [s3;:16: 16. Layouts&]
+[s22;:16`.1: 16.1 Referral implementation&]
 [s5; Placing widgets by specifying their numeric logical coordinates 
 is time consuming, therefore TheIDE provides visual designer 
 to simplify this task.&]
@@ -893,6 +899,29 @@ C`+`+ code.&]
 internationalization of texts. ][*/ dv`_`_`_0][/  is synthetic member 
 variable name used for unnamed layout members (0 is index of 
 member).]&]
+[s5; &]
+[s22;:16`.2: 16.2 Upp namespace agnostic implementation&]
+[s5; If you prefer to write code that is namespace agnostic, you 
+are not forced to use namespace Upp in the context of using layouts. 
+Below implementation presents how you can avoid such situation:&]
+[s5; &]
+[s7; #include <CtrlLib/CtrlLib.h>&]
+[s7; &]
+[s7; namespace Upp `{&]
+[s7; -|#define LAYOUTFILE <Gui16/dlg.lay>&]
+[s7; -|#include <CtrlCore/lay.h>&]
+[s7; `}&]
+[s7; &]
+[s7; struct MyApp : public Upp`::WithDlgLayout<Upp`::TopWindow> `{&]
+[s7; -|MyApp() `{&]
+[s7; -|-|CtrlLayout(`*this, `"MyDialog`");&]
+[s7; -|`}&]
+[s7; `};&]
+[s7; &]
+[s7; GUI`_APP`_MAIN&]
+[s7; `{&]
+[s7; -|MyApp().Run();&]
+[s7; `}&]
 [s5; &]
 [s3;:17: 17. Value of widget&]
 [s5; Many widgets have some sort of natural value. E.g. the value 
