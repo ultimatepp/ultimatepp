@@ -120,6 +120,9 @@
 		#else
 			#define CPU_ALIGNED 1
 		#endif
+		#ifdef __ARM_NEON
+			#define CPU_NEON 1
+		#endif
 	#elif __bfin
 		#define CPU_32 1
 		#define CPU_BLACKFIN

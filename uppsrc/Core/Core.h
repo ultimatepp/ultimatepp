@@ -291,8 +291,8 @@ class JsonIO;
 #endif
 
 #ifdef CPU_NEON
-#include "SIMD_NEON.h"
-#define CPU_SIMD 1
+//#include "SIMD_NEON.h"
+//#define CPU_SIMD 1
 #endif
 
 #include "Mem.h"
