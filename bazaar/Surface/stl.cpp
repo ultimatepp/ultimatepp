@@ -47,7 +47,7 @@ static void LoadStlTxt(String fileName, Surface &surf, bool &isText) {
 			throw Exc(in.Str() + ". "  + t_("'outer loop' field not found"));			
 
 		int ids[5];
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < 6; ++i) {
 			f.Load(in.GetLine());
 			String label = f.GetText(0);
 			

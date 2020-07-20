@@ -24,7 +24,7 @@ Point3D Intersection(const Vector3D &lineVector, const Point3D &linePoint, const
 	Vector3D diff = planePoint - linePoint;
 	double prod1 = diff.dot(planeNormal);
 	double prod2 = lineVector.dot(planeNormal);
-	if (abs(prod2) < EPS)
+	if (abs(prod2) < EPS_XYZ)
 		return Null;
 	double factor = prod1/prod2;
 	return linePoint + lineVector*factor;	
@@ -95,7 +95,7 @@ Point3D Segment3D::Intersection(const Point3D &planePoint, const Vector3D &plane
 	Vector3D diff = planePoint - from;
 	double prod1 = diff.dot(planeNormal);
 	double prod2 = vector.dot(planeNormal);
-	if (abs(prod2) < EPS)
+	if (abs(prod2) < EPS_XYZ)
 		return Null;
 	double factor = prod1/prod2;
 	if (factor >= 1)
@@ -123,7 +123,7 @@ bool PointInSegment(const Point3D &p, const Segment3D &seg) {
 	double dpb = p.Distance(seg.to);
 	double dab = seg.Length();
 	
-	return abs(dpa + dpb - dab) < EPS;
+	return abs(dpa + dpb - dab) < EPS_XYZ;
 }
 
 bool SegmentInSegment(const Segment3D &in, double in_len, const Segment3D &seg) {
@@ -131,12 +131,12 @@ bool SegmentInSegment(const Segment3D &in, double in_len, const Segment3D &seg) 
 	
 	double seg_from_in_from = seg.from.Distance(in.from);
 	double in_to_seg_to = in.to.Distance(seg.to);
-	if (abs(seg_from_in_from + in_len + in_to_seg_to - seg_len) < EPS)
+	if (abs(seg_from_in_from + in_len + in_to_seg_to - seg_len) < EPS_XYZ)
 		return true;
 
 	double seg_from_in_to = seg.from.Distance(in.to);
 	double in_from_seg_to = in.from.Distance(seg.to);
-	if (abs(seg_from_in_to + in_len + in_from_seg_to - seg_len) < EPS)
+	if (abs(seg_from_in_to + in_len + in_from_seg_to - seg_len) < EPS_XYZ)
 		return true;
 	
 	return false;
@@ -229,7 +229,7 @@ int Surface::FixSkewed() {
 	return num;
 }
 
-void Surface::DetectTriBiP(int &numTri, int &numBi, int &numP) {
+void Surface::DetectTriBiP(Vector<Panel> &panels, int &numTri, int &numBi, int &numP) {
 	numTri = numBi = numP = 0;
 	for (int i = panels.GetCount()-1; i >= 0; --i) {
 		Panel &panel = panels[i];
@@ -245,7 +245,7 @@ void Surface::DetectTriBiP(int &numTri, int &numBi, int &numP) {
 			panel.id[0] = ids[0];
 			panel.id[1] = ids[1];
 			panel.id[2] = ids[2];	
-			TriangleToQuad(i);
+			//TriangleToQuad(i);
 		} else if (ids.GetCount() == 2) {
 			numBi++;
 			panels.Remove(i, 1);
@@ -317,7 +317,7 @@ int Surface::RemoveDuplicatedPointsAndRenumber(Vector<Panel> &_panels, Vector<Po
 	int num = 0;
 	
 	// Detect duplicated points in nodes
-	double similThres = 0.001;
+	double similThres = EPS_XYZ;
 	Upp::Index<int> duplic, goods;
 	for (int i = 0; i < _nodes.GetCount()-1; ++i) {
 		if (duplic.Find(i) >= 0)
@@ -686,7 +686,7 @@ String Surface::Heal(bool basic, Function <void(String, int pos)> Status) {
 			ret << "\n" << Format(t_("Removed %d duplicated panels"), numDupPan);
 	} else {	
 		Status(t_("Detecting triangles and wrong panels"), 40);
-		DetectTriBiP(numTriangles, numBiQuads, numMonoQuads);
+		DetectTriBiP(panels, numTriangles, numBiQuads, numMonoQuads);
 		if (numTriangles > 0)
 			ret << "\n" << Format(t_("Fixed %d triangles"), numTriangles);
 		if (numBiQuads > 0)
@@ -880,7 +880,7 @@ void Surface::GetHydrostaticStiffness(MatrixXd &c, const Point3D &cb, double rho
 					const Point3D &cg, double mass, double g) {
 	c.setConstant(6, 6, 0);
 	
-	if (volume < 0.00001)
+	if (volume < EPS_XYZ)
 		return;
 	
 	if (IsNull(mass))
@@ -912,14 +912,14 @@ void Surface::GetHydrostaticStiffness(MatrixXd &c, const Point3D &cb, double rho
 	c(3, 3) = (c(3, 3) + volumez*cb.z)*rho_g - mass*g*cg.z;
 	c(4, 4) = (c(4, 4) + volumez*cb.z)*rho_g - mass*g*cg.z;
 	
-	if (abs(cb.x) > 0.001)
+	if (abs(cb.x) > EPS_XYZ)
 		c(3, 5) -= rho_g*volume*cb.x;
-	if (abs(cg.x) > 0.001)
+	if (abs(cg.x) > EPS_XYZ)
 		c(3, 5) += mass*g*cg.x;
 	
-	if (abs(cb.x) > 0.001)
+	if (abs(cb.x) > EPS_XYZ)
 		c(4, 5) -= rho_g*volume*cb.y;
-	if (abs(cg.x) > 0.001)
+	if (abs(cg.x) > EPS_XYZ)
 		c(4, 5) += mass*g*cg.y;
 			
 	c(3, 2) = c(2, 3);
@@ -929,13 +929,13 @@ void Surface::GetHydrostaticStiffness(MatrixXd &c, const Point3D &cb, double rho
 
 inline static void AddSegZero(Vector<Segment3D> &seg, const Point3D &p0, const Point3D &p1, 
 			const Point3D &p2, const Point3D &p3) {
-	if (abs(p0.z - 0) <= 0.01 && abs(p1.z - 0) <= 0.01)
+	if (abs(p0.z - 0) <= EPS_XYZ && abs(p1.z - 0) <= EPS_XYZ)
 		seg << Segment3D(p0, p1);
-	if (abs(p1.z - 0) <= 0.01 && abs(p2.z - 0) <= 0.01)
+	if (abs(p1.z - 0) <= EPS_XYZ && abs(p2.z - 0) <= EPS_XYZ)
 		seg << Segment3D(p1, p2);
-	if (abs(p2.z - 0) <= 0.01 && abs(p3.z - 0) <= 0.01)
+	if (abs(p2.z - 0) <= EPS_XYZ && abs(p3.z - 0) <= EPS_XYZ)
 		seg << Segment3D(p2, p3);
-	if (abs(p3.z - 0) <= 0.01 && abs(p0.z - 0) <= 0.01)
+	if (abs(p3.z - 0) <= EPS_XYZ && abs(p0.z - 0) <= EPS_XYZ)
 		seg << Segment3D(p3, p0);
 }
 
@@ -973,10 +973,9 @@ void Surface::CutZ(const Surface &orig, double factor) {
 				else {
 					const Point3D &from = nodes[origPanelid[ids[i]]];
 					const Point3D &to   = nodes[origPanelid[ids[i+1]]];
-					Segment3D seg(from, to);
-					if (abs(from.z) <= 0.01 && abs(to.z) <= 0.01) {
-						nodeFrom << origPanelid[ids[i]];
-						nodeTo << origPanelid[ids[i+1]];
+					if (abs(from.z) <= EPS_XYZ && abs(to.z) <= EPS_XYZ) {
+						//nodeFrom << origPanelid[ids[i]];
+						//nodeTo << origPanelid[ids[i+1]];
 						segWL.from = from;
 						segWL.to = to;	
 					} else if ((from.z)*factor <= 0 && (to.z)*factor <= 0) {
@@ -985,15 +984,18 @@ void Surface::CutZ(const Surface &orig, double factor) {
 					} else if ((from.z)*factor >= 0 && (to.z)*factor >= 0) 
 						;
 					else {
+						Segment3D seg(from, to);
 						Point3D inter = seg.IntersectionPlaneZ(0);
-						if ((from.z)*factor < 0) {
-							nodeFrom << origPanelid[ids[i]];
-							nodes << inter;
-							nodeTo << nodes.GetCount() - 1;
-						} else {
-							nodeTo << origPanelid[ids[i+1]];
-							nodes << inter;
-							nodeFrom << nodes.GetCount() - 1;
+						if (!IsNull(inter)) {
+							if ((from.z)*factor < 0) {
+								nodeFrom << origPanelid[ids[i]];
+								nodes << inter;
+								nodeTo << nodes.GetCount() - 1;
+							} else {
+								nodeTo << origPanelid[ids[i+1]];
+								nodes << inter;
+								nodeFrom << nodes.GetCount() - 1;
+							}
 						}
 						if (IsNull(segWL.from))
 							segWL.from = inter;
@@ -1047,8 +1049,10 @@ void Surface::CutZ(const Surface &orig, double factor) {
 				panel2.id[2] = nodeFrom[4];
 				panel2.id[3] = nodeFrom[4];
 				//TriangleToQuad(panel2); 
+				panels << panel2;
 			}
 			//TriangleToQuad(panel);
+			panels << panel;
 		}
 	}
 }
@@ -1085,7 +1089,7 @@ void Surface::CutX(const Surface &orig, double factor) {
 					const Point3D &from = nodes[origPanelid[ids[i]]];
 					const Point3D &to   = nodes[origPanelid[ids[i+1]]];
 					Segment3D seg(from, to);
-					if (abs(from.x) <= 0.01 && abs(to.x) <= 0.01) {
+					if (abs(from.x) <= EPS_XYZ && abs(to.x) <= EPS_XYZ) {
 						nodeFrom << origPanelid[ids[i]];
 						nodeTo << origPanelid[ids[i+1]];
 					} else if ((from.x)*factor <= 0 && (to.x)*factor <= 0) {
@@ -1094,15 +1098,17 @@ void Surface::CutX(const Surface &orig, double factor) {
 					} else if ((from.x)*factor >= 0 && (to.x)*factor >= 0) 
 						;
 					else {
-						Point3D inter = seg.IntersectionPlaneZ(0);
-						if ((from.x)*factor < 0) {
-							nodeFrom << origPanelid[ids[i]];
-							nodes << inter;
-							nodeTo << nodes.GetCount() - 1;
-						} else {
-							nodeTo << origPanelid[ids[i+1]];
-							nodes << inter;
-							nodeFrom << nodes.GetCount() - 1;
+						Point3D inter = seg.IntersectionPlaneX(0);
+						if (!IsNull(inter)) {
+							if ((from.x)*factor < 0) {
+								nodeFrom << origPanelid[ids[i]];
+								nodes << inter;
+								nodeTo << nodes.GetCount() - 1;
+							} else {
+								nodeTo << origPanelid[ids[i+1]];
+								nodes << inter;
+								nodeFrom << nodes.GetCount() - 1;
+							}
 						}
 					}
 				}
@@ -1149,9 +1155,11 @@ void Surface::CutX(const Surface &orig, double factor) {
 				panel2.id[1] = nodeFrom[3];
 				panel2.id[2] = nodeFrom[4];
 				panel2.id[3] = nodeFrom[4];
-				TriangleToQuad(panel2); 
+				//TriangleToQuad(panel2); 
+				panels << panel2;
 			}
-			TriangleToQuad(panel);
+			//TriangleToQuad(panel);
+			panels << panel;
 		}
 	}
 }
@@ -1187,25 +1195,24 @@ void Surface::CutY(const Surface &orig, double factor) {
 				else {
 					const Point3D &from = nodes[origPanelid[ids[i]]];
 					const Point3D &to   = nodes[origPanelid[ids[i+1]]];
-					Segment3D seg(from, to);
-					if (abs(from.y) <= 0.01 && abs(to.y) <= 0.01) {
-						nodeFrom << origPanelid[ids[i]];
-						nodeTo << origPanelid[ids[i+1]];
-					} else if ((from.y)*factor <= 0 && (to.y)*factor <= 0) {
+					if ((from.y)*factor <= 0 && (to.y)*factor <= 0) {
 						nodeFrom << origPanelid[ids[i]];
 						nodeTo << origPanelid[ids[i+1]];
 					} else if ((from.y)*factor >= 0 && (to.y)*factor >= 0) 
 						;
 					else {
-						Point3D inter = seg.IntersectionPlaneZ(0);
-						if ((from.y)*factor < 0) {
-							nodeFrom << origPanelid[ids[i]];
-							nodes << inter;
-							nodeTo << nodes.GetCount() - 1;
-						} else {
-							nodeTo << origPanelid[ids[i+1]];
-							nodes << inter;
-							nodeFrom << nodes.GetCount() - 1;
+						Segment3D seg(from, to);
+						Point3D inter = seg.IntersectionPlaneY(0);
+						if (!IsNull(inter)) {
+							if ((from.y)*factor < 0) {
+								nodeFrom << origPanelid[ids[i]];
+								nodes << inter;
+								nodeTo << nodes.GetCount() - 1;
+							} else {
+								nodeTo << origPanelid[ids[i+1]];
+								nodes << inter;
+								nodeFrom << nodes.GetCount() - 1;
+							}
 						}
 					}
 				}
@@ -1252,9 +1259,11 @@ void Surface::CutY(const Surface &orig, double factor) {
 				panel2.id[1] = nodeFrom[3];
 				panel2.id[2] = nodeFrom[4];
 				panel2.id[3] = nodeFrom[4];
-				TriangleToQuad(panel2); 
+				//TriangleToQuad(panel2); 
+				panels << panel2;
 			}
-			TriangleToQuad(panel);
+			//TriangleToQuad(panel);
+			panels << panel;
 		}
 	}
 }
@@ -1363,7 +1372,7 @@ void VolumeEnvelope::MixEnvelope(VolumeEnvelope &env) {
 }
 
 void Surface::AddNode(Point3D &p) {
-	double similThres = 0.001;
+	double similThres = EPS_XYZ;
 	for (int i = 0; i < nodes.GetCount(); ++i) {
 		if (nodes[i].IsSimilar(p, similThres))
 			return;
@@ -1431,7 +1440,7 @@ void Surface::AddRevolution(Vector<Pointf> &points, double panelWidth) {
 		numSlices++;
 	
 	if (numSlices < 3)
-		throw Exc(t_("Panel width too small"));
+		throw Exc(t_("Panel width too large"));
 		
 	//double angle = 2*M_PI/numSlices;
 		

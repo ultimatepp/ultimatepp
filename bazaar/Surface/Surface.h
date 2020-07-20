@@ -5,12 +5,12 @@
 
 namespace Upp {
 
+const double EPS_XYZ = 0.00001;
+
 template<class T>
 inline T avg(T a, T b) 			{return T(a+b)/2;}
 template<class T>
 inline T avg(T a, T b, T c)		{return T(a+b+c)/3;}
-
-const double EPS = 0.00001;
  
 template<class T>
 void Sort(T& a, T& b, T& c, T& d) {
@@ -65,7 +65,7 @@ public:
 		return false;
 	}
 	#pragma GCC diagnostic ignored "-Wattributes"
-	friend bool operator==(const Point3D& a, const Point3D& b) {return a.IsSimilar(b, 0.0001);}
+	friend bool operator==(const Point3D& a, const Point3D& b) {return a.IsSimilar(b, EPS_XYZ);}
 	#pragma GCC diagnostic warning "-Wattributes"
 	
 	void Translate(double dx, double dy, double dz);
@@ -363,7 +363,8 @@ public:
 	static int RemoveDuplicatedPanels(Vector<Panel> &_panels);
 	static int RemoveTinyPanels(Vector<Panel> &_panels);
 	static int RemoveDuplicatedPointsAndRenumber(Vector<Panel> &_panels, Vector<Point3D> &_nodes);
-
+	static void DetectTriBiP(Vector<Panel> &panels) {int dum;	DetectTriBiP(panels, dum, dum, dum);}
+	
 protected:
 	struct PanelPoints {
 		Point3D data[4];
@@ -374,7 +375,7 @@ private:
 	inline bool CheckId(int id) {return id >= 0 && id < nodes.GetCount()-1;}
 	bool side = true;
 	
-	void DetectTriBiP(int &numTri, int &numBi, int &numP);
+	static void DetectTriBiP(Vector<Panel> &panels, int &numTri, int &numBi, int &numP);
 	int FixSkewed();
 	int SegmentInSegments(int iseg) const;
 	void AnalyseSegments(double zTolerance);
