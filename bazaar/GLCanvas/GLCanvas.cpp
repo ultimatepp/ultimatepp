@@ -49,9 +49,9 @@ void GLCanvas::ContextMenu(Bar& bar) {
 bool GLCanvas::Key(dword key, int ) {
 	if (key == K_CTRL_F)
 		ZoomToFit();
-	else if (key == K_CTRL_ADD)
+	else if (key == K_CTRL_ADD || key == (K_CTRL|K_PLUS))
 		Zoom(200);
-	else if (key == K_CTRL_SUBTRACT)
+	else if (key == K_CTRL_SUBTRACT || key == (K_CTRL|K_MINUS))
 		Zoom(-200);
 	else if (key == K_CTRL_C)
 		SaveToClipboard();
