@@ -187,14 +187,14 @@ int SshChannel::GetExitCode()
 
 String SshChannel::GetExitSignal()
 {
-	char **sig = nullptr;
+	char *sig = (char *)"none";
 	size_t len = 0;
 	String s;
 	INTERLOCKED
 	{
-		libssh2_channel_get_exit_signal(*channel, sig, &len, nullptr, nullptr, nullptr, nullptr);
+		libssh2_channel_get_exit_signal(*channel, &sig, &len, nullptr, nullptr, nullptr, nullptr);
 	}
-	s.Set(*sig, len);
+	s.Set(sig, len);
 	LLOG("Exit signal: " << s);
 	return s;
 }
@@ -205,6 +205,7 @@ int SshChannel::Get(void *ptr, int size, int sid)
 	Run([=]() mutable {
 		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
 			int rc = Read(ptr, size, sid);
+			if(rc == 0) break;
 			if(rc > 0) RefreshUI();
 			if(rc < 0) return false;
 		}
@@ -254,6 +255,7 @@ int SshChannel::Put(const void *ptr, int size, int sid)
 	Run([=]() mutable {
 		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
 			int rc = Write(ptr, size, sid);
+			if(rc == 0) break;
 			if(rc > 0) RefreshUI();
 			if(rc < 0) return false;
 		}

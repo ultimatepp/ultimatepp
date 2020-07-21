@@ -5,13 +5,26 @@ namespace Upp {
 int SshExec::Execute(const String& cmd, String& out, String& err)
 {
 	if(RequestExec(cmd)) {
-		int size = max(ssh->chunk_size,  1024);
-		out = Get(size);
-		err = GetStdErr(size);
+		ReadStdOut(out);
+		ReadStdErr(err);
 		if(Shut(IsError() ? GetErrorDesc() : Null))
 			return  GetExitCode();
 	}
 	return GetError();
+}
+
+void SshExec::ReadStdOut(String& out)
+{
+	String s;
+	while(!(s = Get(ssh->chunk_size)).IsEmpty())
+		out.Cat(s);
+}
+
+void SshExec::ReadStdErr(String& err)
+{
+	String s;
+	while(!(s = GetStdErr(ssh->chunk_size)).IsEmpty())
+		err.Cat(s);
 }
 
 int SshExecute(SshSession& session, const String& cmd, String& out, String& err)
