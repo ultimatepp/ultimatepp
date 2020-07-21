@@ -74,6 +74,9 @@ public:
     int operator()(const String& cmd, String& out, String& err)                             { return Execute(cmd, out, err); }
 
     SshExec(SshSession& session) : SshChannel(session)                                      { ssh->otype = EXEC; };
+private:
+	void ReadStdOut(String& out);
+	void ReadStdErr(String& err);
 };
 
 int     SshExecute(SshSession& session, const String& cmd, String& out, String& err);
