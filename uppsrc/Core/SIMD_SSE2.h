@@ -29,7 +29,7 @@ force_inline f32x4& operator-=(f32x4& a, f32x4 b) { return a = a - b; }
 force_inline f32x4  operator*(f32x4 a, f32x4 b)   { return _mm_mul_ps(a.data, b.data); }
 force_inline f32x4& operator*=(f32x4& a, f32x4 b) { return a = a * b; }
 force_inline f32x4  operator/(f32x4 a, f32x4 b)   { return _mm_div_ps(a.data, b.data); }
-force_inline f32x4& operator/=(f32x4& a, f32x4 b) { return a = a + b; }
+force_inline f32x4& operator/=(f32x4& a, f32x4 b) { return a = a / b; }
 
 force_inline f32x4  operator==(f32x4 a, f32x4 b)  { return _mm_cmpeq_ps(a.data, b.data); }
 force_inline f32x4  operator!=(f32x4 a, f32x4 b)  { return _mm_cmpneq_ps(a.data, b.data); }
