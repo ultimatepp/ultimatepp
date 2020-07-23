@@ -1033,6 +1033,7 @@ public:
 	void      ConsoleLine(const String& line, bool assist = false);
 	void      ConsoleRunEnd();
 	void      SyncErrorsMessage();
+	String    GetErrorsText(bool all, bool src);
 	void      CopyError(bool all);
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();

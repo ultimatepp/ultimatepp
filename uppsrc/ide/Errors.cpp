@@ -602,22 +602,36 @@ void Ide::ShowFound()
 		GoToError(FFound());
 }
 
-void Ide::CopyError(bool all)
+String Ide::GetErrorsText(bool all, bool src)
 {
 	int c = error.GetCursor();
 	if(!all && c < 0)
-		return;
+		return Null;
 	String txt;
 	int h = all ? error.GetCount() : error.GetCursor() + 1;
-	for(int i = all ? 0 : c; i < h; i++)
-		txt << error.Get(i, 0) << " (" << error.Get(i, 1) << "): " << error.Get(i, 2) << "\r\n";
-	WriteClipboardText(txt);
+	for(int i = all ? 0 : c; i < h; i++) {
+		if(src)
+			txt << error.Get(i, 0) << " (" << error.Get(i, 1) << "): ";
+		txt << error.Get(i, 2) << "\r\n";
+	}
+	return txt;
+}
+
+void Ide::CopyError(bool all)
+{
+	String s = GetErrorsText(all, true);
+	if(s.GetCount())
+		WriteClipboardText(s);
 }
 
 void Ide::ErrorMenu(Bar& bar)
 {
 	bar.Add(error.IsCursor(), "Copy", THISBACK1(CopyError, false));
 	bar.Add("Copy all", THISBACK1(CopyError, true));
+	bar.Separator();
+	bar.Add(error.IsCursor(), "Search the web..", IdeImg::Google(), [=] {
+		LaunchWebBrowser("https://www.google.com/search?q=" + GetErrorsText(false, false));
+	});
 }
 
 void Ide::SelError()
