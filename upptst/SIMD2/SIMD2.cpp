@@ -2,6 +2,15 @@
 
 using namespace Upp;
 
+String Hex(const void *ptr, int count)
+{
+	String r;
+	const byte *p = (const byte *)ptr;
+	while(count--)
+		MergeWith(r, " ", FormatIntHex(*p++, 2));
+	return r;
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
@@ -263,7 +272,7 @@ CONSOLE_APP_MAIN
 		
 		auto i64 = i64all(I64(0x123456789abcdef));
 		
-		LOGHEXDUMP(&i64, 16);
+		DUMP(Hex((byte *)&i64, 16));
 	}
 	{
 		LOG("=========================");
@@ -353,4 +362,15 @@ CONSOLE_APP_MAIN
 		x.Load(q);
 		DDUMP(x);
 	}
+
+	auto LoadLog = [](const String& path) {
+		String s = LoadFile(path);
+		return s.Mid(max(s.FindAfter("\n"), 0));
+	};
+	
+	String log = LoadLog(GetStdLogPath());
+
+	ASSERT(LoadLog(GetStdLogPath()) == LoadLog(GetDataFile("Etalon.log")));
+	
+	Cout() << "================= OK\r\n";
 }

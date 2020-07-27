@@ -2,6 +2,7 @@ uses
 	Core;
 
 file
+	Etalon.log,
 	SIMD2.cpp;
 
 mainconfig
