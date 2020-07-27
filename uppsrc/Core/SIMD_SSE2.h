@@ -1,16 +1,16 @@
 struct f32x4 {
 	__m128 data;
 
-	f32x4& Load(void *ptr)       { data = _mm_loadu_ps((float *)ptr); return *this; }
-	f32x4& Load64(void *ptr)     { data = _mm_castpd_ps(_mm_load_sd((double *)ptr)); return *this; }
-	f32x4& Load32(void *ptr)     { data = _mm_load_ss((float *)ptr); return *this; }
+	f32x4& Load(const void *ptr)   { data = _mm_loadu_ps((float *)ptr); return *this; }
+	f32x4& Load64(const void *ptr) { data = _mm_castpd_ps(_mm_load_sd((double *)ptr)); return *this; }
+	f32x4& Load32(const void *ptr) { data = _mm_load_ss((float *)ptr); return *this; }
 
-	void   Store(void *ptr)      { _mm_storeu_ps((float *)ptr, data); }
-	void   Store64(void *ptr)    { _mm_store_sd((double *)ptr, _mm_castps_pd(data)); }
-	void   Store32(void *ptr)    { _mm_store_ss((float *)ptr, data); }
+	void   Store(void *ptr)        { _mm_storeu_ps((float *)ptr, data); }
+	void   Store64(void *ptr)      { _mm_store_sd((double *)ptr, _mm_castps_pd(data)); }
+	void   Store32(void *ptr)      { _mm_store_ss((float *)ptr, data); }
 	
 	f32x4()                      {}
-	f32x4(void *ptr)             { Load(ptr); }
+	f32x4(const void *ptr)       { Load(ptr); }
 	f32x4(__m128 d)              { data = d; }
 	f32x4(double f)              { data = _mm_set_ss((float)f); }
 	f32x4(float f)               { data = _mm_set_ss(f); }
@@ -98,7 +98,7 @@ force_inline bool   AllTrue(i16x8 a)               { return _mm_movemask_epi8(a.
 
 struct i32x4 : i16x8 { // 4xint32
 	i32x4()                      {}
-	i32x4(void *ptr)             { Load(ptr); }
+	i32x4(const void *ptr)       { Load(ptr); }
 	i32x4(__m128i d)             { data = d; }
 	i32x4(int v)                 { data = _mm_set_epi32(0, 0, 0, v); }
 	i32x4(int a, int b, int c, int d)  { data = _mm_set_epi32(a, b, c, d); }
@@ -132,7 +132,7 @@ force_inline bool   AllTrue(i32x4 a)               { return _mm_movemask_epi8(a.
 
 struct i8x16 : i16x8 { // 16xint8
 	i8x16()                      {}
-	i8x16(void *ptr)             { Load(ptr); }
+	i8x16(const void *ptr)       { Load(ptr); }
 	i8x16(__m128i d)             { data = d; }
 	i8x16(int v)                 { data = _mm_set_epi8(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,v); }
 	i8x16(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p)

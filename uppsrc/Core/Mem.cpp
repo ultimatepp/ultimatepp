@@ -17,6 +17,7 @@ void memset8__(void *p, i16x8 data, size_t len)
 	t = (byte *)(((uintptr_t)t | 15) + 1);
 	len = e - t;
 	e -= 128;
+#ifdef CPU_SSE2
 	if(len >= 1024*1024) { // for really huge data, bypass the cache
 		auto Set4S = [&](int at) { data.Stream(t + at); };
 		while(len >= 64) {
@@ -27,6 +28,7 @@ void memset8__(void *p, i16x8 data, size_t len)
 		_mm_sfence();
 		e = t - 1;
 	}
+#endif
 	while(t <= e) {
 		Set4(0*16); Set4(1*16); Set4(2*16); Set4(3*16);
 		Set4(4*16); Set4(5*16); Set4(6*16); Set4(7*16);

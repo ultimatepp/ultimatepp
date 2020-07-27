@@ -453,9 +453,15 @@ void memset32(void *p, dword data, size_t len)
 }
 
 inline
-void memset64(void *p, dword data, size_t len)
+void memset64(void *p, qword data, size_t len)
 {
 	memset__<qword>(p, data, len);
+}
+
+inline
+void memset128(void *p, m128 data, size_t len)
+{
+	memset__<m128>(p, data, len);
 }
 
 inline
@@ -565,6 +571,12 @@ inline
 bool memeq64(const void *p, const void *q, size_t len)
 {
 	return memcmp(p, q, 8 * len) == 0;
+}
+
+inline
+bool memeq128(const void *p, const void *q, size_t len)
+{
+	return memcmp(p, q, 16 * len) == 0;
 }
 
 #endif

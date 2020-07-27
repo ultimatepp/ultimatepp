@@ -35,6 +35,7 @@ file
 	Mem.h,
 	Mem.cpp,
 	SIMD_SSE2.h,
+	SIMD_NEON.h,
 	SIMD.cpp,
 	Atomic.h,
 	Mt.h,
