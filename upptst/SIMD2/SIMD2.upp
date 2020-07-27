@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	SIMD2.cpp;
+
+mainconfig
+	"" = "";
+
