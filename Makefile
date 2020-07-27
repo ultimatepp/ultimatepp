@@ -45412,6 +45412,7 @@ $(OutDir_Core)NetNode.o: $(UPPDIR1)Core/NetNode.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45497,6 +45498,7 @@ $(OutDir_Core)App.o: $(UPPDIR1)Core/App.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45582,6 +45584,7 @@ $(OutDir_Core)Huge.o: $(UPPDIR1)Core/Huge.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45667,6 +45670,7 @@ $(OutDir_Core)Stream.o: $(UPPDIR1)Core/Stream.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45752,6 +45756,7 @@ $(OutDir_Core)BlockStream.o: $(UPPDIR1)Core/BlockStream.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45837,6 +45842,7 @@ $(OutDir_Core)FileMapping.o: $(UPPDIR1)Core/FileMapping.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -45922,6 +45928,7 @@ $(OutDir_Core)FilterStream.o: $(UPPDIR1)Core/FilterStream.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46007,6 +46014,7 @@ $(OutDir_Core)Log.o: $(UPPDIR1)Core/Log.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46092,6 +46100,7 @@ $(OutDir_Core)Debug.o: $(UPPDIR1)Core/Debug.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46177,6 +46186,7 @@ $(OutDir_Core)Ini.o: $(UPPDIR1)Core/Ini.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46262,6 +46272,7 @@ $(OutDir_Core)Util.o: $(UPPDIR1)Core/Util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46347,6 +46358,7 @@ $(OutDir_Core)mathutil.o: $(UPPDIR1)Core/mathutil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46432,6 +46444,7 @@ $(OutDir_Core)Random.o: $(UPPDIR1)Core/Random.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46517,6 +46530,7 @@ $(OutDir_Core)Speller.o: $(UPPDIR1)Core/Speller.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46602,6 +46616,7 @@ $(OutDir_Core)LocalProcess.o: $(UPPDIR1)Core/LocalProcess.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46687,6 +46702,7 @@ $(OutDir_Core)Vcont.o: $(UPPDIR1)Core/Vcont.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46772,6 +46788,7 @@ $(OutDir_Core)Index.o: $(UPPDIR1)Core/Index.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46857,6 +46874,7 @@ $(OutDir_Core)TimeDate.o: $(UPPDIR1)Core/TimeDate.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -46942,6 +46960,7 @@ $(OutDir_Core)Value.o: $(UPPDIR1)Core/Value.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47027,6 +47046,7 @@ $(OutDir_Core)ValueUtil.o: $(UPPDIR1)Core/ValueUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47112,6 +47132,7 @@ $(OutDir_Core)Format.o: $(UPPDIR1)Core/Format.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47197,6 +47218,7 @@ $(OutDir_Core)Convert.o: $(UPPDIR1)Core/Convert.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47282,6 +47304,7 @@ $(OutDir_Core)Color.o: $(UPPDIR1)Core/Color.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47367,6 +47390,7 @@ $(OutDir_Core)Gtypes.o: $(UPPDIR1)Core/Gtypes.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47452,6 +47476,7 @@ $(OutDir_Core)t.o: $(UPPDIR1)Core/t.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47538,6 +47563,7 @@ $(OutDir_Core)Lang.o: $(UPPDIR1)Core/Lang.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47623,6 +47649,7 @@ $(OutDir_Core)LangInfo.o: $(UPPDIR1)Core/LangInfo.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47708,6 +47735,7 @@ $(OutDir_Core)parser.o: $(UPPDIR1)Core/parser.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47793,6 +47821,7 @@ $(OutDir_Core)XML.o: $(UPPDIR1)Core/XML.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47878,6 +47907,7 @@ $(OutDir_Core)Xmlize.o: $(UPPDIR1)Core/Xmlize.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -47963,6 +47993,7 @@ $(OutDir_Core)JSON.o: $(UPPDIR1)Core/JSON.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48048,6 +48079,7 @@ $(OutDir_Core)Uuid.o: $(UPPDIR1)Core/Uuid.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48133,6 +48165,7 @@ $(OutDir_Core)Ptr.o: $(UPPDIR1)Core/Ptr.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48219,6 +48252,7 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48308,6 +48342,7 @@ $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48393,6 +48428,7 @@ $(OutDir_Core)CoWork.o: $(UPPDIR1)Core/CoWork.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48478,6 +48514,7 @@ $(OutDir_Core)ValueCache.o: $(UPPDIR1)Core/ValueCache.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48563,6 +48600,7 @@ $(OutDir_Core)MD5.o: $(UPPDIR1)Core/MD5.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48648,6 +48686,7 @@ $(OutDir_Core)SHA1.o: $(UPPDIR1)Core/SHA1.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48733,6 +48772,7 @@ $(OutDir_Core)SHA256.o: $(UPPDIR1)Core/SHA256.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48823,6 +48863,7 @@ $(OutDir_Core)xxHsh.o: $(UPPDIR1)Core/xxHsh.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48908,6 +48949,7 @@ $(OutDir_Core)InetUtil.o: $(UPPDIR1)Core/InetUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -48993,6 +49035,7 @@ $(OutDir_Core)MIME.o: $(UPPDIR1)Core/MIME.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49078,6 +49121,7 @@ $(OutDir_Core)Socket.o: $(UPPDIR1)Core/Socket.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49163,6 +49207,7 @@ $(OutDir_Core)Http.o: $(UPPDIR1)Core/Http.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49248,6 +49293,7 @@ $(OutDir_Core)WebSocket.o: $(UPPDIR1)Core/WebSocket.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49333,6 +49379,7 @@ $(OutDir_Core)Dli.o: $(UPPDIR1)Core/Dli.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49418,6 +49465,7 @@ $(OutDir_Core)Win32Util.o: $(UPPDIR1)Core/Win32Util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49649,6 +49697,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49775,6 +49824,7 @@ $(OutDir_plugin_lz4)Compress.o: $(UPPDIR1)plugin/lz4/Compress.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49862,6 +49912,7 @@ $(OutDir_plugin_lz4)Decompress.o: $(UPPDIR1)plugin/lz4/Decompress.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -49949,6 +50000,7 @@ $(OutDir_plugin_lz4)util.o: $(UPPDIR1)plugin/lz4/util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50047,6 +50099,7 @@ $(OutDir_plugin_zstd)Compress.o: $(UPPDIR1)plugin/zstd/Compress.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50134,6 +50187,7 @@ $(OutDir_plugin_zstd)Decompress.o: $(UPPDIR1)plugin/zstd/Decompress.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50221,6 +50275,7 @@ $(OutDir_plugin_zstd)Util.o: $(UPPDIR1)plugin/zstd/Util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50641,6 +50696,7 @@ $(OutDir_RichEdit)Ruler.o: $(UPPDIR1)RichEdit/Ruler.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50785,6 +50841,7 @@ $(OutDir_RichEdit)UnitEdit.o: $(UPPDIR1)RichEdit/UnitEdit.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -50928,6 +50985,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51072,6 +51130,7 @@ $(OutDir_RichEdit)Speller.o: $(UPPDIR1)RichEdit/Speller.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51215,6 +51274,7 @@ $(OutDir_RichEdit)Kbd.o: $(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51358,6 +51418,7 @@ $(OutDir_RichEdit)Mouse.o: $(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51501,6 +51562,7 @@ $(OutDir_RichEdit)Cursor.o: $(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51644,6 +51706,7 @@ $(OutDir_RichEdit)Undo.o: $(UPPDIR1)RichEdit/Undo.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51787,6 +51850,7 @@ $(OutDir_RichEdit)Modify.o: $(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -51930,6 +51994,7 @@ $(OutDir_RichEdit)Formating.o: $(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52073,6 +52138,7 @@ $(OutDir_RichEdit)FormatDlg.o: $(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52216,6 +52282,7 @@ $(OutDir_RichEdit)ParaFormat.o: $(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52359,6 +52426,7 @@ $(OutDir_RichEdit)TableUndo.o: $(UPPDIR1)RichEdit/TableUndo.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52502,6 +52570,7 @@ $(OutDir_RichEdit)Table.o: $(UPPDIR1)RichEdit/Table.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52645,6 +52714,7 @@ $(OutDir_RichEdit)Find.o: $(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52788,6 +52858,7 @@ $(OutDir_RichEdit)Tool.o: $(UPPDIR1)RichEdit/Tool.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -52931,6 +53002,7 @@ $(OutDir_RichEdit)Clip.o: $(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53074,6 +53146,7 @@ $(OutDir_RichEdit)StyleKeys.o: $(UPPDIR1)RichEdit/StyleKeys.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53217,6 +53290,7 @@ $(OutDir_RichEdit)HeaderFooter.o: $(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53404,6 +53478,7 @@ $(OutDir_IconDes)IconDraw.o: $(UPPDIR1)IconDes/IconDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53550,6 +53625,7 @@ $(OutDir_IconDes)AlphaCtrl.o: $(UPPDIR1)IconDes/AlphaCtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53696,6 +53772,7 @@ $(OutDir_IconDes)RGBACtrl.o: $(UPPDIR1)IconDes/RGBACtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53842,6 +53919,7 @@ $(OutDir_IconDes)ImageOp.o: $(UPPDIR1)IconDes/ImageOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -53988,6 +54066,7 @@ $(OutDir_IconDes)Paint.o: $(UPPDIR1)IconDes/Paint.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54135,6 +54214,7 @@ $(OutDir_IconDes)Event.o: $(UPPDIR1)IconDes/Event.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54281,6 +54361,7 @@ $(OutDir_IconDes)Fast.o: $(UPPDIR1)IconDes/Fast.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54427,6 +54508,7 @@ $(OutDir_IconDes)IconDes.o: $(UPPDIR1)IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54573,6 +54655,7 @@ $(OutDir_IconDes)List.o: $(UPPDIR1)IconDes/List.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54719,6 +54802,7 @@ $(OutDir_IconDes)Image.o: $(UPPDIR1)IconDes/Image.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -54865,6 +54949,7 @@ $(OutDir_IconDes)Smoothen.o: $(UPPDIR1)IconDes/Smoothen.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55011,6 +55096,7 @@ $(OutDir_IconDes)Text.o: $(UPPDIR1)IconDes/Text.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55157,6 +55243,7 @@ $(OutDir_IconDes)Bar.o: $(UPPDIR1)IconDes/Bar.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55305,6 +55392,7 @@ $(OutDir_IconDes)EditPos.o: $(UPPDIR1)IconDes/EditPos.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55451,6 +55539,7 @@ $(OutDir_IconDes)ImlFile.o: $(UPPDIR1)IconDes/ImlFile.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55633,6 +55722,7 @@ $(OutDir_CppBase)ppconfig.o: $(UPPDIR1)CppBase/ppconfig.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55721,6 +55811,7 @@ $(OutDir_CppBase)macro.o: $(UPPDIR1)CppBase/macro.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55809,6 +55900,7 @@ $(OutDir_CppBase)util.o: $(UPPDIR1)CppBase/util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55897,6 +55989,7 @@ $(OutDir_CppBase)ppfile.o: $(UPPDIR1)CppBase/ppfile.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -55985,6 +56078,7 @@ $(OutDir_CppBase)srcfiles.o: $(UPPDIR1)CppBase/srcfiles.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56073,6 +56167,7 @@ $(OutDir_CppBase)cpp.o: $(UPPDIR1)CppBase/cpp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56161,6 +56256,7 @@ $(OutDir_CppBase)Pre.o: $(UPPDIR1)CppBase/Pre.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56249,6 +56345,7 @@ $(OutDir_CppBase)cpplex.o: $(UPPDIR1)CppBase/cpplex.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56337,6 +56434,7 @@ $(OutDir_CppBase)Parser.o: $(UPPDIR1)CppBase/Parser.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56425,6 +56523,7 @@ $(OutDir_CppBase)Body.o: $(UPPDIR1)CppBase/Body.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56513,6 +56612,7 @@ $(OutDir_CppBase)Base.o: $(UPPDIR1)CppBase/Base.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56601,6 +56701,7 @@ $(OutDir_CppBase)ScopeInfo.o: $(UPPDIR1)CppBase/ScopeInfo.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56689,6 +56790,7 @@ $(OutDir_CppBase)Qualify.o: $(UPPDIR1)CppBase/Qualify.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56777,6 +56879,7 @@ $(OutDir_CppBase)CppItem.o: $(UPPDIR1)CppBase/CppItem.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56865,6 +56968,7 @@ $(OutDir_CppBase)Expression.o: $(UPPDIR1)CppBase/Expression.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -56953,6 +57057,7 @@ $(OutDir_CppBase)Iface.o: $(UPPDIR1)CppBase/Iface.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -57079,6 +57184,7 @@ $(OutDir_plugin_gif)gifupp.o: $(UPPDIR1)plugin/gif/gifupp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -57175,6 +57281,7 @@ $(OutDir_plugin_gif)gif.o: $(UPPDIR1)plugin/gif/gif.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -57279,6 +57386,7 @@ $(OutDir_plugin_jpg)jpgupp.o: $(UPPDIR1)plugin/jpg/jpgupp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -57381,6 +57489,7 @@ $(OutDir_plugin_jpg)jpgreg.o: $(UPPDIR1)plugin/jpg/jpgreg.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58127,6 +58236,7 @@ $(OutDir_Painter)Painter.o: $(UPPDIR1)Painter/Painter.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58228,6 +58338,7 @@ $(OutDir_Painter)SvgArc.o: $(UPPDIR1)Painter/SvgArc.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58329,6 +58440,7 @@ $(OutDir_Painter)PainterPath.o: $(UPPDIR1)Painter/PainterPath.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58430,6 +58542,7 @@ $(OutDir_Painter)DrawOp.o: $(UPPDIR1)Painter/DrawOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58531,6 +58644,7 @@ $(OutDir_Painter)Painting.o: $(UPPDIR1)Painter/Painting.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58632,6 +58746,7 @@ $(OutDir_Painter)PaintPainting.o: $(UPPDIR1)Painter/PaintPainting.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58733,6 +58848,7 @@ $(OutDir_Painter)PainterInit.o: $(UPPDIR1)Painter/PainterInit.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58834,6 +58950,7 @@ $(OutDir_Painter)Xform2D.o: $(UPPDIR1)Painter/Xform2D.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -58935,6 +59052,7 @@ $(OutDir_Painter)Approximate.o: $(UPPDIR1)Painter/Approximate.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59036,6 +59154,7 @@ $(OutDir_Painter)Stroker.o: $(UPPDIR1)Painter/Stroker.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59137,6 +59256,7 @@ $(OutDir_Painter)Dasher.o: $(UPPDIR1)Painter/Dasher.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59238,6 +59358,7 @@ $(OutDir_Painter)Transformer.o: $(UPPDIR1)Painter/Transformer.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59339,6 +59460,7 @@ $(OutDir_Painter)Rasterizer.o: $(UPPDIR1)Painter/Rasterizer.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59440,6 +59562,7 @@ $(OutDir_Painter)RasterizerClip.o: $(UPPDIR1)Painter/RasterizerClip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59541,6 +59664,7 @@ $(OutDir_Painter)RenderChar.o: $(UPPDIR1)Painter/RenderChar.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59642,6 +59766,7 @@ $(OutDir_Painter)Fillers.o: $(UPPDIR1)Painter/Fillers.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59745,6 +59870,7 @@ $(OutDir_Painter)Context.o: $(UPPDIR1)Painter/Context.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59846,6 +59972,7 @@ $(OutDir_Painter)Path.o: $(UPPDIR1)Painter/Path.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -59947,6 +60074,7 @@ $(OutDir_Painter)Render.o: $(UPPDIR1)Painter/Render.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60049,6 +60177,7 @@ $(OutDir_Painter)Image.o: $(UPPDIR1)Painter/Image.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60150,6 +60279,7 @@ $(OutDir_Painter)Mask.o: $(UPPDIR1)Painter/Mask.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60251,6 +60381,7 @@ $(OutDir_Painter)Gradient.o: $(UPPDIR1)Painter/Gradient.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60352,6 +60483,7 @@ $(OutDir_Painter)RadialGradient.o: $(UPPDIR1)Painter/RadialGradient.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60453,6 +60585,7 @@ $(OutDir_Painter)OnPath.o: $(UPPDIR1)Painter/OnPath.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60554,6 +60687,7 @@ $(OutDir_Painter)SvgUtil.o: $(UPPDIR1)Painter/SvgUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60656,6 +60790,7 @@ $(OutDir_Painter)SvgBounds.o: $(UPPDIR1)Painter/SvgBounds.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60758,6 +60893,7 @@ $(OutDir_Painter)SvgStyle.o: $(UPPDIR1)Painter/SvgStyle.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -60860,6 +60996,7 @@ $(OutDir_Painter)SvgParser.o: $(UPPDIR1)Painter/SvgParser.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61022,6 +61159,7 @@ $(OutDir_Draw)Font.o: $(UPPDIR1)Draw/Font.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61117,6 +61255,7 @@ $(OutDir_Draw)FontCR.o: $(UPPDIR1)Draw/FontCR.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61212,6 +61351,7 @@ $(OutDir_Draw)FontWin32.o: $(UPPDIR1)Draw/FontWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61307,6 +61447,7 @@ $(OutDir_Draw)FontFc.o: $(UPPDIR1)Draw/FontFc.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61402,6 +61543,7 @@ $(OutDir_Draw)Draw.o: $(UPPDIR1)Draw/Draw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61497,6 +61639,7 @@ $(OutDir_Draw)DrawText.o: $(UPPDIR1)Draw/DrawText.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61592,6 +61735,7 @@ $(OutDir_Draw)DrawData.o: $(UPPDIR1)Draw/DrawData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61687,6 +61831,7 @@ $(OutDir_Draw)Drawing.o: $(UPPDIR1)Draw/Drawing.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61782,6 +61927,7 @@ $(OutDir_Draw)ImageAnyDraw.o: $(UPPDIR1)Draw/ImageAnyDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61877,6 +62023,7 @@ $(OutDir_Draw)DrawUtil.o: $(UPPDIR1)Draw/DrawUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -61972,6 +62119,7 @@ $(OutDir_Draw)DrawTextUtil.o: $(UPPDIR1)Draw/DrawTextUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62067,6 +62215,7 @@ $(OutDir_Draw)Display.o: $(UPPDIR1)Draw/Display.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62165,6 +62314,7 @@ $(OutDir_Draw)Image.o: $(UPPDIR1)Draw/Image.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62260,6 +62410,7 @@ $(OutDir_Draw)ImageBlit.o: $(UPPDIR1)Draw/ImageBlit.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62355,6 +62506,7 @@ $(OutDir_Draw)RasterFormat.o: $(UPPDIR1)Draw/RasterFormat.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62450,6 +62602,7 @@ $(OutDir_Draw)RasterWrite.o: $(UPPDIR1)Draw/RasterWrite.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62545,6 +62698,7 @@ $(OutDir_Draw)Palette.o: $(UPPDIR1)Draw/Palette.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62640,6 +62794,7 @@ $(OutDir_Draw)Raster.o: $(UPPDIR1)Draw/Raster.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62735,6 +62890,7 @@ $(OutDir_Draw)RasterEncoder.o: $(UPPDIR1)Draw/RasterEncoder.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62830,6 +62986,7 @@ $(OutDir_Draw)ImageOp.o: $(UPPDIR1)Draw/ImageOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -62925,6 +63082,7 @@ $(OutDir_Draw)ImageChOp.o: $(UPPDIR1)Draw/ImageChOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63020,6 +63178,7 @@ $(OutDir_Draw)Mify.o: $(UPPDIR1)Draw/Mify.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63115,6 +63274,7 @@ $(OutDir_Draw)ImageScale.o: $(UPPDIR1)Draw/ImageScale.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63210,6 +63370,7 @@ $(OutDir_Draw)RescaleFilter.o: $(UPPDIR1)Draw/RescaleFilter.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63305,6 +63466,7 @@ $(OutDir_Draw)MakeCache.o: $(UPPDIR1)Draw/MakeCache.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63400,6 +63562,7 @@ $(OutDir_Draw)DrawRasterData.o: $(UPPDIR1)Draw/DrawRasterData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63495,6 +63658,7 @@ $(OutDir_Draw)Uhd.o: $(UPPDIR1)Draw/Uhd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63590,6 +63754,7 @@ $(OutDir_Draw)Iml.o: $(UPPDIR1)Draw/Iml.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63685,6 +63850,7 @@ $(OutDir_Draw)DDARasterizer.o: $(UPPDIR1)Draw/DDARasterizer.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63780,6 +63946,7 @@ $(OutDir_Draw)SDrawClip.o: $(UPPDIR1)Draw/SDrawClip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63875,6 +64042,7 @@ $(OutDir_Draw)SDrawPut.o: $(UPPDIR1)Draw/SDrawPut.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -63970,6 +64138,7 @@ $(OutDir_Draw)SDrawText.o: $(UPPDIR1)Draw/SDrawText.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64065,6 +64234,7 @@ $(OutDir_Draw)SDraw.o: $(UPPDIR1)Draw/SDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64160,6 +64330,7 @@ $(OutDir_Draw)SImageDraw.o: $(UPPDIR1)Draw/SImageDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64255,6 +64426,7 @@ $(OutDir_Draw)Cham.o: $(UPPDIR1)Draw/Cham.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64351,6 +64523,7 @@ $(OutDir_Draw)SColors.o: $(UPPDIR1)Draw/SColors.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64524,6 +64697,7 @@ $(OutDir_PdfDraw)TTFStream.o: $(UPPDIR1)PdfDraw/TTFStream.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64621,6 +64795,7 @@ $(OutDir_PdfDraw)TTFStruct.o: $(UPPDIR1)PdfDraw/TTFStruct.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64718,6 +64893,7 @@ $(OutDir_PdfDraw)TTFReader.o: $(UPPDIR1)PdfDraw/TTFReader.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64815,6 +64991,7 @@ $(OutDir_PdfDraw)TTFSubset.o: $(UPPDIR1)PdfDraw/TTFSubset.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -64912,6 +65089,7 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65010,6 +65188,7 @@ $(OutDir_PdfDraw)PdfReport.o: $(UPPDIR1)PdfDraw/PdfReport.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65107,6 +65286,7 @@ $(OutDir_PdfDraw)PdfInit.o: $(UPPDIR1)PdfDraw/PdfInit.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65222,6 +65402,7 @@ $(OutDir_plugin_pcre)RegExp.o: $(UPPDIR1)plugin/pcre/RegExp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65348,6 +65529,7 @@ $(OutDir_CtrlCore)SystemDraw.o: $(UPPDIR1)CtrlCore/SystemDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65460,6 +65642,7 @@ $(OutDir_CtrlCore)Frame.o: $(UPPDIR1)CtrlCore/Frame.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65572,6 +65755,7 @@ $(OutDir_CtrlCore)CtrlMt.o: $(UPPDIR1)CtrlCore/CtrlMt.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65684,6 +65868,7 @@ $(OutDir_CtrlCore)Ctrl.o: $(UPPDIR1)CtrlCore/Ctrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65797,6 +65982,7 @@ $(OutDir_CtrlCore)CtrlChild.o: $(UPPDIR1)CtrlCore/CtrlChild.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -65909,6 +66095,7 @@ $(OutDir_CtrlCore)CtrlPos.o: $(UPPDIR1)CtrlCore/CtrlPos.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66021,6 +66208,7 @@ $(OutDir_CtrlCore)CtrlDraw.o: $(UPPDIR1)CtrlCore/CtrlDraw.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66133,6 +66321,7 @@ $(OutDir_CtrlCore)CtrlMouse.o: $(UPPDIR1)CtrlCore/CtrlMouse.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66245,6 +66434,7 @@ $(OutDir_CtrlCore)CtrlKbd.o: $(UPPDIR1)CtrlCore/CtrlKbd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66357,6 +66547,7 @@ $(OutDir_CtrlCore)CtrlTimer.o: $(UPPDIR1)CtrlCore/CtrlTimer.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66469,6 +66660,7 @@ $(OutDir_CtrlCore)CtrlClip.o: $(UPPDIR1)CtrlCore/CtrlClip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66581,6 +66773,7 @@ $(OutDir_CtrlCore)LocalLoop.o: $(UPPDIR1)CtrlCore/LocalLoop.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66693,6 +66886,7 @@ $(OutDir_CtrlCore)CtrlCoreInit.o: $(UPPDIR1)CtrlCore/CtrlCoreInit.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66806,6 +67000,7 @@ $(OutDir_CtrlCore)TopWindow.o: $(UPPDIR1)CtrlCore/TopWindow.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -66918,6 +67113,7 @@ $(OutDir_CtrlCore)DrawWin32.o: $(UPPDIR1)CtrlCore/DrawWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67030,6 +67226,7 @@ $(OutDir_CtrlCore)DrawOpWin32.o: $(UPPDIR1)CtrlCore/DrawOpWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67142,6 +67339,7 @@ $(OutDir_CtrlCore)DrawTextWin32.o: $(UPPDIR1)CtrlCore/DrawTextWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67254,6 +67452,7 @@ $(OutDir_CtrlCore)ImageWin32.o: $(UPPDIR1)CtrlCore/ImageWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67366,6 +67565,7 @@ $(OutDir_CtrlCore)MetaFile.o: $(UPPDIR1)CtrlCore/MetaFile.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67478,6 +67678,7 @@ $(OutDir_CtrlCore)UtilWin32.o: $(UPPDIR1)CtrlCore/UtilWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67590,6 +67791,7 @@ $(OutDir_CtrlCore)Win32Ctrl.o: $(UPPDIR1)CtrlCore/Win32Ctrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67703,6 +67905,7 @@ $(OutDir_CtrlCore)Win32Wnd.o: $(UPPDIR1)CtrlCore/Win32Wnd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67816,6 +68019,7 @@ $(OutDir_CtrlCore)Win32Clip.o: $(UPPDIR1)CtrlCore/Win32Clip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -67929,6 +68133,7 @@ $(OutDir_CtrlCore)Win32DnD.o: $(UPPDIR1)CtrlCore/Win32DnD.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68041,6 +68246,7 @@ $(OutDir_CtrlCore)Win32Proc.o: $(UPPDIR1)CtrlCore/Win32Proc.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68153,6 +68359,7 @@ $(OutDir_CtrlCore)TopWin32.o: $(UPPDIR1)CtrlCore/TopWin32.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68265,6 +68472,7 @@ $(OutDir_CtrlCore)DHCtrl.o: $(UPPDIR1)CtrlCore/DHCtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68377,6 +68585,7 @@ $(OutDir_CtrlCore)DrawX11.o: $(UPPDIR1)CtrlCore/DrawX11.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68489,6 +68698,7 @@ $(OutDir_CtrlCore)DrawOpX11.o: $(UPPDIR1)CtrlCore/DrawOpX11.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68601,6 +68811,7 @@ $(OutDir_CtrlCore)DrawTextX11.o: $(UPPDIR1)CtrlCore/DrawTextX11.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68713,6 +68924,7 @@ $(OutDir_CtrlCore)ImageX11.o: $(UPPDIR1)CtrlCore/ImageX11.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68825,6 +69037,7 @@ $(OutDir_CtrlCore)UtilX11.o: $(UPPDIR1)CtrlCore/UtilX11.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -68937,6 +69150,7 @@ $(OutDir_CtrlCore)X11Ctrl.o: $(UPPDIR1)CtrlCore/X11Ctrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69049,6 +69263,7 @@ $(OutDir_CtrlCore)X11Wnd.o: $(UPPDIR1)CtrlCore/X11Wnd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69162,6 +69377,7 @@ $(OutDir_CtrlCore)X11Proc.o: $(UPPDIR1)CtrlCore/X11Proc.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69274,6 +69490,7 @@ $(OutDir_CtrlCore)X11Clip.o: $(UPPDIR1)CtrlCore/X11Clip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69386,6 +69603,7 @@ $(OutDir_CtrlCore)X11DnD.o: $(UPPDIR1)CtrlCore/X11DnD.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69498,6 +69716,7 @@ $(OutDir_CtrlCore)X11Top.o: $(UPPDIR1)CtrlCore/X11Top.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69610,6 +69829,7 @@ $(OutDir_CtrlCore)X11ImgClip.o: $(UPPDIR1)CtrlCore/X11ImgClip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69723,6 +69943,7 @@ $(OutDir_CtrlCore)X11App.o: $(UPPDIR1)CtrlCore/X11App.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69835,6 +70056,7 @@ $(OutDir_CtrlCore)X11DHCtrl.o: $(UPPDIR1)CtrlCore/X11DHCtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -69947,6 +70169,7 @@ $(OutDir_CtrlCore)GtkDrawOp.o: $(UPPDIR1)CtrlCore/GtkDrawOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70059,6 +70282,7 @@ $(OutDir_CtrlCore)GtkDrawText.o: $(UPPDIR1)CtrlCore/GtkDrawText.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70171,6 +70395,7 @@ $(OutDir_CtrlCore)GtkDrawImage.o: $(UPPDIR1)CtrlCore/GtkDrawImage.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70283,6 +70508,7 @@ $(OutDir_CtrlCore)GdkImage.o: $(UPPDIR1)CtrlCore/GdkImage.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70395,6 +70621,7 @@ $(OutDir_CtrlCore)GtkUtil.o: $(UPPDIR1)CtrlCore/GtkUtil.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70507,6 +70734,7 @@ $(OutDir_CtrlCore)GtkX11Util.o: $(UPPDIR1)CtrlCore/GtkX11Util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70619,6 +70847,7 @@ $(OutDir_CtrlCore)GtkCtrl.o: $(UPPDIR1)CtrlCore/GtkCtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70731,6 +70960,7 @@ $(OutDir_CtrlCore)GtkCapture.o: $(UPPDIR1)CtrlCore/GtkCapture.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70843,6 +71073,7 @@ $(OutDir_CtrlCore)GtkWnd.o: $(UPPDIR1)CtrlCore/GtkWnd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -70955,6 +71186,7 @@ $(OutDir_CtrlCore)GtkCreate.o: $(UPPDIR1)CtrlCore/GtkCreate.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71067,6 +71299,7 @@ $(OutDir_CtrlCore)GtkEvent.o: $(UPPDIR1)CtrlCore/GtkEvent.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71179,6 +71412,7 @@ $(OutDir_CtrlCore)GtkTop.o: $(UPPDIR1)CtrlCore/GtkTop.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71291,6 +71525,7 @@ $(OutDir_CtrlCore)GtkClip.o: $(UPPDIR1)CtrlCore/GtkClip.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71404,6 +71639,7 @@ $(OutDir_CtrlCore)GtkDnD.o: $(UPPDIR1)CtrlCore/GtkDnD.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71516,6 +71752,7 @@ $(OutDir_CtrlCore)GtkApp.o: $(UPPDIR1)CtrlCore/GtkApp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71628,6 +71865,7 @@ $(OutDir_CtrlCore)CocoCtrl.o: $(UPPDIR1)CtrlCore/CocoCtrl.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71740,6 +71978,7 @@ $(OutDir_CtrlCore)CocoWnd.o: $(UPPDIR1)CtrlCore/CocoWnd.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71852,6 +72091,7 @@ $(OutDir_CtrlCore)CocoTop.o: $(UPPDIR1)CtrlCore/CocoTop.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -71964,6 +72204,7 @@ $(OutDir_CtrlCore)CocoChSysInit.o: $(UPPDIR1)CtrlCore/CocoChSysInit.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72106,6 +72347,7 @@ $(OutDir_CtrlCore)ParseRTF.o: $(UPPDIR1)CtrlCore/ParseRTF.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72218,6 +72460,7 @@ $(OutDir_CtrlCore)EncodeRTF.o: $(UPPDIR1)CtrlCore/EncodeRTF.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72460,6 +72703,7 @@ $(OutDir_plugin_bmp)Bmp.o: $(UPPDIR1)plugin/bmp/Bmp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72557,6 +72801,7 @@ $(OutDir_plugin_bmp)BmpWrite.o: $(UPPDIR1)plugin/bmp/BmpWrite.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72654,6 +72899,7 @@ $(OutDir_plugin_bmp)Icon.o: $(UPPDIR1)plugin/bmp/Icon.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72751,6 +72997,7 @@ $(OutDir_plugin_bmp)BmpReg.o: $(UPPDIR1)plugin/bmp/BmpReg.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72859,6 +73106,7 @@ $(OutDir_RichText)Object.o: $(UPPDIR1)RichText/Object.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -72961,6 +73209,7 @@ $(OutDir_RichText)RichImage.o: $(UPPDIR1)RichText/RichImage.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73069,6 +73318,7 @@ $(OutDir_RichText)ParaData.o: $(UPPDIR1)RichText/ParaData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73171,6 +73421,7 @@ $(OutDir_RichText)ParaType.o: $(UPPDIR1)RichText/ParaType.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73273,6 +73524,7 @@ $(OutDir_RichText)ParaPaint.o: $(UPPDIR1)RichText/ParaPaint.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73376,6 +73628,7 @@ $(OutDir_RichText)HeaderFooter.o: $(UPPDIR1)RichText/HeaderFooter.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73478,6 +73731,7 @@ $(OutDir_RichText)TxtData.o: $(UPPDIR1)RichText/TxtData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73580,6 +73834,7 @@ $(OutDir_RichText)TxtPaint.o: $(UPPDIR1)RichText/TxtPaint.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73682,6 +73937,7 @@ $(OutDir_RichText)TxtOp.o: $(UPPDIR1)RichText/TxtOp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73784,6 +74040,7 @@ $(OutDir_RichText)Format.o: $(UPPDIR1)RichText/Format.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73886,6 +74143,7 @@ $(OutDir_RichText)TableCell.o: $(UPPDIR1)RichText/TableCell.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -73988,6 +74246,7 @@ $(OutDir_RichText)TableLayout.o: $(UPPDIR1)RichText/TableLayout.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74090,6 +74349,7 @@ $(OutDir_RichText)TablePaint.o: $(UPPDIR1)RichText/TablePaint.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74192,6 +74452,7 @@ $(OutDir_RichText)TableData.o: $(UPPDIR1)RichText/TableData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74294,6 +74555,7 @@ $(OutDir_RichText)TextPaint.o: $(UPPDIR1)RichText/TextPaint.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74396,6 +74658,7 @@ $(OutDir_RichText)TextStyle.o: $(UPPDIR1)RichText/TextStyle.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74498,6 +74761,7 @@ $(OutDir_RichText)TextData.o: $(UPPDIR1)RichText/TextData.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74600,6 +74864,7 @@ $(OutDir_RichText)TextTable.o: $(UPPDIR1)RichText/TextTable.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74702,6 +74967,7 @@ $(OutDir_RichText)EncodeQtf.o: $(UPPDIR1)RichText/EncodeQtf.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74804,6 +75070,7 @@ $(OutDir_RichText)ParseQtf.o: $(UPPDIR1)RichText/ParseQtf.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -74906,6 +75173,7 @@ $(OutDir_RichText)EncodeHTML.o: $(UPPDIR1)RichText/EncodeHTML.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -75008,6 +75276,7 @@ $(OutDir_RichText)Util.o: $(UPPDIR1)RichText/Util.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -75184,6 +75453,7 @@ $(OutDir_plugin_png)pngupp.o: $(UPPDIR1)plugin/png/pngupp.cpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
@@ -75282,6 +75552,7 @@ $(OutDir_plugin_png)pngreg.o: $(UPPDIR1)plugin/png/pngreg.icpp \
 	$(UPPDIR1)Core/Profile.h \
 	$(UPPDIR1)Core/Ptr.h \
 	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
 	$(UPPDIR1)Core/SIMD_SSE2.h \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
