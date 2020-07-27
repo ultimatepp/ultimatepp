@@ -156,7 +156,7 @@ force_inline i8x16  operator~(i8x16 a)            { return _mm_xor_si128(a.data,
 
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }
-force_inline i32x4 Round(f32x4 a)                 { return _mm_cvtps_epi32(a.data); }
+// force_inline i32x4 Round(f32x4 a)                 { return _mm_cvtps_epi32(a.data); }
 
 force_inline i16x8 Unpack8L(i16x8 a)              { return _mm_unpacklo_epi8(a.data, _mm_setzero_si128()); }
 force_inline i16x8 Unpack8H(i16x8 a)              { return _mm_unpackhi_epi8(a.data, _mm_setzero_si128()); }
