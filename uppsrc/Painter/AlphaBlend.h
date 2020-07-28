@@ -38,7 +38,7 @@ i16x8 MakeAlpha(i16x8 x)
 }
 
 force_inline
-i16x8 AlphaBlendSSE2(i16x8 t, i16x8 s, i16x8 alpha)
+i16x8 AlphaBlendSIMD(i16x8 t, i16x8 s, i16x8 alpha)
 {
 	return s + (t * alpha >> 8);
 }
@@ -46,13 +46,13 @@ i16x8 AlphaBlendSSE2(i16x8 t, i16x8 s, i16x8 alpha)
 force_inline
 void AlphaBlend1(RGBA *t, i16x8 s, i16x8 alpha)
 {
-	StoreRGBA(t, AlphaBlendSSE2(LoadRGBA(t), s, alpha));
+	StoreRGBA(t, AlphaBlendSIMD(LoadRGBA(t), s, alpha));
 }
 
 force_inline
 void AlphaBlend2(RGBA *t, i16x8 s, i16x8 alpha)
 {
-	StoreRGBA2(t, AlphaBlendSSE2(LoadRGBA2(t), s, alpha));
+	StoreRGBA2(t, AlphaBlendSIMD(LoadRGBA2(t), s, alpha));
 }
 
 force_inline
@@ -60,8 +60,8 @@ void AlphaBlend4(RGBA *t, i16x8 sl, i16x8 al, i16x8 sh, i16x8 ah)
 {
 	i16x8 t4(t);
 	PackRGBA(
-		AlphaBlendSSE2(LoadRGBAL(t4), sl, al),
-		AlphaBlendSSE2(LoadRGBAH(t4), sh, ah)
+		AlphaBlendSIMD(LoadRGBAL(t4), sl, al),
+		AlphaBlendSIMD(LoadRGBAH(t4), sh, ah)
 	).Store(t);
 }
 
@@ -69,14 +69,14 @@ force_inline
 void AlphaBlend(RGBA *t, const RGBA& c)
 {
 	i16x8 s = LoadRGBA(&c);
-	StoreRGBA(t, AlphaBlendSSE2(LoadRGBA(t), s, MakeAlpha(s)));
+	StoreRGBA(t, AlphaBlendSIMD(LoadRGBA(t), s, MakeAlpha(s)));
 }
 
 force_inline
 void AlphaBlend(RGBA *t, const RGBA& c, int alpha)
 {
 	i16x8 s = Mul8(LoadRGBA(&c), alpha);
-	StoreRGBA(t, AlphaBlendSSE2(LoadRGBA(t), s, MakeAlpha(s)));
+	StoreRGBA(t, AlphaBlendSIMD(LoadRGBA(t), s, MakeAlpha(s)));
 }
 
 force_inline
