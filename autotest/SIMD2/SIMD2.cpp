@@ -260,6 +260,9 @@ CONSOLE_APP_MAIN
 		i16x8 h = Unpack8H(a);
 		DUMP(Unpack16L(h));
 		DUMP(Unpack16H(h));
+	
+		DUMP(i32x4(11, 22, 0x01020304, 0x05060708));
+		DUMP(Unpack8L(i32x4(11, 22, 0x01020304, 0x05060708)));
 		
 		DUMP(Pack16(Unpack8L(a), Unpack8H(a)));
 		DUMP(Pack32(Unpack16L(h)));
