@@ -148,6 +148,10 @@ CONSOLE_APP_MAIN
 
 		DUMP(AllTrue(a > b));
 		DUMP(AllTrue(b > a));
+		
+		i16x8 s(1000, 2000, 4000, 8000, 16000, 20000, 25000, 3000);
+		DUMP(s);
+		DUMP(s >> 7);
 	}
 
 	{
@@ -364,13 +368,17 @@ CONSOLE_APP_MAIN
 	}
 
 	auto LoadLog = [](const String& path) {
-		String s = LoadFile(path);
+		String s = Filter(LoadFile(path), [](int c) { return c == '\r' ? 0 : c; });
 		return s.Mid(max(s.FindAfter("\n"), 0));
 	};
 	
 	String log = LoadLog(GetStdLogPath());
+	String etalon = LoadLog(GetDataFile("Etalon.log"));
 
-	ASSERT(LoadLog(GetStdLogPath()) == LoadLog(GetDataFile("Etalon.log")));
+	SaveFile(GetHomeDirFile("log.txt"), log);
+	SaveFile(GetHomeDirFile("etalon.txt"), etalon);
+	
+	ASSERT(log == etalon);
 	
 	Cout() << "================= OK\r\n";
 }

@@ -1,4 +1,4 @@
-* C:\upp\out\upptst\MSBT19.Debug.Debug_Full\SIMD2.exe 27.07.2020 17:35:09, user: cxl
+* C:\upp\out\autotest\MSBT19.Debug.Debug_Full\SIMD2.exe 28.07.2020 09:40:44, user: cxl
 
 f32x4(r) = 0 0 0 0
 x = 4 3 2 1
@@ -72,6 +72,8 @@ AllTrue(a < b) = true
 AllTrue(b < a) = false
 AllTrue(a > b) = false
 AllTrue(b > a) = true
+s = 1000 2000 4000 8000  16000 20000 25000 3000
+s >> 7 = 7 15 31 62  125 156 195 23
 ==========================================================
 x = 0 0 0 1
 x = 0 0 2 1
