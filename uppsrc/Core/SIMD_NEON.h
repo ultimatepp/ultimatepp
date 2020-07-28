@@ -158,6 +158,8 @@ force_inline i32x4  operator+(i32x4 a, i32x4 b)   { return vaddq_s32(a, b); }
 force_inline i32x4& operator+=(i32x4& a, i32x4 b) { return a = a + b; }
 force_inline i32x4  operator-(i32x4 a, i32x4 b)   { return vsubq_s32(a, b); }
 force_inline i32x4& operator-=(i32x4& a, i32x4 b) { return a = a - b; }
+force_inline i32x4  operator*(i32x4 a, i32x4 b)   { return vmulq_s32(a, b); }
+force_inline i32x4& operator*=(i32x4& a, i32x4 b) { return a = a * b; }
 
 force_inline i32x4  operator&(i32x4 a, i32x4 b)    { return vandq_s32(a, b); }
 force_inline i32x4& operator&=(i32x4& a, i32x4 b)  { return a = a & b; }
