@@ -24,6 +24,9 @@ CONSOLE_APP_MAIN
 #ifdef CPU_ARM
 	RLOG("CPU_ARM");
 #endif
+#ifdef CPU_NEON
+	RLOG("CPU_NEON");
+#endif
 	RLOG("========================");
 	RDUMP(sizeof(bool));
 	RDUMP(sizeof(int));
