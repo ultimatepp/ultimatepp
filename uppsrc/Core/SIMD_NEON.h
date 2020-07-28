@@ -144,7 +144,7 @@ struct i32x4 { // 4xint32
 	i32x4(int16x8_t d)           { data = vreinterpretq_s32_s16(d); }
 	i32x4(int v)                 { data = vsetq_lane_s32(v, vdupq_n_s32(0), 0); }
 	i32x4(int a, int b, int c, int d)  {
-		int32_t __attribute__((aligned(16))) val[4] = { (int16_t)d, (int16_t)c, (int16_t)b, (int16_t)a };
+		int32_t __attribute__((aligned(16))) val[4] = { (int32_t)d, (int32_t)c, (int32_t)b, (int32_t)a };
 		data = vld1q_s32(val);
 	}
 	operator int32x4_t()         { return data; }
