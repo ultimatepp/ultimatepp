@@ -10,26 +10,32 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 #ifdef CPU_SIMD
-	RGBA x = Color(11, 22, 33);
-	RGBA *s = &x;
+	{
+		RGBA x = Color(11, 22, 33);
+		RGBA *s = &x;
+		
+		DUMP(LoadRGBAF(&x));
+		DUMP(i16x8(*(dword *)s));
+		DUMP(Unpack8L(i16x8(*(dword *)s)));
+		DUMP(Unpack8L(i16x8(*(dword *)s)));
+		
+		Vector<RGBA> p;
+		p.Add(Yellow());
+		p.Add(30 * Magenta());
+		p.Add(100 * Blue());
+		p.Add(200 * Green());
+		p.Add(Red());
 	
-	DUMP(LoadRGBAF(&x));
-	DUMP(i16x8(*(dword *)s));
-	DUMP(Unpack8L(i16x8(*(dword *)s)));
-	DUMP(Unpack8L(i16x8(*(dword *)s)));
+		DUMP(p);
+		AlphaBlend(p.begin(), 250 * LtRed(), 250, 5);
+		DUMP(p);
 	
-	Vector<RGBA> p;
-	p.Add(Yellow());
-	p.Add(30 * Magenta());
-	p.Add(100 * Blue());
-	p.Add(200 * Green());
-	p.Add(Red());
-	
-	
-	DUMP(p);
-	AlphaBlend(p.begin(), 250 * LtRed(), 250, 5);
-	DUMP(p);
-	
+		RGBA c = 250 * LtRed();
+		DUMP(c);
+		DUMP(LoadRGBA2(c));
+		DUMP(Mul8(LoadRGBA2(c), 250));
+		DUMP(MakeAlpha(Mul8(LoadRGBA2(c), 250)));
+	}
 
 	{
 		f32x4 x(1, 2, 3, 4);
