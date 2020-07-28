@@ -1,4 +1,4 @@
-* C:\upp\out\autotest\MSBT19.Debug.Debug_Full\SIMD.exe 28.07.2020 10:15:45, user: cxl
+* C:\upp\out\autotest\MSBT19.Debug.Debug_Full\SIMD.exe 28.07.2020 10:37:45, user: cxl
 
 LoadRGBAF(&x) = 255 11 22 33
 i16x8(*(dword *)s) = 0 0 0 0  0 0 0 5665
@@ -8,6 +8,9 @@ p = [RGBA(255, 255, 0, 255), RGBA(15, 0, 29, 30), RGBA(0, 0, 50, 100), RGBA(0, 1
 p = [RGBA(254, 10, 0, 255), RGBA(244, 0, 1, 245), RGBA(244, 0, 2, 248), RGBA(244, 4, 0, 253), RGBA(249, 0, 0, 255)]
 c = RGBA(250, 0, 0, 250)
 LoadRGBA2(c) = 250 250 0 0  250 250 0 0
+i16all(250) = 250 250 250 250  250 250 250 250
+i16all(250) * LoadRGBA2(c) = -3036 -3036 0 0  -3036 -3036 0 0
+i16all(250) * LoadRGBA2(c) >> 8 = 244 244 0 0  244 244 0 0
 Mul8(LoadRGBA2(c), 250) = 244 244 0 0  244 244 0 0
 MakeAlpha(Mul8(LoadRGBA2(c), 250)) = 12 11 11 11  12 11 11 11
 ----------------

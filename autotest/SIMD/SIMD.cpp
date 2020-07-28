@@ -33,6 +33,9 @@ CONSOLE_APP_MAIN
 		RGBA c = 250 * LtRed();
 		DUMP(c);
 		DUMP(LoadRGBA2(c));
+		DUMP(i16all(250));
+		DUMP(i16all(250) * LoadRGBA2(c));
+		DUMP(i16all(250) * LoadRGBA2(c) >> 8);
 		DUMP(Mul8(LoadRGBA2(c), 250));
 		DUMP(MakeAlpha(Mul8(LoadRGBA2(c), 250)));
 	}
