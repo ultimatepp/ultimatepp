@@ -1,0 +1,59 @@
+* C:\upp\out\upptst\MSBT19.Debug.Debug_Full\SIMD.exe 28.07.2020 09:11:17, user: cxl
+
+LoadRGBAF(&x) = 255 11 22 33
+i16x8(*(dword *)s) = 0 0 0 0  0 0 0 5665
+Unpack8L(i16x8(*(dword *)s)) = 0 0 0 0  0 0 22 33
+Unpack8L(i16x8(*(dword *)s)) = 0 0 0 0  0 0 22 33
+----------------
+x = 1 2 3 4
+Broadcast0(x) = 4 4 4 4
+Broadcast1(x) = 3 3 3 3
+Broadcast2(x) = 2 2 2 2
+Broadcast3(x) = 1 1 1 1
+min(x, y) = 1 2 2 4
+max(x, y) = 1 3 3 4
+x == y = -nan 0 0 -nan
+x != y = 0 -nan -nan 0
+x < y = 0 -nan 0 0
+x <= y = -nan -nan 0 -nan
+x > y = 0 0 -nan 0
+x >= y = -nan 0 -nan -nan
+AllTrue(x == y) = false
+AllTrue(x == x) = true
+x + y = 2 5 5 8
+x - y = 0 -1 1 0
+x / y = 1 0.666667 1.5 1
+x * y = 1 6 6 16
+----------------
+BroadcastLH0(x) = 4 4 4 4  8 8 8 8
+BroadcastLH1(x) = 3 3 3 3  7 7 7 7
+BroadcastLH2(x) = 2 2 2 2  6 6 6 6
+BroadcastLH3(x) = 1 1 1 1  5 5 5 5
+x == y = -1 0 0 0  0 0 0 0
+x < y = 0 -1 0 0  -1 -1 0 0
+x > y = 0 0 -1 -1  0 0 -1 -1
+AllTrue(x == y) = false
+AllTrue(x == x) = true
+x + y = 2 6 5 7  13 13 12 14
+x - y = 0 -2 1 1  -3 -1 2 2
+x * y = 1 8 6 12  40 42 35 48
+----------------
+x = 1 2 3 4 . 11 12 13 14 . 21 22 23 24 . 31 32 33 34
+Unpack8L(x) = 21 22 23 24  31 32 33 34
+Unpack8H(x) = 1 2 3 4  11 12 13 14
+----------------
+Unpack16L(x) = 11 12 13 14
+Unpack16H(x) = 1 2 3 4
+----------------
+ToFloat(x) = 1 2 3 4
+x == y = -1 0 0 0
+x < y = 0 -1 0 0
+x > y = 0 0 -1 -1
+AllTrue(x == y) = false
+AllTrue(x == x) = true
+x + y = 2 6 5 7
+x - y = 0 -2 1 1
+x * y = 0 1 0 8  0 6 0 12
+----------------
+x = 1.1 2.8 3.7 -4.2
+Truncate(x) = 1 2 3 -4
