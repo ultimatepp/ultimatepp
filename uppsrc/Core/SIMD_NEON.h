@@ -6,7 +6,7 @@ struct f32x4 {
 	float32x4_t data;
 
 	f32x4& Load(const void *ptr)   { data = vld1q_f32((float *)ptr); return *this; }
-	f32x4& Load64(const void *ptr) { data = vreinterpretq_f32_s64(vsetq_lane_s64(*(int64_t *)ptr, vdupq_n_s64(0), 0)); return *this; }
+	f32x4& Load64(const void *ptr) { data = vcombine_f32(vld1_f32((float *)ptr), vdup_n_f32(0)); return *this; }
 	f32x4& Load32(const void *ptr) { data = vsetq_lane_f32(*(float *)ptr, vdupq_n_f32(0), 0); return *this; }
 
 	void   Store(void *ptr)        { vst1q_f32((float32_t *)ptr, data); }
@@ -74,7 +74,7 @@ struct i16x8 { // 8xint16
 	int16x8_t data;
 
 	i16x8& Load(const void *ptr)   { data = vld1q_s16((int16_t *)ptr); return *this; }
-	i16x8& Load64(const void *ptr) { data = vreinterpretq_s16_s64(vsetq_lane_s64(*(int64_t *)ptr, vdupq_n_s64(0), 0)); return *this; }
+	i16x8& Load64(const void *ptr) { data = vcombine_s16(vld1_s16((int16_t *)ptr), vdup_n_s16(0)); return *this; }
 	i16x8& Load32(const void *ptr) { data = vreinterpretq_s16_s32(vsetq_lane_s32(*(int32_t *)ptr, vdupq_n_s32(0), 0)); return *this; }
 
 	void   Store(void *ptr)      { vst1q_s16((int16_t *)ptr, data); }
@@ -113,7 +113,7 @@ force_inline i16x8  operator^(i16x8 a, i16x8 b)    { return veorq_s16(a, b); }
 force_inline i16x8& operator^=(i16x8& a, i16x8 b)  { return a = a ^ b; }
 force_inline i16x8  operator~(i16x8 a)             { return vmvnq_s16(a); }
 
-force_inline i16x8  operator>>(i16x8 a, int b)     { return vshlq_s16(a, vdupq_n_s16(-b)); }
+force_inline i16x8  operator>>(i16x8 a, int b)     { return vreinterpretq_s16_u16(vshlq_u16(vreinterpretq_u16_s16(a), vdupq_n_s16(-b))); }
 force_inline i16x8& operator>>=(i16x8& a, int b)   { return a = a >> b; }
 force_inline i16x8  operator<<(i16x8 a, int b)     { return vshlq_s16(a, vdupq_n_s16(b)); }
 force_inline i16x8& operator<<=(i16x8& a, int b)   { return a = a << b; }
@@ -130,7 +130,7 @@ struct i32x4 { // 4xint32
 	int32x4_t data;
 
 	i32x4& Load(const void *ptr)   { data = vld1q_s32((int32_t *)ptr); return *this; }
-	i32x4& Load64(const void *ptr) { data = vreinterpretq_s32_s64(vsetq_lane_s64(*(int64_t *)ptr, vdupq_n_s64(0), 0)); return *this; }
+	i32x4& Load64(const void *ptr) { data = vcombine_s32(vld1_s32((int32_t *)ptr), vdup_n_s32(0)); return *this; }
 	i32x4& Load32(const void *ptr) { data = vsetq_lane_s32(*(int32_t *)ptr, vdupq_n_s32(0), 0); return *this; }
 
 	void   Store(void *ptr)      { vst1q_s32((int32_t *)ptr, data); }
@@ -184,7 +184,7 @@ struct i8x16 { // 16*int8
 	int8x16_t data;
 
 	i8x16& Load(const void *ptr)   { data = vld1q_s8((int8_t *)ptr); return *this; }
-	i8x16& Load64(const void *ptr) { data = vreinterpretq_s8_s64(vsetq_lane_s64(*(int64_t *)ptr, vdupq_n_s64(0), 0)); return *this; }
+	i8x16& Load64(const void *ptr) { data = vcombine_s8(vld1_s8((int8_t *)ptr), vdup_n_s8(0)); return *this; }
 	i8x16& Load32(const void *ptr) { data = vreinterpretq_s8_s32(vsetq_lane_s32(*(int32_t *)ptr, vdupq_n_s32(0), 0)); return *this; }
 
 	void   Store(void *ptr)      { vst1q_s8((int8_t *)ptr, data); }
