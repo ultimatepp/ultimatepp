@@ -87,7 +87,6 @@ CONSOLE_APP_MAIN
 
 		DUMP(x + y);
 		DUMP(x - y);
-		DUMP(x * y);
 	}
 
 	{
