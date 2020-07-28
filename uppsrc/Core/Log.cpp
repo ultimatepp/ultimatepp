@@ -132,7 +132,7 @@ void LogOut::Create(bool append)
 	strcpy(user, uenv ? uenv : "boot");
 #endif
 
-	char h[1000];
+	char h[1200];
 	sprintf(h, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
 	           FromSysChrSet(exe),
 	           t.day, t.month, t.year, t.hour, t.minute, t.second, user);
