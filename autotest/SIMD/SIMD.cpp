@@ -1,5 +1,7 @@
 #include <Core/Core.h>
 #include <Draw/Draw.h>
+#include <Painter/Painter.h>
+#include <Painter/AlphaBlend.h>
 
 using namespace Upp;
 
@@ -15,6 +17,19 @@ CONSOLE_APP_MAIN
 	DUMP(i16x8(*(dword *)s));
 	DUMP(Unpack8L(i16x8(*(dword *)s)));
 	DUMP(Unpack8L(i16x8(*(dword *)s)));
+	
+	Vector<RGBA> p;
+	p.Add(Yellow());
+	p.Add(30 * Magenta());
+	p.Add(100 * Blue());
+	p.Add(200 * Green());
+	p.Add(Red());
+	
+	
+	DUMP(p);
+	AlphaBlend(p.begin(), 250 * LtRed(), 250, 5);
+	DUMP(p);
+	
 
 	{
 		f32x4 x(1, 2, 3, 4);

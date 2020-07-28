@@ -1,9 +1,11 @@
-* C:\upp\out\upptst\MSBT19.Debug.Debug_Full\SIMD.exe 28.07.2020 09:11:17, user: cxl
+* C:\upp\out\autotest\MSBT19.Debug.Debug_Full\SIMD.exe 28.07.2020 10:09:37, user: cxl
 
 LoadRGBAF(&x) = 255 11 22 33
 i16x8(*(dword *)s) = 0 0 0 0  0 0 0 5665
 Unpack8L(i16x8(*(dword *)s)) = 0 0 0 0  0 0 22 33
 Unpack8L(i16x8(*(dword *)s)) = 0 0 0 0  0 0 22 33
+p = [RGBA(255, 255, 0, 255), RGBA(15, 0, 29, 30), RGBA(0, 0, 50, 100), RGBA(0, 100, 0, 200), RGBA(128, 0, 0, 255)]
+p = [RGBA(254, 10, 0, 255), RGBA(244, 0, 1, 245), RGBA(244, 0, 2, 248), RGBA(244, 4, 0, 253), RGBA(249, 0, 0, 255)]
 ----------------
 x = 1 2 3 4
 Broadcast0(x) = 4 4 4 4
