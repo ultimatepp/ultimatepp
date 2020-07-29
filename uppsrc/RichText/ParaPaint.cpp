@@ -191,8 +191,7 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		for(int p = opy.page; p <= rc.py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : rc.page.top);
 			int bottom = z * (p == rc.py.page ? rc.py.y : rc.page.bottom);
-			pw.Page(p).DrawRect(z * rc.page.left, top, z * rc.page.right - z * rc.page.left,
-			                    bottom - top, InvertColor);
+			pi.DrawSelection(pw.Page(p), z * rc.page.left, top, z * rc.page.right - z * rc.page.left, bottom - top);
 		}
 	opy = rc.py;
 	int oi = 0;
@@ -208,8 +207,8 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		if(BreaksPage(rc, pl, lni)) {
 			if(li.ppos > pi.sell && li.ppos < pi.selh) {
 				int y = z * rc.py.y;
-				pw.Page(rc.py.page).DrawRect(z * rc.page.left, y, z * rc.page.right - z * rc.page.left,
-				                             z * rc.page.bottom - y, InvertColor);
+				pi.DrawSelection(pw.Page(rc.py.page), z * rc.page.left, y, z * rc.page.right - z * rc.page.left,
+				                                      z * rc.page.bottom - y);
 			}
 			rc.Page();
 		}
@@ -371,8 +370,7 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 			if(pi.selh > li.ppos + li.plen)
 				h = rc.page.right;
 			if(pi.sell < pi.selh && pi.selh > li.ppos)
-				draw.DrawRect(z * l, z * rc.py.y, z * h - z * l,
-							  z * (rc.py.y + linecy) - z * rc.py.y, InvertColor);
+				pi.DrawSelection(draw, z * l, z * rc.py.y, z * h - z * l, z * (rc.py.y + linecy) - z * rc.py.y);
 			ASSERT(draw.GetCloffLevel() == cloff);
 		}
 		else
@@ -399,8 +397,8 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 	}
 	if(pl.len >= pi.sell && pl.len < pi.selh && rc.py < pi.bottom) {
 		int top = z * rc.py.y;
-		pw.Page(rc.py.page).DrawRect(z * rc.page.left, top, z * rc.page.right - z * rc.page.left,
-		                             z * min(rc.py.y + format.after, rc.page.bottom) - top, InvertColor);
+		pi.DrawSelection(pw.Page(rc.py.page), z * rc.page.left, top, z * rc.page.right - z * rc.page.left,
+		                                      z * min(rc.py.y + format.after, rc.page.bottom) - top);
 	}
 	if(!IsNull(mla) && !IsNull(pi.showcodes) && pi.showlabels) {
 		bool b = format.label.GetCount();

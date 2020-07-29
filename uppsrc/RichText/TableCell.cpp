@@ -191,12 +191,12 @@ void RichCell::Paint(PageDraw& pw, RichContext rc, PageY npy,
 	if(select) {
 		int cx = xpg.right - xpg.left;
 		if(rc.py.page == npy.page)
-			pw.Page(rc.py.page).DrawRect(xpg.left, y, cx, ny - y, InvertColor);
+			pi.DrawSelection(pw.Page(rc.py.page), xpg.left, y, cx, ny - y);
 		else {
-			pw.Page(rc.py.page).DrawRect(xpg.left, y, cx, xpg.bottom - y, InvertColor);
+			pi.DrawSelection(pw.Page(rc.py.page), xpg.left, y, cx, xpg.bottom - y);
 			for(int i = rc.py.page + 1; i < npy.page; i++)
-				pw.Page(i).DrawRect(nxpg.left, nxpg.top, cx, nxpg.Height(), InvertColor);
-			pw.Page(npy.page).DrawRect(nxpg.left, nxpg.top, cx, ny - nxpg.top, InvertColor);
+				pi.DrawSelection(pw.Page(i), nxpg.left, nxpg.top, cx, nxpg.Height());
+			pi.DrawSelection(pw.Page(npy.page), nxpg.left, nxpg.top, cx, ny - nxpg.top);
 		}
 	}
 }

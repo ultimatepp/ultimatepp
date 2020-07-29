@@ -61,6 +61,9 @@ PaintInfo::PaintInfo()
 	showlabels = false;
 	shrink_oversized_objects = false;
 	textcolor = Null;
+	DrawSelection = [] (Draw& w, int x, int y, int cx, int cy) {
+		w.DrawRect(x, y, cx, cy, InvertColor);
+	};
 }
 
 String RichPara::Number::AsText(const RichPara::NumberFormat& format) const
