@@ -813,7 +813,7 @@ public:
 	RichEdit&       PersistentFindReplace(bool b = true)   { persistent_findreplace = b; return *this; }
 	RichEdit&       Floating(double zoomlevel_ = 1);
 	RichEdit&       NoFloating(double zoomlevel_ = 1)      { return Floating(Null); }
-	RichEdit&       SetPaintInfo(const PaintInfo pi)       { paint_info = pi; return *this; }
+	RichEdit&       SetPaintInfo(const PaintInfo& pi)      { paint_info = pi; return *this; }
 	RichEdit&       IgnorePhysicalObjectSize(bool b = true){ ignore_physical_size = b; return *this; }
 
 	struct UndoInfo {

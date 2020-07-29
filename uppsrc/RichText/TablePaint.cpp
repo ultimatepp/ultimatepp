@@ -186,7 +186,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool b
 		if(!r.IsEmpty()) {
 			DrawFatFrame(w, r, fc, fl);
 			if(allsel)
-				w.DrawRect(r, InvertColor);
+				pi.DrawSelection(w, r.left, r.top, r.Width(), r.Height());
 		}
 	}
 	if(pw.tracer)
