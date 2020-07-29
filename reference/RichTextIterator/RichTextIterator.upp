@@ -1,0 +1,12 @@
+description "Demostrates the use of RichTextIterator to extract Images from RichText\377";
+
+uses
+	CtrlLib;
+
+file
+	Test.qtf,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
