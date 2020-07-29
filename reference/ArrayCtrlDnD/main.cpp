@@ -69,7 +69,7 @@ struct App : TopWindow {
 		b.WhenDrag = [=] { DragB(); };
 
 		Add(s.Horz(a, b));
-		for(int i = 0; i < 200; i++) {
+		for(int i = 0; i < 15; i++) {
 			a.Add(i);
 			b.Add(FormatIntRoman(i, true));
 		}
