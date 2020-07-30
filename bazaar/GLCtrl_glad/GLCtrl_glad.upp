@@ -1,0 +1,14 @@
+uses
+	CtrlCore,
+	plugin/glad;
+
+library(WIN32 (GCC | CLANG)) "glu32 opengl32";
+
+pkg_config(LINUX | BSD) "gl glu";
+
+file
+	GLCtrl_glad.h,
+	Win32GLCtrl_glad.cpp,
+	XGLCtrl_glad.cpp,
+	GLCtrl_glad.cpp;
+
