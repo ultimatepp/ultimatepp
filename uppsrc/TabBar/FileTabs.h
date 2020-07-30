@@ -10,7 +10,7 @@ protected:
 	virtual String GetFileGroup(const String &file);
 	// Overload this to change stacking behaviour
 	virtual String GetStackId(const Tab &a);
-	virtual unsigned GetStackSortOrder(const Tab &a);	
+	virtual hash_t GetStackSortOrder(const Tab &a);	
 	
 	virtual void ComposeTab(Tab& tab, const Font &font, Color ink, int style);
 	virtual void ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &font, Color ink, int style);

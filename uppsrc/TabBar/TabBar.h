@@ -115,6 +115,8 @@ public:
 		Style&  NoGroupSeparators()			{ return GroupSeparators(Value(), Value()); }
 	};
 	
+	TabBar& SetStyle(const TabBar::Style& s);
+	
 protected:
 	enum {
 		TB_MARGIN = 5,
@@ -124,6 +126,8 @@ protected:
 		TB_ICON = 16,
 		TB_SPACEICON = 3
 	};
+	const Style *style;
+	
 public:
 	struct TabItem : Moveable<TabItem> {
 		int x;
@@ -288,7 +292,7 @@ protected:
 	int  	GetPrev(int n, bool drag = false) const;
 
 	int 	GetWidth(int n);
-	int 	GetExtraWidth();
+	int 	GetExtraWidth(int n);
 	int 	GetWidth() const;
 	int 	GetHeight(bool scrollbar = true) const;
 
@@ -309,7 +313,7 @@ protected:
 	int   	GetNextId();
 	int   	GetScrollPos() 				{ return sc.GetPos(); }		
 	
-	static int GetStyleHeight();
+	int GetStyleHeight() const;
 	static Image AlignImage(int align, const Image& img);
 	static Value AlignValue(int align, const Value& v, const Size& isz);
 
@@ -404,6 +408,10 @@ protected:
 	virtual void CursorChanged() { }
 	// for sub-classes to receive tab closes without using WhenClose
 	virtual void TabClosed(Value key) { }
+	
+	bool IsCancelClose(int id);
+	bool IsCancelCloseAll(int exception, int last_closed = 0);
+	
 public:
 	typedef TabBar CLASSNAME;
 
@@ -415,6 +423,7 @@ public:
 	Event<>  		 			WhenCloseAll;		// Executed before 'Close All' action
 	Gate<ValueArray>	     	CancelCloseSome;	// Return true to cancel action (executed with list of closing tabs)
 	Event<ValueArray>	    	WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
+	Gate<int, int>				CancelDragAndDrop;	// Return true to cancel drag and drop from tab to tab
 
 	TabBar();
 	TabBar& CopyBaseSettings(const TabBar& src);
@@ -533,7 +542,7 @@ public:
 	TabBar&		  	CopySettings(const TabBar& src);
 	virtual void    Serialize(Stream& s);
 	
-	static const Style& 	GetStyle() 						{ return StyleDefault(); }	
+	const Style& 	GetStyle() const					{ ASSERT(style); return *style; }	
 
 	virtual void 	ContextMenu(Bar& bar);
 	
