@@ -13,7 +13,7 @@ String FileTabs::GetStackId(const Tab &a)
 	return GetFileTitle(s);
 }
 
-unsigned FileTabs::GetStackSortOrder(const Tab &a)
+hash_t FileTabs::GetStackSortOrder(const Tab &a)
 {
 	String s = a.value;
 	return GetFileExt(s).GetHashValue();

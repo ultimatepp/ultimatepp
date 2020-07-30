@@ -311,7 +311,8 @@ TabBar::TabBar()
 	mintabcount = 1;
 	scrollbar_sz = TB_SBHEIGHT;
 	allowreorder = true;
-
+	style = &StyleDefault();
+	
 	// Init sorting
 	groupsort = false;
 	tabsort = false;
@@ -454,13 +455,22 @@ int TabBar::GetNextId()
 void TabBar::ContextMenu(Bar& bar)
 {
 	int ii = GetHighlight(); // Need copy to freeze it, [=] copies 'this' and thus reference to highlight
-	if (GetCursor() >= 0 && crosses && ii >= 0)
-		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK2(Close, highlight, true));
-	if (ii >= 0 && crosses)
+	if (GetCursor() >= 0 && ii >= 0 && !IsCancelClose(ii))
+		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), [=] {
+			if (CancelClose && !CancelClose(tabs[ii].key)) {
+				WhenClose(tabs[ii].key);
+				TabClosed(tabs[ii].key);
+				tabs.Remove(ii);
+				MakeGroups();
+				Repos();
+				SetCursor(-1);
+			}
+		});
+	if (ii >= 0 && !IsCancelCloseAll(ii))
 		bar.Add(t_("Close others"), [=] { CloseAll(ii); });
-    if (ii >= 0 && ii < GetCount() - 1 && crosses)
+    if (ii >= 0 && ii < GetCount() - 1 && !IsCancelCloseAll(-1, ii + 1))
 		bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
-	if (mintabcount <= 0 && crosses)
+	if (mintabcount <= 0 && !IsCancelCloseAll(-1))
 		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
 	bar.Add(false, t_("Dock"), [=] {});
 	if(ii >= 1)
@@ -499,6 +509,7 @@ void TabBar::ContextMenu(Bar& bar)
 		}
 	}
 }
+
 void TabBar::CloseAll(int exception, int last_closed)
 {
 	ValueArray vv;
@@ -515,8 +526,11 @@ void TabBar::CloseAll(int exception, int last_closed)
 
 	for(int i = tabs.GetCount() - 1; i >= last_closed; i--)
 		if(i != exception) {
-			TabClosed(tabs[i].key);
-			tabs.Remove(i);
+			if (CancelClose && !CancelClose(tabs[i].key)) {
+				WhenClose(tabs[i].key);
+				TabClosed(tabs[i].key);
+				tabs.Remove(i);
+			}
 		}
 
 	SetCursor(last_closed ? last_closed - 1 : 0);
@@ -533,6 +547,44 @@ void TabBar::CloseGroup()
 	Value v = GetData();
 	DoCloseGroup(group);
 	SetData(v);
+}
+
+bool TabBar::IsCancelClose(int id)
+{
+	if (CancelCloseAll && CancelCloseAll())
+		return true;
+	
+	if (CancelCloseSome) {
+		ValueArray vv;
+		vv.Add(tabs[id].key);
+		if (CancelCloseSome(vv))
+			return true;
+	}
+	
+	if (CancelClose && CancelClose(tabs[id].key))
+		return true;
+	return false;
+}
+
+bool TabBar::IsCancelCloseAll(int exception, int last_closed)
+{
+	ValueArray vv;
+	for(int i = last_closed; i < tabs.GetCount(); i++)
+		if(i != exception)
+			vv.Add(tabs[i].key);
+		
+	if(exception < 0 && last_closed == 0 ? CancelCloseAll() : CancelCloseSome(vv))
+		return true;
+	
+	if (CancelClose) {
+		for(int i = tabs.GetCount() - 1; i >= last_closed; i--)
+			if(i != exception) {
+				if (!CancelClose(tabs[i].key))
+					return false;
+			}
+		return true;
+	}
+	return false; 
 }
 
 TabBar::Tab::Tab()
@@ -801,8 +853,11 @@ void TabBar::DoCloseGroup(int n)
 			WhenCloseSome(vv);
 			for(int i = 0; i < vv.GetCount(); i++)
 			{
- 				TabClosed(vv[i]);
- 				tabs.Remove(vi[i]);
+				if (!CancelClose(vv[i])) {
+					WhenClose(vv[i]);
+	 				TabClosed(vv[i]);
+	 				tabs.Remove(vi[i]);
+				}
 			}
 			// remove group if all of its tabs get closed
 			if(!nTabs) {
@@ -1097,7 +1152,7 @@ void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsample)
 {
 	TabBar::Tab &t = tabs[n];
-	const Style& s = GetStyle();
+	const Style& s = *style;
 	int align = GetAlign();
 	int cnt = dragsample ? 1 : tabs.GetCount();
 	
@@ -1165,7 +1220,7 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 
 	t.Clear();
 
-	if(crosses && cnt > mintabcount && !dragsample) {
+	if(crosses && cnt > mintabcount && !dragsample && !IsCancelClose(n)) {
 		TabItem& ti = t.AddItem();
 		ti.img = s.crosses[cross == n ? 2 : ac || hl ? 1 : 0];
 		ti.side = crosses_side;
@@ -1200,7 +1255,7 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 void TabBar::Paint(Draw &w)
 {
 	int align = GetAlign();
-	const Style &st = StyleDefault();
+	const Style &st = *style;
 	Size ctrlsz = GetSize();
 	Size sz = GetBarSize(ctrlsz);
 	
@@ -1358,12 +1413,12 @@ void TabBar::Scroll()
 
 int TabBar::GetWidth(int n)
 {
-	return GetStdSize(tabs[n]).cx + GetExtraWidth();
+	return GetStdSize(tabs[n]).cx + GetExtraWidth(n);
 }
 
-int TabBar::GetExtraWidth()
+int TabBar::GetExtraWidth(int n)
 {
-	return DPI(TB_MARGIN) * 2 + (DPI(TB_SPACE) + GetStyle().crosses[0].GetSize().cx) * crosses;	
+	return DPI(TB_MARGIN) * 2 + (DPI(TB_SPACE) + GetStyle().crosses[0].GetSize().cx) * (crosses && !IsCancelClose(n));	
 }
 
 Size TabBar::GetStdSize(const Value &q)
@@ -1485,7 +1540,7 @@ int TabBar::GetHeight(bool scrollbar) const
 	return TabBar::GetStyleHeight() + TB_SBSEPARATOR * int(scrollbar);
 }
 
-int TabBar::GetStyleHeight()
+int TabBar::GetStyleHeight() const
 {
 	const Style& s = GetStyle();
 	return s.tabheight + s.sel.top;
@@ -1565,7 +1620,7 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 				cx += GetStackedSize(tabs[n]).cx;
 		}
 			
-		t.size.cx = cx + GetExtraWidth();
+		t.size.cx = cx + GetExtraWidth(i);
 
 		if (stacking) {
 			for(int n = i + 1; n < tabs.GetCount() && tabs[n].stack == t.stack; n++) {
@@ -2223,7 +2278,7 @@ bool TabBar::ProcessMouse(int i, const Point& p)
 	{
 		if (stacking && ProcessStackMouse(i, p))
 			return true;
-		bool iscross = crosses ? tabs[i].HasMouseCross(p) : false;
+		bool iscross = crosses && !IsCancelClose(i) ? tabs[i].HasMouseCross(p) : false;
 		if(highlight != i || (iscross && cross != i || !iscross && cross == i))
 		{
 			cross = iscross ? i : -1;
@@ -2323,6 +2378,14 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 	bool sametab = c == tab || c == GetNext(tab, true);
 	bool internal = AcceptInternal<TabBar>(d, "tabs");
 
+	if (CancelDragAndDrop && CancelDragAndDrop(tab, c > tab ? c-1 : c)) 
+	{
+		target = -1;
+		isdrag = false;
+		d.Reject();
+		return;
+	}
+	
 	if(!sametab && internal && d.IsAccepted())
 	{
 		int id = active >= 0 ? tabs[active].id : -1;
@@ -2684,6 +2747,15 @@ void TabBar::Serialize(Stream& s)
 	group = g;
 	
 	Repos();
+}
+
+TabBar& TabBar::SetStyle(const TabBar::Style& s)	{
+	if(style != &s) {
+		style = &s;
+		RefreshLayout();
+		Refresh();
+	}
+	return *this;
 }
 
 CH_STYLE(TabBar, Style, StyleDefault)
