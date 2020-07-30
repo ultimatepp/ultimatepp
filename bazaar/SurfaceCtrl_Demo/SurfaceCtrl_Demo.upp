@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	SurfaceCtrl;
+
+file
+	main.cpp,
+	SurfaceCtrl_Demo.h,
+	SurfaceCtrl_Demo.lay;
+
+mainconfig
+	"" = "GUI",
+	"" = "",
+	"" = "USEMALLOC";
+
