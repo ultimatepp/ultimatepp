@@ -15,6 +15,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 
+#ifdef CPU_SIMD
 	{
 		float r[4] = { 0 };
 		DUMP(f32x4(r));
@@ -384,4 +385,7 @@ CONSOLE_APP_MAIN
 	ASSERT(log == etalon);
 	
 	Cout() << "================= OK\r\n";
+#else
+	Cout() << "================= NO SIMD\r\n";
+#endif
 }
