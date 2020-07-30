@@ -1,0 +1,32 @@
+uses
+	Surface,
+	Surface,
+	GLCtrl_glad;
+
+file
+	SurfaceCtrl.h,
+	SurfaceCtrl.cpp,
+	GLDrawFunction.h,
+	Object3D.h,
+	Object3D.cpp,
+	Shader.h,
+	Transform.h,
+	Transform.cpp,
+	Camera.h,
+	Camera.cpp,
+	VisualCamera.h,
+	TrackBallCamera.h,
+	shaders/Vertex.glsl highlight cpp,
+	shaders/VertexSimple.glsl highlight cpp,
+	shaders/GeometrySimple.glsl highlight cpp,
+	shaders/TesselationControlTriangles.glsl highlight cpp,
+	shaders/TesselationEvaluationTriangles.glsl highlight cpp,
+	shaders/GeometryTriangle.glsl highlight cpp,
+	shaders/GeometryTriangleTesselated.glsl highlight cpp,
+	shaders/GeometryNormal.glsl highlight cpp,
+	shaders/FragmentLightTesselated.glsl highlight cpp,
+	shaders/FragmentLight.glsl highlight cpp,
+	shaders/FragmentBlackTesselated.glsl,
+	shaders/FragmentBlack.glsl highlight cpp,
+	shaders/FragmentNoLight.glsl highlight cpp;
+
