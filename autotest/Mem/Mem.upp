@@ -1,4 +1,4 @@
-description "#WAIT: 20\377";
+description "#WAIT: 40\377";
 
 uses
 	Core;
