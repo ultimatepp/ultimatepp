@@ -120,10 +120,19 @@ void Ctrl::CursorSync()
 	if(focusCtrl && (((msecs() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-	if(fbCursorPos != p && !SystemCursor || cr != fbCaretRect) {
-		fbCaretRect = cr;
+
+	if(fbCursorPos != p) {
 		fbCursorPos = p;
-		Invalidate();
+		if(!(VirtualGuiPtr->GetOptions() & GUI_SETMOUSECURSOR))
+			Invalidate();
+	}
+
+	if(cr != fbCaretRect) {
+		fbCaretRect = cr;
+		if(VirtualGuiPtr->GetOptions() & GUI_SETCARET)
+			VirtualGuiPtr->SetCaret(cr);
+		else
+			Invalidate();
 	}
 }
 

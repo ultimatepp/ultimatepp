@@ -2,6 +2,11 @@
 
 namespace Upp {
 
+dword SDL2GUI::GetOptions()
+{
+	return GUI_SETMOUSECURSOR;
+}
+
 Size SDL2GUI::GetSize()
 {
 	int w, h;

@@ -32,7 +32,13 @@ enum KM {
 	KM_ALT = KM_LALT | KM_RALT,
 };
 
+enum GUI_OPTIONS {
+	GUI_SETMOUSECURSOR = 0x01,
+	GUI_SETCARET       = 0x02,
+};
+
 struct VirtualGui {
+	virtual dword       GetOptions();
 	virtual Size        GetSize() = 0;
 	virtual dword       GetMouseButtons() = 0;
 	virtual dword       GetModKeys() = 0;
@@ -40,7 +46,8 @@ struct VirtualGui {
 	virtual bool        ProcessEvent(bool *quit) = 0;
 	virtual void        WaitEvent(int ms) = 0;
 	virtual void        WakeUpGuiThread() = 0;
-	virtual void        SetMouseCursor(const Image& image) = 0;
+	virtual void        SetMouseCursor(const Image& image);
+	virtual void        SetCaret(const Rect& caret);
 	virtual void        Quit() = 0;
 	virtual bool        IsWaitingEvent() = 0;
 	virtual SystemDraw& BeginDraw() = 0;

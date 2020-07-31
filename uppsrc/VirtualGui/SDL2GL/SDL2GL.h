@@ -13,6 +13,7 @@
 namespace Upp {
 	
 struct SDL2GUI : VirtualGui {
+	virtual dword       GetOptions();
 	virtual Size        GetSize();
 	virtual dword       GetMouseButtons();
 	virtual dword       GetModKeys();
