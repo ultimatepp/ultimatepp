@@ -24,8 +24,6 @@ int            Ctrl::fbCaretTm;
 bool           Ctrl::fbEndSession;
 int            Ctrl::PaintLock;
 
-bool           Ctrl::SystemCursor;
-
 int Ctrl::FindTopCtrl() const
 {
 	for(int i = 0; i < topctrl.GetCount(); i++)
@@ -185,7 +183,7 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
 	if(!IsNull(fbCaretRect))
 		draw.DrawRect(fbCaretRect, InvertColor);
-	if(VirtualGuiPtr->IsMouseIn() && !SystemCursor)
+	if(VirtualGuiPtr->IsMouseIn() && !(VirtualGuiPtr->GetOptions() & GUI_SETMOUSECURSOR))
 		draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
 }
 

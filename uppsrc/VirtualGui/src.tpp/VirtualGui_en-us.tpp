@@ -22,6 +22,15 @@ some font system to measure fonts (e.g. DrawGL and plugin/FT`_fontsys).&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
+[s5;:Upp`:`:VirtualGui`:`:GetOptions`(`): [@(0.0.255) virtual] [_^Upp`:`:dword^ dword]_[* G
+etOptions]()&]
+[s2;%% Returns set of flags describing some aspects of VirtualGui 
+behaviour:-|&]
+[s0;l288;%% GUI`_SETMOUSECURSOR: Use SetMouseCursor instead of painting 
+the cursor&]
+[s2;%% GUI`_SETCARET: Use SetCaret instead of painting the caret.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:VirtualGui`:`:GetSize`(`): [@(0.0.255) virtual] [_^Upp`:`:Size^ Size]_[* GetSiz
 e]()_`=_[@3 0]&]
 [s2;%% Returns the size of GUI surface.&]
@@ -73,8 +82,14 @@ be called from different thread.&]
 [s5;:Upp`:`:VirtualGui`:`:SetMouseCursor`(const Upp`:`:Image`&`): [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* SetMouseCursor]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&
 ]_[*@3 image])_`=_[@3 0]&]
-[s2;%% Changes the mouse cursor. This is only used if SystemCursor 
-flag is active.&]
+[s2;%% Changes the mouse cursor. This is only used if GUI`_SETMOUSECURSOR 
+in GetOptions flag is active.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:VirtualGui`:`:SetCaret`(const Upp`:`:Rect`&`): [@(0.0.255) void]_[* SetCaret](
+[@(0.0.255) const]_[_^Upp`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 caret])&]
+[s2;%% Places the caret. This is only used if GUI`_SETMOUSECURSOR 
+in GetOptions flag is active.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:Quit`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Quit]()_`=_[@3 0
