@@ -99,14 +99,16 @@ UOGL_Camera& UOGL_Camera::SetDrawDistanceMin(float value){
 }
 float UOGL_Camera::GetDrawDistanceMin()const{return DrawDistanceMin;}
 
-glm::mat4 UOGL_Camera::GetProjectionMatrix(Upp::Sizef ScreenSize){
+glm::mat4 UOGL_Camera::GetProjectionMatrix(Upp::Sizef SS){
+	ScreenSize = SS;
 	if(type == CT_PERSPECTIVE){
 		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 	}else if(type == CT_ORTHOGRAPHIC){
-		return glm::ortho(-(float)ScreenSize.cx/(FOV/10),(float)ScreenSize.cx/(FOV/10), -(float)ScreenSize.cy/(FOV/10),(float)ScreenSize.cy/(FOV/10), GetDrawDistanceMin(),GetDrawDisanceMax());
-	}else if(type == CT_FRUSTUM){
-		return glm::frustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f);
+		float coef = (GetMaxFOV() -  FOV)/8.5f;
+		if(coef <= 0) coef = 1.0f;
+		return glm::ortho(-(float)ScreenSize.cx/coef,(float)ScreenSize.cx/coef, -(float)ScreenSize.cy/coef,(float)ScreenSize.cy/coef, GetDrawDistanceMin(),GetDrawDisanceMax());
 	}else{
+		LOG("Swaping to Camera Perspective (cause of unknow type)");
 		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 	}
 }

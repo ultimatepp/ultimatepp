@@ -176,7 +176,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 		static unsigned short e = 0;
 		camera.SetCameraType((CameraType)e);
 		e++;
-		if(e == 3) e = 0;
+		if(e == 2) e = 0;
 	}
 	
 	if(key == K_A){

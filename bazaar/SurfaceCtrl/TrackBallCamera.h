@@ -137,23 +137,31 @@ class TrackBallCamera : public CameraEuler {
 		}
 		
 		virtual TrackBallCamera& ProcessMouseScroll(float zdelta){
-			glm::vec3 pos = transform.GetPosition();
+			glm::vec3 camPos = transform.GetPosition();
 			float result = glm::dot(transform.GetPosition(), glm::vec3(0.1f,0.1f,0.1f));
-			//on dezome
+			
 			if(zdelta  ==  - 120){
-				
-				if(result > 0)
-					transform.SetNewPosition(transform.GetPosition() + 1.0f );
-				else
-					transform.SetNewPosition(transform.GetPosition() - 1.0f );
+				if(result > 0){
+					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetNewPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
+					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
+					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
+				}else{
+					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetNewPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
+					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
+					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
+				}
 			}else{
-				//on zome
-				if(result > 0)
-					transform.SetNewPosition(transform.GetPosition() - 1.0f );
-				else
-					transform.SetNewPosition(transform.GetPosition() + 1.0f );
+				if(result > 0){
+					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetNewPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
+					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
+					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
+				}else{
+					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetNewPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
+					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
+					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
+				}
 			}
-			//LookAt(focus);
+			LookAt(focus);
 			return *this;
 		}
 
