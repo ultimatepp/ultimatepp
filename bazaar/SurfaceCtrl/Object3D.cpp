@@ -63,6 +63,15 @@ Object3D::Object3D(Surface& surface, Color color) : transform(){
 			}
 		}
 	}
+	BuildOpenGLData(vertexData,normalData,colorData);
+}
+
+Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){
+	SurfaceCount = surface.GetCount() / 3;
+	BuildOpenGLData(surface,normal,color);
+}
+
+void Object3D::BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){
 	if(VAO > 0) glDeleteVertexArrays(1,&VAO);
 	if(VerticesVBO > 0)glDeleteBuffers(1,&VerticesVBO);
 	if(NormalVBO > 0)glDeleteBuffers(1,&NormalVBO);
@@ -76,11 +85,11 @@ Object3D::Object3D(Surface& surface, Color color) : transform(){
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
-	glBufferData(GL_ARRAY_BUFFER,vertexData.GetCount() * sizeof(float),&(vertexData[0]),GL_DYNAMIC_READ);
+	glBufferData(GL_ARRAY_BUFFER,surface.GetCount() * sizeof(float),&(surface[0]),GL_DYNAMIC_READ);
 	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
-	glBufferData(GL_ARRAY_BUFFER,normalData.GetCount() * sizeof(float),&(normalData[0]),GL_DYNAMIC_READ);
+	glBufferData(GL_ARRAY_BUFFER,normal.GetCount() * sizeof(float),&(normal[0]),GL_DYNAMIC_READ);
 	glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
-	glBufferData(GL_ARRAY_BUFFER,colorData.GetCount() * sizeof(float),&(colorData[0]),GL_DYNAMIC_READ);
+	glBufferData(GL_ARRAY_BUFFER,color.GetCount() * sizeof(float),&(color[0]),GL_DYNAMIC_READ);
 	
 	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -120,6 +129,7 @@ Object3D::Object3D(Surface& surface, Color color) : transform(){
 	glEnableVertexAttribArray(2);
 	*/
 }
+
 bool Object3D::UpdateBuffer(GLuint buffer, int SurfaceNumber, int count,const float * data)noexcept{
 	glBindBuffer(GL_ARRAY_BUFFER,buffer);
 	float* ptr = (float*) glMapBuffer(GL_ARRAY_BUFFER,GL_WRITE_ONLY);
@@ -215,7 +225,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			prog.SetMat4("ViewMatrix", viewMatrix);
 			prog.SetMat4("ProjectionMatrix", projectionMatrix);
 			prog.SetMat4("ModelMatrix", transform.GetModelMatrice());
-			glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
+			glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : DrawType), 0, SurfaceCount);
 		}
 		if(showMeshLine && line.IsLinked()){
 			line.Bind();

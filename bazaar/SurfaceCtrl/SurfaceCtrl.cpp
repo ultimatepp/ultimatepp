@@ -56,25 +56,14 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
+		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,20).End();
 		loaded = true;
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
-
-	/*
-	//Here I start use OpenGL draw commands to draw my axis
-	//Not good idea
-	// https://stackoverflow.com/questions/63176073/opengl-cohabitation-of-shader-and-drawing-command
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(&(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH})[0][0])); //Setting up projection
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(&(camera.GetViewMatrix()[0][0])); //Setting up viewMatrix
-
-	if(ShowAxis)GLDrawFunction::PaintAxis(0, 0, 0,50); //a function that draw axis
-	*/
-	
+	if(ShowAxis)
+		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 }
 
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
@@ -88,9 +77,11 @@ void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 void SurfaceCtrl::ZoomToFit()noexcept{
 	double mxGlobal=0;
 	for(Object3D& obj : allObjects){
-		VolumeEnvelope env = obj.GetVolumeEnvelope();
-		double mx = max(max(env.maxX, env.maxY), env.maxZ);
-		if(mx > mxGlobal) mxGlobal = mx;
+		if(obj.GetVolumeEnvelope()){
+			VolumeEnvelope env = *obj.GetVolumeEnvelope();
+			double mx = max(max(env.maxX, env.maxY), env.maxZ);
+			if(mx > mxGlobal) mxGlobal = mx;
+		}
 	}
 	glm::vec3 camPos = camera.GetTransform().GetPosition();
 	if(camPos.x > camPos.y  && camPos.x > camPos.z) camera.GetTransform().SetNewPosition(glm::vec3((float)mxGlobal,camPos.y,camPos.z));

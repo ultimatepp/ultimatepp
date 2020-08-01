@@ -8,7 +8,7 @@ uses
 file
 	SurfaceCtrl.h,
 	SurfaceCtrl.cpp,
-	GLDrawFunction.h,
+	Object3DProvider.h,
 	Object3D.h,
 	Object3D.cpp,
 	Shader.h,

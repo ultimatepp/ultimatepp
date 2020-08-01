@@ -20,24 +20,28 @@
 #include "Object3D.h"
 #include "Shader.h"
 #include "TrackBallCamera.h"
-#include "GLDrawFunction.h"
+#include "Object3DProvider.h"
 
 namespace Upp{
 	
 class SurfaceCtrl : public GLCtrl_glad{
 	private:
 		bool loaded = false;
+		Object3DProvider objProvider;
 		
 		Upp::Vector<Object3D> allObjects;
+		Object3D Axis;
+		
 		TrackBallCamera camera;
 				
 		OpenGLProgram DrawMeshNoLight;
 		OpenGLProgram DrawMeshLight;
 		OpenGLProgram DrawMeshLine;
 		OpenGLProgram DrawMeshNormal;
+		
+		
 		void InitShader();
-
-
+		
 		bool ShowAxis = false;
 		bool pressed = false;
 		Point StartPress;

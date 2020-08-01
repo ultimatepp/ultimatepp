@@ -28,6 +28,7 @@ struct Light{
     glm::vec3 Specular;
 };*/
 class Surface;
+
 class Object3D : public Upp::Moveable<Object3D>{
 	private:
 		GLuint VerticesVBO = 0;
@@ -53,11 +54,19 @@ class Object3D : public Upp::Moveable<Object3D>{
 			
 		Transform transform;
 		
+		GLenum DrawType = GL_TRIANGLES;
+		
 		bool UpdateBuffer(GLuint buffer, int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceNumber,int count)noexcept;
+		void BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
+		
+		
 	public:
+		Object3D(){}
 		Object3D(Surface& surface,Upp::Color = Green());
-				
+		Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
+		
+		Object3D& SetDrawType(GLenum dt)noexcept{DrawType = dt; return *this;}
 		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
 		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
 		Object3D& ShowMeshNormal(bool b = true)noexcept{showMeshNormal = b; return *this;}
@@ -76,13 +85,15 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Upp::Color GetNormalColor()const noexcept{return normalColor;}
 		float GetNormalOpcaity()const noexcept{return normalOpacity;}
 		float GetLineOpcaity()const noexcept{return lineOpacity;}
-				
+		GLenum GetDrawType()const noexcept{return DrawType;}
+		
+		
 		Transform& GetTransform()noexcept{return transform;}
 		unsigned int GetNumberOfSurface()noexcept{return SurfaceCount;}
 		GLuint GetVAO()noexcept{return VAO;}
 		unsigned int GetSurfaceCount()noexcept{return SurfaceCount;}
 		
-		VolumeEnvelope& GetVolumeEnvelope(){ASSERT_(env,"GetVolumeEnvelope return nullptr !"); return *env;}
+		VolumeEnvelope* GetVolumeEnvelope(){return env;}
 		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope;return *this;}
 		/*
 			Write into OpenGL buffer return true if operation have been done correctly.
