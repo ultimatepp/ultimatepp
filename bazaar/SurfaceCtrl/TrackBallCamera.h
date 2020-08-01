@@ -63,7 +63,7 @@ class TrackBallCamera : public CameraEuler {
 		
 			//Another approach
 			// Determine rotation angles from the change in mouse position
-			float a1 = xoffset/2.0f;
+			float a1 = (xoffset/2.0f) *-1.0f;
 			float a2 = yoffset/2.0f;
 			
 			// Rotate the target->eye vectoraround the up vector
