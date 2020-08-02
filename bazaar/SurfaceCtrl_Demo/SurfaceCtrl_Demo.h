@@ -12,6 +12,8 @@ class SurfaceCtrl_Demo : public WithSurfaceCtrl_DemoLayout<TopWindow> {
 public:
 	typedef SurfaceCtrl_Demo CLASSNAME;
 	SurfaceCtrl_Demo();
+	virtual void Layout();
+
 };
 }
 #endif

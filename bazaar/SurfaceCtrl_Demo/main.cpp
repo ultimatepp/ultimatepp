@@ -26,6 +26,10 @@ namespace Upp{
 		};
 		Sizeable().Zoomable();
 	}
+	
+	void SurfaceCtrl_Demo::Layout(){
+		canvas.GLResize(GetSize().cx,GetSize().cy);
+	}
 }
 
 GUI_APP_MAIN
