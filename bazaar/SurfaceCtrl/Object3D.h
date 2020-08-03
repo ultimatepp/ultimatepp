@@ -27,6 +27,30 @@ struct Light{
     glm::vec3 Diffuse;
     glm::vec3 Specular;
 };*/
+
+
+
+struct Object3DMaterial{
+	private:
+		glm::vec3 Diffuse = glm::vec3(0.30f, 0.30f, 0.30f);
+		glm::vec3 Specular = glm::vec3(0.1f, 0.1f, 0.1f);
+		float Shininess = 12.0f;
+		bool update = true;
+	public:
+		Object3DMaterial(){}
+		Object3DMaterial(const glm::vec3& diffuse_, const glm::vec3& speculare_, float shininess_){Diffuse = diffuse_;Specular = speculare_;Shininess = shininess_;}
+		
+		glm::vec3 GetDiffuse()const noexcept{return Diffuse;}
+		glm::vec3 GetSpecular()const noexcept{return Specular;}
+		float GetShininess()const noexcept{return Shininess;}
+		
+		Object3DMaterial& SetDiffuse(const glm::vec3& diffuse_)noexcept{Diffuse = diffuse_; update = true; return *this;}
+		Object3DMaterial& SetSpecular(const glm::vec3& speculare_)noexcept{Specular = speculare_; update = true; return *this;}
+		Object3DMaterial& SetShininess(float shininess_)noexcept{Shininess = shininess_; update = true; return *this;}
+		
+		bool ShouldBeUpdated()const noexcept{return update;}
+		void HaveBeenUpdated()noexcept{update = false;}
+};
 class Surface;
 
 class Object3D : public Upp::Moveable<Object3D>{
@@ -37,8 +61,11 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		GLuint VAO = 0;
 		
+		Object3DMaterial material; //The material object is a representation of material property of the object (it change how light affect it)
+		
 		Color lineColor = Black();
 		float lineOpacity = 0.5f;
+		float lineWidth = 1.0f;
 		
 		Color normalColor = Red();
 		float normalOpacity = 0.5f;
@@ -80,13 +107,16 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& SetLineColor(Color color)noexcept{lineColor = color; return *this;}
 		Object3D& SetNormalColor(Color color)noexcept{normalColor = color; return *this;}
 		Object3D& SetLineOpacity(float opacity)noexcept{lineOpacity = opacity; if(lineOpacity < 0) lineOpacity =0; if(lineOpacity> 1.0f) lineOpacity = 1.0f; return *this;}
+		Object3D& SetLineWidth(float width)noexcept{lineWidth = width; if(lineWidth < 1) lineWidth = 1.0f; return *this;}
 		Object3D& SetNormalOpacity(float opacity)noexcept{normalOpacity = opacity; if(normalOpacity < 0) normalOpacity =0; if(normalOpacity> 1.0f) normalOpacity = 1.0f; return *this;}
 		Upp::Color GetLineColor()const noexcept{return lineColor;}
 		Upp::Color GetNormalColor()const noexcept{return normalColor;}
 		float GetNormalOpcaity()const noexcept{return normalOpacity;}
 		float GetLineOpcaity()const noexcept{return lineOpacity;}
+		float GetLineWidth()const noexcept{return lineWidth;}
 		GLenum GetDrawType()const noexcept{return DrawType;}
 		
+		Object3DMaterial& GetMaterial(){return material;}
 		
 		Transform& GetTransform()noexcept{return transform;}
 		unsigned int GetNumberOfSurface()noexcept{return SurfaceCount;}

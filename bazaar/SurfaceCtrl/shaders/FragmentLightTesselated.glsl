@@ -8,9 +8,12 @@ SHADER(400 core,
 	uniform vec3 viewPos;
 
 	//material
-    vec3 MaterialDiffuse = vec3(0.30, 0.30, 0.30);
-    vec3 MaterialSpecular = vec3(0.1, 0.1, 0.1);
-    float MaterialShininess = 12.0;
+	struct Material{
+		vec3 Diffuse;
+		vec3 Specular;
+		float Shininess;
+	};
+	uniform Material mat;
 	
 	//light
     vec3 LightPosition =vec3( 0.0, 50.0, 0.0);
@@ -27,13 +30,13 @@ SHADER(400 core,
 		vec3 norm = normalize(normal);
 		vec3 lightDir = normalize(LightPosition - fragPos);
 		float diff = max(dot(norm, lightDir), 0.0);
-		vec3 diffuse = LightDiffuse * (diff * MaterialDiffuse);
+		vec3 diffuse = LightDiffuse * (diff * mat.Diffuse);
 		
 		// specular
 		vec3 viewDir = normalize(viewPos - fragPos);
 		vec3 reflectDir = reflect(-lightDir, norm);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), MaterialShininess);
-		vec3 specular = LightSpecular * (spec * MaterialSpecular);
+		float spec = pow(max(dot(viewDir, reflectDir), 0.0), mat.Shininess);
+		vec3 specular = LightSpecular * (spec * mat.Specular);
 		
 		vec3 result = ambient + diffuse + specular;
 

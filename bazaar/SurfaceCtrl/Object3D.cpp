@@ -221,7 +221,16 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 		if(showMesh && noLight.IsLinked() && light.IsLinked()){
 			OpenGLProgram&  prog = (showLight)? light : noLight;
 			prog.Bind();
-			if(showLight)prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
+			if(showLight){
+				prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
+				if(material.ShouldBeUpdated()){
+					prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
+					prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
+					prog.SetFloat("mat.Shininess", material.GetShininess());
+					material.HaveBeenUpdated();
+				}
+			}
+			
 			prog.SetMat4("ViewMatrix", viewMatrix);
 			prog.SetMat4("ProjectionMatrix", projectionMatrix);
 			prog.SetMat4("ModelMatrix", transform.GetModelMatrice());
@@ -229,6 +238,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 		}
 		if(showMeshLine && line.IsLinked()){
 			line.Bind();
+			glLineWidth(lineWidth);
 			line.SetMat4("ViewMatrix",viewMatrix);
 			line.SetMat4("ProjectionMatrix",projectionMatrix);
 			line.SetMat4("ModelMatrix",transform.GetModelMatrice());

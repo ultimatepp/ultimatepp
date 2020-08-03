@@ -70,6 +70,7 @@ void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
 	//obj.GetTransform().RotateFromAngles(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	obj.SetVolumeEnvelope(surf.env);
+	obj.SetLineWidth(2.0f);
 	ZoomToFit();
 	Refresh();
 }
@@ -172,6 +173,43 @@ bool SurfaceCtrl::Key(dword key,int count){
 	
 	if(key == K_A){
 		ShowAxis = !ShowAxis;
+	}
+	
+	
+	
+	
+	/*
+		Material change
+	*/
+	if(key == K_U){ //Increase diffuse
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetDiffuse(allObjects[0].GetMaterial().GetDiffuse() + glm::vec3(0.1f,0.1f,0.1f));
+		}
+	}
+	if(key == K_I){ //decrease diffuse
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetDiffuse(allObjects[0].GetMaterial().GetDiffuse() - glm::vec3(0.1f,0.1f,0.1f));
+		}
+	}
+	if(key == K_J){ //Increase specular
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() + glm::vec3(0.1f,0.1f,0.1f));
+		}
+	}
+	if(key == K_K){ //decrease specular
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() - glm::vec3(0.1f,0.1f,0.1f));
+		}
+	}
+	if(key == K_Y){ //Increase Shininess
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() + 0.1f);
+		}
+	}
+	if(key == K_H){ //decrease Shininess
+		if(allObjects.GetCount() > 0){
+			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() - 0.1f);
+		}
 	}
 	
 	Refresh();
