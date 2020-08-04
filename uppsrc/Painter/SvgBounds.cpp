@@ -69,34 +69,6 @@ void BoundsPainter::QuadraticOp(const Pointf& p, bool)
 	QuadraticOp(2.0 * current - qcontrol, p, false);
 }
 
-int SolveQuadraticEquation(double a, double b, double c, double *r)
-{
-	if(a == 0) {
-		if(b == 0)
-			return 0;
-		r[0] = r[1] = -c / b;
-		return 1;
-    }
-	double d = b * b - 4 * a * c;
-	if (d < 0)
-		return 0;
-	a *= 2;
-	if (d == 0) {
-		r[0] = r[1] = -b / a;
-		return 1;
-	}
-	d = sqrt(d);
-	if(b == 0) {
-		r[0] = d / a;
-		r[1] = -r[0];
-    }
-	else {
-		r[0] = (-b + d) / a;
-		r[1] = (-b - d) / a;
-    }
-	return 2;
-}
-
 void CubicMinMax(double p1, double p2, double p3, double p4, double& l, double& h) {
 	double c0 = 3 * (p2 - p1);
 	double c1 = 6 * (p3 - p2);

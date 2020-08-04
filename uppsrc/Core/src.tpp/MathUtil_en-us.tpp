@@ -223,32 +223,12 @@ numerator:&]
 [s2;%% remainder `= numerator `- quotient `* denominator.&]
 [s3;%% &]
 [s4; &]
-[s5;:ilog10`(double`): [@(0.0.255) int]_[* ilog10]_([@(0.0.255) double]_[*@3 d])&]
-[s2;%%  [%-*@3 d].&]
-[s3;%% &]
-[s4; &]
-[s5;:ipow10`(int`): [@(0.0.255) double]_[* ipow10]_([@(0.0.255) int]_[*@3 i])&]
-[s2;%%  [%-*@3 i].&]
-[s3;%% &]
-[s4; &]
-[s5;:normalize`(double`,int`&`): [@(0.0.255) double]_[* normalize]_([@(0.0.255) double]_[*@3 d
-], [@(0.0.255) int`&]_[*@3 exponent])&]
-[s2;%%  [%-*@3 d] [%-*@3 exponent].&]
-[s3;%% &]
-[s4; &]
-[s5;:roundr`(double`,int`): [@(0.0.255) double]_[* roundr]_([@(0.0.255) double]_[*@3 d], 
-[@(0.0.255) int]_[*@3 digits])&]
-[s2;%%  [%-*@3 d] [%-*@3 digits].&]
-[s3;%% &]
-[s4; &]
-[s5;:floorr`(double`,int`): [@(0.0.255) double]_[* floorr]_([@(0.0.255) double]_[*@3 d], 
-[@(0.0.255) int]_[*@3 digits])&]
-[s2;%%  [%-*@3 d] [%-*@3 digits].&]
-[s3;%% &]
-[s4; &]
-[s5;:ceilr`(double`,int`): [@(0.0.255) double]_[* ceilr]_([@(0.0.255) double]_[*@3 d], 
-[@(0.0.255) int]_[*@3 digits])&]
-[s2;%%  [%-*@3 d] [%-*@3 digits].&]
+[s5;:Upp`:`:SolveQuadraticEquation`(double`,double`,double`,double`*`): [@(0.0.255) int
+]_[* SolveQuadraticEquation]([@(0.0.255) double]_[*@3 A], [@(0.0.255) double]_[*@3 B], 
+[@(0.0.255) double]_[*@3 C], [@(0.0.255) double]_`*[*@3 r])&]
+[s2;%% Solves quadratic equation. Returns number of solutions (0, 
+1 or 2), stores solutions to array r (which must have at least 
+two elements).&]
 [s3;%% &]
 [s4; &]
 [s5;:AsString`(double`,int`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
