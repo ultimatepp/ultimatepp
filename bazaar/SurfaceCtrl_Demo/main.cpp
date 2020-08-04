@@ -5,7 +5,7 @@ namespace Upp{
 	SurfaceCtrl_Demo::SurfaceCtrl_Demo()
 	{
 		CtrlLayout(*this, "SurfaceCtrl demo. STL viewer");
-		filename.SetText( GetFileDirectory(__FILE__) + "\\Stanford_Bunny_sample.stl" );
+		filename.SetText( GetFileDirectory(__FILE__) + "Stanford_Bunny_sample.stl" );
 		butOpen.WhenAction = [&] {
 			try {
 				bool isText;
