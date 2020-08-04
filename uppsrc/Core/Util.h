@@ -292,6 +292,8 @@ double         roundr       (double d, int digits);
 double         floorr       (double d, int digits);
 double         ceilr        (double d, int digits);
 
+int SolveQuadraticEquation(double A, double B, double C, double *r);
+
 //BW - use max<double>
 //inline double fmax(double x, double y)            { return x >= y ? x : y; }
 //BW - use min<double>
