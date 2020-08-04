@@ -157,12 +157,20 @@ bool SurfaceCtrl::Key(dword key,int count){
 		camera.ProcessMouveMouvement(0,-200);
 	}
 	
+	
+	
 	if(key == K_ADD){
-		camera.SetFOV(camera.GetFOV() + 5);
+		//camera.SetFOV(camera.GetFOV() + 5);
+		camera.ProcessMouseScroll(+120);
 	}
 	if(key == K_SUBTRACT){
-		camera.SetFOV(camera.GetFOV() - 5);
+		//camera.SetFOV(camera.GetFOV() - 5);
+		camera.ProcessMouseScroll(-120);
 	}
+
+
+	
+	
 	
 	if(key == K_C){
 		static unsigned short e = 0;
@@ -194,21 +202,25 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if(key == K_J){ //Increase specular
 		if(allObjects.GetCount() > 0){
 			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() + glm::vec3(0.1f,0.1f,0.1f));
+			LOG(allObjects[0].GetMaterial().GetSpecular().x + AsString(" ") + allObjects[0].GetMaterial().GetSpecular().y + AsString(" ") + allObjects[0].GetMaterial().GetSpecular().z);
 		}
 	}
 	if(key == K_K){ //decrease specular
 		if(allObjects.GetCount() > 0){
 			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() - glm::vec3(0.1f,0.1f,0.1f));
+			LOG( AsString(allObjects[0].GetMaterial().GetSpecular().x) + " " + AsString(allObjects[0].GetMaterial().GetSpecular().y) + " " + AsString(allObjects[0].GetMaterial().GetSpecular().z));
 		}
 	}
 	if(key == K_Y){ //Increase Shininess
 		if(allObjects.GetCount() > 0){
 			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() + 0.1f);
+			LOG(allObjects[0].GetMaterial().GetShininess());
 		}
 	}
 	if(key == K_H){ //decrease Shininess
 		if(allObjects.GetCount() > 0){
 			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() - 0.1f);
+			LOG(allObjects[0].GetMaterial().GetShininess());
 		}
 	}
 	
@@ -224,7 +236,13 @@ void SurfaceCtrl::MouseMove(Point p, dword){
 	}
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
-	camera.ProcessMouseScroll(zdelta);
+	//camera.ProcessMouseScroll(zdelta);
+	if(zdelta > 0)
+		camera.SetFOV(camera.GetFOV() - 1);
+	else
+		camera.SetFOV(camera.GetFOV() + 1);
+	if(camera.GetFOV() <= 0 ) camera.SetFOV(1);
+	if(camera.GetFOV() >= 180) camera.SetFOV(179);
 	Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword){
