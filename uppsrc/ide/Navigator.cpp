@@ -246,6 +246,12 @@ void Navigator::Navigate()
 			}
 			SyncCursor();
 		}
+		else
+		if(m.kind == KIND_SRCFILE) {
+			theide->AddHistory();
+			theide->EditFile(m.ptype);
+			theide->AddHistory();
+		}
 		else {
 			Vector<NavLine> l = GetNavLines(m);
 			int q = l.GetCount() - 1;
@@ -383,7 +389,7 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0) {
 		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
 		                                    : SColorFace);
-		if(m.kind == KIND_FILE)
+		if(findarg(m.kind, KIND_FILE) >= 0)
 			return PaintFileName(w, r, m.type, ink);
 		String h = FormatNest(m.type);
 		w.DrawText(x, y, h, StdFont().Bold(), ink);
@@ -391,6 +397,10 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	}
 	
 	w.DrawRect(r, paper);
+
+	if(m.kind == KIND_SRCFILE)
+		return PaintFileName(w, r, m.type, ink);
+
 	if(m.kind == KIND_LINE) {
 		w.DrawText(x, y, m.type, StdFont().Bold(), ink);
 		return GetTextSize(m.type, StdFont().Bold()).cx;
@@ -619,6 +629,21 @@ void Navigator::Search()
 		gitem = pick(h);
 		for(int i = 0; i < gitem.GetCount(); i++)
 			Sort(gitem[i], sorting ? SortByNames : SortByLines);
+		const Workspace& wspc = GetIdeWorkspace();
+		String s = ToUpper(TrimBoth(~search));
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			const Package& p = wspc.GetPackage(i);
+			for(int j = 0; j < p.GetCount(); j++) {
+				if(!p[j].separator && ToUpper(p[j]).Find(s) >= 0) {
+					NavItem& m = nitem.Add();
+					m.kind = KIND_SRCFILE;
+					m.type = wspc[i] + "/" + p[j];
+					m.ptype = SourcePath(wspc[i], p[j]);
+					m.line = 0;
+					gitem.GetAdd("<files>").Add(&m);
+				}
+			}
+		}
 	}
 	scope.Clear();
 	scope.Add(Null);

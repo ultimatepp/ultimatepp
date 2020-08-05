@@ -35,7 +35,7 @@ struct Navigator {
 		void Set(const CppItem& m);
 	};
 	
-	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
+	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE, KIND_SRCFILE };
 	
 	struct ScopeDisplay : Display {
 		Navigator *navigator;
