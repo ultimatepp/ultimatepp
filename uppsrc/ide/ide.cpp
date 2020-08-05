@@ -110,11 +110,12 @@ void Ide::SetMain(const String& package)
 	mainconfigname.Clear();
 	mainconfigparam.Clear();
 	ScanWorkspace();
+	editfile.Clear();
 	LoadFromFile(THISBACK(SerializeWorkspace), WorkspaceFile());
 	tabs.FixIcons();
 	editorsplit.Zoom(0);
-	UpdateFormat();
 	String e = editfile;
+	UpdateFormat();
 	editfile.Clear();
 	MakeTitle();
 	MakeIcon();
