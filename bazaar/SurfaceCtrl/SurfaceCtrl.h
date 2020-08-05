@@ -39,17 +39,12 @@ class SurfaceCtrl : public GLCtrl_glad{
 		OpenGLProgram DrawMeshLine;
 		OpenGLProgram DrawMeshNormal;
 		
-		
-		void InitShader();
-		
 		bool ShowAxis = false;
-		bool pressed = false;
-		Point StartPress;
 		
 		float sizeW = 800.0f;
 		float sizeH = 600.0f;
 		
-		void ProcessMouse(float pitch, float yaw);
+		void InitShader();
 	public:
 		SurfaceCtrl();
 		~SurfaceCtrl();
@@ -76,6 +71,9 @@ class SurfaceCtrl : public GLCtrl_glad{
 		virtual void LeftDown(Point p, dword);
 		virtual void LeftUp(Point p, dword);
 		virtual void MouseLeave();
+		virtual void MiddleDown(Point p, dword keyflags);
+		virtual void MiddleUp(Point p, dword keyflags);
+
 };
 }
 #endif

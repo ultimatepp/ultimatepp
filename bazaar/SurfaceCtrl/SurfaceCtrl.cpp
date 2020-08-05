@@ -43,7 +43,6 @@ void SurfaceCtrl::InitShader(){
 		#include "shaders/FragmentBlack.glsl"
 	)).Link();
 }
-
 void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
@@ -52,7 +51,6 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO); //Gestion pour le RGB uniquement
 	InitShader();
 }
-
 void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
@@ -65,7 +63,6 @@ void SurfaceCtrl::GLPaint(){
 	if(ShowAxis)
 		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 }
-
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
 	//obj.GetTransform().RotateFromAngles(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
@@ -74,7 +71,6 @@ void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	ZoomToFit();
 	Refresh();
 }
-
 void SurfaceCtrl::ZoomToFit()noexcept{
 	double mxGlobal=0;
 	for(Object3D& obj : allObjects){
@@ -89,21 +85,14 @@ void SurfaceCtrl::ZoomToFit()noexcept{
 	if(camPos.y > camPos.z  && camPos.y > camPos.x) camera.GetTransform().SetNewPosition(glm::vec3(camPos.x,(float)mxGlobal,camPos.z));
 	if(camPos.z > camPos.x  && camPos.z > camPos.y) camera.GetTransform().SetNewPosition(glm::vec3(camPos.x,camPos.y,(float)mxGlobal));
 }
-
 void SurfaceCtrl::DrawAllObjects(){
 	for(Object3D& obj : allObjects){
 		obj.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
 	}
 }
-
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.SetPosition(glm::vec3(0.0f,10.0f,30.0f));
 }
-
-void SurfaceCtrl::ProcessMouse(float yaw,float pitch ){
-	camera.ProcessMouveMouvement(yaw,pitch);
-}
-
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
 	sizeH = h;
@@ -130,7 +119,6 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_T){
 		if(allObjects.GetCount() > 0) DUMP(allObjects[0].ReadColors(0,1));
 	}
-	
 	if( key == K_L){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshLine(!allObjects[0].GetShowMeshLine());
 	}
@@ -143,7 +131,6 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_N){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
-	
 	if(key == K_LEFT){
 		camera.ProcessMouveMouvement(200,0);
 	}
@@ -156,9 +143,6 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if(key == K_DOWN){
 		camera.ProcessMouveMouvement(0,-200);
 	}
-	
-	
-	
 	if(key == K_ADD){
 		//camera.SetFOV(camera.GetFOV() + 5);
 		camera.ProcessMouseScroll(+120);
@@ -167,25 +151,15 @@ bool SurfaceCtrl::Key(dword key,int count){
 		//camera.SetFOV(camera.GetFOV() - 5);
 		camera.ProcessMouseScroll(-120);
 	}
-
-
-	
-	
-	
 	if(key == K_C){
 		static unsigned short e = 0;
 		camera.SetCameraType((CameraType)e);
 		e++;
 		if(e == 2) e = 0;
 	}
-	
 	if(key == K_A){
 		ShowAxis = !ShowAxis;
 	}
-	
-	
-	
-	
 	/*
 		Material change
 	*/
@@ -223,17 +197,14 @@ bool SurfaceCtrl::Key(dword key,int count){
 			LOG(allObjects[0].GetMaterial().GetShininess());
 		}
 	}
-	
 	Refresh();
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword){
 	SetFocus();
-	if(pressed){
-		ProcessMouse(p.x - StartPress.x,p.y - StartPress.y);
-		StartPress = p;
-		Refresh();
-	}
+	camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
+	camera.StartPress = p;
+	Refresh();
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	//camera.ProcessMouseScroll(zdelta);
@@ -246,16 +217,24 @@ void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword){
-	StartPress = p;
-	pressed = true;
+	camera.StartPress = p;
+	camera.MouseLeftPressed = true;
 	return;
 }
 void SurfaceCtrl::LeftUp(Point p, dword){
-	pressed = false;
+	camera.MouseLeftPressed = false;
 	return;
 }
+void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
+	camera.StartPress = p;
+	camera.MouseMiddlePressed = true;
+}
+void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
+	camera.MouseMiddlePressed = false;
+}
 void SurfaceCtrl::MouseLeave(){
-	pressed = false;
+	camera.MouseLeftPressed = false;
+	camera.MouseMiddlePressed = false;
 	return;
 }
 }

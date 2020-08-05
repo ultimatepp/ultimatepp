@@ -96,6 +96,7 @@ class Transform{
 		glm::vec3 QuaterionToEuler(glm::quat const& quaterion);
 		glm::quat EulerToQuaterion(float Yaw,float Pitch,float Roll);
 		glm::vec3 ExtractPositionFromModelMatrix(const glm::mat4& modelMatrix);
+		glm::quat CreateQuaterion(float AngleInRadians, glm::vec3 Dir);
 };
 }
 #endif

@@ -493,6 +493,9 @@ CameraEuler& CameraEuler::ProcessMouveMouvement(float xoffset, float yoffset){
 	SetYaw(Yaw + xoffset);
 	SetPitch(Pitch + yoffset);
 	SetRoll(0);
+	
+	
+	
 	transform.UpdateByEuler(Yaw,Pitch,Roll);
 	/*
 	glm::vec3 euler = transform.QuaterionToEuler(transform.GetQuaterion());

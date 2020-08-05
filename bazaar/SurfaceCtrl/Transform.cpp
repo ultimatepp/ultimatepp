@@ -378,10 +378,10 @@ glm::vec3 Transform::QuaterionToEuler(glm::quat const& q1){
 }
 //Taken from http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
 glm::quat Transform::EulerToQuaterion(float Yaw,float Pitch,float Roll){
-	glm::quat myXQuat = glm::angleAxis<float>(glm::radians(Pitch), glm::vec3(1, 0, 0));
-	glm::quat myYQuat = glm::angleAxis<float>(glm::radians(Yaw), glm::vec3(0, 1, 0));
-	glm::quat myZQuat = glm::angleAxis<float>(glm::radians(Roll), glm::vec3(0, 0, 1));
-	return myXQuat * myYQuat * myZQuat;
+	glm::quat q1 = CreateQuaterion((glm::radians(Pitch)/2.0f) * -1.0f ,glm::vec3(1.0f,0.0f,0.0f));
+	glm::quat q2 = CreateQuaterion(glm::radians(Yaw)/2.0f,glm::vec3(0.0f,1.0f,0.0f));
+	glm::quat q3 = CreateQuaterion(glm::radians(Roll)/2.0f,glm::vec3(0.0f,0.0f,1.0f));
+	return q1 * q2 * q3;
 }
 glm::vec3 Transform::ExtractPositionFromModelMatrix(const glm::mat4& modelMatrix){
 	glm::mat3 rotMat(modelMatrix);
@@ -389,6 +389,15 @@ glm::vec3 Transform::ExtractPositionFromModelMatrix(const glm::mat4& modelMatrix
 	
 	glm::vec3 retVec = -d * rotMat;
 	return retVec;
+}
+
+glm::quat Transform::CreateQuaterion(float HalfAngleInRadians, glm::vec3 Dir){
+	float sinVal = glm::sin(HalfAngleInRadians);
+	float cosVal = glm::cos(HalfAngleInRadians);
+	float xVal = Dir.x * sinVal;
+	float yVal = Dir.y * sinVal;
+	float zVal = Dir.z * sinVal;
+	return glm::quat(cosVal,xVal, yVal, zVal);
 }
 
 }
