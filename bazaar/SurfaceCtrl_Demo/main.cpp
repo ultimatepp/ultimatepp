@@ -6,6 +6,7 @@ namespace Upp{
 	{
 		CtrlLayout(*this, "SurfaceCtrl demo. STL viewer");
 		filename.SetText( GetFileDirectory(__FILE__) + "Stanford_Bunny_sample.stl" );
+		ActiveFocus(canvas);
 		butOpen.WhenAction = [&] {
 			try {
 				bool isText;
