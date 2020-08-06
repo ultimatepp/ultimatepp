@@ -10,7 +10,7 @@ uses
 
 library(WIN32) "user32 gdi32";
 
-pkg_config(LINUX | FREEBSD | OPENBSD) "freetype2 x11 fontconfig xcb expat";
+pkg_config(POSIX) "freetype2 x11 fontconfig xcb expat";
 
 file
 	Draw.h options(BUILDER_OPTION) PCH,
