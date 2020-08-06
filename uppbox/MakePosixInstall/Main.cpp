@@ -119,10 +119,15 @@ CONSOLE_APP_MAIN
 	#define OPTS " -arvb "
 #endif
 
+#ifndef PLATFORM_SOLARIS
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
-	
+#endif
+
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
-	SaveFile(release + "/uMakefile", LoadFile(release + "/Makefile"));
+	String umk = LoadFile(release + "/Makefile");
+	umk.Replace("-Wl,--gc-sections ", ""); // many systems do not support this
+	umk.Replace("-Wl,-O,2 ", ""); // many systems do not support this
+	SaveFile(release + "/uMakefile", umk);
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
 
 	SaveFile(release + "/license.chk", "1");
