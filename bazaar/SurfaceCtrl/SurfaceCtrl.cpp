@@ -107,7 +107,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_S){
 		camera->ProcessKeyboardMouvement(CM_BACKWARD);
 	}
-	if( key == K_A){
+	if( key == K_Q){
 		camera->ProcessKeyboardMouvement(CM_LEFT);
 	}
 	if( key == K_D){
