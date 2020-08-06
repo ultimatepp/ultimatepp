@@ -19,6 +19,7 @@
 
 #include "Object3D.h"
 #include "Shader.h"
+#include "FreeCamera.h"
 #include "TrackBallCamera.h"
 #include "Object3DProvider.h"
 
@@ -32,7 +33,11 @@ class SurfaceCtrl : public GLCtrl_glad{
 		Upp::Vector<Object3D> allObjects;
 		Object3D Axis;
 		
-		TrackBallCamera camera;
+		UOGL_Camera* camera;
+		TrackBallCamera trackball;
+		FreeCamera euler;
+		
+		
 				
 		OpenGLProgram DrawMeshNoLight;
 		OpenGLProgram DrawMeshLight;
@@ -53,7 +58,8 @@ class SurfaceCtrl : public GLCtrl_glad{
 		Function <void()> WhenPaint;
 		Function <void()> OnEnd;
 		
-		TrackBallCamera& GetCamera()noexcept{return camera;}
+		TrackBallCamera& GetTrackBallCamera()noexcept{return trackball;}
+		FreeCamera& GetFreeCamera()noexcept{return euler;}
 		
 		void CreateObject(Surface& surf,Upp::Color color)noexcept;
 		

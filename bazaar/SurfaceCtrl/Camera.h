@@ -22,6 +22,9 @@ class UOGL_Camera{
 	    float DrawDisanceMax = 10000.0f;
 		float DrawDistanceMin = 0.1f;
 		
+		float MouvementSpeed = 5.0f;
+	    float MouseSensitivity = 0.1f;
+		
 		Upp::Sizef ScreenSize;
 	public:
 		UOGL_Camera(){}
@@ -62,12 +65,19 @@ class UOGL_Camera{
 		virtual bool ProcessKeyBoard(unsigned long Key,int count); //To process key
 		virtual UOGL_Camera& ProcessMouveMouvement(float xoffset, float yoffset)=0;
 		virtual UOGL_Camera& ProcessMouseScroll(float yoffset);
+		
+		UOGL_Camera& SetMouvementSpeed(float value = 15.0f);
+		float GetMouvementSpeed();
+		UOGL_Camera& SetMouseSensitivity(float value = 0.01f);
+		float GetMouseSensitivity();
+		
+		Point StartPress;
+		bool MouseLeftPressed = false;
+		bool MouseMiddlePressed = false;
 };
 
 class CameraQuaterion :  public UOGL_Camera{
 	protected:
-	    float MouvementSpeed = 5.0f;
-	    float MouseSensitivity = 0.1f;
 		float GetRealMouseSensitivity();
 	public:
 		CameraQuaterion(); //be carefull of setting scene correctly
@@ -76,10 +86,6 @@ class CameraQuaterion :  public UOGL_Camera{
 		virtual ~CameraQuaterion(){}
 		virtual CameraQuaterion* Clone();
 		
-		CameraQuaterion& SetMouvementSpeed(float value = 15.0f);
-		float GetMouvementSpeed();
-		CameraQuaterion& SetMouseSensitivity(float value = 0.01f);
-		float GetMouseSensitivity();
 		
 		//virtual glm::mat4 GetProjectionMatrix(Upp::Sizef ScreenSize)const;
 		virtual glm::mat4 GetViewMatrix();
@@ -90,9 +96,6 @@ class CameraQuaterion :  public UOGL_Camera{
 
 class CameraEuler : public UOGL_Camera{
 	protected:
-		float MouseSensitivity = 0.5f;
-		float MovementSpeed = 15.0f;
-		
 		float Yaw = 0.0f;
 	    float Pitch = 0.0f;
 	    float Roll = 0.0f;
@@ -117,11 +120,6 @@ class CameraEuler : public UOGL_Camera{
 		CameraEuler& operator=(CameraEuler& cameraEuler);
 		virtual ~CameraEuler(){}
 		virtual CameraEuler* Clone();
-		
-		CameraEuler& SetMouseSensitivity(float value = 0.01f);
-		float GetMouseSensitivity()const;
-		CameraEuler& SetMouvementSpeed(float value = 15.0f);
-		float GetMouvementSpeed()const;
 		
 		CameraEuler& SetYaw(float value);
 		CameraEuler& SetPitch(float value);

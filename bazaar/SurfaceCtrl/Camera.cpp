@@ -6,6 +6,9 @@ UOGL_Camera::UOGL_Camera(UOGL_Camera& camera){
 	*this = camera;
 }
 UOGL_Camera& UOGL_Camera::operator=(UOGL_Camera& camera){
+	MouseSensitivity = camera.MouseSensitivity;
+	MouvementSpeed = camera.MouvementSpeed;
+	
 	transform = camera.transform; //The Camera Transform object
 	
 	type = camera.type;
@@ -134,6 +137,22 @@ bool UOGL_Camera::ProcessKeyBoard(unsigned long Key,int count){
 	//Default keyboard handler
 	return false;
 }
+
+UOGL_Camera& UOGL_Camera::SetMouvementSpeed(float value){
+	MouvementSpeed = value;
+	return *this;
+}
+UOGL_Camera& UOGL_Camera::SetMouseSensitivity(float value){
+	MouseSensitivity = value;
+	return *this;
+}
+float UOGL_Camera::GetMouvementSpeed(){
+	return MouvementSpeed;
+}
+float UOGL_Camera::GetMouseSensitivity(){
+	return MouseSensitivity;
+}
+
 //CameraQuaterion CLASS
 
 CameraQuaterion::CameraQuaterion(){} //be carefull of setting scene correctly
@@ -150,20 +169,7 @@ CameraQuaterion& CameraQuaterion::operator=(CameraQuaterion& cameraQuaterion){
 CameraQuaterion* CameraQuaterion::Clone(){
 	return new CameraQuaterion(*this);
 }
-CameraQuaterion& CameraQuaterion::SetMouvementSpeed(float value){
-	MouvementSpeed = value;
-	return *this;
-}
-CameraQuaterion& CameraQuaterion::SetMouseSensitivity(float value){
-	MouseSensitivity = value;
-	return *this;
-}
-float CameraQuaterion::GetMouvementSpeed(){
-	return MouvementSpeed;
-}
-float CameraQuaterion::GetMouseSensitivity(){
-	return MouseSensitivity;
-}
+
 float CameraQuaterion::GetRealMouseSensitivity(){
 	return MouseSensitivity * 0.02f;
 }
@@ -192,9 +198,6 @@ CameraQuaterion& CameraQuaterion::ProcessMouveMouvement(float xoffset, float yof
 //CameraEuler CLASS
 CameraEuler::CameraEuler(){transform.UpdateByEuler(Pitch,Yaw,Roll);} //Be carefull of setting scene correctly
 CameraEuler::CameraEuler(CameraEuler& cameraEuler) : UOGL_Camera(cameraEuler){
-	MouseSensitivity = cameraEuler.MouseSensitivity;
-	MovementSpeed = cameraEuler.MovementSpeed;
-	
 	Yaw = cameraEuler.Yaw;
 	Pitch = cameraEuler.Pitch;
 	Roll = cameraEuler.Roll;
@@ -217,8 +220,6 @@ CameraEuler::CameraEuler(CameraEuler& cameraEuler) : UOGL_Camera(cameraEuler){
 }
 CameraEuler& CameraEuler::operator=(CameraEuler& cameraEuler){
 	UOGL_Camera::operator=(cameraEuler);
-	MouseSensitivity = cameraEuler.MouseSensitivity;
-	MovementSpeed = cameraEuler.MovementSpeed;
 	Yaw = cameraEuler.Yaw;
 	Pitch = cameraEuler.Pitch;
 	Roll = cameraEuler.Roll;
@@ -243,20 +244,6 @@ CameraEuler& CameraEuler::operator=(CameraEuler& cameraEuler){
 }
 CameraEuler* CameraEuler::Clone(){
 	return new CameraEuler(*this);
-}
-CameraEuler& CameraEuler::SetMouseSensitivity(float value){
-	MouseSensitivity = value;
-	return *this;
-}
-float CameraEuler::GetMouseSensitivity()const{
-	return MouseSensitivity;
-}
-CameraEuler& CameraEuler::SetMouvementSpeed(float value){
-	MovementSpeed = value;
-	return *this;
-}
-float CameraEuler::GetMouvementSpeed()const{
-	return MovementSpeed;
 }
 CameraEuler& CameraEuler::SetYaw(float value){
 	if(ActivateYaw){
@@ -474,7 +461,7 @@ CameraEuler& CameraEuler::LookAt(glm::vec3 const& lookTo,bool UseYaw, bool UsePi
 }
 
 CameraEuler& CameraEuler::ProcessKeyboardMouvement(Camera_Movement direction){
-	float velocity = MovementSpeed ;
+	float velocity = MouvementSpeed ;
 	glm::vec3 position = transform.GetPosition();
 	if (direction == CM_FORWARD)
 	    position += transform.GetFront() * velocity;

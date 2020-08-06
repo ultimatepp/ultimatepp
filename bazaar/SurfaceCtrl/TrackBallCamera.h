@@ -9,21 +9,18 @@
 
 namespace Upp{
 	
-class TrackBallCamera : public CameraEuler {
+class TrackBallCamera : public UOGL_Camera {
 	private :
 		glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f);
 	public:
 		glm::vec3 focus = glm::vec3(0.0f,0.0f,0.0f);; //point the camera will focus
 		
-		Point StartPress;
-		bool MouseLeftPressed = false;
-		bool MouseMiddlePressed = false;
-		
-		
-		TrackBallCamera(){
-			ConstraintPitchEnable = false;
-			ConstraintYawEnable = false;
+		TrackBallCamera(){}
+		virtual TrackBallCamera* Clone(){
+			return new TrackBallCamera(*this);
 		}
+
+		
 		TrackBallCamera& Init(){
 			SetPosition(glm::vec3(0.0f,0.0f,5.0f));
 			LookAt(focus);
@@ -37,14 +34,14 @@ class TrackBallCamera : public CameraEuler {
 			}else{
 					glm::mat4 rotate = glm::mat4_cast(transform.GetQuaterion());
 					glm::mat4 translate = glm::mat4(1.0f);
-					translate = glm::translate(translate,transform.GetPosition() + focus);
+					translate = glm::translate(translate,focus - transform.GetPosition());
 					return rotate * translate;
+					//return glm::lookAt(focus - transform.GetPosition(),transform.GetFront(), up);
 			}
 		}
 
 		
 		virtual TrackBallCamera& ProcessKeyboardMouvement(Camera_Movement direction){
-			CameraEuler::ProcessKeyboardMouvement(direction);
 			return *this;
 		}
 		
@@ -72,7 +69,7 @@ class TrackBallCamera : public CameraEuler {
 		}
 		
 		virtual TrackBallCamera& ProcessMouveMouvement(float xoffset, float yoffset){
-			if(MouseLeftPressed && !MouseMiddlePressed){
+			if(MouseLeftPressed){
 				xoffset *= MouseSensitivity;
 				yoffset *= MouseSensitivity;
 				//Another approach
@@ -91,12 +88,7 @@ class TrackBallCamera : public CameraEuler {
 				up = RotateAround(a2,up,r);
 				up = glm::normalize(up);
 				transform.SetNewPosition(v);
-				
-			}else if (MouseMiddlePressed){
-				
-				CameraEuler::ProcessMouveMouvement(xoffset,yoffset );
 			}
-
 			//transform.SetNewRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
 			
 			

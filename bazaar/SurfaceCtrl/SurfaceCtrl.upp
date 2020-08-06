@@ -18,6 +18,7 @@ file
 	Camera.cpp,
 	VisualCamera.h,
 	TrackBallCamera.h,
+	FreeCamera.h,
 	shaders/Vertex.glsl highlight cpp,
 	shaders/VertexSimple.glsl highlight cpp,
 	shaders/GeometrySimple.glsl highlight cpp,
