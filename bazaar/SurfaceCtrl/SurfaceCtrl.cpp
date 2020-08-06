@@ -202,7 +202,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword){
-	SetFocus();
+	//SetFocus();
 	camera->ProcessMouveMouvement(p.x - camera->StartPress.x,p.y - camera->StartPress.y);
 	camera->StartPress = p;
 	Refresh();
