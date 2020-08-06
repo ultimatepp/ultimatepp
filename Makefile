@@ -379,7 +379,6 @@ $(OutFile): build_info  \
 			-lpthread \
 			-ldl \
 			-lrt \
-			-lsocket \
 			-lz -Wl,--end-group
 
 $(OutDir_ide):
