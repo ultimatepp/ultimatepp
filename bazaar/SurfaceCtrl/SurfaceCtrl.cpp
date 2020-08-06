@@ -101,13 +101,13 @@ void SurfaceCtrl::GLResize(int w, int h){
 	Refresh();
 }
 bool SurfaceCtrl::Key(dword key,int count){
-	if( key == K_Z){
+	if( key == K_W){
 		camera->ProcessKeyboardMouvement(CM_FORWARD);
 	}
 	if( key == K_S){
 		camera->ProcessKeyboardMouvement(CM_BACKWARD);
 	}
-	if( key == K_Q){
+	if( key == K_A){
 		camera->ProcessKeyboardMouvement(CM_LEFT);
 	}
 	if( key == K_D){
