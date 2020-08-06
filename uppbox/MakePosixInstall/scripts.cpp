@@ -9,6 +9,8 @@ AskContinue()
   fi
 }
 
+uname=`uname`
+
 if [ -x "$(command -v apt-get)" ]; then
   DEP="apt-get install g++ clang make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev"
 elif [ -x "$(command -v yum)" ]; then
@@ -22,7 +24,11 @@ elif [ -x "$(command -v zypper)" ]; then
 elif [ -x "$(command -v pacman)" ]; then
   DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang"
 elif [ -x "$(command -v pkg)" ]; then
-  DEP="pkg install bash gmake gtk3 libnotify clang-devel"
+  if [[ "$uname" == 'SunOS' ]]; then
+      DEP="pkg install bash gtk3 libnotify developer/clang-80 gnu-make"
+  else
+      DEP="pkg install bash gmake gtk3 libnotify clang-devel"
+  fi
 elif [ -x "$(command -v pkg_add)" ]; then
   DEP="pkg_add bash gmake gtk3 libnotify clang-devel"
 fi
