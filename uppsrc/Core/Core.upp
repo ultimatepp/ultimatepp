@@ -9,7 +9,7 @@ library(LINUX !ANDROID) "pthread dl rt";
 
 library(BSD !OSX !OPENBSD) "pthread rt execinfo";
 
-library(SOLARIS) "posix4 dl socket";
+library(SOLARIS) "posix4 dl socket nsl";
 
 library(!WIN32 & !NOSO) z;
 
