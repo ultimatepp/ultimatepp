@@ -140,24 +140,22 @@ bool SurfaceCtrl::Key(dword key,int count){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
 	if(key == K_LEFT){
-		camera.ProcessMouveMouvement(2,0);
+		camera.ProcessMouseWheelMouvement(2,0);
 	}
 	if(key == K_RIGHT){
-		camera.ProcessMouveMouvement(-2,0);
+		camera.ProcessMouseWheelMouvement(-2,0);
 	}
 	if(key == K_UP){
-		camera.ProcessMouveMouvement(0,2);
+		camera.ProcessMouseWheelMouvement(0,2);
 	}
 	if(key == K_DOWN){
-		camera.ProcessMouveMouvement(0,-2);
+		camera.ProcessMouseWheelMouvement(0,-2);
 	}
 	if(key == K_ADD){
-		//camera.SetFOV(camera.GetFOV() + 5);
-		camera.ProcessMouseScroll(+120);
+		camera.SetFOV(camera.GetFOV() + 5);
 	}
 	if(key == K_SUBTRACT){
-		//camera.SetFOV(camera.GetFOV() - 5);
-		camera.ProcessMouseScroll(-120);
+		camera.SetFOV(camera.GetFOV() - 5);
 	}
 	if(key == K_C){
 		static unsigned short e = 0;
@@ -209,7 +207,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword){
-	if(camera.MouseMiddlePressed){
+	if(camera.MouseMiddlePressed || camera.MouseLeftPressed){
 		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
 		camera.StartPress = p;
 		Refresh();

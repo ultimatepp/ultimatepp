@@ -14,10 +14,10 @@ class UOGL_Camera{
 	
 		CameraType type = CT_PERSPECTIVE;
 
-		float MaxFOV = 130.0f;
+		float MaxFOV = 160.0f;
 	    float MinFOV = 10.0f;
 	    bool  LimiteFOV = true;
-	    float FOV =90.0f;
+	    float FOV =45.0f;
 
 	    float DrawDisanceMax = 10000.0f;
 		float DrawDistanceMin = 0.1f;

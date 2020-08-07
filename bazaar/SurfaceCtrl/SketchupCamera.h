@@ -5,7 +5,7 @@
 namespace Upp{
 class SketchupCamera : public UOGL_Camera {
 	public:
-		glm::vec3 focus = glm::vec3(0.0f,0.0f,0.0f);; //point the camera will focus
+		glm::vec3 focus = glm::vec3(10.0f,10.0f,0.0f); //point the camera will focus
 		
 		SketchupCamera(){}
 		virtual SketchupCamera* Clone(){
@@ -28,7 +28,7 @@ class SketchupCamera : public UOGL_Camera {
 			return *this;
 		}
 		
-		virtual SketchupCamera& ProcessMouveMouvement(float xoffset, float yoffset){
+		virtual SketchupCamera& ProcessMouseWheelMouvement(float xoffset,float yoffset){
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
 	
@@ -40,7 +40,7 @@ class SketchupCamera : public UOGL_Camera {
 			if(AbsA1 > AbsA2) a2 = 0.0f;
 			else a1 = 0.0f;
 
-			glm::vec3 v =  transform.GetPosition() - focus;
+			glm::vec3 v =  transform.GetPosition() ;
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
 			glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),v))); // Quat using the right vector
 			v = glm::rotate(upRotation, v);
@@ -51,48 +51,33 @@ class SketchupCamera : public UOGL_Camera {
 			transform.SetPosition(v);
 			return *this;
 		}
+		virtual SketchupCamera& ProcessMouseLeftMouvement(float xoffset, float yoffset){
+			xoffset *= (MouseSensitivity * MouvementSpeed);
+			yoffset *= (MouseSensitivity * MouvementSpeed);
+			
+			Cout() << "yoffset : " << yoffset << EOL;
+			
+			transform.Move(0,yoffset,0);
+			focus += glm::vec3(0.0f,yoffset,0.0f);
+			return *this;
+		}
+		
+		virtual SketchupCamera& ProcessMouveMouvement(float xoffset, float yoffset){
+			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
+			if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
+		}
 		
 		virtual bool ProcessKeyBoard(unsigned long Key,int count){
-			/*
-				if( Key == Upp::K_Z){
-					objectToFocus->GetTransform().Move(glm::vec3(0,1 * 0.3f,0));
-					return true;
-				}else if( Key == Upp::K_S){
-					objectToFocus->GetTransform().Move(glm::vec3(0,-1 * 0.3f,0));
-					return true;
-				}else if( Key == Upp::K_Q){
-					objectToFocus->GetTransform().Move(glm::vec3(-1 * 0.3f,0,0));x
-					return true;
-				}else if( Key == Upp::K_D){
-					objectToFocus->GetTransform().Move(glm::vec3(1 * 0.3f,0,0));
-					return true;
-				}
-				*/
 			return true;
 		}
 		
 		virtual SketchupCamera& ProcessMouseScroll(float zdelta){
-			glm::vec3 camPos = transform.GetPosition();
-			float lenght = glm::length(camPos - focus);
-			float result = glm::dot(glm::vec3(0.001f,0.001f,0.001f), transform.GetPosition());
-			glm::vec3 TheVec = camPos - focus;
-
-			if(zdelta  ==  - 120){
-				if(result > 0){
-					transform.SetPosition(camPos + ((0.1f * MouvementSpeed) * TheVec));
-				}else{
-					transform.SetPosition(camPos - ((0.1f * MouvementSpeed) * TheVec));
-				}
+			if(zdelta == - 120){
+				transform.SetPosition(transform.GetPosition() + (0.1f * transform.GetPosition()));
+				
 			}else{
-				//Zoom
-				if(result > 0){
-					transform.SetPosition(camPos - (0.1f * TheVec));
-				}else{
-					transform.SetPosition(camPos + (0.1f * TheVec));
-				}
+				transform.SetPosition(transform.GetPosition() - (0.1f * transform.GetPosition()));
 			}
-
-			///transform.SetRotation(0.0f,0.0f,0.0f);
 			return *this;
 		}
 
