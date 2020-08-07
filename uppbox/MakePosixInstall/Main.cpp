@@ -79,6 +79,14 @@ void SaveScript(const char *name, const char *text)
 	Syx("chmod +x " + SaveText(name, text));
 }
 
+void FixMakefile(String tgt, String src)
+{
+	String umk = LoadFile(src);
+	umk.Replace("-Wl,--gc-sections ", ""); // many systems do not support this
+	umk.Replace("-Wl,-O,2 ", ""); // many systems do not support this
+	SaveFile(tgt, umk);
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -124,11 +132,9 @@ CONSOLE_APP_MAIN
 #endif
 
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
-	String umk = LoadFile(release + "/Makefile");
-	umk.Replace("-Wl,--gc-sections ", ""); // many systems do not support this
-	umk.Replace("-Wl,-O,2 ", ""); // many systems do not support this
-	SaveFile(release + "/uMakefile", umk);
+	FixMakefile(release + "/uMakefile", release + "/Makefile");
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
+	FixMakefile(release + "/Makefile", release + "/Makefile");
 
 	SaveFile(release + "/license.chk", "1");
 	
