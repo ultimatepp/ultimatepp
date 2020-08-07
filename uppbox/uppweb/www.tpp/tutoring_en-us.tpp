@@ -1,6 +1,6 @@
 topic "Tutoring Plan";
-[ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1;#b0; [R6 Tutoring Plan]&]
 [s0; &]
@@ -14,19 +14,20 @@ do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum
 [s0;2 &]
 [s0;# [2 Duration: 2 weeks per person.]&]
 [s0;#2 &]
-[s0;# [2 The plan is anonymous. If the programmer wants his/her name 
+[s0;# [2 The plan is anonymous. If the programmer wants, his/her name 
 will not be known.]&]
 [s0;#2 &]
-[s0;# [2 To enter, send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
-pp`-tutoring`-plan`@googlegroups.com][2  indicating:]&]
+[s0;# [2 To enter, send a ][^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=pmsg`&^2 p
+rivate message][2  to ][^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^2 k
+oldo][2  indicating:]&]
 [s0;#2 &]
 [s0;#i150;O0; [2 Forum name.]&]
 [s0;#i150;O0; [2 Areas where you expect to use U`+`+.]&]
 [s0;#i150;O0; [2 Tutoring timetable. Hours where you are more available 
 for tutoring.]&]
 [s0;#l160;2 &]
-[s0;# [2 The possible tutors will receive the email. You always will 
-be answered. When someone is available, the tutoring will begin.]&]
+[s0;# [2 You will always be answered. When some tutor is available, 
+the tutoring will begin.]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 What help can you expect from a Tutor]]}}&]
@@ -55,8 +56,12 @@ mentoring.]&]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;2%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/07/12]]
-:: [s0; [2 Tutoring Plan is out.]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2020/08/07]]
+:: [s0;# [2 Tutoring plan infrastructure is moved from ][^https`:`/`/sites`.google`.com`/site`/upptutoringplan`/^2 G
+oogle Sites][2  to ][^https`:`/`/www`.ultimatepp`.org`/www`$uppweb`$tutoring`$en`-us`.html^2 U
+`+`+][2 .]]
+:: [s0;# [2 2010/07/12]]
+:: [s0;# [2 2010/07/12]]
 :: [s0;# [2 2010/06/28]]
 :: [s0; [2 Begin date will be 2010/07/12.]]
 :: [s0;# [2 2010/06/26]]
