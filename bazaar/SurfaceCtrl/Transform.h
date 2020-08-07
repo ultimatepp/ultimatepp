@@ -69,12 +69,15 @@ class Transform{
 		Transform& Rotate(float Yaw, float Pitch, float Roll)noexcept{Rotation *= glm::quat(glm::vec3(Pitch, Yaw , Roll)); RecalculateFURW(); return *this;}
 		Transform& Rotate(float angleDegree, const glm::vec3& axis){float radHalfAngle =(float) glm::radians(angleDegree) / 2.0f; float sinVal = glm::sin(radHalfAngle); float cosVal = glm::cos(radHalfAngle);	float xVal = axis.x * sinVal; float yVal = axis.y * sinVal; float zVal = axis.z * sinVal; Rotation *= glm::quat(cosVal,xVal, yVal, zVal); RecalculateFURW(); return *this;}
 	
-		Transform& LookAt(const glm::vec3& LookAt)noexcept{
+		Transform& LookAt(const glm::vec3& LookAt, glm::vec3 customUp = glm::vec3(0.0f,0.0f,0.0f))noexcept{
 			glm::vec3 direction = LookAt - Position;
 			float directionLength = glm::length(direction);
 			if(directionLength > 0.0001){
 				direction /= directionLength;
-				SetRotation(glm::quatLookAt(glm::normalize(direction), Up));
+				if(customUp != glm::vec3(0.0f,0.0f,0.0f))
+					SetRotation(glm::quatLookAt(glm::normalize(direction), customUp));
+				else
+					SetRotation(glm::quatLookAt(glm::normalize(direction), Up));
 			}
 			return *this;
 		}

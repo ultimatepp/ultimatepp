@@ -55,6 +55,7 @@ void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
 		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,200000).End();
+		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,Red()).End();
 		loaded = true;
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -62,6 +63,10 @@ void SurfaceCtrl::GLPaint(){
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
 	if(ShowAxis)
 		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+	if(ShowCameraFocus){
+		CameraFocus.GetTransform().SetPosition(camera.focus);
+		CameraFocus.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+	}
 }
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
@@ -94,9 +99,7 @@ void SurfaceCtrl::DrawAllObjects(){
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.80f);
-	camera.SetMouvementSpeed(2.0f);
-	camera.GetTransform().SetPosition(0,0,5);
-	camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
+	camera.SetMouvementSpeed(15.0f);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
@@ -140,16 +143,16 @@ bool SurfaceCtrl::Key(dword key,int count){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
 	if(key == K_LEFT){
-		camera.ProcessMouseWheelMouvement(2,0);
+		camera.ProcessMouseWheelMouvement(2 * camera.GetMouvementSpeed(),0);
 	}
 	if(key == K_RIGHT){
-		camera.ProcessMouseWheelMouvement(-2,0);
+		camera.ProcessMouseWheelMouvement(-2 * camera.GetMouvementSpeed(),0);
 	}
 	if(key == K_UP){
-		camera.ProcessMouseWheelMouvement(0,2);
+		camera.ProcessMouseWheelMouvement(0,2 * camera.GetMouvementSpeed());
 	}
 	if(key == K_DOWN){
-		camera.ProcessMouseWheelMouvement(0,-2);
+		camera.ProcessMouseWheelMouvement(0,-2 * camera.GetMouvementSpeed());
 	}
 	if(key == K_ADD){
 		camera.SetFOV(camera.GetFOV() + 5);
@@ -165,6 +168,9 @@ bool SurfaceCtrl::Key(dword key,int count){
 	}
 	if(key == K_A){
 		ShowAxis = !ShowAxis;
+	}
+	if(key == K_F){
+		ShowCameraFocus = !ShowCameraFocus;
 	}
 	/*
 		Material change

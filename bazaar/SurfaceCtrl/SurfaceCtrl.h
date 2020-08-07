@@ -32,6 +32,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		
 		Upp::Vector<Object3D> allObjects;
 		Object3D Axis;
+		Object3D CameraFocus;
 		
 		/*
 		UOGL_Camera* camera;
@@ -47,6 +48,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		OpenGLProgram DrawMeshNormal;
 		
 		bool ShowAxis = true;
+		bool ShowCameraFocus = true;
 		
 		float sizeW = 800.0f;
 		float sizeH = 600.0f;

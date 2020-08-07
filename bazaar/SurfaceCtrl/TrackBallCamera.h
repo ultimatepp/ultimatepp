@@ -68,27 +68,25 @@ class TrackBallCamera : public UOGL_Camera {
 			return transform4(vector, glm::toMat4(rotation));
 		}
 		
-		virtual TrackBallCamera& ProcessMouveMouvement(float xoffset, float yoffset){
-			if(MouseLeftPressed){
-				xoffset *= MouseSensitivity;
-				yoffset *= MouseSensitivity;
-				//Another approach
-				// Determine rotation angles from the change in mouse position
-				float a1 = (xoffset/2.0f) *-1.0f;
-				float a2 =  yoffset/2.0f;
-				
-				// Rotate the target->eye vectoraround the up vector
-				glm::vec3 v =  transform.GetPosition() + focus;
-				v = RotateAround(a1,v,up);
-				
-				// Determine the right vector and rotate the target->eye and up around it
-				glm::vec3 r = glm::cross(up,v);
-				r = glm::normalize(r);
-				v = RotateAround(a2,v,r);
-				up = RotateAround(a2,up,r);
-				up = glm::normalize(up);
-				transform.SetPosition(v);
-			}
+		virtual TrackBallCamera& ProcessMouseWheelMouvement(float xoffset,float yoffset){
+			xoffset *= MouseSensitivity;
+			yoffset *= MouseSensitivity;
+			//Another approach
+			// Determine rotation angles from the change in mouse position
+			float a1 = (xoffset/2.0f) *-1.0f;
+			float a2 =  yoffset/2.0f;
+			
+			// Rotate the target->eye vectoraround the up vector
+			glm::vec3 v =  transform.GetPosition() + focus;
+			v = RotateAround(a1,v,up);
+			
+			// Determine the right vector and rotate the target->eye and up around it
+			glm::vec3 r = glm::cross(up,v);
+			r = glm::normalize(r);
+			v = RotateAround(a2,v,r);
+			up = RotateAround(a2,up,r);
+			up = glm::normalize(up);
+			transform.SetPosition(v);
 			//transform.SetRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
 			
 			
@@ -126,7 +124,26 @@ class TrackBallCamera : public UOGL_Camera {
 				
 			return *this;
 		}
+		virtual TrackBallCamera& ProcessMouseLeftMouvement(float xoffset, float yoffset){
+			yoffset *=  -1.0f;
+			
+			float Absx = sqrt(pow(xoffset,2));
+			float Absy = sqrt(pow(yoffset,2));
+			if(Absx > Absy) yoffset = 0.0f;else xoffset = 0.0f;
+			
+			glm::vec3 ri = transform.GetRight() * xoffset + transform.GetUp() * yoffset;
+			transform.Move(ri);
+			
+			focus += ri;
+			return *this;
+		}
 		
+		virtual TrackBallCamera& ProcessMouveMouvement(float xoffset, float yoffset){
+			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
+			if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
+		}
+		
+	
 		virtual bool ProcessKeyBoard(unsigned long Key,int count){
 			/*
 				if( Key == Upp::K_Z){

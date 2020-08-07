@@ -5,7 +5,7 @@
 namespace Upp{
 class SketchupCamera : public UOGL_Camera {
 	public:
-		glm::vec3 focus = glm::vec3(10.0f,10.0f,0.0f); //point the camera will focus
+		glm::vec3 focus = glm::vec3(-5.0f,5.0f, 2.0f); //point the camera will focus
 		
 		SketchupCamera(){}
 		virtual SketchupCamera* Clone(){
@@ -14,14 +14,16 @@ class SketchupCamera : public UOGL_Camera {
 
 		
 		SketchupCamera& Init(){
-			SetPosition(glm::vec3(2.0f,3.0f,5.0f));
-			LookAt(focus);
+			if( focus != glm::vec3(0,0,0))
+				transform.SetPosition(focus - (2.0f * (focus)));
+			else
+				transform.SetPosition(0,0,5);
 			return *this;
 		}
 		
 		
 		virtual glm::mat4 GetViewMatrix(){
-			return glm::lookAt(transform.GetPosition(), focus , transform.GetUp());
+			return glm::lookAt( transform.GetPosition() + focus , focus , transform.GetUp());
 		}
 
 		virtual SketchupCamera& ProcessKeyboardMouvement(Camera_Movement direction){
@@ -40,25 +42,28 @@ class SketchupCamera : public UOGL_Camera {
 			if(AbsA1 > AbsA2) a2 = 0.0f;
 			else a1 = 0.0f;
 
-			glm::vec3 v =  transform.GetPosition() ;
+			glm::vec3 v =  transform.GetPosition();
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
 			glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),v))); // Quat using the right vector
 			v = glm::rotate(upRotation, v);
 			v = glm::rotate(rightRotation, v);
-			
+			transform.SetPosition(v);
 			transform.Rotate(glm::inverse(upRotation * rightRotation));
 			
-			transform.SetPosition(v);
+			
 			return *this;
 		}
 		virtual SketchupCamera& ProcessMouseLeftMouvement(float xoffset, float yoffset){
-			xoffset *= (MouseSensitivity * MouvementSpeed);
-			yoffset *= (MouseSensitivity * MouvementSpeed);
+			yoffset *=  -1.0f;
 			
-			Cout() << "yoffset : " << yoffset << EOL;
+			float Absx = sqrt(pow(xoffset,2));
+			float Absy = sqrt(pow(yoffset,2));
+			if(Absx > Absy) yoffset = 0.0f;else xoffset = 0.0f;
 			
-			transform.Move(0,yoffset,0);
-			focus += glm::vec3(0.0f,yoffset,0.0f);
+			glm::vec3 ri = transform.GetRight() * xoffset + transform.GetUp() * yoffset;
+			transform.Move(ri);
+			
+			focus += ri;
 			return *this;
 		}
 		
@@ -72,11 +77,13 @@ class SketchupCamera : public UOGL_Camera {
 		}
 		
 		virtual SketchupCamera& ProcessMouseScroll(float zdelta){
+			glm::vec3 scaling = (0.1f * (transform.GetPosition()));
 			if(zdelta == - 120){
-				transform.SetPosition(transform.GetPosition() + (0.1f * transform.GetPosition()));
-				
+					transform.SetPosition(transform.GetPosition() + scaling);
 			}else{
-				transform.SetPosition(transform.GetPosition() - (0.1f * transform.GetPosition()));
+				float dot = sqrt(pow(glm::dot(transform.GetPosition(),scaling),2));
+				if(dot > 1.0f)
+				transform.SetPosition(transform.GetPosition() - scaling);
 			}
 			return *this;
 		}
