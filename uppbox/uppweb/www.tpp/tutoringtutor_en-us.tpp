@@ -1,6 +1,6 @@
 topic "Tutoring Plan Tutors page";
-[ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R6 Tutoring Plan. Tutors page]&]
 [s0;+117 &]
@@ -22,8 +22,9 @@ Summer of Code.]&]
 [s0;#2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 How to join]]}}&]
 [s0;#2 &]
-[s0;# [2 To join in U`+`+ Tutoring Plan as Tutor send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
-pp`-tutoring`-plan`@googlegroups.com][2  including the next information:]&]
+[s0;# [2 To join in U`+`+ Tutoring Plan as Tutor, send a ][^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=pmsg`&^2 p
+rivate message][2  to ][^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^2 k
+oldo ][2 including the next information:]&]
 [s0;#2 &]
 [s0;#i150;O0; [2 Experience in U`+`+ architecture and code.]&]
 [s0;# [2 If you usually contribute in Forum or Bazaar this explanation 
@@ -46,30 +47,12 @@ anonymous (but to the tutors and tutored person :`-))]&]
 [s0;2 &]
 [s0; [2 Your proposal will be reviewed by U`+`+ tutors and main developers.]&]
 [s0;2 &]
-[s0; [2 When approved you will get an invitation to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
-pp`-tutoring`-plan][2  in Google groups. You will need a Google 
-account.]&]
+[s0; [2 From that moment on, you can be contacted for, if you have 
+time available, tutoring a new developer.]&]
 [s0;2 &]
-[s0;2%- &]
-[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 I am a Tutor. What to do next?]]}}&]
-[s0;2 &]
-[s0;# [2 Applicants will send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
-pp`-tutoring`-plan`@googlegroups.com][2 . You can periodically 
-check this for emails.]&]
 [s0;#2 &]
-[s0;# [2 All applicants has to be answered. If no tutor is immediately 
-available, the answer will be the next available tutoring date. 
-Tutors have an applicants list to follow this properly.]&]
-[s0;#2 &]
-[s0;# [2 If you are available and the user skills and needs match with 
-your abilities, you can answer her/him and let the rest of tutors 
-know that you will be the tutor of that person.]&]
-[s0;#2 &]
-[s0;# [2 And the tutoring begins...]&]
-[s0;2 &]
-[s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 How to tutor]]}}&]
 [s0;2 &]
 [s0; [2 We have prepared a ][^topic`:`/`/uppweb`/www`/tutoringmanual`$en`-us^2 manual][2  
 for you.]&]
-[s0; ]
+[s0; ]]

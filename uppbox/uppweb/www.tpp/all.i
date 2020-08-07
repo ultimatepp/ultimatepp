@@ -142,6 +142,14 @@ TOPIC("ssposix_en-us")
 #include "ssposix_en-us.tppi"
 END_TOPIC
 
+TOPIC("tutoring_en-us")
+#include "tutoring_en-us.tppi"
+END_TOPIC
+
+TOPIC("tutoringtutor_en-us")
+#include "tutoringtutor_en-us.tppi"
+END_TOPIC
+
 TOPIC("ubuntuinstall_en-us")
 #include "ubuntuinstall_en-us.tppi"
 END_TOPIC
