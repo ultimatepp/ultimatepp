@@ -116,11 +116,11 @@ glm::mat4 UOGL_Camera::GetProjectionMatrix(Upp::Sizef SS){
 	}
 }
 UOGL_Camera& UOGL_Camera::SetPosition(glm::vec3 const& position){
-	transform.SetNewPosition(position);
+	transform.SetPosition(position);
 	return *this;
 }
 UOGL_Camera& UOGL_Camera::LookAt(glm::vec3 const& lookTo){
-	transform.LookAt(lookTo,true);
+	transform.LookAt(lookTo);
 	return *this;
 }
 UOGL_Camera& UOGL_Camera::ProcessMouseScroll(float yoffset){
@@ -152,7 +152,7 @@ float UOGL_Camera::GetMouvementSpeed(){
 float UOGL_Camera::GetMouseSensitivity(){
 	return MouseSensitivity;
 }
-
+/*
 //CameraQuaterion CLASS
 
 CameraQuaterion::CameraQuaterion(){} //be carefull of setting scene correctly
@@ -488,6 +488,7 @@ CameraEuler& CameraEuler::ProcessMouveMouvement(float xoffset, float yoffset){
 	glm::vec3 euler = transform.QuaterionToEuler(transform.GetQuaterion());
 	Upp::Cout() << "After Conversion : Pitch :"<< glm::degrees(euler.x) << ", Yaw :" << glm::degrees(euler.y) << ", Roll :" << glm::degrees(euler.z) << Upp::EOL;
 	*/
-	return *this;
-}
+/*	return *this;
+	
+}*/
 }

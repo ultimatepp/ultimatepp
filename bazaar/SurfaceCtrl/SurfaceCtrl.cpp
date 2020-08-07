@@ -3,7 +3,6 @@
 namespace Upp{
 SurfaceCtrl::SurfaceCtrl(){
 	InitCamera();
-	camera = &trackball;
 	OnBegin = [&]{InitOpenGLFeatures();};
 }
 SurfaceCtrl::~SurfaceCtrl(){
@@ -55,18 +54,18 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
-		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,20).End();
+		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,200000).End();
 		loaded = true;
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
 	if(ShowAxis)
-		Axis.Draw(camera->GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera->GetViewMatrix(),camera->GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 }
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
-	//obj.GetTransform().RotateFromAngles(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
+	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	obj.SetVolumeEnvelope(surf.env);
 	obj.SetLineWidth(2.0f);
 	ZoomToFit();
@@ -81,18 +80,19 @@ void SurfaceCtrl::ZoomToFit()noexcept{
 			if(mx > mxGlobal) mxGlobal = mx;
 		}
 	}
-	glm::vec3 camPos = camera->GetTransform().GetPosition();
-	if(camPos.x > camPos.y  && camPos.x > camPos.z) camera->GetTransform().SetNewPosition(glm::vec3((float)mxGlobal,camPos.y,camPos.z));
-	if(camPos.y > camPos.z  && camPos.y > camPos.x) camera->GetTransform().SetNewPosition(glm::vec3(camPos.x,(float)mxGlobal,camPos.z));
-	if(camPos.z > camPos.x  && camPos.z > camPos.y) camera->GetTransform().SetNewPosition(glm::vec3(camPos.x,camPos.y,(float)mxGlobal));
+	glm::vec3 camPos = camera.GetTransform().GetPosition();
+	if(camPos.x > camPos.y  && camPos.x > camPos.z) camera.GetTransform().SetPosition(glm::vec3((float)mxGlobal,camPos.y,camPos.z));
+	if(camPos.y > camPos.z  && camPos.y > camPos.x) camera.GetTransform().SetPosition(glm::vec3(camPos.x,(float)mxGlobal,camPos.z));
+	if(camPos.z > camPos.x  && camPos.z > camPos.y) camera.GetTransform().SetPosition(glm::vec3(camPos.x,camPos.y,(float)mxGlobal));
 }
 void SurfaceCtrl::DrawAllObjects(){
 	for(Object3D& obj : allObjects){
-		obj.Draw(camera->GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera->GetViewMatrix(),camera->GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
+		obj.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
 	}
 }
 void SurfaceCtrl::InitCamera()noexcept{
-	trackball.SetPosition(glm::vec3(0.0f,10.0f,30.0f));
+	camera.Init();
+	camera.SetMouseSensitivity(0.80f);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
@@ -102,20 +102,23 @@ void SurfaceCtrl::GLResize(int w, int h){
 }
 bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_W){
-		camera->ProcessKeyboardMouvement(CM_FORWARD);
+		camera.ProcessKeyboardMouvement(CM_FORWARD);
 	}
 	if( key == K_S){
-		camera->ProcessKeyboardMouvement(CM_BACKWARD);
+		camera.ProcessKeyboardMouvement(CM_BACKWARD);
 	}
 	if( key == K_Q){
-		camera->ProcessKeyboardMouvement(CM_LEFT);
+		camera.ProcessKeyboardMouvement(CM_LEFT);
 	}
 	if( key == K_D){
-		camera->ProcessKeyboardMouvement(CM_RIGHT);
+		camera.ProcessKeyboardMouvement(CM_RIGHT);
 	}
 	if( key == K_R){
-		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
-		if(allObjects.GetCount() > 0) allObjects[0].UpdateColors(0,allObjects[0].GetSurfaceCount()/2,data);
+	/*	float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
+		if(allObjects.GetCount() > 0) allObjects[0].UpdateColors(0,allObjects[0].GetSurfaceCount()/2,data);*/
+		camera.GetTransform().SetPosition(0,0,camera.GetTransform().GetPosition().z);
+		camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
+		
 	}
 	if( key == K_T){
 		if(allObjects.GetCount() > 0) DUMP(allObjects[0].ReadColors(0,1));
@@ -133,28 +136,36 @@ bool SurfaceCtrl::Key(dword key,int count){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
 	if(key == K_LEFT){
-		camera->ProcessMouveMouvement(200,0);
+		camera.MouseMiddlePressed = true;
+		camera.ProcessMouveMouvement(10,0);
+		camera.MouseMiddlePressed = false;
 	}
 	if(key == K_RIGHT){
-		camera->ProcessMouveMouvement(-200,0);
+		camera.MouseMiddlePressed = true;
+		camera.ProcessMouveMouvement(-10,0);
+		camera.MouseMiddlePressed = false;
 	}
 	if(key == K_UP){
-		camera->ProcessMouveMouvement(0,200);
+		camera.MouseMiddlePressed = true;
+		camera.ProcessMouveMouvement(0,10);
+		camera.MouseMiddlePressed = false;
 	}
 	if(key == K_DOWN){
-		camera->ProcessMouveMouvement(0,-200);
+		camera.MouseMiddlePressed = true;
+		camera.ProcessMouveMouvement(0,-10);
+		camera.MouseMiddlePressed = false;
 	}
 	if(key == K_ADD){
 		//camera.SetFOV(camera.GetFOV() + 5);
-		camera->ProcessMouseScroll(+120);
+		camera.ProcessMouseScroll(+120);
 	}
 	if(key == K_SUBTRACT){
 		//camera.SetFOV(camera.GetFOV() - 5);
-		camera->ProcessMouseScroll(-120);
+		camera.ProcessMouseScroll(-120);
 	}
 	if(key == K_C){
 		static unsigned short e = 0;
-		camera->SetCameraType((CameraType)e);
+		camera.SetCameraType((CameraType)e);
 		e++;
 		if(e == 2) e = 0;
 	}
@@ -203,49 +214,37 @@ bool SurfaceCtrl::Key(dword key,int count){
 }
 void SurfaceCtrl::MouseMove(Point p, dword){
 	//SetFocus();
-	camera->ProcessMouveMouvement(p.x - camera->StartPress.x,p.y - camera->StartPress.y);
-	camera->StartPress = p;
+	camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
+	camera.StartPress = p;
 	Refresh();
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	//camera.ProcessMouseScroll(zdelta);
 	if(zdelta > 0)
-		camera->SetFOV(camera->GetFOV() - 1);
+		camera.SetFOV(camera.GetFOV() - 1);
 	else
-		camera->SetFOV(camera->GetFOV() + 1);
-	if(camera->GetFOV() <= 0 ) camera->SetFOV(1);
-	if(camera->GetFOV() >= 180) camera->SetFOV(179);
+		camera.SetFOV(camera.GetFOV() + 1);
+	if(camera.GetFOV() <= 0 ) camera.SetFOV(1);
+	if(camera.GetFOV() >= 180) camera.SetFOV(179);
 	Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword){
-	camera->StartPress = p;
-	camera->MouseLeftPressed = true;
+	camera.StartPress = p;
+	camera.MouseLeftPressed = true;
 	return;
 }
 void SurfaceCtrl::LeftUp(Point p, dword){
-	camera->MouseLeftPressed = false;
+	camera.MouseLeftPressed = false;
 	return;
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
-	Cout() << euler.MouseMiddlePressed  << EOL;
-	euler.MouseMiddlePressed = !euler.MouseMiddlePressed;
-	
-	euler.SetPosition(trackball.GetTransform().GetPosition());
-	euler.LookAt(trackball.focus);
-	
-	if(euler.MouseMiddlePressed){
-		camera = &euler;
-		Cout() << "Free camera activated " << EOL;
-	}else{
-		camera = &trackball;
-		Cout() << "Trackball camera activated " << EOL;
-	}
+	camera.MouseMiddlePressed = true;
 }
 void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
-//	camera.MouseMiddlePressed = false;
+	camera.MouseMiddlePressed = false;
 }
 void SurfaceCtrl::MouseLeave(){
-	camera->MouseLeftPressed = false;
+	camera.MouseMiddlePressed = false;
 	return;
 }
 }

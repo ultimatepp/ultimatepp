@@ -75,7 +75,7 @@ class UOGL_Camera{
 		bool MouseLeftPressed = false;
 		bool MouseMiddlePressed = false;
 };
-
+/*
 class CameraQuaterion :  public UOGL_Camera{
 	protected:
 		float GetRealMouseSensitivity();
@@ -175,5 +175,6 @@ class CameraEuler : public UOGL_Camera{
 		virtual CameraEuler& ProcessKeyboardMouvement(Camera_Movement direction);
 		virtual CameraEuler& ProcessMouveMouvement(float xoffset, float yoffset);
 };
+*/
 }
 #endif

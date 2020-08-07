@@ -2,7 +2,10 @@
 /*
 	Transform object from UltimateOpenGL
 */
+	/*
 namespace Upp{
+	
+
 Transform::Transform(){
 	Up = glm::vec3(0.0f,1.0f,0.0f);
 	Right = glm::vec3(1.0f,0.0f,0.0f);
@@ -153,8 +156,9 @@ glm::mat4 Transform::GetViewMatrix()const{
 	glm::mat4 translate = glm::mat4(1.0f);
 	translate = glm::translate(translate,-position);
 	return rotate * translate;*/
-}
+//}
 //******************Position part******************
+/*
 Transform& Transform::Move(glm::vec3 move,bool updateChildrens){//Move the position from the vec3 arg
 	position  += move;
 	if(updateChildrens){
@@ -400,4 +404,4 @@ glm::quat Transform::CreateQuaterion(float HalfAngleInRadians, glm::vec3 Dir){
 	return glm::quat(cosVal,xVal, yVal, zVal);
 }
 
-}
+}*/

@@ -28,11 +28,11 @@ class TrackBallCamera : public UOGL_Camera {
 		}
 		virtual glm::mat4 GetViewMatrix(){
 			if(!MouseMiddlePressed){
-				transform.SetNewRotation(glm::conjugate(glm::toQuat(glm::lookAt(focus - transform.GetPosition(),focus, up))));
+				transform.SetRotation(glm::conjugate(glm::toQuat(glm::lookAt(focus - transform.GetPosition(),focus, up))));
 				return glm::lookAt(focus - transform.GetPosition(),focus, up);
 				//return transform.GetViewMatrix();
 			}else{
-					glm::mat4 rotate = glm::mat4_cast(transform.GetQuaterion());
+					glm::mat4 rotate = glm::mat4_cast(transform.GetRotation());
 					glm::mat4 translate = glm::mat4(1.0f);
 					translate = glm::translate(translate,focus - transform.GetPosition());
 					return rotate * translate;
@@ -87,9 +87,9 @@ class TrackBallCamera : public UOGL_Camera {
 				v = RotateAround(a2,v,r);
 				up = RotateAround(a2,up,r);
 				up = glm::normalize(up);
-				transform.SetNewPosition(v);
+				transform.SetPosition(v);
 			}
-			//transform.SetNewRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
+			//transform.SetRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
 			
 			
 			
@@ -116,9 +116,9 @@ class TrackBallCamera : public UOGL_Camera {
 			auto rot2 = glm::quat(cosVal,xVal, yVal, zVal);
 		
 			glm::mat4 position = glm::translate(glm::mat4(1.0f), -transform.GetPosition()) *  glm::toMat4(rot1 * rot2) ;
-			transform.SetNewPosition( transform.ExtractPositionFromModelMatrix(position));
+			transform.SetPosition( transform.ExtractPositionFromModelMatrix(position));
 			
-			transform.SetNewRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
+			transform.SetRotation(glm::quatLookAt(focus - transform.GetPosition(), glm::vec3(0.0f,1.0f,0.0f)) );
 				
 		*/
 				
@@ -152,23 +152,23 @@ class TrackBallCamera : public UOGL_Camera {
 			
 			if(zdelta  ==  - 120){
 				if(result > 0){
-					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetNewPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
-					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
-					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
+					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
+					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
+					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
 				}else{
-					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetNewPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
-					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
-					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
+					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
+					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
+					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
 				}
 			}else{
 				if(result > 0){
-					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetNewPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
-					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
-					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
+					if(camPos.x > camPos.y  && camPos.x > camPos.z) transform.SetPosition(glm::vec3(camPos.x-1.0f,camPos.y,camPos.z));
+					if(camPos.y > camPos.z  && camPos.y > camPos.x) transform.SetPosition(glm::vec3(camPos.x,camPos.y-1.0f,camPos.z));
+					if(camPos.z > camPos.x  && camPos.z > camPos.y) transform.SetPosition(glm::vec3(camPos.x,camPos.y,camPos.z-1.0f));
 				}else{
-					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetNewPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
-					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
-					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetNewPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
+					if(camPos.x < camPos.y  && camPos.x < camPos.z) transform.SetPosition(glm::vec3(camPos.x+1.0f,camPos.y,camPos.z));
+					if(camPos.y < camPos.z  && camPos.y < camPos.x) transform.SetPosition(glm::vec3(camPos.x,camPos.y+1.0f,camPos.z));
+					if(camPos.z < camPos.x  && camPos.z < camPos.y) transform.SetPosition(glm::vec3(camPos.x,camPos.y,camPos.z+1.0f));
 				}
 			}
 			LookAt(focus);

@@ -233,7 +233,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			
 			prog.SetMat4("ViewMatrix", viewMatrix);
 			prog.SetMat4("ProjectionMatrix", projectionMatrix);
-			prog.SetMat4("ModelMatrix", transform.GetModelMatrice());
+			prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
 			glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : DrawType), 0, SurfaceCount);
 		}
 		if(showMeshLine && line.IsLinked()){
@@ -241,7 +241,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			glLineWidth(lineWidth);
 			line.SetMat4("ViewMatrix",viewMatrix);
 			line.SetMat4("ProjectionMatrix",projectionMatrix);
-			line.SetMat4("ModelMatrix",transform.GetModelMatrice());
+			line.SetMat4("ModelMatrix",transform.GetModelMatrix());
 			line.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, lineOpacity );
 			glDrawArrays(((line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
 		}
@@ -249,7 +249,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			normal.Bind();
 			normal.SetMat4("ViewMatrix", viewMatrix);
 			normal.SetMat4("ProjectionMatrix", projectionMatrix);
-			normal.SetMat4("ModelMatrix", transform.GetModelMatrice());
+			normal.SetMat4("ModelMatrix", transform.GetModelMatrix());
 			normal.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, normalOpacity);
 			normal.SetFloat("normal_length",normalLenght );
 			glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
