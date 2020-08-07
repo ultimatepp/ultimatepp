@@ -84,6 +84,7 @@ void SurfaceCtrl::ZoomToFit()noexcept{
 	if(camPos.x > camPos.y  && camPos.x > camPos.z) camera.GetTransform().SetPosition(glm::vec3((float)mxGlobal,camPos.y,camPos.z));
 	if(camPos.y > camPos.z  && camPos.y > camPos.x) camera.GetTransform().SetPosition(glm::vec3(camPos.x,(float)mxGlobal,camPos.z));
 	if(camPos.z > camPos.x  && camPos.z > camPos.y) camera.GetTransform().SetPosition(glm::vec3(camPos.x,camPos.y,(float)mxGlobal));
+	camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
 }
 void SurfaceCtrl::DrawAllObjects(){
 	for(Object3D& obj : allObjects){
@@ -93,6 +94,9 @@ void SurfaceCtrl::DrawAllObjects(){
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.80f);
+	camera.SetMouvementSpeed(2.0f);
+	camera.GetTransform().SetPosition(0,0,5);
+	camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
@@ -136,24 +140,16 @@ bool SurfaceCtrl::Key(dword key,int count){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
 	if(key == K_LEFT){
-		camera.MouseMiddlePressed = true;
-		camera.ProcessMouveMouvement(10,0);
-		camera.MouseMiddlePressed = false;
+		camera.ProcessMouveMouvement(2,0);
 	}
 	if(key == K_RIGHT){
-		camera.MouseMiddlePressed = true;
-		camera.ProcessMouveMouvement(-10,0);
-		camera.MouseMiddlePressed = false;
+		camera.ProcessMouveMouvement(-2,0);
 	}
 	if(key == K_UP){
-		camera.MouseMiddlePressed = true;
-		camera.ProcessMouveMouvement(0,10);
-		camera.MouseMiddlePressed = false;
+		camera.ProcessMouveMouvement(0,2);
 	}
 	if(key == K_DOWN){
-		camera.MouseMiddlePressed = true;
-		camera.ProcessMouveMouvement(0,-10);
-		camera.MouseMiddlePressed = false;
+		camera.ProcessMouveMouvement(0,-2);
 	}
 	if(key == K_ADD){
 		//camera.SetFOV(camera.GetFOV() + 5);
@@ -213,19 +209,14 @@ bool SurfaceCtrl::Key(dword key,int count){
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword){
-	//SetFocus();
-	camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
-	camera.StartPress = p;
-	Refresh();
+	if(camera.MouseMiddlePressed){
+		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
+		camera.StartPress = p;
+		Refresh();
+	}
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
-	//camera.ProcessMouseScroll(zdelta);
-	if(zdelta > 0)
-		camera.SetFOV(camera.GetFOV() - 1);
-	else
-		camera.SetFOV(camera.GetFOV() + 1);
-	if(camera.GetFOV() <= 0 ) camera.SetFOV(1);
-	if(camera.GetFOV() >= 180) camera.SetFOV(179);
+	camera.ProcessMouseScroll(zdelta);
 	Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword){
@@ -239,6 +230,7 @@ void SurfaceCtrl::LeftUp(Point p, dword){
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	camera.MouseMiddlePressed = true;
+	camera.StartPress = p;
 }
 void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 	camera.MouseMiddlePressed = false;
