@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+./configure_makefile Makefile
+./configure_makefile umkMakefile
