@@ -21,7 +21,7 @@ class SketchupCamera : public UOGL_Camera {
 		
 		
 		virtual glm::mat4 GetViewMatrix(){
-			return glm::lookAt(transform.GetPosition(), focus , transform.GetWorldUp());
+			return glm::lookAt(transform.GetPosition(), focus , transform.GetUp());
 		}
 
 		virtual SketchupCamera& ProcessKeyboardMouvement(Camera_Movement direction){
