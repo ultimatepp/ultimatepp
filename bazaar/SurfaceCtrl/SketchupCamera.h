@@ -49,16 +49,16 @@ class SketchupCamera : public UOGL_Camera {
 			return *this;
 		}
 		virtual SketchupCamera& ProcessMouseLeftMouvement(float xoffset, float yoffset){
-			yoffset *= MouseSensitivity * -1.0f;
-			xoffset *= MouseSensitivity;
+			yoffset *= 0.05f * -1.0f;
+			xoffset *= 0.05f;
 			float Absx = sqrt(pow(xoffset,2));
 			float Absy = sqrt(pow(yoffset,2));
 			if(Absx > Absy){
 				focus += transform.GetRight() * xoffset;
-				transform.Move(transform.GetRight() * xoffset);
+				//transform.Move(transform.GetRight() * xoffset);
 			}else{
-				focus += transform.GetUp() * yoffset;
-				transform.Move(transform.GetUp() * yoffset);
+				focus += transform.GetFront() * yoffset;
+			//	transform.Move(transform.GetFront() * yoffset);
 			}
 			return *this;
 		}

@@ -23,7 +23,7 @@ class UOGL_Camera{
 		float DrawDistanceMin = 0.1f;
 		
 		float MouvementSpeed = 5.0f;
-	    float MouseSensitivity = 0.1f;
+	    float MouseSensitivity = 0.08f;
 		
 		Upp::Sizef ScreenSize;
 	public:

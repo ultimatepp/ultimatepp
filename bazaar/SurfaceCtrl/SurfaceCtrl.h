@@ -48,7 +48,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		OpenGLProgram DrawMeshNormal;
 		
 		bool ShowAxis = true;
-		bool ShowCameraFocus = true;
+		bool ShowCameraFocus = false;
 		
 		float sizeW = 800.0f;
 		float sizeH = 600.0f;

@@ -55,7 +55,7 @@ void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
 		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,200000).End();
-		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,Red()).End();
+		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
 		loaded = true;
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -215,9 +215,9 @@ bool SurfaceCtrl::Key(dword key,int count){
 void SurfaceCtrl::MouseMove(Point p, dword){
 	if(camera.MouseMiddlePressed || camera.MouseLeftPressed){
 		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
-		camera.StartPress = p;
 		Refresh();
 	}
+	camera.StartPress = p;
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	camera.ProcessMouseScroll(zdelta);
