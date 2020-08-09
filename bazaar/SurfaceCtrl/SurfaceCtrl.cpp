@@ -99,7 +99,7 @@ void SurfaceCtrl::DrawAllObjects(){
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.80f);
-	camera.SetMouvementSpeed(15.0f);
+	camera.SetMouvementSpeed(0.09f);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
