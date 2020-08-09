@@ -6,6 +6,7 @@ namespace Upp{
 class SketchupCamera : public UOGL_Camera {
 	public:
 		glm::vec3 focus = glm::vec3(0.0f,0.0f,0.0f); //point the camera will focus
+		bool forceZoom = false;
 		
 		SketchupCamera(){}
 		virtual SketchupCamera* Clone(){
@@ -74,8 +75,10 @@ class SketchupCamera : public UOGL_Camera {
 			float yoffset = (StartPress.y) * 0.005f * -1.0;
 			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
-			if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
-			if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;
+			if(!forceZoom){
+				if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
+				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;
+			}
 			glm::vec3 scaling = (0.1f * (transform.GetPosition()));
 			if(zdelta == - 120){
 				    if(doX)focus -= transform.GetRight() * xoffset;

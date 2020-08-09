@@ -212,11 +212,12 @@ bool SurfaceCtrl::Key(dword key,int count){
 	Refresh();
 	return true;
 }
-void SurfaceCtrl::MouseMove(Point p, dword){
+void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	if(camera.MouseMiddlePressed || camera.MouseLeftPressed){
 		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
 		Refresh();
 	}
+	camera.forceZoom = keyflags & K_CTRL;
 	camera.StartPress = p;
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
