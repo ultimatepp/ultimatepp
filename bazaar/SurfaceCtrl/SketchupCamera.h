@@ -64,6 +64,7 @@ class SketchupCamera : public UOGL_Camera {
 		virtual SketchupCamera& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
 			if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
+			return *this;
 		}
 		
 		virtual bool ProcessKeyBoard(unsigned long Key,int count){

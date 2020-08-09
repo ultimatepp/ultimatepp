@@ -141,6 +141,7 @@ class TrackBallCamera : public UOGL_Camera {
 		virtual TrackBallCamera& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
 			if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
+			return *this;
 		}
 		
 	

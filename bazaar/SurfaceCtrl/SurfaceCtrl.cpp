@@ -242,6 +242,7 @@ void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 }
 void SurfaceCtrl::MouseLeave(){
 	camera.MouseMiddlePressed = false;
+	camera.MouseLeftPressed = false;
 	return;
 }
 }
