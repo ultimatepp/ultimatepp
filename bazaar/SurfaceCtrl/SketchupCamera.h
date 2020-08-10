@@ -75,7 +75,7 @@ class SketchupCamera : public UOGL_Camera {
 		
 		virtual SketchupCamera& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
-			if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
+		//	if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
 			return *this;
 		}
 		
@@ -90,8 +90,7 @@ class SketchupCamera : public UOGL_Camera {
 			bool doX = false, doY = false;
 			if(!forceZoom && ! type == CT_ORTHOGRAPHIC){
 				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
-				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY =
-				true;*/
+				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 				doX = true;
 				doY = true;
 			}

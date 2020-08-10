@@ -31,16 +31,12 @@ class SurfaceCtrl : public GLCtrl_glad{
 		Object3DProvider objProvider;
 		
 		Upp::Vector<Object3D> allObjects;
+		Upp::Vector<Object3D*> SelectedObject;
+		
 		Object3D Axis;
 		Object3D CameraFocus;
-		
-		/*
-		UOGL_Camera* camera;
-		TrackBallCamera trackball;
-		FreeCamera euler;
-		*/
+
 		SketchupCamera camera;
-		//TrackBallCamera camera;
 				
 		OpenGLProgram DrawMeshNoLight;
 		OpenGLProgram DrawMeshLight;
