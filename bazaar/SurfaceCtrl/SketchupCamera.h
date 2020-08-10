@@ -30,7 +30,7 @@ class SketchupCamera : public UOGL_Camera {
 				float distance = glm::distance(focus,transform.GetPosition());
 				float coefX = ScreenSize.cx / ScreenSize.cy;
 				float coefY = ScreenSize.cy / ScreenSize.cx;
-				return glm::ortho(-distance*coefY,distance*coefY,-distance*coefX,distance*coefX, GetDrawDistanceMin(),GetDrawDisanceMax());
+				return glm::ortho(-distance*coefX,distance*coefX,-distance*coefY,distance*coefY, GetDrawDistanceMin(),GetDrawDisanceMax());
 			}else{
 				LOG("Swaping to Camera Perspective (cause of unknow type)");
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
