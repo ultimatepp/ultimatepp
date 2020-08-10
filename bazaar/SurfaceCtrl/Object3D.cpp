@@ -223,6 +223,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			prog.Bind();
 			if(showLight){
 				prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
+				Cout() << "ViewPos : " << viewPosition.x<<","<<viewPosition.y<<","<<viewPosition.z <<EOL;
 				if(material.ShouldBeUpdated()){
 					prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
 					prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);

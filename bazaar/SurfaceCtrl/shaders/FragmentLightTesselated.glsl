@@ -16,7 +16,7 @@ SHADER(400 core,
 	uniform Material mat;
 	
 	//light
-    vec3 LightPosition =vec3( 0.0, 50.0, 0.0);
+    vec3 LightPosition =vec3( 0.0, 20.0, 0.0);
     vec3 LightAmbient = vec3( 1.0, 1.0, 1.0);
     vec3 LightDiffuse = vec3( 1.0, 1.0, 1.0);
     vec3 LightSpecular =vec3( 0.64, 0.64, 0.64);

@@ -22,15 +22,15 @@ class SketchupCamera : public UOGL_Camera {
 			return *this;
 		}
 		
-		virtual glm::mat4 GetProjectionMatrix(Upp::Sizef ScreenSize){
-			ScreenSize = ScreenSize;
+		virtual glm::mat4 GetProjectionMatrix(Upp::Sizef SS){
+			ScreenSize = SS;
 			if(type == CT_PERSPECTIVE){
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 			}else if(type == CT_ORTHOGRAPHIC){
 				float distance = glm::distance(focus,transform.GetPosition());
 				float coefX = ScreenSize.cx / ScreenSize.cy;
 				float coefY = ScreenSize.cy / ScreenSize.cx;
-				return glm::ortho(-distance*coefX,distance*coefX,-distance*coefY,distance*coefY, GetDrawDistanceMin(),GetDrawDisanceMax());
+				return glm::ortho(-distance*coefY,distance*coefY,-distance*coefX,distance*coefX, GetDrawDistanceMin(),GetDrawDisanceMax());
 			}else{
 				LOG("Swaping to Camera Perspective (cause of unknow type)");
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
@@ -91,8 +91,11 @@ class SketchupCamera : public UOGL_Camera {
 			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
 			if(!forceZoom && ! type == CT_ORTHOGRAPHIC){
-				if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
-				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;
+				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
+				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY =
+				true;*/
+				doX = true;
+				doY = true;
 			}
 			glm::vec3 scaling = (0.1f * (transform.GetPosition()));
 			if(zdelta == - 120){

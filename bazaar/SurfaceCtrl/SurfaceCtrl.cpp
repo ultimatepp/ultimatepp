@@ -58,6 +58,8 @@ void SurfaceCtrl::GLPaint(){
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
 		loaded = true;
 	}
+	MemoryIgnoreLeaksBlock __;
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
