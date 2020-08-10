@@ -165,6 +165,9 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if(key == K_C){
 		static unsigned short e = 0;
 		camera.SetCameraType((CameraType)e);
+		if(e == 1 && allObjects.GetCount() > 0){
+			camera.focus = allObjects[0].GetTransform().GetPosition();
+		}
 		e++;
 		if(e == 2) e = 0;
 	}

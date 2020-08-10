@@ -21,7 +21,7 @@ class SketchupCamera : public UOGL_Camera {
 				transform.SetPosition(0,0,5);
 			return *this;
 		}
-		
+	
 		virtual glm::mat4 GetProjectionMatrix(Upp::Sizef SS){
 			ScreenSize = SS;
 			if(type == CT_PERSPECTIVE){
