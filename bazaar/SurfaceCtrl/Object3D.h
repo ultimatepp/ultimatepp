@@ -73,11 +73,16 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		unsigned int SurfaceCount = 0;
 		VolumeEnvelope *env = nullptr;
+		Vector<float> BoundingBoxVertices;
+		GLuint BoundingBoxVAO = 0;
+		GLuint BoundingBoxVBO = 0;
 		
 		bool showMesh = true;
 		bool showMeshLine = true;
 		bool showMeshNormal = false;
 		bool showLight = true;
+		
+		bool showBoundingBox = false;
 			
 		Transform transform;
 		
@@ -86,6 +91,8 @@ class Object3D : public Upp::Moveable<Object3D>{
 		bool UpdateBuffer(GLuint buffer, int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceNumber,int count)noexcept;
 		void BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
+		
+		void BuildBoundingBoxData();
 		
 		
 	public:
@@ -98,11 +105,13 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
 		Object3D& ShowMeshNormal(bool b = true)noexcept{showMeshNormal = b; return *this;}
 		Object3D& ShowLight(bool b = true)noexcept{showLight = b; return *this;}
+		Object3D& ShowBoundingBox(bool b = true)noexcept{showBoundingBox = b; return *this;}
 		
 		bool GetShowMesh()const noexcept{return showMesh;}
 		bool GetShowMeshLine()const noexcept{return showMeshLine;}
 		bool GetShowMeshNormal()const noexcept{return showMeshNormal;}
 		bool GetShowLight()const noexcept{return showLight;}
+		bool GetShowBoundingBox()const noexcept{return showBoundingBox;}
 		
 		Object3D& SetLineColor(Color color)noexcept{lineColor = color; return *this;}
 		Object3D& SetNormalColor(Color color)noexcept{normalColor = color; return *this;}
@@ -124,7 +133,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		unsigned int GetSurfaceCount()noexcept{return SurfaceCount;}
 		
 		VolumeEnvelope* GetVolumeEnvelope(){return env;}
-		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope;return *this;}
+		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope; BuildBoundingBoxData(); return *this;}
 		/*
 			Write into OpenGL buffer return true if operation have been done correctly.
 			/!\ True do not mean OpenGL will provide good things, it just mean buffer have been

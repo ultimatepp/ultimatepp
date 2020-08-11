@@ -183,6 +183,10 @@ bool SurfaceCtrl::Key(dword key,int count){
 		Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
 		Cout() << "Current quaterion : " << camera.GetTransform().GetRotation().w << "," << camera.GetTransform().GetRotation().x << "," << camera.GetTransform().GetRotation().y << "," << camera.GetTransform().GetRotation().z << EOL;
 	}
+	if(key == K_B){
+		if(allObjects.GetCount() > 0)
+			allObjects[0].ShowBoundingBox(!allObjects[0].GetShowBoundingBox());
+	}
 	/*
 		Material change
 	*/
