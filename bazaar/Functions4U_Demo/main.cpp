@@ -129,7 +129,26 @@ void DistanceDemo() {
 	Puts(Format("Distance between 'hello' and 'yellow' is %d", DamerauLevenshteinDistance("hello", "yellow")));
 }
 
+void MiscellaneousDemos() {
+	SetConsoleColor(CONSOLE_COLOR::LTRED);
+	Cout() << "This message is in red\n";
+	SetConsoleColor(CONSOLE_COLOR::LTYELLOW);
+	Cout() << "This message is in yellow\n";
+	SetConsoleColor(CONSOLE_COLOR::RESET);
+	Cout() << "This message is in normal color\n";
+	
+	Cout() << "Next text messages (printf, Cout()) will be disabled\n";
+	ConsoleOutputDisable(true);
+	Cout() << "Text with Cout()\n";
+	printf("Text with printf()\n");
+	ConsoleOutputDisable(false);
+	Cout() << "Text messages are now enabled\n";
+}
+
 void Test() {
+	Puts("Miscellaneous demos");
+	MiscellaneousDemos();
+	
 	Puts("Files demo");
 	FilesDemo();
 	
