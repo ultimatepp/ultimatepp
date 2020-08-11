@@ -2796,4 +2796,59 @@ size_t GetNumLines(Stream &stream) {
 	return res;	
 }
 
+
+bool SetConsoleColor(CONSOLE_COLOR color) {
+#ifdef PLATFORM_WIN32
+	static HANDLE hstdout = 0;
+	static CONSOLE_SCREEN_BUFFER_INFO csbiInfo = {};
+	static WORD woldattrs;
+	
+	if (hstdout == 0) {
+		hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (!GetConsoleScreenBufferInfo(hstdout, &csbiInfo)) {
+			hstdout = 0;
+			return false;
+		}
+		woldattrs = csbiInfo.wAttributes;
+	}
+	if (color == RESET) 
+		return SetConsoleTextAttribute(hstdout, woldattrs);
+	else
+		return SetConsoleTextAttribute(hstdout, color);
+#else
+	if (color < 100)
+		printf("\x1b[%dm", color);
+	else
+		printf("\x1b[1;%dm", color-100);	
+	return true;
+#endif
+}
+
+void ConsoleOutputDisable(bool disable) {
+#ifdef PLATFORM_WIN32
+	if (disable)
+		freopen("nul", "w", stdout);
+	else
+		freopen("CONOUT$", "w", stdout); 
+#else
+	static int saved_id = Null;
+	static fpos_t saved_pos;
+	
+	if (disable) {
+		fflush(stdout);
+		fgetpos(stdout, &saved_pos);
+		saved_id = dup(fileno(stdout));
+		close(fileno(stdout));
+	} else {
+		if (!IsNull(saved_id)) {
+			fflush(stdout);
+			dup2(saved_id, fileno(stdout));
+			close(saved_id);
+			clearerr(stdout);
+			fsetpos(stdout, &saved_pos); 
+		}
+	}
+#endif
+}
+
 }
