@@ -100,7 +100,7 @@ void SurfaceCtrl::DrawAllObjects(){
 }
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
-	camera.SetMouseSensitivity(0.80f);
+	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
 }
 void SurfaceCtrl::GLResize(int w, int h){
@@ -228,10 +228,11 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
 		Refresh();
 	}
-	camera.forceZoom = keyflags & K_CTRL;
+	
 	camera.StartPress = p;
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
+	camera.forceZoom = keyflags & K_CTRL;
 	camera.ProcessMouseScroll(zdelta);
 	Refresh();
 }
@@ -246,14 +247,17 @@ void SurfaceCtrl::LeftUp(Point p, dword){
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	camera.MouseMiddlePressed = true;
+	camera.ShiftPressed = keyflags & K_SHIFT;
 	camera.StartPress = p;
 }
 void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 	camera.MouseMiddlePressed = false;
+	camera.ShiftPressed = false;
 }
 void SurfaceCtrl::MouseLeave(){
 	camera.MouseMiddlePressed = false;
 	camera.MouseLeftPressed = false;
+	camera.ShiftPressed = false;
 	return;
 }
 }

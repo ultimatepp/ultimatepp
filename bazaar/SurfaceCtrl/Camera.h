@@ -77,6 +77,7 @@ class UOGL_Camera{
 		Point StartPress;
 		bool MouseLeftPressed = false;
 		bool MouseMiddlePressed = false;
+		bool ShiftPressed = false;
 };
 /*
 class CameraQuaterion :  public UOGL_Camera{

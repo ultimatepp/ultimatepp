@@ -56,6 +56,19 @@ class SketchupCamera2 : public UOGL_Camera{
 		float GetDezoomFactor(){return DezoomFactor;}
 		
 		
+		virtual SketchupCamera2& ProcessMouseWheelTranslation(float xoffset,float yoffset){
+			yoffset *= 0.05f * -1.0f;
+			xoffset *= 0.05f;
+			float Absx = sqrt(pow(xoffset,2));
+			float Absy = sqrt(pow(yoffset,2));
+			if(Absx > Absy){
+				transform.Move(transform.GetRight() * xoffset);
+			}else{
+				transform.Move(transform.GetUp() * yoffset);
+			}
+			return *this;
+		}
+		
 		virtual SketchupCamera2& ProcessMouseWheelMouvement(float xoffset,float yoffset){
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
@@ -94,7 +107,8 @@ class SketchupCamera2 : public UOGL_Camera{
 		}
 		
 		virtual SketchupCamera2& ProcessMouveMouvement(float xoffset, float yoffset){
-			if(MouseMiddlePressed) return ProcessMouseWheelMouvement(xoffset,yoffset);
+			if(MouseMiddlePressed && !ShiftPressed ) return ProcessMouseWheelMouvement(xoffset,yoffset);
+			if(MouseMiddlePressed && ShiftPressed ) return ProcessMouseWheelTranslation(xoffset,yoffset);
 		//	if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
 			return *this;
 		}
