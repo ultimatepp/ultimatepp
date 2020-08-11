@@ -102,6 +102,7 @@ void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
+	camera.SetAllObjects(allObjects);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
@@ -243,6 +244,7 @@ void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 void SurfaceCtrl::LeftDown(Point p, dword){
 	camera.StartPress = p;
 	camera.MouseLeftPressed = true;
+	camera.ProcessMouseLeftClick(p.x,p.y);
 	return;
 }
 void SurfaceCtrl::LeftUp(Point p, dword){

@@ -11,6 +11,7 @@ file
 	Object3DProvider.h,
 	Object3D.h,
 	Object3D.cpp,
+	BoundingBox.h,
 	Shader.h,
 	Transform.h,
 	Transform.cpp,

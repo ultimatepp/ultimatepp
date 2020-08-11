@@ -66,64 +66,6 @@ Object3D::Object3D(Surface& surface, Color color) : transform(){
 	BuildOpenGLData(vertexData,normalData,colorData);
 }
 
-void Object3D::BuildBoundingBoxData(){
-	if(env){
-		glm::vec3 p0(env->minX,env->minY,env->minZ);
-		glm::vec3 p1(env->maxX,env->maxY,env->maxZ);
-		BoundingBoxVertices 
-		<<p0.x<< p0.y<< p0.z
-		<<p0.x<< p0.y<< p1.z
-		<<p0.x<< p1.y<< p1.z
-		<<p1.x<< p1.y<< p0.z
-		<<p0.x<< p0.y<< p0.z
-		<<p0.x<< p1.y<< p0.z
-		<<p1.x<< p0.y<< p1.z
-		<<p0.x<< p0.y<< p0.z
-		<<p1.x<< p0.y<< p0.z
-		<<p1.x<< p1.y<< p0.z
-		<<p1.x<< p0.y<< p0.z
-		<<p0.x<< p0.y<< p0.z
-		<<p0.x<< p0.y<< p0.z
-		<<p0.x<< p1.y<< p1.z
-		<<p0.x<< p1.y<< p0.z
-		<<p1.x<< p0.y<< p1.z
-		<<p0.x<< p0.y<< p1.z
-		<<p0.x<< p0.y<< p0.z
-		<<p0.x<< p1.y<< p1.z
-		<<p0.x<< p0.y<< p1.z
-		<<p1.x<< p0.y<< p1.z
-		<<p1.x<< p1.y<< p1.z
-		<<p1.x<< p0.y<< p0.z
-		<<p1.x<< p1.y<< p0.z
-		<<p1.x<< p0.y<< p0.z
-		<<p1.x<< p1.y<< p1.z
-		<<p1.x<< p0.y<< p1.z
-		<<p1.x<< p1.y<< p1.z
-		<<p1.x<< p1.y<< p0.z
-		<<p0.x<< p1.y<< p0.z
-		<<p1.x<< p1.y<< p1.z
-		<<p0.x<< p1.y<< p0.z
-		<<p0.x<< p1.y<< p1.z
-		<<p1.x<< p1.y<< p1.z
-		<<p0.x<< p1.y<< p1.z
-		<<p1.x<< p0.y<< p1.z;
-
-		
-		if(BoundingBoxVAO > 0) glDeleteVertexArrays(1,&BoundingBoxVAO);
-		if(BoundingBoxVBO > 0) glDeleteBuffers(1,&BoundingBoxVBO);
-		
-		glGenVertexArrays(1,&BoundingBoxVAO);
-		glGenBuffers(1,&BoundingBoxVBO);
-		
-		glBindVertexArray(BoundingBoxVAO);
-		glBindBuffer(GL_ARRAY_BUFFER,BoundingBoxVBO);
-		glBufferData(GL_ARRAY_BUFFER,BoundingBoxVertices.GetCount() * sizeof(float),&(BoundingBoxVertices[0]),GL_STATIC_DRAW);
-		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
-		glEnableVertexAttribArray(0);
-		
-	}
-}
-
 Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){
 	SurfaceCount = surface.GetCount() / 3;
 	BuildOpenGLData(surface,normal,color);
@@ -312,11 +254,8 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			normal.SetFloat("normal_length",normalLenght );
 			glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
 		}
-		if(showBoundingBox && line.IsLinked()){
-			line.Bind();
-			line.SetVec4("CustomColor", Blue().GetR() / 255.0f, Blue().GetG() / 255.0f, Blue().GetB() / 255.0f, lineOpacity );
-			glBindVertexArray(BoundingBoxVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+		if(showBoundingBox){
+			boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,line);
 		}
 	}
 }

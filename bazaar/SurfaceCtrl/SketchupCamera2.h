@@ -5,6 +5,75 @@
 
 namespace Upp{
 class SketchupCamera2 : public UOGL_Camera{
+	private:
+		
+		Vector<Object3D>* allObjects = nullptr;
+				
+		glm::vec3 UnProject(float winX, float winY, float winZ)
+		{
+		    // Compute (projection x modelView) ^ -1:
+		    glm::mat4 modelView = GetViewMatrix() * transform.GetModelMatrix();
+		    glm::mat4 projection = GetProjectionMatrix(ScreenSize);
+		        
+		    const glm::mat4 m = projection * modelView;
+		
+		    // Need to invert Y since screen Y-origin point down,
+		    // while 3D Y-origin points up (this is an OpenGL only requirement):
+		    winY = ScreenSize.cy - winY;
+		
+		    // Transformation of normalized coordinates between -1 and 1:
+		    glm::vec4 in;
+		    in.x = winX  / ScreenSize.cx  * 2.0 - 1.0;
+		    in.y = winY  / ScreenSize.cy  * 2.0 - 1.0;
+		    in.z = 2.0 * winZ - 1.0;
+		    in.w = 1.0;
+		
+		    // To world coordinates:
+		    glm::vec4 out(m * in);
+		    if (out.w == 0.0) // Avoid a division by zero
+		    {
+		        return glm::vec3(0.0f);
+		    }
+		    out.w = 1.0 / out.w;
+		    return glm::vec3(out.x * out.w, out.y * out.w,out.z * out.w);
+		}
+		
+		
+		Vector<Object3D*> Pick(float x, float y){
+			Vector<Object3D*>  intersect;
+			if(allObjects){
+				
+				//glm::vec3 start = UnProject(x,y,-100.0f);
+				//glm::vec3 end = UnProject(x,y,100.0f);
+				
+				
+				
+				glm::vec3 range = transform.GetFront() *  3.0f;
+				range = range - transform.GetFront();
+				
+				glm::vec3 start = UnProject(transform.GetFront().x,transform.GetFront().y,transform.GetFront().z);
+				glm::vec3 end = UnProject(range.x,range.y,range.z);
+				
+				Cout() << "Start : " << start.x << "," << start.y << "," << start.z << EOL;
+				Cout() << "End : " << end.x << "," << end.y << "," << end.z << EOL;
+				
+				
+				
+	
+				for (Object3D& obj : *(allObjects))
+			    {
+			       if (obj.TestLineIntersection(start,end))
+			        {
+			            // This object is crossed by the picking line.
+			            intersect.Add(&obj);
+			        }
+			    }
+				
+			}
+			return intersect;
+		}
+	
+	
 	public:
 		bool forceZoom = false;
 		float DezoomFactor = 75.0f; // 1.0f Mean no dezoom at all
@@ -20,6 +89,8 @@ class SketchupCamera2 : public UOGL_Camera{
 			transform.SetPosition(0,50,150);
 			return *this;
 		}
+		
+		SketchupCamera2& SetAllObjects(Vector<Object3D>& all){allObjects = &all;return *this;}
 	
 		virtual glm::mat4 GetProjectionMatrix(Upp::Sizef SS){
 			ScreenSize = SS;
@@ -93,23 +164,14 @@ class SketchupCamera2 : public UOGL_Camera{
 			
 			return *this;
 		}
-		virtual SketchupCamera2& ProcessMouseLeftMouvement(float xoffset, float yoffset){
-			yoffset *= 0.05f * -1.0f;
-			xoffset *= 0.05f;
-			float Absx = sqrt(pow(xoffset,2));
-			float Absy = sqrt(pow(yoffset,2));
-			if(Absx > Absy){
-				transform.Move(transform.GetRight() * xoffset);
-			}else{
-				transform.Move(transform.GetFront() * yoffset);
-			}
+		virtual SketchupCamera2& ProcessMouseLeftClick(float xoffset, float yoffset){
+			Cout() << Pick(xoffset ,yoffset).GetCount() << EOL;
 			return *this;
 		}
 		
 		virtual SketchupCamera2& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed && !ShiftPressed ) return ProcessMouseWheelMouvement(xoffset,yoffset);
 			if(MouseMiddlePressed && ShiftPressed ) return ProcessMouseWheelTranslation(xoffset,yoffset);
-		//	if(MouseLeftPressed) return ProcessMouseLeftMouvement(xoffset,yoffset);
 			return *this;
 		}
 		
