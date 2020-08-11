@@ -90,7 +90,7 @@ class SketchupCamera : public UOGL_Camera {
 			float yoffset = (StartPress.y) * 0.005f * -1.0;
 			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
-			if(!forceZoom && ! type == CT_ORTHOGRAPHIC){
+			if(!forceZoom && ! (type == CT_ORTHOGRAPHIC)){
 				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
 				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 				doX = true;

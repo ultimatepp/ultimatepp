@@ -66,7 +66,7 @@ void SurfaceCtrl::GLPaint(){
 	if(ShowAxis)
 		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	if(ShowCameraFocus){
-		CameraFocus.GetTransform().SetPosition(camera.focus);
+		CameraFocus.GetTransform().SetPosition(camera.GetVirtualAxis());
 		CameraFocus.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	}
 }
@@ -145,16 +145,16 @@ bool SurfaceCtrl::Key(dword key,int count){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
 	}
 	if(key == K_LEFT){
-		camera.ProcessMouseWheelMouvement(2 * camera.GetMouvementSpeed(),0);
+		camera.ProcessMouseWheelMouvement(20 * camera.GetMouvementSpeed(),0);
 	}
 	if(key == K_RIGHT){
-		camera.ProcessMouseWheelMouvement(-2 * camera.GetMouvementSpeed(),0);
+		camera.ProcessMouseWheelMouvement(-20 * camera.GetMouvementSpeed(),0);
 	}
 	if(key == K_UP){
-		camera.ProcessMouseWheelMouvement(0,2 * camera.GetMouvementSpeed());
+		camera.ProcessMouseWheelMouvement(0,20 * camera.GetMouvementSpeed());
 	}
 	if(key == K_DOWN){
-		camera.ProcessMouseWheelMouvement(0,-2 * camera.GetMouvementSpeed());
+		camera.ProcessMouseWheelMouvement(0,-20 * camera.GetMouvementSpeed());
 	}
 	if(key == K_ADD){
 		camera.SetFOV(camera.GetFOV() + 5);
@@ -166,7 +166,8 @@ bool SurfaceCtrl::Key(dword key,int count){
 		static unsigned short e = 0;
 		camera.SetCameraType((CameraType)e);
 		if(e == 1 && allObjects.GetCount() > 0){
-			camera.focus = allObjects[0].GetTransform().GetPosition();
+			//camera.focus = allObjects[0].GetTransform().GetPosition();
+			
 		}
 		e++;
 		if(e == 2) e = 0;
@@ -176,6 +177,11 @@ bool SurfaceCtrl::Key(dword key,int count){
 	}
 	if(key == K_F){
 		ShowCameraFocus = !ShowCameraFocus;
+	}
+	if(key == K_X){
+		Cout() << "Current camera Position : " << camera.GetTransform().GetPosition().x << "," << camera.GetTransform().GetPosition().y << "," << camera.GetTransform().GetPosition().z << EOL;
+		Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
+		Cout() << "Current quaterion : " << camera.GetTransform().GetRotation().w << "," << camera.GetTransform().GetRotation().x << "," << camera.GetTransform().GetRotation().y << "," << camera.GetTransform().GetRotation().z << EOL;
 	}
 	/*
 		Material change

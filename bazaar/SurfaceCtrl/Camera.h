@@ -24,6 +24,7 @@ class UOGL_Camera{
 		
 		float MouvementSpeed = 0.09f;
 	    float MouseSensitivity = 0.08f;
+	    float ZoomSpeed = 10.0f;
 		
 		Upp::Sizef ScreenSize;
 	public:
@@ -70,6 +71,8 @@ class UOGL_Camera{
 		float GetMouvementSpeed();
 		UOGL_Camera& SetMouseSensitivity(float value = 0.01f);
 		float GetMouseSensitivity();
+		UOGL_Camera& SetZoomSpeed(float value = 10.0f){ZoomSpeed = value; return *this;}
+		float GetZoomSpeed(){return ZoomSpeed;}
 		
 		Point StartPress;
 		bool MouseLeftPressed = false;

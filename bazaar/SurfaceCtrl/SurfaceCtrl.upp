@@ -18,6 +18,7 @@ file
 	Camera.cpp,
 	TrackBallCamera.h,
 	SketchupCamera.h,
+	SketchupCamera2.h,
 	shaders/Vertex.glsl highlight cpp,
 	shaders/VertexSimple.glsl highlight cpp,
 	shaders/GeometrySimple.glsl highlight cpp,
