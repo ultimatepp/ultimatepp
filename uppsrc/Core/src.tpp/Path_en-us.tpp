@@ -166,7 +166,8 @@ rue], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 curdir]_`=_NULL)&]
 [s2;%% Attempts to find a [%-*@3 file] on semicolon separated list 
 directory [%-*@3 paths]. If [%-*@3 current] is true, [%-*@3 curdir].is 
 added to this list. If [%-*@3 curdir] is NULL, the real current 
-directory (obtained using GetCurrentDirectory) is used instead.&]
+directory (obtained using GetCurrentDirectory) is used instead. 
+Returns full path of file, if found, otherwise Null.&]
 [s3;%% &]
 [s4; &]
 [s5;:GetCurrentDirectory`(`): [_^String^ String]_[* GetCurrentDirectory]()&]
