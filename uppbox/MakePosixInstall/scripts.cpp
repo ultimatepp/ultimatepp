@@ -27,7 +27,7 @@ elif [ -x "$(command -v pkg)" ]; then
   if [[ "$uname" == 'SunOS' ]]; then
       DEP="pkg install bash gtk3 libnotify developer/clang-80 build-essential"
   else
-      DEP="pkg install bash gmake gtk3 libnotify clang-devel"
+      DEP="pkg install bash gmake gtk3 libnotify llvm90"
   fi
 elif [ -x "$(command -v pkg_add)" ]; then
   DEP="pkg_add bash gmake gtk3 libnotify clang-devel"
