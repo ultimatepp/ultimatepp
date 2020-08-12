@@ -127,7 +127,7 @@ CONSOLE_APP_MAIN
 	#define OPTS " -arvb "
 #endif
 
-#ifndef PLATFORM_SOLARIS
+#ifdef PLATFORM_LINUX
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
 #endif
 

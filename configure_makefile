@@ -16,3 +16,15 @@ if [[ "$uname" == 'SunOS' ]]; then
 	sed -i 's/-lpthread /-lposix4 /' $1
 	sed -i 's/-lrt /-lsocket -lnsl /' $1
 fi
+
+if [[ "$uname" == 'FreeBSD' ]]; then
+	echo Configuring $1 for FreeBSD
+	sed -i '' 's/-DflagPOSIX -DflagLINUX/-DflagPOSIX -DflagBSD -DflagFREEBSD/' $1
+	sed -i '' 's/-Wl,--gc-sections $(LINKOPTIONS)/$(LINKOPTIONS)/' $1
+	sed -i '' 's/GCC-Gcc-Gui-Linux-Main-Posix-Shared/GCC-Bsd-Freebsd-Gcc-Gui-Main-Posix-Shared/' $1
+	sed -i '' 's/GCC-Gcc-Gui-Linux-Posix-Shared/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/' $1
+	sed -i '' 's/GCC-Gcc-Linux-Main-Posix-Shared/GCC-Bsd-Freebsd-Gcc-Main-Posix-Shared/' $1
+	sed -i '' 's/GCC-Gcc-Linux-Posix-Shared/GCC-Bsd-Freebsd-Gcc-Posix-Shared/' $1
+	sed -i '' 's/$(LIBPATH) -Wl,-O,2 $(LDFLAGS)/$(LIBPATH) $(LDFLAGS)/' $1
+	sed -i '' 's/-ldl /-lexecinfo /' $1
+fi
