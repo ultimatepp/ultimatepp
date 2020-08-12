@@ -56,7 +56,7 @@ class SketchupCamera2 : public UOGL_Camera{
 	
 	public:
 		bool forceZoom = false;
-		float DezoomFactor = 75.0f; // 1.0f Mean no dezoom at all
+		float DezoomFactor = 25.0f; // 1.0f Mean no dezoom at all
 		
 		
 		SketchupCamera2(){}
@@ -66,7 +66,7 @@ class SketchupCamera2 : public UOGL_Camera{
 
 		
 		SketchupCamera2& Init(){
-			transform.SetPosition(0,0,0);
+			transform.SetPosition(0,20,20);
 			return *this;
 		}
 		
