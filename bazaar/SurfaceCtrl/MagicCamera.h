@@ -7,11 +7,11 @@ namespace Upp{
 	private:
 		Vector<Object3D>* allObjects = nullptr;
 		
-		glm::vec3 focus(0.0f,0.0f,0.0f);
+		glm::vec3 focus;
 		
 		glm::vec3 UnProject2(float winX, float winY,float winZ){
 			glm::mat4 View = GetViewMatrix() * glm::mat4(1.0f);
-		    glm::mat4 projection = GetProjectionMatrix(ScreenSize);
+		    glm::mat4 projection = GetProjectionMatrix();
 			glm::mat4 viewProjInv = glm::inverse(projection * View);
 			winY = ScreenSize.cy - winY;
 			glm::vec4 clickedPointOnSreen;
@@ -25,6 +25,7 @@ namespace Upp{
 		
 		Vector<Object3D*> Pick(float x, float y){
 			Vector<Object3D*>  intersect;
+			
 			if(allObjects){
 				glm::vec3 start = UnProject2(x,y,0.0f);
 				glm::vec3 end = UnProject2(x,y,1.0f);
@@ -37,9 +38,21 @@ namespace Upp{
 			return intersect;
 		}
 		
+		void CenterFocus(const Array<glm::vec3>&  allCenter){
+			if(allCenter.GetCount() > 0){
+				glm::vec3 center = allCenter[0];
+				if(allCenter.GetCount() > 1){
+					for(int e = 1; e < allCenter.GetCount(); e++){
+						glm::lerp(center,allCenter[e],0.5f);
+					}
+				}
+				focus = center;
+			}
+		}
+		
 	public:
 		MagicCamera(){}
-		MagicCamera& Init(){transform.SetPosition(0, 10, 20);return *this;}
+		MagicCamera& Init(){transform.SetPosition(0, 10, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
 		
 		MagicCamera& SetAllObjects(Vector<Object3D>& all){allObjects = &all;return *this;}
 	
@@ -61,21 +74,15 @@ namespace Upp{
 			return glm::lookAt( transform.GetPosition() ,  transform.GetPosition() + transform.GetFront() , transform.GetUp());
 		}
 		
-		virtual SketchupCamera2& ProcessKeyboardMouvement(Camera_Movement direction){
+		virtual MagicCamera& ProcessKeyboardMouvement(Camera_Movement direction){
 			return *this;
 		}
 		
 		glm::vec3 GetVirtualAxis(){
-			glm::vec3 v =  transform.GetPosition();
-			glm::vec3 virtualAxis =  v + ((transform.GetFront()) * (DezoomFactor * 2.0f));
-			glm::vec3 test = v - virtualAxis;
-			//Cout() <<"Distance between camera and virtual :" << test.x <<"," << test.y << "," << test.z << EOL;
-			return virtualAxis;
+			return focus;
 		}
-		float GetDezoomFactor(){return DezoomFactor;}
 		
-		
-		virtual SketchupCamera2& ProcessMouseWheelTranslation(float xoffset,float yoffset){
+		virtual MagicCamera& ProcessMouseWheelTranslation(float xoffset,float yoffset){
 			yoffset *= 0.05f * -1.0f;
 			xoffset *= 0.05f;
 			float Absx = sqrt(pow(xoffset,2));
@@ -88,18 +95,23 @@ namespace Upp{
 			return *this;
 		}
 		
-		virtual SketchupCamera2& ProcessMouseWheelMouvement(float xoffset,float yoffset){
+		virtual MagicCamera& ProcessMouseWheelMouvement(float xoffset,float yoffset){
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
+			
 			float a1 = xoffset * -1.0f;
-		//	float AbsA1 = sqrt(pow(a1,2));
 			float a2 = yoffset * -1.0f;
-		//	float AbsA2 = sqrt(pow(a2,2));
-		//	if(AbsA1 > AbsA2) a2 = 0.0f; else a1 = 0.0f;
-						
+			
 			glm::vec3 v =  transform.GetPosition();
-			//glm::vec3 axis = v + ((transform.GetFront() * 10.0f) * (DezoomFactor * 2.0f));
 			glm::vec3 axis = GetVirtualAxis();
+			
+			glm::vec3 pos = focus - transform.GetPosition();
+			float angle = glm::dot(glm::normalize(pos),glm::normalize(transform.GetFront()));
+			if(angle < 98.0f){
+				float distance = glm::distance(focus,transform.GetPosition());
+				axis = (transform.GetPosition() +  (transform.GetFront() * distance));
+			}
+			
 			glm::vec3 between = v - axis;
 					
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
@@ -112,7 +124,7 @@ namespace Upp{
 			
 			return *this;
 		}
-		virtual SketchupCamera2& ProcessMouseLeftClick(float xoffset, float yoffset){
+		virtual MagicCamera& ProcessMouseLeftClick(float xoffset, float yoffset){
 			Vector<Object3D*> obj = Pick(xoffset ,yoffset);
 			Array<glm::vec3> centers;
 			for(Object3D* o : obj){
@@ -121,43 +133,40 @@ namespace Upp{
 					centers.Add(o->GetBoundingBoxTransformed().GetCenter());
 				}
 			}
-			AdapteZoomFactor(centers);
+			CenterFocus(centers);
 			return *this;
 		}
 		
-		virtual SketchupCamera2& ProcessMouveMouvement(float xoffset, float yoffset){
+		virtual MagicCamera& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed && !ShiftPressed ) return ProcessMouseWheelMouvement(xoffset,yoffset);
 			if(MouseMiddlePressed && ShiftPressed ) return ProcessMouseWheelTranslation(xoffset,yoffset);
 			return *this;
 		}
 		
-		virtual bool ProcessKeyBoard(unsigned long Key,int count){
+		virtual bool ProcessKeyBoard(unsigned long Key,int count)noexcept{
 			return true;
 		}
 		
-		virtual SketchupCamera2& ProcessMouseScroll(float zdelta){
-			float xoffset = (StartPress.x - (ScreenSize.cx/2)) * 0.005f;
-			float yoffset = (StartPress.y) * 0.005f * -1.0;
-			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
+		virtual MagicCamera& ProcessMouseScroll(float zdelta)noexcept{
+			float xoffset = (lastPress.x - (ScreenSize.cx/2)) * 0.005f;
+			float yoffset = (lastPress.y) * 0.005f * -1.0;
+			float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
-			if(!forceZoom && ! (type == CT_ORTHOGRAPHIC)){
+			if(!(type == CT_ORTHOGRAPHIC)){
 				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
 				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 				doX = true;
 				doY = true;
 			}
-			//glm::vec3 scaling = (0.1f * (transform.GetPosition()));
-			glm::vec3 scaling = - transform.GetFront()* 2.0f;
+			glm::vec3 scaling = (0.1f * (transform.GetPosition()));
 			if(zdelta == - 120){
 				    if(doX)transform.SetPosition(transform.GetPosition() - (transform.GetRight() * xoffset));
 					if(doY){
 						transform.SetPosition(transform.GetPosition() +(transform.GetFront() * yoffset));
 						transform.SetPosition(transform.GetPosition() + (transform.GetUp() * Upoffset));
 					}
-					if(!doY && !doX){
+					if(!doY && !doX)
 						transform.SetPosition(transform.GetPosition() + scaling);
-						DezoomFactor +=1.0f;
-					}
 			}else{
 				if(doX)transform.SetPosition(transform.GetPosition() + (transform.GetRight() * xoffset));
 				if(doY){
@@ -165,10 +174,9 @@ namespace Upp{
 					transform.SetPosition(transform.GetPosition() - (transform.GetUp() * Upoffset));
 				}
 				if(!doY && !doX){
-					if(DezoomFactor > 2.0f){
+					float dot = sqrt(pow(glm::dot(transform.GetPosition(),scaling),2));
+					if(dot > 1.0f)
 						transform.SetPosition(transform.GetPosition() - scaling);
-						DezoomFactor -=1.0f;
-					}
 				}
 			}
 			return *this;

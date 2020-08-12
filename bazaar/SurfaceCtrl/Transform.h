@@ -10,6 +10,7 @@
 #include <plugin/glm/gtx/norm.hpp>
 #include <plugin/glm/gtx/string_cast.hpp>
 #include <plugin/glm/gtx/matrix_decompose.hpp>
+#include <plugin/glm/gtx/compatibility.hpp>
 /*
 	Transform Object from UltimateOpenGL
 */

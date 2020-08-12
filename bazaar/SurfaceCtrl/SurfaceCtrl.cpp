@@ -64,10 +64,10 @@ void SurfaceCtrl::GLPaint(){
 
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
 	if(ShowAxis)
-		Axis.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	if(ShowCameraFocus){
 		CameraFocus.GetTransform().SetPosition(camera.GetVirtualAxis());
-		CameraFocus.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	}
 }
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
@@ -95,7 +95,7 @@ void SurfaceCtrl::ZoomToFit()noexcept{
 }
 void SurfaceCtrl::DrawAllObjects(){
 	for(Object3D& obj : allObjects){
-		obj.Draw(camera.GetProjectionMatrix(Upp::Sizef{sizeW,sizeH}), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
+		obj.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
 	}
 }
 void SurfaceCtrl::InitCamera()noexcept{
@@ -182,7 +182,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	}
 	if(key == K_X){
 		Cout() << "Current camera Position : " << camera.GetTransform().GetPosition().x << "," << camera.GetTransform().GetPosition().y << "," << camera.GetTransform().GetPosition().z << EOL;
-		Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
+	//	Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
 		Cout() << "Current quaterion : " << camera.GetTransform().GetRotation().w << "," << camera.GetTransform().GetRotation().x << "," << camera.GetTransform().GetRotation().y << "," << camera.GetTransform().GetRotation().z << EOL;
 		Cout() << "Up vector : "<< camera.GetTransform().GetUp().x << "," << camera.GetTransform().GetUp().y << "," << camera.GetTransform().GetUp().z << EOL;
 		Cout() << "Right vector : "<< camera.GetTransform().GetRight().x << "," << camera.GetTransform().GetRight().y << "," << camera.GetTransform().GetRight().z << EOL;
@@ -247,7 +247,7 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	camera.lastPress = p;
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
-	camera.forceZoom = keyflags & K_CTRL;
+//	camera.forceZoom = keyflags & K_CTRL;
 	camera.ProcessMouseScroll(zdelta);
 	Refresh();
 }
