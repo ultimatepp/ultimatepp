@@ -35,14 +35,14 @@ void GLCtrl_glad::Create()
 
 	Ctrl *top = GetTopCtrl();
 	if(!top){
-		DLOG("Error, failled to retrieve top Ctrl");
+		LOG("Error, failled to retrieve top Ctrl");
 		return;
 	}
 
 #ifdef GUI_GTK
 	GdkWindow *gdk = top->gdk();
 	if(!gdk){
-		DLOG("Error, failled to retrieve gdk from top Ctrl");
+		LOG("Error, failled to retrieve gdk from top Ctrl");
 		return;
 	}
 	Window w = gdk_x11_window_get_xid(gdk);
@@ -57,7 +57,7 @@ void GLCtrl_glad::Create()
 		s_Display = Xdisplay;
 	#endif
 		if(!gladLoadGLX(s_Display,DefaultScreen(s_Display))){
-			DLOG("Failed to load GLX API");
+			LOG("Failed to load GLX API");
 			exit(-1);
 		}
 		int samples = numberOfSamples;
@@ -75,7 +75,7 @@ void GLCtrl_glad::Create()
 		}
 		while(!s_XVisualInfo && samples > 0);
 		if(!s_XVisualInfo){
-			DLOG("Error, glXChooseVisual(...) have failled");
+			LOG("Error, glXChooseVisual(...) have failled");
 			return;
 		}
 		s_Colormap = XCreateColormap(s_Display, RootWindow(s_Display, s_XVisualInfo->screen), s_XVisualInfo->visual, AllocNone);
@@ -83,7 +83,7 @@ void GLCtrl_glad::Create()
 	}
 	
 	if(!s_GLXContext){
-		DLOG("Error, failled to create GLXContext using glXCreateContext(...)");
+		LOG("Error, failled to create GLXContext using glXCreateContext(...)");
 		return;
 	}
 
@@ -97,12 +97,12 @@ void GLCtrl_glad::Create()
                         CWBorderPixel|CWColormap|CWEventMask, &swa);
     glXMakeCurrent(s_Display, win, s_GLXContext);
     if(!gladLoadGL()){
-		DLOG("Error loading OpenGL");
+		LOG("Error loading OpenGL");
 		exit(-1);
     }
-    DLOG(Upp::String("OpenGL ") + AsString(GLVersion.major) + Upp::String(".") + AsString(GLVersion.minor) + Upp::String(" used"));
+    LOG(Upp::String("OpenGL ") + AsString(GLVersion.major) + Upp::String(".") + AsString(GLVersion.minor) + Upp::String(" used"));
     if (!"GLAD_GL_VERSION_4_0"){
-		DLOG("OpenGL 4.0 or higher version is necessary !");
+		LOG("OpenGL 4.0 or higher version is necessary !");
 		exit(-1);
 	}
 	visible = false;

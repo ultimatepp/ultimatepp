@@ -21,12 +21,12 @@ void MakeWGLContext(int depthBits, int stencilBits, int samples)
 		for(int pass = 0; pass < 2; pass++) {
 			hWND = CreateWindow("UPP-CLASS-A", "Fake Window",WS_CAPTION|WS_SYSMENU|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,0, 0, 1, 1, NULL, NULL,NULL, NULL);
 			if(!hWND){
-				DLOG("Error on OpenGL window creation");
+				LOG("Error on OpenGL window creation");
 				return;
 			}
 			HDC hDC = ::GetDC(hWND);
 			if(!hDC){
-				DLOG("Error during recuperation of hDC");
+				LOG("Error during recuperation of hDC");
 				return;
 			}
 			memset(&s_pfd, 0, sizeof(s_pfd));
@@ -60,37 +60,37 @@ void MakeWGLContext(int depthBits, int stencilBits, int samples)
 					attr << 0;
 				UINT numFormats;
 				if(!wglChoosePixelFormatARB(hDC, attr, NULL, 1, &s_pixelFormatID, &numFormats)){
-					DLOG("Error during execution of wglChoosePixelFormatARB(...)");
+					LOG("Error during execution of wglChoosePixelFormatARB(...)");
 					return;
 				}
 			}
 			
 			DescribePixelFormat(hDC, s_pixelFormatID, sizeof(PIXELFORMATDESCRIPTOR), &s_pfd);
 			if(!SetPixelFormat(hDC, s_pixelFormatID, &s_pfd)){
-				DLOG("Error during exeuction of SetPixelFormat(...)");
+				LOG("Error during exeuction of SetPixelFormat(...)");
 				return;
 			}
 			s_openGLContext = wglCreateContext(hDC);
 			if(!s_openGLContext){
-				DLOG("Error during creation of OpenGL context using wglCreateContext(...)");
+				LOG("Error during creation of OpenGL context using wglCreateContext(...)");
 			}
 			bool enhanced_mode=false;
 			if(pass == 0) {
 				HGLRC hRC = wglCreateContext(hDC);
 				wglMakeCurrent(hDC, s_openGLContext);
 				if(!gladLoadGL()){
-					DLOG("Failed to load all OpenGL functions");
+					LOG("Failed to load all OpenGL functions");
 					return;
 				}
 				if(!gladLoadWGL(hDC)){
 					
 					return;
 				}
-				DLOG(Upp::String("OpenGL ") + AsString(GLVersion.major) + Upp::String(".") + AsString(GLVersion.minor) + Upp::String(" used"));
+				LOG(Upp::String("OpenGL ") + AsString(GLVersion.major) + Upp::String(".") + AsString(GLVersion.minor) + Upp::String(" used"));
 				if ("GLAD_GL_VERSION_4_0"){
 					enhanced_mode=true;
 				}else{
-					DLOG("OpenGL 4.0 or higher version is necessary !");
+					LOG("OpenGL 4.0 or higher version is necessary !");
 					exit(-1);
 				}
 				wglMakeCurrent(NULL, NULL);
