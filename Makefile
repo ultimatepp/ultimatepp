@@ -2,92 +2,92 @@ UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
 CINC   =  -I$(UPPDIR1) `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I./ -I$(UPPOUT)
-Macro  =  -DflagGUI -DflagGCC -DflagSHARED -DflagPOSIX -DflagBSD -DflagFREEBSD
+Macro  =  -DflagGUI -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
 CFLAGS = -O3 -ffunction-sections -fdata-sections 
 CXXFLAGS = -O3 -ffunction-sections -fdata-sections  -std=c++14
-LDFLAGS = $(LINKOPTIONS)
+LDFLAGS = -Wl,--gc-sections $(LINKOPTIONS)
 LIBPATH =
 AR = ar -sr
 
-OutDir_ide = $(UPPOUT)ide/GCC-Bsd-Freebsd-Gcc-Gui-Main-Posix-Shared/
+OutDir_ide = $(UPPOUT)ide/GCC-Gcc-Gui-Linux-Main-Posix-Shared/
 Macro_ide = $(Macro) -DflagMAIN
-OutDir_ide_Common = $(UPPOUT)ide/Common/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Common = $(UPPOUT)ide/Common/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Common = $(Macro)
-OutDir_ide_Core = $(UPPOUT)ide/Core/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Core = $(UPPOUT)ide/Core/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Core = $(Macro)
-OutDir_ide_LayDes = $(UPPOUT)ide/LayDes/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_LayDes = $(UPPOUT)ide/LayDes/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_LayDes = $(Macro)
-OutDir_ide_IconDes = $(UPPOUT)ide/IconDes/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_IconDes = $(UPPOUT)ide/IconDes/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_IconDes = $(Macro)
-OutDir_ide_Builders = $(UPPOUT)ide/Builders/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Builders = $(UPPOUT)ide/Builders/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Builders = $(Macro)
-OutDir_ide_Debuggers = $(UPPOUT)ide/Debuggers/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Debuggers = $(UPPOUT)ide/Debuggers/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Debuggers = $(Macro)
-OutDir_ide_Browser = $(UPPOUT)ide/Browser/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Browser = $(UPPOUT)ide/Browser/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Browser = $(Macro)
-OutDir_CodeEditor = $(UPPOUT)CodeEditor/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_CodeEditor = $(UPPOUT)CodeEditor/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_CodeEditor = $(Macro)
-OutDir_CtrlLib = $(UPPOUT)CtrlLib/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_CtrlLib = $(UPPOUT)CtrlLib/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_CtrlLib = $(Macro)
-OutDir_plugin_bz2 = $(UPPOUT)plugin/bz2/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_bz2 = $(UPPOUT)plugin/bz2/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_bz2 = $(Macro)
-OutDir_HexView = $(UPPOUT)HexView/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_HexView = $(UPPOUT)HexView/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_HexView = $(Macro)
-OutDir_plugin_astyle = $(UPPOUT)plugin/astyle/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_astyle = $(UPPOUT)plugin/astyle/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_astyle = $(Macro)
-OutDir_TextDiffCtrl = $(UPPOUT)TextDiffCtrl/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_TextDiffCtrl = $(UPPOUT)TextDiffCtrl/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_TextDiffCtrl = $(Macro)
-OutDir_TabBar = $(UPPOUT)TabBar/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_TabBar = $(UPPOUT)TabBar/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_TabBar = $(Macro)
-OutDir_ide_Designers = $(UPPOUT)ide/Designers/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Designers = $(UPPOUT)ide/Designers/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Designers = $(Macro)
-OutDir_ide_Android = $(UPPOUT)ide/Android/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Android = $(UPPOUT)ide/Android/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Android = $(Macro)
-OutDir_ide_Java = $(UPPOUT)ide/Java/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_Java = $(UPPOUT)ide/Java/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Java = $(Macro)
-OutDir_ide_MacroManager = $(UPPOUT)ide/MacroManager/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_ide_MacroManager = $(UPPOUT)ide/MacroManager/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_MacroManager = $(Macro)
-OutDir_urepo = $(UPPOUT)urepo/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_urepo = $(UPPOUT)urepo/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_urepo = $(Macro)
-OutDir_Report = $(UPPOUT)Report/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_Report = $(UPPOUT)Report/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Report = $(Macro)
-OutDir_Esc = $(UPPOUT)Esc/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_Esc = $(UPPOUT)Esc/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Esc = $(Macro)
-OutDir_Core = $(UPPOUT)Core/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_Core = $(UPPOUT)Core/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Core = $(Macro)
-OutDir_plugin_lzma = $(UPPOUT)plugin/lzma/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_lzma = $(UPPOUT)plugin/lzma/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_lzma = $(Macro)
-OutDir_plugin_lz4 = $(UPPOUT)plugin/lz4/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_lz4 = $(UPPOUT)plugin/lz4/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_lz4 = $(Macro)
-OutDir_plugin_zstd = $(UPPOUT)plugin/zstd/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_zstd = $(UPPOUT)plugin/zstd/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_zstd = $(Macro)
-OutDir_RichEdit = $(UPPOUT)RichEdit/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_RichEdit = $(UPPOUT)RichEdit/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_RichEdit = $(Macro)
-OutDir_IconDes = $(UPPOUT)IconDes/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_IconDes = $(UPPOUT)IconDes/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_IconDes = $(Macro)
-OutDir_CppBase = $(UPPOUT)CppBase/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_CppBase = $(UPPOUT)CppBase/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_CppBase = $(Macro)
-OutDir_plugin_gif = $(UPPOUT)plugin/gif/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_gif = $(UPPOUT)plugin/gif/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_gif = $(Macro)
-OutDir_plugin_jpg = $(UPPOUT)plugin/jpg/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_jpg = $(UPPOUT)plugin/jpg/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_jpg = $(Macro)
-OutDir_Painter = $(UPPOUT)Painter/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_Painter = $(UPPOUT)Painter/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Painter = $(Macro)
-OutDir_Draw = $(UPPOUT)Draw/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_Draw = $(UPPOUT)Draw/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Draw = $(Macro)
-OutDir_PdfDraw = $(UPPOUT)PdfDraw/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_PdfDraw = $(UPPOUT)PdfDraw/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_PdfDraw = $(Macro)
-OutDir_plugin_pcre = $(UPPOUT)plugin/pcre/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_pcre = $(UPPOUT)plugin/pcre/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_pcre = $(Macro)
-OutDir_CtrlCore = $(UPPOUT)CtrlCore/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_CtrlCore = $(UPPOUT)CtrlCore/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_CtrlCore = $(Macro)
-OutDir_plugin_bmp = $(UPPOUT)plugin/bmp/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_bmp = $(UPPOUT)plugin/bmp/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_bmp = $(Macro)
-OutDir_RichText = $(UPPOUT)RichText/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_RichText = $(UPPOUT)RichText/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_RichText = $(Macro)
-OutDir_plugin_png = $(UPPOUT)plugin/png/GCC-Bsd-Freebsd-Gcc-Gui-Posix-Shared/
+OutDir_plugin_png = $(UPPOUT)plugin/png/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_png = $(Macro)
 
 OutDir = $(OutDir_ide)
@@ -253,7 +253,7 @@ $(OutFile): build_info  \
 	$(OutDir_RichText)RichText.a \
 	$(OutDir_plugin_png)pngreg.o \
 	$(OutDir_plugin_png)png.a
-	$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) $(LDFLAGS) -Wl,--start-group  \
+	$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) -Wl,-O,2 $(LDFLAGS) -Wl,--start-group  \
 		$(OutDir_ide)BaseDlg.o \
 		$(OutDir_ide)SelectPkg.o \
 		$(OutDir_ide)UppWspc.o \
@@ -377,7 +377,7 @@ $(OutFile): build_info  \
 			`pkg-config --libs libpng` \
 			-lbz2 \
 			-lpthread \
-			-lexecinfo \
+			-ldl \
 			-lrt \
 			-lz -Wl,--end-group
 
