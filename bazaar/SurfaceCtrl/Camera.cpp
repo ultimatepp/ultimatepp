@@ -1,4 +1,4 @@
-#include "Camera.h"
+/*#include "Camera.h"
 //Camera CLASS
 namespace Upp{
 
@@ -490,5 +490,5 @@ CameraEuler& CameraEuler::ProcessMouveMouvement(float xoffset, float yoffset){
 	*/
 /*	return *this;
 	
-}*/
 }
+}*/

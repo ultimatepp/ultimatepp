@@ -36,7 +36,7 @@ class Transform{
 	public:
 		Transform(){}
 		Transform(const Transform& _transform){*this = _transform;}
-		Transform& operator=(const Transform& _transform){Front = _transform.Front; Up = _transform.Up; Right = _transform.Right; WorldUp = _transform.WorldUp; Position = _transform.Position; Rotation = _transform.Rotation; Scale = _transform.Scale; return *this;}
+		Transform& operator=(const Transform& _transform){Front = _transform.Front; Up = _transform.Up; Right = _transform.Right; WorldUp = _transform.WorldUp; WorldFront = _transform.WorldFront; WorldRight = _transform.WorldRight; Position = _transform.Position; Rotation = _transform.Rotation; Scale = _transform.Scale; return *this;}
 		virtual ~Transform(){}
 	
 		Transform& SetFront(const glm::vec3& vec3)noexcept{Front = vec3; return *this;}

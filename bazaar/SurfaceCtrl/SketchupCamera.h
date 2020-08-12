@@ -81,18 +81,16 @@ class SketchupCamera : public UOGL_Camera {
 			return *this;
 		}
 		
-		virtual bool ProcessKeyBoard(unsigned long Key,int count){
+		virtual bool ProcessKeyBoard(unsigned long Key,int count)noexcept{
 			return true;
 		}
 		
-		virtual SketchupCamera& ProcessMouseScroll(float zdelta){
-			float xoffset = (StartPress.x - (ScreenSize.cx/2)) * 0.005f;
-			float yoffset = (StartPress.y) * 0.005f * -1.0;
-			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
+		virtual SketchupCamera& ProcessMouseScroll(float zdelta)noexcept{
+			float xoffset = (lastPress.x - (ScreenSize.cx/2)) * 0.005f;
+			float yoffset = (lastPress.y) * 0.005f * -1.0;
+			float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
 			if(!forceZoom && ! (type == CT_ORTHOGRAPHIC)){
-				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
-				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 				doX = true;
 				doY = true;
 			}

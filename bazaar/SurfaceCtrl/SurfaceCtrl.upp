@@ -17,6 +17,7 @@ file
 	Transform.cpp,
 	Camera.h,
 	Camera.cpp,
+	MagicCamera.h,
 	TrackBallCamera.h,
 	SketchupCamera.h,
 	SketchupCamera2.h,

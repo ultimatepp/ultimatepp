@@ -108,6 +108,7 @@ void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
 	sizeH = h;
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	camera.SetScreenSize(w,h);
 	Refresh();
 }
 bool SurfaceCtrl::Key(dword key,int count){
@@ -239,11 +240,11 @@ bool SurfaceCtrl::Key(dword key,int count){
 }
 void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	if(camera.MouseMiddlePressed || camera.MouseLeftPressed){
-		camera.ProcessMouveMouvement(p.x - camera.StartPress.x,p.y - camera.StartPress.y);
+		camera.ProcessMouveMouvement(p.x - camera.lastPress.x,p.y - camera.lastPress.y);
 		Refresh();
 	}
 	
-	camera.StartPress = p;
+	camera.lastPress = p;
 }
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	camera.forceZoom = keyflags & K_CTRL;
@@ -251,7 +252,7 @@ void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword){
-	camera.StartPress = p;
+	camera.lastPress = p;
 	camera.MouseLeftPressed = true;
 	camera.ProcessMouseLeftClick(p.x,p.y);
 	Refresh();
@@ -262,7 +263,7 @@ void SurfaceCtrl::LeftUp(Point p, dword){
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	camera.MouseMiddlePressed = true;
 	camera.ShiftPressed = keyflags & K_SHIFT;
-	camera.StartPress = p;
+	camera.lastPress = p;
 }
 void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 	camera.MouseMiddlePressed = false;

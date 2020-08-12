@@ -1,27 +1,24 @@
-#ifndef _SurfaceCtrl_SketchupCamera2_h_
-#define _SurfaceCtrl_SketchupCamera2_h_
+#ifndef _SurfaceCtrl_MagicCamera_h_
+#define _SurfaceCtrl_MagicCamera_h_
 
 #include "Camera.h"
-
 namespace Upp{
-class SketchupCamera2 : public UOGL_Camera{
+	class MagicCamera : public UOGL_Camera{
 	private:
-		
 		Vector<Object3D>* allObjects = nullptr;
+		
+		glm::vec3 focus(0.0f,0.0f,0.0f);
 		
 		glm::vec3 UnProject2(float winX, float winY,float winZ){
 			glm::mat4 View = GetViewMatrix() * glm::mat4(1.0f);
 		    glm::mat4 projection = GetProjectionMatrix(ScreenSize);
 			glm::mat4 viewProjInv = glm::inverse(projection * View);
-			
 			winY = ScreenSize.cy - winY;
-			
 			glm::vec4 clickedPointOnSreen;
 			clickedPointOnSreen.x = ((winX - 0.0f) / (ScreenSize.cx)) *2.0f -1.0f;
 			clickedPointOnSreen.y = ((winY - 0.0f) / (ScreenSize.cy)) * 2.0f -1.0f;
 			clickedPointOnSreen.z = 2.0f*winZ-1.0f;
 			clickedPointOnSreen.w = 1.0f;
-		    
 		    glm::vec4 clickedPointOrigin  =  viewProjInv * clickedPointOnSreen;
 		    return glm::vec3(clickedPointOrigin.x / clickedPointOrigin.w,clickedPointOrigin.y / clickedPointOrigin.w,clickedPointOrigin.z / clickedPointOrigin.w);
 		}
@@ -31,49 +28,22 @@ class SketchupCamera2 : public UOGL_Camera{
 			if(allObjects){
 				glm::vec3 start = UnProject2(x,y,0.0f);
 				glm::vec3 end = UnProject2(x,y,1.0f);
-
-				for (Object3D& obj : *(allObjects))
-			    {
-			       if (obj.TestLineIntersection(start,end))
-			        {
+				for (Object3D& obj : *(allObjects)){
+			       if (obj.TestLineIntersection(start,end)){
 			            intersect.Add(&obj);
 			        }
 			    }
 			}
 			return intersect;
 		}
-	
-		void AdapteZoomFactor(Array<glm::vec3>& pos){
-			if( pos.GetCount() > 0){
-				/*glm::vec3 focus = pos[0];
-				glm::vec3 vaxis = GetVirtualAxis();
-				glm::vec3 diff =  glm::abs(vaxis - focus);
-				float zo =  glm::dot(transform.GetFront()* 2.0f,diff);
-				DezoomFactor += zo;*/
-			}
-		}
-	
-	
+		
 	public:
-		bool forceZoom = false;
-		float DezoomFactor = 25.0f; // 1.0f Mean no dezoom at all
+		MagicCamera(){}
+		MagicCamera& Init(){transform.SetPosition(0, 10, 20);return *this;}
 		
-		
-		SketchupCamera2(){}
-		virtual SketchupCamera2* Clone(){
-			return new SketchupCamera2(*this);
-		}
-
-		
-		SketchupCamera2& Init(){
-			transform.SetPosition(0,20,20);
-			return *this;
-		}
-		
-		SketchupCamera2& SetAllObjects(Vector<Object3D>& all){allObjects = &all;return *this;}
+		MagicCamera& SetAllObjects(Vector<Object3D>& all){allObjects = &all;return *this;}
 	
-		virtual glm::mat4 GetProjectionMatrix(Upp::Sizef SS){
-			ScreenSize = SS;
+		glm::mat4 GetProjectionMatrix(){
 			if(type == CT_PERSPECTIVE){
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 			}else if(type == CT_ORTHOGRAPHIC){
@@ -161,14 +131,14 @@ class SketchupCamera2 : public UOGL_Camera{
 			return *this;
 		}
 		
-		virtual bool ProcessKeyBoard(unsigned long Key,int count)noexcept{
+		virtual bool ProcessKeyBoard(unsigned long Key,int count){
 			return true;
 		}
 		
-		virtual SketchupCamera2& ProcessMouseScroll(float zdelta)noexcept{
-			float xoffset = (lastPress.x - (ScreenSize.cx/2)) * 0.005f;
-			float yoffset = (lastPress.y) * 0.005f * -1.0;
-			float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
+		virtual SketchupCamera2& ProcessMouseScroll(float zdelta){
+			float xoffset = (StartPress.x - (ScreenSize.cx/2)) * 0.005f;
+			float yoffset = (StartPress.y) * 0.005f * -1.0;
+			float Upoffset = (StartPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
 			if(!forceZoom && ! (type == CT_ORTHOGRAPHIC)){
 				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
@@ -203,6 +173,8 @@ class SketchupCamera2 : public UOGL_Camera{
 			}
 			return *this;
 		}
-};
+	
+	};
 }
+
 #endif
