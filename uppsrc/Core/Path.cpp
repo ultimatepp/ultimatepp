@@ -263,19 +263,14 @@ String GetFullPath(const char *file) {
 
 String GetFileOnPath(const char* file, const char* paths, bool current, const char *curdir) {
 	String ufn = NativePath(file);
-	if(IsFullPath(ufn))
+	if(IsFullPath(ufn) && FileExists(ufn))
 		return ufn;
 	String fn;
-#ifdef PLATFORM_WINCE
-	if(current && curdir && FileExists(fn = NormalizePath(ufn, curdir)))
-		;
-#else
 	String cd = curdir;
 	if(!curdir)
 		cd = GetCurrentDirectory();
 	if(current && FileExists(fn = NormalizePath(ufn, cd)))
 		;
-#endif
 	else if(paths)
 	{
 		fn = Null;
