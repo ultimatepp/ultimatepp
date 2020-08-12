@@ -157,9 +157,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 		VolumeEnvelope* GetVolumeEnvelope(){return env;}
 		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope; boundingBox.SetBoundingBox(env->minX,env->minY,env->minZ,env->maxX,env->maxY,env->maxZ); return *this;}
 		BoundingBox& GetBoundingBox(){return boundingBox;}
+		BoundingBox GetBoundingBoxTransformed(){BoundingBox box(boundingBox); return box.TransformBy(glm::inverse(transform.GetModelMatrix()));}
 		bool TestLineIntersection(const glm::vec3 & start, const glm::vec3 & end){
 			BoundingBox box(boundingBox);
-			box.TransformBy(transform.GetModelMatrix());
+			box.TransformBy(glm::inverse(transform.GetModelMatrix()));
 			return box.LineIntersection(start,end);
 		}
 		/*

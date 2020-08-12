@@ -68,7 +68,6 @@ class BoundingBox {
 			loaded = copy.loaded;
 			min = copy.min;
 			max = copy.max;
-			
 			BoundingBoxVertices.Append(copy.BoundingBoxVertices);
 			BoundingBoxVAO = copy.BoundingBoxVAO;
 			BoundingBoxVBO = copy.BoundingBoxVBO;
@@ -91,17 +90,19 @@ class BoundingBox {
 		bool IsLoaded(){return loaded;}
 		
 		BoundingBox& TransformBy(const glm::mat4 modelMatrice){
-			glm::vec4 min_(min.x,min.y,min.z,0.0f);
-			glm::vec4 max_(max.x,max.y,max.z,0.0f);
+			glm::vec4 min_(min.x,min.y,min.z,1.0f);
+			glm::vec4 max_(max.x,max.y,max.z,1.0f);
 			min_ = min_ * modelMatrice;
 			max_ = max_ * modelMatrice;
-			min = glm::vec3(min_.x,min_.y,min_.z);
-			max = glm::vec3(max_.x,max_.y,max_.z);
+			max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x , (min_.y > max_.y)? min_.y: max_.y , (min_.z > max_.z)? min_.z : max_.z);
+			min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x , (min_.y < max_.y)? min_.y: max_.y , (min_.z < max_.z)? min_.z : max_.z);
 			return *this;
 		}
 		
 		bool LineIntersection(const glm::vec3& start, const glm::vec3& end){
 			if(loaded){
+			//	Cout() << "testing bounding box : " << EOL << "Min : " << min.x <<"," << min.y <<"," << min.z << EOL << "Max : " << max.x <<","<< max.y << "," << max.z << EOL;
+				
 				glm::vec3 center     = (min + max) * 0.5f;
 			    glm::vec3 extents    = max - center;
 			    glm::vec3 lineDir    = 0.5f * (end - start);
@@ -133,6 +134,10 @@ class BoundingBox {
 			    return true;
 			}
 			return false;
+		}
+		
+		glm::vec3 GetCenter(){
+			return (min + max) * 0.5f;
 		}
 		
 		BoundingBox& Draw(const glm::mat4& modelMat, const glm::mat4& viewMat, const glm::mat4& projMat, OpenGLProgram& shader){

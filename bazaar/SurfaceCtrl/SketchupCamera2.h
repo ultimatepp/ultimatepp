@@ -8,69 +8,49 @@ class SketchupCamera2 : public UOGL_Camera{
 	private:
 		
 		Vector<Object3D>* allObjects = nullptr;
-				
-		glm::vec3 UnProject(float winX, float winY, float winZ)
-		{
-		    // Compute (projection x modelView) ^ -1:
-		    glm::mat4 modelView = GetViewMatrix() * transform.GetModelMatrix();
+		
+		glm::vec3 UnProject2(float winX, float winY,float winZ){
+			glm::mat4 View = GetViewMatrix() * glm::mat4(1.0f);
 		    glm::mat4 projection = GetProjectionMatrix(ScreenSize);
-		        
-		    const glm::mat4 m = projection * modelView;
-		
-		    // Need to invert Y since screen Y-origin point down,
-		    // while 3D Y-origin points up (this is an OpenGL only requirement):
-		    winY = ScreenSize.cy - winY;
-		
-		    // Transformation of normalized coordinates between -1 and 1:
-		    glm::vec4 in;
-		    in.x = winX  / ScreenSize.cx  * 2.0 - 1.0;
-		    in.y = winY  / ScreenSize.cy  * 2.0 - 1.0;
-		    in.z = 2.0 * winZ - 1.0;
-		    in.w = 1.0;
-		
-		    // To world coordinates:
-		    glm::vec4 out(m * in);
-		    if (out.w == 0.0) // Avoid a division by zero
-		    {
-		        return glm::vec3(0.0f);
-		    }
-		    out.w = 1.0 / out.w;
-		    return glm::vec3(out.x * out.w, out.y * out.w,out.z * out.w);
+			glm::mat4 viewProjInv = glm::inverse(projection * View);
+			
+			winY = ScreenSize.cy - winY;
+			
+			glm::vec4 clickedPointOnSreen;
+			clickedPointOnSreen.x = ((winX - 0.0f) / (ScreenSize.cx)) *2.0f -1.0f;
+			clickedPointOnSreen.y = ((winY - 0.0f) / (ScreenSize.cy)) * 2.0f -1.0f;
+			clickedPointOnSreen.z = 2.0f*winZ-1.0f;
+			clickedPointOnSreen.w = 1.0f;
+		    
+		    glm::vec4 clickedPointOrigin  =  viewProjInv * clickedPointOnSreen;
+		    return glm::vec3(clickedPointOrigin.x / clickedPointOrigin.w,clickedPointOrigin.y / clickedPointOrigin.w,clickedPointOrigin.z / clickedPointOrigin.w);
 		}
-		
 		
 		Vector<Object3D*> Pick(float x, float y){
 			Vector<Object3D*>  intersect;
 			if(allObjects){
-				
-				//glm::vec3 start = UnProject(x,y,-100.0f);
-				//glm::vec3 end = UnProject(x,y,100.0f);
-				
-				
-				
-				glm::vec3 range = transform.GetFront() *  3.0f;
-				range = range - transform.GetFront();
-				
-				glm::vec3 start = UnProject(transform.GetFront().x,transform.GetFront().y,transform.GetFront().z);
-				glm::vec3 end = UnProject(range.x,range.y,range.z);
-				
-				Cout() << "Start : " << start.x << "," << start.y << "," << start.z << EOL;
-				Cout() << "End : " << end.x << "," << end.y << "," << end.z << EOL;
-				
-				
-				
-	
+				glm::vec3 start = UnProject2(x,y,0.0f);
+				glm::vec3 end = UnProject2(x,y,1.0f);
+
 				for (Object3D& obj : *(allObjects))
 			    {
 			       if (obj.TestLineIntersection(start,end))
 			        {
-			            // This object is crossed by the picking line.
 			            intersect.Add(&obj);
 			        }
 			    }
-				
 			}
 			return intersect;
+		}
+	
+		void AdapteZoomFactor(Array<glm::vec3>& pos){
+			if( pos.GetCount() > 0){
+				/*glm::vec3 focus = pos[0];
+				glm::vec3 vaxis = GetVirtualAxis();
+				glm::vec3 diff =  glm::abs(vaxis - focus);
+				float zo =  glm::dot(transform.GetFront()* 2.0f,diff);
+				DezoomFactor += zo;*/
+			}
 		}
 	
 	
@@ -86,7 +66,7 @@ class SketchupCamera2 : public UOGL_Camera{
 
 		
 		SketchupCamera2& Init(){
-			transform.SetPosition(0,50,150);
+			transform.SetPosition(0,0,0);
 			return *this;
 		}
 		
@@ -110,9 +90,7 @@ class SketchupCamera2 : public UOGL_Camera{
 		virtual glm::mat4 GetViewMatrix(){
 			return glm::lookAt( transform.GetPosition() ,  transform.GetPosition() + transform.GetFront() , transform.GetUp());
 		}
-
-	
-
+		
 		virtual SketchupCamera2& ProcessKeyboardMouvement(Camera_Movement direction){
 			return *this;
 		}
@@ -144,10 +122,10 @@ class SketchupCamera2 : public UOGL_Camera{
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
 			float a1 = xoffset * -1.0f;
-			float AbsA1 = sqrt(pow(a1,2));
+		//	float AbsA1 = sqrt(pow(a1,2));
 			float a2 = yoffset * -1.0f;
-			float AbsA2 = sqrt(pow(a2,2));
-			if(AbsA1 > AbsA2) a2 = 0.0f; else a1 = 0.0f;
+		//	float AbsA2 = sqrt(pow(a2,2));
+		//	if(AbsA1 > AbsA2) a2 = 0.0f; else a1 = 0.0f;
 						
 			glm::vec3 v =  transform.GetPosition();
 			//glm::vec3 axis = v + ((transform.GetFront() * 10.0f) * (DezoomFactor * 2.0f));
@@ -165,7 +143,15 @@ class SketchupCamera2 : public UOGL_Camera{
 			return *this;
 		}
 		virtual SketchupCamera2& ProcessMouseLeftClick(float xoffset, float yoffset){
-			Cout() << Pick(xoffset ,yoffset).GetCount() << EOL;
+			Vector<Object3D*> obj = Pick(xoffset ,yoffset);
+			Array<glm::vec3> centers;
+			for(Object3D* o : obj){
+				if(o){
+					o->ShowBoundingBox(true);
+					centers.Add(o->GetBoundingBoxTransformed().GetCenter());
+				}
+			}
+			AdapteZoomFactor(centers);
 			return *this;
 		}
 		

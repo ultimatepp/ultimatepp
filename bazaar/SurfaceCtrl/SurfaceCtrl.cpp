@@ -183,6 +183,9 @@ bool SurfaceCtrl::Key(dword key,int count){
 		Cout() << "Current camera Position : " << camera.GetTransform().GetPosition().x << "," << camera.GetTransform().GetPosition().y << "," << camera.GetTransform().GetPosition().z << EOL;
 		Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
 		Cout() << "Current quaterion : " << camera.GetTransform().GetRotation().w << "," << camera.GetTransform().GetRotation().x << "," << camera.GetTransform().GetRotation().y << "," << camera.GetTransform().GetRotation().z << EOL;
+		Cout() << "Up vector : "<< camera.GetTransform().GetUp().x << "," << camera.GetTransform().GetUp().y << "," << camera.GetTransform().GetUp().z << EOL;
+		Cout() << "Right vector : "<< camera.GetTransform().GetRight().x << "," << camera.GetTransform().GetRight().y << "," << camera.GetTransform().GetRight().z << EOL;
+		Cout() << "Front vector : "<< camera.GetTransform().GetFront().x << "," << camera.GetTransform().GetFront().y << "," << camera.GetTransform().GetFront().z << EOL;
 	}
 	if(key == K_B){
 		if(allObjects.GetCount() > 0)
@@ -225,6 +228,12 @@ bool SurfaceCtrl::Key(dword key,int count){
 			LOG(allObjects[0].GetMaterial().GetShininess());
 		}
 	}
+	
+	if(key == K_ESCAPE){ //decrease Shininess
+		for(Object3D& obj : allObjects){
+			obj.ShowBoundingBox(false);
+		}
+	}
 	Refresh();
 	return true;
 }
@@ -245,11 +254,10 @@ void SurfaceCtrl::LeftDown(Point p, dword){
 	camera.StartPress = p;
 	camera.MouseLeftPressed = true;
 	camera.ProcessMouseLeftClick(p.x,p.y);
-	return;
+	Refresh();
 }
 void SurfaceCtrl::LeftUp(Point p, dword){
 	camera.MouseLeftPressed = false;
-	return;
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	camera.MouseMiddlePressed = true;

@@ -256,6 +256,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 		}
 		if(showBoundingBox){
 			boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,line);
+		//	boundingBox.Draw(glm::mat4(1.0f),viewMatrix,projectionMatrix,line);
 		}
 	}
 }
