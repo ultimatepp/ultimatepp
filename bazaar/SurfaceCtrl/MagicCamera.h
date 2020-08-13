@@ -189,7 +189,8 @@ namespace Upp{
 				glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter();
 				if(selectedObj.GetCount() > 1){
 					for(int e = 1; e < selectedObj.GetCount(); e++){
-						glm::lerp(center,selectedObj[e]->GetBoundingBoxTransformed().GetCenter(),0.5f);
+						glm::vec3 center2 = selectedObj[e]->GetBoundingBoxTransformed().GetCenter();
+						center = glm::lerp(center,center2,0.5f);
 					}
 				}
 				focus = center;
