@@ -66,13 +66,17 @@ void SurfaceCtrl::GLPaint(){
 	if(ShowAxis)
 		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	if(ShowCameraFocus){
-		CameraFocus.GetTransform().SetPosition(camera.GetVirtualAxis());
-		CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		if(allObjects.GetCount() > 0){
+			CameraFocus.GetTransform().SetPosition(camera.GetFocus());
+			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		}
 	}
 }
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
 	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
+	obj.GetTransform().SetScale(glm::vec3(0.5f,0.5f,0.5f));
+	//obj.GetTransform().Move(50.0f,10.0f,0.0f);
 	obj.SetVolumeEnvelope(surf.env);
 	obj.SetLineWidth(2.0f);
 	ZoomToFit();
@@ -132,7 +136,9 @@ bool SurfaceCtrl::Key(dword key,int count){
 		
 	}
 	if( key == K_T){
-		if(allObjects.GetCount() > 0) DUMP(allObjects[0].ReadColors(0,1));
+	//	if(allObjects.GetCount() > 0) DUMP(allObjects[0].ReadColors(0,1));
+	Cout() << "Translated !"<<EOL;
+	if(allObjects.GetCount() > 0) allObjects[0].GetTransform().Move(50.0f,10.0f,0.0f);
 	}
 	if( key == K_L){
 		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshLine(!allObjects[0].GetShowMeshLine());

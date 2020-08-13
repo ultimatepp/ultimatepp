@@ -89,14 +89,53 @@ class BoundingBox {
 		
 		bool IsLoaded(){return loaded;}
 		
-		BoundingBox& TransformBy(const glm::mat4 modelMatrice){
-			glm::vec4 min_(min.x,min.y,min.z,1.0f);
-			glm::vec4 max_(max.x,max.y,max.z,1.0f);
-			min_ = min_ * modelMatrice;
-			max_ = max_ * modelMatrice;
-			max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x , (min_.y > max_.y)? min_.y: max_.y , (min_.z > max_.z)? min_.z : max_.z);
-			min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x , (min_.y < max_.y)? min_.y: max_.y , (min_.z < max_.z)? min_.z : max_.z);
-			return *this;
+		BoundingBox& TransformBy(const glm::mat4& modelMatrice){
+			/*
+		    //extract position of my model matrix
+	        glm::vec3 pos( modelMatrice[3] );
+	        
+	        //extract scale of my model matrix
+	        glm::vec3 scale( glm::length(glm::vec3(modelMatrice[0])), glm::length(glm::vec3(modelMatrice[1])) , glm::length(glm::vec3(modelMatrice[2])));
+	        
+	        //Creating vec4 min/max from vec3
+	        glm::vec4 min_(min.x, min.y, min.z, 1.0f);
+	        glm::vec4 max_(max.x, max.y, max.z, 1.0f);
+	        
+	        //Inverting the matrice to multiply my vec4 with it in order to rotate my min max
+	        glm::mat4 inverse = glm::inverse(modelMatrice);
+	        //min_ = min_ * inverse;
+	        min_ = modelMatrice * min_;
+	        max_ = modelMatrice * max_ ;
+	       // max_ = max_ * inverse;
+	        
+	        //adding model matrice translation to min_ and max_
+	        min_ += glm::vec4(pos,0.0f);
+	        max_ += glm::vec4(pos,0.0f);
+	        
+	        
+	        //Scale my min_ max_
+	        min_ *= glm::vec4(scale,1.0f);
+	        max_ *= glm::vec4(scale,1.0f);
+	    //	min_ = glm::vec4(min_.x * scale.x, min_.y * scale.y , min_.z * scale.z, 1.0f);
+		//	max_ = glm::vec4(max_.x * scale.x, max_.y * scale.y , max_.z * scale.z, 1.0f);
+	        
+
+	    
+	        //Redefining max and min
+	        max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x, (min_.y > max_.y)? min_.y: max_.y, (min_.z > max_.z)? min_.z : max_.z);
+	        min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x, (min_.y < max_.y)? min_.y: max_.y, (min_.z < max_.z)? min_.z : max_.z);
+	        
+	        //max *= glm::vec4(scale,1.0f);
+	        //min *= glm::vec4(scale,1.0f);
+	        
+	        return *this;*/
+	        glm::vec4 min_(min.x, min.y, min.z, 1.0f);
+	        glm::vec4 max_(max.x, max.y, max.z, 1.0f);
+	        min_ = modelMatrice * min_;
+	        max_ = modelMatrice * max_;
+	        max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x, (min_.y > max_.y)? min_.y: max_.y, (min_.z > max_.z)? min_.z : max_.z);
+	        min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x, (min_.y < max_.y)? min_.y: max_.y, (min_.z < max_.z)? min_.z : max_.z);
+	        return *this;
 		}
 		
 		bool LineIntersection(const glm::vec3& start, const glm::vec3& end){
@@ -137,7 +176,14 @@ class BoundingBox {
 		}
 		
 		glm::vec3 GetCenter(){
-			return (min + max) * 0.5f;
+			return glm::vec3((min + max) * 0.5f);
+		}
+		
+		glm::vec3 GetMin(){
+			return min;
+		}
+		glm::vec3 GetMax(){
+			return max;
 		}
 		
 		BoundingBox& Draw(const glm::mat4& modelMat, const glm::mat4& viewMat, const glm::mat4& projMat, OpenGLProgram& shader){
