@@ -63,6 +63,7 @@ void SurfaceCtrl::GLPaint(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
+	
 	if(ShowAxis)
 		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 	if(ShowCameraFocus){
@@ -116,17 +117,21 @@ void SurfaceCtrl::GLResize(int w, int h){
 	Refresh();
 }
 bool SurfaceCtrl::Key(dword key,int count){
-	if( key == K_W){
-		camera.ProcessKeyboardMouvement(CM_FORWARD);
+	if( key == K_Z){
+		for(Object3D* obj : SelectedObject)
+			obj->GetTransform().Move(obj->GetTransform().GetUp());
 	}
 	if( key == K_S){
-		camera.ProcessKeyboardMouvement(CM_BACKWARD);
+		for(Object3D* obj : SelectedObject)
+			obj->GetTransform().Move(-(obj->GetTransform().GetUp()));
 	}
 	if( key == K_Q){
-		camera.ProcessKeyboardMouvement(CM_LEFT);
+		for(Object3D* obj : SelectedObject)
+			obj->GetTransform().Move(-(obj->GetTransform().GetRight()));
 	}
 	if( key == K_D){
-		camera.ProcessKeyboardMouvement(CM_RIGHT);
+		for(Object3D* obj : SelectedObject)
+			obj->GetTransform().Move(obj->GetTransform().GetRight());
 	}
 	if( key == K_R){
 	/*	float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
@@ -135,57 +140,45 @@ bool SurfaceCtrl::Key(dword key,int count){
 		camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
 		
 	}
-	if( key == K_T){
-	//	if(allObjects.GetCount() > 0) DUMP(allObjects[0].ReadColors(0,1));
-	Cout() << "Translated !"<<EOL;
-	if(allObjects.GetCount() > 0) allObjects[0].GetTransform().Move(50.0f,10.0f,0.0f);
-	}
+
 	if( key == K_L){
-		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshLine(!allObjects[0].GetShowMeshLine());
+		for(Object3D* obj : SelectedObject)
+			obj->ShowMeshLine(!obj->GetShowMeshLine());
 	}
 	if( key == K_M){
-		if(allObjects.GetCount() > 0) allObjects[0].ShowMesh(!allObjects[0].GetShowMesh());
+		for(Object3D* obj : SelectedObject)
+			obj->ShowMesh(!obj->GetShowMesh());
 	}
 	if( key == K_P){
-		if(allObjects.GetCount() > 0) allObjects[0].ShowLight(!allObjects[0].GetShowLight());
+		for(Object3D* obj : SelectedObject)
+			obj->ShowLight(!obj->GetShowLight());
 	}
 	if( key == K_N){
-		if(allObjects.GetCount() > 0) allObjects[0].ShowMeshNormal(!allObjects[0].GetShowMeshNormal());
+		for(Object3D* obj : SelectedObject)
+			obj->ShowMeshNormal(!obj->GetShowMeshNormal());
 	}
-	if(key == K_LEFT){
-		camera.ProcessMouseWheelMouvement(20 * camera.GetMouvementSpeed(),0);
-	}
-	if(key == K_RIGHT){
-		camera.ProcessMouseWheelMouvement(-20 * camera.GetMouvementSpeed(),0);
-	}
-	if(key == K_UP){
-		camera.ProcessMouseWheelMouvement(0,20 * camera.GetMouvementSpeed());
-	}
-	if(key == K_DOWN){
-		camera.ProcessMouseWheelMouvement(0,-20 * camera.GetMouvementSpeed());
-	}
+	
+	
 	if(key == K_ADD){
 		camera.SetFOV(camera.GetFOV() + 5);
 	}
 	if(key == K_SUBTRACT){
 		camera.SetFOV(camera.GetFOV() - 5);
 	}
+	
 	if(key == K_C){
 		static unsigned short e = 0;
 		camera.SetCameraType((CameraType)e);
-		if(e == 1 && allObjects.GetCount() > 0){
-			//camera.focus = allObjects[0].GetTransform().GetPosition();
-			
-		}
-		e++;
-		if(e == 2) e = 0;
+		e++;if(e == 2) e = 0;
 	}
+	
 	if(key == K_A){
 		ShowAxis = !ShowAxis;
 	}
 	if(key == K_F){
 		ShowCameraFocus = !ShowCameraFocus;
 	}
+	
 	if(key == K_X){
 		Cout() << "Current camera Position : " << camera.GetTransform().GetPosition().x << "," << camera.GetTransform().GetPosition().y << "," << camera.GetTransform().GetPosition().z << EOL;
 	//	Cout() << "Current dezoom factor : " << camera.GetDezoomFactor() << EOL;
@@ -193,10 +186,6 @@ bool SurfaceCtrl::Key(dword key,int count){
 		Cout() << "Up vector : "<< camera.GetTransform().GetUp().x << "," << camera.GetTransform().GetUp().y << "," << camera.GetTransform().GetUp().z << EOL;
 		Cout() << "Right vector : "<< camera.GetTransform().GetRight().x << "," << camera.GetTransform().GetRight().y << "," << camera.GetTransform().GetRight().z << EOL;
 		Cout() << "Front vector : "<< camera.GetTransform().GetFront().x << "," << camera.GetTransform().GetFront().y << "," << camera.GetTransform().GetFront().z << EOL;
-	}
-	if(key == K_B){
-		if(allObjects.GetCount() > 0)
-			allObjects[0].ShowBoundingBox(!allObjects[0].GetShowBoundingBox());
 	}
 	/*
 		Material change
@@ -236,10 +225,11 @@ bool SurfaceCtrl::Key(dword key,int count){
 		}
 	}
 	
-	if(key == K_ESCAPE){ //decrease Shininess
-		for(Object3D& obj : allObjects){
-			obj.ShowBoundingBox(false);
+	if(key == K_ESCAPE){ //removing all selection
+		for(Object3D* obj : SelectedObject){
+			obj->ShowBoundingBox(false);
 		}
+		SelectedObject.Clear();
 		camera.ResetFocus();
 	}
 	Refresh();
@@ -261,7 +251,25 @@ void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 void SurfaceCtrl::LeftDown(Point p, dword){
 	camera.lastPress = p;
 	camera.MouseLeftPressed = true;
-	camera.ProcessMouseLeftClick(p.x,p.y);
+	Object3D* obj = camera.ProcessMouseLeftClick(p.x,p.y);
+	if(obj != nullptr){
+		bool trouver = false;
+		int e = 0;
+		for(Object3D* ob : SelectedObject){
+			if( obj == ob){
+				trouver = true;
+				obj->ShowBoundingBox(false);
+				SelectedObject.Remove(e,1);
+				break;
+			}
+			e++;
+		}
+		if(!trouver){
+			obj->ShowBoundingBox(true);
+			SelectedObject.Add(obj);
+		}
+		camera.CenterFocus(SelectedObject);
+	}
 	Refresh();
 }
 void SurfaceCtrl::LeftUp(Point p, dword){

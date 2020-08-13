@@ -157,7 +157,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		VolumeEnvelope* GetVolumeEnvelope(){return env;}
 		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope; boundingBox.SetBoundingBox(env->minX,env->minY,env->minZ,env->maxX,env->maxY,env->maxZ); return *this;}
 		BoundingBox& GetBoundingBox(){return boundingBox;}
-		BoundingBox GetBoundingBoxTransformed(){
+		BoundingBox GetBoundingBoxTransformed()const noexcept{
 			BoundingBox box(boundingBox);
 			box.TransformBy(transform.GetModelMatrix());
 			return box;

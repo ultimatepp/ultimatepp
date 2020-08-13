@@ -23,31 +23,25 @@ namespace Upp{
 		    return glm::vec3(clickedPointOrigin.x / clickedPointOrigin.w,clickedPointOrigin.y / clickedPointOrigin.w,clickedPointOrigin.z / clickedPointOrigin.w);
 		}
 		
-		Vector<Object3D*> Pick(float x, float y){
-			Vector<Object3D*>  intersect;
-			
+		Object3D* Pick(float x, float y){
+			Object3D*  intersect = nullptr;
 			if(allObjects){
+				double distance = 100000.0f;
+				
 				glm::vec3 start = UnProject2(x,y,0.0f);
 				glm::vec3 end = UnProject2(x,y,1.0f);
+				
 				for (Object3D& obj : *(allObjects)){
 			       if (obj.TestLineIntersection(start,end)){
-			            intersect.Add(&obj);
+			            double dis = glm::length(transform.GetPosition() - obj.GetTransform().GetPosition());
+			            if( dis < distance){
+							distance = dis;
+							intersect = &obj;
+			            }
 			        }
 			    }
 			}
 			return intersect;
-		}
-		
-		void CenterFocus(const Array<glm::vec3>&  allCenter){
-			if(allCenter.GetCount() > 0){
-				glm::vec3 center = allCenter[0];
-				if(allCenter.GetCount() > 1){
-					for(int e = 1; e < allCenter.GetCount(); e++){
-						glm::lerp(center,allCenter[e],0.5f);
-					}
-				}
-				focus = center;
-			}
 		}
 		
 	public:
@@ -130,17 +124,16 @@ namespace Upp{
 			
 			return *this;
 		}
-		virtual MagicCamera& ProcessMouseLeftClick(float xoffset, float yoffset){
-			Vector<Object3D*> obj = Pick(xoffset ,yoffset);
-			Array<glm::vec3> centers;
-			for(Object3D* o : obj){
+		Object3D* ProcessMouseLeftClick(float xoffset, float yoffset){
+			Object3D* obj = Pick(xoffset ,yoffset);
+			/*for(Object3D* o : obj){
 				if(o){
 					o->ShowBoundingBox(true);
 					centers.Add(o->GetBoundingBoxTransformed().GetCenter());
 				}
 			}
-			CenterFocus(centers);
-			return *this;
+			CenterFocus(centers);*/
+			return obj;
 		}
 		
 		virtual MagicCamera& ProcessMouveMouvement(float xoffset, float yoffset){
@@ -190,6 +183,19 @@ namespace Upp{
 	
 		glm::vec3 GetFocus(){return focus;}
 		MagicCamera& ResetFocus(){focus = glm::vec3(0,0,0); return *this;}
+		
+		MagicCamera& CenterFocus(const Vector<Object3D*>&  selectedObj){
+			if(selectedObj.GetCount() > 0){
+				glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter();
+				if(selectedObj.GetCount() > 1){
+					for(int e = 1; e < selectedObj.GetCount(); e++){
+						glm::lerp(center,selectedObj[e]->GetBoundingBoxTransformed().GetCenter(),0.5f);
+					}
+				}
+				focus = center;
+			}
+			return *this;
+		}
 	
 	};
 }
