@@ -28,3 +28,19 @@ if [[ "$uname" == 'FreeBSD' ]]; then
 	sed -i '' 's/$(LIBPATH) -Wl,-O,2 $(LDFLAGS)/$(LIBPATH) $(LDFLAGS)/' $1
 	sed -i '' 's/-ldl /-lexecinfo /' $1
 fi
+
+if [[ "$uname" == 'OpenBSD' ]]; then
+	echo Configuring $1 for OpenBSD
+	sed -i.bak 's/-DflagPOSIX -DflagLINUX/-DflagPOSIX -DflagBSD -DflagFREEBSD/' $1
+	sed -i.bak 's/-Wl,--gc-sections $(LINKOPTIONS)/$(LINKOPTIONS)/' $1
+	sed -i.bak 's#LIBPATH =#LIBPATH = -L"/usr/local/lib"#' $1
+	sed -i.bak 's#-I./ -I$(UPPOUT)#-I/usr/local/include -I./ -I$(UPPOUT)#' $1
+	sed -i.bak 's/GCC-Gcc-Gui-Linux-Main-Posix-Shared/GCC-Bsd-Gcc-Gui-Main-Openbsd-Posix-Shared/' $1
+	sed -i.bak 's/GCC-Gcc-Gui-Linux-Posix-Shared/GCC-Bsd-Gcc-Gui-Openbsd-Posix-Shared/' $1
+	sed -i.bak 's/GCC-Gcc-Linux-Main-Posix-Shared/GCC-Bsd-Gcc-Main-Openbsd-Posix-Shared/' $1
+	sed -i.bak 's/GCC-Gcc-Linux-Posix-Shared/GCC-Bsd-Gcc-Openbsd-Posix-Shared/' $1
+	sed -i.bak 's/$(LIBPATH) -Wl,-O,2 $(LDFLAGS)/$(LIBPATH) $(LDFLAGS)/' $1
+	sed -i.bak 's/-ldl /-lexecinfo /' $1
+	sed -i.bak 's/-lrt / /' $1
+	rm  $1.bak
+fi

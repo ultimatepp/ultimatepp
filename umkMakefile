@@ -1,39 +1,39 @@
 UPPDIR1 = ./uppsrc/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) -I./ -I$(UPPOUT)
-Macro  =  -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
+CINC   =  -I$(UPPDIR1) -I/usr/local/include -I./ -I$(UPPOUT)
+Macro  =  -DflagGCC -DflagSHARED -DflagPOSIX -DflagBSD -DflagFREEBSD
 CXX = c++
 LINKER = $(CXX)
 CFLAGS = -O3 -ffunction-sections -fdata-sections 
 CXXFLAGS = -O3 -ffunction-sections -fdata-sections  -std=c++14
-LDFLAGS = -Wl,--gc-sections $(LINKOPTIONS)
-LIBPATH =
+LDFLAGS = $(LINKOPTIONS)
+LIBPATH = -L"/usr/local/lib"
 AR = ar -sr
 
-OutDir_umk = $(UPPOUT)umk/GCC-Gcc-Linux-Main-Posix-Shared/
+OutDir_umk = $(UPPOUT)umk/GCC-Bsd-Gcc-Main-Openbsd-Posix-Shared/
 Macro_umk = $(Macro) -DflagMAIN
-OutDir_ide_Builders = $(UPPOUT)ide/Builders/GCC-Gcc-Linux-Posix-Shared/
+OutDir_ide_Builders = $(UPPOUT)ide/Builders/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_ide_Builders = $(Macro)
-OutDir_ide_Core = $(UPPOUT)ide/Core/GCC-Gcc-Linux-Posix-Shared/
+OutDir_ide_Core = $(UPPOUT)ide/Core/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_ide_Core = $(Macro)
-OutDir_ide_Android = $(UPPOUT)ide/Android/GCC-Gcc-Linux-Posix-Shared/
+OutDir_ide_Android = $(UPPOUT)ide/Android/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_ide_Android = $(Macro)
-OutDir_ide_Java = $(UPPOUT)ide/Java/GCC-Gcc-Linux-Posix-Shared/
+OutDir_ide_Java = $(UPPOUT)ide/Java/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_ide_Java = $(Macro)
-OutDir_Esc = $(UPPOUT)Esc/GCC-Gcc-Linux-Posix-Shared/
+OutDir_Esc = $(UPPOUT)Esc/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_Esc = $(Macro)
-OutDir_plugin_bz2 = $(UPPOUT)plugin/bz2/GCC-Gcc-Linux-Posix-Shared/
+OutDir_plugin_bz2 = $(UPPOUT)plugin/bz2/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_plugin_bz2 = $(Macro)
-OutDir_plugin_lzma = $(UPPOUT)plugin/lzma/GCC-Gcc-Linux-Posix-Shared/
+OutDir_plugin_lzma = $(UPPOUT)plugin/lzma/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_plugin_lzma = $(Macro)
-OutDir_plugin_lz4 = $(UPPOUT)plugin/lz4/GCC-Gcc-Linux-Posix-Shared/
+OutDir_plugin_lz4 = $(UPPOUT)plugin/lz4/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_plugin_lz4 = $(Macro)
-OutDir_plugin_zstd = $(UPPOUT)plugin/zstd/GCC-Gcc-Linux-Posix-Shared/
+OutDir_plugin_zstd = $(UPPOUT)plugin/zstd/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_plugin_zstd = $(Macro)
-OutDir_Core = $(UPPOUT)Core/GCC-Gcc-Linux-Posix-Shared/
+OutDir_Core = $(UPPOUT)Core/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_Core = $(Macro)
-OutDir_plugin_pcre = $(UPPOUT)plugin/pcre/GCC-Gcc-Linux-Posix-Shared/
+OutDir_plugin_pcre = $(UPPOUT)plugin/pcre/GCC-Bsd-Gcc-Openbsd-Posix-Shared/
 Macro_plugin_pcre = $(Macro)
 
 OutDir = $(OutDir_umk)
@@ -81,7 +81,7 @@ $(OutFile): build_info  \
 	$(OutDir_plugin_zstd)zstd.a \
 	$(OutDir_Core)Core.a \
 	$(OutDir_plugin_pcre)pcre.a
-	$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) -Wl,-O,2 $(LDFLAGS) -Wl,--start-group  \
+	$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) $(LDFLAGS) -Wl,--start-group  \
 		$(OutDir_umk)MacOs.o \
 		$(OutDir_umk)Console.o \
 		$(OutDir_umk)IdeContext.o \
@@ -101,8 +101,8 @@ $(OutFile): build_info  \
 			$(OutDir_plugin_pcre)pcre.a \
 			-lbz2 \
 			-lpthread \
-			-ldl \
-			-lrt \
+			-lexecinfo \
+			 \
 			-lz -Wl,--end-group
 
 $(OutDir_umk):

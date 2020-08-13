@@ -24,19 +24,27 @@ elif [ -x "$(command -v zypper)" ]; then
 elif [ -x "$(command -v pacman)" ]; then
   DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang"
 elif [ -x "$(command -v pkg)" ]; then
+  DEP="pkg install bash gmake gtk3 libnotify llvm90 pkgconf"
   if [[ "$uname" == 'SunOS' ]]; then
      DEP="pkg install bash gtk3 libnotify developer/clang-80 build-essential"
-  else
-     DEP="pkg install bash gmake gtk3 libnotify llvm90 pkgconf"
   fi
 elif [ -x "$(command -v pkg_add)" ]; then
   DEP="pkg_add bash gmake gtk3 libnotify clang-devel"
 fi
 
+if [[ "$uname" == 'OpenBSD' ]]; then
+  DEP=""
+fi
+
 if [ -z "$DEP" ]; then
-  echo Packaging system was not identified.
-  echo Automatic dependency instalation has failed.
-  echo You will have to install required packages manually.
+  if [[ "$uname" == 'OpenBSD' ]]; then
+    echo Automatic dependecies installation is not supported on OpenBSD.
+    echo See README for details.
+  else
+    echo Packaging system was not identified.
+    echo Automatic dependency instalation has failed.
+    echo You will have to install required packages manually.
+  fi
   echo Please make sure that build dependecies are satisfied.
   AskContinue
 else
@@ -70,7 +78,8 @@ fi
 
 if [ -z "$UMK" ]; then
   echo umks32 cannot be used, building umk using make
-  make -f uMakefile -j 4
+  ./configure
+  make -f umkMakefile -j 4
   UMK="./umk"
 fi
 

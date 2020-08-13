@@ -10,7 +10,10 @@ namespace Upp {
 #define Font        XFont
 #define Display     XDisplay
 #define Picture     XPicture
+
+#ifndef PLATFORM_OPENBSD // avoid warning
 #define CurrentTime XCurrentTime
+#endif
 
 #include <gdk/gdkx.h>
 
@@ -18,7 +21,10 @@ namespace Upp {
 #undef Time
 #undef Font
 #undef Display
+
+#ifndef PLATFORM_OPENBSD // avoid warning
 #undef CurrentTime
+#endif
 
 XDisplay *Xdisplay()
 {

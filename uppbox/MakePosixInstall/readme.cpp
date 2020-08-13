@@ -55,7 +55,14 @@ pkg_add bash pkgconfig
 
 (this should work as long as you have installed desktop environment before installing U++).
 
-It is also necessary to
+It is also necessary to increase the allowed memory sizes in /etc/login.conf to
+
+default:\
+	:datasize-max=4096M:\
+	:datasize-cur=4096M:\
+	:stacksize-cur=512M:\
+
+otherwise compiler will run out of memory.
 
 )--";
 
