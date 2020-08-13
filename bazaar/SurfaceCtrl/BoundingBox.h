@@ -68,7 +68,7 @@ class BoundingBox {
 			loaded = copy.loaded;
 			min = copy.min;
 			max = copy.max;
-			BoundingBoxVertices.Append(copy.BoundingBoxVertices);
+			BoundingBoxVertices.Append(copy.BoundingBoxVertices); //This line make all things crash
 			BoundingBoxVAO = copy.BoundingBoxVAO;
 			BoundingBoxVBO = copy.BoundingBoxVBO;
 			return *this;
