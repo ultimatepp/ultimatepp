@@ -5,7 +5,7 @@
 namespace Upp{
 	class MagicCamera : public UOGL_Camera{
 	private:
-		Vector<Object3D>* allObjects = nullptr;
+		Array<Object3D>* allObjects = nullptr;
 		
 		glm::vec3 focus;
 		
@@ -27,7 +27,6 @@ namespace Upp{
 			Object3D*  intersect = nullptr;
 			if(allObjects){
 				double distance = 100000.0f;
-				
 				glm::vec3 start = UnProject2(x,y,0.0f);
 				glm::vec3 end = UnProject2(x,y,1.0f);
 				
@@ -48,7 +47,7 @@ namespace Upp{
 		MagicCamera(){}
 		MagicCamera& Init(){transform.SetPosition(0, 10, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
 		
-		MagicCamera& SetAllObjects(Vector<Object3D>& all){allObjects = &all;return *this;}
+		MagicCamera& SetAllObjects(Array<Object3D>& all){allObjects = &all;return *this;}
 	
 		glm::mat4 GetProjectionMatrix(){
 			if(type == CT_PERSPECTIVE){
@@ -57,7 +56,6 @@ namespace Upp{
 				float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* (ScreenSize.cx/ScreenSize.cy);
 				float distanceY = glm::distance(glm::vec3(0,0,0),transform.GetPosition());
 				return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
-			//	return glm::ortho(-glm::distance(focus,transform.GetPosition()) ,glm::distance(focus,transform.GetPosition()) ,-glm::distance(focus,transform.GetPosition()) ,glm::distance(focus,transform.GetPosition()), 0.00001f, 10000.0f);
 			}else{
 				LOG("Swaping to Camera Perspective (cause of unknow type)");
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
@@ -126,13 +124,6 @@ namespace Upp{
 		}
 		Object3D* ProcessMouseLeftClick(float xoffset, float yoffset){
 			Object3D* obj = Pick(xoffset ,yoffset);
-			/*for(Object3D* o : obj){
-				if(o){
-					o->ShowBoundingBox(true);
-					centers.Add(o->GetBoundingBoxTransformed().GetCenter());
-				}
-			}
-			CenterFocus(centers);*/
 			return obj;
 		}
 		

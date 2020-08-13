@@ -29,7 +29,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		bool loaded = false;
 		Object3DProvider objProvider;
 		
-		Upp::Vector<Object3D> allObjects;
+		Upp::Array<Object3D> allObjects;
 		Upp::Vector<Object3D*> SelectedObject;
 		
 		Object3D Axis;

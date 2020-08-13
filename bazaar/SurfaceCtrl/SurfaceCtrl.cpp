@@ -74,7 +74,7 @@ void SurfaceCtrl::GLPaint(){
 	}
 }
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
-	Object3D& obj = allObjects.Create(surf,color);
+	Object3D& obj = allObjects.Create<Object3D>(surf,color);
 	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	obj.GetTransform().SetScale(glm::vec3(0.5f,0.5f,0.5f));
 	//obj.GetTransform().Move(50.0f,10.0f,0.0f);
@@ -119,22 +119,22 @@ void SurfaceCtrl::GLResize(int w, int h){
 bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_Z){
 		for(Object3D* obj : SelectedObject)
-			obj->GetTransform().Move(obj->GetTransform().GetUp());
+			obj->GetTransform().Move(camera.GetTransform().GetUp());
 		camera.CenterFocus(SelectedObject);
 	}
 	if( key == K_S){
 		for(Object3D* obj : SelectedObject)
-			obj->GetTransform().Move(-(obj->GetTransform().GetUp()));
+			obj->GetTransform().Move(-(camera.GetTransform().GetUp()));
 		camera.CenterFocus(SelectedObject);
 	}
 	if( key == K_Q){
 		for(Object3D* obj : SelectedObject)
-			obj->GetTransform().Move(-(obj->GetTransform().GetRight()));
+			obj->GetTransform().Move(-(camera.GetTransform().GetRight()));
 		camera.CenterFocus(SelectedObject);
 	}
 	if( key == K_D){
 		for(Object3D* obj : SelectedObject)
-			obj->GetTransform().Move(obj->GetTransform().GetRight());
+			obj->GetTransform().Move(camera.GetTransform().GetRight());
 		camera.CenterFocus(SelectedObject);
 	}
 	if( key == K_R){

@@ -12,24 +12,11 @@ class BoundingBox {
 		glm::vec3 min;
 		glm::vec3 max;
 		
-		Vector<float> BoundingBoxVertices;
-		
 		GLuint BoundingBoxVAO = 0;
 		GLuint BoundingBoxVBO = 0;
 		
 		void loadBoundingBox(){
-			BoundingBoxVertices<<min.x<< min.y<< min.z<<min.x<< min.y<< max.z<<min.x<< max.y<< max.z
-			<<max.x<< max.y<< min.z<<min.x<< min.y<< min.z<<min.x<< max.y<< min.z
-			<<max.x<< min.y<< max.z<<min.x<< min.y<< min.z<<max.x<< min.y<< min.z
-			<<max.x<< max.y<< min.z<<max.x<< min.y<< min.z<<min.x<< min.y<< min.z
-			<<min.x<< min.y<< min.z<<min.x<< max.y<< max.z<<min.x<< max.y<< min.z
-			<<max.x<< min.y<< max.z<<min.x<< min.y<< max.z<<min.x<< min.y<< min.z
-			<<min.x<< max.y<< max.z<<min.x<< min.y<< max.z<<max.x<< min.y<< max.z
-			<<max.x<< max.y<< max.z<<max.x<< min.y<< min.z<<max.x<< max.y<< min.z
-			<<max.x<< min.y<< min.z<<max.x<< max.y<< max.z<<max.x<< min.y<< max.z
-			<<max.x<< max.y<< max.z<<max.x<< max.y<< min.z<<min.x<< max.y<< min.z
-			<<max.x<< max.y<< max.z<<min.x<< max.y<< min.z<<min.x<< max.y<< max.z
-			<<max.x<< max.y<< max.z<<min.x<< max.y<< max.z<<max.x<< min.y<< max.z;
+			Vector<float> BoundingBoxVertices = GetVertices();
 	
 			if(BoundingBoxVAO > 0) glDeleteVertexArrays(1,&BoundingBoxVAO);
 			if(BoundingBoxVBO > 0) glDeleteBuffers(1,&BoundingBoxVBO);
@@ -68,10 +55,40 @@ class BoundingBox {
 			loaded = copy.loaded;
 			min = copy.min;
 			max = copy.max;
-			BoundingBoxVertices.Append(copy.BoundingBoxVertices); //This line make the program crash during (clone() function)
 			BoundingBoxVAO = copy.BoundingBoxVAO;
 			BoundingBoxVBO = copy.BoundingBoxVBO;
 			return *this;
+		}
+		
+		BoundingBox& ReloadBoundingBox(){loadBoundingBox();return *this;}
+		BoundingBox& UnloadBoundingBox(){glDeleteVertexArrays(1,&BoundingBoxVAO);glDeleteBuffers(1,&BoundingBoxVBO);loaded =false;return *this;}
+		
+		Vector<float> GetVertices(){
+			Vector<float> BoundingBoxVertices;
+			BoundingBoxVertices<<min.x<< min.y<< min.z<<min.x<< min.y<< max.z<<min.x<< max.y<< max.z
+			<<max.x<< max.y<< min.z<<min.x<< min.y<< min.z<<min.x<< max.y<< min.z
+			<<max.x<< min.y<< max.z<<min.x<< min.y<< min.z<<max.x<< min.y<< min.z
+			<<max.x<< max.y<< min.z<<max.x<< min.y<< min.z<<min.x<< min.y<< min.z
+			<<min.x<< min.y<< min.z<<min.x<< max.y<< max.z<<min.x<< max.y<< min.z
+			<<max.x<< min.y<< max.z<<min.x<< min.y<< max.z<<min.x<< min.y<< min.z
+			<<min.x<< max.y<< max.z<<min.x<< min.y<< max.z<<max.x<< min.y<< max.z
+			<<max.x<< max.y<< max.z<<max.x<< min.y<< min.z<<max.x<< max.y<< min.z
+			<<max.x<< min.y<< min.z<<max.x<< max.y<< max.z<<max.x<< min.y<< max.z
+			<<max.x<< max.y<< max.z<<max.x<< max.y<< min.z<<min.x<< max.y<< min.z
+			<<max.x<< max.y<< max.z<<min.x<< max.y<< min.z<<min.x<< max.y<< max.z
+			<<max.x<< max.y<< max.z<<min.x<< max.y<< max.z<<max.x<< min.y<< max.z;
+			return BoundingBoxVertices;
+		}
+		
+		Vector<float> GetVerticesTransformed(const glm::mat4& modelMatrice){
+			Vector<float> BoundingBoxVertices = GetVertices();
+			Vector<float> BoundingBoxTransformed;
+			for(int e = 0; e < BoundingBoxVertices.GetCount(); e+=3){
+				glm::vec4 pos(BoundingBoxVertices[e], BoundingBoxVertices[e+1], BoundingBoxVertices[e+2],1.0f);
+				pos = modelMatrice * pos;
+				BoundingBoxTransformed << pos.x << pos.y << pos.z;
+			}
+			return BoundingBoxTransformed;
 		}
 		
 		BoundingBox& SetBoundingBox(glm::vec3 min_, glm::vec3 max_){
@@ -101,8 +118,6 @@ class BoundingBox {
 		
 		bool LineIntersection(const glm::vec3& start, const glm::vec3& end){
 			if(loaded){
-			//	Cout() << "testing bounding box : " << EOL << "Min : " << min.x <<"," << min.y <<"," << min.z << EOL << "Max : " << max.x <<","<< max.y << "," << max.z << EOL;
-				
 				glm::vec3 center     = (min + max) * 0.5f;
 			    glm::vec3 extents    = max - center;
 			    glm::vec3 lineDir    = 0.5f * (end - start);
@@ -146,7 +161,7 @@ class BoundingBox {
 		glm::vec3 GetMax(){
 			return max;
 		}
-		
+
 		BoundingBox& Draw(const glm::mat4& modelMat, const glm::mat4& viewMat, const glm::mat4& projMat, OpenGLProgram& shader){
 			if(loaded && shader.IsLinked()){
 				shader.Bind();

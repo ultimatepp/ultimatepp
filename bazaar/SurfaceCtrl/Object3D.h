@@ -159,9 +159,9 @@ class Object3D : public Upp::Moveable<Object3D>{
 		BoundingBox& GetBoundingBox(){return boundingBox;}
 		BoundingBox GetBoundingBoxTransformed()const noexcept{
 			BoundingBox box(boundingBox);
-			box.TransformBy(transform.GetModelMatrix());
-			return box;
+			return box.TransformBy(transform.GetModelMatrix());
 		}
+		
 		bool TestLineIntersection(const glm::vec3 & start, const glm::vec3 & end){
 			BoundingBox box  = GetBoundingBoxTransformed();
 			return box.LineIntersection(start,end);
