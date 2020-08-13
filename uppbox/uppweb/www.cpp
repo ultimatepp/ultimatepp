@@ -698,7 +698,7 @@ struct DownloadItem {
 String Downloads()
 {
 	String r;
-	r << "{{1:1:1:1^@L "
+	r << "{{1:2:2:2^@L "
 	     "Date:: "
 	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
 	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/FreeBSD]:: "
