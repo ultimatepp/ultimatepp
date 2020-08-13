@@ -701,7 +701,7 @@ String Downloads()
 	r << "{{1:2:2:2^@L "
 	     "Date:: "
 	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/FreeBSD]:: "
+	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/BSD/Solaris]:: "
 	     "[^app$ide$install_macos_en-us.html^ U`+`+ for MacOS]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 
