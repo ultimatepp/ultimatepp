@@ -23,7 +23,11 @@
 		#define PLATFORM_WIN32 1
 		#undef  WINVER
 		#undef  _WIN32_WINNT
-		#define _WIN32_WINNT 0x0501
+		#ifdef flagWIN10
+			#define _WIN32_WINNT 0x0A00
+		#else
+			#define _WIN32_WINNT 0x0501
+		#endif
 	#endif
 
 	#if __unix || __unix__ || __APPLE__
