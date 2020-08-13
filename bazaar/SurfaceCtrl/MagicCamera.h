@@ -102,31 +102,31 @@ namespace Upp{
 			float a1 = xoffset * -1.0f;
 			float a2 = yoffset * -1.0f;
 			
+			glm::vec3 axis = GetVirtualAxis();
 			
-			
-			glm::vec3 v =  transform.GetPosition();
 			glm::vec3 pos = focus - transform.GetPosition();
 			float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
-			if(angle < 0.98f){
-				
-				glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
-				glm::quat rightRotation = Transform::GetQuaterion(a2,transform.GetRight());
-
-				transform.Rotate(glm::inverse(upRotation * rightRotation));
-			}else{
-				
-				glm::vec3 axis = GetVirtualAxis();
 			
-				glm::vec3 between = v - axis;
-						
-				glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
-				glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),between)));
-				between = glm::rotate(upRotation, between);
-				between = glm::rotate(rightRotation, between);
-				
-				transform.SetPosition(axis + between);
-				transform.Rotate(glm::inverse(upRotation * rightRotation));
+			float distance = glm::distance(focus,transform.GetPosition());
+			if(angle < 0.98f){
+				if (angle  < 0){
+					focus = glm::vec3(0.0f,0.0f,0.0f);
+				}
+				axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
 			}
+			if(distance > 70) transform.SetPosition(transform.GetPosition() *0.999f);
+			
+			glm::vec3 between = transform.GetPosition() - axis;
+			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
+			glm::quat rightRotation = Transform::GetQuaterion(a2, transform.GetRight());
+			//glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),v)));
+			
+			between = glm::rotate(upRotation, between);
+			between = glm::rotate(rightRotation, between);
+			
+			transform.SetPosition(axis + between);
+			transform.Rotate(glm::inverse(upRotation * rightRotation));
+			
 			
 			return *this;
 		}
@@ -189,6 +189,7 @@ namespace Upp{
 		}
 	
 		glm::vec3 GetFocus(){return focus;}
+		MagicCamera& ResetFocus(){focus = glm::vec3(0,0,0); return *this;}
 	
 	};
 }

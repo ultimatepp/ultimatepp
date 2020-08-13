@@ -240,6 +240,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 		for(Object3D& obj : allObjects){
 			obj.ShowBoundingBox(false);
 		}
+		camera.ResetFocus();
 	}
 	Refresh();
 	return true;
