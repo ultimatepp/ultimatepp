@@ -186,7 +186,8 @@ namespace Upp{
 		
 		MagicCamera& CenterFocus(const Vector<Object3D*>&  selectedObj){
 			if(selectedObj.GetCount() > 0){
-				glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter(); // The crash is occuring here, During copy operator, the Append function on vector make things crash
+				glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter(); // The crash is occuring here, During copy operator,
+																							//the Append function on vector make things crash
 				if(selectedObj.GetCount() > 1){
 					for(int e = 1; e < selectedObj.GetCount(); e++){
 						glm::vec3 center2 = selectedObj[e]->GetBoundingBoxTransformed().GetCenter();
@@ -194,6 +195,8 @@ namespace Upp{
 					}
 				}
 				focus = center;
+			}else{
+				focus = glm::vec3(0.0f,0.0f,0.0f);
 			}
 			return *this;
 		}
