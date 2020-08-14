@@ -1,4 +1,4 @@
-// Backward compatibility
+// Backward compatibility; use Function/Event in the new code
 
 template <class... ArgTypes>
 class CallbackN : Moveable<CallbackN<ArgTypes...>> {
