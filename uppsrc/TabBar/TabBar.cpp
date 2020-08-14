@@ -457,7 +457,7 @@ void TabBar::ContextMenu(Bar& bar)
 	int ii = GetHighlight(); // Need copy to freeze it, [=] copies 'this' and thus reference to highlight
 	if (GetCursor() >= 0 && ii >= 0 && !IsCancelClose(ii))
 		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), [=] {
-			if (CancelClose && !CancelClose(tabs[ii].key)) {
+			if (!CancelClose(tabs[ii].key)) {
 				WhenClose(tabs[ii].key);
 				TabClosed(tabs[ii].key);
 				tabs.Remove(ii);
@@ -526,7 +526,7 @@ void TabBar::CloseAll(int exception, int last_closed)
 
 	for(int i = tabs.GetCount() - 1; i >= last_closed; i--)
 		if(i != exception) {
-			if (CancelClose && !CancelClose(tabs[i].key)) {
+			if (!CancelClose(tabs[i].key)) {
 				WhenClose(tabs[i].key);
 				TabClosed(tabs[i].key);
 				tabs.Remove(i);
@@ -551,7 +551,7 @@ void TabBar::CloseGroup()
 
 bool TabBar::IsCancelClose(int id)
 {
-	if (CancelCloseAll && CancelCloseAll())
+	if (CancelCloseAll())
 		return true;
 	
 	if (CancelCloseSome) {
@@ -561,7 +561,7 @@ bool TabBar::IsCancelClose(int id)
 			return true;
 	}
 	
-	if (CancelClose && CancelClose(tabs[id].key))
+	if (CancelClose(tabs[id].key))
 		return true;
 	return false;
 }
