@@ -108,6 +108,7 @@ void SurfaceCtrl::InitCamera()noexcept{
 	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
 	camera.SetAllObjects(allObjects);
+	camera.SetAllSelected(SelectedObject);
 }
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
@@ -120,22 +121,22 @@ bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_Z){
 		for(Object3D* obj : SelectedObject)
 			obj->GetTransform().Move(camera.GetTransform().GetUp());
-		camera.CenterFocus(SelectedObject);
+		camera.CenterFocus();
 	}
 	if( key == K_S){
 		for(Object3D* obj : SelectedObject)
 			obj->GetTransform().Move(-(camera.GetTransform().GetUp()));
-		camera.CenterFocus(SelectedObject);
+		camera.CenterFocus();
 	}
 	if( key == K_Q){
 		for(Object3D* obj : SelectedObject)
 			obj->GetTransform().Move(-(camera.GetTransform().GetRight()));
-		camera.CenterFocus(SelectedObject);
+		camera.CenterFocus();
 	}
 	if( key == K_D){
 		for(Object3D* obj : SelectedObject)
 			obj->GetTransform().Move(camera.GetTransform().GetRight());
-		camera.CenterFocus(SelectedObject);
+		camera.CenterFocus();
 	}
 	if( key == K_R){
 	/*	float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
@@ -240,7 +241,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword keyflags){
-	if(camera.MouseMiddlePressed || camera.MouseLeftPressed){
+	if(camera.MouseMiddlePressed || camera.MouseLeftPressed ){
 		camera.ProcessMouveMouvement(p.x - camera.lastPress.x,p.y - camera.lastPress.y);
 		Refresh();
 	}
@@ -272,7 +273,7 @@ void SurfaceCtrl::LeftDown(Point p, dword){
 			obj->ShowBoundingBox(true);
 			SelectedObject.Add(obj);
 		}
-		camera.CenterFocus(SelectedObject);
+		camera.CenterFocus();
 	}else{
 		for(Object3D* obj : SelectedObject){
 			obj->ShowBoundingBox(false);

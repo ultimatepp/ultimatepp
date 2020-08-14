@@ -5,7 +5,8 @@
 namespace Upp{
 	class MagicCamera : public UOGL_Camera{
 	private:
-		Array<Object3D>* allObjects = nullptr;
+		Upp::Array<Object3D>* allObjects = nullptr;
+		Upp::Vector<Object3D*>* Selected = nullptr;
 		
 		glm::vec3 focus;
 		
@@ -48,6 +49,7 @@ namespace Upp{
 		MagicCamera& Init(){transform.SetPosition(0, 10, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
 		
 		MagicCamera& SetAllObjects(Array<Object3D>& all){allObjects = &all;return *this;}
+		MagicCamera& SetAllSelected(Upp::Vector<Object3D*>& selected){Selected = &selected; return *this;}
 	
 		glm::mat4 GetProjectionMatrix(){
 			if(type == CT_PERSPECTIVE){
@@ -127,9 +129,25 @@ namespace Upp{
 			return obj;
 		}
 		
+		virtual MagicCamera& ProcessMouseMouveLeftClick(float xoffset, float yoffset){
+			if(Selected){
+				glm::vec3 y = transform.GetUp() * ((yoffset * -1.0f) * MouvementSpeed);
+				glm::vec3 x = transform.GetRight() * (xoffset * MouvementSpeed);
+				
+				for(Object3D* obj : *(Selected)){
+					if(obj){
+						obj->GetTransform().Move(x + y);
+					}
+				}
+				CenterFocus();
+			}
+			return *this;
+		}
+		
 		virtual MagicCamera& ProcessMouveMouvement(float xoffset, float yoffset){
 			if(MouseMiddlePressed && !ShiftPressed ) return ProcessMouseWheelMouvement(xoffset,yoffset);
 			if(MouseMiddlePressed && ShiftPressed ) return ProcessMouseWheelTranslation(xoffset,yoffset);
+			if(MouseLeftPressed)  return ProcessMouseMouveLeftClick(xoffset,yoffset);
 			return *this;
 		}
 		
@@ -175,19 +193,22 @@ namespace Upp{
 		glm::vec3 GetFocus(){return focus;}
 		MagicCamera& ResetFocus(){focus = glm::vec3(0,0,0); return *this;}
 		
-		MagicCamera& CenterFocus(const Vector<Object3D*>&  selectedObj){
-			if(selectedObj.GetCount() > 0){
-				glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter(); // The crash is occuring here, During copy operator,
-																							//the Append function on vector make things crash
-				if(selectedObj.GetCount() > 1){
-					for(int e = 1; e < selectedObj.GetCount(); e++){
-						glm::vec3 center2 = selectedObj[e]->GetBoundingBoxTransformed().GetCenter();
-						center = glm::lerp(center,center2,0.5f);
+		MagicCamera& CenterFocus(){
+			if(Selected){
+				Upp::Vector<Object3D*>& selectedObj = *(Selected);
+				if(selectedObj.GetCount() > 0){
+					glm::vec3 center = selectedObj[0]->GetBoundingBoxTransformed().GetCenter(); // The crash is occuring here, During copy operator,
+																								//the Append function on vector make things crash
+					if(selectedObj.GetCount() > 1){
+						for(int e = 1; e < selectedObj.GetCount(); e++){
+							glm::vec3 center2 = selectedObj[e]->GetBoundingBoxTransformed().GetCenter();
+							center = glm::lerp(center,center2,0.5f);
+						}
 					}
+					focus = center;
+				}else{
+					focus = glm::vec3(0.0f,0.0f,0.0f);
 				}
-				focus = center;
-			}else{
-				focus = glm::vec3(0.0f,0.0f,0.0f);
 			}
 			return *this;
 		}
