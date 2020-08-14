@@ -182,7 +182,11 @@ void AppMain___()
 			for(++i; i < arg.GetCount(); i++) {
 				if(!IsNull(cmdline))
 					cmdline << ' ';
-				cmdline << arg[i];
+				String h = arg[i];
+				if(h.Find(' ') >= 0)
+					cmdline << '\"' << arg[i] << '\"';
+				else
+					cmdline << arg[i];
 			}
 			int n = cmdline.GetLength() + 1;
 			Buffer<char> cmd(n);
