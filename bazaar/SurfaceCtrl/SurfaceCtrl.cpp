@@ -248,43 +248,56 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	
 	camera.lastPress = p;
 }
-void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
-//	camera.forceZoom = keyflags & K_CTRL;
-	camera.ProcessMouseScroll(zdelta);
-	Refresh();
-}
-void SurfaceCtrl::LeftDown(Point p, dword){
-	camera.lastPress = p;
-	camera.MouseLeftPressed = true;
+
+
+void SurfaceCtrl::ProcessSelectedObject(Point p, dword keyflags)noexcept{
+	bool ShiftPress = keyflags & K_SHIFT;
+	
 	Object3D* obj = camera.ProcessMouseLeftClick(p.x,p.y);
-	if(obj != nullptr){
-		bool trouver = false;
-		int e = 0;
+	if(obj){
+		if(!ShiftPress){
+			for(Object3D* ob : SelectedObject){
+				ob->ShowBoundingBox(false);
+			}
+			SelectedObject.Clear();
+		}
+		
+		bool found = false;
 		for(Object3D* ob : SelectedObject){
-			if( obj == ob){
-				trouver = true;
-				obj->ShowBoundingBox(false);
-				SelectedObject.Remove(e,1);
+			if(ob == obj){
+				found = true;
 				break;
 			}
-			e++;
 		}
-		if(!trouver){
+		if(!found){
 			obj->ShowBoundingBox(true);
 			SelectedObject.Add(obj);
 		}
 		camera.CenterFocus();
 	}else{
-		for(Object3D* obj : SelectedObject){
-			obj->ShowBoundingBox(false);
+		if(!ShiftPress){
+			for(Object3D* obj : SelectedObject){
+				obj->ShowBoundingBox(false);
+			}
+			SelectedObject.Clear();
+			camera.ResetFocus();
 		}
-		SelectedObject.Clear();
-		camera.ResetFocus();
 	}
-	
+}
+
+
+void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
+//	camera.forceZoom = keyflags & K_CTRL;
+	camera.ProcessMouseScroll(zdelta);
 	Refresh();
 }
-void SurfaceCtrl::LeftUp(Point p, dword){
+void SurfaceCtrl::LeftDown(Point p, dword keyflags){
+	camera.lastPress = p;
+	camera.MouseLeftPressed = true;
+	ProcessSelectedObject(p,keyflags);
+	Refresh();
+}
+void SurfaceCtrl::LeftUp(Point p, dword keyflags){
 	camera.MouseLeftPressed = false;
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){

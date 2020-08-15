@@ -69,6 +69,8 @@ class SurfaceCtrl : public GLCtrl_glad{
 		void InitCamera()noexcept;
 		void ZoomToFit()noexcept;
 		void InitOpenGLFeatures()noexcept;
+		void ProcessSelectedObject(Point p, dword keyflags)noexcept;
+		
 		
 		virtual void GLPaint();
 		virtual void GLResize(int w, int h);
