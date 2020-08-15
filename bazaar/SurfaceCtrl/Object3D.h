@@ -163,7 +163,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		}
 		
 		bool TestLineIntersection(const glm::vec3 & start, const glm::vec3 & end){
-			BoundingBox box  = GetBoundingBoxTransformed();
+			BoundingBox box  = Upp::pick(GetBoundingBoxTransformed());
 			return box.LineIntersection(start,end);
 		}
 		/*

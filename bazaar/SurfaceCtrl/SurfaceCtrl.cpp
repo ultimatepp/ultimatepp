@@ -250,7 +250,7 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 }
 
 
-void SurfaceCtrl::ProcessSelectedObject(Point p, dword keyflags)noexcept{
+void SurfaceCtrl::ProcessSelectedObject(Point& p, dword keyflags)noexcept{
 	bool ShiftPress = keyflags & K_SHIFT;
 	
 	Object3D* obj = camera.ProcessMouseLeftClick(p.x,p.y);
@@ -304,6 +304,7 @@ void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	camera.MouseMiddlePressed = true;
 	camera.ShiftPressed = keyflags & K_SHIFT;
 	camera.lastPress = p;
+	camera.DetermineRotationPoint(p);
 }
 void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 	camera.MouseMiddlePressed = false;

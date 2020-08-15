@@ -8,6 +8,8 @@ namespace Upp{
 		Upp::Array<Object3D>* allObjects = nullptr;
 		Upp::Vector<Object3D*>* Selected = nullptr;
 		
+		bool OnObject = false;
+		
 		glm::vec3 focus;
 		
 		glm::vec3 UnProject2(float winX, float winY,float winZ){
@@ -89,6 +91,19 @@ namespace Upp{
 			return *this;
 		}
 		
+		MagicCamera& DetermineRotationPoint(Point& p){
+			
+			Object3D* obj = Pick(p.x,p.y);
+			if(obj){
+				focus = obj->GetBoundingBoxTransformed().GetCenter();
+				OnObject = true;
+			}else{
+				OnObject = false;
+			}
+			return *this;
+		}
+		
+		
 		virtual MagicCamera& ProcessMouseWheelMouvement(float xoffset,float yoffset){
 			xoffset *= MouseSensitivity;
 			yoffset *= MouseSensitivity;
@@ -101,14 +116,14 @@ namespace Upp{
 			glm::vec3 pos = focus - transform.GetPosition();
 			float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
 			
-			float distance = glm::distance(focus,transform.GetPosition());
-			if(angle < 0.98f){
+	//		float distance = glm::distance(focus,transform.GetPosition());
+			if(angle < 0.90f){
 				if (angle  < 0){
 					focus = glm::vec3(0.0f,0.0f,0.0f);
 				}
 				axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
 			}
-			if(distance > 70) transform.SetPosition(transform.GetPosition() *0.999f);
+	//		if(distance > 70) transform.SetPosition(transform.GetPosition() *0.999f);
 			
 			glm::vec3 between = transform.GetPosition() - axis;
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
@@ -156,11 +171,13 @@ namespace Upp{
 		}
 		
 		virtual MagicCamera& ProcessMouseScroll(float zdelta)noexcept{
+			DetermineRotationPoint(lastPress);
+			
 			float xoffset = (lastPress.x - (ScreenSize.cx/2)) * 0.005f;
 			float yoffset = (lastPress.y) * 0.005f * -1.0;
 			float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
 			bool doX = false, doY = false;
-			if(!(type == CT_ORTHOGRAPHIC)){
+			if(!(type == CT_ORTHOGRAPHIC) && !OnObject){
 				/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
 				if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 				doX = true;
