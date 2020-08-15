@@ -183,7 +183,7 @@ namespace Upp{
 				doX = true;
 				doY = true;
 			}
-			glm::vec3 scaling = (0.1f * (transform.GetPosition()));
+			glm::vec3 scaling = 0.1f *  (transform.GetPosition() - focus);
 			if(zdelta == - 120){
 				    if(doX)transform.SetPosition(transform.GetPosition() - (transform.GetRight() * xoffset));
 					if(doY){
@@ -199,8 +199,8 @@ namespace Upp{
 					transform.SetPosition(transform.GetPosition() - (transform.GetUp() * Upoffset));
 				}
 				if(!doY && !doX){
-					float dot = sqrt(pow(glm::dot(transform.GetPosition(),scaling),2));
-					if(dot > 1.0f)
+					float dot = sqrt(pow(glm::dot(focus,scaling),2));
+					if(dot > 3.0f)
 						transform.SetPosition(transform.GetPosition() - scaling);
 				}
 			}
