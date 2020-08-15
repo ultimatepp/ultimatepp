@@ -14,7 +14,7 @@ void SurfaceCtrl::InitShader(){
 	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
 		#include "shaders/FragmentNoLight.glsl"
 	)).Link();
-	
+	/*
 	DrawMeshLight.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
 		#include "shaders/VertexSimple.glsl"
 	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
@@ -26,6 +26,13 @@ void SurfaceCtrl::InitShader(){
 	)).AttachShader(OpenGLShader(GL_GEOMETRY_SHADER,
 		#include "shaders/GeometrySimple.glsl"
 	)).Link();
+	*/
+	DrawMeshLight.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
+		#include "shaders/VertexSimple.glsl"
+	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
+		#include "shaders/FragmentLight.glsl"
+	)).Link();
+	
 		
 	DrawMeshLine.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
 		#include "shaders/VertexSimple.glsl"
@@ -172,7 +179,7 @@ bool SurfaceCtrl::Key(dword key,int count){
 	}
 	
 	if(key == K_C){
-		static unsigned short e = 0;
+		static unsigned short e = 1;
 		camera.SetCameraType((CameraType)e);
 		e++;if(e == 2) e = 0;
 	}

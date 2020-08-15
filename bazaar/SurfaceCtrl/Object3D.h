@@ -76,7 +76,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		VolumeEnvelope *env = nullptr;
 
 		bool showMesh = true;
-		bool showMeshLine = true;
+		bool showMeshLine = false;
 		bool showMeshNormal = false;
 		bool showLight = true;
 		
