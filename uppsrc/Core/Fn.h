@@ -36,7 +36,7 @@ constexpr const T& max(const T& a, const T& b, const Args& ...args)
 //$+
 
 template <class T>
-constexpr const T& clamp(const T& x, const T& min_, const T& max_)
+constexpr T clamp(const T& x, const T& min_, const T& max_)
 {
 	return min(max(x, min_), max_);
 }
