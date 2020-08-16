@@ -28,20 +28,15 @@ topic "Small utility functions";
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:clamp`(const T`&`,const T`&`,const T`&`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) constexpr]_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* clamp]([@(0.0.255) c
-onst]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 min`_], 
-[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 max`_])&]
+lass]_[*@4 T]>_[@(0.0.255) constexpr]_[*@4 T]_[* clamp]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 min`_], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 max`_])&]
 [s2;%% Returns [%-*@3 x] if it is between [%-*@3 min`_] and [%-*@3 max`_] 
 .&]
 [s2; [%% If ][*@3 x][%%  is lower than ][*@3 min`_][%%  it returns ][*@3 min`_][%%  
 ][*@3 .]&]
 [s2;%% If [%-*@3 x] is higher than [%-*@3 max`_] it returns [%-*@3 max`_] 
 [%-*@3 .].&]
-[s3;%% &]
-[s4; &]
-[s5;:clamp`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* clamp]([*@4 T
-]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
-[s0;l288;*@3 &]
 [s3;%% &]
 [s4; &]
 [s5;:findarg`(const T`&`,const T1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class]_
