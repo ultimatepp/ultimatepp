@@ -17,7 +17,7 @@ encodings. U`+`+ has [^topic`:`/`/Core`/src`/CharSet`$en`-us`#AddCharSet`(const 
 xtensible] support for various encoding (charsets). It directly 
 defines following constants to express charset (names are self`-explanatory):&]
 [s0; &]
-[ {{3333:3333:3334f0;g0;^ [s0; [* CHARSET`_ISO8859`_1]&]
+[ {{3333:3333:3334f4;g0;^ [s0; [* CHARSET`_ISO8859`_1]&]
 [s0; [* CHARSET`_ISO8859`_2]&]
 [s0; [* CHARSET`_ISO8859`_3]&]
 [s0; [* CHARSET`_ISO8859`_4]&]
@@ -196,6 +196,11 @@ encoding [%-*@3 charset]. [%-*@3 charset] [*/ can] be CHARSET`_UTF8.
 Error`-escape characters 0xEExx are converted to xx bytes. If 
 code`-point does not exist in target encoding, [%-*@3 defchar ]is 
 used as result of conversion.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FromUnicodeBuffer`(const Upp`:`:wchar`*`): [_^Upp`:`:String^ String]_[* FromU
+nicodeBuffer]([@(0.0.255) const]_[_^Upp`:`:wchar^ wchar]_`*[*@3 src])&]
+[s2;%% Same as FromUnicodeBuffer([%-*@3 src] , wstrlen([%-*@3 src])).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:FromUnicode`(const WString`&`,byte`,int`): [_^String^ String]_[* FromUnicode]([@(0.0.255) c

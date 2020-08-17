@@ -192,8 +192,6 @@ inline bool IsXDigit(int c)        { return IsDigit(c) || c >= 'A' && c <= 'F' |
 
 bool IsDoubleWidth(int c);
 
-word UnicodeCombine(word chr, word combine);
-
 String Utf8ToAscii(const String& src);
 String Utf8ToUpperAscii(const String& src);
 String Utf8ToLowerAscii(const String& src);
@@ -252,6 +250,8 @@ bool    SaveStreamBOMUtf8(Stream& out, const String& data);
 bool    SaveFileBOMUtf8(const char *path, const String& data);
 
 // Deprecated
+
+word UnicodeCombine(word chr, word combine);
 
 inline bool IsCJKIdeograph(int c)  { return c >= 0x2e80 && c <= 0xdfaf || c >= 0xf900 && c <= 0xfaff; }
 
