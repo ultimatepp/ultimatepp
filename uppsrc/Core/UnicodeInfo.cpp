@@ -144,7 +144,7 @@ UnicodeInfo::UnicodeInfo()
 
 static int sUnicodeDecompose(dword codepoint, dword *t, Vector<dword> *r, bool only_canonical)
 { // TODO: Add hangul support
-	UnicodeInfo& f = Single<UnicodeInfo>();
+	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(codepoint);
 	if(q >= 0 && (!only_canonical || q < f.canonical_count)) {
 		String s = f.decomposed[q];
@@ -152,7 +152,7 @@ static int sUnicodeDecompose(dword codepoint, dword *t, Vector<dword> *r, bool o
 			r->SetCount(s.GetCount() >> 2);
 		int i;
 		for(i = 0; 4 * i < s.GetCount(); i++)
-			(r ? (*r)[i] : t[i]) = *(const dword *)(~s + 4 * i);
+			(r ? (*r)[i] : t[i]) = ((const dword *)~s)[i];
 		return i;
 	}
 	return 0;
@@ -176,10 +176,8 @@ dword UnicodeCompose(const dword *t, int count)
 		return 0;
 	if(count == 1)
 		return t[0];
-	String s;
-	for(int i = 0; i < count; i++)
-		s.Cat((char *)(t + i), 4);
-	UnicodeInfo& f = Single<UnicodeInfo>();
+	String s((byte *)t, sizeof(dword) * count);
+	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.decomposed.Find(s);
 	return q >= 0 && q < f.canonical_count ? f.composed[q] : 0;
 }
@@ -187,7 +185,7 @@ dword UnicodeCompose(const dword *t, int count)
 
 dword ToUpperRest_(dword c)
 {
-	UnicodeInfo& f = Single<UnicodeInfo>();
+	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.lower.Find(c);
 	return q >= 0 ? f.upper[q] : c;
 }
@@ -204,14 +202,14 @@ dword ToLowerRest_(dword c)
 		return 0xe5;
 	if(c == 0xa64a) // CYRILLIC CAPITAL LETTER MONOGRAPH UK
 		return 0xa64b;
-	UnicodeInfo& f = Single<UnicodeInfo>();
+	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.upper.Find(c);
 	return q >= 0 ? f.lower[q] : c;
 }
 
 char ToAsciiRest_(dword c)
 {
-	UnicodeInfo& f = Single<UnicodeInfo>();
+	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(c);
 	if(q < 0)
 		return ' ';
