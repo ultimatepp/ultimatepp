@@ -404,13 +404,6 @@ character.&]
 [s2;%% Returns true if [%-*@3 c] is a double`-width UNICODE character 
 (like CJK ideograph).&]
 [s3;%% &]
-[s4;%% &]
-[s5;:UnicodeCombine`(word`,word`): [_^word^ word]_[* UnicodeCombine]([_^word^ word]_[*@3 chr],
- [_^word^ word]_[*@3 combine])&]
-[s2;%% Combines [%-*@3 chr] with diacritical marking [%-*@3 combine], 
-returns the result as UNICODE character. Not all combinations 
-are covered...&]
-[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Utf8ToAscii`(const Upp`:`:String`&`): [_^Upp`:`:String^ String]_[* Utf8ToAsci
 i]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 src])&]
