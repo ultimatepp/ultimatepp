@@ -49,27 +49,55 @@ byte unicode_fast_info__[] = {
 };
 
 struct UnicodeInfo {
+	struct CharBits {
+		Vector<byte *> page;
+	
+		void Set(int i) {
+			int ii = i >> 10;
+			byte *b = page.At(ii, NULL);
+			if(!b) {
+				b = page[ii] = new byte[128];
+				memset(b, 0, 128);
+			}
+			b[(i >> 3) & 127] |= (1 << (i & 7));
+		}
+		
+		void Shrink() { page.Shrink(); }
+		
+		bool Get(int i) {
+			int ii = i >> 10;
+			return ii >= 0 && ii < page.GetCount() && page[ii] && (page[ii][(i >> 3) & 127] & (1 << (i & 7)));
+		}
+		
+		~CharBits() {
+			for(byte *b : page)
+				if(b)
+					delete[] b;
+		}
+	};
+	
 	Index<dword>                      composed;
 	Index<String>                     decomposed; // using String as the vessel for dwords
 	int                               canonical_count;
-	Index<dword>                      lower;
-	Index<dword>                      upper;
-	Index<dword>                      rtl;
-	Index<dword>                      letter;
-	Index<dword>                      islower;
-	Index<dword>                      isupper;
-	Index<dword>                      ismark;
+
+	Index<dword> lower;
+	Index<dword> upper;
+	CharBits     rtl;
+	CharBits     letter;
+	CharBits     islower;
+	CharBits     isupper;
+	CharBits     ismark;
 	
-	void Load(const Vector<dword>& data, Index<dword>& x, int& offset);
+	void Load(const Vector<dword>& data, CharBits& x, int& offset);
 	
 	UnicodeInfo();
 };
 
-void UnicodeInfo::Load(const Vector<dword>& data, Index<dword>& x, int& offset)
+void UnicodeInfo::Load(const Vector<dword>& data, CharBits& x, int& offset)
 {
 	int count = data[offset];
 	for(int i = 0; i < count; i++)
-		x.Add(data[i + 1 + offset]);
+		x.Set(data[i + 1 + offset]);
 	x.Shrink();
 	offset += count + 1;
 }
@@ -97,7 +125,6 @@ UnicodeInfo::UnicodeInfo()
 		data.Add(val);
 		prev = val;
 	}
-
 	
 	int count = canonical_count = data[0];
 	count += data[1];
@@ -182,7 +209,6 @@ dword UnicodeCompose(const dword *t, int count)
 	return q >= 0 && q < f.canonical_count ? f.composed[q] : 0;
 }
 
-
 dword ToUpperRest_(dword c)
 {
 	const UnicodeInfo& f = Single<UnicodeInfo>();
@@ -214,32 +240,32 @@ char ToAsciiRest_(dword c)
 	if(q < 0)
 		return ' ';
 	int ch = *(const dword *)~f.decomposed[q];
-	return ch < 128 ? ch : ' ';
+	return ch >= ' ' && ch < 128 ? ch : ' ';
 }
 
 bool IsRTL_(dword c)
 {
-	return Single<UnicodeInfo>().rtl.Find(c) >= 0;
+	return Single<UnicodeInfo>().rtl.Get(c);
 }
 
 bool IsLetter_(dword c)
 {
-	return Single<UnicodeInfo>().letter.Find(c) >= 0;
+	return Single<UnicodeInfo>().letter.Get(c);
 }
 
 bool IsLower_(dword c)
 {
-	return c != (dword)ToUpper((int)c) || Single<UnicodeInfo>().islower.Find(c) >= 0;
+	return c != (dword)ToUpper((int)c) || Single<UnicodeInfo>().islower.Get(c);
 }
 
 bool IsUpper_(dword c)
 {
-	return c != (dword)ToLower((int)c) || Single<UnicodeInfo>().isupper.Find(c) >= 0;
+	return c != (dword)ToLower((int)c) || Single<UnicodeInfo>().isupper.Get(c);
 }
 
 bool IsMark_(dword c)
 {
-	return Single<UnicodeInfo>().ismark.Find(c) >= 0;
+	return Single<UnicodeInfo>().ismark.Get(c);
 }
 
 };

@@ -228,7 +228,7 @@ word]>_[* UnicodeDecompose]([_^Upp`:`:dword^ dword]_[*@3 codepoint],
 [@(0.0.255) bool]_[*@3 only`_canonical])&]
 [s2;%% Returns UNICODE decomposition of given [%-*@3 codepoint] into 
 base and combining characters. If [%-*@3 only`_canonical] is true, 
-only canonical decomposition is allowed..&]
+only canonical decomposition is allowed.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:UnicodeCompose`(const Upp`:`:dword`*`,int`): [_^Upp`:`:dword^ dword]_[* Unico
