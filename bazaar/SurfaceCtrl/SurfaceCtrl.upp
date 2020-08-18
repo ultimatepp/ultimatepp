@@ -2,7 +2,6 @@ description "\377B113,255,200";
 
 uses
 	Surface,
-	Surface,
 	GLCtrl_glad;
 
 file
