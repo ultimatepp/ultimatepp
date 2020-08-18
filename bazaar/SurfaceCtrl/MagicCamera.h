@@ -1,7 +1,8 @@
 #ifndef _SurfaceCtrl_MagicCamera_h_
 #define _SurfaceCtrl_MagicCamera_h_
 
-#include "Camera.h"
+#include "UOGL_Camera.h"
+
 namespace Upp{
 	class MagicCamera : public UOGL_Camera{
 	private:

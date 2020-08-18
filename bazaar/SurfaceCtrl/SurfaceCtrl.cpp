@@ -83,11 +83,11 @@ void SurfaceCtrl::GLPaint(){
 void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create<Object3D>(surf,color);
 	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
-	obj.GetTransform().SetScale(glm::vec3(0.5f,0.5f,0.5f));
+	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
 	//obj.GetTransform().Move(50.0f,10.0f,0.0f);
 	obj.SetVolumeEnvelope(surf.env);
 	obj.SetLineWidth(2.0f);
-	ZoomToFit();
+//	ZoomToFit();
 	Refresh();
 }
 void SurfaceCtrl::ZoomToFit()noexcept{
@@ -110,6 +110,42 @@ void SurfaceCtrl::DrawAllObjects(){
 		obj.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
 	}
 }
+
+void SurfaceCtrl::DeleteObject(unsigned int iterator){
+	if(!(iterator >= allObjects.GetCount())){
+		{
+			Object3D& obj = allObjects[iterator];
+			int e = 0;
+			for(Object3D* ob : SelectedObject){
+				if(ob == &obj){
+					SelectedObject.Remove(e,1);
+					break;
+				}
+				e++;
+			}
+		}
+		allObjects.Remove(iterator,1);
+	}
+}
+void SurfaceCtrl::DeleteSelectedObjects(){
+	for(int e = 0 ; e < SelectedObject.GetCount(); e++){
+		int i = 0;
+		for(Object3D& ob : allObjects){
+			if (SelectedObject[e] == &ob){
+				allObjects.Remove(i,1);
+				SelectedObject.Remove(e,1);
+				e--;
+				break;
+			}
+			i++;
+		}
+	}
+}
+void SurfaceCtrl::DeleteAllObjects(){
+	SelectedObject.Clear();
+	allObjects.Clear();
+}
+
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.2f);
@@ -146,11 +182,14 @@ bool SurfaceCtrl::Key(dword key,int count){
 		camera.CenterFocus();
 	}
 	if( key == K_R){
-	/*	float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
-		if(allObjects.GetCount() > 0) allObjects[0].UpdateColors(0,allObjects[0].GetSurfaceCount()/2,data);*/
-		camera.GetTransform().SetPosition(0,0,camera.GetTransform().GetPosition().z);
-		camera.GetTransform().SetRotation(0.0f,0.0f,0.0f);
+		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
+		if(allObjects.GetCount() > 0) allObjects[0].UpdateColors(0,allObjects[0].GetSurfaceCount()/2,data);
+
 		
+	}
+	
+	if( key == K_DELETE){
+		DeleteSelectedObjects();
 	}
 
 	if( key == K_L){
@@ -244,6 +283,15 @@ bool SurfaceCtrl::Key(dword key,int count){
 		SelectedObject.Clear();
 		camera.ResetFocus();
 	}
+	
+	if(key & K_CTRL && key & K_A){
+		SelectedObject.Clear();
+		for(Object3D& obj : allObjects){
+			obj.ShowBoundingBox(true);
+			SelectedObject.Add(&obj);
+		}
+	}
+	
 	Refresh();
 	return true;
 }

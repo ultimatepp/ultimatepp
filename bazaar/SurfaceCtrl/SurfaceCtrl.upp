@@ -14,7 +14,7 @@ file
 	BoundingBox.h,
 	Shader.h,
 	Transform.h,
-	Camera.h,
+	UOGL_Camera.h,
 	MagicCamera.h,
 	shaders/Vertex.glsl highlight cpp,
 	shaders/VertexSimple.glsl highlight cpp,

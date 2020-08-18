@@ -33,7 +33,7 @@ SHADER(400 core,
 	    float Linear;\n
 	    float Quadratic;\n
 	};
-	PointLight pointLight = PointLight ( vec3( 0.0, 0.0, 0.0), vec3( 1.0,0.0,0.0) , vec3( 2.0, 2.0, 2.0), vec3(  1.0, 1.0, 1.0), 1.0, 0.022, 0.0019);
+	PointLight pointLight = PointLight ( vec3( -40.0, 40.0, 0.0), vec3( 1.0,1.0,1.0) , vec3( 2.0, 2.0, 2.0), vec3(  1.0, 1.0, 1.0), 1.0, 0.022, 0.0019);
 	
 	vec3 CalcColorDirLight(Material material,DirLight light, vec3 normal, vec3 fragPos, vec3 viewPos);\n
 	vec3 CalcPointLight(Material material,PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir);\n

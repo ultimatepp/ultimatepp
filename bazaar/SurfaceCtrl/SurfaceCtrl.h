@@ -56,13 +56,13 @@ class SurfaceCtrl : public GLCtrl_glad{
 		Function <void()> OnBegin;
 		Function <void()> WhenPaint;
 		Function <void()> OnEnd;
-		
 	
-		//FreeCamera& GetFreeCamera()noexcept{return euler;}
-		MagicCamera& GetSketchupCamera()noexcept{return camera;}
-	//	TrackBallCamera& GetTrackBallCamera()noexcept{return camera;}
+		MagicCamera& GetCamera()noexcept{return camera;}
 		
 		void CreateObject(Surface& surf,Upp::Color color)noexcept;
+		void DeleteObject(unsigned int iterator);
+		void DeleteSelectedObjects();
+		void DeleteAllObjects();
 		
 		void DrawAllObjects();
 		
