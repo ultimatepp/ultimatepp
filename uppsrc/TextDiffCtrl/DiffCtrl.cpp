@@ -156,11 +156,14 @@ DiffDlg::DiffDlg()
 
 void FileDiff::Open()
 {
-	if(!fs.ExecuteOpen())
+	if(IsNull(r)) {
+		if(!fs.ExecuteOpen())
+			return;
+		r <<= ~fs;
+	}
+	if(IsNull(r))
 		return;
-	String f = ~fs;
-	r <<= f;
-	diff.Set(LoadFile(editfile), extfile = LoadFile(f));
+	diff.Set(LoadFile(editfile), extfile = LoadFile(~~r));
 }
 
 void FileDiff::Execute(const String& f)
@@ -179,6 +182,12 @@ FileDiff::FileDiff(FileSel& fs_)
 	Icon(DiffImg::Diff());
 	diff.InsertFrameRight(r);
 	r <<= THISBACK(Open);
+}
+
+void FileDiff::Execute(const String& lpath, const String& rpath)
+{
+	r <<= rpath;
+	Execute(lpath);
 }
 
 FileSel& DiffFs() {

@@ -30,6 +30,28 @@ String GetTypeName(const char *s)
 	return s;
 }
 
+void CheckLogEtalon(const char *etalon_path)
+{
+#ifdef _DEBUG
+	auto LoadLog = [](const String& path) {
+		String s = Filter(LoadFile(path), [](int c) { return c == '\r' ? 0 : c; });
+		return s.Mid(max(s.FindAfter("\n"), 0));
+	};
+	
+	String log = LoadLog(GetStdLogPath());
+	String etalon = LoadLog(etalon_path);
+
+	ASSERT(log == etalon);
+	
+	LOG("================= OK");
+#endif
+}
+
+void CheckLogEtalon()
+{
+	CheckLogEtalon(GetDataFile("Etalon.log"));
+}
+
 bool TimingInspector::active = true;
 
 static TimingInspector s_zero; // time of Start / End without actual body to measure

@@ -207,6 +207,8 @@ struct FileDiff : DiffDlg {
 	FileDiff(FileSel& fs);
 
 	FileSel& fs;
+
+	void Execute(const String& lpath, const String& rpath);
 };
 
 class DirDiffDlg : public TopWindow {

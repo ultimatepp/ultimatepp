@@ -491,7 +491,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
 	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
-	    .Help("Show differences between the project and arbitrary files");
+	    .Help("Show differences between the current and arbitrary files");
+	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer && GetTargetLogPath().GetCount(),
+	             AK_DIFFLOG, IdeImg::DiffLog(), THISBACK(DiffLog))
+	    .Help("Show differences between the current and arbitrary files");
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
 		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))

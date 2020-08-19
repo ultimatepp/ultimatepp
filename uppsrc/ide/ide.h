@@ -793,6 +793,7 @@ public:
 		void   GoOpposite();
 		void   Print();
 		void   Diff();
+		void   DiffLog();
 		void   DiffFiles(const char *lname, const String& l, const char *rname, const String& r);
 		String LoadConflictFile(const String& n);
 		void   GotoDiffLeft(int line, DiffDlg *df);
