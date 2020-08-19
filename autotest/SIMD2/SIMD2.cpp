@@ -371,20 +371,7 @@ CONSOLE_APP_MAIN
 		DDUMP(x);
 	}
 
-	auto LoadLog = [](const String& path) {
-		String s = Filter(LoadFile(path), [](int c) { return c == '\r' ? 0 : c; });
-		return s.Mid(max(s.FindAfter("\n"), 0));
-	};
-	
-	String log = LoadLog(GetStdLogPath());
-	String etalon = LoadLog(GetDataFile("Etalon.log"));
-
-	SaveFile(GetHomeDirFile("log.txt"), log);
-	SaveFile(GetHomeDirFile("etalon.txt"), etalon);
-	
-	ASSERT(log == etalon);
-	
-	Cout() << "================= OK\r\n";
+	CheckLogEtalon();
 #else
 	Cout() << "================= NO SIMD\r\n";
 #endif
