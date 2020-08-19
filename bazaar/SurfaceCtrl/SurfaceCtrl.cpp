@@ -171,6 +171,7 @@ void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
+	camera.GetTransform().SetRotation(0,0,0);
 	camera.SetAllObjects(allObjects);
 	camera.SetAllSelected(SelectedObject);
 }
