@@ -703,6 +703,17 @@ void Ide::Diff()
 	diffdlg.Execute(editfile);
 }
 
+void Ide::DiffLog()
+{
+	String log_path = GetTargetLogPath();
+	if(IsNull(editfile) || IsNull(log_path) || max(GetFileLength(editfile), GetFileLength(log_path)) > 100*1024*1024)
+		return;
+	FileDiff diffdlg(AnySourceFs());
+	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
+	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
+	diffdlg.Execute(editfile, log_path);
+}
+
 struct ConflictDiff : TopWindow {
 	Label        left, right;
 	TextDiffCtrl diff;

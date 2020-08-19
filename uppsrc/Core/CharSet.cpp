@@ -2011,7 +2011,7 @@ static word sComb(const word *s, word chr)
 word UnicodeCombine(word chr, word combine)
 {
 	dword h[2] = { chr, combine };
-	return UnicodeCompose(h, 2);
+	return (word)UnicodeCompose(h, 2);
 }
 
 void ToUpper(char *t, const char *s, int len, byte charset)

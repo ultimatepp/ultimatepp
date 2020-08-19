@@ -216,7 +216,7 @@ public:
 
 	Vector()                                  { Zero(); }
 	explicit Vector(int n)                    { items = n; vector = RawAlloc(n); alloc = n; Construct(vector, vector + n); }
-	explicit Vector(int n, const T& init)     { items = n; vector = RawAlloc(n); alloc = n; DeepCopyConstruct(vector, vector + n, init); }
+	explicit Vector(int n, const T& init)     { items = n; vector = RawAlloc(n); alloc = n; DeepCopyConstructFill(vector, vector + n, init); }
 	~Vector() {
 		Free();
 		return; // Constraints:

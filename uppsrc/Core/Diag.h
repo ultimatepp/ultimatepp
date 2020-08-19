@@ -246,6 +246,9 @@ void DumpMap(Stream& s, const T& t) {
 	s << LOG_END;
 }
 
+void CheckLogEtalon(const char *etalon_path);
+void CheckLogEtalon();
+
 #ifdef UPP_HEAP
 String AsString(const MemoryProfile& mem);
 #else
