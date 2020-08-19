@@ -3,7 +3,9 @@
 namespace Upp{
 SurfaceCtrl::SurfaceCtrl(){
 	InitCamera();
+	GLResize(600,800);
 	OnBegin = [&]{InitOpenGLFeatures();};
+	
 }
 SurfaceCtrl::~SurfaceCtrl(){
 	OnEnd();
@@ -50,6 +52,21 @@ void SurfaceCtrl::InitShader(){
 		#include "shaders/FragmentBlack.glsl"
 	)).Link();
 }
+
+void SurfaceCtrl::ProcessTime(){
+	double currentFrame = GetEllapsedTime(); //Calcules le nombre de frames par seconde //Changement made by Iñaki
+	DeltaTime = currentFrame - lastFrame;//Calcules le nombre de frames par seconde
+	lastFrame = currentFrame;//Calcules le nombre de frames par seconde
+	//Fps counter
+	bufferFrame++;
+	if( currentFrame -  LastTime >= 1.0){
+		frameCount =bufferFrame;
+		bufferFrame=0;
+		LastTime = currentFrame;
+	}
+}
+
+
 void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
@@ -65,10 +82,11 @@ void SurfaceCtrl::GLPaint(){
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
 		loaded = true;
 	}
+	if(TimerStarted)ProcessTime();
 	MemoryIgnoreLeaksBlock __;
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
 	
 	if(ShowAxis)
@@ -79,8 +97,10 @@ void SurfaceCtrl::GLPaint(){
 			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
 		}
 	}
+	if(FastMode) Refresh();
+	
 }
-void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
+Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create<Object3D>(surf,color);
 	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
@@ -88,7 +108,8 @@ void SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	obj.SetVolumeEnvelope(surf.env);
 	obj.SetLineWidth(2.0f);
 //	ZoomToFit();
-	Refresh();
+	if(!FastMode) Refresh();
+	return obj;
 }
 void SurfaceCtrl::ZoomToFit()noexcept{
 	double mxGlobal=0;
@@ -156,9 +177,10 @@ void SurfaceCtrl::InitCamera()noexcept{
 void SurfaceCtrl::GLResize(int w, int h){
 	sizeW = w;
 	sizeH = h;
+	HSizePos(GetRect().TopLeft().x, w - GetRect().BottomRight().x).VSizePos(GetRect().TopLeft().y, h - GetRect().BottomRight().y);
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	camera.SetScreenSize(w,h);
-	Refresh();
+	if(!FastMode)Refresh();
 }
 bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_Z){
@@ -292,13 +314,13 @@ bool SurfaceCtrl::Key(dword key,int count){
 		}
 	}
 	
-	Refresh();
+	if(!FastMode)Refresh();
 	return true;
 }
 void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	if(camera.MouseMiddlePressed || camera.MouseLeftPressed ){
 		camera.ProcessMouveMouvement(p.x - camera.lastPress.x,p.y - camera.lastPress.y);
-		Refresh();
+		if(!FastMode)Refresh();
 	}
 	
 	camera.lastPress = p;
@@ -344,13 +366,13 @@ void SurfaceCtrl::ProcessSelectedObject(Point& p, dword keyflags)noexcept{
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 //	camera.forceZoom = keyflags & K_CTRL;
 	camera.ProcessMouseScroll(zdelta);
-	Refresh();
+	if(!FastMode) Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword keyflags){
 	camera.lastPress = p;
 	camera.MouseLeftPressed = true;
 	ProcessSelectedObject(p,keyflags);
-	Refresh();
+	if(!FastMode) Refresh();
 }
 void SurfaceCtrl::LeftUp(Point p, dword keyflags){
 	camera.MouseLeftPressed = false;

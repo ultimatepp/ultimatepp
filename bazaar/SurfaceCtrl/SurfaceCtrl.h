@@ -48,7 +48,17 @@ class SurfaceCtrl : public GLCtrl_glad{
 		float sizeW = 800.0f;
 		float sizeH = 600.0f;
 		
+		bool TimerStarted = false;
+		std::chrono::time_point<std::chrono::high_resolution_clock> start,end; //High resolution clock
+		double DeltaTime=0.0f,LastTime=0.0f,lastFrame =0.0f,Timer=0.0f;
+		int bufferFrame =0,frameCount = 0; //used to calculate FPS
+		void ProcessTime();
+		
+		bool FastMode = false;
+
 		void InitShader();
+		
+		
 	public:
 		SurfaceCtrl();
 		~SurfaceCtrl();
@@ -59,7 +69,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 	
 		MagicCamera& GetCamera()noexcept{return camera;}
 		
-		void CreateObject(Surface& surf,Upp::Color color)noexcept;
+		Object3D& CreateObject(Surface& surf,Upp::Color color)noexcept;
 		void DeleteObject(unsigned int iterator);
 		void DeleteSelectedObjects();
 		void DeleteAllObjects();
@@ -71,7 +81,6 @@ class SurfaceCtrl : public GLCtrl_glad{
 		void InitOpenGLFeatures()noexcept;
 		void ProcessSelectedObject(Point& p, dword keyflags)noexcept;
 		
-		
 		virtual void GLPaint();
 		virtual void GLResize(int w, int h);
 		virtual bool Key(dword key,int count);
@@ -82,6 +91,35 @@ class SurfaceCtrl : public GLCtrl_glad{
 		virtual void MouseLeave();
 		virtual void MiddleDown(Point p, dword keyflags);
 		virtual void MiddleUp(Point p, dword keyflags);
+		
+		//Fast Mode
+		SurfaceCtrl& EnableFastMode(){FastMode = true;return *this;}
+		SurfaceCtrl& DisableFastMode(){FastMode = false;return *this;}
+		
+		//time Management
+		SurfaceCtrl& StartTimer(){TimerStarted = true; start= std::chrono::high_resolution_clock::now();return *this;}
+		SurfaceCtrl& StopTimer(){TimerStarted = false;return *this;}
+		
+		double GetEllapsedTime(){
+			if(TimerStarted){
+				end = std::chrono::high_resolution_clock::now();
+				std::chrono::duration<double> diff = end-start;
+				Timer =diff.count();
+				return Timer;
+			}else{
+				LOG("Timer has not been started, Start it by using SurfaceCtrl::StartTimer();");
+				return 0;
+			}
+		}
+		double GetDeltaTime(){
+			if(TimerStarted){
+				return DeltaTime;
+			}else{
+				LOG("Timer has not been started, Start it by using SurfaceCtrl::StartTimer();");
+				return 0;
+			}
+		}
+		
 
 };
 }
