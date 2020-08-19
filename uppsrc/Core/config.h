@@ -23,8 +23,11 @@
 		#define PLATFORM_WIN32 1
 		#undef  WINVER
 		#undef  _WIN32_WINNT
+
 		#ifdef flagWIN10
-			#define _WIN32_WINNT 0x0A00
+			#define _WIN32_WINNT _WIN32_WINNT_WIN10
+			#undef NTDDI_VERSION
+			#define NTDDI_VERSION NTDDI_WIN10_19H1
 		#else
 			#define _WIN32_WINNT 0x0501
 		#endif
