@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 #include <Sql/Sql.h>
-#include "lib/sqleet.h"
+#include "lib/sqlite3mc_amalgamation.h"
 #include "Sqlite3.h"
 
 namespace Upp {
@@ -326,15 +326,57 @@ String Sqlite3Connection::ToString() const {
 }
 
 //////////////////////////////////////////////////////////////////////
-int Sqlite3Session::ChangePassword(const String& password) {
+int Sqlite3Session::SetDBEncryption(int cipher) {
+	// "default:cipher" => use SQLCipher during the entire lifetime of database instance
+	// CIPHER_CHAHA2020_SQLEET settings are backward compatible with the previous sqleet implementation in the U++
+	// Note: It is not recommended to use legacy mode for encrypting new databases. It is supported for compatibility
+	// reasons only, so that databases that were encrypted in legacy mode can be accessed.
+
 	int retcode = SQLITE_ERROR;
-#ifndef SQLITE_HAS_CODEC
-	SetError("SQLite Encryption Extension is not enabled", "", SQLITE_ERROR, "SQLite Encryption Extension is not enabled");
-#else
-	retcode = sqlite3_rekey(db, password, password.GetCount());
-	if(retcode)
+	switch (cipher) {
+		case CIPHER_CHAHA2020_DEFAULT: {
+			int value = sqlite3mc_config(db, "default:cipher", CODEC_TYPE_CHACHA20);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "kdf_iter", 64007);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "legacy", 0);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "legacy_page_size", 4096);
+			if (value != -1)
+				retcode = SQLITE_OK;
+			} break;
+		case CIPHER_CHAHA2020_SQLEET:
+		default: {
+			int value = sqlite3mc_config(db, "default:cipher", CODEC_TYPE_CHACHA20);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "kdf_iter", 12345);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "legacy", 1);
+			if (value != -1)
+				value = sqlite3mc_config_cipher(db, "chacha20", "legacy_page_size", 4096);
+			if (value != -1)
+				retcode = SQLITE_OK;
+		} break;
+	}
+	return retcode;
+}
+
+int Sqlite3Session::ChangePassword(const String& password, int cipher) {
+	int retcode = SQLITE_OK;
+
+	if (!IsEncrypted()) {
+		retcode = SetDBEncryption(cipher);
+	}
+
+	if(SQLITE_OK == retcode) {
+		retcode = sqlite3_rekey(db, password, password.GetCount());
+	}
+
+	if(retcode) {
 		SetError(sqlite3_errstr(retcode), "", retcode, sqlite3_errstr(retcode));
-#endif
+	} else {
+		encrypted = password.GetCount() > 0;
+	}
 	return retcode;
 }
 
@@ -349,7 +391,7 @@ int Sqlite3Session::CheckDBAccess() {
 	return retcode;
 }
 
-bool Sqlite3Session::Open(const char* filename, const String& password) {
+bool Sqlite3Session::Open(const char* filename, const String& password, int cipher) {
 	// Only open db once.
 	ASSERT(NULL == db);
 	current_filename = filename;
@@ -358,10 +400,23 @@ bool Sqlite3Session::Open(const char* filename, const String& password) {
 	// I don't know how to get the list of attached databases from the API
 	current_dbname = "main";
 	int retcode = sqlite3_open(filename, &db);
-#ifdef SQLITE_HAS_CODEC
-	if(SQLITE_OK == retcode)
-		retcode = sqlite3_key(db, password, password.GetCount());
-#endif
+	if(SQLITE_OK == retcode && password.GetCount() > 0) {
+		if(SQLITE_OK == SetDBEncryption(cipher)) {
+			retcode = sqlite3_key(db, password, password.GetCount());
+		// When setting a new key on an empty database (that is, a database with zero bytes length),
+		// you have to make a subsequent write access so that the database will actually be encrypted.
+		// You’d usually want to write to a new database anyway, but if not, you can execute the VACUUM
+		// statement instead to force SQLite to write to the empty database.
+			if (GetFileLength(filename) <= 0) {
+				sqlite3_stmt *stmt;
+				retcode = sqlite3_prepare_v2(db, "VACUUM;", -1, &stmt, 0);
+				if (SQLITE_OK == retcode)
+					sqlite3_finalize(stmt);
+			}
+			if (SQLITE_OK == retcode)
+				encrypted = true;
+		}
+	}
 	if(SQLITE_OK == retcode)
 		retcode = CheckDBAccess();
 	if(SQLITE_OK == retcode)
@@ -429,12 +484,8 @@ Sqlite3Session::Sqlite3Session()
 	db = NULL;
 	Dialect(SQLITE3);
 	busy_timeout = 0;
-
-#ifndef SQLITE_HAS_CODEC
-	see = false;
-#else
 	see = true;
-#endif
+	encrypted = false;
 }
 
 Sqlite3Session::~Sqlite3Session()
