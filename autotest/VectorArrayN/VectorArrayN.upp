@@ -1,0 +1,12 @@
+description "Tests Vector/Array constructors with defined number of items\377";
+
+uses
+	Core;
+
+file
+	Etalon.log,
+	VectorArrayN.cpp;
+
+mainconfig
+	"" = "";
+
