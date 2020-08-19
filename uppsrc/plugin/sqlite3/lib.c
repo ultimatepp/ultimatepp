@@ -5,4 +5,4 @@
 #define SQLITE_ENABLE_JSON1 1
 #define SQLITE_ENABLE_RBU 1
 
-#include "lib/sqleet.c"
+#include "lib/sqlite3mc_amalgamation.c"

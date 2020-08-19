@@ -39,7 +39,8 @@ protected:
 private:
 	friend class Sqlite3Connection;
 
-	bool see;
+	bool see;       // SQLite Encryption Extension is supported
+	bool encrypted; // the database is encrypted
 	sqlite3 *db;
 	String current_filename;
 	String current_dbname;
@@ -52,11 +53,14 @@ private:
 	void Reset();
 	void Cancel();
 
+	int SetDBEncryption(int cipher);
+
 public:
 	bool IsSee()                                        { return see; };
-	int  ChangePassword(const String& password);
+	bool IsEncrypted()                                  { return NULL != db && encrypted; };
+	int  ChangePassword(const String& password, int cipher = CIPHER_CHAHA2020_SQLEET);
 	int  CheckDBAccess();
-	bool Open(const char *filename, const String& password = Null);
+	bool Open(const char *filename, const String& password = Null, int cipher = CIPHER_CHAHA2020_SQLEET);
 	void Close();
 
 	operator sqlite3 *()                                { return db; }
@@ -69,6 +73,11 @@ public:
 
 	Sqlite3Session();
 	~Sqlite3Session();
+
+	enum Ciphers {
+		CIPHER_CHAHA2020_SQLEET,
+		CIPHER_CHAHA2020_DEFAULT
+	};
 };
 
 }
