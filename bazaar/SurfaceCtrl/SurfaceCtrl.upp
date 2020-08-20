@@ -15,6 +15,7 @@ file
 	Transform.h,
 	UOGL_Camera.h,
 	MagicCamera.h,
+	MagicCamera.cpp,
 	shaders/Vertex.glsl highlight cpp,
 	shaders/VertexSimple.glsl highlight cpp,
 	shaders/GeometrySimple.glsl highlight cpp,

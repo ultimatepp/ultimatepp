@@ -56,6 +56,10 @@ class Surface;
 
 class Object3D : public Upp::Moveable<Object3D>{
 	private:
+		inline static int GlobalID = 0;
+		
+		int ID;
+		
 		GLuint VerticesVBO = 0;
 		GLuint ColorVBO = 0;
 		GLuint NormalVBO = 0;
@@ -72,7 +76,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		float normalOpacity = 0.5f;
 		float normalLenght = 1.0f;
 		
-		unsigned int SurfaceCount = 0;
+		int SurfaceCount = 0;
 		VolumeEnvelope *env = nullptr;
 
 		bool showMesh = true;
@@ -92,10 +96,11 @@ class Object3D : public Upp::Moveable<Object3D>{
 		void BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
 		
 	public:
-		Object3D(){}
-		Object3D(const Object3D& obj){*this = obj;}
+		Object3D():ID(GlobalID++){}
+		Object3D(const Object3D& obj):ID(GlobalID++){*this = obj;}
 		Object3D(Surface& surface,Upp::Color = Green());
 		Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
+		Object3D(Upp::String& ObjFile);
 		
 		Object3D& operator=(const Object3D& obj){
 			VerticesVBO = obj.VerticesVBO;
@@ -121,6 +126,14 @@ class Object3D : public Upp::Moveable<Object3D>{
 			DrawType = obj.DrawType;
 			return *this;
 		}
+		
+		
+		Object3D& LoadObj(String& FileObj);
+		Object3D& LoadStl(String& StlFile);
+		Object3D& LoadSurface(Surface& Surface);
+		Surface GetSurface();
+		
+		int GetID()const {return ID;}
 		
 		Object3D& SetDrawType(GLenum dt)noexcept{DrawType = dt; return *this;}
 		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
@@ -150,6 +163,8 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3DMaterial& GetMaterial(){return material;}
 		
 		Transform& GetTransform()noexcept{return transform;}
+		const Transform& GetTransform()const noexcept{return transform;}
+		
 		unsigned int GetNumberOfSurface()noexcept{return SurfaceCount;}
 		GLuint GetVAO()noexcept{return VAO;}
 		unsigned int GetSurfaceCount()noexcept{return SurfaceCount;}
@@ -162,7 +177,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 			return box.TransformBy(transform.GetModelMatrix());
 		}
 		
-		bool TestLineIntersection(const glm::vec3 & start, const glm::vec3 & end){
+		bool TestLineIntersection(const glm::vec3 & start, const glm::vec3 & end)const{
 			BoundingBox box  = Upp::pick(GetBoundingBoxTransformed());
 			return box.LineIntersection(start,end);
 		}
