@@ -199,7 +199,7 @@ public:
 	bool Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom, 
 		Vector<String> &excepFolders, Vector<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS flags = NO_FLAG);
-	long GetCount()				{return diffList.GetCount();};
+	long GetCount()				{return diffList.size();};
 	bool SaveFile(const char *fileName);
 	bool LoadFile(const char *fileName);
 	String ToString();
@@ -269,6 +269,15 @@ template<class T>
 inline T fround(T x, int numdec) {
 	int64 mult = 10*numdec;
 	return T(int64(x*mult + .5))/mult;	
+}
+template<typename T>
+T fact(T val) {
+	if (val <= 0)
+		throw std::invalid_argument("fact() accepts only nonzero positive numbers");
+	T ret = 1;
+	while (val > 1)
+		ret *= val--;
+	return ret; 
 }
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
@@ -666,15 +675,15 @@ private:
 
 template <class C>
 static void ShuffleAscending(C &data, std::default_random_engine &generator) {
-	for (int i = 0; i < data.GetCount() - 2; i++) {
-	  	std::uniform_int_distribution<int> distribution(i, data.GetCount() - 1);
+	for (int i = 0; i < data.size() - 2; i++) {
+	  	std::uniform_int_distribution<int> distribution(i, data.size() - 1);
         Swap(data[i], data[distribution(generator)]);
     }
 }
 
 template <class C>
 static void ShuffleDescending(C &data, std::default_random_engine &generator) {
-	for (int i = data.GetCount() - 1; i > 0; i--) {
+	for (int i = data.size() - 1; i > 0; i--) {
 	  	std::uniform_int_distribution<int> distribution(0, i);
         Swap(data[i], data[distribution(generator)]);
     }
@@ -716,7 +725,7 @@ bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
 
 template <class Range, class V>
 int Find(const Range& r, const V& value, int from = 0) {
-	for(int i = from; i < r.GetCount(); i++)
+	for(int i = from; i < r.size(); i++)
 		if(r[i] == value) 
 			return i;
 	return -1;
@@ -728,12 +737,12 @@ int FindAdd(Range& r, const V& value, int from = 0) {
 	if (id >= 0)
 		return id; 
 	r.Add(value);
-	return r.GetCount()-1;
+	return r.size()-1;
 }
 
 template <class Range, class V>
 int FindRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
-	for(int i = from; i < r.GetCount(); i++) {
+	for(int i = from; i < r.size(); i++) {
 		if (EqualRatio(r[i], value, ratio))
 			return i;
 	}
@@ -746,12 +755,12 @@ int FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
 	if (id >= 0)
 		return id; 
 	r.Add(value);
-	return r.GetCount()-1;
+	return r.size()-1;
 }
 
 template <class Range, class V>
 int FindDelta(const Range& r, const V& value, const V& delta, int from = 0) {
-	for(int i = from; i < r.GetCount(); i++) 
+	for(int i = from; i < r.size(); i++) 
 		if(abs(r[i] - value) <= delta) 
 			return i;
 	return -1;
@@ -763,34 +772,23 @@ int FindAddDelta(Range& r, const V& value, const V& delta, int from = 0) {
 	if (id >= 0)
 		return id; 
 	r.Add(value);
-	return r.GetCount()-1;
+	return r.size()-1;
 }
 
 template <class Range, class V>
 int FindRoundDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
 	String svalue = FormatDouble(value, numDecimals);
-	for(int i = from; i < r.GetCount(); i++) 
+	for(int i = from; i < r.size(); i++) 
 		if(FormatDouble(r[i], numDecimals) == svalue) 
 			return i;
 	return -1;
 }
-/*
-template <class Range, class V>
-int FindTruncDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
-	V svalue = TruncDecimals(value, numDecimals);
-	for(int i = from; i < r.GetCount(); i++) {
-		V s = TruncDecimals(r[i], numDecimals);
-		if(s == svalue) 
-			return i;
-	}
-	return -1;
-}*/
 
 template <class Range, class V>
 int FindClosest(const Range& r, const V& value, int from = 0) {
 	int minId = -1;
 	V minDiff = FLT_MAX;
-	for(int i = from; i < r.GetCount(); i++) {
+	for(int i = from; i < r.size(); i++) {
 		V diff = abs(value - r[i]);
 		if (diff < minDiff) {
 			minDiff = diff;	
@@ -802,9 +800,9 @@ int FindClosest(const Range& r, const V& value, int from = 0) {
 
 template <class Range>
 bool Compare(const Range& a, const Range& b) {
-	if (a.GetCount() != b.GetCount())
+	if (a.size() != b.size())
 		return false;
-	for(int i = 0; i < a.GetCount(); i++) {
+	for(int i = 0; i < a.size(); i++) {
 		if(a[i] != b[i]) 
 			return false;
 	}
@@ -813,9 +811,9 @@ bool Compare(const Range& a, const Range& b) {
 	
 template <class Range, class V>
 bool CompareRatio(const Range& a, const Range& b, const V& ratio) {
-	if (a.GetCount() != b.GetCount())
+	if (a.size() != b.size())
 		return false;
-	for(int i = 0; i < a.GetCount(); i++) 
+	for(int i = 0; i < a.size(); i++) 
 		if (!EqualRatio(a[i], b[i], ratio)) 
 			return false;
 	return true;
@@ -824,7 +822,7 @@ bool CompareRatio(const Range& a, const Range& b, const V& ratio) {
 template <class Range>
 String ToString(const Range& a) {
 	String ret;
-	for(int i = 0; i < a.GetCount(); i++) {
+	for(int i = 0; i < a.size(); i++) {
 		if (i > 0)
 			ret << ";";
 		ret << a[i]; 
