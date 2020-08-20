@@ -136,9 +136,9 @@ String FourierEquation::GetEquation(int numDigits) {
 static inline double DegToRad(double deg) {return deg*M_PI/180.;}
 static inline double RadToDeg(double rad) {return rad*180./M_PI;}
 
-void EvalExpr::EvalThrowError(CParser &p, const char *s) {
-	CParser::Pos pos = p.GetPos();
-	CParser::Error err(Format("(%d): ", pos.GetColumn()) + s);
+void EvalExpr::EvalThrowError(CParserPP &p, const char *s) {
+	CParserPP::Pos pos = p.GetPos();
+	CParserPP::Error err(Format("(%d): ", pos.GetColumn()) + s);
 	throw err;
 }
 
@@ -159,6 +159,11 @@ doubleUnit uceil(doubleUnit val) {
 
 doubleUnit ufloor(doubleUnit val) {
 	val.val = floor(val.val);
+	return val;
+}
+
+doubleUnit uround(doubleUnit val) {
+	val.val = round(val.val);
 	return val;
 }
 
@@ -263,6 +268,7 @@ doubleUnit ulog10(doubleUnit val) {
 EvalExpr::EvalExpr() {
 	noCase = false;
 	errorIfUndefined = false;
+	allowString = false;
 	
 	constants.Add("pi", doubleUnit(M_PI));
 	constants.Add("e", doubleUnit(M_E));
@@ -270,6 +276,7 @@ EvalExpr::EvalExpr() {
 	functions.Add("abs", ufabs);
 	functions.Add("ceil", uceil);
 	functions.Add("floor", ufloor);
+	functions.Add("round", uround);
 	functions.Add("sqrt", usqrt);
 	functions.Add("sin", usin);
 	functions.Add("cos", ucos);
@@ -287,10 +294,10 @@ EvalExpr::EvalExpr() {
 	functions.Add("radToDeg", uRadToDeg);
 }
 
-doubleUnit EvalExpr::Term(CParser& p) {
+doubleUnit EvalExpr::Term(CParserPP& p) {
 	bool isneg = p.Char('-');
 	if (p.IsId()) {
-		String strId = p.ReadId();
+		String strId = p.ReadIdPP();
 		if(doubleUnit (*function)(doubleUnit) = functions.Get(strId, 0)) {
 			p.PassChar('(');
 			doubleUnit x = Exp(p);
@@ -302,18 +309,21 @@ doubleUnit EvalExpr::Term(CParser& p) {
 				ret.Neg();
 			return ret;
 		}	
-		String strsearch;
+		String strIdSearch;
 		if (noCase)
-			strsearch = ToLower(strId);
+			strIdSearch = ToLower(strId);
 		else
-			strsearch = strId;
-		doubleUnit ret = constants.Get(strsearch, Null);
+			strIdSearch = strId;
+		doubleUnit ret = constants.Get(strIdSearch, Null);
 		if (IsNull(ret)) {
-			ret = variables.Get(strsearch, Null);
-			if (IsNull(ret)) {
+			int id = FindVariable(strIdSearch);
+			if (id >= 0)
+				ret = variables[id];
+			else {
 				if (errorIfUndefined)
 					EvalThrowError(p, Format(t_("Unknown identifier '%s'"), strId));	
-				ret = variables.GetAdd(strsearch, 0);
+				lastVariableSetId = variables.FindAdd(strIdSearch, 0);
+				ret = variables[lastVariableSetId];
 			}
 		}
 		if (isneg)
@@ -333,7 +343,7 @@ doubleUnit EvalExpr::Term(CParser& p) {
 	}
 }
 
-doubleUnit EvalExpr::Pow(CParser& p) {
+doubleUnit EvalExpr::Pow(CParserPP& p) {
 	doubleUnit x = Term(p);
 	for(;;) {
 		if(p.Char('^')) {
@@ -345,7 +355,7 @@ doubleUnit EvalExpr::Pow(CParser& p) {
 	}
 }
 
-doubleUnit EvalExpr::Mul(CParser& p) {
+doubleUnit EvalExpr::Mul(CParserPP& p) {
 	doubleUnit x = Pow(p);
 	for(;;) {
 		if(p.Char('*'))
@@ -353,7 +363,7 @@ doubleUnit EvalExpr::Mul(CParser& p) {
 		else if (p.Char2('|', '|')) 
 			x.ResParallel(Pow(p));
 		else if(memcmp(p.GetPtr(), "·", strlen("·")) == 0) {
-			CParser::Pos pos = p.GetPos();
+			CParserPP::Pos pos = p.GetPos();
 			pos.ptr += strlen("·");
 			p.SetPos(pos);
 			p.Spaces();
@@ -361,7 +371,7 @@ doubleUnit EvalExpr::Mul(CParser& p) {
 		} else if(p.Char('/')) {
 			x.Div(Pow(p));
 		} else if(memcmp(p.GetPtr(), "º", strlen("º")) == 0) { 
-			CParser::Pos pos = p.GetPos();
+			CParserPP::Pos pos = p.GetPos();
 			pos.ptr += strlen("º");
 			p.SetPos(pos);
 			p.Spaces();
@@ -371,7 +381,7 @@ doubleUnit EvalExpr::Mul(CParser& p) {
 	}
 }
 
-doubleUnit EvalExpr::Exp(CParser& p) {
+doubleUnit EvalExpr::Exp(CParserPP& p) {
 	doubleUnit x = Mul(p);
 	for(;;) {
 		if(p.Char('+'))
@@ -386,29 +396,22 @@ doubleUnit EvalExpr::Exp(CParser& p) {
 	}
 }
 
-doubleUnit EvalExpr::Eval(String line) {
-	line = TrimBoth(line);
-	if (line.IsEmpty())
-		return Null;
-	
-	p.Set(line);
+doubleUnit EvalExpr::AssignVariable(String var, String expr) {
+	p.Set(expr);
+	if (noCase)
+		var = ToLower(var);
+	int idalloc = FindAddVariable(var);
 	try {
-		if(p.IsId()) {
-			CParser::Pos pos = p.GetPos();
-			String var = p.ReadId();
-			if(p.Char('=')) {
-				doubleUnit ret = Exp(p);
-				if (noCase)
-					var = ToLower(var);
-				SetVariable(var, ret);
-				return ret;
-			} else {
-				p.SetPos(pos);
-				return Exp(p);
-			}
-		} else
-			return Exp(p);
-	} catch(CParser::Error e) {
+		doubleUnit ret = Exp(p);
+		SetVariable(idalloc, ret);
+		return ret;
+	} catch(CParserPP::Error e) {
+		if (allowString) {
+			doubleUnit ret;
+			ret.sval = expr;
+			SetVariable(idalloc, ret);
+			return ret;	
+		}
 		lastError = e;
 		return Null;
 	} catch(Exc e) {
@@ -417,9 +420,56 @@ doubleUnit EvalExpr::Eval(String line) {
 	}
 }
 
-String EvalExpr::TermStr(CParser& p, int numDigits) {
+doubleUnit EvalExpr::AssignVariable(String var, double d) {
+	if (noCase)
+		var = ToLower(var);
+	try {
+		doubleUnit ret(d);
+		SetVariable(var, ret);
+		return ret;
+	} catch(CParserPP::Error e) {
+		lastError = e;
+		return Null;
+	} catch(Exc e) {
+		lastError = e;
+		return Null;
+	}
+}
+		
+doubleUnit EvalExpr::Eval(String line) {
+	line = TrimBoth(line);
+	if (line.IsEmpty())
+		return Null;
+	
+	p.Set(line);
+	try {
+		if(p.IsId()) {
+			CParserPP::Pos pos = p.GetPos();
+			String var = p.ReadIdPP();
+			if(p.Char('=')) {
+				if (noCase)
+					var = ToLower(var);
+				doubleUnit ret = Exp(p);
+				SetVariable(var, ret);
+				return ret;
+			} else {
+				p.SetPos(pos);
+				return Exp(p);
+			}
+		} else
+			return Exp(p);
+	} catch(CParserPP::Error e) {
+		lastError = e;
+		return Null;
+	} catch(Exc e) {
+		lastError = e;
+		return Null;
+	}
+}
+
+String EvalExpr::TermStr(CParserPP& p, int numDigits) {
 	if(p.IsId()) {
-		String strId = p.ReadId();
+		String strId = p.ReadIdPP();
 		if(functions.Find(strId) >= 0) {
 			p.PassChar('(');
 			String x = ExpStr(p, numDigits);
@@ -430,14 +480,14 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 			strId = ToLower(strId);
 		if (IsNull(numDigits)) {
 			if (constants.Find(strId) < 0)
-				variables.GetAdd(strId, 0);
+				lastVariableSetId = variables.FindAdd(strId, 0);
 			return strId;
 		} else {
 			if (constants.Find(strId) >= 0)
 				return strId;
 			else {
-				double dat = variables.GetAdd(strId, 0).val;
-				return FormatDoubleFix(dat, numDigits);
+				lastVariableSetId = variables.FindAdd(strId, 0);
+				return FormatDoubleFix(variables[lastVariableSetId].val, numDigits);
 			}
 		}
 	}
@@ -449,7 +499,7 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 	return FormatDoubleFix(p.ReadDouble(), IsNull(numDigits) ? 3 : numDigits);
 }
 
-String EvalExpr::PowStr(CParser& p, int numDigits) {
+String EvalExpr::PowStr(CParserPP& p, int numDigits) {
 	String x = TermStr(p, numDigits);
 	for(;;)
 		if(p.Char('^'))
@@ -458,7 +508,7 @@ String EvalExpr::PowStr(CParser& p, int numDigits) {
 			return x;
 }
 
-String EvalExpr::MulStr(CParser& p, int numDigits) {
+String EvalExpr::MulStr(CParserPP& p, int numDigits) {
 	String x = PowStr(p, numDigits);
 	for(;;)
 		if(p.Char('*'))
@@ -469,7 +519,7 @@ String EvalExpr::MulStr(CParser& p, int numDigits) {
 			return x;
 }
 
-String EvalExpr::ExpStr(CParser& p, int numDigits) {
+String EvalExpr::ExpStr(CParserPP& p, int numDigits) {
 	String x = MulStr(p, numDigits);
 	for(;;) {
 		if(p.Char('+'))
@@ -490,14 +540,14 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 	if (line.IsEmpty())
 		return Null;
 	
-	CParser p(line);
+	CParserPP p(line);
 	try {
 		if(p.IsId()) {
-			CParser::Pos pos = p.GetPos();
-			String var = p.ReadId();
+			CParserPP::Pos pos = p.GetPos();
+			String var = p.ReadIdPP();
 			if(p.Char('=')) {
 				String ret = ExpStr(p, numDigits);
-				variables.GetAdd(var, 0);
+				lastVariableSetId = variables.FindAdd(var, 0);
 				return var + " = " + ret;
 			} else {
 				p.SetPos(pos);
@@ -505,7 +555,7 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 			}
 		} else
 			return ExpStr(p, numDigits);
-	} catch(CParser::Error e) {
+	} catch(CParserPP::Error e) {
 		lastError = Format(t_("Error evaluating '%s': %s"), line, e);
 		return Null;
 	} catch(Exc e) {

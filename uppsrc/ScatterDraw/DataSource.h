@@ -718,7 +718,7 @@ inline T LinearInterpolate(T x, T x0, T x1, T y0, T y1) {
 	if (abs(x1_0) < T(FLT_EPSILON))
 		return (y0 + y1)/T(2);
 	
-  	return ((x1 - x)/x1_0)*y0 + ((x - x0)/x1_0)*y1;
+  	return y0 + (x - x0)*(y1 - y0)/x1_0;
 }
 
 template <class T>
@@ -760,16 +760,63 @@ inline T TrilinearInterpolate(T x, T y, T z, T x0, T x1, T y0, T y1, T z0, T z1,
 	return LinearInterpolate(z, z0, z1, r0, r1);
 }
 
+template <class T>
+T LinearInterpolate(const T x, const Point_<T> *vec, int len) {
+	ASSERT(len > 1);
+	if (x < vec[0].x)
+		return vec[0].y;
+	for (int i = 0; i < len-1; ++i) {
+		if (vec[i+1].x >= x && vec[i].x <= x) 
+			return LinearInterpolate(x, vec[i].x, vec[i+1].x, vec[i].y, vec[i+1].y);
+	}
+	return vec[len-1].y;
+}
+
 template <class Range, class T>
-T LinearInterpolate(const T x, const Range &vecx, const Range &vecy) {
-	ASSERT(vecx.GetCount() > 1 && vecy.GetCount() > 1);
+T LinearInterpolate(const T x, const Range &vec) {
+	ASSERT(vec.GetCount() > 1);
+	return LinearInterpolate(x, (const T *)vec, vec.GetCount());
+}
+
+template <class T>
+void GetInterpolatePos(const T x, const T *vecx, int len, int &x0, int &x1) {
+	if (x < vecx[0]) {
+		x0 = x1 = 0;
+		return;
+	}
+	for (int i = 0; i < len-1; ++i) {
+		if (vecx[i+1] >= x && vecx[i] <= x) {
+			x0 = i;
+			x1 = i+1;
+			return;
+		}
+	}
+	x0 = x1 = len-1;
+}
+
+template <class Range, class T>
+void GetInterpolatePos(const T x, const Range &vecx, int &x0, int &x1) {
+	ASSERT(vecx.GetCount() > 1);
+	GetInterpolatePos(x, (const T *)vecx, vecx.GetCount(), x0, x1);
+}
+
+template <class T>
+T LinearInterpolate(const T x, const T *vecx, const T *vecy, int len) {
+	ASSERT(len > 1);
 	if (x < vecx[0])
 		return vecy[0];
-	for (int i = 0; i < vecx.GetCount()-1; ++i) {
+	for (int i = 0; i < len-1; ++i) {
 		if (vecx[i+1] >= x && vecx[i] <= x) 
 			return LinearInterpolate(x, vecx[i], vecx[i+1], vecy[i], vecy[i+1]);
 	}
-	return vecy[vecx.GetCount()-1];
+	return vecy[len-1];
+}
+
+template <class Range, class T>
+T LinearInterpolate(const T x, const Range &vecx, const Range &vecy) {
+	ASSERT(vecx.GetCount() > 1);
+	ASSERT(vecx.GetCount() == vecy.GetCount());
+	return LinearInterpolate(x, (const T *)vecx, (const T *)vecy, vecx.GetCount());
 }
 
 class TableInterpolate {
@@ -886,11 +933,8 @@ public:
 	
 private:
 	double *pdata;
-	//int lendata;
 	double *pxAxis;
-	//int lenxAxis;
 	double *pyAxis;
-	//int lenyAxis;
 };
 
 
