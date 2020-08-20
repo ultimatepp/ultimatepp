@@ -5,7 +5,7 @@ namespace Upp {
 	
 enum IntegralType {TRAPEZOIDAL, SIMPSON_1_3}; 
 
-double Integral(const Eigen::VectorXd &y, const Eigen::VectorXd &x);
+double Integral(Eigen::VectorXd &y, const Eigen::VectorXd &x);
 double Integral(Eigen::VectorXd &y, double dx, IntegralType type = TRAPEZOIDAL);
 	
 }

@@ -11,9 +11,9 @@ topic "class Rational : public Moveable<Rational> ";
 [s1;:Upp`:`:Rational`:`:class:%- [@(0.0.255) class]_[* Rational]_:_[@(0.0.255) public]_[*@3 Mo
 veable]<[* Rational]>_&]
 [s2; &]
-[s0; [^topic`:`/`/STEM4U`/srcimp`/ArbitraryPrecision`_en`-us^2 An arbitrary 
-integer precision][2  ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 rati
-onal number][2  type based on intInf.]&]
+[s0; [^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2 A rational 
+number based on an arbitrary precision integer][2  type based on 
+intInf.]&]
 [s0; [2 Arbitrary precision means that the type is never out of bounds.]&]
 [s0; [2 A rational number means that it is a fraction of a numerator 
 and denominator.]&]
