@@ -7,7 +7,3 @@ uses
 file
 	DemoTest.cpp;
 
-mainconfig
-	"" = "TEST",
-	"" = "";
-
