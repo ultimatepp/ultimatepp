@@ -39,12 +39,9 @@ class Object3DProvider {
 		}
 		Object3DProvider& AddLine(double x0, double y0, double z0, double x1, double y1, double z1,const Color& color){
 			if(begin){
-				vertexData.Add(x0);
-				vertexData.Add(y0);
-				vertexData.Add(z0);
-				vertexData.Add(x1);
-				vertexData.Add(y1);
-				vertexData.Add(z1);
+				vertexData
+				<<x0<<y0<<z0
+				<<x1<<y1<<z1;
 				
 				InsertFloatColor(2,color);
 			}
@@ -131,6 +128,25 @@ class Object3DProvider {
 		Object3DProvider& AddAxis(const Point3D &p, double len){
 			return AddAxis(p.x, p.y, p.z, len);
 		}
+		
+		Object3DProvider&  CreateAxis(double len){
+			if(begin){
+				//vertexData is a vector of float
+				//Len is the length of my axis (20 000)
+				vertexData << 0.0f << 0.0f << 0.0f
+						   << len  << 0.0f << 0.0f
+						   << 0.0f << 0.0f << 0.0f
+						   << 0.0f << len  << 0.0f
+						   << 0.0f << 0.0f << 0.0f
+						   << 0.0f << 0.0f << len;
+			
+			   InsertFloatColor(2,LtRed());
+			   InsertFloatColor(2,LtGreen());
+			   InsertFloatColor(2,LtBlue());
+			}
+			return *this;
+		}
+		
 		Object3DProvider& AddDoubleAxis(double x, double y, double z, double len, const Color &color){
 			AddLine(x-len/2, y	  , z	   , x+len/2, y	     , z	  , color);
 			AddLine(x		 , y-len/2, z	   , x		, y+len/2, z	  , color);

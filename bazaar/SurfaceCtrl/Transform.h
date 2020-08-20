@@ -26,7 +26,7 @@ class Transform{
 		glm::vec3 WorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 		
 		glm::vec3 Position = glm::vec3(0.0f);
-		glm::quat Rotation = glm::angleAxis(glm::radians(90.0f),glm::vec3(0.0f,1.0f,0.0f));
+		glm::quat Rotation = Transform::GetQuaterion(0.0f,glm::vec3(0.0f,0.0f,0.0f));
 		glm::vec3 Scale = glm::vec3(1.0f);
 		
 		void RecalculateFURW(){
@@ -86,8 +86,8 @@ class Transform{
 		glm::mat4 GetViewMatrix()const noexcept{return glm::lookAt(Position,Position + Front, Up);}
 		glm::mat4 GetModelMatrix()const noexcept{
 			glm::mat4 ModelMatrix = glm::mat4(1.0f);
-			ModelMatrix = glm::translate(ModelMatrix, Position);
-		    ModelMatrix = glm::scale(ModelMatrix, Scale);
+			ModelMatrix = glm::translate(ModelMatrix, Position); //position of cube
+		    ModelMatrix = glm::scale(ModelMatrix, Scale); //Scale (not used so glm::vec3(1.0f))
 			ModelMatrix *= glm::mat4_cast(Rotation);
 			return ModelMatrix;
 		}

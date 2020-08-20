@@ -17,11 +17,12 @@ SHADER(400 core,
 \n
 \n	//DirLight
 	struct DirLight{\n
+		vec3 DirectionOfDiffusion;\n
 	    vec3 Ambient;\n
 	    vec3 Diffuse;\n
 	    vec3 Specular;\n
 	};\n
-	DirLight dirlight = DirLight( vec3( 1.0, 1.0, 1.0) , vec3( 1.0, 1.0, 1.0), vec3( 0.64, 0.64, 0.64));\n
+	DirLight dirlight = DirLight(vec3(0.0,-1.0,0.0), vec3( 1.0, 1.0, 1.0) , vec3( 1.0, 1.0, 1.0), vec3( 0.64, 0.64, 0.64));\n
 //	DirLight dirlight = DirLight( vec3( 0.0, 0.0, 0.0) , vec3( 0.0, 0.0, 0.0), vec3( 0.0, 0.0, 0.0));\n
 \n
 	struct PointLight{\n
@@ -33,23 +34,23 @@ SHADER(400 core,
 	    float Linear;\n
 	    float Quadratic;\n
 	};
-	PointLight pointLight = PointLight ( vec3( -40.0, 40.0, 0.0), vec3( 1.0,1.0,1.0) , vec3( 2.0, 2.0, 2.0), vec3(  1.0, 1.0, 1.0), 1.0, 0.022, 0.0019);
+	PointLight pointLight = PointLight ( vec3( 0.0, 0.0, -50.0), vec3( 1.0,1.0,1.0) , vec3( 2.0, 2.0, 2.0), vec3(  1.0, 1.0, 1.0), 1.0, 0.022, 0.0019);
 	
 	vec3 CalcColorDirLight(Material material,DirLight light, vec3 normal, vec3 fragPos, vec3 viewPos);\n
 	vec3 CalcPointLight(Material material,PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir);\n
 \n
     void main(){\n
         vec3 norm = normalize(fs_normal);
-		FragColor =  vec4( (CalcColorDirLight(mat,dirlight,norm,fs_fragPos,viewPos)  + CalcPointLight(mat,pointLight,norm,fs_fragPos,viewPos)) , 1.0);\n
+		//FragColor =  vec4( (CalcColorDirLight(mat,dirlight,norm,fs_fragPos,viewPos)  + CalcPointLight(mat,pointLight,norm,fs_fragPos,viewPos)) , 1.0);\n
+		FragColor =  vec4( CalcColorDirLight(mat,dirlight,norm,fs_fragPos,viewPos)  , 1.0);\n
     }\n
 \n
     vec3 CalcColorDirLight(Material material,DirLight dirlight, vec3 normal,vec3 fragPos, vec3 viewPos){\n
 	    vec3 ambient  = dirlight.Ambient  * fs_color;\n
-	    vec3 lightDir = vec3(0.0, -1.0,0.0);\n
-	    float diff = max(dot(normal, lightDir), 0.0);\n
+	    float diff = max(dot(normal, dirlight.DirectionOfDiffusion), 0.0);\n
 	    vec3 diffuse  = dirlight.Diffuse  * diff * material.Diffuse;\n
 	    vec3 viewDir = normalize(viewPos - fragPos);
-	    vec3 reflectDir = reflect(-lightDir, normal);\n
+	    vec3 reflectDir = reflect(-dirlight.DirectionOfDiffusion, normal);\n
 	    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.Shininess);\n
 	    vec3 specular = dirlight.Specular * (spec * material.Specular);\n
 	    return (ambient + diffuse + specular);\n

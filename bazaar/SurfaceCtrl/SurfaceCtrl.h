@@ -34,6 +34,8 @@ class SurfaceCtrl : public GLCtrl_glad{
 		
 		Object3D Axis;
 		Object3D CameraFocus;
+		Object3D SimpleCube; //Test object Should be deleted in release version
+		Object3D SimpleCube2; //Test object Should be deleted in release version
 
 		MagicCamera camera;
 				

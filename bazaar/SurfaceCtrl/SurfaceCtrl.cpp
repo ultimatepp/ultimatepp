@@ -78,8 +78,9 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
-		Axis = objProvider.Begin(GL_LINES).AddAxis(0,0,0,200000).End();
+		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
+		
 		loaded = true;
 	}
 	if(TimerStarted)ProcessTime();
@@ -98,11 +99,10 @@ void SurfaceCtrl::GLPaint(){
 		}
 	}
 	if(FastMode) Refresh();
-	
 }
 Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create<Object3D>(surf,color);
-	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
+//	obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
 	//obj.GetTransform().Move(50.0f,10.0f,0.0f);
 	obj.SetVolumeEnvelope(surf.env);
@@ -171,7 +171,6 @@ void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();
 	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
-	camera.GetTransform().SetRotation(0,0,0);
 	camera.SetAllObjects(allObjects);
 	camera.SetAllSelected(SelectedObject);
 }
