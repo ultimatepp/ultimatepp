@@ -20,6 +20,7 @@ file
 	gtest-upp.h,
 	gtest-death-test.h,
 	gtest-internal-inl.h,
+	gtest-matchers.h,
 	gtest-message.h,
 	gtest-param-test.h,
 	gtest-printers.h,
