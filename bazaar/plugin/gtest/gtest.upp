@@ -7,6 +7,7 @@ library(POSIX) pthread;
 
 file
 	Sources readonly separator,
+	gtest-matchers.cc,
 	gtest-death-test.cc,
 	gtest-filepath.cc,
 	gtest-port.cc,
@@ -31,13 +32,10 @@ file
 	internal/gtest-death-test-internal.h,
 	internal/gtest-filepath.h,
 	internal/gtest-internal.h,
-	internal/gtest-linked_ptr.h,
-	internal/gtest-param-util-generated.h,
 	internal/gtest-param-util.h,
 	internal/gtest-port-arch.h,
 	internal/gtest-port.h,
 	internal/gtest-string.h,
-	internal/gtest-tuple.h,
 	internal/gtest-type-util.h,
 	"Include - Internal - Custom" readonly separator,
 	internal/custom/gtest.h,
