@@ -1,6 +1,9 @@
 #include "Object3D.h"
 #include <Surface/Surface.h>
 namespace Upp{
+int Object3D::GlobalID = 0;
+	
+	
 Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
 	glm::vec3 col(color.GetR()/255.0f,color.GetG()/255.0f,color.GetB()/255.0f);
 	Upp::Vector<float> vertexData;
@@ -71,17 +74,21 @@ Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp:
 	BuildOpenGLData(surface,normal,color);
 }
 
-Object3D& LoadObj(String& FileObj){
+Object3D& Object3D::LoadObj(String& FileObj){
 	//TODO
+	return *this;
 }
-Object3D& LoadStl(String& StlFile){
+Object3D& Object3D::LoadStl(String& StlFile){
 	//TODO
+	return *this;
 }
-Object3D& LoadSurface(Surface& Surface){
+Object3D& Object3D::LoadSurface(Surface& Surface){
 	//TODO
+	return *this;
 }
-Surface GetSurface(){
+Surface Object3D::GetSurface(){
 	//TODO
+	return Surface();
 }
 
 void Object3D::BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){

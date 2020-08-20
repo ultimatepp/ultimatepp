@@ -56,7 +56,7 @@ class Surface;
 
 class Object3D : public Upp::Moveable<Object3D>{
 	private:
-		inline static int GlobalID = 0;
+		static int GlobalID;
 		
 		int ID;
 		
@@ -126,7 +126,6 @@ class Object3D : public Upp::Moveable<Object3D>{
 			DrawType = obj.DrawType;
 			return *this;
 		}
-		
 		
 		Object3D& LoadObj(String& FileObj);
 		Object3D& LoadStl(String& StlFile);

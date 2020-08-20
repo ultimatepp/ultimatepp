@@ -276,7 +276,10 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	float XOffset = p.x - camera.lastPress.x;
 	float YOffset = p.y - camera.lastPress.y;
 	if(camera.MouseMiddlePressed){
-		camera.MouseWheelMouvement(XOffset,YOffset);
+		if(camera.ShiftPressed)
+			camera.ProcessMouseWheelTranslation(XOffset,YOffset);
+		else
+			camera.MouseWheelMouvement(XOffset,YOffset);
 		if(!fastMode) Refresh();
 	}else if(camera.MouseLeftPressed){
 		glm::vec3 x = GetCamera().GetTransform().GetRight() * (XOffset * GetCamera().GetMouvementSpeed());
