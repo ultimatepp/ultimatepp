@@ -51,7 +51,6 @@ It  will be converted private soon.&]
 [s4;%- &]
 [s5;:EvalExpr`:`:variables:%- [_^VectorMap^ VectorMap]<[_^String^ String], 
 [@(0.0.255) double]>_[* variables]&]
-[s2; [%-* variables] VectorMap includes all variables. It  will be 
-converted private soon.&]
+[s2; [%-* variables] VectorMap includes all variables.&]
 [s3;%- &]
 [s3; ]]

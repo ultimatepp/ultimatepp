@@ -506,10 +506,11 @@ public:
 class doubleUnit : public Moveable<doubleUnit> {
 public:
 	doubleUnit() : doubleUnit(0)						{}
-	doubleUnit(double _val) : val(_val), unit(0, 0, 0)	{}
+	doubleUnit(double _val) : val(_val), sval(String::GetVoid()), unit(0, 0, 0)	{}
 	doubleUnit(const Nuller&) 							{SetNull();}
 	
 	double val;
+	String sval;
 	Unit unit;
 	
 	void Sum(const doubleUnit &d) {
@@ -563,15 +564,54 @@ public:
 
 template<> inline bool IsNull(const doubleUnit& r)  {return r.val < DOUBLE_NULL_LIM;}
 
+class CParserPP : public CParser {
+public:
+	CParserPP() : CParser() {}
+	CParserPP(const char *ptr) : CParser(ptr) {}
+	
+	String ReadIdPP() {
+		if(!IsId())
+			ThrowError("missing id");
+		String result;
+		const char *b = term;
+		const char *p = b;
+		
+		while (true) {
+			while (iscid(*p))
+				p++;
+			if ((*p) == '[') {
+				p++;
+				const char *p0 = p;
+				while ((*p) >= '0' && (*p) <= '9')
+					p++;
+				if (p0 == p)
+					ThrowError("empty vector index");
+				if ((*p) != ']')
+					ThrowError("wrong token found closing vector index");
+				else
+					p++;
+			} else if ((*p) == '.')
+				p++;
+			else
+				break;
+		}
+		term = p;
+		DoSpaces();
+		return String(b, (int)(uintptr_t)(p - b));
+	}
+};
 
 class EvalExpr {
 public:
 	EvalExpr();
-	void Init()									  {variables.Clear();}
+	void Clear()									  		{variables.Clear();}
 	doubleUnit Eval(String line);
+	doubleUnit AssignVariable(String var, String expr);
+	doubleUnit AssignVariable(String var, double d);
 	String EvalStr(String line, int numDigits = 3);
-	EvalExpr &SetCaseSensitivity(bool val = true) {noCase = !val;			return *this;}
-	EvalExpr &SetErrorUndefined(bool val = true)  {errorIfUndefined = val;	return *this;}
+	EvalExpr &SetCaseSensitivity(bool val = true) 			{noCase = !val;				return *this;}
+	EvalExpr &SetErrorUndefined(bool val = true)  			{errorIfUndefined = val;	return *this;}
+	EvalExpr &SetAllowString(bool val = true)  				{allowString = val;			return *this;}
 	
 	const String &GetFunction(int id) 						{return functions.GetKey(id);}
 	int GetFunctionsCount() 								{return functions.GetCount();}
@@ -583,9 +623,15 @@ public:
 	int GetConstantId(String &name)							{return constants.Find(name);}
 	int GetConstantsCount() 								{return constants.GetCount();}
 
-	void SetVariable(String name, doubleUnit value)			{variables.GetAdd(name) = value;}
-	void SetVariable(int id, doubleUnit value)				{variables[id] = value;}
-	doubleUnit GetVariable(String name)						{return variables.GetAdd(name);}	
+	doubleUnit &GetVariable(String name) {
+		int id = FindVariable(name);
+		if (id >= 0)
+			return variables[id];
+		if (errorIfUndefined)
+			EvalThrowError(p, Format(t_("Unknown identifier '%s'"), name));
+		return variables.Add(name, Null);
+	}
+	doubleUnit &GetVariable(int id)							{return variables[id];}
 	void GetVariable(int id, String &name, doubleUnit &val)	{name = variables.GetKey(id); val = variables[id];}
 	int GetVariablesCount() 								{return variables.GetCount();}
 	void ClearVariables();
@@ -594,31 +640,49 @@ public:
 	VectorMap<String, doubleUnit> constants;
 	VectorMap<String, doubleUnit (*)(doubleUnit)> functions;
 
-	CParser p;
+	CParserPP p;
 
-	static void EvalThrowError(CParser &p, const char *s);
+	static void EvalThrowError(CParserPP &p, const char *s);
 	
+	virtual int FindVariable(String strId) 					{return variables.Find(strId);}
+		
 protected:
-	doubleUnit Exp(CParser& p);
-	
+	doubleUnit Exp(CParserPP& p);
+
+	void SetVariable(String name, doubleUnit value)	{
+		lastVariableSetId = variables.FindAdd(name);
+		variables[lastVariableSetId] = value;
+	}
+	void SetVariable(int id, doubleUnit value) {
+		lastVariableSetId = id;
+		variables[id] = value;
+	}
+	int FindAddVariable(String name) {
+		return lastVariableSetId = variables.FindAdd(name);
+	}
+	void RemoveVariable(int id) {
+		variables.Remove(id);
+	}
 	bool noCase;
 	String lastError;
 	VectorMap<String, doubleUnit> variables;
 	bool errorIfUndefined;
-	
+	bool allowString;
+	int lastVariableSetId = -1;
+		
 	bool IsFunction(String str)								{return functions.Get(str, 0);}
 	bool IsConstant(String str)								{return !IsNull(GetConstant(str));}
 	
 private:
-	void *Functions_Get(CParser& p);
-	doubleUnit Term(CParser& p);
-	doubleUnit Pow(CParser& p);
-	doubleUnit Mul(CParser& p);
+	void *Functions_Get(CParserPP& p);
+	doubleUnit Term(CParserPP& p);
+	doubleUnit Pow(CParserPP& p);
+	doubleUnit Mul(CParserPP& p);
 	
-	String TermStr(CParser& p, int numDigits);
-	String PowStr(CParser& p, int numDigits);
-	String MulStr(CParser& p, int numDigits);
-	String ExpStr(CParser& p, int numDigits);
+	String TermStr(CParserPP& p, int numDigits);
+	String PowStr(CParserPP& p, int numDigits);
+	String MulStr(CParserPP& p, int numDigits);
+	String ExpStr(CParserPP& p, int numDigits);
 };
 
 class UserEquation : public ExplicitEquation {
@@ -633,7 +697,7 @@ public:
 		if (parts.IsEmpty())
 			return;
 		strEquation = parts[0];
-		eval.Init();
+		eval.Clear();
 		eval.SetConstant(varHoriz, doubleUnit(23));
 		idx = eval.GetConstantsCount() - 1;
 		eval.EvalStr(strEquation);
@@ -661,7 +725,7 @@ public:
 	double f(double x)  {
 		eval.SetConstant(idx, doubleUnit(x));
 		for (int i = 0; i < coeff.GetCount(); ++i) 
-			eval.SetVariable(varNames[i], coeff[i]);
+			eval.AssignVariable(varNames[i], coeff[i]);
 		return eval.Eval(strEquation).val;
 	}
 	void SetName(String _name) 					    {name = _name;}
