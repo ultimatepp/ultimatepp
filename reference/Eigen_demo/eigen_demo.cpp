@@ -30,7 +30,7 @@ struct SerialTest {
 		
 CONSOLE_APP_MAIN
 {
-	// http://eigen.tuxfamily.org/dox/TutorialMatrixClass.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html
 	Cout() << "\n\nTutorial page 1 - The Matrix class";
 	
 	Cout() << "\n\nCoefficient accessors";
@@ -84,7 +84,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	// http://eigen.tuxfamily.org/dox/TutorialMatrixArithmetic.html
+	// https://eigen.tuxfamily.org/dox-devel/group__TutorialMatrixArithmetic.html
 	Cout() << "\n\nTutorial page 2 - Matrix and vector arithmetic";
 	
 	Cout() << "\n\nAddition and subtraction";
@@ -184,7 +184,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	// http://eigen.tuxfamily.org/dox/TutorialArrayClass.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialArrayClass.html
 	Cout() << "\n\nTutorial page 3 - The Array class and coefficient-wise operations ";
 	
 	Cout() << "\n\nAccessing values inside an Array";
@@ -269,7 +269,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	// http://eigen.tuxfamily.org/dox/TutorialBlockOperations.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialBlockOperations.html
 	Cout() << "\n\nTutorial page 4 - Block operations";
 	
 	Cout() << "\n\nUsing block operations";
@@ -333,7 +333,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	//http://eigen.tuxfamily.org/dox/TutorialAdvancedInitialization.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialAdvancedInitialization.html
 	Cout() << "\n\nTutorial page 5 - Advanced initialization";
 
 	Cout() << "\n\nThe comma initializer";
@@ -426,7 +426,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	//http://eigen.tuxfamily.org/dox/TutorialLinearAlgebra.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialLinearAlgebra.html
 	Cout() << "\n\nTutorial page 6 - Linear algebra and decompositions";
 
 	Cout() << "\n\nBasic linear solving	Ax = b";
@@ -532,7 +532,7 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
-	// http://eigen.tuxfamily.org/dox/TutorialReductionsVisitorsBroadcasting.html
+	// https://eigen.tuxfamily.org/dox/group__TutorialReductionsVisitorsBroadcasting.html
 	Cout() << "\n\nTutorial page 7 - Reductions, visitors and broadcasting";
 		
 	Cout() << "\n\nReductions";
