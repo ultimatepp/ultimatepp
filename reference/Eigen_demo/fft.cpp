@@ -62,7 +62,7 @@ void FFTTests()
 	        double T = 1/freq;
 	        str << "\n" << freq << csvSep << (freq > 0 ? FormatDouble(T) : "") << csvSep 
 	        			<< 2*std::abs(freqbuf[i])/numData << csvSep 
-	        			<< 2*std::abs(freqbuf2[i])/numData;;
+	        			<< 2*std::abs(freqbuf2[i])/numData;
 	    }
 	    String fftFileName = AppendFileName(GetDesktopFolder(), "fft.csv");
 	    Cout() << "\nFFT saved in '" << fftFileName << "'";
