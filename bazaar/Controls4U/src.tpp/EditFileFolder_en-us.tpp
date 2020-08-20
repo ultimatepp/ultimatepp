@@ -177,7 +177,7 @@ history.&]
 [s4;%- &]
 [s5;:BrowseDroppingWidth`(int`):%- [_^EditFileFolder^ EditFileFolder]_`&[* BrowseDropping
 Width]([@(0.0.255) int]_[*@3 w])&]
-[s2; Set the width of the drop down list to [%-*@3 w] .&]
+[s2; Sets the width of the drop down list to [%-*@3 w] .&]
 [s3; &]
 [s4;%- &]
 [s5;:WhenChange:%- [_^Callback^ Function<bool ()>]_[* WhenChange]&]

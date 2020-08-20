@@ -41,7 +41,7 @@ void PaintArc(Painter &w, double cx, double cy, double R, double ang0, double an
 void EditFileFolder::Init() {
 	WhenEnter = THISBACK1(DoGo, true);
 	butBrowseLeft.SetImage(Controls4UImg::Folder());
-	butBrowseLeft.Tip(t_("Browse"));
+	butBrowseLeft.Tip(t_("Click to open file selector"));
 	butBrowseLeft <<= THISBACK(DoBrowse);
 	AddFrame(butBrowseRight);
 	butBrowseRight.SetImage(Controls4UImg::Folder());
@@ -61,7 +61,7 @@ void EditFileFolder::Init() {
 	butUp.Enable(false);
 	butGo.SetImage(CtrlImg::SmallRight()); 
 	butGo <<= THISBACK1(DoGo, true);
-	butFolder.Width(10).Tip(t_("Open folder"));
+	butFolder.Width(10).Tip(t_("Open file directory"));
 	InsertFrame(1, butFolder);
 	isLoad = true;
 	histInd = -1;
@@ -253,7 +253,7 @@ EditFile::EditFile() {
 	isFile = true;		
 	title = t_("Select file");	
 	Init();
-	butBrowseRight.Tip(t_("Browse file"));
+	butBrowseRight.Tip(t_("Click to browse file"));
 	butFolder.WhenAction = [&] {
 		String fileName = GetData();
 		String folder = GetFileFolder(fileName);
@@ -275,7 +275,7 @@ EditFolder::EditFolder() {
 	isFile = false;	
 	title = t_("Select folder");	
 	Init();
-	butBrowseRight.Tip(t_("Browse folder"));
+	butBrowseRight.Tip(t_("Click to browse folder"));
 	butFolder.WhenAction = [&] {
 		String folder = GetData();
 		if (Trim(folder).IsEmpty())
