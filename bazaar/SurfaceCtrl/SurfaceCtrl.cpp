@@ -71,7 +71,6 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	Object3D& obj = allObjects.Create(surf,color);
 	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
-	obj.SetVolumeEnvelope(surf.env);
 	obj.SetLineWidth(2.0f);
 	if(!fastMode) Refresh();
 	return obj;
@@ -85,6 +84,11 @@ int SurfaceCtrl::FindObject(int ID)const noexcept{
 	}
 	return -1;
 }
+Object3D& SurfaceCtrl::GetObject(int ID)noexcept{
+	ASSERT_(FindObject(ID) != -1, "Invalide Object ID");
+	return allObjects[FindObject(ID)];
+}
+
 void SurfaceCtrl::DeleteObject(int ID)noexcept{
 	for(int e = 0; e < allObjects.GetCount(); e++){
 		Object3D& obj = allObjects[e];
@@ -297,6 +301,7 @@ void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	if(!fastMode) Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword keyflags){
+	SetFocus();
 	camera.lastPress = p;
 	camera.MouseLeftPressed = true;
 	UpdateSelectedObjectViaMouse(p,keyflags);
@@ -306,6 +311,7 @@ void SurfaceCtrl::LeftUp(Point p, dword keyflags){
 	camera.MouseLeftPressed = false;
 }
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
+	SetFocus();
 	camera.MouseMiddlePressed = true;
 	camera.ShiftPressed = keyflags & K_SHIFT;
 	camera.lastPress = p;

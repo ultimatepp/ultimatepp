@@ -3,7 +3,6 @@
 namespace Upp{
 int Object3D::GlobalID = 0;
 	
-	
 Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
 	glm::vec3 col(color.GetR()/255.0f,color.GetG()/255.0f,color.GetB()/255.0f);
 	Upp::Vector<float> vertexData;
@@ -67,6 +66,7 @@ Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
 		}
 	}
 	BuildOpenGLData(vertexData,normalData,colorData);
+	CreateBoundingBox(vertexData);
 }
 
 Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color) : ID(GlobalID++){
@@ -89,6 +89,22 @@ Object3D& Object3D::LoadSurface(Surface& Surface){
 Surface Object3D::GetSurface(){
 	//TODO
 	return Surface();
+}
+
+void Object3D::CreateBoundingBox(Upp::Vector<float>& surface){
+	float minX,minY,minZ;
+	minX = minY = minZ = FLT_MAX;
+	float maxX,maxY,maxZ;
+	maxX = maxY = maxZ = -FLT_MAX;
+	for (int i = 0; i < (surface.GetCount() -1); i = i + 3) {
+		maxX = max(maxX, surface[i]);
+		minX = min(minX, surface[i]);
+		maxY = max(maxY, surface[i+1]);
+		minY = min(minY, surface[i+1]);
+		maxZ = max(maxZ, surface[i+2]);
+		minZ = min(minZ, surface[i+2]);
+	}
+	boundingBox.SetBoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 }
 
 void Object3D::BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){

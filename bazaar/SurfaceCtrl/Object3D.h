@@ -77,12 +77,12 @@ class Object3D : public Upp::Moveable<Object3D>{
 		float normalLenght = 1.0f;
 		
 		int SurfaceCount = 0;
-		VolumeEnvelope *env = nullptr;
 
 		bool showMesh = true;
 		bool showMeshLine = false;
 		bool showMeshNormal = false;
 		bool showLight = true;
+		
 		
 		BoundingBox boundingBox;
 		bool showBoundingBox = false;
@@ -115,7 +115,6 @@ class Object3D : public Upp::Moveable<Object3D>{
 			normalOpacity = obj.normalOpacity;
 			normalLenght = obj.normalLenght;
 			SurfaceCount = obj.SurfaceCount;
-			env =obj.env;
 			showMesh = obj.showMesh;
 			showMeshLine = obj.showMeshLine;
 			showMeshNormal = obj.showMeshNormal;
@@ -168,8 +167,8 @@ class Object3D : public Upp::Moveable<Object3D>{
 		GLuint GetVAO()noexcept{return VAO;}
 		unsigned int GetSurfaceCount()noexcept{return SurfaceCount;}
 		
-		VolumeEnvelope* GetVolumeEnvelope(){return env;}
-		Object3D& SetVolumeEnvelope(VolumeEnvelope& envelope){env = &envelope; boundingBox.SetBoundingBox(env->minX,env->minY,env->minZ,env->maxX,env->maxY,env->maxZ); return *this;}
+		void CreateBoundingBox(Upp::Vector<float>& surface); // Create Bounding box
+		
 		BoundingBox& GetBoundingBox(){return boundingBox;}
 		BoundingBox GetBoundingBoxTransformed()const noexcept{
 			BoundingBox box(boundingBox);

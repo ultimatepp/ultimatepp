@@ -73,6 +73,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		const Upp::Vector<Object3D>& GetAllObjects()const noexcept{return allObjects;}
 		Object3D& CreateObject(Surface& surf,Upp::Color color)noexcept;
 		int FindObject(int ID)const noexcept;
+		Object3D& GetObject(int ID)noexcept;
 		void DeleteObject(int ID)noexcept; //Delete the object (update selected)
 		void DeleteAllObjects()noexcept; //Delete all object
 		void DrawAllObjects()noexcept; //Draw all object
