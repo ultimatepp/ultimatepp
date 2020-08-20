@@ -442,7 +442,7 @@ private:
 	
 	Button processButton, dataButton, propertiesButton;
 	
-	Size saveSize = Size(1000, 800);
+	Size saveSize = Size(1000, 600);
 	int jpgQuality = 90;
 	
 	int rotate = Angle_0;
@@ -505,17 +505,24 @@ public:
 	}
 	ScatterCtrl &operator()()		{return scatter;}
 	
-	ScatterWindow &OpenMain() {
+	ScatterWindow &OpenMain(bool dataInternal = true, bool zoomToFit = true) {
 		if(scatter.ThereAreSecondaryY())
 			scatter.SetPlotAreaRightMargin(70);
-		scatter.SetDataSourceInternal();
-		scatter.ZoomToFit(true, true);
+		if (dataInternal)
+			scatter.SetDataSourceInternal();
+		if (zoomToFit)
+			scatter.ZoomToFit(true, true);
 		TopWindow::SetRect(0, 0, 800, 500);
 		TopWindow::OpenMain();
 		Ctrl::ProcessEvents();
 		return *this;
 	}
 
+	void Refresh() {
+		scatter.Refresh();
+		Ctrl::ProcessEvents();
+	}
+	
 private:	
 	ScatterCtrl scatter;	
 };
