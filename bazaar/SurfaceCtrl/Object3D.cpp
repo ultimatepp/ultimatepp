@@ -2,12 +2,106 @@
 #include <Surface/Surface.h>
 namespace Upp{
 int Object3D::GlobalID = 0;
+
+Object3D& Object3D::operator=(Object3D&& obj){
+	VerticesVBO = obj.VerticesVBO;
+	ColorVBO = obj.ColorVBO;
+	NormalVBO = obj.NormalVBO;
+	VAO = obj.VAO;
 	
-Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
+	material = obj.material; //The material object is a representation of material property of the object (it change how light affect it)
+	lineColor = obj.lineColor;
+	lineOpacity = obj.lineOpacity;
+	lineWidth = obj.lineWidth;
+	normalColor = obj.normalColor;
+	normalOpacity = obj.normalOpacity;
+	normalLenght = obj.normalLenght;
+	SurfaceCount = obj.SurfaceCount;
+	showMesh = obj.showMesh;
+	showMeshLine = obj.showMeshLine;
+	showMeshNormal = obj.showMeshNormal;
+	showLight = obj.showLight;
+	boundingBox = obj.boundingBox;
+	showBoundingBox = obj.showBoundingBox;
+	transform = obj.transform;
+	DrawType = obj.DrawType;
+	
+	verticesData.Append(obj.verticesData);
+	normalsData.Append(obj.normalsData);
+	colorsData.Append(obj.colorsData);
+	texturesData.Append(obj.texturesData);
+	
+	obj.VerticesVBO = 0;
+	obj.ColorVBO = 0;
+	obj.NormalVBO = 0;
+	obj.VAO = 0;
+	obj.verticesData.Clear();
+	obj.normalsData.Clear();
+	obj.colorsData.Clear();
+	obj.texturesData.Clear();
+	obj.SurfaceCount = 0;
+	obj.loaded = false;
+	return *this;
+}
+
+Object3D& Object3D::operator=(const Object3D& obj){
+	VerticesVBO = obj.VerticesVBO;
+	ColorVBO = obj.ColorVBO;
+	NormalVBO = obj.NormalVBO;
+	VAO = obj.VAO;
+	
+	material = obj.material; //The material object is a representation of material property of the object (it change how light affect it)
+	lineColor = obj.lineColor;
+	lineOpacity = obj.lineOpacity;
+	lineWidth = obj.lineWidth;
+	normalColor = obj.normalColor;
+	normalOpacity = obj.normalOpacity;
+	normalLenght = obj.normalLenght;
+	SurfaceCount = obj.SurfaceCount;
+	showMesh = obj.showMesh;
+	showMeshLine = obj.showMeshLine;
+	showMeshNormal = obj.showMeshNormal;
+	showLight = obj.showLight;
+	boundingBox = obj.boundingBox;
+	showBoundingBox = obj.showBoundingBox;
+	transform = obj.transform;
+	DrawType = obj.DrawType;
+	
+	verticesData.Append(obj.verticesData);
+	normalsData.Append(obj.normalsData);
+	colorsData.Append(obj.colorsData);
+	texturesData.Append(obj.texturesData);
+	
+	return *this;
+}
+
+Object3D::~Object3D(){
+	Unload();
+}
+
+bool Object3D::LoadObj(const String& FileObj){
+	return false;
+}
+bool Object3D::LoadStl(const String& StlFile, Color color){
+	verticesData.Clear();
+	normalsData.Clear();
+	colorsData.Clear();
+	texturesData.Clear();
+	if(STLLoader::LoadSTL(StlFile,verticesData,normalsData)){
+		float r = color.GetR()/255.0f;
+		float g = color.GetG()/255.0f;
+		float b = color.GetB()/255.0f;
+		for(int e = 0; e < (verticesData.GetCount() -1) ; e = e + 3){
+			colorsData << r << g << b ;
+		}
+		SurfaceCount = verticesData.GetCount() / 3;
+		Load(MT_COLOR);
+		return true;
+	}
+	return false;
+}
+bool Object3D::LoadSurface(Surface& surface, Color color){
 	glm::vec3 col(color.GetR()/255.0f,color.GetG()/255.0f,color.GetB()/255.0f);
-	Upp::Vector<float> vertexData;
-	Upp::Vector<float> normalData;
-	Upp::Vector<float> colorData;
 	int indice =0;
 	SurfaceCount =0;
 	for (int ip = 0; ip < surface.panels.GetCount(); ++ip) {
@@ -16,66 +110,105 @@ Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
 		if(panel.IsTriangle()){
 			for(int e = 0; e < 3; e++){
 				Point3D p = surface.nodes[panel.id[e]];
-				vertexData.Add(p.x);
-				vertexData.Add(p.y);
-				vertexData.Add(p.z);
-				normalData.Add(panel.normalPaint.x);
-				normalData.Add(panel.normalPaint.y);
-				normalData.Add(panel.normalPaint.z);
-				colorData.Add(col.x);
-				colorData.Add(col.y);
-				colorData.Add(col.z);
+				verticesData.Add(p.x);
+				verticesData.Add(p.y);
+				verticesData.Add(p.z);
+				normalsData.Add(panel.normalPaint.x);
+				normalsData.Add(panel.normalPaint.y);
+				normalsData.Add(panel.normalPaint.z);
+				colorsData.Add(col.x);
+				colorsData.Add(col.y);
+				colorsData.Add(col.z);
 				SurfaceCount++;
 			}
 		}else{//A quad is just 2 triangles
 			Point3D SecondTriangle[3];
 			for(int e = 0; e < 3; e++){
-				
 				Point3D p = surface.nodes[panel.id[e]];
 				if(e == 0) SecondTriangle[2] = p;
 				if(e == 2) SecondTriangle[0] = p;
-				vertexData.Add(p.x);
-				vertexData.Add(p.y);
-				vertexData.Add(p.z);
+				verticesData.Add(p.x);
+				verticesData.Add(p.y);
+				verticesData.Add(p.z);
 				
-				normalData.Add(panel.normalPaint.x);
-				normalData.Add(panel.normalPaint.y);
-				normalData.Add(panel.normalPaint.z);
+				normalsData.Add(panel.normalPaint.x);
+				normalsData.Add(panel.normalPaint.y);
+				normalsData.Add(panel.normalPaint.z);
 				
-				colorData.Add(col.x);
-				colorData.Add(col.y);
-				colorData.Add(col.z);
+				colorsData.Add(col.x);
+				colorsData.Add(col.y);
+				colorsData.Add(col.z);
 				SurfaceCount++;
 			}
 			SecondTriangle[1]  = surface.nodes[panel.id[3]];
 			for(int e = 0; e < 3; e++){
 				Point3D p = SecondTriangle[e];
-				vertexData.Add(p.x);
-				vertexData.Add(p.y);
-				vertexData.Add(p.z);
+				verticesData.Add(p.x);
+				verticesData.Add(p.y);
+				verticesData.Add(p.z);
 				
-				normalData.Add(panel.normalPaint.x);
-				normalData.Add(panel.normalPaint.y);
-				normalData.Add(panel.normalPaint.z);
+				normalsData.Add(panel.normalPaint.x);
+				normalsData.Add(panel.normalPaint.y);
+				normalsData.Add(panel.normalPaint.z);
 				
-				colorData.Add(col.x);
-				colorData.Add(col.y);
-				colorData.Add(col.z);
+				colorsData.Add(col.x);
+				colorsData.Add(col.y);
+				colorsData.Add(col.z);
 				SurfaceCount++;
 			}
 		}
 	}
-	BuildOpenGLData(vertexData,normalData,colorData);
-	
+	Load(MT_COLOR);
+	return true;
 }
 
-Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color) : ID(GlobalID++){
-	SurfaceCount = surface.GetCount() / 3;
-	BuildOpenGLData(surface,normal,color);
-	
+Surface Object3D::GetSurface(){ //return a surface Objectd
+	//TODO
+	return Surface();
 }
 
-void Object3D::UnloadData(){
+bool Object3D::Load(const MaterialType& mt){ //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
+	if(VAO > 0) glDeleteVertexArrays(1,&VAO);
+	if(VerticesVBO > 0)glDeleteBuffers(1,&VerticesVBO);
+	if(NormalVBO > 0)glDeleteBuffers(1,&NormalVBO);
+	if(ColorVBO > 0)glDeleteBuffers(1,&ColorVBO);
+	
+	// OpenGL 4.0 compatibility :
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VerticesVBO);
+	glGenBuffers(1, &NormalVBO);
+	glGenBuffers(1, &ColorVBO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
+	glBufferData(GL_ARRAY_BUFFER,verticesData.GetCount() * sizeof(float),&(verticesData[0]),GL_DYNAMIC_READ);
+	
+	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
+	glBufferData(GL_ARRAY_BUFFER,normalsData.GetCount() * sizeof(float),&(normalsData[0]),GL_DYNAMIC_READ);
+	
+	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	
+	if(mt == MT_COLOR){
+		glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
+		glBufferData(GL_ARRAY_BUFFER,colorsData.GetCount() * sizeof(float),&(colorsData[0]),GL_DYNAMIC_READ);
+	
+		glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(2);
+	}else{
+		//Texturing
+	}
+	CreateBoundingBox(verticesData);
+	loaded = true;
+	return true;
+}
+Object3D& Object3D::Unload(){
 	if(SurfaceCount > 0){
 		if(VAO > 0) glDeleteVertexArrays(1,&VAO);
 		if(VerticesVBO > 0)glDeleteBuffers(1,&VerticesVBO);
@@ -85,42 +218,13 @@ void Object3D::UnloadData(){
 		NormalVBO = 0;
 		VerticesVBO = 0;
 		VAO = 0;
+		
+		SurfaceCount = 0;
+		
+		RemoveBoundingBox();
+		loaded = false;
 	}
-}
-
-bool Object3D::LoadObj(const String& FileObj){
-	UnloadData();
-	//TODO
-	return false;
-}
-bool Object3D::LoadStl(const String& StlFile, Color color){
-	Upp::Vector<float> vertexData;
-	Upp::Vector<float> normalData;
-	Upp::Vector<float> colorData;
-	if(STLLoader::LoadSTL(StlFile,vertexData,normalData)){
-		float r = color.GetR()/255.0f;
-		float g = color.GetG()/255.0f;
-		float b = color.GetB()/255.0f;
-		for(int e = 0; e < (vertexData.GetCount() -1) ; e = e + 3){
-			colorData << r << g << b ;
-		}
-		SurfaceCount = vertexData.GetCount() / 3;
-		BuildOpenGLData(vertexData,normalData,colorData);
-		return true;
-	}
-	return false;
-}
-bool Object3D::LoadSurface(Surface& Surface){
-	//TODO
-	return false;
-}
-bool LoadVector(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color , Upp::Vector<float>& TextureCoordinate ){
-	//TODO
-	return false;
-}
-Surface Object3D::GetSurface(){
-	//TODO
-	return Surface();
+	return *this;
 }
 
 void Object3D::CreateBoundingBox(Upp::Vector<float>& surface){
@@ -139,64 +243,8 @@ void Object3D::CreateBoundingBox(Upp::Vector<float>& surface){
 	boundingBox.SetBoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 }
 
-void Object3D::BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color){
-	if(VAO > 0) glDeleteVertexArrays(1,&VAO);
-	if(VerticesVBO > 0)glDeleteBuffers(1,&VerticesVBO);
-	if(NormalVBO > 0)glDeleteBuffers(1,&NormalVBO);
-	if(ColorVBO > 0)glDeleteBuffers(1,&ColorVBO);
-	
-	// OpenGL 4.0 compatibility :
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VerticesVBO);
-	glGenBuffers(1, &NormalVBO);
-	glGenBuffers(1, &ColorVBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
-	glBufferData(GL_ARRAY_BUFFER,surface.GetCount() * sizeof(float),&(surface[0]),GL_DYNAMIC_READ);
-	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
-	glBufferData(GL_ARRAY_BUFFER,normal.GetCount() * sizeof(float),&(normal[0]),GL_DYNAMIC_READ);
-	glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
-	glBufferData(GL_ARRAY_BUFFER,color.GetCount() * sizeof(float),&(color[0]),GL_DYNAMIC_READ);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(2);
-	
-	//OpenGL 4.5 compatibility :
-	/*
-	glGenVertexArrays(1, &VAO);
-	
-	glCreateBuffers(1, &VerticesVBO);
-	glCreateBuffers(1, &NormalVBO);
-	glCreateBuffers(1, &ColorVBO);
-
-	glBindVertexArray(VAO);
-	glNamedBufferStorage(VerticesVBO,vertexData.GetCount() * sizeof(float),&(vertexData[0]), GL_MAP_READ_BIT  | GL_MAP_WRITE_BIT);
-	glNamedBufferStorage(NormalVBO,normalData.GetCount() * sizeof(float),&(normalData[0]), GL_MAP_READ_BIT  | GL_MAP_WRITE_BIT);
-	glNamedBufferStorage(ColorVBO,colorData.GetCount() * sizeof(float),&(colorData[0]), GL_MAP_READ_BIT  | GL_MAP_WRITE_BIT);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,VerticesVBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,NormalVBO);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	
-	glBindBuffer(GL_ARRAY_BUFFER,ColorVBO);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(2);
-	*/
-	CreateBoundingBox(surface);
+void Object3D::RemoveBoundingBox(){
+	boundingBox = BoundingBox();
 }
 
 bool Object3D::UpdateBuffer(GLuint buffer, int SurfaceNumber, int count,const float * data)noexcept{

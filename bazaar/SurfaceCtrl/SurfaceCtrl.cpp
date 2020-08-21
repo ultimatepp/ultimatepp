@@ -69,7 +69,8 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 }
 //Action on all objects vector
 Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
-	Object3D& obj = allObjects.Create(surf,color);
+	Object3D& obj = allObjects.Create();
+	obj.LoadSurface(surf,color);
 	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
 	obj.SetLineWidth(2.0f);
 	if(!fastMode) Refresh();
@@ -207,6 +208,7 @@ void SurfaceCtrl::RotateAllSelectedObjects(glm::quat rotation)noexcept{ //Rotate
 void SurfaceCtrl::DeleteAllSelectedObjects()noexcept{ //Delete all selected object
 	for(int e = 0; e < allSelected.GetCount() ; e++){
 		DeleteObject(allSelected[e]);
+		e--;
 	}
 	allSelected.Clear();
 }
@@ -281,6 +283,8 @@ void SurfaceCtrl::GLResize(int w, int h){
 
 //Input event
 void SurfaceCtrl::MouseMove(Point p, dword keyflags){
+	camera.ShiftPressed = keyflags & K_SHIFT;
+	
 	float XOffset = p.x - camera.lastPress.x;
 	float YOffset = p.y - camera.lastPress.y;
 	if(camera.MouseMiddlePressed){
@@ -317,7 +321,6 @@ void SurfaceCtrl::LeftUp(Point p, dword keyflags){
 void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
 	SetFocus();
 	camera.MouseMiddlePressed = true;
-	camera.ShiftPressed = keyflags & K_SHIFT;
 	camera.lastPress = p;
 	camera.DetermineRotationPoint(p,allObjects);
 }
@@ -328,7 +331,6 @@ void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
 void SurfaceCtrl::MouseLeave(){
 	camera.MouseMiddlePressed = false;
 	camera.MouseLeftPressed = false;
-	camera.ShiftPressed = false;
 	return;
 }
 bool SurfaceCtrl::Key(dword key,int count){

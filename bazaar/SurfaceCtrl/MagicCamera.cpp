@@ -92,8 +92,8 @@ MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
 			transform.SetPosition(transform.GetPosition() - (transform.GetUp() * Upoffset));
 		}
 		if(!doY && !doX){
-			float dot = sqrt(pow(glm::dot(focus,scaling),2));
-			if(dot > 3.0f)
+			float length = glm::length(GetTransform().GetPosition() - focus);
+			if(length > 2.0f)
 				transform.SetPosition(transform.GetPosition() - scaling);
 		}
 	}

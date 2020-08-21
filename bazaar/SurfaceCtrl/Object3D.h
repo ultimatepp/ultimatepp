@@ -11,6 +11,7 @@
 
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
+enum MaterialType { MT_COLOR, MT_TEXTURE };
 /*
 struct Light{
 	Light(){
@@ -69,6 +70,13 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		GLuint VAO = 0;
 		
+		bool loaded = false;
+		
+		Upp::Vector<float> verticesData;
+		Upp::Vector<float> normalsData;
+		Upp::Vector<float> colorsData;
+		Upp::Vector<float> texturesData; //Texture coordinate
+		
 		Object3DMaterial material; //The material object is a representation of material property of the object (it change how light affect it)
 		
 		Color lineColor = Black();
@@ -93,53 +101,41 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Transform transform;
 		
 		GLenum DrawType = GL_TRIANGLES;
-		
-		
+	
 		bool UpdateBuffer(GLuint buffer, int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceNumber,int count)noexcept;
-		void BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
-		void UnloadData();
 	public:
 		Object3D():ID(GlobalID++){}
+		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
+		Object3D& operator=(Object3D&& obj);
+		
 		Object3D(const Object3D& obj):ID(GlobalID++){*this = obj;}
+		Object3D& operator=(const Object3D& obj);
+		~Object3D();
+	
+		//copy also VBO and VAO , wich mean when object is destroyed , every copy will
+		//lost their 3D representation in OpenGL
 		
-		
-		Object3D(Surface& surface,Upp::Color = Green());
-		Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
-		Object3D(Upp::String& ObjFile);
-		
-		
-		Object3D& operator=(const Object3D& obj){
-			VerticesVBO = obj.VerticesVBO;
-			ColorVBO = obj.ColorVBO;
-			NormalVBO = obj.NormalVBO;
-			VAO = obj.VAO;
-			material = obj.material; //The material object is a representation of material property of the object (it change how light affect it)
-			lineColor = obj.lineColor;
-			lineOpacity = obj.lineOpacity;
-			lineWidth = obj.lineWidth;
-			normalColor = obj.normalColor;
-			normalOpacity = obj.normalOpacity;
-			normalLenght = obj.normalLenght;
-			SurfaceCount = obj.SurfaceCount;
-			showMesh = obj.showMesh;
-			showMeshLine = obj.showMeshLine;
-			showMeshNormal = obj.showMeshNormal;
-			showLight = obj.showLight;
-			boundingBox = obj.boundingBox;
-			showBoundingBox = obj.showBoundingBox;
-			transform = obj.transform;
-			DrawType = obj.DrawType;
-			return *this;
-		}
 		
 		bool LoadObj(const String& FileObj);
 		bool LoadStl(const String& StlFile, Upp::Color = Green());
-		bool LoadVector(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color , Upp::Vector<float>& TextureCoordinate );
-		bool LoadSurface(Surface& Surface);
+		bool LoadSurface(Surface& surface, Upp::Color = Green());
 		Surface GetSurface();
 		
 		int GetID()const {return ID;}
+		
+		Upp::Vector<float>& GetVerticesData()noexcept{return verticesData;}
+		Upp::Vector<float>& GetNormalsData()noexcept{return normalsData;}
+		Upp::Vector<float>& GetColorsData()noexcept{return colorsData;}
+		Upp::Vector<float>& GetTexturesData()noexcept{return texturesData;}
+		
+		Object3D& AddVerticesData(const Upp::Vector<float>& data)noexcept{verticesData.Append(data); SurfaceCount = verticesData.GetCount() / 3; return *this;}
+		Object3D& AddNormalsData(const Upp::Vector<float>& data)noexcept{normalsData.Append(data); return *this;}
+		Object3D& AddColorsData(const Upp::Vector<float>& data)noexcept{colorsData.Append(data); return *this;}
+		Object3D& AddTexturesData(const Upp::Vector<float>& data)noexcept{texturesData.Append(data); return *this;}
+		
+		bool Load(const MaterialType& mt); //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
+		Object3D& Unload();
 		
 		Object3D& SetDrawType(GLenum dt)noexcept{DrawType = dt; return *this;}
 		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
@@ -176,6 +172,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		unsigned int GetSurfaceCount()noexcept{return SurfaceCount;}
 		
 		void CreateBoundingBox(Upp::Vector<float>& surface); // Create Bounding box
+		void RemoveBoundingBox();
 		
 		BoundingBox& GetBoundingBox(){return boundingBox;}
 		BoundingBox GetBoundingBoxTransformed()const noexcept{

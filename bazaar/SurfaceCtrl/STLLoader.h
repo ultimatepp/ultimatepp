@@ -106,11 +106,6 @@ class STLLoader{
 		return true;
 	}
 	
-	static bool test(FileIn& in){
-		float dummy;
-		//in.Get
-	}
-
 	static bool LoadSTLBin(const String& fileName, Vector<float>& vertices, Vector<float>& normals,bool ReadNormals = false){
 		FileIn in(fileName);
 		if (!in.IsOpen()){
