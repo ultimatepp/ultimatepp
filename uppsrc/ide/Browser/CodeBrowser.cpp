@@ -45,7 +45,7 @@ struct ScopeLess {
 	bool operator()(const String& a, const String& b) const {
 		if((*a == '<') != (*b == '<'))
 			return *a > *b;
-		return a < b; 
+		return a < b;
 	}
 };
 
@@ -71,52 +71,52 @@ String GetFileText(const String& s)
 
 void CodeBrowser::Load()
 {
-	String find = ToUpper((String)~search);
 	String match = ToUpper((String)~search_scope);
 	String pm = GetPm();
 	Vector<String> txt;
 	Vector<Value>  ndx;
 	Index<int>     fi;
 	Index<String>  fs;
-	CodeBaseLock __;
-	for(int i = 0; i < CodeBase().GetCount(); i++) {
-		String s = CodeBase().GetKey(i);
-		const Array<CppItem>& n = CodeBase()[i];
-		if(s.GetCount())
-			if(MatchCib(s, match) && (MatchCib(s, find) || HasItem(n, find)) && MatchPm(n, pm)) {
-				txt.Add(s);
-				ndx.Add(s);
-			}
-		for(int i = 0; i < n.GetCount(); i++) {
-			int f = n[i].file;
-			if(fi.Find(f) < 0) {
-				String s = GetFileText(GetSourceFilePath(f));
-				if(s.StartsWith(pm) && MatchCib(s, match) &&
-				   (IsNull(find) || MatchCib(s, find) || n[i].uname.StartsWith(find))) {
+	{
+		CodeBaseLock __;
+		for(int i = 0; i < CodeBase().GetCount(); i++) {
+			String s = CodeBase().GetKey(i);
+			const Array<CppItem>& n = CodeBase()[i];
+			if(s.GetCount())
+				if(MatchCib(s, match) && MatchPm(n, pm)) {
 					txt.Add(s);
-					ndx.Add(f);
-					fs.Add(s);
-					fi.Add(f);
+					ndx.Add(s);
+				}
+			for(int i = 0; i < n.GetCount(); i++) {
+				int f = n[i].file;
+				if(fi.Find(f) < 0) {
+					String s = GetFileText(GetSourceFilePath(f));
+					if(s.StartsWith(pm) && MatchCib(s, match)) {
+						txt.Add(s);
+						ndx.Add(f);
+						fs.Add(s);
+						fi.Add(f);
+					}
 				}
 			}
 		}
-	}
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		String pn = wspc[i];
-		const Package& p = wspc.GetPackage(i);
-		String pp = PackageDirectory(pn);
-		for(int j = 0; j < p.GetCount(); j++)
-			if(!p[j].separator) {
-				String fn = AppendFileName(pp, p[j]);
-				String s = GetFileText(AppendFileName(pn, p[j]));
-				if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match) && MatchPm(fn, pm)) {
-					int f = GetSourceFileIndex(SourcePath(pn, p[j]));
-					txt.Add(s);
-					ndx.Add(f);
-					fs.Add(s);
+		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String pn = wspc[i];
+			const Package& p = wspc.GetPackage(i);
+			String pp = PackageDirectory(pn);
+			for(int j = 0; j < p.GetCount(); j++)
+				if(!p[j].separator) {
+					String fn = AppendFileName(pp, p[j]);
+					String s = GetFileText(AppendFileName(pn, p[j]));
+					if(fs.Find(s) < 0 && MatchCib(s, match) && MatchPm(fn, pm)) {
+						int f = GetSourceFileIndex(SourcePath(pn, p[j]));
+						txt.Add(s);
+						ndx.Add(f);
+						fs.Add(s);
+					}
 				}
-			}
+		}
 	}
 	IndexSort(txt, ndx, ScopeLess());
 	Value key = scope.GetKey();
@@ -184,6 +184,7 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 
 void CodeBrowser::LoadScope()
 {
+	DLOG("===== LoadScope");
 	Value key = item.GetKey();
 	int sc = item.GetCursorSc();
 	{
@@ -195,10 +196,7 @@ void CodeBrowser::LoadScope()
 		Value x = scope.Get(2);
 		int file = IsNumber(x) ? (int)x : -1;
 		String scope = file < 0 ? String(x) : String();
-		int q = CodeBase().Find(scope);
-		bool filematch = file >= 0 && MatchCib(GetFileText(GetSourceFilePath(file)), find);
-		bool scopematch = !filematch && MatchCib(scope, find);
-		if(q >= 0) {
+		auto Do = [&](int q) {
 			const Array<CppItem>& n = CodeBase()[q];
 			VectorMap<String, bool> inherited;
 			if(file < 0)
@@ -207,7 +205,7 @@ void CodeBrowser::LoadScope()
 			for(int i = 0; i < n.GetCount(); i++) {
 				CppItemInfo m;
 				(CppItem&) m = n[i];
-				if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {
+				if((file < 0 || m.file == file) && m.uname.StartsWith(find) && set.Find(m.qitem) < 0) {
 					set.Add(m.qitem);
 					int q = inherited.Find(m.qitem);
 					if(q >= 0) {
@@ -217,6 +215,14 @@ void CodeBrowser::LoadScope()
 					item.Add(m.qitem, RawToValue(m));
 				}
 			}
+		};
+		if(file >= 0)
+			for(int q = 0; q < CodeBase().GetCount(); q++)
+				Do(q);
+		else {
+			int q = CodeBase().Find(scope);
+			if(q >= 0)
+				Do(q);
 		}
 	}
 	item.Sort(1, sort ? ItemCompareLexical : ItemCompare);
@@ -281,9 +287,11 @@ void CodeBrowser::Goto(const String& coderef, const String& rfile)
 
 void CodeBrowser::Search()
 {
-	Load();
-	if(!scope.IsCursor() || !item.IsCursor())
+	LoadScope();
+	if(!scope.IsCursor())
 		scope.SetCursor(0);
+	if(!item.IsCursor())
+		item.SetCursor(0);
 }
 
 bool CodeBrowser::Key(dword key, int count)
