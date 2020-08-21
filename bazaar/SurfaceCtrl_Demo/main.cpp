@@ -6,18 +6,13 @@ namespace Upp{
 	{
 		CtrlLayout(*this, "SurfaceCtrl demo. STL viewer");
 		filename.SetText( GetFileDirectory(__FILE__) + "Stanford_Bunny_sample.stl" );
-		ActiveFocus(canvas);
+		
 		butOpen.WhenAction = [&] {
 			try {
-				bool isText;
-				String header;
-				Surface surf;
-				LoadStl(~filename, surf, isText, header);
-				surf.GetPanelParams();
-				surf.GetLimits();
-				surf.GetSurface();
-				surf.GetVolume();
-				canvas.CreateObject(surf,Gray());
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadStl(~filename,Gray());
+				obj.GetTransform().Rotate(-90.0f,glm::vec3(1.0f,0.0f,0.0f));
+				obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
@@ -30,6 +25,10 @@ namespace Upp{
 	
 	void SurfaceCtrl_Demo::Layout(){
 		canvas.GLResize(GetSize().cx,GetSize().cy);
+	}
+	
+	bool SurfaceCtrl_Demo::Key(dword key, int count){
+		return canvas.Key(key,count);
 	}
 }
 

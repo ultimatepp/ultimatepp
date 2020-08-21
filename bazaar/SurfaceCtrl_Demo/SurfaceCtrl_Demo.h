@@ -13,7 +13,7 @@ public:
 	typedef SurfaceCtrl_Demo CLASSNAME;
 	SurfaceCtrl_Demo();
 	virtual void Layout();
-
+	virtual bool Key(dword key, int count);
 };
 }
 #endif
