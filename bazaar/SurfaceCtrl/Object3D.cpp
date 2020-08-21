@@ -163,8 +163,34 @@ bool Object3D::LoadSurface(Surface& surface, Color color){
 }
 
 Surface Object3D::GetSurface(){ //return a surface Objectd
-	//TODO
-	return Surface();
+	Surface surf;
+	for(int e = 0; e < verticesData.GetCount(); e = e+9){
+		Panel &panel = surf.panels.Add();
+		
+		panel.normalPaint.x = double(normalsData[e]);
+		panel.normalPaint.y = double(normalsData[e+1]);
+		panel.normalPaint.z = double(normalsData[e+2]);
+		
+		Point3D &node0 = surf.nodes.Add();
+		node0.x = double(verticesData[e]);
+		node0.y = double(verticesData[e+1]);
+		node0.z = double(verticesData[e+2]);
+		panel.id[0] = surf.nodes.GetCount()-1;
+		
+		Point3D &node1 = surf.nodes.Add();
+		node1.x = double(verticesData[e+3]);
+		node1.y = double(verticesData[e+4]);
+		node1.z = double(verticesData[e+5]);
+		panel.id[1] = surf.nodes.GetCount()-1;
+		
+		Point3D &node2 = surf.nodes.Add();
+		node2.x = double(verticesData[e+6]);
+		node2.y = double(verticesData[e+7]);
+		node2.z = double(verticesData[e+8]);
+		panel.id[2] = surf.nodes.GetCount()-1;
+		panel.id[3] = panel.id[0];
+	}
+	return pick(surf);
 }
 
 bool Object3D::Load(const MaterialType& mt){ //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
