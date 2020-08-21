@@ -55,7 +55,8 @@ String PreprocessCpp(const String& src, const String& path)
 	return cpp.output;
 }
 
-ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error)
+ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error,
+                          Function<String(String, String, String)> qualify)
 {
 	String path = NormalizeSourcePath(path_);
 	Cpp cpp;
@@ -63,6 +64,7 @@ ParserContext AssistParse(const String& src, const String& path_, Event<int, con
 	cpp.Preprocess(path, ss, GetMasterFile(path));
 	Parser parser;
 	parser.dobody = true; // will do bodies and not write anything to base
+	parser.qualify = qualify;
 	StringStream pin(cpp.output);
 	CppBase dummy;
 	parser.Do(pin, dummy, Null, Null, GetFileTitle(path), error,

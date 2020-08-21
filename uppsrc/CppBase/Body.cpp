@@ -1,7 +1,7 @@
 #include "CppBase.h"
 #include "Internal.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 namespace Upp {
 
@@ -87,8 +87,8 @@ bool Parser::TryDecl()
 		q++;
 	if(!lex.IsId(q))
 		return false;
-	type = Qualify(*base, current_scope, type, context.namespace_using);
-	if(base->Find(NoTemplatePars(type)) >= 0) {
+	type = qualify(current_scope, type, context.namespace_using);
+	if(type.GetCount()) {
 		Locals(type);
 		return true;
 	}

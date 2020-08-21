@@ -184,36 +184,38 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 
 void CodeBrowser::LoadScope()
 {
-	CodeBaseLock __;
-	String find = ToUpper((String)~search);
 	Value key = item.GetKey();
 	int sc = item.GetCursorSc();
-	item.Clear();
-	if(!scope.IsCursor())
-		return;
-	Value x = scope.Get(2);
-	int file = IsNumber(x) ? (int)x : -1;
-	String scope = file < 0 ? String(x) : String();
-	int q = CodeBase().Find(scope);
-	bool filematch = file >= 0 && MatchCib(GetFileText(GetSourceFilePath(file)), find);
-	bool scopematch = !filematch && MatchCib(scope, find);
-	if(q >= 0) {
-		const Array<CppItem>& n = CodeBase()[q];
-		VectorMap<String, bool> inherited;
-		if(file < 0)
-			GatherMethods(scope, inherited, false);
-		Index<String> set;
-		for(int i = 0; i < n.GetCount(); i++) {
-			CppItemInfo m;
-			(CppItem&) m = n[i];
-			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {
-				set.Add(m.qitem);
-				int q = inherited.Find(m.qitem);
-				if(q >= 0) {
-					m.over = true;
-					m.virt = m.virt || inherited[q];
+	{
+		CodeBaseLock __;
+		String find = ToUpper((String)~search);
+		item.Clear();
+		if(!scope.IsCursor())
+			return;
+		Value x = scope.Get(2);
+		int file = IsNumber(x) ? (int)x : -1;
+		String scope = file < 0 ? String(x) : String();
+		int q = CodeBase().Find(scope);
+		bool filematch = file >= 0 && MatchCib(GetFileText(GetSourceFilePath(file)), find);
+		bool scopematch = !filematch && MatchCib(scope, find);
+		if(q >= 0) {
+			const Array<CppItem>& n = CodeBase()[q];
+			VectorMap<String, bool> inherited;
+			if(file < 0)
+				GatherMethods(scope, inherited, false);
+			Index<String> set;
+			for(int i = 0; i < n.GetCount(); i++) {
+				CppItemInfo m;
+				(CppItem&) m = n[i];
+				if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {
+					set.Add(m.qitem);
+					int q = inherited.Find(m.qitem);
+					if(q >= 0) {
+						m.over = true;
+						m.virt = m.virt || inherited[q];
+					}
+					item.Add(m.qitem, RawToValue(m));
 				}
-				item.Add(m.qitem, RawToValue(m));
 			}
 		}
 	}

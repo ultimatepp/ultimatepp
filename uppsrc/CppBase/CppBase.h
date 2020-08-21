@@ -221,12 +221,15 @@ void Parse(CppBase& base, const String& src, int file, int filetype, const Strin
            const Index<String>& namespace_using);
 
 
+String NoTemplatePars(const String& type);
+
 // PreprocessParse CAN be run in parallel
 void PreprocessParse(CppBase& base, Stream& in, int file, const String& path,
                      Event<int, const String&> error);
 String PreprocessCpp(const String& src, const String& path);
 
-ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error);
+ParserContext AssistParse(const String& src, const String& path_, Event<int, const String&> error,
+                          Function<String(String, String, String)> qualify);
 
 void SimpleParse(CppBase& cpp, const String& txt, const String& cls);
 

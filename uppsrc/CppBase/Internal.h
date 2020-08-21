@@ -421,6 +421,7 @@ public:
 	void AddMacro(int lineno, const String& macro);
 
 	bool                      dobody;
+	Function<String(String, String, String)> qualify; // used to qualify local variable names (needs main codebase and its mutex)
 	int                       currentScopeDepth;
 	int                       maxScopeDepth;
 	
@@ -436,8 +437,6 @@ public:
 
 	Parser() : dobody(false) { lex.WhenError = THISBACK(ThrowError); }
 };
-
-String NoTemplatePars(const String& type);
 
 void   QualifyTypes(CppBase& base, const String& scope, CppItem& m);
 String QualifyKey(const CppBase& base, const String& scope, const String& type, const String& usings);

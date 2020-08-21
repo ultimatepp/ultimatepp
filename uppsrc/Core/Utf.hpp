@@ -95,17 +95,24 @@ force_inline bool ToUtf16_(Target t, size_t codepoint)
 	return true;
 }
 
+force_inline dword ReadSurrogatePair(const wchar *s, const wchar *lim)
+{
+	return (*s & 0XFC00) == 0xD800 && s + 1 < lim && (s[1] & 0xFC00) == 0xDC00 ?
+		   ((dword(s[0] & 0x3ff) << 10) | (s[1] & 0x3ff)) + 0x10000 : 0;
+}
+
 template <class Target>
 force_inline void FromUtf16_(Target t, const wchar *s, size_t len)
 {
 	const wchar *lim = s + len;
 	while(s < lim) {
-		if((*s & 0XFC00) == 0xD800 && s + 1 < lim && (s[1] & 0xFC00) == 0xDC00) {
-			t(s, ((dword(s[0] & 0x3ff) << 10) | (s[1] & 0x3ff)) + 0x10000);
+		dword c = ReadSurrogatePair(s, lim);
+		if(c) {
+			t(s, c);
 			s += 2;
 		}
 		else {
-			t((const wchar *)s, *s);
+			t(s, *s);
 			s++;
 		}
 	}
