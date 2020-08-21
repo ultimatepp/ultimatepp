@@ -9,7 +9,7 @@ const String CAR_REGISTRATION_NUMBER = "UPP IS THE BEST";
 
 class Car {
 public:
-	virtual ~Car() {}
+	virtual ~Car() = default;
 	
 	virtual void OpenHood() = 0;
 	virtual String ReadRegistrationNumbers() = 0;
