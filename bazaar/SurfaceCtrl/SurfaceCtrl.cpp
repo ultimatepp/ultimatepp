@@ -16,32 +16,19 @@ void SurfaceCtrl::InitShader(){
 	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
 		#include "shaders/FragmentNoLight.glsl"
 	)).Link();
-	/*
-	DrawMeshLight.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
-		#include "shaders/VertexSimple.glsl"
-	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
-		#include "shaders/FragmentLightTesselated.glsl"
-	)).AttachShader(OpenGLShader(GL_TESS_CONTROL_SHADER,
-		#include "shaders/TesselationControlTriangles.glsl"
-	)).AttachShader(OpenGLShader(GL_TESS_EVALUATION_SHADER,
-		#include "shaders/TesselationEvaluationTriangles.glsl"
-	)).AttachShader(OpenGLShader(GL_GEOMETRY_SHADER,
-		#include "shaders/GeometrySimple.glsl"
-	)).Link();
-	*/
+	
 	DrawMeshLight.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
 		#include "shaders/VertexSimple.glsl"
 	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
 		#include "shaders/FragmentLight.glsl"
 	)).Link();
 	
-		
 	DrawMeshLine.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
-		#include "shaders/VertexSimple.glsl"
+		#include "shaders/Vertex.glsl"
 	)).AttachShader(OpenGLShader(GL_GEOMETRY_SHADER,
-		#include "shaders/GeometryTriangleTesselated.glsl"
+		#include "shaders/GeometryTriangle.glsl"
 	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
-		#include "shaders/FragmentBlackTesselated.glsl"
+		#include "shaders/FragmentBlack.glsl"
 	)).Link();
 	
 	DrawMeshNormal.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
@@ -113,9 +100,15 @@ void SurfaceCtrl::DeleteAllObjects()noexcept{
 	allSelected.Clear();
 	allObjects.Clear();
 }
+void SurfaceCtrl::AddDefaultShader(Object3D& obj){ //Set default to the object in arg
+	obj.SetProgramLight(DrawMeshLight);
+	obj.SetProgramNoLight(DrawMeshNoLight);
+	obj.SetProgramNormal(DrawMeshNormal);
+	obj.SetProgramLine(DrawMeshLine);
+}
 void SurfaceCtrl::DrawAllObjects()noexcept{
 	for(Object3D& obj : allObjects){
-		obj.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshLight,DrawMeshLine,DrawMeshNormal );
+		obj.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 	}
 }
 //Change selected object vector
@@ -251,8 +244,9 @@ void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
 		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
+		AddDefaultShader(Axis);
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
-		
+		AddDefaultShader(CameraFocus);
 		loaded = true;
 	}
 	if(TimerStarted)ProcessTime();
@@ -263,11 +257,11 @@ void SurfaceCtrl::GLPaint(){
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
 	
 	if(showAxis)
-		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 	if(ShowCameraFocus){
 		if(allObjects.GetCount() > 0){
 			CameraFocus.GetTransform().SetPosition(camera.GetFocus());
-			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition(), DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight,DrawMeshNoLight);
+			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 		}
 	}
 	if(fastMode) Refresh();

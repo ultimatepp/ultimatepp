@@ -41,6 +41,7 @@ class OpenGLShader{
 		
 		GLuint ID = 0;
 		bool linked = false;
+		bool copied = false; //if the shader is copied then is deletion wont occure a clear in OpenGL data
 		
 		GLint GetUniformLocation(Upp::String name){
 			GLint location = glGetUniformLocation(ID, name.ToStd().c_str());
@@ -61,7 +62,20 @@ class OpenGLShader{
 		}
 	public:
 		OpenGLProgram(){}
-		~OpenGLProgram(){if(ID != 0) glDeleteProgram(ID);}
+		OpenGLProgram(const OpenGLProgram& prog){*this = prog;}
+		OpenGLProgram& operator=(const OpenGLProgram& prog)noexcept{
+			vertex = prog.vertex;
+			TCS = prog.TCS;
+			TES = prog.TES;
+			geometry = prog.geometry;
+			fragment = prog.fragment;
+			ID = prog.ID;
+			linked = prog.linked;
+			copied = true;
+			return *this;
+		}
+		
+		~OpenGLProgram(){if(ID != 0 && !copied) glDeleteProgram(ID);}
 		
 		OpenGLProgram& Bind()noexcept{if(linked)glUseProgram(ID);return *this;}
 		OpenGLProgram& UnBind()noexcept{glUseProgram(0);return *this;}

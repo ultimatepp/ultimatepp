@@ -358,48 +358,71 @@ Vector<float> Object3D::ReadNormals(unsigned int SurfaceNumber, int count)noexce
 Vector<float> Object3D::ReadVertices(unsigned int SurfaceNumber, int count)noexcept{
 	return ReadBuffer(VerticesVBO,SurfaceNumber,count);
 }
-void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 viewPosition,OpenGLProgram& noLight, OpenGLProgram& light, OpenGLProgram& line,OpenGLProgram& normal)noexcept{
+void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 viewPosition)noexcept{
 	if(SurfaceCount){
 		glBindVertexArray(VAO);
-		if(showMesh && noLight.IsLinked() && light.IsLinked()){
-			OpenGLProgram&  prog = (showLight)? light : noLight;
-			prog.Bind();
-			if(showLight){
-				prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
-				if(material.ShouldBeUpdated()){
-					prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
-					prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
-					prog.SetFloat("mat.Shininess", material.GetShininess());
-					material.HaveBeenUpdated();
+		if(showMesh){
+			if(NoLight.IsLinked() && Light.IsLinked()){
+				OpenGLProgram&  prog = (showLight)? Light : NoLight;
+				prog.Bind();
+				if(showLight){
+					prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
+					if(material.ShouldBeUpdated()){
+						prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
+						prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
+						prog.SetFloat("mat.Shininess", material.GetShininess());
+						material.HaveBeenUpdated();
+					}
+				}
+				
+				prog.SetMat4("ViewMatrix", viewMatrix);
+				prog.SetMat4("ProjectionMatrix", projectionMatrix);
+				prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
+				glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : DrawType), 0, SurfaceCount);
+			}else{
+				ONCELOCK{
+					LOG("no Light/NoLight OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be light/nolight draw");
 				}
 			}
-			
-			prog.SetMat4("ViewMatrix", viewMatrix);
-			prog.SetMat4("ProjectionMatrix", projectionMatrix);
-			prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
-			glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : DrawType), 0, SurfaceCount);
 		}
-		if(showMeshLine && line.IsLinked()){
-			line.Bind();
-			glLineWidth(lineWidth);
-			line.SetMat4("ViewMatrix",viewMatrix);
-			line.SetMat4("ProjectionMatrix",projectionMatrix);
-			line.SetMat4("ModelMatrix",transform.GetModelMatrix());
-			line.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, lineOpacity );
-			glDrawArrays(((line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
+		if(showMeshLine){
+			if(Line.IsLinked()){
+				Line.Bind();
+				glLineWidth(lineWidth);
+				Line.SetMat4("ViewMatrix",viewMatrix);
+				Line.SetMat4("ProjectionMatrix",projectionMatrix);
+				Line.SetMat4("ModelMatrix",transform.GetModelMatrix());
+				Line.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, lineOpacity );
+				glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
+			}else{
+				ONCELOCK{
+					LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be line draw");
+				}
+			}
 		}
-		if(showMeshNormal && normal.IsLinked()){
-			normal.Bind();
-			normal.SetMat4("ViewMatrix", viewMatrix);
-			normal.SetMat4("ProjectionMatrix", projectionMatrix);
-			normal.SetMat4("ModelMatrix", transform.GetModelMatrix());
-			normal.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, normalOpacity);
-			normal.SetFloat("normal_length",normalLenght );
-			glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
+		if(showMeshNormal){
+			if(Normal.IsLinked()){
+				Normal.Bind();
+				Normal.SetMat4("ViewMatrix", viewMatrix);
+				Normal.SetMat4("ProjectionMatrix", projectionMatrix);
+				Normal.SetMat4("ModelMatrix", transform.GetModelMatrix());
+				Normal.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, normalOpacity);
+				Normal.SetFloat("normal_length",normalLenght );
+				glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
+			}else{
+				ONCELOCK{
+					LOG("no Normal OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be normal draw");
+				}
+			}
 		}
 		if(showBoundingBox){
-			boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,line);
-		//	boundingBox.Draw(glm::mat4(1.0f),viewMatrix,projectionMatrix,line);
+			if(Line.IsLinked()){
+				boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,Line);
+			}else{
+				ONCELOCK{
+					LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't have is bounding box draw");
+				}
+			}
 		}
 	}
 }

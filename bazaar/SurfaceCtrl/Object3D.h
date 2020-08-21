@@ -88,6 +88,11 @@ class Object3D : public Upp::Moveable<Object3D>{
 		float normalLenght = 1.0f;
 		
 		int SurfaceCount = 0;
+		
+		OpenGLProgram NoLight; //The program will draw figure without light
+		OpenGLProgram Line; //THe program will draw figure line
+		OpenGLProgram Normal; //The program will draw Normal
+		OpenGLProgram Light; //the program will draw figure with light
 
 		bool showMesh = true;
 		bool showMeshLine = false;
@@ -106,15 +111,17 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceNumber,int count)noexcept;
 	public:
 		Object3D():ID(GlobalID++){}
+		//move will prevent your object to be deleted (from OpenGL perspective) 
 		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
 		Object3D& operator=(Object3D&& obj);
 		
+		//copy also VBO and VAO , wich mean when object is destroyed , every copy will
+		//lost their 3D representation in OpenGL
 		Object3D(const Object3D& obj):ID(GlobalID++){*this = obj;}
 		Object3D& operator=(const Object3D& obj);
 		~Object3D();
 	
-		//copy also VBO and VAO , wich mean when object is destroyed , every copy will
-		//lost their 3D representation in OpenGL
+		
 		
 		
 		bool LoadObj(const String& FileObj);
@@ -209,7 +216,12 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Vector<float> ReadNormals(unsigned int SurfaceNumber, int count)noexcept;
 		Vector<float> ReadVertices(unsigned int SurfaceNumber, int count)noexcept;
 		
-		void Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix, glm::vec3 viewPosition, OpenGLProgram& noLight, OpenGLProgram& light, OpenGLProgram& line,OpenGLProgram& normal)noexcept;
+		Object3D& SetProgramNoLight(const OpenGLProgram& program)noexcept{NoLight = program; return *this;}
+		Object3D& SetProgramLight(const OpenGLProgram& program)noexcept{Light = program; return *this;}
+		Object3D& SetProgramLine(const OpenGLProgram& program)noexcept{Line = program; return *this;}
+		Object3D& SetProgramNormal(const OpenGLProgram& program)noexcept{Normal = program; return *this;}
+		
+		void Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix, glm::vec3 viewPosition)noexcept;
 };
 	
 }
