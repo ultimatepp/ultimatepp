@@ -1,4 +1,4 @@
-#ifndef _SurfaceCtrl_STLLoader_h_
+#ifndef _SurfaceCtrl_STLLoader_h_z
 #define _SurfaceCtrl_STLLoader_h_
 #include <Core/Core.h>
 namespace Upp{

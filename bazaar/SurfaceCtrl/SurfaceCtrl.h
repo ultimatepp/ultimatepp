@@ -79,7 +79,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		Object3D& GetObject(int ID)noexcept;
 		void DeleteObject(int ID)noexcept; //Delete the object (update selected)
 		void DeleteAllObjects()noexcept; //Delete all object
-		void AddDefaultShader(Object3D& obj); //Set default to the object in arg
+		void SetDefaultShader(Object3D& obj); //Set default to the object in arg
 		void DrawAllObjects()noexcept; //Draw all object
 
 		//Change selected object vector

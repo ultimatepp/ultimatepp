@@ -100,7 +100,7 @@ void SurfaceCtrl::DeleteAllObjects()noexcept{
 	allSelected.Clear();
 	allObjects.Clear();
 }
-void SurfaceCtrl::AddDefaultShader(Object3D& obj){ //Set default to the object in arg
+void SurfaceCtrl::SetDefaultShader(Object3D& obj){ //Set default to the object in arg
 	obj.SetProgramLight(DrawMeshLight);
 	obj.SetProgramNoLight(DrawMeshNoLight);
 	obj.SetProgramNormal(DrawMeshNormal);
@@ -244,9 +244,9 @@ void SurfaceCtrl::GLPaint(){
 	if(!loaded){
 		OnBegin();
 		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
-		AddDefaultShader(Axis);
+		SetDefaultShader(Axis);
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
-		AddDefaultShader(CameraFocus);
+		SetDefaultShader(CameraFocus);
 		loaded = true;
 	}
 	if(TimerStarted)ProcessTime();
