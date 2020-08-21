@@ -66,25 +66,57 @@ Object3D::Object3D(Surface& surface, Color color) : ID(GlobalID++){
 		}
 	}
 	BuildOpenGLData(vertexData,normalData,colorData);
-	CreateBoundingBox(vertexData);
+	
 }
 
 Object3D::Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color) : ID(GlobalID++){
 	SurfaceCount = surface.GetCount() / 3;
 	BuildOpenGLData(surface,normal,color);
+	
 }
 
-Object3D& Object3D::LoadObj(String& FileObj){
-	//TODO
-	return *this;
+void Object3D::UnloadData(){
+	if(SurfaceCount > 0){
+		if(VAO > 0) glDeleteVertexArrays(1,&VAO);
+		if(VerticesVBO > 0)glDeleteBuffers(1,&VerticesVBO);
+		if(NormalVBO > 0)glDeleteBuffers(1,&NormalVBO);
+		if(ColorVBO > 0)glDeleteBuffers(1,&ColorVBO);
+		ColorVBO = 0;
+		NormalVBO = 0;
+		VerticesVBO = 0;
+		VAO = 0;
+	}
 }
-Object3D& Object3D::LoadStl(String& StlFile){
+
+bool Object3D::LoadObj(const String& FileObj){
+	UnloadData();
 	//TODO
-	return *this;
+	return false;
 }
-Object3D& Object3D::LoadSurface(Surface& Surface){
+bool Object3D::LoadStl(const String& StlFile, Color color){
+	Upp::Vector<float> vertexData;
+	Upp::Vector<float> normalData;
+	Upp::Vector<float> colorData;
+	if(STLLoader::LoadSTL(StlFile,vertexData,normalData)){
+		float r = color.GetR()/255.0f;
+		float g = color.GetG()/255.0f;
+		float b = color.GetB()/255.0f;
+		for(int e = 0; e < (vertexData.GetCount() -1) ; e = e + 3){
+			colorData << r << g << b ;
+		}
+		SurfaceCount = vertexData.GetCount() / 3;
+		BuildOpenGLData(vertexData,normalData,colorData);
+		return true;
+	}
+	return false;
+}
+bool Object3D::LoadSurface(Surface& Surface){
 	//TODO
-	return *this;
+	return false;
+}
+bool LoadVector(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color , Upp::Vector<float>& TextureCoordinate ){
+	//TODO
+	return false;
 }
 Surface Object3D::GetSurface(){
 	//TODO
@@ -164,6 +196,7 @@ void Object3D::BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(2);
 	*/
+	CreateBoundingBox(surface);
 }
 
 bool Object3D::UpdateBuffer(GLuint buffer, int SurfaceNumber, int count,const float * data)noexcept{

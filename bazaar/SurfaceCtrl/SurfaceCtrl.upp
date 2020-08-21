@@ -28,5 +28,7 @@ file
 	shaders/FragmentLight.glsl highlight cpp,
 	shaders/FragmentBlackTesselated.glsl,
 	shaders/FragmentBlack.glsl highlight cpp,
-	shaders/FragmentNoLight.glsl highlight cpp;
+	shaders/FragmentNoLight.glsl highlight cpp,
+	FileLoader readonly separator,
+	STLLoader.h;
 

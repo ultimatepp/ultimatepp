@@ -6,6 +6,9 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "BoundingBox.h"
+
+#include "STLLoader.h"
+
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
 /*
@@ -91,16 +94,20 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		GLenum DrawType = GL_TRIANGLES;
 		
+		
 		bool UpdateBuffer(GLuint buffer, int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceNumber,int count)noexcept;
 		void BuildOpenGLData(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
-		
+		void UnloadData();
 	public:
 		Object3D():ID(GlobalID++){}
 		Object3D(const Object3D& obj):ID(GlobalID++){*this = obj;}
+		
+		
 		Object3D(Surface& surface,Upp::Color = Green());
 		Object3D(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color);
 		Object3D(Upp::String& ObjFile);
+		
 		
 		Object3D& operator=(const Object3D& obj){
 			VerticesVBO = obj.VerticesVBO;
@@ -126,9 +133,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 			return *this;
 		}
 		
-		Object3D& LoadObj(String& FileObj);
-		Object3D& LoadStl(String& StlFile);
-		Object3D& LoadSurface(Surface& Surface);
+		bool LoadObj(const String& FileObj);
+		bool LoadStl(const String& StlFile, Upp::Color = Green());
+		bool LoadVector(Upp::Vector<float>& surface, Upp::Vector<float>& normal, Upp::Vector<float>& color , Upp::Vector<float>& TextureCoordinate );
+		bool LoadSurface(Surface& Surface);
 		Surface GetSurface();
 		
 		int GetID()const {return ID;}

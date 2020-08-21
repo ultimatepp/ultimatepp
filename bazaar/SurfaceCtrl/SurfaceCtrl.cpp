@@ -75,6 +75,10 @@ Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
 	if(!fastMode) Refresh();
 	return obj;
 }
+Object3D& SurfaceCtrl::CreateObject()noexcept{
+	return allObjects.Create();
+}
+
 int SurfaceCtrl::FindObject(int ID)const noexcept{
 	for(int e = 0; e < allObjects.GetCount(); e++){
 		const Object3D& obj = allObjects[e];
