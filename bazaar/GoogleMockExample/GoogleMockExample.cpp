@@ -12,13 +12,13 @@ public:
 	virtual ~Car() = default;
 	
 	virtual void OpenHood() = 0;
-	virtual String ReadRegistrationNumbers() = 0;
+	virtual String ReadRegistrationNumbers() const = 0;
 };
 
 class MockCar final : public Car {
 public:
 	MOCK_METHOD(void, OpenHood, (), (override));
-	MOCK_METHOD(String, ReadRegistrationNumbers, (), (override));
+	MOCK_METHOD(String, ReadRegistrationNumbers, (), (const, override));
 };
 
 class CarRepairShop final {
