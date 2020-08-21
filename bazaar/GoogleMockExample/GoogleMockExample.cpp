@@ -15,10 +15,10 @@ public:
 	virtual String ReadRegistrationNumbers() = 0;
 };
 
-class MockCar : public Car {
+class MockCar final : public Car {
 public:
-	MOCK_METHOD0(OpenHood, void());
-	MOCK_METHOD0(ReadRegistrationNumbers, String());
+	MOCK_METHOD(void, OpenHood, (), (override));
+	MOCK_METHOD(String, ReadRegistrationNumbers, (), (override));
 };
 
 class CarRepairShop final {

@@ -1,4 +1,4 @@
-description "Google C++ mocking framework (Depends on Google Test)\3770,128,128";
+description "Google C++ mocking framework (Depends on Google Test) - Version 1.10.0\3770,128,128";
 
 uses
 	plugin/gtest;
