@@ -44,7 +44,12 @@ void AssistEditor::Context(ParserContext& parser, int pos)
 	
 	theide->ScanFile(true);
 	
-	parser = AssistParse(Get(0, pos), theide->editfile, AssistScanError);
+	parser = AssistParse(Get(0, pos), theide->editfile, AssistScanError,
+	                     [&](String scope, String type, String usings) {
+							CodeBaseLock __;
+							String t = Qualify(CodeBase(), scope, type, usings);
+							return CodeBase().Find(NoTemplatePars(t)) >= 0 ? t : Null;
+	                     });
 	inbody = parser.IsInBody();
 #ifdef _DEBUG
 	PutVerbose("body: " + AsString(inbody));

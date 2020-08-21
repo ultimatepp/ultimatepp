@@ -85,6 +85,8 @@ int    Utf32Len(const char *s, int len);
 inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen(s)); }
 inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
 
+dword ReadSurrogatePair(const wchar *s, const wchar *lim);
+
 void          ToUtf32(dword *t, const wchar *s, int len);
 Vector<dword> ToUtf32(const wchar *s, int len);
 inline Vector<dword> ToUtf32(const wchar *s)          { return ToUtf32(s, wstrlen(s)); }

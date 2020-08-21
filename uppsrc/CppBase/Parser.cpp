@@ -1204,7 +1204,7 @@ CppItem& Parser::Item(const String& scope, const String& using_namespace, const 
 	im.impl = impl;
 	im.filetype = filetype;
 	im.using_namespaces = using_namespace;
-	LLOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << scope << "::" << item);
+	LLOG("New item " << line + 1 << "    " << scope << "::" << item);
 	return im;
 }
 
@@ -1721,7 +1721,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
                  const Index<String>& namespace_using)
 {
 	LTIMING("Parser::Do");
-	LLOG("= C++ Parser ==================================== " << title_ << " " << namespace_stack);
+	LLOG("= C++ Parser ==================================== " << title_ << " " << namespace_stack << ", dobody: " << dobody);
 	base = &_base;
 	err = _err;
 	filei = filei_;
