@@ -11,7 +11,7 @@ who want to make a better world through science and technology.]&]
 [s0;2 &]
 [s0; [2 Libraries included are:]&]
 [s0;2 &]
-[ {{1630:8370f0;g0;^t/25b/25 [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Polynomial`_en`-us^2 Polynomial]]
+[ {{1940:8060f0;g0;^t/25b/25 [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Polynomial`_en`-us^2 Polynomial]]
 :: [s0; [2 A templated polynomial type able to handle coefficients of 
 any type including arbitrary precision rational numbers]]
 :: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Rational`_en`-us^2 Rational]]
@@ -20,10 +20,17 @@ integer precision][2  ][^https`:`/`/en`.wikipedia`.org`/wiki`/Rational`_number^2
 onal number][2  type based on intInf]]
 :: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/intInf`_en`-us^2 intInf]]
 :: [s0; [2 An integer type with ][^https`:`/`/en`.wikipedia`.org`/wiki`/Arbitrary`-precision`_arithmetic^2 a
-rbitrary`-precision][2  including the usual arithmetic.]]}}&]
+rbitrary`-precision][2  including the usual arithmetic.]]
+:: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Permutations`_en`-us^2 Permutations]]
+:: [s0; [2 Permutation functions.]]
+:: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Finantial`_en`-us^2 Finantial]]
+:: [s0; [2 Some financial functions.]]
+:: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/TSP`_TavellingSalesman`_en`-us^2 TSP]]
+:: [s0; [2 A symmetric ][^https`:`/`/en`.wikipedia`.org`/wiki`/Travelling`_salesman`_problem^2 T
+raveling salesman problem][2  (TSP) solver.]]}}&]
 [s0;2 &]
-[s0; [2 STEM4U`_DemoTest allows to demonstrate some libraries features. 
-When TEST flag is set, it allows to test libraries.]&]
+[s0; [2 STEM4U`_DemoTest allows to demonstrate and test some libraries 
+features.]&]
 [s0;2 &]
 [s0; [2 To know about the libraries internally used, you can read the 
 ][^topic`:`/`/STEM4U`/srcdoc`/Credits`_en`-us^2 credits][2 .]]]
