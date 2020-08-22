@@ -5,10 +5,12 @@ SHADER(400 core,
 	in vec3 fs_color[3];\n
 	in vec3 fs_normal[3];\n
 	in vec3 fs_fragPos[3];\n
+	in vec2 fs_texCoord[3];\n
 	
 	out vec3 color;\n
 	out vec3 normal;\n
 	out vec3 fragPos;\n
+	out vec2 texCoord;\n;
 
     void main()
     {
@@ -19,6 +21,7 @@ SHADER(400 core,
 		for(i = 0; i < gl_in.length(); i++){
 			gl_Position =  gl_in[i].gl_Position;
 			color = fs_color[i];
+			texCoord = fs_texCoord[i];
 			normal = v3;
 			fragPos = gl_in[i].gl_Position.xyz;
 			EmitVertex();
@@ -27,6 +30,7 @@ SHADER(400 core,
 		
 		gl_Position = gl_in[0].gl_Position;
 		color = fs_color[0];
+		texCoord = fs_texCoord[i];
 		normal = v3;
 		fragPos = gl_in[0].gl_Position.xyz;
 		EmitVertex();

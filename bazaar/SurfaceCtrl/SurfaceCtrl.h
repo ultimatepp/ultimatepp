@@ -73,7 +73,6 @@ class SurfaceCtrl : public GLCtrl_glad{
 
 		//Action on all objects vector
 		const Upp::Vector<Object3D>& GetAllObjects()const noexcept{return allObjects;}
-		Object3D& CreateObject(Surface& surf,Upp::Color color)noexcept;
 		Object3D& CreateObject()noexcept;
 		int FindObject(int ID)const noexcept;
 		Object3D& GetObject(int ID)noexcept;

@@ -9,6 +9,7 @@ file
 	SurfaceCtrl.cpp,
 	Object3D.h,
 	Object3D.cpp,
+	Mesh.h,
 	Object3DProvider.h,
 	BoundingBox.h,
 	Shader.h,
@@ -25,5 +26,6 @@ file
 	shaders\FragmentLight.glsl highlight cpp,
 	shaders\FragmentBlack.glsl highlight cpp,
 	FileLoader readonly separator,
-	STLLoader.h;
+	STLLoader.h,
+	OBJLoader.h;
 

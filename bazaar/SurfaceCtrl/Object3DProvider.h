@@ -17,9 +17,9 @@ class Object3DProvider {
 		void InsertFloatColor(int number,const Color& color){
 			if(number > 0){
 				for(int e = 0;e < number; e ++){
-					colorData.Add(color.GetR()/255);
-					colorData.Add(color.GetG()/255);
-					colorData.Add(color.GetB()/255);
+					colorData.Add(color.GetR()/255.0f);
+					colorData.Add(color.GetG()/255.0f);
+					colorData.Add(color.GetB()/255.0f);
 				}
 			}
 		}
@@ -186,7 +186,7 @@ class Object3DProvider {
 			buffered.AddVerticesData(vertexData);
 			buffered.AddNormalsData(normalData);
 			buffered.AddColorsData(colorData);
-			buffered.Load(MT_COLOR);
+			buffered.Load();
 			
 			buffered.SetDrawType(DrawType);
 			buffered.ShowLight(false);

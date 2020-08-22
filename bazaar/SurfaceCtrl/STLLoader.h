@@ -1,9 +1,9 @@
-#ifndef _SurfaceCtrl_STLLoader_h_z
+#ifndef _SurfaceCtrl_STLLoader_h_
 #define _SurfaceCtrl_STLLoader_h_
 #include <Core/Core.h>
 namespace Upp{
 
-#define LLOG(x) //LOG(x)
+#define LLOG(x) LOG(x)
 
 //Code taken from Surface package
 //Author : Iñaki Koldo Zabala

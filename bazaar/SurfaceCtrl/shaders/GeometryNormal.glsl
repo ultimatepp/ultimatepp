@@ -5,9 +5,12 @@ SHADER(400 core,
 	in vec3 color[3];\n
 	in vec3 normal[3];\n
 	in vec3 fragPos[3];\n
+	in vec2 texCoord[3];\n
+	
 	out vec3 fs_color;\n
 	out vec3 fs_normal;\n
 	out vec3 fs_fragPos;\n
+	out vec2 fs_texCoord;\n;
 	
     uniform float normal_length = 0.8;
 
@@ -23,12 +26,14 @@ SHADER(400 core,
 		fs_fragPos = fragPos[0];
 		fs_normal = normal[0];
 		fs_color = color[0];
+		fs_texCoord = texCoord[0];
 		EmitVertex();
 		
 		gl_Position =  (tri_centroid + vec4(face_normal * normal_length, 0.0));
 		fs_fragPos = fragPos[1];
 		fs_normal = normal[1];
 		fs_color = color[1];
+		fs_texCoord = texCoord[1];
 		EmitVertex();
 		EndPrimitive();
 		/*

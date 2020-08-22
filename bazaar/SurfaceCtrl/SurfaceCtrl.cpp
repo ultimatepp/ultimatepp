@@ -55,14 +55,6 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 	InitShader();
 }
 //Action on all objects vector
-Object3D& SurfaceCtrl::CreateObject(Surface& surf, Color color)noexcept{
-	Object3D& obj = allObjects.Create();
-	obj.LoadSurface(surf,color);
-	obj.GetTransform().SetScale(glm::vec3(0.1f,0.1f,0.1f));
-	obj.SetLineWidth(2.0f);
-	if(!fastMode) Refresh();
-	return obj;
-}
 Object3D& SurfaceCtrl::CreateObject()noexcept{
 	return allObjects.Create();
 }
@@ -330,7 +322,7 @@ void SurfaceCtrl::MouseLeave(){
 bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_R){
 		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
-		if(allObjects.GetCount() > 0) allObjects[0].UpdateColors(0,allObjects[0].GetSurfaceCount()/2,data);
+		if(allObjects.GetCount() > 0 && allObjects[0].GetMeshes().GetCount() > 0) allObjects[0].UpdateColors(0,0,(allObjects[0].GetMeshes()[0].GetVertices().GetCount()/3)/2,data);
 	}
 	if( key == K_DELETE){
 		DeleteAllSelectedObjects();
