@@ -43,14 +43,16 @@ T TSP_TotalDistance(const Vector<T> &distances, const Vector<int> &order) {
 	return ret;
 }
 
+		
 template<typename T>
-void TSP_NearestNeighbor(const Vector<T> &distances, int sz, Vector<int> &order) {
+T TSP_NearestNeighbor(const Vector<T> &distances, int sz, Vector<int> &order) {
 	Vector<int> list(sz-1);
 	for (int i = 0; i < sz-1; ++i)
 		list[i] = i+1;
 	
 	TriangularIndex ind(sz);
 	
+	T total = 0;
 	order.Clear();
 	int point = 0;
 	order << point;
@@ -67,17 +69,49 @@ void TSP_NearestNeighbor(const Vector<T> &distances, int sz, Vector<int> &order)
 		point = list[idmin];
 		order << point;
 		list.Remove(idmin);
+		total += mind;
 	}
 	order << 0;
+	return total;
 }
 
+void OrderToConnections(const Vector<int> &order, Vector<Point_<int>> &connections) {
+	connections.SetCount(order.size()-1);
+	for (int i = 0; i < connections.size(); ++i) {
+		connections[i].x = order[i];
+		connections[i].y = order[i+1];
+	}
+}
+
+void ConnectionsToOrder(Vector<Point_<int>> &connections, Vector<int> &order) {
+	int next = connections[0].y;
+	connections.Remove(0);
+	for (int id = 1; next != 0; id++) {
+		for (int i = 0; i < connections.size(); ++i) {
+			if (connections[i].x == next) { 
+				order[id] = next;
+				next = connections[i].y;
+				connections.Remove(i);
+				break;
+			} else if (connections[i].y == next) {
+				order[id] = next;
+				next = connections[i].x;
+				connections.Remove(i);
+				break;
+			}
+		}
+	}
+}
+	
 template<typename T>
-void TSP_2_Opt(const Vector<T> &distances, int sz, Vector<int> &order) {
+T TSP_2_Opt(const Vector<T> &distances, int sz, Vector<int> &order) {
 	TriangularIndex ind(sz);
 
-	int idchange;
-	do {
-		idchange = -1;
+	Vector<Point_<int>> connections;
+	OrderToConnections(order, connections);
+	
+	while (true) {
+		int idchange = -1;
 		T bestSaving = 0;
 		
 		for (int i = 0; i < order.size()-1 && idchange < 0; ++i) {
@@ -95,24 +129,43 @@ void TSP_2_Opt(const Vector<T> &distances, int sz, Vector<int> &order) {
 				}
 			}
 			if (idchange >= 0) {
-				Swap(order[i+1], order[idchange]);
+				Swap(connections[i].y, connections[idchange].x);
+				ConnectionsToOrder(connections, order);
+				OrderToConnections(order, connections);
 				break;
 			}
 		}
-	} while (idchange >= 0);
-}
-
-template<typename T>
-T TSP(const Vector<T> &distances, int sz, Vector<int> &order) {
-	if (order.IsEmpty()) 
-		TSP_NearestNeighbor(distances, sz, order);
-
-	TSP_2_Opt(distances, sz, order);
+		if (idchange < 0)
+			break;
+	}
 	return TSP_TotalDistance(distances, order);
 }
 
+enum TSP_Init {TSP_USER, TSP_NEAREST_NEIGHBOR, TSP_CONSECUTIVE, TSP_RANDOM};
+
 template<typename T>
-T TSP(const Vector<Point_<T>>& points, Vector<int> &order) {
+T TSP(const Vector<T> &distances, int sz, Vector<int> &order, TSP_Init init) {
+	if (init == TSP_NEAREST_NEIGHBOR)
+		TSP_NearestNeighbor(distances, sz, order);
+	else if (init == TSP_CONSECUTIVE) {
+		order.Clear();
+		for (int i = 0; i < sz; ++i)
+			order << i;
+		order << 0;
+	} else if (init == TSP_RANDOM) {
+		order.Clear();
+		for (int i = 1; i < sz; ++i)
+			order << i;
+		Shuffle(order);
+		order.Insert(0, 0);
+		order << 0;
+	}
+	ASSERT(order.size()-1 == sz);
+	return TSP_2_Opt(distances, sz, order);
+}
+
+template<typename T>
+T TSP(const Vector<Point_<T>>& points, Vector<int> &order, TSP_Init init) {
 	const int sz = points.size();
 	TriangularIndex ind(sz);
 	Vector<T> distances(ind.GetNumData());
@@ -121,11 +174,11 @@ T TSP(const Vector<Point_<T>>& points, Vector<int> &order) {
 		for (int c = r+1; c < sz; ++c)
 			distances[ind(r, c)] = Distance(points[r], points[c]);
 
-	return TSP(distances, order);
+	return TSP(distances, sz, order, init);
 }
 
 template<typename T>
-T TSP(const Vector<Vector<T>>& matrix, Vector<int> &order) {
+T TSP(const Vector<Vector<T>>& matrix, Vector<int> &order, TSP_Init init) {
 	const int sz = matrix.size();
 	TriangularIndex ind(sz);
 	Vector<T> distances(ind.GetNumData());
@@ -134,9 +187,9 @@ T TSP(const Vector<Vector<T>>& matrix, Vector<int> &order) {
 		for (int c = r+1; c < sz; ++c)
 			distances[ind(r, c)] = matrix[r][c];
 
-	return TSP(distances, sz, order);
+	return TSP(distances, sz, order, init);
 }
-	
+
 }
 
 #endif
