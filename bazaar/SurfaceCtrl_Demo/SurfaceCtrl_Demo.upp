@@ -10,5 +10,6 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "",
-	"" = "USEMALLOC";
+	"" = "USEMALLOC",
+	"" = "USEMALLOC GUI";
 
