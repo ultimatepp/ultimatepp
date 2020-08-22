@@ -25,8 +25,5 @@ file
 	shaders\GeometryTriangle.glsl highlight cpp,
 	shaders\FragmentNoLight.glsl highlight cpp,
 	shaders\FragmentLight.glsl highlight cpp,
-	shaders\FragmentBlack.glsl highlight cpp,
-	FileLoader readonly separator,
-	STLLoader.h,
-	OBJLoader.h;
+	shaders\FragmentBlack.glsl highlight cpp;
 
