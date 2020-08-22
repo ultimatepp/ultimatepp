@@ -138,23 +138,27 @@ class Mesh : public Moveable<Mesh>{
 				glBindBuffer(GL_ARRAY_BUFFER,texCoordsVBO);
 				glBufferData(GL_ARRAY_BUFFER,texCoords.GetCount() * sizeof(float),(texCoords.GetCount() > 0)? &(texCoords[0]): NULL ,GL_DYNAMIC_READ);
 				
-				
-				glBindBuffer(GL_ARRAY_BUFFER,verticesVBO);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(0);
-				
-				glBindBuffer(GL_ARRAY_BUFFER,normalsVBO);
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(1);
-				
-				glBindBuffer(GL_ARRAY_BUFFER,colorsVBO);
-				glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(2);
-				
-				glBindBuffer(GL_ARRAY_BUFFER,texCoordsVBO);
-				glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(3);
-				
+				if(vertices.GetCount()){
+					glBindBuffer(GL_ARRAY_BUFFER,verticesVBO);
+					glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+					glEnableVertexAttribArray(0);
+				}
+				if(normals.GetCount()){
+					glBindBuffer(GL_ARRAY_BUFFER,normalsVBO);
+					glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+					glEnableVertexAttribArray(1);
+				}
+				if(colors.GetCount()){
+					glBindBuffer(GL_ARRAY_BUFFER,colorsVBO);
+					glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+					glEnableVertexAttribArray(2);
+				}
+				if(texCoords.GetCount()){
+					glBindBuffer(GL_ARRAY_BUFFER,texCoordsVBO);
+					glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+					glEnableVertexAttribArray(3);
+				}
+					
 				loaded = true;
 			}
 		}

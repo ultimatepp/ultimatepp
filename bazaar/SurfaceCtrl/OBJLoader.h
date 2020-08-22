@@ -84,47 +84,50 @@ namespace Upp{
 					}
 					if(line.StartsWith("f ")){
 						//All pannel
+						if(!m)m = &(meshes.Create());
 						Vector<String> data = Split(line, " ");
-						for(int e = 1; e < 4; e++){
+						for(int e = (data.GetCount()-1); e > 1 ; e--){
 							Vector<String> data2 = Split(data[e], "/");
 							vec3& vertex = allVertices[Atof(data2[0])];
-							vec3& texture = allTextures[Atof(data2[1])];
-							vec3& normal = allNormals[Atof(data2[2])];
-							
-							if(!m)m = &(meshes.Create());
-							
 							m->GetVertices() << vertex.x << vertex.y << vertex.z;
-							m->GetTexCoords() << texture.x << texture.y;
-							m->GetNormals() << normal.x << normal.y << normal.z;
+							
+							if(data2.GetCount() > 1){
+								vec3& texture = allTextures[Atof(data2[1])];
+								m->GetTexCoords() << texture.x << texture.y;
+							}
+							if(data2.GetCount() > 2){
+								vec3& normal = allNormals[Atof(data2[2])];
+								m->GetNormals() << normal.x << normal.y << normal.z;
+							}
 						}
-						//Degueu
 						if(data.GetCount() == 5){
+							for(int e = 1; e < (data.GetCount() -2) ; e++){
+								Vector<String> data2 = Split(data[e], "/");
+								vec3& vertex = allVertices[Atof(data2[0])];
+								m->GetVertices() << vertex.x << vertex.y << vertex.z;
+								
+								if(data2.GetCount() > 1){
+									vec3& texture = allTextures[Atof(data2[1])];
+									m->GetTexCoords() << texture.x << texture.y;
+								}
+								if(data2.GetCount() > 2){
+									vec3& normal = allNormals[Atof(data2[2])];
+									m->GetNormals() << normal.x << normal.y << normal.z;
+								}
+							}
+							
 							Vector<String> data2 = Split(data[4], "/");
-							vec3& vertex = allVertices[Atof(data2[0])];
-							vec3& texture = allTextures[Atof(data2[1])];
-							vec3& normal = allNormals[Atof(data2[2])];
-							
-							m->GetVertices() << vertex.x << vertex.y << vertex.z;
-							m->GetTexCoords() << texture.x << texture.y;
-							m->GetNormals() << normal.x << normal.y << normal.z;
-							
-							Vector<String> data3 = Split(data[2], "/");
-							vertex = allVertices[Atof(data3[0])];
-							texture = allTextures[Atof(data3[1])];
-							normal = allNormals[Atof(data3[2])];
-							
-							m->GetVertices() << vertex.x << vertex.y << vertex.z;
-							m->GetTexCoords() << texture.x << texture.y;
-							m->GetNormals() << normal.x << normal.y << normal.z;
-							
-							Vector<String> data4 = Split(data[3], "/");
-							vertex = allVertices[Atof(data4[0])];
-							texture = allTextures[Atof(data4[1])];
-							normal = allNormals[Atof(data4[2])];
-							
-							m->GetVertices() << vertex.x << vertex.y << vertex.z;
-							m->GetTexCoords() << texture.x << texture.y;
-							m->GetNormals() << normal.x << normal.y << normal.z;
+								vec3& vertex = allVertices[Atof(data2[0])];
+								m->GetVertices() << vertex.x << vertex.y << vertex.z;
+								
+								if(data2.GetCount() > 1){
+									vec3& texture = allTextures[Atof(data2[1])];
+									m->GetTexCoords() << texture.x << texture.y;
+								}
+								if(data2.GetCount() > 2){
+									vec3& normal = allNormals[Atof(data2[2])];
+									m->GetNormals() << normal.x << normal.y << normal.z;
+								}
 							
 						}
 						continue;
