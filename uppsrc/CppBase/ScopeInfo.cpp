@@ -63,7 +63,7 @@ void ScopeInfo::Bases(int i, Vector<int>& g)
 								g.Add(nq);
 						}
 						if(*q == '\0')
-							return;
+							break;
 						q++;
 						b = q;
 					}
