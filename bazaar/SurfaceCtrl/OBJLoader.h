@@ -97,6 +97,36 @@ namespace Upp{
 							m->GetTexCoords() << texture.x << texture.y;
 							m->GetNormals() << normal.x << normal.y << normal.z;
 						}
+						//Degueu
+						if(data.GetCount() == 5){
+							Vector<String> data2 = Split(data[4], "/");
+							vec3& vertex = allVertices[Atof(data2[0])];
+							vec3& texture = allTextures[Atof(data2[1])];
+							vec3& normal = allNormals[Atof(data2[2])];
+							
+							m->GetVertices() << vertex.x << vertex.y << vertex.z;
+							m->GetTexCoords() << texture.x << texture.y;
+							m->GetNormals() << normal.x << normal.y << normal.z;
+							
+							Vector<String> data3 = Split(data[2], "/");
+							vertex = allVertices[Atof(data3[0])];
+							texture = allTextures[Atof(data3[1])];
+							normal = allNormals[Atof(data3[2])];
+							
+							m->GetVertices() << vertex.x << vertex.y << vertex.z;
+							m->GetTexCoords() << texture.x << texture.y;
+							m->GetNormals() << normal.x << normal.y << normal.z;
+							
+							Vector<String> data4 = Split(data[3], "/");
+							vertex = allVertices[Atof(data4[0])];
+							texture = allTextures[Atof(data4[1])];
+							normal = allNormals[Atof(data4[2])];
+							
+							m->GetVertices() << vertex.x << vertex.y << vertex.z;
+							m->GetTexCoords() << texture.x << texture.y;
+							m->GetNormals() << normal.x << normal.y << normal.z;
+							
+						}
 						continue;
 					}
 				}
