@@ -7,3 +7,6 @@ uses
 file
 	DemoTest.cpp;
 
+mainconfig
+	"" = "";
+

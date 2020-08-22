@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <Functions4U/Functions4U.h>
 #include <plugin/Eigen/Eigen.h>
 #include <STEM4U/IntInf.h>
 #include <STEM4U/Rational.h>
@@ -103,7 +104,6 @@ void TestPolynomial() {
 	VERIFY(sum_bN.Simplify() == 1);
 }
 
-
 // val = 2/1 * 3/2 * 4/3 * ... If done n times, result has to be n
 template<typename T>
 T Loop() {
@@ -113,15 +113,32 @@ T Loop() {
 	return val;
 }
 
+	
 CONSOLE_APP_MAIN 
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
-	
 	UppLog() << "Travelling salesman";
-	
+
+	const Vector<Point_<int>> points = {{0, 0},{4, 4},{4, 0},{2, 4},{0, 4},{4, 2},{0, 2},{2, 0}};
+
+	Vector<int> orderp;
+	int distp = TSP(points, orderp, TSP_NEAREST_NEIGHBOR);
+	UppLog() << "\nTotal distance between points is: " << distp;
+	VERIFY(distp == 16);
+	String sorderp;
+	for (int i = 0; i < orderp.size(); ++i) {
+		if (i > 0)
+			sorderp << " -> ";
+		sorderp << orderp[i];
+	}
+	UppLog() << "\nOrder is: " << sorderp;
+	UppLog() << "\n";
+	VERIFY(sorderp == "0 -> 7 -> 2 -> 5 -> 1 -> 3 -> 4 -> 6 -> 0");
+
+		
 	// Example from https://developers.google.com/optimization/routing/tsp#printer
-	Vector<Vector<int>> cities = {
+	const Vector<Vector<int>> cities = {
 		{0, 2451, 713, 1018, 1631, 1374, 2408, 213, 2571, 875, 1420, 2145, 1972},
 		{2451, 0, 1745, 1524, 831, 1240, 959, 2596, 403, 1589, 1374, 357, 579},
 		{7133, 1745, 0, 355, 920, 803, 1737, 851, 1858, 262, 940, 1453, 1260},
@@ -138,7 +155,7 @@ CONSOLE_APP_MAIN
 	};
 
 	Vector<int> order;
-	int dist = TSP(cities, order);
+	int dist = TSP(cities, order, TSP_CONSECUTIVE);
 	
 	UppLog() << "\nTotal distance between cities is: " << dist;
 	VERIFY(dist == 7293);
@@ -152,7 +169,7 @@ CONSOLE_APP_MAIN
 	VERIFY(sorder == "0 -> 7 -> 2 -> 3 -> 4 -> 12 -> 6 -> 8 -> 1 -> 11 -> 10 -> 5 -> 9 -> 0");
 	
 	
-	UppLog() << "\n\nTo test rounding errors";
+	UppLog() << "\n\nRounding errors test";
 	
 	double dval = Loop<double>();
 	Rational rval = Loop<Rational>();
