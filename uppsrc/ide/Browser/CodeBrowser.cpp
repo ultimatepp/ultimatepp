@@ -184,7 +184,6 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 
 void CodeBrowser::LoadScope()
 {
-	DLOG("===== LoadScope");
 	Value key = item.GetKey();
 	int sc = item.GetCursorSc();
 	{
