@@ -387,44 +387,6 @@ bool SurfaceCtrl::Key(dword key,int count){
 		Cout() << "Right vector : "<< camera.GetTransform().GetRight().x << "," << camera.GetTransform().GetRight().y << "," << camera.GetTransform().GetRight().z << EOL;
 		Cout() << "Front vector : "<< camera.GetTransform().GetFront().x << "," << camera.GetTransform().GetFront().y << "," << camera.GetTransform().GetFront().z << EOL;
 	}
-	/*
-		Material change
-	*/
-	if(key == K_U){ //Increase diffuse
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetDiffuse(allObjects[0].GetMaterial().GetDiffuse() + glm::vec3(0.1f,0.1f,0.1f));
-		}
-	}
-	if(key == K_I){ //decrease diffuse
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetDiffuse(allObjects[0].GetMaterial().GetDiffuse() - glm::vec3(0.1f,0.1f,0.1f));
-		}
-	}
-	if(key == K_J){ //Increase specular
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() + glm::vec3(0.1f,0.1f,0.1f));
-			LOG(allObjects[0].GetMaterial().GetSpecular().x + AsString(" ") + allObjects[0].GetMaterial().GetSpecular().y + AsString(" ") + allObjects[0].GetMaterial().GetSpecular().z);
-		}
-	}
-	if(key == K_K){ //decrease specular
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetSpecular(allObjects[0].GetMaterial().GetSpecular() - glm::vec3(0.1f,0.1f,0.1f));
-			LOG( AsString(allObjects[0].GetMaterial().GetSpecular().x) + " " + AsString(allObjects[0].GetMaterial().GetSpecular().y) + " " + AsString(allObjects[0].GetMaterial().GetSpecular().z));
-		}
-	}
-	if(key == K_Y){ //Increase Shininess
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() + 0.1f);
-			LOG(allObjects[0].GetMaterial().GetShininess());
-		}
-	}
-	if(key == K_H){ //decrease Shininess
-		if(allObjects.GetCount() > 0){
-			allObjects[0].GetMaterial().SetShininess(allObjects[0].GetMaterial().GetShininess() - 0.1f);
-			LOG(allObjects[0].GetMaterial().GetShininess());
-		}
-	}
-	
 	if(key == K_ESCAPE){ //removing all selection
 		ClearSelectedObject();
 		camera.SetFocus(glm::vec3(0.0f,0.0f,0.0f));

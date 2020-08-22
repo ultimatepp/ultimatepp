@@ -3,14 +3,13 @@
 #include <Core/Core.h>
 #include <GLCtrl_glad/GLCtrl_glad.h>
 #include <Surface/Surface.h>
+#include <plugin/assimp/assimp.h>
 #include "Transform.h"
 #include "Shader.h"
 #include "BoundingBox.h"
 
 #include "Mesh.h"
 
-#include "STLLoader.h"
-#include "OBJLoader.h"
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
 /*
@@ -44,12 +43,12 @@ class Object3D : public Upp::Moveable<Object3D>{
 	private:
 		static int GlobalID;
 		int ID;
+		
 		Vector<Mesh> meshes;
+		
 		bool loaded = false;
 		bool moved = false;
-		
-		Material material; //The material object is a representation of material property of the object (it change how light affect it)
-		
+
 		Color lineColor = Black();
 		float lineOpacity = 0.5f;
 		float lineWidth = 1.0f;
@@ -57,6 +56,8 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Color normalColor = Red();
 		float normalOpacity = 0.5f;
 		float normalLenght = 1.0f;
+		
+		GLenum drawType = GL_TRIANGLES;
 		
 		OpenGLProgram NoLight; //The program will draw figure without light
 		OpenGLProgram Line; //THe program will draw figure line
@@ -72,11 +73,17 @@ class Object3D : public Upp::Moveable<Object3D>{
 		bool showBoundingBox = false;
 			
 		Transform transform;
+		Material material; //The material object is a representation of material property of the object (it change how light affect it)
 		
-		GLenum DrawType = GL_TRIANGLES;
-	
 		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count)noexcept;
+		
+		/*
+			Assimp loading function
+		*/
+		bool InitFromScene(const aiScene* pScene, const String& Filename);
+	    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
+	    bool InitMaterials(const aiScene* pScene, const String& Filename);
 	public:
 		Object3D():ID(GlobalID++){}
 		//move will prevent your object to be deleted (from OpenGL perspective)
@@ -89,30 +96,26 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& operator=(const Object3D& obj);
 		~Object3D();
 
-		bool LoadObj(const String& FileObj);
-		bool LoadStl(const String& StlFile, Upp::Color = Green());
+		/**
+			LoadModel load multiple kind of object file using Assimp lib, you can specify some custom
+			load routine by editing pFlags, if pFlags = 0 then SurfaceCtrl default behavior about
+			assimp will be used
+		**/
+		bool LoadModel(const String& FileObj, Color color = Gray(), unsigned int pFlags = 0);
+
+		/*bool LoadObj(const String& FileObj);
+		bool LoadStl(const String& StlFile, Upp::Color = Green());*/
 		bool LoadSurface(Surface& surface, Upp::Color = Green());
 		Surface GetSurface();
 		
 		int GetID()const {return ID;}
 		
 		const Upp::Vector<Mesh>& GetMeshes() const noexcept{return meshes;}
-		
-		Upp::Vector<float>& GetVerticesData(int MeshNo = 0){if(MeshNo < meshes.GetCount()){return meshes[MeshNo].GetVertices();}else if(meshes.GetCount() > 0){return meshes[0].GetVertices();}else{throw Exc(Format(t_("Object3D '%i' don't have any meshes, vertices data can't be retrieve\n"), ID));}}
-		Upp::Vector<float>& GetNormalsData(int MeshNo = 0){if(MeshNo < meshes.GetCount()){return meshes[MeshNo].GetNormals();}else if(meshes.GetCount() > 0){return meshes[0].GetNormals();}else{throw Exc(Format(t_("Object3D '%i' don't have any meshes, normals data can't be retrieve\n"), ID));}}
-		Upp::Vector<float>& GetColorsData(int MeshNo = 0){if(MeshNo < meshes.GetCount()){return meshes[MeshNo].GetColors();}else if(meshes.GetCount() > 0){return meshes[0].GetColors();}else{throw Exc(Format(t_("Object3D '%i' don't have any meshes, colors data can't be retrieve\n"), ID));}}
-		Upp::Vector<float>& GetTexturesData(int MeshNo = 0){if(MeshNo < meshes.GetCount()){return meshes[MeshNo].GetTexCoords();}else if(meshes.GetCount() > 0){return meshes[0].GetTexCoords();}else{throw Exc(Format(t_("Object3D '%i' don't have any meshes, textures coordinates data can't be retrieve\n"), ID));}}
-		
-		//Create a mesh if no mesh exist
-		Object3D& AddVerticesData(const Upp::Vector<float>& data, int MeshNo = 0)noexcept{if(meshes.GetCount() == 0 && MeshNo == 0)meshes.Create();  if(MeshNo < meshes.GetCount()){meshes[MeshNo].GetVertices().Append(data);} return *this;}
-		Object3D& AddNormalsData(const Upp::Vector<float>& data, int MeshNo = 0)noexcept{if(meshes.GetCount() == 0 && MeshNo == 0)meshes.Create(); if(MeshNo < meshes.GetCount()){meshes[MeshNo].GetNormals().Append(data);} return *this;}
-		Object3D& AddColorsData(const Upp::Vector<float>& data, int MeshNo = 0)noexcept{if(meshes.GetCount() == 0 && MeshNo == 0)meshes.Create(); if(MeshNo < meshes.GetCount()){meshes[MeshNo].GetColors().Append(data);} return *this;}
-		Object3D& AddTexturesData(const Upp::Vector<float>& data, int MeshNo = 0)noexcept{if(meshes.GetCount() == 0 && MeshNo == 0)meshes.Create(); if(MeshNo < meshes.GetCount()){meshes[MeshNo].GetTexCoords().Append(data);} return *this;}
-		
+		Mesh& CreateMeshes()noexcept{return meshes.Add();}
+
 		bool Load(); //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
 		Object3D& Unload();
 		
-		Object3D& SetDrawType(GLenum dt)noexcept{DrawType = dt; return *this;}
 		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
 		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
 		Object3D& ShowMeshNormal(bool b = true)noexcept{showMeshNormal = b; return *this;}
@@ -125,20 +128,19 @@ class Object3D : public Upp::Moveable<Object3D>{
 		bool GetShowLight()const noexcept{return showLight;}
 		bool GetShowBoundingBox()const noexcept{return showBoundingBox;}
 		
+		Object3D& SetDrawType(GLenum drawtype)noexcept{drawType = drawtype;return *this;}
 		Object3D& SetLineColor(Color color)noexcept{lineColor = color; return *this;}
 		Object3D& SetNormalColor(Color color)noexcept{normalColor = color; return *this;}
 		Object3D& SetLineOpacity(float opacity)noexcept{lineOpacity = opacity; if(lineOpacity < 0) lineOpacity =0; if(lineOpacity> 1.0f) lineOpacity = 1.0f; return *this;}
 		Object3D& SetLineWidth(float width)noexcept{lineWidth = width; if(lineWidth < 1) lineWidth = 1.0f; return *this;}
 		Object3D& SetNormalOpacity(float opacity)noexcept{normalOpacity = opacity; if(normalOpacity < 0) normalOpacity =0; if(normalOpacity> 1.0f) normalOpacity = 1.0f; return *this;}
+		GLenum GetDrawType()const noexcept{return drawType;}
 		Upp::Color GetLineColor()const noexcept{return lineColor;}
 		Upp::Color GetNormalColor()const noexcept{return normalColor;}
 		float GetNormalOpcaity()const noexcept{return normalOpacity;}
 		float GetLineOpcaity()const noexcept{return lineOpacity;}
 		float GetLineWidth()const noexcept{return lineWidth;}
-		GLenum GetDrawType()const noexcept{return DrawType;}
-		
-		Material& GetMaterial(){return material;}
-		
+				
 		Transform& GetTransform()noexcept{return transform;}
 		const Transform& GetTransform()const noexcept{return transform;}
 				

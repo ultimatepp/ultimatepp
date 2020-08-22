@@ -1,12 +1,13 @@
 #include "Object3D.h"
 #include <Surface/Surface.h>
+
 namespace Upp{
 int Object3D::GlobalID = 0;
 
 Object3D& Object3D::operator=(Object3D&& obj){
 	meshes = pick(obj.meshes);
 	
-	material = obj.material; //The material object is a representation of material property of the object (it change how light affect it)
+	drawType = obj.drawType;
 	lineColor = obj.lineColor;
 	lineOpacity = obj.lineOpacity;
 	lineWidth = obj.lineWidth;
@@ -20,7 +21,6 @@ Object3D& Object3D::operator=(Object3D&& obj){
 	boundingBox = obj.boundingBox;
 	showBoundingBox = obj.showBoundingBox;
 	transform = obj.transform;
-	DrawType = obj.DrawType;
 	obj.moved = true;
 	obj.loaded = false;
 	return *this;
@@ -29,7 +29,7 @@ Object3D& Object3D::operator=(Object3D&& obj){
 Object3D& Object3D::operator=(const Object3D& obj){
 	meshes.Append(obj.meshes);
 	
-	material = obj.material; //The material object is a representation of material property of the object (it change how light affect it)
+	drawType = obj.drawType;
 	lineColor = obj.lineColor;
 	lineOpacity = obj.lineOpacity;
 	lineWidth = obj.lineWidth;
@@ -43,7 +43,6 @@ Object3D& Object3D::operator=(const Object3D& obj){
 	boundingBox = obj.boundingBox;
 	showBoundingBox = obj.showBoundingBox;
 	transform = obj.transform;
-	DrawType = obj.DrawType;
 	
 	return *this;
 }
@@ -51,7 +50,7 @@ Object3D& Object3D::operator=(const Object3D& obj){
 Object3D::~Object3D(){
 	Unload();
 }
-
+/*
 bool Object3D::LoadObj(const String& FileObj){
 	Color color = Gray();
 	if(OBJLoader::LoadOBJ(FileObj,meshes)){
@@ -82,7 +81,126 @@ bool Object3D::LoadStl(const String& StlFile, Color color){
 		return true;
 	}
 	return false;
+}*/
+
+
+/**
+	LoadModel load multiple kind of object file using Assimp lib, you can specify some custom
+	load routine by editing pFlags, if pFlags = 0 then SurfaceCtrl default behavior about
+	assimp will be used
+**/
+bool Object3D::LoadModel(const String& Filename, Color color, unsigned int pFlags ){
+	Unload();
+	bool Ret = false;
+    if( pFlags == 0){
+		pFlags = aiProcess_JoinIdenticalVertices |// join identical vertices/ optimize indexing
+		aiProcess_ValidateDataStructure |	// perform a full validation of the loader's output
+		aiProcess_ImproveCacheLocality |	// improve the cache locality of the output vertices
+		aiProcess_RemoveRedundantMaterials |// remove redundant materials
+		aiProcess_GenUVCoords |				// convert spherical, cylindrical, box and planar mapping to proper UVs
+		aiProcess_TransformUVCoords |		// pre-process UV transformations (scaling, translation ...)
+		aiProcess_FindInstances |			// search for instanced meshes and remove them by references to one master
+		aiProcess_LimitBoneWeights |		// limit bone weights to 4 per vertex
+		aiProcess_OptimizeMeshes |			// join small meshes, if possible;
+		aiProcess_PreTransformVertices |
+		aiProcess_GenSmoothNormals |		// generate smooth normal vectors if not existing
+		aiProcess_SplitLargeMeshes |		// split large, unrenderable meshes into sub-meshes
+		aiProcess_Triangulate |				// triangulate polygons with more than 3 edges
+		aiProcess_ConvertToLeftHanded |		// convert everything to D3D left handed space
+		aiProcess_SortByPType;
+    }
+    
+    Assimp::Importer Importer;
+	const aiScene* pScene = Importer.ReadFile(Filename.ToStd().c_str(),pFlags);
+	if(pScene){
+        Ret = InitFromScene(pScene, Filename);
+        if(Ret){
+            glm::vec3 col(color.GetR()/255.0f, color.GetG()/255.0f, color.GetB()/255.0f);
+            for(Mesh& m : meshes){
+				Vector<float>& color = m.GetColors();
+				for(unsigned int e = 0; e < (m.GetVertices().GetCount()/3) ; e++){
+					color << col.x << col.y << col.z;
+				}
+            }
+			Load();
+        }
+    }else {
+        LOG(Format("Error parsing '%s': '%s'\n", Filename, String(Importer.GetErrorString())));
+    }
+    return Ret;
 }
+
+/*
+	Assimp loading function
+*/
+bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
+	meshes.AddN(pScene->mNumMeshes);
+	//Add Texture vector init here
+	
+	// Initialise les maillages de la scène, un par un
+    for (unsigned int i = 0 ; i < meshes.GetCount() ; i++) {
+        const aiMesh* paiMesh = pScene->mMeshes[i];
+        InitMesh(i, paiMesh);
+    }
+	return InitMaterials(pScene, Filename);
+}
+void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
+	//For texture / material data
+	//meshes[Index].MaterialIndex = paiMesh->mMaterialIndex;
+	
+	Vector<float>& vertices = meshes[Index].GetVertices();
+	Vector<float>& normals = meshes[Index].GetNormals();
+	Vector<float>& textCoords = meshes[Index].GetTexCoords();
+	
+	struct Vertex : public Moveable<Vertex>{
+		float pos[3];
+		float normals[3];
+		float texCoords[2];
+		
+		Vertex(float x, float y, float z, float n1 , float n2, float n3, float tc1 , float tc2){
+			pos[0] = x; pos[1] = y; pos[2] = z;
+			normals[0] = n1; normals[1] = n2; normals[2] = n3;
+			texCoords[0] = tc1; texCoords[1] = tc2;
+		}
+	};
+	
+	Vector<Vertex> dummyVertices;
+	Vector<float> dummyIndices;
+	
+	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+
+    for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+        const aiVector3D* pPos = &(paiMesh->mVertices[i]);
+        const aiVector3D* pNormal = (&(paiMesh->mNormals[i]))? &(paiMesh->mNormals[i]) : &Zero3D;
+        
+        glm::vec3 norm(pNormal->x , pNormal->y , pNormal->z);
+        norm = glm::abs(norm) * -1.0f;
+        
+        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+		
+		//dummyVertices << Vertex( pPos->x , pPos->y , pPos->z , pNormal->x , pNormal->y , pNormal->z , pTexCoord->x , pTexCoord->y);
+		dummyVertices << Vertex( pPos->x , pPos->y , pPos->z , norm.x , norm.y , norm.z , pTexCoord->x , pTexCoord->y);
+    }
+	
+	for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
+        const aiFace& Face = paiMesh->mFaces[i];
+        ASSERT_(Face.mNumIndices == 3, "Face in Assimp strucure do not contain 3 points !");
+        dummyIndices << Face.mIndices[0] << Face.mIndices[1] << Face.mIndices[2];
+    }
+	for(unsigned int i = 0 ; i < dummyIndices.GetCount(); i++){
+		Vertex& vertex = dummyVertices[dummyIndices[i]];
+		vertices <<  vertex.pos[0] << vertex.pos[1] << vertex.pos[2];
+		normals << vertex.normals[0] << vertex.normals[1] << vertex.normals[2];
+		textCoords << vertex.texCoords[0] << vertex.texCoords[1];
+	}
+}
+bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
+	 //TODO
+	return true;
+}
+
+
+
 bool Object3D::LoadSurface(Surface& surface, Color color){
 	Mesh& mesh = meshes.Create();
 	glm::vec3 col( color.GetR()/255.0f, color.GetG()/255.0f, color.GetB()/255.0f);
@@ -367,6 +485,7 @@ Vector<float> Object3D::ReadVertices(int MeshNo, unsigned int SurfaceNumber, int
 	}
 }
 void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 viewPosition)noexcept{
+	
 	if(showMesh){
 		if(NoLight.IsLinked() && Light.IsLinked()){
 			OpenGLProgram&  prog = (showLight)? Light : NoLight;
@@ -381,6 +500,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 				}
 			}
 			
+			
 			prog.SetMat4("ViewMatrix", viewMatrix);
 			prog.SetMat4("ProjectionMatrix", projectionMatrix);
 			prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
@@ -388,7 +508,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			
 			for(Mesh& m : meshes){
 				glBindVertexArray(m.GetVAO());
-				glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : DrawType), 0, m.GetVertices().GetCount()/3);
+				glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
 			}
 		}else{
 			ONCELOCK{
@@ -444,5 +564,6 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			}
 		}
 	}
+	
 }
 }

@@ -183,11 +183,12 @@ class Object3DProvider {
 		Object3D End(){
 			normalData.Append(Vector<float>(vertexData.GetCount()));
 			Object3D buffered;
-			buffered.AddVerticesData(vertexData);
-			buffered.AddNormalsData(normalData);
-			buffered.AddColorsData(colorData);
-			buffered.Load();
+			Mesh& m = buffered.CreateMeshes();
 			
+			m.GetVertices().Append(vertexData);
+			m.GetNormals().Append(normalData);
+			m.GetColors().Append(colorData);
+			buffered.Load();
 			buffered.SetDrawType(DrawType);
 			buffered.ShowLight(false);
 			buffered.ShowMeshLine(false);

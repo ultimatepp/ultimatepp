@@ -2,7 +2,8 @@ description "\377B113,255,200";
 
 uses
 	Surface,
-	GLCtrl_glad;
+	GLCtrl_glad,
+	plugin/assimp;
 
 file
 	SurfaceCtrl.h,

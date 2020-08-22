@@ -43,6 +43,8 @@ class Mesh : public Moveable<Mesh>{
 		GLuint colorsVBO = 0;
 		GLuint texCoordsVBO = 0;
 		
+		Material material; //The material object is a representation of material property of the object (it change how light affect it)
+		
 		
 		/**
 			All stuff about texture
@@ -53,6 +55,8 @@ class Mesh : public Moveable<Mesh>{
 		Mesh& operator=(Mesh&& obj){
 			name = obj.name;
 			loaded = obj.loaded;
+			
+			material  = obj.material;
 			
 			vertices = pick(obj.vertices);
 			normals = pick(obj.normals);
@@ -79,6 +83,7 @@ class Mesh : public Moveable<Mesh>{
 			name = obj.name;
 			loaded = obj.loaded;
 			
+			material  = obj.material;
 			vertices.Append(obj.vertices);
 			normals.Append(obj.normals);
 			colors.Append(obj.colors);
@@ -96,6 +101,8 @@ class Mesh : public Moveable<Mesh>{
 				Clear(true);
 			}
 		}
+		
+		Material& GetMaterial(){return material;}
 		
 		void SetName(const Upp::String& n){name = n;}
 		Upp::String GetName()const noexcept{return name;}
