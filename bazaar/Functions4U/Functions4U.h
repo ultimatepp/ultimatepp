@@ -695,10 +695,12 @@ void Shuffle(C &data, int randomSeed = Null) {
 		std::random_device rd;
 		randomSeed = rd();
 	}
+	std::default_random_engine re(randomSeed);
+	
 	std::mt19937 generator(randomSeed);
   
-	ShuffleAscending(data, generator);
-	ShuffleDescending(data, generator);	
+	ShuffleAscending(data, re);
+	ShuffleDescending(data, re);	
 }
 
 template <class T>
