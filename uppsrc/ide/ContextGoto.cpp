@@ -18,6 +18,11 @@ bool GetIdScope(String& os, const String& scope, const String& id, Index<String>
 	done.Add(scope);
 	Vector<String> tparam;
 	String n = ParseTemplatedType(scope, tparam);
+	String nn = n + "::" + id;
+	if(CodeBase().Find(nn) >= 0) { // Console -> LineEdit::EditPos
+		os = nn;
+		return true;
+	}
 	int q = CodeBase().Find(n);
 	if(q < 0)
 		return Null;
@@ -314,8 +319,7 @@ void Ide::ContextGoto0(int pos)
 		while(scope.GetCount() < 100 && todo.GetCount()) { // Add base classes
 			String t = todo[0];
 			todo.Remove(0);
-			if(t.EndsWith("::"))
-				t.Trim(t.GetCount() - 2);
+			t.TrimEnd("::");
 			if(t.GetCount()) {
 				scope.Add(t);
 				istype.Add(false);
@@ -362,7 +366,7 @@ void Ide::ContextGoto0(int pos)
 			const Array<CppItem>& n = CodeBase()[q];
 			for(int i = 0; i < n.GetCount(); i++) {
 				const CppItem& m = n[i];
-				if(n[i].name == id) {
+				if(m.name == id) {
 					if(ii < 0)
 						ii = i;
 					else {
