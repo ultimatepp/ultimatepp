@@ -53,18 +53,20 @@ Object3D::~Object3D(){
 }
 
 bool Object3D::LoadObj(const String& FileObj){
-	/*Color color = Gray();
-	if(OBJLoader::LoadOBJ(FileObj,verticesData,normalsData,texturesData)){
+	Color color = Gray();
+	if(OBJLoader::LoadOBJ(FileObj,meshes)){
 		float r = color.GetR()/255.0f;
 		float g = color.GetG()/255.0f;
 		float b = color.GetB()/255.0f;
-		for(int e = 0; e < (verticesData.GetCount() -1) ; e = e + 3){
-			colorsData << r << g << b ;
+		for(Mesh& m : meshes){
+			int cpt = m.GetVertices().GetCount() -1;
+			for(int e = 0; e < cpt ; e = e + 3){
+				m.GetColors() << r << g << b ;
+			}
 		}
-		SurfaceCount = verticesData.GetCount() / 3;
 		Load();
 		return true;
-	}*/
+	}
 	return false;
 }
 
