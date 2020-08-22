@@ -45,6 +45,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		int ID;
 		
 		Vector<Mesh> meshes;
+		Vector<unsigned int> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
 		
 		bool loaded = false;
 		bool moved = false;

@@ -135,6 +135,7 @@ bool Object3D::LoadModel(const String& Filename, Color color, unsigned int pFlag
 */
 bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
 	meshes.AddN(pScene->mNumMeshes);
+	textures.AddN(pScene->mNumMaterials);
 	//Add Texture vector init here
 	
 	// Initialise les maillages de la scène, un par un
@@ -146,7 +147,7 @@ bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
 }
 void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	//For texture / material data
-	//meshes[Index].MaterialIndex = paiMesh->mMaterialIndex;
+	meshes[Index].SetTextureIndice(paiMesh->mMaterialIndex);
 	
 	Vector<float>& vertices = meshes[Index].GetVertices();
 	Vector<float>& normals = meshes[Index].GetNormals();
@@ -195,8 +196,34 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	}
 }
 bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
-	 //TODO
-	return true;
+	bool Ret = false;
+	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
+        const aiMaterial* pMaterial = pScene->mMaterials[i];
+        textures[i] = NULL;
+        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+            aiString Path;
+
+            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+                //std::string FullPath = Dir + "/" + Path.data;
+                
+                //LOAD texture here:
+                //m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
+
+                /*if (!textures[i]->Load()) {
+                    printf("Error loading texture '%s'\n", FullPath.c_str());
+                    delete m_Textures[i];
+                    m_Textures[i] = NULL;
+                    Ret = false;
+                }*/
+            }
+        }
+        if (!textures[i]) {
+          //textures[i] = new Texture(GL_TEXTURE_2D, "../Content/white.png");
+          //Ret = textures[i]->Load();
+        }
+    }
+   // return Ret;
+   return true;
 }
 
 

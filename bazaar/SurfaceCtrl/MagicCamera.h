@@ -13,7 +13,7 @@ namespace Upp{
 		glm::vec3 UnProject2(float winX, float winY,float winZ)const noexcept;
 	public:
 		MagicCamera(){}
-		MagicCamera& Init(){transform.SetPosition(0, 10, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
+		MagicCamera& Init(){transform.SetPosition(0, 0, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
 		
 		glm::mat4 GetProjectionMatrix()const noexcept;
 		glm::mat4 GetViewMatrix()const noexcept;

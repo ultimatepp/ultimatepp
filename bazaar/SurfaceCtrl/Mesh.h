@@ -45,6 +45,7 @@ class Mesh : public Moveable<Mesh>{
 		
 		Material material; //The material object is a representation of material property of the object (it change how light affect it)
 		
+		unsigned int textureIndice = 0;
 		
 		/**
 			All stuff about texture
@@ -101,6 +102,9 @@ class Mesh : public Moveable<Mesh>{
 				Clear(true);
 			}
 		}
+		
+		Mesh& SetTextureIndice(unsigned int indice){textureIndice = indice; return *this;}
+		unsigned int GetTextureIndice(){return textureIndice;}
 		
 		Material& GetMaterial(){return material;}
 		
