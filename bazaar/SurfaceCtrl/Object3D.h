@@ -79,6 +79,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count , const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count)noexcept;
 		
+		//Texture loading function
+		//Return Texture indice in openGL data 0 if failled
+		unsigned int LoadTexture(const String& filename);
+		unsigned int LoadEmptyTexture();
 		/*
 			Assimp loading function
 		*/

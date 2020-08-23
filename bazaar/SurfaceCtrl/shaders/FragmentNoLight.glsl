@@ -5,9 +5,17 @@ SHADER(400 core,
 	in vec2 fs_texCoord;\n
 	
     out vec4 FragColor;\n
+    
+    uniform sampler2D tex;
+    uniform int useTexture;
 
     void main()
     {
-		FragColor = vec4(fs_color,1.0);
+        if(useTexture != 0){
+            FragColor = texture(tex, fs_texCoord);
+        }else{
+			FragColor = vec4(fs_color,1.0);
+        }
+		
     }
 )

@@ -3,7 +3,11 @@ description "\377B113,255,200";
 uses
 	Surface,
 	GLCtrl_glad,
-	plugin/assimp;
+	plugin/assimp,
+	plugin/jpg,
+	plugin/png,
+	plugin/tif,
+	plugin/gif;
 
 file
 	SurfaceCtrl.h,
@@ -18,6 +22,7 @@ file
 	UOGL_Camera.h,
 	MagicCamera.h,
 	MagicCamera.cpp,
+	textures.iml,
 	shaders readonly separator,
 	shaders\Vertex.glsl highlight cpp,
 	shaders\VertexSimple.glsl highlight cpp,

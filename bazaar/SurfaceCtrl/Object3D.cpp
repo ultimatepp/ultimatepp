@@ -2,6 +2,12 @@
 #include <Surface/Surface.h>
 
 namespace Upp{
+	
+#define IMAGECLASS TexturesImg
+#define IMAGEFILE <SurfaceCtrl/textures.iml>
+#include <Draw/iml.h>
+	
+	
 int Object3D::GlobalID = 0;
 
 Object3D& Object3D::operator=(Object3D&& obj){
@@ -130,6 +136,45 @@ bool Object3D::LoadModel(const String& Filename, Color color, unsigned int pFlag
     return Ret;
 }
 
+//Load texture function
+unsigned int Object3D::LoadTexture(const String& filename){
+	
+	Image m = StreamRaster::LoadFileAny(filename);
+	if(IsNull(m))
+		return 0;
+	
+	Size size = m.GetSize();
+	
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.cy , size.cx, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~m);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	
+	return texture;
+}
+unsigned int Object3D::LoadEmptyTexture(){
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	Image img = TexturesImg::empty();
+	Size size = img.GetSize();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.cy , size.cx, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	
+	return texture;
+}
+
 /*
 	Assimp loading function
 */
@@ -199,30 +244,22 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
 	bool Ret = false;
 	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
-        textures[i] = NULL;
+        textures[i] = 0;
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
 
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                //std::string FullPath = Dir + "/" + Path.data;
-                
+                String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
                 //LOAD texture here:
-                //m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
-
-                /*if (!textures[i]->Load()) {
-                    printf("Error loading texture '%s'\n", FullPath.c_str());
-                    delete m_Textures[i];
-                    m_Textures[i] = NULL;
-                    Ret = false;
-                }*/
+                unsigned int load = LoadTexture(FullPath);
+                if(load != 0){
+                    textures[i] = load;
+                }else{
+					textures[i] = LoadEmptyTexture();
+                }
             }
         }
-        if (!textures[i]) {
-          //textures[i] = new Texture(GL_TEXTURE_2D, "../Content/white.png");
-          //Ret = textures[i]->Load();
-        }
     }
-   // return Ret;
    return true;
 }
 
@@ -531,10 +568,15 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 			prog.SetMat4("ViewMatrix", viewMatrix);
 			prog.SetMat4("ProjectionMatrix", projectionMatrix);
 			prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
-			
-			
+
 			for(Mesh& m : meshes){
 				glBindVertexArray(m.GetVAO());
+				if(textures.GetCount()> 0){
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()]);
+					prog.SetInt("tex", 0);
+					prog.SetInt("useTexture", textures[m.GetTextureIndice()]);
+				}
 				glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
 			}
 		}else{
