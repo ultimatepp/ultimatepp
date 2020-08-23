@@ -161,7 +161,7 @@ class Mesh : public Moveable<Mesh>{
 				}
 				if(colors.GetCount()){
 					glBindBuffer(GL_ARRAY_BUFFER,colorsVBO);
-					glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+					glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 					glEnableVertexAttribArray(2);
 				}
 				if(texCoords.GetCount()){

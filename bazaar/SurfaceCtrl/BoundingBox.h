@@ -107,13 +107,14 @@ class BoundingBox {
 		bool IsLoaded(){return loaded;}
 		
 		BoundingBox& TransformBy(const glm::mat4& modelMatrice){
-	        glm::vec4 min_(min.x, min.y, min.z, 1.0f);
-	        glm::vec4 max_(max.x, max.y, max.z, 1.0f);
-	        min_ = modelMatrice * min_;
-	        max_ = modelMatrice * max_;
-	        max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x, (min_.y > max_.y)? min_.y: max_.y, (min_.z > max_.z)? min_.z : max_.z);
-	        min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x, (min_.y < max_.y)? min_.y: max_.y, (min_.z < max_.z)? min_.z : max_.z);
-	        return *this;
+			if(loaded){
+		        glm::vec4 min_(min.x, min.y, min.z, 1.0f);
+		        glm::vec4 max_(max.x, max.y, max.z, 1.0f);
+		        min_ = modelMatrice * min_;
+		        max_ = modelMatrice * max_;
+		        max = glm::vec3( (min_.x > max_.x)? min_.x:max_.x, (min_.y > max_.y)? min_.y: max_.y, (min_.z > max_.z)? min_.z : max_.z);
+		        min = glm::vec3( (min_.x < max_.x)? min_.x:max_.x, (min_.y < max_.y)? min_.y: max_.y, (min_.z < max_.z)? min_.z : max_.z);
+			}return *this;
 		}
 		
 		bool LineIntersection(const glm::vec3& start, const glm::vec3& end){

@@ -321,7 +321,7 @@ void SurfaceCtrl::MouseLeave(){
 }
 bool SurfaceCtrl::Key(dword key,int count){
 	if( key == K_R){
-		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f};
+		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f, 0.5f};
 		if(allObjects.GetCount() > 0 && allObjects[0].GetMeshes().GetCount() > 0) allObjects[0].UpdateColors(0,0,(allObjects[0].GetMeshes()[0].GetVertices().GetCount()/3)/2,data);
 	}
 	if( key == K_DELETE){

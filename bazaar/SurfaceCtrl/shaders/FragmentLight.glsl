@@ -1,5 +1,5 @@
 SHADER(400 core,
-	in vec3 fs_color;\n
+	in vec4 fs_color;\n
 	in vec3 fs_normal;\n
 	in vec3 fs_fragPos;\n
 	in vec2 fs_texCoord;\n
@@ -49,7 +49,7 @@ SHADER(400 core,
 			vec4 tex = texture(tex, fs_texCoord);
             FragColor = vec4( CalcColorDirLight(tex.rgb,mat,dirlight,norm,fs_fragPos,viewPos)  , tex.w);\n
         }else{
-			FragColor =  vec4( CalcColorDirLight(fs_color,mat,dirlight,norm,fs_fragPos,viewPos)  , 1.0);\n
+			FragColor =  vec4( CalcColorDirLight(fs_color.xyz ,mat,dirlight,norm,fs_fragPos,viewPos)  , fs_color.w);\n
         }
     }\n
 \n

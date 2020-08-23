@@ -1,5 +1,5 @@
 SHADER(400 core,
-	in vec3 fs_color;\n
+	in vec4 fs_color;\n
 	in vec3 fs_normal;\n
 	in vec3 fs_fragPos;\n
 	in vec2 fs_texCoord;\n
@@ -14,7 +14,7 @@ SHADER(400 core,
         if(useTexture != 0){
             FragColor = texture(tex, fs_texCoord);
         }else{
-			FragColor = vec4(fs_color,1.0);
+			FragColor = fs_color;
         }
 		
     }

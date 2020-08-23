@@ -2,12 +2,12 @@ SHADER(400 core,
 	layout (triangles) in;
 	layout (line_strip, max_vertices = 4) out;
 	
-	in vec3 fs_color[3];\n
+	in vec4 fs_color[3];\n
 	in vec3 fs_normal[3];\n
 	in vec3 fs_fragPos[3];\n
 	in vec2 fs_texCoord[3];\n
 	
-	out vec3 color;\n
+	out vec4 color;\n
 	out vec3 normal;\n
 	out vec3 fragPos;\n
 	out vec2 texCoord;\n;

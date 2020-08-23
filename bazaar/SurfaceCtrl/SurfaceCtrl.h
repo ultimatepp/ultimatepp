@@ -57,8 +57,6 @@ class SurfaceCtrl : public GLCtrl_glad{
 		bool fastMode = false;
 
 		void InitShader(); //Load default shader
-		
-		
 	public:
 		SurfaceCtrl();
 		~SurfaceCtrl();

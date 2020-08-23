@@ -1,12 +1,12 @@
 SHADER(400 core,
 	layout (location = 0) in vec3 aPos;
 	layout (location = 1) in vec3 aNorm;
-	layout (location = 2) in vec3 aColor;
+	layout (location = 2) in vec4 aColor;
 	layout (location = 3) in vec2 aTexCoord;
 
 	out vec3 fs_normal;
 	out vec3 fs_fragPos;
-	out vec3 fs_color;
+	out vec4 fs_color;
 	out vec2 fs_texCoord;
 	
 

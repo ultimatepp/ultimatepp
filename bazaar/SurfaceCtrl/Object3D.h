@@ -12,6 +12,7 @@
 
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
+enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
 /*
 struct Light{
 	Light(){
@@ -39,16 +40,30 @@ struct Light{
 
 class Surface;
 
+struct Texture : public Moveable<Texture>{
+	Upp::String name="";
+	unsigned int id =0;
+	
+	Texture& operator=(const Texture& t){
+		name = t.name;
+		id = t.id;
+		return *this;
+	}
+	
+};
+
+
 class Object3D : public Upp::Moveable<Object3D>{
 	private:
 		static int GlobalID;
 		int ID;
 		
 		Vector<Mesh> meshes;
-		Vector<unsigned int> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
+		Vector<Texture> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
 		
 		bool loaded = false;
 		bool moved = false;
+		bool visible = true;
 
 		Color lineColor = Black();
 		float lineOpacity = 0.5f;
@@ -76,13 +91,13 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Transform transform;
 		Material material; //The material object is a representation of material property of the object (it change how light affect it)
 		
-		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count , const float * data)noexcept;
-		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count)noexcept;
+		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count ,int numberOfElement, const float * data)noexcept;
+		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count, int numberOfElement)noexcept;
 		
 		//Texture loading function
-		//Return Texture indice in openGL data 0 if failled
-		unsigned int LoadTexture(const String& filename);
-		unsigned int LoadEmptyTexture();
+		//Return position of the texture object carrying this texture
+		int LoadTexture(const Image& img , const String& name, int indiceWhereInsert = -1);
+		
 		/*
 			Assimp loading function
 		*/
@@ -106,20 +121,34 @@ class Object3D : public Upp::Moveable<Object3D>{
 			load routine by editing pFlags, if pFlags = 0 then SurfaceCtrl default behavior about
 			assimp will be used
 		**/
-		bool LoadModel(const String& FileObj, Color color = Gray(), unsigned int pFlags = 0);
+		Object3D& LoadModel(const String& FileObj, Color color = Gray(), int alpha =255, unsigned int pFlags = 0);
 
 		/*bool LoadObj(const String& FileObj);
 		bool LoadStl(const String& StlFile, Upp::Color = Green());*/
-		bool LoadSurface(Surface& surface, Upp::Color = Green());
+		Object3D& LoadSurface(Surface& surface, Upp::Color = Green(), int alpha =255);
 		Surface GetSurface();
 		
-		int GetID()const {return ID;}
+		
+		//Check if texture provided is already load, then return the iterator of the texture
+		//object
+		int InsertTexture(const String& filename,int indice = -1)noexcept; //insert texture in object3D
+		int InsertTexture(const Image& m,int indice = -1)noexcept; //insert texture in object3D
+		int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
+		
+		const Texture& GetTexture(int indice){if(indice < textures.GetCount()) return textures[indice];else throw Exc("int indice higher than textures.getCount()");}//Return the indice, Can throw exception
+
+		Object3D& AttachTexture(int TexNo,int MeshNo, int NumberMeshToAffect =1);//Attach a texture to the range of mesh
+		Object3D& GenerateTextureCoordinate(int MeshNo, int NumberMeshToAffect =1, bool CustomTextureCoordinate = false,const Vector<float>& tc = Vector<float>());// Generate new Texture coordinate for the selected range of mesh
+		
+		
+		int GetID()const{return ID;}
 		
 		const Upp::Vector<Mesh>& GetMeshes() const noexcept{return meshes;}
-		Mesh& CreateMeshes()noexcept{return meshes.Add();}
+		Mesh& CreateMesh()noexcept{return meshes.Add();}
 
-		bool Load(); //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
-		Object3D& Unload();
+		bool Init(); //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
+		Object3D& Clear();
+		Object3D& Reload(); //Unload and reload
 		
 		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
 		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
@@ -162,15 +191,21 @@ class Object3D : public Upp::Moveable<Object3D>{
 			BoundingBox box  = Upp::pick(GetBoundingBoxTransformed());
 			return box.LineIntersection(start,end);
 		}
+		
+		Object3D& Show(){visible = true;return *this;}
+		Object3D& Hide(){visible = false;return *this;}
+		Object3D& SetVisible(bool b = true){visible = b; return *this;}
+		bool& IsVisible(){return visible;}
+		
 		/*
 			Write into OpenGL buffer return true if operation have been done correctly.
 			/!\ True do not mean OpenGL will provide good things, it just mean buffer have been
 			    writted  correctly
 		*/
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, int r, int g, int b)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, float r, float g, float b)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 color)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, Upp::Color color)noexcept;
+		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, int r, int g, int b,int alpha)noexcept;
+		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, float r, float g, float b,float alpha)noexcept;
+		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 color,float alpha)noexcept;
+		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, Upp::Color color,int alpha)noexcept;
 		bool UpdateColors(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept;
 		
 		bool UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, float x, float y, float z)noexcept;
