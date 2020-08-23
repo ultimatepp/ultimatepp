@@ -6,13 +6,12 @@ namespace Upp{
 #define IMAGECLASS TexturesImg
 #define IMAGEFILE <SurfaceCtrl/textures.iml>
 #include <Draw/iml.h>
-	
-	
+
 int Object3D::GlobalID = 0;
 
 Object3D& Object3D::operator=(Object3D&& obj){
 	meshes = pick(obj.meshes);
-	
+	loaded = obj.loaded;
 	drawType = obj.drawType;
 	lineColor = obj.lineColor;
 	lineOpacity = obj.lineOpacity;
@@ -34,7 +33,7 @@ Object3D& Object3D::operator=(Object3D&& obj){
 
 Object3D& Object3D::operator=(const Object3D& obj){
 	meshes.Append(obj.meshes);
-	
+	loaded = obj.loaded;
 	drawType = obj.drawType;
 	lineColor = obj.lineColor;
 	lineOpacity = obj.lineOpacity;
@@ -59,40 +58,6 @@ Object3D::~Object3D(){
 	}
 	Clear();
 }
-/*
-bool Object3D::LoadObj(const String& FileObj){
-	Color color = Gray();
-	if(OBJLoader::LoadOBJ(FileObj,meshes)){
-		float r = color.GetR()/255.0f;
-		float g = color.GetG()/255.0f;
-		float b = color.GetB()/255.0f;
-		for(Mesh& m : meshes){
-			int cpt = m.GetVertices().GetCount() -1;
-			for(int e = 0; e < cpt ; e = e + 3){
-				m.GetColors() << r << g << b ;
-			}
-		}
-		Load();
-		return true;
-	}
-	return false;
-}
-
-bool Object3D::LoadStl(const String& StlFile, Color color){
-	Mesh& mesh = meshes.Create();
-	glm::vec3 col( color.GetR()/255.0f, color.GetG()/255.0f, color.GetB()/255.0f);
-	if(STLLoader::LoadSTL(StlFile,mesh.GetVertices(),mesh.GetNormals())){
-		int cpt = mesh.GetVertices().GetCount() -1;
-		for(int e = 0; e < cpt ; e = e + 3){
-			mesh.GetColors() << col.x << col.y << col.z ;
-		}
-		Load();
-		return true;
-	}
-	return false;
-}*/
-
-
 /**
 	LoadModel load multiple kind of object file using Assimp lib, you can specify some custom
 	load routine by editing pFlags, if pFlags = 0 then SurfaceCtrl default behavior about
@@ -363,12 +328,13 @@ Surface Object3D::GetSurface(){ //return a surface Objectd
 //Check if texture provided is already load, then return the iterator of the texture
 //object
 int Object3D::InsertTexture(const String& filename, int indice)noexcept{ //insert texture in object3D
-	Image m = StreamRaster::LoadFileAny(filename);
+	Image m = StreamRaster::LoadFileAny( (IsFullPath(filename))? filename : AppendFileName(GetCurrentDirectory(),filename) );
 	return InsertTexture(m,indice);
 }
 int Object3D::InsertTexture(const Image& m, int indice)noexcept{ //insert texture in object3D
 	return LoadTexture(m,AsString(m.GetSerialId()),indice);
 }
+/*
 int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //Insert one of SurfaceCtrl provided texture
 	Image m;
 	switch(tm){
@@ -389,7 +355,7 @@ int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //I
 		break;
 	}
 	return InsertTexture(m,indice);
-}
+}*/
 Object3D& Object3D::AttachTexture(int numTexture,int MeshNo, int count){//Attach a texture to the range of mes
 	int textNo = numTexture;
 	if(textNo > textures.GetCount()) textNo = 0;
@@ -614,87 +580,89 @@ Vector<float> Object3D::ReadVertices(int MeshNo, unsigned int SurfaceNumber, int
 	}
 }
 void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 viewPosition)noexcept{
-	if(visible){
-		if(showMesh){
-			if(NoLight.IsLinked() && Light.IsLinked()){
-				OpenGLProgram&  prog = (showLight)? Light : NoLight;
-				prog.Bind();
-				if(showLight){
-					prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
-					if(material.ShouldBeUpdated()){
-						prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
-						prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
-						prog.SetFloat("mat.Shininess", material.GetShininess());
-						material.HaveBeenUpdated();
+	if(loaded){
+		if(visible){
+			if(showMesh){
+				if(NoLight.IsLinked() && Light.IsLinked()){
+					OpenGLProgram&  prog = (showLight)? Light : NoLight;
+					prog.Bind();
+					if(showLight){
+						prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
+						if(material.ShouldBeUpdated()){
+							prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
+							prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
+							prog.SetFloat("mat.Shininess", material.GetShininess());
+							material.HaveBeenUpdated();
+						}
+					}
+					
+					
+					prog.SetMat4("ViewMatrix", viewMatrix);
+					prog.SetMat4("ProjectionMatrix", projectionMatrix);
+					prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
+		
+					for(Mesh& m : meshes){
+						glBindVertexArray(m.GetVAO());
+						if(textures.GetCount()> 0){
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
+							prog.SetInt("tex", 0);
+							prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);
+						}
+						glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
+					}
+				}else{
+					ONCELOCK{
+						LOG("no Light/NoLight OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be light/nolight draw");
 					}
 				}
-				
-				
-				prog.SetMat4("ViewMatrix", viewMatrix);
-				prog.SetMat4("ProjectionMatrix", projectionMatrix);
-				prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
-	
-				for(Mesh& m : meshes){
-					glBindVertexArray(m.GetVAO());
-					if(textures.GetCount()> 0){
-						glActiveTexture(GL_TEXTURE0);
-						glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
-						prog.SetInt("tex", 0);
-						prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);
+			}
+			if(showMeshLine){
+				if(Line.IsLinked()){
+					Line.Bind();
+					glLineWidth(lineWidth);
+					Line.SetMat4("ViewMatrix",viewMatrix);
+					Line.SetMat4("ProjectionMatrix",projectionMatrix);
+					Line.SetMat4("ModelMatrix",transform.GetModelMatrix());
+					Line.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, lineOpacity );
+					
+					for(Mesh& m : meshes){
+						glBindVertexArray(m.GetVAO());
+						glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, m.GetVertices().GetCount()/3);
 					}
-					glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
-				}
-			}else{
-				ONCELOCK{
-					LOG("no Light/NoLight OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be light/nolight draw");
-				}
-			}
-		}
-		if(showMeshLine){
-			if(Line.IsLinked()){
-				Line.Bind();
-				glLineWidth(lineWidth);
-				Line.SetMat4("ViewMatrix",viewMatrix);
-				Line.SetMat4("ProjectionMatrix",projectionMatrix);
-				Line.SetMat4("ModelMatrix",transform.GetModelMatrix());
-				Line.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, lineOpacity );
-				
-				for(Mesh& m : meshes){
-					glBindVertexArray(m.GetVAO());
-					glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, m.GetVertices().GetCount()/3);
-				}
-				//glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
-			}else{
-				ONCELOCK{
-					LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be line draw");
+					//glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
+				}else{
+					ONCELOCK{
+						LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be line draw");
+					}
 				}
 			}
-		}
-		if(showMeshNormal){
-			if(Normal.IsLinked()){
-				Normal.Bind();
-				Normal.SetMat4("ViewMatrix", viewMatrix);
-				Normal.SetMat4("ProjectionMatrix", projectionMatrix);
-				Normal.SetMat4("ModelMatrix", transform.GetModelMatrix());
-				Normal.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, normalOpacity);
-				Normal.SetFloat("normal_length",normalLenght );
-				for(Mesh& m : meshes){
-					glBindVertexArray(m.GetVAO());
-					glDrawArrays(GL_TRIANGLES, 0, m.GetVertices().GetCount()/3);
-				}
-				//glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
-			}else{
-				ONCELOCK{
-					LOG("no Normal OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be normal draw");
+			if(showMeshNormal){
+				if(Normal.IsLinked()){
+					Normal.Bind();
+					Normal.SetMat4("ViewMatrix", viewMatrix);
+					Normal.SetMat4("ProjectionMatrix", projectionMatrix);
+					Normal.SetMat4("ModelMatrix", transform.GetModelMatrix());
+					Normal.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, normalOpacity);
+					Normal.SetFloat("normal_length",normalLenght );
+					for(Mesh& m : meshes){
+						glBindVertexArray(m.GetVAO());
+						glDrawArrays(GL_TRIANGLES, 0, m.GetVertices().GetCount()/3);
+					}
+					//glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
+				}else{
+					ONCELOCK{
+						LOG("no Normal OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be normal draw");
+					}
 				}
 			}
-		}
-		if(showBoundingBox){
-			if(Line.IsLinked()){
-				boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,Line);
-			}else{
-				ONCELOCK{
-					LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't have is bounding box draw");
+			if(showBoundingBox){
+				if(Line.IsLinked()){
+					boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,Line);
+				}else{
+					ONCELOCK{
+						LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't have is bounding box draw");
+					}
 				}
 			}
 		}

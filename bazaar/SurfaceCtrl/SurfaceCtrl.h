@@ -23,7 +23,7 @@
 #include "Object3DProvider.h"
 
 namespace Upp{
-	
+
 class SurfaceCtrl : public GLCtrl_glad{
 	private:
 		bool loaded = false;

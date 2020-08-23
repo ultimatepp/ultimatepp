@@ -12,7 +12,7 @@
 
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
-enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
+//enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
 /*
 struct Light{
 	Light(){
@@ -105,7 +105,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 	    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
 	    bool InitMaterials(const aiScene* pScene, const String& Filename);
 	public:
-		Object3D():ID(GlobalID++){}
+		Object3D():ID(++GlobalID){}
 		//move will prevent your object to be deleted (from OpenGL perspective)
 		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
 		Object3D& operator=(Object3D&& obj);
@@ -133,7 +133,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		//object
 		int InsertTexture(const String& filename,int indice = -1)noexcept; //insert texture in object3D
 		int InsertTexture(const Image& m,int indice = -1)noexcept; //insert texture in object3D
-		int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
+	//	int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
 		
 		const Texture& GetTexture(int indice){if(indice < textures.GetCount()) return textures[indice];else throw Exc("int indice higher than textures.getCount()");}//Return the indice, Can throw exception
 

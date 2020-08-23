@@ -56,7 +56,7 @@ void SurfaceCtrl::InitOpenGLFeatures()noexcept{
 }
 //Action on all objects vector
 Object3D& SurfaceCtrl::CreateObject()noexcept{
-	return allObjects.Create();
+	return allObjects.Add();
 }
 
 int SurfaceCtrl::FindObject(int ID)const noexcept{
@@ -69,7 +69,7 @@ int SurfaceCtrl::FindObject(int ID)const noexcept{
 	return -1;
 }
 Object3D& SurfaceCtrl::GetObject(int ID)noexcept{
-	ASSERT_(FindObject(ID) != -1, "Invalide Object ID");
+	ASSERT_(FindObject(ID) != -1, "Invalide Object ID: " + AsString(ID));
 	return allObjects[FindObject(ID)];
 }
 
