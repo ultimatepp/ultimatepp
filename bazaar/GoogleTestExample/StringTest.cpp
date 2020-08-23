@@ -1,6 +1,6 @@
 #include "StringTest.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void StringTest::SetUp()
 {
@@ -48,4 +48,4 @@ TEST_F(StringTest, TestEqual)
 	ASSERT_FALSE(sCat.IsEqual(sDog));
 }
 
-END_UPP_NAMESPACE
+}

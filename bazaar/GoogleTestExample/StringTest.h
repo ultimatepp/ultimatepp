@@ -4,18 +4,18 @@
 #include <Core/Core.h>
 #include <plugin/gtest/gtest.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
-class StringTest : public testing::Test {
-protected:
-	virtual void SetUp();
-	
-protected:
-	String sEmpty;
-	String sCat;
-	String sDog;
-};
+	class StringTest : public testing::Test {
+	protected:
+		virtual void SetUp() override;
+		
+	protected:
+		String sEmpty;
+		String sCat;
+		String sDog;
+	};
 
-END_UPP_NAMESPACE
+}
 
 #endif
