@@ -1,7 +1,8 @@
-LAYOUT(SurfaceCtrl_DemoLayout, 480, 372)
+LAYOUT(SurfaceCtrl_DemoLayout, 564, 372)
 	ITEM(SurfaceCtrl, canvas, SetFrame(ThinInsetFrame()).HSizePosZ(0, 0).VSizePosZ(28, 0))
-	ITEM(Label, dv___1, SetLabel(t_("File :")).LeftPosZ(8, 52).TopPosZ(4, 19))
-	ITEM(EditString, filename, HSizePosZ(60, 52).TopPosZ(4, 19))
-	ITEM(Button, butOpen, SetLabel(t_("Open")).RightPosZ(4, 44).TopPosZ(4, 20))
+	ITEM(Label, dv___1, SetLabel(t_("File :")).LeftPosZ(8, 28).TopPosZ(4, 19))
+	ITEM(EditString, filename, HSizePosZ(36, 160).TopPosZ(4, 19))
+	ITEM(Button, butOpen, SetLabel(t_("Open")).RightPosZ(116, 44).TopPosZ(4, 20))
+	ITEM(Button, OpenEarth, SetLabel(t_("Open Earth")).RightPosZ(4, 96).TopPosZ(4, 20))
 END_LAYOUT
 
