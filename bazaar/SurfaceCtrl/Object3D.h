@@ -12,7 +12,7 @@
 
 namespace Upp{
 enum DrawType { DT_TRIANGLE, DT_QUAD };
-//enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
+enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
 /*
 struct Light{
 	Light(){
@@ -122,9 +122,6 @@ class Object3D : public Upp::Moveable<Object3D>{
 			assimp will be used
 		**/
 		Object3D& LoadModel(const String& FileObj, Color color = Gray(), int alpha =255, unsigned int pFlags = 0);
-
-		/*bool LoadObj(const String& FileObj);
-		bool LoadStl(const String& StlFile, Upp::Color = Green());*/
 		Object3D& LoadSurface(Surface& surface, Upp::Color = Green(), int alpha =255);
 		Surface GetSurface();
 		
@@ -133,7 +130,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		//object
 		int InsertTexture(const String& filename,int indice = -1)noexcept; //insert texture in object3D
 		int InsertTexture(const Image& m,int indice = -1)noexcept; //insert texture in object3D
-	//	int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
+		int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
 		
 		const Texture& GetTexture(int indice){if(indice < textures.GetCount()) return textures[indice];else throw Exc("int indice higher than textures.getCount()");}//Return the indice, Can throw exception
 

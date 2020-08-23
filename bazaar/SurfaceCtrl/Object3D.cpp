@@ -334,7 +334,7 @@ int Object3D::InsertTexture(const String& filename, int indice)noexcept{ //inser
 int Object3D::InsertTexture(const Image& m, int indice)noexcept{ //insert texture in object3D
 	return LoadTexture(m,AsString(m.GetSerialId()),indice);
 }
-/*
+
 int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //Insert one of SurfaceCtrl provided texture
 	Image m;
 	switch(tm){
@@ -355,7 +355,7 @@ int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //I
 		break;
 	}
 	return InsertTexture(m,indice);
-}*/
+}
 Object3D& Object3D::AttachTexture(int numTexture,int MeshNo, int count){//Attach a texture to the range of mes
 	int textNo = numTexture;
 	if(textNo > textures.GetCount()) textNo = 0;
