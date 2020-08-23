@@ -168,6 +168,7 @@ unsigned int Object3D::LoadEmptyTexture(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 	Image img = TexturesImg::empty();
+	//Image img = TexturesImg::testAlpha();
 	Size size = img.GetSize();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.cy , size.cx, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -252,6 +253,7 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
                 String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
                 //LOAD texture here:
                 unsigned int load = LoadTexture(FullPath);
+                
                 if(load != 0){
                     textures[i] = load;
                 }else{

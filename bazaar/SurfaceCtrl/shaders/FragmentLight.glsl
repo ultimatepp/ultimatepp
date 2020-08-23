@@ -46,7 +46,8 @@ SHADER(400 core,
         vec3 norm = normalize(fs_normal);
 		//FragColor =  vec4( (CalcColorDirLight(mat,dirlight,norm,fs_fragPos,viewPos)  + CalcPointLight(mat,pointLight,norm,fs_fragPos,viewPos)) , 1.0);\n
 		if(useTexture != 0){
-            FragColor = vec4( CalcColorDirLight(texture(tex, fs_texCoord).rgb,mat,dirlight,norm,fs_fragPos,viewPos)  , 1.0);\n
+			vec4 tex = texture(tex, fs_texCoord);
+            FragColor = vec4( CalcColorDirLight(tex.rgb,mat,dirlight,norm,fs_fragPos,viewPos)  , tex.w);\n
         }else{
 			FragColor =  vec4( CalcColorDirLight(fs_color,mat,dirlight,norm,fs_fragPos,viewPos)  , 1.0);\n
         }
