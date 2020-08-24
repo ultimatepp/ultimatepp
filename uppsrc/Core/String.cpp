@@ -416,22 +416,9 @@ void StringBuffer::Shrink()
 	pend = pbegin + l;
 }
 
-void StringBuffer::Cat(const char *s, int l)
+void StringBuffer::ReallocL(const char *s, int l)
 {
-	if(pend + l > limit)
-		Realloc(max(GetLength(), l) + GetLength(), s, l);
-	else {
-		memcpy8(pend, s, l);
-		pend += l;
-	}
-}
-
-void StringBuffer::Cat(int c, int l)
-{
-	if(pend + l > limit)
-		Realloc(max(GetLength(), l) + GetLength(), NULL, l);
-	memset(pend, c, l);
-	pend += l;
+	Realloc(max(GetLength(), l) + GetLength(), s, l);
 }
 
 void StringBuffer::Set(String& s)

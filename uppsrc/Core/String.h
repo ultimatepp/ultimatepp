@@ -408,6 +408,7 @@ class StringBuffer : NoCopy {
 
 	char *Alloc(int len, int& alloc);
 	void  Realloc(dword n, const char *cat = NULL, int l = 0);
+	void  ReallocL(const char *s, int l);
 	void  Expand();
 	void  Zero()                    { pbegin = pend = buffer; limit = pbegin + 255; }
 	void  Free();
