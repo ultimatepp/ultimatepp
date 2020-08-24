@@ -341,6 +341,8 @@ class JsonIO;
 #include "Color.h"
 #include "Complex.h"
 
+#include "Hash.h"
+
 #include "Util.h"
 
 #include "Profile.h"
@@ -351,7 +353,6 @@ class JsonIO;
 #include "Convert.h"
 
 #include "z.h"
-#include "Hash.h"
 
 #include "Parser.h"
 #include "JSON.h"

@@ -22,24 +22,6 @@ void StreamContainer(Stream& s, T& cont)
 }
 
 template <class T>
-hash_t HashBySerialize(const T& cont)
-{
-	TimeStop tm;
-	xxHashStream xxh;
-	const_cast<T&>(cont).Serialize(xxh);
-	return xxh.Finish();
-}
-
-template <class T>
-bool IsEqualBySerialize(const T& a, const T& b)
-{
-	StringStream sa, sb;
-	const_cast<T&>(a).Serialize(sa);
-	const_cast<T&>(b).Serialize(sb);
-	return sa.GetResult() == sb.GetResult();
-}
-
-template <class T>
 T * Vector<T>::RawAlloc(int& n)
 {
 	size_t sz0 = n * sizeof(T);
