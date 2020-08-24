@@ -288,6 +288,26 @@ void StringBuffer::Strlen()
 	SetLength((int)strlen__(pbegin));
 }
 
+inline
+void StringBuffer::Cat(const char *s, int l)
+{
+	if(pend + l > limit)
+		ReallocL(s, l);
+	else {
+		memcpy8(pend, s, l);
+		pend += l;
+	}
+}
+
+inline
+void StringBuffer::Cat(int c, int l)
+{
+	if(pend + l > limit)
+		ReallocL(NULL, l);
+	memset8(pend, c, l);
+	pend += l;
+}
+
 force_inline
 void StringBuffer::Cat(const char *s)
 {
