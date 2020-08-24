@@ -464,6 +464,33 @@ void SerializeGlobalConfigs(Stream& s);
 inline void abort() { TerminateProcess(NULL, -1); }
 #endif
 
+template <class T>
+hash_t HashBySerialize(const T& cont)
+{
+	TimeStop tm;
+	xxHashStream xxh;
+	const_cast<T&>(cont).Serialize(xxh);
+	return xxh.Finish();
+}
+
+template <class T>
+size_t SizeBySerialize(const T& cont)
+{
+	TimeStop tm;
+	SizeStream szs;
+	const_cast<T&>(cont).Serialize(szs);
+	return szs;
+}
+
+template <class T>
+bool IsEqualBySerialize(const T& a, const T& b)
+{
+	StringStream sa, sb;
+	const_cast<T&>(a).Serialize(sa);
+	const_cast<T&>(b).Serialize(sb);
+	return sa.GetResult() == sb.GetResult();
+}
+
 String  Replace(const String& s, const Vector<String>& find, const Vector<String>& replace);
 String  Replace(const String& s, const VectorMap<String, String>& fr);
 WString Replace(const WString& s, const Vector<WString>& find, const Vector<WString>& replace);
