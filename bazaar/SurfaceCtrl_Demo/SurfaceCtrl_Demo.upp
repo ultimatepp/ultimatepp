@@ -3,9 +3,9 @@ uses
 	SurfaceCtrl;
 
 file
-	main.cpp,
 	SurfaceCtrl_Demo.h,
-	SurfaceCtrl_Demo.lay;
+	SurfaceCtrl_Demo.lay,
+	main.cpp;
 
 mainconfig
 	"" = "GUI",
