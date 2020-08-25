@@ -118,7 +118,9 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
-	UppLog() << "Travelling salesman";
+	UppLog() << "STEM4U demo and test";
+	
+	UppLog() << "\nTravelling salesman";
 
 	const Vector<Point_<int>> points = {{0, 0},{4, 4},{4, 0},{2, 4},{0, 4},{4, 2},{0, 2},{2, 0}};
 
@@ -221,5 +223,10 @@ CONSOLE_APP_MAIN
 	
 	TestIntInf();
     TestPolynomial();
+    
+	#ifdef flagDEBUG
+	Cout() << "\nPress enter key to end";
+	ReadStdIn();
+	#endif    
 }
 
