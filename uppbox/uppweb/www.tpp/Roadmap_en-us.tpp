@@ -26,6 +26,37 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
+[s3; 2020.2 (September/October 2020?)&]
+[s5; &]
+[s5;po [*/ Upcoming release]&]
+[s5;po &]
+[s5;po [* Release highlights]&]
+[s5;l160;i150;poO0; This release is mostly about optimizations, using 
+SIMD and multithreading.&]
+[s5;po &]
+[s5;po [* Core]&]
+[s5;l160;i150;poO0; memset`*, memcpy`*, memeq`*, memhash SIMD optimised 
+inlined routines (`* `= 8, 16, 32, 64, 128)&]
+[s5;l160;i150;poO0; String comparison is yet again optimised&]
+[s5;l160;i150;poO0; Using 64 bit hashes on 64 bit CPUS&]
+[s5;po &]
+[s5;po [* Draw, Painter]&]
+[s5;l160;i150;poO0; SIMD optimizations (Intel SSE2 and ARM NEON) 
+of graphics related routines&]
+[s5;po &]
+[s5;po [* Ide]&]
+[s5;l160;i150;poO0; C`+`+ Assist parser in TheIDE is now multithreaded 
+and some parts run in background&]
+[s5;l160;i150;poO0; Navigator now can search for files too&]
+[s5;l160;i150;poO0; The errors now can be directly googled&]
+[s5;po &]
+[s5;po [* SQL]&]
+[s5;l160;i150;poO0; plugin/Sqlite3: Updated to 3.33&]
+[s5;po &]
+[s5;po [* uppsrc]&]
+[s5;l160;i150;poO0; Improved support for OpenSolaris derived systems, 
+FreeBSD and OpenBSD&]
+[s5; &]
 [s3; 2020.1 (May 2020)&]
 [s5;po &]
 [s5;po [*/ Current stable release]&]
