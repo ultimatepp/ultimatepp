@@ -12,7 +12,7 @@ using namespace Eigen;
 
 void FFTTests()
 {
-	Cout() << "\nFFT sample\nGets the FFT of equation"
+	UppLog() << "\nFFT sample\nGets the FFT of equation"
 			  "\n f(t) = 2*sin(2*PI*t/50 - PI/3) + 5*sin(2*PI*t/30 - PI/2) + 30*sin(2*PI*t/10 - PI/5)"
 			  "\nsampled with a frequency of 14 samples/second";
 	
@@ -64,9 +64,9 @@ void FFTTests()
 	        			<< 2*std::abs(freqbuf[i])/numData << csvSep 
 	        			<< 2*std::abs(freqbuf2[i])/numData;
 	    }
-	    String fftFileName = AppendFileName(GetDesktopFolder(), "fft.csv");
-	    Cout() << "\nFFT saved in '" << fftFileName << "'";
-	    SaveFile(fftFileName, str);
+	    String fftFileName = GetExeDirFile("fft.csv");
+	    UppLog() << "\nFFT saved in '" << fftFileName << "'";
+	    VERIFY(SaveFile(fftFileName, str));
 	}
 	
 	// Saving original and filtered series
@@ -76,9 +76,9 @@ void FFTTests()
 	    double t = 0;
 	    for (int i = 0; i < numData; ++i, t = i*1/samplingFrecuency) 
 	       	str << "\n" << t << csvSep << timebuf[i] << csvSep << timebuf2[i];;
-	    String dataFileName = AppendFileName(GetDesktopFolder(), "data.csv");
-	    Cout() << "\nSource data saved in '" << dataFileName << "'";
-	    SaveFile(dataFileName, str);
+	    String dataFileName = GetExeDirFile("data.csv");
+	    UppLog() << "\nSource data saved in '" << dataFileName << "'";
+	    VERIFY(SaveFile(dataFileName, str));
     }
 }
 

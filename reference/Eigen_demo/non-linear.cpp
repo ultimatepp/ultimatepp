@@ -48,12 +48,12 @@ struct Thurber_functor : NonLinearOptimizationFunctor<double> {
 VectorXd Thurber_functor::_x, Thurber_functor::_y;
 
 void NonLinearOptimization() {
-	Cout() << "\n\nNon linear equations optimization using Levenberg Marquardt based on Minpack\n"
+	UppLog() << "\n\nNon linear equations optimization using Levenberg Marquardt based on Minpack\n"
 	     "(Given a set of non linear equations and a set of data longer than the equations, "
 	     "the program finds the equation coefficients that better fit with the equations)";
 	
 	{
-		Cout() << "\n\nEckerle4 equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/eckerle4.shtml";
+		UppLog() << "\n\nEckerle4 equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/eckerle4.shtml";
 		
 		VectorXd x(3);
 		
@@ -65,44 +65,39 @@ void NonLinearOptimization() {
 		int ret = lm.minimize(x);
 		if (ret == LevenbergMarquardtSpace::ImproperInputParameters || 
 			ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
-			Cout() << "\nNo convergence!: " << ret;
+			UppLog() << "\nNo convergence!: " << ret;
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 1.4635887487E-03))
-				Cout() << "\nNorm^2 is right";
+				UppLog() << "\nNorm^2 is right";
 			else
-				Cout() << "\nNorm^2 is NOT right";
+				UppLog() << "\nNorm^2 is NOT right";
 			if (VerifyIsApprox(x[0], 1.5543827178) &&
 				VerifyIsApprox(x[1], 4.0888321754) &&
 				VerifyIsApprox(x[2], 4.5154121844E+02))
-				Cout() << "\nNon-linear function optimization is right!";
+				UppLog() << "\nNon-linear function optimization is right!";
 			else
-				Cout() << "\nNon-linear function optimization is NOT right!";
+				UppLog() << "\nNon-linear function optimization is NOT right!";
 		}
 	}
 	{
-		Cout() << "\n\nThis is a simpler way, using NonLinearOptimization()";
+		UppLog() << "\n\nThis is a simpler way, using NonLinearOptimization()";
 		double x[] = {400.0, 405.0, 410.0, 415.0, 420.0, 425.0, 430.0, 435.0, 436.5, 438.0, 439.5, 441.0, 442.5, 444.0, 445.5, 447.0, 448.5, 450.0, 451.5, 453.0, 454.5, 456.0, 457.5, 459.0, 460.5, 462.0, 463.5, 465.0, 470.0, 475.0, 480.0, 485.0, 490.0, 495.0, 500.0};
 		double f[] = {0.0001575, 0.0001699, 0.0002350, 0.0003102, 0.0004917, 0.0008710, 0.0017418, 0.0046400, 0.0065895, 0.0097302, 0.0149002, 0.0237310, 0.0401683, 0.0712559, 0.1264458, 0.2073413, 0.2902366, 0.3445623, 0.3698049, 0.3668534, 0.3106727, 0.2078154, 0.1164354, 0.0616764, 0.0337200, 0.0194023, 0.0117831, 0.0074357, 0.0022732, 0.0008800, 0.0004579, 0.0002345, 0.0001586, 0.0001143, 0.0000710};	
 		int num = sizeof(x)/sizeof(double);
 		VectorXd y(3);
 		y << 1., 10., 500.;
-		if(!NonLinearOptimization(y, num, [&](const VectorXd &y, VectorXd &residual)->int {
+		VERIFY(NonLinearOptimization(y, num, [&](const VectorXd &y, VectorXd &residual)->int {
 			for(int i = 0; i < num; i++)
 				residual[i] = y[0]/y[1] * exp(-0.5*(x[i]-y[2])*(x[i]-y[2])/(y[1]*y[1])) - f[i];
 			return 0;	
-		}))
-			Cout() << "\nNo convergence!";
-		else {
-			if (VerifyIsApprox(y[0], 1.5543827178) &&
+		}));
+		
+		VERIFY(VerifyIsApprox(y[0], 1.5543827178) &&
 				VerifyIsApprox(y[1], 4.0888321754) &&
-				VerifyIsApprox(y[2], 4.5154121844E+02))
-				Cout() << "\nNon-linear function optimization is right!";
-			else
-				Cout() << "\nNon-linear function optimization is NOT right!";
-		}
+				VerifyIsApprox(y[2], 4.5154121844E+02));
 	}
 	{
-		Cout() << "\n\nThurber equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/thurber.shtml\n";
+		UppLog() << "\n\nThurber equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/thurber.shtml\n";
 		
 		VectorXd x(7);
 		x << 1000, 1000, 400, 40, 0.7, 0.3, 0.0;	// Initial values
@@ -113,25 +108,19 @@ void NonLinearOptimization() {
 		lm.parameters.ftol = 1.E4*NumTraits<double>::epsilon();
 		lm.parameters.xtol = 1.E4*NumTraits<double>::epsilon();
 		int ret = lm.minimize(x);
-		if (ret == LevenbergMarquardtSpace::ImproperInputParameters || 
-			ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
-			Cout() << "\nNo convergence!: " << ret;
-		else {
-			if (VerifyIsApprox(lm.fvec.squaredNorm(), 5.6427082397E+03))
-				Cout() << "\nNorm^2 is right";
-			else
-				Cout() << "\nNorm^2 is NOT right";
-			if (VerifyIsApprox(x[0], 1.2881396800E+03) &&
+		
+		VERIFY(!(ret == LevenbergMarquardtSpace::ImproperInputParameters || 
+			ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation));
+		
+		VERIFY(VerifyIsApprox(lm.fvec.squaredNorm(), 5.6427082397E+03));
+		
+		VERIFY(VerifyIsApprox(x[0], 1.2881396800E+03) &&
 			    VerifyIsApprox(x[1], 1.4910792535E+03) &&
 			    VerifyIsApprox(x[2], 5.8323836877E+02) &&
 			    VerifyIsApprox(x[3], 7.5416644291E+01) &&
 			    VerifyIsApprox(x[4], 9.6629502864E-01) &&
 			    VerifyIsApprox(x[5], 3.9797285797E-01) &&
-			    VerifyIsApprox(x[6], 4.9727297349E-02))
-				Cout() << "\nNon-linear function optimization is right!";
-			else
-				Cout() << "\nNon-linear function optimization FAILED!";
-		}
+			    VerifyIsApprox(x[6], 4.9727297349E-02));
 	}
 }
 
@@ -158,7 +147,7 @@ struct Hybrd_functor : NonLinearOptimizationFunctor<double>
 };
 
 void NonLinearSolving() {
-	Cout() << "\n\nNon linear equation solving using the Powell hybrid method (\"dogleg\") based on Minpack. "
+	UppLog() << "\n\nNon linear equation solving using the Powell hybrid method (\"dogleg\") based on Minpack. "
 	       << "(Finds a zero of a system of n nonlinear equations in n variables)";
 	
 	const int n = 9;
@@ -169,17 +158,15 @@ void NonLinearSolving() {
 	Hybrd_functor functor;
 	HybridNonLinearSolver<Hybrd_functor> solver(functor);
 	int ret = solver.solveNumericalDiff(x);
-	if (ret == HybridNonLinearSolverSpace::ImproperInputParameters ||
+	
+	VERIFY(!(ret == HybridNonLinearSolverSpace::ImproperInputParameters ||
 	    ret == HybridNonLinearSolverSpace::TooManyFunctionEvaluation ||
 	    ret == HybridNonLinearSolverSpace::NotMakingProgressJacobian ||
-	    ret == HybridNonLinearSolverSpace::NotMakingProgressIterations)
-		Cout() << "\nNo convergence!: " << ret;
-	else {
-		if (VerifyIsApprox(solver.fvec.blueNorm(), 1.192636e-08))
-			Cout() << "\nNorm is right";
-		else
-			Cout() << "\nNorm is NOT right";
-		if (VerifyIsApprox(x[0], -0.5706545) && 
+	    ret == HybridNonLinearSolverSpace::NotMakingProgressIterations));
+
+	VERIFY(VerifyIsApprox(solver.fvec.blueNorm(), 1.192636e-08));
+			
+	VERIFY(VerifyIsApprox(x[0], -0.5706545) && 
 		    VerifyIsApprox(x[1], -0.6816283) &&     
 		    VerifyIsApprox(x[2], -0.7017325) && 
 		    VerifyIsApprox(x[3], -0.7042129) &&  
@@ -187,17 +174,13 @@ void NonLinearSolving() {
 		    VerifyIsApprox(x[5], -0.6918656) && 
 		    VerifyIsApprox(x[6], -0.665792) && 
 		    VerifyIsApprox(x[7], -0.5960342) &&  
-		    VerifyIsApprox(x[8], -0.4164121))
-			Cout() << "\nEquation solving is right!";
-		else
-			Cout() << "\nEquation solving FAILED!";
-	}
+		    VerifyIsApprox(x[8], -0.4164121));
 	
-	Cout() << "\n\nThis is a simpler way, using SolveNonLinearEquations()";
+	UppLog() << "\n\nThis is a simpler way, using SolveNonLinearEquations()";
 	
 	x.setConstant(n, -1.);		// Initial values
 	
-	if (!SolveNonLinearEquations(x, [&](const VectorXd &x, VectorXd &residual)->int {
+	VERIFY(SolveNonLinearEquations(x, [&](const VectorXd &x, VectorXd &residual)->int {
 		const ptrdiff_t n = x.size();
 		
 		ASSERT(residual.size() == n);
@@ -211,10 +194,8 @@ void NonLinearSolving() {
 			residual[k] = (3. - 2.*x[k])*x[k] - temp1 - 2.*temp2 + 1.;
 		}
 		return 0;
-	}))
-		Cout() << "\nNo convergence!: ";
-	else {
-		if (VerifyIsApprox(x[0], -0.5706545) && 
+	}));	// No convergence!
+	VERIFY(VerifyIsApprox(x[0], -0.5706545) && 
 		    VerifyIsApprox(x[1], -0.6816283) &&     
 		    VerifyIsApprox(x[2], -0.7017325) && 
 		    VerifyIsApprox(x[3], -0.7042129) &&  
@@ -222,11 +203,7 @@ void NonLinearSolving() {
 		    VerifyIsApprox(x[5], -0.6918656) && 
 		    VerifyIsApprox(x[6], -0.665792) && 
 		    VerifyIsApprox(x[7], -0.5960342) &&  
-		    VerifyIsApprox(x[8], -0.4164121))
-			Cout() << "\nEquation solving is right!";
-		else
-			Cout() << "\nEquation solving FAILED!";
-	}	
+		    VerifyIsApprox(x[8], -0.4164121));
 }
 
 void NonLinearTests() {
