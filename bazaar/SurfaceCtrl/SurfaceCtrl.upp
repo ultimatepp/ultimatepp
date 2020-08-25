@@ -26,9 +26,11 @@ file
 	shaders readonly separator,
 	shaders\Vertex.glsl highlight cpp,
 	shaders\VertexSimple.glsl highlight cpp,
+	shaders\VertexCubeMap.glsl highlight cpp,
 	shaders\GeometryNormal.glsl highlight cpp,
 	shaders\GeometryTriangle.glsl highlight cpp,
 	shaders\FragmentNoLight.glsl highlight cpp,
 	shaders\FragmentLight.glsl highlight cpp,
-	shaders\FragmentBlack.glsl highlight cpp;
+	shaders\FragmentBlack.glsl highlight cpp,
+	shaders\FragmentCubeMap.glsl highlight cpp;
 

@@ -3,6 +3,7 @@
 namespace Upp{
 SurfaceCtrl::SurfaceCtrl(){
 	InitCamera();
+	
 	GLResize(600,800);
 	OnBegin = [&]{InitOpenGLFeatures();};
 	
@@ -234,11 +235,18 @@ double SurfaceCtrl::GetDeltaTime()noexcept{
 //Application event
 void SurfaceCtrl::GLPaint(){
 	if(!loaded){
+		
+		glEnable(GL_DEPTH_TEST);
+
 		OnBegin();
+		
+		
 		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
 		SetDefaultShader(Axis);
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
 		SetDefaultShader(CameraFocus);
+		
+		skybox.Init();
 		loaded = true;
 	}
 	if(TimerStarted)ProcessTime();
@@ -256,6 +264,7 @@ void SurfaceCtrl::GLPaint(){
 			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 		}
 	}
+	skybox.Draw( camera.GetProjectionMatrix() , camera.GetViewMatrix());
 	if(fastMode) Refresh();
 }
 void SurfaceCtrl::GLResize(int w, int h){

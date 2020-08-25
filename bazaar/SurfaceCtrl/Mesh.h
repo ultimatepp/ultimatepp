@@ -25,17 +25,16 @@ struct Material{
 		void HaveBeenUpdated()noexcept{update = false;}
 };
 
-	
 //Mesh contain vertex  and how it's read
 class Mesh : public Moveable<Mesh>{
 	private:
-		Upp::String name =""; //Possible name of Mesh
+		String name =""; //Possible name of Mesh
 		bool loaded = false;
 		
-		Upp::Vector<GLfloat> vertices;
-		Upp::Vector<GLfloat> normals;
-		Upp::Vector<GLfloat> colors;
-		Upp::Vector<GLfloat> texCoords;
+		Vector<GLfloat> vertices;
+		Vector<GLfloat> normals;
+		Vector<GLfloat> colors;
+		Vector<GLfloat> texCoords;
 		
 		GLuint vao = 0;
 		GLuint verticesVBO = 0;
@@ -108,19 +107,19 @@ class Mesh : public Moveable<Mesh>{
 		
 		Material& GetMaterial(){return material;}
 		
-		void SetName(const Upp::String& n){name = n;}
-		Upp::String GetName()const noexcept{return name;}
+		void SetName(const String& n){name = n;}
+		String GetName()const noexcept{return name;}
 		
 		/*** Retireve all vector, to fille data ***/
-		Upp::Vector<float>& GetVertices(){return vertices;}
-		Upp::Vector<float>& GetNormals(){return normals;}
-		Upp::Vector<float>& GetColors(){return colors;}
-		Upp::Vector<float>& GetTexCoords(){return texCoords;}
+		Vector<float>& GetVertices(){return vertices;}
+		Vector<float>& GetNormals(){return normals;}
+		Vector<float>& GetColors(){return colors;}
+		Vector<float>& GetTexCoords(){return texCoords;}
 		
-		const Upp::Vector<float>& GetVertices()const noexcept{return vertices;}
-		const Upp::Vector<float>& GetNormals()const noexcept{return normals;}
-		const Upp::Vector<float>& GetColors()const noexcept{return colors;}
-		const Upp::Vector<float>& GetTexCoords()const noexcept{return texCoords;}
+		const Vector<float>& GetVertices()const noexcept{return vertices;}
+		const Vector<float>& GetNormals()const noexcept{return normals;}
+		const Vector<float>& GetColors()const noexcept{return colors;}
+		const Vector<float>& GetTexCoords()const noexcept{return texCoords;}
 		
 		GLuint GetVAO()const noexcept{return vao;}
 		GLuint GetVerticesVBO()const noexcept{return verticesVBO;}

@@ -1,5 +1,7 @@
 #include "Object3D.h"
 #include <Surface/Surface.h>
+#define STRINGIFY(...) #__VA_ARGS__
+#define SHADER(version, shader) "#version " #version "\n" STRINGIFY(shader)
 
 namespace Upp{
 	
@@ -134,8 +136,8 @@ int Object3D::LoadTexture(const Image& img , const String& name, int indiceWhere
 	t->name = trueName;
 	glGenTextures(1, &(t->id));
 	glBindTexture(GL_TEXTURE_2D, t->id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -327,15 +329,15 @@ Surface Object3D::GetSurface(){ //return a surface Objectd
 
 //Check if texture provided is already load, then return the iterator of the texture
 //object
-int Object3D::InsertTexture(const String& filename, int indice)noexcept{ //insert texture in object3D
+int Object3D::InsertTexture(const String& filename, int indice, FlipMode flipmode)noexcept{ //insert texture in object3D
 	Image m = StreamRaster::LoadFileAny( (IsFullPath(filename))? filename : AppendFileName(GetCurrentDirectory(),filename) );
-	return InsertTexture(m,indice);
+	return InsertTexture(m,indice,flipmode);
 }
-int Object3D::InsertTexture(const Image& m, int indice)noexcept{ //insert texture in object3D
-	return LoadTexture(m,AsString(m.GetSerialId()),indice);
+int Object3D::InsertTexture(const Image& m, int indice, FlipMode flipmode)noexcept{ //insert texture in object3D
+	return LoadTexture(FlipImage(m,flipmode),AsString(m.GetSerialId()),indice);
 }
 
-int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //Insert one of SurfaceCtrl provided texture
+int Object3D::InsertTexture(const TexturesMaterial& tm, int indice, FlipMode flipmode)noexcept{ //Insert one of SurfaceCtrl provided texture
 	Image m;
 	switch(tm){
 		case TM_BRICK:
@@ -354,7 +356,7 @@ int Object3D::InsertTexture(const TexturesMaterial& tm, int indice)noexcept{ //I
 			m = TexturesImg::wood();
 		break;
 	}
-	return InsertTexture(m,indice);
+	return InsertTexture(m,indice,flipmode);
 }
 Object3D& Object3D::AttachTexture(int numTexture,int MeshNo, int count){//Attach a texture to the range of mes
 	int textNo = numTexture;
@@ -668,4 +670,68 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 		}
 	}
 }
+
+
+
+Skybox& Skybox::Init(){ //Load the skybox
+	glGenTextures(1, &ID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+	Vector<Image> allSkyboximg { TexturesImg::skybox_right() , TexturesImg::skybox_left(), TexturesImg::skybox_up(), TexturesImg::skybox_down(), TexturesImg::skybox_front(), TexturesImg::skybox_back() };
+//	Vector<Image> allSkyboximg { TexturesImg::wood() , TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood() };
+	int i = 0;
+	for(Image& img : allSkyboximg){
+		Size size = img.GetSize();
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.cx , size.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
+		i++;
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    
+    Vector<float> skyboxData;
+    skyboxData << -1.0f <<  1.0f << -1.0f << -1.0f << -1.0f << -1.0f << 1.0f << -1.0f << -1.0f << 1.0f << -1.0f << -1.0f << 1.0f <<  1.0f << -1.0f << -1.0f <<  1.0f << -1.0f <<
+	-1.0f << -1.0f <<  1.0f << -1.0f << -1.0f << -1.0f << -1.0f <<  1.0f << -1.0f << -1.0f <<  1.0f << -1.0f << -1.0f <<  1.0f <<  1.0f << -1.0f << -1.0f <<  1.0f <<
+	 1.0f << -1.0f << -1.0f << 1.0f << -1.0f <<  1.0f << 1.0f <<  1.0f <<  1.0f << 1.0f <<  1.0f <<  1.0f << 1.0f <<  1.0f << -1.0f << 1.0f << -1.0f << -1.0f <<
+	-1.0f << -1.0f <<  1.0f << -1.0f <<  1.0f <<  1.0f << 1.0f <<  1.0f <<  1.0f << 1.0f <<  1.0f <<  1.0f << 1.0f << -1.0f <<  1.0f << -1.0f << -1.0f <<  1.0f <<
+	-1.0f <<  1.0f << -1.0f << 1.0f <<  1.0f << -1.0f << 1.0f <<  1.0f <<  1.0f << 1.0f <<  1.0f <<  1.0f << -1.0f <<  1.0f <<  1.0f << -1.0f <<  1.0f << -1.0f <<
+	-1.0f << -1.0f << -1.0f << -1.0f << -1.0f <<  1.0f << 1.0f << -1.0f << -1.0f << 1.0f << -1.0f << -1.0f << -1.0f << -1.0f <<  1.0f << 1.0f << -1.0f <<  1.0f;
+    
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, skyboxData.GetCount() * sizeof(float), &(skyboxData[0]), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+ 
+	program.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
+		#include "shaders/VertexCubeMap.glsl"
+	)).AttachShader(OpenGLShader(GL_FRAGMENT_SHADER,
+		#include "shaders/FragmentCubeMap.glsl"
+	)).Link();
+	return *this;
+}
+Skybox& Skybox::Clear(){if(ID)glDeleteTextures(1,&ID); return *this;} //Clear the skybox
+
+Skybox& Skybox::Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix){ //Draw the skybox
+	if(ID > 0){
+		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+		program.Bind();
+		
+		program.SetMat4("ViewMatrix", glm::mat4(glm::mat3(viewMatrix)));// remove translation from the view matrix
+		program.SetMat4("ProjectionMatrix", projectionMatrix);
+		program.SetInt("skybox", 1);
+		
+		glBindVertexArray(VAO);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDepthFunc(GL_LESS); // set depth function back to default
+	}
+	return *this;
+}
+
 }

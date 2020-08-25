@@ -34,6 +34,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		
 		Object3D Axis;
 		Object3D CameraFocus;
+		Skybox skybox;
 
 		MagicCamera camera;
 				

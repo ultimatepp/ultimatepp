@@ -127,10 +127,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		
 		//Check if texture provided is already load, then return the iterator of the texture
-		//object
-		int InsertTexture(const String& filename,int indice = -1)noexcept; //insert texture in object3D
-		int InsertTexture(const Image& m,int indice = -1)noexcept; //insert texture in object3D
-		int InsertTexture(const TexturesMaterial& tm,int indice = -1)noexcept; //Insert one of SurfaceCtrl provided texture
+		//Object3D
+		int InsertTexture(const String& filename,int indice = -1, FlipMode flipmode = FLIP_NONE)noexcept; //insert texture in object3D
+		int InsertTexture(const Image& m,int indice = -1, FlipMode flipmode = FLIP_NONE)noexcept; //insert texture in object3D
+		int InsertTexture(const TexturesMaterial& tm,int indice = -1, FlipMode flipmode = FLIP_NONE)noexcept; //Insert one of SurfaceCtrl provided texture
 		
 		const Texture& GetTexture(int indice){if(indice < textures.GetCount()) return textures[indice];else throw Exc("int indice higher than textures.getCount()");}//Return the indice, Can throw exception
 
@@ -225,6 +225,24 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& SetProgramNormal(const OpenGLProgram& program)noexcept{Normal = program; return *this;}
 		
 		void Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix, glm::vec3 viewPosition)noexcept;
+};
+
+class Skybox {
+	private:
+		unsigned int ID = 0;
+		GLuint VBO, VAO;
+		
+		OpenGLProgram program;
+		
+	public:
+		
+		Skybox(){}
+		~Skybox(){Clear();}
+		
+		Skybox& Init();
+		Skybox& Clear();
+		Skybox& Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix);
+
 };
 	
 }
