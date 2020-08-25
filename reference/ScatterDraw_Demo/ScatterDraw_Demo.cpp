@@ -7,10 +7,12 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	Cout() << "\nScatterDraw_Demo";
-	Cout() << "\nScatter painted to Image and saved to file";
+	StdLogSetup(LOG_COUT|LOG_FILE);
 	
-	String fileName = AppendFileName(GetDesktopFolder(), "Scatter");
+	UppLog() << "\nScatterDraw_Demo";
+	UppLog() << "\nScatter painted to Image and saved to file";
+	
+	String fileName = GetExeDirFile("Scatter");
 	
 	ScatterDraw scatter;
 	Vector<Pointf> s1;
@@ -32,10 +34,10 @@ CONSOLE_APP_MAIN
 	}
 	
 	if (loaded) {
-		Cout() << "\nRead scatter from file";
+		UppLog() << "\nRead scatter from file";
 		fileName = fileName + "+";
 	} else {
-		Cout() << "\nPreparing scatter";
+		UppLog() << "\nPreparing scatter";
 		
 		s1 << Pointf(10,14) << Pointf(20,25) << Pointf(30,29) << Pointf(40,24) << Pointf(50,36);
 		
@@ -59,7 +61,9 @@ CONSOLE_APP_MAIN
 	StoreAsXMLFile(scatter, "Scatter", fileName + ".xml");
 	StoreToFile(scatter, fileName + ".bin");
 	
-	Cout() << "\nSaved '" << fileName << "'";
-	Cout() << "\nPress key to end";
+	UppLog() << "\nSaved '" << fileName << "'";
+	#ifdef flagDEBUG
+	Cout() << "\nPress enter key to end";
 	ReadStdIn();
+	#endif
 }
