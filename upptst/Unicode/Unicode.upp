@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	UnicodeData.txt,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
