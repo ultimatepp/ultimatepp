@@ -11,8 +11,7 @@ namespace Upp{
 			try {
 
 				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(~filename).AttachTexture(obj.InsertTexture(TM_WATER),0,1).GenerateTextureCoordinate(0,1).Init();
-				//obj.LoadModel(~filename).Init();
+				obj.LoadModel(~filename).Init();
 
 				obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
 				obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
@@ -25,16 +24,38 @@ namespace Upp{
 				Exclamation(DeQtf(e));
 			}
 		};
-		OpenEarth.WhenAction = [&]{
+		OpenSurface.WhenAction = [&]{
 			try {
 				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "Earth 2K.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "Diffuse_2K.png"),0,obj.GetMeshes().GetCount()).Init();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "landscape/landscape.fbx").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "landscape/landscape.jpg"),0,obj.GetMeshes().GetCount()).Init();
 				canvas.SetDefaultShader(obj);
 				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
 		};
+		OpenEarth.WhenAction = [&]{
+			try {
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
+				obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
+				canvas.SetDefaultShader(obj);
+				canvas.Refresh();
+			} catch (Exc e) {
+				Exclamation(DeQtf(e));
+			}
+		};
+		Ultimate.WhenAction = [&]{
+			try {
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
+				canvas.SetDefaultShader(obj);
+				canvas.Refresh();
+			} catch (Exc e) {
+				Exclamation(DeQtf(e));
+			}
+		};
+		
 		
 		canvas.WhenPaint = [&] {
 			canvas.DrawAllObjects();
