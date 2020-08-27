@@ -1,0 +1,6 @@
+BINARY(skybox_back, "skybox/back.jpg")
+BINARY(skybox_bottom, "skybox/bottom.jpg")
+BINARY(skybox_front, "skybox/front.jpg")
+BINARY(skybox_left, "skybox/left.jpg")
+BINARY(skybox_right, "skybox/right.jpg")
+BINARY(skybox_top, "skybox/top.jpg")

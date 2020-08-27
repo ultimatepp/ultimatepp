@@ -22,6 +22,7 @@ file
 	UOGL_Camera.h,
 	MagicCamera.h,
 	MagicCamera.cpp,
+	skybox.brc,
 	textures.iml,
 	shaders readonly separator,
 	shaders\Vertex.glsl highlight cpp,

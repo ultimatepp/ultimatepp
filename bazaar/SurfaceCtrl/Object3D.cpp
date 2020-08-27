@@ -9,6 +9,8 @@ namespace Upp{
 #define IMAGEFILE <SurfaceCtrl/textures.iml>
 #include <Draw/iml.h>
 
+#include "skybox.brc"
+
 int Object3D::GlobalID = 0;
 
 Object3D& Object3D::operator=(Object3D&& obj){
@@ -677,7 +679,18 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 Skybox& Skybox::Init(){ //Load the skybox
 	glGenTextures(1, &ID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
-	Vector<Image> allSkyboximg { TexturesImg::skybox_right() , TexturesImg::skybox_left(), TexturesImg::skybox_up(), TexturesImg::skybox_down(), TexturesImg::skybox_front(), TexturesImg::skybox_back() };
+	
+	Vector<Image> allSkyboximg {
+		StreamRaster::LoadStringAny(String(skybox_right, skybox_right_length)),
+		StreamRaster::LoadStringAny(String(skybox_left, skybox_left_length)),
+		StreamRaster::LoadStringAny(String(skybox_top, skybox_top_length)),
+		StreamRaster::LoadStringAny(String(skybox_bottom, skybox_bottom_length)),
+		StreamRaster::LoadStringAny(String(skybox_front, skybox_front_length)),
+		StreamRaster::LoadStringAny(String(skybox_back, skybox_back_length))};
+	
+	
+	
+	//TexturesImg::skybox_right() , TexturesImg::skybox_left(), TexturesImg::skybox_up(), TexturesImg::skybox_down(), TexturesImg::skybox_front(), TexturesImg::skybox_back() };
 //	Vector<Image> allSkyboximg { TexturesImg::wood() , TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood(), TexturesImg::wood() };
 	int i = 0;
 	for(Image& img : allSkyboximg){
