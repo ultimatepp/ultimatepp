@@ -27,7 +27,7 @@ namespace Upp{
 		OpenSurface.WhenAction = [&]{
 			try {
 				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "landscape/landscape.fbx").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "landscape/landscape.jpg"),0,obj.GetMeshes().GetCount()).Init();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "landscape/landscape.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "landscape/landscape.jpg"),0,obj.GetMeshes().GetCount()).Init();
 				canvas.SetDefaultShader(obj);
 				canvas.Refresh();
 			} catch (Exc e) {
