@@ -1998,16 +1998,6 @@ int  ToAscii(int c, byte charset)
 	return cs.FromUnicode(ToAscii(cs.ToUnicode(c)));
 }
 
-static word sComb(const word *s, word chr)
-{
-	while(*s) {
-		if(*s == chr)
-			return s[1];
-		s += 2;
-	}
-	return 0;
-}
-
 word UnicodeCombine(word chr, word combine)
 {
 	dword h[2] = { chr, combine };
