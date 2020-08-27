@@ -107,10 +107,10 @@ Object3D& Object3D::LoadModel(const String& Filename, Color color, int alpha , u
     return *this;
 }
 int Object3D::LoadTexture(const Image& img , const String& name, int indiceWhereInsert){
-	Image image = img;
+	Image image = clone(img);
 	String trueName = name;
 	if(IsNull(image)){
-		image = TexturesImg::empty();
+		image = clone(TexturesImg::empty());
 		trueName = AsString(image.GetSerialId());
 	}
 	for(int e = 0; e < textures.GetCount(); e++){
@@ -333,7 +333,7 @@ Surface Object3D::GetSurface(){ //return a surface Objectd
 //Check if texture provided is already load, then return the iterator of the texture
 //object
 int Object3D::InsertTexture(const String& filename, int indice, FlipMode flipmode)noexcept{ //insert texture in object3D
-	Image m = StreamRaster::LoadFileAny( (IsFullPath(filename))? filename : AppendFileName(GetCurrentDirectory(),filename) );
+	Image m = pick(StreamRaster::LoadFileAny( (IsFullPath(filename))? filename : AppendFileName(GetCurrentDirectory(),filename)));
 	return InsertTexture(m,indice,flipmode);
 }
 int Object3D::InsertTexture(const Image& m, int indice, FlipMode flipmode)noexcept{ //insert texture in object3D
@@ -344,19 +344,19 @@ int Object3D::InsertTexture(const TexturesMaterial& tm, int indice, FlipMode fli
 	Image m;
 	switch(tm){
 		case TM_BRICK:
-			m = TexturesImg::brick();
+			m = clone(TexturesImg::brick());
 		break;
 		case TM_METAL:
-			m = TexturesImg::metal();
+			m = clone(TexturesImg::metal());
 		break;
 		case TM_STONE:
-			m = TexturesImg::stone();
+			m = clone(TexturesImg::stone());
 		break;
 		case TM_WATER:
-			m = TexturesImg::water();
+			m = clone(TexturesImg::water());
 		break;
 		case TM_WOOD:
-			m = TexturesImg::wood();
+			m = clone(TexturesImg::wood());
 		break;
 	}
 	return InsertTexture(m,indice,flipmode);
