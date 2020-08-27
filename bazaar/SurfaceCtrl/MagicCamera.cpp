@@ -9,7 +9,7 @@ glm::mat4 MagicCamera::GetProjectionMatrix()const noexcept{
 		return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
 	}else{
 		LOG("Swaping to Camera Perspective (cause of unknow type)");
-		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
+		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),-GetDrawDisanceMax(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 	}
 }
 glm::mat4 MagicCamera::GetViewMatrix()const noexcept{
@@ -44,7 +44,7 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 			glm::vec3 between;
 			
 			if(type == CT_ORTHOGRAPHIC){
-				axis = glm::vec3(0.0f,0.0f,0.0f);
+				between =  transform.GetPosition() - axis;
 			}else{
 				if(angle < 0.90f){
 					if (angle  < 0){
@@ -52,17 +52,18 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 					}
 					axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
 				}
+				between = transform.GetPosition() - axis;
 			}
-			between = transform.GetPosition() - axis;
+			
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
 			glm::quat rightRotation = Transform::GetQuaterion(a2, transform.GetRight());
-			//glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),v)));
 			
 			between = glm::rotate(upRotation, between);
 			between = glm::rotate(rightRotation, between);
 			
 			transform.SetPosition(axis + between);
 			transform.Rotate(glm::inverse(upRotation * rightRotation));
+			
 			return *this;
 		}
 
