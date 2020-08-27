@@ -24,16 +24,6 @@ namespace Upp{
 				Exclamation(DeQtf(e));
 			}
 		};
-		OpenSurface.WhenAction = [&]{
-			try {
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "landscape/landscape.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "landscape/landscape.jpg"),0,obj.GetMeshes().GetCount()).Init();
-				canvas.SetDefaultShader(obj);
-				canvas.Refresh();
-			} catch (Exc e) {
-				Exclamation(DeQtf(e));
-			}
-		};
 		OpenEarth.WhenAction = [&]{
 			try {
 				Object3D& obj = canvas.CreateObject();
