@@ -383,7 +383,7 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 		}
 	Close:
 		path.Close();
-		first = last + 1; 
+		first = last + 1;
     }
 	return true;
 }
