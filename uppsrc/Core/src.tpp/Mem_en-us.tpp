@@ -60,7 +60,8 @@ functions [/ should] be faster than the manual implementation.&]
 lass]_[*@4 T]>_[@(0.0.255) void]_[* memcpy`_t]([@(0.0.255) void]_`*[*@3 t], 
 [@(0.0.255) const]_[*@4 T]_`*[*@3 s], [_^size`_t^ size`_t]_[*@3 count])&]
 [s2;%% This function selects appropriate memcpy`* function based 
-on sizeof(T). Useful for template algorithms..&]
+on sizeof(T) to copy [%-*@3 count] of [%-*@4 T] elements. Useful 
+for template algorithms.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:inline`_memeq8`_aligned`(const void`*`,const void`*`,size`_t`): [@(0.0.255) b
