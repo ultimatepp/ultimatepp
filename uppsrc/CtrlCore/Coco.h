@@ -49,7 +49,6 @@ private:
 	RectCG MakeRectCG(const Rect& r) const;
 	void   ClipCG(const Rect& r);
 	Rect   GetClip() const         { return clip.GetCount() ? clip.Top() : Rect(-999999, -999999, 999999, 999999); }
-	Point  GetOffset() const       { return offset.GetCount() ? offset.Top() : Point(0, 0); }
 	RectCG Convert(int x, int y, int cx, int cy);
 	RectCG Convert(const Rect& r);
 	PointCG Convert(int x, int y);
@@ -70,6 +69,7 @@ private:
 	friend struct BackDraw__;
 
 public:
+	Point    GetOffset() const       { return offset.GetCount() ? offset.Top() : Point(0, 0); }
 	void    *GetCGHandle() const      { return handle; }
 
 	bool     CanSetSurface()          { return false; }
