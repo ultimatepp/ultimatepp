@@ -264,7 +264,20 @@ void SurfaceCtrl::GLPaint(){
 			CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 		}
 	}
-	skybox.Draw( camera.GetProjectionMatrix() , camera.GetViewMatrix());
+	
+	
+	//Draw skybox :
+	glm::mat4 proj;
+	if(camera.GetCameraType() == CT_ORTHOGRAPHIC){
+		camera.SetCameraType(CT_PERSPECTIVE);
+		proj = camera.GetProjectionMatrix();
+		camera.SetCameraType(CT_ORTHOGRAPHIC);
+	}else{
+		proj = camera.GetProjectionMatrix();
+	}
+	skybox.Draw( proj , camera.GetViewMatrix());
+	//***
+	
 	if(fastMode) Refresh();
 }
 void SurfaceCtrl::GLResize(int w, int h){

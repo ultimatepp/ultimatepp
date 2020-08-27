@@ -41,16 +41,19 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 			glm::vec3 pos = focus - transform.GetPosition();
 			float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
 			
-	//		float distance = glm::distance(focus,transform.GetPosition());
-			if(angle < 0.90f){
-				if (angle  < 0){
-					focus = glm::vec3(0.0f,0.0f,0.0f);
-				}
-				axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
-			}
-	//		if(distance > 70) transform.SetPosition(transform.GetPosition() *0.999f);
+			glm::vec3 between;
 			
-			glm::vec3 between = transform.GetPosition() - axis;
+			if(type == CT_ORTHOGRAPHIC){
+				axis = glm::vec3(0.0f,0.0f,0.0f);
+			}else{
+				if(angle < 0.90f){
+					if (angle  < 0){
+						focus = glm::vec3(0.0f,0.0f,0.0f);
+					}
+					axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
+				}
+			}
+			between = transform.GetPosition() - axis;
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
 			glm::quat rightRotation = Transform::GetQuaterion(a2, transform.GetRight());
 			//glm::quat rightRotation = Transform::GetQuaterion(a2,glm::normalize(glm::cross(transform.GetUp(),v)));
@@ -70,7 +73,7 @@ MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
 	float yoffset = (lastPress.y) * 0.005f * -1.0;
 	float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
 	bool doX = false, doY = false;
-	if(!(type == CT_ORTHOGRAPHIC) && !OnObject){
+	if(!OnObject){
 		/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
 		if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
 		doX = true;
