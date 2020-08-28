@@ -9,7 +9,7 @@ glm::mat4 MagicCamera::GetProjectionMatrix()const noexcept{
 		return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
 	}else{
 		LOG("Swaping to Camera Perspective (cause of unknow type)");
-		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),-GetDrawDisanceMax(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
+		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),(-GetDrawDisanceMax())*10.0f,(GetDrawDisanceMax())*10.0f);//We calculate Projection here since multiple camera can have different FOV
 	}
 }
 glm::mat4 MagicCamera::GetViewMatrix()const noexcept{
@@ -36,7 +36,6 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 			
 			float a1 = xoffset * -1.0f;
 			float a2 = yoffset * -1.0f;
-			glm::vec3 axis = focus;
 			
 			glm::vec3 pos = focus - transform.GetPosition();
 			float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
@@ -44,15 +43,16 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 			glm::vec3 between;
 			
 			if(type == CT_ORTHOGRAPHIC){
-				between =  transform.GetPosition() - axis;
+				between =  transform.GetPosition();
+				focus = glm::vec3(0.0f,0.0f,0.0f);
 			}else{
 				if(angle < 0.90f){
 					if (angle  < 0){
 						focus = glm::vec3(0.0f,0.0f,0.0f);
 					}
-					axis =  transform.GetPosition() + (transform.GetFront()*10.0f);
+					focus =  transform.GetPosition() + (transform.GetFront()*10.0f);
 				}
-				between = transform.GetPosition() - axis;
+				between = transform.GetPosition() - focus;
 			}
 			
 			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
@@ -61,18 +61,17 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 			between = glm::rotate(upRotation, between);
 			between = glm::rotate(rightRotation, between);
 			
-			transform.SetPosition(axis + between);
+			transform.SetPosition(focus + between);
 			transform.Rotate(glm::inverse(upRotation * rightRotation));
 			
 			return *this;
 		}
 
 MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
-	
-	//Must call DetermineRotationPoint before 
-	float xoffset = (lastPress.x - (ScreenSize.cx/2)) * 0.005f;
-	float yoffset = (lastPress.y) * 0.005f * -1.0;
-	float Upoffset = (lastPress.y - (ScreenSize.cy/2)) * 0.005f;
+	//Must call DetermineRotationPoint before
+	float xoffset = (lastPress.x - (ScreenSize.cx/2.0f)) * 0.005f;
+	float yoffset = (lastPress.y) * 0.005f * -1.0f;
+	float Upoffset = (lastPress.y - (ScreenSize.cy/2.0f)) * 0.005f;
 	bool doX = false, doY = false;
 	if(!OnObject){
 		/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;

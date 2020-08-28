@@ -1,7 +1,6 @@
 #ifndef _UltimateOpenGL_UOGL_Camera_h_
 #define _UltimateOpenGL_UOGL_Camera_h_
 #include "Transform.h"
-
 /*
  Camera object from Ultimate OpenGL
 */
