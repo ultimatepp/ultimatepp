@@ -121,23 +121,25 @@ int Object3D::LoadTexture(const Image& img , const String& name, int indiceWhere
 	
 	Size size = image.GetSize();
 	int indice;
-	Texture* t = nullptr;
-	if(indiceWhereInsert == -1){
-		indice = textures.GetCount();
-		t = &(textures.Add());
-	}else{
-		if(indiceWhereInsert < textures.GetCount()){
-			indice = indiceWhereInsert;
-			t = &(textures[indiceWhereInsert]);
-		}else{
+
+	Texture& t = [&]()-> Texture&{
+		if(indiceWhereInsert == -1){
 			indice = textures.GetCount();
-			t = &(textures.Add());
+			return textures.Add();
+		}else{
+			if(indiceWhereInsert < textures.GetCount()){
+				indice = indiceWhereInsert;
+				return textures[indiceWhereInsert];
+			}else{
+				indice = textures.GetCount();
+				return textures.Add();
+			}
 		}
-	}
+	}();
 	
-	t->name = trueName;
-	glGenTextures(1, &(t->id));
-	glBindTexture(GL_TEXTURE_2D, t->id);
+	t.name = trueName;
+	glGenTextures(1, &(t.id));
+	glBindTexture(GL_TEXTURE_2D, t.id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -216,6 +218,7 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 }
 bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
 	bool Ret = false;
+	Vector<int> ToRemove;
 	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0){
@@ -224,9 +227,16 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
                 String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
                 InsertTexture(FullPath,i);
             }
+        }else{
+            ToRemove << i;
         }
     }
-   return true;
+    int removed = 0;
+    for(int r : ToRemove){
+		textures.Remove(r-removed,1);
+		removed++;
+    }
+    return true;
 }
 
 Object3D& Object3D::LoadSurface(Surface& surface, Color color, int alpha){
@@ -610,6 +620,7 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 						glBindVertexArray(m.GetVAO());
 						if(textures.GetCount()> 0){
 							glActiveTexture(GL_TEXTURE0);
+							
 							glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
 							prog.SetInt("tex", 0);
 							prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);
