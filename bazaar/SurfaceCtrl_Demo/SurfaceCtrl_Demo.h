@@ -9,10 +9,16 @@ namespace Upp{
 #include <CtrlCore/lay.h>
 
 class SurfaceCtrl_Demo : public WithSurfaceCtrl_DemoLayout<TopWindow> {
+private:
+	
+	void RetrieveCameraInformation();
+	void UpdatePosition();
+	void UpdateRotation();
+	
 public:
 	typedef SurfaceCtrl_Demo CLASSNAME;
 	SurfaceCtrl_Demo();
-	virtual void Layout();
+	
 	virtual bool Key(dword key, int count);
 };
 }

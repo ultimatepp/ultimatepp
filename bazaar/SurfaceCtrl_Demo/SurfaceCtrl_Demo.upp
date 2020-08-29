@@ -1,6 +1,7 @@
 uses
 	CtrlLib,
-	SurfaceCtrl;
+	SurfaceCtrl,
+	Functions4U;
 
 file
 	SurfaceCtrl_Demo.h,
