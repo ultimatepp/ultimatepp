@@ -40,8 +40,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <inttypes.h>
 
-#include "inttypes.h"
 #include "nasmlib.h"
 #include "sync.h"
 

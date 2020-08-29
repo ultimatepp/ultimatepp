@@ -31,40 +31,24 @@
  *
  * ----------------------------------------------------------------------- */
 
-/*
- * tables.h
- *
- * Declarations for auto-generated tables
+/* 
+ * preproc.h  header file for preproc.c
  */
 
-#ifndef NASM_TABLES_H
-#define NASM_TABLES_H
+#ifndef NASM_PREPROC_H
+#define NASM_PREPROC_H
 
-#include "compiler.h"
-#include <inttypes.h>
-#include "insnsi.h"		/* For enum opcode */
+#include "pptok.h"
 
-/* --- From standard.mac via macros.pl: --- */
+extern const char * const pp_directives[];
+extern const uint8_t pp_directives_len[];
 
-/* macros.c */
-extern const unsigned char nasm_stdmac[];
-extern const unsigned char * const nasm_stdmac_after_tasm;
-const unsigned char *nasm_stdmac_find_package(const char *);
+/* Pointer to a macro chain */
+typedef const unsigned char macros_t;
 
-/* --- From insns.dat via insns.pl: --- */
+enum preproc_token pp_token_hash(const char *token);
 
-/* insnsn.c */
-extern const char * const nasm_insn_names[];
+/* Opens an include file or input file. This uses the include path. */
+FILE *pp_input_fopen(const char *filename, const char *mode);
 
-/* --- From regs.dat via regs.pl: --- */
-
-/* regs.c */
-extern const char * const nasm_reg_names[];
-/* regflags.c */
-typedef uint64_t opflags_t;
-typedef uint16_t  decoflags_t;
-extern const opflags_t nasm_reg_flags[];
-/* regvals.c */
-extern const int nasm_regvals[];
-
-#endif /* NASM_TABLES_H */
+#endif

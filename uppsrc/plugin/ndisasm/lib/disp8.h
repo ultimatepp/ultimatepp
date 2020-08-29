@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------- *
- *   
- *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
+ *
+ *   Copyright 1996-2013 The NASM Authors - All Rights Reserved
  *   See the file AUTHORS included with the NASM distribution for
  *   the specific copyright holders.
  *
@@ -14,7 +14,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *     
+ *
  *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
  *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
  *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -32,39 +32,14 @@
  * ----------------------------------------------------------------------- */
 
 /*
- * tables.h
- *
- * Declarations for auto-generated tables
+ * disp8.h   header file for disp8.c
  */
 
-#ifndef NASM_TABLES_H
-#define NASM_TABLES_H
+#ifndef NASM_DISP8_H
+#define NASM_DISP8_H
 
-#include "compiler.h"
-#include <inttypes.h>
-#include "insnsi.h"		/* For enum opcode */
+#include "nasm.h"
 
-/* --- From standard.mac via macros.pl: --- */
-
-/* macros.c */
-extern const unsigned char nasm_stdmac[];
-extern const unsigned char * const nasm_stdmac_after_tasm;
-const unsigned char *nasm_stdmac_find_package(const char *);
-
-/* --- From insns.dat via insns.pl: --- */
-
-/* insnsn.c */
-extern const char * const nasm_insn_names[];
-
-/* --- From regs.dat via regs.pl: --- */
-
-/* regs.c */
-extern const char * const nasm_reg_names[];
-/* regflags.c */
-typedef uint64_t opflags_t;
-typedef uint16_t  decoflags_t;
-extern const opflags_t nasm_reg_flags[];
-/* regvals.c */
-extern const int nasm_regvals[];
-
-#endif /* NASM_TABLES_H */
+uint8_t get_disp8N(insn *ins);
+bool is_disp8n(operand *input, insn *ins, int8_t *compdisp);
+#endif  /* NASM_DISP8_H */

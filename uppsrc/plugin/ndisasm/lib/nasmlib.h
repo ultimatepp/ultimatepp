@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------- *
  *
- *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
+ *   Copyright 1996-2016 The NASM Authors - All Rights Reserved
  *   See the file AUTHORS included with the NASM distribution for
  *   the specific copyright holders.
  *
@@ -39,7 +39,8 @@
 #define NASM_NASMLIB_H
 
 #include "compiler.h"
-#include "inttypes.h"
+
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_STRINGS_H
@@ -64,15 +65,6 @@ extern unsigned char nasm_tolower_tab[256];
 #define nasm_isxdigit(x) isxdigit((unsigned char)(x))
 
 /*
- * If this is defined, the wrappers around malloc et al will
- * transform into logging variants, which will cause NASM to create
- * a file called `malloc.log' when run, and spew details of all its
- * memory management into that. That can then be analysed to detect
- * memory leaks and potentially other problems too.
- */
-/* #define LOGALLOC */
-
-/*
  * -------------------------
  * Error reporting functions
  * -------------------------
@@ -81,32 +73,41 @@ extern unsigned char nasm_tolower_tab[256];
 /*
  * An error reporting function should look like this.
  */
-typedef void (*efunc) (int severity, const char *fmt, ...);
+void printf_func(2, 3) nasm_error(int severity, const char *fmt, ...);
+no_return printf_func(2, 3) nasm_fatal(int flags, const char *fmt, ...);
+no_return printf_func(2, 3) nasm_panic(int flags, const char *fmt, ...);
+no_return nasm_panic_from_macro(const char *file, int line);
+#define panic() nasm_panic_from_macro(__FILE__, __LINE__);
+
 typedef void (*vefunc) (int severity, const char *fmt, va_list ap);
-#ifdef __GNUC__
-void nasm_error(int severity, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-#else
-void nasm_error(int severity, const char *fmt, ...);
-#endif
-void nasm_set_verror(vefunc);
+extern vefunc nasm_verror;
+static inline vefunc nasm_set_verror(vefunc ve)
+{
+    vefunc old_verror = nasm_verror;
+    nasm_verror = ve;
+    return old_verror;
+}
 
 /*
  * These are the error severity codes which get passed as the first
  * argument to an efunc.
  */
 
-#define ERR_DEBUG       0x00000008      /* put out debugging message */
-#define ERR_WARNING     0x00000000      /* warn only: no further action */
-#define ERR_NONFATAL    0x00000001      /* terminate assembly after phase */
-#define ERR_FATAL       0x00000002      /* instantly fatal: exit with error */
-#define ERR_PANIC       0x00000003      /* internal error: panic instantly
+#define ERR_DEBUG       0x00000000      /* put out debugging message */
+#define ERR_WARNING     0x00000001      /* warn only: no further action */
+#define ERR_NONFATAL    0x00000002      /* terminate assembly after phase */
+#define ERR_FATAL       0x00000006      /* instantly fatal: exit with error */
+#define ERR_PANIC       0x00000007      /* internal error: panic instantly
                                          * and dump core for reference */
-#define ERR_MASK        0x0000000F      /* mask off the above codes */
+#define ERR_MASK        0x00000007      /* mask off the above codes */
 #define ERR_NOFILE      0x00000010      /* don't give source file name/line */
 #define ERR_USAGE       0x00000020      /* print a usage message */
 #define ERR_PASS1       0x00000040      /* only print this error on pass one */
 #define ERR_PASS2       0x00000080
+
 #define ERR_NO_SEVERITY 0x00000100      /* suppress printing severity */
+#define ERR_PP_PRECOND	0x00000200	/* for preprocessor use */
+#define ERR_PP_LISTMACRO 0x00000400	/* from preproc->error_list_macros() */
 
 /*
  * These codes define specific types of suppressible warning.
@@ -115,8 +116,10 @@ void nasm_set_verror(vefunc);
 #define ERR_WARN_MASK   0xFFFFF000      /* the mask for this feature */
 #define ERR_WARN_SHR    12              /* how far to shift right */
 
-#define WARN(x) ((x) << ERR_WARN_SHR)
+#define WARN(x)         ((x) << ERR_WARN_SHR)
+#define WARN_IDX(x)     (((x) & ERR_WARN_MASK) >> ERR_WARN_SHR)
 
+#define ERR_WARN_TERM           WARN( 0) /* treat warnings as errors */
 #define ERR_WARN_MNP            WARN( 1) /* macro-num-parameters warning */
 #define ERR_WARN_MSR            WARN( 2) /* macro self-reference */
 #define ERR_WARN_MDP            WARN( 3) /* macro default parameters check */
@@ -129,7 +132,12 @@ void nasm_set_verror(vefunc);
 #define ERR_WARN_FL_UNDERFLOW   WARN( 9) /* FP underflow */
 #define ERR_WARN_FL_TOOLONG     WARN(10) /* FP too many digits */
 #define ERR_WARN_USER           WARN(11) /* %warning directives */
-#define ERR_WARN_MAX            11       /* the highest numbered one */
+#define ERR_WARN_LOCK		WARN(12) /* bad LOCK prefixes */
+#define ERR_WARN_HLE		WARN(13) /* bad HLE prefixes */
+#define ERR_WARN_BND		WARN(14) /* bad BND prefixes */
+#define ERR_WARN_ZEXTRELOC	WARN(15) /* relocation zero-extended */
+#define ERR_WARN_PTR		WARN(16) /* not a NASM keyword */
+#define ERR_WARN_MAX            16       /* the highest numbered one */
 
 /*
  * Wrappers around malloc, realloc and free. nasm_malloc will
@@ -138,28 +146,17 @@ void nasm_set_verror(vefunc);
  * passed a NULL pointer; nasm_free will do nothing if it is passed
  * a NULL pointer.
  */
-void nasm_init_malloc_error(void);
-#ifndef LOGALLOC
 void *nasm_malloc(size_t);
 void *nasm_zalloc(size_t);
 void *nasm_realloc(void *, size_t);
 void nasm_free(void *);
 char *nasm_strdup(const char *);
 char *nasm_strndup(const char *, size_t);
-#else
-void *nasm_malloc_log(const char *, int, size_t);
-void *nasm_zalloc_log(const char *, int, size_t);
-void *nasm_realloc_log(const char *, int, void *, size_t);
-void nasm_free_log(const char *, int, void *);
-char *nasm_strdup_log(const char *, int, const char *);
-char *nasm_strndup_log(const char *, int, const char *, size_t);
-#define nasm_malloc(x) nasm_malloc_log(__FILE__,__LINE__,x)
-#define nasm_zalloc(x) nasm_zalloc_log(__FILE__,__LINE__,x)
-#define nasm_realloc(x,y) nasm_realloc_log(__FILE__,__LINE__,x,y)
-#define nasm_free(x) nasm_free_log(__FILE__,__LINE__,x)
-#define nasm_strdup(x) nasm_strdup_log(__FILE__,__LINE__,x)
-#define nasm_strndup(x,y) nasm_strndup_log(__FILE__,__LINE__,x,y)
-#endif
+
+/*
+ * Wrapper around fwrite() which fatal-errors on output failure.
+ */
+void nasm_write(const void *, size_t, FILE *);
 
 /*
  * NASM assert failure
@@ -204,6 +201,8 @@ int nasm_memicmp(const char *, const char *, size_t);
 char *nasm_strsep(char **stringp, const char *delim);
 #endif
 
+/* This returns the numeric value of a given 'digit'. */
+#define numvalue(c)         ((c) >= 'a' ? (c) - 'a' + 10 : (c) >= 'A' ? (c) - 'A' + 10 : (c) - '0')
 
 /*
  * Convert a string into a number, using NASM number rules. Sets
@@ -238,24 +237,42 @@ void standard_extension(char *inname, char *outname, char *extension);
  * This is a useful #define which I keep meaning to use more often:
  * the number of elements of a statically defined array.
  */
-
-#define elements(x)     ( sizeof(x) / sizeof(*(x)) )
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 /*
  * List handling
  *
  *  list_for_each - regular iterator over list
  *  list_for_each_safe - the same but safe against list items removal
+ *  list_last - find the last element in a list
  */
 #define list_for_each(pos, head)                        \
     for (pos = head; pos; pos = pos->next)
 #define list_for_each_safe(pos, n, head)                \
     for (pos = head, n = (pos ? pos->next : NULL); pos; \
         pos = n, n = (n ? n->next : NULL))
+#define list_last(pos, head)                            \
+    for (pos = head; pos && pos->next; pos = pos->next) \
+        ;
+#define list_reverse(head, prev, next)                  \
+    do {                                                \
+        if (!head || !head->next)                       \
+            break;                                      \
+        prev = NULL;                                    \
+        while (head) {                                  \
+            next = head->next;                          \
+            head->next = prev;                          \
+            prev = head;                                \
+            head = next;                                \
+        }                                               \
+        head = prev;                                    \
+    } while (0)
 
 /*
  * Power of 2 align helpers
  */
+#undef ALIGN_MASK		/* Some BSD flavors define these in system headers */
+#undef ALIGN
 #define ALIGN_MASK(v, mask)     (((v) + (mask)) & ~(mask))
 #define ALIGN(v, a)             ALIGN_MASK(v, (a) - 1)
 #define IS_ALIGNED(v, a)        (((v) & ((a) - 1)) == 0)
@@ -375,16 +392,24 @@ void fwriteaddr(uint64_t data, int size, FILE * fp);
 int bsi(const char *string, const char **array, int size);
 int bsii(const char *string, const char **array, int size);
 
-char *src_set_fname(char *newname);
+/*
+ * These functions are used to keep track of the source code file and name.
+ */
+void src_init(void);
+void src_free(void);
+const char *src_set_fname(const char *newname);
+const char *src_get_fname(void);
 int32_t src_set_linnum(int32_t newline);
 int32_t src_get_linnum(void);
+/* Can be used when there is no need for the old information */
+void src_set(int32_t line, const char *filename);
 /*
- * src_get may be used if you simply want to know the source file and line.
+ * src_get gets both the source file name and line.
  * It is also used if you maintain private status about the source location
  * It return 0 if the information was the same as the last time you
- * checked, -1 if the name changed and (new-old) if just the line changed.
+ * checked, -2 if the name changed and (new-old) if just the line changed.
  */
-int src_get(int32_t *xline, char **xname);
+int32_t src_get(int32_t *xline, const char **xname);
 
 char *nasm_strcat(const char *one, const char *two);
 
@@ -392,12 +417,26 @@ char *nasm_skip_spaces(const char *p);
 char *nasm_skip_word(const char *p);
 char *nasm_zap_spaces_fwd(char *p);
 char *nasm_zap_spaces_rev(char *p);
+char *nasm_trim_spaces(char *p);
+char *nasm_get_word(char *p, char **tail);
+char *nasm_opt_val(char *p, char **opt, char **val);
+
+/*
+ * Converts a relative pathname rel_path into an absolute path name.
+ *
+ * The buffer returned must be freed by the caller
+ */
+char *nasm_realpath(const char *rel_path);
 
 const char *prefix_name(int);
 
-#define ZERO_BUF_SIZE 4096
+#define ZERO_BUF_SIZE 4096      /* Default value */
+#if defined(BUFSIZ) && (BUFSIZ > ZERO_BUF_SIZE)
+# undef ZERO_BUF_SIZE
+# define ZERO_BUF_SIZE BUFSIZ
+#endif
 extern const uint8_t zero_buffer[ZERO_BUF_SIZE];
-size_t fwritezero(size_t bytes, FILE *fp);
+void fwritezero(size_t bytes, FILE *fp);
 
 static inline bool overflow_general(int64_t value, int bytes)
 {
@@ -444,9 +483,31 @@ static inline bool overflow_unsigned(int64_t value, int bytes)
     return value < vmin || value > vmax;
 }
 
+static inline int64_t signed_bits(int64_t value, int bits)
+{
+    if (bits < 64) {
+        value &= ((int64_t)1 << bits) - 1;
+        if (value & (int64_t)1 << (bits - 1))
+            value |= (int64_t)((uint64_t)-1 << bits);
+    }
+    return value;
+}
+
 int idata_bytes(int opcode);
 
 /* check if value is power of 2 */
 #define is_power2(v)   ((v) && ((v) & ((v) - 1)) == 0)
+
+/*
+ * floor(log2(v))
+ */
+int ilog2_32(uint32_t v);
+int ilog2_64(uint64_t v);
+
+/*
+ * v == 0 ? 0 : is_power2(x) ? ilog2_X(v) : -1
+ */
+int alignlog2_32(uint32_t v);
+int alignlog2_64(uint64_t v);
 
 #endif

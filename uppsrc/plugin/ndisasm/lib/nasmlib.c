@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------- *
  *   
- *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
+ *   Copyright 1996-2016 The NASM Authors - All Rights Reserved
  *   See the file AUTHORS included with the NASM distribution for
  *   the specific copyright holders.
  *
@@ -41,18 +41,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
+#include <inttypes.h>
 
-#include "inttypes.h"
 #include "nasm.h"
 #include "nasmlib.h"
 #include "insns.h"
 
 int globalbits = 0;    /* defined in nasm.h, works better here for ASM+DISASM */
-static vefunc nasm_verror;	/* Global error handling function */
-
-#ifdef LOGALLOC
-static FILE *logfp;
-#endif
+vefunc nasm_verror;    /* Global error handling function */
 
 /* Uninitialized -> all zero by C spec */
 const uint8_t zero_buffer[ZERO_BUF_SIZE];
@@ -72,11 +69,6 @@ void tolower_init(void)
 	nasm_tolower_tab[i] = tolower(i);
 }
 
-void nasm_set_verror(vefunc ve)
-{
-    nasm_verror = ve;
-}
-
 void nasm_error(int severity, const char *fmt, ...)
 {
     va_list ap;
@@ -86,121 +78,79 @@ void nasm_error(int severity, const char *fmt, ...)
     va_end(ap);
 }
 
-void nasm_init_malloc_error(void)
+no_return nasm_fatal(int flags, const char *fmt, ...)
 {
-#ifdef LOGALLOC
-    logfp = fopen("malloc.log", "w");
-    setvbuf(logfp, NULL, _IOLBF, BUFSIZ);
-    fprintf(logfp, "null pointer is %p\n", NULL);
-#endif
+    va_list ap;
+
+    va_start(ap, fmt);
+    nasm_verror(flags | ERR_FATAL, fmt, ap);
+    abort();			/* We should never get here */
 }
 
-#ifdef LOGALLOC
-void *nasm_malloc_log(const char *file, int line, size_t size)
-#else
+no_return nasm_panic(int flags, const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    nasm_verror(flags | ERR_PANIC, fmt, ap);
+    abort();			/* We should never get here */
+}
+
+no_return nasm_panic_from_macro(const char *file, int line)
+{
+    nasm_panic(ERR_NOFILE, "Internal error at %s:%d\n", file, line);
+}
+
 void *nasm_malloc(size_t size)
-#endif
 {
     void *p = malloc(size);
     if (!p)
-        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
-#ifdef LOGALLOC
-    else
-        fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
-                file, line, (long)size, p);
-#endif
+        nasm_fatal(ERR_NOFILE, "out of memory");
     return p;
 }
 
-#ifdef LOGALLOC
-void *nasm_zalloc_log(const char *file, int line, size_t size)
-#else
 void *nasm_zalloc(size_t size)
-#endif
 {
     void *p = calloc(size, 1);
     if (!p)
-        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
-#ifdef LOGALLOC
-    else
-        fprintf(logfp, "%s %d calloc(%ld, 1) returns %p\n",
-                file, line, (long)size, p);
-#endif
+        nasm_fatal(ERR_NOFILE, "out of memory");
     return p;
 }
 
-#ifdef LOGALLOC
-void *nasm_realloc_log(const char *file, int line, void *q, size_t size)
-#else
 void *nasm_realloc(void *q, size_t size)
-#endif
 {
     void *p = q ? realloc(q, size) : malloc(size);
     if (!p)
-        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
-#ifdef LOGALLOC
-    else if (q)
-        fprintf(logfp, "%s %d realloc(%p,%ld) returns %p\n",
-                file, line, q, (long)size, p);
-    else
-        fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
-                file, line, (long)size, p);
-#endif
+        nasm_fatal(ERR_NOFILE, "out of memory");
     return p;
 }
 
-#ifdef LOGALLOC
-void nasm_free_log(const char *file, int line, void *q)
-#else
 void nasm_free(void *q)
-#endif
 {
-    if (q) {
-#ifdef LOGALLOC
-        fprintf(logfp, "%s %d free(%p)\n", file, line, q);
-#endif
+    if (q)
         free(q);
-    }
 }
 
-#ifdef LOGALLOC
-char *nasm_strdup_log(const char *file, int line, const char *s)
-#else
 char *nasm_strdup(const char *s)
-#endif
 {
     char *p;
     int size = strlen(s) + 1;
 
     p = malloc(size);
     if (!p)
-        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
-#ifdef LOGALLOC
-    else
-        fprintf(logfp, "%s %d strdup(%ld) returns %p\n",
-                file, line, (long)size, p);
-#endif
+        nasm_fatal(ERR_NOFILE, "out of memory");
     strcpy(p, s);
     return p;
 }
 
-#ifdef LOGALLOC
-char *nasm_strndup_log(const char *file, int line, const char *s, size_t len)
-#else
 char *nasm_strndup(const char *s, size_t len)
-#endif
 {
     char *p;
     int size = len + 1;
 
     p = malloc(size);
     if (!p)
-        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
-#ifdef LOGALLOC
-    else
-        fprintf(logfp, "%s %d strndup(%ld) returns %p\n",
-                file, line, (long)size, p);
-#endif
+        nasm_fatal(ERR_NOFILE, "out of memory");
     strncpy(p, s, len);
     p[len] = '\0';
     return p;
@@ -208,8 +158,15 @@ char *nasm_strndup(const char *s, size_t len)
 
 no_return nasm_assert_failed(const char *file, int line, const char *msg)
 {
-    nasm_error(ERR_FATAL, "assertion %s failed at %s:%d", msg, file, line);
+    nasm_fatal(0, "assertion %s failed at %s:%d", msg, file, line);
     exit(1);
+}
+
+void nasm_write(const void *ptr, size_t size, FILE *f)
+{
+    size_t n = fwrite(ptr, 1, size, f);
+    if (n != size)
+        nasm_fatal(0, "unable to write output: %s", strerror(errno));
 }
 
 #ifndef nasm_stricmp
@@ -286,8 +243,7 @@ char *nasm_strsep(char **stringp, const char *delim)
 #endif
 
 
-#define lib_isnumchar(c)   (nasm_isalnum(c) || (c) == '$' || (c) == '_')
-#define numvalue(c)  ((c)>='a' ? (c)-'a'+10 : (c)>='A' ? (c)-'A'+10 : (c)-'0')
+#define lib_isnumchar(c)    (nasm_isalnum(c) || (c) == '$' || (c) == '_')
 
 static int radix_letter(char c)
 {
@@ -439,38 +395,36 @@ int64_t readstrnum(char *str, int length, bool *warn)
     return charconst;
 }
 
-static int32_t next_seg;
-
-void seg_init(void)
-{
-    next_seg = 0;
-}
-
 int32_t seg_alloc(void)
 {
-    return (next_seg += 2) - 2;
+    static int32_t next_seg = 0;
+    int32_t this_seg = next_seg;
+
+    next_seg += 2;
+
+    return this_seg;
 }
 
 #ifdef WORDS_LITTLEENDIAN
 
 void fwriteint16_t(uint16_t data, FILE * fp)
 {
-    fwrite(&data, 1, 2, fp);
+    nasm_write(&data, 2, fp);
 }
 
 void fwriteint32_t(uint32_t data, FILE * fp)
 {
-    fwrite(&data, 1, 4, fp);
+    nasm_write(&data, 4, fp);
 }
 
 void fwriteint64_t(uint64_t data, FILE * fp)
 {
-    fwrite(&data, 1, 8, fp);
+    nasm_write(&data, 8, fp);
 }
 
 void fwriteaddr(uint64_t data, int size, FILE * fp)
 {
-    fwrite(&data, 1, size, fp);
+    nasm_write(&data, size, fp);
 }
 
 #else /* not WORDS_LITTLEENDIAN */
@@ -479,50 +433,42 @@ void fwriteint16_t(uint16_t data, FILE * fp)
 {
     char buffer[2], *p = buffer;
     WRITESHORT(p, data);
-    fwrite(buffer, 1, 2, fp);
+    nasm_write(buffer, 2, fp);
 }
 
 void fwriteint32_t(uint32_t data, FILE * fp)
 {
     char buffer[4], *p = buffer;
     WRITELONG(p, data);
-    fwrite(buffer, 1, 4, fp);
+    nasm_write(buffer, 4, fp);
 }
 
 void fwriteint64_t(uint64_t data, FILE * fp)
 {
     char buffer[8], *p = buffer;
     WRITEDLONG(p, data);
-    fwrite(buffer, 1, 8, fp);
+    nasm_write(buffer, 8, fp);
 }
 
 void fwriteaddr(uint64_t data, int size, FILE * fp)
 {
     char buffer[8], *p = buffer;
     WRITEADDR(p, data, size);
-    fwrite(buffer, 1, size, fp);
+    nasm_write(buffer, size, fp);
 }
 
 #endif
 
-size_t fwritezero(size_t bytes, FILE *fp)
+void fwritezero(size_t bytes, FILE *fp)
 {
-    size_t count = 0;
     size_t blksize;
-    size_t rv;
 
     while (bytes) {
 	blksize = (bytes < ZERO_BUF_SIZE) ? bytes : ZERO_BUF_SIZE;
 
-	rv = fwrite(zero_buffer, 1, blksize, fp);
-	if (!rv)
-	    break;
-
-	count += rv;
-	bytes -= rv;
+	nasm_write(zero_buffer, blksize, fp);
+	bytes -= blksize;
     }
-
-    return count;
 }
 
 void standard_extension(char *inname, char *outname, char *extension)
@@ -559,13 +505,14 @@ void standard_extension(char *inname, char *outname, char *extension)
  */
 static const char *prefix_names[] = {
     "a16", "a32", "a64", "asp", "lock", "o16", "o32", "o64", "osp",
-    "rep", "repe", "repne", "repnz", "repz", "times", "wait"
+    "rep", "repe", "repne", "repnz", "repz", "times", "wait",
+    "xacquire", "xrelease", "bnd"
 };
 
 const char *prefix_name(int token)
 {
     unsigned int prefix = token-PREFIX_ENUM_START;
-    if (prefix > elements(prefix_names))
+    if (prefix >= ARRAY_SIZE(prefix_names))
 	return NULL;
 
     return prefix_names[prefix];
@@ -604,44 +551,6 @@ int bsii(const char *string, const char **array, int size)
             return k;
     }
     return -1;                  /* we haven't got it :( */
-}
-
-static char *file_name = NULL;
-static int32_t line_number = 0;
-
-char *src_set_fname(char *newname)
-{
-    char *oldname = file_name;
-    file_name = newname;
-    return oldname;
-}
-
-int32_t src_set_linnum(int32_t newline)
-{
-    int32_t oldline = line_number;
-    line_number = newline;
-    return oldline;
-}
-
-int32_t src_get_linnum(void)
-{
-    return line_number;
-}
-
-int src_get(int32_t *xline, char **xname)
-{
-    if (!file_name || !*xname || strcmp(*xname, file_name)) {
-        nasm_free(*xname);
-        *xname = file_name ? nasm_strdup(file_name) : NULL;
-        *xline = line_number;
-        return -2;
-    }
-    if (*xline != line_number) {
-        int32_t tmp = line_number - *xline;
-        *xline = line_number;
-        return tmp;
-    }
-    return 0;
 }
 
 char *nasm_strcat(const char *one, const char *two)
@@ -690,40 +599,106 @@ char *nasm_zap_spaces_rev(char *p)
     return p;
 }
 
+/* zap leading and trailing spaces */
+char *nasm_trim_spaces(char *p)
+{
+    p = nasm_zap_spaces_fwd(p);
+    nasm_zap_spaces_fwd(nasm_skip_word(p));
+
+    return p;
+}
+
+/*
+ * return the word extracted from a stream
+ * or NULL if nothing left
+ */
+char *nasm_get_word(char *p, char **tail)
+{
+    char *word = nasm_skip_spaces(p);
+    char *next = nasm_skip_word(word);
+
+    if (word && *word) {
+        if (*next)
+            *next++ = '\0';
+    } else
+        word = next = NULL;
+
+    /* NOTE: the tail may start with spaces */
+    *tail = next;
+
+    return word;
+}
+
+/*
+ * Extract "opt=val" values from the stream and
+ * returns "opt"
+ *
+ * Exceptions:
+ * 1) If "=val" passed the NULL returned though
+ *    you may continue handling the tail via "next"
+ * 2) If "=" passed the NULL is returned and "val"
+ *    is set to NULL as well
+ */
+char *nasm_opt_val(char *p, char **val, char **next)
+{
+    char *q, *nxt;
+
+    *val = *next = NULL;
+
+    p = nasm_get_word(p, &nxt);
+    if (!p)
+        return NULL;
+
+    q = strchr(p, '=');
+    if (q) {
+        if (q == p)
+            p = NULL;
+        *q++='\0';
+        if (*q) {
+            *val = q;
+        } else {
+            q = nasm_get_word(q + 1, &nxt);
+            if (q)
+                *val = q;
+        }
+    } else {
+        q = nasm_skip_spaces(nxt);
+        if (q && *q == '=') {
+            q = nasm_get_word(q + 1, &nxt);
+            if (q)
+                *val = q;
+        }
+    }
+
+    *next = nxt;
+    return p;
+}
+
 /*
  * initialized data bytes length from opcode
  */
 int idata_bytes(int opcode)
 {
-    int ret;
     switch (opcode) {
     case I_DB:
-        ret = 1;
-        break;
+        return 1;
     case I_DW:
-        ret = 2;
-        break;
+        return 2;
     case I_DD:
-        ret = 4;
-        break;
+        return 4;
     case I_DQ:
-        ret = 8;
-        break;
+        return 8;
     case I_DT:
-        ret = 10;
-        break;
+        return 10;
     case I_DO:
-        ret = 16;
-        break;
+        return 16;
     case I_DY:
-        ret = 32;
-        break;
+        return 32;
+    case I_DZ:
+        return 64;
     case I_none:
-        ret = -1;
-        break;
+        return -1;
     default:
-        ret = 0;
-        break;
+        return 0;
     }
-    return ret;
 }
