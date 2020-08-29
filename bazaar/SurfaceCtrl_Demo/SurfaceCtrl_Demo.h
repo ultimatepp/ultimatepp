@@ -14,6 +14,7 @@ private:
 	void RetrieveCameraInformation();
 	void UpdatePosition();
 	void UpdateRotation();
+	void UpdateFocus();
 	
 public:
 	typedef SurfaceCtrl_Demo CLASSNAME;

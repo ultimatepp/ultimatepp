@@ -31,6 +31,12 @@ namespace Upp{
 			canvas.Refresh();
 		};
 		
+		ShowFocus = canvas.IsCameraFocusShow();
+		ShowFocus.WhenAction = [&]{
+			canvas.ShowCameraFocus(ShowFocus.Get());
+			canvas.Refresh();
+		};
+		
 		butOpen.WhenAction = [&] {
 			try {
 
@@ -79,6 +85,11 @@ namespace Upp{
 		quatY <<= THISBACK(UpdateRotation);
 		quatZ <<= THISBACK(UpdateRotation);
 		
+		focusX <<= THISBACK(UpdateFocus);
+		focusY <<= THISBACK(UpdateFocus);
+		focusZ <<= THISBACK(UpdateFocus);
+		
+		
 		resetPos.WhenAction = [&]{
 			canvas.GetCamera().GetTransform().SetPosition(0,0,20);
 			canvas.GetCamera().GetTransform().SetRotation(0,glm::vec3(0,0,0));
@@ -110,12 +121,20 @@ namespace Upp{
 		upvec.SetLabel("("+ AsString(t.GetUp().x,2) +", " + AsString(t.GetUp().y,2) +", " + AsString(t.GetUp().z,2) + ")");
 		rightvec.SetLabel("("+ AsString(t.GetRight().x,2) +", " + AsString(t.GetRight().y,2) +", " + AsString(t.GetRight().z,2) + ")");
 		
+		focusX = canvas.GetCamera().GetFocus().x;
+		focusY = canvas.GetCamera().GetFocus().y;
+		focusZ = canvas.GetCamera().GetFocus().z;
+		onObjectBool.SetLabel( AsString(canvas.GetCamera().IsOnObject()));
+		
 	}
 	void SurfaceCtrl_Demo::UpdatePosition(){
 		canvas.GetCamera().GetTransform().SetPosition(camPosX,camPosY,camPosZ);
 	}
 	void SurfaceCtrl_Demo::UpdateRotation(){
 		canvas.GetCamera().GetTransform().SetRotation(glm::quat(quatW,quatX,quatY,quatZ));
+	}
+	void SurfaceCtrl_Demo::UpdateFocus(){
+		canvas.GetCamera().SetFocus(focusX,focusY,focusZ);
 	}
 }
 
