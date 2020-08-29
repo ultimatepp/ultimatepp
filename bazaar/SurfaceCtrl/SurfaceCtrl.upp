@@ -2,14 +2,15 @@ description "\377B113,255,200";
 
 uses
 	Surface,
-	GLCtrl_glad,
 	plugin/assimp,
 	plugin/jpg,
 	plugin/png,
 	plugin/tif,
-	plugin/gif;
+	plugin/gif,
+	GLCtrl_glad;
 
 file
+	Definition.h,
 	SurfaceCtrl.h,
 	SurfaceCtrl.cpp,
 	Object3D.h,

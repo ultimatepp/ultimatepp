@@ -1,5 +1,7 @@
 #ifndef _SurfaceCtrl_Shader_h_
 #define _SurfaceCtrl_Shader_h_
+#include "Definition.h"
+//#include <GLCtrl_glad/GLCtrl_glad.h>
 namespace Upp{
 class OpenGLShader{
 	private:

@@ -1,5 +1,4 @@
 #include "SurfaceCtrl.h"
-
 namespace Upp{
 SurfaceCtrl::SurfaceCtrl(){
 	InitCamera();

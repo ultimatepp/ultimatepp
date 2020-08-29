@@ -1,7 +1,6 @@
 #ifndef _SurfaceCtrl_MagicCamera_h_
 #define _SurfaceCtrl_MagicCamera_h_
 #include "UOGL_Camera.h"
-
 #include "Object3D.h"
 
 namespace Upp{

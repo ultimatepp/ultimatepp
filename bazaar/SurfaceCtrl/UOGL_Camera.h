@@ -5,8 +5,7 @@
  Camera object from Ultimate OpenGL
 */
 namespace Upp{
-enum Camera_Movement {CM_FORWARD,CM_BACKWARD,CM_LEFT,CM_RIGHT};// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum CameraType{CT_PERSPECTIVE = 0 ,CT_ORTHOGRAPHIC = 1};//,CT_FRUSTUM = 2}; //Type of camera rendering
+
 class UOGL_Camera{
 	protected:
 		Transform transform; //The Camera Transform object

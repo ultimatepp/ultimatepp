@@ -1,18 +1,11 @@
 #ifndef _SurfaceCtrl_Object3D_h_
 #define _SurfaceCtrl_Object3D_h_
-#include <Core/Core.h>
-#include <GLCtrl_glad/GLCtrl_glad.h>
-#include <Surface/Surface.h>
-#include <plugin/assimp/assimp.h>
-#include "Transform.h"
-#include "Shader.h"
+#include "Definition.h"
 #include "BoundingBox.h"
-
 #include "Mesh.h"
+#include "Transform.h"
 
 namespace Upp{
-enum DrawType { DT_TRIANGLE, DT_QUAD };
-enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
 /*
 struct Light{
 	Light(){
@@ -33,13 +26,6 @@ struct Light{
     glm::vec3 Diffuse;
     glm::vec3 Specular;
 };*/
-
-
-
-
-
-class Surface;
-
 struct Texture : public Moveable<Texture>{
 	Upp::String name="";
 	unsigned int id =0;

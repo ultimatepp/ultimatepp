@@ -1,30 +1,12 @@
 #ifndef _UOGLCtrl_UOGLCtrl_h_
 #define _UOGLCtrl_UOGLCtrl_h_
-#include <CtrlLib/CtrlLib.h>
-#include <GLCtrl_glad/GLCtrl_glad.h>
-#include <Surface/Surface.h>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <plugin/glm/glm.hpp>
-#include <plugin/glm/gtc/matrix_transform.hpp>
-#include <plugin/glm/gtc/type_ptr.hpp>
-#include <plugin/glm/gtx/quaternion.hpp>
-#include <plugin/glm/ext/quaternion_trigonometric.hpp>
-#include <plugin/glm/gtc/constants.hpp>
-#include <plugin/glm/gtx/norm.hpp>
-#include <plugin/glm/gtx/string_cast.hpp>
-
-#define STRINGIFY(...) #__VA_ARGS__
-#define SHADER(version, shader) "#version " #version "\n" STRINGIFY(shader)
-
-#include "Object3D.h"
-#include "Shader.h"
-#include "MagicCamera.h"
+#include "Definition.h"
 #include "Object3DProvider.h"
+#include "Object3D.h"
+#include "MagicCamera.h"
 
 namespace Upp{
-
-class SurfaceCtrl : public GLCtrl_glad{
+class SurfaceCtrl : public GL{
 	private:
 		bool loaded = false;
 		Object3DProvider objProvider;
@@ -134,5 +116,6 @@ class SurfaceCtrl : public GLCtrl_glad{
 		virtual void MouseLeave(); //action when mouse leave
 		virtual bool Key(dword key,int count); //Action when key press
 };
+#include "Object3D.h"
 }
 #endif

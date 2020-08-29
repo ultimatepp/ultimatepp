@@ -1,10 +1,8 @@
 #ifndef _SurfaceCtrl_GLDrawFunction_h_
 #define _SurfaceCtrl_GLDrawFunction_h_
-#include <Surface/Surface.h>
+#include "Definition.h"
 #include "Object3D.h"
-/*
-	All this code belong to Iñaki Zabala
-*/
+
 namespace Upp{
 class Object3DProvider {
 	private:
