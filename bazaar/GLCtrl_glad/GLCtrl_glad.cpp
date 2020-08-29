@@ -24,8 +24,6 @@ void GLCtrl_glad::DoGLPaint()
 
 void GLCtrl_glad::Init()
 {
-	
-	
 	Transparent();
 #ifdef PLATFORM_WIN32
 	CreateContext();//IMPORTANT

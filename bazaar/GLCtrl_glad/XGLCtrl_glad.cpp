@@ -101,8 +101,8 @@ void GLCtrl_glad::Create()
 		exit(-1);
     }
     LOG(Upp::String("OpenGL ") + AsString(GLVersion.major) + Upp::String(".") + AsString(GLVersion.minor) + Upp::String(" used"));
-    if (!"GLAD_GL_VERSION_4_0"){
-		LOG("OpenGL 4.0 or higher version is necessary !");
+    if (!"GLAD_GL_VERSION_4_3"){
+		LOG("OpenGL 4.3 or higher version is necessary !");
 		exit(-1);
 	}
 	visible = false;
