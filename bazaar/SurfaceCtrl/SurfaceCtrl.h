@@ -44,7 +44,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		OpenGLProgram DrawMeshNormal;
 		
 		bool showAxis = true;
-		bool ShowCameraFocus = false;
+		bool showCameraFocus = false;
 		
 		float sizeW = 800.0f;
 		float sizeH = 600.0f;
@@ -114,6 +114,10 @@ class SurfaceCtrl : public GLCtrl_glad{
 		SurfaceCtrl& DisableAxis()noexcept{showAxis = false; return *this;}
 		SurfaceCtrl& ShowAxis(bool b = true)noexcept{showAxis = b; return *this;}
 		bool IsAxisEnable()const noexcept{return showAxis;}
+		
+		//Focus option
+		SurfaceCtrl& ShowCameraFocus(bool b = true)noexcept{showCameraFocus = b; return *this;}
+		bool IsCameraFocusShow()const noexcept{return showCameraFocus;}
 		
 		//Application event
 		virtual void Layout(){GLResize(GetSize().cx,GetSize().cy);}

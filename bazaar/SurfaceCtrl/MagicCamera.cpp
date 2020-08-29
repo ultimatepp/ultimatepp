@@ -133,18 +133,71 @@ int MagicCamera::Pick(float x, float y,const Upp::Vector<Object3D>& allObjects)c
     }
 	return intersect;
 }
+bool MagicCamera::PickFocus(float x, float y){
+	int intersect = -1;
+	double distance = 100000.0f;
+	glm::vec3 start = UnProject2(x,y,0.0f);
+	glm::vec3 end = UnProject2(x,y,1.0f);
+	
+	glm::vec3 focusMin = focus - 0.5f;
+	glm::vec3 focusMax = focus + 0.5f;
+	
+	glm::vec3 center     = (focusMin + focusMax) * 0.5f;
+    glm::vec3 extents    = focusMax - focus;
+    glm::vec3 lineDir    = 0.5f * (end - start);
+    glm::vec3 lineCenter = start + lineDir;
+    glm::vec3 dir        = lineCenter - center;
 
-MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Object3D>& allObjects)noexcept{
-	int obj = Pick(p.x,p.y,allObjects);
-	if(obj != -1){
-		for(const Object3D& o : allObjects){
-			if(o.GetID() == obj){
-				focus = o.GetBoundingBoxTransformed().GetCenter();
+    float ld0 = abs(lineDir.x);
+    if (abs(dir.x) > (extents.x + ld0))
+        return false;
+
+    float ld1 = abs(lineDir.y);
+    if (abs(dir.y) > (extents.y + ld1))
+        return false;
+
+    float ld2 = abs(lineDir.z);
+    if (abs(dir.z) > (extents.z + ld2))
+        return false;
+
+    glm::vec3 vCross = glm::cross(lineDir, dir);
+    if (abs(vCross.x) > (extents.y * ld2 + extents.z * ld1))
+        return false;
+
+    if (abs(vCross.y) > (extents.x * ld2 + extents.y * ld0))
+        return false;
+   
+    if (abs(vCross.z) > (extents.x * ld1 + extents.y * ld0))
+        return false;
+
+    return true;
+}
+
+
+MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Object3D>& allObjects, const Upp::Vector<int>& allSelecteds)noexcept{
+	if(allSelecteds.GetCount() == 0){
+		int obj = Pick(p.x,p.y,allObjects);
+		if(obj != -1){
+			for(const Object3D& o : allObjects){
+				if(o.GetID() == obj){
+					focus = o.GetBoundingBoxTransformed().GetCenter();
+					OnObject = true;
+				}
+			}
+		}else{
+			if(PickFocus(p.x,p.y)){
 				OnObject = true;
+			}else{
+				OnObject = false;
+				glm::vec3 pos = focus - transform.GetPosition();
+				float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
+				if(angle > 0.95f){
+					focus = glm::vec3(0.0f,0.0f,0.0f);
+				}
 			}
 		}
 	}else{
-		OnObject = false;
+		OnObject = true;
 	}
 	return *this;
 }
