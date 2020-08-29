@@ -30,12 +30,12 @@
 //
 // This file implements death tests.
 
-#include "gtest/gtest-death-test.h"
+#include "gtest-death-test.h"
 
 #include <utility>
 
-#include "gtest/internal/gtest-port.h"
-#include "gtest/internal/custom/gtest.h"
+#include "internal/gtest-port.h"
+#include "internal/custom/gtest.h"
 
 #if GTEST_HAS_DEATH_TEST
 

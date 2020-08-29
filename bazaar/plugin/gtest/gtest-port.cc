@@ -28,7 +28,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-#include "gtest/internal/gtest-port.h"
+#include "internal/gtest-port.h"
 
 #include <limits.h>
 #include <stdio.h>

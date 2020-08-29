@@ -30,9 +30,9 @@
 //
 // The Google C++ Testing and Mocking Framework (Google Test)
 
-#include "gtest/gtest.h"
-#include "gtest/internal/custom/gtest.h"
-#include "gtest/gtest-spi.h"
+#include "gtest.h"
+#include "internal/custom/gtest.h"
+#include "gtest-spi.h"
 
 #include <ctype.h>
 #include <math.h>
