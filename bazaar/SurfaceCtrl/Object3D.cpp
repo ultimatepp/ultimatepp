@@ -620,7 +620,6 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 						glBindVertexArray(m.GetVAO());
 						if(textures.GetCount()> 0){
 							glActiveTexture(GL_TEXTURE0);
-							
 							glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
 							prog.SetInt("tex", 0);
 							prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);

@@ -281,11 +281,10 @@ void SurfaceCtrl::GLPaint(){
 	if(fastMode) Refresh();
 }
 void SurfaceCtrl::GLResize(int w, int h){
-	sizeW = w;
-	sizeH = h;
-	HSizePos(GetRect().TopLeft().x, w - GetRect().BottomRight().x).VSizePos(GetRect().TopLeft().y, h - GetRect().BottomRight().y);
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	camera.SetScreenSize(w,h);
+	if(w != 0)sizeW = w;
+	if(h != 0)sizeH = h;
+	glViewport(0, 0, sizeW, sizeH);
+	camera.SetScreenSize(sizeW, sizeH);
 	if(!fastMode)Refresh();
 }
 

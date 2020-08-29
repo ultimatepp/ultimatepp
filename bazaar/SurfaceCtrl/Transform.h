@@ -106,6 +106,10 @@ class Transform{
 			return glm::quat(cosVal,xVal, yVal, zVal);
 		}
 		
+		static glm::vec3 GetEulerAngle(const glm::quat& quaterion){
+			return glm::eulerAngles(quaterion);
+		}
+				
 		static glm::vec3 TransformVectorByMatrix(const glm::vec3& vector,const glm::mat4& matrix){
 			float w = vector[0]* matrix[0][3] + vector[1] * matrix[1][3] + vector[2] * matrix[2][3] + matrix[3][3];
 			glm::vec3 ret;

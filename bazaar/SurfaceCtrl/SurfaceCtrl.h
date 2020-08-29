@@ -116,6 +116,7 @@ class SurfaceCtrl : public GLCtrl_glad{
 		bool IsAxisEnable()const noexcept{return showAxis;}
 		
 		//Application event
+		virtual void Layout(){GLResize(GetSize().cx,GetSize().cy);}
 		virtual void GLPaint(); //paint function
 		virtual void GLResize(int w, int h); //Action on resize
 		
