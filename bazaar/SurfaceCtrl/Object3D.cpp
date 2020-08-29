@@ -623,6 +623,8 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 							glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
 							prog.SetInt("tex", 0);
 							prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);
+						}else{
+							prog.SetInt("useTexture", 0);
 						}
 						glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
 					}

@@ -342,6 +342,14 @@ bool SurfaceCtrl::Key(dword key,int count){
 		float data[] = { 230.0f/255.0f, 140.0f/255.0f, 30.0f/255.0f, 0.5f};
 		if(allObjects.GetCount() > 0 && allObjects[0].GetMeshes().GetCount() > 0) allObjects[0].UpdateColors(0,0,(allObjects[0].GetMeshes()[0].GetVertices().GetCount()/3)/2,data);
 	}*/
+	if( key == K_R){
+		for(int id : allSelected){
+			int iterator = FindObject(id);
+			if(iterator != -1){
+				DUMP(allObjects[iterator].ReadColors(0,0,50));
+			}
+		}
+	}
 	if( key == K_DELETE){
 		DeleteAllSelectedObjects();
 	}
