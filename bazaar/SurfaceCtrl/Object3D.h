@@ -43,14 +43,34 @@ class Object3D : public Upp::Moveable<Object3D>{
 	private:
 		static int GlobalID;
 		int ID;
-		
+
+		Transform transform;
+		BoundingBox boundingBox;
+		Material material; //The material object is a representation of material property of the object (it change how light affect it)
+
 		Vector<Mesh> meshes;
 		Vector<Texture> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
-		
+		Vector<OpenGLProgram> program;
+		VectorMap<String,Value> objectValues; //In case data need to be used in Init() Clear() and Draw();
+
 		bool loaded = false;
 		bool moved = false;
 		bool visible = true;
+		bool showBoundingBox = false;
 
+		int ProgramNoLight = 0;//The program will draw figure without light
+		int ProgramLine =  0; //THe program will draw figure line
+		int ProgramNormal =  0;//The program will draw Normal
+		int ProgramLight =  0;//the program will draw figure with light
+		
+		GLenum drawType = GL_TRIANGLES;
+	public:
+		Function <void()> WhenInit;
+		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)> WhenDraw;
+		Function <void()> WhenClear;
+		Function <void()> WhenReload;
+		
+		/*
 		Color lineColor = Black();
 		float lineOpacity = 0.5f;
 		float lineWidth = 1.0f;
@@ -59,31 +79,22 @@ class Object3D : public Upp::Moveable<Object3D>{
 		float normalOpacity = 0.5f;
 		float normalLenght = 1.0f;
 		
-		GLenum drawType = GL_TRIANGLES;
-		
-		OpenGLProgram NoLight; //The program will draw figure without light
-		OpenGLProgram Line; //THe program will draw figure line
-		OpenGLProgram Normal; //The program will draw Normal
-		OpenGLProgram Light; //the program will draw figure with light
+		OpenGLProgram NoLight;
+		OpenGLProgram Line;
+		OpenGLProgram Normal;
+		OpenGLProgram Light;
 
 		bool showMesh = true;
 		bool showMeshLine = false;
 		bool showMeshNormal = false;
 		bool showLight = true;
-		
-		BoundingBox boundingBox;
-		bool showBoundingBox = false;
-			
-		Transform transform;
-		Material material; //The material object is a representation of material property of the object (it change how light affect it)
-		
+		*/
+	private:
 		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count ,int numberOfElement, const float * data)noexcept;
 		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count, int numberOfElement)noexcept;
-		
 		//Texture loading function
 		//Return position of the texture object carrying this texture
 		int LoadTexture(const Image& img , const String& name, int indiceWhereInsert = -1);
-		
 		/*
 			Assimp loading function
 		*/
@@ -91,7 +102,20 @@ class Object3D : public Upp::Moveable<Object3D>{
 	    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
 	    bool InitMaterials(const aiScene* pScene, const String& Filename);
 	public:
-		Object3D():ID(++GlobalID){}
+		Object3D():ID(++GlobalID){
+			objectValues.Add("showMesh", Value(true));
+			objectValues.Add("showMeshLine", Value(false));
+			objectValues.Add("showMeshNormal", Value(false));
+			objectValues.Add("showLight", Value(true));
+			
+			objectValues.Add("lineColor", RawToValue(Black()));
+			objectValues.Add("lineOpacity", Value(0.5f));
+			objectValues.Add("lineWidth", Value(1.0f));
+			
+			objectValues.Add("normalColor", RawToValue(Red()));
+			objectValues.Add("normalOpacity", Value(0.5f));
+			objectValues.Add("normalLenght", Value(1.0f));
+		}
 		//move will prevent your object to be deleted (from OpenGL perspective)
 		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
 		Object3D& operator=(Object3D&& obj);
@@ -100,6 +124,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 		//lost their 3D representation in OpenGL
 		Object3D(const Object3D& obj):ID(GlobalID++){*this = obj;}
 		Object3D& operator=(const Object3D& obj);
+		
 		~Object3D();
 
 		/**
@@ -133,30 +158,34 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& Clear();
 		Object3D& Reload(); //Unload and reload
 		
-		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
-		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
-		Object3D& ShowMeshNormal(bool b = true)noexcept{showMeshNormal = b; return *this;}
-		Object3D& ShowLight(bool b = true)noexcept{showLight = b; return *this;}
+		Object3D& ShowMesh(bool b = true)noexcept{if(objectValues.Find("showMesh") != -1) objectValues.Get("showMesh")= b; return *this;}
+		Object3D& ShowMeshLine(bool b = true)noexcept{if(objectValues.Find("showMeshLine") != -1) objectValues.Get("showMeshLine")= b; return *this;}
+		Object3D& ShowMeshNormal(bool b = true)noexcept{if(objectValues.Find("showMeshNormal") != -1) objectValues.Get("showMeshNormal")= b; return *this;}
+		Object3D& ShowLight(bool b = true)noexcept{if(objectValues.Find("showLight") != -1) objectValues.Get("showLight") = b; return *this;}
 		Object3D& ShowBoundingBox(bool b = true)noexcept{showBoundingBox = b; return *this;}
 		
-		bool GetShowMesh()const noexcept{return showMesh;}
-		bool GetShowMeshLine()const noexcept{return showMeshLine;}
-		bool GetShowMeshNormal()const noexcept{return showMeshNormal;}
-		bool GetShowLight()const noexcept{return showLight;}
+		bool GetShowMesh()const noexcept{if(objectValues.Find("showMesh") != -1) return objectValues.Get("showMesh"); else return false;}
+		bool GetShowMeshLine()const noexcept{if(objectValues.Find("showMeshLine") != -1) return (bool)objectValues.Get("showMeshLine"); else return false;}
+		bool GetShowMeshNormal()const noexcept{if(objectValues.Find("showMeshNormal") != -1) return (bool)objectValues.Get("showMeshNormal"); else return false;}
+		bool GetShowLight()const noexcept{if(objectValues.Find("showLight") != -1) return (bool)objectValues.Get("showLight"); else return false;}
 		bool GetShowBoundingBox()const noexcept{return showBoundingBox;}
+
+		Object3D& SetLineColor(Color color)noexcept{if(objectValues.Find("lineColor") != -1) objectValues.Get("lineColor")= color; return *this;}
+		Object3D& SetNormalColor(Color color)noexcept{if(objectValues.Find("normalColor") != -1) objectValues.Get("normalColor")= color; return *this;}
+		Object3D& SetLineOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f; if(objectValues.Find("lineOpacity") != -1) objectValues.Get("lineOpacity") = opacity;  return *this;}
+		Object3D& SetLineWidth(float width)noexcept{if(width < 1) width = 1.0f; if(objectValues.Find("lineWidth") != -1) objectValues.Get("lineWidth") = width; return *this;}
+		Object3D& SetNormalOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f;if(objectValues.Find("normalOpacity") != -1) objectValues.Get("normalOpacity")= opacity; return *this;}
+		
+		const VectorMap<String,Value>& GetObjectsValues(){return objectValues;}
 		
 		Object3D& SetDrawType(GLenum drawtype)noexcept{drawType = drawtype;return *this;}
-		Object3D& SetLineColor(Color color)noexcept{lineColor = color; return *this;}
-		Object3D& SetNormalColor(Color color)noexcept{normalColor = color; return *this;}
-		Object3D& SetLineOpacity(float opacity)noexcept{lineOpacity = opacity; if(lineOpacity < 0) lineOpacity =0; if(lineOpacity> 1.0f) lineOpacity = 1.0f; return *this;}
-		Object3D& SetLineWidth(float width)noexcept{lineWidth = width; if(lineWidth < 1) lineWidth = 1.0f; return *this;}
-		Object3D& SetNormalOpacity(float opacity)noexcept{normalOpacity = opacity; if(normalOpacity < 0) normalOpacity =0; if(normalOpacity> 1.0f) normalOpacity = 1.0f; return *this;}
 		GLenum GetDrawType()const noexcept{return drawType;}
-		Upp::Color GetLineColor()const noexcept{return lineColor;}
-		Upp::Color GetNormalColor()const noexcept{return normalColor;}
-		float GetNormalOpcaity()const noexcept{return normalOpacity;}
-		float GetLineOpcaity()const noexcept{return lineOpacity;}
-		float GetLineWidth()const noexcept{return lineWidth;}
+		
+		Upp::Color GetLineColor()const noexcept{if(objectValues.Find("lineColor") != -1) return objectValues.Get("lineColor").Get<Color>(); else return Black();}
+		Upp::Color GetNormalColor()const noexcept{if(objectValues.Find("normalColor") != -1) return objectValues.Get("normalColor").Get<Color>(); else return Black();}
+		float GetNormalOpcaity()const noexcept{if(objectValues.Find("normalOpacity") != -1) return (double)(objectValues.Get("normalOpacity")); else return 0.0f;}
+		float GetLineOpcaity()const noexcept{if(objectValues.Find("lineOpacity") != -1) return (double)(objectValues.Get("lineOpacity")); else return 0.0f;}
+		float GetLineWidth()const noexcept{if(objectValues.Find("lineWidth") != -1) return (double)(objectValues.Get("lineWidth")); else return 0.0f;}
 				
 		Transform& GetTransform()noexcept{return transform;}
 		const Transform& GetTransform()const noexcept{return transform;}
@@ -205,12 +234,12 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Vector<float> ReadNormals(int MeshNo, unsigned int SurfaceNumber, int count);
 		Vector<float> ReadVertices(int MeshNo, unsigned int SurfaceNumber, int count);
 		
-		Object3D& SetProgramNoLight(const OpenGLProgram& program)noexcept{NoLight = program; return *this;}
-		Object3D& SetProgramLight(const OpenGLProgram& program)noexcept{Light = program; return *this;}
-		Object3D& SetProgramLine(const OpenGLProgram& program)noexcept{Line = program; return *this;}
-		Object3D& SetProgramNormal(const OpenGLProgram& program)noexcept{Normal = program; return *this;}
+		Object3D& SetProgramNoLight(const OpenGLProgram& prog)noexcept{ProgramNoLight = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramLight(const OpenGLProgram& prog)noexcept{ProgramLight = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramLine(const OpenGLProgram& prog)noexcept{ProgramLine = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramNormal(const OpenGLProgram& prog)noexcept{ProgramNormal = program.GetCount(); program.Add(prog); return *this;}
 		
-		void Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix, glm::vec3 viewPosition)noexcept;
+		void Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)noexcept;
 };
 
 class Skybox {
