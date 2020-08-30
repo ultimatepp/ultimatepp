@@ -1,9 +1,14 @@
-description "OpenGL extension wrangler library\3770,128,128";
+description "OpenGL extension wrangler library - version 2.2.0\3770,128,128";
+
+options
+	"-D GLEW_STATIC";
 
 file
 	glew.h,
 	glxew.h,
 	wglew.h,
+	eglew.h,
 	glew.c,
+	Info readonly separator,
 	Copying;
 
