@@ -5,7 +5,6 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	SplitterFrame sf;
 	ArrayCtrl list;
-	TopWindow app;
 
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), SColorPaper());
