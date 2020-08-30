@@ -63,7 +63,7 @@ class SurfaceCtrl : public GL{
 		void DrawAllObjects()noexcept; //Draw all object
 
 		//Change selected object vector
-		const Upp::Vector<int>& GetSelectedObject()const noexcept; //return const vector representing all selected Object
+		const Upp::Vector<int>& GetSelectedObject()const noexcept{return allSelected;} //return const vector representing all selected Object
 		void AddSelectedObject(int ID)noexcept;
 		void UpdateSelectedObjectViaMouse(Point& p, dword keyflags)noexcept; //Process work on selected object depending on keyflags and point
 		glm::vec3 GetCenterPoint()const noexcept; //Return center point between all selected item

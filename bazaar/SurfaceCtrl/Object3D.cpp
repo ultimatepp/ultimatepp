@@ -610,12 +610,9 @@ void Object3D::Draw(glm::mat4 projectionMatrix, glm::mat4 viewMatrix,glm::vec3 v
 							material.HaveBeenUpdated();
 						}
 					}
-					
-					
 					prog.SetMat4("ViewMatrix", viewMatrix);
 					prog.SetMat4("ProjectionMatrix", projectionMatrix);
 					prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
-		
 					for(Mesh& m : meshes){
 						glBindVertexArray(m.GetVAO());
 						if(textures.GetCount()> 0){
