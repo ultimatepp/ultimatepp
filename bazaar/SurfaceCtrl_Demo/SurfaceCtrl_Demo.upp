@@ -12,5 +12,6 @@ mainconfig
 	"" = "GUI",
 	"" = "",
 	"" = "USEMALLOC",
-	"" = "USEMALLOC GUI";
+	"" = "USEMALLOC GUI",
+	"" = "GUI GLCTRL USEMALLOC";
 

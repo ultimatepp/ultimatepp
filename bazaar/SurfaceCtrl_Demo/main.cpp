@@ -89,6 +89,57 @@ namespace Upp{
 		focusY <<= THISBACK(UpdateFocus);
 		focusZ <<= THISBACK(UpdateFocus);
 		
+		ObjPosX <<= THISBACK(UpdateObjectInformation);
+		ObjPosY <<= THISBACK(UpdateObjectInformation);
+		ObjPosZ <<= THISBACK(UpdateObjectInformation);
+		ObjQuatW <<= THISBACK(UpdateObjectInformation);
+		ObjQuatX <<= THISBACK(UpdateObjectInformation);
+		ObjQuatY <<= THISBACK(UpdateObjectInformation);
+		ObjQuatZ <<= THISBACK(UpdateObjectInformation);
+		ObjScalX <<= THISBACK(UpdateObjectInformation);
+		ObjScalY <<= THISBACK(UpdateObjectInformation);
+		ObjScalZ <<= THISBACK(UpdateObjectInformation);
+
+		ObjShowSkin.WhenAction = [&]{
+			if(TreeIDSelected > 0){
+				int iterator = canvas.FindObject(TreeIDSelected);
+				if( iterator != -1){
+					Object3D& obj = canvas.GetObject(TreeIDSelected);
+					obj.ShowMesh(ObjShowSkin.Get());
+					canvas.Refresh();
+				}
+			}
+		};
+		ObjShowLine.WhenAction = [&]{
+			if(TreeIDSelected > 0){
+				int iterator = canvas.FindObject(TreeIDSelected);
+				if( iterator != -1){
+					Object3D& obj = canvas.GetObject(TreeIDSelected);
+					obj.ShowMeshLine(ObjShowLine.Get());
+					canvas.Refresh();
+				}
+			}
+		};
+		ObjShowNormal.WhenAction = [&]{
+			if(TreeIDSelected > 0){
+				int iterator = canvas.FindObject(TreeIDSelected);
+				if( iterator != -1){
+					Object3D& obj = canvas.GetObject(TreeIDSelected);
+					obj.ShowMeshNormal(ObjShowNormal.Get());
+					canvas.Refresh();
+				}
+			}
+		};
+		ObjShowLight.WhenAction = [&]{
+			if(TreeIDSelected > 0){
+				int iterator = canvas.FindObject(TreeIDSelected);
+				if( iterator != -1){
+					Object3D& obj = canvas.GetObject(TreeIDSelected);
+					obj.ShowLight(ObjShowLight.Get());
+					canvas.Refresh();
+				}
+			}
+		};
 		
 		resetPos.WhenAction = [&]{
 			canvas.GetCamera().GetTransform().SetPosition(0,0,20);
@@ -99,7 +150,17 @@ namespace Upp{
 		canvas.WhenPaint = [&] {
 			canvas.DrawAllObjects();
 			RetrieveCameraInformation();
+			RetrieveObjectInformation();
 		};
+		
+		AllObjects.WhenLeftClick = [&]{
+			if(AllObjects.GetSel().GetCount() > 0){
+				int sel = atoi(AllObjects.Get(AllObjects.GetSel()[0]).ToString());
+				TreeIDSelected = sel;
+				RetrieveObjectInformation();
+			}
+		};
+		
 		Sizeable().Zoomable();
 	}
 		
@@ -125,7 +186,22 @@ namespace Upp{
 		focusY = canvas.GetCamera().GetFocus().y;
 		focusZ = canvas.GetCamera().GetFocus().z;
 		onObjectBool.SetLabel( AsString(canvas.GetCamera().IsOnObject()));
-		
+
+		AllObjects.Clear();
+		AllObjects.SetRoot(Image(), "Application");
+		int i = AllObjects.Add(0,Image(),"All Objects");
+		for(const Object3D& obj : canvas.GetAllObjects()){
+			int e = AllObjects.Add(i,Image(), AsString(obj.GetID()));
+			AllObjects.Add(e, Image(), "Position: " + AsString(obj.GetTransform().GetPosition().x,2) +", " + AsString(obj.GetTransform().GetPosition().y,2) +", " + AsString(obj.GetTransform().GetPosition().z,2));
+			AllObjects.Add(e, Image(), "Rotation: " + AsString(obj.GetTransform().GetRotation().w,2) +", " + AsString(obj.GetTransform().GetRotation().x,2) +", " + AsString(obj.GetTransform().GetRotation().y,2)+", " + AsString(obj.GetTransform().GetRotation().z,2));
+			AllObjects.Add(e, Image(), "Scale: " + AsString(obj.GetTransform().GetScale().x,2) +", " + AsString(obj.GetTransform().GetScale().y,2) +", " + AsString(obj.GetTransform().GetScale().z,2));
+			AllObjects.Add(e, Image(), "Meshes count: " + AsString(obj.GetMeshes().GetCount()));
+		}
+		i = AllObjects.Add(0,Image(),"Selected Objects");
+		for(const int& in : canvas.GetSelectedObject()){
+			AllObjects.Add(i,Image(), AsString(in));
+		}
+		AllObjects.OpenDeep(0,true);
 	}
 	void SurfaceCtrl_Demo::UpdatePosition(){
 		canvas.GetCamera().GetTransform().SetPosition(camPosX,camPosY,camPosZ);
@@ -135,6 +211,42 @@ namespace Upp{
 	}
 	void SurfaceCtrl_Demo::UpdateFocus(){
 		canvas.GetCamera().SetFocus(focusX,focusY,focusZ);
+	}
+	void SurfaceCtrl_Demo::RetrieveObjectInformation(){
+		if(TreeIDSelected > 0){
+			int iterator = canvas.FindObject(TreeIDSelected);
+			if( iterator != -1){
+				Object3D& obj = canvas.GetObject(TreeIDSelected);
+				ObjShowSkin = obj.GetShowMesh();
+				ObjShowNormal = obj.GetShowMeshNormal();
+				ObjShowLine =  obj.GetShowMeshLine();
+				ObjShowLight = obj.GetShowLight();
+				
+				ObjPosX = obj.GetTransform().GetPosition().x;
+				ObjPosY = obj.GetTransform().GetPosition().y;
+				ObjPosZ = obj.GetTransform().GetPosition().z;
+				
+				ObjQuatW = obj.GetTransform().GetRotation().w;
+				ObjQuatX = obj.GetTransform().GetRotation().x;
+				ObjQuatY = obj.GetTransform().GetRotation().y;
+				ObjQuatZ = obj.GetTransform().GetRotation().z;
+				
+				ObjScalX = obj.GetTransform().GetScale().x;
+				ObjScalY = obj.GetTransform().GetScale().y;
+				ObjScalZ = obj.GetTransform().GetScale().z;
+			}
+		}
+	}
+	void SurfaceCtrl_Demo::UpdateObjectInformation(){
+		if(TreeIDSelected > 0){
+			int iterator = canvas.FindObject(TreeIDSelected);
+			if( iterator != -1){
+				Object3D& obj = canvas.GetObject(TreeIDSelected);
+				obj.GetTransform().SetPosition(ObjPosX,ObjPosY,ObjPosZ);
+				obj.GetTransform().SetRotation(glm::quat(ObjQuatW,ObjQuatX,ObjQuatY,ObjQuatZ));
+				obj.GetTransform().SetScale(glm::vec3((float)ObjScalX,(float)ObjScalY,(float)ObjScalZ));
+			}
+		}
 	}
 }
 
