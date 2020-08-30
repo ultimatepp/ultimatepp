@@ -3,14 +3,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Surface/Surface.h>
 
-#ifdef flagGLCTRL
-#	include <GLCtrl/GLCtrl.h>
-#	define GL GLCtrl
-#else
-#	include <GLCtrl_glad/GLCtrl_glad.h>
-#	define GL GLCtrl_glad
-#endif
-
+#include <GLCtrl/GLCtrl.h>
+#define GL GLCtrl
 
 #include <plugin/assimp/assimp.h>
 

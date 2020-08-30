@@ -7,7 +7,7 @@ uses
 	plugin/png,
 	plugin/tif,
 	plugin/gif,
-	GLCtrl_glad;
+	GLCtrl;
 
 file
 	Definition.h,

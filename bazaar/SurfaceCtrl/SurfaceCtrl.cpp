@@ -1,6 +1,6 @@
 #include "SurfaceCtrl.h"
 namespace Upp{
-SurfaceCtrl::SurfaceCtrl(){
+SurfaceCtrl::SurfaceCtrl() : GLCtrl(){
 	InitCamera();
 	
 	GLResize(600,800);
