@@ -39,38 +39,40 @@ namespace Upp{
 		
 		butOpen.WhenAction = [&] {
 			try {
-
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(~filename).Init();
-
-				obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
-				obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
-				obj.SetLineWidth(2.0f);
-				
-				canvas.SetDefaultShader(obj);
-				
-				canvas.Refresh();
+				canvas.ExecuteGL([&]{
+					Object3D& obj = canvas.CreateObject();
+					obj.LoadModel(~filename).Init();
+					obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
+					obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
+					obj.SetLineWidth(2.0f);
+					canvas.SetDefaultShader(obj);
+					canvas.Refresh();
+				});
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
 		};
 		OpenEarth.WhenAction = [&]{
 			try {
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
-				obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
-				canvas.SetDefaultShader(obj);
-				canvas.Refresh();
+				canvas.ExecuteGL([&]{
+					Object3D& obj = canvas.CreateObject();
+					obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
+					obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
+					canvas.SetDefaultShader(obj);
+					canvas.Refresh();
+				});
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
 		};
 		Ultimate.WhenAction = [&]{
 			try {
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
-				canvas.SetDefaultShader(obj);
-				canvas.Refresh();
+				canvas.ExecuteGL([&]{
+					Object3D& obj = canvas.CreateObject();
+					obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
+					canvas.SetDefaultShader(obj);
+					canvas.Refresh();
+				});
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
@@ -252,7 +254,7 @@ namespace Upp{
 
 GUI_APP_MAIN
 {
-	Upp::ConsoleOutput con(true);
+	//Upp::ConsoleOutput con(true);
 	Upp::StdLogSetup( Upp::LOG_COUT | Upp::LOG_FILE);
 	Upp::SurfaceCtrl_Demo().Run();
 }
