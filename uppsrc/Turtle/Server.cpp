@@ -1,53 +1,24 @@
-#include "Local.h"
-
+#include "Turtle.h"
 #include "Turtle.brc"
 
 #ifdef PLATFORM_POSIX
-#include <sys/wait.h>
+#include <wait.h>
 #endif
 
-#ifdef GUI_TURTLE
+#define LLOG(x)     // RLOG(x)
+#define LDUMP(x)    // RDUMP(x)
+#define LTIMING(x)
 
 namespace Upp {
 
-#define LLOG(x)    //  DLOG(x)
-#define LDUMP(x)   //  DDUMP(x)
-#define LTIMING(x)
+static Vector<int> sProcessIds;
 
-int         Ctrl::main_pid;
-Vector<int> Ctrl::pid;
-bool        Ctrl::quit;
-
-
-void Ctrl::Broadcast(int signal) {
-#ifdef PLATFORM_POSIX
-	if(getpid() == main_pid)
-		for(int i = 0; i < pid.GetCount(); i++)
-			kill(pid[i], signal);
-#endif
-}
-	
-String    Ctrl::host = "localhost";
-int       Ctrl::port = 8088;
-bool      Ctrl::debugmode;
-int       Ctrl::connection_limit = INT_MAX;
-String    Ctrl::ip = "0.0.0.0";
-TcpSocket Ctrl::socket;
-WebSocket Ctrl::websocket;
-int64     Ctrl::update_serial;
-int64     Ctrl::recieved_update_serial;
-
-Callback2<int, String> Ctrl::WhenConnect;
-Callback1<int>         Ctrl::WhenTerminate;
-
-StaticRect& DesktopRect();
-
-bool Ctrl::StartSession()
+bool TurtleServer::StartSession()
 {
 	LLOG("Connect");
 
 #ifdef PLATFORM_POSIX
-	main_pid = getpid();
+	mainpid = getpid();
 #endif
 
 	IpAddrInfo ipinfo;
@@ -73,14 +44,15 @@ bool Ctrl::StartSession()
 	LLOG("Starting to listen on " << port << ", pid: " << getpid());
 	socket.Timeout(0); // TODO: Not quite ideal way to make quit work..
 	for(;;) {
-		if(quit)
-			return false;
+		SocketWaitEvent we;
+		we.Add(socket, WAIT_READ);
+		we.Wait(250);
 #ifdef PLATFORM_POSIX
 		int i = 0;
-		while(i < pid.GetCount())
-			if(pid[i] && waitpid(pid[i], 0, WNOHANG | WUNTRACED) > 0) {
-				WhenTerminate(pid[i]);
-				pid.Remove(i);
+		while(i < sProcessIds.GetCount())
+			if(sProcessIds[i] && waitpid(sProcessIds[i], 0, WNOHANG | WUNTRACED) > 0) {
+				WhenTerminate(sProcessIds[i]);
+				sProcessIds.Remove(i);
 			}
 			else
 				i++;
@@ -92,7 +64,7 @@ bool Ctrl::StartSession()
 			if(http.Read(socket)) {
 				RLOG("Accepted, header read");
 				if(websocket.WebAccept(socket, http)) { // TODO: Connection limit, info
-					if(pid.GetCount() >= connection_limit) {
+					if(sProcessIds.GetCount() >= connection_limit) {
 						socket.Close();
 						continue;
 					}
@@ -103,7 +75,7 @@ bool Ctrl::StartSession()
 					if(newpid == 0)
 						break;
 					else {
-						pid.Add(newpid);
+						sProcessIds.Add(newpid);
 						WhenConnect(newpid, socket.GetPeerAddr());
 						socket.Close();
 						continue;
@@ -120,37 +92,20 @@ bool Ctrl::StartSession()
 			socket.Close();
 		}
 	}
-	LLOG("Connection established with " << socket.GetPeerAddr() << ", pid: " << getpid());
+	RLOG("Connection established with " << socket.GetPeerAddr() << ", pid: " << getpid());
 	server.Close();
 	if(socket.IsError())
 		LLOG("CONNECT ERROR: " << socket.GetErrorDesc());
-
-	Ctrl::GlobalBackBuffer();
-	Ctrl::InitTimer();
-
-	SetStdFont(ScreenSans(12)); //FIXME general handling
-	ChStdSkin();
-
-	DesktopRect().Color(Cyan());
-	DesktopRect().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);
-	SetDesktop(Desktop());
-	
 	stat_started = GetSysTime();
-
-	LLOG("Waiting for the event");
-	
-	while(!IsWaitingEvent())
-		GuiSleep(10);
-	
-	LLOG("Starting the server");
-	
-	ProcessEvents();
-
 	return true;
 }
 
-Callback Ctrl::WhenDisconnect;
-
-}
-
+void TurtleServer::Broadcast(int signal)
+{
+#ifdef PLATFORM_POSIX
+	if(getpid() == mainpid)
+		for(int i = 0; i < sProcessIds.GetCount(); i++)
+			kill(sProcessIds[i], signal);
 #endif
+}
+}

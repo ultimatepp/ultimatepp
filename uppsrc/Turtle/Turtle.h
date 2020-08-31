@@ -1,140 +1,169 @@
-#define GUI_TURTLE
+#ifndef _VirtualGui_Turtle_h
+#define _VirtualGui_Turtle_h
 
-#define _TODO_ // _DBG_
-
-#include <Draw/Draw.h>
-
-#ifdef PLATFORM_POSIX
-#include <CtrlCore/stdids.h>
-#endif
+#include <CtrlLib/CtrlLib.h>
 
 namespace Upp {
 
-#define IMAGECLASS FBImg
-#define IMAGEFILE <Turtle/FB.iml>
-#include <Draw/iml_header.h>
-
-class TurtleStream : public OutStream {
+class TurtleServer : public VirtualGui {
 public:
-	virtual void Out(const void *data, dword size);
+    TurtleServer()                                         {}
+    TurtleServer(const String& host, int port)             { Host(host).Port(port); }
+    TurtleServer(const String& ip, String& host, int port) { Bind(ip).Host(host).Port(port); }
+
+    TurtleServer&       Bind(const String& addr)           { TurtleServer::ip   = addr; return *this; }
+    TurtleServer&       Host(const String& host)           { TurtleServer::host = host; return *this; }
+    TurtleServer&       Port(int port)                     { TurtleServer::port = port; return *this; }
+    TurtleServer&       MaxConnections(int limit)          { TurtleServer::connection_limit = max(1, limit); return *this; }
+
+    static void         DebugMode(bool b = true)           { TurtleServer::debugmode = b; }
+    
+    static Event<int, String>  WhenConnect;
+    static Event<int>          WhenTerminate;
+    static Event<>             WhenDisconnect;
 
 private:
-	Zlib zlib;
-	bool hasdata;
+    virtual dword       GetOptions()                       { return GUI_SETMOUSECURSOR; }
+    virtual Size        GetSize()                          { return desktopsize;  }
+    virtual dword       GetMouseButtons()                  { return mousebuttons; }
+    virtual dword       GetModKeys()                       { return modifierkeys; }
+    virtual bool        IsMouseIn()                        { return true; }
+    virtual bool        ProcessEvent(bool *quit);
+    virtual void        WaitEvent(int ms);
+    virtual bool        IsWaitingEvent();
+    virtual void        SetMouseCursor(const Image& image);
+    virtual void        SetCaret(const Rect& caret)        {}
+    virtual SystemDraw& BeginDraw();
+    virtual void        CommitDraw();
+    virtual void        WakeUpGuiThread()                  {}
+    virtual void        Quit()                             { WhenDisconnect(); }
+        
+private:
+    void                MouseButton(dword event, CParser& p);
+    void                MouseWheel(CParser& p);
+    void                MouseMove(CParser& p);
+    void                KeyDown(const String& event, CParser& p);
+    void                KeyUp(const String& event, CParser& p);
+    void                KeyPress(const String& event, CParser& p);
+    void                Resize(CParser& p);
 
-	void Reset();
+    void                ReadModifierKeys(CParser& p);
+    dword               TranslateWebKeyToK(dword key);
+
+    static void         Broadcast(int signal);
+    void                SyncClient();
+    
+public:
+    struct Stream : OutStream
+    {
+        Stream();
+        void            Out(const void *data, dword size) final;
+        String          FlushStream();
+        void            Reset();
+        Zlib            zlib;
+        bool            hasdata;
+    };
+    
+    struct ImageSysData
+    {
+        ImageSysData();
+       ~ImageSysData();
+        void            Init(const Image& img);
+        Image           image;
+        int             handle;
+    };
+    
+    struct Draw : SDraw
+    {
+        Draw();
+        void            Init(const Size& sz);
+        void            PutImage(Point p, const Image& img, const Rect& src) final;
+        void            PutRect(const Rect& r, Color color) final;
+        Point           pos;
+        SystemDraw      sysdraw;
+    };
+
+    friend class        TurtleServer::Draw;
+    friend class        TurtleServer::ImageSysData;
 
 public:
-	void   SetDataFlag()           { hasdata = true; }
-	bool   HasData() const         { return hasdata; }
-	String FlushStream();
+    enum Commands {
+        RECT            = 0,
+        IMAGE           = 1,
+        SETIMAGE        = 2,
+        INVERTRECT      = 3,
+        STD_CURSORIMAGE = 4,
+        SETCURSORIMAGE  = 5,
+        MOUSECURSOR     = 6,
+        DISABLESENDING  = 7,
+        UPDATESERIAL    = 8,
+    
+        IMAGEPP         = 9,
+        IMAGENP         = 10,
+        IMAGEPN         = 11,
+        IMAGENN         = 12,
+    
+        RECTPP          = 13,
+        RECTNP          = 14,
+        RECTPN          = 15,
+        RECTNN          = 16,
+    
+        SETCARET        = 17,
+        
+        HORZDRAGLINE    = 18,
+        VERTDRAGLINE    = 19,
+        
+        OPENLINK        = 20,
+    };
 
-	TurtleStream() { Reset(); }
+private:
+    static void         Put8(int x);
+    static void         Put16(int x);
+    static void         Put32(int x);
+    static void         Put(Point p);
+    static void         Put(Size sz);
+    static void         Put(const Rect& r);
+    static void         Put(const String& s);
+    static void         Flush();
+
+    static void         SetCanvasSize(const Size& sz);
+    static void         ResetImageCache();
+        
+private:
+    static TcpSocket    socket;
+    static WebSocket    websocket;
+    static dword        mousebuttons;
+    static dword        modifierkeys;
+    static Size         desktopsize;
+    static int          mainpid;
+    static int64        update_serial;
+    static int64        recieved_update_serial;
+    static int64        serial_0;
+    static int          serial_time0;
+    static bool         quit;
+    static String       host;
+    static int          port;
+    static String       ip;
+    static int          connection_limit;
+    static bool         debugmode;
+
+public:
+    // Statistics.
+    static Time         stat_started;
+    static int64        stat_data_send;
+    static int          stat_putrect;
+    static int          stat_putimage;
+    static int          stat_setimage;
+    static int64        stat_setimage_len;
+    static int          stat_roundtrip_ms;
+    static int          stat_client_ms;
+    
+private:
+    static bool         StartSession();
+    friend void         RunTurtleGui(TurtleServer&, Event<>);
 };
 
-class SystemDraw : public SDraw {
-public:
-	virtual void  PutImage(Point p, const Image& img, const Rect& src);
-	virtual void  PutRect(const Rect& r, Color color);
-
-public:
-	struct ImageSysData {
-		Image      img;
-		int        handle;
-
-		static Vector<int> free_handle;
-		static int handle_count;
-
-		static int  AllocImageHandle();
-		static void FreeImageHandle(int handle);
-		
-		void Init(const Image& img);
-		~ImageSysData();
-	};
-
-	static LRUCache<ImageSysData, int64> cache;
-
-	Point pos;
-
-	static void ResetI();
-
-	bool    CanSetSurface()                         { return false; }
-	static void Flush()                             {}
-	
-	SystemDraw()                                    { pos = Point(0, 0); PaintOnly(); }
-};
-
-struct BackDraw__ : public SystemDraw {
-	BackDraw__() : SystemDraw() {}
-};
-
-class BackDraw : public BackDraw__ { // Dummy only, as we are running in GlobalBackBuffer mode
-	Size        size;
-	Draw       *painting;
-	Point       painting_offset;
-	ImageBuffer ib;
-	
-public:
-	virtual bool  IsPaintingOp(const Rect& r) const;
-
-public:
-	void  Put(SystemDraw& w, int x, int y)             {}
-	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
-
-	void Create(SystemDraw& w, int cx, int cy)         {}
-	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
-	void Destroy()                                     {}
-
-	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
-
-	BackDraw();
-	~BackDraw();
-};
-
-class ImageDraw : public SImageDraw {
-public:
-	ImageDraw(Size sz) : SImageDraw(sz) {}
-	ImageDraw(int cx, int cy) : SImageDraw(cx, cy) {}
-};
-
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
-
-class TopWindowFrame;
-
-#define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
-
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Turtle/Ctrl.h>
-
-#define GUIPLATFORM_PASTECLIP_DECLS \
-	bool dnd; \
-	friend struct DnDLoop; \
-
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Turtle/Top.h>
-
-class PrinterJob { // _TODO_
-	NilDraw             nil;
-	Vector<int>         pages;
-
-public:
-	Draw&               GetDraw()                       { return nil; }
-	operator            Draw&()                         { return GetDraw(); }
-	const Vector<int>&  GetPages() const                { return pages; }
-	int                 operator[](int i) const         { return 0; }
-	int                 GetPageCount() const            { return 0; }
-
-	bool                Execute()                       { return false; }
-
-	PrinterJob& Landscape(bool b = true)                { return *this; }
-	PrinterJob& MinMaxPage(int minpage, int maxpage)    { return *this; }
-	PrinterJob& PageCount(int n)                        { return *this; }
-	PrinterJob& CurrentPage(int currentpage)            { return *this; }
-	PrinterJob& Name(const char *_name)                 { return *this; }
-
-	PrinterJob(const char *name = NULL)                 {}
-	~PrinterJob()                                       {}
-};
+void RunTurtleGui(TurtleServer& gui, Event<> app_main);
 
 }
-
-#define GUIPLATFORM_INCLUDE_AFTER <Turtle/After.h>
+#endif
