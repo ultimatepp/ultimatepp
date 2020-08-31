@@ -11,6 +11,8 @@
 #define Status  int
 #endif
 
+#define GLEW_STATIC
+
 #include <plugin/glew/glew.h>
 
 #ifdef PLATFORM_WIN32
