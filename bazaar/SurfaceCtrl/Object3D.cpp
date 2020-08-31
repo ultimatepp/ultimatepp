@@ -184,6 +184,7 @@ bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
 }
 void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	//For texture / material data
+	LOG("Mesh No" + AsString(Index) + " Get Texture No" + AsString(paiMesh->mMaterialIndex));
 	meshes[Index].SetTextureIndice(paiMesh->mMaterialIndex);
 	
 	Vector<float>& vertices = meshes[Index].GetVertices();
@@ -234,7 +235,6 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 }
 bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
 	bool Ret = false;
-	Vector<int> ToRemove;
 	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0){
@@ -243,14 +243,7 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
                 String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
                 InsertTexture(FullPath,i);
             }
-        }else{
-            ToRemove << i;
         }
-    }
-    int removed = 0;
-    for(int r : ToRemove){
-		textures.Remove(r-removed,1);
-		removed++;
     }
     return true;
 }

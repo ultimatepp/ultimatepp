@@ -30,6 +30,8 @@ struct Texture : public Moveable<Texture>{
 	Upp::String name="";
 	unsigned int id =0;
 	
+	String ToString()const{return "name=" + name + " | " + "id=" + AsString(id);}
+	
 	Texture& operator=(const Texture& t){
 		name = t.name;
 		id = t.id;

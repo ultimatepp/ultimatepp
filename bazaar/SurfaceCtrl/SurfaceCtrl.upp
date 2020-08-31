@@ -9,6 +9,10 @@ uses
 	plugin/gif,
 	GLCtrl;
 
+library(WIN32 (GCC | CLANG)) "glu32 opengl32";
+
+pkg_config(LINUX | BSD) "gl glu";
+
 file
 	Definition.h,
 	SurfaceCtrl.h,
