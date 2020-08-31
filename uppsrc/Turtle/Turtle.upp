@@ -1,31 +1,21 @@
 description "HTML5 thin client backend\377B128,0,255";
 
 uses
-	Painter,
-	CtrlLib;
+	CtrlLib,
+	VirtualGui;
 
 file
 	Turtle.h,
-	Keys.h,
-	After.h,
-	Local.h,
-	Draw.cpp,
-	Image.cpp,
-	FB.iml,
-	Ctrl.h,
-	DrawDragRect.cpp,
-	Ctrl.cpp,
-	Wnd.cpp,
+	Init.cpp,
 	Stream.cpp,
 	Server.cpp,
-	Output.cpp,
+	Keys.cpp,
 	Event.cpp,
-	Top.h,
-	TopFrame.cpp,
-	Top.cpp,
-	Clip.cpp,
-	DnD.cpp,
-	ChSysInit.cpp,
+	Draw.cpp,
+	Info readonly separator,
 	Turtle.brc,
-	Turtle.html;
+	Turtle.html,
+	Docs readonly separator,
+	src.tpp,
+	issues;
 

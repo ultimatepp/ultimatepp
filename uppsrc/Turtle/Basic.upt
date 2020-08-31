@@ -1,0 +1,84 @@
+template "U++ Basic Turtle application" main;
+
+option "Create header" header;
+
+text   "Server URL"       host  = "localhost";
+text   "Connection port"  port  = "8888";
+text   "Connection limit" limit = "100";
+option "Debug mode"            debugmode;
+option "Add GUI mode switch"   guiflag;
+
+@@<:PACKAGE:>.h
+??header
+#ifndef _<:PACKAGE:>_<:PACKAGE:>_h
+#define _<:PACKAGE:>_<:PACKAGE:>_h
+<:?guiflag:>
+#ifdef flagTURTLEGUI
+#include <Turtle/Turtle.h>
+#else
+#include <CtrlLib/CtrlLib.h>
+#endif
+<:/:>
+#include <Turtle/Turtle.h>
+<:.:>
+using namespace Upp {
+
+}
+
+#endif
+@@<:PACKAGE:>.cpp
+<:? header :>#include "<:PACKAGE:>.h"<:.:><:? !header && !guiflag:>#include <Turtle/Turtle.h><:.:><:? !header && guiflag :>#ifdef flagTURTLEGUI
+#include <Turtle/Turtle.h>
+#else
+#include <CtrlLib/CtrlLib.h>
+#endif<:.:>
+
+using namespace Upp;
+
+void AppMainLoop()
+{
+	// "Main" stuff should go in here...
+}
+<:?guiflag:>
+#ifdef flagTURTLEGUI
+<:.:>
+CONSOLE_APP_MAIN
+{
+<:?debugmode:>
+#ifdef _DEBUG
+	TurtleServer::DebugMode();
+#endif
+<:.:>
+	// MemoryLimitKb(100000000); // Can aid preventing DDoS attacks.
+
+	TurtleServer guiserver;
+	guiserver.Host("<:host:>");
+	guiserver.Port(<:port:>);
+	guiserver.MaxConnections(<:limit:>);
+	RunTurtleGui(guiserver, AppMainLoop);
+}
+<:?guiflag:>
+#else
+
+GUI_APP_MAIN
+{
+	AppMainLoop();
+}
+
+#endif
+<:.:>
+@@<:PACKAGE:>.upp
+<:?guiflag:>
+uses (TURTLEGUI)  Turtle;
+uses (!TURTLEGUI) CtrlLib;
+<:/:>
+uses Turtle;
+<:.:>
+
+file<:?header:>
+	<:PACKAGE:>.h,<:.:>
+	<:PACKAGE:>.cpp;
+
+mainconfig
+	"" = "TURTLEGUI"<:?guiflag:>,<:/:>;<:.:>
+	<:?guiflag:>"" = "GUI";<:.:>
