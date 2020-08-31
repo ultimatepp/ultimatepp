@@ -2,7 +2,7 @@
 #include "Turtle.brc"
 
 #ifdef PLATFORM_POSIX
-#include <wait.h>
+#include <sys/wait.h>
 #endif
 
 #define LLOG(x)     // RLOG(x)

@@ -6,8 +6,8 @@
 
 namespace Upp {
 
-static int			sHandleCount;
-static Vector<int>  sFreeHandles;
+static int sHandleCount;
+static Vector<int> sFreeHandles;
 static TurtleServer::Draw sTurtleDraw;
 static LRUCache<TurtleServer::ImageSysData, int64> sImageCache;
 
@@ -102,7 +102,7 @@ void TurtleServer::Draw::PutImage(Point p, const Image& img, const Rect& src)
 		&& abs(dp.y) < 256) {
 			TurtleServer::Put8(dp.x < 0
 				? dp.y < 0 ? TurtleServer::IMAGENN : TurtleServer::IMAGENP
-			    : dp.y < 0 ? TurtleServer::IMAGEPN : TurtleServer::IMAGEPP);
+				: dp.y < 0 ? TurtleServer::IMAGEPN : TurtleServer::IMAGEPP);
 			TurtleServer::Put8(abs(dp.x));
 			TurtleServer::Put8(abs(dp.y));
 			TurtleServer::Put16(sd.handle);
@@ -140,7 +140,7 @@ void TurtleServer::Draw::PutRect(const Rect& r, Color color)
 		&& 0) { // FIXME: ?
 			TurtleServer::Put8(dp.x < 0
 				? dp.y < 0 ? TurtleServer::RECTNN : TurtleServer::RECTNP
-			    : dp.y < 0 ? TurtleServer::RECTPN : TurtleServer::RECTPP);
+				: dp.y < 0 ? TurtleServer::RECTPN : TurtleServer::RECTPP);
 			TurtleServer::Put8(abs(dp.x));
 			TurtleServer::Put8(abs(dp.y));
 			TurtleServer::Put8(sz.cx);
