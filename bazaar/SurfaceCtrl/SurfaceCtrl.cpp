@@ -1,15 +1,35 @@
 #include "SurfaceCtrl.h"
 namespace Upp{
-SurfaceCtrl::SurfaceCtrl() : GLCtrl(){
-	InitCamera();
-	
-	GLResize(600,800);
-	OnBegin = [&]{InitOpenGLFeatures();};
-	
+SurfaceCtrl::SurfaceCtrl(){
+	OnBegin = [&]{};
 }
 SurfaceCtrl::~SurfaceCtrl(){
 	OnEnd();
 }
+
+void SurfaceCtrl::Init()noexcept{
+	ExecuteGL([&]{
+		glEnable(GL_DEPTH_TEST);
+	    glEnable(GL_MULTISAMPLE);
+		glEnable(GL_BLEND);//Gestion of alpha
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Gestion de l'alpha sur les textures
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO); //Gestion pour le RGB uniquement
+		InitShader();
+		
+		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
+		SetDefaultShader(Axis);
+		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
+		SetDefaultShader(CameraFocus);
+		
+		#ifdef flagSKYBOX
+			skybox.Init();
+		#endif
+		
+		OnBegin();
+		loaded = true;
+	});
+}
+
 void SurfaceCtrl::InitShader(){
 	DrawMeshNoLight.AttachShader(OpenGLShader(GL_VERTEX_SHADER,
 		#include "shaders/VertexSimple.glsl"
@@ -46,14 +66,7 @@ void SurfaceCtrl::InitCamera()noexcept{
 	camera.SetMouseSensitivity(0.2f);
 	camera.SetMouvementSpeed(0.09f);
 }
-void SurfaceCtrl::InitOpenGLFeatures()noexcept{
-	glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-	glEnable(GL_BLEND);//Gestion of alpha
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Gestion de l'alpha sur les textures
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO); //Gestion pour le RGB uniquement
-	InitShader();
-}
+
 //Action on all objects vector
 Object3D& SurfaceCtrl::CreateObject()noexcept{
 	return allObjects.Add();
@@ -233,35 +246,22 @@ double SurfaceCtrl::GetDeltaTime()noexcept{
 
 //Application event
 void SurfaceCtrl::GLPaint(){
-	if(!loaded){
-		
-		glEnable(GL_DEPTH_TEST);
-
-		OnBegin();
-		
-		
-		Axis = objProvider.Begin(GL_LINES).CreateAxis(20000).End();
-		SetDefaultShader(Axis);
-		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
-		SetDefaultShader(CameraFocus);
-		
-		skybox.Init();
-		loaded = true;
+	ONCELOCK{
+		GLResize(600,800);
+		Init(); //Load axis, focus point, skybox, etc...
+		InitCamera();
 	}
 	if(TimerStarted)ProcessTime();
 	MemoryIgnoreLeaksBlock __;
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
-	
 	if(showAxis)
 		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 	if(showCameraFocus){
 		CameraFocus.GetTransform().SetPosition(camera.GetFocus());
 		CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 	}
-	
 	
 	//Draw skybox :
 	glm::mat4 proj;

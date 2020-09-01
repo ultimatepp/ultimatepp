@@ -256,7 +256,12 @@ class Skybox {
 		Skybox(){}
 		~Skybox(){Clear();}
 		
+		
+#ifdef flagSKYBOX
 		Skybox& Init();
+#endif
+		Skybox& Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back);
+		Skybox& Init(const Vector<Image>& images);
 		Skybox& Clear();
 		Skybox& Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix);
 

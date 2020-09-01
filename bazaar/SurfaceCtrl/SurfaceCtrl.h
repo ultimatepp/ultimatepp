@@ -49,8 +49,8 @@ class SurfaceCtrl : public GL{
 		Function <void()> OnEnd;
 		
 		//Starting function
+		void Init()noexcept;
 		void InitCamera()noexcept;
-		void InitOpenGLFeatures()noexcept;
 
 		//Action on all objects vector
 		const Upp::Vector<Object3D>& GetAllObjects()const noexcept{return allObjects;}
