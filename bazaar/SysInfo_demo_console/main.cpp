@@ -247,6 +247,7 @@ CONSOLE_APP_MAIN
 	#endif
 		
 	#ifdef flagDEBUG
+	UppLog() << "\n";
 	Cout() << "\nPress enter key to end";
 	ReadStdIn();
 	#endif  
