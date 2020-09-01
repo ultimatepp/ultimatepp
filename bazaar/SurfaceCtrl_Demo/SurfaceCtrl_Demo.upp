@@ -9,9 +9,9 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI",
-	"" = "",
 	"" = "USEMALLOC",
 	"" = "USEMALLOC GUI",
-	"" = "GUI GLCTRL USEMALLOC";
+	"" = "GUI SKYBOX",
+	"" = "USEMALLOC GUI SKYBOX",
+	"" = "GUI";
 

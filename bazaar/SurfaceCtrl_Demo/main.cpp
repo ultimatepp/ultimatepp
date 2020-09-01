@@ -254,7 +254,7 @@ namespace Upp{
 
 GUI_APP_MAIN
 {
-	//Upp::ConsoleOutput con(true);
+	Upp::ConsoleOutput con(true);
 	Upp::StdLogSetup( Upp::LOG_COUT | Upp::LOG_FILE);
 	Upp::SurfaceCtrl_Demo().Run();
 }
