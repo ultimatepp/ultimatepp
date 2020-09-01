@@ -5,10 +5,10 @@
 #include <STEM4U/Rational.h>
 #include <STEM4U/Polynomial.h>
 #include <STEM4U/Sundials.h>
+#include <STEM4U/Integral.h>
 #include <STEM4U/TSP.h>
 
 using namespace Upp;
-
 
 void TestIntInf() {
 	UppLog() << "\n\nintInf demo. A signed integer type with arbitrary-precision including the usual arithmetic.";
@@ -113,13 +113,7 @@ T Loop() {
 	return val;
 }
 
-	
-CONSOLE_APP_MAIN 
-{
-	StdLogSetup(LOG_COUT|LOG_FILE);
-	
-	UppLog() << "STEM4U demo and test";
-	
+void TestTSP() {
 	UppLog() << "\nTravelling salesman";
 
 	const Vector<Point_<int>> points = {{0, 0},{4, 4},{4, 0},{2, 4},{0, 4},{4, 2},{0, 2},{2, 0}};
@@ -169,8 +163,9 @@ CONSOLE_APP_MAIN
 	}
 	UppLog() << "\nOrder is: " << sorder;
 	VERIFY(sorder == "0 -> 7 -> 2 -> 3 -> 4 -> 12 -> 6 -> 8 -> 1 -> 11 -> 10 -> 5 -> 9 -> 0");
-	
-	
+}
+
+void TestRational() {
 	UppLog() << "\n\nRounding errors test";
 	
 	double dval = Loop<double>();
@@ -198,8 +193,9 @@ CONSOLE_APP_MAIN
 	Rational sin_1_3 = sinSeries.y(Rational(1, 3));	
 	UppLog() << "\nsin(1/3) = " << sin_1_3;		
 	UppLog() << "\nsin(1/3) = " << FormatRational(sin_1_3, 32);	
-	
-	
+}
+
+void TestDAESolver() {
 	UppLog() << "\n\nSolveDAE() solves an harmonic oscillator m·d2x + k·x = 0"; 
 	double y[]  = {2, 0};
 	double dy[] = {0, 0};
@@ -220,11 +216,60 @@ CONSOLE_APP_MAIN
 			return true;
 		}
 	);
+}
+using namespace  Eigen;
+
+void TestIntegral() {	
+	UppLog() << "\n\nIntegral demo";
 	
+	double R = 1;
+	UppLog() << "\nSemicircle integral value is " << M_PI*sqr(R)/2;
+	UppLog() << "\nNumerically integrated with simple and composite versions:";
+	UppLog() << Format("\n%s\t%s\t\t%s\t\t%s\t\t%s\t%s", "#Points", "Trapezoidal", "Simpson 1/3", "Simpson 3/8", "Hermite 3 point", "Hermite 5 point");
+	for (int nump = 5; nump <= 30; ++nump) {
+		double dx = 2*R/(nump-1);
+		VectorXd y(nump), x(nump);
+		for (int i = 0; i < nump; ++i) {
+			x[i] = 2*R*i/(nump-1) - R;
+			y[i] = ::sqrt(sqr(R) - sqr(x[i]));
+		}
+		
+		double yx_trap = Integral<VectorXd, double>(y, x, TRAPEZOIDAL);
+		double yx_simp13 = Integral<VectorXd, double>(y, x, SIMPSON_1_3);
+		double yx_simp38 = Integral<VectorXd, double>(y, x, SIMPSON_3_8);
+		double ydx_trap = Integral(y, dx, TRAPEZOIDAL);
+		double ydx_simp13 = Integral(y, dx, SIMPSON_1_3);
+		double ydx_simp38 = Integral(y, dx, SIMPSON_3_8);
+		double ydx_herm3 = Integral(y, dx, HERMITE_3);
+		double ydx_herm5 = Integral(y, dx, HERMITE_5);
+		
+		UppLog() << Format("\n%d", nump);
+		UppLog() << Format("\t%7.5f = %7.5f", yx_trap, ydx_trap);
+		UppLog() << Format("\t%7.5f = %7.5f", yx_simp13, ydx_simp13);
+		UppLog() << Format("\t%7.5f = %7.5f", yx_simp38, ydx_simp38);
+		UppLog() << Format("\t%7.5f", ydx_herm3);
+		UppLog() << Format("\t\t%7.5f", ydx_herm5);
+		VERIFY(yx_trap - ydx_trap < 1E-10);
+		VERIFY(yx_simp13 - ydx_simp13 < 1E-10);
+		VERIFY(yx_simp38 - ydx_simp38 < 1E-10);
+	}
+}
+	
+CONSOLE_APP_MAIN 
+{
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	UppLog() << "STEM4U demo and test";
+	
+	TestTSP();
+	TestRational();
+	TestDAESolver();
 	TestIntInf();
     TestPolynomial();
+    TestIntegral();
     
 	#ifdef flagDEBUG
+	UppLog() << "\n";
 	Cout() << "\nPress enter key to end";
 	ReadStdIn();
 	#endif    
