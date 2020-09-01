@@ -25,6 +25,18 @@ Painter& Painter::RectPath(const Rect& r)
 	return *this;
 }
 
+Painter& Painter::RectPath(double x, double y, double cx, double cy)
+{
+	Move(x, y).Line(x + cx, y).Line(x + cx, y + cy).Line(x, y + cy).Close();
+	return *this;
+}
+
+Painter& Painter::RectPath(const Rectf& r)
+{
+	RectPath(r.left, r.top, r.GetWidth(), r.GetHeight());
+	return *this;
+}
+
 bool Painter::ClipOp(const Rect& r)
 {
 	Begin();
