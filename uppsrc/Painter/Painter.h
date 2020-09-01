@@ -351,6 +351,8 @@ public:
 	
 	Painter& RectPath(int x, int y, int cx, int cy);
 	Painter& RectPath(const Rect& r);
+	Painter& RectPath(double x, double y, double cx, double cy);
+	Painter& RectPath(const Rectf& r);
 };
 
 void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt);
