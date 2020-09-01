@@ -63,7 +63,7 @@ class LogStream;
  *  behavior and is not of interest for you. Instead, take a look at #DefaultLogger. */
 class ASSIMP_API Logger
 #ifndef SWIG
-    : public Intern::AllocateFromAssimpHeap
+//    : public Intern::AllocateFromAssimpHeap
 #endif
 {
 public:

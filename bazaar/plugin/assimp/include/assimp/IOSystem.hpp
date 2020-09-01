@@ -88,7 +88,7 @@ namespace Assimp    {
  */
 class ASSIMP_API IOSystem
 #ifndef SWIG
-    : public Intern::AllocateFromAssimpHeap
+//    : public Intern::AllocateFromAssimpHeap
 #endif
 {
 public:

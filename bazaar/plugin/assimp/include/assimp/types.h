@@ -75,12 +75,12 @@ typedef uint32_t ai_uint32 ;
 
 #ifdef __cplusplus
 #include <cstring>
-#include <new>      // for std::nothrow_t
+//#include <new>      // for std::nothrow_t
 #include <string>   // for aiString::Set(const std::string&)
 
-namespace Assimp    {
+//namespace Assimp    {
 //! @cond never
-namespace Intern        {
+//namespace Intern        {
     // --------------------------------------------------------------------
     /** @brief Internal helper class to utilize our internal new/delete
      *    routines for allocating object of this and derived classes.
@@ -95,24 +95,24 @@ namespace Intern        {
      */
     // --------------------------------------------------------------------
 #ifndef SWIG
-    struct ASSIMP_API AllocateFromAssimpHeap    {
+ //   struct ASSIMP_API AllocateFromAssimpHeap    {
         // http://www.gotw.ca/publications/mill15.htm
 
         // new/delete overload
-        void *operator new    ( size_t num_bytes) /* throw( std::bad_alloc ) */;
-        void *operator new    ( size_t num_bytes, const std::nothrow_t& ) throw();
-        void  operator delete ( void* data);
+//        void *operator new    ( size_t num_bytes) /* throw( std::bad_alloc ) */;
+//        void *operator new    ( size_t num_bytes, const std::nothrow_t& ) throw();
+//        void  operator delete ( void* data);
 
         // array new/delete overload
-        void *operator new[]    ( size_t num_bytes) /* throw( std::bad_alloc ) */;
-        void *operator new[]    ( size_t num_bytes, const std::nothrow_t& )  throw();
-        void  operator delete[] ( void* data);
+//        void *operator new[]    ( size_t num_bytes) /* throw( std::bad_alloc ) */;
+//        void *operator new[]    ( size_t num_bytes, const std::nothrow_t& )  throw();
+//        void  operator delete[] ( void* data);
 
-    }; // struct AllocateFromAssimpHeap
+//   }; // struct AllocateFromAssimpHeap
 #endif
-} // namespace Intern
+//} // namespace Intern
     //! @endcond
-} // namespace Assimp
+//}  namespace Assimp
 
 extern "C" {
 #endif

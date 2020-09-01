@@ -22,7 +22,7 @@
 #include "internal/strfunc.h"
 #include "memorystream.h"
 #include "encodedstream.h"
-#include <new>      // placement new
+//#include <new>      // placement new
 #include <limits>
 
 RAPIDJSON_DIAG_PUSH

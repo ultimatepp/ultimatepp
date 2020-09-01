@@ -22,7 +22,7 @@
 #include "internal/dtoa.h"
 #include "internal/itoa.h"
 #include "stringbuffer.h"
-#include <new>      // placement new
+//#include <new>      // placement new
 
 #if defined(RAPIDJSON_SIMD) && defined(_MSC_VER)
 #include <intrin.h>

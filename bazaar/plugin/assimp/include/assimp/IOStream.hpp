@@ -70,7 +70,7 @@ namespace Assimp {
 */
 class ASSIMP_API IOStream
 #ifndef SWIG
-    : public Intern::AllocateFromAssimpHeap
+//    : public Intern::AllocateFromAssimpHeap
 #endif
 {
 protected:

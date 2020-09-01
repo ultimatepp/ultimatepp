@@ -102,8 +102,9 @@ namespace Assimp {
 }
 
 using namespace Assimp;
-using namespace Assimp::Intern;
+//using namespace Assimp::Intern;
 
+/*
 // ------------------------------------------------------------------------------------------------
 // Intern::AllocateFromAssimpHeap serves as abstract base class. It overrides
 // new and delete (and their array counterparts) of public API classes (e.g. Logger) to
@@ -142,7 +143,7 @@ void* AllocateFromAssimpHeap::operator new[] ( size_t num_bytes, const std::noth
 void AllocateFromAssimpHeap::operator delete[] ( void* data)    {
     return ::operator delete[](data);
 }
-
+*/
 // ------------------------------------------------------------------------------------------------
 // Importer constructor.
 Importer::Importer()

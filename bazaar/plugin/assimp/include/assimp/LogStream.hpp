@@ -60,7 +60,7 @@ class IOSystem;
  *  are not enough for your purpose. */
 class ASSIMP_API LogStream
 #ifndef SWIG
-    : public Intern::AllocateFromAssimpHeap
+//    : public Intern::AllocateFromAssimpHeap
 #endif
 {
 protected:
