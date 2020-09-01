@@ -76,12 +76,10 @@ T TSP_NearestNeighbor(const Vector<T> &distances, int sz, Vector<int> &order) {
 }
 
 void OrderToConnections(const Vector<int> &order, Vector<int> &left, Vector<int> &right) {
-	left.SetCount(order.size()-1);
-	right.SetCount(order.size()-1);
-	for (int i = 0; i < left.size(); ++i) {
-		left[i] = order[i];
-		right[i] = order[i+1];
-	}
+	left = clone(order);
+	left.Remove(left.size()-1);
+	right = clone(order);
+	right.Remove(0);
 }
 
 void ConnectionsToOrder(const Vector<int> &left, const Vector<int> &right, Vector<int> &order) {
@@ -118,7 +116,7 @@ T TSP_2_Opt(const Vector<T> &distances, int sz, Vector<int> &order) {
 		T bestSaving = 0;
 		
 		for (int i = 0; i < order.size()-1 && idchange < 0; ++i) {
-			for (int j = 0; j < order.size()-1; ++j) {
+			for (int j = i+1; j < order.size()-1; ++j) {
 				if (i != j && order[i]   != order[j] && order[i]   != order[j+1]
 						   && order[i+1] != order[j] && order[i+1] != order[j+1]) {
 					T saving = distances[ind(order[i],   order[i+1])] 
