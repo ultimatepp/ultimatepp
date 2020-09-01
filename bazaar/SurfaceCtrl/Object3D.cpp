@@ -408,37 +408,6 @@ Object3D& Object3D::GenerateTextureCoordinate(int MeshNo, int count , bool Custo
 	return *this;
 }
 
-bool Object3D::Init(){ //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
-	for(Mesh& m : meshes){
-		m.Init();
-	}
-	CreateBoundingBox();
-	loaded = true;
-	return true;
-}
-Object3D& Object3D::Clear(){
-	if(!moved){
-		for(Mesh& m : meshes){
-			m.Clear(true);
-		}
-		RemoveBoundingBox();
-		loaded = false;
-	}
-	return *this;
-}
-Object3D& Object3D::Reload(){
-	if(!moved){
-		for(Mesh& m : meshes){
-			m.Clear(false);
-		}
-		RemoveBoundingBox();
-		loaded = false;
-	}
-	Init();
-	return *this;
-}
-
-
 void Object3D::CreateBoundingBox(){
 	float minX,minY,minZ;
 	minX = minY = minZ = FLT_MAX;
@@ -605,16 +574,25 @@ Vector<float> Object3D::ReadVertices(int MeshNo, unsigned int SurfaceNumber, int
 		throw Exc(Format(t_("Object3D '%i' don't have meshes no '%i', vertices can't be readed\n"), ID, MeshNo));
 	}
 }
-void Object3D::Draw(const glm::mat4& projectionMatrix,const  glm::mat4& viewMatrix,const glm::vec3& viewPosition)noexcept{
-	if(loaded){
-		if(visible){
-			if(objectValues.Find("showMesh") != -1 && (bool)objectValues.Get("showMesh") ){
-				if(ProgramNoLight != -1 && ProgramLight != -1 && program[ProgramNoLight].IsLinked() && program[ProgramLight].IsLinked()){
-					OpenGLProgram&  prog = (objectValues.Find("showLight") != -1 && (bool)objectValues.Get("showLight"))? program[ProgramLight] : program[ProgramNoLight];
+
+void Object3D::DefaultInit(Object3D& obj){
+	for(Mesh& m : obj.GetMeshes()){
+		m.Init();
+	}
+	obj.CreateBoundingBox();
+	
+}
+void Object3D::DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)noexcept{
+	if(obj.IsLoaded()){
+		if(obj.IsVisible()){
+			if(obj.GetShowMesh()){
+				if(obj.GetProgramNoLight() != -1 && obj.GetProgramLight() != -1 && obj.GetProgram()[obj.GetProgramNoLight()].IsLinked() && obj.GetProgram()[obj.GetProgramLight()].IsLinked()){
+					OpenGLProgram&  prog = (obj.GetShowLight())? obj.GetProgram()[obj.GetProgramLight()] : obj.GetProgram()[obj.GetProgramNoLight()];
 					prog.Bind();
-					if(objectValues.Find("showLight") != -1 && (bool)objectValues.Get("showLight")){
+					if(obj.GetShowLight()){
 						prog.SetVec3("viewPos",viewPosition.x,viewPosition.y,viewPosition.z);
-						if(material.ShouldBeUpdated()){
+						if(obj.GetMaterial().ShouldBeUpdated()){
+							Material& material = obj.GetMaterial();
 							prog.SetVec3("mat.Diffuse", material.GetDiffuse().x,material.GetDiffuse().y,material.GetDiffuse().z);
 							prog.SetVec3("mat.Specular", material.GetSpecular().x,material.GetSpecular().y,material.GetSpecular().z);
 							prog.SetFloat("mat.Shininess", material.GetShininess());
@@ -623,18 +601,19 @@ void Object3D::Draw(const glm::mat4& projectionMatrix,const  glm::mat4& viewMatr
 					}
 					prog.SetMat4("ViewMatrix", viewMatrix);
 					prog.SetMat4("ProjectionMatrix", projectionMatrix);
-					prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
-					for(Mesh& m : meshes){
+					prog.SetMat4("ModelMatrix", obj.GetTransform().GetModelMatrix());
+					
+					for(Mesh& m : obj.GetMeshes()){
 						glBindVertexArray(m.GetVAO());
-						if(textures.GetCount()> 0){
+						if(obj.GetTextures().GetCount()> 0){
 							glActiveTexture(GL_TEXTURE0);
-							glBindTexture(GL_TEXTURE_2D, textures[m.GetTextureIndice()].id);
+							glBindTexture(GL_TEXTURE_2D, obj.GetTextures()[m.GetTextureIndice()].id);
 							prog.SetInt("tex", 0);
-							prog.SetInt("useTexture", textures[m.GetTextureIndice()].id);
+							prog.SetInt("useTexture", obj.GetTextures()[m.GetTextureIndice()].id);
 						}else{
 							prog.SetInt("useTexture", 0);
 						}
-						glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : drawType), 0, m.GetVertices().GetCount()/3);
+						glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : obj.GetDrawType()), 0, m.GetVertices().GetCount()/3);
 					}
 				}else{
 					ONCELOCK{
@@ -642,50 +621,50 @@ void Object3D::Draw(const glm::mat4& projectionMatrix,const  glm::mat4& viewMatr
 					}
 				}
 			}
-			if(objectValues.Find("showMeshLine") != -1 && (bool)objectValues.Get("showMeshLine")){
-				if(ProgramLine != -1 && program[ProgramLine].IsLinked()){
-					program[ProgramLine].Bind();
-					if(objectValues.Find("lineWidth") != -1) glLineWidth((double)objectValues.Get("lineWidth"));
-					program[ProgramLine].SetMat4("ViewMatrix",viewMatrix);
-					program[ProgramLine].SetMat4("ProjectionMatrix",projectionMatrix);
-					program[ProgramLine].SetMat4("ModelMatrix",transform.GetModelMatrix());
-					Color lineColor = (objectValues.Find("lineColor") !=-1)? ValueTo<Color>(objectValues.Get("lineColor")) : Black();
-					program[ProgramLine].SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f, (objectValues.Find("lineOpacity") !=-1)?(double)objectValues.Get("lineOpacity"):1.0f);
+			if(obj.GetShowMeshLine()){
+				if(obj.GetProgramLine() != -1 && obj.GetProgram()[obj.GetProgramLine()].IsLinked()){
+					OpenGLProgram& prog =  obj.GetProgram()[obj.GetProgramLine()];
+					prog.Bind();
+					glLineWidth(obj.GetLineWidth());
+					prog.SetMat4("ViewMatrix",viewMatrix);
+					prog.SetMat4("ProjectionMatrix",projectionMatrix);
+					prog.SetMat4("ModelMatrix",transform.GetModelMatrix());
+					Color lineColor = obj.GetLineColor();
+					prog.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f,obj.GetLineOpacity());
 					
-					for(Mesh& m : meshes){
+					for(Mesh& m : obj.GetMeshes()){
 						glBindVertexArray(m.GetVAO());
-						glDrawArrays(((program[ProgramLine].ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, m.GetVertices().GetCount()/3);
+						glDrawArrays(((prog.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, m.GetVertices().GetCount()/3);
 					}
-					//glDrawArrays(((Line.ContainTCS()) ? GL_PATCHES : GL_TRIANGLES), 0, SurfaceCount);
 				}else{
 					ONCELOCK{
 						LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be line draw");
 					}
 				}
 			}
-			if(objectValues.Find("showMeshNormal") != -1 && (bool)objectValues.Get("showMeshNormal")){
-				if(ProgramNormal != -1 && program[ProgramNormal].IsLinked() ){
-					program[ProgramNormal].Bind();
-					program[ProgramNormal].SetMat4("ViewMatrix", viewMatrix);
-					program[ProgramNormal].SetMat4("ProjectionMatrix", projectionMatrix);
-					program[ProgramNormal].SetMat4("ModelMatrix", transform.GetModelMatrix());
-					Color normalColor = (objectValues.Find("normalColor") !=-1)? ValueTo<Color>(objectValues.Get("normalColor")) : Black();
-					program[ProgramNormal].SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, (objectValues.Find("normalOpacity") !=-1)?(double)objectValues.Get("normalOpacity"):1.0f);
-					program[ProgramNormal].SetFloat("normal_length",(objectValues.Find("normalLenght") !=-1)?(double)objectValues.Get("normalLenght"):1.0f );
-					for(Mesh& m : meshes){
+			if(obj.GetShowMeshNormal()){
+				if(obj.GetProgramNormal() != -1 && obj.GetProgram()[obj.GetProgramNormal()].IsLinked() ){
+					OpenGLProgram& prog =  obj.GetProgram()[obj.GetProgramNormal()];
+					prog.Bind();
+					prog.SetMat4("ViewMatrix", viewMatrix);
+					prog.SetMat4("ProjectionMatrix", projectionMatrix);
+					prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
+					Color normalColor = obj.GetNormalColor();
+					prog.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, obj.GetNormalOpacity());
+					prog.SetFloat("normal_length",obj.GetNormalLength());
+					for(Mesh& m : obj.GetMeshes()){
 						glBindVertexArray(m.GetVAO());
 						glDrawArrays(GL_TRIANGLES, 0, m.GetVertices().GetCount()/3);
 					}
-					//glDrawArrays(GL_TRIANGLES, 0, SurfaceCount);
 				}else{
 					ONCELOCK{
 						LOG("no Normal OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't be normal draw");
 					}
 				}
 			}
-			if(showBoundingBox){
-				if(ProgramLine != -1 && program[ProgramLine].IsLinked()){
-					boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,program[ProgramLine]);
+			if(obj.GetShowBoundingBox()){
+				if(obj.GetProgramLine() != -1 && obj.GetProgram()[obj.GetProgramLine()].IsLinked()){
+					boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,obj.GetProgram()[obj.GetProgramLine()]);
 				}else{
 					ONCELOCK{
 						LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't have is bounding box draw");
@@ -694,6 +673,18 @@ void Object3D::Draw(const glm::mat4& projectionMatrix,const  glm::mat4& viewMatr
 			}
 		}
 	}
+}
+void Object3D::DefaultClear(Object3D& obj){
+	if(!moved){
+		for(Mesh& m : obj.GetMeshes()){
+			m.Clear(true);
+		}
+		obj.RemoveBoundingBox();
+	}
+}
+void Object3D::DefaultReload(Object3D& obj){
+	obj.Clear();
+	obj.Init();
 }
 
 #ifdef flagSKYBOX

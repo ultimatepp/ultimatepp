@@ -247,7 +247,7 @@ double SurfaceCtrl::GetDeltaTime()noexcept{
 //Application event
 void SurfaceCtrl::GLPaint(){
 	ONCELOCK{
-		GLResize(600,800);
+		Layout();
 		Init(); //Load axis, focus point, skybox, etc...
 		InitCamera();
 	}

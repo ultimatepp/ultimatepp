@@ -67,11 +67,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		GLenum drawType = GL_TRIANGLES;
 	public:
-		Function <void()> WhenInit;
-		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)> WhenDraw;
-		Function <void()> WhenClear;
-		Function <void()> WhenReload;
-		
+		Function <void(Object3D& obj)> WhenInit;
+		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)> WhenDraw;
+		Function <void(Object3D& obj)> WhenClear;
+		Function <void(Object3D& obj)> WhenReload;
 		/*
 		Color lineColor = Black();
 		float lineOpacity = 0.5f;
@@ -116,7 +115,12 @@ class Object3D : public Upp::Moveable<Object3D>{
 			
 			objectValues.Add("normalColor", RawToValue(Red()));
 			objectValues.Add("normalOpacity", Value(0.5f));
-			objectValues.Add("normalLenght", Value(1.0f));
+			objectValues.Add("normalLength", Value(1.0f));
+			
+			WhenInit = [&](Object3D& obj){ DefaultInit(obj); };
+			WhenDraw = [&](const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition, Object3D& obj){ DefaultDraw(projectionMatrix,viewMatrix,viewPosition,obj); };
+			WhenClear = [&](Object3D& obj){ DefaultClear(obj); };
+			WhenReload = [&](Object3D& obj){ DefaultReload(obj); };
 		}
 		//move will prevent your object to be deleted (from OpenGL perspective)
 		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
@@ -138,7 +142,6 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& LoadSurface(Surface& surface, Upp::Color = Green(), int alpha =255);
 		Surface GetSurface();
 		
-		
 		//Check if texture provided is already load, then return the iterator of the texture
 		//Object3D
 		int InsertTexture(const String& filename,int indice = -1, FlipMode flipmode = FLIP_NONE)noexcept; //insert texture in object3D
@@ -150,15 +153,10 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& AttachTexture(int TexNo,int MeshNo, int NumberMeshToAffect =1);//Attach a texture to the range of mesh
 		Object3D& GenerateTextureCoordinate(int MeshNo, int NumberMeshToAffect =1, bool CustomTextureCoordinate = false,const Vector<float>& tc = Vector<float>());// Generate new Texture coordinate for the selected range of mesh
 		
-		
 		int GetID()const{return ID;}
-		
 		const Upp::Vector<Mesh>& GetMeshes() const noexcept{return meshes;}
+		Upp::Vector<Mesh>& GetMeshes()noexcept{return meshes;}
 		Mesh& CreateMesh()noexcept{return meshes.Add();}
-
-		bool Init(); //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
-		Object3D& Clear();
-		Object3D& Reload(); //Unload and reload
 		
 		Object3D& ShowMesh(bool b = true)noexcept{if(objectValues.Find("showMesh") != -1) objectValues.Get("showMesh")= b; return *this;}
 		Object3D& ShowMeshLine(bool b = true)noexcept{if(objectValues.Find("showMeshLine") != -1) objectValues.Get("showMeshLine")= b; return *this;}
@@ -174,6 +172,7 @@ class Object3D : public Upp::Moveable<Object3D>{
 
 		Object3D& SetLineColor(Color color)noexcept{if(objectValues.Find("lineColor") != -1) objectValues.Get("lineColor")= color; return *this;}
 		Object3D& SetNormalColor(Color color)noexcept{if(objectValues.Find("normalColor") != -1) objectValues.Get("normalColor")= color; return *this;}
+		Object3D& SetNormalLength(float length)noexcept{if(objectValues.Find("normalLength") != -1) objectValues.Get("normalLength")= length; return *this;}
 		Object3D& SetLineOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f; if(objectValues.Find("lineOpacity") != -1) objectValues.Get("lineOpacity") = opacity;  return *this;}
 		Object3D& SetLineWidth(float width)noexcept{if(width < 1) width = 1.0f; if(objectValues.Find("lineWidth") != -1) objectValues.Get("lineWidth") = width; return *this;}
 		Object3D& SetNormalOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f;if(objectValues.Find("normalOpacity") != -1) objectValues.Get("normalOpacity")= opacity; return *this;}
@@ -185,12 +184,24 @@ class Object3D : public Upp::Moveable<Object3D>{
 		
 		Upp::Color GetLineColor()const noexcept{if(objectValues.Find("lineColor") != -1) return objectValues.Get("lineColor").Get<Color>(); else return Black();}
 		Upp::Color GetNormalColor()const noexcept{if(objectValues.Find("normalColor") != -1) return objectValues.Get("normalColor").Get<Color>(); else return Black();}
-		float GetNormalOpcaity()const noexcept{if(objectValues.Find("normalOpacity") != -1) return (double)(objectValues.Get("normalOpacity")); else return 0.0f;}
-		float GetLineOpcaity()const noexcept{if(objectValues.Find("lineOpacity") != -1) return (double)(objectValues.Get("lineOpacity")); else return 0.0f;}
+		float GetNormalOpacity()const noexcept{if(objectValues.Find("normalOpacity") != -1) return (double)(objectValues.Get("normalOpacity")); else return 0.0f;}
+		float GetNormalLength()const noexcept{if(objectValues.Find("normalLength") != -1) return (double)(objectValues.Get("normalLength")); else return 1.0f;}
+		float GetLineOpacity()const noexcept{if(objectValues.Find("lineOpacity") != -1) return (double)(objectValues.Get("lineOpacity")); else return 0.0f;}
 		float GetLineWidth()const noexcept{if(objectValues.Find("lineWidth") != -1) return (double)(objectValues.Get("lineWidth")); else return 0.0f;}
-				
+		
+		const VectorMap<String,Value>& GetObjectValues()const noexcept{return objectValues;}
+		VectorMap<String,Value>& GetObjectValues()noexcept{return objectValues;}
+		
+		bool IsLoaded(){return loaded;}
+		
 		Transform& GetTransform()noexcept{return transform;}
 		const Transform& GetTransform()const noexcept{return transform;}
+		
+		Material& GetMaterial()noexcept{return material;}
+		const Material& GetMaterial()const noexcept{return material;}
+		
+		const Vector<Texture>& GetTextures()const noexcept{return textures;}
+		Vector<Texture>& GetTextures()noexcept{return textures;}
 				
 		void CreateBoundingBox(); // Create Bounding box
 		void RemoveBoundingBox();
@@ -241,7 +252,23 @@ class Object3D : public Upp::Moveable<Object3D>{
 		Object3D& SetProgramLine(const OpenGLProgram& prog)noexcept{ProgramLine = program.GetCount(); program.Add(prog); return *this;}
 		Object3D& SetProgramNormal(const OpenGLProgram& prog)noexcept{ProgramNormal = program.GetCount(); program.Add(prog); return *this;}
 		
-		void Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)noexcept;
+		int GetProgramNoLight(){return ProgramNoLight;}
+		int GetProgramLight(){return ProgramLight;}
+		int GetProgramLine(){return ProgramLine;}
+		int GetProgramNormal(){return ProgramNormal;}
+		
+		const Vector<OpenGLProgram>& GetProgram()const noexcept{return program;}
+		Vector<OpenGLProgram>& GetProgram()noexcept{return program;}
+		
+		void DefaultInit(Object3D& obj);
+		void DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)noexcept;
+		void DefaultClear(Object3D& obj);
+		void DefaultReload(Object3D& obj);
+			
+		void Init(){ WhenInit(*this); loaded = true;} //Load all data in graphic memory It's called automaticly by using Load function, but you must call it if you set manually all data
+		void Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)noexcept{WhenDraw(projectionMatrix,viewMatrix,viewPosition, *this);}
+		void Clear(){WhenClear(*this); loaded = false;}
+		void Reload(){WhenReload(*this);}
 };
 
 class Skybox {
