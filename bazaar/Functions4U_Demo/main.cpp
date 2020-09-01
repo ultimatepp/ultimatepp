@@ -151,6 +151,7 @@ CONSOLE_APP_MAIN
 	DistanceDemo();	
 	
 	#ifdef flagDEBUG
+	UppLog() << "\n";
 	Cout() << "\nPress enter key to end";
 	ReadStdIn();
 	#endif   
