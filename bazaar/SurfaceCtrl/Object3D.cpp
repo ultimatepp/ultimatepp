@@ -15,6 +15,26 @@ namespace Upp{
 
 int Object3D::GlobalID = 0;
 
+Object3D::Object3D():ID(++GlobalID){
+	objectValues.Add("showMesh", Value(true));
+	objectValues.Add("showMeshLine", Value(false));
+	objectValues.Add("showMeshNormal", Value(false));
+	objectValues.Add("showLight", Value(true));
+	
+	objectValues.Add("lineColor", RawToValue(Black()));
+	objectValues.Add("lineOpacity", Value(0.5f));
+	objectValues.Add("lineWidth", Value(1.0f));
+	
+	objectValues.Add("normalColor", RawToValue(Red()));
+	objectValues.Add("normalOpacity", Value(0.5f));
+	objectValues.Add("normalLength", Value(1.0f));
+	
+	WhenInit = [&](Object3D& obj){ DefaultInit(obj); };
+	WhenDraw = [&](const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition, Object3D& obj){ DefaultDraw(projectionMatrix,viewMatrix,viewPosition,obj); };
+	WhenClear = [&](Object3D& obj){ DefaultClear(obj); };
+	WhenReload = [&](Object3D& obj){ DefaultReload(obj); };
+}
+
 Object3D& Object3D::operator=(Object3D&& obj){
 	transform = pick(obj.transform);
 	boundingBox = pick(obj.boundingBox);

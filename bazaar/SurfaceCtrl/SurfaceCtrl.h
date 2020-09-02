@@ -70,6 +70,9 @@ class SurfaceCtrl : public GL{
 		void RemoveSelectedObject(int ID)noexcept;
 		void ClearSelectedObject()noexcept;
 		
+		//Skybox Getter
+		Skybox& GetSkybox()noexcept{return skybox;}
+		
 		//Change Object selected
 		void MoveAllSelectedObjects(glm::vec3 move)noexcept; //Move all selected object
 		void RotateAllSelectedObjects(glm::quat rotation)noexcept; //Rotate all selected object
