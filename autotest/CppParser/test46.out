@@ -1,6 +1,0 @@
-<globals> {
-	VARIABLE, name: test1, qitem: test1, qtype: Vector<Vector<int>>, qptype: , natural: Vector<Vector<int> > test1, line 1, using 
-	VARIABLE, name: test2, qitem: test2, qtype: Vector<Vector<int>>, qptype: , natural: Vector<Vector<int>> test2, line 2, using 
-}
-<locals> {
-}

@@ -1,6 +1,0 @@
-<globals> {
-	MACRO, name: _THROW0, qitem: _THROW0(), qtype: , qptype: , natural: _THROW0(), line 1, using 
-	FUNCTION, name: Test, qitem: Test(), qtype: , qptype: , natural: void Test(), line 3, using 
-}
-<locals> {
-}

@@ -1,5 +1,0 @@
-Foo {
-	INSTANCEFUNCTIONTEMPLATE, name: Bar, qitem: Bar(B), qtype: , qptype: B, natural: template <typename A> ,<typename B> void Bar(B v), line 1, using 
-}
-<locals> {
-}
