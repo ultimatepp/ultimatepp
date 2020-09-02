@@ -52,9 +52,9 @@ chaining.&]
 [s4; &]
 [s5;:Upp`:`:TurtleServer`:`:DebugMode`(bool`): [@(0.0.255) static] 
 [@(0.0.255) void]_[* DebugMode]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s6;%% POSIX only&]
 [s2;%% If true, the server will not spawn child processes (no forking). 
-Useful for debugging purposes. This switch is only effective 
-in DEBUG mode.&]
+Useful for debugging purposes.&]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]

@@ -44,9 +44,6 @@ bool TurtleServer::StartSession()
 	LLOG("Starting to listen on " << port << ", pid: " << getpid());
 	socket.Timeout(0); // TODO: Not quite ideal way to make quit work..
 	for(;;) {
-		SocketWaitEvent we;
-		we.Add(socket, WAIT_READ);
-		we.Wait(250);
 #ifdef PLATFORM_POSIX
 		int i = 0;
 		while(i < sProcessIds.GetCount())
