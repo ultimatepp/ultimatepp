@@ -1,5 +1,0 @@
-<globals> {
-	FUNCTION, name: _S_chk, qitem: _S_chk(typename template rebind<_Tp2>::other*), qtype: , qptype: rebind<_Tp2>::other, natural: void _S_chk(typename _Alloc2::template rebind<_Tp2>::other*), line 3, using 
-}
-<locals> {
-}

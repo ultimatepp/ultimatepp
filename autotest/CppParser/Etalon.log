@@ -1,0 +1,877 @@
+* /home/cxl/.cache/upp.out/autotest/CLANG.Debug.Debug_Full.Shared/CppParser 02.09.2020 12:56:20, user: cxl
+
+**** test0.in
+====
+Upp {
+	NAMESPACE, name: Upp, qitem: namespace Upp, qtype: , qptype: , natural: namespace Upp, line 1, using 
+	FUNCTIONTEMPLATE, name: Single, qitem: Single(), qtype: T, qptype: , natural: template <class T> T& Single(), line 13, using 
+}
+Upp::Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Upp::Foo, qptype: , natural: struct Foo, line 2, using 
+}
+Upp::String {
+	STRUCT, name: String, qitem: struct, qtype: Upp::String, qptype: , natural: struct String, line 3, using 
+	INSTANCEFUNCTION, name: Bar, qitem: Bar(), qtype: Upp::Foo, qptype: , natural: Foo Bar(), line 4, using 
+	INSTANCEVARIABLE, name: bar, qitem: bar, qtype: Upp::Foo, qptype: , natural: Foo bar, line 5, using 
+}
+Upp::One {
+	STRUCTTEMPLATE, name: One, qitem: class, qtype: Upp::One, qptype: , natural: template <class T> class One, line 8, using 
+	INSTANCEFUNCTION, name: operator->, qitem: operator->(), qtype: 0, qptype: , natural: T *operator->(), line 10, using 
+}
+Upp::Array {
+	STRUCTTEMPLATE, name: Array, qitem: struct, qtype: Upp::Array, qptype: , natural: template <class T> struct Array, line 16, using 
+	INSTANCEFUNCTION, name: operator[], qitem: operator[](int), qtype: 0, qptype: , natural: T& operator[](int i), line 18, using 
+	INSTANCEFUNCTION, name: operator(), qitem: operator()(int), qtype: Upp::Foo, qptype: , natural: Foo operator()(int i), line 19, using 
+}
+ResourceCache {
+	STRUCT, name: ResourceCache, qitem: class, qtype: ResourceCache, qptype: , natural: class ResourceCache, line 26, using Upp
+	INSTANCEFUNCTION, name: GetAttrs, qitem: GetAttrs(), qtype: ValueMap, qptype: , natural: ValueMap GetAttrs(), line 28, using Upp
+	CLASSFUNCTION, name: The, qitem: The(), qtype: ResourceCache, qptype: , natural: ResourceCache& The(), line 30, using Upp
+}
+<globals> {
+	FUNCTION, name: Expressions, qitem: Expressions(), qtype: , qptype: , natural: void Expressions(), line 33, using Upp
+}
+<locals> {
+str1 Upp::String, line: 35
+str2 Upp::String, line: 36
+s1 Upp::String, line: 38
+s2 Upp::String, line: 39
+one Upp::One<Upp::String>, line: 41
+one1 Upp::Foo, line: 42
+one2 Upp::Foo, line: 43
+single Upp::String, line: 45
+single1 Upp::Foo, line: 46
+single2 Upp::Foo, line: 47
+a Upp::Array<Upp::String>, line: 49
+a1 Upp::String, line: 50
+a2 Upp::Foo, line: 51
+a3 Upp::Foo, line: 52
+th ResourceCache, line: 54
+}
+-------------------------------------------------------------------------------
+**** test1.in
+====
+<globals> {
+	FUNCTION, name: Test, qitem: Test(), qtype: , qptype: , natural: void Test(), line 1, using 
+	VARIABLE, name: global, qitem: global, qtype: Point, qptype: , natural: Point global, line 13, using 
+	FUNCTION, name: foo, qitem: foo(), qtype: , qptype: , natural: void foo(), line 15, using 
+}
+Foo {
+	STRUCT, name: Foo, qitem: class, qtype: Foo, qptype: , natural: class Foo, line 3, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(), qtype: , qptype: , natural: Foo(), line 4, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 7, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 8, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 8, using 
+	INSTANCEVARIABLE, name: next, qitem: next, qtype: Point, qptype: , natural: Point *next, line 9, using , pointer
+	INSTANCEVARIABLE, name: bar, qitem: bar, qtype: Foo, qptype: , natural: Foo bar, line 10, using 
+}
+<locals> {
+x , line: 17
+a Point, line: 18
+b Point, line: 18
+c Point pointer, line: 18
+}
+-------------------------------------------------------------------------------
+**** test2.in
+====
+_CrtEnableIf<true, _Ty>  {
+	STRUCTTEMPLATE, name: _CrtEnableIf<true, _Ty> , qitem: struct, qtype: _CrtEnableIf<true,_Ty>, qptype: , natural: template <true, typename _Ty> struct _CrtEnableIf<true, _Ty> , line 1, using 
+}
+_CrtEnableIf<true, _Ty> ::_Type {
+	TYPEDEF, name: _Type, qitem: typedef, qtype: 1, qptype: , natural: typedef _Ty _Type, line 4, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test3.in
+====
+<globals> {
+	FUNCTIONTEMPLATE, name: memcpy, qitem: memcpy(_DstType(&)[_Size],const void*,size_t)throw(), qtype: _CrtEnableIf<(_Size>1),void*>::_Type, qptype: _DstType;;size_t, natural: template <size_t _Size, typename _DstType> typename _CrtEnableIf<(_Size > 1), void *>::_Type memcpy(_DstType (&_Dst)[_Size], const void *_Src, size_t _SrcSize) throw(), line 3, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test4.in
+====
+<globals> {
+	FUNCTIONTEMPLATE, name: Fn<true, int>, qitem: Fn<true,int>(), qtype: , qptype: , natural: template <class T> void Fn<true, int>(), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test5.in
+====
+Value {
+	STRUCT, name: Value, qitem: class, qtype: Value, qptype: , natural: class Value, line 1, using 
+	INSTANCEFUNCTION, name: operator<=, qitem: operator<=(const Value&)const, qtype: , qptype: Value, natural: bool operator<=(const Value& x) const, line 2, using 
+	INSTANCEFUNCTION, name: operator>=, qitem: operator>=(const Value&)const, qtype: , qptype: Value, natural: bool operator>=(const Value& x) const, line 3, using 
+	INSTANCEFUNCTION, name: operator<, qitem: operator<(const Value&)const, qtype: , qptype: Value, natural: bool operator<(const Value& x) const, line 4, using 
+	INSTANCEFUNCTION, name: operator>, qitem: operator>(const Value&)const, qtype: , qptype: Value, natural: bool operator>(const Value& x) const, line 5, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test6.in
+====
+<globals> {
+	FUNCTION, name: test, qitem: test(const int), qtype: , qptype: , natural: void test(const int a), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test7.in
+====
+<globals> {
+	FUNCTION, name: __insecure__strlwr_l, qitem: __insecure__strlwr_l(char*,_locale_t), qtype: , qptype: ;_locale_t, natural: __inline char * __insecure__strlwr_l( char *_String, _locale_t _Locale), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test8.in
+====
+.vPROCESSOR_IDLESTATE_INFO {
+	STRUCT, name: .vPROCESSOR_IDLESTATE_INFO, qitem: struct, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct .vPROCESSOR_IDLESTATE_INFO, line 1, using 
+	INSTANCEVARIABLE, name: TimeCheck, qitem: TimeCheck, qtype: DWORD, qptype: , natural: DWORD TimeCheck, line 2, using 
+	INSTANCEVARIABLE, name: DemotePercent, qitem: DemotePercent, qtype: BYTE, qptype: , natural: BYTE DemotePercent, line 3, using 
+	INSTANCEVARIABLE, name: PromotePercent, qitem: PromotePercent, qtype: BYTE, qptype: , natural: BYTE PromotePercent, line 4, using 
+	INSTANCEVARIABLE, name: Spare, qitem: Spare, qtype: BYTE, qptype: , natural: BYTE Spare[2], line 5, using , pointer
+}
+<globals> {
+	VARIABLE, name: vPROCESSOR_IDLESTATE_INFO, qitem: vPROCESSOR_IDLESTATE_INFO, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } vPROCESSOR_IDLESTATE_INFO, line 5, using 
+	VARIABLE, name: vPPROCESSOR_IDLESTATE_INFO, qitem: vPPROCESSOR_IDLESTATE_INFO, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } *vPPROCESSOR_IDLESTATE_INFO, line 5, using , pointer
+	VARIABLE, name: xxx, qitem: xxx, qtype: Point, qptype: , natural: struct Point { int x, y; } xxx, line 16, using 
+	VARIABLE, name: yyy, qitem: yyy, qtype: Point, qptype: , natural: struct Point { int x, y; } yyy, line 16, using 
+}
+.PROCESSOR_IDLESTATE_INFO {
+	STRUCT, name: .PROCESSOR_IDLESTATE_INFO, qitem: struct, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: struct .PROCESSOR_IDLESTATE_INFO, line 8, using 
+	INSTANCEVARIABLE, name: TimeCheck, qitem: TimeCheck, qtype: DWORD, qptype: , natural: DWORD TimeCheck, line 9, using 
+	INSTANCEVARIABLE, name: DemotePercent, qitem: DemotePercent, qtype: BYTE, qptype: , natural: BYTE DemotePercent, line 10, using 
+	INSTANCEVARIABLE, name: PromotePercent, qitem: PromotePercent, qtype: BYTE, qptype: , natural: BYTE PromotePercent, line 11, using 
+	INSTANCEVARIABLE, name: Spare, qitem: Spare, qtype: BYTE, qptype: , natural: BYTE Spare[2], line 12, using , pointer
+}
+PROCESSOR_IDLESTATE_INFO {
+	TYPEDEF, name: PROCESSOR_IDLESTATE_INFO, qitem: typedef, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: typedef struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } PROCESSOR_IDLESTATE_INFO, line 12, using 
+}
+PPROCESSOR_IDLESTATE_INFO {
+	TYPEDEF, name: PPROCESSOR_IDLESTATE_INFO, qitem: typedef, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: typedef struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } *PPROCESSOR_IDLESTATE_INFO, line 12, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 15, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 16, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 16, using 
+}
+PointT {
+	STRUCT, name: PointT, qitem: struct, qtype: PointT, qptype: , natural: struct PointT, line 19, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 20, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 20, using 
+}
+PPP {
+	TYPEDEF, name: PPP, qitem: typedef, qtype: PointT, qptype: , natural: typedef struct PointT { int x, y; } PPP, line 20, using 
+}
+TPoint {
+	STRUCTTEMPLATE, name: TPoint, qitem: struct, qtype: TPoint, qptype: , natural: template <class T> struct TPoint, line 23, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: 0, qptype: , natural: T x, line 25, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: 0, qptype: , natural: T y, line 25, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test9.in
+====
+<globals> {
+	FUNCTION, name: _InterlockedCompareExchange16, qitem: _InterlockedCompareExchange16(SHORT volatile*,SHORT,SHORT), qtype: SHORT, qptype: SHORT;SHORT;SHORT, natural: SHORT _InterlockedCompareExchange16 ( SHORT volatile *Destination, SHORT ExChange, SHORT Comperand ), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test10.in
+====
+Moveable {
+	STRUCTTEMPLATE, name: Moveable, qitem: class, qtype: Moveable, qptype: 1, natural: template <class T, class B = EmptyClass> class Moveable : public B, line 1, using 
+	INSTANCEVARIABLE, name: boo, qitem: boo, qtype: , qptype: , natural: int boo, line 4, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test11.in
+====
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test12.in
+====
+<globals> {
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum Alpha FOO, line 2, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum Alpha BAR, line 2, using 
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum FOO, line 6, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum BAR, line 6, using 
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum Gamma FOO, line 10, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum Gamma BAR, line 10, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test13.in
+====
+<globals> {
+	MACRO, name: _DWORDLONG_, qitem: _DWORDLONG_, qtype: , qptype: , natural: _DWORDLONG_, line 41, using 
+}
+_LARGE_INTEGER {
+	STRUCT, name: _LARGE_INTEGER, qitem: struct, qtype: _LARGE_INTEGER, qptype: , natural: , line 1, using 
+	STRUCT, name: _LARGE_INTEGER, qitem: union, qtype: _LARGE_INTEGER, qptype: , natural: union _LARGE_INTEGER, line 3, using 
+	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; LONG HighPart; } u, line 10, using 
+	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: LONGLONG, qptype: , natural: LONGLONG QuadPart, line 13, using 
+}
+_LARGE_INTEGER::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 4, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 5, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 6, using 
+}
+_LARGE_INTEGER::.u {
+	STRUCT, name: .u, qitem: struct, qtype: .u, qptype: , natural: struct .u, line 8, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 9, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 10, using 
+}
+LARGE_INTEGER {
+	TYPEDEF, name: LARGE_INTEGER, qitem: typedef, qtype: _LARGE_INTEGER, qptype: , natural: typedef union _LARGE_INTEGER { struct { DWORD LowPart; LONG HighPart; } ; struct { DWORD LowPart; LONG HighPart; } u; LONGLONG QuadPart; } LARGE_INTEGER, line 13, using 
+}
+PLARGE_INTEGER {
+	TYPEDEF, name: PLARGE_INTEGER, qitem: typedef, qtype: LARGE_INTEGER, qptype: , natural: typedef LARGE_INTEGER *PLARGE_INTEGER, line 16, using 
+}
+_ULARGE_INTEGER {
+	STRUCT, name: _ULARGE_INTEGER, qitem: struct, qtype: _ULARGE_INTEGER, qptype: , natural: , line 19, using 
+	STRUCT, name: _ULARGE_INTEGER, qitem: union, qtype: _ULARGE_INTEGER, qptype: , natural: union _ULARGE_INTEGER, line 21, using 
+	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; DWORD HighPart; } u, line 28, using 
+	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: ULONGLONG, qptype: , natural: ULONGLONG QuadPart, line 31, using 
+}
+_ULARGE_INTEGER::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 22, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 23, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: DWORD, qptype: , natural: DWORD HighPart, line 24, using 
+}
+_ULARGE_INTEGER::.u {
+	STRUCT, name: .u, qitem: struct, qtype: .u, qptype: , natural: struct .u, line 26, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 27, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: DWORD, qptype: , natural: DWORD HighPart, line 28, using 
+}
+ULARGE_INTEGER {
+	TYPEDEF, name: ULARGE_INTEGER, qitem: typedef, qtype: _ULARGE_INTEGER, qptype: , natural: typedef union _ULARGE_INTEGER { struct { DWORD LowPart; DWORD HighPart; } ; struct { DWORD LowPart; DWORD HighPart; } u; ULONGLONG QuadPart; } ULARGE_INTEGER, line 31, using 
+}
+PULARGE_INTEGER {
+	TYPEDEF, name: PULARGE_INTEGER, qitem: typedef, qtype: ULARGE_INTEGER, qptype: , natural: typedef ULARGE_INTEGER *PULARGE_INTEGER, line 34, using 
+}
+_LUID {
+	STRUCT, name: _LUID, qitem: struct, qtype: _LUID, qptype: , natural: struct _LUID, line 36, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 37, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 38, using 
+}
+LUID {
+	TYPEDEF, name: LUID, qitem: typedef, qtype: _LUID, qptype: , natural: typedef struct _LUID { DWORD LowPart; LONG HighPart; } LUID, line 38, using 
+}
+PLUID {
+	TYPEDEF, name: PLUID, qitem: typedef, qtype: _LUID, qptype: , natural: typedef struct _LUID { DWORD LowPart; LONG HighPart; } *PLUID, line 38, using 
+}
+DWORDLONG {
+	TYPEDEF, name: DWORDLONG, qitem: typedef, qtype: ULONGLONG, qptype: , natural: typedef ULONGLONG DWORDLONG, line 42, using 
+}
+PDWORDLONG {
+	TYPEDEF, name: PDWORDLONG, qitem: typedef, qtype: DWORDLONG, qptype: , natural: typedef DWORDLONG *PDWORDLONG, line 43, using 
+}
+_LIST_ENTRY {
+	STRUCT, name: _LIST_ENTRY, qitem: struct, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY, line 45, using 
+	INSTANCEVARIABLE, name: Flink, qitem: Flink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Flink, line 46, using , pointer
+	INSTANCEVARIABLE, name: Blink, qitem: Blink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Blink, line 47, using , pointer
+}
+LIST_ENTRY {
+	TYPEDEF, name: LIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } LIST_ENTRY, line 47, using 
+}
+PLIST_ENTRY {
+	TYPEDEF, name: PLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } *PLIST_ENTRY, line 47, using 
+}
+PRLIST_ENTRY {
+	TYPEDEF, name: PRLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } * PRLIST_ENTRY, line 47, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test14.in
+====
+.name {
+	STRUCT, name: .name, qitem: struct, qtype: .name, qptype: , natural: struct .name, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 2, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: .name::Foo, qptype: , natural: struct Foo { int a; } y, line 4, using 
+	INSTANCEVARIABLE, name: quack, qitem: quack, qtype: .quack, qptype: , natural: struct { int foo; } quack, line 10, using 
+}
+.name::Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: .name::Foo, qptype: , natural: struct Foo, line 3, using 
+	INSTANCEVARIABLE, name: a, qitem: a, qtype: , qptype: , natural: int a, line 4, using 
+}
+.name::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 6, using 
+	INSTANCEVARIABLE, name: bar, qitem: bar, qtype: , qptype: , natural: int bar, line 7, using 
+}
+.name::.quack {
+	STRUCT, name: .quack, qitem: struct, qtype: .quack, qptype: , natural: struct .quack, line 9, using 
+	INSTANCEVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: int foo, line 10, using 
+}
+name {
+	TYPEDEF, name: name, qitem: typedef, qtype: .name, qptype: , natural: typedef struct { int x; struct Foo { int a; } y; struct { int bar; }; struct { int foo; } quack; } name, line 10, using 
+}
+std {
+	NAMESPACE, name: std, qitem: namespace std, qtype: , qptype: , natural: namespace std, line 14, using 
+}
+std::string {
+	STRUCT, name: string, qitem: struct, qtype: std::string, qptype: , natural: struct string, line 15, using 
+}
+Bar {
+	STRUCT, name: Bar, qitem: struct, qtype: Bar, qptype: , natural: struct Bar, line 22, using std
+	INSTANCEFUNCTION, name: Foo, qitem: Foo(Bar::string), qtype: std::string, qptype: Bar::string, natural: std::string Foo(string a), line 25, using std
+}
+Bar::string {
+	STRUCT, name: string, qitem: struct, qtype: Bar::string, qptype: , natural: struct string, line 23, using std
+}
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(std::string), qtype: , qptype: std::string, natural: void Foo(string a), line 28, using std
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test15.in
+====
+<globals> {
+	MACRO, name: _THROW0, qitem: _THROW0(), qtype: , qptype: , natural: _THROW0(), line 1, using 
+	FUNCTION, name: Test, qitem: Test(), qtype: , qptype: , natural: void Test(), line 3, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test16.in
+====
+<globals> {
+	ENUM, name: MandatoryLevelUntrusted, qitem: MandatoryLevelUntrusted, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelUntrusted = 0, line 2, using 
+	ENUM, name: MandatoryLevelLow, qitem: MandatoryLevelLow, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelLow, line 3, using 
+	ENUM, name: MandatoryLevelMedium, qitem: MandatoryLevelMedium, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelMedium, line 4, using 
+	ENUM, name: MandatoryLevelHigh, qitem: MandatoryLevelHigh, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelHigh, line 5, using 
+	ENUM, name: MandatoryLevelSystem, qitem: MandatoryLevelSystem, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelSystem, line 6, using 
+	ENUM, name: MandatoryLevelSecureProcess, qitem: MandatoryLevelSecureProcess, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelSecureProcess, line 7, using 
+	ENUM, name: MandatoryLevelCount, qitem: MandatoryLevelCount, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelCount, line 8, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test17.in
+====
+_LIST_ENTRY {
+	STRUCT, name: _LIST_ENTRY, qitem: struct, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY, line 1, using 
+	INSTANCEVARIABLE, name: Flink, qitem: Flink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Flink, line 2, using , pointer
+	INSTANCEVARIABLE, name: Blink, qitem: Blink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Blink, line 3, using , pointer
+}
+LIST_ENTRY {
+	TYPEDEF, name: LIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } LIST_ENTRY, line 3, using 
+}
+PLIST_ENTRY {
+	TYPEDEF, name: PLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } *PLIST_ENTRY, line 3, using 
+}
+PRLIST_ENTRY {
+	TYPEDEF, name: PRLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } * PRLIST_ENTRY, line 3, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test18.in
+====
+<globals> {
+	FUNCTION, name: EncodeHtml, qitem: EncodeHtml(const String&,const VectorMap<String,String>&), qtype: String, qptype: String;VectorMap<String,String>, natural: String EncodeHtml(const String& x, const VectorMap<String, String>& escape = VectorMap<String, String>()), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test19.in
+====
+<globals> {
+	FUNCTION, name: function, qitem: function(string[4],int[4][5],const int&,int(*)[4]), qtype: , qptype: string;;;, natural: int function(string x[4], int y[4][5], const int& x, int (*f)[4]), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test20.in
+====
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test21.in
+====
+<globals> {
+	FUNCTION, name: foo, qitem: foo(), qtype: , qptype: , natural: int foo(), line 1, using 
+	VARIABLE, name: bar, qitem: bar, qtype: Bar, qptype: , natural: static Bar bar, line 5, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test22.in
+errs:
+	[0] = 61: Name expected
+====
+ERRORS: [61: Name expected]
+<globals> {
+	VARIABLE, name: cpp_file_mutex, qitem: cpp_file_mutex, qtype: StaticMutex, qptype: , natural: static StaticMutex cpp_file_mutex, line 8, using 
+	VARIABLE, name: cpp_file, qitem: cpp_file, qtype: Index<String>, qptype: , natural: static Index<String> cpp_file, line 9, using 
+	FUNCTION, name: GetCppFileIndex, qitem: GetCppFileIndex(const String&), qtype: , qptype: String, natural: int GetCppFileIndex(const String& path), line 11, using 
+	FUNCTION, name: GetCppFile, qitem: GetCppFile(int), qtype: String, qptype: , natural: const String& GetCppFile(int i), line 19, using 
+	FUNCTION, name: SLPos, qitem: SLPos(SrcFile&), qtype: , qptype: SrcFile, natural: void SLPos(SrcFile& res), line 49, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 63, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 65, using 
+	FUNCTION, name: PreProcess, qitem: PreProcess(Stream&), qtype: SrcFile, qptype: Stream, natural: SrcFile PreProcess(Stream& in), line 67, using 
+}
+SrcFile {
+	CONSTRUCTOR, name: SrcFile, qitem: SrcFile(), qtype: , qptype: , natural: SrcFile(), line 54, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test23.in
+====
+TreeNodeInfo {
+	STRUCT, name: TreeNodeInfo, qitem: class, qtype: TreeNodeInfo, qptype: Moveable<TreeNodeInfo>, natural: class TreeNodeInfo : private Moveable<TreeNodeInfo> , line 1, using 
+	ENUM, name: SMALLCHARS, qitem: SMALLCHARS, qtype: , qptype: , natural: enum SMALLCHARS = 40 , line 2, using 
+	INSTANCEVARIABLE, name: kind, qitem: kind, qtype: int8, qptype: , natural: int8 kind, line 4, using 
+	INSTANCEVARIABLE, name: len, qitem: len, qtype: byte, qptype: , natural: byte len, line 5, using 
+	INSTANCEVARIABLE, name: impressions, qitem: impressions, qtype: word, qptype: , natural: word impressions, line 6, using 
+	INSTANCEVARIABLE, name: sortaccel, qitem: sortaccel, qtype: dword, qptype: , natural: dword sortaccel, line 7, using 
+	ENUM, name: EMPTY, qitem: EMPTY, qtype: , qptype: , natural: enum EMPTY = -100 , line 33, using 
+	INSTANCEFUNCTION, name: Ext, qitem: Ext(), qtype: TreeNodeInfo::Extended, qptype: , natural: Extended& Ext(), line 35, using 
+	INSTANCEFUNCTION, name: Free, qitem: Free(), qtype: , qptype: , natural: void Free(), line 36, using 
+	INSTANCEFUNCTION, name: Init, qitem: Init(), qtype: , qptype: , natural: void Init(), line 37, using 
+	INSTANCEFUNCTION, name: Copy, qitem: Copy(const TreeNodeInfo&), qtype: , qptype: TreeNodeInfo, natural: void Copy(const TreeNodeInfo& src), line 38, using 
+	INSTANCEFUNCTION, name: GetName, qitem: GetName()const, qtype: String, qptype: , natural: String GetName() const, line 44, using 
+	INSTANCEFUNCTION, name: GetUrlName, qitem: GetUrlName()const, qtype: String, qptype: , natural: String GetUrlName() const, line 45, using 
+	INSTANCEFUNCTION, name: GetNameA, qitem: GetNameA()const, qtype: String, qptype: , natural: String GetNameA() const, line 46, using 
+	INSTANCEFUNCTION, name: GetUrlNameA, qitem: GetUrlNameA()const, qtype: String, qptype: , natural: String GetUrlNameA() const, line 48, using 
+	INSTANCEFUNCTION, name: GetAltName, qitem: GetAltName()const, qtype: String, qptype: , natural: String GetAltName() const, line 49, using 
+	INSTANCEFUNCTION, name: GetAltNameA, qitem: GetAltNameA()const, qtype: String, qptype: , natural: String GetAltNameA() const, line 50, using 
+	INSTANCEFUNCTION, name: GetTitle, qitem: GetTitle()const, qtype: String, qptype: , natural: String GetTitle() const, line 51, using 
+	INSTANCEFUNCTION, name: GetTitleA, qitem: GetTitleA()const, qtype: String, qptype: , natural: String GetTitleA() const, line 52, using 
+	INSTANCEFUNCTION, name: GetDoubledId, qitem: GetDoubledId()const, qtype: , qptype: , natural: int GetDoubledId() const, line 54, using 
+	INSTANCEFUNCTION, name: GetParentId, qitem: GetParentId()const, qtype: , qptype: , natural: int GetParentId() const, line 55, using 
+	INSTANCEFUNCTION, name: GetMasterId, qitem: GetMasterId()const, qtype: , qptype: , natural: int GetMasterId() const, line 56, using 
+	INSTANCEFUNCTION, name: GetImpressions, qitem: GetImpressions()const, qtype: , qptype: , natural: int GetImpressions() const, line 58, using 
+	INSTANCEFUNCTION, name: GetNodeId, qitem: GetNodeId()const, qtype: String, qptype: , natural: String GetNodeId() const, line 60, using 
+	INSTANCEFUNCTION, name: IsMaster, qitem: IsMaster()const, qtype: , qptype: , natural: bool IsMaster() const, line 61, using 
+	INSTANCEFUNCTION, name: NoProtection, qitem: NoProtection()const, qtype: , qptype: , natural: bool NoProtection() const, line 62, using 
+	INSTANCEFUNCTION, name: NoSameCustomer, qitem: NoSameCustomer()const, qtype: , qptype: , natural: bool NoSameCustomer() const, line 63, using 
+	INSTANCEFUNCTION, name: NoOccupancyHigh, qitem: NoOccupancyHigh()const, qtype: , qptype: , natural: bool NoOccupancyHigh() const, line 64, using 
+	INSTANCEFUNCTION, name: NonCommercial, qitem: NonCommercial()const, qtype: , qptype: , natural: bool NonCommercial() const, line 65, using 
+	INSTANCEFUNCTION, name: Erotica, qitem: Erotica()const, qtype: , qptype: , natural: bool Erotica() const, line 66, using 
+	INSTANCEFUNCTION, name: IsExtended, qitem: IsExtended()const, qtype: , qptype: , natural: bool IsExtended() const, line 68, using 
+	INSTANCEFUNCTION, name: Less, qitem: Less(dword,const char*,int,const char*,int)const, qtype: , qptype: dword;;;;, natural: int Less(dword sortaccel, const char *aname, int alen, const char *name, int len) const, line 70, using 
+	INSTANCEFUNCTION, name: Less, qitem: Less(const TreeNodeInfo&)const, qtype: , qptype: TreeNodeInfo, natural: int Less(const TreeNodeInfo& b) const, line 71, using 
+	INSTANCEFUNCTION, name: Serialize, qitem: Serialize(Stream&), qtype: , qptype: Stream, natural: void Serialize(Stream& s), line 73, using 
+	INSTANCEFUNCTION, name: operator=, qitem: operator=(const TreeNodeInfo&), qtype: TreeNodeInfo, qptype: TreeNodeInfo, natural: TreeNodeInfo& operator=(const TreeNodeInfo& src), line 75, using 
+	CONSTRUCTOR, name: TreeNodeInfo, qitem: TreeNodeInfo(const TreeNodeInfo&), qtype: , qptype: TreeNodeInfo, natural: TreeNodeInfo(const TreeNodeInfo& src), line 76, using 
+	CONSTRUCTOR, name: TreeNodeInfo, qitem: TreeNodeInfo(), qtype: , qptype: , natural: TreeNodeInfo(), line 77, using 
+	DESTRUCTOR, name: TreeNodeInfo, qitem: ~TreeNodeInfo(), qtype: , qptype: , natural: ~TreeNodeInfo(), line 78, using 
+}
+TreeNodeInfo::Extended {
+	STRUCT, name: Extended, qitem: struct, qtype: TreeNodeInfo::Extended, qptype: , natural: struct Extended, line 9, using 
+	INSTANCEVARIABLE, name: name, qitem: name, qtype: String, qptype: , natural: String name, line 10, using 
+	INSTANCEVARIABLE, name: aname, qitem: aname, qtype: String, qptype: , natural: String aname, line 11, using 
+	INSTANCEVARIABLE, name: urlname, qitem: urlname, qtype: String, qptype: , natural: String urlname, line 12, using 
+	INSTANCEVARIABLE, name: aurlname, qitem: aurlname, qtype: String, qptype: , natural: String aurlname, line 13, using 
+	INSTANCEVARIABLE, name: title, qitem: title, qtype: String, qptype: , natural: String title, line 14, using 
+	INSTANCEVARIABLE, name: atitle, qitem: atitle, qtype: String, qptype: , natural: String atitle, line 15, using 
+	INSTANCEVARIABLE, name: altname, qitem: altname, qtype: String, qptype: , natural: String altname, line 16, using 
+	INSTANCEVARIABLE, name: aaltname, qitem: aaltname, qtype: String, qptype: , natural: String aaltname, line 17, using 
+	INSTANCEVARIABLE, name: nodeid, qitem: nodeid, qtype: String, qptype: , natural: String nodeid, line 18, using 
+	INSTANCEVARIABLE, name: doubled_id, qitem: doubled_id, qtype: , qptype: , natural: int doubled_id, line 19, using 
+	INSTANCEVARIABLE, name: parent_id, qitem: parent_id, qtype: , qptype: , natural: int parent_id, line 20, using 
+	INSTANCEVARIABLE, name: master_id, qitem: master_id, qtype: , qptype: , natural: int master_id, line 21, using 
+	INSTANCEVARIABLE, name: impressions, qitem: impressions, qtype: , qptype: , natural: int impressions, line 22, using 
+	INSTANCEVARIABLE, name: master, qitem: master, qtype: , qptype: , natural: bool master, line 24, using 
+	INSTANCEVARIABLE, name: noprotection, qitem: noprotection, qtype: , qptype: , natural: bool noprotection, line 24, using 
+	INSTANCEVARIABLE, name: nosamecustomer, qitem: nosamecustomer, qtype: , qptype: , natural: bool nosamecustomer, line 24, using 
+	INSTANCEVARIABLE, name: nooccupancyhigh, qitem: nooccupancyhigh, qtype: , qptype: , natural: bool nooccupancyhigh, line 24, using 
+	INSTANCEVARIABLE, name: noncommercial, qitem: noncommercial, qtype: , qptype: , natural: bool noncommercial, line 24, using 
+	INSTANCEVARIABLE, name: erotica, qitem: erotica, qtype: , qptype: , natural: bool erotica, line 24, using 
+	CONSTRUCTOR, name: Extended, qitem: Extended(), qtype: , qptype: , natural: Extended(), line 26, using 
+}
+TreeNodeInfo::=/title {
+	STRUCT, name: =/title, qitem: union, qtype: =/title, qptype: , natural: union =/title, line 28, using 
+	INSTANCEVARIABLE, name: extended, qitem: extended, qtype: TreeNodeInfo::Extended, qptype: , natural: Extended *extended, line 29, using , pointer
+	INSTANCEVARIABLE, name: text, qitem: text, qtype: , qptype: , natural: char text[SMALLCHARS], line 30, using , pointer
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test24.in
+====
+<globals> {
+	MACRO, name: KRPANO_TOUR_XML, qitem: KRPANO_TOUR_XML, qtype: , qptype: , natural: KRPANO_TOUR_XML, line 9, using 
+	MACRO, name: TEST, qitem: TEST(x), qtype: , qptype: , natural: TEST(x), line 10, using 
+	MACRO, name: TEST2, qitem: TEST2(x, y), qtype: , qptype: , natural: TEST2(x, y), line 11, using 
+	ENUM, name: RES_IMAGE, qitem: RES_IMAGE, qtype: , qptype: , natural: enum ResourceType RES_IMAGE = 0, line 2, using 
+	ENUM, name: RES_SWF, qitem: RES_SWF, qtype: , qptype: , natural: enum ResourceType RES_SWF = 1, line 3, using 
+	ENUM, name: RES_ATTACHMENT, qitem: RES_ATTACHMENT, qtype: , qptype: , natural: enum ResourceType RES_ATTACHMENT = 2, line 4, using 
+	ENUM, name: RES_DOWNLOAD, qitem: RES_DOWNLOAD, qtype: , qptype: , natural: enum ResourceType RES_DOWNLOAD = 3, line 5, using 
+	ENUM, name: RES_SCREENSHOT, qitem: RES_SCREENSHOT, qtype: , qptype: , natural: enum ResourceType RES_SCREENSHOT = 4, line 6, using 
+	ENUM, name: RES_UPLOADED_IMAGE, qitem: RES_UPLOADED_IMAGE, qtype: , qptype: , natural: enum ResourceType RES_UPLOADED_IMAGE = 5, line 7, using 
+	ENUM, name: RES_PANORAMA_TREE_NFS, qitem: RES_PANORAMA_TREE_NFS, qtype: , qptype: , natural: enum ResourceType RES_PANORAMA_TREE_NFS = 6, line 12, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test25.inc
+====
+<globals> {
+	FUNCTION, name: deflateInit_, qitem: deflateInit_(strm,level,version,stream_size)z_streamp strm;int level;const char*version;int stream_size;, qtype: , qptype: strm;level;version;stream_size, natural: int deflateInit_(strm, level, version, stream_size) z_streamp strm; int level; const char *version; int stream_size;, line 1, using 
+	FUNCTION, name: Foo, qitem: Foo(int,Bar*), qtype: , qptype: ;Bar, natural: void Foo(int x, Bar *y), line 12, using 
+}
+AAA {
+	STRUCT, name: AAA, qitem: struct, qtype: AAA, qptype: , natural: struct AAA, line 14, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 15, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 15, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test26.in
+====
+Foo {
+	INSTANCEFUNCTION, name: Foo, qitem: Foo(), qtype: , qptype: , natural: void Foo(), line 1, using 
+	INSTANCEFUNCTION, name: Bar, qitem: Bar(), qtype: , qptype: , natural: void Bar(), line 3, using 
+	INSTANCEFUNCTION, name: Bar2, qitem: Bar2(), qtype: , qptype: , natural: void Bar2(), line 5, using 
+}
+<locals> {
+x , line: 7
+}
+-------------------------------------------------------------------------------
+**** test27.in
+====
+Alfa {
+	STRUCT, name: Alfa, qitem: struct, qtype: Alfa, qptype: , natural: struct Alfa, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: unsigned x:5, line 2, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: unsigned y:10, line 3, using 
+	INSTANCEVARIABLE, name: h, qitem: h, qtype: String, qptype: , natural: String h, line 4, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test28.in
+====
+Vector {
+	STRUCTTEMPLATE, name: Vector, qitem: struct, qtype: Vector, qptype: , natural: template <class T> struct Vector, line 1, using 
+	INSTANCEFUNCTION, name: begin, qitem: begin(), qtype: Vector::Iterator, qptype: , natural: Iterator begin(), line 8, using 
+}
+Vector::Iterator {
+	STRUCT, name: Iterator, qitem: struct, qtype: Vector::Iterator, qptype: , natural: struct Iterator, line 3, using 
+	INSTANCEFUNCTIONTEMPLATE, name: operator->, qitem: operator->(T), qtype: V, qptype: 0, natural: template <class V> V operator->(T), line 4, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 11, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: x, qptype: , natural: xy, line 11, using 
+}
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(), qtype: , qptype: , natural: void Foo(), line 13, using 
+}
+<locals> {
+x Point, line: 14
+v Vector<Point>, line: 15
+y Point, line: 16
+vv Vector<Point>, line: 17
+i Point, line: 18
+ii Point, line: 19
+}
+-------------------------------------------------------------------------------
+**** test29.in
+====
+Upp {
+	NAMESPACE, name: Upp, qitem: namespace Upp, qtype: , qptype: , natural: namespace Upp, line 1, using 
+}
+Upp::Vector {
+	STRUCT, name: Vector, qitem: struct, qtype: Upp::Vector, qptype: , natural: struct Vector, line 3, using 
+}
+Upp::Vector::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: T, qptype: , natural: typedef T *Iterator, line 4, using 
+}
+Upp::AMap {
+	STRUCTTEMPLATE, name: AMap, qitem: struct, qtype: Upp::AMap, qptype: , natural: template <class K, class T, class V, class HashFn> struct AMap, line 7, using 
+}
+Upp::AMap::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: 2::Iterator, qptype: , natural: typedef typename V::Iterator Iterator, line 9, using 
+}
+Upp::VectorMap {
+	STRUCTTEMPLATE, name: VectorMap, qitem: struct, qtype: Upp::VectorMap, qptype: MoveableAndDeepCopyOption<Upp::VectorMap<0,1,2>>;Upp::AMap<0,1,Upp::Vector<1>,2>, natural: template <class K, class T, class HashFn = StdHash<K> > struct VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T, HashFn> >, public AMap< K, T, Vector<T>, HashFn > , line 12, using 
+}
+Upp::VectorMap::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: Upp::AMap<K,T,Upp::Vector<T>,HashFn>::Iterator, qptype: , natural: typedef typename AMap< K, T, Vector<T>, HashFn >::Iterator Iterator, line 15, using 
+}
+Upp::VectorMap::iterator {
+	TYPEDEF, name: iterator, qitem: typedef, qtype: Upp::VectorMap::Iterator, qptype: , natural: typedef Iterator iterator, line 16, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test30.in
+====
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 1, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 1, using 
+}
+<globals> {
+	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 3, using 
+}
+<locals> {
+a Point, line: 6
+b Point, line: 7
+c Point, line: 8
+d Point, line: 8
+p Point, line: 9
+}
+-------------------------------------------------------------------------------
+**** test31.in
+====
+<globals> {
+	ENUM, name: ONE, qitem: ONE, qtype: , qptype: , natural: enum Foo ONE, line 1, using 
+	ENUM, name: TWO, qitem: TWO, qtype: , qptype: , natural: enum Foo TWO, line 1, using 
+	ENUM, name: AONE, qitem: AONE, qtype: , qptype: , natural: enum FooA AONE, line 3, using 
+	ENUM, name: ATWO, qitem: ATWO, qtype: , qptype: , natural: enum FooA ATWO, line 3, using 
+	ENUM, name: EE1, qitem: EE1, qtype: , qptype: , natural: enum EE EE1 = 1, line 5, using 
+	ENUM, name: EE2, qitem: EE2, qtype: , qptype: , natural: enum EE EE2 = 2, line 5, using 
+	ENUM, name: EEbig, qitem: EEbig, qtype: , qptype: , natural: enum EE EEbig = 0xFFFFFFF0U , line 5, using 
+}
+ClassFoo {
+	STRUCT, name: ClassFoo, qitem: class, qtype: ClassFoo, qptype: , natural: , line 7, using 
+	ENUM, name: ClONE, qitem: ClONE, qtype: , qptype: , natural: enum ClONE, line 7, using 
+	ENUM, name: ClBTWO, qitem: ClBTWO, qtype: , qptype: , natural: enum ClBTWO, line 7, using 
+}
+Cl3Foo {
+	STRUCT, name: Cl3Foo, qitem: class, qtype: Cl3Foo, qptype: , natural: , line 9, using 
+	ENUM, name: C3ONE, qitem: C3ONE, qtype: , qptype: , natural: enum C3ONE, line 9, using 
+	ENUM, name: C3TWO, qitem: C3TWO, qtype: , qptype: , natural: enum C3TWO, line 9, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test32.in
+====
+Test {
+	STRUCTTEMPLATE, name: Test, qitem: class, qtype: Test, qptype: , natural: template <class T, class U> class Test, line 5, using 
+	INSTANCEVARIABLE, name: a, qitem: a, qtype: 0, qptype: , natural: T a, line 8, using 
+	INSTANCEVARIABLE, name: b, qitem: b, qtype: 1, qptype: , natural: U b, line 9, using 
+}
+Y {
+	STRUCT, name: Y, qitem: class, qtype: Y, qptype: , natural: class Y, line 12, using 
+	INSTANCEFUNCTION, name: operator=, qitem: operator=(const Y&), qtype: Y, qptype: Y, natural: Y& operator=(const Y&) = default, line 13, using 
+	CONSTRUCTOR, name: Y, qitem: Y(const Y&), qtype: , qptype: Y, natural: Y(const Y&) = default, line 14, using 
+}
+<globals> {
+	FUNCTION, name: operator|, qitem: operator|(Flags,Flags), qtype: , qptype: Flags;Flags, natural: constexpr int operator|(Flags f1, Flags f2), line 17, using 
+	VARIABLE, name: aligned_array, qitem: aligned_array, qtype: , qptype: , natural: alignas(double) unsigned char aligned_array[1024], line 34, using , pointer
+	FUNCTION, name: foo, qitem: foo(double)noexcept, qtype: , qptype: , natural: double foo(double) noexcept, line 36, using 
+	VARIABLE, name: override, qitem: override, qtype: , qptype: , natural: int override, line 43, using 
+	VARIABLE, name: final, qitem: final, qtype: , qptype: , natural: int final, line 44, using 
+	VARIABLE, name: ThreadLocal, qitem: ThreadLocal, qtype: , qptype: , natural: thread_local int ThreadLocal, line 46, using 
+	VARIABLE, name: in_inline_namespace, qitem: in_inline_namespace, qtype: , qptype: , natural: int in_inline_namespace, line 49, using 
+	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 52, using 
+}
+X {
+	STRUCT, name: X, qitem: class, qtype: X, qptype: , natural: class X, line 19, using 
+	CONSTRUCTOR, name: X, qitem: X(int), qtype: , qptype: , natural: X(int x), line 20, using 
+	CONSTRUCTOR, name: X, qitem: X(), qtype: , qptype: , natural: X(), line 21, using 
+	CONSTRUCTOR, name: X, qitem: X(string), qtype: , qptype: string, natural: X(string s), line 22, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 26, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 26, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 26, using 
+}
+U1 {
+	STRUCT, name: U1, qitem: union, qtype: U1, qptype: , natural: union U1, line 28, using 
+	INSTANCEVARIABLE, name: m1, qitem: m1, qtype: , qptype: , natural: int m1, line 29, using 
+	INSTANCEVARIABLE, name: m2, qitem: m2, qtype: complex<double>, qptype: , natural: complex<double> m2, line 30, using 
+	INSTANCEVARIABLE, name: m3, qitem: m3, qtype: string, qptype: , natural: string m3, line 31, using 
+}
+OverrideFinal {
+	STRUCT, name: OverrideFinal, qitem: struct, qtype: OverrideFinal, qptype: , natural: struct OverrideFinal, line 38, using 
+	INSTANCEFUNCTION, name: Foo, qitem: Foo()final, qtype: , qptype: , natural: void Foo() final, line 39, using 
+	INSTANCEFUNCTION, name: Bar, qitem: Bar()override, qtype: , qptype: , natural: void Bar() override, line 40, using 
+}
+<locals> {
+x Test<Test<Test<Point>>,Point>, line: 55
+y Test<Test<Test<Point>>,Point>, line: 56
+x , line: 57
+y , line: 59
+ll , line: 60
+p  pointer, line: 61
+}
+-------------------------------------------------------------------------------
+**** test33.in
+====
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(int), qtype: String, qptype: , natural: auto Foo(int x) -> String, line 1, using 
+	FUNCTIONTEMPLATE, name: Test, qitem: Test(), qtype: @function(T)+v, qptype: , natural: template <class T, class V> decltype(function(T) + v) Test(), line 3, using 
+	FUNCTION, name: Bar, qitem: Bar(int,int), qtype: @x+y, qptype: ;, natural: auto Bar(int x, int y) -> decltype(x + y), line 6, using 
+	FUNCTIONTEMPLATE, name: Body, qitem: Body(), qtype: , qptype: , natural: template <class H> void Body(), line 8, using 
+}
+<locals> {
+hh @H + H, line: 11
+}
+-------------------------------------------------------------------------------
+**** test34.in
+====
+Foo {
+	TYPEDEF, name: Foo, qitem: typedef, qtype: String, qptype: , natural: using Foo, line 1, using 
+	TYPEDEF, name: Foo, qitem: typedef, qtype: String, qptype: , natural: using Foo, line 6, using 
+}
+Vec {
+	TYPEDEF, name: Vec, qitem: typedef, qtype: vector<T,My_alloc<T>>, qptype: , natural: using Vec = std::vector<T,My_alloc<T>>, line 3, using 
+	TYPEDEF, name: Vec, qitem: typedef, qtype: vector<T,My_alloc<T>>, qptype: , natural: using Vec = std::vector<T,My_alloc<T>> *, line 8, using 
+	TYPEDEF, name: Vec, qitem: typedef, qtype: vector<T,My_alloc<T>>, qptype: , natural: using Vec = std::vector<T,My_alloc<T>> volatile * const, line 11, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test35.in
+====
+<globals> {
+	VARIABLE, name: backpaint, qitem: backpaint, qtype: byte, qptype: , natural: byte backpaint:2, line 1, using 
+	VARIABLE, name: hasdhctrl, qitem: hasdhctrl, qtype: , qptype: , natural: bool hasdhctrl:1, line 2, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test36.in
+====
+StaticVariableTest {
+	STRUCT, name: StaticVariableTest, qitem: struct, qtype: StaticVariableTest, qptype: , natural: struct StaticVariableTest, line 1, using 
+	CLASSVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: static int foo, line 2, using 
+	CLASSVARIABLE, name: bar, qitem: bar, qtype: String, qptype: , natural: static String bar, line 3, using 
+	CLASSVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: int StaticVariableTest::foo, line 6, using 
+	CLASSVARIABLE, name: bar, qitem: bar, qtype: String, qptype: , natural: String StaticVariableTest::bar, line 7, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test37.in
+====
+Ns {
+	NAMESPACE, name: Ns, qitem: namespace Ns, qtype: , qptype: , natural: namespace Ns, line 1, using 
+	ENUM, name: SM_NONE, qitem: SM_NONE, qtype: , qptype: , natural: enum SM_NONE, line 3, using 
+	ENUM, name: SM_SINGLE, qitem: SM_SINGLE, qtype: , qptype: , natural: enum SM_SINGLE, line 3, using 
+	ENUM, name: SM_DOUBLE, qitem: SM_DOUBLE, qtype: , qptype: , natural: enum SM_DOUBLE, line 3, using 
+	VARIABLE, name: var1, qitem: var1, qtype: , qptype: , natural: enum var1, line 3, using 
+	VARIABLE, name: String, qitem: String, qtype: , qptype: , natural: enum String, line 3, using 
+}
+Ns::Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Ns::Foo, qptype: , natural: struct Foo, line 7, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 8, using 
+	ENUM, name: SM_NONE, qitem: SM_NONE, qtype: , qptype: , natural: enum SM_NONE, line 9, using 
+	ENUM, name: SM_SINGLE, qitem: SM_SINGLE, qtype: , qptype: , natural: enum SM_SINGLE, line 9, using 
+	ENUM, name: SM_DOUBLE, qitem: SM_DOUBLE, qtype: , qptype: , natural: enum SM_DOUBLE, line 9, using 
+	INSTANCEVARIABLE, name: var2, qitem: var2, qtype: , qptype: , natural: enum var2, line 9, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test38.in
+====
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+	INSTANCEVARIABLE, name: rect, qitem: rect, qtype: Rect, qptype: , natural: Rect rect, line 2, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(Rect), qtype: , qptype: Rect, natural: Foo(Rect r), line 3, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(Rect), qtype: , qptype: Rect, natural: Foo(Rect r), line 6, using 
+}
+<locals> {
+r Rect, line: 6
+}
+-------------------------------------------------------------------------------
+**** test39.in
+errs:
+	[0] = 63: Name expected
+====
+ERRORS: [63: Name expected]
+<globals> {
+	VARIABLE, name: cpp_file_mutex, qitem: cpp_file_mutex, qtype: StaticMutex, qptype: , natural: static StaticMutex cpp_file_mutex, line 10, using 
+	VARIABLE, name: cpp_file, qitem: cpp_file, qtype: Index<String>, qptype: , natural: static Index<String> cpp_file, line 11, using 
+	FUNCTION, name: GetCppFileIndex, qitem: GetCppFileIndex(const String&), qtype: , qptype: String, natural: int GetCppFileIndex(const String& path), line 13, using 
+	FUNCTION, name: GetCppFile, qitem: GetCppFile(int), qtype: String, qptype: , natural: const String& GetCppFile(int i), line 21, using 
+	FUNCTION, name: SLPos, qitem: SLPos(SrcFile&), qtype: , qptype: SrcFile, natural: void SLPos(SrcFile& res), line 51, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 65, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 67, using 
+	FUNCTION, name: PreProcess, qitem: PreProcess(Stream&), qtype: SrcFile, qptype: Stream, natural: SrcFile PreProcess(Stream& in), line 69, using 
+}
+SrcFile {
+	CONSTRUCTOR, name: SrcFile, qitem: SrcFile(), qtype: , qptype: , natural: SrcFile(), line 56, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test40.in
+====
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo()noexcept, qtype: , qptype: , natural: Foo() noexcept, line 2, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(int)noexcept(noexcept(anything)), qtype: , qptype: , natural: Foo(int) noexcept(noexcept(anything)), line 3, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test41.in
+====
+<globals> {
+	FUNCTIONTEMPLATE, name: _M_emplace_unique, qitem: _M_emplace_unique(_Args&&...__args), qtype: , qptype: _Args;, natural: template <typename... _Args> bool _M_emplace_unique(_Args&&... __args), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test42.in
+====
+basic_istream {
+	STRUCT, name: basic_istream, qitem: class, qtype: basic_istream, qptype: basic_ios, natural: class basic_istream : public virtual basic_ios, line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test43.in
+====
+Foo {
+	INSTANCEFUNCTIONTEMPLATE, name: Bar, qitem: Bar(B), qtype: , qptype: B, natural: template <typename A> ,<typename B> void Bar(B v), line 1, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test44.in
+====
+<globals> {
+	FUNCTION, name: _S_chk, qitem: _S_chk(typename template rebind<_Tp2>::other*), qtype: , qptype: rebind<_Tp2>::other, natural: void _S_chk(typename _Alloc2::template rebind<_Tp2>::other*), line 3, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------
+**** test45.in
+====
+FooBar {
+	STRUCT, name: FooBar, qitem: struct, qtype: FooBar, qptype: , natural: struct FooBar, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 2, using 
+}
+<globals> {
+	FUNCTION, name: Autocomplete, qitem: Autocomplete(), qtype: , qptype: , natural: void Autocomplete(), line 5, using 
+}
+<locals> {
+b FooBar, line: 7
+}
+-------------------------------------------------------------------------------
+**** test46.in
+====
+<globals> {
+	VARIABLE, name: test1, qitem: test1, qtype: Vector<Vector<int>>, qptype: , natural: Vector<Vector<int> > test1, line 1, using 
+	VARIABLE, name: test2, qitem: test2, qtype: Vector<Vector<int>>, qptype: , natural: Vector<Vector<int>> test2, line 2, using 
+}
+<locals> {
+}
+-------------------------------------------------------------------------------

@@ -64,6 +64,10 @@ void Test(const char *path, int filetype)
 	
 	p.dobody = true;
 	in.Seek(0);
+	p.qualify = [&](String scope, String type, String usings) {
+		String t = Qualify(base, scope, type, usings);
+		return base.Find(NoTemplatePars(t)) >= 0 ? t : Null;
+	};
 	p.Do(in, base, 0, filetype, "title", callback(AddError),
 	     Vector<String>(), Vector<String>(), hh);
 	
@@ -79,13 +83,6 @@ void Test(const char *path, int filetype)
 	LOG("====");
 	LOG(out);
 	LOG("-------------------------------------------------------------------------------");
-#ifdef flagSAVE
-	SaveFile(ForceExt(path, ".out"), out);
-#else
-	String h = LoadFile(ForceExt(path, ".out"));
-	h.Replace("\r", "");
-	ASSERT(out == h);
-#endif
 }
 
 CONSOLE_APP_MAIN {
@@ -105,5 +102,5 @@ CONSOLE_APP_MAIN {
 		if(FileExists(p))
 			Test(p, FILE_C);
 	}
-	LOG("=========== OK");
+	CheckLogEtalon();
 }

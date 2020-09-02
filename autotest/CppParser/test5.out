@@ -1,9 +1,0 @@
-Value {
-	STRUCT, name: Value, qitem: class, qtype: Value, qptype: , natural: class Value, line 1, using 
-	INSTANCEFUNCTION, name: operator<=, qitem: operator<=(const Value&)const, qtype: , qptype: Value, natural: bool operator<=(const Value& x) const, line 2, using 
-	INSTANCEFUNCTION, name: operator>=, qitem: operator>=(const Value&)const, qtype: , qptype: Value, natural: bool operator>=(const Value& x) const, line 3, using 
-	INSTANCEFUNCTION, name: operator<, qitem: operator<(const Value&)const, qtype: , qptype: Value, natural: bool operator<(const Value& x) const, line 4, using 
-	INSTANCEFUNCTION, name: operator>, qitem: operator>(const Value&)const, qtype: , qptype: Value, natural: bool operator>(const Value& x) const, line 5, using 
-}
-<locals> {
-}
