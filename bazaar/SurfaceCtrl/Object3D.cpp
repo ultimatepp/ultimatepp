@@ -206,7 +206,6 @@ bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
 }
 void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	//For texture / material data
-	LOG("Mesh No" + AsString(Index) + " Get Texture No" + AsString(paiMesh->mMaterialIndex));
 	meshes[Index].SetTextureIndice(paiMesh->mMaterialIndex);
 	
 	Vector<float>& vertices = meshes[Index].GetVertices();
