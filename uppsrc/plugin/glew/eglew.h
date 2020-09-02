@@ -106,11 +106,7 @@
 #include <KHR/khrplatform.h>
 #include <EGL/eglplatform.h>
 
-#ifndef GLEW_INCLUDE
-#  include <GL/glew.h>
-#else
-#  include GLEW_INCLUDE
-#endif
+#include "glew.h"
 
 #ifdef __cplusplus
 extern "C" {
