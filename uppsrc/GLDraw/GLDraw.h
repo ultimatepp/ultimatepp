@@ -4,6 +4,8 @@
 #include <Draw/Draw.h>
 #include <Painter/Painter.h>
 
+#define GLEW_STATIC
+
 #include <plugin/glew/glew.h>
 
 #include <plugin/tess2/tess2.h>
