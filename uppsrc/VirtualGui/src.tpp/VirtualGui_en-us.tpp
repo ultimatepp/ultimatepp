@@ -1,4 +1,4 @@
-topic "";
+topic "VirtualGui";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -16,7 +16,7 @@ topic "";
 [s2;%% VirtualGui represents interface to implement simple virtualized 
 GUI desktop. By implementing a handful of methods client gets 
 working GUI desktop over given surface.&]
-[s2;%% VirtualGUI mostly represents `'event`' part of GUI. Client 
+[s2;%% VirtualGUI mostly represents the `"event`" part of GUI. Client 
 also has to implement or use some Draw to paint on surface and 
 some font system to measure fonts (e.g. DrawGL and plugin/FT`_fontsys).&]
 [s3; &]
@@ -24,12 +24,14 @@ some font system to measure fonts (e.g. DrawGL and plugin/FT`_fontsys).&]
 [s3; &]
 [s5;:Upp`:`:VirtualGui`:`:GetOptions`(`): [@(0.0.255) virtual] [_^Upp`:`:dword^ dword]_[* G
 etOptions]()&]
-[s2;%% Returns set of flags describing some aspects of VirtualGui 
-behaviour:-|&]
-[s0;l288;%% GUI`_SETMOUSECURSOR: Use SetMouseCursor instead of painting 
-the cursor&]
-[s2;%% GUI`_SETCARET: Use SetCaret instead of painting the caret.&]
-[s3; &]
+[s2;%% Returns a set of flags describing some aspects of VirtualGui 
+behaviour. Available option flags are:-|&]
+[s2;%% &]
+[s7;i1120;a17;:Ctrl`:`:CENTER:%% [%-*C@3 GUI`_SETMOUSECURSOR]-|Use the 
+SetMouseCursor() method instead of painting the cursor.&]
+[s7;i1120;a17;:Ctrl`:`:STDSIZE:%% [%-*C@3 GUI`_SETCARET]-|Use the SetCaret() 
+method instead of painting the caret.&]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:GetSize`(`): [@(0.0.255) virtual] [_^Upp`:`:Size^ Size]_[* GetSiz
 e]()_`=_[@3 0]&]
@@ -39,7 +41,7 @@ e]()_`=_[@3 0]&]
 [s5;:Upp`:`:VirtualGui`:`:GetMouseButtons`(`): [@(0.0.255) virtual] 
 [_^Upp`:`:dword^ dword]_[* GetMouseButtons]()_`=_[@3 0]&]
 [s2;%% Returns the current state of mouse buttons.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:GetModKeys`(`): [@(0.0.255) virtual] [_^Upp`:`:dword^ dword]_[* G
 etModKeys]()_`=_[@3 0]&]
@@ -94,14 +96,15 @@ in GetOptions flag is active.&]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:Quit`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Quit]()_`=_[@3 0
 ]&]
-[s2;%% Called when end of GUI operation is required.&]
+[s2;%% Called when the end of GUI operation is required.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:BeginDraw`(`): [@(0.0.255) virtual] [_^Upp`:`:SystemDraw^ Syste
 mDraw][@(0.0.255) `&]_[* BeginDraw]()_`=_[@3 0]&]
 [s2;%% Starts drawing on the surface. VirtualGui only requires single 
 instance of SystemDraw to exist at any time, so it is ok to have 
-corresponding Draw as instance variable of VirtualGui implementation.&]
+corresponding Draw as an instance variable of the VirtualGui 
+implementation.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:VirtualGui`:`:CommitDraw`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* CommitD
@@ -114,6 +117,6 @@ raw]()_`=_[@3 0]&]
 [s5;:Upp`:`:RunVirtualGui`(Upp`:`:VirtualGui`&`,Upp`:`:Event`<`>`): [@(0.0.255) void]_[* R
 unVirtualGui]([_^Upp`:`:VirtualGui^ VirtualGui][@(0.0.255) `&]_[*@3 gui], 
 [_^Upp`:`:Event^ Event]<>_[*@3 app`_main])&]
-[s2;%% This function executes virtual GUI session.&]
+[s2;%% This function executes the virtual GUI session.&]
 [s3;%% &]
 [s0;%% ]]
