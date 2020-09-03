@@ -29,7 +29,6 @@
 #endif
 #define HAVE_BOOLEAN		/* prevent jmorecfg.h from redefining it */
 
-
 #ifdef JPEG_INTERNALS
 
 #undef RIGHT_SHIFT_IS_UNSIGNED
