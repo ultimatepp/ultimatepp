@@ -48579,8 +48579,7 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/z.cpp -o $(OutDir_Core)z.o
 
-$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c \
-	$(UPPDIR1)Core/lib/lz4.h
+$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/lib/lz4.c -o $(OutDir_Core)lz4.o
 
 $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \
@@ -50734,6 +50733,10 @@ $(OutDir_plugin_zstd)zstd_compress.o: $(UPPDIR1)plugin/zstd/lib/zstd_compress.c 
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_literals.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_sequences.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_superblock.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_double_fast.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_fast.h \
@@ -50757,6 +50760,7 @@ $(OutDir_plugin_zstd)zstd_opt.o: $(UPPDIR1)plugin/zstd/lib/zstd_opt.c \
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_opt.h \
@@ -50777,6 +50781,7 @@ $(OutDir_plugin_zstd)zstdmt_compress.o: $(UPPDIR1)plugin/zstd/lib/zstdmt_compres
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_ldm.h \
@@ -50795,6 +50800,7 @@ $(OutDir_plugin_zstd)zstd_lazy.o: $(UPPDIR1)plugin/zstd/lib/zstd_lazy.c \
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_lazy.h \
@@ -50813,6 +50819,7 @@ $(OutDir_plugin_zstd)zstd_ldm.o: $(UPPDIR1)plugin/zstd/lib/zstd_ldm.c \
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_double_fast.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_fast.h \
@@ -50833,6 +50840,7 @@ $(OutDir_plugin_zstd)zstd_fast.o: $(UPPDIR1)plugin/zstd/lib/zstd_fast.c \
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_fast.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
@@ -50881,11 +50889,69 @@ $(OutDir_plugin_zstd)zstd_double_fast.o: $(UPPDIR1)plugin/zstd/lib/zstd_double_f
 	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_double_fast.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
 	$(UPPDIR1)plugin/zstd/lib/zstdmt_compress.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_double_fast.c -o $(OutDir_plugin_zstd)zstd_double_fast.o
+
+$(OutDir_plugin_zstd)zstd_compress_superblock.o: $(UPPDIR1)plugin/zstd/lib/zstd_compress_superblock.c \
+	$(UPPDIR1)plugin/zstd/lib/bitstream.h \
+	$(UPPDIR1)plugin/zstd/lib/compiler.h \
+	$(UPPDIR1)plugin/zstd/lib/debug.h \
+	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/hist.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
+	$(UPPDIR1)plugin/zstd/lib/mem.h \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.c \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_literals.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_sequences.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_superblock.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstdmt_compress.h
+	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_compress_superblock.c -o $(OutDir_plugin_zstd)zstd_compress_superblock.o
+
+$(OutDir_plugin_zstd)zstd_compress_sequences.o: $(UPPDIR1)plugin/zstd/lib/zstd_compress_sequences.c \
+	$(UPPDIR1)plugin/zstd/lib/bitstream.h \
+	$(UPPDIR1)plugin/zstd/lib/compiler.h \
+	$(UPPDIR1)plugin/zstd/lib/debug.h \
+	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
+	$(UPPDIR1)plugin/zstd/lib/mem.h \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.c \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_sequences.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h
+	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_compress_sequences.c -o $(OutDir_plugin_zstd)zstd_compress_sequences.o
+
+$(OutDir_plugin_zstd)zstd_compress_literals.o: $(UPPDIR1)plugin/zstd/lib/zstd_compress_literals.c \
+	$(UPPDIR1)plugin/zstd/lib/bitstream.h \
+	$(UPPDIR1)plugin/zstd/lib/compiler.h \
+	$(UPPDIR1)plugin/zstd/lib/debug.h \
+	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
+	$(UPPDIR1)plugin/zstd/lib/mem.h \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.c \
+	$(UPPDIR1)plugin/zstd/lib/xxhash.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_compress_literals.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_cwksp.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd_internal.h \
+	$(UPPDIR1)plugin/zstd/lib/zstdmt_compress.h
+	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_compress_literals.c -o $(OutDir_plugin_zstd)zstd_compress_literals.o
 
 $(OutDir_plugin_zstd)zstd.a: \
 	$(OutDir_plugin_zstd)Compress.o \
@@ -50909,7 +50975,10 @@ $(OutDir_plugin_zstd)zstd.a: \
 	$(OutDir_plugin_zstd)error_private.o \
 	$(OutDir_plugin_zstd)hist.o \
 	$(OutDir_plugin_zstd)pool.o \
-	$(OutDir_plugin_zstd)zstd_double_fast.o
+	$(OutDir_plugin_zstd)zstd_double_fast.o \
+	$(OutDir_plugin_zstd)zstd_compress_superblock.o \
+	$(OutDir_plugin_zstd)zstd_compress_sequences.o \
+	$(OutDir_plugin_zstd)zstd_compress_literals.o
 	$(AR) $(OutDir_plugin_zstd)zstd.a \
 		$(OutDir_plugin_zstd)Compress.o \
 		$(OutDir_plugin_zstd)Decompress.o \
@@ -50932,7 +51001,10 @@ $(OutDir_plugin_zstd)zstd.a: \
 		$(OutDir_plugin_zstd)error_private.o \
 		$(OutDir_plugin_zstd)hist.o \
 		$(OutDir_plugin_zstd)pool.o \
-		$(OutDir_plugin_zstd)zstd_double_fast.o
+		$(OutDir_plugin_zstd)zstd_double_fast.o \
+		$(OutDir_plugin_zstd)zstd_compress_superblock.o \
+		$(OutDir_plugin_zstd)zstd_compress_sequences.o \
+		$(OutDir_plugin_zstd)zstd_compress_literals.o
 
 $(OutDir_RichEdit):
 	mkdir -p $(OutDir_RichEdit)
