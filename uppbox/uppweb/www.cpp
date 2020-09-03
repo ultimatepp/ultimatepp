@@ -81,7 +81,7 @@ typedef Image (*ImageFn)();
 
 namespace Upp {
 template<>
-unsigned GetHashValue(const ::ImageFn& fn) { return (unsigned)(uintptr_t) fn; }
+hash_t GetHashValue(const ::ImageFn& fn) { return (unsigned)(uintptr_t) fn; }
 };
 
 String GetImageSrc(ImageFn img)
