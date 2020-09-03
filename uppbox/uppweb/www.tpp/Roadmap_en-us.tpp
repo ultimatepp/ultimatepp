@@ -44,11 +44,13 @@ inlined routines (`* `= 8, 16, 32, 64, 128)&]
 [s5;l160;i150;poO0; SIMD optimizations (Intel SSE2 and ARM NEON) 
 of graphics related routines&]
 [s5;po &]
-[s5;po [* Ide]&]
+[s5;po [* Ide/umk]&]
 [s5;l160;i150;poO0; C`+`+ Assist parser in TheIDE is now multithreaded 
 and some parts run in background&]
 [s5;l160;i150;poO0; Navigator now can search for files too&]
 [s5;l160;i150;poO0; The errors now can be directly googled&]
+[s5;l160;i150;poO0; ide/umk now can be configured for cross`-compilation 
+(e.g. compile Win32 application in Linux)&]
 [s5;po &]
 [s5;po [* SQL]&]
 [s5;l160;i150;poO0; plugin/Sqlite3: Updated to 3.33&]
