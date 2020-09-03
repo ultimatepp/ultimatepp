@@ -39,19 +39,45 @@ started with TheIDE] `- the introduction to the concepts of TheIDE&]
 [s3; Use the whole power provided by the U`+`+ framework. Learn how 
 to use it`'s most important features.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core 
-Tutorial] `- the introduction to the foundations behind the framework&]
+Tutorial] `- the introduction to the foundations behind the framework.&]
 [s3;l160;i150;O0; [*^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
 Tutorial] `- learn how to build graphical user interfaces with 
-the U`+`+&]
+the U`+`+.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
 Tutorial] `- get knowledge about drawing custom content inside 
-window or control&]
+window or control.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
-Tutorial] `- check out the mechanism behind the image manipulation&]
+Tutorial] `- check out the mechanism behind the image manipulation.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
-Tutorial] `- introduction to using databases within U`+`+ framework&]
+Tutorial] `- introduction to using databases within U`+`+ framework.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark 
-Tutorial] `- web framework tutorial&]
+Tutorial] `- web framework tutorial.&]
+[s2; Articles&]
+[s3; The are also set of world class articles created by U`+`+ Authors 
+from which you can learn:&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5268022`/Getting`-Started`-with`-Uplusplus`-2020`-1^ G
+etting Started with U`+`+ 2020.1] `- new getting started article 
+related to one of the newest release `- good starting point for 
+everyone who wants to start journey with U`+`+.&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5262594`/Text`-to`-SVG`-Path`-Utility`-in`-Uplusplus^ T
+ext to SVG Path Utility in U`+`+] `- learn how to create useful 
+utility to convert text to SVG path in about 20 minutes and with 
+140 lines of code.&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/1068378`/Simple`-Multi`-Request`-Web`-Crawler`-using`-Uplusplus^ S
+imple Multi`-Request Web Crawler using U`+`+] `- interested in 
+network and concurrent programming with U`+`+? This article will 
+show you how to create simple parallel web crawler with user 
+interface.&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/1074135`/Evaluating`-expression`-with`-descend`-parser`-and`-Uplu^ E
+valuating expression with descend parser and U`+`+ CParser] `- 
+do you want to learn how to parse complex mathematical formulas 
+using U`+`+ core features and present them to the users? If, 
+yes this article is for you.&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/1070601`/Parallel`-QuickSort`-with`-Uplusplus`-CoWork^ P
+arallel QuickSort with U`+`+ CoWork] `- our computers from one 
+year to another are much more stronger. Learn how to use this 
+power with CoWork, which is the tool for very easy code parallelization 
+within U`+`+ framework.&]
 [s2; Video tutorials&]
 [s3; The list of video tutorials are available on the separate [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ p
 age].]]
