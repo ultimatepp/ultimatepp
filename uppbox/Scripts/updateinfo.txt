@@ -50,6 +50,7 @@ test upptst/Https with CLANGx64, release, debug
 
 close msys2
 
+----
 start msys2 mingw 32
 
 check that i686-w64-mingw32-clang works
@@ -88,6 +89,8 @@ openssl -> bin/openssl/include
 
 close perl / reopen perl to clean PATH
 
+cd .../openssl...
+
 vc64.bat
 
 nmake clean
@@ -101,6 +104,8 @@ LIB_CFLAGS=$(CNF_CFLAGS) $(CFLAGS)
 
 nmake
 libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
+
+2020-09-03: 1.1.1g
 
 ------------------------------------------------------------------
 plugin/jpg
@@ -147,6 +152,7 @@ remove all files except *.h, *.c and README (put it at the start of package),
 
 initial: 9b
 2019-03-22: 9c
+2020-09-03: 9d
 -------------------------------------------------------------------
 plugin/tif
 
@@ -171,7 +177,7 @@ Fix size_t in tif_config.h:
 #define TIFF_SSIZE_T ptrdiff_t
 #define TIFF_SIZE_T size_t
 
-Fix macros in libconf.h:
+Fix macros in tiffconf.h:
 
 #include <stddef.h>
 
@@ -198,6 +204,7 @@ Fix macros in libconf.h:
 Test with ImageView / upptst/data/tif, all platforms and compilers....
 
 2019-03-22: 4.0.10
+2020-09-03: 4.1.0
 
 -------------------------------------------------------------------
 plugin/png
@@ -217,6 +224,7 @@ fix problem with zlib.h inclidu:
 
 initial: 1.2.59
 2019-03-22: 1.2.59
+2020-09-03: 1.2.59 (no update)
 
 -------------------------------------------------------------------
 plugin/z
@@ -225,6 +233,8 @@ https://zlib.net/
 
 current version 1.2.11
 2019-03-22: 1.2.11
+2020-09-03: 1.2.11 (no update)
+
 -------------------------------------------------------------------
 plugin/lz4
 
@@ -240,6 +250,7 @@ put to lz4/
 
 initial: 1.7.3
 2019-03-22: 1.8.3
+2020-09-03: 1.9.2
 -------------------------------------------------------------------
 Core: xxhash
 
@@ -256,9 +267,17 @@ switch to 'master' branch
 download
 move files to lib, these appear to be all files from lib / "common", "compress" and "decompress"
 
+Fix includes:
+
+#include "../common/compiler.h"
+#include "../zstd.h"
+
+(remove ../common)
+
+
 initial 1.3.2
 2019-03-26: 1.3.8
-
+2020-09-03: 1.4.5
 -------------------------------------------------------------------
 plugin/lzma
 
@@ -275,6 +294,7 @@ to 7zTypes.h (to deactivate MT variant - for now)
 
 initial: 16.04
 2019-03-22: 19.0
+2020-09-03: 19.0 (no update)
 -------------------------------------------------------------------
 plugin/bz2
 
@@ -284,10 +304,11 @@ replace files in lib
 
 initial: 1.0.6
 2019-03-22: 1.0.6
+2020-09-03: 1.0.6 (no update)
 -------------------------------------------------------------------
 plugin/pcre
 
-ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
+ftp://ftp.pcre.org/pub/pcre/
 
 download pcre-x.x.zip
 
@@ -299,6 +320,7 @@ fix errors in pcre_compile.c with casts
 
 initial: 8.41
 2019-03-22: 8.43
+2020-09-02: 8.44
 ------------------------------------------------------------------
 plugin/Eigen
 
@@ -326,7 +348,7 @@ Download amalgamation, replace files lib/sqleet.[c|h]
 
 2019-03-22: 3.27.2
 2019-03-22: sqleet 0.27.2
-
+2020-09-03: updated coolman 3.33
 ------------------------------------------------------------------
 plugin/glew
 
