@@ -34,6 +34,8 @@ void Out(const void *data, int count, Stream *out)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
+	
+	RLOG("Test files directory: " << GetHomeDirFile("testdata"));
 
 	FindFile ff(GetHomeDirFile("testdata") + "/*.*");
 
