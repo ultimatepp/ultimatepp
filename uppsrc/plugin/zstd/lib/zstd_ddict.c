@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present, Yann Collet, Facebook, Inc.
+ * Copyright (c) 2016-2020, Yann Collet, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under both the BSD-style license (found in the
@@ -25,7 +25,7 @@
 #include "zstd_ddict.h"
 
 #if defined(ZSTD_LEGACY_SUPPORT) && (ZSTD_LEGACY_SUPPORT>=1)
-#  include "zstd_legacy.h"
+#  include "../legacy/zstd_legacy.h"
 #endif
 
 
@@ -65,6 +65,10 @@ void ZSTD_copyDDictParameters(ZSTD_DCtx* dctx, const ZSTD_DDict* ddict)
     dctx->virtualStart = ddict->dictContent;
     dctx->dictEnd = (const BYTE*)ddict->dictContent + ddict->dictSize;
     dctx->previousDstEnd = dctx->dictEnd;
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+    dctx->dictContentBeginForFuzzing = dctx->prefixStart;
+    dctx->dictContentEndForFuzzing = dctx->previousDstEnd;
+#endif
     if (ddict->entropyPresent) {
         dctx->litEntropy = 1;
         dctx->fseEntropy = 1;
@@ -105,9 +109,9 @@ ZSTD_loadEntropy_intoDDict(ZSTD_DDict* ddict,
     ddict->dictID = MEM_readLE32((const char*)ddict->dictContent + ZSTD_FRAMEIDSIZE);
 
     /* load entropy tables */
-    CHECK_E( ZSTD_loadDEntropy(&ddict->entropy,
-                                ddict->dictContent, ddict->dictSize),
-             dictionary_corrupted );
+    RETURN_ERROR_IF(ZSTD_isError(ZSTD_loadDEntropy(
+            &ddict->entropy, ddict->dictContent, ddict->dictSize)),
+        dictionary_corrupted, "");
     ddict->entropyPresent = 1;
     return 0;
 }
@@ -133,7 +137,7 @@ static size_t ZSTD_initDDict_internal(ZSTD_DDict* ddict,
     ddict->entropy.hufTable[0] = (HUF_DTable)((HufLog)*0x1000001);  /* cover both little and big endian */
 
     /* parse dictionary content */
-    CHECK_F( ZSTD_loadEntropy_intoDDict(ddict, dictContentType) );
+    FORWARD_IF_ERROR( ZSTD_loadEntropy_intoDDict(ddict, dictContentType) , "");
 
     return 0;
 }
