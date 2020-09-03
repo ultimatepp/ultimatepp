@@ -44,9 +44,9 @@ class SurfaceCtrl : public GL{
 		SurfaceCtrl();
 		~SurfaceCtrl();
 		
-		Function <void()> OnBegin;
+		Function <void()> WhenBegin;
 		Function <void()> WhenPaint;
-		Function <void()> OnEnd;
+		Function <void()> WhenEnd;
 		
 		//Starting function
 		void Init()noexcept;

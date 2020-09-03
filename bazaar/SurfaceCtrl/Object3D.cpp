@@ -9,25 +9,22 @@ namespace Upp{
 #define IMAGEFILE <SurfaceCtrl/textures.iml>
 #include <Draw/iml.h>
 
-#ifdef flagSKYBOX
-	#include "skybox.brc"
-#endif
 
 int Object3D::GlobalID = 0;
 
 Object3D::Object3D():ID(++GlobalID){
-	objectValues.Add("showMesh", Value(true));
-	objectValues.Add("showMeshLine", Value(false));
-	objectValues.Add("showMeshNormal", Value(false));
-	objectValues.Add("showLight", Value(true));
+	lineColor = Black();
+	lineOpacity = 0.5f;
+	lineWidth = 1.0f;
 	
-	objectValues.Add("lineColor", RawToValue(Black()));
-	objectValues.Add("lineOpacity", Value(0.5f));
-	objectValues.Add("lineWidth", Value(1.0f));
+	normalColor = Red();
+	normalOpacity = 1.0f;
+	normalLength = 1.0f;
 	
-	objectValues.Add("normalColor", RawToValue(Red()));
-	objectValues.Add("normalOpacity", Value(0.5f));
-	objectValues.Add("normalLength", Value(1.0f));
+	showMesh = true;
+	showMeshLine = false;
+	showMeshNormal = false;
+	showLight = true;
 	
 	WhenInit = [&](Object3D& obj){ DefaultInit(obj); };
 	WhenDraw = [&](const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition, Object3D& obj){ DefaultDraw(projectionMatrix,viewMatrix,viewPosition,obj); };
@@ -45,6 +42,19 @@ Object3D& Object3D::operator=(Object3D&& obj){
 	program = pick(obj.program);
 	objectValues = pick(obj.objectValues);
 	
+	lineColor = obj.lineColor;
+	lineOpacity = obj.lineOpacity;
+	lineWidth = obj.lineWidth;
+	
+	normalColor = obj.normalColor;
+	normalOpacity = obj.normalOpacity;
+	normalLength = obj.normalLength;
+	
+	showMesh = obj.showMesh;
+	showMeshLine = obj.showMeshLine;
+	showMeshNormal = obj.showMeshNormal;
+	showLight = obj.showLight;
+	
 	WhenInit = obj.WhenInit;
 	WhenDraw = obj.WhenDraw;
 	WhenClear = obj.WhenClear;
@@ -54,10 +64,10 @@ Object3D& Object3D::operator=(Object3D&& obj){
 	visible = obj.visible;
 	showBoundingBox = obj.showBoundingBox;
 
-	ProgramNoLight = obj.ProgramNoLight;
-	ProgramLine = obj.ProgramLine;
-	ProgramNormal = obj.ProgramNormal;
-	ProgramLight = obj.ProgramLight;
+	programNoLight = obj.programNoLight;
+	programLine = obj.programLine;
+	programNormal = obj.programNormal;
+	programLight = obj.programLight;
 	
 	drawType = obj.drawType;
 	
@@ -76,6 +86,19 @@ Object3D& Object3D::operator=(const Object3D& obj){
 	program = clone(obj.program);
 	objectValues = clone(obj.objectValues);
 	
+	lineColor = obj.lineColor;
+	lineOpacity = obj.lineOpacity;
+	lineWidth = obj.lineWidth;
+	
+	normalColor = obj.normalColor;
+	normalOpacity = obj.normalOpacity;
+	normalLength = obj.normalLength;
+	
+	showMesh = obj.showMesh;
+	showMeshLine = obj.showMeshLine;
+	showMeshNormal = obj.showMeshNormal;
+	showLight = obj.showLight;
+	
 	WhenInit = obj.WhenInit;
 	WhenDraw = obj.WhenDraw;
 	WhenClear = obj.WhenClear;
@@ -85,10 +108,10 @@ Object3D& Object3D::operator=(const Object3D& obj){
 	visible = obj.visible;
 	showBoundingBox = obj.showBoundingBox;
 
-	ProgramNoLight = obj.ProgramNoLight;
-	ProgramLine = obj.ProgramLine;
-	ProgramNormal = obj.ProgramNormal;
-	ProgramLight = obj.ProgramLight;
+	programNoLight = obj.programNoLight;
+	programLine = obj.programLine;
+	programNormal = obj.programNormal;
+	programLight = obj.programLight;
 	
 	drawType = obj.drawType;
 	return *this;
@@ -644,10 +667,11 @@ void Object3D::DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& vi
 				if(obj.GetProgramLine() != -1 && obj.GetProgram()[obj.GetProgramLine()].IsLinked()){
 					OpenGLProgram& prog =  obj.GetProgram()[obj.GetProgramLine()];
 					prog.Bind();
+					
 					glLineWidth(obj.GetLineWidth());
 					prog.SetMat4("ViewMatrix",viewMatrix);
 					prog.SetMat4("ProjectionMatrix",projectionMatrix);
-					prog.SetMat4("ModelMatrix",transform.GetModelMatrix());
+					prog.SetMat4("ModelMatrix",obj.GetTransform().GetModelMatrix());
 					Color lineColor = obj.GetLineColor();
 					prog.SetVec4("CustomColor", lineColor.GetR() / 255.0f, lineColor.GetG() / 255.0f, lineColor.GetB() / 255.0f,obj.GetLineOpacity());
 					
@@ -667,7 +691,7 @@ void Object3D::DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& vi
 					prog.Bind();
 					prog.SetMat4("ViewMatrix", viewMatrix);
 					prog.SetMat4("ProjectionMatrix", projectionMatrix);
-					prog.SetMat4("ModelMatrix", transform.GetModelMatrix());
+					prog.SetMat4("ModelMatrix", obj.GetTransform().GetModelMatrix());
 					Color normalColor = obj.GetNormalColor();
 					prog.SetVec4("CustomColor",normalColor.GetR() / 255.0f, normalColor.GetG() / 255.0f, normalColor.GetB() / 255.0f, obj.GetNormalOpacity());
 					prog.SetFloat("normal_length",obj.GetNormalLength());
@@ -683,7 +707,7 @@ void Object3D::DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& vi
 			}
 			if(obj.GetShowBoundingBox()){
 				if(obj.GetProgramLine() != -1 && obj.GetProgram()[obj.GetProgramLine()].IsLinked()){
-					boundingBox.Draw(transform.GetModelMatrix(),viewMatrix,projectionMatrix,obj.GetProgram()[obj.GetProgramLine()]);
+					boundingBox.Draw(obj.GetTransform().GetModelMatrix(),viewMatrix,projectionMatrix,obj.GetProgram()[obj.GetProgramLine()]);
 				}else{
 					ONCELOCK{
 						LOG("no Line OpenGL Program have been provided, Object3D No " + AsString(ID) +" Can't have is bounding box draw");
@@ -706,20 +730,14 @@ void Object3D::DefaultReload(Object3D& obj){
 	obj.Init();
 }
 
-#ifdef flagSKYBOX
-Skybox& Skybox::Init(){
-	Vector<Image> allSkyboximg {
-		StreamRaster::LoadStringAny(String(skybox_right, skybox_right_length)),
-		StreamRaster::LoadStringAny(String(skybox_left, skybox_left_length)),
-		StreamRaster::LoadStringAny(String(skybox_top, skybox_top_length)),
-		StreamRaster::LoadStringAny(String(skybox_bottom, skybox_bottom_length)),
-		StreamRaster::LoadStringAny(String(skybox_front, skybox_front_length)),
-		StreamRaster::LoadStringAny(String(skybox_back, skybox_back_length))};
-	return Init(allSkyboximg);
-}
-#endif
 Skybox& Skybox::Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back){
-	return Init(Vector<Image>{skybox_right,skybox_left,skybox_top,skybox_bottom,skybox_front,skybox_back});
+	auto TestImage = [&](const Image& img) -> Image{
+		if(img){
+			return pick(img);
+		}
+		return TexturesImg::empty();
+	};
+	return Init(Vector<Image>{ TestImage(skybox_right), TestImage(skybox_left), TestImage(skybox_top), TestImage(skybox_bottom),TestImage(skybox_front), TestImage(skybox_back)});
 }
 Skybox& Skybox::Init(const Vector<Image>& images){
 	glGenTextures(1, &ID);
@@ -727,8 +745,13 @@ Skybox& Skybox::Init(const Vector<Image>& images){
 	
 	int i = 0;
 	for(const Image& img : images){
-		Size size = img.GetSize();
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.cx , size.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
+		if(img){
+			Size size = img.GetSize();
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.cx , size.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
+		}else{
+			Size size = TexturesImg::empty().GetSize();
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.cx , size.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~(TexturesImg::empty()));
+		}
 		i++;
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

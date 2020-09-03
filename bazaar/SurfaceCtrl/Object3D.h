@@ -59,12 +59,26 @@ class Object3D : public Upp::Moveable<Object3D>{
 		bool visible = true;
 		bool showBoundingBox = false;
 
-		int ProgramNoLight = 0;//The program will draw figure without light
-		int ProgramLine =    0;//THe program will draw figure line
-		int ProgramNormal =  0;//The program will draw Normal
-		int ProgramLight =   0;//the program will draw figure with light
+		int programNoLight = 0;//The program will draw figure without light
+		int programLine =    0;//THe program will draw figure line
+		int programNormal =  0;//The program will draw Normal
+		int programLight =   0;//the program will draw figure with light
 		
 		GLenum drawType = GL_TRIANGLES;
+		
+		 //All this value are here by default
+		Color lineColor = Black();
+		float lineOpacity = 0.5f;
+		float lineWidth = 1.0f;
+		
+		Color normalColor = Red();
+		float normalOpacity = 1.0f;
+		float normalLength = 1.0f;
+
+		bool showMesh = true;
+		bool showMeshLine = false;
+		bool showMeshNormal = false;
+		bool showLight = true;
 	public:
 		Function <void(Object3D& obj)> WhenInit;
 		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)> WhenDraw;
@@ -142,35 +156,35 @@ class Object3D : public Upp::Moveable<Object3D>{
 
 		Mesh& CreateMesh()noexcept{return meshes.Add();}
 		
-		Object3D& SetLineColor(Color color)noexcept{if(objectValues.Find("lineColor") != -1) objectValues.Get("lineColor")= color; return *this;}
-		Object3D& SetNormalColor(Color color)noexcept{if(objectValues.Find("normalColor") != -1) objectValues.Get("normalColor")= color; return *this;}
-		Object3D& ShowMesh(bool b = true)noexcept{if(objectValues.Find("showMesh") != -1) objectValues.Get("showMesh")= b; return *this;}
-		Object3D& ShowMeshLine(bool b = true)noexcept{if(objectValues.Find("showMeshLine") != -1) objectValues.Get("showMeshLine")= b; return *this;}
-		Object3D& ShowMeshNormal(bool b = true)noexcept{if(objectValues.Find("showMeshNormal") != -1) objectValues.Get("showMeshNormal")= b; return *this;}
-		Object3D& ShowLight(bool b = true)noexcept{if(objectValues.Find("showLight") != -1) objectValues.Get("showLight") = b; return *this;}
-		Object3D& SetNormalLength(float length)noexcept{if(objectValues.Find("normalLength") != -1) objectValues.Get("normalLength")= length; return *this;}
-		Object3D& SetLineOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f; if(objectValues.Find("lineOpacity") != -1) objectValues.Get("lineOpacity") = opacity;  return *this;}
-		Object3D& SetLineWidth(float width)noexcept{if(width < 1) width = 1.0f; if(objectValues.Find("lineWidth") != -1) objectValues.Get("lineWidth") = width; return *this;}
-		Object3D& SetNormalOpacity(float opacity)noexcept{if(opacity < 0) opacity =0; if(opacity> 1.0f) opacity = 1.0f;if(objectValues.Find("normalOpacity") != -1) objectValues.Get("normalOpacity")= opacity; return *this;}
-		Object3D& SetProgramNoLight(const OpenGLProgram& prog)noexcept{ProgramNoLight = program.GetCount(); program.Add(prog); return *this;}
-		Object3D& SetProgramLight(const OpenGLProgram& prog)noexcept{ProgramLight = program.GetCount(); program.Add(prog); return *this;}
-		Object3D& SetProgramLine(const OpenGLProgram& prog)noexcept{ProgramLine = program.GetCount(); program.Add(prog); return *this;}
-		Object3D& SetProgramNormal(const OpenGLProgram& prog)noexcept{ProgramNormal = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetLineColor(Color color)noexcept{lineColor = color; return *this;}
+		Object3D& SetNormalColor(Color color)noexcept{normalColor = color; return *this;}
+		Object3D& ShowMesh(bool b = true)noexcept{showMesh = b; return *this;}
+		Object3D& ShowMeshLine(bool b = true)noexcept{showMeshLine = b; return *this;}
+		Object3D& ShowMeshNormal(bool b = true)noexcept{showMeshNormal = b; return *this;}
+		Object3D& ShowLight(bool b = true)noexcept{showLight = b; return *this;}
+		Object3D& SetNormalLength(float length)noexcept{normalLength = length; return *this;}
+		Object3D& SetLineOpacity(float opacity)noexcept{lineOpacity = opacity; return *this;}
+		Object3D& SetLineWidth(float width)noexcept{lineWidth = width; return *this;}
+		Object3D& SetNormalOpacity(float opacity)noexcept{normalOpacity = opacity; return *this;}
+		Object3D& SetProgramNoLight(const OpenGLProgram& prog)noexcept{programNoLight = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramLight(const OpenGLProgram& prog)noexcept{programLight = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramLine(const OpenGLProgram& prog)noexcept{programLine = program.GetCount(); program.Add(prog); return *this;}
+		Object3D& SetProgramNormal(const OpenGLProgram& prog)noexcept{programNormal = program.GetCount(); program.Add(prog); return *this;}
 
-		Upp::Color GetLineColor()const noexcept{if(objectValues.Find("lineColor") != -1) return objectValues.Get("lineColor").Get<Color>(); else return Black();}
-		Upp::Color GetNormalColor()const noexcept{if(objectValues.Find("normalColor") != -1) return objectValues.Get("normalColor").Get<Color>(); else return Black();}
-		bool GetShowMesh()const noexcept{if(objectValues.Find("showMesh") != -1) return objectValues.Get("showMesh"); else return false;}
-		bool GetShowMeshLine()const noexcept{if(objectValues.Find("showMeshLine") != -1) return (bool)objectValues.Get("showMeshLine"); else return false;}
-		bool GetShowMeshNormal()const noexcept{if(objectValues.Find("showMeshNormal") != -1) return (bool)objectValues.Get("showMeshNormal"); else return false;}
-		bool GetShowLight()const noexcept{if(objectValues.Find("showLight") != -1) return (bool)objectValues.Get("showLight"); else return false;}
-		float GetNormalOpacity()const noexcept{if(objectValues.Find("normalOpacity") != -1) return (double)(objectValues.Get("normalOpacity")); else return 0.0f;}
-		float GetNormalLength()const noexcept{if(objectValues.Find("normalLength") != -1) return (double)(objectValues.Get("normalLength")); else return 1.0f;}
-		float GetLineOpacity()const noexcept{if(objectValues.Find("lineOpacity") != -1) return (double)(objectValues.Get("lineOpacity")); else return 0.0f;}
-		float GetLineWidth()const noexcept{if(objectValues.Find("lineWidth") != -1) return (double)(objectValues.Get("lineWidth")); else return 0.0f;}
-		int GetProgramNoLight(){return ProgramNoLight;}
-		int GetProgramLight(){return ProgramLight;}
-		int GetProgramLine(){return ProgramLine;}
-		int GetProgramNormal(){return ProgramNormal;}
+		Upp::Color GetLineColor()const noexcept{return lineColor;}
+		Upp::Color GetNormalColor()const noexcept{return normalColor;}
+		bool GetShowMesh()const noexcept{return showMesh;}
+		bool GetShowMeshLine()const noexcept{return showMeshLine;}
+		bool GetShowMeshNormal()const noexcept{return showMeshNormal;}
+		bool GetShowLight()const noexcept{return showLight;}
+		float GetNormalOpacity()const noexcept{return normalOpacity;}
+		float GetNormalLength()const noexcept{return normalLength;}
+		float GetLineOpacity()const noexcept{return lineOpacity;}
+		float GetLineWidth()const noexcept{return lineWidth;}
+		int GetProgramNoLight(){return programNoLight;}
+		int GetProgramLight(){return programLight;}
+		int GetProgramLine(){return programLine;}
+		int GetProgramNormal(){return programNormal;}
 		
 		void CreateBoundingBox(); // Create Bounding box
 		void RemoveBoundingBox(); // Delete the bounding box
@@ -222,9 +236,7 @@ class Skybox {
 		~Skybox(){Clear();}
 		
 		
-#ifdef flagSKYBOX
-		Skybox& Init(); //Load the brc skybox
-#endif
+
 		Skybox& Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back); //Load all image provided as skybox
 		Skybox& Clear();
 		Skybox& Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix);

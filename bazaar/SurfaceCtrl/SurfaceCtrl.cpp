@@ -1,10 +1,10 @@
 #include "SurfaceCtrl.h"
 namespace Upp{
 SurfaceCtrl::SurfaceCtrl(){
-	OnBegin = [&]{};
+	WhenBegin = [&]{};
 }
 SurfaceCtrl::~SurfaceCtrl(){
-	OnEnd();
+	WhenEnd();
 }
 
 void SurfaceCtrl::Init()noexcept{
@@ -25,7 +25,7 @@ void SurfaceCtrl::Init()noexcept{
 			skybox.Init();
 		#endif
 		
-		OnBegin();
+		WhenBegin();
 		loaded = true;
 	});
 }
