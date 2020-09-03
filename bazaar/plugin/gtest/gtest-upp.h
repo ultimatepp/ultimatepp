@@ -37,4 +37,23 @@
 	
 #endif
 
+#if defined(PLATFORM_X11)
+	
+	#define TEST_GUI_APP_MAIN \
+	void TestGuiMainFn(); \
+	\
+	int main(int argc, char **argv, const char **envptr) { \
+		UPP::AppInit__(argc, (const char **)argv, envptr); \
+		UPP::InitGtkApp(argc, argv, envptr); \
+		testing::InitGoogleTest(&argc, argv); \
+		int testsResult = RUN_ALL_TESTS(); \
+		UPP::ExitGtkApp(); \
+		UPP::AppExit__(); \
+		return testsResult; \
+	} \
+	void TestGuiMainFn()
+
+#endif
+
+
 #endif 
