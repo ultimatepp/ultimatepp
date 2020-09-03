@@ -27,8 +27,13 @@
 #if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
 	#define TIFF_INT32_T long
 	#define TIFF_UINT32_T unsigned long
-	#define TIFF_INT64_T signed __int64
-	#define TIFF_UINT64_T unsigned __int64
+	#if __GNUC__
+		#define TIFF_INT64_T  long long int
+		#define TIFF_UINT64_T long long unsigned
+	#else
+		#define TIFF_INT64_T signed __int64
+		#define TIFF_UINT64_T unsigned __int64
+	#endif
 #else
 	#define TIFF_INT32_T int
 	#define TIFF_UINT32_T unsigned int
