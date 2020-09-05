@@ -1,7 +1,9 @@
+description "Automate UI testing with Google Test\377";
+
 uses
 	CtrlLib;
 
-uses(TESTING_TEST) plugin/gtest;
+uses(TESTING_GOOGLE_TEST_UI_EXAMPLE) plugin/gtest;
 
 file
 	AppWindow.h,
@@ -13,5 +15,5 @@ file
 
 mainconfig
 	"" = "GUI",
-	"" = "GUI TESTING_TEST";
+	"" = "GUI TESTING_GOOGLE_TEST_UI_EXAMPLE";
 

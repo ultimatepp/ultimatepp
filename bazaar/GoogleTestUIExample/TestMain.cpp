@@ -1,4 +1,4 @@
-#ifdef flagTESTING_TEST
+#ifdef flagTESTING_GOOGLE_TEST_UI_EXAMPLE
 
 #include <CtrlLib/CtrlLib.h>
 #include <plugin/gtest/gtest.h>

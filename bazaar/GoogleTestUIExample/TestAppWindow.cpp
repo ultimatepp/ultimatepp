@@ -1,4 +1,4 @@
-#ifdef flagTESTING_TEST
+#ifdef flagTESTING_GOOGLE_TEST_UI_EXAMPLE
 
 #include "AppWindow.h"
 
@@ -44,11 +44,12 @@ TEST_F(AppWindowTest, ApperanceTest)
 	if (!FileExists(fileName)) {
 		encoder.SaveFile(fileName, id);
 		Cout() << "Non referal window image. Creating and failing test..\n";
-		EXPECT_TRUE(false);
-	} else {
-		auto img = StreamRaster::LoadFileAny(fileName);
-		EXPECT_EQ(img, id);
+		ASSERT_TRUE(false);
+		return;
 	}
+	
+	auto img = StreamRaster::LoadFileAny(fileName);
+	EXPECT_EQ(img, id);
 }
 
 #endif
