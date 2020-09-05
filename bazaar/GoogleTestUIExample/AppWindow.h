@@ -5,16 +5,16 @@
 
 namespace Upp
 {
-	class AppWindow final : public TopWindow
+	class AppWindow : public TopWindow
 	{
 	public:
+		Button button;
+		
+	public:
 		AppWindow();
-	    
-	private:
-		void OnClick();
 	
-	private:
-	    Button button;
+	protected:
+		virtual void OnButtonClick();
 	};
 }
 

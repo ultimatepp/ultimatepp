@@ -3,7 +3,7 @@ description "Automate UI testing with Google Test\377";
 uses
 	CtrlLib;
 
-uses(TESTING_GOOGLE_TEST_UI_EXAMPLE) plugin/gtest;
+uses(TESTING_GOOGLE_TEST_UI_EXAMPLE) plugin/gmock;
 
 file
 	AppWindow.h,

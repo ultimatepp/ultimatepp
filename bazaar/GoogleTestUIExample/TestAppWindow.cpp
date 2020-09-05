@@ -2,25 +2,38 @@
 
 #include "AppWindow.h"
 
-#include <plugin/gtest/gtest.h>
+#include <plugin/gmock/gmock.h>
 #include <memory>
 
 using namespace Upp;
 
+class AppWindowMock final : public AppWindow {
+public:
+	MOCK_METHOD(void, OnButtonClick, (), (override));
+};
+
 class AppWindowTest : public testing::Test
 {
-public:
+protected:
 	AppWindowTest()
 		: windowRect(0, 0, 200, 200)
 	{}
 	
-	virtual void SetUp() override
+	void SetUp() override
 	{
-		window = MakeOne<AppWindow>();
+		window = MakeOne<AppWindowMock>();
 	}
 	
-public:
-	One<AppWindow> window;
+	void clickButton()
+	{
+		EXPECT_CALL(*window.Get(), OnButtonClick());
+		
+		window->button.LeftDown(Point(), 0);
+		window->button.LeftUp(Point(), 0);
+	}
+	
+protected:
+	One<AppWindowMock> window;
 	const Rect windowRect;
 };
 
@@ -50,6 +63,11 @@ TEST_F(AppWindowTest, ApperanceTest)
 	
 	auto img = StreamRaster::LoadFileAny(fileName);
 	EXPECT_EQ(img, id);
+}
+
+TEST_F(AppWindowTest, ButtonCanBeClick)
+{
+	clickButton();
 }
 
 #endif
