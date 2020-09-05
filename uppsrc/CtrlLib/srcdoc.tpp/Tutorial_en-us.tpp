@@ -1314,13 +1314,13 @@ window.&]
 [s3; Recommended tutorials:&]
 [s5; If you want to learn more, we have several tutorials that you 
 can find useful:&]
-[s5;l192;i150;O0; [^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
-tutorial ]`- in this tutorial we show more advance techniques 
+[s5;l192;i150;O0; [^topic`:`/`/Draw`/srcdoc`/DrawTutorial`_en`-us^ Draw 
+tutorial] `- in this tutorial we show more advance techniques 
 of drawing inside window. This is the natural continue of things 
 mention on this page.&]
-[s5;l192;i150;O0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
+[s5;l192;i150;O0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`_en`-us^ Image 
 tutorial] `- here we move things related to images. We show how 
 to create, use and embed icons directly in application.&]
-[s5;l192;i150;O0; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ Core 
+[s5;l192;i150;O0; [^topic`:`/`/Core`/srcdoc`/Tutorial`_en`-us^ Core 
 value types tutorial] `- learn basics about non user U`+`+ related 
 code.]]
