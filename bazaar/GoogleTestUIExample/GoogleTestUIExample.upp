@@ -1,0 +1,17 @@
+uses
+	CtrlLib;
+
+uses(TESTING_TEST) plugin/gtest;
+
+file
+	AppWindow.h,
+	AppWindow.cpp,
+	main.cpp,
+	Tests readonly separator,
+	TestAppWindow.cpp,
+	TestMain.cpp;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI TESTING_TEST";
+
