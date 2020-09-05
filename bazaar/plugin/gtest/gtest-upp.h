@@ -37,7 +37,23 @@
 	
 #endif
 
-#if defined(PLATFORM_X11)
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+	#define TEST_GUI_APP_MAIN \
+	void TestGuiMainFn(); \
+	\
+	int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
+	{ \
+		UPP::AppInitEnvironment__(); \
+		UPP::Ctrl::InitWin32(hInstance); \
+		testing::InitGoogleTest(&__argc, __argv); \
+		int testsResult = RUN_ALL_TESTS(); \
+		UPP::Ctrl::ExitWin32(); \
+		UPP::AppExit__(); \
+		return testsResult; \
+	} \
+	void TestGuiMainFn()
+
+#elif defined(PLATFORM_X11)
 	
 	#define TEST_GUI_APP_MAIN \
 	void TestGuiMainFn(); \
