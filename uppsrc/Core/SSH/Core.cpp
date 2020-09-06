@@ -93,24 +93,21 @@ bool Ssh::Run(Gate<>&& fn)
 
 void Ssh::Wait()
 {
+	// Here we disregard libssh2's socket event flags, and always wait for "any"
+	// socket event. Because we might have multiple channels waiting on the same
+	// session socket simutaneously (in MT). In those cases, waiting for a single
+	// event could lead the waiting channels to timeout errors. This way we give
+	// them a chance to fetch or send their data.
+
 	while(!IsTimeout()) {
 		RefreshUI();
 		if(!ssh->socket)
 			return;
 		SocketWaitEvent we;
-		AddTo(we);
+		we.Add(*ssh->socket, WAIT_READ|WAIT_WRITE);
 		if(we.Wait(ssh->waitstep) || ssh->noblock)
 			return;
 	}
-}
-
-dword Ssh::GetWaitEvents()
-{
-	dword events = 0;
-	if(ssh->socket && ssh->session)
-		events = libssh2_session_block_directions(ssh->session);
-	return !!(events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
-	       !!(events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
 }
 
 void Ssh::SetError(int rc, const String& reason)
