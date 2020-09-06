@@ -13,7 +13,7 @@ namespace Upp
 	public:
 		AppWindow();
 	
-	protected:
+	private:
 		virtual void OnButtonClick();
 	};
 }

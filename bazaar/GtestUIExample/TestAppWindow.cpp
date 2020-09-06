@@ -1,9 +1,8 @@
-#ifdef flagTESTING_GOOGLE_TEST_UI_EXAMPLE
+#ifdef flagTESTING_GTEST_UI_EXAMPLE
 
 #include "AppWindow.h"
 
 #include <plugin/gmock/gmock.h>
-#include <memory>
 
 using namespace Upp;
 

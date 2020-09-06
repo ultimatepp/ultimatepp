@@ -4,7 +4,7 @@
 
 using namespace Upp;
 
-#ifndef flagTESTING_GOOGLE_TEST_UI_EXAMPLE
+#ifndef flagTESTING_GTEST_UI_EXAMPLE
 	GUI_APP_MAIN
 	{
 		AppWindow().Run();

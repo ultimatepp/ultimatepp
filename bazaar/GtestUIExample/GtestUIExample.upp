@@ -1,0 +1,19 @@
+description "Automate UI testing with Google Test and Google Mock\377";
+
+uses
+	CtrlLib;
+
+uses(TESTING_GTEST_UI_EXAMPLE) plugin/gmock;
+
+file
+	AppWindow.h,
+	AppWindow.cpp,
+	main.cpp,
+	Tests readonly separator,
+	TestAppWindow.cpp,
+	TestMain.cpp;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI TESTING_GTEST_UI_EXAMPLE";
+

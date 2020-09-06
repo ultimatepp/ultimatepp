@@ -5,11 +5,11 @@ uses
 	Core;
 
 file
-	Tests readonly separator,
-	StringTest.h,
-	StringTest.cpp,
 	Init readonly separator,
-	main.cpp;
+	main.cpp,
+	Tests readonly separator,
+	StringTest.cpp,
+	StringTest.h;
 
 mainconfig
 	"" = "";
