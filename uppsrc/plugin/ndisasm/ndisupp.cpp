@@ -8,6 +8,7 @@ extern "C" {
 #undef UINT64_MAX
 
 #include "lib/compiler.h"
+#include "lib/inttypes.h"
 #include "lib/disasm.h"
 }
 
