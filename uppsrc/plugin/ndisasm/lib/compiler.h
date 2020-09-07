@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------- *
  *   
- *   Copyright 2007-2016 The NASM Authors - All Rights Reserved
+ *   Copyright 2007-2009 The NASM Authors - All Rights Reserved
  *   See the file AUTHORS included with the NASM distribution for
  *   the specific copyright holders.
  *
@@ -43,17 +43,9 @@
 #ifndef NASM_COMPILER_H
 #define NASM_COMPILER_H 1
 
-#ifdef __DJGPP__
-/* DJGPP has header file problems if __STRICT_ANSI__ is defined */
-# undef __STRICT_ANSI__
-#endif
-
 #ifdef __APPLE__
 #define _FORTIFY_SOURCE 0  //aris002 - in the future evaluate how unsafe are the safe funtions and vice versa
 #endif
-
-/* On Microsoft platforms we support multibyte character sets in filenames */
-#define _MBCS 1
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"
@@ -86,6 +78,12 @@
 
 #endif
 
+#ifdef __GNUC__
+# define _unused	__attribute__((unused))
+#else
+# define _unused
+#endif
+
 /* Some versions of MSVC have these only with underscores in front */
 #include <stddef.h>
 #include <stdarg.h>
@@ -104,7 +102,7 @@ int snprintf(char *, size_t, const char *, ...);
 #endif
 
 #ifndef HAVE_VSNPRINTF
-# ifdef HAVE__VSNPRINTF
+# ifdef HAVE__VSNPRINT
 #  define vsnprintf _vsnprintf
 # else
 int vsnprintf(char *, size_t, const char *, va_list);
@@ -192,15 +190,6 @@ char *strsep(char **, const char *);
 # define no_return void __attribute__((noreturn))
 #else
 # define no_return void
-#endif
-
-/*
- * How to tell the compiler that a function takes a printf-like string
- */
-#ifdef __GNUC__
-# define printf_func(fmt, list) __attribute__((format(printf, fmt, list)))
-#else
-# define printf_func(fmt, list)
 #endif
 
 #endif	/* NASM_COMPILER_H */

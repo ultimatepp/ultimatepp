@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------- *
  *   
- *   Copyright 1996-2013 The NASM Authors - All Rights Reserved
+ *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
  *   See the file AUTHORS included with the NASM distribution for
  *   the specific copyright holders.
  *
@@ -39,7 +39,6 @@
 #define NASM_OPFLAGS_H
 
 #include "compiler.h"
-#include "tables.h"     /* for opflags_t and nasm_reg_flags[] */
 
 /*
  * Here we define the operand types. These are implemented as bit
@@ -52,220 +51,189 @@
  *    (class & ~operand) == 0
  *
  * if and only if "operand" belongs to class type "class".
+ *
+ * The bits are assigned as follows:
+ *
+ * Bits 0-7, 23, 29: sizes
+ *  0:  8 bits (BYTE)
+ *  1: 16 bits (WORD)
+ *  2: 32 bits (DWORD)
+ *  3: 64 bits (QWORD)
+ *  4: 80 bits (TWORD)
+ *  5: FAR
+ *  6: NEAR
+ *  7: SHORT
+ * 23: 256 bits (YWORD)
+ * 29: 128 bits (OWORD)
+ *
+ * Bits 8-11 modifiers
+ *  8: TO
+ *  9: COLON
+ * 10: STRICT
+ * 11: (reserved)
+ *
+ * Bits 12-15: type of operand
+ * 12: REGISTER
+ * 13: IMMEDIATE
+ * 14: MEMORY (always has REGMEM attribute as well)
+ * 15: REGMEM (valid EA operand)
+ *
+ * Bits 16-19, 28: subclasses
+ * With REG_CDT:
+ * 16: REG_CREG (CRx)
+ * 17: REG_DREG (DRx)
+ * 18: REG_TREG (TRx)
+
+ * With REG_GPR:
+ * 16: REG_ACCUM  (AL, AX, EAX, RAX)
+ * 17: REG_COUNT  (CL, CX, ECX, RCX)
+ * 18: REG_DATA   (DL, DX, EDX, RDX)
+ * 19: REG_HIGH   (AH, CH, DH, BH)
+ * 28: REG_NOTACC (not REG_ACCUM)
+ *
+ * With REG_SREG:
+ * 16: REG_CS
+ * 17: REG_DESS (DS, ES, SS)
+ * 18: REG_FSGS
+ * 19: REG_SEG67
+ *
+ * With FPUREG:
+ * 16: FPU0
+ *
+ * With XMMREG:
+ * 16: XMM0
+ *
+ * With YMMREG:
+ * 16: YMM0
+ *
+ * With MEMORY:
+ * 16: MEM_OFFS (this is a simple offset)
+ * 17: IP_REL (IP-relative offset)
+ *
+ * With IMMEDIATE:
+ * 16: UNITY (1)
+ * 17: BYTENESS16 (-128..127)
+ * 18: BYTENESS32 (-128..127)
+ * 19: BYTENESS64 (-128..127)
+ *
+ * Bits 20-22, 24-27: register classes
+ * 20: REG_CDT (CRx, DRx, TRx)
+ * 21: RM_GPR (REG_GPR) (integer register)
+ * 22: REG_SREG
+ * 24: FPUREG
+ * 25: RM_MMX (MMXREG)
+ * 26: RM_XMM (XMMREG)
+ * 27: RM_YMM (YMMREG)
+ *
+ * Bit 31 is currently unallocated.
+ *
+ * 30: SAME_AS
+ * Special flag only used in instruction patterns; means this operand
+ * has to be identical to another operand.  Currently only supported
+ * for registers.
  */
 
-#define OP_GENMASK(bits, shift)         (((UINT64_C(1) << (bits)) - 1) << (shift))
-#define OP_GENBIT(bit, shift)           (UINT64_C(1) << ((shift) + (bit)))
+typedef uint32_t opflags_t;
 
-/*
- * Type of operand: memory reference, register, etc.
- *
- * Bits: 0 - 3
- */
-#define OPTYPE_SHIFT            (0)
-#define OPTYPE_BITS             (4)
-#define OPTYPE_MASK             OP_GENMASK(OPTYPE_BITS, OPTYPE_SHIFT)
-#define GEN_OPTYPE(bit)         OP_GENBIT(bit, OPTYPE_SHIFT)
+/* Size, and other attributes, of the operand */
+#define BITS8           0x00000001U
+#define BITS16          0x00000002U
+#define BITS32          0x00000004U
+#define BITS64          0x00000008U   /* x64 and FPU only */
+#define BITS80          0x00000010U   /* FPU only */
+#define BITS128         0x20000000U
+#define BITS256         0x00800000U
+#define FAR             0x00000020U   /* grotty: this means 16:16 or */
+                                       /* 16:32, like in CALL/JMP */
+#define NEAR            0x00000040U
+#define SHORT           0x00000080U   /* and this means what it says :) */
 
-/*
- * Modifiers.
- *
- * Bits: 4 - 6
- */
-#define MODIFIER_SHIFT          (4)
-#define MODIFIER_BITS           (3)
-#define MODIFIER_MASK           OP_GENMASK(MODIFIER_BITS, MODIFIER_SHIFT)
-#define GEN_MODIFIER(bit)       OP_GENBIT(bit, MODIFIER_SHIFT)
+#define SIZE_MASK       0x208000FFU   /* all the size attributes */
 
-/*
- * Register classes.
- *
- * Bits: 7 - 16
- */
-#define REG_CLASS_SHIFT         (7)
-#define REG_CLASS_BITS          (10)
-#define REG_CLASS_MASK          OP_GENMASK(REG_CLASS_BITS, REG_CLASS_SHIFT)
-#define GEN_REG_CLASS(bit)      OP_GENBIT(bit, REG_CLASS_SHIFT)
+/* Modifiers */
+#define MODIFIER_MASK   0x00000f00U
+#define TO              0x00000100U   /* reverse effect in FADD, FSUB &c */
+#define COLON           0x00000200U   /* operand is followed by a colon */
+#define STRICT          0x00000400U   /* do not optimize this operand */
 
-/*
- * Subclasses. Depends on type of operand.
- *
- * Bits: 17 - 24
- */
-#define SUBCLASS_SHIFT          (17)
-#define SUBCLASS_BITS           (8)
-#define SUBCLASS_MASK           OP_GENMASK(SUBCLASS_BITS, SUBCLASS_SHIFT)
-#define GEN_SUBCLASS(bit)       OP_GENBIT(bit, SUBCLASS_SHIFT)
+/* Type of operand: memory reference, register, etc. */
+#define OPTYPE_MASK     0x0000f000U
+#define REGISTER        0x00001000U   /* register number in 'basereg' */
+#define IMMEDIATE       0x00002000U
+#define MEMORY          0x0000c000U
+#define REGMEM          0x00008000U   /* for r/m, ie EA, operands */
 
-/*
- * Special flags. Context dependant.
- *
- * Bits: 25 - 31
- */
-#define SPECIAL_SHIFT           (25)
-#define SPECIAL_BITS            (7)
-#define SPECIAL_MASK            OP_GENMASK(SPECIAL_BITS, SPECIAL_SHIFT)
-#define GEN_SPECIAL(bit)        OP_GENBIT(bit, SPECIAL_SHIFT)
-
-/*
- * Sizes of the operands and attributes.
- *
- * Bits: 32 - 42
- */
-#define SIZE_SHIFT              (32)
-#define SIZE_BITS               (11)
-#define SIZE_MASK               OP_GENMASK(SIZE_BITS, SIZE_SHIFT)
-#define GEN_SIZE(bit)           OP_GENBIT(bit, SIZE_SHIFT)
-
-/*
- * Bits distribution (counted from 0)
- *
- *    6         5         4         3         2         1
- * 3210987654321098765432109876543210987654321098765432109876543210
- *                                 |
- *                                 | dword bound
- *
- * ............................................................1111 optypes
- * .........................................................111.... modifiers
- * ...............................................1111111111....... register classes
- * .......................................11111111................. subclasses
- * ................................1111111......................... specials
- * .....................11111111111................................ sizes
- */
-
-#define REGISTER                GEN_OPTYPE(0)                   /* register number in 'basereg' */
-#define IMMEDIATE               GEN_OPTYPE(1)
-#define REGMEM                  GEN_OPTYPE(2)                   /* for r/m, ie EA, operands */
-#define MEMORY                  (GEN_OPTYPE(3) | REGMEM)
-
-#define BITS8                   GEN_SIZE(0)                     /*   8 bits (BYTE) */
-#define BITS16                  GEN_SIZE(1)                     /*  16 bits (WORD) */
-#define BITS32                  GEN_SIZE(2)                     /*  32 bits (DWORD) */
-#define BITS64                  GEN_SIZE(3)                     /*  64 bits (QWORD), x64 and FPU only */
-#define BITS80                  GEN_SIZE(4)                     /*  80 bits (TWORD), FPU only */
-#define BITS128                 GEN_SIZE(5)                     /* 128 bits (OWORD) */
-#define BITS256                 GEN_SIZE(6)                     /* 256 bits (YWORD) */
-#define BITS512                 GEN_SIZE(7)                     /* 512 bits (ZWORD) */
-#define FAR                     GEN_SIZE(8)                     /* grotty: this means 16:16 or 16:32, like in CALL/JMP */
-#define NEAR                    GEN_SIZE(9)
-#define SHORT                   GEN_SIZE(10)                    /* and this means what it says :) */
-
-#define TO                      GEN_MODIFIER(0)                 /* reverse effect in FADD, FSUB &c */
-#define COLON                   GEN_MODIFIER(1)                 /* operand is followed by a colon */
-#define STRICT                  GEN_MODIFIER(2)                 /* do not optimize this operand */
-
-#define REG_CLASS_CDT           GEN_REG_CLASS(0)
-#define REG_CLASS_GPR           GEN_REG_CLASS(1)
-#define REG_CLASS_SREG          GEN_REG_CLASS(2)
-#define REG_CLASS_FPUREG        GEN_REG_CLASS(3)
-#define REG_CLASS_RM_MMX        GEN_REG_CLASS(4)
-#define REG_CLASS_RM_XMM        GEN_REG_CLASS(5)
-#define REG_CLASS_RM_YMM        GEN_REG_CLASS(6)
-#define REG_CLASS_RM_ZMM        GEN_REG_CLASS(7)
-#define REG_CLASS_OPMASK        GEN_REG_CLASS(8)
-#define REG_CLASS_BND           GEN_REG_CLASS(9)
-
-#define is_class(class, op)         (!((opflags_t)(class) & ~(opflags_t)(op)))
-#define is_reg_class(class, reg)    is_class((class), nasm_reg_flags[(reg)])
-
-#define IS_SREG(reg)                is_reg_class(REG_SREG, (reg))
-#define IS_FSGS(reg)                is_reg_class(REG_FSGS, (reg))
+#define is_class(class, op)     (!((opflags_t)(class) & ~(opflags_t)(op)))
 
 /* Register classes */
-#define REG_EA                  (                                               REGMEM | REGISTER)      /* 'normal' reg, qualifies as EA */
-#define RM_GPR                  (                  REG_CLASS_GPR              | REGMEM)                 /* integer operand */
-#define REG_GPR                 (                  REG_CLASS_GPR              | REGMEM | REGISTER)      /* integer register */
-#define REG8                    (                  REG_CLASS_GPR    | BITS8   | REGMEM | REGISTER)      /*  8-bit GPR  */
-#define REG16                   (                  REG_CLASS_GPR    | BITS16  | REGMEM | REGISTER)      /* 16-bit GPR */
-#define REG32                   (                  REG_CLASS_GPR    | BITS32  | REGMEM | REGISTER)      /* 32-bit GPR */
-#define REG64                   (                  REG_CLASS_GPR    | BITS64  | REGMEM | REGISTER)      /* 64-bit GPR */
-#define FPUREG                  (                  REG_CLASS_FPUREG                    | REGISTER)      /* floating point stack registers */
-#define FPU0                    (GEN_SUBCLASS(1) | REG_CLASS_FPUREG                    | REGISTER)      /* FPU stack register zero */
-#define RM_MMX                  (                  REG_CLASS_RM_MMX           | REGMEM)                 /* MMX operand */
-#define MMXREG                  (                  REG_CLASS_RM_MMX           | REGMEM | REGISTER)      /* MMX register */
-#define RM_XMM                  (                  REG_CLASS_RM_XMM           | REGMEM)                 /* XMM (SSE) operand */
-#define XMMREG                  (                  REG_CLASS_RM_XMM           | REGMEM | REGISTER)      /* XMM (SSE) register */
-#define RM_YMM                  (                  REG_CLASS_RM_YMM           | REGMEM)                 /* YMM (AVX) operand */
-#define YMMREG                  (                  REG_CLASS_RM_YMM           | REGMEM | REGISTER)      /* YMM (AVX) register */
-#define RM_ZMM                  (                  REG_CLASS_RM_ZMM           | REGMEM)                 /* ZMM (AVX512) operand */
-#define ZMMREG                  (                  REG_CLASS_RM_ZMM           | REGMEM | REGISTER)      /* ZMM (AVX512) register */
-#define RM_OPMASK               (                  REG_CLASS_OPMASK           | REGMEM)                 /* Opmask operand */
-#define OPMASKREG               (                  REG_CLASS_OPMASK           | REGMEM | REGISTER)      /* Opmask register */
-#define OPMASK0                 (GEN_SUBCLASS(1) | REG_CLASS_OPMASK           | REGMEM | REGISTER)      /* Opmask register zero (k0) */
-#define RM_K                    RM_OPMASK
-#define KREG                    OPMASKREG
-#define RM_BND                  (                  REG_CLASS_BND              | REGMEM)                 /* Bounds operand */
-#define BNDREG                  (                  REG_CLASS_BND              | REGMEM | REGISTER)      /* Bounds register */
-#define REG_CDT                 (                  REG_CLASS_CDT    | BITS32           | REGISTER)      /* CRn, DRn and TRn */
-#define REG_CREG                (GEN_SUBCLASS(1) | REG_CLASS_CDT    | BITS32           | REGISTER)      /* CRn */
-#define REG_DREG                (GEN_SUBCLASS(2) | REG_CLASS_CDT    | BITS32           | REGISTER)      /* DRn */
-#define REG_TREG                (GEN_SUBCLASS(3) | REG_CLASS_CDT    | BITS32           | REGISTER)      /* TRn */
-#define REG_SREG                (                  REG_CLASS_SREG   | BITS16           | REGISTER)      /* any segment register */
+#define REG_EA          0x00009000U   /* 'normal' reg, qualifies as EA */
+#define RM_GPR          0x00208000U   /* integer operand */
+#define REG_GPR         0x00209000U   /* integer register */
+#define REG8            0x00209001U   /*  8-bit GPR  */
+#define REG16           0x00209002U   /* 16-bit GPR */
+#define REG32           0x00209004U   /* 32-bit GPR */
+#define REG64           0x00209008U   /* 64-bit GPR */
+#define FPUREG          0x01001000U   /* floating point stack registers */
+#define FPU0            0x01011000U   /* FPU stack register zero */
+#define RM_MMX          0x02008000U   /* MMX operand */
+#define MMXREG          0x02009000U   /* MMX register */
+#define RM_XMM          0x04008000U   /* XMM (SSE) operand */
+#define XMMREG          0x04009000U   /* XMM (SSE) register */
+#define XMM0            0x04019000U   /* XMM register zero */
+#define RM_YMM          0x08008000U   /* YMM (AVX) operand */
+#define YMMREG          0x08009000U   /* YMM (AVX) register */
+#define YMM0            0x08019000U   /* YMM register zero */
+#define REG_CDT         0x00101004U   /* CRn, DRn and TRn */
+#define REG_CREG        0x00111004U   /* CRn */
+#define REG_DREG        0x00121004U   /* DRn */
+#define REG_TREG        0x00141004U   /* TRn */
+#define REG_SREG        0x00401002U   /* any segment register */
+#define REG_CS          0x00411002U   /* CS */
+#define REG_DESS        0x00421002U   /* DS, ES, SS */
+#define REG_FSGS        0x00441002U   /* FS, GS */
+#define REG_SEG67       0x00481002U   /* Unimplemented segment registers */
 
-/* Segment registers */
-#define REG_ES                  (GEN_SUBCLASS(0) | GEN_SUBCLASS(2) | REG_CLASS_SREG | BITS16 | REGISTER)      /* ES */
-#define REG_CS                  (GEN_SUBCLASS(1) | GEN_SUBCLASS(2) | REG_CLASS_SREG | BITS16 | REGISTER)      /* CS */
-#define REG_SS                  (GEN_SUBCLASS(0) | GEN_SUBCLASS(3) | REG_CLASS_SREG | BITS16 | REGISTER)      /* SS */
-#define REG_DS                  (GEN_SUBCLASS(1) | GEN_SUBCLASS(3) | REG_CLASS_SREG | BITS16 | REGISTER)      /* DS */
-#define REG_FS                  (GEN_SUBCLASS(0) | GEN_SUBCLASS(4) | REG_CLASS_SREG | BITS16 | REGISTER)      /* FS */
-#define REG_GS                  (GEN_SUBCLASS(1) | GEN_SUBCLASS(4) | REG_CLASS_SREG | BITS16 | REGISTER)      /* GS */
-#define REG_FSGS                (                  GEN_SUBCLASS(4) | REG_CLASS_SREG | BITS16 | REGISTER)      /* FS or GS */
-#define REG_SEG67               (                  GEN_SUBCLASS(5) | REG_CLASS_SREG | BITS16 | REGISTER)      /* Unimplemented segment registers */
+#define REG_RIP         0x00801008U   /* RIP relative addressing */
+#define REG_EIP         0x00801004U   /* EIP relative addressing */
 
 /* Special GPRs */
-#define REG_SMASK               SUBCLASS_MASK                                                                           /* a mask for the following */
-#define REG_ACCUM               (GEN_SUBCLASS(1)                   | REG_CLASS_GPR           | REGMEM | REGISTER)       /* accumulator: AL, AX, EAX, RAX */
-#define REG_AL                  (GEN_SUBCLASS(1)                   | REG_CLASS_GPR | BITS8   | REGMEM | REGISTER)
-#define REG_AX                  (GEN_SUBCLASS(1)                   | REG_CLASS_GPR | BITS16  | REGMEM | REGISTER)
-#define REG_EAX                 (GEN_SUBCLASS(1)                   | REG_CLASS_GPR | BITS32  | REGMEM | REGISTER)
-#define REG_RAX                 (GEN_SUBCLASS(1)                   | REG_CLASS_GPR | BITS64  | REGMEM | REGISTER)
-#define REG_COUNT               (GEN_SUBCLASS(5) | GEN_SUBCLASS(2) | REG_CLASS_GPR           | REGMEM | REGISTER)       /* counter: CL, CX, ECX, RCX */
-#define REG_CL                  (GEN_SUBCLASS(5) | GEN_SUBCLASS(2) | REG_CLASS_GPR | BITS8   | REGMEM | REGISTER)
-#define REG_CX                  (GEN_SUBCLASS(5) | GEN_SUBCLASS(2) | REG_CLASS_GPR | BITS16  | REGMEM | REGISTER)
-#define REG_ECX                 (GEN_SUBCLASS(5) | GEN_SUBCLASS(2) | REG_CLASS_GPR | BITS32  | REGMEM | REGISTER)
-#define REG_RCX                 (GEN_SUBCLASS(5) | GEN_SUBCLASS(2) | REG_CLASS_GPR | BITS64  | REGMEM | REGISTER)
-#define REG_DL                  (GEN_SUBCLASS(5) | GEN_SUBCLASS(3) | REG_CLASS_GPR | BITS8   | REGMEM | REGISTER)       /* data: DL, DX, EDX, RDX */
-#define REG_DX                  (GEN_SUBCLASS(5) | GEN_SUBCLASS(3) | REG_CLASS_GPR | BITS16  | REGMEM | REGISTER)
-#define REG_EDX                 (GEN_SUBCLASS(5) | GEN_SUBCLASS(3) | REG_CLASS_GPR | BITS32  | REGMEM | REGISTER)
-#define REG_RDX                 (GEN_SUBCLASS(5) | GEN_SUBCLASS(3) | REG_CLASS_GPR | BITS64  | REGMEM | REGISTER)
-#define REG_HIGH                (GEN_SUBCLASS(5) | GEN_SUBCLASS(4) | REG_CLASS_GPR | BITS8   | REGMEM | REGISTER)       /* high regs: AH, CH, DH, BH */
-#define REG_NOTACC              GEN_SUBCLASS(5)                                                                         /* non-accumulator register */
-#define REG8NA                  (GEN_SUBCLASS(5)                   | REG_CLASS_GPR | BITS8   | REGMEM | REGISTER)       /*  8-bit non-acc GPR  */
-#define REG16NA                 (GEN_SUBCLASS(5)                   | REG_CLASS_GPR | BITS16  | REGMEM | REGISTER)       /* 16-bit non-acc GPR */
-#define REG32NA                 (GEN_SUBCLASS(5)                   | REG_CLASS_GPR | BITS32  | REGMEM | REGISTER)       /* 32-bit non-acc GPR */
-#define REG64NA                 (GEN_SUBCLASS(5)                   | REG_CLASS_GPR | BITS64  | REGMEM | REGISTER)       /* 64-bit non-acc GPR */
+#define REG_SMASK       0x100f0000U   /* a mask for the following */
+#define REG_ACCUM       0x00219000U   /* accumulator: AL, AX, EAX, RAX */
+#define REG_AL          0x00219001U
+#define REG_AX          0x00219002U
+#define REG_EAX         0x00219004U
+#define REG_RAX         0x00219008U
+#define REG_COUNT       0x10229000U   /* counter: CL, CX, ECX, RCX */
+#define REG_CL          0x10229001U
+#define REG_CX          0x10229002U
+#define REG_ECX         0x10229004U
+#define REG_RCX         0x10229008U
+#define REG_DL          0x10249001U   /* data: DL, DX, EDX, RDX */
+#define REG_DX          0x10249002U
+#define REG_EDX         0x10249004U
+#define REG_RDX         0x10249008U
+#define REG_HIGH        0x10289001U   /* high regs: AH, CH, DH, BH */
+#define REG_NOTACC      0x10000000U   /* non-accumulator register */
+#define REG8NA          0x10209001U   /*  8-bit non-acc GPR  */
+#define REG16NA         0x10209002U   /* 16-bit non-acc GPR */
+#define REG32NA         0x10209004U   /* 32-bit non-acc GPR */
+#define REG64NA         0x10209008U   /* 64-bit non-acc GPR */
 
 /* special types of EAs */
-#define MEM_OFFS                (GEN_SUBCLASS(1) | MEMORY)      /* simple [address] offset - absolute! */
-#define IP_REL                  (GEN_SUBCLASS(2) | MEMORY)      /* IP-relative offset */
-#define XMEM                    (GEN_SUBCLASS(3) | MEMORY)      /* 128-bit vector SIB */
-#define YMEM                    (GEN_SUBCLASS(4) | MEMORY)      /* 256-bit vector SIB */
-#define ZMEM                    (GEN_SUBCLASS(5) | MEMORY)      /* 512-bit vector SIB */
+#define MEM_OFFS        0x0001c000U   /* simple [address] offset - absolute! */
+#define IP_REL          0x0002c000U   /* IP-relative offset */
 
 /* memory which matches any type of r/m operand */
-#define MEMORY_ANY              (MEMORY | RM_GPR | RM_MMX | RM_XMM_L16 | RM_YMM_L16 | RM_ZMM_L16 | RM_OPMASK | RM_BND)
+#define MEMORY_ANY      (MEMORY|RM_GPR|RM_MMX|RM_XMM|RM_YMM)
 
-/* special immediate values */
-#define UNITY                   (GEN_SUBCLASS(0) | IMMEDIATE)   /* operand equals 1 */
-#define SBYTEWORD               (GEN_SUBCLASS(1) | IMMEDIATE)   /* operand is in the range -128..127 mod 2^16 */
-#define SBYTEDWORD              (GEN_SUBCLASS(2) | IMMEDIATE)   /* operand is in the range -128..127 mod 2^32 */
-#define SDWORD                  (GEN_SUBCLASS(3) | IMMEDIATE)   /* operand is in the range -0x80000000..0x7FFFFFFF */
-#define UDWORD                  (GEN_SUBCLASS(4) | IMMEDIATE)   /* operand is in the range 0..0xFFFFFFFF */
+/* special type of immediate operand */
+#define UNITY           0x00012000U   /* for shift/rotate instructions */
+#define SBYTE16         0x00022000U   /* for op r16,immediate instrs. */
+#define SBYTE32         0x00042000U   /* for op r32,immediate instrs. */
+#define SBYTE64         0x00082000U   /* for op r64,immediate instrs. */
+#define BYTENESS        0x000e0000U   /* for testing for byteness */
 
-/*
- * Subset of vector registers: register 0 only and registers 0-15.
- * Avoid conflicts in subclass bitfield with any of special EA types!
- */
-#define RM_XMM_L16              (GEN_SUBCLASS(6) | RM_XMM)                                              /* XMM r/m operand  0 ~ 15 */
-#define XMM0                    (GEN_SUBCLASS(1) | GEN_SUBCLASS(6) | XMMREG)                            /* XMM register   zero  */
-#define XMM_L16                 (                  GEN_SUBCLASS(6) | XMMREG)                            /* XMM register  0 ~ 15 */
-
-#define RM_YMM_L16              (GEN_SUBCLASS(6) | RM_YMM)                                              /* YMM r/m operand  0 ~ 15 */
-#define YMM0                    (GEN_SUBCLASS(1) | GEN_SUBCLASS(6) | YMMREG)                            /* YMM register   zero  */
-#define YMM_L16                 (                  GEN_SUBCLASS(6) | YMMREG)                            /* YMM register  0 ~ 15 */
-
-#define RM_ZMM_L16              (GEN_SUBCLASS(6) | RM_ZMM)                                              /* ZMM r/m operand  0 ~ 15 */
-#define ZMM0                    (GEN_SUBCLASS(1) | GEN_SUBCLASS(6) | ZMMREG)                            /* ZMM register   zero  */
-#define ZMM_L16                 (                  GEN_SUBCLASS(6) | ZMMREG)                            /* ZMM register  0 ~ 15 */
+/* special flags */
+#define SAME_AS         0x40000000U
 
 #endif /* NASM_OPFLAGS_H */
