@@ -102,8 +102,7 @@ bool SshSession::Connect(const String& url)
              u.scheme == "scp"   ||
              u.scheme == "sftp"  ||
              u.scheme == "exec"  ||
-             u.scheme.IsEmpty()  &&
-             !u.host.IsEmpty();
+             (u.scheme.IsEmpty()  && !u.host.IsEmpty());
 	int port = (u.port.IsEmpty() || !b) ? 22 : StrInt(u.port);
 
 	return b ? Connect(u.host, port, u.username, u.password)

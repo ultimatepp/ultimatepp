@@ -364,8 +364,8 @@ SshShell::SshShell(SshSession& session)
 , resized(false)
 , xenabled(false)
 #ifdef PLATFORM_POSIX
-, xscreen(0)
 , xdisplay(0)
+, xscreen(0)
 , xbuflen(1024 * 1024)
 #elif PLATFORM_WIN32
 , stdinput(nullptr)
