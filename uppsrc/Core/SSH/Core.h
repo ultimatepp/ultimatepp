@@ -66,7 +66,7 @@ protected:
     bool                IsTimeout() const                       { return !IsNull(ssh->timeout) && ssh->timeout > 0 &&  msecs(ssh->start_time) >= ssh->timeout; }
     void                SetError(int rc, const String& reason = Null);
     void                ReportError(int rc, const String& reason);
-	inline void         RefreshUI()                             { WhenWait  ? WhenWait() : ssh->whenwait(); }
+    void                RefreshUI()                             { WhenWait  ? WhenWait() : ssh->whenwait(); }
     
 private:
     static int64        GetNewId();

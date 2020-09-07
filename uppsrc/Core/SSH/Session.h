@@ -74,8 +74,8 @@ public:
 
     // DEPRECATED stuff. Use GetxxxFingerprint() methods instead.
     enum Hash           { HASH_MD5, HASH_SHA1, HASH_SHA256 };
-    String              GetFingerprint() const              { return session->fingerprint; }
-    SshSession&         HashType(Hash h)                    { session->hashtype = h; return *this; }
+    [[deprecated]] String      GetFingerprint() const              { return session->fingerprint; }
+    [[deprecated]] SshSession& HashType(Hash h)                    { session->hashtype = h; return *this; }
 
 private:
     void                Exit() override;

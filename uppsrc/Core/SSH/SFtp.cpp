@@ -601,10 +601,8 @@ FileSystemInfo::FileInfo SFtp::DirEntry::ToFileInfo() const
 
 bool SFtp::DirEntry::CanMode(dword u, dword g, dword o) const
 {
-	return a->flags & LIBSSH2_SFTP_ATTR_PERMISSIONS &&
-		   a->permissions & o ||
-		   a->permissions & g ||
-		   a->permissions & u;
+	return (a->flags & LIBSSH2_SFTP_ATTR_PERMISSIONS)
+		&& (a->permissions & o || a->permissions & g || a->permissions & u);
 }
 
 void SFtp::DirEntry::Zero()

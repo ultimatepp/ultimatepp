@@ -4,6 +4,8 @@ namespace Upp {
 	
 #define MLOG(x)  //  LOG(x)
 
+#ifdef UPP_HEAP
+
 static std::atomic<int64> UPP_SSH_alloc;
 
 static void *ssh_malloc(size_t size, void **abstract)
@@ -50,4 +52,6 @@ static void *ssh_realloc(void *ptr, size_t size, void** abstract)
 	MemoryFree(aptr);
 	return newaptr;
 }
+
+#endif
 }
