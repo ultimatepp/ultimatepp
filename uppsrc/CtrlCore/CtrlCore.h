@@ -16,14 +16,7 @@
 		#define VIRTUALGUI 1
 	#endif
 
-	#ifdef flagTURTLE
-		#define GUIPLATFORM_KEYCODES_INCLUDE <Turtle/Keys.h>
-		//need to make SDL_keysym.h known before K_ enum
-		#define GUIPLATFORM_INCLUDE          <Turtle/Turtle.h>
-		#define GUIPLATFORM_NOSCROLL
-		#define PLATFORM_TURTLE
-		#define TURTLE
-	#elif VIRTUALGUI
+	#ifdef VIRTUALGUI
 		#define GUIPLATFORM_KEYCODES_INCLUDE <VirtualGui/Keys.h>
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
 	#elif PLATFORM_COCOA
