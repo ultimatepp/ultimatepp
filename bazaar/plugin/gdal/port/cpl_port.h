@@ -224,7 +224,11 @@ typedef unsigned __int64 GUIntBig;
 #define GINTBIG_MIN     ((GIntBig)(0x80000000) << 32)
 #define GINTBIG_MAX     (((GIntBig)(0x7FFFFFFF) << 32) | 0xFFFFFFFFU)
 
-#elif HAVE_LONG_LONG
+#else
+
+#ifndef HAVE_LONG_LONG
+#define HAVE_LONG_LONG
+#endif
 
 typedef long long        GIntBig;
 typedef unsigned long long GUIntBig;
@@ -232,13 +236,6 @@ typedef unsigned long long GUIntBig;
 #define GINTBIG_MIN     ((GIntBig)(0x80000000) << 32)
 #define GINTBIG_MAX     (((GIntBig)(0x7FFFFFFF) << 32) | 0xFFFFFFFFU)
 
-#else
-
-typedef long             GIntBig;
-typedef unsigned long    GUIntBig;
-
-#define GINTBIG_MIN     INT_MIN
-#define GINTBIG_MAX     INT_MAX
 #endif
 
 #if SIZEOF_VOIDP == 8
@@ -249,10 +246,8 @@ typedef int              GPtrDiff_t;
 
 #if defined(__MSVCRT__) || (defined(WIN32) && defined(_MSC_VER))
   #define CPL_FRMT_GB_WITHOUT_PREFIX     "I64"
-#elif HAVE_LONG_LONG
-  #define CPL_FRMT_GB_WITHOUT_PREFIX     "ll"
 #else
-  #define CPL_FRMT_GB_WITHOUT_PREFIX     "l"
+  #define CPL_FRMT_GB_WITHOUT_PREFIX     "ll"
 #endif
 
 #define CPL_FRMT_GIB     "%" CPL_FRMT_GB_WITHOUT_PREFIX "d"
