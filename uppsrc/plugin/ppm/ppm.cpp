@@ -24,12 +24,12 @@ bool PPMRaster::Create()
 		CParser p(h);
 		size.cx = p.ReadInt();
 		size.cy = p.ReadInt();
-		if(size.cx <= 0 && size.cx > 99999 || size.cy <= 0 || size.cy >= 99999)
+		if(size.cx <= 0 || size.cx > 99999 || size.cy <= 0 || size.cy >= 99999)
 			return false;
 		h = stream.GetLine();
 		CParser p1(h);
 		int maxval = p1.ReadInt();
-		if(maxval <= 0 && maxval > 65535)
+		if(maxval <= 0 || maxval > 65535)
 			return false;
 		is16 = maxval > 255;
 		pixel_pos = stream.GetPos();

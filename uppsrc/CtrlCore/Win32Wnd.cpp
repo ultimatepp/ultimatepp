@@ -1279,9 +1279,6 @@ Rect Ctrl::GetScreenClient(HWND hwnd)
 }
 
 Rect Ctrl::GetDefaultWindowRect() {
-#ifdef PLATFORM_WINCE
-	return Rect(0, 0, 100, 100);
-#else
 	HWND hwnd = ::CreateWindow("UPP-CLASS-A", "", WS_OVERLAPPED,
 		                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 							   NULL, NULL, NULL, NULL);
@@ -1294,7 +1291,6 @@ Rect Ctrl::GetDefaultWindowRect() {
 	else
 		sr = RectC(20, 20, 500, 350);
 	return sr;
-#endif
 }
 
 TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
