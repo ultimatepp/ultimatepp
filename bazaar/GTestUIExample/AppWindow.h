@@ -1,5 +1,5 @@
-#ifndef _Test_AppWindow_h_
-#define _Test_AppWindow_h_
+#ifndef _GTestUIExample_AppWindow_h_
+#define _GTestUIExample_AppWindow_h_
 
 #include <CtrlLib/CtrlLib.h>
 
