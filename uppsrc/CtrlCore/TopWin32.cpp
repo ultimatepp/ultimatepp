@@ -309,9 +309,15 @@ TopWindow& TopWindow::FullScreen(bool b)
 	fullscreen = b;
 	HWND hwnd = GetOwnerHWND();
 	bool pinloop = inloop;
+	bool open = IsOpen();
 	WndDestroy();
 	Overlap();
-	SetRect(overlapped); // 12-05-23 Tom changed from GetDefaultWindowRect() to 'overlapped' to restore back to previous window position
+	Rect r = GetRect();
+	if(open)
+		SetRect(overlapped); // restore to the same screen as before
+	else
+	if(r.left + r.top == 0)
+		SetRect(GetDefaultWindowRect()); // open in primary screen
 	Open(hwnd);
 	inloop = pinloop;
 	return *this;

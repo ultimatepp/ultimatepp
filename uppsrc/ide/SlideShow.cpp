@@ -86,7 +86,6 @@ INITBLOCK {
 SlideShow::SlideShow()
 {
 	text.slideshow = settings.slideshow = this;
-	FullScreen();
 	Add(text.SizePos());
 	text.NoHyperlinkDecoration();
 	text.NoSb();
@@ -266,6 +265,8 @@ void SlideShow::SetPage()
 void TopicCtrl::SShow()
 {
 	SlideShow ss;
+	ss.SetRect(GetScreenRect());
+	ss.FullScreen();
 	TopicLink tl = ParseTopicLink(GetCurrent());
 	if(IsNull(tl.package))
 		return;
