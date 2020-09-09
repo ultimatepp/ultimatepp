@@ -294,8 +294,6 @@ void Esc::Subscript(Esc::SRVal& r)
 
 void Esc::Term(SRVal& r)
 {
-	RTIMING("Term");
-
 	r.sbs = EscValue();
 
 	op_limit--;
@@ -391,7 +389,6 @@ void Esc::Term(SRVal& r)
 	if(Char(':'))
 		_global = true;
 	if(IsId()) {
-		RTIMING("Id1");
 		String id = ReadId();
 		EscValue method;
 		int locali = var.Find(id);
@@ -425,7 +422,6 @@ void Esc::Term(SRVal& r)
 		else
 			r.lval = &var.GetPut(id);
 
-		RTIMING("Id2");
 		try {
 			Subscript(r, _self, id);
 		}
