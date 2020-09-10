@@ -27,7 +27,7 @@ private:
     virtual Size        GetSize()                          { return desktopsize;  }
     virtual dword       GetMouseButtons()                  { return mousebuttons; }
     virtual dword       GetModKeys()                       { return modifierkeys; }
-    virtual bool        IsMouseIn()                        { return true; }
+    virtual bool        IsMouseIn()                        { return mousein; }
     virtual bool        ProcessEvent(bool *quit);
     virtual void        WaitEvent(int ms);
     virtual bool        IsWaitingEvent();
@@ -145,6 +145,7 @@ private:
     static String       ip;
     static int          connection_limit;
     static bool         debugmode;
+    static bool         mousein;
 
 public:
     // Statistics.
