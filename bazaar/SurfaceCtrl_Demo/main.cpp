@@ -24,6 +24,13 @@ namespace Upp{
 			canvas.Refresh();
 		};
 		
+		 
+		skybox = canvas.GetSkybox().IsShown();
+		skybox.WhenAction = [&]{
+			canvas.GetSkybox().Show(skybox.Get());
+			canvas.Refresh();
+		};
+		
 		fovSelector <<= canvas.GetCamera().GetFOV();
 		fovSelector.MinMax(0,160);
 		fovSelector.WhenAction =[&]{
@@ -39,40 +46,38 @@ namespace Upp{
 		
 		butOpen.WhenAction = [&] {
 			try {
-				canvas.ExecuteGL([&]{
-					Object3D& obj = canvas.CreateObject();
-					obj.LoadModel(~filename).Init();
-					obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
-					obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
-					obj.SetLineWidth(2.0f);
-					canvas.SetDefaultShader(obj);
-					canvas.Refresh();
-				});
+				GLLock __(canvas,false);
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadModel(~filename).Init();
+				obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
+				obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
+				obj.SetLineWidth(2.0f);
+				canvas.SetDefaultShader(obj);
+				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
 		};
 		OpenEarth.WhenAction = [&]{
 			try {
-				canvas.ExecuteGL([&]{
-					Object3D& obj = canvas.CreateObject();
-					obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
-					obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
-					canvas.SetDefaultShader(obj);
-					canvas.Refresh();
-				});
+				GLLock __(canvas,false);
+				
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
+				obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
+				canvas.SetDefaultShader(obj);
+				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
 		};
 		Ultimate.WhenAction = [&]{
 			try {
-				canvas.ExecuteGL([&]{
-					Object3D& obj = canvas.CreateObject();
-					obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
-					canvas.SetDefaultShader(obj);
-					canvas.Refresh();
-				});
+				GLLock __(canvas,false);
+				Object3D& obj = canvas.CreateObject();
+				obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
+				canvas.SetDefaultShader(obj);
+				canvas.Refresh();	
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
@@ -150,6 +155,17 @@ namespace Upp{
 		};
 		
 		canvas.WhenPaint = [&] {
+		ONCELOCK{
+			GLLock __(canvas);
+			canvas.GetSkybox().Init(
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/right.jpg"),
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/left.jpg"),
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/top.jpg"),
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/bottom.jpg"),
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/front.jpg"),
+			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/back.jpg"));
+		}
+			
 			canvas.DrawAllObjects();
 			RetrieveCameraInformation();
 			RetrieveObjectInformation();
@@ -254,7 +270,7 @@ namespace Upp{
 
 GUI_APP_MAIN
 {
-	Upp::ConsoleOutput con(true);
+//	Upp::ConsoleOutput con(true);
 	Upp::StdLogSetup( Upp::LOG_COUT | Upp::LOG_FILE);
 	Upp::SurfaceCtrl_Demo().Run();
 }
