@@ -12,7 +12,5 @@ Known Issues
 
 3) The VirtualGui-based Turtle package inherits the problems of the old Turtle package.
 
-  a) One such major problem is that on windows platform, closing the remote app throws an 
-     exception on the server side. This requires further investigation. 
-
-  b) The other one is high cpu usage even on idle state.
+  One such major problem is that on windows platform, closing the remote app throws an 
+  exception on the server side. This requires further investigation. 
