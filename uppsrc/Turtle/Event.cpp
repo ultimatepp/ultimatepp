@@ -36,7 +36,7 @@ bool TurtleServer::ProcessEvent(bool *quit)
 	
 	try
 	{
-		if(p.Id("I"))
+		if(p.Id("i"))
 		{
 			ResetImageCache();
 		}
@@ -56,9 +56,15 @@ bool TurtleServer::ProcessEvent(bool *quit)
 			MouseWheel(p);
 		}
 		else
+		if(p.Id("I"))
+		{
+			mousein = true;
+		}
+		else
 		if(p.Id("O"))
 		{
 			mousebuttons = 0;
+			mousein = false;
 		}
 		else
 		if(p.Id("D"))

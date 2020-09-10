@@ -426,7 +426,7 @@ function SRect(p, sx, sy)
 
 
 window.img_cache = {};
-window.event_queue = "I\n";
+window.event_queue = "i\n";
 window.cursor_cache = {};
 window.update_serial_l = 0;
 window.update_serial_h = 0;
@@ -460,6 +460,13 @@ canvas.onmousedown = function(event)
 canvas.onmouseout = function(event)
 {
 	event_queue += "O\n";
+	ScheduleSend();
+	event.preventDefault();
+}
+
+canvas.onmouseover = function(event)
+{
+	event_queue += "I\n";
 	ScheduleSend();
 	event.preventDefault();
 }
