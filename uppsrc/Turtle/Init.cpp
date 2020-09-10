@@ -13,6 +13,7 @@ bool        TurtleServer::debugmode;
 WebSocket   TurtleServer::websocket;
 int         TurtleServer::mainpid;
 bool        TurtleServer::quit;
+bool        TurtleServer::mousein;
 dword       TurtleServer::mousebuttons      = 0;
 dword       TurtleServer::modifierkeys      = 0;
 Size        TurtleServer::desktopsize       = Size(1024, 1024);
