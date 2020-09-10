@@ -227,6 +227,7 @@ class Skybox {
 	private:
 		unsigned int ID = 0;
 		GLuint VBO, VAO;
+		bool show = true;
 		
 		OpenGLProgram program;
 		Skybox& Init(const Vector<Image>& images); //Load this vector of image as Skybox
@@ -235,7 +236,8 @@ class Skybox {
 		Skybox(){}
 		~Skybox(){Clear();}
 		
-		
+		Skybox& Show(bool b = true){show = b; return *this;}
+		bool IsShown(){return show;}
 
 		Skybox& Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back); //Load all image provided as skybox
 		Skybox& Clear();

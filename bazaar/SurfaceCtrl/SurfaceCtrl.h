@@ -6,6 +6,11 @@
 #include "MagicCamera.h"
 
 namespace Upp{
+	
+static const String GetSurfaceCtrlDirectory(){
+	return GetFileDirectory(__FILE__);
+}
+	
 class SurfaceCtrl : public GL{
 	private:
 		bool loaded = false;

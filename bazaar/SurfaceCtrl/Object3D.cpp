@@ -787,7 +787,7 @@ Skybox& Skybox::Init(const Vector<Image>& images){
 Skybox& Skybox::Clear(){if(ID)glDeleteTextures(1,&ID); return *this;} //Clear the skybox
 
 Skybox& Skybox::Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix){ //Draw the skybox
-	if(ID > 0){
+	if(show && ID > 0){
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		program.Bind();
 		
