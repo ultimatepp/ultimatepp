@@ -15,7 +15,27 @@ class OpenGLShader{
 		    glGetShaderiv(ID, GL_COMPILE_STATUS, &success);
 		    if (!success){
 		        glGetShaderInfoLog(ID, 512, NULL, infoLog);
-		        LOG("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" + String(infoLog));
+		        String type;
+		        switch(shaderType){
+					case GL_VERTEX_SHADER:
+						type= "VERTEX";
+						break;
+					case GL_FRAGMENT_SHADER:
+						type= "FRAGMENT";
+						break;
+					case GL_TESS_CONTROL_SHADER:
+						type= "TESSELATION_CONTROL";
+						break;
+					case GL_TESS_EVALUATION_SHADER:
+						type= "TESSELATION_EVALUATION";
+						break;
+					case GL_GEOMETRY_SHADER:
+						type= "GEOMETRY";
+						break;
+					default:
+						type= "UNKNOW";
+		        };
+		        LOG("ERROR::SHADER::" + type + "::" + AsString(ID) + "::COMPILATION_FAILED\n" + String(infoLog));
 				return false;
 		    }
 			return true;

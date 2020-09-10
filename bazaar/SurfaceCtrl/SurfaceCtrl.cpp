@@ -20,11 +20,7 @@ void SurfaceCtrl::Init()noexcept{
 		SetDefaultShader(Axis);
 		CameraFocus = objProvider.Begin(GL_TRIANGLE_FAN).AddCube(0.0f,0.0f,0.0f,1,LtYellow()).End();
 		SetDefaultShader(CameraFocus);
-		
-		#ifdef flagSKYBOX
-			skybox.Init();
-		#endif
-		
+				
 		WhenBegin();
 		loaded = true;
 	});
