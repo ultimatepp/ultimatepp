@@ -46,6 +46,7 @@
 		UPP::AppInitEnvironment__(); \
 		UPP::Ctrl::InitWin32(hInstance); \
 		testing::InitGoogleTest(&__argc, __argv); \
+		TestGuiMainFn(); \
 		int testsResult = RUN_ALL_TESTS(); \
 		UPP::Ctrl::ExitWin32(); \
 		UPP::AppExit__(); \
@@ -61,10 +62,28 @@
 	int main(int argc, char **argv, const char **envptr) { \
 		UPP::AppInit__(argc, (const char **)argv, envptr); \
 		UPP::InitGtkApp(argc, argv, envptr); \
-		testing::InitGoogleTest(&argc, argv); \
+		testing::InitGoogleTest(&argc, (char**)argv); \
+		TestGuiMainFn(); \
 		int testsResult = RUN_ALL_TESTS(); \
 		UPP::ExitGtkApp(); \
 		UPP::AppExit__(); \
+		return testsResult; \
+	} \
+	void TestGuiMainFn()
+
+#elif defined(PLATFORM_COCOA)
+	
+	#define TEST_GUI_APP_MAIN \
+	void TestGuiMainFn(); \
+	\
+	int main(int argc, const char **argv, const char **envptr) { \
+		UPP::AppInit__(argc, (const char **)argv, envptr); \
+		UPP::CocoInit(argc, argv, envptr); \
+		testing::InitGoogleTest(&argc, (char**)argv); \
+		TestGuiMainFn(); \
+		int testsResult = RUN_ALL_TESTS(); \
+		UPP::Ctrl::CloseTopCtrls(); \
+		UPP::CocoExit(); \
 		return testsResult; \
 	} \
 	void TestGuiMainFn()
