@@ -10,7 +10,6 @@ int         TurtleServer::port              = 8888;
 String      TurtleServer::ip                = "0.0.0.0";
 int         TurtleServer::connection_limit  = 100;
 bool        TurtleServer::debugmode;
-TcpSocket   TurtleServer::socket;
 WebSocket   TurtleServer::websocket;
 int         TurtleServer::mainpid;
 bool        TurtleServer::quit;

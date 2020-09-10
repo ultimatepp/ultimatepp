@@ -103,4 +103,3 @@ void TurtleServer::Flush()
 	websocket.SendBinary(s);
 }
 }
-

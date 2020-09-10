@@ -97,51 +97,56 @@ bool TurtleServer::ProcessEvent(bool *quit)
 void TurtleServer::WaitEvent(int ms)
 {
 	websocket.Do();
-	socket.Timeout(ms).WaitRead();
-	socket.Timeout(0);
+	SocketWaitEvent we;
+	websocket.AddTo(we);
+	we.Wait(ms);
 }
 
 bool TurtleServer::IsWaitingEvent()
 {
 	websocket.Do();
-	for(;;) {
-		String s = websocket.Receive();
-		if(websocket.IsClosed()) {
-			Ctrl::EndSession();
-			sQuit = true; // Ugly...
-			return false;
-		}
-		if(s.GetCount() == 0)
-			break;
-		LLOG("Received data " << s);
-		StringStream ss(s);
-		while(!ss.IsEof()) {
-			String s = ss.GetLine();
-			CParser p(s);
-			try
-			{
-				if(p.Id("S")) {
-					uint32 l = p.ReadNumber();
-					uint32 h = p.ReadNumber();
-					recieved_update_serial = MAKEQWORD(l, h);
-					stat_client_ms = p.ReadNumber();
-				}
-				else
-					sEventQueue.AddTail(s);
+
+	String s = websocket.Receive();
+
+	if(websocket.IsClosed()) {
+		Ctrl::EndSession();
+		sQuit = true; // Ugly..
+		return false;
+	}
+
+	if(s.GetCount() == 0)
+		return sEventQueue.GetCount();
+	
+	LLOG("Received data " << s);
+
+	StringStream ss(s);
+	while(!ss.IsEof()) {
+		String s = ss.GetLine();
+		CParser p(s);
+		try
+		{
+			if(p.Id("S")) {
+				uint32 l = p.ReadNumber();
+				uint32 h = p.ReadNumber();
+				recieved_update_serial = MAKEQWORD(l, h);
+				stat_client_ms = p.ReadNumber();
 			}
-			catch(const CParser::Error& e)
-			{
-				LLOG("IsWaitingEvent() -> Parser error. " << e);
-			}
+			else
+				sEventQueue.AddTail(s);
 		}
-		if(recieved_update_serial == serial_0) {
-			serial_0 = 0;
-			stat_roundtrip_ms = msecs() - serial_time0;
-			serial_time0 = Null;
+		catch(const CParser::Error& e)
+		{
+			LLOG("IsWaitingEvent() -> Parser error. " << e);
 		}
 	}
-	if(socket.IsError())
-		LLOG("ERROR: " << socket.GetErrorDesc());
+	if(recieved_update_serial == serial_0) {
+		serial_0 = 0;
+		stat_roundtrip_ms = msecs() - serial_time0;
+		serial_time0 = Null;
+	}
+
+	if(websocket.IsError())
+		LLOG("ERROR: " << websocket.GetErrorDesc());
 	
 	return sEventQueue.GetCount();
 }

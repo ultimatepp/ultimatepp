@@ -11,10 +11,46 @@
 
 namespace Upp {
 
-static Vector<int> sProcessIds;
+static Vector<int> sChildPids;
+
+static bool sSendTurtleHtml(TcpSocket& s, const String& host, int port)
+{
+	HttpHeader h;
+	if(!h.Read(s))
+		return false;
+	LLOG("Sending Turtle HTML");
+	String html = String(turtle_html, turtle_html_length);
+	html.Replace("%%host%%", Format("ws://%s:%d", host, port));
+	return HttpResponse(s, h.scgi, 200, "OK", "text/html", html);
+}
+
+static void sUpdateChildList()
+{
+#ifdef PLATFORM_POSIX
+	int i = 0;
+	while(i < sChildPids.GetCount()) {
+		if(sChildPids[i] && waitpid(sChildPids[i], 0, WNOHANG | WUNTRACED) > 0) {
+			TurtleServer::WhenTerminate(sChildPids[i]);
+			sChildPids.Remove(i);
+		}
+		else ++i;
+	}
+#endif
+}
+
+void TurtleServer::Broadcast(int signal)
+{
+#ifdef PLATFORM_POSIX
+	if(getpid() == mainpid)
+		for(int i = 0; i < sChildPids.GetCount(); i++)
+			kill(sChildPids[i], signal);
+#endif
+}
 
 bool TurtleServer::StartSession()
 {
+	// TODO: See if we can add secure websocket (wss://) support.
+	
 	LLOG("Connect");
 
 #ifdef PLATFORM_POSIX
@@ -27,11 +63,9 @@ bool TurtleServer::StartSession()
 	TcpSocket server;
 
 #ifdef _DEBUG
-	int qq = 0;
-	for(;;) {
-		if(server.Listen(ipinfo, port, 5, false, true))
-			break;
-		Cout() << "Trying to start listening (other process using the same port?) " << ++qq << "\n";
+	int cnt = 0;
+	while(!server.Listen(ipinfo, port, 5, false, true)) {
+		LLOG("Trying to start listening (other process using the same port?) " << ++cnt);
 		Sleep(1000);
 	}
 #else
@@ -42,67 +76,41 @@ bool TurtleServer::StartSession()
 #endif
 
 	LLOG("Starting to listen on " << port << ", pid: " << getpid());
-	socket.Timeout(0); // TODO: Not quite ideal way to make quit work..
+
 	for(;;) {
-#ifdef PLATFORM_POSIX
-		int i = 0;
-		while(i < sProcessIds.GetCount())
-			if(sProcessIds[i] && waitpid(sProcessIds[i], 0, WNOHANG | WUNTRACED) > 0) {
-				WhenTerminate(sProcessIds[i]);
-				sProcessIds.Remove(i);
-			}
-			else
-				i++;
-#endif
+		sUpdateChildList();
 		if(server.IsError())
 			server.ClearError();
-		if(socket.Accept(server)) {
-			HttpHeader  http;
-			if(http.Read(socket)) {
-				RLOG("Accepted, header read");
-				if(websocket.WebAccept(socket, http)) { // TODO: Connection limit, info
-					if(sProcessIds.GetCount() >= connection_limit) {
-						socket.Close();
-						continue;
-					}
+		TcpSocket socket;
+		if(!socket.Accept(server))
+			continue;
+		if(!sSendTurtleHtml(socket, host, port))
+			continue;
+		websocket.NonBlocking();
+		while(!websocket.Accept(server))
+			Sleep(20);
+		LLOG("Websocket connection accepted. IP: " << websocket.GetPeerAddr());
 #ifdef PLATFORM_POSIX
-					if(debugmode)
-						break;
-					int newpid = fork();
-					if(newpid == 0)
-						break;
-					else {
-						sProcessIds.Add(newpid);
-						WhenConnect(newpid, socket.GetPeerAddr());
-						socket.Close();
-						continue;
-					}
-#else
-					break;
-#endif
-				}
-				RLOG("Sending HTML");
-				String html = String(turtle_html, turtle_html_length);
-				html.Replace("%%host%%", "ws://" + Nvl(GetIniKey("turtle_host"), Nvl(host, "localhost")) + ":" + AsString(port));
-				HttpResponse(socket, http.scgi, 200, "OK", "text/html", html);
-			}
-			socket.Close();
+		if(sChildPids.GetCount() >= connection_limit)
+			continue;
+		if(debugmode)
+			break;
+		int newpid = fork();
+		if(!newpid)
+			break;
+		else {
+			LLOG("Process forked. Pid: " << newpid);
+			sChildPids.Add(newpid);
+			WhenConnect(newpid, websocket.GetPeerAddr());
+			continue;
 		}
+#else
+		break;
+#endif
 	}
-	RLOG("Connection established with " << socket.GetPeerAddr() << ", pid: " << getpid());
+
 	server.Close();
-	if(socket.IsError())
-		LLOG("CONNECT ERROR: " << socket.GetErrorDesc());
 	stat_started = GetSysTime();
 	return true;
-}
-
-void TurtleServer::Broadcast(int signal)
-{
-#ifdef PLATFORM_POSIX
-	if(getpid() == mainpid)
-		for(int i = 0; i < sProcessIds.GetCount(); i++)
-			kill(sProcessIds[i], signal);
-#endif
 }
 }
