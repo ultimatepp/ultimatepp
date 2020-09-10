@@ -130,7 +130,6 @@ private:
     static void         ResetImageCache();
         
 private:
-    static TcpSocket    socket;
     static WebSocket    websocket;
     static dword        mousebuttons;
     static dword        modifierkeys;
