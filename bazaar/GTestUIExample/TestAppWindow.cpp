@@ -55,7 +55,7 @@ TEST_F(AppWindowTest, ApperanceTest)
 	PNGEncoder encoder;
 	if (!FileExists(fileName)) {
 		encoder.SaveFile(fileName, id);
-		ASSERT_TRUE(false) << "Non found referal window image. Creating new one and failing test..\n";
+		ASSERT_TRUE(false) << "Non referal window image found. Creating new one and failing test..\n";
 	}
 	
 	auto img = StreamRaster::LoadFileAny(fileName);
