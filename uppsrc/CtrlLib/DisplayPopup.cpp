@@ -9,9 +9,6 @@ Point DisplayPopup::Op(Point p)
 
 void DisplayPopup::LeftDown(Point p, dword flags)
 {
-	DDUMP(p);
-	DDUMP(Op(p));
-	DDUMP(Upp::Name(ctrl));
 	ctrl->LeftDown(Op(p), flags);
 }
 
