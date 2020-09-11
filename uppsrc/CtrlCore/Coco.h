@@ -95,9 +95,9 @@ class ImageDraw : public SystemDraw {
 public:
 	Draw& Alpha();
 
-	operator Image();
+	operator Image() const;
 
-	Image GetStraight();
+	Image GetStraight() const;
 
 	ImageDraw(Size sz);
 	ImageDraw(int cx, int cy);
