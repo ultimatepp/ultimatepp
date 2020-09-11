@@ -46,13 +46,14 @@ namespace Upp{
 		
 		butOpen.WhenAction = [&] {
 			try {
-				GLLock __(canvas,false);
+				canvas.ExecuteGL([&]{
 				Object3D& obj = canvas.CreateObject();
 				obj.LoadModel(~filename).Init();
 				obj.GetTransform().Rotate(90.0f,glm::vec3(1.0f,0.0f,0.0f));
 				obj.GetTransform().SetScale(glm::vec3(1.0f,1.0f,1.0f));
 				obj.SetLineWidth(2.0f);
 				canvas.SetDefaultShader(obj);
+				});
 				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
@@ -60,12 +61,12 @@ namespace Upp{
 		};
 		OpenEarth.WhenAction = [&]{
 			try {
-				GLLock __(canvas,false);
-				
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
-				obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
-				canvas.SetDefaultShader(obj);
+				canvas.ExecuteGL([&]{
+					Object3D& obj = canvas.CreateObject();
+					obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
+					obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
+					canvas.SetDefaultShader(obj);
+				});
 				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
@@ -73,11 +74,12 @@ namespace Upp{
 		};
 		Ultimate.WhenAction = [&]{
 			try {
-				GLLock __(canvas,false);
-				Object3D& obj = canvas.CreateObject();
-				obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
-				canvas.SetDefaultShader(obj);
-				canvas.Refresh();	
+				canvas.ExecuteGL([&]{
+					Object3D& obj = canvas.CreateObject();
+					obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
+					canvas.SetDefaultShader(obj);
+				});
+				canvas.Refresh();
 			} catch (Exc e) {
 				Exclamation(DeQtf(e));
 			}
@@ -156,7 +158,7 @@ namespace Upp{
 		
 		canvas.WhenPaint = [&] {
 		ONCELOCK{
-			GLLock __(canvas);
+			canvas.ExecuteGL([&]{
 			canvas.GetSkybox().Init(
 			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/right.jpg"),
 			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/left.jpg"),
@@ -164,6 +166,7 @@ namespace Upp{
 			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/bottom.jpg"),
 			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/front.jpg"),
 			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/back.jpg"));
+			});
 		}
 			
 			canvas.DrawAllObjects();
