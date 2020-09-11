@@ -331,26 +331,30 @@ ImageDraw::~ImageDraw()
 	handle = NULL; // avoid releasing invalid handle in ~SystemDraw
 }
 
-Image ImageDraw::GetStraight()
+Image ImageDraw::GetStraight() const
 {
+	ImageBuffer ib2(ib.GetSize());
+	memcpy_t(~ib2, ~ib, ib.GetLength());
 	if(alpha) {
-		RGBA *e = ib.End();
-		RGBA *t = ib;
-		RGBA *s = alpha->ib;
+		RGBA *e = ib2.End();
+		RGBA *t = ib2;
+		const RGBA *s = alpha->ib;
 		while(t < e) {
 			t->a = s->r;
 			s++;
 			t++;
 		}
 	}
-	return Image(ib);
+	return Image(ib2);
 }
 
-ImageDraw::operator Image()
+ImageDraw::operator Image() const
 {
 	if(alpha)
 		return Premultiply(GetStraight());
-	return Image(ib);
+	ImageBuffer ib2(ib.GetSize());
+	memcpy_t(~ib2, ~ib, ib.GetLength());
+	return Image(ib2);
 }
 
 Image GetIconForFile(const char *path)
