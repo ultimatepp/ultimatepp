@@ -4,7 +4,7 @@
 
 NSEvent *sCurrentMouseEvent__; // needed for drag operation
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 static Upp::Point coco_mouse_pos;
 static bool       coco_mouse_left;
