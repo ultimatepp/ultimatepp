@@ -1,4 +1,4 @@
-description "Creating raster images in the code";
+description "Creating raster images in the code\377";
 
 uses
 	CtrlLib;
