@@ -198,7 +198,7 @@ public:
 	Stream&   SerializeRaw(dword *data)    { if(IsLoading()) *data = Get32le(); else Put32le(*data); return *this; }
 	Stream&   SerializeRaw(uint64 *data)   { if(IsLoading()) *data = Get64le(); else Put64le(*data); return *this; }
 
-	Stream&   operator%(bool& d)           { return SerializeRaw((byte *)&d); }
+	Stream&   operator%(bool& d)           { byte b = d; SerializeRaw(&b); d = b; return *this; }
 	Stream&   operator%(char& d)           { return SerializeRaw((byte *)&d); }
 	Stream&   operator%(signed char& d)    { return SerializeRaw((byte *)&d); }
 	Stream&   operator%(unsigned char& d)  { return SerializeRaw((byte *)&d); }
