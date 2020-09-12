@@ -6,14 +6,11 @@
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
 
 	#define TEST_APP_MAIN \
-	namespace Upp { extern bool PanicMode; } \
-	\
 	void TestMainFn(int argc, char** argv); \
 	\
 	int main(int argc, char** argv) \
 	{ \
-		Upp::PanicMode = true; \
-	\
+		Upp::MemoryIgnoreLeaksBlock __; \
 		testing::InitGoogleTest(&argc, argv); \
 		TestMainFn(argc, argv); \
 		return RUN_ALL_TESTS(); \
@@ -38,15 +35,17 @@
 #endif
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+	
 	#define TEST_GUI_APP_MAIN \
 	void TestGuiMainFn(); \
 	\
 	int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
 	{ \
+		Upp::MemoryIgnoreLeaksBlock __; \
 		UPP::AppInitEnvironment__(); \
 		UPP::Ctrl::InitWin32(hInstance); \
 		testing::InitGoogleTest(&__argc, __argv); \
-		TestGuiMainFn(); \
+		UPP::AppExecute__(TestGuiMainFn); \
 		int testsResult = RUN_ALL_TESTS(); \
 		UPP::Ctrl::ExitWin32(); \
 		UPP::AppExit__(); \
