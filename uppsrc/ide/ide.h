@@ -601,8 +601,8 @@ public:
 	bool      auto_rescan;
 	bool      auto_check;
 	int       spellcheck_comments;
-	bool      wordwrap_comments;
-	bool      wordwrap;
+	bool      wordwrap_comments = true;
+	bool      wordwrap = false;
 	bool      setmain_newide;
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
