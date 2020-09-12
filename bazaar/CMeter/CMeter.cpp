@@ -35,7 +35,7 @@ CMeter::CMeter(double _min, double _max, bool _vertical, bool _reverse)
 
 	, incv(0.0)
 	, inci(0)
-	, __val(min)
+	, __val(_min)
 	, __ii(-1)
 	, px(0)
 	, py(0)
