@@ -4,26 +4,35 @@
 #include <Core/config.h>
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
-#define TEST_APP_MAIN_IGNORE_LEAKS Upp::MemoryIgnoreLeaksBlock __;
+	#define TEST_APP_MAIN \
+	void TestMainFn(); \
+	\
+	int main(int argc, char** argv) \
+	{ \
+		Upp::MemoryIgnoreLeaksBlock __; \
+		UPP::AppInit__(argc, (const char **)argv); \
+		testing::InitGoogleTest(&argc, argv); \
+		UPP::AppExecute__(TestMainFn); \
+		int testsResult = RUN_ALL_TESTS(); \
+		UPP::AppExit__(); \
+		return testsResult; \
+	} \
+	void TestMainFn()
 #else
-#define TEST_APP_MAIN_IGNORE_LEAKS
+	#define TEST_APP_MAIN \
+	void TestMainFn(); \
+	\
+	int main(int argc, char **argv, const char **envptr) \
+	{ \
+		UPP::AppInit__(argc, (const char **)argv, envptr); \
+		testing::InitGoogleTest(&argc, argv); \
+		UPP::AppExecute__(TestMainFn); \
+		int testsResult = RUN_ALL_TESTS(); \
+		UPP::AppExit__(); \
+		return testsResult; \
+	} \
+	void TestMainFn()
 #endif
-
-#define TEST_APP_MAIN \
-void TestMainFn(); \
-\
-int main(int argc, char** argv) \
-{ \
-	TEST_APP_MAIN_IGNORE_LEAKS \
-	UPP::AppInit__(argc, (const char **)argv); \
-	testing::InitGoogleTest(&argc, argv); \
-	UPP::AppExecute__(TestMainFn); \
-	int testsResult = RUN_ALL_TESTS(); \
-	UPP::AppExit__(); \
-	return testsResult; \
-} \
-\
-void TestMainFn()
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
 	
@@ -49,7 +58,8 @@ void TestMainFn()
 	#define TEST_GUI_APP_MAIN \
 	void TestGuiMainFn(); \
 	\
-	int main(int argc, char **argv, const char **envptr) { \
+	int main(int argc, char **argv, const char **envptr) \
+	{ \
 		UPP::AppInit__(argc, (const char **)argv, envptr); \
 		UPP::InitGtkApp(argc, argv, envptr); \
 		testing::InitGoogleTest(&argc, (char**)argv); \
@@ -66,7 +76,8 @@ void TestMainFn()
 	#define TEST_GUI_APP_MAIN \
 	void TestGuiMainFn(); \
 	\
-	int main(int argc, const char **argv, const char **envptr) { \
+	int main(int argc, const char **argv, const char **envptr) \
+	{ \
 		UPP::AppInit__(argc, (const char **)argv, envptr); \
 		UPP::CocoInit(argc, argv, envptr); \
 		testing::InitGoogleTest(&argc, (char**)argv); \
