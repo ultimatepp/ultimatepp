@@ -1,3 +1,6 @@
 #include "AutoScroller.hpp"
 
-template class AutoScroller<ParentCtrl>;
+namespace Upp
+{
+	template class AutoScroller<ParentCtrl>;
+}
