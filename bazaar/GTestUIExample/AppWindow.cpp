@@ -5,10 +5,10 @@ using namespace Upp;
 AppWindow::AppWindow()
 {
     Title("App Window");
-    SetRect(0, 0, 200, 200);
+    SetRect(0, 0, 250, 250);
     button.SetLabel("Hello world!");
     button << [=] { OnButtonClick(); };
-    Add(button.HSizePos(25, 25).VSizePos(50, 50));
+    Add(button.HSizePos(25, 25).VSizePos(75, 75));
 }
 
 void AppWindow::OnButtonClick()
