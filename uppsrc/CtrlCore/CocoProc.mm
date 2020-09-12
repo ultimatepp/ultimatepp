@@ -125,6 +125,36 @@ struct MMImp {
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(DPI(np.x), DPI(np.y));
 		coco_mouse_pos = p + r.TopLeft();
+		
+		if(event == Ctrl::MOUSEMOVE) {
+			static Point coco_mouse_pos_old(-10000, -10000);
+			if(coco_mouse_pos_old == coco_mouse_pos) { // duplicate for another window, ignore
+				sCurrentMouseEvent__ = NULL;
+				return false;
+			}
+			coco_mouse_pos_old = coco_mouse_pos;
+
+			if(coco_capture)
+				coco_capture->DispatchMouse(event, coco_mouse_pos - coco_capture->GetScreenRect().TopLeft(), 120 * sgn(zd));
+			else {
+				Vector<Ctrl *> t = Ctrl::GetTopCtrls(); // Find window that contains the mouse, from the top
+				for(NSNumber *num in [NSWindow windowNumbersWithOptions:0]) { // All app windows
+					NSWindow *win = [NSApp windowWithWindowNumber:[num integerValue]];
+					if(win) {
+					    int q = FindMatch(t, [&](Ctrl *t) { return t->GetNSWindow() == win; });
+					    if(q >= 0) {
+					        Ctrl *w = t[q];
+					        Rect r = w->GetRect(); // same as ScreenRect
+					        if(w->IsEnabled() && r.Contains(coco_mouse_pos)) {
+								w->DispatchMouse(event, coco_mouse_pos - r.TopLeft(), 120 * sgn(zd));
+								break;
+					        }
+					    }
+					}
+				}
+			}
+		}
+		else
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
 		sCurrentMouseEvent__ = NULL;
