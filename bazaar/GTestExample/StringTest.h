@@ -1,5 +1,5 @@
-#ifndef _GoogleTestExample_VectorTest_h_
-#define _GoogleTestExample_VectorTest_h_
+#ifndef _GTestExample_StringTest_h_
+#define _GTestExample_StringTest_h_
 
 #include <Core/Core.h>
 #include <plugin/gtest/gtest.h>
