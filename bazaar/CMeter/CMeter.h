@@ -29,7 +29,7 @@ public:
 		int mode; //one of the MODES
 	};
 
-	class CVMark 
+	class CVMark
 		: Moveable<CVMark>
 	{
 	public:
@@ -49,7 +49,7 @@ public:
 		IMGCACHE = 0,
 		STATIC,
 		GRADIENT,
-		DYNGRADIENT,	
+		DYNGRADIENT,
 	};
 
 	CMeter(double min = 0.0, double max = 1.0, bool vertical = false, bool reverse = false);
@@ -64,49 +64,49 @@ public:
 	Value GetMin() const { return Min(); }
 	Value GetMax() const { return Max(); }
 
-	CMeter & Set(double val);
-	double Get() const { return val; }
+	CMeter& Set(double val);
+	double  Get() const { return val; }
 
-	CMeter & Val(double val) { return Set(val); }
-	double Val() const { return val; }
+	CMeter& Val(double val) { return Set(val); }
+	double  Val() const { return val; }
 
-	CMeter & Percent(double percent) { Set(min + percent * (max-min) / 100.0); }
-	double Percent() const { return 100.0 * (val-min)/(max-min); }
+	CMeter& Percent(double percent) { Set(min + percent * (max-min) / 100.0); return *this; }
+	double  Percent() const { return 100.0 * (val-min)/(max-min); }
 
-	CMeter & Min(double min);
-	double Min() const { return min; }
+	CMeter& Min(double min);
+	double  Min() const { return min; }
 
-	CMeter & Max(double max);
-	double Max() const { return max; }
+	CMeter& Max(double max);
+	double  Max() const { return max; }
 
-	CMeter & MinMax(double min = 0.0, double max = 1.0);
+	CMeter& MinMax(double min = 0.0, double max = 1.0);
 
-	CMeter & Reverse(bool reverse = true);
+	CMeter& Reverse(bool reverse = true);
 	bool IsReverse() const { return reverse; }
 
-	CMeter & Vertical(bool vertical = true);
+	CMeter& Vertical(bool vertical = true);
 	bool IsVertical() const { return vertical; }
 
-	CMeter & Stepping(bool stepping = true);
+	CMeter& Stepping(bool stepping = true);
 	bool IsStepping() const { return stepping; }
 
-	CMeter & StepLinear(bool steplin = true);
+	CMeter& StepLinear(bool steplin = true);
 	bool IsStepLinear() { return steplin; }
 
-	CMeter & IncDecToStep(bool b = true) { incdectostep = b; return *this; }
+	CMeter& IncDecToStep(bool b = true) { incdectostep = b; return *this; }
 	bool IsIncDecToStep() { return incdectostep; }
 
-	CMeter & Steps(const Vector<double> & vsteps, bool reverse = false);
+	CMeter& Steps(const Vector<double> & vsteps, bool reverse = false);
 	void GetSteps(Vector<double> & vstep) { vsteps <<= this->vsteps; }
 
-	CMeter & ShowValue(bool showvalue = true);
-	CMeter & HideValue() { return ShowValue(false); }
+	CMeter& ShowValue(bool showvalue = true);
+	CMeter& HideValue() { return ShowValue(false); }
 	bool IsShowValue() { return showvalue; }
 
-	CMeter & ShowPercent(bool showpercent = true);
+	CMeter& ShowPercent(bool showpercent = true);
 	bool IsShowPercent() { return showpercent; }
 
-	CMeter & SetMode(int mode);
+	CMeter& SetMode(int mode);
 	int GetMode() const { return drawmode; }
 
 	void Inc();
@@ -134,8 +134,8 @@ protected:
 	virtual void Update();
 	
 	virtual void LeftRepeat(Point p, dword keyflags);
-	virtual void LeftDown(Point p, dword keyflags);			
-	virtual void LeftUp(Point p, dword keyflags) ;	
+	virtual void LeftDown(Point p, dword keyflags);
+	virtual void LeftUp(Point p, dword keyflags);
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 
@@ -208,7 +208,6 @@ protected:
 	bool incdectostep:1;
 
 	int drawmode;
-
 
 	Font font;
 	Image draw;
