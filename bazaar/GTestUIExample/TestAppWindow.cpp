@@ -15,7 +15,7 @@ class AppWindowTest : public testing::Test
 {
 protected:
 	AppWindowTest()
-		: windowRect(0, 0, 200, 200)
+		: windowRect(0, 0, 250, 250)
 	{}
 	
 	void SetUp() override
