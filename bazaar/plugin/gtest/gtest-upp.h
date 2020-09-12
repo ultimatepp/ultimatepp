@@ -3,11 +3,18 @@
 
 #include <Core/config.h>
 
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+#define TEST_APP_MAIN_IGNORE_LEAKS Upp::MemoryIgnoreLeaksBlock __;
+#else
+#define TEST_APP_MAIN_IGNORE_LEAKS
+#endif
+
 #define TEST_APP_MAIN \
 void TestMainFn(); \
 \
 int main(int argc, char** argv) \
 { \
+	TEST_APP_MAIN_IGNORE_LEAKS \
 	UPP::AppInit__(argc, (const char **)argv); \
 	testing::InitGoogleTest(&argc, argv); \
 	UPP::AppExecute__(TestMainFn); \
