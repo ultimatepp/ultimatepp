@@ -18,6 +18,7 @@
 #include <plugin/glm/gtx/norm.hpp>
 #include <plugin/glm/gtx/compatibility.hpp>
 #include <plugin/glm/gtx/string_cast.hpp>
+#include <plugin/glm/gtx/vector_angle.hpp>
 
 #define STRINGIFY(...) #__VA_ARGS__
 #define SHADER(version, shader) "#version " #version "\n" STRINGIFY(shader)

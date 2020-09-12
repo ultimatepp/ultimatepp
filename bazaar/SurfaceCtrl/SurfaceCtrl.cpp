@@ -56,6 +56,30 @@ void SurfaceCtrl::InitShader(){
 	)).Link();
 }
 
+void SurfaceCtrl::ZoomToFit(){
+	float mi = FLT_MAX;
+	float ma = FLT_MIN;
+	glm::vec3 center(0.0f,0.1f,0.0f);
+	int cpt = 0;
+	for(Object3D& obj : allObjects){
+		BoundingBox b =  obj.GetBoundingBoxTransformed();
+		mi = min(mi , min(min(b.GetMin().x,b.GetMin().y),b.GetMin().z));
+		ma = max(ma , max(max(b.GetMax().x,b.GetMax().y),b.GetMax().z));
+		if(cpt == 0)
+			center = b.GetCenter();
+		else
+			center = glm::lerp(center,b.GetCenter(),0.5f);
+		cpt++;
+	}
+	
+	camera.LookAt(center);
+	if(!allObjects.GetCount() == 0){
+		float length  = glm::abs(glm::length(center - camera.GetTransform().GetPosition()));
+		float size = ma-mi * 1.5f ;
+		camera.GetTransform().SetPosition(camera.GetTransform().GetFront() * -size);
+	}
+}
+
 //Starting function
 void SurfaceCtrl::InitCamera()noexcept{
 	camera.Init();

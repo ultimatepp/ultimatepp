@@ -108,6 +108,7 @@ class SurfaceCtrl : public GL{
 		//Focus option
 		SurfaceCtrl& ShowCameraFocus(bool b = true)noexcept{showCameraFocus = b; return *this;}
 		bool IsCameraFocusShow()const noexcept{return showCameraFocus;}
+		void ZoomToFit(); //Replace the camera to fit all object loaded in the screen
 		
 		//Application event
 		virtual void Layout(){GLResize(GetSize().cx,GetSize().cy);}

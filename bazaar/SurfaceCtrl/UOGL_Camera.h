@@ -126,7 +126,7 @@ class UOGL_Camera{
 				return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 			}
 		}
-		UOGL_Camera& LookAt(glm::vec3 const& lookAt)noexcept{transform.LookAt(lookAt);return *this;}
+		virtual UOGL_Camera& LookAt(const glm::vec3& lookAt)noexcept{transform.LookAt(lookAt);return *this;}
 		virtual UOGL_Camera& ProcessMouseScroll(float yoffset)noexcept{
 			if(LimiteFOV && FOV >= MinFOV && FOV <= MaxFOV){
 				FOV -=yoffset;
