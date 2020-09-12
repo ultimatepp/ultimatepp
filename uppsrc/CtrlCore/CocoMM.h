@@ -80,12 +80,20 @@ struct RectCG {
 }
 @end
 
+@interface CocoWindow : NSWindow
+{
+	@public
+	Upp::Ptr<Upp::Ctrl> ctrl;
+	bool active;
+}
+@end
+
 struct Upp::MMCtrl {
 	static void SyncRect(CocoView *view);
 };
 
 struct Upp::CocoTop {
-	NSWindow *window = NULL;
+	CocoWindow *window = NULL;
 	CocoView *view = NULL;
 	Ptr<Ctrl> owner;
 };

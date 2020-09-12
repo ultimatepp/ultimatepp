@@ -4,14 +4,6 @@
 
 #define LLOG(x)
 
-@interface CocoWindow : NSWindow
-{
-	@public
-	Upp::Ptr<Upp::Ctrl> ctrl;
-	bool active;
-}
-@end
-
 @implementation CocoWindow
 
 - (void)becomeKeyWindow {
@@ -360,6 +352,11 @@ void TopWindow::Overlap(bool effect)
 		[top->coco->window zoom:top->coco->window];
 	if(top && top->coco && top->coco->window && top->coco->window.miniaturized)
 		[top->coco->window deminiaturize:top->coco->window];
+}
+
+bool Ctrl::IsCocoActive() const
+{
+	return top && top->coco && top->coco->window && top->coco->window->active;
 }
 
 }

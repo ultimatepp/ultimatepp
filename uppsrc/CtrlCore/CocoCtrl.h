@@ -25,6 +25,7 @@ public:
 	
 	void  *GetNSWindow() const;
 	void  *GetNSView() const;
+	bool   IsCocoActive() const;
 	
 	void   RegisterCocoaDropFormats();
 

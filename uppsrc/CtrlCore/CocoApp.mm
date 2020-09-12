@@ -32,7 +32,7 @@ void SyncPopupFocus(NSWindow *win)
 	Ctrl *q = Ctrl::GetFocusCtrl();
 	if(q) {
 		q = q->GetTopCtrl();
-		if(q->IsPopUp() && q->GetNSWindow() != win) {
+		if(q->IsPopUp() && q->GetNSWindow() != win && q->IsCocoActive()) {
 			q = q->GetOwner();
 			if(q) q->SetFocus();
 		}
