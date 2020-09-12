@@ -11,7 +11,5 @@ file
 mainconfig
 	"" = "USEMALLOC",
 	"" = "USEMALLOC GUI",
-	"" = "GUI SKYBOX",
-	"" = "USEMALLOC GUI SKYBOX",
 	"" = "GUI";
 
