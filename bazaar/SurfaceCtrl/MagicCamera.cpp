@@ -201,4 +201,25 @@ MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Obje
 	}
 	return *this;
 }
+
+MagicCamera& MagicCamera::LookAt(const glm::vec3& lookat)noexcept{
+	glm::quat buffer;
+	glm::vec3  direction = lookat - transform.GetPosition();
+    float directionLength = glm::length(direction);
+    // Check if the direction is valid; Also deals with NaN
+    if(!(directionLength > 0.0001)){
+        transform.SetRotation(glm::quat(1, 0, 0, 0));
+		return *this;;
+    }
+    // Normalize direction
+    direction /= directionLength;
+    if(glm::abs(glm::dot(direction, transform.GetWorldUp())) > .9999f) {
+        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetUp()))); // Use alternative up
+    }
+    else {
+        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetWorldUp())));
+    }
+	return *this;
+}
+
 }

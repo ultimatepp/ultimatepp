@@ -25,7 +25,8 @@ namespace Upp{
 		
 		int Pick(float x, float y,const Upp::Vector<Object3D>& allObjects)const noexcept; //Return Picked object ID between a vector of object
 		MagicCamera& DetermineRotationPoint(Point& p,const Upp::Vector<Object3D>& allObjects, const Upp::Vector<int>& allSelecteds)noexcept; //Find a new focus point depending on cursor position and all Object3D
-
+	
+		virtual MagicCamera& LookAt(const glm::vec3& lookat)noexcept;
 	
 		MagicCamera& ProcessMouseWheelTranslation(float xoffset,float yoffset); //Move the camera depending on X and Y offset
 		MagicCamera& MouseWheelMouvement(float xoffset,float yoffset)noexcept; //Rotate arround axis
