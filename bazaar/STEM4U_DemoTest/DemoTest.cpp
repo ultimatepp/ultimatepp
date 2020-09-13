@@ -7,6 +7,7 @@
 #include <STEM4U/Sundials.h>
 #include <STEM4U/Integral.h>
 #include <STEM4U/TSP.h>
+#include <STEM4U/SeaWaves.h>
 
 using namespace Upp;
 
@@ -255,6 +256,63 @@ void TestIntegral() {
 	}
 }
 	
+	
+void TestSeaWaves() {
+	UppLog() << "\n\nSeaWaves demo";
+
+	double T = 12;
+	double depth = 50;
+	double H = 2;
+	
+	SeaWaves::rho = 1028;
+	
+	double waveNumber  = SeaWaves::WaveNumber(T, depth, false);
+	UppLog() << "\n" << Format("Wave number: %f rad/m", waveNumber);
+	double waveNumberE = SeaWaves::WaveNumber(T, depth, true);
+	UppLog() << "\n" << Format("Wave number (exact): %f rad/m", waveNumberE);
+	double waveLength = SeaWaves::WaveLength(T, depth);
+	UppLog() << "\n" << Format("Wave length: %f m", waveLength);
+	double c = SeaWaves::Celerity(T, depth);		
+	UppLog() << "\n" << Format("Celerity: %f m/s", c);
+	double gc = SeaWaves::GroupCelerity(T, depth);
+	UppLog() << "\n" << Format("Group celerity: %f m/s", gc);
+	SeaWaves::SEA_TYPE seaType = SeaWaves::GetSeaType(T, depth);
+	UppLog() << "\n" << Format("Sea: %s", seaType == SeaWaves::SHALLOW ? "shallow" : seaType == SeaWaves::INTERMEDIATE ? "intermediate" : "deep");
+	double power = SeaWaves::Power(T, H, depth);
+	UppLog() << "\n" << Format("Power: %f kW/m", power);
+		
+	double Tz = 12;
+	double gamma = 2;
+	double Tp = Tp_fTz(Tz, gamma);
+	double gamma2 = gamma_fTp_Tz(Tp, Tz);
+	UppLog() << "\n" << Format("Tp: %.2f, Tz: %.2f, gamma: %.4f, %.4f", Tp, Tz, gamma, gamma2);
+	VERIFY(abs(gamma - gamma2) < 0.000001);
+
+	double freq = 2*M_PI/T;
+	double psd = SeaWaves::JONSWAP_Spectrum(H, T, 3.3, freq);
+	UppLog() << "\n" << Format("JONSWAP PSD (%f): %f", freq, psd);
+
+	{
+		SeaWaves waves;
+		
+		double Tp =	12, Hs = 2;
+		waves.Init(Tp, Hs);
+		double x = 100, y = 100, z = -10, t = 10;
+		waves.Calc(x, y, z, t);
+		UppLog() << "\n" << Format("Sea data for Hs: %.2f m, Tp; %.2f s, at x: %.2f m, y: %.2f m, z: %.2f m, t: %.3f s", Hs, Tp, x, y, z, t);
+		UppLog() << "\n" << Format("Free surface z: %f m = %f m", waves.zSurf, waves.ZSurf(x, y, z, t));
+		VERIFY(abs(waves.zSurf - waves.ZSurf(x, y, z, t)) < 0.000001);
+		VERIFY(abs(waves.zSurf - 0.13560241) < 0.000001);
+		UppLog() << "\n" << Format("vx: %f m/s, vy: %f m/s, vz: %f m/s", waves.vx, waves.vy, waves.vz);
+		VERIFY(abs(waves.vz + 0.102412178) < 0.000001);
+		UppLog() << "\n" << Format("ax: %f m/s2, ay: %f m/s2, az: %f m/s2", waves.ax, waves.ay, waves.az);
+		VERIFY(abs(waves.az - 0.000565667) < 0.000001);
+		UppLog() << "\n" << Format("p: %.3f Pa = %.3f Pa", waves.p, waves.Pressure(x, y, z, t));
+		VERIFY(abs(waves.p - waves.Pressure(x, y, z, t)) < 0.000001);
+	}
+}
+
+
 CONSOLE_APP_MAIN 
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -267,6 +325,7 @@ CONSOLE_APP_MAIN
 	TestIntInf();
     TestPolynomial();
     TestIntegral();
+    TestSeaWaves();
     
 	#ifdef flagDEBUG
 	UppLog() << "\n";
