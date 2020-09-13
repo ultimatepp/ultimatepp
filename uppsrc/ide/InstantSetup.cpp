@@ -196,20 +196,20 @@ void InstantSetup()
 				default_method = Nvl(default_method, method);
 		}
 
-	enum { VS_2015, VS_2017, BT_2017, VS_2019, BT_2019 };
+	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019 };
 	DirFinder df;
 
 	for(int version = VS_2015; version <= BT_2019; version++)
 		for(int x64 = 0; x64 < 2; x64++) {
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
-			                                   VS_2019, "MSVS19", BT_2019, "MSBT19",
+			                                   VS_2019, "MSVS19", VSP_2019, "MSVC19P", BT_2019, "MSBT19",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
-			                                 VS_2019, "MSC19", BT_2019, "MSC19",
+			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
 			                                 "MSC19"
 			                 ) + ToUpper(x64s);
 		
@@ -239,6 +239,7 @@ void InstantSetup()
 				                            VS_2017, "/microsoft visual studio/2017/community/vc/tools/msvc",
 				                            BT_2019, "/microsoft visual studio/2019/buildtools/vc/tools/msvc",
 				                            VS_2019, "/microsoft visual studio/2019/community/vc/tools/msvc",
+				                            VSP_2019, "/microsoft visual studio/2019/professional/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
