@@ -21,6 +21,5 @@ file
 	JBControlsDemo.lay;
 
 mainconfig
-	"" = "GUI MT",
 	"" = "GUI";
 
