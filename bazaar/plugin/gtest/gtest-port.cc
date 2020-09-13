@@ -85,6 +85,11 @@
 #include "internal/gtest-string.h"
 #include "gtest-internal-inl.h"
 
+namespace Upp {
+	void MemoryIgnoreLeaksBegin();
+	void MemoryIgnoreLeaksEnd();
+}
+
 namespace testing {
 namespace internal {
 
@@ -428,7 +433,9 @@ void Mutex::ThreadSafeLazyInit() {
 #ifdef _MSC_VER
           MemoryIsNotDeallocated memory_is_not_deallocated;
 #endif  // _MSC_VER
+          Upp::MemoryIgnoreLeaksBegin();
           critical_section_ = new CRITICAL_SECTION;
+          Upp::MemoryIgnoreLeaksEnd();
         }
         ::InitializeCriticalSection(critical_section_);
         // Updates the critical_section_init_phase_ to 2 to signal
@@ -673,7 +680,9 @@ class ThreadLocalRegistryImpl {
 #ifdef _MSC_VER
     MemoryIsNotDeallocated memory_is_not_deallocated;
 #endif  // _MSC_VER
+    Upp::MemoryIgnoreLeaksBegin();
     static ThreadIdToThreadLocals* map = new ThreadIdToThreadLocals();
+    Upp::MemoryIgnoreLeaksEnd();
     return map;
   }
 
