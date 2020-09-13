@@ -1167,9 +1167,9 @@ public:
 			throw Exc(in->Str() + Format(t_("Bad %s '%s' in field #%d, line\n'%s'"), "double", fields[i], i+1, line));
 		return res;
 	}
-	int GetCount() const {
-		return fields.GetCount();
-	}
+	
+	int size() const 		{return fields.GetCount();}
+	int GetCount() const 	{return size();}
 	
 	int (*IsSeparator)(int) = defaultIsSeparator;
 		
