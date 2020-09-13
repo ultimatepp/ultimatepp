@@ -10,7 +10,8 @@ uses
 	plugin/tif,
 	plugin/bmp,
 	plugin/lz4,
-	PdfDraw;
+	PdfDraw,
+	Painter;
 
 library(WIN32) oleaut32;
 
