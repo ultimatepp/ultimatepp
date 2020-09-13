@@ -20,6 +20,8 @@ file
 	TSP.h,
 	Permutations.cpp,
 	Permutations.h,
+	SeaWaves.cpp,
+	SeaWaves.h,
 	Utility.cpp,
 	Utility.h,
 	srcimp.tpp,
