@@ -9,6 +9,7 @@
 	\
 	int main(int argc, char** argv) \
 	{ \
+		Upp::MemoryIgnoreLeaksBlock __; \
 		UPP::AppInit__(argc, (const char **)argv); \
 		testing::InitGoogleTest(&argc, argv); \
 		UPP::AppExecute__(TestMainFn); \
