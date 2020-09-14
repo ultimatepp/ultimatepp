@@ -210,7 +210,9 @@ void SurfaceCtrl::MoveAllSelectedObjects(glm::vec3 move)noexcept{ //Move all sel
 		int id = allSelected[e];
 		int iterator = FindObject(id);
 		if(iterator != -1){
-			allObjects[iterator].GetTransform().Move(move);
+		//	float length =  glm::length(camera.GetTransform().GetPosition() - allObjects[iterator].GetTransform().GetPosition());
+			//Cout()  << length << EOL;
+			allObjects[iterator].GetTransform().Move(move  );
 		}
 	}
 }
