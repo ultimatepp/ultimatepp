@@ -248,7 +248,7 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	};
 	
 	Vector<Vertex> dummyVertices;
-	Vector<unsigned int> dummyIndices;
+	Vector<int> dummyIndices;
 	
 	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
@@ -265,12 +265,12 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 		dummyVertices << Vertex( pPos->x , pPos->y , pPos->z , norm.x , norm.y , norm.z , pTexCoord->x , pTexCoord->y);
     }
 	
-	for (int i = 0 ; i < paiMesh->mNumFaces ; i++) {
+	for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
         const aiFace& Face = paiMesh->mFaces[i];
         ASSERT_(Face.mNumIndices == 3, "Face in Assimp strucure do not contain 3 points !");
         dummyIndices << Face.mIndices[0] << Face.mIndices[1] << Face.mIndices[2];
     }
-	for(unsigned int i = 0 ; i < dummyIndices.GetCount(); i++){
+	for(int i = 0 ; i < dummyIndices.GetCount(); i++){
 		Vertex& vertex = dummyVertices[dummyIndices[i]];
 		vertices <<  vertex.pos[0] << vertex.pos[1] << vertex.pos[2];
 		normals << vertex.normals[0] << vertex.normals[1] << vertex.normals[2];
