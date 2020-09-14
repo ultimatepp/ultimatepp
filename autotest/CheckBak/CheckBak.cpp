@@ -51,7 +51,7 @@ CONSOLE_APP_MAIN
 	len = len >> 20;
 	ASSERT(len > 2000 && len < 5500);
 
-	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/big/bak", ';')) {
+	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/big/bak;/ssd/bak", ';')) {
 		FileIn in1(fn);
 		
 		String p = dir + '/' + GetFileName(fn);
