@@ -118,7 +118,7 @@ class UOGL_Camera{
 			if(type == CT_PERSPECTIVE){
 				return glm::perspective(glm::radians(GetFOV()),(float)(ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 			}else if(type == CT_ORTHOGRAPHIC){
-				float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* (ScreenSize.cx/ScreenSize.cy);
+				float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* float(ScreenSize.cx/ScreenSize.cy);
 				float distanceY = glm::distance(glm::vec3(0,0,0),transform.GetPosition());
 				return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
 			}else{

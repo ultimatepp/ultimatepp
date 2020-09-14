@@ -193,24 +193,24 @@ class Object3D : public Upp::Moveable<Object3D>{
 		/*Write into OpenGL buffer return true if operation have been done correctly.
 		/!\ True do not mean OpenGL will provide good things, it just mean buffer have been
 		writted  correctly*/
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, int r, int g, int b,int alpha)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, float r, float g, float b,float alpha)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 color,float alpha)noexcept;
-		bool UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, Upp::Color color,int alpha)noexcept;
-		bool UpdateColors(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept;
+		bool UpdateColor(int MeshNo, int SurfaceNumber, int r, int g, int b,int alpha)noexcept;
+		bool UpdateColor(int MeshNo, int SurfaceNumber, float r, float g, float b,float alpha)noexcept;
+		bool UpdateColor(int MeshNo, int SurfaceNumber, glm::vec3 color,float alpha)noexcept;
+		bool UpdateColor(int MeshNo, int SurfaceNumber, Upp::Color color,int alpha)noexcept;
+		bool UpdateColors(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept;
 		
-		bool UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, float x, float y, float z)noexcept;
-		bool UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 normal)noexcept;
-		bool UpdateNormals(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept;
+		bool UpdateNormal(int MeshNo, int SurfaceNumber, float x, float y, float z)noexcept;
+		bool UpdateNormal(int MeshNo, int SurfaceNumber, glm::vec3 normal)noexcept;
+		bool UpdateNormals(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept;
 		
-		bool UpdateVertice(unsigned int MeshNo, unsigned int SurfaceNumber, float x, float y, float z)noexcept;
-		bool UpdateVertice(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 vertice)noexcept;
-		bool UpdateVertices(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept;
+		bool UpdateVertice(int MeshNo, int SurfaceNumber, float x, float y, float z)noexcept;
+		bool UpdateVertice(int MeshNo, int SurfaceNumber, glm::vec3 vertice)noexcept;
+		bool UpdateVertices(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept;
 		
 		//Read OpenGL buffer and return data in Upp::Vector
-		Vector<float> ReadColors(int MeshNo, unsigned int SurfaceNumber, int count);
-		Vector<float> ReadNormals(int MeshNo, unsigned int SurfaceNumber, int count);
-		Vector<float> ReadVertices(int MeshNo, unsigned int SurfaceNumber, int count);
+		Vector<float> ReadColors(int MeshNo, int SurfaceNumber, int count);
+		Vector<float> ReadNormals(int MeshNo, int SurfaceNumber, int count);
+		Vector<float> ReadVertices(int MeshNo, int SurfaceNumber, int count);
 		
 		void DefaultInit(Object3D& obj);
 		void DefaultDraw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)noexcept;

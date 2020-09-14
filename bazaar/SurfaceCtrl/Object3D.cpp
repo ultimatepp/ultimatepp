@@ -155,7 +155,7 @@ Object3D& Object3D::LoadModel(const String& Filename, Color color, int alpha , u
             glm::vec4 col(color.GetR()/255.0f, color.GetG()/255.0f, color.GetB()/255.0f, alpha/255.0f);
             for(Mesh& m : meshes){
 				Vector<float>& colors = m.GetColors();
-				for(unsigned int e = 0; e < (m.GetVertices().GetCount()/3) ; e++){
+				for(int e = 0; e < (m.GetVertices().GetCount()/3) ; e++){
 					colors << col.x << col.y << col.z << col.w;
 				}
             }
@@ -220,8 +220,8 @@ bool Object3D::InitFromScene(const aiScene* pScene, const String& Filename){
 	textures.AddN(pScene->mNumMaterials);
 	//Add Texture vector init here
 	
-	// Initialise les maillages de la scène, un par un
-    for (unsigned int i = 0 ; i < meshes.GetCount() ; i++) {
+	// Initialises the scene meshes, one by one
+    for (int i = 0 ; i < meshes.GetCount() ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
         InitMesh(i, paiMesh);
     }
@@ -248,7 +248,7 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	};
 	
 	Vector<Vertex> dummyVertices;
-	Vector<float> dummyIndices;
+	Vector<unsigned int> dummyIndices;
 	
 	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
@@ -265,7 +265,7 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 		dummyVertices << Vertex( pPos->x , pPos->y , pPos->z , norm.x , norm.y , norm.z , pTexCoord->x , pTexCoord->y);
     }
 	
-	for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
+	for (int i = 0 ; i < paiMesh->mNumFaces ; i++) {
         const aiFace& Face = paiMesh->mFaces[i];
         ASSERT_(Face.mNumIndices == 3, "Face in Assimp strucure do not contain 3 points !");
         dummyIndices << Face.mIndices[0] << Face.mIndices[1] << Face.mIndices[2];
@@ -307,12 +307,12 @@ Object3D& Object3D::LoadSurface(Surface& surface, Color color, int alpha){
 		if(panel.IsTriangle()){
 			for(int e = 0; e < 3; e++){
 				Point3D p = surface.nodes[panel.id[e]];
-				vertices.Add(p.x);
-				vertices.Add(p.y);
-				vertices.Add(p.z);
-				normals.Add(panel.normalPaint.x);
-				normals.Add(panel.normalPaint.y);
-				normals.Add(panel.normalPaint.z);
+				vertices.Add(float(p.x));
+				vertices.Add(float(p.y));
+				vertices.Add(float(p.z));
+				normals.Add(float(panel.normalPaint.x));
+				normals.Add(float(panel.normalPaint.y));
+				normals.Add(float(panel.normalPaint.z));
 				colors.Add(col.x);
 				colors.Add(col.y);
 				colors.Add(col.z);
@@ -324,13 +324,13 @@ Object3D& Object3D::LoadSurface(Surface& surface, Color color, int alpha){
 				Point3D p = surface.nodes[panel.id[e]];
 				if(e == 0) SecondTriangle[2] = p;
 				if(e == 2) SecondTriangle[0] = p;
-				vertices.Add(p.x);
-				vertices.Add(p.y);
-				vertices.Add(p.z);
+				vertices.Add(float(p.x));
+				vertices.Add(float(p.y));
+				vertices.Add(float(p.z));
 				
-				normals.Add(panel.normalPaint.x);
-				normals.Add(panel.normalPaint.y);
-				normals.Add(panel.normalPaint.z);
+				normals.Add(float(panel.normalPaint.x));
+				normals.Add(float(panel.normalPaint.y));
+				normals.Add(float(panel.normalPaint.z));
 				
 				colors.Add(col.x);
 				colors.Add(col.y);
@@ -340,13 +340,13 @@ Object3D& Object3D::LoadSurface(Surface& surface, Color color, int alpha){
 			SecondTriangle[1]  = surface.nodes[panel.id[3]];
 			for(int e = 0; e < 3; e++){
 				Point3D p = SecondTriangle[e];
-				vertices.Add(p.x);
-				vertices.Add(p.y);
-				vertices.Add(p.z);
+				vertices.Add(float(p.x));
+				vertices.Add(float(p.y));
+				vertices.Add(float(p.z));
 				
-				normals.Add(panel.normalPaint.x);
-				normals.Add(panel.normalPaint.y);
-				normals.Add(panel.normalPaint.z);
+				normals.Add(float(panel.normalPaint.x));
+				normals.Add(float(panel.normalPaint.y));
+				normals.Add(float(panel.normalPaint.z));
 				
 				colors.Add(col.x);
 				colors.Add(col.y);
@@ -512,7 +512,7 @@ Vector<float> Object3D::ReadBuffer(GLuint buffer, int SurfaceCount , int Surface
 	}
 	return data;
 }
-bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, int r, int g, int b, int alpha)noexcept{
+bool Object3D::UpdateColor(int MeshNo, int SurfaceNumber, int r, int g, int b, int alpha)noexcept{
 	float data[]= {r/255.0f,g/255.0f,b/255.0f, alpha/255.0f};
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,4,data);
@@ -520,7 +520,7 @@ bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, int 
 		return false;
 	}
 }
-bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, float r, float g, float b, float alpha)noexcept{
+bool Object3D::UpdateColor(int MeshNo, int SurfaceNumber, float r, float g, float b, float alpha)noexcept{
 	float data[] = {r,g,b, alpha};
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,4,data);
@@ -528,7 +528,7 @@ bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, floa
 		return false;
 	}
 }
-bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 color, float alpha)noexcept{
+bool Object3D::UpdateColor(int MeshNo, int SurfaceNumber, glm::vec3 color, float alpha)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		float data[]= {color.x,color.y,color.z, alpha};
 		return UpdateBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,4,data);
@@ -536,7 +536,7 @@ bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, glm:
 		return false;
 	}
 }
-bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, Upp::Color color, int alpha)noexcept{
+bool Object3D::UpdateColor(int MeshNo, int SurfaceNumber, Upp::Color color, int alpha)noexcept{
 	float data[] = {color.GetR()/255.0f,color.GetG()/255.0f,color.GetB()/255.0f, alpha/255.0f};
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,4,data);
@@ -544,14 +544,14 @@ bool Object3D::UpdateColor(unsigned int MeshNo, unsigned int SurfaceNumber, Upp:
 		return false;
 	}
 }
-bool Object3D::UpdateColors(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept{
+bool Object3D::UpdateColors(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, Count ,4,data);
 	}else{
 		return false;
 	}
 }
-bool Object3D::UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, float x, float y, float z)noexcept{
+bool Object3D::UpdateNormal(int MeshNo, int SurfaceNumber, float x, float y, float z)noexcept{
 	float data[] = {x,y,z};
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetNormalsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,3, data);
@@ -559,21 +559,21 @@ bool Object3D::UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, flo
 		return false;
 	}
 }
-bool Object3D::UpdateNormal(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 normal)noexcept{
+bool Object3D::UpdateNormal(int MeshNo, int SurfaceNumber, glm::vec3 normal)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetNormalsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,3, &(normal.x));
 	}else{
 		return false;
 	}
 }
-bool Object3D::UpdateNormals(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept{
+bool Object3D::UpdateNormals(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetNormalsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, Count ,3, data);
 	}else{
 		return false;
 	}
 }
-bool Object3D::UpdateVertice(unsigned int MeshNo, unsigned int SurfaceNumber, float x, float y, float z)noexcept{
+bool Object3D::UpdateVertice(int MeshNo, int SurfaceNumber, float x, float y, float z)noexcept{
 	float data[] = {x,y,z};
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetVerticesVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,3, data);
@@ -581,35 +581,35 @@ bool Object3D::UpdateVertice(unsigned int MeshNo, unsigned int SurfaceNumber, fl
 		return false;
 	}
 }
-bool Object3D::UpdateVertice(unsigned int MeshNo, unsigned int SurfaceNumber, glm::vec3 vertice)noexcept{
+bool Object3D::UpdateVertice(int MeshNo, int SurfaceNumber, glm::vec3 vertice)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetVerticesVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber, 1 ,3, &(vertice.x));
 	}else{
 		return false;
 	}
 }
-bool Object3D::UpdateVertices(unsigned int MeshNo, unsigned int SurfaceNumber,int Count, const float * data)noexcept{
+bool Object3D::UpdateVertices(int MeshNo, int SurfaceNumber,int Count, const float * data)noexcept{
 	if(MeshNo < meshes.GetCount()){
 		return UpdateBuffer(meshes[MeshNo].GetVerticesVBO(), meshes[MeshNo].GetVertices().GetCount()/3 ,SurfaceNumber, Count ,3, data);
 	}else{
 		return false;
 	}
 }
-Vector<float> Object3D::ReadColors(int MeshNo, unsigned int SurfaceNumber, int count){
+Vector<float> Object3D::ReadColors(int MeshNo, int SurfaceNumber, int count){
 	if(MeshNo < meshes.GetCount()){
 		return ReadBuffer(meshes[MeshNo].GetColorsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber,count,4);
 	}else{
 		throw Exc(Format(t_("Object3D '%i' don't have meshes no '%i', colors can't be readed\n"), ID, MeshNo));
 	}
 }
-Vector<float> Object3D::ReadNormals(int MeshNo, unsigned int SurfaceNumber, int count){
+Vector<float> Object3D::ReadNormals(int MeshNo, int SurfaceNumber, int count){
 	if(MeshNo < meshes.GetCount()){
 		return ReadBuffer(meshes[MeshNo].GetNormalsVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber,count,3);
 	}else{
 		throw Exc(Format(t_("Object3D '%i' don't have meshes no '%i', normals can't be readed\n"), ID, MeshNo));
 	}
 }
-Vector<float> Object3D::ReadVertices(int MeshNo, unsigned int SurfaceNumber, int count){
+Vector<float> Object3D::ReadVertices(int MeshNo, int SurfaceNumber, int count){
 	if(MeshNo < meshes.GetCount()){
 		return ReadBuffer(meshes[MeshNo].GetVerticesVBO(), meshes[MeshNo].GetVertices().GetCount()/3,SurfaceNumber,count,3);
 	}else{
