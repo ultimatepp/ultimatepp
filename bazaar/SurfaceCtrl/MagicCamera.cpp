@@ -2,9 +2,9 @@
 namespace Upp{
 glm::mat4 MagicCamera::GetProjectionMatrix()const noexcept{
 	if(type == CT_PERSPECTIVE){
-		return glm::perspective(glm::radians(GetFOV()),(float)( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
+		return glm::perspective(glm::radians(GetFOV()),float( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
 	}else if(type == CT_ORTHOGRAPHIC){
-		float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* (ScreenSize.cx/ScreenSize.cy);
+		float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* float(ScreenSize.cx/ScreenSize.cy);
 		float distanceY = glm::distance(glm::vec3(0,0,0),transform.GetPosition());
 		return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
 	}else{
@@ -20,10 +20,10 @@ glm::vec3 MagicCamera::UnProject2(float winX, float winY,float winZ)const noexce
 	glm::mat4 View = GetViewMatrix() * glm::mat4(1.0f);
     glm::mat4 projection = GetProjectionMatrix();
 	glm::mat4 viewProjInv = glm::inverse(projection * View);
-	winY = ScreenSize.cy - winY;
+	winY = float(ScreenSize.cy) - winY;
 	glm::vec4 clickedPointOnSreen;
-	clickedPointOnSreen.x = ((winX - 0.0f) / (ScreenSize.cx)) *2.0f -1.0f;
-	clickedPointOnSreen.y = ((winY - 0.0f) / (ScreenSize.cy)) * 2.0f -1.0f;
+	clickedPointOnSreen.x = ((winX - 0.0f) / float(ScreenSize.cx)) *2.0f -1.0f;
+	clickedPointOnSreen.y = ((winY - 0.0f) / float(ScreenSize.cy)) * 2.0f -1.0f;
 	clickedPointOnSreen.z = 2.0f*winZ-1.0f;
 	clickedPointOnSreen.w = 1.0f;
     glm::vec4 clickedPointOrigin  =  viewProjInv * clickedPointOnSreen;
@@ -69,9 +69,9 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 
 MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
 	//Must call DetermineRotationPoint before
-	float xoffset = (lastPress.x - (ScreenSize.cx/2.0f)) * 0.005f;
+	float xoffset = (lastPress.x - (float(ScreenSize.cx)/2.0f)) * 0.005f;
 	float yoffset = (lastPress.y) * 0.005f * -1.0f;
-	float Upoffset = (lastPress.y - (ScreenSize.cy/2.0f)) * 0.005f;
+	float Upoffset = (lastPress.y - (float(ScreenSize.cy)/2.0f)) * 0.005f;
 	bool doX = false, doY = false;
 	if(!OnObject){
 		/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
@@ -176,7 +176,7 @@ bool MagicCamera::PickFocus(float x, float y){
 
 MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Object3D>& allObjects, const Upp::Vector<int>& allSelecteds)noexcept{
 	if(allSelecteds.GetCount() == 0){
-		int obj = Pick(p.x,p.y,allObjects);
+		int obj = Pick(float(p.x),float(p.y),allObjects);
 		if(obj != -1){
 			for(const Object3D& o : allObjects){
 				if(o.GetID() == obj){
@@ -185,7 +185,7 @@ MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Obje
 				}
 			}
 		}else{
-			if(PickFocus(p.x,p.y)){
+			if(PickFocus(float(p.x),float(p.y))){
 				OnObject = true;
 			}else{
 				OnObject = false;
@@ -203,7 +203,6 @@ MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Obje
 }
 
 MagicCamera& MagicCamera::LookAt(const glm::vec3& lookat)noexcept{
-	glm::quat buffer;
 	glm::vec3  direction = lookat - transform.GetPosition();
     float directionLength = glm::length(direction);
     // Check if the direction is valid; Also deals with NaN

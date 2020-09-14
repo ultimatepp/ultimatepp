@@ -151,7 +151,7 @@ void SurfaceCtrl::AddSelectedObject(int ID)noexcept{
 }
 void SurfaceCtrl::UpdateSelectedObjectViaMouse(Point& p, dword keyflags)noexcept{
 	bool ShiftPress = keyflags & K_SHIFT;
-	int ID = camera.Pick(p.x,p.y,allObjects);
+	int ID = camera.Pick(float(p.x), float(p.y), allObjects);
 	if(ID != -1){
 		if(!ShiftPress){
 			ClearSelectedObject();
@@ -298,9 +298,9 @@ void SurfaceCtrl::GLPaint(){
 	if(fastMode) Refresh();
 }
 void SurfaceCtrl::GLResize(int w, int h){
-	if(w != 0)sizeW = w;
-	if(h != 0)sizeH = h;
-	glViewport(0, 0, sizeW, sizeH);
+	if(w != 0)sizeW = float(w);
+	if(h != 0)sizeH = float(h);
+	glViewport(0, 0, int(sizeW), int(sizeH));
 	camera.SetScreenSize(sizeW, sizeH);
 	if(!fastMode)Refresh();
 }
@@ -309,8 +309,8 @@ void SurfaceCtrl::GLResize(int w, int h){
 void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 	camera.ShiftPressed = keyflags & K_SHIFT;
 	
-	float XOffset = p.x - camera.lastPress.x;
-	float YOffset = p.y - camera.lastPress.y;
+	float XOffset = float(p.x - camera.lastPress.x);
+	float YOffset = float(p.y - camera.lastPress.y);
 	if(camera.MouseMiddlePressed){
 		if(camera.ShiftPressed)
 			camera.ProcessMouseWheelTranslation(XOffset,YOffset);
@@ -328,7 +328,7 @@ void SurfaceCtrl::MouseMove(Point p, dword keyflags){
 
 void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
 	camera.DetermineRotationPoint(p,allObjects,allSelected);
-	camera.ProcessMouseScroll(zdelta);
+	camera.ProcessMouseScroll(float(zdelta));
 	if(!fastMode) Refresh();
 }
 void SurfaceCtrl::LeftDown(Point p, dword keyflags){
