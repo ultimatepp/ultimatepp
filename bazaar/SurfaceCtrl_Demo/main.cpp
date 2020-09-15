@@ -24,9 +24,20 @@ namespace Upp{
 			canvas.Refresh();
 		};
 		
-		 
+		canvas.GetSkybox().Show(false);
 		skybox = canvas.GetSkybox().IsShown();
 		skybox.WhenAction = [&]{
+			if(!canvas.GetSkybox().IsLoaded()){
+				canvas.ExecuteGL([&]{
+				canvas.GetSkybox().Init(
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/right.jpg"),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/left.jpg"),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/top.jpg"),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/bottom.jpg"),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/front.jpg"),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/back.jpg"));
+				});
+			}
 			canvas.GetSkybox().Show(skybox.Get());
 			canvas.Refresh();
 		};
@@ -34,7 +45,7 @@ namespace Upp{
 		fovSelector <<= canvas.GetCamera().GetFOV();
 		fovSelector.MinMax(0,160);
 		fovSelector.WhenAction =[&]{
-			canvas.GetCamera().SetFOV(fovSelector);
+			canvas.GetCamera().SetFOV(float(fovSelector));
 			canvas.Refresh();
 		};
 		
@@ -165,18 +176,6 @@ namespace Upp{
 		};
 		
 		canvas.WhenPaint = [&] {
-		ONCELOCK{
-			canvas.ExecuteGL([&]{
-			canvas.GetSkybox().Init(
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/right.jpg"),
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/left.jpg"),
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/top.jpg"),
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/bottom.jpg"),
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/front.jpg"),
-			StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/back.jpg"));
-			});
-		}
-			
 			canvas.DrawAllObjects();
 			RetrieveCameraInformation();
 			RetrieveObjectInformation();
@@ -199,21 +198,21 @@ namespace Upp{
 
 	void SurfaceCtrl_Demo::RetrieveCameraInformation(){
 		Transform&  t = canvas.GetCamera().GetTransform();
-		camPosX = t.GetPosition().x;
-		camPosY = t.GetPosition().y;
-		camPosZ = t.GetPosition().z;
+		camPosX <<= t.GetPosition().x;
+		camPosY <<= t.GetPosition().y;
+		camPosZ <<= t.GetPosition().z;
 		glm::quat q = t.GetRotation();
-		quatW = q.w;
-		quatX = q.x;
-		quatY = q.y;
-		quatZ = q.z;
+		quatW <<= q.w;
+		quatX <<= q.x;
+		quatY <<= q.y;
+		quatZ <<= q.z;
 		frontvec.SetLabel("("+ AsString( t.GetFront().x,2) +", " + AsString(t.GetFront().y,2) +", " + AsString(t.GetFront().z,2) + ")");
 		upvec.SetLabel("("+ AsString(t.GetUp().x,2) +", " + AsString(t.GetUp().y,2) +", " + AsString(t.GetUp().z,2) + ")");
 		rightvec.SetLabel("("+ AsString(t.GetRight().x,2) +", " + AsString(t.GetRight().y,2) +", " + AsString(t.GetRight().z,2) + ")");
 		
-		focusX = canvas.GetCamera().GetFocus().x;
-		focusY = canvas.GetCamera().GetFocus().y;
-		focusZ = canvas.GetCamera().GetFocus().z;
+		focusX <<= canvas.GetCamera().GetFocus().x;
+		focusY <<= canvas.GetCamera().GetFocus().y;
+		focusZ <<= canvas.GetCamera().GetFocus().z;
 		onObjectBool.SetLabel( AsString(canvas.GetCamera().IsOnObject()));
 
 		AllObjects.Clear();
@@ -233,13 +232,13 @@ namespace Upp{
 		AllObjects.OpenDeep(0,true);
 	}
 	void SurfaceCtrl_Demo::UpdatePosition(){
-		canvas.GetCamera().GetTransform().SetPosition(camPosX,camPosY,camPosZ);
+		canvas.GetCamera().GetTransform().SetPosition(float(camPosX),float(camPosY),float(camPosZ));
 	}
 	void SurfaceCtrl_Demo::UpdateRotation(){
-		canvas.GetCamera().GetTransform().SetRotation(glm::quat(quatW,quatX,quatY,quatZ));
+		canvas.GetCamera().GetTransform().SetRotation(glm::quat(float(quatW),float(quatX),float(quatY),float(quatZ)));
 	}
 	void SurfaceCtrl_Demo::UpdateFocus(){
-		canvas.GetCamera().SetFocus(focusX,focusY,focusZ);
+		canvas.GetCamera().SetFocus(float(focusX),float(focusY),float(focusZ));
 	}
 	void SurfaceCtrl_Demo::RetrieveObjectInformation(){
 		if(TreeIDSelected > 0){
@@ -248,21 +247,21 @@ namespace Upp{
 				Object3D& obj = canvas.GetObject(TreeIDSelected);
 				ObjShowSkin = obj.GetShowMesh();
 				ObjShowNormal = obj.GetShowMeshNormal();
-				ObjShowLine =  obj.GetShowMeshLine();
+				ObjShowLine = obj.GetShowMeshLine();
 				ObjShowLight = obj.GetShowLight();
 				
-				ObjPosX = obj.GetTransform().GetPosition().x;
-				ObjPosY = obj.GetTransform().GetPosition().y;
-				ObjPosZ = obj.GetTransform().GetPosition().z;
+				ObjPosX <<= obj.GetTransform().GetPosition().x;
+				ObjPosY <<= obj.GetTransform().GetPosition().y;
+				ObjPosZ <<= obj.GetTransform().GetPosition().z;
 				
-				ObjQuatW = obj.GetTransform().GetRotation().w;
-				ObjQuatX = obj.GetTransform().GetRotation().x;
-				ObjQuatY = obj.GetTransform().GetRotation().y;
-				ObjQuatZ = obj.GetTransform().GetRotation().z;
+				ObjQuatW <<= obj.GetTransform().GetRotation().w;
+				ObjQuatX <<= obj.GetTransform().GetRotation().x;
+				ObjQuatY <<= obj.GetTransform().GetRotation().y;
+				ObjQuatZ <<= obj.GetTransform().GetRotation().z;
 				
-				ObjScalX = obj.GetTransform().GetScale().x;
-				ObjScalY = obj.GetTransform().GetScale().y;
-				ObjScalZ = obj.GetTransform().GetScale().z;
+				ObjScalX <<= obj.GetTransform().GetScale().x;
+				ObjScalY <<= obj.GetTransform().GetScale().y;
+				ObjScalZ <<= obj.GetTransform().GetScale().z;
 			}
 		}
 	}
@@ -271,8 +270,8 @@ namespace Upp{
 			int iterator = canvas.FindObject(TreeIDSelected);
 			if( iterator != -1){
 				Object3D& obj = canvas.GetObject(TreeIDSelected);
-				obj.GetTransform().SetPosition(ObjPosX,ObjPosY,ObjPosZ);
-				obj.GetTransform().SetRotation(glm::quat(ObjQuatW,ObjQuatX,ObjQuatY,ObjQuatZ));
+				obj.GetTransform().SetPosition(float(ObjPosX),float(ObjPosY),float(ObjPosZ));
+				obj.GetTransform().SetRotation(glm::quat(float(ObjQuatW),float(ObjQuatX),float(ObjQuatY),float(ObjQuatZ)));
 				obj.GetTransform().SetScale(glm::vec3((float)ObjScalX,(float)ObjScalY,(float)ObjScalZ));
 			}
 		}
