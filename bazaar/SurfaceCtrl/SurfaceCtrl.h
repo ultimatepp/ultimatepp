@@ -31,6 +31,7 @@ class SurfaceCtrl : public GL{
 		OpenGLProgram DrawMeshNormal;
 		
 		bool showAxis = true;
+		bool depthAxis = false;
 		bool showCameraFocus = false;
 		
 		float sizeW = 800.0f;
@@ -104,6 +105,11 @@ class SurfaceCtrl : public GL{
 		SurfaceCtrl& DisableAxis()noexcept{showAxis = false; return *this;}
 		SurfaceCtrl& ShowAxis(bool b = true)noexcept{showAxis = b; return *this;}
 		bool IsAxisEnable()const noexcept{return showAxis;}
+		
+		SurfaceCtrl& EnableDepthAxis()noexcept{depthAxis = true; return *this;}
+		SurfaceCtrl& DisableDepthAxis()noexcept{depthAxis = false; return *this;}
+		SurfaceCtrl& UseDepthAxis(bool b = true)noexcept{depthAxis = b; return *this;}
+		bool IsDepthAxisEnable()noexcept{return depthAxis;}
 		
 		//Focus option
 		SurfaceCtrl& ShowCameraFocus(bool b = true)noexcept{showCameraFocus = b; return *this;}
