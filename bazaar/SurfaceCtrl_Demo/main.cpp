@@ -18,9 +18,19 @@ namespace Upp{
 			}
 			canvas.Refresh();
 		};
+		
 		axis = canvas.IsAxisEnable();
 		axis.WhenAction = [&]{
 			canvas.ShowAxis(axis.Get());
+			if(axis.Get())
+				depthaxis.Enable();
+			else
+				depthaxis.Disable();
+			canvas.Refresh();
+		};
+		depthaxis = canvas.IsDepthAxisEnable();
+		depthaxis.WhenAction = [&]{
+			canvas.UseDepthAxis(depthaxis.Get());
 			canvas.Refresh();
 		};
 		
