@@ -24,8 +24,7 @@ namespace Upp{
 			canvas.Refresh();
 		};
 		
-		canvas.GetSkybox().Show(false);
-		skybox = canvas.GetSkybox().IsShown();
+		skybox = canvas.GetSkybox().IsShown();  
 		skybox.WhenAction = [&]{
 			if(!canvas.GetSkybox().IsLoaded()){
 				canvas.ExecuteGL([&]{
