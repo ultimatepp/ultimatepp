@@ -238,7 +238,8 @@ class Skybox {
 		
 		Skybox& Show(bool b = true){show = b; return *this;}
 		bool IsShown(){return show;}
-
+		bool IsLoaded(){return ID;}
+	
 		Skybox& Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back); //Load all image provided as skybox
 		Skybox& Clear();
 		Skybox& Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix);
