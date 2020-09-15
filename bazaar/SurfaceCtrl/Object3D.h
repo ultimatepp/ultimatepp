@@ -227,7 +227,7 @@ class Skybox {
 	private:
 		unsigned int ID = 0;
 		GLuint VBO, VAO;
-		bool show = true;
+		bool show = false;
 		
 		OpenGLProgram program;
 		Skybox& Init(const Vector<Image>& images); //Load this vector of image as Skybox
