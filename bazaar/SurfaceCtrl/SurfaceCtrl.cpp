@@ -279,8 +279,11 @@ void SurfaceCtrl::GLPaint(){
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	WhenPaint(); //The function wich loop arround all object and draw using proper VAO and shaders
-	if(showAxis)
+	if(showAxis){
+		if(depthAxis)glDepthFunc(GL_ALWAYS);  // change depth function so depth test always passes
 		Axis.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
+		if(depthAxis)glDepthFunc(GL_LESS);  // change depth function so depth test passes when values are equal to depth buffer's content
+	}
 	if(showCameraFocus){
 		CameraFocus.GetTransform().SetPosition(camera.GetFocus());
 		CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
