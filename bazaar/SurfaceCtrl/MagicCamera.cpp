@@ -31,41 +31,41 @@ glm::vec3 MagicCamera::UnProject2(float winX, float winY,float winZ)const noexce
 }
 
 MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexcept{
-			xoffset *= MouseSensitivity;
-			yoffset *= MouseSensitivity;
-			
-			float a1 = xoffset * -1.0f;
-			float a2 = yoffset * -1.0f;
-			
-			glm::vec3 pos = focus - transform.GetPosition();
-			float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
-			
-			glm::vec3 between;
-			
-			if(type == CT_ORTHOGRAPHIC){
-				between =  transform.GetPosition();
+	xoffset *= MouseSensitivity;
+	yoffset *= MouseSensitivity;
+	
+	float a1 = xoffset * -1.0f;
+	float a2 = yoffset * -1.0f;
+	
+	glm::vec3 pos = focus - transform.GetPosition();
+	float angle = glm::dot(glm::normalize(transform.GetFront()),glm::normalize(pos));
+	
+	glm::vec3 between;
+	
+	if(type == CT_ORTHOGRAPHIC){
+		between =  transform.GetPosition();
+		focus = glm::vec3(0.0f,0.0f,0.0f);
+	}else{
+		if(angle < 0.90f){
+			if (angle  < 0){
 				focus = glm::vec3(0.0f,0.0f,0.0f);
-			}else{
-				if(angle < 0.90f){
-					if (angle  < 0){
-						focus = glm::vec3(0.0f,0.0f,0.0f);
-					}
-					focus =  transform.GetPosition() + (transform.GetFront()*10.0f);
-				}
-				between = transform.GetPosition() - focus;
 			}
-			
-			glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
-			glm::quat rightRotation = Transform::GetQuaterion(a2, transform.GetRight());
-			
-			between = glm::rotate(upRotation, between);
-			between = glm::rotate(rightRotation, between);
-			
-			transform.SetPosition(focus + between);
-			transform.Rotate(glm::inverse(upRotation * rightRotation));
-			
-			return *this;
+			focus =  transform.GetPosition() + (transform.GetFront()*10.0f);
 		}
+		between = transform.GetPosition() - focus;
+	}
+	
+	glm::quat upRotation = Transform::GetQuaterion(a1,transform.GetWorldUp());
+	glm::quat rightRotation = Transform::GetQuaterion(a2, transform.GetRight());
+	
+	between = glm::rotate(upRotation, between);
+	between = glm::rotate(rightRotation, between);
+	
+	transform.SetPosition(focus + between);
+	transform.Rotate(glm::inverse(upRotation * rightRotation));
+	
+	return *this;
+}
 
 MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
 	//Must call DetermineRotationPoint before
@@ -134,8 +134,6 @@ int MagicCamera::Pick(float x, float y,const Upp::Vector<Object3D>& allObjects)c
 	return intersect;
 }
 bool MagicCamera::PickFocus(float x, float y){
-	int intersect = -1;
-	double distance = 100000.0f;
 	glm::vec3 start = UnProject2(x,y,0.0f);
 	glm::vec3 end = UnProject2(x,y,1.0f);
 	

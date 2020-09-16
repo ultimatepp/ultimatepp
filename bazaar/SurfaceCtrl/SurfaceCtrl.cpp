@@ -73,8 +73,7 @@ void SurfaceCtrl::ZoomToFit(){
 	}
 	
 	camera.LookAt(center);
-	if(!allObjects.GetCount() == 0){
-		float length  = glm::abs(glm::length(center - camera.GetTransform().GetPosition()));
+	if(allObjects.GetCount()){
 		float size = ma-mi * 1.5f ;
 		camera.GetTransform().SetPosition(glm::abs(camera.GetTransform().GetFront() * -size));
 		camera.LookAt(center);
