@@ -195,20 +195,18 @@ MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Obje
 }
 
 MagicCamera& MagicCamera::LookAt(const glm::vec3& lookat)noexcept{
-	glm::vec3  direction = lookat - transform.GetPosition();
-    float directionLength = glm::length(direction);
-    
-    if(!(directionLength > 0.0001)){ // Check if the direction is valid; Also deals with NaN
+	glm::vec3 direction = glm::normalize( lookat - transform.GetPosition());
+    if(!(glm::length(direction) > 0.0001)){ // Check if the direction is valid; Also deals with NaN
         transform.SetRotation(glm::quat(1, 0, 0, 0));
 		return *this;
     }
-    direction /= directionLength; // Normalize direction
-
-    if(glm::abs(glm::dot(direction, transform.GetWorldUp())) > .9999f) {
-        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetUp())));// Use relative up
-    } else {
-        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetWorldUp())));
-    }
+	//Check if We must use relative Up
+	glm::vec3 upToUse = transform.GetWorldUp();
+    if(glm::abs(glm::dot(direction, transform.GetWorldUp())) > .9999f) upToUse = transform.GetUp();
+    //Check if parallel
+	if(glm::vec3(0.0f) == glm::cross(transform.GetUp(),direction) ) direction = glm::normalize(lookat - (transform.GetPosition() + glm::vec3(0.001f,0.0f,0.001f))); //Change position and recalculate direction
+	//Calcul new quaternion
+    transform.SetRotation(glm::inverse(glm::quatLookAt(direction, upToUse)));
 	return *this;
 }
 
