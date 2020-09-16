@@ -28,6 +28,7 @@ file
 	MagicCamera.h,
 	MagicCamera.cpp,
 	skybox.brc,
+	SurfaceCtrl.iml,
 	textures.iml,
 	shaders readonly separator,
 	shaders\Vertex.glsl highlight cpp,
