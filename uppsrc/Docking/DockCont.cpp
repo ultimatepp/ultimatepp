@@ -570,7 +570,7 @@ void DockCont::Highlight()
 {
 	if (!GetCount() || (!IsOpen() && !IsPopUp() && !GetParent())) return;
 	ViewDraw v(this); 
-	ChPaint(v, GetSize(), GetCurrent().GetStyle().highlight);
+	ChPaint(v, GetSize(), GetCurrent().GetStyle().highlight[1]);
 }
 
 Image DockCont::GetHighlightImage()
