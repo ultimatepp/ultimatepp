@@ -12,6 +12,7 @@ static const String GetSurfaceCtrlDirectory(){
 }
 	
 class SurfaceCtrl : public GL{
+	typedef SurfaceCtrl CLASSNAME;
 	private:
 		bool loaded = false;
 		Object3DProvider objProvider;
@@ -122,14 +123,35 @@ class SurfaceCtrl : public GL{
 		virtual void GLResize(int w, int h); //Action on resize
 		
 		//Input event
-		virtual void MouseMove(Point p, dword); //Action on mouse move
+		/*virtual void MouseMove(Point p, dword); //Action on mouse move
 		virtual void MouseWheel(Point p,int zdelta,dword keyflags); //action on Mouse wheel
 		virtual void LeftDown(Point p, dword); //Action on Left Down mouse
 		virtual void LeftUp(Point p, dword); //Action on Up down mouse
 		virtual void MiddleDown(Point p, dword keyflags); //Action Middle down (wheel down) mouse
 		virtual void MiddleUp(Point p, dword keyflags);//Action Middle up (wheel up) mouse
-		virtual void MouseLeave(); //action when mouse leave
+		virtual void MouseLeave(); //action when mouse leave*/
 		virtual bool Key(dword key,int count); //Action when key press
+		
+		
+		int buttonRotation = Ctrl::MIDDLE;
+		int buttonDrag = Ctrl::LEFT;
+		int buttonMenu = Ctrl::RIGHT;
+		
+		String defaultFileName;
+		int jpgQuality = 90;
+		Image GetImage();
+		void SaveToClipboard();
+		void SaveToFile();
+		void OnTypeImage(FileSel *_fs);
+		
+		virtual Image HandleEvent(int event, Point p, int zdelta, dword);
+		
+		void ProcessZoom(Point p, int zdelta);
+		
+		//Menu bar
+		Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+		void ContextMenu(Bar& bar,const Point& p);
+		
 };
 #include "Object3D.h"
 }
