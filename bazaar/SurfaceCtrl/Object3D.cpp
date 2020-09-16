@@ -278,7 +278,6 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	}
 }
 bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
-	bool Ret = false;
 	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0){
@@ -300,7 +299,6 @@ Object3D& Object3D::LoadSurface(Surface& surface, Color color, int alpha){
 	auto& normals = mesh.GetNormals();
 	auto& colors = mesh.GetColors();
 	
-	int indice =0;
 	for (int ip = 0; ip < surface.panels.GetCount(); ++ip) {
 		const Panel &panel = surface.panels[ip];
 		//ADDING :
