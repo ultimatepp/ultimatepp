@@ -289,7 +289,9 @@ namespace Upp{
 
 GUI_APP_MAIN
 {
+#if defined(flagDEBUG) && defined(flagMSC)
 	Upp::ConsoleOutput con(true);
+#endif
 	Upp::StdLogSetup( Upp::LOG_COUT | Upp::LOG_FILE);
 	Upp::SurfaceCtrl_Demo().Run();
 }
