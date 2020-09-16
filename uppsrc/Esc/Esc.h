@@ -22,7 +22,7 @@ class EscValue : Moveable<EscValue> {
 	};
 
 	int              type;
-	mutable unsigned hash;
+	mutable hash_t   hash;
 
 	struct EscMap;
 	struct EscArray;
