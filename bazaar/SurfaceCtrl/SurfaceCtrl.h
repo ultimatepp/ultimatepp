@@ -116,6 +116,8 @@ class SurfaceCtrl : public GL{
 		SurfaceCtrl& ShowCameraFocus(bool b = true)noexcept{showCameraFocus = b; return *this;}
 		bool IsCameraFocusShow()const noexcept{return showCameraFocus;}
 		void ZoomToFit(); //Replace the camera to fit all object loaded in the screen
+		void ProcessZoom(Point p, int zdelta, float multiplier = 1.0f); // Zoom the camera out/in depending on multiplier
+		void ViewFromAxe(Point p, bool AxeX, bool AxeY, bool AxeZ); // Will set camera on axe selected axe
 		
 		//Application event
 		virtual void Layout(){GLResize(GetSize().cx,GetSize().cy);}
@@ -146,7 +148,7 @@ class SurfaceCtrl : public GL{
 		
 		virtual Image HandleEvent(int event, Point p, int zdelta, dword);
 		
-		void ProcessZoom(Point p, int zdelta);
+		
 		
 		//Menu bar
 		Image MouseEvent(int event, Point p, int zdelta, dword keyflags);

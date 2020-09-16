@@ -295,7 +295,6 @@ void SurfaceCtrl::GLPaint(){
 		CameraFocus.GetTransform().SetPosition(camera.GetFocus());
 		CameraFocus.Draw(camera.GetProjectionMatrix(), camera.GetViewMatrix(),camera.GetTransform().GetPosition());
 	}
-	
 	//Draw skybox :
 	glm::mat4 proj;
 	if(camera.GetCameraType() == CT_ORTHOGRAPHIC){
@@ -305,9 +304,7 @@ void SurfaceCtrl::GLPaint(){
 	}else{
 		proj = camera.GetProjectionMatrix();
 	}
-	skybox.Draw( proj , camera.GetViewMatrix());
-	//***
-	
+	skybox.Draw(proj , camera.GetViewMatrix());
 	if(fastMode) Refresh();
 }
 void SurfaceCtrl::GLResize(int w, int h){
@@ -319,58 +316,18 @@ void SurfaceCtrl::GLResize(int w, int h){
 }
 
 //Input event
-/*
-void SurfaceCtrl::MouseMove(Point p, dword keyflags){
-	camera.ShiftPressed = keyflags & K_SHIFT;
-	
-	float XOffset = float(p.x - camera.lastPress.x);
-	float YOffset = float(p.y - camera.lastPress.y);
-	if(camera.MouseMiddlePressed){
-		if(camera.ShiftPressed)
-			camera.ProcessMouseWheelTranslation(XOffset,YOffset);
-		else
-			camera.MouseWheelMouvement(XOffset,YOffset);
-		if(!fastMode) Refresh();
-	}else if(camera.MouseLeftPressed){
-		glm::vec3 x = GetCamera().GetTransform().GetRight() * (XOffset * GetCamera().GetMouvementSpeed());
-		glm::vec3 y = GetCamera().GetTransform().GetUp() * ((YOffset * -1.0f) * GetCamera().GetMouvementSpeed());
-		MoveAllSelectedObjects(x + y);
-		if(!fastMode) Refresh();
-	}
-	camera.lastPress = p;
-}
-void SurfaceCtrl::MouseWheel(Point p,int zdelta,dword keyflags){
-	camera.DetermineRotationPoint(p,allObjects,allSelected);
-	camera.ProcessMouseScroll(float(zdelta));
-	if(!fastMode) Refresh();
-}
-void SurfaceCtrl::LeftDown(Point p, dword keyflags){
-	SetFocus();
-	camera.lastPress = p;
-	camera.MouseLeftPressed = true;
-	UpdateSelectedObjectViaMouse(p,keyflags);
-	if(!fastMode)Refresh();
-}
-void SurfaceCtrl::LeftUp(Point p, dword keyflags){
-	camera.MouseLeftPressed = false;
-}
-void SurfaceCtrl::MiddleDown(Point p, dword keyflags){
-	SetFocus();
-	camera.MouseMiddlePressed = true;
-	camera.lastPress = p;
-	camera.DetermineRotationPoint(p,allObjects,allSelected);
-}
-void SurfaceCtrl::MiddleUp(Point p, dword keyflags){
-	camera.MouseMiddlePressed = false;
-	camera.ShiftPressed = false;
-}
-void SurfaceCtrl::MouseLeave(){
-	camera.MouseMiddlePressed = false;
-	camera.MouseLeftPressed = false;
-	return;
-}*/
 bool SurfaceCtrl::Key(dword key,int count){
-	if (key == K_CTRL_F)
+	if( key == K_DELETE){
+		DeleteAllSelectedObjects();
+	} else if(key == K_ESCAPE){ //removing all selection
+		ClearSelectedObject();
+		camera.SetFocus(glm::vec3(0.0f,0.0f,0.0f));
+	} else if(key & K_CTRL && key & K_A){
+		ClearSelectedObject();
+		for(Object3D& obj : allObjects){
+			AddSelectedObject(obj.GetID());
+		}
+	} else if (key == K_CTRL_F)
 		ZoomToFit();
 	else if (key == K_CTRL_ADD || key == (K_CTRL|K_PLUS))
 		ProcessZoom(Point(0,0),120);
@@ -386,9 +343,14 @@ bool SurfaceCtrl::Key(dword key,int count){
 	return true;
 }
 
-void SurfaceCtrl::ProcessZoom(Point p, int zdelta){
+void SurfaceCtrl::ProcessZoom(Point p, int zdelta, float multiplier){
 	camera.DetermineRotationPoint(p,allObjects,allSelected);
-	camera.ProcessMouseScroll(float(zdelta));
+	camera.ProcessMouseScroll(float(zdelta),multiplier);
+	if(!fastMode) Refresh();
+}
+void SurfaceCtrl::ViewFromAxe(Point p, bool AxeX, bool AxeY, bool AxeZ){ // Will set camera on axe selected axe
+	camera.DetermineRotationPoint(p,allObjects,allSelected);
+	camera.ViewFromAxe(AxeX,AxeY,AxeZ);
 	if(!fastMode) Refresh();
 }
 
@@ -451,12 +413,11 @@ Image SurfaceCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags) {
 }
 void SurfaceCtrl::ContextMenu(Bar& bar,const Point& p) {
 	bar.Add(t_("Fit to data"), SurfaceCtrlImg::ShapeHandles(), [&]{ZoomToFit();}).Key(K_CTRL_F).Help(t_("Zoom to fit visible all data"));
-	bar.Add(t_("Zoom +"),SurfaceCtrlImg::ZoomPlus(),  [&]{ProcessZoom(p,120);}) .Key(K_CTRL|K_ADD).Help(t_("Zoom in (closer)"));
-	bar.Add(t_("Zoom -"),SurfaceCtrlImg::ZoomMinus(), [&]{ProcessZoom(p,-120);}).Key(K_CTRL|K_SUBTRACT).Help(t_("Zoom out (away)"));
-	bar.Add(t_("View X axis"),[&]{});
-	bar.Add(t_("View Y axis"),[&]{});
-	bar.Add(t_("View Z axis"),[&]{});
-	bar.Add(t_("View isometric XYZ"),[&]{});
+	bar.Add(t_("Zoom +"),SurfaceCtrlImg::ZoomPlus(),  [&]{ProcessZoom(p,120,5);}) .Key(K_CTRL|K_ADD).Help(t_("Zoom in (closer)"));
+	bar.Add(t_("Zoom -"),SurfaceCtrlImg::ZoomMinus(), [&]{ProcessZoom(p,-120,5);}).Key(K_CTRL|K_SUBTRACT).Help(t_("Zoom out (away)"));
+	bar.Add(t_("View from X axis"),[&]{ViewFromAxe(p,true,false,false);});
+	bar.Add(t_("View from Y axis"),[&]{ViewFromAxe(p,false,true,false);});
+	bar.Add(t_("View from Z axis"),[&]{ViewFromAxe(p,false,false,true);});
 	bar.Separator();
 	bar.Add(t_("Copy image"),  SurfaceCtrlImg::Copy(), [&]{ExecuteGL(THISFN(SaveToClipboard), true);}).Key(K_CTRL_C).Help(t_("Copy image to clipboard"));
 	bar.Add(t_("Save image"),  SurfaceCtrlImg::Save(), [&]{ExecuteGL(THISFN(SaveToFile), true);}).Key(K_CTRL_S).Help(t_("Save image to file"));

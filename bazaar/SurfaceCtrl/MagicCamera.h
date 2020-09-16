@@ -27,10 +27,12 @@ namespace Upp{
 		MagicCamera& DetermineRotationPoint(Point& p,const Upp::Vector<Object3D>& allObjects, const Upp::Vector<int>& allSelecteds)noexcept; //Find a new focus point depending on cursor position and all Object3D
 	
 		virtual MagicCamera& LookAt(const glm::vec3& lookat)noexcept;
+		void ViewFromAxe(bool AxeX, bool AxeY, bool AxeZ, bool Inverse = false)noexcept; // Will set camera on axe selected axe
 	
 		MagicCamera& ProcessMouseWheelTranslation(float xoffset,float yoffset); //Move the camera depending on X and Y offset
 		MagicCamera& MouseWheelMouvement(float xoffset,float yoffset)noexcept; //Rotate arround axis
-		MagicCamera& ProcessMouseScroll(float zdelta)noexcept; //Zoom or move via MouseWheel depending on OnObject Boolean
+		MagicCamera& ProcessMouseScroll(float zdelta, float multiplier = 1.0f)noexcept; //Zoom or move via MouseWheel depending on OnObject Boolean
+		
 		
 		MagicCamera& ProcessKeyboardMouvement(Camera_Movement direction){return *this;} //Handler for keyboard, Useless in this kind of camera
 		bool ProcessKeyBoard(unsigned long Key,int count)noexcept{return true;} //Handler for keyboard, Useless in this kind of camera
