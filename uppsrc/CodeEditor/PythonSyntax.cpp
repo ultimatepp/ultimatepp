@@ -9,7 +9,7 @@ void PythonSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& 
 		int c = *s;
 		dword pair = MAKELONG(s[0], s[1]);
 		if(c == '#') {
-			hls.Put(end - s, hl_style[INK_COMMENT]);
+			hls.Put(int(end - s), hl_style[INK_COMMENT]);
 			return;
 		}
 		else

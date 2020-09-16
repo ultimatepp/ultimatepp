@@ -79,7 +79,7 @@ static void CalcHash(Vector<Index<dword>>& hash, const Vector<String>& file, int
 	{ // 1st row
 		Index<dword>& first = hash.Add();
 		for(int i = 0; i < file.GetCount(); i++)
-			first.Add(GetHashValue(file[i]));
+			first.Add(FoldHash(GetHashValue(file[i])));
 	}
 	static const int prime[] =
 	{
