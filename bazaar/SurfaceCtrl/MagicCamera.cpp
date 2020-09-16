@@ -67,37 +67,31 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 	return *this;
 }
 
-MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta)noexcept{
+MagicCamera& MagicCamera::ProcessMouseScroll(float zdelta, float multiplier)noexcept{
 	//Must call DetermineRotationPoint before
-	float xoffset = (lastPress.x - (float(ScreenSize.cx)/2.0f)) * 0.005f;
-	float yoffset = (lastPress.y) * 0.005f * -1.0f;
-	float Upoffset = (lastPress.y - (float(ScreenSize.cy)/2.0f)) * 0.005f;
-	bool doX = false, doY = false;
-	if(!OnObject){
-		/*if(sqrt(pow( StartPress.x - (ScreenSize.cx/2),2)) > (ScreenSize.cx/20)) doX = true;
-		if(sqrt(pow( StartPress.y - (ScreenSize.cy/2),2)) > (ScreenSize.cy/20)) doY = true;*/
-		doX = true;
-		doY = true;
-	}
-	glm::vec3 scaling = 0.1f *  (transform.GetPosition() - focus);
+	float xoffset = (lastPress.x - (float(ScreenSize.cx)/2.0f)) * 0.05f;
+	float yoffset = (lastPress.y) * 0.05f * -1.0f;
+	float Upoffset = (lastPress.y - (float(ScreenSize.cy)/2.0f)) * 0.05f;
+	
+	glm::vec3 scaling = (0.1f *  (transform.GetPosition() - focus))* multiplier;
+	
 	if(zdelta == - 120){
-		    if(doX)transform.SetPosition(transform.GetPosition() - (transform.GetRight() * xoffset));
-			if(doY){
-				transform.SetPosition(transform.GetPosition() +(transform.GetFront() * yoffset));
-				transform.SetPosition(transform.GetPosition() + (transform.GetUp() * Upoffset));
-			}
-			if(!doY && !doX)
+		    if(!OnObject){
+				transform.SetPosition(transform.GetPosition() - ((transform.GetRight() * xoffset)* multiplier));
+				transform.SetPosition(transform.GetPosition() + ((transform.GetFront() * yoffset)* multiplier));
+				transform.SetPosition(transform.GetPosition() + ((transform.GetUp() * Upoffset)* multiplier));
+			}else{
 				transform.SetPosition(transform.GetPosition() + scaling);
+			}
 	}else{
-		if(doX)transform.SetPosition(transform.GetPosition() + (transform.GetRight() * xoffset));
-		if(doY){
-			transform.SetPosition(transform.GetPosition() - (transform.GetFront() * yoffset));
-			transform.SetPosition(transform.GetPosition() - (transform.GetUp() * Upoffset));
-		}
-		if(!doY && !doX){
+		if(!OnObject){
+			transform.SetPosition(transform.GetPosition() + ((transform.GetRight() * xoffset)* multiplier));
+			transform.SetPosition(transform.GetPosition() - ((transform.GetFront() * yoffset)* multiplier));
+			transform.SetPosition(transform.GetPosition() - ((transform.GetUp() * Upoffset)* multiplier));
+		}else{
 			float length = glm::length(GetTransform().GetPosition() - focus);
 			if(length > 2.0f)
-				transform.SetPosition(transform.GetPosition() - scaling);
+				transform.SetPosition(transform.GetPosition() - (scaling));
 		}
 	}
 	return *this;
@@ -203,20 +197,36 @@ MagicCamera& MagicCamera::DetermineRotationPoint(Point& p,const Upp::Vector<Obje
 MagicCamera& MagicCamera::LookAt(const glm::vec3& lookat)noexcept{
 	glm::vec3  direction = lookat - transform.GetPosition();
     float directionLength = glm::length(direction);
-    // Check if the direction is valid; Also deals with NaN
-    if(!(directionLength > 0.0001)){
+    
+    if(!(directionLength > 0.0001)){ // Check if the direction is valid; Also deals with NaN
         transform.SetRotation(glm::quat(1, 0, 0, 0));
-		return *this;;
+		return *this;
     }
-    // Normalize direction
-    direction /= directionLength;
+    direction /= directionLength; // Normalize direction
+
     if(glm::abs(glm::dot(direction, transform.GetWorldUp())) > .9999f) {
-        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetUp()))); // Use alternative up
-    }
-    else {
+        transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetUp())));// Use relative up
+    } else {
         transform.SetRotation(glm::inverse(glm::quatLookAt(direction, transform.GetWorldUp())));
     }
 	return *this;
 }
 
+void MagicCamera::ViewFromAxe(bool AxeX, bool AxeY, bool AxeZ, bool Inverse)noexcept{ // Will set camera on axe selected axe
+	float length = glm::length(transform.GetPosition() - focus);
+	if(Inverse) length *= -1.0f;
+	
+	glm::vec3 pos = focus;
+	if(AxeX){
+		pos.x += length;
+	}if(AxeY){
+		pos.y += length;
+	}if(AxeZ){
+		pos.z += length;
+	}
+
+	
+	transform.SetPosition(pos);
+	LookAt(focus);
+}
 }

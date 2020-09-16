@@ -27,7 +27,6 @@ file
 	UOGL_Camera.h,
 	MagicCamera.h,
 	MagicCamera.cpp,
-	skybox.brc,
 	SurfaceCtrl.iml,
 	textures.iml,
 	shaders readonly separator,
