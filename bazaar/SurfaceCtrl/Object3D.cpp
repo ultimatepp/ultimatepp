@@ -278,14 +278,68 @@ void Object3D::InitMesh(unsigned int Index, const aiMesh* paiMesh){
 	}
 }
 bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
+	aiString Path;
 	for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0){
-            aiString Path;
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                 String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
                 InsertTexture(FullPath,i);
             }
+        }else if(pMaterial->GetTextureCount(aiTextureType_SPECULAR) > 0){
+            if (pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Specular texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_AMBIENT) > 0){
+            if (pMaterial->GetTexture(aiTextureType_AMBIENT, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Ambient texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_EMISSIVE) > 0){
+            if (pMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Emissive texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_HEIGHT) > 0){
+            if (pMaterial->GetTexture(aiTextureType_HEIGHT, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Height texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_NORMALS) > 0){
+            if (pMaterial->GetTexture(aiTextureType_NORMALS, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Normals texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_SHININESS) > 0){
+            if (pMaterial->GetTexture(aiTextureType_SHININESS, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Shininess texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_OPACITY) > 0){
+            if (pMaterial->GetTexture(aiTextureType_OPACITY, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Opacity texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_DISPLACEMENT) > 0){
+            if (pMaterial->GetTexture(aiTextureType_DISPLACEMENT, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Displacement texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_LIGHTMAP) > 0){
+            if (pMaterial->GetTexture(aiTextureType_LIGHTMAP, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Lightmap texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_REFLECTION) > 0){
+            if (pMaterial->GetTexture(aiTextureType_REFLECTION, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Reflection texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_UNKNOWN) > 0){
+            if (pMaterial->GetTexture(aiTextureType_UNKNOWN, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("Unknow texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else if(pMaterial->GetTextureCount(aiTextureType_NONE) > 0){
+            if (pMaterial->GetTexture(aiTextureType_NONE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
+                LOG("None texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
+        }else{
+			for(int e = 0; e < pMaterial->mNumProperties; e++){
+				aiMaterialProperty* aiMp = pMaterial->mProperties[e];
+				LOG("Property number " + AsString(e) +" :");
+				LOG("mKey : " + String((*aiMp).mKey.data));
+				LOG("mSemantic : " + AsString((*aiMp).mSemantic));
+				LOG("mIndex : " +  AsString((*aiMp).mIndex));
+				LOG("mDataLength : " +  AsString((*aiMp).mDataLength));
+				LOG("aiPropertyTypeInfo : " + AsString((int) (*aiMp).mType));
+				String str = String((*aiMp).mData);
+				LOG("mData count : " + AsString(str.GetCount()));
+				LOG("---------------------------------");
+				
+				if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+	                String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
+	                InsertTexture(FullPath,i);
+	            }
+			}
         }
     }
     return true;
