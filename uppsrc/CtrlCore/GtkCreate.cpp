@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  //    DLOG(x)
+#define LLOG(x)    //  DLOG(x)
 
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
@@ -72,18 +72,17 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), (gpointer)(uintptr_t)top->id);
 
 	WndShow(IsShown());
-
+	
+	SweepConfigure(true);
 	FocusSync();
 	if(!popup)
 		SetWndFocus();
 
-	SweepConfigure(true);
+	activeCtrl = this;
 	
 	DndInit();
 	
 	StateH(OPEN);
-
-	activeCtrl = this;
 
 	GdkModifierType mod;
 	Point m = GetMouseInfo(gdk(), mod);
