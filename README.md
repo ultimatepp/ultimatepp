@@ -33,7 +33,7 @@ Other downloads:
 
 ## U++ Resources
 
-More information about the framework, can be found on the official [site](https://ww.ultimatepp.org). Don't forget to check our rich [documentation](https://www.ultimatepp.org/www$uppweb$documentation$en-us.html).
+More information about the framework, can be found on the official [site](https://www.ultimatepp.org). Don't forget to check our rich [documentation](https://www.ultimatepp.org/www$uppweb$documentation$en-us.html).
 
 ## Examples
 
