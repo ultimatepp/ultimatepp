@@ -379,28 +379,30 @@ Image SurfaceCtrl::HandleEvent(int event, Point p, int zdelta, dword keyflags){
 		} else if ((event & Ctrl::BUTTON) == buttonDrag && (event & Ctrl::ACTION) == Ctrl::UP){
 			camera.MouseLeftPressed = false;
 		} else if((event & Ctrl::ACTION) == Ctrl::MOUSEMOVE) {
+			GetMouseLeft();
 			camera.ShiftPressed = keyflags & K_SHIFT;
 			float XOffset = float(p.x - camera.lastPress.x);
 			float YOffset = float(p.y - camera.lastPress.y);
 			if(camera.MouseMiddlePressed){
 				if(camera.ShiftPressed){
 					camera.ProcessMouseWheelTranslation(XOffset,YOffset);
-					returnImage = SurfaceCtrlImg::TranslationArrow();
 				}else{
 					camera.MouseWheelMouvement(XOffset,YOffset);
-					returnImage = SurfaceCtrlImg::RotationArrow();
 				}
 				if(!fastMode) Refresh();
 			}else if(camera.MouseLeftPressed){
 				glm::vec3 x = GetCamera().GetTransform().GetRight() * (XOffset * GetCamera().GetMouvementSpeed());
 				glm::vec3 y = GetCamera().GetTransform().GetUp() * ((YOffset * -1.0f) * GetCamera().GetMouvementSpeed());
 				MoveAllSelectedObjects(x + y);
-				returnImage = SurfaceCtrlImg::HandGrab();
 				if(!fastMode) Refresh();
 			}
 			camera.lastPress = p;
 		}
 	}
+	
+	if(event == CURSORIMAGE && GetMouseMiddle() && camera.MouseMiddlePressed && camera.ShiftPressed ) returnImage = SurfaceCtrlImg::TranslationArrow();
+	else if(event == CURSORIMAGE && GetMouseMiddle() && camera.MouseMiddlePressed ) returnImage = SurfaceCtrlImg::RotationArrow();
+	else if(event == CURSORIMAGE && GetMouseLeft() && camera.MouseLeftPressed ) returnImage = SurfaceCtrlImg::HandGrab();
 	return returnImage;
 }
 
