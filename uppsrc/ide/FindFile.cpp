@@ -121,8 +121,9 @@ void FindFileWindow::Find()
 			}
 		}
 	}
-	if(list.GetCount() > 0)
+	if(list.GetCount() > 0) {
 		list.SetCursor(0);
+	}
 	
 	ok.Enable(list.IsCursor());
 }
@@ -130,8 +131,9 @@ void FindFileWindow::Find()
 bool FindFileWindow::DoesFileMeetTheCriteria(const Package::File& file, const String& packageName,
                                              const String& query)
 {
-	if (searchInCurrentPackage && !IsActualPackage(packageName))
+	if (searchInCurrentPackage && !IsActualPackage(packageName)) {
 		return false;
+	}
 	
 	return !file.separator && (ToUpper(packageName).Find(query) >= 0 || ToUpper(file).Find(query) >= 0);
 }
@@ -148,13 +150,15 @@ void Ide::FindFileName()
 	window.searchInCurrentPackage.Set(find_file_search_in_current_package);
 	window.Find();
 	
-	if(window.Execute() != IDOK) {
-		find_file_search_in_current_package = ~window.searchInCurrentPackage;
-		return;
-	}
+	auto status = window.Execute();
 	
+	find_file_search_in_current_package = ~window.searchInCurrentPackage;
 	find_file_search_string = ~window.mask;
 	find_file_search_in_current_package = ~window.searchInCurrentPackage;
+	
+	if (status != IDOK) {
+		return;
+	}
 	
 	for(const auto& currentData : window.GetFindedFilesData()) {
 		AddHistory();
