@@ -29,7 +29,7 @@ Package locations]&]
 Package/folder/file names]&]
 [s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#9^ 9. 
 Alternative #include path mechanisms]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#10^ 11. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#10^ 10. 
 Layout file #includes]&]
 [s0; &]
 [s6;:1: 1. Packages&]
