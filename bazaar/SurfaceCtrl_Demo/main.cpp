@@ -4,9 +4,15 @@
 namespace Upp{
 	SurfaceCtrl_Demo::SurfaceCtrl_Demo()
 	{
-		CtrlLayout(*this, "SurfaceCtrl demo. STL viewer");
+		CtrlLayout(*this, "SurfaceCtrl demo");
 		filename.SetText( GetFileDirectory(__FILE__) + "Stanford_Bunny_sample.stl" );
-			
+		
+		filename.WhenAction = [&]{
+			WString str = filename.GetText();
+			str.Replace("\"","");
+			filename.SetText(str);
+		};
+		
 		cameraView <<= 0;
 		cameraView.WhenAction = [&]{
 			if(cameraView == 0){
