@@ -11,25 +11,25 @@ topic "Packages, Assemblies and Nests";
 [s4; Packages, Assemblies `& Nests&]
 [s6; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#1^ 1. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#1^2 1. 
 Packages]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#2^ 2. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#2^2 2. 
 Assemblies]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#3^ 3. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#3^2 3. 
 Opening a package]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#4^ 4. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#4^2 4. 
 Nests]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#5^ 5. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#5^2 5. 
 The U`+`+ examples assembly]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#6^ 6. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#6^2 6. 
 Include paths and #include directives]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#7^ 7. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#7^2 7. 
 Package locations]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#8^ 8. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#8^2 8. 
 Package/folder/file names]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#9^ 9. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#9^2 9. 
 Alternative #include path mechanisms]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#10^ 10. 
+[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`_en`-us`#10^2 10. 
 Layout file #includes]&]
 [s0; &]
 [s6;:1: 1. Packages&]
