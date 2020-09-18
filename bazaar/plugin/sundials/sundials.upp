@@ -1,5 +1,7 @@
 description "SUNDIALS: SUite of Nonlinear and DIfferential/ALgebraic Equation Solvers\377";
 
+options(BUILDER_OPTION) NOWARNINGS;
+
 uses
 	Core;
 
