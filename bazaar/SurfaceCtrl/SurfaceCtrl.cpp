@@ -355,7 +355,7 @@ void SurfaceCtrl::ViewFromAxe(Point p, bool AxeX, bool AxeY, bool AxeZ){ // Will
 }
 
 Image SurfaceCtrl::HandleEvent(int event, Point p, int zdelta, dword keyflags){
-	Image returnImage = Image::Hand();
+	Image returnImage = SurfaceCtrlImg::PreciseCursor();
 	if ((event & Ctrl::ACTION) == Ctrl::MOUSEWHEEL){
 		ProcessZoom(p,zdelta);
 	}else if ((event & Ctrl::ACTION) == Ctrl::MOUSELEAVE) {
