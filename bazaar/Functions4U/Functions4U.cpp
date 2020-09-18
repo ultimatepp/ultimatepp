@@ -2541,12 +2541,12 @@ Value GetVARIANT(VARIANT &result)
 
 String WideToString(LPCWSTR wcs, int len) {
 	if (len == -1) {
-		len = WideCharToMultiByte(CP_UTF8, 0, wcs, len, NULL, 0, NULL, NULL);	
+		len = WideCharToMultiByte(CP_UTF8, 0, wcs, len, nullptr, 0, nullptr, nullptr);	
 		if (len == 0)
 			return Null;
 	}
 	Buffer<char> w(len);
-	WideCharToMultiByte(CP_UTF8, 0, wcs, len, w, len, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, wcs, len, w, len, nullptr, nullptr);
 	return ~w;	
 }
 
@@ -2573,7 +2573,7 @@ bool Dl::Load(const String &fileDll) {
 		if (FreeLibrary(hinstLib) == 0)
 			return false;
 	
-	hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+	hinstLib = LoadLibraryEx(TEXT(fileDll), nullptr, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
 	if (!hinstLib) 
 		return false;
 	return true;
@@ -2581,7 +2581,7 @@ bool Dl::Load(const String &fileDll) {
 
 void *Dl::GetFunction(const String &functionName) {
 	if (!hinstLib) 
-		return NULL;
+		return nullptr;
 	return reinterpret_cast<void *>(GetProcAddress(hinstLib, functionName));
 }
 
@@ -2612,7 +2612,7 @@ bool Dl::Load(const String &fileDll) {
 
 void *Dl::GetFunction(const String &functionName) {
 	if (!hinstLib) 
-		return NULL;
+		return nullptr;
 	return dlsym(hinstLib, functionName);
 }	
 
