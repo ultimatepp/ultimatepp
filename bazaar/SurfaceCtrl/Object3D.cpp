@@ -334,11 +334,6 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
 				String str = String((*aiMp).mData);
 				LOG("mData count : " + AsString(str.GetCount()));
 				LOG("---------------------------------");
-				
-				if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-	                String FullPath =AppendFileName(GetFileFolder(Filename), String(Path.data));
-	                InsertTexture(FullPath,i);
-	            }
 			}
         }
     }

@@ -14,6 +14,7 @@ library(WIN32 (GCC | CLANG)) "glu32 opengl32";
 pkg_config(LINUX | BSD) "gl glu";
 
 file
+	LICENSES.txt,
 	Definition.h,
 	SurfaceCtrl.h,
 	SurfaceCtrl.cpp,

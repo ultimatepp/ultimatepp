@@ -421,8 +421,8 @@ void SurfaceCtrl::ContextMenu(Bar& bar,const Point& p) {
 	bar.Add(t_("View from Y axis"),[&]{ViewFromAxe(p,false,true,false);});
 	bar.Add(t_("View from Z axis"),[&]{ViewFromAxe(p,false,false,true);});
 	bar.Separator();
-	bar.Add(t_("Copy image"),  SurfaceCtrlImg::Copy(), [&]{ExecuteGL(THISFN(SaveToClipboard), true);}).Key(K_CTRL_C).Help(t_("Copy image to clipboard"));
-	bar.Add(t_("Save image"),  SurfaceCtrlImg::Save(), [&]{ExecuteGL(THISFN(SaveToFile), true);}).Key(K_CTRL_S).Help(t_("Save image to file"));
+	bar.Add(t_("Copy image"),  SurfaceCtrlImg::Copy(), [&]{ExecuteGL(THISFN(SaveToClipboard), false);}).Key(K_CTRL_C).Help(t_("Copy image to clipboard"));
+	bar.Add(t_("Save image"),  SurfaceCtrlImg::Save(), [&]{ExecuteGL(THISFN(SaveToFile), false);}).Key(K_CTRL_S).Help(t_("Save image to file"));
 }
 
 
@@ -456,8 +456,7 @@ void SurfaceCtrl::SaveToClipboard() {
 		Exclamation(t_("Imposible to get view image"));
 		return;
 	}
-	
-	WriteClipboardImage(image);	
+	WriteClipboardImage(image);
 }
 
 void SurfaceCtrl::OnTypeImage(FileSel *_fs) {
