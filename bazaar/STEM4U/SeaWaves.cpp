@@ -206,27 +206,32 @@ void SeaWaves::Calc(double x, double y, double z, double t) {
 	for (int f = 0; f < nf; f++) {
     	for (int d = 0; d < nd; d++) {
     		double frec = frecs[f];
+    		double sindirsd = sin(dirs[d]);
+    		double cosdirsd = cos(dirs[d]);
+    		double aux = k_f[f]*cosdirsd*x + k_f[f]*sindirsd*y - 2*M_PI*frec*t + fi_fd(d, f);
+    		double auxcos = cos(aux);
+    		double auxsin = sin(aux);
     		
-	        double AUXsl = amp_fd(d, f)*cos(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));         
+	        double AUXsl = amp_fd(d, f)*auxcos;         
             zSurf += AUXsl;
-            dzSurf += 2*M_PI*frec*amp_fd(d, f)*sin(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));         
+            dzSurf += 2*M_PI*frec*amp_fd(d, f)*auxsin;         
 	        
-	        double KP     = cosh(k_f[f]*(h+z))/cosh(k_f[f]*h);
-	        double KP_sin = sinh(k_f[f]*(h+z))/cosh(k_f[f]*h);
+	        double kp     = cosh(k_f[f]*(h+z))/cosh(k_f[f]*h);
+	        double kp_sin = sinh(k_f[f]*(h+z))/cosh(k_f[f]*h);
 	
-	        double AUXvh = g*amp_fd(d, f)*k_f[f]/(2*M_PI*frec)*KP*cos(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));         
-	        vx += AUXvh*cos(dirs[d]);
-	        vy += AUXvh*sin(dirs[d]);
+	        double AUXvh = g*amp_fd(d, f)*k_f[f]/(2*M_PI*frec)*kp*auxcos;         
+	        vx += AUXvh*cosdirsd;
+	        vy += AUXvh*sindirsd;
 	        
-	        vz += g*amp_fd(d, f)*k_f[f]/(2*M_PI*frec)*KP_sin*sin(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));
+	        vz += g*amp_fd(d, f)*k_f[f]/(2*M_PI*frec)*kp_sin*auxsin;
 	        
-	        double AUXah = g*amp_fd(d, f)*pow((k_f[f]),2)/(2*M_PI*frec)*KP*sin(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));
-	        ax += AUXah*cos(dirs[d]);
-	        ay += AUXah*sin(dirs[d]);
+	        double AUXah = g*amp_fd(d, f)*pow((k_f[f]),2)/(2*M_PI*frec)*kp*auxsin;
+	        ax += AUXah*cosdirsd;
+	        ay += AUXah*sindirsd;
 	    
-	        az += -g*amp_fd(d, f)*pow((k_f[f]),2)/(2*M_PI*frec)*KP_sin*cos(k_f[f]*cos(dirs[d])*x + k_f[f]*sin(dirs[d])*y - 2*M_PI*frec*t + fi_fd(d, f));         
+	        az += -g*amp_fd(d, f)*pow((k_f[f]),2)/(2*M_PI*frec)*kp_sin*auxcos;         
 	        
-	   		p += rho*g*KP*AUXsl;	
+	   		p += rho*g*kp*AUXsl;	
     	}
 	}
 }
