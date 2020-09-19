@@ -1,5 +1,4 @@
 topic "Finding specific file in the project (Find File)";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,8 +20,14 @@ topic "Finding specific file in the project (Find File)";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2;~~~832; Finding specific file in the project (Find File)&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/FindFile`_en`-us`#1^ 1. Functionality]&]
+[s0; &]
+[s3;:1: 1. Functionality&]
 [s5; If you are looking for specified file or files in your project 
 you can use `"Find File`" dialog. By project we mean the set 
 of packages. For example, if your project is using CtrlLib and 
