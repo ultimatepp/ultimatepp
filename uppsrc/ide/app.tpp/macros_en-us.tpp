@@ -1,8 +1,7 @@
 topic "TheIDE macros";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;b167;a42;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -20,9 +19,24 @@ topic "TheIDE macros";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [b83;*+117 $$19,19#1546C2CD4112BAB0A26C534D6F11ED13:subtitle]
 [ph2 $$20,20#DD7DA091E475BE28D02C795D449A6B57:TextInTable]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; TheIDE Macros&]
-[s3; 1. Overview&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/macros`_en`-us`#1^ 1. Overview]&]
+[s0; [^topic`:`/`/ide`/app`/macros`_en`-us`#2^ 2. TheIDE `- API]&]
+[s0;     [^topic`:`/`/ide`/app`/macros`_en`-us`#2`.1^ 2.1 Text editing 
+methods]&]
+[s0;     [^topic`:`/`/ide`/app`/macros`_en`-us`#2`.2^ 2.2 File methods]&]
+[s0;     [^topic`:`/`/ide`/app`/macros`_en`-us`#2`.3^ 2.3 User interaction 
+methods]&]
+[s0;     [^topic`:`/`/ide`/app`/macros`_en`-us`#2`.4^ 2.4 Build and 
+execute methods]&]
+[s0;     [^topic`:`/`/ide`/app`/macros`_en`-us`#2`.5^ 2.5 Informative 
+methods]&]
+[s0; &]
+[s3;:1: 1. Overview&]
 [s5; TheIDE macros are written in [^topic`:`/`/ide`/app`/esc`$en`-us^ Esc 
 scripting language] and placed in .usc files. .usc files can 
 be either part of regular packages or are placed in Common or 
@@ -64,8 +78,8 @@ keyword:&]
 [s0; &]
 [s5; Functions defined like this can be simply called in the code 
 of macros as a global functions.&]
-[s3; 2. TheIDE `- API&]
-[s19; 2.1 Text editing methods&]
+[s3;:2: 2. TheIDE `- API&]
+[s19;:2`.1: 2.1 Text editing methods&]
 [s5; Most of text editing methods are provided in two (`"overloaded`") 
 forms `- implicit that works with cursor and selection or explicit 
 with given positions.&]
@@ -152,7 +166,7 @@ replaced.]
 (like when corresponding movement while pressing Shift key) if 
 [/ sel] is 1.]}}&]
 [s0; &]
-[s19; 2.2 File methods&]
+[s19;:2`.2: 2.2 File methods&]
 [s5; This section grouped methods that allows to manipulate TheIDE 
 files.&]
 [s0; &]
@@ -168,7 +182,7 @@ files.&]
 :: [s0;ph [*C+75 CloseFile()]]
 :: [s20; Closes active tab.]}}&]
 [s0; &]
-[s19; 2.3 User interaction methods&]
+[s19;:2`.3: 2.3 User interaction methods&]
 [s5; From time to time, it is necessary to communicate some information 
 from user to the macro or vice versa, which is exactly what these 
 methods do.&]
@@ -186,7 +200,7 @@ edit fields.]
 :: [s0;ph [*C+75 Echo(][/C+75 ...][*C+75 )]]
 :: [s20; Prints all arguments to the output console, one per line.]}}&]
 [s0; &]
-[s19; 2.4 Build and execute methods&]
+[s19;:2`.4: 2.4 Build and execute methods&]
 [s5; The macros can be used to extend the capabilities of TheIDE. 
 For that, there is a few methods that allow executing other programs 
 and also to trigger building U`+`+ packages.&]
@@ -205,7 +219,7 @@ executable.]
 :: [s20; Same as previous, but works with any package specified by passing 
 path to it`'s .upp file as a first parameter.]}}&]
 [s0; &]
-[s19; 2.5 Informative methods&]
+[s19;:2`.5: 2.5 Informative methods&]
 [s5; The methods providing information about packages and build settings. 
 If the optional parameter [/ pkg] is not specified, the currently 
 selected package is used.&]
