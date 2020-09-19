@@ -1,8 +1,7 @@
 topic "Using theIDE as a Cross Development Tool";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -21,8 +20,25 @@ topic "Using theIDE as a Cross Development Tool";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Using TheIDE as a Cross Development Tool&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#2^ 2. Create an empty 
+package within MyApps]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#3^ 3. Create a macro 
+file for the <name> package]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#4^ 4. Running the Cross`-Compile]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#5^ 5. Adding Files and 
+Spacers]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#6^ 6. Open File  or 
+Open Edited Files Warning]&]
+[s0; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb`#7^ 7. Incorporation 
+into TheIDE]&]
+[s0; &]
+[s3;:1: 1. Introduction&]
 [s5; By turning off many of the features of TheIDE it can be used 
 as a cross development tool which uses pre`-defined external 
 makefiles. This is especially useful when moving applications 
@@ -36,7 +52,7 @@ to get a valid compilation.&]
 [s5; It should be noted that the following will only work with versions 
 of TheIDE from 602 onwards. This is because it requires additional 
 standard library functions not implemented in previous versions.&]
-[s3; 1. Create an empty package within MyApps&]
+[s3;:2: 2. Create an empty package within MyApps&]
 [s5; Start TheIDE and create a new package.  Define the <name> of 
 the package and select an `'empty`' package.  Immediately the 
 package has been created load and edit the <name>.upp file in 
@@ -50,8 +66,7 @@ the lines:&]
 can be found and that the <name>.upp file is recognized and has 
 the correct syntax.  Without the two lines above TheIDE will 
 not find the package.&]
-[s0;3 &]
-[s3; 2. Create a macro file for the <name> package&]
+[s3;:3: 3. Create a macro file for the <name> package&]
 [s0; &]
 [s5; With the <name> package open under TheIDE create a new file 
 with the extension usc... I suggest macro.usc. This will be the 
@@ -90,7 +105,7 @@ not having to be edited.&]
 file path and other environmental variable names have been set 
 from the previous cross development application. This is not 
 part of the function of TheIDE.&]
-[s3; 3. Running the Cross`-Compile&]
+[s3;:4: 4. Running the Cross`-Compile&]
 [s5; The `'macro`' menu item will appear sometime on the menu bar. 
 You may have to close and reopen the package for it to appear 
 for the first time. Click on `'macro`' and then the required 
@@ -100,22 +115,21 @@ body will be executed which will in this case invoke the application
 make facility. Errors will be displayed in the bottom window. 
 Any errors can be located by clicking the left mouse button on 
 the error line as with the normal TheIDE operation.&]
-[s3; 4. Adding Files and Spacers&]
+[s3;:5: 5. Adding Files and Spacers&]
 [s5; Files and spacers can be added in the normal way by clicking 
 the right mouse button in the files window at the left side of 
 the screen. These however will have no association with the external 
 makefiles.&]
-[s3; 5. Open File  or Open Edited Files Warning.&]
+[s3;:6: 6. Open File  or Open Edited Files Warning&]
 [s5; I am unsure of what will happen with open / edited files with 
 the external makefiles. When the inbuilt `'build`' is executed 
 any open files are updated so that the changed will be compiled. 
 This does not appear to be the case when the external makefile 
 is used.  It is recommended that all edited files are written 
 back prior to invoking the macro.&]
-[s3; 6. Incorporation into TheIDE&]
+[s3;:7: 7. Incorporation into TheIDE&]
 [s5; When more knowledge of TheIDE is known it may be possible to 
 incorporate such external make facilities such as WINAVR into 
 its standard build features. There are mechanisms to select other 
 compiler builds but the extensive windows library will need to 
-be uncoupled.  This however is a future project.&]
-[s0; ]]
+be uncoupled.  This however is a future project.]]
