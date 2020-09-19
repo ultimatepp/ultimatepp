@@ -8,97 +8,110 @@ topic "Assist++ - C++ parser directives";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
-[b83;*4 $$10,11#07864147445237544204411237157677:title]
+[H4;b83;*4 $$10,11#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$11,11#45413000475342174754091244180557:text]
 [l321;t246;C@5;1 $$12,12#20902679421464641399138805415013:code]
 [a83;*R6 $$13,11#31310162474203024125188417583966:caption]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s13; Assist`+`+ `- parser directives&]
-[s10; 1. Introduction&]
+[s10; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us`#2^ 2. Handling 
+of source files, headers, macros and namespaces]&]
+[s0; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us`#3^ 3. Macro 
+overrides, namespace macros]&]
+[s0; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us`#4^ 4. Grounding 
+heuristics]&]
+[s0; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us`#5^ 5. Assist`+`+ 
+C`+`+ parser directives]&]
+[s0; &]
+[s10;:1: 1. Introduction&]
 [s11; Assist`+`+ C`+`+ parser does not follow C/C`+`+ standards exactly, 
 for performance and practical reasons. This documents provides 
 information about deviations, heuristics and tricks that we use 
 to make the machinery fast and highly error resistant.&]
-[s10; 2. Handling of source files, headers, macros and namespaces&]
+[s10;:2: 2. Handling of source files, headers, macros and namespaces&]
 [s11; The main difference between C`+`+ compiler and theide C`+`+ 
 parser is that theide is handling any source file separately. 
 This is an absolute performance requirement if global database 
 is to be maintained while editing files.&]
 [s11; For this reason, declaration and definition must be be in single 
 file. For example&]
-[s11; [* File1.h]&]
-[s12; struct Foo `{&]
-[s12; &]
-[s11; [* File2.h]&]
-[s12; #include `"File1.h`"&]
-[s12; -|int bar;&]
-[s12; `};&]
+[s11;l288; [* File1.h]&]
+[s12;l288; struct Foo `{&]
+[s12;l288; &]
+[s11;l288; [* File2.h]&]
+[s12;l288; #include `"File1.h`"&]
+[s12;l288; -|int bar;&]
+[s12;l288; `};&]
 [s11; is [*/ NOT] supported.&]
 [s11; Parser preprocessor rules:&]
-[s11;i150;O0; All #if/#ifdef conditions are considered true. This 
-is useful e.g. when there is platform specific code  `- parser 
-is then able to pick all variants. #else parts are excluded. 
+[s11;l160;i150;O0; All #if/#ifdef conditions are considered true. 
+This is useful e.g. when there is platform specific code  `- 
+parser is then able to pick all variants. #else parts are excluded. 
 For example&]
-[s12; #ifdef PLATFORM`_WIN32&]
-[s12; void CloseWindow(void `*handle) `{&]
-[s12; ....&]
-[s12; `}&]
-[s12; #endif&]
-[s12; #ifdef PLATFORM`_GTK&]
-[s12; void CloseWindow(void `*handle) `{&]
-[s12; .....&]
-[s12; `}&]
-[s12; #endif&]
-[s11; both CloseWindow definitions will be in the codebase.&]
-[s11;i150;O0; When expanding macro, last #define directive is used.&]
-[s12; #define FOO 1&]
-[s12; #define FOO 2&]
-[s12; FOO&]
-[s11; the last line will be expanded to `"2`".&]
-[s11;i150;O0; #undef cancels the last definition of the same macro, 
-if it is defined in the same file. This is useful to handle special 
-defines used for handling name clashes when including external 
-libraries:&]
-[s12; #define byte win32`_byte`_ // RpcNdr defines byte `-> class 
+[s12;l576; #ifdef PLATFORM`_WIN32&]
+[s12;l576; void CloseWindow(void `*handle) `{&]
+[s12;l576; ....&]
+[s12;l576; `}&]
+[s12;l576; #endif&]
+[s12;l576; #ifdef PLATFORM`_GTK&]
+[s12;l576; void CloseWindow(void `*handle) `{&]
+[s12;l576; .....&]
+[s12;l576; `}&]
+[s12;l576; #endif&]
+[s11;l288; both CloseWindow definitions will be in the codebase.&]
+[s11;l160;i150;O0; When expanding macro, last #define directive is 
+used.&]
+[s12;l576; #define FOO 1&]
+[s12;l576; #define FOO 2&]
+[s12;l576; FOO&]
+[s11;l288; the last line will be expanded to `"2`".&]
+[s11;l160;i150;O0; #undef cancels the last definition of the same 
+macro, if it is defined in the same file. This is useful to handle 
+special defines used for handling name clashes when including 
+external libraries:&]
+[s12;l576; #define byte win32`_byte`_ // RpcNdr defines byte `-> class 
 with Upp`::byte&]
-[s12; #define CY win32`_CY`_&]
-[s12; #include <objidl.h>&]
-[s12; #include <winnetwk.h>&]
-[s12; #undef byte&]
-[s12; #undef CY&]
-[s11;i150;O0; #include in file adds all macros that are (recursively) 
+[s12;l576; #define CY win32`_CY`_&]
+[s12;l576; #include <objidl.h>&]
+[s12;l576; #include <winnetwk.h>&]
+[s12;l576; #undef byte&]
+[s12;l576; #undef CY&]
+[s11;l160;i150;O0; #include in file adds all macros that are (recursively) 
 defined by included file and also all `"using namespace`" directives. 
 It [* DOES NOT] use namespace block definitions, for example this 
 abomination is not supported:&]
-[s11; [* StartNamespace.h]&]
-[s12; namespace MyNamespace `{&]
-[s12; &]
-[s11; [* EndNamespace.h]&]
-[s12; `};&]
-[s12; &]
-[s11; [* File.cpp]&]
-[s12; #include `"StartNamespace.h`"&]
-[s12; void Foo();&]
-[s12; #include `"EndNamespace.h`"&]
-[s11; is [*/ NOT] supported.&]
-[s11;i150;O0; However, if file gets into the project through #include, 
-all macros, usings and namespace block definitions are correctly 
-included/used. Consider&]
-[s11; [* MasterHeader.h]&]
-[s12; #define FOO 1&]
-[s12; using namespace Bar;&]
-[s12; namespace Foo `{&]
-[s12; #include `"SubHeader.h`"&]
-[s12; `};&]
-[s12; &]
-[s11; [* SubHeader.h]&]
-[s12; &]
-[s12; void Fn() `{ return FOO; `}&]
-[s12; &]
-[s11; This [* IS] supported: Fn will be in Foo namespace and will return 
-1.&]
-[s10; 3. Macro overrides, namespace macros&]
+[s11;l576; [* StartNamespace.h]&]
+[s12;l576; namespace MyNamespace `{&]
+[s12;l576; &]
+[s11;l576; [* EndNamespace.h]&]
+[s12;l576; `};&]
+[s12;l576; &]
+[s11;l576; [* File.cpp]&]
+[s12;l576; #include `"StartNamespace.h`"&]
+[s12;l576; void Foo();&]
+[s12;l576; #include `"EndNamespace.h`"&]
+[s11;l320;~~~192; is [*/ NOT] supported.&]
+[s11;l160;i150;O0; However, if file gets into the project through 
+#include, all macros, usings and namespace block definitions 
+are correctly included/used. Consider&]
+[s11;l576; [* MasterHeader.h]&]
+[s12;l576; #define FOO 1&]
+[s12;l576; using namespace Bar;&]
+[s12;l576; namespace Foo `{&]
+[s12;l576; #include `"SubHeader.h`"&]
+[s12;l576; `};&]
+[s12;l576; &]
+[s11;l576; [* SubHeader.h]&]
+[s12;l576; &]
+[s12;l576; void Fn() `{ return FOO; `}&]
+[s12;l576; &]
+[s11;l352; This [* IS] supported: Fn will be in Foo namespace and will 
+return 1.&]
+[s10;:3: 3. Macro overrides, namespace macros&]
 [s11; It is possible to tell TheIDE overriding definition of specific 
 macros in special .defs files. One global.defs file resides in 
 TheIDE configuration and is accessible through `"<meta>`" package. 
@@ -127,7 +140,7 @@ meaning of NAMESPACE`_UPP/END`_UPP`_NAMESPACE when extracting
 macros from File.h). The solution is simple, putting those #defines 
 into .defs file fixes the issue, as such macros are detected 
 by special code and used when handling File.h.&]
-[s10; 4. Grounding heuristics&]
+[s10;:4: 4. Grounding heuristics&]
 [s11; It is a good idea to make parser highly resistant to bugs, including 
 code that it does not understand. For this reason parser is using 
 somewhat strange but very effective simple heuristics: If a line 
@@ -146,7 +159,7 @@ on `'global`' level. Consider&]
 miss the rest of file (because all would be considered to be 
 part of Fn1 body). However Fn2 definition invokes grounding heuristics 
 and parsing restarts at that point, not missing Fn2.&]
-[s10; 5. Assist`+`+ C`+`+ parser directives&]
+[s10;:5: 5. Assist`+`+ C`+`+ parser directives&]
 [s11; Assist supports simple directives that are passed to it via 
 `'//`' comments that can be used in cases that original code 
 is confusing:&]
