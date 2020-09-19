@@ -67,7 +67,6 @@ ee this].&]
 of the source files that belong to the package and for any source 
 files that belong to packages directly or indirectly used by 
 the [* main package.]&]
-[s5;* &]
 [s6;:2: 2. Assemblies&]
 [s5; An assembly can be thought of as a collection of packages but 
 it is actually just a set of paths which determine where U`+`+ 
@@ -86,7 +85,6 @@ the compiler that was used.  e.g. for the HelloWorld example
 when built with MSVC`+`+ 7.1 compiler, the output file folder 
 is typically [/ C:/upp/out/HelloWorld/MSC71.Gui.Main] where [/ C:/upp/out] 
 is specified as the output folder root in the assembly.&]
-[s5; &]
 [s6;:3: 3. Opening a package&]
 [s3; To open a package, the [/ Set`-main`-package] option on the File 
 menu in TheIDE is used. The `"Select main package`" dialog will 
@@ -119,7 +117,6 @@ and [/ main`-package`-configuration] options apply to the [* main
 package].  The [/ project`-export] option on the File menu exports 
 the main package and all the packages that are directly and indirectly 
 used by the main package, to any folder you choose.&]
-[s5; &]
 [s6;:4:~~~128; 4. Nests&]
 [s5; U`+`+ requires that packages be organized into nests.  A nest 
 is actually just a directory containing a set of package directories 
@@ -133,7 +130,6 @@ set additional include paths for the compiler. See [/ Include`-paths`-and`-#incl
 `-directives] below for more detail.&]
 [s5; The assembly containing all of the U`+`+ library packages is 
 uppsrc and the name of the associated nest is also uppsrc.&]
-[s5; &]
 [s6;:5: 5. The U`+`+ examples assembly&]
 [s5; The assembly containing all of the U`+`+ examples (such as HelloWorld), 
 is named `"examples`" and you can see it in the select`-main`-package 
@@ -148,7 +144,6 @@ contains all of the U`+`+ core library packages.&]
 [s5; For portability, [*_@(170.42.150) forward slashes should be used 
 in all path specifications] rather than back`-slashes.  This 
 also applies to #include directives.&]
-[s5; &]
 [s6;:6: 6. Include paths and #include directives&]
 [s5; The nest paths defined in an assembly determine where U`+`+ 
 looks for the assembly`'s packages.  These paths are also added 
@@ -177,7 +172,6 @@ instead of angle brackets.&]
 be used]  e.g. CtrlLib and not ctrllib.&]
 [s5; See [/ Alternative`-#include`-path`-mechanisms] below for additional 
 information.&]
-[s5; &]
 [s6;:7: 7. Package locations&]
 [s5; A package folder does not have to be located in a top level 
 nest folder.  It may be located in a sub`-folder of a nest folder 
@@ -218,7 +212,6 @@ the package is in a top level nest folder.&]
 one project.  If there are multiple projects in an assembly then 
 you need to consider the package/folder/file name issue described 
 below.&]
-[s5; &]
 [s6;:8: 8. Package/folder/file names&]
 [s5; It is usually necessary that the names of the folders and files 
 that appear in the top level nest folders of an assembly be [*_@(113.42.150) unique
@@ -261,7 +254,6 @@ specification.&]
 path specification.&]
 [s5; Note `"..`" in a path specification means `"parent folder`" 
 i.e. up one level.&]
-[s5; &]
 [s6;:9: 9. Alternative #include path mechanisms&]
 [s5; The nest paths specified in an assembly are normally used to 
 identify the directory (or directory tree) where packages can 
@@ -314,7 +306,6 @@ to be in effect only when your own package`'s source files are
 being compiled.  The [/^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ p
 ackage`-organizer] also allows you to specify compiler switches 
 for specific files.&]
-[s5; &]
 [s6;:10: 10. Layout file #includes&]
 [s5; A layout file contains a description of the GUI part of a project 
 i.e. the layout of widgets etc.  e.g. the AddressBook example 
