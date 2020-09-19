@@ -1,7 +1,6 @@
 #ifndef _OfficeAutomationBase_h
 #define _OfficeAutomationBase_h
 
-#include <Ole/Ole.h>
 
 using namespace Upp;
 
@@ -9,8 +8,7 @@ using namespace Upp;
 
 typedef IDispatch* ObjectOle;
 
-class VariantOle
-{
+class VariantOle {
 public:
 	VariantOle();
     ~VariantOle();
@@ -40,8 +38,7 @@ public:
 };
 	
 	
-class MSSheet : public OfficeSheet
-{
+class MSSheet : public OfficeSheet {
 public:
 	MSSheet();
 	virtual ~MSSheet();
@@ -67,8 +64,7 @@ private:
 	bool killProcess;
 };
 
-class MSDoc : public OfficeDoc
-{
+class MSDoc : public OfficeDoc {
 public:
 	MSDoc();
 	virtual ~MSDoc();
@@ -95,8 +91,7 @@ private:
 #define wdReplaceAll	2
 
 
-class OPENSheet : public OfficeSheet
-{
+class OPENSheet : public OfficeSheet {
 public:
 	OPENSheet();
 	virtual ~OPENSheet();
@@ -123,8 +118,7 @@ private:
 	bool quit;
 };
 
-class OPENDoc : public OfficeDoc
-{
+class OPENDoc : public OfficeDoc {
 public:
 	OPENDoc();
 	virtual ~OPENDoc();
@@ -134,7 +128,7 @@ public:
 	Doc_METHOD_LIST
 
 	// New functs for next versions	
-	//bool SetColor(Color col);
+	// bool SetColor(Color col);
 	
 private:
 	ObjectOle ServiceManager;
