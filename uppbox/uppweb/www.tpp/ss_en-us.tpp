@@ -23,8 +23,7 @@ screenshots]&]
 screenshots]&]
 [s3; Additional screenshots&]
 [s4; Our code examples usually have images added to the description. 
-Examine each sub site in the following websites to see specific 
-screenshot:&]
+Examine each sub site in the below websites to see specific screenshot:&]
 [s4;l160;i150;O0;~~~32; [^topic`:`/`/uppweb`/www`/examples`$en`-us^ U`+`+ 
 examples]&]
 [s0; ]]
