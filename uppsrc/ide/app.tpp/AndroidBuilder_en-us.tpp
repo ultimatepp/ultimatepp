@@ -94,7 +94,6 @@ rate).&]
 what are you doing you can select packages manually. In this 
 paragraph, we showed the fastest way to the successful configure 
 Android SDK.]&]
-[s0;b42;a42;/2 &]
 [s3;:4: 4. Creating Android builder&]
 [s2; The next big step is creating Android builder inside TheIDE. 
 This operation will allow us to write and build an application 
@@ -134,7 +133,6 @@ button to save your new method. From now you will be able to
 write core Android applications using Java programming language.&]
 [s0;b42;a42; [/2 Attention: On MS Window may occur problems with 64 
 bit Java version, so please be careful.]&]
-[s0;b42;a42;/2 &]
 [s3;:5: 5. Linking Android builder with Android NDK&]
 [s2; Ultimate`+`+ is C`+`+ framework, so it is natural that we want 
 to write applications in that language. To do that we need to 
@@ -162,7 +160,6 @@ edit field. After successful Android NDK connection with the
 builder, fields `"Toolchain`" and `"C`+`+ runtime`" should be 
 detected automatically. At the end, we are saving changes in 
 our build method by clicking `"OK`" button.&]
-[s2; &]
 [s3;:6: 6. Configuring Android builder&]
 [s2; Android builder is a powerful tool, so it allows configuration. 
 Below is a list with all options grouped in two categories. The 

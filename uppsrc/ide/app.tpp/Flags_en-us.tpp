@@ -56,7 +56,6 @@ shown below:&]
 to be separated with the space. For example we can have `"GUI 
 USEMALLOC`". This configuration will create GUI application without 
 custom U`+`+ allocator.&]
-[s0; &]
 [s3;:2: [4 2. Main configuration flags]&]
 [s5; Main configuration flags are provided by the user. Most of the 
 time they are added automatically to the project. This situation 
