@@ -42,9 +42,11 @@ topic "Getting started with TheIDE";
 file and launch it. By default the file should be localized in 
 the installation directory. However, it depends on the operating 
 system and the way you installed U`+`+.&]
+[s0; &]
 [s3;:2: 2. Assemblies and Packages&]
 [s5; In this section we show how to create your own main package. 
 It can be treated as project, solution etc.&]
+[s0; &]
 [s21;:2`_1: 2.1 Selecting assembly&]
 [s5; After you launch TheIDE on the screen window should appear. 
 This window acts as a hub. When you can select/create packages 
