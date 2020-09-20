@@ -331,6 +331,85 @@ ctrl LabelBox {
 	}
 }
 
+fn DrawClassName(w, r, text)
+{
+	font = Arial(10);
+	sz = GetTextSize(text, font);
+	w.DrawRect(r.right - sz.cx - sz.cy, r.bottom - sz.cy, sz.cx + 2 * sz.cy, sz.cy, :SGray);
+	w.DrawText(r.right - sz.cx - sz.cy / 2, r.bottom - sz.cy, text, font, :SYellow);
+}
+
+ctrl ParentCtrl {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame  SetFrame @3;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		DrawBorder(w, r, :SGray, :SGray);
+
+		DrawClassName(w, r, "ParentCtrl");
+	}
+	Sample() {}
+};
+
+ctrl ImageCtrl {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame  SetFrame @3;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		DrawBorder(w, r, :SGray, :SGray);
+		DrawClassName(w, r, "ImageCtrl");
+	}
+	Sample() {}
+};
+
+ctrl DrawingCtrl {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame  SetFrame @3;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		DrawBorder(w, r, :SGray, :SGray);
+		DrawClassName(w, r, "ImageCtrl");
+	}
+	Sample() {}
+};
+
+ctrl StaticRect {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Color  SetPaper = :SLtBlue @2;
+	Frame  SetFrame @3;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, .SetPaper);
+		DrawBorder(w, r, :SGray, :SGray);
+		DrawClassName(w, r, "StaticRect");
+	}
+	Sample() {}
+};
+
 ctrl DataPusher {
 	group "Push";
 
