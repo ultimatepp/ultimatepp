@@ -83,8 +83,8 @@ public:
         SystemDraw      sysdraw;
     };
 
-    friend class        TurtleServer::Draw;
-    friend class        TurtleServer::ImageSysData;
+    friend struct       TurtleServer::Draw;
+    friend struct       TurtleServer::ImageSysData;
 
 public:
     enum Commands {
