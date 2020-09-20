@@ -4,6 +4,8 @@ uses
 	CtrlLib,
 	VirtualGui;
 
+uses(WIN32 & MSC) plugin/DroidFonts;
+
 file
 	Turtle.h,
 	Init.cpp,

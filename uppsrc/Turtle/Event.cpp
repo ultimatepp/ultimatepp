@@ -142,7 +142,7 @@ bool TurtleServer::IsWaitingEvent()
 		}
 		catch(const CParser::Error& e)
 		{
-			LLOG("IsWaitingEvent() -> Parser error. " << e);
+			LLOG("IsWaitingEvent() -> Parser error.");
 		}
 	}
 	if(recieved_update_serial == serial_0) {
