@@ -1,9 +1,9 @@
 #include "MagicCamera.h"
 namespace Upp{
 glm::mat4 MagicCamera::GetProjectionMatrix()const noexcept{
-	if(type == CT_PERSPECTIVE){
+	if(type == CameraType::PERSPECTIVE){
 		return glm::perspective(glm::radians(GetFOV()),float( ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
-	}else if(type == CT_ORTHOGRAPHIC){
+	}else if(type == CameraType::ORTHOGRAPHIC){
 		float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* float(ScreenSize.cx/ScreenSize.cy);
 		float distanceY = glm::distance(glm::vec3(0,0,0),transform.GetPosition());
 		return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);
@@ -43,7 +43,7 @@ MagicCamera& MagicCamera::MouseWheelMouvement(float xoffset,float yoffset)noexce
 	
 	glm::vec3 between;
 	
-	if(type == CT_ORTHOGRAPHIC){
+	if(type == CameraType::ORTHOGRAPHIC){
 		between =  transform.GetPosition();
 		focus = glm::vec3(0.0f,0.0f,0.0f);
 	}else{

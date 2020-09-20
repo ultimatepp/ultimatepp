@@ -10,7 +10,7 @@ class UOGL_Camera{
 	protected:
 		Transform transform; //The Camera Transform object
 	
-		CameraType type = CT_PERSPECTIVE;
+		CameraType type = CameraType::PERSPECTIVE;
 
 		float MaxFOV = 160.0f;
 	    float MinFOV = 10.0f;
@@ -115,9 +115,9 @@ class UOGL_Camera{
 		float GetDrawDistanceMin()const noexcept{return DrawDistanceMin;}
 		
 		glm::mat4 GetProjectionMatrix()const noexcept{
-			if(type == CT_PERSPECTIVE){
+			if(type == CameraType::PERSPECTIVE){
 				return glm::perspective(glm::radians(GetFOV()),(float)(ScreenSize.cx / ScreenSize.cy),GetDrawDistanceMin(),GetDrawDisanceMax());//We calculate Projection here since multiple camera can have different FOV
-			}else if(type == CT_ORTHOGRAPHIC){
+			}else if(type == CameraType::ORTHOGRAPHIC){
 				float distance = glm::distance(glm::vec3(0,0,0),transform.GetPosition())* float(ScreenSize.cx/ScreenSize.cy);
 				float distanceY = glm::distance(glm::vec3(0,0,0),transform.GetPosition());
 				return glm::ortho(-distance ,distance ,-distanceY ,distanceY, 0.00001f, 10000.0f);

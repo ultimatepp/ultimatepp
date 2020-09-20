@@ -11,7 +11,7 @@ static const String GetSurfaceCtrlDirectory(){
 	return GetFileDirectory(__FILE__);
 }
 	
-class SurfaceCtrl : public GL{
+class SurfaceCtrl : public GLCtrl{
 	typedef SurfaceCtrl CLASSNAME;
 	private:
 		bool loaded = false;
