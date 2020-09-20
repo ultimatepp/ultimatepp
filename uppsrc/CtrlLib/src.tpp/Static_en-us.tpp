@@ -145,43 +145,44 @@ etImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 `_img])&]
 [s0; &]
 [s0; &]
 [s0;%- &]
-[ {{10000@3 [s0; [*@(229)4 Picture]]}}&]
+[ {{10000@3 [s0; [*@(229)4 DrawingCtrl]]}}&]
 [s3; &]
-[s1;:Picture`:`:class:%- [@(0.0.255)3 class][3 _][*3 Picture][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
-trl]&]
+[s1;:DrawingCtrl`:`:class:%- [@(0.0.255)3 class][3 _][*3 DrawingCtrl][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Ctrl]&]
 [s9; Displays Drawing.&]
 [s3;%- &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:Picture`:`:Background`(Color`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* Background]([_^Color^ C
-olor]_[*@3 color])&]
+[s5;:DrawingCtrl`:`:Background`(Color`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&]_[* Backg
+round]([_^Color^ Color]_[*@3 color])&]
 [s2; Sets background [%-*@3 color]. Default is white.&]
 [s3; &]
 [s4;%- &]
-[s5;:Picture`:`:Get`(`)const:%- [_^Drawing^ Drawing]_[* Get]()_[@(0.0.255) const]&]
+[s5;:DrawingCtrl`:`:Get`(`)const:%- [_^Drawing^ Drawing]_[* Get]()_[@(0.0.255) const]&]
 [s2; Returns Drawing assigned to Picture.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Picture`:`:KeepRatio`(bool`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* KeepRatio]([@(0.0.255) b
-ool]_[*@3 keep]_`=_[@(0.0.255) true])&]
+[s5;:DrawingCtrl`:`:KeepRatio`(bool`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&]_[* KeepRat
+io]([@(0.0.255) bool]_[*@3 keep]_`=_[@(0.0.255) true])&]
 [s2; If active, Picture keeps the aspect ratio of Drawing. Default 
 is on.&]
 [s3; &]
 [s4;%- &]
-[s5;:Picture`:`:NoKeepRatio`(`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* NoKeepRatio]()&]
+[s5;:DrawingCtrl`:`:NoKeepRatio`(`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&]_[* NoKeepRat
+io]()&]
 [s2; Do not keep aspect ratio.&]
 [s3; &]
 [s4;%- &]
-[s5;:Picture`:`:Set`(const Drawing`&`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* Set]([@(0.0.255) c
-onst]_[_^Drawing^ Drawing][@(0.0.255) `&]_[*@3 `_picture])&]
-[s5;:Picture`:`:operator`=`(const Drawing`&`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* ope
-rator`=]([@(0.0.255) const]_[_^Drawing^ Drawing][@(0.0.255) `&]_[*@3 `_picture])&]
+[s5;:DrawingCtrl`:`:Set`(const Drawing`&`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&]_[* Se
+t]([@(0.0.255) const]_[_^Drawing^ Drawing][@(0.0.255) `&]_[*@3 `_picture])&]
+[s5;:DrawingCtrl`:`:operator`=`(const Drawing`&`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&
+]_[* operator`=]([@(0.0.255) const]_[_^Drawing^ Drawing][@(0.0.255) `&]_[*@3 `_picture])&]
 [s2; Assigns the Drawing.&]
 [s3; &]
 [s4;%- &]
-[s5;:Picture`:`:operator`=`(const Painting`&`):%- [_^Picture^ Picture][@(0.0.255) `&]_[* op
-erator`=]([@(0.0.255) const]_[_^Painting^ Painting][@(0.0.255) `&]_[*@3 `_picture])&]
+[s5;:DrawingCtrl`:`:operator`=`(const Painting`&`):%- [_^Picture^ DrawingCtrl][@(0.0.255) `&
+]_[* operator`=]([@(0.0.255) const]_[_^Painting^ Painting][@(0.0.255) `&]_[*@3 `_picture])&]
 [s2; Assigns [%-*@3 `_picture], converted to Drawing.&]
 [s0; &]
 [s0; &]

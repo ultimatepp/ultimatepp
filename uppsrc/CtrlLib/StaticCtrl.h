@@ -126,7 +126,7 @@ public:
 // BWC
 typedef ImageCtrl Icon;
 
-class Picture : public Ctrl {
+class DrawingCtrl : public Ctrl {
 public:
 	virtual void   Paint(Draw& w);
 
@@ -136,17 +136,17 @@ protected:
 	bool    ratio;
 
 public:
-	Drawing  Get() const                         { return picture; }
+	Drawing  Get() const                             { return picture; }
 
-	Picture& Background(Color color);
-	Picture& KeepRatio(bool keep = true)         { ratio = keep; Refresh(); return *this; }
-	Picture& NoKeepRatio()                       { return KeepRatio(false); }
-	Picture& Set(const Drawing& _picture)        { picture = _picture; Refresh(); return *this; }
+	DrawingCtrl& Background(Color color);
+	DrawingCtrl& KeepRatio(bool keep = true)         { ratio = keep; Refresh(); return *this; }
+	DrawingCtrl& NoKeepRatio()                       { return KeepRatio(false); }
+	DrawingCtrl& Set(const Drawing& _picture)        { picture = _picture; Refresh(); return *this; }
 
-	Picture& operator=(const Drawing& _picture)  { return Set(_picture); }
-	Picture& operator=(const Painting& _picture) { return Set(AsDrawing(_picture)); }
+	DrawingCtrl& operator=(const Drawing& _picture)  { return Set(_picture); }
+	DrawingCtrl& operator=(const Painting& _picture) { return Set(AsDrawing(_picture)); }
 
-	Picture();
+	DrawingCtrl();
 };
 
 class SeparatorCtrl : public Ctrl {

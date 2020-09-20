@@ -261,7 +261,7 @@ Size ImageCtrl::GetMinSize() const
 }
 
 
-Picture& Picture::Background(Color color)
+DrawingCtrl& DrawingCtrl::Background(Color color)
 {
 	background = color;
 	Transparent(IsNull(color));
@@ -269,7 +269,7 @@ Picture& Picture::Background(Color color)
 	return *this;
 }
 
-void Picture::Paint(Draw& w) {
+void DrawingCtrl::Paint(Draw& w) {
 	Size sz = GetSize();
 	w.DrawRect(0, 0, sz.cx, sz.cy, background);
 	if(!picture) return;
@@ -296,7 +296,7 @@ void Picture::Paint(Draw& w) {
 	w.End();
 }
 
-Picture::Picture() {
+DrawingCtrl::DrawingCtrl() {
 	ratio = true;
 	background = White;
 }
