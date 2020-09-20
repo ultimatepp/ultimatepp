@@ -16,11 +16,11 @@ namespace Upp{
 		cameraView <<= 0;
 		cameraView.WhenAction = [&]{
 			if(cameraView == 0){
-				canvas.GetCamera().SetCameraType(CT_PERSPECTIVE);
+				canvas.GetCamera().SetCameraType(CameraType::PERSPECTIVE);
 			}else if(cameraView == 1){
-				canvas.GetCamera().SetCameraType(CT_ORTHOGRAPHIC);
+				canvas.GetCamera().SetCameraType(CameraType::ORTHOGRAPHIC);
 			}else{
-				canvas.GetCamera().SetCameraType(CT_PERSPECTIVE);
+				canvas.GetCamera().SetCameraType(CameraType::PERSPECTIVE);
 			}
 			canvas.Refresh();
 		};
