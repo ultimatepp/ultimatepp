@@ -12,41 +12,6 @@ static const String GetSurfaceCtrlDirectory(){
 }
 	
 class SurfaceCtrl : public GLCtrl{
-	typedef SurfaceCtrl CLASSNAME;
-	private:
-		bool loaded = false;
-		Object3DProvider objProvider;
-		
-		Upp::Vector<Object3D> allObjects;
-		Upp::Vector<int> allSelected;
-		
-		Object3D Axis;
-		Object3D CameraFocus;
-		Skybox skybox;
-
-		MagicCamera camera;
-				
-		OpenGLProgram DrawMeshNoLight;
-		OpenGLProgram DrawMeshLight;
-		OpenGLProgram DrawMeshLine;
-		OpenGLProgram DrawMeshNormal;
-		
-		bool showAxis = true;
-		bool depthAxis = false;
-		bool showCameraFocus = false;
-		
-		float sizeW = 800.0f;
-		float sizeH = 600.0f;
-		
-		bool TimerStarted = false;
-		std::chrono::time_point<std::chrono::high_resolution_clock> start,end; //High resolution clock
-		double DeltaTime=0.0f,LastTime=0.0f,lastFrame =0.0f,Timer=0.0f;
-		int bufferFrame =0,frameCount = 0; //used to calculate FPS
-		void ProcessTime()noexcept;
-		
-		bool fastMode = false;
-
-		void InitShader(); //Load default shader
 	public:
 		SurfaceCtrl();
 		~SurfaceCtrl();
@@ -81,9 +46,9 @@ class SurfaceCtrl : public GLCtrl{
 		Skybox& GetSkybox()noexcept{return skybox;}
 		
 		//Change Object selected
-		void MoveAllSelectedObjects(glm::vec3 move)noexcept; //Move all selected object
-		void RotateAllSelectedObjects(glm::quat rotation)noexcept; //Rotate all selected object
-		void DeleteAllSelectedObjects()noexcept; //Delete all selected object
+		void MoveAllSelectedObjects(glm::vec3 move)noexcept;
+		void RotateAllSelectedObjects(glm::quat rotation)noexcept;
+		void DeleteAllSelectedObjects()noexcept;
 		
 		//Camera getter
 		const MagicCamera& GetCamera()const noexcept{return camera;}
@@ -125,15 +90,7 @@ class SurfaceCtrl : public GLCtrl{
 		virtual void GLResize(int w, int h); //Action on resize
 		
 		//Input event
-		/*virtual void MouseMove(Point p, dword); //Action on mouse move
-		virtual void MouseWheel(Point p,int zdelta,dword keyflags); //action on Mouse wheel
-		virtual void LeftDown(Point p, dword); //Action on Left Down mouse
-		virtual void LeftUp(Point p, dword); //Action on Up down mouse
-		virtual void MiddleDown(Point p, dword keyflags); //Action Middle down (wheel down) mouse
-		virtual void MiddleUp(Point p, dword keyflags);//Action Middle up (wheel up) mouse
-		virtual void MouseLeave(); //action when mouse leave*/
 		virtual bool Key(dword key,int count); //Action when key press
-		
 		
 		int buttonRotation = Ctrl::MIDDLE;
 		int buttonDrag = Ctrl::LEFT;
@@ -147,13 +104,46 @@ class SurfaceCtrl : public GLCtrl{
 		void OnTypeImage(FileSel *_fs);
 		
 		virtual Image HandleEvent(int event, Point p, int zdelta, dword);
-		
-		
-		
+
 		//Menu bar
 		Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
 		void ContextMenu(Bar& bar,const Point& p);
+	
+	private:
+		typedef SurfaceCtrl CLASSNAME;
+		bool loaded = false;
+		Object3DProvider objProvider;
 		
+		Upp::Vector<Object3D> allObjects;
+		Upp::Vector<int> allSelected;
+		
+		Object3D Axis;
+		Object3D CameraFocus;
+		Skybox skybox;
+
+		MagicCamera camera;
+				
+		OpenGLProgram DrawMeshNoLight;
+		OpenGLProgram DrawMeshLight;
+		OpenGLProgram DrawMeshLine;
+		OpenGLProgram DrawMeshNormal;
+		
+		bool showAxis = true;
+		bool depthAxis = false;
+		bool showCameraFocus = false;
+		
+		float sizeW = 800.0f;
+		float sizeH = 600.0f;
+		
+		bool TimerStarted = false;
+		std::chrono::time_point<std::chrono::high_resolution_clock> start,end; //High resolution clock
+		double DeltaTime=0.0f,LastTime=0.0f,lastFrame =0.0f,Timer=0.0f;
+		int bufferFrame =0,frameCount = 0; //used to calculate FPS
+		void ProcessTime()noexcept;
+		
+		bool fastMode = false;
+
+		void InitShader(); //Load default shader
 };
 #include "Object3D.h"
 }

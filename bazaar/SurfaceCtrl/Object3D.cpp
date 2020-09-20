@@ -323,7 +323,7 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
             if (pMaterial->GetTexture(aiTextureType_NONE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS)
                 LOG("None texture : "  + AppendFileName(GetFileFolder(Filename), String(Path.data)));
         }else{
-			for(int e = 0; e < pMaterial->mNumProperties; e++){
+			/*for(int e = 0; e < pMaterial->mNumProperties; e++){
 				aiMaterialProperty* aiMp = pMaterial->mProperties[e];
 				LOG("Property number " + AsString(e) +" :");
 				LOG("mKey : " + String((*aiMp).mKey.data));
@@ -334,7 +334,7 @@ bool Object3D::InitMaterials(const aiScene* pScene, const String& Filename){
 				String str = String((*aiMp).mData);
 				LOG("mData count : " + AsString(str.GetCount()));
 				LOG("---------------------------------");
-			}
+			}*/
         }
     }
     return true;

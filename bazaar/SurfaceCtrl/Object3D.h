@@ -37,64 +37,9 @@ struct Texture : public Moveable<Texture>{
 		id = t.id;
 		return *this;
 	}
-	
 };
 
 class Object3D : public Upp::Moveable<Object3D>{
-	private:
-		static int GlobalID;
-		int ID;
-
-		Transform transform;
-		BoundingBox boundingBox;
-		Material material; //The material object is a representation of material property of the object (it change how light affect it)
-
-		Vector<Mesh> meshes;
-		Vector<Texture> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
-		Vector<OpenGLProgram> program;
-		VectorMap<String,Value> objectValues; //In case data need to be used in Init() Clear() and Draw();
-
-		bool loaded = false;
-		bool moved = false;
-		bool visible = true;
-		bool showBoundingBox = false;
-
-		int programNoLight = 0;//The program will draw figure without light
-		int programLine =    0;//THe program will draw figure line
-		int programNormal =  0;//The program will draw Normal
-		int programLight =   0;//the program will draw figure with light
-		
-		GLenum drawType = GL_TRIANGLES;
-		
-		 //All this value are here by default
-		Color lineColor = Black();
-		float lineOpacity = 0.5f;
-		float lineWidth = 1.0f;
-		
-		Color normalColor = Red();
-		float normalOpacity = 1.0f;
-		float normalLength = 1.0f;
-
-		bool showMesh = true;
-		bool showMeshLine = false;
-		bool showMeshNormal = false;
-		bool showLight = true;
-	public:
-		Function <void(Object3D& obj)> WhenInit;
-		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)> WhenDraw;
-		Function <void(Object3D& obj)> WhenClear;
-		Function <void(Object3D& obj)> WhenReload;
-	private:
-		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count ,int numberOfElement, const float * data)noexcept;
-		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count, int numberOfElement)noexcept;
-		//Texture loading function
-		//Return position of the texture object carrying this texture
-		int LoadTexture(const Image& img , const String& name, int indiceWhereInsert = -1);
-		
-		//Assimp loading function
-		bool InitFromScene(const aiScene* pScene, const String& Filename);
-	    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
-	    bool InitMaterials(const aiScene* pScene, const String& Filename);
 	public:
 		Object3D();
 		Object3D(Object3D&& obj):ID(GlobalID++){*this = pick(obj);}
@@ -104,6 +49,11 @@ class Object3D : public Upp::Moveable<Object3D>{
 		~Object3D();
 
 		int GetID()const{return ID;}
+		
+		Function <void(Object3D& obj)> WhenInit;
+		Function <void(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition,Object3D& obj)> WhenDraw;
+		Function <void(Object3D& obj)> WhenClear;
+		Function <void(Object3D& obj)> WhenReload;
 		
 		bool IsLoaded(){return loaded;}
 		Object3D& Show(){visible = true;return *this;}
@@ -221,18 +171,62 @@ class Object3D : public Upp::Moveable<Object3D>{
 		void Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix,const glm::vec3& viewPosition)noexcept{WhenDraw(projectionMatrix,viewMatrix,viewPosition, *this);}
 		void Clear(){WhenClear(*this); loaded = false;}
 		void Reload(){WhenReload(*this);}
+	
+	
+	private:
+		static int GlobalID;
+		int ID;
+
+		Transform transform;
+		BoundingBox boundingBox;
+		Material material; //The material object is a representation of material property of the object (it change how light affect it)
+
+		Vector<Mesh> meshes;
+		Vector<Texture> textures; //Vector carrying all texture of the object, every meshes refer to it via one iterator
+		Vector<OpenGLProgram> program;
+		VectorMap<String,Value> objectValues; //In case data need to be used in Init() Clear() and Draw();
+
+		bool loaded = false;
+		bool moved = false;
+		bool visible = true;
+		bool showBoundingBox = false;
+
+		int programNoLight = 0;//The program will draw figure without light
+		int programLine =    0;//THe program will draw figure line
+		int programNormal =  0;//The program will draw Normal
+		int programLight =   0;//the program will draw figure with light
+		
+		GLenum drawType = GL_TRIANGLES;
+		
+		 //All this value are here by default
+		Color lineColor = Black();
+		float lineOpacity = 0.5f;
+		float lineWidth = 1.0f;
+		
+		Color normalColor = Red();
+		float normalOpacity = 1.0f;
+		float normalLength = 1.0f;
+
+		bool showMesh = true;
+		bool showMeshLine = false;
+		bool showMeshNormal = false;
+		bool showLight = true;
+
+		bool UpdateBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count ,int numberOfElement, const float * data)noexcept;
+		Vector<float> ReadBuffer(GLuint buffer, int SurfaceCount , int SurfaceNumber,int count, int numberOfElement)noexcept;
+		//Texture loading function
+		//Return position of the texture object carrying this texture
+		int LoadTexture(const Image& img , const String& name, int indiceWhereInsert = -1);
+		
+		//Assimp loading function
+		bool InitFromScene(const aiScene* pScene, const String& Filename);
+	    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
+	    bool InitMaterials(const aiScene* pScene, const String& Filename);
+	
 };
 
 class Skybox {
-	private:
-		unsigned int ID = 0;
-		GLuint VBO, VAO;
-		bool show = false;
-		
-		OpenGLProgram program;
-		Skybox& Init(const Vector<Image>& images); //Load this vector of image as Skybox
 	public:
-		
 		Skybox(){}
 		~Skybox(){Clear();}
 		
@@ -243,7 +237,13 @@ class Skybox {
 		Skybox& Init(const Image& skybox_right,const Image& skybox_left,const Image& skybox_top,const Image& skybox_bottom,const Image& skybox_front,const Image& skybox_back); //Load all image provided as skybox
 		Skybox& Clear();
 		Skybox& Draw(const glm::mat4& projectionMatrix,const glm::mat4& viewMatrix);
-
+	private:
+		unsigned int ID = 0;
+		GLuint VBO, VAO;
+		bool show = false;
+		
+		OpenGLProgram program;
+		Skybox& Init(const Vector<Image>& images); //Load this vector of image as Skybox
 };
 	
 }
