@@ -4,13 +4,7 @@
 #include "Object3D.h"
 
 namespace Upp{
-	class MagicCamera : public UOGL_Camera{
-	private:
-		bool OnObject = false;
-		glm::vec3 focus;
-		
-		glm::vec3 UnProject2(float winX, float winY,float winZ)const noexcept;
-		bool PickFocus(float x, float y);
+class MagicCamera : public UOGL_Camera{
 	public:
 		MagicCamera(){}
 		MagicCamera& Init(){transform.SetPosition(0, 0, 20); focus = glm::vec3(0.0f,0.0f,0.0f); return *this;}
@@ -33,9 +27,15 @@ namespace Upp{
 		MagicCamera& MouseWheelMouvement(float xoffset,float yoffset)noexcept; //Rotate arround axis
 		MagicCamera& ProcessMouseScroll(float zdelta, float multiplier = 1.0f)noexcept; //Zoom or move via MouseWheel depending on OnObject Boolean
 		
-		
-		MagicCamera& ProcessKeyboardMouvement(Camera_Movement direction){return *this;} //Handler for keyboard, Useless in this kind of camera
+		MagicCamera& ProcessKeyboardMouvement(CameraMovementDirection direction){return *this;} //Handler for keyboard, Useless in this kind of camera
 		bool ProcessKeyBoard(unsigned long Key,int count)noexcept{return true;} //Handler for keyboard, Useless in this kind of camera
+
+	private:
+		bool OnObject = false;
+		glm::vec3 focus;
+		
+		glm::vec3 UnProject2(float winX, float winY,float winZ)const noexcept;
+		bool PickFocus(float x, float y);
 	};
 }
 

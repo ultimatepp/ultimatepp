@@ -4,6 +4,18 @@
 //#include <GLCtrl_glad/GLCtrl_glad.h>
 namespace Upp{
 class OpenGLShader{
+	public:
+		OpenGLShader(GLenum type,const char * data) : shaderType{type} {
+			ID = glCreateShader(shaderType);
+		    glShaderSource(ID, 1, &data, NULL);
+		    glCompileShader(ID);
+		    if(CheckForCompilationError())compiled = true;
+		}
+		~OpenGLShader(){glDeleteShader(ID);}
+		
+		GLuint GetID()const noexcept{return ID;}
+		GLenum GetType()const noexcept{return shaderType;}
+		bool IsCompiled()const noexcept{return compiled;}
 	private:
 		GLenum shaderType;
 		GLuint ID = 0;
@@ -40,49 +52,8 @@ class OpenGLShader{
 		    }
 			return true;
 		}
-	public:
-		OpenGLShader(GLenum type,const char * data) : shaderType{type} {
-			ID = glCreateShader(shaderType);
-		    glShaderSource(ID, 1, &data, NULL);
-		    glCompileShader(ID);
-		    if(CheckForCompilationError())compiled = true;
-		}
-		~OpenGLShader(){glDeleteShader(ID);}
-		
-		GLuint GetID()const noexcept{return ID;}
-		GLenum GetType()const noexcept{return shaderType;}
-		bool IsCompiled()const noexcept{return compiled;}
 };
-	class OpenGLProgram : public Moveable<OpenGLProgram>{
-	private:
-		GLuint vertex = 0;
-		GLuint TCS = 0; //Tesselation control shader
-		GLuint TES = 0; //Tesselation evaluation shader
-		GLuint geometry = 0;
-		GLuint fragment = 0;
-		
-		String name="";
-		GLuint ID = 0;
-		bool linked = false;
-		bool copied = false; //if the shader is copied then is deletion wont occure a clear in OpenGL data
-		
-		GLint GetUniformLocation(Upp::String name){
-			GLint location = glGetUniformLocation(ID, name.ToStd().c_str());
-			if(location == -1)RLOG("Warning : uniform named " + name +" can't be find in program number " + AsString(ID));
-			return location;
-		}
-		
-		bool CheckForLinkingError()noexcept{
-			int success;
-		    char infoLog[512];
-			glGetProgramiv(ID, GL_LINK_STATUS, &success);
-			if (!success) {
-				glGetProgramInfoLog(ID, 512, NULL, infoLog);
-				LOG("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" + String(infoLog));
-				return false;
-			}
-			return true;
-		}
+class OpenGLProgram : public Moveable<OpenGLProgram>{
 	public:
 		OpenGLProgram(){}
 		OpenGLProgram(const String& n){name = n;}
@@ -172,6 +143,37 @@ class OpenGLShader{
 		OpenGLProgram& SetMat2(Upp::String name, const glm::mat2 &mat)noexcept{if(linked)glUniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);return *this;}
 		OpenGLProgram& SetMat3(Upp::String name, const glm::mat3 &mat)noexcept{if(linked)glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);return *this;}
 		OpenGLProgram& SetMat4(Upp::String name, const glm::mat4 &mat)noexcept{if(linked)glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat[0][0]);return *this;}
+	
+	
+	private:
+		GLuint vertex = 0;
+		GLuint TCS = 0; //Tesselation control shader
+		GLuint TES = 0; //Tesselation evaluation shader
+		GLuint geometry = 0;
+		GLuint fragment = 0;
+		
+		String name="";
+		GLuint ID = 0;
+		bool linked = false;
+		bool copied = false; //if the shader is copied then is deletion wont occure a clear in OpenGL data
+		
+		GLint GetUniformLocation(Upp::String name){
+			GLint location = glGetUniformLocation(ID, name.ToStd().c_str());
+			if(location == -1)RLOG("Warning : uniform named " + name +" can't be find in program number " + AsString(ID));
+			return location;
+		}
+		
+		bool CheckForLinkingError()noexcept{
+			int success;
+		    char infoLog[512];
+			glGetProgramiv(ID, GL_LINK_STATUS, &success);
+			if (!success) {
+				glGetProgramInfoLog(ID, 512, NULL, infoLog);
+				LOG("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" + String(infoLog));
+				return false;
+			}
+			return true;
+		}
 	};
 }
 

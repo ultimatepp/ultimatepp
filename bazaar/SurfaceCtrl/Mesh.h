@@ -4,11 +4,6 @@
 namespace Upp{
 	
 struct Material{
-	private:
-		glm::vec3 Diffuse = glm::vec3(0.30f, 0.30f, 0.30f);
-		glm::vec3 Specular = glm::vec3(0.1f, 0.1f, 0.1f);
-		float Shininess = 12.0f;
-		bool update = true;
 	public:
 		Material(){}
 		Material(const glm::vec3& diffuse_, const glm::vec3& speculare_, float shininess_){Diffuse = diffuse_;Specular = speculare_;Shininess = shininess_;}
@@ -23,32 +18,15 @@ struct Material{
 		
 		bool ShouldBeUpdated()const noexcept{return update;}
 		void HaveBeenUpdated()noexcept{update = false;}
+	private:
+		glm::vec3 Diffuse = glm::vec3(0.30f, 0.30f, 0.30f);
+		glm::vec3 Specular = glm::vec3(0.1f, 0.1f, 0.1f);
+		float Shininess = 12.0f;
+		bool update = true;
 };
 
 //Mesh contain vertex  and how it's read
 class Mesh : public Moveable<Mesh>{
-	private:
-		String name =""; //Possible name of Mesh
-		bool loaded = false;
-		
-		Vector<GLfloat> vertices;
-		Vector<GLfloat> normals;
-		Vector<GLfloat> colors;
-		Vector<GLfloat> texCoords;
-		
-		GLuint vao = 0;
-		GLuint verticesVBO = 0;
-		GLuint normalsVBO = 0;
-		GLuint colorsVBO = 0;
-		GLuint texCoordsVBO = 0;
-		
-		Material material; //The material object is a representation of material property of the object (it change how light affect it)
-		
-		unsigned int textureIndice = 0;
-		
-		/**
-			All stuff about texture
-		**/
 	public:
 		Mesh(){}
 		Mesh(Mesh&& obj){*this = pick(obj);}
@@ -193,11 +171,25 @@ class Mesh : public Moveable<Mesh>{
 			}
 			loaded = false;
 		}
+	
+	private:
+		String name =""; //Possible name of Mesh
+		bool loaded = false;
 		
-	
-
-	
-
+		Vector<GLfloat> vertices;
+		Vector<GLfloat> normals;
+		Vector<GLfloat> colors;
+		Vector<GLfloat> texCoords;
+		
+		GLuint vao = 0;
+		GLuint verticesVBO = 0;
+		GLuint normalsVBO = 0;
+		GLuint colorsVBO = 0;
+		GLuint texCoordsVBO = 0;
+		
+		Material material; //The material object is a representation of material property of the object (it change how light affect it)
+		
+		unsigned int textureIndice = 0;
 };
 
 }

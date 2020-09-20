@@ -6,32 +6,6 @@
 namespace Upp{
 
 class BoundingBox {
-	private:
-		bool loaded = false;
-		
-		glm::vec3 min;
-		glm::vec3 max;
-		
-		GLuint BoundingBoxVAO = 0;
-		GLuint BoundingBoxVBO = 0;
-		
-		void loadBoundingBox(){
-			Vector<float> BoundingBoxVertices = GetVertices();
-	
-			if(BoundingBoxVAO > 0) glDeleteVertexArrays(1,&BoundingBoxVAO);
-			if(BoundingBoxVBO > 0) glDeleteBuffers(1,&BoundingBoxVBO);
-			
-			glGenVertexArrays(1,&BoundingBoxVAO);
-			glGenBuffers(1,&BoundingBoxVBO);
-			
-			glBindVertexArray(BoundingBoxVAO);
-			glBindBuffer(GL_ARRAY_BUFFER,BoundingBoxVBO);
-			glBufferData(GL_ARRAY_BUFFER,BoundingBoxVertices.GetCount() * sizeof(float),&(BoundingBoxVertices[0]),GL_STATIC_DRAW);
-			glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
-			glEnableVertexAttribArray(0);
-			loaded = true;
-		}
-		
 	public:
 		BoundingBox(){
 			loaded = false;
@@ -43,12 +17,12 @@ class BoundingBox {
 		BoundingBox(glm::vec3 min_, glm::vec3 max_){
 			min = min_;
 			max = max_;
-			loadBoundingBox();
+			LoadBoundingBox();
 		}
 		BoundingBox(float minX,float minY, float minZ, float maxX,float maxY,float maxZ){
 			min = glm::vec3(minX,minY,minZ);
 			max = glm::vec3(maxX,maxY,maxZ);
-			loadBoundingBox();
+			LoadBoundingBox();
 		}
 		
 		BoundingBox& operator=(const BoundingBox& copy){
@@ -60,7 +34,7 @@ class BoundingBox {
 			return *this;
 		}
 		
-		BoundingBox& ReloadBoundingBox(){loadBoundingBox();return *this;}
+		BoundingBox& ReloadBoundingBox(){LoadBoundingBox();return *this;}
 		BoundingBox& UnloadBoundingBox(){glDeleteVertexArrays(1,&BoundingBoxVAO);glDeleteBuffers(1,&BoundingBoxVBO);loaded =false;return *this;}
 		
 		Vector<float> GetVertices(){
@@ -94,13 +68,13 @@ class BoundingBox {
 		BoundingBox& SetBoundingBox(glm::vec3 min_, glm::vec3 max_){
 			min = min_;
 			max = max_;
-			loadBoundingBox();
+			LoadBoundingBox();
 			return *this;
 		}
 		BoundingBox& SetBoundingBox(float minX,float minY, float minZ, float maxX,float maxY,float maxZ){
 			min = glm::vec3(minX,minY,minZ);
 			max = glm::vec3(maxX,maxY,maxZ);
-			loadBoundingBox();
+			LoadBoundingBox();
 			return *this;
 		}
 		
@@ -174,6 +148,31 @@ class BoundingBox {
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
 			return *this;
+		}
+	private:
+		bool loaded = false;
+		
+		glm::vec3 min;
+		glm::vec3 max;
+		
+		GLuint BoundingBoxVAO = 0;
+		GLuint BoundingBoxVBO = 0;
+		
+		void LoadBoundingBox(){
+			Vector<float> BoundingBoxVertices = GetVertices();
+	
+			if(BoundingBoxVAO > 0) glDeleteVertexArrays(1,&BoundingBoxVAO);
+			if(BoundingBoxVBO > 0) glDeleteBuffers(1,&BoundingBoxVBO);
+			
+			glGenVertexArrays(1,&BoundingBoxVAO);
+			glGenBuffers(1,&BoundingBoxVBO);
+			
+			glBindVertexArray(BoundingBoxVAO);
+			glBindBuffer(GL_ARRAY_BUFFER,BoundingBoxVBO);
+			glBufferData(GL_ARRAY_BUFFER,BoundingBoxVertices.GetCount() * sizeof(float),&(BoundingBoxVertices[0]),GL_STATIC_DRAW);
+			glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
+			glEnableVertexAttribArray(0);
+			loaded = true;
 		}
 };
 }

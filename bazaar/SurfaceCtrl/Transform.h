@@ -6,24 +6,6 @@
 */
 namespace Upp{
 class Transform{
-	private:
-		glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
-		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f);
-		
-		glm::vec3 WorldFront = glm::vec3(0.0, 0.0, -1.0);
-		glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 WorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
-		
-		glm::vec3 Position = glm::vec3(0.0f);
-		glm::quat Rotation = Transform::GetQuaterion(0.0f,glm::vec3(0.0f,0.0f,0.0f));
-		glm::vec3 Scale = glm::vec3(1.0f);
-		
-		void RecalculateFURW(){
-			Front = glm::rotate(glm::inverse(Rotation), WorldFront);
-		    Right = glm::rotate(glm::inverse(Rotation), WorldRight);
-		    Up = glm::rotate(glm::inverse(Rotation), WorldUp);
-		}
 	public:
 		Transform(){}
 		Transform(const Transform& _transform){*this = _transform;}
@@ -107,6 +89,24 @@ class Transform{
 			ret.y = (vector[0]*matrix[0][1]+vector[1]*matrix[1][1]+vector[2]*matrix[2][1]+matrix[3][1])/w;
 			ret.z = (vector[0]*matrix[0][2]+vector[1]*matrix[1][2]+vector[2]*matrix[2][2]+matrix[3][2])/w;
 			return ret;
+		}
+	private:
+		glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f);
+		
+		glm::vec3 WorldFront = glm::vec3(0.0, 0.0, -1.0);
+		glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 WorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
+		
+		glm::vec3 Position = glm::vec3(0.0f);
+		glm::quat Rotation = Transform::GetQuaterion(0.0f,glm::vec3(0.0f,0.0f,0.0f));
+		glm::vec3 Scale = glm::vec3(1.0f);
+		
+		void RecalculateFURW(){
+			Front = glm::rotate(glm::inverse(Rotation), WorldFront);
+		    Right = glm::rotate(glm::inverse(Rotation), WorldRight);
+		    Up = glm::rotate(glm::inverse(Rotation), WorldUp);
 		}
 };
 }

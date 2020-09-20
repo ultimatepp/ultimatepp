@@ -7,26 +7,7 @@
 namespace Upp{
 
 class UOGL_Camera{
-	protected:
-		Transform transform; //The Camera Transform object
-	
-		CameraType type = CameraType::PERSPECTIVE;
-
-		float MaxFOV = 160.0f;
-	    float MinFOV = 10.0f;
-	    bool  LimiteFOV = true;
-	    float FOV =45.0f;
-
-	    float DrawDisanceMax = 10000.0f;
-		float DrawDistanceMin = 0.1f;
-		
-		float MouvementSpeed = 0.09f;
-	    float MouseSensitivity = 0.08f;
-	    float ZoomSpeed = 10.0f;
-		
-		Upp::Sizef ScreenSize;
 	public:
-		
 		Point lastPress;
 		bool MouseLeftPressed = false;
 		bool MouseMiddlePressed = false;
@@ -149,7 +130,24 @@ class UOGL_Camera{
 		
 		Upp::Sizef GetScreenSize()const noexcept{return ScreenSize;}
 		UOGL_Camera& SetScreenSize(float width, float height)noexcept{ScreenSize = Sizef(width,height);return *this;}
+	protected:
+		Transform transform; //The Camera Transform object
+	
+		CameraType type = CameraType::PERSPECTIVE;
 
+		float MaxFOV = 160.0f;
+	    float MinFOV = 10.0f;
+	    bool  LimiteFOV = true;
+	    float FOV =45.0f;
+
+	    float DrawDisanceMax = 10000.0f;
+		float DrawDistanceMin = 0.1f;
+		
+		float MouvementSpeed = 0.09f;
+	    float MouseSensitivity = 0.08f;
+	    float ZoomSpeed = 10.0f;
+		
+		Upp::Sizef ScreenSize;
 };
 }
 #endif

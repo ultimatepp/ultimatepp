@@ -23,7 +23,7 @@
 #define SHADER(version, shader) "#version " #version "\n" STRINGIFY(shader)
 
 namespace Upp{
-	enum class Camera_Movement {FORWARD,BACKWARD,LEFT,RIGHT};// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+	enum class CameraMovementDirection {FORWARD,BACKWARD,LEFT,RIGHT};// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 	enum class CameraType{PERSPECTIVE = 0 ,ORTHOGRAPHIC = 1};//,CT_FRUSTUM = 2}; //Type of camera rendering
 	enum class DrawType { TRIANGLE, QUAD };
 	enum class TexturesMaterial { WATER, STONE, BRICK, METAL, WOOD};
