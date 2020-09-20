@@ -4,7 +4,6 @@
 #include <Surface/Surface.h>
 
 #include <GLCtrl/GLCtrl.h>
-#define GL GLCtrl
 
 #include <plugin/assimp/assimp.h>
 
@@ -24,10 +23,10 @@
 #define SHADER(version, shader) "#version " #version "\n" STRINGIFY(shader)
 
 namespace Upp{
-	enum Camera_Movement {CM_FORWARD,CM_BACKWARD,CM_LEFT,CM_RIGHT};// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-	enum CameraType{CT_PERSPECTIVE = 0 ,CT_ORTHOGRAPHIC = 1};//,CT_FRUSTUM = 2}; //Type of camera rendering
-	enum DrawType { DT_TRIANGLE, DT_QUAD };
-	enum TexturesMaterial { TM_WATER, TM_STONE, TM_BRICK, TM_METAL, TM_WOOD};
+	enum class Camera_Movement {FORWARD,BACKWARD,LEFT,RIGHT};// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+	enum class CameraType{PERSPECTIVE = 0 ,ORTHOGRAPHIC = 1};//,CT_FRUSTUM = 2}; //Type of camera rendering
+	enum class DrawType { TRIANGLE, QUAD };
+	enum class TexturesMaterial { WATER, STONE, BRICK, METAL, WOOD};
 
 	class SurfaceCtrl;
 	class Skybox;

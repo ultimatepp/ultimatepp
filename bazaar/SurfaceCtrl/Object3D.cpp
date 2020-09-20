@@ -453,19 +453,19 @@ int Object3D::InsertTexture(const Image& m, int indice, FlipMode flipmode)noexce
 int Object3D::InsertTexture(const TexturesMaterial& tm, int indice, FlipMode flipmode)noexcept{ //Insert one of SurfaceCtrl provided texture
 	Image m;
 	switch(tm){
-		case TM_BRICK:
+		case TexturesMaterial::BRICK:
 			m = clone(TexturesImg::brick());
 		break;
-		case TM_METAL:
+		case TexturesMaterial::METAL:
 			m = clone(TexturesImg::metal());
 		break;
-		case TM_STONE:
+		case TexturesMaterial::STONE:
 			m = clone(TexturesImg::stone());
 		break;
-		case TM_WATER:
+		case TexturesMaterial::WATER:
 			m = clone(TexturesImg::water());
 		break;
-		case TM_WOOD:
+		case TexturesMaterial::WOOD:
 			m = clone(TexturesImg::wood());
 		break;
 	}

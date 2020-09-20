@@ -297,10 +297,10 @@ void SurfaceCtrl::GLPaint(){
 	}
 	//Draw skybox :
 	glm::mat4 proj;
-	if(camera.GetCameraType() == CT_ORTHOGRAPHIC){
-		camera.SetCameraType(CT_PERSPECTIVE);
+	if(camera.GetCameraType() == CameraType::ORTHOGRAPHIC){
+		camera.SetCameraType(CameraType::PERSPECTIVE);
 		proj = camera.GetProjectionMatrix();
-		camera.SetCameraType(CT_ORTHOGRAPHIC);
+		camera.SetCameraType(CameraType::ORTHOGRAPHIC);
 	}else{
 		proj = camera.GetProjectionMatrix();
 	}
