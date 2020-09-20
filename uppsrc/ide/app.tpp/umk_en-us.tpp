@@ -16,44 +16,50 @@ topic "UMK - Command line builder";
 [s10; UMK `- Command line builder&]
 [s12; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#1^ 1. Introduction]&]
-[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#2^ 2. Examples]&]
+[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#1^ 1. Definition]&]
+[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#2^ 2. Command line interface]&]
+[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#3^ 3. Examples]&]
 [s0; &]
-[s12;:1: 1. Introduction&]
+[s12;:1: 1. Definition&]
 [s11; [* UMK] (U`+`+ MaKe) is a command line utility to build the U`+`+ 
 program, with U`+`+ assembly/package/build method system.&]
+[s12;:2: 2. Command line interface&]
+[s11; Below is a command line interface of UMK:&]
 [s0; &]
-[s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package ][*C3 `[][*C@(0.0.255)3 build`_method][*C3 `]
-][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[
-][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M
-][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X
-][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 F
-LAG][*C3 `]..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@4;3 !][*C3  
-`[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
+[s0;l128;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package ][*C3 `[][*C@(0.0.255)3 build`_me
+thod][*C3 `]][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r
+][*C3 `]`[][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]
+`[][*C@4;3 M][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]
+`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FL
+AG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] 
+`[][*C@(0.0.255)3 !][*C3  `[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
 [s0;3 &]
-[s11; [*@(0.0.255) assembly] is a direct set of package nest directories 
-relative to working directory that represent U`+`+ assembly separated 
-by `',`'. Alternatively it can be a predefined assembly (in .var 
-file) which is in Win32 in directory where is located umk.exe 
-or in POSIX systems in directories [@3 .config/u`+`+/umk ]or [@3 .config/u`+`+/theide
-] or direct path to .var file.&]
-[s11; [*@(0.0.255) package ]is the main package (a program to build).&]
-[s11; [*@(0.0.255) build`_method] is build method that is to be used 
-to build the resulting executable, specified either as name of 
-build method (which is then searched for in [@3 .config/u`+`+/umk 
+[s11; Let`'s take a closer look at all available options:&]
+[s11;l128;i150;O0; [*@(0.0.255) assembly] is a direct set of package 
+nest directories relative to working directory that represent 
+U`+`+ assembly separated by `',`'. Alternatively it can be a 
+predefined assembly (in .var file) which is in Win32 in directory 
+where is located umk.exe or in POSIX systems in directories [@3 .config/u`+`+/umk 
+]or [@3 .config/u`+`+/theide] or direct path to .var file.&]
+[s11;l128;i150;O0; [*@(0.0.255) package ]is the main package (a program 
+to build).&]
+[s11;l128;i150;O0; [*@(0.0.255) build`_method] is build method that 
+is to be used to build the resulting executable, specified either 
+as name of build method (which is then searched for in [@3 .config/u`+`+/umk 
 ]or [@3 .config/u`+`+/theide] directories) or it is a direct path 
 to the .bm file. If not specified, [* CLANG] build method is assumed. 
 Note that in POSIX, umk automatically creates [* CLANG] and [* GCC] 
 build methods if they do not exist.&]
-[s11; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compilation 
-flags]. If flags are not specified, the first main configuration 
+[s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
+tion flags]. If flags are not specified, the first main configuration 
 entry in .upp file is used.&]
-[s11; [*@(0.0.255) out] overrides output name, file or directory.&]
-[s11; [*C@4;3 !] means the the resulting binary should be also executed 
-after successful build, using optional arguments after [*C@4;3 !] 
-as its arguments.&]
-[s0;*C@4;3 &]
-[ {{1914:8086h1;@1 [s0; [3 Option]]
+[s11;l128;i150;O0; [*@(0.0.255) out] overrides output name, file or 
+directory.&]
+[s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
+should be also executed after successful build, using optional 
+arguments after [*C@(0.0.255)3 !] as its arguments.&]
+[s11;l128;i150;O0; Other options can be found in the table below:&]
+[ {{1914:8086<283;h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
 ::^@2 [s0; [*C@4;3 a]]
 ::= [s0; [3 Rebuild all.]]
@@ -83,13 +89,14 @@ as its arguments.&]
 ::= [s0; [3 Number of threads used for building. Default is number of logical 
 cores available.]]}}&]
 [s0; &]
-[s12;:2: 2. Examples&]
+[s12;:3: 3. Examples&]
+[s11; Sample usage of UMK is located below:&]
 [s0;*C@5+92 &]
-[s0; [*C@5+92 umk uppsrc ide GCC `-br `+GUI,SSE2,SHARED `~/theide]&]
-[s0; [*C@5+92 umk uppsrc ide /usr/share/upp/GCC.bm `-br `+GUI,SSE2,SHARED 
+[s0;l128; [*C@5+92 umk uppsrc ide GCC `-br `+GUI,SSE2,SHARED `~/theide]&]
+[s0;l128; [*C@5+92 umk uppsrc ide /usr/share/upp/GCC.bm `-br `+GUI,SSE2,SHARED 
 `~/theide]&]
-[s0;*C@5+92 &]
-[s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs]&]
-[s0; [*C@5+92 umk upp/examples,upp/uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
-`~/bin]&]
+[s0;l128;*C@5+92 &]
+[s0;l128; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs]&]
+[s0;l128; [*C@5+92 umk upp/examples,upp/uppsrc Bombs `~/GCC.bm `-rv 
+`+GUI,SHARED `~/bin]&]
 [s0; ]]
