@@ -52,12 +52,13 @@ Packages and Assemblies]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l160; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
 `- parser directives]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Blitz`_en`-us^ BLITZ]&]
 [s0;l160; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
 [s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file format]&]
 [s0;l160; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line]&]
-[s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
+[s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/special`$en`-us^ Special 
 features]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
