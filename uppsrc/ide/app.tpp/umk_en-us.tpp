@@ -13,7 +13,7 @@ topic "UMK - Command line builder";
 [H4;b83;*4 $$12,11#07864147445237544204411237157677:title]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s10; [+184 UMK `- Command line builder]&]
+[s10; UMK `- Command line builder&]
 [s12; Table of contents&]
 [s0; &]
 [s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#1^ 1. Introduction]&]
