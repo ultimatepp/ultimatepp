@@ -58,7 +58,7 @@ directory.&]
 [s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
 should be also executed after successful build, using optional 
 arguments after [*C@(0.0.255)3 !] as its arguments.&]
-[s11;l128;i150;O0; Other options can be found in the table below:&]
+[s11;l128;i160;O0; All other options are located below:&]
 [ {{1914:8086<283;h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
 ::^@2 [s0; [*C@4;3 a]]
