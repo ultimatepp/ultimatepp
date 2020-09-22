@@ -479,7 +479,7 @@ size_t SizeBySerialize(const T& cont)
 	TimeStop tm;
 	SizeStream szs;
 	const_cast<T&>(cont).Serialize(szs);
-	return szs;
+	return (size_t)szs;
 }
 
 template <class T>

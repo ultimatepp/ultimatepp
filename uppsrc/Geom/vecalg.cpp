@@ -1221,7 +1221,7 @@ Pointf VecArcInfo::CentreOfMass() const
 	if(!IsCurved())
 		return M;
 	double extrusion = bow / (beta - alpha) - radius + fabs(bulge);
-	return M + Unit(IsReversed() ? UPP::Left(M) : UPP::Right(M)) * extrusion;
+	return M + UnitV(IsReversed() ? UPP::Left(M) : UPP::Right(M)) * extrusion;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1527,8 +1527,8 @@ VecArcInfo VecArcInfo::Offset(double dist) const
 {
 	if(dist == 0)
 		return *this;
-	Pointf last = A + UPP::Unit(UPP::Right(GetStartDir())) * dist;
-	Pointf next = B + UPP::Unit(UPP::Right(GetEndDir())) * dist;
+	Pointf last = A + UPP::UnitV(UPP::Right(GetStartDir())) * dist;
+	Pointf next = B + UPP::UnitV(UPP::Right(GetEndDir())) * dist;
 	if(IsCurved())
 		return VecArcInfo(C, last, next, !IsReversed());
 	else
@@ -1738,7 +1738,7 @@ bool VecIntersection::CC(const Pointf& C1, double r1, const Pointf& C2, double r
 
 	if(r > tol2)
 	{ // two solutions
-		Pointf D = Unit(Right(CC)) * sqrt(r);
+		Pointf D = UnitV(Right(CC)) * sqrt(r);
 		count = 2;
 		t[0] = Bearing(CP1 + D) / TWOPI;
 		u[0] = Bearing(CP2 + D) / TWOPI;
