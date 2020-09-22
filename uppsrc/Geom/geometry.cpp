@@ -78,7 +78,7 @@ Sizef Orthogonal(const Sizef& v, const Sizef& against)
 
 Sizef Orthonormal(const Sizef& v, const Sizef& against)
 {
-	return Unit(Orthogonal(v, against));
+	return UnitV(Orthogonal(v, against));
 }
 
 Sizef GetFarthestAxis(const Sizef& v)
