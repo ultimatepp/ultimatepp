@@ -66,7 +66,7 @@ inline double         Squared(Pointf3 p)                        { return p.x * p
 inline double         Length(Pointf3 p)                         { return sqrt(Squared(p)); }
 extern Pointf3        Length(Pointf3 p, double l);
 inline double         Distance(Pointf3 p, Pointf3 q)            { return Length(p - q); }
-inline Pointf3        Unit(Pointf3 p)                           { return Length(p, 1.0); }
+inline Pointf3        UnitV(Pointf3 p)                          { return Length(p, 1.0); }
 inline Pointf3        Scale(Pointf3 p, double d, Pointf3 c = Pointf(0, 0)) { return (p - c) * d + c; }
 inline double         Determinant(Pointf3 a, Pointf3 b, Pointf3 c) { return (a % b) ^ c; }
 extern Pointf3        Bezier2(Pointf3 a, Pointf3 b, Pointf3 c, double t);
@@ -123,7 +123,7 @@ inline Plane3&  operator -= (Plane3& p, Pointf3 v)                 { p.delta -= 
 inline Plane3   operator +  (Plane3 p, Pointf3 v)           { Plane3 r = p; r += v; return r; }
 inline Plane3   operator -  (Plane3 p, Pointf3 v)           { Plane3 r = p; r -= v; return r; }
 
-extern Plane3   Unit(Plane3 p);
+extern Plane3   Unit3(Plane3 p);
 
 struct Matrixf3;
 

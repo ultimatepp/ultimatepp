@@ -33,7 +33,7 @@ Pointf3 Orthogonal(Pointf3 v, Pointf3 against)
 
 Pointf3 Orthonormal(Pointf3 v, Pointf3 against)
 {
-	return Unit(Orthogonal(v, against));
+	return UnitV(Orthogonal(v, against));
 }
 
 Pointf3 FarthestAxis(Pointf3 v)
@@ -94,7 +94,7 @@ double Angle(Pointf3 a, Pointf3 b)
 //////////////////////////////////////////////////////////////////////
 // Plane3::
 
-Plane3 Unit(Plane3 p)
+Plane3 Unit3(Plane3 p)
 {
 	double nt = max(Length(p.normal), fpabsmax(p.normal));
 	if(nt)
@@ -253,7 +253,7 @@ double Matrixf3Measure(const Matrixf3& mx)
 Matrixf3 Matrixf3Rotate(Pointf3 axis, double angle)
 {
 	Matrixf3 to_space = Matrixf3_1();
-	to_space.z = Unit(axis);
+	to_space.z = UnitV(axis);
 	to_space.y = Orthonormal(FarthestAxis(to_space.z), to_space.z);
 	to_space.x = to_space.y % to_space.z;
 	double ca = cos(angle), sa = sin(angle);
@@ -292,13 +292,13 @@ void Camera::Serialize(Stream& stream)
 
 void Camera::Update()
 {
-	direction = Unit(target - location);
+	direction = UnitV(target - location);
 	distance_delta = -(location ^ direction);
 	viewing_distance = double(min(width_mm, height_mm) / (2e3 * tan(viewing_angle / 2.0)));
 	Pointf3 up = Orthogonal(upwards, direction);
 	if(Squared(up) <= 1e-10)
 		up = Orthogonal(FarthestAxis(direction), direction);
-	straight_up = Unit(up);
+	straight_up = UnitV(up);
 	straight_right = direction % straight_up;
 	camera_matrix = Matrixf3(straight_right, straight_up, direction, location);
 	invcam_matrix = Matrixf3Inverse(camera_matrix);
@@ -327,11 +327,11 @@ void Camera::SetPolar(Pointf3 dz, Pointf3 dx, double d, double a, double b, doub
 	Pointf3 az = RotateX(Pointf3(0, 0, -1), -b);
 	az = d * RotateY(az, a);
 	Pointf3 loc = az * Matrixf3(dx, dy, dz, target);
-	Pointf3 dir = Unit(target - loc);
+	Pointf3 dir = UnitV(target - loc);
 	Pointf3 su = Orthogonal(dy, dir);
 	if(Length(su) <= 1e-10)
 		su = Orthogonal(FarthestAxis(dir), dir);
-	su = Unit(su);
+	su = UnitV(su);
 	Location(loc).Upwards(Rotate(su, dir, r));
 }
 

@@ -38,7 +38,7 @@ inline Pointf Move         (const Pointf& p, double dx, double dy)   { return Po
 inline Pointf Mid          (const Pointf& p, const Pointf& q, double wt) { return p + (q - p) * wt; }
 inline double Squared      (const Pointf& p, const Pointf& q)        { return Squared(q - p); }
 Pointf        Length       (const Pointf& p, double l);
-inline Pointf Unit         (const Pointf& p)                         { return Length(p, 1); }
+inline Pointf UnitV        (const Pointf& p)                         { return Length(p, 1); }
 inline Pointf Rotated      (const Pointf& p, double a)               { double s = sin(a), c = cos(a); return Pointf(p.x * c - p.y * s, p.x * s + p.y * c); }
 inline Pointf Rotated      (const Pointf& p, double angle, const Pointf& c) { return c + Rotated(p - c, angle); }
 Pointf        Project      (const Pointf& p, const Pointf& a, const Pointf& b);
@@ -91,7 +91,7 @@ inline Sizef  Mid          (const Sizef& p, const Sizef& q)     { return Sizef((
 inline double Squared      (const Sizef& p, const Sizef& q)     { return Squared(q - p); }
 //inline double Length       (Sizef p)                          { return sqrt(Squared(p)); }
 Sizef         Length       (const Sizef& p, double l);
-inline Sizef  Unit         (const Sizef& p)                     { return Length(p, 1); }
+inline Sizef  UnitV        (const Sizef& p)                     { return Length(p, 1); }
 inline Sizef  Reversed     (const Sizef& s)                     { return Sizef(-s.cx, -s.cy); }
 inline Sizef  ReversedX    (const Sizef& s)                     { return Sizef(-s.cx, s.cy); }
 inline Sizef  ReversedY    (const Sizef& s)                     { return Sizef(s.cx, -s.cy); }
