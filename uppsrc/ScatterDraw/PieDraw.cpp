@@ -91,13 +91,13 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	if(!title.IsEmpty()) {
 		Upp::Font FontTitle6;
 		FontTitle6 = titleFont;
-		FontTitle6.Height(scale*titleFont.GetHeight());
+		FontTitle6.Height(scale*(titleFont.GetHeight()+ + titleFont.GetDescent()));
 		FontTitle6.Width(scale*titleFont.GetWidth());
 		textsize = GetTextSizeSpace(title, FontTitle6);
 		if(titlePos == TOP) 
 			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*titleGap, title, FontTitle6, titleColor);
 		else  
-			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*(GetSize().cy - titleFont.GetHeight() - titleGap), 
+			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*(GetSize().cy - titleFont.GetHeight() -titleFont.GetDescent() - titleGap), 
 						title, FontTitle6,titleColor);
 	}
 	
@@ -145,7 +145,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 			alfa0 += fround(3600.0*vValues[i]/sum);
 			String percent = GetPercent(vValues[i],sum);
 			Upp::Font scaledFont;
-			scaledFont.Height(scale*StdFont().GetHeight());
+			scaledFont.Height(scale*(StdFont().GetHeight() + StdFont().GetDescent()));
 			scaledFont.Width(scale*StdFont().GetWidth());
 			Size szz = GetTextSizeSpace(percent, scaledFont);
 		
@@ -159,12 +159,12 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	}
 	if(showLegend) {
 		Upp::Font scaledFont;
-		scaledFont.Height(scale*legendFont.GetHeight());
+		scaledFont.Height(scale*(legendFont.GetHeight() + legendFont.GetDescent()));
 		scaledFont.Width(scale*legendFont.GetWidth());
-		int fh = scale*legendFont.GetHeight();
+		int fh = scale*(legendFont.GetHeight() + legendFont.GetDescent());
 		int nr = GetCatCount();
 		int legendWidth = 0;
-		int legendHeight = (1 + nr)*scaledFont.GetHeight();
+		int legendHeight = (1 + nr)*(scaledFont.GetHeight()+scaledFont.GetDescent());
 		for(int i = 0; i < nr; i++) 
 			legendWidth = max<int>(legendWidth, GetTextSizeSpace(vNames[i], scaledFont).cx);
 		legendWidth += fround(2.2*fh);

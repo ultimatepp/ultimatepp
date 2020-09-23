@@ -153,7 +153,7 @@ void ScatterDraw::DrawRainbowPalette(Draw& w) const {
 	
 	Rect rect;
 	Font fnt = rainbowPaletteFont;
-	fnt.Height(int(fnt.GetHeight()*min(plotScaleX, plotScaleY)));
+	fnt.Height(int((fnt.GetHeight()+ + fnt.GetDescent())*min(plotScaleX, plotScaleY)));
 	switch(rainbowAnchor) {
 	case LEFT_TOP: 		rect.Set(int(plotLeft  + rainbowPosx), 
 								 int(plotTop   + rainbowPosy), 
