@@ -196,7 +196,7 @@ String CParser::ReadIdt() {
 		result.Cat(*term++);
 	}
 	DoSpaces();
-	return result;
+	return String(result);
 }
 
 bool CParser::IsInt() const {
@@ -381,7 +381,7 @@ String CParser::ReadOneString(int delim, bool chkend) {
 		if(*term == delim) {
 			term++;
 			DoSpaces();
-			return result;
+			return String(result);
 		}
 		else
 		if(*term == '\\') {
@@ -452,16 +452,16 @@ String CParser::ReadOneString(int delim, bool chkend) {
 			if((byte)*term < ' ' && *term != '\t') {
 				if(chkend) {
 					ThrowError("Unterminated string");
-					return result;
+					return String(result);
 				}
 				if(*term == '\0')
-					return result;
+					return String(result);
 			}
 			result.Cat(*term++);
 		}
 	}
 	DoSpaces();
-	return result;
+	return String(result);
 }
 
 String CParser::ReadOneString(bool chkend)
@@ -700,7 +700,7 @@ String AsCString(const char *s, const char *lim, int linemax, const char *linepf
 		s++;
 	}
 	t.Cat('\"');
-	return t;
+	return String(t);
 }
 
 String AsCString(const char *s, int linemax, const char *linepfx, dword flags)

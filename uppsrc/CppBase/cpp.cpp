@@ -100,7 +100,7 @@ String Cpp::Expand(const char *s)
 										prefix_macro = bid;
 									else
 										prefix_macro = String(' ', 1) + bid; // do not want to emit grounding in body
-									return r;
+									return String(r);
 								}
 								else
 								if(*s == '\"' || *s == '\'')
@@ -147,7 +147,7 @@ String Cpp::Expand(const char *s)
 		else
 			r.Cat(*s++);
 	}
-	return r;
+	return String(r);
 }
 
 void Cpp::DoFlatInclude(const String& header_path)

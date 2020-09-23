@@ -490,7 +490,7 @@ String FastCompress(const void *s, int sz)
 	int clen = LZ4_compress_default((const char *)s, ~b + sizeof(int), sz, (int)maxsize);
 	b.SetCount(clen + sizeof(int));
 	b.Shrink();
-	return b;
+	return String(b);
 }
 
 String FastCompress(const String& s)
@@ -503,7 +503,7 @@ String FastDecompress(const String& data)
 	int sz = *(int *)~data;
 	StringBuffer b(sz);
 	LZ4_decompress_safe(~data + sizeof(int), b, data.GetCount() - sizeof(int), sz);
-	return b;
+	return String(b);
 }
 
 // following function is used in both plugin/lz4 and plugin/zstd

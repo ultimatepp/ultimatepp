@@ -130,7 +130,7 @@ String WinMetaFile::Get() const
 	int size = ::GetEnhMetaFileBits(hemf, 0, 0);
 	StringBuffer b(size);
 	::GetEnhMetaFileBits(hemf, size, (BYTE *)~b);
-	return b;
+	return String(b);
 }
 
 void WinMetaFile::Serialize(Stream& s) {

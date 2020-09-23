@@ -106,7 +106,7 @@ EscValue::operator WString() const
 					s.Cat(c);
 			}
 	}
-	return s;
+	return WString(s);
 }
 
 void EscValue::InitString(const WString& s)

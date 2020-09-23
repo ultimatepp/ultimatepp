@@ -14,7 +14,7 @@ String ReadValue(CParser& p)
 	while(IsUppValueChar(p.PeekChar()))
 		v.Cat(p.GetChar());
 	p.Spaces();
-	return v;
+	return String(v);
 }
 
 static bool sMatchOr(CParser& p, const Vector<String>& flag);

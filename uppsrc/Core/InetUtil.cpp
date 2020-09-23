@@ -124,7 +124,7 @@ String UrlEncode(const char *p, const char *e)
 		else
 			out << '%' << hex_digits[(*p >> 4) & 15] << hex_digits[*p & 15];
 	}
-	return out;
+	return String(out);
 }
 
 String UrlEncode(const char *s, int len)
@@ -156,7 +156,7 @@ String UrlDecode(const char *b, const char *e)
 		}
 		else
 			out.Cat(*p);
-	return out;
+	return String(out);
 }
 
 String UrlDecode(const char *s, int len)
@@ -179,7 +179,7 @@ String QPEncode(const char* s)
 			r.Cat(s[0]);
 			len++;
 		}
-		else 
+		else
 		if(s[0] == '\r')
 			;
 		else
@@ -209,7 +209,7 @@ String QPEncode(const char* s)
 		}
 		s++;
 	}
-	return r;
+	return String(r);
 }
     
 String QPDecode(const char *s, bool underscore_to_space)
@@ -232,7 +232,7 @@ String QPDecode(const char *s, bool underscore_to_space)
 		else
 			r.Cat(c);
 	}
-	return r;
+	return String(r);
 }
 
 String Base64Encode(const char *_b, const char *_e)
@@ -272,7 +272,7 @@ String Base64Encode(const char *_b, const char *_e)
 		p[2] = encoder[(b[1] << 2) & 0x3C];
 		p[3] = '=';
 	}
-	return s;
+	return String(s);
 }
 
 String Base64Encode(const char *b, int len)
@@ -330,7 +330,7 @@ String Base64Decode(const char *b, const char *e)
 				out.Cat((c[2] << 6) | (c[3] >> 0));
 		}
 	}
-	return out;
+	return String(out);
 }
 
 String Base64Decode(const char *s, int len)

@@ -107,7 +107,7 @@ String Bits::ToString() const
 	StringBuffer ss;
 	for(int i = GetLast(); i >= 0; i--)
 		ss << FormatIntHex(bp[i]);
-	return ss;
+	return String(ss);
 }
 
 void Bits::Serialize(Stream& s)

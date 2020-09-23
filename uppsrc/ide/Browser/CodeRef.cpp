@@ -158,7 +158,7 @@ String NaturalDeQtf(const char *s) {
 		}
 		s++;
 	}
-	return r;
+	return String(r);
 }
 
 static int sSplitT(int c) {

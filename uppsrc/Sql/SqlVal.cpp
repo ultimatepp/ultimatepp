@@ -77,7 +77,7 @@ String SqlS::operator()(int at, byte cond) const
 		return text;
 	StringBuffer out;
 	out << SqlCode(cond, "(")() << text << SqlCode(cond, ")")();
-	return out;
+	return String(out);
 }
 
 void SqlS::Init(const SqlS& a, const char *o, int olen, const SqlS& b, int pr, int prb)

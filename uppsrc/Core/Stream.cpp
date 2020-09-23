@@ -176,7 +176,7 @@ String Stream::Get(int size)
 	StringBuffer b(size);
 	int n = Get(~b, size);
 	b.SetCount(n);
-	return b;
+	return String(b);
 }
 
 String Stream::GetAll(int size)
@@ -1218,7 +1218,7 @@ String LoadStream(Stream& in) {
 			StringBuffer s((int)size);
 			in.Get(s, (int)size);
 			if(!in.IsError())
-				return s;
+				return String(s);
 		}
 	}
 	return String::GetVoid();

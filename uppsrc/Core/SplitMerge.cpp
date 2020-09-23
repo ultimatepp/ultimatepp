@@ -173,7 +173,7 @@ T Join_(const Vector<T>& im, const T& delim, bool ignoreempty) {
 			r.Cat(im[i]);
 			next = true;
 		}
-	return r;
+	return T(r);
 }
 
 String Join(const Vector<String>& im, const String& delim, bool ignoreempty) {

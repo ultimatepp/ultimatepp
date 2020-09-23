@@ -392,13 +392,13 @@ String HexString(const byte *s, int count, int sep, int sepchr)
 	for(;;) {
 		for(int q = 0; q < sep; q++) {
 			if(i >= count)
-				return b;
+				return String(b);
 			*t++ = itoc[(s[i] & 0xf0) >> 4];
 			*t++ = itoc[s[i] & 0x0f];
 			i++;
 		}
 		if(i >= count)
-			return b;
+			return String(b);
 		*t++ = sepchr;
 	}
 }
@@ -467,7 +467,7 @@ String NormalizeSpaces(const char *s)
 		else
 			r.Cat(*s++);
 	}
-	return r;
+	return String(r);
 }
 
 String NormalizeSpaces(const char *s, const char *end)
@@ -485,7 +485,7 @@ String NormalizeSpaces(const char *s, const char *end)
 		else
 			r.Cat(*s++);
 	}
-	return r;
+	return String(r);
 }
 
 String CsvString(const String& text)
@@ -569,7 +569,7 @@ String CompressLog(const char *s)
 		else
 			result.Cat(b, s);
 	}
-	return result;
+	return String(result);
 }
 
 int ChNoInvalid(int c)
@@ -599,7 +599,7 @@ String ToSystemCharset(const String& src, int cp)
 	if(q <= 0)
 		return src;
 	b.SetCount(q);
-	return b;
+	return String(b);
 }
 
 String ToSystemCharset(const String& src)

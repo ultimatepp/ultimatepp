@@ -28,7 +28,7 @@ struct sMakeTextGlyph : public ImageMaker
 		RawCat(h, angle);
 		RawCat(h, color);
 		RawCat(h, yy);
-		return h;
+		return String(h);
 	}
 
 	virtual Image Make() const {

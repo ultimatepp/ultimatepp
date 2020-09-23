@@ -280,7 +280,7 @@ String EscValue::ToString(int maxlen, int indent_step, bool hex, int indent) con
 			r << lambda->arg[i];
 		}
 		r << ")\n" << lambda->code;
-		return r;
+		return String(r);
 	case ESC_MAP:
 		r << ind << "{ ";
 		int c = min(map->map.GetCount(), 100);

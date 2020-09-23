@@ -79,7 +79,7 @@ String PackRLE(const RGBA *s, int len)
 			}
 		}
 	}
-	return r;
+	return String(r);
 }
 
 int Premultiply(RGBA *t, const RGBA *s, int len)
