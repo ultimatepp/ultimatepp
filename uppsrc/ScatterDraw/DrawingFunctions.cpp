@@ -144,14 +144,14 @@ void DrawHArrow(Painter &w, double x0, double y0, double x1, double y1, double w
 
 void DrawText(Draw &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
 	Vector<String> str = Split(text, '\n');
-	int h = font.GetHeight();
+	int h = font.GetHeight() + font.GetDescent();
 	for (int i = 0; i < str.GetCount(); ++i)
 		w.DrawText(int(x), int(y + h*i), angle, str[i], font, color);
 }
 
 void DrawText(Painter &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
 	Vector<String> str = Split(text, '\n');
-	int h = font.GetHeight();
+	int h = font.GetHeight() + font.GetDescent();
 	w.Begin();
 	w.Translate(x, y).Rotate(-angle*M_PI/1800.);
 	for (int i = 0; i < str.GetCount(); ++i) {

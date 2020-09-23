@@ -347,8 +347,8 @@ doubleUnit EvalExpr::Pow(CParserPP& p) {
 	doubleUnit x = Term(p);
 	for(;;) {
 		if(p.Char('^')) {
-			if (x.val < 0)
-				EvalThrowError(p, t_("Complex number"));
+			//if (x.val < 0)
+			//	EvalThrowError(p, t_("Complex number"));
 			x.Exp(Term(p));
 		} else
 			return x;
@@ -607,53 +607,56 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {
 		
 	Spline::Fit(x, y);
 	
+	coeff.SetCount(1);
+	
 	return NoError;
 }
 
 void Spline::Fit(const double *x, const double *y, int num) {
-    ncoeff = num - 1;
+    nscoeff = num - 1;
     
-    Buffer<double> h(ncoeff);
-    for(int i = 0; i < ncoeff; ++i)
+    Buffer<double> h(nscoeff);
+    for(int i = 0; i < nscoeff; ++i)
         h[i] = x[i+1] - x[i];
 
-    Buffer<double> alpha(ncoeff);
-    for(int i = 1; i < ncoeff; ++i)
+    Buffer<double> alpha(nscoeff);
+    for(int i = 1; i < nscoeff; ++i)
         alpha[i] = 3*(y[i+1] - y[i])/h[i] - 3*(y[i] - y[i-1])/h[i-1];
 
-    Buffer<double> c(ncoeff+1), l(ncoeff+1), mu(ncoeff+1), z(ncoeff+1);
+    Buffer<double> c(nscoeff+1), l(nscoeff+1), mu(nscoeff+1), z(nscoeff+1);
     l[0] = 1;
     mu[0] = 0;
     z[0] = 0;
 
-    for(int i = 1; i < ncoeff; ++i) {
+    for(int i = 1; i < nscoeff; ++i) {
         l[i] = 2*(x[i+1] - x[i-1]) - h[i-1]*mu[i-1];
         mu[i] = h[i]/l[i];
         z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
     }
 
-    l[ncoeff] = 1;
-    z[ncoeff] = 0;
-    c[ncoeff] = 0;
+    l[nscoeff] = 1;
+    z[nscoeff] = 0;
+    c[nscoeff] = 0;
 
-	coeff.Alloc(ncoeff);
-    for(int i = ncoeff-1; i >= 0; --i) {
+	scoeff.Alloc(nscoeff);
+    for(int i = nscoeff-1; i >= 0; --i) {
         c[i] = z[i] - mu[i] * c[i+1];
-        coeff[i].b = (y[i+1] - y[i])/h[i] - h[i]*(c[i+1] + 2*c[i])/3;
-        coeff[i].d = (c[i+1] - c[i])/3/h[i];
+        scoeff[i].b = (y[i+1] - y[i])/h[i] - h[i]*(c[i+1] + 2*c[i])/3;
+        scoeff[i].d = (c[i+1] - c[i])/3/h[i];
     }
 
-    for(int i = 0; i < ncoeff; ++i) {
-        coeff[i].x = x[i];
-        coeff[i].a = y[i];
-        coeff[i].c = c[i];
+    for(int i = 0; i < nscoeff; ++i) {
+        scoeff[i].x = x[i];
+        scoeff[i].a = y[i];
+        scoeff[i].c = c[i];
     }
 }
 
 double Spline::f(double x) const {
+	ASSERT(nscoeff > 0);
     int j;
-    for (j = 0; j < ncoeff; j++) {
-        if (coeff[j].x > x) {
+    for (j = 0; j < nscoeff; j++) {
+        if (scoeff[j].x > x) {
             if (j == 0)
                 j = 1;
             break;
@@ -661,8 +664,8 @@ double Spline::f(double x) const {
     }
     j--;
 
-    double dx = x - coeff[j].x;
-    return coeff[j].a + coeff[j].b*dx + coeff[j].c*dx*dx + coeff[j].d*dx*dx*dx;
+    double dx = x - scoeff[j].x;
+    return scoeff[j].a + scoeff[j].b*dx + scoeff[j].c*dx*dx + scoeff[j].d*dx*dx*dx;
 }
 
 INITBLOCK {

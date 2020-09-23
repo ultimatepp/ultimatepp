@@ -1257,11 +1257,11 @@ double ScatterDraw::GetXByPoint(double x) {
 }
 
 double ScatterDraw::GetYByPoint(double y) {
-	return (GetSize().cy - vPlotTop - y - 1)*GetYRange()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin();
+	return (GetSize().cy - vPlotTop - y - 1)*GetYRange()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - GetTitleFont().GetDescent() - 1) + GetYMin();
 }
 
 double ScatterDraw::GetY2ByPoint(double y) {
-	return (GetSize().cy - vPlotTop - y - 1)*GetY2Range()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin2();
+	return (GetSize().cy - vPlotTop - y - 1)*GetY2Range()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - GetTitleFont().GetDescent() - 1) + GetYMin2();
 }
 
 double ScatterDraw::GetXPointByValue(double x) {
@@ -1269,7 +1269,7 @@ double ScatterDraw::GetXPointByValue(double x) {
 }
 
 double ScatterDraw::GetYPointByValue(double y) {
-	return (GetSize().cy - vPlotTop - 1) - (y - GetYMin())/GetYRange()*(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1);
+	return (GetSize().cy - vPlotTop - 1) - (y - GetYMin())/GetYRange()*(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - GetTitleFont().GetDescent() - 1);
 }
 
 ScatterDraw &ScatterDraw::SetRangeLinked(double rx, double ry, double ry2) {

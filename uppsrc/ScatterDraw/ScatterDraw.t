@@ -24,12 +24,6 @@ esES("Identificador desconocido '%s'")
 euES("")
 frFR("")
 
-T_("Complex number")
-caES("")
-esES("N\303\272mero complejo")
-euES("")
-frFR("")
-
 T_("Error evaluating '%s': %s")
 caES("")
 esES("Error evaluando '%s': %s")
@@ -168,5 +162,14 @@ frFR("")
 T_("Units does not match in resistor parallel")
 caES("")
 esES("Unidades no encajan en resistencias en paralelo")
+euES("")
+frFR("")
+
+
+// Obsolete
+
+T_("Complex number")
+caES("")
+esES("N\303\272mero complejo")
 euES("")
 frFR("")

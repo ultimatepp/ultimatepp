@@ -31,10 +31,8 @@ public:
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
-	virtual inline int64 GetCount() const	{return Null;}
+	virtual inline int64 GetCount() const	{return coeff.GetCount() > 0 ? 0 : int64(Null);}
 	
-	//void SetNumDigits(int n)				{numDigits = n;}
-	//int GetNumDigits()					{return numDigits;}
 	void SetMaxFitFunctionEvaluations(int n){maxFitFunctionEvaluations = n;}
 	int GetMaxFitFunctionEvaluations()		{return maxFitFunctionEvaluations;}
 	
@@ -70,7 +68,7 @@ public:
 protected:
 	Vector<double> coeff;
 	int degree;
-	static int /*numDigits,*/ maxFitFunctionEvaluations;
+	static int maxFitFunctionEvaluations;
 	
 	void SetNumCoeff(int num);
 	void SetCoeff(const Vector<double>& c)          {coeff = clone(c);}
@@ -428,8 +426,8 @@ public:
 	
 private:
 	struct Coeff {double a, b, c, d, x;};
-    Buffer<Coeff> coeff;
-    int ncoeff = 0;
+    Buffer<Coeff> scoeff;
+    int nscoeff = 0;
 };
 
 class SplineEquation : public ExplicitEquation, public Spline {
@@ -644,7 +642,7 @@ public:
 
 	static void EvalThrowError(CParserPP &p, const char *s);
 	
-	virtual int FindVariable(String strId) 					{return variables.Find(strId);}
+	virtual int FindVariable(String strId) const			{return variables.Find(strId);}
 		
 protected:
 	doubleUnit Exp(CParserPP& p);
@@ -703,36 +701,40 @@ public:
 		eval.EvalStr(strEquation);
 		coeff.Clear();
 		varNames.Clear();
-		for (int i = 0; i < eval.GetVariablesCount(); ++i) {
-			String varName;
-			doubleUnit dummy;
-			eval.GetVariable(i, varName, dummy);
-			varNames << varName;
-			int istr;
-			for (istr = 1; istr < parts.GetCount(); ++istr) {
-				String strVar = varName + "=";
-				int ifound = parts[istr].Find(strVar);
-				if (ifound >= 0) {
-					double val = ScanDouble(parts[istr].Mid(strVar.GetCount()));
-					coeff << val;
-					break;
+		if (eval.GetVariablesCount() == 0)
+			coeff.SetCount(1);
+		else {
+			for (int i = 0; i < eval.GetVariablesCount(); ++i) {
+				String varName;
+				doubleUnit dummy;
+				eval.GetVariable(i, varName, dummy);
+				varNames << varName;
+				int istr;
+				for (istr = 1; istr < parts.GetCount(); ++istr) {
+					String strVar = varName + "=";
+					int ifound = parts[istr].Find(strVar);
+					if (ifound >= 0) {
+						double val = ScanDouble(parts[istr].Mid(strVar.GetCount()));
+						coeff << val;
+						break;
+					}
 				}
+				if (istr == parts.GetCount())
+					coeff << 0.1;	
 			}
-			if (istr == parts.GetCount())
-				coeff << 0.1;	
 		}
 	}
 	double f(double x)  {
 		eval.SetConstant(idx, doubleUnit(x));
-		for (int i = 0; i < coeff.GetCount(); ++i) 
+		for (int i = 0; i < varNames.GetCount(); ++i) 
 			eval.AssignVariable(varNames[i], coeff[i]);
 		return eval.Eval(strEquation).val;
 	}
 	void SetName(String _name) 					    {name = _name;}
 	virtual String GetName() 						{return name;}
 	virtual String GetEquation(int numDigits = 3)	{return eval.EvalStr(strEquation, numDigits);}
-	virtual void GuessCoeff(DataSource &        ) 	{}
-	void SetDegree(int    )							{NEVER();}
+	virtual void GuessCoeff(DataSource &)		 	{}
+	void SetDegree(int)								{NEVER();}
 
 private:
 	String name;

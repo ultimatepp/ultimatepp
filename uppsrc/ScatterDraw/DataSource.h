@@ -584,7 +584,7 @@ public:
 	virtual inline double f(double x)		{return function(x);}
 	virtual double x(int64 ) 				{NEVER(); return Null;}
 	virtual double y(int64 ) 				{NEVER(); return Null;}
-	virtual inline int64 GetCount() const	{NEVER(); return Null;}
+	virtual inline int64 GetCount() const	{return 0;}
 };
 
 class FuncSourceV : public DataSource {
@@ -596,7 +596,7 @@ public:
 	virtual inline double f(double x)		{double y; function(y, x); return y;}
 	virtual double x(int64 ) 				{NEVER(); return Null;}
 	virtual double y(int64 ) 				{NEVER(); return Null;}
-	virtual inline int64 GetCount() const	{NEVER(); return Null;}
+	virtual inline int64 GetCount() const	{return 0;}
 };
 
 class FuncSourcePara : public DataSource {
