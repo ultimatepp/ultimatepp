@@ -79,7 +79,7 @@ static WString sReadLn(const wchar *p)
 		else
 			wbuf.Cat(*p++);
 	}
-	return wbuf;
+	return WString(wbuf);
 }
 
 int LastC(const wchar *b, const wchar *e)

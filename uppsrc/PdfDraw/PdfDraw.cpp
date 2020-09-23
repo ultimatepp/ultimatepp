@@ -277,7 +277,7 @@ String PdfDraw::PdfString(const char *s)
 		b.Cat(*s++);
 	}
 	b.Cat(')');
-	return b;
+	return String(b);
 }
 
 void PdfDraw::PutFontHeight(int fi, double ht)

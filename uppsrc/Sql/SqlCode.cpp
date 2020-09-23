@@ -10,7 +10,7 @@ String MakeSqlValue(int code, T& value)
 	StringBuffer b(sizeof(T) + 1);
 	b[0] = code;
 	memcpy(~b + 1, &value, sizeof(T));
-	return b;
+	return String(b);
 }
 
 template <class T>
@@ -327,7 +327,7 @@ String SqlCompile(byte dialect, const String& s)
 	b.Reserve(s.GetLength() + 100);
 	const char *q = s;
 	SqlCompile(q, &b, dialect, NULL);
-	return b;
+	return String(b);
 }
 
 #ifndef NOAPPSQL
@@ -370,7 +370,7 @@ String SqlFormat0(const char *s, int l, int code)
 	b[0] = code;
 	memcpy(~b + 1, &l, sizeof(int));
 	memcpy(~b + 1 + sizeof(int), s, l);
-	return b;
+	return String(b);
 }
 
 String SqlFormat(const char *s, int l)

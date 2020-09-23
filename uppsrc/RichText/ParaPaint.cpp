@@ -141,7 +141,7 @@ String RichObjectImageMaker::Key() const
 	RawCat(b, object.GetSerialId());
 	RawCat(b, sz);
 	RawCat(b, context);
-	return b;
+	return String(b);
 }
 
 Image RichObjectImageMaker::Make() const

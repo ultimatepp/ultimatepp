@@ -2053,7 +2053,7 @@ WString ToUnicode(const char *src, int l, byte charset)
 		return FromUtf8(src, l);
 	WStringBuffer result(l);
 	ToUnicode(result, src, l, charset);
-	return result;
+	return WString(result);
 }
 
 WString ToUnicode(const String& src, byte charset)
@@ -2068,7 +2068,7 @@ String FromUnicodeBuffer(const wchar *src, int len, byte charset, int defchar)
 		return ToUtf8(src, len);
 	StringBuffer result(len);
 	FromUnicode(result, src, len, charset, defchar);
-	return result;
+	return String(result);
 }
 
 String FromUnicodeBuffer(const wchar *src)
@@ -2094,7 +2094,7 @@ String ToCharset(byte charset, const String& src, byte scharset, int def)
 		return ToUtf8(ToUnicode(src, scharset));
 	StringBuffer result(slen);
 	ConvertCharset(result, charset, src, scharset, slen);
-	return result;
+	return String(result);
 }
 
 WString InitCaps(const wchar *s)
@@ -2125,7 +2125,7 @@ WString InitCaps(const WString& s)
 			r[i] = ToLower(c);
 		spc = !IsLeNum(c);
 	}
-	return r;
+	return WString(r);
 }
 
 WString ToUpper(const WString& w)
@@ -2133,7 +2133,7 @@ WString ToUpper(const WString& w)
 	int l = w.GetLength();
 	WStringBuffer r(l);
 	ToUpper(r, w, l);
-	return r;
+	return WString(r);
 }
 
 WString ToLower(const WString& w)
@@ -2141,7 +2141,7 @@ WString ToLower(const WString& w)
 	int l = w.GetLength();
 	WStringBuffer r(l);
 	ToLower(r, w, l);
-	return r;
+	return WString(r);
 }
 
 WString ToAscii(const WString& w)
@@ -2149,7 +2149,7 @@ WString ToAscii(const WString& w)
 	int l = w.GetLength();
 	WStringBuffer r(l);
 	ToAscii(r, w, l);
-	return r;
+	return WString(r);
 }
 
 String InitCaps(const char *s, byte charset)
@@ -2165,7 +2165,7 @@ String ToUpper(const char *s, byte charset)
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToUpper(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToLower(const char *s, byte charset)
@@ -2176,7 +2176,7 @@ String ToLower(const char *s, byte charset)
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToLower(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToAscii(const char *s, byte charset)
@@ -2187,7 +2187,7 @@ String ToAscii(const char *s, byte charset)
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToUpper(const String& s, byte charset)
@@ -2198,7 +2198,7 @@ String ToUpper(const String& s, byte charset)
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToUpper(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToLower(const String& s, byte charset)
@@ -2209,7 +2209,7 @@ String ToLower(const String& s, byte charset)
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToLower(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToAscii(const String& s, byte charset)
@@ -2220,7 +2220,7 @@ String ToAscii(const String& s, byte charset)
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToUpperAscii(const String& s, byte charset)
@@ -2231,7 +2231,7 @@ String ToUpperAscii(const String& s, byte charset)
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 String ToLowerAscii(const String& s, byte charset)
@@ -2242,7 +2242,7 @@ String ToLowerAscii(const String& s, byte charset)
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);
-	return r;
+	return String(r);
 }
 
 bool IsDoubleWidth(int c)

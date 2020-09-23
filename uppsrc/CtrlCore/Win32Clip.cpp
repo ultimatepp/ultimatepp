@@ -408,7 +408,7 @@ String sDib(const Value& image)
 	byte *p = (byte *)~b;
 	memcpy(p, &header, sizeof(header));
 	memcpy(p + sizeof(header), ~img, 4 * img.GetLength());
-	return b;
+	return String(b);
 }
 
 String sImage(const Value& image)

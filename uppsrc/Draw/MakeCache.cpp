@@ -13,7 +13,7 @@ struct scImageMaker : ValueMaker {
 		s.Cat(typeid(*m).name());
 		RawCat(s, paintonly);
 		s.Cat(m->Key());
-		return s;
+		return String(s);
 	}
 	virtual int    Make(Value& object) const {
 		Image img = m->Make();
@@ -140,7 +140,7 @@ struct sCachedRescale : public ImageMaker
 		RawCat(h, sz.cy);
 		RawCat(h, img.GetSerialId());
 		RawCat(h, filter);
-		return h;
+		return String(h);
 	}
 
 	virtual Image Make() const {
@@ -195,7 +195,7 @@ struct sColorize : public ImageMaker
 		StringBuffer h;
 		RawCat(h, color);
 		RawCat(h, img.GetSerialId());
-		return h;
+		return String(h);
 	}
 
 	virtual Image Make() const {

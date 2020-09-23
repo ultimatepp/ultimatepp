@@ -53,7 +53,7 @@ String ToUtf8(const wchar *s, int len)
 	StringBuffer r;
 	r.Reserve(len);
 	FromUtf16_([&](const wchar *, dword code) { ToUtf8_([&](char c) { r.Cat(c); }, code); }, s, len);
-	return r;
+	return String(r);
 }
 
 int Utf16Len(const dword *s, int len)
@@ -76,7 +76,7 @@ WString ToUtf16(const dword *s, int len)
 	r.Reserve(len);
 	for(const dword *lim = s + len; s < lim; s++)
 		ToUtf16_([&](wchar c) { r.Cat(c); }, *s);
-	return r;
+	return WString(r);
 }
 
 int Utf16Len(const char *s, int len)
@@ -95,7 +95,7 @@ WString ToUtf16(const char *s, int len)
 {
 	WStringBuffer r;
 	FromUtf8_([&](const byte *, dword code) { ToUtf16_([&](wchar c) { r.Cat(c); }, code); }, s, len);
-	return r;
+	return WString(r);
 }
 
 int Utf32Len(const char *s, int len)
@@ -146,7 +146,7 @@ String Utf8ToAscii(const String& src)
 	while(s < lim)
 		*t++ = (byte)*s < 128 ? *s++ : ToAscii(FetchUtf8(s, lim));
 	r.SetLength(int(t - ~r));
-	return r;
+	return String(r);
 }
 
 String Utf8ToUpperAscii(const String& src)
@@ -160,7 +160,7 @@ String Utf8ToUpperAscii(const String& src)
 		*t++ = (byte)*s <= 'Z' ? *s++ : ToUpperAscii(FetchUtf8(s, lim));
 	}
 	r.SetLength(int(t - ~r));
-	return r;
+	return String(r);
 }
 
 String Utf8ToLowerAscii(const String& src)
@@ -173,7 +173,7 @@ String Utf8ToLowerAscii(const String& src)
 	while(s < lim)
 		*t++ = ToLowerAscii(FetchUtf8(s, lim));
 	r.SetLength(int(t - ~r));
-	return r;
+	return String(r);
 }
 
 };

@@ -17,7 +17,7 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 			*t++ = *s++;
 			n--;
 		}
-		return b;
+		return WString(b);
 	}
 #endif
 	return ToUnicode(s, n, cs);

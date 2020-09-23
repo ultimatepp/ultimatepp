@@ -1707,7 +1707,7 @@ WString OracleClob::Read()
 	out.SetCount(nchars);
 	Seek(0);
 	Stream::Get(out, 2 * nchars);
-	return out;
+	return WString(out);
 }
 
 void OracleClob::Write(const WString& w)

@@ -834,7 +834,7 @@ String TcpSocket::Get(int count)
 	if(!done && IsEof())
 		return String::GetVoid();
 	out.SetLength(done);
-	return out;
+	return String(out);
 }
 
 bool  TcpSocket::GetAll(void *buffer, int len)

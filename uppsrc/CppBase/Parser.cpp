@@ -483,7 +483,7 @@ String Parser::ReadOper(bool& castoper) {
 			spc = true;
 		p++;
 	}
-	return r;
+	return String(r);
 }
 
 String Parser::Name(String& name, bool& castoper, bool& oper)

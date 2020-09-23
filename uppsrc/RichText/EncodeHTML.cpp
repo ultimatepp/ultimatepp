@@ -363,7 +363,7 @@ String DefaultHtmlObjectSaver::GetHtml(const RichObject& object, const String& l
 		PNGEncoder png;
 		png.SaveFile(AppendFileName(outdir, lname), object.ToImage(psz));
 	}
-	return html;
+	return String(html);
 }
 
 String EncodeHtml(const RichText& text, Index<String>& css,

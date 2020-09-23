@@ -48,7 +48,7 @@ String SqlSet::operator()(int at, byte cond) const {
 		return text;
 	StringBuffer out;
 	out << SqlCode(cond, "(")() << text << SqlCode(cond, ")")();
-	return out;
+	return String(out);
 }
 
 SqlSet& SqlSet::Cat(const SqlVal& val) {

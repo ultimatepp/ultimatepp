@@ -24,7 +24,7 @@ String DeXml(const char *s, byte charset, bool escapelf)
 	StringBuffer result;
 	for(; *s; s++)
 		sDeXmlChar(result, *s, charset, escapelf);
-	return result;
+	return String(result);
 }
 
 String DeXml(const char *s, const char *end, byte charset, bool escapelf)
@@ -34,7 +34,7 @@ String DeXml(const char *s, const char *end, byte charset, bool escapelf)
 	StringBuffer result;
 	for(; s < end; s++)
 		sDeXmlChar(result, *s, charset, escapelf);
-	return result;
+	return String(result);
 }
 
 String DeXml(const String& s, byte charset, bool escapelf)
@@ -51,21 +51,21 @@ String XmlHeader(const char *encoding, const char *version, const char *standalo
 	if(standalone)
 		r << " standalone=\"" << standalone << "\"";
 	r << " ?>\r\n";
-	return r;
+	return String(r);
 }
 
 String XmlPI(const char *text)
 {
 	StringBuffer r;
 	r << "<?" << text << "?>\r\n";
-	return r;
+	return String(r);
 }
 
 String XmlDecl(const char *text)
 {
 	StringBuffer r;
 	r << "<!" << text << ">\r\n";
-	return r;
+	return String(r);
 }
 
 String XmlDocType(const char *text)
@@ -82,7 +82,7 @@ String XmlComment(const char *text)
 {
 	StringBuffer out;
 	out << "<!-- " << text << " -->\r\n";
-	return out;
+	return String(out);
 }
 
 String  XmlTag::operator()()
@@ -120,7 +120,7 @@ String  XmlTag::operator()(const char *text)
 		else
 		if(first) {
 			r << text << end;
-			return r;
+			return String(r);
 		}
 		first = false;
 		wasslash = false;
@@ -142,7 +142,7 @@ String  XmlTag::operator()(const char *text)
 	if(!first)
 		r << "\r\n";
 	r << end;
-	return r;
+	return String(r);
 }
 
 String  XmlTag::Text(const char *text, byte charset)
@@ -707,7 +707,7 @@ String XmlParser::ReadTextE()
 			out.Cat(t);
 		else if(IsEnd()) {
 			PassEnd();
-			return out;
+			return String(out);
 		}
 		else
 			Skip();

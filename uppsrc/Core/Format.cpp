@@ -64,7 +64,7 @@ String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper
 	if(dwd < width)
 		memset(o, lpad, pad);
 	memcpy8(o + pad, p, dwd);
-	return out;
+	return String(out);
 }
 
 String FormatInt(int i)
@@ -382,7 +382,7 @@ String FormatDoubleExp(double d, int digits, int flags, int fill_exp)
 	}
 	out.Cat(flags & FD_CAP_E ? 'E' : 'e');
 	out.Cat(FormatIntDec(exp, fill_exp, '0', flags & FD_SIGN_EXP));
-	return out;
+	return String(out);
 }
 
 String FormatDate(Date date, const char *format, int language)
@@ -577,7 +577,7 @@ String IntFormatter(const Formatting& f)
 	StringBuffer q;
 	q.SetLength(1000);
 	q.SetLength(sprintf(q, '%' + f.format + f.id, (int)f.arg));
-	return q;
+	return String(q);
 }
 
 String Int64Formatter(const Formatting& f)
@@ -585,7 +585,7 @@ String Int64Formatter(const Formatting& f)
 	StringBuffer q;
 	q.SetLength(1000);
 	q.SetLength(sprintf(q, '%' + f.format + f.id, (int64)f.arg));
-	return q;
+	return String(q);
 }
 
 String IntLowerAlphaFormatter(const Formatting& f)
@@ -1148,7 +1148,7 @@ String DeFormat(const char *text)
 			x.Cat('%');
 		x.Cat(*text++);
 	}
-	return x;
+	return String(x);
 }
 
 }
