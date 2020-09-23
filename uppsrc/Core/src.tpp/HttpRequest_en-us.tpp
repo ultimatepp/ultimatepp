@@ -395,6 +395,11 @@ pRequest][@(0.0.255) `&]_[* SSLProxyAuth]([@(0.0.255) const]_[_^String^ String][
 Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:HttpRequest`:`:SSLProxyGET`(bool`): [_^Upp`:`:HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* SSLProxyGET]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Makes SSL use GET proxy type instead of CONNECT method.&]
+[s3;%% &]
+[s4; &]
 [s5;:HttpRequest`:`:CommonProxy`(const String`&`,int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* CommonProxy]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 host], 
 [@(0.0.255) int]_[*@3 port])&]
