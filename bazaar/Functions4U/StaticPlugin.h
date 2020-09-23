@@ -47,12 +47,6 @@ public:
 	}
 	bool _Init(const char *_name, const char *_type);
 	
-	#if defined(__MINGW32__)
-		__attribute__ ((deprecated))
-	#else
-		;
-	#endif
-
 	String &GetType() {return name;};
 	String &GetName() {return name;};
 };
