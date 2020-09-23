@@ -123,9 +123,6 @@ public:
 	void SetDisplay(const Display& d);
 };
 
-// BWC
-typedef ImageCtrl Icon;
-
 class DrawingCtrl : public Ctrl {
 public:
 	virtual void   Paint(Draw& w);
@@ -148,6 +145,10 @@ public:
 
 	DrawingCtrl();
 };
+
+// BWC
+typedef ImageCtrl Icon;
+typedef DrawingCtrl Picture;
 
 class SeparatorCtrl : public Ctrl {
 public:
