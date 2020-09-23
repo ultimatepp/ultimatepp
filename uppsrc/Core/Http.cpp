@@ -68,6 +68,7 @@ void HttpRequest::Init()
 	content_length = 0;
 	chunked_encoding = false;
 	waitevents = 0;
+	ssl_get_proxy = false;
 }
 
 HttpRequest::HttpRequest()
@@ -445,20 +446,21 @@ void HttpRequest::Start()
 	body.Clear();
 	WhenStart();
 
-	bool use_proxy = !IsNull(ssl ? ssl_proxy_host : proxy_host);
+	bool ssl_connect = ssl && !ssl_get_proxy;
+	bool use_proxy = !IsNull(ssl_connect ? ssl_proxy_host : proxy_host);
 
-	int p = use_proxy ? (ssl ? ssl_proxy_port : proxy_port) : port;
+	int p = use_proxy ? (ssl_connect ? ssl_proxy_port : proxy_port) : port;
 	if(!p)
-		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
-	String h = use_proxy ? ssl ? ssl_proxy_host : proxy_host : host;
-	LLOG("Using " << (use_proxy ? "proxy " : "") << h << ":" << p);
-	
+		p = ssl_connect ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
+	phost = use_proxy ? ssl_connect ? ssl_proxy_host : proxy_host : host;
+	LLOG("Using " << (use_proxy ? "proxy " : "") << phost << ":" << p);
+
 	SSLServerNameIndication(host);
 
 	StartPhase(DNS);
 	if(IsNull(GetTimeout()) && timeout == INT_MAX) {
 		if(WhenWait) {
-			addrinfo.Start(h, p);
+			addrinfo.Start(phost, p);
 			while(addrinfo.InProgress()) {
 				Sleep(GetWaitStep());
 				WhenWait();
@@ -467,11 +469,11 @@ void HttpRequest::Start()
 			}
 		}
 		else
-			addrinfo.Execute(h, p);
+			addrinfo.Execute(phost, p);
 		StartConnect();
 	}
 	else
-		addrinfo.Start(h, p);
+		addrinfo.Start(phost, p);
 }
 
 void HttpRequest::Dns()
@@ -493,7 +495,7 @@ void HttpRequest::StartConnect()
 	if(!Connect(addrinfo))
 		return;
 	addrinfo.Clear();
-	if(ssl && ssl_proxy_host.GetCount()) {
+	if(ssl && ssl_proxy_host.GetCount() && !ssl_get_proxy) {
 		StartPhase(SSLPROXYREQUEST);
 		waitevents = WAIT_WRITE;
 		String host_port = host;
@@ -530,9 +532,9 @@ void HttpRequest::ProcessSSLProxyResponse()
 void HttpRequest::AfterConnect()
 {
 	LLOG("HTTP AfterConnect");
-	if(ssl && !StartSSL())
+	if(ssl && !ssl_get_proxy && !StartSSL())
 		return;
-	if(ssl)
+	if(ssl && !ssl_get_proxy)
 		StartPhase(SSLHANDSHAKE);
 	else
 		StartRequest();
@@ -556,8 +558,8 @@ void HttpRequest::StartRequest()
 	if(port)
 		host_port << ':' << port;
 	String url;
-	url << "http://" << host_port << Nvl(path, "/");
-	if(!IsNull(proxy_host) && !ssl)
+	url << (ssl && ssl_get_proxy ? "https://" : "http://") << host_port << Nvl(path, "/");
+	if(!IsNull(proxy_host) && (!ssl || ssl_get_proxy))
 		data << url;
 	else {
 		if(*path != '/')
@@ -575,7 +577,7 @@ void HttpRequest::StartRequest()
 	}
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
-		     << "Host: " << host_port << "\r\n"
+		     << "Host: " << (ssl_get_proxy ? phost : host_port) << "\r\n"
 		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n")
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
@@ -586,7 +588,7 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
-	VectorMap<String, Tuple<String, int>> cms;
+	VectorMap<String, Tuple<String, int> > cms;
 	for(int i = 0; i < cookies.GetCount(); i++) {
 		const HttpCookie& c = cookies[i];
 		if(host.EndsWith(c.domain) && path.StartsWith(c.path)) {
