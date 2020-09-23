@@ -5,7 +5,7 @@ END_LAYOUT
 
 LAYOUT(EditFileFolder, 468, 200)
 	ITEM(StaticImage, clipImage, SetBackground(Color(229, 229, 229)).SetFrame(ThinInsetFrame()).HSizePosZ(260, 8).VSizePosZ(8, 12))
-	ITEM(EditFile, FileName, LeftPosZ(8, 240).TopPosZ(28, 19))
+	ITEM(EditFile, fileName, LeftPosZ(8, 240).TopPosZ(28, 19))
 	ITEM(Label, dv___2, SetLabel(t_("Insert image name")).LeftPosZ(8, 240).TopPosZ(8, 19))
 	ITEM(DropList, imageFit, LeftPosZ(56, 84).TopPosZ(76, 19))
 	ITEM(Label, dv___4, SetLabel(t_("SetFit")).LeftPosZ(8, 48).TopPosZ(76, 19))
