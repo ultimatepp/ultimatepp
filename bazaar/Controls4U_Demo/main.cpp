@@ -73,10 +73,10 @@ GUI_APP_MAIN {
 EditFileFolder_Demo::EditFileFolder_Demo() {
 	CtrlLayout(*this);
 
-	FileName.ActiveDir(GetDesktopFolder());
-	FileName.Type("Image files", "*.png, *.jpg, *.jpeg, *.tif*, *.bmp, *.gif");
-	FileName.AllFilesType();
-	FileName.WhenChange = THISBACK(OnNewFile);
+	fileName.ActiveDir(GetDesktopFolder());
+	fileName.Type("Image files", "*.png, *.jpg, *.jpeg, *.tif*, *.bmp, *.gif");
+	fileName.AllFilesType();
+	fileName.WhenChange = [=]{return OnNewFile();};
 	angleList.Add(0, "0º").Add(1, "90º").Add(2, "180º").Add(3, "270º").SetData(0);
 	angleList.WhenAction = THISBACK(ChangeProperties);
 	imageFit.Add(0, "BestFit").Add(1, "FillFrame").Add(2, "NoScale").Add(3, "RepeatToFill").SetData(0);
@@ -85,8 +85,8 @@ EditFileFolder_Demo::EditFileFolder_Demo() {
 	back.Set(Images::paper());
 }
 bool EditFileFolder_Demo::OnNewFile() {
-	if (!clipImage.Set(~FileName)) {
-		if (FileExists(~FileName)) {
+	if (!clipImage.Set(~fileName)) {
+		if (FileExists(~fileName)) {
 			Exclamation("File not found");
 			return false;
 		} else {	
