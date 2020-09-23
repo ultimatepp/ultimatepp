@@ -80,8 +80,9 @@ bool Patch::Load(Stream& in, Progress& pi)
 		common_path.Trim(MatchLen(common_path, h[i]));
 	common_path.TrimEnd("/");
 	common_path.TrimStart("/");
-	for(int i = 0; i < h.GetCount(); i++)
-		file.SetKey(i, h[i].Mid(common_path.GetCount() + 1));
+	if(common_path.GetCount())
+		for(int i = 0; i < h.GetCount(); i++)
+			file.SetKey(i, h[i].Mid(common_path.GetCount() + 1));
 	return true;
 }
 
@@ -114,26 +115,30 @@ bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
 	int best = 0;
 	String com_path = common_path;
 	com_path.Replace("\\", "/");
-	while(com_path.GetCount()) {
-		for(String d : dir) {
-			while(d.GetCount() > 3) {
-				if(pi.StepCanceled())
-					return false;
-				String dir = AppendFileName(d, com_path);
-				int n = MatchCount(dir);
-				if(n > best) {
-					best = n;
-					target_dir = dir;
+	if(dir.GetCount())
+		for(int pass = 0; pass < 2; pass++) {
+			while(com_path.GetCount()) {
+				for(String d : dir) {
+					while(d.GetCount() > 3) {
+						if(pi.StepCanceled())
+							return false;
+						String dir = AppendFileName(d, com_path);
+						int n = MatchCount(dir);
+						if(n > best) {
+							best = n;
+							target_dir = dir;
+						}
+						d = GetFileFolder(d);
+					}
 				}
-				d = GetFileFolder(d);
+				int q = com_path.Find('/');
+				if(q >= 0)
+					com_path = com_path.Mid(q + 1);
+				else
+					break;
 			}
+			com_path = GetFileFolder(dir[0]);
 		}
-		int q = com_path.Find('/');
-		if(q >= 0)
-			com_path = com_path.Mid(q + 1);
-		else
-			break;
-	}
 	return best;
 }
 
