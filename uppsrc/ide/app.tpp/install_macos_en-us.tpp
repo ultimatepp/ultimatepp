@@ -18,12 +18,13 @@ ere].&]
 [s3; Some other tools and libraries can be installed with [^https`:`/`/brew`.sh`/^ home
 brew]. Following packages are recommended (as in they might be 
 required in certain contexts):&]
-[s3;i150;O0;%- gdb&]
-[s3;i150;O0;%- openssl&]
-[s3;i150;O0;%- libssh2&]
+[s3;l128;i150;O0;%- gdb&]
+[s3;l128;i150;O0;%- openssl&]
+[s3;l128;i150;O0;%- libssh2&]
 [s3; As long as you keep [*/ theide ](or [*/ umk]) just in the original 
 directory, nothing will be written outside of it `- its `"sandboxed`". 
 If you get bored with U`+`+ and need to clean the space, simply 
 delete the `"upp`" folder.&]
 [s3; If you move theide e.g. to [/ `~/bin], it will start to write 
-things to[/  `~/.config ]and [/ `~/.cache].]]
+things to[/  `~/.config ]and [/ `~/.cache].&]
+[s3; ]]
