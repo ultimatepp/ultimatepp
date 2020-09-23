@@ -532,7 +532,7 @@ String BrcToC(CParser& binscript, String basedir)
 			"int " << ident << "_length = " << b_length << ";\n\n";
 		}
 	}
-	return fo;
+	return String(fo);
 }
 
 void CopyFile(const String& d, const String& s, bool brc)

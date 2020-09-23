@@ -678,7 +678,7 @@ WString TextCtrl::GetW(int64 pos, int size) const
 		if(size == 0) break;
 		pos = 0;
 	}
-	return r;
+	return WString(r);
 }
 
 String TextCtrl::Get(int64 pos, int size, byte charset) const
@@ -707,7 +707,7 @@ String TextCtrl::Get(int64 pos, int size, byte charset) const
 			if(size == 0) break;
 			pos = 0;
 		}
-		return r;
+		return String(r);
 	}
 	return FromUnicode(GetW(pos, size), charset);
 }

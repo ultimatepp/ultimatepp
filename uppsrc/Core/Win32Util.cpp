@@ -61,7 +61,7 @@ String AsString(const wchar_t *buffer, int count) { // Convert with code page...
 	StringBuffer temp(count);
 	for(char *p = temp, *e = p + count; p < e;)
 		*p++ = (char)*buffer++;
-	return temp;
+	return String(temp);
 }
 
 String AsString(const wchar_t *buffer, const wchar_t *end) {
@@ -90,7 +90,7 @@ String GetWinRegString(const char *value, const char *path, HKEY base_key, dword
 		len--;
 	raw_len.SetLength(len);
 	RegCloseKey(key);
-	return raw_len;
+	return String(raw_len);
 }
 
 int GetWinRegInt(const char *value, const char *path, HKEY base_key, dword wow) {

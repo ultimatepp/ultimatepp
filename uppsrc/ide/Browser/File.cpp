@@ -97,7 +97,7 @@ String WriteTopic(const char *title, const RichText& text)
 	StringBuffer r;
 	r << "topic " << AsCString(title) << ";\r\n";
 	r << AsQTF(text, CHARSET_UTF8, QTF_BODY|QTF_ALL_STYLES|QTF_CRLF);
-	return r;
+	return String(r);
 }
 
 String WriteTopicI(const char *title, const RichText& text)
@@ -121,7 +121,7 @@ String WriteTopicI(const char *title, const RichText& text)
 			r << "\r\n";
 	}
 	r << "\r\n\r\n";
-	return r;
+	return String(r);
 }
 
 void SaveGroupInc(const String& grouppath)

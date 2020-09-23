@@ -562,7 +562,7 @@ String DeQtf(const char *s) {
 			r.Cat(*s);
 		}
 	}
-	return r;
+	return String(r);
 }
 
 String DeQtfLf(const char *s) {
@@ -580,7 +580,7 @@ String DeQtfLf(const char *s) {
 			r.Cat("-|");
 		s++;
 	}
-	return r;
+	return String(r);
 }
 
 RichText AsRichText(const RichObject& obj)

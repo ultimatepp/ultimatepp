@@ -216,7 +216,7 @@ String WriteIcon(const Vector<Image>& icons, int flags)
 			Poke32le(entry + OFFSETOF(BMP_ICONDIRENTRY, dwImageOffset), out_offset);
 		}
 	}
-	return out;
+	return String(out);
 }
 
 }

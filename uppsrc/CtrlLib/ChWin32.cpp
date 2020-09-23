@@ -194,7 +194,7 @@ struct Win32ImageMaker : ImageMaker {
 		RawCat(key, part);
 		RawCat(key, state);
 		RawCat(key, sz);
-		return key;
+		return String(key);
 	}
 	virtual Image Make() const {
 		Rect rr(sz);

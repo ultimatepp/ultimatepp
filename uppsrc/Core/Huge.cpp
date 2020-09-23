@@ -41,7 +41,7 @@ String Huge::Get() const
 		Panic("String is too big!");
 	StringBuffer sb((int)size);
 	Get(~sb, 0, size);
-	return sb;
+	return String(sb);
 }
 
 }
