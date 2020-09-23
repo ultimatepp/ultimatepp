@@ -15,7 +15,7 @@ LAYOUT(Tab1Basic, 428, 296)
 END_LAYOUT
 
 LAYOUT(Tab2Functions, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetPlotAreaRightMargin(130).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-120).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(130).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-120).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab3ParametricFunctions, 384, 284)
@@ -23,11 +23,11 @@ LAYOUT(Tab3ParametricFunctions, 384, 284)
 END_LAYOUT
 
 LAYOUT(Tab4Formatting, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab5Dynamic, 400, 288)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Dynamic")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(10).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("time")).SetLabelY(t_("Electric circuit performance")).SetTitleFont(StdFontZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(10).SetLegendPosY(10).HSizePosZ(16, 12).VSizePosZ(12, 36))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Dynamic")).SetPlotAreaLeftMargin(60).SetPlotAreaRightMargin(10).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("time")).SetLabelY(t_("Electric circuit performance")).SetTitleFont(StdFontZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(10).SetLegendPosY(10).HSizePosZ(16, 12).VSizePosZ(12, 36))
 	ITEM(Button, bStart, SetLabel(t_("Start")).LeftPosZ(16, 42).BottomPosZ(5, 23))
 	ITEM(Button, bStop, SetLabel(t_("Stop")).LeftPosZ(64, 42).BottomPosZ(5, 23))
 	ITEM(Button, bReset, SetLabel(t_("Reset")).LeftPosZ(112, 42).BottomPosZ(5, 23))
@@ -50,7 +50,7 @@ LAYOUT(Tab7Operations, 388, 300)
 END_LAYOUT
 
 LAYOUT(Tab8Secondary, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(70).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(50).SetLabelX(t_("Month")).SetLabelY(t_("Legend Y")).SetLabelY2(t_("Legend Y2")).SetLabelsFont(SansSerifZ(11)).SetTitleFont(SansSerifZ(15).Bold()).SetLegendAnchor(2).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetPlotAreaLeftMargin(60).SetPlotAreaRightMargin(70).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(50).SetLabelX(t_("Month")).SetLabelY(t_("Legend Y")).SetLabelY2(t_("Legend Y2")).SetLabelsFont(SansSerifZ(11)).SetTitleFont(SansSerifZ(15).Bold()).SetLegendAnchor(2).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab9Big, 380, 348)
@@ -61,11 +61,11 @@ LAYOUT(Tab9Big, 380, 348)
 END_LAYOUT
 
 LAYOUT(Tab10User, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User graph")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User graph")).SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(TabUserEquation, 672, 276)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User equation")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 28))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User equation")).SetPlotAreaLeftMargin(60).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 28))
 	ITEM(Label, dv___1, SetLabel(t_("to")).RightPosZ(140, 16).BottomPosZ(3, 21))
 	ITEM(Label, dv___2, SetLabel(t_("from y =")).RightPosZ(204, 44).BottomPosZ(3, 21))
 	ITEM(Label, dv___3, SetLabel(t_("User equation y = f(x) =")).LeftPosZ(8, 116).BottomPosZ(3, 21))
@@ -95,7 +95,7 @@ LAYOUT(Tab12Linked, 456, 464)
 END_LAYOUT
 
 LAYOUT(TabRangePlot, 420, 236)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabSurf, 468, 292)
@@ -113,20 +113,20 @@ LAYOUT(TabSurf, 468, 292)
 END_LAYOUT
 
 LAYOUT(TabStackedPlot, 420, 244)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Stacked Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 20))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Stacked Plot")).SetPlotAreaLeftMargin(60).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 20))
 	ITEM(Switch, type, SetLabel(t_("Stacked\nStacked100")).LeftPosZ(4, 160).BottomPosZ(2, 16))
 END_LAYOUT
 
 LAYOUT(TabBubblePlot, 420, 236)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Bubble Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Bubble Plot")).SetPlotAreaLeftMargin(80).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabUserPaint, 428, 296)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("User paint")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 4))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User paint")).SetPlotAreaLeftMargin(60).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
-	ITEM(PieCtrl, chart, SetLegendBackColor(Color(229, 229, 229)).SetLegendLeft(20).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
+	ITEM(PieCtrl, chart, SetLegendLeft(20).SetLegendBackColor(Color(229, 229, 229)).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
 	ITEM(Label, dv___1, SetLabel(t_(" EXPERIMENTAL")).SetFrame(ThinInsetFrame()).LeftPosZ(8, 84).TopPosZ(8, 24))
 END_LAYOUT
 
