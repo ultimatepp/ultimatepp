@@ -103,6 +103,8 @@ T_("Warning in compiler messages")
 
 T_("Current line highlight")
 
+T_("Current column highlight")
+
 T_("Whitespaces")
 
 T_("Misplaced tabs and spaces")
@@ -191,6 +193,8 @@ T_("Replace")
 T_("RegEx")
 
 T_("Cancel")
+
+T_("Replace\nRemove lines without pattern\nRemove lines with pattern")
 
 
 // Obsolete
