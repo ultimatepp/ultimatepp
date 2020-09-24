@@ -1,13 +1,14 @@
 LAYOUT(SelectPackageLayout, 740, 432)
 	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 60))
 	ITEM(DataPusher, description, HSizePosZ(4, 4).BottomPosZ(36, 20))
-	ITEM(ProgressIndicator, progress, HSizePosZ(380, 240).BottomPosZ(9, 15))
+	ITEM(ProgressIndicator, progress, HSizePosZ(360, 260).BottomPosZ(9, 15))
 	ITEM(DropList, filter, LeftPosZ(4, 156).BottomPosZ(9, 19))
 	ITEM(EditString, search, LeftPosZ(164, 124).BottomPosZ(9, 19))
 	ITEM(Option, brief, SetLabel(t_("Brief list")).LeftPosZ(296, 76).BottomPosZ(8, 20))
 	ITEM(Button, newu, SetLabel(t_("&New package")).RightPosZ(142, 90).BottomPosZ(6, 22))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(74, 64).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(6, 64).BottomPosZ(6, 22))
+	ITEM(Button, help, SetLabel(t_("?")).Tip(t_("What is this dialog?")).LeftPosZ(484, 20).TopPosZ(404, 22))
 END_LAYOUT
 
 LAYOUT(ConfigLayout, 724, 214)
