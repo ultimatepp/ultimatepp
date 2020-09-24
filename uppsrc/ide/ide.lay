@@ -7,7 +7,7 @@ LAYOUT(SelectPackageLayout, 740, 432)
 	ITEM(Option, brief, SetLabel(t_("Brief list")).Tip(t_("If set, displays simplify packages list. Otherwise, the detailed list is shown.")).LeftPosZ(296, 68).BottomPosZ(8, 20))
 	ITEM(Button, newu, SetLabel(t_("&New package")).Tip(t_("Create new package in the currently selected assembly.")).RightPosZ(142, 90).BottomPosZ(6, 22))
 	ITEM(Button, ok, SetLabel(t_("OK")).Tip(t_("Open selected package.")).RightPosZ(74, 64).BottomPosZ(6, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(6, 64).BottomPosZ(6, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).Tip(t_("Cancel package selection.")).RightPosZ(6, 64).BottomPosZ(6, 22))
 	ITEM(Button, help, SetLabel(t_("?")).Tip(t_("Learn more about packages, assemblies and nests.. (Highly recommended for all U++ beginners)")).RightPosZ(236, 20).BottomPosZ(6, 22))
 END_LAYOUT
 
