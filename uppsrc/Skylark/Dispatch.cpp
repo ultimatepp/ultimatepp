@@ -96,7 +96,7 @@ String MakeLink0(int q, const Vector<Value>& arg)
 		return String();
 	StringBuffer out;
 	MakeLink(out, sLinkMap()[q], arg);
-	return out;
+	return String(out);
 }
 
 String MakeLink(const HandlerId& id, const Vector<Value>& arg)

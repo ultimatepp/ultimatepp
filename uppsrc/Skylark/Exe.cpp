@@ -354,7 +354,7 @@ String EscapeHtml(const String& s)
 {
 	StringBuffer out;
 	EscapeHtml(out, s);
-	return out;
+	return String(out);
 }
 
 force_inline
