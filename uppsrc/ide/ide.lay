@@ -8,7 +8,7 @@ LAYOUT(SelectPackageLayout, 740, 432)
 	ITEM(Button, newu, SetLabel(t_("&New package")).RightPosZ(142, 90).BottomPosZ(6, 22))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(74, 64).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(6, 64).BottomPosZ(6, 22))
-	ITEM(Button, help, SetLabel(t_("?")).Tip(t_("What is this dialog?")).LeftPosZ(484, 20).TopPosZ(404, 22))
+	ITEM(Button, help, SetLabel(t_("?")).Tip(t_("What is this dialog?")).RightPosZ(236, 20).BottomPosZ(6, 22))
 END_LAYOUT
 
 LAYOUT(ConfigLayout, 724, 214)
