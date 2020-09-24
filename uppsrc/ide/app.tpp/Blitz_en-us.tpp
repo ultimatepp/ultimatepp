@@ -90,7 +90,7 @@ compile without BLITZ):&]
 `_`_LINE`_`_))&]
 [s7; #else&]
 [s7; #define STATIC`_ID            MK`_`_s`_(`_`_LINE`_`_)&]
-[s0; [C@5;1 -|#endif]]}}&]
+[s0;l320; [C@5;1 #endif]]}}&]
 [s0; &]
 [s3;:2: 2. Precompiled headers&]
 [s5; [^http`:`/`/en`.wikipedia`.org`/wiki`/Precompiled`_header^ Precompiled 
