@@ -292,7 +292,7 @@ struct StatementExecutor { // Deprecated, use SqlPerformScript
 	virtual ~StatementExecutor() {}
 };
 
- // Deprecated, use SqlPerforScript
+ // Deprecated, use SqlPerformScript
 typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate<int, int> progress_canceled);
 
 class AppSql;
@@ -489,6 +489,8 @@ public:
 	~SqlMassInsert();
 };
 
+#ifndef NOAPPSQL
+
 template <class T>
 void SqlLoadTable(T& t, SqlId table, SqlId key = SqlId("ID"))
 {
@@ -536,6 +538,8 @@ void operator*=(VectorMap<K, V>& map, SqlSelect select)
 	while(sql.Fetch())
 		map.Add(sql[0], sql[1]);
 }
+
+#endif
 
 // Deprecated, use SqlPerformScript instead
 struct StdStatementExecutor : StatementExecutor {

@@ -43,7 +43,7 @@ public:
 #ifndef NOAPPSQL
 bool OraclePerformScript(const String& text, StatementExecutor& se = SQLStatementExecutor(), Gate<int, int> progress_canceled = false);
 #else
-bool OraclePerformScript(const String& text, StatementExecutor& se, Gate2<int, int> progress_canceled = false);
+bool OraclePerformScript(const String& text, StatementExecutor& se, Gate<int, int> progress_canceled = false);
 #endif
 
 Vector<String> OracleSchemaUsers(Sql& cursor);
