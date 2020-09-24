@@ -68,7 +68,7 @@ const char *OciParseString(const char *s) {
 
 String OciParseStringError(const char *s) {
 	String err = "Parse error: unterminated string ";
-	int l = strlen(s);
+	int l = (int)strlen(s);
 	enum { SAMPLE = 10 };
 	if(l <= SAMPLE)
 		err.Cat(s, l);
@@ -96,7 +96,7 @@ int OciParse(const char *statement, String& out, OciSqlConnection *conn, SqlSess
 					session -> SetError(OciParseStringError(b), statement);
 				return -1;
 			}
-			cmd.Cat(b, s - b);
+			cmd.Cat(b, int(s - b));
 		}
 		else if(*s == '?') {
 			++s;

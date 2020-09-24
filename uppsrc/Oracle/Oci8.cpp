@@ -1198,7 +1198,7 @@ void OCI8Connection::Clear() {
 			static char close[] = "begin close :1; end;";
 			bool err = false;
 			OCIBind *bind = 0;
-			err = oci8.OCIStmtPrepare(aux, errhp, (OraText *)close, strlen(close), OCI_NTV_SYNTAX, OCI_DEFAULT)
+			err = oci8.OCIStmtPrepare(aux, errhp, (OraText *)close, (ub4)strlen(close), OCI_NTV_SYNTAX, OCI_DEFAULT)
 				|| oci8.OCIBindByPos(aux, &bind, errhp, 1, &stmthp, 0, SQLT_RSET, 0, 0, 0, 0, 0, OCI_DEFAULT)
 				|| oci8.OCIStmtExecute(SvcCtx(), aux, errhp, 1, 0, 0, 0, OCI_DEFAULT);
 			if(err)
@@ -1312,7 +1312,7 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 		return false;
 	}
 	LLOG("Attributes allocated -> OCIServerAttach");
-	if(oci8.OCIServerAttach(srvhp, errhp, (byte *)db, strlen(db), 0)) {
+	if(oci8.OCIServerAttach(srvhp, errhp, (byte *)db, (sb4)strlen(db), 0)) {
 		SetOciError(NFormat(t_("Connecting to server '%s'"), db), errhp);
 		Logoff();
 		return false;
@@ -1321,8 +1321,8 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 	in_server = true;
 	sword retcode;
 	if(oci8.OCIAttrSet(svchp, OCI_HTYPE_SVCCTX, srvhp, 0, OCI_ATTR_SERVER, errhp)
-	|| oci8.OCIAttrSet(seshp, OCI_HTYPE_SESSION, (byte *)name, strlen(name), OCI_ATTR_USERNAME, errhp)
-	|| oci8.OCIAttrSet(seshp, OCI_HTYPE_SESSION, (byte *)pwd, strlen(pwd), OCI_ATTR_PASSWORD, errhp)
+	|| oci8.OCIAttrSet(seshp, OCI_HTYPE_SESSION, (byte *)name, (ub4)strlen(name), OCI_ATTR_USERNAME, errhp)
+	|| oci8.OCIAttrSet(seshp, OCI_HTYPE_SESSION, (byte *)pwd, (ub4)strlen(pwd), OCI_ATTR_PASSWORD, errhp)
 	|| oci8.OCIAttrSet(svchp, OCI_HTYPE_SVCCTX, seshp, 0, OCI_ATTR_SESSION, errhp)
 	|| (retcode = oci8.OCISessionBegin(svchp, errhp, seshp, OCI_CRED_RDBMS, OCI_DEFAULT)) != OCI_SUCCESS
 	&& retcode != OCI_SUCCESS_WITH_INFO) {
