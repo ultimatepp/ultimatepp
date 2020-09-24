@@ -340,7 +340,7 @@ fn DrawClassName(w, r, text)
 }
 
 ctrl ParentCtrl {
-	group "Static";
+	group "Special";
 
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 24); }
@@ -386,7 +386,7 @@ ctrl DrawingCtrl {
 		r = GetRect();
 		DrawCtrlFrame(w, r, .SetFrame);
 		DrawBorder(w, r, :SGray, :SGray);
-		DrawClassName(w, r, "ImageCtrl");
+		DrawClassName(w, r, "DrawingCtrl");
 	}
 	Sample() {}
 };
