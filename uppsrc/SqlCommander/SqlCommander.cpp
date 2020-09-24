@@ -1,4 +1,3 @@
-#include <OleDB/OleDB.h>
 #include <SqlCtrl/SqlCtrl.h>
 
 #define HAVE_ORACLE
@@ -19,6 +18,7 @@
 
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 	#define HAVE_OLEDB
+	#include <OleDB/OleDB.h>
 #endif
 
 #ifdef HAVE_ORACLE
@@ -118,7 +118,7 @@ void SqlCommanderApp::Run() {
 				Exclamation(NFormat("OCI7 login failed: [* \1%s\1].", oci7->GetLastError()));
 				continue;
 			}
-			session = -oci7;
+			session = pick(oci7);
 		}
 		if(co == "OCI8") {
 			One<Oracle8> oci8 = new Oracle8;
@@ -126,7 +126,7 @@ void SqlCommanderApp::Run() {
 				Exclamation(NFormat("OCI8 login failed: [* \1%s\1].", oci8->GetLastError()));
 				continue;
 			}
-			session = -oci8;
+			session = pick(oci8);
 		}
 #endif
 #ifdef HAVE_MYSQL
@@ -136,7 +136,7 @@ void SqlCommanderApp::Run() {
 				Exclamation(NFormat("MySql login failed: [* \1%s\1].", mysql->GetLastError()));
 				continue;
 			}
-			session = -mysql;
+			session = pick(mysql);
 		}
 #endif
 #ifdef HAVE_POSTGRESQL
@@ -159,7 +159,7 @@ void SqlCommanderApp::Run() {
 			if(!IsNull(db))
 				conninfo << "dbname='" << db << "' ";
 			postgres->Open(conninfo);
-			session = -postgres;
+			session = pick(postgres);
 		}
 #endif
 #ifdef HAVE_SQLLITE
@@ -169,7 +169,7 @@ void SqlCommanderApp::Run() {
 				Exclamation(NFormat("SQLite3 open failed, (db file = [* \1%s\1]): [* \1%s\1].", db, sqlite->GetLastError()));
 				continue;
 			}
-			session = -sqlite;
+			session = pick(sqlite);
 		}
 #endif
 #ifdef HAVE_OLEDB
@@ -180,7 +180,7 @@ void SqlCommanderApp::Run() {
 				Exclamation(NFormat("OleDB login failed: [* \1%s\1].", oledb->GetLastError()));
 				continue;
 			}
-			session = -oledb;
+			session = pick(oledb);
 		}
 #endif
 		if(!session)
@@ -195,11 +195,7 @@ void SqlCommanderApp::Run() {
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
-//	SetLanguage(LNGC_('E', 'N', 'U', 'S', CHARSET_WIN1252));
 	SetLanguage(LNGC_('C', 'S', 'C', 'Z', CHARSET_WIN1250));
-//	SetDefaultCharset(CHARSET_WIN1250);
-//	Draw::XLFDArialFont = "-*-helvetica-*-*-*-*-*-*-*-*-*-*-*-*";
-//	Draw::SetStdFont(Arial(12));
 	SqlCommanderApp().Run();
 }
 #endif//flagMAIN
