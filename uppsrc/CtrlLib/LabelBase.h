@@ -84,9 +84,9 @@ public:
 	LabelBase&  AlignCenter()                                { return SetAlign(ALIGN_CENTER); }
 	LabelBase&  AlignRight()                                 { return SetAlign(ALIGN_RIGHT); }
 	LabelBase&  SetVAlign(int align);
-	LabelBase&  AlignTop()                                   { return SetAlign(ALIGN_TOP); }
-	LabelBase&  AlignVCenter()                               { return SetAlign(ALIGN_CENTER); }
-	LabelBase&  AlignBottom()                                { return SetAlign(ALIGN_BOTTOM); }
+	LabelBase&  AlignTop()                                   { return SetVAlign(ALIGN_TOP); }
+	LabelBase&  AlignVCenter()                               { return SetVAlign(ALIGN_CENTER); }
+	LabelBase&  AlignBottom()                                { return SetVAlign(ALIGN_BOTTOM); }
 	LabelBase&  SetImage(const Image& bmp, int spc = 0, bool never_hide = false)
 	{ SetLeftImage(bmp, spc, never_hide); return *this; }
 	LabelBase&  NoWrap(bool b = true);
