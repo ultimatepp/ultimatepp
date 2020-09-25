@@ -360,15 +360,15 @@ public:
 
 class EigenVector : public DataSource {
 private:
-	const Eigen::VectorXd *yData, *xData, *zData;
+	const Eigen::VectorXd *xData, *yData, *zData;
 	double x0, deltaX;
 	
 public:
 	EigenVector(const Eigen::VectorXd &_yData, double _x0, double _deltaX) : yData(&_yData), x0(_x0), deltaX(_deltaX) {xData = nullptr;}
-	EigenVector(const Eigen::VectorXd &_yData, const Eigen::VectorXd &_xData) : yData(&_yData), xData(&_xData) {zData = nullptr; x0 = deltaX = 0;}
-	EigenVector(const Eigen::VectorXd &_yData, const Eigen::VectorXd &_xData, const Eigen::VectorXd &_zData) : yData(&_yData), xData(&_xData), zData(&_zData) {x0 = deltaX = 0;}
-	virtual inline double y(int64 id)  	{return (*yData)(Eigen::Index(id));}
+	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData) : xData(&_xData), yData(&_yData) {zData = nullptr; x0 = deltaX = 0;}
+	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData, const Eigen::VectorXd &_zData) : xData(&_xData), yData(&_yData), zData(&_zData) {x0 = deltaX = 0;}
 	virtual inline double x(int64 id)  	{return xData ? (*xData)(Eigen::Index(id)) : id*deltaX + x0;}
+	virtual inline double y(int64 id)  	{return (*yData)(Eigen::Index(id));}
 	virtual double znFixed(int n, int64 id) {
 		if (n == 0)
 			return (*zData)(Eigen::Index(id));
@@ -502,6 +502,29 @@ public:
 	virtual int GetznFixedCount() const		{return idsFixed.GetCount();}
 };
 
+class VectorXY : public DataSource {
+private:
+	const Vector<double> *xData, *yData;
+
+public:
+	VectorXY(const Vector<double> &_xData, Vector<double> &_yData) : xData(&_xData), yData(&_yData) {}
+	virtual inline double x(int64 id) 		{return (*xData)[int(id)];}
+	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
+	virtual inline int64 GetCount()	 const	{return min(xData->GetCount(), yData->GetCount());}
+};
+
+class ArrayXY : public DataSource {
+private:
+	const Upp::Array<double> *xData, *yData;
+
+public:
+	ArrayXY(const Upp::Array<double> &_xData, Upp::Array<double> &_yData) : xData(&_xData), yData(&_yData) {}
+	virtual inline double x(int64 id) 		{return (*xData)[int(id)];}
+	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
+	virtual inline int64 GetCount() const	{return min(xData->GetCount(), yData->GetCount());}
+};
+
+/* Replaced by VectorXY and ArrayXY
 class VectorDouble : public DataSource {
 private:
 	const Vector<double> *xData, *yData;
@@ -522,7 +545,7 @@ public:
 	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 		{return (*xData)[int(id)];}
 	virtual inline int64 GetCount() const	{return min(xData->GetCount(), yData->GetCount());}
-};
+};*/
 
 class VectorPointf : public DataSource {
 private:
@@ -1003,7 +1026,9 @@ typename T::PlainObject Convolution2D(const Eigen::MatrixBase<T>& orig, const Ei
 		dest *= factor;
 	return dest;
 }
-	
+
+//#include "deprecated.h"
+
 }
 
 #endif

@@ -479,11 +479,11 @@ public:
 	ScatterDraw &AddSeries(Eigen::VectorXd &yData, double x0, double deltaX)
 														{return AddSeries<EigenVector>(yData, x0, deltaX);}
 	ScatterDraw &AddSeries(Eigen::VectorXd &xData, Eigen::VectorXd &yData)
-														{return AddSeries<EigenVector>(yData, xData);}
+														{return AddSeries<EigenVector>(xData, yData);}
 	ScatterDraw &AddSeries(Vector<double> &xData, Vector<double> &yData)
-														{return AddSeries<VectorDouble>(yData, xData);}
+														{return AddSeries<VectorXY>(xData, yData);}
 	ScatterDraw &AddSeries(Upp::Array<double> &xData, Upp::Array<double> &yData)
-														{return AddSeries<ArrayDouble>(yData, xData);}		
+														{return AddSeries<ArrayXY>(xData, yData);}		
 	ScatterDraw &AddSeries(Vector<Pointf> &points)		{return AddSeries<VectorPointf>(points);}
 	ScatterDraw &AddSeries(Upp::Array<Pointf> &points)	{return AddSeries<ArrayPointf>(points);}
 	template <class Y>
@@ -684,9 +684,9 @@ public:
 	ScatterDraw &SetDrawXReticleNumbers(bool set = true) {drawXReticleNumbers = set;	return *this;}
 	ScatterDraw &SetDrawYReticleNumbers(bool set = true) {drawYReticleNumbers = set;	return *this;}
 	ScatterDraw &SetDrawY2ReticleNumbers(bool set = true){drawY2ReticleNumbers = set;	return *this;}
-	bool GetDrawXReticleNumbers()						{return drawXReticleNumbers;}
-	bool GetDrawYReticleNumbers()						{return drawYReticleNumbers;}
-	bool GetDrawY2ReticleNumbers()						{return drawY2ReticleNumbers;}
+	bool GetDrawXReticleNumbers()					{return drawXReticleNumbers;}
+	bool GetDrawYReticleNumbers()					{return drawYReticleNumbers;}
+	bool GetDrawY2ReticleNumbers()					{return drawY2ReticleNumbers;}
 	ScatterDraw &SetReticleFont(const Font &fnt)	{reticleFont = fnt;		return *this;}
 	Font &GetReticleFont()							{return reticleFont;}
 	ScatterDraw &SetReticleColor(const Color &col)	{reticleColor = col;	return *this;}
