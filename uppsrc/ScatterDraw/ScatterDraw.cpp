@@ -598,11 +598,11 @@ ScatterDraw &ScatterDraw::InsertSeries(int index, double *xData, double *yData, 
 }
 
 ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<double> &xData, Vector<double> &yData) {
-	return InsertSeries<VectorDouble>(index, xData, yData);
+	return InsertSeries<VectorXY>(index, xData, yData);
 }
 
 ScatterDraw &ScatterDraw::InsertSeries(int index, Upp::Array<double> &xData, Upp::Array<double> &yData) {
-	return InsertSeries<ArrayDouble>(index, xData, yData);
+	return InsertSeries<ArrayXY>(index, xData, yData);
 }
 		
 ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<Pointf> &points) {
