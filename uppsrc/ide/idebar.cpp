@@ -46,7 +46,7 @@ void Ide::File(Bar& menu)
 {
 	if (!IsEditorMode())
 	{
-		menu.Add(AK_SETMAIN, THISBACK(NewMainPackage))
+		menu.Add(AK_SETMAIN, IdeImg::MainPackage(), THISBACK(NewMainPackage))
 			.Enable(!IdeIsDebugLock())
 			.Help("Select global configuration (var), select / add main project package");
 	}
