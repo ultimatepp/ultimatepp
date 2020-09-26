@@ -100,8 +100,9 @@ LAYOUT(FindFileLayout, 450, 540)
 	ITEM(EditField, mask, HSizePosZ(4, 6).TopPosZ(4, 19))
 	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 6).VSizePosZ(28, 36))
 	ITEM(Option, searchInCurrentPackage, SetLabel(t_("Search in current package")).HSizePosZ(6, 260).BottomPosZ(6, 20))
-	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(6, 22))
+	ITEM(Button, help, SetLabel(t_("?")).Tip(t_("Learn more about find file..")).RightPosZ(146, 20).BottomPosZ(6, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(6, 64).BottomPosZ(6, 22))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(6, 22))
 END_LAYOUT
 
 LAYOUT(UppLayout, 936, 576)

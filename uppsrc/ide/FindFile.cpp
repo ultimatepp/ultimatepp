@@ -88,6 +88,7 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	mask.SetFilter(CharFilterFindFileMask);
 	mask << [=] { Find(); };
 	searchInCurrentPackage << [=] { Find(); };
+	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$FindFile$en-us.html"); };
 }
 
 bool FindFileWindow::Key(dword key, int count)
