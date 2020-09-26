@@ -9,13 +9,13 @@
 void SelectPackageDlg::PackageMenu(Bar& menu)
 {
 	bool b = GetCurrentName().GetCount();
-	menu.Add("New package..", THISBACK(OnNew));
+	menu.Add("New package..", [=] { OnNew(); });
 	menu.Separator();
 	menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
 	menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
 	menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
 	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
-	menu.Add(b, "Delete package", THISBACK(DeletePackage));
+	menu.Add(b, "Delete package..", [=] { DeletePackage(); });
 }
 
 bool RenamePackageFs(const String& upp, const String& npf, const String& nupp, bool copy)
@@ -422,7 +422,7 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	;
 	bar.Add(base.IsCursor(), "Edit assembly..", THISBACK(OnBaseEdit))
 		.Key(K_CTRL_ENTER);
-	bar.Add(base.IsCursor(), "Remove assembly", THISBACK(OnBaseRemove))
+	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
 	Vector<String> d = GetSvnDirs();
 	if(HasSvn()) {
