@@ -663,7 +663,9 @@ public:
 	ScatterDraw &ShowSeriesLegend(int index, bool show = false);
 	ScatterDraw &ShowSeriesLegend(bool show = false)	{return ShowSeriesLegend(series.GetCount() - 1, show);}
 	bool GetShowSeriesLegend(int index)					{ASSERT(IsValid(index));ASSERT(!series[index].IsDeleted());return series[index].showLegend;}
-		
+	ScatterDraw &NoSeriesLegend(int index)				{return ShowSeriesLegend(index, false);}
+	ScatterDraw &NoSeriesLegend()						{return ShowSeriesLegend(false);}
+	
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
 	ScatterDraw &Legend(const String legend);
 	ScatterDraw &Legend(int index, const String legend);
@@ -1761,12 +1763,12 @@ void ScatterDraw::Plot(T& w)
 					String txt = (*(serie.labels))[i];
 					Size sz = GetTextSizeSpace(txt, fnt);
 					int ddy = static_cast<int>(-sz.cy/2.);
-					int ddx;
+					int ddx = 0;
 					switch (serie.labelsAlign) {
 					case ALIGN_LEFT:	ddx = 0;		break;
 					case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
 					case ALIGN_RIGHT:	ddx = -sz.cx;	break;
-					default: 			ddx = 0; // to avoid warning
+					default: 			NEVER();
 					}
 					double x = points[i].x + dx + ddx;
 					double y = points[i].y + dy + ddy;
