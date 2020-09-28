@@ -19,7 +19,7 @@ RichTxt::Para::Para(const Para& src, int)
 	content = src.content;
 	haspos = src.haspos;
 	if(src.number)
-		number = new RichPara::NumberFormat(*src.number);
+		number.Create<RichPara::NumberFormat>(*src.number);
 	Invalidate();
 	checked = false;
 }
@@ -128,10 +128,8 @@ void RichTxt::Put(int i, const RichPara& p, const RichStyle& s)
 	pp.numbering = numbering;
 	pp.spellerrors.Clear();
 	pp.haspos = p.HasPos();
-	if(numbering >= 0 || p.format.reset_number) {
-		pp.number = new RichPara::NumberFormat;
-		*pp.number = p.format;
-	}
+	if(numbering >= 0 || p.format.reset_number)
+		pp.number.Create() = p.format;
 }
 
 void RichTxt::Put(int i, const RichPara& p, const RichStyles& s)

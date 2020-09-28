@@ -736,8 +736,8 @@ omStyleY](ZoomStyle_[*@3 style]_`=_TO`_CENTER)&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetRange`(double`,double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
-[@(0.0.255) double]_[*@3 ry2]_`=_[@3 100])&]
+]_[* SetRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry][*  
+`= Null], [@(0.0.255) double]_[*@3 ry2][*  `= Null])&]
 [s3; Sets the horizontal ([%-*@3 rx]), vertical ([%-*@3 ry]) and secondary 
 vertical ([%-*@3 ry2]) axis ranges.&]
 [s3; Range is the visible with of the plot in series units (not in 
