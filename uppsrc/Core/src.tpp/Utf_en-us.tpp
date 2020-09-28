@@ -192,8 +192,8 @@ in the text. If source is specified as pointer [%-*@3 s] without
 [s5;:Upp`:`:ReadSurrogatePair`(const Upp`:`:wchar`*`,const Upp`:`:wchar`*`): [_^Upp`:`:dword^ d
 word]_[* ReadSurrogatePair]([@(0.0.255) const]_[_^Upp`:`:wchar^ wchar]_`*[*@3 s], 
 [@(0.0.255) const]_[_^Upp`:`:wchar^ wchar]_`*[*@3 lim])&]
-[s2;%% Reads single utf32 codepoint from [%-*@3 s], [%-*@3 lim] is one 
-wchar .&]
+[s2;%% Reads single utf32 codepoint from [%-*@3 s], [%-*@3 lim]. Returns 
+0 if there is no surrogate pair at [%-*@3 s].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ToUtf32`(Upp`:`:dword`*`,const Upp`:`:wchar`*`,int`): [@(0.0.255) void]_[* To
