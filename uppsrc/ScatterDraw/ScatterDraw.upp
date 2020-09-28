@@ -7,8 +7,8 @@ uses
 options(MSC) -D_SCL_SECURE_NO_WARNINGS;
 
 file
-	ScatterDraw.cpp,
 	ScatterDraw.h,
+	ScatterDraw.cpp,
 	DataSource.cpp,
 	DataSource.h,
 	Equation.cpp,
