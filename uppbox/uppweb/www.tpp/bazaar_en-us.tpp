@@ -1,38 +1,44 @@
 topic "Bazaar";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
+[b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
+[H4;b83;*4 $$3,2#07864147445237544204411237157677:title]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; Bazaar&]
-[s0; [2 Community contributed packages and code snippets are included 
-in Bazaar.]&]
-[s0;2 &]
-[s0; [2 If you have a new package that you consider interesting, go 
-to ][^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
-Submission and Maintenance][2 .]&]
-[s0;2 &]
-[s0; [2 If you want to use one of the packages listed here, read the 
-][^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^2 Bazaar User Guide][2 .]&]
-[s0;2 &]
-[s0; [2 All the code submitted to Bazaar is provided to be directly 
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#2^ 2. Bazaar Pages]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#3^ 3. Maintained Packages 
+List]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#4^ 4. Unmaintained/Deprecated 
+Package List]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#5^ 5. Bazaar contributor 
+pages]&]
+[s0; &]
+[s3;:1: 1. Introduction&]
+[s2; Community contributed packages and code snippets are included 
+in Bazaar.&]
+[s2; If you have a new package that you consider interesting, go 
+to [^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^ Bazaar 
+Submission and Maintenance].&]
+[s2; If you want to use one of the packages listed here, read the 
+[^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^ Bazaar User Guide].&]
+[s2; All the code submitted to Bazaar is provided to be directly 
 used in good quality programs. If you find any bug or you would 
 like to get any additional feature or improvement, please go 
-to ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
-Support][2 .]&]
-[s0;2 &]
-[s0; [2 All packages and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 N
-ew BSD license][2 .]&]
-[s0;2 &]
-[s0;2%- &]
-[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. Bazaar Pages]]}}&]
+to [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^ Bazaar Support].&]
+[s2; All packages and code in Bazaar are under [^topic`:`/`/ide`/app`/About`$en`-us^ Ne
+w BSD license].&]
+[s3;:2: 2. Bazaar Pages&]
 [s0;%- &]
 [ {{3333:3333:3334@7 [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
 Submission and Maintenance]]
 :: [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^2 Bazaar User 
 Guide]]
 :: [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar Support]]}}&]
-[s0;2 &]
 [s0;2%- &]
-[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Maintained Packages List]]}}&]
+[s3;:3: 3. Maintained Packages List&]
 [s0;2%- &]
 [ {{1055:1758:1143:1416:947:909:1123:815:834h1;@(178)R2 [s0;= [*2 Name]]
 :: [s0;= [*2 Basic Description]]
@@ -732,17 +738,12 @@ format]]
 :: [s0;=2 ]
 :: [s0;= [2 All]]
 :: [s0;2 ]}}&]
-[s0;2 &]
 [s0;2%- &]
-[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 3. Unmaintained/Deprecated Package List]]}}&]
-[s0;%- &]
-[s0; [2 Unmaintained packages are moved to archive/bazaar folder.]&]
+[s3;:4: 4. Unmaintained/Deprecated Package List&]
+[s2; Unmaintained packages are moved to archive/bazaar folder.&]
 [s0;2%- &]
-[s0;2%- &]
-[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 4. Bazaar contributor pages]]}}&]
-[s0;%- &]
-[s0; [2 These are the personal pages of some Bazaar contributors:]&]
-[s0;2 &]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_cont`_koldo`$en`-us^2 Iñaki 
+[s3;:5: 5. Bazaar contributor pages&]
+[s2; These are the personal pages of some Bazaar contributors:&]
+[s2;l128;i150;O0;~~~32; [^topic`:`/`/uppweb`/www`/bazaar`_cont`_koldo`$en`-us^ Iñaki 
 Zabala]&]
 [s0; ]]
