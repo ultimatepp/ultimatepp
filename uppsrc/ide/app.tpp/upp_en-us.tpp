@@ -1,10 +1,9 @@
 topic "U++ package file format";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -21,15 +20,36 @@ topic "U++ package file format";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; U`+`+ package file format&]
-[s0; All the information about packages is stored in a text file 
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#2^ 2. Accepted flags]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#3^ 3. Encoding]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#4^ 4. Custom build steps]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#5^ 5. Description]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#6^ 6. Files]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#7^ 7. Add/Remove flags]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#8^ 8. Additional includes]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#9^ 9. Libraries]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#10^ 10. Linking options]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#11^ 11. Size optimization]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#12^ 12. Speed optimization]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#13^ 13. Compiler options]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#14^ 14. Main configuration]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#15^ 15. No BLITZ]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#16^ 16. Target]&]
+[s0; [^topic`:`/`/ide`/app`/upp`_en`-us`#17^ 17. Used packages]&]
+[s0; &]
+[s3;:1: 1. Introduction&]
+[s5; All the information about packages is stored in a text file 
 with the same name as the package and .upp extension. This file 
 stores list of files that belong into the package and also all 
 the settings that are set in Package organizer. This article 
 aims to document the syntax of the .upp file.&]
-[s0; &]
-[s0; Each section of .upp file begins with a keyword and ends with 
+[s5; Each section of .upp file begins with a keyword and ends with 
 semicolon. The recognized section keywords are:&]
 [s0; &]
 [ {{2500:2500:2500:2500g2; [s7;l160; [2 acceptflags]&]
@@ -48,8 +68,8 @@ semicolon. The recognized section keywords are:&]
 [s7;l160; [2 noblitz]&]
 [s7;l160; [2 target]&]
 [s7;l160; [2 uses]]}}&]
-[s3; &]
-[s3; Accepted flags&]
+[s0; &]
+[s3;:2: 2. Accepted flags&]
 [s5; Each package can specify a list of flags that it can use to 
 provide special or optimized functionality. Such flags can be 
 then passed with dot prefix and will be only applied to main 
@@ -61,7 +81,7 @@ need to be rebuilt when the flags are changed.&]
 :: [s5; Example:]
 :: [s5; [C@5 acceptflags NOGTK, GUI;]]}}&]
 [s5; &]
-[s3; Encoding&]
+[s3;:3: 3. Encoding&]
 [s5; The default encoding for all the files in the package can be 
 specified using [C@5 charset] keyword. &]
 [ {{1914:8086f0;g0;h1; [s5; Syntax:]
@@ -69,7 +89,7 @@ specified using [C@5 charset] keyword. &]
 :: [s5; Example:]
 :: [s5; [C@5 charset `"UTF`-8`";]]}}&]
 [s5; &]
-[s3; Custom build steps&]
+[s3;:4: 4. Custom build steps&]
 [s5; Each package can invoke so called `"custom build steps`" which 
 are invoked either at compile time on all file with given extension 
 or when linking, if the extension is one of the special values 
@@ -114,7 +134,7 @@ enclosed in `'`$(...)`' that are replaced upon evaluation:&]
 [s5; [C@5 custom(POSIX PROTECT) `"post`-link`", `"ProtectEncrypt `$(OUTPATH) 
 AABBCCDDEEFF00112233445566778899`", `"`";]]}}&]
 [s5; &]
-[s3; Description&]
+[s3;:5: 5. Description&]
 [s5; Description of package as it appears in Package selection dialogs 
 is set using the [C@5 description] keyword. The description string 
 can also include formatting portion, that determines the color 
@@ -132,7 +152,7 @@ the color]
 :: [s5; [C@5 description `"Non`-GUI code. Streams, NTL containers, concrete 
 types, Value, XML, C parsing etc...`\377B128,0,0`";]]}}&]
 [s5; &]
-[s3; Files&]
+[s3;:6: 6. Files&]
 [s5; Possibly the most important part of package is the list of files 
 that belong to it. Each file in the list can have set several 
 options which specify how it is handled and displayed.&]
@@ -150,7 +170,7 @@ options which specify how it is handled and displayed.&]
 [s5; [C@5 -|idefile.cpp charset `"iso8859`-1`",]&]
 [s5; [C@5 -|Resources readonly separator,]&]
 [s5; [C@5 -|ide.rc depends() ide.ico;]]}}&]
-[s5; &]
+[s0; &]
 [s5; File options have following meaning:&]
 [ {{2745:7255^ [s5; [C@5 options]]
 :: [s5; Additional compiler options to be used for file.]
@@ -174,7 +194,8 @@ optimization is default.]
 :: [s5; [C@5 highlight]]
 :: [s5; IDE setting: Information about syntax highlighting overried (normal 
 default depends on file extension).]}}&]
-[s3; Add/Remove flags&]
+[s0; &]
+[s3;:7: 7. Add/Remove flags&]
 [s5; It is possible to automatically add or remove flags, based on 
 other flags. This is can be handy for example for platform dependent 
 flag switching.&]
@@ -182,8 +203,8 @@ flag switching.&]
 :: [s5; [C@5 flags(<when>) `[!`]<flag`_name> `[`[!`]<flag`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 flags(POSIX) `"ALSA OSS`";]]}}&]
-[s5; &]
-[s3; Additional includes&]
+[s0; &]
+[s3;:8: 8. Additional includes&]
 [s5; If the package requires some special include paths, they can 
 be added using [C@5 include] keyword.&]
 [ {{1914:8086h1; [s5; Syntax:]
@@ -191,8 +212,8 @@ be added using [C@5 include] keyword.&]
 :: [s5; Example:]
 :: [s5; [C@5 include ../lib;]&]
 [s5; [C@5 include(POSIX) /opt/someapp/include;]]}}&]
-[s5; &]
-[s3; Libraries&]
+[s0; &]
+[s3;:9: 9. Libraries&]
 [s5; If the package requires to be linked with a shared or static 
 library, those can be added using [C@5 library] keyword.&]
 [ {{1914:8086h1; [s5; Syntax:]
@@ -200,8 +221,8 @@ library, those can be added using [C@5 library] keyword.&]
 :: [s5; Example:]
 :: [s5; [C@5 library png;]&]
 [s5; [C@5 include(POSIX) jpeg;]]}}&]
-[s5; &]
-[s3; Linking options&]
+[s0; &]
+[s3;:10: 10. Linking options&]
 [s5; Each package can specify special options to be passed to the 
 linker command. Note that since each platform can have different 
 linker, you should provide link option for each supported platform.&]
@@ -209,8 +230,8 @@ linker, you should provide link option for each supported platform.&]
 :: [s5; [C@5 link`[(<when>)`] <lib`_name> `[, <lib`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 link(MSC DEBUG) /nodefaultlib:msvcrt.lib;]]}}&]
-[s5; &]
-[s3; Size optimization&]
+[s0; &]
+[s3;:11: 11. Size optimization&]
 [s5; The [C@5 optimize`_size] keyword can be used to tell compiler 
 that the entire package should be optimized for smaller size 
 of resulting binary when compiled with `"Optimal`" settings. 
@@ -219,8 +240,8 @@ It takes no parameters.&]
 :: [s5; [C@5 optimize`_size;]]
 :: [s5; Example:]
 :: [s5; [C@5 optimize`_size;]]}}&]
-[s5; &]
-[s3; Speed optimization&]
+[s0; &]
+[s3;:12: 12. Speed optimization&]
 [s5; The [C@5 optimize`_speed] keyword can be used to tell compiler 
 that the entire package should be optimized for faster execution 
 when compiled with `"Optimal`" settings. . It takes no parameters.&]
@@ -228,8 +249,8 @@ when compiled with `"Optimal`" settings. . It takes no parameters.&]
 :: [s5; [C@5 optimize`_speed;]]
 :: [s5; Example:]
 :: [s5; [C@5 optimize`_speed;]]}}&]
-[s5; &]
-[s3; Compiler options&]
+[s0; &]
+[s3;:13: 13. Compiler options&]
 [s5; Any special options necessary for the package compilation may 
 be added with [C@5 options] keyword. They will be passed to the 
 compiler command only when compiling given package.&]
@@ -237,8 +258,8 @@ compiler command only when compiling given package.&]
 :: [s5; [C@5 options`[(<when>)`] <lib`_name> `[, <lib`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 options(MSC) `"/D PSAPI`_VERSION`=1`";]]}}&]
-[s5; &]
-[s3; Main configuration&]
+[s0; &]
+[s3;:14: 14. Main configuration&]
 [s5; The set of flags that are available in the Main configuration 
 droplist in TheIDE are stored using the [C@5 mainconfig] keyword. 
 The name part is optional `- if the flags combination doesn`'t 
@@ -247,16 +268,16 @@ have a name it is represented as an empty string.&]
 :: [s5; [C@5 mainconfig <name> `= <flags> `[,<name> `= <flags>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 mainconfig `"`" `= `"GUI`", `"Without gtk`" `= `".NOGTK GUI`";]]}}&]
-[s5; &]
-[s3; No BLITZ&]
+[s0; &]
+[s3;:15: 15. No BLITZ&]
 [s5; The [C@5 noblitz] keyword allows to prohibit BLITZ for entire 
 package. It takes no parameters.&]
 [ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 noblitz;]]
 :: [s5; Example:]
 :: [s5; [C@5 noblitz;]]}}&]
-[s5; &]
-[s3; Target&]
+[s0; &]
+[s3;:16: 16. Target&]
 [s5; The section [C@5 target] can specify the name and/or path to the 
 resulting executable. The value can optionally depend on the 
 flags used.&]
@@ -265,8 +286,8 @@ flags used.&]
 :: [s5; Example:]
 :: [s5; [C@5 target calc.ocx;]&]
 [s5; [C@5 target(TEST) ld`-test.exe;]]}}&]
-[s5; &]
-[s3; Used packages&]
+[s0; &]
+[s3;:17: 17. Used packages&]
 [s5; Each package specifies a list of packages which it depends on. 
 The dependency specified in [C@5 uses] section can be either conditional 
 (based on flags) or unconditional.&]
@@ -275,4 +296,4 @@ The dependency specified in [C@5 uses] section can be either conditional
 :: [s5; Example:]
 :: [s5; [C@5 uses CtrlCore;]&]
 [s5; [C@5 uses(POSIX `| LINUX `| FREEBSD) PdfDraw;]]}}&]
-[s5; ]]
+[s0; ]]
