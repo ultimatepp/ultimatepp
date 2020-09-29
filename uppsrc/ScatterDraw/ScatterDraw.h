@@ -120,9 +120,6 @@ protected:
 		bool showLegend;
 		bool legendLine; // show line in legend even if series is NoPlot
 		
-		double minx = Null;
-		double maxx = Null;
-
 		int id;
 	
 	private:
@@ -681,7 +678,6 @@ public:
 	const String GetUnitsX(int index);
 	const String GetUnitsY(int index);
 	
-	ScatterDraw &ExplicitRange(double minx, double maxx);
 	ScatterDraw &LegendLine(bool b = true)              { series.Top().legendLine = b; return *this; }
 	
 	inline bool IsValid(int index) const {return (index >= 0 && index < series.GetCount());}
@@ -1623,8 +1619,8 @@ void ScatterDraw::Plot(T& w)
 					}
 				}
 			} else if (data.IsExplicit()) {
-				double xmin = Nvl(serie.minx, xMin - 1);
-				double xmax = Nvl(serie.maxx, xMin + xRange + 1);
+				double xmin = xMin - 1;
+				double xmax = xMin + xRange + 1;
 				double dx = double(xmax - xmin)/plotW;
 				for (double xx = xmin; xx < xmax; xx += dx) {
 					double yy = data.f(xx);

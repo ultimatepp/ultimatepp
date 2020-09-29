@@ -955,13 +955,6 @@ and X axis ([%-*@3 unitsX]).&]
 [s3; Returns the Y axis units for [%-*@3 index] series.&]
 [s1; &]
 [s6;%- &]
-[s5;:Upp`:`:ScatterDraw`:`:ExplicitRange`(double`,double`):%- [_^Upp`:`:ScatterDraw^ Sc
-atterDraw]_`&[* ExplicitRange]([@(0.0.255) double]_[*@3 minx], [@(0.0.255) double]_[*@3 max
-x])&]
-[s3; Sets the x range for explicit series. Useful for spline interpolation 
-so that splines do not extend beyond series X range.&]
-[s1; &]
-[s6;%- &]
 [s5;:Upp`:`:ScatterDraw`:`:LegendLine`(bool`):%- [_^Upp`:`:ScatterDraw^ ScatterDraw]_`&
 [* LegendLine]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s3; Draw line in series legend even if the series does not plot 
