@@ -38,8 +38,6 @@ Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
-[s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
-Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
@@ -49,9 +47,11 @@ file in the project (Find File)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
 libraries]&]
 [s0;l224; &]
+[s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
+templates]&]
+[s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file description]&]
+[s0;l224;^topic`:`/`/ide`/app`/upp`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
-[s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
-[s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
 [s0;l224; &]
