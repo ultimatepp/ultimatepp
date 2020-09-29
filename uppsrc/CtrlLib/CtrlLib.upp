@@ -9,7 +9,8 @@ uses
 uses(POSIX) PdfDraw;
 
 file
-	CtrlLib.h options(BUILDER_OPTION) PCH,
+	CtrlLib.h
+		options(BUILDER_OPTION) PCH,
 	CtrlLib readonly separator,
 	LabelBase.h,
 	LabelBase.cpp,
@@ -103,7 +104,7 @@ file
 	CtrlUtil.cpp,
 	Ctrl.iml,
 	Ctrl.lay,
-	CtrlLib.t charset "UTF-8",
+	CtrlLib.t,
 	CtrlLibInit.cpp,
 	Lang readonly separator,
 	Lang.h,
@@ -122,7 +123,7 @@ file
 	Meta readonly separator,
 	Normal.upt,
 	Complex.upt,
-	CtrlLib.usc font 2 charset "UTF-8",
+	CtrlLib.usc font 2,
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,
