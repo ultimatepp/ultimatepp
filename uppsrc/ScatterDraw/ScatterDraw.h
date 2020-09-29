@@ -159,6 +159,7 @@ protected:
 				("barWidth", barWidth)
 				("isClosed", isClosed)
 				("showLegend", showLegend)
+				("legendLine", legendLine)
 			;
 			if (io.IsLoading()) {
 				if (!IsNull(markP))
@@ -207,6 +208,7 @@ protected:
 				% barWidth
 				% isClosed
 				% showLegend
+				% legendLine
 			;
 			if (s.IsLoading()) {
 				if (!IsNull(markP))
