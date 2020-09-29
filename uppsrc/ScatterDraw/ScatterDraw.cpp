@@ -957,14 +957,6 @@ ScatterDraw &ScatterDraw::Units(const String unitsY, const String unitsX) {
 	return Units(index, unitsY, unitsX);
 }
 
-ScatterDraw &ScatterDraw::ExplicitRange(double minx, double maxx)
-{
-	auto& s = series.Top();
-	s.minx = minx;
-	s.maxx = maxx;
-	return *this;
-}
-
 ScatterDraw& ScatterDraw::Units(int index, const String unitsY, const String unitsX) {
 	ASSERT(IsValid(index));
 	ASSERT(!series[index].IsDeleted());
