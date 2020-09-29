@@ -501,17 +501,18 @@ public:
 class FileSelButton : public FileSel
 {
 public:
-	typedef FileSelButton CLASSNAME;
 	enum MODE { MODE_OPEN, MODE_SAVE, MODE_DIR };
 	FileSelButton(MODE mode = MODE_OPEN, const char *title = NULL);
-
+	
 	void               Attach(Ctrl& parent) { parent.AddFrame(button); }
 	void               Detach();
 	void               Title(String t)      { title = t; }
 	String             GetTitle() const     { return title; }
 	
 	Event<>            WhenSelected;
-
+	
+	FileSelButton&     Tip(const char *txt) { button.Tip(txt); return *this; }
+	
 private:
 	void               OnAction();
 
