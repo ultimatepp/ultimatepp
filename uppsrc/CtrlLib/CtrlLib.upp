@@ -9,8 +9,7 @@ uses
 uses(POSIX) PdfDraw;
 
 file
-	CtrlLib.h
-		options(BUILDER_OPTION) PCH,
+	CtrlLib.h options(BUILDER_OPTION) PCH,
 	CtrlLib readonly separator,
 	LabelBase.h,
 	LabelBase.cpp,
