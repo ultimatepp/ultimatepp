@@ -382,7 +382,7 @@ FileSelButton::FileSelButton(MODE mode, const char *title)
 {
 	button.NoWantFocus();
 	button.SetImage(CtrlImg::right_arrow());
-	button <<= THISBACK(OnAction);
+	button << [=] { OnAction(); };
 }
 
 void FileSelButton::OnAction()
