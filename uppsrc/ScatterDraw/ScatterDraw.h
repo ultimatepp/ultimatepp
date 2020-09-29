@@ -118,6 +118,9 @@ protected:
 		Alignment labelsAlign;
 		
 		bool showLegend;
+		
+		double minx = Null;
+		double maxx = Null;
 
 		int id;
 	
@@ -674,6 +677,8 @@ public:
 	ScatterDraw &Units(int index, const String unitsY, const String unitsX = "");
 	const String GetUnitsX(int index);
 	const String GetUnitsY(int index);
+	
+	ScatterDraw &ExplicitRange(double minx, double maxx);
 	
 	inline bool IsValid(int index) const {return (index >= 0 && index < series.GetCount());}
 	
@@ -1251,12 +1256,12 @@ void ScatterDraw::SetDrawing(T& w, bool ctrl) {
 	plotW = size.cx - fround((hPlotLeft + hPlotRight)*plotScaleX);
 	plotH = size.cy - fround((vPlotTop + vPlotBottom)*plotScaleY) - titleHeight;
 	
-	Plot(w);	
+	Plot(w);
 		
 	if (!ctrl) {
-		if (!PlotTexts(w)) 
+		if (!PlotTexts(w))
 			return;
-	} 
+	}
 }
 
 template <class T>
@@ -1483,7 +1488,7 @@ void ScatterDraw::Plot(T& w)
 	double left, top, d = min(plotW, plotH);//, r = d/2.;
 	if (!isPolar) {
 		if (!surf)
-			w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
+			w.DrawRect(0, 0, plotW, plotH, plotAreaColor);
 		else {
 			ImageBuffer out_image(plotW, plotH);
 			Upp::Fill(~out_image, plotAreaColor, out_image.GetLength());
@@ -1526,7 +1531,7 @@ void ScatterDraw::Plot(T& w)
 				SetGridLinesX(unitsX);
 			else {
 				if (xMajorUnit > 0) {
-					for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) 
+					for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++)
 						unitsX << xMinUnit + i*xMajorUnit;
 				}
 			}
@@ -1541,7 +1546,7 @@ void ScatterDraw::Plot(T& w)
 							DrawLineOpa(w, reticleX, 0, reticleX, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 					}
 				}
-			} 
+			}
 		} /*else {
 			double ang0 = 2*M_PI*xMinUnit/xRange;
 			for(double i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
@@ -1584,7 +1589,7 @@ void ScatterDraw::Plot(T& w)
 
 	try {
 		for (int j = 0; j < series.GetCount(); j++) {
-			ScatterSeries &serie = series[j]; 
+			ScatterSeries &serie = series[j];
 			if (serie.IsDeleted())
 				continue;
 			DataSource &data = serie.Data();
@@ -1601,7 +1606,7 @@ void ScatterDraw::Plot(T& w)
 				for (double x = xmin; x <= xmax; x++) {
 					double xx = data.x(x);
 					double yy = data.y(x);
-					if (IsNull(xx) || IsNull(yy)) 
+					if (IsNull(xx) || IsNull(yy))
 						points << Null;
 					else {
 						int ix = fround(plotW*(xx - xMin)/xRange);
@@ -1614,9 +1619,9 @@ void ScatterDraw::Plot(T& w)
 					}
 				}
 			} else if (data.IsExplicit()) {
-				double xmin = xMin - 1;
-				double xmax = xMin + xRange + 1; 	
-				double dx = double(xmax - xmin)/plotW;		
+				double xmin = Nvl(serie.minx, xMin - 1);
+				double xmax = Nvl(serie.maxx, xMin + xRange + 1);
+				double dx = double(xmax - xmin)/plotW;
 				for (double xx = xmin; xx < xmax; xx += dx) {
 					double yy = data.f(xx);
 					if (IsNull(yy))
