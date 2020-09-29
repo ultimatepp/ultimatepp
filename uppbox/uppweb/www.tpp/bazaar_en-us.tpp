@@ -31,13 +31,14 @@ to [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^ Bazaar Support].&]
 [s2; All packages and code in Bazaar are under [^topic`:`/`/ide`/app`/About`$en`-us^ Ne
 w BSD license].&]
 [s3;:2: 2. Bazaar Pages&]
+[s2; Below is the main documentation pages of Bazaar project:&]
+[s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_submission`_en`-us^ Bazaar 
+Submission and Maintenance]&]
+[s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_user`_en`-us^ Bazaar 
+User Guide]&]
+[s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_support`_en`-us^ Bazaar 
+Support]&]
 [s0;%- &]
-[ {{3333:3333:3334@7 [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
-Submission and Maintenance]]
-:: [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^2 Bazaar User 
-Guide]]
-:: [s0;= [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar Support]]}}&]
-[s0;2%- &]
 [s3;:3: 3. Maintained Packages List&]
 [s0;2%- &]
 [ {{1055:1758:1143:1416:947:909:1123:815:834h1;@(178)R2 [s0;= [*2 Name]]
