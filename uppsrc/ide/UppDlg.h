@@ -113,7 +113,6 @@ struct NestEditorDlg : public WithNestEditorLayout<TopWindow> {
 class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
 {
 public:
-    typedef BaseSetupDlg CLASSNAME;
     BaseSetupDlg();
 
     bool Run(String& vars);

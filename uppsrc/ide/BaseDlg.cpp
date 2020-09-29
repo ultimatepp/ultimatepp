@@ -186,11 +186,11 @@ BaseSetupDlg::BaseSetupDlg()
 : browse_out("Output & intermediate files")
 {
 	CtrlLayoutOKCancel(*this, "Assembly setup");
-	browse_upp.SetImage(CtrlImg::right_arrow()).Tip("Select path");
-	browse_upp <<= THISBACK(OnBrowseUpp);
+	browse_upp.SetImage(CtrlImg::right_arrow()).Tip("Select path..");
+	browse_upp << [=] { OnBrowseUpp(); };
 	upp.AddFrame(browse_upp);
 
-	setup_nest.Tip("Open nest editor");
+	setup_nest.Tip("Open nest editor..");
 	setup_nest << [=] {
 		NestEditorDlg ndlg;
 		ndlg.Set(~upp);
@@ -200,8 +200,8 @@ BaseSetupDlg::BaseSetupDlg()
 		OnUpp();
 	};
 
-	upp <<= THISBACK(OnUpp);
-	browse_out.Attach(output);
+	upp << [=] { OnUpp(); };
+	browse_out.Tip("Select path..").Attach(output);
 }
 
 bool BaseSetupDlg::Run(String& vars)
