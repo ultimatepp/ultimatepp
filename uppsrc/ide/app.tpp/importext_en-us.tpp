@@ -1,9 +1,9 @@
-topic "import.ext";
+topic "Importing external libraries";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -20,22 +20,29 @@ topic "import.ext";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[b83;*+117 $$22,22#1546C2CD4112BAB0A26C534D6F11ED13:subtitle]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; import.ext `- importing libraries&]
-[s0; Sometimes it is useful to transform 3rd party code into U`+`+ 
+[s2; Importing external libraries&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/importext`_en`-us`#1^ 1. Importing large 
+libraries]&]
+[s0;     [^topic`:`/`/ide`/app`/importext`_en`-us`#1`_1^ 1.1 Introduction]&]
+[s0;     [^topic`:`/`/ide`/app`/importext`_en`-us`#1`_2^ 1.2. Directives]&]
+[s0; &]
+[s3;:1: 1. Importing large libraries&]
+[s22;:1`_1: 1.1 Introduction&]
+[s5; Sometimes it is useful to transform 3rd party code into U`+`+ 
 package. There are several methods to do that, however if 3rd 
 party code is huge codebase of hundreds or thousands files, traditional 
 approaches (e.g. put all these files into package) are tedious 
 or outright impossible.&]
-[s0; &]
-[s0; To solve this issue, concept of import description file was 
+[s5; To solve this issue, concept of import description file was 
 introduced. This describes which files of external library are 
 to be compiled and helps with setting up include path.&]
-[s0; &]
-[s0; Import description file is file in package with name `"import.ext`"&]
-[s0; &]
-[s0; Here is an example of import.ext content:&]
+[s5; Import description file is file in package with name [*/ `"import.ext`"]&]
+[s5; Here is an example of import.ext content:&]
 [s0; &]
 [s7; files `*.cpp `*.c;&]
 [s7; &]
@@ -81,25 +88,26 @@ to be compiled and helps with setting up include path.&]
 [s7; &]
 [s7; includes `*.h `*.hpp;&]
 [s7; &]
-[s0; In this case, line with `"files`" basically says that all .cpp 
+[s5; In this case, line with `"files`" basically says that all .cpp 
 and .h files found in package folder are to be added into the 
 project. `"exclude`" specifies exceptions to this. `"includes`" 
 adds folders of all matching files into include path.&]
+[s22;:1`_2: 1.2. Directives&]
+[s5; Below is the set of directives that can be used in [* `"import.ext`"] 
+file:&]
 [s0; &]
-[s0; Set of directives:&]
-[s0; &]
-[ {{1441:8559^ [s0; files]
-:: [s0; Adds all files that match the pattern the set of files to be 
+[ {{2066:7934^ [s5; [* files]]
+:: [s5; Adds all files that match the pattern the set of files to be 
 added to package. Pattern can use `'`*`' wildcard.]
-:: [s0; exclude]
-:: [s0; Removes files that match the pattern from the set.]
-:: [s0; include`_path]
-:: [s0; Adds folders that match the pattern to the include path.]
-:: [s0; exclude`_path]
-:: [s0; Removes directories from the include path (only folders added 
+:: [s5; [* exclude]]
+:: [s5; Removes files that match the pattern from the set.]
+:: [s5; [* include`_path]]
+:: [s5; Adds folders that match the pattern to the include path.]
+:: [s5; [* exclude`_path]]
+:: [s5; Removes directories from the include path (only folders added 
 by import.ext can be removed)]
-:: [s0; includes]
-:: [s0; Adds folders of all matching files into include path.]}}&]
+:: [s5; [* includes]]
+:: [s5; Adds folders of all matching files into include path.]}}&]
 [s0; &]
 [s0; Note that all file paths are relative to the root of package 
 directory.&]
