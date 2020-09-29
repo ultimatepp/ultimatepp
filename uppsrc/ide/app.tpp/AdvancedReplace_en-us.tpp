@@ -25,9 +25,9 @@ topic "Advanced Find and Replace";
 [s2; Advanced Find and Replace&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/AdvancedReplace`_en`-us`#1^ 1. Functionality]&]
+[s0; [^topic`:`/`/ide`/app`/AdvancedReplace`_en`-us`#1^ 1. Introduction]&]
 [s0; &]
-[s3;:1: 1. Functionality&]
+[s3;:1: 1. Introduction&]
 [s5; TheIDE find and replace in the block, using wildcards, has some 
 specific features available that make it suitable for some lightweight 
 text transformations.&]
