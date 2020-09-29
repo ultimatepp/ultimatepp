@@ -124,7 +124,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 				double dashLen = GetDashLength(serie.dash)*textScale;
 				double realLineLen = lineLen/dashLen > 1 ? dashLen*int(lineLen/dashLen) : lineLen;
 				line << Pointf(lx, ly) << Pointf(lx + realLineLen, ly);
-				if (serie.opacity > 0 && serie.thickness > 0 && serie.seriesPlot)
+				if (serie.opacity > 0 && serie.thickness > 0 && (serie.seriesPlot || serie.legendLine))
 					DrawPolylineOpa(w, line, textScale, 1, serie.thickness, serie.color, serie.dash);
 				Pointf mark_p(lx + xWidth, ly);
 				if (serie.markWidth > 0 && serie.markPlot)
