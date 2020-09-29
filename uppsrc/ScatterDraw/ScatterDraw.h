@@ -118,6 +118,7 @@ protected:
 		Alignment labelsAlign;
 		
 		bool showLegend;
+		bool legendLine; // show line in legend even if series is NoPlot
 		
 		double minx = Null;
 		double maxx = Null;
@@ -679,6 +680,7 @@ public:
 	const String GetUnitsY(int index);
 	
 	ScatterDraw &ExplicitRange(double minx, double maxx);
+	ScatterDraw &LegendLine(bool b = true)              { series.Top().legendLine = b; return *this; }
 	
 	inline bool IsValid(int index) const {return (index >= 0 && index < series.GetCount());}
 	
