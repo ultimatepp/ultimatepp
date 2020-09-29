@@ -31,7 +31,7 @@ in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 guide]&]
 [s0;l160; [*^topic`:`/`/ide`/app`/install`_posix`_en`-us^3 POSIX Installation 
 guide]&]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^3 MacOS Installation 
+[s0;l160; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^3 macOS Installation 
 guide]&]
 [s0;l160;*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 &]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
@@ -65,12 +65,14 @@ features]&]
 Find and Replace]&]
 [s0;l160; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
 file in project (Find File)]&]
-[s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
+[s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
 libraries]&]
 [s0;l160; &]
-[s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
-[s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
+[s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
+templates]&]
+[s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file description]&]
 [s0;l160; &]
+[s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
 [s0;l160; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
 [s0;l160; &]
