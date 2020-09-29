@@ -94,8 +94,6 @@ bool memeq128(const void *p, const void *q, size_t len) { return inline_memeq128
 
 #ifdef CPU_UNALIGNED
 
-#if 1
-
 #ifdef HASH64
 
 hash_t memhash(const void *ptr, size_t len)
@@ -176,28 +174,6 @@ hash_t memhash(const void *ptr, size_t len)
 		return val;
 	}
 	return len ? HASH_CONST2 * val + *s : val;
-}
-
-#endif
-
-#else
-
-NOUBSAN // CPU supports unaligned memory access
-hash_t memhash(const void *ptr, size_t count)
-{
-	unsigned hash = 1234567890U;
-
-	const unsigned *ds = (unsigned *)ptr;
-	const unsigned *de = ds + (count >> 2);
-	while(ds < de)
-		hash = ((hash << 5) - hash) ^ *ds++;
-
-	const byte *s = (byte *)ds;
-	const byte *e = s + (count & 3);
-	while(s < e)
-		hash = ((hash << 5) - hash) ^ *s++;
-
-	return hash;
 }
 
 #endif

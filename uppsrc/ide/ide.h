@@ -333,6 +333,7 @@ public:
 	virtual   void   SyncWorkspace();
 	virtual   void   BuildFileMenu(Bar& menu);
 	virtual   void   ProjectRepo(Bar& bar);
+	virtual   void   FilePropertiesMenu0(Bar& menu);
 	virtual   void   FilePropertiesMenu(Bar& menu);
 	virtual   String GetOutputDir();
 	virtual   String GetConfigDir();
