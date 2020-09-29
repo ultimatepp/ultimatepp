@@ -31,7 +31,8 @@ to [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^ Bazaar Support].&]
 [s2; All packages and code in Bazaar are under [^topic`:`/`/ide`/app`/About`$en`-us^ Ne
 w BSD license].&]
 [s3;:2: 2. Bazaar Pages&]
-[s2; Below is the main documentation pages of Bazaar project:&]
+[s2; In addition to this page, below is the most important documentation 
+pages of Bazaar project:&]
 [s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_submission`_en`-us^ Bazaar 
 Submission and Maintenance]&]
 [s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_user`_en`-us^ Bazaar 
