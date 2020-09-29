@@ -1,4 +1,4 @@
-topic "Ultimate++ Project Templates";
+topic "U++ Project Templates";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -43,7 +43,7 @@ topic "Ultimate++ Project Templates";
 [b83;*+117 $$42,42#2AC2FD302E8CD436942CC99374D81489:SubTitle]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Ultimate`+`+ Package Templates&]
+[s2; U`+`+ Package Templates&]
 [s3; Table of contents&]
 [s0; &]
 [s0; [^`#1^ 1. Prologue]&]
