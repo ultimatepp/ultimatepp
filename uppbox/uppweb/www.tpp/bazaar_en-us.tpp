@@ -6,16 +6,16 @@ topic "Bazaar";
 [{_}%EN-US 
 [s1; Bazaar&]
 [s3; Table of contents&]
-[s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#1^ 1. Introduction]&]
-[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#2^ 2. Bazaar Pages]&]
-[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#3^ 3. Maintained Packages 
+[s0;2 &]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#1^2 1. Introduction]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#2^2 2. Bazaar Pages]&]
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#3^2 3. Maintained Packages 
 List]&]
-[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#4^ 4. Unmaintained/Deprecated 
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#4^2 4. Unmaintained/Deprecated 
 Package List]&]
-[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#5^ 5. Bazaar contributor 
+[s0; [^topic`:`/`/uppweb`/www`/bazaar`_en`-us`#5^2 5. Bazaar contributor 
 pages]&]
-[s0; &]
+[s0;2 &]
 [s3;:1: 1. Introduction&]
 [s2; Community contributed packages and code snippets are included 
 in Bazaar.&]
