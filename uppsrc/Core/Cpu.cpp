@@ -42,15 +42,17 @@ static void sCheckCPU()
 			ecx = cpuInfo[2];
 			edx = cpuInfo[3];
 		#else
-			__get_cpuid(1, &eax, &ebx, &ecx, &edx);
+			if(__get_cpuid(1, &eax, &ebx, &ecx, &edx))
 		#endif
 		// https://en.wikipedia.org/wiki/CPUID#EAX.3D1:_Processor_Info_and_Feature_Bits
-		sHasMMX = edx & (1 << 23);
-		sHasSSE = edx & (1 << 25);
-		sHasSSE2 = edx & (1 << 26);
-		sHasSSE3 = ecx & 1;
-		sHasAVX = ecx & (1 << 28);
-		sHypervisor = ecx & (1 << 31);
+			{
+				sHasMMX = edx & (1 << 23);
+				sHasSSE = edx & (1 << 25);
+				sHasSSE2 = edx & (1 << 26);
+				sHasSSE3 = ecx & 1;
+				sHasAVX = ecx & (1 << 28);
+				sHypervisor = ecx & (1 << 31);
+			}
 	}
 }
 
