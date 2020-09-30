@@ -22,7 +22,7 @@ elif [ -x "$(command -v urpmi)" ]; then
 elif [ -x "$(command -v zypper)" ]; then
   DEP="zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif [ -x "$(command -v pacman)" ]; then
-  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang pkgconfig"
+  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang pkgconfig gdb"
 elif [ -x "$(command -v pkg)" ]; then
   DEP="pkg install bash gmake gtk3 libnotify llvm90 pkgconf"
   if [[ "$uname" == 'SunOS' ]]; then
