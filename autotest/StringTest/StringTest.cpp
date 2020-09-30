@@ -4,6 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	String x = "0123456789012345";
 	ASSERT(x.FindFirstOf("654") == 4);
 	ASSERT(x.FindFirstOf("46") == 4);
@@ -121,4 +123,6 @@ CONSOLE_APP_MAIN
 	sb[0] = 'a';
 	bb = sb;
 	ASSERT(bb == "a2");
+	
+	LOG("============== OK");
 }
