@@ -22,7 +22,7 @@ elif [ -x "$(command -v urpmi)" ]; then
 elif [ -x "$(command -v zypper)" ]; then
   DEP="zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif [ -x "$(command -v pacman)" ]; then
-  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang"
+  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang pkgconfig"
 elif [ -x "$(command -v pkg)" ]; then
   DEP="pkg install bash gmake gtk3 libnotify llvm90 pkgconf"
   if [[ "$uname" == 'SunOS' ]]; then
@@ -83,8 +83,13 @@ if [ -z "$UMK" ]; then
   UMK="./umk"
 fi
 
-$UMK ./uppsrc ide CLANG -brs ./theide
-$UMK ./uppsrc umk CLANG -brs ./umk
+if clang++ >/dev/null; then
+	$UMK ./uppsrc ide CLANG -brs ./theide
+	$UMK ./uppsrc umk CLANG -brs ./umk
+else
+	$UMK ./uppsrc ide GCC -brs ./theide
+	$UMK ./uppsrc umk GCC -brs ./umk
+fi
 
 if [ -x ./theide ]; then
   echo Install process has been finished, TheIDE is built as ./theide
