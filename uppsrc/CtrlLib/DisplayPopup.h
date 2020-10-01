@@ -24,7 +24,7 @@ private:
 	Point   Op(Point p);
 	void    Sync();
 
-	static Link<DisplayPopup> *all();
+	static Vector<DisplayPopup *>& all();
 	static bool StateHook(Ctrl *, int reason);
 	static bool MouseHook(Ctrl *, bool, int, Point, int, dword);
 	static void SyncAll();
