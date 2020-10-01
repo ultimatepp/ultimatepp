@@ -10,23 +10,23 @@ Switch& Switch::Set(int i, const Value& val) {
 	return *this;
 }
 
-Switch& Switch::Set(int i, const Value& val, const char *text) {
+Switch& Switch::Set(int i, const Value& val, const char *text, int gap) {
 	Case& v = cs.At(i);
 	if(value.IsVoid())
 		value = val;
-	SetLabel(i, text);
+	SetLabel(i, text, gap);
 	v.value = val;
 	Refresh();
 	return *this;
 }
 
-Switch& Switch::Add(const Value& val, const char *text) {
+Switch& Switch::Add(const Value& val, const char *text, int gap) {
 	Set(cs.GetCount(), val, text);
 	return *this;
 }
 
-Switch& Switch::Add(const char *text) {
-	Set(cs.GetCount(), cs.GetCount(), text);
+Switch& Switch::Add(const char *text, int gap) {
+	Set(cs.GetCount(), cs.GetCount(), text, gap);
 	return *this;
 }
 
@@ -37,11 +37,12 @@ int Switch::GetIndex() const {
 	return -1;
 }
 
-Switch&  Switch::SetLabel(int i, const char *text) {
+Switch&  Switch::SetLabel(int i, const char *text, int gap) {
 	if(i >= cs.GetCount())
 		cs.At(i).value = i;
 	Case& v = cs[i];
 	v.accesskey = ExtractAccessKey(text, v.label);
+	v.gap = gap;
 	Refresh();
 	return *this;
 }
@@ -71,24 +72,43 @@ Switch& Switch::SetLabel(const char *text) {
 	const char *q = text;
 	int i = 0;
 	const char *s = text;
+	int gap = 0;
 	while(*s) {
-		if(*s == '\r') {
-			SetLabel(i++, String(q, s));
-			q = ++s;
-			if(*q == '\n') {
-				q++;
-				s++;
+		if(*s == '^') {
+			if(s[1] == '^')
+				s += 2;
+			else {
+				gap = atoi(String(q, s));
+				q = ++s;
 			}
 		}
 		else
+		if(*s == '|') {
+			if(s[1] == '|')
+				s += 2;
+			else {
+				gap = atoi(String(q, s)) | GAP_SEPARATOR;
+				q = ++s;
+			}
+		}
+		else
+		if(*s == '\r') {
+			SetLabel(i++, String(q, s), gap);
+			gap = 0;
+			q = ++s;
+			if(*q == '\n')
+				q = ++s;
+		}
+		else
 		if(*s == '\n') {
-			SetLabel(i++, String(q, s));
+			SetLabel(i++, String(q, s), gap);
+			gap = 0;
 			q = ++s;
 		}
 		else
 			s++;
 	}
-	SetLabel(i++, String(q, s));
+	SetLabel(i++, String(q, s), gap);
 	cs.SetCount(i);
 	return *this;
 }
@@ -108,19 +128,13 @@ Value Switch::GetData() const {
 
 Rect  Switch::GetCaseRect(int i) const {
 	Size sz = GetSize();
-	if(posx.GetCount())
-		return RectC(i ? posx[i - 1] : 0, 0, posx[i], sz.cy);
-	else
-		return RectC(0, linecy * i, sz.cx, linecy);
+	return i >= 0 && i < cs.GetCount() ? (Rect)cs[i].rect : Rect(Null);
 }
 
 Rect  Switch::GetCheckRect(int i) const {
-	Size sz = GetSize();
-	int cx = CtrlsImg::S0().GetSize().cx;
-	if(posx.GetCount())
-		return RectC(i ? posx[i - 1] : 0, 0, cx, sz.cy);
-	else
-		return RectC(0, linecy * i, cx, linecy);
+	Rect r = GetCaseRect(i);
+	r.right = r.left + CtrlsImg::S0().GetSize().cx;
+	return r;
 }
 
 void Switch::EnableCase(int i, bool enable) {
@@ -157,68 +171,74 @@ void Switch::Paint(Draw& w) {
 	int tcy = GetTextSize("W", font).cy;
 	Size isz = CtrlsImg::S0().GetSize();
 	linecy = max(mincy, max(isz.cy + DPI(2), tcy));
-	int y = 0;
-	int x = 0;
-	bool horz = linecy * cs.GetCount() > sz.cy;
+	bool horz = false;
+	if(direction == 1) horz = true;
+	for(int pass = !!direction; pass < 2; pass++) { // first pass to decide horz, second to actually draw
+		int y = 0;
+		int x = 0;
+		
+		if(horz)
+			linecy = sz.cy;
 	
-	if (direction == 1) horz = true;
-	else if (direction == -1) horz = false;
+		int ty = (linecy - tcy) / 2;
+		bool ds = !IsShowEnabled();
+		int i;
+		light = -1;
+		for(i = 0; i < cs.GetCount(); i++) {
+			Case& v = cs[i];
+
+			if(v.gap) {
+				int gsz = (v.gap & 255) * tcy / 4;
+				if(pass && (v.gap & GAP_SEPARATOR))
+					if(horz)
+						w.DrawRect(x + y + gsz / 2, y, DPI(1), linecy, SColorDisabled());
+					else
+						w.DrawRect(x, y + gsz / 2, sz.cx, DPI(1), SColorDisabled());
+				(horz ? x : y) += gsz;
+			}
+			
+			bool dv = ds || !v.enabled;
 	
-	if(horz) {
-		posx.SetCount(cs.GetCount());
-		linecy = sz.cy;
-	}
-	else
-		posx.Clear();
-	int ty = (linecy - tcy) / 2;
-	bool ds = !IsShowEnabled();
-	int i;
-	light = -1;
-	for(i = 0; i < cs.GetCount(); i++) {
-		Case& v = cs[i];
-		bool dv = ds || !v.enabled;
-
-		Size tsz = GetSmartTextSize(v.label, font);
-		int iy = (linecy - isz.cy) / 2;
-
-		Rect hr = RectC(x, y, horz ? tsz.cx + isz.cx + 4 : sz.cx, linecy);
-		bool mousein = HasMouseIn(hr);
-		if(mousein)
-			light = i;
-		Image img;
-		int q = dv ? CTRL_DISABLED :
-		        pushindex == i ? CTRL_PRESSED :
-		        mousein ? CTRL_HOT :
-		        CTRL_NORMAL;
-		img = CtrlsImg::Get((v.value == value ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + q);
-		w.DrawImage(x, y + iy, img);
-		DrawSmartText(w, x + isz.cx + 4, y + ty, sz.cx, v.label, font,
-		              dv || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this), ///////
-		              VisibleAccessKeys() ? v.accesskey : 0);
-		if(HasFocus() && (pushindex == i || v.value == value && pushindex < 0))
-			DrawFocus(w, RectC(x + isz.cx + 2, y + ty - 1, tsz.cx + 3, tsz.cy + 2) & sz);
-		if(horz) {
-			x += hr.Width() + sz.cy / 2;
-			posx[i] = x;
+			Size tsz = GetSmartTextSize(v.label, font);
+			int iy = (linecy - isz.cy) / 2;
+			int width = horz ? tsz.cx + isz.cx + DPI(4) : sz.cx;
+			Rect hr = RectC(x, y, width, linecy);
+			bool mousein = HasMouseIn(hr);
+			if(mousein)
+				light = i;
+			if(pass) {
+				Image img;
+				int q = dv ? CTRL_DISABLED :
+				        pushindex == i ? CTRL_PRESSED :
+				        mousein ? CTRL_HOT :
+				        CTRL_NORMAL;
+				img = CtrlsImg::Get((v.value == value ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + q);
+				w.DrawImage(x, y + iy, img);
+				DrawSmartText(w, x + isz.cx + DPI(4), y + ty, sz.cx, v.label, font,
+				              dv || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this), ///////
+				              VisibleAccessKeys() ? v.accesskey : 0);
+				if(HasFocus() && (pushindex == i || v.value == value && pushindex < 0))
+					DrawFocus(w, RectC(x + isz.cx + DPI(2), y + ty - DPI(1), tsz.cx + DPI(3), tsz.cy + DPI(2)) & sz);
+			}
+			v.rect = hr;
+			if(horz)
+				x += hr.Width() + tcy;
+			else
+				y += linecy;
 		}
-		else
-			y += linecy;
+		
+		if(y > sz.cy)
+			horz = true;
 	}
-	if(horz)
-		posx[i - 1] = sz.cx;
+	
 }
 
 int Switch::GetIndex(Point p) {
-	if(posx.GetCount()) {
-		for(int i = 0; i < posx.GetCount(); i++)
-			if(p.x < posx[i]) return cs[i].enabled ? i : -1;
-		return -1;
+	for(int i = 0; i < cs.GetCount(); i++) {
+		if(cs[i].rect.Contains(p))
+			return i;
 	}
-	else {
-		int i = p.y / linecy;
-		i = i >= 0 && i < cs.GetCount() ? i : -1;
-		return i < 0 ? -1 : cs[i].enabled ? i : -1;
-	}
+	return -1;
 }
 
 void Switch::MouseMove(Point p, dword keyflags) {
@@ -239,6 +259,7 @@ void Switch::MouseMove(Point p, dword keyflags) {
 }
 
 void Switch::LeftDown(Point p, dword keyflags) {
+	DLOG("============= LeftDown");
 	if(IsReadOnly()) return;
 	if(Ctrl::ClickFocus()) SetWantFocus();
 	pushindex = GetIndex();
