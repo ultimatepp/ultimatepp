@@ -124,5 +124,14 @@ CONSOLE_APP_MAIN
 	bb = sb;
 	ASSERT(bb == "a2");
 	
+	String lc, lc2;
+	for(int i = 0; i < 100; i++) {
+		lc.Cat(i % 10 + '0');
+		ASSERT(lc == ~lc);
+		ASSERT(lc != ~lc2);
+		ASSERT(lc != ~(lc + 'x'));
+		lc2 = lc;
+	}
+	
 	LOG("============== OK");
 }
