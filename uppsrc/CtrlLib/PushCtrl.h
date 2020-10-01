@@ -299,13 +299,13 @@ public:
 	virtual void   LostFocus();
 
 public:
-	struct Case : Moveable<Case> {
+	struct Case  {
 		String label;
 		Value  value;
-		int    accesskey;
-		bool   enabled;
-
-		Case()         { accesskey = 0; enabled = true; }
+		int    accesskey = 0;
+		bool   enabled = true;
+		int    gap = 0;
+		Rect16 rect = Rect16(0, 0, 0, 0);
 	};
 
 private:
@@ -313,7 +313,6 @@ private:
 	Value        value;
 	int          pushindex;
 	Array<Case>  cs;
-	Vector<int>  posx;
 	int          linecy;
 	int          light;
 	int          mincy;
@@ -329,14 +328,16 @@ private:
 	Rect    GetCheckRect(int i) const;
 
 public:
-	Switch& SetLabel(int i, const char *text);
+	enum { GAP_SEPARATOR = 1 << 20 };
+
+	Switch& SetLabel(int i, const char *text, int gap = 0);
 	Switch& SetLabel(const char *text);
 	String  GetLabel() const                                    { return GetLabel(GetIndex()); }
 	String  GetLabel(int i) const                               { return cs[i].label; }
-	Switch& Set(int i, const Value& val, const char *text);
+	Switch& Set(int i, const Value& val, const char *text, int gap = 0);
 	Switch& Set(int i, const Value& val);
-	Switch& Add(const Value& val, const char *text);
-	Switch& Add(const char *text);
+	Switch& Add(const Value& val, const char *text, int gap = 0);
+	Switch& Add(const char *text, int gap = 0);
 
 	void    EnableCase(int i, bool enable = true);
 	void    DisableCase(int i)                                  { EnableCase(i, false); }
