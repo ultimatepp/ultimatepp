@@ -291,7 +291,7 @@ public:
 	const T *GetNext(int i = 0) const    { return link_next[i]; }
 	const T *GetPrev(int i = 0) const    { return link_prev[i]; }
 
-	NOUBSAN	void LinkSelf(int i = 0)             { link_next[i] = link_prev[i] = (T *)this; }
+	NOUBSAN	void LinkSelf(int i = 0)     { link_next[i] = link_prev[i] = (T *)this; }
 	void LinkSelfAll()                   { for(int i = 0; i < N; i++) LinkSelf(i); }
 	void Unlink(int i = 0)               { link_next[i]->link_prev[i] = link_prev[i]; link_prev[i]->link_next[i] = link_next[i];
 	                                       LinkSelf(i); }
@@ -364,7 +364,7 @@ private:
 
 	int  foundsize;
 	int  newsize;
-	bool flag;
+	bool flag = false;
 	
 	const int InternalSize = 3 * (sizeof(Item) + sizeof(Key) + 24) / 2;
 

@@ -12,8 +12,8 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 	ImageBuffer ib(tsz);
 	int scx0 = ssz.cx / nx * nx;
 	auto do_line = [&](int ty, f32x4 *b, f32x4 *div) {
-		memset(b, 0, tsz.cx * sizeof(f32x4));
-		memset(div, 0, tsz.cx * sizeof(f32x4));
+		memset((void *)b, 0, tsz.cx * sizeof(f32x4));
+		memset((void *)div, 0, tsz.cx * sizeof(f32x4));
 		f32x4 v1 = f32all(1);
 		f32x4 vnx = f32all(nx);
 		int yy = ny * ty;

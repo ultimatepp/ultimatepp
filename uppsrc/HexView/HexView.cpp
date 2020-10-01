@@ -65,7 +65,7 @@ void HexViewInfo::Paint(Draw& w)
 	w.DrawText(xx, 0, Format64(pos), font, Red);
 	xx += (longmode ? 22 : 12) * fsz.cx;
 	int y = 0;
-	int x;
+	int x = 0;
 	for(int q = 0; q < mode; q++) {
 		x = xx;
 		if(q < 1)

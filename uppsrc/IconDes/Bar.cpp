@@ -300,7 +300,7 @@ void IconDes::SerializeSettings(Stream& s)
 	if(version >= 2)
 		s % ImgFile();
 	if(version >= 3) {
-		bool b;
+		bool b = false;
 		s % b % show_small;
 	}
 	if(version >= 4)
