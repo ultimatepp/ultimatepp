@@ -146,7 +146,7 @@ C gather(Args&& ...args)
 template <class C, typename... Args>
 int scatter_n(int n, const C& c, Args& ...args)
 {
-	if(n < sizeof...(args))
+	if(n < (int)sizeof...(args))
 		return 0;
 	iter_get(c.begin(), args...);
 	return sizeof...(args);

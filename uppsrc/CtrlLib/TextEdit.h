@@ -512,7 +512,7 @@ protected:
 	struct Para : Moveable<Para> {
 		int    cx, cy;
 
-		Para()         { cx = -1; }
+		Para()         { cx = -1; cy = 0; }
 	};
 
 	Vector<Para> para;

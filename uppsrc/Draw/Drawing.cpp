@@ -336,7 +336,7 @@ void Draw::DrawingPos::Pop()
 
 Rect Draw::DrawingPos::GetRect()
 {
-	Rect r;
+	Rect r(0, 0, 0, 0);
 	*this % r;
 	return Get(r);
 }
@@ -513,7 +513,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 		case DRAWING_DRAWPOLYPOLYPOLYGON:
 			{
 				Color outline;
-				uint64 pattern;
+				uint64 pattern = 0;
 				int subpolygon_count_count, disjunct_polygon_count_count;
 				int version = 2;
 				ps / version;
@@ -542,7 +542,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 				int n, angle;
 				Font font;
 				Color ink;
-				byte cs;
+				byte cs = 0;
 				ps % x % y % angle % font % ink / n % cs;
 				if(font.GetHeight() == 0) {
 					FontInfo fi = font.Info();
@@ -562,7 +562,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 				}
 				LLOG("wsDrawText \"" << WString(text, n)
 				     << "\" at: (" << x << ", " << y << ", " << angle << ")");
-				bool dxb;
+				bool dxb = false;
 				ps % dxb;
 				Buffer<int> dx(n);
 				int *wd = dx;

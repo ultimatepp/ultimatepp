@@ -107,6 +107,7 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int64& l, int64& h)
 		h = GetGPos(line, rect.right);
 		return true;
 	}
+	l = h = 0;
 	return false;
 }
 
@@ -391,9 +392,9 @@ void   LineEdit::Paint0(Draw& w) {
 	GetSelection(sell, selh);
 	if(!IsEnabled())
 		sell = selh = 0;
-	Rect rect;
+	Rect rect(0, 0, 0, 0);
 	bool rectsel = IsRectSelection();
-	if(IsRectSelection())
+	if(rectsel)
 		rect = GetRectSelection();
 	Size sz = GetSize();
 	Size fsz = GetFontSize();

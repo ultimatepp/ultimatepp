@@ -1009,10 +1009,10 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 	for(;;) { // in case that signature_len grows...
 		int signature = -1;
 		int signature_widget = -1;
-		int p7s_start, p7s_end, pdf_length_pos;
+		int p7s_start, p7s_end, pdf_length_pos = 0;
 	
 		int  sign_page = Null;
-		Rect sign_rect;
+		Rect sign_rect(0, 0, 0, 0);
 
 		if(sign) {
 			signature = BeginObj();

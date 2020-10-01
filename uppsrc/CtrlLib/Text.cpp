@@ -733,8 +733,10 @@ bool TextCtrl::GetSelection32(int& l, int& h) const
 {
 	int64 ll, hh;
 	bool b = GetSelection(ll, hh);
-	if(hh >= INT_MAX)
+	if(hh >= INT_MAX) {
+		l = h = (int)cursor;
 		return false;
+	}
 	l = (int)ll;
 	h = (int)hh;
 	return b;
