@@ -189,11 +189,12 @@ void Switch::Paint(Draw& w) {
 
 			if(v.gap) {
 				int gsz = (v.gap & 255) * tcy / 4;
-				if(pass && (v.gap & GAP_SEPARATOR))
+				if(pass && (v.gap & GAP_SEPARATOR)) {
 					if(horz)
 						w.DrawRect(x + y + gsz / 2, y, DPI(1), linecy, SColorDisabled());
 					else
 						w.DrawRect(x, y + gsz / 2, sz.cx, DPI(1), SColorDisabled());
+				}
 				(horz ? x : y) += gsz;
 			}
 			
@@ -259,7 +260,6 @@ void Switch::MouseMove(Point p, dword keyflags) {
 }
 
 void Switch::LeftDown(Point p, dword keyflags) {
-	DLOG("============= LeftDown");
 	if(IsReadOnly()) return;
 	if(Ctrl::ClickFocus()) SetWantFocus();
 	pushindex = GetIndex();
