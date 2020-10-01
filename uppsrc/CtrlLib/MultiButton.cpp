@@ -260,6 +260,7 @@ void MultiButton::GetPos(int ii, int& x, int& cx)
 {
 	int border, lx, rx;
 	Metrics(border, lx, rx);
+	x = cx = 0;
 	for(int i = 0; i <= ii; i++) {
 		SubButton& b = button[i];
 		GetPos(b, lx, rx, x, cx);

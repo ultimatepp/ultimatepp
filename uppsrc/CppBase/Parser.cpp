@@ -1614,14 +1614,11 @@ void Parser::Do()
 			else {
 				if(!Scope(tparam, tnames)) {
 					Array<Decl> r = Declaration(true, true, tnames, tparam);
-					CppItem *functionItem = 0;
 					bool body = lex == '{';
 					for(int i = 0; i < r.GetCount(); i++) {
 						Decl& d = r[i];
-						if(!d.isfriend && d.function) {
-							CppItem& m = Fn(d, "template " + tparam + ' ', body, tnames, tparam);
-							functionItem = &m;
-						}
+						if(!d.isfriend && d.function)
+							Fn(d, "template " + tparam + ' ', body, tnames, tparam);
 					}
 					EatBody();
 					Key(';');
@@ -1665,14 +1662,13 @@ void Parser::Do()
 		}
 		else {
 			Array<Decl> r = Declaration(true, true, Null, Null);
-			CppItem *functionItem = 0;
 			bool body = lex == '{';
 			for(int i = 0; i < r.GetCount(); i++) {
 				Decl& d = r[i];
 				if(d.name.GetCount()) {
 					if(d.function) {
 						if(!d.isfriend)
-							functionItem = &Fn(d, Null, body, String(), String());
+							Fn(d, Null, body, String(), String());
 					}
 					else {
 						String h = d.natural;

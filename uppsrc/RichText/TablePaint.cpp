@@ -116,7 +116,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool b
 	int frameln = LineZoom(pi.zoom, format.frame);
 	int gridln = LineZoom(pi.zoom, format.grid);
 	Rect pg[2];
-	Rect hpg;
+	Rect hpg(0, 0, 0, 0);
 	RichContext hrc = rc;
 	int hy = min(format.header, cell.GetCount());
 	for(int pass = 0;; pass++) {

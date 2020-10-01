@@ -210,7 +210,7 @@ void RepoSync::SyncList()
 		         AttrText(path).SetFont(ArialZ(20).Bold()).Paper(bk),
 		         AttrText().Paper(bk));
 		list.SetLineCy(hi, Zy(26));
-		bool actions;
+		bool actions = false;
 		if(w.kind == SVN_DIR) {
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);
 			o.SizePos();

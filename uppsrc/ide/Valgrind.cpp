@@ -71,7 +71,7 @@ void Ide::Valgrind()
 							String fn;
 							String dir;
 							String file;
-							int    line;
+							int    line = Null;
 							if(p.Tag("frame")) {
 								while(!p.End()) {
 									if(p.Tag("obj")) {
