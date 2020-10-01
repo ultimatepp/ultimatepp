@@ -62,6 +62,12 @@ void DisplayPopup::Paint(Draw& w)
 	}
 }
 
+Vector<DisplayPopup *>& DisplayPopup::all()
+{
+	static Vector<DisplayPopup *> all;
+	return all;
+}
+
 DisplayPopup::DisplayPopup()
 {
 	SetFrame(BlackFrame());
@@ -74,12 +80,14 @@ DisplayPopup::DisplayPopup()
 		InstallStateHook(StateHook);
 		InstallMouseHook(MouseHook);
 	}
-	LinkBefore(all());
+	all().Add(this);
 }
 
 DisplayPopup::~DisplayPopup()
 {
-	Unlink();
+	int q = FindIndex(all(), this);
+	if(q >= 0)
+		all().Remove(q);
 }
 
 void DisplayPopup::Sync()
@@ -139,16 +147,10 @@ void DisplayPopup::Sync()
 		Close();
 }
 
-Link<DisplayPopup> *DisplayPopup::all()
-{
-	static Link<DisplayPopup> all;
-	return &all;
-}
-
 void DisplayPopup::SyncAll()
 {
 	int n = 0;
-	for(DisplayPopup *p = all()->Link<DisplayPopup>::GetNext(); p != all(); p = p->Link<DisplayPopup>::GetNext())
+	for(DisplayPopup *p : all())
 		if(p->ctrl && p->ctrl->IsOpen()) {
 			p->Sync();
 			n++;
