@@ -11,7 +11,8 @@ uses
 	plugin/bmp,
 	plugin/lz4,
 	PdfDraw,
-	Painter;
+	Painter,
+	plugin/bz2;
 
 library(WIN32) oleaut32;
 
@@ -40,8 +41,7 @@ file
 	Bsdiff\bsadditional.cpp,
 	Bsdiff\bsdiff.cpp,
 	Bsdiff\bspatch.cpp,
-	Bsdiff\bzlib.h,
-	Bsdiff\Credits.txt,
+	Bsdiff\Copying,
 	Html readonly separator,
 	Html/htmld.cpp,
 	Html/htmld.h,

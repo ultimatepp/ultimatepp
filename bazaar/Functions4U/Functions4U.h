@@ -236,9 +236,16 @@ String RemoveAccents(String str);
 String RemoveAccent(wchar c);
 bool IsPunctuation(wchar c);
 String RemovePunctuation(String str);
-	
-inline double ToRad(double angle)	{return angle*M_PI/180.;}
-inline double ToDeg(double angle)	{return angle*180./M_PI;}
+
+template<class T>	
+inline T ToRad(T angle)	{return angle*M_PI/180.;}
+template<class T>
+inline T ToDeg(T angle)	{return angle*180./M_PI;}
+template<class T>
+inline T atan2_360(T y, T x) {
+	T ret = ToDeg(atan2<T>(y, x));
+	return ret > 90 ? 450 - ret : 90 - ret; 
+}
 
 inline bool Odd(int val)	  		{return val%2;}
 inline bool Even(int val) 	  		{return !Odd(val);}
