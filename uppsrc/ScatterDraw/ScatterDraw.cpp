@@ -301,10 +301,10 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 	return *this;
 }
 
-void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
+ScatterDraw &ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	if (linkedMaster) {
 		linkedMaster->ZoomToFit(horizontal, vertical, factor);
-		return;
+		return *this;
 	}
 	DoFitToData(horizontal, vertical, factor);
 	if (!linkedCtrls.IsEmpty()) {
@@ -312,6 +312,7 @@ void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	    	linkedCtrls[i]->DoFitToData(horizontal, vertical, factor);
 	}
 	WhenZoomToFit();
+	return *this;
 }
 			
 ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
@@ -561,7 +562,7 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() {
 	labelsDx = labelsDy = 0;
 	labelsAlign = ALIGN_CENTER;
 	showLegend = true;
-	legendLine = true;
+	legendLine = false;
 }
 		
 void ScatterDraw::ScatterBasicSeries::Init(int index) {

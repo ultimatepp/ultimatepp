@@ -387,8 +387,8 @@ private:
 
 public:
 	VectorY() : yData(0), x0(0), deltaX(0) {}
-	VectorY(const Vector<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
-	void Init(const Vector<Y> &_yData, double _x0, double _deltaX) {
+	VectorY(const Vector<Y> &_yData, double _x0 = 0, double _deltaX = 1) {Init(_yData, _x0, _deltaX);}
+	void Init(const Vector<Y> &_yData, double _x0 = 0, double _deltaX = 1) {
 		this->yData = &_yData;
 		this->x0 = _x0;
 		this->deltaX = _deltaX;
@@ -409,8 +409,8 @@ private:
 
 public:
 	ArrayY() {}
-	ArrayY(const Upp::Array<Y> &_yData, double _x0, double _deltaX) {Init(_yData, _x0, _deltaX);}
-	void Init(const Upp::Array<Y> &_yData, double _x0, double _deltaX) {
+	ArrayY(const Upp::Array<Y> &_yData, double _x0 = 0, double _deltaX = 1) {Init(_yData, _x0, _deltaX);}
+	void Init(const Upp::Array<Y> &_yData, double _x0 = 0, double _deltaX = 1) {
 		this->yData = &_yData;
 		this->x0 = _x0;
 		this->deltaX = _deltaX;

@@ -390,7 +390,7 @@ Size GetTextSizeSpace(const String& text, Font font) {
 	WString wtext(text);
 	for (int i = 0; i < wtext.GetCount(); ++i)  
 		ret.cx += font.GetLeftSpace(wtext[i]) + font.GetWidth(wtext[i]);
-	ret.cy = font.GetHeight();
+	ret.cy = font.GetHeight() + font.GetDescent();
 	return ret;
 }
 
