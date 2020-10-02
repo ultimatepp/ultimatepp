@@ -463,7 +463,7 @@ intermediate folder names replacing them with `"...`".&]
 [s5;:IsPunctuation`(wchar`):%- [@(0.0.255) bool]_[* IsPunctuation]([_^wchar^ wchar]_[*@3 c])&]
 [s2; Returns true if [%-*@3 c ]is a punctuation character.&]
 [s3;%- &]
-[s4;%- &]
+[s4; &]
 [s5;:Replace`(String`,String`,String`):%- [_^String^ String]_[* Replace]([_^String^ String]_
 [*@3 str], [_^String^ String]_[*@3 find], [_^String^ String]_[*@3 replace])&]
 [s0;l288; Replaces in [%-*@3 str] substring [%-*@3 find] with [%-*@3 replace] 
@@ -588,12 +588,25 @@ oint`_]<[*@4 T]>`&_[*@3 p1], [@(0.0.255) const]_[_^Point`_^ Point`_]<[*@4 T]>`&_
 if it is even.&]
 [s3; &]
 [s4;%- &]
-[s5;:ToRad`(double`):%- [@(0.0.255) double]_[* ToRad]([@(0.0.255) double]_[*@3 angle])&]
+[s5;:Upp`:`:ToRad`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* ToRad](
+[*@4 T]_[*@3 angle])&]
 [s2; Returns [%-*@3 angle ]in degrees converted to radians.&]
 [s3; &]
-[s4; &]
-[s5;:ToDeg`(double`):%- [@(0.0.255) double]_[* ToDeg]([@(0.0.255) double]_[*@3 angle])&]
-[s0;l288; Returns [%-*@3 angle ]in radians converted to degrees.&]
+[s4;%- &]
+[s5;:Upp`:`:ToDeg`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* ToDeg](
+[*@4 T]_[*@3 angle])&]
+[s2; Returns [%-*@3 angle ]in radians converted to degrees.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:atan2`_360`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_
+[* atan2`_360]([*@4 T]_[*@3 y], [*@4 T]_[*@3 x])&]
+[s2; Like [^https`:`/`/en`.wikipedia`.org`/wiki`/Atan2^ atan2]() in 
+degrees where 0º is vertical and angle rotates clockwise to 
+360º..&]
+[s0;= 
+@@image:1031&953
+(AwIB7gAAAAAAAAAAAHic7dz/S9R3HMDxP3QQgwjGIBhBDCTYL0EMRhDEIKIoGlG4jI0oJlI4XG3DYiwyyy9cmppmmkd55bT2Gh+4iXrnnXn3/nzuHg/eP0gmvs3P09fnfXf28SMAAAAAAAAAAADADkqLleFSOfUuIKWT/VM9fROpdwHJxCD47OyjWMYBXSsGQVaBcUB3qg4C44CuVR0ExgHdacsgMA7oQlsGgXFAt9lxEBgHdJUdB4FxQPeoMwiMA7pEnUFgHNANdh0ExgEdb9dBYBzQ2RocBMYBHazBQWAc0KmaGgTGAR2pqUFgHNB59jAIjAM6zB4GgXFA98iu9tS7gJRUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABqABUACoAFYAKQAWgAlABZBV8deVprOM3Stk6MzgT6+yvM9fuL1x/8HJo7PXY/Orr1X9SbxZaIqugwfX5+ZGjvePf/TJ14be5G38v/jG5UlqsrG98SP1FwCfJLu+379cXymuxJl+ujsy+iRVX+OCT5VgxC2IoxICIYVErjW9+mrx0by5GxouV96m/IGhas+eCuM4fPn9zZ3T5yp/zp29P9/RNHDg3sjmKQxdHv731rHd4frhULlfWW7dz2C+ffjqurG2Mzr2NG6RTA9OHL2+dFzEmYppML73brw3Dvtv3x4jiEB1TICbFiZuluFmq5nDk6ljcNcW9lnMEedPSR0pjTEQR3995/sWl0WoO8Xb8SZw74r0t+rzQlPY8XxA//2MKxCyIiVDN4eCFx+eHZuM83urPDvW1/1mz0mIlTgrHrk9Wc4i3B0aW9jYaoq/42H3fJF0l4XPHM8vvLv/+onqzlI2GZs/RcSo/cG4kymrRJukGyV9Bsbb+4e74yvEbpc0PKw2NvW7kEB0dZQfw+PA2bJVOlbyCqi2jIU4Qg0+W67QQ74pequ08eFZu527pJPmpIBOjIQZB9RBdp4W4F9r8xET8TY/Bsjd5qyAT13Nc/HVaiIPAluesY/U/epVwzxRXPivI1GohVk/fxPZXNB26OPr2vdds0LQ8V5DZ3sLp29O1XvUaJ4vU+6V48l9BZksLtVbcJnldK80qSgWZytrGlz88qR/CqYHp1NukYIpVQdzw1E8gWyOzb1LvlCIpUAVj86vbHxfacR27Ppl6sxRJUSpYW/9wtHe8kQSyFYeI1FumMIpSQYP3QtV1+PLTCCf1rimGQlQQ9/kN3gttXtfuL6TeOMWQ/woqaxu1fvG//jp44bH/PYZG5L+CgZGlXR8drbXODM6k3j4FkP8KMjERppfePXhWvvXw1aV7cyf7p77+cTx+2tevwK8e0IiiVFBLubI+Nr96d3zl579enh+aPXGzdOTq2OZDhF89YFdFr6CWhfJanKnvjC73Ds/H26m3Q651agXQOBWACkAFoAJQAagAVAAqABWACkAFoAJQAagAVAAqABWACkAFoAJQAagAVAAqABWACkAFoAJQAagAVAAqABWACkAFoAJQAagAVJAfJ/unSouV1LvoRirIj+x7oYX2U0F+ZN8LLbSfCvJjcwVaaCcV5Mf2CrTQHirIj1oVaKHVVJAf9SvQQuuoID8aqUALraCC/Gi8gj230OynsKxCrKZaSL5by2rF6umbGC6Vm588/C/7l0y9C/7j+k9FBfnh+k9FBfnh+k9FBfnh+k9FBfnh+k9FBfnh+k9FBfnh+k9FBfnh+k9FBfnh+k9FBaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKgAVgApABaACUAGoAFQAKugq/wIwLpKz)
+&]
 [s3; &]
 [ {{10000@1 [s0; [* Graphical functions]]}}&]
 [s4;%- &]

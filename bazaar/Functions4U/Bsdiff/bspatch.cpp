@@ -30,7 +30,7 @@ __FBSDID("$FreeBSD: src/usr.bin/bsdiff/bspatch/bspatch.c,v 1.1 2005/08/06 01:59:
 
 #include <Core/Core.h>
 
-#include "bzlib.h"
+#include <plugin/bz2/lib/bzlib.h>
 #include <fcntl.h>
 
 #include "../bsdiff.h"
@@ -68,7 +68,7 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 	BZFILE * cpfbz2, * dpfbz2, * epfbz2;
 	int cbz2err, dbz2err, ebz2err;
 	int fd;
-	ssize_t oldsize,newsize;
+	ssize_t oldsize = 0,newsize;
 	ssize_t bzctrllen,bzdatalen;
 	u_char header[32],buf[8];
 	u_char *old, *nnew;

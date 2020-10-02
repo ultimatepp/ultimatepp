@@ -30,7 +30,7 @@ __FBSDID("$FreeBSD: src/usr.bin/bsdiff/bsdiff/bsdiff.c,v 1.1 2005/08/06 01:59:05
 
 #include <Core/Core.h>
 
-#include "bzlib.h"
+#include <plugin/bz2/lib/bzlib.h>
 #include <fcntl.h>
 
 #include "../bsdiff.h"
@@ -205,7 +205,7 @@ bool BSDiff(String oldfile, String newfile, String patchfile)
 	int fd;
 	u_char *old,*nnew;
 	off_t oldsize,newsize;
-	off_t *I,*V;
+	off_t *I,*V = nullptr;
 	off_t scan,pos,len;
 	off_t lastscan,lastpos,lastoffset;
 	off_t oldscore,scsc;
