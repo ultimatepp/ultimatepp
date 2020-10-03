@@ -30,6 +30,9 @@ like to get any additional feature or improvement, please go
 to [^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^ Bazaar Support].&]
 [s2; All packages and code in Bazaar are under [^topic`:`/`/ide`/app`/About`$en`-us^ Ne
 w BSD license].&]
+[s2; If you are looking for support and you would like to ask questions 
+please visit dedicated to bazaar [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=62`&^ f
+orum].&]
 [s3;:2: 2. Bazaar Pages&]
 [s2; In addition to this page, below is the most important documentation 
 pages of Bazaar project:&]
@@ -39,9 +42,7 @@ Submission and Maintenance]&]
 User Guide]&]
 [s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_support`_en`-us^ Bazaar 
 Support]&]
-[s2;l128;i150;O0; [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=62`&^ B
-azaar Forum]&]
-[s0;%- &]
+[s0;^topic`:`/`/uppweb`/www`/bazaar`_support`_en`-us^ &]
 [s3;:3: 3. Maintained Packages List&]
 [s0;2%- &]
 [ {{1055:1758:1143:1416:947:909:1123:815:834h1;@(178)R2 [s0;= [*2 Name]]
