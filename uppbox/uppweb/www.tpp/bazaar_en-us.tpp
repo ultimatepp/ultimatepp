@@ -39,6 +39,8 @@ Submission and Maintenance]&]
 User Guide]&]
 [s2;l128;i150;O0; [^topic`:`/`/uppweb`/www`/bazaar`_support`_en`-us^ Bazaar 
 Support]&]
+[s2;l128;i150;O0; [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=62`&^ B
+azaar Forum]&]
 [s0;%- &]
 [s3;:3: 3. Maintained Packages List&]
 [s0;2%- &]
