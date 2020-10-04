@@ -2,13 +2,13 @@
 #define _TimerTest_TimerTest_h
 
 #include <CtrlLib/CtrlLib.h>
+#include <Timer/Timer.h>
 
-using namespace Upp;
+namespace Upp {
 
 #define LAYOUTFILE <TimerTest/TimerTest.lay>
 #include <CtrlCore/lay.h>
 
-#include <Timer/Timer.h>
 
 class TimerTest : public WithLayout<TopWindow> {
 public:
@@ -26,5 +26,6 @@ private:
 	Atomic demo;
 };
 
-#endif
+}
 
+#endif

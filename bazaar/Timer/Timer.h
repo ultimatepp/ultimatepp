@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-using namespace Upp;
+namespace Upp {
 
 //runs a chained list of TimerEvent stored Callbacks after sleeping
 class Timer
@@ -60,5 +60,7 @@ private:
 	//ArrayMap<unsigned, TimeEvent*> emap;
 	//LinkOwner<TimeEvent> flist; //unused elements for reuse
 };
+
+}
 
 #endif

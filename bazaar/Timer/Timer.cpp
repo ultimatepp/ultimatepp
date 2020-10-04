@@ -1,6 +1,7 @@
 #include "Timer.h"
 
-// #define LOG_QUEUE
+using namespace Upp;
+
 #define LLOG(x) // LOG(x)
 
 Timer::Timer()
