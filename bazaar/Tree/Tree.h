@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 template <class T>
 class Tree
@@ -108,9 +108,6 @@ public:
 		, root(NULL)
 		, B(v, 0)
 	{ Relink(); }
-
-	using B::ConstIterator;
-	using B::Iterator;
 
 //	using B::ValueType;
 //	using B::Begin;
@@ -453,6 +450,6 @@ inline void Xmlize(XmlIO& xml, MapNodeB<K, BB>& a)
 	xml("leaf", (BB&)a); Xmlize(xml, (TreeMap<K, MapNodeB<K,BB> >&)a);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
