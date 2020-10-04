@@ -1,4 +1,7 @@
-#include "XedTest.h"
+#include <Core/Core.h>
+#include <Xed/Xed.h>
+
+using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
