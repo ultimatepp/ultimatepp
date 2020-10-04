@@ -433,12 +433,15 @@ void Sqlite3Session::Close() {
 	sql.Clear();
 	if (NULL != db) {
 		SessionClose();
-		DEBUGCODE(int retval =)
-		sqlite3_close(db);
+	#ifdef _DEBUG
+		int retval = sqlite3_close(db);
 		// If this function fails, that means that some of the
 		// prepared statements have not been finalized.
 		// See lib/sqlite3.h:91
 		ASSERT(SQLITE_OK == retval);
+	#else
+		sqlite3_close(db);
+	#endif
 		db = NULL;
 	}
 }
