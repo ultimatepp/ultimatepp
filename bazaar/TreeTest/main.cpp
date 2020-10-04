@@ -1,5 +1,7 @@
 #include "TreeTest.h"
 
+using namespace Upp;
+
 TreeTest::TreeTest()
 {
 	CtrlLayout(*this, "Window title");

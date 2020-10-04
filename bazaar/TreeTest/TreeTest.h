@@ -2,18 +2,16 @@
 #define _TreeTest_TreeTest_h
 
 #include <CtrlLib/CtrlLib.h>
+#include <Tree/Tree.h>
 
-using namespace Upp;
+namespace Upp {
 
 #define LAYOUTFILE <TreeTest/TreeTest.lay>
 #include <CtrlCore/lay.h>
 
-#include <Tree/Tree.h>
-
 class Element
 {
 public:
-	typedef Element CLASSNAME;
 	String name;
 	Value value;
 
@@ -25,18 +23,18 @@ public:
 
 class TreeTest : public WithLayout<TopWindow> {
 public:
-	typedef TreeTest CLASSNAME;
 	TreeTest();
 	
-	Node<One<Element> > root;
+	Node<One<Element>> root;
 	Node<Element> roota;
-	
+
 	NodeB<Element> rootb;
-	NodeB<One<Element> > rootc;
-	
+	NodeB<One<Element>> rootc;
 	
 	MapNode<String, Element> mroota;
 };
+
+}
 
 #endif
 
