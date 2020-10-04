@@ -18,8 +18,9 @@ public:
 	
 	void Toggle();
 
-	AutoScroller<ParentCtrl> sc;
-	WithTestLay<ParentCtrl> view;
+public:
+	AutoScroller<ParentCtrl> scroller;
+	WithTestLay<ParentCtrl> scroller_view;
 };
 
 }
