@@ -1,5 +1,7 @@
 #include "AutoScrollerTest.h"
 
+using namespace Upp;
+
 #define IMAGEFILE <AutoScrollerTest/AutoScrollerTest.iml>
 #include <Draw/iml_source.h>
 
@@ -17,13 +19,13 @@ AutoScrollerTest::AutoScrollerTest()
 	sc.EnableScroll();
 	Add(sc.SizePos());
 
-	CtrlLayout(view); //will determine desired size of pane
-	sc.AddPane(view); //size remains as specified, if view changes size, sc.Layout() needs to be called.
-						//if sc changes its size, it recalculates the scroll bars automatically
+	CtrlLayout(view); // will determine desired size of pane
+	sc.AddPane(view); // size remains as specified, if view changes size, sc.Layout() needs to be called.
+	                  // if sc changes its size, it recalculates the scroll bars automatically
 
-	//sc.WhenScrolled = THISBACK(); //after scrolling events
+	//sc.WhenScrolled = [=] {}; //after scrolling events
 
-	view.tg <<= THISBACK(Toggle);
+	view.tg << [=] { Toggle(); };
 	
 	view.doc0 <<= "doc0";
 	view.doc1 <<= "doc1";

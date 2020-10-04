@@ -1,38 +1,50 @@
-#ifndef _AutoScroller_AutoScroller_h_
-#define _AutoScroller_AutoScroller_h_
+#ifndef _AutoScroller_AutoScroller_hpp_
+#define _AutoScroller_AutoScroller_hpp_
 
-#include <CtrlLib/CtrlLib.h>
+#include "AutoScrollerParentCtrl.h"
 
 namespace Upp
 {
-	template<class C = ParentCtrl>
-	class AutoScroller : public C
+	template<class C>
+	AutoScroller<C>::AutoScroller()
 	{
-	public:
-		using CLASSNAME = AutoScroller<C>;
-		AutoScroller();
-		
-	public:
-		virtual void Layout();
-		
-		void EnableScroll(bool b = true);
-		void DisableScroll() { EnableScroll(false); }
-		bool IsEnabledScroll() const { return scroll.x.IsEnabled() || scroll.y.IsEnabled(); }
+		C::AddFrame(scroll);
+		scroll.AutoHide();
+		scroll.WhenScroll = THISBACK(OnScroll);
+	}
 	
-		void AddPane(Ctrl& c) { ClearPane(); pane = &c; C::Add(c); }
-		Ctrl* GetPane() const { return pane; }
-		inline bool HasPane() const { return (~pane != NULL); }
-		void ClearPane() { if(! ~pane) return; pane->Remove(); pane = NULL; }
+	template<class C>
+	void AutoScroller<C>::Scroll(const Point& p)
+	{
+		if(!HasPane()) return;
+		Rect _r = pane->GetRect();
+		Rect r(-p, _r.GetSize());
+		pane->SetRect(r);
+		WhenScrolled();
+	}
 	
-		void Scroll(const Point& p);
-		void OnScroll();
+	template<class C>
+	void AutoScroller<C>::OnScroll()
+	{
+		Scroll(scroll.Get());
+	}
 	
-		Callback WhenScrolled;
-		ScrollBars scroll;
+	template<class C>
+	void AutoScroller<C>::Layout()
+	{
+		Size psz = C::GetSize();
+		scroll.SetPage(psz);
+		if(!HasPane()) return;
+		Size tsz = pane->GetSize();
+		scroll.SetTotal(tsz);
+	}
 	
-	protected:
-		Ptr<Ctrl> pane;
-	};
+	template<class C>
+	void AutoScroller<C>::EnableScroll(bool b)
+	{
+		scroll.x.Enable(b);
+		scroll.y.Enable(b);
+	}
 }
 
 #endif
