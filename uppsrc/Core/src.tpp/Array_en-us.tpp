@@ -131,11 +131,18 @@ can be either T or a type derived from T. No constructor is applied.
 [s7; [*/ Return value]-|Reference to the new element  (that is [* `*newt]).&]
 [s0;*%- &]
 [s4;%- &]
+[s5;:Upp`:`:Array`:`:Add`(Upp`:`:One`<T`>`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([_^Upp`:`:One^ O
+ne]<[*@4 T]>`&`&_[*@3 one])&]
+[s2; Creates a new element in the Array, moving the content of [%-*@3 one] 
+to it. [%-*@3 one] must contain a value, otherwise the behavior 
+is undefined.&]
+[s3; &]
+[s4;%- &]
 [s5;:Upp`:`:Array`:`:Create`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) `&
 `&...]_[*@3 args])&]
-[s2; Creates and adds a new element to the Array. [%-*@3 args] are 
-forwarded to constructor.&]
+[s2; Creates a new element in the Array. [%-*@3 args] are forwarded 
+to constructor.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:operator`[`]`(int`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* operat
