@@ -306,10 +306,10 @@ private:
 		int     serial;
 		int     cursor;
 
-		virtual void     Apply(RichText& txt) = 0;
-		virtual UndoRec *GetRedo(const RichText& txt) = 0;
+		virtual void         Apply(RichText& txt) = 0;
+		virtual One<UndoRec> GetRedo(const RichText& txt) = 0;
 
-		UndoRec *Serial(int s) { serial = s; return this; }
+		One<UndoRec> Serial(int s) { serial = s; return this; }
 
 		virtual ~UndoRec() {}
 	};
@@ -319,8 +319,8 @@ private:
 		int                  length;
 		bool                 typing;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoInsert(int pos, int length, bool typing = false);
 	};
@@ -329,8 +329,8 @@ private:
 		int                  pos;
 		RichText             text;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoRemove(const RichText& txt, int pos, int length);
 	};
@@ -340,8 +340,8 @@ private:
 		int                 length;
 		RichText::Formating format;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoFormat(const RichText& txt, int pos, int length);
 	};
@@ -350,8 +350,8 @@ private:
 		Uuid                 id;
 		RichStyle            style;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoStyle(const RichText& txt, const Uuid& id);
 	};
@@ -359,8 +359,8 @@ private:
 	struct UndoStyles : UndoRec {
 		RichStyles           styles;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoStyles(const RichText& txt);
 	};
@@ -369,8 +369,8 @@ private:
 		int                 table;
 		RichTable::Format   format;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoTableFormat(const RichText& txt, int table);
 	};
@@ -378,8 +378,8 @@ private:
 	struct UndoCreateTable : UndoRec {
 		int              table;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoCreateTable(int table) : table(table) {}
 	};
@@ -388,8 +388,8 @@ private:
 		int              pos;
 		RichTable        table;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoDestroyTable(const RichText& txt, int pos);
 	};
@@ -399,8 +399,8 @@ private:
 		bool             before;
 		RichPara::Format format;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoRemoveParaSpecial(const RichText& txt, int table, bool before);
 	};
@@ -409,8 +409,8 @@ private:
 		int              table;
 		bool             before;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoInsertParaSpecial(int table, bool before) : table(table), before(before) {}
 	};
@@ -419,25 +419,25 @@ private:
 		int             table;
 		RichTable       copy;
 
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 
 		UndoTable(const RichText& txt, int table);
 	};
 	
 	struct UndoBegSelFix : UndoRec {
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 	};
 
 	struct UndoBegSelUnFix : UndoRec {
-		virtual void     Apply(RichText& txt);
-		virtual UndoRec *GetRedo(const RichText& txt);
+		virtual void         Apply(RichText& txt);
+		virtual One<UndoRec> GetRedo(const RichText& txt);
 	};
 
 	BiArray<UndoRec> undo;
 	Array<UndoRec>   redo;
-	
+
 	FileSel          imagefs;
 	
 	struct StyleKey {
@@ -494,7 +494,7 @@ private:
 	void       Limit(int& pos, int& count);
 	bool       InvalidRange(int c1, int c2);
 	void       NextUndo()                 { undoserial += incundoserial; incundoserial = false; }
-	void       AddUndo(UndoRec *undo);
+	void       AddUndo(One<UndoRec>&& ur);
 
 	void       BeginRulerTrack();
 	void       RulerTrack();

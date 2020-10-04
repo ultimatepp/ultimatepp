@@ -31,9 +31,9 @@ void RichEdit::UndoBegSelFix::Apply(RichText& txt)
 	BegSelUnFixRaw(txt);
 }
 
-RichEdit::UndoRec *RichEdit::UndoBegSelFix::GetRedo(const RichText& txt)
+One<RichEdit::UndoRec> RichEdit::UndoBegSelFix::GetRedo(const RichText& txt)
 {
-	return new RichEdit::UndoBegSelUnFix;
+	return MakeOne<RichEdit::UndoBegSelUnFix>();
 }
 
 void RichEdit::UndoBegSelUnFix::Apply(RichText& text)
@@ -41,16 +41,16 @@ void RichEdit::UndoBegSelUnFix::Apply(RichText& text)
 	BegSelFixRaw(text);
 }
 
-RichEdit::UndoRec * RichEdit::UndoBegSelUnFix::GetRedo(const RichText& txt)
+One<RichEdit::UndoRec> RichEdit::UndoBegSelUnFix::GetRedo(const RichText& txt)
 {
-	return new RichEdit::UndoBegSelFix;
+	return MakeOne<RichEdit::UndoBegSelFix>();
 }
 
 bool RichEdit::BegSelTabFix(int& count)
 {
 	if(begtabsel) { // If selection starts with first table which is the first element in the text
 		int c = cursor;
-		AddUndo(new UndoBegSelFix);
+		AddUndo(MakeOne<UndoBegSelFix>());
 		BegSelFixRaw(text); // adds an empty paragraph at the start
 		Move(0);
 		Move(c + 1, true); // and changes the selection
@@ -65,7 +65,7 @@ void RichEdit::BegSelTabFixEnd(bool fix)
 { // removes empty paragraph added by BegSelTabFix
 	if(fix && GetLength() > 0) {
 		int c = cursor;
-		AddUndo(new UndoBegSelUnFix);
+		AddUndo(MakeOne<UndoBegSelUnFix>());
 		BegSelUnFixRaw(text);
 		Move(0);
 		Move(c - 1, true);
@@ -78,7 +78,7 @@ bool RichEdit::InvalidRange(int l, int h)
 	return !InSameTxt(text.GetRichPos(min(l, h)), text.GetRichPos(max(l, h)));
 }
 
-void RichEdit::AddUndo(UndoRec *ur)
+void RichEdit::AddUndo(One<UndoRec>&& ur)
 {
 	redo.Clear();
 	SetModify();
@@ -89,23 +89,23 @@ void RichEdit::AddUndo(UndoRec *ur)
 	found = false;
 	ur->cursor = cursor;
 	ur->serial = undoserial;
-	undo.AddTail(ur);
+	undo.AddTail(pick(ur));
 }
 
 void RichEdit::SaveStylesUndo()
 {
-	AddUndo(new UndoStyles(text));
+	AddUndo(MakeOne<UndoStyles>(text));
 }
 
 void RichEdit::SaveStyleUndo(const Uuid& id)
 {
-	AddUndo(new UndoStyle(text, id));
+	AddUndo(MakeOne<UndoStyle>(text, id));
 }
 
 void RichEdit::SaveFormat(int pos, int count)
 {
 	Limit(pos, count);
-	AddUndo(new UndoFormat(text, pos, count));
+	AddUndo(MakeOne<UndoFormat>(text, pos, count));
 }
 
 void RichEdit::SaveFormat()
@@ -156,7 +156,7 @@ void RichEdit::Remove(int pos, int len, bool forward)
 	RichTxt::FormatInfo fi;
 	if(forward)
 		fi = text.GetFormatInfo(pos, 0);
-	AddUndo(new UndoRemove(text, pos, len));
+	AddUndo(MakeOne<UndoRemove>(text, pos, len));
 	text.Remove(pos, len);
 	if(forward) {
 		SaveFormat(pos, 0);
@@ -194,7 +194,7 @@ void RichEdit::Insert(int pos, const RichText& txt, bool typing)
 			}
 		}
 	}
-	AddUndo(new UndoInsert(pos, l, typing));
+	AddUndo(MakeOne<UndoInsert>(pos, l, typing));
 }
 
 void RichEdit::Undo()
@@ -208,10 +208,10 @@ void RichEdit::Undo()
 	while(undo.GetCount()) {
 		UndoRec& u = undo.Tail();
 		if(u.serial != serial) break;
-		UndoRec *r = u.GetRedo(text);
+		One<UndoRec> r = u.GetRedo(text);
 		r->serial = u.serial;
 		r->cursor = cursor;
-		redo.Add(r);
+		redo.Add(pick(r));
 		u.Apply(text);
 		c = u.cursor;
 		undo.DropTail();
@@ -233,10 +233,10 @@ void RichEdit::Redo()
 	while(redo.GetCount()) {
 		UndoRec& r = redo.Top();
 		if(r.serial != serial) break;
-		UndoRec *u = r.GetRedo(text);
+		One<UndoRec> u = r.GetRedo(text);
 		u->serial = r.serial;
 		u->cursor = cursor;
-		undo.AddTail(u);
+		undo.AddTail(pick(u));
 		r.Apply(text);
 		c = r.cursor;
 		redo.Drop();
