@@ -967,7 +967,7 @@ Image ScatterCtrl::CursorImage(Point , dword )
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0.)).Key(K_CTRL_F)
+		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), [=]{ZoomToFit(mouseHandlingX, mouseHandlingY, 0.);}).Key(K_CTRL_F)
 									.Help(t_("Zoom to fit visible all data"));
 		bar.Add(t_("Zoom +"), 	   ScatterImg::ZoomPlus(), THISBACK3(Zoom, 1/1.2, true, mouseHandlingY)).Key(K_CTRL|K_ADD)
 										.Help(t_("Zoom in (closer)"));
