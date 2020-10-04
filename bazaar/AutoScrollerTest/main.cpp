@@ -7,7 +7,7 @@ using namespace Upp;
 
 void AutoScrollerTest::Toggle()
 {
-	sc.EnableScroll(!sc.IsEnabledScroll());
+	scroller.EnableScroll(!scroller.IsScrollEnabled());
 }
 
 AutoScrollerTest::AutoScrollerTest()
@@ -16,21 +16,21 @@ AutoScrollerTest::AutoScrollerTest()
 	Sizeable().Zoomable();
 	Size sz = GetSize();
 
-	sc.EnableScroll();
-	Add(sc.SizePos());
+	scroller.EnableScroll();
+	Add(scroller.SizePos());
 
-	CtrlLayout(view); // will determine desired size of pane
-	sc.AddPane(view); // size remains as specified, if view changes size, sc.Layout() needs to be called.
-	                  // if sc changes its size, it recalculates the scroll bars automatically
+	CtrlLayout(scroller_view);       // will determine desired size of pane
+	scroller.AddPane(scroller_view); // size remains as specified, if view changes size, scroller.Layout() needs to be called.
+	                                 // if scroller changes its size, it recalculates the scroll bars automatically
 
-	//sc.WhenScrolled = [=] {}; //after scrolling events
+	// scroller.WhenScrolled = [=] {}; //after scrolling events
 
-	view.tg << [=] { Toggle(); };
+	scroller_view.toggle_button << [=] { Toggle(); };
 	
-	view.doc0 <<= "doc0";
-	view.doc1 <<= "doc1";
-	view.doc2 <<= "doc2";
-	view.doc3 <<= "doc3";
+	scroller_view.doc0 <<= "doc0";
+	scroller_view.doc1 <<= "doc1";
+	scroller_view.doc2 <<= "doc2";
+	scroller_view.doc3 <<= "doc3";
 }
 
 GUI_APP_MAIN

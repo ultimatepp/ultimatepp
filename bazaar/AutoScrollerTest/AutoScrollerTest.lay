@@ -7,6 +7,6 @@ LAYOUT(TestLay, 640, 440)
 	ITEM(DocEdit, doc3, RightPosZ(16, 176).TopPosZ(16, 92))
 	ITEM(DocEdit, doc2, RightPosZ(12, 176).BottomPosZ(12, 92))
 	ITEM(ProgressIndicator, dv___4, LeftPosZ(112, 440).TopPosZ(156, 24))
-	ITEM(Button, tg, SetLabel(t_("Toggle")).LeftPosZ(84, 56).TopPosZ(40, 15))
+	ITEM(Button, toggle_button, SetLabel(t_("Toggle")).LeftPosZ(84, 56).TopPosZ(40, 15))
 END_LAYOUT
 

@@ -17,7 +17,7 @@ namespace Upp
 		
 		void EnableScroll(bool b = true);
 		void DisableScroll()         { EnableScroll(false); }
-		bool IsEnabledScroll() const { return scroll.x.IsEnabled() || scroll.y.IsEnabled(); }
+		bool IsScrollEnabled() const { return scroll.x.IsEnabled() || scroll.y.IsEnabled(); }
 	
 		void AddPane(Ctrl& c)        { ClearPane(); pane = &c; C::Add(c); }
 		Ctrl* GetPane() const        { return pane; }
