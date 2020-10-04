@@ -3,6 +3,8 @@
 #define REPEAT_TEST
 #define TIMEOUT 1000
 
+using namespace Upp;
+
 TimerTest::TimerTest()
 	: demo(0)
 {
