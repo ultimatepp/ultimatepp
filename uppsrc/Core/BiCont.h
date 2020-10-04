@@ -110,6 +110,8 @@ public:
 	T&       AddTail(T *newt)              { bv.AddTail(newt); return *newt; }
 	template <class TT> TT& CreateHead()   { TT *q = new TT; bv.AddHead(q); return *q; }
 	template <class TT> TT& CreateTail()   { TT *q = new TT; bv.AddTail(q); return *q; }
+	T&       AddHead(One<T>&& one)         { ASSERT(one); return AddHead(one.Detach()); }
+	T&       AddTail(One<T>&& one)         { ASSERT(one); return AddTail(one.Detach()); }
 	T&       Head()                        { return *(T *) bv.Head(); }
 	T&       Tail()                        { return *(T *) bv.Tail(); }
 	const T& Head() const                  { return *(const T *) bv.Head(); }

@@ -100,6 +100,67 @@ public:
 	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
 };
 
+template <class T>
+class One : MoveableAndDeepCopyOption< One<T> > {
+	mutable T  *ptr;
+
+	void        Free()                     { if(ptr && ptr != (T*)1) delete ptr; }
+	template <class TT>
+	void        Pick(One<TT>&& data)       { ptr = data.Detach(); }
+
+public:
+	void        Attach(T *data)            { Free(); ptr = data; }
+	T          *Detach()                   { T *t = ptr; ptr = NULL; return t; }
+	void        Clear()                    { Free(); ptr = NULL; }
+
+	void        operator=(T *data)         { Attach(data); }
+	
+	template <class TT>
+	void        operator=(One<TT>&& d)     { if((void *)this != (void *)&d) { Free(); Pick(pick(d)); }}
+
+	const T    *operator->() const         { ASSERT(ptr); return ptr; }
+	T          *operator->()               { ASSERT(ptr); return ptr; }
+	const T    *operator~() const          { return ptr; }
+	T          *operator~()                { return ptr; }
+	const T    *Get() const                { return ptr; }
+	T          *Get()                      { return ptr; }
+	const T&    operator*() const          { ASSERT(ptr); return *ptr; }
+	T&          operator*()                { ASSERT(ptr); return *ptr; }
+
+	template <class TT, class... Args>
+	TT&         Create(Args&&... args)     { TT *q = new TT(std::forward<Args>(args)...); Attach(q); return *q; }
+	template <class TT> // with C++ conforming compiler, this would not be needed - GCC bug workaround
+	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
+	template <class... Args>
+	T&          Create(Args&&... args)     { T *q = new T(std::forward<Args>(args)...); Attach(q); return *q; }
+	T&          Create()                   { T *q = new T; Attach(q); return *q; }
+
+	template <class TT>
+	bool        Is() const                 { return dynamic_cast<const TT *>(ptr); }
+
+	bool        IsEmpty() const            { return !ptr; }
+
+	operator bool() const                  { return ptr; }
+	
+	String ToString() const                { return ptr ? AsString(*ptr) : "<empty>"; }
+
+	One()                                  { ptr = NULL; }
+	One(T *newt)                           { ptr = newt; }
+	template <class TT>
+	One(One<TT>&& p)                       { Pick(pick(p)); }
+	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : new T(clone(*p)); }
+	One(const One<T>& p) = delete;
+	void operator=(const One<T>& p) = delete;
+	~One()                                 { Free(); }
+};
+
+template <class T, class... Args>
+One<T> MakeOne(Args&&... args) {
+	One<T> r;
+	r.Create(std::forward<Args>(args)...);
+	return r;
+}
+
 template <class U> class Index;
 
 template <class T>
@@ -286,6 +347,7 @@ public:
 	T&       Add(const T& x)                 { T *q = new T(x); vector.Add(q); return *q; }
 	T&       Add(T&& x)                      { T *q = new T(pick(x)); vector.Add(q); return *q; }
 	T&       Add(T *newt)                    { vector.Add(newt); return *newt; }
+	T&       Add(One<T>&& one)               { ASSERT(one); return Add(one.Detach()); }
 	template<class TT, class... Args>
 	TT& Create(Args&&... args)               { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
 	const T& operator[](int i) const         { return Get(i); }

@@ -1,5 +1,4 @@
 topic "BiArray";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "BiArray";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 BiArray]]}}&]
 [s3; &]
@@ -175,6 +175,22 @@ _[*@4 TT][@(0.0.255) `&]_[* CreateHead]()&]
 _[*@4 TT][@(0.0.255) `&]_[* CreateTail]()&]
 [s2; Creates a new element of type [%-*@4 TT] at the tail.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:AddHead`(Upp`:`:One`<T`>`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddHead](
+[_^Upp`:`:One^ One]<[*@4 T]>`&`&_[*@3 one])&]
+[s2; Creates a new element at the head, moving the content of [%-*@3 one] 
+to it. [%-*@3 one] must contain a value, otherwise the behavior 
+is undefined.&]
+[s6; Invalidates iterators to the BiArray.&]
+[s0; &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:AddTail`(Upp`:`:One`<T`>`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddTail](
+[_^Upp`:`:One^ One]<[*@4 T]>`&`&_[*@3 one])&]
+[s2; Creates a new element at the tail, moving the content of [%-*@3 one] 
+to it. [%-*@3 one] must contain a value, otherwise the behavior 
+is undefined.&]
+[s6; Invalidates iterators to the BiArray.&]
+[s3; &]
 [s4;%- &]
 [s5;:BiArray`:`:Head`(`):%- [*@4 T][@(0.0.255) `&]_[* Head]()&]
 [s2; Returns reference to the head of the BiArray. Same as operator`[`](0).&]

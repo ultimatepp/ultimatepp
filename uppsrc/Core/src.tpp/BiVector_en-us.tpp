@@ -1,5 +1,4 @@
 topic "BiVector";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "BiVector";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 BiVector]]}}&]
 [s3; &]
@@ -103,24 +103,6 @@ of the [* BiVector]. The new element will be at position [* GetCount]()
 `- 1.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators and references to the BiVector.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:BiVector`:`:AddHeadPick`(T`&`&`):%- [@(0.0.255) void]_[* AddHeadPick]([*@4 T][@(0.0.255) `&
-`&]_[*@3 x])&]
-[s2; Adds a new element at the head of the [* BiVector] and picks value 
-of the parameter [%-*@3 x]. The new element will be at position 
-0.&]
-[s6; Requires T to have pick constructor.&]
-[s2; Invalidates iterators and references to the BiVector.&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:BiVector`:`:AddTailPick`(T`&`&`):%- [@(0.0.255) void]_[* AddTailPick]([*@4 T][@(0.0.255) `&
-`&]_[*@3 x])&]
-[s2; Adds a new element at the tail of the [* BiVector] and picks value 
-of the parameter [%-*@3 x]. The new element will be at position 
-[* GetCount]() `- 1.&]
-[s6; Requires T to have pick constructor.&]
-[s2; Invalidates iterators and references to the BiVector.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:BiVector`:`:Head`(`):%- [*@4 T][@(0.0.255) `&]_[* Head]()&]

@@ -435,6 +435,8 @@ private:
 public:
 	void Put(Item *newitem)                       { item.Add(newitem); }
 
+	void Put(One<Item>&& newitem)                 { item.Add(newitem.Detach()); }
+
 	template <class T>
 	void Put(Ctrl& ctrl, T& val);
 

@@ -4,12 +4,12 @@ namespace Upp {
 
 void RichEdit::SaveTableFormat(int table)
 {
-	AddUndo(new UndoTableFormat(text, table));
+	AddUndo(MakeOne<UndoTableFormat>(text, table));
 }
 
 void RichEdit::SaveTable(int table)
 {
-	AddUndo(new UndoTable(text, table));
+	AddUndo(MakeOne<UndoTable>(text, table));
 }
 
 void RichEdit::InsertTable()
@@ -52,7 +52,7 @@ void RichEdit::InsertTable()
 		begtabsel = false;
 	}
 	SaveFormat(cursor, 0);
-	AddUndo(new UndoCreateTable(text.SetTable(cursor, table)));
+	AddUndo(MakeOne<UndoCreateTable>(text.SetTable(cursor, table)));
 	Finish();
 }
 
@@ -72,12 +72,12 @@ struct CtrlRetrieveItemValueNN : public CtrlRetriever::Item {
 template <class T>
 void Advn(CtrlRetriever& r, Ctrl& ctrl, T& value) {
 	ctrl <<= value;
-	r.Put(new CtrlRetrieveItemValueNN<T>(ctrl, value));
+	r.Put(MakeOne<CtrlRetrieveItemValueNN<T>>(ctrl, value));
 }
 
 void RichEdit::DestroyTable()
 {
-	AddUndo(new UndoDestroyTable(text, cursorp.table));
+	AddUndo(MakeOne<UndoDestroyTable>(text, cursorp.table));
 	int c = text.GetCellPos(cursorp.table, 0, 0).pos;
 	text.DestroyTable(cursorp.table);
 	Move(c);
@@ -208,13 +208,13 @@ bool RichEdit::RemoveSpecial(int ll, int hh, bool back)
 	if(InSameTxt(p1, p2))
 		return false;
 	if(p1.paralen == 0 && p2.posintab == 0 && text.CanRemoveParaSpecial(p2.table, true)) {
-		AddUndo(new UndoRemoveParaSpecial(text, p2.table, true));
+		AddUndo(MakeOne<UndoRemoveParaSpecial>(text, p2.table, true));
 		text.RemoveParaSpecial(p2.table, true);
 		Move(cursor - back);
 	}
 	else
 	if(p2.paralen == 0 && p1.posintab == p1.tablen && text.CanRemoveParaSpecial(p1.table, false)) {
-		AddUndo(new UndoRemoveParaSpecial(text, p1.table, false));
+		AddUndo(MakeOne<UndoRemoveParaSpecial>(text, p1.table, false));
 		text.RemoveParaSpecial(p1.table, false);
 		Move(cursor - back);
 	}
@@ -230,13 +230,13 @@ bool RichEdit::InsertLineSpecial()
 		fmt.newpage = false;
 		fmt.label.Clear();
 		if(cursorp.posintab == 0 && text.ShouldInsertParaSpecial(cursorp.table, true)) {
-			AddUndo(new UndoInsertParaSpecial(cursorp.table, true));
+			AddUndo(MakeOne<UndoInsertParaSpecial>(cursorp.table, true));
 			text.InsertParaSpecial(cursorp.table, true, fmt);
 			Move(cursor + 1);
 			return true;
 		}
 		if(cursorp.posintab == cursorp.tablen && text.ShouldInsertParaSpecial(cursorp.table, false)) {
-			AddUndo(new UndoInsertParaSpecial(cursorp.table, false));
+			AddUndo(MakeOne<UndoInsertParaSpecial>(cursorp.table, false));
 			text.InsertParaSpecial(cursorp.table, false, fmt);
 			Move(cursor + 1);
 			return true;
