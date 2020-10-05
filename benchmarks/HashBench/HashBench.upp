@@ -1,9 +1,8 @@
 uses
-	Core,
-	TestData;
+	Core;
 
 file
-	Sort.cpp;
+	HashBench.cpp;
 
 mainconfig
 	"" = "";

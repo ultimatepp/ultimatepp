@@ -1,4 +1,15 @@
-OLD: VectorMap time: 5742398 ms
-NEW: VectorMap time: 5888610 ms
+* C:\upp\out\benchmarks\CLANGx64.Blitz.Debug_Full.Release\idmapBench.exe 30.08.2020 10:31:20, user: cxl
 
-VectorMap time: 5524707 ms
+STL hash_map time: 3272627 ms
+STL map time: 4835707 ms
+ValueMap time: 2423032 ms
+SortedVectorMap time: 5366781 ms
+VectorMap time: 1365093 ms
+
+* C:\upp\out\benchmarks\CLANGx64.Blitz.Debug_Full.Release.Usemalloc\idmapBench.exe 30.08.2020 10:32:18, user: cxl
+
+STL hash_map time: 4058483 ms
+STL map time: 5616567 ms
+ValueMap time: 3364236 ms
+SortedVectorMap time: 6401656 ms
+VectorMap time: 2260672 ms
