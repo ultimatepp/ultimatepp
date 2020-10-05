@@ -338,7 +338,7 @@ CONSOLE_APP_MAIN
 #endif
 
 
-#if 0
+#if 1
 	{
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
