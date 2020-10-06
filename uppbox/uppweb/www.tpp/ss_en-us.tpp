@@ -20,6 +20,8 @@ screenshots]&]
 [s4;l160;i150;O0; [^topic`:`/`/uppweb`/www`/ssmac`_en`-us^ macOS screenshots]&]
 [s4;l160;i150;O0; [^topic`:`/`/uppweb`/www`/chss`$en`-us^ Chameleon 
 screenshots]&]
+[s4;l160;i150;O0; [^topic`:`/`/uppweb`/www`/ssgames`_en`-us^ Games 
+screenshots]&]
 [s0;^topic`:`/`/uppweb`/www`/chss`$en`-us^ &]
 [s3; Additional screenshots&]
 [s4; Our code examples usually have images added to the description. 
