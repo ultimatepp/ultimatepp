@@ -134,6 +134,10 @@ TOPIC("ss_en-us")
 #include "ss_en-us.tppi"
 END_TOPIC
 
+TOPIC("ssgames_en-us")
+#include "ssgames_en-us.tppi"
+END_TOPIC
+
 TOPIC("ssmac_en-us")
 #include "ssmac_en-us.tppi"
 END_TOPIC
