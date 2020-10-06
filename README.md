@@ -64,8 +64,8 @@ GUI_APP_MAIN
 }
 ```
 
-### Complex Applications
-U++ allows writing complex application with hundreds of view. A perfect example is TheIDE our integrated development environment. The picture from GNU/Linux version is located below:
+### Complex Application
+U++ allows writing complex applications with hundreds of view. A perfect example is TheIDE our integrated development environment. The picture from GNU/Linux version is located below:
 
 <p align="center">
   <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" width="80%" height="80%">
