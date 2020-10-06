@@ -48,9 +48,9 @@ class Transform{
 			if(directionLength > 0.0001){
 				direction /= directionLength;
 				if(customUp != glm::vec3(0.0f,0.0f,0.0f))
-					SetRotation(glm::quatLookAt(glm::normalize(direction), customUp));
+					SetRotation(glm::inverse(glm::quatLookAt(glm::normalize(direction), customUp)));
 				else
-					SetRotation(glm::quatLookAt(glm::normalize(direction), Up));
+					SetRotation(glm::inverse(glm::quatLookAt(glm::normalize(direction), Up)));
 			}
 			return *this;
 		}
