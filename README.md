@@ -67,7 +67,9 @@ GUI_APP_MAIN
 ### Complex Applications
 U++ allows writing complex application with hundreds of view. A perfect example is TheIDE our integrated development environment. The picture from GNU/Linux version is located below:
 
-![alt text](uppbox/uppweb/Resources/Images/TheIDE.png?raw=true "TheIDE - Ultimate++ Integrated Developemnt Enviroment")
+<p align="center">
+  <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" style="width: 70%; height: 70%">
+</p>
 
 If you would like to see more screenshots from applications written in U++, please visit one of our internal [site](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
