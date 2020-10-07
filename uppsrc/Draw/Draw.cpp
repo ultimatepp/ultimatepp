@@ -476,13 +476,13 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 	if(!HasPainter())
 		return;
 	Size sz = target.GetSize();
-	if((sz.cx > 2000 || sz.cy > 1500) && IsPrinter()) {
+	if(sz.cx > 2000 || sz.cy > 1500) {
 		int yy = 0;
 		while(yy < sz.cy) {
 			int ccy = min(sz.cy - yy, 100);
 			ImageBuffer ib(sz.cx, ccy);
 			Fill(~ib, IsPrinter() ? White() : Null, ib.GetLength());
-			PaintImageBuffer(ib, pw, sz, Point(0, yy), true);
+			PaintImageBuffer(ib, pw, sz, Point(0, yy), MODE_ANTIALIASED);
 			DrawImageBandRLE(*this, target.left, target.top + yy, ib, 16);
 			yy += ccy;
 		}
@@ -490,7 +490,7 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 	else {
 		ImageBuffer ib(sz);
 		Fill(~ib, IsPrinter() ? White() : Null, ib.GetLength());
-		PaintImageBuffer(ib, pw, sz, Point(0, 0), IsPrinter());
+		PaintImageBuffer(ib, pw, sz, Point(0, 0), MODE_ANTIALIASED);
 		DrawImage(target.left, target.top, ib);
 	}
 }
