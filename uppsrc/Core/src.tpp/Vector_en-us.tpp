@@ -302,7 +302,7 @@ elements as necessary) and returns a reference to this element.&]
 [s4;%- &]
 [s5;:Vector`:`:Remove`(const int`*`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) const
 ]_[@(0.0.255) int]_`*[*@3 sorted`_list], [@(0.0.255) int]_[*@3 n])&]
-[s2; Removes number of elements from Vector. Time of operation almost 
+[s2; Removes multiple elements from Vector. Time of operation almost 
 does not depend on number of elements.&]
 [s6; Invalidates iterators and references to Vector.&]
 [s7; [*C@3 sorted`_list]-|Pointer to array of positions to remove. It 
@@ -312,11 +312,19 @@ must be sorted from lowest to greatest value.&]
 [s4;%- &]
 [s5;:Vector`:`:Remove`(const Vector`<int`>`&`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) c
 onst]_[_^Vector^ Vector][@(0.0.255) <int>`&]_[*@3 sorted`_list])&]
-[s2; Removes number of elements form Vector. Same as [* Remove(sorted`_list, 
+[s2; Removes multiple elements from Vector. Same as [* Remove(sorted`_list, 
 sorted`_list.GetCount())].&]
 [s6; Invalidates iterators and references to Vector.&]
 [s7; [*C@3 sorted`_list]-|Sorted Vector of positions to remove.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:RemoveIf`(Condition`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 Condition]>_[@(0.0.255) void]_[* RemoveIf]([*@4 Condition]_[*@3 c])&]
+[s2; Removes all elements that satisfy predicate [%-*@3 c]. [%-*@3 c] 
+is a function object (usually a lambda) that has a single int 
+parameter representing the index of an element and returns true 
+when the element at the  index is supposed to be removed.&]
+[s3; &]
 [s4;%- &]
 [s5;:Vector`:`:InsertN`(int`,int`):%- [@(0.0.255) void]_[* InsertN]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
