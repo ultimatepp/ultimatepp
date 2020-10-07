@@ -127,7 +127,6 @@ Value Switch::GetData() const {
 }
 
 Rect  Switch::GetCaseRect(int i) const {
-	Size sz = GetSize();
 	return i >= 0 && i < cs.GetCount() ? (Rect)cs[i].rect : Rect(Null);
 }
 

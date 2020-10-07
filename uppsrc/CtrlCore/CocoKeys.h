@@ -1,7 +1,7 @@
 K_BACK = kVK_Delete|K_DELTA,
 K_BACKSPACE = K_BACK,
 
-K_TAB = kVK_Tab|K_DELTA,
+K_TAB = 9,
 
 K_SPACE = kVK_Space|K_DELTA,
 
