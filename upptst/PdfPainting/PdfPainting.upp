@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	PdfDraw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
