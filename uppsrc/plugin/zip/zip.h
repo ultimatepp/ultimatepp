@@ -129,7 +129,7 @@ public:
 	void EndFile();
 	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
 
-	void WriteFolder(const char *path, Time tm);
+	void WriteFolder(const char *path, Time tm = GetSysTime());
 	void WriteFile(const void *ptr, int size, const char *path, Gate<int, int> progress = Null, Time tm = GetSysTime(), bool deflate = true);
 	void WriteFile(const String& s, const char *path, Gate<int, int> progress = Null, Time tm = GetSysTime(), bool deflate = true);
 

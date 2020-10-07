@@ -311,7 +311,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 		DrawRect(x, y, sz.cx, sz.cy, color);
 		return;
 	}
-	if(kind == IMAGE_OPAQUE && (!IsPrinter() || (GetDeviceCaps(GetHandle(), RASTERCAPS) & RC_DIBTODEV))) {
+	if(kind == IMAGE_OPAQUE && (!IsPrinter() || (GetDeviceCaps(GetHandle(), RASTERCAPS) & RC_DIBTODEV)) && src == img.GetSize()) {
 		LTIMING("Image Opaque direct set");
 		SetSurface(*this, x, y, sz.cx, sz.cy, ~img);
 		return;
