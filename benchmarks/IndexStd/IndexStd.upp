@@ -1,0 +1,10 @@
+uses
+	Core,
+	TestData;
+
+file
+	IndexStd.cpp;
+
+mainconfig
+	"" = "";
+
