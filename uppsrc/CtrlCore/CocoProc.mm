@@ -210,7 +210,9 @@ struct MMImp {
 				KEY(U); KEY(V); KEY(W); KEY(X); KEY(Y); KEY(Z);
 			}
 		#undef KEY
-		k = (k == kVK_ANSI_KeypadEnter ? K_ENTER : k)|K_DELTA|up;
+
+		k = decode(k, kVK_ANSI_KeypadEnter, K_ENTER, kVK_Tab, K_TAB, K_DELTA|k)|up;
+
 		if(GetCtrl())
 			k |= K_CTRL;
 		if(GetShift())
@@ -228,7 +230,7 @@ struct MMImp {
 			WString x = ToWString((CFStringRef)(e.characters));
 			for(wchar c : x) {
 				if(c < 0xF700 &&
-				   (c > 32 && c != 127 || c == 9 && !GetOption() || c == 32 && !GetShift()))
+				   (c > 32 && c != 127 || /*c == 9 && !GetOption() || */c == 32 && !GetShift()))
 					ctrl->DispatchKey(c, 1);
 			}
 			if(e.keyCode == kVK_ANSI_KeypadEnter && *x != 13)
