@@ -4,9 +4,11 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
-	FileSelector sel;
+	FileSelNative sel;
 	sel.AllFilesType();
 	sel.Type("Test2", "*.tst");
+	sel.Type("All", "*.*");
+	sel.Type("All 2", "*");
 	sel.ActiveType(1);
 	for(int i = 0; i < sel.GetCount(); i++)
 		DDUMP(sel[i]);
