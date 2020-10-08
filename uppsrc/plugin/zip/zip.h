@@ -58,6 +58,7 @@ public:
 	dword  GetPos() const;
 
 	void   Create(Stream& in);
+	void   Close()                { file.Clear(); zip->Close(); }
 
 	UnZip(Stream& in);
 	UnZip();
@@ -71,6 +72,7 @@ public:
 	bool Create(const char *name);
 	
 	FileUnZip(const char *name)                 { Create(name); }
+	FileUnZip()                                 { }
 };
 
 class MemUnZip : public UnZip {

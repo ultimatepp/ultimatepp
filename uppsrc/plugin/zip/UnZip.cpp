@@ -6,6 +6,7 @@ void UnZip::ReadDir()
 {
 	error = true;
 	
+	file.Clear();
 	current = 0;
 
 	int entries = -1;
