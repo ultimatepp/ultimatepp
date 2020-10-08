@@ -596,11 +596,14 @@ bool Gdb::Key(dword key, int count)
 bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = pick(_host);
-
-	dbg = host->StartProcess(GdbCommand(console) + host->NormalizeExecutablePath(exefile));
+	
+	String gdb_command = GdbCommand(console) + host->NormalizeExecutablePath(exefile);
+	dbg = host->StartProcess(gdb_command);
 
 	if (!dbg) {
-		ErrorOK("Error while invoking gdb!");
+		Loge() << METHOD_NAME << "Failed to launch gdb (\"" << gdb_command << "\").";
+		
+		ErrorOK("Error while invoking gdb! For details check TheIDE logs.");
 		return false;
 	}
 
