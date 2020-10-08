@@ -50,7 +50,7 @@ bool FileSelNative::Execute(bool open, const char *title)
 	for(int i = 0; i < type.GetCount(); i++) {
 	    GtkFileFilter *filter = gtk_file_filter_new();
 	    gtk_file_filter_set_name(filter, type[i].a);
-	    gtk_file_filter_add_pattern(filter, type[i].b);
+	    gtk_file_filter_add_pattern(filter, decode(type[i].b, "*.*", "*", type[i].b));
 	    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fc), filter);
 	    if(i == activetype)
 			gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(fc), filter);
