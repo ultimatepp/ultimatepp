@@ -1,10 +1,10 @@
-topic "Screenshots from games";
+topic "Games Screenshots";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [b83;*4 $$2,0#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1;~~~512; Screenshots from games&]
+[s1;~~~512; Games screenshots&]
 [s0; [/1 (click on image to enlarge it)]&]
 [s3; Due to its flexibility, U`+`+ can be used for advanced 2D game 
 development.&]
