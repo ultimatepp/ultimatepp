@@ -513,6 +513,8 @@ bool sDblTime(int time)
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	GuiLock __;
+	if(e == MOUSEWHEEL && !zd) // ignore non-scroll wheel events
+		return Null;
 	if(e == MOUSEMOVE && repeatTopCtrl == this) {
 		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && GetMouseLeft()) {
 			DispatchMouseEvent(LEFTDRAG, leftmousepos, 0);
