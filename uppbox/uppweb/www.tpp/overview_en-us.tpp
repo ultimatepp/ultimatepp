@@ -127,9 +127,9 @@ makes standard containers somewhat hard to use in GUI development.&]
 Instead, Ultimate`+`+ containers come in two flavors.&]
 [s5; Vector flavor has Moveable requirement that allows very fast 
 implementation for certain types (e.g., element insertion at 
-arbitrary position of Ultimate`+`+ Vector<String> is more than 
-10 times faster than the same operation with typical implementation 
-of std`::vector<std`::string>).&]
+arbitrary position of Ultimate`+`+ Vector<String> is much faster 
+than the same operation with typical implementation of std`::vector<std`::string>).
+&]
 [s5; Array flavor has no requirements for element types at all, at 
 the price of somewhat lower performance.&]
 [s5; As a result, in Ultimate`+`+ you are for example allowed to 
@@ -138,9 +138,9 @@ create container of .GUI widgets that edits integer numbers (
 it using standard Ultimate`+`+ [*C@(28.42.150) Sort] algorithm. 
 Doing something like this would require using pointers as elements 
 in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or alternatively 
-some sort of smart pointers (soon to be std`:: boost`::shared`_ptr), 
-but both increase code complexity and break the Ultimate`+`+ 
-rule according to which [/ everything belongs somewhere].&]
+some sort of smart pointers (probably std`::unique`_ptr), but 
+both increase code complexity and break the Ultimate`+`+ rule 
+according to which [/ everything belongs somewhere].&]
 [s5; &]
 [s3;:4: 4. Who owns widgets?&]
 [s5; One of the things we discovered over our countless experiments 
@@ -213,18 +213,18 @@ variables.&]
 [s5; &]
 [s3;:6: 6. Value and Null&]
 [s5; One aspect that makes development in Ultimate`+`+ very orthogonal 
-is the existence of Value `- the polymorphic value type. Any 
-of Ultimate`+`+ basic types (int, double, String, Color, Rect, 
-Font, Image etc...) can be stored into and retrieved from a Value. 
-Value itself can be queried for the type of value it contains. 
-It is also very easy to make any custom types Value`-compatible.&]
-[s5; Related to Value is the general concept of `"empty value`". 
-The Ultimate`+`+ special constant Null represents an empty value. 
-Most concrete types support Null. Null is also defined for fundamental 
-types `- int, double and int64 `- as a value that is lower than 
-any other value for specific type (for example, Null is equal 
-to INT`_MIN for int). To test whether a variable of a certain 
-type is Null, you can use the generic IsNull function.&]
+is the existence of Value `- the dynamically typed value type. 
+Any of Ultimate`+`+ basic types (int, double, String, Color, 
+Rect, Font, Image etc...) can be stored into and retrieved from 
+a Value. Value itself can be queried for the type of value it 
+contains. It is also very easy to make any custom types Value`-compatible.&]
+[s5; Somewhat related to Value is the general concept of `"empty 
+value`". The Ultimate`+`+ special constant Null represents an 
+empty value. Most concrete types support Null. Null is also defined 
+for fundamental types `- int, double and int64 `- as a value 
+that is lower than any other value for specific type (for example, 
+Null is equal to INT`_MIN for int). To test whether a variable 
+of a certain type is Null, you can use the generic IsNull function.&]
 [s5; Value (and Null) have a remarkable effect on GUI flexibility. 
 Many widgets logically have their `"natural`" values, (for integer 
 edit field it is the typed in number, for option widget it is 
@@ -452,11 +452,11 @@ each time we felt that some major or minor aspect of library
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s5; Now, after some 18 years of development, Ultimate`+`+ is a mature 
-platform that brings vast reductions of our development costs. 
-Most interfaces seem to be finished and optimal. There is of 
-course still some work ahead, mostly in documentation an IDE 
-department.&]
+[s5; Now, after some more than 2 decades of development, Ultimate`+`+ 
+is a mature platform that brings vast reductions of development 
+costs. Most interfaces seem to be finished and optimal. There 
+is of course still some work ahead, mostly in documentation an 
+IDE department.&]
 [s5; If you find our Ultimate`+`+ way of programming interesting, 
 nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
 g] it. But be careful there: you should be prepared to throw away 
