@@ -7,7 +7,9 @@ topic "Games Screenshots";
 [s1;~~~512; Games screenshots&]
 [s0; [/1 (click on image to enlarge it)]&]
 [s3; Due to its flexibility, U`+`+ can be used for advanced 2D game 
-development.&]
+development.In standard distribution via plugin we provide [^https`:`/`/box2d`.org`/^ B
+ox2D] physics engine. The exemplary use of that technology you 
+could find [^topic`:`/`/uppweb`/examples`/Box2DExample`_en`-us^ here].&]
 [s2; 1. Jet`-Story 2018&]
 [s3; Arcade adventure game.&]
 [s0; 
