@@ -2,6 +2,9 @@ library(WIN32) SDL2.lib;
 
 library(POSIX) SDL2;
 
+pkg_config
+	sdl2;
+
 file
 	Synth.h,
 	Core.cpp,
