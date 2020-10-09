@@ -32,7 +32,9 @@ tools for games development]&]
 [s3; The game is available on [^https`:`/`/store`.steampowered`.com`/app`/872700`/JetStory`_2018`/^ S
 team] (Windows only).&]
 [s4;:1`_2: 1.2 Castle Builder&]
-[s3; Mario clone with easy to use level editor.&]
+[s3; Mario clone with easy to use level editor. More information 
+about project can be found [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&th`=9216^ h
+ere].&]
 [s3; Game:&]
 [s0; 
 @@rawimage:3158&2496
