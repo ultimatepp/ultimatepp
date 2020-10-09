@@ -8,6 +8,9 @@ library(WIN32 MSC) "SDL2.lib SDL2main.lib OpenGL32.lib";
 
 library(WIN32 (GCC | CLANG)) "SDL2.lib SDL2main.lib  opengl32";
 
+pkg_config
+	sdl2;
+
 file
 	SDL2GL.h,
 	Window.cpp,
