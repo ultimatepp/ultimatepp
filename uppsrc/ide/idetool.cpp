@@ -398,6 +398,8 @@ void Ide::Times()
 {
 	WithStatisticsLayout<TopWindow> statdlg;
 	CtrlLayout(statdlg, "Elapsed times");
+	statdlg.ok.Ok();
+	statdlg.ok << [&] { statdlg.Break(); };
 	statdlg.SetTimeCallback(-1000, statdlg.Breaker(IDRETRY), 50);
 	do
 	{
