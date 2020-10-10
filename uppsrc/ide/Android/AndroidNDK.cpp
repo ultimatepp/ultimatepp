@@ -99,16 +99,11 @@ Vector<String> AndroidNDK::FindCppRuntimes() const
 {
 	Vector<String> runtimes;
 	
-	// Values from ndk documentation
-	runtimes.Add("system");
-	runtimes.Add("gabi++_static");
-	runtimes.Add("gabi++_shared");
-	runtimes.Add("stlport_static");
-	runtimes.Add("stlport_shared");
-	runtimes.Add("gnustl_static");
-	runtimes.Add("gnustl_shared");
+	// Values from NDK documentation
 	runtimes.Add("c++_static");
 	runtimes.Add("c++_shared");
+	runtimes.Add("system");
+	runtimes.Add("none");
 	
 	return runtimes;
 }
@@ -127,33 +122,8 @@ String AndroidNDK::GetIncludeDir() const
 String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 {
 	String nest = GetSourcesDir() + DIR_SEPS + "cxx-stl" + DIR_SEPS;
-	if(cppRuntime == "system")
+	if(cppRuntime == "system") {
 		return nest + "system" + DIR_SEPS + "include";
-	else
-	if(cppRuntime.StartsWith("gabi++"))
-		return nest + "gabi++" + DIR_SEPS + "include";
-	else
-	if(cppRuntime.StartsWith("stlport"))
-		return nest + "stlport" + DIR_SEPS + "stlport";
-	else
-	if(cppRuntime.StartsWith("gnustl")) {
-		// TODO: implement selection of library version
-		String versionsDir = nest + "gnu-libstdc++";
-		
-		FindFile ff(nest + "gnu-libstdc++" + DIR_SEPS + "*.*");
-		String inc;
-		double ver = 0;
-		while(ff) {
-			if(ff.IsFolder()) {
-				double h = atof(ff.GetName());
-				if(h > ver) {
-					ver = h;
-					inc = ff.GetPath();
-				}
-			}
-			ff.Next();
-		}
-		return inc + DIR_SEPS + "include";
 	}
 	else
 	if(cppRuntime.StartsWith("c++")) {
