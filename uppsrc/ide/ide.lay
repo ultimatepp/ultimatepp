@@ -181,15 +181,16 @@ LAYOUT(CharsetLayout, 204, 64)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
 END_LAYOUT
 
-LAYOUT(StatisticsLayout, 242, 94)
+LAYOUT(StatisticsLayout, 244, 128)
 	ITEM(Label, dv___0, SetLabel(t_("Session time:")).LeftPosZ(4, 80).TopPosZ(4, 19))
-	ITEM(EditField, session_time, LeftPosZ(88, 150).TopPosZ(4, 19))
+	ITEM(EditField, session_time, HSizePosZ(88, 4).TopPosZ(4, 19))
 	ITEM(Label, dv___2, SetLabel(t_("Editing time:")).LeftPosZ(4, 80).TopPosZ(26, 19))
-	ITEM(EditField, edit_time, LeftPosZ(88, 150).TopPosZ(26, 19))
+	ITEM(EditField, edit_time, HSizePosZ(88, 4).TopPosZ(26, 19))
 	ITEM(Label, dv___4, SetLabel(t_("Building time:")).LeftPosZ(4, 80).TopPosZ(48, 19))
-	ITEM(EditField, build_time, LeftPosZ(88, 150).TopPosZ(48, 19))
+	ITEM(EditField, build_time, HSizePosZ(88, 4).TopPosZ(48, 19))
 	ITEM(Label, dv___6, SetLabel(t_("Idle time:")).LeftPosZ(4, 80).TopPosZ(70, 19))
-	ITEM(EditField, idle_time, LeftPosZ(88, 150).TopPosZ(70, 19))
+	ITEM(EditField, idle_time, HSizePosZ(88, 4).TopPosZ(70, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(4, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
 LAYOUT(BuildMethodsLayout, 812, 592)
