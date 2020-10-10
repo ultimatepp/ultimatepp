@@ -126,13 +126,10 @@ void AndroidBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("SDK_PLATFORM_VERSION",    &sdk_platform_version);
 	map.Add("SDK_BUILD_TOOLS_RELEASE", &sdk_build_tools_release);
 	map.Add("NDK_BLITZ",               &ndk_blitz);
-	map.Add("NDK_ARCH_ARMEABI",        &ndk_arch_armeabi);
 	map.Add("NDK_ARCH_ARMEABI_V7A",    &ndk_arch_armeabi_v7a);
 	map.Add("NDK_ARCH_ARM64_V8A",      &ndk_arch_arm64_v8a);
 	map.Add("NDK_ARCH_X86",            &ndk_arch_x86);
 	map.Add("NDK_ARCH_X86_64",         &ndk_arch_x86_64);
-	map.Add("NDK_ARCH_MIPS",           &ndk_arch_mips);
-	map.Add("NDK_ARCH_MIPS64",         &ndk_arch_mips64);
 	map.Add("NDK_TOOLCHAIN",           &ndk_toolchain);
 	map.Add("NDK_CPP_RUNTIME",         &ndk_cpp_runtime);
 	map.Add("NDK_COMMON_CPP_OPTIONS",  &ndk_common_cpp_options);
@@ -250,10 +247,9 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 		LoadToolchains(ndk);
 		LoadCppRuntimes(ndk);
 		
-		ndk_arch_armeabi.Set(1);
-		ndk_arch_armeabi_v7a.Set(1);
 		ndk_arch_arm64_v8a.Set(1);
-		ndk_common_cpp_options.SetData("-std=c++14 -fexceptions -frtti -Wno-logical-op-parentheses");
+		ndk_arch_x86_64.Set(1);
+		ndk_common_cpp_options.SetData("-std=c++17 -fexceptions -frtti -Wno-logical-op-parentheses");
 	}
 	else
 		ClearNdkCtrls();
@@ -331,13 +327,10 @@ void AndroidBuilderSetup::ClearSdkCtrls()
 void AndroidBuilderSetup::EnableNdkCtrls(bool enable)
 {
 	ndk_blitz.Enable(enable);
-	ndk_arch_armeabi.Enable(enable);
 	ndk_arch_armeabi_v7a.Enable(enable);
 	ndk_arch_arm64_v8a.Enable(enable);
 	ndk_arch_x86.Enable(enable);
 	ndk_arch_x86_64.Enable(enable);
-	ndk_arch_mips.Enable(enable);
-	ndk_arch_mips64.Enable(enable);
 	ndk_toolchain.Enable(enable);
 	ndk_cpp_runtime.Enable(enable);
 	ndk_common_cpp_options.Enable(enable);
@@ -352,13 +345,10 @@ void AndroidBuilderSetup::DisableNdkCtrls()
 void AndroidBuilderSetup::ClearNdkCtrls()
 {
 	ndk_blitz.Set(0);
-	ndk_arch_armeabi.Set(0);
 	ndk_arch_armeabi_v7a.Set(0);
 	ndk_arch_arm64_v8a.Set(0);
 	ndk_arch_x86.Set(0);
 	ndk_arch_x86_64.Set(0);
-	ndk_arch_mips.Set(0);
-	ndk_arch_mips64.Set(0);
 	ndk_toolchain.Clear();
 	ndk_cpp_runtime.Clear();
 	ndk_common_cpp_options.Clear();
