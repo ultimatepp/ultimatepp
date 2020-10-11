@@ -1,234 +1,244 @@
 topic "Esc scripting language";
 [b133;a83;*+117 $$1,0#31310162474203024125188417583966:subtitle]
-[b83;*+150 $$2,0#07864147445237544204411237157677:title]
+[H4;b83;*+150 $$2,0#07864147445237544204411237157677:title]
 [l321;C@5;1 $$3,3#20902679421464641399138805415013:code]
+[b42;a42;ph2 $$4,4#45413000475342174754091244180557:text]
+[a83;*6 $$5,5#B3A4428F1E67450ED340E28F681B00E8:caption]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*R8 Esc scripting language]&]
+[s5; Esc scripting language&]
+[s2; Table of contents&]
 [s0; &]
-[s0; Esc is a simple scripting language intended for embedding in 
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#1^ 1. Introduction]&]
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2^ 2. Value types]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2`_1^ 2.1 Voids]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2`_2^ 2.2 Numbers]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2`_3^ 2.3 Arrays]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2`_4^ 2.4 Maps]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#2`_5^ 2.5 Lambdas]&]
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#3^ 3. Variables and contexts]&]
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#4^ 4. Expressions]&]
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#5^ 5. Statements]&]
+[s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6^ 6. Standard library]&]
+[s0; &]
+[s2;:1: 1. Introduction&]
+[s4; Esc is a simple scripting language intended for embedding in 
 Ultimate`+`+ applications.&]
-[s0; &]
-[s0; It is typeless, value oriented language with simple interfacing 
+[s4; It is typeless, value oriented language with simple interfacing 
 with C`+`+/U`+`+ code. It is very simple yet quite complete language.&]
-[s0; &]
-[s2; Value types&]
-[s1; voids&]
-[s0; All variables have void value before assigned any other value. 
+[s2;:2: 2. Value types&]
+[s1;:2`_1: 2.1 Voids&]
+[s4; All variables have void value before assigned any other value. 
 Void type has single value&]
 [s0; &]
 [s3; void&]
 [s0; &]
-[s0; and expression can be tested for voidness using [@(128.0.255) is`_void] 
+[s4; and expression can be tested for voidness using [@(128.0.255) is`_void] 
 function.&]
-[s1; numbers&]
-[s0; Number is floating point number (corresponding to C type double). 
+[s1;:2`_2: 2.2 Numbers&]
+[s4; Number is floating point number (corresponding to C type double). 
 Examples of number literals:&]
 [s0; &]
 [s3; 1&]
 [s3; 1.123&]
 [s3; 1.123e`-96&]
-[s3; 0x123-|-|[@4 // hexadecimal]&]
-[s3; 0123 -|-|[@4 // octal]&]
-[s3; 0b10100100-|-|[@4 // binary]&]
-[s3; `'x`'-|-|-|[@4 // character code]&]
+[s3; 0x123       [@4 // hexadecimal]&]
+[s3; 0123        [@4 // octal]&]
+[s3; 0b10100100  [@4 // binary]&]
+[s3; `'x`'         [@4 // character code]&]
 [s0; &]
-[s0; Esc supports common C`-like operations for number values.&]
-[s1; arrays&]
-[s0; Arrays are ordered random access sequences of other Esc values 
+[s4; Esc supports common C`-like operations for number values.&]
+[s1;:2`_3: 2.3 Arrays&]
+[s4; Arrays are ordered random access sequences of other Esc values 
 (nested arrays included). Array values are specified using [@(128.0.255) `[`]] 
 brackets:&]
 [s0; &]
-[s3; `[`]-|-|-|-|[@4 // empty array]&]
+[s3; `[`]                 [@4 // empty array]&]
 [s3; `[ 1, 2, 3, 4, 5 `]&]
-[s3; `[ 1, `[2, 3`], 4 `]-|-|[@4 // array contains nested array]&]
-[s3; `"Hello`"-|-|-|[@4 // equivalent to `[`'H`', `'e`', `'l`', `'l`', 
-`'o`'`]]&]
-[s3; `[ 1, 2, 3 `* alfa `]-|[@4 // expressions can be used as well]&]
+[s3; `[ 1, `[2, 3`], 4 `]   [@4 // array contains nested array]&]
+[s3; `"Hello`"            [@4 // equivalent to `[`'H`', `'e`', `'l`', 
+`'l`', `'o`'`]]&]
+[s3; `[ 1, 2, 3 `* alfa `] [@4 // expressions can be used as well]&]
 [s0; &]
-[s0; Number of elements in the array can be retrieved by standard 
+[s4; Number of elements in the array can be retrieved by standard 
 function [*C count].&]
-[s0; &]
-[s0; Accessing elements of arrays is provided by subscript [@(128.0.255) `[ 
+[s4; Accessing elements of arrays is provided by subscript [@(128.0.255) `[ 
 `]] operator:&]
 [s0; &]
 [s3; a`[0`]&]
 [s3; a`[1`] `= 3&]
 [s0; &]
-[s0; First element of array corresponds to index [@(128.0.255) `[0`]].&]
-[s0; &]
-[s0; Negative indexes are allowed and designate elements from the 
+[s4; First element of array corresponds to index [@(128.0.255) `[0`]].&]
+[s4; Negative indexes are allowed and designate elements from the 
 end of array: [@(128.0.255) `[`-1`]] is last element of array, [@(128.0.255) `[`-2`]] 
 last but one etc.&]
 [s0; &]
 [s3; a`[`-1`]&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; a`[count(a) `- 1`]&]
 [s0; &]
-[s0; When index is used for the r`-value (standing on the right side 
+[s4; When index is used for the r`-value (standing on the right side 
 of [@(128.0.255) `=]), index is range checked. For l`-value, if 
 non`-negative index designates element past the of the array, 
 array is expanded with void values to create this element.&]
-[s0; &]
-[s0; `"Empty`" index [@(128.0.255) `[`]] designates element past last 
+[s4; `"Empty`" index [@(128.0.255) `[`]] designates element past last 
 and can be used to add elements to the array:&]
 [s0; &]
 [s3; x`[`] `= item&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; x`[count(x)`] `= item&]
 [s0; &]
-[s0; Range of element in array can be obtained or changed using slices:&]
+[s4; Range of element in array can be obtained or changed using slices:&]
 [s0; &]
 [s3; array`[pos, count`]&]
 [s0; &]
-[s0; designates array slice of [/ count] elements starting with [/ pos] 
+[s4; designates array slice of [/ count] elements starting with [/ pos] 
 element.&]
 [s0; &]
 [s3; x`[start:end`]&]
 [s0; &]
-[s0; designates array slice of [/ end `- start] elements starting with 
+[s4; designates array slice of [/ end `- start] elements starting with 
 [/ start] .&]
-[s0; &]
-[s0; Parts of slices can be ommited&]
+[s4; Parts of slices can be omitted&]
 [s0; &]
 [s3; array`[pos,`]&]
-[s0; or&]
+[s4; or&]
 [s3; array`[pos:`]&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; array`[pos : count(array)`]&]
 [s0; &]
-[s0; and&]
+[s4; and&]
 [s0; &]
 [s3; array`[,count`]&]
-[s0; or&]
+[s4; or&]
 [s3; array`[:count`]&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; array`[0, count`]&]
 [s0; &]
-[s0; When slices are used as l`-value, corresponding part of the 
+[s4; When slices are used as l`-value, corresponding part of the 
 array is replaced:&]
 [s0; &]
 [s3; s `= `"1234`";&]
-[s3; s`[1: `-1`] `= `"xXx`";-|[@4 // s is now `"1xXx4`"]&]
+[s3; s`[1: `-1`] `= `"xXx`"; [@4 // s is now `"1xXx4`"]&]
 [s0; &]
-[s0; Several operators can be applied to arrays&]
+[s4; Several operators can be applied to arrays&]
 [s0; &]
 [s3; array1 `+ array2&]
 [s0; &]
-[s0; concatenates two arrays,&]
+[s4; concatenates two arrays,&]
 [s0; &]
 [s3; array `* number&]
 [s3; number `* array&]
 [s0; &]
-[s0; repeats array number times.&]
+[s4; repeats array number times.&]
 [s0; &]
 [s3; array `+`= array1&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; array `= array `+ array1&]
 [s0; &]
-[s0; also&]
+[s4; also&]
 [s0; &]
 [s3; array << array1 << array2 << array3&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; array `= array `+ array1 `+ array2 `+ array3&]
 [s0; &]
-[s0; Esc allows [/ void] value on the right side of array concatenation 
+[s4; Esc allows [/ void] value on the right side of array concatenation 
 expression `- in such cases, operator has no effect.&]
-[s1; maps&]
-[s0; Maps contain key`-value pairs as entries. Normal subscripts 
+[s1;:2`_4: 2.4 Maps&]
+[s4; Maps contain key`-value pairs as entries. Normal subscripts 
 [@(128.0.255) `[`]] are used to access map entries:&]
 [s0; &]
 [s3; map`[key`] `= value&]
 [s0; &]
-[s0; All entries in map that are not assigned a non`-void value have 
+[s4; All entries in map that are not assigned a non`-void value have 
 void value. This way assigning void to the map key can be considered 
 as removing entry from the map&]
 [s0; &]
 [s3; map`[key`] `= void&]
 [s0; &]
-[s0;  and testing entry for being void can be considered as test 
-of key presence in map:&]
+[s4; and testing entry for being void can be considered as test of 
+key presence in map:&]
 [s0;C &]
 [s3; if(is`_void(map`[key`])) `{ ... `}&]
 [s0; &]
-[s0; As the special exception, when a void value appears before an 
+[s4; As the special exception, when a void value appears before an 
 l`-value [@(128.0.255) `[`]], it is changed to the empty map:&]
 [s0; &]
-[s3; x `= void; // x is void&]
-[s3; x`[key`] `= value; // x is now map&]
+[s3; x `= void;       [@4 // x is void]&]
+[s3; x`[key`] `= value; [@4 // x is now map]&]
 [s0; &]
-[s0; Maps are also used to create compound data structures. To make 
+[s4; Maps are also used to create compound data structures. To make 
 this job easier, special [/ .field] syntax is supported:&]
 [s0; &]
 [s3; x.field `= value;&]
 [s0; &]
-[s0; is equivalent to&]
+[s4; is equivalent to&]
 [s0; &]
 [s3; x`[`"field`"`] `= value;&]
 [s0; &]
 [s0; Map values can also be specified using `{`} braces:&]
 [s0; &]
-[s3; `{`} // empty map&]
+[s3; `{`}                                [@4 // empty map]&]
 [s3; `{ `"alfa`":10, `"beta`":20, 20:`"40`" `}&]
-[s3; `{ 2 `* a : `"100`" `} // map values can contain expressions&]
-[s1; lambdas&]
-[s0; Lambdas represent executable Esc code. Lambda values are introduced 
+[s3; `{ 2 `* a : `"100`" `}                 [@4 // map values can contain 
+expressions]&]
+[s0; &]
+[s1;:2`_5: 2.5 Lambdas&]
+[s4; Lambdas represent executable Esc code. Lambda values are introduced 
 using [@(128.0.255) `@] character:&]
 [s0; &]
 [s3; `@(x) `{ return 2 `* x; `}&]
 [s0; &]
-[s0; Assigning lambda value to variable is equivalent to defining 
+[s4; Assigning lambda value to variable is equivalent to defining 
 a function:&]
 [s0; &]
 [s3; :foo `= `@(x) `{ return 2 `* x; `};-|[@4 // defines global function 
 foo]&]
 [s0; &]
-[s0; If lambda argument is preceded with [@(128.0.255) `&] character, 
+[s4; If lambda argument is preceded with [@(128.0.255) `&] character, 
 it designates input`-output argument (other arguments are input 
 only).&]
-[s0; &]
-[s0; [*@(128.0.255) ... ]at the end of the argument list allows variable 
+[s4; [@(128.0.255) ...] at the end of the argument list allows variable 
 number of arguments to be present. In that case, additional parameters 
 are passed in [/ argv] variable of type array.&]
 [s0; &]
 [s3; :sum `= `@(...) `{ s `= 0; for(i in argv) s `+`= argv`[i`]; `}&]
 [s0; &]
-[s0; Parameters can have default values separated by [@(128.0.255) `=]:&]
+[s4; Parameters can have default values separated by [@(128.0.255) `=]:&]
 [s0; &]
 [s3; :bar `= `@(x `= 0) `{ ... `}&]
 [s0; &]
-[s0; To make life easier, alternative form of function definition 
+[s4; To make life easier, alternative form of function definition 
 is available:&]
 [s0; &]
 [s3; #:foo(x) `{ return 2 `* x; `}&]
-[s2;i150;O9; Variables and contexts&]
 [s0; &]
-[s0; Variable names in Esc follow C principles (are case sensitive, 
+[s2;i150;O9;:3: 3. Variables and contexts&]
+[s4; Variable names in Esc follow C principles (are case sensitive, 
 start with alphabetic character or [@(128.0.255) `_] and can contain 
 alphabetic characters, [@(128.0.255) `_] and numbers).&]
-[s0; &]
-[s0; Esc distinguishes three types of variables contexts using [*@(128.0.255) .] 
+[s4; Esc distinguishes three types of variables contexts using [*@(128.0.255) .] 
 and [*@(128.0.255) :] characters:&]
 [s0; &]
 [s3; var-|-|[@4 // local]&]
 [s3; .var-|-|[@4 // instance]&]
 [s3; :var-|-|[@4 // global]&]
 [s0; &]
-[s0; Local variables are specific to function, global variables are 
+[s4; Local variables are specific to function, global variables are 
 shared among all functions. Instance variables &]
-[s0; represent map values (keys designate variable names) of map 
+[s4; represent map values (keys designate variable names) of map 
 whose lambda value is invoked, or can be forced using binary 
 [@(128.0.255) !] bind operator:&]
 [s0; &]
@@ -238,28 +248,26 @@ whose lambda value is invoked, or can be forced using binary
 [s3; var1.x `= 0;&]
 [s3; var.Next()! var1;-|-|[@4 // var1.x is now 1]&]
 [s0; &]
-[s0; To make programmer`'s life easier, one exception applies concerning 
+[s4; To make programmer`'s life easier, one exception applies concerning 
 context `- when invoking lambda from local variable and lambda 
 is not present in it, instance and global contexts (in this order) 
 are tried as well:&]
 [s0; &]
 [s3; beta(x)&]
-[s3; &]
-[s0; Tries to get lambda form local [/ beta] variable first, then (if 
+[s0; &]
+[s4; Tries to get lambda form local [/ beta] variable first, then (if 
 no lambda found) from instance [/ beta ]variable and finally (if 
 still no lambda) from global [/ beta]. Of course, [*@(128.0.255) .] 
 and [*@(128.0.255) :] can still be used to designate context:&]
 [s0; &]
-[s3; :beta(x)-|-|-|-|[@4 // calls global beta even if local or instance 
-beta is present]&]
+[s3; :beta(x) [@4 // calls global beta even if local or instance beta 
+is present]&]
 [s0; &]
-[s2; Expressions&]
-[s0; &]
-[s0; When expressions are used as logical values, void, zero number 
+[s2;:4: 4. Expressions&]
+[s4; When expressions are used as logical values, void, zero number 
 and map or array with zero elements represent [/ false], other 
 values are [/ true.]&]
-[s0;/ &]
-[s0; In following table, thick lines divide operators with the same 
+[s4; In following table, thick lines divide operators with the same 
 priority, with topmost items having the highest priority:&]
 [s0; &]
 [ {{4468:5532h1;@(216) [s0; Operator]
@@ -368,7 +376,7 @@ just skipped.]
 :: [s0; Same as [C l`-number `= l`-number % number].]}}&]
 [s0; &]
 [s0; &]
-[s2; Statements&]
+[s2;:5: 5. Statements&]
 [s0; &]
 [ {{4508:5492h1;@(216) [s0; Statement]
 :: [s0; Comments]
@@ -428,7 +436,7 @@ case and default exists, does nothing.]
 :: [s0; [*C #:][/C name][*C (][/C args][*C ) `{ ... `}]]
 :: [s0; Same as [C :][/C name][C  `= `@(][/C args][C ) `{ ... `};]]}}&]
 [s0; &]
-[s2; [3 Standard library]&]
+[s2;:6: 6. Standard library&]
 [s0;3 &]
 [ {{2479:7521h1;@(216) [s0; Function]
 :: [s0; Comments]
