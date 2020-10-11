@@ -31,11 +31,14 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 	h << " (GCC)";
 #endif
 #endif
-#if __cplusplus >= 201100
-	h << " (C++11)";
-#endif
-#if __cplusplus >= 201400
+#if __cplusplus >= 202000
+	h << " (C++20)";
+#elif __cplusplus >= 201700
+	h << " (C++17)";
+#elif __cplusplus >= 201400
 	h << " (C++14)";
+#elif __cplusplus >= 201100
+	h << " (C++11)";
 #endif
 #ifdef GUI_GTK
 	h << " (Gtk)";
