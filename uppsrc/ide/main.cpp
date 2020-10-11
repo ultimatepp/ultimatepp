@@ -304,7 +304,8 @@ void AppMain___()
 
 		SetPPDefs(LoadFile(ppdefs));
 		
-		ide.LoadLastMain();
+		if(!clset)
+			ide.LoadLastMain();
 		do {
 			IdeAgain = false;
 			if(clset || ide.OpenMainPackage()) {
