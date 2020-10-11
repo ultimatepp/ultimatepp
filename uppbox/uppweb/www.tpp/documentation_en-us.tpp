@@ -45,19 +45,17 @@ with TheIDE]&]
 Assemblies and Nests]&]
 [s0;l160; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
 Packages and Assemblies]&]
-[s0;l160; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
-[s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
-[s0;l160; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
-[s0;l160; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
+[s0;l160; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us^ Command 
+line arguments]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l160; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
 `- parser directives]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Blitz`_en`-us^ BLITZ]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
 [s0;l160; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
-[s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
-Project Templates]&]
-[s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file format]&]
-[s0;l160; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/special`$en`-us^ Special 
 features]&]
