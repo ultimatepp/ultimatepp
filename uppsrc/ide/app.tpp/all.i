@@ -26,6 +26,10 @@ TOPIC("Blitz_en-us")
 #include "Blitz_en-us.tppi"
 END_TOPIC
 
+TOPIC("CommandLineArugments_en-us")
+#include "CommandLineArugments_en-us.tppi"
+END_TOPIC
+
 TOPIC("ConfiguringPackagesAssemblies_en-us")
 #include "ConfiguringPackagesAssemblies_en-us.tppi"
 END_TOPIC
@@ -84,10 +88,6 @@ END_TOPIC
 
 TOPIC("Topic_en-us")
 #include "Topic_en-us.tppi"
-END_TOPIC
-
-TOPIC("cmdline_en-us")
-#include "cmdline_en-us.tppi"
 END_TOPIC
 
 TOPIC("importext_en-us")

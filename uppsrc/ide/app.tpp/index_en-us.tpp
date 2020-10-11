@@ -29,6 +29,8 @@ with TheIDE]&]
 Assemblies and Nests]&]
 [s0;l224; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
 Packages and Assemblies]&]
+[s0;l224; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us^ Command 
+line arguments]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
 `- parser directives]&]

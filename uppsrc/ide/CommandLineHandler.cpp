@@ -44,10 +44,12 @@ bool BaseCommandLineHandler::HandleHelp() const
 	if(args.IsEmpty() || findarg(args[0], "?", "--help", "-h", "-?", "/?") < 0)
 		return false;
 		
-	Cout() << "Usage: theide -f [file..]\n"
-			  "       theide [file..] // autodetection mode\n\n";
+	Cout() << "Usage:\n"
+			  "    theide [file..]             - opens given file in editor mode (Auto detection mode).\n"
+			  "    theide [assembly] [package] - opens given package from given assembly.\n\n";
 	
 	Cout() << "Common options:\n"
+	          "    -f $file        - opens given file in editor mode.\n"
 	          "    -v or --version - displays information about version.\n"
 			  "    -h or --help    - displays this site.\n\n";
 	
