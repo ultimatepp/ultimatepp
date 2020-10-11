@@ -37,7 +37,7 @@ execute methods]&]
 methods]&]
 [s0; &]
 [s3;:1: 1. Overview&]
-[s5; TheIDE macros are written in [^topic`:`/`/ide`/app`/esc`$en`-us^ Esc 
+[s5; TheIDE macros are written in [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us^ Esc 
 scripting language] and placed in .usc files. .usc files can 
 be either part of regular packages or are placed in Common or 
 Local directory.&]
