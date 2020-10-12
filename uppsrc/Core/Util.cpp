@@ -38,7 +38,7 @@ void PanicMessageBox(const char *title, const char *text)
 }
 
 
-#if defined(PLATFORM_LINUX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID)
+#if defined(PLATFORM_LINUX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID) && defined(flagSTACKTRACE)
 void AddStackTrace(char * str, int len)
 {
 	const size_t max_depth = 100;
