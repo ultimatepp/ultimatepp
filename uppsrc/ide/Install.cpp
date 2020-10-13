@@ -70,7 +70,7 @@ bool Install(bool& hasvars)
 			}
 	};
 	
-#ifdef PLATFORM_COCOA
+#ifdef PLATFORM_COCOA && 0
 	if(!hasvars) {
 		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/uppsrc");
 		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/*");
@@ -85,7 +85,7 @@ bool Install(bool& hasvars)
 			MakeAssembly(myapps);
 			MakeAssembly(myapps + ";" + bazaar, "MyApps-bazaar");
 		}
-	#ifdef PLATFORM_COCOA
+	#ifdef PLATFORM_COCOA && 0
 		String app = GetAppFolder();
 		if(app.GetCount()) {
 			String f = GetFileFolder(app);
