@@ -4,7 +4,7 @@
 #	include <winnls.h>
 #endif
 
-#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID)
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID) && defined(flagSTACKTRACE)
 #	include <execinfo.h>
 #	include <cxxabi.h>
 #endif
