@@ -63,30 +63,30 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	}
 	dashStyle <<= DashStyle::TypeName(id);
 	
-	xMin.WhenEnter = THISBACK(Change);
-	xMax.WhenEnter = THISBACK(Change);
-	yMin.WhenEnter = THISBACK(Change);
-	yMax.WhenEnter = THISBACK(Change);
-	yMin2.WhenEnter = THISBACK(Change);
-	yMax2.WhenEnter = THISBACK(Change);
-	xMinUnit.WhenEnter = THISBACK(Change);
-	yMinUnit.WhenEnter = THISBACK(Change);
-	xMajorUnit.WhenEnter = THISBACK(Change);
-	yMajorUnit.WhenEnter = THISBACK(Change);
+	xMin.WhenEnter = [=]{Change();};
+	xMax.WhenEnter = [=]{Change();};
+	yMin.WhenEnter = [=]{Change();};
+	yMax.WhenEnter = [=]{Change();};
+	yMin2.WhenEnter = [=]{Change();};
+	yMax2.WhenEnter = [=]{Change();};
+	xMinUnit.WhenEnter = [=]{Change();};
+	yMinUnit.WhenEnter = [=]{Change();};
+	xMajorUnit.WhenEnter = [=]{Change();};
+	yMajorUnit.WhenEnter = [=]{Change();};
 	
-	opAttachX.WhenAction = THISBACK(Change);
-	opAttachY.WhenAction = THISBACK(Change);
-	opReticleX.WhenAction = THISBACK(Change);
-	opReticleY.WhenAction = THISBACK(Change);
-	opReticleY2.WhenAction = THISBACK(Change);
-	opReticleXNumbers.WhenAction = THISBACK(Change);
-	opReticleYNumbers.WhenAction = THISBACK(Change);
-	opReticleY2Numbers.WhenAction = THISBACK(Change);
-	reticlethickness <<= THISBACK(Change);
+	opAttachX.WhenAction = [=]{Change();};
+	opAttachY.WhenAction = [=]{Change();};
+	opReticleX.WhenAction = [=]{Change();};
+	opReticleY.WhenAction = [=]{Change();};
+	opReticleY2.WhenAction = [=]{Change();};
+	opReticleXNumbers.WhenAction = [=]{Change();};
+	opReticleYNumbers.WhenAction = [=]{Change();};
+	opReticleY2Numbers.WhenAction = [=]{Change();};
+	reticlethickness.WhenAction = [=]{Change();};
 	
-	linecolor <<= THISBACK(Change);
-	linethickness <<= THISBACK(Change);
-	dashStyle.WhenAction = THISBACK(Change);
+	linecolor.WhenAction = [=]{Change();};
+	linethickness.WhenAction = [=]{Change();};
+	dashStyle.WhenAction = [=]{Change();};
 	
 	Change();
 }
@@ -140,31 +140,31 @@ void TextsTab::Init(ScatterCtrl& scatter)
 	pscatter = &scatter;
 	
 	title <<= scatter.GetTitle();
-	title <<= THISBACK(Change);
+	title.WhenAction = [=]{Change();};
 	xLabel <<= scatter.GetLabelX();
-	xLabel <<= THISBACK(Change);
+	xLabel.WhenAction = [=]{Change();};
 	yLabel <<= scatter.GetLabelY();
-	yLabel <<= THISBACK(Change);
+	yLabel.WhenAction = [=]{Change();};
 	yLabel2 <<= scatter.GetLabelY2();
-	yLabel2 <<= THISBACK(Change);
+	yLabel2.WhenAction = [=]{Change();};
 	backcolor <<= scatter.GetPlotAreaColor();
-	backcolor <<= THISBACK(Change);
+	backcolor.WhenAction = [=]{Change();};
 	leftMargin <<= scatter.GetPlotAreaLeftMargin();
-	leftMargin <<= THISBACK(Change);
+	leftMargin.WhenAction = [=]{Change();};
 	rightMargin <<= scatter.GetPlotAreaRightMargin();
-	rightMargin <<= THISBACK(Change);
+	rightMargin.WhenAction = [=]{Change();};
 	topMargin <<= scatter.GetPlotAreaTopMargin();
-	topMargin <<= THISBACK(Change);
+	topMargin.WhenAction = [=]{Change();};
 	bottomMargin <<= scatter.GetPlotAreaBottomMargin();
-	bottomMargin <<= THISBACK(Change);
+	bottomMargin.WhenAction = [=]{Change();};
 	butFontTitle.SetImage(ScatterImgP::ColorA);
-	butFontTitle <<= THISBACK(OnFontTitle);
+	butFontTitle.WhenAction = [=]{Change();};
 	colorTitle <<= scatter.GetTitleColor();
-	colorTitle <<= THISBACK(Change);
+	colorTitle.WhenAction = [=]{Change();};
 	butFontLabel.SetImage(ScatterImgP::ColorA);
-	butFontLabel <<= THISBACK(OnFontLabel);
+	butFontLabel.WhenAction = [=]{OnFontLabel();};
 	colorLabel <<= scatter.GetLabelsColor();
-	colorLabel <<= THISBACK(Change);
+	colorLabel.WhenAction = [=]{Change();};
 	
 	Change();
 }
@@ -173,7 +173,7 @@ void TextsTab::OnFontTitle() {
 	FontSelect fontSelect;
 	
 	fontSelect.Set(pscatter->GetTitleFont());
-	fontSelect.WhenAction = THISBACK(OnChangeFontTitle);
+	fontSelect.WhenAction = [=](Font f) {OnChangeFontTitle(f);};
 	fontSelect.Execute(butFontTitle);
 }
 
@@ -186,7 +186,7 @@ void TextsTab::OnFontLabel() {
 	FontSelect fontSelect;
 	
 	fontSelect.Set(pscatter->GetLabelsFont());
-	fontSelect.WhenAction = THISBACK(OnChangeFontLabel);
+	fontSelect.WhenAction = [=](Font f) {OnChangeFontLabel(f);};
 	fontSelect.Execute(butFontLabel);
 }
 
@@ -217,35 +217,35 @@ void LegendTab::Init(ScatterCtrl& scatter)
 	pscatter = &scatter;
 	
 	showLegend <<= scatter.GetShowLegend();
-	showLegend <<= THISBACK(Change);
+	showLegend.WhenAction = [=] {Change();};
 	
 	legendPosition <<= (scatter.GetLegendAnchor() == ScatterDraw::TOP ? 0 : 1);
-	legendPosition <<= THISBACK(Change);
+	legendPosition.WhenAction = [=] {Change();};
 	switch(scatter.GetLegendAnchor()) {
 	case ScatterDraw::LEFT_TOP: 	legendAnchorLT = true;	break;
 	case ScatterDraw::RIGHT_TOP: 	legendAnchorRT = true;	break;
 	case ScatterDraw::LEFT_BOTTOM: 	legendAnchorLB = true;	break;
 	case ScatterDraw::RIGHT_BOTTOM: legendAnchorRB = true;	break;
 	}
-	legendAnchorLT <<= THISBACK1(ChangeAnchor, &legendAnchorLT);
-	legendAnchorRT <<= THISBACK1(ChangeAnchor, &legendAnchorRT);
-	legendAnchorLB <<= THISBACK1(ChangeAnchor, &legendAnchorLB);
-	legendAnchorRB <<= THISBACK1(ChangeAnchor, &legendAnchorRB);
+	legendAnchorLT.WhenAction = [&] {ChangeAnchor(&legendAnchorLT);};
+	legendAnchorRT.WhenAction = [&] {ChangeAnchor(&legendAnchorRT);};
+	legendAnchorLB.WhenAction = [&] {ChangeAnchor(&legendAnchorLB);};
+	legendAnchorRB.WhenAction = [&] {ChangeAnchor(&legendAnchorRB);};
 	
 	fillColor <<= scatter.GetLegendFillColor();
-	fillColor <<= THISBACK(Change);
+	fillColor.WhenAction = [=] {Change();};
 	borderColor <<= scatter.GetLegendBorderColor();
-	borderColor <<= THISBACK(Change);
+	borderColor.WhenAction = [=] {Change();};
 	Point p = scatter.GetLegendPos();
 	tableHoriz <<= p.x;
-	tableHoriz <<= THISBACK(Change);
+	tableHoriz.WhenAction = [=] {Change();};
 	tableVert <<= p.y;
-	tableVert <<= THISBACK(Change);
+	tableVert.WhenAction = [=] {Change();};
 	numCols <<= scatter.GetLegendNumCols();
-	numCols <<= THISBACK(Change);
+	numCols.WhenAction = [=] {Change();};
 	
 	rowSpacing <<= scatter.GetLegendRowSpacing();
-	rowSpacing <<= THISBACK(Change);
+	rowSpacing.WhenAction = [=] {Change();};
 	
 	Change();
 }
@@ -317,26 +317,26 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	dropResolution.Add(ScatterDraw::MD_ANTIALIASED, t_("Painter Antialiased"));
 	dropResolution.Add(ScatterDraw::MD_SUBPIXEL, t_("Painter Subpixel"));
 	dropResolution = scatter.GetMode();
-	dropResolution <<= THISBACK(Change);
+	dropResolution.WhenAction = [=] {Change();};
 	dropRotate.Clear();
 	dropRotate.Add(ScatterCtrl::Angle_0, t_("0º"));
 	dropRotate.Add(ScatterCtrl::Angle_90, t_("90º"));
 	dropRotate.Add(ScatterCtrl::Angle_180, t_("180º"));
 	dropRotate.Add(ScatterCtrl::Angle_270, t_("270º"));
 	dropRotate = scatter.GetRotate();
-	dropRotate <<= THISBACK(Change);
+	dropRotate.WhenAction = [=] {Change();};
 	editWidth <<= scatter.GetSaveSize().cx;
 	editHeight <<= scatter.GetSaveSize().cy;
 	opResponsive <<= scatter.ScatterDraw::IsResponsive();
 	editSensitivity <<= scatter.ScatterDraw::GetResponsivenessFactor();
 	editJpgQ <<= scatter.GetJPGQuality();
-	editWidth <<= THISBACK(Change);
-	editHeight <<= THISBACK(Change);
-	opResponsive <<= THISBACK(Change);
-	editSensitivity <<= THISBACK(Change);
-	editJpgQ <<= THISBACK(Change);
+	editWidth.WhenAction = [=] {Change();};
+	editHeight.WhenAction = [=] {Change();};
+	opResponsive.WhenAction = [=] {Change();};
+	editSensitivity.WhenAction = [=] {Change();};
+	editJpgQ.WhenAction = [=] {Change();};
 	
-	butApplyToAll <<= THISBACK(ChangeAll);
+	butApplyToAll.WhenAction = [=] {ChangeAll();};
 	
 	Change();
 }
@@ -398,12 +398,12 @@ void SeriesTab::Init0()
 	for(int i = 0; i < scatter.GetCount(); i++)
 		left.list.Add(scatter.GetLegend(i));
 	left.list.SetCursor(0);
-	left.list.WhenSel = THISBACK(UpdateFields);
-	left.butMoveUp <<= THISBACK(OnMoveUp);
+	left.list.WhenSel = [=] {UpdateFields();};
+	left.butMoveUp.WhenAction = [=] {OnMoveUp();};
 	left.butMoveUp.SetImage(ScatterImgP::UpArrow);
-	left.butMoveDown <<= THISBACK(OnMoveDown);
+	left.butMoveDown.WhenAction = [=] {OnMoveDown();};
 	left.butMoveDown.SetImage(ScatterImgP::DownArrow);
-	left.butDelete <<= THISBACK(OnDelete);
+	left.butDelete.WhenAction = [=] {OnDelete();};
 	
 	right.marktype.Clear();
 
@@ -418,24 +418,24 @@ void SeriesTab::Init0()
 	
 	UpdateFields();
 
-	right.linecolor <<= THISBACK(Change);
-	right.fillcolor <<= THISBACK(Change);
-	right.visible <<= THISBACK(Change);
-	right.dashStyle.WhenAction = THISBACK(Change);
-	right.linethickness <<= THISBACK(Change);
+	right.linecolor.WhenAction = [=] {Change();};
+	right.fillcolor.WhenAction = [=] {Change();};
+	right.visible.WhenAction = [=] {Change();};
+	right.dashStyle.WhenAction = [=] {Change();};
+	right.linethickness.WhenAction = [=] {Change();};
 
-	right.markstyle.WhenAction = THISBACK(Change);
-	right.markcolor <<= THISBACK(Change);
-	right.markwidth <<= THISBACK(Change);
-	right.marktype.WhenAction = THISBACK(Change);
+	right.markstyle.WhenAction = [=] {Change();};
+	right.markcolor.WhenAction = [=] {Change();};
+	right.markwidth.WhenAction = [=] {Change();};
+	right.marktype.WhenAction = [=] {Change();};
 	
-	right.showLegend <<= THISBACK(Change);
+	right.showLegend.WhenAction = [=] {Change();};
 	
-	right.unitsY <<= THISBACK(Change);
-	right.unitsX <<= THISBACK(Change);
+	right.unitsY.WhenAction = [=] {Change();};
+	right.unitsX.WhenAction = [=] {Change();};
 
-	right.name <<= THISBACK(Change);
-	right.primary <<= THISBACK(Change);
+	right.name.WhenAction = [=] {Change();};
+	right.primary.WhenAction = [=] {Change();};
 	
 	right.name.SetFocus();
 }

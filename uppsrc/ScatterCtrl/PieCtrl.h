@@ -10,7 +10,6 @@ namespace Upp {
 
 class PieCtrl: public StaticRect, public PieDraw {
 public:
-	typedef PieCtrl CLASSNAME;
 	PieCtrl();
 
  	void Paint(Draw& w); 	

@@ -54,14 +54,14 @@ void PieCtrl::Paint(Draw& w)
 }
 
 void PieCtrl::RightDown(Point, dword) {
-	MenuBar::Execute(THISBACK(ContextMenu));
+	MenuBar::Execute([=](Bar& bar){ContextMenu(bar);});
 }
 
 void PieCtrl::ContextMenu(Bar& bar)
 {
-	bar.Add(t_("Copy"), PieImg::Copy(), THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C)
+	bar.Add(t_("Copy"), PieImg::Copy(), [=] {SaveToClipboard(false);}).Key(K_CTRL_C)
 									.Help(t_("Copy image to clipboard"));
-	bar.Add(t_("Save to file"), PieImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S)
+	bar.Add(t_("Save to file"), PieImg::Save(), [=] {SaveToFile(Null);}).Key(K_CTRL_S)
 									.Help(t_("Save image to file"));
 }
 
@@ -85,7 +85,7 @@ void PieCtrl::SaveToFile(String fileName)
 		fileToSave.ClearTypes();
 		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
 		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
-		fileToSave.type.WhenAction = THISBACK(OnFileToSave);
+		fileToSave.type.WhenAction = [=] {OnFileToSave();};
 	    if(!fileToSave.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
 	        Exclamation(t_("Plot has not been saved"));
 	        return;

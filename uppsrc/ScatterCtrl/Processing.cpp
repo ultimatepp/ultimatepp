@@ -23,7 +23,7 @@ void PropertiesDlg::Init(ScatterCtrl& scatter)
 	tab.Add(general,  t_("General"));
 	OnTab();
 	
-	tab <<= THISBACK(OnTab);
+	tab.WhenAction = [=]{OnTab();};
 	butOK.WhenAction = [=] {Close();};
 }
 
@@ -76,7 +76,7 @@ void ProcessingDlg::Init(ScatterCtrl& scatter)
 	}
 	if (list.list.GetCount() > 0)
 		list.list.SetCursor(0);
-	list.list.WhenSel = THISBACK(UpdateFields);
+	list.list.WhenSel = [=] {UpdateFields();};
 	UpdateFields();
 	
 	right.butOK.WhenAction = [=] {Close();};
@@ -126,45 +126,45 @@ ProcessingTab::ProcessingTab()
 	tab.Add(splitterTabOp.SizePos(),   		t_("Operations"));
 	tab.Add(splitterTabBestFit.SizePos(), 	t_("Best fit"));
 	tab.Add(splitterTabHist.SizePos(), 		t_("Histogram"));
-	tab.WhenSet = THISBACK(OnSet);
+	tab.WhenSet = [=] {OnSet();};
 	
-	tabFreqRight.butFFT.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.butFFT.WhenAction = [=] {OnFFT();};
 	tabFreqRight.opXAxis = 0;
-	tabFreqRight.opXAxis.WhenAction = THISBACK(OnFFT);
-	tabFreqRight.type.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.opXAxis.WhenAction = [=] {OnFFT();};
+	tabFreqRight.type.WhenAction = [=] {OnFFT();};
 	tabFreqRight.type = 0;
 	
 	for (int i = 0; i < DataSource::GetFFTWindowCount(); ++i)
 		tabFreqRight.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
 	tabFreqRight.window.SetIndex(1);
-	tabFreqRight.window.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.window.WhenAction = [=] {OnFFT();};
 	tabFreqRight.num <<= 1;
 	tabFreqRight.overlapping <<= 0.1;
 	
 	tabFitRight.opSeries = true;
-	tabFitRight.opSeries.WhenAction = THISBACK(OnOp);
-	tabFitRight.opAverage.WhenAction = THISBACK(OnOp);
-	tabFitRight.opLinear.WhenAction = THISBACK(OnOp);
-	tabFitRight.opCuadratic.WhenAction = THISBACK(OnOp);
-	tabFitRight.opCubic.WhenAction = THISBACK(OnOp);
-	tabFitRight.opSinus.WhenAction = THISBACK(OnOp);
-	tabFitRight.opSinusTend.WhenAction = THISBACK(OnOp);
-	tabFitRight.opSpline.WhenAction = THISBACK(OnOp);
-	tabFitRight.opDerivative.WhenAction = THISBACK(OnOp);
-	tabFitRight.derOrder.WhenAction = THISBACK(OnOp);
-	tabFitRight.derAccuracy.WhenAction = THISBACK(OnOp);
-	tabFitRight.opSG.WhenAction = THISBACK(OnOp);
-	tabFitRight.sgOrder.WhenAction = THISBACK(OnOp);
-	tabFitRight.sgSize.WhenAction = THISBACK(OnOp);
-	tabFitRight.sgDeg.WhenAction = THISBACK(OnOp);
-	tabFitRight.opMax.WhenAction = THISBACK(OnOp);
-	tabFitRight.opMin.WhenAction = THISBACK(OnOp);
-	tabFitRight.opMovAvg.WhenAction = THISBACK(OnOp);
-	tabFitRight.opSecAvg.WhenAction = THISBACK(OnOp);
-	tabFitRight.opCumAvg.WhenAction = THISBACK(OnOp);
-	tabFitRight.butAutoSensSector.WhenAction = THISBACK(OnAutoSensSector);
-	tabFitRight.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
-	tabFitRight.width.WhenAction = THISBACK(OnUpdateSensitivity);
+	tabFitRight.opSeries.WhenAction = [=] {OnOp();};
+	tabFitRight.opAverage.WhenAction = [=] {OnOp();};
+	tabFitRight.opLinear.WhenAction = [=] {OnOp();};
+	tabFitRight.opCuadratic.WhenAction = [=] {OnOp();};
+	tabFitRight.opCubic.WhenAction = [=] {OnOp();};
+	tabFitRight.opSinus.WhenAction = [=] {OnOp();};
+	tabFitRight.opSinusTend.WhenAction = [=] {OnOp();};
+	tabFitRight.opSpline.WhenAction = [=] {OnOp();};
+	tabFitRight.opDerivative.WhenAction = [=] {OnOp();};
+	tabFitRight.derOrder.WhenAction = [=] {OnOp();};
+	tabFitRight.derAccuracy.WhenAction = [=] {OnOp();};
+	tabFitRight.opSG.WhenAction = [=] {OnOp();};
+	tabFitRight.sgOrder.WhenAction = [=] {OnOp();};
+	tabFitRight.sgSize.WhenAction = [=] {OnOp();};
+	tabFitRight.sgDeg.WhenAction = [=] {OnOp();};
+	tabFitRight.opMax.WhenAction = [=] {OnOp();};
+	tabFitRight.opMin.WhenAction = [=] {OnOp();};
+	tabFitRight.opMovAvg.WhenAction = [=] {OnOp();};
+	tabFitRight.opSecAvg.WhenAction = [=] {OnOp();};
+	tabFitRight.opCumAvg.WhenAction = [=] {OnOp();};
+	tabFitRight.butAutoSensSector.WhenAction = [=] {OnAutoSensSector();}; 
+	tabFitRight.width.WhenLostFocus = [=] {OnUpdateSensitivity();};
+	tabFitRight.width.WhenAction = [=] {OnUpdateSensitivity();};
 	
 	tabFitRight.opDerivative.Tip(t_("Numerical derivative including derivative order and accuracy (related to window size)"));
 	tabFitRight.derOrder <<= 1;
@@ -181,11 +181,11 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.sgDeg <<= 3;
 	tabFitRight.sgDeg.Tip(t_("Polynomial degree"));
 	tabFitRight.numDecimals <<= 3;
-	tabFitRight.numDecimals.WhenAction = THISBACK(UpdateEquations);
-	tabFitRight.showEquation.WhenAction = THISBACK(OnShowEquation);
+	tabFitRight.numDecimals.WhenAction = [=] {UpdateEquations();};
+	tabFitRight.showEquation.WhenAction = [=] {OnShowEquation();};
 	
-	tabOpRight.xLow.WhenLostFocus = THISBACK(OnOperation);
-	tabOpRight.xHigh.WhenLostFocus = THISBACK(OnOperation);
+	tabOpRight.xLow.WhenLostFocus = [=] {OnOperation();};
+	tabOpRight.xHigh.WhenLostFocus = [=] {OnOperation();};
 	
 	tabBestFitRight.coefficients = 0;
 	tabBestFitRight.coefficients.Tip(t_("To show real equation coefficients with different precisions or just in text"));
@@ -197,7 +197,7 @@ ProcessingTab::ProcessingTab()
 	tabBestFitRight.gridTrend.AddColumn(t_("Equation"), 30);
 	tabBestFitRight.gridTrend.AddColumn(t_("R2"), 5);
 	tabBestFitRight.gridTrend.SetLineCy(EditField::GetStdHeight()).MultiSelect();
-	tabBestFitRight.gridTrend.WhenBar = THISBACK(OnArrayBar);
+	tabBestFitRight.gridTrend.WhenBar = [=](Bar &menu) {OnArrayBar(menu);};
 	tabBestFitRight.gridTrend.Sort(r2Compare);
 	for (int i = 0; i < ExplicitEquation::GetEquationCount(); ++i) 
 		equationTypes.Add(ExplicitEquation::Create(i));
@@ -205,13 +205,13 @@ ProcessingTab::ProcessingTab()
 	equationTypes.Add(userEquation);
 	
 	tabBestFitRight.butFit.Tip(t_("It tries to fit the series with the supported equations"));
-	tabBestFitRight.butFit.WhenPush = THISBACK(OnFit);
+	tabBestFitRight.butFit.WhenPush = [=] {OnFit();};
 	
 	tabHistRight.axis.Add(t_("X"));
 	tabHistRight.axis.Add(t_("Y"));
 	tabHistRight.axis.SetIndex(1);
-	tabHistRight.axis.WhenAction = THISBACK(OnSet);
-	tabHistRight.butHist <<= THISBACK(OnHist);
+	tabHistRight.axis.WhenAction = [=] {OnSet();};
+	tabHistRight.butHist.WhenAction = [=] {OnHist();};
 	tabHistRight.numVals <<= 30;
 	tabHistRight.valNormalize <<= 100;
 	tabHistRight.opStaggered <<= true;
@@ -239,8 +239,8 @@ void ProcessingTab::ArraySelect() {
 }
 
 void ProcessingTab::OnArrayBar(Bar &menu) {
-	menu.Add(t_("Select all"), Null, THISBACK(ArraySelect)).Key(K_CTRL_A).Help(t_("Select all rows"));
-	menu.Add(t_("Copy"), ScatterImgP::Copy(), THISBACK(ArrayCopy)).Key(K_CTRL_C).Help(t_("Copy selected rows"));
+	menu.Add(t_("Select all"), Null, [=] {ArraySelect();}).Key(K_CTRL_A).Help(t_("Select all rows"));
+	menu.Add(t_("Copy"), ScatterImgP::Copy(), [=] {ArrayCopy();}).Key(K_CTRL_C).Help(t_("Copy selected rows"));
 }
 
 void ProcessingTab::OnFit() {
