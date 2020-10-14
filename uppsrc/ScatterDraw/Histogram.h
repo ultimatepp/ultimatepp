@@ -139,6 +139,7 @@ public:
 		return ranges[0][int(id)];
 	}
 	inline virtual int64 GetCount() const {return !values.size() ? 0 : values.size();};
+	inline virtual int64 size() const 	  {return GetCount();};
 	
 	void Xmlize(XmlIO xml) {
 		xml

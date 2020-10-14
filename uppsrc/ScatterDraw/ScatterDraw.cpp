@@ -433,30 +433,30 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 
 ScatterDraw &ScatterDraw::Graduation_FormatX(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatX = cbModifFormatXGridUnits = THISBACK(ExpFormat); 	break;
-		case MON: cbModifFormatX = cbModifFormatXGridUnits = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatX = cbModifFormatXGridUnits = THISBACK(DyFormat);	break;
-		default:break;
+		case EXP: cbModifFormatX = cbModifFormatXGridUnits = ExpFormat;	break;
+		case MON: cbModifFormatX = cbModifFormatXGridUnits = MonFormat;	break;
+		case DY:  cbModifFormatX = cbModifFormatXGridUnits = DyFormat;	break;
+		default:  break;
 	}
 	return *this;
 }
 
 ScatterDraw &ScatterDraw::Graduation_FormatY(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatY = cbModifFormatYGridUnits = THISBACK(ExpFormat);	break;
-		case MON: cbModifFormatY = cbModifFormatYGridUnits = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatY = cbModifFormatYGridUnits = THISBACK(DyFormat);	break;
-		default:break;
+		case EXP: cbModifFormatY = cbModifFormatYGridUnits = ExpFormat;	break;
+		case MON: cbModifFormatY = cbModifFormatYGridUnits = MonFormat;	break;
+		case DY:  cbModifFormatY = cbModifFormatYGridUnits = DyFormat;	break;
+		default:  break;
 	}
 	return *this;
 }
 
 ScatterDraw &ScatterDraw::Graduation_FormatY2(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(ExpFormat);	break;
-		case MON: cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(DyFormat);		break;
-		default:break;
+		case EXP: cbModifFormatY2 = cbModifFormatY2GridUnits = ExpFormat;	break;
+		case MON: cbModifFormatY2 = cbModifFormatY2GridUnits = MonFormat;	break;
+		case DY:  cbModifFormatY2 = cbModifFormatY2GridUnits = DyFormat;	break;
+		default:  break;
 	}
 	return *this;
 }
@@ -469,10 +469,8 @@ String ScatterDraw::VariableFormat(double range, double d) {
 	else if (0.1   <= range && range < 1) 	   return FormatDouble(d, 3);
 	else if (1	   <= range && range < 10) 	   return FormatDouble(d, 2);
 	else if (10	   <= range && range < 100)    return FormatDouble(d, 1);
-	else if (100   <= range && range < 10000000) {
-						/*if (d < 1 && d > -1)   return "0";	// Never -0
-						else*/				   return FormatDouble(d, 0);
-	} else return FormatDoubleExp(d, 2);
+	else if (100   <= range && range < 10000000)return FormatDouble(d, 0);
+	else return FormatDoubleExp(d, 2);
 }
 
 Color ScatterDraw::GetNewColor(int index, int version) {
