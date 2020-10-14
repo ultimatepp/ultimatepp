@@ -36,7 +36,7 @@ public:
 	RasterPlayer& SetSpeed(double s = 1)	{speed = s; Refresh(); return *this;}
 	RasterPlayer& SetMT(bool _mt = false);
 	
-	Callback WhenShown;
+	Event<> WhenShown;
 	
 	int GetPageCount() 	{return images.GetCount();};
 	int GetFrameCount() {return images.GetCount();};	
