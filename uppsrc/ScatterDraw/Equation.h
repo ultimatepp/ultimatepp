@@ -642,7 +642,7 @@ public:
 
 	static void EvalThrowError(CParserPP &p, const char *s);
 	
-	virtual int FindVariable(String strId) const			{return variables.Find(strId);}
+	virtual int FindVariable(String strId) 					{return variables.Find(strId);}
 		
 protected:
 	doubleUnit Exp(CParserPP& p);

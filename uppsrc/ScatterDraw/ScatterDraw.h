@@ -55,7 +55,6 @@ Color GetRainbowColor(double frac, const Color &col0, const Color &col1, const C
 
 class ScatterDraw {
 public:
-	typedef ScatterDraw CLASSNAME;
 	ScatterDraw();
 	virtual ~ScatterDraw() noexcept {}
 	
@@ -222,8 +221,6 @@ protected:
 		
 	class ScatterSeries : public Moveable<ScatterSeries>, public ScatterBasicSeries {
 	public:
-		typedef ScatterSeries CLASSNAME;
-		
 		ScatterSeries()	: owns(false), serializeData(false) {dataS.Init(&data);}
 		void SetDataSource(DataSource *pointsData, bool ownsData = true) {
 			DeletePD();
@@ -311,25 +308,25 @@ public:
 	template<class T>
 	void SetDrawing(T& w, bool ctrl = false);
 	
-	Callback3<String&, int, double> cbModifFormatX;
-	Callback3<String&, int, double> cbModifFormatXGridUnits;
-	Callback3<String&, int, double> cbModifFormatDeltaX;
-	Callback3<String&, int, double> cbModifFormatY;
-	Callback3<String&, int, double> cbModifFormatYGridUnits;
-	Callback3<String&, int, double> cbModifFormatDeltaY;
-	Callback3<String&, int, double> cbModifFormatY2;
-	Callback3<String&, int, double> cbModifFormatY2GridUnits;
-	Callback3<String&, int, double> cbModifFormatDeltaY2;
+	Function<void(String&, int, double)> cbModifFormatX;
+	Function<void(String&, int, double)> cbModifFormatXGridUnits;
+	Function<void(String&, int, double)> cbModifFormatDeltaX;
+	Function<void(String&, int, double)> cbModifFormatY;
+	Function<void(String&, int, double)> cbModifFormatYGridUnits;
+	Function<void(String&, int, double)> cbModifFormatDeltaY;
+	Function<void(String&, int, double)> cbModifFormatY2;
+	Function<void(String&, int, double)> cbModifFormatY2GridUnits;
+	Function<void(String&, int, double)> cbModifFormatDeltaY2;
 	
-	Callback1<Vector<double>&> SetGridLinesX;
-	Callback1<Vector<double>&> SetGridLinesY;
+	Function<void(Vector<double>&)> SetGridLinesX;
+	Function<void(Vector<double>&)> SetGridLinesY;
 	
-	Callback WhenZoomScroll;
-	Callback WhenSetRange;
-	Callback WhenSetXYMin;
-	Callback1<Painter&> WhenPainter;
-	Callback1<Draw&> WhenDraw;
-	Callback WhenZoomToFit;
+	Function<void()> WhenZoomScroll;
+	Function<void()> WhenSetRange;
+	Function<void()> WhenSetXYMin;
+	Function<void(Painter&)> WhenPainter;
+	Function<void(Draw&)> WhenDraw;
+	Function<void()> WhenZoomToFit;
 	
 	Function <bool(int)> WhenRemoveSeries;
 	Function <bool(int, int)> WhenSwapSeries;
@@ -1167,9 +1164,9 @@ protected:
 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	
-	void ExpFormat(String& s, int , double d)	{s = FormatDoubleExp(d, 1);}
-	void MonFormat(String& s, int , double d)	{s = Format("%Mon", int(d));}
-	void DyFormat(String& s, int , double d)	{s = Format("%Dy", int(d));}
+	static void ExpFormat(String& s, int , double d)	{s = FormatDoubleExp(d, 1);}
+	static void MonFormat(String& s, int , double d)	{s = Format("%Mon", int(d));}
+	static void DyFormat(String& s, int , double d)		{s = Format("%Dy", int(d));}
 	
 	static String VariableFormat(double range, double d);	
 
@@ -1288,8 +1285,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 	
 	w.Offset(Point(fround(plotScaleX*hPlotLeft), fround(plotScaleY*vPlotTop + titleHeight)));
 	
-	Upp::Font fontLabel;
-	fontLabel = labelsFont;
+	Upp::Font fontLabel = labelsFont;
 	fontLabel.Height(fround(min(plotScaleX, plotScaleY)*(labelsFont.GetHeight()+labelsFont.GetDescent())));
 	Upp::Font fontX = fontLabel;
 	if (boldX)
@@ -1474,8 +1470,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY) {
 }
 	
 template <class T>
-void ScatterDraw::Plot(T& w)
-{
+void ScatterDraw::Plot(T& w) {
 	if (plotW < 0 || plotH < 0)
 		return;
 	

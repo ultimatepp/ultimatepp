@@ -9,7 +9,6 @@ namespace Upp {
 
 class PieDraw {
 public:
-	typedef PieDraw CLASSNAME;
 	PieDraw();
 	virtual ~PieDraw() noexcept {};
 	
