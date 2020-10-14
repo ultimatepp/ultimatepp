@@ -1,4 +1,4 @@
-description "Context menu alternative and using CallbackArgTarget\377";
+description "Context menu alternative\377";
 
 uses
 	CtrlLib;
