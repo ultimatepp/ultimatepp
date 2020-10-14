@@ -12,7 +12,7 @@ struct MyAppWindow : TopWindow {
 		int result = Null;
 		MenuBar menu;
 		for(int i = 0; i < 10; i++)
-			menu.Add(AsString(i), [=, &result] { result = i; });
+			menu.Add(AsString(i), [&] { result = i; });
 		menu.Separator();
 		menu.Add("Exit", [=] { Exit(); });
 		menu.Execute();
