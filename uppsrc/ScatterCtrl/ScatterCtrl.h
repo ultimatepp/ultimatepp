@@ -14,7 +14,7 @@ namespace Upp {
 	
 class EditDoubleLostFocus : public EditDouble {
 public:
-	Callback WhenLostFocus;
+	Event<> WhenLostFocus;
 	
 	virtual void LostFocus() {
 		WhenLostFocus();
@@ -26,7 +26,6 @@ typedef WithSpin<double, EditDoubleLostFocus> EditDoubleLostFocusSpin;
 
 class CtrlScroll : public StaticRect {
 public:
-	typedef CtrlScroll CLASSNAME;
 	CtrlScroll();
 
 	CtrlScroll &AddPane(Ctrl& c, bool scrollH = true, bool scrollV = true);
@@ -164,8 +163,6 @@ public:
 
 class ScatterCtrl : public Ctrl, public ScatterDraw {
 public:
-	typedef ScatterCtrl CLASSNAME;
-	
 	ScatterCtrl();
 	virtual ~ScatterCtrl() noexcept {RemoveInstance(this);};
 	
@@ -192,7 +189,7 @@ public:
 	
 	enum MouseAction {NONE, LEFT_DOWN, LEFT_UP, LEFT_DOUBLE, LEFT_MOVE, MIDDLE_DOWN, MIDDLE_UP, MIDDLE_MOVE, 
 					  RIGHT_DOWN, RIGHT_UP, RIGHT_MOVE};
-	Callback3<Point, dword, MouseAction> WhenMouseClick;
+	Function<void(Point, dword, MouseAction)> WhenMouseClick;
 	
 	struct KeyBehavior {		
 		KeyBehavior(bool _ctrl, bool _alt, bool _shift, int _key, bool _isVirtualKey, ScatterAction _action) : 
@@ -496,8 +493,6 @@ void ScatterCtrl::SetDrawing(T& w, const Size &sz, bool ctrl) {
 
 class ScatterWindow : public TopWindow {
 public:
-	typedef ScatterWindow CLASSNAME;
-	
 	ScatterWindow() {
 		Sizeable().Zoomable();
 		Add(scatter.SizePos());

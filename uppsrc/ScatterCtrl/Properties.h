@@ -12,7 +12,6 @@ namespace Upp {
 
 	
 class FontSelect : public WithFontSelector<TopWindow> {
-typedef FontSelect CLASSNAME;
 public:
 	Event<Font> WhenAction;
 
@@ -20,11 +19,11 @@ public:
 		CtrlLayoutExit(*this, t_("Font"));
 		FrameLess(true);
 		
-		face.WhenAction = THISBACK(Select);
-		height.WhenAction = THISBACK(Select);
-		bold.WhenAction = THISBACK(Select);
-		italic.WhenAction = THISBACK(Select);
-		naa.WhenAction = THISBACK(Select);
+		face.WhenAction = [=]{Select();};
+		height.WhenAction = [=]{Select();};
+		bold.WhenAction = [=]{Select();};
+		italic.WhenAction = [=]{Select();};
+		naa.WhenAction = [=]{Select();};
 		face.Clear();
 		Upp::Index<String> fni;
 		for(int i = 0; i < Font::GetFaceCount(); i++) {
@@ -91,8 +90,6 @@ private:
 
 class MeasuresTab : public WithMeasures<StaticRect> {
 public:
-	typedef MeasuresTab CLASSNAME;
-	
 	void Init(ScatterCtrl &scatter);
 	void Change();
 
@@ -102,8 +99,6 @@ private:
 
 class TextsTab : public WithTexts<StaticRect> {
 public:
-	typedef TextsTab CLASSNAME;
-	
 	void Init(ScatterCtrl &scatter);
 	void DoShowText();
 	
@@ -119,8 +114,6 @@ private:
 
 class LegendTab : public WithLegend<StaticRect> {
 public:
-	typedef LegendTab CLASSNAME;
-	
 	void Init(ScatterCtrl &scatter);
 
 private:
@@ -132,8 +125,6 @@ private:
 
 class SeriesTab : public Splitter {
 public:
-	typedef SeriesTab CLASSNAME;
-	
 	SeriesTab() : dashCount(DashStyle::GetCount()) {}
 	virtual ~SeriesTab() noexcept {DashStyle::UnregisterFrom(dashCount);}
 	void Init(ScatterCtrl& scatter);
@@ -157,8 +148,6 @@ private:
 
 class GeneralTab : public WithGeneral<StaticRect> {
 public:
-	typedef GeneralTab CLASSNAME;
-	
 	void Init(ScatterCtrl &scatter);
 
 private:
@@ -170,8 +159,6 @@ private:
 
 class DataDlg : public WithData<TopWindow> {
 public:
-	typedef DataDlg CLASSNAME;
-	
 	void Init(ScatterCtrl& scatter);
 	virtual ~DataDlg() noexcept {};
 	
@@ -204,8 +191,6 @@ private:
 
 class PropertiesDlg : public WithProperties<TopWindow> {
 public:
-	typedef PropertiesDlg CLASSNAME;
-	
 	void Init(ScatterCtrl& scatter);
 	virtual ~PropertiesDlg() noexcept {};
 	
@@ -229,8 +214,6 @@ private:
 
 class ProcessingTab : public WithProcessingTab<StaticRect> {
 public:
-	typedef ProcessingTab CLASSNAME;
-
 	ProcessingTab();
 	virtual ~ProcessingTab() noexcept {};
 	
@@ -301,8 +284,6 @@ private:
 
 class ProcessingDlg : public TopWindow {
 public:
-	typedef ProcessingDlg CLASSNAME;
-
 	void Init(ScatterCtrl& scatter);
 	virtual ~ProcessingDlg() noexcept {};
 

@@ -92,7 +92,7 @@ String FixPathName(const String &path) {
 CtrlScroll::CtrlScroll() {
 	AddFrame(scroll);
 	scroll.AutoHide();
-	scroll.WhenScroll = THISBACK(OnScroll);
+	scroll.WhenScroll = [=]{OnScroll();};
 	hsizepos = vsizepos = false;
 }
 
@@ -177,7 +177,7 @@ void ScatterCtrl::LoadControl() {
 	fs.ActiveType(idt);
 	
 	fs.ActiveDir(GetFileFolder(defaultDataFile));
-	fs.type.WhenAction = THISBACK1(OnTypeDataFile, &fs); 
+	fs.type.WhenAction = [&] {OnTypeDataFile(&fs);}; 
     if(!fs.ExecuteOpen(t_("Loading plot data from file"))) {
         Exclamation(t_("Plot has not been loaded"));
         return;
@@ -240,7 +240,7 @@ void ScatterCtrl::SaveControl() {
 	fs.ActiveType(idt);
 	
 	fs.ActiveDir(GetFileFolder(defaultDataFile));
-	fs.type.WhenAction = THISBACK1(OnTypeDataFile, &fs); 
+	fs.type.WhenAction = [&] {OnTypeDataFile(&fs);};
     if(!fs.ExecuteSaveAs(t_("Saving plot data to file"))) {
         Exclamation(t_("Plot has not been saved"));
         return;
@@ -267,7 +267,7 @@ void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
 	}
 	if (!IsNull(highlight_0) && !highlighting) {
 		highlighting = true;
-		SetTimeCallback(-200, THISBACK(TimerCallback));
+		SetTimeCallback(-200, [=] {TimerCallback();});
 	}
 	TimeStop t;
 	lastRefresh0_ms = GetTickCount();
@@ -552,7 +552,7 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int w
 	case ZOOM_WINDOW:		ZoomWindow(down, pt);
 							break;						
 	case CONTEXT_MENU:		if(showContextMenu && !down)
-								MenuBar::Execute(THISBACK(ContextMenu));
+								MenuBar::Execute([=](Bar& bar) {ContextMenu(bar);});
 							break;
 	case NO_ACTION:
 	case SCROLL_LEFT:
@@ -969,25 +969,25 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	if (mouseHandlingX || mouseHandlingY) {
 		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), [=]{ZoomToFit(mouseHandlingX, mouseHandlingY, 0.);}).Key(K_CTRL_F)
 									.Help(t_("Zoom to fit visible all data"));
-		bar.Add(t_("Zoom +"), 	   ScatterImg::ZoomPlus(), THISBACK3(Zoom, 1/1.2, true, mouseHandlingY)).Key(K_CTRL|K_ADD)
+		bar.Add(t_("Zoom +"), 	   ScatterImg::ZoomPlus(),  [=] {Zoom(1/1.2, true, mouseHandlingY);}).Key(K_CTRL|K_ADD)
 										.Help(t_("Zoom in (closer)"));
-		bar.Add(t_("Zoom -"), 	   ScatterImg::ZoomMinus(), THISBACK3(Zoom, 1.2, true, mouseHandlingY)).Key(K_CTRL|K_SUBTRACT)
+		bar.Add(t_("Zoom -"), 	   ScatterImg::ZoomMinus(), [=] {Zoom(1.2, true, mouseHandlingY);}).Key(K_CTRL|K_SUBTRACT)
 									.Help(t_("Zoom out (away)"));
 	}
-	bar.Add(t_("Attach X axis"), Null, THISBACK(ChangeMouseHandlingX)).Check(!mouseHandlingX)
+	bar.Add(t_("Attach X axis"), Null, [=] {ChangeMouseHandlingX();}).Check(!mouseHandlingX)
 									.Help(t_("Fix X axis so no zoom or scroll is possible"));
 	if (mouseHandlingX) {
-		bar.Add(t_("Scroll Left"), ScatterImg::LeftArrow(), THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT)
+		bar.Add(t_("Scroll Left"), ScatterImg::LeftArrow(),  [=] {ScatterDraw::Scroll(0.2, 0);}).Key(K_CTRL_LEFT)
 									.Help(t_("Scrolls plot to the left"));
-		bar.Add(t_("Scroll Right"),ScatterImg::RightArrow(), THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT)
+		bar.Add(t_("Scroll Right"),ScatterImg::RightArrow(), [=] {ScatterDraw::Scroll(-0.2, 0);}).Key(K_CTRL_RIGHT)
 									.Help(t_("Scrolls plot to the right"));
 	}
-	bar.Add(t_("Attach Y axis"),   Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY)
+	bar.Add(t_("Attach Y axis"),   Null, [=] {ChangeMouseHandlingY();}).Check(!mouseHandlingY)
 									.Help(t_("Fix Y axis so no zoom or scroll is possible"));
 	if (mouseHandlingY) {
-		bar.Add(t_("Scroll Up"),   ScatterImg::UpArrow(), THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP)
+		bar.Add(t_("Scroll Up"),   ScatterImg::UpArrow(),   [=] {ScatterDraw::Scroll(0, -0.2);}).Key(K_CTRL_UP)
 									.Help(t_("Scrolls plot up"));
-		bar.Add(t_("Scroll Down"), ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN)
+		bar.Add(t_("Scroll Down"), ScatterImg::DownArrow(), [=] {ScatterDraw::Scroll(0, 0.2);}).Key(K_CTRL_DOWN)
 									.Help(t_("Scrolls plot down"));
 	}
 	if (mouseHandlingX || mouseHandlingY)
@@ -996,16 +996,16 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	if (showPropDlg)
 #endif	
 	{
-		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P)
+		bar.Add(t_("Properties"), ScatterImg::Gear(), [=] {DoShowEditDlg(0);}).Key(K_CTRL_P)
 									.Help(t_("Plot properties dialog"));
-		bar.Add(t_("View Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D)
+		bar.Add(t_("View Data"), ScatterImg::Database(), [=] {DoShowData();}).Key(K_CTRL_D)
 									.Help(t_("Raw data table"));
 	}
 #ifndef _DEBUG
 	if (showProcessDlg)
 #endif
 	{
-		bar.Add(t_("Data Analysis"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P)
+		bar.Add(t_("Data Analysis"), ScatterImg::chart_curve_edit(), [=] {DoProcessing();}).Key(K_SHIFT_P)
 									.Help(t_("Data processing dialog"));
 	}
 #ifndef _DEBUG
@@ -1014,9 +1014,9 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	{
 		bar.Separator();
 	}
-	bar.Add(t_("Copy image"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C)
+	bar.Add(t_("Copy image"), ScatterImg::Copy(), [=] {SaveToClipboard(false);}).Key(K_CTRL_C)
 									.Help(t_("Copy image to clipboard"));
-	bar.Add(t_("Save image"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S)
+	bar.Add(t_("Save image"), ScatterImg::Save(), [=] {SaveToFile(Null);}).Key(K_CTRL_S)
 									.Help(t_("Save image to file"));
 #ifndef _DEBUG
 	if (showLoadData || showSaveData)
@@ -1024,8 +1024,8 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	{
 		bar.Separator();
 	}
-	bar.Add(t_("Load plot"), THISBACK(LoadControl)).Help(t_("Load plot from file"));
-	bar.Add(t_("Save plot"), THISBACK(SaveControl)).Help(t_("Save plot to file"));
+	bar.Add(t_("Load plot"), [=] {LoadControl();}).Help(t_("Load plot from file"));
+	bar.Add(t_("Save plot"), [=] {SaveControl();}).Help(t_("Save plot to file"));
 }
 
 void ScatterCtrl::OnTypeImage(FileSel *_fs)
@@ -1070,7 +1070,7 @@ void ScatterCtrl::SaveToFile(String fileName)
 		fs.ActiveType(idt);
 	
 		fs.ActiveDir(GetFileFolder(defaultFileNamePlot));
-		fs.type.WhenAction = THISBACK1(OnTypeImage, &fs); 
+		fs.type.WhenAction = [&] {OnTypeImage(&fs);}; 
 	    if(!fs.ExecuteSaveAs(t_("Saving plot image to file"))) {
 	        Exclamation(t_("Plot has not been saved"));
 	        return;
@@ -1183,7 +1183,7 @@ ScatterCtrl::ScatterCtrl() {
 	Add(processButton.RightPosZ(posx, buttonWidthProcess).TopPosZ(0, buttonHeight));
 	processButton.Show(false);
 	processButton.SetImage(ScatterImg::chart_curve_edit()).SetLabel(t_("Data Analysis"));
-	processButton.WhenAction = THISBACK(DoProcessing);
+	processButton.WhenAction = [=] {DoProcessing();};
 	processButton.Tip(t_("Data processing dialog"));	
 	
 	posx += buttonWidthProcess;
@@ -1191,7 +1191,7 @@ ScatterCtrl::ScatterCtrl() {
 	Add(dataButton.RightPosZ(posx, buttonWidthData).TopPosZ(0, buttonHeight));
 	dataButton.Show(false);
 	dataButton.SetImage(ScatterImg::Database()).SetLabel(t_("View Data"));
-	dataButton.WhenAction = THISBACK(DoShowData);
+	dataButton.WhenAction = [=] {DoShowData();};
 	dataButton.Tip(t_("Show raw data table"));
 	
 	posx += buttonWidthData;
@@ -1199,7 +1199,7 @@ ScatterCtrl::ScatterCtrl() {
 	Add(propertiesButton.RightPosZ(posx, buttonWidthProperties).TopPosZ(0, buttonHeight));
 	propertiesButton.Show(false);
 	propertiesButton.SetImage(ScatterImg::Gear()).SetLabel(t_("Properties"));
-	propertiesButton.WhenAction = THISBACK1(DoShowEditDlg, 0);
+	propertiesButton.WhenAction = [=] {DoShowEditDlg(0);};
 	propertiesButton.Tip(t_("Plot properties dialog"));	
 	
 	AddMouseBehavior(false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES); 

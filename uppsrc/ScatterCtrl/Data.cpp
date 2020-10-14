@@ -50,7 +50,7 @@ void DataDlg::Init(ScatterCtrl& scatter)
 		}
 	}
 	
-	tab <<= THISBACK(OnTab);
+	tab.WhenAction = [=]{OnTab();};
 	butOK.WhenAction = [=] {Close();};
 }
 
@@ -125,7 +125,7 @@ void DataDlg::OnTab()
 			}
 		}
 	}
-	data.WhenBar = THISBACK(OnArrayBar);
+	data.WhenBar = [=](Bar &bar) {OnArrayBar(bar);};
 }
 
 void DataDlg::ArrayCopy() {
@@ -178,7 +178,7 @@ void DataDlg::OnArrayBar(Bar &menu)
 	if (index < 0)
 		return;
 	
-	menu.Add(t_("Select all"), Null, THISBACK(ArraySelect)).Key(K_CTRL_A)
+	menu.Add(t_("Select all"), Null, [=] {ArraySelect();}).Key(K_CTRL_A)
 								.Help(t_("Select all rows"));
 								
 	ArrayCtrl &data = series[index].data;							
@@ -187,9 +187,9 @@ void DataDlg::OnArrayBar(Bar &menu)
 		menu.Add(t_("No row selected"), Null, Null).Enable(false).Bold(true);
 	else {
 		menu.Add(Format(t_("Selected %d rows"), count), Null, Null).Enable(false).Bold(true);
-		menu.Add(t_("Copy"), ScatterImgP::Copy(), THISBACK(ArrayCopy)).Key(K_CTRL_C)
+		menu.Add(t_("Copy"), ScatterImgP::Copy(), [=] {ArrayCopy();}).Key(K_CTRL_C)
 									.Help(t_("Copy selected rows to clipboard"));
-		menu.Add(t_("Save to file"), ScatterImgP::Save(), THISBACK1(ArraySaveToFile, Null)).Key(K_CTRL_S)
+		menu.Add(t_("Save to file"), ScatterImgP::Save(), [=] {ArraySaveToFile(Null);}).Key(K_CTRL_S)
 									.Help(t_("Save to .csv file"));
 	}
 }
