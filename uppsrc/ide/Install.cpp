@@ -70,13 +70,6 @@ bool Install(bool& hasvars)
 			}
 	};
 	
-#ifdef PLATFORM_COCOA && 0
-	if(!hasvars) {
-		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/uppsrc");
-		Scan(GetFileFolder(GetFileFolder(GetExeFilePath())) + "/SharedSupport/*");
-	}
-#endif
-
 	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
 
 	for(pass = 0; pass < 2; pass++) {
@@ -85,15 +78,6 @@ bool Install(bool& hasvars)
 			MakeAssembly(myapps);
 			MakeAssembly(myapps + ";" + bazaar, "MyApps-bazaar");
 		}
-	#ifdef PLATFORM_COCOA && 0
-		String app = GetAppFolder();
-		if(app.GetCount()) {
-			String f = GetFileFolder(app);
-			Scan(f + "/uppsrc");
-			Scan(f + "/*");
-			myapps = f + "/MyApps";
-		}
-	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));
