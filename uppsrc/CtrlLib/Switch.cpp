@@ -222,7 +222,7 @@ void Switch::Paint(Draw& w) {
 			}
 			v.rect = hr;
 			if(horz)
-				x += hr.Width() + tcy;
+				x += hr.Width() + tcy / 2;
 			else
 				y += linecy;
 		}

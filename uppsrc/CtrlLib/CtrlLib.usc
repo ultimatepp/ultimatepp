@@ -691,7 +691,7 @@ ctrl Switch {
 						DrawOption(w, x, (sz.cy - osz) / 2, 2);
 						w.DrawSmartText(x + osz + 4, (sz.cy - tcy) / 2, cs[i], .SetFont);
 					}
-					x += osz + 4 + textsize.cx + max(osz, tcy) / 2;
+					x += osz + 4 + textsize.cx + tcy / 2;
 				}
 				else {
 					if(pass) {
