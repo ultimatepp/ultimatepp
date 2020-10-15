@@ -1,4 +1,4 @@
-description "TheIDE - .lay designer\377B";
+description "TheIDE - layout (.lay) designer \377B";
 
 uses
 	RichEdit,
