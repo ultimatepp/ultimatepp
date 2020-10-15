@@ -336,16 +336,13 @@ void PrinterDlg::OnOK()
 
 Size PrinterJob::GetDefaultPageSize(String *name)
 {
-	static const char PageSize[] = "Page Size:";
 	Size sz(6000 * 210 / 254, 6000 * 297 / 254);
 
-	//default printer properties
 	Vector<String> dpp = Split(System("lpoptions -l"), '\n');
 
 	for (int i = 0; i < dpp.GetCount(); i++){
-		int pos = dpp[i].Find(PageSize);
+		int pos = max(dpp[i].FindAfter("Page Size"), dpp[i].FindAfter("PageSize"));
 		if (pos >= 0){
-			pos += sizeof(PageSize);
 			pos = dpp[i].Find('*', pos);
 			//return A4 if there is not default page size
 			if (pos < 0) return sz;
