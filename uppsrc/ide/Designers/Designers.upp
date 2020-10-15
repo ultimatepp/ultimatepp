@@ -1,4 +1,4 @@
-description "Various small(er) designers (Image viewer, QTF editor, ...)\377B";
+description "TheIDE - Various small designers (Image viewer, QTF editor, ...)\377B";
 
 uses
 	HexView,
