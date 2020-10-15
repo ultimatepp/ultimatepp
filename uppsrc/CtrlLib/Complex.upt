@@ -21,7 +21,6 @@ using namespace Upp;<:?lay:>
 
 class <:classname:> : public <:lay > 1 ? "With" + classname + "Layout<TopWindow>" : "TopWindow":> {
 public:
-	typedef <:classname:> CLASSNAME;
 	<:classname:>();
 };
 
