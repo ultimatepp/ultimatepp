@@ -1,3 +1,5 @@
+description "2D and 3D geometry mathematics. Somewhat obsolete\377";
+
 uses
 	Core;
 

@@ -1,3 +1,5 @@
+description "VirtualGui implementation for SDL2/OpenGL\377";
+
 uses
 	VirtualGui,
 	GLDraw;

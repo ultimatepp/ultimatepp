@@ -1,3 +1,5 @@
+description "PostgreSQL SQl database support\377";
+
 acceptflags
 	NOPOSTGRESQL;
 

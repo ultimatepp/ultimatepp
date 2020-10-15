@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "zstd compressor (good ratio, very good speed)\3770,128,128";
 
 uses
 	Core;

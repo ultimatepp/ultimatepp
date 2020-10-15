@@ -1,3 +1,5 @@
+description "Legacy reports. Do not use in the new code.\377";
+
 uses
 	Draw,
 	RichText,

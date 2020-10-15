@@ -8,9 +8,10 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-//	StdLogSetup(LOG_COUT|LOG_FILE);
-	for(int i = 0; i < 1000; i++) {
-		Vector<String> w = AliceWords();	
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	RDUMP(AliceWords().GetCount());
+	for(int i = 0; i < 300; i++) {
+		Vector<String> w = AliceWords();
 		{
 			std::vector<std::string> x;
 			for(auto s : w)
@@ -22,8 +23,30 @@ CONSOLE_APP_MAIN
 			RTIMING("Sort Vector<String>");
 			Sort(w);
 		}
+	#if 0
 		ONCELOCK {
 			RDUMPC(w);
 		}
+	#endif
+	}
+
+	for(int i = 0; i < 300; i++) {
+		Vector<int> w;
+		for(int i = 0; i < 40000; i++)
+			w.Add(Random());
+		{
+			std::vector<int> x(w.begin(), w.end());
+			RTIMING("std::sort std::vector<int>");
+			std::sort(x.begin(), x.end());
+		}
+		{
+			RTIMING("Sort Vector<int>");
+			Sort(w);
+		}
+	#if 0
+		ONCELOCK {
+			RDUMPC(w);
+		}
+	#endif
 	}
 }

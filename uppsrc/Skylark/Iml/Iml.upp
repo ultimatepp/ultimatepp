@@ -1,4 +1,4 @@
-description "\377128,0,0";
+description "Using .iml files in Skylark\377128,0,0";
 
 uses
 	Draw,
