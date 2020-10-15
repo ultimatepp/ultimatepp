@@ -1,3 +1,5 @@
+description "Windows OLE encapsulation\377";
+
 uses
 	Core;
 

@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "LZ4 compressor (lower compression but very fast)\3770,128,128";
 
 uses
 	Core;

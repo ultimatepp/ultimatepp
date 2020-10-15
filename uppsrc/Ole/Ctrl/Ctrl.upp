@@ -1,3 +1,5 @@
+description "Windows GUI OLE encapsulation\377";
+
 uses
 	Ole,
 	CtrlCore;

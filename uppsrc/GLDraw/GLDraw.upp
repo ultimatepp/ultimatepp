@@ -1,3 +1,5 @@
+description "OpenGL Draw implementation\377";
+
 uses
 	Draw,
 	Painter,

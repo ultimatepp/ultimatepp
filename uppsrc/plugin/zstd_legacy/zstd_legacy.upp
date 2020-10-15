@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "Support for older zstd format. Do not use with new applications.\3770,128,128";
 
 file
 	zstd.h,

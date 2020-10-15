@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "astyle C++ formatting utility\3770,128,128";
 
 uses
 	Core;
