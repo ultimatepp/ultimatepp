@@ -1,3 +1,5 @@
+description "Widgets to show differences between two texts\377";
+
 uses
 	CtrlLib;
 

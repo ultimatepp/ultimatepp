@@ -1,3 +1,5 @@
+description "Geometry related GUI code. Do not use in the new code.\377";
+
 acceptflags
 	NOHRRPNG;
 

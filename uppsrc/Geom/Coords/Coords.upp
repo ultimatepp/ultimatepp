@@ -1,3 +1,5 @@
+description "Geographical coordinates. Somewhat obsolete.\377";
+
 uses
 	Geom;
 

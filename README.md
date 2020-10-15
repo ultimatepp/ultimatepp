@@ -8,7 +8,7 @@ Rapid development is achieved by the [smart and aggressive use of C++](https://w
 
 The U++ integrated development environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual designers for U++ libraries, a [Topic++](https://www.ultimatepp.org/app$ide$Topic$en-us.html) system for documenting code and creating rich text resources for applications (like help and code documentation) and [Assist++](https://www.ultimatepp.org/app$ide$Assist$en-us.html) - a powerful C++ code analyzer that provides features like code completion, navigation and transformation.
 
-TheIDE can work with GCC, MinGW and Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
+TheIDE can work with GCC, Clang, MinGW and Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
 
 U++ supports following platforms on the production level: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
 
@@ -44,29 +44,39 @@ Below is the code of trivial GUI application that displays "Hello World" string 
 ```c++
 #include <CtrlLib/CtrlLib.h>
 
-class MyAppWindow : public Upp::TopWindow {
+class MyApp: public Upp::TopWindow {
 public:
-    MyAppWindow() {
-        Title("My application").Zoomable().Sizeable();
+    MyApp()
+    {
+        Title("My application").Zoomable().Sizeable().SetRect(0, 0, 320, 200);
     }
 
-    virtual void Paint(Upp::Draw& w) override {
+    virtual void Paint(Upp::Draw& w) override
+    {
         w.DrawRect(GetSize(), Upp::SWhite);
-        w.DrawText(20, 20, "Hello world!", Upp::Arial(30), Upp::Magenta);
+        w.DrawText(10, 10, "Hello, world!", Upp::Arial(30), Upp::Magenta);
     }
 };
 
 GUI_APP_MAIN
 {
-    MyAppWindow app;
-    app.SetRect(0, 0, 200, 100);
-    app.Run();
+    MyApp().Run();
 }
 ```
+
+### TheIDE
+
+Standard part of U++ framework is integrated development environment, TheIDE.
+
+<p align="center">
+  <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" width="80%" height="80%">
+</p>
 
 ### Additional examples
 
 See here: [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be found in the **examples** and **references** directories located in this repository.
+
+If you would like to see more screenshots, click [here](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
 # Repository
 

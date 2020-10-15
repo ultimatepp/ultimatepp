@@ -1,3 +1,5 @@
+description "OpenGL widget base class\377";
+
 uses
 	CtrlCore,
 	plugin/glew;

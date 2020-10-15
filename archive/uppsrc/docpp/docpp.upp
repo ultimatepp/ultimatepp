@@ -1,0 +1,12 @@
+uses
+	RichEdit;
+
+file
+	docpp.h,
+	keyword.i,
+	Pre.cpp,
+	cpplex.cpp,
+	Parser.cpp,
+	Info readonly separator,
+	Copying;
+
