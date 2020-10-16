@@ -10,9 +10,6 @@
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
 
-// #include <ftxf86.h> // The only function required from that header:
-FT_EXPORT( const char* ) FT_Get_X11_Font_Format( FT_Face  face ); // Put here to avoid include path issues...
-
 namespace Upp {
 
 static FT_Library sFTlib;
@@ -151,7 +148,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
 		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
-		fi.ttf = strcmp(FT_Get_X11_Font_Format(face), "TrueType") == 0;
+		fi.ttf = path.EndsWith(".ttf") || path.EndsWith(".otf");
 		if(path.GetCount() < 250)
 			strcpy(fi.path, ~path);
 		else
