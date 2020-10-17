@@ -255,8 +255,9 @@ void MacroManagerWindow::OnNewMacroFile()
 void MacroManagerWindow::OnDeleteMacroFile()
 {
 	auto fileName = static_cast<String>(globalTree.GetValue());
-	if(!PromptOKCancel(t_("Are you sure you want to remove following macro file \"" + fileName + "\"?")))
+	if(!PromptOKCancel(String(t_("Are you sure you want to remove following macro file")) << " \"" << fileName << "\"?")) {
 		return;
+	}
 	
 	FileDelete(AppendFileName(GetLocalDir(), fileName));
 	globalTree.Remove(globalTree.GetCursor());
