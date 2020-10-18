@@ -24,6 +24,7 @@ file
 	MouseKey.cpp,
 	CPUSpeed.cpp,
 	Battery.cpp,
+	Crash.cpp,
 	srcdoc.tpp,
 	src.tpp,
 	srcimp.tpp,
