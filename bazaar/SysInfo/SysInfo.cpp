@@ -1605,7 +1605,7 @@ bool GetDriveSpace(String drive,
 	if (space == "")
 		return false;
 	
-	while (drive != space.GetText())
+	while (!space.Eof() && drive != space.GetText())
 		;
 	space.MoveRel(-10);	space.GoBeginLine(); 
 	space.GetText();	space.GetText();	// Jumps over device path and filesystem
