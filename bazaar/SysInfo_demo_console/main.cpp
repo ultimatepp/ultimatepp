@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 #include <SysInfo/SysInfo.h>
-
+#include <signal.h>
 
 using namespace Upp;
 
@@ -220,32 +220,135 @@ void Test()
 	}
 } 
 
+#if defined(COMPILER_MSC)
+#pragma warning(disable: 4717)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Winfinite-recursion"
+#endif
+void RecurseAlloc()  {
+    int *pi = new int[0x1fffffff];
+    RecurseAlloc();
+}
+#if defined(COMPILER_MSC)
+#pragma warning(default: 4717)
+#else
+#pragma GCC diagnostic pop
+#endif
+
+class Derived;
+class Base {
+public:
+    Base(Derived *_derived): derived(_derived) {};
+    ~Base();
+    virtual void Method() = 0;
+    Derived *derived;
+};
+
+#if defined(COMPILER_MSC)
+#pragma warning(disable:4355)
+#endif
+class Derived : public Base {
+public:
+    Derived() : Base(this) {};
+    virtual void Method() {};
+};
+
+Base::~Base() {
+    derived->Method();
+}
 
 CONSOLE_APP_MAIN
 {	
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	SetExitCode(1);
 	
-	UppLog() << "\n" << "\nSysInfo: Basic system identification:";
-	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
-	VERIFY(GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion));
-	UppLog() << "\n" << Format("Kernel:  %s, version: %s,\narchitecture: %s", kernel, kerVersion, kerArchitecture);
-	UppLog() << "\n" << Format("Distro:  %s, version: %s", distro, distVersion, desktop, deskVersion);
-	UppLog() << "\n" << Format("Desktop: %s, version: %s", desktop, deskVersion);
-	
-    Test();
-    
-	#ifdef flagDEBUG
-	UppLog() << "\n" << "Introduce enter to continue, or (l) to log off, (r) to reboot or (s) to shutdown\n";
-	char str[50];
-	fgets(str, 49, stdin);
-	if (*str == 'l')
-		Shutdown("logoff");
-	else  if (*str == 'r')
-		Shutdown("reboot");
-	else if (*str == 's')
-		Shutdown("shutdown");
+	try {
+		const Vector<String>& command = CommandLine();
+		if (command.size() > 1) {
+			const String &com = command[1];
+			UppLog() << "\nForcing : " << com << "\n";
+			if (command[0] == "-shutdown") {
+				if (com == "logoff") 
+					Shutdown("logoff");
+				else if (com == "reboot") 
+					Shutdown("reboot");
+				else if (com == "shutdown") 
+					Shutdown("shutdown");
+			} else if (command[0] == "-exception") {
+				ExceptionHandler(t_("Please report to developers"));
+				
+				if (com == "access_violation") {
+		            int *p = 0;
+	#if defined(COMPILER_MSC)
+	#pragma warning(disable : 6011)
 	#endif
-		
+		            *p = 0;
+	#if defined(COMPILER_MSC)
+	#pragma warning(default : 6011)   
+	#endif
+		        } else if (com == "terminate") 
+					std::terminate();
+		        else if (com == "unexpected")
+					std::unexpected();
+		        else if (com == "pure_virtual_call") 
+					Derived derived;
+		        else if (com == "invalid_parameter") {
+				  	char *formatString = nullptr;
+	#if defined(COMPILER_MSC)		
+	#pragma warning(disable : 6387)
+	#else
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wformat-security"
+	#endif
+	            	printf(formatString);
+	#if defined(COMPILER_MSC)            	
+	#pragma warning(default : 6387)  
+	#else
+	#pragma GCC diagnostic pop 
+	#endif
+		        } else if (com == "new")
+					RecurseAlloc();
+				else if (com == "SIGABRT") 
+	            	abort();
+	        	else if (com == "SIGFPE") {
+					double a = 0;
+					double c = 5/a;    
+					Cout() << "\n5/0 = " << c;
+					a = c;					// To avoid warning
+	       	 	} else if (com == "SIGILL")
+	            	raise(SIGILL);              
+	        	else if (com == "SIGINT")
+		            raise(SIGINT);              
+	    	    else if (com == "SIGSEGV")
+		            raise(SIGSEGV);              
+	    	    else if (com == "SIGTERM")
+		            raise(SIGTERM);  
+		      	else
+		      		throw Exc(Format("Unknown exception '%s'", com));
+		      	      
+	    		throw Exc(Format("Exception '%s' has not been captured", com));
+	        } else
+	        	throw Exc(Format("Unknown option '%s'", command[0]));    
+		} else {
+			UppLog() << "\n" << "\nSysInfo: Basic system identification:";
+			String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
+			VERIFY(GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion));
+			UppLog() << "\n" << Format("Kernel:  %s, version: %s,\narchitecture: %s", kernel, kerVersion, kerArchitecture);
+			UppLog() << "\n" << Format("Distro:  %s, version: %s", distro, distVersion, desktop, deskVersion);
+			UppLog() << "\n" << Format("Desktop: %s, version: %s", desktop, deskVersion);
+			
+		    Test();
+		}
+	} catch (Exc e) {
+		UppLog() << "\nError: " << e << "\n";  
+		SetExitCode(0);
+	} catch (...) {
+		UppLog() << "\nUnknown Error\n";  
+		SetExitCode(0);
+	}
+	
 	#ifdef flagDEBUG
 	UppLog() << "\n";
 	Cout() << "\nPress enter key to end";
