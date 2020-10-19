@@ -111,10 +111,6 @@ private:
     static void SigillHandler(int);
     static void SigsegvHandler(int);
     static void SigtermHandler(int);
-    
-    static void ErrorHandler(const String &str);
-
-	static String message;
 };
 
 }
