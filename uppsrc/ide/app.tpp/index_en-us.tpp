@@ -47,7 +47,7 @@ Find and Replace]&]
 [s0;l224; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
 file in the project (Find File)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
-libraries]&]
+libraries in source form]&]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
 templates]&]
