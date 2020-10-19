@@ -2,6 +2,10 @@ TOPIC("About_en-us")
 #include "About_en-us.tppi"
 END_TOPIC
 
+TOPIC("AddLib_en-us")
+#include "AddLib_en-us.tppi"
+END_TOPIC
+
 TOPIC("AdvancedReplace_en-us")
 #include "AdvancedReplace_en-us.tppi"
 END_TOPIC
