@@ -64,7 +64,7 @@ Find and Replace]&]
 [s0;l160; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
 file in project (Find File)]&]
 [s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
-libraries]&]
+libraries in source form]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
 templates]&]
@@ -73,6 +73,8 @@ templates]&]
 [s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
 [s0;l160; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
+[s0;l160; [^topic`:`/`/ide`/app`/AddLib`_en`-us^ How to add an external 
+library to your project]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
 Android builder]&]
