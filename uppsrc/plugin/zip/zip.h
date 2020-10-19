@@ -54,8 +54,6 @@ public:
 	String ReadFile(Gate<int, int> progress = Null);
 
 	String ReadFile(const char *path, Gate<int, int> progress = Null);
-	
-	dword  GetPos() const;
 
 	void   Create(Stream& in);
 	void   Close()                { file.Clear(); zip->Close(); }
