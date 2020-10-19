@@ -37,7 +37,7 @@ new package]&]
 package]&]
 [s0; [^topic`:`/`/ide`/app`/GettingStarted`_en`-us`#4^ 4. Creating 
 new file]&]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`_en`-us`#5^ 5. Adding dependencies 
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`_en`-us`#5^ 5. Adding dependency 
 to package]&]
 [s0; [^topic`:`/`/ide`/app`/GettingStarted`_en`-us`#6^ 6. Explanations 
 about TheIDE]&]
@@ -201,7 +201,7 @@ opic`+`+], [^topic`:`/`/ide`/app`/Blitz`$en`-us^ Blitz] or even
 one of the tutorials linked from Manual section, if you want 
 to learn more about how to use U`+`+.&]
 [s0; &]
-[s3;:5: 5. Adding dependencies to package&]
+[s3;:5: 5. Adding dependency to package&]
 [s5; You could extend your package code base by adding additional 
 dependencies. Package at the begging uses very limited set of 
 dependencies. If you use empty package template then there are 
