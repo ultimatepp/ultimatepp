@@ -29,8 +29,6 @@ void ExceptionHandler(const char *msg) {
 }
 
 void CrashHandler::Init(const char *msg) {
-	message = String(msg);
-	
 #if defined(PLATFORM_WIN32)
 	_clearfp();
 	_controlfp(_controlfp(0, 0) & ~(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW), _MCW_EM);
@@ -55,100 +53,70 @@ void CrashHandler::Init(const char *msg) {
 	signal(SIGSEGV, SigsegvHandler); 
 }
 
-String CrashHandler::message = ""; 
-
-void CrashHandler::ErrorHandler(const String &str) {
-	SetConsoleColor(CONSOLE_COLOR::LTYELLOW);	
-	PanicMessageBox(t_("Program error"), str + "\n" + message);
-	SetConsoleColor(CONSOLE_COLOR::RESET);	
-}
-
 #if defined(PLATFORM_WIN32)	
 LONG WINAPI CrashHandler::UnhandledHandler(EXCEPTION_POINTERS *exceptionPtrs) { 
-	ErrorHandler(t_("Default exception"));
-	_exit(1);
+	Panic("Default exception");
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 void __cdecl CrashHandler::SEHHandler(unsigned u, EXCEPTION_POINTERS* p) {
 	switch(u) {
 		case EXCEPTION_FLT_DIVIDE_BY_ZERO:
 		case EXCEPTION_INT_DIVIDE_BY_ZERO:
-		ErrorHandler(t_("Floating point exception"));
+		Panic("Floating point exception");
 		break;
 	default:
-		ErrorHandler(t_("SEH exception"));	
+		Panic("SEH exception");	
 	}
-	_exit(1);	
 }
 #endif 
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif
-
 void __cdecl CrashHandler::TerminateHandler() {
-	ErrorHandler(t_("Terminate exception"));
-	_exit(1);
+	Panic("Terminate exception");
 }
 
 void __cdecl CrashHandler::UnexpectedHandler() {
- 	ErrorHandler(t_("Unexpected exception"));
-	_exit(1);
+ 	Panic("Unexpected exception");
 }
 
 void __cdecl CrashHandler::PureCallHandler() {
-	ErrorHandler(t_("Pure virtual function call"));
-	_exit(1);
+	Panic("Pure virtual function call");
 }
 
 void __cdecl CrashHandler::InvalidParameterHandler(const wchar_t* expression, const wchar_t *function, 
 	const wchar_t* file, unsigned int line, uintptr_t) {
 	if (line == 0)
-		ErrorHandler(t_("Invalid parameter"));
+		Panic("Invalid parameter");
 	else
-		ErrorHandler(Format(t_("Invalid parameter in %s, function %s, file %s, line %d"), AsString(expression),
+		Panic(Format("Invalid parameter in %s, function %s, file %s, line %d", AsString(expression),
 			AsString(function), AsString(file), int(line)));
-	_exit(1);
 }
 
 void __cdecl CrashHandler::NewHandler() {
-	ErrorHandler(t_("Not enough memory available"));
-	_exit(1);
+	Panic("Not enough memory available");
 }
 
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
 void CrashHandler::SigabrtHandler(int) {
-	ErrorHandler(t_("SIGABRT: Process has aborted"));
-	_exit(1);
+	Panic("SIGABRT: Process has aborted");
 }
 
 void CrashHandler::SigfpeHandler(int) {
-	ErrorHandler(t_("SIGFPE: Floating point error"));
-	_exit(1);
+	Panic("SIGFPE: Floating point error");
 }
 
 void CrashHandler::SigillHandler(int) {
-	ErrorHandler(t_("SIGILL: Executable code seems corrupted"));
-	_exit(1);    
+	Panic("SIGILL: Executable code seems corrupted");
 }
 
 void CrashHandler::SigintHandler(int) {
-	ErrorHandler(t_("SIGINT: Process has been asked to terminate by user"));
-	_exit(1);
+	Panic("SIGINT: Process has been asked to terminate by user");
 }
 
 void CrashHandler::SigsegvHandler(int) {
-	ErrorHandler(t_("SIGSEGV: Trying to read or write from/to a memory area that your process does not have access to"));
-	_exit(1); 
+	Panic("SIGSEGV: Trying to read or write from/to a memory area that your process does not have access to");
 }
 
 void CrashHandler::SigtermHandler(int) {
-	ErrorHandler(t_("SIGTERM: Process has been asked to terminate by other application"));
-	_exit(1);
+	Panic("SIGTERM: Process has been asked to terminate by other application");
 }
 
 };
