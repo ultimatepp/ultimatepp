@@ -297,7 +297,7 @@ String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/w
 struct Title {
 	String title, link;
 	Title(String title, String link) : title(TrimBoth(title)), link(link) {};
-	bool operator < (const Title& other) const { 
+	bool operator < (const Title& other) const {
 		const char *val = title.Begin();
 		const char *valOther = other.title.Begin();
 		for(;; val++, valOther++) {
@@ -960,17 +960,24 @@ CONSOLE_APP_MAIN
 				SrcDocs(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
 				SrcDocs(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
 				SrcDocs(x, qtf, "Skylark", lang, 2, String("/") + FormatInt(di) + "/[Skylark]");
-				FindFile ff(AppendFileName(uppsrc, "*.*"));
-				Array <String> folders;
-				folders.Clear();
-				while(ff) {
-					if(ff.IsFolder() && ff.GetName() != "Web") 
-						folders.Add(ff.GetName());
-					ff.Next();
+				String d = AppendFileName(uppsrc, "*.*");
+				String p;
+				for(int pass = 0; pass < 2; pass++) {
+					DDUMP(d);
+					FindFile ff(d);
+					Array <String> folders;
+					folders.Clear();
+					while(ff) {
+						if(ff.IsFolder() && ff.GetName() != "Web")
+							folders.Add(p + ff.GetName());
+						ff.Next();
+					}
+					Sort(folders);
+					for (int ifold = 0; ifold < folders.GetCount(); ++ifold)
+						SrcDocs(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
+					d = AppendFileName(uppsrc, "plugin/*.*");
+					p = "plugin/";
 				}
-				Sort(folders);
-				for (int ifold = 0; ifold < folders.GetCount(); ++ifold)
-					SrcDocs(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
 				tt[di].text << qtf;
 			}
 		}
