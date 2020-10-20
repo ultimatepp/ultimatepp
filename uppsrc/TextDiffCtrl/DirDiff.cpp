@@ -10,6 +10,7 @@ DirDiffDlg::DirDiffDlg()
 	int bcx = GetTextSize(t_("Compare"), StdFont()).cx * 12 / 10 + 2 * div;
 
 	hidden.SetLabel(t_("Hidden"));
+	split_lines.SetLabel(t_("Split long lines"));
 	
 	added.SetColor(Green()).SetLabel(t_("New"));
 	modified.SetLabel(t_("Modified"));
@@ -21,6 +22,7 @@ DirDiffDlg::DirDiffDlg()
 	files_pane.Add(dir1.TopPos(0, cy).HSizePos());
 	files_pane.Add(dir2.TopPos(cy + div, cy).HSizePos());
 	files_pane.Add(hidden.TopPos(2 * cy + 2 * div, bcy).LeftPos(0, bcx));
+	files_pane.Add(split_lines.TopPos(2 * cy + 2 * div, bcy).LeftPosZ(128, 100));
 	
 	files_pane.Add(   added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
 	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
@@ -87,6 +89,8 @@ DirDiffDlg::DirDiffDlg()
 	
 	copyleft.Disable();
 	copyright.Disable();
+	
+	split_lines << [=] { File(); };
 
 	Icon(DiffImg::DirDiff());
 
@@ -208,14 +212,49 @@ void DirDiffDlg::ClearFiles()
 	compare.Enable(!IsNull(dir1) && !IsNull(dir2));
 }
 
+WString ExpandTabs(const wchar *text)
+{
+	WString out;
+	for(wchar c; (c = *text++);)
+		if(c == '\t')
+			out.Cat(' ', 4 - out.GetLength() % 4);
+		else
+			out.Cat(c);
+	return out;
+}
+
+String SplitLines(const String& s)
+{
+    StringStream ss(s);
+    WString result;
+    while(!ss.IsEof()) {
+        WString l = ExpandTabs(ss.GetLine().ToWString());
+        int q = 0;
+        while(l.GetCount() - q > 80) {
+            result.Cat(~l + q, 80);
+            result.Cat('\n');
+            q += 80;
+        }
+        result.Cat(~l + q, l.GetCount() - q);
+        result.Cat('\n');
+    }
+    return result.ToString();
+}
+
 void DirDiffDlg::File()
 {
 	String fn = files.GetCurrentName();
 	String p1 = AppendFileName(~dir1, fn);
 	String p2 = AppendFileName(~dir2, fn);
 	diff.Set(Null, Null);
+	String f1 = LoadFile(p1);
+	String f2 = LoadFile(p2);
+	if(split_lines) {
+	    f1 = SplitLines(f1);
+	    f2 = SplitLines(f2);
+	}
 	if(GetFileLength(p1) < 4 * 1024 * 1024 && GetFileLength(p2) < 4 * 1024 * 1024)
-		diff.Set(LoadFile(p1), LoadFile(p2));
+		diff.Set(f1, f2);
 	lfile <<= p1;
 	rfile <<= p2;
 	copyleft.Enable();
