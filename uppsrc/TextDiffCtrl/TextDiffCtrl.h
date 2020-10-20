@@ -225,6 +225,7 @@ private:
 	SelectDirButton            seldir2;
 	WithDropChoice<EditString> dir2;
 	Option                     hidden;
+	Option                     split_lines;
 	Button                     compare;
 	Label                      info;
 	
