@@ -229,10 +229,9 @@ Zip::~Zip()
 
 bool FileZip::Create(const char *name)
 {
-	if(!zip.Open(name))
-		return false;
-	Zip::Create(zip);
-	return true;
+	bool b = zip.Open(name);
+	Zip::Create(zip); // if there is error, we still need to have to dump data
+	return b;
 }
 
 bool FileZip::Finish()
