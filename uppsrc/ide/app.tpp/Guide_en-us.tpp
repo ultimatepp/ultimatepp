@@ -16,10 +16,10 @@ topic "TheIDE  Beginner guide";
 [s10; TheIDE Beginner guide&]
 [s12; This guide is the continuation of the [^topic`:`/`/ide`/app`/GettingStarted`_en`-us^ G
 etting Started with TheIDE] article. If you didn`'t read it before, 
-I encourage to do it. It will give you an initial spot. This 
-guide posses the descriptions of common problems our users encounter 
-at the beginning of their journey with TheIDE. Each section provides 
-information on how to do a specific thing.&]
+We encourage you to do it. It will give you an initial spot. 
+This guide posses the descriptions of common problems our users 
+encounter at the beginning of their journey with TheIDE. Each 
+section provides information on how to do a specific thing.&]
 [s11; Table of contents&]
 [s0;* &]
 [s0; [^topic`:`/`/ide`/app`/Guide`_en`-us`#1^ 1. Adding external library 
