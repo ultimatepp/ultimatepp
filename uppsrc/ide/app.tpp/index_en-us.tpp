@@ -41,6 +41,7 @@ line arguments]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
+[s0;l224; [^topic`:`/`/ide`/app`/MacroManager`_en`-us^ Macro Manager]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
