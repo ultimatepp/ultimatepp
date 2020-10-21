@@ -26,18 +26,18 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2020.2 (September/October 2020?)&]
+[s3; 2020.2 (October 2020)&]
 [s5; &]
-[s5;po [*/ Upcoming release]&]
+[s5;po [*/ Current stable release]&]
 [s5;po &]
 [s5;po [* Release highlights]&]
 [s5;l160;i150;poO0; This release is mostly about optimizations, using 
 SIMD and multithreading.&]
 [s5;po &]
 [s5;po [* Core]&]
-[s5;l160;i150;poO0; memset`*, memcpy`*, memeq`*, memhash SIMD optimised 
+[s5;l160;i150;poO0; memset`*, memcpy`*, memeq`*, memhash SIMD optimized 
 inlined routines (`* `= 8, 16, 32, 64, 128)&]
-[s5;l160;i150;poO0; String comparison is yet again optimised&]
+[s5;l160;i150;poO0; String comparison is yet again optimized&]
 [s5;l160;i150;poO0; Using 64 bit hashes on 64 bit CPUs&]
 [s5;po &]
 [s5;po [* Draw, Painter]&]
@@ -51,6 +51,23 @@ data&]
 [s5; [* ScatterCtrl]&]
 [s5;l160;i150;poO0; Added ScatterWindowPool&]
 [s5;po &]
+[s5; [* Ide/umk `- Android]&]
+[s5;l160;i150;poO0; Removed depricated Android standard libraries 
+(now select c`+`+`-static, c`+`+`_shared, system and none are 
+supported)&]
+[s5;l160;i150;poO0; Remove depricated Android platforms (now armabi`-v7, 
+arm64`-v8a, x86 and x86`-64 are supported)&]
+[s5;po &]
+[s5;po [* SQL]&]
+[s5;l160;i150;poO0; plugin/Sqlite3: Updated to 3.33&]
+[s5; &]
+[s5;po [* Core/SSH]&]
+[s5;l160;i150;poO0; Fized a truncation issue with SshExec. It can 
+now handle large outputs up to 2 GiB.&]
+[s5; &]
+[s5;po [* Turtle]&]
+[s5;l160;i150;poO0; Refactored to use VirtualGui&]
+[s5; &]
 [s5;po [* Ide/umk]&]
 [s5;l160;i150;poO0; C`+`+ Assist parser in TheIDE is now multithreaded 
 and some parts run in background&]
@@ -63,18 +80,8 @@ window&]
 [s5;l160;i150;poO0; Additional tooltips in various places for better 
 user experience&]
 [s5;l160;i150;poO0; Simplified project toolbar&]
-[s5;l160;i150;poO0; Modernized documentation&]
+[s5;l160;i150;poO0; Improved documentation&]
 [s5; &]
-[s5; [* Ide/umk `- Android]&]
-[s5;l160;i150;poO0; Removed depricated Android standard libraries 
-(now select c`+`+`-static, c`+`+`_shared, system and none are 
-supported)&]
-[s5;l160;i150;poO0; Remove depricated Android platforms (now armabi`-v7, 
-arm64`-v8a, x86 and x86`-64 are supported)&]
-[s5;po &]
-[s5;po [* SQL]&]
-[s5;l160;i150;poO0; plugin/Sqlite3: Updated to 3.33&]
-[s5;po &]
 [s5;po [* uppsrc]&]
 [s5;l160;i150;poO0; Improved support for OpenSolaris derived systems, 
 FreeBSD and OpenBSD&]
@@ -91,8 +98,6 @@ FreeBSD and OpenBSD&]
 [s0;l160;i150;O0; plugin/Eigen to master branch commit C1D944DD (9/May/2020)&]
 [s5; &]
 [s3; 2020.1 (rev 14429[3 ) ](May 2020)&]
-[s5;po &]
-[s5;po [*/ Current stable release]&]
 [s5;po &]
 [s5;po [* Release highlights]&]
 [s5;l160;i150;poO0; gtk3 replaces gtk2 as default linux backend&]
