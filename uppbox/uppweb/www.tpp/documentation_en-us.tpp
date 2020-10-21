@@ -41,6 +41,7 @@ and development cycle guide]&]
 [s5;^topic`:`/`/ide`/app`/HelpPage`$en`-us^ &]
 [s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide]&]
 [s0;l160; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
 [s0;l160; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
@@ -73,8 +74,6 @@ templates]&]
 [s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
 [s0;l160; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
-[s0;l160; [^topic`:`/`/ide`/app`/AddLib`_en`-us^ How to add an external 
-library to your project]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
 Android builder]&]
