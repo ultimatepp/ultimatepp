@@ -57,9 +57,6 @@ data&]
 supported)&]
 [s5;l160;i150;poO0; Remove depricated Android platforms (now armabi`-v7, 
 arm64`-v8a, x86 and x86`-64 are supported)&]
-[s5;po &]
-[s5;po [* SQL]&]
-[s5;l160;i150;poO0; plugin/Sqlite3: Updated to 3.33&]
 [s5; &]
 [s5;po [* Core/SSH]&]
 [s5;l160;i150;poO0; Fized a truncation issue with SshExec. It can 
