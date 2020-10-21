@@ -78,6 +78,10 @@ TOPIC("Keys_en-us")
 #include "Keys_en-us.tppi"
 END_TOPIC
 
+TOPIC("MacroManager_en-us")
+#include "MacroManager_en-us.tppi"
+END_TOPIC
+
 TOPIC("NewProject_en-us")
 #include "NewProject_en-us.tppi"
 END_TOPIC
