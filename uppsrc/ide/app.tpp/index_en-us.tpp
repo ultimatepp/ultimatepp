@@ -25,6 +25,8 @@ topic "TheIde help index";
 [s0;l224;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
+[s0;l224; [^topic`:`/`/ide`/app`/Tutorial`_en`-us^ TheIDE beginner 
+guide]&]
 [s0;l224; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
 [s0;l224; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
