@@ -2,10 +2,6 @@ TOPIC("About_en-us")
 #include "About_en-us.tppi"
 END_TOPIC
 
-TOPIC("AddLib_en-us")
-#include "AddLib_en-us.tppi"
-END_TOPIC
-
 TOPIC("AdvancedReplace_en-us")
 #include "AdvancedReplace_en-us.tppi"
 END_TOPIC
@@ -64,6 +60,10 @@ END_TOPIC
 
 TOPIC("GettingStarted_en-us")
 #include "GettingStarted_en-us.tppi"
+END_TOPIC
+
+TOPIC("Guide_en-us")
+#include "Guide_en-us.tppi"
 END_TOPIC
 
 TOPIC("IconDes_en-us")
