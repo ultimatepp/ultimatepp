@@ -61,9 +61,10 @@ void MacroManagerWindow::InitToolButton(
 
 void MacroManagerWindow::InitButtons()
 {
-	closeButton.Close();
+	close.Close();
 	
-	closeButton        << [=] { Break(); };
+	close              << [=] { Break(); };
+	help               << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$MacroManager_en-us.html"); };
 	editLabel          << [=] { OnEditFile(); };
 	exportLabel        << [=] { OnExport(globalTree.GetCursor()); };
 	newGlobalLabel     << [=] { OnNewMacroFile(); };
