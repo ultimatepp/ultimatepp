@@ -123,7 +123,7 @@ String GetDesktopManagerNew() {
 
 bool LaunchFile(const char *_file, const char *_params, const char *) {
 	String file = UnixPath(_file);
-	String params = UnixPath(_params);
+	String params = _params == nullptr ? "" : UnixPath(_params);
 	int ret;
 	if (GetDesktopManagerNew() == "gnome") 
 		ret = system("gnome-open \"" + file + "\" " + params);
@@ -2823,11 +2823,11 @@ bool SetConsoleColor(CONSOLE_COLOR color) {
 	
 	if (hstdout == 0) {
 		hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (!GetConsoleScreenBufferInfo(hstdout, &csbiInfo)) {
-			hstdout = 0;
-			return false;
-		}
-		woldattrs = csbiInfo.wAttributes;
+		//if (!GetConsoleScreenBufferInfo(hstdout, &csbiInfo)) {
+		//	hstdout = 0;
+		//	return false;
+		//}
+		woldattrs = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED;  //csbiInfo.wAttributes;
 	}
 	if (color == RESET) 
 		return SetConsoleTextAttribute(hstdout, woldattrs);
@@ -2868,5 +2868,7 @@ void ConsoleOutputDisable(bool disable) {
 	}
 #endif
 }
+
+
 
 }

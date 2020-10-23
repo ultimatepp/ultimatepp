@@ -24,7 +24,7 @@ enum EXT_FILE_FLAGS {NO_FLAG = 0,
 
 String GetDesktopManagerNew();
 
-bool LaunchFile(const char *file, const char *params = 0, const char *directory = ".");
+bool LaunchFile(const char *file, const char *params = nullptr, const char *directory = ".");
 
 bool FileCat(const char *file, const char *appendFile);
 
@@ -630,54 +630,7 @@ struct TempAssign {
 /*						Replaced with std::atomic
 template <class T>
 class ThreadSafe {
-public:
-	inline ThreadSafe()    {val = Null;}
-	inline ThreadSafe(T v) {operator=(v);}
-	inline void operator=(T v) {
-		mutex.Enter();
-		val = v;
-		mutex.Leave();
-	}
-	inline void operator+=(T v) {
-		mutex.Enter();
-		val += v;
-		mutex.Leave();
-	}
-	inline void operator-=(T v) {
-		mutex.Enter();
-		val -= v;
-		mutex.Leave();
-	}
-	inline operator T() {
-		T ret;
-		mutex.Enter();
-		ret = val;
-		mutex.Leave();
-		return ret;
-	}
-	Value GetData() {
-		Value ret;
-		mutex.Enter();
-		ret = val;
-		mutex.Leave();
-		return ret;		
-	}
-	Value operator~() const 		{return GetData();}
-	inline ThreadSafe& operator++() {
-		mutex.Enter();
-		val++;
-		mutex.Leave();
-		return *this;
-	}
-   	inline ThreadSafe operator++(int) {
-		ThreadSafe tmp = *this;
-   		++*this;
-   		return tmp;
-	}
-   
-private:
-	Mutex mutex;
-	T val;
+...
 };*/
 
 template <class C>
@@ -1238,7 +1191,7 @@ enum CONSOLE_COLOR {
 
 bool SetConsoleColor(CONSOLE_COLOR color);
 void ConsoleOutputDisable(bool disable);
-	
+
 }
 
 #endif
