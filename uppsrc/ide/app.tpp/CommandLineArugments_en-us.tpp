@@ -23,7 +23,7 @@ topic "TheIDE Command line arguments";
 [b83;*+117 $$22,22#1546C2CD4112BAB0A26C534D6F11ED13:subtitle]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; TheIDE command line arguments&]
+[s2; TheIDE Command line arguments&]
 [s3; Table of contents&]
 [s0; &]
 [s0; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us`#1^ 1. Command 
