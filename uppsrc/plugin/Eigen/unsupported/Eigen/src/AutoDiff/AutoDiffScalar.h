@@ -566,42 +566,37 @@ struct ScalarBinaryOpTraits<typename DerType::Scalar,AutoDiffScalar<DerType>, Bi
   }
 
 template<typename DerType>
-struct CleanedUpDerType {
-  typedef AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> type;
-};
-
-template<typename DerType>
 inline const AutoDiffScalar<DerType>& conj(const AutoDiffScalar<DerType>& x)  { return x; }
 template<typename DerType>
 inline const AutoDiffScalar<DerType>& real(const AutoDiffScalar<DerType>& x)  { return x; }
 template<typename DerType>
 inline typename DerType::Scalar imag(const AutoDiffScalar<DerType>&)    { return 0.; }
 template<typename DerType, typename T>
-inline typename CleanedUpDerType<DerType>::type (min)(const AutoDiffScalar<DerType>& x, const T& y) {
-  typedef typename CleanedUpDerType<DerType>::type ADS;
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (min)(const AutoDiffScalar<DerType>& x, const T& y) {
+  typedef AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> ADS;
   return (x <= y ? ADS(x) : ADS(y));
 }
 template<typename DerType, typename T>
-inline typename CleanedUpDerType<DerType>::type (max)(const AutoDiffScalar<DerType>& x, const T& y) {
-  typedef typename CleanedUpDerType<DerType>::type ADS;
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (max)(const AutoDiffScalar<DerType>& x, const T& y) {
+  typedef AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> ADS;
   return (x >= y ? ADS(x) : ADS(y));
 }
 template<typename DerType, typename T>
-inline typename CleanedUpDerType<DerType>::type (min)(const T& x, const AutoDiffScalar<DerType>& y) {
-  typedef typename CleanedUpDerType<DerType>::type ADS;
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (min)(const T& x, const AutoDiffScalar<DerType>& y) {
+  typedef AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> ADS;
   return (x < y ? ADS(x) : ADS(y));
 }
 template<typename DerType, typename T>
-inline typename CleanedUpDerType<DerType>::type (max)(const T& x, const AutoDiffScalar<DerType>& y) {
-  typedef typename CleanedUpDerType<DerType>::type ADS;
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (max)(const T& x, const AutoDiffScalar<DerType>& y) {
+  typedef AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> ADS;
   return (x > y ? ADS(x) : ADS(y));
 }
 template<typename DerType>
-inline typename CleanedUpDerType<DerType>::type (min)(const AutoDiffScalar<DerType>& x, const AutoDiffScalar<DerType>& y) {
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (min)(const AutoDiffScalar<DerType>& x, const AutoDiffScalar<DerType>& y) {
   return (x.value() < y.value() ? x : y);
 }
 template<typename DerType>
-inline typename CleanedUpDerType<DerType>::type (max)(const AutoDiffScalar<DerType>& x, const AutoDiffScalar<DerType>& y) {
+inline AutoDiffScalar<typename Eigen::internal::remove_all<DerType>::type::PlainObject> (max)(const AutoDiffScalar<DerType>& x, const AutoDiffScalar<DerType>& y) {
   return (x.value() >= y.value() ? x : y);
 }
 
@@ -716,13 +711,8 @@ template<typename DerType> struct NumTraits<AutoDiffScalar<DerType> >
 }
 
 namespace std {
-
 template <typename T>
 class numeric_limits<Eigen::AutoDiffScalar<T> >
-  : public numeric_limits<typename T::Scalar> {};
-
-template <typename T>
-class numeric_limits<Eigen::AutoDiffScalar<T&> >
   : public numeric_limits<typename T::Scalar> {};
 
 }  // namespace std

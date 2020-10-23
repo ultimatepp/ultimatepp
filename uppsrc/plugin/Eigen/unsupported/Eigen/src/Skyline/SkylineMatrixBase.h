@@ -209,4 +209,4 @@ protected:
 
 } // end namespace Eigen
 
-#endif // EIGEN_SKYLINEMATRIXBASE_H
+#endif // EIGEN_SkylineMatrixBase_H
