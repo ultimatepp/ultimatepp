@@ -222,7 +222,8 @@ void GLCanvas::SetCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	double angle = trackBall.GetZoomAngle();
-	gluPerspective(angle, static_cast<float>(GetSize().cx)/GetSize().cy, 1, 10000);
+	float aspect = GetSize().cy == 0 ? 1 : static_cast<float>(GetSize().cx)/GetSize().cy;
+	gluPerspective(angle, aspect, 1, 10000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(0.0, 0.0, static_cast<float>(GetSize().cy/2.), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
