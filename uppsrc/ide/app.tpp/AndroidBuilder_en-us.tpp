@@ -9,7 +9,7 @@ topic "Android builder";
 [{_}%EN-US 
 [s1; Working with Android builder&]
 [s3; Table of contents&]
-[s0; &]
+[s0;2 &]
 [s0; [^`#1^2 1. Introduction]&]
 [s0; [^`#2^2 2. Downloading Android SDK]&]
 [s0; [^`#3^2 3. Configuring Android SDK]&]

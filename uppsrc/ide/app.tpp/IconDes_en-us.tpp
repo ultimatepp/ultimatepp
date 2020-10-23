@@ -6,7 +6,7 @@ topic "Icon designer";
 [{_}%EN-US 
 [s1; Icon Designer&]
 [s2; Table of contents&]
-[s0; &]
+[s0;2 &]
 [s0; [^topic`:`/`/ide`/app`/IconDes`_en`-us`#1^2 1. Introduction]&]
 [s0; [^topic`:`/`/ide`/app`/IconDes`_en`-us`#2^2 2. Fundamental controls]&]
 [s0; [^topic`:`/`/ide`/app`/IconDes`_en`-us`#3^2 3. Supersampling]&]
