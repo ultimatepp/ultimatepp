@@ -294,21 +294,6 @@ public:
   EIGEN_DEVICE_FUNC explicit inline Quaternion(const Quaternion<OtherScalar, OtherOptions>& other)
   { m_coeffs = other.coeffs().template cast<Scalar>(); }
 
-#if EIGEN_HAS_RVALUE_REFERENCES
-  // We define a copy constructor, which means we don't get an implicit move constructor or assignment operator.
-  /** Default move constructor */
-  EIGEN_DEVICE_FUNC inline Quaternion(Quaternion&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_constructible<Scalar>::value)
-    : m_coeffs(std::move(other.coeffs()))
-  {}
-
-  /** Default move assignment operator */
-  EIGEN_DEVICE_FUNC Quaternion& operator=(Quaternion&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
-  {
-    m_coeffs = std::move(other.coeffs());
-    return *this;
-  }
-#endif
-
   EIGEN_DEVICE_FUNC static Quaternion UnitRandom();
 
   template<typename Derived1, typename Derived2>
@@ -661,7 +646,7 @@ EIGEN_DEVICE_FUNC Quaternion<Scalar,Options> Quaternion<Scalar,Options>::UnitRan
   const Scalar u1 = internal::random<Scalar>(0, 1),
                u2 = internal::random<Scalar>(0, 2*EIGEN_PI),
                u3 = internal::random<Scalar>(0, 2*EIGEN_PI);
-  const Scalar a = sqrt(Scalar(1) - u1),
+  const Scalar a = sqrt(1 - u1),
                b = sqrt(u1);
   return Quaternion (a * sin(u2), a * cos(u2), b * sin(u3), b * cos(u3));
 }
