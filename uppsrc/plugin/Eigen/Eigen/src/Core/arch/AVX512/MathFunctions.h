@@ -15,19 +15,20 @@ namespace Eigen {
 namespace internal {
 
 // Disable the code for older versions of gcc that don't support many of the required avx512 instrinsics.
-#if EIGEN_GNUC_AT_LEAST(5, 3) || EIGEN_COMP_CLANG  || EIGEN_COMP_MSVC >= 1923
+#if EIGEN_GNUC_AT_LEAST(5, 3)
 
 #define _EIGEN_DECLARE_CONST_Packet16f(NAME, X) \
   const Packet16f p16f_##NAME = pset1<Packet16f>(X)
 
 #define _EIGEN_DECLARE_CONST_Packet16f_FROM_INT(NAME, X) \
-  const Packet16f p16f_##NAME =  preinterpret<Packet16f,Packet16i>(pset1<Packet16i>(X))
+  const Packet16f p16f_##NAME = (__m512)pset1<Packet16i>(X)
 
 #define _EIGEN_DECLARE_CONST_Packet8d(NAME, X) \
   const Packet8d p8d_##NAME = pset1<Packet8d>(X)
 
 #define _EIGEN_DECLARE_CONST_Packet8d_FROM_INT64(NAME, X) \
   const Packet8d p8d_##NAME = _mm512_castsi512_pd(_mm512_set1_epi64(X))
+
 
 // Natural logarithm
 // Computes log(x) as log(2^e * m) = C*e + log(m), where the constant C =log(2)
@@ -72,7 +73,7 @@ plog<Packet16f>(const Packet16f& _x) {
   x = pmax(x, p16f_min_norm_pos);
 
   // Extract the shifted exponents.
-  Packet16f emm0 = _mm512_cvtepi32_ps(_mm512_srli_epi32((preinterpret<Packet16i,Packet16f>(x)), 23));
+  Packet16f emm0 = _mm512_cvtepi32_ps(_mm512_srli_epi32((__m512i)x, 23));
   Packet16f e = _mm512_sub_ps(emm0, p16f_126f);
 
   // Set the exponents to -1, i.e. x are in the range [0.5,1).
@@ -128,6 +129,7 @@ plog<Packet16f>(const Packet16f& _x) {
               p16f_nan),
             p16f_minus_inf);
 }
+
 #endif
 
 // Exponential function. Works by writing "x = m*log(2) + r" where
@@ -253,7 +255,6 @@ pexp<Packet8d>(const Packet8d& _x) {
   return pmax(pmul(x, e), _x);
   }*/
 
-
 // Functions for sqrt.
 // The EIGEN_FAST_MATH version uses the _mm_rsqrt_ps approximation and one step
 // of Newton's method, at a cost of 1-2 bits of precision as opposed to the
@@ -309,135 +310,77 @@ EIGEN_STRONG_INLINE Packet8d psqrt<Packet8d>(const Packet8d& x) {
 }
 #endif
 
-// prsqrt for float.
-#if defined(EIGEN_VECTORIZE_AVX512ER)
-
-template <>
-EIGEN_STRONG_INLINE Packet16f prsqrt<Packet16f>(const Packet16f& x) {
-  return _mm512_rsqrt28_ps(x);
-}
-
-#elif EIGEN_FAST_MATH
-
+// Functions for rsqrt.
+// Almost identical to the sqrt routine, just leave out the last multiplication
+// and fill in NaN/Inf where needed. Note that this function only exists as an
+// iterative version for doubles since there is no instruction for diretly
+// computing the reciprocal square root in AVX-512.
+#ifdef EIGEN_FAST_MATH
 template <>
 EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet16f
 prsqrt<Packet16f>(const Packet16f& _x) {
   _EIGEN_DECLARE_CONST_Packet16f_FROM_INT(inf, 0x7f800000);
+  _EIGEN_DECLARE_CONST_Packet16f_FROM_INT(nan, 0x7fc00000);
   _EIGEN_DECLARE_CONST_Packet16f(one_point_five, 1.5f);
   _EIGEN_DECLARE_CONST_Packet16f(minus_half, -0.5f);
+  _EIGEN_DECLARE_CONST_Packet16f_FROM_INT(flt_min, 0x00800000);
 
   Packet16f neg_half = pmul(_x, p16f_minus_half);
 
-  // Identity infinite, negative and denormal arguments.
-  __mmask16 inf_mask = _mm512_cmp_ps_mask(_x, p16f_inf, _CMP_EQ_OQ);
-  __mmask16 not_pos_mask = _mm512_cmp_ps_mask(_x, _mm512_setzero_ps(), _CMP_LE_OQ);
-  __mmask16 not_finite_pos_mask = not_pos_mask | inf_mask;
-  
-  // Compute an approximate result using the rsqrt intrinsic, forcing +inf
-  // for denormals for consistency with AVX and SSE implementations.
-  Packet16f y_approx = _mm512_rsqrt14_ps(_x);
+  // select only the inverse sqrt of positive normal inputs (denormals are
+  // flushed to zero and cause infs as well).
+  __mmask16 le_zero_mask = _mm512_cmp_ps_mask(_x, p16f_flt_min, _CMP_LT_OQ);
+  Packet16f x = _mm512_mask_blend_ps(le_zero_mask, _mm512_rsqrt14_ps(_x), _mm512_setzero_ps());
 
-  // Do a single step of Newton-Raphson iteration to improve the approximation.
-  // This uses the formula y_{n+1} = y_n * (1.5 - y_n * (0.5 * x) * y_n).
-  // It is essential to evaluate the inner term like this because forming
-  // y_n^2 may over- or underflow.
-  Packet16f y_newton = pmul(y_approx, pmadd(y_approx, pmul(neg_half, y_approx), p16f_one_point_five));
+  // Fill in NaNs and Infs for the negative/zero entries.
+  __mmask16 neg_mask = _mm512_cmp_ps_mask(_x, _mm512_setzero_ps(), _CMP_LT_OQ);
+  Packet16f infs_and_nans = _mm512_mask_blend_ps(
+      neg_mask, _mm512_mask_blend_ps(le_zero_mask, _mm512_setzero_ps(), p16f_inf), p16f_nan);
 
-  // Select the result of the Newton-Raphson step for positive finite arguments.
-  // For other arguments, choose the output of the intrinsic. This will
-  // return rsqrt(+inf) = 0, rsqrt(x) = NaN if x < 0, and rsqrt(0) = +inf.
-  return _mm512_mask_blend_ps(not_finite_pos_mask, y_newton, y_approx);
-  }
+  // Do a single step of Newton's iteration.
+  x = pmul(x, pmadd(neg_half, pmul(x, x), p16f_one_point_five));
 
-#else
-
-template <>
-EIGEN_STRONG_INLINE Packet16f prsqrt<Packet16f>(const Packet16f& x) {
-  _EIGEN_DECLARE_CONST_Packet16f(one, 1.0f);
-  return _mm512_div_ps(p16f_one, _mm512_sqrt_ps(x));
+  // Insert NaNs and Infs in all the right places.
+  return _mm512_mask_blend_ps(le_zero_mask, x, infs_and_nans);
 }
 
-#endif
-
-// prsqrt for double.
-#if EIGEN_FAST_MATH
 template <>
 EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet8d
 prsqrt<Packet8d>(const Packet8d& _x) {
+  _EIGEN_DECLARE_CONST_Packet8d_FROM_INT64(inf, 0x7ff0000000000000LL);
+  _EIGEN_DECLARE_CONST_Packet8d_FROM_INT64(nan, 0x7ff1000000000000LL);
   _EIGEN_DECLARE_CONST_Packet8d(one_point_five, 1.5);
   _EIGEN_DECLARE_CONST_Packet8d(minus_half, -0.5);
-  _EIGEN_DECLARE_CONST_Packet8d_FROM_INT64(inf, 0x7ff0000000000000LL);
+  _EIGEN_DECLARE_CONST_Packet8d_FROM_INT64(dbl_min, 0x0010000000000000LL);
 
   Packet8d neg_half = pmul(_x, p8d_minus_half);
 
-  // Identity infinite, negative and denormal arguments.
-  __mmask8 inf_mask = _mm512_cmp_pd_mask(_x, p8d_inf, _CMP_EQ_OQ);
-  __mmask8 not_pos_mask = _mm512_cmp_pd_mask(_x, _mm512_setzero_pd(), _CMP_LE_OQ);
-  __mmask8 not_finite_pos_mask = not_pos_mask | inf_mask;
+  // select only the inverse sqrt of positive normal inputs (denormals are
+  // flushed to zero and cause infs as well).
+  __mmask8 le_zero_mask = _mm512_cmp_pd_mask(_x, p8d_dbl_min, _CMP_LT_OQ);
+  Packet8d x = _mm512_mask_blend_pd(le_zero_mask, _mm512_rsqrt14_pd(_x), _mm512_setzero_pd());
 
-  // Compute an approximate result using the rsqrt intrinsic, forcing +inf
-  // for denormals for consistency with AVX and SSE implementations.
-#if defined(EIGEN_VECTORIZE_AVX512ER)
-  Packet8d y_approx = _mm512_rsqrt28_pd(_x);
-#else
-  Packet8d y_approx = _mm512_rsqrt14_pd(_x);
-#endif
-  // Do one or two steps of Newton-Raphson's to improve the approximation, depending on the
-  // starting accuracy (either 2^-14 or 2^-28, depending on whether AVX512ER is available).
-  // The Newton-Raphson algorithm has quadratic convergence and roughly doubles the number
-  // of correct digits for each step.
-  // This uses the formula y_{n+1} = y_n * (1.5 - y_n * (0.5 * x) * y_n).
-  // It is essential to evaluate the inner term like this because forming
-  // y_n^2 may over- or underflow.
-  Packet8d y_newton = pmul(y_approx, pmadd(neg_half, pmul(y_approx, y_approx), p8d_one_point_five));
-#if !defined(EIGEN_VECTORIZE_AVX512ER)
-  y_newton = pmul(y_newton, pmadd(y_newton, pmul(neg_half, y_newton), p8d_one_point_five));
-#endif
-  // Select the result of the Newton-Raphson step for positive finite arguments.
-  // For other arguments, choose the output of the intrinsic. This will
-  // return rsqrt(+inf) = 0, rsqrt(x) = NaN if x < 0, and rsqrt(0) = +inf.
-  return _mm512_mask_blend_pd(not_finite_pos_mask, y_newton, y_approx);
+  // Fill in NaNs and Infs for the negative/zero entries.
+  __mmask8 neg_mask = _mm512_cmp_pd_mask(_x, _mm512_setzero_pd(), _CMP_LT_OQ);
+  Packet8d infs_and_nans = _mm512_mask_blend_pd(
+      neg_mask, _mm512_mask_blend_pd(le_zero_mask, _mm512_setzero_pd(), p8d_inf), p8d_nan);
+
+  // Do a first step of Newton's iteration.
+  x = pmul(x, pmadd(neg_half, pmul(x, x), p8d_one_point_five));
+
+  // Do a second step of Newton's iteration.
+  x = pmul(x, pmadd(neg_half, pmul(x, x), p8d_one_point_five));
+
+  // Insert NaNs and Infs in all the right places.
+  return _mm512_mask_blend_pd(le_zero_mask, x, infs_and_nans);
 }
-#else
+#elif defined(EIGEN_VECTORIZE_AVX512ER)
 template <>
-EIGEN_STRONG_INLINE Packet8d prsqrt<Packet8d>(const Packet8d& x) {
-  _EIGEN_DECLARE_CONST_Packet8d(one, 1.0f);
-  return _mm512_div_pd(p8d_one, _mm512_sqrt_pd(x));
+EIGEN_STRONG_INLINE Packet16f prsqrt<Packet16f>(const Packet16f& x) {
+  return _mm512_rsqrt28_ps(x);
 }
 #endif
-
-#if defined(EIGEN_VECTORIZE_AVX512DQ)
-template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
-Packet16f plog1p<Packet16f>(const Packet16f& _x) {
-  return generic_plog1p(_x);
-}
-
-template<> EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED
-Packet16f pexpm1<Packet16f>(const Packet16f& _x) {
-  return generic_expm1(_x);
-}
 #endif
-
-#endif
-
-
-template <>
-EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet16f
-psin<Packet16f>(const Packet16f& _x) {
-  return psin_float(_x);
-}
-
-template <>
-EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet16f
-pcos<Packet16f>(const Packet16f& _x) {
-  return pcos_float(_x);
-}
-
-template <>
-EIGEN_DEFINE_FUNCTION_ALLOWING_MULTIPLE_DEFINITIONS EIGEN_UNUSED Packet16f
-ptanh<Packet16f>(const Packet16f& _x) {
-  return internal::generic_fast_tanh_float(_x);
-}
 
 }  // end namespace internal
 

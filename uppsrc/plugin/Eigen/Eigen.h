@@ -9,6 +9,8 @@
 
 #ifndef _DEBUG
 #define EIGEN_NO_DEBUG
+#else
+#define EIGEN_INITIALIZE_MATRICES_BY_NAN 
 #endif
 
 #define eigen_assert(x) ASSERT(x)
