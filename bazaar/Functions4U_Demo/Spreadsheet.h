@@ -11,6 +11,7 @@
 class SpreadsheetAPI {
 public:
 	Spreadsheet_API
+	virtual ~SpreadsheetAPI() {}
 };
 
 
