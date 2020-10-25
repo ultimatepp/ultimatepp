@@ -61,8 +61,8 @@ LAYOUT(RunLayout, 560, 200)
 	ITEM(Option, disable_uhd, SetLabel(t_("Disable UHD mode")).LeftPosZ(120, 120).TopPosZ(148, 20))
 	ITEM(Option, darkmode, SetLabel(t_("Run in dark mode")).LeftPosZ(244, 120).TopPosZ(148, 20))
 	ITEM(Label, console_label, SetLabel(t_("Open console:")).LeftPosZ(4, 112).TopPosZ(124, 20))
-	ITEM(Button, ifile, RightPosZ(28, 20).TopPosZ(4, 19))
-	ITEM(Button, idir, RightPosZ(8, 20).TopPosZ(4, 19))
+	ITEM(Button, ifile, Tip(t_("Select file and insert its path as an arguments...")).RightPosZ(28, 20).TopPosZ(4, 19))
+	ITEM(Button, idir, Tip(t_("Select directory and insert its path as an arguments...")).RightPosZ(8, 20).TopPosZ(4, 19))
 END_LAYOUT
 
 LAYOUT(FindInFilesLayout, 568, 152)
@@ -869,7 +869,7 @@ LAYOUT(SlideShowSettingsLayout, 184, 188)
 	ITEM(Button, title_plus, SetLabel(t_("+")).LeftPosZ(124, 24).TopPosZ(80, 19))
 	ITEM(Button, title_minus, SetLabel(t_("-")).LeftPosZ(152, 24).TopPosZ(80, 19))
 	ITEM(Switch, pointer, SetLabel(t_("Standard pointer\nPointer 1\nPointer 2")).LeftPosZ(8, 120).TopPosZ(108, 52))
-	ITEM(Button, report, SetLabel(t_("Export")).LeftPosZ(8, 104).TopPosZ(164, 20))
+	ITEM(Button, report, SetLabel(t_("Export")).LeftPosZ(76, 104).TopPosZ(164, 20))
 END_LAYOUT
 
 LAYOUT(InsertAsLayout, 276, 168)
