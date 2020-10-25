@@ -278,8 +278,6 @@ private:
 };
 #endif
 
-void ExceptionHandler(const char *msg);
-
 }
 
 #endif
