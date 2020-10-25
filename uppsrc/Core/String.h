@@ -166,8 +166,16 @@ public:
 };
 
 class String0 : Moveable<String0> {
-	enum { SMALL = 0, MEDIUM = 31 }; // SMALL has to be 0 because of GetSpecial and because is it ending zero
-	enum { KIND = 14, SLEN = 15, LLEN = 2, SPECIAL = 13 };
+	enum { // 
+		KIND = 14,    // chr[KIND] is String tier flag
+		SLEN = 15,    // chr[SLEN] stores the length of small tier strings (up to 14 bytes)
+		LLEN = 2,     // chr[LLEN] stores the length of medium (< 32) and large tier strings
+		SPECIAL = 13, // 
+	};
+	enum { // chr[KIND] predefined values, if > MEDIUM, it is Rc type; if <255, also stores alloc
+		SMALL = 0, // SVO ending zero, also has to be 0 because of GetSpecial, also flag of small
+	    MEDIUM = 31 // medium, ptr points to 32 bytes block on heap
+	};
 
 	struct Rc {
 		Atomic refcount;
@@ -178,7 +186,7 @@ class String0 : Moveable<String0> {
 
 	union {
 		char   chr[16];
-		char  *ptr;
+		char  *ptr; // medium and large tier, in large tier (Rc *)ptr - 1 points to Rc
 		dword *wptr;
 		qword *qptr;
 		word   v[8];
@@ -220,19 +228,20 @@ class String0 : Moveable<String0> {
 	void UnShare();
 	void SetSLen(int l);
 
-	char *Ptr() { return IsSmall() ? chr : ptr; }
+	char *Ptr()                   { return IsSmall() ? chr : ptr; }
 	char *Alloc(int count, char& kind);
 
 	static String0::Rc voidptr[2];
 
-	void Swap(String0& b)         { UPP::Swap(q[0], b.q[0]); UPP::Swap(q[1], b.q[1]); Dsyn(); b.Dsyn(); }
+	void Swap(String0& b);
 	
+	// interface for Value
 	static dword StW(byte st)     { return MAKE4B(0, st, 0, 0); }
 	void SetSpecial0(byte st)     { w[3] = StW(st); }
 	void SetSpecial(byte st)      { ASSERT(IsSmall() && GetCount() == 0); SetSpecial0(st); }
 	byte GetSpecial() const       { return (chr[SLEN] | chr[KIND]) == 0 ? chr[SPECIAL] : 0; }
 	byte GetSt() const            { return chr[SPECIAL]; }
-	dword GetStW() const           { return w[3]; }
+	dword GetStW() const          { return w[3]; }
 	bool IsSpecial() const        { return !v[7] && v[6]; }
 	bool IsSpecial(byte st) const { return w[3] == StW(st); }
 	

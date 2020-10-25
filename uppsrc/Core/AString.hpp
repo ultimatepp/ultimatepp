@@ -292,6 +292,20 @@ String::String(const char *s)
 }
 
 force_inline
+void String0::Swap(String0& b)
+{
+	qword a0 = q[0]; // Explicit code (instead of Swap) seems to emit some SSE2 code with CLANG
+	qword a1 = q[1];
+	qword b0 = b.q[0];
+	qword b1 = b.q[1];
+	q[0] = b0;
+	q[1] = b1;
+	b.q[0] = a0;
+	b.q[1] = a1;
+	Dsyn(); b.Dsyn();
+}
+
+force_inline
 void StringBuffer::Strlen()
 {
 	SetLength((int)strlen__(pbegin));

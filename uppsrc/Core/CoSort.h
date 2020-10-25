@@ -1,53 +1,65 @@
 template <class I, class Less>
 void CoSort__(CoWork& cw, I l, I h, const Less& less)
 {
-	const int PARALLEL_THRESHOLD = 80;
+	int count = int(h - l);
+	I middle = l + (count >> 1);        // get the middle element
 
 	for(;;) {
-		int count = int(h - l);
-		if(count < 2)
-			return;
-		if(count < 8) {                         // Final optimized SelectSort
-			FinalSort__(l, h, less);
+		if(count < 200) { // too little elements to gain anything with parellel processing
+			Sort__(l, h, less);
 			return;
 		}
-		int pass = 4;
-		for(;;) {
-			I middle = l + (count >> 1);        // get the middle element
-			OrderIter2__(l, middle, less);      // sort l, middle, h-1 to find median of 3
-			OrderIter2__(middle, h - 1, less);
-			OrderIter2__(l, middle, less);      // median is now in middle
-			IterSwap(l + 1, middle);            // move median pivot to l + 1
-			I ii = l + 1;
-			for(I i = l + 2; i != h - 1; ++i)   // do partitioning; already l <= pivot <= h - 1
-				if(less(*i, *(l + 1)))
-					IterSwap(++ii, i);
-			IterSwap(ii, l + 1);                // put pivot back in between partitions
-			I iih = ii;
-			while(iih + 1 != h && !less(*ii, *(iih + 1))) // Find middle range of elements equal to pivot
-				++iih;
-			if(pass > 5 || min(ii - l, h - iih) > (max(ii - l, h - iih) >> pass)) { // partition sizes ok or we have done max attempts
-				if(ii - l < h - iih - 1) {       // schedule or recurse on smaller partition, tail on larger
-					if(ii - l < PARALLEL_THRESHOLD) // too small to run in parallel?
-						Sort__(l, ii, less); // resolve in this thread
-					else
-						cw & [=, &cw] { CoSort__(cw, l, ii, less); }; // schedule for parallel execution
-					l = iih + 1;
-				}
-				else {
-					if(h - iih - 1 < PARALLEL_THRESHOLD) // too small to run in parallel?
-						Sort__(iih + 1, h, less); // resolve in this thread
-					else
-						cw & [=, &cw] { CoSort__(cw, iih + 1, h, less); }; // schedule for parallel execution
-					h = ii;
-				}
-				break;
-			}
-			IterSwap(l, l + (int)Random(count));     // try some other random elements for median pivot
-			IterSwap(middle, l + (int)Random(count));
-			IterSwap(h - 1, l + (int)Random(count));
-			pass++;
+
+		if(count > 1000) {
+			middle = l + (count >> 1); // iterators cannot point to the same object!
+			I q = l + 1 + (int)Random((count >> 1) - 2);
+			I w = middle + 1 + (int)Random((count >> 1) - 2);
+			OrderIter5__(l, q, middle, w, h - 1, less);
 		}
+		else
+			OrderIter3__(l, middle, h - 1, less);
+
+		I pivot = h - 2;
+		IterSwap(pivot, middle); // move median pivot to h - 2
+		I i = l;
+		I j = h - 2; // l, h - 2, h - 1 already sorted above
+		for(;;) { // Hoare’s partition (modified):
+			while(less(*++i, *pivot));
+			do
+				if(j <= i) goto done;
+			while(!less(*--j, *pivot));
+			IterSwap(i, j);
+		}
+	done:
+		IterSwap(i, h - 2);                 // put pivot back in between partitions
+
+		I ih = i;
+		while(ih + 1 != h && !less(*i, *(ih + 1))) // Find middle range of elements equal to pivot
+			++ih;
+
+		int count_l = i - l;
+		if(count_l == 1) // this happens if there are many elements equal to pivot, filter them out
+			for(I q = ih + 1; q != h; ++q)
+				if(!less(*i, *q))
+					IterSwap(++ih, q);
+
+		int count_h = h - ih - 1;
+
+		if(count_l < count_h) {       // recurse on smaller partition, tail on larger
+			cw & [=, &cw] { CoSort__(l, i, less); };
+			l = ih + 1;
+			count = count_h;
+		}
+		else {
+			cw & [=, &cw] { CoSort__(ih + 1, h, less); };
+			h = i;
+			count = count_l;
+		}
+
+		if(count > 8 && min(count_l, count_h) < (max(count_l, count_h) >> 2)) // If unbalanced,
+			middle = l + 1 + Random(count - 2); // randomize the next step
+		else
+			middle = l + (count >> 1); // the middle is probably still the best guess otherwise
 	}
 }
 

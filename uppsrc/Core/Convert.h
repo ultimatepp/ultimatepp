@@ -301,3 +301,35 @@ public:
 };
 
 Convert& LNGConvert();
+
+template <typename F, typename S, class R>
+struct LambdaConvertClass : Convert {
+	Function<Value(const Value& w)> format;
+	Function<Value(const Value& text)> scan;
+	Function<int(int)> filter;
+
+	virtual Value Format(const Value& q) const { return format(q); }
+	virtual Value Scan(const Value& text) const { return scan(text); }
+	virtual int Filter(int chr) const { return Filter(chr); }
+	
+	LambdaConvertClass(F format, S scan, R filter) : format(format), scan(scan), filter(filter) {}
+};
+
+template <typename F, typename S, class R>
+const LambdaConvertClass<F, S, R>& LambdaConvert(F format, S scan, R filter)
+{
+	static LambdaConvertClass<F, S, R> x(format, scan, filter);
+	return x;
+}
+
+template <typename F, typename S>
+const auto& LambdaConvert(F format, S scan)
+{
+	return LambdaConvert(format, scan, [](int ch) { return ch; });
+}
+
+template <typename F>
+const auto& LambdaConvert(F format)
+{
+	return LambdaConvert(format, [](const Value& v) { return v; });
+}

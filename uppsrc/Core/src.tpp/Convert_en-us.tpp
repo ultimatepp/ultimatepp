@@ -688,4 +688,21 @@ ll, Null, true)]&]
 [s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertString`:`:class^1 ConvertString][C1 (
 INT`_MAX, true)]&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:LambdaConvert`(F`,S`,R`):%- [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 F
+], [@(0.0.255) typename]_[*@4 S], [@(0.0.255) class]_[*@4 R]>&]
+[s5;:Upp`:`:LambdaConvert`(F`,S`,R`):%- [@(0.0.255) const]_[@(0.0.255) auto`&]_[* LambdaCon
+vert]([*@4 F]_[*@3 format], [*@4 S]_[*@3 scan], [*@4 R]_[*@3 filter])&]
+[s5;b42;:Upp`:`:LambdaConvert`(F`,S`):%- [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 F
+], [@(0.0.255) typename]_[*@4 S]>&]
+[s5;:Upp`:`:LambdaConvert`(F`,S`):%- [@(0.0.255) const]_[@(0.0.255) auto`&]_[* LambdaConver
+t]([*@4 F]_[*@3 format], [*@4 S]_[*@3 scan])&]
+[s5;b42;:Upp`:`:LambdaConvert`(F`):%- [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 F]>
+&]
+[s5;:Upp`:`:LambdaConvert`(F`):%- [@(0.0.255) const]_[@(0.0.255) auto`&]_[* LambdaConvert](
+[*@4 F]_[*@3 format])&]
+[s2; Returns a reference to a static Convert instance that has Format/Scan/Filter 
+defined as lambda expressions.&]
+[s0; &]
+[s3; &]
 [s0; ]]
