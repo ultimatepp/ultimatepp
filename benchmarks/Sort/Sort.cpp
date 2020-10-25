@@ -19,9 +19,17 @@ CONSOLE_APP_MAIN
 			RTIMING("std::sort std::vector<std::string>");
 			std::sort(x.begin(), x.end());
 		}
+		Vector<String> w2 = clone(w);
 		{
-			RTIMING("Sort Vector<String>");
-			Sort(w);
+			RTIMING("StableSort Vector<String>");
+			StableSort(w2);
+		}
+		{
+			std::vector<std::string> x;
+			for(auto s : w)
+				x.push_back(s.ToStd());
+			RTIMING("std::sort std::vector<std::string>");
+			std::stable_sort(x.begin(), x.end());
 		}
 	#if 0
 		ONCELOCK {
@@ -34,6 +42,11 @@ CONSOLE_APP_MAIN
 		Vector<int> w;
 		for(int i = 0; i < 40000; i++)
 			w.Add(Random());
+		{
+			std::vector<int> x(w.begin(), w.end());
+			RTIMING("std::sort std::vector<int>");
+			std::sort(x.begin(), x.end());
+		}
 		{
 			std::vector<int> x(w.begin(), w.end());
 			RTIMING("std::sort std::vector<int>");
