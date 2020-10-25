@@ -1,57 +1,4 @@
 template <class I, class Less>
-void FinalSort__(I begin, I end, const Less& less)
-{
-	if(begin == end)
-		return;
-	I last = end;
-	--last;
-	while(!(begin == last)) {
-		I best = last;
-		I next = last;
-		I ptr = last;
-		for(;;) {
-			if(less(*best, *--ptr)) {  // best holds, scan for better candidate
-				do
-					if(ptr == begin) { // best is the final minimum
-						IterSwap(begin, best);
-						++begin;
-						goto NEXT_ITEM;
-					}
-				while(less(*best, *--ptr));
-				if(ptr == begin) { // begin is the final minimum, best is 2nd least
-					IterSwap(++begin, best);
-					++begin;
-					break;
-				}
-				next = ptr; // mark position after new best as the new end of sorted array
-				++next;     // it will hold only if all subseqent iterations define new best (descending order)
-			}
-			else
-			if(ptr == begin) { // begin is the final minimum
-				begin = next;  // and everything is sorted up to next
-				break;
-			}
-			best = ptr;
-		}
-	NEXT_ITEM:
-		;
-	}
-}
-
-template <class T, class Less>
-void FinalSort__(T& c, const Less& less)
-{
-	FinalSort__(c.begin(), c.end(), less);
-}
-
-template <class T>
-void FinalSort__(T& c)
-{
-	typedef ValueTypeOf<T> VT;
-	FinalSort__(c.begin(), c.end(), std::less<VT>());
-}
-
-template <class I, class Less>
 force_inline
 void OrderIter2__(I a, I b, const Less& less)
 {
@@ -59,50 +6,159 @@ void OrderIter2__(I a, I b, const Less& less)
 		IterSwap(a, b);
 }
 
+template <class I, class Less>
+force_inline // 2-3 compares, 0-2 swaps
+void OrderIter3__(I x, I y, I z, const Less& less)
+{
+    if(less(*y, *x)) {
+	    if(less(*z, *y))
+	        IterSwap(x, z);
+	    else {
+		    IterSwap(x, y);
+		    if(less(*z, *y))
+		        IterSwap(y, z);
+	    }
+    }
+    else
+    if(less(*z, *y)) {
+        IterSwap(y, z);
+        if(less(*y, *x))
+            IterSwap(x, y);
+    }
+}
+
+template <class I, class Less>
+force_inline // 3-6 compares, 0-5 swaps
+void OrderIter4__(I x, I y, I z, I u, const Less& less)
+{
+	OrderIter3__(x, y, z, less);
+	if(less(*z, *u)) return;
+	IterSwap(z, u);
+	if(less(*y, *z)) return;
+	IterSwap(y, z);
+	if(less(*x, *y)) return;
+	IterSwap(x, y);
+}
+
+template <class I, class Less>
+force_inline // 4-10 compares, 0-9 swaps
+void OrderIter5__(I x, I y, I z, I u, I v, const Less& less)
+{
+	OrderIter4__(x, y, z, u, less);
+	if(less(*u, *v)) return;
+	IterSwap(u, v);
+	if(less(*z, *u)) return;
+	IterSwap(z, u);
+	if(less(*y, *z)) return;
+	IterSwap(y, z);
+	if(less(*x, *y)) return;
+	IterSwap(x, y);
+}
+
+template <class I, class Less>
+force_inline // 9-15 compares, 0-14 swaps
+void OrderIter6__(I x, I y, I z, I u, I v, I w, const Less& less)
+{
+	OrderIter5__(x, y, z, u, v, less);
+	if(less(*v, *w)) return;
+	IterSwap(v, w);
+	if(less(*u, *v)) return;
+	IterSwap(u, v);
+	if(less(*z, *u)) return;
+	IterSwap(z, u);
+	if(less(*y, *z)) return;
+	IterSwap(y, z);
+	if(less(*x, *y)) return;
+	IterSwap(x, y);
+}
+
+template <class I, class Less>
+force_inline // 16-26 compares, 0-20 swaps
+void OrderIter7__(I x, I y, I z, I u, I v, I w, I q, const Less& less)
+{
+	OrderIter6__(x, y, z, u, v, w, less);
+	if(less(*w, *q)) return;
+	IterSwap(w, q);
+	if(less(*v, *w)) return;
+	IterSwap(v, w);
+	if(less(*u, *v)) return;
+	IterSwap(u, v);
+	if(less(*z, *u)) return;
+	IterSwap(z, u);
+	if(less(*y, *z)) return;
+	IterSwap(y, z);
+	if(less(*x, *y)) return;
+	IterSwap(x, y);
+}
+
 dword  Random(dword n);
 
 template <class I, class Less>
 void Sort__(I l, I h, const Less& less)
 {
+	int count = int(h - l);
+	I middle = l + (count >> 1);        // get the middle element
 	for(;;) {
-		int count = int(h - l);
-		if(count < 2)
-			return;
-		if(count < 8) {                         // Final optimized SelectSort
-			FinalSort__(l, h, less);
-			return;
+		switch(count) {
+		case 0:
+		case 1: return;
+		case 2: OrderIter2__(l, l + 1, less); return;
+		case 3: OrderIter3__(l, l + 1, l + 2, less); return;
+		case 4: OrderIter4__(l, l + 1, l + 2, l + 3, less); return;
+		case 5: OrderIter5__(l, l + 1, l + 2, l + 3, l + 4, less); return;
+		case 6: OrderIter6__(l, l + 1, l + 2, l + 3, l + 4, l + 5, less); return;
+		case 7: OrderIter7__(l, l + 1, l + 2, l + 3, l + 4, l + 5, l + 6, less); return;
 		}
-		int pass = 4;
-		for(;;) {
-			I middle = l + (count >> 1);        // get the middle element
-			OrderIter2__(l, middle, less);      // sort l, middle, h-1 to find median of 3
-			OrderIter2__(middle, h - 1, less);
-			OrderIter2__(l, middle, less);      // median is now in middle
-			IterSwap(l + 1, middle);            // move median pivot to l + 1
-			I ii = l + 1;
-			for(I i = l + 2; i != h - 1; ++i)   // do partitioning; already l <= pivot <= h - 1
-				if(less(*i, *(l + 1)))
-					IterSwap(++ii, i);
-			IterSwap(ii, l + 1);                // put pivot back in between partitions
-			I iih = ii;
-			while(iih + 1 != h && !less(*ii, *(iih + 1))) // Find middle range of elements equal to pivot
-				++iih;
-			if(pass > 5 || min(ii - l, h - iih) > (max(ii - l, h - iih) >> pass)) { // partition sizes ok or we have done max attempts
-				if(ii - l < h - iih - 1) {       // recurse on smaller partition, tail on larger
-					Sort__(l, ii, less);
-					l = iih + 1;
-				}
-				else {
-					Sort__(iih + 1, h, less);
-					h = ii;
-				}
-				break;
-			}
-			IterSwap(l, l + (int)Random(count));     // try some other random elements for median pivot
-			IterSwap(middle, l + (int)Random(count));
-			IterSwap(h - 1, l + (int)Random(count));
-			pass++;
+		if(count > 1000) {
+			middle = l + (count >> 1); // iterators cannot point to the same object!
+			I q = l + 1 + (int)Random((count >> 1) - 2);
+			I w = middle + 1 + (int)Random((count >> 1) - 2);
+			OrderIter5__(l, q, middle, w, h - 1, less);
 		}
+		else
+			OrderIter3__(l, middle, h - 1, less);
+
+		I pivot = h - 2;
+		IterSwap(pivot, middle); // move median pivot to h - 2
+		I i = l;
+		I j = h - 2; // l, h - 2, h - 1 already sorted above
+		for(;;) { // Hoare’s partition (modified):
+			while(less(*++i, *pivot));
+			do
+				if(j <= i) goto done;
+			while(!less(*--j, *pivot));
+			IterSwap(i, j);
+		}
+	done:
+		IterSwap(i, h - 2);                 // put pivot back in between partitions
+
+		I ih = i;
+		while(ih + 1 != h && !less(*i, *(ih + 1))) // Find middle range of elements equal to pivot
+			++ih;
+
+		int count_l = i - l;
+		if(count_l == 1) // this happens if there are many elements equal to pivot, filter them out
+			for(I q = ih + 1; q != h; ++q)
+				if(!less(*i, *q))
+					IterSwap(++ih, q);
+
+		int count_h = h - ih - 1;
+
+		if(count_l < count_h) {       // recurse on smaller partition, tail on larger
+			Sort__(l, i, less);
+			l = ih + 1;
+			count = count_h;
+		}
+		else {
+			Sort__(ih + 1, h, less);
+			h = i;
+			count = count_l;
+		}
+
+		if(count > 8 && min(count_l, count_h) < (max(count_l, count_h) >> 2)) // If unbalanced, randomize the next step
+			middle = l + 1 + (int)Random(count - 2); // Random pivot selection
+		else
+			middle = l + (count >> 1); // the middle is probably still the best guess otherwise
 	}
 }
 
@@ -141,6 +197,7 @@ struct StableSortIterator__ {
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii <  b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 
 	StableSortItem__<T> operator*() const    { return StableSortItem__<T>(*ii, *vi); }
 
@@ -198,6 +255,7 @@ struct IndexSortIterator__
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii <  b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 	friend void IterSwap    (Iter a, Iter b) { IterSwap(a.ii, b.ii); IterSwap(a.vi, b.vi); }
 
 	II          ii;
@@ -260,6 +318,7 @@ struct IndexSort2Iterator__
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii <  b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 	friend void IterSwap    (Iter a, Iter b) { IterSwap(a.ii, b.ii); IterSwap(a.vi, b.vi); IterSwap(a.wi, b.wi); }
 
 	II          ii;
@@ -327,6 +386,7 @@ struct IndexSort3Iterator__
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii <  b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 	friend void IterSwap    (Iter a, Iter b) { IterSwap(a.ii, b.ii); IterSwap(a.vi, b.vi); IterSwap(a.wi, b.wi); IterSwap(a.xi, b.xi); }
 
 	II          ii;
@@ -399,6 +459,7 @@ struct SortOrderIterator__ : PostfixOps< SortOrderIterator__<I, V> >
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii < b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 	friend void IterSwap    (Iter a, Iter b) { IterSwap(a.ii, b.ii); }
 
 	int        *ii;
@@ -439,6 +500,7 @@ struct StableSortOrderIterator__ : PostfixOps< StableSortOrderIterator__<I, T> >
 	bool        operator == (Iter b) const   { return ii == b.ii; }
 	bool        operator != (Iter b) const   { return ii != b.ii; }
 	bool        operator <  (Iter b) const   { return ii < b.ii; }
+	bool        operator <= (Iter b) const   { return ii <=  b.ii; }
 	friend void IterSwap    (Iter a, Iter b) { IterSwap(a.ii, b.ii); }
 
 	StableSortItem__<T> operator*() const    { return StableSortItem__<T>(*(vi + *ii), *ii); }

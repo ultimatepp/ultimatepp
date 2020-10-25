@@ -1,5 +1,5 @@
 template <class I>
-inline void IterSwap(I a, I b) { if(a != b) Swap(*a, *b); }
+inline void IterSwap(I a, I b) { Swap(*a, *b); }
 
 struct EmptyClass {};
 
