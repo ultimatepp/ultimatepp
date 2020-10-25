@@ -81,7 +81,7 @@ namespace Upp {
 	
 class CrashHandler {
 public:
-    void Init(const char *msg);
+    CrashHandler();
     virtual ~CrashHandler() {};
 
 private:

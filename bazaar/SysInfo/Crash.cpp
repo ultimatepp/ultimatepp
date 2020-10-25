@@ -17,18 +17,15 @@
 
 namespace Upp {
 
+#if defined(_DEBUG) 
+
 #if defined(PLATFORM_WIN32)
 #pragma float_control(except, on)
 #endif
 
-void ExceptionHandler(const char *msg) {
-#if defined(_DEBUG) 
-	static CrashHandler crash;
-	crash.Init(msg);
-#endif
-}
+static CrashHandler crash;
 
-void CrashHandler::Init(const char *msg) {
+CrashHandler::CrashHandler() {
 #if defined(PLATFORM_WIN32)
 	_clearfp();
 	_controlfp(_controlfp(0, 0) & ~(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW), _MCW_EM);
@@ -118,5 +115,7 @@ void CrashHandler::SigsegvHandler(int) {
 void CrashHandler::SigtermHandler(int) {
 	Panic("SIGTERM: Process has been asked to terminate by other application");
 }
+
+#endif
 
 };
