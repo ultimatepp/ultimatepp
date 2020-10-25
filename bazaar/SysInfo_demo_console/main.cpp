@@ -262,7 +262,7 @@ Base::~Base() {
 CONSOLE_APP_MAIN
 {	
 	StdLogSetup(LOG_COUT|LOG_FILE);
-	SetExitCode(1);
+	SetExitCode(0);
 	
 	try {
 		const Vector<String>& command = CommandLine();
@@ -277,8 +277,6 @@ CONSOLE_APP_MAIN
 				else if (com == "shutdown") 
 					Shutdown("shutdown");
 			} else if (command[0] == "-exception") {
-				ExceptionHandler(t_("Please report to developers"));
-				
 				if (com == "access_violation") {
 		            int *p = 0;
 	#if defined(COMPILER_MSC)
@@ -343,10 +341,10 @@ CONSOLE_APP_MAIN
 		}
 	} catch (Exc e) {
 		UppLog() << "\nError: " << e << "\n";  
-		SetExitCode(0);
+		SetExitCode(1);
 	} catch (...) {
 		UppLog() << "\nUnknown Error\n";  
-		SetExitCode(0);
+		SetExitCode(1);
 	}
 	
 	#ifdef flagDEBUG
