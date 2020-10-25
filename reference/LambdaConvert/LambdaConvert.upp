@@ -1,0 +1,11 @@
+description "Demostrates the use of LambdaConvert - Convert specified as lambda\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
