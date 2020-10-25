@@ -25,6 +25,7 @@ void Ide::RunArgs() {
 #endif
 
 	SelectDirButton dir_browse("Run in folder");
+	dir_browse.Tip("Select directory..");
 	dir_browse.Attach(dlg.dir);
 	dlg.dir = rundir.ToWString();
 
@@ -37,6 +38,7 @@ void Ide::RunArgs() {
 
 	SaveFileButton stdout_browse("Save STDOUT as");
 	stdout_browse.Type("Text files (*.txt)", "*.txt").AllFilesType();
+	stdout_browse.Tip("Select file..");
 	stdout_browse.Attach(dlg.stdout_file);
 
 	{
