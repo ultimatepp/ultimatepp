@@ -16,5 +16,5 @@ topic "Permutations";
 nt]_[*@3 nVals], [@(0.0.255) int]_[*@3 nOptionsVal])&]
 [s3; Given [%-*@3 nVals] vals, with [%-*@3 nOptionsVal] .possible values 
 each, it return a list of all permutations with repetition (a 
-matrix of [%-*@3 nVals ]X [%-*@3 nValsnOptionsVal`^nVals ]cases)&]
+matrix of [%-*@3 nVals ]X [%-*@3 nOptionsVal`^nVals ]cases)&]
 [s4; ]]

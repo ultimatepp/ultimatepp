@@ -57,7 +57,9 @@ inline double Calc1_3(Eigen::VectorXd &y, double dx, size_t n) {
 
 template <class Range, class T>
 T Integral(Range &y, T dx, IntegralType type = TRAPEZOIDAL) {
-	ASSERT(y.size() > 1);
+	if (y.size() <= 1)
+		return 0;
+	
 	Eigen::Index n = y.size();
 	
 	if (type == TRAPEZOIDAL) 
