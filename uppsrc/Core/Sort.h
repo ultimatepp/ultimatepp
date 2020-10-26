@@ -136,13 +136,13 @@ void Sort__(I l, I h, const Less& less)
 		while(ih + 1 != h && !less(*i, *(ih + 1))) // Find middle range of elements equal to pivot
 			++ih;
 
-		int count_l = i - l;
+		int count_l = int(i - l);
 		if(count_l == 1) // this happens if there are many elements equal to pivot, filter them out
 			for(I q = ih + 1; q != h; ++q)
 				if(!less(*i, *q))
 					IterSwap(++ih, q);
 
-		int count_h = h - ih - 1;
+		int count_h = int(h - ih) - 1;
 
 		if(count_l < count_h) {       // recurse on smaller partition, tail on larger
 			Sort__(l, i, less);
