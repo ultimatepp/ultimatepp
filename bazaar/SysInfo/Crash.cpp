@@ -27,9 +27,12 @@ static CrashHandler crash;
 
 CrashHandler::CrashHandler() {
 #if defined(PLATFORM_WIN32)
+	// You really cannot do this without breaking existing code!!!!!
+	// You must leave the control over FP exceptions to the application!!!
+/*
 	_clearfp();
 	_controlfp(_controlfp(0, 0) & ~(_EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW), _MCW_EM);
-	
+*/
 	SetUnhandledExceptionFilter(UnhandledHandler);    
 	_set_purecall_handler(PureCallHandler);    
 	_set_invalid_parameter_handler(InvalidParameterHandler); 
