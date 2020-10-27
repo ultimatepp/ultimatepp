@@ -426,7 +426,7 @@ ctrl DataPusher {
 	>Base;
 	Frame SetFrame = default;
 	bool  SetEditable = true @1;
-	Text  Tip;
+	Text  Tip @1;
 
 	Paint(w) {
 		r = GetRect();
@@ -443,7 +443,7 @@ ctrl ColorPusher {
 	>Base;
 	Frame SetFrame = default;
 	bool  SetEditable = true @1;
-	Text  Tip;
+	Text  Tip @1;
 	bool  NotNull = false;
 	bool  WithVoid = false;
 	bool  SColors = false;
@@ -478,7 +478,7 @@ ctrl Button {
 	Text   SetLabel ? "Button label";
 	Font   SetFont = StdFont();
 	Frame  SetFrame @1;
-	Text   Tip;
+	Text   Tip @1;
 
 	Paint(w) {
 		r = GetRect();
@@ -718,7 +718,7 @@ ctrl EditField {
 	bool  AlignRight @1;
 	bool  SetEditable = true @4 ? "Editable";
 	Frame SetFrame = default @5;
-	Text  Tip @6;
+	Text  Tip @5;
 	bool  WantFocus = true @7;
 
 	Paint(w) {
@@ -745,10 +745,10 @@ ctrl DocEdit {
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
 	Font  SetFont = StdFont();
-	Frame SetFrame = default;
+	Frame SetFrame = default @1;
 	bool  SetEditable = true @1 ? "Editable";
 	bool  WantFocus = true;
-	Text  Tip;
+	Text  Tip @1;
 //	Qtf   SetInfo @1 ? "Info of control" ;
 
 	Paint(w) {
@@ -779,7 +779,7 @@ ctrl LineEdit {
 //	bool  AlignRight @1;
 	bool  SetEditable = true @4 ? "Editable";
 	Frame SetFrame = default @5;
-	Text  Tip @6;
+	Text  Tip @5;
 	bool  WantFocus = true @7;
 
 	Paint(w) {
@@ -1035,7 +1035,7 @@ ctrl DropList {
 	bool  DisplayAll = false;
 	bool  AlwaysDrop = false @1;
 	bool  NotNull = false;
-	Text  Tip;
+	Text  Tip @2;
 //	Qtf   SetInfo @1 ? "Info of control" ;
 
 	Paint(w) {
@@ -1062,7 +1062,7 @@ ctrl DropTree {
 	bool  AutoResize = false;
 	bool  DropFocus = false;
 	bool  AlwaysDrop = false @1;
-	Text  Tip;
+	Text  Tip @2;
 //	Qtf   SetInfo @1 ? "Info of control" ;
 
 	Paint(w) {
@@ -1080,7 +1080,7 @@ template WithDropChoice {
 	bool   Dropping = true;
 	String Appending = ", ";
 	raw    SetDropLines = 16;
-	Text   Tip;
+	Text   Tip @1;
 
 	Paint(w) {
 		CtrlPaint(w);
@@ -1334,7 +1334,7 @@ ctrl DropDate {
 	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
 	bool  WantFocus = true;
-	Text  Tip;
+	Text  Tip @2;
 
 	Paint(w) {
 		r = GetRect();
@@ -1361,8 +1361,8 @@ ctrl DropTime {
 	bool  NotNull = false;
 	Frame SetFrame = default;
 	bool  SetEditable = true @2 ? "Editable";
-	bool  WantFocus = true;
-	Text  Tip;
+	bool  WantFocus = true @2;
+	Text  Tip @2;
 
 	Paint(w) {
 		r = GetRect();
@@ -1398,11 +1398,11 @@ ctrl Clock {
 	group "Input fields";
 	GetMinSize() { return Size(150, 156); }
 	GetStdSize() { return Size(150, 156); }
-	Frame SetFrame = BlackFrame();
+	Frame SetFrame = BlackFrame() @2;
 	bool  SetEditable = true @2 ? "Editable";
-	bool  WantFocus = true;
+	bool  WantFocus = true @2;
 	bool  Seconds = true;
-	Text  Tip;
+	Text  Tip @2;
 
 	PaintPtr(w, cmx, cmy, pos, m, d, color, cf) {
 		dx = m * sin(pos * 2 * 3.1415);
@@ -1489,11 +1489,11 @@ ctrl Calendar {
 
 	Frame SetFrame = BlackFrame();
 	bool  SetEditable = true @2 ? "Editable";
-	bool  WantFocus = true;
+	bool  WantFocus = true @2;
 	bool  SelectAll = true;
 	bool  SwapMonthYear = false;
 	bool  OneButton = false;
-	Text  Tip;
+	Text  Tip @2;
 
 	Paint(w) {
 		ts = GetTextSize("X");
