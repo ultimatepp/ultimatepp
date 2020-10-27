@@ -220,44 +220,6 @@ void Test()
 	}
 } 
 
-#if defined(COMPILER_MSC)
-#pragma warning(disable: 4717)
-#else
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Winfinite-recursion"
-#endif
-void RecurseAlloc()  {
-    int *pi = new int[0x1fffffff];
-    RecurseAlloc();
-}
-#if defined(COMPILER_MSC)
-#pragma warning(default: 4717)
-#else
-#pragma GCC diagnostic pop
-#endif
-
-class Derived;
-class Base {
-public:
-    Base(Derived *_derived): derived(_derived) {};
-    ~Base();
-    virtual void Method() = 0;
-    Derived *derived;
-};
-
-#if defined(COMPILER_MSC)
-#pragma warning(disable:4355)
-#endif
-class Derived : public Base {
-public:
-    Derived() : Base(this) {};
-    virtual void Method() {};
-};
-
-Base::~Base() {
-    derived->Method();
-}
 
 CONSOLE_APP_MAIN
 {	
@@ -276,59 +238,8 @@ CONSOLE_APP_MAIN
 					Shutdown("reboot");
 				else if (com == "shutdown") 
 					Shutdown("shutdown");
-			} else if (command[0] == "-exception") {
-				if (com == "access_violation") {
-		            int *p = 0;
-	#if defined(COMPILER_MSC)
-	#pragma warning(disable : 6011)
-	#endif
-		            *p = 0;
-	#if defined(COMPILER_MSC)
-	#pragma warning(default : 6011)   
-	#endif
-		        } else if (com == "terminate") 
-					std::terminate();
-		        else if (com == "unexpected")
-					std::unexpected();
-		        else if (com == "pure_virtual_call") 
-					Derived derived;
-		        else if (com == "invalid_parameter") {
-				  	char *formatString = nullptr;
-	#if defined(COMPILER_MSC)		
-	#pragma warning(disable : 6387)
-	#else
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wformat-security"
-	#endif
-	            	printf(formatString);
-	#if defined(COMPILER_MSC)            	
-	#pragma warning(default : 6387)  
-	#else
-	#pragma GCC diagnostic pop 
-	#endif
-		        } else if (com == "new")
-					RecurseAlloc();
-				else if (com == "SIGABRT") 
-	            	abort();
-	        	else if (com == "SIGFPE") {
-					double a = 0;
-					double c = 5/a;    
-					Cout() << "\n5/0 = " << c;
-					a = c;					// To avoid warning
-	       	 	} else if (com == "SIGILL")
-	            	raise(SIGILL);              
-	        	else if (com == "SIGINT")
-		            raise(SIGINT);              
-	    	    else if (com == "SIGSEGV")
-		            raise(SIGSEGV);              
-	    	    else if (com == "SIGTERM")
-		            raise(SIGTERM);  
-		      	else
-		      		throw Exc(Format("Unknown exception '%s'", com));
-		      	      
-	    		throw Exc(Format("Exception '%s' has not been captured", com));
-	        } else
-	        	throw Exc(Format("Unknown option '%s'", command[0]));    
+			} else
+				throw Exc(t_("Unknown option"));
 		} else {
 			UppLog() << "\n" << "\nSysInfo: Basic system identification:";
 			String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
