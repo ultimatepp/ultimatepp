@@ -49,12 +49,12 @@ CONSOLE_APP_MAIN
 			{
 				std::vector<std::string> d = c;
 				RTIMING("CoSort<string>");
-				CoSort(d.begin(), d.end(), StdLess<std::string>());
+				CoSort(SubRange(d.begin(), d.end()), StdLess<std::string>());
 			}
 			{
 				std::vector<std::string> d = c;
 				RTIMING("Sort<string>");
-				Sort(d.begin(), d.end(), StdLess<std::string>());
+				Sort(SubRange(d.begin(), d.end()), StdLess<std::string>());
 			}
 		}
 	}

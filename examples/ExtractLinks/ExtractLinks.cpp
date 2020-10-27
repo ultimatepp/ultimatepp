@@ -3,7 +3,8 @@
 
 using namespace Upp;
 
-// http://isocpp.org/blog/2014/12/myths-3 6.1
+// http://isocpp.org/blog/2014/12/myths-3
+// section 6.1
 
 CONSOLE_APP_MAIN
 {
