@@ -1,0 +1,16 @@
+description "Utility to examine content of .crash and .map files\377";
+
+uses
+	CtrlLib;
+
+file
+	imagehlp.dli,
+	crash.cpp,
+	crash.iml,
+	crash.rc,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "GUI";
+
