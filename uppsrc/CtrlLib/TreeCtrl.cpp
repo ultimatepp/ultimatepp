@@ -847,9 +847,10 @@ Rect TreeCtrl::GetValueRect(const Line& l) const
 	Size isz = m.image.GetSize();
 	Size vsz = m.GetValueSize(display);
 	Point org = sb;
-	return RectC(levelcx + l.level * levelcx + isz.cx - org.x + m.margin,
-	             l.y - org.y + (msz.cy - vsz.cy) / 2,
-	             vsz.cx, vsz.cy);
+	int x = levelcx + l.level * levelcx + isz.cx - org.x + m.margin;
+	if(m.ctrl && !highlight_ctrl)
+		x += m.GetCtrlSize().cx;
+	return RectC(x, l.y - org.y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
 }
 
 void TreeCtrl::DoClick(Point p, dword flags, bool down)
