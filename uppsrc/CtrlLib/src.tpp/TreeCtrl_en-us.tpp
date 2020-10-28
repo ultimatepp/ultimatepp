@@ -1,5 +1,4 @@
 topic "TreeCtrl";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "TreeCtrl";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0; [*@(229)4 TreeCtrl]]}}&]
 [s3;%% &]
@@ -82,6 +82,17 @@ See [^PasteClip^ PasteClip] for more details.&]
 [s2;%% This callback manages drag`&drop when WhenDropItem and WhenDropInsert 
 do not apply `- drop into empty area. See [^PasteClip^ PasteClip] 
 for more details.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:WhenEdited: [_^Upp`:`:Event^ Event]<[@(0.0.255) const]_Value[@(0.0.255) `&
+]>_[* WhenEdited]&]
+[s2;%% When defined, TreeCtrl will start editing the node value when 
+clicked on already select one (after a while) in a way similar 
+to e.g. FileSel file renaming. When the value is accepted, WhenEdit 
+is called with a new value. Value is not changed in TreeCtrl, 
+if that is desired, it is a responsibility of code that is assigned 
+to the WhenEdited. Default editor is EditString and can be changed 
+with Editor modifier method.&]
 [s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:WhenCursor: [_^Callback^ Callback]_[* WhenCursor]&]
@@ -600,6 +611,11 @@ Ctrl][@(0.0.255) `&]_[* EmptyNodeIcon]([@(0.0.255) const]_[_^Upp`:`:Image^ Image
 [s2;%% When RenderMultiRoot is active and there the node is zero 
 level and has not elements, [%-*@3 a] is drawn on the left side 
 to indicate it is empty.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:Editor`(Upp`:`:Ctrl`&`): [_^Upp`:`:TreeCtrl^ TreeCtrl][@(0.0.255) `&
+]_[* Editor]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 e])&]
+[s2;%% Assigns alternative editor for WhenEdited functionality.&]
 [s3;%% &]
 [s4; &]
 [s5;:TreeCtrl`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`): [_^TreeCtrl^ TreeCtrl

@@ -88,6 +88,8 @@ private:
 
 	bool    DnDInsert(int i, int py, PasteClip& d, int q);
 	void    DnD(int _drop, bool _insert);
+	
+	friend class FileList;
 
 public:
 	enum {
