@@ -1,0 +1,11 @@
+description "Using TreeCtrl WhenEdited for edit on click (similar to shell rename)\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
