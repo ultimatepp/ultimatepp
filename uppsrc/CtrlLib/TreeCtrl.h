@@ -122,6 +122,9 @@ private:
 	struct LineLess {
 		bool   operator()(int y, const Line& l) const            { return y < l.y; }
 	};
+	
+	One<EditString> edit_string;
+	Ctrl           *editor = NULL;
 
 	struct SortOrder;
 
@@ -157,6 +160,17 @@ private:
 	void   DoClick(Point p, dword flags, bool down);
 	void   SyncInfo();
 	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
+	Rect   GetValueRect(const Line& l) const;
+	void   StartEdit();
+	void   EndEdit();
+	void   KillEdit();
+	bool   IsEdit() const                       { return editor && editor->IsVisible(); }
+	void   OkEdit();
+
+	enum {
+		TIMEID_STARTEDIT = Ctrl::TIMEID_COUNT,
+		TIMEID_COUNT
+	};
 
 	using Ctrl::Close;
 
@@ -179,6 +193,8 @@ public:
 	Event<int, PasteClip&>      WhenDropItem;
 	Event<int, int, PasteClip&> WhenDropInsert;
 	Event<PasteClip&>           WhenDrop;
+	
+	Event<const Value&>         WhenEdited;
 
 	// deprecated - use WhenSel
 	Event<>         WhenCursor;
@@ -322,6 +338,7 @@ public:
 	TreeCtrl& HighlightCtrl(bool a = true)   { highlight_ctrl = a; Refresh(); return *this; }
 	TreeCtrl& RenderMultiRoot(bool a = true) { multiroot = a; Refresh(); return *this; }
 	TreeCtrl& EmptyNodeIcon(const Image& a)  { imgEmpty = a; Refresh(); return *this; }
+	TreeCtrl& Editor(Ctrl& e)                { editor = &e; return *this; }
 	
 	TreeCtrl& SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 
