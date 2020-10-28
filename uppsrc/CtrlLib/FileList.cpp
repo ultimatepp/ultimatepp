@@ -162,10 +162,11 @@ void FileList::StartEdit() {
 	edit.SetFocus();
 	int pos = int(GetFileExtPos(cf.name) - ~cf.name);
 	edit.SetSelection(0, pos);
+	sb.Disable();
 }
 
 void FileList::EndEdit() {
-	KillTimeCallback(TIMEID_STARTEDIT);
+	KillEdit();
 	int b = edit.HasFocus();
 	edit.Hide();
 	if(b) SetFocus();
@@ -180,6 +181,7 @@ void FileList::OkEdit() {
 
 void FileList::KillEdit()
 {
+	sb.Enable();
 	KillTimeCallback(TIMEID_STARTEDIT);
 }
 
@@ -191,7 +193,7 @@ void FileList::LeftDown(Point p, dword flags) {
 	}
 	ColumnList::LeftDown(p, flags);
 	KillEdit();
-	if(c == GetCursor() && c >= 0 && !HasCapture() && renaming && !(flags & (K_SHIFT|K_CTRL)))
+	if(c == GetCursor() && c >= 0 && !HasCapture() && renaming && WhenRename && !(flags & (K_SHIFT|K_CTRL)))
 		SetTimeCallback(750, THISBACK(StartEdit), TIMEID_STARTEDIT);
 }
 

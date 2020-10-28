@@ -471,6 +471,7 @@ void TreeCtrl::SyncTree(bool immediate)
 		SyncAfterSync(restorefocus);
 	else
 		PostCallback(PTEBACK1(SyncAfterSync, restorefocus));
+	KillEdit();
 }
 
 void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
@@ -839,6 +840,18 @@ void TreeCtrl::LeftDrag(Point p, dword keyflags)
 	WhenDrag();
 }
 
+Rect TreeCtrl::GetValueRect(const Line& l) const
+{
+	const Item& m = item[l.itemi];
+	Size msz = m.GetSize(display);
+	Size isz = m.image.GetSize();
+	Size vsz = m.GetValueSize(display);
+	Point org = sb;
+	return RectC(levelcx + l.level * levelcx + isz.cx - org.x + m.margin,
+	             l.y - org.y + (msz.cy - vsz.cy) / 2,
+	             vsz.cx, vsz.cy);
+}
+
 void TreeCtrl::DoClick(Point p, dword flags, bool down)
 {
 	Point org = sb;
@@ -864,6 +877,11 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 		}
 		SetWantFocus();
 		int q = cursor;
+		int qq = q;
+		if(IsEdit()) {
+			OkEdit();
+			qq = -1;
+		}
 		SetCursorLine(i, true, false, true);
 		if(multiselect) {
 			int id = GetCursor();
@@ -880,13 +898,61 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 					anchor = cursor;
 				}
 		}
-		if(cursor != q) {
+		if(cursor != q)
 			WhenAction();
-		}
 		if(down)
 			WhenLeftClick();
 		Select();
+
+		KillEdit();
+		if(cursor == qq && qq >= 0 && !HasCapture() && WhenEdited && !(flags & (K_SHIFT|K_CTRL)) &&
+		   GetValueRect(l).Contains(p))
+			SetTimeCallback(750, [=] { StartEdit(); }, TIMEID_STARTEDIT);
 	}
+}
+
+void TreeCtrl::KillEdit()
+{
+	sb.x.Enable();
+	sb.y.Enable();
+	KillTimeCallback(TIMEID_STARTEDIT);
+}
+
+void TreeCtrl::StartEdit() {
+	if(cursor < 0) return;
+	if(!editor) {
+		edit_string.Create();
+		editor = ~edit_string;
+	}
+	AddChild(editor);
+	const Line& l = line[cursor];
+	const Item& m = item[l.itemi];
+	Rect r = GetValueRect(l);
+	r.Inflate(2);
+	editor->SetFrame(BlackFrame());
+	r.right = GetSize().cx;
+	editor->SetRect(r);
+	*editor <<= m.value;
+	editor->Show();
+	editor->SetFocus();
+	sb.x.Disable();
+	sb.y.Disable();
+}
+
+void TreeCtrl::EndEdit() {
+	KillEdit();
+	if(editor) {
+		int b = editor->HasFocus();
+		editor->Hide();
+		if(b) SetFocus();
+	}
+}
+
+void TreeCtrl::OkEdit() {
+	EndEdit();
+	int c = GetCursor();
+	if(c >= 0 && editor)
+		WhenEdited(~*editor);
 }
 
 void TreeCtrl::SyncInfo()
@@ -1180,7 +1246,14 @@ bool TreeCtrl::Key(dword key, int)
 	key &= ~K_SHIFT;
 	switch(key) {
 	case K_ENTER:
-		Select();
+		if(IsEdit())
+			OkEdit();
+		else
+			Select();
+		break;
+	case K_ESCAPE:
+		if(IsEdit())
+			EndEdit();
 		break;
 	case K_TAB:
 		return Tab(1);
