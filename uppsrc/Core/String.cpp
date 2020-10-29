@@ -73,7 +73,7 @@ hash_t String0::LHashValue() const
 	return memhash(ptr, l);
 }
 
-int String0::Compare(const String0& s) const
+int String0::CompareL(const String0& s) const
 {
 	const char *a = Begin();
 	int la = GetLength();

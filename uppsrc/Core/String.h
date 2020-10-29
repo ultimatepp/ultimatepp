@@ -283,6 +283,7 @@ protected:
 	typedef StringBuffer Buffer;
 	typedef Upp::String  String;
 
+	int    CompareL(const String0& s) const;
 
 public:
 	bool LEq(const String0& s) const;
