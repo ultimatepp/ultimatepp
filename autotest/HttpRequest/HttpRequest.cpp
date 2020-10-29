@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 		{ "www.google.com", "</script>" },
 		{ "http://wattsupwiththat.com/", "</html>" },
 		{ "http://www.rcalbum.cz", "</html>" },
-		{ "www.cekas.cz", "<meta http-equiv" },
+		{ "www.cekas.eu", "<script src='https://www.cekas.eu/" },
 	};
 	for(int nd = 0; nd < 1; nd++)
 		for(int i = 0; i < __countof(x); i++) {

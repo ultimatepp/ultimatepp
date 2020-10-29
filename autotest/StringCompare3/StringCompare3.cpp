@@ -5,7 +5,7 @@ using namespace Upp;
 int EtalonCompare(const String& sa, const String& sb)
 {
 	int q = memcmp(~sa, ~sb, min(sa.GetLength(), sb.GetLength()));
-	return q ? q : SgnCompare(sa.GetLength(), sb.GetLength());
+	return q ? sgn(q) : SgnCompare(sa.GetLength(), sb.GetLength());
 }
 
 CONSOLE_APP_MAIN
