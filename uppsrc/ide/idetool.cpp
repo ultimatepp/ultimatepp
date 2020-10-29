@@ -55,6 +55,45 @@ void Ide::GotoPos(String path, int line)
 	AddHistory();
 }
 
+String PosFn(const String& pkg, const String& n)
+{
+	return String() << Filter(pkg, [](int c) { return c == '\\' ? '/' : c; }) << '/' << n;
+}
+
+void Ide::CopyPosition()
+{
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String pkg = wspc[i];
+		for(String n : pk.file)
+			if(PathIsEqual(SourcePath(pkg, n), editfile)) {
+				WriteClipboardText(PosFn(pkg, n) << " " << editor.GetCurrentLine());
+				return;
+			}
+	}
+}
+
+void Ide::GotoPosition()
+{
+	String f, l;
+	if(!SplitTo(ReadClipboardText(), ' ', f, l))
+		return;
+	int line = atoi(l);
+	if(!line)
+		return;
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String pkg = wspc[i];
+		for(String n : pk.file)
+			if(PosFn(pkg, n) == f) {
+				GotoPos(SourcePath(pkg, n), line);
+				return;
+			}
+	}
+}
+
 void Ide::GotoCpp(const CppItem& pos)
 {
 	GotoPos(GetSourceFilePath(pos.file), pos.line);
