@@ -178,6 +178,9 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(b, AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
 	    .Help("Reformat multiline comment into paragraph");
 	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
+	menu.MenuSeparator();
+	menu.Add(AK_COPY_POSITION, [=] { CopyPosition(); });
+	menu.Add(AK_GOTO_POSITION, [=] { GotoPosition(); });
 }
 
 void Ide::SearchMenu(Bar& menu)

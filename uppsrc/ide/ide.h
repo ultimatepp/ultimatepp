@@ -831,7 +831,10 @@ public:
 		void  AssistEdit(Bar& menu);
 		void  EditorMenu(Bar& bar);
 		void  ToggleWordwrap();
-	
+
+        void  CopyPosition();
+        void  GotoPosition();
+
 	void OnlineSearchMenu(Bar& menu);
 		void OnlineSearch();
 		void OnlineSearchOnTheOfficialSite();
