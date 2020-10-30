@@ -68,7 +68,7 @@ void Ide::CopyPosition()
 		String pkg = wspc[i];
 		for(String n : pk.file)
 			if(PathIsEqual(SourcePath(pkg, n), editfile)) {
-				WriteClipboardText(PosFn(pkg, n) << " " << editor.GetCurrentLine());
+				WriteClipboardText(PosFn(pkg, n) << ":" << editor.GetCurrentLine());
 				return;
 			}
 	}
@@ -77,7 +77,7 @@ void Ide::CopyPosition()
 void Ide::GotoPosition()
 {
 	String f, l;
-	if(!SplitTo(ReadClipboardText(), ' ', f, l))
+	if(!SplitTo(ReadClipboardText(), ':', f, l))
 		return;
 	int line = atoi(l);
 	if(!line)
