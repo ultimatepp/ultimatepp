@@ -370,7 +370,7 @@ void DlSpellerLangs(DropList& dl)
 			while(ff) {
 				int lang = LNGFromText(ff.GetName());
 				if(lang)
-					lngs.Add(lang, LNGAsText(lang));
+					lngs.GetAdd(lang) = LNGAsText(lang);
 				ff.Next();
 			}
 		}
