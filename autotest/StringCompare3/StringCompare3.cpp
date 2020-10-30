@@ -32,4 +32,6 @@ CONSOLE_APP_MAIN
 		}
 		LOG("Less: " << less << ", Equal: " << equal);
 	}
+	
+	LOG("=================== OK");
 }
