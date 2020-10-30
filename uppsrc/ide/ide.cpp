@@ -701,15 +701,14 @@ void Ide::Diff()
 	diffdlg.Execute(editfile);
 }
 
-void Ide::DiffLog()
+void Ide::DiffWith(const String& path)
 {
-	String log_path = GetTargetLogPath();
-	if(IsNull(editfile) || IsNull(log_path) || max(GetFileLength(editfile), GetFileLength(log_path)) > 100*1024*1024)
+	if(IsNull(editfile) || IsNull(path) || max(GetFileLength(editfile), GetFileLength(path)) > 100*1024*1024)
 		return;
 	FileDiff diffdlg(AnySourceFs());
 	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
 	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
-	diffdlg.Execute(editfile, log_path);
+	diffdlg.Execute(editfile, path);
 }
 
 struct ConflictDiff : TopWindow {
