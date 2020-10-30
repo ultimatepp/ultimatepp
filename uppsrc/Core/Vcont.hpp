@@ -272,7 +272,15 @@ template <class Condition>
 void Vector<T>::RemoveIf(Condition c)
 {
 	int ti = 0;
-	for(int i = 0; i < items; i++)
+	int i = 0;
+	for(; i < items; i++) { // run to the first element without moving
+		if(c(i)) {
+			(vector + i++)->~T();
+			break;
+		}
+		ti++;
+	}
+	for(; i < items; i++)
 		if(c(i))
 			(vector + i)->~T();
 		else
