@@ -53,10 +53,9 @@ struct LayoutType : Moveable<LayoutType> {
 	Array<TypeProperty>        property;
 	ArrayMap<String, EscValue> methods;
 	String                     group;
+	String                     name_space;
 	Image                      icon[2];
 	Size                       iconsize[2];
-
-	rval_default(LayoutType);	
 
 	LayoutType()               { iconsize[0] = iconsize[1] = Null; }
 };

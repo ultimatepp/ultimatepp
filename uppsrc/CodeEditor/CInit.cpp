@@ -81,7 +81,7 @@ void CSyntax::InitKeywords()
 		"fn", "group", "ctrl", "subctrl", "template", "enum_property",
 		"raw", "int", "double", "String", "bool",
 		"Text", "Qtf", "Doc", "Font", "Color", "macro",
-		"true", "false",
+		"true", "false", "namespace",
 		NULL
 	};
 	static const char *usclib[] = {
