@@ -54,6 +54,9 @@ String PreprocessLayFile(const char *fn)
 					p.PassChar('(');
 					if(p.IsId()) {
 						String type = p.ReadIdt();
+						int q = type.ReverseFind(':');
+						if(q >= 0)
+							type = type.Mid(q + 1);
 						p.PassChar(',');
 						String name = p.ReadId();
 						if(!name.StartsWith("dv___")) {
