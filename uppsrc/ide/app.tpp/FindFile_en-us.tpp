@@ -50,4 +50,7 @@ selecting `"Search in current package`" option.&]
 multi select mode. It can be done by pressing SHIFT key and clicking 
 on the other file that is presented on the list.&]
 [s5;l192;i150;O0; Double clicking on the file automatically approved 
-your choice.]]
+your choice.&]
+[s5;l192;i150;O0; The choice can also be approved by pressing ENTER 
+key.&]
+[s0; ]]
