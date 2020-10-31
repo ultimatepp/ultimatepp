@@ -1,3 +1,5 @@
+namespace Upp;
+
 enum_property Frame {
 	"NullFrame()",
 	"FieldFrame()",

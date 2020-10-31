@@ -209,8 +209,16 @@ String LayoutItem::Save(int i, int y, const String& eol) const
 	String out;
 	if(type.IsEmpty())
 		out << "\tUNTYPED(";
-	else
-		out << "\tITEM(" << type << ", ";
+	else {
+		String s = type;
+		int q = LayoutTypes().Find(type);
+		if(q >= 0) {
+			String n = LayoutTypes()[q].name_space;
+			if(n.GetCount())
+				s = n + "::" + s;
+		}
+		out << "\tITEM(" << s << ", ";
+	}
 	String var = variable.IsEmpty() ? Format("dv___%d", i) : variable;
 	out << var << ", " << SaveProperties(y) << ")" << eol;
 	return out;

@@ -59,6 +59,9 @@ Array<LayoutItem> ReadItems(CParser& p, byte charset)
 		else
 			return items;
 		LayoutItem& m = items.Add();
+		int q = type.ReverseFind(':');
+		if(q >= 0)
+			type = type.Mid(q + 1);
 		m.Create(type);
 		m.SetCharset(charset);
 		m.variable = ReadVar(p);
