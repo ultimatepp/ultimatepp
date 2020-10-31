@@ -134,7 +134,8 @@ leak detection:&]
 [s0; &]
 [s5; The alternative simpler approach is to used [* MemoryIgnoreLeaksBlock] 
 structure. On construction it starts ignoring and on destruction 
-it cancels ignoring statement. Example below:&]
+it cancels ignoring statement. This is the classical RAII pattern. 
+Example below:&]
 [s0; &]
 [s0;l321; [C@5;1 #include <Core/Core.h>]&]
 [s7; &]
