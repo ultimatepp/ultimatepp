@@ -12,10 +12,13 @@ VectorMap<String, VectorMap<String, String> >& LayoutEnums()
 	return q;
 }
 
+String CurrentNamespace; // this is ugly hack, but better than rewrite everything
+
 void ReadClass(CParser& p, int kind)
 {
 	LayoutType& m = LayoutTypes().GetAdd(p.ReadId());
 	m.kind = kind;
+	m.name_space = CurrentNamespace;
 	p.PassChar('{');
 	while(!p.Char('}')) {
 		if(p.Char('>')) {
@@ -62,6 +65,7 @@ void  LayLib();
 
 void LayUscClean()
 {
+	CurrentNamespace.Clear();
 	LayoutEnums().Clear();
 	LayoutTypes().Clear();
 	LayLib();
@@ -69,6 +73,11 @@ void LayUscClean()
 
 bool LayUscParse(CParser& p)
 {
+	if(p.Id("namespace")) {
+		CurrentNamespace = p.ReadId();
+		p.Char(';');
+	}
+	else
 	if(p.Id("ctrl"))
 		ReadClass(p, LAYOUT_CTRL);
 	else
