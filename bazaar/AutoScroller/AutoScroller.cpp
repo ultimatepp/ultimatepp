@@ -1,4 +1,4 @@
-#include "AutoScroller.hpp"
+#include "AutoScroller.h"
 
 namespace Upp
 {
