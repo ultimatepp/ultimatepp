@@ -931,7 +931,7 @@ Below implementation presents how you can avoid such situation:&]
 [s7; `}&]
 [s0; &]
 [s5; Please notice that from version 2021.1 of U`+`+ framework surrounding 
-inclusion with namespace is not required:&]
+inclusion with namespace is not longer required:&]
 [s0; &]
 [s7; namespace Upp `{&]
 [s7; -|#define LAYOUTFILE <Gui16/dlg.lay>&]
