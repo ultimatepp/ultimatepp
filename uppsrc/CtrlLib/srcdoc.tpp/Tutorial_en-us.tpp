@@ -1182,11 +1182,14 @@ that invoke [* Accept] and [* Reject] as needed before calling the
 [s5; &]
 [s5; Calls to [* Ok] and [* Cancel] methods of Button here make Button 
 react to Enter and Esc keys.&]
+[s5; To reduce tedious tasks even further, there are [* CtrlLayoutOK], 
+[* CtrlLayoutCancel], [* CtrlLayoutOKCancel ]etc. template functions 
+that both setup layout and assign Acceptors and Rejectors. For 
+more information about these functions please visit following 
+documentation [^topic`:`/`/CtrlCore`/src`/Layout`_en`-us^ site]. 
+Example below:&]
 [s5; &]
-[s5; To reduce tedious tasks even further, there are CtrlLayoutOK, 
-CtrlLayoutCancel, CtrlLayoutOKCancel etc. template functions 
-that both setup layout and assign Acceptors and Rejectors.&]
-[s5; &]
+[s7; [@(28.127.0) // main.cpp]&]
 [s7; #include <CtrlLib/CtrlLib.h>&]
 [s7; &]
 [s7; using namespace Upp;&]
@@ -1206,8 +1209,21 @@ that both setup layout and assign Acceptors and Rejectors.&]
 [s7; -|-|Exclamation(`"Canceled`");&]
 [s7; -|`}&]
 [s7; `}&]
+[s7; &]
+[s7; [@(28.127.0) // myapp.lay]&]
+[s0;l321; [C@5;1 LAYOUT(MyAppLayout, 148, 64)]&]
+[s7; -|ITEM(EditDate, date, LeftPosZ(4, 88).TopPosZ(4, 19))&]
+[s7; -|ITEM(Button, [* ok], SetLabel(t`_(`"OK`")).LeftPosZ(4, 64).TopPosZ(32, 
+24))&]
+[s7; -|ITEM(Button, [* cancel], SetLabel(t`_(`"Cancel`")).LeftPosZ(76, 
+64).TopPosZ(32, 24))&]
+[s7; END`_LAYOUT&]
 [s5; &]
-[s5; [/ Note: IDOK, IDCANCEL are predefined constants.]&]
+[s5; [/ Note: ][*/ IDOK][/ , ][*/ IDCANCEL][/  are predefined constants. Also 
+MyAppLayout contains variables ][*/ ok][/  and ][*/ cancel][/  of Button 
+type. The naming is not accidental and CtrLayout like functions 
+require names to be strict.For ][*/ CtrlLayoutExit][/  the button 
+variable should be named ][*/ exit][/ .]&]
 [s3;:21: 21. Creating and using custom widgets&]
 [s5; There is really nothing special about creating your own widgets. 
 All that is to be done is to derive your own class from Ctrl 
