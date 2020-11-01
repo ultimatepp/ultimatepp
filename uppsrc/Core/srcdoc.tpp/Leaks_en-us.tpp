@@ -154,6 +154,6 @@ catched]&]
 [s7; `}&]
 [s0; &]
 [s5; The memory leak detection mechanisms should be use with caution. 
-In almost all cases detections means that something is wrong 
-in the application source code.&]
+In the vast majority of cases detections means that something 
+is wrong in the application source code.&]
 [s0; ]]
