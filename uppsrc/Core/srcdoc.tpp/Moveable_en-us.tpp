@@ -1,10 +1,9 @@
 topic "Moveable";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -18,6 +17,7 @@ topic "Moveable";
 [l321;*C$7;2 $$16,16#03451589433145915344929335295360:result]
 [l321;b83;a83;*C$7;2 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Moveable&]
 [s5; First important node: U`+`+ Moveable is not to be confused with 
@@ -27,6 +27,7 @@ in Vector flavor of containers (namely Vector, BiVector, Index,
 VectorMap, InVector, SortedIndex, SortedVectorMap). To explain 
 what it is and why it is so important let us first create a very 
 primitive Vector`-like container template&]
+[s0; &]
 [s7; template <class T>&]
 [s7; class SimpleVector `{&]
 [s7; -|T  `*vector;&]
@@ -59,6 +60,7 @@ primitive Vector`-like container template&]
 [s7; -|-|delete`[`] (char `*)vector;&]
 [s7; -|`}&]
 [s7; `};&]
+[s0; &]
 [s5; This [* SimpleVector] stores added elements in the [* vector] member 
 field. If there is no more empty storage space left in [* vector], 
 [* SimpleVector] simply doubles its capacity using [* Expand] method. 
@@ -69,6 +71,7 @@ new and copy constructor for this purpose. This also means that
 [* SimpleVector] requires T to have copy constructor (in standard 
 C`+`+ library terms: it must be [/ copy`-constructible]). Now let 
 us create a typical element that can be stored in such container&]
+[s0; &]
 [s7; class SimpleString `{&]
 [s7; -|char `*text;&]
 [s7; public:&]
@@ -89,6 +92,7 @@ us create a typical element that can be stored in such container&]
 [s7; -|-|delete`[`] text;&]
 [s7; -|`}&]
 [s7; `};&]
+[s0; &]
 [s5; and see what happens when [* SimpleVector] of [* SimpleString]s 
 is expanded: First, copies of all elements are created, that means 
 allocating new storage for [* text] member of new element and copying 
@@ -100,6 +104,7 @@ a moment later anyway? What if instead of making copies we could
 find a way to transfer original elements`' [* text] members to 
 new elements and somehow disallow [* delete`[`] text] in destructor? 
 See how primitive it can be:&]
+[s0; &]
 [s7; template <class T>&]
 [s7; class SimpleVector `{&]
 [s7; -|T  `*vector;&]
@@ -128,6 +133,7 @@ See how primitive it can be:&]
 [s7; -|-|delete`[`] (char `*)vector;&]
 [s7; -|`}&]
 [s7; `};&]
+[s0; &]
 [s5; For the moment please ignore fact that by using memcpy to move 
 non`-POD types we are violating C`+`+ standard (we will discuss 
 it later). Now, what we get here is exactly what we wanted `- 
@@ -141,25 +147,28 @@ is lost.&]
 [*/ moveable.]&]
 [s5; Clearly not all types are moveable. Being moveable has a lot 
 to do with [/ not] storing references to the object itself or to 
-it`'s parts. E.g.&]
+it`'s parts. Example:&]
+[s0; &]
 [s7; struct Link `{&]
 [s7; -|Link `*prev;&]
 [s7; public:&]
-[s7; -|Link()        `{ prev `= NULL; `}&]
+[s7; -|Link()        `{ prev `= nullptr; `}&]
 [s7; -|Link(Link `*p) `{ prev `= p; `}&]
 [s7; `};&]
+[s0; &]
 [s5; is [* not] moveable, because memcpy`-ing to a new location would 
 break the existing links. All of the following requirements should 
 be fullfilled for moveable types:&]
-[s5;i150;O0; It does not have any virtual method nor virtual base 
-class.&]
-[s5;i150;O0; Base classes (if any) and any instance member variables 
+[s5;l128;i150;O0; It does not have any virtual method nor virtual 
+base class.&]
+[s5;l128;i150;O0; Base classes (if any) and any instance member variables 
 are moveable.&]
-[s5;i150;O0; No references or pointers are stored to the object itself 
-or to subobjects in the methods of the type, into variables that 
-exist after the method finishes execution. &]
+[s5;l128;i150;O0; No references or pointers are stored to the object 
+itself or to subobjects in the methods of the type, into variables 
+that exist after the method finishes execution. &]
 [s5; Fundamental types fulfills these requirements so they are moveable.&]
 [s5; Example:&]
+[s0; &]
 [s7; struct Foo;&]
 [s7; &]
 [s7; Foo `*global`_foo;&]
@@ -203,6 +212,7 @@ exist after the method finishes execution. &]
 [s7; -|// `-> makes Foo non`-moveable&]
 [s7; -|`}&]
 [s7; `};&]
+[s0; &]
 [s5; These requirements satisfies fairly large number of types, incidentally 
 most of the types you ever wanted to store in a container of 
 elements of a single type are moveable. Most important, all NTL 
@@ -215,18 +225,24 @@ For this we need a way to declare at compile time that a certain
 type is moveable and also a way to check it.&]
 [s5; To achieve this goal, you can mark moveable types by deriving 
 them from the [* Moveable] template class e.g.:&]
+[s0; &]
 [s7; class SimpleString : Moveable<SimpleString> `{ ... `}&]
+[s0; &]
 [s5; Alternatively the [* NTL`_MOVEABLE ]macro can be used to mark 
 types as moveable if the class interface can not be changed, 
 such as in:&]
+[s0; &]
 [s7; NTL`_MOVEABLE(std`::string);&]
+[s0; &]
 [s5; Now that we can mark types as moveable, we need a way to check 
 a type for being moveable. This is done by adding the line:&]
+[s0; &]
 [s7; AssertMoveable<T>()&]
+[s0; &]
 [s5; to one of the methods of a template that gets compiled for any 
 template argument `- the destructor is the most obvious place. 
-The AssertMovable function is defined only if [* T] is marked as 
-moveable, so it results in compilation error for non`-moveable 
+The [* AssertMovable] function is defined only if [* T] is marked 
+as moveable, so it results in compilation error for non`-moveable 
 T types.&]
 [s5; Finally, time has come to deal with the C`+`+ standard. Current 
 C`+`+ defines memcpy only for POD types. The moveable concept 
@@ -240,4 +256,5 @@ is still undefined by C`+`+, it is really hard to imagine an
 optimal C`+`+ implementation that would break this rule. Indeed, 
 all current implementation we have met so far support moveable 
 semantics in the way we have defined here. Performance and other 
-gains realized by using the moveable concept are too big to ignore.]]
+gains realized by using the moveable concept are too big to ignore.&]
+[s5; ]]
