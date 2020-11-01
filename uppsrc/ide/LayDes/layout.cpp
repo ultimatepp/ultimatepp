@@ -50,7 +50,14 @@ Array<LayoutItem> ReadItems(CParser& p, byte charset)
 		String type;
 		if(p.Id("ITEM")) {
 			p.PassChar('(');
-			if(p.IsId()) type = p.ReadIdt();
+			for(;;)
+				if(p.Char2(':', ':'))
+					type << "::";
+				else
+				if(p.IsId())
+					type << p.ReadIdt();
+				else
+					break;
 			p.PassChar(',');
 		}
 		else
