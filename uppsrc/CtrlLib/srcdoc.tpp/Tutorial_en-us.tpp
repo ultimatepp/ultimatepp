@@ -1219,7 +1219,6 @@ Example below:&]
 64).TopPosZ(32, 24))&]
 [s7; END`_LAYOUT&]
 [s0; &]
-[s5; The compiled version of the above code will look like this:&]
 [s0; &]
 [s0;= 
 @@rawimage:929&615
