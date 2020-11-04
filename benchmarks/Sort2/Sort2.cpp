@@ -84,7 +84,7 @@ CONSOLE_APP_MAIN
 		double t = tm.Seconds();
 		RLOG(n << " " << t << " s");
 	}
-	
+/*	
 	Buffer<int> aq(N);
 	RLOG("Generating antiqsort");
 	antiqsort(N, aq);
@@ -96,4 +96,5 @@ CONSOLE_APP_MAIN
 	Sort(h);
 	double t = tm.Seconds();
 	RLOG("antiqsort " << t << " s");
+*/
 }
