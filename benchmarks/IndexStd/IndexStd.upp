@@ -6,5 +6,6 @@ file
 	IndexStd.cpp;
 
 mainconfig
-	"" = "";
+	"" = "",
+	"" = "USEMALLOC";
 

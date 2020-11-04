@@ -12,8 +12,8 @@ CONSOLE_APP_MAIN
 	RDUMP(AliceWords().GetCount());
 	for(int i = 0; i < 300; i++) {
 		Vector<String> w = AliceWords();
+		std::vector<std::string> x;
 		{
-			std::vector<std::string> x;
 			for(auto s : w)
 				x.push_back(s.ToStd());
 			RTIMING("std::sort std::vector<std::string>");
@@ -21,17 +21,21 @@ CONSOLE_APP_MAIN
 		}
 		Vector<String> w2 = clone(w);
 		{
-			RTIMING("StableSort Vector<String>");
-			StableSort(w2);
+			RTIMING("Sort Vector<String>");
+			Sort(w2);
 		}
-		{
+		
+		for(int i = 0; i < w2.GetCount(); i++)
+			if(w2[i] != x[i])
+				Panic("Failed!");
+/*		{
 			std::vector<std::string> x;
 			for(auto s : w)
 				x.push_back(s.ToStd());
 			RTIMING("std::sort std::vector<std::string>");
 			std::stable_sort(x.begin(), x.end());
 		}
-	#if 0
+*/	#if 0
 		ONCELOCK {
 			RDUMPC(w);
 		}
