@@ -5,7 +5,7 @@ topic "Copyright © 1999-2020 Ultimate++ team";
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
-bigniew Rębacz]&]
+bigniew Rębacz, ][*+117 İsmail Yılmaz]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
@@ -22,7 +22,7 @@ De prins, Jeff Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.
 akub Pawlewicz][* , Navin Vidhani, Steffen Brummer, Luis Rodriguez, 
 Rakibul Islam, Nahar Pengatteeri, Ralph Klautke, Victor Picheev, 
 Navadvipa Chandra das, Radek Malčic, Amrein`-Marie Christophe, 
-Abdelghani Omari, Clément Hamon, İsmail Yılmaz]&]
+Abdelghani Omari, Clément Hamon]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
