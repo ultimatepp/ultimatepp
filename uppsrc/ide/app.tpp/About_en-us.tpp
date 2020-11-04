@@ -4,8 +4,8 @@ topic "Copyright © 1999-2020 Ultimate++ team";
 [s0; [*+117 Copyright © 1998, 2020 U`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
-][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
-bigniew Rębacz][*+117 , İsmail Yılmaz]&]
+][*+117 Massimo Del Fedele, İsmail Yılmaz, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
+bigniew Rębacz]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
