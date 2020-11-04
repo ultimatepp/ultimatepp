@@ -825,7 +825,7 @@ static void LinuxBeep(const char *name)
 {
 	static String player;
 	ONCELOCK {
-		const char *players[] = { "play", "ogg123", "gst123" };
+		const char *players[] = { "play", "ogg123", "gst123", "gst-play-1.0" };
 		for(int i = 0; i < __countof(players); i++)
 			if(Sys("which " + String(players[i])).GetCount()) {
 				player = players[i];
@@ -838,9 +838,9 @@ static void LinuxBeep(const char *name)
 		IGNORE_RESULT(system(player + " -q " + fn +
 		              (FileExists(fn + ".ogg") ? ".ogg" :
 		               FileExists(fn + ".oga") ? ".oga" :
-	                   FileExists(fn + ".wav") ? ".wav" :
-	                   ".*")
-		              + " >/dev/null 2>/dev/null&"));
+	                       FileExists(fn + ".wav") ? ".wav" :
+	                       ".*")
+		             + " >/dev/null 2>/dev/null&"));
 	}
 }
 
