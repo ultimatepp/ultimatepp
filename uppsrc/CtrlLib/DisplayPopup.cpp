@@ -9,32 +9,32 @@ Point DisplayPopup::Op(Point p)
 
 void DisplayPopup::LeftDown(Point p, dword flags)
 {
-	ctrl->LeftDown(Op(p), flags);
+	if(ctrl) ctrl->LeftDown(Op(p), flags);
 }
 
 void DisplayPopup::LeftDrag(Point p, dword flags)
 {
-	ctrl->LeftDrag(Op(p), flags);
+	if(ctrl) ctrl->LeftDrag(Op(p), flags);
 }
 
 void DisplayPopup::LeftDouble(Point p, dword flags)
 {
-	ctrl->LeftDouble(Op(p), flags);
+	if(ctrl) ctrl->LeftDouble(Op(p), flags);
 }
 
 void DisplayPopup::RightDown(Point p, dword flags)
 {
-	ctrl->RightDown(Op(p), flags);
+	if(ctrl) ctrl->RightDown(Op(p), flags);
 }
 
 void DisplayPopup::LeftUp(Point p, dword flags)
 {
-	ctrl->LeftUp(Op(p), flags);
+	if(ctrl) ctrl->LeftUp(Op(p), flags);
 }
 
 void DisplayPopup::MouseWheel(Point p, int zdelta, dword flags)
 {
-	ctrl->MouseWheel(Op(p), zdelta, flags);
+	if(ctrl) ctrl->MouseWheel(Op(p), zdelta, flags);
 }
 
 void DisplayPopup::MouseLeave()

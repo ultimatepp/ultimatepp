@@ -14,6 +14,7 @@ public:
 	virtual void  GotFocus();
 	virtual void  LostFocus();
 	virtual void  ChildGotFocus();
+	virtual void  ChildLostFocus();
 	virtual void  ChildRemoved(Ctrl *);
 	virtual void  SetData(const Value& data);
 	virtual Value GetData() const;
@@ -125,6 +126,7 @@ private:
 	
 	One<EditString> edit_string;
 	Ctrl           *editor = NULL;
+	int             edit_cursor = -1;
 
 	struct SortOrder;
 
@@ -157,14 +159,14 @@ private:
 	bool   DnDInsert(int ii, int py, int q, PasteClip& d);
 	void   RefreshSel();
 	void   GatherSel(int id, Vector<int>& sel) const;
-	void   DoClick(Point p, dword flags, bool down);
+	void   DoClick(Point p, dword flags, bool down, bool canedit);
 	void   SyncInfo();
 	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
 	Rect   GetValueRect(const Line& l) const;
 	void   StartEdit();
 	void   EndEdit();
 	void   KillEdit();
-	bool   IsEdit() const                       { return editor && editor->IsVisible(); }
+	bool   IsEdit() const                       { return editor && editor->GetParent() == this; }
 	void   OkEdit();
 
 	enum {
@@ -194,7 +196,8 @@ public:
 	Event<int, int, PasteClip&> WhenDropInsert;
 	Event<PasteClip&>           WhenDrop;
 	
-	Event<const Value&>         WhenEdited;
+	Event<int>                  WhenStartEdit;
+	Event<int, const Value&>    WhenEdited;
 
 	// deprecated - use WhenSel
 	Event<>         WhenCursor;
