@@ -84,15 +84,22 @@ do not apply `- drop into empty area. See [^PasteClip^ PasteClip]
 for more details.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:TreeCtrl`:`:WhenEdited: [_^Upp`:`:Event^ Event]<[@(0.0.255) const]_Value[@(0.0.255) `&
-]>_[* WhenEdited]&]
-[s2;%% When defined, TreeCtrl will start editing the node value when 
+[s5;:Upp`:`:TreeCtrl`:`:WhenStartEdit: [_^Upp`:`:Event^ Event]<[@(0.0.255) int]>_[* WhenSta
+rtEdit]&]
+[s2;%% Called before TreeCtrl starts editing the node. The first 
+parameter is the cursor of edited element.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:WhenEdited: [_^Upp`:`:Event^ Event]<[@(0.0.255) int][%% ,][@(0.0.255)  
+const]_Value[@(0.0.255) `&]>_[* WhenEdited]&]
+[s2;%% When defined TreeCtrl will start editing the node value when 
 clicked on already select one (after a while) in a way similar 
 to e.g. FileSel file renaming. When the value is accepted, WhenEdit 
 is called with a new value. Value is not changed in TreeCtrl, 
 if that is desired, it is a responsibility of code that is assigned 
 to the WhenEdited. Default editor is EditString and can be changed 
-with Editor modifier method.&]
+with Editor modifier method. The first parameter is the cursor 
+of edited element.&]
 [s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:WhenCursor: [_^Callback^ Callback]_[* WhenCursor]&]
