@@ -310,13 +310,13 @@ struct LambdaConvertClass : Convert {
 
 	virtual Value Format(const Value& q) const { return format(q); }
 	virtual Value Scan(const Value& text) const { return scan(text); }
-	virtual int Filter(int chr) const { return Filter(chr); }
+	virtual int Filter(int chr) const { return filter(chr); }
 	
 	LambdaConvertClass(F format, S scan, R filter) : format(format), scan(scan), filter(filter) {}
 };
 
 template <typename F, typename S, class R>
-const LambdaConvertClass<F, S, R>& LambdaConvert(F format, S scan, R filter)
+const auto& LambdaConvert(F format, S scan, R filter)
 {
 	static LambdaConvertClass<F, S, R> x(format, scan, filter);
 	return x;

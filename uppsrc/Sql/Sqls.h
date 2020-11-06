@@ -23,7 +23,7 @@ class SqlRaw : public String, public ValueType<SqlRaw, SQLRAW_V> {
 public:
 	operator Value() const              { return RawValue<SqlRaw>(*this); }
 	SqlRaw(const Value& q)
-		: String(IsNull(q) ? String() : 
+		: String(IsNull(q) ? String() :
 		         IsString(q) ? String(q) :
 		         String(RawValue<SqlRaw>::Extract(q))) {}
 	SqlRaw(const String& s) : String(s) {}

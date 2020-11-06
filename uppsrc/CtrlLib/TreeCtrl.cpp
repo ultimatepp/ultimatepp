@@ -136,6 +136,7 @@ Size   TreeCtrl::Item::GetSize(const Display *treedisplay) const
 
 void   TreeCtrl::SetRoot(const TreeCtrl::Node& n)
 {
+	KillEdit();
 	(TreeCtrl::Node &)item[0] = n;
 	RefreshItem(0);
 }
@@ -157,6 +158,7 @@ void   TreeCtrl::SetRoot(const Image& img, Ctrl& ctrl, int cx, int cy)
 
 int    TreeCtrl::Insert(int parentid, int i, const TreeCtrl::Node& n)
 {
+	KillEdit();
 	int id;
 	if(freelist >= 0) {
 		id = freelist;
@@ -471,7 +473,6 @@ void TreeCtrl::SyncTree(bool immediate)
 		SyncAfterSync(restorefocus);
 	else
 		PostCallback(PTEBACK1(SyncAfterSync, restorefocus));
-	KillEdit();
 }
 
 void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
@@ -835,6 +836,7 @@ void TreeCtrl::ShiftSelect(int l1, int l2)
 
 void TreeCtrl::LeftDrag(Point p, dword keyflags)
 {
+	OkEdit();
 	if(p.y + sb.y > sb.GetTotal().cy)
 		return;
 	WhenDrag();
@@ -853,7 +855,7 @@ Rect TreeCtrl::GetValueRect(const Line& l) const
 	return RectC(x, l.y - org.y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
 }
 
-void TreeCtrl::DoClick(Point p, dword flags, bool down)
+void TreeCtrl::DoClick(Point p, dword flags, bool down, bool canedit)
 {
 	Point org = sb;
 	itemclickpos = Null;
@@ -870,19 +872,23 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 			Open(l.itemi, !IsOpen(l.itemi));
 	}
 	else {
+		auto DoEdit = [&](int qq) {
+			if(down)
+				KillEdit();
+			if(cursor == qq && qq >= 0 && cursor > 0 && !HasCapture() && WhenEdited && !(flags & (K_SHIFT|K_CTRL)) &&
+			   GetValueRect(l).Contains(p) && canedit)
+				SetTimeCallback(750, THISBACK(StartEdit), TIMEID_STARTEDIT);
+		};
 		if(down && IsSel(l.itemi)) { // make possible DnD of multiple items
 			selclick = true;
 			if(down)
 				WhenLeftClick();
+			DoEdit(i);
 			return;
 		}
 		SetWantFocus();
 		int q = cursor;
-		int qq = q;
-		if(IsEdit()) {
-			OkEdit();
-			qq = -1;
-		}
+		int qq = cursor;
 		SetCursorLine(i, true, false, true);
 		if(multiselect) {
 			int id = GetCursor();
@@ -904,11 +910,7 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 		if(down)
 			WhenLeftClick();
 		Select();
-
-		KillEdit();
-		if(cursor == qq && qq >= 0 && !HasCapture() && WhenEdited && !(flags & (K_SHIFT|K_CTRL)) &&
-		   GetValueRect(l).Contains(p))
-			SetTimeCallback(750, [=] { StartEdit(); }, TIMEID_STARTEDIT);
+		DoEdit(qq);
 	}
 }
 
@@ -916,7 +918,13 @@ void TreeCtrl::KillEdit()
 {
 	sb.x.Enable();
 	sb.y.Enable();
+	edit_cursor = -1;
 	KillTimeCallback(TIMEID_STARTEDIT);
+	if(editor && editor->GetParent() == this) {
+		int b = editor->HasFocus();
+		editor->Remove();
+		if(b) SetFocus();
+	}
 }
 
 void TreeCtrl::StartEdit() {
@@ -938,29 +946,29 @@ void TreeCtrl::StartEdit() {
 	editor->SetFocus();
 	sb.x.Disable();
 	sb.y.Disable();
+	edit_cursor = GetCursor();
+	SyncInfo();
+	WhenStartEdit(edit_cursor);
 }
 
 void TreeCtrl::EndEdit() {
 	KillEdit();
-	if(editor) {
-		int b = editor->HasFocus();
-		editor->Hide();
-		if(b) SetFocus();
-	}
 }
 
 void TreeCtrl::OkEdit() {
-	EndEdit();
-	int c = GetCursor();
-	if(c >= 0 && editor)
-		WhenEdited(~*editor);
+	if(IsEdit()) {
+		int q = edit_cursor;
+		if(q >= 0 && editor)
+			WhenEdited(q, ~*editor);
+		EndEdit();
+	}
 }
 
 void TreeCtrl::SyncInfo()
 {
-	if(IsShutdown() || IsPainting())
+	if(IsShutdown() || IsPainting() || dirty)
 		return;
-	if((HasMouse() || info.HasMouse()) && popupex) {
+	if((HasMouse() || info.HasMouse()) && popupex && !IsEdit()) {
 		Point p = GetMouseViewPos();
 		Point org = sb;
 		int i = FindLine(p.y + org.y);
@@ -1000,20 +1008,22 @@ void TreeCtrl::MouseMove(Point p, dword)
 
 void TreeCtrl::LeftDown(Point p, dword flags)
 {
-	DoClick(p, flags, true);
+	OkEdit();
+	DoClick(p, flags, true, true);
 }
 
 void TreeCtrl::LeftUp(Point p, dword keyflags)
 {
 	if(selclick) {
-		DoClick(p, keyflags, false);
+		DoClick(p, keyflags, false, false);
 		selclick = false;
 	}
 }
 
 void TreeCtrl::LeftDouble(Point p, dword flags)
 {
-	LeftDown(p, flags);
+	OkEdit();
+	DoClick(p, flags, true, false);
 	Point org = sb;
 	if(p.y + org.y > sb.GetTotal().cy)
 		return;
@@ -1026,6 +1036,7 @@ void TreeCtrl::LeftDouble(Point p, dword flags)
 
 void TreeCtrl::RightDown(Point p, dword flags)
 {
+	OkEdit();
 	Point org = sb;
 	if(p.y + org.y < sb.GetTotal().cy) {
 		int i = FindLine(p.y + org.y);
@@ -1352,12 +1363,20 @@ void TreeCtrl::GotFocus()
 
 void TreeCtrl::LostFocus()
 {
+	if(editor && !editor->HasFocus())
+		OkEdit();
 	if(dirty)
 		return;
 	RefreshLine(cursor);
 	if(GetSelectCount() > 1)
 		Refresh();
 	SyncInfo();
+}
+
+void TreeCtrl::ChildLostFocus()
+{
+	if(editor && !editor->HasFocus())
+		OkEdit();
 }
 
 void TreeCtrl::ChildRemoved(Ctrl *)
