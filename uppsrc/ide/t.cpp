@@ -210,8 +210,6 @@ struct LangDlg : WithLangLayout<TopWindow> {
 
 	bool ShouldWrite(int i)        { return file.Get(i, 1); }
 
-	typedef LangDlg CLASSNAME;
-
 	LangDlg(Vector<TFile>& map);
 };
 
@@ -313,11 +311,11 @@ void LangDlg::RemoveLangAll()
 
 void LangDlg::LangMenu(Bar& bar)
 {
-	bar.Add(file.IsCursor(), "Add..", THISBACK(AddLang));
-	bar.Add(lang.IsCursor(), "Remove", THISBACK(RemoveLang));
+	bar.Add(file.IsCursor(), "Add..", [=] { AddLang(); });
+	bar.Add(lang.IsCursor(), "Remove", [=] { RemoveLang(); });
 	bar.Separator();
-	bar.Add(file.IsCursor(), "Add to all..", THISBACK(AddLangAll));
-	bar.Add(lang.IsCursor(), "Remove from all..", THISBACK(RemoveLangAll));
+	bar.Add(file.IsCursor(), "Add to all..", [=] { AddLangAll(); });
+	bar.Add(lang.IsCursor(), "Remove from all..", [=] { RemoveLangAll(); });
 }
 
 struct FontAndColorDisplay : Display {
@@ -402,17 +400,19 @@ LangDlg::LangDlg(Vector<TFile>& tfile)
 	file.AddColumn("File");
 	HeaderCtrl::Column& m = file.AddColumn().Ctrls<Option>().HeaderTab();
 	m.SetImage(IdeImg::work());
-	m.WhenAction = THISBACK(ToggleWork);
-	file.WhenEnterRow = THISBACK(EnterFile);
+	m.WhenAction = [=] { ToggleWork(); };
+	file.WhenEnterRow = [=] { EnterFile(); };
 	file.ColumnWidths("144 27");
 
 	lang.AddIndex();
 	lang.AddColumn("Versions");
-	lang.WhenBar = THISBACK(LangMenu);
+	lang.WhenBar = [=] (Bar& bar) { LangMenu(bar); };
 
 	text.AddColumn("Text");
-	text.WhenEnterRow = THISBACK(EnterText);
-
+	text.WhenEnterRow = [=] { EnterText(); };
+	
+	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/srcdoc$Core$i18n_en-us.html"); };
+	
 	source.AddIndex();
 	source.AddIndex();
 	source.AddColumn("Source");
