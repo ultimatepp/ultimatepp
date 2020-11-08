@@ -1,0 +1,30 @@
+#ifdef _MSC_VER
+#pragma setlocale("C")
+#endif
+// main.cpp
+
+T_("My application")
+csCZ("Moje aplikace")
+deDE("Meine Bewerbung")
+esES("Mi aplicaci\303\263n")
+frFR("Mon application")
+itIT("La mia applicazione")
+jaJP("\347\247\201\343\201\256\343\202\242\343\203\227\343\203\252\343\202\261\343\203\274\343\202\267\343\203\247\343\203\263")
+plPL("Moja aplikacja")
+ptPT("Minha aplica\303\247\303\243o")
+ruRU("\320\234\320\276\320\265 \320\277\321\200\320\270\320\273\320\276\320\266\320\265\320\275\320\270\320\265")
+trTR("Benim ba\305\237vurum")
+zhCN("\346\210\221\347\232\204\346\207\211\347\224\250\347\250\213\345\272\217")
+
+T_("Hello translation engine!")
+csCZ("Ahoj p\305\231eklada\304\215!")
+deDE("Hallo \303\234bersetzungsmaschine!")
+esES("\302\241Hola motor de traducci\303\263n!")
+frFR("Bonjour le moteur de traduction!")
+itIT("Ciao motore di traduzione!")
+jaJP("\343\201\223\343\202\223\343\201\253\343\201\241\343\201\257\347\277\273\350\250\263\343\202\250\343\203\263\343\202\270\343\203\263\357\274\201")
+plPL("Witaj silniku translacji!")
+ptPT("Ol\303\241 motor de tradu\303\247\303\243o!")
+ruRU("\320\237\321\200\320\270\320\262\320\265\321\202 \320\264\320\262\320\270\320\266\320\276\320\272 \320\277\320\265\321\200\320\265\320\262\320\276\320\264\320\260!")
+trTR("Merhaba \303\247eviri motoru!")
+zhCN("\346\202\250\345\245\275\347\277\273\350\255\257\345\274\225\346\223\216\357\274\201")
