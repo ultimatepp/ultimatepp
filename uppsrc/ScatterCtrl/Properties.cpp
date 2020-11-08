@@ -139,6 +139,8 @@ void TextsTab::Init(ScatterCtrl& scatter)
 	
 	pscatter = &scatter;
 	
+	labBack.SetInk(White());
+	
 	title <<= scatter.GetTitle();
 	title.WhenAction = [=]{Change();};
 	xLabel <<= scatter.GetLabelX();
