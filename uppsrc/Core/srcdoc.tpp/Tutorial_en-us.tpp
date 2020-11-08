@@ -25,8 +25,7 @@ topic "U++ Core Tutorial";
 [{_} 
 [s2;%% U`+`+ Core Tutorial&]
 [s22; Table of contents&]
-[s5; &]
-[s0;3 &]
+[s0;^`#Chapter`_1^ &]
 [s0; [^`#Chapter`_1^ 1. Basics]&]
 [s0; ___[^`#Section`_1`_1^ 1.1 Logging]&]
 [s0; ___[^`#Section`_1`_2^ 1.2 String]&]
@@ -83,6 +82,7 @@ topic "U++ Core Tutorial";
 [s0; ___[^`#Section`_7`_6^ 7.6 CoPartition]&]
 [s0; ___[^`#Section`_7`_7^ 7.7 CoDo]&]
 [s0; ___[^`#Section`_7`_8^ 7.8 Parallel algorithms]&]
+[s0;^`#Section`_7`_8^ &]
 [s22;:Chapter`_1: 1. Basics&]
 [s3;:Section`_1`_1: 1.1 Logging&]
 [s5; Logging is a useful technique to trace the flow of the code 
