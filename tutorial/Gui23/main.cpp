@@ -19,7 +19,7 @@ struct MyAppWindow : TopWindow {
 
 GUI_APP_MAIN
 {
-	// Set system language
+	// Set system language for whole application
 	SetLanguage(GetSystemLNG());
     
     // Uncomment to force specific language...
@@ -34,7 +34,7 @@ GUI_APP_MAIN
     // SetLanguage("pt-pt"); // Portuguese
     // SetLanguage("ru-ru"); // Russian
     // SetLanguage("tr-tr"); // Turkish
-    // SetLanguage("zh-cn"); // Traditional chinese
+    // SetLanguage("zh-cn"); // Traditional Chinese
     
     MyAppWindow().Run();
 }
