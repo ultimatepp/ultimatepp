@@ -103,7 +103,7 @@ ProcessingTab::ProcessingTab()
 	CtrlLayout(tabFitRight);
 	
 	splitterTabFit.Horz(tabFitLeft.SizePos(), tabFitRightScroll.AddPaneV(tabFitRight).SizePos());
-	splitterTabFit.SetPos(7000, 0);
+	splitterTabFit.SetPos(6500, 0);
 	CtrlLayout(tabFreqLeft);
 	CtrlLayout(tabFreqRight);
 	splitterTabFreq.Horz(tabFreqLeft.SizePos(), tabFreqRightScroll.AddPaneV(tabFreqRight).SizePos());
@@ -157,6 +157,9 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.sgOrder.WhenAction = [=] {OnOp();};
 	tabFitRight.sgSize.WhenAction = [=] {OnOp();};
 	tabFitRight.sgDeg.WhenAction = [=] {OnOp();};
+	tabFitRight.opFFT.WhenAction = [=] {OnOp();};
+	tabFitRight.fromT.WhenAction = [=] {OnOp();};
+	tabFitRight.toT.WhenAction = [=] {OnOp();};
 	tabFitRight.opMax.WhenAction = [=] {OnOp();};
 	tabFitRight.opMin.WhenAction = [=] {OnOp();};
 	tabFitRight.opMovAvg.WhenAction = [=] {OnOp();};
@@ -180,6 +183,9 @@ ProcessingTab::ProcessingTab()
 	tabFitRight.sgSize.Tip(t_("Window size"));
 	tabFitRight.sgDeg <<= 3;
 	tabFitRight.sgDeg.Tip(t_("Polynomial degree"));
+	tabFitRight.opFFT.Tip(t_("FFT filter indicating period from which and to which to filter"));
+	tabFitRight.fromT.Tip(t_("Period from which to filter"));
+	tabFitRight.toT.Tip(t_("Period to which to filter"));
 	tabFitRight.numDecimals <<= 3;
 	tabFitRight.numDecimals.WhenAction = [=] {UpdateEquations();};
 	tabFitRight.showEquation.WhenAction = [=] {OnShowEquation();};
@@ -357,21 +363,23 @@ void ProcessingTab::OnOp()
 	}
 	OnUpdateSensitivity();
 	
-	tabFitLeft.scatter.ScatterDraw::Show(0, tabFitRight.opSeries);
-	tabFitLeft.scatter.ScatterDraw::Show(1, tabFitRight.opAverage);
-	tabFitLeft.scatter.ScatterDraw::Show(2, tabFitRight.opLinear);
-	tabFitLeft.scatter.ScatterDraw::Show(3, tabFitRight.opCuadratic);
-	tabFitLeft.scatter.ScatterDraw::Show(4, tabFitRight.opCubic);
-	tabFitLeft.scatter.ScatterDraw::Show(5, tabFitRight.opSinus);
-	tabFitLeft.scatter.ScatterDraw::Show(6, tabFitRight.opSinusTend);
-	tabFitLeft.scatter.ScatterDraw::Show(7, tabFitRight.opSpline);
-	tabFitLeft.scatter.ScatterDraw::Show(8, tabFitRight.opDerivative);
-	tabFitLeft.scatter.ScatterDraw::Show(9, tabFitRight.opSG);
-	tabFitLeft.scatter.ScatterDraw::Show(10,tabFitRight.opMax);
-	tabFitLeft.scatter.ScatterDraw::Show(11,tabFitRight.opMin);
-	tabFitLeft.scatter.ScatterDraw::Show(12,tabFitRight.opMovAvg);
-	tabFitLeft.scatter.ScatterDraw::Show(13,tabFitRight.opSecAvg);
-	tabFitLeft.scatter.ScatterDraw::Show(14,tabFitRight.opCumAvg);
+	int id = 0;
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opSeries);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opAverage);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opLinear);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opCuadratic);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opCubic);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opSinus);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opSinusTend);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opSpline);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opDerivative);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opSG);
+	tabFitLeft.scatter.ScatterDraw::Show(id++, tabFitRight.opFFT);
+	tabFitLeft.scatter.ScatterDraw::Show(id++,tabFitRight.opMax);
+	tabFitLeft.scatter.ScatterDraw::Show(id++,tabFitRight.opMin);
+	tabFitLeft.scatter.ScatterDraw::Show(id++,tabFitRight.opMovAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(id++,tabFitRight.opSecAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(id++,tabFitRight.opCumAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -494,6 +502,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFitLeft.scatter.AddSeries(spline).NoMark().Dash(LINE_SOLID).Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(derivative).NoMark().Dash(LINE_SOLID).Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(sg).NoMark().Dash(LINE_SOLID).Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(fftFilter).NoMark().Dash(LINE_SOLID).Stroke(1.5);
 		tabFitLeft.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Max"))
 						.NoMark().Dash(LINE_DASHED).Stroke(1.5).SetSequentialX(true);
 		tabFitLeft.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
@@ -516,6 +525,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFitRight.derOrder.Enable(false);
 		tabFitRight.derAccuracy.Enable(false);
 		tabFitRight.opSG.Enable(false);
+		tabFitRight.opFFT.Enable(false);
 		tabFitRight.sgOrder.Enable(false);
 		tabFitRight.opMax.Enable(false);
 		tabFitRight.opMin.Enable(false);
@@ -534,6 +544,7 @@ void ProcessingTab::OnUpdateSensitivity()
 	DataSource &data = tabFitLeft.scatter.GetDataSource(0);
 	
 	bool refresh = false;
+	tabFitLeft.comments.SetText("");
 	if (tabFitRight.opDerivative) {
 		bool isOdd = int(~(tabFitRight.derAccuracy))%2;
 		if (IsNull(tabFitRight.derAccuracy) || isOdd)
@@ -549,8 +560,21 @@ void ProcessingTab::OnUpdateSensitivity()
 			sg.Clear();
 		else
 			sg = data.SavitzkyGolayY(~tabFitRight.sgDeg, ~tabFitRight.sgSize, ~tabFitRight.sgOrder);
-
+		
+		if (sg.IsEmpty())
+			tabFitLeft.comments.SetText(t_("Impossible to filter series"));
 		refresh = true;
+	}
+	if (tabFitRight.opFFT) {
+		double fromT = ~tabFitRight.fromT;
+		double toT = ~tabFitRight.toT;
+		
+		if ((!IsNull(fromT) || !IsNull(toT)) && (fromT < toT))  {
+			fftFilter = data.FilterFFTY(~tabFitRight.fromT, ~tabFitRight.toT);
+			if (fftFilter.IsEmpty())
+				tabFitLeft.comments.SetText(t_("Impossible to filter series"));
+			refresh = true;	
+		}
 	}
 	if (tabFitRight.opMax && newWidthMax != tabFitRight.width) {
 		newWidthMax = tabFitRight.width;
@@ -597,8 +621,10 @@ void ProcessingTab::OnUpdateSensitivity()
 		refresh = true;
 	}
 			
-	if (refresh)
+	if (refresh) {
 		tabFitLeft.scatter.Refresh();
+		tabFitLeft.comments.Refresh();
+	}
 }
 
 void ProcessingTab::OnSet() 
@@ -730,21 +756,23 @@ void ProcessingTab::UpdateEquations()
 void ProcessingTab::OnShowEquation()
 {
 	bool show = tabFitRight.showEquation;
-	tabFitLeft.scatter.Legend(1, pscatter->GetLegend(id) + String("-") + 
+	int i = 1;
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opAverage ? average.GetEquation(tabFitRight.numDecimals) : String(t_("Average"))));
-	tabFitLeft.scatter.Legend(2, pscatter->GetLegend(id) + String("-") + 
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opLinear ? linear.GetEquation(tabFitRight.numDecimals) : String(t_("Linear"))));
-	tabFitLeft.scatter.Legend(3, pscatter->GetLegend(id) + String("-") + 
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opCuadratic ? cuadratic.GetEquation(tabFitRight.numDecimals) : String(t_("Cuadratic"))));
-	tabFitLeft.scatter.Legend(4, pscatter->GetLegend(id) + String("-") + 
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opCubic ? cubic.GetEquation(tabFitRight.numDecimals) : String(t_("Cubic"))));
-	tabFitLeft.scatter.Legend(5, pscatter->GetLegend(id) + String("-") + 
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opSinus ? sinus.GetEquation(tabFitRight.numDecimals) : String(t_("Sinusoidal"))));
-	tabFitLeft.scatter.Legend(6, pscatter->GetLegend(id) + String("-") + 
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFitRight.opSinusTend ? sinusTend.GetEquation(tabFitRight.numDecimals) : String(t_("Sinusoidal tend"))));
-	tabFitLeft.scatter.Legend(7, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
-	tabFitLeft.scatter.Legend(8, pscatter->GetLegend(id) + String("-") + String(Format(t_("Der_%d"), ~tabFitRight.derOrder)));
-	tabFitLeft.scatter.Legend(9, pscatter->GetLegend(id) + String("-") + String(Format(t_("S_G_%d"), ~tabFitRight.sgOrder)));
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + String(Format(t_("Der_%d"), ~tabFitRight.derOrder)));
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + String(Format(t_("S_G_%d"), ~tabFitRight.sgOrder)));
+	tabFitLeft.scatter.Legend(i++, pscatter->GetLegend(id) + String("-") + String(t_("FFT_filter")));
 	tabFitLeft.scatter.Refresh();
 }
 
