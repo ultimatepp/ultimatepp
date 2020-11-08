@@ -285,7 +285,7 @@ public:
 	double f(double x) 							{
 		if (x < 0)
 			return Null;
-		return coeff[0]*pow(x, coeff[1]);
+		return coeff[0]*::pow(x, coeff[1]);
 	}
 	virtual String GetName() 					{return t_("RealExponent");}
 	virtual String GetEquation(int _numDigits = 3) {
@@ -306,7 +306,7 @@ public:
 			return 0;
 		double k =  coeff[0];
 		double lambda = coeff[1];
-		return 1 - exp(double(-pow(x/lambda, k)));
+		return 1 - ::exp(double(-::pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull cumulative");}
 	virtual String GetEquation(int numDigits = 3) {
@@ -330,7 +330,7 @@ public:
 		double k =  coeff[0];
 		double lambda = coeff[1];
 		double factor = coeff[2];
-		return factor*(k/lambda)*(pow(x/lambda, k-1))*exp(double(-pow(x/lambda, k)));
+		return factor*(k/lambda)*(::pow(x/lambda, k-1))*::exp(double(-::pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull");}
 	virtual String GetEquation(int numDigits = 3) {
@@ -415,19 +415,26 @@ public:
 
 class Spline {
 public:
-	Spline()													 {}
-	Spline(const Vector<double> &x, const Vector<double> &y)	 {Fit(x, y);}
-	Spline(const Eigen::VectorXd &x, const Eigen::VectorXd &y) 	 {Fit(x, y);}
-	Spline(const double *x, const double *y, int n)				 {Fit(x, y, n);}	
-	void Fit(const Vector<double> &x, const Vector<double> &y)	 {Fit(x.begin(), y.begin(), x.GetCount());}
-	void Fit(const Eigen::VectorXd &x, const Eigen::VectorXd &y) {Fit(x.data(), y.data(), int(x.size()));}
-	void Fit(const double *x, const double *y, int n);
+	Spline()													  {}
+	Spline(const Vector<double> &x, const Vector<double> &y)	  {Init(x, y);}
+	Spline(const Eigen::VectorXd &x, const Eigen::VectorXd &y) 	  {Init(x, y);}
+	Spline(const double *x, const double *y, int n)				  {Init(x, y, n);}	
+	void Init(const Vector<double> &x, const Vector<double> &y)	  {Init(x.begin(), y.begin(), x.GetCount());}
+	void Init(const Eigen::VectorXd &x, const Eigen::VectorXd &y) {Init(x.data(), y.data(), int(x.size()));}
+	void Init(const double *x, const double *y, int n);
 	double f(double x) const;
+	double df(double x) const;
+	double d2f(double x) const;
+	double Integral(double from = Null, double to = Null) const;
 	
 private:
 	struct Coeff {double a, b, c, d, x;};
     Buffer<Coeff> scoeff;
     int nscoeff = 0;
+    double xlast;
+    
+    int GetPieceIndex(double x) const;
+	static double Integral0(const Coeff &c, double x);
 };
 
 class SplineEquation : public ExplicitEquation, public Spline {
@@ -538,7 +545,7 @@ public:
 		if (!(IsNull(d.unit) || d.unit.IsAdim()))
 			throw Exc(t_("Exponent cannot have units"));
 		unit.Mult(d.unit);
-		val = pow(val, d.val);
+		val = ::pow(val, d.val);
 	}
 	void Sqrt() {
 		if (val < 0) 
@@ -621,6 +628,8 @@ public:
 	int GetConstantId(String &name)							{return constants.Find(name);}
 	int GetConstantsCount() 								{return constants.GetCount();}
 
+	void RenameVariable(String name, String newname);
+	
 	doubleUnit &GetVariable(String name) {
 		int id = FindVariable(name);
 		if (id >= 0)
