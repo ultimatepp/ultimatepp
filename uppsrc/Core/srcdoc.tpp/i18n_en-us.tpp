@@ -27,7 +27,7 @@ do this using translation files.&]
 [s5; To mark string literals for translation in sources, you have 
 to tag them with [* t`_] macro, like&]
 [s0; &]
-[s7; Cout() << t`_(`"Hello world!`");&]
+[s7; Cout() << [* t`_(`"Hello world!`")];&]
 [s0; &]
 [s5; This macro is expanded to function that provides translation 
 of English (more specifically en`-US) text to default language 
@@ -126,7 +126,7 @@ letter character set encoding according this table:&]
 [s7; myapp `-`-export`-tr dede2&]
 [s0; &]
 [s5; will create dede2.tr file (in exe directory on Win32 and user`'s 
-home folder on Posix) ready for translation to deDE in windows`-1252. 
+home folder on POSIX) ready for translation to deDE in windows`-1252. 
 If translations are already present, they are supplied, otherwise 
 .tr file contains English strings in place of translations.&]
 [s5; It is also possible to output secondary already translated language 
