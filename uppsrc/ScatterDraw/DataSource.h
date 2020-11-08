@@ -90,7 +90,8 @@ public:
 	
 	Vector<Pointf> DerivativeY(int orderDer, int orderAcc)	  {return Derivative(&DataSource::y, &DataSource::x, orderDer, orderAcc);}
 	Vector<Pointf> SavitzkyGolayY(int deg, int size, int der) {return SavitzkyGolay(&DataSource::y, &DataSource::x, deg, size, der);}
-		
+	Vector<Pointf> FilterFFTY(double fromT, double toT) 	  {return FilterFFT(&DataSource::y, &DataSource::x, fromT, toT);}
+			
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
@@ -128,6 +129,7 @@ public:
 	double PercentileVal(Getdatafun getdata, double rate);
 	Vector<Pointf> Derivative(Getdatafun getdataY, Getdatafun getdataX, int orderDer, int orderAcc);
 	Vector<Pointf> SavitzkyGolay(Getdatafun getdataY, Getdatafun getdataX, int deg, int size, int der);
+	Vector<Pointf> FilterFFT(Getdatafun getdataY, Getdatafun getdataX, double fromT, double toT);
 	
 	bool IsMagic() 				{return magic == 1234321;}		// Temporal use, just for testing
 	
@@ -482,7 +484,6 @@ public:
 		}
 	}
 	virtual inline double x(int64 id)  {return useRows ? (*data)[beginData + int(id)][idx] : (*data)[idx][beginData + int(id)];}
-	//virtual inline double xn(int n, int64 id) 	{return useRows ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
 	virtual inline int64 GetCount() const	{return numData;};
 	virtual double znx(int n, int64 id)	const {
 		return useRows ? (*data)[beginData + int(id)][idsx[n]] : (*data)[idsx[n]][beginData + int(id)];}
@@ -1027,7 +1028,40 @@ typename T::PlainObject Convolution2D(const Eigen::MatrixBase<T>& orig, const Ei
 	return dest;
 }
 
-//#include "deprecated.h"
+template <class Range, class T>
+T HammingWindow(Range &data) {
+	size_t numData = data.size();
+	T numDataFact = 0;
+	for (size_t i = 0; i < numData; ++i) {
+        T windowFact = 0.54 - 0.46*cos(2*M_PI*i/numData);
+        numDataFact += windowFact;
+    	data[i] *= windowFact;
+	}
+	return numDataFact;
+}
+
+template <class Range, class T>
+T CosWindow(Range &data, int numOver) {
+	size_t numData = data.size();
+	T numDataFact = 0;
+	for (size_t i = 0; i < numOver; ++i) {
+        T windowFact = 0.5*(1 - cos(M_PI*i/numOver));
+        numDataFact += windowFact;
+    	data[i] *= windowFact;	
+    }
+    for (size_t i = numOver; i < numData - numOver; ++i) {
+        T windowFact = 1;		// 1.004
+        numDataFact += windowFact;
+    }
+    for (size_t i = numData - numOver; i < numData; ++i) {
+  		T windowFact = 0.5*(1 + cos(M_PI*(numData - i - numOver)/numOver));
+        numDataFact += windowFact;
+    	data[i] *= windowFact;	
+    }
+	return numDataFact;			    
+}
+
+void FilterFFT(Eigen::VectorXd &data, double T, double fromT, double toT);
 
 }
 

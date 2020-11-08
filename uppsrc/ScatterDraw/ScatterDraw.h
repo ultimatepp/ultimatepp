@@ -280,6 +280,7 @@ protected:
 		bool serializeData, serializeFormat;
 	
 		void CopyInternal() {
+			ASSERT_(!pD->IsExplicit(), "Explicit series cannot be internal");
 			int64 sz = pD->GetCount();
 			if (IsNull(sz) || sz == 0)
 				return;
@@ -1616,7 +1617,7 @@ void ScatterDraw::Plot(T& w) {
 			} else if (data.IsExplicit()) {
 				double xmin = xMin - 1;
 				double xmax = xMin + xRange + 1;
-				double dx = double(xmax - xmin)/plotW;
+				double dx = (xmax - xmin)/plotW;
 				for (double xx = xmin; xx < xmax; xx += dx) {
 					double yy = data.f(xx);
 					if (IsNull(yy))

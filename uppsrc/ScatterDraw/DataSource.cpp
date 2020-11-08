@@ -468,28 +468,10 @@ Vector<Pointf> FFTSimple(VectorXd &data, double tSample, bool frequency, int typ
     double numDataFact = 0;
     switch (window) {
     case DataSource::HAMMING:	
-				for (int i = 0; i < numData; ++i) {
-			        double windowFact = 0.54 - 0.46*cos(2*M_PI*i/numData);
-			        numDataFact += windowFact;
-			    	data[i] *= windowFact;	
-			    }
+				numDataFact = HammingWindow<VectorXd, double>(data);
 			    break;
 	case DataSource::COS:		
-				for (int i = 0; i < numOver; ++i) {
-			        double windowFact = 0.5*(1 - cos(M_PI*i/numOver));
-			        numDataFact += windowFact;
-			    	data[i] *= windowFact;	
-			    }
-			    for (int i = numOver; i < numData - numOver; ++i) {
-			        double windowFact = 1;		// 1.004
-			        numDataFact += windowFact;
-			    	//data[i] *= windowFact;	
-			    }
-			    for (int i = numData - numOver; i < numData; ++i) {
-			  		double windowFact = 0.5*(1 + cos(M_PI*(numData - i - numOver)/numOver));
-			        numDataFact += windowFact;
-			    	data[i] *= windowFact;	
-			    }
+				numDataFact = CosWindow<VectorXd, double>(data, numOver);
 			    break;
 	default:	numDataFact = numData;
     }
@@ -884,20 +866,19 @@ bool SavitzkyGolay_Check(const VectorXd &coeff) {
 Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdataX, int deg, int size, int der) {
 	int numData = int(GetCount());
 
-    Vector<Pointf> data;
-    data.SetCount(numData);
+    Vector<Pointf> data(numData);
     int num = 0;
     for (int i = 0; i < numData; ++i) {
         double y = Membercall(getdataY)(i);
         double x = Membercall(getdataX)(i);
-        if (!IsNull(y) && !IsNull(x)) {
-			data[i].y = y;
-			data[i].x = x;
+        if (!IsNull(y) && !IsNull(x) && !(i > 0 && x == Membercall(getdataX)(i-1))) {
+			data[num].y = y;
+			data[num].x = x;
 			num++;
         }
     }
   	numData = num;
-    
+  	   
     Vector<Pointf> res;	
     if (numData < size)
         return res;
@@ -933,6 +914,67 @@ Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdata
 	return res;
 }
 
+void FilterFFT(VectorXd &data, double T, double fromT, double toT) {
+	double samplingFrecuency = 1/T;
+	
+	size_t numData = data.size();
+    VectorXcd freqbuf;
+    Eigen::FFT<double> fft;
+    fft.SetFlag(fft.HalfSpectrum);
+    fft.fwd(freqbuf, data);
+	
+    for (int i = 0; i < freqbuf.size(); ++i) {
+        double freq = i*samplingFrecuency/numData;
+        double T = 1/freq;
+        if ((IsNull(fromT) || T > fromT) && (IsNull(toT) || T < toT))
+            freqbuf[i] = 0;
+    }
+	fft.inv(data, freqbuf);
+}
+
+Vector<Pointf> DataSource::FilterFFT(Getdatafun getdataY, Getdatafun getdataX, double fromT, double toT) {
+	Vector<Pointf> res;
+	ASSERT(!IsNull(fromT) || !IsNull(toT));
+	if (IsNull(fromT) && IsNull(toT))
+		return res;
+	
+	int numData = int(GetCount());
+
+    VectorXd xv(numData), yv(numData);
+    int num = 0;
+    for (int i = 0; i < numData; ++i) {
+        double y = Membercall(getdataY)(i);
+        double x = Membercall(getdataX)(i);
+        if (!IsNull(y) && !IsNull(x) && !(i > 0 && x == Membercall(getdataX)(i-1))) {
+			yv[num] = y;
+			xv[num] = x;
+			num++;
+        }
+    }
+  	numData = num;
+  	yv.conservativeResize(num);
+  	xv.conservativeResize(num);
+    	
+	double minD = -DOUBLE_NULL_LIM, maxD = DOUBLE_NULL_LIM;
+	for (int i = 0; i < numData-1; ++i) {
+		double d = xv[i+1] - xv[i];
+		minD = min(minD, d);
+		maxD = max(maxD, d);
+	}
+	if ((maxD - minD)/minD > 0.0001)
+		return res;
+		
+	double T = (minD + maxD)/2; 
+	
+	Upp::FilterFFT(yv, T, fromT, toT);
+	
+	res.SetCount(numData);
+	for (int i = 0; i < numData; ++i) {
+		res[i].x = xv[i];
+		res[i].y = yv[i];
+	}
+	return res;
+}
 
 void ExplicitData::Init(Function<double (double x, double y)> _funz, double _minX, double _maxX, double _minY, double _maxY) {
 	ASSERT(maxX >= minX && maxY >= minY);

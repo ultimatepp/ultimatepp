@@ -420,6 +420,22 @@ doubleUnit EvalExpr::AssignVariable(String var, String expr) {
 	}
 }
 
+void EvalExpr::RenameVariable(String varname, String newvarname) {
+	if (noCase) {
+		varname = ToLower(varname);
+		newvarname = ToLower(newvarname);
+	}
+	try {
+		int id = variables.Find(varname);
+		if (id >= 0)
+			variables.SetKey(id, newvarname);
+	} catch(CParserPP::Error e) {
+		lastError = e;
+	} catch(Exc e) {
+		lastError = e;
+	}	
+}
+
 doubleUnit EvalExpr::AssignVariable(String var, double d) {
 	if (noCase)
 		var = ToLower(var);
@@ -605,14 +621,14 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {
 	if (x.GetCount() < 2)
 		return SmallDataSource;
 		
-	Spline::Fit(x, y);
+	Init(x, y);
 	
 	coeff.SetCount(1);
 	
 	return NoError;
 }
 
-void Spline::Fit(const double *x, const double *y, int num) {
+void Spline::Init(const double *x, const double *y, int num) {
     nscoeff = num - 1;
     
     Buffer<double> h(nscoeff);
@@ -650,9 +666,10 @@ void Spline::Fit(const double *x, const double *y, int num) {
         scoeff[i].a = y[i];
         scoeff[i].c = c[i];
     }
+    xlast = x[num-1];
 }
 
-double Spline::f(double x) const {
+int Spline::GetPieceIndex(double x) const {
 	ASSERT(nscoeff > 0);
     int j;
     for (j = 0; j < nscoeff; j++) {
@@ -662,10 +679,63 @@ double Spline::f(double x) const {
             break;
         }
     }
-    j--;
+    return --j;
+}
+
+double Spline::f(double x) const {
+	int j = GetPieceIndex(x);
 
     double dx = x - scoeff[j].x;
-    return scoeff[j].a + scoeff[j].b*dx + scoeff[j].c*dx*dx + scoeff[j].d*dx*dx*dx;
+    double dx2 = dx*dx;
+    return scoeff[j].a + scoeff[j].b*dx + scoeff[j].c*dx*dx + scoeff[j].d*dx*dx2;
+}
+
+double Spline::df(double x) const {
+	int j = GetPieceIndex(x);
+
+    double dx = x - scoeff[j].x;
+    return scoeff[j].b + scoeff[j].c*2.*dx + scoeff[j].d*3.*dx*dx;
+}
+
+double Spline::d2f(double x) const {
+	int j = GetPieceIndex(x);
+
+    double dx = x - scoeff[j].x;
+    return scoeff[j].c*2. + scoeff[j].d*6.*dx;
+}
+
+double Spline::Integral0(const Coeff &c, double x) {
+	double x2 = x*x;
+	return c.a*x + c.b*x2/2 + c.c*x*x2/3 + c.d*x2*x2/4;
+}
+
+double Spline::Integral(double from, double to) const {
+	int ifrom;
+	if (IsNull(from)) {
+		ifrom = 0;
+		from = scoeff[0].x;
+	} else
+		ifrom = GetPieceIndex(from);
+	int ito;
+	if (IsNull(to)) {
+		ito = nscoeff-1;
+		to = xlast;
+	} else
+		ito = GetPieceIndex(to);
+	
+	ASSERT(ifrom <= ito);
+	if (ifrom > ito)
+		return 0;
+		 
+	double res = 0;
+	for (int i = ifrom; i < ito; ++i) {
+		double val = Integral0(scoeff[i], scoeff[i+1].x - scoeff[i].x) - Integral0(scoeff[i], from - scoeff[i].x);
+		res += val;
+		from = scoeff[i+1].x;
+	}
+	double bal =  Integral0(scoeff[ito], to - scoeff[ito].x) - Integral0(scoeff[ito], from - scoeff[ito].x);
+	res += bal;
+	return res;
 }
 
 INITBLOCK {
