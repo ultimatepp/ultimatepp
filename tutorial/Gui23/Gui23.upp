@@ -1,0 +1,12 @@
+description "Translating application\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Gui23.t;
+
+mainconfig
+	"" = "GUI";
+
