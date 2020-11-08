@@ -273,6 +273,7 @@ private:
 	SplineEquation spline;
 	Vector<Pointf> derivative;
 	Vector<Pointf> sg;
+	Vector<Pointf> fftFilter;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
 	Vector<Pointf> movAvg, secAvg, cumAvg;
 	DataXRange dataXRange;
