@@ -14,26 +14,43 @@ topic "3.1 Spline";
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [*2 Public Member List]]}}&]
 [s4; &]
-[s5;:Upp`:`:Spline`:`:Fit`(const Upp`:`:Vector`<double`>`&`,const Upp`:`:Vector`<double`>`&`): [@(0.0.255) v
-oid]_[* Fit]([@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 x], 
+[s5;:Upp`:`:Spline`:`:Init`(const Upp`:`:Vector`<double`>`&`,const Upp`:`:Vector`<double`>`&`): [@(0.0.255) v
+oid]_[* Init]([@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 x], 
 [@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 y])&]
 [s2;%% Gets the spline for a data series of [%-*@3 x] and [%-*@3 y].&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Spline`:`:Fit`(const Eigen`:`:VectorXd`&`,const Eigen`:`:VectorXd`&`): [@(0.0.255) v
-oid]_[* Fit]([@(0.0.255) const]_[_^Eigen`:`:VectorXd^ Eigen`::VectorXd]_`&[*@3 x], 
+[s5;:Upp`:`:Spline`:`:Init`(const Eigen`:`:VectorXd`&`,const Eigen`:`:VectorXd`&`): [@(0.0.255) v
+oid]_[* Init]([@(0.0.255) const]_[_^Eigen`:`:VectorXd^ Eigen`::VectorXd]_`&[*@3 x], 
 [@(0.0.255) const]_[_^Eigen`:`:VectorXd^ Eigen`::VectorXd]_`&[*@3 y])&]
 [s2;%% Gets the spline for a data series of [%-*@3 x] and [%-*@3 y].&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Spline`:`:Fit`(const double`*`,const double`*`,int`): [@(0.0.255) void]_[* Fi
-t]([@(0.0.255) const]_[@(0.0.255) double]_`*[*@3 x], [@(0.0.255) const]_[@(0.0.255) double]_
-`*[*@3 y], [@(0.0.255) int]_[*@3 n])&]
+[s5;:Upp`:`:Spline`:`:Init`(const double`*`,const double`*`,int`): [@(0.0.255) void]_[* I
+nit]([@(0.0.255) const]_[@(0.0.255) double]_`*[*@3 x], [@(0.0.255) const]_[@(0.0.255) doubl
+e]_`*[*@3 y], [@(0.0.255) int]_[*@3 n])&]
 [s2;%% Gets the spline for a data series of [%-*@3 x] and [%-*@3 y].with 
 dimension [%-*@3 n].&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Spline`:`:f`(double`): [@(0.0.255) double]_[* f]([@(0.0.255) double]_[*@3 x])&]
-[s2;%% Returns the Y value for [%-*@3 x].&]
+[s5;:Upp`:`:Spline`:`:f`(double`)const: [@(0.0.255) double]_[* f]([@(0.0.255) double]_[*@3 x])
+ const&]
+[s2;%% Returns the y value for [%-*@3 x].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Spline`:`:df`(double`)const: [@(0.0.255) double]_[* df]([@(0.0.255) double]_[*@3 x
+])_[@(0.0.255) const]&]
+[s2;%% Returns the first derivative at [%-*@3 x] .&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Spline`:`:d2f`(double`)const: [@(0.0.255) double]_[* d2f]([@(0.0.255) double]_[*@3 x
+])_[@(0.0.255) const]&]
+[s2;%% Returns the second derivative at [%-*@3 x] .&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Spline`:`:Integral`(double`,double`)const: [@(0.0.255) double]_[* Integral]([@(0.0.255) d
+ouble]_[*@3 from], [@(0.0.255) double]_[*@3 to])_[@(0.0.255) const]&]
+[s2;%% Returns the definite integral from x `= [%-*@3 from] to x `= 
+[%-*@3 to.].&]
 [s3;%% &]
 [s0;%% ]]

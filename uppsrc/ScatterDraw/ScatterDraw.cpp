@@ -8,7 +8,7 @@ ScatterDraw::ScatterDraw() {
 }
 
 void debug_h() {
-	;			// It does nothing. It just serves to set a breakpoint in templated functions
+	;			// It does nothing. It just serves as a place to set a breakpoint for templated functions
 }
 
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
@@ -196,7 +196,7 @@ void ScatterDraw::AdjustMajorUnitX() {
 		return;
 	while (xRange/xMajorUnit > 1.2*xMajorUnitNum) 
 		xMajorUnit *= 2;
-	while (xRange/xMajorUnit < xMajorUnitNum/1.5) 
+	while (xRange/xMajorUnit < xMajorUnitNum/1.5 && xMajorUnit > 0) 
 		xMajorUnit /= 2;
 }
 
@@ -333,7 +333,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 				if (!IsNull(mx))
 					maxx = max(maxx, mx);
 			}
-			if (minx != -DOUBLE_NULL) {
+			if (minx != -DOUBLE_NULL && maxx != DOUBLE_NULL) {
 				double deltaX = (maxx - minx)*factor;
 				minx -= deltaX;
 				maxx += deltaX;
@@ -365,12 +365,12 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 					}
 				}
 			}
-			if (miny != -DOUBLE_NULL) {
+			if (miny != -DOUBLE_NULL && maxy != DOUBLE_NULL) {
 				double deltaY = (maxy - miny)*factor;
 				miny -= deltaY;
 				maxy += deltaY;		
 			}
-			if (miny2 != -DOUBLE_NULL) {
+			if (miny2 != -DOUBLE_NULL && maxy2 != DOUBLE_NULL) {
 				double deltaY2 = (maxy2 - miny2)*factor;
 				miny2 -= deltaY2;
 				maxy2 += deltaY2;		
@@ -381,7 +381,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 			}
 		}
 		if (horizontal) {
-			if (minx != -DOUBLE_NULL) {
+			if (minx != -DOUBLE_NULL && maxx != DOUBLE_NULL) {
 				if (maxx == minx) {
 					if (maxx == 0) {
 						xRange = 2;
@@ -398,7 +398,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 			}
 		}
 		if (vertical) {
-			if (miny != -DOUBLE_NULL) {
+			if (miny != -DOUBLE_NULL && maxy != DOUBLE_NULL) {
 				if (maxy == miny) 
 					yRange = maxy > 0 ? 2*maxy : 1;
 				else	
@@ -409,7 +409,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 				AdjustMajorUnitY();
 				AdjustMinUnitY();
 			}
-			if (miny2 != -DOUBLE_NULL) {	
+			if (miny2 != -DOUBLE_NULL && maxy2 != DOUBLE_NULL) {	
 				if (maxy2 == miny2) 
 					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
 				else	
