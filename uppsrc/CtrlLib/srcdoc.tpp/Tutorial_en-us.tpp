@@ -1460,7 +1460,7 @@ should be used by application. In our case we will use exactly
 the same language as user operating system is using. This information 
 can be obtained by using [* GetSystemLNG() ]function and passed 
 to [* SetLanguage()].&]
-[s5; Translation to work correctly in context of package required 
+[s5; Translation to work correctly in context of package requires 
 following lines of code to be placed [* in one of implementation 
 file] (.cpp):&]
 [s0; &]
