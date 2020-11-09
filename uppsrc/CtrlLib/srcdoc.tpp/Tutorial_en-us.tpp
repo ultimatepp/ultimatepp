@@ -1365,6 +1365,8 @@ inside window and we will add translation support to it:&]
 [s7; [@(28.127.0) // main.cpp]&]
 [s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
 [s7; &]
+[s7; [@(28.127.0) // The below include needs to be placed in one of 
+implementation file (.cpp)]&]
 [s7; #define TFILE <Gui23/Gui23.t>&]
 [s7; #include <Core/t.h>&]
 [s7; &]
@@ -1458,6 +1460,14 @@ should be used by application. In our case we will use exactly
 the same language as user operating system is using. This information 
 can be obtained by using [* GetSystemLNG() ]function and passed 
 to [* SetLanguage()].&]
+[s5; Translation to work correctly in context of package required 
+following lines of code to be placed [* in one of implementation 
+file] (.cpp):&]
+[s0; &]
+[s7; #define TFILE <Gui23/Gui23.t>&]
+[s7; #include <Core/t.h>&]
+[s0; &]
+[s5; The final results from various language version are as follows:&]
 [s0; &]
 [ {{5000:5000RN [s0;= 
 @@rawimage:1758&573
