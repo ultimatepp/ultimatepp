@@ -8,11 +8,11 @@ using namespace Upp;
 struct MyAppWindow : TopWindow {
     MyAppWindow() {
         Title(t_("My application"));
-        Zoomable().Sizeable().SetRect(0, 0, 400, 100);
+        Zoomable().Sizeable().SetRect(0, 0, 550, 100);
     }
     
     virtual void Paint(Draw& w) override {
-        w.DrawRect(GetSize(), SWhite);
+        w.DrawRect(GetSize(), SLtYellow);
         w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), Blue);
     }
 };
