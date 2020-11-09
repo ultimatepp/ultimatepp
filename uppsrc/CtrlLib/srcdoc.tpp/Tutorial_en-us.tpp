@@ -1355,12 +1355,13 @@ window.&]
 &]
 [s0; &]
 [s3;:23: 23. Internationalizing application&]
-[s5; As the globalization progress it becomes important to deliver 
+[s5; As the globalization progress, it becomes important to deliver 
 application on various markets. Often people on these markets 
-use different language. In this we will show how to create application 
-that will support multiple regions. For this purpose, we will 
-pick up one of the previous example in which simple text is displayed 
-inside window and we will add translation support to it:&]
+use different languages. In this section we will show how to 
+create an application that will support multiple regions. For 
+this purpose, we will pick up one of the previous example in 
+which simple text is displayed inside the window, and we will 
+add translation support to it:&]
 [s0; &]
 [s7; [@(28.127.0) // main.cpp]&]
 [s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
@@ -1419,7 +1420,9 @@ The dialog should appear when you can specify for which packages
 translation synchronization should be run and which languages 
 should be supported. In our case we will support main languages 
 our users use.&]
-[s5; The generated file with translated entries looks as follow:&]
+[s5; The generated file with translated entries is located below. 
+For the purpose of this section we used electronic translator, 
+so for any errors we are sorry.&]
 [s0; &]
 [s7; [@(28.127.0) // Gui23.t]&]
 [s0;l321; [C@5;1 #ifdef `_MSC`_VER]&]
@@ -1453,15 +1456,15 @@ our users use.&]
 [s7; trTR(`"Merhaba çeviri motoru!`")&]
 [s7; zhCN(`"您好翻譯引擎！`")&]
 [s0; &]
-[s5; Before checking the results of the application let`'s take a 
-closer look at framework construction used in this example. The 
-first one is [* SetLanguage()] function. It sets which language 
+[s5; Before checking the results of the application, let`'s take 
+a closer look at framework construction used in this example. 
+The first one is [* SetLanguage()] function. It sets which language 
 should be used by application. In our case we will use exactly 
-the same language as user operating system is using. This information 
+the same language as users operating system is using. This information 
 can be obtained by using [* GetSystemLNG() ]function and passed 
 to [* SetLanguage()].&]
 [s5; Translation to work correctly in context of package requires 
-following lines of code to be placed [* in one of implementation 
+the following lines of code to be placed [* in one of implementation 
 file] (.cpp):&]
 [s0; &]
 [s7; #define TFILE <Gui23/Gui23.t>&]
