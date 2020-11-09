@@ -65,6 +65,10 @@ from which you can learn:&]
 etting Started with U`+`+ 2020.2] `- new getting started article 
 related to one of the newest release `- good starting point for 
 everyone who wants to start journey with U`+`+.&]
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5280535`/Some`-Shocking`-Facts`-You`-Probably`-Didnt`-Want`-to`-Kno^ S
+ome Shocking Facts You Probably Didn`'t Want to Know about U`+`+ 
+Framework...] `- the design principles behind U`+`+ framework. 
+A must read for all beginners.&]
 [s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5262594`/Text`-to`-SVG`-Path`-Utility`-in`-Uplusplus^ T
 ext to SVG Path Utility in U`+`+] `- learn how to create useful 
 utility to convert plain text to SVG.&]
