@@ -26,7 +26,7 @@ void CoSort__(CoWork& cw, I l, I h, const Less& less)
 		for(;;) { // Hoare’s partition (modified):
 			while(less(*++i, *pivot));
 			do
-				if(j <= i) goto done;
+				if(!(i < j)) goto done;
 			while(!less(*--j, *pivot));
 			IterSwap(i, j);
 		}
