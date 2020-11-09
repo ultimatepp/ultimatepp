@@ -164,10 +164,8 @@ private:
 	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
 	Rect   GetValueRect(const Line& l) const;
 	void   StartEdit();
-	void   EndEdit();
 	void   KillEdit();
 	bool   IsEdit() const                       { return editor && editor->GetParent() == this; }
-	void   OkEdit();
 
 	enum {
 		TIMEID_STARTEDIT = Ctrl::TIMEID_COUNT,
@@ -327,6 +325,9 @@ public:
 	void         CenterCursor();
 
 	Size         GetTreeSize() const         { return treesize; }
+
+	void         OkEdit();
+	void         EndEdit();
 
 	TreeCtrl& NoCursor(bool b = true)        { nocursor = b; if(b) KillCursor(); return *this; }
 	TreeCtrl& NoRoot(bool b = true)          { noroot = b; Dirty(); Refresh(); return *this; }
