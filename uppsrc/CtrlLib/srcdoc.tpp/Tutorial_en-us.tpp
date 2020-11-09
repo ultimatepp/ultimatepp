@@ -1467,7 +1467,8 @@ file] (.cpp):&]
 [s7; #define TFILE <Gui23/Gui23.t>&]
 [s7; #include <Core/t.h>&]
 [s0; &]
-[s5; The final results from various language version are as follows:&]
+[s5; The final results from various exemplary languages versions 
+are as follows:&]
 [s0; &]
 [ {{5000:5000RN [s0;= 
 @@rawimage:1758&573
