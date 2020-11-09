@@ -537,6 +537,16 @@ remove.&]
 [s2;%% Same as Remove(GetSel()) `- removes all selected items.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:OkEdit`(`): [@(0.0.255) void]_[* OkEdit]()&]
+[s2;%% If in`-place editor is active (see WhenEdited, WhenStartEdit 
+and Editor), accepts the new value and ends the mode.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:EndEdit`(`): [@(0.0.255) void]_[* EndEdit]()&]
+[s2;%% If in`-place editor is active (see WhenEdited, WhenStartEdit 
+and Editor), ends the mode without accepting the value.&]
+[s3; &]
+[s4; &]
 [s5;:TreeCtrl`:`:Dump`(`): [@(0.0.255) void]_[* Dump]()&]
 [s2;%% Diagnostic dump of tree content to standard log. Exists in 
 debug mode only.&]
