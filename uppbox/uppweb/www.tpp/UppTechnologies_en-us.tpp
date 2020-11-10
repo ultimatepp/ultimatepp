@@ -43,6 +43,22 @@ understanding the architecture of U`+`+.&]
 [s0; [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#1^ 1. Organization]&]
 [s0; [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2^ 2. Components 
 responsibilities]&]
+[s0;     [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_1^ 2.1 
+Development tools]&]
+[s0;     [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2^ 2.2 
+U`+`+ framework]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_1^ 2.2.1 
+Core libraries]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_2^ 2.2.2 
+Graphics libraries]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_3^ 2.2.3 
+GUI libraries]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_4^ 2.2.4 
+UI controls]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_5^ 2.2.5 
+Data base libraries]&]
+[s0;         [^topic`:`/`/uppweb`/www`/UppTechnologies`_en`-us`#2`_2`_6^ 2.2.6 
+Web development]&]
 [s0; &]
 [s3;:1: 1. Organization&]
 [s5; Below diagram presents the most important technologies that 
@@ -54,7 +70,7 @@ belongs to the U`+`+ framework.&]
 &]
 [s0; &]
 [s3;:2: 2. Components responsibilities&]
-[s22; 2.1 Development tools&]
+[s22;:2`_1: 2.1 Development tools&]
 [s5; To work efficiency with U`+`+, you need to use its development 
 tools, which includes:&]
 [s5;l160;i150;O0; [* TheIDE] `- Integrated development environment 
@@ -67,11 +83,11 @@ editor as well.&]
 It can be used to work with U`+`+ project from other IDEs or 
 even creating your own project using only terminal. However, 
 TheIDE can be required to create icons set or layouts.&]
-[s22; 2.2 U`+`+ framework&]
+[s22;:2`_2: 2.2 U`+`+ framework&]
 [s5; U`+`+ framework should be understood by collection of C`+`+ 
 supportive libraries. In this case we can distinguish four main 
 areas. They will be discussed in the next parts of this paragraph.&]
-[s22; 2.2.1 Core libraries&]
+[s22;:2`_2`_1: 2.2.1 Core libraries&]
 [s5; Core libraries provide low level abstraction.&]
 [s5;l160;i150;O0; [* Core] `- the heart of the U`+`+ framework.&]
 [s5;l320;i150;O2; [* NTL] (Non`-standard Template Library) `- containers 
@@ -96,19 +112,19 @@ that it concerns JPEG.&]
 used to compress/decompress files.&]
 [s5;l160;i150;O0; [* Esc] `- scripting language. It is mainly used 
 for scripting TheIDE, but it can be easily embedded in any application.&]
-[s22; 2.2.2 Graphics libraries&]
+[s22;:2`_2`_2: 2.2.2 Graphics libraries&]
 [s5; Libraries that are responsible for processing graphics. They 
 can be used with or without GUI.&]
 [s5;l160;i150;O0; [* Draw] `- simply drawing library.&]
 [s5;l160;i150;O0; [* Painter] `- advanced drawing library.&]
-[s22; 2.2.3 GUI libraries&]
+[s22;:2`_2`_3: 2.2.3 GUI libraries&]
 [s5; All GUI related code is stored here.&]
 [s5;l160;i150;O0; [* CtrlCore ]`- low level related code that wraps 
 platform specific code. Thanks to that package it is possible 
 to write UI code on [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ all 
 platforms supported] by U`+`+ without any modification in user 
 code.&]
-[s22; 2.2.4 UI controls&]
+[s22;:2`_2`_4: 2.2.4 UI controls&]
 [s5; Some packages deliver ready to use UI controls. Some times it 
 is only one control, otherwise it is a collection of controls. 
 Below is simplified list of packages that deliver controls:&]
@@ -118,7 +134,7 @@ fields, buttons, list etc.&]
 with OpenGL API.&]
 [s5;l160;i150;O0; [* TabBar] `-&]
 [s5;l160;i150;O0; [* more...] `- &]
-[s22; 2.2.5 Data base libraries&]
+[s22;:2`_2`_5: 2.2.5 Data base libraries&]
 [s5; One of the main goals of U`+`+ library was to deliver easy to 
 use access to the databases. In this area we can distinguish 
 the following components:&]
@@ -131,7 +147,7 @@ This type of database doesn`'t require connection to special
 server. All content is stored on hard drive as a regular file. 
 More information about this technology can be found on official 
 manufacture [^ https`:`/`/sqlite`.org`/^ site].&]
-[s22; 2.2.6 Web development&]
+[s22;:2`_2`_6: 2.2.6 Web development&]
 [s5; U`+`+ allows creating web application that works directly in 
 your web browser. Currently, we support two following technologies&]
 [s5;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark] 
