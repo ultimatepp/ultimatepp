@@ -26,9 +26,9 @@ topic "GUI Tutorial";
 [s2; GUI Tutorial&]
 [s5;~~~2240; Welcome in GUI Tutorial! Here you will learn how to 
 write GUI applications using U`+`+ library. All code mentions 
-in this tutorial is cross platform. It means it works exactly 
-the same on different operating system. Moreover, examples attached 
-in this tutorial are bundle with U`+`+ standard distribution 
+in this tutorial is cross`-platform. It means it works exactly 
+the same on a different operating system. Moreover, examples 
+attached in this tutorial are bundle with U`+`+ standard distribution, 
 and they are localized in [* tutorial] assembly. So, you don`'t 
 need to rewrite it by yourself. Good luck!&]
 [s3; Table of contents&]
@@ -1463,11 +1463,11 @@ should be used by application. In our case we will use exactly
 the same language as users operating system is using. This information 
 can be obtained by using [* GetSystemLNG() ]function and passed 
 to [* SetLanguage()].&]
-[s5; The [* SetLanguage()] function also sets language on the library 
+[s5; The [* SetLanguage()] function also sets the language on the library 
 level. So, all controls that posses text visible to the user 
 should be translated. In some cases it doesn`'t work due to lack 
-of translation for particular language. You could help in U`+`+ 
-translation by providing dedicated patch. You could use exactly 
+of translation for a particular language. You could help in U`+`+ 
+translation by providing a dedicated patch. You could use exactly 
 the same tools mentioned in this section. After that just generate 
 [^https`:`/`/www`.ultimatepp`.org`/www`$uppweb`$svnInstall`_en`-us`.html`#3^ patch] 
 and post it on appropriate [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=74`&^ f
