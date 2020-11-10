@@ -30,13 +30,13 @@ as C`+`+ framework `- it is rather a collection of technologies.
 This article is intended to show you all major U`+`+ components. 
 Emphasis is put on the organization and responsibilities of each 
 technology.&]
-[s5; We knew that for some readers may be a surprise that library 
+[s5; We knew that for some readers may be a surprise that a library 
 intended to be a GUI library has got own web development framework. 
 This information is probably never mentioned on the third party 
 sources. So, this is definitely a good moment to correct several 
 things.&]
 [s5; If you are just starting your journey with U`+`+, this place 
-is for certain what you are looking for, It can helps you better 
+is for certain what you are looking for, It can help you better 
 understanding the architecture of U`+`+.&]
 [s3; Table of contents&]
 [s0; &]
@@ -55,27 +55,26 @@ belongs to the U`+`+ framework.&]
 [s0; &]
 [s3;:2: 2. Components responsibilities&]
 [s22; 2.1 Development tools&]
-[s5; To work efficiency with U`+`+, you need to use it`'s development 
+[s5; To work efficiency with U`+`+, you need to use its development 
 tools, which includes:&]
 [s5;l160;i150;O0; [* TheIDE] `- Integrated development environment 
 general purpose. It is mainly used by C`+`+ developers and U`+`+ 
-users. But, it can be easily used to develop application in other 
-languages such as Java, Python etc.. It can acts as a text editor 
-as well.&]
+users. But, it can be easily used to develop an application in 
+other languages such as Java, Python etc.. It can act as a text 
+editor as well.&]
 [s5;l160;i150;O0; [*^topic`:`/`/ide`/app`/umk`$en`-us^ UMK] (UltimateMaKe) 
 `- console utility that allows building TheIDE project standalone. 
 It can be used to work with U`+`+ project from other IDEs or 
 even creating your own project using only terminal. However, 
 TheIDE can be required to create icons set or layouts.&]
 [s22; 2.2 U`+`+ framework&]
-[s5; U`+`+ framework should be understand by collection of C`+`+ 
-supportive libraries. In this case we can distinguished four 
-main areas. They will be discussed in the next parts of this 
-paragraph.&]
+[s5; U`+`+ framework should be understood by collection of C`+`+ 
+supportive libraries. In this case we can distinguish four main 
+areas. They will be discussed in the next parts of this paragraph.&]
 [s22; 2.2.1 Core libraries&]
 [s5; Core libraries provide low level abstraction.&]
 [s5;l160;i150;O0; [* Core] `- the heart of the U`+`+ framework.&]
-[s5;l320;i150;O2; [* NTL] (Non standard Template Library) `- containers 
+[s5;l320;i150;O2; [* NTL] (Non`-standard Template Library) `- containers 
 library.&]
 [s5;l320;i150;O2; [* SSL ]`- adds security layer to the library. It 
 should be used when you want to provide secure connection for 
@@ -88,15 +87,15 @@ POP3 protocol is used.&]
 [s5;l160;i150;O0; [* Plugins] `- useful additions to the library. They 
 are mainly third party libraries that are wrapped by U`+`+ framework. 
 They are adapted to TheIDE build system, so all you need to do 
-is just add it to project.&]
+is just add it to the project.&]
 [s5;l320;i150;O2;~~~480; [* PNG] `- adds support for PNG graphics format.&]
-[s5;l320;i150;O2;~~~480; [* JPG] `- similar like previous one expect 
+[s5;l320;i150;O2;~~~480; [* JPG] `- similar like the previous one expect 
 that it concerns JPEG.&]
 [s5;l320;i150;O2;~~~480; [* PCRE] `- regular expression support.&]
 [s5;l320;i150;O2;~~~480; [* Z ]`- adds support for ZIP format. It is 
-used to compares/decompress files.&]
+used to compress/decompress files.&]
 [s5;l160;i150;O0; [* Esc] `- scripting language. It is mainly used 
-for scripting TheIDE, but it can be easily embed in any application.&]
+for scripting TheIDE, but it can be easily embedded in any application.&]
 [s22; 2.2.2 Graphics libraries&]
 [s5; Libraries that are responsible for processing graphics. They 
 can be used with or without GUI.&]
@@ -112,31 +111,32 @@ code.&]
 [s22; 2.2.4 UI controls&]
 [s5; Some packages deliver ready to use UI controls. Some times it 
 is only one control, otherwise it is a collection of controls. 
-Below is the simplify list of packages that deliver controls:&]
+Below is simplified list of packages that deliver controls:&]
 [s5;l160;i150;O0; [* CtrlLib] `- set of standard UI controls like edit 
 fields, buttons, list etc.&]
-[s5;l160;i150;O0; [* GLCtrl `-]&]
+[s5;l160;i150;O0; [* GLCtrl `- ]3D graphics control that interacts 
+with OpenGL API.&]
 [s5;l160;i150;O0; [* TabBar] `-&]
 [s5;l160;i150;O0; [* more...] `- &]
 [s22; 2.2.5 Data base libraries&]
 [s5; One of the main goals of U`+`+ library was to deliver easy to 
 use access to the databases. In this area we can distinguish 
-following components:&]
+the following components:&]
 [s5;l160;i150;O0; [* SQL] `- provides abstract layer that generalize 
 access to database.&]
 [s5;l160;i150;O0; [* MySQL] `- adds support for MySQL database engine.&]
 [s5;l160;i150;O0; [* Plugins:]&]
 [s5;l320;i150;O2; [* SQLITE3] `- adds support for SQLite database engine. 
 This type of database doesn`'t require connection to special 
-server. All content is stored on hard drice as a regular file. 
+server. All content is stored on hard drive as a regular file. 
 More information about this technology can be found on official 
 manufacture [^ https`:`/`/sqlite`.org`/^ site].&]
 [s22; 2.2.6 Web development&]
-[s5; U`+`+ allows to create web application that works directly in 
+[s5; U`+`+ allows creating web application that works directly in 
 your web browser. Currently, we support two following technologies&]
 [s5;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark] 
 `- web development framework dedicated C`+`+ language. It mainly 
-based on U`+`+ core libraries such as Core. It allows to create 
+based on U`+`+ core libraries such as Core. It allows creating 
 web application that based on page generation concept. It means 
 that it can handle all HTML requests and programmer write code 
 that generates HTML page. In addition, Skylark works with all 
