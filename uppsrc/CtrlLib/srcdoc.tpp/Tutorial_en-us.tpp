@@ -1358,7 +1358,7 @@ window.&]
 [s5; As the globalization progress, it becomes important to deliver 
 application on various markets. Often people on these markets 
 use different languages. In this section we will show how to 
-create an application that will support multiple locals. For 
+create an application that will support multiple locales. For 
 this purpose, we will pick up one of the previous example in 
 which simple text is displayed inside the window, and we will 
 add translation support to it:&]
