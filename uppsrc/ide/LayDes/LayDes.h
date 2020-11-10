@@ -43,7 +43,7 @@ struct TypeProperty : Moveable<TypeProperty> {
 	String defval;
 	String help;
 
-	TypeProperty() { level = 0; }
+	TypeProperty() { level = Null; }
 };
 
 enum { LAYOUT_CTRL, LAYOUT_SUBCTRL, LAYOUT_TEMPLATE };

@@ -249,7 +249,7 @@ ctrl Label {
 
 	>TextCtrl;
 
-	Doc    SetLabel ? "Label of control" ;
+	Doc    SetLabel @0 ? "Label of control";
 	Align  SetAlign = ALIGN_LEFT @2;
 	Font   SetFont = StdFont() @2;
 	Color  SetInk = :SBlack @2;

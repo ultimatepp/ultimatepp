@@ -74,7 +74,7 @@ void LayoutItem::CreateProperties(const String& classname, int level)
 			for(int i = 0; i < property.GetCount(); i++)
 				if(r.name == property[i].name)
 					q = i;
-			int l = q >= 0 ? property[q].level : level + r.level;
+			int l = IsNull(r.level) ? q >= 0 ? property[q].level : level : level + r.level;
 			ItemProperty& ip = q >= 0 ? property.Set(q, n) : property.Add(n);
 			ip.level = l;
 			ip.name = r.name;
@@ -182,7 +182,7 @@ int  LayoutItem::FindProperty(const String& s) const
 String LayoutItem::SaveProperties(int y) const
 {
 	String out;
-	Vector<int> o = GetSortOrder(property, FieldRelation(&ItemProperty::level, StdLess<int>()));
+	Vector<int> o = GetStableSortOrder(property, [](const ItemProperty& a, const ItemProperty& b) { return a.level < b.level; });
 	for(int i = 0; i < o.GetCount(); i++) {
 		const ItemProperty& ip = property[o[i]];
 		if(ip.GetData() != ip.defval)
