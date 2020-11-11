@@ -6,12 +6,11 @@ INITBLOCK {
 }
 
 class QtfDlg : public TopWindow {
-	typedef QtfDlg CLASSNAME;
-
 	void Text();
 	void Clear();
 	void Copy();
 	void Editor();
+	void OnHelpLink(const String& link);
 
 public:
 	Splitter leftSplit, mainSplit;
@@ -78,11 +77,21 @@ void QtfDlg::Editor()
 	StoreToGlobal(dlg, "QTF-designer-editor");
 }
 
+void QtfDlg::OnHelpLink(const String& link)
+{
+	auto label_idx = link.ReverseFind("#");
+	if (label_idx == -1) {
+		return;
+	}
+	
+	help.GotoLabel(link.Mid(label_idx + 1));
+}
+
 QtfDlg::QtfDlg()
 {
 	Title("QTF designer");
 	CtrlLayout(qtfText);
-	qtfText.text <<= THISBACK(Text);
+	qtfText.text << [=] { Text(); };
 	qtf.SetFrame(ViewFrame());
 	qtf.Background(SColorPaper);
 	Sizeable().Zoomable();
@@ -92,14 +101,17 @@ QtfDlg::QtfDlg()
 
 	help.Margins(Rect(12, 0, 12, 0));
 	String path = AppendFileName(AppendFileName(PackageDirectory("RichText"), "srcdoc.tpp"), "QTF_en-us.tpp");
-	if(FileExists(path))
+	if(FileExists(path)) {
 		help.SetQTF(ReadTopic(LoadFile(path)).text);
-	else
+	}
+	else {
 		help <<= "[= &&&QTF documentation not found";
+	}
+	help.WhenLink = [=] (const String& link) { OnHelpLink(link); };
 
-	qtfText.clear <<= THISBACK(Clear);
-	qtfText.copy <<= THISBACK(Copy);
-	qtfText.editor <<= THISBACK(Editor);
+	qtfText.clear << [=] { Clear(); };
+	qtfText.copy << [=] { Copy(); };
+	qtfText.editor << [=] { Editor(); };
 
 	leftSplit.Vert(qtfText, qtf).SetPos(4000);
 	mainSplit.Horz(leftSplit, help).SetPos(3500);
