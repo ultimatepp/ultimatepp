@@ -84,7 +84,8 @@ void QtfDlg::OnHelpLink(const String& link)
 		return;
 	}
 	
-	help.GotoLabel(link.Mid(label_idx + 1));
+	constexpr bool highlight = true;
+	help.GotoLabel(link.Mid(label_idx + 1), highlight);
 }
 
 QtfDlg::QtfDlg()
