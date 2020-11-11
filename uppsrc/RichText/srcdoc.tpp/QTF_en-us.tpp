@@ -1,36 +1,58 @@
 topic "QTF";
 [@(128.0.255)2 $$1,0#65874547464505293575048467215454:QTF Chr]
-[*/+117 $$2,0#07143242482611002448121871408047:title]
-[*C@3+75 $$3,3#36268203433472503231438721581057:code]
+[*C@3+75 $$2,2#36268203433472503231438721581057:code]
+[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
+[H4;b83;*4 $$4,0#07864147445237544204411237157677:title]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
+[b83;*+117 $$6,6#1546C2CD4112BAB0A26C534D6F11ED13:subtitle]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0;= [*8 QTF]&]
+[s3; QTF&]
+[s4; Table of contents&]
 [s0; &]
-[s0; QTF is the native format of Ultimate`+`+ rich texts (formatted 
+[s0; [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#1^ 1. Definition]&]
+[s0; [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2^ 2. Format overview]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_1^ 2.1 Symbols]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_2^ 2.2 Colors]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_3^ 2.3 Basic 
+QTF codes]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_4^ 2.4 Character 
+and paragraph formatting]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_5^ 2.5 Styles]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_6^ 2.6 Objects]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_7^ 2.7 iml 
+format]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_8^ 2.8 Fields]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_9^ 2.9 Tables]&]
+[s0;     [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#2`_10^ 2.10 Global 
+Header and Footer]&]
+[s0; [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#3^ 3. Examples]&]
+[s0; &]
+[s4;:1: 1. Definition&]
+[s5; QTF is the native format of Ultimate`+`+ rich texts (formatted 
 texts).&]
-[s0; &]
-[s0; It is byte oriented format. Bytes with values 2`-31 are ignored. 
+[s5; It is byte oriented format. Bytes with values 2`-31 are ignored. 
 Other values are interpreted as characters or formatting commands.&]
-[s0; &]
-[s0; Letters ([@4 a]`-[@4 zA]`-[@4 Z]), numbers ([@4 0]`-[@4 9]), space (32) 
+[s4;:2: 2. Format overview&]
+[s6;:2`_1: 2.1 Symbols&]
+[s5; Letters ([@4 a]`-[@4 zA]`-[@4 Z]), numbers ([@4 0]`-[@4 9]), space (32) 
 and characters&]
 [s0; &]
 [s0; [*@4 . , ; ! ? % ( ) / < > #]&]
 [s0; &]
-[s0; and bytes greater than 127 are guaranteed to be never used as 
+[s5; and bytes greater than 127 are guaranteed to be never used as 
 command characters (not even in future versions of QTF). Other 
 characters should be prefixed with escape character `` (reverse 
 apostrophe). Group of characters can be escaped using byte 1. 
 Example:&]
 [s0; &]
-[s3; `"`\1a`[x`]`\1`[`* bold`]`"&]
+[s2; `"`\1a`[x`]`\1`[`* bold`]`"&]
 [s0; &]
-[s0; Byte 0 represents the end of input sequence.&]
-[s0; &]
-[s0; Dimension units of QTF are dots `- one dot is defined as 1/600 
+[s5; Byte 0 represents the end of input sequence.&]
+[s5; Dimension units of QTF are dots `- one dot is defined as 1/600 
 of inch.&]
-[s0; &]
-[s0; Colors are described as either number [@(128.0.255) 0]`-[@(128.0.255) 9], 
+[s6;:2`_2: 2.2 Colors&]
+[s5; Colors are described as either number [@(128.0.255) 0]`-[@(128.0.255) 9], 
 with meaning&]
 [s0; &]
 [ {{1000:1000:1000:1000:1000:1000:1000:1000:1000:1000<96;>96;f4; [s0;%- [* 0]]
@@ -140,10 +162,8 @@ umber][@(128.0.255) )]&]
 [s0; [@(128.0.255) N]&]
 [s0;@(128.0.255) &]
 [s0; used in place of color designates transparent color.&]
-[s0; &]
-[s0; &]
-[s2; Basic QTF codes&]
-[s0; &]
+[s6;:2`_3: 2.3 Basic QTF codes&]
+[s5; Basic QTF codes are:&]
 [s0; &]
 [ {{2003:7997<96;>96; [s0; [C@(128.0.255) `_]]
 :: [s0; Hard`-space `- space that cannot be divided at the end of line.]
@@ -154,8 +174,7 @@ umber][@(128.0.255) )]&]
 :: [s0;%- [%%C@(128.0.255) `@`$][%%*C@(0.0.255) hex][C@(128.0.255) ;]]
 :: [s0; Unicode character as hexadecimal number.]}}&]
 [s0; &]
-[s0; &]
-[s2; Character and paragraph formatting&]
+[s6;:2`_4: 2.4 Character and paragraph formatting&]
 [s0; &]
 [s0; Character and paragraph formatting starts with&]
 [s0;@(128.0.255) &]
@@ -409,17 +428,15 @@ code. Example: [*C@3 `"`[l200;4 `"]]
 QTF representing header/footer. This QTF can contain field[@5  
 `{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
 to represent total number of pages.]}}&]
-[s0;3 &]
-[s0;3 &]
-[s2; Styles&]
 [s0; &]
-[s0; Paragraph styles are defined using normal character/paragraph 
+[s6;:2`_5: 2.5 Styles&]
+[s5; Paragraph styles are defined using normal character/paragraph 
 formatting sequence with&]
 [s0; &]
 [s0; [@(128.0.255) `$`$][/@(0.0.255) number][@(128.0.255) ,][/@(0.0.255) nnumber][@(128.0.255) #
 ][/@(0.0.255) uuid][@(128.0.255) :][/@(0.0.255) name]&]
 [s0; &]
-[s0; instead of text, where&]
+[s5; instead of text, where&]
 [s0; &]
 [ {{1879:8121^ [s0;%- [@(0.0.255) number]]
 :: [s0; Number of style `- can be used with [@(128.0.255) s] paragraph 
@@ -433,15 +450,13 @@ when inserting paragraphs.]
 :: [s0; Name of style, displayed by editors. Can also be used with [@(128.0.255) s] 
 paragraph format command code.]}}&]
 [s0; &]
-[s0; Style with [@(0.0.255) number] `= 0 and [@(0.0.255) uuid `= ]00000000000000000000000
+[s5; Style with [@(0.0.255) number] `= 0 and [@(0.0.255) uuid `= ]00000000000000000000000
 000000000 is [*/ default] style.&]
-[s0; &]
 [s0; Example:&]
 [s0; &]
 [s0; [C@3 `"`[`*/`+117 `$`$2,0#07143242482611002448121871408047:title`]`"]&]
 [s0;@(0.0.255) &]
-[s0;@(0.0.255) &]
-[s2; Objects&]
+[s6;:2`_6: 2.6 Objects&]
 [s0;@(0.0.255) &]
 [s0; Object plays the role of the single character and is displayed 
 according to its type. It is started with a header in the form&]
@@ -465,42 +480,35 @@ By default, RichText recognizes the PNG format and [*/ iml] format
 :: [s0; [@(0.0.255) cy]]
 :: [s0; Height of object in dots.]}}&]
 [s0;@(0.0.255) &]
-[s0; First form with `'[@(128.0.255) `&]`' activates `"keep aspect 
+[s5; First form with `'[@(128.0.255) `&]`' activates `"keep aspect 
 ratio`" for the object, second form with `'[@(128.0.255) `*]`' 
 leaves this option inactive.&]
-[s0; &]
-[s0; Optionally, there can be 3rd number, separated by `'[@(128.0.255) /]`' 
+[s5; Optionally, there can be 3rd number, separated by `'[@(128.0.255) /]`' 
 character. This number represent vertical placement of object, 
 default value 0 means that bottom border of object is aligned 
 with baseline of text.&]
-[s0; &]
-[s0; If header is followed by `'```' character, object data are in 
+[s5; If header is followed by `'```' character, object data are in 
 text format. In that case, object data are terminated with another 
 `'```' character. If there needs to be `'```' in the text, `'`````' 
 can be used as escape sequence.&]
-[s0; &]
-[s0; If header is followed by `'(`', it countains BASE64 encoded 
+[s5; If header is followed by `'(`', it countains BASE64 encoded 
 binary data, ending with `')`'. [* This is default format for binary 
 data].&]
-[s0; &]
-[s0; If there is no `'```' nor `'(`', header is in binary 7 bit format. 
+[s5; If there is no `'```' nor `'(`', header is in binary 7 bit format. 
 Bit 7 of data bytes is always 1, so that actual data bytes are 
 in range 128`-255. First byte in range 32`-127 ends data sequence. 
 Data are encoded in 7 byte groups, which corresponds to 8 bytes 
 of encoded format. First byte of this 8 bytes block always contains 
 eight bits of following bytes, LSB (that is bit 0) being the 
 eight bit for first byte in block. [/ This format is deprecated.]&]
-[s0; &]
-[s0; [*/3 iml][*3  format]&]
-[s0;* &]
-[s0; [*/ iml][*  ]format is text format of rich object where text data 
-reference existing .iml based Image as pair [@(0.0.255) iml`_class`_name]:[@(0.0.255) i
-mage`_name]. Example of full object definition in [*/ iml] format:&]
+[s6;:2`_7: 2.7 iml format&]
+[s5; iml format is  text format of rich object where text data reference 
+existing .iml based Image as pair [@(0.0.255) iml`_class`_name]:[@(0.0.255) image`_nam
+e]. Example of full object definition in iml format:&]
 [s0; &]
 [s0; [*C@3 `"`@`@iml:400`*400``CtrlImg:exclamation```"]&]
 [s0;@(0.0.255) &]
-[s0;@(0.0.255) &]
-[s2; Fields&]
+[s6;:2`_8: 2.8 Fields&]
 [s0;@(0.0.255) &]
 [s0; Fields are special elements of text that are evaluated by client 
 code into rich text. QTF format for fields is&]
@@ -515,32 +523,29 @@ derived instances and registred using RichPara`::Register function.]
 :: [s0; Additional string parameter that gets passed to FieldType`::Evaluate 
 method]}}&]
 [s0;@(128.0.255) &]
-[s0;@(0.0.255) &]
-[s0;3 &]
-[s2; Tables&]
-[s0; &]
-[s0; Table definition starts with&]
+[s6;:2`_9: 2.9 Tables&]
+[s5; Table definition starts with&]
 [s0;3 &]
 [s0; [@(128.0.255) `{`{]&]
 [s0;@(128.0.255) &]
-[s0; pair, followed by set of numbers separated with&]
+[s5; pair, followed by set of numbers separated with&]
 [s0; &]
 [s0; [@(128.0.255) :]&]
 [s0;@(128.0.255) &]
-[s0; Numbers represent ratios of column widths; count of numbers 
+[s5; Numbers represent ratios of column widths; count of numbers 
 is equivalent to count of columns. Next there is [/ table/cell 
 formatting sequence] ended with single space character. Cells 
 are separated with&]
 [s0; &]
 [s0; [@(128.0.255) `::]&]
 [s0;@(128.0.255) &]
-[s0; characters and another table/cell formating sequence (to setup 
+[s5; characters and another table/cell formating sequence (to setup 
 format for each individual cell). Formating of cells is inherited 
 from previous cells. Table ends with&]
 [s0; &]
 [s0; [@(128.0.255) `}`}]&]
 [s0;@(128.0.255) &]
-[s0; pair.&]
+[s5; pair.&]
 [s0; &]
 [ {{1993:8007^@(229.229.248)-1 [s0; [*/ Table/cell formating sequence]]
 ::=@2 [s0;%- ]
@@ -635,26 +640,19 @@ in dots.]
 QTF representing header/footer. This QTF can contain field[@5  
 `{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
 to represent total number of pages.]}}&]
-[s0;3 &]
-[s0; Note: There is also legacy support for old table format (from 
+[s5; Note: There is also legacy support for old table format (from 
 previous QTF version) that is based on [@(128.0.255) `+`+ ]pair 
 as table start/stop and [@(128.0.255) `|`| `-`-] to divide cells/lines. 
 &]
-[s0;3 &]
-[s0;3 &]
-[s2; Global Header and Footer&]
-[s0; &]
-[s0; Global text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
+[s6;:2`_10: 2.10 Global Header and Footer&]
+[s5; Global text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
 `^], footer [%-C@(128.0.255) `^F][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^`^], 
 where [%-/C@(0.0.255) qtf`_text] is complete embeded QTF representing 
 header/footer. This QTF can contain field[@5  `{:VALUE:PAGENUMBER:`} 
 ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] to represent 
 total number of pages. Global page header and footer can be changed 
 by paragraph attributes.&]
-[s0;3 &]
-[s0;3 &]
-[s0;3 &]
-[s2; [3 Examples]&]
+[s4;:3: 3. Examples&]
 [s0; &]
 [ {{10000 [s0; [*C@3;1 `"Normal `[`* bold`] `[/ italic`] `[`_ underline`] `[`` 
 superscript`] `[, subscript`]`"]]
