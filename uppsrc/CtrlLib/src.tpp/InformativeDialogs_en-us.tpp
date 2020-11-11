@@ -1,5 +1,4 @@
 topic "Informative Dialogs";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -10,6 +9,7 @@ topic "Informative Dialogs";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;ph2 $$9,9#13035079074754324216151401829390:normal]
 [b42;a42;ph2 $$10,10#E71D914572A169C91BE52E3FB27F810F:text]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Informative Dialogs]]}}&]
 [s10; Sometimes programmer needs to display simply informative dialog 
@@ -26,12 +26,12 @@ error in the application.&]
 for your needs, you can compose your own dialog using build in 
 functions. This functions is used to create all dialogs mentions 
 in this reference.&]
-[s10; The message to informative dialog is passed by QTF format. It 
-means that you can for example embed hyper`-link. But, on the 
-other hand it can leads to troubles in displaying text. For example 
-we have symbols that are special for QTF `- this situation can 
-happened while displaying directory path. In this case we need 
-to deqtf our text.using [*^topic`:`/`/RichText`/src`/Utilities`$en`-us`#Upp`:`:DeQtf`(const char`*`)^ D
+[s10; The message to informative dialog is passed by [*^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us^ Q
+TF] format. It means that you can for example embed hyper`-link. 
+But, on the other hand it can leads to troubles in displaying 
+text. For example we have symbols that are special for QTF `- 
+this situation can happened while displaying directory path. 
+In this case we need to deqtf our text.using [*^topic`:`/`/RichText`/src`/Utilities`$en`-us`#Upp`:`:DeQtf`(const char`*`)^ D
 eQtf][*  ]function from RichText package. Below is the code that 
 presenting how to solve such issue:&]
 [s10;l160; [/@(28.42.150) PromptOK(DeQtf(`"C:`\Program Files`\Upp`\theide`"));]&]
