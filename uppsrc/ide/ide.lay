@@ -25,7 +25,7 @@ LAYOUT(ConfLayout, 344, 416)
 	ITEM(Upp::LabelBox, dv___4, SetLabel(t_("Thread model")).RightPosZ(8, 132).TopPosZ(0, 52))
 	ITEM(Upp::Switch, mt, SetLabel(t_("Singlethreaded\nMultithreaded")).RightPosZ(14, 118).TopPosZ(16, 34))
 	ITEM(Upp::Option, sse2, SetLabel(t_("Use SSE2")).HSizePosZ(8, 88).TopPosZ(56, 16))
-	ITEM(Upp::ArrayCtrl, accepts, VertGrid(false).HorzGrid(false).AutoHideSb(true).HSizePosZ(8, 8).VSizePosZ(76, 64))
+	ITEM(Upp::ArrayCtrl, accepts, AutoHideSb(true).VertGrid(false).HorzGrid(false).HSizePosZ(8, 8).VSizePosZ(76, 64))
 	ITEM(Upp::Label, dv___8, SetLabel(t_("&Other flags:")).LeftPosZ(8, 58).BottomPosZ(39, 19))
 	ITEM(Upp::EditString, other, HSizePosZ(68, 8).BottomPosZ(39, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
@@ -768,9 +768,9 @@ END_LAYOUT
 
 LAYOUT(QtfLayout, 356, 236)
 	ITEM(Upp::DocEdit, text, HSizePosZ(0, 0).VSizePosZ(24, 0))
-	ITEM(Upp::Button, editor, SetLabel(t_("Editor")).RightPosZ(0, 56).TopPosZ(0, 20))
-	ITEM(Upp::Button, clear, SetLabel(t_("Clear")).RightPosZ(60, 56).TopPosZ(0, 20))
-	ITEM(Upp::Button, copy, SetLabel(t_("Copy and close")).RightPosZ(120, 100).TopPosZ(0, 20))
+	ITEM(Upp::Button, editor, SetLabel(t_("Editor")).Tip(t_("Open rich text editor and upon close insert created QTF..")).RightPosZ(0, 56).TopPosZ(0, 20))
+	ITEM(Upp::Button, clear, SetLabel(t_("Clear")).Tip(t_("Clear QTF input")).RightPosZ(60, 56).TopPosZ(0, 20))
+	ITEM(Upp::Button, copy, SetLabel(t_("Copy and close")).Tip(t_("Copy QTF input to clipboard and close designer")).RightPosZ(120, 100).TopPosZ(0, 20))
 END_LAYOUT
 
 LAYOUT(JumpLayout, 692, 496)
