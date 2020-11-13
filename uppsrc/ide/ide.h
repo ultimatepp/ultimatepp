@@ -328,6 +328,7 @@ struct WebSearchTab : WithWebSearchTabLayout<ParentCtrl> {
 	void Save();
 	bool EditDlg(String& name, String& uri, String& zico);
 	void Add();
+	void Sync();
 	void Edit();
 	void Default();
 	
