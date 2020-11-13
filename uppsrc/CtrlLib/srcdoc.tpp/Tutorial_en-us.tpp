@@ -115,7 +115,7 @@ with main GUI function and dependency to GUI packages (uses CtrlLib).&]
 [s5;l128;i150;O0; U`+`+ CtrlLib application with main window `- posses 
 some advanced GUI creation options such as adding separate window 
 class and layouts. Good option for persons how finish this tutorial 
-and knows basics.&]
+and know basics.&]
 [s5; `"Package description`" in our case is optional. `"Create new 
 package`" dialogs is shown below with selected template for GUI 
 applications:&]
