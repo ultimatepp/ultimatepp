@@ -116,7 +116,7 @@ with main GUI function and dependency to GUI packages (uses CtrlLib).&]
 some advanced GUI creation options such as adding separate window 
 class and layouts. Good option for persons how finish this tutorial 
 and know basics.&]
-[s5; `"Package description`" in our case is optional. `"Create new 
+[s5; `"Package description`" in this case is optional. `"Create new 
 package`" dialogs is shown below with selected template for GUI 
 applications:&]
 [s0; &]
