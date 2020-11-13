@@ -127,8 +127,6 @@ applications:&]
 [s0; &]
 [s5; Now let`'s click on `"Create`" button and GUI project should 
 be created.&]
-[s5; Please noticed that source code of all tutorials located on 
-this particular site are available in [* tutorial ]assembly.&]
 [s22;:1`_2: 1.2 GUI application main function&]
 [s5; After creating GUI package, let`'s move to the coding part. 
 To hide platform specific differences, U`+`+ GUI application 
