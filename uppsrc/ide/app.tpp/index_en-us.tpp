@@ -17,11 +17,10 @@ topic "TheIde help index";
 [l321;*C$7 $$16,16#03451589433145915344929335295360:result]
 [l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,4#88603949442205825958800053222425:package`-title]
-[ $$0,0#00000000000000000000000000000000:Default]
+[b8; $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;= [*/R6 TheIDE help]&]
 [s0; &]
-[s0;l224;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l224;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
@@ -42,6 +41,7 @@ line arguments]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l224; [^topic`:`/`/ide`/app`/MacroManager`_en`-us^ Macro Manager]&]
+[s0;l224; [^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ Layout designer]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
