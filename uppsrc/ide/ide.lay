@@ -880,3 +880,17 @@ LAYOUT(InsertAsLayout, 276, 168)
 	ITEM(Upp::Label, dv___3, SetLabel(t_("Data length will be put into the clipboard")).LeftPosZ(8, 260).TopPosZ(108, 19))
 END_LAYOUT
 
+LAYOUT(WebSearchEngineLayout, 564, 84)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Name")).LeftPosZ(8, 72).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("URI")).LeftPosZ(8, 72).TopPosZ(32, 19))
+	ITEM(Upp::EditString, name, NotNull(true).HSizePosZ(80, 4).TopPosZ(8, 19))
+	ITEM(Upp::EditString, uri, NotNull(true).HSizePosZ(80, 4).VSizePosZ(32, 33))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Label, dv___6, SetLabel(t_("\001[g Use [* %s] as a placeholder for the search phrase")).LeftPosZ(8, 260).TopPosZ(60, 19))
+END_LAYOUT
+
+LAYOUT(WebSearchTabLayout, 400, 200)
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+

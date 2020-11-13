@@ -10,15 +10,24 @@ Vector<Image> ReadIcon(String data, bool just_best)
 	Vector<Image> out;
 	const byte *in = data;
 	int count = Peek16le(in + OFFSETOF(BMP_ICONDIR, idCount));
+	if(count < 0 || count > 100)
+		return out;
+	const byte *end = (const byte *)data.end();
 	for(int i = 0; i < count; i++) {
 		const byte *hdr = in + sizeof(BMP_ICONDIR) + i * sizeof(BMP_ICONDIRENTRY);
+		if(hdr > end)
+			return out;
 		dword offset = Peek32le(hdr + OFFSETOF(BMP_ICONDIRENTRY, dwImageOffset));
 		hdr = in + offset;
 		int hdrsize = Peek32le(hdr + OFFSETOF(BMP_INFOHEADER, biSize));
+		if(hdr + hdrsize > end)
+			return out;
 		Size bmpsz(
 			Peek32le(hdr + OFFSETOF(BMP_INFOHEADER, biWidth)),
 			Peek32le(hdr + OFFSETOF(BMP_INFOHEADER, biHeight)));
 		Size size(bmpsz.cx, bmpsz.cy >> 1);
+		if(size.cx < 0 || size.cx > 10000 || size.cy < 0 || size.cy > 10000)
+			return out;
 		int compression = Peek32le(hdr + OFFSETOF(BMP_INFOHEADER, biCompression));
 		int bitcount = Peek16le(hdr + OFFSETOF(BMP_INFOHEADER, biBitCount));
 		int clrused = Peek32le(hdr + OFFSETOF(BMP_INFOHEADER, biClrUsed));
@@ -68,9 +77,14 @@ Vector<Image> ReadIcon(String data, bool just_best)
 		}
 
 		ImageBuffer buffer(size);
-		for(int y = 0; y < size.cy; y++, hdr += rowbytes)
+		for(int y = 0; y < size.cy; y++, hdr += rowbytes) {
+			if(hdr + rowbytes > end)
+				return out;
 			fmt.Read(buffer[size.cy - y - 1], hdr, size.cx, palette.Begin());
+		}
 		for(int y = 0; y < size.cy; y++, hdr += maskbytes) {
+			if(hdr + maskbytes > end)
+				return out;
 			const byte *in = hdr;
 			RGBA *out = buffer[size.cy - y - 1];
 			int cx = size.cx;

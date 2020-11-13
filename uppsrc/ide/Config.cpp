@@ -317,8 +317,9 @@ void Ide::Serialize(Stream& s)
 	s.Magic();
 	if(version >= 17)
 		s % hlstyle_is_default;
-	if(version >= 19)
+	if(version >= 19) {
 		s % gui_font % gui_font_override;
+	}
 }
 
 Time Ide::ConfigTime()
