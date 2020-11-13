@@ -323,6 +323,17 @@ struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 	FindInFilesDlg();
 };
 
+struct WebSearchTab : WithWebSearchTabLayout<ParentCtrl> {
+	void Load();
+	void Save();
+	bool EditDlg(String& name, String& uri, String& zico);
+	void Add();
+	void Edit();
+	void Default();
+	
+	WebSearchTab();
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -677,7 +688,7 @@ public:
 	String        current_builder;
 	
 	bool          hlstyle_is_default = true; // default style reacts to dark / light theme settings
-
+	
 // ------------------------------------
 
 	Time      config_time;
@@ -836,9 +847,9 @@ public:
         void  GotoPosition();
 
 	void OnlineSearchMenu(Bar& menu);
-		void OnlineSearch();
-		void OnlineSearchOnTheOfficialSite();
-	
+		void OnlineSearch(String uri);
+		bool IsSearchProvidersMenuVisible() const;
+
 	void SearchMenu(Bar& bar);
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
 		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }

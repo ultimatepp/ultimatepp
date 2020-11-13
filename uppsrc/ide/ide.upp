@@ -20,7 +20,8 @@ uses
 	ide/Java,
 	ide/MacroManager,
 	urepo,
-	Report;
+	Report,
+	Core/SSL;
 
 file
 	IDE readonly separator,
