@@ -44,10 +44,10 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 {
 	WithWebSearchEngineLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Web search engine setup");
-	CtrlRetriever r;
-	r(dlg.name, name)(dlg.uri, uri);
+	CtrlRetriever v;
+	v(dlg.name, name)(dlg.uri, uri);
 	if(dlg.Execute() == IDOK) {
-		r.Retrieve();
+		v.Retrieve();
 		ico = Null;
 		int q = uri.Find('/', max(0, uri.FindAfter("//")));
 		if(q < 0)
@@ -67,7 +67,6 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 		}
 		if(IsNull(r))
 			r = StreamRaster::LoadStringAny(data);
-		DDUMP(r.GetSize());
 		ico = IsNull(r) ? String() :
 		      PNGEncoder().SaveString(2 * r.GetSize() == wanted ? Upscale2x(r)
 		                              : r.GetSize() == 2 * wanted ? Downscale2x(r)
@@ -77,11 +76,20 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 	return false;
 }
 
+void WebSearchTab::Sync()
+{
+	for(int i = 0; i < list.GetCount(); i++) {
+		list.SetDisplay(i, 0, i == 0 ? BoldDisplay() : StdDisplay());
+		list.SetDisplay(i, 1, i == 0 ? BoldDisplay() : StdDisplay());
+	}
+}
+
 void WebSearchTab::Add()
 {
 	String name, uri, zico;
 	if(EditDlg(name, uri, zico))
 		list.Add(name, uri, zico);
+	Sync();
 }
 
 void WebSearchTab::Edit()
@@ -96,6 +104,7 @@ void WebSearchTab::Edit()
 		list.Set(1, uri);
 		list.Set(2, zico);
 	}
+	Sync();
 }
 
 void WebSearchTab::Default()
@@ -106,12 +115,14 @@ void WebSearchTab::Default()
 	list.Remove(i);
 	list.Insert(0, v);
 	list.SetCursor(0);
+	Sync();
 }
 
 void WebSearchTab::Load()
 {
 	for(Value se : LoadSearchEngines())
 		list.Add(se["Name"], se["URI"], Decode64(se["Icon"]));
+	Sync();
 }
 
 void WebSearchTab::Save()
@@ -125,13 +136,13 @@ void WebSearchTab::Save()
 
 void Ide::OnlineSearchMenu(Bar& menu)
 {
-	static Time se_tm = Null;
-	static Value se;
+	static Time search_engines_tm = Null;
+	static Value search_engines;
 	
 	Time h = FileGetTime(SearchEnginesFile());
-	if(h != se_tm) {
-		se = LoadSearchEngines();
-		se_tm = h;
+	if(h != search_engines_tm) {
+		search_engines = LoadSearchEngines();
+		search_engines_tm = h;
 	}
 	
 	bool b = editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
@@ -143,15 +154,15 @@ void Ide::OnlineSearchMenu(Bar& menu)
 	};
 	
 	auto Icon = [&](int i) {
-		return StreamRaster::LoadStringAny(Decode64(se[i]["Icon"]));
+		return StreamRaster::LoadStringAny(Decode64(search_engines[i]["Icon"]));
 	};
 
 	String name, uri;
 	Image m;
 
-	if(se.GetCount()) {
-		name = se[0]["Name"];
-		uri = se[0]["URI"];
+	if(search_engines.GetCount()) {
+		name = search_engines[0]["Name"];
+		uri = search_engines[0]["URI"];
 		m = Icon(0);
 	}
 	else {
@@ -167,13 +178,13 @@ void Ide::OnlineSearchMenu(Bar& menu)
 		             "&domains=www.ultimatepp.org&sitesearch=www.ultimatepp.org");
 	});
 
-	if(!menu.IsMenuBar() || se.GetCount() < 2)
+	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)
 		return;
 
 	menu.Sub(b, "Search on...", [=](Bar& menu) {
-		for(int i = 1; i < se.GetCount(); i++) {
-			const String& name = se[i]["Name"];
-			const String& uri  = se[i]["URI"];
+		for(int i = 1; i < search_engines.GetCount(); i++) {
+			const String& name = search_engines[i]["Name"];
+			const String& uri  = search_engines[i]["URI"];
 			menu.Add(b, name, Nvl(Icon(i), CtrlImg::Network()), [=] { OnlineSearch(uri); });
 		}
 	});
