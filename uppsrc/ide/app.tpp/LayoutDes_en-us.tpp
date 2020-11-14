@@ -33,9 +33,8 @@ to layout]&]
 [s5; Layout designer is a tool that allows to create predefined views 
 that can be directly used in application source code. It significantly 
 reduces the amount of time needed to create the program. It also 
-allow to separate logic from user interface. This is very important 
-to use some modern software architectures like MVC (Model View 
-Controller).&]
+allow to separate logic from user interface. This allows to use 
+some modern software architectures like MVC (Model View Controller).&]
 [s0; &]
 [s0;= 
 @@rawimage:3349&2962
