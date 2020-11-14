@@ -53,6 +53,8 @@ OutDir_urepo = $(UPPOUT)urepo/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_urepo = $(Macro)
 OutDir_Report = $(UPPOUT)Report/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Report = $(Macro)
+OutDir_Core_SSL = $(UPPOUT)Core/SSL/GCC-Gcc-Gui-Linux-Posix-Shared/
+Macro_Core_SSL = $(Macro)
 OutDir_Esc = $(UPPOUT)Esc/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Esc = $(Macro)
 OutDir_Core = $(UPPOUT)Core/GCC-Gcc-Gui-Linux-Posix-Shared/
@@ -125,6 +127,7 @@ prepare: \
 	$(OutDir_ide_MacroManager) \
 	$(OutDir_urepo) \
 	$(OutDir_Report) \
+	$(OutDir_Core_SSL) \
 	$(OutDir_Esc) \
 	$(OutDir_Core) \
 	$(OutDir_plugin_lzma) \
@@ -229,6 +232,8 @@ $(OutFile): build_info  \
 	$(OutDir_ide_MacroManager)MacroManager.a \
 	$(OutDir_urepo)urepo.a \
 	$(OutDir_Report)Report.a \
+	$(OutDir_Core_SSL)Init.o \
+	$(OutDir_Core_SSL)SSL.a \
 	$(OutDir_Esc)Esc.a \
 	$(OutDir_Core)Core.a \
 	$(OutDir_plugin_lzma)lzma.a \
@@ -338,6 +343,8 @@ $(OutFile): build_info  \
 			$(OutDir_ide_MacroManager)MacroManager.a \
 			$(OutDir_urepo)urepo.a \
 			$(OutDir_Report)Report.a \
+		$(OutDir_Core_SSL)Init.o \
+			$(OutDir_Core_SSL)SSL.a \
 			$(OutDir_Esc)Esc.a \
 			$(OutDir_Core)Core.a \
 			$(OutDir_plugin_lzma)lzma.a \
@@ -376,6 +383,8 @@ $(OutFile): build_info  \
 			`pkg-config --libs libnotify` \
 			`pkg-config --libs libpng` \
 			-lbz2 \
+			-lcrypto \
+			-lssl \
 			-lpthread \
 			-ldl \
 			-lrt \
@@ -43294,6 +43303,455 @@ $(OutDir_Report)Report.a: \
 	$(AR) $(OutDir_Report)Report.a \
 		$(OutDir_Report)Report.o \
 		$(OutDir_Report)ReportDlg.o
+
+$(OutDir_Core_SSL):
+	mkdir -p $(OutDir_Core_SSL)
+
+$(OutDir_Core_SSL)Util.o: $(UPPDIR1)Core/SSL/Util.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/SSL/SSL.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/Util.cpp -o $(OutDir_Core_SSL)Util.o
+
+$(OutDir_Core_SSL)InitExit.o: $(UPPDIR1)Core/SSL/InitExit.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/SSL/SSL.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/InitExit.cpp -o $(OutDir_Core_SSL)InitExit.o
+
+$(OutDir_Core_SSL)Socket.o: $(UPPDIR1)Core/SSL/Socket.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/SSL/SSL.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/Socket.cpp -o $(OutDir_Core_SSL)Socket.o
+
+$(OutDir_Core_SSL)P7S.o: $(UPPDIR1)Core/SSL/P7S.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/SSL/SSL.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/P7S.cpp -o $(OutDir_Core_SSL)P7S.o
+
+$(OutDir_Core_SSL)Init.o: $(UPPDIR1)Core/SSL/Init.icpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/SSL/SSL.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/Init.icpp -o $(OutDir_Core_SSL)Init.o
+
+$(OutDir_Core_SSL)SSL.a: \
+	$(OutDir_Core_SSL)Util.o \
+	$(OutDir_Core_SSL)InitExit.o \
+	$(OutDir_Core_SSL)Socket.o \
+	$(OutDir_Core_SSL)P7S.o
+	$(AR) $(OutDir_Core_SSL)SSL.a \
+		$(OutDir_Core_SSL)Util.o \
+		$(OutDir_Core_SSL)InitExit.o \
+		$(OutDir_Core_SSL)Socket.o \
+		$(OutDir_Core_SSL)P7S.o
 
 $(OutDir_Esc):
 	mkdir -p $(OutDir_Esc)
