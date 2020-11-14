@@ -58,6 +58,7 @@ line arguments]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
 [s0;l160; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l160; [^topic`:`/`/ide`/app`/MacroManager`_en`-us^ Macro Manager]&]
+[s0;l160; [^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ Layout designer]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Icon designer]&]
 [s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/special`$en`-us^ Special 
 features]&]
