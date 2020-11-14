@@ -92,7 +92,7 @@ input.&]
 by using other packages not only CtrlLib. One of the package 
 that extends the list is GridCtrl.&]
 [s3;:3: 3. Toolbar commands&]
-[s22;:3`_1: 3.1 Automatic widget size scaling&]
+[s22;:3`_1: 3.1 Widget size scaling behavior&]
 [s5; Layout designer allows to specify how widget will behave upon 
 layout size change. This will happen for example when user change 
 window size on which given layout is placed. Upon selecting a 
@@ -121,7 +121,7 @@ part of the layout.&]
 @@rawimage:100&100
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAAARklEQVQ4je2PQQrAIAwEZyH///L2oKkoVAVPBecWws4mcDlGYINUZ+/nAOwYN/bcoberEBnrxEtaS6Q3N3sCfb8wnnj5Aw8elQ8RJ47SWQAAAABJRU5ErkJggg==)
  `- widget size will [* adapt] to the layout size from [* left to 
-right].&]
+right]. This is typical [* vertical auto resizing] behavior.&]
 [s5;l288;i150;O0;~~~32; 
 @@rawimage:100&100
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAAANklEQVQ4jWNgGAUUA0Yc4v+JVc/EwPAfqhiV/v//PwrGpoaB4f9/JjJcje4CygDFYTAKBgMAAB/sGfG7i4zcAAAAAElFTkSuQmCC)
@@ -142,7 +142,7 @@ part of the layout.&]
 @@rawimage:100&100
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAQ0lEQVQ4jWNkwAr+/8cUY2TErhYvwGYQKmAiw1QUgMtZ2GzGqpYFl8n/kVzPiMf7FHth1IDBYADFCYkAGLi8QHx2BgAW8g0X5zHG9QAAAABJRU5ErkJggg==)
  `- widget size will [* adapt] to the layout size from [* top to 
-bottom].&]
+bottom]. This is typical [* vertical auto resizing] behavior.&]
 [s5;l288;i150;O0;~~~32; 
 @@rawimage:100&100
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAPElEQVQ4jWNkwAn+/0ewGRlxq6MQ4DF5qLgAl8R/LGJY1bLgth9hBiOeIGDCKUMkGHgDKA7EYZCQBt4FADnsERMwzTLlAAAAAElFTkSuQmCC)
@@ -159,6 +159,7 @@ basing on widget type and it`'s current position.&]
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAAAXUlEQVQ4jWNkwAD//2OKMTJiihEE2AzCBExkmIwC0J2Gz1as3mCBOBXhx/9YXM6IJwhI9ALMdATNgipAemBDDYC7kaiQRwYkegFmEYKmOBYoBjhMRY5LspLxiHIBAEE4Ghcxc75qAAAAAElFTkSuQmCC)
  `- the command resets to default scaling options for the widget. 
 It will be set as left for horizontal and top for vertical.&]
+[s0; &]
 [s3;:4: 4. Under the hood&]
 [s5; Under the hood the Layout designer operates on [* .lay] file. 
 It is text file that stores the collection of layouts. The exemplary 
