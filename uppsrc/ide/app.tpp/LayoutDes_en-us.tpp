@@ -72,7 +72,7 @@ and after few usage all problems disappear.&]
 [s5; Standard U`+`+ distribution bundles a dozen of widgets. They 
 are mainly located in CtrlLib (Control Library). To each widget 
 category can be assigned. It is used to distinguish the widget 
-within layout editor. &]
+within layout editor.&]
 [s5;l128;i150;O0; [* Complex] `-&]
 [s5;l128;i150;O0; [* Editors] `-&]
 [s5;l128;i150;O0; [* Input fields] `-&]
