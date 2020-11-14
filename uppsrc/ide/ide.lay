@@ -890,13 +890,13 @@ LAYOUT(WebSearchEngineLayout, 564, 84)
 	ITEM(Upp::Label, dv___6, SetLabel(t_("\001[g Use [* %s] as a placeholder for the search phrase")).LeftPosZ(8, 260).TopPosZ(60, 19))
 END_LAYOUT
 
-LAYOUT(WebSearchTabLayout, 524, 200)
-	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 8).VSizePosZ(36, 4))
-	ITEM(Upp::Button, add, SetLabel(t_("Add engine")).Tip(t_("Add row")).RightPosZ(256, 88).TopPosZ(8, 23))
-	ITEM(Upp::Button, setdef, SetLabel(t_("Set as default")).Tip(t_("Add row")).RightPosZ(348, 96).TopPosZ(8, 23))
-	ITEM(Upp::Button, down, Tip(t_("Move down")).RightPosZ(36, 24).TopPosZ(8, 23))
-	ITEM(Upp::Button, up, Tip(t_("Move up")).RightPosZ(8, 24).TopPosZ(8, 23))
-	ITEM(Upp::Button, edit, SetLabel(t_("Edit engine")).Tip(t_("Edit row")).RightPosZ(168, 84).TopPosZ(8, 23))
-	ITEM(Upp::Button, remove, SetLabel(t_("Remove engine")).Tip(t_("Delete row")).RightPosZ(64, 100).TopPosZ(8, 23))
+LAYOUT(WebSearchTabLayout, 556, 200)
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(36, 4))
+	ITEM(Upp::Button, add, SetLabel(t_("Add engine")).Tip(t_("Add row")).RightPosZ(252, 88).TopPosZ(8, 23))
+	ITEM(Upp::Button, setdef, SetLabel(t_("Set as default")).Tip(t_("Add row")).RightPosZ(344, 96).TopPosZ(8, 23))
+	ITEM(Upp::Button, down, Tip(t_("Move down")).RightPosZ(32, 24).TopPosZ(8, 23))
+	ITEM(Upp::Button, up, Tip(t_("Move up")).RightPosZ(4, 24).TopPosZ(8, 23))
+	ITEM(Upp::Button, edit, SetLabel(t_("Edit engine")).Tip(t_("Edit row")).RightPosZ(164, 84).TopPosZ(8, 23))
+	ITEM(Upp::Button, remove, SetLabel(t_("Remove engine")).Tip(t_("Delete row")).RightPosZ(60, 100).TopPosZ(8, 23))
 END_LAYOUT
 
