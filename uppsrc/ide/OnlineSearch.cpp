@@ -10,6 +10,55 @@ Value  LoadSearchEngines()
 	return ParseJSON(LoadFile(SearchEnginesFile()));
 }
 
+String GetWebsiteIconAsPNG(const String& uri)
+{
+	String ico;
+	int q = uri.Find('/', max(0, uri.FindAfter("//")));
+	if(q < 0)
+		q = uri.GetCount();
+
+	Image r;
+	Size wanted = DPI(16, 16);
+	String data = HttpRequest(uri.Mid(0, q) + "/favicon.ico").RequestTimeout(3000).Execute();
+	for(const Image& m : ReadIcon(data)) {
+		Size isz = m.GetSize();
+		if(isz == wanted) {
+			r = m;
+			break;
+		}
+		if(isz.cx > r.GetSize().cx)
+			r = m;
+	}
+	if(IsNull(r))
+		r = StreamRaster::LoadStringAny(data);
+	return IsNull(r) ? String() :
+	       PNGEncoder().SaveString(2 * r.GetSize() == wanted ? Upscale2x(r)
+	                               : r.GetSize() == 2 * wanted ? Downscale2x(r)
+	                               : Rescale(r, wanted));
+}
+
+void SearchEnginesDefaultSetup()
+{
+	static const Tuple<const char *, const char *> defs[] = {
+		{ "Google", "www.google.com/q=%s" },
+		{ "C++ reference", "https://en.cppreference.com/mwiki/index.php?search=%s" },
+		{ "Wikipedia", "https://en.wikipedia.org/w/index.php?search=%s" },
+		{ "GitHub", "https://github.com/search?q=%s" },
+		{ "CodeProject", "https://www.codeproject.com/search.aspx?q=%s" },
+		{ "WolframAlpha", "https://www.wolframalpha.com/input/?i=%s" },
+	};
+	
+	Progress pi("Search engines setup");
+	pi.SetTotal(__countof(defs));
+	JsonArray ja;
+	for(int i = 0; i < __countof(defs); i++) {
+		pi.Step();
+		ja << Upp::Json("Name", defs[i].a)("URI", defs[i].b)("Icon", Encode64(GetWebsiteIconAsPNG(defs[i].b)));
+	}
+
+	SaveChangedFile(SearchEnginesFile(), ja);
+}
+
 struct IconDisplay : Display {
 	virtual Size GetStdSize(const Value&) { return DPI(16, 16); }
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
@@ -31,13 +80,29 @@ WebSearchTab::WebSearchTab()
 	list.SetLineCy(max(GetStdFontSize().cy, DPI(18)));
 	list.WhenBar = [&](Bar& bar) {
 		bool b = list.IsCursor();
-		bar.Add("Add search engine", IdeImg::add(), [&] { Add(); }).Key(K_INSERT);
-		bar.Add(b, "Edit search engine", IdeImg::pencil(), [&] { Edit(); }).Key(K_ENTER);
-		bar.Add(b, "Set as default engine", IdeImg::star(), [&] { Default(); });
-		list.StdBar(bar);
+		bar.Add("Add search engine", IdeImg::add(), [=] { Add(); }).Key(K_INSERT);
+		bar.Add(b, "Edit search engine", IdeImg::pencil(), [=] { Edit(); }).Key(K_ENTER);
+		bar.Add(b, "Remove search engine", IdeImg::remove(), [=] { list.DoRemove(); Sync(); }).Key(K_DELETE);
+		bar.Add(b, "Set as default engine", IdeImg::star(), [=] { Default(); Sync(); });
+		bar.Add(b, "Move up", IdeImg::arrow_up(), [=] { list.SwapUp(); Sync(); }).Key(K_CTRL_UP);
+		bar.Add(b, "Move down", IdeImg::arrow_up(), [=] { list.SwapDown(); Sync(); }).Key(K_CTRL_DOWN);
+		bar.Separator();
+		bar.Add("Restore the default list", [=] {
+			if(PromptYesNo("Delete the current list and restore defaults?")) {
+				SearchEnginesDefaultSetup();
+				Load();
+			}
+		});
 	};
 	list.EvenRowColor();
 	list.ColumnWidths("104 382 30");
+	
+	add.SetImage(IdeImg::add()) << [=] { Add(); };
+	edit.SetImage(IdeImg::pencil()) ^= [=] { Edit(); };
+	remove.SetImage(IdeImg::remove()) << [=] { list.DoRemove(); Sync(); };
+	setdef.SetImage(IdeImg::star()) << [=] { Default(); };
+	up.SetImage(IdeImg::arrow_up()) << [=] { list.SwapUp(); Sync(); };
+	down.SetImage(IdeImg::arrow_down()) << [=] { list.SwapDown(); Sync(); };
 }
 
 bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
@@ -48,29 +113,7 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 	v(dlg.name, name)(dlg.uri, uri);
 	if(dlg.Execute() == IDOK) {
 		v.Retrieve();
-		ico = Null;
-		int q = uri.Find('/', max(0, uri.FindAfter("//")));
-		if(q < 0)
-			q = uri.GetCount();
-
-		Image r;
-		Size wanted = DPI(16, 16);
-		String data = HttpRequest(uri.Mid(0, q) + "/favicon.ico").RequestTimeout(3000).Execute();
-		for(const Image& m : ReadIcon(data)) {
-			Size isz = m.GetSize();
-			if(isz == wanted) {
-				r = m;
-				break;
-			}
-			if(isz.cx > r.GetSize().cx)
-				r = m;
-		}
-		if(IsNull(r))
-			r = StreamRaster::LoadStringAny(data);
-		ico = IsNull(r) ? String() :
-		      PNGEncoder().SaveString(2 * r.GetSize() == wanted ? Upscale2x(r)
-		                              : r.GetSize() == 2 * wanted ? Downscale2x(r)
-		                              : Rescale(r, wanted));
+		ico = GetWebsiteIconAsPNG(uri);
 		return true;
 	}
 	return false;
@@ -120,6 +163,7 @@ void WebSearchTab::Default()
 
 void WebSearchTab::Load()
 {
+	list.Clear();
 	for(Value se : LoadSearchEngines())
 		list.Add(se["Name"], se["URI"], Decode64(se["Icon"]));
 	Sync();
