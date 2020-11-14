@@ -78,7 +78,8 @@ WebSearchTab::WebSearchTab()
 	list.Moving().RowName("search engine").Removing();
 	list.WhenLeftDouble = [=] { Edit(); };
 	list.SetLineCy(max(GetStdFontSize().cy, DPI(18)));
-	list.WhenBar = [&](Bar& bar) {
+	list.WhenSel << [=] { Sync(); };
+	list.WhenBar = [=](Bar& bar) {
 		bool b = list.IsCursor();
 		bar.Add("Add search engine", IdeImg::add(), [=] { Add(); }).Key(K_INSERT);
 		bar.Add(b, "Edit search engine", IdeImg::pencil(), [=] { Edit(); }).Key(K_ENTER);
@@ -96,6 +97,7 @@ WebSearchTab::WebSearchTab()
 	};
 	list.EvenRowColor();
 	list.ColumnWidths("104 382 30");
+	list.AutoHideSb();
 	
 	add.SetImage(IdeImg::add()) << [=] { Add(); };
 	edit.SetImage(IdeImg::pencil()) ^= [=] { Edit(); };
@@ -125,6 +127,13 @@ void WebSearchTab::Sync()
 		list.SetDisplay(i, 0, i == 0 ? BoldDisplay() : StdDisplay());
 		list.SetDisplay(i, 1, i == 0 ? BoldDisplay() : StdDisplay());
 	}
+	
+	bool b = list.IsCursor();
+	edit.Enable(b);
+	remove.Enable(b);
+	setdef.Enable(b);
+	up.Enable(b);
+	down.Enable(b);
 }
 
 void WebSearchTab::Add()
