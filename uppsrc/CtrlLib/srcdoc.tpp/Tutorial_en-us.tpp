@@ -884,9 +884,9 @@ to simplify this task.&]
 &]
 [s5; &]
 [s5; Visual design in U`+`+ is called [* Layout designer. ]Its documentation 
-is available [^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ here]. You 
-will found there very valuable information that will allow you 
-work to smoothly. You will learn from there how to add widgets 
+is available [*^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ here]. 
+You will found there very valuable information that will allow 
+you to work smoothly. You will learn from there how to add widgets 
 on the layout and how to change widget properties. This is why 
 many aspects are omitted in this lesson.&]
 [s5; Group of layouts is stored in .lay file. Format of .lay files 
