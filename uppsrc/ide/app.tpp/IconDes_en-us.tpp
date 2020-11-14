@@ -26,8 +26,8 @@ designer as a tool and do not discuss code aspects.&]
 [s0; &]
 [s3; Above image shows full interface of Icon Designer.&]
 [s3; More information about using icons in the source code can be 
-find in the [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Draw`$ImgTutorial`$en`-us`.html^ i
-mage tutorial] available on our website.&]
+found in the [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`_en`-us^ image 
+tutorial].&]
 [s2;:2: 2. Fundamental controls&]
 [s3; Below is the list of the control scheme of Icon Designer:&]
 [s0; &]
