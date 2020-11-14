@@ -390,7 +390,7 @@ void Ide::SetupFormat() {
 	WithSetupEditorLayout<ParentCtrl> edt;
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
-	WebSearchTab osm;
+	WebSearchTab web_search;
 	AStyleSetupDialog ast(this);
 #ifdef PLATFORM_WIN32
 	ide.console_txt.Hide();
@@ -431,7 +431,7 @@ void Ide::SetupFormat() {
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(ast, "Code formatting");
-	dlg.Add(osm, "Web search");
+	dlg.Add(web_search, "Web search");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 
 	FontSelectManager ed, vf, con, f1, f2, tf, gui;
@@ -462,7 +462,7 @@ void Ide::SetupFormat() {
 
 	DlSpellerLangs(edt.spellcheck_comments);
 	
-	osm.Load();
+	web_search.Load();
 
 	rtvr
 		(hlt.hilite_scope, hs)
@@ -616,7 +616,7 @@ void Ide::SetupFormat() {
 			                     hlt.hlstyle.Get(i, 3), hlt.hlstyle.Get(i, 4));
 		UpdateFormat();
 		
-		osm.Save();
+		web_search.Save();
 		
 		if(c == IDEXIT)
 			break;
