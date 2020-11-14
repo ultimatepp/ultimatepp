@@ -52,7 +52,9 @@ directly from layout designer..&]
 [s5;l288;i150;O0; [* C2] `- widget name.&]
 [s5;l128;i150;O0; [* D] `- layout view.&]
 [s5;l128;i150;O0; [* E] `- layout designer toolbar.&]
-[s0; &]
+[s5; More information about using layouts in the source code can 
+be found in the [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#16^ GUI 
+tutorial].&]
 [s3;:2: 2. Adding widget to layout&]
 [s5; Adding new widget to the layout is simple. To do it right click 
 on the layout view area and select concrete widget from the list. 
