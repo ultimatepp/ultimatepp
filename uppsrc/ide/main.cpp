@@ -167,6 +167,9 @@ void AppMain___()
 
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();
+	
+	if(!FileExists(SearchEnginesFile()))
+		SearchEnginesDefaultSetup();
 
 	bool dosplash = true;
 	for(int i = 0; i < arg.GetCount(); i++)
