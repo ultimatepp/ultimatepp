@@ -272,14 +272,6 @@ void Ide::InsertMenu(Bar& bar)
 			}
 		}
 	}
-	if(editfile.GetCount()) {
-		ParserContext ctx;
-		editor.Context(ctx, editor.GetCursor());
-		if(!IsNull(ctx.current_scope) && ctx.current_scope != "::" && !ctx.IsInBody()) {
-			String s = "typedef " + ctx.current_scope + " CLASSNAME;";
-			bar.Add(s, THISBACK1(InsertText, s));
-		}
-	}
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
