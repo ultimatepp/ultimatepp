@@ -91,22 +91,18 @@ void VisGenDlg::Refresh()
 			if(layout.item[i].type == "Button" && findarg(bn, "cancel", "ok", "exit") < 0) {
 				String mn = IdInitCaps(bn);
 				mn.Replace("_", "");
-				if(b1.GetCount() == 0)
-					b1 = "\n";
-				if(b2.GetCount() == 0)
-					b2 = "\n";
 				b1 << '\t' << "void " << mn << "();\n";
 				b2 << '\t' << bn << " << [=] { " << mn << "(); };\n";
 				b3 << '\n' << "void " << n << "::" << mn << "()\n{\n}\n";
 			}
 		}
+		if(b1.GetCount())
+			b1 << "\n";
 	}
 
 	if(q == 0) {
 		s << "class " << n << " : public With" << layout.name << "<TopWindow> {\n"
-		  << "\ttypedef " << n << " CLASSNAME;\n"
 		  << b1
-		  << "\n"
 		  << "public:\n"
 		  << "\t" << n << "();\n"
 		  << "};\n"
@@ -121,7 +117,6 @@ void VisGenDlg::Refresh()
 	else
 	if(q == 1) {
 		s << "struct " << n << " : With" << layout.name << "<TopWindow> {\n"
-		  << "\ttypedef " << n << " CLASSNAME;\n"
 		  << b1
 		  << "\t" << n << "();\n"
 		  << "};\n"
