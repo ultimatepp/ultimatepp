@@ -219,7 +219,7 @@ void LoadStl(String file, Surface &surf, bool &isText, String &header) {
 		if (!isText) 
 			LoadStlBin(file, surf, header);
 		else
-			throw e;
+			throw std::move(e);
 	}
 }
 
