@@ -51,6 +51,7 @@ that can be directly used in application source code. It significantly
 reduces the amount of time needed to create the program. It separates 
 logic from user interface. This allows to use some modern software 
 architectures like MVC (Model View Controller).&]
+[s5; Layout Designer &]
 [s0; &]
 [s0;= 
 @@rawimage:3349&2962
@@ -313,7 +314,10 @@ present below:&]
 [s3;:4: 4. Adding support for custom widgets&]
 [s5; For any widget Layout Designer support can be added. To do so 
 [* .usc] file should be created in the package where the widget 
-source code is located.&]
+source code is located. After that, in .usc file the code that 
+describes widget should be added. There is lesson [*^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#21^ C
+reating and using custom widgets] in GUI tutorial where the whole 
+process is explained.&]
 [s5; More information about the scripting language that is used by 
 .usc file interpreter can be found [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us^ here].&]
 [s3;:5: 5. Under the hood&]
