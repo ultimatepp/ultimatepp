@@ -126,10 +126,10 @@ bool SeaWaves::Init(double Tp, double Hs, double dirM, double h, int nd, int nf,
 		double beta = 0.0624/(0.230 + 0.0336*gamma - 0.185*(pow(1.9 + gamma, -1)))*(1.094 - 0.01915*log(gamma));
 		for(int f = 0; f < nf; f++) {
 			double sigma_f;
-		    if(frecs[f] <= fp)
+			if(frecs[f] <= fp)
 		        sigma_f = 0.07;
-		    else
-		        sigma_f = 0.09;	     
+			else
+				sigma_f = 0.09;	     
 	
 			Sf_f[f] = beta*pow(Hs, 2)*pow(Tp,-4)*pow(frecs[f], -5)*exp(-1.25*pow(Tp*frecs[f], -4)) 
 						  *pow(gamma, exp(-pow((Tp*frecs[f]-1), 2)/2/pow(sigma_f, 2)));
@@ -155,7 +155,7 @@ bool SeaWaves::Init(double Tp, double Hs, double dirM, double h, int nd, int nf,
 	        incdir_d[d] = dirs[d] - dirM;
 				
 		for (int f = 0; f < nf; f++) { 
-		    double s_f;				
+			double s_f;				
 		    if (frecs[f] <= fp)
 		        s_f = pow((frecs[f]/fp), 5)*Smax;
 		    else

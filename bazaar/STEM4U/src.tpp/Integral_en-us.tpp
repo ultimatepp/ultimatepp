@@ -8,7 +8,7 @@ topic "Numerical Integration";
 [ {{10000@3 [s0; [*@7;4 Integral]]}}&]
 [s1;%- &]
 [s0;%- &]
-[s0; [2 Numerical integration of a series of points.]&]
+[s0; [2 Numerical definite integration of a series of points.]&]
 [s0; [2 Integration schemes included are:]&]
 [s0;2 &]
 [ {{2098:7902<288;h1; [s0;%- [*2 TRAPEZOIDAL]]
@@ -24,7 +24,10 @@ is not a multiple of three.]]
 approximate endpoints derivatives.]]
 :: [s0;%- [*2 HERMITE`_5]]
 :: [s0;%- [2 Hermite`'s rule with a five points difference scheme to approximate 
-endpoints derivatives.]]}}&]
+endpoints derivatives.]]
+:: [s0;%- [*2 SPLINE]]
+:: [s0;%- [2 Integral obtained by interpolation with a natural ][^https`:`/`/en`.wikipedia`.org`/wiki`/Spline`_`(mathematics`)^2 s
+pline]]}}&]
 [s0;2 &]
 [s2; References:&]
 [s3;i150;O0; [^https`:`/`/en`.wikipedia`.org`/wiki`/Simpson`%27s`_rule^ Wikipedia]&]
@@ -39,7 +42,7 @@ Andy Long and Cliff Long., (2010)]&]
 [s1;%- &]
 [s2;:Upp`:`:Integral`(const Range`&`,const Range`&`,IntegralType`):%- [@(0.0.255) templ
 ate]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Integral]([@(0.0.255) c
-onst]_[*@4 Range]_`&[*@3 y], [@(0.0.255) const]_[*@4 Range]_`&[*@3 x], 
+onst]_[*@4 Range]_`&[*@3 x], [@(0.0.255) const]_[*@4 Range]_`&[*@3 y], 
 IntegralType_[*@3 type]_`=_TRAPEZOIDAL)&]
 [s3; Obtains the numerical integration of data series defined by 
 points ([%-*@3 x], [%-*@3 y]), using the integration schema defined 
