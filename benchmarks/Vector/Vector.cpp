@@ -6,7 +6,7 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	const int N = 200;
+	const int N = 2000;
 	
 	Vector<String> data;
 	Buffer<std::string> sdata(N);
@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(std::string));
 	RDUMP(sizeof(String));
 	
-	for(int q = 100000; q--;) {
+	for(int q = 1000; q--;) {
 		{
 			RTIMING("vector<string>::push_back");
 			std::vector<std::string> v;
