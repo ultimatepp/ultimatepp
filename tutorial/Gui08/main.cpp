@@ -8,7 +8,7 @@ struct MyAppWindow : TopWindow {
 			Break();
 	}
 
-	void RightDown(Point, dword) {
+	virtual void RightDown(Point, dword) override {
 		MenuBar::Execute(
 			[=](Bar& bar) {
 				bar.Add("Exit", [=] { Exit(); });

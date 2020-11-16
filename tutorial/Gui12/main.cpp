@@ -25,18 +25,18 @@ struct MyAppWindow : TopWindow {
 	}
 
 	void SubBar(Bar& bar) {
-		bar.AddMenu("Function", TutorialImg::Fn(), THISBACK(MenuFn))
+		bar.AddMenu("Function", TutorialImg::Fn(), [=] { MenuFn(); })
 		   .Help("This invokes MenuFn method of tutorial example");
-		bar.Add(TutorialImg::Fn2(), THISBACK(BarFn))
+		bar.Add(TutorialImg::Fn2(), [=] { BarFn(); })
 		   .Help("This invokes BarFn method of tutorial example");
-		bar.Add("Exit", TutorialImg::Exit(), THISBACK(Exit));
+		bar.Add("Exit", TutorialImg::Exit(), [=] { Exit(); });
 	}
 
 	void MainMenu(Bar& bar) {
-		bar.Add("Menu", THISBACK(SubBar));
+		bar.Sub("Menu", [=](Bar& bar) {
+			SubBar(bar);
+		});
 	}
-
-	typedef MyAppWindow CLASSNAME;
 
 	MyAppWindow() {
 		Title("My application with bars").Sizeable();
@@ -45,9 +45,9 @@ struct MyAppWindow : TopWindow {
 		AddFrame(tool);
 		AddFrame(status);
 		AddFrame(InsetFrame());
-		menu.Set(THISBACK(MainMenu));
+		menu.Set([=](Bar& bar) { MainMenu(bar); });
 		menu.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
-		tool.Set(THISBACK(SubBar)); 
+		tool.Set([=](Bar& bar) { SubBar(bar); });
 		tool.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
 	}
 };

@@ -3,15 +3,15 @@
 using namespace Upp;
 
 struct MyAppWindow : TopWindow {
-	virtual void Close() {
+	virtual void Close() override {
 		delete this;
 	}
 
-	virtual void LeftDown(Point pos, dword flags) {
+	virtual void LeftDown(Point pos, dword flags) override {
 		(new MyAppWindow)->OpenMain();
 	}
 
-	virtual void Paint(Draw& w) {
+	virtual void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), SWhite);
 		w.DrawText(0, 0, "Click the view area to open next window!", Arial(20));
 	}
