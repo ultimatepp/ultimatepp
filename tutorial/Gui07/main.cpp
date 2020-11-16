@@ -18,8 +18,6 @@ struct MyAppWindow : TopWindow {
 		bar.Sub("Menu", [=](Bar& bar) { SubMenu(bar); });
 	}
 
-	typedef MyAppWindow CLASSNAME;
-
 	MyAppWindow() {
 		Title("My application with menu").Sizeable();
 		AddFrame(menu);

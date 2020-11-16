@@ -9,12 +9,10 @@ struct NonModalDialog : public TopWindow {
 		Close();
 	}
 
-	typedef NonModalDialog CLASSNAME;
-
 	NonModalDialog() {
 		SetRect(0, 0, 200, 50);
 		Add(b.SetLabel("Close non-modal dialog").SizePos());
-		b <<= THISBACK(DoClose);
+		b << [=] { DoClose(); };
 	}
 };
 
@@ -29,12 +27,10 @@ struct MainWindow : public TopWindow {
 			dlg.Open(this);
 	}
 
-	typedef MainWindow CLASSNAME;
-
 	MainWindow() {
 		SetRect(0, 0, 400, 100);
 		Add(b.SetLabel("Open/close non-modal dialog").SizePos());
-		b <<= THISBACK(DoOpen);
+		b << [=] { DoOpen(); };
 	}
 };
 
