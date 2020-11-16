@@ -24,23 +24,21 @@ struct MyAppWindow : TopWindow {
 	}
 
 	void SubBar(Bar& bar) {
-		bar.AddMenu("Function", TutorialImg::Fn(), THISBACK(MenuFn));
-		bar.Add(TutorialImg::Fn2(), THISBACK(BarFn));
-		bar.Add("Exit", TutorialImg::Exit(), THISBACK(Exit));
+		bar.AddMenu("Function", TutorialImg::Fn(), [=] { MenuFn(); });
+		bar.Add(TutorialImg::Fn2(), [=] { BarFn(); });
+		bar.Add("Exit", TutorialImg::Exit(), [=] { Exit(); });
 	}
 
 	void MainMenu(Bar& bar) {
-		bar.Add("Menu", THISBACK(SubBar));
+		bar.Sub("Menu", [=](Bar& bar) { SubBar(bar); });
 	}
-
-	typedef MyAppWindow CLASSNAME;
 
 	MyAppWindow() {
 		Title("My application with bars").Sizeable();
 		AddFrame(menu);
 		AddFrame(tool);
-		menu.Set(THISBACK(MainMenu));
-		tool.Set(THISBACK(SubBar));
+		menu.Set([=](Bar& bar) { MainMenu(bar); });
+		tool.Set([=](Bar& bar) { SubBar(bar); });
 	}
 };
 
