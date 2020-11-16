@@ -72,6 +72,7 @@ CONSOLE_APP_MAIN
 			RDUMP(hst.size());
 		}
 	}
+	return;
 	
 	w = AliceLines();
 	
