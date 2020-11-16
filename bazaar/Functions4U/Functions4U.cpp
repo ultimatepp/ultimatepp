@@ -482,8 +482,9 @@ bool TrashBinClear()
 				String path = AppendFileName(trashBinDirectory, name);
 				if (ff.IsFile())
 					FileDelete(path);
-				else if (ff.IsDirectory())
-					DeleteFolderDeep(path);
+				else if (ff.IsDirectory()) {
+					DeleteFolderDeep(path);		Sleep(100);
+				}
 			}
 		} while(ff.Next());
 	}
@@ -1580,6 +1581,7 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 			if (ff.IsFolder() && !filefolder) {
 				if (!DeleteFolderDeepX(full, flags)) 
 					return false;
+				Sleep(100);
 			} else if (ff.IsFile() && filefolder) {
 				if (!FileDeleteX(full, flags)) 
 					return false;
@@ -2412,6 +2414,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS fla
 			if (diffList[i].isFolder) {
 				if (DirectoryExists(dest))
 					ok = DeleteFolderDeep(dest);	// Necessary to add the "X"
+				Sleep(100);
 			} else {
 				if (FileExists(dest))
 					ok = FileDeleteX(dest, flags);

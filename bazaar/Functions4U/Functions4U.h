@@ -685,16 +685,16 @@ bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
 	return false;
 }
 
-template <class Range, class V>
-int Find(const Range& r, const V& value, int from = 0) {
+template <class Range>
+int Find(const Range& r, const typename Range::value_type& value, int from = 0) {
 	for(int i = from; i < r.size(); i++)
 		if(r[i] == value) 
 			return i;
 	return -1;
 }
 
-template <class Range, class V>
-int FindAdd(Range& r, const V& value, int from = 0) {
+template <class Range>
+int FindAdd(Range& r, const typename Range::value_type& value, int from = 0) {
 	int id = Find(r, value, from);
 	if (id >= 0)
 		return id; 
@@ -702,8 +702,8 @@ int FindAdd(Range& r, const V& value, int from = 0) {
 	return r.size()-1;
 }
 
-template <class Range, class V>
-int FindRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
+template <class Range>
+int FindRatio(const Range& r, const typename Range::value_type& value, const typename Range::value_type& ratio, int from = 0) {
 	for(int i = from; i < r.size(); i++) {
 		if (EqualRatio(r[i], value, ratio))
 			return i;
@@ -711,8 +711,8 @@ int FindRatio(const Range& r, const V& value, const V& ratio, int from = 0) {
 	return -1;
 }
 
-template <class Range, class V>
-int FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
+template <class Range>
+int FindAddRatio(Range& r, const typename Range::value_type& value, const typename Range::value_type& ratio, int from = 0) {
 	int id = FindRatio(r, value, ratio, from);
 	if (id >= 0)
 		return id; 
@@ -720,16 +720,16 @@ int FindAddRatio(Range& r, const V& value, const V& ratio, int from = 0) {
 	return r.size()-1;
 }
 
-template <class Range, class V>
-int FindDelta(const Range& r, const V& value, const V& delta, int from = 0) {
+template <class Range>
+int FindDelta(const Range& r, const typename Range::value_type& value, const typename Range::value_type& delta, int from = 0) {
 	for(int i = from; i < r.size(); i++) 
 		if(abs(r[i] - value) <= delta) 
 			return i;
 	return -1;
 }
 
-template <class Range, class V>
-int FindAddDelta(Range& r, const V& value, const V& delta, int from = 0) {
+template <class Range>
+int FindAddDelta(Range& r, const typename Range::value_type& value, const typename Range::value_type& delta, int from = 0) {
 	int id = FindDelta(r, value, delta, from);
 	if (id >= 0)
 		return id; 
@@ -737,8 +737,8 @@ int FindAddDelta(Range& r, const V& value, const V& delta, int from = 0) {
 	return r.size()-1;
 }
 
-template <class Range, class V>
-int FindRoundDecimals(const Range& r, const V& value, int numDecimals, int from = 0) {
+template <class Range>
+int FindRoundDecimals(const Range& r, const typename Range::value_type& value, int numDecimals, int from = 0) {
 	String svalue = FormatDouble(value, numDecimals);
 	for(int i = from; i < r.size(); i++) 
 		if(FormatDouble(r[i], numDecimals) == svalue) 
@@ -746,12 +746,12 @@ int FindRoundDecimals(const Range& r, const V& value, int numDecimals, int from 
 	return -1;
 }
 
-template <class Range, class V>
-int FindClosest(const Range& r, const V& value, int from = 0) {
+template <class Range>
+int FindClosest(const Range& r, const typename Range::value_type& value, int from = 0) {
 	int minId = -1;
-	V minDiff = FLT_MAX;
+	typename Range::value_type minDiff = std::numeric_limits<typename Range::value_type>::max();
 	for(int i = from; i < r.size(); i++) {
-		V diff = abs(value - r[i]);
+		typename Range::value_type diff = abs(value - r[i]);
 		if (diff < minDiff) {
 			minDiff = diff;	
 			minId = i;		
@@ -771,8 +771,8 @@ bool Compare(const Range& a, const Range& b) {
 	return true;
 }
 	
-template <class Range, class V>
-bool CompareRatio(const Range& a, const Range& b, const V& ratio) {
+template <class Range>
+bool CompareRatio(const Range& a, const Range& b, const typename Range::value_type& ratio) {
 	if (a.size() != b.size())
 		return false;
 	for(int i = 0; i < a.size(); i++) 
