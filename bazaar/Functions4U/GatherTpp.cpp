@@ -358,7 +358,7 @@ bool GatherTpp::Load(String indexFile, Gate2<int, int> progress) {
 }
 
 bool GatherTpp::MakeHtml(const char *folder, Gate2<int, int> progress) {
-	DeleteFolderDeep(folder);
+	DeleteFolderDeep(folder);	Sleep(100);
 	DirectoryCreate(folder);
 
 	for(int i = 0; i < tt.GetCount(); i++) {

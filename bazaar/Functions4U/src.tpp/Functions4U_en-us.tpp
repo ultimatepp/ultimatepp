@@ -772,85 +772,89 @@ the random number generator.&]
 is used every function call..&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:EqualRatio`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) bool]_[* EqualRatio]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 a
-], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
-[*@3 ratio])&]
+[s5;:Upp`:`:EqualRatio`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) tem
+plate]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) bool]_[* EqualRatio]([@(0.0.255) const]_[*@4 T
+][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 zero]_`=_[@3 0])&]
 [s2; Returns true if the difference ratio between [%-*@3 a] and [%-*@3 b] 
-is lower than [%-*@3 ratio].&]
+is lower than [%-*@3 ratio]. A value lower than [%-*@3 zero] is considered 
+zero.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Find`(Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* Find]([*@4 Range][@(0.0.255) `&]_[*@3 r
-], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])
-&]
+[s5;:Upp`:`:Find`(const Range`&`,const typename value`_type`&`,int`):%- [@(0.0.255) tem
+plate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* Find]([@(0.0.255) const]_[*@4 Ran
+ge][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&
+]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
 [%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from]. If nothing 
 is found it returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindAdd`(Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) clas
-s]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAdd]([*@4 Range][@(0.0.255) `&
-]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=
-_[@3 0])&]
+[s5;:Upp`:`:FindAdd`(Range`&`,const typename value`_type`&`,int`):%- [@(0.0.255) templa
+te]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindAdd]([*@4 Range][@(0.0.255) `&]_
+[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&]_[*@3 va
+lue], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
 [%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from], adding 
 it if is new.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindRatio`(const Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) templa
-te]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindRati
-o]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
-]_[*@3 value], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) int]_[*@3 fro
-m]_`=_[@3 0])&]
+[s5;:Upp`:`:FindRatio`(const Range`&`,const typename value`_type`&`,const typename value`_type`&`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindRatio]([@(0.0.255) const]_
+[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_
+type[@(0.0.255) `&]_[*@3 value], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_t
+ype[@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the element of Range (Vector<>, Array<>, ...) [%-*@3 r] 
 whose difference ratio with [%-*@3 value] is lower than [%-*@3 ratio] 
 searching from id [%-*@3 from]. If nothing is found it returns 
 `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindAddRatio`(Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) template]_
-<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAddRatio
-]([*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], 
-[@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 ratio], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s5;:Upp`:`:FindAddRatio`(Range`&`,const typename value`_type`&`,const typename value`_type`&`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindAddRatio]([*@4 Range][@(0.0.255) `&
+]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&]_[*@3 v
+alue], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&]_[*@3 ra
+tio], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
 [%-*@3 r] whose difference ratio with [%-*@3 value] is lower than 
 [%-*@3 ratio] searching from id [%-*@3 from], adding it if is new.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindDelta`(const Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) templa
-te]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindDelt
-a]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
-]_[*@3 value], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 delta], [@(0.0.255) int]_[*@3 fro
-m]_`=_[@3 0])&]
+[s5;:Upp`:`:FindDelta`(const Range`&`,const typename value`_type`&`,const typename value`_type`&`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindDelta]([@(0.0.255) const]_
+[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_
+type[@(0.0.255) `&]_[*@3 value], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_t
+ype[@(0.0.255) `&]_[*@3 delta], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the element of Range (Vector<>, Array<>, ...) [%-*@3 r] 
 whose difference with [%-*@3 value] is lower than [%-*@3 delta] searching 
 from id [%-*@3 from]. If nothing is found it returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindAddDelta`(Range`&`,const V`&`,const V`&`,int`):%- [@(0.0.255) template]_
-<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindAddDelta
-]([*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], 
-[@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 delta], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s5;:Upp`:`:FindAddDelta`(Range`&`,const typename value`_type`&`,const typename value`_type`&`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindAddDelta]([*@4 Range][@(0.0.255) `&
+]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&]_[*@3 v
+alue], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::value`_type[@(0.0.255) `&]_[*@3 de
+lta], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
 [%-*@3 r] whose difference with [%-*@3 value] is lower than [%-*@3 delta] 
 searching from id [%-*@3 from], adding it if is new.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindRoundDecimals`(const Range`&`,const V`&`,int`,int`):%- [@(0.0.255) temp
-late]_<[@(0.0.255) class]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindRo
-undDecimals]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V
-][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 numDecimals], [@(0.0.255) int]_[*@3 from]_
-`=_[@3 0])&]
+[s5;:Upp`:`:FindRoundDecimals`(const Range`&`,const typename value`_type`&`,int`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindRoundDecimals]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::v
+alue`_type[@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 numDecimals], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the element of Range (Vector<>, Array<>, ...) 
 [%-*@3 r] that is equal to [%-*@3 value] from id [%-*@3 from], rounding 
 [%-*@3 numDecimals] decimals. If nothing is found it returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:FindClosest`(const Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindClosest]([@(0.0.255) c
-onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value],
- [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s5;:Upp`:`:FindClosest`(const Range`&`,const typename value`_type`&`,int`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) int]_[* FindClosest]([@(0.0.255) cons
+t]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[@(0.0.255) typename]_Range`::valu
+e`_type[@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the id of the closest element of Range (Vector<>, Array<>, 
 ...) [%-*@3 r] to [%-*@3 value] counting from id [%-*@3 from].&]
 [s3; &]
