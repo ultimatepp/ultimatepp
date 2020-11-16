@@ -224,9 +224,10 @@ void TestIntegral() {
 	UppLog() << "\n\nIntegral demo";
 	
 	double R = 1;
-	UppLog() << "\nSemicircle integral value is " << M_PI*sqr(R)/2;
+	double res = M_PI*sqr(R)/2;
+	UppLog() << "\nSemicircle integral value is " << res;
 	UppLog() << "\nNumerically integrated with simple and composite versions:";
-	UppLog() << Format("\n%s\t%s\t\t%s\t\t%s\t\t%s\t%s", "#Points", "Trapezoidal", "Simpson 1/3", "Simpson 3/8", "Hermite 3 point", "Hermite 5 point");
+	UppLog() << Format("\n%s\t%s\t%s\t%s\t%s\t\t%s\t%s", "#Points", "Trapezoidal", "Simpson 1/3", "Simpson 3/8", "Spline", "Hermite 3 point", "Hermite 5 point");
 	for (int nump = 5; nump <= 30; ++nump) {
 		double dx = 2*R/(nump-1);
 		VectorXd y(nump), x(nump);
@@ -235,24 +236,28 @@ void TestIntegral() {
 			y[i] = ::sqrt(sqr(R) - sqr(x[i]));
 		}
 		
-		double yx_trap = Integral<VectorXd, double>(y, x, TRAPEZOIDAL);
-		double yx_simp13 = Integral<VectorXd, double>(y, x, SIMPSON_1_3);
-		double yx_simp38 = Integral<VectorXd, double>(y, x, SIMPSON_3_8);
-		double ydx_trap = Integral(y, dx, TRAPEZOIDAL);
+		double yx_trap    = Integral(x, y, TRAPEZOIDAL);
+		double yx_simp13  = Integral(x, y, SIMPSON_1_3);
+		double yx_simp38  = Integral(x, y, SIMPSON_3_8);
+		double yx_spline  = Integral(x, y, SPLINE);
+		double ydx_trap   = Integral(y, dx, TRAPEZOIDAL);
 		double ydx_simp13 = Integral(y, dx, SIMPSON_1_3);
 		double ydx_simp38 = Integral(y, dx, SIMPSON_3_8);
-		double ydx_herm3 = Integral(y, dx, HERMITE_3);
-		double ydx_herm5 = Integral(y, dx, HERMITE_5);
+		double ydx_herm3  = Integral(y, dx, HERMITE_3);
+		double ydx_herm5  = Integral(y, dx, HERMITE_5);
+		double ydx_spline = Integral(y, dx, SPLINE);
 		
 		UppLog() << Format("\n%d", nump);
-		UppLog() << Format("\t%7.5f = %7.5f", yx_trap, ydx_trap);
-		UppLog() << Format("\t%7.5f = %7.5f", yx_simp13, ydx_simp13);
-		UppLog() << Format("\t%7.5f = %7.5f", yx_simp38, ydx_simp38);
+		UppLog() << Format("\t%7.5f=%7.5f", yx_trap, ydx_trap);
+		UppLog() << Format("\t%7.5f=%7.5f", yx_simp13, ydx_simp13);
+		UppLog() << Format("\t%7.5f=%7.5f", yx_simp38, ydx_simp38);
+		UppLog() << Format("\t%7.5f=%7.5f", yx_spline, ydx_spline);
 		UppLog() << Format("\t%7.5f", ydx_herm3);
 		UppLog() << Format("\t\t%7.5f", ydx_herm5);
-		VERIFY(yx_trap - ydx_trap < 1E-10);
-		VERIFY(yx_simp13 - ydx_simp13 < 1E-10);
-		VERIFY(yx_simp38 - ydx_simp38 < 1E-10);
+		VERIFY(yx_trap - ydx_trap < 1E-10);			VERIFY(abs(yx_trap   - res)/res < 0.15);
+		VERIFY(yx_simp13 - ydx_simp13 < 1E-10);		VERIFY(abs(yx_simp13 - res)/res < 0.15);
+		VERIFY(yx_simp38 - ydx_simp38 < 1E-10);		VERIFY(abs(yx_simp38 - res)/res < 0.15);
+		VERIFY(yx_spline - ydx_spline < 1E-10);		VERIFY(abs(yx_spline - res)/res < 0.15);
 	}
 }
 	
