@@ -248,7 +248,7 @@ Rational operator*(const Rational& left, T right) {
 template <typename T>
 Rational operator/(T left, const Rational& right) {
 	Rational ret;
-	ret.num = right.den*left;
+	ret.num = right.den*intInf(left);
 	ret.den = right.num; 	
 	if (ret.den < 0) {
 		ret.num = -ret.num;
