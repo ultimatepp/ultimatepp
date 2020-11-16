@@ -5,8 +5,6 @@ using namespace Upp;
 struct MyAppWindow : TopWindow {
 	Button button;
 
-	typedef MyAppWindow CLASSNAME;
-
 	MyAppWindow() {
 		Title("My application with button");
 		Add(button.LeftPos(10, 100).TopPos(10, 30));
