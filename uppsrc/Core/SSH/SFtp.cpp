@@ -135,7 +135,10 @@ int SFtp::Read(SFtpHandle handle, void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
-	int rc = libssh2_sftp_read(handle, (char*) ptr + done, sz);
+	int rc = static_cast<int>(
+		libssh2_sftp_read(handle, (char*) ptr + done, size_t(sz))
+		);
+
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {
@@ -152,7 +155,10 @@ int SFtp::Write(SFtpHandle handle, const void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
-	int rc = libssh2_sftp_write(handle, (const char*) ptr + done, sz);
+	int rc = static_cast<int>(
+		libssh2_sftp_write(handle, (const char*) ptr + done, size_t(sz))
+		);
+
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {

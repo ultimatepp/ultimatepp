@@ -158,7 +158,7 @@ void SshShell::ConsoleRead()
 	if(!EventWait(STDIN_FILENO, WAIT_READ, 0))
 		return;
 	Buffer<char> buffer(ssh->chunk_size);
-	auto n = read(STDIN_FILENO, buffer, ssh->chunk_size);
+	auto n = read(STDIN_FILENO, buffer, size_t(ssh->chunk_size));
 	if(n > 0)
 		Send(String(buffer, n));
 	else
@@ -170,7 +170,7 @@ void SshShell::ConsoleWrite(const void* buffer, int len)
 {
 	if(!EventWait(STDOUT_FILENO, WAIT_WRITE, 0))
 		return;
-	auto n = write(STDOUT_FILENO, buffer, len);
+	auto n = write(STDOUT_FILENO, buffer, size_t(len));
 	if(n == -1 && errno != EAGAIN)
 		SetError(-1, "Couldn't write output to console.");
 }
@@ -287,16 +287,20 @@ void SshShell::X11Loop()
 		SOCKET sock = xrequests[i].b;
 
 		if(EventWait(sock, WAIT_WRITE, 0)) {
-			int rc = libssh2_channel_read(xhandle, xbuffer, xbuflen);
+			int rc = static_cast<int>(
+				libssh2_channel_read(xhandle, xbuffer, size_t(xbuflen))
+				);
 			if(!WouldBlock(rc) && rc < 0)
 				SetError(-1, "[X11]: Read failed.");
 			if(rc > 0)
 				write(sock, xbuffer, rc);
 		}
 		if(EventWait(sock, WAIT_READ, 0)) {
-			int rc =  read(sock, xbuffer, xbuflen);
+			int rc =  static_cast<int>(
+				read(sock, xbuffer, size_t(xbuflen))
+				);
 			if(rc > 0)
-				libssh2_channel_write(xhandle, (const char*) xbuffer, rc);
+				libssh2_channel_write(xhandle, (const char*) xbuffer, size_t(rc));
 		}
 		if(libssh2_channel_eof(xhandle) == 1) {
 			LLOG("[X11] EOF received.");

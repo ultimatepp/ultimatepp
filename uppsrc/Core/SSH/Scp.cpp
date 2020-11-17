@@ -57,7 +57,7 @@ bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 			done_ += n;
 			s.Put(chunk, n);
 			if((nowait = WhenProgress(done_, size))) {
-				msg = "File transfer aborted.";
+				msg = "File transfer is aborted.";
 				break;
 			}
 		}
@@ -82,7 +82,7 @@ bool Scp::Save(Stream& s)
 			if(n < l)
 				s.Seek(n);
 			if((nowait = WhenProgress(done_, size))) {
-				msg = "File transfer aborted.";;
+				msg = "File transfer is aborted.";;
 				break;
 			}
 		}
