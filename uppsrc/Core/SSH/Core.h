@@ -47,7 +47,6 @@ protected:
         int                 waitstep;
         int                 chunk_size;
         int                 status;
-        bool                noblock;
     };
     One<CoreData> ssh;
 
