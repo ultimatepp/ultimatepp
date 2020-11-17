@@ -4,27 +4,23 @@
 using namespace Upp;
 
 // SFtpFileSel:
-// This example demonstrates FileSel integration of SFtp class,
-// using FileSystemInfo interface.
+// This example demonstrates file selector integration of SFtp class,
+// using the FileSystemInfo interface.
 
 GUI_APP_MAIN
 {
-	const char *url = "demo:password@test.rebex.net:22";
+	String url = "demo:password@test.rebex.net:22";
 
+	if(!EditTextNotNull(url, "SFTP server", "Url"))
+		return;
+		
 	Progress pi;
-	pi.Title("Connecting to ssh server");
-	pi.SetTotal(5);
+	pi.Title("Connecting to SFTP server");
+	pi.Set(0, 5);
 	pi.Create();
 
-	bool refresh_gui = true; // FileSel refreshes its file list on every single GUI event.
-	                         // In most cases this is not possible for an sftp connection,
-	                         // because of the network latency. This switch is a workaround
-	                         // for this particular problem, and allows the calls to the sftp
-	                         // subsystem to be in sync with FileSel requests at the cost of a
-	                         // minimal GUI lag in FileSel.
-
 	SshSession session;
-	session.WhenPhase = [&refresh_gui, &pi] (int phase) {
+	session.WhenPhase = [&pi] (int phase) {
 		switch(phase) {
 		case SshSession::PHASE_DNS:
 			pi.SetText("Resolving name...");
@@ -45,21 +41,21 @@ GUI_APP_MAIN
 		case SshSession::PHASE_SUCCESS:
 			pi.SetText("Client successfully connected to server.");
 			pi.SetPos(5);
-			pi.Close();
-			refresh_gui = false;
 			break;
 		}
 	};
-	session.WhenWait = [&refresh_gui, &pi] { if(refresh_gui) pi.ProcessEvents(); };
+	
+	session.WhenWait = [&pi] { pi.ProcessEvents(); };
 	if(session.Timeout(30000).Connect(url)) {
+		pi.Close();
 		SFtp sftp(session);
+		sftp.WhenWait = []{}; // "NOOP"
 		SFtpFileSystemInfo sfsi(sftp);
 		FileSel fsel;
-		fsel.Filesystem((FileSystemInfo&) sfsi);
+		fsel.Filesystem(sfsi);
 		fsel.BaseDir(sftp.GetDefaultDir());
-		while(fsel.Asking(false).ExecuteOpen("Select a file to download (Select cancel to quit)")) {
+		while(fsel.ExecuteOpen("Select a file to download (Select cancel to quit)")) {
 			pi.Reset();
-			refresh_gui = true;
 			String path = fsel.Get();
 			sftp.WhenProgress = [&pi] (int64 done, int64 total)
 			{
@@ -79,7 +75,6 @@ GUI_APP_MAIN
 			else
 				SaveFile(NativePath(AppendFileName(GetCurrentDirectory(), GetFileName(path))), f);
 			pi.Close();
-			refresh_gui = false;
 		}
 	}
 	else
