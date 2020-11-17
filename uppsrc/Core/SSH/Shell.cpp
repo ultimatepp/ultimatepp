@@ -373,7 +373,6 @@ SshShell::SshShell(SshSession& session)
 #endif
 {
     ssh->otype = SHELL;
-    ssh->noblock = true;
 	Zero(tflags);
 }
 

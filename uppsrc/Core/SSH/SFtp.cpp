@@ -111,11 +111,11 @@ bool SFtp::Sync(SFtpHandle handle)
 
 SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 {
-	Run([=] () mutable {
+	INTERLOCKED
+	{
 		LLOG("Seeking to offset: " << position);
 		libssh2_sftp_seek64(handle, position);
-		return true;
-	});
+	}
 	return *this;
 }
 
@@ -123,11 +123,11 @@ int64 SFtp::GetPos(SFtpHandle handle)
 {
 	int64 pos = 0;
 
-	Run([=, &pos] () mutable {
+	INTERLOCKED
+	{
 		pos = libssh2_sftp_tell64(handle);
 		LLOG("File position: " << pos);
-		return true;
-	});
+	};
 	return pos;
 }
 
