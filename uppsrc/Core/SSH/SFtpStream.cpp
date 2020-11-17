@@ -15,15 +15,16 @@ void SFtpStream::SetStreamSize(int64 size)
 dword SFtpStream::Read(int64 at, void *ptr, dword size)
 {
 	SetPos(at);
-	return sftp->Get(handle, ptr, size);
+	int n = sftp->Get(handle, ptr, size);
+	if(sftp->IsError()) SetError();
+	return dword(n);
 }
 
 void SFtpStream::Write(int64 at, const void *data, dword size)
 {
 	SetPos(at);
 	sftp->Put(handle, data, size);
-	if(sftp->IsError())
-		SetError();
+	if(sftp->IsError()) SetError();
 }
 
 void SFtpStream::Close()
@@ -31,7 +32,7 @@ void SFtpStream::Close()
 	if(handle) {
 		Flush();
 		sftp->Close(handle);
-		handle = NULL;
+		handle = nullptr;
 	}
 }
 
@@ -46,13 +47,20 @@ bool SFtpStream::Open(SFtp& sftp_, const char *filename, dword mode, int acm)
 		Close();
 	sftp = &sftp_;
 	int iomode = mode & ~SHAREMASK;
-	handle = sftp->Open(filename, iomode == READ ? SFtp::READ :
-	                    iomode == CREATE ? SFtp::READ|SFtp::WRITE|SFtp::CREATE|SFtp::TRUNCATE :
-	                    SFtp::READ|SFtp::WRITE, acm);
+	handle = sftp->Open(filename,
+						iomode == READ
+							? SFtp::READ
+							: iomode == CREATE
+								? SFtp::READ|SFtp::WRITE|SFtp::CREATE|SFtp::TRUNCATE
+								: SFtp::READ|SFtp::WRITE,
+						acm
+						);
+				
 	if(handle) {
 		SFtpAttrs attrs;
 		if(!sftp->GetAttrs(handle, attrs)) {
-			Close();
+			sftp->Close(handle);
+			handle = nullptr;
 			return false;
 		}
 		OpenInit(mode, attrs.filesize);
