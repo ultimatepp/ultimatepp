@@ -1,7 +1,9 @@
-#ifndef _SSH_libssh2upp_h_
-#define _SSH_libssh2upp_h_
+#ifndef _UPP_SSH_libssh2upp_h_
+#define _UPP_SSH_libssh2upp_h_
 
 #include  "libssh2/agent.c"
+#include  "libssh2/bcrypt_pbkdf.c"
+#include  "libssh2/blowfish.c"
 #include  "libssh2/channel.c"
 #include  "libssh2/comp.c"
 #include  "libssh2/crypt.c"

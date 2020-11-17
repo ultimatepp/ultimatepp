@@ -35,8 +35,16 @@
  * OF SUCH DAMAGE.
  */
 
-// Note: This file is modified to work with SSH package for U++. 
+// Note: This file is modified to work with SSH package for U++.
 // If you get errors during compilation, try modifying the definitons below:
+
+/* Package information */
+#define PACKAGE           "Upp::SSH"
+#define PACKAGE_BUGREPORT "https://github.com/ultimatepp/ultimatepp/issues"
+#define PACKAGE_NAME      "Ultimate++ SSH package"
+#define PACKAGE_STRING    "Ultimate++ SSH package, a libssh2 wrapper, (ver. 2021.1)"
+#define PACKAGE_URL       "https://github.com/ultimatepp/ultimatepp"
+#define PACKAGE_VERSION   "2021.1"
 
 /* Headers */
 #define HAVE_INTTYPES_H
@@ -60,7 +68,7 @@
 #define HAVE_WS2TCPIP_H 
 #define HAVE_WINSOCK2_H 
 #define HAVE_NTDEF_H 
-#define HAVE_NTSTATUS_H 
+#define HAVE_NTSTATUS_H
 #endif
 
 /* DEBUG */
@@ -82,7 +90,7 @@
 /* Let us enable Z compression. */
 #define LIBSSH2_HAVE_ZLIB
 
-/* Upp/SSH package uses OpenSSL by default. */
+/* Upp-SSH package uses OpenSSL by default. */
 #define LIBSSH2_OPENSSL
 
 // #undef LIBSSH2_WINCNG
@@ -122,6 +130,28 @@
 /* #undef HAVE_IOCTLSOCKET_CASE */
 /* #undef HAVE_SO_NONBLOCK */
 /* #undef HAVE_DISABLED_NONBLOCKING */
+
+#ifdef flagWIN32
+#ifndef _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_DEPRECATE
+#endif
+#ifdef _MSC_VER
+#if _MSC_VER < 1900
+#define snprintf _snprintf
+#if _MSC_VER < 1500
+#define vsnprintf _vsnprintf
+#endif
+#define strdup _strdup
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
+#else
+#ifndef __MINGW32__
+#define strncasecmp strnicmp
+#define strcasecmp stricmp
+#endif
+#endif
+#endif
 
 /* snprintf not in Visual Studio CRT and _snprintf dangerously incompatible.
    We provide a safe wrapper if snprintf not found */

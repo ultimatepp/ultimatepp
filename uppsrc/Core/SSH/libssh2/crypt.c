@@ -54,10 +54,10 @@ crypt_none_crypt(LIBSSH2_SESSION * session, unsigned char *buf,
 static const LIBSSH2_CRYPT_METHOD libssh2_crypt_method_none = {
     "none",
     "DEK-Info: NONE",
-    8,                     /* blocksize (SSH2 defines minimum blocksize as 8) */
-    0,                     /* iv_len */
-    0,                     /* secret_len */
-    0,                     /* flags */
+    8,                /* blocksize (SSH2 defines minimum blocksize as 8) */
+    0,                /* iv_len */
+    0,                /* secret_len */
+    0,                /* flags */
     NULL,
     crypt_none_crypt,
     NULL
@@ -80,12 +80,12 @@ crypt_init(LIBSSH2_SESSION * session,
 {
     struct crypt_ctx *ctx = LIBSSH2_ALLOC(session,
                                           sizeof(struct crypt_ctx));
-    if (!ctx)
+    if(!ctx)
         return LIBSSH2_ERROR_ALLOC;
 
     ctx->encrypt = encrypt;
     ctx->algo = method->algo;
-    if (_libssh2_cipher_init(&ctx->h, ctx->algo, iv, secret, encrypt)) {
+    if(_libssh2_cipher_init(&ctx->h, ctx->algo, iv, secret, encrypt)) {
         LIBSSH2_FREE(session, ctx);
         return -1;
     }
@@ -109,7 +109,7 @@ static int
 crypt_dtor(LIBSSH2_SESSION * session, void **abstract)
 {
     struct crypt_ctx **cctx = (struct crypt_ctx **) abstract;
-    if (cctx && *cctx) {
+    if(cctx && *cctx) {
         _libssh2_cipher_dtor(&(*cctx)->h);
         LIBSSH2_FREE(session, *cctx);
         *abstract = NULL;
@@ -252,13 +252,13 @@ crypt_init_arcfour128(LIBSSH2_SESSION * session,
 {
     int rc;
 
-    rc = crypt_init (session, method, iv, free_iv, secret, free_secret,
-                     encrypt, abstract);
-    if (rc == 0) {
+    rc = crypt_init(session, method, iv, free_iv, secret, free_secret,
+                    encrypt, abstract);
+    if(rc == 0) {
         struct crypt_ctx *cctx = *(struct crypt_ctx **) abstract;
         unsigned char block[8];
         size_t discard = 1536;
-        for (; discard; discard -= 8)
+        for(; discard; discard -= 8)
             _libssh2_cipher_crypt(&cctx->h, cctx->algo, cctx->encrypt, block,
                                   method->blocksize);
     }
