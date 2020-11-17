@@ -52,9 +52,9 @@ GUI_APP_MAIN
 		sftp.WhenWait = []{}; // "NOOP"
 		SFtpFileSystemInfo sfsi(sftp);
 		FileSel fsel;
-		fsel.Filesystem(sfsi);
+		fsel.Filesystem((FileSystemInfo&) sfsi);
 		fsel.BaseDir(sftp.GetDefaultDir());
-		while(fsel.ExecuteOpen("Select a file to download (Select cancel to quit)")) {
+		while(fsel.NoAsking().ExecuteOpen("Select a file to download (Select cancel to quit)")) {
 			pi.Reset();
 			String path = fsel.Get();
 			sftp.WhenProgress = [&pi] (int64 done, int64 total)
