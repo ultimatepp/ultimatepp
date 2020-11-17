@@ -1,6 +1,1872 @@
    Changelog for the libssh2 project. Generated with git2news.pl
 
-GitHub (9 Jun 2017)
+GitHub (11 Nov 2020)
+- [Tseng Jun brought this change]
+
+  session.c: Correct a typo which may lead to stack overflow (#533)
+  
+  File: session.c
+  
+  Notes:
+  Seems the author intend to terminate banner_dup buffer, later, print it to the debug console.
+  
+  Author:
+  Tseng Jun
+
+Marc Hoersken (10 Oct 2020)
+- wincng: fix random big number generation to match openssl
+  
+  The old function would set the least significant bits in
+  the most significant byte instead of the most significant bits.
+  
+  The old function would also zero pad too much bits in the
+  most significant byte. This lead to a reduction of key space
+  in the most significant byte according to the following listing:
+  - 8 bits reduced to 0 bits => eg. 2048 bits to 2040 bits DH key
+  - 7 bits reduced to 1 bits => eg. 2047 bits to 2041 bits DH key
+  - 6 bits reduced to 2 bits => eg. 2046 bits to 2042 bits DH key
+  - 5 bits reduced to 3 bits => eg. 2045 bits to 2043 bits DH key
+  
+  No change would occur for the case of 4 significant bits.
+  For 1 to 3 significant bits in the most significant byte
+  the DH key would actually be expanded instead of reduced:
+  - 3 bits expanded to 5 bits => eg. 2043 bits to 2045 bits DH key
+  - 2 bits expanded to 6 bits => eg. 2042 bits to 2046 bits DH key
+  - 1 bits expanded to 7 bits => eg. 2041 bits to 2047 bits DH key
+  
+  There is no case of 0 significant bits in the most significant byte
+  since this would be a case of 8 significant bits in the next byte.
+  
+  At the moment only the following case applies due to a fixed
+  DH key size value currently being used in libssh2:
+  
+  The DH group_order is fixed to 256 (bytes) which leads to a
+  2047 bits DH key size by calculating (256 * 8) - 1.
+  
+  This means the DH keyspace was previously reduced from 2047 bits
+  to 2041 bits (while the top and bottom bits are always set), so the
+  keyspace is actually always reduced from 2045 bits to 2039 bits.
+  
+  All of this is only relevant for Windows versions supporting the
+  WinCNG backend (Vista or newer) before Windows 10 version 1903.
+  
+  Closes #521
+
+Daniel Stenberg (28 Sep 2020)
+- libssh2_session_callback_set.3: explain the recv/send callbacks
+  
+  Describe how to actually use these callbacks.
+  
+  Closes #518
+
+GitHub (23 Sep 2020)
+- [Will Cosgrove brought this change]
+
+  agent.c: formatting
+  
+  Improved formatting of RECV_SEND_ALL macro.
+
+- [Will Cosgrove brought this change]
+
+  CMakeLists.txt: respect install lib dir #405 (#515)
+  
+  Files:
+  CMakeLists.txt
+  
+  Notes:
+  Use CMAKE_INSTALL_LIBDIR directory
+  
+  Credit: Arfrever
+
+- [Will Cosgrove brought this change]
+
+  kex.c: group16-sha512 and group18-sha512 support #457 (#468)
+  
+  Files: kex.c
+  
+  Notes:
+  Added key exchange group16-sha512 and group18-sha512. As a result did the following:
+  
+  Abstracted diffie_hellman_sha256() to diffie_hellman_sha_algo() which is now algorithm agnostic and takes the algorithm as a parameter since we needed sha512 support. Unfortunately it required some helper functions but they are simple.
+  Deleted diffie_hellman_sha1()
+  Deleted diffie_hellman_sha1 specific macro
+  Cleaned up some formatting
+  Defined sha384 in os400 and wincng backends
+  Defined LIBSSH2_DH_MAX_MODULUS_BITS to abort the connection if we receive too large of p from the server doing sha1 key exchange.
+  Reorder the default key exchange list to match OpenSSH and improve security
+  
+  Credit:
+  Will Cosgrove
+
+- [Igor Klevanets brought this change]
+
+  agent.c: Recv and send all bytes via network in agent_transact_unix() (#510)
+  
+  Files: agent.c
+  
+  Notes:
+  Handle sending/receiving partial packet replies in agent.c API.
+  
+  Credit: Klevanets Igor <cerevra@yandex-team.ru>
+
+- [Daniel Stenberg brought this change]
+
+  Makefile.am: include all test files in the dist #379
+  
+  File:
+  Makefile.am
+  
+  Notes:
+  No longer conditionally include OpenSSL specific test files, they aren't run if we're not building against OpenSSL 1.1.x anyway.
+  
+  Credit:
+  Daniel Stenberg
+
+- [Max Dymond brought this change]
+
+  Add support for an OSS Fuzzer fuzzing target (#392)
+  
+  Files:
+  .travis.yml, configure.ac, ossfuzz
+  
+  Notes:
+  This adds support for an OSS-Fuzz fuzzing target in ssh2_client_fuzzer,
+  which is a cut down example of ssh2.c. Future enhancements can improve
+  coverage.
+  
+  Credit:
+  Max Dymond
+
+- [Sebastián Katzer brought this change]
+
+  mbedtls.c: ECDSA support for mbed TLS (#385)
+  
+  Files:
+  mbedtls.c, mbedtls.h, .travis.yml
+  
+  Notes:
+  This PR adds support for ECDSA for both key exchange and host key algorithms.
+  
+  The following elliptic curves are supported:
+  
+  256-bit curve defined by FIPS 186-4 and SEC1
+  384-bit curve defined by FIPS 186-4 and SEC1
+  521-bit curve defined by FIPS 186-4 and SEC1
+  
+  Credit:
+  Sebastián Katzer
+
+Marc Hoersken (1 Sep 2020)
+- buildconf: exec autoreconf to avoid additional process (#512)
+  
+  Also make buildconf exit with the return code of autoreconf.
+  
+  Follow up to #224
+
+- scp.c: fix indentation in shell_quotearg documentation
+
+- wincng: make more use of new helper functions (#496)
+
+- wincng: make sure algorithm providers are closed once (#496)
+
+GitHub (10 Jul 2020)
+- [David Benjamin brought this change]
+
+  openssl.c: clean up curve25519 code (#499)
+  
+  File: openssl.c, openssl.h, crypto.h, kex.c
+  
+  Notes:
+  This cleans up a few things in the curve25519 implementation:
+  
+  - There is no need to create X509_PUBKEYs or PKCS8_PRIV_KEY_INFOs to
+    extract key material. EVP_PKEY_get_raw_private_key and
+    EVP_PKEY_get_raw_public_key work fine.
+  
+  - libssh2_x25519_ctx was never used (and occasionally mis-typedefed to
+    libssh2_ed25519_ctx). Remove it. The _libssh2_curve25519_new and
+    _libssh2_curve25519_gen_k interfaces use the bytes. Note, if it needs
+    to be added back, there is no need to roundtrip through
+    EVP_PKEY_new_raw_private_key. EVP_PKEY_keygen already generated an
+    EVP_PKEY.
+  
+  - Add some missing error checks.
+  
+  Credit:
+  David Benjamin
+
+- [Will Cosgrove brought this change]
+
+  transport.c: socket is disconnected, return error (#500)
+  
+  File: transport.c
+  
+  Notes:
+  This is to fix #102, instead of continuing to attempt to read a disconnected socket, it will now error out.
+  
+  Credit:
+  TDi-jonesds
+
+- [Will Cosgrove brought this change]
+
+  stale.yml
+  
+  Increasing stale values.
+
+Marc Hoersken (6 Jul 2020)
+- wincng: try newer DH API first, fallback to legacy RSA API
+  
+  Avoid the use of RtlGetVersion or similar Win32 functions,
+  since these depend on version information from manifests.
+  
+  This commit makes the WinCNG backend first try to use the
+  new DH algorithm API with the raw secret derivation feature.
+  In case this feature is not available the WinCNG backend
+  will fallback to the classic approach of using RSA-encrypt
+  to perform the required modular exponentiation of BigNums.
+  
+  The feature availability test is done during the first handshake
+  and the result is stored in the crypto backends global state.
+  
+  Follow up to #397
+  Closes #484
+
+- wincng: fix indentation of function arguments and comments
+  
+  Follow up to #397
+
+- [Wez Furlong brought this change]
+
+  wincng: use newer DH API for Windows 8.1+
+  
+  Since Windows 1903 the approach used to perform DH kex with the CNG
+  API has been failing.
+  
+  This commit switches to using the `DH` algorithm provider to perform
+  generation of the key pair and derivation of the shared secret.
+  
+  It uses a feature of CNG that is not yet documented.  The sources of
+  information that I've found on this are:
+  
+  * https://stackoverflow.com/a/56378698/149111
+  * https://github.com/wbenny/mini-tor/blob/5d39011e632be8e2b6b1819ee7295e8bd9b7a769/mini/crypto/cng/dh.inl#L355
+  
+  With this change I am able to successfully connect from Windows 10 to my
+  ubuntu system.
+  
+  Refs: https://github.com/alexcrichton/ssh2-rs/issues/122
+  Fixes: https://github.com/libssh2/libssh2/issues/388
+  Closes: https://github.com/libssh2/libssh2/pull/397
+
+GitHub (1 Jul 2020)
+- [Zenju brought this change]
+
+  comp.c: Fix name clash with ZLIB macro "compress" (#418)
+  
+  File: comp.c
+  
+  Notes:
+  * Fix name clash with ZLIB macro "compress".
+  
+  Credit:
+  Zenju
+
+- [yann-morin-1998 brought this change]
+
+  buildsystem: drop custom buildconf script, rely on autoreconf (#224)
+  
+  Notes:
+  The buildconf script is currently required, because we need to copy a
+  header around, because it is used both from the library and the examples
+  sources.
+  
+  However, having a custom 'buildconf'-like script is not needed if we can
+  ensure that the header exists by the time it is needed. For that, we can
+  just append the src/ directory to the headers search path for the
+  examples.
+  
+  And then it means we no longer need to generate the same header twice,
+  so we remove the second one from configure.ac.
+  
+  Now, we can just call "autoreconf -fi" to generate the autotools files,
+  instead of relying on the canned sequence in "buildconf", since
+  autoreconf has now long known what to do at the correct moment (future
+  versions of autotools, automake, autopoint, autoheader etc... may
+  require an other ordering, or other intermediate steps, etc...).
+  
+  Eventually, get rid of buildconf now it is no longer needed. In fact, we
+  really keep it for legacy, but have it just call autoreconf (and print a
+  nice user-friendly warning). Don't include it in the release tarballs,
+  though.
+  
+  Update doc, gitignore, and travis-CI jobs accordingly.
+  
+  Credit:
+  Signed-off-by: "Yann E. MORIN" <yann.morin.1998@free.fr>
+  Cc: Sam Voss <sam.voss@rockwellcollins.com>
+
+- [Will Cosgrove brought this change]
+
+  libssh2.h: Update Diffie Hellman group values (#493)
+  
+  File: libssh2.h
+  
+  Notes:
+  Update the min, preferred and max DH group values based on RFC 8270.
+  
+  Credit:
+  Will Cosgrove, noted from email list by Mitchell Holland
+
+Marc Hoersken (22 Jun 2020)
+- travis: use existing Makefile target to run checksrc
+
+- Makefile: also run checksrc on test source files
+
+- tests: avoid use of deprecated function _sleep (#490)
+
+- tests: avoid use of banned function strncat (#489)
+
+- tests: satisfy checksrc regarding max line length of 79 chars
+  
+  Follow up to 2764bc8e06d51876b6796d6080c6ac51e20f3332
+
+- tests: satisfy checksrc with whitespace only fixes
+  
+  checksrc.pl -i4 -m79 -ASIZEOFNOPAREN -ASNPRINTF
+              -ACOPYRIGHT -AFOPENMODE tests/*.[ch]
+
+- tests: add support for ports published via Docker for Windows
+
+- tests: restore retry behaviour for docker-machine ip command
+
+- tests: fix mix of declarations and code failing C89 compliance
+
+- wincng: add and improve checks in bit counting function
+
+- wincng: align bits to bytes calculation in all functions
+
+- wincng: do not disable key validation that can be enabled
+  
+  The modular exponentiation also works with key validation enabled.
+
+- wincng: fix return value in _libssh2_dh_secret
+  
+  Do not ignore return value of modular exponentiation.
+
+- appveyor: build and run tests for WinCNG crypto backend
+
+GitHub (1 Jun 2020)
+- [suryakalpo brought this change]
+
+  INSTALL_CMAKE.md: Update formatting (#481)
+  
+  File: INSTALL_CMAKE.md
+  
+  Notes:
+  Although the original text would be immediately clear to seasoned users of CMAKE and/or Unix shell, the lack of newlines may cause some confusion for newcomers. Hence, wrapping the texts in a md code-block such that the newlines appear as intended.
+  
+  credit:
+  suryakalpo
+
+Marc Hoersken (31 May 2020)
+- src: add new and align include guards in header files (#480)
+  
+  Make sure all include guards exist and follow the same format.
+
+- wincng: fix multiple definition of `_libssh2_wincng' (#479)
+  
+  Add missing include guard and move global state
+  from header to source file by using extern.
+
+GitHub (28 May 2020)
+- [Will Cosgrove brought this change]
+
+  transport.c: moving total_num check from #476 (#478)
+  
+  file: transport.c
+  
+  notes:
+  moving total_num zero length check from #476 up to the prior bounds check which already includes a total_num check. Makes it slightly more readable.
+  
+  credit:
+  Will Cosgrove
+
+- [lutianxiong brought this change]
+
+  transport.c: fix use-of-uninitialized-value (#476)
+  
+  file:transport.c
+  
+  notes:
+  return error if malloc(0)
+  
+  credit:
+  lutianxiong
+
+- [Dr. Koutheir Attouchi brought this change]
+
+  libssh2_sftp.h: Changed type of LIBSSH2_FX_* constants to unsigned long, fixes #474
+  
+  File:
+  libssh2_sftp.h
+  
+  Notes:
+  Error constants `LIBSSH2_FX_*` are only returned by `libssh2_sftp_last_error()` which returns `unsigned long`.
+  Therefore these constants should be defined as unsigned long literals, instead of int literals.
+  
+  Credit:
+  Dr. Koutheir Attouchi
+
+- [monnerat brought this change]
+
+  os400qc3.c: constify libssh2_os400qc3_hash_update() data parameter. (#469)
+  
+  Files: os400qc3.c, os400qc3.h
+  
+  Notes:
+  Fixes building on OS400. #426
+  
+  Credit:
+  Reported-by: hjindra on github, dev by Monnerat
+
+- [monnerat brought this change]
+
+  HACKING.CRYPTO: keep up to date with new crypto definitions from code. (#466)
+  
+  File: HACKING.CRYPTO
+  
+  Notes:
+  This commit updates the HACKING.CRYPTO documentation file in an attempt to make it in sync with current code.
+  New documented features are:
+  
+  SHA384
+  SHA512
+  ECDSA
+  ED25519
+  
+  Credit:
+  monnerat
+
+- [Harry Sintonen brought this change]
+
+  kex.c: Add diffie-hellman-group14-sha256 Key Exchange Method (#464)
+  
+  File: kex.c
+  
+  Notes: Added diffie-hellman-group14-sha256 kex
+  
+  Credit: Harry Sintonen <sintonen@iki.fi>
+
+- [Will Cosgrove brought this change]
+
+  os400qc3.h: define sha512 macros (#465)
+  
+  file: os400qc3.h
+  notes: fixes for building libssh2 1.9.x
+
+- [Will Cosgrove brought this change]
+
+  os400qc3.h: define EC types to fix building #426 (#462)
+  
+  File: os400qc3.h
+  Notes: define missing EC types which prevents building
+  Credit: hjindra
+
+- [Brendan Shanks brought this change]
+
+  hostkey.c: Fix 'unsigned int'/'uint32_t' mismatch (#461)
+  
+  File: hostkey.c
+  
+  Notes:
+  These types are the same size so most compilers are fine with it, but CodeWarrior (on classic MacOS) throws an ‘illegal implicit conversion’ error
+  
+  Credit: Brendan Shanks
+
+- [Thomas Klausner brought this change]
+
+  Makefile.am: Fix unportable test(1) operator. (#459)
+  
+  file: Makefile.am
+  
+  Notes:
+  The POSIX comparison operator for test(1) is =; bash supports == but not even test from GNU coreutils does.
+  
+  Credit:
+  Thomas Klausner
+
+- [Tseng Jun brought this change]
+
+  openssl.c: minor changes of coding style (#454)
+  
+  File: openssl.c
+  
+  Notes:
+  minor changes of coding style and align preprocessor conditional for #439
+  
+  Credit:
+  Tseng Jun
+
+- [Hans Meier brought this change]
+
+  openssl.c: Fix for use of uninitialized aes_ctr_cipher.key_len (#453)
+  
+  File:
+  Openssl.c
+  
+  Notes:
+  * Fix for use of uninitialized aes_ctr_cipher.key_len when using HAVE_OPAQUE_STRUCTS, regression from #439
+  
+  Credit:
+  Hans Meirer, Tseng Jun
+
+- [Zenju brought this change]
+
+  agent.c: Fix Unicode builds on Windows (#417)
+  
+  File: agent.c
+  
+  Notes:
+  Fixes unicode builds for Windows in Visual Studio 16.3.2.
+  
+  Credit:
+  Zenju
+
+- [Hans Meier brought this change]
+
+  openssl.c: Fix use-after-free crash in openssl backend without memory leak (#439)
+  
+  Files: openssl.c
+  
+  Notes:
+  Fixes memory leaks and use after free AES EVP_CIPHER contexts when using OpenSSL 1.0.x.
+  
+  Credit:
+  Hans Meier
+
+- [Romain Geissler @ Amadeus brought this change]
+
+  Session.c: Fix undefined warning when mixing with LTO-enabled libcurl. (#449)
+  
+  File: Session.c
+  
+  Notes:
+  With gcc 9, libssh2, libcurl and LTO enabled for all binaries I see this
+  warning (error with -Werror):
+  
+  vssh/libssh2.c: In function ‘ssh_statemach_act’:
+  /data/mwrep/rgeissler/ospack/ssh2/BUILD/libssh2-libssh2-03c7c4a/src/session.c:579:9: error: ‘seconds_to_next’ is used uninitialized in this function [-Werror=uninitialized]
+    579 |     int seconds_to_next;
+        |         ^
+  lto1: all warnings being treated as errors
+  
+  Gcc normally issues -Wuninitialized when it is sure there is a problem,
+  and -Wmaybe-uninitialized when it's not sure, but it's possible. Here
+  the compiler seems to have find a real case where this could happen. I
+  looked in your code and overall it seems you always check if the return
+  code is non null, not often that it's below zero. I think we should do
+  the same here. With this patch, gcc is fine.
+  
+  Credit:
+  Romain-Geissler-1A
+
+- [Zenju brought this change]
+
+  transport.c: Fix crash with delayed compression (#443)
+  
+  Files: transport.c
+  
+  Notes:
+  Fixes crash with delayed compression option using Bitvise server.
+  
+  Contributor:
+  Zenju
+
+- [Will Cosgrove brought this change]
+
+  Update INSTALL_MAKE path to INSTALL_MAKE.md (#446)
+  
+  Included for #429
+
+- [Will Cosgrove brought this change]
+
+  Update INSTALL_CMAKE filename to INSTALL_CMAKE.md (#445)
+  
+  Fixing for #429
+
+- [Wallace Souza brought this change]
+
+  Rename INSTALL_CMAKE to INTALL_CMAKE.md (#429)
+  
+  Adding Markdown file extension in order to Github render the instructions properly
+
+Will Cosgrove (17 Dec 2019)
+- [Daniel Stenberg brought this change]
+
+  include/libssh2.h: fix comment: the known host key uses 4 bits (#438)
+
+- [Zenju brought this change]
+
+  ssh-ed25519: Support PKIX + calc pubkey from private (#416)
+  
+  Files: openssl.c/h
+  Author: Zenju
+  Notes:
+  Adds support for PKIX key reading by fixing:
+  
+  _libssh2_pub_priv_keyfile() is missing the code to extract the ed25519 public key from a given private key
+  
+  _libssh2_ed25519_new_private_frommemory is only parsing the openssh key format but does not understand PKIX (as retrieved via PEM_read_bio_PrivateKey)
+
+GitHub (15 Oct 2019)
+- [Will Cosgrove brought this change]
+
+  .travis.yml: Fix Chrome and 32 bit builds (#423)
+  
+  File: .travis.yml
+  
+  Notes:
+  * Fix Chrome installing by using Travis build in directive
+  * Update to use libgcrypt20-dev package to fix 32 bit builds based on comments found here:
+  https://launchpad.net/ubuntu/xenial/i386/libgcrypt11-dev
+
+- [Will Cosgrove brought this change]
+
+  packet.c: improved parsing in packet_x11_open (#410)
+  
+  Use new API to parse data in packet_x11_open() for better bounds checking.
+
+Will Cosgrove (12 Sep 2019)
+- [Michael Buckley brought this change]
+
+  knownhost.c: Double the static buffer size when reading and writing known hosts (#409)
+  
+  Notes:
+  We had a user who was being repeatedly prompted to accept a server key repeatedly. It turns out the base64-encoded key was larger than the static buffers allocated to read and write known hosts. I doubled the size of these buffers.
+  
+  Credit:
+  Michael Buckley
+
+GitHub (4 Sep 2019)
+- [Will Cosgrove brought this change]
+
+  packet.c: improved packet parsing in packet_queue_listener (#404)
+  
+  * improved bounds checking in packet_queue_listener
+  
+  file: packet.c
+  
+  notes:
+  improved parsing packet in packet_queue_listener
+
+- [Will Cosgrove brought this change]
+
+  packet.c: improve message parsing (#402)
+  
+  * packet.c: improve parsing of packets
+  
+  file: packet.c
+  
+  notes:
+  Use _libssh2_get_string API in SSH_MSG_DEBUG/SSH_MSG_DISCONNECT. Additional uint32 bounds check in SSH_MSG_GLOBAL_REQUEST.
+
+- [Will Cosgrove brought this change]
+
+  misc.c: _libssh2_ntohu32 cast bit shifting (#401)
+  
+  To quite overly aggressive analyzers.
+  
+  Note, the builds pass, Travis is having some issues with Docker images.
+
+- [Will Cosgrove brought this change]
+
+  kex.c: improve bounds checking in kex_agree_methods() (#399)
+  
+  file: kex.c
+  
+  notes:
+  use _libssh2_get_string instead of kex_string_pair which does additional checks
+
+Will Cosgrove (23 Aug 2019)
+- [Fabrice Fontaine brought this change]
+
+  acinclude.m4: add mbedtls to LIBS (#371)
+  
+  Notes:
+  This is useful for static builds so that the Libs.private field in
+  libssh2.pc contains correct info for the benefit of pkg-config users.
+  Static link with libssh2 requires this information.
+  
+  Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+  [Retrieved from:
+  https://git.buildroot.net/buildroot/tree/package/libssh2/0002-acinclude.m4-add-mbedtls-to-LIBS.patch]
+  Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+  
+  Credit:
+  Fabrice Fontaine
+
+- [jethrogb brought this change]
+
+  Generate debug info when building with MSVC (#178)
+  
+  files: CMakeLists.txt
+  
+  notes: Generate debug info when building with MSVC
+  
+  credit:
+  jethrogb
+
+- [Panos brought this change]
+
+  Add agent forwarding implementation (#219)
+  
+  files: channel.c, test_agent_forward_succeeds.c, libssh2_priv.h, libssh2.h, ssh2_agent_forwarding.c
+  
+  notes:
+  * Adding SSH agent forwarding.
+  * Fix agent forwarding message, updated example.
+  Added integration test code and cmake target. Added example to cmake list.
+  
+  credit:
+  pkittenis
+
+GitHub (2 Aug 2019)
+- [Will Cosgrove brought this change]
+
+  Update EditorConfig
+  
+  Added max_line_length = 80
+
+- [Will Cosgrove brought this change]
+
+  global.c : fixed call to libssh2_crypto_exit #394 (#396)
+  
+  * global.c : fixed call to libssh2_crypto_exit #394
+  
+  File: global.c
+  
+  Notes: Don't call `libssh2_crypto_exit()` until `_libssh2_initialized` count is down to zero.
+  
+  Credit: seba30
+
+Will Cosgrove (30 Jul 2019)
+- [hlefebvre brought this change]
+
+  misc.c : Add an EWOULDBLOCK check for better portability (#172)
+  
+  File: misc.c
+  
+  Notes: Added support for all OS' that implement EWOULDBLOCK, not only VMS
+  
+  Credit: hlefebvre
+
+- [Etienne Samson brought this change]
+
+  userauth.c: fix off by one error when loading public keys with no id (#386)
+  
+  File: userauth.c
+  
+  Credit:
+  Etienne Samson
+  
+  Notes:
+  Caught by ASAN:
+  
+  =================================================================
+  ==73797==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60700001bcf0 at pc 0x00010026198d bp 0x7ffeefbfed30 sp 0x7ffeefbfe4d8
+  READ of size 69 at 0x60700001bcf0 thread T0
+  2019-07-04 08:35:30.292502+0200 atos[73890:2639175] examining /Users/USER/*/libssh2_clar [73797]
+      #0 0x10026198c in wrap_memchr (libclang_rt.asan_osx_dynamic.dylib:x86_64h+0x1f98c)
+      #1 0x1000f8e66 in file_read_publickey userauth.c:633
+      #2 0x1000f2dc9 in userauth_publickey_fromfile userauth.c:1513
+      #3 0x1000f2948 in libssh2_userauth_publickey_fromfile_ex userauth.c:1590
+      #4 0x10000e254 in test_userauth_publickey__ed25519_auth_ok publickey.c:69
+      #5 0x1000090c3 in clar_run_test clar.c:260
+      #6 0x1000038f3 in clar_run_suite clar.c:343
+      #7 0x100003272 in clar_test_run clar.c:522
+      #8 0x10000c3cc in main runner.c:60
+      #9 0x7fff5b43b3d4 in start (libdyld.dylib:x86_64+0x163d4)
+  
+  0x60700001bcf0 is located 0 bytes to the right of 80-byte region [0x60700001bca0,0x60700001bcf0)
+  allocated by thread T0 here:
+      #0 0x10029e053 in wrap_malloc (libclang_rt.asan_osx_dynamic.dylib:x86_64h+0x5c053)
+      #1 0x1000b4978 in libssh2_default_alloc session.c:67
+      #2 0x1000f8aba in file_read_publickey userauth.c:597
+      #3 0x1000f2dc9 in userauth_publickey_fromfile userauth.c:1513
+      #4 0x1000f2948 in libssh2_userauth_publickey_fromfile_ex userauth.c:1590
+      #5 0x10000e254 in test_userauth_publickey__ed25519_auth_ok publickey.c:69
+      #6 0x1000090c3 in clar_run_test clar.c:260
+      #7 0x1000038f3 in clar_run_suite clar.c:343
+      #8 0x100003272 in clar_test_run clar.c:522
+      #9 0x10000c3cc in main runner.c:60
+      #10 0x7fff5b43b3d4 in start (libdyld.dylib:x86_64+0x163d4)
+  
+  SUMMARY: AddressSanitizer: heap-buffer-overflow (libclang_rt.asan_osx_dynamic.dylib:x86_64h+0x1f98c) in wrap_memchr
+  Shadow bytes around the buggy address:
+    0x1c0e00003740: fd fd fd fd fd fd fd fd fd fd fa fa fa fa fd fd
+    0x1c0e00003750: fd fd fd fd fd fd fd fa fa fa fa fa 00 00 00 00
+    0x1c0e00003760: 00 00 00 00 00 00 fa fa fa fa 00 00 00 00 00 00
+    0x1c0e00003770: 00 00 00 fa fa fa fa fa fd fd fd fd fd fd fd fd
+    0x1c0e00003780: fd fd fa fa fa fa fd fd fd fd fd fd fd fd fd fa
+  =>0x1c0e00003790: fa fa fa fa 00 00 00 00 00 00 00 00 00 00[fa]fa
+    0x1c0e000037a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+    0x1c0e000037b0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+    0x1c0e000037c0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+    0x1c0e000037d0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+    0x1c0e000037e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  Shadow byte legend (one shadow byte represents 8 application bytes):
+    Addressable:           00
+    Partially addressable: 01 02 03 04 05 06 07
+    Heap left redzone:       fa
+    Freed heap region:       fd
+    Stack left redzone:      f1
+    Stack mid redzone:       f2
+    Stack right redzone:     f3
+    Stack after return:      f5
+    Stack use after scope:   f8
+    Global redzone:          f9
+    Global init order:       f6
+    Poisoned by user:        f7
+    Container overflow:      fc
+    Array cookie:            ac
+    Intra object redzone:    bb
+    ASan internal:           fe
+    Left alloca redzone:     ca
+    Right alloca redzone:    cb
+    Shadow gap:              cc
+
+- [Thilo Schulz brought this change]
+
+  openssl.c : Fix use-after-free crash on reinitialization of openssl backend
+  
+  file : openssl.c
+  
+  notes :
+  libssh2's openssl backend has a use-after-free condition if HAVE_OPAQUE_STRUCTS is defined and you call libssh2_init() again after prior initialisation/deinitialisation of libssh2
+  
+  credit : Thilo Schulz
+
+- [axjowa brought this change]
+
+  openssl.h : Use of ifdef where if should be used (#389)
+  
+  File : openssl.h
+  
+  Notes :
+  LIBSSH2_ECDSA and LIBSSH2_ED25519 are always defined so the #ifdef
+  checks would never be false.
+  
+  This change makes it possible to build libssh2 against OpenSSL built
+  without EC support.
+  
+  Change-Id: I0a2f07c2d80178314dcb7d505d1295d19cf15afd
+  
+  Credit : axjowa
+
+- [Zenju brought this change]
+
+  Agent.c : Preserve error info from agent_list_identities() (#374)
+  
+  Files : agent.c
+  
+  Notes :
+  Currently the error details as returned by agent_transact_pageant() are overwritten by a generic "agent list id failed" message by int agent_list_identities(LIBSSH2_AGENT* agent).
+  
+  Credit :
+  Zenju
+
+- [Who? Me?! brought this change]
+
+  Channel.c: Make sure the error code is set in _libssh2_channel_open() (#381)
+  
+  File : Channel.c
+  
+  Notes :
+  if _libssh2_channel_open() fails, set the error code.
+  
+  Credit :
+  mark-i-m
+
+- [Orgad Shaneh brought this change]
+
+  Kex.c, Remove unneeded call to strlen (#373)
+  
+  File : Kex.c
+  
+  Notes :
+  Removed call to strlen
+  
+  Credit :
+  Orgad Shaneh
+
+- [Pedro Monreal brought this change]
+
+  Spelling corrections (#380)
+  
+  Files :
+  libssh2.h, libssh2_sftp.h, bcrypt_pbkdf.c, mbedtls.c, sftp.c, ssh2.c
+  
+  Notes :
+  * Fixed misspellings
+  
+  Credit :
+  Pedro Monreal
+
+- [Sebastián Katzer brought this change]
+
+  Fix Potential typecast error for `_libssh2_ecdsa_key_get_curve_type` (#383)
+  
+  Issue : #383
+  
+  Files : hostkey.c, crypto.h, openssl.c
+  
+  Notes :
+  * Fix potential typecast error for `_libssh2_ecdsa_key_get_curve_type`
+  * Rename _libssh2_ecdsa_key_get_curve_type to _libssh2_ecdsa_get_curve_type
+  
+  Credit :
+  Sebastián Katzer
+
+GitHub (20 Jun 2019)
+- [Will Cosgrove brought this change]
+
+  bump copyright date
+
+Version 1.9.0 (19 Jun 2019)
+
+GitHub (19 Jun 2019)
+- [Will Cosgrove brought this change]
+
+  1.9 Formatting
+
+- [Will Cosgrove brought this change]
+
+  1.9 Release notes
+
+Will Cosgrove (17 May 2019)
+- [Alexander Curtiss brought this change]
+
+  libgcrypt.c : Fixed _libssh2_rsa_sha1_sign memory leak. (#370)
+  
+  File: libgcrypt.c
+  
+  Notes : Added calls to gcry_sexp_release to free memory allocated by gcry_sexp_find_token
+  
+  Credit :
+  Reporter : beckmi
+  PR by: Alexander Curtiss
+
+- [Orivej Desh brought this change]
+
+  libssh2_priv.h : Fix musl build warning on sys/poll.h (#346)
+  
+  File : libssh2_priv.h
+  
+  Notes :
+  musl prints `redirecting incorrect #include <sys/poll.h> to <poll.h>`
+  http://git.musl-libc.org/cgit/musl/commit/include/sys/poll.h?id=54446d730cfb17c5f7bcf57f139458678f5066cc
+  
+  poll is defined by POSIX to be in poll.h:
+  http://pubs.opengroup.org/onlinepubs/7908799/xsh/poll.html
+  
+  Credit : Orivej Desh
+
+GitHub (1 May 2019)
+- [Will Cosgrove brought this change]
+
+  kex.c : additional bounds checks in diffie_hellman_sha1/256 (#361)
+  
+  Files : kex.c, misc.c, misc.h
+  
+  Notes :
+  Fixed possible out of bounds memory access when reading malformed data in diffie_hellman_sha1() and diffie_hellman_sha256().
+  
+  Added _libssh2_copy_string() to misc.c to return an allocated and filled char buffer from a string_buf offset. Removed no longer needed s var in kmdhgGPshakex_state_t.
+
+Will Cosgrove (26 Apr 2019)
+- [Tseng Jun brought this change]
+
+  sftp.c : sftp_bin2attr() Correct attrs->gid assignment (#366)
+  
+  Regression with fix for #339
+  
+  Credit : Tseng Jun
+
+- [Tseng Jun brought this change]
+
+  kex.c : Correct type cast in curve25519_sha256() (#365)
+
+GitHub (24 Apr 2019)
+- [Will Cosgrove brought this change]
+
+  transport.c : scope local total_num var (#364)
+  
+  file : transport.c
+  notes : move local `total_num` variable inside of if block to prevent scope access issues which caused #360.
+
+Will Cosgrove (24 Apr 2019)
+- [doublex brought this change]
+
+  transport.c : fixes bounds check if partial packet is read
+  
+  Files : transport.c
+  
+  Issue : #360
+  
+  Notes :
+   'p->total_num' instead of local value total_num when doing bounds check.
+  
+  Credit : Doublex
+
+GitHub (23 Apr 2019)
+- [Will Cosgrove brought this change]
+
+  Editor config file for source files (#322)
+  
+  Simple start to an editor config file when editing source files to make sure they are configured correctly.
+
+- [Will Cosgrove brought this change]
+
+  misc.c : String buffer API improvements (#332)
+  
+  Files : misc.c, hostkey.c, kex.c, misc.h, openssl.c, sftp.c
+  
+  Notes :
+  * updated _libssh2_get_bignum_bytes and _libssh2_get_string. Now pass in length as an argument instead of returning it to keep signedness correct. Now returns -1 for failure, 0 for success.
+  
+  _libssh2_check_length now returns 0 on success and -1 on failure to match the other string_buf functions. Added comment to _libssh2_check_length.
+  
+  Credit : Will Cosgrove
+
+Will Cosgrove (19 Apr 2019)
+- [doublex brought this change]
+
+  mbedtls.c : _libssh2_mbedtls_rsa_new_private_frommemory() allow private-key from memory (#359)
+  
+  File : mbedtls.c
+  
+  Notes: _libssh2_mbedtls_rsa_new_private_frommemory() fixes private-key from memory reading to by adding NULL terminator before parsing; adds passphrase support.
+  
+  Credit: doublex
+
+- [Ryan Kelley brought this change]
+
+  Session.c : banner_receive() from leaking when accessing non ssh ports (#356)
+  
+  File : session.c
+  
+  Release previous banner in banner_receive() if the session is reused after a failed connection.
+  
+  Credit : Ryan Kelley
+
+GitHub (11 Apr 2019)
+- [Will Cosgrove brought this change]
+
+  Formatting in agent.c
+  
+  Removed whitespace.
+
+- [Will Cosgrove brought this change]
+
+  Fixed formatting in agent.c
+  
+  Quiet linter around a couple if blocks and pointer.
+
+Will Cosgrove (11 Apr 2019)
+- [Zhen-Huan HWANG brought this change]
+
+  sftp.c : discard and reset oversized packet in sftp_packet_read() (#269)
+  
+  file : sftp.c
+  
+  notes : when sftp_packet_read() encounters an sftp packet which exceeds SFTP max packet size it now resets the reading state so it can continue reading.
+  
+  credit : Zhen-Huan HWANG
+
+GitHub (11 Apr 2019)
+- [Will Cosgrove brought this change]
+
+  Add agent functions libssh2_agent_get_identity_path() and libssh2_agent_set_identity_path() (#308)
+  
+  File : agent.c
+  
+  Notes :
+  Libssh2 uses the SSH_AUTH_SOCK env variable to read the system agent location. However, when using a custom agent path you have to set this value using setenv which is not thread-safe. The new functions allow for a way to set a custom agent socket path in a thread safe manor.
+
+- [Will Cosgrove brought this change]
+
+  Simplified _libssh2_check_length (#350)
+  
+  * Simplified _libssh2_check_length
+  
+  misc.c : _libssh2_check_length()
+  
+  Removed cast and improved bounds checking and format.
+  
+  Credit : Yuriy M. Kaminskiy
+
+- [Will Cosgrove brought this change]
+
+  _libssh2_check_length() : additional bounds check (#348)
+  
+  Misc.c : _libssh2_check_length()
+  
+  Ensure the requested length is less than the total length before doing the additional bounds check
+
+Daniel Stenberg (25 Mar 2019)
+- misc: remove 'offset' from string_buf
+  
+  It isn't necessary.
+  
+  Closes #343
+
+- sftp: repair mtime from e1ead35e475
+  
+  A regression from e1ead35e4759 broke the SFTP mtime logic in
+  sftp_bin2attr
+  
+  Also simplified the _libssh2_get_u32/u64 functions slightly.
+  
+  Closes #342
+
+- session_disconnect: don't zero state, just clear the right bit
+  
+  If we clear the entire field, the freeing of data in session_free() is
+  skipped. Instead just clear the bit that risk making the code get stuck
+  in the transport functions.
+  
+  Regression from 4d66f6762ca3fc45d9.
+  
+  Reported-by: dimmaq on github
+  Fixes #338
+  Closes #340
+
+- libssh2_sftp.h: restore broken ABI
+  
+  Commit 41fbd44 changed variable sizes/types in a public struct which
+  broke the ABI, which breaks applications!
+  
+  This reverts that change.
+  
+  Closes #339
+
+- style: make includes and examples code style strict
+  
+  make travis and the makefile rule verify them too
+  
+  Closes #334
+
+GitHub (21 Mar 2019)
+- [Daniel Stenberg brought this change]
+
+  create a github issue template
+
+Daniel Stenberg (21 Mar 2019)
+- stale-bot: activated
+  
+  The stale bot will automatically mark stale issues (inactive for 90
+  days) and if still untouched after 21 more days, close them.
+  
+  See https://probot.github.io/apps/stale/
+
+- libssh2_session_supported_algs.3: fix formatting mistakes
+  
+  Reported-by: Max Horn
+  Fixes #57
+
+- [Zenju brought this change]
+
+  libssh2.h: Fix Error C2371 'ssize_t': redefinition
+  
+  Closes #331
+
+- travis: add code style check
+  
+  Closes #324
+
+- code style: unify code style
+  
+  Indent-level: 4
+  Max columns: 79
+  No spaces after if/for/while
+  Unified brace positions
+  Unified white spaces
+
+- src/checksrc.pl: code style checker
+  
+  imported as-is from curl
+
+Will Cosgrove (19 Mar 2019)
+- Merge branch 'MichaelBuckley-michaelbuckley-security-fixes'
+
+- Silence unused var warnings (#329)
+  
+  Silence warnings about unused variables in this test
+
+- Removed unneeded > 0 check
+  
+  When checking `userauth_kybd_num_prompts > 100` we don't care if it's also above zero.
+
+- [Matthew D. Fuller brought this change]
+
+  Spell OpenSS_H_ right when talking about their specific private key (#321)
+  
+  Good catch, thanks.
+
+GitHub (19 Mar 2019)
+- [Will Cosgrove brought this change]
+
+  Silence unused var warnings (#329)
+  
+  Silence warnings about unused variables in this test
+
+Michael Buckley (19 Mar 2019)
+- Fix more scope and printf warning errors
+
+- Silence unused variable warning
+
+GitHub (19 Mar 2019)
+- [Will Cosgrove brought this change]
+
+  Removed unneeded > 0 check
+  
+  When checking `userauth_kybd_num_prompts > 100` we don't care if it's also above zero.
+
+Will Cosgrove (19 Mar 2019)
+- [Matthew D. Fuller brought this change]
+
+  Spell OpenSS_H_ right when talking about their specific private key (#321)
+  
+  Good catch, thanks.
+
+Michael Buckley (18 Mar 2019)
+- Fix errors identified by the build process
+
+- Fix casting errors after merge
+
+GitHub (18 Mar 2019)
+- [Michael Buckley brought this change]
+
+  Merge branch 'master' into michaelbuckley-security-fixes
+
+Michael Buckley (18 Mar 2019)
+- Move fallback SIZE_MAX and UINT_MAX to libssh2_priv.h
+
+- Fix type and logic issues with _libssh2_get_u64
+
+Daniel Stenberg (17 Mar 2019)
+- examples: fix various compiler warnings
+
+- lib: fix various compiler warnings
+
+- session: ignore pedantic warnings for funcpointer <=> void *
+
+- travis: add a build using configure
+  
+  Closes #320
+
+- configure: provide --enable-werror
+
+- appveyor: remove old builds that mostly cause failures
+  
+  ... and only run on master branch.
+  
+  Closes #323
+
+- cmake: add two missing man pages to get installed too
+  
+  Both libssh2_session_handshake.3 and
+  libssh2_userauth_publickey_frommemory.3 were installed by the configure
+  build already.
+  
+  Reported-by: Arfrever on github
+  Fixes #278
+
+- include/libssh2.h: warning: "_WIN64" is not defined, evaluates to 0
+  
+  We don't use #if for defines that might not be defined.
+
+- pem: //-comments are not allowed
+
+Will Cosgrove (14 Mar 2019)
+- [Daniel Stenberg brought this change]
+
+  userauth: fix "Function call argument is an uninitialized value" (#318)
+  
+  Detected by scan-build.
+
+- fixed unsigned/signed issue
+
+Daniel Stenberg (15 Mar 2019)
+- session_disconnect: clear state
+  
+  If authentication is started but not completed before the application
+  gives up and instead wants to shut down the session, the '->state' field
+  might still be set and thus effectively dead-lock session_disconnect.
+  
+  This happens because both _libssh2_transport_send() and
+  _libssh2_transport_read() refuse to do anything as long as state is set
+  without the LIBSSH2_STATE_KEX_ACTIVE bit.
+  
+  Reported in curl bug https://github.com/curl/curl/issues/3650
+  
+  Closes #310
+
+Will Cosgrove (14 Mar 2019)
+- Release notes from 1.8.1
+
+Michael Buckley (14 Mar 2019)
+- Use string_buf in sftp_init().
+
+- Guard against out-of-bounds reads in publickey.c
+
+- Guard against out-of-bounds reads in session.c
+
+- Guard against out-of-bounds reads in userauth.c
+
+- Use LIBSSH2_ERROR_BUFFER_TOO_SMALL instead of LIBSSH2_ERROR_OUT_OF_BOUNDARY in sftp.c
+
+- Additional bounds checking in sftp.c
+
+- Additional length checks to prevent out-of-bounds reads and writes in _libssh2_packet_add(). https://libssh2.org/CVE-2019-3862.html
+
+- Add a required_size parameter to sftp_packet_require et. al. to require callers of these functions to handle packets that are too short. https://libssh2.org/CVE-2019-3860.html
+
+- Check the length of data passed to sftp_packet_add() to prevent out-of-bounds reads.
+
+- Prevent zero-byte allocation in sftp_packet_read() which could lead to an out-of-bounds read. https://libssh2.org/CVE-2019-3858.html
+
+- Sanitize padding_length - _libssh2_transport_read(). https://libssh2.org/CVE-2019-3861.html
+  
+  This prevents an underflow resulting in a potential out-of-bounds read if a server sends a too-large padding_length, possibly with malicious intent.
+
+- Defend against writing beyond the end of the payload in _libssh2_transport_read().
+
+- Defend against possible integer overflows in comp_method_zlib_decomp.
+
+GitHub (14 Mar 2019)
+- [Will Cosgrove brought this change]
+
+  Security fixes (#315)
+  
+  * Bounds checks
+  
+  Fixes for CVEs
+  https://www.libssh2.org/CVE-2019-3863.html
+  https://www.libssh2.org/CVE-2019-3856.html
+  
+  * Packet length bounds check
+  
+  CVE
+  https://www.libssh2.org/CVE-2019-3855.html
+  
+  * Response length check
+  
+  CVE
+  https://www.libssh2.org/CVE-2019-3859.html
+  
+  * Bounds check
+  
+  CVE
+  https://www.libssh2.org/CVE-2019-3857.html
+  
+  * Bounds checking
+  
+  CVE
+  https://www.libssh2.org/CVE-2019-3859.html
+  
+  and additional data validation
+  
+  * Check bounds before reading into buffers
+  
+  * Bounds checking
+  
+  CVE
+  https://www.libssh2.org/CVE-2019-3859.html
+  
+  * declare SIZE_MAX and UINT_MAX if needed
+
+- [Will Cosgrove brought this change]
+
+  fixed type warnings (#309)
+
+- [Will Cosgrove brought this change]
+
+  Bumping version number for pending 1.8.1 release
+
+Will Cosgrove (4 Mar 2019)
+- [Daniel Stenberg brought this change]
+
+  _libssh2_string_buf_free: use correct free (#304)
+  
+  Use LIBSSH2_FREE() here, not free(). We allow memory function
+  replacements so free() is rarely the right choice...
+
+GitHub (26 Feb 2019)
+- [Will Cosgrove brought this change]
+
+  Fix for building against libreSSL #302
+  
+  Changed to use the check we use elsewhere.
+
+- [Will Cosgrove brought this change]
+
+  Fix for when building against LibreSSL #302
+
+Will Cosgrove (25 Feb 2019)
+- [gartens brought this change]
+
+  docs: update libssh2_hostkey_hash.3 [ci skip] (#301)
+
+GitHub (21 Feb 2019)
+- [Will Cosgrove brought this change]
+
+  fix malloc/free mismatches #296 (#297)
+
+- [Will Cosgrove brought this change]
+
+  Replaced malloc with calloc #295
+
+- [Will Cosgrove brought this change]
+
+  Abstracted OpenSSL calls out of hostkey.c (#294)
+
+- [Will Cosgrove brought this change]
+
+  Fix memory dealloc impedance mis-match #292 (#293)
+  
+  When using ed25519 host keys and a custom memory allocator.
+
+- [Will Cosgrove brought this change]
+
+  Added call to OpenSSL_add_all_digests() #288
+  
+  For OpenSSL 1.0.x we need to call OpenSSL_add_all_digests().
+
+Will Cosgrove (12 Feb 2019)
+- [Zhen-Huan HWANG brought this change]
+
+  SFTP: increase maximum packet size to 256K (#268)
+  
+  to match implementations like OpenSSH.
+
+- [Zenju brought this change]
+
+  Fix https://github.com/libssh2/libssh2/pull/271 (#284)
+
+GitHub (16 Jan 2019)
+- [Will Cosgrove brought this change]
+
+  Agent NULL check in shutdown #281
+
+Will Cosgrove (15 Jan 2019)
+- [Adrian Moran brought this change]
+
+  mbedtls: Fix leak of 12 bytes by each key exchange. (#280)
+  
+  Correctly free ducts by calling _libssh2_mbedtls_bignum_free() in dtor.
+
+- [alex-weaver brought this change]
+
+  Fix error compiling on Win32 with STDCALL=ON (#275)
+
+GitHub (8 Nov 2018)
+- [Will Cosgrove brought this change]
+
+  Allow default permissions to be used in sftp_mkdir (#271)
+  
+  Added constant LIBSSH2_SFTP_DEFAULT_MODE to use the server default permissions when making a new directory
+
+Will Cosgrove (13 Sep 2018)
+- [Giulio Benetti brought this change]
+
+  openssl: fix dereferencing ambiguity potentially causing build failure (#267)
+  
+  When dereferencing from *aes_ctr_cipher, being a pointer itself,
+  ambiguity can occur; fixed possible build errors.
+
+Viktor Szakats (12 Sep 2018)
+- win32/GNUmakefile: define HAVE_WINDOWS_H
+  
+  This macro was only used in test/example code before, now it is
+  also used in library code, but only defined automatically by
+  automake/cmake, so let's do the same for the standalone win32
+  make file.
+  
+  It'd be probably better to just rely on the built-in _WIN32 macro
+  to detect the presence of windows.h though. It's already used
+  in most of libssh2 library code. There is a 3rd, similar macro
+  named LIBSSH2_WIN32, which might also be replaced with _WIN32.
+  
+  Ref: https://github.com/libssh2/libssh2/commit/8b870ad771cbd9cd29edbb3dbb0878e950f868ab
+  Closes https://github.com/libssh2/libssh2/pull/266
+
+Marc Hoersken (2 Sep 2018)
+- Fix conditional check for HAVE_DECL_SECUREZEROMEMORY
+  
+  "Unlike the other `AC_CHECK_*S' macros, when a symbol is not declared,
+  HAVE_DECL_symbol is defined to `0' instead of leaving HAVE_DECL_symbol
+  undeclared. When you are sure that the check was performed,
+  use HAVE_DECL_symbol in #if."
+  
+  Source: autoconf documentation for AC_CHECK_DECLS.
+
+- Fix implicit declaration of function 'SecureZeroMemory'
+  
+  Include window.h in order to use SecureZeroMemory on Windows.
+
+- Fix implicit declaration of function 'free' by including stdlib.h
+
+GitHub (27 Aug 2018)
+- [Will Cosgrove brought this change]
+
+  Use malloc abstraction function in pem parse
+  
+  Fix warning on WinCNG build.
+
+- [Will Cosgrove brought this change]
+
+  Fixed possible junk memory read in sftp_stat #258
+
+- [Will Cosgrove brought this change]
+
+  removed INT64_C define (#260)
+  
+  No longer used.
+
+- [Will Cosgrove brought this change]
+
+  Added conditional around engine.h include
+
+Will Cosgrove (6 Aug 2018)
+- [Alex Crichton brought this change]
+
+  Fix OpenSSL link error with `no-engine` support (#259)
+  
+  This commit fixes linking against an OpenSSL library that was compiled with
+  `no-engine` support by bypassing the initialization routines as they won't be
+  available anyway.
+
+GitHub (2 Aug 2018)
+- [Will Cosgrove brought this change]
+
+  ED25519 Key Support #39 (#248)
+  
+  OpenSSH Key and ED25519 support #39
+  Added _libssh2_explicit_zero() to explicitly zero sensitive data in memory #120
+  
+  * ED25519 Key file support - Requires OpenSSL 1.1.1 or later
+  * OpenSSH Key format reading support - Supports RSA/DSA/ECDSA/ED25519 types
+  * New string buffer reading functions - These add build-in bounds checking and convenance methods. Used for OpenSSL PEM file reading.
+  * Added new tests for OpenSSH formatted Keys
+
+- [Will Cosgrove brought this change]
+
+  ECDSA key types are now explicit (#251)
+  
+  * ECDSA key types are now explicit
+  
+  Issue was brough up in pull request #248
+
+Will Cosgrove (2 May 2018)
+- [Jakob Egger brought this change]
+
+  Add Instructions for building from Master (#249)
+
+GitHub (27 Apr 2018)
+- [Will Cosgrove brought this change]
+
+  Initialize sb_intl #226
+
+Will Cosgrove (19 Apr 2018)
+- [doublex brought this change]
+
+  buffer overflow (valgrind) (#159)
+
+- [Brendan Shanks brought this change]
+
+  mbedTLS: Remove some C99-style intermingled variable declarations (#196)
+
+GitHub (18 Apr 2018)
+- [Will Cosgrove brought this change]
+
+  fix for #160
+
+Will Cosgrove (18 Apr 2018)
+- [doublex brought this change]
+
+  fix memory leak when using mbedtls backend (#158)
+  
+   _libssh2_bn_init_from_bin/_libssh2_bn_free would leak bignum from mbedtls_calloc().
+
+- [Brendan Shanks brought this change]
+
+  mbedTLS: Avoid multiple definition errors for context handles (#197)
+
+- [Tseng Jun brought this change]
+
+  Fix the EVP cipher meth memory leakage problem (#244)
+  
+  * Fix the EVP cipher meth memory leakage problem
+  
+  Looks good, thanks for the fixes.
+
+Marc Hörsken (31 Mar 2018)
+- [Will Cosgrove brought this change]
+
+  Added ECDSA defines for WinCNG (#245)
+  
+  Fixed missing defines preventing building using WinCNG
+
+GitHub (30 Mar 2018)
+- [Will Cosgrove brought this change]
+
+  Fix for _libssh2_rsa_new with OpenSSL 1.0.x
+  
+  missing d value assignment.
+
+Will Cosgrove (20 Mar 2018)
+- [Etienne Samson brought this change]
+
+  A collection of small fixes (#198)
+  
+  * tests: Remove if-pyramids
+  
+  * tests: Switch run_command arguments
+  
+  * tests: Make run_command a vararg function
+  
+  * tests: Xcode doesn't obey CMake's test working directory
+  
+  * openssl: move manual AES-CTR cipher into crypto init
+  
+  * cmake: Move our include dir before all other include paths
+
+GitHub (15 Mar 2018)
+- [Will Cosgrove brought this change]
+
+  Fixes incorrect indexing of KEX prefs string
+  
+  After stripping out an invalid KEX pref entry, it would incorrectly advance again leaving invalid values in the list.
+
+Viktor Szakats (13 Mar 2018)
+- tests: fix checksrc warnings
+  
+  Also:
+  * add 'static' qualifier to file-wide const buffers
+  * fix a non-ANSI C89 comment
+  * silence a mismatched fprintf() mask warning by adding a cast
+
+- cmake: recognize OpenSSL 1.1 .dll names
+  
+  Also fix some comment typos and a stray tab.
+
+- docs: update an URL [ci skip]
+
+Daniel Stenberg (12 Mar 2018)
+- docs/SECURITY: the max embargo is 14 days now
+
+Viktor Szakats (12 Mar 2018)
+- docs: spelling fixes [ci skip]
+  
+  Closes https://github.com/libssh2/libssh2/pull/222
+
+GitHub (12 Mar 2018)
+- [Will Cosgrove brought this change]
+
+  Fixed minor tabs/spacing issues
+
+- [Will Cosgrove brought this change]
+
+  Update kex.c
+
+- [Will Cosgrove brought this change]
+
+  Added basic bounds checking #206
+  
+  Basic bounds checking in ecdh_sha2_nistp()
+
+- [Will Cosgrove brought this change]
+
+  Fixed Clang warning #206
+  
+  Fixed possible garbage value for secret in an error case
+
+- [Will Cosgrove brought this change]
+
+  Fixed incorrect #if to #ifdef #206
+  
+  When checking HAVE_OPAQUE_STRUCTS.
+
+Viktor Szakats (12 Mar 2018)
+- src: suppress two checksrc warnings
+  
+  Ref: https://github.com/libssh2/libssh2/pull/235
+
+- src: address fopen() warnings, add missing copyright headers
+  
+  Ref: https://github.com/libssh2/libssh2/pull/235
+
+- src: replace sprintf() with snprintf()
+  
+  Ref: https://github.com/libssh2/libssh2/pull/235
+
+- src: fix checksrc warnings
+  
+  Use checksrc.pl from the curl project, with (for now)
+  suppressed long line warnings and indentation set to
+  4 spaces. Fixes are whitespace for the most part.
+  
+  Warning count went down from 2704 to 12.
+  
+  Also fix codespell typos, two non-ANSI C89 comments
+  and a stray tab in include/libssh2.h.
+  
+  Ref: https://github.com/libssh2/libssh2/pull/235
+
+- checksrc: add source style checker
+  
+  This is a slightly extended version of this original source
+  from the curl project:
+  https://github.com/curl/curl/blob/8b754c430b9a4c51aa606c687ee5014faf7c7b06/lib/checksrc.pl
+  
+  This version adds the following options to customize it for
+  libssh2 (plus some whitespace formatting):
+  
+  `-i<n>`  to override indentation spaces (2)
+  `-m<n>`  to override maximum line length (79)
+  
+  Command-line used to check libssh2 sources:
+  
+  $ ./checksrc.pl -i4 -m500 *.c *.h
+  
+  Closes https://github.com/libssh2/libssh2/pull/236
+
+- src: add static qualifier
+  
+  To private, const strings.
+  
+  Closes https://github.com/libssh2/libssh2/pull/237
+
+- [Will Cosgrove brought this change]
+
+  Add support for ECDSA keys and host keys (#41)
+  
+  This commit lands full ECDSA key support when using the OpenSSL
+  backend. Which includes:
+  
+  New KEX methods:
+  ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521
+  
+  Can now read OpenSSL formatted ECDSA key files.
+  
+  Now supports known host keys of type ecdsa-sha2-nistp256.
+  
+  New curve types:
+  NID_X9_62_prime256v1, NID_secp384r1, NID_secp521r1
+  
+  Default host key preferred ordering is now nistp256, nistp384,
+  nistp521, rsa, dss.
+  
+  Ref: https://github.com/libssh2/libssh2/issues/41
+  
+  Closes https://github.com/libssh2/libssh2/pull/206
+
+GitHub (15 Dec 2017)
+- [Will Cosgrove brought this change]
+
+  Fixed possible crash when decoding invalid data
+  
+  When trying to decode invalid data, it frees the buffer but doesn't nil it so the caller gets a junk memory pointer which they could potentially double free.
+
+- [Will Cosgrove brought this change]
+
+  Remove call to OpenSSL_add_all_ciphers()
+  
+  Now lives in libssh2 init() from PR #189
+
+- [Will Cosgrove brought this change]
+
+  Fixed incorrect reference to decrypted block
+  
+  Fixed incorrectly copied memory from p->buf into init instead of from the decrypted buffer block. The only reason this worked was because the crypt() function decrypts the value in-place and overwrites p->buf.  I'm working on a fork that no longer does this and exposed this bug.
+
+Will Cosgrove (20 Oct 2017)
+- [Pan brought this change]
+
+  Fix typo in crypt.c (#218)
+
+Kamil Dudka (17 Oct 2017)
+- session: avoid printing misleading debug messages
+  
+  ... while throwing LIBSSH2_ERROR_EAGAIN out of session_startup()
+  
+  If the session runs in blocking mode, LIBSSH2_ERROR_EAGAIN never reaches
+  the libssh2 API boundary and, in non-blocking mode, these messages are
+  suppressed by the condition in _libssh2_error_flags() anyway.
+  
+  Closes #211
+
+Viktor Szakats (15 Oct 2017)
+- win32/GNUmakefile: allow customizing dll suffixes
+  
+  - New `LIBSSH2_DLL_SUFFIX` envvar will add a suffix to the generated
+    libssh2 dll name. Useful to add `-x64` to 64-bit builds so that
+    it can live in the same directory as the 32-bit one. By default
+    this is empty.
+  
+  - New `LIBSSH2_DLL_A_SUFFIX` envvar to customize the suffix of the
+    generated import library (implib) for libssh2 .dll. It defaults
+    to `dll`, and it's useful to modify that to `.dll` to have the
+    standard naming scheme for mingw-built .dlls, i.e. `libssh2.dll.a`.
+  
+  Ref: https://github.com/curl/curl/commit/aaa16f80256abc1463fd9374815130a165222257
+  
+  Closes https://github.com/libssh2/libssh2/pull/215
+
+- makefile.m32: allow to override gcc, ar and ranlib
+  
+  Allow to ovverride certain build tools, making it possible to
+  use LLVM/Clang to build libssh2. The default behavior is unchanged.
+  To build with clang (as offered by MSYS2), these settings can
+  be used:
+  
+  LIBSSH2_CC=clang
+  LIBSSH2_AR=llvm-ar
+  LIBSSH2_RANLIB=llvm-ranlib
+  
+  Also adjust ranlib parameters to be compatible with LLVM/Clang's
+  ranlib tool.
+  
+  Closes https://github.com/libssh2/libssh2/pull/214
+
+GitHub (27 Sep 2017)
+- [Will Cosgrove brought this change]
+
+  Fixes out of bounds memory access (#210)
+  
+  If an invalid PEM file is read and the lines are longer than 128 characters it will go out of bounds and crash on line 91.
+
+Will Cosgrove (11 Sep 2017)
+- [Kamil Dudka brought this change]
+
+  scp: do not NUL-terminate the command for remote exec (#208)
+  
+  It breaks SCP download/upload from/to certain server implementations.
+  
+  The bug does not manifest with OpenSSH, which silently drops the NUL
+  byte (eventually with any garbage that follows the NUL byte) before
+  executing it.
+  
+  Bug: https://bugzilla.redhat.com/1489736
+
+GitHub (21 Aug 2017)
+- [Viktor Szakats brought this change]
+
+  openssl.c: remove no longer used variable (#204)
+  
+  after e378d2e30a40bd9bcee06dc3a4250f269098e200
+
 - [Will Cosgrove brought this change]
 
   Fix for #188 (#189)
@@ -4673,974 +6539,3 @@ Guenter Knauf (3 Jun 2010)
 - MingW32 has gettimeofday() implemented, so proper ifdef this function here.
 
 - removed MSVC ifdef since seems we can use __int64 still with latest headers.
-
-- changed copyright notice for MinW32 and NetWare binaries.
-
-- cleaned up MSVC ifdefs which where spreaded over 3 places.
-
-- added uint8_t typedef for NetWare CLIB platform.
-
-- if the function declaration gets changed the header should be changed too.
-
-- this is MSVC specific and doesnt apply for all Win32 compilers;
-  the uint8_t typedef clashes with MingW32 headers.
-
-- updated MingW32 makefiles for latest dependency lib versions.
-
-- updated NetWare makefiles for latest dependency lib versions.
-
-Dan Fandrich (30 May 2010)
-- Fixed compiling with libgcrypt
-  
-  A change of parameter types from unsigned long to size_t was
-  missed in the prototype in libgcrypt.h
-
-Daniel Stenberg (28 May 2010)
-- statvfs: use libssh2_sftp_statvfs only, no "_ex"
-  
-  As the long-term goal is to get rid of the extensive set of
-  macros from the API we can just as well start small by not adding
-  new macros when we add new functions. Therefore we let the
-  function be libssh2_sftp_statvfs() plainly without using an _ex
-  suffix.
-  
-  I also made it use size_t instead of unsigned int for the string
-  length as that too is a long-term goal for the API.
-
-- [Grubsky Grigory brought this change]
-
-  DSP: output lib name typo
-
-- [Grubsky Grigory brought this change]
-
-  win32: provide a uint8_t typedef for better building on windows
-
-- agent: win32: fix bad _libssh2_store_str call
-  
-  As pointed out by Grubsky Grigory <g.grubsky@securitycode.ru>, I
-  made a mistake when I added the _libssh2_store_str() call before
-  and I made a slightly different patch than what he suggested.
-  Based purely on taste.
-
-Peter Stuge (24 May 2010)
-- [Joey Degges brought this change]
-
-  Add libssh2_sftp_statvfs() and libssh2_sftp_fstatvfs()
-  
-  These can be used to get file system statistics from servers that
-  support the statvfs@openssh.com and fstatvfs@openssh.com extensions.
-
-Alexander Lamaison (22 May 2010)
-- [Jose Baars brought this change]
-
-  VMS specific: make sure final release can be installed over daily build
-
-- [Jose Baars brought this change]
-
-  VMS: small improvement to the man2help utilities
-
-Peter Stuge (22 May 2010)
-- [Joey Degges brought this change]
-
-  libssh2_exit and libssh2_sftp_readdir man page fixes
-
-Daniel Stenberg (21 May 2010)
-- spelling: s/sue/use
-
-Alexander Lamaison (21 May 2010)
-- Change magic port number for generic knownhost check.
-  
-  libssh2_knownhost_checkp took 0 as a magic port number that indicated
-  a 'generic' check should be performed.  However, 0 is a valid port
-  number in its own right so this commit changes the magic value to any
-  negative int.
-
-Mikhail Gusarov (5 May 2010)
-- Add re-discovered copyright holders to COPYING
-
-- Restoring copyright statements from pre-git era
-  
-  Eli Fant has contributed fragmenting SFTP requests
-
-- Restoring my copyright statements from pre-git era
-  
-  keyboard_interactive, 'exit-status' information packet, non-atomic read/write
-  under FreeBSD, multi-channel operation bugfixes.
-
-Daniel Stenberg (3 May 2010)
-- pedantic: make the code C90 clean
-
-Peter Stuge (3 May 2010)
-- Do proper keyboard-interactive user dialog in the sftp.c example
-
-Daniel Stenberg (3 May 2010)
-- added to tarball: libssh2_knownhost_checkp.3
-
-- knownhost: support [host]:port in knownhost file
-  
-  OpenSSH has ways to add hosts to the knownhosts file that include
-  a specific port number which makes the key associated with only
-  that specific host+port pair. libssh2 previously did not support
-  this, and I was forced to add a new function to the API to
-  properly expose this ability to applications:
-  libssh2_knownhost_checkp()
-  
-  To *add* such hosts to the knownhosts file, you make sure to pass
-  on the host name in that manner to the libssh2_knownhost_addc()
-  function.
-
-- init/exit: mention these were added in 1.2.5
-
-- libssh2_knownhost_check docs: correct the prototype
-
-- examples: avoid use of uninitialized variable 'sock'
-
-- KEX: stop pretending we negotiate language
-  
-  There was some stub-like parts of an implementation for
-  implementing kex language negotiation that caused clang-analyzer
-  to warn and as it did nothing I've now removed the dead code.
-
-- Uninitialized argument
-
-- sftpdir: removed dead assignment
-
-- Makefile.am: include the VMS-specific config header as well
-
-- [Jose Baars brought this change]
-
-  Add VMS specific libssh2_config.h
-
-- fix Value stored to 's' is never read warning
-  
-  and moved variable declaration of s to be more local
-
-- kexinit: simplify the code and avoid scan-build warning
-  
-  Previously it would say "Value stored to 's' is never read" due
-  fourth increment of 's'.
-
-Alexander Lamaison (28 Apr 2010)
-- Removed unecessary brackets.
-
-- Changed sftp_attrsize macro to a static function.
-
-Daniel Stenberg (28 Apr 2010)
-- release: include the VMS-specific files
-
-- sftp_attrsize: protect the macro argument with proper parentheses
-
-- ssh2_agent: avoid using 'session' uninitialized on failures
-
-- examples: remove assignments of variable rc that's never used
-
-- publickey_init: remove useless variable increment
-
-- hostkey_method_ssh_rsa_init: remove useless variable increment
-
-- packet_x11_open: removed useless variable increment
-  
-  and made the declaration of a variable more local
-
-- packet_queue_listener: removed useless variable increment
-  
-  and made the declaration of a variable more local
-
-- sftp_read: move a read_responses array to where its used
-  
-  I find that this increases readability since the array is used
-  only in the function call just immediately below and nowhere
-  else.
-
-- sftp_readdir: turn a small array static const and move it
-
-- sftp_attrsize: converted function to a macro
-  
-  This way, the macro can evaluate a static number at compile time
-  for two out of four uses, and it probably runs faster for the
-  other two cases too.
-
-- sftp_open: deal with short channel_write calls
-  
-  This was an old TODO that just wasn't done before. If
-  channel_write returns short, that is not an error.
-
-- sftp_open: clean up, better check of input data
-  
-  The clang-analyzer report made it look into this function and
-  I've went through it to remove a potential use of an
-  uninitialized variable and I also added some validation of input
-  data received from the server.
-  
-  In general, lots of more code in this file need to validate the
-  input before assuming it is correct: there are servers out there
-  that have bugs or just have another idea of how to do the SFTP
-  protocol.
-
-- bugfix: avoid using the socket if it failed to create one
-
-- bugfix: potential use of NULL pointer
-
-- libssh2_userauth_password_ex: clarify errors somewhat
-  
-  The errors mentioned in this man page are possible return codes
-  but not necessarily the only return codes that this can return.
-  
-  Also reformatted the typ prototypes somewhat.
-
-- examples: fixed and made them more similar
-  
-  The channel read/write functions can return 0 in legitimate cases
-  without it being an error, and we need to loop properly if they
-  return short.
-
-- [Jose Baars brought this change]
-
-  VMS port of libssh2; changes in the libssh2 common code
-
-- Makefile: added the two news headers userauth.h and session.h
-
-- cleanup: prefer the internal functions
-  
-  To get the blocking vs non-blocking to work as smooth as possible
-  and behave better internally, we avoid using the external
-  interfaces when calling functions internally.
-  
-  Renamed a few internal functions to use _libssh2 prefix when not
-  being private within a file, and removed the libssh2_ for one
-  that was private within the file.
-
-- session_free: remove dead code
-
-- libssh2_publickey_init: fixed to work better non-blocking
-  
-  This was triggered by a clang-analyzer complaint that turned out
-  to be valid, and it made me dig deeper and fix some generic non-
-  blocking problems I disovered in the code.
-  
-  While cleaning this up, I moved session-specific stuff over to a
-  new session.h header from the libssh2_priv.h header.
-
-- channel: reduce duplicated free and returns
-  
-  Simplified the code by trying to free data and return on a single
-  spot.
-
-- channel: make variables more local
-  
-  By making 'data' and 'data_len' more local in several places in
-  this file it will be easier to spot how they are used and we'll
-  get less risks to accidentally do bad things with them.
-
-Mikhail Gusarov (24 Apr 2010)
-- Fix typos in manpages, catched by Lintian
-
-Daniel Stenberg (24 Apr 2010)
-- channel_request_pty: simplify the code
-  
-  clang-analyzer pointed out how 'data' could be accessed as a NULL
-  pointer if the wrong state was set, and while I don't see that
-  happen in real-life the code flow is easier to read and follow by
-  moving the LIBSSH2_FREE() call into the block that is supposed to
-  deal with the data pointer anyway.
-
-- libssh2_channel_process_startup: simplify the code
-  
-  clang-analyzer pointed out how 'data' could be accessed as a NULL
-  pointer if the wrong state was set, and while I don't see that
-  happen in real-life the code flow is easier to read and follow by
-  moving the LIBSSH2_FREE() call into the block that is supposed to
-  deal with the data pointer anyway.
-
-- sftp_close_handle: add precation to not access NULL pointer
-  
-  clang-analyzer pointed this out as a "Pass-by-value argument in
-  function call is undefined" but while I can't see exactly how
-  this can ever happen in reality I think a little check for safety
-  isn't such a bad thing here.
-
-- scp_write_nonblock: Value stored to 'nread' is never read
-
-- scp_write: Value stored to 'ptr' is never read
-
-- scp_write_nonblock: Value stored to 'ptr' is never read
-
-- sftp_mkdir: less silly output but show failures
-
-- [Jose Baars brought this change]
-
-  VMS port of libssh2 including VMS specific build procedures
-
-- two variable types changes, made lines less than 80 columns
-  
-  The two variable type changes are only to match type variable
-  fields actually read from the binary protocol.
-
-- remove check for negative padding_length
-  
-  It was silly, since it is read as an unsigned char...
-
-- hostkey_method_ssh_dss_init: Value stored to 's' is never read
-
-- libssh2_banner_set: avoid unnecessary increment and explain code
-
-- agent_transact_unix: remove unused variable
-
-- remove two unnecessary increments
-
-- more code converted to use _libssh2_store_*()
-
-- libssh2_publickey_list_fetch: removed unused variables
-
-- libssh2_publickey_init: remove unused variables
-
-- libssh2_scp_send64: added to API to provide large file transfers
-  
-  The previously existing libssh2_scp_send_ex() function has no way
-  to send files that are larger than 'size_t' which on 32bit
-  systems mean 4GB. This new API uses a libssh2_int64_t type and
-  should thus on most modern systems be able to send enormous
-  files.
-
-- sftp_init: remove unused variables and assignments
-
-- libssh2_knownhost_check: Value stored to 'keylen' is never read
-
-- hostkey: fix compiler warning
-
-- remove unused variable
-
-- data types: convert more to use size_t and uint32_t
-
-- channel: variable type cleanups
-
-- cleanups: better binary packet gen, size_t fixes and PACKET_* removal
-  
-  I'll introduce a new internal function set named
-  
-   _libssh2_store_u32
-   _libssh2_store_u64
-   _libssh2_store_str
-  
-  That can be used all through the library to build binary outgoing
-  packets.  Using these instead of the current approach removes
-  hundreds of lines from the library while at the same time greatly
-  enhances readability. I've not yet fully converted everything to
-  use these functions.
-  
-  I've converted LOTS of 'unsigned long' to 'size_t' where
-  data/string lengths are dealt with internally. This is The Right
-  Thing and it will help us make the transition to our
-  size_t-polished API later on as well.
-  
-  I'm removing the PACKET_* error codes. They were originally
-  introduced as a set of separate error codes from the transport
-  layer, but having its own set of errors turned out to be very
-  awkward and they were then converted into a set of #defines that
-  simply maps them to the global libssh2 error codes instead. Now,
-  I'l take the next logical step and simply replace the PACKET_*
-  defines with the actual LIBSSH2_ERROR_* defines. It will increase
-  readability and decrease confusion.
-  
-  I also separated packet stuff into its own packet.h header file.
-
-- clarified the return code
-
-- rename libssh2_error to the correct _libssh2_error
-  
-  We reserve ^libssh2_ for public symbols and we use _libssh2 as
-  prefix for internal ones. I fixed the intendation of all these
-  edits with emacs afterwards, which then changed it slightly more
-  than just _libssh2_error() expressions but I didn't see any
-  obvious problems.
-
-- data type cleanup: made lots of code use size_t etc
-  
-  A lot of code used 'unsigned long' and the likes when it should
-  rather just use plain 'int' or use size_t for data lengths.
-
-- wait_socket: make c89 compliant and use two fd_sets for select()
-
-- sftp_readdir: always zero terminate, detail the return code
-  
-  I also added a description for the 'longentry' field which was
-  previously undocumented!
-
-- sftp_readdir: simplified and bugfixed
-  
-  This function no longer has any special purpose code for the
-  single entry case, as it was pointless.
-  
-  The previous code would overflow the buffers with an off-by-one
-  in case the file name or longentry data fields received from the
-  server were exactly as long as the buffer provided to
-  libssh2_sftp_readdir_ex.
-  
-  We now make sure that libssh2_sftp_readdir_ex() ALWAYS zero
-  terminate the buffers it fills in.
-  
-  The function no longer calls the libssh2_* function again, but
-  properly uses the internal sftp_* instead.
-
-- channel/transport: we now drain the outgoing send buffer when we ignore EAGAIN
-  
-  When we ignore the EAGAIN from the transport layer within channel_write, we
-  now drain the outgoing transport layer buffer so that remainders in that
-  won't cause any problems in the next invoke of _libssh2_transport_write()
-
-- channel_write: if data has been sent, don't return EAGAIN
-  
-  When sending data in a loop, we must not return EAGAIN if we
-  managed to send data in an earlier round. This was reported in
-  bug #126 => http://libssh2.stuge.se/ticket/126
-
-Simon Josefsson (14 Apr 2010)
-- Fix OpenSSL AES-128-CTR detection.
-  
-  Patch from Paul Howarth <paul@city-fan.org>.
-
-Daniel Stenberg (13 Apr 2010)
-- version in header file now says 1.2.6-DEV
-
-- 1.2.6: clean the RELEASE-NOTES for next release round
-
-- NEWS: add the stuff from the version 1.2.5 RELEASE-NOTES
-
-Version 1.2.5 (13 Apr 2010)
-
-Daniel Stenberg (13 Apr 2010)
-- channel_close: no longer wait for the SSH_MSG_CHANNEL_CLOSE message
-  
-  As the packet may simply not arrive we cannot have the close
-  function wait for it unconditionally.
-
-- less code duplication in the poll vs select code flows
-  
-  libssh2_keepalive_send and libssh2_session_block_directions are
-  now used outside of the #ifdef blocks.
-
-- make it C90 compliant
-
-- updated with all changes and bugs since 1.2.4
-
-- Added LIBSSH2_SFTP_S_IS***() macros and updated docs
-  
-  libssh2_sftp_fstat_ex.3 is now extended quite a lot to describe a
-  lot of the struct and the bits it uses and how to test for them.
-
-- sftp_init() deal with _libssh2_channel_write() returns short
-  
-  When _libssh2_channel_write() is asked to send off 9 bytes, the
-  code needs to deal with the situation where less than 9 bytes
-  were sent off and prepare to send the remaining piece at a later
-  time.
-
-- handle a NULL password as if it was ""
-  
-  libssh2_userauth_publickey_fromfile_ex() takes a "passphrase"
-  but didn't deal with it being set to NULL.
-
-- Reduce used window sizes by factor 10
-  
-  As reported in bug report #166 http://libssh2.stuge.se/ticket/166
-  by 'ptjm', the maximum window size must be less crazy for libssh2
-  to do better with more server implementations. I did not do any
-  testing to see how this changes raw SCP performance, but the
-  maximum window size is still almost 4MB. This also has the upside
-  that libssh2 will use less memory.
-
-Peter Stuge (28 Mar 2010)
-- Correctly clear blocking flag after sending multipart packet
-  
-  commit 7317edab61d2179febc38a2c2c4da0b951d74cbc cleared the outbound
-  blocking bit when send_existing() returned PACKET_NONE and *ret=0, as
-  opposed to before even calling send_existing(), but because *ret=1 when
-  sending parts 2..n of an existing packet, the bit would only be cleared
-  when calling libssh2_transport_write() for a new packet.
-  
-  Clear the direction flag after the final part of a packet has been sent.
-
-Daniel Stenberg (24 Mar 2010)
-- Added man page for libssh2_knownhost_addc()
-  
-  Added mention in libssh2_knownhost_add() docs that
-  libssh2_knownhost_addc() is the preferred function now.
-
-- at next soname bump remove libssh2_knownhost_add()
-
-- ignore TAGS ("make tags" makes them)
-
-- fix memory leak
-  
-  we must not assign the pointer a NULL since it keeps allocated
-  data and at least parts of an error string
-
-- fixed the pattern for avoiding the poll check
-  
-  added some comments about known problems with poll on darwin
-
-- avoid checking for poll on some systems
-  
-  darwin and interix are known to have broken poll implementations
-  so we skip the check on those and thus have them use select
-  unconditionally
-
-- ignore libssh2.dsp
-
-Simon Josefsson (23 Mar 2010)
-- Fix logic in "on-the-fly" crypto init.
-
-- Make sure keepalive is working even when poll is used.
-
-- [Paul Querna brought this change]
-
-  Use poll when available on blocking API.
-  
-  Signed-off-by: Simon Josefsson <simon@josefsson.org>
-
-Peter Stuge (20 Mar 2010)
-- Fix speling
-
-Daniel Stenberg (19 Mar 2010)
-- fix NULL dereference when window adjusting a non-existing channel
-  
-  Suyog Jadhav pointed out that when receiving a window adjust to
-  a channel not found, the code would reference a NULL pointer.
-  Now it will instead output a message about that fact.
-
-Simon Josefsson (19 Mar 2010)
-- Fix build problem.
-
-- Eat our own dog food, call libssh2_init and libssh2_exit in the examples.
-
-- Fix init/exit logic.  Add self-test of it.
-
-Daniel Stenberg (19 Mar 2010)
-- fix typo
-
-Simon Josefsson (19 Mar 2010)
-- Add man page for libssh2_init and libssh2_exit.  Fix libssh2_exit prototype.
-
-- Shorten constant a bit.  More documentation.
-
-- Fix namespace pollution.
-
-- Add global init/exit points, to do crypto initialization in one place.
-  
-  By Lars Nordin.
-
-Daniel Stenberg (14 Mar 2010)
-- libssh2 is released under the Modifed BSD license, not GPL
-
-Alexander Lamaison (14 Mar 2010)
-- Add libssh2_knownhost_addc to handle comments.
-  
-  Comments in known_hosts file were not handle properly.  They were parsed as
-  part of the key causing key matching to return a mismatch if the entry had a
-  comment.  This adds a new API function that takes an optional comment and
-  changes libssh2_knownhost_readline to parse the comment as pass it to the
-  new function.
-  
-  Fixes #164.
-
-- Fix gettimeofday to compile with Visual C++ 6.
-  
-  Reported by Steven Van Ingelgem.
-
-Simon Josefsson (10 Mar 2010)
-- Add.
-
-- keepalive.c: Fix libssh2_error usage.
-
-- Fix typo in last commit.
-
-- Tidy up build option notice.
-
-- Add entry about keep alive stuff.
-
-- Add keep-alive support.
-
-Alexander Lamaison (7 Mar 2010)
-- Untabify.
-
-- Fix memory leak in libssh2_knownhost_add.
-
-Daniel Stenberg (6 Mar 2010)
-- change 'int' to 'libssh2_socket_t' in the public API for sockets
-
-- reduce code duplication and return underlying error better
-
-- acknowledge when _libssh2_packet_requirev() returns error
-  
-  when _libssh2_packet_requirev() returns an error when waiting for
-  SSH_MSG_USERAUTH_SUCCESS or SSH_MSG_USERAUTH_FAILURE, it is an
-  error and it should be treated as such
-
-- wrap long lines
-
-- polished the phrasing in two error strings
-
-- silence picky compiler warnings
-
-- silence picky compiler warnings
-
-- removed libssh2_error()'s forth argument
-  
-  libssh2_error() no longer allocates a string and only accepts a const
-  error string. I also made a lot of functions use the construct of
-  return libssh2_error(...) instead of having one call to
-  libssh2_error() and then a separate return call. In several of those
-  cases I then also changed the former -1 return code to a more
-  detailed one - something that I think will not change behaviors
-  anywhere but it's worth keeping an eye open for any such.
-
-- repaired --enable-debug
-
-Simon Josefsson (1 Mar 2010)
-- Make ./configure output a summary of build options.
-
-Daniel Stenberg (1 Mar 2010)
-- let the err_msg in the session struct be const too
-
-Simon Josefsson (1 Mar 2010)
-- Revert #ifdef change that pulled in AES-CTR code when explicitly disabled.
-
-Daniel Stenberg (1 Mar 2010)
-- fix #ifdefs
-
-- make function match the new proto
-
-Simon Josefsson (1 Mar 2010)
-- Improve AES-CTR check.
-
-Daniel Stenberg (1 Mar 2010)
-- use const to silence a bazillion warnings
-
-Simon Josefsson (1 Mar 2010)
-- Use AES-CTR from OpenSSL when available.
-  
-  Reported by Lars Nordin <Lars.Nordin@SDlabs.se>.
-
-- Make it possible to disable DSA.
-  
-  Patch from Lars Nordin <Lars.Nordin@SDlabs.se>.
-
-Peter Stuge (1 Mar 2010)
-- Send and receive channel EOF before sending SSH_MSG_CHANNEL_CLOSE
-  
-  Sending SSH_MSG_CHANNEL_CLOSE without channel EOF is explicitly allowed
-  in RFC 4254, but some non-conforming servers will hang or time out when
-  the channel is closed before EOF.
-  
-  Other common clients send and receive EOF before closing, there are no
-  drawbacks, and some servers need it to work correctly.
-
-Alexander Lamaison (26 Feb 2010)
-- Style improvements to knownhost error handling.
-  
-  Made improvements as suggested by Peter Stuge: http://www.libssh2.org/mail/libssh2-devel-archive-2010-02/0161.shtml.
-
-- Call libssh2_error for every knownhost API failure.
-  
-  The libssh2 API calls should set the last error code and a message when
-  returning a failure by calling libssh2_error.  This changeset adds these
-  calls to the libssh2_knownhost_* API as well as libssh2_base64_decode.
-  
-  This change also makes libssh2_error into a function rather than a macro.
-  Its implementation is moved to misc.c.  This function returns the error
-  code passed to it allowing callers to return the error value directly
-  without duplicating the error code.
-
-- Fix LIBSSH2_ALLOC checks.
-  
-  These appear to be cut-and paste errors where the wrong variable is checked
-  for NULLness after calling LIBSSH2_ALLOC.
-
-Simon Josefsson (23 Feb 2010)
-- Silence compiler warning.
-
-- Make it portable; test uses = for string comparison (not ==).  Indent.
-
-Alexander Lamaison (22 Feb 2010)
-- libssh2_knownhost_del: fix write to freed memory.
-  
-  When removing a known host, libssh2_knownhost_del would remove the node from the linked list, free its memory and then overwrite the struct parameter (which indicated which node to remove) with 0.  However, this struct is actually allocated within the just-freed node meaning we're writing to freed memory.  This made Windows very upset.
-  
-  The fix is simply to overwrite the struct first before freeing the memory.
-
-Daniel Stenberg (21 Feb 2010)
-- show more verbose error when SCP send fails
-
-- libssh2_socket_t is done, a library-free function is needed
-
-- clarify that this frees all data associated with a session
-
-- improved error handling
-
-- add missing libssh2_error() calls
-  
-  To make sure the public API is functional and that the
-  BLOCK_ADJUST_ERRNO() macro works correctly we MUST make sure to
-  call libssh2_error() when we return errors.
-
-- fix memory leak in userauth_keyboard_interactive()
-  
-  Mr anonymous in bug #125 pointed out that the userauth_keyboard_interactive()
-  function does in fact assign the same pointer a second time to a new allocated
-  buffer without properly freeing the previous one, which caused a memory leak.
-
-- added missing error codes
-  
-  To allow the libssh2_session_last_error() function to work as
-  documented, userauth_password() now better makes sure to call
-  libssh2_error() everywhere before it returns error.
-  
-  Pointed out by mr anonymous in bug #128
-
-Peter Stuge (16 Feb 2010)
-- Fix resource and memory leaks in examples as reported by cppcheck
-  
-  Thanks to Ettl Martin for the report and patch. This fixes #132
-
-Daniel Stenberg (15 Feb 2010)
-- mention the new man pages for macros
-
-- added man pages for API macros
-  
-  all #defined macros in the public headers are considered to be part
-  of the API and I've generated individual man pages for each of them
-  to A) make it easier to figure out what each function/macro actually
-  is for so that automated lookups work better and for B) make sure we
-  have all public functions document (both macros and functions) to
-  make it easier for us to work away from all the macros in a future
-  release.
-
-- Committed the patch by Yoichi Iwaki in bug #2929647
-  
-  Committed the patch by Yoichi Iwaki in bug #2929647, which fixed a memory
-  leak when an 'outbuf' was still allocated when a session was freed.
-
-- free "outbuf" when killing a session
-  
-  Fix memoary leak: if there was an "output" still allocated when a
-  session was torn down it needs to be freed in session_free()
-  
-  Patch by Yoichi Iwaki in bug #2929647
-
-- the working version name is now 1.2.5_DEV
-
-Version 1.2.4 (13 Feb 2010)
-
-Daniel Stenberg (13 Feb 2010)
-- updated info for 1.2.4
-
-Dan Fandrich (10 Feb 2010)
-- Allow compiling with OpenSSL when AES isn't available.
-
-Peter Stuge (9 Feb 2010)
-- [Dave McCaldon brought this change]
-
-  Fix Tru64 socklen_t compile issue with example/direct_tcpip.c
-  
-  Building libssh2-1.2.3 on Tru64 fails at line 48 and 166 because socklen_t
-  isn't defined on Tru64 unless _POSIX_PII_SOCKET is defined.
-  
-  This patch updates configure.ac to add -D_POSIX_PII_SOCKET when building
-  on Tru64 platform(s).
-
-- [Dave McCaldon brought this change]
-
-  Resolve compile issues on Solaris x64 and UltraSPARC
-  
-  Solaris builds of libssh2-1.2.3 failed on both x64 and UltraSPARC
-  platforms because of two problems:
-  
-  1) src/agent.c:145 sun is a reserved word when using the SUNWspro compiler
-  2) example/direct_tcpip.c:84 INADDR_NONE is not defined
-
-Daniel Stenberg (3 Feb 2010)
-- towards 1.2.4 now
-
-Version 1.2.3 (3 Feb 2010)
-
-Daniel Stenberg (3 Feb 2010)
-- Version 1.2.3 (February 3, 2010)
-
-- fix building out of source tree by proving better include path
-  
-  when building out of source tree, we provide -I$(top_builddir)/example
-  since the libssh2_config.h gets generated in that dir
-
-Peter Stuge (1 Feb 2010)
-- [Sofian Brabez brought this change]
-
-  Replace : in hexdump with "  " (two spaces)
-
-- Detect when the forwarded connection is closed in example/direct_tcpip.c
-
-- Fix example/direct_tcpip.c to work also on WIN32
-  
-  read() and write() are no good for WIN32 sockets, use recv() and send().
-
-- Ignore libssh2_config.h.in and stamp-h2 in example/ and remove .cvsignore
-
-- Simplify WIN32 ifdefs in example/direct_tcpip.c to allow standalone compile
-
-- Always #define INVALID_SOCKET -1 in libssh2_priv.h when not on win32
-  
-  Fix broken builds since commit abd9bd0bbe631efeada1f54552c70b54e1c490c1
-  for all non-win32 platforms.
-
-- Include hmac-md5 and hmac-md5-96 only if crypto backend supports MD5
-
-- Use LIBSSH2_HOSTKEY_HASH_SHA1 instead of _MD5 in examples and tests
-  
-  MD5 support is optional and may not always be available, while SHA1 is both
-  required and recommended.
-
-- Update mailing list address in configure.ac to @cool.haxx.se
-
-- Make example/direct_tcpip.c compile for win32
-  
-  One warning from FD_SET() remains, it is also in some other examples.
-
-- Correctly check for an invalid socket in session_startup()
-
-- Small documentation fix after Dave's _USERAUTH_FAILURE improvement
-
-- [Dave McCaldon brought this change]
-
-  Handle SSH_MSG_USERAUTH_FAILURE for password and kbd-int authentication
-  
-  Neither libssh2_userauth_password_ex() nor
-  libssh2_userauth_keyboard_interactive_ex() would return a login failure
-  error if the server responded with a SSH_MSG_USERAUTH_FAILURE, instead
-  you would see whatever previous error had occurred, typically
-  LIBSSH2_ERROR_EAGAIN.
-  
-  This patch changes error code -18 to LIBSSH2_ERROR_AUTHENTICATION_FAILED
-  and makes LIBSSH2_ERROR_PUBLICKEY_UNRECOGNIZED an alias for
-  LIBSSH2_ERROR_AUTHENTICATION_FAILED.  In addition, new logic in
-  userauth_password() properly handles SSH_MSG_USERAUTH_FAILURE and both
-  this function and userauth_keyboard_interactive() now properly return
-  LIBSSH2_ERROR_AUTHENTICATION_FAILED.
-
-Simon Josefsson (28 Jan 2010)
-- Fix.
-
-- Also deal with GLOBAL_REQUEST keep-alives.
-
-- Make OpenSSH-style keepalive work against libssh2 clients.
-
-Daniel Stenberg (27 Jan 2010)
-- clarified
-
-Peter Stuge (26 Jan 2010)
-- [Dave McCaldon brought this change]
-
-  Fix trace context lookup in libssh2_debug()
-  
-  The trace context is actually a bitmask so that tracing output can be
-  controlled by setting a bitmask using libssh2_trace().  However, the logic
-  in libssh2_debug() that converted the context to a string was using the
-  context value as an array index.  Because the code used a bounds check on
-  the array, there was never a danger of a crash, but you would certainly
-  either get the wrong string, or "unknown".
-  
-  This patch adds a lookup that iterates over the context strings and uses
-  it's index to check for the corresponding bit in the context.
-
-- Fix typo in RELEASE-NOTES
-
-Daniel Stenberg (20 Jan 2010)
-- updated for 1.2.3 with all the stuff I found in the log
-
-- ignore more generated files
-
-- [Dave McCaldon brought this change]
-
-  Pass user context through libssh2_trace_sethandler() to callback
-  
-  The libssh2_trace_sethandler() call allows the user to handle the output of libssh2 rather than having it written to stderr.  This patch updates libssh2_trace_sethandler() to allow a user-defined void* context value to be passed back to the output handler.
-
-- [Dave McCaldon brought this change]
-
-  Add libssh2_trace_sethandler() to the API (even more)
-
-- [Dave McCaldon brought this change]
-
-  Add libssh2_trace_sethandler() to the API
-
-- cleanup includes
-  
-  We now produce a local libssh2_config.h file in this dir for the
-  examples to use so I cleaned up the include path at the same time.
-
-- generate a libssh2_config.h in the example dir
-  
-  buildconf copies the template to example/ and configure makes sure
-  to generate a proper file from it and the direct_tcpip.c example
-  is the first one to use it - to make sure it builds fine on more
-  paltforms
-
-Simon Josefsson (13 Jan 2010)
-- Remove redundant #includes and reorder sys/types.h include.
-
-Daniel Stenberg (10 Jan 2010)
-- avoid a free(NULL)
-
-Simon Josefsson (7 Jan 2010)
-- Make it simpler to get more debug info.
-
-Daiki Ueno (1 Jan 2010)
-- Simplify the commit 63457dfa using type cast from size_t * to ulong *.
-
-Alexander Lamaison (30 Dec 2009)
-- Fixed memory leak in userauth_publickey().
-  
-  userauth_publickey_fromfile() reads the key from a
-  file using file_read_publickey() which returns two
-  allocated strings, the decoded key and the key
-  method (such as "ssh-dss").  The latter can be
-  derived from the former but returning both avoids a
-  later allocation while doing so.
-  
-  Older versions of userauth_publickey_fromfile() used
-  this method string directly but when
-  userauth_publickey() was factored out of
-  userauth_publickey_fromfile() it derived the method
-  from the key itself.  This resulted in the method
-  being allocated twice.
-  
-  This fix, which maintains the optimisation that
-  avoids an extra allocation, changes
-  userauth_publickey() so it doesn't allocate and
-  derive the method when userauth_pblc_method already
-  has a value.
-  
-  Signed-off-by: Alexander Lamaison <awl03@doc.ic.ac.uk>
-
-Daiki Ueno (25 Dec 2009)
-- Fix the return value description of libssh2_knownhost_free().
-
-- Fix compiler warnings for size_t pointers on 32-bit Windows.
-
-- Define INVALID_SOCKET and use it instead of SOCKET_BAD.
-  
-  Revert the part of previous commit that defines SOCKET_BAD library wide.
-
-- Use libssh2_socket_t in the ssh-agent stuff.
-  Define a portability macro SOCKET_BAD which means "invalid socket".
-
-- Mark/unmark connection to Pageant is open/close.
-
-- Add test to check if the socket is connected.
-
-Peter Stuge (24 Dec 2009)
-- Add libssh2.pc to top-level .gitignore
-
-- Fix publickey authentication regression
-  
-  Commit 70b199f47659a74b8778c528beccf893843e5ecb introduced a parsing
-  bug in file_read_publickey() which made the algorithm name contain an
-  extra trailing space character, breaking all publickey authentication.
