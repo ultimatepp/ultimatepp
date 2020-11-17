@@ -268,7 +268,10 @@ int SshChannel::Read(void *ptr, int size, int sid)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
-	int rc = libssh2_channel_read_ex(*channel, sid, (char*) ptr + done, sz);
+	int rc = static_cast<int>(
+		libssh2_channel_read_ex(*channel, sid, (char*) ptr + done, size_t(sz))
+		);
+
 	if(rc < 0 && !WouldBlock(rc))
 		SetError(rc);
 	if(rc > 0) {
@@ -290,7 +293,10 @@ int SshChannel::Write(const void *ptr, int size, int sid)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
-	int rc = libssh2_channel_write_ex(*channel, sid, (const char*) ptr + done, sz);
+	int rc = static_cast<int>(
+		libssh2_channel_write_ex(*channel, sid, (const char*) ptr + done, size_t(sz))
+		);
+		
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {
