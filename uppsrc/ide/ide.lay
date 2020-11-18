@@ -648,10 +648,10 @@ LAYOUT(SetupAstyleLayout, 544, 312)
 	ITEM(Upp::Option, OperatorPaddingMode, SetLabel(t_("Pad operators with spaces")).LeftPosZ(4, 180).TopPosZ(222, 18))
 	ITEM(Upp::Option, EmptyLineFill, SetLabel(t_("Fill empty lines")).LeftPosZ(4, 180).TopPosZ(244, 16))
 	ITEM(Upp::Option, TabSpaceConversionMode, SetLabel(t_("Convert tabs to spaces")).HSizePosZ(4, 360).TopPosZ(264, 18))
-	ITEM(Upp::Button, Test, SetLabel(t_("Test")).RightPosZ(208, 56).BottomPosZ(5, 23))
+	ITEM(Upp::Button, Test, SetLabel(t_("Test")).LeftPosZ(280, 56).BottomPosZ(5, 23))
 	ITEM(Upp::LabelBox, dv___30, SetLabel(t_("Test box")).HSizePosZ(344, 4).VSizePosZ(4, 4))
 	ITEM(Upp::LineEdit, TestBox, SetFont(MonospaceZ(11)).HSizePosZ(348, 8).VSizePosZ(20, 8))
-	ITEM(Upp::Button, Defaults, SetLabel(t_("Upp defaults")).RightPosZ(268, 72).BottomPosZ(5, 23))
+	ITEM(Upp::Button, Defaults, SetLabel(t_("Upp defaults")).LeftPosZ(204, 72).BottomPosZ(5, 23))
 END_LAYOUT
 
 LAYOUT(GotoLayout, 796, 524)
