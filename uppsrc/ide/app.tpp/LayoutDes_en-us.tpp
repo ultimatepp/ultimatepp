@@ -50,8 +50,10 @@ for custom widgets]&]
 that can be directly used in application source code. It significantly 
 reduces the amount of time needed to create the program. It separates 
 logic from user interface. This allows to use some modern software 
-architectures like MVC (Model View Controller).&]
-[s5; Layout Designer &]
+architectures like MVC (Model View Controller). Despite the fact 
+that user interface code with U`+`+ can be written without Layout 
+Designer its usage significantly speed up the application creation 
+process.&]
 [s0; &]
 [s0;= 
 @@rawimage:3349&2962
@@ -333,4 +335,4 @@ layout store in that file looks as follow:&]
 [s7; -|ITEM(Upp`::Button, cancel, SetLabel(t`_(`"Cancel`")).RightPosZ(4, 
 80).BottomPosZ(4, 22))&]
 [s7; END`_LAYOUT&]
-[s0; ]]
+[s5; ]]
