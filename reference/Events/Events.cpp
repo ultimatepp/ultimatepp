@@ -215,7 +215,7 @@ struct App : TopWindow {
 		AddFrame(InsetFrame());
 		log.AddColumn("");
 		log.NoHeader();
-		Add(log.HSizePos().BottomPos(0, 200));
+		Add(log.HSizePos().BottomPosZ(0, 200));
 	}
 
 	~App()

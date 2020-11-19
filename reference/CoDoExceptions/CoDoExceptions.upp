@@ -4,7 +4,7 @@ uses
 	Core;
 
 file
-	CoWorkExceptions.cpp;
+	CoDoExceptions.cpp;
 
 mainconfig
 	"" = "";
