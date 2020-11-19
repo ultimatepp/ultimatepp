@@ -19,7 +19,7 @@ int GetKeyCodeX(int key) {
 		return Null;
 
 	if (key > 0x00ff)
-    	key = key | 0x01000000;
+    	key |= 0x01000000;
  	
 	key = XKeysymToKeycode(dpy, key) + K_DELTA;
 	
