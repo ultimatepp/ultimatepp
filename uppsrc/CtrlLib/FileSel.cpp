@@ -803,6 +803,7 @@ void FileSel::SelectNet()
 #endif
 }
 
+#ifdef PLATFORM_WIN32
 void FileSel::ScanNetwork(Function<Array<NetNode> ()> fn)
 {
 	Progress pi(t_("Scanning network.."));
@@ -856,6 +857,7 @@ void FileSel::ScanNetworkRoot()
 	netroot = clone(netnode);
 	netroot_loaded = true;
 }
+#endif
 
 void FileSel::SearchLoad()
 {
