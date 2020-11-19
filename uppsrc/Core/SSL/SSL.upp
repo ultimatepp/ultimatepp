@@ -11,6 +11,5 @@ file
 	Util.cpp,
 	InitExit.cpp,
 	Socket.cpp,
-	P7S.cpp,
-	Init.icpp;
+	P7S.cpp;
 
