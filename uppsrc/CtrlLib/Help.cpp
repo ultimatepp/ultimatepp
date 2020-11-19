@@ -135,8 +135,15 @@ void HelpWindow::SetBar()
 
 bool HelpWindow::Key(dword key, int count)
 {
-	if(key == K_ESCAPE) {
+	switch(key) {
+	case K_ESCAPE:
 		Close();
+		return true;
+	case K_MOUSE_BACKWARD:
+		Back();
+		return true;
+	case K_MOUSE_FORWARD:
+		Forward();
 		return true;
 	}
 	return view.Key(key, count);

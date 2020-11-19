@@ -1399,6 +1399,7 @@ void FileSel::Activate()
 
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
+	case K_MOUSE_BACKWARD:
 	case '.':
 	case K_CTRL_UP:
 		list.SetFocus();

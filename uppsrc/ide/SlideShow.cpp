@@ -188,11 +188,13 @@ bool SlideShow::Key(dword key, int count)
 		break;
 	case K_LEFT:
 	case K_PAGEUP:
+	case K_MOUSE_BACKWARD:
 		page--;
 		break;
 	case K_RIGHT:
 	case K_PAGEDOWN:
 	case K_SPACE:
+	case K_MOUSE_FORWARD:
 		page++;
 		break;
 	case K_CTRL|K_ALT|K_ADD:
