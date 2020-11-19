@@ -1453,7 +1453,11 @@ void FileSel::Reload()
 
 void FileSel::Activate()
 {
-	if(loaded && !loading_network && GetDir() != "\\" && netnode.GetCount() == 0)
+	if(loaded && !loading_network && GetDir() != "\\"
+#ifdef PLATFORM_WIN32
+	   && netnode.GetCount() == 0
+#endif
+	)
 		Reload();
 	TopWindow::Activate();
 }
@@ -1461,7 +1465,9 @@ void FileSel::Activate()
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
 	case K_F9:
+#ifdef PLATFORM_WIN32
 		netroot_loaded = false;
+#endif
 		Reload();
 		return true;
 	case K_MOUSE_FORWARD:
