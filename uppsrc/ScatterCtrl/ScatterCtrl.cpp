@@ -942,10 +942,6 @@ void ScatterCtrl::MouseLeave()
 void ScatterCtrl::MouseZoom(int zdelta, bool , bool ) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-//	if (hor && (lastxRange < xRange*scale))
-//		return;
-//	if (ver && (lastyRange < yRange*scale))
-//		return;
 	if (lastRefresh_sign != ((scale >= 0) ? 1 : -1))	
 		lastRefresh_ms = Null;					// Change of scale sign resets lastRefresh check
 	if (GetTickCount() - lastRefresh0_ms > 1000)

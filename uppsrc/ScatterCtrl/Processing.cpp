@@ -136,7 +136,7 @@ ProcessingTab::ProcessingTab()
 	
 	for (int i = 0; i < DataSource::GetFFTWindowCount(); ++i)
 		tabFreqRight.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
-	tabFreqRight.window.SetIndex(1);
+	tabFreqRight.window.SetIndex(0);
 	tabFreqRight.window.WhenAction = [=] {OnFFT();};
 	tabFreqRight.num <<= 1;
 	tabFreqRight.overlapping <<= 0.1;
@@ -261,9 +261,12 @@ void ProcessingTab::OnFit() {
 	Array<double> r2;
 	r2.SetCount(equationTypes.GetCount());
 	
+	Progress progress(t_("Fitting..."), equationTypes.GetCount());
+	progress.Title(t_("Searching for the function that best fits")); 	
 	for (int i = 0; i < equationTypes.GetCount(); ++i) {
 		equationTypes[i].GuessCoeff(ds);
 		equationTypes[i].Fit(ds, r2[i]);
+		progress.SetPos(i+1);
 	}
 	tabBestFitLeft.scatter.RemoveAllSeries();
 	tabBestFitLeft.scatter.AddSeries(ds).Legend("Series").NoMark();
