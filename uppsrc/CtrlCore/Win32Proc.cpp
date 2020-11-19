@@ -297,6 +297,22 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 //	case WM_GETDLGCODE:
 //		return wantfocus ? 0 : DLGC_STATIC;
+	case WM_XBUTTONDOWN: {
+		UINT button = GET_XBUTTON_WPARAM(wParam);
+		if(button == XBUTTON2)
+			DispatchKey(K_MOUSE_FORWARD, 1);
+		if(button == XBUTTON1)
+			DispatchKey(K_MOUSE_BACKWARD, 1);
+		return 0L;
+	}
+	case WM_XBUTTONUP: {
+		UINT button = GET_XBUTTON_WPARAM(wParam);
+		if(button == XBUTTON2)
+			DispatchKey(K_MOUSE_FORWARD|K_KEYUP, 1);
+		if(button == XBUTTON1)
+			DispatchKey(K_MOUSE_BACKWARD|K_KEYUP, 1);
+		return 0L;
+	}
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_DESTROY:
