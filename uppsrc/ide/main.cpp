@@ -132,6 +132,7 @@ void AppMain___()
 
 	Ctrl::SetUHDEnabled();
 	Ctrl::SetDarkThemeEnabled();
+	Ctrl::SetAppName("TheIDE");
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
