@@ -7,8 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 	try {
-		CoWork co;
-		co & [] { throw "Worker exception"; };
+		CoDo([] { throw "Worker exception"; });
 	}
 	catch(const char *s) {
 		LOG("Caught: " << s);
