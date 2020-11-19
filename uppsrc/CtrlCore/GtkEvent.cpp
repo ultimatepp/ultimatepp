@@ -205,7 +205,7 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 			MouseState &= ~m;
 		return e->button;
 	}
-	return Null;
+	return findarg(e->button, 8, 9) >= 0 ? (int)e->button : (int)Null;
 }
 
 Ctrl::GEvent::GEvent()
@@ -401,6 +401,14 @@ void Ctrl::Proc()
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
 		break;
 	case GDK_BUTTON_PRESS:
+		if(CurrentEvent.value == 8) {
+			DispatchKey(K_MOUSE_BACKWARD, 1);
+			break;
+		}
+		if(CurrentEvent.value == 9) {
+			DispatchKey(K_MOUSE_FORWARD, 1);
+			break;
+		}
 		if(!HasWndFocus() && !popup)
 			SetWndFocus();
 		ClickActivateWnd();
@@ -418,6 +426,14 @@ void Ctrl::Proc()
 			GtkButtonEvent(DOUBLE);
 		break;
 */	case GDK_BUTTON_RELEASE:
+		if(CurrentEvent.value == 8) {
+			DispatchKey(K_MOUSE_BACKWARD|K_KEYUP, 1);
+			break;
+		}
+		if(CurrentEvent.value == 9) {
+			DispatchKey(K_MOUSE_FORWARD|K_KEYUP, 1);
+			break;
+		}
 		if(ignoreclick)
 			EndIgnore();
 		else
