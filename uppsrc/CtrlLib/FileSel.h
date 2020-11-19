@@ -185,6 +185,7 @@ protected:
 	Vector<String> mask;
 	Vector<String> path;
 	Vector<String> lru;
+	Vector<String> fw;
 	int            lastsby;
 	FileSystemInfo *filesystem;
 
@@ -196,6 +197,8 @@ protected:
 	Vector<String> fn;
 
 #ifdef PLATFORM_WIN32
+	static bool netroot_loaded;
+	static Array<NetNode> netroot;
 	Array<NetNode> netstack;
 	Array<NetNode> netnode;
 #endif
@@ -231,6 +234,8 @@ protected:
 	static bool        li_running;
 	static int         li_pos;
 	TimeCallback       li_tm;
+
+	bool        loading_network = false;
 	
 	static void LIThread();
 	String      LIPath();
@@ -273,6 +278,8 @@ protected:
 	void        GoToPlace();
 	void        AddPlaceRaw(const String& path, const Image& m, const String& name, const char* group = NULL, int row = -1);
 	void        AddSystemPlaces(int row = -1);
+	void        ScanNetwork(Function<Array<NetNode> ()> fn);
+	void        ScanNetworkRoot();
 
 	using       WithFileSelectorLayout<TopWindow>::Title;
 

@@ -44,7 +44,7 @@ LAYOUT(SimpleSelectLayout, 172, 184)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
-LAYOUT(FileSelectorLayout, 652, 408)
+LAYOUT(FileSelectorLayout, 652, 488)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("&Directory")).LeftPosZ(8, 72).TopPosZ(6, 15))
 	ITEM(Upp::DropList, dir, HSizePosZ(84, 8).TopPosZ(4, 19))
 	ITEM(Splitter, splitter, HSizePosZ(8, 8).VSizePosZ(28, 116))

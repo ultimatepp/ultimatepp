@@ -120,7 +120,7 @@ not to cause congestion of CoWork scheduling.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:Cancel`(`): [@(0.0.255) void]_[* Cancel]()&]
-[s2;%% Removed all jobs scheduled by this thread that has not started 
+[s2;%% Removes all jobs scheduled by this thread that has not started 
 yet from the queue and then waits for any jobs already started 
 to finish. Rethrows the exception thrown in worker threads. If 
 more than single worker thread throws the exception, the first 
@@ -246,7 +246,7 @@ each worker thread, plus thread that created CoWork need its
 own instance. CoWorkerResources helps to manage such situation.&]
 [s0;%% &]
 [s2;%% NOTE: The problem that this helper class solves is in majority 
-better solved by using CoDo function.&]
+cases better solved by using CoDo function.&]
 [s0;%% &]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]

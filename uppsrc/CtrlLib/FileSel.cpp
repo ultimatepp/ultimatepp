@@ -2,6 +2,10 @@
 
 namespace Upp {
 
+INITBLOCK {
+	RegisterGlobalConfig("GlobalFileSelectorLRU");
+}
+
 #ifdef GUI_WIN
 void AvoidPaintingCheck__();
 
@@ -789,12 +793,68 @@ void FileSel::SelectNet()
 		if(p.GetCount())
 			SetDir(p);
 		else {
-			netstack.Add() = netnode[q];
-			netnode = netstack.Top().Enum();
-			LoadNet();
+			NetNode n = netnode[q];
+			netstack.Add() = n;
+			ScanNetwork([=] {
+				return n.Enum();
+			});
 		}
 	}
 #endif
+}
+
+void FileSel::ScanNetwork(Function<Array<NetNode> ()> fn)
+{
+	Progress pi(t_("Scanning network.."));
+	loading_network = true;
+	for(;;) {
+		Ptr<FileSel> fs = this;
+		if(CoWork::TrySchedule([=] {
+			Array<NetNode> n = fn();
+			GuiLock __;
+			if(fs) {
+				fs->netnode = pick(n);
+				fs->loading_network = false;
+			}
+		}))
+			break;
+		if(pi.StepCanceled()) {
+			SetDir("");
+			return;
+		}
+		Sleep(10);
+	}
+	for(;;) {
+		if(pi.StepCanceled()) {
+			SetDir("");
+			return;
+		}
+		if(!loading_network) {
+			LoadNet();
+			break;
+		}
+		Sleep(10);
+	}
+}
+
+bool FileSel::netroot_loaded;
+Array<NetNode> FileSel::netroot;
+
+void FileSel::ScanNetworkRoot()
+{
+	if(netroot_loaded) {
+		netnode = clone(netroot);
+		LoadNet();
+		return;
+	}
+	ScanNetwork([] {
+		Array<NetNode> n;
+		n = NetNode::EnumRoot();
+		n.Append(NetNode::EnumRemembered());
+		return n;
+	});
+	netroot = clone(netnode);
+	netroot_loaded = true;
 }
 
 void FileSel::SearchLoad()
@@ -805,9 +865,7 @@ void FileSel::SearchLoad()
 	String d = GetDir();
 #ifdef PLATFORM_WIN32
 	if(d == "\\") {
-		netnode = NetNode::EnumRoot();
-		netnode.Append(NetNode::EnumRemembered());
-		LoadNet();
+		ScanNetworkRoot();
 		return;
 	}
 #endif
@@ -1133,6 +1191,7 @@ void FileSel::Finish() {
 }
 
 bool FileSel::OpenItem() {
+	fw.Clear();
 	if(list.IsCursor()) {
 	#ifdef PLATFORM_WIN32
 		if(netnode.GetCount()) {
@@ -1144,9 +1203,7 @@ bool FileSel::OpenItem() {
 		String path = AppendFileName(~dir, m.name);
 	#ifdef PLATFORM_WIN32
 		if(IsNull(dir) && m.name == t_("Network")) {
-			netnode = NetNode::EnumRoot();
-			netnode.Append(NetNode::EnumRemembered());
-			LoadNet();
+			ScanNetworkRoot();
 			return true;
 		}
 		String p = ResolveLnkDir(m.name);
@@ -1315,7 +1372,8 @@ String DirectoryUp(String& dir, bool basedir)
 	return name;
 }
 
-void FileSel::DirUp() {
+void FileSel::DirUp()
+{
 #ifdef PLATFORM_WIN32
 	if(netstack.GetCount()) {
 		netstack.Drop();
@@ -1333,6 +1391,7 @@ void FileSel::DirUp() {
 	}
 #endif
 	String s = ~dir;
+	fw.Add(s);
 	String name = DirectoryUp(s, !basedir.IsEmpty());
 #ifdef PLATFORM_WIN32
 	if(s[0] == '\\' && s[1] == '\\' && s.Find('\\', 2) < 0) {
@@ -1392,13 +1451,21 @@ void FileSel::Reload()
 
 void FileSel::Activate()
 {
-	if(loaded)
+	if(loaded && !loading_network && GetDir() != "\\" && netnode.GetCount() == 0)
 		Reload();
 	TopWindow::Activate();
 }
 
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
+	case K_F9:
+		netroot_loaded = false;
+		Reload();
+		return true;
+	case K_MOUSE_FORWARD:
+		if(fw.GetCount())
+			SetDir(fw.Pop());
+		return true;
 	case K_MOUSE_BACKWARD:
 	case '.':
 	case K_CTRL_UP:
@@ -1689,8 +1756,48 @@ void FileSel::GoToPlace()
 	}
 }
 
+Image SynthetisePathIcon(const String& path)
+{
+	Size isz = DPI(16, 16);
+	ImagePainter iw(isz);
+	iw.Clear(RGBAZero());
+	int x = FoldHash(GetHashValue(path));
+	auto cl = [](int x) { return 128 + (x & 127); };
+	iw.Circle(DPI(8), DPI(8), DPI(7)).Fill(Color(cl(x), cl(x >> 7), cl(x >> 14))).Stroke(1, SBlack());
+	WString s = GetFileTitle(path).ToWString();
+	if(s.GetCount()) {
+		s = s.Mid(0, 1);
+		Font fnt = Serif(DPI(12));
+		Size tsz = GetTextSize(s, fnt);
+		iw.DrawText((isz.cx - tsz.cx) / 2, (isz.cy - tsz.cy) / 2, s, fnt, Black());
+	}
+	return iw;
+}
+
+String PathName(const String& path)
+{
+	int cx = Zx(100);
+	String p = path;
+	p.Replace("\\", "/");
+	if(GetTextSize(p, StdFont()).cx < cx) return p;
+	cx -= GetTextSize("..", StdFont()).cx;
+	while(GetTextSize(p, StdFont()).cx > cx && p.GetCount() > 1)
+		p = p.Mid(1);
+	return ".." + p;
+}
+
 bool FileSel::Execute(int _mode) {
 	mode = _mode;
+
+	int fixed_places = places.GetCount();
+
+	Vector<String> glru;
+	LoadFromGlobal(glru, "GlobalFileSelectorLRU");
+	if(glru.GetCount()) {
+		AddPlaceSeparator();
+		for(const String& path : glru)
+			AddPlace(path, SynthetisePathIcon(path), PathName(path), "PLACES:FOLDER");
+	}
 
 	int system_row = -1;
 	for(int i = places.GetCount() - 1; i >= 0; i--) {
@@ -1876,17 +1983,25 @@ bool FileSel::Execute(int _mode) {
 	}
 	else
 		type.Trim(dlc);
-	if(c == IDOK) {
-		String d = ~dir;
-		if(filesystem->IsWin32())
-			if(d.GetLength() == 3 && d[1] == ':') return true;
-		if(filesystem->IsPosix())
-			if(d == "/") return true;
-		if(!IsFullPath(d)) return true;
-		LruAdd(lru, d, 8);
-		return true;
+
+	String d = ~dir;
+	if(filesystem->IsWin32() && d.GetLength() == 3 && d[1] == ':' ||
+	   filesystem->IsPosix() && d == "/" ||
+	   !IsFullPath(d))
+		d.Clear();
+
+	if(d.GetCount()) {
+		LruAdd(lru, d, 12);
+		Vector<String> glru;
+		d = NormalizePath(d);
+		LoadFromGlobal(glru, "GlobalFileSelectorLRU");
+		LruAdd(glru, d, 5);
+		StoreToGlobal(glru, "GlobalFileSelectorLRU");
 	}
-	return false;
+
+	places.SetCount(fixed_places);
+
+	return c == IDOK;
 }
 
 bool FileSel::ExecuteOpen(const char *title) {
