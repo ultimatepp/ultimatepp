@@ -421,7 +421,12 @@ bool Ide::Key(dword key, int count)
 	case K_ALT_C|K_SHIFT:
 		CodeBrowser();
 		return true;
-	case K_ALT_RIGHT:
+	case K_MOUSE_BACKWARD:
+		History(-1);
+		return true;
+	case K_MOUSE_FORWARD:
+		History(1);
+		return true;
 	default:
 		if(key >= K_SHIFT_CTRL_0 && key <= K_SHIFT_CTRL_9) {
 			Bookmark& b = bookmark[key - K_SHIFT_CTRL_0];
