@@ -70,7 +70,7 @@ public:
             DirEntry& operator=(DirEntry&&) = default;
             
             // Deprecated stuff.
-            [[deprecated("Will be removed with U++ 2021.1.")]]
+            [[deprecated("Will be removed with U++ 2021.2.")]]
             String ToXml() const;
             
         private:
