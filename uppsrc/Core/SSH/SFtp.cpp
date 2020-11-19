@@ -605,6 +605,20 @@ FileSystemInfo::FileInfo SFtp::DirEntry::ToFileInfo() const
 	return pick(fi);
 }
 
+void SFtp::DirEntry::Serialize(Stream& s)
+{
+	ASSERT(a);
+
+	s % a->flags;
+	s % a->permissions;
+	s % a->uid;
+	s % a->gid;
+	s % a->filesize;
+	s % a->mtime;
+	s % a->atime;
+	s % filename;
+}
+
 bool SFtp::DirEntry::CanMode(dword u, dword g, dword o) const
 {
 	return (a->flags & LIBSSH2_SFTP_ATTR_PERMISSIONS)

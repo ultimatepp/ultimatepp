@@ -503,41 +503,17 @@ string. Output of this method is similar to Unix ls command`'s
 output.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:SFtp`:`:DirEntry`:`:ToXml`(`)const:%- [_^Upp`:`:String^ String]_[* ToXml]()_[@(0.0.255) c
-onst]&]
-[s2; Returns the information of file system object as an xml string. 
-Returned string will be a single xml tag, with the name of the 
-file system object as its text:&]
-[s0;%- &]
-[ {{4133:5867<288;>544;l/26r/26t/14b/14@1-1 [s0;= [* sftp:direntry]]
-::l/25r/25t/15b/15@2 [s0;%- ]
-::l/26r/26t/14b/14@(178) [s0;= Attributes]
-:: [s0;= Possible Value(s)]
-::l/25r/25t/15b/15@2 [s0;= [*C type]]
-:: [s0; [C file, directory, symlink, socket, pipe, block`-special, character`-special, 
-other]]
-:: [s0;= [*C uid]]
-:: [s0; [C A string representing an int64 value]]
-:: [s0;= [*C gid]]
-:: [s0; [C A string representing an int64 value]]
-:: [s0;= [*C size]]
-:: [s0; [C A string representing an int64 value]]
-:: [s0;= [*C modified]]
-:: [s0; [C Last modification time in YYYY:MM`::DD HH:MM:SS format]]
-:: [s0;= [*C accessed]]
-:: [s0; [C Last access time in YYYY:MM`::DD HH:MM:SS format]]
-:: [s0;= [*C permissions]]
-:: [s0; [C rwxrwxrwx]]}}&]
-[s3;%- &]
-[s3;%- &]
-[s4;%- &]
 [s5;:Upp`:`:SFtp`:`:DirEntry`:`:ToFileInfo`(`)const:%- [_^Upp`:`:FileSystemInfo`:`:FileInfo^ F
 ileSystemInfo`::FileInfo]_[* ToFileInfo]()_[@(0.0.255) const]&]
 [s2; Converts the DirEntry object to FileSystemInfo:FileInfo object. 
 See[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtpFileSystemInfo`:`:class^  
 SFtpFileSystemInfo].&]
 [s3;%- &]
-[s0;%- &]
+[s4;%- &]
+[s5;:Upp`:`:SFtp`:`:DirEntry`:`:Serialize`(Upp`:`:Stream`&`):%- [@(0.0.255) void]_[* Seri
+alize]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 s])&]
+[s2; Serializes the DirEntry object.&]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
 [s5;:Upp`:`:SFtp`:`:DirEntry`:`:DirEntry`(`):%- [* DirEntry]()&]
