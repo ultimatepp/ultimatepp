@@ -74,9 +74,9 @@ public:
 
     // DEPRECATED stuff.
     enum Hash           { HASH_MD5, HASH_SHA1, HASH_SHA256 };
-    [[deprecated("Will be removed with U++ 2021.1. Use GetxxxFingerprint() methods instead.")]]
+    [[deprecated("Will be removed with U++ 2021.2. Use GetxxxFingerprint() methods instead.")]]
 	String      GetFingerprint() const              { return session->fingerprint; }
-    [[deprecated("Will be removed with U++ 2021.1. Use GetxxxFingerprint() methods instead.")]]
+    [[deprecated("Will be removed with U++ 2021.2. Use GetxxxFingerprint() methods instead.")]]
     SshSession& HashType(Hash h)                    { session->hashtype = h; return *this; }
 
 private:
