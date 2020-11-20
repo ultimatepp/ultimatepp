@@ -348,8 +348,10 @@ public:
 	T&       Add(T&& x)                      { T *q = new T(pick(x)); vector.Add(q); return *q; }
 	T&       Add(T *newt)                    { vector.Add(newt); return *newt; }
 	T&       Add(One<T>&& one)               { ASSERT(one); return Add(one.Detach()); }
+	template<class... Args>
+	T&       Create(Args&&... args)          { T *q = new T(std::forward<Args>(args)...); Add(q); return *q; }
 	template<class TT, class... Args>
-	TT& Create(Args&&... args)               { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
+	TT&      Create(Args&&... args)          { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
 	const T& operator[](int i) const         { return Get(i); }
 	T&       operator[](int i)               { return Get(i); }
 	const T& Get(int i, const T& def) const  { return i >= 0 && i < GetCount() ? Get(i) : def; }
