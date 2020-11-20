@@ -5,7 +5,6 @@ uses
 
 file
 	umake.h,
-	MacOs.cpp,
 	Console.cpp,
 	IdeContext.cpp,
 	MakeBuild.cpp,
