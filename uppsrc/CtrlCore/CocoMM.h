@@ -43,6 +43,7 @@ CGImageRef createCGImage(const Image& img);
 
 NSImage *GetNSImage(const Image& img);
 
+// From Draw/FontCoco.cpp
 WString ToWString(CFStringRef s);
 String  ToString(CFStringRef s);
 

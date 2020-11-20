@@ -60,7 +60,7 @@ void SearchEnginesDefaultSetup()
 }
 
 struct IconDisplay : Display {
-	virtual Size GetStdSize(const Value&) { return DPI(16, 16); }
+	virtual Size GetStdSize(const Value&) const { return DPI(16, 16); }
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 	{
 		w.DrawRect(r, paper);
