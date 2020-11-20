@@ -5,7 +5,7 @@ topic "Skylark Tutorial";
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
-[l321;C@5;1 $$7,7#20902679421464641399138805415013:code]
+[l321;C@5+75 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
 [*@(0.0.255)2 $$9,0#83433469410354161042741608181528:base]
 [C2 $$10,0#37138531426314131251341829483380:class]
@@ -787,7 +787,6 @@ by [@5 SubmitEdit].&]
 [s5;l160;i150;O0; It is also possible to add shared variables based 
 on single row select, names being then same as names of columns, 
 as demonstrated by [@5 Edit].&]
-[s5; &]
 [s7; &]
 [s7; #include <Skylark/Skylark.h>&]
 [s7; #include <plugin/sqlite3/Sqlite3.h>&]
@@ -1087,9 +1086,8 @@ can be used to setup parameters of pack instance.&]
 [s5; Url links to pack methods are then expressed as [/@5 instance:method][@5  
 ]in witz templates and as LINK(instance, method) in C`+`+ code.&]
 [s5; Note also that HandlerId is a special simple type able to store 
-either [@5 LINK ]or [@5 THISLINK ]originated reference to pack method 
+either LINK or [@5 THISLINK ]originated reference to pack method 
 or pointer to handler function.&]
-[s7; .....&]
 [s7; &]
 [s7; struct CreateEditDelete : [* SkylarkPack ]`{&]
 [s7; -|[* HandlerId   ]back;&]
