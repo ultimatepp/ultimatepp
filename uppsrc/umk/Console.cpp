@@ -281,7 +281,6 @@ void Console::CheckEndGroup()
 				;
 			if(p < 0) {
 				if(group.count > 0) {
-					int duration = msecs(group.start_time);
 					String msg = NFormat("%s: %d file(s) built in %s, %d msecs / file",
 						gname, group.count, PrintTime(group.msecs), group.msecs / group.count);
 					msg << '\n';
