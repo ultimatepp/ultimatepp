@@ -3,27 +3,27 @@
 String CppAsQtf(const String& str)
 {
 	static const char *cpp[] = {
-		"__asm", "else", "struct",
-		"enum", "switch", "auto", "__except", "template",
-		"explicit", "this",
-		"bool", "extern", "mutable", "thread",
-		"break", "false", "throw",
-		"case", "__fastcall", "namespace", "true",
-		"catch", "__finally", "new", "try",
-		"__cdecl", "float", "__try",
-		"char", "for", "operator", "typedef",
-		"class", "friend", "private", "typeid",
-		"const", "goto", "protected", "typename",
-		"const_cast", "if", "public", "union",
-		"continue", "inline", "register", "unsigned",
-		"__declspec", "__inline", "reinterpret_cast", "using",
-		"using", "default", "int", "return",
-		"delete", "__int8", "short", "__uuidof",
-		"dllexport", "__int16", "signed", "virtual",
-		"dllimport", "__int32", "sizeof", "void",
-		"do", "__int64", "static", "volatile",
-		"double", "__leave", "static_cast",
-		"dynamic_cast", "long", "__stdcall", "while",
+		"__asm", "__cdecl", "__declspec", "__except", "__fastcall",
+        "__finally", "__inline", "__int16", "__int32", "__int64",
+        "__int8", "__leave", "__stdcall", "__try", "__uuidof",
+        "alignas", "alignof", "and", "and_eq", "asm", "auto",
+        "bitand", "bitor", "bool", "break", "case", "catch",
+        "char", "char8_t", "char16_t", "char32_t", "class",
+        "co_await", "co_return", "co_yield", "compl", "concept",
+        "const", "const_cast", "consteval", "constexpr", "constinit",
+        "continue", "decltype", "default", "delete", "dllexport",
+        "dllimport", "do", "double", "dynamic_cast", "else", "enum",
+        "explicit", "export", "extern", "false", "final", "float",
+        "for", "force_inline", "friend", "goto", "if", "import",
+        "inline", "int", "long", "module", "mutable", "namespace",
+        "never_inline", "new", "noexcept", "not", "not_eq", "nullptr",
+        "operator", "or", "or_eq", "override", "private", "protected",
+        "public", "register", "reinterpret_cast", "requires", "return",
+        "short", "signed", "sizeof", "static", "static_assert",
+        "static_cast", "struct", "switch", "template", "this", "thread",
+        "thread_local", "throw", "true", "try", "typedef", "typeid",
+        "typename", "union", "unsigned", "using", "virtual",
+        "void", "volatile", "wchar_t", "while", "xor", "xor_eq",
 		"include", "define", "ifdef", "ifndef", "endif",
 		NULL
 	};
@@ -34,7 +34,7 @@ String CppAsQtf(const String& str)
 
 	const char *s = str;
 	StringBuffer qtf;
-	qtf << "[l0r0<C1 ";
+	qtf << "[l0r0<C+76 ";
 	while(*s)
 	{
 		if(iscib(*s)) {
