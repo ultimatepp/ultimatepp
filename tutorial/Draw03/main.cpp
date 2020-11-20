@@ -3,17 +3,18 @@
 using namespace Upp;
 
 struct MyApp : TopWindow {
-	DropList fontlist;
+	DropList font_list;
 
-	void Paint(Draw& w) {
+	virtual void Paint(Draw& w) override {
+		const String text = "Programming is fun";
+		Font fnt(~font_list, 60);
+		
 		w.DrawRect(GetSize(), White);
 		w.Offset(50, 50);
-		const char *text = "Programming is fun";
-		Font fnt(~fontlist, 60);
 		int x = 0;
 		Vector<int> dx;
-		for(const char *s = text; *s; s++) {
-			int width = fnt[*s];
+		for(char letter : text) {
+			int width = fnt[letter];
 			w.DrawRect(x, 0, width - 1, fnt.GetAscent(), Color(255, 255, 200));
 			w.DrawRect(x, fnt.GetAscent(), width - 1, fnt.GetDescent(), Color(255, 200, 255));
 			w.DrawRect(x + width - 1, 0, 1, fnt.GetHeight(), Black());
@@ -30,14 +31,12 @@ struct MyApp : TopWindow {
 		Refresh();
 	}
 
-	typedef MyApp CLASSNAME;
-
 	MyApp() {
 		for(int i = 0; i < Font::GetFaceCount(); i++)
-			fontlist.Add(i, Font::GetFaceName(i));
-		Add(fontlist.TopPos(0, MINSIZE).LeftPosZ(0, 200));
-		fontlist <<= 0;
-		fontlist <<= THISBACK(NewFont);
+			font_list.Add(i, Font::GetFaceName(i));
+		Add(font_list.TopPos(0, MINSIZE).LeftPosZ(0, 200));
+		font_list <<= 0;
+		font_list << [=] { NewFont(); };
 	}
 };
 

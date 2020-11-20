@@ -7,7 +7,8 @@ struct MyApp : TopWindow {
 		w.DrawEllipse(0, 0, 100, 30, WhiteGray(), 1, Cyan);
 		w.DrawText(0, 0, "Hello world", Roman(30).Bold());
 	}
-	virtual void Paint(Draw& w) {
+	
+	virtual void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White());
 		DoPainting(w);
 		w.Offset(30, 50);
