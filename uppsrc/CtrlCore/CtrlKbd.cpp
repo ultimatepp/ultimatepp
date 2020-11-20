@@ -393,8 +393,8 @@ Tuple<dword, const char *> KeyNames__[ ] = {
 	{ K_OPTION_KEY, tt_("key\vOption") },
 #endif
 	{ IK_DBL_CLICK, tt_("key\v[double-click]") },
-	{ K_MOUSE_FORWARD, tt_("key\v[Forward]") },
-	{ K_MOUSE_BACKWARD, tt_("key\v[Backward]") },
+	{ (dword)K_MOUSE_FORWARD, tt_("key\v[Forward]") },
+	{ (dword)K_MOUSE_BACKWARD, tt_("key\v[Backward]") },
 	{ 0, NULL }
 };
 
