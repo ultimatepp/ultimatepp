@@ -83,7 +83,7 @@ and using custom widgets]&]
 dialogs]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#23^ 23. Internationalizing 
 applications (i18n)]&]
-[s5; &]
+[s0; &]
 [s3;:1: 1. First steps&]
 [s22;:1`_1: 1.1 Creating GUI application project from template&]
 [s5; Before we start writing GUI applications, first we need to learn 
