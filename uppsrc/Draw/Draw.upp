@@ -10,6 +10,8 @@ uses
 
 library(WIN32) "user32 gdi32";
 
+link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
+
 pkg_config(POSIX) "freetype2 x11 fontconfig xcb expat";
 
 file
@@ -19,6 +21,7 @@ file
 	FontCR.cpp,
 	FontWin32.cpp,
 	FontFc.cpp,
+	FontCoco.mm,
 	Draw.cpp,
 	DrawText.cpp,
 	DrawData.cpp,

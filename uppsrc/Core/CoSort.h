@@ -46,12 +46,12 @@ void CoSort__(CoWork& cw, I l, I h, const Less& less)
 		int count_h = h - ih - 1;
 
 		if(count_l < count_h) {       // recurse on smaller partition, tail on larger
-			cw & [=, &cw] { CoSort__(l, i, less); };
+			cw & [=, &cw] { CoSort__(cw, l, i, less); };
 			l = ih + 1;
 			count = count_h;
 		}
 		else {
-			cw & [=, &cw] { CoSort__(ih + 1, h, less); };
+			cw & [=, &cw] { CoSort__(cw, ih + 1, h, less); };
 			h = i;
 			count = count_l;
 		}

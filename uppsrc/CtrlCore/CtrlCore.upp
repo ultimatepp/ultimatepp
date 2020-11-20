@@ -10,8 +10,6 @@ library(WIN32) "advapi32 comdlg32 comctl32";
 
 library(WIN32) "user32 gdi32";
 
-link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
-
 pkg_config(POSIX) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
 
 pkg_config(POSIX !X11) "gtk+-3.0 libnotify";
@@ -110,7 +108,6 @@ file
 	CocoAfter.h,
 	CocoKeys.h,
 	CocoMM.h,
-	CocoUtil.mm,
 	CocoDraw.mm,
 	CocoDrawOp.mm,
 	CocoImage.mm,
