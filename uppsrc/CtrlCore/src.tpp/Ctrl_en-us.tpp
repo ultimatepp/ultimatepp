@@ -2710,12 +2710,6 @@ stream.&]
 [s7;i1120;a17; [%-*C@3 s]-|Stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:InitWin32`(HINSTANCE`):%- [@(0.0.255) static] [@(0.0.255) void]_[* InitWin32](
-HINSTANCE_[*@3 hinst])&]
-[s2;b17;a17; Flushes all drawing operations to screen (what it EXACTLY 
-does is platform specific).&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:GuiSleep`(int`):%- [@(0.0.255) static] [@(0.0.255) void]_[* GuiSleep]([@(0.0.255) i
 nt]_[*@3 ms])&]
 [s2;b17;a17; Sleeps (while allowing other applications or threads 
@@ -2757,6 +2751,17 @@ can finish.&]
 single input event (mouse event or keyboard event) is processed. 
 This is helpful in certain caching situations `- e.g. if you 
 want to lazy fetch some data, but only once per input event.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:begin`(`)const:%- [_^Upp`:`:Ctrl`:`:CtrlConstIterator^ CtrlConstIte
+rator]_[* begin]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Ctrl`:`:begin`(`):%- [_^Upp`:`:Ctrl`:`:CtrlIterator^ CtrlIterator]_[* begin](
+)&]
+[s5;:Upp`:`:Ctrl`:`:end`(`)const:%- [_^Upp`:`:Ctrl`:`:CtrlConstIterator^ CtrlConstItera
+tor]_[* end]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Ctrl`:`:end`(`):%- [_^Upp`:`:Ctrl`:`:CtrlIterator^ CtrlIterator]_[* end]()&]
+[s2; Adds rudimentary iterators over child widgets. Allows range`-based 
+for loops: for(Ctrl`& q : widget).&]
 [s0;%- &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Ctrl`::Logc]]}}&]
