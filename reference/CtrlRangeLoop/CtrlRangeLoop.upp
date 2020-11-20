@@ -1,0 +1,11 @@
+description "Using range-based for loop over descendant widgets\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
