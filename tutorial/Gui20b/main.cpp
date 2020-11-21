@@ -2,10 +2,10 @@
 
 using namespace Upp;
 
-struct MyApp : TopWindow {
+struct MyAppWindow : TopWindow {
 	Button exit;
 
-	MyApp() {
+	MyAppWindow() {
 		SetRect(0, 0, 100, 100);
 		Add(exit.SetLabel("exit").LeftPosZ(10, 64).TopPosZ(10, 24));
 		exit <<= Breaker(999);
@@ -14,5 +14,5 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyApp().Run();
+	MyAppWindow().Run();
 }

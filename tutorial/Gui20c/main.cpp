@@ -2,11 +2,11 @@
 
 using namespace Upp;
 
-struct MyApp : TopWindow {
+struct MyAppWindow : TopWindow {
 	Button ok, cancel;
 	EditDate date;
 
-	MyApp() {
+	MyAppWindow() {
 		SetRect(0, 0, 200, 90);
 		Add(date.LeftPosZ(10, 80).TopPosZ(10, 20));
 		Add(ok.SetLabel("OK").LeftPosZ(10, 64).TopPosZ(40, 24));
@@ -19,7 +19,7 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyApp app;
+	MyAppWindow app;
 	switch(app.Run()) {
 	case IDOK:
 		PromptOK(String().Cat() << "OK: " << ~app.date);
