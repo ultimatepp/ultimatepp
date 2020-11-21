@@ -3,26 +3,23 @@
 using namespace Upp;
 
 struct MyCtrl : public Ctrl {
-	int count;
+	int count = 0;
 
-	virtual void Paint(Draw& w) {
+	virtual void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White());
 		w.DrawText(2, 2, AsString(count));
 	}
 
-	virtual void LeftDown(Point, dword) {
+	virtual void LeftDown(Point, dword) override {
 		count++;
 		Refresh();
 	}
-
-	MyCtrl() { count = 0; }
 };
 
 #define LAYOUTFILE <Gui21/Gui21.lay>
 #include <CtrlCore/lay.h>
 
 struct Gui21 : public WithGui21Layout<TopWindow> {
-	typedef Gui21 CLASSNAME;
 	Gui21();
 };
 
