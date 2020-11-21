@@ -866,8 +866,8 @@ is fixed to the default Windows font):&]
 [s3;:16: 16. Layouts&]
 [s22;:16`.1: 16.1 Referral implementation&]
 [s5; Placing widgets by specifying their numeric logical coordinates 
-would be time consuming, therefore TheIDE provides visual designer 
-to simplify this task.&]
+would be time`-consuming, therefore TheIDE provides a visual 
+designer to simplify this task.&]
 [s5; &]
 [s0;= 
 @@rawimage:3502&2261
@@ -892,15 +892,15 @@ is such that it can be directly included into C`+`+:&]
 [s7; [* #define LAYOUTFILE <Gui16/dlg.lay>]&]
 [s7; [* #include <CtrlCore/lay.h>]&]
 [s7; &]
-[s7; struct MyApp : public WithDlgLayout<TopWindow> `{&]
-[s7; -|MyApp() `{&]
+[s7; struct MyAppWindow : public WithDlgLayout<TopWindow> `{&]
+[s7; -|MyAppWindow() `{&]
 [s7; -|-|[* CtrlLayout(`*this, `"My dialog`");]&]
 [s7; -|`}&]
 [s7; `};&]
 [s7; &]
 [s7; GUI`_APP`_MAIN&]
 [s7; `{&]
-[s7; -|MyApp().Run();&]
+[s7; -|MyAppWindow().Run();&]
 [s7; `}&]
 [s0; &]
 [s0;= 
@@ -909,10 +909,14 @@ is such that it can be directly included into C`+`+:&]
 &]
 [s5; &]
 [s5; In order to initialize layout [*^topic`:`/`/CtrlCore`/src`/Layout`_en`-us`#CtrlLayout`(T`&`)^ C
-trlLayout()] method needs to be called from constructor. Without 
-it the controls placed on layout will not be visible.&]
-[s5; To understand how layout mechanism works, let`'s examine content 
-of .lay file first:&]
+trlLayout()] method needs to be called from the constructor. 
+Without it the controls placed on layout will not be visible. 
+The first parameter of the function is reference to the control 
+in which the layout will be placed. In our case it is current 
+window. The second optional parameter is the title of the window 
+that displays layout.&]
+[s5; To understand how layout mechanism works, let`'s examine the 
+content of .lay file first:&]
 [s5; &]
 [s7; LAYOUT([* DlgLayout], [* 208], [* 64])&]
 [s7; -|ITEM([* Label], [* dv`_`_`_0], [* SetLabel(t`_(`"Label`")).LeftPosZ(8, 
@@ -971,15 +975,16 @@ Below implementation presents how you can avoid such situation:&]
 [s7; #define LAYOUTFILE <Gui16/dlg.lay>&]
 [s7; #include <CtrlCore/lay.h>&]
 [s7; &]
-[s7; struct MyApp : public Upp`::WithDlgLayout<Upp`::TopWindow> `{&]
-[s7; -|MyApp() `{&]
+[s7; struct MyAppWindow : public Upp`::WithDlgLayout<Upp`::TopWindow> 
+`{&]
+[s7; -|MyAppWindow() `{&]
 [s7; -|-|CtrlLayout(`*this, `"MyDialog`");&]
 [s7; -|`}&]
 [s7; `};&]
 [s7; &]
 [s7; GUI`_APP`_MAIN&]
 [s7; `{&]
-[s7; -|MyApp().Run();&]
+[s7; -|MyAppWindow().Run();&]
 [s7; `}&]
 [s0; &]
 [s5; Please notice that from version 2021.1 of U`+`+ framework surrounding 
