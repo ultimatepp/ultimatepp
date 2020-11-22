@@ -1232,4 +1232,6 @@ void InstantSetup();
 
 bool SetupSVNTrunk();
 
+void Uppiverse();
+
 #endif

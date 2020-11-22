@@ -233,3 +233,13 @@ void ShellOpenFolder(const String& dir)
 		);
 	#endif
 }
+
+void DirSelect(Ctrl& t, Button& b)
+{
+	b.SetImage(CtrlImg::Dir());
+	b << [&] {
+		String s = SelectDirectory();
+		if(s.GetCount())
+			t <<= s;
+	};
+}

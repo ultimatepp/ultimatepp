@@ -202,6 +202,12 @@ public:
 	String PackagePath(const String& name);
 };
 
+Nest& MainNest();
+
+String DefaultUpvFilePath();
+
+String GetUpvDir();
+
 String VarFilePath();
 String VarFilePath(String name);
 

@@ -183,12 +183,8 @@ void NestEditorDlg::Sync()
 bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }
 
 BaseSetupDlg::BaseSetupDlg()
-: browse_out("Output & intermediate files")
 {
 	CtrlLayoutOKCancel(*this, "Assembly setup");
-	browse_upp.SetImage(CtrlImg::right_arrow()).Tip("Select path..");
-	browse_upp << [=] { OnBrowseUpp(); };
-	upp.AddFrame(browse_upp);
 
 	setup_nest.Tip("Open nest editor..");
 	setup_nest << [=] {
@@ -201,13 +197,17 @@ BaseSetupDlg::BaseSetupDlg()
 	};
 
 	upp << [=] { OnUpp(); };
-	browse_out.Tip("Select path..").Attach(output);
+	
+	DirSelect(output, output_sel);
+	DirSelect(upv, upv_sel);
+	upv.NullText("Default");
 }
 
 bool BaseSetupDlg::Run(String& vars)
 {
 	upp     <<= GetVar("UPP");
 	output  <<= GetVar("OUTPUT");
+	upv     <<= GetVar("UPPIVERSE");
 	base    <<= vars;
 	new_base = IsNull(vars);
 	
@@ -227,6 +227,7 @@ bool BaseSetupDlg::Run(String& vars)
 		}
 		SetVar("UPP", ~upp);
 		SetVar("OUTPUT", ~output);
+		SetVar("UPPIVERSE", ~upv);
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)
 			RealizeDirectory(paths[i]);
@@ -235,33 +236,6 @@ bool BaseSetupDlg::Run(String& vars)
 		return true;
 	}
 	return false;
-}
-
-void BaseSetupDlg::OnBrowseUpp()
-{
-	String s = ~upp;
-	int b, e;
-	if(upp.HasFocus())
-		upp.GetSelection(b, e);
-	else
-		e = s.GetLength();
-	b = e;
-	while(b > 0 && s[b - 1] != ';')
-		b--;
-	while(e < s.GetLength() && s[e] != ';')
-		e++;
-	SelectDirButton dirsel;
-	String pre = s.Left(b), post = s.Mid(e);
-	dirsel.ActiveDir(s.Mid(b, e - b));
-	
-	AddAssemblyPaths((FileSel&) dirsel);
-
-	if(dirsel.ExecuteSelectDir()) {
-		String newdir = ~dirsel;
-		upp <<= pre + newdir + Nvl(post, ";");
-		upp.SetWantFocus();
-		OnUpp();
-	}
 }
 
 void BaseSetupDlg::OnUpp()

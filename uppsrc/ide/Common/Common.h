@@ -27,6 +27,8 @@ FileSel&  AnyPackageFs();
 FileSel&  BasedSourceFs();
 FileSel&  OutputFs();
 
+void      DirSelect(Ctrl& t, Button& b);
+
 void      ShellOpenFolder(const String& dir);
 
 Image     ImageOver(const Image& back, const Image& over);

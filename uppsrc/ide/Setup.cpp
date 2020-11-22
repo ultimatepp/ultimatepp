@@ -567,12 +567,16 @@ void Ide::SetupFormat() {
 	for(auto sk : GetAllChSkins())
 		ide.chstyle.Add(ide.chstyle.GetCount(), sk.b);
 
-	FrameRight<Button> uscBrowse;
-	uscBrowse.SetImage(CtrlImg::right_arrow());
-	uscBrowse <<= callback1(AddPath, &ide.uscpath);
-	ide.uscpath.AddFrame(uscBrowse);
 	String usc_path = GetHomeDirFile("usc.path");
 	ide.uscpath <<= LoadFile(usc_path);
+	ide.uscpath_sel.SetImage(CtrlImg::MkDir());
+	ide.uscpath_sel << [&] {
+		AddPath(&ide.uscpath);
+	};
+
+	String upv_path = DefaultUpvFilePath();
+	ide.uppiverse <<= LoadFile(upv_path);
+	DirSelect(ide.uppiverse, ide.uppiverse_sel);
 	
 	fnt.defaults << [&] {
 		Ide def;
@@ -587,10 +591,14 @@ void Ide::SetupFormat() {
 
 	for(;;) {
 		int c = dlg.Run();
+
+		Upp::SaveFile(upv_path, ~ide.uscpath);
+
 		if(IsNull(ide.uscpath))
 			FileDelete(usc_path);
 		else
-			Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
+			Upp::SaveFile(usc_path, ~ide.uscpath);
+
 		editorfont = ed.Get();
 		tfont = tf.Get();
 		veditorfont = vf.Get();
