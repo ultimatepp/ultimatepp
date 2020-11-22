@@ -112,8 +112,7 @@ void SelectPackageDlg::MovePackage(bool copy)
 	}
 
 	dlg.dir <<= d0;
-	dlg.select.SetImage(CtrlImg::Dir());
-	dlg.select << [&] { String d = SelectDirectory(); if(d.GetCount()) dlg.dir <<= d; };
+	DirSelect(dlg.dir, dlg.select);
 
 	dlg.name <<= GetCurrentName();
 
