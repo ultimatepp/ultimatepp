@@ -12,7 +12,7 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 	int instruction_len, int num_prompts, const LIBSSH2_USERAUTH_KBDINT_PROMPT *prompts,
 	LIBSSH2_USERAUTH_KBDINT_RESPONSE *responses, void **abstract)
 {
-	SshSession *session = static_cast<SshSession*>(*abstract);
+	SshSession *session = reinterpret_cast<SshSession*>(*abstract);
 	for(auto i = 0; i < num_prompts; i++) {
 		auto response = session->WhenKeyboard(
 			String(name, name_len),
@@ -36,7 +36,7 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 
 static void ssh_password_change(LIBSSH2_SESSION *session, char **pwd, int *len, void **abstract)
 {
-	String newpwd = static_cast<SshSession*>(*abstract)->WhenPasswordChange();
+	String newpwd = reinterpret_cast<SshSession*>(*abstract)->WhenPasswordChange();
 #ifdef UPP_HEAP
 		*pwd = (char*) ssh_malloc(newpwd.GetLength(), abstract);
 		memcpy(*pwd, ~newpwd, newpwd.GetLength());
@@ -49,17 +49,17 @@ static void ssh_password_change(LIBSSH2_SESSION *session, char **pwd, int *len, 
 
 static void ssh_x11_request(LIBSSH2_SESSION *session, LIBSSH2_CHANNEL *channel, char *shost, int sport, void **abstract)
 {
-	static_cast<SshSession*>(*abstract)->WhenX11((SshX11Handle) channel);
+	reinterpret_cast<SshSession*>(*abstract)->WhenX11((SshX11Handle) channel);
 }
 
 // ssh_session_libtrace: Allows full-level logging (redirection) of libsssh2 diagnostic messages.
 
 #ifdef flagLIBSSH2TRACE
-static void ssh_session_libtrace(LIBSSH2_SESSION *session, void* context, const char*data, size_t length)
+static void ssh_session_libtrace(LIBSSH2_SESSION *session, void *context, const char *data, size_t length)
 {
 	if(!session  || !SSH::sTraceVerbose)
 		return;
-	auto* ssh_obj = static_cast<SshSession*>(context);
+	auto* ssh_obj = reinterpret_cast<SshSession*>(context);
 	RLOG(SSH::GetName(ssh_obj->GetType(), ssh_obj->GetId()) << String(data, int64(length)));
 }
 #endif
@@ -91,22 +91,18 @@ void SshSession::Exit()
 		session->connected = false;
 		LLOG("Session handles freed.");
 		return true;
-	});
+	}, false);
 }
 
 bool SshSession::Connect(const String& url)
 {
 	UrlInfo u(url);
 
-	auto b = u.scheme == "ssh"   ||
-             u.scheme == "scp"   ||
-             u.scheme == "sftp"  ||
-             u.scheme == "exec"  ||
-             (u.scheme.IsEmpty()  && !u.host.IsEmpty());
+	auto b = findarg(u.scheme, "ssh", "sftp", "scp", "exec") >= 0 || (u.scheme.IsEmpty() && !u.host.IsEmpty());
 	int port = (u.port.IsEmpty() || !b) ? 22 : StrInt(u.port);
-
-	return b ? Connect(u.host, port, u.username, u.password)
-	         : Run([=]{ SetError(-1, "Malformed secure shell URL."); return false; });
+	if(b) return Connect(u.host, port, u.username, u.password);
+	ReportError(-1, "Malformed secure shell URL.");
+	return false;
 }
 
 bool SshSession::Connect(const String& host, int port, const String& user, const String& password)

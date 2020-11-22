@@ -35,7 +35,7 @@ void SshChannel::Exit()
 			LLOG("Channel succesfully freed.");
 		}
 		return !rc;
-	});
+	}, false);
 }
 
 bool SshChannel::Open()
@@ -203,11 +203,11 @@ int SshChannel::Get(void *ptr, int size, int sid)
 {
 	done = 0;
 	Run([=]() mutable {
-		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
+		while(done < size && !IsEof() && !IsTimeout()) {
 			int rc = Read(ptr, size, sid);
-			if(rc == 0) break;
-			if(rc > 0) RefreshUI();
+			if(rc > 0) UpdateClient();
 			if(rc < 0) return false;
+			if(!rc) break;
 		}
 		return true;
 	});
@@ -219,7 +219,7 @@ String SshChannel::Get(int size, int sid)
 	StringBuffer sb(size);
 	int len = Get(~sb, size, sid);
 	sb.SetCount(len);
-	return sb;
+	return pick(String(sb));
 }
 
 String SshChannel::GetLine(int maxlen, int sid)
@@ -243,7 +243,7 @@ String SshChannel::GetLine(int maxlen, int sid)
 				done++;
 			}
 		}
-		while(!eol && !IsEof() && !IsTimeout() && InProgress());
+		while(!eol && !IsEof() && !IsTimeout());
 		return eol || IsEof();
 	});
 	return line;
@@ -253,11 +253,11 @@ int SshChannel::Put(const void *ptr, int size, int sid)
 {
 	done = 0;
 	Run([=]() mutable {
-		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
+		while(done < size && !IsEof() && !IsTimeout()) {
 			int rc = Write(ptr, size, sid);
-			if(rc == 0) break;
-			if(rc > 0) RefreshUI();
+			if(rc > 0) UpdateClient();
 			if(rc < 0) return false;
+			if(!rc) break;
 		}
 		return true;
 	});
@@ -271,9 +271,10 @@ int SshChannel::Read(void *ptr, int size, int sid)
 	int rc = static_cast<int>(
 		libssh2_channel_read_ex(*channel, sid, (char*) ptr + done, size_t(sz))
 		);
-
-	if(rc < 0 && !WouldBlock(rc))
+	if(rc < 0 && !WouldBlock(rc)) {
 		SetError(rc);
+	}
+	else
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
@@ -296,9 +297,10 @@ int SshChannel::Write(const void *ptr, int size, int sid)
 	int rc = static_cast<int>(
 		libssh2_channel_write_ex(*channel, sid, (const char*) ptr + done, size_t(sz))
 		);
-		
-	if(!WouldBlock(rc) && rc < 0)
+	if(rc < 0 && !WouldBlock(rc)) {
 		SetError(rc);
+	}
+	else
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();

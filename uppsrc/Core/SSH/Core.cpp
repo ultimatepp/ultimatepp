@@ -47,38 +47,32 @@ String GetName(int type, int64 id)
 
 static StaticMutex sLoopLock;
 
-void Ssh::Check()
+bool Ssh::Run(Gate<>&& fn, bool abortable)
 {
-	auto sock = ssh->socket;
+	auto Do = [=, &fn]()
+	{
+		Mutex::Lock __(sLoopLock);
 
-	if(IsTimeout())
-		SetError(-1, "Operation timed out.");
+		if(IsTimeout())
+			SetError(-1, "Operation timed out.");
 
-	if(ssh->status == ABORTED)
-		SetError(-1, "Operation aborted.");
+		if(abortable && ssh->status == ABORTED)
+			SetError(-1, "Operation aborted.");
+	
+		if(ssh->socket && ssh->socket->IsError())
+			SetError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
 
-	if(sock && ssh->socket->IsError())
-		SetError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
-}
-
-bool Ssh::Do(Gate<>& fn)
-{
-	Mutex::Lock __(sLoopLock);
-
-	Check();
-	if(!ssh->init)
-		ssh->init = Init();
-	return !ssh->init || !fn();
-}
-
-bool Ssh::Run(Gate<>&& fn)
-{
+		if(!ssh->init)
+			ssh->init = Init();
+		
+		return !ssh->init || ! fn();
+	};
+	
 	try {
 		ssh->status = WORKING;
 		ssh->start_time = msecs();
-
-		while(Do(fn))
-			Wait();
+			
+		while(Do())	Wait();
 
 		ssh->status = IDLE;
 	}
@@ -88,12 +82,13 @@ bool Ssh::Run(Gate<>&& fn)
 	catch(...) {
 		ReportError(-1, "Unhandled exception.");
 	}
+
 	return !IsError();
 }
 
 void Ssh::Wait()
 {
-	RefreshUI();
+	UpdateClient();
 	if(!ssh->socket || !ssh->session)
 		return;
 	dword q = 0, r = libssh2_session_block_directions(ssh->session);
@@ -131,8 +126,8 @@ void Ssh::ReportError(int rc, const String& reason)
 
 int64 Ssh::GetNewId()
 {
-	static int64 objectid;
-	return objectid == INT64_MAX ? objectid = 1	: ++objectid;
+	static int64 objectid = 0;
+	return ++objectid;
 }
 
 Ssh::Ssh()
