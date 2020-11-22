@@ -119,11 +119,8 @@ public:
 
 private:
     void OnUpp();
-    void OnBrowseUpp();
 
 private:
-    FrameRight<Button> browse_upp;
-    SelectDirButton    browse_out;
     bool               new_base;
 };
 
