@@ -56,7 +56,7 @@ commentary:&]
 [s10; [@(28.127.0) -|-|// Alternatives:]&]
 [s10; [@(28.127.0) -|-|//     `- option.Set(true);]&]
 [s10; [@(28.127.0) -|-|//     `- option.Set(static`_cast<int>(true));]&]
-[s10; [@(28.127.0) -|-|//     `- option.Set(`"1`");]&]
+[s10; [@(28.127.0) -|-|//     `- option.SetData(`"1`");]&]
 [s10; -|-|option.Set(1);&]
 [s10; -|-|&]
 [s10; -|-|[@(28.127.0) // Let`'s react when option value will be change 
