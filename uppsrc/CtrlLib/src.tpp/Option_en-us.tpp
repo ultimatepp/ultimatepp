@@ -31,8 +31,8 @@ true state, other non`-Null strings as false. Depending on whether
 Option is in NotNull mode, Null is interpreted as false or Null 
 state. 0 is always interpreted as false, Null number as either 
 Null (NotNull mode) or false (NoNotNull mode), other numbers 
-as true. The control may be also known under [^https`:`/`/en`.wikipedia`.org`/wiki`/Checkbox^ C
-heckbox] name.&]
+as true. The control may be also known under [^https`:`/`/en`.wikipedia`.org`/wiki`/Checkbox^ c
+hecbox] name.&]
 [s9;%- [%%/ Derived from ][/ Pusher.]&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Exemplary usage]]}}&]
@@ -62,7 +62,8 @@ commentary:&]
 [s10; -|-|[@(28.127.0) // Let`'s react when option value will be change 
 by the user.]&]
 [s10; -|-|option << `[`=`] `{&]
-[s10; -|-|-|Title(Format(`"Option (checkbox) state changed to %d`", option.Get()));&]
+[s10; -|-|-|Title(Format(`"Option (Check`-box) state changed to %d`", 
+option.Get()));&]
 [s10; -|-|`};&]
 [s10; -|`}&]
 [s10; `};&]
