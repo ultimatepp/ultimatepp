@@ -126,7 +126,7 @@ void Ssh::ReportError(int rc, const String& reason)
 
 int64 Ssh::GetNewId()
 {
-	static int64 objectid = 0;
+	static std::atomic<int64> objectid(0);
 	return ++objectid;
 }
 
