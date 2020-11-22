@@ -57,15 +57,13 @@ protected:
     virtual bool        Init()                                  { return true; }
     virtual void        Exit()                                  {}
     void                Wait();
-    void                Check();
-    bool                Do(Gate<>& fn);
-    bool                Run(Gate<>&& fn);
+    bool                Run(Gate<>&& fn, bool abortable = true);
     bool                WouldBlock(int rc)                      { return rc == LIBSSH2_ERROR_EAGAIN; }
     bool                WouldBlock()                            { return ssh->session && WouldBlock(libssh2_session_last_errno(ssh->session)); }
     bool                IsTimeout() const                       { return !IsNull(ssh->timeout) && ssh->timeout > 0 &&  msecs(ssh->start_time) >= ssh->timeout; }
     void                SetError(int rc, const String& reason = Null);
     void                ReportError(int rc, const String& reason);
-    void                RefreshUI()                             { WhenWait  ? WhenWait() : ssh->whenwait(); }
+    void                UpdateClient()                          { WhenWait  ? WhenWait() : ssh->whenwait(); }
     
 private:
     static int64        GetNewId();

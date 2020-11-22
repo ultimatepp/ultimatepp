@@ -31,7 +31,7 @@ void SFtp::Exit()
 		sftp_session.Clear();
 		LLOG("Session deinitalized.");
 		return true;
-	});
+	}, false);
 }
 
 int SFtp::FStat(SFtpHandle handle, SFtpAttrs& a, bool set)
@@ -70,7 +70,7 @@ void SFtp::Close(SFtpHandle handle)
 		int rc = libssh2_sftp_close_handle(handle);
 		if(!rc)	LLOG("File handle freed.");
 		return !rc;
-	});
+	}, false);
 }
 
 bool SFtp::Rename(const String& oldpath, const String& newpath)
@@ -113,7 +113,7 @@ SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 {
 	INTERLOCKED
 	{
-		LLOG("Seeking to offset: " << position);
+		// LLOG("Seeking to offset: " << position);
 		libssh2_sftp_seek64(handle, position);
 	}
 	return *this;
@@ -126,103 +126,98 @@ int64 SFtp::GetPos(SFtpHandle handle)
 	INTERLOCKED
 	{
 		pos = libssh2_sftp_tell64(handle);
-		LLOG("File position: " << pos);
+		// LLOG("File position: " << pos);
 	};
 	return pos;
-}
-
-int SFtp::Read(SFtpHandle handle, void* ptr, int size)
-{
-	int sz = min(size - done, ssh->chunk_size);
-
-	int rc = static_cast<int>(
-		libssh2_sftp_read(handle, (char*) ptr + done, size_t(sz))
-		);
-
-	if(!WouldBlock(rc) && rc < 0)
-		SetError(rc);
-	if(rc > 0) {
-		done += rc;
-		ssh->start_time = msecs();
-		RefreshUI();
-	}
-	if(!rc)
-		LLOG("EOF received.");
-	return rc;
-}
-
-int SFtp::Write(SFtpHandle handle, const void* ptr, int size)
-{
-	int sz = min(size - done, ssh->chunk_size);
-
-	int rc = static_cast<int>(
-		libssh2_sftp_write(handle, (const char*) ptr + done, size_t(sz))
-		);
-
-	if(!WouldBlock(rc) && rc < 0)
-		SetError(rc);
-	if(rc > 0) {
-		done += rc;
-		ssh->start_time = msecs();
-		RefreshUI();
-	}
-	if(!rc)
-		LLOG("EOF received.");
-	return rc;
 }
 
 int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 {
 	done = 0;
+
 	Run([=]() mutable {
-		while(done < size && !IsTimeout() && InProgress()) {
-			int rc = Read(handle, ptr, size);
-			if(rc < 0) return false;
-			if(!rc) break;
+		while(done < size && !IsTimeout()) {
+			int rc = static_cast<int>(
+				libssh2_sftp_read(handle, (char*) ptr + done, min(size - done, ssh->chunk_size))
+			);
+			if(rc < 0) {
+				if(!WouldBlock(rc))
+					SetError(rc);
+				return false;
+			}
+			else
+			if(rc == 0) {
+				LLOG("EOF received.");
+				break;
+			}
+			done += rc;
+			ssh->start_time = msecs();
+			UpdateClient();
 		}
 		return true;
 	});
+
 	return GetDone();
 }
 
 int SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 {
 	done = 0;
+
 	Run([=]() mutable {
-		while(done < size && !IsTimeout() && InProgress()) {
-			int rc = Write(handle, ptr, size);
-			if(rc < 0) return false;
-			if(!rc) break;
+		while(done < size && !IsTimeout()) {
+			int rc = static_cast<int>(
+				libssh2_sftp_write(handle, (const char*) ptr + done, min(size - done, ssh->chunk_size))
+			);
+			if(rc < 0) {
+				if(!WouldBlock(rc))
+					SetError(rc);
+				return false;
+			}
+			else
+			if(rc == 0) {
+				LLOG("EOF received.");
+				break;
+			}
+			done += rc;
+			ssh->start_time = msecs();
+			UpdateClient();
 		}
 		return true;
 	});
+
 	return GetDone();
 }
 
 bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 {
-	int64 size = src.GetSize();
-	String err;
-	
 	if(IsError())
 		return false;
-	
-	if(size < 0 || size >= maxsize) {
-		err = Format("Buffer overflow. size = %d (allowed size >= 0 && < %d", size, maxsize);
-		goto Bailout;
-	}
-	LLOG("Transfer chunk size: " << ssh->chunk_size);
-	if(CopyStream(dest, src, src.GetSize(), WhenProgress, ssh->chunk_size) < 0) {
-		err = "File transfer is aborted.";
-		goto Bailout;
-	}
-	return !IsError();
 
-Bailout:
-	src.Close();
-	dest.Close();
-	ReportError(-1, err);
-	return false;
+	int64 size = src.GetSize(), count = 0;
+	Buffer<byte> chunk(ssh->chunk_size, 0);
+
+	WhenProgress(0, size);
+
+	while(!src.IsEof()) {
+		int n = src.Get(chunk, (int) min<int64>(size - count, ssh->chunk_size));
+		if(n > 0) {
+			dest.Put(chunk, n);
+			if(dest.IsError()) {
+				LLOG("Stream write error. " + src.GetErrorText());
+				return false;
+			}
+			count += n;
+			if(WhenProgress(count, size)) {
+				return false;
+			}
+		}
+		if(src.IsError()) {
+			LLOG("Stream read error. " + src.GetErrorText());
+			break;
+		}
+	}
+	return !src.IsError();
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)

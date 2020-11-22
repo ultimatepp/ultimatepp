@@ -44,21 +44,22 @@ bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 	int64 done_ = 0;
 	int64 size  = a.st_size;
 	String msg;
-
+	
 	if(size < 0 || size >= maxsize) {
 		msg = "Invald stream size.";
 	}
-	else
-	while(done_ < size && !IsEof() && !IsError()) {
-		int csz = (int) min<int64>(size - done_, ssh->chunk_size);
-		Buffer<char> chunk(csz, 0);
-		int n = Get(chunk, csz);
-		if(n > 0) {
-			done_ += n;
-			s.Put(chunk, n);
-			if((nowait = WhenProgress(done_, size))) {
-				msg = "File transfer is aborted.";
-				break;
+	else {
+		WhenProgress(0, size);
+		Buffer<byte> chunk(ssh->chunk_size);
+		while(done_ < size && !IsEof() && !IsError()) {
+			int n = Get(chunk, (int) min<int64>(size - done_, ssh->chunk_size));
+			if(n > 0) {
+				done_ += n;
+				s.Put(chunk, n);
+				if((nowait = WhenProgress(done_, size))) {
+					msg = "File transfer is aborted.";
+					break;
+				}
 			}
 		}
 	}
@@ -72,8 +73,8 @@ bool Scp::Save(Stream& s)
 	int64 size  = s.GetSize();
 	String msg;
 	
-	Buffer<char> chunk(ssh->chunk_size, 0);
-
+	WhenProgress(0, size);
+	Buffer<byte> chunk(ssh->chunk_size);
 	while(done_ < size && !IsEof() && !IsError()) {
 		int l = s.Get(chunk, (int) min<int64>(size - done_, ssh->chunk_size));
 		int n = Put(chunk, l);
