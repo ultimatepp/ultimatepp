@@ -8,10 +8,10 @@ namespace Upp {
 bool SFtp::Init()
 {
 	if(!ssh->session)
-		SetError(-1, "SSH session is invalid.");
+		ThrowError(-1, "SSH session is invalid.");
 	auto session = libssh2_sftp_init(ssh->session);
 	if(!session && !WouldBlock())
-		SetError(-1);
+		ThrowError(-1);
 	if(session) {
 		sftp_session = MakeOne<LIBSSH2_SFTP*>(session);
 		LLOG("Session successfully initialized.");
@@ -53,7 +53,7 @@ SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 	Run([=, &h] () mutable {
 		h = libssh2_sftp_open(*sftp_session, path, flags, mode);
 		if(!h && !WouldBlock())
-			SetError(-1);
+			ThrowError(-1);
 		if(h)
 			LLOG(Format("File '%s' is successfully opened.", path));
 		return h;
@@ -78,7 +78,7 @@ bool SFtp::Rename(const String& oldpath, const String& newpath)
 	return Run([=] () mutable {
 		int rc = libssh2_sftp_rename(*sftp_session, oldpath, newpath);
 		if(!WouldBlock(rc) && rc != 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(rc == 0)
 			LLOG(Format("'%s' is successfully renamed to '%s'", oldpath, newpath));
 		return !rc;
@@ -90,7 +90,7 @@ bool SFtp::Delete(const String& path)
 	return Run([=] () mutable {
 		int rc = libssh2_sftp_unlink(*sftp_session, path);
 		if(!WouldBlock(rc) && rc != 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(rc == 0)
 			LLOG(Format("File '%s' is successfully deleted.", path));
 		return !rc;
@@ -102,7 +102,7 @@ bool SFtp::Sync(SFtpHandle handle)
 	return Run([=] () mutable {
 		int rc = libssh2_sftp_fsync(handle);
 		if(!WouldBlock(rc) && rc != 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(rc == 0)
 			LLOG("File successfully synchronized to disk.");
 		return !rc;
@@ -142,7 +142,7 @@ int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 			);
 			if(rc < 0) {
 				if(!WouldBlock(rc))
-					SetError(rc);
+					ThrowError(rc);
 				return false;
 			}
 			else
@@ -171,7 +171,7 @@ int SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 			);
 			if(rc < 0) {
 				if(!WouldBlock(rc))
-					SetError(rc);
+					ThrowError(rc);
 				return false;
 			}
 			else
@@ -254,7 +254,7 @@ SFtpHandle SFtp::OpenDir(const String& path)
 	Run([=, &h] () mutable {
 		h = libssh2_sftp_opendir(*sftp_session, path);
 		if(!h && !WouldBlock())
-			SetError(-1);
+			ThrowError(-1);
 		if(h)
 			LLOG(Format("Directory '%s' is successfully opened.", path));
 		return h;
@@ -267,7 +267,7 @@ bool SFtp::MakeDir(const String& path, long mode)
 	return Run([=] () mutable {
 		int rc = libssh2_sftp_mkdir(*sftp_session, path, mode);
 		if(!WouldBlock(rc) && rc != 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(!rc)
 			LLOG(Format("Directory '%s' is succesfully created.", path));
 		return !rc;
@@ -279,7 +279,7 @@ bool SFtp::RemoveDir(const String& path)
 	return Run([=] () mutable {
 		int rc = libssh2_sftp_rmdir(*sftp_session, path);
 		if(!WouldBlock(rc) && rc != 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(!rc)
 			LLOG(Format("Directory '%s' is succesfully deleted.", path));
 		return !rc;
@@ -303,7 +303,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 			);
 			if(rc < 0) {
 				if(!WouldBlock(rc))
-					SetError(rc);
+					ThrowError(rc);
 				break;
 			}
 			else
@@ -349,7 +349,7 @@ bool SFtp::SymLink(const String& path, String& target, int type)
 						type
 					);
 			if(!WouldBlock(rc) && rc != 0)
-				SetError(rc);
+				ThrowError(rc);
 			if(!rc) {
 				target.Set(buffer, rc);
 				LLOG(Format("Symbolic link '%s' for path '%s' is successfult created.", target, path));
@@ -368,7 +368,7 @@ bool SFtp::SymLink(const String& path, String& target, int type)
 						type
 					);
 			if(!WouldBlock(rc) && rc < 0)
-				SetError(rc);
+				ThrowError(rc);
 			if(rc > 0) {
 				target.Set(buffer, rc);
 				LLOG("Symbolic link operation is successful. Target: " << target);
@@ -394,7 +394,7 @@ bool SFtp::GetAttrs(SFtpHandle handle, SFtpAttrs& attrs)
 {
 	return Run([=, &attrs] () mutable {
 		int rc = FStat(handle, attrs, false);
-		if(rc < 0)	SetError(rc);
+		if(rc < 0)	ThrowError(rc);
 		if(!rc)	LLOG("File attributes successfully retrieved.");
 		return !rc;
 	});
@@ -404,7 +404,7 @@ bool SFtp::GetAttrs(const String& path, SFtpAttrs& attrs)
 {
 	return Run([=, &path, &attrs] () mutable {
 		int rc = LStat(path, attrs, LIBSSH2_SFTP_STAT);
-		if(rc < 0)	SetError(rc);
+		if(rc < 0)	ThrowError(rc);
 		if(!rc) LLOG(Format("File attributes of '%s' is successfully retrieved.", path));
 		return !rc;
 	});
@@ -414,7 +414,7 @@ bool SFtp::SetAttrs(SFtpHandle handle, const SFtpAttrs& attrs)
 {
 	return Run([=, &attrs] () mutable {
 		int rc = FStat(handle, const_cast<SFtpAttrs&>(attrs), true);
-		if(rc < 0)	SetError(rc);
+		if(rc < 0)	ThrowError(rc);
 		if(!rc)	LLOG("File attributes successfully modified.");
 		return !rc;
 	});
@@ -424,7 +424,7 @@ bool SFtp::SetAttrs(const String& path, const SFtpAttrs& attrs)
 {
 	return Run([=, &attrs] () mutable {
 		int rc = LStat(path,  const_cast<SFtpAttrs&>(attrs), LIBSSH2_SFTP_SETSTAT);
-		if(rc < 0)	SetError(rc);
+		if(rc < 0)	ThrowError(rc);
 		if(!rc)	LLOG(Format("File attributes of '%s' is successfully modified.", path));
 		return !rc;
 	});

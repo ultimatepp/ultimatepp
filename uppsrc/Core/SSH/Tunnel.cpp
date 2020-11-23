@@ -16,7 +16,7 @@ bool SshTunnel::IsValid()
 		default: NEVER();
 	}
 	if(b)
-		ReportError(-1, "Invalid channel instance.");
+		SetError(-1, "Invalid channel instance.");
 	return !b;
 }
 
@@ -27,7 +27,7 @@ void SshTunnel::Exit()
 	
 	Run([=]() mutable{
 		int rc = libssh2_channel_forward_cancel(*listener);
-		if(!WouldBlock(rc) && rc < 0) SetError(rc);
+		if(!WouldBlock(rc) && rc < 0) ThrowError(rc);
 		if(rc == 0)	listener.Clear();
 		return !rc;
 	});
@@ -42,7 +42,7 @@ bool SshTunnel::Connect(const String& host, int port)
 
 	return Run([=]() mutable{
 		LIBSSH2_CHANNEL *ch = libssh2_channel_direct_tcpip(ssh->session, host , port);
-		if(!ch && !WouldBlock()) SetError(-1);
+		if(!ch && !WouldBlock()) ThrowError(-1);
 		if(ch) {
 			channel = MakeOne<LIBSSH2_CHANNEL*>(ch);
 			LLOG("Direct tcp-ip connection to " << host << ":" << port << " is established.");
@@ -56,7 +56,7 @@ bool SshTunnel::Connect(const String& url)
 	UrlInfo u(url);
 	if(!u.host.IsEmpty() && u.port.IsEmpty())
 		return Connect(u.host, StrInt(u.port));
-	ReportError(-1, "Malformed proxy connection URL.");
+	SetError(-1, "Malformed proxy connection URL.");
 	return false;
 }
 
@@ -76,7 +76,7 @@ bool SshTunnel::Listen(const String& host, int port, int* bound_port, int listen
 			listen_count
 		);
 		if(!lsn && !WouldBlock())
-			SetError(-1);
+			ThrowError(-1);
 		if(lsn) {
 			listener = MakeOne<LIBSSH2_LISTENER*>(lsn);
 			LLOG("Started listening on port #" << port);
@@ -93,13 +93,13 @@ bool SshTunnel::Accept(SshTunnel& listener)
 		return false;
 	
 	if(!listener.listener) {
-		ReportError(-1, "Invalid listener.");
+		SetError(-1, "Invalid listener.");
 		return false;
 	}
 
 	return Run([=, &listener]() mutable {
 		LIBSSH2_CHANNEL *ch = libssh2_channel_forward_accept(*listener.listener);
-		if(!ch && !WouldBlock()) SetError(-1);
+		if(!ch && !WouldBlock()) ThrowError(-1);
 		if(ch) {
 			channel = MakeOne<LIBSSH2_CHANNEL*>(ch);
 			LLOG("Connection accepted.");

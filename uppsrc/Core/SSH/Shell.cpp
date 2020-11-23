@@ -56,7 +56,7 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 
 			auto rc = sigtimedwait(&set, nullptr, &timeout);
 			if(rc < 0 && errno != EAGAIN)
-				SetError(-1, "sigtimedwait() failed.");
+				ThrowError(-1, "sigtimedwait() failed.");
 			if(rc > 0)
 				LLOG("SIGWINCH received.");
 			resized = rc > 0;
@@ -78,14 +78,14 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 				case WAIT_ABANDONED:
 					return;
 				default:
-					SetError(-1, "WaitForSingleObject() failed.");
+					ThrowError(-1, "WaitForSingleObject() failed.");
 			}
 
 			DWORD n = 0;
 			INPUT_RECORD ir[1];
 
 			if(!PeekConsoleInput(stdinput, ir, 1, &n))
-				SetError(-1, "Unable to peek console input events.");
+				ThrowError(-1, "Unable to peek console input events.");
 			if(n) {
 				switch(ir[0].EventType) {
 					case KEY_EVENT:
@@ -103,10 +103,10 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 					case FOCUS_EVENT:
 						break;
 					default:
-						SetError(-1, "Unknown console event type encountered.");
+						ThrowError(-1, "Unknown console event type encountered.");
 				}
 				if(!ReadConsoleInput(stdinput, ir, 1, &n))
-					SetError(-1, "Unable to filter console input events.");
+					ThrowError(-1, "Unable to filter console input events.");
 			}
 #endif
 			break;
@@ -142,10 +142,10 @@ bool SshShell::ConsoleInit()
 #ifdef PLATFORM_WIN32
 		stdinput = GetStdHandle(STD_INPUT_HANDLE);
 		if(!stdinput)
-			SetError(-1, "Unable to obtain a handle for stdin.");
+			ThrowError(-1, "Unable to obtain a handle for stdin.");
 		stdoutput = GetStdHandle(STD_OUTPUT_HANDLE);
 		if(!stdoutput)
-			SetError(-1, "Unable to obtain a handle for stdout.");
+			ThrowError(-1, "Unable to obtain a handle for stdout.");
 #endif
 		ConsoleRawMode();
 		return true;
@@ -163,7 +163,7 @@ void SshShell::ConsoleRead()
 		Send(String(buffer, n));
 	else
 	if(n == -1 && errno != EAGAIN)
-		SetError(-1, "Couldn't read input from console.");
+		ThrowError(-1, "Couldn't read input from console.");
 }
 
 void SshShell::ConsoleWrite(const void* buffer, int len)
@@ -172,7 +172,7 @@ void SshShell::ConsoleWrite(const void* buffer, int len)
 		return;
 	auto n = write(STDOUT_FILENO, buffer, size_t(len));
 	if(n == -1 && errno != EAGAIN)
-		SetError(-1, "Couldn't write output to console.");
+		ThrowError(-1, "Couldn't write output to console.");
 }
 
 void SshShell::ConsoleRawMode(bool b)
@@ -213,7 +213,7 @@ void SshShell::ConsoleRead()
 	const int RBUFSIZE = 1024 * 16;
 	Buffer<char> buffer(RBUFSIZE);
 	if(!ReadConsole(stdinput, buffer, RBUFSIZE, &n, nullptr))
-		SetError(-1, "Couldn't read input from console.");
+		ThrowError(-1, "Couldn't read input from console.");
 	if(n > 0)
 		Send(String(buffer, n));
 }
@@ -222,7 +222,7 @@ void SshShell::ConsoleWrite(const void* buffer, int len)
 {
 	DWORD n = 0;
 	if(!WriteConsole(stdoutput, buffer, len, &n, nullptr))
-		SetError(-1, "Couldn't Write output to console.");
+		ThrowError(-1, "Couldn't Write output to console.");
 }
 
 void SshShell::ConsoleRawMode(bool b)
@@ -265,12 +265,12 @@ bool SshShell::X11Init()
 #ifdef PLATFORM_POSIX
 		int rc = libssh2_channel_x11_req(*channel, xscreen);
 		if(!WouldBlock(rc) && rc < 0)
-			SetError(rc);
+			ThrowError(rc);
 		if(!rc)
 			LLOG("X11 tunnel succesfully initialized.");
 		return !rc;
 #elif PLATFORM_WIN32
-		SetError(-1, "X11 tunneling is not (yet) supported on Windows platform");
+		ThrowError(-1, "X11 tunneling is not (yet) supported on Windows platform");
 		return false;
 #endif
 	});
@@ -291,7 +291,7 @@ void SshShell::X11Loop()
 				libssh2_channel_read(xhandle, xbuffer, size_t(xbuflen))
 				);
 			if(!WouldBlock(rc) && rc < 0)
-				SetError(-1, "[X11]: Read failed.");
+				ThrowError(-1, "[X11]: Read failed.");
 			if(rc > 0)
 				write(sock, xbuffer, rc);
 		}
