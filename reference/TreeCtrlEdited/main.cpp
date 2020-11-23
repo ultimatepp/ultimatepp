@@ -10,15 +10,15 @@ struct App : TopWindow {
 	typedef App CLASSNAME;
 	
 	App() {
-		tree1.WhenEdited << [=](const Value& v) { // using default EditString
+		tree1.WhenEdited << [=](int id, const Value& v) { // using default EditString
 			if(tree1.IsCursor())
-				tree1.Set(tree1.GetCursor(), v);
+				tree1.Set(id, v);
 		};
 
 		tree2.Editor(int_editor);
-		tree2.WhenEdited << [=](const Value& v) {
+		tree2.WhenEdited << [=](int id, const Value& v) {
 			if(tree2.IsCursor())
-				tree2.Set(tree2.GetCursor(), v);
+				tree2.Set(id, v);
 		};
 
 		split << tree1 << tree2;
