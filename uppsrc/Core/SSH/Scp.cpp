@@ -12,7 +12,7 @@ bool Scp::OpenRead(const String& path, ScpAttrs& attrs)
 		LIBSSH2_CHANNEL *ch = libssh2_scp_recv2(ssh->session, path, &attrs);
 		if(!ch && !WouldBlock()) {
 			LLOG("Unable to open file " << path);
-			SetError(-1);
+			ThrowError(-1);
 		}
 		if(ch) {
 			channel = MakeOne<LIBSSH2_CHANNEL*>(ch);
@@ -28,7 +28,7 @@ bool Scp::OpenWrite(const String& path, int64 size, long mode)
 		LIBSSH2_CHANNEL *ch = libssh2_scp_send64(ssh->session, path, mode, size, 0, 0);
 		if(!ch && !WouldBlock()) {
 			LLOG("Unable to open file " << path);
-			SetError(-1);
+			ThrowError(-1);
 		}
 		if(ch) {
 			channel = MakeOne<LIBSSH2_CHANNEL*>(ch);

@@ -101,7 +101,7 @@ bool SshSession::Connect(const String& url)
 	auto b = findarg(u.scheme, "ssh", "sftp", "scp", "exec") >= 0 || (u.scheme.IsEmpty() && !u.host.IsEmpty());
 	int port = (u.port.IsEmpty() || !b) ? 22 : StrInt(u.port);
 	if(b) return Connect(u.host, port, u.username, u.password);
-	ReportError(-1, "Malformed secure shell URL.");
+	SetError(-1, "Malformed secure shell URL.");
 	return false;
 }
 
@@ -111,7 +111,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 
 	if(!Run([=, &ipinfo] () mutable {
 		if(host.IsEmpty())
-			SetError(-1, "Host is not specified.");
+			ThrowError(-1, "Host is not specified.");
 		ssh->session = nullptr;
 		session->socket.Timeout(0);
 		if(!WhenProxy) {
@@ -129,7 +129,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			if(ipinfo.InProgress())
 				return false;
 			if(!ipinfo.GetResult())
-				SetError(-1, "DNS lookup failed.");
+				ThrowError(-1, "DNS lookup failed.");
 			WhenPhase(PHASE_CONNECTION);
 			return true;
 		})) goto Bailout;
@@ -151,7 +151,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	else {
 		if(!Run([=] () mutable {
 			if(!WhenProxy())
-				SetError(-1, "Proxy connection attempt failed.");
+				ThrowError(-1, "Proxy connection attempt failed.");
 			LLOG("Proxy connection to " << host << ":" << port << " is successful.");
 			return true;
 		})) goto Bailout;
@@ -166,7 +166,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			ssh->session = libssh2_session_init_ex(nullptr, nullptr, nullptr, this);
 #endif
 			if(!ssh->session)
-				SetError(-1, "Failed to initalize libssh2 session.");
+				ThrowError(-1, "Failed to initalize libssh2 session.");
 #ifdef flagLIBSSH2TRACE
 			if(libssh2_trace_sethandler(ssh->session, this, &ssh_session_libtrace))
 				LLOG("Warning: Unable to set trace (debug) handler for libssh2.");
@@ -190,7 +190,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			int    method = session->iomethods.GetKey(0);
 			String mnames = GetMethodNames(method);
 			int rc = libssh2_session_method_pref(ssh->session, method, ~mnames);
-			if(!WouldBlock(rc) && rc < 0) SetError(rc);
+			if(!WouldBlock(rc) && rc < 0) ThrowError(rc);
 			if(!rc && !session->iomethods.IsEmpty()) {
 				LLOG("Transport method: #" << method << " is set to [" << mnames << "]");
 				session->iomethods.Remove(0);
@@ -201,7 +201,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 
 	if(!Run([=] () mutable {
 			int rc = libssh2_session_handshake(ssh->session, session->socket.GetSOCKET());
-			if(!WouldBlock(rc) && rc < 0) SetError(rc);
+			if(!WouldBlock(rc) && rc < 0) ThrowError(rc);
 			if(!rc) {
 				LLOG("Handshake successful.");
 				WhenPhase(PHASE_AUTHORIZATION);
@@ -227,7 +227,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 				break;
 			}
 			if(WhenVerify && !WhenVerify(host, port))
-				SetError(-1);
+				ThrowError(-1);
 			return true;
 	})) goto Bailout;
 
@@ -242,7 +242,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 				}
 				else
 				if(!WouldBlock())
-					SetError(-1);
+					ThrowError(-1);
 				return false;
 			}
 			LLOG("Authentication methods list successfully retrieved: [" << session->authmethods << "]");
@@ -287,7 +287,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 					break;
 				case HOSTBASED:
 					if(!session->keyfile)
-						SetError(-1, "Keys cannot be loaded from memory.");
+						ThrowError(-1, "Keys cannot be loaded from memory.");
 					else
 					rc = libssh2_userauth_hostbased_fromfile(
 							ssh->session,
@@ -311,7 +311,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 
 			}
 			if(rc != 0 && !WouldBlock(rc))
-				SetError(rc);
+				ThrowError(rc);
 			if(rc == 0 && libssh2_userauth_authenticated(ssh->session)) {
 				LLOG("Client succesfully authenticated.");
 				WhenPhase(PHASE_SUCCESS);
@@ -421,14 +421,14 @@ int SshSession::TryAgent(const String& username)
 	LLOG("Attempting to authenticate via ssh-agent...");
 	auto agent = libssh2_agent_init(ssh->session);
 	if(!agent)
-		SetError(-1, "Couldn't initialize ssh-agent support.");
+		ThrowError(-1, "Couldn't initialize ssh-agent support.");
 	if(libssh2_agent_connect(agent)) {
 		libssh2_agent_free(agent);
-		SetError(-1, "Couldn't connect to ssh-agent.");
+		ThrowError(-1, "Couldn't connect to ssh-agent.");
 	}
 	if(libssh2_agent_list_identities(agent)) {
 		FreeAgent(agent);
-		SetError(-1, "Couldn't request identities to ssh-agent.");
+		ThrowError(-1, "Couldn't request identities to ssh-agent.");
 	}
 	libssh2_agent_publickey *id = nullptr, *previd = nullptr;
 
@@ -436,7 +436,7 @@ int SshSession::TryAgent(const String& username)
 		auto rc = libssh2_agent_get_identity(agent, &id, previd);
 		if(rc < 0) {
 			FreeAgent(agent);
-			SetError(-1, "Unable to obtain identity from ssh-agent.");
+			ThrowError(-1, "Unable to obtain identity from ssh-agent.");
 		}
 		if(rc != 1) {
 			if(libssh2_agent_userauth(agent, ~username, id)) {
@@ -451,7 +451,7 @@ int SshSession::TryAgent(const String& username)
 		}
 		else {
 			FreeAgent(agent);
-			SetError(-1, "Couldn't authenticate via ssh-agent");
+			ThrowError(-1, "Couldn't authenticate via ssh-agent");
 		}
 		previd = id;
 	}
