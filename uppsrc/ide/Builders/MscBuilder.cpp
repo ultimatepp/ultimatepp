@@ -173,6 +173,9 @@ void DeletePCHFile(const String& pch_file)
 bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
     String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
 {
+	if(HasFlag("MAKE_MLIB") && !HasFlag("MAIN"))
+		return true;
+	
 	SaveBuildInfo(package);
 
 	int i;
@@ -416,28 +419,31 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		return false;
 	}
 
-	Vector<String> pkglibs = Split(Gather(pkg.library, config.GetKeys()), ' ');
-	for(int i = 0; i < pkglibs.GetCount(); i++) {
-		String libfile = AppendExt(pkglibs[i], ".lib");
-		if(!IsFullPath(libfile)) {
-			for(int p = 0; p < libpath.GetCount(); p++) {
-				String nf = NormalizePath(libfile, libpath[p]);
-				if(FileExists(nf)) {
-					libfile = nf;
-					break;
+	bool making_lib = HasFlag("MAKE_LIB") || HasFlag("MAKE_MLIB");
+
+	if(!making_lib) {
+		Vector<String> pkglibs = Split(Gather(pkg.library, config.GetKeys()), ' ');
+		for(int i = 0; i < pkglibs.GetCount(); i++) {
+			String libfile = AppendExt(pkglibs[i], ".lib");
+			if(!IsFullPath(libfile)) {
+				for(int p = 0; p < libpath.GetCount(); p++) {
+					String nf = NormalizePath(libfile, libpath[p]);
+					if(FileExists(nf)) {
+						libfile = nf;
+						break;
+					}
 				}
 			}
+			linkfile.Add(libfile);
 		}
-		linkfile.Add(libfile);
 	}
 	linkoptions << ' ' << Gather(pkg.link, config.GetKeys());
 	
 //	if(pch_file.GetCount())
 //		OnFinish(callback1(DeletePCHFile, pch_file));
 
-	int linktime = msecs();
 	if(!HasFlag("MAIN")) {
-		if(HasFlag("BLITZ") || HasFlag("NOLIB")) {
+		if(HasFlag("BLITZ") || HasFlag("NOLIB") || making_lib) {
 			linkfile.Append(obj);
 //			ShowTime(ccount, time);
 			IdeConsoleEndGroup();
@@ -458,128 +464,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			IdeConsoleEndGroup();
 			return false;
 		}
-		bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64")
-		    || HasFlag("MSC11") || HasFlag("MSC11X64")
-			|| HasFlag("MSC12") || HasFlag("MSC12X64")
-			|| HasFlag("MSC14") || HasFlag("MSC14X64")
-			|| HasFlag("MSC15") || HasFlag("MSC15X64")
-			|| HasFlag("MSC17") || HasFlag("MSC17X64")
-			|| HasFlag("MSC19") || HasFlag("MSC19X64")
-		;
 		Vector<Host::FileInfo> objinfo = host->GetFileInfo(obj);
 		for(int i = 0; i < obj.GetCount(); i++)
-			if(objinfo[i] > producttime) {
-				String linker, lib;
-				if(is_shared) {
-					linker << LinkerName() << " -dll -nologo ";
-					lib << "-machine:" << MachineName()
-						<< " -pdb:" << GetHostPathQ(ForceExt(product, ".pdb"))
-						<< " -out:" << GetHostPathQ(product);
-					if(!isgemsc10)
-						lib << " -incremental:no";
-					if(HasAnyDebug())
-						lib << " -debug -OPT:NOREF";
-					else
-						lib << " -release -OPT:REF,ICF";
-					if(IsMscArm())
-						lib <<  " -subsystem:windowsce,4.20 /ARMPADCODE";
-					else
-					if(HasFlag("GUI"))
-						lib << (HasFlag("WIN32") ? " -subsystem:windows"
-						                         : " -subsystem:windowsce");
-					else
-						lib << " -subsystem:console";
-					Index<String> exports;
-					for(int o = 0; o < obj.GetCount(); o++)
-						AddObjectExports(obj[o], exports);
-					String def;
-					def << "LIBRARY " << AsCString(GetFileName(product)) << "\n\n"
-						"EXPORTS\n";
-					for(int o = 0; o < exports.GetCount(); o++)
-						def << '\t' << exports[o] << "\n"; //" @" << (o + 1) << "\n";
-					String deffile = ForceExt(product, ".def");
-					if(!SaveChangedFile(deffile, def))
-					{
-						PutConsole(Format("%s: error saving file", deffile));
-						return false;
-					}
-					lib << " -def:" << GetHostPathQ(deffile);
-					for(int i = 0; i < libpath.GetCount(); i++)
-						lib << " -LIBPATH:" << GetHostPathQ(libpath[i]);
-					lib << ' ' << Gather(pkg.link, config.GetKeys());
-					for(int i = 0; i < all_uses.GetCount(); i++)
-						lib << ' ' << GetHostPathQ(ForceExt(GetSharedLibPath(all_uses[i]), ".lib"));
-					for(int i = 0; i < all_libraries.GetCount(); i++) {
-						String libfile = AppendExt(all_libraries[i], ".lib");
-						if(!IsFullPath(libfile)) {
-							for(int p = 0; p < libpath.GetCount(); p++) {
-								String nf = NormalizePath(libfile, libpath[p]);
-								if(FileExists(nf)) {
-									libfile = nf;
-									break;
-								}
-							}
-						}
-						lib << ' ' << GetHostPathQ(libfile);
-					}
-				}
-				else{
-					linker << (HasFlag("INTEL") ? "xilib" : "link /lib") << " -nologo ";
-					lib << " -out:" << GetHostPathQ(product) << ' ' << Gather(pkg.link, config.GetKeys());
-				}
-				for(int i = 0; i < obj.GetCount(); i++)
-					lib << ' ' << GetHostPathQ(obj[i]);
-				PutConsole("Creating library...");
-				IdeConsoleEndGroup();
-				DeleteFile(product);
-				String tmpFileName;
-				if(linker.GetCount() + lib.GetCount() >= 8192)
-				{
-					tmpFileName = GetTempFileName();
-					// we can't simply put all data on a single line
-					// as it has a limit of around 130000 chars too, so we split
-					// in multiple lines
-					FileOut f(tmpFileName);
-					while(lib != "")
-					{
-						int found = 0;
-						bool quotes = false;
-						int lim = min(8192, lib.GetCount());
-						for(int i = 0; i < lim; i++)
-						{
-							char c = lib[i];
-							if(isspace(c) && !quotes)
-								found = i;
-							else if(c == '"')
-								quotes = !quotes;
-						}
-						if(!found)
-							found = lib.GetCount();
-						f.PutLine(lib.Left(found));
-						lib.Remove(0, found);
-					}
-					f.Close();
-					linker << "@" << tmpFileName;
-				}
-				else
-					linker << lib;
-				bool res = Execute(linker);
-				if(tmpFileName != "")
-					FileDelete(tmpFileName);
-				if(res) {
-					DeleteFile(product);
-					return false;
-				}
-				else
-				if((IsMsc86() || IsMsc64()) && is_shared) {
-					String mt("mt -nologo -manifest ");
-					mt << GetHostPathQ(product) << ".manifest -outputresource:" << GetHostPathQ(product) << ";2";
-					Execute(mt);
-				}
-				PutConsole(String().Cat() << product << " (" << GetFileInfo(product).length
-				           << " B) created in " << GetPrintTime(linktime));
-				break;
-			}
+			if(objinfo[i] > producttime)
+				return CreateLib(product, obj, all_uses, all_libraries, Gather(pkg.link, config.GetKeys()));
 		return true;
 	}
 
@@ -589,12 +477,143 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	return true;
 }
 
+bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
+                           const Vector<String>& all_uses, const Vector<String>& all_libraries,
+                           const String& link_options)
+{
+	int linktime = msecs();
+	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64")
+	    || HasFlag("MSC11") || HasFlag("MSC11X64")
+		|| HasFlag("MSC12") || HasFlag("MSC12X64")
+		|| HasFlag("MSC14") || HasFlag("MSC14X64")
+		|| HasFlag("MSC15") || HasFlag("MSC15X64")
+		|| HasFlag("MSC17") || HasFlag("MSC17X64")
+		|| HasFlag("MSC19") || HasFlag("MSC19X64")
+	;
+	bool is_shared = HasFlag("SO");
+	String linker, lib;
+	if(is_shared) {
+		linker << LinkerName() << " -dll -nologo ";
+		lib << "-machine:" << MachineName()
+			<< " -pdb:" << GetHostPathQ(ForceExt(product, ".pdb"))
+			<< " -out:" << GetHostPathQ(product);
+		if(!isgemsc10)
+			lib << " -incremental:no";
+		if(HasAnyDebug())
+			lib << " -debug -OPT:NOREF";
+		else
+			lib << " -release -OPT:REF,ICF";
+		if(IsMscArm())
+			lib <<  " -subsystem:windowsce,4.20 /ARMPADCODE";
+		else
+		if(HasFlag("GUI"))
+			lib << (HasFlag("WIN32") ? " -subsystem:windows"
+			                         : " -subsystem:windowsce");
+		else
+			lib << " -subsystem:console";
+		Index<String> exports;
+		for(int o = 0; o < obj.GetCount(); o++)
+			AddObjectExports(obj[o], exports);
+		String def;
+		def << "LIBRARY " << AsCString(GetFileName(product)) << "\n\n"
+			"EXPORTS\n";
+		for(int o = 0; o < exports.GetCount(); o++)
+			def << '\t' << exports[o] << "\n"; //" @" << (o + 1) << "\n";
+		String deffile = ForceExt(product, ".def");
+		if(!SaveChangedFile(deffile, def))
+		{
+			PutConsole(Format("%s: error saving file", deffile));
+			return false;
+		}
+		lib << " -def:" << GetHostPathQ(deffile);
+		for(int i = 0; i < libpath.GetCount(); i++)
+			lib << " -LIBPATH:" << GetHostPathQ(libpath[i]);
+		lib << ' ' << link_options;
+		for(int i = 0; i < all_uses.GetCount(); i++)
+			lib << ' ' << GetHostPathQ(ForceExt(GetSharedLibPath(all_uses[i]), ".lib"));
+		for(int i = 0; i < all_libraries.GetCount(); i++) {
+			String libfile = AppendExt(all_libraries[i], ".lib");
+			if(!IsFullPath(libfile)) {
+				for(int p = 0; p < libpath.GetCount(); p++) {
+					String nf = NormalizePath(libfile, libpath[p]);
+					if(FileExists(nf)) {
+						libfile = nf;
+						break;
+					}
+				}
+			}
+			lib << ' ' << GetHostPathQ(libfile);
+		}
+	}
+	else{
+		linker << (HasFlag("INTEL") ? "xilib" : "link /lib") << " -nologo ";
+		lib << " -out:" << GetHostPathQ(product) << ' ' << link_options;
+	}
+	for(int i = 0; i < obj.GetCount(); i++)
+		lib << ' ' << GetHostPathQ(obj[i]);
+	PutConsole("Creating library...");
+	IdeConsoleEndGroup();
+	DeleteFile(product);
+	String tmpFileName;
+	if(linker.GetCount() + lib.GetCount() >= 8192)
+	{
+		tmpFileName = GetTempFileName();
+		// we can't simply put all data on a single line
+		// as it has a limit of around 130000 chars too, so we split
+		// in multiple lines
+		FileOut f(tmpFileName);
+		while(lib != "")
+		{
+			int found = 0;
+			bool quotes = false;
+			int lim = min(8192, lib.GetCount());
+			for(int i = 0; i < lim; i++)
+			{
+				char c = lib[i];
+				if(isspace(c) && !quotes)
+					found = i;
+				else if(c == '"')
+					quotes = !quotes;
+			}
+			if(!found)
+				found = lib.GetCount();
+			f.PutLine(lib.Left(found));
+			lib.Remove(0, found);
+		}
+		f.Close();
+		linker << "@" << tmpFileName;
+	}
+	else
+		linker << lib;
+	bool res = Execute(linker);
+	if(tmpFileName != "")
+		FileDelete(tmpFileName);
+	if(res) {
+		DeleteFile(product);
+		return false;
+	}
+	else
+	if((IsMsc86() || IsMsc64()) && is_shared) {
+		String mt("mt -nologo -manifest ");
+		mt << GetHostPathQ(product) << ".manifest -outputresource:" << GetHostPathQ(product) << ";2";
+		Execute(mt);
+	}
+	PutConsole(String().Cat() << product << " (" << GetFileInfo(product).length
+	           << " B) created in " << GetPrintTime(linktime));
+	return true;
+}
+
 bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
 	int time = msecs();
 	if(!Wait())
 		return false;
+
 	PutLinking();
+
+	if(HasFlag("MAKE_MLIB") || HasFlag("MAKE_LIB"))
+		return CreateLib(ForceExt(target, ".lib"), linkfile, Vector<String>(), Vector<String>(), linkoptions);
+
 	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64")
 	    || HasFlag("MSC11") || HasFlag("MSC11X64")
 	    || HasFlag("MSC12") || HasFlag("MSC12X64")

@@ -122,9 +122,9 @@ private:
 
 public:
 	template <int I>
-	auto Get() const -> decltype(GetFromTuple(*this, IndexI__<I>()))& { return GetFromTuple(*this, IndexI__<I>()); }
+	auto Get() const { return GetFromTuple(*this, IndexI__<I>()); }
 	template <int I>
-	auto Get() -> decltype(GetFromTuple(*this, IndexI__<I>()))&       { return GetFromTuple(*this, IndexI__<I>()); }
+	auto Get() { return GetFromTuple(*this, IndexI__<I>()); }
 	
 	template <typename T> const T& Get() const { return GetFromTupleByType(*this, (T*)NULL); }
 	template <typename T> T& Get()             { return GetFromTupleByType(*this, (T*)NULL); }
