@@ -279,7 +279,7 @@ protected:
 	void        AddPlaceRaw(const String& path, const Image& m, const String& name, const char* group = NULL, int row = -1);
 	void        AddSystemPlaces(int row = -1);
 #ifdef PLATFORM_WIN32
-	void        ScanNetwork(Function<Array<NetNode> ()> fn);
+	bool        ScanNetwork(Function<Array<NetNode> ()> fn);
 	void        ScanNetworkRoot();
 #endif
 
