@@ -38,6 +38,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries,
 	int opt)
 {
+	if(HasFlag("MAKE_MLIB") && !HasFlag("MAIN"))
+		return true;
+
 	if(HasFlag("OSX") && HasFlag("GUI")) {
 		String folder;
 		String name = GetFileName(target);
@@ -310,16 +313,19 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	MergeWith(linkoptions, " ", Gather(pkg.link, config.GetKeys()));
 	if(linkoptions.GetCount())
 		linkoptions << ' ';
+	
+	bool making_lib = HasFlag("MAKE_LIB") || HasFlag("MAKE_MLIB");
 
-	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
-	linkfile.Append(libs);
+	if(!making_lib) {
+		Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
+		linkfile.Append(libs);
+	}
 
 	if(pch_file.GetCount())
 		OnFinish(callback1(DeletePCHFile, pch_file));
 
-	int libtime = msecs();
 	if(!HasFlag("MAIN")) {
-		if(HasFlag("BLITZ") && !HasFlag("SO")  || HasFlag("NOLIB")) {
+		if(HasFlag("BLITZ") && !HasFlag("SO") || HasFlag("NOLIB") || making_lib) {
 			linkfile.Append(obj); // Simply link everything as .o files...
 			IdeConsoleEndGroup();
 //			if(ccount)
@@ -336,133 +342,13 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".a");
 		String hproduct = GetHostPath(product);
 		Time producttime = GetFileTime(hproduct);
-//		LOG("hproduct = " << hproduct << ", time = " << producttime);
 		if(obj.GetCount()) {
 			linkfile.Add(GetHostPath(product));
 			immfile.Add(GetHostPath(product));
 		}
 		for(int i = 0; i < obj.GetCount(); i++)
-			if(GetFileTime(obj[i]) > producttime) {
-				String lib;
-				if(is_shared) {
-					lib = CompilerName();
-					lib << " -shared -fPIC -fuse-cxa-atexit";
-					if(!HasFlag("SHARED") && !is_shared)
-						lib << " -static";
-//					else if(!HasFlag("WIN32")) // TRC 05/03/08: dynamic fPIC causes trouble in MinGW
-//						lib << " -dynamic -fPIC"; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
-					if(HasFlag("GCC32"))
-						lib << " -m32";
-					Point p = ExtractVersion();
-					if(!IsNull(p.x) && HasFlag("WIN32")) {
-						lib << " -Xlinker --major-image-version -Xlinker " << p.x;
-						if(!IsNull(p.y))
-							lib << " -Xlinker --minor-image-version -Xlinker " << p.y;
-					}
-					lib << ' ' << Gather(pkg.link, config.GetKeys());
-					
-					lib << " -o ";
-				}
-				else
-					lib = "ar -sr ";
-				lib << GetHostPathQ(product);
-				
-		
-				String llib;
-				for(int i = 0; i < obj.GetCount(); i++)
-					llib << ' ' << GetHostPathQ(obj[i]);
-				PutConsole("Creating library...");
-				DeleteFile(hproduct);
-				if(is_shared) {
-					for(int i = 0; i < libpath.GetCount(); i++)
-						llib << " -L" << GetHostPathQ(libpath[i]);
-					for(int i = 0; i < all_uses.GetCount(); i++)
-						llib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
-					for(int i = 0; i < all_libraries.GetCount(); i++)
-						llib << " -l" << GetHostPathQ(all_libraries[i]);
-					
-					if(HasFlag("POSIX"))
-						llib << " -Wl,-soname," << GetSoname(product);
-				}
-
-				String tmpFileName;
-				if(HasFlag("LINUX") || HasFlag("WIN32")) {
-					if(lib.GetCount() + llib.GetCount() >= 8192)
-					{
-						tmpFileName = GetTempFileName();
-						// we can't simply put all data on a single line
-						// as it has a limit of around 130000 chars too, so we split
-						// in multiple lines
-						FileOut f(tmpFileName);
-						while(llib != "")
-						{
-							int found = 0;
-							bool quotes = false;
-							int lim = min(8192, llib.GetCount());
-							for(int i = 0; i < lim; i++)
-							{
-								char c = llib[i];
-								if(isspace(c) && !quotes)
-									found = i;
-								else if(c == '"')
-									quotes = !quotes;
-							}
-							if(!found)
-								found = llib.GetCount();
-	
-							// replace all '\' with '/'`
-							llib = UnixPath(llib);
-							
-							f.PutLine(llib.Left(found));
-							llib.Remove(0, found);
-						}
-						f.Close();
-						lib << " @" << tmpFileName;
-					}
-					else
-						lib << llib;
-				}
-				else
-					lib << llib;
-
-				int res = Execute(lib);
-				if(tmpFileName.GetCount())
-					FileDelete(tmpFileName);
-				String folder, libF, soF, linkF;
-				if(HasFlag("POSIX")) {
-					if(is_shared)
-					{
-						folder = GetFileFolder(hproduct);
-						libF = GetFileName(hproduct);
-						soF = AppendFileName(folder, GetSoname(hproduct));
-						linkF = AppendFileName(folder, GetSoLinkName(hproduct));
-					}
-				}
-				if(res) {
-					DeleteFile(hproduct);
-					if(HasFlag("POSIX")) {
-						if(is_shared) {
-							DeleteFile(libF);
-							DeleteFile(linkF);
-						}
-					}
-					return false;
-				}
-#ifdef PLATFORM_POSIX // we do not have symlink in Win32....
-				if(HasFlag("POSIX")) {
-					if(is_shared)
-					{
-						int r;
-						r = symlink(libF, soF);
-						r = symlink(libF, linkF);
-						(void)r;
-					}
-				}
-#endif
-				PutConsole(String().Cat() << hproduct << " (" << GetFileInfo(hproduct).length
-				           << " B) created in " << GetPrintTime(libtime));
-				break;
-			}
+			if(GetFileTime(obj[i]) > producttime)
+				return CreateLib(product, obj, all_uses, all_libraries, Gather(pkg.link, config.GetKeys()));
 		return true;
 	}
 
@@ -472,12 +358,137 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	return true;
 }
 
+bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
+                           const Vector<String>& all_uses, const Vector<String>& all_libraries,
+                           const String& link_options)
+{
+	int libtime = msecs();
+	String hproduct = GetHostPath(product);
+	String lib;
+	bool is_shared = HasFlag("SO");
+	if(is_shared) {
+		lib = CompilerName();
+		lib << " -shared -fPIC -fuse-cxa-atexit";
+		if(HasFlag("GCC32"))
+			lib << " -m32";
+		Point p = ExtractVersion();
+		if(!IsNull(p.x) && HasFlag("WIN32")) {
+			lib << " -Xlinker --major-image-version -Xlinker " << p.x;
+			if(!IsNull(p.y))
+				lib << " -Xlinker --minor-image-version -Xlinker " << p.y;
+		}
+		lib << ' ' << link_options;
+		lib << " -o ";
+	}
+	else
+		lib = "ar -sr ";
+	lib << GetHostPathQ(product);
+
+	String llib;
+	for(int i = 0; i < obj.GetCount(); i++)
+		llib << ' ' << GetHostPathQ(obj[i]);
+	PutConsole("Creating library...");
+	DeleteFile(hproduct);
+	if(is_shared) {
+		for(int i = 0; i < libpath.GetCount(); i++)
+			llib << " -L" << GetHostPathQ(libpath[i]);
+		for(int i = 0; i < all_uses.GetCount(); i++)
+			llib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
+		for(int i = 0; i < all_libraries.GetCount(); i++)
+			llib << " -l" << GetHostPathQ(all_libraries[i]);
+		
+		if(HasFlag("POSIX"))
+			llib << " -Wl,-soname," << GetSoname(product);
+	}
+
+	String tmpFileName;
+	if(HasFlag("LINUX") || HasFlag("WIN32")) {
+		if(lib.GetCount() + llib.GetCount() >= 8192)
+		{
+			tmpFileName = GetTempFileName();
+			// we can't simply put all data on a single line
+			// as it has a limit of around 130000 chars too, so we split
+			// in multiple lines
+			FileOut f(tmpFileName);
+			while(llib != "")
+			{
+				int found = 0;
+				bool quotes = false;
+				int lim = min(8192, llib.GetCount());
+				for(int i = 0; i < lim; i++)
+				{
+					char c = llib[i];
+					if(isspace(c) && !quotes)
+						found = i;
+					else if(c == '"')
+						quotes = !quotes;
+				}
+				if(!found)
+					found = llib.GetCount();
+
+				// replace all '\' with '/'`
+				llib = UnixPath(llib);
+				
+				f.PutLine(llib.Left(found));
+				llib.Remove(0, found);
+			}
+			f.Close();
+			lib << " @" << tmpFileName;
+		}
+		else
+			lib << llib;
+	}
+	else
+		lib << llib;
+
+	int res = Execute(lib);
+	if(tmpFileName.GetCount())
+		FileDelete(tmpFileName);
+	String folder, libF, soF, linkF;
+	if(HasFlag("POSIX")) {
+		if(is_shared)
+		{
+			folder = GetFileFolder(hproduct);
+			libF = GetFileName(hproduct);
+			soF = AppendFileName(folder, GetSoname(hproduct));
+			linkF = AppendFileName(folder, GetSoLinkName(hproduct));
+		}
+	}
+	if(res) {
+		DeleteFile(hproduct);
+		if(HasFlag("POSIX")) {
+			if(is_shared) {
+				DeleteFile(libF);
+				DeleteFile(linkF);
+			}
+		}
+		return false;
+	}
+#ifdef PLATFORM_POSIX // we do not have symlink in Win32....
+	if(HasFlag("POSIX")) {
+		if(is_shared)
+		{
+			int r;
+			r = symlink(libF, soF);
+			r = symlink(libF, linkF);
+			(void)r;
+		}
+	}
+#endif
+	PutConsole(String().Cat() << hproduct << " (" << GetFileInfo(hproduct).length
+	           << " B) created in " << GetPrintTime(libtime));
+	return true;
+}
 
 bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
 	if(!Wait())
 		return false;
 	PutLinking();
+	
+	if(HasFlag("MAKE_MLIB") || HasFlag("MAKE_LIB"))
+		return CreateLib(ForceExt(target, ".a"), linkfile, Vector<String>(), Vector<String>(), linkoptions);
+
 	int time = msecs();
 #ifdef PLATFORM_OSX
 	CocoaAppBundle();

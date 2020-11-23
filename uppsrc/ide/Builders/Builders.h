@@ -72,6 +72,9 @@ struct GccBuilder : CppBuilder {
 	String CmdLine(const String& package, const Package& pkg);
 	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 	void   CocoaAppBundle();
+	bool   CreateLib(const String& product, const Vector<String>& obj,
+	                 const Vector<String>& all_uses, const Vector<String>& all_libraries,
+	                 const String& link_options);
 
 	String Info_plist; // apple bundle Info.plist
 };
@@ -111,6 +114,9 @@ struct MscBuilder : CppBuilder {
 	bool   IsMsc86() const;
 	bool   IsMscArm() const;
 	bool   IsMsc64() const;
+	bool   CreateLib(const String& product, const Vector<String>& obj,
+	                 const Vector<String>& all_uses, const Vector<String>& all_libraries,
+	                 const String& link_options);
 
 	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 };
