@@ -54,13 +54,13 @@ bool Ssh::Run(Gate<>&& fn, bool abortable)
 		Mutex::Lock __(sLoopLock);
 
 		if(IsTimeout())
-			SetError(-1, "Operation timed out.");
+			ThrowError(-1, "Operation timed out.");
 
 		if(abortable && ssh->status == ABORTED)
-			SetError(-1, "Operation aborted.");
+			ThrowError(-1, "Operation aborted.");
 	
 		if(ssh->socket && ssh->socket->IsError())
-			SetError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
+			ThrowError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
 
 		if(!ssh->init)
 			ssh->init = Init();
@@ -77,10 +77,10 @@ bool Ssh::Run(Gate<>&& fn, bool abortable)
 		ssh->status = IDLE;
 	}
 	catch(const Error& e) {
-		ReportError(e.code, e);
+		SetError(e.code, e);
 	}
 	catch(...) {
-		ReportError(-1, "Unhandled exception.");
+		SetError(-1, "Unhandled exception.");
 	}
 
 	return !IsError();
@@ -101,7 +101,7 @@ void Ssh::Wait()
 	we.Wait(ssh->waitstep);
 }
 
-void Ssh::SetError(int rc, const String& reason)
+void Ssh::ThrowError(int rc, const String& reason)
 {
 	if(IsNull(reason) && ssh && ssh->session) {
 		Buffer<char*> libmsg(256, 0);
@@ -112,7 +112,7 @@ void Ssh::SetError(int rc, const String& reason)
 		throw Error(rc, reason);
 }
 
-void Ssh::ReportError(int rc, const String& reason)
+void Ssh::SetError(int rc, const String& reason)
 {
 	ssh->status  = FAILED;
 	ssh->error.a = rc;
