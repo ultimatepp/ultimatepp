@@ -89,5 +89,5 @@ with CoWork, which is the tool for very easy code parallelization
 within U`+`+ framework.&]
 [s0; &]
 [s2; Video tutorials&]
-[s3; The list of video tutorials are available on the separate [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ p
+[s3; The list of video tutorials are available on the separate [*^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ p
 age].]]
