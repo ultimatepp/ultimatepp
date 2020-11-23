@@ -90,6 +90,17 @@ public:
 
 	operator    bool() const               { return handle != INVALID_HANDLE_VALUE; }
 
+	struct Iterator {
+		FindFile *ff;
+
+		void operator++()                           { if(!ff->Next()) ff = NULL; }
+		bool operator!=(const Iterator& b) const    { return ff != b.ff; }
+		const FindFile& operator*() const           { return *ff; }
+	};
+	
+	Iterator begin() { Iterator h; h.ff = this; return h; }
+	Iterator end()   { Iterator h; h.ff = nullptr; return h; }
+
 	FindFile();
 	FindFile(const char *name);
 	~FindFile();
@@ -153,6 +164,17 @@ public:
 	bool        IsExecutable() const;
 
 	operator    bool() const              { return file; }
+
+	struct Iterator {
+		FindFile *ff;
+
+		void operator++()                           { if(!ff->Next()) ff = NULL; }
+		bool operator!=(const Iterator& b) const    { return ff != b.ff; }
+		const FindFile& operator*() const           { return *ff; }
+	};
+	
+	Iterator begin() { Iterator h; h.ff = this; return h; }
+	Iterator end()   { Iterator h; h.ff = nullptr; return h; }
 
 	FindFile()                            { file = false; dir = NULL; }
 	FindFile(const char *name);
