@@ -963,7 +963,6 @@ CONSOLE_APP_MAIN
 				String d = AppendFileName(uppsrc, "*.*");
 				String p;
 				for(int pass = 0; pass < 2; pass++) {
-					DDUMP(d);
 					FindFile ff(d);
 					Array <String> folders;
 					folders.Clear();
