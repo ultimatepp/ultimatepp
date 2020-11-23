@@ -78,9 +78,9 @@ be found in the [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#16^ GUI
 tutorial].&]
 [s3;:2: 2. Layouts management&]
 [s22;:2`_1: 2.1. Creating new layout&]
-[s5; After creating new layout file it doesn`'t posse any layouts. 
+[s5; After creating a new layout file, it doesn`'t posse any layouts. 
 To create layout right click on layout list and select `"Add 
-new layout..`" or `"Insert new layout`". The difference between 
+new layout..`" or `"Insert new layout..`". The difference between 
 these two options are the first one always insert at the end 
 of the list. On the other hand the second will insert new layout 
 before currently selected layout. Example below:&]
