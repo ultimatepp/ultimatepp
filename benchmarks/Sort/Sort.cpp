@@ -19,6 +19,13 @@ CONSOLE_APP_MAIN
 			RTIMING("std::sort std::vector<std::string>");
 			std::sort(x.begin(), x.end());
 		}
+		{
+			std::vector<std::string> x;
+			for(auto s : w)
+				x.push_back(s.ToStd());
+			RTIMING("std::stable_sort std::vector<std::string>");
+			std::stable_sort(x.begin(), x.end());
+		}
 		Vector<String> w2 = clone(w);
 		{
 			RTIMING("Sort Vector<String>");
@@ -29,11 +36,8 @@ CONSOLE_APP_MAIN
 			if(w2[i] != x[i])
 				Panic("Failed!");
 /*		{
-			std::vector<std::string> x;
-			for(auto s : w)
-				x.push_back(s.ToStd());
-			RTIMING("std::sort std::vector<std::string>");
-			std::stable_sort(x.begin(), x.end());
+			RTIMING("Sort Vector<String>");
+			Sort(w);
 		}
 */	#if 0
 		ONCELOCK {
