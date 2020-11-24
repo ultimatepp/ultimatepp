@@ -115,7 +115,7 @@ void UpvDlg::Install()
 				cmd << "-b " + branch + " " + repo2;
 			else
 				cmd << repo;
-			cmd << ' ' << GetUpvDir() << '/' <<  list.Get(i, 1);
+			cmd << ' ' << GetHubDir() << '/' <<  list.Get(i, 1);
 			if(console.System(cmd))
 				break;
 		}
