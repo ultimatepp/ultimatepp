@@ -331,6 +331,8 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 
 	if(IsWin7())
 		GlobalBackPaint();
+	
+	EnterGuiMutex();
 }
 
 typedef DWORD (WINAPI *PSLWA)(HWND, DWORD, BYTE, DWORD);
@@ -396,6 +398,7 @@ void Ctrl::ExitWin32()
 	LLOG("...overwatch thread finished");
 #endif
 #endif
+	LeaveGuiMutex();
 }
 
 void Ctrl::SetTimerGranularity(int ms)

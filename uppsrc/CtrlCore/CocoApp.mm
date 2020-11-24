@@ -98,6 +98,8 @@ void CocoInit(int argc, const char **argv, const char **envptr)
     sClipFmtsRTF = "rtf";
     
     Ctrl::ReSkin();
+    
+    EnterGuiMutex();
 }
 
 int Ctrl::GetKbdDelay()
@@ -138,6 +140,7 @@ void CocoExit()
 {
 	ReleaseCurrentEvent();
 	[main_coco_pool release];
+	LeaveGuiMutex();
 }
 
 bool Ctrl::IsWaitingEvent()
