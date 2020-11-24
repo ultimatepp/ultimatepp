@@ -203,6 +203,7 @@ Vector<String> GetUppDirs() {
 	Vector<String> s = SplitDirs(GetVar("UPP"));
 	static Vector<String> upv_dirs;
 	if(!upv_loaded) {
+		upv_dirs.Clear();
 		FindFile ff(GetUpvDir() + "/*.*");
 		while(ff) {
 			if(ff.IsFolder())
