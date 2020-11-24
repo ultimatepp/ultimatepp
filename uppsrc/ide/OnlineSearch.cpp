@@ -40,7 +40,7 @@ String GetWebsiteIconAsPNG(const String& uri)
 void SearchEnginesDefaultSetup()
 {
 	static const Tuple<const char *, const char *> defs[] = {
-		{ "Google", "www.google.com/q=%s" },
+		{ "Google", "https://www.google.com/search?q=%s" },
 		{ "C++ reference", "https://en.cppreference.com/mwiki/index.php?search=%s" },
 		{ "Wikipedia", "https://en.wikipedia.org/w/index.php?search=%s" },
 		{ "GitHub", "https://github.com/search?q=%s" },
