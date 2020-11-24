@@ -166,18 +166,18 @@ bool SaveVars(const char *name)
 	return true;
 }
 
-String DefaultUpvFilePath()
+String DefaultHubFilePath()
 {
-	return ConfigFile("uppiverse.path");
+	return ConfigFile("UppHub.path");
 }
 
-String GetUpvDir()
+String GetHubDir()
 {
-	String d = GetVar("UPPIVERSE");
+	String d = GetVar("UPPHUB");
 	if(d.GetCount() && DirectoryExists(d)) return d;
-	d = LoadFile(DefaultUpvFilePath());
+	d = LoadFile(DefaultHubFilePath());
 	if(d.GetCount() && DirectoryExists(d)) return d;
-	d = ConfigFile("uppiverse");
+	d = ConfigFile("UppHub");
 	RealizeDirectory(d);
 	return d;
 }
@@ -197,29 +197,26 @@ void SetVar(const String& var, const String& val, bool save) {
 		SaveVars(GetVarsName());
 }
 
-bool upv_loaded;
+bool hub_loaded;
 
 Vector<String> GetUppDirs() {
 	Vector<String> s = SplitDirs(GetVar("UPP"));
-	static Vector<String> upv_dirs;
-	if(!upv_loaded) {
-		upv_dirs.Clear();
-		FindFile ff(GetUpvDir() + "/*.*");
-		while(ff) {
+	static Vector<String> hub_dirs;
+	if(!hub_loaded) {
+		hub_dirs.Clear();
+		for(const FindFile& ff : FindFile(GetHubDir() + "/*.*"))
 			if(ff.IsFolder())
-				upv_dirs.Add(ff.GetPath());
-			ff.Next();
-		}
-		upv_loaded = true;
+				hub_dirs.Add(ff.GetPath());
+		hub_loaded = true;
 	}
-	s.Append(upv_dirs);
+	s.Append(hub_dirs);
 	return s;
 }
 
 void Nest::InvalidatePackageCache()
 {
 	package_cache.Clear();
-	upv_loaded = false;
+	hub_loaded = false;
 }
 
 String GetUppDir() {
