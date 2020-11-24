@@ -6,9 +6,9 @@ namespace Upp {
 #define LLOG(x)       do { if(SSH::sTrace) RLOG(SSH::GetName(ssh->otype, ssh->oid) << x); } while(false)
 #define LDUMPHEX(x)   do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
 
-// ssh_keyboard_callback: Authenticates a session, using keyboard-interactive authentication.
+// sKeyboardCallback: Authenticates a session, using keyboard-interactive authentication.
 
-static void ssh_keyboard_callback(const char *name, int name_len, const char *instruction,
+static void sKeyboardCallback(const char *name, int name_len, const char *instruction,
 	int instruction_len, int num_prompts, const LIBSSH2_USERAUTH_KBDINT_PROMPT *prompts,
 	LIBSSH2_USERAUTH_KBDINT_RESPONSE *responses, void **abstract)
 {
@@ -32,9 +32,9 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 	}
 }
 
-// ssh_password_change: Requests that the client's password be changed.
+// sChangePasswordCallback: Requests that the client's password be changed.
 
-static void ssh_password_change(LIBSSH2_SESSION *session, char **pwd, int *len, void **abstract)
+static void sChangePasswordCallback(LIBSSH2_SESSION *session, char **pwd, int *len, void **abstract)
 {
 	String newpwd = reinterpret_cast<SshSession*>(*abstract)->WhenPasswordChange();
 #ifdef UPP_HEAP
@@ -45,17 +45,17 @@ static void ssh_password_change(LIBSSH2_SESSION *session, char **pwd, int *len, 
 #endif
 }
 
-// ssh_x11_request: Dispatches incoming X11 requests.
+// sX11RequestCallback: Dispatches incoming X11 requests.
 
-static void ssh_x11_request(LIBSSH2_SESSION *session, LIBSSH2_CHANNEL *channel, char *shost, int sport, void **abstract)
+static void sX11RequestCallback(LIBSSH2_SESSION *session, LIBSSH2_CHANNEL *channel, char *shost, int sport, void **abstract)
 {
 	reinterpret_cast<SshSession*>(*abstract)->WhenX11((SshX11Handle) channel);
 }
 
-// ssh_session_libtrace: Allows full-level logging (redirection) of libsssh2 diagnostic messages.
+// slibssh2DebugCallback: Allows full-level logging (redirection) of libsssh2 diagnostic messages.
 
 #ifdef flagLIBSSH2TRACE
-static void ssh_session_libtrace(LIBSSH2_SESSION *session, void *context, const char *data, size_t length)
+static void slibssh2DebugCallback(LIBSSH2_SESSION *session, void *context, const char *data, size_t length)
 {
 	if(!session  || !SSH::sTraceVerbose)
 		return;
@@ -168,7 +168,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			if(!ssh->session)
 				ThrowError(-1, "Failed to initalize libssh2 session.");
 #ifdef flagLIBSSH2TRACE
-			if(libssh2_trace_sethandler(ssh->session, this, &ssh_session_libtrace))
+			if(libssh2_trace_sethandler(ssh->session, this, &slibssh2DebugCallback))
 				LLOG("Warning: Unable to set trace (debug) handler for libssh2.");
 			else {
 				libssh2_trace(ssh->session, SSH::sTraceVerbose);
@@ -264,7 +264,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 							~password,
 							 password.GetLength(),
 							 WhenPasswordChange
-								? &ssh_password_change
+								? &sChangePasswordCallback
 									: nullptr);
 					break;
 				case PUBLICKEY:
@@ -301,7 +301,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 					rc = libssh2_userauth_keyboard_interactive(
 						ssh->session,
 						~user,
-						&ssh_keyboard_callback);
+						&sKeyboardCallback);
 					break;
 				case SSHAGENT:
 					rc = TryAgent(user);
@@ -322,7 +322,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 
 Finalize:
 #ifdef PLATFORM_POSIX
-	libssh2_session_callback_set(ssh->session, LIBSSH2_CALLBACK_X11, (void*) ssh_x11_request);
+	libssh2_session_callback_set(ssh->session, LIBSSH2_CALLBACK_X11, (void*) sX11RequestCallback);
 	LLOG("X11 dispatcher is set.");
 #endif
 	return true;
