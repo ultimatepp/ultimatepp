@@ -80,7 +80,7 @@ public:
 	LabelBase&  SetInk(Color color)                          { return SetInk(color, color); }
 	LabelBase&  SetRightImage(const Image& bmp2, int spc = 0, bool never_hide = false);
 	LabelBase&  SetAlign(int align);
-	LabelBase&  AlignLeft()                                  { return SetAlign(ALIGN_CENTER); }
+	LabelBase&  AlignLeft()                                  { return SetAlign(ALIGN_LEFT); }
 	LabelBase&  AlignCenter()                                { return SetAlign(ALIGN_CENTER); }
 	LabelBase&  AlignRight()                                 { return SetAlign(ALIGN_RIGHT); }
 	LabelBase&  SetVAlign(int align);
