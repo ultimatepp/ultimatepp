@@ -617,9 +617,9 @@ LAYOUT(SetupIdeLayout, 512, 336)
 	ITEM(Upp::Label, dv___28, SetLabel(t_("In editor mode, path for .usc files")).LeftPosZ(4, 192).TopPosZ(288, 20))
 	ITEM(Upp::EditString, uscpath, HSizePosZ(172, 28).TopPosZ(288, 19))
 	ITEM(Upp::Button, uscpath_sel, RightPosZ(4, 20).BottomPosZ(29, 19))
-	ITEM(Upp::Label, dv___31, SetLabel(t_("Default uppiverse folder")).LeftPosZ(4, 192).BottomPosZ(4, 20))
-	ITEM(Upp::EditString, uppiverse, HSizePosZ(172, 28).BottomPosZ(5, 19))
-	ITEM(Upp::Button, uppiverse_sel, RightPosZ(4, 20).BottomPosZ(5, 19))
+	ITEM(Upp::Label, dv___31, SetLabel(t_("Default UppHub folder")).LeftPosZ(4, 192).BottomPosZ(4, 20))
+	ITEM(Upp::EditString, upphub, HSizePosZ(172, 28).BottomPosZ(5, 19))
+	ITEM(Upp::Button, upphub_sel, RightPosZ(4, 20).BottomPosZ(5, 19))
 END_LAYOUT
 
 LAYOUT(SetupAstyleLayout, 544, 312)

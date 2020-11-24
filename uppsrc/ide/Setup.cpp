@@ -574,9 +574,9 @@ void Ide::SetupFormat() {
 		AddPath(&ide.uscpath);
 	};
 
-	String upv_path = DefaultUpvFilePath();
-	ide.uppiverse <<= LoadFile(upv_path);
-	DirSelect(ide.uppiverse, ide.uppiverse_sel);
+	String hub_path = DefaultHubFilePath();
+	ide.upphub <<= LoadFile(hub_path);
+	DirSelect(ide.upphub, ide.upphub_sel);
 	
 	fnt.defaults << [&] {
 		Ide def;
@@ -592,7 +592,7 @@ void Ide::SetupFormat() {
 	for(;;) {
 		int c = dlg.Run();
 
-		Upp::SaveFile(upv_path, ~ide.uscpath);
+		Upp::SaveFile(hub_path, ~ide.uscpath);
 
 		if(IsNull(ide.uscpath))
 			FileDelete(usc_path);

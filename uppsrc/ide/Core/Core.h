@@ -204,9 +204,9 @@ public:
 
 Nest& MainNest();
 
-String DefaultUpvFilePath();
+String DefaultHubFilePath();
 
-String GetUpvDir();
+String GetHubDir();
 
 String VarFilePath();
 String VarFilePath(String name);
