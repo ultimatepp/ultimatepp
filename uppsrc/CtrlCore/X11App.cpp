@@ -441,6 +441,8 @@ void Ctrl::InitX11(const char *display)
 	}
 
 	Csizeinit();
+	
+	EnterGuiMutex();
 }
 
 void Ctrl::ExitX11()
@@ -454,6 +456,7 @@ void Ctrl::ExitX11()
 		UnregisterSystemHotKey(i);
 	if(xim)
 		XCloseIM(xim);
+	LeaveGuiMutex();
 }
 
 Vector<Rect> FindScreensResolutions()
