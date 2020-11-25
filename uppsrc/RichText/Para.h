@@ -71,6 +71,7 @@ struct RichPara {
 		LSP10 = 0,
 		LSP15 = -1,
 		LSP20 = -2,
+		LSP115 = -3,
 	};
 	
 	enum TabSpecial {

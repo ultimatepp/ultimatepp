@@ -12,6 +12,10 @@ void RichPara::Smh(Lines& lines, HeightInfo *th, int cx) const
 		if(h->descent > l.descent) l.descent = h->descent;
 		if(h->external > l.external) l.external = h->external;
 	}
+	if(format.linespacing == LSP115) {
+		l.ascent = 115 * l.ascent / 100;
+		l.descent = 115 * l.descent / 100;
+	}
 	if(format.linespacing == LSP15) {
 		l.ascent = (3 * l.ascent) >> 1;
 		l.descent = (3 * l.descent) >> 1;
