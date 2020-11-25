@@ -464,8 +464,8 @@ void RepoSyncDirs(const Vector<String>& working)
 	RepoSync repo;
 	String repocfg = ConfigFile("repo.cfg");
 	repo.SetMsgs(LoadFile(repocfg));
-	for(int i = 0; i < working.GetCount(); i++)
-		repo.Dir(working[i]);
+	for(String d : working)
+		repo.Dir(InUppHub(d), d);
 	repo.DoSync();
 	SaveFile(repocfg, repo.GetMsgs());
 	if(f)

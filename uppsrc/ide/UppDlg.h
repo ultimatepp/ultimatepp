@@ -165,6 +165,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 		String nest;
 		Image  icon;
 		bool   main;
+		bool   upphub;
 
 		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
 		
