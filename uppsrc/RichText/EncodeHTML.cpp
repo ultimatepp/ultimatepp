@@ -94,7 +94,9 @@ String HtmlParaStyle(const RichPara::Format& f, Zoom z)
 	if(!IsNull(f.paper))
 		style << HtmlStyleColor(f.paper, "background-color");
 	style << decode(f.linespacing, RichPara::LSP15, "line-height:150%",
-	                               RichPara::LSP20, "line-height:200%", "");
+	                               RichPara::LSP20, "line-height:200%",
+	                               RichPara::LSP115, "line-height:115%",
+	                               "");
 	return style;
 }
 

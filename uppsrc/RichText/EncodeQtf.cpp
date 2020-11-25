@@ -111,6 +111,7 @@ void QTFEncodeParaFormat(String& qtf, const RichPara::Format& format, const Rich
 		qtf << 'Q';
 	if(style.linespacing != format.linespacing)
 		switch(format.linespacing) {
+		case RichPara::LSP115: qtf << "pw"; break;
 		case RichPara::LSP15: qtf << "ph"; break;
 		case RichPara::LSP20: qtf << "pd"; break;
 		default:              qtf << "po"; break;

@@ -297,9 +297,10 @@ ParaFormatting::ParaFormatting()
 	tabs.ColumnWidths("103 89 78");
 	tabs.Appending().Removing().NoAskRemove();
 	tabs.WhenAcceptEdit = tabs.WhenArrayAction = THISBACK(SetMod);
-	linespacing.Add(0, "1.0");
-	linespacing.Add(-1, "1.5");
-	linespacing.Add(-2, "2.0");
+	linespacing.Add(RichPara::LSP10, "1.0");
+	linespacing.Add(RichPara::LSP115, "1.15");
+	linespacing.Add(RichPara::LSP15, "1.5");
+	linespacing.Add(RichPara::LSP20, "2.0");
 	bullet.Add(RichPara::BULLET_NONE, RichEditImg::NoneBullet());
 	bullet.Add(RichPara::BULLET_ROUND, RichEditImg::RoundBullet());
 	bullet.Add(RichPara::BULLET_ROUNDWHITE, RichEditImg::RoundWhiteBullet());

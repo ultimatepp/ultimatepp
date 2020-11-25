@@ -778,6 +778,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 						case 0:   Error("Unexpected end of text");
 						case 'h': format.linespacing = RichPara::LSP15; break;
 						case 'd': format.linespacing = RichPara::LSP20; break;
+						case 'w': format.linespacing = RichPara::LSP115; break;
 						default:  format.linespacing = RichPara::LSP10;
 						}
 						break;
