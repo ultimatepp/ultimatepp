@@ -171,15 +171,32 @@ String DefaultHubFilePath()
 	return ConfigFile("UppHub.path");
 }
 
+bool hubdir_resolved;
+
+void SetHubDir(const String& path)
+{
+	SaveFile(DefaultHubFilePath(), path);
+	hubdir_resolved = false;
+}
+
 String GetHubDir()
 {
-	String d = GetVar("UPPHUB");
+	static String d;
+	if(hubdir_resolved)
+		return d;
+	hubdir_resolved = true;
+	d = GetVar("UPPHUB");
 	if(d.GetCount() && DirectoryExists(d)) return d;
 	d = LoadFile(DefaultHubFilePath());
 	if(d.GetCount() && DirectoryExists(d)) return d;
 	d = ConfigFile("UppHub");
 	RealizeDirectory(d);
 	return d;
+}
+
+bool InUppHub(const String& p)
+{
+	return p.StartsWith(GetHubDir());
 }
 
 bool   LoadVars(const char *name) {
