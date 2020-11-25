@@ -574,8 +574,7 @@ void Ide::SetupFormat() {
 		AddPath(&ide.uscpath);
 	};
 
-	String hub_path = DefaultHubFilePath();
-	ide.upphub <<= LoadFile(hub_path);
+	ide.upphub <<= LoadFile(DefaultHubFilePath());
 	DirSelect(ide.upphub, ide.upphub_sel);
 	
 	fnt.defaults << [&] {
@@ -592,7 +591,7 @@ void Ide::SetupFormat() {
 	for(;;) {
 		int c = dlg.Run();
 
-		Upp::SaveFile(hub_path, ~ide.uscpath);
+		SetHubDir(~ide.upphub);
 
 		if(IsNull(ide.uscpath))
 			FileDelete(usc_path);

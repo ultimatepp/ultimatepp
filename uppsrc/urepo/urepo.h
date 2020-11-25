@@ -71,6 +71,7 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	};
 
 	struct Work {
+		bool   read_only;
 		int    kind;
 		String dir;
 	};
@@ -93,8 +94,10 @@ public:
 	void   SetMsgs(const String& s);
 	String GetMsgs();
 
-	void Dir(const char *dir, int kind);
-	void Dir(const char *dir);
+	void Dir(bool read_only, const char *dir, int kind);
+	void Dir(bool read_only, const char *dir);
+	void Dir(const char *dir, int kind)              { Dir(false, dir, kind); }
+	void Dir(const char *dir)                        { Dir(false, dir); }
 	void DoSync();
 	
 	RepoSync();

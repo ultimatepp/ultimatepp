@@ -218,7 +218,7 @@ void RepoSync::SyncList()
 			o.commit << [=] { SyncCommits(); };
 			o.update = true;
 			actions = ListSvn(path);
-			if(!actions) {
+			if(!actions || w.read_only) {
 				o.commit = false;
 				o.commit.Disable();
 			}
@@ -233,9 +233,13 @@ void RepoSync::SyncList()
 			o.push = true;
 			o.pull = true;
 			actions = ListGit(path);
-			if(!actions) {
+			if(!actions || w.read_only) {
 				o.commit = false;
 				o.commit.Disable();
+			}
+			if(w.read_only) {
+				o.push = false;
+				o.push.Disable();
 			}
 		}
 		if(actions) {
@@ -302,18 +306,19 @@ void RepoSvnDel(const char *path)
 	}
 }
 
-void RepoSync::Dir(const char *dir, int kind)
+void RepoSync::Dir(bool read_only, const char *dir, int kind)
 {
 	Work& d = work.Add();
-	d.dir = dir;
 	d.kind = kind;
+	d.dir = dir;
+	d.read_only = read_only;
 }
 
-void RepoSync::Dir(const char *dir)
+void RepoSync::Dir(bool read_only, const char *dir)
 {
 	int kind = GetRepoKind(dir);
 	if(kind)
-		Dir(dir, kind);
+		Dir(read_only, dir, kind);
 }
 
 void RepoMoveSvn(const String& path, const String& tp)
