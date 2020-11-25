@@ -2002,9 +2002,14 @@ bool FileSel::Execute(int _mode) {
 		LruAdd(lru, d, 12);
 		Vector<String> glru;
 		d = NormalizePath(d);
-		LoadFromGlobal(glru, "GlobalFileSelectorLRU");
-		LruAdd(glru, d, 5);
-		StoreToGlobal(glru, "GlobalFileSelectorLRU");
+		Index<String> h;
+		for(int i = 0; i < fixed_places; i++)
+			h.Add(NormalizePath(~places.Get(i, 0)));
+		if(h.Find(d) < 0) {
+			LoadFromGlobal(glru, "GlobalFileSelectorLRU");
+			LruAdd(glru, d, 5);
+			StoreToGlobal(glru, "GlobalFileSelectorLRU");
+		}
 	}
 
 	places.SetCount(fixed_places);
