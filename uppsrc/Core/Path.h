@@ -89,6 +89,8 @@ public:
 	bool        IsTemporary() const        { return GetAttributes() & FILE_ATTRIBUTE_TEMPORARY; }
 
 	operator    bool() const               { return handle != INVALID_HANDLE_VALUE; }
+	bool        operator++()               { return Next(); }
+	bool        operator++(int)            { return Next(); }
 
 	struct Iterator {
 		FindFile *ff;
@@ -164,6 +166,8 @@ public:
 	bool        IsExecutable() const;
 
 	operator    bool() const              { return file; }
+	bool        operator++()              { return Next(); }
+	bool        operator++(int)           { return Next(); }
 
 	struct Iterator {
 		FindFile *ff;
