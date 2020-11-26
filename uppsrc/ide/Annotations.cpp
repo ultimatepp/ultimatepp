@@ -186,21 +186,36 @@ void AssistEditor::EditAnnotation(bool leftclick)
 	if(!GetAnnotationRefs(tl, coderef))
 		return;
 	SetCursor(GetPos64(GetActiveAnnotationLine()));
-	if(tl.GetCount() > 1) {
-		MenuBar bar;
-		for(int i = 0; i < tl.GetCount(); i++)
-			bar.Add(tl[i], THISBACK3(OpenTopic, tl[i] + '#' + coderef, String(), false));
-		bar.Execute();
-		return;
+	if(leftclick) {
+		auto GoToTopic = [&] (int i) {
+			if(theide) {
+				theide->ShowTopics();
+				if(!theide->doc.GoTo(tl[i] + '#' + coderef) && LegacyRef(coderef))
+					theide->doc.GoTo(tl[i] + '#' + coderef);
+			}
+		};
+		if(tl.GetCount() > 1) {
+			MenuBar bar;
+			for(int i = 0; i < tl.GetCount(); i++)
+				bar.Add(tl[i], [&] { GoToTopic(i); });
+			bar.Execute();
+			return;
+		}
+		if(tl.GetCount()) {
+			GoToTopic(0);
+			return;
+		}
 	}
+
+	MenuBar bar;
 	if(tl.GetCount()) {
-		OpenTopic(tl[0] + '#' + coderef, String(), false);
-		return;
+		for(int i = 0; i < tl.GetCount(); i++)
+			bar.Add("Edit " + tl[i], THISBACK3(OpenTopic, tl[i] + '#' + coderef, String(), false));
+		bar.Separator();
 	}
+
 	String scope, item;
 	SplitCodeRef(coderef, scope, item);
-	const CppItem *m = GetCodeRefItem(coderef);
-	int access = m ? m->access : 0;
 	VectorMap<String, String> tpp;
 	int backi = 0;
 	for(int pass = 0; pass < 2; pass++) {
@@ -209,24 +224,19 @@ void AssistEditor::EditAnnotation(bool leftclick)
 			if(GetAnnotationRefs(tl, coderef2, i) && tl.GetCount()) {
 				String scope2, item2;
 				SplitCodeRef(coderef2, scope2, item2);
-				m = GetCodeRefItem(coderef2);
-				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1 && leftclick) {
-					OpenTopic(tl[0] + '#' + coderef2, coderef, false);
-					return;
-				}
-				for(int j = 0; j < tl.GetCount(); j++)
-					if(tpp.Find(tl[j]) < 0)
-						tpp.Add(tl[j], coderef2);
+				for(const String& t : tl)
+					if(tpp.Find(t) < 0)
+						tpp.Add(t, coderef2);
 			}
 		}
 		if(pass == 0)
 			backi = tpp.GetCount();
 	}
-	MenuBar bar;
+
 	if(tpp.GetCount()) {
 		for(int i = 0; i < tpp.GetCount(); i++) {
 			String l = tpp.GetKey(i);
-			bar.Add(l, THISBACK3(OpenTopic, l + '#' + tpp[i], coderef, i >= backi));
+			bar.Add("Insert into " + l, THISBACK3(OpenTopic, l + '#' + tpp[i], coderef, i >= backi));
 		}
 		bar.Separator();
 	}
