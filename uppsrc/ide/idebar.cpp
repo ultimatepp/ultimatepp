@@ -100,6 +100,8 @@ void Ide::File(Bar& menu)
 	menu.MenuSeparator();
 	
 	menu.Add(AK_OPENFILEDIR, THISBACK(OpenFileFolder));
+	menu.Add("Copy File Path", [=] { WriteClipboardText(GetActiveFilePath()); });
+	menu.Sub("Properties", [=](Bar& bar) { FilePropertiesMenu(bar); });
 	menu.MenuSeparator();
 
 	menu.Add(AK_STATISTICS, THISBACK(Statistics))
@@ -490,6 +492,7 @@ void Ide::FilePropertiesMenu0(Bar& menu)
 
 void Ide::FilePropertiesMenu(Bar& menu)
 {
+	FilePropertiesMenu0(menu);
 	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
 	bool candiff = IsActiveFile() && !editfile_isfolder && !designer;
