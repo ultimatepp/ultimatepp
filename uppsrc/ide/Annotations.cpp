@@ -177,7 +177,7 @@ void AssistEditor::NewTopic(String group, String coderef)
 		theide->EditFile(ef);
 }
 
-void AssistEditor::EditAnnotation(bool fastedit)
+void AssistEditor::EditAnnotation(bool leftclick)
 {
 	if(!SyncRefsFinished)
 		return;
@@ -210,7 +210,7 @@ void AssistEditor::EditAnnotation(bool fastedit)
 				String scope2, item2;
 				SplitCodeRef(coderef2, scope2, item2);
 				m = GetCodeRefItem(coderef2);
-				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1 && fastedit) {
+				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1 && leftclick) {
 					OpenTopic(tl[0] + '#' + coderef2, coderef, false);
 					return;
 				}

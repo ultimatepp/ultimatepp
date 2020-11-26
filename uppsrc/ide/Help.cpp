@@ -560,6 +560,8 @@ void Ide::ShowTopicsWin()
 	if(windoc.IsOpen())
 		windoc.SetForeground();
 	else {
+		topic_serial++;
+		GetRefLinks("");
 		windoc.SyncDocTree();
 		windoc.GoTo(sTopicHome);
 		windoc.OpenMain();
