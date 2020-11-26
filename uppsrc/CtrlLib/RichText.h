@@ -74,7 +74,7 @@ public:
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;
 
-	void            GotoLabel(const String& lbl, bool highlight = false);
+	bool            GotoLabel(const String& lbl, bool highlight = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
 
 	int             GetLength() const                         { return text.GetLength(); }
@@ -228,7 +228,7 @@ public:
 	virtual void  FinishText(RichText& text);
 	virtual void  BarEx(Bar& bar);
 
-	void GoTo(const String& link);
+	bool GoTo(const String& link);
 
 	void SetBar();
 	void Serialize(Stream& s);

@@ -20,16 +20,16 @@ bool HelpWindow::GoTo0(const String& link)
 	Topic t = AcquireTopic(link);
 	SetBar();
 	if(!IsNull(t.text)) {
+		if(~tree != topic)
+			tree.FindSetCursor(topic);
 		label = t.label;
 		topic = t.link;
 		Title(FromUtf8(t.title));
 		RichText txt = ParseQTF(t.text);
 		FinishText(txt);
 		view.Pick(pick(txt), zoom);
-		view.GotoLabel(label, true);
 		current_link = link;
-		tree.FindSetCursor(topic);
-		return true;
+		return view.GotoLabel(label, true);;
 	}
 	return false;
 }
@@ -42,20 +42,23 @@ HelpWindow::Pos HelpWindow::GetPos()
 	return p;
 }
 
-void HelpWindow::GoTo(const String& link)
+bool HelpWindow::GoTo(const String& link)
 {
 	if(IsNull(link) || current_link == link)
-		return;
+		return false;
 	Pos p = GetPos();
 	if(GoTo0(link)) {
 		if(!IsNull(p.link))
 			back.Add(p);
 		forward.Clear();
 		SetBar();
-		return;
+		return true;
 	}
-	if(link.StartsWith("www.") || link.StartsWith("http") || link.StartsWith("mailto:"))
+	if(link.StartsWith("www.") || link.StartsWith("http") || link.StartsWith("mailto:")) {
 		LaunchWebBrowser(link);
+		return true;
+	}
+	return false;
 }
 
 void HelpWindow::Back()
@@ -308,7 +311,7 @@ HelpWindow::HelpWindow()
 	Sizeable().Zoomable();
 	Title(t_("Help"));
 	BackPaint();
-	view.WhenLink = THISBACK(GoTo);
+	view.WhenLink = [=](const String& h) { GoTo(h); };
 	AddFrame(toolbar);
 	view.SetZoom(Zoom(1, 1));
 	zoom.m = 160;
