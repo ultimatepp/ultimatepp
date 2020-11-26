@@ -795,7 +795,7 @@ void Ide::HelpMenu(Bar& menu)
 {
 	if(!IsEditorMode()) {
 		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
-		menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
+		menu.Add(editor.GetWord().GetCount(), AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	}
 	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
 	menu.MenuSeparator();
