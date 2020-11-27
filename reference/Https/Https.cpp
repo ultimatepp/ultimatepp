@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <Core/SSL/SSL.h>
 
 using namespace Upp;
 
