@@ -246,8 +246,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						endtag = "</a>";
 					}
 					String cs;
-					if(part.text[0] != 9)
-						cs = HtmlCharStyle(part.format, p.format);
+					cs = HtmlCharStyle(part.format, p.format);
 					if(!cs.IsEmpty()) {
 						html << "<span" << FormatClass(css, cs) << ">";
 						endtag = "</span>" + endtag;
@@ -390,6 +389,22 @@ String AsCss(Index<String>& ss)
 		css << "{" << ss[i] << "}\r\n";
 	}
 	return css;
+}
+
+String MakeHtml(const char *title, const String& css, const String& body)
+{
+	String h =
+		"<HTML>\r\n"
+	    "<HEAD>\t\n"
+	    "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\t\n"
+	    "<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">\t\n"
+	    "<TITLE>" + String(title) + "</TITLE>\r\n"
+	;
+	if(!IsNull(css))
+		h << "<STYLE TYPE=\"text/css\"><!--\r\n"
+		  << css << "\r\n-->\r\n</STYLE>\r\n";
+	h << "</HEAD><BODY>" << body << "</BODY>";
+	return h;
 }
 
 }
