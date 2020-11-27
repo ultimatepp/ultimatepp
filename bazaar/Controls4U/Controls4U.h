@@ -89,14 +89,14 @@ public:
 	
 	Function<bool ()> WhenChange;
 	
-	virtual void  Serialize(Stream& s) {
+	virtual void Serialize(Stream& s) {
 		WithDropChoice::Serialize(s);
 		if (s.IsLoading()) {
 			if (select.GetCount() > 0)
 				SetData(select.Get(0));
 		}
 	}
-	virtual void  Jsonize(JsonIO& jio) {
+	virtual void Jsonize(JsonIO& jio) {
 		Vector<String> list;
 		if (!jio.IsLoading()) {
 			AddHistory();
@@ -113,7 +113,7 @@ public:
 				SetData(list[0]);
 		}
 	}
-	virtual void  Xmlize(XmlIO& xio) {
+	virtual void Xmlize(XmlIO& xio) {
 		Vector<String> list;
 		if (!xio.IsLoading()) {
 			AddHistory();

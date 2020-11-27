@@ -182,7 +182,7 @@ void EditFileFolder::SetData(const Value& data) {
 void EditFileFolder::DoGo(bool add) {
 	InitFs();
 	String path = GetData(); 
-	pfs->Set(path);			// Write Edit to FileSel
+	pfs->Set(path);			
 	if (!IsRootFolder(path))
 		butUp.Enable(true);
 	else
