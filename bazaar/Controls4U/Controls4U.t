@@ -3,9 +3,9 @@
 #endif
 // Controls4U.cpp
 
-T_("Browse")
+T_("Click to open file selector")
 caES("")
-esES("Explorar")
+esES("")
 euES("")
 frFR("")
 
@@ -27,9 +27,9 @@ esES("Directorio arriba")
 euES("")
 frFR("")
 
-T_("Open folder")
+T_("Open file directory")
 caES("")
-esES("Abrir carpeta")
+esES("")
 euES("")
 frFR("")
 
@@ -39,9 +39,9 @@ esES("Seleccionar fichero")
 euES("")
 frFR("")
 
-T_("Browse file")
+T_("Click to browse file")
 caES("")
-esES("Buscar fichero")
+esES("")
 euES("")
 frFR("")
 
@@ -69,9 +69,9 @@ esES("")
 euES("")
 frFR("")
 
-T_("Browse folder")
+T_("Click to browse folder")
 caES("")
-esES("Buscar carpeta")
+esES("")
 euES("")
 frFR("")
 
@@ -302,6 +302,30 @@ frFR("")
 
 
 // Obsolete
+
+T_("Browse")
+caES("")
+esES("Explorar")
+euES("")
+frFR("")
+
+T_("Open folder")
+caES("")
+esES("Abrir carpeta")
+euES("")
+frFR("")
+
+T_("Browse file")
+caES("")
+esES("Buscar fichero")
+euES("")
+frFR("")
+
+T_("Browse folder")
+caES("")
+esES("Buscar carpeta")
+euES("")
+frFR("")
 
 T_("Select directory")
 caES("")
