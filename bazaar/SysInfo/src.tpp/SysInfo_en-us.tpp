@@ -153,6 +153,7 @@ Phys], [_^uint64^ uint64]_`&[*@3 freePhys], [_^uint64^ uint64]_`&[*@3 totalPageF
 [s2; [%-*@3 totalVirtual ]is the total virtual memory&]
 [s2; [%-*@3 freeVirtual ]is the free virtual memory.&]
 [s3; &]
+[s3; &]
 [s4;%- &]
 [s5;:GetOsInfo`(String`&`,String`&`,String`&`,String`&`,String`&`,String`&`,String`&`):%- [@(0.0.255) b
 ool]_[* GetOsInfo]([_^String^ String]_`&[*@3 kernel], [_^String^ String]_`&[*@3 kerVersion],
@@ -228,11 +229,13 @@ resent]_)&]
 [s0;%- &]
 [ {{10000@1 [s0; [* Process handling]]}}&]
 [s3;%- &]
-[s5;:GetWindowsList`(Array`<int64`>`&`,Array`<int64`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`):%- [@(0.0.255) v
-oid]_[* GetWindowsList]([_^Array^ Array]<[@(0.0.255) int64]>_`&[*@3 wid], 
-[_^Array^ Array]<[@(0.0.255) int64]>_`&[*@3 pid], [_^Array^ Array]<[_^String^ String]>_`&[*@3 n
-ame], [_^Array^ Array]<[_^String^ String]>_`&[*@3 fileName], [_^Array^ Array]<[_^String^ St
-ring]>_`&[*@3 title])&]
+[s4;%- &]
+[s5;:Upp`:`:GetWindowsList`(Upp`:`:Array`<Upp`:`:int64`>`&`,Upp`:`:Array`<Upp`:`:int64`>`&`,Upp`:`:Array`<Upp`:`:String`>`&`,Upp`:`:Array`<Upp`:`:String`>`&`,Upp`:`:Array`<Upp`:`:String`>`&`,bool`):%- [@(0.0.255) v
+oid]_[* GetWindowsList]([_^Upp`:`:Array^ Array]<[_^Upp`:`:int64^ int64]>_`&[*@3 hWnd], 
+[_^Upp`:`:Array^ Array]<[_^Upp`:`:int64^ int64]>_`&[*@3 processId], 
+[_^Upp`:`:Array^ Array]<[_^Upp`:`:String^ String]>_`&[*@3 name], [_^Upp`:`:Array^ Array]<
+[_^Upp`:`:String^ String]>_`&[*@3 fileName], [_^Upp`:`:Array^ Array]<[_^Upp`:`:String^ St
+ring]>_`&[*@3 caption], [@(0.0.255) bool]_[*@3 getAll])&]
 [s2; Gets arrays with handles to all the opened windows with additional 
 info as:&]
 [s2; [%-*@3 wid]: Handle to the the window&]
