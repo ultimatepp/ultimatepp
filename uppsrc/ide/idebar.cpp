@@ -680,10 +680,9 @@ void Ide::BuildMenu(Bar& menu)
 		.Help("Find next " + hh + "according to console pane");
 	menu.Add(ffb, AK_FINDPREVERROR, THISBACK(FindPrevError))
 		.Help("Find previous " + hh + "according to console pane");
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 	menu.MenuSeparator();
 	menu.Add(!IsNull(target), AK_OPENOUTDIR, THISBACK(OpenOutputFolder));
-#endif
+	menu.Add(!IsNull(target), "Terminal at output directory", [=] { LaunchTerminal(GetFileFolder(target)); });
 }
 
 void Ide::DebugMenu(Bar& menu)
