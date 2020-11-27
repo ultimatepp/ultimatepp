@@ -540,6 +540,7 @@ String GetExtExecutable(const String ext);
 
 Vector<String> GetDriveList();
 
+#define DLLFunction(dll, type, function, args) auto function = (type(*)args)dll.GetFunction(#function); if (!function) throw Exc(Format("%s not found", #function))
 
 class Dl {
 public:
@@ -1130,6 +1131,7 @@ public:
 	
 	int size() const 		{return fields.GetCount();}
 	int GetCount() const 	{return size();}
+	bool IsEmpty() const 	{return size() == 0;}
 	
 	int (*IsSeparator)(int) = defaultIsSeparator;
 		
