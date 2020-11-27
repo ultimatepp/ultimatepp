@@ -26,7 +26,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("witz", "Skylark template file (web framework files)");
 	Type("qtf", "U++ rich text file");
 	Type("t", "Translation file");
-	Type("tpp", "Documentation file");
+	Type("tpp", "Documentation folder");
 	type.AddSeparator();
 	Type("json", "JSON file");
 	Type("xml", "XML file");
