@@ -135,22 +135,6 @@ void TopicEditor::ExportGroupPdf()
 	}
 }
 
-String MakeHtml(const char *title, String css, String body)
-{
-	String h =
-		"<HTML>\r\n"
-	    "<HEAD>\t\n"
-	    "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\t\n"
-	    "<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">\t\n"
-	    "<TITLE>" + String(title) + "</TITLE>\r\n"
-	;
-	if(!IsNull(css))
-		h << "<STYLE TYPE=\"text/css\"><!--\r\n"
-		  << css << "\r\n-->\r\n</STYLE>\r\n";
-	h << "</HEAD><BODY>" << body << "</BODY>";
-	return h;
-}
-
 void TopicEditor::ExportHTML()
 {
 	String path = SelectFileSaveAs("HTML files\t*.html\nAll files\t*.*");

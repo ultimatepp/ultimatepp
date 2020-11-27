@@ -513,6 +513,8 @@ String EncodeHtml(const RichText& text, Index<String>& css,
                   const VectorMap<String, String>& escape = VectorMap<String, String>());
 String AsCss(Index<String>& ss);
 
+String MakeHtml(const char *title, const String& css, const String& body);
+
 inline //BW - no labels
 String EncodeHtml(const RichText& text, Index<String>& css,
                   const VectorMap<String, String>& links,
