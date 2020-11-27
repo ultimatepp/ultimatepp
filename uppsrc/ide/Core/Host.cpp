@@ -195,7 +195,11 @@ void sCleanZombies(int signal_number)
 }
 #endif
 
-String LinuxHostConsole = "/usr/bin/xterm -e";
+#ifdef PLATFORM_WIN32
+String HostConsole = "powershell.exe";
+#else
+String HostConsole = "/usr/bin/xterm -e";
+#endif
 
 void LocalHost::Launch(const char *_cmdline, bool console)
 {
@@ -240,19 +244,19 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	};
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
-		int c = LinuxHostConsole.FindFirstOf(" ");
-		lc = c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
+		int c = HostConsole.FindFirstOf(" ");
+		lc = c < 0 ? HostConsole : HostConsole.Left(c);
 		if(ii >= __countof(term) || FileExists(lc))
 			break;
-		LinuxHostConsole = term[ii++];
+		HostConsole = term[ii++];
 	}
 	if(FileExists(lc))
 	{
 		if(console)
-			cmdline = LinuxHostConsole + " sh " + script;
+			cmdline = HostConsole + " sh " + script;
 	}
 	else
-	if(LinuxHostConsole.GetCount())
+	if(HostConsole.GetCount())
 		PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
 #endif
 

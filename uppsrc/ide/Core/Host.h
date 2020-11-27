@@ -1,6 +1,6 @@
 enum { REMOTE_TIMEOUT = 2000 };
 
-extern String LinuxHostConsole;
+extern String HostConsole;
 
 class Host {
 public:

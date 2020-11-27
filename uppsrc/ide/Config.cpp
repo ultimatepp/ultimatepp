@@ -308,7 +308,7 @@ void Ide::Serialize(Stream& s)
 		String dummy;
 		s % dummy;
 	}
-	s % LinuxHostConsole;
+	s % HostConsole;
 	editor.SerializeNavigator(s);
 	s % showtime;
 	s % DiffFs();
@@ -320,6 +320,11 @@ void Ide::Serialize(Stream& s)
 	if(version >= 19) {
 		s % gui_font % gui_font_override;
 	}
+
+#ifdef PLATFORM_WIN32
+	if(s.IsLoading() && HostConsole == "/usr/bin/xterm -e")
+		HostConsole = "powershell.exe";
+#endif
 }
 
 Time Ide::ConfigTime()

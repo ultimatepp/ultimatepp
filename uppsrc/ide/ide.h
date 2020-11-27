@@ -1022,6 +1022,8 @@ public:
 	String    GetTargetLogPath();
 	String    GetIdeLogPath();
 	void      OpenLog(const String& logFilePath);
+
+	virtual void      LaunchTerminal(const char *dir);
 	
 //	Console&  GetConsole();
 
