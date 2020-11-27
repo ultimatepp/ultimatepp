@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	Test.tpp,
+	Etalon.log,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
