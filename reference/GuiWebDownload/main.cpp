@@ -10,8 +10,6 @@ struct Downloader {
 	FileOut     out;
 	String      path;
 	
-	typedef Downloader CLASSNAME;
-	
 	void Content(const void *ptr, int size);
 	void Perform();
 	void ShowProgress();
@@ -23,9 +21,9 @@ struct Downloader {
 Downloader::Downloader()
 {
 	http.MaxContentSize(INT_MAX);
-	http.WhenContent = THISBACK(Content);
-	http.WhenWait = http.WhenDo = THISBACK(ShowProgress);
-	http.WhenStart = THISBACK(Start);
+	http.WhenContent = [=](const void *ptr, int size) { Content(ptr, size); };
+	http.WhenWait = http.WhenDo = [=] { ShowProgress(); };
+	http.WhenStart = [=] { Start(); };
 }
 
 void Downloader::Start()
