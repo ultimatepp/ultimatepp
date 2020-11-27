@@ -312,6 +312,7 @@ struct WorkspaceWork {
 	virtual void   FileRename(const String& nm)       {}
 	virtual bool   FileRemove()                       { return true; }
 	virtual void   SyncSvnDir(const String& working)  {}
+	virtual void   LaunchTerminal(const char *dir)    {}
 
 	void   ScanWorkspace();
 	void   SavePackage();

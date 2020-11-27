@@ -392,21 +392,6 @@ void Ide::SetupFormat() {
 	WithSetupAssistLayout<ParentCtrl> assist;
 	WebSearchTab web_search;
 	AStyleSetupDialog ast(this);
-#ifdef PLATFORM_WIN32
-	ide.console_txt.Hide();
-	ide.console.Hide();
-	ide.kde.Hide();
-	ide.gnome.Hide();
-	ide.xterm.Hide();
-	ide.mate.Hide();
-	ide.lxde.Hide();
-#endif
-	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
-	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
-	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
-	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
-	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
-	
 	edt.lineends
 		.Add(LF, "LF")
 		.Add(CRLF, "CRLF")
@@ -433,6 +418,22 @@ void Ide::SetupFormat() {
 	dlg.Add(ast, "Code formatting");
 	dlg.Add(web_search, "Web search");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
+
+#ifdef PLATFORM_WIN32
+	ide.xterm.SetLabel("powershell");
+	ide.xterm << [&] { ide.console <<= "powershell.exe"; };
+	ide.gnome.SetLabel("cmd");
+	ide.gnome << [&] { ide.console <<= "cmd.exe"; };
+	ide.kde.Hide();
+	ide.mate.Hide();
+	ide.lxde.Hide();
+#else
+	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
+	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
+	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
+	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
+	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
+#endif
 
 	FontSelectManager ed, vf, con, f1, f2, tf, gui;
 	ed.Set(fnt.face, fnt.height, fnt.bold, fnt.italic);
@@ -518,7 +519,7 @@ void Ide::SetupFormat() {
 		(ide.wrap_console_text, wrap_console_text)
 		(ide.hydra1_threads, hydra1_threads)
 		(ide.chstyle, chstyle)
-		(ide.console, LinuxHostConsole)
+		(ide.console, HostConsole)
 		(ide.output_per_assembly, output_per_assembly)
 		(ide.setmain_newide, setmain_newide)
 		(ide.gui_font, gui_font_override)
