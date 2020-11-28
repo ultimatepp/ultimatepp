@@ -52,8 +52,11 @@ const char *asString(void *ptr)
 
 
 Heap::DLink Heap::big[1];
-Heap        Heap::aux;
 StaticMutex Heap::mutex;
+
+// Not associated with thread, locked access, to store orphans on thread exit and provide after
+// exit allocations. Access serialized with Heap::mutex.
+Heap        Heap::aux;
 
 void Heap::Init()
 {

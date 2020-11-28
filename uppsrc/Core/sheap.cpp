@@ -29,7 +29,7 @@ inline void Heap::Page::Format(int k)
 
 Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 {
-	LLOG("AllocK - next work not available " << k << " empty: " << (void *)empty[k]);
+	LLOG("AllocK - next work page not available " << k << " empty: " << (void *)empty[k]);
 	Page *page = empty[k]; // hot empty page of the same klass
 	empty[k] = NULL;
 	if(!page) { // try to reacquire pages freed remotely
@@ -53,30 +53,32 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 			}
 	if(!page) { // Attempt to find page in global storage of free pages
 		Mutex::Lock __(mutex);
-		aux.SmallFreeRemoteRaw();
-		if(aux.work[k]->next != aux.work[k]) { // Try page of the same klass first
-			page = aux.work[k]->next;
-			page->Unlink();
-			LLOG("AllocK - adopting aux page " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
+		if(this != &aux) { // Try to take the page from the aux
+			aux.SmallFreeRemoteRaw();
+			if(aux.work[k]->next != aux.work[k]) { // Try page of the same klass first
+				page = aux.work[k]->next;
+				page->Unlink();
+				LLOG("AllocK - adopting aux page " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
+			}
+			if(!page && aux.empty[k]) { // Try free page of the same klass (no need to format it)
+				page = aux.empty[k];
+				aux.empty[k] = page->next;
+				free_4KB--;
+				ASSERT(free_4KB < max_free_spages);
+				LLOG("AllocK - empty aux page available of the same format " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
+			}
+			if(!page)
+				for(int i = 0; i < NKLASS; i++) // Finally try to find free page of different klass
+					if(aux.empty[i]) {
+						page = aux.empty[i];
+						aux.empty[i] = page->next;
+						free_4KB--;
+						page->Format(k);
+						ASSERT(free_4KB < max_free_spages);
+						LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
+						break;
+					}
 		}
-		if(!page && aux.empty[k]) { // Try free page of the same klass (no need to format it)
-			page = aux.empty[k];
-			aux.empty[k] = page->next;
-			free_4KB--;
-			ASSERT(free_4KB < max_free_spages);
-			LLOG("AllocK - empty aux page available of the same format " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
-		}
-		if(!page)
-			for(int i = 0; i < NKLASS; i++) // Finally try to find free page of different klass
-				if(aux.empty[i]) {
-					page = aux.empty[i];
-					aux.empty[i] = page->next;
-					free_4KB--;
-					page->Format(k);
-					ASSERT(free_4KB < max_free_spages);
-					LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
-					break;
-				}
 		if(!page) { // No free memory was found, ask huge for the new page
 			page = (Page *)HugeAlloc(1);
 			LLOG("AllocK - allocated new system page " << (void *)page << " " << k);
@@ -330,7 +332,7 @@ Heap *ThreadHeap()
 	Heap *heap = heap_tls;
 	if(!heap) { // we definitely need a lock here because some Shutdown can be in progress
 		Mutex::Lock __(Heap::mutex);
-		thread_local byte sHeap[sizeof(Heap)];
+		thread_local byte sHeap[sizeof(Heap)]; // zero initialization is fine for us
 		heap_tls = heap = (Heap *)sHeap;
 	}
 	return heap;
