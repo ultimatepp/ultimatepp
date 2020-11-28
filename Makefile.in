@@ -233,6 +233,7 @@ $(OutFile): build_info  \
 	$(OutDir_ide_MacroManager)MacroManager.a \
 	$(OutDir_urepo)urepo.a \
 	$(OutDir_Report)Report.a \
+	$(OutDir_Core_SSL)SSL.o \
 	$(OutDir_Core_SSL)SSL.a \
 	$(OutDir_Esc)Esc.a \
 	$(OutDir_Core)Core.a \
@@ -344,6 +345,7 @@ $(OutFile): build_info  \
 			$(OutDir_ide_MacroManager)MacroManager.a \
 			$(OutDir_urepo)urepo.a \
 			$(OutDir_Report)Report.a \
+		$(OutDir_Core_SSL)SSL.o \
 			$(OutDir_Core_SSL)SSL.a \
 			$(OutDir_Esc)Esc.a \
 			$(OutDir_Core)Core.a \
@@ -44058,6 +44060,9 @@ $(OutDir_Core_SSL)P7S.o: $(UPPDIR1)Core/SSL/P7S.cpp \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/P7S.cpp -o $(OutDir_Core_SSL)P7S.o
+
+$(OutDir_Core_SSL)SSL.o: $(UPPDIR1)Core/SSL/SSL.icpp
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core_SSL)  $(UPPDIR1)Core/SSL/SSL.icpp -o $(OutDir_Core_SSL)SSL.o
 
 $(OutDir_Core_SSL)SSL.a: \
 	$(OutDir_Core_SSL)Util.o \
