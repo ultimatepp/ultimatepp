@@ -1733,7 +1733,9 @@ bool Shutdown(String action) {
 	} else if (action == "shutdown") {
 		sync();
 		sleep(1);
-#if __GNU_LIBRARY__ > 5
+#if !defined(__GNU_LIBRARY__)
+		reboot(0xCDEF0123);
+#elif __GNU_LIBRARY__ > 5
 		reboot(0xCDEF0123);
 #else
 		reboot(0xfee1dead, 672274793, 0xCDEF0123);
