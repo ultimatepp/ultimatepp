@@ -1,4 +1,4 @@
-topic "QTF";
+topic "QTF - Quixotic Text Format";
 [@(128.0.255)2 $$1,0#65874547464505293575048467215454:QTF Chr]
 [*C@3+75 $$2,2#36268203433472503231438721581057:code]
 [a83;*R6 $$3,0#31310162474203024125188417583966:caption]
@@ -7,7 +7,7 @@ topic "QTF";
 [b83;*+117 $$6,6#1546C2CD4112BAB0A26C534D6F11ED13:subtitle]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s3; QTF&]
+[s3; QTF `- Quixotic Text Format&]
 [s4; Table of contents&]
 [s0; &]
 [s0; [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#1^ 1. Definition]&]
@@ -29,8 +29,8 @@ Header and Footer]&]
 [s0; [^topic`:`/`/RichText`/srcdoc`/QTF`_en`-us`#3^ 3. Examples]&]
 [s0; &]
 [s4;:1: 1. Definition&]
-[s5; QTF is the native format of Ultimate`+`+ rich texts (formatted 
-texts).&]
+[s5; [* Quixotic Text Format] ([* QTF]) is the native format of U`+`+ 
+rich texts (formatted texts).&]
 [s5; It is byte oriented format. Bytes with values 2`-31 are ignored. 
 Other values are interpreted as characters or formatting commands.&]
 [s4;:2: 2. Format overview&]
