@@ -30,9 +30,12 @@ Header and Footer]&]
 [s0; &]
 [s4;:1: 1. Definition&]
 [s5; [* Quixotic Text Format] ([* QTF]) is the native format of U`+`+ 
-rich texts (formatted texts).&]
-[s5; It is byte oriented format. Bytes with values 2`-31 are ignored. 
-Other values are interpreted as characters or formatting commands.&]
+rich texts (formatted texts). It is byte oriented format. Bytes 
+with values 2`-31 are ignored. Other values are interpreted as 
+characters or formatting commands.&]
+[s5; QTF name existed before U`+`+ framework received its final name, 
+so its name does not directly refer to it. For backwards compatibility 
+reasons the community never decided to rename it.&]
 [s4;:2: 2. Format overview&]
 [s6;:2`_1: 2.1 Symbols&]
 [s5; Letters ([@4 a]`-[@4 zA]`-[@4 Z]), numbers ([@4 0]`-[@4 9]), space (32) 
