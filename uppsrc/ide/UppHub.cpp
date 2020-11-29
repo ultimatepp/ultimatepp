@@ -63,7 +63,7 @@ void UppHubDlg::Load(const String& url)
 	int begin = s.FindAfter("UPPHUB_BEGIN");
 	int end = s.Find("UPPHUB_END");
 	
-	if(begin >= 0 && end >= 0) {
+	if(begin >= 0 && end >= 0)
 		s = s.Mid(begin, end - begin);
 
 	Value v = ParseJSON(s);
