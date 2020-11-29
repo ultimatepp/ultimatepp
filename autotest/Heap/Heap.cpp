@@ -138,13 +138,16 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	TimeStop tm;
 
-	LOG("Allocator test:");
-	HeapTest(256, 100000, true);
-	LOG("Checked allocator test Passed");
-	HeapTest(8192, 1000000, false);
-	LOG("Quick allocator test Passed");
-	HeapTest(8192, 100 * 1000000, false);
-	LOG("Allocator test Passed");
+	for(int pass = 0; pass < 2; pass++) {
+		LOG("Allocator test:");
+		HeapTest(256, 100000, true);
+		LOG("Checked allocator test Passed");
+		HeapTest(8192, 1000000, false);
+		LOG("Quick allocator test Passed");
+		HeapTest(8192, 100 * 1000000, false);
+		LOG("Allocator test Passed");
+		MemoryFreeThread();
+	}
 	LOG("Used: " << MemoryUsedKb() << " KB");
 	LOG("============== OK " << tm);
 }
