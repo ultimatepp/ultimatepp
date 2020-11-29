@@ -60,8 +60,8 @@ void UppHubDlg::Load(const String& url)
 
 	String s = r.GetContent();
 	
-	int begin = s.FindAfter("UPPIVERSE_BEGIN");
-	int end = s.Find("UPPIVERSE_END");
+	int begin = s.FindAfter("UPPHUB_BEGIN");
+	int end = s.Find("UPPHUB_END");
 	
 	if(begin >= 0 && end >= 0) {
 		s = s.Mid(begin, end - begin);
