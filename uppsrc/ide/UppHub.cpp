@@ -65,29 +65,29 @@ void UppHubDlg::Load(const String& url)
 	
 	if(begin >= 0 && end >= 0) {
 		s = s.Mid(begin, end - begin);
-		Value v = ParseJSON(s);
-		if(v.IsError()) {
-			s.Replace("&quot;", "\"");
-			s.Replace("&amp;", "&");
-			v = ParseJSON(s);
-		}
-		try {
-			for(Value ns : v["nests"]) {
-				UppHubNest& n = upv.Add();
-				n.name = ns["name"];
-				for(Value p : ns["packages"])
-					n.packages.Add(p);
-				n.description = ns["description"];
-				n.repo = ns["repository"];
-			}
-			for(Value l : v["links"]) {
-				if(loading_stopped)
-					break;
-				Load(l);
-			}
-		}
-		catch(ValueTypeError) {}
+
+	Value v = ParseJSON(s);
+	if(v.IsError()) {
+		s.Replace("&quot;", "\"");
+		s.Replace("&amp;", "&");
+		v = ParseJSON(s);
 	}
+	try {
+		for(Value ns : v["nests"]) {
+			UppHubNest& n = upv.Add();
+			n.name = ns["name"];
+			for(Value p : ns["packages"])
+				n.packages.Add(p);
+			n.description = ns["description"];
+			n.repo = ns["repository"];
+		}
+		for(Value l : v["links"]) {
+			if(loading_stopped)
+				break;
+			Load(l);
+		}
+	}
+	catch(ValueTypeError) {}
 }
 
 void UppHubDlg::Load()
