@@ -1,14 +1,14 @@
 #include "ide.h"
 
-struct UpvNest : Moveable<UpvNest> {
+struct UppHubNest : Moveable<UppHubNest> {
 	String         name;
 	Vector<String> packages;
 	String         description;
 	String         repo;
 };
 
-struct UpvDlg : WithUpvLayout<TopWindow> {
-	Vector<UpvNest> upv;
+struct UppHubDlg : WithUpvLayout<TopWindow> {
+	Vector<UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
 	bool loading_stopped;
@@ -17,10 +17,10 @@ struct UpvDlg : WithUpvLayout<TopWindow> {
 	void Load();
 	void Install();
 
-	UpvDlg();
+	UppHubDlg();
 };
 
-UpvDlg::UpvDlg()
+UppHubDlg::UppHubDlg()
 {
 	CtrlLayoutOKCancel(*this, "Uppiverse");
 	
@@ -36,7 +36,7 @@ UpvDlg::UpvDlg()
 	list.ColumnWidths("49 106 136 671");
 }
 
-void UpvDlg::Load(const String& url)
+void UppHubDlg::Load(const String& url)
 {
 	if(loaded.Find(url) >= 0)
 		return;
@@ -73,7 +73,7 @@ void UpvDlg::Load(const String& url)
 		}
 		try {
 			for(Value ns : v["nests"]) {
-				UpvNest& n = upv.Add();
+				UppHubNest& n = upv.Add();
 				n.name = ns["name"];
 				for(Value p : ns["packages"])
 					n.packages.Add(p);
@@ -90,7 +90,7 @@ void UpvDlg::Load(const String& url)
 	}
 }
 
-void UpvDlg::Load()
+void UppHubDlg::Load()
 {
 	loading_stopped = false;
 	loaded.Clear();
@@ -99,11 +99,11 @@ void UpvDlg::Load()
 	Load("https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root");
 	
 	list.Clear();
-	for(const UpvNest& n : upv)
+	for(const UppHubNest& n : upv)
 		list.Add(false, n.name, n.description, Join(n.packages, " "), n.repo);
 }
 
-void UpvDlg::Install()
+void UppHubDlg::Install()
 {
 	UrepoConsole console;
 	for(int i = 0; i < list.GetCount(); i++) {
@@ -121,13 +121,55 @@ void UpvDlg::Install()
 		}
 	}
 	console.Perform();
+	InvalidatePackageCache();
 }
 
-void Uppiverse()
+void UppHub()
 {
-	UpvDlg dlg;
+	UppHubDlg dlg;
 	dlg.Load();
-	if(dlg.Run() == IDOK) {
+	if(dlg.Run() == IDOK)
 		dlg.Install();
+}
+
+void UppHubAuto(const String& main)
+{
+	bool noprompt = false;
+	int pmissing = -1;
+	for(;;) {
+		Workspace wspc;
+		wspc.Scan(main);
+		Index<String> missing;
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String p = wspc[i];
+			if(!FileExists(PackagePath(p)))
+				missing.FindAdd(p);
+		}
+
+		if(missing.GetCount() == 0)
+			break;
+
+		UppHubDlg dlg;
+		dlg.Load();
+		int found = 0;
+		for(const UppHubNest& n : dlg.upv)
+			for(const String& p : n.packages)
+				if(missing.Find(p) >= 0) {
+					found++;
+					int i = dlg.list.Find(n.name, 1);
+					if(i >= 0)
+						dlg.list.Set(i, 0, true);
+				}
+
+		if(found == missing.GetCount() && missing.GetCount() != pmissing &&
+		   (noprompt || PromptYesNo("Missing packages were found in UppHub. Install?") && dlg.Run() == IDOK)) {
+			dlg.Install();
+			noprompt = true;
+			pmissing = missing.GetCount();
+			continue;
+		}
+
+		PromptOK("Some packages are missing:&&[* \1" + Join(missing.GetKeys(), "\n"));
+		break;
 	}
 }
