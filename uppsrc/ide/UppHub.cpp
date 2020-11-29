@@ -72,6 +72,7 @@ void UppHubDlg::Load(const String& url)
 		s.Replace("&amp;", "&");
 		v = ParseJSON(s);
 	}
+
 	try {
 		for(Value ns : v["nests"]) {
 			UppHubNest& n = upv.Add();
