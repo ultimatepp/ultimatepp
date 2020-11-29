@@ -87,7 +87,7 @@ file
 	MacroManager.cpp,
 	SetupSVN.cpp,
 	Upgrade.cpp,
-	Uppiverse.cpp,
+	UppHub.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,

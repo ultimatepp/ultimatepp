@@ -96,7 +96,7 @@ void UpvDlg::Load()
 	loaded.Clear();
 	upv.Clear();
 
-	Load("https://www.ultimatepp.org/forums/index.php?t=msg&goto=55566&#msg_55566");
+	Load("https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root");
 	
 	list.Clear();
 	for(const UpvNest& n : upv)
