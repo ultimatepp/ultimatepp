@@ -1,2 +1,4 @@
+#include "SSL.h"
+
 // this file is required to assure the compatibility of older code
 // new application should #include <Core/SSL/SSL.h>, then this file is not required
