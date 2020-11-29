@@ -1234,6 +1234,7 @@ void InstantSetup();
 
 bool SetupSVNTrunk();
 
-void Uppiverse();
+void UppHub();
+void UppHubAuto(const String& s);
 
 #endif
