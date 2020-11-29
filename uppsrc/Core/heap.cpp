@@ -115,47 +115,6 @@ void Heap::MoveLargeTo(Heap *to_heap)
 		MoveLargeTo(large->next, to_heap);
 }
 
-void Heap::Shutdown()
-{ // Move all active blocks, "orphans", to global aux heap
-	LLOG("**** Shutdown heap " << asString(this));
-	Mutex::Lock __(mutex);
-	Init();
-	RemoteFlushRaw(); // Move remote blocks to originating heaps
-	FreeRemoteRaw(); // Free all remotely freed blocks
-	for(int i = 0; i < NKLASS; i++) { // move all small pages to aux (some heap will pick them later)
-		LLOG("Free cache " << asString(i));
-		FreeLink *l = cache[i];
-		while(l) {
-			FreeLink *h = l;
-			l = l->next;
-			SmallFreeDirect(h);
-		}
-		while(full[i]->next != full[i]) {
-			Page *p = full[i]->next;
-			p->Unlink();
-			p->heap = &aux;
-			p->Link(aux.full[i]);
-			LLOG("Orphan full " << (void *)p);
-		}
-		while(work[i]->next != work[i]) {
-			Page *p = work[i]->next;
-			p->Unlink();
-			p->heap = &aux;
-			p->Link(p->freelist ? aux.work[i] : aux.full[i]);
-			LLOG("Orphan work " << (void *)p);
-		}
-		if(empty[i]) {
-			ASSERT(empty[i]->freelist);
-			ASSERT(empty[i]->active == 0);
-			Free4KB(i, empty[i]);
-			LLOG("Orphan empty " << (void *)empty[i]);
-		}
-	}
-	MoveLargeTo(&aux); // move all large pages to aux, some heap will pick them later
-	memset(this, 0, sizeof(Heap));
-	LLOG("++++ Done Shutdown heap " << asString(this));
-}
-
 void Heap::DblCheck(Page *p)
 {
 	Page *l = p;

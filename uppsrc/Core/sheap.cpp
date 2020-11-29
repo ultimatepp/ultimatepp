@@ -325,53 +325,153 @@ void Heap::Free48(void *ptr)
 	Free(ptr, KLASS_48);
 }
 
-force_inline
-Heap *ThreadHeap()
-{
-	thread_local Heap *heap_tls;
-	Heap *heap = heap_tls;
-	if(!heap) { // we definitely need a lock here because some Shutdown can be in progress
-		Mutex::Lock __(Heap::mutex);
-		thread_local byte sHeap[sizeof(Heap)]; // zero initialization is fine for us
-		heap_tls = heap = (Heap *)sHeap;
+static thread_local bool heap_closed__;
+static thread_local Heap *heap_tls__;
+
+void Heap::Shutdown()
+{ // Move all active blocks, "orphans", to global aux heap
+	LLOG("**** Shutdown heap " << asString(this));
+	Mutex::Lock __(mutex);
+	heap_closed__ = true;
+	heap_tls__ = NULL;
+	Init();
+	RemoteFlushRaw(); // Move remote blocks to originating heaps
+	FreeRemoteRaw(); // Free all remotely freed blocks
+	for(int i = 0; i < NKLASS; i++) { // move all small pages to aux (some heap will pick them later)
+		LLOG("Free cache " << asString(i));
+		FreeLink *l = cache[i];
+		while(l) {
+			FreeLink *h = l;
+			l = l->next;
+			SmallFreeDirect(h);
+		}
+		while(full[i]->next != full[i]) {
+			Page *p = full[i]->next;
+			p->Unlink();
+			p->heap = &aux;
+			p->Link(aux.full[i]);
+			LLOG("Orphan full " << (void *)p);
+		}
+		while(work[i]->next != work[i]) {
+			Page *p = work[i]->next;
+			p->Unlink();
+			p->heap = &aux;
+			p->Link(p->freelist ? aux.work[i] : aux.full[i]);
+			LLOG("Orphan work " << (void *)p);
+		}
+		if(empty[i]) {
+			ASSERT(empty[i]->freelist);
+			ASSERT(empty[i]->active == 0);
+			Free4KB(i, empty[i]);
+			LLOG("Orphan empty " << (void *)empty[i]);
+		}
 	}
-	return heap;
+	MoveLargeTo(&aux); // move all large pages to aux, some heap will pick them later
+	memset(this, 0, sizeof(Heap));
+	LLOG("++++ Done Shutdown heap " << asString(this));
 }
+
+never_inline
+void EnterHeapMutex()
+{
+	Heap::mutex.Enter();
+}
+
+never_inline
+void LeaveHeapMutex()
+{
+	Heap::mutex.Leave();
+}
+
+struct HeapMutexLock {
+	HeapMutexLock()  { EnterHeapMutex(); }
+	~HeapMutexLock() { LeaveHeapMutex(); }
+};
+
+struct HeapExitThreadGuard {
+	void Used() {}
+	~HeapExitThreadGuard() { MemoryFreeThread(); }
+};
+
+Heap *MakeHeap()
+{
+	if(heap_closed__)
+		return &Heap::aux;
+
+	static thread_local HeapExitThreadGuard __;
+	__.Used(); // "odr-used", register allocator to be shutdown at thread exit
+
+	static thread_local byte sHeap__[sizeof(Heap)]; // zero initialization is fine for us
+	heap_tls__ = (Heap *)sHeap__;
+
+	return heap_tls__;
+}
+
+struct CurrentHeap {
+	bool  locked = false;
+	Heap *heap;
+	
+	Heap *operator->() { return heap; }
+
+	CurrentHeap() {
+		heap = heap_tls__;
+		if(!heap) {
+			EnterHeapMutex();
+			locked = true;
+			heap = MakeHeap();
+		}
+	}
+	~CurrentHeap() {
+		if(locked)
+			LeaveHeapMutex();
+	}
+};
 
 void MemoryFreek__(int klass, void *ptr)
 {
-	ThreadHeap()->Free((void *)ptr, klass);
+	Heap *heap = heap_tls__;
+	if(heap)
+		heap->Free((void *)ptr, klass);
+	else {
+		HeapMutexLock __;
+		MakeHeap()->Free((void *)ptr, klass);
+	}
 }
 
 void *MemoryAllok__(int klass)
 {
-	return ThreadHeap()->Allok(klass);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return heap->Allok(klass);
+	else {
+		HeapMutexLock __;
+		return MakeHeap()->Allok(klass);
+	}
 }
 
 #if defined(HEAPDBG)
 
 void *MemoryAllocSz_(size_t& sz)
 {
-	return ThreadHeap()->AllocSz(sz);
+	return CurrentHeap()->AllocSz(sz);
 }
 
 void  MemoryFree_(void *ptr)
 {
-	ThreadHeap()->Free(ptr);
+	return CurrentHeap()->Free(ptr);
 }
 
 bool  MemoryTryRealloc_(void *ptr, size_t& size)
 {
-	return ThreadHeap()->TryRealloc(ptr, size);
+	return CurrentHeap()->TryRealloc(ptr, size);
 }
 
 size_t GetMemoryBlockSize_(void *ptr)
 {
-	return ThreadHeap()->GetBlockSize(ptr);
+	return CurrentHeap()->GetBlockSize(ptr);
 }
 
 #else
-
 
 #ifdef flagHEAPLOG
 
@@ -405,87 +505,155 @@ inline void LogFree(void *ptr) {}
 inline void *LogAlloc(void *ptr, size_t sz) { return ptr; }
 
 #endif
- 
+
+// xxx2 routines in the following code are to make things explicit for optimiser
+
+never_inline
+void *MemoryAlloc2(size_t& sz)
+{
+	HeapMutexLock __;
+	return LogAlloc(MakeHeap()->AllocSz(sz), sz);
+}
+
 void *MemoryAlloc(size_t sz)
 {
 	LTIMING("MemoryAlloc");
-	return LogAlloc(ThreadHeap()->AllocSz(sz), sz);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return LogAlloc(heap->AllocSz(sz), sz);
+	return MemoryAlloc2(sz);
 }
 
 void *MemoryAllocSz(size_t& sz)
 {
 	LTIMING("MemoryAllocSz");
-	return LogAlloc(ThreadHeap()->AllocSz(sz), sz);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return LogAlloc(heap->AllocSz(sz), sz);
+	return MemoryAlloc2(sz);
+}
+
+never_inline
+void MemoryFree2(void *ptr)
+{
+	HeapMutexLock __;
+	MakeHeap()->Free(ptr);
 }
 
 void  MemoryFree(void *ptr)
 {
 	LTIMING("MemoryFree");
 	LogFree(ptr);
-	ThreadHeap()->Free(ptr);
+
+	Heap *heap = heap_tls__;
+	if(heap)
+		heap->Free(ptr);
+	else
+		MemoryFree2(ptr);
 }
 
 size_t GetMemoryBlockSize(void *ptr)
 {
-	return ThreadHeap()->GetBlockSize(ptr);
+	return CurrentHeap()->GetBlockSize(ptr);
 }
 
 bool MemoryTryRealloc__(void *ptr, size_t& size)
 {
-	return ThreadHeap()->TryRealloc(ptr, size);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return heap->TryRealloc(ptr, size);
+	else {
+		HeapMutexLock __;
+		return MakeHeap()->TryRealloc(ptr, size);
+	}
+}
+
+never_inline
+void *MemoryAlloc32_2()
+{
+	HeapMutexLock __;
+	return LogAlloc(MakeHeap()->Alloc32(), 32);
 }
 
 void *MemoryAlloc32()
 {
 	LTIMING("MemoryAlloc32");
-	return LogAlloc(ThreadHeap()->Alloc32(), 32);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return LogAlloc(heap->Alloc32(), 32);
+	return MemoryAlloc32_2();
+}
+
+never_inline
+void  MemoryFree32_2(void *ptr)
+{
+	HeapMutexLock __;
+	MakeHeap()->Free32(ptr);
 }
 
 void  MemoryFree32(void *ptr)
 {
 	LTIMING("MemoryFree32");
 	LogFree(ptr);
-	ThreadHeap()->Free32(ptr);
+	Heap *heap = heap_tls__;
+	if(heap)
+		heap->Free32(ptr);
+	else
+		MemoryFree32_2(ptr);
 }
 
 void *MemoryAlloc48()
 {
 	LTIMING("MemoryAlloc48");
-	return LogAlloc(ThreadHeap()->Alloc48(), 48);
+	Heap *heap = heap_tls__;
+	if(heap)
+		return LogAlloc(heap->Alloc48(), 48);
+	else {
+		HeapMutexLock __;
+		return LogAlloc(MakeHeap()->Alloc48(), 48);
+	}
 }
 
 void  MemoryFree48(void *ptr)
 {
 	LTIMING("MemoryFree48");
 	LogFree(ptr);
-	ThreadHeap()->Free48(ptr);
+	Heap *heap = heap_tls__;
+	if(heap)
+		heap->Free48(ptr);
+	else {
+		HeapMutexLock __;
+		MakeHeap()->Free48(ptr);
+	}
 }
 
 #endif
 
 void MemoryFreeThread()
 {
-	ThreadHeap()->Shutdown();
+	if(heap_closed__)
+		return;
+	CurrentHeap()->Shutdown();
 }
 
 void MemoryCheck()
 {
-	ThreadHeap()->Check();
+	CurrentHeap()->Check();
 }
 
 MemoryProfile::MemoryProfile()
 {
-	ThreadHeap()->Make(*this);
+	CurrentHeap()->Make(*this);
 }
 
 void MemoryDumpLarge()
 {
-	ThreadHeap()->DumpLarge();
+	CurrentHeap()->DumpLarge();;
 }
 
 void MemoryDumpHuge()
 {
-	ThreadHeap()->DumpHuge();
+	CurrentHeap()->DumpHuge();
 }
 
 #endif

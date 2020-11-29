@@ -96,9 +96,6 @@ sThreadRoutine(void *arg)
 	delete p;
 	if(sExit)
 		(*sExit)();
-#ifdef UPP_HEAP
-	MemoryFreeThread();
-#endif
 	return 0;
 }
 
