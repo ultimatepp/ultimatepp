@@ -1,4 +1,3 @@
-UPPIVERSE_BEGIN
 {
   "nests": [
     { "name": "URR",
@@ -11,4 +10,4 @@ UPPIVERSE_BEGIN
     "https://www.ultimatepp.org/forums/index.php?t=msg&th=11264&start=0&"
   ]
 }
-UPPIVERSE_END
+
