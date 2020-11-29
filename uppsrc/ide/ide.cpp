@@ -109,6 +109,9 @@ void Ide::SetMain(const String& package)
 	history.Clear();
 	mainconfigname.Clear();
 	mainconfigparam.Clear();
+
+	UppHubAuto(main);
+
 	ScanWorkspace();
 	editfile.Clear();
 	LoadFromFile(THISBACK(SerializeWorkspace), WorkspaceFile());
