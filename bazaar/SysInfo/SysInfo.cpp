@@ -1817,7 +1817,7 @@ bool PutWindowPlacement(HWND hwnd, RECT rcNormalPosition, POINT ptMinPosition, P
     place.showCmd = showcmd;
     place.flags = flags;
     place.length = sizeof(place);
-    return SetWindowPlacement(hwnd, &place);
+    return ::SetWindowPlacement(hwnd, &place);
 }
 
 bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition, POINT &ptMaxPosition, long &showcmd)
@@ -1825,7 +1825,7 @@ bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition
     WINDOWPLACEMENT place;
     
     place.length = sizeof(place);
-    bool ret = GetWindowPlacement(hwnd, &place);
+    bool ret = ::GetWindowPlacement(hwnd, &place);
     if (!ret)
         return false;
     ptMinPosition = place.ptMinPosition;
@@ -1888,17 +1888,17 @@ bool Window_SetRect(int64 windowId, int left, int top, int right, int bottom)
 
 void Window_Bottom(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	::SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 void Window_Top(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	::SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 void Window_TopMost(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	::SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 #endif
