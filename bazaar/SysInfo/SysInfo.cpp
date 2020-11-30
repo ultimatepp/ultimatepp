@@ -1745,7 +1745,9 @@ bool Shutdown(String action) {
 	} else if (action == "reboot") {		// LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2
 		sync();
 		sleep(1);
-#if __GNU_LIBRARY__ > 5
+#if !defined(__GNU_LIBRARY__)
+		reboot(0x01234567);
+#elif __GNU_LIBRARY__ > 5
 		reboot(0x01234567);
 #else
 		reboot(0xfee1dead, 672274793, 0x01234567);
