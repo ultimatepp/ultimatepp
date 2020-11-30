@@ -662,6 +662,11 @@ void MemoryDumpHuge()
 	CurrentHeap()->DumpHuge();
 }
 
+#ifdef HEAPDBG
+force_inline void *MemoryAlloc32_i() { return MemoryAlloc32(); }
+force_inline void  MemoryFree32_i(void *ptr) { return MemoryFree32(ptr); }
+#endif
+
 #include "StringMem.i"
 
 #endif
