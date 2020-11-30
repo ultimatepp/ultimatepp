@@ -1,6 +1,10 @@
 #ifndef _SysInfo_SysInfo_in_h_
 #define _SysInfo_SysInfo_in_h_
 
+#ifdef PLATFORM_OSX
+	#error SysInfo does not support OSX
+#endif
+
 #include "Core/Core.h"
 
 #if defined(PLATFORM_WIN32) 
