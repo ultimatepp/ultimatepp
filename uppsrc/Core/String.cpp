@@ -13,33 +13,14 @@ void String0::Dsyn()
 
 String0::Rc String0::voidptr[2];
 
-void String0::LSet(const String0& s)
-{
-	w[2] = s.w[2];
-	w[3] = s.w[3];
-	if(s.IsRef()) {
-		ptr = s.ptr;
-		if(ptr != (char *)(voidptr + 1))
-			AtomicInc(s.Ref()->refcount);
-	}
-	else {
-		ptr = (char *)MemoryAlloc32();
-		memcpy(qptr, s.qptr, 32); // optimizes to movups
-	}
-}
+#ifndef UPP_HEAP
 
-void String0::LFree()
-{
-	if(IsRef()) {
-		if(ptr != (char *)(voidptr + 1)) {
-			Rc *rc = Ref();
-			ASSERT(rc->refcount > 0);
-			if(AtomicDec(rc->refcount) == 0) MemoryFree(rc);
-		}
-	}
-	else
-		MemoryFree32(ptr);
-}
+inline void  *MemoryAlloc32_i()              { return new byte[32]; }
+inline void   MemoryFree32_i(void *ptr)      { delete[] (byte *)ptr; }
+
+#include "StringMem.i"
+
+#endif
 
 bool String0::LEq(const String0& s) const
 {
@@ -76,20 +57,6 @@ int String0::CompareL(const String0& s) const
 	int lb = s.GetLength();
 	int q = inline_memcmp_aligned(a, b, min(la, lb));
 	return q ? q : SgnCompare(la, lb);
-}
-
-char *String0::Alloc(int count, char& kind)
-{
-	if(count < 32) {
-		kind = MEDIUM;
-		return (char *)MemoryAlloc32();
-	}
-	size_t sz = sizeof(Rc) + count + 1;
-	Rc *rc = (Rc *)MemoryAllocSz(sz);
-	rc->alloc = count == INT_MAX ? INT_MAX : (int)sz - sizeof(Rc) - 1;
-	rc->refcount = 1;
-	kind = min(rc->alloc, 255);
-	return rc->GetPtr();
 }
 
 char *String0::Insert(int pos, int count, const char *s)
@@ -184,29 +151,6 @@ void String0::Trim(int pos)
 		LLen() = pos;
 	}
 	Dsyn();
-}
-
-void String0::LCat(int c)
-{
-	if(IsSmall()) {
-		qword *x = (qword *)MemoryAlloc32();
-		x[0] = q[0];
-		x[1] = q[1];
-		LLen() = SLen();
-		SLen() = 15;
-		chr[KIND] = MEDIUM;
-		qptr = x;
-	}
-	int l = LLen();
-	if(IsRef() ? !IsShared() && l < (int)Ref()->alloc : l < 31) {
-		ptr[l] = c;
-		ptr[LLen() = l + 1] = 0;
-	}
-	else {
-		char *s = Insert(l, 1, NULL);
-		s[0] = c;
-		s[1] = 0;
-	}
 }
 
 void String0::Cat(const char *s, int len)
@@ -327,33 +271,6 @@ String::String(StringBuffer& b)
 //	DLOG(sprintf(h, "String(StringBuffer) end2 %p (%p)", ptr, this));
 }
 
-char *StringBuffer::Alloc(int count, int& alloc)
-{
-	if(count <= 31) {
-		char *s = (char *)MemoryAlloc32();
-		alloc = 31;
-		return s;
-	}
-	else {
-		size_t sz = sizeof(Rc) + count + 1;
-		Rc *rc = (Rc *)MemoryAlloc(sz);
-		alloc = rc->alloc = (int)min((size_t)INT_MAX, sz - sizeof(Rc) - 1);
-		rc->refcount = 1;
-		return (char *)(rc + 1);
-	}
-}
-
-void StringBuffer::Free()
-{
-	if(pbegin == buffer)
-		return;
-	int all = (int)(limit - pbegin);
-	if(all == 31)
-		MemoryFree32(pbegin);
-	if(all > 31)
-		MemoryFree((Rc *)pbegin - 1);
-}
-
 void StringBuffer::Realloc(dword n, const char *cat, int l)
 {
 	int al;
@@ -414,24 +331,6 @@ void StringBuffer::Shrink()
 void StringBuffer::ReallocL(const char *s, int l)
 {
 	Realloc(max(GetLength(), l) + GetLength(), s, l);
-}
-
-void StringBuffer::Set(String& s)
-{
-	s.UnShare();
-	int l = s.GetLength();
-	if(s.GetAlloc() == 14) {
-		pbegin = (char *)MemoryAlloc32();
-		limit = pbegin + 31;
-		memcpy8(pbegin, s.Begin(), l);
-		pend = pbegin + l;
-	}
-	else {
-		pbegin = s.ptr;
-		pend = pbegin + l;
-		limit = pbegin + s.GetAlloc();
-	}
-	s.Zero();
 }
 
 String TrimLeft(const String& str)
