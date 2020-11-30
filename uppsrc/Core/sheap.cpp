@@ -575,7 +575,8 @@ void *MemoryAlloc32_2()
 	return LogAlloc(MakeHeap()->Alloc32(), 32);
 }
 
-void *MemoryAlloc32()
+force_inline
+void *MemoryAlloc32_i()
 {
 	LTIMING("MemoryAlloc32");
 	Heap *heap = heap_tls__;
@@ -584,6 +585,8 @@ void *MemoryAlloc32()
 	return MemoryAlloc32_2();
 }
 
+void *MemoryAlloc32() { return MemoryAlloc32_i(); }
+
 never_inline
 void  MemoryFree32_2(void *ptr)
 {
@@ -591,7 +594,8 @@ void  MemoryFree32_2(void *ptr)
 	MakeHeap()->Free32(ptr);
 }
 
-void  MemoryFree32(void *ptr)
+force_inline
+void  MemoryFree32_i(void *ptr)
 {
 	LTIMING("MemoryFree32");
 	LogFree(ptr);
@@ -601,6 +605,8 @@ void  MemoryFree32(void *ptr)
 	else
 		MemoryFree32_2(ptr);
 }
+
+void  MemoryFree32(void *ptr) { MemoryFree32_i(ptr); }
 
 void *MemoryAlloc48()
 {
@@ -655,6 +661,8 @@ void MemoryDumpHuge()
 {
 	CurrentHeap()->DumpHuge();
 }
+
+#include "StringMem.i"
 
 #endif
 
