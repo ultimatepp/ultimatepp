@@ -51,6 +51,7 @@ file
 	String.h,
 	AString.hpp,
 	StringFind.cpp,
+	StringMem.i highlight cpp,
 	String.cpp,
 	WString.cpp,
 	StrUtil.cpp,
