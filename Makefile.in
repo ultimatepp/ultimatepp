@@ -45371,6 +45371,7 @@ $(OutDir_Core)sheap.o: $(UPPDIR1)Core/sheap.cpp \
 	$(UPPDIR1)Core/SplitMerge.h \
 	$(UPPDIR1)Core/Stream.h \
 	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/StringMem.i \
 	$(UPPDIR1)Core/t_.h \
 	$(UPPDIR1)Core/TimeDate.h \
 	$(UPPDIR1)Core/Topic.h \
@@ -45804,6 +45805,7 @@ $(OutDir_Core)String.o: $(UPPDIR1)Core/String.cpp \
 	$(UPPDIR1)Core/SplitMerge.h \
 	$(UPPDIR1)Core/Stream.h \
 	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/StringMem.i \
 	$(UPPDIR1)Core/t_.h \
 	$(UPPDIR1)Core/TimeDate.h \
 	$(UPPDIR1)Core/Topic.h \
