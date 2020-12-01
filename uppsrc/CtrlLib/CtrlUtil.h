@@ -506,7 +506,7 @@ public:
 	enum MODE { MODE_OPEN, MODE_SAVE, MODE_DIR };
 	FileSelButton(MODE mode = MODE_OPEN, const char *title = NULL);
 	
-	void               Attach(Ctrl& parent) { parent.AddFrame(button); }
+	void               Attach(Ctrl& parent);
 	void               Detach();
 	void               Title(String t)      { title = t; }
 	String             GetTitle() const     { return title; }
