@@ -107,10 +107,20 @@ class RightSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
 
+class RightGapFrameCls : public CtrlFrame {
+	virtual void FrameLayout(Rect& r)                   { r.right -= DPI(2); }
+	virtual void FramePaint(Draw& w, const Rect& r) {
+		w.DrawRect(r.right - DPI(2), r.top, DPI(2), r.Height(), SColorFace());
+	}
+	virtual void FrameAddSize(Size& sz) { sz.cx += DPI(2); }
+};
+
 CtrlFrame& BottomSeparatorFrame() { return Single<BottomSeparatorFrameCls>(); }
 CtrlFrame& TopSeparatorFrame()    { return Single<TopSeparatorFrameCls>(); }
 CtrlFrame& RightSeparatorFrame()  { return Single<RightSeparatorFrameCls>(); }
 CtrlFrame& LeftSeparatorFrame()   { return Single<LeftSeparatorFrameCls>(); }
+
+CtrlFrame& RightGapFrame()  { return Single<RightGapFrameCls>(); }
 
 CH_INT(FrameButtonWidth, DPI(17));
 CH_INT(ScrollBarArrowSize, FrameButtonWidth());

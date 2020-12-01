@@ -208,6 +208,8 @@ CtrlFrame& BottomSeparatorFrame();
 CtrlFrame& LeftSeparatorFrame();
 CtrlFrame& RightSeparatorFrame();
 
+CtrlFrame& RightGapFrame();
+
 void LayoutFrameLeft(Rect& r, Ctrl *ctrl, int cx);
 void LayoutFrameRight(Rect& r, Ctrl *ctrl, int cx);
 void LayoutFrameTop(Rect& r, Ctrl *ctrl, int cy);

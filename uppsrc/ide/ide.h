@@ -306,6 +306,7 @@ void   DlSpellerLangs(DropList& dl);
 
 #include "Assist.h"
 
+void DirSelect(Ctrl& t, Button& b);
 void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
 void RepoSyncDirs(const Vector<String>& working);

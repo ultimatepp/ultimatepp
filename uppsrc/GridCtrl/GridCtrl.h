@@ -949,7 +949,6 @@ class GridCtrl : public Ctrl
 		bool isedit:1;
 		int  genr_ctrls;
 		bool edit_ctrls:1;
-		bool shiftmode:1;
 		bool recalc_cols;
 		bool recalc_rows;
 		bool cancel_update_cell:1;
@@ -962,7 +961,6 @@ class GridCtrl : public Ctrl
 		bool cancel_move:1;
 		bool mouse_move:1;
 		bool is_clipboard:1;
-		bool selecting:1;
 		bool enabled:1;
 
 		bool call_whenchangecol:1;
@@ -1024,14 +1022,15 @@ class GridCtrl : public Ctrl
 
 		/* Points */
 
+		Point curpos; // cursor position
+		Point anchor; // selection anchor
+
 		Point oldpos;
-		Point curpos;
 		Point oldcur;
 		Point curid;
 		Point livecur;
 		Point ctrlpos;
 		Point ctrlid;
-		Point shiftpos;
 		Point leftpnt;
 		Size  osz;
 
@@ -1389,6 +1388,7 @@ class GridCtrl : public Ctrl
 
 		int  GetMouseRow(Point &p, bool relative = true, bool fixed = false, bool full = true);
 		int  GetMouseCol(Point &p, bool relative = true, bool fixed = false, bool full = true);
+		Point GetPos(Point p);
 
 		void UpdateCursor();
 
@@ -1547,8 +1547,6 @@ class GridCtrl : public Ctrl
 		void DoSelectAll();
 		void DoSwapUp();
 		void DoSwapDown();
-		void DoShiftSelect();
-		void DoCtrlSelect();
 		void DoGoBegin();
 		void DoGoEnd();
 		void DoGoNext();
@@ -1713,6 +1711,7 @@ class GridCtrl : public Ctrl
 		void SelectCount(int i, int cnt = 1, bool sel = true);
 		void SelectRange(int from, int to, bool sel = true);
 		void SelectRange(Point from, Point to, bool sel = true, bool fullrow = false);
+		void SelectRange(const Rect& r, bool sel , bool fullrow );
 		void ShiftSelect(int from, int to);
 		void ShiftSelect(Point from, Point to);
 		void SelectInverse(int from, int to);

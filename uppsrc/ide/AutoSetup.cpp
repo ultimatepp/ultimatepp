@@ -4,24 +4,10 @@
 
 extern FileSel& sSD();
 
-static void sSetFolder(EditField *f)
-{
-	if(!sSD().ExecuteSelectDir()) return;
-	*f <<= ~sSD();
-}
-
-void DirSel(EditField& f, FrameRight<Button>& b)
-{
-	f.AddFrame(b);
-	b <<= callback1(&sSetFolder, &f);
-	b.SetImage(CtrlImg::smallright()).NoWantFocus();
-}
-
 String NormalizePathNN(const String& path)
 {
 	return IsNull(path) ? path : NormalizePath(path);
 }
-
 
 #ifdef PLATFORM_WIN32
 bool ExistProgram(String& bin, const char *dir, const char *file)
