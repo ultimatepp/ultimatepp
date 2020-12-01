@@ -381,8 +381,25 @@ FileSelButton::FileSelButton(MODE mode, const char *title)
 : title(title), mode(mode)
 {
 	button.NoWantFocus();
-	button.SetImage(CtrlImg::right_arrow());
+	button.SetImage(mode == MODE_DIR ? CtrlImg::DirSmall() : CtrlImg::FileSmall());
 	button << [=] { OnAction(); };
+}
+
+void FileSelButton::Attach(Ctrl& parent)
+{
+	button.Width(DPI(20));
+	bool not_mb = true;
+	for(int i = 0; i < parent.GetFrameCount(); i++)
+		if(dynamic_cast<MultiButtonFrame *>(&parent.GetFrame(i))) {
+			not_mb = false;
+			break;
+		}
+	if(not_mb && dynamic_cast<EditField *>(&parent)) {
+		parent.InsertFrame(0, button);
+		parent.InsertFrame(1, RightGapFrame());
+	}
+	else
+		parent.AddFrame(button);
 }
 
 void FileSelButton::OnAction()
