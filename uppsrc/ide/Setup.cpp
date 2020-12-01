@@ -570,10 +570,7 @@ void Ide::SetupFormat() {
 
 	String usc_path = GetHomeDirFile("usc.path");
 	ide.uscpath <<= LoadFile(usc_path);
-	ide.uscpath_sel.SetImage(CtrlImg::MkDir());
-	ide.uscpath_sel << [&] {
-		AddPath(&ide.uscpath);
-	};
+	DirSelect(ide.uscpath, ide.uscpath_sel);
 
 	ide.upphub <<= LoadFile(DefaultHubFilePath());
 	DirSelect(ide.upphub, ide.upphub_sel);
