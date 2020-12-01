@@ -10,6 +10,10 @@ uses(GRIDSQL) Sql;
 file
 	GridCtrl.h,
 	GridCtrl.cpp,
+	GridKey.cpp,
+	GridSelect.cpp,
+	GridMouse.cpp,
+	GridPaint.cpp,
 	GridDisplay.h,
 	GridDisplay.cpp,
 	GridText.cpp,
