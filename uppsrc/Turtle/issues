@@ -14,3 +14,11 @@ Known Issues
 
   One such major problem is that on windows platform, closing the remote app throws an 
   exception on the server side. This requires further investigation. 
+
+4) KeyboardEvent.KeyCode and KeyboardEvent.which properties are deprecated and are going
+   to be emoved from the standard.
+   See: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
+   See: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/which
+   Recommended alternatives: KeyboardEvent.key and KeyboardEvent.code.
+   See: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+   See: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
