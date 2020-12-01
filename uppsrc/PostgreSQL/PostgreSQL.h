@@ -4,11 +4,7 @@
 #ifndef flagNOPOSTGRESQL
 
 #include <Sql/Sql.h>
-#ifdef PLATFORM_WIN32
 #include <libpq-fe.h>
-#elif defined(PLATFORM_POSIX)
-#include <postgresql/libpq-fe.h>
-#endif
 
 // debian: sudo apt-get install libpq-dev
 
