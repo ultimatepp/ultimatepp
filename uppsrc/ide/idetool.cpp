@@ -76,21 +76,33 @@ void Ide::CopyPosition()
 
 void Ide::GotoPosition()
 {
-	String f, l;
-	if(!SplitTo(ReadClipboardText(), ':', f, l))
-		return;
-	int line = atoi(l);
+	String cs = ReadClipboardText();
+	String f;
+	int line = 0;
+	for(char c : ":( ") {
+		String l;
+		if(SplitTo(cs, c, f, l)) {
+			f = TrimBoth(f);
+			line = atoi(l);
+			if(line)
+				break;
+		}
+	}
 	if(!line)
 		return;
+	f.Replace("\\", "/");
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pk = wspc.GetPackage(i);
 		String pkg = wspc[i];
-		for(String n : pk.file)
-			if(PosFn(pkg, n) == f) {
+		for(String n : pk.file) {
+			String pf = PosFn(pkg, n);
+			int q = f.GetCount() - pf.GetCount() - 1;
+			if(pf == f || q >= 0 && f.EndsWith(PosFn(pkg, n)) && f[q] == '/') {
 				GotoPos(SourcePath(pkg, n), line);
 				return;
 			}
+		}
 	}
 }
 
