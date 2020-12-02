@@ -550,13 +550,15 @@ int CodeEditor::BlockReplace()
 	foundpos = l;
 	Index<int> ln;
 	StartSearchProgress(l, h);
-	while(FindFrom(foundpos, false, true) && foundpos + foundsize <= h) {
+	while(foundpos < GetLength() && FindFrom(foundpos, false, true) && foundpos + foundsize <= h) {
 		CachePos(foundpos);
 		if(~findreplace.mode == 0) {
 			Remove((int)foundpos, foundsize);
 			WString rt = GetReplaceText();
 			Insert((int)foundpos, rt);
 			foundpos += rt.GetCount();
+			if(foundsize + rt.GetCount() == 0 && foundpos < GetLength())
+				foundpos++;
 			h = h - foundsize + rt.GetCount();
 			count++;
 		}
