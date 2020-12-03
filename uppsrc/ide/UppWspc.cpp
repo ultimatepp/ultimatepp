@@ -308,7 +308,19 @@ void WorkspaceWork::PackageCursor()
 
 Vector<String> WorkspaceWork::RepoDirs(bool actual)
 {
-	Vector<String> d = GetUppDirs();
+	Vector<String> u = GetUppDirs();
+	Index<String> id;
+	
+	const Workspace& w = GetIdeWorkspace();
+	for(int i = 0; i < w.GetCount(); i++) {
+		String pp = PackagePath(w[i]);
+		for(String s : u)
+			if(pp.StartsWith(s))
+				id.FindAdd(s);
+	}
+	
+	Vector<String> d = id.PickKeys();
+	
 	if (actual && !IsAux())
 		d.Insert(0, GetFileFolder(PackagePath(actualpackage)));
 	Vector<String> r;
