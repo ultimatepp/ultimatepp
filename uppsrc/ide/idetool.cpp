@@ -470,8 +470,6 @@ INITBLOCK {
 
 void RepoSyncDirs(const Vector<String>& working)
 {
-//	if(!CheckSvn())
-//		return;
 	Ptr<Ctrl> f = Ctrl::GetFocusCtrl();
 	RepoSync repo;
 	String repocfg = ConfigFile("repo.cfg");
