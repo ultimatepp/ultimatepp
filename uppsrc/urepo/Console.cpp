@@ -39,7 +39,7 @@ int UrepoConsole::System(const char *cmd)
 		return -1;
 	String out;
 	canceled = false;
-	cancel.Show(withcancel);
+	cancel.Show();
 	while(p.IsRunning() && IsOpen()) {
 		String h = p.Get();
 		out.Cat(h);
@@ -82,6 +82,7 @@ int UrepoConsole::Git(const char *dir, const char *command)
 {
 	String h = GetCurrentDirectory();
 	SetCurrentDirectory(dir);
+	list.Add(AttrText(String("cd ") + dir).SetFont(font().Bold().Italic()).Ink(SLtBlue()));
 	int code = CheckSystem(String() << "git " << command);
 	SetCurrentDirectory(h);
 	return code;

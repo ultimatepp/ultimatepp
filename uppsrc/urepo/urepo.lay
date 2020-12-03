@@ -1,33 +1,33 @@
 LAYOUT(RepoSyncLayout, 680, 400)
-	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
-	ITEM(Button, credentials, SetLabel(t_("Credentials..")).RightPosZ(96, 84).BottomPosZ(4, 24))
-	ITEM(Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
+	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, credentials, SetLabel(t_("Credentials..")).RightPosZ(96, 84).BottomPosZ(4, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
 END_LAYOUT
 
 LAYOUT(CredentialsLayout, 680, 400)
-	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(544, 64).BottomPosZ(4, 24))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(612, 64).BottomPosZ(4, 24))
-	ITEM(Option, remember, SetLabel(t_("Remember (credentials will be stored in configuration as clear text)")).LeftPosZ(120, 348).TopPosZ(372, 20))
-	ITEM(Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
-	ITEM(Button, clear, SetLabel(t_("Clear all")).LeftPosZ(476, 64).TopPosZ(372, 24))
+	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(544, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(612, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Option, remember, SetLabel(t_("Remember (credentials will be stored in configuration as clear text)")).LeftPosZ(120, 348).TopPosZ(372, 20))
+	ITEM(Upp::Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
+	ITEM(Upp::Button, clear, SetLabel(t_("Clear all")).LeftPosZ(476, 64).TopPosZ(372, 24))
 END_LAYOUT
 
 LAYOUT(UrepoConsoleLayout, 680, 660)
-	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
-	ITEM(Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(612, 64).BottomPosZ(8, 24))
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Abort")).RightPosZ(612, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(SvnOptionsLayout, 140, 16)
-	ITEM(Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
-	ITEM(Option, update, SetLabel(t_("Update")).LeftPosZ(72, 68).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, update, SetLabel(t_("Update")).LeftPosZ(72, 68).VCenterPosZ(16, 0))
 END_LAYOUT
 
 LAYOUT(GitOptionsLayout, 164, 16)
-	ITEM(Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
-	ITEM(Option, push, SetLabel(t_("Push")).LeftPosZ(68, 48).VCenterPosZ(16, 0))
-	ITEM(Option, pull, SetLabel(t_("Pull")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(68, 48).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, pull, SetLabel(t_("Pull")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
 END_LAYOUT
 

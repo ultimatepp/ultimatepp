@@ -70,7 +70,6 @@ bool SetupSVNTrunk()
 	};
 
 	UrepoConsole console;
-	console.WithCancel();
 	String dir, tempdir;
 	for(;;) {
 		if(dlg.Run() != IDOK)
