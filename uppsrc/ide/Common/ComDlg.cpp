@@ -4,8 +4,43 @@
 #define IMAGEFILE  <ide/Common/common.iml>
 #include <Draw/iml_source.h>
 
+void FileSelect(Ctrl& t, Button& b, Event<> ev, const char *types, bool saveas)
+{
+	b.Tip("Select file..");
+	b.SetImage(CtrlImg::File());
+	String p = types ? types : "All files (*.*)\t*.*";
+	b << [=, &t] {
+		String s = (saveas ? SelectFileSaveAs : SelectFileOpen)(p);
+		if(s.GetCount()) {
+			t <<= s;
+			ev();
+		}
+	};
+}
+
+void FileSelectSaveAs(Ctrl& t, Button& b, Event<> ev, const char *types)
+{
+	return FileSelect(t, b, ev, types, true);
+}
+
+void FileSelectOpen(Ctrl& t, Button& b, Event<> ev, const char *types)
+{
+	return FileSelect(t, b, ev, types, false);
+}
+
+void FileSelectSaveAs(Ctrl& t, Button& b, const char *types)
+{
+	return FileSelect(t, b, Null, types, true);
+}
+
+void FileSelectOpen(Ctrl& t, Button& b, const char *types)
+{
+	return FileSelect(t, b, Null, types, false);
+}
+
 void DirSelect(Ctrl& t, Button& b)
 {
+	b.Tip("Select directory..");
 	b.SetImage(CtrlImg::Dir());
 	b << [&] {
 		String s = SelectDirectory();

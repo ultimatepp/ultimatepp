@@ -35,7 +35,6 @@ void TargetMode::Serialize(Stream& s)
 struct ModePane : WithModePaneLayout<StaticRect> {
 	DropList       debugs;
 	DropList       blitzs;
-	SaveFileButton target_browse;
 
 	void  Serialize(Stream& s) { target.SerializeList(s); }
 
@@ -117,17 +116,13 @@ ModePane::ModePane()
 	debug.Add(0, "None")
 	     .Add(1, "Minimal")
 	     .Add(2, "Full");
-	target_browse.Attach(target);
-	target.WhenSelect = target_browse.WhenSelected = [=] {
-		target_override <<= true;
-	};
+	FileSelectSaveAs(target, targetb, [=] { target_override <<= true; });
 }
 
 struct OutMode : WithOutputModeLayout<TopWindow> {
 	Ide& ide;
 	ModePane debug;
 	ModePane release;
-	FrameRight<Button> dsb;
 
 	void Load();
 	void Save();
@@ -400,7 +395,7 @@ OutMode::OutMode(Ide& ide)
 	method <<= THISBACK(Preset);
 	cmd_options <<= THISBACK(CmdOptions);
 	SyncLock();
-	DirSel(export_dir, dsb);
+	DirSelect(export_dir, export_dirb);
 	export_all <<= THISBACK1(Export, 1);
 	export_used <<= THISBACK1(Export, 0);
 	export_makefile <<= THISBACK1(Export, 2);

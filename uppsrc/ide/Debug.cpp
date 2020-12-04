@@ -24,9 +24,7 @@ void Ide::RunArgs() {
 	dlg.darkmode.SetLabel(IsSystemThemeDark() ? "Run in light mode" : "Run in dark mode");
 #endif
 
-	SelectDirButton dir_browse("Run in folder");
-	dir_browse.Tip("Select directory..");
-	dir_browse.Attach(dlg.dir);
+	DirSelect(dlg.dir, dlg.dirb);
 	dlg.dir = rundir.ToWString();
 
 	dlg.arg <<= runarg;
@@ -40,6 +38,9 @@ void Ide::RunArgs() {
 	stdout_browse.Type("Text files (*.txt)", "*.txt").AllFilesType();
 	stdout_browse.Tip("Select file..");
 	stdout_browse.Attach(dlg.stdout_file);
+	
+	FileSelectSaveAs(dlg.stdout_file, dlg.stdout_fileb,
+	                 "Text files (*.txt)\t*.txt\nLog files (*.log)\t*.log\nAll files (*.*)\t*.*");
 
 	{
 		StringStream ss(recent_stdout_file);
