@@ -7,7 +7,7 @@ struct UppHubNest : Moveable<UppHubNest> {
 	String         repo;
 };
 
-struct UppHubDlg : WithUpvLayout<TopWindow> {
+struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	Vector<UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
@@ -22,7 +22,7 @@ struct UppHubDlg : WithUpvLayout<TopWindow> {
 
 UppHubDlg::UppHubDlg()
 {
-	CtrlLayoutOKCancel(*this, "Uppiverse");
+	CtrlLayoutOKCancel(*this, "UppHub");
 	
 	list.EvenRowColor();
 
