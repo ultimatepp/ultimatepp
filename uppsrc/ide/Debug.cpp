@@ -34,11 +34,6 @@ void Ide::RunArgs() {
 		dlg.arg.SerializeList(ss);
 	}
 
-	SaveFileButton stdout_browse("Save STDOUT as");
-	stdout_browse.Type("Text files (*.txt)", "*.txt").AllFilesType();
-	stdout_browse.Tip("Select file..");
-	stdout_browse.Attach(dlg.stdout_file);
-	
 	FileSelectSaveAs(dlg.stdout_file, dlg.stdout_fileb,
 	                 "Text files (*.txt)\t*.txt\nLog files (*.log)\t*.log\nAll files (*.*)\t*.*");
 
@@ -76,6 +71,7 @@ void Ide::RunArgs() {
 		bool b = ~dlg.runmode == RUN_FILE;
 		dlg.stdout_file_lbl.Enable(b);
 		dlg.stdout_file.Enable(b);
+		dlg.stdout_fileb.Enable(b);
 		int rm = ~dlg.runmode;
 		dlg.stdout_file.Enable(rm == RUN_FILE || rm == RUN_FILE_CONSOLE);
 		dlg.utf8.Enable(rm != RUN_WINDOW);
