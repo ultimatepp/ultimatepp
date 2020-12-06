@@ -912,7 +912,7 @@ LAYOUT(WebSearchTabLayout, 556, 200)
 	ITEM(Upp::Button, remove, SetLabel(t_("Remove engine")).Tip(t_("Delete row")).RightPosZ(60, 100).TopPosZ(8, 23))
 END_LAYOUT
 
-LAYOUT(UpvLayout, 992, 656)
+LAYOUT(UppHubLayout, 992, 656)
 	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 984).TopPosZ(4, 616))
 	ITEM(Upp::Button, settings, SetLabel(t_("Settings..")).LeftPosZ(4, 64).TopPosZ(628, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("Install")).RightPosZ(72, 64).BottomPosZ(4, 24))
