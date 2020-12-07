@@ -26,6 +26,9 @@ String  GetConfigFolder();
 String  ConfigFile(const char *file);
 String  ConfigFile();
 
+void    SetConfigGroup(const char *group);
+String  GetConfigGroup();
+
 
 const Vector<String>& CommandLine();
 const VectorMap<String, String>& Environment();
