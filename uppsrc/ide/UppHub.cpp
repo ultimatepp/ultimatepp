@@ -1,21 +1,24 @@
 #include "ide.h"
 
 struct UppHubNest : Moveable<UppHubNest> {
-	String         name;
-	Vector<String> packages;
-	String         description;
-	String         repo;
+	int              tier = -1;
+	String           name;
+	Vector<String>   packages;
+	String           description;
+	String           repo;
+	String           status = "Unknown";
 };
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
-	Vector<UppHubNest> upv;
+	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
 	bool loading_stopped;
 
-	void Load(const String& url);
+	void Load(int tier, const String& url, bool deep);
 	void Load();
 	void Install();
+	void Install(const Index<int>& ii);
 
 	UppHubDlg();
 };
@@ -26,39 +29,50 @@ UppHubDlg::UppHubDlg()
 	
 	list.EvenRowColor();
 
-	void (*factory)(int, One<Ctrl>&) = [](int, One<Ctrl>& o) { o.Create<Option>().NoWantFocus(); };
-
-	list.AddColumn("Install").Ctrls(factory);
 	list.AddColumn("Name");
 	list.AddColumn("Description");
 	list.AddColumn("Packages");
+	list.AddColumn("Status");
+	
 	list.AddIndex("REPO");
-	list.ColumnWidths("49 106 136 671");
+	
+	settings.Show(IsVerbose());
+	settings << [=] {
+		String s = LoadFile(ConfigFile("upphub_root"));
+		EditText(s, "UppHub root", "Root url");
+		SaveFile(ConfigFile("upphub_root"), s);
+		Load();
+	};
 }
 
-void UppHubDlg::Load(const String& url)
+void UppHubDlg::Load(int tier, const String& url, bool deep)
 {
 	if(loaded.Find(url) >= 0)
 		return;
 	loaded.Add(url);
 	
-	pi.SetText(url);
 	
-	HttpRequest r(url);
+	String s = LoadFile(url);
 	
-	r.WhenWait = r.WhenDo = [&] {
-		if(pi.StepCanceled()) {
-			r.Abort();
-			loading_stopped = true;
-		}
-	};
-	
-	r.Execute();
-	
-	if(loading_stopped)
-		return;
+	if(IsNull(s)) {
+		pi.SetText(url);
 
-	String s = r.GetContent();
+		HttpRequest r(url);
+		
+		r.WhenWait = r.WhenDo = [&] {
+			if(pi.StepCanceled()) {
+				r.Abort();
+				loading_stopped = true;
+			}
+		};
+		
+		r.Execute();
+		
+		if(loading_stopped)
+			return;
+	
+		s = r.GetContent();
+	}
 	
 	int begin = s.FindAfter("UPPHUB_BEGIN");
 	int end = s.Find("UPPHUB_END");
@@ -75,17 +89,32 @@ void UppHubDlg::Load(const String& url)
 
 	try {
 		for(Value ns : v["nests"]) {
-			UppHubNest& n = upv.Add();
-			n.name = ns["name"];
-			for(Value p : ns["packages"])
-				n.packages.Add(p);
-			n.description = ns["description"];
-			n.repo = ns["repository"];
+			String name = ns["name"];
+			UppHubNest& n = upv.GetAdd(ns["name"]);
+			n.name = name;
+			bool tt = tier > n.tier;
+			if(tt || n.packages.GetCount() == 0)
+				for(Value p : ns["packages"])
+					n.packages.Add(p);
+			if(tt || n.description.GetCount() == 0)
+				n.description = ns["description"];
+			if(tt || n.repo.GetCount() == 0)
+				n.repo = ns["repository"];
+			String status = ns["status"];
+			if(findarg(status, "stable", "testing", "experimental", "unknown", "broken") >= 0 &&
+			   (tt || n.status.GetCount() == 0))
+				n.status = status;
 		}
-		for(Value l : v["links"]) {
+		if(deep)
+			for(Value l : v["links"]) {
+				if(loading_stopped)
+					break;
+				Load(tier + 1, l, true);
+			}
+		for(Value l : v["refs"]) {
 			if(loading_stopped)
 				break;
-			Load(l);
+			Load(tier + 1, l, false);
 		}
 	}
 	catch(ValueTypeError) {}
@@ -97,32 +126,46 @@ void UppHubDlg::Load()
 	loaded.Clear();
 	upv.Clear();
 
-	Load("https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root");
+	Load(0, Nvl(LoadFile(ConfigFile("upphub_root")),
+	            "https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root"),
+	     true);
 	
 	list.Clear();
 	for(const UppHubNest& n : upv)
-		list.Add(false, n.name, n.description, Join(n.packages, " "), n.repo);
+		list.Add(n.name, n.description, Join(n.packages, " "), n.status, n.repo);
+}
+
+void UppHubDlg::Install(const Index<int>& ii)
+{
+	UrepoConsole console;
+	if(ii.GetCount()) {
+		for(int i : ii) {
+			String n = list.Get(i, 0);
+			if(n.GetCount()) {
+				String cmd = "git clone ";
+				String repo = list.Get(i, "REPO");
+				String repo2, branch;
+				if(SplitTo(repo, ' ', repo2, branch))
+					cmd << "-b " + branch + " " + repo2;
+				else
+					cmd << repo;
+				cmd << ' ' << GetHubDir() << '/' << n;
+				console.System(cmd);
+			}
+		}
+		console.Log("Done", Gray());
+		console.Perform();
+		InvalidatePackageCache();
+	}
 }
 
 void UppHubDlg::Install()
 {
-	UrepoConsole console;
-	for(int i = 0; i < list.GetCount(); i++) {
-		if((bool)list.Get(i, 0)) {
-			String cmd = "git clone ";
-			String repo = list.Get(i, "REPO");
-			String repo2, branch;
-			if(SplitTo(repo, ' ', repo2, branch))
-				cmd << "-b " + branch + " " + repo2;
-			else
-				cmd << repo;
-			cmd << ' ' << GetHubDir() << '/' <<  list.Get(i, 1);
-			if(console.System(cmd))
-				break;
-		}
+	if(list.IsCursor() && PromptYesNo("Install " + ~list.GetKey() + "?")) {
+		Index<int> h;
+		h << list.GetCursor();
+		Install(h);
 	}
-	console.Perform();
-	InvalidatePackageCache();
 }
 
 void UppHub()
@@ -136,7 +179,7 @@ void UppHub()
 void UppHubAuto(const String& main)
 {
 	bool noprompt = false;
-	int pmissing = -1;
+	Index<String> pmissing;
 	for(;;) {
 		Workspace wspc;
 		wspc.Scan(main);
@@ -152,21 +195,20 @@ void UppHubAuto(const String& main)
 
 		UppHubDlg dlg;
 		dlg.Load();
-		int found = 0;
+		Index<int> found;
 		for(const UppHubNest& n : dlg.upv)
 			for(const String& p : n.packages)
 				if(missing.Find(p) >= 0) {
-					found++;
-					int i = dlg.list.Find(n.name, 1);
+					int i = dlg.list.Find(n.name);
 					if(i >= 0)
-						dlg.list.Set(i, 0, true);
+						found.FindAdd(i);
 				}
 
-		if(found == missing.GetCount() && missing.GetCount() != pmissing &&
-		   (noprompt || PromptYesNo("Missing packages were found in UppHub. Install?") && dlg.Run() == IDOK)) {
-			dlg.Install();
+		if(found.GetCount() == missing.GetCount() && missing != pmissing &&
+		   (noprompt || PromptYesNo("Missing packages were found in UppHub. Install?"))) {
+			dlg.Install(found);
 			noprompt = true;
-			pmissing = missing.GetCount();
+			pmissing = clone(missing);
 			continue;
 		}
 
