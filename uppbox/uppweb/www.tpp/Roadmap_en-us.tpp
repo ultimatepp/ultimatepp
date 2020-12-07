@@ -103,6 +103,10 @@ improved dark theme support&]
 [s5;l160;i150;poO0; In Win32, PDB debugger now displays various U`+`+ 
 and standard library containers and types nicely&]
 [s5;l160;i150;poO0; Win32 release now ships with CLANG compiler toolchain&]
+[s5;l160;i150;poO0; Win32 release [* does not contain 32`-bit TheIDE 
+version] anymore. Only 64`-bit version is bundled. If you want 
+to use U`+`+ on 32`-bit Windows [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2019`.2`/upp`-mingw`-13664`.7z`/download^ 2
+019.2] is recommended for you.&]
 [s5;l160;i150;poO0; Posix release archives are reworked to allow 
 easier and faster installation&]
 [s5;po &]
