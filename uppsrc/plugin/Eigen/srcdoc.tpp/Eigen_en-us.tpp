@@ -18,7 +18,8 @@ vectors, numerical solvers and related algorithms.]&]
 [s0;#2 &]
 [s0;#2 &]
 [s0;# [2 Eigen package is a wrapper of Eigen library, updated to stable 
-release 3.3.8 (05/10/2020). It includes the library and helper 
+][^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=ChangeLog`#Eigen`_3`.3`.9^2 r
+elease 3.3.9 (04/12/2020)][2 . It includes the library and helper 
 functions to integrate better Eigen with U`+`+. Starting from 
 the 3.1.1 version, it is licensed under the ][^http`:`/`/www`.mozilla`.org`/MPL`/2`.0`/^2 M
 PL2][2 , which is a simple weak copyleft license. Common questions 

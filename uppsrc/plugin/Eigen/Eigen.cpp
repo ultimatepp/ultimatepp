@@ -21,7 +21,8 @@ bool NonLinearOptimization(VectorXd &y, Eigen::Index numData,
 		lm.parameters.maxfev = maxfev;
 	int ret = lm.minimize(y);
 	if (ret == Eigen::LevenbergMarquardtSpace::ImproperInputParameters || 
-		ret == Eigen::LevenbergMarquardtSpace::TooManyFunctionEvaluation) 
+		ret == Eigen::LevenbergMarquardtSpace::TooManyFunctionEvaluation ||
+		ret == Eigen::LevenbergMarquardtSpace::CosinusTooSmall) 
 		return false;
 	return true;
 }
