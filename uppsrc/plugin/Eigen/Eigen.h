@@ -204,6 +204,22 @@ void Serialize(Stream& stream, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
 	}
 }
 
+// These resize functions serve both for Eigen and U++ Vectors
+template <typename T>
+void Resize(Vector<T> &v, size_t len) {v.SetCount(len);}
+template <typename T>
+void Resize(Vector<T> &v, size_t len, const T& init) {v.SetCount(len, init);}
+template <typename T>
+void ResizeConservative(Vector<T> &v, size_t len) {v.SetCount(len);}
+
+template <typename T>
+void Resize(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len) {v.resize(len);}
+template <typename T>
+void Resize(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len, const T& init) {v.setConstant(len, 1, init);}
+template <typename T>
+void ResizeConservative(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len) {v.conservativeResize(len);}
+
+
 }
 
 #endif
