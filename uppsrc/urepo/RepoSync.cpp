@@ -415,7 +415,7 @@ again:
 		if(git && git->pull)
 			sys.Git(repo_dir, "pull");
 	}
-	console.Log("Done", Gray());
+	sys.Log("Done", Gray());
 	sys.Perform();
 }
 
