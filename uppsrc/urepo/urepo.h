@@ -16,6 +16,7 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 	bool canceled = false;
 
 public:
+	int  System(const char *cmd, Event<One<AProcess>&, const char *> start_process);
 	int  System(const char *s);
 	int  CheckSystem(const char *s);
 	int  Git(const char *dir, const char *command);

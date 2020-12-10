@@ -103,6 +103,7 @@ extern bool IdeAgain; // Used to restart theide after checking out SVN (SetupSVN
 bool CopyFolder(const char *dst, const char *src, Progress *pi = NULL);
 
 bool HasSvn();
+bool HasGit();
 
 int  MaxAscent(Font f);
 
