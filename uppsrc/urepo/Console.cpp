@@ -28,15 +28,19 @@ void UrepoConsole::Log(const Value& s, Color ink)
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 }
 
-int UrepoConsole::System(const char *cmd)
+int UrepoConsole::System(const char *cmd, Event<One<AProcess>&, const char *> start_process)
 {
 	if(!IsOpen())
 		Open();
 	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(SLtBlue()));
 	int ii = list.GetCount();
-	LocalProcess p;
-	if(!p.Start(cmd))
+	One<AProcess> ap;
+	start_process(ap, cmd);
+	if(!ap) {
+		list.Add(AttrText("Failed to start the executable").SetFont(font().Bold()).Ink(SLtRed()));
 		return -1;
+	}
+	AProcess& p = *ap;
 	String out;
 	canceled = false;
 	cancel.Show();
@@ -64,6 +68,15 @@ int UrepoConsole::System(const char *cmd)
 			ii++;
 		}
 	return code;
+}
+
+int UrepoConsole::System(const char *cmd)
+{
+	return System(cmd, [&](One<AProcess>& ap, const char *cmd) {
+		LocalProcess& p = ap.Create<LocalProcess>();
+		if(!p.Start(cmd))
+			ap.Clear();
+	});
 }
 
 int UrepoConsole::CheckSystem(const char *s)
