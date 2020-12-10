@@ -100,8 +100,13 @@ One<Host> MakeBuild::CreateHost(bool darkmode, bool disable_uhd)
 	One<Host> outhost;
 	{
 		auto& host = outhost.Create<LocalHost>();
-		VectorMap<String, String> env(Environment(), 1);
+		VectorMap<String, String> env = clone(Environment());
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
+#ifdef PLATFORM_WIN32
+		String p = GetExeDirFile("bin/mingit/cmd");
+		if(FileExists(p + "/git.exe"))
+			host.exedirs.Add(p);
+#endif
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
@@ -109,7 +114,6 @@ One<Host> MakeBuild::CreateHost(bool darkmode, bool disable_uhd)
 			env.GetAdd("UPP_DISABLE_UHD__") = "1";
 		if(darkmode)
 			env.GetAdd("UPP_DARKMODE__") = "1";
-		
 		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
 #ifdef PLATFORM_POSIX
 		if(target != "")

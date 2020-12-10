@@ -177,7 +177,7 @@ void Ide::ExecuteBinary()
 
 void Ide::LaunchTerminal(const char *dir)
 {
-	One<Host> h = CreateHostRunDir();
+	One<Host> h = CreateHost(false, false);
 	h->ChDir(dir);
 #ifdef PLATFORM_WIN32
 	h->Launch(Nvl(HostConsole, "powershell.exe"), false);
