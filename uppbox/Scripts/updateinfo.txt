@@ -391,6 +391,8 @@ GLM
 https://github.com/g-truc/glm
 
 
+-------------------------------------
+MinGit-2.29.2.3-busybox-32-bit
 
 ====================================================================
 DEPRECATED (NOT USED ANYMORE)
@@ -420,4 +422,5 @@ Check exe icon issue
 initial: MinGW-W64 GCC-7.2.0
 2019-03-22: 8.1.0
 2020-02-13: ldd.exe update to clang 9.0.0
+
 
