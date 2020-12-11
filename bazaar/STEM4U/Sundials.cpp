@@ -280,7 +280,7 @@ void SolveDAE(const double y[], const double dy[], int numEq, double dt, double 
 	N_VDestroy(yp);
 	
 	if (!error.IsEmpty())
-		throw error;
+		throw Exc(error);
 }
 
 /*
@@ -309,7 +309,7 @@ void SolveNonLinearEquationsSun(double y[], int numEq,
 		
 		double fnormtol = 1.e-6;
 		double scsteptol = 1.e-6;
-		int numIteraciones = 500;
+		int numIterations = 500;
 
 	  	kmem = KINCreate();
 	  	CheckMem((void *)kmem, "KINCreate");
@@ -343,7 +343,7 @@ void SolveNonLinearEquationsSun(double y[], int numEq,
 		CheckRet(flag, "KINSetFuncNormTol");
 		flag = KINSetScaledStepTol(kmem, scsteptol);
 		CheckRet(flag, "KINSetScaledStepTol");
-		flag = KINSetNumMaxIters(kmem, numIteraciones);
+		flag = KINSetNumMaxIters(kmem, numIterations);
 	  	CheckRet(flag, "KINSetNumMaxIters");
 		
 	  	auto ResFun = [](N_Vector u, N_Vector f, void *user_data) { 
@@ -363,7 +363,7 @@ void SolveNonLinearEquationsSun(double y[], int numEq,
 			CheckMem((void *)constr, "N_VNew_Serial");
 			realtype *constrdata = NV_DATA_S(constr);
 			for (int i = 0; i < numEq; ++i)
-			constrdata[i] = constraints[i];
+				constrdata[i] = constraints[i];
   		
 		 	flag = KINSetConstraints(kmem, constr);
 		  	CheckRet(flag, "KINSetConstraints");
@@ -403,7 +403,7 @@ void SolveNonLinearEquationsSun(double y[], int numEq,
  	N_VDestroy_Serial(s);
   	KINFree(&kmem);
   	if (!error.IsEmpty())
-  		throw error;
+  		throw Exc(error);
 }
 
 }

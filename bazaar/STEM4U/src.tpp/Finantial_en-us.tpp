@@ -1,4 +1,4 @@
-topic "Finantial";
+topic "Finantial functions";
 [H6;0 $$1,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483370:codeitem]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
@@ -6,7 +6,7 @@ topic "Finantial";
 [i448;a25;kKO9; $$5,0#37138531426314131252341829483380:structitem]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[ {{10000@3 [s0; [*@7;4 Financial]]}}&]
+[ {{10000@3 [s0; [*@7;4 Financial functions]]}}&]
 [s1;%- &]
 [s0;%- &]
 [s0; [2 Some financial functions.]&]

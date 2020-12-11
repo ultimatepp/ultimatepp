@@ -149,13 +149,13 @@ bool SeaWaves::Init(double Tp, double Hs, double dirM, double h, int nd, int nf,
 	    double per = Hs/L0;  								
 	    double Smax = pow(10, -1.2195*log10(per) - 0.5573); 
 	    
-	    Buffer<double> incdir_d(nd);
-	
-	    for (int d = 0; d < nd; ++d)
-	        incdir_d[d] = dirs[d] - dirM;
+		Buffer<double> incdir_d(nd);
+		
+		for (int d = 0; d < nd; ++d)
+			incdir_d[d] = dirs[d] - dirM;
 				
 		for (int f = 0; f < nf; f++) { 
-			double s_f;				
+			double s_f;
 		    if (frecs[f] <= fp)
 		        s_f = pow((frecs[f]/fp), 5)*Smax;
 		    else

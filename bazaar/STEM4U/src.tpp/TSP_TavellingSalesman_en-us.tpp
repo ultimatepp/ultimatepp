@@ -5,7 +5,7 @@ topic "Traveling salesman problem (TSP) ";
 [0 $$4,0#96390100711032703541132217272105:end]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[ {{10000@3 [s0; [*@7;4 Traveling salesman]]}}&]
+[ {{10000@3 [s0; [*@7;4 Traveling salesman problem (TSP)]]}}&]
 [s1;%- &]
 [s0;%- &]
 [s0; [2 The symmetric ][^https`:`/`/en`.wikipedia`.org`/wiki`/Travelling`_salesman`_problem^2 T
