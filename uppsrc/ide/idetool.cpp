@@ -72,6 +72,8 @@ void Ide::CopyPosition()
 				return;
 			}
 	}
+	
+	WriteClipboardText(GetFileName(editfile) << ":" << editor.GetCurrentLine());
 }
 
 void Ide::GotoPosition()
