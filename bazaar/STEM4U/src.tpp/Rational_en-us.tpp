@@ -1,4 +1,4 @@
-topic "class Rational : public Moveable<Rational> ";
+topic "Rational: A rational number based on an arbitrary precision integer";
 [i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -6,7 +6,8 @@ topic "class Rational : public Moveable<Rational> ";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[ {{10000@3 [s0; [*@7;4 Rational]]}}&]
+[ {{10000@3 [s0; [*@7;4 Rational: A rational number based on an arbitrary precision 
+integer]]}}&]
 [s1;@(0.0.255)0%- &]
 [s1;:Upp`:`:Rational`:`:class:%- [@(0.0.255) class]_[* Rational]_:_[@(0.0.255) public]_[*@3 Mo
 veable]<[* Rational]>_&]

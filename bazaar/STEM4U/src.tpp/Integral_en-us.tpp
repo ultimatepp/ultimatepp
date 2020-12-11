@@ -1,11 +1,11 @@
-topic "Numerical Integration";
+topic "Numerical definite integration";
 [H6;0 $$1,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483370:codeitem]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
 [0 $$4,0#96390100711032703541132217272105:end]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[ {{10000@3 [s0; [*@7;4 Integral]]}}&]
+[ {{10000@3 [s0; [*@7;4 Integral: Numerical definite integration]]}}&]
 [s1;%- &]
 [s0;%- &]
 [s0; [2 Numerical definite integration of a series of points.]&]
