@@ -51,7 +51,7 @@ void Print(const Value& x)
 		Cout() << "Value is of RichFoo type: " << (RichFoo)x << '\n';
 	else
 	if(IsTypeRaw<RawFoo>(x)) {
-		const RawFoo& r = ValueTo<RawFoo>(x);
+		const RawFoo& r = x.To<RawFoo>();
 		Cout() << "Value is of RawFoo type: " << r.a << ", " << r.b << '\n';
 	}
 	else
