@@ -174,7 +174,7 @@ public:
 	void        SetFetchRows(int nrows)                { cn->fetchrows = nrows; } // deprecated
 	void        SetLongSize(int lsz)                   { cn->longsize = lsz; } // deprecated
 
-	void        Cancel()                               { cn->Cancel(); }
+	void        Cancel()                               { if(cn) cn->Cancel(); }
 
 	Value       Select(const String& what); // Deprecated
 
