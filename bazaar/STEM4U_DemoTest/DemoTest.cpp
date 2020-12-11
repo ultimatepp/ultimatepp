@@ -318,12 +318,21 @@ void TestSeaWaves() {
 }
 
 
+void TestLocalFitting(bool test);
+void TestMooring(bool test);
+void TestButterworth(bool test);
+
 CONSOLE_APP_MAIN 
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 	UppLog() << "STEM4U demo and test";
 	
+	bool test = CommandLine().size() > 0 && CommandLine()[0] == "-test";
+	
+	TestMooring(test);
+	TestLocalFitting(test);
+	TestButterworth(test);
 	TestTSP();
 	TestRational();
 	TestDAESolver();
@@ -331,6 +340,8 @@ CONSOLE_APP_MAIN
     TestPolynomial();
     TestIntegral();
     TestSeaWaves();
+    
+    UppLog() << "\n\nAll tests passed\n";
     
 	#ifdef flagDEBUG
 	UppLog() << "\n";
