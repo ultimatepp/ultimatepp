@@ -526,7 +526,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void      Tab();
 
-	bool      Create(One<Host> local, const String& exefile, const String& cmdline, bool clang_);
+	bool      Create(Host& local, const String& exefile, const String& cmdline, bool clang_);
 
 	void      SerializeSession(Stream& s);
 

@@ -23,9 +23,6 @@ public:
 
 	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
 
-	String    GetHostPath(const String& path)   { return host->GetHostPath(path); }
-	String    GetLocalPath(const String& path)  { return host->GetLocalPath(path); }
-
 	void      Lock();
 	void      Unlock();
 
@@ -94,7 +91,7 @@ public:
 	
 	void      BreakRunning();
 	
-	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
+	bool      Create(Host& host, const String& exefile, const String& cmdline, bool console);
 	
 	TimeCallback periodic; // Period check for killed console
 	void Periodic();
@@ -105,8 +102,7 @@ public:
 	Gdb();
 	
 protected:
-	One<Host>          host;
-	One<AProcess>      dbg;
+	LocalProcess       dbg;
 
 	Vector<String>     regname;
 	Vector<Label *>    reglbl;

@@ -161,7 +161,7 @@ String MscBuilder::Pdb(String package, int slot, bool separate_pdb) const
 	String pdb_name = GetAnyFileName(package);
 	if(separate_pdb)
 		pdb_name << '-' << (slot + 1);
-	return " -Gy -Fd" + GetHostPathQ(CatAnyPath(outdir, pdb_name + ".pdb"));
+	return " -Gy -Fd" + GetPathQ(CatAnyPath(outdir, pdb_name + ".pdb"));
 }
 
 void DeletePCHFile(const String& pch_file)
@@ -265,10 +265,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		cc << " -EHsc";
 	else
 		cc << " -GX";
-//	String pdb = GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pdb"));
+//	String pdb = GetPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pdb"));
 //	String pch;
 //	if(!HasFlag("MSC8")) // MSC8 does not support automatic precompiled headers...
-//		pch << " -YX -Fp" << GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pch")) << ' ';
+//		pch << " -YX -Fp" << GetPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pch")) << ' ';
 //	cc << " -Gy -Fd" << pdb;
 //	if(HasFlag("SSE2") && !IsMsc64())
 //		cc << " /arch:SSE2";
@@ -309,7 +309,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		String pch_obj = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.obj");
 		pch_file = CatAnyPath(outdir, GetFileTitle(pch_header) + ".pch");
 		RegisterPCHFile(pch_file);
-		String pch_common = GetHostPathQ(pch_header) + " -Fp" + GetHostPathQ(pch_file) + " -FI" + GetHostPathQ(pch_header);
+		String pch_common = GetPathQ(pch_header) + " -Fp" + GetPathQ(pch_file) + " -FI" + GetPathQ(pch_header);
 		
 		if(blitz) // enable MK__s macros
 			pch_common.Cat(" -DBLITZ_INDEX__=FPCH");
@@ -318,9 +318,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			int pch_slot = AllocSlot();
 			StringBuffer sb;
 			sb << Join(cc, cpp_options) << Pdb(package, pch_slot, false) << " -Yc" << pch_common
-			   << " -Tp " << GetHostPathQ(pch_header) << " -Fo" + GetHostPathQ(pch_obj);
+			   << " -Tp " << GetPathQ(pch_header) << " -Fo" + GetPathQ(pch_obj);
 			PutConsole("Precompiling header: " + GetFileName(pch_header));
-			if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_obj), 1))
+			if(pch_slot < 0 || !Run(~sb, pch_slot, pch_obj, 1))
 				error = true;
 			Wait();
 		}
@@ -336,8 +336,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		if(HasAnyDebug())
 			c << Pdb(package, slot, false);
 		if(slot < 0 ||
-		   !Run(c + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object),
-		        slot, GetHostPath(b.object), b.count))
+		   !Run(c + " -Tp " + GetPathQ(b.path) + " -Fo" + GetPathQ(b.object),
+		        slot, b.object, b.count))
 			error = true;
 	}
 
@@ -362,9 +362,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			if(rc) {
 				PutConsole(GetFileNamePos(fn));
 				int slot = AllocSlot();
-				if(slot < 0 || !Run("rc /fo" + GetHostPathQ(objfile) + Includes(" /i", package, pkg)
+				if(slot < 0 || !Run("rc /fo" + GetPathQ(objfile) + Includes(" /i", package, pkg)
 				    + DefinesTargetTime(" /d", package, pkg) + (HasFlag("DEBUG")?" /d_DEBUG":"")
-					+ ' ' + GetHostPathQ(fn), slot, GetHostPath(objfile), 1))
+					+ ' ' + GetPathQ(fn), slot, objfile, 1))
 					execerr = true;
 			}
 			else
@@ -381,8 +381,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					int slot = AllocSlot();
 					StringBuffer cmdline;
 					cmdline << cc << Pdb(package, slot, false)
-					        << " -Tc " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPathQ(objfile);
-					if(slot < 0 || !Run(String(cmdline), slot, GetHostPath(objfile), 1))
+					        << " -Tc " << GetPathQ(tmpfile) << " -Fo" << GetPathQ(objfile);
+					if(slot < 0 || !Run(String(cmdline), slot, objfile, 1))
 						throw Exc(Format("Error compiling binary object '%s'.", objfile));
 				}
 				catch(Exc e) {
@@ -396,10 +396,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				if(HasAnyDebug())
 					c << Pdb(package, slot, !sContainsPchOptions(cc) && !sContainsPchOptions(soptions[i]));
 				c << " " + soptions[i] + (ext == ".c" ? Join(c_options, " -Tc") : Join(cpp_options, " -Tp")) + ' '
-				     + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile);
+				     + GetPathQ(fn) + " -Fo" + GetPathQ(objfile);
 				if(nopch.Find(fn) < 0)
 					c << pch_use;
-				if(slot < 0 || !Run(c, slot, GetHostPath(objfile), 1))
+				if(slot < 0 || !Run(c, slot, objfile, 1))
 					execerr = true;
 			}
 			if(execerr)
@@ -495,8 +495,8 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	if(is_shared) {
 		linker << LinkerName() << " -dll -nologo ";
 		lib << "-machine:" << MachineName()
-			<< " -pdb:" << GetHostPathQ(ForceExt(product, ".pdb"))
-			<< " -out:" << GetHostPathQ(product);
+			<< " -pdb:" << GetPathQ(ForceExt(product, ".pdb"))
+			<< " -out:" << GetPathQ(product);
 		if(!isgemsc10)
 			lib << " -incremental:no";
 		if(HasAnyDebug())
@@ -525,12 +525,12 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 			PutConsole(Format("%s: error saving file", deffile));
 			return false;
 		}
-		lib << " -def:" << GetHostPathQ(deffile);
+		lib << " -def:" << GetPathQ(deffile);
 		for(int i = 0; i < libpath.GetCount(); i++)
-			lib << " -LIBPATH:" << GetHostPathQ(libpath[i]);
+			lib << " -LIBPATH:" << GetPathQ(libpath[i]);
 		lib << ' ' << link_options;
 		for(int i = 0; i < all_uses.GetCount(); i++)
-			lib << ' ' << GetHostPathQ(ForceExt(GetSharedLibPath(all_uses[i]), ".lib"));
+			lib << ' ' << GetPathQ(ForceExt(GetSharedLibPath(all_uses[i]), ".lib"));
 		for(int i = 0; i < all_libraries.GetCount(); i++) {
 			String libfile = AppendExt(all_libraries[i], ".lib");
 			if(!IsFullPath(libfile)) {
@@ -542,15 +542,15 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 					}
 				}
 			}
-			lib << ' ' << GetHostPathQ(libfile);
+			lib << ' ' << GetPathQ(libfile);
 		}
 	}
 	else{
 		linker << (HasFlag("INTEL") ? "xilib" : "link /lib") << " -nologo ";
-		lib << " -out:" << GetHostPathQ(product) << ' ' << link_options;
+		lib << " -out:" << GetPathQ(product) << ' ' << link_options;
 	}
 	for(int i = 0; i < obj.GetCount(); i++)
-		lib << ' ' << GetHostPathQ(obj[i]);
+		lib << ' ' << GetPathQ(obj[i]);
 	PutConsole("Creating library...");
 	IdeConsoleEndGroup();
 	DeleteFile(product);
@@ -595,7 +595,7 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	else
 	if((IsMsc86() || IsMsc64()) && is_shared) {
 		String mt("mt -nologo -manifest ");
-		mt << GetHostPathQ(product) << ".manifest -outputresource:" << GetHostPathQ(product) << ";2";
+		mt << GetPathQ(product) << ".manifest -outputresource:" << GetPathQ(product) << ";2";
 		Execute(mt);
 	}
 	PutConsole(String().Cat() << product << " (" << GetFileInfo(product).length
@@ -626,8 +626,8 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		if(GetFileTime(linkfile[i]) > targettime) {
 			String link, lib;
 			link << LinkerName() << " -nologo -machine:" << MachineName()
-			<< " -pdb:" << GetHostPathQ(ForceExt(target, ".pdb"))
-			<< " -out:" << GetHostPathQ(target);
+			<< " -pdb:" << GetPathQ(ForceExt(target, ".pdb"))
+			<< " -out:" << GetPathQ(target);
 			if(!isgemsc10)
 				if(HasAnyDebug())
 					link << " -incremental:yes -debug -OPT:NOREF";
@@ -656,7 +656,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				link << " -LIBPATH:\"" << libpath[i] << '\"';
 			link << ' ' << linkoptions << ' ';
 			for(i = 0; i < linkfile.GetCount(); i++)
-				lib << ' ' << GetHostPathQ(AppendExt(linkfile[i], ".lib"));
+				lib << ' ' << GetPathQ(AppendExt(linkfile[i], ".lib"));
 			PutConsole("Linking...");
 			bool error = false;
 
@@ -697,11 +697,11 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				CustomStep(".post-link", Null, error);
 				if((IsMsc86() || IsMsc64()) && HasFlag("SHARED")) {
 					String mt("mt -nologo -manifest ");
-					mt << GetHostPathQ(target) << ".manifest -outputresource:" << GetHostPathQ(target)
+					mt << GetPathQ(target) << ".manifest -outputresource:" << GetPathQ(target)
 				           << (HasFlag("DLL") ? ";2" : ";1");
 				   Execute(mt);
 				}
-				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+				PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
 			}
 			else {
@@ -712,7 +712,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				FileDelete(tmpFileName);
 			return !error;
 		}
-	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+	PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
 	return true;
 }

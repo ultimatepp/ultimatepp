@@ -1,11 +1,4 @@
-#ifndef _urepo_urepo_h_
-#define _urepo_urepo_h_
-
-#include <TextDiffCtrl/TextDiffCtrl.h>
-
-namespace Upp {
-
-#define LAYOUTFILE <urepo/urepo.lay>
+#define LAYOUTFILE <ide/urepo.lay>
 #include <CtrlCore/lay.h>
 
 class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
@@ -16,7 +9,6 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 	bool canceled = false;
 
 public:
-	int  System(const char *cmd, Event<One<AProcess>&, const char *> start_process);
 	int  System(const char *s);
 	int  CheckSystem(const char *s);
 	int  Git(const char *dir, const char *command);
@@ -106,7 +98,3 @@ public:
 void EditCredentials(RepoSync& rs);
 
 void RunRepoDiff(const String& filepath);
-
-};
-
-#endif

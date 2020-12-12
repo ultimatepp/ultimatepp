@@ -92,7 +92,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			             << " $(LINKOPTIONS)\n"
 			"LIBPATH =";
 		for(int i = 0; i < libpath.GetCount(); i++)
-			makefile.config << " -L" << GetMakePath(AdjustMakePath(GetHostPathQ(libpath[i])));
+			makefile.config << " -L" << GetMakePath(AdjustMakePath(GetPathQ(libpath[i])));
 		makefile.config << "\n"
 			"AR = ar -sr\n\n";
 		Vector<String> lib;
@@ -149,7 +149,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		String ln = libs[i];
 		String ext = ToLower(GetFileExt(ln));
 		if(ext == ".a" || ext == ".so" || ext == ".dll")
-			makefile.linkfileend << " \\\n\t\t\t" << GetHostPathQ(FindInDirs(libpath, ln));
+			makefile.linkfileend << " \\\n\t\t\t" << GetPathQ(FindInDirs(libpath, ln));
 		else
 			makefile.linkfileend << " \\\n\t\t\t-l" << ln;
 	}
@@ -257,11 +257,12 @@ void CppBuilder::ShowTime(int count, int start_time)
 
 void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 {
-	BeginBuilding(false, true);
+	BeginBuilding(true);
 
 	VectorMap<String, String> bm = GetMethodVars(method);
-	One<Host> host = CreateHost(false, false);
-	One<Builder> b = CreateBuilder(~host);
+	Host host;
+	CreateHost(host, false, false);
+	One<Builder> b = CreateBuilder(&host);
 	
 	if(!b)
 		return;
@@ -271,10 +272,10 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	String makefile;
 
 	Vector<String> uppdirs = GetUppDirs();
-	String uppout = exporting ? host->GetHostPath(GetVar("OUTPUT")) : ".cache/upp.out";
+	String uppout = exporting ? GetVar("OUTPUT") : ".cache/upp.out";
 	String inclist;
 
-	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, *host, *b);
+	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, host, *b);
 	bool win32 = allconfig.Find("WIN32") >= 0;
 
 	Workspace wspc;
@@ -282,7 +283,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 
 	Index<String> pkg_config;
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		Index<String> modconfig = PackageConfig(wspc, i, bm, mainconfigparam, *host, *b);
+		Index<String> modconfig = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 		PkgConfig(wspc, modconfig, pkg_config);
 		if(i)
 			for(int a = allconfig.GetCount(); --a >= 0;)
@@ -292,7 +293,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 
 	if(!exporting)
 		for(int i = 0; i < uppdirs.GetCount(); i++) {
-			String srcdir = GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppdirs[i], ""))), win32);
+			String srcdir = GetMakePath(AdjustMakePath(AppendFileName(uppdirs[i], "")), win32);
 			makefile << "UPPDIR" << (i + 1) << " = " << srcdir << "\n";
 			inclist << " -I$(UPPDIR" << (i + 1) << ")";
 		}
@@ -308,7 +309,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	inclist << " -I$(UPPOUT)"; // build_info.h is created there
 	
 	makefile << "\n"
-		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
+		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(AppendFileName(uppout, "")), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
 		"Macro  = ";
 
@@ -322,12 +323,12 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		linkfileend << " \\\n\t\t\t`pkg-config --libs " << s << "`";
 
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		b->config = PackageConfig(wspc, i, bm, mainconfigparam, *host, *b);
+		b->config = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 		b->version = tm.version;
 		b->method = method;
 		MakeFile mf;
-		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i, bm, mainconfigparam, *host, *b),
-		               GetAllLibraries(wspc, i, bm, mainconfigparam, *host, *b), allconfig,
+		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i, bm, mainconfigparam, host, *b),
+		               GetAllLibraries(wspc, i, bm, mainconfigparam, host, *b), allconfig,
 		               exporting);
 		if(i == 0) { // main package
 			String tdir = mf.outdir;

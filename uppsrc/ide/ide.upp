@@ -19,7 +19,6 @@ uses
 	ide/Android,
 	ide/Java,
 	ide/MacroManager,
-	urepo,
 	Report,
 	Core/SSL;
 
@@ -109,6 +108,14 @@ file
 		depends() xide.ico
 		depends() ide.ico,
 	theide.desktop,
+	Repo readonly separator,
+	urepo.h,
+	RepoConsole.cpp,
+	RepoSync.cpp,
+	Credentials.cpp,
+	Diff.cpp,
+	urepo.iml,
+	urepo.lay,
 	Info readonly separator,
 	Copying;
 

@@ -22,7 +22,6 @@ struct CppBuilder : Builder {
 	Time             targettime;
 
 	String                 GetSharedLibPath(const String& package) const;
-	String                 GetLocalPath(const String& path) const;
 	int                    AllocSlot();
 	bool                   Run(const char *cmdline, int slot, String key, int blitz_count);
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);

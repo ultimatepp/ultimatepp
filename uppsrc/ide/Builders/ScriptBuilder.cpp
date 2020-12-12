@@ -79,12 +79,12 @@ void ScriptBuilder::CheckParse()
 	EscValue inclist;
 	inclist.SetEmptyArray();
 	for(int i = 0; i < include.GetCount(); i++)
-		inclist.ArrayAdd(GetHostPathQ(include[i]));
+		inclist.ArrayAdd(GetPathQ(include[i]));
 	globals.GetAdd("INCLUDE") = inclist;
 	EscValue liblist;
 	liblist.SetEmptyArray();
 	for(int i = 0; i < libpath.GetCount(); i++)
-		liblist.ArrayAdd(GetHostPathQ(libpath[i]));
+		liblist.ArrayAdd(GetPathQ(libpath[i]));
 	globals.GetAdd("LIBPATH") = liblist;
 
 	try
@@ -156,7 +156,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int time = msecs();
-			if(Execute(cc + " " + GetHostPathQ(b.path) + " -o " + GetHostPathQ(b.object)) == 0)
+			if(Execute(cc + " " + GetPathQ(b.path) + " -o " + GetPathQ(b.object)) == 0)
 				PutCompileTime(time, b.count);
 			else
 				error = true;
@@ -176,10 +176,10 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 			return false;
 		if(IsNull(objfile))
 			objfile = CatAnyPath(outdir, GetFileTitle(fn) + ".o");
-		if(HdependFileTime(fn) > GetFileTime(GetHostPath(objfile))) {
+		if(HdependFileTime(fn) > GetFileTime(objfile)) {
 			PutConsole(GetFileName(fn));
 			int time = msecs();
-			if(!ExecuteIf("compile", GetHostPathQ(fn), GetHostPathQ(objfile), soptions[i]).GetNumber()) {
+			if(!ExecuteIf("compile", GetPathQ(fn), GetPathQ(objfile), soptions[i]).GetNumber()) {
 				DeleteFile(objfile);
 				error = true;
 			}
@@ -218,7 +218,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 				EscValue objlist;
 				objlist.SetEmptyArray();
 				for(int i = 0; i < obj.GetCount(); i++)
-					objlist.ArrayAdd(GetHostPathQ(obj[i]));
+					objlist.ArrayAdd(GetPathQ(obj[i]));
 				if(!ExecuteIf("library", objlist, product).GetNumber()) {
 					DeleteFile(product);
 					error = true;
@@ -248,13 +248,13 @@ bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptio
 			liblist.SetEmptyArray();
 			for(i = 0; i < linkfile.GetCount(); i++)
 				if(*linkfile[i] == '*')
-					liblist.ArrayAdd(GetHostPathQ(linkfile[i].Mid(1)));
+					liblist.ArrayAdd(GetPathQ(linkfile[i].Mid(1)));
 				else
-					objlist.ArrayAdd(GetHostPathQ(linkfile[i]));
+					objlist.ArrayAdd(GetPathQ(linkfile[i]));
 			Vector<EscValue> linkargs;
 			linkargs.Add(objlist);
 			linkargs.Add(liblist);
-			linkargs.Add(GetHostPathQ(target));
+			linkargs.Add(GetPathQ(target));
 			linkargs.Add(linkoptions);
 			PutConsole("Linking...");
 			bool error = false;
@@ -264,11 +264,11 @@ bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptio
 				return false;
 			}
 			CustomStep(".post-link", Null, error);
-			PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+			PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 				<< " B) linked in " << GetPrintTime(time));
 			return !error;
 		}
-	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+	PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
 	return true;
 }

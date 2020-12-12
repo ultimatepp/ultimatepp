@@ -10,7 +10,6 @@
 #include <ide/Browser/Browser.h>
 #include <TabBar/TabBar.h>
 #include <CodeEditor/CodeEditor.h>
-#include <urepo/urepo.h>
 #include <ide/IconDes/IconDes.h>
 #include <ide/Java/Java.h>
 #include <ide/LayDes/LayDes.h>
@@ -431,7 +430,7 @@ public:
 	virtual void   ConsoleClear();
 	virtual void   SetupDefaultMethod();
 	virtual Vector<String> PickErrors();
-	virtual void   BeginBuilding(bool sync_files, bool clear_console);
+	virtual void   BeginBuilding(bool clear_console);
 	virtual void   EndBuilding(bool ok);
 	virtual void   ClearErrorEditor();
 	virtual void   DoProcessEvents();
@@ -914,7 +913,7 @@ public:
 		void  FileCompile();
 		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
-		One<Host> CreateHostRunDir();
+		void  CreateHostRunDir(Host& h);
 		void  OpenOutputFolder();
 		void  PreprocessInternal();
 
@@ -1229,10 +1228,6 @@ public:
 
 	Ide();
 	~Ide();
-
-
-// THIS IS SANDBOX FOR DEVELOPING NEW NAVIGATOR
-//	void CodeBrowser();
 };
 
 inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
@@ -1243,5 +1238,7 @@ bool SetupSVNTrunk();
 
 void UppHub();
 void UppHubAuto(const String& s);
+
+#include "urepo.h"
 
 #endif
