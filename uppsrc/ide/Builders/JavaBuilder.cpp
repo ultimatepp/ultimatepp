@@ -104,8 +104,8 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 						ismf = true;
 						if(manifest >= 0)
 						{
-							PutConsole(Format("%s(1): duplicate manifest file", GetHostPath(fn)));
-							PutConsole(Format("%s(1): (previous manifest file)", GetHostPath(sfile[manifest])));
+							PutConsole(Format("%s(1): duplicate manifest file", fn));
+							PutConsole(Format("%s(1): (previous manifest file)", sfile[manifest]));
 						}
 						manifest = sfile.GetCount();
 					}
@@ -199,12 +199,12 @@ bool JavaBuilder::PreprocessJava(String file, String target, String options,
 	{
 		prepfile = ForceExt(file, ".i");
 		host->ChDir(GetFileFolder(prepfile));
-		execpath << GetHostPath(file);
+		execpath << file;
 	}
 	else
 	{
 		PutConsole(file);
-		execpath << GetHostPath(file) << " " << GetHostPath(target);
+		execpath << file << " " << target;
 		prepfile = target;
 	}
 	if(Execute(execpath) != 0)
@@ -268,9 +268,9 @@ bool JavaBuilder::Link(const Vector<String>& linkfile, const String& linkoptions
 	cmdline << "cf";
 	if(!manifest.IsEmpty())
 		cmdline << 'm';
-	cmdline << ' ' << GetHostPath(target);
+	cmdline << ' ' << target;
 	if(!manifest.IsEmpty())
-		cmdline << ' ' << GetHostPath(manifest);
+		cmdline << ' ' << manifest;
 	Time tm = Time::Low();
 	for(int i = ITEMCOUNT; i < linkfile.GetCount(); i++)
 		tm = max(tm, AddClassDeep(cmdline, linkfile[i], Null));
@@ -301,7 +301,7 @@ bool JavaBuilder::Link(const Vector<String>& linkfile, const String& linkoptions
 		           << " B) archived in " << GetPrintTime(time));
 	}
 	else
-		PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+		PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 		           << " B) is up to date.");
 	return true;
 }

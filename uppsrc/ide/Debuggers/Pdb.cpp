@@ -144,7 +144,7 @@ INITBLOCK
 	RegisterGlobalConfig(CONFIGNAME);
 }
 
-bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline, bool clang_)
+bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool clang_)
 {
 	STARTUPINFO si;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
@@ -164,8 +164,8 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline, 
 	memcpy(cmd, cl, cl.GetLength() + 1);
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-	Buffer<char> env(local->GetEnvironment().GetCount() + 1);
-	memcpy(env, ~local->GetEnvironment(), local->GetEnvironment().GetCount() + 1);
+	Buffer<char> env(local.environment.GetCount() + 1);
+	memcpy(env, ~local.environment, local.environment.GetCount() + 1);
 	bool h = CreateProcess(exefile, cmd, NULL, NULL, TRUE,
 	                       /*NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|*/DEBUG_ONLY_THIS_PROCESS/*|DEBUG_PROCESS*/,
 	                       ~env, NULL, &si, &pi);
@@ -457,10 +457,10 @@ Pdb::~Pdb()
 	Stop();
 }
 
-One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool clang)
+One<Debugger> PdbCreate(Host& host, const String& exefile, const String& cmdline, bool clang)
 {
 	One<Debugger> dbg;
-	if(!dbg.Create<Pdb>().Create(pick(host), exefile, cmdline, clang))
+	if(!dbg.Create<Pdb>().Create(host, exefile, cmdline, clang))
 		dbg.Clear();
 	return dbg;
 }

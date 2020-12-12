@@ -1,6 +1,4 @@
-#include "urepo.h"
-
-namespace Upp {
+#include "ide.h"
 
 String GetSvnDir(const String& p)
 {
@@ -81,5 +79,3 @@ void EditCredentials(RepoSync& rs)
 		dlg.GetResults();
 	}
 }
-
-};

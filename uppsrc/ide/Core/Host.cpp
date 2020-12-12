@@ -4,40 +4,21 @@
 
 #include <plugin/bz2/bz2.h>
 
-LocalHost::LocalHost()
+Host::Host()
 {
 }
 
-String LocalHost::GetEnvironment()
+String Host::GetEnvironment()
 {
 	return environment;
 }
 
-String LocalHost::GetHostPath(const String& path)
-{
-	return path;
-}
-
-String LocalHost::GetLocalPath(const String& path)
-{
-	return path;
-}
-
-String LocalHost::NormalizePath(const String& path)
-{
-	return ::NormalizePath(path);
-}
-
-String LocalHost::NormalizeExecutablePath(const String& path)
-{
-	return NormalizeExePath(path);
-}
-
-Vector<Host::FileInfo> LocalHost::GetFileInfo(const Vector<String>& path)
+Vector<Host::FileInfo> Host::GetFileInfo(const Vector<String>& path)
 {
 	Vector<FileInfo> fi;
 	for(int i = 0; i < path.GetCount(); i++) {
 		FindFile ff(path[i]);
+
 		FileInfo& f = fi.Add();
 		if(ff) {
 			(Time&)f = ff.GetLastWriteTime();
@@ -47,22 +28,18 @@ Vector<Host::FileInfo> LocalHost::GetFileInfo(const Vector<String>& path)
 			(Time&)f = Time::Low();
 			f.length = Null;
 		}
+
+		if(onefile.GetCount()) {
+			if(path[i] == onefile)
+				(Time &)f = GetSysTime();
+			else
+				(Time &)f = Time::Low();
+		}
 	}
 	return fi;
 }
 
-void LocalHost::DeleteFile(const Vector<String>& path)
-{
-	for(int i = 0; i < path.GetCount(); i++)
-		::DeleteFile(path[i]);
-}
-
-void LocalHost::DeleteFolderDeep(const String& folder)
-{
-	::DeleteFolderDeep(folder);
-}
-
-void LocalHost::ChDir(const String& path)
+void Host::ChDir(const String& path)
 {
 #ifdef PLATFORM_WIN32
 	SetCurrentDirectory(path);
@@ -71,10 +48,10 @@ void LocalHost::ChDir(const String& path)
 	IGNORE_RESULT( chdir(path) );
 #endif
 	if(cmdout)
-		*cmdout << "cd \"" << GetHostPath(path) << "\"\n";
+		*cmdout << "cd \"" << path << "\"\n";
 }
 
-void LocalHost::DoDir(const String& dir)
+void Host::DoDir(const String& dir)
 {
 	if(dir.GetLength() > 3) {
 		DoDir(GetFileFolder(dir));
@@ -82,7 +59,7 @@ void LocalHost::DoDir(const String& dir)
 	}
 }
 
-bool LocalHost::RealizeDir(const String& path)
+bool Host::RealizeDir(const String& path)
 {
 	bool realized = RealizeDirectory(path);
 	if(cmdout)
@@ -90,17 +67,7 @@ bool LocalHost::RealizeDir(const String& path)
 	return realized;
 }
 
-bool LocalHost::SaveFile(const String& path, const String& data)
-{
-	return ::SaveFile(path, data);
-}
-
-String  LocalHost::LoadFile(const String& path)
-{
-	return ::LoadFile(path);
-}
-
-int LocalHost::Execute(const char *cmdline)
+int Host::Execute(const char *cmdline)
 {
 	if(cmdout)
 		*cmdout << cmdline << '\n';
@@ -110,7 +77,7 @@ int LocalHost::Execute(const char *cmdline)
 	return q;
 }
 
-int LocalHost::ExecuteWithInput(const char *cmdline, bool noconvert)
+int Host::ExecuteWithInput(const char *cmdline, bool noconvert)
 {
 	if(cmdout)
 		*cmdout << cmdline << '\n';
@@ -120,7 +87,7 @@ int LocalHost::ExecuteWithInput(const char *cmdline, bool noconvert)
 	return q;
 }
 
-int LocalHost::Execute(const char *cmdline, Stream& out, bool noconvert)
+int Host::Execute(const char *cmdline, Stream& out, bool noconvert)
 {
 	PutVerbose(cmdline);
 	int q = IdeConsoleExecute(FindCommand(exedirs, cmdline), &out, environment, true, noconvert);
@@ -128,47 +95,46 @@ int LocalHost::Execute(const char *cmdline, Stream& out, bool noconvert)
 	return q;
 }
 
-int LocalHost::AllocSlot()
+int Host::AllocSlot()
 {
 	return IdeConsoleAllocSlot();
 }
 
-bool LocalHost::Run(const char *cmdline, int slot, String key, int blitz_count)
+bool Host::Run(const char *cmdline, int slot, String key, int blitz_count)
 {
 	return IdeConsoleRun(FindCommand(exedirs, cmdline), NULL, environment, false, slot, key, blitz_count);
 }
 
-bool LocalHost::Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count)
+bool Host::Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count)
 {
 	return IdeConsoleRun(FindCommand(exedirs, cmdline), &out, environment, true, slot, key, blitz_count);
 }
 
-bool LocalHost::Wait()
+bool Host::Wait()
 {
 	return IdeConsoleWait();
 }
 
-bool LocalHost::Wait(int slot)
+bool Host::Wait(int slot)
 {
 	return IdeConsoleWait(slot);
 }
 
-void LocalHost::OnFinish(Event<>  cb)
+void Host::OnFinish(Event<>  cb)
 {
 	IdeConsoleOnFinish(cb);
 }
 
-One<AProcess> LocalHost::StartProcess(const char *cmdline)
+bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 {
 	try {
 		PutVerbose(cmdline);
-		One<AProcess> p;
-		if(p.Create<LocalProcess>().Start(FindCommand(exedirs, cmdline), environment))
-			return p;
+		if(p.Start(FindCommand(exedirs, cmdline), environment))
+			return true;
 	}
 	catch(...) {
 	}
-	return NULL;
+	return false;
 }
 
 #ifdef PLATFORM_POSIX
@@ -201,7 +167,7 @@ String HostConsole = "powershell.exe";
 String HostConsole = "/usr/bin/xterm -e";
 #endif
 
-void LocalHost::Launch(const char *_cmdline, bool console)
+void Host::Launch(const char *_cmdline, bool console)
 {
 	String cmdline = FindCommand(exedirs, _cmdline);
 	PutVerbose(cmdline);
@@ -319,7 +285,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 #endif
 }
 
-void LocalHost::AddFlags(Index<String>& cfg)
+void Host::AddFlags(Index<String>& cfg)
 {
 	if(HasPlatformFlag(cfg))
 		return;
@@ -373,12 +339,12 @@ void LocalHost::AddFlags(Index<String>& cfg)
 #endif
 }
 
-const Vector<String>& LocalHost::GetExecutablesDirs() const
+const Vector<String>& Host::GetExecutablesDirs() const
 {
 	return exedirs;
 }
 
-bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
+bool Host::HasPlatformFlag(const Index<String>& cfg)
 {
 	static const Index<String> platformFlags = {
 		"WIN32", "POSIX", "LINUX", "ANDROID",
@@ -392,13 +358,3 @@ bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
 
 	return false;
 }
-
-#if 0
-static bool IsSamePath(const char *a, const char *b, int count) {
-	for(; --count >= 0; a++, b++)
-		if(a != b && ToLower(*a) != ToLower(*b) && !((*a == '\\' || *a == '/') && (*b == '\\' || *b == '/')))
-			return false;
-	return true;
-}
-
-#endif

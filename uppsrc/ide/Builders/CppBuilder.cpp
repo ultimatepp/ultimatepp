@@ -94,11 +94,6 @@ String CppBuilder::GetSharedLibPath(const String& package) const
 	return CatAnyPath(GetFileFolder(target), outfn);
 }
 
-String CppBuilder::GetLocalPath(const String& path) const
-{
-	return host->GetLocalPath(path);
-}
-
 int CppBuilder::AllocSlot()
 {
 	return host->AllocSlot();
@@ -268,7 +263,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 {
 	String package = Nvl(package_, mainpackage);
 	String path = (*pf == '.' && pf[1] != '.') ? target : SourcePath(package, pf);
-	String file = GetHostPath(path);
+	String file = path;
 	String ext = ToLower(GetFileExt(pf));
 	if(ext == ".ext") {
 		Vector<String> files;
@@ -355,15 +350,15 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				AddPath(mac, "PACKAGE", package);
 				mac.Add("FILE", GetFileName(file));
 				mac.Add("TITLE", GetFileTitle(file));
-				AddPath(mac, "EXEPATH", GetHostPath(target));
-				AddPath(mac, "EXEDIR", GetHostPath(GetFileFolder(target)));
+				AddPath(mac, "EXEPATH", target);
+				AddPath(mac, "EXEDIR", GetFileFolder(target));
 				mac.Add("EXEFILE", GetFileName(target));
 				mac.Add("EXETITLE", GetFileTitle(target));
-				AddPath(mac, "OUTDIR", GetHostPath(outdir));
+				AddPath(mac, "OUTDIR", outdir);
 				//BW
-				AddPath(mac, "OUTDIR", GetHostPath(GetFileFolder(target)));
-				AddPath(mac, "OUTFILE", GetHostPath(GetFileName(target)));
-				AddPath(mac, "OUTTITLE", GetHostPath(GetFileTitle(target)));
+				AddPath(mac, "OUTDIR", GetFileFolder(target));
+				AddPath(mac, "OUTFILE", GetFileName(target));
+				AddPath(mac, "OUTTITLE", GetFileTitle(target));
 
 				mac.Add("INCLUDE", Join(include, ";"));
 
@@ -406,8 +401,8 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 {
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
-		cc << sep << GetHostPathQ(include[i]);
-	cc << sep << GetHostPathQ(outdir);
+		cc << sep << GetPathQ(include[i]);
+	cc << sep << GetPathQ(outdir);
 	return cc;
 }
 

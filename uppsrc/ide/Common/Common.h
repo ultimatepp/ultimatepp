@@ -104,6 +104,9 @@ bool CopyFolder(const char *dst, const char *src, Progress *pi = NULL);
 
 bool HasSvn();
 bool HasGit();
+#ifdef PLATFORM_WIN32
+String GetInternalGitPath();
+#endif
 
 int  MaxAscent(Font f);
 

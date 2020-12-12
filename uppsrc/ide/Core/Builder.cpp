@@ -5,11 +5,6 @@ void Builder::ChDir(const String& path)
 	host->ChDir(path);
 }
 
-String Builder::GetHostPath(const String& path) const
-{
-	return host->GetHostPath(path);
-}
-
 String TrimSlash(String s)
 {
 	while(findarg(*s.Last(), '/', '\\') >= 0)
@@ -17,9 +12,9 @@ String TrimSlash(String s)
 	return s;
 }
 
-String Builder::GetHostPathQ(const String& path) const
+String Builder::GetPathQ(const String& path) const
 {
-	return '\"' + TrimSlash(GetHostPath(path)) + '\"';
+	return '\"' + TrimSlash(path) + '\"';
 }
 
 Vector<Host::FileInfo> Builder::GetFileInfo(const Vector<String>& path) const
@@ -71,34 +66,4 @@ int Builder::Execute(const char *cmdline)
 int Builder::Execute(const char *cl, Stream& out)
 {
 	return host->Execute(CmdX(cl), out);
-}
-
-void Builder::DeleteFile(const Vector<String>& path)
-{
-	host->DeleteFile(path);
-}
-
-void Builder::DeleteFile(const String& path)
-{
-	host->DeleteFile(Vector<String>() << path);
-}
-
-bool Builder::RealizeDir(const String& path)
-{
-	return host->RealizeDir(path);
-}
-
-bool Builder::SaveFile(const String& path, const String& data)
-{
-	return host->SaveFile(path, data);
-}
-
-String Builder::LoadFile(const String& path)
-{
-	return host->LoadFile(path);
-}
-
-bool Builder::FileExists(const String& path) const
-{
-	return !IsNull(GetFileInfo(path).length);
 }

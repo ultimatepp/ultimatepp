@@ -115,22 +115,22 @@ bool Gdb::Result(String& result, const String& s)
 
 String Gdb::Cmd(const char *command, bool start)
 {
-	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
+	if(!dbg.IsRunning() || IdeIsDebugLock()) return Null;
 	TimeStop ts;
 	Lock();
 	if(command) {
 		LLOG("========= Cmd: " << command);
-		dbg->Write(String(command) + "\n");
+		dbg.Write(String(command) + "\n");
 		PutVerbose(String() << "Command: " << command);
 	}
 	String result;
 	int ms0 = msecs();
-	while(dbg) {
+	while(dbg.IsRunning()) {
 		String s;
-		if(!dbg->Read(s)) {
+		if(!dbg.Read(s)) {
 			PutVerbose(result);
 			PutVerbose("Debugger terminated");
-			LLOG("Running: " << dbg->IsRunning());
+			LLOG("Running: " << dbg.IsRunning());
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
@@ -165,25 +165,25 @@ String Gdb::Cmd(const char *command, bool start)
 
 String Gdb::FastCmd(const char *command)
 {
-	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
+	if(!dbg.IsRunning() || IdeIsDebugLock()) return Null;
 	bool lock = false;
 	if(command) {
-		dbg->Write(String(command) + "\n");
+		dbg.Write(String(command) + "\n");
 		PutVerbose(String() << "Fast Command: " << command);
 	}
 	String result;
 	TimeStop ts;
-	while(dbg) {
+	while(dbg.IsRunning()) {
 		String s;
 		if(TTYQuit()) {
 			LLOG("TTYQuit");
 			Stop();
 		}
-		if(!dbg->Read(s)) {
+		if(!dbg.Read(s)) {
 			LLOG(result);
 			PutVerbose(result);
 			PutVerbose("dbg terminated");
-			LLOG("Running: " << dbg->IsRunning());
+			LLOG("Running: " << dbg.IsRunning());
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
@@ -217,11 +217,11 @@ String Gdb::FastCmd(const char *command)
 void Gdb::Stop()
 {
 	LLOG("Stop");
-	if(dbg && dbg->IsRunning())
-		dbg->Kill();
+	if(dbg.IsRunning())
+		dbg.Kill();
 }
 
 bool Gdb::IsFinished()
 {
-	return !(dbg && dbg->IsRunning()) && !IdeIsDebugLock();
+	return !dbg.IsRunning() && !IdeIsDebugLock();
 }

@@ -871,7 +871,7 @@ String Ide::GetIncludePath()
 	}
 
 	const Workspace& wspc = GetIdeWorkspace();
-	LocalHost dummy_host;
+	Host dummy_host;
 	One<Builder> b = CreateBuilder(&dummy_host);
 	Index<String> pkg_config;
 	for(int i = 0; i < wspc.GetCount(); i++) {

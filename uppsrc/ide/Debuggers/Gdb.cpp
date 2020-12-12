@@ -136,9 +136,9 @@ int CharFilterReSlash(int c)
 	return c == '\\' ? '/' : c;
 }
 
-String Bpoint(Host& host, const String& file, int line)
+String Bpoint(const String& file, int line)
 {
-	return String().Cat() << Filter(host.GetHostPath(NormalizePath(file)), CharFilterReSlash) << ":" << line + 1;
+	return String().Cat() << Filter(NormalizePath(file), CharFilterReSlash) << ":" << line + 1;
 }
 
 bool Gdb::TryBreak(const char *text)
@@ -156,7 +156,7 @@ bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 		return true;
 	}
 
-	String bi = Bpoint(*host, filename, line);
+	String bi = Bpoint(filename, line);
 
 	String command;
 	if(bp.IsEmpty())
@@ -230,7 +230,7 @@ bool ParsePos(const String& s, String& fn, int& line, adr_t & adr)
 
 void Gdb::CheckEnd(const char *s)
 {
-	if(!dbg) {
+	if(!dbg.IsRunning()) {
 		Stop();
 		return;
 	}
@@ -270,9 +270,9 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 	}
 	
 	if(ParsePos(s, file, line, addr)) {
-		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr()
-		                                                : DbgImg::IpLinePtr(), 0);
-		IdeSetDebugPos(GetLocalPath(file), line - 1,
+		IdeSetDebugPos(file, line - 1, fr ? DbgImg::FrameLinePtr()
+		                                  : DbgImg::IpLinePtr(), 0);
+		IdeSetDebugPos(file, line - 1,
 		               disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr()
 		                                : Image(), 1);
 		SyncDisas(fr);
@@ -303,7 +303,7 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 		SyncFrameButtons();
 	}
 	
-	if (dbg->IsRunning()) {
+	if (dbg.IsRunning()) {
 		if (IsProcessExitedNormally(s))
 			Stop();
 		else {
@@ -430,7 +430,7 @@ bool Gdb::RunTo()
 		bi = Sprintf("*0x%X", disas.GetCursor());
 	}
 	else
-		bi = Bpoint(*host, IdeGetFileName(), IdeGetFileLine());
+		bi = Bpoint(IdeGetFileName(), IdeGetFileLine());
 	if(!TryBreak("b " + bi)) {
 		Exclamation("No code at chosen location!");
 		return false;
@@ -593,14 +593,11 @@ bool Gdb::Key(dword key, int count)
 	return Ctrl::Key(key, count);
 }
 
-bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
+bool Gdb::Create(Host& host, const String& exefile, const String& cmdline, bool console)
 {
-	host = pick(_host);
-	
-	String gdb_command = GdbCommand(console) + host->NormalizeExecutablePath(exefile);
-	dbg = host->StartProcess(gdb_command);
+	String gdb_command = GdbCommand(console) + NormalizeExePath(exefile);
 
-	if (!dbg) {
+	if(!host.StartProcess(dbg, gdb_command)) {
 		Loge() << METHOD_NAME << "Failed to launch gdb (\"" << gdb_command << "\").";
 		
 		ErrorOK("Error while invoking gdb! For details check TheIDE logs.");
@@ -780,10 +777,10 @@ Gdb::Gdb()
 	pane.Add(nodebuginfo_bg);
 }
 
-One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
+One<Debugger> GdbCreate(Host& host, const String& exefile, const String& cmdline, bool console)
 {
 	auto dbg = MakeOne<Gdb>();
-	if(!dbg->Create(pick(host), exefile, cmdline, console))
+	if(!dbg->Create(host, exefile, cmdline, console))
 		return nullptr;
 	return pick(dbg); // CLANG does not like this without pick
 }

@@ -1,6 +1,17 @@
-#include "urepo.h"
+#include "ide.h"
 
-namespace Upp {
+int RepoSys(const char *cmd, String& out, bool convertcharset)
+{
+	LocalProcess p; // TODO: CreateHost global
+	Ide *ide = (Ide *)TheIde();
+	if(!ide)
+		return -1;
+	Host host;
+	ide->CreateHost(host, false, false);
+	if(!p.Start(cmd))
+		return -1;
+	return p.Finish(out);
+}
 
 UrepoConsole::UrepoConsole()
 {
@@ -28,19 +39,22 @@ void UrepoConsole::Log(const Value& s, Color ink)
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 }
 
-int UrepoConsole::System(const char *cmd, Event<One<AProcess>&, const char *> start_process)
+int UrepoConsole::System(const char *cmd)
 {
 	if(!IsOpen())
 		Open();
 	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(SLtBlue()));
 	int ii = list.GetCount();
-	One<AProcess> ap;
-	start_process(ap, cmd);
-	if(!ap) {
+	LocalProcess p;
+	Ide *ide = (Ide *)TheIde();
+	if(!ide)
+		return -1;
+	Host host;
+	ide->CreateHost(host, false, false);
+	if(!p.Start(cmd)) {
 		list.Add(AttrText("Failed to start the executable").SetFont(font().Bold()).Ink(SLtRed()));
 		return -1;
 	}
-	AProcess& p = *ap;
 	String out;
 	canceled = false;
 	cancel.Show();
@@ -70,15 +84,6 @@ int UrepoConsole::System(const char *cmd, Event<One<AProcess>&, const char *> st
 	return code;
 }
 
-int UrepoConsole::System(const char *cmd)
-{
-	return System(cmd, [&](One<AProcess>& ap, const char *cmd) {
-		LocalProcess& p = ap.Create<LocalProcess>();
-		if(!p.Start(cmd))
-			ap.Clear();
-	});
-}
-
 int UrepoConsole::CheckSystem(const char *s)
 {
 	int exitcode = System(s);
@@ -100,5 +105,3 @@ int UrepoConsole::Git(const char *dir, const char *command)
 	SetCurrentDirectory(h);
 	return code;
 }
-
-};

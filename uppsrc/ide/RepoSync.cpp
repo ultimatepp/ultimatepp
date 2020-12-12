@@ -1,6 +1,4 @@
-#include "urepo.h"
-
-namespace Upp {
+#include "ide.h"
 
 RepoSync::RepoSync()
 {
@@ -524,5 +522,3 @@ int GetRepoKind(const String& p)
 	}
 	return NOT_REPO_DIR;
 }
-
-};

@@ -150,13 +150,7 @@ void UppHubDlg::Install(const Index<int>& ii)
 				else
 					cmd << repo;
 				cmd << ' ' << GetHubDir() << '/' << n;
-				Ide *ide = (Ide *)TheIde();
-				if(!ide)
-					console.Log("failed", Gray());
-				One<Host> host = ide->CreateHost(false, false);
-				console.System(cmd, [&](One<AProcess>& ap, const char *cmd) {
-					ap = host->StartProcess(cmd);
-				});
+				console.System(cmd);
 			}
 		}
 		console.Log("Done", Gray());

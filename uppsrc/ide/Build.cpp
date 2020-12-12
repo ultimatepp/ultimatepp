@@ -31,7 +31,7 @@ String Ide::GetMain()
 	return main;
 }
 
-void Ide::BeginBuilding(bool sync_files, bool clear_console)
+void Ide::BeginBuilding(bool clear_console)
 {
 	SetupDefaultMethod();
 	HdependTimeDirty();
@@ -47,7 +47,6 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	if(clear_console)
 		console.Clear();
 	build_time = msecs();
-	CreateHost(sync_files, disable_uhd);
 	cmdout.Clear();
 }
 
@@ -56,7 +55,8 @@ void Ide::EndBuilding(bool ok)
 	console.EndGroup();
 	console.Wait();
 	Vector<String> errors = console.PickErrors();
-	CreateHost(false, disable_uhd)->DeleteFile(errors);
+	for(String p : errors)
+		DeleteFile(p);
 	if(!errors.IsEmpty())
 		ok = false;
 	PutConsole("");
@@ -79,7 +79,7 @@ void Ide::DoBuild()
 void Ide::PackageBuild()
 {
 	InitBlitz();
-	BeginBuilding(true, true);
+	BeginBuilding(true);
 	const Workspace& wspc = IdeWorkspace();
 	int pi = GetPackageIndex();
 	if(pi >= 0 && pi <= wspc.GetCount()) {
@@ -138,7 +138,7 @@ void Ide::FileCompile()
 		return;
 	ClearErrorEditor(editfile);
 	SwitchHeader();
-	BeginBuilding(true, true);
+	BeginBuilding(true);
 	const Workspace& wspc = IdeWorkspace();
 	bool ok = true;
 	onefile = editfile;
@@ -180,11 +180,12 @@ void Ide::Preprocess(bool asmout) {
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= wspc.GetCount())
 		return;
-	One<Host> host = CreateHost(darkmode, disable_uhd);
-	One<Builder> b = CreateBuilder(~host);
+	Host host;
+	CreateHost(host, darkmode, disable_uhd);
+	One<Builder> b = CreateBuilder(&host);
 	Vector<String> linkfile;
 	String linkopt;
-	b->config = PackageConfig(wspc, pi, GetMethodVars(method), mainconfigparam, *host, *b);
+	b->config = PackageConfig(wspc, pi, GetMethodVars(method), mainconfigparam, host, *b);
 	console.Clear();
 	PutConsole((asmout ? "Compiling " : "Preprocessing ") + editfile);
 	b->Preprocess(wspc[pi], editfile, pfn, asmout);

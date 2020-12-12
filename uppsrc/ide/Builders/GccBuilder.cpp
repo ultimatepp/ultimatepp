@@ -28,7 +28,7 @@ void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String based
 	String tmpfile = ForceExt(objfile, ".c");
 	SaveFile(tmpfile, fo);
 	String cc = CmdLine(package, pkg);
-	cc << " -c -o " << GetHostPathQ(objfile) << " -x c " << GetHostPathQ(tmpfile);
+	cc << " -c -o " << GetPathQ(objfile) << " -x c " << GetPathQ(tmpfile);
 	int slot = AllocSlot();
 	if(slot < 0 || !Run(cc, slot, objfile, 1))
 		throw Exc(Format("Error compiling binary object '%s'.", objfile));
@@ -202,22 +202,22 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		int pch_slot = AllocSlot();
 		StringBuffer sb;
 
-		sb << Join(cc, cpp_options) << " -x c++-header " << GetHostPathQ(pch_header) << " -o " << GetHostPathQ(pch_file);
+		sb << Join(cc, cpp_options) << " -x c++-header " << GetPathQ(pch_header) << " -o " << GetPathQ(pch_file);
 
 		PutConsole("Precompiling header: " + GetFileName(pch_header));
-		if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_file), 1))
+		if(pch_slot < 0 || !Run(~sb, pch_slot, pch_file, 1))
 			error = true;
 		Wait();
 
-		pch_use = " -I" + GetHostPathQ(outdir) + " -include " + GetFileName(pch_header2) + " -Winvalid-pch ";
+		pch_use = " -I" + GetPathQ(outdir) + " -include " + GetFileName(pch_header2) + " -Winvalid-pch ";
 	}
 
 	if(blitz && b.build) {
 		PutConsole("BLITZ:" + b.info);
 		int slot = AllocSlot();
 		if(slot < 0 || !Run(String().Cat() << Join(cc, cpp_options) << ' '
-		                    << GetHostPathQ(b.path)
-		                    << " -o " << GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
+		                    << GetPathQ(b.path)
+		                    << " -o " << GetPathQ(b.object), slot, b.object, b.count))
 			error = true;
 	}
 
@@ -237,7 +237,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		String objfile = CatAnyPath(outdir, GetFileTitle(fn) + (rc ? "$rc.o" : brc ? "$brc.o" : ".o"));
 		if(GetFileName(fn) == "Info.plist")
 			Info_plist = LoadFile(fn);
-		if(HdependFileTime(fn) > GetFileTime(GetHostPath(objfile))) {
+		if(HdependFileTime(fn) > GetFileTime(objfile)) {
 			PutConsole(GetFileName(fn));
 			int time = msecs();
 			bool execerr = false;
@@ -247,14 +247,14 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				int q = compiler.ReverseFind('-'); // clang32 windres name is i686-w64-mingw32-windres.exe
 				if(q > 0)
 					windres = compiler.Mid(0, q + 1) + windres;
-				exec << GetHostPath(FindInDirs(host->GetExecutablesDirs(), windres)) << " -i " << GetHostPathQ(fn);
+				exec << FindInDirs(host->GetExecutablesDirs(), windres) << " -i " << GetPathQ(fn);
 				if(cc.Find(" -m32 ") >= 0)
 					exec << " --target=pe-i386 ";
-				exec << " -o " << GetHostPathQ(objfile) << Includes(" --include-dir=", package, pkg)
+				exec << " -o " << GetPathQ(objfile) << Includes(" --include-dir=", package, pkg)
 				     << DefinesTargetTime(" -D", package, pkg) + (HasFlag("DEBUG")?" -D_DEBUG":"");
 				PutVerbose(exec);
 				int slot = AllocSlot();
-				execerr = (slot < 0 || !Run(exec, slot, GetHostPath(objfile), 1));
+				execerr = (slot < 0 || !Run(exec, slot, objfile, 1));
 			}
 			else if(brc) {
 				try {
@@ -262,7 +262,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					if(brcdata.IsVoid())
 						throw Exc(Format("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
-					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(fn), package, pkg);
+					BinaryToObject(objfile, parser, GetFileDirectory(fn), package, pkg);
 				}
 				catch(Exc e) {
 					PutConsole(e);
@@ -285,10 +285,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					exec << fuse_cxa_atexit << Join(" -x c++", cpp_options) << ' ';
 					exec << pch_use;
 				}
-				exec << GetHostPathQ(fn)  << " " << soptions[i] << " -o " << GetHostPathQ(objfile);
+				exec << GetPathQ(fn)  << " " << soptions[i] << " -o " << GetPathQ(objfile);
 				PutVerbose(exec);
 				int slot = AllocSlot();
-				execerr = (slot < 0 || !Run(exec, slot, GetHostPath(objfile), 1));
+				execerr = (slot < 0 || !Run(exec, slot, objfile, 1));
 			}
 			if(execerr)
 				DeleteFile(objfile);
@@ -340,11 +340,11 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			product = GetSharedLibPath(package);
 		else
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".a");
-		String hproduct = GetHostPath(product);
+		String hproduct = product;
 		Time producttime = GetFileTime(hproduct);
 		if(obj.GetCount()) {
-			linkfile.Add(GetHostPath(product));
-			immfile.Add(GetHostPath(product));
+			linkfile.Add(product);
+			immfile.Add(product);
 		}
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(GetFileTime(obj[i]) > producttime)
@@ -363,7 +363,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
                            const String& link_options)
 {
 	int libtime = msecs();
-	String hproduct = GetHostPath(product);
+	String hproduct = product;
 	String lib;
 	bool is_shared = HasFlag("SO");
 	if(is_shared) {
@@ -382,20 +382,20 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	}
 	else
 		lib = "ar -sr ";
-	lib << GetHostPathQ(product);
+	lib << GetPathQ(product);
 
 	String llib;
 	for(int i = 0; i < obj.GetCount(); i++)
-		llib << ' ' << GetHostPathQ(obj[i]);
+		llib << ' ' << GetPathQ(obj[i]);
 	PutConsole("Creating library...");
 	DeleteFile(hproduct);
 	if(is_shared) {
 		for(int i = 0; i < libpath.GetCount(); i++)
-			llib << " -L" << GetHostPathQ(libpath[i]);
+			llib << " -L" << GetPathQ(libpath[i]);
 		for(int i = 0; i < all_uses.GetCount(); i++)
-			llib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
+			llib << ' ' << GetPathQ(GetSharedLibPath(all_uses[i]));
 		for(int i = 0; i < all_libraries.GetCount(); i++)
-			llib << " -l" << GetHostPathQ(all_libraries[i]);
+			llib << " -l" << GetPathQ(all_libraries[i]);
 		
 		if(HasFlag("POSIX"))
 			llib << " -Wl,-soname," << GetSoname(product);
@@ -522,15 +522,15 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 						lnk << " -mconsole";
 				}
 			}
-			lnk << " -o " << GetHostPathQ(target);
+			lnk << " -o " << GetPathQ(target);
 			if(createmap)
-				lnk << " -Wl,-Map," << GetHostPathQ(GetFileDirectory(target) + GetFileTitle(target) + ".map");
+				lnk << " -Wl,-Map," << GetPathQ(GetFileDirectory(target) + GetFileTitle(target) + ".map");
 			if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 				lnk << (HasFlag("CLANG") && HasFlag("WIN32") ? " -Wl,-pdb=" : " -ggdb");
 			else
 				lnk << (!HasFlag("OSX") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)
-				lnk << " -L" << GetHostPathQ(libpath[i]);
+				lnk << " -L" << GetPathQ(libpath[i]);
 			MergeWith(lnk, " ", linkoptions);
 			String lfilename;
 			if(HasFlag("OBJC")) {
@@ -538,23 +538,23 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				String linklist;
 				for(i = 0; i < linkfile.GetCount(); i++)
 					if(ToLower(GetFileExt(linkfile[i])) == ".o" || ToLower(GetFileExt(linkfile[i])) == ".a")
-						linklist << GetHostPath(linkfile[i]) << '\n';
+						linklist << linkfile[i] << '\n';
 
 				String linklistM = "Producing link file list ...\n";
 				String odir = GetFileDirectory(linkfile[0]);
-				lfilename << GetHostPath(GetFileFolder(linkfile[0])) << ".LinkFileList";
+				lfilename << GetFileFolder(linkfile[0]) << ".LinkFileList";
 					
 				linklistM  << lfilename;
 				UPP::SaveFile(lfilename, linklist);
-				lnk << " -L" << GetHostPathQ(odir)
-				    << " -F" << GetHostPathQ(odir)
+				lnk << " -L" << GetPathQ(odir)
+				    << " -F" << GetPathQ(odir)
 				          << " -filelist " << lfilename << " ";
 				PutConsole( linklistM );
 			}
 			else
 				for(i = 0; i < linkfile.GetCount(); i++) {
 					if(ToLower(GetFileExt(linkfile[i])) == ".o")
-						lnk  << ' ' << GetHostPathQ(linkfile[i]);
+						lnk  << ' ' << GetPathQ(linkfile[i]);
 					else
 						lib.Add(linkfile[i]);
 				}
@@ -582,12 +582,12 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							
 					if(pass == 0) {
 						if(ext == ".a")
-							lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
+							lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
 					}
 					else
 						if(ext != ".a") {
 							if(ext == ".so" || ext == ".dll" || ext == ".lib")
-								lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
+								lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
 							else
 								lnk << " -l" << ln;
 						}
@@ -600,7 +600,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			CustomStep(".pre-link", Null, error);
 			if(!error && Execute(lnk) == 0) {
 				CustomStep(".post-link", Null, error);
-				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+				PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
 				return !error;
 			}
@@ -610,7 +610,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			}
 		}
 
-	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
+	PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
 	return true;
 }
@@ -627,7 +627,7 @@ bool GccBuilder::Preprocess(const String& package, const String& file, const Str
 	String cmd = CmdLine(package, pkg);
 	cmd << " " << Gather(pkg.option, config.GetKeys());
 	cmd << " -o " << target;
-	cmd << (asmout ? " -S " : " -E ") << GetHostPathQ(file);
+	cmd << (asmout ? " -S " : " -E ") << GetPathQ(file);
 	if(BuilderUtils::IsCFile(file))
 		cmd << " " << c_options;
 	else

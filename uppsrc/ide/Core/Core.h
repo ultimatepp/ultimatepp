@@ -476,19 +476,12 @@ struct Builder {
 	
 	// TODO: move other methods if needed
 	void                   ChDir(const String& path);
-	String                 GetHostPath(const String& path) const;
-	String                 GetHostPathQ(const String& path) const;
+	String                 GetPathQ(const String& path) const;
 	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
 	Host::FileInfo         GetFileInfo(const String& path) const;
 	Time                   GetFileTime(const String& path) const;
 	int                    Execute(const char *cmdline);
 	int                    Execute(const char *cl, Stream& out);
-	void                   DeleteFile(const Vector<String>& path);
-	void                   DeleteFile(const String& path);
-	bool                   FileExists(const String& path) const;
-	bool                   RealizeDir(const String& path);
-	bool                   SaveFile(const String& path, const String& data);
-	String                 LoadFile(const String& path);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
 };
 
