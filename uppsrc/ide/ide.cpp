@@ -170,7 +170,9 @@ bool Ide::OpenMainPackage()
 void Ide::NewMainPackage()
 {
 	if(setmain_newide) {
-		CreateHost(false, false)->Launch(GetExeFilePath() + " --nosplash");
+		Host h;
+		CreateHost(h, false, false);
+		h.Launch(GetExeFilePath() + " --nosplash");
 	}
 	else {
 		SaveCodeBase();

@@ -34,7 +34,7 @@ public:
 	virtual void ConsoleClear() = 0;
 	virtual void SetupDefaultMethod() = 0;
 	virtual Vector<String> PickErrors() = 0; //console.PickErrors()
-	virtual void BeginBuilding(bool sync_files, bool clear_console) = 0;
+	virtual void BeginBuilding(bool clear_console) = 0;
 	virtual void EndBuilding(bool ok) = 0;
 	virtual void ClearErrorEditor() = 0;
 	virtual void DoProcessEvents() = 0;
@@ -67,10 +67,11 @@ public:
 	
 	bool         makefile_svn_revision = true;
 
+	void CreateHost(Host& host, bool darkmode = false, bool disable_uhd = false, const VectorMap<String, String>& add_to_env = VectorMap<String, String>());
+
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
 	                            String mainparam, Host& host, Builder& b, String *target = NULL);
-	One<Host> CreateHost(bool darkmode, bool disable_uhd);
 	One<Builder> CreateBuilder(Host *host);
 	String OutDir(const Index<String>& cfg, const String& package,
 	              const VectorMap<String, String>& bm, bool use_target = false);

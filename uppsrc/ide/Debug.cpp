@@ -105,14 +105,13 @@ void Ide::RunArgs() {
 	}
 }
 
-One<Host> Ide::CreateHostRunDir()
+void Ide::CreateHostRunDir(Host& h)
 {
-	One<Host> h = CreateHost(darkmode, disable_uhd);
+	CreateHost(h, darkmode, disable_uhd);
 	if(IsNull(rundir))
-		h->ChDir(GetFileFolder(target));
+		h.ChDir(GetFileFolder(target));
 	else
-		h->ChDir(rundir);
-	return h;
+		h.ChDir(rundir);
 }
 
 bool Ide::ShouldHaveConsole()
@@ -135,24 +134,25 @@ void Ide::BuildAndExecute()
 void Ide::ExecuteBinary()
 {
 	int time = msecs();
-	One<Host> h = CreateHostRunDir();
-	h->ChDir(Nvl(rundir, GetFileFolder(target)));
+	Host h;
+	CreateHostRunDir(h);
+	h.ChDir(Nvl(rundir, GetFileFolder(target)));
 	String cmdline;
 	if(!runexternal)
-		cmdline << '\"' << h->GetHostPath(target) << "\" ";
+		cmdline << '\"' << target << "\" ";
 	cmdline << ToSystemCharset(runarg);
 		
 	int exitcode;
 	switch(runmode) {
 	case RUN_WINDOW:
 		HideBottom();
-		h->Launch(cmdline, ShouldHaveConsole());
+		h.Launch(cmdline, ShouldHaveConsole());
 		break;
 	case RUN_CONSOLE:
 		ShowConsole();
 		PutConsole(String().Cat() << "Executing: " << cmdline);
 		console.Sync();
-		exitcode = h->ExecuteWithInput(cmdline, console_utf8);
+		exitcode = h.ExecuteWithInput(cmdline, console_utf8);
 		PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
 		break;
 	case RUN_FILE: {
@@ -167,7 +167,7 @@ void Ide::ExecuteBinary()
 				PromptOK("Unable to open output file [* " + DeQtf(stdout_file) + "] !");
 				return;
 			}
-			if(h->Execute(cmdline, out, console_utf8) >= 0) {
+			if(h.Execute(cmdline, out, console_utf8) >= 0) {
 				out.Close();
 				EditFile(fn);
 			}
@@ -177,16 +177,17 @@ void Ide::ExecuteBinary()
 
 void Ide::LaunchTerminal(const char *dir)
 {
-	One<Host> h = CreateHost(false, false);
-	h->ChDir(dir);
+	Host h;
+	CreateHost(h, false, false);
+	h.ChDir(dir);
 #ifdef PLATFORM_WIN32
-	h->Launch(Nvl(HostConsole, "powershell.exe"), false);
+	h.Launch(Nvl(HostConsole, "powershell.exe"), false);
 #else
 	String c = HostConsole;
 	int q = c.Find(' ');
 	if(q >= 0)
 		c.Trim(q);
-	h->Launch(Nvl(c, "/usr/bin/xterm"), false);
+	h.Launch(Nvl(c, "/usr/bin/xterm"), false);
 #endif
 }
 
@@ -260,27 +261,29 @@ void Ide::ExecuteApk()
 	if(!select.GetDeviceCount())
 		return;
 	
-	One<Host> host = CreateHost(darkmode, disable_uhd);
+	Host host;
+	CreateHost(host, darkmode, disable_uhd);
 	Apk apk(target, sdk);
 	String packageName = apk.FindPackageName();
 	String activityName = apk.FindLaunchableActivity();
 	
 	Adb adb = sdk.MakeAdb();
 	adb.SetSerial(select.GetSelectedSerial());
-	host->Execute(adb.MakeInstallCmd(target));
+	host.Execute(adb.MakeInstallCmd(target));
 	
 	if(!packageName.IsEmpty() && !activityName.IsEmpty())
-		host->Execute(adb.MakeLaunchOnDeviceCmd(packageName, activityName));
+		host.Execute(adb.MakeLaunchOnDeviceCmd(packageName, activityName));
 }
 
 void Ide::BuildAndDebug0(const String& srcfile)
 {
 	if(Build()) {
-		One<Host> h = CreateHostRunDir();
-		h->ChDir(GetFileFolder(target));
+		Host h;
+		CreateHostRunDir(h);
+		h.ChDir(GetFileFolder(target));
 		VectorMap<String, String> bm = GetMethodVars(method);
 		String dbg = Nvl(bm.Get("DEBUGGER", Null), "gdb");
-		h->Launch('\"' + dbg + "\" \"" + h->GetHostPath(target) + "\"", true);
+		h.Launch('\"' + dbg + "\" \"" + target + "\"", true);
 	}
 }
 
@@ -294,10 +297,10 @@ void Ide::BuildAndExtDebugFile()
 	BuildAndDebug0(editfile);
 }
 
-One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> GdbCreate(Host& host, const String& exefile, const String& cmdline, bool console);
 
 #ifdef PLATFORM_WIN32
-One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool clang);
+One<Debugger> PdbCreate(Host& host, const String& exefile, const String& cmdline, bool clang);
 #endif
 
 void Ide::BuildAndDebug(bool runto)
@@ -317,8 +320,9 @@ void Ide::BuildAndDebug(bool runto)
 		return;
 	if(designer && !editfile_isfolder)
 		EditAsText();
-	One<Host> host = CreateHostRunDir();
-	host->ChDir(Nvl(rundir, GetFileFolder(target)));
+	Host host;
+	CreateHostRunDir(host);
+	host.ChDir(Nvl(rundir, GetFileFolder(target)));
 	HideBottom();
 	editor.Disable();
 
@@ -326,10 +330,10 @@ void Ide::BuildAndDebug(bool runto)
 
 #ifdef PLATFORM_WIN32
 	if(findarg(builder, "GCC") < 0) // llvm-mingw can generate pdb symbolic info
-		debugger = PdbCreate(pick(host), target, runarg, builder == "CLANG");
+		debugger = PdbCreate(host, target, runarg, builder == "CLANG");
 	else
 #endif
-		debugger = GdbCreate(pick(host), target, runarg, console);
+		debugger = GdbCreate(host, target, runarg, console);
 
 	if(!debugger) {
 		IdeEndDebug();
@@ -426,9 +430,11 @@ void Ide::ConditionalBreak()
 	String brk = editor.GetBreakpoint(ln);
 	if(brk == "\xe")
 		brk = "1";
-
-	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
-	                                  *CreateHost(darkmode, disable_uhd), *CreateBuilder(~CreateHostRunDir()));
+	
+	Host h;
+	CreateHost(h, darkmode, disable_uhd);
+	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam, h,
+	                                  *CreateBuilder(&h));
 #ifdef PLATFORM_WIN32
 	if(cfg.Find("MSC") >= 0) {
 		if(EditPDBExpression("Conditional breakpoint", brk, NULL))

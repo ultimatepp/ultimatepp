@@ -409,21 +409,23 @@ void Ide::MacroExecute(EscEscape& e)
 {
 	int time = msecs();
 	String cmdline = e[0];
-	One<Host> h = CreateHostRunDir();
-	h->ChDir(Nvl(rundir, GetFileFolder(target)));
+	Host h;
+	CreateHostRunDir(h);
+	h.ChDir(Nvl(rundir, GetFileFolder(target)));
 	ShowConsole();
 	PutConsole(String().Cat() << "MacroExecute: " << cmdline);
 	console.Sync();
-	e = h->Execute(cmdline);
+	e = h.Execute(cmdline);
 	PutVerbose("Finished in " + GetPrintTime(time));
 }
 
 void Ide::MacroLaunch(EscEscape& e)
 {
 	String cmdline = e[0];
-	One<Host> h = CreateHostRunDir();
-	h->ChDir(Nvl(rundir, GetFileFolder(target)));
-	h->Launch(cmdline);
+	Host h;
+	CreateHostRunDir(h);
+	h.ChDir(Nvl(rundir, GetFileFolder(target)));
+	h.Launch(cmdline);
 }
 
 void Ide::MacroClearConsole(EscEscape& e)

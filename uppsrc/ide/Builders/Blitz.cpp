@@ -77,7 +77,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 				b.build = true;
 			blitz << "\r\n"
 			      << "#define BLITZ_INDEX__ F" << i << "\r\n"
-			      << "#include \"" << builder->GetHostPath(sourceFile) << "\"\r\n";
+			      << "#include \"" << sourceFile << "\"\r\n";
 			b.info << ' ' << GetFileName(sourceFile);
 			const Vector<String>& d = HdependGetDefines(sourceFile);
 			for(int i = 0; i < d.GetCount(); i++)
@@ -97,16 +97,16 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 	if(b.count > 1) {
 		sourceFiles = pick(excluded);
 		soptions = pick(excludedoptions);
-		if(builder->LoadFile(b.path) != blitz) {
-			builder->RealizeDir(GetFileDirectory(b.path));
-			builder->SaveFile(b.path, blitz);
+		if(LoadFile(b.path) != blitz) {
+			RealizeDirectory(GetFileDirectory(b.path));
+			SaveFile(b.path, blitz);
 			b.build = true;
 		}
 		obj.Add(b.object);
 		immfile.Add(b.object);
 	}
 	else {
-		builder->DeleteFile(b.path);
+		DeleteFile(b.path);
 		b.build = false;
 	}
 	return b;
