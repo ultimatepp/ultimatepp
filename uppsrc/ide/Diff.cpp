@@ -1,7 +1,7 @@
 #include "ide.h"
 
 #define IMAGECLASS UrepoImg
-#define IMAGEFILE  <urepo/urepo.iml>
+#define IMAGEFILE  <ide/urepo.iml>
 #include <Draw/iml.h>
 
 struct RepoDiff : DiffDlg {

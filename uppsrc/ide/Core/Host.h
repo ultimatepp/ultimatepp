@@ -19,6 +19,7 @@ struct Host : LocalProcess {
 	Host();
 	
 	String                GetEnvironment();
+	void                  AddEnvironment(const char *id, const char *value);
 	Vector<FileInfo>      GetFileInfo(const Vector<String>& path);
 
 	void                  ChDir(const String& path);
