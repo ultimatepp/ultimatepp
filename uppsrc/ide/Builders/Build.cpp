@@ -93,7 +93,7 @@ String NoCr(const char *s)
 	return out;
 }
 
-void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd, const VectorMap<String, String>& add_to_env)
+void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -124,11 +124,6 @@ void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd, const Ve
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);
 			host.environment << env.GetKey(i) << '=' << env[i] << '\0';
-		}
-		for(int i = 0; i < add_to_env.GetCount(); i++) {
-			LDUMP(add_to_env.GetKey(i));
-			LDUMP(add_to_env[i]);
-			host.environment << add_to_env.GetKey(i) << '=' << add_to_env[i] << '\0';
 		}
 		host.environment.Cat(0);
 		host.cmdout = &cmdout;

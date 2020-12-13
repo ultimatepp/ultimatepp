@@ -13,6 +13,16 @@ String Host::GetEnvironment()
 	return environment;
 }
 
+void Host::AddEnvironment(const char *id, const char *value)
+{
+	bool b = *environment;
+	if(b)
+		environment.Trim(environment.GetCount() - 1);
+	environment << id << '=' << value << '\0';
+	if(b)
+		environment << '\0';
+}
+
 Vector<Host::FileInfo> Host::GetFileInfo(const Vector<String>& path)
 {
 	Vector<FileInfo> fi;
