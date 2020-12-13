@@ -49,8 +49,6 @@ OutDir_ide_Java = $(UPPOUT)ide/Java/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_Java = $(Macro)
 OutDir_ide_MacroManager = $(UPPOUT)ide/MacroManager/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_ide_MacroManager = $(Macro)
-OutDir_urepo = $(UPPOUT)urepo/GCC-Gcc-Gui-Linux-Posix-Shared/
-Macro_urepo = $(Macro)
 OutDir_Report = $(UPPOUT)Report/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Report = $(Macro)
 OutDir_Core_SSL = $(UPPOUT)Core/SSL/GCC-Gcc-Gui-Linux-Posix-Shared/
@@ -125,7 +123,6 @@ prepare: \
 	$(OutDir_ide_Android) \
 	$(OutDir_ide_Java) \
 	$(OutDir_ide_MacroManager) \
-	$(OutDir_urepo) \
 	$(OutDir_Report) \
 	$(OutDir_Core_SSL) \
 	$(OutDir_Esc) \
@@ -213,6 +210,10 @@ $(OutFile): build_info  \
 	$(OutDir_ide)Debug.o \
 	$(OutDir_ide)Valgrind.o \
 	$(OutDir_ide)Export.o \
+	$(OutDir_ide)RepoConsole.o \
+	$(OutDir_ide)RepoSync.o \
+	$(OutDir_ide)Credentials.o \
+	$(OutDir_ide)Diff.o \
 	$(OutDir_ide_Common)Common.a \
 	$(OutDir_ide_Core)Core.a \
 	$(OutDir_ide_LayDes)LayDes.a \
@@ -231,7 +232,6 @@ $(OutFile): build_info  \
 	$(OutDir_ide_Android)Android.a \
 	$(OutDir_ide_Java)Java.a \
 	$(OutDir_ide_MacroManager)MacroManager.a \
-	$(OutDir_urepo)urepo.a \
 	$(OutDir_Report)Report.a \
 	$(OutDir_Core_SSL)SSL.o \
 	$(OutDir_Core_SSL)SSL.a \
@@ -325,6 +325,10 @@ $(OutFile): build_info  \
 		$(OutDir_ide)Debug.o \
 		$(OutDir_ide)Valgrind.o \
 		$(OutDir_ide)Export.o \
+		$(OutDir_ide)RepoConsole.o \
+		$(OutDir_ide)RepoSync.o \
+		$(OutDir_ide)Credentials.o \
+		$(OutDir_ide)Diff.o \
 			$(OutDir_ide_Common)Common.a \
 			$(OutDir_ide_Core)Core.a \
 			$(OutDir_ide_LayDes)LayDes.a \
@@ -343,7 +347,6 @@ $(OutFile): build_info  \
 			$(OutDir_ide_Android)Android.a \
 			$(OutDir_ide_Java)Java.a \
 			$(OutDir_ide_MacroManager)MacroManager.a \
-			$(OutDir_urepo)urepo.a \
 			$(OutDir_Report)Report.a \
 		$(OutDir_Core_SSL)SSL.o \
 			$(OutDir_Core_SSL)SSL.a \
@@ -561,6 +564,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -597,8 +601,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/BaseDlg.cpp -o $(OutDir_ide)BaseDlg.o
 
 $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
@@ -767,6 +770,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -803,8 +807,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/SelectPkg.cpp -o $(OutDir_ide)SelectPkg.o
 
 $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
@@ -973,6 +976,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -1009,8 +1013,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/UppWspc.cpp -o $(OutDir_ide)UppWspc.o
 
 $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
@@ -1179,6 +1182,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -1215,8 +1219,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/NewPackageFile.cpp -o $(OutDir_ide)NewPackageFile.o
 
 $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
@@ -1385,6 +1388,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -1421,8 +1425,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Organizer.cpp -o $(OutDir_ide)Organizer.o
 
 $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
@@ -1591,6 +1594,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -1627,8 +1631,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Template.cpp -o $(OutDir_ide)Template.o
 
 $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
@@ -1797,6 +1800,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -1833,8 +1837,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Console.cpp -o $(OutDir_ide)Console.o
 
 $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
@@ -2003,6 +2006,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -2039,8 +2043,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/FindFile.cpp -o $(OutDir_ide)FindFile.o
 
 $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
@@ -2209,6 +2212,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -2245,8 +2249,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/FindInFiles.cpp -o $(OutDir_ide)FindInFiles.o
 
 $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
@@ -2415,6 +2418,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -2451,8 +2455,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Config.cpp -o $(OutDir_ide)Config.o
 
 $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
@@ -2621,6 +2624,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -2657,8 +2661,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/ide.cpp -o $(OutDir_ide)ide.o
 
 $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
@@ -2827,6 +2830,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -2863,8 +2867,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/idefile.cpp -o $(OutDir_ide)idefile.o
 
 $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
@@ -3033,6 +3036,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -3069,8 +3073,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/EditorTabBar.cpp -o $(OutDir_ide)EditorTabBar.o
 
 $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
@@ -3239,6 +3242,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -3275,8 +3279,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Bottom.cpp -o $(OutDir_ide)Bottom.o
 
 $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
@@ -3445,6 +3448,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -3481,8 +3485,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/t.cpp -o $(OutDir_ide)t.o
 
 $(OutDir_ide)Cpp.o: $(UPPDIR1)ide/Cpp.cpp \
@@ -3651,6 +3654,7 @@ $(OutDir_ide)Cpp.o: $(UPPDIR1)ide/Cpp.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -3687,8 +3691,7 @@ $(OutDir_ide)Cpp.o: $(UPPDIR1)ide/Cpp.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Cpp.cpp -o $(OutDir_ide)Cpp.o
 
 $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
@@ -3857,6 +3860,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -3893,8 +3897,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Assist.cpp -o $(OutDir_ide)Assist.o
 
 $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
@@ -4063,6 +4066,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -4099,8 +4103,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/DCopy.cpp -o $(OutDir_ide)DCopy.o
 
 $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
@@ -4269,6 +4272,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -4305,8 +4309,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/ContextGoto.cpp -o $(OutDir_ide)ContextGoto.o
 
 $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
@@ -4475,6 +4478,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -4511,8 +4515,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/GoToLine.cpp -o $(OutDir_ide)GoToLine.o
 
 $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
@@ -4681,6 +4684,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -4717,8 +4721,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Swaps.cpp -o $(OutDir_ide)Swaps.o
 
 $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
@@ -4887,6 +4890,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -4923,8 +4927,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/ParamInfo.cpp -o $(OutDir_ide)ParamInfo.o
 
 $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
@@ -5093,6 +5096,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -5129,8 +5133,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Navigator.cpp -o $(OutDir_ide)Navigator.o
 
 $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
@@ -5299,6 +5302,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -5335,8 +5339,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Annotations.cpp -o $(OutDir_ide)Annotations.o
 
 $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
@@ -5505,6 +5508,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -5541,8 +5545,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Virtuals.cpp -o $(OutDir_ide)Virtuals.o
 
 $(OutDir_ide)Thisbacks.o: $(UPPDIR1)ide/Thisbacks.cpp \
@@ -5711,6 +5714,7 @@ $(OutDir_ide)Thisbacks.o: $(UPPDIR1)ide/Thisbacks.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -5747,8 +5751,7 @@ $(OutDir_ide)Thisbacks.o: $(UPPDIR1)ide/Thisbacks.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Thisbacks.cpp -o $(OutDir_ide)Thisbacks.o
 
 $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
@@ -5917,6 +5920,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -5953,8 +5957,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Log.cpp -o $(OutDir_ide)Log.o
 
 $(OutDir_ide)Jump.o: $(UPPDIR1)ide/Jump.cpp \
@@ -6123,6 +6126,7 @@ $(OutDir_ide)Jump.o: $(UPPDIR1)ide/Jump.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -6159,8 +6163,7 @@ $(OutDir_ide)Jump.o: $(UPPDIR1)ide/Jump.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Jump.cpp -o $(OutDir_ide)Jump.o
 
 $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
@@ -6329,6 +6332,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -6365,8 +6369,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/MainConfig.cpp -o $(OutDir_ide)MainConfig.o
 
 $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
@@ -6535,6 +6538,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -6571,8 +6575,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Setup.cpp -o $(OutDir_ide)Setup.o
 
 $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
@@ -6741,6 +6744,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -6777,8 +6781,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Custom.cpp -o $(OutDir_ide)Custom.o
 
 $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
@@ -6947,6 +6950,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -6983,8 +6987,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Print.cpp -o $(OutDir_ide)Print.o
 
 $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
@@ -7153,6 +7156,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -7189,8 +7193,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Insert.cpp -o $(OutDir_ide)Insert.o
 
 $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
@@ -7359,6 +7362,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -7395,8 +7399,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/idetool.cpp -o $(OutDir_ide)idetool.o
 
 $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
@@ -7565,6 +7568,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -7601,8 +7605,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Install.cpp -o $(OutDir_ide)Install.o
 
 $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
@@ -7771,6 +7774,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -7807,8 +7811,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Android.cpp -o $(OutDir_ide)Android.o
 
 $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
@@ -7979,6 +7982,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -8015,8 +8019,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/idebar.cpp -o $(OutDir_ide)idebar.o
 
 $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
@@ -8186,6 +8189,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -8222,8 +8226,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/idewin.cpp -o $(OutDir_ide)idewin.o
 
 $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
@@ -8393,6 +8396,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -8429,8 +8433,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/main.cpp -o $(OutDir_ide)main.o
 
 $(OutDir_ide)CommandLineHandler.o: $(UPPDIR1)ide/CommandLineHandler.cpp \
@@ -8747,6 +8750,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -8783,8 +8787,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/About.cpp -o $(OutDir_ide)About.o
 
 $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
@@ -8953,6 +8956,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -8989,8 +8993,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Macro.cpp -o $(OutDir_ide)Macro.o
 
 $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
@@ -9159,6 +9162,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -9195,8 +9199,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Help.cpp -o $(OutDir_ide)Help.o
 
 $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
@@ -9365,6 +9368,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -9401,8 +9405,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/SlideShow.cpp -o $(OutDir_ide)SlideShow.o
 
 $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
@@ -9571,6 +9574,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -9607,8 +9611,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/OnlineSearch.cpp -o $(OutDir_ide)OnlineSearch.o
 
 $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
@@ -9777,6 +9780,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -9813,8 +9817,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Errors.cpp -o $(OutDir_ide)Errors.o
 
 $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
@@ -9983,6 +9986,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -10019,8 +10023,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Calc.cpp -o $(OutDir_ide)Calc.o
 
 $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
@@ -10189,6 +10192,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -10225,8 +10229,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/FormatCode.cpp -o $(OutDir_ide)FormatCode.o
 
 $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
@@ -10395,6 +10398,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -10431,8 +10435,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Abbr.cpp -o $(OutDir_ide)Abbr.o
 
 $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
@@ -10601,6 +10604,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -10637,8 +10641,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Qtf.cpp -o $(OutDir_ide)Qtf.o
 
 $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
@@ -10807,6 +10810,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -10843,8 +10847,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Xml.cpp -o $(OutDir_ide)Xml.o
 
 $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
@@ -11013,6 +11016,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -11049,8 +11053,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Json.cpp -o $(OutDir_ide)Json.o
 
 $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
@@ -11220,6 +11223,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)ide/MacroManager/MacroManager.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -11256,8 +11260,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/MacroManager.cpp -o $(OutDir_ide)MacroManager.o
 
 $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
@@ -11426,6 +11429,7 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -11462,8 +11466,7 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/SetupSVN.cpp -o $(OutDir_ide)SetupSVN.o
 
 $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
@@ -11632,6 +11635,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -11668,8 +11672,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Upgrade.cpp -o $(OutDir_ide)Upgrade.o
 
 $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
@@ -11838,6 +11841,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -11874,8 +11878,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/UppHub.cpp -o $(OutDir_ide)UppHub.o
 
 $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
@@ -12044,6 +12047,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -12080,8 +12084,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/MethodsCtrls.cpp -o $(OutDir_ide)MethodsCtrls.o
 
 $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
@@ -12252,6 +12255,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)ide/Methods.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -12288,8 +12292,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Methods.cpp -o $(OutDir_ide)Methods.o
 
 $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
@@ -12458,6 +12461,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -12494,8 +12498,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/AutoSetup.cpp -o $(OutDir_ide)AutoSetup.o
 
 $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
@@ -12664,6 +12667,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -12700,8 +12704,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/InstantSetup.cpp -o $(OutDir_ide)InstantSetup.o
 
 $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
@@ -12870,6 +12873,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -12906,8 +12910,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/OutputMode.cpp -o $(OutDir_ide)OutputMode.o
 
 $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
@@ -13076,6 +13079,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -13112,8 +13116,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Build.cpp -o $(OutDir_ide)Build.o
 
 $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
@@ -13282,6 +13285,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -13318,8 +13322,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Debug.cpp -o $(OutDir_ide)Debug.o
 
 $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
@@ -13488,6 +13491,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -13524,8 +13528,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Valgrind.cpp -o $(OutDir_ide)Valgrind.o
 
 $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
@@ -13694,6 +13697,7 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)ide/LayDes/LayDes.h \
 	$(UPPDIR1)ide/MethodsCtrls.h \
 	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
 	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
@@ -13730,9 +13734,834 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
+	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Export.cpp -o $(OutDir_ide)Export.o
+
+$(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
+	$(UPPDIR1)CodeEditor/CodeEditor.h \
+	$(UPPDIR1)CodeEditor/CSyntax.h \
+	$(UPPDIR1)CodeEditor/DiffSyntax.h \
+	$(UPPDIR1)CodeEditor/hl_color.i \
+	$(UPPDIR1)CodeEditor/LogSyntax.h \
+	$(UPPDIR1)CodeEditor/PythonSyntax.h \
+	$(UPPDIR1)CodeEditor/Syntax.h \
+	$(UPPDIR1)CodeEditor/TagSyntax.h \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/lib/lz4.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)CtrlLib/AKeys.h \
+	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
+	$(UPPDIR1)CtrlLib/Bar.h \
+	$(UPPDIR1)CtrlLib/Ch.h \
+	$(UPPDIR1)CtrlLib/ColumnList.h \
+	$(UPPDIR1)CtrlLib/CtrlLib.h \
+	$(UPPDIR1)CtrlLib/CtrlUtil.h \
+	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
+	$(UPPDIR1)CtrlLib/DisplayPopup.h \
+	$(UPPDIR1)CtrlLib/DlgColor.h \
+	$(UPPDIR1)CtrlLib/DropChoice.h \
+	$(UPPDIR1)CtrlLib/EditCtrl.h \
+	$(UPPDIR1)CtrlLib/FileSel.h \
+	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
+	$(UPPDIR1)CtrlLib/key_header.h \
+	$(UPPDIR1)CtrlLib/LabelBase.h \
+	$(UPPDIR1)CtrlLib/Lang.h \
+	$(UPPDIR1)CtrlLib/MultiButton.h \
+	$(UPPDIR1)CtrlLib/Progress.h \
+	$(UPPDIR1)CtrlLib/PushCtrl.h \
+	$(UPPDIR1)CtrlLib/RichText.h \
+	$(UPPDIR1)CtrlLib/ScrollBar.h \
+	$(UPPDIR1)CtrlLib/SliderCtrl.h \
+	$(UPPDIR1)CtrlLib/Splitter.h \
+	$(UPPDIR1)CtrlLib/StaticCtrl.h \
+	$(UPPDIR1)CtrlLib/StatusBar.h \
+	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
+	$(UPPDIR1)CtrlLib/TabCtrl.h \
+	$(UPPDIR1)CtrlLib/TextEdit.h \
+	$(UPPDIR1)CtrlLib/TreeCtrl.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
+	$(UPPDIR1)Esc/Esc.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)HexView/HexView.h \
+	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
+	$(UPPDIR1)ide/Common/Common.h \
+	$(UPPDIR1)ide/Core/Core.h \
+	$(UPPDIR1)ide/Core/Host.h \
+	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
+	$(UPPDIR1)ide/Designers/Designers.h \
+	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
+	$(UPPDIR1)plugin/bmp/bmp.h \
+	$(UPPDIR1)plugin/bz2/bz2.h \
+	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
+	$(UPPDIR1)plugin/lz4/lz4.h \
+	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
+	$(UPPDIR1)plugin/pcre/lib/pcre.h \
+	$(UPPDIR1)plugin/pcre/Pcre.h \
+	$(UPPDIR1)plugin/pcre/RegExp.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/RepoConsole.cpp -o $(OutDir_ide)RepoConsole.o
+
+$(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
+	$(UPPDIR1)CodeEditor/CodeEditor.h \
+	$(UPPDIR1)CodeEditor/CSyntax.h \
+	$(UPPDIR1)CodeEditor/DiffSyntax.h \
+	$(UPPDIR1)CodeEditor/hl_color.i \
+	$(UPPDIR1)CodeEditor/LogSyntax.h \
+	$(UPPDIR1)CodeEditor/PythonSyntax.h \
+	$(UPPDIR1)CodeEditor/Syntax.h \
+	$(UPPDIR1)CodeEditor/TagSyntax.h \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/lib/lz4.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)CtrlLib/AKeys.h \
+	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
+	$(UPPDIR1)CtrlLib/Bar.h \
+	$(UPPDIR1)CtrlLib/Ch.h \
+	$(UPPDIR1)CtrlLib/ColumnList.h \
+	$(UPPDIR1)CtrlLib/CtrlLib.h \
+	$(UPPDIR1)CtrlLib/CtrlUtil.h \
+	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
+	$(UPPDIR1)CtrlLib/DisplayPopup.h \
+	$(UPPDIR1)CtrlLib/DlgColor.h \
+	$(UPPDIR1)CtrlLib/DropChoice.h \
+	$(UPPDIR1)CtrlLib/EditCtrl.h \
+	$(UPPDIR1)CtrlLib/FileSel.h \
+	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
+	$(UPPDIR1)CtrlLib/key_header.h \
+	$(UPPDIR1)CtrlLib/LabelBase.h \
+	$(UPPDIR1)CtrlLib/Lang.h \
+	$(UPPDIR1)CtrlLib/MultiButton.h \
+	$(UPPDIR1)CtrlLib/Progress.h \
+	$(UPPDIR1)CtrlLib/PushCtrl.h \
+	$(UPPDIR1)CtrlLib/RichText.h \
+	$(UPPDIR1)CtrlLib/ScrollBar.h \
+	$(UPPDIR1)CtrlLib/SliderCtrl.h \
+	$(UPPDIR1)CtrlLib/Splitter.h \
+	$(UPPDIR1)CtrlLib/StaticCtrl.h \
+	$(UPPDIR1)CtrlLib/StatusBar.h \
+	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
+	$(UPPDIR1)CtrlLib/TabCtrl.h \
+	$(UPPDIR1)CtrlLib/TextEdit.h \
+	$(UPPDIR1)CtrlLib/TreeCtrl.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
+	$(UPPDIR1)Esc/Esc.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)HexView/HexView.h \
+	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
+	$(UPPDIR1)ide/Common/Common.h \
+	$(UPPDIR1)ide/Core/Core.h \
+	$(UPPDIR1)ide/Core/Host.h \
+	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
+	$(UPPDIR1)ide/Designers/Designers.h \
+	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
+	$(UPPDIR1)plugin/bmp/bmp.h \
+	$(UPPDIR1)plugin/bz2/bz2.h \
+	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
+	$(UPPDIR1)plugin/lz4/lz4.h \
+	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
+	$(UPPDIR1)plugin/pcre/lib/pcre.h \
+	$(UPPDIR1)plugin/pcre/Pcre.h \
+	$(UPPDIR1)plugin/pcre/RegExp.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/RepoSync.cpp -o $(OutDir_ide)RepoSync.o
+
+$(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
+	$(UPPDIR1)CodeEditor/CodeEditor.h \
+	$(UPPDIR1)CodeEditor/CSyntax.h \
+	$(UPPDIR1)CodeEditor/DiffSyntax.h \
+	$(UPPDIR1)CodeEditor/hl_color.i \
+	$(UPPDIR1)CodeEditor/LogSyntax.h \
+	$(UPPDIR1)CodeEditor/PythonSyntax.h \
+	$(UPPDIR1)CodeEditor/Syntax.h \
+	$(UPPDIR1)CodeEditor/TagSyntax.h \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/lib/lz4.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)CtrlLib/AKeys.h \
+	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
+	$(UPPDIR1)CtrlLib/Bar.h \
+	$(UPPDIR1)CtrlLib/Ch.h \
+	$(UPPDIR1)CtrlLib/ColumnList.h \
+	$(UPPDIR1)CtrlLib/CtrlLib.h \
+	$(UPPDIR1)CtrlLib/CtrlUtil.h \
+	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
+	$(UPPDIR1)CtrlLib/DisplayPopup.h \
+	$(UPPDIR1)CtrlLib/DlgColor.h \
+	$(UPPDIR1)CtrlLib/DropChoice.h \
+	$(UPPDIR1)CtrlLib/EditCtrl.h \
+	$(UPPDIR1)CtrlLib/FileSel.h \
+	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
+	$(UPPDIR1)CtrlLib/key_header.h \
+	$(UPPDIR1)CtrlLib/LabelBase.h \
+	$(UPPDIR1)CtrlLib/Lang.h \
+	$(UPPDIR1)CtrlLib/MultiButton.h \
+	$(UPPDIR1)CtrlLib/Progress.h \
+	$(UPPDIR1)CtrlLib/PushCtrl.h \
+	$(UPPDIR1)CtrlLib/RichText.h \
+	$(UPPDIR1)CtrlLib/ScrollBar.h \
+	$(UPPDIR1)CtrlLib/SliderCtrl.h \
+	$(UPPDIR1)CtrlLib/Splitter.h \
+	$(UPPDIR1)CtrlLib/StaticCtrl.h \
+	$(UPPDIR1)CtrlLib/StatusBar.h \
+	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
+	$(UPPDIR1)CtrlLib/TabCtrl.h \
+	$(UPPDIR1)CtrlLib/TextEdit.h \
+	$(UPPDIR1)CtrlLib/TreeCtrl.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
+	$(UPPDIR1)Esc/Esc.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)HexView/HexView.h \
+	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
+	$(UPPDIR1)ide/Common/Common.h \
+	$(UPPDIR1)ide/Core/Core.h \
+	$(UPPDIR1)ide/Core/Host.h \
+	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
+	$(UPPDIR1)ide/Designers/Designers.h \
+	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
+	$(UPPDIR1)plugin/bmp/bmp.h \
+	$(UPPDIR1)plugin/bz2/bz2.h \
+	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
+	$(UPPDIR1)plugin/lz4/lz4.h \
+	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
+	$(UPPDIR1)plugin/pcre/lib/pcre.h \
+	$(UPPDIR1)plugin/pcre/Pcre.h \
+	$(UPPDIR1)plugin/pcre/RegExp.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Credentials.cpp -o $(OutDir_ide)Credentials.o
+
+$(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
+	$(UPPDIR1)CodeEditor/CodeEditor.h \
+	$(UPPDIR1)CodeEditor/CSyntax.h \
+	$(UPPDIR1)CodeEditor/DiffSyntax.h \
+	$(UPPDIR1)CodeEditor/hl_color.i \
+	$(UPPDIR1)CodeEditor/LogSyntax.h \
+	$(UPPDIR1)CodeEditor/PythonSyntax.h \
+	$(UPPDIR1)CodeEditor/Syntax.h \
+	$(UPPDIR1)CodeEditor/TagSyntax.h \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/lib/lz4.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/SIMD_NEON.h \
+	$(UPPDIR1)Core/SIMD_SSE2.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)CtrlLib/AKeys.h \
+	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
+	$(UPPDIR1)CtrlLib/Bar.h \
+	$(UPPDIR1)CtrlLib/Ch.h \
+	$(UPPDIR1)CtrlLib/ColumnList.h \
+	$(UPPDIR1)CtrlLib/CtrlLib.h \
+	$(UPPDIR1)CtrlLib/CtrlUtil.h \
+	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
+	$(UPPDIR1)CtrlLib/DisplayPopup.h \
+	$(UPPDIR1)CtrlLib/DlgColor.h \
+	$(UPPDIR1)CtrlLib/DropChoice.h \
+	$(UPPDIR1)CtrlLib/EditCtrl.h \
+	$(UPPDIR1)CtrlLib/FileSel.h \
+	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
+	$(UPPDIR1)CtrlLib/key_header.h \
+	$(UPPDIR1)CtrlLib/LabelBase.h \
+	$(UPPDIR1)CtrlLib/Lang.h \
+	$(UPPDIR1)CtrlLib/MultiButton.h \
+	$(UPPDIR1)CtrlLib/Progress.h \
+	$(UPPDIR1)CtrlLib/PushCtrl.h \
+	$(UPPDIR1)CtrlLib/RichText.h \
+	$(UPPDIR1)CtrlLib/ScrollBar.h \
+	$(UPPDIR1)CtrlLib/SliderCtrl.h \
+	$(UPPDIR1)CtrlLib/Splitter.h \
+	$(UPPDIR1)CtrlLib/StaticCtrl.h \
+	$(UPPDIR1)CtrlLib/StatusBar.h \
+	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
+	$(UPPDIR1)CtrlLib/TabCtrl.h \
+	$(UPPDIR1)CtrlLib/TextEdit.h \
+	$(UPPDIR1)CtrlLib/TreeCtrl.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/iml_source.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
+	$(UPPDIR1)Esc/Esc.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)HexView/HexView.h \
+	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
+	$(UPPDIR1)ide/Common/Common.h \
+	$(UPPDIR1)ide/Core/Core.h \
+	$(UPPDIR1)ide/Core/Host.h \
+	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
+	$(UPPDIR1)ide/Designers/Designers.h \
+	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
+	$(UPPDIR1)plugin/bmp/bmp.h \
+	$(UPPDIR1)plugin/bz2/bz2.h \
+	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
+	$(UPPDIR1)plugin/lz4/lz4.h \
+	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
+	$(UPPDIR1)plugin/pcre/lib/pcre.h \
+	$(UPPDIR1)plugin/pcre/Pcre.h \
+	$(UPPDIR1)plugin/pcre/RegExp.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/z/lib/zconf.h \
+	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
+	$(UPPDIR1)plugin/zstd/lib/zstd.h \
+	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/Diff.cpp -o $(OutDir_ide)Diff.o
 
 $(OutDir_ide_Common):
 	mkdir -p $(OutDir_ide_Common)
@@ -42667,749 +43496,6 @@ $(OutDir_ide_MacroManager)MacroManager.a: \
 		$(OutDir_ide_MacroManager)MacroElement.o \
 		$(OutDir_ide_MacroManager)MacroManager.o \
 		$(OutDir_ide_MacroManager)UscFileParser.o
-
-$(OutDir_urepo):
-	mkdir -p $(OutDir_urepo)
-
-$(OutDir_urepo)Console.o: $(UPPDIR1)urepo/Console.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SSE2.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_urepo)  $(UPPDIR1)urepo/Console.cpp -o $(OutDir_urepo)Console.o
-
-$(OutDir_urepo)Credentials.o: $(UPPDIR1)urepo/Credentials.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SSE2.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_urepo)  $(UPPDIR1)urepo/Credentials.cpp -o $(OutDir_urepo)Credentials.o
-
-$(OutDir_urepo)RepoSync.o: $(UPPDIR1)urepo/RepoSync.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SSE2.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_urepo)  $(UPPDIR1)urepo/RepoSync.cpp -o $(OutDir_urepo)RepoSync.o
-
-$(OutDir_urepo)Diff.o: $(UPPDIR1)urepo/Diff.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/iml_source.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SSE2.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_urepo)  $(UPPDIR1)urepo/Diff.cpp -o $(OutDir_urepo)Diff.o
-
-$(OutDir_urepo)main.o: $(UPPDIR1)urepo/main.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SSE2.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)urepo/urepo.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_urepo)  $(UPPDIR1)urepo/main.cpp -o $(OutDir_urepo)main.o
-
-$(OutDir_urepo)urepo.a: \
-	$(OutDir_urepo)Console.o \
-	$(OutDir_urepo)Credentials.o \
-	$(OutDir_urepo)RepoSync.o \
-	$(OutDir_urepo)Diff.o \
-	$(OutDir_urepo)main.o
-	$(AR) $(OutDir_urepo)urepo.a \
-		$(OutDir_urepo)Console.o \
-		$(OutDir_urepo)Credentials.o \
-		$(OutDir_urepo)RepoSync.o \
-		$(OutDir_urepo)Diff.o \
-		$(OutDir_urepo)main.o
 
 $(OutDir_Report):
 	mkdir -p $(OutDir_Report)
