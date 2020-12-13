@@ -26,7 +26,7 @@ String Ide::GetMain()
 	return main;
 }
 
-void Ide::BeginBuilding(bool sync_files, bool clear_console)
+void Ide::BeginBuilding(bool clear_console)
 {
 	SetupDefaultMethod();
 	SetHdependDirs();
@@ -39,7 +39,8 @@ void Ide::EndBuilding(bool ok)
 	console.EndGroup();
 	console.Wait();
 	Vector<String> errors = console.PickErrors();
-	CreateHost(false, false)->DeleteFile(errors);
+	for(String p: errors)
+		DeleteFile(p);
 	if(!errors.IsEmpty())
 		ok = false;
 	PutConsole("");

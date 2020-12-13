@@ -147,7 +147,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual void           ConsoleClear();
 	virtual void           SetupDefaultMethod();
 	virtual Vector<String> PickErrors();
-	virtual void           BeginBuilding(bool sync_files, bool clear_console);
+	virtual void           BeginBuilding(bool clear_console);
 	virtual void           EndBuilding(bool ok);
 	virtual void           ClearErrorEditor();
 	virtual void           DoProcessEvents();
