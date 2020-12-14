@@ -27,7 +27,12 @@ rbitrary`-precision][2  including the usual arithmetic.]]
 :: [s0; [2 Some financial functions.]]
 :: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/TSP`_TavellingSalesman`_en`-us^2 TSP]]
 :: [s0; [2 A symmetric ][^https`:`/`/en`.wikipedia`.org`/wiki`/Travelling`_salesman`_problem^2 T
-raveling salesman problem][2  (TSP) solver.]]}}&]
+raveling salesman problem][2  (TSP) solver.]]
+:: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Butterworth`_en`-us^2 Butterworth]]
+:: [s0; [2 Butterworth IIR filter following interface similar to Matlab]]
+:: [s0;#i150;O0; [^topic`:`/`/STEM4U`/src`/Catenary`_en`-us^2 Catenary]]
+:: [s0; [2 Simple catenary mooring line solver considering sagging and 
+bottom.]]}}&]
 [s0;2 &]
 [s0; [2 STEM4U`_DemoTest allows to demonstrate and test some libraries 
 features.]&]
