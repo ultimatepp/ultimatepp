@@ -1,7 +1,7 @@
 LAYOUT(RepoSyncLayout, 680, 400)
 	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
-	ITEM(Upp::Button, credentials, SetLabel(t_("Credentials..")).RightPosZ(96, 84).BottomPosZ(4, 24))
+	ITEM(Upp::Button, credentials, SetLabel(t_("SVN Credentials..")).RightPosZ(92, 104).BottomPosZ(4, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
 END_LAYOUT
 

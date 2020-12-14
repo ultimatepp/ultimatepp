@@ -19,6 +19,8 @@ public:
 	UrepoConsole();
 };
 
+String RepoSys(const char *cmd);
+
 String SvnCmd(const char *cmd);
 
 enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };

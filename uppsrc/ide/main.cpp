@@ -224,6 +224,19 @@ void AppMain___()
 			return;
 		}
 	#endif
+	/*
+		if(arg[i] == "#git_ask_pass") {
+			String s;
+			for(;;) {
+				int c = getchar();
+				if(c == EOF)
+					break;
+				s.Cat(c);
+			}
+			PromptOK("ASK_PASS:&\1" + s);
+			return;
+		}
+	*/
 	}
 
 #ifdef _DEBUG0
