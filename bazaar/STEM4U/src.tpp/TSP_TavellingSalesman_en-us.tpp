@@ -26,6 +26,7 @@ with a ][^https`:`/`/en`.wikipedia`.org`/wiki`/2`-opt^2 2`-opt
 algorithm][2 . Since it uses templates, the input data can be either 
 integer or floating point.]&]
 [s0;2 &]
+[s0;2 &]
 [s1; &]
 [s2;:Upp`:`:TSP`(const Upp`:`:Vector`<Upp`:`:Point`_`<T`>`>`&`,Upp`:`:Vector`<int`>`&`,TSP`_Init`):%- [@(0.0.255) t
 emplate]_<[@(0.0.255) typename]_[*@4 T]>_[*@4 T]_[* TSP]([@(0.0.255) const]_[_^Upp`:`:Vector^ V

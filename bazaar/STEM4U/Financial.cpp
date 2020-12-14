@@ -27,7 +27,7 @@ Vector<double> InternalRateOfReturn(const Vector<double> &cf, double lowRate, do
 			double from = prev;
 			double tox = valx;
 			double to = val;
-			double oldGuessx = DOUBLE_NULL;
+			double oldGuessx = std::numeric_limits<double>::min();
 			for (int iter = 0; iter < maxIteration; ++iter) {
 				double guessx = fromx - from*(tox - fromx)/(to - from);
 				double guess = NetPresentValue(guessx, cf);
