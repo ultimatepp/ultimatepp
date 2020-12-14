@@ -12,6 +12,9 @@ void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
 
 void Rasterizer::LineClip(double x1, double y1, double x2, double y2)
 {
+	if(IsNull(x1) || IsNull(y1) || IsNull(x2) || IsNull(y2))
+		return;
+
 	if(y1 < cliprect.top) {
 		if(y2 < cliprect.top)
 			return;
