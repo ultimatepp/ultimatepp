@@ -1,0 +1,8 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\DoubleNull.exe 14.12.2020 10:29:29, user: cxl
+
+IsNull(x) = true
+IsNull(y) = false
+IsNull(1e300) = false
+IsNull(0) = false
+IsNull(log(-1)) = true
+IsNull(1 / zero) = true
