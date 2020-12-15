@@ -65,10 +65,10 @@ positive vertical distance between floor and vessel fairlead
 vessel fairlead [%-*@3 Fhanchorvessel], vertical force applied 
 to anchor, [%-*@3 Fvanchor], vertical force applied to vessel fairlead 
 [%-*@3 Fvvessel], length of the mooring line that is lying on the 
-floor, [%-*@3 xonfloor], horizontal [%-*@3 x] and vertical [%-*@3 z] 
-vectors with [%-*@3 num] elements showing mooring line shape. It 
-also returns MooringStatus. Breaking load [%-*@3 BL ]can be set 
-to Null if it is unknown.&]
+floor, from anchor to touchdown, [%-*@3 xonfloor], horizontal [%-*@3 x] 
+and vertical [%-*@3 z] vectors with [%-*@3 num] elements showing 
+mooring line shape. It also returns MooringStatus. Breaking load 
+[%-*@3 BL ]can be set to Null if it is unknown.&]
 [s4;%% &]
 [s1; &]
 [s2;:Upp`:`:Catenary`(double`,double`,double`,double`,double`,double`,double`,double`,double`&`,double`&`,double`&`,double`&`): M
@@ -88,8 +88,9 @@ positive vertical distance between floor and vessel fairlead
 vessel fairlead [%-*@3 Fhanchorvessel], vertical force applied 
 to anchor, [%-*@3 Fvanchor], vertical force applied to vessel fairlead 
 [%-*@3 Fvvessel], length of the mooring line that is lying on the 
-floor, [%-*@3 xonfloor]. It also returns MooringStatus. Breaking 
-load [%-*@3 BL ]can be set to Null if it is unknown.&]
+floor, from anchor to touchdown, [%-*@3 xonfloor]. It also returns 
+MooringStatus. Breaking load [%-*@3 BL ]can be set to Null if it 
+is unknown.&]
 [s4;%% &]
 [s1; &]
 [s2;:Upp`:`:Catenary`(double`,double`,double`,double`,double`&`,Upp`:`:Vector`<double`>`&`,Upp`:`:Vector`<double`>`&`,int`): M
@@ -102,9 +103,9 @@ horizontal distance between anchor and vessel fairlead [%-*@3 xanchorvessel],
 positive vertical distance between floor and anchor [%-*@3 zanchor], 
 positive vertical distance between floor and vessel fairlead 
 [%-*@3 zvessel], returns the length of the mooring line that is 
-lying on the floor, [%-*@3 xonfloor], horizontal [%-*@3 x] and vertical 
-[%-*@3 z] vectors with [%-*@3 num] elements showing mooring line 
-shape. It also returns MooringStatus.&]
+lying on the floor, from anchor to touchdown, [%-*@3 xonfloor], 
+horizontal [%-*@3 x] and vertical [%-*@3 z] vectors with [%-*@3 num] 
+elements showing mooring line shape. It also returns MooringStatus.&]
 [s4;%% &]
 [s1; &]
 [s2;:Upp`:`:Catenary`(double`,double`,double`,double`,double`&`): MooringStatus_[* Cate
@@ -116,19 +117,21 @@ horizontal distance between anchor and vessel fairlead [%-*@3 xanchorvessel],
 positive vertical distance between floor and anchor [%-*@3 zanchor], 
 positive vertical distance between floor and vessel fairlead 
 [%-*@3 zvessel], returns the length of the mooring line that is 
-lying on the floor, [%-*@3 xonfloor]. It also returns MooringStatus.&]
+lying on the floor, from anchor to touchdown, [%-*@3 xonfloor]. 
+It also returns MooringStatus.&]
 [s4;%% &]
 [s1; &]
 [s2;:Upp`:`:CatenaryGetLen`(double`,double`,double`,double`,double`&`): MooringStatus
 _[* CatenaryGetLen]([@(0.0.255) double]_[*@3 xonfloor], [@(0.0.255) double]_[*@3 xanchorves
 sel], [@(0.0.255) double]_[*@3 zanchor], [@(0.0.255) double]_[*@3 zvessel], 
 [@(0.0.255) double]_`&[*@3 moorlen])&]
-[s3;%% Based on a mooring line with a length of the mooring line 
-that is lying on the floor [%-*@3 xonfloor], , horizontal distance 
-between anchor and vessel fairlead [%-*@3 xanchorvessel], positive 
-vertical distance between floor and anchor [%-*@3 zanchor], positive 
-vertical distance between floor and vessel fairlead [%-*@3 zvessel], 
-returns the length of the mooring line. It also returns MooringStatus.&]
+[s3;%% Based on a mooring line, with a length of the mooring line 
+that is lying on the floor, from anchor to touchdown, [%-*@3 xonfloor], 
+horizontal distance between anchor and vessel fairlead [%-*@3 xanchorvessel], 
+positive vertical distance between floor and anchor [%-*@3 zanchor], 
+positive vertical distance between floor and vessel fairlead 
+[%-*@3 zvessel], returns the length of the mooring line. It also 
+returns MooringStatus.&]
 [s4;%% &]
 [s1; &]
 [s2;:Upp`:`:MooringStatusStr`(MooringStatus`): [@(0.0.255) const]_[@(0.0.255) char]_`*[* Mo
