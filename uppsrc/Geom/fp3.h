@@ -57,6 +57,9 @@ inline Pointf3        operator * (double val, Pointf3 p)        { return Pointf3
 inline Pointf3        operator / (Pointf3 p, double val)        { return Pointf3(p.x / val, p.y / val, p.z / val); }
 inline Pointf3        operator / (Pointf3 p, Pointf3 q)         { return Pointf3(p.x / q.x, p.y / q.y, p.z / q.z); }
 
+inline double         ScalarProduct(Pointf3 p, Pointf3 q)       { return p.x * q.x + p.y * q.y + p.z * q.z; }
+inline Pointf3        VectorProduct(Pointf3 p, Pointf3 q)       { return Pointf3(p.y * q.z - p.z * q.y, p.z * q.x - p.x * q.z, p.x * q.y - p.y * q.x); }
+
 inline double         operator ^ (Pointf3 p, Pointf3 q)         { return p.x * q.x + p.y * q.y + p.z * q.z; }
 inline Pointf3        operator % (Pointf3 p, Pointf3 q)         { return Pointf3(p.y * q.z - p.z * q.y, p.z * q.x - p.x * q.z, p.x * q.y - p.y * q.x); }
 
