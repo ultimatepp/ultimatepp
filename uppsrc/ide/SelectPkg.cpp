@@ -195,11 +195,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	
 	newu <<= THISBACK(OnNew);
 	filter <<= THISBACK(OnFilter);
-	filter.Add(MAIN|FIRST, "Main packages of first nest");
-	filter.Add(MAIN, "All main packages");
-	filter.Add(FIRST, "All packages of first nest");
-	filter.Add(0, "All packages");
-	filter <<= main ? MAIN|FIRST : 0;
+	filter <<= main ? MAIN|NEST : 0;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
@@ -217,6 +213,21 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	clist.WhenBar = alist.WhenBar = THISBACK(PackageMenu);
 	
 	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
+}
+
+void SelectPackageDlg::SyncFilter()
+{
+	filter.ClearList();
+	Vector<String> upp = GetUppDirs();
+	if(upp.GetCount() == 0)
+		return;
+	for(int i = 0; i < upp.GetCount(); i++) {
+		String fn = GetFileName(upp[i]);
+		filter.Add(NEST|MAIN|i, "Main packages of " + fn);
+		filter.Add(NEST|i, "All packages of " + fn);
+	}
+	filter.Add(MAIN, "All main packages");
+	filter.Add(0, "All packages");
 }
 
 bool SelectPackageDlg::Key(dword key, int count)
@@ -522,20 +533,25 @@ void SelectPackageDlg::SyncList(const String& find)
 	String s = ~search;
 	int f = ~filter;
 	Index<String> added;
-	for(int i = 0; i < min((f & FIRST) ? 1 : data.GetCount(), data.GetCount()); i++) {
-		const ArrayMap<String, PkData>& nest = data[i];
-		for(int i = 0; i < nest.GetCount(); i++) {
-			const PkData& d = nest[i];
-			if(!nest.IsUnlinked(i) &&
-			   d.ispackage &&
-			   (!(f & MAIN) || d.main) &&
-			   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
-			   added.Find(d.package) < 0) {
-				packages.Add() = d;
-				added.Add(d.package);
+	int from = 0;
+	int to = data.GetCount() - 1;
+	if(f & NEST)
+		from = to = f & NEST_MASK;
+	if(to < data.GetCount())
+		for(int i = from; i <= to; i++) {
+			const ArrayMap<String, PkData>& nest = data[i];
+			for(int i = 0; i < nest.GetCount(); i++) {
+				const PkData& d = nest[i];
+				if(!nest.IsUnlinked(i) &&
+				   d.ispackage &&
+				   (!(f & MAIN) || d.main) &&
+				   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
+				   added.Find(d.package) < 0) {
+					packages.Add() = d;
+					added.Add(d.package);
+				}
 			}
 		}
-	}
 	Sort(packages);
 	alist.Clear();
 	clist.Clear();
@@ -587,6 +603,7 @@ String SelectPackageDlg::CachePath(const char *vn) const
 
 void SelectPackageDlg::Load(const String& find)
 {
+	SyncFilter();
 	if(selectvars && !base.IsCursor())
 		return;
 	if(loading) { // If we are called recursively from ProcessEvents, stop current loading and change loadi
