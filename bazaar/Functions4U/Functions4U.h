@@ -634,6 +634,19 @@ class ThreadSafe {
 ...
 };*/
 
+template <class Range>
+void LinSpaced(Range &v, int n, typename Range::value_type min, typename Range::value_type max) {
+	ASSERT(n > 0);
+	v.SetCount(n);
+	if (n == 1)
+		v[0] = min;
+	else {
+		typename Range::value_type d = (max - min)/(n - 1);
+		for (int i = 0; i < n; ++i)
+			v[i] = min + d*i;
+	}
+}
+
 template <class C>
 static void ShuffleAscending(C &data, std::default_random_engine &generator) {
 	for (int i = 0; i < data.size() - 2; i++) {
@@ -684,6 +697,11 @@ bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
 	if(abs((a - b)/b) <= ratio) 
 		return true;
 	return false;
+}
+
+template <class T>
+bool EqualDecimals(const T& a, const T& b, int numdecimals) {
+	return FormatDouble(a, numdecimals) == FormatDouble(b, numdecimals);
 }
 
 template <class Range>
@@ -772,12 +790,22 @@ bool Compare(const Range& a, const Range& b) {
 	return true;
 }
 	
-template <class Range>
-bool CompareRatio(const Range& a, const Range& b, const typename Range::value_type& ratio) {
+template <class Range1, class Range2>
+bool CompareRatio(const Range1& a, const Range2& b, const typename Range1::value_type& ratio) {
 	if (a.size() != b.size())
 		return false;
 	for(int i = 0; i < a.size(); i++) 
 		if (!EqualRatio(a[i], b[i], ratio)) 
+			return false;
+	return true;
+}
+
+template <class Range1, class Range2>
+bool CompareDecimals(const Range1& a, const Range2& b, int numDecimals) {
+	if (a.size() != b.size())
+		return false;
+	for(int i = 0; i < a.size(); i++) 
+		if (!EqualDecimals(a[i], b[i], numDecimals)) 
 			return false;
 	return true;
 }
