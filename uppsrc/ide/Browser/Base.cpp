@@ -123,7 +123,7 @@ void ReduceCodeBaseCache()
 
 String CodeBaseCacheFile()
 {
-	return AppendFileName(CodeBaseCacheDir(), GetVarsName() + '.' + IdeGetCurrentMainPackage() + '.' + IdeGetCurrentBuildMethod() + ".codebase");
+	return AppendFileName(CodeBaseCacheDir(), GetAssemblyId() + '.' + IdeGetCurrentMainPackage() + '.' + IdeGetCurrentBuildMethod() + ".codebase");
 }
 
 static bool   s_console;
@@ -195,8 +195,8 @@ void LoadCodeBase()
 	Mutex::Lock __(CppBaseMutex);
 	MLOG("LoadCodeBase start: " << MemoryUsedKb());
 	TryLoadCodeBase(CodeBaseCacheFile()) ||
-	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*." + IdeGetCurrentBuildMethod() + ".codebase")) ||
-	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*.codebase")) ||
+	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetAssemblyId() + ".*." + IdeGetCurrentBuildMethod() + ".codebase")) ||
+	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetAssemblyId() + ".*.codebase")) ||
 	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), "*.codebase"));
 	
 	LLOG("LoadCodeBase: " << CodeBase().GetCount());

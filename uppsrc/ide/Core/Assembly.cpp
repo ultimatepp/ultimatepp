@@ -216,6 +216,22 @@ void SetVar(const String& var, const String& val, bool save) {
 
 bool hub_loaded;
 
+String main_nest;
+
+void SetMainNest(const String& n)
+{
+	main_nest = n;
+}
+
+String GetAssemblyId()
+{
+	String id = GetVarsName();
+	Vector<String> s = SplitDirs(GetVar("UPP"));
+	if(s.GetCount() && main_nest.GetCount() && s[0] != main_nest)
+		id << "_" << GetFileName(main_nest);
+	return id;
+}
+
 Vector<String> GetUppDirs() {
 	Vector<String> s = SplitDirs(GetVar("UPP"));
 	static Vector<String> hub_dirs;
@@ -227,6 +243,8 @@ Vector<String> GetUppDirs() {
 		hub_loaded = true;
 	}
 	s.Append(hub_dirs);
+	if(main_nest.GetCount() && (s.GetCount() == 0 || main_nest != s[0]))
+		s.Insert(0, main_nest);
 	return s;
 }
 
