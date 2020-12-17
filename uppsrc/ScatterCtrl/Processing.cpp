@@ -577,7 +577,8 @@ void ProcessingTab::OnUpdateSensitivity()
 			if (fftFilter.IsEmpty())
 				tabFitLeft.comments.SetText(t_("Impossible to filter series"));
 			refresh = true;	
-		}
+		} else
+			fftFilter.Clear();
 	}
 	if (tabFitRight.opMax && newWidthMax != tabFitRight.width) {
 		newWidthMax = tabFitRight.width;
@@ -795,36 +796,17 @@ void ProcessingTab::OnFFT()
 		if (tabFitLeft.scatter.IsDeletedDataSource(0))
 			return;
 		DataSource &data = tabFitLeft.scatter.GetDataSource(0);
-		
-		Vector<Pointf> orderedSeries;
-		for (int64 i = 0; i < data.GetCount(); ++i) {		// Clean Nulls
-			if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
-				orderedSeries << Pointf(data.x(i), data.y(i));
-		}
-		//if (orderedSeries.GetCount() != data.GetCount())
-		//	errText << Format(t_("Removed %d Null points."), data.GetCount() - orderedSeries.GetCount());
-		
-		PointfLess less;
-		Sort(orderedSeries, less);								
-		
-		Vector<double> resampledSeries;
-		resampledSeries << orderedSeries[0].y;
-		double nextSample = orderedSeries[0].x + samplingTime;
-		for (int i = 0; i < orderedSeries.GetCount() - 1;) {
-			if (orderedSeries[i].x == nextSample) {
-				resampledSeries << orderedSeries[i].y;
-				nextSample += samplingTime;
-			} else if (orderedSeries[i].x < nextSample && orderedSeries[i + 1].x > nextSample) {	// Linear interpolation
-				resampledSeries << (orderedSeries[i].y + (orderedSeries[i + 1].y - orderedSeries[i].y)*
-								   (nextSample - orderedSeries[i].x)/(orderedSeries[i + 1].x - orderedSeries[i].x));
-				nextSample += samplingTime;
-			} else
-				++i;
-		}
-		if (orderedSeries[orderedSeries.GetCount() - 1].x == nextSample) 
-			resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
-	
-		VectorY<double> series(resampledSeries, 0, samplingTime);
+
+		Eigen::VectorXd sourcex(data.GetCount()), sourcey(data.GetCount());
+		for (int64 i = 0; i < data.GetCount(); ++i) {
+			sourcex[i] = data.x(i);
+			sourcey[i] = data.y(i);
+		}		
+		Eigen::VectorXd resampled;
+		double from;
+		Resample(sourcex, sourcey, samplingTime, resampled, from);
+			
+		EigenVector series(resampled, from, samplingTime);
 		fft = series.FFTY(samplingTime, tabFreqRight.opXAxis == 1, tabFreqRight.type, 
 							tabFreqRight.window.GetIndex(), tabFreqRight.num, tabFreqRight.overlapping);
 		VectorPointf fftData(fft);

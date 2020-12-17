@@ -1047,10 +1047,10 @@ void ScatterCtrl::SaveToFile(String fileName)
 		fs.Type(Format(t_("%s bitmap file"), "png"), "*.png");
 		fs.Type(Format(t_("%s vector file"), "pdf"), "*.pdf");
 		fs.AllFilesType();
-		if (!defaultFileNamePlot.IsEmpty())
-			fs = defaultFileNamePlot;
-		else if (!GetTitle().IsEmpty())
+		if (!GetTitle().IsEmpty())
 			fs = FixPathName(GetTitle()) + ".jpg";
+		else if (!defaultFileNamePlot.IsEmpty())
+			fs = defaultFileNamePlot;
 		else
 			fs = String(t_("Scatter plot")) + ".jpg";
 		
