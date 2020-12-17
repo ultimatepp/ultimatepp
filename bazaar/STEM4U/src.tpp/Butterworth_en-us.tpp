@@ -16,8 +16,12 @@ It was first described in 1930 by the British engineer and physicist
 Stephen Butterworth in his paper entitled ][^https`:`/`/www`.changpuak`.ch`/electronics`/downloads`/On`_the`_Theory`_of`_Filter`_Amplifiers`.pdf^2 `"
 On the Theory of Filter Amplifiers`"]&]
 [s0;^https`:`/`/www`.changpuak`.ch`/electronics`/downloads`/On`_the`_Theory`_of`_Filter`_Amplifiers`.pdf^2%% &]
-[s0;%% [2 These filter classes are templated and can be used with different 
-vector types like U`+`+ Vector<>, Eigen VectorXd and std`::vector<>.]&]
+[s0;%% [2 These filter functions are templated and can be used with 
+different vector types like U`+`+ Vector<>, Eigen VectorXd and 
+std`::vector<>.]&]
+[s0;2%% &]
+[s0;%% [2 Its behaviour is equivalent to Matlab functions filter(), 
+filtfilt() and butter().]&]
 [s0;^https`:`/`/www`.changpuak`.ch`/electronics`/downloads`/On`_the`_Theory`_of`_Filter`_Amplifiers`.pdf^2%% &]
 [s0; [2 Other references:]&]
 [s0;i150;O0; [^https`:`/`/en`.wikipedia`.org`/wiki`/Digital`_filter`#Difference`_equation^2 D
