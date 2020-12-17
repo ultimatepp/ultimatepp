@@ -300,9 +300,10 @@ public:
 	void InsertSeries(int id, ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	void InsertSeries(int id, GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	
-	void RemoveAllSeries() {
+	ScatterCtrl& RemoveAllSeries() {
 		GuiLock __;
 		ScatterDraw::RemoveAllSeries();
+		return *this;
 	}
 		
 	ScatterCtrl& SetMaxRefreshTime(int _maxRefresh_ms) 	{maxRefresh_ms = _maxRefresh_ms; return *this;}
@@ -496,18 +497,26 @@ public:
 	ScatterWindow() {
 		Sizeable().Zoomable();
 		Add(scatter.SizePos());
-		scatter.ShowAllMenus().SetPlotAreaLeftMargin(70);
+		scatter.ShowAllMenus();
+		pos.Clear();
 	}
 	ScatterCtrl &operator()()		{return scatter;}
 	
 	ScatterWindow &OpenMain(bool dataInternal = true, bool zoomToFit = true) {
-		if(scatter.ThereAreSecondaryY())
-			scatter.SetPlotAreaRightMargin(70);
+		if (scatter.ThereArePrimaryY()) 
+			scatter.SetPlotAreaLeftMargin(100).SetDrawYReticle(true).SetDrawYReticleNumbers(true);
+		else 
+			scatter.SetPlotAreaLeftMargin(10).SetDrawYReticle(false).SetDrawYReticleNumbers(false);
+		if (scatter.ThereAreSecondaryY()) 
+			scatter.SetPlotAreaRightMargin(100).SetDrawY2Reticle(true).SetDrawY2ReticleNumbers(true);
+		else 
+			scatter.SetPlotAreaRightMargin(10).SetDrawY2Reticle(false).SetDrawY2ReticleNumbers(false);
+
 		if (dataInternal)
 			scatter.SetDataSourceInternal();
 		if (zoomToFit)
 			scatter.ZoomToFit(true, true);
-		TopWindow::SetRect(0, 0, 800, 500);
+		TopWindow::SetRect(0, 0, width, height);
 		TopWindow::OpenMain();
 		Ctrl::ProcessEvents();
 		return *this;
@@ -520,6 +529,8 @@ public:
 	
 private:	
 	ScatterCtrl scatter;	
+	int width = 800, height = 500;
+	Point pos;
 };
 
 class ScatterWindowPool {
