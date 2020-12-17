@@ -6,7 +6,6 @@ topic "Butterworth IIR filter";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@7;4 Butterworth IIR filter]]}}&]
-[s1; &]
 [s0; &]
 [s0;%% [2 The ][^https`:`/`/en`.wikipedia`.org`/wiki`/Butterworth`_filter^2 Butterworth 
 IIR filter][2  is a type of signal processing filter designed to 
