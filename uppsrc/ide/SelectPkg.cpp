@@ -217,10 +217,9 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 
 void SelectPackageDlg::SyncFilter()
 {
+	Value v = ~filter;
 	filter.ClearList();
 	Vector<String> upp = GetUppDirs();
-	if(upp.GetCount() == 0)
-		return;
 	for(int i = 0; i < upp.GetCount(); i++) {
 		String fn = GetFileName(upp[i]);
 		filter.Add(NEST|MAIN|i, "Main packages of " + fn);
@@ -228,6 +227,10 @@ void SelectPackageDlg::SyncFilter()
 	}
 	filter.Add(MAIN, "All main packages");
 	filter.Add(0, "All packages");
+	if(filter.HasKey(v))
+		filter <<= v;
+	else
+		filter.GoBegin();
 }
 
 bool SelectPackageDlg::Key(dword key, int count)
@@ -261,11 +264,18 @@ String SelectPackageDlg::GetCurrentName()
 	return Null;
 }
 
+String SelectPackageDlg::GetCurrentPath()
+{
+	int i = clist.IsShown() ? clist.GetCursor() : alist.GetCursor();
+	String f = GetCurrentName();
+	return i >= 0 && i < nest_list.GetCount() ? AppendFileName(AppendFileName(nest_list[i], f), GetFileName(f) + ".upp") : String();
+}
+
 int   SelectPackageDlg::GetCurrentIndex()
 {
-	String s = GetCurrentName();
+	String p = GetCurrentPath();
 	for(int i = 0; i < packages.GetCount(); i++)
-		if(packages[i].package == s)
+		if(AppendFileName(packages[i].nest, packages[i].package) == p)
 			return i;
 	return -1;
 }
@@ -314,7 +324,7 @@ void SelectPackageDlg::SyncBrief()
 	clist.Show(b);
 }
 
-String SelectPackageDlg::Run(String startwith)
+String SelectPackageDlg::Run(String& path, String startwith)
 {
 	finished = canceled = false;
 	if(!IsSplashOpen())
@@ -332,10 +342,15 @@ String SelectPackageDlg::Run(String startwith)
 	clist.FindSetCursor(startwith);
 	ActiveFocus(alist.IsShown() ? (Ctrl&)alist : (Ctrl&)clist);
 	switch(TopWindow::Run()) {
-	case IDOK:  return GetCurrentName();
-	case IDYES: return selected;
+	case IDOK:
+		path = GetCurrentPath();
+		return GetCurrentName();
+	case IDYES:
+		path = selected_path;
+		return selected;
 	default:
 		LoadVars(bkvar);
+		SyncFilter();
 		SyncBase(GetVarsName());
 		return Null;
 	}
@@ -380,7 +395,7 @@ void SelectPackageDlg::OnNew() {
 	while(dlg.Run() == IDOK) {
 		String nest = ~dlg.nest;
 		String name = NativePath(String(~dlg.package));
-		String path = AppendFileName(nest, AppendFileName(name, GetFileName(name) + ".upp"));
+		String path = AppendFileName(AppendFileName(nest, name), GetFileName(name) + ".upp");
 		if(FileExists(path) && !PromptYesNo("Package [* \1" + path + "\1] already exists.&"
 		                                    "Do you wish to recreate the files?"))
 			continue;
@@ -390,6 +405,7 @@ void SelectPackageDlg::OnNew() {
 			continue;
 		}
 		dlg.Create();
+		selected_path = path;
 		selected = name;
 		Break(IDYES);
 		break;
@@ -555,6 +571,7 @@ void SelectPackageDlg::SyncList(const String& find)
 	Sort(packages);
 	alist.Clear();
 	clist.Clear();
+	nest_list.Clear();
 	ListCursor();
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
@@ -563,8 +580,9 @@ void SelectPackageDlg::SyncList(const String& find)
 		Image icon = pkg.icon;
 		if(IsNull(icon))
 			icon = pkg.main ? IdeImg::MainPackage() : pkg.upphub ? IdeImg::HubPackage() : IdeImg::Package();
+		nest_list.Add(pkg.nest);
 		clist.Add(pkg.package, DPI(icon, 16));
-		alist.Add(pkg.package, pkg.nest, pkg.description, icon);
+		alist.Add(pkg.package, GetFileName(pkg.nest), pkg.description, icon);
 		alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 	}
 	if(!alist.FindSetCursor(n))
@@ -620,6 +638,7 @@ void SelectPackageDlg::Load(const String& find)
 			if(!base.IsCursor())
 				return;
 			LoadVars(assembly);
+			SyncFilter();
 		}
 		Vector<String> upp = GetUppDirs();
 		packages.Clear();
@@ -632,7 +651,7 @@ void SelectPackageDlg::Load(const String& find)
 		LoadFromFile(data, cache_path);
 		data.SetCount(upp.GetCount());
 		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (additional package candidates)
-			ScanFolder(upp[i], data[i], GetFileName(upp[i]), dir_exists, Null);
+			ScanFolder(upp[i], data[i], upp[i], dir_exists, Null);
 		int update = msecs();
 		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
 			ArrayMap<String, PkData>& nest = data[i];
@@ -734,13 +753,22 @@ INITBLOCK
 	RegisterGlobalConfig("SelectPkg");
 }
 
-String SelectPackage(const char *title, const char *startwith, bool selectvars, bool main)
+String SelectPackage(String& path, const char *title, const char *startwith, bool selectvars, bool main)
 {
 	SelectPackageDlg dlg(title, selectvars, main);
 	const char *c = main ? "SelectPkgMain" : "SelectPkg";
 	LoadFromGlobal(dlg, c);
 	dlg.SyncBrief();
-	String b = dlg.Run(startwith);
+	dlg.SyncFilter();
+	String b = dlg.Run(path, startwith);
 	StoreToGlobal(dlg, c);
+	DDUMP(path);
+	DDUMP(b);
 	return b;
+}
+
+String SelectPackage(const char *title, const char *startwith, bool selectvars, bool main)
+{
+	String dummy;
+	return SelectPackage(dummy, title, startwith, selectvars, main);
 }
