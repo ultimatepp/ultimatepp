@@ -759,12 +759,13 @@ onst]&]
 [s3; Returns the secondary y axis range.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetMajorUnits`(double`,double`):%- [_^ScatterDraw^ ScatterDraw]_`&[* S
-etMajorUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
-[s3; Sets the horizontal ([%-*@3 ux]) and vertical ([%-*@3 uy]) distance 
-between grid lines.&]
+[s5;:Upp`:`:ScatterDraw`:`:SetMajorUnits`(double`,double`,double`):%- [_^Upp`:`:ScatterDraw^ S
+catterDraw]_`&[* SetMajorUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy],
+ [@(0.0.255) double]_[*@3 uy2])&]
+[s3; Sets the horizontal ([%-*@3 ux]), vertical ([%-*@3 uy]) or secondary 
+vertical ([%-*@3 uy2]) distance between grid lines.&]
 [s1; &]
-[s6;%- &]
+[s6; &]
 [s5;:ScatterDraw`:`:SetMajorUnitsNum`(int`,int`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Set
 MajorUnitsNum]([@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
 [s3; Sets the horizontal ([%-*@3 nx]) and vertical ([%-*@3 ny]) number 
@@ -1110,7 +1111,8 @@ nt]_[*@3 index])&]
 the series data.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:RemoveAllSeries`(`):%- [@(0.0.255) void]_[* RemoveAllSeries]()&]
+[s5;:ScatterDraw`:`:RemoveAllSeries`(`):%- [_^ScatterDraw^ ScatterDraw]_`&[* RemoveAllSer
+ies]()&]
 [s3; Remove all data series from control. It does not delete the 
 series data.&]
 [s1;%- &]

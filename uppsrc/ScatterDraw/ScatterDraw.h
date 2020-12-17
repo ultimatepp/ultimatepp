@@ -384,6 +384,16 @@ public:
 	ScatterDraw& SetPlotAreaBottomMargin(int margin);
 	int GetPlotAreaBottomMargin()					{return vPlotBottom;}
 	
+	ScatterDraw& SetMargin(int hLeft, int hRight, int vTop, int vBottom) {return SetPlotAreaMargin(hLeft, hRight, vTop, vBottom);}
+	ScatterDraw& SetLeftMargin(int margin)  {return SetPlotAreaLeftMargin(margin);}
+	int GetLeftMargin()						{return hPlotLeft;}
+	ScatterDraw& SetRightMargin(int margin)	{return SetPlotAreaRightMargin(margin);}	
+	int GetRightMargin()					{return hPlotRight;}
+	ScatterDraw& SetTopMargin(int margin)	{return SetPlotAreaTopMargin(margin);}
+	int GetTopMargin()						{return vPlotTop;}
+	ScatterDraw& SetBottomMargin(int margin){return SetPlotAreaBottomMargin(margin);}
+	int GetBottomMargin()					{return vPlotBottom;}
+	
 	ScatterDraw& SetPlotAreaColor(const Color& p_a_color);
 	Color& GetPlotAreaColor()						{return plotAreaColor;}
 	
@@ -447,7 +457,7 @@ public:
 	double GetXRange()const 	{return xRange;}
 	double GetYRange()const 	{return yRange;}
 	double GetY2Range()const 	{return yRange2;}
-	ScatterDraw &SetMajorUnits(double ux, double uy = Null);
+	ScatterDraw &SetMajorUnits(double ux, double uy = Null, double uy2 = Null);
 	ScatterDraw &SetMajorUnitsNum(int nx, int ny = Null);
 	double GetMajorUnitsX() 	{return xMajorUnit;}
 	double GetMajorUnitsY() 	{return yMajorUnit;}
@@ -720,7 +730,8 @@ public:
 	ScatterDraw &SetDataSecondaryY(bool secondary = true);
 	void SetRightY(int index)		{SetDataSecondaryY(index);} 	
 	ScatterDraw &SetRightY()		{return SetDataSecondaryY();}
-	bool IsDataPrimaryY(int index);	
+	bool IsDataPrimaryY(int index);
+	bool ThereArePrimaryY();	
 	bool ThereAreSecondaryY();
 	
 	void SetSequentialX(int index, bool sequential);
@@ -734,7 +745,7 @@ public:
 	ScatterDraw &ShowAll(bool show = true);
 
 	bool RemoveSeries(int index);
-	void RemoveAllSeries();
+	ScatterDraw &RemoveAllSeries();
 	
 	bool SwapSeries(int i1, int i2);
 	
