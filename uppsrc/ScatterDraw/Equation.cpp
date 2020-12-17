@@ -336,6 +336,8 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 			x.Neg();
 		return x;
 	} else {
+		if (p.IsChar2('.', '.'))
+			p.ThrowError("missing number");
 		doubleUnit x = doubleUnit(p.ReadDouble());
 		if (isneg)
 			x.Neg();

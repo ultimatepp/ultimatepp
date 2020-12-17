@@ -796,10 +796,10 @@ T LinearInterpolate(const T x, const Point_<T> *vec, int len) {
 	return vec[len-1].y;
 }
 
-template <class Range, class T>
-T LinearInterpolate(const T x, const Range &vec) {
+template <class Range>
+typename Range::value_type LinearInterpolate(const typename Range::value_type x, const Range &vec) {
 	ASSERT(vec.GetCount() > 1);
-	return LinearInterpolate(x, (const T *)vec, vec.GetCount());
+	return LinearInterpolate(x, (const typename Range::value_type *)vec, vec.GetCount());
 }
 
 template <class T>
@@ -818,14 +818,14 @@ void GetInterpolatePos(const T x, const T *vecx, int len, int &x0, int &x1) {
 	x0 = x1 = len-1;
 }
 
-template <class Range, class T>
-void GetInterpolatePos(const T x, const Range &vecx, int &x0, int &x1) {
-	ASSERT(vecx.GetCount() > 1);
-	GetInterpolatePos(x, (const T *)vecx, vecx.GetCount(), x0, x1);
+template <class Range>
+void GetInterpolatePos(const typename Range::value_type x, const Range &vecx, int &x0, int &x1) {
+	ASSERT(vecx.size() > 1);
+	GetInterpolatePos(x, (const typename Range::value_type *)vecx, vecx.size(), x0, x1);
 }
 
 template <class T>
-T LinearInterpolate(const T x, const T *vecx, const T *vecy, int len) {
+T LinearInterpolate(const T x, const T *vecx, const T *vecy, size_t len) {
 	ASSERT(len > 1);
 	if (x < vecx[0])
 		return vecy[0];
@@ -836,12 +836,15 @@ T LinearInterpolate(const T x, const T *vecx, const T *vecy, int len) {
 	return vecy[len-1];
 }
 
-template <class Range, class T>
-T LinearInterpolate(const T x, const Range &vecx, const Range &vecy) {
-	ASSERT(vecx.GetCount() > 1);
-	ASSERT(vecx.GetCount() == vecy.GetCount());
-	return LinearInterpolate(x, (const T *)vecx, (const T *)vecy, vecx.GetCount());
+template <class Range>
+typename Range::value_type LinearInterpolate(typename Range::value_type x, const Range &vecx, const Range &vecy) {
+	ASSERT(vecx.size() > 1);
+	ASSERT(vecx.size() == vecy.size());
+	return LinearInterpolate(x, (const typename Range::value_type *)vecx, 
+								(const typename Range::value_type *)vecy, vecx.size());
 }
+
+double LinearInterpolate(double x, const Eigen::VectorXd &vecx, const Eigen::VectorXd &vecy);
 
 class TableInterpolate {
 public:
@@ -1028,39 +1031,76 @@ typename T::PlainObject Convolution2D(const Eigen::MatrixBase<T>& orig, const Ei
 	return dest;
 }
 
-template <class Range, class T>
-T HammingWindow(Range &data) {
+template <class Range>
+typename Range::value_type HammingWindow(Range &data) {
 	size_t numData = data.size();
-	T numDataFact = 0;
+	typename Range::value_type numDataFact = 0;
 	for (size_t i = 0; i < numData; ++i) {
-        T windowFact = 0.54 - 0.46*cos(2*M_PI*i/numData);
+        typename Range::value_type windowFact = 0.54 - 0.46*cos(2*M_PI*i/numData);
         numDataFact += windowFact;
     	data[i] *= windowFact;
 	}
 	return numDataFact;
 }
 
-template <class Range, class T>
-T CosWindow(Range &data, int numOver) {
+template <class Range>
+typename Range::value_type CosWindow(Range &data, int numOver) {
 	size_t numData = data.size();
-	T numDataFact = 0;
+	typename Range::value_type numDataFact = 0;
 	for (size_t i = 0; i < numOver; ++i) {
-        T windowFact = 0.5*(1 - cos(M_PI*i/numOver));
+        typename Range::value_type windowFact = 0.5*(1 - cos(M_PI*i/numOver));
         numDataFact += windowFact;
     	data[i] *= windowFact;	
     }
     for (size_t i = numOver; i < numData - numOver; ++i) {
-        T windowFact = 1;		// 1.004
+        typename Range::value_type windowFact = 1;		// 1.004
         numDataFact += windowFact;
     }
     for (size_t i = numData - numOver; i < numData; ++i) {
-  		T windowFact = 0.5*(1 + cos(M_PI*(numData - i - numOver)/numOver));
+  		typename Range::value_type windowFact = 0.5*(1 + cos(M_PI*(numData - i - numOver)/numOver));
         numDataFact += windowFact;
     	data[i] *= windowFact;	
     }
 	return numDataFact;			    
 }
 
+template <class Range1, class Range2>
+void CleanNANDupSort(const Range1 &x, const Range1 &y, Range2 &retx, Range2 &rety) {
+	ASSERT(x.size() == y.size());
+	Vector<Pointf> orderedSeries;
+	orderedSeries.Reserve(int(x.size()));
+	for (int i = 0; i < x.size(); ++i) {		
+		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i]))
+			orderedSeries << Pointf(x[i], y[i]);
+	}
+	PointfLess less;
+	Sort(orderedSeries, less);	
+	
+	Vector<int> num(orderedSeries.size(), 1);
+	double eps = (orderedSeries.Top().x - orderedSeries[0].x)/1000./orderedSeries.size();
+	for (int i = orderedSeries.size()-1; i >= 1; --i) {
+		if (orderedSeries[i].x - orderedSeries[i-1].x < eps) {
+			num[i-1] += num[i];
+			orderedSeries[i-1].y += orderedSeries[i].y;		
+			orderedSeries.Remove(i);
+			num.Remove(i);
+		}
+	}
+	for (int i = 0; i < orderedSeries.size(); ++i) 
+		orderedSeries[i].y /= num[i];
+	
+	Resize(retx, orderedSeries.size());
+	Resize(rety, orderedSeries.size());
+	for (int i = 0; i < x.size(); ++i) {		
+		retx[i] = orderedSeries[i].x;
+		rety[i] = orderedSeries[i].y;
+	}
+}
+	
+void Resample(const Eigen::VectorXd &sourcex, const Eigen::VectorXd &sourcey, double &srate, 
+			 Eigen::VectorXd &ret, double &from);
+Vector<Pointf> FFTSimple(Eigen::VectorXd &data, double tSample, bool frequency, int type, 
+		int window, int numOver);
 void FilterFFT(Eigen::VectorXd &data, double T, double fromT, double toT);
 
 }
