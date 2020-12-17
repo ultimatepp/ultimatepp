@@ -165,11 +165,3 @@ esES("Unidades no encajan en resistencias en paralelo")
 euES("")
 frFR("")
 
-
-// Obsolete
-
-T_("Complex number")
-caES("")
-esES("N\303\272mero complejo")
-euES("")
-frFR("")

@@ -203,6 +203,8 @@ void ScatterDraw::AdjustMajorUnitX() {
 void ScatterDraw::AdjustMajorUnitY() {
 	if (yMajorUnit == 0 || IsNull(yMajorUnit))
 		return;
+	if (yMajorUnitNum == 0 || IsNull(yMajorUnitNum))
+		return;
 	while (yRange/yMajorUnit > 1.2*yMajorUnitNum) 
 		yMajorUnit *= 2;
 	while (yRange/yMajorUnit < yMajorUnitNum/1.5) 
@@ -211,6 +213,8 @@ void ScatterDraw::AdjustMajorUnitY() {
 
 void ScatterDraw::AdjustMajorUnitY2() {
 	if (yMajorUnit2 == 0 || IsNull(yMajorUnit2))
+		return;
+	if (yMajorUnitNum == 0 || IsNull(yMajorUnitNum))
 		return;
 	while (yRange2/yMajorUnit2 > 1.2*yMajorUnitNum) 
 		yMajorUnit2 *= 2;
@@ -242,7 +246,7 @@ ScatterDraw &ScatterDraw::SetRange(double rx, double ry, double ry2) {
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::SetMajorUnits(double ux, double uy) {
+ScatterDraw &ScatterDraw::SetMajorUnits(double ux, double uy, double uy2) {
 	if (!IsNull(ux)) {
 		xMajorUnit = ux;
 		xMajorUnitNum = int(xRange/ux);
@@ -250,8 +254,14 @@ ScatterDraw &ScatterDraw::SetMajorUnits(double ux, double uy) {
 	}
 	if (!IsNull(uy)) {
 		yMajorUnit = uy;
-		yMajorUnit2 = yMajorUnit*yRange2/yRange;
+		yMajorUnit2 = uy*yRange2/yRange;
 		yMajorUnitNum = int(yRange/uy);
+		AdjustMinUnitY();
+		AdjustMinUnitY2();
+	} else if (!IsNull(uy2)) {
+		yMajorUnit2 = uy2;
+		yMajorUnit = uy2*yRange/yRange2;
+		yMajorUnitNum = int(yRange/yMajorUnit);
 		AdjustMinUnitY();
 		AdjustMinUnitY2();
 	}
@@ -1074,7 +1084,7 @@ void ScatterDraw::SetDataPrimaryY(int index, bool primary) {
 	
 	series[index].primaryY = primary;
 	if (!primary)
-		SetDrawY2Reticle(true);
+		SetDrawY2Reticle(true).SetDrawY2ReticleNumbers();
 	Refresh();
 }
 
@@ -1109,6 +1119,13 @@ void ScatterDraw::SetDataSourceInternal() {
 	for (int i = 0; i < series.GetCount(); ++i)
 		series[i].SetDataSource_Internal(true);
 }*/
+
+bool ScatterDraw::ThereArePrimaryY() {
+	for (int i = 0; i < series.GetCount(); ++i)
+		if (series[i].primaryY)
+			return true;
+	return false;
+}
 
 bool ScatterDraw::ThereAreSecondaryY() {
 	for (int i = 0; i < series.GetCount(); ++i)
@@ -1209,9 +1226,10 @@ bool ScatterDraw::RemoveSeries(int index) {
 	return true;
 }
 
-void ScatterDraw::RemoveAllSeries() {
+ScatterDraw& ScatterDraw::RemoveAllSeries() {
 	series.Clear();
 	Refresh();
+	return *this;
 }
 
 bool ScatterDraw::SwapSeries(int i1, int i2) {
