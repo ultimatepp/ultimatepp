@@ -204,13 +204,15 @@ void Serialize(Stream& stream, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
 	}
 }
 
-// These resize functions serve both for Eigen and U++ Vectors
+// These resize functions serve both for Eigen, std and U++ Vectors
 template <typename T>
-void Resize(Vector<T> &v, size_t len) {v.SetCount(len);}
+void Resize(Vector<T> &v, size_t len) {v.SetCount(int(len));}
 template <typename T>
-void Resize(Vector<T> &v, size_t len, const T& init) {v.SetCount(len, init);}
+void Resize(Vector<T> &v, size_t len, const T& init) {v.SetCount(int(len), init);}
 template <typename T>
-void ResizeConservative(Vector<T> &v, size_t len) {v.SetCount(len);}
+void ResizeConservative(Vector<T> &v, size_t len) {v.SetCount(int(len));}
+template <typename T>
+void ResizeConservative(Vector<T> &v, size_t len, const T& init) {v.SetCount(int(len), init);}
 
 template <typename T>
 void Resize(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len) {v.resize(len);}
@@ -218,6 +220,63 @@ template <typename T>
 void Resize(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len, const T& init) {v.setConstant(len, 1, init);}
 template <typename T>
 void ResizeConservative(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len) {v.conservativeResize(len);}
+template <typename T>
+void ResizeConservative(Eigen::Matrix<T, Eigen::Dynamic, 1> &v, size_t len, const T& init) {
+	size_t len0 = v.size();
+	v.conservativeResize(len);
+	if (len > len0)
+		std::fill(&v[len0], v.data() + v.size(), init);	
+}
+
+template <typename T>
+void Resize(std::vector<T> &v, size_t len) {v.resize(len);}
+template <typename T>
+void Resize(std::vector<T> &v, size_t len, const T& init) {
+	v.resize(len);
+	std::fill(v.begin(), v.end(), init);
+}
+template <typename T>
+void ResizeConservative(std::vector<T> &v, size_t len) {v.resize(len);}
+template <typename T>
+void ResizeConservative(std::vector<T> &v, size_t len, const T& init) {v.resize(len, init);}
+
+
+template <typename T>
+auto Begin(const Vector<T> &v)			{return v.begin();}
+template <typename T>
+auto Begin(Vector<T> &v)				{return v.begin();}
+template <typename T>
+auto End(const Vector<T> &v)			{return v.end();}
+
+template <typename T>
+auto Begin(const std::vector<T> &v)		{return v.begin();}
+template <typename T>
+auto Begin(std::vector<T> &v)			{return v.begin();}
+template <typename T>
+auto End(const std::vector<T> &v)		{return v.end();}
+
+template <typename T>
+auto Begin(const Eigen::Matrix<T, Eigen::Dynamic, 1> &v){return v.data();}
+template <typename T>
+auto Begin(Eigen::Matrix<T, Eigen::Dynamic, 1> &v)		{return v.data();}
+template <typename T>
+auto End(const Eigen::Matrix<T, Eigen::Dynamic, 1> &v)	{return v.data() + v.size();}
+
+
+template <typename T>
+void Reverse(Vector<T> &v) {
+	T *first = v.begin();
+	T *last = v.end();
+	while ((first != last) && (first != --last)) 
+		Swap(*first++, *last);
+}
+
+template <typename T>
+void Reverse(std::vector<T> &v) {std::reverse(v.begin(), v.end());}
+
+template <typename T>
+void Reverse(Eigen::Matrix<T, Eigen::Dynamic, 1> &v) {v.reverseInPlace();}
+
 
 
 }
