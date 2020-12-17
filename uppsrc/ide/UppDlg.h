@@ -203,6 +203,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           ListCursor();
 	void           ChangeDescription();
 
+	void           SyncFilter();
 	void           ScanFolder(const String& path, ArrayMap<String, PkData>& nd,
 	                          const String& nest, Index<String>& dir_exists,
 	                          const String& prefix);
@@ -223,7 +224,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           MovePackage(bool copy);
 	
 	enum {
-		MAIN = 1, FIRST = 2
+		MAIN = 0x1000, NEST = 0x2000, NEST_MASK = 0xfff
 	};
 };
 
