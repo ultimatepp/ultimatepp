@@ -142,7 +142,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 	SelectPackageDlg(const char *title, bool selectvars, bool main);
 
-	String         Run(String startwith);
+	String         Run(String& path, String startwith);
 
 	void           Serialize(Stream& s);
 
@@ -151,13 +151,15 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	ParentCtrl     list;
 	FileList       clist;
 	ArrayCtrl      alist;
+	
+	Vector<String> nest_list;
 
 	bool           selectvars;
 	bool           loading;
 	int            loadi;
 	bool           finished;
 	bool           canceled;
-	String         selected;
+	String         selected, selected_path;
 
 	struct PkInfo {
 		String package;
@@ -183,6 +185,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	Array<PkInfo>             packages;
 	Array< ArrayMap<String, PkData> > data;
 
+	String         GetCurrentPath();
 	String         GetCurrentName();
 	int            GetCurrentIndex();
 	void           SyncBrief();
@@ -230,8 +233,10 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 bool RenamePackageFs(const String& upp, const String& newname, bool duplicate = false);
 
+String SelectPackage(String& path, const char *title, const char *startwith = NULL,
+                     bool selectvars = false, bool all = false);
 String SelectPackage(const char *title, const char *startwith = NULL,
-	bool selectvars = false, bool all = false);
+	                 bool selectvars = false, bool all = false);
 
 int CondFilter(int c);
 int FlagFilter(int c);
@@ -267,7 +272,8 @@ struct WorkspaceWork {
 	UppList      filelist;
 	Vector<int>  fileindex;
 
-	String    main;
+	String    main_path;
+	String    main_package;
 	String    actualpackage;
 	int       actualfileindex;
 	Package   actual;
@@ -330,7 +336,7 @@ struct WorkspaceWork {
 	void   CloseAllGroups();
 	void   GroupOrFile(Point pos);
 
-	void   SetMain(const String& m)                           { main = m; }
+	void   SetMain(const String& path, const String& pkg)     { main_path = path; main_package = pkg; }
 	void   FindSetPackage(const String& s)                    { package.FindSetCursor(s); }
 
 	void   ShowFile(int pi);
@@ -460,4 +466,4 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	PackageEditor();
 };
 
-void EditPackages(const char *main, const char *startwith, String& cfg);
+void EditPackages(const String& main_path, const String& main_pkg, const char *startwith, String& cfg);
