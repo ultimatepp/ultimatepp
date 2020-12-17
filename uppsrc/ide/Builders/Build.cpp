@@ -237,7 +237,7 @@ String MakeBuild::OutDir(const Index<String>& cfg, const String& package, const 
 		x[i] = InitCaps(x[i]);
 	String outdir = GetVar("OUTPUT");
 	if(output_per_assembly)
-		outdir = AppendFileName(outdir, GetVarsName());
+		outdir = AppendFileName(outdir, GetAssemblyId());
 	if(!use_target)
 		outdir = AppendFileName(outdir, package);
 	outdir = AppendFileName(outdir, GetFileTitle(method) + "." + Join(x, "."));

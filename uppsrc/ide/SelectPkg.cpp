@@ -264,18 +264,18 @@ String SelectPackageDlg::GetCurrentName()
 	return Null;
 }
 
-String SelectPackageDlg::GetCurrentPath()
+String SelectPackageDlg::GetCurrentNest()
 {
 	int i = clist.IsShown() ? clist.GetCursor() : alist.GetCursor();
 	String f = GetCurrentName();
-	return i >= 0 && i < nest_list.GetCount() ? AppendFileName(AppendFileName(nest_list[i], f), GetFileName(f) + ".upp") : String();
+	return i >= 0 && i < nest_list.GetCount() ? nest_list[i] : String();
 }
 
 int   SelectPackageDlg::GetCurrentIndex()
 {
-	String p = GetCurrentPath();
+	String s = GetCurrentName();
 	for(int i = 0; i < packages.GetCount(); i++)
-		if(AppendFileName(packages[i].nest, packages[i].package) == p)
+		if(packages[i].package == s)
 			return i;
 	return -1;
 }
@@ -324,7 +324,7 @@ void SelectPackageDlg::SyncBrief()
 	clist.Show(b);
 }
 
-String SelectPackageDlg::Run(String& path, String startwith)
+String SelectPackageDlg::Run(String& nest, String startwith)
 {
 	finished = canceled = false;
 	if(!IsSplashOpen())
@@ -343,10 +343,10 @@ String SelectPackageDlg::Run(String& path, String startwith)
 	ActiveFocus(alist.IsShown() ? (Ctrl&)alist : (Ctrl&)clist);
 	switch(TopWindow::Run()) {
 	case IDOK:
-		path = GetCurrentPath();
+		nest = GetCurrentNest();
 		return GetCurrentName();
 	case IDYES:
-		path = selected_path;
+		nest = selected_nest;
 		return selected;
 	default:
 		LoadVars(bkvar);
@@ -405,7 +405,7 @@ void SelectPackageDlg::OnNew() {
 			continue;
 		}
 		dlg.Create();
-		selected_path = path;
+		selected_nest = nest;
 		selected = name;
 		Break(IDYES);
 		break;
@@ -564,7 +564,8 @@ void SelectPackageDlg::SyncList(const String& find)
 				   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
 				   added.Find(d.package) < 0) {
 					packages.Add() = d;
-					added.Add(d.package);
+					if(!d.main)
+						added.Add(d.package);
 				}
 			}
 		}
@@ -753,17 +754,15 @@ INITBLOCK
 	RegisterGlobalConfig("SelectPkg");
 }
 
-String SelectPackage(String& path, const char *title, const char *startwith, bool selectvars, bool main)
+String SelectPackage(String& nest, const char *title, const char *startwith, bool selectvars, bool main)
 {
 	SelectPackageDlg dlg(title, selectvars, main);
 	const char *c = main ? "SelectPkgMain" : "SelectPkg";
 	LoadFromGlobal(dlg, c);
 	dlg.SyncBrief();
 	dlg.SyncFilter();
-	String b = dlg.Run(path, startwith);
+	String b = dlg.Run(nest, startwith);
 	StoreToGlobal(dlg, c);
-	DDUMP(path);
-	DDUMP(b);
 	return b;
 }
 

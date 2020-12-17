@@ -223,6 +223,8 @@ String VarFilePath();
 Vector<String> GetUppDirs();
 String GetUppDir();
 void   SetVar(const String& var, const String& val, bool save = true);
+void   SetMainNest(const String& n);
+String GetAssemblyId();
 
 String GetCurrentBuildMethod();
 String GetCurrentMainPackage();
