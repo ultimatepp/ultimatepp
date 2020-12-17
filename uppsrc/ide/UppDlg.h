@@ -142,7 +142,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 	SelectPackageDlg(const char *title, bool selectvars, bool main);
 
-	String         Run(String& path, String startwith);
+	String         Run(String& nest, String startwith);
 
 	void           Serialize(Stream& s);
 
@@ -159,7 +159,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	int            loadi;
 	bool           finished;
 	bool           canceled;
-	String         selected, selected_path;
+	String         selected, selected_nest;
 
 	struct PkInfo {
 		String package;
@@ -185,7 +185,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	Array<PkInfo>             packages;
 	Array< ArrayMap<String, PkData> > data;
 
-	String         GetCurrentPath();
+	String         GetCurrentNest();
 	String         GetCurrentName();
 	int            GetCurrentIndex();
 	void           SyncBrief();
@@ -233,7 +233,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 bool RenamePackageFs(const String& upp, const String& newname, bool duplicate = false);
 
-String SelectPackage(String& path, const char *title, const char *startwith = NULL,
+String SelectPackage(String& nest, const char *title, const char *startwith = NULL,
                      bool selectvars = false, bool all = false);
 String SelectPackage(const char *title, const char *startwith = NULL,
 	                 bool selectvars = false, bool all = false);
@@ -272,8 +272,7 @@ struct WorkspaceWork {
 	UppList      filelist;
 	Vector<int>  fileindex;
 
-	String    main_path;
-	String    main_package;
+	String    main;
 	String    actualpackage;
 	int       actualfileindex;
 	Package   actual;
@@ -336,13 +335,13 @@ struct WorkspaceWork {
 	void   CloseAllGroups();
 	void   GroupOrFile(Point pos);
 
-	void   SetMain(const String& path, const String& pkg)     { main_path = path; main_package = pkg; }
-	void   FindSetPackage(const String& s)                    { package.FindSetCursor(s); }
+	void   SetMain(const String& pkg)                 { main = pkg; }
+	void   FindSetPackage(const String& s)            { package.FindSetCursor(s); }
 
 	void   ShowFile(int pi);
 
-	String         GetActivePackage() const                   { return package.GetCurrentName(); }
-	String         GetActivePackagePath() const               { return PackagePath(package.GetCurrentName()); }
+	String         GetActivePackage() const           { return package.GetCurrentName(); }
+	String         GetActivePackagePath() const       { return PackagePath(package.GetCurrentName()); }
 	String         GetActiveFileName() const;
 	String         GetActiveFilePath() const;
 	void           OpenFileFolder();
@@ -466,4 +465,4 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	PackageEditor();
 };
 
-void EditPackages(const String& main_path, const String& main_pkg, const char *startwith, String& cfg);
+void EditPackages(const char *main, const char *startwith, String& cfg);

@@ -221,7 +221,7 @@ public:
 		MinimizeBox().CloseBoxRejects();
 		threads <<= hydra1_threads;
 		threads.NotNull(false);
-		cmdAssembly = GetVarsName();
+		cmdAssembly = GetAssemblyId();
 		cmdBuildMode = (targetmode == 1 ? "r" : "d");
 		if (mainconfigparam.GetCount()) {
 			cmdMainConfig = mainconfigparam;
