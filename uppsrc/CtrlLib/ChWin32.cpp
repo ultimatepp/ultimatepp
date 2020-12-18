@@ -550,26 +550,16 @@ void ChHostSkin()
 				s.border = s.trivialborder = XpInt(XP_COMBOBOX, CP_DROPDOWNBUTTON, CBXS_NORMAL, 2403/*TMT_BORDERSIZE*/);
 			}
 		}
+
 		{
-			HeaderCtrl::Style& s = HeaderCtrl::StyleDefault().Write();
-			Win32Look(s.look, 4, XP_HEADER, HP_HEADERITEM);
-			Image hm = Unmultiply(XpImage(XP_HEADER, HP_HEADERITEM, 1, SColorPaper, Size(20, 10)));
-			RGBA textc = SColorText();
-			int diff = Diff(hm[4][19], textc);
-			int hdroll = 0;
+			HeaderCtrl::Style& hs = HeaderCtrl::StyleDefault().Write();
 			for(int i = 0; i < 4; i++) {
-				int d = Diff(hm[4][i], textc);
-				if(d < diff) {
-					diff = d;
-					hdroll = i + 1;
-				}
-				d = Diff(hm[4][19 - i], textc);
-				if(d < diff) {
-					diff = d;
-					hdroll = -i;
-				}
+				Image h = CreateImage(Size(10, 10), FaceColor(decode(i, CTRL_NORMAL, 5,
+				                                                     CTRL_HOT, IsDarkTheme() ? 10 : 0,
+				                                                     CTRL_PRESSED, -5,
+				                                                     -8)));
+				hs.look[i] = ChHot(WithBottomLine(WithRightLine(h, SColorShadow(), 1), SColorShadow()));
 			}
-			s.gridadjustment = hdroll;
 		}
 		{
 			ProgressIndicator::Style& s = ProgressIndicator::StyleDefault().Write();
