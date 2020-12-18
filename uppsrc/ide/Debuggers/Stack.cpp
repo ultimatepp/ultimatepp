@@ -14,7 +14,7 @@ Pdb::Thread& Pdb::Current()
 	return zero;
 }
 
-Array<Pdb::Frame> Pdb::Backtrace(Thread& ctx, bool single_frame)
+Array<Pdb::Frame> Pdb::Backtrace(Thread& ctx, bool single_frame, bool thread_info)
 {
 	Array<Frame> frame;
 	STACKFRAME64 stackFrame = {0};
@@ -54,30 +54,36 @@ Array<Pdb::Frame> Pdb::Backtrace(Thread& ctx, bool single_frame)
 		f.frame = stackFrame.AddrFrame.Offset;
 		f.stack = stackFrame.AddrStack.Offset;
 		f.fn = GetFnInfo(f.pc);
-		if(IsNull(f.fn.name)) {
-			if(single_frame)
-				return frame;
-			f.text = Hex(f.pc);
-			for(int i = 0; i < module.GetCount(); i++) {
-				const ModuleInfo& m = module[i];
-				if(f.pc >= m.base && f.pc < m.base + m.size) {
-					f.text << " (" << GetFileName(m.path) << ")";
-					break;
-				}
-			}
+		if(thread_info) {
+			if(frame.GetCount() > 20)
+				break;
 		}
 		else {
-			GetLocals(f, cctx, f.param, f.local);
-			if(single_frame)
-				return frame;
-			f.text = f.fn.name;
-			f.text << '(';
-			for(int i = 0; i < f.param.GetCount(); i++) {
-				if(i)
-					f.text << ", ";
-				f.text << f.param.GetKey(i) << "=" << Visualise(f.param[i], MEMBER).GetString();
+			if(IsNull(f.fn.name)) {
+				if(single_frame)
+					return frame;
+				f.text = Hex(f.pc);
+				for(int i = 0; i < module.GetCount(); i++) {
+					const ModuleInfo& m = module[i];
+					if(f.pc >= m.base && f.pc < m.base + m.size) {
+						f.text << " (" << GetFileName(m.path) << ")";
+						break;
+					}
+				}
 			}
-			f.text << ')';
+			else {
+				GetLocals(f, cctx, f.param, f.local);
+				if(single_frame)
+					return frame;
+				f.text = f.fn.name;
+				f.text << '(';
+				for(int i = 0; i < f.param.GetCount(); i++) {
+					if(i)
+						f.text << ", ";
+					f.text << f.param.GetKey(i) << "=" << Visualise(f.param[i], MEMBER).GetString();
+				}
+				f.text << ')';
+			}
 		}
 	}
 	return frame;
@@ -135,7 +141,28 @@ void Pdb::BTs()
 	for(int i = 0; i < threads.GetCount(); i++) {
 		dword thid = threads.GetKey(i);
 		String stid = AsString(thid);
-		int id = bts.Add(0, DbgImg::Thread(), stid, Format("0x%x", (int)thid), true);
+		String info;
+		bool waiting = false;
+		bool cowork = false;
+		for(const Frame& f : Backtrace(threads[i], false, true)) {
+			if(info.GetCount() + f.fn.name.GetCount() > 160) {
+				info << "...";
+				break;
+			}
+			bool zwait = f.fn.name.StartsWith("ZwWait");
+			waiting |= zwait;
+			if(!f.fn.name.StartsWith("RtlSleep") && !f.fn.name.StartsWith("ZwWaitForAlertByThreadId"))
+				MergeWith(info, ", ", f.fn.name);
+			if(f.fn.name == "Upp::CoWork::Pool::ThreadRun") {
+				cowork = true;
+				break;
+			}
+		}
+		int id = bts.Add(0, DbgImg::Thread(), stid,
+		                 AttrText(Format("0x%x ", (int)thid) + info)
+		                 .NormalInk(waiting ? cowork ? Blend(SLtBlue, SGray(), 200) : SGray()
+		                                    : cowork ? SLtBlue() : SColorText()),
+		                 true);
 		if(open.Find(stid) >= 0)
 			bts.Open(id);
 	}
