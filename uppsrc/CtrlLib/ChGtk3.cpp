@@ -299,14 +299,18 @@ void ChHostSkin()
 		SColorHighlightText_Write(GetInkColor());
 	Gtk_New("label.view");
 		SColorLabel_Write(GetInkColor());
-#if 0
-	Gtk_New("tooltip.background");
-		SColorInfo_Write(GetBackgroundColor());
-		SColorInfoText_Write(GetInkColor());
-#else
-	SColorInfo_Write(IsDark(SColorText()) ? LtYellow() : GrayColor(79));
-	SColorInfoText_Write(SColorText());
-#endif
+
+	Color tooltip_ink, tooltip_paper;
+    Gtk_New("tooltip.background");
+		tooltip_paper = GetBackgroundColor();
+    Gtk_New("tooltip.color");
+		tooltip_ink = GetInkColor();
+	if(Diff(tooltip_paper, tooltip_ink) < 100) { // ink color too close to background color, fix it
+		tooltip_paper = IsDark(SColorText()) ? LtYellow() : GrayColor(79);
+		tooltip_ink = SColorText();;
+	}
+	SColorInfo_Write(tooltip_paper);
+	SColorInfoText_Write(tooltip_ink);
 
 	ChBaseSkin();
 
