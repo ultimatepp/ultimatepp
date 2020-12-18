@@ -451,7 +451,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 // code
 	Thread&    Current();
-	Array<Frame> Backtrace(Thread& ctx, bool single_frame = false);
+	Array<Frame> Backtrace(Thread& ctx, bool single_frame = false, bool thread_info = false);
 	int        Disassemble(adr_t ip);
 	bool       IsValidFrame(adr_t eip);
 	void       Sync0(Thread& ctx);
