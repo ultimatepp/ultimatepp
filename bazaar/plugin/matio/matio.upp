@@ -1,5 +1,7 @@
 description "MATLAB MAT file I/O library\3770,128,128";
 
+options(BUILDER_OPTION) NOWARNINGS;
+
 uses
 	Core;
 

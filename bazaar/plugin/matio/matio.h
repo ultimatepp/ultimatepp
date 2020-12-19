@@ -59,12 +59,13 @@ public:
 	const T &operator()(int r) const		{return data[r];}
 	const T &operator()(int r, int c) const	{return data[c*rows + r];}
 		
-	operator T*()                    		{ return data; }
-	operator const T*() const        		{ return data; }
+	operator T*()                    		{return data;}
+	operator const T*() const        		{return data;}
 		
-	int GetCount() 							{return rows*cols;}
-	int GetRows() 							{return rows;}
-	int GetCols() 							{return cols;}
+	int GetCount() const					{return rows*cols;}
+	int size() const						{return GetCount();}
+	int GetRows() const						{return rows;}
+	int GetCols() const						{return cols;}
 			
 	void Print() {
 		for(int r = 0; r < GetRows(); r++) {
