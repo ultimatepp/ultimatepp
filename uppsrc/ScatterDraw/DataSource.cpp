@@ -3,10 +3,9 @@
 namespace Upp {
 using namespace Eigen;
 
-#define Membercall(fun)	(this->*fun)
 
 double DataSource::Min(Getdatafun getdata, int64& id) {
-	double minVal = -DOUBLE_NULL;
+	double minVal = std::numeric_limits<double>::max();
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
 		if (!IsNull(d) && minVal > d) {
@@ -14,13 +13,13 @@ double DataSource::Min(Getdatafun getdata, int64& id) {
 			id = i;
 		}
 	}
-	if (minVal == -DOUBLE_NULL)
+	if (minVal == std::numeric_limits<double>::max())
 		return Null;
 	return minVal;		
 }
  
 double DataSource::Max(Getdatafun getdata, int64& id) {
-	double maxVal = DOUBLE_NULL;
+	double maxVal = std::numeric_limits<double>::min();
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
 		if (!IsNull(d) && maxVal < d) {
@@ -28,7 +27,7 @@ double DataSource::Max(Getdatafun getdata, int64& id) {
 			id = i;
 		}
 	}
-	if (maxVal == DOUBLE_NULL)
+	if (maxVal == std::numeric_limits<double>::min())
 		return Null;
 	return maxVal;
 }
@@ -756,9 +755,9 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
         xv[i] = Membercall(getdataX)(i);
     }
 
-	VectorXd resampled;    
-    double h = Null, from;
-    Resample(xv, yv, h, resampled, from);
+	VectorXd resx, resy;    
+    Resample(xv, yv, resx, resy);
+	double from = resx[0];
 	
 	// From https://en.wikipedia.org/wiki/Finite_difference_coefficient
 	double kernels1[4][9] = {{-1/2., 0, 1/2.},
@@ -776,6 +775,7 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
 	
 	double factor;
 	VectorXd kernel;
+	double h = resx[1]-resx[0];
 	if (orderDer == 1) {
 		factor = 1/h;
 		kernel = Map<MatrixXd>(kernels1[idkernel], orderAcc+1, 1);
@@ -785,9 +785,9 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
 	} else
 		return res;
 	
-	VectorXd resE = Convolution(resampled, kernel, factor);
+	VectorXd resE = Convolution(resy, kernel, factor);
 	
-	int nnumData = int(resampled.size())-orderAcc;
+	int nnumData = int(resy.size())-orderAcc;
 	res.SetCount(nnumData);
 	int frame = orderAcc/2 + 1;
 	for (int i = 0; i < nnumData; ++i) {
@@ -853,17 +853,18 @@ Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdata
         xv[i] = Membercall(getdataX)(i);
     }
 
-	VectorXd resampled;    
-    double h = Null, from;
-    Resample(xv, yv, h, resampled, from);
+	VectorXd resx, resy;    
+    Resample(xv, yv, resx, resy);
+	double from = resx[0];
     
     VectorXd coeff = SavitzkyGolay_Coeff(size/2, size/2, deg, der);
 	if (!SavitzkyGolay_Check(coeff))
 		return res;
-		
-	VectorXd resE = Convolution(resampled, coeff, 1/pow(h, der));
+	
+	double h = resx[1]-resx[0];
+	VectorXd resE = Convolution(resy, coeff, 1/pow(h, der));
 
-	int nnumData = int(resampled.size())-size;
+	int nnumData = int(resy.size())-size;
 	res.SetCount(nnumData);
 	int frame = size/2;
 	for (int i = 0; i < nnumData; ++i) {
@@ -879,18 +880,39 @@ double LinearInterpolate(double x, const VectorXd &vecx, const VectorXd &vecy) {
 	return LinearInterpolate(x, vecx.data(), vecy.data(), vecx.size());
 }
 
-void Resample(const VectorXd &sourcex, const VectorXd &sourcey, double &srate, VectorXd &ret, double &from) {
+void Resample(const VectorXd &sx, const VectorXd &sy, VectorXd &rx, VectorXd &ry, double srate) {
 	VectorXd x, y;
-	CleanNANDupSort(sourcex, sourcey, x, y);
+	CleanNANDupXSort(sx, sy, x, y);
 	
-	from = x[0];
-	double delta = x[x.size()-1] - from;
+	double delta = x[x.size()-1] - x[0];
 	if (IsNull(srate)) 
 		srate = delta/(x.size()-1);
 	int len = int(delta/srate) + 1;
-	ret.resize(len);
-	for (int i = 0; i < len; ++i) 
-		ret[i] = LinearInterpolate(from + i*srate, x, y);
+	rx.resize(len);
+	ry.resize(len);
+	for (int i = 0; i < len; ++i) { 
+		rx[i] = x[0] + i*srate;
+		ry[i] = LinearInterpolate(rx[i], x, y);
+	}
+}
+
+void Resample(const VectorXd &sx, const VectorXd &sy, const VectorXd &sz, 
+			  VectorXd &rx, VectorXd &ry, VectorXd &rz, double srate) {
+	VectorXd x, y, z;
+	CleanNANDupXSort(sx, sy, sz, x, y, z);
+	
+	double delta = x[x.size()-1] - x[0];
+	if (IsNull(srate)) 
+		srate = delta/(x.size()-1);
+	int len = int(delta/srate) + 1;
+	rx.resize(len);
+	ry.resize(len);
+	rz.resize(len);
+	for (int i = 0; i < len; ++i) { 
+		rx[i] = x[0] + i*srate;
+		ry[i] = LinearInterpolate(rx[i], x, y);
+		rz[i] = LinearInterpolate(rx[i], x, z);
+	}
 }
 		
 void FilterFFT(VectorXd &data, double T, double fromT, double toT) {
@@ -925,16 +947,17 @@ Vector<Pointf> DataSource::FilterFFT(Getdatafun getdataY, Getdatafun getdataX, d
         xv[i] = Membercall(getdataX)(i);
     }
     
-    VectorXd resampled;
-    double T = Null, from;
-    Resample(xv, yv, T, resampled, from);
+	VectorXd resx, resy;    
+    Resample(xv, yv, resx, resy);
+	double from = resx[0];
+	double T = resx[1]-resx[0];
     
-	Upp::FilterFFT(resampled, T, fromT, toT);
-	int nnumData = int(resampled.size());
+	Upp::FilterFFT(resy, T, fromT, toT);
+	int nnumData = int(resy.size());
 	res.SetCount(nnumData);
 	for (int i = 0; i < nnumData; ++i) {
 		res[i].x = from + i*T;
-		res[i].y = resampled[i];
+		res[i].y = resy[i];
 	}
 	return res;
 }
@@ -947,8 +970,8 @@ void ExplicitData::Init(Function<double (double x, double y)> _funz, double _min
 	this->minY = _minY;
 	this->maxY = _maxY;
 	
-	minZ = -DOUBLE_NULL_LIM;
-	maxZ = DOUBLE_NULL_LIM;
+	minZ = std::numeric_limits<double>::max();
+	maxZ = std::numeric_limits<double>::min();
 	double deltax = (_maxX - _minX)/100.;
 	double deltay = (_maxY - _minY)/100.;
 	for (double x = _minX; x <= _maxX; x += deltax) {
@@ -963,7 +986,8 @@ void ExplicitData::Init(Function<double (double x, double y)> _funz, double _min
 }
 
 int FindClosest(Pointf &p, Vector<Pointf> &points, double deltaX, double deltaY, double &d) {
-	double dxmin = -DOUBLE_NULL, dymin = -DOUBLE_NULL;
+	double dxmin = std::numeric_limits<double>::max();
+	double dymin = std::numeric_limits<double>::max();
 	int imin = -1;
 	for (int i = 0; i < points.GetCount(); ++i) {
 		double dx = abs(p.x - points[i].x);		
