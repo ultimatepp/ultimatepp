@@ -352,7 +352,7 @@ void ProcessingTab::OnOp()
 			tabFitRight.opSinusTend <<= false;
 			tabFitRight.opSinusTend.Enable(false);
 		} else {
-			splineFirst = false;
+			sinusTendFirst = false;
 			r2SinusTend = r2SinusTendBest;
 			sinusTend = sinusTendBest;
 		}
@@ -802,11 +802,10 @@ void ProcessingTab::OnFFT()
 			sourcex[i] = data.x(i);
 			sourcey[i] = data.y(i);
 		}		
-		Eigen::VectorXd resampled;
-		double from;
-		Resample(sourcex, sourcey, samplingTime, resampled, from);
-			
-		EigenVector series(resampled, from, samplingTime);
+		Eigen::VectorXd resx, resy;
+		Resample(sourcex, sourcey, resx, resy, samplingTime);
+		
+		EigenVector series(resy, resx[0], samplingTime);
 		fft = series.FFTY(samplingTime, tabFreqRight.opXAxis == 1, tabFreqRight.type, 
 							tabFreqRight.window.GetIndex(), tabFreqRight.num, tabFreqRight.overlapping);
 		VectorPointf fftData(fft);
