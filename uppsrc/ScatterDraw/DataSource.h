@@ -5,6 +5,8 @@
 
 namespace Upp {
 
+#define Membercall(fun)	(this->*fun)
+
 class DataSource : public Pte<DataSource>  {
 public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
@@ -30,6 +32,18 @@ public:
 
 	void SetDestructor(Function <void(void)> _OnDestructor) {OnDestructor = _OnDestructor;}
 
+	template <class Range>
+	void Copy(Getdatafun getdata, Range &out) {
+		Resize(out, GetCount());
+		int n = 0;		
+		for (int64 i = 0; i < GetCount(); ++i) { 
+			double d = Membercall(getdata)(i);
+			if (!IsNull(d) && IsFin(d)) 
+				out[n++] = d;
+		}
+		ResizeConservative(out, n);
+	}
+	
 	double MinY(int64& id)  		{return Min(&DataSource::y, id);}
 	double MinY()  					{int64 dummy;	return Min(&DataSource::y, dummy);}
 	double MinX(int64& id)  		{return Min(&DataSource::x, id);}	
@@ -1065,42 +1079,142 @@ typename Range::value_type CosWindow(Range &data, int numOver) {
 }
 
 template <class Range1, class Range2>
-void CleanNANDupSort(const Range1 &x, const Range1 &y, Range2 &retx, Range2 &rety) {
-	ASSERT(x.size() == y.size());
-	Vector<Pointf> orderedSeries;
-	orderedSeries.Reserve(int(x.size()));
-	for (int i = 0; i < x.size(); ++i) {		
-		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i]))
-			orderedSeries << Pointf(x[i], y[i]);
+void CleanNAN(const Range1 &x, Range2 &retx) {
+	int num = x.size();
+	Resize(retx, num);
+	int n = 0;
+	for (int i = 0; i < num; ++i) {		
+		if (!IsNull(x[i]) && IsFin(x[i])) 
+			retx[n++] = x[i];
 	}
-	PointfLess less;
-	Sort(orderedSeries, less);	
-	
-	Vector<int> num(orderedSeries.size(), 1);
-	double eps = (orderedSeries.Top().x - orderedSeries[0].x)/1000./orderedSeries.size();
-	for (int i = orderedSeries.size()-1; i >= 1; --i) {
-		if (orderedSeries[i].x - orderedSeries[i-1].x < eps) {
-			num[i-1] += num[i];
-			orderedSeries[i-1].y += orderedSeries[i].y;		
-			orderedSeries.Remove(i);
-			num.Remove(i);
+	ResizeConservative(retx, n);
+}
+
+template <class Range1, class Range2>
+void CleanNAN(const Range1 &x, const Range1 &y, Range2 &retx, Range2 &rety) {
+	int num = int(x.size());
+	ASSERT(num == y.size());
+	Resize(retx, num);
+	Resize(rety, num);
+	int n = 0;
+	for (int i = 0; i < num; ++i) {		
+		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i])) {
+			retx[n]   = x[i];
+			rety[n] = y[i];
+			n++;
 		}
 	}
-	for (int i = 0; i < orderedSeries.size(); ++i) 
-		orderedSeries[i].y /= num[i];
-	
-	Resize(retx, orderedSeries.size());
-	Resize(rety, orderedSeries.size());
-	for (int i = 0; i < x.size(); ++i) {		
-		retx[i] = orderedSeries[i].x;
-		rety[i] = orderedSeries[i].y;
+	ResizeConservative(retx, n);
+	ResizeConservative(rety, n);
+}
+
+template <class Range1, class Range2>
+void CleanNAN(const Range1 &x, const Range1 &y, const Range1 &z, Range2 &retx, Range2 &rety, Range2 &retz) {
+	int num = int(x.size());
+	ASSERT(num == y.size() && num == z.size());
+	Resize(retx, num);
+	Resize(rety, num);
+	Resize(retz, num);
+	int n = 0;
+	for (int i = 0; i < num; ++i) {		
+		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i]) && !IsNull(z[i]) && IsFin(z[i])) {
+			retx[n] = x[i];
+			rety[n] = y[i];
+			retz[n] = z[i];
+			n++;
+		}
 	}
+	ResizeConservative(retx, n);
+	ResizeConservative(rety, n);
+	ResizeConservative(retz, n);
+}
+
+template <class Range1, class Range2>
+Range1 ApplyIndex(const Range1 &x, Range2 &indices) {
+	ASSERT(x.size() == indices.size());
+	Range1 ret(x.size());
+	for (int i = 0; i < x.size(); ++i)
+		ret[i] = x[indices[i]];
+	return ret;
+}
+
+template <class Range1, class Range2>
+void CleanNANDupXSort(const Range1 &x, const Range1 &y, Range2 &rx, Range2 &ry) {
+	CleanNAN(x, y, rx, ry);
+	
+	int n = int(rx.size());
+	Vector<int> indices(n);
+	for (int i = 0; i < indices.size(); ++i)
+		indices[i] = i;
+	StableSort(indices,[&](int a, int b)-> bool {return x[a] < x[b];}); 
+	rx = ApplyIndex(rx, indices);
+	ry = ApplyIndex(ry, indices);
+	
+	Vector<int> num(n, 1);
+	double epsx = (rx[n-1] - rx[0])/1000./n;
+	for (int i = n-1; i >= 1; --i) {
+		if (rx[i] - rx[i-1] < epsx) {
+			num[i-1] += num[i];
+			ry[i-1]  += ry[i];		
+			num[i] = 0;
+		}
+	}
+	int id = 0;
+	for (int i = 0; i < num.size(); ++i) {
+		if (num[i] != 0) { 
+			ry[id] = ry[i]/num[i];
+			rx[id] = rx[i];
+			id++;
+		}
+	}
+	ResizeConservative(rx, id);
+	ResizeConservative(ry, id);
+}
+
+template <class Range1, class Range2>
+void CleanNANDupXSort(const Range1 &x, const Range1 &y, const Range1 &z, Range2 &rx, Range2 &ry, Range2 &rz) {
+	CleanNAN(x, y, z, rx, ry, rz);
+	
+	int n = int(rx.size());
+	Vector<int> indices(n);
+	for (int i = 0; i < indices.size(); ++i)
+		indices[i] = i;
+	StableSort(indices,[&](int a, int b)-> bool {return rx[a] < rx[b];}); 
+	rx = ApplyIndex(rx, indices);
+	ry = ApplyIndex(ry, indices);
+	rz = ApplyIndex(rz, indices);
+	
+	Vector<int> num(n, 1);
+	double epsx = (rx[n-1] - rx[0])/1000./n;
+	for (int i = n-1; i >= 1; --i) {
+		if (rx[i] - rx[i-1] < epsx) {
+			num[i-1] += num[i];
+			num[i] = 0;
+			ry[i-1]  += ry[i];	
+			rz[i-1]  += rz[i];	
+		}
+	}
+	int id = 0;
+	for (int i = 0; i < num.size(); ++i) {
+		if (num[i] != 0) { 
+			rx[id] = rx[i];
+			ry[id] = ry[i]/num[i];
+			rz[id] = rz[i]/num[i];			
+			id++;
+		}
+	}
+	ResizeConservative(rx, id);
+	ResizeConservative(ry, id);
+	ResizeConservative(rz, id);
 }
 	
-void Resample(const Eigen::VectorXd &sourcex, const Eigen::VectorXd &sourcey, double &srate, 
-			 Eigen::VectorXd &ret, double &from);
+void Resample(const Eigen::VectorXd &sx, const Eigen::VectorXd &sy, 
+			  Eigen::VectorXd &rx, Eigen::VectorXd &ry, double srate = Null);
+void Resample(const Eigen::VectorXd &sx, const Eigen::VectorXd &sy, const Eigen::VectorXd &sz, 
+			  Eigen::VectorXd &rx, Eigen::VectorXd &ry, Eigen::VectorXd &rz, double srate = Null);
+
 Vector<Pointf> FFTSimple(Eigen::VectorXd &data, double tSample, bool frequency, int type, 
-		int window, int numOver);
+						 int window, int numOver);
 void FilterFFT(Eigen::VectorXd &data, double T, double fromT, double toT);
 
 }

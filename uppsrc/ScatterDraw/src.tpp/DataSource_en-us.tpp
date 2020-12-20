@@ -78,11 +78,10 @@ and [^topic`:`/`/ScatterDraw`/src`/VectorY`$en`-us^ VectorY] .&]
 [s0; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
-[s4;%- &]
+[s4; &]
 [s5;:DataSource`:`:DataSource`(`):%- [* DataSource]()&]
 [s2; Default constructor where the data is defined as data series 
 by default.&]
-[s3;%- &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s4;%- &]
@@ -131,6 +130,13 @@ value [%-*@3 x].&]
 [_^Vector^ Vector]<[@(0.0.255) double]>_[*@3 xn])&]
 [s2; Returns the value of the explicit equation based on the independent 
 value set [%-*@3 xn].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:DataSource`:`:Copy`(Upp`:`:DataSource`:`:Getdatafun`,Range`&`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) void]_[* Copy]([_^Upp`:`:DataSource`:`:Getdatafun^ G
+etdatafun]_[*@3 getdata], [*@4 Range]_`&[*@3 out])&]
+[s2; Copies data series [%-*@3 getdata] into an Upp`::Vector<>, Eigen`::VectorXd 
+or a std`::vector<> [%-*@3 out].&]
 [s3; &]
 [s4;%- &]
 [s5;:DataSource`:`:GetCount`(`):%- [@(0.0.255) virtual] [_^int64^ int64]_[* GetCount]()&]
