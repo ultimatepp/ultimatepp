@@ -915,7 +915,9 @@ END_LAYOUT
 LAYOUT(UppHubLayout, 992, 656)
 	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 984).TopPosZ(4, 616))
 	ITEM(Upp::Button, settings, SetLabel(t_("Settings..")).LeftPosZ(4, 64).TopPosZ(628, 24))
-	ITEM(Upp::Button, ok, SetLabel(t_("Install")).RightPosZ(72, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, action, SetLabel(t_("Install")).RightPosZ(72, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, reinstall, SetLabel(t_("Reinstall")).RightPosZ(140, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, readme, SetLabel(t_("README..")).RightPosZ(208, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
