@@ -1,12 +1,17 @@
 #include "ide.h"
 
+// Todo: other folders in UppHub
+
 struct UppHubNest : Moveable<UppHubNest> {
 	int              tier = -1;
 	String           name;
 	Vector<String>   packages;
 	String           description;
 	String           repo;
-	String           status = "Unknown";
+	String           status = "unknown";
+	String           category;
+	String           list_name;
+	String           readme;
 };
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
@@ -15,26 +20,57 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	Progress pi;
 	bool loading_stopped;
 
+	void Readme();
 	void Load(int tier, const String& url, bool deep);
 	void Load();
-	void Install();
+	void Install(bool noprompt = false);
+	void Uninstall(bool noprompt = false);
+	void Reinstall();
 	void Install(const Index<int>& ii);
+	void SyncList();
 
 	UppHubDlg();
 };
 
 UppHubDlg::UppHubDlg()
 {
-	CtrlLayoutOKCancel(*this, "UppHub");
+	CtrlLayoutCancel(*this, "UppHub");
 	
 	list.EvenRowColor();
 
 	list.AddColumn("Name");
+	list.AddColumn("Category");
 	list.AddColumn("Description");
 	list.AddColumn("Packages");
 	list.AddColumn("Status");
+	list.AddColumn("INSTALLED", "Installed");
 	
 	list.AddIndex("REPO");
+	list.AddIndex("README");
+	
+	list.ColumnWidths("94 72 373 301 61 61");
+	list.WhenSel = [=] {
+		action.Disable();
+		readme.Disable();
+		reinstall.Disable();
+		if(list.IsCursor()) {
+			readme.Enable();
+			action.Enable();
+			if(IsNull(list.Get("INSTALLED"))) {
+				action.SetLabel("Install");
+				action ^= [=] { Install(); };
+			}
+			else {
+				action.SetLabel("Uninstall");
+				reinstall.Enable();
+				action ^= [=] { Uninstall(); };
+			}
+		}
+		readme.Enable(!IsNull(list.Get("README")));
+	};
+	list.WhenLeftDouble = [=] { Readme(); };
+	readme << [=] { Readme(); };
+	reinstall << [=] { Reinstall(); };
 	
 	settings.Show(IsVerbose());
 	settings << [=] {
@@ -43,6 +79,18 @@ UppHubDlg::UppHubDlg()
 		SaveFile(ConfigFile("upphub_root"), s);
 		Load();
 	};
+}
+
+void UppHubDlg::Readme()
+{
+	String link = list.Get("README");
+	String s = HttpRequest(link).RequestTimeout(3000).Execute();
+	if(s.GetCount()) {
+		if(link.EndsWith(".qtf"))
+			PromptOK(s);
+		else
+			PromptOK("\1" + s);
+	}
 }
 
 void UppHubDlg::Load(int tier, const String& url, bool deep)
@@ -88,6 +136,7 @@ void UppHubDlg::Load(int tier, const String& url, bool deep)
 	}
 
 	try {
+		String list_name = v["name"];
 		for(Value ns : v["nests"]) {
 			String name = ns["name"];
 			UppHubNest& n = upv.GetAdd(ns["name"]);
@@ -96,14 +145,16 @@ void UppHubDlg::Load(int tier, const String& url, bool deep)
 			if(tt || n.packages.GetCount() == 0)
 				for(Value p : ns["packages"])
 					n.packages.Add(p);
-			if(tt || n.description.GetCount() == 0)
-				n.description = ns["description"];
-			if(tt || n.repo.GetCount() == 0)
-				n.repo = ns["repository"];
-			String status = ns["status"];
-			if(findarg(status, "stable", "testing", "experimental", "unknown", "broken") >= 0 &&
-			   (tt || n.status.GetCount() == 0))
-				n.status = status;
+			auto Attr = [&](String& a, const char *id) {
+				if(tt || IsNull(a))
+					a = ns[id];
+			};
+			Attr(n.description, "description");
+			Attr(n.repo, "repository");
+			Attr(n.category, "category");
+			Attr(n.status, "status");
+			Attr(n.readme, "readme");
+			n.list_name = list_name;
 		}
 		if(deep)
 			for(Value l : v["links"]) {
@@ -120,6 +171,20 @@ void UppHubDlg::Load(int tier, const String& url, bool deep)
 	catch(ValueTypeError) {}
 }
 
+void UppHubDlg::SyncList()
+{
+	int sc = list.GetScroll();
+	Value k = list.GetKey();
+	list.Clear();
+	for(const UppHubNest& n : upv)
+		list.Add(n.name, n.category, n.description, Join(n.packages, " "), n.status,
+		         DirectoryExists(GetHubDir() + "/" + n.name) ? "Yes" : "",
+		         n.repo, n.readme);
+	list.ScrollTo(sc);
+	if(!list.FindSetCursor(k))
+		list.GoBegin();
+}
+
 void UppHubDlg::Load()
 {
 	loading_stopped = false;
@@ -129,10 +194,10 @@ void UppHubDlg::Load()
 	Load(0, Nvl(LoadFile(ConfigFile("upphub_root")),
 	            "https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root"),
 	     true);
-	
-	list.Clear();
-	for(const UppHubNest& n : upv)
-		list.Add(n.name, n.description, Join(n.packages, " "), n.status, n.repo);
+
+	SyncList();
+
+	pi.Close();
 }
 
 void UppHubDlg::Install(const Index<int>& ii)
@@ -159,12 +224,32 @@ void UppHubDlg::Install(const Index<int>& ii)
 	}
 }
 
-void UppHubDlg::Install()
+void UppHubDlg::Install(bool noprompt)
 {
-	if(list.IsCursor() && PromptYesNo("Install " + ~list.GetKey() + "?")) {
+	if(list.IsCursor() && (noprompt || PromptYesNo("Install " + ~list.GetKey() + "?"))) {
 		Index<int> h;
 		h << list.GetCursor();
 		Install(h);
+		SyncList();
+	}
+}
+
+
+
+void UppHubDlg::Uninstall(bool noprompt)
+{
+	if(list.IsCursor() && (noprompt || PromptYesNo("Uninstall " + ~list.GetKey() + "?"))) {
+		if(!DeleteFolderDeep(GetHubDir() + "/" + ~list.GetKey(), true))
+			Exclamation("Failed to delete " + ~list.GetKey());
+		SyncList();
+	}
+}
+
+void UppHubDlg::Reinstall()
+{
+	if(list.IsCursor() && PromptYesNo("Reinstall " + ~list.GetKey() + "?")) {
+		Uninstall(true);
+		Install(true);
 	}
 }
 
@@ -172,8 +257,7 @@ void UppHub()
 {
 	UppHubDlg dlg;
 	dlg.Load();
-	if(dlg.Run() == IDOK)
-		dlg.Install();
+	dlg.Run();
 }
 
 void UppHubAuto(const String& main)

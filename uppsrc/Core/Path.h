@@ -230,7 +230,7 @@ bool        PathIsEqual(const char *p1, const char *p2);
 inline bool DeleteFile(const char *fn)      { return unlink(fn) == 0; }
 #endif
 
-bool    DeleteFolderDeep(const char *dir);
+bool    DeleteFolderDeep(const char *dir, bool rdonly = false);
 
 #ifndef PLATFORM_WINCE
 String  GetTempPath();

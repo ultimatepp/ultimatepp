@@ -2663,13 +2663,14 @@ void ArrayCtrl::Sort(const Id& id, int (*compare)(const Value& v1, const Value& 
 
 void ArrayCtrl::Clear() {
 	EndEdit();
+	int oc = cursor;
 	if(cursor >= 0) {
 		WhenKillCursor();
 		cursor = -1;
 		info.Cancel();
 	}
 	array.Clear();
-	if(cursor >= 0) {
+	if(oc >= 0) {
 		WhenCursor();
 		WhenSel();
 	}

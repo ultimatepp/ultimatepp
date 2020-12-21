@@ -312,10 +312,13 @@ then used as reference point) and can contain segments `".`"
 or `"..`".&]
 [s3;%% &]
 [s4; &]
-[s5;:DeleteFolderDeep`(const char`*`): [@(0.0.255) bool]_[* DeleteFolderDeep]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 dir])&]
+[s5;:Upp`:`:DeleteFolderDeep`(const char`*`,bool`): [@(0.0.255) bool]_[* DeleteFolderDeep
+]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dir], [@(0.0.255) bool]_[*@3 rdonly]_`=_[@(0.0.255) f
+alse])&]
 [s2;%% Removes [%-*@3 dir] and everything it contains. Returns true 
-on success.&]
+on success. If [%-*@3 rdonly] is true, folder is deleted regardless 
+of any read`-only settings (as long as process is allowed to 
+remove them).&]
 [s3;%% &]
 [s4; &]
 [s5;:GetTempPath`(`): [_^String^ String]_[* GetTempPath]()&]

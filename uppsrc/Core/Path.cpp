@@ -867,22 +867,37 @@ bool RealizeDirectory(const String& d)
 	return true;
 }
 
-bool DeleteFolderDeep(const char *dir)
+void SetWritePermission(const char *path)
 {
+#ifdef PLATFORM_WIN32
+	SetFileAttributes(path, GetFileAttributes(path) & ~FILE_ATTRIBUTE_READONLY);
+#endif
+#ifdef PLATFORM_POSIX
+	chmod(path, S_IRWXU);
+#endif
+}
+
+bool DeleteFolderDeep(const char *dir, bool rdonly)
+{
+	bool ok = true;
 	{
 		FindFile ff(AppendFileName(dir, "*.*"));
 		while(ff) {
 			String name = ff.GetName();
 			String p = AppendFileName(dir, name);
-			if(ff.IsFile() || ff.IsSymLink())
-				FileDelete(p);
+			if(ff.IsFile() || ff.IsSymLink()) {
+				if(ff.IsReadOnly() && rdonly)
+					SetWritePermission(p);
+				ok = ok && FileDelete(p);
+			}
 			else
 			if(ff.IsFolder())
-				DeleteFolderDeep(p);
+				ok = ok && DeleteFolderDeep(p, rdonly);
 			ff.Next();
 		}
 	}
-	return DirectoryDelete(dir);
+	SetWritePermission(dir);
+	return ok && DirectoryDelete(dir);
 }
 
 String GetSymLinkPath(const char *linkpath)
