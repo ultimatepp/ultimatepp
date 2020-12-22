@@ -117,7 +117,7 @@ bool Patch::MatchFiles(const Vector<String>& dir, Progress& pi)
 	com_path.Replace("\\", "/");
 	if(dir.GetCount())
 		for(int pass = 0; pass < 2; pass++) {
-			while(com_path.GetCount()) {
+			for(;;) {
 				for(String d : dir) {
 					while(d.GetCount() > 3) {
 						if(pi.StepCanceled())
