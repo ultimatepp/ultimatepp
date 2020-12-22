@@ -96,6 +96,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 	}
 	
 	patch_file <<= patch_path;
+	
 
 	if(!patch.MatchFiles(target_dirs, pi)) {
 		Exclamation("Unable to match the directory structure!");
@@ -124,8 +125,8 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 	}
 	
 	failed.Show(failed_count);
-	failed.SetInk(SRed()).SetFont(StdFont().Bold().Italic());
-	failed = String() << failed_count << " file(s) cannot be patched";
+	failed.SetInk(SRed());
+	failed = String() << failed_count << " file(s) failed";
 
 	ShowResult();
 	
