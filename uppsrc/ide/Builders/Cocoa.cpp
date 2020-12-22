@@ -28,7 +28,7 @@ void GccBuilder::CocoaAppBundle()
 	}
 	if(imgs.GetCount() && convert_icons) {
 		String icons = AppendFileName(outdir, "icons.iconset");
-		RealizeDir(icons);
+		RealizeDirectory(icons);
 		PutConsole("Exporting bundle icons to " + icons);
 		
 		for(String fn : {
