@@ -627,7 +627,9 @@ Ide::Ide()
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {
 		bar.Add("Open main package..", [=] {
-			CreateHost(false, false)->Launch(GetExeFilePath() + " --nosplash");
+			Host h;
+			CreateHost(h, false, false);
+			h.Launch(GetExeFilePath() + " --nosplash");
 		});
 	};
 #endif
