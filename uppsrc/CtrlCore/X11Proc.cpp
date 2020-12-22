@@ -221,31 +221,30 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			dword up = pressed ? 0 : K_KEYUP;
 			static struct { KeySym keysym; dword key; } tab[] = {
 				{ XK_ISO_Left_Tab, K_TAB|K_SHIFT },
-				{ XK_BackSpace, K_BACKSPACE },
-				{ XK_Tab, K_TAB },
-				{ XK_Return, K_ENTER },
-				{ XK_KP_Enter, K_ENTER },
-				{ XK_Escape, K_ESCAPE },
-				{ XK_space, K_SPACE },
-
-				{ XK_KP_Space, K_SPACE },
-				{ XK_KP_Tab, K_TAB },
-				{ XK_KP_Enter, K_ENTER },
-				{ XK_KP_F1, K_F1 },
-				{ XK_KP_F2, K_F2 },
-				{ XK_KP_F3, K_F3 },
-				{ XK_KP_F4, K_F4 },
-				{ XK_KP_Home, K_HOME },
-				{ XK_KP_Left, K_LEFT },
-				{ XK_KP_Up, K_UP },
-				{ XK_KP_Right, K_RIGHT },
-				{ XK_KP_Down, K_DOWN },
-				{ XK_KP_Page_Up, K_PAGEUP },
-				{ XK_KP_Page_Down, K_PAGEDOWN },
-				{ XK_KP_End, K_END },
-				{ XK_KP_Begin, K_HOME },
-				{ XK_KP_Insert, K_INSERT },
-				{ XK_KP_Delete, K_DELETE },
+				{ XK_BackSpace,    K_BACKSPACE },
+				{ XK_Tab,          K_TAB       },
+				{ XK_Return,       K_ENTER     },
+				{ XK_KP_Enter,     K_ENTER     },
+				{ XK_Escape,       K_ESCAPE    },
+				{ XK_space,        K_SPACE     },
+				{ XK_KP_Space,     K_SPACE     },
+				{ XK_KP_Tab,       K_TAB       },
+				{ XK_KP_Enter,     K_ENTER     },
+				{ XK_KP_F1,        K_F1        },
+				{ XK_KP_F2,        K_F2        },
+				{ XK_KP_F3,        K_F3        },
+				{ XK_KP_F4,        K_F4        },
+				{ XK_KP_Home,      K_HOME      },
+				{ XK_KP_Left,      K_LEFT      },
+				{ XK_KP_Up,        K_UP        },
+				{ XK_KP_Right,     K_RIGHT     },
+				{ XK_KP_Down,      K_DOWN      },
+				{ XK_KP_Page_Up,   K_PAGEUP    },
+				{ XK_KP_Page_Down, K_PAGEDOWN  },
+				{ XK_KP_End,       K_END       },
+				{ XK_KP_Begin,     K_HOME      },
+				{ XK_KP_Insert,    K_INSERT    },
+				{ XK_KP_Delete,    K_DELETE    },
 			};
 			for(int i = 0; i < __countof(tab); i++)
 				if(tab[i].keysym == keysym) {
@@ -262,9 +261,17 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			}
 		#ifndef PLATFORM_OSX11
 			if(GetCtrl() || GetAlt()) { // fix Ctrl+Shift+1 etc...
-				keysym = decode((int)event->xkey.keycode, 0xa, '1', 0xb, '2', 0xc, '3', 0xd, '4',
-				                0xe, '5', 0xf, '6', 0x10, '7', 0x11, '8', 0x12, '9', 0x13, '0',
-				                keysym);
+				keysym = decode((int)event->xkey.keycode,
+								0x0a, 0x31,
+								0x0b, 0x32,
+								0x0c, 0x33,
+								0x0d, 0x34,
+								0x0e, 0x35,
+								0x0f, 0x36,
+								0x10, 0x37,
+								0x11, 0x38,
+								0x12, 0x39,
+								0x13, 0x30, keysym);
 			}
 		#endif
 			// DLOG("keysym: " << keysym << " " << (char)keysym);
