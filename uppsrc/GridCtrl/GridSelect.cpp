@@ -45,11 +45,14 @@ void GridCtrl::SelectRange(Point from, Point to, bool sel /* = true*/, bool full
 		t = from;
 	}
 
-	int ymin = f.y;
-	int ymax = t.y;
+	int ymin = min(f.y, t.y);
+	int ymax = max(f.y, t.y);
 
 	int xmin = f.x;
 	int xmax = t.x;
+	
+	if(ymin < 0 || xmin < 0)
+		return;
 
 	if(xmin > xmax)
 	{
@@ -222,6 +225,14 @@ bool GridCtrl::IsSelected(int n, bool relative)
 	//int id = vitems[n + (relative ? fixed_rows : 0)].id;
 	int id = n + (relative ? fixed_rows : 0);
 	return vitems[id].IsSelect() || vitems[id].IsCursor();
+}
+
+bool GridCtrl::IsSelect(int n, int m, bool relative)
+{
+	int r = relative ? fixed_rows + n : n;
+	int c = relative ? fixed_cols + m : m;
+	Item &it = GetItem(r, c);
+	return it.IsSelect();
 }
 
 bool GridCtrl::IsSelected(int n, int m, bool relative)
