@@ -121,7 +121,7 @@ file
 
 mainconfig
 	"" = "GUI",
-	"" = "GUI .USEMALLOC",
+	"" = "GUI USEMALLOC",
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
 	"" = "GUI CHECKCLIPBOARD",
