@@ -113,13 +113,13 @@ void GridCtrl::LeftDown(Point p, dword keyflags)
 		moveRow = curpos.y;
 
 		if(keyflags & K_CTRL) {
-			SelectRange(oldcur, oldcur, !IsSelected(curpos.y, curpos.y, false), select_row);
-			SelectRange(curpos, curpos, !IsSelected(curpos.y, curpos.y, false), select_row);
+			SelectRange(curpos, curpos, !IsSelect(curpos.y, curpos.x, false), select_row);
 		}
 		else {
 			ClearSelection();
 			if((keyflags & K_SHIFT) && multi_select && IsValidCursor(oldcur)) {
-				SetCursor0(oldcur, CU_HIDECTRLS);
+				if(oldcur.y >= 0 && oldcur.x >= 0)
+					SetCursor0(oldcur, CU_HIDECTRLS);
 				Refresh();
 			}
 		}
