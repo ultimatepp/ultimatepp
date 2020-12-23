@@ -282,7 +282,6 @@ template<> inline bool  IsNull(const double& r)  { return !(abs(r) < -DOUBLE_NUL
 template<> inline bool  IsNull(const bool& r  )  { return false; }
 
 #include "Heap.h"
-
 #ifdef CPU_X86
 bool CpuMMX();
 bool CpuSSE();
