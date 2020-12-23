@@ -343,6 +343,10 @@ void GridCtrl::Paint(Draw &w)
 						Rect r(anchor, curpos);
 						r.Normalize();
 						r.SetSize(r.GetSize() + 1);
+						if(select_row) {
+							r.left = 0;
+							r.right = INT_MAX;
+						}
 						if(r.Contains(Point(j, i)))
 							style |= GD::SELECT;
 					}

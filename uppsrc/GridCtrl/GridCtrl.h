@@ -1643,7 +1643,8 @@ class GridCtrl : public Ctrl
 		void UpdateSummary(bool b = true);
 
 	private:
-
+		bool IsSelect(int n, int m, bool relative);
+	
 		bool TabKey(bool enter_mode);
 
 		bool Go0(int jump, bool scroll = true, bool goleft = false, bool ctrlmode = false);
