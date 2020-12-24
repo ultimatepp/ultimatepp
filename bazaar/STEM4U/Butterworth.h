@@ -19,75 +19,114 @@ void TrinomialMultiply(int order, const Range &b, const Range &c, Range &ret) {
 		ret[2*(2*i + 1) + 1] += c[2*i] * ret[2*(2*i - 1) + 1] + c[2*i + 1] * ret[2*(2*i - 1)];
 
 		for (int j = 2*i; j > 1; --j) {
-			ret[2 * j] += b[2*i] * ret[2*(j - 1)] - b[2*i + 1] * ret[2*(j - 1) + 1] +
-						  c[2*i] * ret[2*(j - 2)] - c[2*i + 1] * ret[2*(j - 2) + 1];
-			ret[2 * j + 1] += b[2*i] * ret[2*(j - 1) + 1] + b[2*i + 1] * ret[2*(j - 1)] +
-							  c[2*i] * ret[2*(j - 2) + 1] + c[2*i + 1] * ret[2*(j - 2)];
+			ret[2*j] 	 += b[2*i] * ret[2*(j-1)]   - b[2*i+1] * ret[2*(j-1)+1] +
+						    c[2*i] * ret[2*(j-2)]   - c[2*i+1] * ret[2*(j-2)+1];
+			ret[2*j + 1] += b[2*i] * ret[2*(j-1)+1] + b[2*i+1] * ret[2*(j-1)] +
+							c[2*i] * ret[2*(j-2)+1] + c[2*i+1] * ret[2*(j-2)];
 		}
 		ret[2] += b[2*i] * ret[0] - b[2*i + 1] * ret[1] + c[2*i];
-		ret[3] += b[2*i] * ret[1] + b[2*i + 1] * ret[0] + c[2*i + 1];
+		ret[3] += b[2*i] * ret[1] + b[2*i + 1] * ret[0] + c[2*i+1];
 		ret[0] += b[2*i];
-		ret[1] += b[2*i + 1];
+		ret[1] += b[2*i+1];
 	}
 }
 
+template <class Range>	
+void BinomialMultiply(int order, const Range &p, Range &ret) {
+	Resize(ret, 2*order, 0.);
+
+    for (int i = 0; i < order; ++i) {
+		for(int j = i; j > 0; --j) {
+		    ret[2*j]   += p[2*i] * ret[2*(j-1)]   - p[2*i+1] * ret[2*(j-1)+1];
+		    ret[2*j+1] += p[2*i] * ret[2*(j-1)+1] + p[2*i+1] * ret[2*(j-1)];
+		}
+		ret[0] += p[2*i];
+		ret[1] += p[2*i+1];
+    }
+}
+
 template <class Range>
-void ComputeLP(int order, Range &coeffs) {
+void CoefficientsLowPass(int order, Range &coeffs) {
 	Resize(coeffs, order + 1);
 
 	coeffs[0] = 1;
 	coeffs[1] = order;
-	int m = order / 2;
+	int m = order/2;
 	for (int i = 2; i <= m; ++i) {
-		coeffs[i] = (order - i + 1.)*coeffs[i - 1] / i;
-		coeffs[order - i] = coeffs[i];
+		coeffs[i] 		= (order-i+1)*coeffs[i-1]/i;
+		coeffs[order-i] = coeffs[i];
 	}
-	coeffs[order - 1] = order;
-	coeffs[order] = 1;
+	coeffs[order-1] = order;
+	coeffs[order]   = 1;
 }
 
 template <class Range>
-void ComputeHP(int order, Range &coeffs) {
-	ComputeLP(order, coeffs);
+void CoefficientsHighPass(int order, Range &coeffs) {
+	CoefficientsLowPass(order, coeffs);
 
 	for (int i = 0; i <= order; ++i)
-		if (i % 2) 
+		if (i%2) 
 			coeffs[i] = -coeffs[i];
+}
+
+template <class Range>
+void DCoefficientsLowHigh(int order, typename Range::value_type cutoff, Range &cden, double st, double ct) {
+	using Scalar = typename Range::value_type;
+	
+	Range rcoeffs(2*order);  
+	
+	for (int i = 0; i < order; ++i) {
+		Scalar poleAngle = M_PI * (2*i + 1) / (2.*order);
+		Scalar sinPoleAngle = sin(poleAngle);
+		Scalar cosPoleAngle = cos(poleAngle);
+		Scalar a = 1 + st*sinPoleAngle;
+		rcoeffs[2*i] = -ct / a;
+		rcoeffs[2*i + 1] = -st*cosPoleAngle / a;
+	}
+
+	BinomialMultiply(order, rcoeffs, cden);
+
+	cden[1] = cden[0];
+	cden[0] = 1;
+	for (int i = 3; i <= order; ++i)
+		cden[i] = cden[2*i - 2];
+
+	ResizeConservative(cden, order + 1);
 }
 
 template <class Range>
 void Butter(int order, typename Range::value_type lowcutoff, typename Range::value_type upcutoff, Range &cnum, Range &cden) {
 	using Scalar = typename Range::value_type;
 	
-	Scalar cp = cos(M_PI * (upcutoff + lowcutoff) / 2.);
-	Scalar theta = M_PI * (upcutoff - lowcutoff) / 2.;
+	Scalar cp = cos(M_PI*(upcutoff+lowcutoff)/2.);
+	Scalar theta = M_PI*(upcutoff-lowcutoff)/2.;
 	Scalar st = sin(theta);
 	Scalar ct = cos(theta);
 	Scalar s2t = 2*st*ct;       
-	Scalar c2t = 2*ct*ct - 1;  
+	Scalar c2t = 2*ct*ct-1;  
 
-	Range RCoeffs(2*order);  
-	Range TCoeffs(2*order); 
+	Range rcoeffs(2*order);  
+	Range tcoeffs(2*order); 
 	
 	for (int i = 0; i < order; ++i) {
-		Scalar poleAngle = M_PI * (2.*i + 1) / (2.*order);
+		Scalar poleAngle = M_PI * (2.*i+1)/(2.*order);
 		Scalar sinPoleAngle = sin(poleAngle);
 		Scalar cosPoleAngle = cos(poleAngle);
 		Scalar a = 1 + s2t*sinPoleAngle;
-		RCoeffs[2*i] = c2t / a;
-		RCoeffs[2*i + 1] = s2t*cosPoleAngle / a;
-		TCoeffs[2*i] = -2*cp*(ct + st*sinPoleAngle) / a;
-		TCoeffs[2*i + 1] = -2*cp*st*cosPoleAngle / a;
+		rcoeffs[2*i] = c2t / a;
+		rcoeffs[2*i + 1] = s2t*cosPoleAngle/a;
+		tcoeffs[2*i]   = -2*cp*(ct + st*sinPoleAngle)/a;
+		tcoeffs[2*i+1] = -2*cp*st*cosPoleAngle/a;
 	}
 
-	TrinomialMultiply(order, TCoeffs, RCoeffs, cden);
+	TrinomialMultiply(order, tcoeffs, rcoeffs, cden);
 
 	cden[1] = cden[0];
 	cden[0] = 1;
 	for (int i = 3; i <= 2*order; ++i)
-		cden[i] = cden[2*i - 2];
+		cden[i] = cden[2*i-2];
 
-	ResizeConservative(cden, 2*order + 1);
+	ResizeConservative(cden, 2*order+1);
 
 	Resize(cnum, 2*order + 1);
 
@@ -95,16 +134,16 @@ void Butter(int order, typename Range::value_type lowcutoff, typename Range::val
 	for (int n = 0; n < 2*order + 1; n++)
 		numbers[n] = (Scalar)n;
 
-	ComputeHP(order, TCoeffs);
+	CoefficientsHighPass(order, tcoeffs);
 
 	for (int i = 0; i < order; ++i) {
-		cnum[2*i] = TCoeffs[i];
+		cnum[2*i] = tcoeffs[i];
 		cnum[2*i + 1] = 0;
 	}
-	cnum[2*order] = TCoeffs[order];
-
+	cnum[2*order] = tcoeffs[order];
+	
 	Scalar cplow = 4*tan(M_PI * lowcutoff / 2.);
-	Scalar cpup  = 4*tan(M_PI * upcutoff  / 2.);
+	Scalar cpup  = max(0., 4*tan(M_PI * upcutoff  / 2.));
 
 	Scalar wn = 2 * atan2(sqrt(cplow * cpup), 4);
 	const auto result = std::complex<Scalar>(-1, 0);
@@ -116,13 +155,140 @@ void Butter(int order, typename Range::value_type lowcutoff, typename Range::val
 	Scalar b = 0;
 	Scalar den = 0;
 	for (int d = 0; d < 2*order + 1; d++) {
-		b += real(normalizedKernel[d] * cnum[d]);
+		b   += real(normalizedKernel[d] * cnum[d]);
 		den += real(normalizedKernel[d] * cden[d]);
 	}
 	for (int c = 0; c < 2*order + 1; c++)
-		cnum[c] = (cnum[c] * den) / b;
+		cnum[c] *= den/b;
+}
 
-	ResizeConservative(cnum, 2*order + 1);
+template <class Range>
+void ButterBandStop(int order, typename Range::value_type lowcutoff, typename Range::value_type upcutoff, Range &cnum, Range &cden) {
+	using Scalar = typename Range::value_type;
+	
+	Scalar cp = cos(M_PI*(upcutoff+lowcutoff)/2.);
+	Scalar theta = M_PI*(upcutoff-lowcutoff)/2.;
+	Scalar st = sin(theta);
+	Scalar ct = cos(theta);
+	Scalar s2t = 2*st*ct;       
+	Scalar c2t = 2*ct*ct-1;  
+
+	Range RCoeffs(2*order);  
+	Range TCoeffs(2*order); 
+	
+	for (int i = 0; i < order; ++i) {
+		Scalar poleAngle = M_PI * (2.*i + 1)/(2.*order);
+		Scalar sinPoleAngle = sin(poleAngle);
+		Scalar cosPoleAngle = cos(poleAngle);
+		Scalar a = 1 + s2t*sinPoleAngle;
+		RCoeffs[2*i] = c2t/a;
+		RCoeffs[2*i + 1] = -s2t*cosPoleAngle/a;
+		TCoeffs[2*i] = -2*cp*(ct + st*sinPoleAngle)/a;
+		TCoeffs[2*i+1] = 2*cp*st*cosPoleAngle/a;
+	}
+
+	TrinomialMultiply(order, TCoeffs, RCoeffs, cden);
+
+	cden[1] = cden[0];
+	cden[0] = 1;
+	for (int i = 3; i <= 2*order; ++i)
+		cden[i] = cden[2*i-2];
+
+	ResizeConservative(cden, 2*order+1);
+
+	Resize(cnum, 2*order+1, 0.);
+
+    Scalar alpha = -2*cp/ct;
+    cnum[0] = 1;
+    cnum[2] = 1;
+    cnum[1] = alpha;
+  
+    for(int i = 1; i < order; ++i ) {
+		cnum[2*i+2] += cnum[2*i];
+		for(int j = 2*i; j > 1; --j )
+		    cnum[j+1] += alpha * cnum[j] + cnum[j-1];
+	
+		cnum[2] += alpha * cnum[1] + 1.0;
+		cnum[1] += alpha;
+    }
+	
+    Scalar tt = tan(theta);
+    Scalar sfr = 1;
+    Scalar sfi = 0;
+
+    for(int k = 0; k < order; ++k ) {
+		Scalar parg = M_PI * (double)(2*k+1)/(double)(2*order);
+		Scalar sparg = tt + sin(parg);
+		Scalar cparg = cos(parg);
+		Scalar a = (sfr + sfi)*(sparg - cparg);
+		Scalar b = sfr * sparg;
+		Scalar c = -sfi * cparg;
+		sfr = b - c;
+		sfi = a - b - c;
+    }
+	cnum = cnum/sfr;
+}
+
+template <class Range>
+void ButterLowPass(int order, typename Range::value_type cutoff, Range &cnum, Range &cden) {
+	using Scalar = typename Range::value_type;
+	
+	Scalar theta = M_PI*cutoff;
+	Scalar st = sin(theta);
+	Scalar ct = cos(theta);
+	
+	DCoefficientsLowHigh(order, cutoff, cden, st, ct);
+
+	Resize(cnum, 2*order + 1);
+
+	CoefficientsLowPass(order, cnum);
+
+    Scalar parg0 = M_PI/(2*order);
+
+    Scalar sf = 1;
+    for(int k = 0; k < order/2; ++k )
+        sf *= 1 + st*sin((2*k+1)*parg0);
+
+    st = sin(theta/2);
+
+    if(order%2) 
+    	sf *= st + cos(theta/2);
+    sf = pow(st, order)/sf;
+
+    cnum = cnum*sf;
+    
+    ResizeConservative(cnum, order + 1);
+}
+
+template <class Range>
+void ButterHighPass(int order, typename Range::value_type cutoff, Range &cnum, Range &cden) {
+	using Scalar = typename Range::value_type;
+	
+	Scalar theta = M_PI*cutoff;
+	Scalar st = sin(theta);
+	Scalar ct = cos(theta);
+	
+	DCoefficientsLowHigh(order, cutoff, cden, st, ct);
+
+	Resize(cnum, 2*order + 1);
+
+	CoefficientsHighPass(order, cnum);
+
+    double parg0 = M_PI/(2*order);
+
+    double sf = 1;
+    for(int k = 0; k < order/2; ++k )
+        sf *= 1 + st*sin((2*k+1)*parg0);
+
+    st = cos(theta/2);
+
+    if(order%2) 
+    	sf *= st + sin(theta/2);
+    sf = pow(st, order)/sf;
+
+    cnum = cnum*sf;
+    
+	ResizeConservative(cnum, order + 1);
 }
 
 template <class Range>
