@@ -77,7 +77,7 @@ void TestLocalFitting(bool test) {
 		String dir = AppendFileName(GetDesktopFolder(), "STEM4U_Demo");
 		RealizeDirectory(dir);
 		for (int i = 2; i < 10; ++i) {
-			LocalFitting(x, y, resx, resy, 1, i, 20);
+			LocalFitting(x, y, resx, resy, 1, i, 20, true);
 		
 			ScatterDraw scatter;
 			scatter.AddSeries(x, y).Legend("Source").NoPlot();
@@ -156,6 +156,35 @@ void TestButterworth(bool test) {
 	
 	Filter(y, num, den, ys);
 	VERIFY(CompareDecimals(ys, filtered2, 4));
+	
+	{
+		Vector<double> realden = {1, 0.5772405248063024,	0.4217870486895615,	0.05629723649184257};
+		Vector<double> realnum = {0.2569156012484633,	0.77074680374539,	0.77074680374539,	0.2569156012484633};
+		ButterLowPass(3, 300/500., num, den);
+		VERIFY(CompareDecimals(num, realnum, 4));
+		VERIFY(CompareDecimals(den, realden, 4));
+	}
+	{
+		Vector<double> realden = {1, -1.366384294542497,	1.244909042262885,	-0.8777284807461305,	0.6537220767193219,	-0.2256192091864848,	0.05629723649184263};
+		Vector<double> realnum = {0.2569156012484634,	-0.5887981646207889,	1.220548576488561,	-1.292135655233534,	1.220548576488561,	-0.5887981646207886, 0.2569156012484632};
+		ButterBandStop(3, 0.2, 0.6, num, den);
+		VERIFY(CompareDecimals(num, realnum, 4));
+		VERIFY(CompareDecimals(den, realden, 4));
+	}
+	{
+		Vector<double> realden = {1, 0.5772405248063024,	0.4217870486895614,	0.05629723649184256};
+		Vector<double> realnum = {0.09853116092392708,	-0.2955934827717812,	0.2955934827717812,	-0.09853116092392708};
+		ButterHighPass(3, 300/500., num, den);
+		VERIFY(CompareDecimals(num, realnum, 4));
+		VERIFY(CompareDecimals(den, realden, 4));
+	}
+	{
+		Vector<double> realden = {1, 3.350876399443029,	6.254114906185602,	7.030648450220865,	5.287323143862961,	2.393486699223919,	0.6041096995072742};
+		Vector<double> realnum = {0.001567010350588277,	0,	-0.00470103105176483,	0,	0.00470103105176483,	0,	-0.001567010350588277};
+		Butter(3, 500/.750, 560/750., num, den);
+		VERIFY(CompareDecimals(num, realnum, 4));
+		VERIFY(CompareDecimals(den, realden, 4));
+	}
 }
 
 
