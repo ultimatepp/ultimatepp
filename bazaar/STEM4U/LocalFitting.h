@@ -6,7 +6,7 @@ using namespace Eigen;
 
 template <class Range1, class Range2>
 void LocalFitting(const Range1 &x, const Range1 &y, const Range2 &resx, Range2 &resy, 
-	int deg, typename Range1::value_type windowsize) {
+	int deg, typename Range1::value_type windowsize, bool weightless) {
 	using Scalar = typename Range1::value_type;
 	ASSERT(x.size() == y.size());
 	ASSERT(deg >=1 && deg <= 2);
@@ -40,10 +40,11 @@ void LocalFitting(const Range1 &x, const Range1 &y, const Range2 &resx, Range2 &
 			for (int ii = ibegin; ii <= iend; ii++)
 				coeff[0] += y[ii];
 			coeff[0] /= num;
-			weight.resize(num);
-			for (int ii = ibegin; ii <= iend; ii++)
-				weight[ii-ibegin] = max(minweight, pow3(1 - pow3(min(1., abs(x[ii-ibegin]-rx)/w_2))));
-					
+			Resize(weight, num, 1.);
+			if (!weightless) {
+				for (int ii = ibegin; ii <= iend; ii++)
+					weight[ii-ibegin] = max(minweight, pow3(1 - pow3(min(1., abs(rx - x[ii])/w_2))));
+			}
 			if (!NonLinearOptimization(coeff, num, [&](const VectorXd &c, VectorXd &residual)->int {
 				for (int ii = ibegin; ii <= iend; ii++) {
 					if (deg == 2) 
@@ -63,7 +64,9 @@ void LocalFitting(const Range1 &x, const Range1 &y, const Range2 &resx, Range2 &
 }
 
 template <class Range1, class Range2>
-void LocalFitting(const Range1 &x, const Range1 &y, Range2 &resx, Range2 &resy, int deg, typename Range1::value_type windowsize, int num,
+void LocalFitting(const Range1 &x, const Range1 &y, Range2 &resx, 
+		Range2 &resy, int deg, typename Range1::value_type windowsize, 
+		int num, bool weightless, 
 		typename Range1::value_type from = Null, typename Range1::value_type to = Null) {
 	ASSERT(x.size() == y.size());
 	if (IsNull(from))
@@ -74,7 +77,7 @@ void LocalFitting(const Range1 &x, const Range1 &y, Range2 &resx, Range2 &resy, 
 	
 	resx.setLinSpaced(num, from, to);
 	
-	return LocalFitting(x, y, resx, resy, deg, windowsize);
+	return LocalFitting(x, y, resx, resy, deg, windowsize, weightless);
 }
 
 
