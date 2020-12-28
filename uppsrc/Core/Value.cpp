@@ -563,7 +563,7 @@ void Value::Register(dword w, Void* (*c)(), const char *name) {
 #ifdef flagCHECKINIT
 	RLOG("Register valuetype " << w);
 #endif
-	AssertST();
+	AssertST(); // all needs to be registered at file level scope
 	ASSERT(w != UNKNOWN_V);
 	ASSERT(w < 0x8000000);
 	CHECK(Typemap().GetAdd(w, c) == c);
