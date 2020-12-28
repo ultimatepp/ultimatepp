@@ -1,5 +1,29 @@
 #include "Tutorial.h"
 
+struct Foo : ValueType<Foo, 10010> {
+	int x;
+	
+	Foo(const Nuller&)                  { x = Null; }
+	Foo(int x) : x(x) {}
+	Foo() {}
+
+	// We provide these methods to allow automatic conversion of Foo to/from Value
+	operator Value() const              { return RichToValue(*this); }
+	Foo(const Value& v)                 { *this = v.Get<Foo>(); }
+
+	String ToString() const             { return AsString(x); }
+	unsigned GetHashValue() const       { return x; }
+	void Serialize(Stream& s)           { s % x; }
+	bool operator==(const Foo& b) const { return x == b.x; }
+	bool IsNullInstance() const         { return IsNull(x); }
+	int  Compare(const Foo& b) const    { return SgnCompare(x, b.x); }
+	// This type does not define XML nor Json serialization
+};
+
+INITBLOCK { // This has to be at file level scope
+	Value::Register<Foo>(); // need to register value type integer id to allow serialization
+}
+
 void Value2Tutorial()
 {
 	/// .Client types and `Value`, `RawValue`, `RichValue`
@@ -33,6 +57,7 @@ void Value2Tutorial()
 	/// support for these operations via template function specializations or (perhaps more
 	/// convenient) using defined methods and inheriting from `ValueType` base class template:
 
+#if 0
 	struct Foo : ValueType<Foo, 10010> {
 		int x;
 		
@@ -53,11 +78,8 @@ void Value2Tutorial()
 		// This type does not define XML nor Json serialization
 	};
 
-#if 0
 	INITBLOCK { // This has to be at file level scope
-#endif
 		Value::Register<Foo>(); // need to register value type integer id to allow serialization
-#if 0
 	}
 #endif
 
