@@ -58,7 +58,10 @@ String CppAsQtf(const String& str)
 				if(strchr("!+-*^/%~&|=[]:?<>.#", *s))
 					qtf << "[@B `" << *s << "]";
 				else
+				if((byte)*s < 128)
 					qtf << '`' << *s;
+				else
+					qtf << *s;
 			}
 			s++;
 		}
