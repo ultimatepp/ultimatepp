@@ -1142,7 +1142,7 @@ CONSOLE_APP_MAIN
 				sid.Cat(*idStr);
 			else {
 				int id = ScanInt(sid);
-				if (IsNull(id)) 
+				if (IsNull(id))
 					fullTitle << "/" << sid;
 				else {
 					if (id < 0 || id >= tt.GetCount()) {
