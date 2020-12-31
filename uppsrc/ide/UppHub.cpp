@@ -66,7 +66,7 @@ UppHubDlg::UppHubDlg()
 				action ^= [=] { Uninstall(); };
 			}
 		}
-		readme.Enable(!IsNull(list.Get("README")));
+		readme.Enable(!IsNull(list.IsCursor() && list.Get("README")));
 	};
 	list.WhenLeftDouble = [=] { Readme(); };
 	readme << [=] { Readme(); };
