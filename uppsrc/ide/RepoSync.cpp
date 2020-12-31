@@ -130,7 +130,6 @@ String GitCmd(const char *dir, const char *command)
 	SetCurrentDirectory(dir);
 	String r = RepoSys(String() << "git " << command);
 	SetCurrentDirectory(h);
-	DDUMP(r);
 	return r;
 }
 
