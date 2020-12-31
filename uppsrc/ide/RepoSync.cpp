@@ -130,6 +130,7 @@ String GitCmd(const char *dir, const char *command)
 	SetCurrentDirectory(dir);
 	String r = RepoSys(String() << "git " << command);
 	SetCurrentDirectory(h);
+	DDUMP(r);
 	return r;
 }
 
@@ -336,6 +337,19 @@ void RepoMoveSvn(const String& path, const String& tp)
 	}
 }
 
+String GetGitUrl(const String& repo_dir)
+{
+	Vector<String> ln = Split(GitCmd(repo_dir, "config --get remote.origin.url"), CharFilterCrLf);
+	return ln.GetCount() ? ln[0] : String();
+}
+
+
+String GetSvnUrl(const String& repo_dir)
+{
+	Vector<String> ln = Split(RepoSys("svn info --show-item repos-root-url " + repo_dir), CharFilterCrLf);
+	return ln.GetCount() ? ln[0] : String();
+}
+
 void RepoSync::DoSync()
 {
 	SyncList();
@@ -365,11 +379,22 @@ again:
 	UrepoConsole sys;
 	int repoi = 0;
 	int l = 0;
-	String repo_dir;
 	while(l < list.GetCount()) {
 		SvnOptions *svn = dynamic_cast<SvnOptions *>(list.GetCtrl(l, 0));
 		GitOptions *git = dynamic_cast<GitOptions *>(list.GetCtrl(l, 0));
 		String repo_dir = work[repoi++].dir;
+		String url;
+		if(git) {
+			url = GetGitUrl(repo_dir);
+			if(url.GetCount())
+				sys.Log("git origin url: " + url, Gray());
+			
+		}
+		if(svn) {
+			url = GetGitUrl(repo_dir);
+			if(url.GetCount())
+				sys.Log("svn repository url: " + url, Gray());
+		}
 		l++;
 		String message;
 		String filelist;   // <-- list of files to update
