@@ -23,13 +23,32 @@ int UrepoConsole::Git(const char *dir, const char *command, bool pwd)
 		String url = GetGitUrl(dir);
 		String username, password;
 		if(url.StartsWith("https://") && GetCredentials(url, dir, username, password)) {
-			url.Insert(strlen("https://"), UrlEncode(username) + ":" + UrlEncode(password) + "@");
-			cmd << " " << url;
+			String https = "https://";
+			cmd << ' ' << https << UrlEncode(username) + ":";
+			int p = cmd.GetCount();
+			cmd << UrlEncode(password);
+			HidePassword(p, cmd.GetCount());
+			cmd << "@" << url.Mid(https.GetCount());
 		}
 	}
 	int code = CheckSystem(cmd);
 	SetCurrentDirectory(h);
 	return code;
+}
+
+String RepoSync::SvnCmd(UrepoConsole& sys, const char *svncmd, const String& dir)
+{
+	String cmd;
+	cmd << "svn " << svncmd << " --non-interactive ";
+	String username, password;
+	if(GetCredentials(GetSvnUrl(dir), dir, username, password)) {
+		cmd << "--username " << username << " --password ";
+		int i0 = cmd.GetCount();
+		cmd << password;
+		sys.HidePassword(i0, cmd.GetCount());
+		cmd << " ";
+	}
+	return cmd;
 }
 
 RepoSync::RepoSync()
@@ -58,18 +77,6 @@ RepoSync::RepoSync()
 		EditCredentials(hint.PickKeys());
 	};
 }
-
-String RepoSync::SvnCmd(const char *svncmd, const String& dir)
-{
-	String cmd;
-	cmd << "svn " << svncmd << " --non-interactive ";
-	String username, password;
-	if(GetCredentials(GetSvnUrl(dir), dir, username, password))
-		cmd << "--username " << username << " --password " << password << " ";
-
-	return cmd;
-}
-
 
 int CharFilterSvnMsgRepo(int c)
 {
@@ -433,7 +440,7 @@ again:
 			if(svn && svn->commit) {
 				if(action == MESSAGE && commit) {
 					String msg = list.Get(l, 3);
-					if(sys.CheckSystem(SvnCmd("commit", repo_dir) << filelist << " -m \"" << msg << "\""))
+					if(sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\""))
 						msgmap.GetAdd(repo_dir) = msg;
 					l++;
 					break;
@@ -457,7 +464,7 @@ again:
 			l++;
 		}
 		if(svn && svn->update)
-			sys.CheckSystem(SvnCmd("update", repo_dir).Cat() << repo_dir);
+			sys.CheckSystem(SvnCmd(sys, "update", repo_dir).Cat() << repo_dir);
 		if(git && git->push)
 			sys.Git(repo_dir, "push", true);
 		if(git && git->pull)
@@ -507,7 +514,7 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 			RepoSvnDel(path);
 			String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
 			FileMove(path, tp);
-			sys.CheckSystem(SvnCmd("update", path) << " \"" << path << "\"");
+			sys.CheckSystem(SvnCmd(sys, "update", path) << " \"" << path << "\"");
 			RepoMoveSvn(path, tp);
 			sRepoDeleteFolderDeep(path);
 			FileMove(tp, path);

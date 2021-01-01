@@ -7,11 +7,14 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 	Font font;
 	void AddResult(const String& out);
 	bool canceled = false;
+	int  hide_password_from = 0;
+	int  hide_password_to = 0;
 
 public:
 	int  System(const char *s);
 	int  CheckSystem(const char *s);
 	int  Git(const char *dir, const char *command, bool pwd = false);
+	void HidePassword(int from, int to)         { hide_password_from = from; hide_password_to = to; }
 	void Log(const Value& s, Color ink = SColorText());
 	void Perform()	                            { exit.Show(); Execute(); }
 	void Clear()                                { list.Clear(); }
@@ -69,7 +72,7 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	
 	Array<Work> work;
 
-	String SvnCmd(const char *cmd, const String& dir);
+	String SvnCmd(UrepoConsole& sys, const char *svncmd, const String& dir);
 	bool ListGit(const String& path);
 	bool ListSvn(const String& path);
 	bool GitFile(UrepoConsole& sys, int action, const String& path, bool revert);
