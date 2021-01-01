@@ -95,13 +95,3 @@ int UrepoConsole::CheckSystem(const char *s)
 	}
 	return exitcode;
 }
-
-int UrepoConsole::Git(const char *dir, const char *command)
-{
-	String h = GetCurrentDirectory();
-	SetCurrentDirectory(dir);
-	list.Add(AttrText(String("cd ") + dir).SetFont(font().Bold().Italic()).Ink(SLtBlue()));
-	int code = CheckSystem(String() << "git " << command);
-	SetCurrentDirectory(h);
-	return code;
-}

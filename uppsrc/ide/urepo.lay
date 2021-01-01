@@ -1,7 +1,7 @@
 LAYOUT(RepoSyncLayout, 680, 400)
 	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
-	ITEM(Upp::Button, credentials, SetLabel(t_("SVN Credentials..")).RightPosZ(92, 104).BottomPosZ(4, 24))
+	ITEM(Upp::Button, credentials, SetLabel(t_("Credentials..")).RightPosZ(92, 80).BottomPosZ(4, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
 END_LAYOUT
 
@@ -9,9 +9,11 @@ LAYOUT(CredentialsLayout, 680, 400)
 	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(544, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(612, 64).BottomPosZ(4, 24))
-	ITEM(Upp::Option, remember, SetLabel(t_("Remember (credentials will be stored in configuration as clear text)")).LeftPosZ(120, 348).TopPosZ(372, 20))
 	ITEM(Upp::Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
-	ITEM(Upp::Button, clear, SetLabel(t_("Clear all")).LeftPosZ(476, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, clear, SetLabel(t_("Remove all")).LeftPosZ(448, 72).TopPosZ(372, 24))
+	ITEM(Upp::Button, add, SetLabel(t_("Add..")).LeftPosZ(220, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, edit, SetLabel(t_("Edit..")).LeftPosZ(288, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).LeftPosZ(356, 64).TopPosZ(372, 24))
 END_LAYOUT
 
 LAYOUT(UrepoConsoleLayout, 680, 660)
@@ -29,5 +31,17 @@ LAYOUT(GitOptionsLayout, 164, 16)
 	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
 	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(68, 48).VCenterPosZ(16, 0))
 	ITEM(Upp::Option, pull, SetLabel(t_("Pull")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
+END_LAYOUT
+
+LAYOUT(CredentialLayout, 368, 116)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Url (or directory)")).LeftPosZ(8, 92).TopPosZ(8, 19))
+	ITEM(WithDropChoice<EditString>, url, LeftPosZ(112, 248).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("Username")).LeftPosZ(8, 92).TopPosZ(32, 19))
+	ITEM(Upp::EditString, username, LeftPosZ(112, 248).TopPosZ(32, 19))
+	ITEM(Upp::Label, dv___4, SetLabel(t_("Password")).LeftPosZ(8, 92).TopPosZ(56, 19))
+	ITEM(Upp::EditString, password, LeftPosZ(112, 248).TopPosZ(56, 19))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(228, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(296, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Option, show_passwords, SetLabel(t_("Show password")).LeftPosZ(8, 108).TopPosZ(84, 20))
 END_LAYOUT
 
