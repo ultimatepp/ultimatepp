@@ -11,7 +11,7 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 public:
 	int  System(const char *s);
 	int  CheckSystem(const char *s);
-	int  Git(const char *dir, const char *command);
+	int  Git(const char *dir, const char *command, bool pwd = false);
 	void Log(const Value& s, Color ink = SColorText());
 	void Perform()	                            { exit.Show(); Execute(); }
 	void Clear()                                { list.Clear(); }
@@ -51,9 +51,7 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	Array<Button>            diff;
 	ArrayMap<String, String> msgmap;
 
-	Index<String>                            svndir;
-	VectorMap<String, Tuple<String, String>> svn_credentials;
-	bool                                     remember_credentials = true;
+	Index<String>            svndir;
 	
 	struct SvnOptions : WithSvnOptionsLayout<ParentCtrl> {
 		SvnOptions() { CtrlLayout(*this); }
@@ -97,6 +95,7 @@ public:
 };
 
 
-void EditCredentials(RepoSync& rs);
+bool GetCredentials(const String& url, const String& dir, String& username, String& password);
+void EditCredentials(const Vector<String>& url_hints);
 
 void RunRepoDiff(const String& filepath);

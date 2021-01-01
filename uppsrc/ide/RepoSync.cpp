@@ -1,5 +1,37 @@
 #include "ide.h"
 
+String GetGitUrl(const String& repo_dir)
+{
+	Vector<String> ln = Split(GitCmd(repo_dir, "config --get remote.origin.url"), CharFilterCrLf);
+	return ln.GetCount() ? ln[0] : String();
+}
+
+
+String GetSvnUrl(const String& repo_dir)
+{
+	Vector<String> ln = Split(RepoSys("svn info --show-item repos-root-url " + repo_dir), CharFilterCrLf);
+	return ln.GetCount() ? ln[0] : String();
+}
+
+int UrepoConsole::Git(const char *dir, const char *command, bool pwd)
+{
+	String h = GetCurrentDirectory();
+	SetCurrentDirectory(dir);
+	list.Add(AttrText(String("cd ") + dir).SetFont(font().Bold().Italic()).Ink(SLtBlue()));
+	String cmd = String() << "git " << command;
+	if(pwd) {
+		String url = GetGitUrl(dir);
+		String username, password;
+		if(url.StartsWith("https://") && GetCredentials(url, dir, username, password)) {
+			url.Insert(strlen("https://"), UrlEncode(username) + ":" + UrlEncode(password) + "@");
+			cmd << " " << url;
+		}
+	}
+	int code = CheckSystem(cmd);
+	SetCurrentDirectory(h);
+	return code;
+}
+
 RepoSync::RepoSync()
 {
 	CtrlLayoutOKCancel(*this, "Version control repository synchronize");
@@ -14,7 +46,16 @@ RepoSync::RepoSync()
 	Sizeable().Zoomable();
 	BackPaint();
 	credentials << [=] {
-		EditCredentials(*this);
+		Index<String> hint;
+		for(const auto& w : work) {
+			String path = w.dir;
+			String s = decode(w.kind, SVN_DIR, GetSvnUrl(path), GIT_DIR, GetGitUrl(path), Null);
+			if(s.GetCount())
+				hint.FindAdd(s);
+			if(path.GetCount())
+				hint.FindAdd(path);
+		}
+		EditCredentials(hint.PickKeys());
 	};
 }
 
@@ -22,12 +63,10 @@ String RepoSync::SvnCmd(const char *svncmd, const String& dir)
 {
 	String cmd;
 	cmd << "svn " << svncmd << " --non-interactive ";
-	int q = svn_credentials.Find(GetSvnDir(dir));
-	if(q >= 0) {
-		Tuple<String, String> h = svn_credentials[q];
-		if(h.a.GetCount() && h.b.GetCount())
-			cmd << "--username " << h.a << " --password " << h.b << " ";
-	}
+	String username, password;
+	if(GetCredentials(GetSvnUrl(dir), dir, username, password))
+		cmd << "--username " << username << " --password " << password << " ";
+
 	return cmd;
 }
 
@@ -336,19 +375,6 @@ void RepoMoveSvn(const String& path, const String& tp)
 	}
 }
 
-String GetGitUrl(const String& repo_dir)
-{
-	Vector<String> ln = Split(GitCmd(repo_dir, "config --get remote.origin.url"), CharFilterCrLf);
-	return ln.GetCount() ? ln[0] : String();
-}
-
-
-String GetSvnUrl(const String& repo_dir)
-{
-	Vector<String> ln = Split(RepoSys("svn info --show-item repos-root-url " + repo_dir), CharFilterCrLf);
-	return ln.GetCount() ? ln[0] : String();
-}
-
 void RepoSync::DoSync()
 {
 	SyncList();
@@ -390,7 +416,7 @@ again:
 			
 		}
 		if(svn) {
-			url = GetGitUrl(repo_dir);
+			url = GetSvnUrl(repo_dir);
 			if(url.GetCount())
 				sys.Log("svn repository url: " + url, Gray());
 		}
@@ -433,9 +459,9 @@ again:
 		if(svn && svn->update)
 			sys.CheckSystem(SvnCmd("update", repo_dir).Cat() << repo_dir);
 		if(git && git->push)
-			sys.Git(repo_dir, "push");
+			sys.Git(repo_dir, "push", true);
 		if(git && git->pull)
-			sys.Git(repo_dir, "pull");
+			sys.Git(repo_dir, "pull", true);
 	}
 	sys.Log("Done", Gray());
 	sys.Perform();
@@ -513,9 +539,6 @@ void RepoSync::Serialize(Stream& s)
 	int version = 0;
 	s / version;
 	s % msgmap;
-	s % remember_credentials;
-	if(remember_credentials)
-		s % svn_credentials;
 }
 
 void RepoSync::SetMsgs(const String& s)
