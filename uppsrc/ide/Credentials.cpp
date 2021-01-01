@@ -70,6 +70,7 @@ bool GetCredentials(const String& url, const String& dir, String& username, Stri
 
 struct CredentialDlg : WithCredentialLayout<TopWindow> {
 	void Hints(const Vector<String>& url_hints);
+	void Sync() { password.Password(!show_password); }
 	CredentialDlg();
 };
 
@@ -82,6 +83,8 @@ void CredentialDlg::Hints(const Vector<String>& url_hints)
 CredentialDlg::CredentialDlg()
 {
 	CtrlLayoutOKCancel(*this, "Credentials");
+	Sync();
+	show_password << [=] { Sync(); };
 }
 
 struct CredentialsDlg : WithCredentialsLayout<TopWindow> {
@@ -177,6 +180,13 @@ void CredentialsDlg::Sync()
 	clear.Enable(list.GetCount());
 	edit.Enable(list.IsCursor());
 	remove.Enable(list.IsCursor());
+	
+	list.ColumnAt(2)
+	    .SetConvert(show_passwords ? StdConvert()
+	                               : LambdaConvert([](const Value& v) {
+		                                 return String('*', (~v).GetCount());
+		                             })
+		);
 }
 
 CredentialsDlg::CredentialsDlg(const Vector<String>& url_hints)
