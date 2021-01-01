@@ -42,14 +42,20 @@ int UrepoConsole::System(const char *cmd)
 {
 	if(!IsOpen())
 		Open();
-	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(SLtBlue()));
+	if(hide_password_to > hide_password_from) {
+		String w = cmd;
+		w = w.Mid(0, hide_password_from) + String('*', hide_password_to - hide_password_from) + w.Mid(hide_password_to);
+		hide_password_to = hide_password_from = 0;
+		list.Add(AttrText(w).SetFont(font().Bold()).Ink(SLtBlue()));
+	}
+	else
+		list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(SLtBlue()));
 	int ii = list.GetCount();
 	Ide *ide = (Ide *)TheIde();
 	if(!ide)
 		return -1;
 	Host host;
 	ide->CreateHost(host, false, false);
-//	host.AddEnvironment("ASK_PASS", GetExeFilePath() + " #git_ask_pass");
 	LocalProcess p;
 	if(!host.StartProcess(p, cmd)) {
 		list.Add(AttrText("Failed to start the executable").SetFont(font().Bold()).Ink(SLtRed()));
