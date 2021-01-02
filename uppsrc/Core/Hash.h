@@ -70,7 +70,7 @@ class Sha256Stream : public OutStream {
 	void  Cleanup();
 
 public:
-	void   Finish(byte *hash20);
+	void   Finish(byte *hash32);
 	String FinishString();
 	String FinishStringS();
 
@@ -81,8 +81,8 @@ public:
 	~Sha256Stream();
 };
 
-void    SHA256(byte *hash20, const void *data, dword size);
-void    SHA256(byte *hash20, const String& s);
+void    SHA256(byte *hash32, const void *data, dword size);
+void    SHA256(byte *hash32, const String& s);
 String  SHA256String(const void *data, dword size);
 String  SHA256String(const String& data);
 String  SHA256StringS(const void *data, dword size);
