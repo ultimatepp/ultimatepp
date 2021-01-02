@@ -82,7 +82,7 @@ bool LoadCredentials0(Array<Credential>& r)
 struct GetPasskeyDlg : WithGetPasskeyLayout<TopWindow> {
 	GetPasskeyDlg();
 	
-	void Sync() { passkey.Password(!show_passkey);; }
+	void Sync() { passkey.Password(!show_passkey); }
 };
 
 GetPasskeyDlg::GetPasskeyDlg()
