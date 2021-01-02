@@ -7,13 +7,14 @@ END_LAYOUT
 
 LAYOUT(CredentialsLayout, 680, 400)
 	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(Upp::Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
+	ITEM(Upp::Button, passkey, SetLabel(t_("Passkey..")).LeftPosZ(136, 76).TopPosZ(372, 24))
+	ITEM(Upp::Button, add, SetLabel(t_("Add..")).LeftPosZ(240, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, edit, SetLabel(t_("Edit..")).LeftPosZ(308, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).LeftPosZ(376, 64).TopPosZ(372, 24))
+	ITEM(Upp::Button, clear, SetLabel(t_("Remove all")).LeftPosZ(456, 72).TopPosZ(372, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(544, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(612, 64).BottomPosZ(4, 24))
-	ITEM(Upp::Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
-	ITEM(Upp::Button, clear, SetLabel(t_("Remove all")).LeftPosZ(448, 72).TopPosZ(372, 24))
-	ITEM(Upp::Button, add, SetLabel(t_("Add..")).LeftPosZ(220, 64).TopPosZ(372, 24))
-	ITEM(Upp::Button, edit, SetLabel(t_("Edit..")).LeftPosZ(288, 64).TopPosZ(372, 24))
-	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).LeftPosZ(356, 64).TopPosZ(372, 24))
 END_LAYOUT
 
 LAYOUT(UrepoConsoleLayout, 680, 660)
@@ -43,5 +44,28 @@ LAYOUT(CredentialLayout, 368, 116)
 	ITEM(Upp::Option, show_password, SetLabel(t_("Show password")).LeftPosZ(8, 108).TopPosZ(84, 20))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(228, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(296, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(PasskeyLayout, 368, 92)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Passkey")).LeftPosZ(8, 92).TopPosZ(8, 19))
+	ITEM(Upp::EditString, passkey1, LeftPosZ(112, 248).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("Passkey (confirm)")).LeftPosZ(8, 92).TopPosZ(32, 19))
+	ITEM(Upp::EditString, passkey2, LeftPosZ(112, 248).TopPosZ(32, 19))
+	ITEM(Upp::Option, show_passkey, SetLabel(t_("Show passkey")).LeftPosZ(8, 108).TopPosZ(60, 20))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(296, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(GetPasskeyLayout, 368, 68)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Passkey")).LeftPosZ(8, 92).TopPosZ(8, 19))
+	ITEM(Upp::EditString, passkey, LeftPosZ(112, 248).TopPosZ(8, 19))
+	ITEM(Upp::Option, show_passkey, SetLabel(t_("Show passkey")).LeftPosZ(8, 108).TopPosZ(36, 20))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(228, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(296, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(FailedPasskeyLayout, 296, 64)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Invalid passkey.")).LeftPosZ(8, 296).TopPosZ(8, 19))
+	ITEM(Upp::Button, clear, SetLabel(t_("Clear credentials and passkey")).LeftPosZ(8, 168).TopPosZ(32, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Try again")).LeftPosZ(212, 76).TopPosZ(32, 24))
 END_LAYOUT
 

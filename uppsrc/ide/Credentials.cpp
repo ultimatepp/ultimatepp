@@ -11,6 +11,39 @@ String GetSvnDir(const String& p)
 	return Null;
 }
 
+byte passkey_sha256[32];
+
+String CredentialsCrypt(const String& src)
+{
+	int ci = 0;
+	byte c[32];
+	memcpy(c, passkey_sha256, 32);
+	String r;
+	for(char b : src) {
+		if(ci >= 32) { // poor mans acceptable encryption
+			SHA256(c, c, 32);
+			ci = 0;
+		}
+		r.Cat(b ^ c[ci++]);
+	}
+	return r;
+}
+
+struct PasskeyDlg : WithPasskeyLayout<TopWindow> {
+	PasskeyDlg();
+
+	void Sync() { passkey1.Password(!show_passkey); passkey2.Password(!show_passkey); }
+};
+
+PasskeyDlg::PasskeyDlg()
+{
+	CtrlLayoutOK(*this, "Passkey");
+	
+	show_passkey << [=] { Sync(); };
+	
+	Sync();
+}
+
 struct Credential {
 	String url;
 	String username;
@@ -22,10 +55,12 @@ String CredentialsFile()
 	return ConfigFile("repo.credentials");
 }
 
-bool LoadCredentials(Array<Credential>& r)
+bool LoadCredentials0(Array<Credential>& r)
 {
 	r.Clear();
 	String s = LoadFile(CredentialsFile());
+	if(String(passkey_sha256, 32) != String(0, 32))
+		s = CredentialsCrypt(s);
 	Value v = ParseJSON(s);
 	if(IsError(v))
 		return false;
@@ -42,6 +77,45 @@ bool LoadCredentials(Array<Credential>& r)
 		return false;
 	}
 	return true;
+}
+
+struct GetPasskeyDlg : WithGetPasskeyLayout<TopWindow> {
+	GetPasskeyDlg();
+	
+	void Sync() { passkey.Password(!show_passkey);; }
+};
+
+GetPasskeyDlg::GetPasskeyDlg()
+{
+	CtrlLayoutOKCancel(*this, "Passkey");
+	
+	show_passkey << [=] { Sync(); };
+	
+	Sync();
+}
+
+bool LoadCredentials(Array<Credential>& r)
+{
+	if(!FileExists(CredentialsFile()))
+		return false;
+	if(LoadCredentials0(r)) return true;
+	if(String(passkey_sha256, 32) == String(0, 32)) {
+		for(;;) {
+			GetPasskeyDlg dlg;
+			dlg.Run();
+			SHA256(passkey_sha256, ~dlg.passkey);
+			if(LoadCredentials0(r)) return true;
+			WithFailedPasskeyLayout<TopWindow> p;
+			CtrlLayoutOK(p, "Passkey");
+			p.Breaker(p.clear, IDEXIT);
+			if(p.Run() == IDEXIT) {
+				memset(passkey_sha256, 0, 32);
+				FileDelete(CredentialsFile());
+				break;
+			}
+		}
+	}
+	return false;
 }
 
 bool GetCredentials(const String& url, const String& dir, String& username, String& password)
@@ -97,10 +171,51 @@ struct CredentialsDlg : WithCredentialsLayout<TopWindow> {
 
 	void Load();
 	void Save();
+	
+	void Passkey();
 
 	typedef CredentialsDlg CLASSNAME;
 	CredentialsDlg(const Vector<String>& url_hints);
 };
+
+CredentialsDlg::CredentialsDlg(const Vector<String>& url_hints)
+:	url_hints(url_hints)
+{
+	CtrlLayoutOKCancel(*this, "Credentials");
+	list.AddColumn("Url (or directory)");
+	list.AddColumn("Username");
+	list.AddColumn("Password");
+	list.ColumnWidths("500 200 200");
+	list.EvenRowColor();
+	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
+	list.WhenSel = [=] { Sync(); };
+	list.WhenLeftDouble = [=] { Edit(); };
+	
+	show_passwords << [=] { Sync(); };
+	add << [=] { Add(); };
+	edit << [=] { Edit(); };
+	remove << [=] { Remove(); };
+	clear << [=] {
+		if(PromptYesNo("Remove all?"))
+			list.Clear();
+	};
+	passkey << [=] { Passkey(); };
+}
+
+void CredentialsDlg::Passkey()
+{
+	PasskeyDlg dlg;
+	String k;
+	for(;;) {
+		if(dlg.Run() == IDCANCEL)
+			return;
+		k = ~dlg.passkey1;
+		if(k == ~dlg.passkey2)
+			break;
+		Exclamation("Fields do not match!");
+	}
+	SHA256(passkey_sha256, k);
+}
 
 void CredentialsDlg::Load()
 {
@@ -121,7 +236,7 @@ void CredentialsDlg::Save()
 			va << ValueMap()("url", list.Get(i, 0))
 			                ("username", list.Get(i, 1))
 			                ("password", list.Get(i, 2));
-		SaveFile(CredentialsFile(), AsJSON(va));
+		SaveFile(CredentialsFile(), CredentialsCrypt(AsJSON(va)));
 	}
 	else
 		FileDelete(CredentialsFile());
@@ -187,29 +302,6 @@ void CredentialsDlg::Sync()
 		                                 return String('*', (~v).GetCount());
 		                             })
 		);
-}
-
-CredentialsDlg::CredentialsDlg(const Vector<String>& url_hints)
-:	url_hints(url_hints)
-{
-	CtrlLayoutOKCancel(*this, "Credentials");
-	list.AddColumn("Url (or directory)");
-	list.AddColumn("Username");
-	list.AddColumn("Password");
-	list.ColumnWidths("500 200 200");
-	list.EvenRowColor();
-	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
-	list.WhenSel = [=] { Sync(); };
-	list.WhenLeftDouble = [=] { Edit(); };
-	
-	show_passwords << [=] { Sync(); };
-	add << [=] { Add(); };
-	edit << [=] { Edit(); };
-	remove << [=] { Remove(); };
-	clear << [=] {
-		if(PromptYesNo("Remove all?"))
-			list.Clear();
-	};
 }
 
 void EditCredentials(const Vector<String>& url_hints)
