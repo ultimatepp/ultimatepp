@@ -13,8 +13,18 @@ String GetSvnDir(const String& p)
 
 byte passkey_sha256[32];
 
+bool HasCredentialsPasskey()
+{
+	for(int i = 0; i < 32; i++)
+		if(passkey_sha256[i])
+			return true;
+	return false;
+}
+
 String CredentialsCrypt(const String& src)
 {
+	if(!HasCredentialsPasskey())
+		return src;
 	int ci = 0;
 	byte c[32];
 	memcpy(c, passkey_sha256, 32);
@@ -58,10 +68,7 @@ String CredentialsFile()
 bool LoadCredentials0(Array<Credential>& r)
 {
 	r.Clear();
-	String s = LoadFile(CredentialsFile());
-	if(String(passkey_sha256, 32) != String(0, 32))
-		s = CredentialsCrypt(s);
-	Value v = ParseJSON(s);
+	Value v = ParseJSON(CredentialsCrypt(LoadFile(CredentialsFile())));
 	if(IsError(v))
 		return false;
 	try {
@@ -99,7 +106,7 @@ bool LoadCredentials(Array<Credential>& r)
 	if(!FileExists(CredentialsFile()))
 		return false;
 	if(LoadCredentials0(r)) return true;
-	if(String(passkey_sha256, 32) == String(0, 32)) {
+	if(!HasCredentialsPasskey()) {
 		for(;;) {
 			GetPasskeyDlg dlg;
 			dlg.Run();
@@ -210,11 +217,17 @@ void CredentialsDlg::Passkey()
 		if(dlg.Run() == IDCANCEL)
 			return;
 		k = ~dlg.passkey1;
-		if(k == ~dlg.passkey2)
-			break;
-		Exclamation("Fields do not match!");
+		if(k == ~dlg.passkey2) {
+			if(k.GetCount() || PromptYesNo("Store credentials as plain text?"))
+				break;
+		}
+		else
+			Exclamation("Fields do not match!");
 	}
-	SHA256(passkey_sha256, k);
+	if(k.GetCount())
+		SHA256(passkey_sha256, k);
+	else
+		memset(passkey_sha256, 0, 32);
 }
 
 void CredentialsDlg::Load()
