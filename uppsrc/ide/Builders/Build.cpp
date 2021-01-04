@@ -180,7 +180,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	else {
 		// TODO: cpp builder variables only!!!
 		b->compiler = bm.Get("COMPILER", "");
-		b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
+		b->include = SplitDirs(Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
 		const Workspace& wspc = GetIdeWorkspace();
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			const Package& pkg = wspc.GetPackage(i);
