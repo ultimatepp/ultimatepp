@@ -473,7 +473,7 @@ again:
 		if(git && git->push)
 			sys.Git(repo_dir, "push", true);
 		if(git && git->pull)
-			sys.Git(repo_dir, "pull", true);
+			sys.Git(repo_dir, "pull --ff-only", true);
 	}
 	sys.Log("Done", Gray());
 	sys.Perform();
