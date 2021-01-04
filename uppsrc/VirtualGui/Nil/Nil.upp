@@ -1,3 +1,5 @@
+description "Empty GUI implementation - to link GUI packages with console application\377";
+
 uses
 	VirtualGui;
 
