@@ -28,12 +28,9 @@ int UrepoConsole::Git(const char *dir, const char *command, bool pwd)
 			if(username.GetCount())
 				cmd << UrlEncode(username) + ":";
 			int p = cmd.GetCount();
-			DDUMP(password);
-			DDUMP(UrlEncode(password));
 			cmd << UrlEncode(password);
 			HidePassword(p, cmd.GetCount());
 			cmd << "@" << url.Mid(https.GetCount());
-			DDUMP(cmd);
 		}
 	}
 	int code = CheckSystem(cmd);
