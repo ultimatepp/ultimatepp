@@ -24,11 +24,16 @@ int UrepoConsole::Git(const char *dir, const char *command, bool pwd)
 		String username, password;
 		if(url.StartsWith("https://") && GetCredentials(url, dir, username, password)) {
 			String https = "https://";
-			cmd << ' ' << https << UrlEncode(username) + ":";
+			cmd << ' ' << https;
+			if(username.GetCount())
+				cmd << UrlEncode(username) + ":";
 			int p = cmd.GetCount();
+			DDUMP(password);
+			DDUMP(UrlEncode(password));
 			cmd << UrlEncode(password);
 			HidePassword(p, cmd.GetCount());
 			cmd << "@" << url.Mid(https.GetCount());
+			DDUMP(cmd);
 		}
 	}
 	int code = CheckSystem(cmd);
