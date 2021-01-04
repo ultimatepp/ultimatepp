@@ -14,6 +14,11 @@ void ChHostSkin()
 	ChSysInit();
 }
 
+bool IsSystemThemeDark()
+{
+	return false;
+}
+
 END_UPP_NAMESPACE
 
 #endif
