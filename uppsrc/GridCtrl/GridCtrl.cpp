@@ -4604,6 +4604,8 @@ void GridCtrl::ClearRow(int r, int column_offset)
 void GridCtrl::Clear(bool columns)
 {
 	doscroll = false;
+	
+	anchor = Null;
 
 	UpdateCtrls(UC_HIDE | UC_CTRLS);
 

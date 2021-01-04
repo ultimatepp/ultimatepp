@@ -260,6 +260,8 @@ void GridCtrl::ClearSelection()
 				items[i][j].Select(0);
 		}
 
+		anchor = Null;
+
 		Refresh();
 		selected_rows = 0;
 		selected_items = 0;
