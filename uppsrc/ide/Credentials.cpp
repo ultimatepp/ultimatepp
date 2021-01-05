@@ -94,7 +94,7 @@ struct GetPasskeyDlg : WithGetPasskeyLayout<TopWindow> {
 
 GetPasskeyDlg::GetPasskeyDlg()
 {
-	CtrlLayoutOKCancel(*this, "Passkey");
+	CtrlLayoutOK(*this, "Passkey");
 	
 	show_passkey << [=] { Sync(); };
 	
