@@ -7,7 +7,7 @@ struct MyAppWindow : TopWindow {
 
 	MyAppWindow() {
 		Title("My application with font-zoomed button").Sizeable();
-		*this << button.SetLabel("Button").LeftPosZ(10, 64).TopPosZ(10, 24);
+		*this << button.SetLabel("Button").LeftPos(Zx(10), Zy(64)).TopPosZ(10, 24);
 	}
 };
 

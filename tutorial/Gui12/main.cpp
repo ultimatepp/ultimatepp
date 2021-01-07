@@ -10,32 +10,24 @@ struct MyAppWindow : TopWindow {
 	MenuBar   menu;
 	ToolBar   tool;
 	StatusBar status;
-
-	void MenuFn() {
-		PromptOK("Fn activated!");
-	}
-
-	void BarFn() {
-		PromptOK("Fn2 activated!");
-	}
-
-	void Exit() {
-		if(PromptOKCancel("Exit MyApp?"))
-			Break();
-	}
+	
+	typedef MyAppWindow CLASSNAME; // so that we can use THISFN shortcut
 
 	void SubBar(Bar& bar) {
-		bar.AddMenu("Function", TutorialImg::Fn(), [=] { MenuFn(); })
-		   .Help("This invokes MenuFn method of tutorial example");
-		bar.Add(TutorialImg::Fn2(), [=] { BarFn(); })
-		   .Help("This invokes BarFn method of tutorial example");
-		bar.Add("Exit", TutorialImg::Exit(), [=] { Exit(); });
+		bar.AddMenu("Function", TutorialImg::Fn(), [=] { // AddMenu - only in menu
+			PromptOK("Fn activated!");
+		}).Help("This invokes MenuFn method of tutorial example");
+		bar.Add(TutorialImg::Fn2(), [=] { // does not have image - not in toolbar
+			PromptOK("Fn2 activated!");
+		}).Help("This invokes BarFn method of tutorial example");
+		bar.Add("Exit", TutorialImg::Exit(), [=] { // in both toolbar and menu
+			if(PromptOKCancel("Exit MyApp?"))
+				Break();
+		});
 	}
 
 	void MainMenu(Bar& bar) {
-		bar.Sub("Menu", [=](Bar& bar) {
-			SubBar(bar);
-		});
+		bar.Sub("Menu", THISFN(SubBar));
 	}
 
 	MyAppWindow() {
@@ -45,10 +37,10 @@ struct MyAppWindow : TopWindow {
 		AddFrame(tool);
 		AddFrame(status);
 		AddFrame(InsetFrame());
-		menu.Set([=](Bar& bar) { MainMenu(bar); });
-		menu.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
-		tool.Set([=](Bar& bar) { SubBar(bar); });
-		tool.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
+		menu.Set(THISFN(MainMenu));
+		menu.WhenHelp = status;
+		tool.Set([=](Bar& bar) { SubBar(bar); }); // equivalent to THISFN(SubBar)
+		tool.WhenHelp = status;
 	}
 };
 
