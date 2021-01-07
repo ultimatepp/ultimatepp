@@ -5,14 +5,10 @@ using namespace Upp;
 struct NonModalDialog : public TopWindow {
 	Button b;
 
-	void DoClose() {
-		Close();
-	}
-
 	NonModalDialog() {
-		SetRect(0, 0, 200, 50);
+		SetRect(0, 0, Zx(200), Zy(50));
 		Add(b.SetLabel("Close non-modal dialog").SizePos());
-		b << [=] { DoClose(); };
+		b << [=] { Close(); };
 	}
 };
 
@@ -20,17 +16,15 @@ struct MainWindow : public TopWindow {
 	NonModalDialog dlg;
 	Button b;
 
-	void DoOpen() {
-		if(dlg.IsOpen())
-			dlg.Close();
-		else
-			dlg.Open(this);
-	}
-
 	MainWindow() {
-		SetRect(0, 0, 400, 100);
+		SetRect(0, 0, Zx(400), Zy(100));
 		Add(b.SetLabel("Open/close non-modal dialog").SizePos());
-		b << [=] { DoOpen(); };
+		b << [=] {
+			if(dlg.IsOpen())
+				dlg.Close();
+			else
+				dlg.Open(this);
+		};
 	}
 };
 

@@ -5,7 +5,7 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	TopWindow  app;
-	app.SetRect(0, 0, 200, 60);
+	app.SetRect(0, 0, Zx(200), Zy(60));
 	EditDate  date1, date2, date3;
 	date1 <<= date2 <<= date3 <<= GetSysDate();
 	date1.ClearModify();

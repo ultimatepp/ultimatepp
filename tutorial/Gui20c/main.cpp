@@ -7,7 +7,7 @@ struct MyAppWindow : TopWindow {
 	EditDate date;
 
 	MyAppWindow() {
-		SetRect(0, 0, 200, 90);
+		SetRect(0, 0, Zx(200), Zy(90));
 		Add(date.LeftPosZ(10, 80).TopPosZ(10, 20));
 		Add(ok.SetLabel("OK").LeftPosZ(10, 64).TopPosZ(40, 24));
 		Add(cancel.SetLabel("Cancel").LeftPosZ(100, 64).TopPosZ(40, 24));

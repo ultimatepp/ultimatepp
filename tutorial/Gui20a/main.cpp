@@ -5,14 +5,10 @@ using namespace Upp;
 struct MyAppWindow : TopWindow {
 	Button exit;
 
-	void Exit() {
-		Break(999);
-	}
-
 	MyAppWindow() {
-		SetRect(0, 0, 100, 100);
+		SetRect(0, 0, Zx(100), Zy(100));
 		Add(exit.SetLabel("exit").LeftPosZ(10, 64).TopPosZ(10, 24));
-		exit << [=] { Exit(); };
+		exit << [=] { Break(999); };
 	}
 };
 
