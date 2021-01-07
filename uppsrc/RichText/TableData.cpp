@@ -71,7 +71,7 @@ void RichTable::Normalize0()
 				c.hspan = hs - j;
 				for(int ii = i; ii <= vs; ii++)
 					for(int jj = j; jj <= hs; jj++) {
-						if(i != ii || j != jj) {
+						if((i != ii || j != jj) && ii < ny && jj < nx) {
 							CellInfo& f = ci[ii][jj];
 							f.valid = false;
 							cell[ii][jj].Clear();
