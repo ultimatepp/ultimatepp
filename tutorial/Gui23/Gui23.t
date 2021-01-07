@@ -17,7 +17,7 @@ trTR("Benim ba\305\237vurum")
 zhCN("\346\210\221\347\232\204\346\207\211\347\224\250\347\250\213\345\272\217")
 
 T_("Hello translation engine!")
-csCZ("Ahoj p\305\231eklada\304\215!")
+csCZ("Ahoj p\305\231eklada\304\215i!")
 deDE("Hallo \303\234bersetzungsmaschine!")
 esES("\302\241Hola motor de traducci\303\263n!")
 frFR("Bonjour le moteur de traduction!")
