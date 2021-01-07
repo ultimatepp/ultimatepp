@@ -48,7 +48,7 @@ UppHubDlg::UppHubDlg()
 	list.AddIndex("REPO");
 	list.AddIndex("README");
 	
-	list.ColumnWidths("94 72 373 301 61 61");
+	list.ColumnWidths("94 72 373 251 119 53");
 	list.WhenSel = [=] {
 		action.Disable();
 		readme.Disable();
@@ -66,7 +66,7 @@ UppHubDlg::UppHubDlg()
 				action ^= [=] { Uninstall(); };
 			}
 		}
-		readme.Enable(!IsNull(list.IsCursor() && list.Get("README")));
+		readme.Enable(list.IsCursor() && !IsNull(list.Get("README")));
 	};
 	list.WhenLeftDouble = [=] { Readme(); };
 	readme << [=] { Readme(); };
