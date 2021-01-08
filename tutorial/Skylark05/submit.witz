@@ -1,7 +1,0 @@
-<!DOCTYPE html>
-<html>
-<body>
-Result: $RESULT<br>
-<a href=$HomePage>Back to homepage</a>
-</body>
-</html>
