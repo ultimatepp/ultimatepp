@@ -55,8 +55,6 @@ window or control.&]
 Tutorial] `- check out the mechanism behind the image manipulation.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
 Tutorial] `- introduction to using databases within U`+`+ framework.&]
-[s3;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark 
-Tutorial] `- web framework tutorial.&]
 [s0; &]
 [s2; Articles&]
 [s3; The are also set of world class articles created by U`+`+ authors 

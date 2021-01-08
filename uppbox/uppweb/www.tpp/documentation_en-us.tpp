@@ -99,8 +99,6 @@ control.&]
 `- check out the mechanism behind the image manipulation.&]
 [s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial] 
 `- introduction to using databases within U`+`+ framework.&]
-[s0;l160; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark Tutorial] 
-`- web framework tutorial.&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
 [s0;l160; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us^ Supporting 
 UHD displays and Dark theme]&]
