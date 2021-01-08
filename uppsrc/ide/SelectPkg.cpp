@@ -221,6 +221,11 @@ void SelectPackageDlg::SyncFilter()
 	filter.ClearList();
 	Vector<String> upp = GetUppDirs();
 	for(int i = 0; i < upp.GetCount(); i++) {
+		if(upp[i].StartsWith(GetHubDir())) {
+			filter.Add(UPPHUB|MAIN|i, "Main packages of UppHub");
+			filter.Add(UPPHUB|i, "All packages of UppHub");
+			break;
+		}
 		String fn = GetFileName(upp[i]);
 		filter.Add(NEST|MAIN|i, "Main packages of " + fn);
 		filter.Add(NEST|i, "All packages of " + fn);
@@ -553,6 +558,8 @@ void SelectPackageDlg::SyncList(const String& find)
 	int to = data.GetCount() - 1;
 	if(f & NEST)
 		from = to = f & NEST_MASK;
+	if(f & UPPHUB)
+		from = f & NEST_MASK;
 	if(to < data.GetCount())
 		for(int i = from; i <= to; i++) {
 			const ArrayMap<String, PkData>& nest = data[i];
