@@ -219,7 +219,7 @@ void SelectPackageDlg::SyncFilter()
 {
 	Value v = ~filter;
 	filter.ClearList();
-	Vector<String> upp = GetUppDirs();
+	Vector<String> upp = GetUppDirsRaw();
 	for(int i = 0; i < upp.GetCount(); i++) {
 		if(upp[i].StartsWith(GetHubDir())) {
 			filter.Add(UPPHUB|MAIN|i, "Main packages of UppHub");
@@ -388,15 +388,18 @@ void SelectPackageDlg::OnFilter()
 
 void SelectPackageDlg::OnBase()
 {
-	if(!finished && !canceled)
+	if(!finished && !canceled) {
+		SyncFilter();
+		filter.GoBegin();
 		Load();
+	}
 }
 
 void SelectPackageDlg::OnNew() {
 	TemplateDlg dlg;
 	LoadFromGlobal(dlg, "NewPackage");
 	int f = ~filter;
-	dlg.Load(GetUppDirs(), f & MAIN);
+	dlg.Load(GetUppDirsRaw(), f & MAIN);
 	while(dlg.Run() == IDOK) {
 		String nest = ~dlg.nest;
 		String name = NativePath(String(~dlg.package));
@@ -648,7 +651,7 @@ void SelectPackageDlg::Load(const String& find)
 			LoadVars(assembly);
 			SyncFilter();
 		}
-		Vector<String> upp = GetUppDirs();
+		Vector<String> upp = GetUppDirsRaw();
 		packages.Clear();
 		description.Hide();
 		progress.Show();

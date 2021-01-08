@@ -220,6 +220,7 @@ bool   LoadVars(const char *name);
 String GetVar(const String& var);
 String GetVarsName();
 String VarFilePath();
+Vector<String> GetUppDirsRaw();
 Vector<String> GetUppDirs();
 String GetUppDir();
 void   SetVar(const String& var, const String& val, bool save = true);

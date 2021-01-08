@@ -232,7 +232,8 @@ String GetAssemblyId()
 	return id;
 }
 
-Vector<String> GetUppDirs() {
+Vector<String> GetUppDirsRaw()
+{
 	Vector<String> s = SplitDirs(GetVar("UPP"));
 	static Vector<String> hub_dirs;
 	if(!hub_loaded) {
@@ -243,6 +244,12 @@ Vector<String> GetUppDirs() {
 		hub_loaded = true;
 	}
 	s.Append(hub_dirs);
+	return s;
+}
+
+Vector<String> GetUppDirs()
+{
+	Vector<String> s = GetUppDirsRaw();
 	if(main_nest.GetCount() && (s.GetCount() == 0 || main_nest != s[0]))
 		s.Insert(0, main_nest);
 	return s;
