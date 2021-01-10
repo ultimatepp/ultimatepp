@@ -391,7 +391,7 @@ void Ide::Setup(Bar& menu)
 	    .Help("Setups/fixes build methods and basic assemblies..");
 #endif
 	menu.MenuSeparator();
-	menu.Add(HasGit(), "UppHub..", [] { UppHub(); });
+	menu.Add(HasGit(), "UppHub..", IdeImg::UppHub(), [] { UppHub(); });
 	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
 		if(SetupSVNTrunk()) {
 			IdeAgain = true;
