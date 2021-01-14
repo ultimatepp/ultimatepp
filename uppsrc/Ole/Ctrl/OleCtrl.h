@@ -618,10 +618,10 @@ public:
 
 	// IViewObject
 
-	STDMETHOD(Draw)(dword aspect, long index, void *aspectinfo,
+	STDMETHOD(Draw)(DWORD aspect, LONG index, void *aspectinfo,
 		DVTARGETDEVICE *device, HDC target, HDC draw,
 		const RECTL *bounds, const RECTL *wbounds,
-		BOOL (STDMETHODCALLTYPE *progress)(dword arg), dword arg);
+		BOOL (STDMETHODCALLTYPE *progress)(ULONG_PTR dwContinue), ULONG_PTR arg);
 	STDMETHOD(GetColorSet)(dword aspect, long index, void *aspectinfo,
 		DVTARGETDEVICE *device, HDC target, LOGPALETTE **palette);
 	STDMETHOD(Freeze)(dword aspect, long index, void *aspectinfo,

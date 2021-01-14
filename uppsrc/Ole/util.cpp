@@ -19,7 +19,7 @@ GUID GetCoClassGUID(const char *name, bool prog_id)
 	return guid;
 }
 
-unsigned GetHashValue(const GUID& guid) {
+hash_t GetHashValue(const GUID& guid) {
 	const dword *p = reinterpret_cast<const dword *>(&guid);
 	return CombineHash(p[0], p[1], p[2], p[3]);
 }
