@@ -914,7 +914,6 @@ public:
 		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
 		void  CreateHostRunDir(Host& h);
-		void  OpenOutputFolder();
 		void  PreprocessInternal();
 
 	void      DebugMenu(Bar& menu);
