@@ -43,3 +43,7 @@ struct Host {
 private:
 	bool HasPlatformFlag(const Index<String>& cfg);
 };
+
+#ifdef PLATFORM_POSIX
+void RemoveConsoleScripts();
+#endif
