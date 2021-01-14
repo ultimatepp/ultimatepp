@@ -211,8 +211,3 @@ void Ide::CreateMakefile()
 		return;
 	SaveMakeFile(~mfout, true);
 }
-
-void Ide::OpenOutputFolder()
-{
-	ShellOpenFolder(GetFileFolder(target));
-}
