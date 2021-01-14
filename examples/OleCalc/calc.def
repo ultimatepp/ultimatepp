@@ -1,4 +1,4 @@
-LIBRARY	"calc.ocx"
+LIBRARY	"OleCalc.dll"
 
 EXPORTS
 	DllCanUnloadNow     PRIVATE

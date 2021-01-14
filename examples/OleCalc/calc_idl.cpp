@@ -68,7 +68,7 @@ typedef IID CLSID;
 #define MIDL_DEFINE_GUID(type,name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
         const type name = {l,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}
 
-#endif !_MIDL_USE_GUIDDEF_
+#endif
 
 MIDL_DEFINE_GUID(IID, IID_ICalculator,0x2CFA5DB2,0xA740,0x11d3,0x98,0x1C,0x00,0x00,0x00,0x00,0x00,0x00);
 
@@ -158,7 +158,7 @@ typedef IID CLSID;
 #define MIDL_DEFINE_GUID(type,name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
         const type name = {l,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}
 
-#endif !_MIDL_USE_GUIDDEF_
+#endif
 
 MIDL_DEFINE_GUID(IID, IID_ICalculator,0x2CFA5DB2,0xA740,0x11d3,0x98,0x1C,0x00,0x00,0x00,0x00,0x00,0x00);
 
