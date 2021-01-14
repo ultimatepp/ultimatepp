@@ -6,6 +6,7 @@ struct UppHubNest : Moveable<UppHubNest> {
 	int              tier = -1;
 	String           name;
 	Vector<String>   packages;
+	Vector<String>   uses;
 	String           description;
 	String           repo;
 	String           status = "unknown";
@@ -47,6 +48,7 @@ UppHubDlg::UppHubDlg()
 	
 	list.AddIndex("REPO");
 	list.AddIndex("README");
+	list.AddIndex("USES");
 	
 	list.ColumnWidths("94 72 373 251 119 53");
 	list.WhenSel = [=] {
@@ -139,12 +141,15 @@ void UppHubDlg::Load(int tier, const String& url, bool deep)
 		String list_name = v["name"];
 		for(Value ns : v["nests"]) {
 			String name = ns["name"];
-			UppHubNest& n = upv.GetAdd(ns["name"]);
+			UppHubNest& n = upv.GetAdd(name);
 			n.name = name;
 			bool tt = tier > n.tier;
 			if(tt || n.packages.GetCount() == 0)
 				for(Value p : ns["packages"])
 					n.packages.Add(p);
+			if(tt || n.uses.GetCount() == 0)
+				for(Value p : ns["uses"])
+					n.uses.Add(p);
 			auto Attr = [&](String& a, const char *id) {
 				if(tt || IsNull(a))
 					a = ns[id];
@@ -233,8 +238,6 @@ void UppHubDlg::Install(bool noprompt)
 		SyncList();
 	}
 }
-
-
 
 void UppHubDlg::Uninstall(bool noprompt)
 {

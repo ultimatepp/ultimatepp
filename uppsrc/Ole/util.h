@@ -34,7 +34,7 @@ private:
 	T       *ptr;
 };
 
-unsigned              GetHashValue(const GUID& guid);
+hash_t                GetHashValue(const GUID& guid);
 String                Format(const GUID& guid);
 String                CFormat(const GUID& guid);
 inline void           Serialize(Stream& stream, GUID& guid) { stream.SerializeRaw((byte *)&guid, sizeof(GUID)); }
@@ -74,7 +74,7 @@ private:
 };
 
 template <>
-inline unsigned GetHashValue(const Guid& guid) { return GetHashValue(~guid); }
+inline hash_t   GetHashValue(const Guid& guid) { return GetHashValue(~guid); }
 template <>
 inline String   AsString(const GUID& guid) { return Format(guid); }
 template <>

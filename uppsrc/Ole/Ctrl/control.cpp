@@ -527,10 +527,10 @@ HRESULT OcxControl::EnumDAdvise(IEnumSTATDATA **enumerator)
 	return LOGRESULT(E_NOTIMPL);
 }
 
-HRESULT OcxControl::Draw(dword aspect, long index, void *aspectinfo,
-	DVTARGETDEVICE *device, HDC target_dc, HDC draw_dc,
-	const RECTL *bounds, const RECTL *wbounds,
-	BOOL (STDMETHODCALLTYPE *progress)(dword arg), dword arg)
+HRESULT OcxControl::Draw(DWORD aspect, LONG index, void *aspectinfo,
+		DVTARGETDEVICE *device, HDC target, HDC draw_dc,
+		const RECTL *bounds, const RECTL *wbounds,
+		BOOL (STDMETHODCALLTYPE *progress)(ULONG_PTR dwContinue), ULONG_PTR arg)
 {
 	LOGMETHOD("IViewObject::Draw");
 	if(aspect != DVASPECT_CONTENT)
@@ -743,15 +743,15 @@ HRESULT OcxControl::TranslateAccelerator(MSG *msg)
 	LOGMETHOD("IOleInPlaceObject::TranslateAccelerator");
 	dword keycode = 0;
 	if(msg->message == WM_KEYDOWN)
-		keycode = KEYtoK(msg->wParam);
+		keycode = KEYtoK((dword)msg->wParam);
 	else if(msg->message == WM_KEYUP)
-		keycode = KEYtoK(msg->wParam) | K_KEYUP;
+		keycode = KEYtoK((dword)msg->wParam) | K_KEYUP;
 	else if(msg->message == WM_SYSKEYDOWN && (msg->lParam & 0x20000000))
-		keycode = KEYtoK(msg->wParam);
+		keycode = KEYtoK((dword)msg->wParam);
 	else if(msg->message == WM_SYSKEYUP && (msg->lParam & 0x20000000))
-		keycode = KEYtoK(msg->wParam) | K_KEYUP;
+		keycode = KEYtoK((dword)msg->wParam) | K_KEYUP;
 	else if(msg->message == WM_CHAR)
-		keycode = msg->wParam;
+		keycode = (dword)msg->wParam;
 	if(keycode == 0 || !IsActive() || !IsEnabled() || !IsVisible())
 		return LOGRESULT(S_FALSE);
 
