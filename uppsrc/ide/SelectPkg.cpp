@@ -195,7 +195,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	
 	newu <<= THISBACK(OnNew);
 	filter <<= THISBACK(OnFilter);
-	filter <<= main ? MAIN|NEST : 0;
+	filter <<= main ? MAIN|NEST : NONMAIN;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
@@ -231,6 +231,7 @@ void SelectPackageDlg::SyncFilter()
 		filter.Add(NEST|i, "All packages of " + fn);
 	}
 	filter.Add(MAIN, "All main packages");
+	filter.Add(NONMAIN, "All non-main packages");
 	filter.Add(0, "All packages");
 	if(filter.HasKey(v))
 		filter <<= v;
@@ -367,7 +368,8 @@ void SelectPackageDlg::OnOK()
 	int f = ~filter;
 	String n = GetCurrentName();
 	if(n.GetCount() && pkg.Load(PackagePath(n)) &&
-	   (!(f & MAIN) || pkg.config.GetCount())) {
+	   (!(f & MAIN) || pkg.config.GetCount()) &&
+	   (!(f & NONMAIN) || !pkg.config.GetCount())) {
 		loading = false;
 		finished = true;
 		AcceptBreak(IDOK);
@@ -390,7 +392,7 @@ void SelectPackageDlg::OnBase()
 {
 	if(!finished && !canceled) {
 		SyncFilter();
-		filter.GoBegin();
+		filter <<= (int)~filter & ~NEST_MASK;
 		Load();
 	}
 }
@@ -571,6 +573,7 @@ void SelectPackageDlg::SyncList(const String& find)
 				if(!nest.IsUnlinked(i) &&
 				   d.ispackage &&
 				   (!(f & MAIN) || d.main) &&
+				   (!(f & NONMAIN) || !d.main) &&
 				   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
 				   added.Find(d.package) < 0) {
 					packages.Add() = d;
