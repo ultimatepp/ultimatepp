@@ -153,6 +153,8 @@ void AppMain___()
 	bool hasvars = FindFile(ConfigFile("*.var"));
 
 #ifdef PLATFORM_POSIX
+	RemoveConsoleScripts(); // remove old console-script files
+
 	String home = Environment().Get("UPP_HOME", Null);
 	if(!IsNull(home))
 		SetHomeDirectory(home);

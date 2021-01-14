@@ -177,6 +177,17 @@ String HostConsole = "powershell.exe";
 String HostConsole = "/usr/bin/xterm -e";
 #endif
 
+#ifdef PLATFORM_POSIX
+void RemoveConsoleScripts()
+{
+	FileTime tm = (GetSysTime() - 24*3600).AsFileTime();
+	for(FindFile ff(ConfigFile("console-script-*")); ff; ff++) {
+		if(ff.GetLastWriteTime() < tm)
+			FileDelete(ff.GetPath());
+	}
+}
+#endif
+
 void Host::Launch(const char *_cmdline, bool console)
 {
 	String cmdline = FindCommand(exedirs, _cmdline);
