@@ -1235,8 +1235,8 @@ void InstantSetup();
 
 bool SetupSVNTrunk();
 
-void UppHub();
-void UppHubAuto(const String& s);
+String UppHub();
+void   UppHubAuto(const String& s);
 
 #include "urepo.h"
 

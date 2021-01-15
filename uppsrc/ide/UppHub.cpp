@@ -20,6 +20,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	Index<String> loaded;
 	Progress pi;
 	bool loading_stopped;
+	String last_package;
 
 	void Readme();
 	void Load(int tier, const String& url, bool deep);
@@ -72,6 +73,8 @@ UppHubDlg::UppHubDlg()
 			}
 		}
 		readme.Enable(list.IsCursor() && !IsNull(list.Get("README")));
+		UppHubNest *n = Current();
+		last_package = n && n->packages.GetCount() ? n->packages[0] : String();
 	};
 	list.WhenLeftDouble = [=] { Readme(); };
 	readme << [=] { Readme(); };
@@ -263,11 +266,12 @@ void UppHubDlg::Reinstall()
 	}
 }
 
-void UppHub()
+String UppHub()
 {
 	UppHubDlg dlg;
 	dlg.Load();
 	dlg.Run();
+	return dlg.last_package;
 }
 
 void UppHubAuto(const String& main)
