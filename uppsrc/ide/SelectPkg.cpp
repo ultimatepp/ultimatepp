@@ -212,6 +212,16 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	loading = false;
 	clist.WhenBar = alist.WhenBar = THISBACK(PackageMenu);
 	
+	upphub.SetImage(IdeImg::UppHub());
+	upphub << [=] {
+		String p = UppHub();
+		OnBase();
+		if(p.GetCount()) {
+			alist.FindSetCursor(p);
+			clist.FindSetCursor(p);
+		}
+	};
+	
 	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
 }
 
