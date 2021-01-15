@@ -16,6 +16,7 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
 	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
 	menu.Add(b, "Delete package..", [=] { DeletePackage(); });
+	menu.Add(b, "Change description..", [=] { ChangeDescription(); });
 }
 
 bool RenamePackageFs(const String& upp, const String& npf, const String& nupp, bool copy)
@@ -193,17 +194,21 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	if (!selectvars)
 		splitter.Hide();
 	
-	newu <<= THISBACK(OnNew);
-	filter <<= THISBACK(OnFilter);
-	filter <<= main ? MAIN|NEST : NONMAIN;
+	newu << [=] { OnNew(); };
+	kind.Add(MAIN, "Main packages");
+	kind.Add(NONMAIN, "Non-main packages");
+	kind.Add(ALL, "All packages");
+	kind << [=] { OnFilter(); };
+	kind <<= main ? MAIN : NONMAIN;
+	nest << [=] { OnFilter(); };
+	OnFilter();
+	nest <<= main ? 0 : ALL;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
 	search << [=] { SyncList(Null); };
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
-	description.NullText("Package description (Alt+Enter)", StdFont().Italic(), SColorDisabled());
-	description <<= THISBACK(ChangeDescription);
 	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
 	clist.BackPaintHint();
 	alist.BackPaintHint();
@@ -227,26 +232,26 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 
 void SelectPackageDlg::SyncFilter()
 {
-	Value v = ~filter;
-	filter.ClearList();
+	Value n = ~nest;
+	nest.ClearList();
 	Vector<String> upp = GetUppDirsRaw();
+	nest.Add(ALL, AttrText("All").Italic().Bold().NormalInk(SBlue()));
+	bool hub = false;
 	for(int i = 0; i < upp.GetCount(); i++) {
-		if(upp[i].StartsWith(GetHubDir())) {
-			filter.Add(UPPHUB|MAIN|i, "Main packages of UppHub");
-			filter.Add(UPPHUB|i, "All packages of UppHub");
-			break;
+		if(upp[i].StartsWith(GetHubDir()) && !hub) {
+			nest.Add(UPPHUB|i, AttrText("UppHub").Italic().NormalInk(SBlue()));
+			hub = true;
 		}
 		String fn = GetFileName(upp[i]);
-		filter.Add(NEST|MAIN|i, "Main packages of " + fn);
-		filter.Add(NEST|i, "All packages of " + fn);
+		if(hub)
+			nest.Add(i, AttrText(fn).NormalInk(SCyan()));
+		else
+			nest.Add(i, fn);
 	}
-	filter.Add(MAIN, "All main packages");
-	filter.Add(NONMAIN, "All non-main packages");
-	filter.Add(0, "All packages");
-	if(filter.HasKey(v))
-		filter <<= v;
+	if(nest.HasKey(n))
+		nest <<= n;
 	else
-		filter.GoBegin();
+		nest.GoBegin();
 }
 
 bool SelectPackageDlg::Key(dword key, int count)
@@ -314,7 +319,7 @@ void SelectPackageDlg::ChangeDescription()
 			return;
 		pkg.description = ~dlg.text;
 		pkg.Save(pp);
-		p.description = description <<= ~dlg.text;
+		p.description = ~dlg.text;
 		if(alist.IsCursor())
 			alist.Set(2, ~dlg.text);
 	}
@@ -327,10 +332,7 @@ void SelectPackageDlg::ListCursor()
 		String pp = PackagePath(GetCurrentName());
 		Package pkg;
 		pkg.Load(pp);
-		description <<= pkg.description;
 	}
-	else
-		description <<= Null;
 }
 
 void SelectPackageDlg::SyncBrief()
@@ -375,11 +377,11 @@ String SelectPackageDlg::Run(String& nest, String startwith)
 void SelectPackageDlg::OnOK()
 {
 	Package pkg;
-	int f = ~filter;
+	int fk = ~kind;
 	String n = GetCurrentName();
 	if(n.GetCount() && pkg.Load(PackagePath(n)) &&
-	   (!(f & MAIN) || pkg.config.GetCount()) &&
-	   (!(f & NONMAIN) || !pkg.config.GetCount())) {
+	   (!(fk == MAIN) || pkg.config.GetCount()) &&
+	   (!(fk == NONMAIN) || !pkg.config.GetCount())) {
 		loading = false;
 		finished = true;
 		AcceptBreak(IDOK);
@@ -402,7 +404,8 @@ void SelectPackageDlg::OnBase()
 {
 	if(!finished && !canceled) {
 		SyncFilter();
-		filter <<= (int)~filter & ~NEST_MASK;
+		if(splitter.IsShown())
+			nest <<= nest.GetCount() ? 0 : ALL;
 		Load();
 	}
 }
@@ -410,8 +413,7 @@ void SelectPackageDlg::OnBase()
 void SelectPackageDlg::OnNew() {
 	TemplateDlg dlg;
 	LoadFromGlobal(dlg, "NewPackage");
-	int f = ~filter;
-	dlg.Load(GetUppDirsRaw(), f & MAIN);
+	dlg.Load(GetUppDirsRaw(), ~kind == MAIN);
 	while(dlg.Run() == IDOK) {
 		String nest = ~dlg.nest;
 		String name = NativePath(String(~dlg.package));
@@ -567,14 +569,16 @@ void SelectPackageDlg::SyncList(const String& find)
 
 	packages.Clear();
 	String s = ~search;
-	int f = ~filter;
+	int fn = ~nest;
+	int fk = ~kind;
 	Index<String> added;
 	int from = 0;
 	int to = data.GetCount() - 1;
-	if(f & NEST)
-		from = to = f & NEST_MASK;
-	if(f & UPPHUB)
-		from = f & NEST_MASK;
+	if(fn & UPPHUB)
+		from = fn & NEST_MASK;
+	else
+	if(fn != ALL)
+		from = to = fn & NEST_MASK;
 	if(to < data.GetCount())
 		for(int i = from; i <= to; i++) {
 			const ArrayMap<String, PkData>& nest = data[i];
@@ -582,8 +586,8 @@ void SelectPackageDlg::SyncList(const String& find)
 				const PkData& d = nest[i];
 				if(!nest.IsUnlinked(i) &&
 				   d.ispackage &&
-				   (!(f & MAIN) || d.main) &&
-				   (!(f & NONMAIN) || !d.main) &&
+				   (!(fk == MAIN) || d.main) &&
+				   (!(fk == NONMAIN) || !d.main) &&
 				   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
 				   added.Find(d.package) < 0) {
 					packages.Add() = d;
@@ -666,7 +670,6 @@ void SelectPackageDlg::Load(const String& find)
 		}
 		Vector<String> upp = GetUppDirsRaw();
 		packages.Clear();
-		description.Hide();
 		progress.Show();
 		loading = true;
 		data.Clear();
@@ -741,7 +744,6 @@ void SelectPackageDlg::Load(const String& find)
 			ProcessEvents();
 		if(!IsOpen())
 			Open();
-		description.Show();
 		if(loading) {
 			loading = false;
 			SyncList(find);
