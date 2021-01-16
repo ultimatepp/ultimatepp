@@ -606,8 +606,12 @@ void SelectPackageDlg::SyncList(const String& find)
 	for(int i = 0; i < packages.GetCount(); i++) {
 		const PkInfo& pkg = packages[i];
 		Image icon = pkg.icon;
-		if(IsNull(icon))
-			icon = pkg.main ? IdeImg::MainPackage() : pkg.upphub ? IdeImg::HubPackage() : IdeImg::Package();
+		if(IsNull(icon)) {
+			if(pkg.main)
+				icon = pkg.upphub ? IdeImg::HubMainPackage() : IdeImg::MainPackage();
+			else
+				icon = pkg.upphub ? IdeImg::HubPackage() : IdeImg::Package();
+		}
 		nest_list.Add(pkg.nest);
 		clist.Add(pkg.package, DPI(icon, 16));
 		alist.Add(pkg.package, GetFileName(pkg.nest), pkg.description, icon);
