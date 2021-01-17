@@ -10,7 +10,6 @@ uses
 	plugin\ftp,
 	Sql,
 	Painter,
-	Skylark,
 	VirtualGui/Nil;
 
 options(GCC) -DNOWSTRING;
