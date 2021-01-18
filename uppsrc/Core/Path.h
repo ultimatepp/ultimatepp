@@ -100,7 +100,7 @@ public:
 		const FindFile& operator*() const           { return *ff; }
 	};
 	
-	Iterator begin() { Iterator h; h.ff = this; return h; }
+	Iterator begin() { Iterator h; h.ff = *this ? this : nullptr; return h; }
 	Iterator end()   { Iterator h; h.ff = nullptr; return h; }
 
 	FindFile();
@@ -177,7 +177,7 @@ public:
 		const FindFile& operator*() const           { return *ff; }
 	};
 	
-	Iterator begin() { Iterator h; h.ff = this; return h; }
+	Iterator begin() { Iterator h; h.ff = *this ? this : nullptr; return h; }
 	Iterator end()   { Iterator h; h.ff = nullptr; return h; }
 
 	FindFile()                            { file = false; dir = NULL; }
