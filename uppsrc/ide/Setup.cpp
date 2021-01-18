@@ -573,6 +573,7 @@ void Ide::SetupFormat() {
 	DirSelect(ide.uscpath, ide.uscpath_sel);
 
 	ide.upphub <<= LoadFile(DefaultHubFilePath());
+	ide.upphub.NullText(ConfigFile("UppHub"));
 	DirSelect(ide.upphub, ide.upphub_sel);
 	
 	fnt.defaults << [&] {

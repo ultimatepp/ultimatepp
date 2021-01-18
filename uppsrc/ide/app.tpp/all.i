@@ -102,6 +102,10 @@ TOPIC("Topic_en-us")
 #include "Topic_en-us.tppi"
 END_TOPIC
 
+TOPIC("UppHub_en-us")
+#include "UppHub_en-us.tppi"
+END_TOPIC
+
 TOPIC("importext_en-us")
 #include "importext_en-us.tppi"
 END_TOPIC

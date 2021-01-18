@@ -202,7 +202,7 @@ BaseSetupDlg::BaseSetupDlg()
 	upv_sel.Tip("Select UppHub directory...");
 	DirSelect(output, output_sel);
 	DirSelect(upv, upv_sel);
-	upv.NullText("Default");
+	upv.NullText(GetHubDir());
 }
 
 bool BaseSetupDlg::Run(String& vars)
