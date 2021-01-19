@@ -138,7 +138,7 @@ static inline double RadToDeg(double rad) {return rad*180./M_PI;}
 
 void EvalExpr::EvalThrowError(CParserPP &p, const char *s) {
 	CParserPP::Pos pos = p.GetPos();
-	CParserPP::Error err(Format("(%d): ", pos.GetColumn()) + s);
+	CParserPP::Error err(Format("(%d): ", pos.GetColumn()) + String(s));
 	throw err;
 }
 
@@ -300,9 +300,9 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 		String strId = p.ReadIdPP();
 		if(doubleUnit (*function)(doubleUnit) = functions.Get(strId, 0)) {
 			p.PassChar('(');
-			doubleUnit x = Exp(p);
+			doubleUnit x(Exp(p));
 			p.PassChar(')');
-			doubleUnit ret = function(x);
+			doubleUnit ret(function(x));
 			if (IsNull(ret))
 				EvalThrowError(p, Format(t_("Error in %s(%f)"), strId, x.val));	
 			if (isneg)
@@ -314,14 +314,17 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 			strIdSearch = ToLower(strId);
 		else
 			strIdSearch = strId;
-		doubleUnit ret = constants.Get(strIdSearch, Null);
+		doubleUnit ret(constants.Get(strIdSearch, Null));
 		if (IsNull(ret)) {
 			int id = FindVariable(strIdSearch);
 			if (id >= 0)
 				ret = variables[id];
 			else {
-				if (errorIfUndefined)
-					EvalThrowError(p, Format(t_("Unknown identifier '%s'"), strId));	
+				if (errorIfUndefined) {
+					lastError = Format(t_("Unknown identifier '%s'"), strId);
+					return Null;
+				}
+					//EvalThrowError(p, Format(t_("Unknown identifier '%s'"), strId));	
 				lastVariableSetId = variables.FindAdd(strIdSearch, 0);
 				ret = variables[lastVariableSetId];
 			}
@@ -330,7 +333,7 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 			ret.Neg();
 		return ret;
 	} else if (p.Char('(')) {
-		doubleUnit x = Exp(p);
+		doubleUnit x(Exp(p));
 		p.PassChar(')');
 		if (isneg)
 			x.Neg();
@@ -338,7 +341,7 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 	} else {
 		if (p.IsChar2('.', '.'))
 			p.ThrowError("missing number");
-		doubleUnit x = doubleUnit(p.ReadDouble());
+		doubleUnit x(p.ReadDouble());
 		if (isneg)
 			x.Neg();
 		return x;
@@ -346,20 +349,19 @@ doubleUnit EvalExpr::Term(CParserPP& p) {
 }
 
 doubleUnit EvalExpr::Pow(CParserPP& p) {
-	doubleUnit x = Term(p);
-	for(;;) {
+	doubleUnit x(Term(p));
+	for(;;) 
 		if(p.Char('^')) {
 			//if (x.val < 0)
 			//	EvalThrowError(p, t_("Complex number"));
 			x.Exp(Term(p));
 		} else
 			return x;
-	}
 }
 
 doubleUnit EvalExpr::Mul(CParserPP& p) {
-	doubleUnit x = Pow(p);
-	for(;;) {
+	doubleUnit x(Pow(p));
+	for(;;) 
 		if(p.Char('*'))
 			x.Mult(Pow(p));
 		else if (p.Char2('|', '|')) 
@@ -380,12 +382,11 @@ doubleUnit EvalExpr::Mul(CParserPP& p) {
 			x.Mult(doubleUnit(M_PI/180.));
 		} else
 			return x;
-	}
 }
 
 doubleUnit EvalExpr::Exp(CParserPP& p) {
-	doubleUnit x = Mul(p);
-	for(;;) {
+	doubleUnit x(Mul(p));
+	for(;;) 
 		if(p.Char('+'))
 			x.Sum(Mul(p));
 		else if(p.Char('-'))
@@ -395,29 +396,36 @@ doubleUnit EvalExpr::Exp(CParserPP& p) {
 			x.Sum(Mul(p));
 		} else
 			return x;
-	}
 }
 
 doubleUnit EvalExpr::AssignVariable(String var, String expr) {
-	p.Set(expr);
+	doubleUnit ret;
 	if (noCase)
 		var = ToLower(var);
 	int idalloc = FindAddVariable(var);
 	try {
-		doubleUnit ret = Exp(p);
-		SetVariable(idalloc, ret);
-		return ret;
-	} catch(CParserPP::Error e) {
-		if (allowString) {
-			doubleUnit ret;
-			ret.sval = expr;
+		p.Set(expr);
+		
+		ret.Set(Exp(p));
+		if (!IsNull(ret)) {
 			SetVariable(idalloc, ret);
-			return ret;	
+			return ret;
+		} else {
+			if (allowString) {
+				ret.sval = expr;
+				SetVariable(idalloc, ret);
+				return ret;	
+			}
+			return Null;
 		}
+	} catch(CParserPP::Error e) {
 		lastError = e;
 		return Null;
 	} catch(Exc e) {
 		lastError = e;
+		return Null;
+	} catch(...) {
+		lastError = "Unknown error";
 		return Null;
 	}
 }
@@ -451,7 +459,10 @@ doubleUnit EvalExpr::AssignVariable(String var, double d) {
 	} catch(Exc e) {
 		lastError = e;
 		return Null;
-	}
+	} catch(...) {
+		lastError = "Unknown error";
+		return Null;
+	} 
 }
 		
 doubleUnit EvalExpr::Eval(String line) {
@@ -467,7 +478,7 @@ doubleUnit EvalExpr::Eval(String line) {
 			if(p.Char('=')) {
 				if (noCase)
 					var = ToLower(var);
-				doubleUnit ret = Exp(p);
+				doubleUnit ret(Exp(p));
 				SetVariable(var, ret);
 				return ret;
 			} else {
@@ -539,7 +550,7 @@ String EvalExpr::MulStr(CParserPP& p, int numDigits) {
 
 String EvalExpr::ExpStr(CParserPP& p, int numDigits) {
 	String x = MulStr(p, numDigits);
-	for(;;) {
+	for(;;) 
 		if(p.Char('+'))
 			x = x + " + " + MulStr(p, numDigits);
 		else if(p.Char('-'))
@@ -549,7 +560,6 @@ String EvalExpr::ExpStr(CParserPP& p, int numDigits) {
 		else {
 			x.Replace("+ -", "- ");
 			return x;
-		}
 	}
 }
 

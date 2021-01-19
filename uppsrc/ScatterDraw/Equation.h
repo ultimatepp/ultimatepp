@@ -325,11 +325,11 @@ public:
 	WeibullEquation() 							{SetCoeff(1, 1, 1);}
 	WeibullEquation(double k, double lambda, double factor)	{ASSERT(k > 0);	ASSERT(lambda > 0);	SetCoeff(k, lambda, factor);}
 	double f(double x) {
-		if (x < 0)
-			return 0;
 		double k =  coeff[0];
 		double lambda = coeff[1];
 		double factor = coeff[2];
+		if (x/lambda < 0)
+			return 0;
 		return factor*(k/lambda)*(::pow(x/lambda, k-1))*::exp(double(-::pow(x/lambda, k)));
 	}
 	virtual String GetName() 					{return t_("Weibull");}
@@ -454,6 +454,12 @@ public:
 	Unit() 							{SetNull();}
 	Unit(const Nuller&)	: Unit()	{}
 	Unit(double _m, double _l, double _t) : m(_m), l(_l), t(_t) {}
+	
+	void Set(const Unit &d) {
+		m = d.m;
+		l = d.l;
+		t = d.t;
+	}
 	String GetString() {
 		if (IsNullInstance())
 			return String();
@@ -518,6 +524,11 @@ public:
 	String sval;
 	Unit unit;
 	
+	void Set(const doubleUnit &d) {
+		val = d.val;
+		sval = d.sval;
+		unit.Set(d.unit);
+	}
 	void Sum(const doubleUnit &d) {
 		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
 			throw Exc(t_("Units does not match in summation"));
@@ -652,17 +663,27 @@ public:
 	static void EvalThrowError(CParserPP &p, const char *s);
 	
 	virtual int FindVariable(String strId) 					{return variables.Find(strId);}
+	Vector<int> FindVariableList(String pattern) {
+		Vector<int> ret;
+		if (noCase)
+			pattern = ToLower(pattern);
+		for (int i = 0; i < variables.GetCount(); ++i) {
+			if (PatternMatch(pattern, variables.GetKey(i)))
+				ret << i;
+		}
+		return ret;
+	}
 		
 protected:
 	doubleUnit Exp(CParserPP& p);
 
 	void SetVariable(String name, doubleUnit value)	{
 		lastVariableSetId = variables.FindAdd(name);
-		variables[lastVariableSetId] = value;
+		variables[lastVariableSetId].Set(value);
 	}
 	void SetVariable(int id, doubleUnit value) {
 		lastVariableSetId = id;
-		variables[id] = value;
+		variables[id].Set(value);
 	}
 	int FindAddVariable(String name) {
 		return lastVariableSetId = variables.FindAdd(name);
