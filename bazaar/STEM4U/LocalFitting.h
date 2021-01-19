@@ -18,18 +18,22 @@ void LocalFitting(const Range1 &x, const Range1 &y, const Range2 &resx, Range2 &
 	for (int i = 0; i < resx.size(); ++i) {
 		int ibegin, iend;
 		const auto &rx = resx[i];
-		for (ibegin = 0; ibegin < x.size(); ++ibegin) 
-			if (x[ibegin] >= rx - w_2) {
-				if (x[ibegin] >= rx)
-					ibegin--;
-				ibegin = max(0, ibegin);
-				break;
-			}
-		for (iend = ibegin+1; iend < x.size(); ++iend) 
-			if (x[iend] >= rx + w_2) 
-				break;
-		iend = min(iend, int(x.size()-1));
-		int num = iend-ibegin+1;
+		int num = 0;
+		Scalar zoomfactor = 1;
+		for (int j = 1; num < 2; ++j, zoomfactor = w_2*j) {
+			for (ibegin = 0; ibegin < x.size(); ++ibegin) 
+				if (x[ibegin] >= rx - w_2*zoomfactor) {
+					if (x[ibegin] >= rx)
+						ibegin--;
+					ibegin = max(0, ibegin);
+					break;
+				}
+			for (iend = ibegin+1; iend < x.size(); ++iend) 
+				if (x[iend] >= rx + w_2*zoomfactor) 
+					break;
+			iend = min(iend, int(x.size()-1));
+			num = iend-ibegin+1;
+		}
 		if (num == 2) 
 			resy[i] = LinearInterpolate(rx, x[ibegin], x[iend], y[ibegin], y[iend]);
 		else if (num == 3 && deg == 2)
@@ -54,7 +58,7 @@ void LocalFitting(const Range1 &x, const Range1 &y, const Range2 &resx, Range2 &
 				}
 				return 0;	
 			}))
-				throw Exc(t_("LOWESS Impossible to get coefficients"));
+				throw Exc(t_("LocalFitting: Impossible to get coefficients"));
 			if (deg == 2)
 				resy[i] = coeff(0) + coeff(1)*rx + coeff(2)*sqr(rx);
 			else

@@ -28,8 +28,8 @@ file
 	Mooring.cpp,
 	Mooring.h,
 	Utility.cpp,
-	Utility.h,
 	srcimp.tpp,
+	Utility.h,
 	src.tpp,
 	srcdoc.tpp,
 	Copying;
