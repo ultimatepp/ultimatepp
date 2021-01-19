@@ -2,6 +2,7 @@
 #define _ScatterDraw_DataSource_h_
 
 #include <plugin/Eigen/Eigen.h>
+#include <numeric>
 
 namespace Upp {
 
@@ -43,7 +44,45 @@ public:
 		}
 		ResizeConservative(out, n);
 	}
-	
+	template <class Range>
+	void Copy(Getdatafun getdata0, Getdatafun getdata1, Range &out0, Range &out1) {
+		Resize(out0, GetCount());
+		Resize(out1, GetCount());
+		int n = 0;		
+		for (int64 i = 0; i < GetCount(); ++i) { 
+			double d0 = Membercall(getdata0)(i);
+			double d1 = Membercall(getdata1)(i);
+			if (!IsNull(d0) && IsFin(d0) && !IsNull(d1) && IsFin(d1)) {
+				out0[n] = d0;
+				out1[n] = d1;
+				n++;
+			}
+		}
+		ResizeConservative(out0, n);
+		ResizeConservative(out1, n);
+	}
+	template <class Range>
+	void Copy(Getdatafun getdata0, Getdatafun getdata1, Getdatafun getdata2, Range &out0, Range &out1, Range &out2) {
+		Resize(out0, GetCount());
+		Resize(out1, GetCount());
+		Resize(out2, GetCount());
+		int n = 0;		
+		for (int64 i = 0; i < GetCount(); ++i) { 
+			double d0 = Membercall(getdata0)(i);
+			double d1 = Membercall(getdata1)(i);
+			double d2 = Membercall(getdata2)(i);
+			if (!IsNull(d0) && IsFin(d0) && !IsNull(d1) && IsFin(d1) && !IsNull(d2) && IsFin(d2)) {
+				out0[n] = d0;
+				out1[n] = d1;
+				out2[n] = d2;
+				n++;
+			}
+		}
+		ResizeConservative(out0, n);
+		ResizeConservative(out1, n);
+		ResizeConservative(out2, n);
+	}
+		
 	double MinY(int64& id)  		{return Min(&DataSource::y, id);}
 	double MinY()  					{int64 dummy;	return Min(&DataSource::y, dummy);}
 	double MinX(int64& id)  		{return Min(&DataSource::x, id);}	
@@ -152,7 +191,7 @@ protected:
 	
 private:
 	Function <void(void)> OnDestructor;
-	Vector<int64> Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, bool (*fun)(double a, double b));
+	Vector<int64> Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, Function <bool(double a, double b)> Fun);
 	int magic = 1234321;
 };
 
@@ -381,8 +420,15 @@ private:
 	
 public:
 	EigenVector(const Eigen::VectorXd &_yData, double _x0, double _deltaX) : yData(&_yData), x0(_x0), deltaX(_deltaX) {xData = nullptr;}
-	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData) : xData(&_xData), yData(&_yData) {zData = nullptr; x0 = deltaX = 0;}
-	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData, const Eigen::VectorXd &_zData) : xData(&_xData), yData(&_yData), zData(&_zData) {x0 = deltaX = 0;}
+	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData) : xData(&_xData), yData(&_yData) {
+		ASSERT(_xData.size() == _yData.size());
+		zData = nullptr; 
+		x0 = deltaX = 0;
+	}
+	EigenVector(const Eigen::VectorXd &_xData, const Eigen::VectorXd &_yData, const Eigen::VectorXd &_zData) : xData(&_xData), yData(&_yData), zData(&_zData) {
+		ASSERT(_xData.size() == _yData.size() && _xData.size() == _zData.size());
+		x0 = deltaX = 0;
+	}
 	virtual inline double x(int64 id)  	{return xData ? (*xData)(Eigen::Index(id)) : id*deltaX + x0;}
 	virtual inline double y(int64 id)  	{return (*yData)(Eigen::Index(id));}
 	virtual double znFixed(int n, int64 id) {
@@ -538,29 +584,6 @@ public:
 	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
 	virtual inline int64 GetCount() const	{return min(xData->GetCount(), yData->GetCount());}
 };
-
-/* Replaced by VectorXY and ArrayXY
-class VectorDouble : public DataSource {
-private:
-	const Vector<double> *xData, *yData;
-
-public:
-	VectorDouble(const Vector<double> &_yData, Vector<double> &_xData) : xData(&_xData), yData(&_yData) {}
-	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
-	virtual inline double x(int64 id) 		{return (*xData)[int(id)];}
-	virtual inline int64 GetCount()	 const	{return min(xData->GetCount(), yData->GetCount());}
-};
-
-class ArrayDouble : public DataSource {
-private:
-	const Upp::Array<double> *xData, *yData;
-
-public:
-	ArrayDouble(const Upp::Array<double> &_yData, Upp::Array<double> &_xData) : xData(&_xData), yData(&_yData) {}
-	virtual inline double y(int64 id) 		{return (*yData)[int(id)];}
-	virtual inline double x(int64 id) 		{return (*xData)[int(id)];}
-	virtual inline int64 GetCount() const	{return min(xData->GetCount(), yData->GetCount());}
-};*/
 
 class VectorPointf : public DataSource {
 private:
@@ -1057,6 +1080,122 @@ typename Range::value_type HammingWindow(Range &data) {
 	return numDataFact;
 }
 
+
+template <class Range1, class Range2>
+void MovingAverage(const Range1 &x, const Range1 &y, typename Range1::value_type width, Range2 &rresy) {
+	using Scalar = typename Range1::value_type;
+	ASSERT(x.size() == y.size());
+	Range2 resy(x.size());
+	
+	if (x.size() == 0)
+		return;
+	
+	Scalar width_2 = width/2.;
+	
+	for (int i = 0; i < x.size(); ++i) {
+		int ifrom, ito;
+		Scalar xi = x[i];
+		for (ifrom = i-1; ifrom >= 0; --ifrom) 
+			if ((xi - x[ifrom]) > width_2)
+				break;
+		ifrom++;
+		for (ito = i+1; ito < x.size(); ++ito) 
+			if ((x[ito] - xi) > width_2) 
+				break;
+		ito--;
+		resy[i] = std::accumulate(&y[ifrom], &y[ito], 0.)/(ito - ifrom + 1);
+	}
+	rresy = pick(resy);
+}
+
+template <class Range>
+void FindPeaks(const Range &y, Vector<int64> &imx, Vector<int64> &imn) {
+	using Scalar = typename Range::value_type;
+	
+	imx.Clear();
+	imn.Clear();
+
+	if (y.size() < 3)
+		return;
+	
+	bool nextIsMax = y[1] > y[0];
+	int64 beginpeak = -1;
+	
+	Scalar thisy = y[1];
+	for (int i = 1; i < y.size()-1; ++i) {
+		Scalar nexty = y[i+1];
+		if (nexty == thisy) {
+			if (beginpeak < 0)
+				beginpeak = i;
+		} else {
+			if (nextIsMax) {
+				if (nexty < thisy) {
+					imx << (beginpeak < 0 ? i : (beginpeak + i)/2);
+					nextIsMax = false;
+				}
+			} else {
+				if (nexty > thisy) {
+					imn << (beginpeak < 0 ? i : (beginpeak + i)/2);
+					nextIsMax = true;
+				}
+			}
+			beginpeak = -1;
+		}
+		thisy = nexty;
+	}
+}
+
+template <class Range>
+void FindPeaks(const Range &x, const Range &y, typename Range::value_type width, Vector<int64> &rimx, Vector<int64> &rimn) {
+	using Scalar = typename Range::value_type;
+	
+	rimx.Clear();
+	rimn.Clear();
+	Vector<int64> imx, imn;
+	
+	FindPeaks(y, imx, imn);
+	
+	Scalar x0 = x[0];
+	int64 idm = -1;
+	for (int i = 0; i < imx.size(); ++i) {
+		int64 id = imx[i];
+		if (x[id] - x0 > width) {
+			if (idm >= 0)  
+				rimx << idm;
+			x0 += width; 
+			idm = -1;
+		} 
+		if (idm < 0 || y[id] > y[idm])
+			idm = id;
+	}
+	x0 = x[0];
+	for (int i = 0; i < imn.size(); ++i) {
+		int64 id = imn[i];
+		if (x[id] - x0 > width) {
+			if (idm >= 0)  
+				rimn << idm;
+			x0 += width; 
+			idm = -1;
+		} 
+		if (idm < 0 || y[id] < y[idm])
+			idm = id;
+	}
+}	
+
+template <class Range>
+Vector<int64> UpperPeaks(const Range &x, const Range &y, typename Range::value_type width) {
+	Vector<int64> imx, imn;
+	FindPeaks(x, y, width, imx, imn);
+	return imx;
+}
+
+template <class Range>
+Vector<int64> LowerPeaks(const Range &x, const Range &y, typename Range::value_type width) {
+	Vector<int64> imx, imn;
+	FindPeaks(x, y, width, imx, imn);
+	return imn;
+}
+
 template <class Range>
 typename Range::value_type CosWindow(Range &data, int numOver) {
 	size_t numData = data.size();
@@ -1139,7 +1278,8 @@ Range1 ApplyIndex(const Range1 &x, Range2 &indices) {
 }
 
 template <class Range1, class Range2>
-void CleanNANDupXSort(const Range1 &x, const Range1 &y, Range2 &rx, Range2 &ry) {
+void CleanNANDupXSort(const Range1 &x, const Range1 &y, Range2 &rrx, Range2 &rry) {
+	Range2 rx, ry;
 	CleanNAN(x, y, rx, ry);
 	
 	int n = int(rx.size());
@@ -1169,10 +1309,14 @@ void CleanNANDupXSort(const Range1 &x, const Range1 &y, Range2 &rx, Range2 &ry) 
 	}
 	ResizeConservative(rx, id);
 	ResizeConservative(ry, id);
+	
+	rrx = pick(rx);
+	rry = pick(ry);
 }
 
 template <class Range1, class Range2>
-void CleanNANDupXSort(const Range1 &x, const Range1 &y, const Range1 &z, Range2 &rx, Range2 &ry, Range2 &rz) {
+void CleanNANDupXSort(const Range1 &x, const Range1 &y, const Range1 &z, Range2 &rrx, Range2 &rry, Range2 &rrz) {
+	Range2 rx, ry, rz;
 	CleanNAN(x, y, z, rx, ry, rz);
 	
 	int n = int(rx.size());
@@ -1206,13 +1350,16 @@ void CleanNANDupXSort(const Range1 &x, const Range1 &y, const Range1 &z, Range2 
 	ResizeConservative(rx, id);
 	ResizeConservative(ry, id);
 	ResizeConservative(rz, id);
+	
+	rrx = pick(rx);
+	rry = pick(ry);
+	rrz = pick(rz);
 }
 	
 void Resample(const Eigen::VectorXd &sx, const Eigen::VectorXd &sy, 
 			  Eigen::VectorXd &rx, Eigen::VectorXd &ry, double srate = Null);
 void Resample(const Eigen::VectorXd &sx, const Eigen::VectorXd &sy, const Eigen::VectorXd &sz, 
 			  Eigen::VectorXd &rx, Eigen::VectorXd &ry, Eigen::VectorXd &rz, double srate = Null);
-
 Vector<Pointf> FFTSimple(Eigen::VectorXd &data, double tSample, bool frequency, int type, 
 						 int window, int numOver);
 void FilterFFT(Eigen::VectorXd &data, double T, double fromT, double toT);

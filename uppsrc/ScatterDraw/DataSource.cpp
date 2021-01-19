@@ -198,63 +198,18 @@ double DataSource::Variance(Getdatafun getdata, double avg) {
 	return ret/(count - 1);
 }
 
-Vector<int64> DataSource::Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, bool (*fun)(double a, double b)) {
-	Vector<int64> ret;
-	double width_2 = width/2.;
-		
-	for (int i = 0; i < GetCount(); ++i) {
-		double y = Membercall(getdataY)(i);
-		double x = Membercall(getdataX)(i);
-		if (IsNull(x) || IsNull(y))
-			continue;
-		int numComparisons = 0;
-		for (int j = i-1; j >= 0; --j) {
-			double ynext = Membercall(getdataY)(j);
-			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext) || IsNull(ynext))
-				continue;
-			if ((x - xnext) > width_2)
-				break;
-			if (!fun(y, ynext)) {
-				numComparisons = Null;
-				break;
-			}
-			numComparisons++;
-		}
-		if (IsNull(numComparisons))
-			continue;
-		for (int j = i+1; j < GetCount(); ++j) {
-			double ynext = Membercall(getdataY)(j);
-			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext) || IsNull(ynext))
-				continue;
-			if ((xnext - x) > width_2)
-				break;
-			if (!fun(y, ynext)) {
-				numComparisons = Null;
-				break;
-			}
-			numComparisons++;
-		}
-		if (IsNull(numComparisons))
-			continue;
-		if (numComparisons > 2) {
-			if (!ret.IsEmpty()) {
-				int64 prev_i = ret[ret.GetCount() - 1];
-				if (Membercall(getdataX)(prev_i) != x)
-					ret << i;
-			} else 
-				ret << i;
-		}
-	}
-	return ret;
+Vector<int64> DataSource::UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {
+	VectorXd x, y;
+	Copy(getdataX, getdataY, x, y);
+	return UpperPeaks(x, y, width);
 }
 
-inline bool GreaterEqualThan(double a, double b) {return a >= b;}
-inline bool LowerEqualThan(double a, double b) {return a <= b;}
+Vector<int64> DataSource::LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {
+	VectorXd x, y;
+	Copy(getdataX, getdataY, x, y);
+	return LowerPeaks(x, y, width);
+}
 
-Vector<int64> DataSource::UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, GreaterEqualThan);}
-Vector<int64> DataSource::LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, LowerEqualThan);}
 
 Vector<Pointf> DataSource::Cumulative(Getdatafun getdataY, Getdatafun getdataX) {
 	Vector<Pointf> ret;
@@ -292,44 +247,12 @@ Vector<Pointf> DataSource::CumulativeAverage(Getdatafun getdataY, Getdatafun get
 
 Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width) {
 	Vector<Pointf> ret;
-	double width_2 = width/2.;
+	Vector<double> x, y;
+	Copy(getdataX, getdataY, x, y);
 	
-	for (int i = 0; i < GetCount(); ++i) {
-		double y = Membercall(getdataY)(i);
-		double x = Membercall(getdataX)(i);
-		if (IsNull(x) || IsNull(y))
-			continue;
-		int numAvg = 1;
-		double sum = y;
-		int j;
-		for (j = i-1; j >= 0; --j) {
-			double ynext = Membercall(getdataY)(j);
-			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext) || IsNull(ynext))
-				continue;
-			if ((x - xnext) > width_2)
-				break;
-			sum += ynext;
-			numAvg++;
-		}
-		if (j < 0)
-			continue;
-		for (j = i+1; j < GetCount(); ++j) {
-			double ynext = Membercall(getdataY)(j);
-			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext))
-				continue;
-			if ((xnext - x) > width_2) 
-				break;
-			if (IsNull(ynext))
-				continue;
-			sum += ynext;
-			numAvg++;
-		}
-		if (j == GetCount())
-			continue;
-		ret << Pointf(x, sum/numAvg);
-	}
+	Upp::MovingAverage(x, y, width, y);
+	for (int i = 0; i < x.size(); ++i) 
+		ret << Pointf(x[i], y[i]);
 	return ret;	
 }
 
@@ -755,9 +678,9 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
         xv[i] = Membercall(getdataX)(i);
     }
 
-	VectorXd resx, resy;    
-    Resample(xv, yv, resx, resy);
-	double from = resx[0];
+	CleanNANDupXSort(xv, yv, xv, yv);   
+    Resample(xv, yv, xv, yv);
+	double from = xv[0];
 	
 	// From https://en.wikipedia.org/wiki/Finite_difference_coefficient
 	double kernels1[4][9] = {{-1/2., 0, 1/2.},
@@ -775,7 +698,7 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
 	
 	double factor;
 	VectorXd kernel;
-	double h = resx[1]-resx[0];
+	double h = xv[1]-xv[0];
 	if (orderDer == 1) {
 		factor = 1/h;
 		kernel = Map<MatrixXd>(kernels1[idkernel], orderAcc+1, 1);
@@ -785,9 +708,9 @@ Vector<Pointf> DataSource::Derivative(Getdatafun getdataY, Getdatafun getdataX, 
 	} else
 		return res;
 	
-	VectorXd resE = Convolution(resy, kernel, factor);
+	VectorXd resE = Convolution(yv, kernel, factor);
 	
-	int nnumData = int(resy.size())-orderAcc;
+	int nnumData = int(yv.size())-orderAcc;
 	res.SetCount(nnumData);
 	int frame = orderAcc/2 + 1;
 	for (int i = 0; i < nnumData; ++i) {
@@ -853,18 +776,18 @@ Vector<Pointf> DataSource::SavitzkyGolay(Getdatafun getdataY, Getdatafun getdata
         xv[i] = Membercall(getdataX)(i);
     }
 
-	VectorXd resx, resy;    
-    Resample(xv, yv, resx, resy);
-	double from = resx[0];
+	CleanNANDupXSort(xv, yv, xv, yv);
+    Resample(xv, yv, xv, yv);
+	double from = xv[0];
     
     VectorXd coeff = SavitzkyGolay_Coeff(size/2, size/2, deg, der);
 	if (!SavitzkyGolay_Check(coeff))
 		return res;
 	
-	double h = resx[1]-resx[0];
-	VectorXd resE = Convolution(resy, coeff, 1/pow(h, der));
+	double h = xv[1]-xv[0];
+	VectorXd resE = Convolution(yv, coeff, 1/pow(h, der));
 
-	int nnumData = int(resy.size())-size;
+	int nnumData = int(yv.size())-size;
 	res.SetCount(nnumData);
 	int frame = size/2;
 	for (int i = 0; i < nnumData; ++i) {
@@ -880,10 +803,9 @@ double LinearInterpolate(double x, const VectorXd &vecx, const VectorXd &vecy) {
 	return LinearInterpolate(x, vecx.data(), vecy.data(), vecx.size());
 }
 
-void Resample(const VectorXd &sx, const VectorXd &sy, VectorXd &rx, VectorXd &ry, double srate) {
-	VectorXd x, y;
-	CleanNANDupXSort(sx, sy, x, y);
-	
+void Resample(const VectorXd &x, const VectorXd &y, VectorXd &rrx, VectorXd &rry, double srate) {
+	VectorXd rx, ry;
+		
 	double delta = x[x.size()-1] - x[0];
 	if (IsNull(srate)) 
 		srate = delta/(x.size()-1);
@@ -894,13 +816,14 @@ void Resample(const VectorXd &sx, const VectorXd &sy, VectorXd &rx, VectorXd &ry
 		rx[i] = x[0] + i*srate;
 		ry[i] = LinearInterpolate(rx[i], x, y);
 	}
+	rrx = pick(rx);
+	rry = pick(ry);
 }
 
-void Resample(const VectorXd &sx, const VectorXd &sy, const VectorXd &sz, 
-			  VectorXd &rx, VectorXd &ry, VectorXd &rz, double srate) {
-	VectorXd x, y, z;
-	CleanNANDupXSort(sx, sy, sz, x, y, z);
-	
+void Resample(const VectorXd &x, const VectorXd &y, const VectorXd &z, 
+			  VectorXd &rrx, VectorXd &rry, VectorXd &rrz, double srate) {
+	VectorXd rx, ry, rz;
+		
 	double delta = x[x.size()-1] - x[0];
 	if (IsNull(srate)) 
 		srate = delta/(x.size()-1);
@@ -913,6 +836,9 @@ void Resample(const VectorXd &sx, const VectorXd &sy, const VectorXd &sz,
 		ry[i] = LinearInterpolate(rx[i], x, y);
 		rz[i] = LinearInterpolate(rx[i], x, z);
 	}
+	rrx = pick(rx);
+	rry = pick(ry);
+	rrz = pick(rz);
 }
 		
 void FilterFFT(VectorXd &data, double T, double fromT, double toT) {
@@ -947,17 +873,17 @@ Vector<Pointf> DataSource::FilterFFT(Getdatafun getdataY, Getdatafun getdataX, d
         xv[i] = Membercall(getdataX)(i);
     }
     
-	VectorXd resx, resy;    
-    Resample(xv, yv, resx, resy);
-	double from = resx[0];
-	double T = resx[1]-resx[0];
+	CleanNANDupXSort(xv, yv, xv, yv);  
+    Resample(xv, yv, xv, yv);
+	double from = xv[0];
+	double T = xv[1]-xv[0];
     
-	Upp::FilterFFT(resy, T, fromT, toT);
-	int nnumData = int(resy.size());
+	Upp::FilterFFT(yv, T, fromT, toT);
+	int nnumData = int(yv.size());
 	res.SetCount(nnumData);
 	for (int i = 0; i < nnumData; ++i) {
 		res[i].x = from + i*T;
-		res[i].y = resy[i];
+		res[i].y = yv[i];
 	}
 	return res;
 }
