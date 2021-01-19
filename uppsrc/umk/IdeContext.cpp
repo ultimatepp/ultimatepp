@@ -190,3 +190,36 @@ String Ide::IdeGetNestFolder()
 	return Null;
 }
 
+#if defined(__APPLE__) && defined(flagLINUX) // we are on macos building using make
+
+#include <Draw/Draw.h>
+
+namespace Upp {
+
+CommonFontInfo GetFontInfoSys(Font font)
+{
+	CommonFontInfo fi;
+	return fi;
+}
+
+GlyphInfo  GetGlyphInfoSys(Font font, int chr)
+{
+	return GlyphInfo();
+}
+
+Vector<FaceInfo> GetAllFacesSys()
+{
+	Vector<FaceInfo> r;
+	return r;
+}
+
+String GetFontDataSys(Font font)
+{
+	return String();
+}
+
+void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int chr, Font font) {}
+
+};
+
+#endif
