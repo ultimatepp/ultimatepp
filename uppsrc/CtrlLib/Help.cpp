@@ -20,10 +20,10 @@ bool HelpWindow::GoTo0(const String& link)
 	Topic t = AcquireTopic(link);
 	SetBar();
 	if(!IsNull(t.text)) {
-		if(~tree != topic)
-			tree.FindSetCursor(topic);
 		label = t.label;
 		topic = t.link;
+		if(~tree != topic)
+			tree.FindSetCursor(topic);
 		Title(FromUtf8(t.title));
 		RichText txt = ParseQTF(t.text);
 		FinishText(txt);
