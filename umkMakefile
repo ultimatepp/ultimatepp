@@ -308,6 +308,16 @@ $(OutDir_umk)IdeContext.o: $(UPPDIR1)umk/IdeContext.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SSE2.h \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
