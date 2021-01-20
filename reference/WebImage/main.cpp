@@ -11,7 +11,7 @@ struct MyApp : TopWindow {
 	}
 	
 	MyApp() {
-		img = StreamRaster::LoadStringAny(HttpRequest("http://www.ultimatepp.org/1i.png").Execute());
+		img = StreamRaster::LoadStringAny(HttpRequest("https://www.ultimatepp.org/forums/theme/default/images/1i.png").Execute());
 	}
 };
 

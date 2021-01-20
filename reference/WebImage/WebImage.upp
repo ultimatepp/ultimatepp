@@ -1,7 +1,8 @@
 description "Using HttpRequest to obtain image from web, and displaying it\377";
 
 uses
-	CtrlLib;
+	CtrlLib,
+	Core/SSL;
 
 file
 	main.cpp;
