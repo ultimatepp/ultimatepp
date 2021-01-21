@@ -334,8 +334,8 @@ void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 			K key;
 			V value;
 			LoadFromJsonValue(key, va[i][keyid]);
-			LoadFromJsonValue(value, va[i][valueid]);	
-			map.Add(key, value);
+			LoadFromJsonValue(value, va[i][valueid]);
+			map.Add(key, pick(value));
 		}
 	}
 	else {
@@ -362,8 +362,8 @@ void JsonizeSortedMap(JsonIO& io, T& map, const char *keyid, const char *valueid
 			K key;
 			V value;
 			LoadFromJsonValue(key, va[i][keyid]);
-			LoadFromJsonValue(value, va[i][valueid]);	
-			map.Add(key, value);
+			LoadFromJsonValue(value, va[i][valueid]);
+			map.Add(key, pick(value));
 		}
 	}
 	else {
@@ -390,8 +390,8 @@ void JsonizeStringMap(JsonIO& io, T& map)
 			V value;
 			String key = va.GetKey(i);
 			LoadFromJsonValue(key, va.GetKey(i));
-			LoadFromJsonValue(value, va.GetValue(i));	
-			map.Add(key, value);
+			LoadFromJsonValue(value, va.GetValue(i));
+			map.Add(key, pick(value));
 		}
 	}
 	else {
@@ -430,7 +430,7 @@ void JsonizeIndex(JsonIO& io, T& index)
 		for(int i = 0; i < va.GetCount(); i++) {
 			V v;
 			LoadFromJsonValue(v, va[i]);
-			index.Add(v);
+			index.Add(pick(v));
 		}
 	}
 	else {
