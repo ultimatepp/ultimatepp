@@ -86,8 +86,36 @@ void SqlSession::InstallErrorHandler(bool (*handler)(String error, String stmt, 
 
 void Detach_SQL();
 
+StaticMutex          sDefs;
+static SqlSession   *sGlobalSession;
+static SqlSession   *sGlobalSessionR;
+
+
+static bool sPerThread;
+
+thread_local SqlSession *sThreadSession;
+thread_local SqlSession *sThreadSessionR;
+
 void SqlSession::SessionClose()
 {
+#ifndef flagNOAPPSQL
+	if(SQL.IsOpen() && &SQL.GetSession() == this) {
+		SQL.Cancel();
+		SQL.Detach();
+		if(sPerThread)
+			sThreadSession = NULL;
+		else
+			sGlobalSession = NULL;
+	}
+	if(SQLR.IsOpen() && &SQLR.GetSession() == this) {
+		SQLR.Cancel();
+		SQLR.Detach();
+		if(sPerThread)
+			sThreadSessionR = NULL;
+		else
+			sGlobalSessionR = NULL;
+	}
+#endif
 	if(sql) {
 		sql->Cancel();
 		sql.Clear();
@@ -96,13 +124,6 @@ void SqlSession::SessionClose()
 		sqlr->Cancel();
 		sqlr.Clear();
 	}
-#ifndef flagNOAPPSQL
-	if(SQL.IsOpen() && &SQL.GetSession() == this) {
-		SQL.Cancel();
-		SQL.Detach();
-		Detach_SQL();
-	}
-#endif
 }
 
 Sql& SqlSession::GetSessionSql()
@@ -128,17 +149,6 @@ void   SqlSession::ClearError()
 	errorclass = Sql::ERROR_UNSPECIFIED;
 }
 
-StaticMutex          sDefs;
-static SqlSession   *sGlobalSession;
-static SqlSession   *sGlobalSessionR;
-
-
-#ifdef _MULTITHREADED
-static bool sPerThread;
-
-thread__ SqlSession *sThreadSession;
-thread__ SqlSession *sThreadSessionR;
-
 void Sql::PerThread(bool b)
 {
 	sPerThread = b;
@@ -148,7 +158,6 @@ void SqlSession::PerThread(bool b)
 {
 	sPerThread = b;
 }
-#endif
 
 #ifndef NOAPPSQL
 
@@ -182,13 +191,11 @@ void Sql::operator=(SqlSession& s)
 
 Sql& AppCursor()
 {
-#ifdef _MULTITHREADED
 	if(sPerThread) {
 		if(sThreadSession)
 			return sThreadSession->GetSessionSql();
 	}
 	else
-#endif
 		if(sGlobalSession)
 			return sGlobalSession->GetSessionSql();
 	static Sql *empty;
@@ -201,22 +208,18 @@ Sql& AppCursor()
 
 Sql& AppCursorR()
 {
-#ifdef _MULTITHREADED
 	if(sPerThread) {
 		if(sThreadSessionR)
 			return sThreadSessionR->GetSessionSqlR();
 	}
 	else
-#endif
 	if(sGlobalSessionR)
 		return sGlobalSessionR->GetSessionSqlR();
-#ifdef _MULTITHREADED
 	if(sPerThread) {
 		if(sThreadSession)
 			return sThreadSession->GetSessionSqlR();
 	}
 	else
-#endif
 	if(sGlobalSession)
 		return sGlobalSession->GetSessionSqlR();
 	static Sql *empty;
