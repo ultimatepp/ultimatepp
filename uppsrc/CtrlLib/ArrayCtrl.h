@@ -256,10 +256,10 @@ private:
 
 	unsigned  bains:2;
 	
-	Image cursor_override;
-
 	bool  isdrag:1;
 	bool  selclick:1;
+
+	Image cursor_override;
 
 	int    Pos(int np) const;
 
