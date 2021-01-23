@@ -74,7 +74,9 @@ templates]&]
 [s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file description]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
-[s0;l160; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
+[s0;l160; [^topic`:`/`/ide`/app`/UppHub`_en`-us^ UppHub `- additional 
+packages from the Internet]&]
+[s0;l160; [^topic`:`/`/ide`/app`/CrossComp`_en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
