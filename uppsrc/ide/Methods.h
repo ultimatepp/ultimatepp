@@ -52,19 +52,10 @@ public:
 };
 
 class AndroidBuilderSetup : public WithBuildMethodsAndroidBuilderSetupLayout<BuilderSetupInterface> {
-	typedef AndroidBuilderSetup CLASSNAME;
-	
 public:
-	FrameRight<Button> sdkBrowse;
-	FrameRight<Button> sdkDownload;
-	FrameRight<Button> ndkBrowse;
-	FrameRight<Button> ndkDownload;
-	FrameRight<Button> jdkBrowse;
-	FrameRight<Button> jdkDownload;
-	
-public: /* BuilderSetupInterface */
 	AndroidBuilderSetup();
 	
+public: /* BuilderSetupInterface */
 	void New(const String& builder) override;
 	void OnLoad() override;
 	void OnCtrlLoad(const String& ctrlKey, const String& value) override;
