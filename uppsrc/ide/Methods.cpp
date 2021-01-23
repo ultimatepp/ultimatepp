@@ -84,38 +84,18 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 	CtrlLayout(*this);
 	
 	sdk_path << [=] { OnSdkPathChange(); };
-	
-	sdkDownload.SetImage(IdeImg::DownloadBlack());
-	sdkDownload.Tip("Download");
-	sdkDownload << [=] { LaunchWebBrowser(AndroidSDK::GetDownloadUrl()); };
-	sdk_path.AddFrame(sdkDownload);
-	
-	sdkBrowse.SetImage(CtrlImg::right_arrow());
-	sdkBrowse.Tip("Select directory");
-	sdkBrowse << [=]{ OnSdkPathInsert(); };
-	sdk_path.AddFrame(sdkBrowse);
+	sdk_path_download << [=] { LaunchWebBrowser(AndroidSDK::GetDownloadUrl()); };
+	sdk_path_download.SetImage(IdeImg::arrow_down());
+	DirSelect(sdk_path, sdk_path_select);
 	
 	ndk_path << [=] { OnNdkPathChange(); };
+	ndk_path_download << [=] { LaunchWebBrowser(AndroidNDK::GetDownloadUrl()); };
+	ndk_path_download.SetImage(IdeImg::arrow_down());
+	DirSelect(ndk_path, ndk_path_select);
 	
-	ndkDownload.SetImage(IdeImg::DownloadBlack());
-	ndkDownload.Tip("Download");
-	ndkDownload << [=] { LaunchWebBrowser(AndroidNDK::GetDownloadUrl()); };
-	ndk_path.AddFrame(ndkDownload);
-	
-	ndkBrowse.SetImage(CtrlImg::right_arrow());
-	ndkBrowse.Tip("Select directory");
-	ndkBrowse << [=] { OnNdkPathInsert(); };
-	ndk_path.AddFrame(ndkBrowse);
-	
-	jdkDownload.SetImage(IdeImg::DownloadBlack());
-	jdkDownload.Tip("Download");
-	jdkDownload << [=] { LaunchWebBrowser(Jdk::GetDownloadUrl()); };
-	jdk_path.AddFrame(jdkDownload);
-	
-	jdkBrowse.SetImage(CtrlImg::right_arrow());
-	jdkBrowse.Tip("Select directory");
-	jdkBrowse << [=] { InsertPath(&jdk_path); };
-	jdk_path.AddFrame(jdkBrowse);
+	jdk_path_download << [=] { LaunchWebBrowser(Jdk::GetDownloadUrl()); };
+	jdk_path_download.SetImage(IdeImg::arrow_down());
+	DirSelect(jdk_path, jdk_path_select);
 }
 
 void AndroidBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)

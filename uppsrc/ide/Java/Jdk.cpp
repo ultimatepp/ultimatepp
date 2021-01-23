@@ -6,7 +6,7 @@ namespace Upp {
 
 String Jdk::GetDownloadUrl()
 {
-	return "http://www.oracle.com/technetwork/java/javase/downloads/index.html";
+	return "https://www.azul.com/downloads/zulu-community/?package=jdk";
 }
 
 Jdk::Jdk(const String& path, Host* host)
