@@ -534,6 +534,8 @@ public:
 	DateTimeCtrl& SwapMonthYear(bool b = true)                     { cc.calendar.SwapMonthYear(b); return *this; }
 	DateTimeCtrl& OneButton(bool b = true)                         { cc.calendar.OneButton(true); return *this; }
 	DateTimeCtrl& NoOneButton()                                    { cc.calendar.OneButton(false); return *this; }
+	DateTimeCtrl& DayEnd(bool b = true)                            { ConvertTime::DayEnd(b); return *this; }
+	DateTimeCtrl& TimeAlways(bool b = true)                        { ConvertTime::TimeAlways(b); return *this; }
 
 	Event<>  WhenSelect;
 };
