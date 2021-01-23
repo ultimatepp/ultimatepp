@@ -1,0 +1,9 @@
+LAYOUT(TestLayout, 600, 600)
+	ITEM(Upp::Calendar, dv___0, SwapMonthYear(true).OneButton(true).LeftPosZ(8, 236).TopPosZ(8, 156))
+	ITEM(Upp::Clock, dv___1, LeftPosZ(256, 150).TopPosZ(8, 156))
+	ITEM(Upp::DropDate, dv___2, SwapMonthYear(true).OneButton(true).NotNull(true).LeftPosZ(8, 104).TopPosZ(176, 19))
+	ITEM(Upp::DropTime, dv___3, SwapMonthYear(true).DayEnd(true).TimeAlways(true).NotNull(true).LeftPosZ(256, 120).TopPosZ(176, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 192).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
