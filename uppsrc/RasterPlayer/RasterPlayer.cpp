@@ -79,12 +79,11 @@ bool RasterPlayer::LoadBuffer(const String &buffer) {
 		raster->SeekPage(i);
 		r = raster->GetPageRect(i);
 		switch (raster->GetPageDisposal(i)) {
-		case 1:
-		case 2:	iw.DrawRect(r, SColorFace());
+		case 0:	
+		case 1:	break;
+		case 2: iw.DrawRect(sz, SColorFace());	  
 				break;
-		//case 2: iw.DrawRect(sz, White());	  // It seems gif files do not comply with standard
-		//		break;
-		case 4:	if (i > 0) 
+		case 3:	if (i > 0) 
 					previous = GetRect_(images[i-1], r);
 				iw.DrawRect(sz, SColorFace()); 
 				break;
