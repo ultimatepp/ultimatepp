@@ -387,6 +387,36 @@ void Ide::ContextGoto0(int pos)
 			}
 		}
 	}
+
+	if(id.StartsWith("AK_")) {
+		String ak_id = id.Mid(3);
+		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String pn = wspc[i];
+			const Package& p = wspc.GetPackage(i);
+			String pp = PackageDirectory(pn);
+			for(int j = 0; j < p.GetCount(); j++)
+				if(!p[j].separator) {
+					String fn = AppendFileName(pp, p[j]);
+					if(GetFileExt(fn) == ".key") {
+						FileIn in(fn);
+						int line = 0;
+						while(!in.IsEof()) {
+							String s = in.GetLine();
+							try {
+								CParser p(s);
+								if(p.Id("KEY") && p.Char('(') && p.Id(ak_id)) {
+									GotoPos(fn, line + 1);
+									return;
+								}
+							}
+							catch(CParser::Error) {}
+							line++;
+						}
+					}
+				}
+		}
+	}
 }
 
 void Ide::ContextGoto()
