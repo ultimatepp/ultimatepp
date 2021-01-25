@@ -81,6 +81,45 @@ typename Range::value_type GetSampleRate(const Range &x, int numDecimals) {
 	return delta[idmx];
 }
 
+template <class Range>
+void LinSpaced(Range &v, int n, typename Range::value_type min, typename Range::value_type max) {
+	ASSERT(n > 0);
+	Resize(v, n);
+	if (n == 1)
+		v[0] = min;
+	else {
+		typename Range::value_type d = (max - min)/(n - 1);
+		for (int i = 0; i < n; ++i)
+			v[i] = min + d*i;
+	}
+}
+
+
+template <class Range>
+void CircShift(const Range& in, int len, Range &out) {
+	std::rotate_copy(in, in + len, End(in), out);
+}
+
+template <typename T>
+void CircShift(const Eigen::Matrix<T, Eigen::Dynamic, 1> &in, int len, Eigen::Matrix<T, Eigen::Dynamic, 1> &out) {
+	Resize(out, in.size());
+	out.segment(len, in.size() - len) = in.segment(0, in.size() - len); 
+	out.segment(0, len) = in.segment(in.size() - len, len);
+}
+
+template <class Range>
+void NextPow2(const Range& in, Range &out) {
+	Resize(out, in.size());
+	for (int i = 0; i < in.size(); ++i)
+		out[i] = ceil(log(abs(in[i])))/log(2);
+}
+
+template <typename T>
+T NextPow2(const T& in) {
+	ASSERT(in > 0);
+	return T(ceil(log(in))/log(2));
+}
+
 }
 
 #endif

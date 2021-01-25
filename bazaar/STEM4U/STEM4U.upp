@@ -17,6 +17,7 @@ file
 	Sundials.h,
 	LocalFitting.h,
 	Butterworth.h,
+	CrossCorrelation.h,
 	Integral.h,
 	Financial.cpp,
 	Financial.h,
@@ -28,8 +29,8 @@ file
 	Mooring.cpp,
 	Mooring.h,
 	Utility.cpp,
-	srcimp.tpp,
 	Utility.h,
+	srcimp.tpp,
 	src.tpp,
 	srcdoc.tpp,
 	Copying;
