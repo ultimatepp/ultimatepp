@@ -926,5 +926,6 @@ LAYOUT(UppHubLayout, 992, 656)
 	ITEM(Upp::Button, reinstall, SetLabel(t_("Reinstall")).RightPosZ(140, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, readme, SetLabel(t_("README..")).RightPosZ(208, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Exit")).RightPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, help, SetLabel(t_("?")).Tip(t_("Learn more about UppHub..")).RightPosZ(276, 20).BottomPosZ(4, 24))
 END_LAYOUT
 
