@@ -87,6 +87,8 @@ UppHubDlg::UppHubDlg()
 		SaveFile(ConfigFile("upphub_root"), s);
 		Load();
 	};
+	
+	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
 }
 
 void UppHubDlg::Readme()
