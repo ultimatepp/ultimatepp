@@ -530,10 +530,15 @@ public:
 	}
 	virtual inline double y(int64 id)  {
 		if (!IsNull(idy) && idy >= 0) {
-			if (useRows) 
+			if (useRows) {
+				if ((*data)[beginData + int(id)].GetCount() <= idy)
+					return Null;
 				return (*data)[beginData + int(id)][idy];
-			else
+			} else {
+				if ((*data)[idy].GetCount() <= beginData + int(id))
+					return Null;
 				return (*data)[idy][beginData + int(id)];
+			}
 		} else {
 			if (GetznyCount(id) == 0)
 				return Null;

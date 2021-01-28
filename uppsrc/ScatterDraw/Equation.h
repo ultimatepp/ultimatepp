@@ -651,6 +651,7 @@ public:
 	}
 	doubleUnit &GetVariable(int id)							{return variables[id];}
 	void GetVariable(int id, String &name, doubleUnit &val)	{name = variables.GetKey(id); val = variables[id];}
+	const String &GetVariableName(int id) const				{return variables.GetKey(id);}
 	int GetVariablesCount() 								{return variables.GetCount();}
 	void ClearVariables();
 	String &GetLastError()									{return lastError;}
@@ -663,12 +664,14 @@ public:
 	static void EvalThrowError(CParserPP &p, const char *s);
 	
 	virtual int FindVariable(String strId) 					{return variables.Find(strId);}
-	Vector<int> FindVariableList(String pattern) {
+	Vector<int> FindVariableList(String patternyes, String patternno = "") {
 		Vector<int> ret;
-		if (noCase)
-			pattern = ToLower(pattern);
+		if (noCase) {
+			patternyes = ToLower(patternyes);
+			patternno = ToLower(patternno);
+		}
 		for (int i = 0; i < variables.GetCount(); ++i) {
-			if (PatternMatch(pattern, variables.GetKey(i)))
+			if (PatternMatch(patternyes, variables.GetKey(i)) && !PatternMatch(patternno, variables.GetKey(i)))
 				ret << i;
 		}
 		return ret;
@@ -698,8 +701,8 @@ protected:
 	bool allowString;
 	int lastVariableSetId = -1;
 		
-	bool IsFunction(String str)								{return functions.Get(str, 0);}
-	bool IsConstant(String str)								{return !IsNull(GetConstant(str));}
+	bool IsFunction(String str)			{return functions.Get(str, 0);}
+	bool IsConstant(String str)			{return !IsNull(GetConstant(str));}
 	
 private:
 	void *Functions_Get(CParserPP& p);

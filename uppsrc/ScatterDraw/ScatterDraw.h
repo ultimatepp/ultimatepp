@@ -1607,6 +1607,7 @@ void ScatterDraw::Plot(T& w) {
 			if (data.IsExplicit() && IsNull(data.GetCount()))
 				continue;
 			Vector<Pointf> points;
+			bool pointsisempty = true;
 			if (data.IsParam()) {
 				double xmin = 0;
 				double xmax = double(data.GetCount());
@@ -1623,6 +1624,7 @@ void ScatterDraw::Plot(T& w) {
 						else
 							iy = fround(plotH*(yy - yMin2)/yRange2);
 						points << Point(ix, plotH - iy);
+						pointsisempty = false;
 					}
 				}
 			} else if (data.IsExplicit()) {
@@ -1641,6 +1643,7 @@ void ScatterDraw::Plot(T& w) {
 						else
 							iy = fround(plotH*(yy - yMin2)/yRange2);
 						points << Point(ix, plotH - iy);
+						pointsisempty = false;
 					}
 				}
 			} else {
@@ -1704,6 +1707,7 @@ void ScatterDraw::Plot(T& w) {
 							iMin = fround(plotH*(minY - yMin2)/yRange2);
 						}
 						points << Point(ix, plotH - iMax);
+						pointsisempty = false;
 						if (iMax != iMin)
 							points << Point(ix, plotH - iMin);	
 					} 
@@ -1722,11 +1726,12 @@ void ScatterDraw::Plot(T& w) {
 							else
 								iy = fround(plotH*(yy - yMin2)/yRange2);
 							points << Point(ix, plotH - iy);
+							pointsisempty = false;
 						}
 					}
 				}
 			}
-			if (!points.IsEmpty() && serie.seriesPlot && serie.thickness > 0) 
+			if (!pointsisempty && !points.IsEmpty() && serie.seriesPlot && serie.thickness > 0) 
 				serie.seriesPlot->Paint(w, points, plotScaleAvg, serie.opacity, 
 											serie.thickness, serie.color, 
 											serie.dash, plotAreaColor, serie.fillColor, plotW/xRange, plotH/yRange, 
@@ -1735,10 +1740,12 @@ void ScatterDraw::Plot(T& w) {
 		
 			if (serie.markWidth >= 1 && serie.markPlot) {
 				if (!serie.markPlot->IsMultiPlot()) {
-					for (int i = 0; i < points.GetCount(); i++) 
-						serie.markPlot->Paint(w, plotScaleAvg, points[i], 
-							serie.markWidth, serie.markColor, 
-							serie.markBorderWidth, serie.markBorderColor);              
+					for (int i = 0; i < points.GetCount(); i++) { 
+						if (!IsNull(points[i])) 
+							serie.markPlot->Paint(w, plotScaleAvg, points[i], 
+								serie.markWidth, serie.markColor, 
+								serie.markBorderWidth, serie.markBorderColor);              
+					}
 				} else {
 					for (int64 i = 0; i < data.GetCount(); ++i) {
 						int ix = fround(plotW*(data.x(i) - xMin)/xRange);
@@ -1772,19 +1779,21 @@ void ScatterDraw::Plot(T& w) {
 				Font fnt = serie.labelsFont;
 				fnt.Height(int((fnt.GetHeight() + fnt.GetDescent())*min(plotScaleX, plotScaleY)));
 				for (int i = 0; i < points.GetCount() && i < serie.labels->GetCount(); i++) {
-					String txt = (*(serie.labels))[i];
-					Size sz = GetTextSizeSpace(txt, fnt);
-					int ddy = static_cast<int>(-sz.cy/2.);
-					int ddx = 0;
-					switch (serie.labelsAlign) {
-					case ALIGN_LEFT:	ddx = 0;		break;
-					case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
-					case ALIGN_RIGHT:	ddx = -sz.cx;	break;
-					default: 			NEVER();
+					if (!IsNull(points[i])) {
+						String txt = (*(serie.labels))[i];
+						Size sz = GetTextSizeSpace(txt, fnt);
+						int ddy = static_cast<int>(-sz.cy/2.);
+						int ddx = 0;
+						switch (serie.labelsAlign) {
+						case ALIGN_LEFT:	ddx = 0;		break;
+						case ALIGN_CENTER:	ddx = -sz.cx/2;	break;
+						case ALIGN_RIGHT:	ddx = -sz.cx;	break;
+						default: 			NEVER();
+						}
+						double x = points[i].x + dx + ddx;
+						double y = points[i].y + dy + ddy;
+						DrawText(w, x, y, 0, txt, fnt, serie.labelsColor);
 					}
-					double x = points[i].x + dx + ddx;
-					double y = points[i].y + dy + ddy;
-					DrawText(w, x, y, 0, txt, fnt, serie.labelsColor);
 				}
 			}
 		}
