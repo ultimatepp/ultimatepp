@@ -157,7 +157,7 @@ void SHA1Transform(uint32_t state[5], const unsigned char buffer[64])
     state[4] += e;
     /* Wipe variables */
     a = b = c = d = e = 0;
-    memset(block, '\0', sizeof(block));
+    memset8(block, '\0', sizeof(block));
 }
 
 /* SHA1Init - Initialize new context */

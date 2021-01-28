@@ -2,44 +2,6 @@
 
 #define LLOG(x) // DLOG(x)
 
-void Ide::ResolveUvsConflict() {
-	String result;
-	editor.NextUndo();
-	bool copy = true;
-	for(int i = 0; i < editor.GetLineCount(); i++) {
-		String ln = editor.GetUtf8Line(i);
-		if(strncmp(ln, "$uvs: ", 6) == 0) {
-			ln = ln.Mid(6);
-			if(ln == "YOUR DELETE")
-				copy = false;
-			else
-			if(ln == "END YOUR DELETE")
-				copy = true;
-			else
-			if(ln == "REPOSITORY DELETE")
-				copy = false;
-			else
-			if(ln == "END REPOSITORY DELETE")
-				copy = true;
-			else
-			if(ln != "REPOSITORY INSERT" &&
-			   ln != "YOUR INSERT" &&
-			   ln != "END YOUR INSERT" &&
-			   ln != "END REPOSITORY INSERT" &&
-			   ln != "PENDING CONFLICT") {
-				Exclamation("Cannot resolve uvs conflict -&conflicting modifications found");
-				editor.SetCursor(editor.GetPos64(i));
-				return;
-			}
-		}
-		else
-		if(copy)
-			result << ln << "\r\n";
-	}
-	editor.SelectAll();
-	editor.Paste(result.ToWString());
-}
-
 void Ide::GotoPos(String path, int line)
 {
 	LLOG("GotoPos " << path << ':' << line);
@@ -81,7 +43,7 @@ void Ide::GotoPosition()
 	String cs = ReadClipboardText();
 	String f;
 	int line = 0;
-	for(char c : ":( ") {
+	for(char c : ":( \t") {
 		String l;
 		if(SplitTo(cs, c, f, l)) {
 			f = TrimBoth(f);

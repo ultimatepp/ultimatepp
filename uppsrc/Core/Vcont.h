@@ -309,7 +309,7 @@ public:
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
 	T&       AddPick(T&& x)             { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAdd(pick(x)); }
 	int      GetIndex(const T& item) const;
-	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
+	T&       InsertPick(int i, T&& x)   { return Insert(i, pick(x)); }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
 	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
 	typedef T       *Iterator;
