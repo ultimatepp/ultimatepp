@@ -419,6 +419,11 @@ doubleUnit EvalExpr::AssignVariable(String var, String expr) {
 			return Null;
 		}
 	} catch(CParserPP::Error e) {
+		if (allowString) {
+			ret.sval = expr;
+			SetVariable(idalloc, ret);
+			return ret;	
+		}
 		lastError = e;
 		return Null;
 	} catch(Exc e) {
@@ -427,7 +432,7 @@ doubleUnit EvalExpr::AssignVariable(String var, String expr) {
 	} catch(...) {
 		lastError = "Unknown error";
 		return Null;
-	}
+	} 
 }
 
 void EvalExpr::RenameVariable(String varname, String newvarname) {
