@@ -133,15 +133,12 @@ Value UppHubDlg::LoadJson(const String& url)
 	if(begin >= 0 && end >= 0)
 		s = s.Mid(begin, end - begin);
 	
-	DDUMP(s);
 
 	Value v = ParseJSON(s);
 	if(v.IsError()) {
 		s.Replace("&quot;", "\"");
 		s.Replace("&amp;", "&");
-		DDUMP(s);
 		v = ParseJSON(s);
-		DDUMP(v);
 	}
 	return v;
 }
@@ -154,7 +151,6 @@ void UppHubDlg::Load(int tier, const String& url)
 	
 	Value v = LoadJson(url);
 	
-	DDUMP(v);
 
 	try {
 		String list_name = v["name"];
