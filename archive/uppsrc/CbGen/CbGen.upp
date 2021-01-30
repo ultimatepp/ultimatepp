@@ -1,0 +1,13 @@
+description "Utility to generate (long and repetitive) callback C++ source files\377";
+
+uses
+	Core;
+
+file
+	CppGen.cpp,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"Normal" = "";
+

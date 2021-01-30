@@ -1,0 +1,14 @@
+description "Utility to analyze .map files\377";
+
+uses
+	CtrlLib;
+
+file
+	imagehlp.dli,
+	Analyze.cpp,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "GUI";
+
