@@ -1,0 +1,11 @@
+description "Utility that builds all U++ examples\377";
+
+uses
+	Core;
+
+file
+	BuildAll.cpp;
+
+mainconfig
+	"" = "";
+

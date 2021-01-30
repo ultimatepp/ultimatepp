@@ -1,13 +1,5 @@
 {
-  "nests": [
-    { "name": "URR",
-      "packages": [ "Urr" ],
-      "description": "Simple UDP Request-Response protocol",
-      "repository": "https://github.com/mirek-fidler/urr.git"
-    }
-  ],
   "links": [
-    "https://www.ultimatepp.org/forums/index.php?t=msg&th=11264&start=0&"
+    "https://raw.githubusercontent.com/mirek-fidler/UppHub/master/README.md"
   ]
 }
-
