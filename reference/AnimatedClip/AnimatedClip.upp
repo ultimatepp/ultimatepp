@@ -7,8 +7,8 @@ uses
 	RasterPlayer;
 
 file
-	AnimatedClip.h,
 	main.cpp,
+	AnimatedClip.h,
 	AnimatedClip.lay,
 	AnimatedClip.brc,
 	arkearth_e0.gif,
