@@ -1511,7 +1511,7 @@ void ScatterDraw::Plot(T& w) {
 							double x = xMin + (ix + 0.5)/factorX;
 							double y = yMin + (iy + 0.5)/factorY;
 							double z = surf->z(x, y);
-							if (!IsNull(z))
+							if (IsNum(z))
 								out_image[plotH - iy - 1][ix] = GetRainbowColor((z - surfMinZ)/deltaz, 
 										surfRainbow, continuousColor ? 0 : surfNumColor);	
 						}
@@ -1614,7 +1614,7 @@ void ScatterDraw::Plot(T& w) {
 				for (double x = xmin; x <= xmax; x++) {
 					double xx = data.x(x);
 					double yy = data.y(x);
-					if (IsNull(xx) || IsNull(yy))
+					if (!IsNum(xx) || !IsNum(yy))
 						points << Null;
 					else {
 						int ix = fround(plotW*(xx - xMin)/xRange);
@@ -1633,7 +1633,7 @@ void ScatterDraw::Plot(T& w) {
 				double dx = (xmax - xmin)/plotW;
 				for (double xx = xmin; xx < xmax; xx += dx) {
 					double yy = data.f(xx);
-					if (IsNull(yy))
+					if (!IsNum(yy))
 						points << Null;
 					else {
 						int ix = fround(plotW*(xx - xMin)/xRange);
@@ -1652,7 +1652,7 @@ void ScatterDraw::Plot(T& w) {
 					imin = imax = Null;
 					for (int64 i = 0; i < data.GetCount(); ++i) {
 						double xx = data.x(i);
-						if (!IsNull(xx)) {
+						if (IsNum(xx)) {
 							if (IsNull(imin)) {
 								if (xx >= xMin) 
 									imin = i;
@@ -1676,22 +1676,18 @@ void ScatterDraw::Plot(T& w) {
 					int npix = 1;
 					for (int64 i = imin; i <= imax; ) {						
 						double yy = data.y(i);
-						if (IsNull(yy)) {
-							++i;
-							continue;
-						}
 						int64 ii;
 						double maxv = data.x(imin) + dxpix*npix; 
 						double maxY = yy, minY = yy;
 						for (ii = 1; i + ii < imax && data.x(i + ii) < maxv; ++ii) {
 							double dd = data.y(i + ii);
-							if (IsNull(dd))
+							if (!IsNum(dd))
 								continue;
 							maxY = max(maxY, dd);
 							minY = min(minY, dd);
 						}
 						double xx = data.x(i);
-						if (IsNull(xx)) {
+						if (!IsNum(xx)) {
 							++i;
 							continue;
 						}
@@ -1699,24 +1695,28 @@ void ScatterDraw::Plot(T& w) {
 						npix++;
 						int ix = fround(plotW*(xx - xMin)/xRange);
 						int iMax, iMin;
-						if (serie.primaryY) {
-							iMax = fround(plotH*(maxY - yMin)/yRange);
-							iMin = fround(plotH*(minY - yMin)/yRange);
-						} else {
-							iMax = fround(plotH*(maxY - yMin2)/yRange2);
-							iMin = fround(plotH*(minY - yMin2)/yRange2);
+						if (!IsNum(yy)) 
+							points << Null;							
+						else {
+							if (serie.primaryY) {
+								iMax = fround(plotH*(maxY - yMin)/yRange);
+								iMin = fround(plotH*(minY - yMin)/yRange);
+							} else {
+								iMax = fround(plotH*(maxY - yMin2)/yRange2);
+								iMin = fround(plotH*(minY - yMin2)/yRange2);
+							}
+							points << Point(ix, plotH - iMax);
+							pointsisempty = false;
+							if (iMax != iMin)
+								points << Point(ix, plotH - iMin);	
 						}
-						points << Point(ix, plotH - iMax);
-						pointsisempty = false;
-						if (iMax != iMin)
-							points << Point(ix, plotH - iMin);	
 					} 
 				} else {
 					for (int64 i = imin; i <= imax; ) {	
 						double xx = data.x(i);
 						double yy = data.y(i);
 						++i;
-						if (IsNull(xx) || IsNull(yy)) 
+						if (!IsNum(xx) || !IsNum(yy)) 
 							points << Null;
 						else {
 							int ix = fround(plotW*(xx - xMin)/xRange);

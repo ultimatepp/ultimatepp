@@ -66,12 +66,12 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &serie, double &r2) 
 }
 
 double ExplicitEquation::R2Y(DataSource &serie, double mean) {
-	if (IsNull(mean))
+	if (!IsNum(mean))
 		mean = serie.AvgY();
 	double sse = 0, sst = 0;
 	for (int64 i = 0; i < serie.GetCount(); ++i) {
 		double y = serie.y(i);
-		if (!IsNull(y)) {
+		if (!!IsNum(y)) {
 			double err = y - f(serie.x(i));
 			sse += err*err;
 			double d = y - mean;
@@ -611,7 +611,7 @@ void EvalExpr::ClearVariables() {
 ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2) {	
 	Vector<Pointf> seriesRaw;
 	for (int64 i = 0; i < data.GetCount(); ++i) {		// Remove Nulls	
-		if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
+		if (!!IsNum(data.x(i)) && !!IsNum(data.y(i)))
 			seriesRaw << Pointf(data.x(i), data.y(i));
 	}
 
@@ -728,13 +728,13 @@ double Spline::Integral0(const Coeff &c, double x) {
 
 double Spline::Integral(double from, double to) const {
 	int ifrom;
-	if (IsNull(from)) {
+	if (!IsNum(from)) {
 		ifrom = 0;
 		from = scoeff[0].x;
 	} else
 		ifrom = GetPieceIndex(from);
 	int ito;
-	if (IsNull(to)) {
+	if (!IsNum(to)) {
 		ito = nscoeff-1;
 		to = xlast;
 	} else

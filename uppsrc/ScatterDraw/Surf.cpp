@@ -4,9 +4,9 @@ namespace Upp {
 
 ScatterDraw& ScatterDraw::AddSurf(DataSourceSurf &_surf) {
 	surf = &_surf;
-	if (IsNull(surfMinZ))
+	if (!IsNum(surfMinZ))
 		surfMinZ = _surf.MinZ();
-	if (IsNull(surfMaxZ))
+	if (!IsNum(surfMaxZ))
 		surfMaxZ = _surf.MaxZ();
 	return *this;
 }
@@ -138,7 +138,7 @@ double TableData::z_area(Getdatafun getdataX, Getdatafun getdataY, Getdatafun ge
 		double z12 = Membercall(getdata)(ix + (iy+1)*width);
 		double z21 = Membercall(getdata)(ix+1+ iy*width);
 		double z22 = Membercall(getdata)(ix+1 + (iy+1)*width);
-		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
+		if (!IsNum(z11) || !IsNum(z12) || !IsNum(z21) || !IsNum(z22))
 			return Null;
 		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
 	} else
@@ -197,7 +197,7 @@ double TableData::z_point(Getdatafun getdataX, Getdatafun getdataY, Getdatafun g
 		double z12 = Membercall(getdata)(ix + (iy+1)*width);
 		double z21 = Membercall(getdata)(ix+1 + iy*width);
 		double z22 = Membercall(getdata)(ix+1 + (iy+1)*width);
-		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
+		if (!IsNum(z11) || !IsNum(z12) || !IsNum(z21) || !IsNum(z22))
 			return Null;
 		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
 	} else
@@ -224,7 +224,7 @@ double TableData::MinZ(Getdatafun getdata) {
 	double ret = -DOUBLE_NULL;
 	for (int i = 0; i < lendata; ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (!!IsNum(d)) {
 			if (ret > d)
 				ret = d;
 		}
@@ -238,7 +238,7 @@ double TableData::MaxZ(Getdatafun getdata) {
 	double ret = DOUBLE_NULL;
 	for (int i = 0; i < lendata; ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (!!IsNum(d)) {
 			if (ret < d)
 				ret = d;
 		}

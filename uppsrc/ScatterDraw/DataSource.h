@@ -8,6 +8,9 @@ namespace Upp {
 
 #define Membercall(fun)	(this->*fun)
 
+bool IsNum(double n);
+bool IsNum(int n);
+
 class DataSource : public Pte<DataSource>  {
 public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
@@ -39,7 +42,7 @@ public:
 		int n = 0;		
 		for (int64 i = 0; i < GetCount(); ++i) { 
 			double d = Membercall(getdata)(i);
-			if (!IsNull(d) && IsFin(d)) 
+			if (IsNum(d)) 
 				out[n++] = d;
 		}
 		ResizeConservative(out, n);
@@ -52,7 +55,7 @@ public:
 		for (int64 i = 0; i < GetCount(); ++i) { 
 			double d0 = Membercall(getdata0)(i);
 			double d1 = Membercall(getdata1)(i);
-			if (!IsNull(d0) && IsFin(d0) && !IsNull(d1) && IsFin(d1)) {
+			if (IsNum(d0) && IsNum(d1)) {
 				out0[n] = d0;
 				out1[n] = d1;
 				n++;
@@ -71,7 +74,7 @@ public:
 			double d0 = Membercall(getdata0)(i);
 			double d1 = Membercall(getdata1)(i);
 			double d2 = Membercall(getdata2)(i);
-			if (!IsNull(d0) && IsFin(d0) && !IsNull(d1) && IsFin(d1) && !IsNull(d2) && IsFin(d2)) {
+			if (IsNum(d0) && IsNum(d1) && IsNum(d2)) {
 				out0[n] = d0;
 				out1[n] = d1;
 				out2[n] = d2;
@@ -217,9 +220,9 @@ public:
 	void SetXHigh(double _xHigh){xHigh = _xHigh;}
 	bool Check(int64 id) const {
 		double x = data->x(id);
-		if (!IsNull(xHigh) && xHigh < x)
+		if (IsNum(xHigh) && xHigh < x)
 			return false;
-		if (!IsNull(xLow) && xLow > x)
+		if (IsNum(xLow) && xLow > x)
 			return false;
 		return true;
 	}
@@ -237,21 +240,67 @@ public:
 	}
 	virtual inline double x(double t) {
 		double x = data->x(t);
-		if (!IsNull(xHigh) && xHigh < x)
+		if (IsNum(xHigh) && xHigh < x)
 			return Null;
-		if (!IsNull(xLow) && xLow > x)
+		if (IsNum(xLow) && xLow > x)
 			return Null;
 		return x;
 	}
 	virtual double f(double x) {
-		if (!IsNull(xHigh) && xHigh < x)
+		if (IsNum(xHigh) && xHigh < x)
 			return Null;
-		if (!IsNull(xLow) && xLow > x)
+		if (IsNum(xLow) && xLow > x)
 			return Null;
 		return data->f(x);
 	}
 	virtual double MinX() 				{return xLow;}
 	virtual double MaxX() 				{return xHigh;}
+	virtual inline int64 GetCount() const {
+		if (isExplicit)
+			return count;
+		return data->GetCount();
+	}
+};
+
+class DataTranslateScale : public DataSource {
+private:
+	DataSource *data;
+	double shiftX, shiftY;
+	double multX, multY;
+	int count;
+
+public:
+	DataTranslateScale() : data(0), count(1000) {}
+	DataTranslateScale(DataSource &_data, double _shiftX, double _multX, double _shiftY, double _multY) {
+		Init(_data, _shiftX, _multX, _shiftY, _multY);
+	}
+	void Init(DataSource &_data, double _shiftX, double _multX, double _shiftY, double _multY) {
+		data = &_data;
+		isExplicit = _data.IsExplicit();
+		isParam = _data.IsParam();
+		shiftX = _shiftX;
+		shiftY = _shiftY;
+		multX = _multX;
+		multY = _multY;
+		count = 1000;
+	}
+	void SetCount(int _count)		{count = _count;}
+	void SetShiftX(double _shiftX) 	{shiftX = _shiftX;}
+	void SetShiftY(double _shiftY)	{shiftY = _shiftY;}
+	void SetMultX(double _multX) 	{multX = _multX;}
+	void SetMultY(double _multY)	{multY = _multY;}
+	/*virtual inline double y(int64 id) {
+		if (isExplicit)
+			return f(id)*multY + shiftY;
+		else
+			return data->y(id)*multY + shiftY;
+	}*/
+	virtual inline double x(double t) {
+		return data->x(t)*multX + shiftX;
+	}
+	virtual double f(double x) {
+		return data->f(x)*multY + shiftY;
+	}
 	virtual inline int64 GetCount() const {
 		if (isExplicit)
 			return count;
@@ -680,14 +729,14 @@ public:
 		lastT = Null;
 	}
 	virtual inline double y(double t) {
-		if (IsNull(lastT) || t != lastT) {
+		if (!IsNum(lastT) || t != lastT) {
 			lastPointf = function(minT + t*(maxT-minT)/numPoints);
 			lastT = t;
 		}
 		return lastPointf.y;
 	}
 	virtual inline double x(double t) {
-		if (IsNull(lastT) || t != lastT) {
+		if (!IsNum(lastT) || t != lastT) {
 			lastPointf = function(minT + t*(maxT-minT)/numPoints);
 			lastT = t;
 		}
@@ -729,14 +778,14 @@ public:
 		lastT = Null;
 	}
 	inline double y(double t) {
-		if (IsNull(lastT) || t != lastT) {
+		if (!IsNum(lastT) || t != lastT) {
 			function(lastPointf, minT + t*(maxT-minT)/numPoints);
 			lastT = t;
 		}
 		return lastPointf.y;
 	}
 	inline double x(double t) {
-		if (IsNull(lastT) || t != lastT) {
+		if (!IsNum(lastT) || t != lastT) {
 			function(lastPointf, minT + t*(maxT-minT)/numPoints);
 			lastT = t;
 		}
@@ -1228,7 +1277,7 @@ void CleanNAN(const Range1 &x, Range2 &retx) {
 	Resize(retx, num);
 	int n = 0;
 	for (int i = 0; i < num; ++i) {		
-		if (!IsNull(x[i]) && IsFin(x[i])) 
+		if (IsNum(x[i])) 
 			retx[n++] = x[i];
 	}
 	ResizeConservative(retx, n);
@@ -1242,7 +1291,7 @@ void CleanNAN(const Range1 &x, const Range1 &y, Range2 &retx, Range2 &rety) {
 	Resize(rety, num);
 	int n = 0;
 	for (int i = 0; i < num; ++i) {		
-		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i])) {
+		if (IsNum(x[i]) && IsNum(y[i])) {
 			retx[n]   = x[i];
 			rety[n] = y[i];
 			n++;
@@ -1261,7 +1310,7 @@ void CleanNAN(const Range1 &x, const Range1 &y, const Range1 &z, Range2 &retx, R
 	Resize(retz, num);
 	int n = 0;
 	for (int i = 0; i < num; ++i) {		
-		if (!IsNull(x[i]) && IsFin(x[i]) && !IsNull(y[i]) && IsFin(y[i]) && !IsNull(z[i]) && IsFin(z[i])) {
+		if (IsNum(x[i]) && IsNum(y[i]) && IsNum(z[i])) {
 			retx[n] = x[i];
 			rety[n] = y[i];
 			retz[n] = z[i];
