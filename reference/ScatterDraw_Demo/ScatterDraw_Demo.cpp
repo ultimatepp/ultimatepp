@@ -6,6 +6,8 @@ using namespace Upp;
 #include <PdfDraw/PdfDraw.h>
 
 
+void NullDataDemo(String fileName);
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -48,8 +50,35 @@ CONSOLE_APP_MAIN
 	SaveFile(fileName + ".pdf", pdf.Finish());
 		
 	UppLog() << "\nSaved '" << fileName << "'";
+	
+	NullDataDemo(fileName);
+	
 	#ifdef flagDEBUG
 	Cout() << "\nPress enter key to end";
 	ReadStdIn();
 	#endif
+}
+
+void NullDataDemo(String fileName) {
+	ScatterDraw scatter;
+
+	UppLog() << "\nPreparing Null data scatter";
+
+	Vector<Pointf> s1 = {{1,14}, {2,65}, {3,29}, {Null,Null}, {5,40}, {6,50}, {7,Null}, {8,25}, {9,10}};
+	
+	UppLog() << "\nScatter with Null data";
+	
+	scatter.AddSeries(s1).Legend("Series null").Units("kW", "seg");
+	
+	scatter.SetTitle("ScatterDraw Null data demo").SetTitleFont(SansSerif(14).Bold());
+	scatter.SetFastViewX(true).SetSequentialXAll(true);
+	scatter.SetLabelY("Power").SetLabelX("Time").SetLabelsFont(SansSerif(12));
+	scatter.SetPlotAreaLeftMargin(70).SetPlotAreaRightMargin(30).SetPlotAreaTopMargin(40).SetPlotAreaBottomMargin(50);
+	scatter.SetMode(ScatterDraw::MD_ANTIALIASED).SetLegendAnchor(ScatterDraw::RIGHT_TOP);
+	scatter.SetSize(Size(1000, 500)).ZoomToFit(true, true);
+	
+	fileName = fileName + " null data.png";
+	PNGEncoder().SaveFile(fileName, scatter.GetImage());	
+	
+	UppLog() << "\nSaved '" << fileName << "'";
 }
