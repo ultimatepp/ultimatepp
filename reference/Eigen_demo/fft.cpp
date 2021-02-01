@@ -23,7 +23,7 @@ void FFTTests()
     VectorXd timebuf(numData);
     {
 	    double t = 0;
-	    for (int i = 0; i < numData; ++i, t = i*1/samplingFrecuency) 
+	    for (int i = 0; i < numData; ++i, t = i/samplingFrecuency) 
 	       	timebuf[i] = 2*sin(2*M_PI*t/50 - M_PI/3) + 5*sin(2*M_PI*t/30 - M_PI/2) + 30*sin(2*M_PI*t/10 - M_PI/5);
     }
     
