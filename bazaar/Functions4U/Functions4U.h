@@ -294,8 +294,6 @@ template <class T>
 inline T BetweenVal(const T& val, const T& _min, const T& _max) { 
 	return max(_min, min(_max, val));
 }
-template <class T> 
-inline bool IsNAN(T val) {return std::isnan(val);}
 
 template <class T> 
 inline T FixFloat(T val) {
@@ -544,16 +542,15 @@ Vector<String> GetDriveList();
 
 class Dl {
 public:
-	Dl();
 	virtual ~Dl();
 	bool Load(const String &fileDll);
 	void *GetFunction(const String &functionName);
 	
 private:
 #if defined(PLATFORM_WIN32) 
-	HINSTANCE hinstLib;	
+	HINSTANCE hinstLib = 0;	
 #else
-	void *hinstLib;
+	void *hinstLib = 0;
 #endif
 };
 
@@ -634,18 +631,6 @@ class ThreadSafe {
 ...
 };*/
 
-template <class Range>
-void LinSpaced(Range &v, int n, typename Range::value_type min, typename Range::value_type max) {
-	ASSERT(n > 0);
-	v.SetCount(n);
-	if (n == 1)
-		v[0] = min;
-	else {
-		typename Range::value_type d = (max - min)/(n - 1);
-		for (int i = 0; i < n; ++i)
-			v[i] = min + d*i;
-	}
-}
 
 template <class C>
 static void ShuffleAscending(C &data, std::default_random_engine &generator) {
@@ -701,7 +686,9 @@ bool EqualRatio(const T& a, const T& b, const T& ratio, const T& zero = 0) {
 
 template <class T>
 bool EqualDecimals(const T& a, const T& b, int numdecimals) {
-	return FormatDouble(a, numdecimals) == FormatDouble(b, numdecimals);
+	String sa = FormatDouble(a, numdecimals);
+	String sb = FormatDouble(a, numdecimals);
+	return sa == sb;
 }
 
 template <class Range>
@@ -907,7 +894,7 @@ class LocalProcessX
  {
 typedef LocalProcessX CLASSNAME;
 public:
-	LocalProcessX() {}
+	//LocalProcessX() {}
 	virtual ~LocalProcessX() 		{Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, 
@@ -1145,6 +1132,14 @@ public:
 			throw Exc(in->Str() + Format(t_("Bad %s '%s' in field #%d, line\n'%s'"), "integer", fields[i], i+1, line));
 		return res; 
 	}
+	bool IsInt(int i) const {
+		if (fields.IsEmpty())
+			throw Exc(in->Str() + t_("No data available"));
+		if (IsNull(i))
+			i = fields.GetCount()-1;
+		CheckId(i);
+		return !IsNull(ScanInt(fields[i]));
+	}
 	double GetDouble(int i) const {
 		if (fields.IsEmpty())
 			throw Exc(in->Str() + t_("No data available"));
@@ -1155,6 +1150,10 @@ public:
 		if (IsNull(res))
 			throw Exc(in->Str() + Format(t_("Bad %s '%s' in field #%d, line\n'%s'"), "double", fields[i], i+1, line));
 		return res;
+	}
+	
+	bool IsEof() {
+		return in->IsEof();
 	}
 	
 	int size() const 		{return fields.GetCount();}

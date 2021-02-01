@@ -985,7 +985,7 @@ String SeasonName(int iseason) {
 	return iseason >= 0 && iseason < 4 ? season[iseason] : "";
 }
 
-int GetSeason(Date &date) {
+int GetSeason(const Date &date) {
 	return int((date.month - 1)/3.);
 }
 
@@ -1001,7 +1001,7 @@ String BytesToString(uint64 _bytes, bool units)
 			if (bytes >= 1024) {
 				bytes /= 1024;
 				if (bytes >= 1024) {
-					bytes /= 1024;
+					//bytes /= 1024;
 					ret = Format("%.1f %s", _bytes/(1024*1024*1024*1024.), units ? "Tb" : "");
 				} else
 					ret = Format("%.1f %s", _bytes/(1024*1024*1024.), units ? "Gb" : "");
@@ -1776,8 +1776,10 @@ int64 FindStringInFile(const char *file, const String text, int64 pos0) {
 		int64 pos = 0;
 		if (pos0 > 0) {
 			pos = pos0;
-			if (0 == fseek(fp, long(pos0), SEEK_SET))
+			if (0 == fseek(fp, long(pos0), SEEK_SET)) {
+				fclose(fp);
 				return -2;
+			}
 		}
 		int i = 0, c;
 		for (; (c = fgetc(fp)) != EOF; pos++) {
@@ -1925,7 +1927,6 @@ bool FileDataArray::Init(String , FileDataArray &orig, FileDiffArray &diff)
 				folderCount--;
 			else
 				fileCount--;
-			break;
 			break;
 		case 'p':
 			SetLastError(t_("Problem found"));		// To Fix				
@@ -2084,7 +2085,7 @@ bool operator<(const FileData& a, const FileData& b)
 		return a.isFolder;
 }
 
-bool CheckFileData(FileData &data, String &, String &, String &lowrelFileName, String &lowfileName, bool isFolder) {
+bool CheckFileData(FileData &data, String &, String &, const String &lowrelFileName, const String &lowfileName, bool isFolder) {
 	if (data.isFolder == isFolder) {
 		if (ToLower(data.fileName) == lowfileName) {
 			if (ToLower(data.relFilename) == lowrelFileName) 
@@ -2557,10 +2558,6 @@ String WideToString(LPCWSTR wcs, int len) {
 #endif
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-
-Dl::Dl() {
-	hinstLib = 0;
-}
 
 Dl::~Dl() {
 	if (hinstLib) 

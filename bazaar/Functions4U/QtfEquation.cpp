@@ -25,8 +25,9 @@ String CParserPlus::ReadIdPlus() {
 Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, double betw) {
 	Font fnt;
 	
-	int _pos1, _pos2;
+	int _pos1;
 	if ((_pos1 = text.Find('_', 0)) >= 0) {
+		int _pos2;
 		String sub = text.Right(text.GetCount()-_pos1-1);
 		if ((_pos2 = sub.Find('_', 0)) >= 0)
 			sub = sub.Left(_pos2) + ',' + sub.Right(sub.GetCount()-_pos2-1);
@@ -444,7 +445,7 @@ Drawing DrawEquation(const String &str) {
 		} else
 			return equation.Exp(p);
 	}
-	catch(CParser::Error e) {
+	catch(CParser::Error &e) {
 		String res;
 		res << "ERROR: " << e;
 		return EquationDraw::Text(res);

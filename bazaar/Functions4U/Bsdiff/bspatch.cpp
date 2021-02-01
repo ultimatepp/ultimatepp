@@ -80,11 +80,10 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 	//if(argc!=4) errx(1,"usage: %s oldfile newfile patchfile\n",argv[0]);
 
 	/* Open patch file */
-	if (
 #ifdef PLATFORM_POSIX			
-	(f = fopen(patchfile, "r")) == NULL)
+	if ((f = fopen(patchfile, "r")) == NULL)
 #else
-	(f = _wfopen(patchfile.ToWString(), L"rb")) == NULL)	
+	if ((f = _wfopen(patchfile.ToWString(), L"rb")) == NULL)	
 #endif
 		return Err(Format(t_("fopen(%s)"), patchfile));
 
@@ -104,7 +103,8 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 
 	/* Read header */
 	if (fread(header, 1, 32, f) < 32) {
-		if (feof(f))
+		fclose(f);
+		if (feof(f)) 
 			return Err(t_("Corrupt patch"));
 		return Err(Format(t_("fread(%s)"), patchfile));
 	}
@@ -130,9 +130,11 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 	(cpf = _wfopen(patchfile.ToWString(), L"rb")) == NULL)	
 #endif	    
 		return Err(Format(t_("fopen(%s)"), patchfile));
-	if (fseeko(cpf, 32, SEEK_SET))
+	if (fseeko(cpf, 32, SEEK_SET)) {
+		fclose(cpf);
 		return Err(Format(t_("fseeko(%s, %lld)"), patchfile,
 		    (long long)32));
+	}
 	if ((cpfbz2 = BZ2_bzReadOpen(&cbz2err, cpf, 0, 0, NULL, 0)) == NULL)
 		return Err(Format(t_("BZ2_bzReadOpen, bz2err = %d"), cbz2err));
 	if (
@@ -160,11 +162,10 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 	if ((epfbz2 = BZ2_bzReadOpen(&ebz2err, epf, 0, 0, NULL, 0)) == NULL)
 		return Err(Format(t_("BZ2_bzReadOpen, bz2err = %d"), ebz2err));
 
-	if(
 #ifdef PLATFORM_POSIX		
-		((fd = open(oldfile, O_RDONLY, 0)) < 0) ||
+	if (((fd = open(oldfile, O_RDONLY, 0)) < 0) ||
 #else
-		((fd = _wsopen(oldfile.ToWString(), O_RDONLY|O_BINARY, _SH_DENYNO, 0)) < 0) ||
+	if (((fd = _wsopen(oldfile.ToWString(), O_RDONLY|O_BINARY, _SH_DENYNO, 0)) < 0) ||
 #endif		
 		((oldsize=lseek(fd,0,SEEK_END))==-1) ||
 		((old=(u_char *)malloc(oldsize+1))==NULL) ||
@@ -232,11 +233,10 @@ bool BSPatch(String oldfile, String newfile, String patchfile)
 		return Err(Format(t_("fclose(%s)"), patchfile));
 
 	/* Write the new file */
-	if(
 #ifdef PLATFORM_POSIX		
-		((fd = open(newfile, O_CREAT|O_TRUNC|O_WRONLY, 0666)) < 0) ||
+	if (((fd = open(newfile, O_CREAT|O_TRUNC|O_WRONLY, 0666)) < 0) ||
 #else
-		((fd = _wsopen(newfile.ToWString(), O_CREAT|O_TRUNC|O_WRONLY|O_BINARY, _SH_DENYNO, _S_IREAD | _S_IWRITE)) < 0) ||
+	if (((fd = _wsopen(newfile.ToWString(), O_CREAT|O_TRUNC|O_WRONLY|O_BINARY, _SH_DENYNO, _S_IREAD | _S_IWRITE)) < 0) ||
 #endif			
 		(write(fd,nnew,newsize)!=newsize) || (close(fd)==-1))
 		return Err(Format(t_("Impossible to open %s"), newfile));

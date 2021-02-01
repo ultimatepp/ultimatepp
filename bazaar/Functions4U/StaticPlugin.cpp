@@ -9,10 +9,6 @@ Array<StaticPlugin::PluginData>& StaticPlugin::Plugins() {
 	return x;
 }
 
-StaticPlugin::StaticPlugin() {
-	data = 0;
-}
-
 StaticPlugin::~StaticPlugin() {
 	End();
 }

@@ -9,10 +9,10 @@ namespace Upp {
 
 class StaticPlugin {
 private:
-	void *data;
+	void *data = 0;
 	String name;
 	String type;
-	void *instance;
+	void *instance = 0;
 	
 	template <class T> static void *New() 			{return new T;}
 	template <class T> static void Delete(void *p) 	{delete static_cast<T *>(p);}
@@ -31,7 +31,6 @@ protected:
 	static Upp::Array<PluginData>& Plugins();
 	
 public:
-	StaticPlugin();
 	virtual ~StaticPlugin();
 	
 	void End();
