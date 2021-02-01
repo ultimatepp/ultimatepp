@@ -5,7 +5,7 @@
 
 namespace Upp {
 
-const double EPS_XYZ = 0.00001;
+const double EPS_XYZ = 0.001;
 
 template<class T>
 inline T avg(T a, T b) 			{return T(a+b)/2;}
@@ -66,6 +66,7 @@ public:
 	}
 	#pragma GCC diagnostic ignored "-Wattributes"
 	friend bool operator==(const Point3D& a, const Point3D& b) {return a.IsSimilar(b, EPS_XYZ);}
+	friend bool operator!=(const Point3D& a, const Point3D& b) {return !a.IsSimilar(b, EPS_XYZ);}
 	#pragma GCC diagnostic warning "-Wattributes"
 	
 	void Translate(double dx, double dy, double dz);
@@ -183,6 +184,9 @@ public:
 	}
 };
 
+void DeleteVoidSegments(Vector<Segment3D> &segs);
+void DeleteDuplicatedSegments(Vector<Segment3D> &segs);
+	
 Point3D GetCentroid(const Point3D &a, const Point3D &b);
 Point3D GetCentroid(const Point3D &a, const Point3D &b, const Point3D &c);
 Vector3D GetNormal(const Point3D &a, const Point3D &b, const Point3D &c);
@@ -303,8 +307,8 @@ public:
 	Vector<Point3D> nodes;
 	Vector<Panel> panels;
 	
-	int GetNumNodes() 	{return nodes.GetCount();}
-	int GetNumPanels() 	{return panels.GetCount();}
+	int GetNumNodes() const		{return nodes.GetCount();}
+	int GetNumPanels() const	{return panels.GetCount();}
 	
 	Vector<Segment3D> skewed;
 	Vector<Segment3D> segWaterlevel, segTo1panel, segTo3panel;
@@ -317,12 +321,18 @@ public:
 	void GetLimits(); 
 	void GetPanelParams();
 	String CheckErrors() const;
-	double GetWaterPlaneArea();
+	double GetWaterPlaneArea() const;
 	void GetSurface();
 	void GetSegments();
 	void GetVolume();
-	Point3D GetCenterOfBuoyancy();
+	Point3D GetCenterOfBuoyancy() const;
 	void GetHydrostaticStiffness(Eigen::MatrixXd &c, const Point3D &cb, double rho, const Point3D &cg, double mass, double g);
+	static Vector<Point3D> GetClosedPolygons(Vector<Segment3D> &segs);
+	static Array<Pointf> Point3dto2D(const Vector<Point3D> &bound);
+	void AddWaterSurface(const Surface &surf, const Surface &under, char c);
+	Vector<Segment3D> GetWaterLineSegments(const Surface &orig);
+	bool GetDryPanels(const Surface &surf);
+	char IsWaterPlaneMesh() const; 
 	
 	void CutX(const Surface &orig, double factor = 1);
 	void CutY(const Surface &orig, double factor = 1);
@@ -358,8 +368,9 @@ public:
 	
 	void AddFlatPanel(double lenX, double lenY, double panelWidth);
 	void AddRevolution(Vector<Pointf> &points, double panelWidth);
-	void AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth);
-	
+	void AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth, bool adjustSize);
+	void AddPolygonalPanel2(Array<Pointf> &poly, double panelWidth);
+		
 	static int RemoveDuplicatedPanels(Vector<Panel> &_panels);
 	static int RemoveTinyPanels(Vector<Panel> &_panels);
 	static int RemoveDuplicatedPointsAndRenumber(Vector<Panel> &_panels, Vector<Point3D> &_nodes);

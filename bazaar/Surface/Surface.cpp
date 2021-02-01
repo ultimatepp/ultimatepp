@@ -821,12 +821,11 @@ void Surface::GetSurface() {
 	avgFacetSideLen  = sqrt(surface/panels.GetCount());
 }
 
-double Surface::GetWaterPlaneArea() {
+double Surface::GetWaterPlaneArea() const {
 	double area = 0;
 	
 	for (int ip = 0; ip < panels.GetCount(); ++ip) {
-		Panel &panel = panels[ip];
-		
+		const Panel &panel = panels[ip];
 		area += -(panel.surface0*panel.normal0.z + panel.surface1*panel.normal1.z);
 	}
 	return area;
@@ -851,7 +850,7 @@ void Surface::GetVolume() {
 	volume = avg(volumex, volumey, volumez);
 }
 	
-Point3D Surface::GetCenterOfBuoyancy() {
+Point3D Surface::GetCenterOfBuoyancy() const {
 	double xb = 0, yb = 0, zb = 0;
 	
 	for (int ip = 0; ip < panels.GetCount(); ++ip) {
@@ -875,7 +874,6 @@ Point3D Surface::GetCenterOfBuoyancy() {
 	return Point3D(xb, yb, zb);
 }
 
-// Hydrostatic restoring is only expected from heave, roll and pitch
 void Surface::GetHydrostaticStiffness(MatrixXd &c, const Point3D &cb, double rho, 
 					const Point3D &cg, double mass, double g) {
 	c.setConstant(6, 6, 0);
@@ -1055,6 +1053,8 @@ void Surface::CutZ(const Surface &orig, double factor) {
 			panels << panel;
 		}
 	}
+	DeleteVoidSegments(segWaterlevel);
+	DeleteDuplicatedSegments(segWaterlevel);
 }
 
 void Surface::CutX(const Surface &orig, double factor) {
@@ -1536,26 +1536,86 @@ void Surface::SetPanelPoints(Array<PanelPoints> &pans) {
 	}
 }
 
-void Surface::AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth) {
+void Surface::AddPolygonalPanel2(Array<Pointf> &bound, double panelWidth) {
 	ASSERT(bound.GetCount() >= 2);
 	
-	bound << bound[0];
+	if (bound[0] != bound[bound.size()-1])
+		bound << bound[0];
 	
-	for (int i = bound.GetCount()-2; i >= 0; --i) {
-		double len = sqrt(sqr(bound[i].x-bound[i+1].x) + sqr(bound[i].y-bound[i+1].y)); 
-		int num = int(round(len/panelWidth));
-		if (num > 1) {
-			double x0 = bound[i].x;
-			double lenx = bound[i+1].x - bound[i].x;
-			double y0 = bound[i].y;
-			double leny = bound[i+1].y - bound[i].y;
-			for (int in = num-1; in >= 1; --in) {
-				Pointf p(x0 + lenx*in/num, y0 + leny*in/num);
-				bound.Insert(i+1, p);
+	double minX = std::numeric_limits<double>::max(), minY = std::numeric_limits<double>::max(), 
+		   maxX = std::numeric_limits<double>::lowest(), maxY = std::numeric_limits<double>::lowest();
+	for (const auto &p : bound) {
+		if (p.x < minX)
+			minX = p.x;
+		if (p.y < minY)
+			minY = p.y;
+		if (p.x > maxX)
+			maxX = p.x;
+		if (p.y > maxY)
+			maxY = p.y;
+	}
+	double panelWidthY = (sqrt(3.)/2.)*panelWidth;
+	Array<Pointf> poly;
+	bool add = false;
+	for (double x = minX; x < maxX; x += panelWidth) {
+		double deltay = add ? panelWidthY/2. : 0;
+		add = !add;
+		for (double y = minY; y < maxY; y += panelWidthY) {	
+			Pointf pt(x, y + deltay);
+			bool addPoint = true;
+			for (int i = 0; i < bound.size(); ++i)
+				if (Distance(bound[i], pt) < panelWidth/5) {
+					addPoint = false;
+					break;
+				}
+			if (addPoint && ContainsPoint(bound, pt) != CMP_OUT)
+				poly << pt;
+		}
+	}
+	for (const auto &p : bound) 
+		poly << p;
+
+	Delaunay del;
+	del.Build(poly);
+
+	Array<PanelPoints> pans;
+	for (int i = 0; i < del.GetCount(); ++i) {
+		const Delaunay::Triangle &tri = del[i];
+		if (tri[0] < 0 || tri[1] < 0 || tri[2] < 0)  
+			continue;
+
+		PanelPoints &pan = pans.Add();
+		pan.data[0].x = poly[tri[0]].x;		pan.data[0].y = poly[tri[0]].y;		pan.data[0].z = 0;
+		pan.data[1].x = poly[tri[1]].x;		pan.data[1].y = poly[tri[1]].y;		pan.data[1].z = 0;
+		pan.data[2].x = poly[tri[2]].x;		pan.data[2].y = poly[tri[2]].y;		pan.data[2].z = 0;
+		pan.data[3].x = poly[tri[2]].x;		pan.data[3].y = poly[tri[2]].y;		pan.data[3].z = 0;
+	}
+	SetPanelPoints(pans);
+}
+
+void Surface::AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth, bool adjustSize) {
+	ASSERT(bound.GetCount() >= 2);
+	
+	if (bound[0] != bound[bound.size()-1])
+		bound << bound[0];
+	
+	if (adjustSize) {
+		for (int i = bound.GetCount()-2; i >= 0; --i) {
+			double len = sqrt(sqr(bound[i].x-bound[i+1].x) + sqr(bound[i].y-bound[i+1].y)); 
+			int num = int(round(len/panelWidth));
+			if (num > 1) {
+				double x0 = bound[i].x;
+				double lenx = bound[i+1].x - bound[i].x;
+				double y0 = bound[i].y;
+				double leny = bound[i+1].y - bound[i].y;
+				for (int in = num-1; in >= 1; --in) {
+					Pointf p(x0 + lenx*in/num, y0 + leny*in/num);
+					bound.Insert(i+1, p);
+				}
 			}
 		}
 	}
-	bound.Remove(bound.GetCount()-1);
+	bound.Remove(bound.size()-1);
 	
 	double avgx = 0, avgy = 0;
 	for (Pointf &p : bound) {
@@ -1572,6 +1632,7 @@ void Surface::AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth) {
 	
 	Delaunay del;
 	
+	int maxnum = -1;
 	while (true) {
 		del.Build(delp);
 		double avglen = 0, maxlen = 0;
@@ -1598,6 +1659,9 @@ void Surface::AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth) {
 				maxlen = len;	maxid = i;	maxid3 = 2;
 			}
 		}
+		if (num == maxnum)
+			break;
+		maxnum = num;
 		avglen /= num;
 		if (avglen < panelWidth) 
 			break;
@@ -1620,6 +1684,202 @@ void Surface::AddPolygonalPanel(Vector<Pointf> &bound, double panelWidth) {
 		pan.data[3].x = delp[tri[2]].x;		pan.data[3].y = delp[tri[2]].y;		pan.data[3].z = 0;
 	}
 	SetPanelPoints(pans);
+}
+
+Vector<Point3D> Surface::GetClosedPolygons(Vector<Segment3D> &segs) {
+	Vector<Point3D> ret;
+	
+	if (segs.IsEmpty())
+		return ret;
+	
+	ret << segs[0].from;
+	ret << segs[0].to;
+	segs.Remove(0);
+	while (true) {
+		const Point3D &last = ret[ret.size()-1];
+		bool found = false;
+		for (int i = 0; i < segs.size(); ++i) {
+			if (segs[i].from == last) {
+				ret << segs[i].to;
+				segs.Remove(i);
+				found = true;
+				break;
+			} else if (segs[i].to == last) {
+				ret << segs[i].from;
+				segs.Remove(i);
+				found = true;
+				break;
+			}
+		}
+		if (!found) 
+			return ret;
+		if (ret[0] == ret[ret.size()-1])
+			return ret;		// Polygon closed
+		if (segs.IsEmpty()) {
+			ret.Clear();	// Polygon unclosed
+			return ret;
+		}
+	}
+}
+		
+Array<Pointf> Surface::Point3dto2D(const Vector<Point3D> &bound) {
+	Array<Pointf> ret;
+	for (const auto &d: bound)
+		ret << Pointf(d.x, d.y);
+	return ret;
+}
+
+int Find(Vector<Segment3D> &segs, const Point3D &from, const Point3D &to) {
+	for (int is = 0; is < segs.size(); ++is) {
+		if (segs[is].from == from && segs[is].to == to)
+			return is;
+		if (segs[is].from == to && segs[is].to == from)
+			return is;
+	}
+	return -1;
+}
+
+void DeleteVoidSegments(Vector<Segment3D> &segs) {
+	for (int i = segs.size()-1; i >= 0; --i) {
+		const Segment3D &seg = segs[i];
+		if (seg.from == seg.to)
+			segs.Remove(i);
+	}
+}	
+
+void DeleteDuplicatedSegments(Vector<Segment3D> &segs) {
+	for (int i = 0; i < segs.size(); ++i) {
+		const Segment3D &seg0 = segs[i];
+		for (int j = segs.size()-1; j > i; --j) {
+			const Segment3D &seg = segs[j];	
+			if (seg0.from == seg.from && seg0.to == seg.to)
+				segs.Remove(j);
+			else if (seg0.from == seg.to && seg0.to == seg.from)
+				segs.Remove(j);
+		}
+	}
+}
+
+bool Surface::GetDryPanels(const Surface &orig) {
+	nodes = clone(orig.nodes);
+	panels.Clear();
+	
+	for (const auto &pan : orig.panels) {
+		const int &id0 = pan.id[0];
+		const int &id1 = pan.id[1];
+		const int &id2 = pan.id[2];
+		const int &id3 = pan.id[3];
+		const Point3D &p0 = nodes[id0];
+		const Point3D &p1 = nodes[id1];
+		const Point3D &p2 = nodes[id2];
+		const Point3D &p3 = nodes[id3];	
+		
+		if (p0.z >= -EPS_XYZ && p1.z >= -EPS_XYZ && p2.z >= -EPS_XYZ && p3.z >= -EPS_XYZ) 
+			panels << clone(pan);
+	}
+	return !panels.IsEmpty();
+}
+
+Vector<Segment3D> Surface::GetWaterLineSegments(const Surface &orig) {
+	Vector<Segment3D> ret;
+
+	for (const auto &pan : orig.panels) {
+		const int &id0 = pan.id[0];
+		const int &id1 = pan.id[1];
+		const int &id2 = pan.id[2];
+		const int &id3 = pan.id[3];
+		const Point3D &p0 = orig.nodes[id0];
+		const Point3D &p1 = orig.nodes[id1];
+		const Point3D &p2 = orig.nodes[id2];
+		const Point3D &p3 = orig.nodes[id3];	
+		
+		if (p0 != p1 && p0.z >= -EPS_XYZ && p1.z >= -EPS_XYZ && Find(ret, p0, p1) < 0)
+			ret << Segment3D(p0, p1);
+		if (p1 != p2 && p1.z >= -EPS_XYZ && p2.z >= -EPS_XYZ && Find(ret, p1, p2) < 0)
+			ret << Segment3D(p1, p2);
+		if (p2 != p3 && p2.z >= -EPS_XYZ && p3.z >= -EPS_XYZ && Find(ret, p2, p3) < 0)
+			ret << Segment3D(p2, p3);
+		if (p3 != p0 && p3.z >= -EPS_XYZ && p0.z >= -EPS_XYZ && Find(ret, p3, p0) < 0)
+			ret << Segment3D(p3, p0);
+	}
+	return ret;
+}
+
+void Surface::AddWaterSurface(const Surface &surf, const Surface &under, char c) {
+	if (c == 'f') {				// Takes the underwater limit from under and fills inside it
+		if (surf.surface == 0)
+			return;
+
+		Vector<Segment3D> segs = GetWaterLineSegments(under);
+		if (segs.IsEmpty())
+			throw Exc(t_("There is no water piercing in this mesh"));
+		double panelWidth = 0;
+		for (int i = 0; i < segs.size(); ++i)
+			panelWidth += segs[i].Length();
+		panelWidth /= segs.size();
+
+		while (!segs.IsEmpty()) {
+			Vector<Point3D> bound = GetClosedPolygons(segs);
+			if (bound.IsEmpty())
+				break;
+			Array<Pointf> bound2D = Point3dto2D(bound);
+			if (bound2D.size() > 2)
+				AddPolygonalPanel2(bound2D, panelWidth);
+		}
+	} else if (c == 'r') {		// Copies only the underwater side
+		if (under.panels.IsEmpty())
+			throw Exc(t_("There is no submerged mesh"));
+		panels = clone(under.panels);
+		nodes = clone(under.nodes);
+	} else if (c == 'e') 		// Copies only the dry and waterline side
+		if (!GetDryPanels(surf))
+			throw Exc(t_("There is no mesh in and above the water surface"));		
+}
+
+char Surface::IsWaterPlaneMesh() const {
+	bool waterplane = false, outwaterplane = false;
+	for (const auto &pan : panels) {
+		const int &id0 = pan.id[0];
+		const int &id1 = pan.id[1];
+		const int &id2 = pan.id[2];
+		const int &id3 = pan.id[3];
+		const Point3D &p0 = nodes[id0];
+		const Point3D &p1 = nodes[id1];
+		const Point3D &p2 = nodes[id2];
+		const Point3D &p3 = nodes[id3];	
+		
+		int numwaterplane = 0, num = 0;
+		if (p0 != p1) {
+			num++;
+			if (p0.z >= -EPS_XYZ && p1.z >= -EPS_XYZ && p0.z <= EPS_XYZ && p1.z <= EPS_XYZ)
+				numwaterplane++;
+		}
+		if (p1 != p2) {
+			num++;
+			if (p1.z >= -EPS_XYZ && p2.z >= -EPS_XYZ && p1.z <= EPS_XYZ && p2.z <= EPS_XYZ)
+				numwaterplane++;
+		}
+		if (p2 != p3) {
+			num++;
+			if (p2.z >= -EPS_XYZ && p3.z >= -EPS_XYZ && p2.z <= EPS_XYZ && p3.z <= EPS_XYZ)
+				numwaterplane++;
+		}
+		if (p3 != p0) {
+			num++;
+			if (p3.z >= -EPS_XYZ && p0.z >= -EPS_XYZ && p3.z <= EPS_XYZ && p0.z <= EPS_XYZ)
+				numwaterplane++;
+		}
+		if (num == numwaterplane)
+			waterplane = true;
+		else
+			outwaterplane = true;
+	}	
+	if (waterplane && !outwaterplane)
+		return 'y';
+	else if (waterplane && !outwaterplane)
+		return 'n';
+	else
+		return 'x';	
 }
 
 }
