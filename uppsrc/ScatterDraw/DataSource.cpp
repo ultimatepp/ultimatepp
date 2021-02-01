@@ -3,12 +3,20 @@
 namespace Upp {
 using namespace Eigen;
 
+bool IsNum(double n) {
+	return IsFin(n) && !IsNull(n);
+}
+
+bool IsNum(int n) {
+	return !IsNull(n);
+}
+
 
 double DataSource::Min(Getdatafun getdata, int64& id) {
 	double minVal = std::numeric_limits<double>::max();
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d) && minVal > d) {
+		if (!!IsNum(d) && minVal > d) {
 			minVal = d;	
 			id = i;
 		}
@@ -19,15 +27,15 @@ double DataSource::Min(Getdatafun getdata, int64& id) {
 }
  
 double DataSource::Max(Getdatafun getdata, int64& id) {
-	double maxVal = std::numeric_limits<double>::min();
+	double maxVal = std::numeric_limits<double>::lowest();
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d) && maxVal < d) {
+		if (IsNum(d) && maxVal < d) {
 			maxVal = d;
 			id = i;
 		}
 	}
-	if (maxVal == std::numeric_limits<double>::min())
+	if (maxVal == std::numeric_limits<double>::lowest())
 		return Null;
 	return maxVal;
 }
@@ -36,18 +44,18 @@ void DataSource::MaxList(Getdatafun getdataY, Getdatafun getdataX, Vector<int64>
 	id.Clear();
 	for (int64 i = 1; i < GetCount() - 1; ++i) {
 		double d = Membercall(getdataY)(i);
-		if (IsNull(d))
+		if (!IsNum(d))
 			continue;
 		int64 ii;
 		for (ii = i-1; ii >= 0; --ii) {
-			if (!IsNull(Membercall(getdataY)(ii)))
+			if (IsNum(Membercall(getdataY)(ii)))
 				break;
 		}
 		if (ii < 0)
 			continue;
 		double d_1 = Membercall(getdataY)(ii);
 		for (ii = i+1; ii < GetCount(); ++ii) {
-			if (!IsNull(Membercall(getdataY)(ii)))
+			if (IsNum(Membercall(getdataY)(ii)))
 				break;
 		}
 		if (ii >= GetCount())
@@ -68,7 +76,7 @@ Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64
 	int64 idMin, idMax;
 	iw = 0;
 	for (idMin = maxId - 1; idMin >= 0 && iw < width; idMin--) {
-		if (IsNull(Membercall(getdataY)(idMin)) || IsNull(Membercall(getdataX)(idMin)))
+		if (!IsNum(Membercall(getdataY)(idMin)) || !IsNum(Membercall(getdataX)(idMin)))
 			continue;
 		iw++;
 	}
@@ -76,14 +84,14 @@ Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64
 		idMin = 0;
 	iw = 0;
 	for (idMax = maxId + 1; idMax < GetCount() && iw < width; idMax++) {
-		if (IsNull(Membercall(getdataY)(idMax)) || IsNull(Membercall(getdataX)(idMax)))
+		if (!IsNum(Membercall(getdataY)(idMax)) || !IsNum(Membercall(getdataX)(idMax)))
 			continue;
 		iw++;
 	}
 	if (idMax >= GetCount())
 		idMax = GetCount() - 1;
 	for (int64 i = idMin; i <= idMax; ++i) {
-		if (IsNull(Membercall(getdataY)(i)) || IsNull(Membercall(getdataX)(i)))
+		if (!IsNum(Membercall(getdataY)(i)) || !IsNum(Membercall(getdataX)(i)))
 			continue;
 		p << Pointf(Membercall(getdataX)(i), Membercall(getdataY)(i));
 	}
@@ -94,7 +102,7 @@ Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64
 	const Vector<double> &coeff = polyFit.GetCoeff();
 	double b = coeff[1];
 	double a = coeff[2];
-	if (IsNull(a) || fabs(a) < 1E-10)
+	if (!IsNum(a) || fabs(a) < 1E-10)
 		return Null;
 	return Pointf(-b/2/a, polyFit.f(-b/2/a));
 }
@@ -104,7 +112,7 @@ double DataSource::Avg(Getdatafun getdata) {
 	int count = 0;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (IsNum(d)) {
 			ret += d;
 			count++;
 		}
@@ -119,7 +127,7 @@ int64 DataSource::Closest(Getdatafun getdata, double dat) {
 	int64 minDat;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (IsNum(d)) {
 			if (minD > abs(d - dat)) {
 				minD = abs(d - dat);
 				minDat = i;
@@ -137,7 +145,7 @@ int64 DataSource::Closest(Getdatafun getdataX, Getdatafun getdataY, double x, do
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double dx = Membercall(getdataX)(i);
 		double dy = Membercall(getdataY)(i);
-		if (!IsNull(dx) && !IsNull(dy)) {
+		if (IsNum(dx) && IsNum(dy)) {
 			double d = sqr(dx - x) + sqr(dy - y);
 			if (minD > d) {
 				minD = d;
@@ -155,7 +163,7 @@ double DataSource::RMS(Getdatafun getdata) {
 	int count = 0;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (IsNum(d)) {
 			ret += d*d;
 			count++;
 		}
@@ -179,15 +187,15 @@ double DataSource::IsSorted(Getdatafun getdata) {
 }
 
 double DataSource::Variance(Getdatafun getdata, double avg) {
-	if (IsNull(avg))
+	if (!IsNum(avg))
 		avg = Avg(getdata);
-	if (IsNull(avg))
+	if (!IsNum(avg))
 		return Null;
 	double ret = 0;
 	int count = 0;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (IsNum(d)) {
 			d -= avg;
 			ret += d*d;
 			count++;
@@ -219,7 +227,7 @@ Vector<Pointf> DataSource::Cumulative(Getdatafun getdataY, Getdatafun getdataX) 
 		double y = Membercall(getdataY)(i);
 		double x = Membercall(getdataX)(i);
 		
-		if (IsNull(x) || IsNull(y))
+		if (!IsNum(x) || !IsNum(y))
 			continue;
 		acum += y;
 		ret << Pointf(x, acum);
@@ -236,7 +244,7 @@ Vector<Pointf> DataSource::CumulativeAverage(Getdatafun getdataY, Getdatafun get
 		double y = Membercall(getdataY)(i);
 		double x = Membercall(getdataX)(i);
 		
-		if (IsNull(x) || IsNull(y))
+		if (!IsNum(x) || !IsNum(y))
 			continue;
 		acum += y;
 		num++;
@@ -262,7 +270,7 @@ Vector<Pointf> DataSource::SectorAverage(Getdatafun getdataY, Getdatafun getdata
 	for (int i = 0; i < GetCount();) {
 		double y = Membercall(getdataY)(i);
 		double x = Membercall(getdataX)(i);
-		if (IsNull(x) || IsNull(y))
+		if (!IsNum(x) || !IsNum(y))
 			continue;
 		
 		int numAvg = 1;
@@ -272,13 +280,13 @@ Vector<Pointf> DataSource::SectorAverage(Getdatafun getdataY, Getdatafun getdata
 		for (j = i+1; j < GetCount(); ++j) {
 			double ynext = Membercall(getdataY)(j);
 			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext))
+			if (!IsNum(xnext))
 				continue;
 			if ((xnext - x) > width) {
 				--j;
 				break;
 			}
-			if (IsNull(ynext))
+			if (!IsNum(ynext))
 				continue;
 			sumX += xnext;
 			sum += ynext;
@@ -302,13 +310,13 @@ void DataSource::ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool asc
 	for (i0 = 0; i0 < GetCount(); ++i0) {
 		y_prev = Membercall(getdataY)(i0);
 		x_prev = Membercall(getdataX)(i0);
-		if (!IsNull(x_prev) && !IsNull(y_prev))
+		if (IsNum(x_prev) && IsNum(y_prev))
 			break;
 	}
 	for (int i = i0; i < GetCount(); ++i) {
 		double y = Membercall(getdataY)(i);
 		double x = Membercall(getdataX)(i);
-		if (IsNull(x) || IsNull(y))
+		if (!IsNum(x) || !IsNum(y))
 			continue;
 		
 		if (((y >= 0 && y_prev < 0) && ascending) || ((y <= 0 && y_prev > 0) && descending)) {
@@ -322,7 +330,7 @@ void DataSource::ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool asc
 
 double DataSource::StdDev(Getdatafun getdata, double avg) {
 	double var = Variance(getdata, avg);
-	return IsNull(var) ? Null : sqrt(var);
+	return !IsNum(var) ? Null : sqrt(var);
 }
 
 double DataSource::SinEstim_Amplitude(double avg) {
@@ -332,11 +340,11 @@ double DataSource::SinEstim_Amplitude(double avg) {
 bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg) {
 	if (GetCount() < 4)
 		return false;
-	if (IsNull(avg))
+	if (!IsNum(avg))
 		avg = AvgY();
 	int64 firstId;
 	for (firstId = 0; firstId < GetCount(); ++firstId) 
-		if (!IsNull(x(firstId)) && !IsNull(y(firstId)))
+		if (!!IsNum(x(firstId)) && !!IsNum(y(firstId)))
 			break;
 	bool firstIsToPositive = (y(firstId) - avg) < 0;
 	bool isPossitive = !firstIsToPositive;
@@ -346,12 +354,12 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 	double firstZero = Null;
 	firstId++;
 	for (int64 id = firstId; id < GetCount(); ++id) {
-		if (IsNull(x(id)) || IsNull(y(id)))
+		if (!IsNum(x(id)) || !IsNum(y(id)))
 			continue;
 		if (((y(id) - avg) > 0) != isPossitive) {
 			isPossitive = !isPossitive;
 			double zero = x(id-1) - (y(id-1) - avg)*(x(id) - x(id-1))/(y(id) - y(id-1));
-			if (IsNull(lastZero)) 
+			if (!IsNum(lastZero)) 
 				firstZero = zero;
 			else {
 				T += zero - lastZero;
@@ -460,7 +468,7 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     int num = 0;
     for (int i = 0; i < numData; ++i) {
         double d = Membercall(getdata)(i);
-        if (!IsNull(d)) {
+        if (!!IsNum(d)) {
 			data[i] = d;
 			num++;
         }
@@ -636,7 +644,7 @@ Vector<double> DataSource::SortData(Getdatafun getdata) {
 	int count = 0;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
-		if (!IsNull(d)) {
+		if (IsNum(d)) {
 			ret << d;
 			count++;
 		}
@@ -807,7 +815,7 @@ void Resample(const VectorXd &x, const VectorXd &y, VectorXd &rrx, VectorXd &rry
 	VectorXd rx, ry;
 		
 	double delta = x[x.size()-1] - x[0];
-	if (IsNull(srate)) 
+	if (!IsNum(srate)) 
 		srate = delta/(x.size()-1);
 	int len = int(delta/srate) + 1;
 	rx.resize(len);
@@ -825,7 +833,7 @@ void Resample(const VectorXd &x, const VectorXd &y, const VectorXd &z,
 	VectorXd rx, ry, rz;
 		
 	double delta = x[x.size()-1] - x[0];
-	if (IsNull(srate)) 
+	if (!IsNum(srate)) 
 		srate = delta/(x.size()-1);
 	int len = int(delta/srate) + 1;
 	rx.resize(len);
@@ -853,7 +861,7 @@ void FilterFFT(VectorXd &data, double T, double fromT, double toT) {
     for (int i = 0; i < freqbuf.size(); ++i) {
         double freq = i*samplingFrecuency/numData;
         double T = 1/freq;
-        if ((IsNull(fromT) || T > fromT) && (IsNull(toT) || T < toT))
+        if ((!IsNum(fromT) || T > fromT) && (!IsNum(toT) || T < toT))
             freqbuf[i] = 0;
     }
 	fft.inv(data, freqbuf);
@@ -861,8 +869,8 @@ void FilterFFT(VectorXd &data, double T, double fromT, double toT) {
 
 Vector<Pointf> DataSource::FilterFFT(Getdatafun getdataY, Getdatafun getdataX, double fromT, double toT) {
 	Vector<Pointf> res;
-	ASSERT(!IsNull(fromT) || !IsNull(toT));
-	if (IsNull(fromT) && IsNull(toT))
+	ASSERT(!!IsNum(fromT) || !!IsNum(toT));
+	if (!IsNum(fromT) && !IsNum(toT))
 		return res;
 	
 	int numData = int(GetCount());
@@ -897,13 +905,13 @@ void ExplicitData::Init(Function<double (double x, double y)> _funz, double _min
 	this->maxY = _maxY;
 	
 	minZ = std::numeric_limits<double>::max();
-	maxZ = std::numeric_limits<double>::min();
+	maxZ = std::numeric_limits<double>::lowest();
 	double deltax = (_maxX - _minX)/100.;
 	double deltay = (_maxY - _minY)/100.;
 	for (double x = _minX; x <= _maxX; x += deltax) {
 		for (double y = _minY; y <= _maxY; y += deltay) {
 			double z = _funz(x, y);
-			if (!IsNull(z)) {
+			if (!!IsNum(z)) {
 				minZ = min(minZ, z);
 				maxZ = max(maxZ, z);
 			}
@@ -959,7 +967,7 @@ Vector<Pointf> DataSourceSurf::GetIsoline(double thres, const Rectf &area, doubl
 		for (int ix = 0; ix < width-1; ix++) {
 			double z0 = zp[ix + iy*width];
 			double z1 = zp[ix+1 + iy*width];
-			if (IsNull(z0) || IsNull(z1))
+			if (!IsNum(z0) || !IsNum(z1))
 				continue;
 			if ((z1 > thres && z0 <= thres) || (z0 > thres && z1 <= thres)) {
 				double delta = abs(thres - z0)/abs(z1 - z0);
@@ -971,7 +979,7 @@ Vector<Pointf> DataSourceSurf::GetIsoline(double thres, const Rectf &area, doubl
 		for (int iy = 0; iy < height-1; iy++) {
 			double z0 = zp[ix + iy*width];
 			double z1 = zp[ix + (iy+1)*width];
-			if (IsNull(z0) || IsNull(z1))
+			if (!IsNum(z0) || !IsNum(z1))
 				continue;
 			if ((z1 > thres && z0 <= thres) || (z0 > thres && z1 <= thres)) {
 				double delta = abs(thres - z0)/abs(z1 - z0);
@@ -990,13 +998,13 @@ Vector<Pointf> DataSourceSurf::GetIsoline(double thres, const Rectf &area, doubl
 		double dt, d0;
 		int iminT = FindClosest(isoline.Top(), points, deltaX, deltaY, dt);
 		int imin0 = FindClosest(isoline[0], points, deltaX, deltaY, d0);
-		if (IsNull(iminT) && IsNull(imin0)) {	
+		if (!IsNum(iminT) && !IsNum(imin0)) {	
 			isoline << Null;
 			imin = 0;
-		} else if (IsNull(iminT)) {
+		} else if (!IsNum(iminT)) {
 			Reverse(isoline);
 			imin = imin0;
-		} else if (IsNull(imin0))
+		} else if (!IsNum(imin0))
 			imin = iminT;
 		else {
 			if (dt > d0) {

@@ -79,7 +79,7 @@ Histogram &Histogram::Create(Upp::Array<HistogramDataAxis> &dataAxis, bool isY) 
 	for (int64 i = 0; i < totalVals; ++i) {
 		for (int ix = 0; ix < numAxis; ++ix) {
 			double d = isY ? dataAxis[ix].data.y(i) : dataAxis[ix].data.x(i);
-			if (!IsNull(d)) {
+			if (!!IsNum(d)) {
 				double val = d - dataAxis[ix].min;
 				val = val/delta[ix];
 				if (val >= dataAxis[ix].numVals)
@@ -112,7 +112,7 @@ Histogram &Histogram::Create(DataSource &data, double min, double max, int numVa
 	totalVals = 0;
 	for (int64 i = 0; i < total; ++i) {
 		double d = isY ? data.y(i) : data.x(i);
-		if (!IsNull(d)) {
+		if (!!IsNum(d)) {
 			double val = (d - min)/delta;
 			if (val >= numVals)
 				val = numVals - 1;
