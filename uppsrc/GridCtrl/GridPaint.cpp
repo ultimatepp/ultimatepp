@@ -339,7 +339,7 @@ void GridCtrl::Paint(Draw &w)
 					if(hasfocus)
 						style |= GD::FOCUS;
 					
-					if(IsValidCursor(anchor) && anchor != curpos) { // mouse selection in progress
+					if(IsValidCursor(anchor) && anchor != curpos && multi_select) { // mouse selection in progress
 						Rect r(anchor, curpos);
 						r.Normalize();
 						r.SetSize(r.GetSize() + 1);
