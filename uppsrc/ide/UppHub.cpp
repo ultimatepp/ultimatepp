@@ -209,7 +209,7 @@ void UppHubDlg::Load()
 	upv.Clear();
 
 	Load(0, Nvl(LoadFile(ConfigFile("upphub_root")),
-	            "https://raw.githubusercontent.com/ultimatepp/ultimatepp/master/upphub.root"));
+	            "https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json"));
 
 	SyncList();
 
