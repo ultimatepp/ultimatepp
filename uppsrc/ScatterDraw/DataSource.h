@@ -453,10 +453,16 @@ private:
 	
 public:
 	CArray(const double *_yData, int _numData, double _x0, double _deltaX) : yData(_yData), numData(_numData), x0(_x0), deltaX(_deltaX) {xData = NULL;}
-	CArray(const double *_yData, const double *_xData, int _numData) : yData(_yData), xData(_xData), numData(_numData) {zData = nullptr; x0 = deltaX = 0;}
-	CArray(const double *_yData, const double *_xData, const double *_zData, int _numData) : yData(_yData), xData(_xData), zData(_zData), numData(_numData) {x0 = deltaX = 0;}
-	virtual inline double y(int64 id)  	{return yData[ptrdiff_t(id)];}
-	virtual inline double x(int64 id)  	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
+	CArray(const double *_xData, const double *_yData, int _numData) : xData(_xData), yData(_yData), numData(_numData) {
+	zData = nullptr; x0 = deltaX = 0;
+	}
+	CArray(const double *_xData, const double *_yData, const double *_zData, int _numData) : xData(_xData), yData(_yData), zData(_zData), numData(_numData) {x0 = deltaX = 0;}
+	virtual inline double y(int64 id)  	{
+		return yData[ptrdiff_t(id)];
+		}
+	virtual inline double x(int64 id)  	{
+	return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;
+	}
 	virtual double znFixed(int n, int64 id); 
 	virtual int GetznFixedCount() const			{return 1;}
 	virtual inline int64 GetCount() const		{return numData;}
