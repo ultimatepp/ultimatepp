@@ -490,7 +490,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 		return;
 	}
 	
-	if(IsValidCursor(anchor) && IsValidCursor(curpos))
+	if(IsValidCursor(anchor) && IsValidCursor(curpos) && multi_select)
 		SelectRange(Rect(anchor, curpos), true, select_row);
 	
 	anchor = curpos;
