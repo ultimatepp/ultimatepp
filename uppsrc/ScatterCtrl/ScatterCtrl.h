@@ -242,7 +242,7 @@ public:
 	void SaveAsMetafile(const char* file);
 #endif	
 	void SaveToClipboard(bool saveAsMetafile = false);
-	void SaveToFile(String fileName = Null);
+	bool SaveToFile(String fileName = Null);
 	
 	void LoadControl();
 	void SaveControl();
