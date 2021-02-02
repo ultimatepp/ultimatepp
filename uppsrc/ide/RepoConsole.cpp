@@ -9,6 +9,7 @@ String RepoSys(const char *cmd)
 	ide->CreateHost(host, false, false);
 	LocalProcess p;
 	String out;
+	host.canlog = false;
 	return host.StartProcess(p, cmd) && p.Finish(out) == 0 ? out : String::GetVoid();
 }
 

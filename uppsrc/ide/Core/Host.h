@@ -13,10 +13,14 @@ struct Host {
 	String        *cmdout;
 	
 	String         onefile; // support for Ctrl+F7 - build single file
+	
+	bool           canlog = true; // it does PutVerbose for commands
 
 	void    DoDir(const String& s);
 
 	Host();
+	
+	void                  Log(const String& s) { if(canlog) PutVerbose(s); }
 	
 	String                GetEnvironment();
 	void                  AddEnvironment(const char *id, const char *value);

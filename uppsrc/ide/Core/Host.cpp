@@ -81,9 +81,9 @@ int Host::Execute(const char *cmdline)
 {
 	if(cmdout)
 		*cmdout << cmdline << '\n';
-	PutVerbose(cmdline);
+	Log(cmdline);
 	int q = IdeConsoleExecute(FindCommand(exedirs, cmdline), NULL, environment, false);
-	PutVerbose(Format("Exitcode: %d", q));
+	Log(Format("Exitcode: %d", q));
 	return q;
 }
 
@@ -91,17 +91,17 @@ int Host::ExecuteWithInput(const char *cmdline, bool noconvert)
 {
 	if(cmdout)
 		*cmdout << cmdline << '\n';
-	PutVerbose(cmdline);
+	Log(cmdline);
 	int q = IdeConsoleExecuteWithInput(FindCommand(exedirs, cmdline), NULL, environment, false, noconvert);
-	PutVerbose(Format("Exitcode: %d", q));
+	Log(Format("Exitcode: %d", q));
 	return q;
 }
 
 int Host::Execute(const char *cmdline, Stream& out, bool noconvert)
 {
-	PutVerbose(cmdline);
+	Log(cmdline);
 	int q = IdeConsoleExecute(FindCommand(exedirs, cmdline), &out, environment, true, noconvert);
-	PutVerbose(Format("Exitcode: %d", q));
+	Log(Format("Exitcode: %d", q));
 	return q;
 }
 
@@ -138,7 +138,7 @@ void Host::OnFinish(Event<>  cb)
 bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 {
 	try {
-		PutVerbose(cmdline);
+		if(canlog) Log(cmdline);
 		if(p.Start(FindCommand(exedirs, cmdline), environment))
 			return true;
 	}
@@ -191,7 +191,7 @@ void RemoveConsoleScripts()
 void Host::Launch(const char *_cmdline, bool console)
 {
 	String cmdline = FindCommand(exedirs, _cmdline);
-	PutVerbose(cmdline);
+	Log(cmdline);
 #ifdef PLATFORM_WIN32
 	if(console)
 		cmdline = GetExeFilePath() + " ! " + cmdline;
@@ -250,7 +250,7 @@ void Host::Launch(const char *_cmdline, bool console)
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	Vector<char *> args;
 	
-	PutVerbose(cmdline);
+	Log(cmdline);
 
 	char *o = cmd_buf;
 	const char *s = cmdline;
