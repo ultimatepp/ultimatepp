@@ -371,8 +371,10 @@ void Ide::ContextGoto0(int pos)
 						ii = i;
 					else {
 						const CppItem& mm = n[ii];
-						if(CombineCompare(findarg(mm.kind, CONSTRUCTOR) < 0, findarg(m.kind, CONSTRUCTOR) < 0)
+						if(CombineCompare(findarg(mm.kind, CONSTRUCTOR, DESTRUCTOR) < 0,
+						                  findarg(m.kind, CONSTRUCTOR, DESTRUCTOR) < 0)
 						                 (!istype[j] || mm.IsType(), !istype[j] || m.IsType())
+							             (mm.impl, m.impl)
 							             (findarg(mm.filetype, FILE_CPP, FILE_C) >= 0,
 							              findarg(m.filetype, FILE_CPP, FILE_C) >= 0)
 							             (mm.line, m.line) < 0)
