@@ -1037,7 +1037,7 @@ void ScatterCtrl::OnTypeImage(FileSel *_fs)
 		fs.file = ForceExt(GetFileName(~fs), ".pdf");
 }
 
-void ScatterCtrl::SaveToFile(String fileName)
+bool ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
 	
@@ -1069,7 +1069,7 @@ void ScatterCtrl::SaveToFile(String fileName)
 		fs.type.WhenAction = [&] {OnTypeImage(&fs);}; 
 	    if(!fs.ExecuteSaveAs(t_("Saving plot image to file"))) {
 	        Exclamation(t_("Plot has not been saved"));
-	        return;
+	        return false;
 	    }
         fileName = defaultFileNamePlot = ~fs;
 	} 
@@ -1077,20 +1077,22 @@ void ScatterCtrl::SaveToFile(String fileName)
 		WaitCursor waitcursor;
 		PNGEncoder encoder;
 		ScatterDraw::SetSize(saveSize);
-		encoder.SaveFile(fileName, GetImage());
+		return encoder.SaveFile(fileName, GetImage());
 	} else if (GetFileExt(fileName) == ".jpg") {	
 		WaitCursor waitcursor;
 		JPGEncoder encoder(jpgQuality);
 		ScatterDraw::SetSize(saveSize);
-		encoder.SaveFile(fileName, GetImage());		
+		return encoder.SaveFile(fileName, GetImage());		
 	} else if (GetFileExt(fileName) == ".pdf") {	
 		WaitCursor waitcursor;
 		PdfDraw pdf(saveSize.cx, saveSize.cy);
 		ScatterDraw::SetSize(saveSize);
 		ScatterDraw::SetDrawing(pdf, false);
-		SaveFile(fileName, pdf.Finish());		
-	} else 
+		return SaveFile(fileName, pdf.Finish());		
+	} else {
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+		return false;
+	}
 }
 
 ScatterCtrl &ScatterCtrl::AddSeries(ArrayCtrl &data, bool useCols, int idX, int idY, int , int beginData, int numData)
