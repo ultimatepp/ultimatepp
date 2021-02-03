@@ -1,5 +1,4 @@
 topic "Value";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Value";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Value]]}}&]
 [s1;@(0.0.255)3%- &]
@@ -117,6 +117,10 @@ ValueArray or ValueMap (technical and performance reasons).&]
 [s5;:Value`:`:operator int`(`)const:%- [* operator_int]()_[@(0.0.255) const]&]
 [s5;:Value`:`:operator int64`(`)const:%- [* operator_int64]()_[@(0.0.255) const]&]
 [s5;:Value`:`:operator bool`(`)const:%- [* operator_bool]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Value`:`:operator std`:`:string`(`)const:%- [* operator_std`::string]()_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:Value`:`:operator std`:`:wstring`(`)const:%- [* operator_std`::wstring]()_[@(0.0.255) c
+onst]&]
 [s5;:Value`:`:Value`(const String`&`):%- [* Value]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
 ]_[*@3 s])&]
 [s5;:Value`:`:Value`(const WString`&`):%- [* Value]([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&
@@ -129,6 +133,10 @@ ValueArray or ValueMap (technical and performance reasons).&]
 [s5;:Value`:`:Value`(bool`):%- [* Value]([@(0.0.255) bool]_[*@3 b])&]
 [s5;:Value`:`:Value`(Date`):%- [* Value]([_^Date^ Date]_[*@3 d])&]
 [s5;:Value`:`:Value`(Time`):%- [* Value]([_^Time^ Time]_[*@3 t])&]
+[s5;:Upp`:`:Value`:`:Value`(const std`:`:string`&`):%- [* Value]([@(0.0.255) const]_[_^std`:`:string^ s
+td`::string][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Upp`:`:Value`:`:Value`(const std`:`:wstring`&`):%- [* Value]([@(0.0.255) const]_[_^std`:`:wstring^ s
+td`::wstring][@(0.0.255) `&]_[*@3 s])&]
 [s2; Support of direct T`->Value and Value`->T conversions of standard 
 Value types. If conversion is not possible, throws ValueTypeError.&]
 [s3;%- &]
@@ -137,7 +145,7 @@ Value types. If conversion is not possible, throws ValueTypeError.&]
 ])&]
 [s2; Support for assignment from Null (e.g. Value v `= Null). Creates 
 Value containing (int)Null.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Value`:`:operator`=`=`(const Value`&`)const:%- [@(0.0.255) bool]_[* operator`=`=]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])_[@(0.0.255) const]&]
