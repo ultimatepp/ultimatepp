@@ -223,6 +223,8 @@ public:
 	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
+	operator std::string() const     { return (String)*this; }
+	operator std::wstring() const    { return (WString)*this; }
 	
 	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
@@ -234,6 +236,8 @@ public:
 	Value(Date d)                    : data(d, DATE_V, String::SPECIAL) { Magic(); }
 	Value(Time t)                    : data(t, TIME_V, String::SPECIAL) { Magic(); }
 	Value(const Nuller&)             : data((int)Null, INT_V, String::SPECIAL) { Magic(); }
+	Value(const std::string& s) : Value(String(s)) {}
+	Value(const std::wstring& s) : Value(WString(s)) {}
 
 	bool operator==(const Value& v) const;
 	bool operator!=(const Value& v) const { return !operator==(v); }
