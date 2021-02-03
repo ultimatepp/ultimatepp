@@ -402,7 +402,6 @@ public:
 
 	String(const std::string& s)                           { String0::Set0(s.c_str(), (int)s.length()); }
 	std::string ToStd() const                              { return std::string(Begin(), End()); }
-	operator std::string() const                           { return ToStd(); }
 };
 
 inline std::string to_string(const String& s)              { return std::string(s.Begin(), s.End()); }
