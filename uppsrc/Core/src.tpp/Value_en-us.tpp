@@ -117,9 +117,9 @@ ValueArray or ValueMap (technical and performance reasons).&]
 [s5;:Value`:`:operator int`(`)const:%- [* operator_int]()_[@(0.0.255) const]&]
 [s5;:Value`:`:operator int64`(`)const:%- [* operator_int64]()_[@(0.0.255) const]&]
 [s5;:Value`:`:operator bool`(`)const:%- [* operator_bool]()_[@(0.0.255) const]&]
-[s5;:Upp`:`:Value`:`:operator std`:`:string`(`)const:%- [* operator_std`::string]()_[@(0.0.255) c
+[s5;:Upp`:`:Value`:`:ToStd`(`)const:%- [_^std`:`:string^ std`::string]_[* ToStd]()_[@(0.0.255) c
 onst]&]
-[s5;:Upp`:`:Value`:`:operator std`:`:wstring`(`)const:%- [* operator_std`::wstring]()_[@(0.0.255) c
+[s5;:Upp`:`:Value`:`:ToWStd`(`)const:%- [_^std`:`:wstring^ std`::wstring]_[* ToWStd]()_[@(0.0.255) c
 onst]&]
 [s5;:Value`:`:Value`(const String`&`):%- [* Value]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
 ]_[*@3 s])&]
