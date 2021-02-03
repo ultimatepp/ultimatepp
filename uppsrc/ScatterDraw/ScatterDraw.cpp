@@ -595,6 +595,8 @@ ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
 	s.SetDataSource(data);
+	if (sequentialXAll)
+		s.sequential = true;
 	Refresh();
 	return *this;	
 }
