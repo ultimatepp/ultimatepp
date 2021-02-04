@@ -1,0 +1,12 @@
+# Markdown package (Scheduled for: Ultimate++ release 2021.1)
+
+## TODO:
+
+- Image handling is yet to be implemented.
+- Task lists are yet to be implemented.
+
+## Remaining issues:
+
+- Block elements don't have configurable style.
+- Page properties (margins, indentation, etc.) are not configurable.
+- Soft break is not handled very well.

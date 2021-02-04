@@ -98,6 +98,8 @@ void UppHubDlg::Readme()
 	if(s.GetCount()) {
 		if(n->readme.EndsWith(".qtf"))
 			PromptOK(s);
+		if(n->readme.EndsWith(".md"))
+			PromptOK(MarkdownConverter().Tables().ToQtf(s));
 		else
 			PromptOK("\1" + s);
 	}
