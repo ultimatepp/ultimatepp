@@ -1,0 +1,14 @@
+description "Markdown to QTF converter, based on MD4C library\377";
+
+uses
+	Core;
+
+file
+	Markdown.h,
+	Markdown.cpp,
+	Info readonly separator,
+	Copying,
+	issues,
+	Library readonly separator,
+	MD4C/md4c.h,
+	MD4C/md4c.c;
