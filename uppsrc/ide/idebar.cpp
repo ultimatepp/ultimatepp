@@ -386,6 +386,7 @@ void Ide::Setup(Bar& menu)
 #endif
 	menu.MenuSeparator();
 	menu.Add(HasGit(), "UppHub..", IdeImg::UppHub(), [] { UppHub(); });
+	menu.Add(HasGit(), "Terminal at UppHub..", [=] { LaunchTerminal(GetHubDir()); });
 	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
 		if(SetupSVNTrunk()) {
 			IdeAgain = true;
