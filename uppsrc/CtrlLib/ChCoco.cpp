@@ -5,6 +5,40 @@
 
 namespace Upp {
 
+bool IsCocoTransparent(const RGBA *s, int add, int n)
+{
+	while(n-- > 0) {
+		if(s->a > 10)
+			return false;
+		s += add;
+	}
+	return true;
+}
+
+Rect FindCocoBounds(const Image& m)
+{
+	Size isz = m.GetSize();
+	Rect r = isz;
+	for(r.top = 0; r.top < isz.cy && IsCocoTransparent(m[r.top], 1, isz.cx); r.top++)
+		;
+	for(r.bottom = isz.cy; r.bottom > r.top && IsCocoTransparent(m[r.bottom - 1], 1, isz.cx); r.bottom--)
+		;
+	if(r.bottom <= r.top)
+		return Null;
+	int h = r.GetHeight();
+	const RGBA *p = m[r.top];
+	for(r.left = 0; r.left < isz.cy && IsCocoTransparent(p + r.left, isz.cx, h); r.left++)
+		;
+	for(r.right = isz.cx; r.right > r.left && IsCocoTransparent(p + r.right - 1, isz.cx, h); r.right--)
+		;
+	return r;
+}
+
+Image CocoCrop(const Image& m)
+{
+	return Crop(m, FindCocoBounds(m));
+}
+
 Image CocoImg(Color bg, int type, int value, int state)
 {
 	Size isz(140, 140);
@@ -19,7 +53,7 @@ Image CocoImg(int type, int value = 0, int state = 0)
 	Image m[2];
 	for(int i = 0; i < 2; i++)
 		m[i] = CocoImg(i ? Black() : White(), type, value, state);
-	Image h = AutoCrop(RecreateAlpha(m[0], m[1]));
+	Image h = CocoCrop(RecreateAlpha(m[0], m[1]));
 	int q = h.GetSize().cy / 4;
 	SetHotSpots(h, Point(q, q));
 	return h;

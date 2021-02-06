@@ -935,7 +935,6 @@ Value TabBar::AlignValue(int align, const Value &v, const Size &sz)
 	ImageDraw w(isz.cx, isz.cy);
 	w.DrawRect(isz, SColorFace());
 	ChPaint(w, isz, v);
-	ImageBuffer img;
 	return AlignImage(align, (Image)w);
 }
 
@@ -1274,8 +1273,10 @@ void TabBar::Paint(Draw &w)
 	w.DrawRect(sz, SColorFace());
 	#endif
 
-	IsVert() ? w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Blend(SColorDkShadow, SColorShadow)):
-		w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Blend(SColorDkShadow, SColorShadow));	
+	if(IsVert())
+		w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Blend(SColorDkShadow, SColorShadow));
+	else
+		w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Blend(SColorDkShadow, SColorShadow));
 
 	if (!tabs.GetCount()) {
 		if (align == BOTTOM || align == RIGHT)
