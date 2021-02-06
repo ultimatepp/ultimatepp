@@ -44,7 +44,11 @@ String FollowCygwinSymlink(const String& file) {
 }
 
 Vector<String> SplitDirs(const char *s) {
+#ifdef PLATFORM_POSIX
+	return Split(s, [](int c) { return findarg(c, ';', ':') >= 0 ? c : 0; });
+#else
 	return Split(s, ';');
+#endif
 }
 
 static String varsname = "default";

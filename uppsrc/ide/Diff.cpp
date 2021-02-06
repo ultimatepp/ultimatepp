@@ -23,7 +23,7 @@ void RepoDiff::Execute(const String& f)
 	editfile = f;
 	if(kind == SVN_DIR) {
 		WaitCursor wait;
-		String log = Sys("svn log " + f);
+		String log = RepoSys("svn log " + f);
 		if(log.IsVoid()) {
 			Exclamation("Error executing 'svn log'");
 			return;
@@ -108,7 +108,7 @@ void RepoDiff::Execute(const String& f)
 void RepoDiff::Load()
 {
 	if(kind == SVN_DIR)
-		extfile = Sys("svn cat " + editfile + '@' + AsString(~r), false);
+		extfile = RepoSys("svn cat " + editfile + '@' + AsString(~r));
 	if(kind == GIT_DIR)
 		extfile = GitCmd(GetFileFolder(editfile), "show " + ~~r + ":./" + GetFileName(editfile));
 	diff.Set(LoadFile(editfile), extfile);

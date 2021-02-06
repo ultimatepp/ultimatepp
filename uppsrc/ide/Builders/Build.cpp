@@ -120,6 +120,9 @@ void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
 			env.GetAdd("LD_LIBRARY_PATH") = ldPath;
 		}
 #endif
+#ifdef PLATFORM_COCOA
+		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")); // sometimes some of these are missing..
+#endif
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);

@@ -10,7 +10,9 @@ CGImageRef createCGImage(const Image& img)
 {
 	if(IsNull(img))
 		return NULL;
-	CGDataProvider *dataProvider = CGDataProviderCreateWithData(NULL, ~img, img.GetLength() * sizeof(RGBA), NULL);
+	Image *km = new Image(img); // to keep data alive
+	CGDataProvider *dataProvider = CGDataProviderCreateWithData(km, ~img, img.GetLength() * sizeof(RGBA),
+	                               [](void *info, const void *data, size_t size) { delete (Image *)info; });
 	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
 	Upp::Size isz = img.GetSize();
     CGImageRef cg_img = CGImageCreate(isz.cx, isz.cy, 8, 32, isz.cx * sizeof(RGBA),
@@ -40,8 +42,7 @@ void ImageSysData::Init(const Image& m)
 
 ImageSysData::~ImageSysData()
 {
-	SysImageReleased(img);
-    // Do not call CGImageRelease(cgimg); here
+	CGImageRelease(cgimg);
 }
 
 struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
@@ -60,7 +61,7 @@ static void sCleanImageCache(const Image& img)
 	if(Rsz > 200 * 200) { // we do not want to do this for each small image painted...
 		Rsz = 0;
 		cg_image_cache.Remove([](const ImageSysData& object) {
-			return object.img.GetRefCount() == 1;
+			return object.img.GetRefCount() == 1; // the object.img is nowhere else than in cache
 		});
 	}
 }
@@ -71,7 +72,34 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 
 	if(img.GetLength() == 0)
 		return;
-	
+#if 0
+	Image m = IsNull(color) ? img : CachedSetColorKeepAlpha(img, color);
+	Image *km = new Image(m); // to keep data alive
+	CGDataProvider *dataProvider = CGDataProviderCreateWithData(km, ~m, m.GetLength() * sizeof(RGBA),
+	                               [](void *info, const void *data, size_t size) { delete (Image *)info; });
+	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
+	Upp::Size isz = img.GetSize();
+    CGImageRef cgimg = CGImageCreate(isz.cx, isz.cy, 8, 32, isz.cx * sizeof(RGBA),
+                                      colorSpace, kCGImageAlphaPremultipliedFirst,
+                                      dataProvider, 0, false, kCGRenderingIntentDefault);
+
+
+	if(cgimg) {
+		DLOG("Have cgimg");
+		Size isz = img.GetSize();
+		DDUMP(isz);
+		CGContextSaveGState(cgHandle);
+		Point off = GetOffset();
+		CGContextTranslateCTM(cgHandle, x + off.x, y + off.y);
+		CGContextScaleCTM(cgHandle, 1.0, -1.0);
+		CGContextDrawImage(cgHandle, CGRectMake(0, -isz.cy, isz.cx, isz.cy), cgimg);
+	    CGContextRestoreGState(cgHandle);
+		CGImageRelease(cgimg);
+	}
+
+	CGDataProviderRelease(dataProvider);
+
+#else
 	sCleanImageCache(img);
 
 	ImageSysDataMaker m;
@@ -89,6 +117,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	}
 	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
 	cg_image_cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
+#endif
 }
 
 // TODO: https://stackoverflow.com/questions/10733228/native-osx-lion-resize-cursor-for-custom-nswindow-or-nsview
