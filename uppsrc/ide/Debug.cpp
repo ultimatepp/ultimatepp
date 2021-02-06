@@ -182,6 +182,15 @@ void Ide::LaunchTerminal(const char *dir)
 	h.ChDir(dir);
 #ifdef PLATFORM_WIN32
 	h.Launch(Nvl(HostConsole, "powershell.exe"), false);
+#elif defined(PLATFORM_COCOA)
+	String script = ConfigFile("console-script-" + AsString(getpid()));
+	FileStream out(script, FileStream::CREATE, 0777);
+	out << "#!/bin/sh\n"
+	    << "cd " << dir << '\n'
+	    << "export PS1=\"\\w > \"\n"
+	    << "/bin/bash\n"
+	;
+	h.Launch("/usr/bin/open " + script);
 #else
 	String c = HostConsole;
 	int q = c.Find(' ');
