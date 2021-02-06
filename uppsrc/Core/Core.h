@@ -88,8 +88,8 @@
 	#include <signal.h>
 	#include <syslog.h>
 	#include <float.h>
- 	#include <fenv.h>
- 	#ifdef PLATFORM_SOLARIS
+	#include <fenv.h>
+	#ifdef PLATFORM_SOLARIS
 		#include <inttypes.h>
 	#else
 		#include <stdint.h>

@@ -169,7 +169,7 @@
 		#define CPU_32 1
 		#define CPU_IA32 1
 		#define CPU_SSE2 1
-	#endif			
+	#endif
 #endif
 
 #ifdef  flagCLR
