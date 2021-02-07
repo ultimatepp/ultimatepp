@@ -44,13 +44,18 @@ if there is Breaker with IDYES (as assigned to exit Ctrl by CtrlLayoutExit),
 performs AcceptBreak(IDYES). If none if that is true, AcceptBreak(IDOK) 
 is performed.&]
 [s2;%% If TopWindow does not run modal loop, it is closed `- in this 
-case, any state backup created by Backup method is scratched.&]
+case, any state backup created by Backup method is scratched. 
+Override in descendant class is allowed to call `'delete this`' 
+as the very last thing it does (as long as the instance is allocated 
+on the heap).&]
 [s3;%% &]
 [s4; &]
-[s5;:TopWindow`:`:WhenClose: [_^Callback^ Callback]_[* WhenClose]&]
+[s5;:TopWindow`:`:WhenClose: [_^Callback^ Event<>]_[* WhenClose]&]
 [s2;%% This callback is by default invoked when Close button of host 
 GUI window is pushed. Default assigned action is to perform Close 
-virtual method.&]
+virtual method. Assigned event is allowed to call `'delete this`' 
+as the very last thing it does (as long as the instance is allocated 
+on the heap).&]
 [s3;%% &]
 [s4; &]
 [s5;:TopWindow`:`:Backup`(`): [@(0.0.255) void]_[* Backup]()&]
