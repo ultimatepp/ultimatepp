@@ -88,7 +88,7 @@ bool SetupSVNTrunk()
 #ifdef _DEBUG
 		for(auto nest : { "uppsrc", "examples" })
 #else
-		for(auto nest : { "uppsrc", "reference", "examples", "tutorial", "bazaar" })
+		for(auto nest : { "uppsrc", "reference", "examples", "tutorial"/*, "bazaar"*/ })
 #endif
 		{
 			static String svn = "svn checkout svn://www.ultimatepp.org/upp/trunk";
@@ -140,8 +140,8 @@ bool SetupSVNTrunk()
 			MakeAssembly(ff.GetPath());
 	
 	MakeAssembly(myapps);
-	uppsrc = AppendFileName(dir, "bazaar") + ';' + uppsrc;
-	MakeAssembly(myapps, "MyApps-bazaar");
+//	uppsrc = AppendFileName(dir, "bazaar") + ';' + uppsrc;
+//	MakeAssembly(myapps, "MyApps-bazaar");
 
 	console.Perform();
 	return true;

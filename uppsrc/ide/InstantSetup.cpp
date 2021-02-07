@@ -457,9 +457,9 @@ void InstantSetup()
 		{ "reference", "#/reference;#/uppsrc" },
 		{ "examples", "#/examples;#/uppsrc" },
 		{ "tutorial", "#/tutorial;#/uppsrc" },
-		{ "examples-bazaar", "#/bazaar;#/uppsrc" },
+	//	{ "examples-bazaar", "#/bazaar;#/uppsrc" },
 		{ "MyApps", "#/MyApps;#/uppsrc" },
-		{ "MyApps-bazaar", "#/MyApps;#/bazaar;#/uppsrc" },
+	//	{ "MyApps-bazaar", "#/MyApps;#/bazaar;#/uppsrc" },
 	};
 
 	String exe = GetExeFilePath();
