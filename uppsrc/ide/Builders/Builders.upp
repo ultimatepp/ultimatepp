@@ -6,9 +6,11 @@ uses
 	ide\Core,
 	ide/Android,
 	ide/Java,
-	ide/Android,
-	plugin/png,
-	Draw;
+	ide/Android;
+
+uses(!NOSO) plugin/png;
+
+uses(!NOSO) Draw;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,

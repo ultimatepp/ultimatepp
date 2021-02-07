@@ -391,6 +391,7 @@ void Ide::Setup(Bar& menu)
 		if(SetupSVNTrunk()) {
 			IdeAgain = true;
 			Break();
+			
 		}
 	});
 
