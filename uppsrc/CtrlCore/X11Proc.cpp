@@ -219,7 +219,11 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			}
 			LLOG("KeySym:" << FormatIntHex(keysym) << " " << (char)keysym << " " << count);
 			dword up = pressed ? 0 : K_KEYUP;
-			static struct { KeySym keysym; dword key; } tab[] = {
+			static struct {
+				KeySym keysym;
+				dword key;
+			}
+			keypadtab[] = {
 				{ XK_ISO_Left_Tab, K_TAB|K_SHIFT },
 				{ XK_BackSpace,    K_BACKSPACE },
 				{ XK_Tab,          K_TAB       },
@@ -245,12 +249,38 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 				{ XK_KP_Begin,     K_HOME      },
 				{ XK_KP_Insert,    K_INSERT    },
 				{ XK_KP_Delete,    K_DELETE    },
+			},
+			numpadtab[] = {
+				{ XK_KP_0,         K_NUMPAD0   },
+				{ XK_KP_1,         K_NUMPAD1   },
+				{ XK_KP_2,         K_NUMPAD2   },
+				{ XK_KP_3,         K_NUMPAD3   },
+				{ XK_KP_4,         K_NUMPAD4   },
+				{ XK_KP_5,         K_NUMPAD5   },
+				{ XK_KP_6,         K_NUMPAD6   },
+				{ XK_KP_7,         K_NUMPAD7   },
+				{ XK_KP_8,         K_NUMPAD8   },
+				{ XK_KP_9,         K_NUMPAD9   },
+				{ XK_KP_Multiply,  K_MULTIPLY  },
+				{ XK_KP_Add,       K_ADD       },
+				{ XK_KP_Separator, K_SEPARATOR },
+				{ XK_KP_Subtract,  K_SUBTRACT  },
+				{ XK_KP_Decimal,   K_DECIMAL   },
+				{ XK_KP_Divide,    K_DIVIDE    },
 			};
-			for(int i = 0; i < __countof(tab); i++)
-				if(tab[i].keysym == keysym) {
-					DispatchKey(KEYtoK(tab[i].key)|up, count);
+			for(int i = 0; i < __countof(keypadtab); i++) {
+				if(keypadtab[i].keysym == keysym) {
+					DispatchKey(KEYtoK(keypadtab[i].key|up), count);
 					return;
 				}
+			}
+			if(GetCtrl() || GetAlt()) // Send Numpad keycodes.
+				for(int i = 0; i < __countof(numpadtab); i++) {
+				if(numpadtab[i].keysym == keysym) {
+					DispatchKey(KEYtoK(numpadtab[i].key|up), count);
+					return;
+				}
+			}
 			if(GetShift() && chr == 0) {
 				static dword k[] = { 41, 33, 64, 35, 36, 37, 94, 38, 42, 40 };
 				for(int i = 0; i < 10; i++)
