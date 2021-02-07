@@ -285,6 +285,10 @@ class JsonIO;
 	#endif
 #endif
 
+#if defined(CPU_SSE2) && defined(CPU_32) && defined(PLATFORM_POSIX)
+#undef CPU_SSE2
+#endif
+
 #ifdef CPU_SSE2
 #include "SIMD_SSE2.h"
 #define CPU_SIMD 1
