@@ -2,32 +2,26 @@
 
 namespace Upp {
 
-#define DELDUMP
+#define LLOG(x) // DLOG(x)
 
-#ifdef DELDUMP
-	#define LINK(ta, ia, tb, ib) \
-		RLOG("Link " << ta << "[" << ia << "] to " << tb << "[" << ib << "]"); \
-		Link(ta, ia, tb, ib)
-#else
-	#define LINK(ta, ia, tb, ib) Link(ta, ia, tb, ib)
-#endif
-
-static bool PointOrder(const Pointf& a, const Pointf& b) { return a.x < b.x || a.x == b.x && a.y < b.y; }
+inline
+void Delaunay::Link(int ta, int ia, int tb, int ib)
+{
+	LLOG("Link " << ta << "[" << ia << "] to " << tb << "[" << ib << "]"); \
+	triangles[ta].SetNext(ia, tb, ib);
+	triangles[tb].SetNext(ib, ta, ia);
+}
 
 void Delaunay::Build(const Array<Pointf>& p, double e)
 {
 	epsilon = e;
 	epsilon2 = e * e;
 	points <<= p;
-	order = GetSortOrder(points, &PointOrder);
+	order = GetSortOrder(points, [](const Pointf& a, const Pointf& b) { return a.x < b.x || a.x == b.x && a.y < b.y; });
 	tihull = -1;
 	int npoints = p.GetCount();
 
-#ifdef DELDUMP
-	RLOG("Delaunay(" << npoints << " points)");
-	for(int dd = 0; dd < npoints; dd++)
-		RLOG("[" << dd << "] = " << points[dd]);
-#endif
+	LLOG("Delaunay(" << npoints << " points): " << points);
 
 	triangles.Clear();
 	if(order.IsEmpty())
@@ -43,8 +37,8 @@ void Delaunay::Build(const Array<Pointf>& p, double e)
 	CreatePair(order[0], order[xi]);
 	while(++xi < npoints)
 		AddHull(order[xi]);
-
-#ifdef DELDUMP
+	
+#if 0
 	RLOG("//Delaunay: " << triangles.GetCount() << " triangles");
 	for(int td = 0; td < triangles.GetCount(); td++)
 	{
@@ -60,9 +54,18 @@ void Delaunay::Build(const Array<Pointf>& p, double e)
 	RLOG("");
 #endif
 
+// #define SANITY
+#ifdef SANITY
+	int sanity = 0;
+#endif
+
 	int clean = 0;
 	do
 	{
+	#ifdef SANITY
+		ASSERT(sanity++ < 1000);
+	#endif
+		LLOG("--------------- Cleaning from " << clean);
 		int old_clean = clean;
 		clean = triangles.GetCount();
 		for(int i = clean; --i >= old_clean;)
@@ -87,18 +90,18 @@ void Delaunay::Build(const Array<Pointf>& p, double e)
 						double t2 = (B - C) % (B - A);
 						double u1 = (D - C) ^ (B - D);
 						double u2 = (B - C) % (B - D);
-						if(t1 * u2 < t2 * u1)
+						if(t1 * u2 - t2 * u1 < -epsilon)
 						{ // not locally Delaunay, flip
 							int y1 = y + 1, y2 = y + 2;
 							if(y1 >= 3) y1 -= 3;
 							if(y2 >= 3) y2 -= 3;
-#ifdef DELDUMP
-							RLOG("Delaunay flip (" << i << " / " << x << ", " << j << " / " << y << ")");
-							RLOG(i << ": " << t[x] << " - " << A << ", " << t[x1] << " - " << B << ", " << t[x2] << " - " << C);
-							RLOG(j << ": " << u[y] << " - " << D << ", " << u[y1] << " - " << At(u, y1) << ", " << u[y2] << " - " << At(u, y2));
-							RLOG("t1 = " << t1 << ", t2 = " << t2 << ", t = " << t1 / t2);
-							RLOG("u1 = " << u1 << ", u2 = " << u2 << ", u = " << u1 / u2);
-#endif
+
+							LLOG("Delaunay flip (" << i << " / " << x << ", " << j << " / " << y << ")");
+							LLOG(i << ": " << t[x] << " - " << A << ", " << t[x1] << " - " << B << ", " << t[x2] << " - " << C);
+							LLOG(j << ": " << u[y] << " - " << D << ", " << u[y1] << " - " << At(u, y1) << ", " << u[y2] << " - " << At(u, y2));
+							LLOG("t1 = " << t1 << ", t2 = " << t2 << ", t = " << t1 / t2);
+							LLOG("u1 = " << u1 << ", u2 = " << u2 << ", u = " << u1 / u2);
+
 							Triangle ot = t;
 							Triangle ou = u;
 							ASSERT(ot[x1] == ou[y2] && ot[x2] == ou[y1]);
@@ -110,10 +113,9 @@ void Delaunay::Build(const Array<Pointf>& p, double e)
 							Link(j, 1, ou.Next(y2), ou.NextIndex(y2));
 							Link(j, 2, ot.Next(x1), ot.NextIndex(x1));
 							clean = i;
-#ifdef DELDUMP
-							RLOG("After flip: [" << i << "] = " << t[x] << ", " << t[x1] << ", " << t[y2]
+
+							LLOG("After flip: [" << i << "] = " << t[x] << ", " << t[x1] << ", " << t[y2]
 								<< "; [" << j << "] = " << u[y] << ", " << u[y1] << ", " << u[y2]);
-#endif
 						}
 					}
 				}
@@ -124,24 +126,22 @@ void Delaunay::Build(const Array<Pointf>& p, double e)
 
 void Delaunay::CreatePair(int i, int j)
 {
-#ifdef DELDUMP
-	RLOG("CreatePair(" << i << ": " << points[i] << ", " << j << ": " << points[j] << ")");
-#endif
+	LLOG("CreatePair(" << i << ": " << points[i] << ", " << j << ": " << points[j] << ")");
+
 	int ia = triangles.GetCount(), ib = ia + 1;
 	triangles.Add().Set(-1, i, j);
 	triangles.Add().Set(-1, j, i);
-	LINK(ia, 0, ib, 0);
-	LINK(ia, 1, ib, 2);
-	LINK(ia, 2, ib, 1);
+	Link(ia, 0, ib, 0);
+	Link(ia, 1, ib, 2);
+	Link(ia, 2, ib, 1);
 
 	tihull = ia;
 }
 
 void Delaunay::AddHull(int i)
 {
-#ifdef DELDUMP
-	RLOG("AddHull(" << i << ": " << points[i] << ")");
-#endif
+	LLOG("AddHull(" << i << ": " << points[i] << ")");
+
 	ASSERT(tihull >= 0);
 	Pointf newpt = points[i];
 	int hi = tihull;
@@ -156,9 +156,7 @@ void Delaunay::AddHull(int i)
 		double d2 = Squared(t1 - newpt);
 		if(d2 <= epsilon2)
 		{
-#ifdef DELDUMP
-			RLOG("-> too close to " << t[1] << ": " << t1);
-#endif
+			LLOG("-> too close to " << t[1] << ": " << t1);
 			return; // too close
 		}
 		if(d2 < nd2)
@@ -168,9 +166,7 @@ void Delaunay::AddHull(int i)
 		}
 		if((t2 - t1) % (newpt - tm) > epsilon2)
 		{
-#ifdef DELDUMP
-			RLOG("IN[" << hi << "], was_out = " << was_out);
-#endif
+			LLOG("IN[" << hi << "], was_out = " << was_out);
 			if(was_out)
 				vf = hi;
 			if(!fix_out)
@@ -179,9 +175,7 @@ void Delaunay::AddHull(int i)
 		}
 		else
 		{
-#ifdef DELDUMP
-			RLOG("OUT[" << hi << "], was_out = " << was_out);
-#endif
+			LLOG("OUT[" << hi << "], was_out = " << was_out);
 			was_out = true;
 			if(vl >= 0)
 				fix_out = true;
@@ -198,15 +192,13 @@ void Delaunay::AddHull(int i)
 		int j = tm[1];
 
 		int ia = triangles.GetCount(), ib = ia + 1;
-#ifdef DELDUMP
-		RLOG("collinear -> connect " << im << " -> " << ia << " -> " << ib << " -> " << in);
-#endif
+		LLOG("collinear -> connect " << im << " -> " << ia << " -> " << ib << " -> " << in);
 		triangles.Add().Set(-1, i, j);
 		triangles.Add().Set(-1, j, i);
-		LINK(ia, 0, ib, 0);
-		LINK(ia, 2, ib, 1);
-		LINK(ia, 1, im, 2);
-		LINK(ib, 2, in, 1);
+		Link(ia, 0, ib, 0);
+		Link(ia, 2, ib, 1);
+		Link(ia, 1, im, 2);
+		Link(ib, 2, in, 1);
 	}
 	else
 	{
@@ -215,9 +207,7 @@ void Delaunay::AddHull(int i)
 		int xfn = tf.Next(2), xln = tl.Next(1);
 
 		int xf = triangles.GetCount(), xl = xf + 1;
-#ifdef DELDUMP
-		RLOG("adding vertex " << i << ": " << points[i] << " to hull between " << vf << " and " << vl);
-#endif
+		LLOG("adding vertex " << i << ": " << points[i] << " to hull between " << vf << " and " << vl);
 		triangles.Add().Set(-1, tf[1], i);
 		triangles.Add().Set(-1, i, tl[2]);
 
@@ -226,13 +216,13 @@ void Delaunay::AddHull(int i)
 		for(int f = vf; f != vl; triangles[f = triangles[f].Next(1)][0] = i)
 			;
 
-		LINK(xf, 0, vf, 2);
-		LINK(xl, 0, vl, 1);
+		Link(xf, 0, vf, 2);
+		Link(xl, 0, vl, 1);
 
-		LINK(xf, 2, xfn, 1);
-		LINK(xl, 1, xln, 2);
+		Link(xf, 2, xfn, 1);
+		Link(xl, 1, xln, 2);
 
-		LINK(xf, 1, xl, 2);
+		Link(xf, 1, xl, 2);
 	}
 }
 
