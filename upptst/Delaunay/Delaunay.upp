@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Geom;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
