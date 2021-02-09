@@ -33,7 +33,7 @@ private:
 	bool                          IsNear(const Pointf& a, const Pointf& b) const { return fabs(a.x - b.x) <= epsilon && fabs(a.y - b.y) <= epsilon; }
 	void                          CreatePair(int i, int j);
 	void                          AddHull(int i);
-	void                          Link(int ta, int ia, int tb, int ib)         { triangles[ta].SetNext(ia, tb, ib); triangles[tb].SetNext(ib, ta, ia); }
+	void                          Link(int ta, int ia, int tb, int ib);
 
 private:
 	Array<Pointf>                 points;
