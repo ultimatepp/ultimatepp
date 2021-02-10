@@ -235,7 +235,7 @@ void Switch::Paint(Draw& w) {
 
 int Switch::GetIndex(Point p) {
 	for(int i = 0; i < cs.GetCount(); i++) {
-		if(cs[i].rect.Contains(p))
+		if(cs[i].rect.Contains(p) && cs[i].enabled)
 			return i;
 	}
 	return -1;
