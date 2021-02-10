@@ -5,7 +5,7 @@ namespace Upp{
 	SurfaceCtrl_Demo::SurfaceCtrl_Demo()
 	{
 		CtrlLayout(*this, "SurfaceCtrl demo");
-		filename.SetText( GetFileDirectory(__FILE__) + "Stanford_Bunny_sample.stl" );
+		filename.SetText( GetDataFile("Stanford_Bunny_sample.stl")  );
 		
 		filename.WhenAction = [&]{
 			WString str = filename.GetText();
@@ -40,17 +40,17 @@ namespace Upp{
 			canvas.Refresh();
 		};
 		
-		skybox = canvas.GetSkybox().IsShown();  
+		skybox = canvas.GetSkybox().IsShown();
 		skybox.WhenAction = [&]{
 			if(!canvas.GetSkybox().IsLoaded()){
 				canvas.ExecuteGL([&]{
 				canvas.GetSkybox().Init(
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/right.jpg"),
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/left.jpg"),
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/top.jpg"),
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/bottom.jpg"),
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/front.jpg"),
-				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory() + "skybox/back.jpg"));
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/right.jpg")),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/left.jpg")),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/top.jpg")),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/bottom.jpg")),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/front.jpg")),
+				StreamRaster::LoadFileAny( GetSurfaceCtrlDirectory("skybox/back.jpg")));
 				});
 			}
 			canvas.GetSkybox().Show(skybox.Get());
@@ -90,7 +90,7 @@ namespace Upp{
 			try {
 				canvas.ExecuteGL([&]{
 					Object3D& obj = canvas.CreateObject();
-					obj.LoadModel(GetFileDirectory(__FILE__) + "earth/earth.obj").AttachTexture(obj.InsertTexture(GetFileDirectory(__FILE__) + "earth/earth.png",-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
+					obj.LoadModel(GetDataFile("earth/earth.obj")).AttachTexture(obj.InsertTexture(GetDataFile("earth/earth.png"),-1,FLIP_MIRROR_VERT),0,obj.GetMeshes().GetCount()).Init();
 					obj.GetTransform().Rotate(-180,glm::vec3(1.0f,0.0f,0.0f));
 					canvas.SetDefaultShader(obj);
 					canvas.ZoomToFit();
@@ -104,7 +104,7 @@ namespace Upp{
 			try {
 				canvas.ExecuteGL([&]{
 					Object3D& obj = canvas.CreateObject();
-					obj.LoadModel(GetFileDirectory(__FILE__) + "ultimate/upp.obj").Init();
+					obj.LoadModel(GetDataFile("ultimate/upp.obj")).Init();
 					canvas.SetDefaultShader(obj);
 					canvas.ZoomToFit();
 				});
