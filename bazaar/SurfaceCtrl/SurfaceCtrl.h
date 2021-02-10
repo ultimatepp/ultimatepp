@@ -7,8 +7,11 @@
 
 namespace Upp{
 	
-static const String GetSurfaceCtrlDirectory(){
-	return GetFileDirectory(__FILE__);
+static const String GetSurfaceCtrlDirectory(const String& ressourceToGet=""){
+	if(FileExists(GetFileDirectory(__FILE__) + ressourceToGet))
+		return GetFileDirectory(__FILE__) + ressourceToGet;
+	else
+		return GetExeDirFile(ressourceToGet);
 }
 	
 class SurfaceCtrl : public GLCtrl{
