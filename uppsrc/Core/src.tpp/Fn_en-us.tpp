@@ -68,8 +68,8 @@ lass]_[*@4 T], [@(0.0.255) class]_[*@4 T1], ...> T_[* get`_i]([@(0.0.255) int]_[
 har]_`*[* get`_i]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p0], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p1], ...)&]
 [s2;%% Returns parameter [%-*/@3 p][%-*@3 i]. If [%-*@3 i] is negative, 
-returns [%-*/@3 p][%-*@3 0], if it is greater then the last parameter, 
-returns the last parameter.&]
+returns [%-*/@3 p][%-*@3 0], if it is greater then the number of 
+parameters, returns the last parameter.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:foreach`_arg`(F`,const T`&`,const T1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) c
