@@ -4,7 +4,6 @@ struct UppHubNest : Moveable<UppHubNest> {
 	int              tier = -1;
 	String           name;
 	Vector<String>   packages;
-	Vector<String>   uses;
 	String           description;
 	String           repo;
 	String           status = "unknown";
@@ -167,9 +166,6 @@ void UppHubDlg::Load(int tier, const String& url)
 			if(tt || n.packages.GetCount() == 0)
 				for(Value p : ns["packages"])
 					n.packages.Add(p);
-			if(tt || n.uses.GetCount() == 0)
-				for(Value p : ns["uses"])
-					n.uses.Add(p);
 			auto Attr = [&](String& a, const char *id) {
 				if(tt || IsNull(a))
 					a = ns[id];
@@ -221,24 +217,35 @@ void UppHubDlg::Load()
 void UppHubDlg::Install(const Index<String>& ii_)
 {
 	Index<String> ii = clone(ii_);
-	for(int i = 0; i < ii.GetCount(); i++)
-		if(UppHubNest *n = Get(ii[i]))
-			for(String s : n->uses)
-				ii.FindAdd(s);
-
 	UrepoConsole console;
 	if(ii.GetCount()) {
-		for(String ns : ii) {
+		int i = 0;
+		while(i < ii.GetCount()) {
+			String ns = ii[i++];
 			UppHubNest *n = Get(ns);
 			if(n) {
-				String cmd = "git clone ";
-				String repo2, branch;
-				if(SplitTo(n->repo, ' ', repo2, branch))
-					cmd << "-b " + branch + " " + repo2;
-				else
-					cmd << n->repo;
-				cmd << ' ' << GetHubDir() << '/' << n->name;
-				console.System(cmd);
+				String dir = GetHubDir() + '/' + n->name;
+				if(!DirectoryExists(dir)) {
+					String cmd = "git clone ";
+					String repo2, branch;
+					if(SplitTo(n->repo, ' ', repo2, branch))
+						cmd << "-b " + branch + " " + repo2;
+					else
+						cmd << n->repo;
+					cmd << ' ' << dir;
+					console.System(cmd);
+					for(String p : n->packages) {
+						Package pkg;
+						pkg.Load(dir + '/' + p + '/' + p + ".upp");
+						for(const auto& u : pkg.uses)
+							for(const UppHubNest& n : upv)
+								for(const String& p : n.packages)
+									if(u.text == p) {
+										ii.FindAdd(n.name);
+										break;
+									}
+					}
+				}
 			}
 		}
 		console.Log("Done", Gray());
