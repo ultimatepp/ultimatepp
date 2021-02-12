@@ -644,10 +644,10 @@ If ext is `"`", the format is taken from [%-*@3 fileName] extension.&]
 ]_[* DrawRectLine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [@(0.0.255) int]_[*@3 x], 
 [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height], 
 [@(0.0.255) int]_[*@3 lineWidth], [@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
-[s5;:DrawRectLine`(Draw`&`,Point`&`,Size`&`,int`,const Color`&`):%- [@(0.0.255) void]_[* D
-rawRectLine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [_^Point^ Point]_`&[*@3 pos], 
-[_^Size^ Size]_`&[*@3 s], [@(0.0.255) int]_[*@3 lineWidth], [@(0.0.255) const]_[_^Color^ Colo
-r]_`&[*@3 color])&]
+[s5;:DrawRectLine`(Draw`&`,Point`&`,const Size`&`,int`,const Color`&`):%- [@(0.0.255) v
+oid]_[* DrawRectLine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [_^Point^ Point]_`&[*@3 pos], 
+[@(0.0.255) const]_[_^Size^ Size]_`&[*@3 s], [@(0.0.255) int]_[*@3 lineWidth], 
+[@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
 [s5;:DrawRectLine`(Draw`&`,Rect`&`,int`,const Color`&`):%- [@(0.0.255) void]_[* DrawRectL
 ine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [_^Rect^ Rect]_`&[*@3 r], [@(0.0.255) int]_[*@3 lin
 eWidth], [@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
@@ -758,6 +758,18 @@ button can be pressed again so the function can be called twice.&]
 it opens a new window using, lets say, PromptOK(). This way ChildLostFocus 
 will be called twice: the second one because PromptOK() makes 
 the field to loose the focus.&]
+[s3; &]
+[s4; &]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
+[s1;:Upp`:`:TempAssign`:`:struct:%- [@(0.0.255) struct]_[* TempAssign]&]
+[s2; A class to temporary assign a value to a variable. Original 
+value is set again to the variable after the class destructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:TempAssign`:`:TempAssign`(T`&`,T`):%- [* TempAssign]([*@4 T]_`&[*@3 val], 
+[*@4 T]_[*@3 set])&]
+[s2; Value of variable [%-*@3 val] is replaced temporarily with value 
+[%-*@3 set].&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:tmGetTimeX`(`):%- [@(0.0.255) double]_[* tmGetTimeX]()&]

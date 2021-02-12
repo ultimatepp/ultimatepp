@@ -123,7 +123,7 @@ void DrawRectLine(Draw& w, int x, int y, int width, int height, int lineWidth, c
 	w.DrawLine(x, y+height, x, y, lineWidth, color);
 }
 
-void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &color) {
+void DrawRectLine(Draw& w, Point &pos, const Size &s, int lineWidth, const Color &color) {
 	w.DrawLine(pos.x, pos.y, pos.x+s.cx, pos.y, lineWidth, color);
 	w.DrawLine(pos.x+s.cx, pos.y, pos.x+s.cx, pos.y+s.cy, lineWidth, color);
 	w.DrawLine(pos.x+s.cx, pos.y+s.cy, pos.x, pos.y+s.cy, lineWidth, color);

@@ -38,7 +38,7 @@ Image NativePathIconX(const char *path, bool folder, int flags = 0);
 
 class CParserPlus : public CParser {
 public:
-	CParserPlus(const char *ptr) : CParser(ptr) {}
+	explicit CParserPlus(const char *ptr) : CParser(ptr) {}
 	String ReadIdPlus();
 };
 
@@ -96,7 +96,7 @@ int GetEditWidth(const String &str, const Font font);
 class ConsoleOutput {
 public:
 	ConsoleOutput() 				{Init();}
-	ConsoleOutput(bool forceWindow) {Init(forceWindow);}
+	explicit ConsoleOutput(bool forceWindow) {Init(forceWindow);}
 	virtual ~ConsoleOutput(); 
 	
 	bool Init(bool forceWindow = false);
@@ -115,18 +115,17 @@ Vector<int> ArrayCtrlSelectedGet(const ArrayCtrl &array);
 int ArrayCtrlSelectedGetCount(const ArrayCtrl &array);
 Vector<Vector<Value>> ArrayCtrlGet(const ArrayCtrl &arr);
 void ArrayCtrlSet(ArrayCtrl &array, const Vector<Vector<Value>> &vals, int fromRow = 0, int fromCol = 0);
-		
+
 template <class T>
 T &GetDefinedParent(Ctrl *ths) {
-	T *main;
 	while (ths->GetParent() != nullptr) {
 		ths = ths->GetParent();
+		T *main;
 		if ((main = dynamic_cast<T*>(ths)) != nullptr)
 			return *main;
 	}
 	NEVER_(t_("Parent does not found in GetDefinedParent()"));
 	throw Exc(t_("Parent does not found in GetDefinedParent()"));
-	//return *main;
 }
 
 }

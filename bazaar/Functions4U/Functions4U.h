@@ -288,13 +288,18 @@ T fact(T val) {
 }
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
+	ASSERT(max > min);
 	return val >= min && val <= max;
+}
+template <class T> 
+inline bool Between(const T& val, const T& range) { 
+	ASSERT(range > 0);
+	return val >= -range && val <= range;
 }
 template <class T> 
 inline T BetweenVal(const T& val, const T& _min, const T& _max) { 
 	return max(_min, min(_max, val));
 }
-
 template <class T> 
 inline T FixFloat(T val) {
 	if(std::isnan(val) || std::isinf(val) || val == HUGE_VAL || val == -HUGE_VAL)
@@ -338,6 +343,10 @@ inline const T Angle(const Point_<T>& p1, const Point_<T>& p2)  {
 	return Angle<T>(p1.x, p1.y, p2.x, p2.y);
 }
 
+template <class T> 
+inline const Point_<T> Middle(const Point_<T>& p1, const Point_<T>& p2)  { 
+	return Point_<T>(Avg(p1.x, p2.x), Avg(p1.y, p2.y));
+}
 
 Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
 Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
@@ -349,9 +358,10 @@ bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char sep
 // A String based class to parse into
 class StringParse : public String {
 public:
+	explicit StringParse() : String("") {GoInit();};
+	StringParse(String _s): String(_s)  {GoInit();};
+	
 	void GoInit()	{pos = 0; lastSeparator='\0';};
-	StringParse():String("") {GoInit();};
-	StringParse(String _s): String(_s) {GoInit();};
 	bool GoBefore(const String text) {
 		if (pos >= GetLength()) {
 			pos = GetLength()-1;
@@ -591,8 +601,8 @@ int SysX(const char *cmd, String& out, String& err, double timeOut = Null,
 	
 class _NRFuse {
 public:
-	_NRFuse(bool *_inside) {inside = _inside; failed = true;}
-	virtual ~_NRFuse() 			   {if (!failed) *inside = false;}
+	explicit _NRFuse(bool *_inside) {inside = _inside; failed = true;}
+	virtual ~_NRFuse() 			   	{if (!failed) *inside = false;}
 	bool failed;
 private:
 	bool *inside;
@@ -613,16 +623,14 @@ private:
 
 template <class T>
 struct TempAssign {
-	TempAssign(T &_val, T set) {
-		old = _val;
-		_val = set;
-		val = &_val;
+	TempAssign(T &_variable, T newvalue) : oldvalue(_variable), variable(&_variable) {
+		*variable = newvalue;
 	}
 	virtual ~TempAssign() {
-		*val = old;
+		*variable = oldvalue;
 	}
 	
-	T *val, old;
+	T *variable, oldvalue;
 };
 
 /*						Replaced with std::atomic
@@ -994,8 +1002,8 @@ private:
 	LocalProcess2 p;
 	RealTimeStop timeElapsed, timeWithoutOutput;
 	ProcessStatus status = STOP_OK;
-	double maxTimeWithoutOutput, maxRunTime;
-	double refreshTime;
+	double maxTimeWithoutOutput = 0, maxRunTime = 0;
+	double refreshTime = 0;
 #ifdef CTRLLIB_H	
 	bool callbackOn = false;
 	TimeCallback timeCallback;
@@ -1027,7 +1035,7 @@ size_t GetNumLines(Stream &stream);
 
 class FileInLine : public FileIn {
 public:
-	FileInLine(String _fileName) : FileIn(_fileName), line(0), fileName(_fileName) {};
+	explicit FileInLine(String _fileName) : FileIn(_fileName), line(0), fileName(_fileName) {};
 	String GetLine() {
 		line++;	
 		return FileIn::GetLine();
@@ -1064,8 +1072,8 @@ private:
 
 class FileInBinary : public FileIn {
 public:
-	FileInBinary()                          	{}
-	FileInBinary(const char *fn) : FileIn(fn)	{}
+	FileInBinary()                  		        	{}
+	explicit FileInBinary(const char *fn) : FileIn(fn)	{}
 	
 	void ReadB(void *data, size_t sz) {
 		int64 len = Get64(data, sz);
@@ -1089,8 +1097,8 @@ public:
 
 class FileOutBinary : public FileOut {
 public:
-	FileOutBinary(const char *fn) : FileOut(fn)	{}
-	FileOutBinary()                          		{}
+	explicit FileOutBinary(const char *fn) : FileOut(fn)	{}
+	FileOutBinary()                          				{}
 	
 	template <class T>
 	void Write(T data) {
@@ -1103,7 +1111,7 @@ public:
 	const int FIRST = 0;
 	const int LAST = Null;
 	
-	FieldSplit(FileInLine &_in) {in = &_in;}
+	explicit FieldSplit(FileInLine &_in) {in = &_in;}
 	
 	FieldSplit& Load(String _line) {
 		line = _line;

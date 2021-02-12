@@ -48,7 +48,7 @@ static Topic ReadTopic(const char *text)
 			}
 		}
 	}
-	catch(CParser::Error e) {
+	catch(CParser::Error &e) {
 		topic.text = String::GetVoid();
 		topic.title = e;
 	}
@@ -102,7 +102,7 @@ struct GatherLinkIterator : RichText::Iterator {
 	VectorMap<String, String> *reflink;
 	Index<String> link;
 
-	GatherLinkIterator(VectorMap<String, String> *_reflink) : reflink(_reflink) {};
+	explicit GatherLinkIterator(VectorMap<String, String> *_reflink) : reflink(_reflink) {};
 	virtual bool operator()(int , const RichPara& para)
 	{
 		for(int i = 0; i < para.GetCount(); i++) {
@@ -192,8 +192,6 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String _keywords)
 	Index<String> css;
 	String path = links.GetKey(i);
 	
-	String text = GetText(path);
-	
 	String qtflangs;	
 	String strlang;
 
@@ -215,7 +213,7 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String _keywords)
 			)
 		);
 
-	String topicTitle = tt.GetKey(i);
+	//String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
 		pageTitle = title;

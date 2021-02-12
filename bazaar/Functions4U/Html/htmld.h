@@ -51,9 +51,9 @@ public:
 	
 	String operator~() const           { return text; }
 
+	HtmlsD() {}
 	HtmlsD(const char *s) : text(s) {}
 	HtmlsD(const String& s) : text(s) {}
-	HtmlsD() {}
 	HtmlsD(const Nuller&) {}
 };
 
@@ -189,7 +189,7 @@ public:
 
 	bool          IsEmpty() const                            { return IsNull(tag); }
 
-	HtmlTagD(const char *s);
+	explicit HtmlTagD(const char *s);
 	HtmlTagD() {}
 };
 

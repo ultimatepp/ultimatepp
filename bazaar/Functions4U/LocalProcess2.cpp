@@ -170,9 +170,7 @@ bool LocalProcess2::DoStart(const char *_command, const Vector<String> *arg, boo
 	return true;
 #endif
 #ifdef PLATFORM_POSIX
-	String app;
 	if(arg) {
-		app = command;
 		int n = strlen(command) + 1;
 		for(int i = 0; i < arg->GetCount(); i++)
 			n += (*arg)[i].GetCount() + 1;
@@ -480,9 +478,8 @@ bool LocalProcess2::IsRunning() {
 		LLOG("IsRunning() -> no");
 		return false;
 	}
-	int status = 0, wp;
-	if(!( (wp = waitpid(pid, &status, WNOHANG | WUNTRACED)) == pid && 
-	      DecodeExitCode(status) ))
+	int status = 0;
+	if(!(waitpid(pid, &status, WNOHANG | WUNTRACED) == pid && DecodeExitCode(status)))
 		return true;
 	LLOG("IsRunning() -> no, just exited, exit code = " << exit_code);
 	return false;

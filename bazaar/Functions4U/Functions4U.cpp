@@ -2590,10 +2590,6 @@ void *Dl::GetFunction(const String &functionName) {
 
 #include <dlfcn.h>
 
-Dl::Dl() {
-	hinstLib = 0;
-}
-
 Dl::~Dl() {
 	if (hinstLib) 
 		if (dlclose(hinstLib) == 0)
