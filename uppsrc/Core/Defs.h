@@ -278,7 +278,7 @@ template <class T> bool IsNull(const T& x)       { return x.IsNullInstance(); }
 
 template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
 template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
-template<> inline bool  IsNull(const double& r)  { return !(abs(r) < -DOUBLE_NULL); }
+template<> inline bool  IsNull(const double& r)  { return !(std::abs(r) < -DOUBLE_NULL); }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
 
 #include "Heap.h"
