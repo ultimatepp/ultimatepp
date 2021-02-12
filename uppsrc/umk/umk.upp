@@ -12,6 +12,5 @@ file
 	umake.cpp;
 
 mainconfig
-	"" = "",
-	"" = "NOSO";
+	"" = "";
 
