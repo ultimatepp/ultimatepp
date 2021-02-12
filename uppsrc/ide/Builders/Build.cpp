@@ -104,8 +104,10 @@ void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
 		String p = GetExeDirFile("bin/mingit/cmd");
 		if(FileExists(p + "/git.exe"))
 			host.exedirs.Add(p);
-#endif
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
+#else
+		env.GetAdd("PATH") = Join(host.exedirs, ":");
+#endif
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
 		if(disable_uhd)
