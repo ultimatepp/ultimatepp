@@ -14,7 +14,7 @@ public:
 	SplitterButton& Horz(Ctrl &left, Ctrl &right);
 	SplitterButton& Vert(Ctrl& top, Ctrl& bottom);
 	
-	SplitterButton &SetPositions(Vector<int> &_positions);
+	SplitterButton &SetPositions(const Vector<int> &_positions);
 	SplitterButton &SetPositions(int pos1);
 	SplitterButton &SetPositions(int pos1, int pos2);
 	SplitterButton &SetPositions(int pos1, int pos2, int pos3);

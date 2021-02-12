@@ -1,11 +1,11 @@
 topic "";
-[ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
 [b42;2 $$4,4#13035079074754324216151401829390:normal]
 [H6;0 $$5,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$6,0#37138531426314131252341829483370:item]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@7;4 SplitterButton]]}}&]
 [s1; &]
@@ -62,9 +62,9 @@ plitterButton][@(0.0.255) `&]_[* Vert]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3
 is horizontal.&]
 [s1; &]
 [s5;%- &]
-[s6;:Upp`:`:SplitterButton`:`:SetPositions`(Upp`:`:Vector`<int`>`&`):%- [_^Upp`:`:SplitterButton^ S
-plitterButton]_`&[* SetPositions]([_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>_`&[*@3 posi
-tions])&]
+[s6;:Upp`:`:SplitterButton`:`:SetPositions`(const Upp`:`:Vector`<int`>`&`):%- [_^Upp`:`:SplitterButton^ S
+plitterButton]_`&[* SetPositions]([@(0.0.255) const ][_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
+nt]>_`&[*@3 positions])&]
 [s3; Sets in [%-*@3 positions ]vector the separator line positions 
 in 0 to 10000 units. Minimum number of positions is two.&]
 [s1; &]

@@ -42,8 +42,7 @@ SplitterButton& SplitterButton::Vert(Ctrl& top, Ctrl& bottom) {
 	return *this;
 }
 
-SplitterButton &SplitterButton::SetPositions(Vector<int> &_positions) {
-	//ASSERT(_positions.GetCount() > 1);
+SplitterButton &SplitterButton::SetPositions(const Vector<int> &_positions) {
 	positions = clone(_positions);
 	Sort(positions);
 	if (positionId >= positions.GetCount() || positionId < 0)
