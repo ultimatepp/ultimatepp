@@ -147,7 +147,7 @@ LAYOUT(MoveCopyPackageLayout, 408, 80)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
 END_LAYOUT
 
-LAYOUT(NewPackageLayout, 892, 560)
+LAYOUT(NewPackageLayout, 892, 588)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Package name")).LeftPosZ(8, 80).TopPosZ(4, 19))
 	ITEM(Upp::EditString, package, LeftPosZ(88, 268).TopPosZ(4, 19))
 	ITEM(Upp::Label, dv___2, SetLabel(t_("Create in")).LeftPosZ(8, 84).TopPosZ(28, 19))
@@ -155,9 +155,10 @@ LAYOUT(NewPackageLayout, 892, 560)
 	ITEM(Upp::ArrayCtrl, templist, AutoHideSb(true).LeftPosZ(8, 348).TopPosZ(52, 272))
 	ITEM(Upp::Label, dv___5, SetLabel(t_("Package description")).LeftPosZ(364, 108).TopPosZ(4, 20))
 	ITEM(Upp::EditString, description, HSizePosZ(472, 4).TopPosZ(4, 19))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(292, 64).BottomPosZ(4, 24))
-	ITEM(Upp::Button, ok, SetLabel(t_("Create")).LeftPosZ(224, 64).BottomPosZ(4, 24))
-	UNTYPED(preview, HSizePosZ(364, 4).VSizePosZ(28, 4))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Create")).RightPosZ(76, 64).BottomPosZ(4, 24))
+	UNTYPED(preview, HSizePosZ(364, 4).VSizePosZ(28, 32))
+	ITEM(Upp::StaticText, template_end, LeftPosZ(292, 64).BottomPosZ(33, 35))
 END_LAYOUT
 
 LAYOUT(FileFormatLayout, 348, 184)
