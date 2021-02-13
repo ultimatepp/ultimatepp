@@ -280,7 +280,7 @@ void TemplateDlg::EnterTemplate()
 	ctrl.Clear();
 	Point pos = templist.GetRect().BottomLeft();
 	pos.y += 8;
-	int cx = cancel.GetRect().right - pos.x;
+	int cx = template_end.GetRect().right - pos.x;
 	for(int i = 0; i < tp.item.GetCount(); i++) {
 		const TemplateItem& m = tp.item[i];
 		if(m.type == TEMPLATEITEM_OPTION)
