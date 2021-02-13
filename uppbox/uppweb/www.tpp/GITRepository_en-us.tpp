@@ -59,9 +59,11 @@ the end you need to create PR from branch you created.&]
 [s3;:4: 4. Useful links&]
 [s5; External links:&]
 [s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp^ https://github.com/ultimatepp] 
-`- Ultimate`+`+ organization on GitHub&]
+`- U`+`+ organization on GitHub&]
 [s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ https://github.com/u
 ltimatepp/ultimatepp] `- GIT repository&]
 [s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/ultimatepp`/commits`/master^ ht
 tps://github.com/ultimatepp/ultimatepp/commits/master] `- Latest 
-changes]]
+changes&]
+[s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp`/UppHub^ https://github.com/ultim
+atepp/UppHub] `- Registry for additional U`+`+ packages]]
