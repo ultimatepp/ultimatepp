@@ -160,5 +160,7 @@ UppHub window.&]
 &]
 [s0; &]
 [s5; The whole process has been described comprehensively in [^https`:`/`/github`.com`/ultimatepp`/UppHub`/blob`/main`/README`.md^ R
-EADME.md] file localized in UppHub repository.&]
+EADME.md] file localized in UppHub repository. Moreover, the 
+exemplary PR can be found [^https`:`/`/github`.com`/ultimatepp`/UppHub`/pull`/7^ he
+re].&]
 [s5; ]]
