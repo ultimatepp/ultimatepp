@@ -111,7 +111,7 @@ void RepoDiff::Load()
 		extfile = RepoSys("svn cat " + editfile + '@' + AsString(~r));
 	if(kind == GIT_DIR)
 		extfile = GitCmd(GetFileFolder(editfile), "show " + ~~r + ":./" + GetFileName(editfile));
-	diff.Set(LoadFile(editfile), extfile);
+	diff.Set(backup = LoadFile(editfile), extfile);
 }
 
 RepoDiff::RepoDiff()

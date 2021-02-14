@@ -22,7 +22,7 @@ DirDiffDlg::DirDiffDlg()
 	files_pane.Add(dir1.TopPos(0, cy).HSizePos());
 	files_pane.Add(dir2.TopPos(cy + div, cy).HSizePos());
 	files_pane.Add(hidden.TopPos(2 * cy + 2 * div, bcy).LeftPos(0, bcx));
-	files_pane.Add(split_lines.TopPos(2 * cy + 2 * div, bcy).LeftPosZ(128, 100));
+	files_pane.Add(split_lines.TopPos(2 * cy + 2 * div, bcy).LeftPosZ(52, 100));
 	
 	files_pane.Add(   added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
 	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
@@ -69,26 +69,67 @@ DirDiffDlg::DirDiffDlg()
 	diff.InsertFrameLeft(left);
 	diff.InsertFrameRight(right);
 
-	bcx = GetTextSize(t_("Copy"), StdFont()).cx + HorzLayoutZoom(40);
-
 	left.Height(EditField::GetStdHeight());
 	lfile.SetReadOnly();
-	left.Add(lfile.VSizePos().HSizePos(0, bcx));
-	left.Add(copyright.VSizePos().RightPos(0, bcx));
-	copyright.SetImage(DiffImg::CopyRight());
-	copyright.SetLabel("Copy");
-	copyright <<= THISBACK1(Copy, false);
+	left.Add(lfile.VSizePos().HSizePosZ(0, 222));
+	left.Add(copyright.VSizePos().RightPosZ(0, 70));
+	left.Add(removeleft.VSizePos().RightPosZ(74, 70));
+	left.Add(revertleft.VSizePos().RightPosZ(148, 70));
 
 	right.Height(EditField::GetStdHeight());
 	rfile.SetReadOnly();
-	right.Add(rfile.VSizePos().HSizePos(bcx, 0));
-	right.Add(copyleft.VSizePos().LeftPos(0, bcx));
-	copyleft.SetImage(DiffImg::CopyLeft());
-	copyleft.SetLabel("Copy");
-	copyleft <<= THISBACK1(Copy, true);
+	right.Add(rfile.VSizePos().HSizePosZ(222, 0));
+	right.Add(copyleft.VSizePos().LeftPosZ(0, 70));
+	right.Add(removeright.VSizePos().LeftPosZ(74, 70));
+	right.Add(revertright.VSizePos().LeftPosZ(148, 70));
 	
-	copyleft.Disable();
-	copyright.Disable();
+	auto SetupCopy = [=](Button& copy, bool left) {
+		copy.SetImage(left ? DiffImg::CopyLeft() : DiffImg::CopyRight());
+		copy.SetLabel("Copy");
+		copy.Disable();
+		copy << [=] { Copy(left); };
+	};
+	
+	SetupCopy(copyleft, true);
+	SetupCopy(copyright, false);
+
+	auto SetupRevert = [=](Button& revert, EditString *dir) {
+		revert.Disable();
+		revert.SetLabel("Revert");
+		revert.SetImage(CtrlImg::undo());
+		revert << [=] {
+			String path = AppendFileName(~*dir, files.GetCurrentName());
+			int q = backup.Find(path);
+			if(q >= 0 && PromptYesNo("Revert changes?")) {
+				SaveFile(path, ZDecompress(backup[q]));
+				backup.Remove(q);
+				Refresh();
+			}
+		};
+	};
+	
+	SetupRevert(revertleft, &dir1);
+	SetupRevert(revertright, &dir2);
+	
+	auto SetupRemove = [=](Button& remove, TextCompareCtrl *text, EditString *dir)
+	{
+		remove.SetLabel("Remove");
+		remove.SetImage(CtrlImg::remove());
+		
+		remove << [=] {
+			String path = AppendFileName(~*dir, files.GetCurrentName());
+			Backup(path);
+			SaveFile(path, text->RemoveSelected(HasCrs(path)));
+			Refresh();
+		};
+	
+		text->WhenSel << [=, &remove] {
+			remove.Enable(text->IsSelection());
+		};
+	};
+	
+	SetupRemove(removeleft, &diff.left, &dir1);
+	SetupRemove(removeright, &diff.right, &dir2);
 	
 	split_lines << [=] { File(); };
 
@@ -246,6 +287,11 @@ void DirDiffDlg::File()
 	String fn = files.GetCurrentName();
 	String p1 = AppendFileName(~dir1, fn);
 	String p2 = AppendFileName(~dir2, fn);
+
+	diff.right.WhenHighlight = diff.left.WhenHighlight = [=](Vector<LineEdit::Highlight>& hl, const WString& ln) {
+		DiffDlg::WhenHighlight(AppendFileName(p1, files.GetCurrentName()), hl, ln);
+	};
+
 	diff.Set(Null, Null);
 	String f1 = LoadFile(p1);
 	String f2 = LoadFile(p2);
@@ -259,6 +305,22 @@ void DirDiffDlg::File()
 	rfile <<= p2;
 	copyleft.Enable();
 	copyright.Enable();
+	revertleft.Enable(backup.Find(p1) >= 0);
+	revertright.Enable(backup.Find(p2) >= 0);
+}
+
+void DirDiffDlg::Refresh()
+{
+	int sc = diff.GetSc();
+	File();
+	diff.Sc(sc);
+}
+
+void DirDiffDlg::Backup(const String& path)
+{
+	int q = backup.Find(path);
+	if(q < 0 && GetFileLength(path) < 4 * 1024 * 1024 && backup.GetCount() < 100)
+		backup.Add(path, ZCompress(LoadFile(path)));
 }
 
 void DirDiffDlg::Copy(bool left)
@@ -267,12 +329,19 @@ void DirDiffDlg::Copy(bool left)
 	String dst = ~rfile;
 	if(left)
 		Swap(src, dst);
+	if(left ? diff.right.IsSelection() : diff.left.IsSelection()) {
+		Backup(dst);
+		SaveFile(dst, diff.Merge(left, HasCrs(dst)));
+		Refresh();
+		return;
+	}
 	if(PromptYesNo("Copy [* \1" + src + "\1]&to [* \1" + dst + "\1] ?")) {
+		Backup(dst);
 		FileIn  in(src);
 		FileOut out(dst);
 		CopyStream(out, in);
 		out.Close();
-		File();
+		Refresh();
 	}
 }
 
@@ -283,6 +352,31 @@ bool Upp::DirDiffDlg::HotKey(dword key)
 		return true;
 	}
 	return false;
+}
+
+bool DirDiffDlg::Key(dword key, int count)
+{
+	bool left;
+	if(diff.left.HasFocus())
+		left = true;
+	else
+	if(diff.right.HasFocus())
+		left = false;
+	else
+		return TopWindow::Key(key, count);
+	switch(key) {
+	case K_F5:
+	case K_INSERT:
+	case K_ENTER:
+	case K_SPACE:
+		(left ? copyright : copyleft).WhenAction();
+		return true;
+	case K_F8:
+	case K_DELETE:
+		(left ? removeleft : removeright).WhenAction();
+		return true;
+	}
+	return TopWindow::Key(key, count);
 }
 
 };

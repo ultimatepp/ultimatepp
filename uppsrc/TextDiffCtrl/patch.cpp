@@ -156,15 +156,15 @@ String Patch::GetPatch(int i) const
 	return r;
 }
 
-String Patch::GetPatchedFile(int i) const
+String Patch::GetPatchedFile(int i, const String& text) const
 {
-	if(GetFileLength(GetPath(i)) > 10000000)
+	if(GetFileLength(GetPath(i)) > 4 * 1024 * 1024)
 		return String::GetVoid();
 	Vector<String> lines;
 	bool crlf = true;
 	String path = GetPath(i);
-	if(FileExists(path)) {
-		String s = LoadFile(GetPath(i));
+	if(FileExists(path) || IsNull(text)) {
+		String s = Nvl(text, LoadFile(GetPath(i)));
 		crlf = s.Find('\r') >= 0;
 		lines = Split(Filter(s, [](int c) { return c == '\r' ? 0 : c; }), '\n', false);
 	}

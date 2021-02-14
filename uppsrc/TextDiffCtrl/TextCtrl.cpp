@@ -46,6 +46,7 @@ void TextCompareCtrl::DoSelection(int y, bool shift)
 			cursor = anchor = i;
 		Refresh();
 		scroll.ScrollIntoY(ii);
+		WhenSel();
 	}
 }
 
@@ -89,6 +90,11 @@ void TextCompareCtrl::MouseMove(Point pt, dword flags)
 void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
 {
 	ReleaseCapture();
+}
+
+void Upp::TextCompareCtrl::LostFocus()
+{
+	Refresh();
 }
 
 void TextCompareCtrl::Copy()
@@ -291,18 +297,15 @@ void TextCompareCtrl::Paint(Draw& draw)
 	}
 	draw.Clip(n_width, 0, sz.cx - gutter_width - n_width, sz.cy);
 
-	int sell, selh;
-	GetSelection(sell, selh);
-	
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
 		Color ink = text_color;
 		Color paper = IsNull(l.number) ? missingpaper : l.diff ? diffpaper : paper_color;
-		bool sel = l.number >= sell && l.number <= selh;
+		bool sel = IsSelected(i);
 		if(sel) {
-			ink = SColorHighlightText;
-			paper = SColorHighlight;
+			ink = SColorHighlightText();
+			paper = HasFocus() ? SColorHighlight() : Blend(SColorHighlight(), SColorDisabled());
 		}
 
 		WString ln = l.text.ToWString();
@@ -480,7 +483,17 @@ int TextCompareCtrl::MeasureLength(const wchar *text) const
 	return pos;
 }
 
-bool TextCompareCtrl::GetSelection(int& l, int& h)
+bool TextCompareCtrl::IsSelected(int i) const
+{
+	int sell, selh;
+	if(HasLine(i) && GetSelection(sell, selh)) {
+		i = GetNumber(i);
+		return i >= sell && i <= selh;
+	}
+	return false;
+}
+
+bool TextCompareCtrl::GetSelection(int& l, int& h) const
 {
 	if(IsNull(cursor)) {
 		l = h = -1;
