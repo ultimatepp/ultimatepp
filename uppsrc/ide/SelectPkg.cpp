@@ -189,8 +189,14 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	list.Add(clist.SizePos());
 	list.Add(alist.SizePos());
 	
+	lists_status.SetDefault("");
+	lists_status.NoSizeGrip();
+	lists_status.Height(Zy(10));
+	lists_status.Add(progress.SizePos());
+	
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Left(base, Zx(170)));
+
 	if (!selectvars)
 		splitter.Hide();
 	
@@ -203,7 +209,6 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	nest << [=] { OnFilter(); };
 	OnFilter();
 	nest <<= main ? 0 : ALL;
-	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
 	search << [=] { SyncList(Null); };
@@ -674,7 +679,7 @@ void SelectPackageDlg::Load(const String& find)
 		}
 		Vector<String> upp = GetUppDirsRaw();
 		packages.Clear();
-		progress.Show();
+		list.AddFrame(lists_status);
 		loading = true;
 		data.Clear();
 		Index<String> dir_exists;
@@ -743,7 +748,7 @@ void SelectPackageDlg::Load(const String& find)
 		}
 	
 		StoreToFile(data, cache_path);
-		progress.Hide();
+		list.RemoveFrame(lists_status);
 		while(IsSplashOpen())
 			ProcessEvents();
 		if(!IsOpen())

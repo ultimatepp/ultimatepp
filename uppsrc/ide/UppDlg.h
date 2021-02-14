@@ -146,11 +146,13 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 	void           Serialize(Stream& s);
 
-	SplitterFrame  splitter;
-	ArrayCtrl      base;
-	ParentCtrl     list;
-	FileList       clist;
-	ArrayCtrl      alist;
+	SplitterFrame     splitter;
+	ArrayCtrl         base;
+	ParentCtrl        list;
+	FileList          clist;
+	ArrayCtrl         alist;
+	ProgressIndicator progress;
+	StatusBar         lists_status;
 	
 	Vector<String> nest_list;
 
