@@ -8,8 +8,17 @@ PatchDiff::PatchDiff()
 
 	hidden.Hide();
 	
-	copyright.Hide();
-	lfile.HSizePos();
+	copyright.Remove();
+	removeright.Remove();
+	revertright.Remove();
+
+	left.Height(EditField::GetStdHeight());
+	left.Add(lfile.HSizePosZ(0, 148));
+	left.Add(removeleft.VSizePos().RightPosZ(0, 70));
+	left.Add(revertleft.VSizePos().RightPosZ(74, 70));
+
+	right.Add(rfile.VSizePos().HSizePosZ(74, 0));
+	right.Add(copyleft.VSizePos().LeftPosZ(0, 70));
 	
 	copyleft.SetLabel("Patch");
 	
@@ -48,8 +57,8 @@ PatchDiff::PatchDiff()
 		for(int i = 0; i < patch.GetCount(); i++) {
 			if(pi.StepCanceled())
 				return;
-			String h = patch.GetPatchedFile(i);
 			String p = patch.GetPath(i);
+			String h = patch.GetPatchedFile(i, GetBackup(p));
 			if(!h.IsVoid()) {
 				if(IsNull(h))
 					FileDelete(p);
@@ -59,18 +68,42 @@ PatchDiff::PatchDiff()
 		}
 		Break(IDOK);
 	};
-	
+
+	removeleft ^= [=] {
+		Backup(file_path);
+		SaveFile(file_path, diff.left.RemoveSelected(HasCrs(file_path)));
+		Refresh();
+	};
+
 	copyleft ^= [=] {
 		int ii = GetFileIndex();
-		if(ii < 0 || !PromptYesNo("Patch [* \1" + file_path + "\1] ?") || patched_file.IsVoid())
+		if(ii < 0 || patched_file.IsVoid())
 			return;
-		if(IsNull(patched_file))
-			FileDelete(file_path);
-		else
-			SaveFile(file_path, patched_file);
-		list[ii].d = 4;
-		files.Set(files.GetCursor(), MakeFile(ii));
-		File();
+		if(diff.right.IsSelection()) {
+			Backup(file_path);
+			SaveFile(file_path, diff.Merge(true, HasCrs(file_path)));
+			Refresh();
+			return;
+		}
+		if(PromptYesNo("Patch [* \1" + file_path + "\1] ?")) {
+			Backup(file_path);
+			if(IsNull(patched_file))
+				FileDelete(file_path);
+			else
+				SaveFile(file_path, patched_file);
+			list[ii].d = 4;
+			files.Set(files.GetCursor(), MakeFile(ii));
+			Refresh();
+		}
+	};
+
+	revertleft ^= [=] {
+		int q = backup.Find(file_path);
+		if(q >= 0 && PromptYesNo("Revert changes?")) {
+			SaveFile(file_path, ZDecompress(backup[q]));
+			backup.Remove(q);
+			Refresh();
+		}
 	};
 
 	Title("Patch");
@@ -115,7 +148,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 			return false;
 		String fn = patch.GetFile(i);
 		String p = patch.GetPath(i);
-		String h = patch.GetPatchedFile(i);
+		String h = patch.GetPatchedFile(i, GetBackup(p));
 		bool pe = h.GetCount();
 		bool x = FileExists(p);
 		bool failed = h.IsVoid();
@@ -142,6 +175,12 @@ int PatchDiff::GetFileIndex() const
 	return ii >= 0 ? (int)files.Get(ii).data : -1;
 }
 
+String PatchDiff::GetBackup(const String& path)
+{
+	int q = backup.Find(path);
+	return q >= 0 ? ZDecompress(backup[q]) : String();
+}
+
 void PatchDiff::File()
 {
 	diff.Set(Null, Null);
@@ -160,7 +199,7 @@ void PatchDiff::File()
 				diff.Set(content, content);
 			}
 			else {
-				patched_file = patch.GetPatchedFile(ii);
+				patched_file = patch.GetPatchedFile(ii, GetBackup(file_path));
 				if(patched_file.IsVoid()) {
 					diff.Set(content, patch.GetPatch(ii));
 					p2 = "[FAILED TO APPLY THE PATCH]";
@@ -175,6 +214,7 @@ void PatchDiff::File()
 	}
 	lfile <<= file_path;
 	rfile <<= p2;
+	revertleft.Enable(backup.Find(file_path) >= 0);
 }
 
 };

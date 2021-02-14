@@ -54,11 +54,6 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 	Vector<String> ll = GetLineMap(l);
 	Vector<String> rl = GetLineMap(r);
 	Array<TextSection> sections = CompareLineMaps(ll, rl);
-
-//	Point left_pos = left.GetPos();
-//	Point right_pos = right.GetPos();
-//	int sb_pos = left.GetSb();
-
 	int outln = 0;
 	left.SetCount(0);
 	right.SetCount(0);
@@ -92,6 +87,35 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 	right.ClearSelection();
 }
 
+String TextDiffCtrl::Merge(bool l, bool cr)
+{
+	ASSERT(left.GetCount() == right.GetCount());
+	const TextCompareCtrl& target = l ? left : right;
+	const TextCompareCtrl& source = l ? right : left;
+	String r;
+	String eol = cr ? "\r\n" : "\n";
+	for(int i = 0; i < target.GetCount(); i++) {
+		if(source.IsSelected(i) && source.HasLine(i))
+			r << source.GetText(i) << eol;
+		else
+		if(target.HasLine(i))
+			r << target.GetText(i) << eol;
+	}
+	r.TrimEnd(eol);
+	return r;
+}
+
+String TextCompareCtrl::RemoveSelected(bool cr)
+{
+	String r;
+	String eol = cr ? "\r\n" : "\n";
+	for(int i = 0; i < GetCount(); i++)
+		if(!IsSelected(i) && HasLine(i))
+			r << GetText(i) << eol;
+	r.TrimEnd(eol);
+	return r;
+}
+
 void TextDiffCtrl::Set(const String& l, const String& r)
 {
 	StringStream sl(l);
@@ -101,6 +125,23 @@ void TextDiffCtrl::Set(const String& l, const String& r)
 
 INITBLOCK {
 	RegisterGlobalConfig("diff");
+}
+
+bool DiffDlg::Key(dword key, int count)
+{
+	switch(key) {
+	case K_F5:
+	case K_INSERT:
+	case K_ENTER:
+	case K_SPACE:
+		Write();
+		return true;
+	case K_F8:
+	case K_DELETE:
+		remove.WhenAction();
+		return true;
+	}
+	return TopWindow::Key(key, count);
 }
 
 void DiffDlg::Execute(const String& f)
@@ -123,35 +164,91 @@ void DiffDlg::Execute(const String& f)
 	}
 }
 
+void DiffDlg::Refresh()
+{
+	int sc = diff.GetSc();
+	diff.Set(LoadFile(editfile), extfile);
+	diff.Sc(sc);
+}
+
+bool HasCrs(const String& path)
+{
+	bool cr = false;
+	FileIn in(path);
+	if(in) {
+		while(!in.IsEof()) {
+			int c = in.Get();
+			if(c == '\r')
+				return true;
+			if(c == '\n')
+				return false;
+		}
+	}
+	return false;
+}
+
 void DiffDlg::Write()
 {
+	if(diff.right.IsSelection()) {
+		SaveFile(editfile, diff.Merge(true, HasCrs(editfile)));
+		Refresh();
+		revert.Enable();
+		return;
+	}
 	if(PromptYesNo("Do you want to overwrite&[* " + DeQtf(editfile) + "] ?")) {
 		SaveFile(editfile, extfile);
 		Break(IDOK);
+		revert.Enable();
 	}
 }
 
 Event<const String&, Vector<LineEdit::Highlight>&, const WString&> DiffDlg::WhenHighlight;
-
-static void sDoHighlight(Vector<LineEdit::Highlight>& hl, const WString& ln, const String *path)
-{
-	DiffDlg::WhenHighlight(*path, hl, ln);
-}
 
 DiffDlg::DiffDlg()
 {
 	Add(diff.SizePos());
 	Sizeable().Zoomable();
 	diff.InsertFrameLeft(p);
-	int cy = EditField::GetStdHeight();
-	p.Height(cy);
-	p.Add(l.VSizePos().HSizePos(0, 6 * cy));
-	p.Add(write.VSizePos().RightPos(0, 6 * cy));
-	write <<= THISBACK(Write);
-	write.SetLabel("Overwrite <-");
+
+	p.Height(EditField::GetStdHeight());
+	p.Add(l.VSizePos().HSizePosZ(0, 222));
+	p.Add(write.VSizePos().RightPosZ(0, 70));
+	p.Add(remove.VSizePos().RightPosZ(74, 70));
+	p.Add(revert.VSizePos().RightPosZ(148, 70));
+
+	write << [=] { Write(); };
+	write.SetLabel("Copy");
+	write.SetImage(DiffImg::CopyLeft());
+	write.Tip("F5");
+
+	revert.Disable();
+	revert.SetLabel("Revert");
+	revert.SetImage(CtrlImg::undo());
+	revert << [=] {
+		if(PromptYesNo("Revert changes?")) {
+			SaveFile(editfile, backup);
+			Refresh();
+		}
+	};
+	
+	remove.SetLabel("Remove");
+	remove.SetImage(CtrlImg::remove());
+	remove.Tip("F8");
+	remove << [=] {
+		SaveFile(editfile, diff.left.RemoveSelected(HasCrs(editfile)));
+		Refresh();
+		revert.Enable();
+	};
+	
+	diff.left.WhenSel << [=] {
+		remove.Enable(diff.left.IsSelection());
+	};
+	
 	l.SetReadOnly();
-	diff.left.WhenHighlight = callback1(sDoHighlight, &editfile);
-	diff.right.WhenHighlight = callback1(sDoHighlight, &editfile);
+
+	diff.right.WhenHighlight = diff.left.WhenHighlight = [=](Vector<LineEdit::Highlight>& hl, const WString& ln) {
+		DiffDlg::WhenHighlight(editfile, hl, ln);
+	};
 }
 
 void FileDiff::Open()
@@ -163,7 +260,8 @@ void FileDiff::Open()
 	}
 	if(IsNull(r))
 		return;
-	diff.Set(LoadFile(editfile), extfile = LoadFile(~~r));
+	backup = LoadFile(editfile);
+	diff.Set(backup, extfile = LoadFile(~~r));
 }
 
 void FileDiff::Execute(const String& f)
