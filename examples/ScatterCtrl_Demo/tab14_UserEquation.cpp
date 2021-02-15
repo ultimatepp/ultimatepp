@@ -24,7 +24,7 @@ void TabUserEquation::OnUpdate()
 		return;	
 	}
 	
-	userEquation.Init("Reach flow (Coull)", ~equation);
+	userEquation.Init("User equation", ~equation);
 	
 	scatter.RemoveAllSeries();
 	scatter.AddSeries(userEquation).Legend(userEquation.GetFullName()).NoMark().Stroke(2).Units("m3/s");
