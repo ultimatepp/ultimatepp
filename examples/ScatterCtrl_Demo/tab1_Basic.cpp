@@ -33,7 +33,7 @@ void Tab1_Basic::Init()
 	scatter.AddSeries(s5).Legend("Series 5").PlotStyle<BarSeriesPlot>().BarWidth(barWidth).Dash("").NoMark().Fill();
 		
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg().SetPopText("h", "v", "v2").SetMouseHandling(true, true);
+	scatter.ShowAllMenus().SetPopText("h", "v", "v2").SetMouseHandling(true, true);
 	scatter.SetLegendPos(Point(20, 20));
 }
 
