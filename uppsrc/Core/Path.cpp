@@ -958,7 +958,7 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count,
 			f.filename = drive;
 			char name[256], system[256];
 			DWORD d;
-			if(c != 'A' && c != 'B' && n != DRIVE_REMOTE && n != DRIVE_UNKNOWN) {
+			if(c != 'A' && c != 'B' && n != DRIVE_UNKNOWN) {
 				bool b = GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256);
 				if(b) {
 					if(*name) f.root_desc << " " << FromSystemCharset(name);
