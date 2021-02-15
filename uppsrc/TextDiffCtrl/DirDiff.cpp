@@ -86,6 +86,7 @@ DirDiffDlg::DirDiffDlg()
 	auto SetupCopy = [=](Button& copy, bool left) {
 		copy.SetImage(left ? DiffImg::CopyLeft() : DiffImg::CopyRight());
 		copy.SetLabel("Copy");
+		copy.Tip("F5");
 		copy.Disable();
 		copy << [=] { Copy(left); };
 	};
@@ -114,6 +115,7 @@ DirDiffDlg::DirDiffDlg()
 	auto SetupRemove = [=](Button& remove, TextCompareCtrl *text, EditString *dir)
 	{
 		remove.SetLabel("Remove");
+		remove.Tip("F8");
 		remove.SetImage(CtrlImg::remove());
 		
 		remove << [=] {

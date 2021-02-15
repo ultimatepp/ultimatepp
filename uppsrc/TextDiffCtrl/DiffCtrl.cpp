@@ -10,6 +10,12 @@ TextDiffCtrl::TextDiffCtrl()
 {
 	left.SetLeft();
 	left.Gutter(30);
+	next.SetImage(DiffImg::Next());
+	prev.SetImage(DiffImg::Prev());
+	left.scroll.y.AddFrame(prev);
+	left.scroll.y.AddFrame(next);
+	next << [=] { FindDiff(true); };
+	prev << [=] { FindDiff(false); };
 	right.NoGutter();
 	Horz(left, right);
 	left.WhenScroll = right.ScrollWhen(left);
@@ -121,6 +127,31 @@ void TextDiffCtrl::Set(const String& l, const String& r)
 	StringStream sl(l);
 	StringStream sr(r);
 	Set(sl, sr);
+}
+
+void TextDiffCtrl::FindDiff(bool fw)
+{
+	int i = left.scroll.GetY() + (fw ? 2 * left.scroll.GetPage().cy / 3 : -1);
+	while(i > 0 && i < left.lines.GetCount()) {
+		if(left.lines[i].diff) {
+			left.SetSb(max(i - 2, 0));
+			return;
+		}
+		i += fw ? 1 : -1;
+	}
+}
+
+bool TextDiffCtrl::Key(dword key, int count)
+{
+	switch(key) {
+	case K_F3:
+		FindDiff(true);
+		return true;
+	case K_SHIFT_F3:
+		FindDiff(false);
+		return true;
+	}
+	return Splitter::Key(key, count);
 }
 
 INITBLOCK {
