@@ -42,10 +42,6 @@ TOPIC("UppTechnologies_en-us")
 #include "UppTechnologies_en-us.tppi"
 END_TOPIC
 
-TOPIC("bazaar_cont_koldo_en-us")
-#include "bazaar_cont_koldo_en-us.tppi"
-END_TOPIC
-
 TOPIC("bazaar_en-us")
 #include "bazaar_en-us.tppi"
 END_TOPIC
