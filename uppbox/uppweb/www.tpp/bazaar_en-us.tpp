@@ -748,8 +748,4 @@ format]]
 [s3;:4: 4. Unmaintained/Deprecated Package List&]
 [s2; Unmaintained packages are moved to archive/bazaar folder.&]
 [s0;2%- &]
-[s3;:5: 5. Bazaar contributor pages&]
-[s2; These are the personal pages of some Bazaar contributors:&]
-[s2;l128;i150;O0;~~~32; [^topic`:`/`/uppweb`/www`/bazaar`_cont`_koldo`$en`-us^ Iñaki 
-Zabala]&]
 [s0; ]]
