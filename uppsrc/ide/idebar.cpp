@@ -472,6 +472,13 @@ void Ide::Project(Bar& menu)
 	if(!IsEditorMode()) {
 		menu.MenuSeparator();
 		if(repo_dirs) {
+			String pp = GetActivePackagePath();
+			menu.AddMenu(FileExists(pp) && editfile_repo,
+			             (editfile_repo == SVN_DIR ? "Show svn history of " : "Show git history of ") + GetFileName(pp),
+			             IdeImg::SvnDiff(), [=] {
+				if(FileExists(pp))
+					RunRepoDiff(pp);
+			});
 			if(menu.IsMenuBar())
 				menu.Add("Repo", THISBACK(ProjectRepo));
 			else
@@ -505,9 +512,11 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	             AK_DIFFLOG, IdeImg::DiffLog(), [=] { DiffWith(GetTargetLogPath()); })
 	    .Help("Show differences between the current and the log");
 	if(editfile_repo) {
-		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
-		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
-		    .Text(txt + "..").Help(txt);
+		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
+		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [=] {
+			if(!IsNull(editfile))
+				RunRepoDiff(editfile);
+		}).Text(txt + "file..");
 		if(editfile.GetCount()) {
 			String mine;
 			String theirs;
