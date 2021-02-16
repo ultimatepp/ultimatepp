@@ -232,7 +232,7 @@ oid]_[* CoFor`_ST]([@(0.0.255) int]_[*@3 n], [*@4 Fn]_[*@3 iterator])&]
 [s2;%% Calls CoFor([%-*@3 n], [%-*@3 iterator]) if [%-*@3 co] is true, 
 CoFor`_ST([%-*@3 n], [%-*@3 iterator]) otherwise. This allows to 
 parametrize algorithms with respect to parallelization.&]
-[s0; &]
+[s3; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkerResources]]}}&]
 [s3; &]
 [s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]

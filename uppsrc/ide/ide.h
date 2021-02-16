@@ -821,7 +821,6 @@ public:
 		String LoadConflictFile(const String& n);
 		void   GotoDiffLeft(int line, DiffDlg *df);
 		void   GotoDiffRight(int line, FileDiff *df);
-		void   SvnHistory();
 
 	void      Edit(Bar& menu);
 		bool  IsDesignerFile(const String& path);

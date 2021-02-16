@@ -765,10 +765,3 @@ void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const
 	diff.Set(lname, LoadConflictFile(l), rname, LoadConflictFile(r));
 	diff.Execute();
 }
-
-void Ide::SvnHistory()
-{
-	if(IsNull(editfile))
-		return;
-	RunRepoDiff(editfile);
-}

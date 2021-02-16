@@ -1,6 +1,6 @@
 description "OpenSSL based SSL support for Core\3770,128,128";
 
-library(POSIX !OSX) "crypto ssl";
+library(!OSX) "crypto ssl";
 
 library(WIN32) gdi32;
 

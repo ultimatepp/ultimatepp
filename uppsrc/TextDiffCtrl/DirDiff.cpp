@@ -16,6 +16,14 @@ DirDiffDlg::DirDiffDlg()
 	modified.SetLabel(t_("Modified"));
 	removed.SetColor(Red()).SetLabel(t_("Removed"));
 	
+	recent <<= Null;
+	recent.Add(Null, "All");
+	recent.Add(1, "1 Day");
+	recent.Add(3, "3 Days");
+	recent.Add(7, "7 Days");
+	recent.Add(14, "14 Days");
+	recent.Add(32, "28 Days");
+	
 	compare.SetLabel(t_("Compare"));
 	int bcy = max(cy, compare.GetStdSize().cy);
 	
@@ -27,6 +35,7 @@ DirDiffDlg::DirDiffDlg()
 	files_pane.Add(   added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
 	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
 	files_pane.Add( removed.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(128, 80));
+	files_pane.Add(  recent.TopPos(3 * cy + 3 * div, bcy).RightPos(0, bcx));
 	
 	removed = 1;
 	added = 1;
@@ -36,7 +45,6 @@ DirDiffDlg::DirDiffDlg()
 	clearFind.RightPosZ(1, 16).VSizePosZ(1, 1);
 	find.AddChild(&clearFind);
 	
-	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, Zx(70)));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
 	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, Zy(24)).HSizePos());
 	files_pane.Add(find.BottomPosZ(4, 19).HSizePosZ());
@@ -193,6 +201,8 @@ void DirDiffDlg::Compare()
 	Sort(f);
 	Progress pi(t_("Comparing.."));
 	pi.SetTotal(f.GetCount());
+	
+	Date dlim = IsNull(recent) ? Null : GetSysDate() - (int)~recent;
 
 	list.Clear();
 	for(int i = 0; i < f.GetCount(); i++) {
@@ -201,7 +211,7 @@ void DirDiffDlg::Compare()
 		String p1 = AppendFileName(~dir1, f[i]);
 		String p2 = AppendFileName(~dir2, f[i]);
 		int n = NORMAL_FILE;
-		if(!FileEqual(p1, p2, n))
+		if((IsNull(dlim) || FileGetTime(p1) >= dlim || FileGetTime(p2) >= dlim) && !FileEqual(p1, p2, n))
 			list.Add(MakeTuple(f[i], p1, p2, n));
 	}
 	
@@ -245,7 +255,7 @@ void DirDiffDlg::ShowResult()
 		   && ToLower(list[i].a).Find(sFind) >= 0)
 			files.Add(MakeFile(i));
 	}
-	info = AsString(files.GetCount()) + " files";
+	Title(AsString(files.GetCount()) + " files");
 	clearFind.Show(!IsNull(find));
 }
 

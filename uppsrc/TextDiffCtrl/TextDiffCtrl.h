@@ -247,6 +247,7 @@ protected:
 	Splitter                   files_diff;
 	ParentCtrl                 files_pane;
 	FileList                   files;
+	DropList                   recent;
 
 	SelectDirButton            seldir1;
 	WithDropChoice<EditString> dir1;
@@ -255,7 +256,6 @@ protected:
 	Option                     hidden;
 	Option                     split_lines;
 	Button                     compare;
-	Label                      info;
 	
 	Option                     removed, added, modified;
 	EditString				   find;

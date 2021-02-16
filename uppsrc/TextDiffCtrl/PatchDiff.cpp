@@ -12,6 +12,8 @@ PatchDiff::PatchDiff()
 	removeright.Remove();
 	revertright.Remove();
 
+	recent.Hide();
+
 	left.Height(EditField::GetStdHeight());
 	left.Add(lfile.HSizePosZ(0, 148));
 	left.Add(removeleft.VSizePos().RightPosZ(0, 70));
