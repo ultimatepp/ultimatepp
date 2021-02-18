@@ -118,9 +118,9 @@ set of [* packages] in the list intended to be used in projects,
 [* description], [* status] (e.g. unstable, experimental, testing, 
 stable..), [* category] and the location of [* readme] file. The 
 [* repository] contains the location of git https repository. Eventual 
-tag or branch can be added after the space (e.g. `"https://github.com/mirek`-fidle
-r/Turtle.git tag2020`"). Alternatively, the entry can by defined 
-with [* url] which points to https location with the same content.&]
+tag or branch can be specified in [* branch]. Alternatively, the 
+entry can by defined with [* url] which points to https location 
+with the same content.&]
 [s5; Additionally, the list can contain [* links] to other lists.&]
 [s5; UppHub list can be even defined in any html page, e.g. in [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=55542`&`#msg`_55542^ f
 orum post]. In that case it is necessary to provide sentinels 
