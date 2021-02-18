@@ -246,7 +246,7 @@ void UppHubDlg::Install(const Index<String>& ii_)
 				if(!DirectoryExists(dir)) {
 					String cmd = "git clone ";
 					if(n->branch.GetCount())
-						cmd << "-b " + n->branch;
+						cmd << "-b " + n->branch << " ";
 					cmd << n->repo;
 					cmd << ' ' << dir;
 					console.System(cmd);
