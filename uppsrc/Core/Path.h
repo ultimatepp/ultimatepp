@@ -239,8 +239,15 @@ String  GetTempFileName(const char *prefix = NULL);
 
 String GetSymLinkPath(const char *linkpath);
 
-template <class T>
-class Array;
+template <class T> class Array;
+template <class T> class Vector;
+
+enum {
+	FINDALLFILES = 1,
+	FINDALLFOLDERS = 2,
+};
+
+Vector<String> FindAllPaths(const String& dir, const char *patterns = "*", dword opt = FINDALLFILES);
 
 class FileSystemInfo {
 public:

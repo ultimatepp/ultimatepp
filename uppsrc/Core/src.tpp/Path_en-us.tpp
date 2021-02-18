@@ -321,6 +321,16 @@ of any read`-only settings (as long as process is allowed to
 remove them).&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:FindAllPaths`(const Upp`:`:String`&`,const char`*`,Upp`:`:dword`): [_^Upp`:`:Vector^ V
+ector]<[_^Upp`:`:String^ String]>_[* FindAllPaths]([@(0.0.255) const]_[_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 patterns]_`=_`"
+`*`", [_^Upp`:`:dword^ dword]_[*@3 opt]_`=_FINDALLFILES)&]
+[s2;%% Returns a Vector of all paths in [%-*@3 dir] and its sub`-directories 
+that match one of [%-*@3 patterns] (see PatternMatchMulti) and 
+are either file or folder (`".`" and `"..`" excluded) based on 
+[%-*@3 opt] flags (FINDALLFILES, FINDALLFOLDERS).&]
+[s3;%% &]
+[s4; &]
 [s5;:GetTempPath`(`): [_^String^ String]_[* GetTempPath]()&]
 [s2;%% Returns a path to directory suitable for storing temporary 
 files.&]
