@@ -10,6 +10,7 @@ struct UppHubNest : Moveable<UppHubNest> {
 	String           category;
 	String           list_name;
 	String           readme;
+	String           branch;
 };
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
@@ -154,7 +155,6 @@ void UppHubDlg::Load(int tier, const String& url)
 	loaded.Add(url);
 	
 	Value v = LoadJson(url);
-	
 
 	try {
 		String list_name = v["name"];
@@ -178,6 +178,8 @@ void UppHubDlg::Load(int tier, const String& url)
 			Attr(n.category, "category");
 			Attr(n.status, "status");
 			Attr(n.readme, "readme");
+			Attr(n.branch, "branch");
+
 			n.list_name = list_name;
 		}
 		for(Value l : v["links"]) {
@@ -243,11 +245,9 @@ void UppHubDlg::Install(const Index<String>& ii_)
 				String dir = GetHubDir() + '/' + n->name;
 				if(!DirectoryExists(dir)) {
 					String cmd = "git clone ";
-					String repo2, branch;
-					if(SplitTo(n->repo, ' ', repo2, branch))
-						cmd << "-b " + branch + " " + repo2;
-					else
-						cmd << n->repo;
+					if(n->branch.GetCount())
+						cmd << "-b " + n->branch;
+					cmd << n->repo;
 					cmd << ' ' << dir;
 					console.System(cmd);
 					for(String p : FindAllPaths(dir, "*.upp")) {
