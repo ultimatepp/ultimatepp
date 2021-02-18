@@ -27,6 +27,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Uninstall(bool noprompt = false);
 	void  Reinstall();
 	void  Install(const Index<String>& ii);
+	void  Update();
 	void  SyncList();
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
@@ -41,8 +42,8 @@ UppHubDlg::UppHubDlg()
 	
 	list.EvenRowColor();
 
-	list.AddColumn("Name");
-	list.AddColumn("Category");
+	list.AddColumn("Name").Sorting();
+	list.AddColumn("Category").Sorting();
 	list.AddColumn("Description");
 	list.AddColumn("Packages");
 	list.AddColumn("Status");
@@ -85,6 +86,8 @@ UppHubDlg::UppHubDlg()
 		SaveFile(ConfigFile("upphub_root"), s);
 		Load();
 	};
+	
+	update << [=] { Update(); };
 	
 	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
 }
@@ -195,6 +198,7 @@ void UppHubDlg::SyncList()
 		list.Add(n.name, n.category, n.description, Join(n.packages, " "), n.status,
 		         DirectoryExists(GetHubDir() + "/" + n.name) ? "Yes" : "",
 		         n.repo, n.readme);
+	list.DoColumnSort();
 	list.ScrollTo(sc);
 	if(!list.FindSetCursor(k))
 		list.GoBegin();
@@ -212,6 +216,18 @@ void UppHubDlg::Load()
 	SyncList();
 
 	pi.Close();
+}
+
+void UppHubDlg::Update()
+{
+	if(!PromptYesNo("Pull updates for all modules?"))
+		return;
+	UrepoConsole console;
+	for(const UppHubNest& n : upv) {
+		String dir = GetHubDir() + "/" + n.name;
+		if(DirectoryExists(dir))
+			console.Git(dir, "pull --ff-only");
+	}
 }
 
 void UppHubDlg::Install(const Index<String>& ii_)
@@ -234,9 +250,9 @@ void UppHubDlg::Install(const Index<String>& ii_)
 						cmd << n->repo;
 					cmd << ' ' << dir;
 					console.System(cmd);
-					for(String p : n->packages) {
+					for(String p : FindAllPaths(dir, "*.upp")) {
 						Package pkg;
-						pkg.Load(dir + '/' + p + '/' + p + ".upp");
+						pkg.Load(p);
 						for(const auto& u : pkg.uses)
 							for(const UppHubNest& n : upv)
 								for(const String& p : n.packages)

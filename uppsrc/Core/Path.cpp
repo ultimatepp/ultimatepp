@@ -1049,4 +1049,23 @@ bool FileSystemInfo::FolderExists(String path) const
 	return !fi.IsEmpty() && fi[0].is_directory;
 }
 
+static void FindAllPaths_(Vector<String>& r, const String& dir, const char *patterns, dword opt)
+{
+	for(FindFile ff(dir + "/*.*"); ff; ff++) {
+		String p = ff.GetPath();
+		if(PatternMatchMulti(patterns, ff.GetName()) &&
+		   ((opt & FINDALLFILES) && ff.IsFile() || (opt & FINDALLFOLDERS) && ff.IsFolder()))
+			r.Add(ff.GetPath());
+		if(ff.IsFolder())
+			FindAllPaths_(r, ff.GetPath(), patterns, opt);
+	}
+}
+
+Vector<String> FindAllPaths(const String& dir, const char *patterns, dword opt)
+{
+	Vector<String> r;
+	FindAllPaths_(r, dir, patterns, opt);
+	return r;
+}
+
 }
