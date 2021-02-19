@@ -931,7 +931,7 @@ LAYOUT(UppHubLayout, 992, 656)
 END_LAYOUT
 
 LAYOUT(UppHubSettingsLayout, 512, 64)
-	ITEM(Upp::Option, override, SetLabel(t_("Override UppHub url with")).LeftPosZ(8, 152).TopPosZ(8, 16))
+	ITEM(Upp::Option, seturl, SetLabel(t_("Override UppHub url with")).LeftPosZ(8, 152).TopPosZ(8, 16))
 	ITEM(Upp::EditString, url, LeftPosZ(152, 328).TopPosZ(7, 19))
 	ITEM(Upp::Button, selfile, LeftPosZ(484, 20).TopPosZ(7, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(372, 64).TopPosZ(32, 24))

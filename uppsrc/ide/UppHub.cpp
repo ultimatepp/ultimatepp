@@ -238,10 +238,13 @@ void UppHubDlg::Load()
 	loading_stopped = false;
 	loaded.Clear();
 	upv.Clear();
-	
-	Load(0, Nvl(~~settings.url,
-	            LoadFile(ConfigFile("upphub_root")),
-	            (String)"https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json"));
+
+	String url = Nvl(LoadFile(ConfigFile("upphub_root")),
+	                 (String)"https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json");
+	if(settings.seturl)
+		url = ~settings.url,
+
+	Load(0, url);
 
 	SyncList();
 
