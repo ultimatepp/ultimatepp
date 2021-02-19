@@ -141,5 +141,7 @@ for json content using [* UPPHUB`_BEGIN ]and [* UPPHUB`_END ]words:&]
 [s7;   `]&]
 [s7; `}&]
 [s7; UPPHUB`_END&]
+[s5; When TheIDE is in verbose mode, it is possible to override the 
+url of json list file with Settings button for testing.&]
 [s5; &]
 [s5; ]]
