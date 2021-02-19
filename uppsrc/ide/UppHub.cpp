@@ -20,6 +20,10 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	bool loading_stopped;
 	String last_package;
 
+	WithUppHubSettingsLayout<TopWindow> settings;
+
+	virtual bool Key(dword key, int count);
+
 	void  Readme();
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
@@ -30,6 +34,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Install(const Index<String>& ii);
 	void  Update();
 	void  SyncList();
+	void  Settings();
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
 	UppHubNest *Current()               { return Get(list.GetKey()); }
@@ -40,6 +45,9 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 UppHubDlg::UppHubDlg()
 {
 	CtrlLayoutCancel(*this, "UppHub");
+
+	CtrlLayoutOKCancel(settings, "Settings");
+	FileSelectOpen(settings.url, settings.selfile);
 	
 	list.EvenRowColor();
 
@@ -80,17 +88,37 @@ UppHubDlg::UppHubDlg()
 	readme << [=] { Readme(); };
 	reinstall << [=] { Reinstall(); };
 	
-	settings.Show(IsVerbose());
-	settings << [=] {
-		String s = LoadFile(ConfigFile("upphub_root"));
-		EditText(s, "UppHub root", "Root url");
-		SaveFile(ConfigFile("upphub_root"), s);
-		Load();
+	setup.Show(IsVerbose());
+	setup << [=] {
+		Settings();
 	};
 	
 	update << [=] { Update(); };
 	
 	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
+
+	LoadFromGlobal(settings, "UppHubDlgSettings");
+}
+
+INITBLOCK {
+	RegisterGlobalConfig("UppHubDlgSettings");
+}
+
+bool UppHubDlg::Key(dword key, int count)
+{
+	if(key == K_F12) {
+		Settings();
+		return true;
+	}
+	return TopWindow::Key(key, count);
+}
+
+void UppHubDlg::Settings()
+{
+	if(settings.Execute() == IDOK) {
+		StoreToGlobal(settings, "UppHubDlgSettings");
+		Load();
+	}
 }
 
 void UppHubDlg::Readme()
@@ -137,7 +165,6 @@ Value UppHubDlg::LoadJson(const String& url)
 	
 	if(begin >= 0 && end >= 0)
 		s = s.Mid(begin, end - begin);
-	
 
 	Value v = ParseJSON(s);
 	if(v.IsError()) {
@@ -211,9 +238,10 @@ void UppHubDlg::Load()
 	loading_stopped = false;
 	loaded.Clear();
 	upv.Clear();
-
-	Load(0, Nvl(LoadFile(ConfigFile("upphub_root")),
-	            "https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json"));
+	
+	Load(0, Nvl(~~settings.url,
+	            LoadFile(ConfigFile("upphub_root")),
+	            (String)"https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json"));
 
 	SyncList();
 
@@ -246,7 +274,7 @@ void UppHubDlg::Install(const Index<String>& ii_)
 				if(!DirectoryExists(dir)) {
 					String cmd = "git clone ";
 					if(n->branch.GetCount())
-						cmd << "-b " + n->branch << " ";
+						cmd << "-b " + n->branch << ' ';
 					cmd << n->repo;
 					cmd << ' ' << dir;
 					console.System(cmd);
