@@ -241,8 +241,9 @@ void UppHubDlg::Load()
 
 	String url = Nvl(LoadFile(ConfigFile("upphub_root")),
 	                 (String)"https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json");
+
 	if(settings.seturl)
-		url = ~settings.url,
+		url = ~settings.url;
 
 	Load(0, url);
 
