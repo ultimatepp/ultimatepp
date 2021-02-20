@@ -22,8 +22,6 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 
 	WithUppHubSettingsLayout<TopWindow> settings;
 
-	virtual bool Key(dword key, int count);
-
 	void  Readme();
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
@@ -88,7 +86,6 @@ UppHubDlg::UppHubDlg()
 	readme << [=] { Readme(); };
 	reinstall << [=] { Reinstall(); };
 	
-	setup.Show(IsVerbose());
 	setup << [=] {
 		Settings();
 	};
@@ -102,15 +99,6 @@ UppHubDlg::UppHubDlg()
 
 INITBLOCK {
 	RegisterGlobalConfig("UppHubDlgSettings");
-}
-
-bool UppHubDlg::Key(dword key, int count)
-{
-	if(key == K_F12) {
-		Settings();
-		return true;
-	}
-	return TopWindow::Key(key, count);
 }
 
 void UppHubDlg::Settings()

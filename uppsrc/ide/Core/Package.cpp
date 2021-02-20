@@ -166,6 +166,11 @@ void Package::Reset()
 	ink = Null;
 	spellcheck_comments = Null;
 	tabsize = Null;
+#ifdef PLATFORM_WIN32
+	cr = true;
+#else
+	cr = false;
+#endif
 }
 
 Package::Package()
@@ -227,6 +232,7 @@ bool Package::Load(const char *path)
 		custom.Clear();
 		description.Clear();
 		String f = LoadFile(path);
+		cr = f.Find('\r') >= 0;
 		time = FileGetTime(path);
 		if(IsNull(time))
 			return false;
@@ -412,22 +418,22 @@ void putopt(Stream& out, const char *key, const Array<OptItem>& m) {
 			out << key << AsStringWhen(m[i].when) << ' ' << WriteValue(m[i].text) << ";\n\n";
 }
 
-void putp(Stream& out, const char *key, const Vector<String>& v)
+void putp(Stream& out, const char *key, const Vector<String>& v, const String& eol)
 {
 	if(v.GetCount()) {
-		out << key << "\n";
+		out << key << eol;
 		for(int i = 0; i < v.GetCount(); i++) {
-			if(i) out << ",\n";
+			if(i) out << "," << eol;
 			out << '\t' << WriteValue(v[i]);
 		}
-		out << ";\n\n";
+		out << ";" << eol << eol;
 	}
 }
 
-void putfopt(Stream& out, const char *key, const Array<OptItem>& m)
+void putfopt(Stream& out, const char *key, const Array<OptItem>& m, const String& eol)
 {
 	for(int i = 0; i < m.GetCount(); i++)
-		out << "\n\t\t" << key << AsStringWhen(m[i].when) << ' ' << WriteValue(m[i].text);
+		out << eol << "\t\t" << key << AsStringWhen(m[i].when) << ' ' << WriteValue(m[i].text);
 }
 
 String IdeCharsetName(byte charset) {
@@ -447,6 +453,8 @@ void PutSpellCheckComments(StringStream& out, int sc)
 
 bool Package::Save(const char *path) const {
 	StringStream out;
+	String eol = cr ? "\r\n" : "\n";
+	String eol2 = eol + eol;
 	if(description.GetCount() || italic || bold || !IsNull(ink)) {
 		String d = description;
 		d.Cat(255);
@@ -456,17 +464,17 @@ bool Package::Save(const char *path) const {
 			d << 'I';
 		if(!IsNull(ink))
 			d << (int)ink.GetR() << ',' << (int)ink.GetG() << ',' << (int)ink.GetB();
-		out << "description " << AsCString(d) << ";\n\n";
+		out << "description " << AsCString(d) << ";" << eol2;
 	}
 	if(charset > 0)
-		out << "charset " << AsCString(IdeCharsetName(charset)) << ";\n\n";
+		out << "charset " << AsCString(IdeCharsetName(charset)) << ";" << eol2;
 	if(!IsNull(tabsize))
-		out << "tabsize " << tabsize << ";\n\n";
+		out << "tabsize " << tabsize << ";" << eol2;
 	if(noblitz)
-		out << "noblitz;\n\n";
+		out << "noblitz;" << eol2;
 	if(nowarnings)
-		out << "options(BUILDER_OPTION) NOWARNINGS;\n\n";
-	putp(out, "acceptflags", accepts);
+		out << "options(BUILDER_OPTION) NOWARNINGS;" << eol2;
+	putp(out, "acceptflags", accepts, eol);
 	putopt(out, "flags", flag);
 	putopt(out, "uses", uses);
 	putopt(out, "target", target);
@@ -502,19 +510,19 @@ bool Package::Save(const char *path) const {
 			if(!IsNull(f.highlight))
 				out << " highlight " << f.highlight;
 			PutSpellCheckComments(out, f.spellcheck_comments);
-			putfopt(out, "options", f.option);
-			putfopt(out, "depends", f.depends);
+			putfopt(out, "options", f.option, eol);
+			putfopt(out, "depends", f.depends, eol);
 		}
 		out << ";\n\n";
 	}
 	if(config.GetCount()) {
-		out << "mainconfig\n";
+		out << "mainconfig" << eol;
 		for(int i = 0; i < config.GetCount(); i++) {
 			const Config& f = config[i];
-			if(i) out << ",\n";
+			if(i) out << "," << eol;
 			out << '\t' << AsCString(f.name) << " = " << AsCString(f.param);
 		}
-		out << ";\n\n";
+		out << ";" << eol2;
 	}
 	PutSpellCheckComments(out, spellcheck_comments);
 	for(int i = 0; i < custom.GetCount(); i++)
