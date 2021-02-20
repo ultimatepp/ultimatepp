@@ -364,6 +364,7 @@ public:
 	bool                     bold, italic;
 	Color                    ink;
 	int                      spellcheck_comments;
+	bool                     cr = false;
 
 	int   GetCount() const                { return file.GetCount(); }
 	File& operator[](int i)               { return file[i]; }
