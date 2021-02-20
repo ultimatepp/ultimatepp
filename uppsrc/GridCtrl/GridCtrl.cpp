@@ -556,7 +556,7 @@ void GridCtrl::StdMenuBar(Bar &bar)
 		isitem = true;
 	}
 
-	if(multi_select || !select_row)
+	if(multi_select)
 	{
 		SelectMenu(bar);
 		isitem = true;
@@ -632,8 +632,10 @@ void GridCtrl::ClipboardMenu(Bar &bar)
 	bool c = IsCursor();
 	bool s = c || IsSelection();
 	bar.Add(t_("Copy"), THISBACK(DoCopy)).Image(CtrlImg::copy()).Key(K_CTRL_C).Enable(s && copy_allowed);
-	bar.Add(t_("Cut"), THISBACK(Nothing)).Image(CtrlImg::cut()).Key(K_CTRL_X).Enable(s && cut_allowed);
-	bar.Add(t_("Paste"), THISBACK(DoPaste)).Image(CtrlImg::paste()).Key(K_CTRL_V).Enable(c && paste_allowed && IsClipboardAvailable());
+	if(cut_allowed)
+		bar.Add(t_("Cut"), THISBACK(Nothing)).Image(CtrlImg::cut()).Key(K_CTRL_X).Enable(s && cut_allowed);
+	if(paste_allowed)
+		bar.Add(t_("Paste"), THISBACK(DoPaste)).Image(CtrlImg::paste()).Key(K_CTRL_V).Enable(c && paste_allowed && IsClipboardAvailable());
 	if(extra_paste)
 		bar.Add(t_("Paste as"), THISBACK(PasteAsMenu));
 }
