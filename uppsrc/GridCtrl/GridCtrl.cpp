@@ -678,6 +678,7 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 
 	for(int i = fixed_rows; i < total_rows; i++)
 	{
+		if(vitems[i].hidden) continue;
 		bool row_selected = select_row && IsSelected(i, false);
 		
 		for(int j = fixed_cols; j < total_cols; j++)
