@@ -217,7 +217,7 @@ CONSOLE_APP_MAIN
 	    .Body(body)
 	;
 
-	Vector<String> s = Split((String)email["emails"], ';');
+	Vector<String> s = Split((String)ini["emails"], ';');
 	for(int i = 0; i < s.GetCount(); i++)
 		smtp.To(s[i]);
 	smtp.Send();
