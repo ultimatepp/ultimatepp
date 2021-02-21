@@ -141,7 +141,7 @@ bool SetupSVNTrunk()
 	
 	MakeAssembly(myapps);
 //	uppsrc = AppendFileName(dir, "bazaar") + ';' + uppsrc;
-//	MakeAssembly(myapps, "MyApps-bazaar");
+//	MakeAssembly(myapps, "MyAppwits-bazaar");
 
 	console.Perform();
 	return true;
