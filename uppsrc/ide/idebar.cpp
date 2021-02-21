@@ -653,6 +653,8 @@ void Ide::BuildMenu(Bar& menu)
 	b = b && idestate == EDITING;
 	menu.Add(b, AK_CLEAN, THISBACK(Clean))
 		.Help("Remove all intermediate files");
+//	menu.Add("Reset BLITZ", [=] { ResetBlitz(); })
+//	    .Help("All files will be considered for BLITZ, regardless of time");
 	menu.Add(b, AK_REBUILDALL, IdeImg::build_rebuild_all(), THISBACK(RebuildAll))
 		.Help("Remove all intermediate files & build");
 	menu.Add(b, AK_CLEANUPPOUT, THISBACK(CleanUppOut))

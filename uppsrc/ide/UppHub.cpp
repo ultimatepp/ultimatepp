@@ -288,6 +288,7 @@ void UppHubDlg::Install(const Index<String>& ii_)
 		console.Perform();
 		InvalidatePackageCache();
 	}
+	ResetBlitz();
 }
 
 void UppHubDlg::Install(bool noprompt)
