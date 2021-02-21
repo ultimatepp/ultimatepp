@@ -93,6 +93,10 @@ UppHubDlg::UppHubDlg()
 	update << [=] { Update(); };
 	
 	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
+	
+	search.NullText("Search");
+	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
+	search << [=] { SyncList(); };
 
 	LoadFromGlobal(settings, "UppHubDlgSettings");
 }
@@ -211,10 +215,14 @@ void UppHubDlg::SyncList()
 	int sc = list.GetScroll();
 	Value k = list.GetKey();
 	list.Clear();
-	for(const UppHubNest& n : upv)
-		list.Add(n.name, n.category, n.description, Join(n.packages, " "), n.status,
-		         DirectoryExists(GetHubDir() + "/" + n.name) ? "Yes" : "",
-		         n.repo, n.readme);
+	for(const UppHubNest& n : upv) {
+		String pkgs = Join(n.packages, " ");
+		if(ToUpperAscii(n.name + n.category + n.description + pkgs).Find(~~search) >= 0)
+			list.Add(n.name, n.category, n.description, pkgs, n.status,
+			         DirectoryExists(GetHubDir() + "/" + n.name) ? "Yes" : "",
+			         n.repo, n.readme);
+	}
+		         
 	list.DoColumnSort();
 	list.ScrollTo(sc);
 	if(!list.FindSetCursor(k))
