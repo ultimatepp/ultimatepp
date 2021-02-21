@@ -473,6 +473,7 @@ again:
 			sys.Git(repo_dir, "pull --ff-only", true);
 	}
 	sys.Log("Done", Gray());
+	ResetBlitz();
 	sys.Perform();
 }
 

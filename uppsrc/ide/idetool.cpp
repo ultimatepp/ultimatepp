@@ -633,4 +633,6 @@ void Ide::MergeNests()
 		for(int i = 0; i < tocopy.GetCount(); i++)
 			CopyFolder(AppendFileName(app_nest, tocopy[i]), AppendFileName(tocopy_nest[i], tocopy[i]), &pi);
 	}
+	ScanWorkspace();
+	SyncWorkspace();
 }
