@@ -4,16 +4,12 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	HttpRequest r("https://raw.githubusercontent.com/ultimatepp/UppHub/main/README.md");
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	HttpRequest r("https://raw.githubusercontent.com/ultimatepp/UppHub/main/nests.json");
 		
 	String s = r.Execute();
 	
-	int begin = s.FindAfter("UPPHUB_BEGIN");
-	int end = s.Find("UPPHUB_END");
-	
-	if(begin >= 0 && end >= 0)
-		s = s.Mid(begin, end - begin);
-
 	Value v = ParseJSON(s);
 	if(v.IsError()) {
 		s.Replace("&quot;", "\"");
@@ -22,4 +18,6 @@ CONSOLE_APP_MAIN
 	}
 	
 	ASSERT(!v.IsError());
+	
+	LOG("========== OK");
 }
