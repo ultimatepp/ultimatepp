@@ -153,13 +153,11 @@ void  Switch::RefreshCase(int i) {
 }
 
 void Switch::GotFocus() {
-	RefreshCase(GetIndex());
+	Refresh();
 }
 
 void Switch::LostFocus() {
-	int i = GetIndex();
-	if(i >= 0 && i < cs.GetCount())
-		Refresh(GetCaseRect(i));
+	Refresh();
 }
 
 void Switch::Paint(Draw& w) {
@@ -215,7 +213,7 @@ void Switch::Paint(Draw& w) {
 				img = CtrlsImg::Get((v.value == value ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + q);
 				w.DrawImage(x, y + iy, img);
 				DrawSmartText(w, x + isz.cx + DPI(4), y + ty, sz.cx, v.label, font,
-				              dv || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this), ///////
+				              dv || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this),
 				              VisibleAccessKeys() ? v.accesskey : 0);
 				if(HasFocus() && (pushindex == i || v.value == value && pushindex < 0))
 					DrawFocus(w, RectC(x + isz.cx + DPI(2), y + ty - DPI(1), tsz.cx + DPI(3), tsz.cy + DPI(2)) & sz);
