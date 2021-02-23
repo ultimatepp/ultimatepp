@@ -103,7 +103,7 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 		switch(b.type) {
 		case MD_BLOCK_DOC:
 		{
-			txt << "[G;2;# "
+			txt << "[G;2 "
 				<< Compose(b.children, data, false, flags)
 				<< "&]";
 			break;

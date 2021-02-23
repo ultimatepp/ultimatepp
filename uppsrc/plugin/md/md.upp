@@ -1,4 +1,4 @@
-description "Markdown to QTF converter, based on MD4C library\377";
+description "Markdown to QTF converter, based on MD4C library\3770,128,128";
 
 uses
 	Core;
@@ -12,3 +12,4 @@ file
 	Library readonly separator,
 	MD4C/md4c.h,
 	MD4C/md4c.c;
+
