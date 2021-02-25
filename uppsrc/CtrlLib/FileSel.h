@@ -194,6 +194,7 @@ protected:
 	String         activetype;
 	String         defext;
 	String         preselect;
+	String         default_name;
 	Vector<String> fn;
 
 #ifdef PLATFORM_WIN32
@@ -353,6 +354,7 @@ public:
 	FileSel& AddStandardPlaces();
 	FileSel& FileCtrl(Ctrl& ext, int cx)         { file_ctrl = &ext; file_ctrl_cx = cx; return *this; }
 	FileSel& FileCtrl(Ctrl& ext)                 { return FileCtrl(ext, ext.GetMinSize().cx); }
+	FileSel& DefaultName(const String& s)        { default_name = s; return *this; }
 
 	FileSel();
 	virtual ~FileSel();
