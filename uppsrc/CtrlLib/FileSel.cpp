@@ -1978,6 +1978,8 @@ bool FileSel::Execute(int _mode) {
 				}
 		preselect.Clear();
 	}
+	if(default_name.GetCount() && mode == SAVEAS)
+		file <<= default_name;
 	FileUpdate();
 	Update();
 	int c = TopWindow::Run(appmodal);

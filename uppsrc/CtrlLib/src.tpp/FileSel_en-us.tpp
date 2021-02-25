@@ -326,4 +326,10 @@ filename widget. The height of widget is set to be the same as
 the filename, width is [%-*@3 cx.] Variant without [%-*@3 cx] gets 
 the width from GetMinSize().&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FileSel`:`:DefaultName`(const Upp`:`:String`&`): [_^Upp`:`:FileSel^ FileSel
+][@(0.0.255) `&]_[* DefaultName]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 s])&]
+[s2;%% Specifies the default name for Save As operation.&]
+[s3;%% &]
 [s3;%% ]]
