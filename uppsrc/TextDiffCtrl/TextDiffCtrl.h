@@ -90,7 +90,7 @@ private:
 
 	typedef TextCompareCtrl CLASSNAME;
 	
-	friend class TextDiffCtrl;
+	friend struct TextDiffCtrl;
 
 public:
 	Event<>        WhenSel;
