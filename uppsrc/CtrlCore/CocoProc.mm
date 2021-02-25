@@ -125,7 +125,7 @@ struct MMImp {
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(DPI(np.x), DPI(np.y));
 		coco_mouse_pos = p + r.TopLeft();
-		
+
 		if(event == Ctrl::MOUSEMOVE) {
 			static Point coco_mouse_pos_old(-10000, -10000);
 			if(coco_mouse_pos_old == coco_mouse_pos) { // duplicate for another window, ignore
@@ -155,8 +155,12 @@ struct MMImp {
 			}
 		}
 		else
-		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
+		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos))) {
+	        if((event & Ctrl::ACTION) == Ctrl::DOWN && !view->ctrl->HasFocusDeep() && view->ctrl->IsWantFocus())
+	            view->ctrl->SetFocus();
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
+		}
+		
 		sCurrentMouseEvent__ = NULL;
 		return false;
 	}
