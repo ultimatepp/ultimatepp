@@ -197,6 +197,17 @@ CONSOLE_APP_MAIN
 			SetExitCode(4);
 			return;
 		}
+		Index<String> missing;
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String p = wspc[i];
+			if(!FileExists(PackagePath(p)))
+				missing.FindAdd(p);
+		}
+		if(missing.GetCount()) {
+			Puts("Missing package(s): " << Join(missing.GetKeys(), " ") << "\n");
+			SetExitCode(5);
+			return;
+		}
 		if(IsNull(ide.mainconfigparam)) {
 			const Array<Package::Config>& f = wspc.GetPackage(0).config;
 			if(f.GetCount())
