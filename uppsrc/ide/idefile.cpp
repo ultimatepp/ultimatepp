@@ -143,7 +143,6 @@ void Ide::ChangeFileCharset(const String& name, Package& p, byte charset)
 		}
 	if(sv) {
 		String pp = PackagePathA(name);
-		RealizePath(pp);
 		p.Save(pp);
 	}
 }
