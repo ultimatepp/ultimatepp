@@ -10,15 +10,18 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String path = GetExeDirFile("test.html");
+	String path = GetHomeDirFile("test.html");
 	Index<String> css;
 	String html = EncodeHtml(ParseQTF(GetTopic("topic://EncodeHtml/Test/Test_en-us").text), css,
 	                         VectorMap<String, String>(), VectorMap<String, String>(),
 	                         GetFileFolder(path));
-	SaveFile(path, MakeHtml("Test", AsCss(css), html));
 
-	DDUMP(path);
-	DDUMP(SHA1StringS(LoadFile(path)));
+	html = MakeHtml("Test", AsCss(css), html);
+	SaveFile(path, html);
 	
-	CheckLogEtalon();
+	auto NoCr = [](String s) { s.Replace("\r", ""); return s; };
+
+	ASSERT(NoCr(LoadDataFile("test.html")) == NoCr(html));
+	
+	LOG("============== OK");
 }

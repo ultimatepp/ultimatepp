@@ -3,7 +3,7 @@ uses
 
 file
 	Test.tpp,
-	Etalon.log,
+	test.html,
 	main.cpp;
 
 mainconfig
