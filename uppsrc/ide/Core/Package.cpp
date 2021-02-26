@@ -452,6 +452,7 @@ void PutSpellCheckComments(StringStream& out, int sc)
 }
 
 bool Package::Save(const char *path) const {
+	RealizePath(path);
 	StringStream out;
 	String eol = cr ? "\r\n" : "\n";
 	String eol2 = eol + eol;

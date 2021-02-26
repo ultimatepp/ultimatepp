@@ -149,7 +149,6 @@ void WorkspaceWork::SavePackage()
 		return;
 	InvalidatePackageInfo(actualpackage);
 	String pp = PackagePathA(actualpackage);
-	RealizePath(pp);
 	if(organizer && backup.Find(pp) < 0) {
 		Backup& b = backup.Add(pp);
 		FindFile ff(pp);
@@ -160,7 +159,8 @@ void WorkspaceWork::SavePackage()
 		else
 			b.data = String::GetVoid();
 	}
-	actual.Save(pp);
+	if(FileExists(pp) || actual.GetCount())
+		actual.Save(pp);
 }
 
 void WorkspaceWork::RestoreBackup()
@@ -296,7 +296,6 @@ void WorkspaceWork::PackageCursor()
 	}
 	else {
 		String pp = PackagePathA(actualpackage);
-		RealizePath(pp);
 		actual.Load(pp);
 	}
 	LoadActualPackage();
