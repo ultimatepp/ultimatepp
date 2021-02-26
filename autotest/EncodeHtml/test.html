@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>	
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">	
+<META NAME="Generator" CONTENT="U++ HTML Package">	
+<TITLE>Test</TITLE>
+<STYLE TYPE="text/css"><!--
+.A{margin:0px 0px 16px 0px;text-indent:0px;text-align:left;color:#000000;font-family:serif;font-size:24pt;font-weight:bold;font-style:normal;text-decoration:none;}
+.B{margin:16px 0px 0px 0px;text-indent:0px;text-align:left;color:#000000;font-family:sans-serif;font-size:16pt;font-weight:bold;font-style:normal;text-decoration:none;}
+.C{margin:0px 0px 0px 0px;text-indent:0px;text-align:left;color:#000000;font-family:sans-serif;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.D{margin:8px 0px 8px 0px;text-indent:0px;text-align:left;color:#000000;font-family:sans-serif;font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;line-height:150%}
+.E{font-weight:bold;}
+.F{margin:0px 0px 0px 0px;text-indent:0px;text-align:center;color:#000000;font-family:sans-serif;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.G{margin:0px 0px 0px 64px;text-indent:0px;text-align:left;color:#000080;font-family:monospace;font-size:8pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.H{margin:0px 0px 0px 64px;text-indent:0px;text-align:left;color:#1c7f00;font-family:monospace;font-size:8pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.I{color:#000080;}
+.J{color:#1caa00;}
+
+-->
+</STYLE>
+</HEAD><BODY><p class="A">Resolving memory leaks in U++ applications</p>
+<hr><p class="B">Table of contents</p>
+<p class="C">&nbsp;</p>
+<p class="C"><a href="topic://Core/srcdoc/Leaks_en-us#1">1. Introduction</a></p>
+<p class="C"><a href="topic://Core/srcdoc/Leaks_en-us#2">2. Debugging leaks</a></p>
+<p class="C"><a href="topic://Core/srcdoc/Leaks_en-us#3">3. False positives</a></p>
+<p class="C">&nbsp;</p>
+<hr><p id="1" class="B">1. Introduction</p>
+<p class="D">Before 2008.1 release, the memory leaks debugging facilities have changed. Here we try to explain why logic has changed and what problem is it supposed to solve:</p>
+<p class="D">Previous method involved watching for particular ADDRESS to be allocated (so that you could determine the source of leak). Anyway, that has a problem than often the same memory block is going to be allocated more than one time - obviously, in that case the watch would only catch the first allocation, which would not be the cause of the problem. That is why logic was improved by introducing &quot;memory allocation serial number&quot;.</p>
+<p class="D">The memory leaks mechanisms only applies to U++ Core based application. When you develop non U++ applications in TheIDE, the detection mechanism will not be present.</p>
+<hr><p id="2" class="B">2. Debugging leaks</p>
+<p class="D">In &quot;memory allocation serial number&quot; each memory allocation has associated serial number (incremental). When U++ detects a leak, it dumps all leak blocks (note that sometimes you can resolve the problem just by examining its content) to standard .log file. You can see it in TheIDE by pressing<span class="E"> Alt+L</span> or by selecting <span class="E">&quot;View log file&quot;</span> option from &quot;Debug&quot; menu:</p>
+<p class="C">&nbsp;</p>
+<p class="F"><a href="_0.png"><img src="_0.png" border="0" alt="" style="width: 446px; height: 280px"></a></p>
+<p class="C">&nbsp;</p>
+<p class="D">In the .log, serial number is printed for each leaked memory block. It is printed after &quot;--memory-breakpoint__&quot;:</p>
+<p class="C">&nbsp;</p>
+<p class="F"><a href="_1.png"><img src="_1.png" border="0" alt="" style="width: 753px; height: 184px"></a></p>
+<p class="C">&nbsp;</p>
+<p class="D">Now the only thing you need to do is to add &quot;void <span class="E">MemoryBreakpoint</span>(dword serial)&quot; call to your application source code. For the case above the serial parameter should 925. When Alloc for that serial happens again, __BREAK__ will segfault (&quot;*(void *)0 = 0&quot;) the application and you will be able to catch the problem in the debugger. The code that will detect the leak could look like this:</p>
+<p class="C">&nbsp;</p>
+<p class="G">#include &lt;Core/Core.h&gt;</p>
+<p class="G">&nbsp;</p>
+<p class="G">using namespace Upp;</p>
+<p class="G">&nbsp;</p>
+<p class="G">CONSOLE_APP_MAIN</p>
+<p class="G">{</p>
+<p class="H"><span class="I">&nbsp;&nbsp;&nbsp;&nbsp;MemoryBreakpoint(925); </span>// &lt;- The earlier you place this instruction the better</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p class="H"><span class="I">&nbsp;&nbsp;&nbsp;&nbsp;int* a = new int(5); </span><span class="J"> &nbsp;</span>// &lt;- Debugger should break in this line</p>
+<p class="G">}</p>
+<p class="D">&nbsp;</p>
+<p class="D">The alternative approach assumes that the &quot;--memory-breakpoint__&quot; is passed as a program argument. In this case there is no need to modify source code. To do it open &quot;Run options&quot; dialog from &quot;Debug&quot; menu:</p>
+<p class="C">&nbsp;</p>
+<p class="F"><a href="_2.png"><img src="_2.png" border="0" alt="" style="width: 461px; height: 324px"></a></p>
+<p class="C">&nbsp;</p>
+<p class="D">Now the window where command line arguments for application can be specified should appears. In this case we need to add &quot;--memory-breakpoint__ ${serial_number}&quot; as argument. In our example serial number is 925:</p>
+<p class="C">&nbsp;</p>
+<p class="F"><a href="_3.png"><img src="_3.png" border="0" alt="" style="width: 686px; height: 311px"></a></p>
+<p class="C">&nbsp;</p>
+<p class="D">Of course, the only problem with this is that the order of allocations must be exactly the same in the &quot;test run&quot;. Which is often not, but usually it is possible to arrange it so after spending a couple of nights desperately looking for the source of leak in the code using other methods. So make sure that the serial number is still valid! In might be correct for several applications debug sessions, but in the end it will <span class="E">expire</span>.</p>
+<hr><p id="3" class="B">3. False positives</p>
+<p class="D">There is a very memory situation when memory leak can not be fixed by the programmer. For example the external library is used and there is not full control over it. Sometimes the operating system drivers leaks could be treated as leaks. To avoid such false positives U++ library provides ignoring mechanisms.</p>
+<p class="D">The first one is the pair of function <span class="E">MemoryIgnoreLeaksBegin()</span> and <span class="E">MemoryIgnoreLeaksEnd()</span>. The below example show how to avoid leak detection:</p>
+<p class="C">&nbsp;</p>
+<p class="G">#include &lt;Core/Core.h&gt;</p>
+<p class="G">&nbsp;</p>
+<p class="G">using namespace Upp;</p>
+<p class="G">&nbsp;</p>
+<p class="G">CONSOLE_APP_MAIN</p>
+<p class="G">{</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;MemoryIgnoreLeaksBegin();</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;int* a = new int(5);</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;MemoryIgnoreLeaksEnd();</p>
+<p class="G">}</p>
+<p class="C">&nbsp;</p>
+<p class="D">The alternative simpler approach is to used <span class="E">MemoryIgnoreLeaksBlock</span> structure. On construction it starts ignoring and on destruction it cancels ignoring statement. This is the classical RAII pattern. Example below:</p>
+<p class="C">&nbsp;</p>
+<p class="G">#include &lt;Core/Core.h&gt;</p>
+<p class="G">&nbsp;</p>
+<p class="G">using namespace Upp;</p>
+<p class="G">&nbsp;</p>
+<p class="G">CONSOLE_APP_MAIN</p>
+<p class="G">{</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;{</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MemoryIgnoreLeaksBlock __;</p>
+<p class="H"><span class="I">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int* a = new int(5); </span>// &lt;- This leak will be ignored</p>
+<p class="G">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p class="H"><span class="I">&nbsp;&nbsp;&nbsp;&nbsp;int* b = new int(10); </span>// &lt;- This leak will be catched</p>
+<p class="G">}</p>
+<p class="C">&nbsp;</p>
+<p class="D">The memory leak detection mechanisms should be use with caution. In the vast majority of cases detections means that something is wrong in the application source code.</p>
+<p class="C">&nbsp;</p>
+</BODY>
