@@ -97,6 +97,7 @@ bool Pusher::FinishPush()
 		return false;
 	if(IsReadOnly())
 		return false;
+	ReleaseCapture(); // this is to mitigate X11 mouse capture debugger problems
 	PerformAction();
 	return true;
 }
