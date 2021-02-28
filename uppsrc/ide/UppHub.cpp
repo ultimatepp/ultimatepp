@@ -13,16 +13,31 @@ struct UppHubNest : Moveable<UppHubNest> {
 	String           branch;
 };
 
+Color StatusPaper(const String& status)
+{
+	return Blend(SColorPaper, decode(status, "broken", SLtRed(),
+	                                         "experimental", SLtYellow(),
+	                                         "stable", SLtGreen(),
+	                                         "rolling", SLtCyan(),
+	                                         SColorPaper()), 50);
+}
+
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
 	bool loading_stopped;
 	String last_package;
+	VectorMap<String, String> readme;
+
+	// loading readme in background
+	TimeCallback tm;
+	String       readme_url;
+	bool         loading = false;
+	HttpRequest  http;
 
 	WithUppHubSettingsLayout<TopWindow> settings;
 
-	void  Readme();
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
 	void  Load();
@@ -31,11 +46,14 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Reinstall();
 	void  Install(const Index<String>& ii);
 	void  Update();
+	void  Sync();
 	void  SyncList();
 	void  Settings();
+	bool  Installed();
+	void  UrlLoading();
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
-	UppHubNest *Current()               { return Get(list.GetKey()); }
+	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
 
 	UppHubDlg();
 };
@@ -47,43 +65,31 @@ UppHubDlg::UppHubDlg()
 	CtrlLayoutOKCancel(settings, "Settings");
 	FileSelectOpen(settings.url, settings.selfile);
 	
-	list.EvenRowColor();
-
 	list.AddColumn("Name").Sorting();
-	list.AddColumn("Category").Sorting();
 	list.AddColumn("Description");
-	list.AddColumn("Packages");
-	list.AddColumn("Status");
-	list.AddColumn("INSTALLED", "Installed");
+	list.AddIndex("NAME");
 	
-	list.AddIndex("REPO");
-	list.AddIndex("README");
-	list.AddIndex("USES");
-	
-	list.ColumnWidths("94 72 373 251 119 53");
+	list.ColumnWidths("109 378");
 	list.WhenSel = [=] {
-		action.Disable();
-		readme.Disable();
-		reinstall.Disable();
-		if(list.IsCursor()) {
-			readme.Enable();
-			action.Enable();
-			if(IsNull(list.Get("INSTALLED"))) {
-				action.SetLabel("Install");
-				action ^= [=] { Install(); };
-			}
-			else {
-				action.SetLabel("Uninstall");
-				reinstall.Enable();
-				action ^= [=] { Uninstall(); };
-			}
-		}
-		readme.Enable(list.IsCursor() && !IsNull(list.Get("README")));
 		UppHubNest *n = Current();
-		last_package = n && n->packages.GetCount() ? n->packages[0] : String();
+		http.Abort();
+		http.New();
+		if(n && readme.Find(n->readme) < 0) {
+			readme_url = n->readme;
+			http.Url(readme_url);
+			loading = true;
+			tm.KillPost([=] { UrlLoading(); });
+		}
+		Sync();
 	};
-	list.WhenLeftDouble = [=] { Readme(); };
-	readme << [=] { Readme(); };
+	list.WhenLeftDouble = [=] {
+		if(list.IsCursor()) {
+			if(Installed())
+				Reinstall();
+			else
+				Install();
+		}
+	};
 	reinstall << [=] { Reinstall(); };
 	
 	setup << [=] {
@@ -105,26 +111,70 @@ INITBLOCK {
 	RegisterGlobalConfig("UppHubDlgSettings");
 }
 
+bool UppHubDlg::Installed()
+{
+	UppHubNest *n = Current();
+	return n && DirectoryExists(GetHubDir() + "/" + n->name);
+}
+
+void UppHubDlg::UrlLoading()
+{
+	if(http.Do())
+		tm.KillPost([=] { UrlLoading(); });
+	else {
+		loading = false;
+		if(http.IsSuccess())
+			readme.GetAdd(readme_url) = http.GetContent();
+		Sync();
+	}
+}
+
+void UppHubDlg::Sync()
+{
+	action.Disable();
+	reinstall.Disable();
+	if(list.IsCursor()) {
+		action.Enable();
+		if(Installed()) {
+			action.SetLabel("Uninstall");
+			reinstall.Enable();
+			action ^= [=] { Uninstall(); };
+		}
+		else {
+			action.SetLabel("Install");
+			action ^= [=] { Install(); };
+		}
+	}
+	UppHubNest *n = Current();
+	last_package = n && n->packages.GetCount() ? n->packages[0] : String();
+	if(!n) return;
+	String qtf;
+	qtf << "Status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
+	if(Installed())
+		qtf << ", [*/ installed]";
+	qtf << "&&";
+	String s = readme.Get(n->readme, String());
+	if(s.GetCount()) {
+		if(n->readme.EndsWith(".qtf"))
+			qtf << s;
+		else
+		if(n->readme.EndsWith(".md"))
+			qtf << MarkdownConverter().Tables().ToQtf(s);
+		else
+			qtf << "\1" << s;
+	}
+	else {
+		qtf << "[* \1" << n->description << "\1]";
+		qtf << (loading ? "&[/ Loading more information]" : "&[/ Failed to get ]\1" + n->readme);
+	}
+	info <<= qtf;
+}
+
 void UppHubDlg::Settings()
 {
 	if(settings.Execute() == IDOK) {
 		StoreToGlobal(settings, "UppHubDlgSettings");
 		Load();
-	}
-}
-
-void UppHubDlg::Readme()
-{
-	UppHubNest *n = Current();
-	if(!n) return;
-	String s = HttpRequest(n->readme).RequestTimeout(3000).Execute();
-	if(s.GetCount()) {
-		if(n->readme.EndsWith(".qtf"))
-			PromptOK(s);
-		if(n->readme.EndsWith(".md"))
-			PromptOK(MarkdownConverter().Tables().ToQtf(s));
-		else
-			PromptOK("\1" + s);
 	}
 }
 
@@ -217,10 +267,11 @@ void UppHubDlg::SyncList()
 	list.Clear();
 	for(const UppHubNest& n : upv) {
 		String pkgs = Join(n.packages, " ");
+		auto AT = [&](const String& s) {
+			return AttrText(s).Bold(DirectoryExists(GetHubDir() + "/" + n.name)).NormalPaper(StatusPaper(n.status));
+		};
 		if(ToUpperAscii(n.name + n.category + n.description + pkgs).Find(~~search) >= 0)
-			list.Add(n.name, n.category, n.description, pkgs, n.status,
-			         DirectoryExists(GetHubDir() + "/" + n.name) ? "Yes" : "",
-			         n.repo, n.readme);
+			list.Add(AT(n.name), AT(n.description), n.name);
 	}
 		         
 	list.DoColumnSort();
