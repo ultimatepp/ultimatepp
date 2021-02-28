@@ -15,11 +15,11 @@ struct UppHubNest : Moveable<UppHubNest> {
 
 Color StatusPaper(const String& status)
 {
-	return Blend(SColorPaper, decode(status, "broken", SLtRed(),
-	                                         "experimental", SLtYellow(),
-	                                         "stable", SLtGreen(),
-	                                         "rolling", SLtCyan(),
-	                                         SColorPaper()), 50);
+	return Blend(SColorPaper(), decode(status, "broken", SLtRed(),
+	                                           "experimental", SLtYellow(),
+	                                           "stable", SLtGreen(),
+	                                           "rolling", SLtCyan(),
+	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
@@ -103,6 +103,11 @@ UppHubDlg::UppHubDlg()
 	search.NullText("Search");
 	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
 	search << [=] { SyncList(); };
+	
+	experimental <<= true;
+	broken <<= false;
+	
+	category ^= experimental ^= broken ^= [=] { SyncList(); };
 
 	LoadFromGlobal(settings, "UppHubDlgSettings");
 }
@@ -149,10 +154,14 @@ void UppHubDlg::Sync()
 	last_package = n && n->packages.GetCount() ? n->packages[0] : String();
 	if(!n) return;
 	String qtf;
-	qtf << "Status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
+	Color c = StatusPaper(n->status);
+	qtf << "{{";
+	if(!IsDarkTheme())
+		qtf << "@(" << (int)c.GetR() << "." << (int)c.GetG() << "." << (int)c.GetB() << ")";
+	qtf << " Category: [* \1" << n->category << "\1, status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
 	if(Installed())
 		qtf << ", [*/ installed]";
-	qtf << "&&";
+	qtf << "}}&&";
 	String s = readme.Get(n->readme, String());
 	if(s.GetCount()) {
 		if(n->readme.EndsWith(".qtf"))
@@ -270,7 +279,10 @@ void UppHubDlg::SyncList()
 		auto AT = [&](const String& s) {
 			return AttrText(s).Bold(DirectoryExists(GetHubDir() + "/" + n.name)).NormalPaper(StatusPaper(n.status));
 		};
-		if(ToUpperAscii(n.name + n.category + n.description + pkgs).Find(~~search) >= 0)
+		if(ToUpperAscii(n.name + n.category + n.description + pkgs).Find(~~search) >= 0 &&
+		   (IsNull(category) || ~category == n.category) &&
+		   (experimental || n.status != "experimental") &&
+		   (broken || n.status != "broken"))
 			list.Add(AT(n.name), AT(n.description), n.name);
 	}
 		         
@@ -293,6 +305,16 @@ void UppHubDlg::Load()
 		url = ~settings.url;
 
 	Load(0, url);
+	
+	category.ClearList();
+	Index<String> cat;
+	for(const UppHubNest& n : upv)
+		cat.FindAdd(n.category);
+	SortIndex(cat);
+	category.Add(Null, AttrText("All categories").Italic());
+	for(String s : cat)
+		category.Add(s);
+	category.GoBegin();
 
 	SyncList();
 

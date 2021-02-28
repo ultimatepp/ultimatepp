@@ -929,6 +929,9 @@ LAYOUT(UppHubLayout, 992, 656)
 	ITEM(Upp::Button, reinstall, SetLabel(t_("Reinstall")).RightPosZ(140, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, action, SetLabel(t_("Install")).RightPosZ(72, 64).BottomPosZ(4, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Exit")).RightPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Upp::DropList, category, LeftPosZ(224, 132).TopPosZ(630, 19))
+	ITEM(Upp::Option, experimental, SetLabel(t_("Show experimental")).LeftPosZ(364, 116).TopPosZ(632, 16))
+	ITEM(Upp::Option, broken, SetLabel(t_("Show broken")).LeftPosZ(492, 116).TopPosZ(632, 16))
 END_LAYOUT
 
 LAYOUT(UppHubSettingsLayout, 512, 64)
