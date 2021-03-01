@@ -158,7 +158,7 @@ void UppHubDlg::Sync()
 	qtf << "{{";
 	if(!IsDarkTheme())
 		qtf << "@(" << (int)c.GetR() << "." << (int)c.GetG() << "." << (int)c.GetB() << ")";
-	qtf << " Category: [* \1" << n->category << "\1, status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
+	qtf << " Category: [* \1" << n->category << "\1], status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
 	if(Installed())
 		qtf << ", [*/ installed]";
 	qtf << "}}&&";
