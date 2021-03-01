@@ -171,9 +171,11 @@ bool DirDiffDlg::FileEqual(const String& f1, const String& f2, int& n)
 	FileIn in1(f1);
 	FileIn in2(f2);
 	if(in1 && in2) {
+		in1.SetBufferSize(256 * 1024);
+		in2.SetBufferSize(256 * 1024);
 		while(!in1.IsEof() && !in2.IsEof()) {
-			String a = in1.Get(256 * 1024);
-			String b = in2.Get(256 * 1024);
+			String a = in1.GetLine();
+			String b = in2.GetLine();
 			if(a != b)
 				return false;
 		}
