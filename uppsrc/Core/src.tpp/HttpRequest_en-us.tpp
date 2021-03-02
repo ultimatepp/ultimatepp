@@ -229,6 +229,11 @@ number of bytes to be sent from the stream, if Null, all remaining
 data from the stream are sent. Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:HttpRequest`:`:GetPostData`(`)const: [_^Upp`:`:String^ String]_[* GetPostData
+]()_[@(0.0.255) const]&]
+[s2;%% Returns the value set by PostData.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:HttpRequest`:`:ResolveDigestAuthentication`(`): [@(0.0.255) bool]_[* ResolveD
 igestAuthentication]()&]
 [s2;%% This method is assigned to WhenAuthenticate by default. Provides 

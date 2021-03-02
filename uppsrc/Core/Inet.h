@@ -500,6 +500,7 @@ public:
 	HttpRequest&  operator()(const char *id, const String& data) { return UrlVar(id, data); }
 	HttpRequest&  PostData(const String& pd)              { postdata = pd; poststream = NULL; return *this; }
 	HttpRequest&  PostStream(Stream& s, int64 len = Null);
+	String        GetPostData() const                     { return postdata; }
 
 	bool          ResolveDigestAuthentication();
 
