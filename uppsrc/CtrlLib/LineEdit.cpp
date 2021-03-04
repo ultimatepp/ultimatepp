@@ -1079,18 +1079,6 @@ void LineEdit::CutLine()
 	DeleteLine();
 }
 
-void LineEdit::EditPos::Serialize(Stream& s) {
-	int version = 1;
-	s / version;
-	if(version >= 1)
-		s % sby % cursor;
-	else {
-		int c = (int)cursor;
-		s % sby % c;
-		cursor = c;
-	}
-}
-
 LineEdit::EditPos LineEdit::GetEditPos() const {
 	EditPos pos;
 	pos.sby = sb.Get().y;

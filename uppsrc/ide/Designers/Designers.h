@@ -67,7 +67,7 @@ public:
 INITIALIZE(HexView)
 
 struct IdeQtfDes : IdeDesigner, RichEditWithToolBar {
-	String  filename;
+	String filename;
 
 	virtual String GetFileName() const        { return filename; }
 	virtual void   Save();
@@ -87,6 +87,31 @@ struct IdeQtfDes : IdeDesigner, RichEditWithToolBar {
 };
 
 INITIALIZE(Qtf)
+
+struct IdeMDDes : IdeDesigner, ParentCtrl {
+	String       filename;
+	DocEdit      editor;
+	RichTextView preview;
+	Splitter     splitter;
+	TimeCallback tm;
+
+	virtual void GotFocus();
+	virtual String GetFileName() const        { return filename; }
+	virtual void   Save();
+	virtual void   SaveEditPos();
+	virtual void   EditMenu(Bar& menu);
+	virtual Ctrl&  DesignerCtrl()             { return *this; }
+	
+	virtual void   Serialize(Stream& s);
+	
+	void    Preview();
+
+	bool   Load(const char *filename);
+
+	IdeMDDes();
+};
+
+INITIALIZE(MD)
 
 bool  FileIsBinary(const char *path);
 

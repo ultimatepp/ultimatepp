@@ -1,5 +1,4 @@
 topic "DocEdit";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "DocEdit";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 DocEdit]]}}&]
 [s3; &]
@@ -95,4 +95,16 @@ active.&]
 [s5;:DocEdit`:`:IsEofLine`(`)const:%- [@(0.0.255) bool]_[* IsEofLine]()_[@(0.0.255) const]&]
 [s2; Returns true if EofLine is active.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:DocEdit`:`:GetEditPos`(`)const:%- [_^Upp`:`:TextCtrl`:`:EditPos^ EditPos]_[* G
+etEditPos]()_[@(0.0.255) const]&]
+[s2; Returns the edit position in the text to be restored later. 
+Edit position comprises cursor and scrollbar positions.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:DocEdit`:`:SetEditPos`(const Upp`:`:TextCtrl`:`:EditPos`&`):%- [@(0.0.255) v
+oid]_[* SetEditPos]([@(0.0.255) const]_[_^Upp`:`:TextCtrl`:`:EditPos^ TextCtrl`::EditPos
+][@(0.0.255) `&]_[*@3 pos])&]
+[s2; Restores the position obtained with GetEditPos.&]
+[s3; &]
 [s0; ]]

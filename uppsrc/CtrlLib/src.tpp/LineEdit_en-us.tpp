@@ -249,9 +249,9 @@ onst]&]
 Edit position comprises cursor and scrollbar positions.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:SetEditPos`(const LineEdit`:`:EditPos`&`): [@(0.0.255) void]_[* SetEditP
-os]([@(0.0.255) const]_[_^LineEdit`:`:EditPos^ LineEdit`::EditPos][@(0.0.255) `&]_[*@3 pos
-])&]
+[s5;:Upp`:`:LineEdit`:`:SetEditPos`(const Upp`:`:TextCtrl`:`:EditPos`&`): [@(0.0.255) v
+oid]_[* SetEditPos]([@(0.0.255) const]_[_^Upp`:`:TextCtrl`:`:EditPos^ EditPos][@(0.0.255) `&
+]_[*@3 pos])&]
 [s2;%% Sets the edit position obtained by calling GetEditPos. If 
 cursor is not in the view after restoring, view is scrolled so 
 that it is by calling ScrollIntoCursor.&]
