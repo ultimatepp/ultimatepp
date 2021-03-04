@@ -289,9 +289,22 @@ void WorkspaceWork::PackageCursor()
 	if(actualpackage == METAPACKAGE) {
 		actual.file.Clear();
 		actual.file.AddPick(Package::File(String(HELPNAME)));
-		Vector<String> d = GetUppDirs();
-		for(int i = 0; i < d.GetCount(); i++)
-			actual.file.AddPick(Package::File(AppendFileName(d[i], "_.tpp")));
+		for(String d : GetUppDirs()) {
+			Package::File sep(GetFileName(d));
+			sep.separator = true;
+			actual.file.AddPick(pick(sep));
+			actual.file.AddPick(Package::File(AppendFileName(d, "_.tpp")));
+			for(String f : { "readme", "readme.md", "license", "copying" }) {
+				for(int u = 0; u < 2; u++) {
+					String p = AppendFileName(d, f);
+					if(FileExists(p)) {
+						actual.file.AddPick(Package::File(p));
+						break;
+					}
+					f = ToUpper(f);
+				}
+			}
+		}
 		actual.file.AddPick(Package::File(ConfigFile("global.defs")));
 	}
 	else {
