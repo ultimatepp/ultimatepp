@@ -13,5 +13,6 @@ file
 	HexView.cpp,
 	TreeDes.cpp,
 	Xml.cpp,
-	Json.cpp;
+	Json.cpp,
+	md.cpp;
 

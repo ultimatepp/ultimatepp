@@ -599,4 +599,16 @@ void DocEdit::LeftDrag(Point p, dword flags)
 	}
 }
 
+TextCtrl::EditPos DocEdit::GetEditPos() const {
+	EditPos pos;
+	pos.sby = sb.Get();
+	pos.cursor = cursor;
+	return pos;
+}
+
+void DocEdit::SetEditPos(const TextCtrl::EditPos& pos) {
+	sb.Set(minmax(pos.sby, 0, GetY(para.GetCount()) + 2));
+	SetCursor(pos.cursor);
+}
+
 }

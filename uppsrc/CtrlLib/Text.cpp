@@ -1183,4 +1183,16 @@ String TextCtrl::GetSelectionData(const String& fmt) const
 	return GetTextClip(GetSelectionW(), fmt);
 }
 
+void TextCtrl::EditPos::Serialize(Stream& s) {
+	int version = 1;
+	s / version;
+	if(version >= 1)
+		s % sby % cursor;
+	else {
+		int c = (int)cursor;
+		s % sby % c;
+		cursor = c;
+	}
+}
+
 }

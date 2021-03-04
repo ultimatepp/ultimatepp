@@ -294,14 +294,13 @@ void WorkspaceWork::PackageCursor()
 			sep.separator = true;
 			actual.file.AddPick(pick(sep));
 			actual.file.AddPick(Package::File(AppendFileName(d, "_.tpp")));
-			for(String f : { "readme", "readme.md", "license", "copying" }) {
-				for(int u = 0; u < 2; u++) {
-					String p = AppendFileName(d, f);
-					if(FileExists(p)) {
-						actual.file.AddPick(Package::File(p));
+			for(String f : { "readme", "license", "copying" }) {
+				for(int u = 0; u < 4; u++) {
+					FindFile ff(AppendFileName(d, (u & 1 ? ToUpper(f) : f) + (u & 2 ? ".md" : "")));
+					if(ff) {
+						actual.file.AddPick(Package::File(ff.GetPath()));
 						break;
 					}
-					f = ToUpper(f);
 				}
 			}
 		}

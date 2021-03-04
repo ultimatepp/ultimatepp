@@ -122,26 +122,4 @@ tag or branch can be specified in [* branch]. Alternatively, the
 entry can by defined with [* url] which points to https location 
 with the same content.&]
 [s5; Additionally, the list can contain [* links] to other lists.&]
-[s5; UppHub list can be even defined in any html page, e.g. in [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=55542`&`#msg`_55542^ f
-orum post]. In that case it is necessary to provide sentinels 
-for json content using [* UPPHUB`_BEGIN ]and [* UPPHUB`_END ]words:&]
-[s7; &]
-[s7; UPPHUB`_BEGIN&]
-[s7; `{&]
-[s7;   `"nests`": &]
-[s7;     `{ `"name`": `"Skylark`",&]
-[s7;       `"packages`": `[ `"Skylark`"`],&]
-[s7;       `"description`": `"U`+`+ web framework`",&]
-[s7;       `"repository`": `"https://github.com/mirek`-fidler/Skylark.git`",&]
-[s7;       `"status`": `"experimental`",&]
-[s7;       `"category`": `"networking`",&]
-[s7;       `"readme`": `"https://raw.githubusercontent.com/mirek`-fidler/Skylark/master
-/README.md`"&]
-[s7;     `}&]
-[s7;   `]&]
-[s7; `}&]
-[s7; UPPHUB`_END&]
-[s5; When TheIDE is in verbose mode, it is possible to override the 
-url of json list file with Settings button for testing.&]
-[s5; &]
 [s5; ]]

@@ -26,6 +26,15 @@ public:
 		void Clear()                     { undo.Clear(); redo.Clear(); }
 	};
 
+	struct EditPos : Moveable<EditPos> {
+		int   sby;
+		int64 cursor;
+
+		void Serialize(Stream& s);
+		void Clear()                      { sby = 0; cursor = 0; }
+		EditPos()                         { Clear(); }
+	};
+
 	enum {
 		INK_NORMAL,
 		INK_DISABLED,
@@ -316,15 +325,6 @@ public:
 		Highlight() { flags = 0; }
 	};
 
-	struct EditPos : Moveable<EditPos> {
-		int   sby;
-		int64 cursor;
-
-		void Serialize(Stream& s);
-		void Clear()                      { sby = 0; cursor = 0; }
-		EditPos()                         { Clear(); }
-	};
-
 protected:
 	virtual void  HighlightLine(int line, Vector<Highlight>& h, int64 pos);
 	virtual void  NewScrollPos();
@@ -562,6 +562,9 @@ public:
 	DocEdit&  EofLine(bool b = true)                         { eofline = b; return *this; }
 	DocEdit&  NoEofLine()                                    { return EofLine(false); }
 	bool      IsEofLine() const                              { return eofline; }
+
+	EditPos   GetEditPos() const;
+	void      SetEditPos(const TextCtrl::EditPos& pos);
 
 	typedef DocEdit CLASSNAME;
 
