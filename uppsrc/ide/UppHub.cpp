@@ -51,6 +51,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Settings();
 	bool  Installed();
 	void  UrlLoading();
+	void  Menu(Bar& bar);
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
 	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
@@ -90,10 +91,13 @@ UppHubDlg::UppHubDlg()
 				Install();
 		}
 	};
+	list.WhenBar = [=](Bar& bar) { Menu(bar); };
 	reinstall << [=] { Reinstall(); };
 	
-	setup << [=] {
-		Settings();
+	more << [=] {
+		MenuBar bar;
+		Menu(bar);
+		bar.Execute();
 	};
 	
 	update << [=] { Update(); };
@@ -114,6 +118,74 @@ UppHubDlg::UppHubDlg()
 
 INITBLOCK {
 	RegisterGlobalConfig("UppHubDlgSettings");
+}
+
+void UppHubDlg::Menu(Bar& bar)
+{
+	Ide *ide = (Ide *)TheIde();
+	String hubdir = GetHubDir();
+	if(Installed()) {
+		UppHubNest *n = Current();
+		String p = hubdir + "/" + n->name;
+		bar.Add("Open " + n->name + " Directory", [=] { ShellOpenFolder(p); });
+		bar.Add("Copy " + n->name + " Directory Path", [=] { WriteClipboardText(p); });
+		if(ide)
+			bar.Add("Terminal at " + n->name + " Directory", [=] { ide->LaunchTerminal(p); });
+		bar.Separator();
+	}
+	
+	bar.Add("Open UppHub Directory", [=] { ShellOpenFolder(hubdir); });
+	bar.Add("Copy UppHub Directory Path", [=] { WriteClipboardText(hubdir); });
+	if(ide)
+		bar.Add("Terminal at UppHub Directory", [=] { ide->LaunchTerminal(hubdir); });
+	bar.Separator();
+	bar.Add("Reinstall everything..", [=] {
+		Index<String> names;
+		for(const UppHubNest& n : upv)
+			if(DirectoryExists(hubdir + "/" + n.name))
+				names.Add(n.name);
+		if(names.GetCount() == 0) {
+			Exclamation("No modules folders.");
+			return;
+		}
+		if(!PromptYesNo("Reinstall all installed nests?&[/ (This will delete any local changes)]"))
+			return;
+		for(String n : names)
+			if(!DeleteFolderDeep(hubdir + "/" + n, true))
+				Exclamation("Failed to delete \1" + n);
+		Install(names);
+	});
+	bar.Add("Uninstall everything..", [=] {
+		if(!PromptYesNo("This will completely delete the local UppHub content.&Continue?"))
+			return;
+		for(FindFile ff(hubdir + "/*"); ff; ff++) {
+			String p = ff.GetPath();
+			if(ff.IsFolder()) {
+				if(!DeleteFolderDeep(p, true))
+					Exclamation("Failed to delete \1" + p);
+			}
+			else
+			if(ff.IsFile())
+				FileDelete(p);
+		}
+		SyncList();
+	});
+	bar.Separator();
+	bar.Add("Synchronize repos..", [=] {
+		Vector<String> dirs;
+		for(FindFile ff(hubdir + "/*"); ff; ff++) {
+			if(ff.IsFolder() && DirectoryExists(ff.GetPath() + "/.git"))
+				dirs.Add(ff.GetPath());
+		}
+		if(dirs.GetCount() == 0) {
+			Exclamation("No working folders.");
+			return;
+		}
+		RepoSyncDirs(dirs);
+		SyncList();
+	});
+	bar.Separator();
+	bar.Add("UppHub URL..", [=] { Settings(); });
 }
 
 bool UppHubDlg::Installed()
