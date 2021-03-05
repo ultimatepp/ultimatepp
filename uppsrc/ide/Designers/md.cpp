@@ -7,7 +7,7 @@ struct IdeMDEditPos : Moveable<IdeMDEditPos> {
 	LineEdit::UndoData undodata;
 };
 
-static VectorMap<String, IdeMDEditPos>& sEP()
+static VectorMap<String, IdeMDEditPos>& sEPmd()
 {
 	static VectorMap<String, IdeMDEditPos> x;
 	return x;
@@ -32,7 +32,7 @@ void IdeMDDes::Preview()
 void IdeMDDes::SaveEditPos()
 {
 	if(filename.GetCount()) {
-		IdeMDEditPos& p = sEP().GetAdd(filename);
+		IdeMDEditPos& p = sEPmd().GetAdd(filename);
 		p.filetime = FileGetTime(filename);;
 		p.undodata = editor.PickUndoData();
 		p.editpos = editor.GetEditPos();
@@ -45,7 +45,7 @@ bool IdeMDDes::Load(const char *filename_)
 	FileIn in(filename);
 	if(in) {
 		editor.Load(in, CHARSET_UTF8);
-		IdeMDEditPos& ep = sEP().GetAdd(filename);
+		IdeMDEditPos& ep = sEPmd().GetAdd(filename);
 		if(ep.filetime == FileGetTime(filename)) {
 			editor.SetEditPos(ep.editpos);
 			editor.SetPickUndoData(pick(ep.undodata));
@@ -78,7 +78,7 @@ void IdeMDDes::Serialize(Stream& s)
 
 void SerializeMDDesPos(Stream& s)
 {
-	VectorMap<String, IdeMDEditPos>& filedata = sEP();
+	VectorMap<String, IdeMDEditPos>& filedata = sEPmd();
 	s.Magic();
 	s.Magic(0);
 	if(s.IsStoring()) {
