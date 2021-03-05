@@ -759,11 +759,11 @@ void Ide::EditFile(const String& p)
 	FlushFile();
 	if(path.IsEmpty())
 		return;
-
+	
 	for(int i = 0; i < package.GetCount(); i++) {
 		String pkg = package[i].name;
 		Package p;
-		p.Load(PackagePathA(pkg));
+		Fetch(p, pkg);
 		for(int j = 0; j < p.file.GetCount(); j++)
 			if(PathIsEqual(SourcePath(pkg, p.file[j]), path)) {
 				package.FindSetCursor(pkg);

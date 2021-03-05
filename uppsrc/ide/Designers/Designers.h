@@ -4,6 +4,7 @@
 #include <HexView/HexView.h>
 #include <ide/Common/Common.h>
 #include <ide/IconDes/IconDes.h>
+#include <ide/ide.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
 	Size   img_sz;
