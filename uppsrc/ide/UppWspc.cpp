@@ -279,37 +279,42 @@ void WorkspaceWork::TouchFile(const String& path)
 	}
 }
 
+void WorkspaceWork::Fetch(Package& p, const String& pkg)
+{
+	if(pkg.IsEmpty()) return;
+	if(pkg == METAPACKAGE) {
+		p.file.Clear();
+		p.file.AddPick(Package::File(String(HELPNAME)));
+		p.file.AddPick(Package::File(ConfigFile("global.defs")));
+		for(String d : GetUppDirs()) {
+			Package::File sep(GetFileName(d));
+			sep.separator = true;
+			p.file.AddPick(pick(sep));
+			p.file.AddPick(Package::File(AppendFileName(d, "_.tpp")));
+			for(String f : { "readme", "license", "copying" }) {
+				for(int u = 0; u < 4; u++) {
+					FindFile ff(AppendFileName(d, (u & 1 ? ToUpper(f) : f) + (u & 2 ? ".md" : "")));
+					if(ff) {
+						p.file.AddPick(Package::File(ff.GetPath()));
+						break;
+					}
+				}
+			}
+		}
+	}
+	else {
+		String pp = PackagePathA(pkg);
+		p.Load(pp);
+	}
+}
+
 void WorkspaceWork::PackageCursor()
 {
 	InvalidatePackageCache();
 	filelist.WhenBar.Clear();
 	actualpackage = GetActivePackage();
 	repo_dirs = false;
-	if(actualpackage.IsEmpty()) return;
-	if(actualpackage == METAPACKAGE) {
-		actual.file.Clear();
-		actual.file.AddPick(Package::File(String(HELPNAME)));
-		for(String d : GetUppDirs()) {
-			Package::File sep(GetFileName(d));
-			sep.separator = true;
-			actual.file.AddPick(pick(sep));
-			actual.file.AddPick(Package::File(AppendFileName(d, "_.tpp")));
-			for(String f : { "readme", "license", "copying" }) {
-				for(int u = 0; u < 4; u++) {
-					FindFile ff(AppendFileName(d, (u & 1 ? ToUpper(f) : f) + (u & 2 ? ".md" : "")));
-					if(ff) {
-						actual.file.AddPick(Package::File(ff.GetPath()));
-						break;
-					}
-				}
-			}
-		}
-		actual.file.AddPick(Package::File(ConfigFile("global.defs")));
-	}
-	else {
-		String pp = PackagePathA(actualpackage);
-		actual.Load(pp);
-	}
+	Fetch(actual, actualpackage);
 	LoadActualPackage();
 	filelist.Enable();
 	if(actualpackage != METAPACKAGE)

@@ -326,6 +326,7 @@ struct WorkspaceWork {
 	void   SavePackage();
 	void   RestoreBackup();
 	void   SyncErrorPackages();
+	void   Fetch(Package& p, const String& pkg);
 
 	Vector<String> RepoDirs(bool actual = false);
 
