@@ -40861,6 +40861,7 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -40910,37 +40911,71 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/Png.cpp -o $(OutDir_ide_Designers)Png.o
 
@@ -41034,6 +41069,7 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41083,37 +41119,71 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/Img.cpp -o $(OutDir_ide_Designers)Img.o
 
@@ -41207,6 +41277,7 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41256,37 +41327,71 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/Qtf.cpp -o $(OutDir_ide_Designers)Qtf.o
 
@@ -41380,6 +41485,7 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41429,37 +41535,71 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/HexView.cpp -o $(OutDir_ide_Designers)HexView.o
 
@@ -41553,6 +41693,7 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41602,37 +41743,71 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/TreeDes.cpp -o $(OutDir_ide_Designers)TreeDes.o
 
@@ -41726,6 +41901,7 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41775,37 +41951,71 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/Xml.cpp -o $(OutDir_ide_Designers)Xml.o
 
@@ -41899,6 +42109,7 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -41948,37 +42159,71 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
+	$(UPPDIR1)plugin/md/Markdown.h \
+	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/Json.cpp -o $(OutDir_ide_Designers)Json.o
 
@@ -42072,6 +42317,7 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
@@ -42121,18 +42367,43 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)guiplatform.h \
 	$(UPPDIR1)HexView/HexView.h \
 	$(UPPDIR1)IconDes/IconDes.h \
+	$(UPPDIR1)ide/About.h \
+	$(UPPDIR1)ide/Android/Android.h \
+	$(UPPDIR1)ide/Android/Devices.h \
+	$(UPPDIR1)ide/Android/Executables.h \
+	$(UPPDIR1)ide/Assist.h \
+	$(UPPDIR1)ide/Browser/Browser.h \
+	$(UPPDIR1)ide/Builders/Android.h \
+	$(UPPDIR1)ide/Builders/Build.h \
+	$(UPPDIR1)ide/Builders/BuilderComponents.h \
+	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Common/Common.h \
 	$(UPPDIR1)ide/Core/Core.h \
 	$(UPPDIR1)ide/Core/Host.h \
 	$(UPPDIR1)ide/Core/Logger.h \
+	$(UPPDIR1)ide/Debuggers/cvconst.h \
+	$(UPPDIR1)ide/Debuggers/Debuggers.h \
+	$(UPPDIR1)ide/Debuggers/Gdb.h \
+	$(UPPDIR1)ide/Debuggers/GdbUtils.h \
+	$(UPPDIR1)ide/Debuggers/Pdb.h \
 	$(UPPDIR1)ide/Designers/Designers.h \
 	$(UPPDIR1)ide/IconDes/IconDes.h \
+	$(UPPDIR1)ide/ide.h \
+	$(UPPDIR1)ide/Java/Java.h \
+	$(UPPDIR1)ide/LayDes/LayDes.h \
+	$(UPPDIR1)ide/MethodsCtrls.h \
+	$(UPPDIR1)ide/UppDlg.h \
+	$(UPPDIR1)ide/urepo.h \
+	$(UPPDIR1)ide/version.h \
 	$(UPPDIR1)Painter/BufferPainter.h \
 	$(UPPDIR1)Painter/Interpolator.hpp \
 	$(UPPDIR1)Painter/LinearPath.h \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
+	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
+	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42140,20 +42411,27 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)plugin/lzma/lzma.h \
 	$(UPPDIR1)plugin/md/Markdown.h \
 	$(UPPDIR1)plugin/md/MD4C/md4c.h \
+	$(UPPDIR1)plugin/ndisasm/ndisasm.h \
 	$(UPPDIR1)plugin/pcre/lib/pcre.h \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/Table.h \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)TabBar/FileTabs.h \
+	$(UPPDIR1)TabBar/TabBar.h \
+	$(UPPDIR1)TabBar/TabBarCtrl.h \
+	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide_Designers)  $(UPPDIR1)ide/Designers/md.cpp -o $(OutDir_ide_Designers)md.o
 
