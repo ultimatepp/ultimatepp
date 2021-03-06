@@ -1,0 +1,10 @@
+uses
+	Core,
+	Geom;
+
+file
+	Delunay.cpp;
+
+mainconfig
+	"" = "";
+
