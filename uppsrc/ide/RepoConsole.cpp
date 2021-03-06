@@ -27,9 +27,32 @@ UrepoConsole::UrepoConsole()
 void UrepoConsole::AddResult(const String& out)
 {
 	Vector<String> h = Split(out, CharFilterCrLf);
-	for(int i = 0; i < h.GetCount(); i++) {
-		String s = "    " + h[i];
-		list.Add(AttrText(s).SetFont(font), s);
+	const char *s = out;
+	const char *b = s;
+	auto Add = [&] {
+		String txt(b, s - b);
+		list.Add(AttrText("    " + txt).SetFont(font), txt);
+		b = 1 + s++;
+	};
+	while(*s) {
+		if(*s == '\r') {
+			if(s[1] == '\n') {
+				Add();
+				b++;
+			}
+			else
+			if(list.GetCount() == 0)
+				Add();
+			else {
+				list.SetCount(list.GetCount() - 1);
+				Add();
+			}
+		}
+		else
+		if(*s == '\n')
+			Add();
+		else
+			s++;
 	}
 	list.GoEnd();
 }
@@ -72,6 +95,11 @@ int UrepoConsole::System(const char *cmd)
 		if(lf >= 0) {
 			AddResult(out.Mid(0, lf + 1));
 			out = out.Mid(lf + 1);
+		}
+		int cr = out.ReverseFind('\r');
+		if(cr >= 0) {
+			AddResult(out.Mid(0, cr + 1));
+			out = out.Mid(cr + 1);
 		}
 		ProcessEvents();
 		Sleep(h.GetCount() == 0); // p.Wait would be much better here!
