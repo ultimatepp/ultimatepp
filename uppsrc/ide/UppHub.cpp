@@ -66,14 +66,15 @@ UppHubDlg::UppHubDlg()
 	CtrlLayoutOKCancel(settings, "Settings");
 	FileSelectOpen(settings.url, settings.selfile);
 	
+	list.AddKey("NAME");
 	list.AddColumn("Name").Sorting();
 	list.AddColumn("Description");
-	list.AddIndex("NAME");
 	
 	list.ColumnWidths("109 378");
 	list.WhenSel = [=] {
 		UppHubNest *n = Current();
 		http.Abort();
+		http.Timeout(0);
 		http.New();
 		if(n && readme.Find(n->readme) < 0) {
 			readme_url = n->readme;
@@ -91,7 +92,18 @@ UppHubDlg::UppHubDlg()
 				Install();
 		}
 	};
-	list.WhenBar = [=](Bar& bar) { Menu(bar); };
+	list.WhenBar = [=](Bar& bar) {
+		if(list.IsCursor()) {
+			if(Installed()) {
+				bar.Add("Uninstall", [=] { Uninstall(); });
+				bar.Add("Reinstall", [=] { Reinstall(); });
+			}
+			else
+				bar.Add("Install", [=] { Install(); });
+			bar.Separator();
+		}
+		Menu(bar);
+	};
 	reinstall << [=] { Reinstall(); };
 	
 	more << [=] {
@@ -139,6 +151,19 @@ void UppHubDlg::Menu(Bar& bar)
 	if(ide)
 		bar.Add("Terminal at UppHub Directory", [=] { ide->LaunchTerminal(hubdir); });
 	bar.Separator();
+	bar.Add("Install everything..", [=] {
+		if(!PromptYesNo("Installing everything will take some time and will need a lot of storage space.&[/ Are you sure?"))
+			return;
+		Index<String> names;
+		for(const UppHubNest& n : upv)
+			if(!DirectoryExists(hubdir + "/" + n.name))
+				names.Add(n.name);
+		if(names.GetCount() == 0) {
+			Exclamation("No modules folders.");
+			return;
+		}
+		Install(names);
+	});
 	bar.Add("Reinstall everything..", [=] {
 		Index<String> names;
 		for(const UppHubNest& n : upv)
@@ -355,7 +380,7 @@ void UppHubDlg::SyncList()
 		   (IsNull(category) || ~category == n.category) &&
 		   (experimental || n.status != "experimental") &&
 		   (broken || n.status != "broken"))
-			list.Add(AT(n.name), AT(n.description), n.name);
+			list.Add(n.name, AT(n.name), AT(n.description), n.name);
 	}
 		         
 	list.DoColumnSort();
@@ -442,14 +467,13 @@ void UppHubDlg::Install(const Index<String>& ii_)
 		InvalidatePackageCache();
 	}
 	ResetBlitz();
+	SyncList();
 }
 
 void UppHubDlg::Install(bool noprompt)
 {
-	if(list.IsCursor() && (noprompt || PromptYesNo("Install " + ~list.GetKey() + "?"))) {
+	if(list.IsCursor() && (noprompt || PromptYesNo("Install " + ~list.GetKey() + "?")))
 		Install(Index<String>{ ~list.GetKey() });
-		SyncList();
-	}
 }
 
 void UppHubDlg::Uninstall(bool noprompt)

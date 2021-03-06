@@ -60,7 +60,7 @@ struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
 	bool  operator==(const AttrText& f) const;
 	bool  operator!=(const AttrText& f) const       { return !operator==(f); }
 
-	hash_t GetHashValue() const                     { return CombineHash(text, font, ink, paper); }
+	hash_t GetHashValue() const                     { return Upp::GetHashValue(value); }
 	bool   IsNullInstance() const                   { return IsNull(text); }
 	void   SetNull()                                { Init(); img = Null; text = Null; }
 
