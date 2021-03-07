@@ -437,7 +437,4 @@ void      FreeDll__(DLLHANDLE dllhandle);
 using Upp::byte; // Dirty solution to Windows.h typedef byte...
 #endif
 
-inline const char *t_(const char *s)  { return Upp::t_GetLngString(s); }
-inline const char *tt_(const char *s) { return s; }
-
 #endif //CORE_H
