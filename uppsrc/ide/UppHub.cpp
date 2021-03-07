@@ -164,7 +164,7 @@ void UppHubDlg::Menu(Bar& bar)
 		}
 		Install(names);
 	});
-	bar.Add("Reinstall everything..", [=] {
+	bar.Add("Reinstall all..", [=] {
 		Index<String> names;
 		for(const UppHubNest& n : upv)
 			if(DirectoryExists(hubdir + "/" + n.name))

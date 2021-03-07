@@ -14,7 +14,7 @@
 
 #define LAYOUT(name, x, y)       template<class T> \
 	                             struct With##name : public T, public name##__layid { \
-										static UPP::Size GetLayoutSize() { return UPP::Ctrl::LayoutZoom(x, y); }
+										static Upp::Size GetLayoutSize() { return Upp::Ctrl::LayoutZoom(x, y); }
 #define UNTYPED(variable, param)
 #define ITEM(classname, var, param)     classname var;
 #define END_LAYOUT               };
@@ -27,7 +27,7 @@
 #undef  END_LAYOUT
 
 #define LAYOUT(nm, x, y)       template<class T> inline void SetLayout_##nm(T& parent, bool add = false, bool show = false) { \
-                                  SetLayout_Size(parent, Zx(x), Zy(y));
+                                  SetLayout_Size(parent, Upp::Zx(x), Upp::Zy(y));
 #define UNTYPED(var, param)       parent.var.param; if(add) parent.Add(parent.var); if(show) parent.var.Show();
 #define ITEM(clss, var, param)    UNTYPED(var, param);
 #define END_LAYOUT             }
@@ -40,7 +40,7 @@
 #undef  END_LAYOUT
 
 #define LAYOUT(nm, x, y)       template<class T, class D> inline void SetLayout_##nm(T& ctrl, D& parent, bool add = false, bool show = false) { \
-                                  SetLayout_Size(ctrl, Zx(x), Zy(y));
+                                  SetLayout_Size(ctrl, Upp::Zx(x), Upp::Zy(y));
 #define UNTYPED(var, param)       parent.var.param; if(add) ctrl.Add(parent.var); if(show) parent.var.Show();
 #define ITEM(clss, var, param)    UNTYPED(var, param);
 #define END_LAYOUT             }
