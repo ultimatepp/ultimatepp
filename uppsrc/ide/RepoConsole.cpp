@@ -26,18 +26,18 @@ UrepoConsole::UrepoConsole()
 
 void UrepoConsole::AddResult(const String& out)
 {
-	Vector<String> h = Split(out, CharFilterCrLf);
 	const char *s = out;
 	const char *b = s;
 	auto Add = [&] {
 		String txt(b, s - b);
 		list.Add(AttrText("    " + txt).SetFont(font), txt);
-		b = 1 + s++;
+		b = ++s;
 	};
 	while(*s) {
 		if(*s == '\r') {
 			if(s[1] == '\n') {
 				Add();
+				s++;
 				b++;
 			}
 			else
