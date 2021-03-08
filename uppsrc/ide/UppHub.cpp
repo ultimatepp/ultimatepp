@@ -136,15 +136,24 @@ void UppHubDlg::Menu(Bar& bar)
 {
 	Ide *ide = (Ide *)TheIde();
 	String hubdir = GetHubDir();
+	bool sep = false;
+	UppHubNest *n = Current();
 	if(Installed()) {
-		UppHubNest *n = Current();
 		String p = hubdir + "/" + n->name;
 		bar.Add("Open " + n->name + " Directory", [=] { ShellOpenFolder(p); });
 		bar.Add("Copy " + n->name + " Directory Path", [=] { WriteClipboardText(p); });
 		if(ide)
 			bar.Add("Terminal at " + n->name + " Directory", [=] { ide->LaunchTerminal(p); });
-		bar.Separator();
+		sep = true;
 	}
+
+	if(n && n->repo.StartsWith("https://")) {
+		bar.Add("Open " + n->name + " in Browser..", [=] { LaunchWebBrowser(n->repo); });
+		sep = true;
+	}
+
+	if(sep)
+		bar.Separator();
 	
 	bar.Add("Open UppHub Directory", [=] { ShellOpenFolder(hubdir); });
 	bar.Add("Copy UppHub Directory Path", [=] { WriteClipboardText(hubdir); });
@@ -210,7 +219,7 @@ void UppHubDlg::Menu(Bar& bar)
 		SyncList();
 	});
 	bar.Separator();
-	bar.Add("UppHub URL..", [=] { Settings(); });
+	bar.Add("Set UppHub URL..", [=] { Settings(); });
 }
 
 bool UppHubDlg::Installed()
