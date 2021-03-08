@@ -458,6 +458,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -496,6 +497,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -666,6 +668,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -704,6 +707,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -874,6 +878,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -912,6 +917,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -1082,6 +1088,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -1120,6 +1127,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -1290,6 +1298,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -1328,6 +1337,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -1498,6 +1508,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -1536,6 +1547,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -1706,6 +1718,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -1744,6 +1757,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -1914,6 +1928,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -1952,6 +1967,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -2122,6 +2138,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -2160,6 +2177,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -2330,6 +2348,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -2368,6 +2387,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -2538,6 +2558,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -2576,6 +2597,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -2746,6 +2768,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -2784,6 +2807,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -2954,6 +2978,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -2992,6 +3017,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -3162,6 +3188,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -3200,6 +3227,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -3370,6 +3398,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -3408,6 +3437,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -3578,6 +3608,7 @@ $(OutDir_ide)Cpp.o: $(UPPDIR1)ide/Cpp.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -3616,6 +3647,7 @@ $(OutDir_ide)Cpp.o: $(UPPDIR1)ide/Cpp.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -3786,6 +3818,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -3824,6 +3857,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -3994,6 +4028,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -4032,6 +4067,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -4202,6 +4238,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -4240,6 +4277,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -4410,6 +4448,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -4448,6 +4487,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -4618,6 +4658,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -4656,6 +4697,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -4826,6 +4868,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -4864,6 +4907,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -5034,6 +5078,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -5072,6 +5117,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -5242,6 +5288,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -5280,6 +5327,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -5450,6 +5498,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -5488,6 +5537,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -5658,6 +5708,7 @@ $(OutDir_ide)Thisbacks.o: $(UPPDIR1)ide/Thisbacks.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -5696,6 +5747,7 @@ $(OutDir_ide)Thisbacks.o: $(UPPDIR1)ide/Thisbacks.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -5866,6 +5918,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -5904,6 +5957,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -6074,6 +6128,7 @@ $(OutDir_ide)Jump.o: $(UPPDIR1)ide/Jump.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -6112,6 +6167,7 @@ $(OutDir_ide)Jump.o: $(UPPDIR1)ide/Jump.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -6282,6 +6338,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -6320,6 +6377,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -6490,6 +6548,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -6528,6 +6587,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -6698,6 +6758,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -6736,6 +6797,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -6906,6 +6968,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -6944,6 +7007,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -7114,6 +7178,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -7152,6 +7217,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -7322,6 +7388,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -7360,6 +7427,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -7530,6 +7598,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -7568,6 +7637,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -7738,6 +7808,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -7776,6 +7847,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -7946,6 +8018,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -7984,6 +8057,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -8156,6 +8230,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -8194,6 +8269,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -8365,6 +8441,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -8403,6 +8480,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -8565,6 +8643,7 @@ $(OutDir_ide)CommandLineHandler.o: $(UPPDIR1)ide/CommandLineHandler.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -8602,6 +8681,7 @@ $(OutDir_ide)CommandLineHandler.o: $(UPPDIR1)ide/CommandLineHandler.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -8721,6 +8801,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -8760,6 +8841,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -8930,6 +9012,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -8968,6 +9051,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -9138,6 +9222,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -9176,6 +9261,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -9346,6 +9432,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -9384,6 +9471,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -9554,6 +9642,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -9592,6 +9681,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -9762,6 +9852,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -9800,6 +9891,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -9970,6 +10062,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -10008,6 +10101,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -10178,6 +10272,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -10216,6 +10311,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -10386,6 +10482,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -10424,6 +10521,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -10594,6 +10692,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -10632,6 +10731,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -10802,6 +10902,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -10840,6 +10941,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -11010,6 +11112,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -11048,6 +11151,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -11218,6 +11322,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -11256,6 +11361,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -11427,6 +11533,7 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -11465,6 +11572,7 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -11635,6 +11743,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -11673,6 +11782,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -11843,6 +11953,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -11881,6 +11992,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -12051,6 +12163,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -12089,6 +12202,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -12259,6 +12373,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -12297,6 +12412,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -12469,6 +12585,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -12507,6 +12624,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -12677,6 +12795,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -12715,6 +12834,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -12885,6 +13005,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -12923,6 +13044,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -13093,6 +13215,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -13131,6 +13254,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -13301,6 +13425,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -13339,6 +13464,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -13509,6 +13635,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -13547,6 +13674,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -13717,6 +13845,7 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -13755,6 +13884,7 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -13925,6 +14055,7 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -13963,6 +14094,7 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -14133,6 +14265,7 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -14171,6 +14304,7 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -14341,6 +14475,7 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -14379,6 +14514,7 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -14549,6 +14685,7 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -14587,6 +14724,7 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -14762,6 +14900,7 @@ $(OutDir_ide_Common)ComDlg.o: $(UPPDIR1)ide/Common/ComDlg.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -14799,6 +14938,7 @@ $(OutDir_ide_Common)ComDlg.o: $(UPPDIR1)ide/Common/ComDlg.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -14929,6 +15069,7 @@ $(OutDir_ide_Common)Module.o: $(UPPDIR1)ide/Common/Module.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -14966,6 +15107,7 @@ $(OutDir_ide_Common)Module.o: $(UPPDIR1)ide/Common/Module.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -15095,6 +15237,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -15132,6 +15275,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -16358,6 +16502,7 @@ $(OutDir_ide_LayDes)sdiff.o: $(UPPDIR1)ide/LayDes/sdiff.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -16396,6 +16541,7 @@ $(OutDir_ide_LayDes)sdiff.o: $(UPPDIR1)ide/LayDes/sdiff.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -16533,6 +16679,7 @@ $(OutDir_ide_LayDes)laylib.o: $(UPPDIR1)ide/LayDes/laylib.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -16571,6 +16718,7 @@ $(OutDir_ide_LayDes)laylib.o: $(UPPDIR1)ide/LayDes/laylib.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -16708,6 +16856,7 @@ $(OutDir_ide_LayDes)layusc.o: $(UPPDIR1)ide/LayDes/layusc.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -16746,6 +16895,7 @@ $(OutDir_ide_LayDes)layusc.o: $(UPPDIR1)ide/LayDes/layusc.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -16883,6 +17033,7 @@ $(OutDir_ide_LayDes)property.o: $(UPPDIR1)ide/LayDes/property.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -16921,6 +17072,7 @@ $(OutDir_ide_LayDes)property.o: $(UPPDIR1)ide/LayDes/property.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17058,6 +17210,7 @@ $(OutDir_ide_LayDes)textprop.o: $(UPPDIR1)ide/LayDes/textprop.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17096,6 +17249,7 @@ $(OutDir_ide_LayDes)textprop.o: $(UPPDIR1)ide/LayDes/textprop.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17233,6 +17387,7 @@ $(OutDir_ide_LayDes)fontprop.o: $(UPPDIR1)ide/LayDes/fontprop.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17271,6 +17426,7 @@ $(OutDir_ide_LayDes)fontprop.o: $(UPPDIR1)ide/LayDes/fontprop.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17408,6 +17564,7 @@ $(OutDir_ide_LayDes)propane.o: $(UPPDIR1)ide/LayDes/propane.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17446,6 +17603,7 @@ $(OutDir_ide_LayDes)propane.o: $(UPPDIR1)ide/LayDes/propane.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17583,6 +17741,7 @@ $(OutDir_ide_LayDes)item.o: $(UPPDIR1)ide/LayDes/item.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17621,6 +17780,7 @@ $(OutDir_ide_LayDes)item.o: $(UPPDIR1)ide/LayDes/item.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17758,6 +17918,7 @@ $(OutDir_ide_LayDes)layout.o: $(UPPDIR1)ide/LayDes/layout.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17796,6 +17957,7 @@ $(OutDir_ide_LayDes)layout.o: $(UPPDIR1)ide/LayDes/layout.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -17933,6 +18095,7 @@ $(OutDir_ide_LayDes)visgen.o: $(UPPDIR1)ide/LayDes/visgen.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -17971,6 +18134,7 @@ $(OutDir_ide_LayDes)visgen.o: $(UPPDIR1)ide/LayDes/visgen.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -18108,6 +18272,7 @@ $(OutDir_ide_LayDes)laydes.o: $(UPPDIR1)ide/LayDes/laydes.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -18146,6 +18311,7 @@ $(OutDir_ide_LayDes)laydes.o: $(UPPDIR1)ide/LayDes/laydes.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -18284,6 +18450,7 @@ $(OutDir_ide_LayDes)layfile.o: $(UPPDIR1)ide/LayDes/layfile.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -18322,6 +18489,7 @@ $(OutDir_ide_LayDes)layfile.o: $(UPPDIR1)ide/LayDes/layfile.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -18459,6 +18627,7 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -18497,6 +18666,7 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -18668,6 +18838,7 @@ $(OutDir_ide_IconDes)IconDes.o: $(UPPDIR1)ide/IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -18705,6 +18876,7 @@ $(OutDir_ide_IconDes)IconDes.o: $(UPPDIR1)ide/IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -18839,6 +19011,7 @@ $(OutDir_ide_IconDes)IdeDes.o: $(UPPDIR1)ide/IconDes/IdeDes.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -18876,6 +19049,7 @@ $(OutDir_ide_IconDes)IdeDes.o: $(UPPDIR1)ide/IconDes/IdeDes.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -20943,6 +21117,7 @@ $(OutDir_ide_Debuggers)Terminal.o: $(UPPDIR1)ide/Debuggers/Terminal.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -20980,6 +21155,7 @@ $(OutDir_ide_Debuggers)Terminal.o: $(UPPDIR1)ide/Debuggers/Terminal.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -21117,6 +21293,7 @@ $(OutDir_ide_Debuggers)Disas.o: $(UPPDIR1)ide/Debuggers/Disas.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -21154,6 +21331,7 @@ $(OutDir_ide_Debuggers)Disas.o: $(UPPDIR1)ide/Debuggers/Disas.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -21291,6 +21469,7 @@ $(OutDir_ide_Debuggers)GdbCmd.o: $(UPPDIR1)ide/Debuggers/GdbCmd.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -21328,6 +21507,7 @@ $(OutDir_ide_Debuggers)GdbCmd.o: $(UPPDIR1)ide/Debuggers/GdbCmd.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -21466,6 +21646,7 @@ $(OutDir_ide_Debuggers)GdbData.o: $(UPPDIR1)ide/Debuggers/GdbData.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -21503,6 +21684,7 @@ $(OutDir_ide_Debuggers)GdbData.o: $(UPPDIR1)ide/Debuggers/GdbData.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -21640,6 +21822,7 @@ $(OutDir_ide_Debuggers)Gdb.o: $(UPPDIR1)ide/Debuggers/Gdb.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -21677,6 +21860,7 @@ $(OutDir_ide_Debuggers)Gdb.o: $(UPPDIR1)ide/Debuggers/Gdb.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -21814,6 +21998,7 @@ $(OutDir_ide_Debuggers)GdbMem.o: $(UPPDIR1)ide/Debuggers/GdbMem.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -21851,6 +22036,7 @@ $(OutDir_ide_Debuggers)GdbMem.o: $(UPPDIR1)ide/Debuggers/GdbMem.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22077,6 +22263,7 @@ $(OutDir_ide_Debuggers)Cpu.o: $(UPPDIR1)ide/Debuggers/Cpu.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22114,6 +22301,7 @@ $(OutDir_ide_Debuggers)Cpu.o: $(UPPDIR1)ide/Debuggers/Cpu.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22253,6 +22441,7 @@ $(OutDir_ide_Debuggers)Debug.o: $(UPPDIR1)ide/Debuggers/Debug.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22290,6 +22479,7 @@ $(OutDir_ide_Debuggers)Debug.o: $(UPPDIR1)ide/Debuggers/Debug.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22427,6 +22617,7 @@ $(OutDir_ide_Debuggers)Mem.o: $(UPPDIR1)ide/Debuggers/Mem.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22464,6 +22655,7 @@ $(OutDir_ide_Debuggers)Mem.o: $(UPPDIR1)ide/Debuggers/Mem.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22601,6 +22793,7 @@ $(OutDir_ide_Debuggers)Sym.o: $(UPPDIR1)ide/Debuggers/Sym.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22638,6 +22831,7 @@ $(OutDir_ide_Debuggers)Sym.o: $(UPPDIR1)ide/Debuggers/Sym.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22775,6 +22969,7 @@ $(OutDir_ide_Debuggers)Exp.o: $(UPPDIR1)ide/Debuggers/Exp.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22812,6 +23007,7 @@ $(OutDir_ide_Debuggers)Exp.o: $(UPPDIR1)ide/Debuggers/Exp.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -22949,6 +23145,7 @@ $(OutDir_ide_Debuggers)PrettyUpp.o: $(UPPDIR1)ide/Debuggers/PrettyUpp.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -22986,6 +23183,7 @@ $(OutDir_ide_Debuggers)PrettyUpp.o: $(UPPDIR1)ide/Debuggers/PrettyUpp.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23123,6 +23321,7 @@ $(OutDir_ide_Debuggers)PrettyStd.o: $(UPPDIR1)ide/Debuggers/PrettyStd.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -23160,6 +23359,7 @@ $(OutDir_ide_Debuggers)PrettyStd.o: $(UPPDIR1)ide/Debuggers/PrettyStd.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23297,6 +23497,7 @@ $(OutDir_ide_Debuggers)Pretty.o: $(UPPDIR1)ide/Debuggers/Pretty.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -23334,6 +23535,7 @@ $(OutDir_ide_Debuggers)Pretty.o: $(UPPDIR1)ide/Debuggers/Pretty.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23471,6 +23673,7 @@ $(OutDir_ide_Debuggers)Visualise.o: $(UPPDIR1)ide/Debuggers/Visualise.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -23508,6 +23711,7 @@ $(OutDir_ide_Debuggers)Visualise.o: $(UPPDIR1)ide/Debuggers/Visualise.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23645,6 +23849,7 @@ $(OutDir_ide_Debuggers)Data.o: $(UPPDIR1)ide/Debuggers/Data.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -23682,6 +23887,7 @@ $(OutDir_ide_Debuggers)Data.o: $(UPPDIR1)ide/Debuggers/Data.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23819,6 +24025,7 @@ $(OutDir_ide_Debuggers)Tree.o: $(UPPDIR1)ide/Debuggers/Tree.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -23856,6 +24063,7 @@ $(OutDir_ide_Debuggers)Tree.o: $(UPPDIR1)ide/Debuggers/Tree.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -23993,6 +24201,7 @@ $(OutDir_ide_Debuggers)Stack.o: $(UPPDIR1)ide/Debuggers/Stack.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24030,6 +24239,7 @@ $(OutDir_ide_Debuggers)Stack.o: $(UPPDIR1)ide/Debuggers/Stack.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -24167,6 +24377,7 @@ $(OutDir_ide_Debuggers)Code.o: $(UPPDIR1)ide/Debuggers/Code.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24204,6 +24415,7 @@ $(OutDir_ide_Debuggers)Code.o: $(UPPDIR1)ide/Debuggers/Code.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -24341,6 +24553,7 @@ $(OutDir_ide_Debuggers)Pdb.o: $(UPPDIR1)ide/Debuggers/Pdb.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24379,6 +24592,7 @@ $(OutDir_ide_Debuggers)Pdb.o: $(UPPDIR1)ide/Debuggers/Pdb.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -24566,6 +24780,7 @@ $(OutDir_ide_Browser)Lay.o: $(UPPDIR1)ide/Browser/Lay.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24604,6 +24819,7 @@ $(OutDir_ide_Browser)Lay.o: $(UPPDIR1)ide/Browser/Lay.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -24737,6 +24953,7 @@ $(OutDir_ide_Browser)Iml.o: $(UPPDIR1)ide/Browser/Iml.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24775,6 +24992,7 @@ $(OutDir_ide_Browser)Iml.o: $(UPPDIR1)ide/Browser/Iml.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -24908,6 +25126,7 @@ $(OutDir_ide_Browser)Sch.o: $(UPPDIR1)ide/Browser/Sch.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -24946,6 +25165,7 @@ $(OutDir_ide_Browser)Sch.o: $(UPPDIR1)ide/Browser/Sch.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25079,6 +25299,7 @@ $(OutDir_ide_Browser)Util.o: $(UPPDIR1)ide/Browser/Util.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25117,6 +25338,7 @@ $(OutDir_ide_Browser)Util.o: $(UPPDIR1)ide/Browser/Util.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25250,6 +25472,7 @@ $(OutDir_ide_Browser)Base.o: $(UPPDIR1)ide/Browser/Base.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25288,6 +25511,7 @@ $(OutDir_ide_Browser)Base.o: $(UPPDIR1)ide/Browser/Base.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25421,6 +25645,7 @@ $(OutDir_ide_Browser)Item.o: $(UPPDIR1)ide/Browser/Item.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25459,6 +25684,7 @@ $(OutDir_ide_Browser)Item.o: $(UPPDIR1)ide/Browser/Item.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25593,6 +25819,7 @@ $(OutDir_ide_Browser)ItemDisplay.o: $(UPPDIR1)ide/Browser/ItemDisplay.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25631,6 +25858,7 @@ $(OutDir_ide_Browser)ItemDisplay.o: $(UPPDIR1)ide/Browser/ItemDisplay.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25764,6 +25992,7 @@ $(OutDir_ide_Browser)CodeBrowser.o: $(UPPDIR1)ide/Browser/CodeBrowser.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25802,6 +26031,7 @@ $(OutDir_ide_Browser)CodeBrowser.o: $(UPPDIR1)ide/Browser/CodeBrowser.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -25935,6 +26165,7 @@ $(OutDir_ide_Browser)TopicBase.o: $(UPPDIR1)ide/Browser/TopicBase.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -25973,6 +26204,7 @@ $(OutDir_ide_Browser)TopicBase.o: $(UPPDIR1)ide/Browser/TopicBase.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26106,6 +26338,7 @@ $(OutDir_ide_Browser)Reference.o: $(UPPDIR1)ide/Browser/Reference.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26144,6 +26377,7 @@ $(OutDir_ide_Browser)Reference.o: $(UPPDIR1)ide/Browser/Reference.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26277,6 +26511,7 @@ $(OutDir_ide_Browser)File.o: $(UPPDIR1)ide/Browser/File.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26315,6 +26550,7 @@ $(OutDir_ide_Browser)File.o: $(UPPDIR1)ide/Browser/File.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26448,6 +26684,7 @@ $(OutDir_ide_Browser)Topic.o: $(UPPDIR1)ide/Browser/Topic.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26486,6 +26723,7 @@ $(OutDir_ide_Browser)Topic.o: $(UPPDIR1)ide/Browser/Topic.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26619,6 +26857,7 @@ $(OutDir_ide_Browser)Template.o: $(UPPDIR1)ide/Browser/Template.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26657,6 +26896,7 @@ $(OutDir_ide_Browser)Template.o: $(UPPDIR1)ide/Browser/Template.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26790,6 +27030,7 @@ $(OutDir_ide_Browser)Link.o: $(UPPDIR1)ide/Browser/Link.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26828,6 +27069,7 @@ $(OutDir_ide_Browser)Link.o: $(UPPDIR1)ide/Browser/Link.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -26961,6 +27203,7 @@ $(OutDir_ide_Browser)TopicWin.o: $(UPPDIR1)ide/Browser/TopicWin.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -26999,6 +27242,7 @@ $(OutDir_ide_Browser)TopicWin.o: $(UPPDIR1)ide/Browser/TopicWin.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27133,6 +27377,7 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -27171,6 +27416,7 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27304,6 +27550,7 @@ $(OutDir_ide_Browser)CodeRef.o: $(UPPDIR1)ide/Browser/CodeRef.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -27342,6 +27589,7 @@ $(OutDir_ide_Browser)CodeRef.o: $(UPPDIR1)ide/Browser/CodeRef.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27475,6 +27723,7 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -27513,6 +27762,7 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27687,6 +27937,7 @@ $(OutDir_CodeEditor)Register.o: $(UPPDIR1)CodeEditor/Register.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -27724,6 +27975,7 @@ $(OutDir_CodeEditor)Register.o: $(UPPDIR1)CodeEditor/Register.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27841,6 +28093,7 @@ $(OutDir_CodeEditor)HighlightOut.o: $(UPPDIR1)CodeEditor/HighlightOut.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -27878,6 +28131,7 @@ $(OutDir_CodeEditor)HighlightOut.o: $(UPPDIR1)CodeEditor/HighlightOut.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -27995,6 +28249,7 @@ $(OutDir_CodeEditor)Syntax.o: $(UPPDIR1)CodeEditor/Syntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28032,6 +28287,7 @@ $(OutDir_CodeEditor)Syntax.o: $(UPPDIR1)CodeEditor/Syntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28149,6 +28405,7 @@ $(OutDir_CodeEditor)Style.o: $(UPPDIR1)CodeEditor/Style.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28186,6 +28443,7 @@ $(OutDir_CodeEditor)Style.o: $(UPPDIR1)CodeEditor/Style.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28303,6 +28561,7 @@ $(OutDir_CodeEditor)RegisterSyntax.o: $(UPPDIR1)CodeEditor/RegisterSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28340,6 +28599,7 @@ $(OutDir_CodeEditor)RegisterSyntax.o: $(UPPDIR1)CodeEditor/RegisterSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28457,6 +28717,7 @@ $(OutDir_CodeEditor)CSyntax.o: $(UPPDIR1)CodeEditor/CSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28494,6 +28755,7 @@ $(OutDir_CodeEditor)CSyntax.o: $(UPPDIR1)CodeEditor/CSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28611,6 +28873,7 @@ $(OutDir_CodeEditor)CInit.o: $(UPPDIR1)CodeEditor/CInit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28648,6 +28911,7 @@ $(OutDir_CodeEditor)CInit.o: $(UPPDIR1)CodeEditor/CInit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28765,6 +29029,7 @@ $(OutDir_CodeEditor)CHighlight.o: $(UPPDIR1)CodeEditor/CHighlight.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28802,6 +29067,7 @@ $(OutDir_CodeEditor)CHighlight.o: $(UPPDIR1)CodeEditor/CHighlight.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -28919,6 +29185,7 @@ $(OutDir_CodeEditor)CLogic.o: $(UPPDIR1)CodeEditor/CLogic.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -28956,6 +29223,7 @@ $(OutDir_CodeEditor)CLogic.o: $(UPPDIR1)CodeEditor/CLogic.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29073,6 +29341,7 @@ $(OutDir_CodeEditor)DiffSyntax.o: $(UPPDIR1)CodeEditor/DiffSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29110,6 +29379,7 @@ $(OutDir_CodeEditor)DiffSyntax.o: $(UPPDIR1)CodeEditor/DiffSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29227,6 +29497,7 @@ $(OutDir_CodeEditor)TagSyntax.o: $(UPPDIR1)CodeEditor/TagSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29264,6 +29535,7 @@ $(OutDir_CodeEditor)TagSyntax.o: $(UPPDIR1)CodeEditor/TagSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29381,6 +29653,7 @@ $(OutDir_CodeEditor)PythonSyntax.o: $(UPPDIR1)CodeEditor/PythonSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29418,6 +29691,7 @@ $(OutDir_CodeEditor)PythonSyntax.o: $(UPPDIR1)CodeEditor/PythonSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29535,6 +29809,7 @@ $(OutDir_CodeEditor)LogSyntax.o: $(UPPDIR1)CodeEditor/LogSyntax.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29572,6 +29847,7 @@ $(OutDir_CodeEditor)LogSyntax.o: $(UPPDIR1)CodeEditor/LogSyntax.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29689,6 +29965,7 @@ $(OutDir_CodeEditor)EditorBar.o: $(UPPDIR1)CodeEditor/EditorBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29726,6 +30003,7 @@ $(OutDir_CodeEditor)EditorBar.o: $(UPPDIR1)CodeEditor/EditorBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29843,6 +30121,7 @@ $(OutDir_CodeEditor)FindReplace.o: $(UPPDIR1)CodeEditor/FindReplace.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -29880,6 +30159,7 @@ $(OutDir_CodeEditor)FindReplace.o: $(UPPDIR1)CodeEditor/FindReplace.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -29997,6 +30277,7 @@ $(OutDir_CodeEditor)Lang.o: $(UPPDIR1)CodeEditor/Lang.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30034,6 +30315,7 @@ $(OutDir_CodeEditor)Lang.o: $(UPPDIR1)CodeEditor/Lang.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30151,6 +30433,7 @@ $(OutDir_CodeEditor)CodeEditor.o: $(UPPDIR1)CodeEditor/CodeEditor.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30189,6 +30472,7 @@ $(OutDir_CodeEditor)CodeEditor.o: $(UPPDIR1)CodeEditor/CodeEditor.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30339,6 +30623,7 @@ $(OutDir_CtrlLib)LabelBase.o: $(UPPDIR1)CtrlLib/LabelBase.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30376,6 +30661,7 @@ $(OutDir_CtrlLib)LabelBase.o: $(UPPDIR1)CtrlLib/LabelBase.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30482,6 +30768,7 @@ $(OutDir_CtrlLib)DisplayPopup.o: $(UPPDIR1)CtrlLib/DisplayPopup.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30519,6 +30806,7 @@ $(OutDir_CtrlLib)DisplayPopup.o: $(UPPDIR1)CtrlLib/DisplayPopup.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30625,6 +30913,7 @@ $(OutDir_CtrlLib)Button.o: $(UPPDIR1)CtrlLib/Button.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30662,6 +30951,7 @@ $(OutDir_CtrlLib)Button.o: $(UPPDIR1)CtrlLib/Button.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30768,6 +31058,7 @@ $(OutDir_CtrlLib)Switch.o: $(UPPDIR1)CtrlLib/Switch.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30805,6 +31096,7 @@ $(OutDir_CtrlLib)Switch.o: $(UPPDIR1)CtrlLib/Switch.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -30911,6 +31203,7 @@ $(OutDir_CtrlLib)EditField.o: $(UPPDIR1)CtrlLib/EditField.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -30948,6 +31241,7 @@ $(OutDir_CtrlLib)EditField.o: $(UPPDIR1)CtrlLib/EditField.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31054,6 +31348,7 @@ $(OutDir_CtrlLib)Text.o: $(UPPDIR1)CtrlLib/Text.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31091,6 +31386,7 @@ $(OutDir_CtrlLib)Text.o: $(UPPDIR1)CtrlLib/Text.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31197,6 +31493,7 @@ $(OutDir_CtrlLib)LineEdit.o: $(UPPDIR1)CtrlLib/LineEdit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31234,6 +31531,7 @@ $(OutDir_CtrlLib)LineEdit.o: $(UPPDIR1)CtrlLib/LineEdit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31340,6 +31638,7 @@ $(OutDir_CtrlLib)DocEdit.o: $(UPPDIR1)CtrlLib/DocEdit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31377,6 +31676,7 @@ $(OutDir_CtrlLib)DocEdit.o: $(UPPDIR1)CtrlLib/DocEdit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31483,6 +31783,7 @@ $(OutDir_CtrlLib)ScrollBar.o: $(UPPDIR1)CtrlLib/ScrollBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31520,6 +31821,7 @@ $(OutDir_CtrlLib)ScrollBar.o: $(UPPDIR1)CtrlLib/ScrollBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31626,6 +31928,7 @@ $(OutDir_CtrlLib)HeaderCtrl.o: $(UPPDIR1)CtrlLib/HeaderCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31663,6 +31966,7 @@ $(OutDir_CtrlLib)HeaderCtrl.o: $(UPPDIR1)CtrlLib/HeaderCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31769,6 +32073,7 @@ $(OutDir_CtrlLib)ArrayCtrl.o: $(UPPDIR1)CtrlLib/ArrayCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31806,6 +32111,7 @@ $(OutDir_CtrlLib)ArrayCtrl.o: $(UPPDIR1)CtrlLib/ArrayCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -31912,6 +32218,7 @@ $(OutDir_CtrlLib)MultiButton.o: $(UPPDIR1)CtrlLib/MultiButton.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -31949,6 +32256,7 @@ $(OutDir_CtrlLib)MultiButton.o: $(UPPDIR1)CtrlLib/MultiButton.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32055,6 +32363,7 @@ $(OutDir_CtrlLib)PopupTable.o: $(UPPDIR1)CtrlLib/PopupTable.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32092,6 +32401,7 @@ $(OutDir_CtrlLib)PopupTable.o: $(UPPDIR1)CtrlLib/PopupTable.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32198,6 +32508,7 @@ $(OutDir_CtrlLib)DropList.o: $(UPPDIR1)CtrlLib/DropList.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32235,6 +32546,7 @@ $(OutDir_CtrlLib)DropList.o: $(UPPDIR1)CtrlLib/DropList.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32341,6 +32653,7 @@ $(OutDir_CtrlLib)DropChoice.o: $(UPPDIR1)CtrlLib/DropChoice.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32378,6 +32691,7 @@ $(OutDir_CtrlLib)DropChoice.o: $(UPPDIR1)CtrlLib/DropChoice.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32484,6 +32798,7 @@ $(OutDir_CtrlLib)Static.o: $(UPPDIR1)CtrlLib/Static.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32521,6 +32836,7 @@ $(OutDir_CtrlLib)Static.o: $(UPPDIR1)CtrlLib/Static.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32627,6 +32943,7 @@ $(OutDir_CtrlLib)Splitter.o: $(UPPDIR1)CtrlLib/Splitter.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32664,6 +32981,7 @@ $(OutDir_CtrlLib)Splitter.o: $(UPPDIR1)CtrlLib/Splitter.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32770,6 +33088,7 @@ $(OutDir_CtrlLib)FrameSplitter.o: $(UPPDIR1)CtrlLib/FrameSplitter.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32807,6 +33126,7 @@ $(OutDir_CtrlLib)FrameSplitter.o: $(UPPDIR1)CtrlLib/FrameSplitter.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -32913,6 +33233,7 @@ $(OutDir_CtrlLib)SliderCtrl.o: $(UPPDIR1)CtrlLib/SliderCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -32950,6 +33271,7 @@ $(OutDir_CtrlLib)SliderCtrl.o: $(UPPDIR1)CtrlLib/SliderCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33056,6 +33378,7 @@ $(OutDir_CtrlLib)ColumnList.o: $(UPPDIR1)CtrlLib/ColumnList.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33093,6 +33416,7 @@ $(OutDir_CtrlLib)ColumnList.o: $(UPPDIR1)CtrlLib/ColumnList.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33199,6 +33523,7 @@ $(OutDir_CtrlLib)Progress.o: $(UPPDIR1)CtrlLib/Progress.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33236,6 +33561,7 @@ $(OutDir_CtrlLib)Progress.o: $(UPPDIR1)CtrlLib/Progress.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33342,6 +33668,7 @@ $(OutDir_CtrlLib)AKeys.o: $(UPPDIR1)CtrlLib/AKeys.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33379,6 +33706,7 @@ $(OutDir_CtrlLib)AKeys.o: $(UPPDIR1)CtrlLib/AKeys.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33485,6 +33813,7 @@ $(OutDir_CtrlLib)RichTextView.o: $(UPPDIR1)CtrlLib/RichTextView.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33522,6 +33851,7 @@ $(OutDir_CtrlLib)RichTextView.o: $(UPPDIR1)CtrlLib/RichTextView.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33628,6 +33958,7 @@ $(OutDir_CtrlLib)Prompt.o: $(UPPDIR1)CtrlLib/Prompt.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33665,6 +33996,7 @@ $(OutDir_CtrlLib)Prompt.o: $(UPPDIR1)CtrlLib/Prompt.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33771,6 +34103,7 @@ $(OutDir_CtrlLib)Help.o: $(UPPDIR1)CtrlLib/Help.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33808,6 +34141,7 @@ $(OutDir_CtrlLib)Help.o: $(UPPDIR1)CtrlLib/Help.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -33914,6 +34248,7 @@ $(OutDir_CtrlLib)DateTimeCtrl.o: $(UPPDIR1)CtrlLib/DateTimeCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -33951,6 +34286,7 @@ $(OutDir_CtrlLib)DateTimeCtrl.o: $(UPPDIR1)CtrlLib/DateTimeCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34057,6 +34393,7 @@ $(OutDir_CtrlLib)SuggestCtrl.o: $(UPPDIR1)CtrlLib/SuggestCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34094,6 +34431,7 @@ $(OutDir_CtrlLib)SuggestCtrl.o: $(UPPDIR1)CtrlLib/SuggestCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34200,6 +34538,7 @@ $(OutDir_CtrlLib)Bar.o: $(UPPDIR1)CtrlLib/Bar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34237,6 +34576,7 @@ $(OutDir_CtrlLib)Bar.o: $(UPPDIR1)CtrlLib/Bar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34343,6 +34683,7 @@ $(OutDir_CtrlLib)MenuItem.o: $(UPPDIR1)CtrlLib/MenuItem.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34380,6 +34721,7 @@ $(OutDir_CtrlLib)MenuItem.o: $(UPPDIR1)CtrlLib/MenuItem.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34487,6 +34829,7 @@ $(OutDir_CtrlLib)MenuBar.o: $(UPPDIR1)CtrlLib/MenuBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34524,6 +34867,7 @@ $(OutDir_CtrlLib)MenuBar.o: $(UPPDIR1)CtrlLib/MenuBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34631,6 +34975,7 @@ $(OutDir_CtrlLib)ToolButton.o: $(UPPDIR1)CtrlLib/ToolButton.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34668,6 +35013,7 @@ $(OutDir_CtrlLib)ToolButton.o: $(UPPDIR1)CtrlLib/ToolButton.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34774,6 +35120,7 @@ $(OutDir_CtrlLib)ToolBar.o: $(UPPDIR1)CtrlLib/ToolBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34811,6 +35158,7 @@ $(OutDir_CtrlLib)ToolBar.o: $(UPPDIR1)CtrlLib/ToolBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -34917,6 +35265,7 @@ $(OutDir_CtrlLib)ToolTip.o: $(UPPDIR1)CtrlLib/ToolTip.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -34954,6 +35303,7 @@ $(OutDir_CtrlLib)ToolTip.o: $(UPPDIR1)CtrlLib/ToolTip.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35060,6 +35410,7 @@ $(OutDir_CtrlLib)StatusBar.o: $(UPPDIR1)CtrlLib/StatusBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35097,6 +35448,7 @@ $(OutDir_CtrlLib)StatusBar.o: $(UPPDIR1)CtrlLib/StatusBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35203,6 +35555,7 @@ $(OutDir_CtrlLib)TabCtrl.o: $(UPPDIR1)CtrlLib/TabCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35240,6 +35593,7 @@ $(OutDir_CtrlLib)TabCtrl.o: $(UPPDIR1)CtrlLib/TabCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35346,6 +35700,7 @@ $(OutDir_CtrlLib)TreeCtrl.o: $(UPPDIR1)CtrlLib/TreeCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35383,6 +35738,7 @@ $(OutDir_CtrlLib)TreeCtrl.o: $(UPPDIR1)CtrlLib/TreeCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35489,6 +35845,7 @@ $(OutDir_CtrlLib)DropTree.o: $(UPPDIR1)CtrlLib/DropTree.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35526,6 +35883,7 @@ $(OutDir_CtrlLib)DropTree.o: $(UPPDIR1)CtrlLib/DropTree.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35632,6 +35990,7 @@ $(OutDir_CtrlLib)DlgColor.o: $(UPPDIR1)CtrlLib/DlgColor.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35669,6 +36028,7 @@ $(OutDir_CtrlLib)DlgColor.o: $(UPPDIR1)CtrlLib/DlgColor.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35775,6 +36135,7 @@ $(OutDir_CtrlLib)ColorPopup.o: $(UPPDIR1)CtrlLib/ColorPopup.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35812,6 +36173,7 @@ $(OutDir_CtrlLib)ColorPopup.o: $(UPPDIR1)CtrlLib/ColorPopup.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -35918,6 +36280,7 @@ $(OutDir_CtrlLib)ColorPusher.o: $(UPPDIR1)CtrlLib/ColorPusher.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -35955,6 +36318,7 @@ $(OutDir_CtrlLib)ColorPusher.o: $(UPPDIR1)CtrlLib/ColorPusher.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36061,6 +36425,7 @@ $(OutDir_CtrlLib)FileList.o: $(UPPDIR1)CtrlLib/FileList.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36098,6 +36463,7 @@ $(OutDir_CtrlLib)FileList.o: $(UPPDIR1)CtrlLib/FileList.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36204,6 +36570,7 @@ $(OutDir_CtrlLib)FileSel.o: $(UPPDIR1)CtrlLib/FileSel.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36241,6 +36608,7 @@ $(OutDir_CtrlLib)FileSel.o: $(UPPDIR1)CtrlLib/FileSel.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36347,6 +36715,7 @@ $(OutDir_CtrlLib)FileSelUtil.o: $(UPPDIR1)CtrlLib/FileSelUtil.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36384,6 +36753,7 @@ $(OutDir_CtrlLib)FileSelUtil.o: $(UPPDIR1)CtrlLib/FileSelUtil.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36490,6 +36860,7 @@ $(OutDir_CtrlLib)PrinterJob.o: $(UPPDIR1)CtrlLib/PrinterJob.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36527,6 +36898,7 @@ $(OutDir_CtrlLib)PrinterJob.o: $(UPPDIR1)CtrlLib/PrinterJob.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36635,6 +37007,7 @@ $(OutDir_CtrlLib)Windows.o: $(UPPDIR1)CtrlLib/Windows.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36672,6 +37045,7 @@ $(OutDir_CtrlLib)Windows.o: $(UPPDIR1)CtrlLib/Windows.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36778,6 +37152,7 @@ $(OutDir_CtrlLib)Win32.o: $(UPPDIR1)CtrlLib/Win32.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36815,6 +37190,7 @@ $(OutDir_CtrlLib)Win32.o: $(UPPDIR1)CtrlLib/Win32.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -36921,6 +37297,7 @@ $(OutDir_CtrlLib)Gtk.o: $(UPPDIR1)CtrlLib/Gtk.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -36958,6 +37335,7 @@ $(OutDir_CtrlLib)Gtk.o: $(UPPDIR1)CtrlLib/Gtk.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37064,6 +37442,7 @@ $(OutDir_CtrlLib)TrayIconWin32.o: $(UPPDIR1)CtrlLib/TrayIconWin32.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37101,6 +37480,7 @@ $(OutDir_CtrlLib)TrayIconWin32.o: $(UPPDIR1)CtrlLib/TrayIconWin32.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37207,6 +37587,7 @@ $(OutDir_CtrlLib)TrayIconX11.o: $(UPPDIR1)CtrlLib/TrayIconX11.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37244,6 +37625,7 @@ $(OutDir_CtrlLib)TrayIconX11.o: $(UPPDIR1)CtrlLib/TrayIconX11.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37350,6 +37732,7 @@ $(OutDir_CtrlLib)TrayIconGtk.o: $(UPPDIR1)CtrlLib/TrayIconGtk.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37387,6 +37770,7 @@ $(OutDir_CtrlLib)TrayIconGtk.o: $(UPPDIR1)CtrlLib/TrayIconGtk.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37493,6 +37877,7 @@ $(OutDir_CtrlLib)Update.o: $(UPPDIR1)CtrlLib/Update.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37530,6 +37915,7 @@ $(OutDir_CtrlLib)Update.o: $(UPPDIR1)CtrlLib/Update.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37636,6 +38022,7 @@ $(OutDir_CtrlLib)CtrlUtil.o: $(UPPDIR1)CtrlLib/CtrlUtil.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37673,6 +38060,7 @@ $(OutDir_CtrlLib)CtrlUtil.o: $(UPPDIR1)CtrlLib/CtrlUtil.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37780,6 +38168,7 @@ $(OutDir_CtrlLib)CtrlLibInit.o: $(UPPDIR1)CtrlLib/CtrlLibInit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37818,6 +38207,7 @@ $(OutDir_CtrlLib)CtrlLibInit.o: $(UPPDIR1)CtrlLib/CtrlLibInit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -37924,6 +38314,7 @@ $(OutDir_CtrlLib)LNGCtrl.o: $(UPPDIR1)CtrlLib/LNGCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -37961,6 +38352,7 @@ $(OutDir_CtrlLib)LNGCtrl.o: $(UPPDIR1)CtrlLib/LNGCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -38067,6 +38459,7 @@ $(OutDir_CtrlLib)Ch.o: $(UPPDIR1)CtrlLib/Ch.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -38104,6 +38497,7 @@ $(OutDir_CtrlLib)Ch.o: $(UPPDIR1)CtrlLib/Ch.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -38212,6 +38606,7 @@ $(OutDir_CtrlLib)ChWin32.o: $(UPPDIR1)CtrlLib/ChWin32.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -38249,6 +38644,7 @@ $(OutDir_CtrlLib)ChWin32.o: $(UPPDIR1)CtrlLib/ChWin32.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -38356,6 +38752,7 @@ $(OutDir_CtrlLib)ChGtk3.o: $(UPPDIR1)CtrlLib/ChGtk3.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -38393,6 +38790,7 @@ $(OutDir_CtrlLib)ChGtk3.o: $(UPPDIR1)CtrlLib/ChGtk3.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -38499,6 +38897,7 @@ $(OutDir_CtrlLib)ChCoco.o: $(UPPDIR1)CtrlLib/ChCoco.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -38536,6 +38935,7 @@ $(OutDir_CtrlLib)ChCoco.o: $(UPPDIR1)CtrlLib/ChCoco.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -38875,6 +39275,7 @@ $(OutDir_HexView)HexView.o: $(UPPDIR1)HexView/HexView.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -38912,6 +39313,7 @@ $(OutDir_HexView)HexView.o: $(UPPDIR1)HexView/HexView.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -39482,6 +39884,7 @@ $(OutDir_TextDiffCtrl)TextDiff.o: $(UPPDIR1)TextDiffCtrl/TextDiff.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -39519,6 +39922,7 @@ $(OutDir_TextDiffCtrl)TextDiff.o: $(UPPDIR1)TextDiffCtrl/TextDiff.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -39626,6 +40030,7 @@ $(OutDir_TextDiffCtrl)TextCtrl.o: $(UPPDIR1)TextDiffCtrl/TextCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -39663,6 +40068,7 @@ $(OutDir_TextDiffCtrl)TextCtrl.o: $(UPPDIR1)TextDiffCtrl/TextCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -39770,6 +40176,7 @@ $(OutDir_TextDiffCtrl)DiffCtrl.o: $(UPPDIR1)TextDiffCtrl/DiffCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -39807,6 +40214,7 @@ $(OutDir_TextDiffCtrl)DiffCtrl.o: $(UPPDIR1)TextDiffCtrl/DiffCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -39915,6 +40323,7 @@ $(OutDir_TextDiffCtrl)DirDiff.o: $(UPPDIR1)TextDiffCtrl/DirDiff.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -39952,6 +40361,7 @@ $(OutDir_TextDiffCtrl)DirDiff.o: $(UPPDIR1)TextDiffCtrl/DirDiff.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40059,6 +40469,7 @@ $(OutDir_TextDiffCtrl)patch.o: $(UPPDIR1)TextDiffCtrl/patch.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40096,6 +40507,7 @@ $(OutDir_TextDiffCtrl)patch.o: $(UPPDIR1)TextDiffCtrl/patch.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40203,6 +40615,7 @@ $(OutDir_TextDiffCtrl)PatchDiff.o: $(UPPDIR1)TextDiffCtrl/PatchDiff.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40240,6 +40653,7 @@ $(OutDir_TextDiffCtrl)PatchDiff.o: $(UPPDIR1)TextDiffCtrl/PatchDiff.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40365,6 +40779,7 @@ $(OutDir_TabBar)TabBar.o: $(UPPDIR1)TabBar/TabBar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40403,6 +40818,7 @@ $(OutDir_TabBar)TabBar.o: $(UPPDIR1)TabBar/TabBar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40513,6 +40929,7 @@ $(OutDir_TabBar)FileTabs.o: $(UPPDIR1)TabBar/FileTabs.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40550,6 +40967,7 @@ $(OutDir_TabBar)FileTabs.o: $(UPPDIR1)TabBar/FileTabs.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40659,6 +41077,7 @@ $(OutDir_TabBar)TabBarCtrl.o: $(UPPDIR1)TabBar/TabBarCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40696,6 +41115,7 @@ $(OutDir_TabBar)TabBarCtrl.o: $(UPPDIR1)TabBar/TabBarCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -40826,6 +41246,7 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -40864,6 +41285,7 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -41034,6 +41456,7 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -41072,6 +41495,7 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -41242,6 +41666,7 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -41280,6 +41705,7 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -41450,6 +41876,7 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -41488,6 +41915,7 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -41658,6 +42086,7 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -41696,6 +42125,7 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -41866,6 +42296,7 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -41904,6 +42335,7 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -42074,6 +42506,7 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -42112,6 +42545,7 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -42282,6 +42716,7 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -42320,6 +42755,7 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)CppBase/CppBase.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -43639,6 +44075,7 @@ $(OutDir_ide_MacroManager)MacroElement.o: $(UPPDIR1)ide/MacroManager/MacroElemen
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -43676,6 +44113,7 @@ $(OutDir_ide_MacroManager)MacroElement.o: $(UPPDIR1)ide/MacroManager/MacroElemen
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -43805,6 +44243,7 @@ $(OutDir_ide_MacroManager)MacroManager.o: $(UPPDIR1)ide/MacroManager/MacroManage
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -43842,6 +44281,7 @@ $(OutDir_ide_MacroManager)MacroManager.o: $(UPPDIR1)ide/MacroManager/MacroManage
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -43973,6 +44413,7 @@ $(OutDir_ide_MacroManager)UscFileParser.o: $(UPPDIR1)ide/MacroManager/UscFilePar
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -44010,6 +44451,7 @@ $(OutDir_ide_MacroManager)UscFileParser.o: $(UPPDIR1)ide/MacroManager/UscFilePar
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -44142,6 +44584,7 @@ $(OutDir_Report)Report.o: $(UPPDIR1)Report/Report.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -44179,6 +44622,7 @@ $(OutDir_Report)Report.o: $(UPPDIR1)Report/Report.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -44286,6 +44730,7 @@ $(OutDir_Report)ReportDlg.o: $(UPPDIR1)Report/ReportDlg.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -44324,6 +44769,7 @@ $(OutDir_Report)ReportDlg.o: $(UPPDIR1)Report/ReportDlg.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -52705,6 +53151,7 @@ $(OutDir_RichEdit)Ruler.o: $(UPPDIR1)RichEdit/Ruler.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -52742,6 +53189,7 @@ $(OutDir_RichEdit)Ruler.o: $(UPPDIR1)RichEdit/Ruler.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -52850,6 +53298,7 @@ $(OutDir_RichEdit)UnitEdit.o: $(UPPDIR1)RichEdit/UnitEdit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -52887,6 +53336,7 @@ $(OutDir_RichEdit)UnitEdit.o: $(UPPDIR1)RichEdit/UnitEdit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -52994,6 +53444,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53032,6 +53483,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53139,6 +53591,7 @@ $(OutDir_RichEdit)Speller.o: $(UPPDIR1)RichEdit/Speller.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53176,6 +53629,7 @@ $(OutDir_RichEdit)Speller.o: $(UPPDIR1)RichEdit/Speller.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53283,6 +53737,7 @@ $(OutDir_RichEdit)Kbd.o: $(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53320,6 +53775,7 @@ $(OutDir_RichEdit)Kbd.o: $(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53427,6 +53883,7 @@ $(OutDir_RichEdit)Mouse.o: $(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53464,6 +53921,7 @@ $(OutDir_RichEdit)Mouse.o: $(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53571,6 +54029,7 @@ $(OutDir_RichEdit)Cursor.o: $(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53608,6 +54067,7 @@ $(OutDir_RichEdit)Cursor.o: $(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53715,6 +54175,7 @@ $(OutDir_RichEdit)Undo.o: $(UPPDIR1)RichEdit/Undo.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53752,6 +54213,7 @@ $(OutDir_RichEdit)Undo.o: $(UPPDIR1)RichEdit/Undo.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -53859,6 +54321,7 @@ $(OutDir_RichEdit)Modify.o: $(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -53896,6 +54359,7 @@ $(OutDir_RichEdit)Modify.o: $(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54003,6 +54467,7 @@ $(OutDir_RichEdit)Formating.o: $(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54040,6 +54505,7 @@ $(OutDir_RichEdit)Formating.o: $(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54147,6 +54613,7 @@ $(OutDir_RichEdit)FormatDlg.o: $(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54184,6 +54651,7 @@ $(OutDir_RichEdit)FormatDlg.o: $(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54291,6 +54759,7 @@ $(OutDir_RichEdit)ParaFormat.o: $(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54328,6 +54797,7 @@ $(OutDir_RichEdit)ParaFormat.o: $(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54435,6 +54905,7 @@ $(OutDir_RichEdit)TableUndo.o: $(UPPDIR1)RichEdit/TableUndo.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54472,6 +54943,7 @@ $(OutDir_RichEdit)TableUndo.o: $(UPPDIR1)RichEdit/TableUndo.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54579,6 +55051,7 @@ $(OutDir_RichEdit)Table.o: $(UPPDIR1)RichEdit/Table.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54616,6 +55089,7 @@ $(OutDir_RichEdit)Table.o: $(UPPDIR1)RichEdit/Table.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54723,6 +55197,7 @@ $(OutDir_RichEdit)Find.o: $(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54760,6 +55235,7 @@ $(OutDir_RichEdit)Find.o: $(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -54867,6 +55343,7 @@ $(OutDir_RichEdit)Tool.o: $(UPPDIR1)RichEdit/Tool.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -54904,6 +55381,7 @@ $(OutDir_RichEdit)Tool.o: $(UPPDIR1)RichEdit/Tool.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55011,6 +55489,7 @@ $(OutDir_RichEdit)Clip.o: $(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55048,6 +55527,7 @@ $(OutDir_RichEdit)Clip.o: $(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55155,6 +55635,7 @@ $(OutDir_RichEdit)StyleKeys.o: $(UPPDIR1)RichEdit/StyleKeys.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55192,6 +55673,7 @@ $(OutDir_RichEdit)StyleKeys.o: $(UPPDIR1)RichEdit/StyleKeys.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55299,6 +55781,7 @@ $(OutDir_RichEdit)HeaderFooter.o: $(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55336,6 +55819,7 @@ $(OutDir_RichEdit)HeaderFooter.o: $(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55487,6 +55971,7 @@ $(OutDir_IconDes)IconDraw.o: $(UPPDIR1)IconDes/IconDraw.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55524,6 +56009,7 @@ $(OutDir_IconDes)IconDraw.o: $(UPPDIR1)IconDes/IconDraw.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55634,6 +56120,7 @@ $(OutDir_IconDes)AlphaCtrl.o: $(UPPDIR1)IconDes/AlphaCtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55671,6 +56158,7 @@ $(OutDir_IconDes)AlphaCtrl.o: $(UPPDIR1)IconDes/AlphaCtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55781,6 +56269,7 @@ $(OutDir_IconDes)RGBACtrl.o: $(UPPDIR1)IconDes/RGBACtrl.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55818,6 +56307,7 @@ $(OutDir_IconDes)RGBACtrl.o: $(UPPDIR1)IconDes/RGBACtrl.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -55928,6 +56418,7 @@ $(OutDir_IconDes)ImageOp.o: $(UPPDIR1)IconDes/ImageOp.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -55965,6 +56456,7 @@ $(OutDir_IconDes)ImageOp.o: $(UPPDIR1)IconDes/ImageOp.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56075,6 +56567,7 @@ $(OutDir_IconDes)Paint.o: $(UPPDIR1)IconDes/Paint.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56112,6 +56605,7 @@ $(OutDir_IconDes)Paint.o: $(UPPDIR1)IconDes/Paint.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56223,6 +56717,7 @@ $(OutDir_IconDes)Event.o: $(UPPDIR1)IconDes/Event.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56260,6 +56755,7 @@ $(OutDir_IconDes)Event.o: $(UPPDIR1)IconDes/Event.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56370,6 +56866,7 @@ $(OutDir_IconDes)Fast.o: $(UPPDIR1)IconDes/Fast.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56407,6 +56904,7 @@ $(OutDir_IconDes)Fast.o: $(UPPDIR1)IconDes/Fast.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56517,6 +57015,7 @@ $(OutDir_IconDes)IconDes.o: $(UPPDIR1)IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56554,6 +57053,7 @@ $(OutDir_IconDes)IconDes.o: $(UPPDIR1)IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56664,6 +57164,7 @@ $(OutDir_IconDes)List.o: $(UPPDIR1)IconDes/List.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56701,6 +57202,7 @@ $(OutDir_IconDes)List.o: $(UPPDIR1)IconDes/List.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56811,6 +57313,7 @@ $(OutDir_IconDes)Image.o: $(UPPDIR1)IconDes/Image.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56848,6 +57351,7 @@ $(OutDir_IconDes)Image.o: $(UPPDIR1)IconDes/Image.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -56958,6 +57462,7 @@ $(OutDir_IconDes)Smoothen.o: $(UPPDIR1)IconDes/Smoothen.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -56995,6 +57500,7 @@ $(OutDir_IconDes)Smoothen.o: $(UPPDIR1)IconDes/Smoothen.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -57105,6 +57611,7 @@ $(OutDir_IconDes)Text.o: $(UPPDIR1)IconDes/Text.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -57142,6 +57649,7 @@ $(OutDir_IconDes)Text.o: $(UPPDIR1)IconDes/Text.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -57252,6 +57760,7 @@ $(OutDir_IconDes)Bar.o: $(UPPDIR1)IconDes/Bar.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -57289,6 +57798,7 @@ $(OutDir_IconDes)Bar.o: $(UPPDIR1)IconDes/Bar.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -57401,6 +57911,7 @@ $(OutDir_IconDes)EditPos.o: $(UPPDIR1)IconDes/EditPos.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -57438,6 +57949,7 @@ $(OutDir_IconDes)EditPos.o: $(UPPDIR1)IconDes/EditPos.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -57548,6 +58060,7 @@ $(OutDir_IconDes)ImlFile.o: $(UPPDIR1)IconDes/ImlFile.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -57585,6 +58098,7 @@ $(OutDir_IconDes)ImlFile.o: $(UPPDIR1)IconDes/ImlFile.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
@@ -74443,6 +74957,7 @@ $(OutDir_CtrlCore)CocoChSysInit.o: $(UPPDIR1)CtrlCore/CocoChSysInit.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -74480,6 +74995,7 @@ $(OutDir_CtrlCore)CocoChSysInit.o: $(UPPDIR1)CtrlCore/CocoChSysInit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/lay.h \
+	$(UPPDIR1)CtrlCore/lay0.h \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
 	$(UPPDIR1)CtrlLib/AKeys.h \
