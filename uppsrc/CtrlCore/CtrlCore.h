@@ -674,6 +674,14 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
+	
+	static bool   pen;
+	static bool   pen_barrel;
+	static bool   pen_inverted;
+	static bool   pen_eraser;
+	static double pen_pressure;
+	static double pen_rotation;
+	static Pointf pen_tilt;
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
@@ -1288,6 +1296,14 @@ public:
 	static void ShutdownThreads();
 	
 	static int64 GetEventId()                           { return eventid; }
+
+	static bool   IsPointerPen()                        { return pen; }
+	static bool   IsPenBarrelPressed()                  { return pen_barrel; }
+	static bool   IsPenInverted()                       { return pen_inverted; }
+	static bool   IsPenEraserPressed()                  { return pen_eraser; }
+	static double GetPenPressure()                      { return pen_pressure; }
+	static double GetPenRotation()                      { return pen_rotation; }
+	static Pointf GetPenTilt()                          { return pen_tilt; }
 
 	Ctrl();
 	virtual ~Ctrl();
