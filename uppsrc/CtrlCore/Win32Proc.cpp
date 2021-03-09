@@ -84,7 +84,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			};
 
 			POINTER_INFO pi;
-			if(GetPointerInfo(GET_POINTERID_WPARAM(wParam), &pi)) {
+			if(GetPointerInfo && GetPointerPenInfo && GetPointerInfo(GET_POINTERID_WPARAM(wParam), &pi)) {
 				if(pi.pointerType == PT_PEN) {
 					POINTER_PEN_INFO ppi;
 					if(GetPointerPenInfo(pi.pointerId, &ppi)) {
