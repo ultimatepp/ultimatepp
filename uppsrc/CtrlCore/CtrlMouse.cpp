@@ -18,6 +18,14 @@ Point     Ctrl::leftmousepos = Null;
 Point     Ctrl::rightmousepos = Null;
 Point     Ctrl::middlemousepos = Null;
 
+bool      Ctrl::pen;
+bool      Ctrl::pen_barrel;
+bool      Ctrl::pen_inverted;
+bool      Ctrl::pen_eraser;
+double    Ctrl::pen_pressure = Null;
+double    Ctrl::pen_rotation = Null;
+Pointf    Ctrl::pen_tilt = Null;
+
 dword GetMouseFlags() {
 	dword style = 0;
 	if(GetAlt()) style |= K_ALT;
