@@ -29,8 +29,6 @@ topic "UppHub";
 [s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#2^ 2. UppHub module developer 
 perspective]&]
 [s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3^ 3. Maintainer information]&]
-[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#4^ 4. Registering module 
-in global registry]&]
 [s0; &]
 [s3;:1: 1. User perspective&]
 [s5; UppHub is a system intended to catalogue and install independently 
@@ -79,19 +77,20 @@ intended to be used in other projects should have unique name
 will be the same as the name of module). Module nest can also 
 contain some main`-package: examples and testing packages. Following 
 rules are suggested:&]
-[s0;i150;b42;a42;phO0; do not mix packages in single UppHub nest 
-that are solving different problems (like mixing SysInfo with 
-STEM4U)&]
-[s5;i150;O0; try to make sure the package names that are to be used 
-are unique (obvious reasons) `- does not apply the name of examples, 
-tests and other main packages that come with the module.&]
-[s5;i150;O0; if you are adapting 3rd party code (or perhaps format), 
-consider putting it to [* plugin ](like plugin/md)&]
-[s5;i150;O0; put examples into [* examples ]directory&]
-[s5;i150;O0; put U`+`+ style tests (those that can be be compiled 
+[s0;l128;i150;b42;a42;phO0; do not mix packages in single UppHub 
+nest that are solving different problems (like mixing SysInfo 
+with STEM4U)&]
+[s5;l128;i150;O0; try to make sure the package names that are to 
+be used are unique (obvious reasons) `- does not apply the name 
+of examples, tests and other main packages that come with the 
+module.&]
+[s5;l128;i150;O0; if you are adapting 3rd party code (or perhaps 
+format), consider putting it to [* plugin ](like plugin/md)&]
+[s5;l128;i150;O0; put examples into [* examples ]directory&]
+[s5;l128;i150;O0; put U`+`+ style tests (those that can be be compiled 
 / run automatically and fail with non`-zero exit, e.g. with ASSERT) 
 into [* autotest ]directory&]
-[s5;i150;O0; put other tests to [* test]&]
+[s5;l128;i150;O0; put other tests to [* test]&]
 [s5; &]
 [s3;:3: 3. UppHub maintainer information&]
 [s5; This information is only important for maintainers of UppHub. 
