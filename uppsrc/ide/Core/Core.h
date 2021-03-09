@@ -222,6 +222,7 @@ String GetVarsName();
 String VarFilePath();
 Vector<String> GetUppDirsRaw();
 Vector<String> GetUppDirs();
+bool   IsHubDir(const String& path);
 String GetUppDir();
 void   SetVar(const String& var, const String& val, bool save = true);
 void   SetMainNest(const String& n);

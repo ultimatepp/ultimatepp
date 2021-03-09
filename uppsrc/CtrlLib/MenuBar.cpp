@@ -560,6 +560,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	Size sz0 = sz;
 	sz = AddFrameSize(sz);
 	if(p.y + sz.cy > r.bottom) {
+		p.y = min(GetMousePos().y, p.y); // avoid mouse cursor ending in the menu
 		if(p.y - r.top > r.bottom - p.y) {
 			int y0;
 			if (parentmenu && parentmenu->GetActiveSubmenu() && parentmenu->submenuitem)
