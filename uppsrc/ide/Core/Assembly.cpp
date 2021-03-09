@@ -190,11 +190,14 @@ String GetHubDir()
 		return d;
 	hubdir_resolved = true;
 	d = GetVar("UPPHUB");
-	if(d.GetCount() && DirectoryExists(d)) return d;
-	d = LoadFile(DefaultHubFilePath());
-	if(d.GetCount() && DirectoryExists(d)) return d;
-	d = ConfigFile("UppHub");
-	RealizeDirectory(d);
+	if(d.GetCount() == 0 || !DirectoryExists(d)) {
+		d = LoadFile(DefaultHubFilePath());
+		if(d.GetCount() == 0 || !DirectoryExists(d)) {
+			d = ConfigFile("UppHub");
+			RealizeDirectory(d);
+		}
+	}
+	d = NormalizePath(d);
 	return d;
 }
 
@@ -257,6 +260,11 @@ Vector<String> GetUppDirs()
 	if(main_nest.GetCount() && (s.GetCount() == 0 || main_nest != s[0]))
 		s.Insert(0, main_nest);
 	return s;
+}
+
+bool IsHubDir(const String& path)
+{
+	return NormalizePath(path).StartsWith(GetHubDir());
 }
 
 void Nest::InvalidatePackageCache()

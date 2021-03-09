@@ -370,9 +370,15 @@ void Ide::FindStdDir()
 	MenuBar menu;
 	if(!IsNull(n))
 		menu.Add(n, THISBACK1(FindSetStdDir, n));
-	Vector<String> d = GetUppDirs();
-	for(int i = 0; i < d.GetCount(); i++)
-		menu.Add(d[i], THISBACK1(FindSetStdDir, d[i]));
+	String hub = GetHubDir();
+	Vector<String> pd;
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++)
+		pd.Add(PackageDirectory(wspc[i]));
+	for(String d : GetUppDirs())
+		if(!IsHubDir(d) || FindMatch(pd, [&](const String& q) { return q.StartsWith(d); }) >= 0)
+			menu.Add(d, [=] { FindSetStdDir(d); });
+	menu.Add(GetHubDir(), [=] { FindSetStdDir(GetHubDir()); });
 	menu.Execute(&ff.folder, ff.folder.GetPushScreenRect().BottomLeft());
 }
 
