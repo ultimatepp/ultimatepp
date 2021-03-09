@@ -98,7 +98,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 						if(ppi.penMask & PEN_MASK_PRESSURE)
 							pen_pressure = ppi.pressure / 1024.0;
 						if(ppi.penMask & PEN_MASK_ROTATION)
-							pen_pressure = ppi.rotation * M_2PI / 360;
+							pen_rotation = ppi.rotation * M_2PI / 360;
 						if(ppi.penMask & PEN_MASK_TILT_X)
 							pen_tilt.x = ppi.tiltX * M_2PI / 360;
 						if(ppi.penMask & PEN_MASK_TILT_Y)
