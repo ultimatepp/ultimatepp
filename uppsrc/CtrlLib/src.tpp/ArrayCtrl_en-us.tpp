@@ -1829,6 +1829,9 @@ array is equal to the [* GetIndexCount()] of the source ArrayCtrl.&]
 [s4; &]
 [s5;:ArrayCtrl`:`:Set`(int`,const Vector`<Value`>`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+[s5;:Upp`:`:ArrayCtrl`:`:Set`(int`,Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [@(0.0.255) v
+oid]_[* Set]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&
+`&_[*@3 v])&]
 [s2; Modifies a given row by setting all source index values to values 
 passed in the parameter [/ v].&]
 [s3; &]
@@ -1850,10 +1853,11 @@ non`-null defaults, you have to modify the relevant cells manually.&]
 [s4; &]
 [s5;:ArrayCtrl`:`:Add`(const Vector`<Value`>`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) con
 st]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+[s5;:Upp`:`:ArrayCtrl`:`:Add`(Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [@(0.0.255) void]_
+[* Add]([_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 v])&]
 [s2; Adds a new row at the end of the source data matrix. The [*^topic`:`/`/Core`/src`/Vector`$en`-us^ V
 ector] parameter contains the values to be used to initialize 
 the new row of the matrix.&]
-[s7; [*C@3 v]-|new matrix row&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:AddArray`(const ValueArray`&`): [@(0.0.255) void]_[* AddArray]([@(0.0.255) c

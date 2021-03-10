@@ -493,22 +493,50 @@ void ArrayCtrl::Set0(int i, int ii, const Value& v) {
 	else
 		SetCtrlValue(i, ii, v);
 	array.At(i).line.At(ii) = v;
+}
+
+void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
+	RTIMING("Set0");
+	array.At(i).line.Clear();
+	RTIMING("Set1");
+	for(int ii = 0; ii < v.GetCount(); ii++)
+		Set0(i, ii, v[ii]);
+	AfterSet(i);
+	RefreshRow(i);
+	WhenArrayAction();
+}
+
+void  ArrayCtrl::Set(int i, Vector<Value>&& v) {
+	RTIMING("Set0");
+	RTIMING("Set1");
+	Vector<Value>& line = array.At(i).line;
+	if(hasctrls || i == cursor) {
+		line.Clear();
+		for(int ii = 0; ii < v.GetCount(); ii++)
+			Set0(i, ii, v[ii]);
+	}
+	else
+		line = pick(v);
+	AfterSet(i);
+	RefreshRow(i);
 	WhenArrayAction();
 }
 
 void ArrayCtrl::AfterSet(int i)
 {
+	RTIMING("AfterSet");
 	SetSb();
 	Refresh();
 	SyncInfo();
 	SyncLineCtrls(i);
-	InvalidateCache(cursor);
+	InvalidateCache(i);
 }
 
 void ArrayCtrl::Set(int i, int ii, const Value& v)
 {
 	Set0(i, ii, v);
 	AfterSet(i);
+	WhenArrayAction();
 }
 
 void ArrayCtrl::Set(int i, const Id& id, const Value& v) {
@@ -2005,16 +2033,6 @@ bool ArrayCtrl::AcceptEnter() {
 	return true;
 }
 
-void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
-	array.At(i).line.Clear();
-	for(int ii = 0; ii < v.GetCount(); ii++)
-		Set(i, ii, v[ii]);
-	InvalidateCache(i);
-	SetSb();
-	RefreshRow(i);
-	WhenArrayAction();
-}
-
 void  ArrayCtrl::Add() {
 	if(GetIndexCount()) {
 		Vector<Value> x;
@@ -2032,11 +2050,6 @@ void  ArrayCtrl::Add() {
 		RefreshRow(i);
 	}
 	WhenArrayAction();
-}
-
-void  ArrayCtrl::Add(const Vector<Value>& v)
-{
-	Set(array.GetCount(), v);
 }
 
 void ArrayCtrl::Set(int ii, const VectorMap<String, Value>& m)

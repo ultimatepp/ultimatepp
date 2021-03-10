@@ -474,6 +474,7 @@ public:
 	Vector<Value> GetLine(int i) const                          { return ReadRow(i); }
 
 	void       Set(int i, const Vector<Value>& v);
+	void       Set(int i, Vector<Value>&& v);
 	void       Set(int i, const VectorMap<String, Value>& m);
 
 	void       Add();
@@ -482,7 +483,8 @@ public:
 	__Expand(E__Add)
 #undef   E__Add
 
-	void       Add(const Vector<Value>& v);
+	void       Add(const Vector<Value>& v)                      { Set(array.GetCount(), v); }
+	void       Add(Vector<Value>&& v)                           { Set(array.GetCount(), pick(v)); }
 	void       Add(const Nuller& null)                          { Add((Value)Null); }
 	void       Add(const VectorMap<String, Value>& m);
 //$-void Add(const Value& [, const Value& ]...);
