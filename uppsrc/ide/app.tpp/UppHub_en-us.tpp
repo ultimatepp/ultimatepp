@@ -28,7 +28,8 @@ topic "UppHub";
 [s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#1^ 1. User perspective]&]
 [s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#2^ 2. UppHub module developer 
 perspective]&]
-[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3^ 3. Maintainer information]&]
+[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3^ 3. UppHub maintainer 
+information]&]
 [s0; &]
 [s3;:1: 1. User perspective&]
 [s5; UppHub is a system intended to catalogue and install independently 

@@ -57,6 +57,8 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
 
 	UppHubDlg();
+	
+	bool Key(dword key, int count) override;
 };
 
 UppHubDlg::UppHubDlg()
@@ -116,7 +118,7 @@ UppHubDlg::UppHubDlg()
 	
 	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
 	
-	search.NullText("Search");
+	search.NullText("Search (Ctrl+K)");
 	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
 	search << [=] { SyncList(); };
 	
@@ -128,8 +130,18 @@ UppHubDlg::UppHubDlg()
 	LoadFromGlobal(settings, "UppHubDlgSettings");
 }
 
-INITBLOCK {
+INITBLOCK
+{
 	RegisterGlobalConfig("UppHubDlgSettings");
+}
+
+bool UppHubDlg::Key(dword key, int count)
+{
+	if(key == K_CTRL_K) {
+		search.SetFocus();
+		return true;
+	}
+	return TopWindow::Key(key, count);
 }
 
 void UppHubDlg::Menu(Bar& bar)
