@@ -876,7 +876,7 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down, bool canedit)
 			if(down)
 				KillEdit();
 			if(cursor == qq && qq >= 0 && cursor > 0 && !HasCapture() && WhenEdited && !(flags & (K_SHIFT|K_CTRL)) &&
-			   GetValueRect(l).Contains(p) && canedit)
+			   GetValueRect(line[qq]).Contains(p) && canedit)
 				SetTimeCallback(750, THISBACK(StartEdit), TIMEID_STARTEDIT);
 		};
 		if(down && IsSel(l.itemi)) { // make possible DnD of multiple items
