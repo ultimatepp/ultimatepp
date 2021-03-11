@@ -712,9 +712,15 @@ Image JPGRaster::GetExifThumbnail()
 	return StreamRaster::LoadStringAny(ss);
 }
 
+bool IsJPG(StreamRaster *s)
+{
+	return dynamic_cast<JPGRaster *>(s);
+}
+
 INITIALIZER(JPGRaster)
 {
 	StreamRaster::Register<JPGRaster>();
+	SetIsJPGFn(IsJPG);
 }
 
 }

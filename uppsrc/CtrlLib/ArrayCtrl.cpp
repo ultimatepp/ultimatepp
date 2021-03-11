@@ -496,9 +496,7 @@ void ArrayCtrl::Set0(int i, int ii, const Value& v) {
 }
 
 void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
-	RTIMING("Set0");
 	array.At(i).line.Clear();
-	RTIMING("Set1");
 	for(int ii = 0; ii < v.GetCount(); ii++)
 		Set0(i, ii, v[ii]);
 	AfterSet(i);
@@ -507,8 +505,6 @@ void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
 }
 
 void  ArrayCtrl::Set(int i, Vector<Value>&& v) {
-	RTIMING("Set0");
-	RTIMING("Set1");
 	Vector<Value>& line = array.At(i).line;
 	if(hasctrls || i == cursor) {
 		line.Clear();
@@ -524,7 +520,6 @@ void  ArrayCtrl::Set(int i, Vector<Value>&& v) {
 
 void ArrayCtrl::AfterSet(int i)
 {
-	RTIMING("AfterSet");
 	SetSb();
 	Refresh();
 	SyncInfo();

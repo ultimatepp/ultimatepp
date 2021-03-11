@@ -241,17 +241,20 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
 	if(r) {
 		Size isz = r->GetSize();
+		if(GetIsJPGFn() && GetIsJPGFn()(~r) && GetPdfDrawJPEGFn())
+			GetPdfDrawJPEGFn()(w, 0, 0, sz.cx, sz.cy, data);
+		else
 		if(isz.cx * isz.cy > sz.cx * sz.cy) { // conserve memory by scaling down from source
 			ImageEncoder m;
-			Rescale(m, sz, *r, r->GetSize());
+			Rescale(m, sz, *r, isz);
 			w.DrawImage(0, 0, sz.cx, sz.cy, m);
 		}
 		else
 			w.DrawImage(0, 0, sz.cx, sz.cy, r->GetImage()); // scale up by Draw to give e.g. PDF chance to store unscaled
 	}
 	else
-	if(IsString(data) && IsSVG(~data))
-		w.DrawImage(0, 0, RenderSVGImage(sz, ~data));
+	if(IsSVG(s))
+		w.DrawImage(0, 0, RenderSVGImage(sz, s));
 }
 
 Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, void *) const

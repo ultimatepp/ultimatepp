@@ -28,6 +28,8 @@ public:
 	Image   GetExifThumbnail();
 };
 
+bool IsJPG(StreamRaster *s);
+
 class JPGEncoder : public StreamRasterEncoder {
 	class Data;
 	One<Data> data;

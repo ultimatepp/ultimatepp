@@ -581,15 +581,34 @@ void DrawXPButton(Draw& w, Rect r, int type)
 }
 
 static DrawingToPdfFnType sPdf;
+static PdfDrawJPEGFnType sJpeg;
 
-void SetDrawingToPdfFn(DrawingToPdfFnType Pdf)
+void SetDrawingToPdfFn(DrawingToPdfFnType Pdf, PdfDrawJPEGFnType Jpeg)
 {
 	sPdf = Pdf;
+	sJpeg = Jpeg;
 }
 
 DrawingToPdfFnType GetDrawingToPdfFn()
 {
 	return sPdf;
+}
+
+PdfDrawJPEGFnType GetPdfDrawJPEGFn()
+{
+	return sJpeg;
+}
+
+static IsJPGFnType sIsJPG;
+
+void SetIsJPGFn(IsJPGFnType isjpg)
+{
+	sIsJPG = isjpg;
+}
+
+IsJPGFnType GetIsJPGFn()
+{
+	return sIsJPG;
 }
 
 Image (*render_glyph)(int cx, int x, Font font, int chr, int py, int pcy);
