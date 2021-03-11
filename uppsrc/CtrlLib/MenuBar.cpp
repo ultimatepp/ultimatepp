@@ -545,7 +545,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 			szcy = false;
 		WhenHelp = parentmenu->WhenHelp;
 	}
-	Rect r = GetWorkArea(p);
+	Rect workarea = GetWorkArea(p);
 	restorefocus = GetFocusCtrl();
 	LLOG("PopUp " << UPP::Name(this) << " set restorefocus:" << UPP::Name(restorefocus));
 	DistributeAccessKeys();
@@ -555,32 +555,32 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	else
 		SetFrame(OutsetFrame());
 	pane.SubMenu();
-	Size sz = pane.Repos(false, r.Height());
+	Size sz = pane.Repos(false, workarea.Height());
 	pane.RightPos(0, sz.cx).BottomPos(0, sz.cy);
 	Size sz0 = sz;
 	sz = AddFrameSize(sz);
-	if(p.y + sz.cy > r.bottom) {
-		p.y = min(GetMousePos().y, p.y); // avoid mouse cursor ending in the menu
-		if(p.y - r.top > r.bottom - p.y) {
+	if(p.y + sz.cy > workarea.bottom) {
+		if(p.y - workarea.top > workarea.bottom - p.y) { // more space at top
+			p.y = min(GetMousePos().y, p.y); // avoid mouse cursor ending in the menu
 			int y0;
 			if (parentmenu && parentmenu->GetActiveSubmenu() && parentmenu->submenuitem)
 				y0 = parentmenu->submenuitem->GetScreenRect().BottomRight().y + 2 + rsz.cy;
 			else
 				y0 = p.y + rsz.cy;
 			szy = szcy;
-			sz = pane.Repos(false, y0 - max(y0 - sz.cy, r.top) - (sz.cy - sz0.cy));
+			sz = pane.Repos(false, y0 - max(y0 - sz.cy, workarea.top) - (sz.cy - sz0.cy));
 			pane.RightPos(0, sz.cx).TopPos(0, sz.cy);
 			sz = AddFrameSize(sz);
 			p.y = y0 - sz.cy;
 		}
 		else {
-			sz = pane.Repos(false, r.bottom - p.y - (sz.cy - sz0.cy));
+			sz = pane.Repos(false, workarea.bottom - p.y - (sz.cy - sz0.cy));
 			pane.RightPos(0, sz.cx).BottomPos(0, sz.cy);
 			sz = AddFrameSize(sz);
 		}
 	}
-	if(p.x + sz.cx > r.right) {
-		p.x = max(p.x + rsz.cx - sz.cx, r.left);
+	if(p.x + sz.cx > workarea.right) {
+		p.x = max(p.x + rsz.cx - sz.cx, workarea.left);
 		szx = szcx;
 		pane.LeftPos(0, sz.cx);
 	}
