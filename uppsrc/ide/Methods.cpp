@@ -798,7 +798,7 @@ String Ide::GetIncludePath()
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "");
+	String include = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
@@ -861,11 +861,13 @@ String Ide::GetIncludePath()
 		for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
-	
+
+#ifdef PLATFORM_POSIX
 	for(String s : pkg_config)
 		for(String p : Split(Sys("pkg-config --cflags " + s), ' '))
 			if(p.TrimStart("-I"))
 				MergeWith(include, ";", p);
+#endif
 
 	return include;
 }
