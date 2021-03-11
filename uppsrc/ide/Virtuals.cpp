@@ -54,6 +54,10 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	virtual bool Key(dword key, int count)
 	{
+		if(key == K_CTRL_K) {
+			find.SetFocus();
+			return true;
+		}
 		return HotKey(key) || find.Key(key, count);
 	}
 
@@ -85,6 +89,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 	{
 		SerializePlacement(s);
 		list.SerializeHeader(s);
+		s % add_virtual % add_override;
 	}
 
 	typedef VirtualsDlg CLASSNAME;
@@ -104,8 +109,11 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.MultiSelect();
 		list.EvenRowColor();
 		Sizeable().Zoomable();
+		find.NullText("Search (Ctrl+K)");
 		find.SetFilter(SearchItemFilter);
 		find <<= THISBACK(Sync);
+		add_override <<= true;
+		add_virtual <<= false;
 		Sync();
 	}
 };
@@ -134,7 +142,13 @@ void AssistEditor::Virtuals()
 	for(int i = 0; i < dlg.list.GetCount(); i++)
 		if(dlg.list.IsSelected(i)) {
 			String n = (String)dlg.list.Get(i, 1);
-			text << "\tvirtual " << RemoveDefPar(n) << ";\r\n";
+			text << "\t";
+			if(dlg.add_virtual)
+				text << "virtual ";
+			text << RemoveDefPar(n);
+			if(dlg.add_override)
+				text << " override";
+			text << ";\r\n";
 			ctext << MakeDefinition(ctx.current_scope, n) << "\n{\n}\n\n";
 		}
 	Paste(text.ToWString());
