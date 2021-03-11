@@ -16,7 +16,7 @@ String Pdf(const Array<Drawing>& report, Size sz, int margin, bool pdfa,
 
 INITIALIZER(PdfDraw)
 {
-	SetDrawingToPdfFn(Pdf);
+	SetDrawingToPdfFn(Pdf, DrawJPEG);
 }
 
 }
