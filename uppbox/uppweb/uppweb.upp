@@ -10,7 +10,8 @@ uses
 	plugin\ftp,
 	Sql,
 	Painter,
-	VirtualGui/Nil;
+	VirtualGui,
+	plugin/FT_fontsys;
 
 options(GCC) -DNOWSTRING;
 
@@ -62,5 +63,5 @@ file
 	2019.2.txt;
 
 mainconfig
-	"" = "MT SKELETON RAINBOW";
+	"" = "STATIC_PNG X11 GUI NOSO";
 
