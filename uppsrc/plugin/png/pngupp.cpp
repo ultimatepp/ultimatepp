@@ -1,4 +1,4 @@
-#if defined(flagWIN32) || defined(flagOSX)
+#if defined(flagWIN32) || defined(flagOSX) || defined(flagSTATIC_PNG)
 #include <plugin/png/lib/png.h>
 #else
 #include <png.h>

@@ -433,6 +433,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	BeginBuilding(clear_console);
 	bool ok = true;
 	main_conf.Clear();
+	add_includes.Clear();
 	if(wspc.GetCount()) {
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			const Package& pk = wspc.package[i];
