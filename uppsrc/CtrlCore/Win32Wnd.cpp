@@ -64,21 +64,17 @@ static BOOL CALLBACK sDumpWindow(HWND hwnd, LPARAM lParam) {
 }
 
 void DumpWindowOrder(bool aliens) {
-#ifndef PLATFORM_WINCE
 	LLOG("DumpWindowOrder" << LOG_BEGIN);
 	EnumChildWindows(NULL, &sDumpWindow, (LPARAM)(aliens ? 1 : 0));
 	LLOG(LOG_END << "//DumpWindowOrder");
-#endif
 }
 
-#ifndef PLATFORM_WINCE
 Point GetMousePos() {
 	Point p;
 	return ::GetCursorPos(p) ? p : Null;
 	::GetCursorPos(p);
 	return p;
 }
-#endif
 
 HCURSOR   Ctrl::hCursor;
 HINSTANCE Ctrl::hInstance;

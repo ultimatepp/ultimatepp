@@ -1,4 +1,4 @@
-#if defined(flagWIN32) || defined(flagOSX)
+#if defined(flagWIN32) || defined(flagOSX) || defined(flagSTATIC_PNG)
 
 #define PNG_NO_MMX_CODE
 #define PNG_USE_GLOBAL_ARRAYS

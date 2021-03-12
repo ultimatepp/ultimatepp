@@ -63,54 +63,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
-	
 	switch(message) {
-	case WM_POINTERDOWN:
-	case WM_POINTERUPDATE:
-	case WM_POINTERUP:
-		{
-			pen = false;
-			pen_pressure = pen_rotation = Null;
-			pen_tilt = Null;
-			pen_eraser = false;
-			pen_barrel = false;
-			pen_inverted = false;
-
-			static BOOL (WINAPI *GetPointerInfo)(UINT32 pointerId, POINTER_INFO *pointerInfo);
-			static BOOL (WINAPI *GetPointerPenInfo)(UINT32 pointerId, POINTER_PEN_INFO *penInfo);
-			ONCELOCK {
-				DllFn(GetPointerInfo, "User32.dll", "GetPointerInfo");
-				DllFn(GetPointerPenInfo, "User32.dll", "GetPointerPenInfo");
-			};
-
-			POINTER_INFO pi;
-			if(GetPointerInfo && GetPointerPenInfo && GetPointerInfo(GET_POINTERID_WPARAM(wParam), &pi)) {
-				if(pi.pointerType == PT_PEN) {
-					POINTER_PEN_INFO ppi;
-					if(GetPointerPenInfo(pi.pointerId, &ppi)) {
-						pen = true;
-						if(ppi.penFlags & PEN_FLAG_BARREL)
-							pen_barrel = true;
-						if(ppi.penFlags & PEN_FLAG_INVERTED)
-							pen_inverted = true;
-						if(ppi.penFlags & PEN_FLAG_ERASER)
-							pen_eraser = true;
-						if(ppi.penMask & PEN_MASK_PRESSURE)
-							pen_pressure = ppi.pressure / 1024.0;
-						if(ppi.penMask & PEN_MASK_ROTATION)
-							pen_rotation = ppi.rotation * M_2PI / 360;
-						if(ppi.penMask & PEN_MASK_TILT_X)
-							pen_tilt.x = ppi.tiltX * M_2PI / 360;
-						if(ppi.penMask & PEN_MASK_TILT_Y)
-							pen_tilt.y = ppi.tiltY * M_2PI / 360;
-					}
-				}
-			}
-		}
-		break;
-	case WM_POINTERLEAVE:
-		pen = false;
-		break;
 	case WM_PALETTECHANGED:
 		if((HWND)wParam == hwnd)
 			break;
