@@ -526,7 +526,7 @@ GLOBALDEF int FtpConnect(const char *host, netbuf **nControl, char perror[],
 			delete[] ctrl->buf;
 		delete ctrl;
 		return 0;
-	}
+	}   
 	*nControl = ctrl;
 	return 1;
 }
@@ -536,7 +536,7 @@ GLOBALDEF int FtpConnect(const char *host, netbuf **nControl, char perror[],
 *
 * returns 1 if successful, 0 on error
 */
-GLOBALDEF int FtpOptions(int opt, long val, netbuf *nControl)
+GLOBALDEF int FtpOptions(int opt, uintptr_t val, netbuf *nControl)
 {
 	int v,rv=0;
 	switch (opt)
