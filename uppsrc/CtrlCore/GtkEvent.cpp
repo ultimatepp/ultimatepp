@@ -140,8 +140,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			AddEvent(user_data, EVENT_FOCUS_CHANGE, value, event);
 		}
 		return false;
-	case GDK_LEAVE_NOTIFY:
 	case GDK_MOTION_NOTIFY:
+	case GDK_LEAVE_NOTIFY:
 		break;
 	case GDK_BUTTON_PRESS:
 		value = DoButtonEvent(event, true);
@@ -211,6 +211,14 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 Ctrl::GEvent::GEvent()
 {
 	event = NULL;
+
+	pen = false;
+	pen_barrel = false;
+	pen_inverted = false;
+	pen_eraser = false;
+	pen_pressure = Null;
+	pen_rotation = Null;
+	pen_tilt = Null;
 }
 
 void Ctrl::GEvent::Free()
@@ -273,6 +281,27 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
 	e.event = NULL;
+	GdkDevice *d = gdk_event_get_source_device(event);
+	if(d && gdk_device_get_source(d) == GDK_SOURCE_PEN) {
+		e.pen = true;
+		double *axes = NULL;
+		GdkDevice *device = NULL;
+		if(event->type == GDK_MOTION_NOTIFY)
+			axes = ((GdkEventMotion *)event)->axes;
+		if(findarg(event->type, GDK_BUTTON_PRESS, GDK_2BUTTON_PRESS, GDK_3BUTTON_PRESS or GDK_BUTTON_RELEASE) >= 0)
+			axes = ((GdkEventButton *)event)->axes;
+		if(axes) {
+			double h;
+			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_PRESSURE, &h))
+				e.pen_pressure = h;
+			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_ROTATION, &h))
+				e.pen_rotation = h;
+			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_XTILT, &h))
+				e.pen_tilt.x = h;
+			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_YTILT, &h))
+				e.pen_tilt.y = h;
+		}
+	}
 	if(event) {
 		e.time = gdk_event_get_time(event);
 		e.event = gdk_event_copy(event);
@@ -396,6 +425,15 @@ void Ctrl::Proc()
 	bool pressed = false;
 	int  kv, hw;
 	static int clicktime = msecs() - 100000;
+
+	pen = CurrentEvent.pen;
+	pen_barrel = CurrentEvent.pen_barrel;
+	pen_inverted = CurrentEvent.pen_inverted;
+	pen_eraser = CurrentEvent.pen_eraser;
+	pen_pressure = CurrentEvent.pen_pressure;
+	pen_rotation = CurrentEvent.pen_rotation;
+	pen_tilt = CurrentEvent.pen_tilt;
+
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
