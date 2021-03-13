@@ -679,6 +679,7 @@ private:
 	static bool   pen_barrel;
 	static bool   pen_inverted;
 	static bool   pen_eraser;
+	static bool   pen_history;
 	static double pen_pressure;
 	static double pen_rotation;
 	static Pointf pen_tilt;
@@ -1298,6 +1299,7 @@ public:
 	static int64 GetEventId()                           { return eventid; }
 
 	static bool   IsPointerPen()                        { return pen; }
+	static bool   IsPenHistoryEvent()                   { return pen_history; }
 	static bool   IsPenBarrelPressed()                  { return pen_barrel; }
 	static bool   IsPenInverted()                       { return pen_inverted; }
 	static bool   IsPenEraserPressed()                  { return pen_eraser; }

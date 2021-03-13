@@ -63,11 +63,111 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
+	
+	auto DoMouseMove = [&](POINT p) {
+		if(ignoreclick)
+			EndIgnore();
+		else {
+			if(_this) DoMouse(MOUSEMOVE, Point(p));
+			DoCursorShape();
+		}
+	};
+	
 	switch(message) {
+	case WM_POINTERDOWN:
+	case WM_POINTERUPDATE:
+	case WM_POINTERUP: {
+			POINT p = Point((LONG)lParam);
+			ScreenToClient(hwnd, &p);
+	
+			pen = false;
+			pen_pressure = pen_rotation = Null;
+			pen_tilt = Null;
+			pen_eraser = false;
+			pen_barrel = false;
+			pen_inverted = false;
+			pen_history = false;
+			
+			static BOOL (WINAPI *EnableMouseInPointer)(BOOL fEnable);
+			static BOOL (WINAPI *GetPointerType)(UINT32 pointerId, POINTER_INPUT_TYPE *pointerType);
+			static BOOL (WINAPI *GetPointerInfo)(UINT32 pointerId, POINTER_INFO *pointerInfo);
+			static BOOL (WINAPI *GetPointerPenInfo)(UINT32 pointerId, POINTER_PEN_INFO *penInfo);
+			static BOOL (WINAPI *GetPointerPenInfoHistory)(UINT32 pointerId, UINT32 *entriesCount, POINTER_PEN_INFO *penInfo);
+	
+			ONCELOCK {
+				DllFn(GetPointerType, "User32.dll", "GetPointerType");
+				DllFn(GetPointerInfo, "User32.dll", "GetPointerInfo");
+				DllFn(GetPointerPenInfo, "User32.dll", "GetPointerPenInfo");
+				DllFn(GetPointerPenInfoHistory, "User32.dll", "GetPointerPenInfoHistory");
+			};
+			
+			if(!(GetPointerType && GetPointerInfo && GetPointerPenInfo && GetPointerPenInfoHistory))
+				break;
+			
+			POINTER_INPUT_TYPE pointerType;
+	
+			auto ProcessPenInfo = [&] (POINTER_PEN_INFO& ppi) {
+				pen = true;
+				if(ppi.penFlags & PEN_FLAG_BARREL)
+					pen_barrel = true;
+				if(ppi.penFlags & PEN_FLAG_INVERTED)
+					pen_inverted = true;
+				if(ppi.penFlags & PEN_FLAG_ERASER)
+					pen_eraser = true;
+				if(ppi.penMask & PEN_MASK_PRESSURE)
+					pen_pressure = ppi.pressure / 1024.0;
+				if(ppi.penMask & PEN_MASK_ROTATION)
+					pen_rotation = ppi.rotation * M_2PI / 360;
+				if(ppi.penMask & PEN_MASK_TILT_X)
+					pen_tilt.x = ppi.tiltX * M_2PI / 360;
+				if(ppi.penMask & PEN_MASK_TILT_Y)
+					pen_tilt.y = ppi.tiltY * M_2PI / 360;
+			};
+	
+			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
+			if(GetPointerType(pointerId, &pointerType) && pointerType == PT_PEN) {
+				UINT32 hc = 256;
+				Buffer<POINTER_PEN_INFO> ppit(hc);
+				if(message == WM_POINTERUPDATE && GetPointerPenInfoHistory(pointerId, &hc, ppit)) {
+					for(int i = hc - 1; i >= 0; i--) {
+						ProcessPenInfo(ppit[i]);
+						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
+						ScreenToClient(hwnd, &hp);
+						DoMouseMove(hp);
+						pen_history = true; // first one is the current event
+					}
+					pen_history = false;
+					return 0L;
+				}
+				POINTER_PEN_INFO ppi;
+				if(GetPointerPenInfo(pointerId, &ppi))
+					ProcessPenInfo(ppi);
+				switch(message) {
+				case WM_POINTERDOWN:
+					ClickActivateWnd();
+					if(ignoreclick) return 0L;
+					DoMouse(LEFTDOWN, Point(p), 0);
+					if(_this) PostInput();
+					break;
+				case WM_POINTERUP:
+					if(ignoreclick) EndIgnore();
+					else DoMouse(LEFTUP, Point(p), 0);
+					if(_this) PostInput();
+					break;
+				case WM_POINTERUPDATE:
+					DoMouseMove(p);
+					break;
+				}
+				return 0L;
+			}
+		}
+		break;
+	case WM_POINTERLEAVE:
+		pen = false;
+		break;
 	case WM_PALETTECHANGED:
 		if((HWND)wParam == hwnd)
 			break;
-#ifndef PLATFORM_WINCE
 	case WM_QUERYNEWPALETTE:
 		if(!SystemDraw::AutoPalette()) break;
 		{
@@ -81,7 +181,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(i) InvalidateRect(hwnd, NULL, TRUE);
 			return i;
 		}
-#endif
 	case WM_PAINT:
 		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
@@ -93,37 +192,28 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			fullrefresh = false;
 			if(IsVisible()) {
 				SystemDraw draw(dc);
-	#ifndef PLATFORM_WINCE
 				HPALETTE hOldPal;
 				if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
 					hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
 					int n = RealizePalette(dc);
 					LLOG("In paint realized " << n << " colors");
 				}
-	#endif
 				painting = true;
 				UpdateArea(draw, Rect(ps.rcPaint));
 				painting = false;
-	#ifndef PLATFORM_WINCE
 				if(draw.PaletteMode() && SystemDraw::AutoPalette())
 					SelectPalette(dc, hOldPal, TRUE);
-	#endif
 			}
 			EndPaint(hwnd, &ps);
 			
 			UpdateDHCtrls(); // so that they are displayed withing the same WM_PAINT - looks better
 		}
 		return 0L;
-#ifndef PLATFORM_WINCE
 	case WM_NCHITTEST:
 		CheckMouseCtrl();
 		if(ignoremouse) return HTTRANSPARENT;
 		break;
-#endif
 	case WM_LBUTTONDOWN:
-#ifdef PLARFORM_WINCE
-		wince_mouseleft = true;
-#endif
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
 		DoMouse(LEFTDOWN, Point((dword)lParam), 0);
@@ -134,14 +224,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			EndIgnore();
 		else
 			DoMouse(LEFTUP, Point((dword)lParam), 0);
-#ifdef PLATFORM_WINCE
-		wince_mouseleft = false;
-#endif
-#ifdef PLATFORM_WINCE
-		wince_mousepos = Point(-99999, -99999);
-		if(!ignoreclick)
-			if(_this) DoMouse(MOUSEMOVE, Point(-99999, -99999));
-#endif
 		if(_this) PostInput();
 		return 0L;
 	case WM_LBUTTONDBLCLK:
@@ -188,23 +270,15 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		DoMouse(MIDDLEDOUBLE, Point((dword)lParam));
 		if(_this) PostInput();
 		return 0L;
-#ifndef PLATFORM_WINCE
 	case WM_NCLBUTTONDOWN:
 	case WM_NCRBUTTONDOWN:
 	case WM_NCMBUTTONDOWN:
 		ClickActivateWnd();
 		IgnoreMouseUp();
 		break;
-#endif
 	case WM_MOUSEMOVE:
 		LLOG("WM_MOUSEMOVE: ignoreclick = " << ignoreclick);
-		if(ignoreclick) {
-			EndIgnore();
-			return 0L;
-		}
-		if(_this)
-			DoMouse(MOUSEMOVE, Point((dword)lParam));
-		DoCursorShape();
+		DoMouseMove(Point((dword)lParam));
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
 		if(ignoreclick) {
@@ -265,9 +339,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				keycode = KEYtoK((dword)wParam) | K_KEYUP;
 			else
 			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && KEYtoK(VK_SPACE) == K_SPACE) {
-#ifdef PLATFORM_WINCE
-				keycode = wParam;
-#else
 				if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX Unicode patch
 					keycode = (dword)wParam;
 				else {
@@ -280,7 +351,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 					else
 						keycode = (dword)wParam;
 				}
-#endif
 			}
 			bool b = false;
 			if(keycode) {
@@ -482,14 +552,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 */
 	}
 	if(hwnd) {
-#ifdef PLATFORM_WINCE
 		return DefWindowProc(hwnd, message, wParam, lParam);
-#else
 		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
 			return DefWindowProcW(hwnd, message, wParam, lParam);
 		else
 			return DefWindowProc(hwnd, message, wParam, lParam);
-#endif
 	}
 	return 0L;
 }
