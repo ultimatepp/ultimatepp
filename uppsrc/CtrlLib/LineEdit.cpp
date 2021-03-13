@@ -71,8 +71,7 @@ LineEdit& LineEdit::SetFont(Font f) {
 }
 
 Size LineEdit::GetFontSize() const {
-	FontInfo fi = font.Info();
-	return Size(max(fi['M'], fi['W']), fi.GetHeight());
+	return Size(font.GetMonoWidth(), font.GetHeight());
 }
 
 void LineEdit::SetRectSelection(int64 anchor, int64 cursor)

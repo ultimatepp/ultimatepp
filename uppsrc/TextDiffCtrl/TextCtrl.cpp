@@ -391,12 +391,10 @@ void TextCompareCtrl::SetFont(Font f, Font nf)
 {
 	font = f;
 	number_font = nf;
-	FontInfo fi = f.Info();
-	FontInfo ni = nf.Info();
-	letter.cy = fi.GetHeight();
-	letter.cx = fi.GetAveWidth();
-	number_width = 5 * ni.GetAveWidth();
-	number_yshift = (fi.GetHeight() - ni.GetHeight() + 2) >> 1;
+	letter.cy = f.GetHeight();
+	letter.cx = f.GetMonoWidth();
+	number_width = 5 * nf.GetMonoWidth();
+	number_yshift = (f.GetHeight() - nf.GetHeight() + 2) >> 1;
 	Layout();
 }
 

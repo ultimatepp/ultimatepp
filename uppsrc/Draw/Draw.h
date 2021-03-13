@@ -162,6 +162,7 @@ public:
 	int   GetOverhang() const                { return Fi().overhang; }
 	int   GetAveWidth() const                { return Fi().avewidth; }
 	int   GetMaxWidth() const                { return Fi().maxwidth; }
+	int   GetMonoWidth() const               { return max(GetWidth('M'), GetWidth('W')); }
 	bool  IsNormal(int ch) const;
 	bool  IsComposed(int ch) const;
 	bool  IsReplaced(int ch) const;

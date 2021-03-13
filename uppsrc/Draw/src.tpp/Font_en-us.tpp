@@ -276,11 +276,26 @@ of text.&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:GetAveWidth`(`)const: [@(0.0.255) int]_[* GetAveWidth]()_[@(0.0.255) const]&]
-[s2;%% Returns the average width of character.&]
+[s2;%% Returns the average width of character. Depends on information 
+from the font provider, which is not always reliable `- it is 
+better the obtain the spacing info from the width of individual 
+glyphs.&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:GetMaxWidth`(`)const: [@(0.0.255) int]_[* GetMaxWidth]()_[@(0.0.255) const]&]
-[s2;%% Returns the maximal width of character.&]
+[s2;%% Returns the maximal width of character. Depends on information 
+from the font provider, which is not always reliable `- it is 
+better the obtain the spacing info from the width of individual 
+glyphs.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Font`:`:GetMonoWidth`(`)const: [@(0.0.255) int]_[* GetMonoWidth]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns supposed width of character cell if the font is (or 
+is considered) monospace. This is the method used in LineEdit 
+to determine cell width. Currently, max(GetWidth(`'M`'), GetWidth(`'W`')) 
+value is used as GetAveWidth and GetMaxWidth using the information 
+from the font metadata is unreliable.&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:IsNormal`(int`)const: [@(0.0.255) bool]_[* IsNormal]([@(0.0.255) int]_[@3 ch])_[@(0.0.255) c
