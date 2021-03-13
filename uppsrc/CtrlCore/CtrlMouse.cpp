@@ -22,6 +22,7 @@ bool      Ctrl::pen;
 bool      Ctrl::pen_barrel;
 bool      Ctrl::pen_inverted;
 bool      Ctrl::pen_eraser;
+bool      Ctrl::pen_history;
 double    Ctrl::pen_pressure = Null;
 double    Ctrl::pen_rotation = Null;
 Pointf    Ctrl::pen_tilt = Null;
