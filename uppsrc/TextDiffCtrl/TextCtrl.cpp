@@ -394,7 +394,7 @@ void TextCompareCtrl::SetFont(Font f, Font nf)
 	letter.cy = f.GetHeight();
 	letter.cx = f.GetMonoWidth();
 	number_width = 5 * nf.GetMonoWidth();
-	number_yshift = (f.GetHeight() - nf.GetHeight() + 2) >> 1;
+	number_yshift = (f.GetCy() - nf.GetCy() + 2) >> 1;
 	Layout();
 }
 
