@@ -53,6 +53,14 @@ _DBG_
 		Point      mousepos;
 		guint      state;
 		int        count;
+
+		bool       pen;
+		bool       pen_barrel;
+		bool       pen_inverted;
+		bool       pen_eraser;
+		double     pen_pressure;
+		double     pen_rotation;
+		Pointf     pen_tilt;
 	};
 	
 	struct GEvent : Moveable<GEvent, GEvent0> {
