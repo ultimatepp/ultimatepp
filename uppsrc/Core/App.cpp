@@ -236,7 +236,7 @@ void CopyFolder(const char *dst, const char *src)
 		}
 		else
 		if(ff.IsFolder() && *ff.GetName() != '.')
-			CopyFolder(s, d);
+			CopyFolder(d, s);
 		ff.Next();
 	}
 }
