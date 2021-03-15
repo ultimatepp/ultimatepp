@@ -63,7 +63,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
-	
+
 	auto DoMouseMove = [&](POINT p) {
 		if(ignoreclick)
 			EndIgnore();
@@ -72,14 +72,14 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			DoCursorShape();
 		}
 	};
-	
+
 	switch(message) {
 	case WM_POINTERDOWN:
 	case WM_POINTERUPDATE:
 	case WM_POINTERUP: {
 			POINT p = Point((LONG)lParam);
 			ScreenToClient(hwnd, &p);
-	
+
 			pen = false;
 			pen_pressure = pen_rotation = Null;
 			pen_tilt = Null;
@@ -87,25 +87,25 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			pen_barrel = false;
 			pen_inverted = false;
 			pen_history = false;
-			
+
 			static BOOL (WINAPI *EnableMouseInPointer)(BOOL fEnable);
 			static BOOL (WINAPI *GetPointerType)(UINT32 pointerId, POINTER_INPUT_TYPE *pointerType);
 			static BOOL (WINAPI *GetPointerInfo)(UINT32 pointerId, POINTER_INFO *pointerInfo);
 			static BOOL (WINAPI *GetPointerPenInfo)(UINT32 pointerId, POINTER_PEN_INFO *penInfo);
 			static BOOL (WINAPI *GetPointerPenInfoHistory)(UINT32 pointerId, UINT32 *entriesCount, POINTER_PEN_INFO *penInfo);
-	
+
 			ONCELOCK {
 				DllFn(GetPointerType, "User32.dll", "GetPointerType");
 				DllFn(GetPointerInfo, "User32.dll", "GetPointerInfo");
 				DllFn(GetPointerPenInfo, "User32.dll", "GetPointerPenInfo");
 				DllFn(GetPointerPenInfoHistory, "User32.dll", "GetPointerPenInfoHistory");
 			};
-			
+
 			if(!(GetPointerType && GetPointerInfo && GetPointerPenInfo && GetPointerPenInfoHistory))
 				break;
-			
+
 			POINTER_INPUT_TYPE pointerType;
-	
+
 			auto ProcessPenInfo = [&] (POINTER_PEN_INFO& ppi) {
 				pen = true;
 				if(ppi.penFlags & PEN_FLAG_BARREL)
@@ -123,7 +123,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				if(ppi.penMask & PEN_MASK_TILT_Y)
 					pen_tilt.y = ppi.tiltY * M_2PI / 360;
 			};
-	
+
 			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
 			if(GetPointerType(pointerId, &pointerType) && pointerType == PT_PEN) {
 				UINT32 hc = 256;
@@ -205,7 +205,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 					SelectPalette(dc, hOldPal, TRUE);
 			}
 			EndPaint(hwnd, &ps);
-			
+
 			UpdateDHCtrls(); // so that they are displayed withing the same WM_PAINT - looks better
 		}
 		return 0L;
@@ -552,7 +552,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 */
 	}
 	if(hwnd) {
-		return DefWindowProc(hwnd, message, wParam, lParam);
 		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
 			return DefWindowProcW(hwnd, message, wParam, lParam);
 		else
