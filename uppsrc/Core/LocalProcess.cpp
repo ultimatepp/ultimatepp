@@ -337,7 +337,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	LLOG(args.GetCount() << "arguments:");
 	for(int a = 0; a < args.GetCount(); a++)
 		LLOG("[" << a << "]: <" << (args[a] ? args[a] : "NULL") << ">");
-#endif//DO_LLOG
+#endif
 
 	if(cd)
 		(void)!chdir(cd); // that (void)! strange thing is to silence GCC warning

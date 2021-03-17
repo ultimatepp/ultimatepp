@@ -88,7 +88,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			pen_inverted = false;
 			pen_history = false;
 
-			static BOOL (WINAPI *EnableMouseInPointer)(BOOL fEnable);
 			static BOOL (WINAPI *GetPointerType)(UINT32 pointerId, POINTER_INPUT_TYPE *pointerType);
 			static BOOL (WINAPI *GetPointerInfo)(UINT32 pointerId, POINTER_INFO *pointerInfo);
 			static BOOL (WINAPI *GetPointerPenInfo)(UINT32 pointerId, POINTER_PEN_INFO *penInfo);
@@ -133,8 +132,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 						ProcessPenInfo(ppit[i]);
 						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
 						ScreenToClient(hwnd, &hp);
+						pen_history = (bool)i;
 						DoMouseMove(hp);
-						pen_history = true; // first one is the current event
 					}
 					pen_history = false;
 					return 0L;
@@ -142,16 +141,29 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				POINTER_PEN_INFO ppi;
 				if(GetPointerPenInfo(pointerId, &ppi))
 					ProcessPenInfo(ppi);
+				static bool right_down = false;
 				switch(message) {
 				case WM_POINTERDOWN:
 					ClickActivateWnd();
 					if(ignoreclick) return 0L;
-					DoMouse(LEFTDOWN, Point(p), 0);
+					right_down = pen_barrel;
+					if(right_down)
+						DoMouse(RIGHTDOWN, Point(p));
+					else
+						DoMouse(LEFTDOWN, Point(p), 0);
 					if(_this) PostInput();
 					break;
 				case WM_POINTERUP:
-					if(ignoreclick) EndIgnore();
-					else DoMouse(LEFTUP, Point(p), 0);
+					if(ignoreclick)
+						EndIgnore();
+					else {
+						if(right_down) {
+							right_down = false;
+							DoMouse(RIGHTUP, Point(p));
+						}
+						else
+							DoMouse(LEFTUP, Point(p), 0);
+					}
 					if(_this) PostInput();
 					break;
 				case WM_POINTERUPDATE:

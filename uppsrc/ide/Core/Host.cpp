@@ -139,6 +139,7 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 {
 	try {
 		if(canlog) Log(cmdline);
+		p.NoConvertCharset();
 		if(p.Start(FindCommand(exedirs, cmdline), environment))
 			return true;
 	}
