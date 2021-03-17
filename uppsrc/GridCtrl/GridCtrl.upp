@@ -5,8 +5,6 @@ charset "UTF-8";
 uses
 	CtrlLib;
 
-uses(GRIDSQL) Sql;
-
 file
 	GridCtrl.h,
 	GridCtrl.cpp,
