@@ -48,6 +48,7 @@ void Ide::BeginBuilding(bool clear_console)
 		console.Clear();
 	build_time = msecs();
 	cmdout.Clear();
+	InvalidateIncludes();
 }
 
 void Ide::EndBuilding(bool ok)

@@ -321,6 +321,7 @@ struct WorkspaceWork {
 	virtual bool   FileRemove()                       { return true; }
 	virtual void   SyncSvnDir(const String& working)  {}
 	virtual void   LaunchTerminal(const char *dir)    {}
+	virtual void   InvalidateIncludes()               {}
 
 	void   ScanWorkspace();
 	void   SavePackage();

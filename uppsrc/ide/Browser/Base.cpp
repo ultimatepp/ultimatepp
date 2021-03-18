@@ -434,7 +434,7 @@ void CodeBaseScanFile0(Stream& in, const String& fn)
 	InvalidateFileTimeCache(NormalizeSourcePath(fn));
 	PPSync(TheIde()->IdeGetIncludePath());
 
-	LTIMING("CodeBaseScan");
+	LTIMING("CodeBaseScanFile0");
 
 	int file;
 	{
@@ -505,6 +505,7 @@ void NewCodeBase()
 {
 	if(DeadLockCheck()) return;
 	Mutex::Lock __(CppBaseMutex);
+	InvalidatePPCache();
 	ReduceCodeBaseCache();
 	if(IsNull(IdeGetCurrentMainPackage())) {
 		ClearCodeBase();
@@ -525,6 +526,7 @@ void NewCodeBase()
 void RescanCodeBase()
 {
 	if(DeadLockCheck()) return;
+	InvalidatePPCache();
 	Mutex::Lock __(CppBaseMutex);
 	ClearCodeBase();
 	s_console = true;

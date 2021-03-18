@@ -351,6 +351,8 @@ void Ide::SaveFile0(bool always)
 	if(!editor.IsDirty() && !always)
 		return;
 	TouchFile(editfile);
+	if(!FileExists(editfile))
+		InvalidateIncludes();
 	for(;;) {
 		FileOut out(editfile);
 		SaveEditorFile(out);
@@ -424,10 +426,12 @@ int CharFilterMacro(int c)
 void Ide::FileRename(const String& nm)
 {
 	tabs.RenameFile(editfile, nm);
+	InvalidateIncludes();
 }
 
 bool Ide::FileRemove()
 {
+	InvalidateIncludes();
 	int q = FindIndex(tablru, editfile);
 	if(q >= 0)
 		tablru.Remove(q);

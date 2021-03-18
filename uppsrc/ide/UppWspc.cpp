@@ -965,12 +965,14 @@ void WorkspaceWork::AddNormalUses()
 	OptItem& m = actual.uses.Add();
 	m.text = p;
 	SaveLoadPackage();
+	InvalidateIncludes();
 }
 
 void WorkspaceWork::RemovePackageMenu(Bar& bar)
 {
 	if(bar.IsScanKeys() || bar.IsScanHelp() || !bar.IsMenuBar())
 		return;
+	InvalidateIncludes();
 	String active = UnixPath(GetActivePackage());
 	int usecnt = 0;
 	for(int i = 0; i < package.GetCount(); i++) {
@@ -1015,6 +1017,7 @@ void WorkspaceWork::PackageOp(String active, String from_package, String rename)
 		}
 	ScanWorkspace();
 	SyncWorkspace();
+	InvalidateIncludes();
 }
 
 void WorkspaceWork::RemovePackage(String from_package)
@@ -1024,6 +1027,7 @@ void WorkspaceWork::RemovePackage(String from_package)
 		"Remove package [* \1%s\1] from uses sections of all current packages ?", active)))
 		return;
 	PackageOp(GetActivePackage(), from_package, Null);
+	InvalidateIncludes();
 }
 
 void WorkspaceWork::TogglePackageSpeed()
@@ -1139,6 +1143,7 @@ void WorkspaceWork::DnDInsert(int line, PasteClip& d)
 		return;
 	if(GetInternalPtr<UppList>(d, "package-file") == &filelist && d.Accept())
 		DoMove(line < fileindex.GetCount() ? fileindex[line] : actual.file.GetCount(), true);
+	InvalidateIncludes();
 }
 
 void WorkspaceWork::Drag()
