@@ -365,15 +365,31 @@ void PPFile::Dump() const
 	DUMPC(includes);
 }
 
-void PPSync(const String& include_path)
+void InvalidatePPCache()
 {
-	LLOG("* PPSync");
 	{
 		Mutex::Lock __(s_IncludePathMutex);
 		s_IncludePath.Clear();
-		s_Include_Path = include_path;
 	}
 	{
+		Mutex::Lock __(s_FlatPPMutex);
+		s_FlatPP.Clear();
+	}
+}
+
+void PPSync(const String& include_path)
+{
+	LLOG("* PPSync");
+	bool update = false;
+	{
+		Mutex::Lock __(s_IncludePathMutex);
+		if(s_Include_Path != include_path) {
+			s_IncludePath.Clear();
+			s_Include_Path = include_path;
+			update = true;
+		}
+	}
+	if(update) {
 		Mutex::Lock __(s_FlatPPMutex);
 		s_FlatPP.Clear();
 	}
@@ -420,7 +436,7 @@ String GetIncludePath0(const char *s, const char *filedir)
 		s++;
 		String name;
 		if(type == '<') type = '>';
-		while(*s != '\r' && *s != '\n') {
+		while(*s != '\r' && *s != '\n' && *s) {
 			if(*s == type) {
 				if(type == '\"') {
 					String fn = NormalizeSourcePath(name, filedir);

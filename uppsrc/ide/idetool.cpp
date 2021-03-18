@@ -78,6 +78,7 @@ void Ide::GotoCpp(const CppItem& pos)
 void Ide::CheckCodeBase()
 {
 	InvalidateFileTimeCache();
+	InvalidateIncludes();
 	CodeBaseSync();
 }
 
@@ -91,6 +92,7 @@ void Ide::RescanCode()
 	PutConsole(AsString(tm));
 //*/
 //*
+	InvalidateIncludes();
 	SaveFile();
 	TimeStop t;
 	console.Clear();

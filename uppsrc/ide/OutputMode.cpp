@@ -422,6 +422,7 @@ void Ide::SetupOutputMode()
 
 void Ide::SyncBuildMode()
 {
+	InvalidateIncludes();
 	SetupDefaultMethod();
 	Vector<String> bmlist;
 	for(FindFile ff(ConfigFile("*.bm")); ff; ff.Next())

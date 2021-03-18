@@ -14,6 +14,8 @@ String GetStdDefs();
 
 void   SetPPDefs(const String& defs);
 
+void   InvalidatePPCache();
+
 void   PPSync(const String& include_path);
 
 enum Kind {

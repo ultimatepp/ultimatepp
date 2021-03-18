@@ -776,6 +776,7 @@ void Ide::SetupBuildMethods()
 			break;
 		}
 	}
+	InvalidateIncludes();
 	CodeBaseSync();
 	SyncBuildMode();
 	SetBar();
@@ -796,21 +797,23 @@ void ExtractIncludes(Index<String>& r, String h)
 
 String Ide::GetIncludePath()
 {
+	if(include_path.GetCount())
+		return include_path;
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	String include = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
 		Index<String> r;
 		for(int pass = 0; pass < 2; pass++)
 			ExtractIncludes(r, Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
-		r.FindAdd("/usr/include");
-		r.FindAdd("/usr/local/include");
+		r.FindAdd("/usr/include_path");
+		r.FindAdd("/usr/local/include_path");
 		sys_includes = Join(r.GetKeys(), ";");
 	}
 	if(findarg(bm.Get("BUILDER", ""), "GCC", "CLANG") >= 0)
-		MergeWith(include, ";", sys_includes);
+		MergeWith(include_path, ";", sys_includes);
 #endif
 #ifdef PLATFORM_WIN32
 	static VectorMap<String, String> clang_include;
@@ -836,16 +839,16 @@ String Ide::GetIncludePath()
 		q = clang_include.GetCount();
 		clang_include.Add(method, Join(r.GetKeys(), ";"));
 	}
-	MergeWith(include, ";", clang_include[q]);
+	MergeWith(include_path, ";", clang_include[q]);
 #endif
 	if(findarg(bm.Get("BUILDER", ""), "ANDROID") >= 0) {
 		AndroidNDK ndk(bm.Get("NDK_PATH", ""));
 		if(ndk.Validate()) {
-			MergeWith(include, ";", ndk.GetIncludeDir());
+			MergeWith(include_path, ";", ndk.GetIncludeDir());
 			
 			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME", ""));
 			if(!cppIncludeDir.IsEmpty()) {
-				MergeWith(include, ";", cppIncludeDir);
+				MergeWith(include_path, ";", cppIncludeDir);
 			}
 		}
 	}
@@ -857,7 +860,7 @@ String Ide::GetIncludePath()
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
-			MergeWith(include, ";", SourcePath(wspc[i], pkg.include[j].text));
+			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
 		for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
@@ -866,13 +869,19 @@ String Ide::GetIncludePath()
 	for(String s : pkg_config)
 		for(String p : Split(Sys("pkg-config --cflags " + s), ' '))
 			if(p.TrimStart("-I"))
-				MergeWith(include, ";", p);
+				MergeWith(include_path, ";", p);
 #endif
 
-	return include;
+	return include_path;
 }
 
 String Ide::IdeGetIncludePath()
 {
 	return GetIncludePath();
+}
+
+void Ide::InvalidateIncludes()
+{
+	InvalidatePPCache();
+	include_path.Clear();
 }
