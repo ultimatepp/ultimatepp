@@ -673,6 +673,32 @@ PackageEditor::PackageEditor()
 	ink <<=
 	bold <<=
 	italic <<= THISBACK(SaveOptionsLoad);
+	
+	merge << [=] {
+		const Workspace& wspc = GetIdeWorkspace();
+		if(wspc.GetCount() == 0)
+			return;
+		Vector<String> nests = GetUppDirs();
+		String app_nest = NormalizePath(nests[0]);
+		Progress pi;
+		Vector<String> tocopy, tocopy_nest;
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String pkg_name = wspc[i];
+			String pkg_dir = GetFileFolder(PackagePath(pkg_name));
+			String pkg_nest = GetPackagePathNest(pkg_dir);
+			if(NormalizePath(GetPackagePathNest(pkg_dir)) != app_nest) {
+				tocopy.Add(pkg_name);
+				tocopy_nest.Add(pkg_nest);
+			}
+		}
+		if(PromptOKCancel("Following packages will be copied to [* \1" + app_nest + "\1]:&&\1" + Join(tocopy, "\n"))) {
+			Progress pi;
+			for(int i = 0; i < tocopy.GetCount(); i++)
+				CopyFolder(AppendFileName(app_nest, tocopy[i]), AppendFileName(tocopy_nest[i], tocopy[i]), &pi);
+		}
+		ScanWorkspace();
+		SyncWorkspace();
+	};
 
 	FileCursor();
 }
