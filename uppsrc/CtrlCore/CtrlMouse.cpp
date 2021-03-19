@@ -591,7 +591,7 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	if(e == RIGHTUP)
 		rightmousepos = Null;
 	if(e == MIDDLEUP)
-		rightmousepos = Null;
+		middlemousepos = Null;
 	if(findarg(e, LEFTUP, RIGHTUP, MIDDLEUP) >= 0)
 		KillRepeat();
 	Image result = DispatchMouseEvent(e, p, zd);
