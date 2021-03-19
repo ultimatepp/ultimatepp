@@ -149,7 +149,7 @@ const char *StrToDate(const char *fmt, Date& d, const char *s, Date def)
 			break;
 		case 'y':
 			d.year = n;
-			if(d.year < 25) d.year += 2000; // Check again in 2020.... // TODO: Make this automatic
+			if(d.year < 35) d.year += 2000; // Check again in 2030.... // TODO: Make this automatic
 			else
 			if(d.year < 100) d.year += 1900;
 			break;
