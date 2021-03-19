@@ -899,7 +899,6 @@ public:
 		void  SyncRepoDirs(const Vector<String>& working);
 		void  SyncRepoDir(const String& working);
 		void  SyncRepo();
-		void  MergeNests();
 
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);

@@ -456,7 +456,6 @@ void Ide::Project(Bar& menu)
 		if(menu.IsMenuBar())
 			menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
 				.Help("Configuring compiler, operating system, output application parameters, custom flags");
-		menu.Add("Merge nests..", [=] { MergeNests(); });
 		menu.Separator();
 		menu.Add(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");
