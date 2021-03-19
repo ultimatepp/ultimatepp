@@ -1,5 +1,4 @@
 #include "ide.h"
-//#include "Install.h"
 
 bool CheckLicense()
 {
@@ -40,8 +39,6 @@ bool Install(bool& hasvars)
 		if(pass == 0) {
 			if(name == "uppsrc" && IsNull(uppsrc))
 				uppsrc = b;
-//			if(name == "bazaar" && IsNull(bazaar))
-//				bazaar = b;
 		}
 		else {
 			if(name != "uppsrc")
@@ -73,11 +70,8 @@ bool Install(bool& hasvars)
 	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
 
 	for(pass = 0; pass < 2; pass++) {
-//		if(pass && bazaar.GetCount()) {
-//			MakeAssembly(bazaar, "examples-bazaar");
-//			MakeAssembly(myapps);
-//			MakeAssembly(myapps + ";" + bazaar, "MyApps-bazaar");
-//		}
+		if(pass)
+			MakeAssembly(myapps);
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));
