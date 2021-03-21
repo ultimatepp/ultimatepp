@@ -26,6 +26,75 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
+[s3; 2021.1 (April 2021?)&]
+[s5;po*/ &]
+[s5;po [*/ Upcoming release]&]
+[s5;po &]
+[s5;po [* Release highlights]&]
+[s5;l160;i150;poO0; New system for 3rd party modules, `"UppHub`": 
+independently developed U`+`+ modules residing in Git repositories 
+now can be seamlessly integrated, including automatic installation 
+of missing packages if they are in the UppHub.&]
+[s5;po &]
+[s5;po [* Core]&]
+[s0;l160;i150;O0; double NAN and INF values are now considered Null 
+(IsNull returns true for them).&]
+[s0;l160;i150;O0; FileSystemInfo now returns volume names of network 
+drives&]
+[s0;l160;i150;O0; Improvements in FindFile&]
+[s0;l160;i150;O0; String middle tier heap handling optimised&]
+[s0;l160;i150;O0; U`+`+ does not require MemoryFreeThread call at 
+the end of thread (it is now implemented using thread`_local 
+destructor)&]
+[s5; &]
+[s5;po [* CtrlCore]&]
+[s0;l160;i150;O0; New C`+`+ style for iteration of widget children 
+now possible [*C@5 for(Ctrl`& q : widget)]`+&]
+[s0;l160;i150;O0; Pen support (pressure, tilt etc...)&]
+[s0; &]
+[s5;po [* RichText, RichEdit]&]
+[s0;l160;i150;O0; 1.15 line spacing support&]
+[s0;l160;i150;O0; JPEG raw image data is now exported to PDF as JPEG 
+(instead of recoding)&]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0;l160;i150;O0; Context goto now support AK`_ key definitions&]
+[s0;l160;i150;O0; TheIDE now contains credentials manager for git 
+and svn (including github tokens)&]
+[s0;l160;i150;O0; Various improvements to text comparison dialogs 
+`- ability to copy and delete individual lines between versions, 
+filtering by file time (for directory comparison).&]
+[s0;l160;i150;O0; Repo history of .upp files directly available via 
+package context menu&]
+[s0;l160;i150;O0; Open package dialog filtering options redesigned&]
+[s0;l160;i150;O0; New function to copy positions as text to clipboard 
+(e.g. `"RichEdit/Modify.cpp:27`") and go to such position based 
+on clipboard content. Useful for communication between developers.&]
+[s0;l160;i150;O0; Some common nest root files like README.md or LICENSE 
+are now directly accessible through <meta> pseudo`-package.&]
+[s0;l160;i150;O0; TheIDE/umk build flags MAKE`_LIB and MAKE`_MLIB 
+force generation of library instead of executable.&]
+[s0;l160;i150;O0; New `"Merge nests`" function (in Package organizer) 
+copies all used packages that are not in the first nest of assembly 
+into the first nest. In U`+`+, first nest usually contains the 
+application code whole while other nests contain libraries (U`+`+ 
+or 3rd party libraries). This function is intended to `"freeze`" 
+the non`-application code before releasing / tagging / branching 
+to reduce the chance that a change of that code does not break 
+the application.&]
+[s0;l160;i150;O0; TheIDE now can `"Open terminal`" at various directories 
+(output directory, package directory, source file directory etc...), 
+with PATH augmented with current build executable directories.&]
+[s0;l160;i150;O0; Support for .md (markdown) format&]
+[s0;l160;i150;O0; Improved debugger threads tab&]
+[s0;l160;i150;O0; Support for [*C@5 override][*  ]in virtual methods 
+dialog&]
+[s0; &]
+[s0; [* Win32]&]
+[s0;l160;i150;O0; Now ships with minimal git (mingit) implementation&]
+[s0;l160;i150;O0; CLANG now at version 11.0.0&]
+[s5; &]
+[s5; &]
 [s3; 2020.2 (rev. 15260) (October 2020)&]
 [s5; &]
 [s5;po [*/ Current stable release]&]
