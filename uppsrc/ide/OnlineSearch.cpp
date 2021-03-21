@@ -86,7 +86,7 @@ WebSearchTab::WebSearchTab()
 		bar.Add(b, "Remove search engine", IdeImg::remove(), [=] { list.DoRemove(); Sync(); }).Key(K_DELETE);
 		bar.Add(b, "Set as default engine", IdeImg::star(), [=] { Default(); Sync(); });
 		bar.Add(b, "Move up", IdeImg::arrow_up(), [=] { list.SwapUp(); Sync(); }).Key(K_CTRL_UP);
-		bar.Add(b, "Move down", IdeImg::arrow_up(), [=] { list.SwapDown(); Sync(); }).Key(K_CTRL_DOWN);
+		bar.Add(b, "Move down", IdeImg::arrow_down(), [=] { list.SwapDown(); Sync(); }).Key(K_CTRL_DOWN);
 		bar.Separator();
 		bar.Add("Restore the default list", [=] {
 			if(PromptYesNo("Delete the current list and restore defaults?")) {
