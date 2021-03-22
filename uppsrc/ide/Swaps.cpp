@@ -45,6 +45,7 @@ bool Ide::SwapSIf(const char *cref)
 	if(!cref && n.GetCount() < 2)
 		for(int i = 0; i < nn.GetCount(); i++)
 			if(nn[i].IsType()) {
+				UnlockCodeBaseAll();
 				GotoCpp(nn[i]);
 				return false;
 			}
