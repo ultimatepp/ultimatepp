@@ -1335,6 +1335,8 @@ void ArrayCtrl::ClearModify() {
 
 bool ArrayCtrl::AcceptRow() {
 	ASSERT(IsCursor());
+	if(acceptingrow) // prevent recursion
+		return true;
 	int i;
 	for(i = 0; i < column.GetCount(); i++) {
 		Column& m = column[i];
