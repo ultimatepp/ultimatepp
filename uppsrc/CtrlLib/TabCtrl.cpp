@@ -177,7 +177,7 @@ void TabCtrl::Tabs::Paint(Draw& w)
 
 Rect TabCtrl::GetOpaqueRect() const
 {
-	return pane.GetRect();
+	return IsTransparent() ? Rect(0, 0, 0, 0) : pane.GetRect();
 }
 
 void TabCtrl::PaintTabs(Draw& w)

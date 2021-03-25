@@ -18,14 +18,7 @@ Point     Ctrl::leftmousepos = Null;
 Point     Ctrl::rightmousepos = Null;
 Point     Ctrl::middlemousepos = Null;
 
-bool      Ctrl::pen;
-bool      Ctrl::pen_barrel;
-bool      Ctrl::pen_inverted;
-bool      Ctrl::pen_eraser;
-bool      Ctrl::pen_history;
-double    Ctrl::pen_pressure = Null;
-double    Ctrl::pen_rotation = Null;
-Pointf    Ctrl::pen_tilt = Null;
+PenInfo   Ctrl::pen;
 
 dword GetMouseFlags() {
 	dword style = 0;
@@ -226,6 +219,10 @@ Image Ctrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 		break;
 	case CURSORIMAGE:
 		return CursorImage(p, keyflags);
+	case PEN:
+		if(!Pen(p, pen, keyflags))
+			return Null;
+		break;
 	}
 	return Image::Arrow();
 }

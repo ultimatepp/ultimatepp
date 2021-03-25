@@ -368,6 +368,19 @@ const T *GetInternalPtr(PasteClip& d, const char *id = "")
 	return IsAvailableInternal<T>(d, id) ? (T *)GetInternalDropPtr__() : NULL;
 }
 
+enum { PEN_DOWN = 1, PEN_UP = 2 };
+
+struct PenInfo {
+	int    action = 0;
+	bool   barrel = false;
+	bool   inverted = false;
+	bool   eraser = false;
+	bool   history = false;
+	double pressure = Null;
+	double rotation = Null;
+	Pointf tilt = Null;
+};
+
 class Ctrl : public Pte<Ctrl> {
 public:
 	enum PlacementConstants {
@@ -529,6 +542,8 @@ private:
 
 	static  Ptr<Ctrl> repeatTopCtrl;
 	static  Point     repeatMousePos;
+	
+	static  PenInfo   pen;
 
 	static  Vector<MouseHook>& mousehook();
 	static  Vector<KeyHook>&   keyhook();
@@ -674,15 +689,6 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
-	
-	static bool   pen;
-	static bool   pen_barrel;
-	static bool   pen_inverted;
-	static bool   pen_eraser;
-	static bool   pen_history;
-	static double pen_pressure;
-	static double pen_rotation;
-	static Pointf pen_tilt;
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
@@ -743,7 +749,7 @@ public:
 
 	enum MouseEvents {
 		BUTTON        = 0x0F,
-		ACTION        = 0xF0,
+		ACTION        = 0xFF0,
 
 		MOUSEENTER    = 0x10,
 		MOUSEMOVE     = 0x20,
@@ -758,6 +764,8 @@ public:
 		DRAG          = 0xc0,
 		HOLD          = 0xd0,
 		TRIPLE        = 0xe0,
+		PEN           = 0xf0,
+		PENLEAVE      = 0x100,
 
 		LEFTDOWN      = LEFT|DOWN,
 		LEFTDOUBLE    = LEFT|DOUBLE,
@@ -854,6 +862,8 @@ public:
 	virtual void   MiddleUp(Point p, dword keyflags);
 	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   MouseLeave();
+	
+	virtual bool   Pen(Point p, const PenInfo& pen, dword keyflags);
 
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
@@ -1297,15 +1307,6 @@ public:
 	static void ShutdownThreads();
 	
 	static int64 GetEventId()                           { return eventid; }
-
-	static bool   IsPointerPen()                        { return pen; }
-	static bool   IsPenHistoryEvent()                   { return pen_history; }
-	static bool   IsPenBarrelPressed()                  { return pen_barrel; }
-	static bool   IsPenInverted()                       { return pen_inverted; }
-	static bool   IsPenEraserPressed()                  { return pen_eraser; }
-	static double GetPenPressure()                      { return pen_pressure; }
-	static double GetPenRotation()                      { return pen_rotation; }
-	static Pointf GetPenTilt()                          { return pen_tilt; }
 
 	Ctrl();
 	virtual ~Ctrl();

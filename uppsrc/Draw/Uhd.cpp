@@ -18,7 +18,7 @@ namespace Upscale2x_helper {
 	}
 };
 
-Image Upscale2x(const Image& src, RGBA bg)
+Image Upscale2x_(const Image& src)
 {
 	using namespace Upscale2x_helper;
 	Size isz = src.GetSize();
@@ -42,8 +42,7 @@ Image Upscale2x(const Image& src, RGBA bg)
 					if(*q >= 0) {
 						int xx = x + dx;
 						int yy = y + dy;
-						pp[*q] = pp[*q + 20] = xx >= 0 && xx < isz.cx
-						                       && yy >= 0 && yy < isz.cy ? src[yy][xx] : bg;
+						pp[*q] = pp[*q + 20] = src[clamp(yy, 0, isz.cy - 1)][clamp(xx, 0, isz.cx - 1)];
 					}
 					q++;
 				}
@@ -79,8 +78,8 @@ Image Upscale2x(const Image& src)
 		s = Magnify(src, 2, 2); // in that case, filtering by smart rescale methods could lead to artifacts
 	else {
 		Size isz = src.GetSize();
-		s = RecreateAlpha(Upscale2x(GetOver(CreateImage(isz, White()), src), White()),
-		                  Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
+		s = RecreateAlpha(Upscale2x_(GetOver(CreateImage(isz, White()), src)),
+		                  Upscale2x_(GetOver(CreateImage(isz, Black()), src)));
 
 		struct SFilter : ImageFilter9 { // Improve contours
 			virtual RGBA operator()(const RGBA **mx) {
