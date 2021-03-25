@@ -71,6 +71,8 @@ void Ctrl::MiddleDrag(Point p, dword keyflags)      {}
 void Ctrl::MiddleHold(Point p, dword keyflags)      {}
 void Ctrl::MiddleUp(Point p, dword keyflags)        {}
 
+bool Ctrl::Pen(Point p, const PenInfo& pen, dword keyflags) { return false; }
+
 void Ctrl::Layout()                                 {}
 
 void Ctrl::PostInput()

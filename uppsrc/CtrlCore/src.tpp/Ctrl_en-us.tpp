@@ -2753,48 +2753,6 @@ This is helpful in certain caching situations `- e.g. if you
 want to lazy fetch some data, but only once per input event.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:IsPointerPen`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsPointerP
-en]()&]
-[s2; Current mouse event is in fact not a mouse event, but was caused 
-by interaction of graphical pen with tablet.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:IsPenHistoryEvent`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsPen
-HistoryEvent]()&]
-[s2; The current event is from coalesced pen history (that could 
-happen if your software is unable to process all events in time).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:IsPenBarrelPressed`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsPe
-nBarrelPressed]()&]
-[s2; Barell is pressed.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:IsPenInverted`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsPenInve
-rted]()&]
-[s2; Pen is inverted.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:IsPenEraserPressed`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsPe
-nEraserPressed]()&]
-[s2; Pen is in eraser mode&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:GetPenPressure`(`):%- [@(0.0.255) static] [@(0.0.255) double]_[* GetPen
-Pressure]()&]
-[s2; Returns pen pressure as number 0...1.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:GetPenRotation`(`):%- [@(0.0.255) static] [@(0.0.255) double]_[* GetPen
-Rotation]()&]
-[s2; Returns pen rotation in radians.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:GetPenTilt`(`):%- [@(0.0.255) static] [_^Upp`:`:Pointf^ Pointf]_[* GetP
-enTilt]()&]
-[s2; Returns pen tilt in radians.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:begin`(`)const:%- [_^Upp`:`:Ctrl`:`:CtrlConstIterator^ CtrlConstIte
 rator]_[* begin]()_[@(0.0.255) const]&]
 [s5;:Upp`:`:Ctrl`:`:begin`(`):%- [_^Upp`:`:Ctrl`:`:CtrlIterator^ CtrlIterator]_[* begin](

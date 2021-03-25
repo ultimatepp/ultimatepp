@@ -66,7 +66,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 			dx = 0;
 		for(int yy = -ay + 1; yy <= ay; yy++)
 			for(int xx = -ax + 1; xx <= ax; xx++) {
-				*xd++ = minmax(sx + xx, 0, isz.cx - 1) + sr.left;
+				*xd++ = clamp(sx + xx, 0, isz.cx - 1) + sr.left;
 				*xd++ = sGetk(kernel, ((xx << shift) - dx) * a / ax, a, shift);
 			}
 	}
@@ -87,10 +87,9 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 			int *yd = py;
 			for(int yy = -ay + 1; yy <= ay; yy++) {
 				*yd++ = sGetk(kernel, ((yy << shift) - dy) * a / ay, a, shift);
-				*yd++ = minmax(sy + yy, 0, isz.cy - 1) + sr.top;
+				*yd++ = clamp(sy + yy, 0, isz.cy - 1) + sr.top;
 			}
 			RGBA *t = ib[y];
-
 	#ifdef CPU_SIMD
 			for(int x = 0; x < sz.cx; x++) {
 				f32x4 rgbaf = 0;
@@ -123,6 +122,11 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 					for(int xx = 2 * ax; xx-- > 0;) {
 						const RGBA& s = l[*xd++];
 						int weight = ky * *xd++;
+						if(s.a != 255) {
+							DDUMP(s);
+							DDUMP(x);
+							DDUMP(y);
+						}
 						red   += weight * s.r;
 						green += weight * s.g;
 						blue  += weight * s.b;

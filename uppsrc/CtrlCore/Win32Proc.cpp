@@ -64,63 +64,49 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
 
-	auto DoMouseMove = [&](POINT p) {
-		if(ignoreclick)
-			EndIgnore();
-		else {
-			if(_this) DoMouse(MOUSEMOVE, Point(p));
-			DoCursorShape();
-		}
-	};
-
 	switch(message) {
 	case WM_POINTERDOWN:
 	case WM_POINTERUPDATE:
 	case WM_POINTERUP: {
 			POINT p = Point((LONG)lParam);
 			ScreenToClient(hwnd, &p);
-
-			pen = false;
-			pen_pressure = pen_rotation = Null;
-			pen_tilt = Null;
-			pen_eraser = false;
-			pen_barrel = false;
-			pen_inverted = false;
-			pen_history = false;
+			
+			pen.pressure = pen.rotation = Null;
+			pen.tilt = Null;
+			pen.eraser = pen.barrel = pen.inverted = pen.history = false;
 
 			static BOOL (WINAPI *GetPointerType)(UINT32 pointerId, POINTER_INPUT_TYPE *pointerType);
 			static BOOL (WINAPI *GetPointerInfo)(UINT32 pointerId, POINTER_INFO *pointerInfo);
 			static BOOL (WINAPI *GetPointerPenInfo)(UINT32 pointerId, POINTER_PEN_INFO *penInfo);
 			static BOOL (WINAPI *GetPointerPenInfoHistory)(UINT32 pointerId, UINT32 *entriesCount, POINTER_PEN_INFO *penInfo);
-
+		
 			ONCELOCK {
 				DllFn(GetPointerType, "User32.dll", "GetPointerType");
 				DllFn(GetPointerInfo, "User32.dll", "GetPointerInfo");
 				DllFn(GetPointerPenInfo, "User32.dll", "GetPointerPenInfo");
 				DllFn(GetPointerPenInfoHistory, "User32.dll", "GetPointerPenInfoHistory");
 			};
-
+		
 			if(!(GetPointerType && GetPointerInfo && GetPointerPenInfo && GetPointerPenInfoHistory))
 				break;
 
 			POINTER_INPUT_TYPE pointerType;
 
 			auto ProcessPenInfo = [&] (POINTER_PEN_INFO& ppi) {
-				pen = true;
 				if(ppi.penFlags & PEN_FLAG_BARREL)
-					pen_barrel = true;
+					pen.barrel = true;
 				if(ppi.penFlags & PEN_FLAG_INVERTED)
-					pen_inverted = true;
+					pen.inverted = true;
 				if(ppi.penFlags & PEN_FLAG_ERASER)
-					pen_eraser = true;
+					pen.eraser = true;
 				if(ppi.penMask & PEN_MASK_PRESSURE)
-					pen_pressure = ppi.pressure / 1024.0;
+					pen.pressure = ppi.pressure / 1024.0;
 				if(ppi.penMask & PEN_MASK_ROTATION)
-					pen_rotation = ppi.rotation * M_2PI / 360;
+					pen.rotation = ppi.rotation * M_2PI / 360;
 				if(ppi.penMask & PEN_MASK_TILT_X)
-					pen_tilt.x = ppi.tiltX * M_2PI / 360;
+					pen.tilt.x = ppi.tiltX * M_2PI / 360;
 				if(ppi.penMask & PEN_MASK_TILT_Y)
-					pen_tilt.y = ppi.tiltY * M_2PI / 360;
+					pen.tilt.y = ppi.tiltY * M_2PI / 360;
 			};
 
 			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
@@ -128,54 +114,36 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				UINT32 hc = 256;
 				Buffer<POINTER_PEN_INFO> ppit(hc);
 				if(message == WM_POINTERUPDATE && GetPointerPenInfoHistory(pointerId, &hc, ppit)) {
+					bool processed = false;
 					for(int i = hc - 1; i >= 0; i--) {
 						ProcessPenInfo(ppit[i]);
 						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
 						ScreenToClient(hwnd, &hp);
-						pen_history = (bool)i;
-						DoMouseMove(hp);
+						pen.history = (bool)i;
+						processed = !IsNull(DoMouse(PEN, hp, 0));
 					}
-					pen_history = false;
-					return 0L;
+					if(processed)
+						return 0L;
+					else
+						break;
 				}
 				POINTER_PEN_INFO ppi;
 				if(GetPointerPenInfo(pointerId, &ppi))
 					ProcessPenInfo(ppi);
-				static bool right_down = false;
 				switch(message) {
 				case WM_POINTERDOWN:
+					pen.action = PEN_DOWN;
 					ClickActivateWnd();
-					if(ignoreclick) return 0L;
-					right_down = pen_barrel;
-					if(right_down)
-						DoMouse(RIGHTDOWN, Point(p));
-					else
-						DoMouse(LEFTDOWN, Point(p), 0);
-					if(_this) PostInput();
 					break;
 				case WM_POINTERUP:
-					if(ignoreclick)
-						EndIgnore();
-					else {
-						if(right_down) {
-							right_down = false;
-							DoMouse(RIGHTUP, Point(p));
-						}
-						else
-							DoMouse(LEFTUP, Point(p), 0);
-					}
-					if(_this) PostInput();
-					break;
-				case WM_POINTERUPDATE:
-					DoMouseMove(p);
+					pen.action = PEN_UP;
 					break;
 				}
-				return 0L;
+				if(!IsNull(DoMouse(PEN, p, 0)))
+					return 0L;
+				break;
 			}
 		}
-		break;
-	case WM_POINTERLEAVE:
-		pen = false;
 		break;
 	case WM_PALETTECHANGED:
 		if((HWND)wParam == hwnd)
@@ -290,7 +258,12 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		break;
 	case WM_MOUSEMOVE:
 		LLOG("WM_MOUSEMOVE: ignoreclick = " << ignoreclick);
-		DoMouseMove(Point((dword)lParam));
+		if(ignoreclick)
+			EndIgnore();
+		else {
+			if(_this) DoMouse(MOUSEMOVE, Point((dword)lParam));
+			DoCursorShape();
+		}
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
 		if(ignoreclick) {
