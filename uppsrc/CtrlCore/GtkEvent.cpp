@@ -426,13 +426,19 @@ void Ctrl::Proc()
 	int  kv, hw;
 	static int clicktime = msecs() - 100000;
 
-	pen = CurrentEvent.pen;
-	pen_barrel = CurrentEvent.pen_barrel;
-	pen_inverted = CurrentEvent.pen_inverted;
-	pen_eraser = CurrentEvent.pen_eraser;
-	pen_pressure = CurrentEvent.pen_pressure;
-	pen_rotation = CurrentEvent.pen_rotation;
-	pen_tilt = CurrentEvent.pen_tilt;
+	pen.barrel = CurrentEvent.pen_barrel;
+	pen.inverted = CurrentEvent.pen_inverted;
+	pen.eraser = CurrentEvent.pen_eraser;
+	pen.pressure = CurrentEvent.pen_pressure;
+	pen.rotation = CurrentEvent.pen_rotation;
+	pen.tilt = CurrentEvent.pen_tilt;
+	
+	if(CurrentEvent.pen &&
+	   findarg(CurrentEvent.type, GDK_MOTION_NOTIFY, GDK_BUTTON_PRESS, GDK_BUTTON_RELEASE) >= 0)
+	{
+		pen.action = decode(CurrentEvent.type, GDK_BUTTON_PRESS, PEN_DOWN, GDK_BUTTON_RELEASE, PEN_UP, 0);
+		GtkMouseEvent(PEN, PEN, 0);
+	}
 
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
