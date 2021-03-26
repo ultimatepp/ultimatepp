@@ -16,7 +16,7 @@ _DBG_
 */
 
 	bool   DispatchMouseIn(int act, int zd);
-	void   GtkMouseEvent(int action, int act, int zd);
+	Image  GtkMouseEvent(int action, int act, int zd);
 	void   GtkButtonEvent(int action);
 
 	static bool IsWaitingEvent0(bool fetch);
