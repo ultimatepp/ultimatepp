@@ -182,9 +182,9 @@ private:
 	Size      csize;
 	Drawing   cache;
 
-	void   UnknownPaint(Draw& w);
 	void   CreateProperties(const String& classname, int level);
 	void   CreateMethods(EscValue& ctrl, const String& type, bool copy) const;
+	void   UnknownPaint(Draw& w);
 
 public:
 	void     Invalidate()               { csize.cx = -1; }
@@ -201,9 +201,7 @@ public:
 	String   SaveProperties(int y = 0) const;
 	String   Save(int i, int y, const String& eol) const;
 
-	rval_default(LayoutItem);
-
-	LayoutItem()                      { csize.cx = -1; hide = false; charset = CHARSET_UNICODE; }
+	LayoutItem()                        { csize.cx = -1; hide = false; charset = CHARSET_UNICODE; }
 };
 
 Image GetTypeIcon(const String& type, int cx, int cy, int i, Color bg);

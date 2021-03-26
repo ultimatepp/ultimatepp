@@ -169,24 +169,52 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 		return;
 	passed.Add(layid);
 	LayoutData& l = layout[layid];
-	bool nocursor = true;
+	Buffer<int> lrs(l.item.GetCount());
+	String dummy;
+	for(int i = 0; i < l.item.GetCount(); i++)
+		lrs[i] = ParseLayoutRef(l.item[i].type, dummy);
 	for(int i = 0; i < l.item.GetCount(); i++) {
 		LayoutItem& m = l.item[i];
 		if(m.hide)
 			continue;
 		Rect r = CtrlRectZ(m.pos, size);
-		String dummy;
-		int lr = ParseLayoutRef(m.type, dummy);
 		DrawFrame(w, r, Blend(SLtGray(), SCyan(), 35));
-		w.Clipoff(r);
-		if(lr < 0)
-			m.Paint(w, r.Size());
-		else
-		if(i >= cursor.GetCount() ? nocursor : cursor[i]) {
-			PaintLayoutItems(w, lr, r.Size(), passed, Vector<bool>());
-			nocursor = false;
+		bool show = true;
+		if(i < cursor.GetCount() && !cursor[i]) // does this widget hide part of some widget that is current selected?
+			for(int j = 0; j < l.item.GetCount(); j++)
+				if(j != i && j < cursor.GetCount() && cursor[j]) {
+					LayoutItem& mm = l.item[j];
+					if(!mm.hide && r.Intersects(CtrlRectZ(mm.pos, size)) && (LayoutTypes().Find(mm.type) >= 0 || lrs[j] >= 0)) {
+						show = false;
+						break;
+					}
+				}
+		
+		if(show) {
+			w.Clipoff(r);
+			if(lrs[i] < 0)
+				m.Paint(w, r.Size());
+			else {
+				Size sz = r.GetSize();
+				PaintLayoutItems(w, lrs[i], CtrlRect(m.pos, size).GetSize(), passed, Vector<bool>());
+				Font fnt = LayFont();
+				String s = m.type;
+				Size tsz = GetTextSize(s, fnt);
+				int tcy2 = tsz.cy / 2;
+				if(tsz.cx + tcy2 > sz.cx && s.TrimStart("With"))
+					tsz = GetTextSize(s, fnt);
+				int q = s.Find('<');
+				if(tsz.cx + tcy2 > sz.cx && q >= 0) {
+					s.Trim(q);
+					tsz = GetTextSize(s, fnt);
+				}
+				if(tsz.cx + tcy2 > sz.cx && s.TrimEnd("Layout"))
+					tsz = GetTextSize(s, fnt);
+				w.DrawRect(sz.cx - tsz.cx - tsz.cy, sz.cy - tsz.cy, tsz.cx + tsz.cy, tsz.cy, SGray());
+				w.DrawText(sz.cx - tsz.cx - tsz.cy / 2, sz.cy - tsz.cy, s, fnt, SYellow());
+			}
+			w.End();
 		}
-		w.End();
 	}
 	passed.Drop();
 }
