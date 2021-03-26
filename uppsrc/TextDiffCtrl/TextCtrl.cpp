@@ -86,6 +86,12 @@ void TextCompareCtrl::MouseMove(Point pt, dword flags)
 	}
 }
 
+void TextCompareCtrl::LeftRepeat(Point pt, dword keyflags)
+{
+	if(HasCapture() && !gutter_capture)
+		DoSelection(pt.y, true);
+}
+
 void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
 {
 	ReleaseCapture();
@@ -128,6 +134,13 @@ bool TextCompareCtrl::Key(dword key, int repcnt)
 {
 	Point pos = scroll, newpos = pos, page = scroll.GetPage();
 	switch(key) {
+		case K_CTRL_A:
+			if(lines.GetCount() > 1) {
+				cursor = lines[0].number;
+				anchor = lines.Top().number;
+				Refresh();
+			}
+			break;
 		case K_LEFT:       newpos.x--; break;
 		case K_RIGHT:      newpos.x++; break;
 		case K_CTRL_LEFT:  newpos.x -= page.x >> 1; break;
@@ -391,7 +404,7 @@ void TextCompareCtrl::SetFont(Font f, Font nf)
 {
 	font = f;
 	number_font = nf;
-	letter.cy = f.GetHeight();
+	letter.cy = f.GetCy();
 	letter.cx = f.GetMonoWidth();
 	number_width = 5 * nf.GetMonoWidth();
 	number_yshift = (f.GetCy() - nf.GetCy() + 2) >> 1;

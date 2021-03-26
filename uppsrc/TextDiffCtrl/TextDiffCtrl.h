@@ -37,6 +37,7 @@ public:
 	virtual void   LeftDown(Point pt, dword keyflags);
 	virtual void   LeftDouble(Point pt, dword keyflags);
 	virtual void   LeftUp(Point pt, dword keyflags);
+	virtual void   LeftRepeat(Point pt, dword keyflags);
 	virtual void   RightDown(Point p, dword keyflags);
 	virtual bool   Key(dword key, int repcnt);
 	virtual void   LostFocus();
