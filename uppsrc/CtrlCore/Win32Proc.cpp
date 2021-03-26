@@ -71,6 +71,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			POINT p = Point((LONG)lParam);
 			ScreenToClient(hwnd, &p);
 			
+			pen.action = 0;
 			pen.pressure = pen.rotation = Null;
 			pen.tilt = Null;
 			pen.eraser = pen.barrel = pen.inverted = pen.history = false;
