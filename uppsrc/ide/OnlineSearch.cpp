@@ -109,7 +109,7 @@ WebSearchTab::WebSearchTab()
 
 bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 {
-	WithWebSearchEngineLayout<TopWindow> dlg;
+	WithSetupWebSearchEngineLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Web search engine setup");
 	CtrlRetriever v;
 	v(dlg.name, name)(dlg.uri, uri);
