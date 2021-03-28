@@ -285,10 +285,9 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	if(d && gdk_device_get_source(d) == GDK_SOURCE_PEN) {
 		e.pen = true;
 		double *axes = NULL;
-		GdkDevice *device = NULL;
 		if(event->type == GDK_MOTION_NOTIFY)
 			axes = ((GdkEventMotion *)event)->axes;
-		if(findarg(event->type, GDK_BUTTON_PRESS, GDK_2BUTTON_PRESS, GDK_3BUTTON_PRESS or GDK_BUTTON_RELEASE) >= 0)
+		if(findarg(event->type, GDK_BUTTON_PRESS, GDK_2BUTTON_PRESS, GDK_3BUTTON_PRESS, GDK_BUTTON_RELEASE) >= 0)
 			axes = ((GdkEventButton *)event)->axes;
 		if(axes) {
 			double h;
