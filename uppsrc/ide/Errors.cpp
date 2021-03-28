@@ -548,7 +548,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		ValueArray n = error.Get(cnt - 1, "NOTES");
 		bool iserrorpos = true;
 		for(const char *s = f.message; *s; s++)
-			if(*s != ' ' && *s != '~' && *s != '^')
+			if(*s != ' ' && *s != '~' && *s != '^' && *s != '|')
 				iserrorpos = false;
 		int i = n.GetCount() - 1;
 		if(iserrorpos && i >= 0) {
