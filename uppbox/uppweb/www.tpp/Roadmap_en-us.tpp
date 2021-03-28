@@ -46,6 +46,8 @@ drives&]
 [s0;l160;i150;O0; U`+`+ does not require MemoryFreeThread call at 
 the end of thread (it is now implemented using thread`_local 
 destructor)&]
+[s0;l160;i150;O0; Core/SSH: the underlying libssh2 library is upgraded 
+to v. 1.9.0&]
 [s5; &]
 [s5;po [* CtrlCore]&]
 [s0;l160;i150;O0; New C`+`+ style for iteration of widget children 
