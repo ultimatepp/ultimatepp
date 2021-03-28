@@ -32,6 +32,10 @@ public:
 
 protected:
 	static HCURSOR   hCursor;
+	
+	static Point CurrentMousePos;
+	
+	friend Point GetMousePos();
 
 	static VectorMap< HWND, Ptr<Ctrl> >& Windows();
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
