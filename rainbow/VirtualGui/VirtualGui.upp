@@ -11,8 +11,8 @@ library(POSIX) "SDL2 SDL2main GL";
 library(WIN32) "SDL2.lib SDL2main.lib OpenGL32.lib";
 
 file
-	Local.h,
 	VirtualGui.h,
+	Local.h,
 	Keys.h,
 	After.h,
 	Image.cpp,
@@ -27,5 +27,6 @@ file
 	Top.cpp,
 	Clip.cpp,
 	DnD.cpp,
-	ChSysInit.cpp;
+	ChSysInit.cpp,
+	Nil.cpp;
 
