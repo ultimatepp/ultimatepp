@@ -32,6 +32,7 @@ struct MyApp : TopWindow {
 	}
 
 
+
 	virtual void Paint(Draw& w0) {
 		DrawPainter w(w0, GetSize());
 		w.Co();
