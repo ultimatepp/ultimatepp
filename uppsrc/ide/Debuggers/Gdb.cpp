@@ -597,6 +597,10 @@ bool Gdb::Create(Host& host, const String& exefile, const String& cmdline, bool 
 {
 	String gdb_command = GdbCommand(console) + NormalizeExePath(exefile);
 
+#ifdef PLATFORM_POSIX
+	system("setxkbmap -option grab:break_actions"); // to be able to recover capture in breakpoint
+#endif
+
 	if(!host.StartProcess(dbg, gdb_command)) {
 		Loge() << METHOD_NAME << "Failed to launch gdb (\"" << gdb_command << "\").";
 		
