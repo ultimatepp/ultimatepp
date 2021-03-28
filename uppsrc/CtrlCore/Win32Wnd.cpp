@@ -69,13 +69,6 @@ void DumpWindowOrder(bool aliens) {
 	LLOG(LOG_END << "//DumpWindowOrder");
 }
 
-Point GetMousePos() {
-	Point p;
-	return ::GetCursorPos(p) ? p : Null;
-	::GetCursorPos(p);
-	return p;
-}
-
 HCURSOR   Ctrl::hCursor;
 HINSTANCE Ctrl::hInstance;
 #ifndef flagDLL

@@ -55,6 +55,12 @@ bool GetMouseLeft()   { return !!(GetKeyStateSafe(VK_LBUTTON) & 0x8000); }
 bool GetMouseRight()  { return !!(GetKeyStateSafe(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyStateSafe(VK_MBUTTON) & 0x8000); }
 
+Point Ctrl::CurrentMousePos;
+
+Point GetMousePos() {
+	return Ctrl::CurrentMousePos;
+}
+
 bool PassWindowsKey(int wParam);
 
 LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
@@ -64,11 +70,23 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
 
+	POINT p;
+	if(::GetCursorPos(&p))
+		CurrentMousePos = p;
+
+	auto MousePos = [&] {
+		Point p = Point((dword)lParam);
+		CurrentMousePos = p;
+		::ClientToScreen(hwnd, CurrentMousePos);
+		return p;
+	};
+
 	switch(message) {
 	case WM_POINTERDOWN:
 	case WM_POINTERUPDATE:
 	case WM_POINTERUP: {
 			POINT p = Point((LONG)lParam);
+			CurrentMousePos = p;
 			ScreenToClient(hwnd, &p);
 			
 			pen.action = 0;
@@ -197,58 +215,58 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_LBUTTONDOWN:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(LEFTDOWN, Point((dword)lParam), 0);
+		DoMouse(LEFTDOWN, MousePos(), 0);
 		if(_this) PostInput();
 		return 0L;
 	case WM_LBUTTONUP:
 		if(ignoreclick)
 			EndIgnore();
 		else
-			DoMouse(LEFTUP, Point((dword)lParam), 0);
+			DoMouse(LEFTUP, MousePos(), 0);
 		if(_this) PostInput();
 		return 0L;
 	case WM_LBUTTONDBLCLK:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(LEFTDOUBLE, Point((dword)lParam), 0);
+		DoMouse(LEFTDOUBLE, MousePos(), 0);
 		if(_this) PostInput();
 		return 0L;
 	case WM_RBUTTONDOWN:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(RIGHTDOWN, Point((dword)lParam));
+		DoMouse(RIGHTDOWN, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_RBUTTONUP:
 		if(ignoreclick)
 			EndIgnore();
 		else
-			DoMouse(RIGHTUP, Point((dword)lParam));
+			DoMouse(RIGHTUP, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_RBUTTONDBLCLK:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(RIGHTDOUBLE, Point((dword)lParam));
+		DoMouse(RIGHTDOUBLE, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_MBUTTONDOWN:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(MIDDLEDOWN, Point((dword)lParam));
+		DoMouse(MIDDLEDOWN, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_MBUTTONUP:
 		if(ignoreclick)
 			EndIgnore();
 		else
-			DoMouse(MIDDLEUP, Point((dword)lParam));
+			DoMouse(MIDDLEUP, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_MBUTTONDBLCLK:
 		ClickActivateWnd();
 		if(ignoreclick) return 0L;
-		DoMouse(MIDDLEDOUBLE, Point((dword)lParam));
+		DoMouse(MIDDLEDOUBLE, MousePos());
 		if(_this) PostInput();
 		return 0L;
 	case WM_NCLBUTTONDOWN:
@@ -262,7 +280,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		if(ignoreclick)
 			EndIgnore();
 		else {
-			if(_this) DoMouse(MOUSEMOVE, Point((dword)lParam));
+			if(_this) DoMouse(MOUSEMOVE, MousePos());
 			DoCursorShape();
 		}
 		return 0L;
@@ -275,6 +293,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			Point p(0, 0);
 			::ClientToScreen(hwnd, p);
 			DoMouse(MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+			CurrentMousePos = Point((dword)lParam);
 		}
 		if(_this) PostInput();
 		return 0L;
