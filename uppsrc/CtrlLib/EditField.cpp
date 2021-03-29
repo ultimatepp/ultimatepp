@@ -295,7 +295,6 @@ void EditField::Paint(Draw& w)
 		w.Clipoff(2, yy, sz.cx - 4, fcy);
 	}
 	int x = -sc;
-	bool ar = alignright && !HasFocus();
 	w.DrawRect(0, 0, sz.cx, fcy, paper);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		const wchar *txt = nulltext;
@@ -309,10 +308,6 @@ void EditField::Paint(Draw& w)
 	}
 	else {
 		const wchar *txt = text;
-		if(ar) {
-			x = sz.cx - 4 - GetTextCx(text, text.GetLength(), password, font);
-			w.DrawRect(0, 0, x, fcy, paper);
-		}
 		int len = GetLength();
 		Vector<Highlight> hl;
 		hl.SetCount(len);
@@ -399,7 +394,13 @@ void EditField::Finish(bool refresh)
 	sz.cx -= 2;
 	if(sz.cx <= 0) return;
 	int x = GetCaret(cursor);
-	int wx = x + max(font.GetRightSpace('o'), font.GetCy() / 5); // sometimes RightSpace is not implemented (0)
+	int rspc = max(font.GetRightSpace('o'), font.GetCy() / 5); // sometimes RightSpace is not implemented (0)
+	int wx = x + rspc;
+	if(alignright) {
+		int cx = GetCaret(text.GetCount());
+		sc = cx - sz.cx + rspc + 2;
+		RefreshAll();
+	}
 	if(wx > sz.cx + sc - 1) {
 		sc = wx - sz.cx + 1;
 		RefreshAll();
@@ -459,6 +460,8 @@ void EditField::LostFocus()
 	if(!keep_selection) {
 		anchor = -1;
 		cursor = sc = 0;
+		if(alignright)
+			Finish();
 	}
 	RefreshAll();
 }

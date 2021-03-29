@@ -148,6 +148,7 @@ protected:
 	void    StdPasteFilter(WString&);
 	void    SelSource();
 	Color   GetPaper();
+	int     GetRightSpace() const;
 
 protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
