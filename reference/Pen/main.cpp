@@ -9,7 +9,7 @@ struct MyApp : TopWindow {
 
 	PenInfo pen;
 
-	virtual bool Pen(Point p, const PenInfo& pn, dword keyflags) {
+	virtual bool Pen(Point p, const PenInfo& pn, dword keyflags) override {
 		if(keyflags & K_SHIFT)
 			return false; // let the message to be processed as mouse
 		if(pn.pressure) {
@@ -31,7 +31,7 @@ struct MyApp : TopWindow {
 		}
 	}
 	
-	virtual void Paint(Draw& w0) {
+	virtual void Paint(Draw& w0) override {
 		DrawPainter w(w0, GetSize());
 		w.Co();
 		w.Clear(SColorPaper());
