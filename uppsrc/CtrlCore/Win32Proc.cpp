@@ -29,7 +29,6 @@ dword Ctrl::KEYtoK(dword chr) {
 	return chr;
 }
 
-
 class NilDrawFull : public NilDraw {
 	virtual bool IsPaintingOp(const Rect& r) const { return true; }
 };
@@ -111,7 +110,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 			POINTER_INPUT_TYPE pointerType;
 
-			auto ProcessPenInfo = [&] (POINTER_PEN_INFO& ppi) {
+			auto ProcessPenInfo = [&](POINTER_PEN_INFO& ppi) {
 				if(ppi.penFlags & PEN_FLAG_BARREL)
 					pen.barrel = true;
 				if(ppi.penFlags & PEN_FLAG_INVERTED)
@@ -127,6 +126,17 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				if(ppi.penMask & PEN_MASK_TILT_Y)
 					pen.tilt.y = ppi.tiltY * M_2PI / 360;
 			};
+			
+			auto DoPen = [&](Point p) {
+				GuiLock __;
+				eventCtrl = this;
+				Ctrl *q = ChildFromPoint(p);
+				if(!q) q = this;
+				p -= q->GetView().TopLeft();
+				bool b = q->Pen(p, pen, GetMouseFlags());
+				SyncCaret();
+				return b;
+			};
 
 			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
 			if(GetPointerType(pointerId, &pointerType) && pointerType == PT_PEN) {
@@ -139,7 +149,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
 						ScreenToClient(hwnd, &hp);
 						pen.history = (bool)i;
-						processed = !IsNull(DoMouse(PEN, hp, 0));
+						processed = DoPen(hp);
 					}
 					if(processed)
 						return 0L;
@@ -158,7 +168,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 					pen.action = PEN_UP;
 					break;
 				}
-				if(!IsNull(DoMouse(PEN, p, 0)))
+				if(DoPen(p))
 					return 0L;
 				break;
 			}
