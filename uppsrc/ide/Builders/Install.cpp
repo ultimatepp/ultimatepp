@@ -61,7 +61,7 @@ LIB = "";
 LINKMODE_LOCK = "0";)";
 
 const char *clang_bm =
-R"(BUILDER = "GCC";
+R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
 COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
@@ -117,7 +117,7 @@ LIB = "";
 LINKMODE_LOCK = "0";)";
 
 const char *clang_bm =
-R"(BUILDER = "GCC";
+R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
 COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
