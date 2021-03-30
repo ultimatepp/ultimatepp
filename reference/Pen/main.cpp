@@ -8,10 +8,10 @@ struct MyApp : TopWindow {
 	Vector<Vector<Tuple<double, Pointf>>> drawing;
 
 	PenInfo pen;
-	
-	bool Pen(Point p, const PenInfo& pn, dword keyflags) override {
+
+	virtual bool Pen(Point p, const PenInfo& pn, dword keyflags) {
 		if(keyflags & K_SHIFT)
-			return false;
+			return false; // let the message to be processed as mouse
 		if(pn.pressure) {
 			if((!!pn.pressure == !!pen.pressure) && drawing.GetCount())
 				drawing.Top().Add(MakeTuple(pn.pressure, p));
@@ -30,9 +30,7 @@ struct MyApp : TopWindow {
 			tracker.Track(Rect(p,p));
 		}
 	}
-
-
-
+	
 	virtual void Paint(Draw& w0) {
 		DrawPainter w(w0, GetSize());
 		w.Co();
