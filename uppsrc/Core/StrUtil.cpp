@@ -78,6 +78,11 @@ int CharFilterToLower(int c)
 	return ToLower(c);
 }
 
+int CharFilterToUpperAscii(int c)
+{
+	return ToUpperAscii(c);
+}
+
 int CharFilterAlphaToUpper(int c)
 {
 	return IsAlpha(c) ? IsUpper(c) ? c : ToUpper(c) : 0;
