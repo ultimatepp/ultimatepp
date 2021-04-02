@@ -19,6 +19,7 @@ Point     Ctrl::rightmousepos = Null;
 Point     Ctrl::middlemousepos = Null;
 
 PenInfo   Ctrl::pen;
+bool      Ctrl::is_pen_event;
 
 dword GetMouseFlags() {
 	dword style = 0;
@@ -317,6 +318,8 @@ Image Ctrl::MEvent0(int e, Point p, int zd)
 		mm |= K_MOUSEDOUBLE;
 	if((e & ACTION) == TRIPLE)
 		mm |= K_MOUSETRIPLE;
+	if(is_pen_event)
+		mm |= K_PEN;
 	Rect view = GetView();
 	if(mouseCtrl != this) {
 		if(mouseCtrl) {

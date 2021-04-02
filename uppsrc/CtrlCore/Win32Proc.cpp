@@ -68,6 +68,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
+	
+	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
 
 	POINT p;
 	if(::GetCursorPos(&p))
@@ -126,7 +128,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				if(ppi.penMask & PEN_MASK_TILT_Y)
 					pen.tilt.y = ppi.tiltY * M_2PI / 360;
 			};
-			
+		/*
 			auto DoPen = [&](Point p) {
 				GuiLock __;
 				eventCtrl = this;
@@ -137,11 +139,12 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				SyncCaret();
 				return b;
 			};
-
+		*/
 			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
 			if(GetPointerType(pointerId, &pointerType) && pointerType == PT_PEN) {
 				UINT32 hc = 256;
 				Buffer<POINTER_PEN_INFO> ppit(hc);
+/*
 				if(message == WM_POINTERUPDATE && GetPointerPenInfoHistory(pointerId, &hc, ppit)) {
 					bool processed = false;
 					for(int i = hc - 1; i >= 0; i--) {
@@ -156,10 +159,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 					else
 						break;
 				}
+*/
 				POINTER_PEN_INFO ppi;
 				if(GetPointerPenInfo(pointerId, &ppi))
 					ProcessPenInfo(ppi);
-				switch(message) {
+/*				switch(message) {
 				case WM_POINTERDOWN:
 					pen.action = PEN_DOWN;
 					ClickActivateWnd();
@@ -170,7 +174,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				}
 				if(DoPen(p))
 					return 0L;
-				break;
+				break;*/
 			}
 		}
 		break;

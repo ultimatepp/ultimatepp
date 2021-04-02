@@ -103,6 +103,8 @@ enum {
 	K_OPTION       = 0x4000000,
 #endif
 
+	K_PEN          = 0x8000000,
+
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
 	
 	K_MOUSE_FORWARD = 0x80000001,
@@ -544,6 +546,7 @@ private:
 	static  Point     repeatMousePos;
 	
 	static  PenInfo   pen;
+	static  bool      is_pen_event;
 
 	static  Vector<MouseHook>& mousehook();
 	static  Vector<KeyHook>&   keyhook();
@@ -1239,6 +1242,8 @@ public:
 	bool   IsDragAndDropSource()    { return this == GetDragAndDropSource(); }
 	bool   IsDragAndDropTarget()    { return this == GetDragAndDropTarget(); }
 	static Size  StdSampleSize()    { return Size(DPI(126), DPI(106)); }
+	
+	static PenInfo GetPenInfo()     { return pen; }
 	
 public:
 	static void SetSkin(void (*skin)());
