@@ -9,18 +9,18 @@ struct MyApp : TopWindow {
 
 	PenInfo pen;
 
-	virtual bool Pen(Point p, const PenInfo& pn, dword keyflags) override {
-		if(keyflags & K_SHIFT)
-			return false; // let the message to be processed as mouse
-		if(pn.pressure) {
-			if((!!pn.pressure == !!pen.pressure) && drawing.GetCount())
-				drawing.Top().Add(MakeTuple(pn.pressure, p));
-			else
-				drawing.Add().Add(MakeTuple(pn.pressure, p));
+	virtual void MouseMove(Point p, dword keyflags) override {
+		if(keyflags & K_PEN) {
+			PenInfo pn = GetPenInfo();
+			if(pn.pressure) {
+				if((!!pn.pressure == !!pen.pressure) && drawing.GetCount())
+					drawing.Top().Add(MakeTuple(pn.pressure, p));
+				else
+					drawing.Add().Add(MakeTuple(pn.pressure, p));
+			}
+			pen = pn;
 		}
-		pen = pn;
 		Refresh();
-		return true;
 	}
 	
 	void LeftDown(Point p, dword keyflags) override {
