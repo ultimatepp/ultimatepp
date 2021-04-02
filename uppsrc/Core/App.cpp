@@ -82,8 +82,6 @@ static void sSetArgv0__(const char *title)
 	strcpy(Argv0__, title);
 }
 
-extern char Argv0__[];
-
 const char *procexepath_() {
 	static char h[_MAX_PATH + 1];
 	ONCELOCK {
