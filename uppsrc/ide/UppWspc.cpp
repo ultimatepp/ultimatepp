@@ -57,25 +57,6 @@ String WorkspaceWork::PackagePathA(const String& pn) {
 	return PackagePath(pn);
 }
 
-struct PackageOrder {
-	String mainpath;
-	
-	int GetMatchLen(const String& x) const {
-		if(*x == '<')
-			return 0;
-		String h = PackagePath(x);
-		for(int i = 0; i < mainpath.GetCount(); i++)
-			if(mainpath[i] != h[i])
-				return i;
-		return mainpath.GetCount();
-	}
-	
-	bool operator()(const String& p1, const String& p2) const {
-		int l1 = GetMatchLen(p1);
-		int l2 = GetMatchLen(p2);
-		return l1 != l2 ? l1 > l2 : p1 < p2;
-	}
-};
 
 void WorkspaceWork::SyncErrorPackages()
 {
@@ -101,6 +82,26 @@ void WorkspaceWork::SyncErrorPackages()
 		}
 	}
 }
+
+struct PackageOrder {
+	String mainpath;
+	
+	int GetMatchLen(const String& x) const {
+		if(*x == '<')
+			return 0;
+		String h = PackagePath(x);
+		for(int i = 0; i < mainpath.GetCount(); i++)
+			if(mainpath[i] != h[i])
+				return i;
+		return mainpath.GetCount();
+	}
+	
+	bool operator()(const String& p1, const String& p2) const {
+		int l1 = GetMatchLen(p1);
+		int l2 = GetMatchLen(p2);
+		return l1 != l2 ? l1 > l2 : p1 < p2;
+	}
+};
 
 void WorkspaceWork::ScanWorkspace() {
 	Workspace wspc;
