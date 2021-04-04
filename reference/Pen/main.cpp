@@ -9,28 +9,22 @@ struct MyApp : TopWindow {
 
 	PenInfo pen;
 
-	virtual void MouseMove(Point p, dword keyflags) override {
-		if(keyflags & K_PEN) {
-			PenInfo pn = GetPenInfo();
-			if(pn.pressure) {
-				if((!!pn.pressure == !!pen.pressure) && drawing.GetCount())
-					drawing.Top().Add(MakeTuple(pn.pressure, p));
-				else
-					drawing.Add().Add(MakeTuple(pn.pressure, p));
-			}
-			pen = pn;
-		}
-		Refresh();
-	}
-	
-	void LeftDown(Point p, dword keyflags) override {
+	virtual void Pen(Point p, const PenInfo& pn, dword keyflags) override {
 		if(keyflags & K_SHIFT) {
 			RectTracker tracker(*this);
 			tracker.MinSize(Size(-100000,-100000));
 			tracker.Track(Rect(p,p));
 		}
+		if(pn.pressure) {
+			if((!!pn.pressure == !!pen.pressure) && drawing.GetCount())
+				drawing.Top().Add(MakeTuple(pn.pressure, p));
+			else
+				drawing.Add().Add(MakeTuple(pn.pressure, p));
+		}
+		pen = pn;
+		Refresh();
 	}
-	
+
 	virtual void Paint(Draw& w0) override {
 		DrawPainter w(w0, GetSize());
 		w.Co();
