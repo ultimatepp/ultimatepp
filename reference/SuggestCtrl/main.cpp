@@ -2,11 +2,6 @@
 
 using namespace Upp;
 
-inline int CharFilterToUpperAscii(int c)
-{
-	return ToUpper(ToAscii(c));
-}
-
 int Sep(int c)
 {
 	return c == ';' || c == ',' ? ';' : 0;
