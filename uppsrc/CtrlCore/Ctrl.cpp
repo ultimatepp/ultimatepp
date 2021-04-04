@@ -608,6 +608,7 @@ Ctrl::Ctrl() {
 	popupgrab = false;
 	fullrefresh = false;
 	akv = false;
+	supports_pen = false;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);
