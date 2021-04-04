@@ -71,7 +71,7 @@ void Ctrl::MiddleDrag(Point p, dword keyflags)      {}
 void Ctrl::MiddleHold(Point p, dword keyflags)      {}
 void Ctrl::MiddleUp(Point p, dword keyflags)        {}
 
-bool Ctrl::Pen(Point p, const PenInfo& pen, dword keyflags) { return false; }
+void Ctrl::Pen(Point p, const PenInfo& pen, dword keyflags) {}
 
 void Ctrl::Layout()                                 {}
 
@@ -608,7 +608,6 @@ Ctrl::Ctrl() {
 	popupgrab = false;
 	fullrefresh = false;
 	akv = false;
-	supports_pen = false;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);

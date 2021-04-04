@@ -166,7 +166,7 @@ Rect RectTracker::Round(const Rect& r)
 	return rounder ? rounder->Round(h) : h;
 }
 
-bool  RectTracker::Pen(Point p, const PenInfo &pn, dword keyflags){
+void  RectTracker::Pen(Point p, const PenInfo &pn, dword keyflags){
 	switch(pn.action){
 		case 0:
 			if(!pn.history) MouseMove(p, keyflags);
@@ -178,7 +178,6 @@ bool  RectTracker::Pen(Point p, const PenInfo &pn, dword keyflags){
 			LeftUp(p, keyflags);
 			break;
 	}
-	return true;
 }
 
 void RectTracker::MouseMove(Point mp, dword){
