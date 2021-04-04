@@ -547,7 +547,6 @@ private:
 	
 	static  PenInfo   pen;
 	static  bool      is_pen_event;
-	bool			  supports_pen;
 
 	static  Vector<MouseHook>& mousehook();
 	static  Vector<KeyHook>&   keyhook();
@@ -867,7 +866,7 @@ public:
 	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   MouseLeave();
 	
-	virtual bool   Pen(Point p, const PenInfo& pen, dword keyflags);
+	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);
 
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
@@ -1544,7 +1543,7 @@ public:
 	virtual void  LeftUp(Point, dword);
 	virtual void  RightUp(Point, dword);
 	virtual void  MouseMove(Point p, dword);
-	virtual bool  Pen(Point p, const PenInfo &pn, dword);
+	virtual void  Pen(Point p, const PenInfo &pn, dword);
 	virtual Image CursorImage(Point, dword);
 	virtual void  Paint(Draw& w);
 

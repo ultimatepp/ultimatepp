@@ -139,12 +139,13 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				eventCtrl = this;
 				Ctrl *q = this;
 				if(captureCtrl){
-					q=captureCtrl;
-					p+=GetScreenRect().TopLeft()-captureCtrl->GetScreenRect().TopLeft();
+					q = captureCtrl;
+					p += GetScreenRect().TopLeft()-captureCtrl->GetScreenRect().TopLeft();
 				}
-				else for(Ctrl *t = q; t; t=q->ChildFromPoint(p)) q = t;
+				else
+					for(Ctrl *t = q; t; t=q->ChildFromPoint(p)) q = t;
 				
-				q->supports_pen = q->Pen(p, pen, GetMouseFlags());
+				q->Pen(p, pen, GetMouseFlags());
 				SyncCaret();
 				Image m = CursorOverride();
 				if(IsNull(m)) SetMouseCursor(q->CursorImage(p,GetMouseFlags()));
