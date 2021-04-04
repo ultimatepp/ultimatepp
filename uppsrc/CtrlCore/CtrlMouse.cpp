@@ -142,6 +142,7 @@ void Ctrl::ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword ke
 Image Ctrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
 	LLOG("MouseEvent " << UPP::Name(this) << " " << FormatIntHex(event));
+	if(supports_pen && is_pen_event) return Image::Arrow(); // Avoid duplicated pen events
 	switch(event) {
 	case MOUSEENTER:
 		MouseEnter(p, keyflags);
@@ -220,10 +221,6 @@ Image Ctrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 		break;
 	case CURSORIMAGE:
 		return CursorImage(p, keyflags);
-	case PEN:
-		if(!Pen(p, pen, keyflags))
-			return Null;
-		break;
 	}
 	return Image::Arrow();
 }

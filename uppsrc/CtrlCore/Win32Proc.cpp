@@ -3,6 +3,7 @@
 #ifdef GUI_WIN
 
 #include <winnls.h>
+#include <tpcshrd.h> // for WM_TABLET_QUERYSYSTEMGESTURESTATUS and TABLET_DISABLE_PRESSANDHOLD
 
 //#include "imm.h"
 
@@ -46,11 +47,13 @@ dword GetKeyStateSafe(dword what) {
 	return r;
 }
 
+static bool pendown=false;
+
 bool GetShift()       { return !!(GetKeyStateSafe(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyStateSafe(VK_CONTROL) & 0x8000); }
 bool GetAlt()         { return !!(GetKeyStateSafe(VK_MENU) & 0x8000); }
 bool GetCapsLock()    { return !!(GetKeyStateSafe(VK_CAPITAL) & 1); }
-bool GetMouseLeft()   { return !!(GetKeyStateSafe(VK_LBUTTON) & 0x8000); }
+bool GetMouseLeft()   { return pendown || !!(GetKeyStateSafe(VK_LBUTTON) & 0x8000); }
 bool GetMouseRight()  { return !!(GetKeyStateSafe(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyStateSafe(VK_MBUTTON) & 0x8000); }
 
@@ -68,9 +71,9 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
-	
-	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
 
+	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
+	
 	POINT p;
 	if(::GetCursorPos(&p))
 		CurrentMousePos = p;
@@ -83,6 +86,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	};
 
 	switch(message) {
+	case WM_TABLET_QUERYSYSTEMGESTURESTATUS:
+			return TABLET_DISABLE_PRESSANDHOLD;	// For clean press and hold behavior
 	case WM_POINTERDOWN:
 	case WM_POINTERUPDATE:
 	case WM_POINTERUP: {
@@ -128,53 +133,58 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				if(ppi.penMask & PEN_MASK_TILT_Y)
 					pen.tilt.y = ppi.tiltY * M_2PI / 360;
 			};
-		/*
+			
 			auto DoPen = [&](Point p) {
 				GuiLock __;
 				eventCtrl = this;
-				Ctrl *q = ChildFromPoint(p);
-				if(!q) q = this;
-				p -= q->GetView().TopLeft();
-				bool b = q->Pen(p, pen, GetMouseFlags());
+				Ctrl *q = this;
+				if(captureCtrl){
+					q=captureCtrl;
+					p+=GetScreenRect().TopLeft()-captureCtrl->GetScreenRect().TopLeft();
+				}
+				else for(Ctrl *t = q; t; t=q->ChildFromPoint(p)) q = t;
+				
+				q->supports_pen = q->Pen(p, pen, GetMouseFlags());
 				SyncCaret();
-				return b;
+				Image m = CursorOverride();
+				if(IsNull(m)) SetMouseCursor(q->CursorImage(p,GetMouseFlags()));
+				else SetMouseCursor(m);
 			};
-		*/
+
 			UINT32 pointerId = GET_POINTERID_WPARAM(wParam);
 			if(GetPointerType(pointerId, &pointerType) && pointerType == PT_PEN) {
 				UINT32 hc = 256;
 				Buffer<POINTER_PEN_INFO> ppit(hc);
-/*
 				if(message == WM_POINTERUPDATE && GetPointerPenInfoHistory(pointerId, &hc, ppit)) {
-					bool processed = false;
 					for(int i = hc - 1; i >= 0; i--) {
+						static Point lastp=Null;
 						ProcessPenInfo(ppit[i]);
-						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
-						ScreenToClient(hwnd, &hp);
 						pen.history = (bool)i;
-						processed = DoPen(hp);
+						POINT hp = ppit[i].pointerInfo.ptPixelLocation;
+						if(!pen.history || hp!=lastp){
+							lastp = CurrentMousePos = hp;
+							ScreenToClient(hwnd, &hp);
+							DoPen(hp);
+						}
 					}
-					if(processed)
-						return 0L;
-					else
-						break;
+					break;
 				}
-*/
 				POINTER_PEN_INFO ppi;
 				if(GetPointerPenInfo(pointerId, &ppi))
 					ProcessPenInfo(ppi);
-/*				switch(message) {
+				switch(message) {
 				case WM_POINTERDOWN:
+					pendown=true;
 					pen.action = PEN_DOWN;
 					ClickActivateWnd();
 					break;
 				case WM_POINTERUP:
+					pendown=false;
 					pen.action = PEN_UP;
 					break;
 				}
-				if(DoPen(p))
-					return 0L;
-				break;*/
+				DoPen(p);
+				break;
 			}
 		}
 		break;
