@@ -432,12 +432,32 @@ void Ctrl::Proc()
 	pen.rotation = CurrentEvent.pen_rotation;
 	pen.tilt = CurrentEvent.pen_tilt;
 	
-	if(CurrentEvent.pen &&
+	is_pen_event = CurrentEvent.pen;
+
+	auto DoPen = [&](Point p) {
+		GuiLock __;
+		eventCtrl = this;
+		Ctrl *q = this;
+		if(captureCtrl){
+			q = captureCtrl;
+			p += GetScreenRect().TopLeft() - captureCtrl->GetScreenRect().TopLeft();
+		}
+		else
+			for(Ctrl *t = q; t; t=q->ChildFromPoint(p)) q = t;
+		
+		q->Pen(p, pen, GetMouseFlags());
+		SyncCaret();
+		Image m = CursorOverride();
+		if(IsNull(m)) SetMouseCursor(q->CursorImage(p,GetMouseFlags()));
+		else SetMouseCursor(m);
+	};
+
+	if(is_pen_event &&
 	   findarg(CurrentEvent.type, GDK_MOTION_NOTIFY, GDK_BUTTON_PRESS, GDK_BUTTON_RELEASE) >= 0)
 	{
 		pen.action = decode(CurrentEvent.type, GDK_BUTTON_PRESS, PEN_DOWN, GDK_BUTTON_RELEASE, PEN_UP, 0);
-		if(!IsNull(GtkMouseEvent(PEN, PEN, 0)))
-			CurrentEvent.type = -99999; // suppres further processing
+		
+		DoPen(GetMousePos() - GetScreenRect().TopLeft());
 	}
 
 	switch(CurrentEvent.type) {
