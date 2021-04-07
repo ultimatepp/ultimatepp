@@ -3,7 +3,6 @@
 #ifdef GUI_WIN
 
 #include <winnls.h>
-#include <tpcshrd.h> // for WM_TABLET_QUERYSYSTEMGESTURESTATUS and TABLET_DISABLE_PRESSANDHOLD
 
 //#include "imm.h"
 
@@ -86,8 +85,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	};
 
 	switch(message) {
-	case WM_TABLET_QUERYSYSTEMGESTURESTATUS:
-			return TABLET_DISABLE_PRESSANDHOLD;	// For clean press and hold behavior
 	case WM_POINTERDOWN:
 	case WM_POINTERUPDATE:
 	case WM_POINTERUP: {
