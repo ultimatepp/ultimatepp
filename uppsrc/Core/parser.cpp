@@ -339,7 +339,7 @@ double CParser::ReadDouble()
 	if(Char('.')) {
 		double q = 1;
 		while(IsDigit(*term)) {
-			q = q / 10;
+			q = 0.1 * q;
 			n += q * (*term++ - '0');
 		}
 	}
