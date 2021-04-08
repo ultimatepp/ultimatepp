@@ -113,7 +113,7 @@ HeaderCtrl::Column& HeaderCtrl::Add()
 HeaderCtrl::Column& HeaderCtrl::Add(const char *text, double ratio)
 {
 	HeaderCtrl::Column& c = Add();
-	c.ratio = ratio ? Zxf(ratio) : 1;
+	c.ratio = ratio ? Zxf(ratio) + DPI(4) : 1;
 	c.SetText(text);
 	SbTotal();
 	return c;
