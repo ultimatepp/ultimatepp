@@ -366,8 +366,6 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 {
 	LG(0, "LeftUp");
 
-	bool capture = HasCapture();
-
 	ReleaseCapture();
 	Refresh();
 
