@@ -284,6 +284,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	GdkDevice *d = gdk_event_get_source_device(event);
 	if(d && gdk_device_get_source(d) == GDK_SOURCE_PEN) {
 		e.pen = true;
+		e.pen_barrel = MouseState & GDK_BUTTON3_MASK;
 		double *axes = NULL;
 		if(event->type == GDK_MOTION_NOTIFY)
 			axes = ((GdkEventMotion *)event)->axes;
