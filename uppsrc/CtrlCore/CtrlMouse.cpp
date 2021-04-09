@@ -373,9 +373,14 @@ void    Ctrl::LRep() {
 	UPP::SetTimeCallback(-GetKbdSpeed(), callback(&Ctrl::LRepeat), &mousepos);
 }
 
+bool    Ctrl::NotDrag(Point p)
+{
+	return sDistMax(p, mousepos + mouseCtrl->GetRect().TopLeft()) < GUI_DragDistance();
+}
+
 void    Ctrl::LHold() {
 	GuiLock __;
-	if(sDistMax(leftmousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseLeft())
+	if(NotDrag(leftmousepos) && repeatTopCtrl && GetMouseLeft())
 		repeatTopCtrl->DispatchMouseEvent(LEFTHOLD, repeatMousePos, 0);
 }
 
@@ -395,7 +400,7 @@ void    Ctrl::RRep() {
 
 void    Ctrl::RHold() {
 	GuiLock __;
-	if(sDistMax(rightmousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseRight())
+	if(NotDrag(rightmousepos) && repeatTopCtrl && GetMouseRight())
 		repeatTopCtrl->DispatchMouseEvent(RIGHTHOLD, repeatMousePos, 0);
 }
 
@@ -416,7 +421,7 @@ void    Ctrl::MRep() {
 
 void    Ctrl::MHold() {
 	GuiLock __;
-	if(sDistMax(middlemousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseMiddle())
+	if(NotDrag(middlemousepos) && repeatTopCtrl && GetMouseMiddle())
 		repeatTopCtrl->DispatchMouseEvent(MIDDLEHOLD, repeatMousePos, 0);
 }
 
