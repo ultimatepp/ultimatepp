@@ -574,6 +574,7 @@ private:
 
 	static  void  EndIgnore();
 	static  void  LRep();
+	static  bool  NotDrag(Point p);
 	static  void  LHold();
 	static  void  LRepeat();
 	static  void  RRep();
