@@ -3,8 +3,9 @@
 using namespace Upp;
 
 struct MyCtrl : Ctrl {
+	bool x = false;
 	void Paint(Draw& w) override {
-		w.DrawRect(GetSize(), Blue());
+		w.DrawRect(GetSize(), x ? Red() : Blue());
 	}
 	void LeftHold(Point p, dword keyflags) override
 	{
@@ -29,6 +30,21 @@ struct MyCtrl : Ctrl {
 	void MiddleTriple(Point p, dword keyflags) override
 	{
 		Exclamation("Middle Triple!");
+	}
+	void LeftDouble(Point p, dword keyflags) override
+	{
+		x = !x;
+		Refresh();
+	}
+	void RightDouble(Point p, dword keyflags) override
+	{
+		x = !x;
+		Refresh();
+	}
+	void MiddleDouble(Point p, dword keyflags) override
+	{
+		x = !x;
+		Refresh();
 	}
 };
 
