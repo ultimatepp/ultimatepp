@@ -2,7 +2,12 @@
 
 bool CheckLicense()
 {
-	if(!FileExists(GetExeDirFile("license.chk")))
+#ifdef PLATFORM_MACOS
+	String chkfile = GetFileFolder(GetAppFolder()) + "/license.chk";
+#else
+	String chkfile = GetExeDirFile("license.chk");
+#endif
+	if(!FileExists(chkfile))
 		return true;
 	ShowSplash();
 	Ctrl::ProcessEvents();
@@ -17,7 +22,7 @@ bool CheckLicense()
 	d.ActiveFocus(d.license);
 	if(d.Run() != IDOK)
 		return false;
-	DeleteFile(GetExeDirFile("license.chk"));
+	DeleteFile(chkfile);
 	return true;
 }
 
@@ -33,8 +38,8 @@ bool Install(bool& hasvars)
 	
 	int pass = 0;
 
-	auto MakeAssembly = [&](String b, String name = Null) {
-		name = Nvl(name, GetFileTitle(b));
+	auto MakeAssembly = [&](String b) {
+		String name = GetFileTitle(b);
 		String a = ass + '/' + name + ".var";
 		if(pass == 0) {
 			if(name == "uppsrc" && IsNull(uppsrc))
@@ -43,7 +48,7 @@ bool Install(bool& hasvars)
 		else {
 			if(name != "uppsrc")
 				b << ';' << uppsrc;
-			if(!FileExists(a) && name != "bazaar")
+			if(!FileExists(a))
 				SaveFile(a,
 					"UPP = " + AsCString(b) + ";\r\n"
 					"OUTPUT = " + AsCString(out) + ";\r\n"
@@ -72,6 +77,10 @@ bool Install(bool& hasvars)
 	for(pass = 0; pass < 2; pass++) {
 		if(pass)
 			MakeAssembly(myapps);
+	#ifdef PLATFORM_COCOA
+		Scan(GetFileFolder(GetAppFolder()) + "/uppsrc");
+		Scan(GetFileFolder(GetAppFolder()) + "/*");
+	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));
@@ -83,9 +92,7 @@ bool Install(bool& hasvars)
 			if(ff.IsFolder())
 				Scan(ff.GetPath() + "/*");
 	}
-	
 
-	
 	CreateBuildMethods();
 	return true;
 }

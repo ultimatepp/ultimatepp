@@ -731,8 +731,6 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 	gc.minpos = minpos;
 	gc.maxpos = maxpos;
 
-	bool row_selected = select_row && IsSelected(curpos.y, false);
-
 	WriteClipboardFormat(gc);
 	AppendClipboardText(header + body);
 
