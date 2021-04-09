@@ -482,9 +482,12 @@ void Ctrl::Proc()
 			ignoreclick = false;
 			ignoremouseup = false;
 		}
-		if(!ignoreclick)
-			GtkButtonEvent(msecs(clicktime) < 250 ? DOUBLE : DOWN);
-		clicktime = msecs();
+		
+		if(!ignoreclick) {
+			bool dbl = msecs(clicktime) < 250;
+			clicktime = dbl ? clicktime - 1000 : msecs();
+			GtkButtonEvent(dbl ? DOUBLE : DOWN);
+		}
 		break;
 /*	case GDK_2BUTTON_PRESS:
 		if(!ignoreclick)
