@@ -53,7 +53,7 @@ bool GetCtrl()        { return !!(GetKeyStateSafe(VK_CONTROL) & 0x8000); }
 bool GetAlt()         { return !!(GetKeyStateSafe(VK_MENU) & 0x8000); }
 bool GetCapsLock()    { return !!(GetKeyStateSafe(VK_CAPITAL) & 1); }
 bool GetMouseLeft()   { return pendown || !!(GetKeyStateSafe(VK_LBUTTON) & 0x8000); }
-bool GetMouseRight()  { return !!(GetKeyStateSafe(VK_RBUTTON) & 0x8000); }
+bool GetMouseRight()  { return Ctrl::GetPenInfo().barrel || !!(GetKeyStateSafe(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyStateSafe(VK_MBUTTON) & 0x8000); }
 
 Point Ctrl::CurrentMousePos;
