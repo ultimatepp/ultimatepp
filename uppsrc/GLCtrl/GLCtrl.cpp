@@ -71,6 +71,11 @@ Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 	return ctrl->MouseEvent(event, p, zdelta, keyflags);
 }
 
+void GLCtrl::GLPane::Pen(Point p, const PenInfo& pen, dword keyflags)
+{
+	(ctrl->mouseTarget ? ctrl->mouseTarget : ctrl)->Pen(p, pen, keyflags);
+}
+
 #endif
 
 

@@ -62,6 +62,7 @@ private:
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 		virtual Image   MouseEvent(int event, Point p, int zdelta, dword keyflags);
+		virtual void    Pen(Point p, const PenInfo& pen, dword keyflags);
 		
 		void Init();
 		void Destroy();
@@ -72,6 +73,8 @@ private:
 		void ExecuteGL(Event<> paint, bool swap_buffers);
 	};
 #endif
+
+	friend struct GLPane;
 
 #ifdef PLATFORM_POSIX // we assume X11 or GTK
 	unsigned long win = 0;
