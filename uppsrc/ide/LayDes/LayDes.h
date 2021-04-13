@@ -353,7 +353,7 @@ private:
 	Point  Normalize(Point p);
 	Point  ZPoint(Point p);
 	int    FindHandle(Point p);
-	int    FindItem(Point p);
+	int    FindItem(Point p, bool cursor_first = false);
 	void   GetSprings(Rect& l, Rect& t, Rect& r, Rect& b);
 	void   DrawSpring(Draw& w, const Rect& r, bool horz, bool spring);
 	void   SelectOne(int ii, dword flags);
