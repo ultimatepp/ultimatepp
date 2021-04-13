@@ -180,11 +180,12 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 		Rect r = CtrlRectZ(m.pos, size);
 		DrawFrame(w, r, Blend(SLtGray(), SCyan(), 35));
 		bool show = true;
-		if(i < cursor.GetCount() && !cursor[i]) // does this widget hide part of some widget that is current selected?
+		if(i < cursor.GetCount() && !cursor[i] && m.type != "LabelBox") // does this widget hide part of some widget that is current selected?
 			for(int j = 0; j < l.item.GetCount(); j++)
 				if(j != i && j < cursor.GetCount() && cursor[j]) {
 					LayoutItem& mm = l.item[j];
-					if(!mm.hide && r.Intersects(CtrlRectZ(mm.pos, size)) && (LayoutTypes().Find(mm.type) >= 0 || lrs[j] >= 0)) {
+					if(!mm.hide && r.Intersects(CtrlRectZ(mm.pos, size)) && (LayoutTypes().Find(mm.type) >= 0 || lrs[j] >= 0)
+					   && mm.type != "LabelBox" && HasCapture() && findarg(draghandle, 11, 12) >= 0) {
 						show = false;
 						break;
 					}
@@ -323,26 +324,28 @@ int   LayDes::FindHandle(Point p)
 	return -1;
 }
 
-int   LayDes::FindItem(Point p)
+int   LayDes::FindItem(Point p, bool cursor_first)
 {
 	if(IsNull(currentlayout))
 		return -1;
 	LayoutData& l = CurrentLayout();
 	int ii = -1;
 	int min = INT_MAX;
-	for(int i = 0; i < l.item.GetCount(); i++) {
-		LayoutItem& m = l.item[i];
-		if(m.hide)
-			continue;
-		Rect r = CtrlRect(m.pos, l.size);
-		if(r.Contains(p)) {
-			int mm = r.Width() * r.Height();
-			if(mm < min) {
-				ii = i;
-				min = mm;
+	for(int pass = !cursor_first; pass < 2 && ii < 0; pass++)
+		for(int i = 0; i < (pass ? l.item.GetCount() : cursor.GetCount()); i++) {
+			int i2 = pass ? i : cursor[i];
+			LayoutItem& m = l.item[i2];
+			if(m.hide)
+				continue;
+			Rect r = CtrlRect(m.pos, l.size);
+			if(r.Contains(p)) {
+				int mm = r.Width() * r.Height();
+				if(mm < min) {
+					ii = i2;
+					min = mm;
+				}
 			}
 		}
-	}
 	return ii;
 }
 
@@ -565,7 +568,7 @@ void  LayDes::LeftDown(Point p, dword keyflags)
 	if(draghandle >= 0)
 		StoreItemRects();
 	else {
-		int ii = FindItem(dragbase);
+		int ii = FindItem(dragbase, true);
 		if(ii >= 0) {
 			if(GetShift() || GetCtrl() || FindIndex(cursor, ii) < 0)
 				SelectOne(ii, keyflags);
