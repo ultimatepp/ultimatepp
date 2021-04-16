@@ -535,7 +535,7 @@ public:
 	int        GetScroll() const;
 	void       ScrollTo(int sc);
 	void       ShowAppendLine();
-	bool       AcceptRow();
+	bool       AcceptRow(bool endedit = false);
 
 	void       Move(int d);
 	void       SwapUp();

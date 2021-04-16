@@ -148,6 +148,8 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
 	Size tsz = GetTLTextSize(txt, font);
+	if(txt.GetCount() == 0)
+		tsz.cy = 0;
 	if(a == ALIGN_RIGHT)
 		x = r.right - tsz.cx;
 	if(a == ALIGN_CENTER)
@@ -190,6 +192,8 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
 	Size sz = GetTLTextSize(txt, font);
+	if(txt.GetCount() == 0)
+		sz.cy = 0;
 	return Size(sz.cx + isz.cx, max(sz.cy, isz.cy));
 }
 

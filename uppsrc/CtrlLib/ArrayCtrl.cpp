@@ -1333,7 +1333,7 @@ void ArrayCtrl::ClearModify() {
 		control[i].ctrl->ClearModify();
 }
 
-bool ArrayCtrl::AcceptRow() {
+bool ArrayCtrl::AcceptRow(bool endedit) {
 	ASSERT(IsCursor());
 	if(acceptingrow) // prevent recursion
 		return true;
@@ -1342,7 +1342,7 @@ bool ArrayCtrl::AcceptRow() {
 		Column& m = column[i];
 		if(m.edit && !m.edit->Accept())
 			return false;
-		if(IsCtrl(cursor, i)) {
+		if(IsCtrl(cursor, i) && !endedit) {
 			Ctrl *c =  GetCellCtrl(cursor, i).ctrl;
 			acceptingrow++;
 			bool b = c->Accept();
@@ -1363,7 +1363,8 @@ bool ArrayCtrl::AcceptRow() {
 	}
 	bool b = editmode;
 	EndEdit();
-	SetCtrls();
+	if(!endedit)
+		SetCtrls();
 	ClearModify();
 	if(b)
 		WhenAcceptEdit();
@@ -1665,7 +1666,7 @@ void ArrayCtrl::DoPoint(Point p, bool dosel) {
 		SetCursor0(clickpos.y, dosel);
 	else
 	if(IsCursor())
-		AcceptRow();
+		AcceptRow(true); // true not to reenable ctrls
 	if(!HasFocusDeep())
 		SetWantFocus();
 }
