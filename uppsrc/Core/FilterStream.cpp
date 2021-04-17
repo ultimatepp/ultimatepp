@@ -52,6 +52,12 @@ dword InFilterStream::_Get(void *data, dword size)
 	return size - todo;
 }
 
+void InFilterStream::SetRd()
+{
+	Stream::buffer = ptr = buffer.begin();
+	rdlim = buffer.end();
+}
+
 void InFilterStream::Out(const void *p, int size)
 {
 	const byte *s = (byte *)p;
@@ -68,6 +74,7 @@ void InFilterStream::Out(const void *p, int size)
 		int l = buffer.GetCount();
 		buffer.SetCountR(l + size);
 		memcpy8(buffer.begin() + l, s, size);
+		SetRd();
 	}
 	WhenOut();
 }
@@ -94,8 +101,7 @@ void InFilterStream::Fetch()
 			}
 		}
 	}
-	Stream::buffer = ptr = buffer.begin();
-	rdlim = buffer.end();
+	SetRd();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

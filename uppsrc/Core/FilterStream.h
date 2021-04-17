@@ -16,6 +16,7 @@ protected:
 
 	void   Init();
 	void   Fetch();
+	void   SetRd();
 
 private:
 	void   SetSize(int64 size)  { NEVER(); } // removed
