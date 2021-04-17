@@ -35,9 +35,9 @@ public:
 	void Set(Stream& in_, F& filter) {
 		Init();
 		in = &in_;
-		filter.WhenOut = callback(this, &InFilterStream::Out);
-		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
-		End = callback(&filter, &F::End);
+		filter.WhenOut = [=](const void *ptr, int size) { Out(ptr, size); };
+		Filter = [&filter](const void *ptr, int size) { filter.Put(ptr, size); };
+		End = [&filter] { filter.End(); };
 	}
 	
 	void SetBufferSize(int size) { buffersize = size; inbuffer.Clear(); }
