@@ -28,6 +28,7 @@ namespace Upp {
 static StaticMutex sHlock;
 
 static char sHomeDir[_MAX_PATH + 1];
+static char Argv0__[_MAX_PATH + 1];
 
 void    SetHomeDirectory(const char *dir)
 {
@@ -74,8 +75,6 @@ String GetEnv(const char *id)
 {
 	return FromSystemCharset(getenv(id));
 }
-
-char Argv0__[_MAX_PATH + 1];
 
 static void sSetArgv0__(const char *title)
 {
@@ -300,6 +299,8 @@ String  ConfigFile() {
 	return ConfigFile(GetAppName() + ".cfg");
 }
 
+String argv0;
+
 Vector<WString>& coreCmdLine__()
 {
 	static Vector<WString> h;
@@ -315,6 +316,11 @@ const Vector<String>& CommandLine()
 			cmd.Add(src[i].ToString());
 	}
 	return cmd;
+}
+
+String GetArgv0()
+{
+	return Argv0__;
 }
 
 VectorMap<WString, WString>& EnvMap()
@@ -494,6 +500,7 @@ void AppInitEnvironment__()
 	int nArgs;
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 	if(szArglist) {
+		memcpy(Argv0__, szArglist[0]);
 		for(int i = 1; i < nArgs; i++)
 			coreCmdLine__().Add(szArglist[i]);
 		LocalFree(szArglist);
