@@ -107,4 +107,19 @@ void TabBarCtrl::TabClosed(Value key)
 	ctrls.RemoveKey(key);
 }
 
+
+Vector<Ctrl*> TabBarCtrl::GetCtrlGroup(const String& group)
+{
+	Vector<Ctrl*> v;
+	
+	for(const TabBar::Tab& t : tabs)
+		if(t.group == group) {
+			Ctrl *c = GetCtrl(t.key);
+			if(c) v.Add(c);
+		}
+	
+	return pick(v);
+}
+
+
 }
