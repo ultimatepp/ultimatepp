@@ -135,7 +135,14 @@ cfg].&]
 [s5;:CommandLine`(`): [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
 ector][@(0.0.255) <][_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) >
 `&]_[* CommandLine]()&]
-[s2;%% Return a vector of strings containing the command line parameters.&]
+[s2;%% Return a vector of strings containing the command line parameters. 
+This array does not contain main`'s argv`[0`], so the number 
+of elements is argc `- 1.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:GetArgv0`(`): [_^Upp`:`:String^ String]_[* GetArgv0]()&]
+[s2;%% Returns the argv`[0`] argument to main (contains the name 
+of executable).&]
 [s3; &]
 [s4; &]
 [s5;:Environment`(`): [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/VectorMap`$en`-us`#VectorMap`:`:class^ V

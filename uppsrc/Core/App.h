@@ -31,6 +31,7 @@ String  GetConfigGroup();
 
 
 const Vector<String>& CommandLine();
+String GetArgv0();
 const VectorMap<String, String>& Environment();
 
 void    SetExitCode(int code);
