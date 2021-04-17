@@ -296,7 +296,7 @@ private:
 	void   CtrlSetData(int col);
 	Value  Get0(int i, int ii) const;
 	void   Set0(int i, int ii, const Value& v);
-	void   AfterSet(int i);
+	void   AfterSet(int i, bool sync_ctrls = true);
 
 	void   Reline(int i, int y);
 	void   Remove0(int i);
@@ -406,6 +406,8 @@ public:
 	int                       GetColumnCount() const   { return column.GetCount(); }
 	int                       FindColumnWithPos(int pos) const;
 	int                       FindColumnWithId(const Id& id) const;
+	Vector<int>               FindColumnsWithPos(int pos) const;
+	Vector<int>               FindColumnsWithId(const Id& id) const;
 	Column&                   ColumnAt(int i)          { return column[i]; }
 	Column&                   ColumnAt(const Id& id)   { return column[FindColumnWithId(id)]; }
 	HeaderCtrl::Column&       HeaderTab(int i)         { return header.Tab(i); }

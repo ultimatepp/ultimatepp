@@ -24,8 +24,8 @@ object, typically of compression/decompression class.&]
 to be filtered.&]
 [s3; &]
 [s4; &]
-[s5;:InFilterStream`:`:Filter: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) void
-]_`*, [@(0.0.255) int]>_[* Filter]&]
+[s5;:Upp`:`:InFilterStream`:`:Filter: [_^Upp`:`:Event^ Event]<[@(0.0.255) const]_[@(0.0.255) v
+oid]_`*, [@(0.0.255) int]>_[* Filter]&]
 [s2;%% Callback to filter input function.&]
 [s3; &]
 [s4; &]
@@ -35,25 +35,26 @@ the end of `'real`' stream. This Gate serves as signal of such
 situation.&]
 [s3; &]
 [s4; &]
-[s5;:InFilterStream`:`:End: [_^Callback^ Callback]_[* End]&]
+[s5;:Upp`:`:InFilterStream`:`:End: [_^Upp`:`:Event^ Event]<>_[* End]&]
 [s2;%% Callback to filter finalization. This is invoked by InFilterStream 
 when it reaches the end of input stream. It gives chance to the 
 filter to flush any remaining data (to Out).&]
 [s3; &]
 [s4; &]
-[s5;:InFilterStream`:`:More: [_^Gate^ Gate]_[* More]&]
+[s5;:Upp`:`:InFilterStream`:`:More: [_^Upp`:`:Gate^ Gate]<>_[* More]&]
 [s2;%% Callback used for alternate mode of operation where instead 
-of input stream and filter only single data source is used. It 
-should return true if source of data is still active, false when 
+of input stream and filter only single data source is used (e.g. 
+HttpRequest). It should push data through FilterStream`::Out method 
+and return true if source of data is still active, false when 
 it reaches the end. False is then interpreted as EOF of InFilterStream.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:InFilterStream`:`:Out`(const void`*`,int`): [@(0.0.255) void]_[* Out]([@(0.0.255) cons
 t]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 [s2;%% Method serving as filter output.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:InFilterStream`:`:WhenOut: [_^Upp`:`:Callback^ Callback]_[* WhenOut]&]
+[s5;:Upp`:`:InFilterStream`:`:WhenOut: [_^Upp`:`:Event^ Event]<>_[* WhenOut]&]
 [s2;%% This callback is called whenever Out method is invoked. It 
 is intended for load progress indicators.&]
 [s3; &]
@@ -62,8 +63,8 @@ is intended for load progress indicators.&]
 ]>_[@(0.0.255) void]_[* Set]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 in`_], 
 [*@4 F][@(0.0.255) `&]_[*@3 filter])&]
 [s2;%% Sets the input stream and filter. Filter must have WhenOut 
-callback which is connected to Out method and Put and End methods 
-that are connected to Filter and End callbacks.&]
+Event which is connected to Out method and Put and End methods 
+that are connected to Filter and End Events.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:InFilterStream`:`:SetBufferSize`(int`): [@(0.0.255) void]_[* SetBufferSize]([@(0.0.255) i

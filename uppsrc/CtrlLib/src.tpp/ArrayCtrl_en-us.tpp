@@ -1338,20 +1338,33 @@ onst]&]
 [s4; &]
 [s5;:ArrayCtrl`:`:FindColumnWithPos`(int`)const: [@(0.0.255) int]_[* FindColumnWithPos]([@(0.0.255) i
 nt]_[*@3 pos])_[@(0.0.255) const]&]
-[s2; Returns the zero`-based index of a column based on its source 
-data index.&]
-[s7; [*C@3 pos]-|ordinal number of the source index&]
-[s7; [*/ Return value]-|ordinal number of the column having the given 
-index as its source, `-1 when not found&]
+[s2; Returns the zero`-based index of a first column based on its 
+source data index or `-1 if not found. Note that there could 
+be multiple columns linked with single source `- in that case 
+the function returns the index of first one found. Use FindColumnsWithPos 
+if you need them all.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:FindColumnWithId`(const Id`&`)const: [@(0.0.255) int]_[* FindColumnWith
 Id]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])_[@(0.0.255) const]&]
-[s2; Returns the zero`-based index of a column based on its source 
-data index.&]
-[s7; [*C@3 id]-|source index identifier&]
-[s7; [*/ Return value]-|ordinal number of the column having the given 
-index as its source, `-1 when not found&]
+[s2; Returns the zero`-based index of a first column based on its 
+source data Id or `-1 if not found. Note that there could be 
+multiple columns linked with single source `- in that case the 
+function returns the index of first one found. Use FindColumnsWithId 
+if you need them all.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithPos`(int`)const:%- [_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
+nt]>_[* FindColumnsWithPos]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
+[s2; Returns the zero`-based indices of all columns based on its 
+source data index or `-1 if not found.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithId`(const Upp`:`:Id`&`)const:%- [_^Upp`:`:Vector^ V
+ector]<[@(0.0.255) int]>_[* FindColumnsWithId]([@(0.0.255) const]_[_^Upp`:`:Id^ Id][@(0.0.255) `&
+]_[*@3 id])_[@(0.0.255) const]&]
+[s2; Returns the zero`-based indices of all columns based on its 
+source data [%-*@3 id] or `-1 if not found.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:ColumnAt`(int`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* Column
