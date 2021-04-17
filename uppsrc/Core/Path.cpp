@@ -667,7 +667,7 @@ bool FileCopy(const char *oldname, const char *newname)
 		unlink(newname);
 		return false;
 	}
-	FileSetTime(newname, FileGetTime(oldname));
+	SetFileTime(newname, GetFileTime(oldname));
 	return true;
 #else
 	#error
@@ -805,12 +805,14 @@ FileTime TimeToFileTime(Time time)
 #endif
 #ifdef PLATFORM_POSIX
 	struct tm t;
+	memset(&t, 0, sizeof(t));
 	t.tm_sec  = time.second;
 	t.tm_min  = time.minute;
 	t.tm_hour = time.hour;
 	t.tm_mday = time.day;
 	t.tm_mon  = time.month - 1;
 	t.tm_year = time.year - 1900;
+	t.tm_isdst = -1;
 	return mktime(&t);
 #endif
 }
