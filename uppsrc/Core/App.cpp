@@ -500,7 +500,7 @@ void AppInitEnvironment__()
 	int nArgs;
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 	if(szArglist) {
-		memcpy(Argv0__, szArglist[0]);
+		strcpy(Argv0__, WString(szArglist[0]).ToString());
 		for(int i = 1; i < nArgs; i++)
 			coreCmdLine__().Add(szArglist[i]);
 		LocalFree(szArglist);
