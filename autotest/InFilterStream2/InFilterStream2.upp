@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	InFilterStream2.cpp;
+
+mainconfig
+	"" = "";
+
