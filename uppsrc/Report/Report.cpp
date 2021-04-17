@@ -51,8 +51,7 @@ Rect Report::GetPageRect()
 void Report::PaintHF(Draw& w, int y, const char *qtf, int i)
 {
 	RichText txt = ParseQTF(FormatHF(qtf, i));
-	PaintInfo pi;
-	pi.textcolor = Black();
+	PaintInfo pi; // need pi so that darktheme is false
 	txt.Paint(w, 0, y, GetSize().cx, pi);
 }
 
