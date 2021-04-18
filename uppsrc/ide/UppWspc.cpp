@@ -917,11 +917,11 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	menu.Add("Terminal at File Directory", [=] { LaunchTerminal(GetFileDirectory(GetActiveFilePath())); });
 	menu.Separator();
 	menu.Add(filelist.GetCursor() > 0, "Move up", THISBACK1(MoveFile, -1))
-		.Key(organizer ? K_CTRL_UP : K_SHIFT_CTRL_UP)
+		.Key(organizer ? K_CTRL_UP : K_ALT|K_CTRL_UP)
 		.Help("Move current file one position towards package beginning");
 	menu.Add(filelist.IsCursor() && filelist.GetCursor() < filelist.GetCount() - 1, "Move down",
 	         THISBACK1(MoveFile, 1))
-		.Key(organizer ? K_CTRL_DOWN : K_SHIFT_CTRL_DOWN)
+		.Key(organizer ? K_CTRL_DOWN : K_ALT|K_CTRL_DOWN)
 		.Help("Move current file one position towards package end");
 	if(IsActiveFile()) {
 		menu.Separator();

@@ -441,6 +441,7 @@ public:
 	bool   GetLineSelection(int& l, int& h);
 	void   TabRight();
 	void   TabLeft();
+	void   SwapUpDown(bool up);
 
 	void    CheckEdited(bool e = true)                { check_edited = e; }
 	bool    GetCheckEdited()                          { return check_edited; }
