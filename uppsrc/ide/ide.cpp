@@ -384,8 +384,8 @@ bool Ide::Key(dword key, int count)
 		return true;
 	}
 	switch(key) {
-	case K_SHIFT_CTRL_UP:
-	case K_SHIFT_CTRL_DOWN:
+	case K_ALT|K_CTRL_UP:
+	case K_ALT|K_CTRL_DOWN:
 	case K_ALT_DELETE:
 		return filelist.Key(key, count);
 	case K_ALT_UP:

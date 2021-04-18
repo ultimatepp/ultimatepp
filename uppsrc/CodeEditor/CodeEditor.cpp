@@ -1,4 +1,5 @@
 #include "CodeEditor.h"
+#include "CodeEditor.h"
 
 namespace Upp {
 
@@ -558,6 +559,36 @@ bool CodeEditor::GetLineSelection(int& l, int& h) {
 	return true;
 }
 
+void CodeEditor::SwapUpDown(bool up)
+{
+	int l, h;
+	if(GetSelection(l, h)) {
+		l = GetLine(l);
+		int hh = h;
+		h = GetLinePos(hh);
+		if(hh && h < GetLineCount()) h++;
+	}
+	else {
+		l = GetLine(cursor);
+		h = l + 1;
+	}
+	if(up) {
+		if(l == 0)
+			return;
+		Insert(GetPos(h), GetWLine(l - 1) + "\n");
+		Remove(GetPos(l - 1), GetLineLength(l - 1) + 1);
+		SetSelection(GetPos(l - 1), GetPos(h - 1));
+	}
+	else {
+		if(h >= GetLineCount() - 1)
+			return;
+		WString line = GetWLine(h) + "\n";
+		Remove(GetPos(h), GetLineLength(h) + 1);
+		Insert(GetPos(l), line);
+		SetSelection(GetPos(l + 1), GetPos(h + 1));
+	}
+}
+
 void CodeEditor::TabRight() {
 	if(IsReadOnly()) return;
 	int l, h;
@@ -878,6 +909,12 @@ bool CodeEditor::Key(dword code, int count) {
 		return true;
 	}
 	switch(code) {
+	case K_SHIFT_CTRL_UP:
+		SwapUpDown(true);
+		return true;
+	case K_SHIFT_CTRL_DOWN:
+		SwapUpDown(false);
+		return true;
 	case K_CTRL_DELETE:
 		DeleteWord();
 		return true;
