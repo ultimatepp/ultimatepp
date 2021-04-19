@@ -1,5 +1,4 @@
 #include "CodeEditor.h"
-#include "CodeEditor.h"
 
 namespace Upp {
 
