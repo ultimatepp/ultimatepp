@@ -2,6 +2,7 @@
 #define Upp_Markdown_h
 
 #include <Core/Core.h>
+
 #include "MD4C/md4c.h"
 
 namespace Upp {
@@ -28,7 +29,9 @@ public:
     MarkdownConverter& GitHubDialect()                          { flags = MD_DIALECT_GITHUB; return *this; }
 
     String ToQtf(const String& markdown_text);
-    
+
+    Event< VectorMap<String, String>& > WhenImages;
+
 private:
     dword           flags;
 };
