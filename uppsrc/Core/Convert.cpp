@@ -380,7 +380,7 @@ Value ConvertDouble::Scan(const Value& txt) const {
 
 int   ConvertDouble::Filter(int chr) const {
 	chr = CharFilterDouble(chr);
-	return comma && chr == '.' ? ',' : chr;		
+	return comma && chr == '.' ? ',' : chr;
 }
 
 ConvertDouble::ConvertDouble(double minval, double maxval, bool notnull)

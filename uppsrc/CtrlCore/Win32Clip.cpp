@@ -315,7 +315,10 @@ String ReadClipboardText()
 #ifdef PLATFORM_WINCE
 	return ReadClipboardUnicodeText().ToString();
 #else
-	String s = ReadClipboard((const char *)CF_TEXT);
+	String s = ReadClipboardUnicodeText().ToString();
+	if(s.GetCount())
+		return s;
+	s = ReadClipboard((const char *)CF_TEXT);
 	return String(s, (int)strlen(~s));
 #endif
 }
