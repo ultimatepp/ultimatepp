@@ -281,6 +281,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
 	e.event = NULL;
+#if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDevice *d = gdk_event_get_source_device(event);
 	if(d && gdk_device_get_source(d) == GDK_SOURCE_PEN) {
 		e.pen = true;
@@ -302,6 +303,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 				e.pen_tilt.y = h;
 		}
 	}
+#endif
 	if(event) {
 		e.time = gdk_event_get_time(event);
 		e.event = gdk_event_copy(event);
@@ -426,6 +428,7 @@ void Ctrl::Proc()
 	int  kv, hw;
 	static int clicktime = msecs() - 100000;
 
+#if GTK_CHECK_VERSION(3, 22, 0)
 	pen.barrel = CurrentEvent.pen_barrel;
 	pen.inverted = CurrentEvent.pen_inverted;
 	pen.eraser = CurrentEvent.pen_eraser;
@@ -460,6 +463,7 @@ void Ctrl::Proc()
 		
 		DoPen(GetMousePos() - GetScreenRect().TopLeft());
 	}
+#endif
 
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
