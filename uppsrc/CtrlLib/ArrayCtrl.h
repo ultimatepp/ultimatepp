@@ -284,7 +284,7 @@ private:
 	Point           FindCellCtrl(Ctrl *c);
 	Ctrl           *SyncLineCtrls(int i, Ctrl *p = NULL);
 	void            SyncPageCtrls();
-	void            SyncCtrls();
+	void            SyncCtrls(int i0 = 0);
 	bool            IsCtrl(int i, int j) const;
 	const CellCtrl& GetCellCtrl(int i, int j) const;
 	CellCtrl&       GetCellCtrl(int i, int j);
