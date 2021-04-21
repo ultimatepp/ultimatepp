@@ -32,17 +32,17 @@ struct QueryCallback : b2QueryCallback
 	b2Fixture* fixture;
 };
 
-struct DebugDraw : b2DebugDraw
+struct DebugDraw : b2Draw
 {
 	Draw* w;
 	Sizef sz;
 	float cx, cy;
 	float aspect;
 	float zoom;
-	
+
 	DebugDraw()
 	{}
-	
+
 	void Init(Draw& d, Size s)
 	{
 		w = &d;
@@ -53,7 +53,7 @@ struct DebugDraw : b2DebugDraw
 		aspect = float(sz.cx / sz.cy);
 		aspect *= zoom;
 	}
-	
+
 	Point conv(const b2Vec2& v)
 	{
 		return Point(int(v.x * aspect + cx), int(cy - v.y * aspect));
@@ -65,84 +65,86 @@ struct DebugDraw : b2DebugDraw
 
 		v.x = (p.x - cx) / aspect;
 		v.y = (cy - p.y) / aspect;
-		
+
 		return v;
 	}
 
 	Color conv(const b2Color& c, double f = 255.0)
 	{
 		return Color(int(c.r * f), int(c.g * f), int(c.b * f));
-	}	
-	
-	void DrawPolygon(const b2Vec2* v, int vertexCount, const b2Color& color)
+	}
+
+	virtual void DrawPolygon(const b2Vec2* v, int32 vertexCount, const b2Color& color)
 	{
 		Vector<Point> p;
 		p.SetCount(vertexCount + 1);
 		for(int i = 0; i < vertexCount; ++i)
 			p[i] = conv(v[i]);
 		p[vertexCount] = p[0];
-		
+
 		w->DrawPolyline(p, 1, conv(color, 150.0));
 	}
-	
-	void DrawSolidPolygon(const b2Vec2* v, int vertexCount, const b2Color& color)
+
+	virtual void DrawSolidPolygon(const b2Vec2* v, int32 vertexCount, const b2Color& color)
 	{
 		Vector<Point> p;
 		p.SetCount(vertexCount);
 		for(int i = 0; i < vertexCount; ++i)
 			p[i] = conv(v[i]);
-		
-		w->DrawPolygon(p, conv(color, 255.0), 1, conv(color, 150));		
+
+		w->DrawPolygon(p, conv(color, 255.0), 1, conv(color, 150));
 	}
-	
-	void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+
+	virtual void DrawCircle(const b2Vec2& center, float radius, const b2Color& color)
 	{
 		int r = int(aspect * radius * 2.0f);
+		// int r = int(radius * 2.0f);
 		Point p = conv(b2Vec2(center.x - radius, center.y + radius));
 		w->DrawEllipse(p.x, p.y, r, r, conv(color, 150.0));
 	}
-	
-	void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+
+	virtual void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color)
 	{
 		int r = int(aspect * radius * 2.0f);
 		Point p = conv(b2Vec2(center.x - radius, center.y + radius));
 		w->DrawEllipse(p.x, p.y, r, r, conv(color, 255.0), PEN_SOLID, conv(color, 150.0));
 	}
-	
-	void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+
+	virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 	{
 		w->DrawLine(conv(p1), conv(p2), 1, conv(color, 150.0));
 	}
-	
-	void DrawTransform(const b2Transform& xf)
+
+	virtual void DrawTransform(const b2Transform& xf)
 	{
 	}
-	
-	void DrawPoint(const b2Vec2& p0, float32 size, const b2Color& color)
+
+	virtual void DrawPoint(const b2Vec2& p0, float size, const b2Color& color)
 	{
 		Point p = conv(p0);
-		int s = int(size * aspect);
+		// int s = int(size * aspect);
+		int s = int(size);
 		w->DrawRect(p.x, p.y, s, s, conv(color, 255.0));
 	}
-	
+
 	void DrawString(int x, int y, const char* string, ...)
 	{
 		char buffer[256];
-	
+
 		va_list arg;
 		va_start(arg, string);
 		vsprintf(buffer, string, arg);
 		va_end(arg);
-		
+
 		w->DrawText(x, y, buffer);
 	}
-	
+
 	void DrawAABB(b2AABB* aabb, const b2Color& color)
 	{
 		Point lb = conv(aabb->lowerBound);
 		Point ub = conv(aabb->upperBound);
 		Color fg = conv(color, 150.0);
-				
+
 		w->DrawRect(lb.x, lb.y, ub.x, ub.y, fg);
 	}
 };
@@ -156,14 +158,13 @@ struct App : TopWindow
 	Option showBoxes;
 	DropList drawMode;
 	DebugDraw debugDraw;
-	
+
 	typedef App CLASSNAME;
-	
-	App() : world(b2Vec2(0.0, -10.0), true)
+
+	App() : world(b2Vec2(0.0, -10.0))
 	{
 		Title("Box2D Example");
-		SetRectX(0, 640);
-		SetRectY(0, 480);
+		SetRect(0, 0, Zx(640), Zy(480));
 		Sizeable().Zoomable();
 		BackPaint();
 		SetTimeCallback(-1, THISBACK(Render));
@@ -175,61 +176,66 @@ struct App : TopWindow
 		b2BodyDef bodyDef;
 		groundBody = world.CreateBody(&bodyDef);
 		showBoxes.SetLabel("AABBs");
-		
+
 		drawMode
 			.Add(0, "Draw")
 			.Add(1, "Painter - No aa")
 			.Add(2, "Painter - Antialiased")
 			.Add(3, "Painter - Subpixel");
-			
+
 		drawMode <<= 2;
-				
+
 		Add(showBoxes.LeftPosZ(5, 55).TopPosZ(5, 19));
 		Add(drawMode.LeftPosZ(5, 130).TopPosZ(28, 19));
 		Bridge();
 	}
-	
+
 	void Bridge()
 	{
-		const int ecount = 30;
-		
-		b2BodyDef bd;
-		b2Body* ground = world.CreateBody(&bd);
-
-		b2PolygonShape shape;
-		shape.SetAsEdge(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
-		ground->CreateFixture(&shape, 0.0f);
-
-		shape.SetAsBox(0.5f, 0.125f);
-
-		b2FixtureDef fd;
-		fd.shape = &shape;
-		fd.density = 20.0f;
-		fd.friction = 0.2f;
-
-		b2RevoluteJointDef jd;
-
-		b2Body* prevBody = ground;
-		for(int i = 0; i < ecount; ++i)
+		const int e_count = 30;
+		b2Body* ground = NULL;
 		{
 			b2BodyDef bd;
-			bd.type = b2_dynamicBody;
-			bd.position.Set(-14.5f + 1.0f * i, 5.0f);
-			b2Body* body = world.CreateBody(&bd);
-			body->CreateFixture(&fd);
+			ground = world.CreateBody(&bd);
 
-			b2Vec2 anchor(-15.0f + 1.0f * i, 5.0f);
-			jd.Initialize(prevBody, body, anchor);
-			world.CreateJoint(&jd);
-
-			prevBody = body;
+			b2EdgeShape shape;
+			shape.SetTwoSided(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+			ground->CreateFixture(&shape, 0.0f);
 		}
 
-		b2Vec2 anchor(-15.0f + 1.0f * ecount, 5.0f);
-		jd.Initialize(prevBody, ground, anchor);
-		world.CreateJoint(&jd);
+		{
+			b2PolygonShape shape;
+			shape.SetAsBox(0.5f, 0.125f);
 
-		for(int i = 0; i < 2; ++i)
+			b2FixtureDef fd;
+			fd.shape = &shape;
+			fd.density = 20.0f;
+			fd.friction = 0.2f;
+
+			b2RevoluteJointDef jd;
+
+			b2Body* prevBody = ground;
+			for (int32 i = 0; i < e_count; ++i)
+			{
+				b2BodyDef bd;
+				bd.type = b2_dynamicBody;
+				bd.position.Set(-14.5f + 1.0f * i, 5.0f);
+				b2Body* body = world.CreateBody(&bd);
+				body->CreateFixture(&fd);
+
+				b2Vec2 anchor(-15.0f + 1.0f * i, 5.0f);
+				jd.Initialize(prevBody, body, anchor);
+				world.CreateJoint(&jd);
+
+				prevBody = body;
+			}
+
+			b2Vec2 anchor(-15.0f + 1.0f * e_count, 5.0f);
+			jd.Initialize(prevBody, ground, anchor);
+			world.CreateJoint(&jd);
+		}
+
+		for (int32 i = 0; i < 2; ++i)
 		{
 			b2Vec2 vertices[3];
 			vertices[0].Set(-0.5f, 0.0f);
@@ -250,7 +256,7 @@ struct App : TopWindow
 			body->CreateFixture(&fd);
 		}
 
-		for(int i = 0; i < 3; ++i)
+		for (int32 i = 0; i < 3; ++i)
 		{
 			b2CircleShape shape;
 			shape.m_radius = 0.5f;
@@ -264,11 +270,11 @@ struct App : TopWindow
 			bd.position.Set(-6.0f + 6.0f * i, 10.0f);
 			b2Body* body = world.CreateBody(&bd);
 			body->CreateFixture(&fd);
-		}		
+		}
 	}
-	
+
 	void Render() { Refresh(); }
-	
+
 	virtual void Paint(Draw& w)
 	{
 		int m = ~drawMode;
@@ -277,17 +283,17 @@ struct App : TopWindow
 		int velocityIterations = 8;
 		int positionIterations = 10;
 
-		float32 timeStep = 1.0f / hz;
-		
-		int flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit;
+		float timeStep = 1.0f / hz;
+
+		int flags = b2Draw::e_shapeBit | b2Draw::e_jointBit;
 		if(showBoxes)
-			flags |= b2DebugDraw::e_aabbBit;
-		
+			flags |= b2Draw::e_aabbBit;
+
 		debugDraw.SetFlags(flags);
-	
+
 		world.SetWarmStarting(1);
-		world.SetContinuousPhysics(1);	
-		world.Step(timeStep, velocityIterations, positionIterations);	
+		world.SetContinuousPhysics(1);
+		world.Step(timeStep, velocityIterations, positionIterations);
 
 		Point p1, p2;
 		if(mouseJoint)
@@ -297,7 +303,7 @@ struct App : TopWindow
 		}
 
 		Size sz = GetSize();
-						
+
 		if(m > 0)
 		{
 			ImageBuffer ib(sz);
@@ -306,21 +312,21 @@ struct App : TopWindow
 			bg.r = bg.g = bg.b = bg.a = 255;
 			bp.Clear(bg);
 			debugDraw.Init(bp, sz);
-	
-			world.DrawDebugData();	
+
+			world.DebugDraw();
 			if(mouseJoint)
 			{
 				bp.DrawLine(p1, p2, 2, LtGreen);
 				bp.DrawEllipse(p2.x - 3, p2.y - 3, 6, 6, Green, PEN_SOLID, Black);
 			}
-	
+
 			w.DrawImage(0, 0, ib);
 		}
 		else
 		{
 			w.DrawRect(sz, White);
 			debugDraw.Init(w, sz);
-			world.DrawDebugData();	
+			world.DebugDraw();
 			if(mouseJoint)
 			{
 				w.DrawLine(p1, p2, 2, LtGreen);
@@ -328,24 +334,24 @@ struct App : TopWindow
 			}
 		}
 	}
-	
+
 	virtual void LeftDown(Point p0, dword keyflags)
 	{
 		b2Vec2 p = debugDraw.conv(p0);
 		mouseWorld = p;
-		
+
 		if(mouseJoint != NULL)
 			return;
-	
+
 		b2AABB aabb;
 		b2Vec2 d;
 		d.Set(0.001f, 0.001f);
 		aabb.lowerBound = p - d;
 		aabb.upperBound = p + d;
-	
+
 		QueryCallback callback(p);
 		world.QueryAABB(&callback, aabb);
-	
+
 		if (callback.fixture)
 		{
 			b2Body* body = callback.fixture->GetBody();
@@ -356,7 +362,7 @@ struct App : TopWindow
 			md.maxForce = 1000.0f * body->GetMass();
 			mouseJoint = (b2MouseJoint*) world.CreateJoint(&md);
 			body->SetAwake(true);
-		}		
+		}
 	}
 
 	virtual void LeftUp(Point p0, dword keyflags)
@@ -365,17 +371,17 @@ struct App : TopWindow
 		{
 			world.DestroyJoint(mouseJoint);
 			mouseJoint = NULL;
-		}		
+		}
 	}
 
 	virtual void MouseMove(Point p, dword keyflags)
 	{
 		mouseWorld = debugDraw.conv(p);
-		
+
 		if(mouseJoint)
 			mouseJoint->SetTarget(mouseWorld);
 	}
-	
+
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags)
 	{
 		debugDraw.zoom += zdelta / 80.0f;
