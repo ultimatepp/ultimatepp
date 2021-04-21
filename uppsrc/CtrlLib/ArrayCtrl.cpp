@@ -638,6 +638,7 @@ void ArrayCtrl::Layout() {
 
 void ArrayCtrl::Reline(int i, int y)
 {
+	int i0 = i;
 	if(WhenLineVisible)
 		while(i < ln.GetCount()) {
 			Ln& p = ln[i];
@@ -646,7 +647,7 @@ void ArrayCtrl::Reline(int i, int y)
 				y += Nvl(p.cy, linecy) + horzgrid;
 			i++;
 		}
-	else
+	else {
 		while(i < ln.GetCount()) {
 			Ln& p = ln[i];
 			p.y = y;
@@ -654,9 +655,10 @@ void ArrayCtrl::Reline(int i, int y)
 				y += Nvl(p.cy, linecy) + horzgrid;
 			i++;
 		}
+	}
 	SetSb();
 	Refresh();
-	SyncCtrls();
+	SyncCtrls(i0);
 }
 
 int  ArrayCtrl::GetLineY(int i) const
@@ -741,19 +743,6 @@ Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
 	if(!hasctrls)
 		return NULL;
 	Size sz = GetSize();
-	for(int ii = i - 1; ii >= 0 && !p; ii--)
-		for(int j = column.GetCount() - 1; j >= 0; j--) {
-			if(IsCtrl(ii, j)) {
-				p = &GetCellCtrl(ii, j);
-				break;
-			}
-			if(column[j].factory) {
-				for(int q = 0; q <= i; q++)
-					p = SyncLineCtrls(q, p);
-				return p;
-			}
-		}
-	    
 	for(int j = 0; j < column.GetCount(); j++) {
 		bool ct = IsCtrl(i, j);
 		if(!ct && column[j].factory) {
@@ -771,8 +760,21 @@ Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
 		if(ct) {
 			LTIMING("PlaceCtrls");
 			Ctrl& c = GetCellCtrl(i, j);
-			if(!c.HasFocusDeep() || c.GetParent() != this)
+			if(!c.HasFocusDeep() || c.GetParent() != this) {
+				for(int ii = i - 1; ii >= 0 && !p; ii--) // find previous Ctrl for the correct order
+					for(int j = column.GetCount() - 1; j >= 0; j--) {
+						if(IsCtrl(ii, j)) {
+							p = &GetCellCtrl(ii, j);
+							break;
+						}
+						if(column[j].factory) { // was not created yet...
+							for(int q = 0; q <= i; q++)
+								p = SyncLineCtrls(q, p);
+							return p;
+						}
+					}
 				AddChild(&c, p);
+			}
 			p = &c;
 			Rect r;
 			if(i < min_visible_line || i > max_visible_line)
@@ -808,7 +810,7 @@ void  ArrayCtrl::SyncPageCtrls()
 		p = SyncLineCtrls(i, p);
 }
 
-void  ArrayCtrl::SyncCtrls()
+void  ArrayCtrl::SyncCtrls(int i0)
 {
 	LTIMING("SyncCtrls");
 	if(!hasctrls)
@@ -816,7 +818,7 @@ void  ArrayCtrl::SyncCtrls()
 	ctrl_low = GetCount() - 1;
 	ctrl_high = 0;
 	Ctrl *p = NULL;
-	for(int i = 0; i < GetCount(); i++)
+	for(int i = i0; i < GetCount(); i++)
 		p = SyncLineCtrls(i, p);
 }
 
