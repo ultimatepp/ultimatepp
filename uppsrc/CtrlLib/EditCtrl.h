@@ -381,6 +381,8 @@ private:
 	SpinButtons     sb;
 	IncType         inc;
 	bool            roundfrommin;
+	bool            mousewheel = true;
+	bool            keys = true;
 
 	typedef WithSpin CLASSNAME;
 public:
@@ -395,6 +397,12 @@ public:
 	bool               IsSpinVisible() const        { return sb.IsVisible(); }
 	
 	WithSpin&          RoundFromMin(bool b = true)  { roundfrommin = b; return *this; }
+	
+	WithSpin&          MouseWheelSpin(bool b = true){ mousewheel = b; return *this; }
+	WithSpin&          NoMouseWheelSpin()           { return MouseWheelSpin(false); }
+	
+	WithSpin&          KeySpin(bool b = true)       { keys = b; return *this; }
+	WithSpin&          NoKeySpin()                  { return KeySpin(false); }
 
 	SpinButtons&       SpinButtonsObject()          { return sb; }
 	const SpinButtons& SpinButtonsObject() const    { return sb; }
@@ -489,13 +497,15 @@ void WithSpin<DataType, Base, IncType>::Dec()
 template <class DataType, class Base, class IncType>
 bool WithSpin<DataType, Base, IncType>::Key(dword key, int repcnt)
 {
-	if(key == K_UP) {
-		Inc();
-		return true;
-	}
-	if(key == K_DOWN) {
-		Dec();
-		return true;
+	if(keys) {
+		if(key == K_UP) {
+			Inc();
+			return true;
+		}
+		if(key == K_DOWN) {
+			Dec();
+			return true;
+		}
 	}
 	return Base::Key(key, repcnt);
 }
@@ -503,10 +513,12 @@ bool WithSpin<DataType, Base, IncType>::Key(dword key, int repcnt)
 template <class DataType, class Base, class IncType>
 void WithSpin<DataType, Base, IncType>::MouseWheel(Point, int zdelta, dword)
 {
-	if(zdelta < 0)
-		Dec();
-	else
-		Inc();
+	if(mousewheel) {
+		if(zdelta < 0)
+			Dec();
+		else
+			Inc();
+	}
 }
 
 typedef WithSpin<int, EditInt>               EditIntSpin;

@@ -41,7 +41,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 			int32 p0 = Peek32le(p);
 			int32 p1 = Peek32le(p + len);
 			while(s <= e) {
-				if(Peek32le(s) == p0 && Peek32le(s + len) == p1)
+				if((int32)Peek32le(s) == p0 && (int32)Peek32le(s + len) == p1)
 					return (int)(s - ptr);
 				s += step;
 			}
@@ -50,7 +50,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 		if(len == 4) {
 			int32 p0 = Peek32le(p);
 			while(s <= e) {
-				if(Peek32le(s) == p0)
+				if((int32)Peek32le(s) == p0)
 					return (int)(s - ptr);
 				s += step;
 			}
@@ -60,7 +60,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 			int16 p0 = Peek16le(p);
 			char p1 = p[2];
 			while(s <= e) {
-				if(Peek16le(s) == p0 && s[2] == p1)
+				if((int16)Peek16le(s) == p0 && s[2] == p1)
 					return (int)(s - ptr);
 				s += step;
 			}
@@ -69,7 +69,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 		if(len == 2) {
 			int16 p0 = Peek16le(p);
 			while(s <= e) {
-				if(Peek16le(s) == p0)
+				if((int16)Peek16le(s) == p0)
 					return (int)(s - ptr);
 				s += step;
 			}
@@ -93,21 +93,21 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 			len -= 8;
 			int64 p1 = Peek64le(p + len);
 			while(s <= e) {
-				if(Peek64le(s) == p0 && Peek64le(s + len) == p1)
+				if((int64)Peek64le(s) == p0 && (int64)Peek64le(s + len) == p1)
 					return (int)(s - ptr);
 				s += step;
 			}
 		}
 		else
 			while(s <= e) {
-				if(Peek64le(s) == p0 && equal_back_8(s, p, len))
+				if((int64)Peek64le(s) == p0 && equal_back_8(s, p, len))
 					return (int)(s - ptr);
 				s += step;
 			}
 #else
 		int32 p0 = Peek32le(p);
 		while(s <= e) {
-			if(Peek32le(s) == p0 && equal_back_4(s, p, len))
+			if((int32)Peek32le(s) == p0 && equal_back_4(s, p, len))
 				return (int)(s - ptr);
 			s += step;
 		}
