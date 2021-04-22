@@ -91,8 +91,8 @@ arkdownConverter][@(0.0.255) `&]_[* PermissiveWWWAutolinks]([@(0.0.255) bool]_[*
 they begin with `'[C www]`'.) Returns `*this for method chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:MarkdownConverter`:`:PermissiveEmailAutoLinks`(bool`): [_^Upp`:`:MarkdownConverter^ M
-arkdownConverter][@(0.0.255) `&]_[* PermissiveEmailAutoLinks]([@(0.0.255) bool]_[*@3 b]_`=
+[s5;:Upp`:`:MarkdownConverter`:`:PermissiveEmailAutolinks`(bool`): [_^Upp`:`:MarkdownConverter^ M
+arkdownConverter][@(0.0.255) `&]_[* PermissiveEmailAutolinks]([@(0.0.255) bool]_[*@3 b]_`=
 _[@(0.0.255) true])&]
 [s2;%% Recognize e`-mails as autolinks even without `'[C <]`', `'[C >]`' 
 and `'[C mailto:]`'&]

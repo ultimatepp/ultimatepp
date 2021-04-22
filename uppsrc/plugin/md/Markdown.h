@@ -23,7 +23,7 @@ public:
     MarkdownConverter& PermissiveAtxHeaders(bool b = true)      { if(b) flags |= MD_FLAG_PERMISSIVEATXHEADERS;     else flags &= ~MD_FLAG_PERMISSIVEATXHEADERS; return *this; }
     MarkdownConverter& PermissiveUrlAutolinks(bool b = true)    { if(b) flags |= MD_FLAG_PERMISSIVEURLAUTOLINKS;   else flags &= ~MD_FLAG_PERMISSIVEURLAUTOLINKS; return *this; }
     MarkdownConverter& PermissiveWWWAutolinks(bool b = true)    { if(b) flags |= MD_FLAG_PERMISSIVEWWWAUTOLINKS;   else flags &= ~MD_FLAG_PERMISSIVEWWWAUTOLINKS; return *this; }
-    MarkdownConverter& PermissiveEmailAutoLinks(bool b = true)  { if(b) flags |= MD_FLAG_PERMISSIVEEMAILAUTOLINKS; else flags &= ~MD_FLAG_PERMISSIVEEMAILAUTOLINKS; return *this; }
+    MarkdownConverter& PermissiveEmailAutolinks(bool b = true)  { if(b) flags |= MD_FLAG_PERMISSIVEEMAILAUTOLINKS; else flags &= ~MD_FLAG_PERMISSIVEEMAILAUTOLINKS; return *this; }
     MarkdownConverter& PermissiveAutolinks(bool b = true)       { if(b) flags |= MD_FLAG_PERMISSIVEAUTOLINKS;      else flags &= ~MD_FLAG_PERMISSIVEAUTOLINKS; return *this; }
 
     MarkdownConverter& CommonMarkDialect()                      { flags = MD_DIALECT_COMMONMARK; return *this; }
