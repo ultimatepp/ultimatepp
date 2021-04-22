@@ -9,6 +9,8 @@ file
 	Info readonly separator,
 	Copying,
 	issues,
+	Docs readonly separator,
+	src.tpp,
 	Library readonly separator,
 	MD4C/md4c.h,
 	MD4C/md4c.c;
