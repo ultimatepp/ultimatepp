@@ -1,5 +1,4 @@
 topic "WithSpin template and Value editors with spin buttons";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "WithSpin template and Value editors with spin buttons";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 WithSpin]]}}&]
 [s3;%- &]
@@ -61,7 +61,7 @@ ool]_[*@3 s]_`=_[@(0.0.255) true])&]
 [s4; &]
 [s5;:WithSpin`:`:IsSpinVisible`(`)const:%- [@(0.0.255) bool]_[* IsSpinVisible]()_[@(0.0.255) c
 onst]&]
-[s2; Returns true if spin buttes are shown.&]
+[s2; Returns true if spin buttons are shown.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:WithSpin`:`:RoundFromMin`(bool`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&
@@ -72,6 +72,29 @@ value is 3, going up from the minimum goes through values 3,
 5, 10, ..., which when RoundFromMin is active, it goes through 
 3, 8, 13, ...&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:WithSpin`:`:MouseWheelSpin`(bool`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&
+]_[* MouseWheelSpin]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If active, the value can be altered by mouse wheel `- rolling 
+the wheel is equivalent to pushing up/down arrows. Default is 
+active.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:WithSpin`:`:NoMouseWheelSpin`(`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&
+]_[* NoMouseWheelSpin]()&]
+[s2; Same as MouseWheelSpin(false).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:WithSpin`:`:KeySpin`(bool`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&]_[* K
+eySpin]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If active, the value can be altered with Up and Down keys. Default 
+is active.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:WithSpin`:`:NoKeySpin`(`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&]_[* No
+KeySpin]()&]
+[s2; Same as KeySpin(false).&]
+[s3;%- &]
 [s4; &]
 [s5;:WithSpin`:`:SpinButtonsObject`(`):%- [_^SpinButtons^ SpinButtons][@(0.0.255) `&]_[* Sp
 inButtonsObject]()&]
