@@ -31,7 +31,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	VectorMap<String, String> readme;
 
 	// loading readme in background
-	TimeCallback tm;
+	TimeCallback delay;
 	String       readme_url;
 	bool         loading = false;
 	HttpRequest  http;
@@ -82,7 +82,7 @@ UppHubDlg::UppHubDlg()
 			readme_url = n->readme;
 			http.Url(readme_url);
 			loading = true;
-			tm.KillPost([=] { UrlLoading(); });
+			delay.KillPost([=] { UrlLoading(); });
 		}
 		Sync();
 	};
@@ -243,7 +243,7 @@ bool UppHubDlg::Installed()
 void UppHubDlg::UrlLoading()
 {
 	if(http.Do())
-		tm.KillPost([=] { UrlLoading(); });
+		delay.KillPost([=] { UrlLoading(); });
 	else {
 		loading = false;
 		if(http.IsSuccess())

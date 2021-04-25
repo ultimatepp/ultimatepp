@@ -94,7 +94,7 @@ struct IdeMDDes : IdeDesigner, ParentCtrl {
 	DocEdit      editor;
 	RichTextView preview;
 	Splitter     splitter;
-	TimeCallback tm;
+	TimeCallback delay;
 
 	virtual void GotFocus();
 	virtual String GetFileName() const        { return filename; }
