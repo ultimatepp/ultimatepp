@@ -15,7 +15,7 @@ static VectorMap<String, IdeMDEditPos>& sEPmd()
 
 IdeMDDes::IdeMDDes()
 {
-	editor << [=] { tm.KillSet(250, [=] { Preview(); }); };
+	editor << [=] { delay.KillSet(250, [=] { Preview(); }); };
 	splitter.Horz(editor, preview);
 	Add(splitter.SizePos());
 	if(TheIde())

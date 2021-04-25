@@ -29,7 +29,7 @@ void UrepoConsole::AddResult(const String& out)
 	const char *s = out;
 	const char *b = s;
 	auto Add = [&] {
-		String txt(b, s - b);
+		String txt(b, int(s - b));
 		list.Add(AttrText("    " + txt).SetFont(font), txt);
 		b = ++s;
 	};
