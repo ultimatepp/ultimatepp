@@ -197,7 +197,8 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 	Size sz1 = limg.GetSize();
 	Size sz2 = rimg.GetSize();
 	int txtcx = r.GetWidth() - sz1.cx - Nvl(lspc, 0) - sz2.cx - Nvl(rspc, 0);
-	Size txtsz = *text ? GetSmartTextSize(text, font, nowrap ? INT_MAX/2 : txtcx) : paintrect.GetStdSize();
+	bool donowrap = nowrap && *text != '\1';
+	Size txtsz = *text ? GetSmartTextSize(text, font, donowrap ? INT_MAX/2 : txtcx) : paintrect.GetStdSize();
 	if(txtsz.cx) {
 		if(!rimg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
 			sz2.cx = 0;
@@ -254,11 +255,12 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 			w.DrawImage(ix, iy, rimg, rcolor);
 	}
 	paintrect.Paint(w, p.x + push, p.y + push, txtsz.cx, isz.cy, color, Null);
+	
 	if(*text) {
 		if(disabled && *text != '\1')
 			DrawSmartText(w, p.x + push + 1, p.y + push + 1,
-			              nowrap ? INT_MAX/2 : txtcx, text, font, SColorPaper);
-		DrawSmartText(w, p.x + push, p.y + push, nowrap ? INT_MAX/2 : txtcx,
+			              donowrap ? INT_MAX/2 : txtcx, text, font, SColorPaper);
+		DrawSmartText(w, p.x + push, p.y + push, donowrap ? INT_MAX/2 : txtcx,
 		              text, font, color, visibleaccesskey ? accesskey : 0);
 		if(focus)
 			DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
