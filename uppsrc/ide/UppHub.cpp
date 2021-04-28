@@ -64,6 +64,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 UppHubDlg::UppHubDlg()
 {
 	CtrlLayoutCancel(*this, "UppHub");
+	Sizeable().Zoomable();
 
 	CtrlLayoutOKCancel(settings, "Settings");
 	FileSelectOpen(settings.url, settings.selfile);
