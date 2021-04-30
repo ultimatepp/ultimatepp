@@ -457,3 +457,20 @@ void JsonizeBySerialize(JsonIO& jio, T& x)
 			throw JsonizeError("jsonize by serialize error");
 		}
 }
+
+template <class IZE>
+struct LambdaIzeVar {
+	IZE& ize;
+
+	void Jsonize(JsonIO& io) { ize(io); }
+	void Xmlize(XmlIO& io) { ize(io); }
+	
+	LambdaIzeVar(IZE& ize) : ize(ize) {}
+};
+
+template <class IO, class IZE>
+void LambdaIze(IO& io, const char *id, IZE ize)
+{
+	LambdaIzeVar<IZE> var(ize);
+	io(id, var);
+}
