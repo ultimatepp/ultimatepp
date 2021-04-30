@@ -216,4 +216,13 @@ _[@(0.0.255) void]_[* JsonizeBySerialize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3
 [*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2;%% This function encodes/retrieves Json by binary serializing 
 the object and Jsonizing the hexadecimal data string.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:LambdaIze`(IO`&`,const char`*`,IZE`): [@(0.0.255) template]_<[@(0.0.255) clas
+s]_[*@4 IO], [@(0.0.255) class]_[*@4 IZE]>_[@(0.0.255) void]_[* LambdaIze]([*@4 IO][@(0.0.255) `&
+]_[*@3 io], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [*@4 IZE]_[*@3 ize])&]
+[s2;%% This special function uses [%-*@3 ize] to represent the value 
+of Jsonize or Xmlize node named [%-*@3 id]. Lambda should have 
+one paramter IO`&.&]
+[s3;%% &]
 [s3;%% ]]
