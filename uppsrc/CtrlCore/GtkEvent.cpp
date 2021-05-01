@@ -283,7 +283,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.event = NULL;
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDevice *d = gdk_event_get_source_device(event);
-	if(d && gdk_device_get_source(d) == GDK_SOURCE_PEN) {
+	if(d && findarg(gdk_device_get_source(d), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
 		e.pen = true;
 		e.pen_barrel = MouseState & GDK_BUTTON3_MASK;
 		double *axes = NULL;
@@ -292,15 +292,11 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 		if(findarg(event->type, GDK_BUTTON_PRESS, GDK_2BUTTON_PRESS, GDK_3BUTTON_PRESS, GDK_BUTTON_RELEASE) >= 0)
 			axes = ((GdkEventButton *)event)->axes;
 		if(axes) {
-			double h;
-			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_PRESSURE, &h))
-				e.pen_pressure = h;
-			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_ROTATION, &h))
-				e.pen_rotation = h;
-			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_XTILT, &h))
-				e.pen_tilt.x = h;
-			if(axes && gdk_device_get_axis(d, axes, GDK_AXIS_YTILT, &h))
-				e.pen_tilt.y = h;
+			GdkAxisFlags flags = gdk_device_get_axes (d);
+			if(flags & GDK_AXIS_FLAG_PRESSURE) gdk_device_get_axis(d, axes, GDK_AXIS_PRESSURE, &e.pen_pressure);
+			if(flags & GDK_AXIS_FLAG_ROTATION) gdk_device_get_axis(d, axes, GDK_AXIS_ROTATION, &e.pen_rotation);
+			if(flags & GDK_AXIS_FLAG_XTILT) gdk_device_get_axis(d, axes, GDK_AXIS_XTILT, &e.pen_tilt.x);
+			if(flags & GDK_AXIS_FLAG_YTILT) gdk_device_get_axis(d, axes, GDK_AXIS_YTILT, &e.pen_tilt.y);
 		}
 	}
 #endif
