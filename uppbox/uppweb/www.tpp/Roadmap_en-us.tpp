@@ -26,7 +26,7 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2021.1 (April 2021?)&]
+[s3; 2021.1 (May 2021?)&]
 [s5;po*/ &]
 [s5;po [*/ Upcoming release]&]
 [s5;po &]
@@ -51,7 +51,7 @@ to v. 1.9.0&]
 [s5; &]
 [s5;po [* CtrlCore]&]
 [s0;l160;i150;O0; New C`+`+ style for iteration of widget children 
-now possible [*C@5 for(Ctrl`& q : widget)]`+&]
+now possible [*C@5 for(Ctrl`& q : widget)]&]
 [s0;l160;i150;O0; Pen support (pressure, tilt etc...)&]
 [s0; &]
 [s5;po [* RichText, RichEdit]&]
@@ -91,6 +91,8 @@ with PATH augmented with current build executable directories.&]
 [s0;l160;i150;O0; Improved debugger threads tab&]
 [s0;l160;i150;O0; Support for [*C@5 override][*  ]in virtual methods 
 dialog&]
+[s0;l160;i150;O0; Ctrl`+Shift`+Up/Down now moving the line or block 
+of text up/down&]
 [s0; &]
 [s0; [* Win32]&]
 [s0;l160;i150;O0; Now ships with minimal git (mingit) implementation&]
