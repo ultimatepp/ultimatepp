@@ -291,9 +291,11 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 								out.FindAdd(f);
 						}
 				}
+				else
 				if(p.Id("exclude")) {
 					ExtExclude(p, out);
 				}
+				else
 				if(p.Id("include_path")) {
 					Vector<String> e = ReadPatterns(p);
 					for(int j = 0; j < e.GetCount(); j++) {
@@ -309,10 +311,12 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 							include_path.Add(ee);
 					}
 				}
+				else
 				if(p.Id("exclude_path")) {
 					ExtExclude(p, include_path);
 				}
-				if(p.Id("includes")) {
+				else {
+					p.PassId("includes");
 					Vector<String> e = ReadPatterns(p);
 					for(int i = 0; i < files.GetCount(); i++)
 						for(int j = 0; j < e.GetCount(); j++) {
