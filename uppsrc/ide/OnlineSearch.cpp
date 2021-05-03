@@ -10,7 +10,7 @@ Value  LoadSearchEngines()
 	return ParseJSON(LoadFile(SearchEnginesFile()));
 }
 
-String GetWebsiteIconAsPNG(const String& uri)
+String GetWebsiteIconAsPNG(const String& uri, Progress& pi)
 {
 	String ico;
 	int q = uri.Find('/', max(0, uri.FindAfter("//")));
@@ -19,7 +19,13 @@ String GetWebsiteIconAsPNG(const String& uri)
 
 	Image r;
 	Size wanted = DPI(16, 16);
-	String data = HttpRequest(uri.Mid(0, q) + "/favicon.ico").RequestTimeout(3000).Execute();
+	pi.SetText("Setting up " + uri.Mid(0, q));
+	HttpRequest http(uri.Mid(0, q) + "/favicon.ico");
+	http.WhenWait = [&] {
+		if(pi.StepCanceled())
+			http.Abort();
+	};
+	String data = http.RequestTimeout(3000).Execute();
 	for(const Image& m : ReadIcon(data)) {
 		Size isz = m.GetSize();
 		if(isz == wanted) {
@@ -49,12 +55,9 @@ void SearchEnginesDefaultSetup()
 	};
 	
 	Progress pi("Search engines setup");
-	pi.SetTotal(__countof(defs));
 	JsonArray ja;
-	for(int i = 0; i < __countof(defs); i++) {
-		pi.Step();
-		ja << Upp::Json("Name", defs[i].a)("URI", defs[i].b)("Icon", Encode64(GetWebsiteIconAsPNG(defs[i].b)));
-	}
+	for(int i = 0; i < __countof(defs); i++)
+		ja << Upp::Json("Name", defs[i].a)("URI", defs[i].b)("Icon", Encode64(GetWebsiteIconAsPNG(defs[i].b, pi)));
 
 	SaveChangedFile(SearchEnginesFile(), ja);
 }
@@ -115,7 +118,8 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 	v(dlg.name, name)(dlg.uri, uri);
 	if(dlg.Execute() == IDOK) {
 		v.Retrieve();
-		ico = GetWebsiteIconAsPNG(uri);
+		Progress pi;
+		ico = GetWebsiteIconAsPNG(uri, pi);
 		return true;
 	}
 	return false;
