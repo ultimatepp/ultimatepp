@@ -326,8 +326,9 @@ void WorkspaceWork::PackageCursor()
 Vector<String> WorkspaceWork::RepoDirs(bool actual)
 {
 	Vector<String> u = GetUppDirs();
+	for(String& s : u)
+		s = NormalizePath(s);
 	Index<String> id;
-	
 	const Workspace& w = GetIdeWorkspace();
 	for(int i = 0; i < w.GetCount(); i++) {
 		String pp = PackagePath(w[i]);
