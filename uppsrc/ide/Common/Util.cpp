@@ -262,7 +262,7 @@ String GetInternalGitPath()
 bool HasGit()
 {
 	String dummy;
-	static bool b = FileExists(GetInternalGitPath()) || Sys("svn", dummy) >= 0;
+	static bool b = FileExists(GetInternalGitPath()) || Sys("git", dummy) >= 0;
 	return b;
 }
 
@@ -271,7 +271,7 @@ bool HasGit()
 bool HasGit()
 {
 	String dummy;
-	static bool b = Sys("svn", dummy) >= 0;
+	static bool b = Sys("git", dummy) >= 0;
 	return b;
 }
 
