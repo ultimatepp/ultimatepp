@@ -1230,6 +1230,7 @@ void TreeCtrl::ChildGotFocus()
 			return;
 		}
 	}
+	Ctrl::ChildGotFocus();
 }
 
 bool TreeCtrl::Tab(int d)
