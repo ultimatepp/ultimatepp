@@ -347,7 +347,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 			if(show_diff_highlight) {
 				WString ln_diff = l.text_diff.ToWString();
 				ln_diff = ExpandTabs(ln_diff);
-				if(ln_diff.GetCount() * ln.GetCount() < 50000) {
+				if((int64)ln_diff.GetCount() * ln.GetCount() < 50000) {
 					if(left)
 						ldiff = LineDiff(true, hln, paper_color,
 						                 ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
