@@ -286,6 +286,18 @@ nt64]_[*@3 pos])&]
 [s7; [%-*C@3 pos]-|Position.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Stream`:`:SetVersion`(int`):%- [@(0.0.255) void]_[* SetVersion]([@(0.0.255) int
+]_[*@3 ver])&]
+[s2; Sets the arbitrary number [%-*@3 ver] to the stream. Client code 
+can use it in any way it needs, but it is designed to store the 
+the version information during serialization.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Stream`:`:GetVersion`(`)const:%- [@(0.0.255) int]_[* GetVersion]()_[@(0.0.255) c
+onst]&]
+[s2; Reads the number set by SetVersion.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Stream`:`:GetSize`(`)const:%- [@(0.0.255) virtual] [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[* GetSize]()_[@(0.0.255) const]&]
 [s7; [* Return value]-|Size of stream.&]

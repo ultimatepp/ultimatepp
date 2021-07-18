@@ -31,6 +31,8 @@ protected:
 
 	unsigned style:6;
 	unsigned errorcode:16;
+	
+	int      version = 0;
 
 	enum {
 		BEGINOFLINE = 0x02,
@@ -60,6 +62,9 @@ public:
 	virtual  ~Stream();
 
 	word      GetStyle() const       { return style; }
+	
+	void      SetVersion(int ver)    { version = ver; }
+	int       GetVersion() const     { return version; }
 
 	bool      IsError() const        { return style & STRM_ERROR; }
 	bool      IsOK() const           { return !IsError(); }
