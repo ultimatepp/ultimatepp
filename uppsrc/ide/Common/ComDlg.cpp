@@ -44,8 +44,10 @@ void DirSelect(Ctrl& t, Button& b)
 	b.SetImage(CtrlImg::Dir());
 	b << [&] {
 		String s = SelectDirectory();
-		if(s.GetCount())
+		if(s.GetCount()) {
 			t <<= s;
+			t.WhenAction();
+		}
 	};
 }
 
