@@ -58,9 +58,6 @@ public class AndroidMathActivity extends Activity
 		text += "Vec2: " + vec2.toString() + "\n";
 		
 		tv.append(text);
-		
-		vec1.dispose();
-		vec2.dispose();
 	}
 	
 	static {
