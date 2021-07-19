@@ -30,7 +30,7 @@ extern "C" {
 		mm.MakeCopy(env, jobjThis, jobjThat);
 	}
 
-	JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_nativeFinalize(
+	JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_nativeDispose(
 		JNIEnv *env,
 		jobject obj)
 	{

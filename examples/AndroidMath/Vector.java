@@ -13,15 +13,15 @@ public class Vector
 	private long nativeAdress = 0;
 	
 	/**
-	 * We override finalize method, because we need to destroy native c++ object when
-	 * there is not more reference to Java object. This method is called by default
-	 * by garbage collector.
+	 * In order to avoid memory leaks on the native side. The cleaning method needs to be
+	 * called.
+	 *
+	 * In previous version of this example finalize method was used. However, in Java 9 the
+	 * finalize method was deprecated and we can not longer relay on them.
 	 */
-	@Override
-	protected void finalize() throws Throwable
+	protected void dispose()
 	{
-		nativeFinalize();
-		super.finalize();
+		nativeDispose();
 	}
 	
 	public Vector(int size)
@@ -46,5 +46,5 @@ public class Vector
 	
 	private native void construct(int size);
 	private native void copyConstruct(Vector vec);
-	private native void nativeFinalize();
+	private native void nativeDispose();
 }
