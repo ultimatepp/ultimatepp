@@ -55,10 +55,6 @@ void __LOGF__(const char *format, ...);
 
 #ifdef _DEBUG
 
-#define _DBG_
-
-#define DEBUGCODE(x)     x
-
 #define LOG(a)           UPP::VppLog() << a << UPP::EOL
 #define LOGF             UPP::__LOGF__
 #define LOGBEGIN()       UPP::VppLog() << UPP::LOG_BEGIN
@@ -87,29 +83,7 @@ void __LOGF__(const char *format, ...);
 #define DEACTIVATE_TIMING()  UPP::TimingInspector::Activate(false);
 #define TIMESTOP(x)      RTIMESTOP(x)
 
-#define DLOG(x)          LOG(x)
-#define DDUMP(x)         DUMP(x)
-#define DDUMPC(x)        DUMPC(x)
-#define DDUMPM(x)        DUMPM(x)
-#define DTIMING(x)       TIMING(x)
-#define DLOGHEX(x)       LOGHEX(x)
-#define DDUMPHEX(x)      DUMPHEX(x)
-#define DTIMESTOP(x)     TIMESTOP(x)
-#define DHITCOUNT(x)     HITCOUNT(x)
-
 #else
-
-#define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
-#define DDUMP(x)         @ // To clean logs after debugging, this produces error in release mode
-#define DDUMPC(x)        @ // To clean logs after debugging, this produces error in release mode
-#define DDUMPM(x)        @ // To clean logs after debugging, this produces error in release mode
-#define DTIMING(x)       @ // To clean logs after debugging, this produces error in release mode
-#define DLOGHEX(x)       @ // To clean logs after debugging, this produces error in release mode
-#define DDUMPHEX(nx)     @ // To clean logs after debugging, this produces error in release mode
-#define DTIMESTOP(x)     @ // To clean logs after debugging, this produces error in release mode
-#define DHITCOUNT(x)     @ // To clean logs after debugging, this produces error in release mode
-
-#define DEBUGCODE(x)     LOG_NOP
 
 inline void LOGF(const char *format, ...) {}
 
@@ -162,6 +136,38 @@ struct DebugLogBlock
 #define RDUMPM(c)         UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c))
 #define RLOGHEX(x)        UPP::LogHex(x)
 #define RDUMPHEX(x)       UPP::VppLog() << #x << " = ", UPP::LogHex(x)
+
+#if defined(_DEBUG) || defined(flagDEBUGCODE)
+
+#define DLOG(x)          RLOG(x)
+#define DDUMP(x)         RDUMP(x)
+#define DDUMPC(x)        RDUMPC(x)
+#define DDUMPM(x)        RDUMPM(x)
+#define DTIMING(x)       RTIMING(x)
+#define DLOGHEX(x)       RLOGHEX(x)
+#define DDUMPHEX(x)      RDUMPHEX(x)
+#define DTIMESTOP(x)     RTIMESTOP(x)
+#define DHITCOUNT(x)     RHITCOUNT(x)
+
+#define DEBUGCODE(x)     x
+
+#define _DBG_
+
+#else
+
+#define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
+#define DDUMP(x)         @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPC(x)        @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPM(x)        @ // To clean logs after debugging, this produces error in release mode
+#define DTIMING(x)       @ // To clean logs after debugging, this produces error in release mode
+#define DLOGHEX(x)       @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPHEX(nx)     @ // To clean logs after debugging, this produces error in release mode
+#define DTIMESTOP(x)     @ // To clean logs after debugging, this produces error in release mode
+#define DHITCOUNT(x)     @ // To clean logs after debugging, this produces error in release mode
+
+#define DEBUGCODE(x)     LOG_NOP
+
+#endif
 
 // Conditional logging
 

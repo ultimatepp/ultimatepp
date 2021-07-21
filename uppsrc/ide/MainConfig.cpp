@@ -44,11 +44,12 @@ void MainConfigDlg::FlagDlg()
 	Vector<String> accepts = wspc.GetAllAccepts(0);
 	Sort(accepts, GetLanguageInfo());
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
-	cfg.accepts.AddColumn("Set").Ctrls(sSetOption).HeaderTab().Fixed(40);
-	cfg.accepts.AddColumn("Flag", 1);
-	cfg.accepts.AddColumn("Packages", 2);
+	cfg.accepts.AddColumn("Set").Ctrls(sSetOption);
+	cfg.accepts.AddColumn("Flag");
+	cfg.accepts.AddColumn("Packages");
 	cfg.accepts.SetCount(accepts.GetCount());
 	cfg.accepts.SetLineCy(Zy(20));
+	cfg.accepts.ColumnWidths("26 122 204");
 	for(int i = 0; i < accepts.GetCount(); i++) {
 		String acc = accepts[i];
 		Vector<String> pkg;
@@ -61,14 +62,13 @@ void MainConfigDlg::FlagDlg()
 	}
 
 	cfg.other.SetFilter(FlagFilterM);
-	cfg.dll <<= cfg.gui <<= cfg.mt <<= cfg.sse2 <<= 0;
+	cfg.gui <<= false;
+	cfg.debugcode <<= false;
 	String other;
 	for(int i = 0; i < flg.GetCount(); i++) {
 		String f = flg[i];
-		if(!SetSw(f, cfg.dll, "DLL")
-		   && !SetSw(f, cfg.gui, "GUI")
-		   && !SetSw(f, cfg.mt, "MT")
-		   && !SetSw(f, cfg.sse2, "SSE2")) {
+		if(!SetSw(f, cfg.gui, "GUI") &&
+		   !SetSw(f, cfg.debugcode, "DEBUGCODE")) {
 			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1);
 			if(x >= 0)
 				cfg.accepts.Set(x, CC_SET, true);
@@ -83,10 +83,8 @@ void MainConfigDlg::FlagDlg()
 	if(cfg.Run() == IDOK) {
 		String flags;
 		flags
-			<< GetSw(cfg.dll, "DLL")
 		    << GetSw(cfg.gui, "GUI")
-		    << GetSw(cfg.mt, "MT")
-			<< GetSw(cfg.sse2, "SSE2");
+		    << GetSw(cfg.debugcode, "DEBUGCODE");
 		for(int i = 0; i < cfg.accepts.GetCount(); i++)
 			if(cfg.accepts.Get(i, CC_SET))
 				flags << '.' << cfg.accepts.Get(i, CC_NAME) << ' ';
