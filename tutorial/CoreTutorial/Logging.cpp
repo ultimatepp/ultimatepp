@@ -59,9 +59,10 @@ void Logging()
 	
 	RLOG("This will be logged in release mode too!");
 	
-	/// Sort of opposite situation is when adding temporary `LOG`s to the code for debugging. In
-	/// that case, '`D`' prefixed variants (`DLOG`, `DDUMP`, `DDUMPHEX`...) are handy - these cause
-	/// compile error in release mode, so will not get forgotten in the code past the release:
+	/// Sort of opposite situation is when adding temporary `LOG`s to the code for debugging.
+	/// In that case, '`D`' prefixed variants (`DLOG`, `DDUMP`, `DDUMPHEX`...) are handy -
+	/// these cause compile error in release mode (unless you define the flag DEBUGCODE in the
+	/// main configuration), so will not get forgotten in the code past the release:
 	
 	DLOG("This would not compile in release mode.");
 	
