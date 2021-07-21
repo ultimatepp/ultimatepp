@@ -118,10 +118,10 @@ You can do this by clicking on `"Builder`" drop list and selecting
 choosing a directory inside `"JDK path`" field. Before you start 
 setting directory, please make sure that you possess appropriate 
 JDK version. The current version of Android SDK supports [* Java 
-up to version 7]. If you don`'t have JDK or you have a version 
-that doesn`'t meet the requirements, you can download it from 
-the official site: [^http`:`/`/www`.oracle`.com`/technetwork`/java`/javase`/downloads`/index`.html^ h
-ttp://www.oracle.com/technetwork/java/javase/downloads/index.html].&]
+8 ]and we recommended this version. If you don`'t have JDK or 
+you have a version that doesn`'t meet the requirements, you can 
+download it from one of the distributors: [^https`:`/`/www`.azul`.com`/downloads`/`?version`=java`-8`-lts`&package`=jdk^ h
+ttps://www.azul.com/downloads/?version`=java`-8`-lts`&package`=jdk].&]
 [s2; To finish creating Android builder process, we need to set the 
 Android SDK path. The field used for its settings `"Android SDK 
 Path`". Before you setup path, make sure you have installed and 
