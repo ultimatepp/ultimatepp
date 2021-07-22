@@ -38,6 +38,7 @@ enum Kind {
 	MACRO,
 	FRIENDCLASS,
 	NAMESPACE,
+	FLAGTEST,
 };
 
 inline bool IsCppType(int i)
@@ -130,6 +131,7 @@ struct CppItem {
 	bool           IsCode() const      { return IsCppCode(kind); }
 	bool           IsData() const      { return IsCppData(kind); }
 	bool           IsMacro() const     { return IsCppMacro(kind); }
+	bool           IsFlagTest() const  { return kind == FLAGTEST; }
 	bool           IsTemplate() const  { return IsCppTemplate(kind); }
 	
 	void           Serialize(Stream& s);

@@ -297,6 +297,9 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 						segment_id.Add(--segment_serial);
 					}
 				}
+				else
+				if(p.Id("if") || p.Id("ifdef") || p.Id("ifndef")) // FLAGTEST support
+					result.Cat(l + "\n");
 				else {
 					result.Cat('\n');
 				#ifdef IGNORE_ELSE

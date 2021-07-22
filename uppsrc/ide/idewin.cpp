@@ -171,6 +171,7 @@ String Ide::IdeGetCurrentMainPackage()
 void Ide::IdePutErrorLine(const String& line)
 {
 	if(console.verbosebuild) {
+		GuiLock __;
 		SetBottom(Ide::BERRORS);
 		ConsoleRunEnd();
 		ConsoleLine(line, true);

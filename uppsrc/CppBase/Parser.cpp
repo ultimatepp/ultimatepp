@@ -1208,14 +1208,14 @@ CppItem& Parser::Item(const String& scope, const String& using_namespace, const 
 	return im;
 }
 
-void Parser::AddMacro(int lineno, const String& macro)
+void Parser::AddMacro(int lineno, const String& macro, int kind)
 {
 	String name;
 	const char *s = macro;
 	while(*s && iscid(*s))
 		name.Cat(*s++);
 	CppItem& im = Item("", "", macro, name);
-	im.kind = MACRO;
+	im.kind = kind;
 	im.line = lineno;
 	im.access = PUBLIC;
 }

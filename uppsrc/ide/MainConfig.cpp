@@ -37,6 +37,25 @@ void sSetOption(One<Ctrl>& ctrl)
 
 void MainConfigDlg::FlagDlg()
 {
+	VectorMap<String, Index<String>> flags;
+	{
+		CodeBaseLock __;
+		const CppBase& b = CodeBase();
+		for(int i = 0; i < b.GetCount(); i++) {
+			String nest = b.GetKey(i);
+			const Array<CppItem>& ci = b[i];
+			for(int j = 0; j < ci.GetCount(); j++) {
+				const CppItem& m = ci[j];
+				if(m.kind == FLAGTEST) {
+					String n = m.name;
+					n.TrimStart("flag");
+					flags.GetAdd(n).FindAdd(GetSourcePackage(GetSourceFilePath(m.file)));
+				}
+			}
+		}
+	}
+	SortByKey(flags);
+	
 	WithConfLayout<TopWindow> cfg;
 	CtrlLayoutOKCancel(cfg, "Configuration flags");
 	cfg.Sizeable().MaximizeBox();
@@ -47,20 +66,11 @@ void MainConfigDlg::FlagDlg()
 	cfg.accepts.AddColumn("Set").Ctrls(sSetOption);
 	cfg.accepts.AddColumn("Flag");
 	cfg.accepts.AddColumn("Packages");
-	cfg.accepts.SetCount(accepts.GetCount());
 	cfg.accepts.SetLineCy(Zy(20));
 	cfg.accepts.ColumnWidths("26 122 204");
-	for(int i = 0; i < accepts.GetCount(); i++) {
-		String acc = accepts[i];
-		Vector<String> pkg;
-		for(int p = 0; p < wspc.GetCount(); p++)
-			if(FindIndex(wspc.package[p].accepts, acc) >= 0)
-				pkg.Add(wspc[p]);
-		Sort(pkg, GetLanguageInfo());
-		cfg.accepts.Set(i, CC_NAME, accepts[i]);
-		cfg.accepts.Set(i, CC_PACKAGES, Join(pkg, ","));
-	}
-
+	for(const auto& f : ~flags)
+		cfg.accepts.Add(false, f.key, Join(f.value.GetKeys(), ", "));
+	
 	cfg.other.SetFilter(FlagFilterM);
 	cfg.gui <<= false;
 	cfg.debugcode <<= false;
@@ -69,7 +79,7 @@ void MainConfigDlg::FlagDlg()
 		String f = flg[i];
 		if(!SetSw(f, cfg.gui, "GUI") &&
 		   !SetSw(f, cfg.debugcode, "DEBUGCODE")) {
-			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1);
+			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1) || cfg.accepts.Find(f, CC_NAME);
 			if(x >= 0)
 				cfg.accepts.Set(x, CC_SET, true);
 			else {
@@ -87,7 +97,7 @@ void MainConfigDlg::FlagDlg()
 		    << GetSw(cfg.debugcode, "DEBUGCODE");
 		for(int i = 0; i < cfg.accepts.GetCount(); i++)
 			if(cfg.accepts.Get(i, CC_SET))
-				flags << '.' << cfg.accepts.Get(i, CC_NAME) << ' ';
+				flags << cfg.accepts.Get(i, CC_NAME) << ' ';
 		flags << cfg.other.GetText().ToString();
 		fe = Join(SplitFlags0(flags), " ").ToWString();
 	}

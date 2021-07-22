@@ -17,7 +17,7 @@ SrcFile::SrcFile() :
 {
 }
 
-SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preprocess, only removes (or processes) comment and directives
+SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preprocess, only removes (or processes) comments and directives
 {
 	SrcFile res;
 	bool include = true;
@@ -56,8 +56,7 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 		if(*rm == '\0')
 			res.blankLinesRemoved++;
 		else
-		if(*rm == '#')
-		{
+		if(*rm == '#') {
 			const char *s = rm + 1;
 			while(*s == ' ' || *s == '\t')
 				s++;
@@ -78,6 +77,22 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 				}
 				if(include)
 					parser.AddMacro(lineno, macro);
+			}
+			else
+			if(s[0] == 'i' && s[1] == 'f') {
+				CParser p(s + 2);
+				try {
+					while(!p.IsEof()) {
+						if(p.IsId()) {
+							String id = p.ReadId();
+							if(id.StartsWith("flag"))
+								parser.AddMacro(lineno, id, FLAGTEST);
+						}
+						else
+							p.SkipTerm();
+					}
+				}
+				catch(CParser::Error) {}
 			}
 			res.preprocessorLinesRemoved++;
 		}

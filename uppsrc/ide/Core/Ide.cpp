@@ -19,6 +19,19 @@ const Workspace& GetIdeWorkspace()
 	return x;
 }
 
+String GetSourcePackage(const String& path)
+{
+	String p = ToLower(NormalizePath(path));
+	const Workspace& w = GetIdeWorkspace();
+	for(int i = 0; i < w.GetCount(); i++) {
+		String pn = w[i];
+		String pp = ToLower(GetFileFolder(PackagePath(pn)));
+		if(p.StartsWith(pp) && findarg(p[pp.GetCount()], '/', '\\') >= 0)
+			return pn;
+	}
+	return Null;
+}
+
 String IdeContext::GetDefaultMethod()
 {
 	return LoadFile(ConfigFile("default_method"));

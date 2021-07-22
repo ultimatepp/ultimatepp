@@ -102,6 +102,9 @@ void PaintCppItemImage(Draw& w, int& x, int ry, int access, int kind, bool focus
 	case MACRO:
 		img = BrowserImg::macro();
 		break;
+	case FLAGTEST:
+		img = BrowserImg::flagtest();
+		break;
 	case FRIENDCLASS:
 		img = BrowserImg::friend_class();
 		break;

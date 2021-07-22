@@ -128,6 +128,8 @@ bool             IdeConsoleWait(int slot);
 void             IdeConsoleOnFinish(Event<>  cb);
 void             IdeGotoCodeRef(String s);
 
+String GetSourcePackage(const String& path);
+
 String GetDefaultMethod();
 VectorMap<String, String> GetMethodVars(const String& method);
 String GetMethodPath(const String& method);

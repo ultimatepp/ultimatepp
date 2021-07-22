@@ -418,7 +418,7 @@ struct Parser : ParserContext {
 	typedef Parser CLASSNAME;
 
 public:
-	void AddMacro(int lineno, const String& macro);
+	void AddMacro(int lineno, const String& macro, int kind = MACRO);
 
 	bool                      dobody;
 	Function<String(String, String, String)> qualify; // used to qualify local variable names (needs main codebase and its mutex)

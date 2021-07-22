@@ -131,7 +131,7 @@ static bool   s_console;
 void BrowserScanError(int line, const String& text, int file)
 {
 	if(s_console)
-		IdePutErrorLine(String().Cat() << source_file.GetKey(file) << " (" << line << "): " << text);
+		PostCallback([=] { IdePutErrorLine(String().Cat() << source_file.GetKey(file) << " (" << line << "): " << text); });
 }
 
 void SerializeCodeBase(Stream& s)
