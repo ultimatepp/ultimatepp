@@ -16,12 +16,12 @@ JavaVersion::JavaVersion(int major, int minor)
 
 bool JavaVersion::IsGreate(int major) const
 {
-	return major > mMajor;
+	return mMajor > major;
 }
 
 bool JavaVersion::IsGreaterOrEqual(int major) const
 {
-	return major >= mMajor;
+	return mMajor >= major;
 }
 
 bool JavaVersion::IsGreaterOrEqual(int major, int minor) const

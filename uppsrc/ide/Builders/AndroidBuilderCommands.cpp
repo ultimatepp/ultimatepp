@@ -20,8 +20,8 @@ String AndroidBuilderCommands::PreperCompileJavaSourcesCommand(
 	
 	cmd << NormalizeExePath(jdkPtr->GetJavacPath());
 	
-	if (jdkPtr->GetVersion().IsGreaterOrEqual(1, 8)) {
-		cmd << " -source 1.7 -target 1.7";
+	if (jdkPtr->GetVersion().IsGreaterOrEqual(9)) {
+		cmd << " -source 1.8 -target 1.8";
 	}
 	
 	cmd << (projectPtr->IsDebug() ? " -g" : " -g:none");
