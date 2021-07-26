@@ -1,5 +1,4 @@
 topic "Charset and encoding issues";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
@@ -20,16 +19,17 @@ topic "Charset and encoding issues";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [2 $$19,0#53580023442335529039900623488521:gap]
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Charset and encoding issues&]
 [s3; [3 UTF`-8EE]&]
 [s5; U`+`+ is not using pure UTF`-8, but our extension that we have 
 named `"UTF`-8EE`" as for `"Error Escaped`".&]
-[s5; The thing is that not every sequence of bytes is valid UTF`-8. 
+[s5; The idea is that not every sequence of bytes is valid UTF`-8. 
 Now the issues is how to react to this problem when loading file 
 into TheIDE (or other editor). Of course, error message is one 
 solution, but we sometimes have to process text files that have 
-several section with different encodings, UTF`-8 being one of 
+several sections with different encodings, UTF`-8 being one of 
 them. It is of course cool to have editor capable of dealing 
 with this.&]
 [s5; So let us introduce UTF`-8EE. The idea is this `- when invalid 
@@ -44,4 +44,4 @@ bytes are simply interpreted with their original value. This
 basically means that any text can be converted from UTF`-8EE 
 to 16bit unicode (UCS2) and back and the result is equal to the 
 original text.&]
-[s0; ]
+[s0; ]]
