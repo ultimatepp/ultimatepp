@@ -322,7 +322,8 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 			   *s == '\t' && (t.align == ALIGN_RIGHT ? t.pos - format.lm > rcx
 			                                         : t.pos - format.lm >= rcx)) {
 				if(*s == '\n') // fieldparts with newline
-					space = NULL;Line& l = lines.line.Add();
+					space = NULL;
+				Line& l = lines.line.Add();
 				l.withtabs = withtabs;
 				l.pos = (int)(text - lines.text);
 				if(space) {

@@ -191,7 +191,6 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp = '.')
 	}
 	if(*s == '.' || *s == alt_dp) {
 		s++;
-		int dp = 0;
 		const CHAR *s0 = s;
 		double decimals = (double)ReadNumber();
 		number += decimals * pow10i(-(s - s0));
