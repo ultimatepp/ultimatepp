@@ -83,7 +83,7 @@ if [ -z "$UMK" ]; then
   UMK="./umk"
 fi
 
-if clang++ >/dev/null; then
+if clang++ 2>/dev/null; then
 	$UMK ./uppsrc ide CLANG -brs ./theide
 	$UMK ./uppsrc umk CLANG -brs ./umk
 else
