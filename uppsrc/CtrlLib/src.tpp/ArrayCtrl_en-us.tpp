@@ -1561,7 +1561,8 @@ is independent of it.&]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetCtrl`(int`,int`): [_^Ctrl^ Ctrl]_`*[* GetCtrl]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) int]_[*@3 col])&]
-[s2; Returns a pointer to ctrl if there is any, NULL otherwise.&]
+[s2; Returns a pointer to a ctrl at row [*@3 i] and column [*@3 col ]if 
+there is any, NULL otherwise.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:CreateCtrl`(int`,int`,bool`): [@(0.0.255) template]_<[@(0.0.255) class]_

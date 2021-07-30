@@ -306,6 +306,16 @@ void Ide::SaveFile(bool always)
 	issaving--;
 }
 
+int64 Ide::EditorHash()
+{
+	xxHash64Stream ss;
+	for(int i = 0; i < editor.GetLineCount(); i++) {
+		ss.Put(editor.GetUtf8Line(i));
+		ss.Put("\n");
+	}
+	return ss.Finish();
+}
+
 void Ide::SaveEditorFile(Stream& out)
 {
 	if(GetFileExt(editfile) == ".t") {
@@ -403,8 +413,11 @@ void Ide::FlushFile() {
 			RefreshBrowser();
 	}
 	else
-	if(!editfile.IsEmpty())
-		Filedata(editfile).undodata = editor.PickUndoData();
+	if(!editfile.IsEmpty()) {
+		FileData& fd = Filedata(editfile);
+		fd.undodata = editor.PickUndoData();
+		fd.filehash = EditorHash();
+	}
 	editfile.Clear();
 	editfile_repo = NOT_REPO_DIR;
 	editfile_isfolder = false;
@@ -569,6 +582,8 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
 		editor.SetEditPosSbOnly(fd.editpos);
 		if(!editor.IsView()) {
+			if(EditorHash() != fd.filehash)
+				fd.undodata.Clear();
 			editor.SetPickUndoData(pick(fd.undodata));
 			editor.SetLineInfo(fd.lineinfo);
 			editor.SetLineInfoRem(pick(fd.lineinforem));

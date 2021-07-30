@@ -522,6 +522,7 @@ public:
 		LineEdit::EditPos  editpos;
 		Point              columnline;
 		LineEdit::UndoData undodata;
+		int64              filehash; // make sure undodata work
 		LineInfo           lineinfo;
 		LineInfoRem        lineinforem;
 
@@ -805,6 +806,7 @@ public:
 		void   EditAnyFile();
 		bool   IsProjectFile(const String& f) const;
 		void   SaveEditorFile(Stream& out);
+		int64  EditorHash();
 		void   SaveFile0(bool always);
 		void   SaveFile(bool always = false);
 		void   DoSaveFile()    { SaveFile(); }
