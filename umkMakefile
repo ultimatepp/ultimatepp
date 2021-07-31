@@ -1,4 +1,4 @@
-UPPDIR1 = ./uppsrc/
+UPPDIR1 = /home/cxl/upp.src/uppsrc/
 
 UPPOUT = .cache/upp.out/
 CINC   =  -I$(UPPDIR1) `pkg-config --cflags libpng` `pkg-config --cflags freetype2` `pkg-config --cflags x11` `pkg-config --cflags fontconfig` `pkg-config --cflags xcb` `pkg-config --cflags expat` -I./ -I$(UPPOUT)
