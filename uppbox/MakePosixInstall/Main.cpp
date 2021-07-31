@@ -91,11 +91,8 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	Syx("svn update " + upp_src);
-	Vector<String> s = Split(Syx("svnversion " + upp_src), [](int c) { return IsDigit(c) ? 0 : c; });
-	if(s.GetCount() == 0)
-		Error("Invalid version");
-	String version = s.Top();
+	String version = AsString(atoi(LoadFile("u:/upp-revision")));
+	Log("version: " + version);
 	RLOG("version: " + version);
 	
 	DeleteFolderDeep(release);

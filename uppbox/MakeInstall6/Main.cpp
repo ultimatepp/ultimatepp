@@ -81,10 +81,7 @@ void Make(String pkg, String exe, String method = "CLANGx64")
 
 CONSOLE_APP_MAIN
 {
-	Vector<String> s = Split(Syx("c:/upp/SlikSvn/bin/svnversion " + uppsrc), NoDigit);
-	if(s.GetCount() == 0)
-		Error("Invalid version");
-	String version = s.Top();
+	String version = AsString(atoi(LoadFile("u:/upp-revision")));
 	Log("version: " + version);
 	
 	DeleteFolderDeep(tmp);
