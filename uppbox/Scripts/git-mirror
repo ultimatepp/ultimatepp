@@ -14,3 +14,4 @@ ssh -T git@github.com
 
 git remote set-url origin git@github.com:ultimatepp/mirror.git
 
+test of git->svn mirroring
