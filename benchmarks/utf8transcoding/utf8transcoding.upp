@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	utf8transcoding.cpp;
+
+mainconfig
+	"" = "";
+

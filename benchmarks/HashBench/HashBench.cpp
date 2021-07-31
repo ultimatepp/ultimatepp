@@ -4,18 +4,36 @@ using namespace Upp;
 
 #define LDUMP(x) x
 
-template <class T>
-String AsHash(const T& x)
-{
-	Sha1Stream s;
-	const_cast<T&>(x).Serialize(s);
-	return s.FinishString();
-}
-
 CONSOLE_APP_MAIN
 {
-	Pointf x(1, 2);
-	DDUMP(AsHash(x));
-	DDUMP(AsHash(Pointf(1, 2)));
-	DDUMP(AsHash(Pointf(2, 2)));
+	String s;
+	for(int i = 0; i < 1000000; i++)
+		s.Cat(Random());
+	
+	for(int i = 0; i < 100; i++) {
+		{
+			RTIMING("SHA1");
+			SHA1String(s);
+		}
+		{
+			RTIMING("SHA256");
+			SHA256String(s);
+		}
+		{
+			RTIMING("MD5");
+			MD5String(s);
+		}
+		{
+			RTIMING("xxHash");
+			xxHash(s);
+		}
+		{
+			RTIMING("Save");
+			SaveFile("c:/xxx/delete.bin", s);
+		}
+		{
+			RTIMING("Load");
+			LoadFile("c:/xxx/delete.bin");
+		}
+	}
 }
