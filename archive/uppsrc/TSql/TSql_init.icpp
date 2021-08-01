@@ -1,8 +1,0 @@
-#include "TSql.h"
-
-namespace Upp {
-
-#define TFILE <TSql/TSql.h>
-#include <Core/t.h>
-
-}
