@@ -50,6 +50,7 @@ void Ide::RunArgs() {
 	dlg.runmode <<= dlg.Breaker(222);
 	dlg.disable_uhd <<= disable_uhd;
 	dlg.darkmode <<= darkmode;
+	dlg.minimize <<= minimize;
 
 	auto Ins = [&](bool file) {
 		int l, h;
@@ -86,6 +87,7 @@ void Ide::RunArgs() {
 			stdout_file = ~dlg.stdout_file;
 			disable_uhd = ~dlg.disable_uhd;
 			darkmode = ~dlg.darkmode;
+			minimize = ~dlg.minimize;
 			dlg.arg.AddHistory();
 			{
 				StringStream ss;
@@ -138,6 +140,8 @@ void Ide::ExecuteBinary()
 	CreateHostRunDir(h);
 	h.ChDir(Nvl(rundir, GetFileFolder(target)));
 	String cmdline;
+	if(minimize)
+		Minimize();
 	if(!runexternal)
 		cmdline << '\"' << target << "\" ";
 	cmdline << ToSystemCharset(runarg);
