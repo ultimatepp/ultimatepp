@@ -32,7 +32,6 @@ void CppBuilder::AddCCJ(
 
 	bool main = HasFlag("MAIN");
 	bool is_shared = HasFlag("SO");
-	bool libout = !main && !HasFlag("NOLIB");
 	bool win32 = HasFlag("WIN32");
 
 	String pack_ident = MakeIdent(package);
@@ -159,7 +158,6 @@ void CppBuilder::AddCCJ(
 void MakeBuild::SaveCCJ(const String& fn, bool exporting)
 {
 	const char* eol = "\n";
-	const char* tab = "\t";
 
 	BeginBuilding(true);
 
