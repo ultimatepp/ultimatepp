@@ -68,9 +68,9 @@ RepoSync::RepoSync()
 	BackPaint();
 	credentials << [=] {
 		Index<String> hint;
-		for(const auto& w : work) {
-			String path = w.dir;
-			String s = decode(w.kind, SVN_DIR, GetSvnUrl(path), GIT_DIR, GetGitUrl(path), Null);
+		for(const auto& w : ~work) {
+			String path = w.key;
+			String s = decode(w.value, SVN_DIR, GetSvnUrl(path), GIT_DIR, GetGitUrl(path), Null);
 			if(s.GetCount())
 				hint.FindAdd(s);
 			if(path.GetCount())
@@ -247,8 +247,8 @@ void RepoSync::SyncList()
 	list.Clear();
 	credentials.Show();
 	svndir.Clear();
-	for(const auto& w : work) {
-		String path = GetFullPath(w.dir);
+	for(const auto& w : ~work) {
+		String path = GetFullPath(w.key);
 		int hi = list.GetCount();
 		Color bk = AdjustIfDark(LtYellow());
 		list.Add(REPOSITORY, path,
@@ -257,21 +257,21 @@ void RepoSync::SyncList()
 		         AttrText().Paper(bk));
 		list.SetLineCy(hi, Zy(26));
 		bool actions = false;
-		if(w.kind == SVN_DIR) {
+		if(w.value == SVN_DIR) {
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);
 			o.SizePos();
 			o.commit = true;
 			o.commit << [=] { SyncCommits(); };
 			o.update = true;
 			actions = ListSvn(path);
-			if(!actions || w.read_only) {
+			if(!actions) {
 				o.commit = false;
 				o.commit.Disable();
 			}
 			credentials.Show();
-			svndir.FindAdd(GetSvnDir(w.dir));
+			svndir.FindAdd(GetSvnDir(w.key));
 		}
-		if(w.kind == GIT_DIR) {
+		if(w.value == GIT_DIR) {
 			auto& o = list.CreateCtrl<GitOptions>(hi, 0, false);
 			o.SizePos();
 			o.commit = true;
@@ -279,21 +279,17 @@ void RepoSync::SyncList()
 			o.push = true;
 			o.pull = true;
 			actions = ListGit(path);
-			if(!actions || w.read_only) {
+			if(!actions) {
 				o.commit = false;
 				o.push = false;
 				o.commit.Disable();
-			}
-			if(w.read_only) {
-				o.push = false;
-				o.push.Disable();
 			}
 		}
 		if(actions) {
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
 			list.SetLineCy(list.GetCount() - 1, (3 * EditField::GetStdHeight()) + 4);
 			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsgRepo).VSizePos(2, 2).HSizePos());
-			int q = msgmap.Find(w.dir);
+			int q = msgmap.Find(w.key);
 			if(q >= 0) {
 				message.Top() <<= msgmap[q];
 				msgmap.Unlink(q);
@@ -353,19 +349,12 @@ void RepoSvnDel(const char *path)
 	}
 }
 
-void RepoSync::Dir(bool read_only, const char *dir, int kind)
+void RepoSync::Dir(const char *dir)
 {
-	Work& d = work.Add();
-	d.kind = kind;
-	d.dir = dir;
-	d.read_only = read_only;
-}
-
-void RepoSync::Dir(bool read_only, const char *dir)
-{
-	int kind = GetRepoKind(dir);
+	String d = dir;
+	int kind = GetRepo(d);
 	if(kind)
-		Dir(read_only, dir, kind);
+		work.GetAdd(kind == GIT_DIR ? d : String(dir)) = kind;
 }
 
 void RepoMoveSvn(const String& path, const String& tp)
@@ -395,7 +384,7 @@ again:
 		int repoi = 0;
 		for(int i = 0; i < list.GetCount(); i++)
 			if(list.Get(i, 0) == MESSAGE)
-				msgmap.GetAdd(work[repoi++].dir) = list.Get(i, 3);
+				msgmap.GetAdd(work.GetKey(repoi++)) = list.Get(i, 3);
 		return;
 	}
 	Disable();
@@ -417,7 +406,7 @@ again:
 	while(l < list.GetCount()) {
 		SvnOptions *svn = dynamic_cast<SvnOptions *>(list.GetCtrl(l, 0));
 		GitOptions *git = dynamic_cast<GitOptions *>(list.GetCtrl(l, 0));
-		String repo_dir = work[repoi++].dir;
+		String repo_dir = work.GetKey(repoi++);
 		String url;
 		if(git) {
 			url = GetGitUrl(repo_dir);
@@ -433,6 +422,16 @@ again:
 		l++;
 		String message;
 		String filelist;   // <-- list of files to update
+		if(git && git->pull)
+			if(sys.Git(repo_dir, "pull --ff-only", true)) {
+				while(l < list.GetCount()) {
+					int action = list.Get(l, 0);
+					if(action == REPOSITORY)
+						break;
+					l++;
+				}
+				continue;
+			}
 		bool commit = false;
 		while(l < list.GetCount()) {
 			int action = list.Get(l, 0);
@@ -470,8 +469,6 @@ again:
 			sys.CheckSystem(SvnCmd(sys, "update", repo_dir).Cat() << repo_dir);
 		if(git && git->push)
 			sys.Git(repo_dir, "push", true);
-		if(git && git->pull)
-			sys.Git(repo_dir, "pull --ff-only", true);
 	}
 	sys.Log("Done", Gray());
 	ResetBlitz();
@@ -562,21 +559,26 @@ String RepoSync::GetMsgs()
 	return Garble(StoreAsString(*this));
 }
 
-int GetRepoKind(const String& p)
+int GetRepo(String& path)
 {
-	if(IsNull(p))
+	if(IsNull(path))
 		return NOT_REPO_DIR;
-	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
+	if(DirectoryExists(AppendFileName(path, ".svn")) || DirectoryExists(AppendFileName(path, "_svn")))
 		return SVN_DIR;
-	String path = p;
 	String path0;
 	while(path != path0) {
 		path0 = path;
 		if(DirectoryExists(AppendFileName(path, ".git")))
 			return GIT_DIR;
-		DirectoryUp(path);
 		if(DirectoryExists(AppendFileName(path, ".svn")))
 			return SVN_DIR;
+		DirectoryUp(path);
 	}
 	return NOT_REPO_DIR;
+}
+
+int GetRepoKind(const String& p)
+{
+	String pp = p;
+	return GetRepo(pp);
 }

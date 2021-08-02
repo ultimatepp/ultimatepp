@@ -29,6 +29,7 @@ String SvnCmd(const char *cmd);
 enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);
+int    GetRepo(String& path);
 String GetSvnDir(const String& p);
 
 String GitCmd(const char *dir, const char *command);
@@ -64,13 +65,7 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 		GitOptions() { CtrlLayout(*this); }
 	};
 
-	struct Work {
-		bool   read_only;
-		int    kind;
-		String dir;
-	};
-	
-	Array<Work> work;
+	VectorMap<String, int> work;
 
 	String SvnCmd(UrepoConsole& sys, const char *svncmd, const String& dir);
 	bool ListGit(const String& path);
@@ -88,10 +83,8 @@ public:
 	void   SetMsgs(const String& s);
 	String GetMsgs();
 
-	void Dir(bool read_only, const char *dir, int kind);
-	void Dir(bool read_only, const char *dir);
-	void Dir(const char *dir, int kind)              { Dir(false, dir, kind); }
-	void Dir(const char *dir)                        { Dir(false, dir); }
+	void Dir(const char *dir, int kind);
+	void Dir(const char *dir);
 	void DoSync();
 	
 	RepoSync();

@@ -6,7 +6,8 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
-	ASSERT(IsNull(Sys("svn status /home/cxl/upp.src")));
-	
+	chdir("/home/cxl/upp.src");
+	ASSERT(Sys("git status").Find("nothing to commit, working tree clean") >= 0);
+
 	LOG("=========== OK");
 }
