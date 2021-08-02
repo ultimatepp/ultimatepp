@@ -91,7 +91,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String version = AsString(atoi(LoadFile("u:/upp-revision")));
+	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))));
 	Log("version: " + version);
 	RLOG("version: " + version);
 	

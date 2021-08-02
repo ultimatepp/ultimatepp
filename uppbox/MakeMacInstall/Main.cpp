@@ -74,11 +74,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 CONSOLE_APP_MAIN
 {
-	Syx("svn update " + upp_src);
-	Vector<String> s = Split(Syx("svnversion " + upp_src), NoDigit);
-	if(s.GetCount() == 0)
-		Error("Invalid version");
-	String version = s.Top();
+	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))));
 	Log("version: " + version);
 	
 	DeleteFolderDeep(release);
