@@ -337,8 +337,6 @@ public:
 
 	void Reserve(int r);
 	
-//	String0& operator=(const String0& s) { Free(); Set0(s); return *this; }
-
 	String0()                   {}
 	~String0()                  { Free(); }
 };
@@ -398,14 +396,13 @@ public:
 	static String GetVoid();
 	bool   IsVoid() const;
 	
-	enum SmallHint { SMALL_HINT };
-	
-	String(const char *s, int n, SmallHint)                { ASSERT(n <= 14); Zero(); SLen() = n; memcpy8(chr, s, n); Dsyn(); }
-
 	friend void Swap(String& a, String& b)                 { a.Swap(b); }
 	
 	String(const std::string& s)                           { String0::Set0(s.c_str(), (int)s.length()); }
 	std::string ToStd() const                              { return std::string(Begin(), End()); }
+	
+	template <class Maker>
+	static String MakeSmall(Maker m)                       { String s; int n = m(s.chr); ASSERT(n <= 14); s.SLen() = n; s.Dsyn(); return s; }
 };
 
 inline std::string to_string(const String& s)              { return std::string(s.Begin(), s.End()); }

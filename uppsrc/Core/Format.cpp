@@ -27,6 +27,159 @@ String  VFormat(const char *fmt, va_list ptr) {
 
 // Formatting routines ---------------------------
 
+// utoa32, utoa64 inspired by
+// https://github.com/miloyip/itoa-benchmark/blob/940542a7770155ee3e9f2777ebc178dc899b43e0/src/branchlut.cpp
+// by Milo Yip
+
+namespace utoa_private {
+
+const char s100[] =
+    "00010203040506070809"
+    "10111213141516171819"
+    "20212223242526272829"
+    "30313233343536373839"
+    "40414243444546474849"
+    "50515253545556575859"
+    "60616263646566676869"
+    "70717273747576777879"
+    "80818283848586878889"
+    "90919293949596979899"
+;
+
+force_inline
+void  Do2(char *t, dword d) {
+#ifdef CPU_UNALIGNED
+	*(word *)t = *((word *)s100 + d);
+#else
+	auto Copy2 = [](char *t, dword d) {
+		t[0] = s[2 * d];
+		t[1] = s[2 * d + 1];
+	};
+#endif
+};
+
+force_inline
+void  Do4(char *t, dword value) {
+	Do2(t, value / 100);
+	Do2(t + 2, value % 100);
+}
+
+force_inline
+void  Do8(char *t, dword value) {
+	Do4(t, value / 10000);
+	Do4(t + 4, value % 10000);
+}
+
+};
+
+int utoa32(dword value, char *buffer)
+{
+	using namespace utoa_private;
+
+	if (value < 10000) {
+		if(value < 100) {
+			if(value < 10) {
+				*buffer = value + '0';
+				return 1;
+			}
+			Do2(buffer, value % 100);
+			return 2;
+		}
+
+		if(value < 1000) {
+			*buffer = value / 100 + '0';
+			Do2(buffer + 1, value % 100);
+			return 3;
+		}
+		
+		Do4(buffer, value);
+		return 4;
+	}
+	else if (value < 100000000) {
+		if(value < 10000000) {
+			if(value < 100000) {
+				*buffer = value / 10000 + '0';
+				Do4(buffer + 1, value % 10000);
+				return 5;
+			}
+			if(value < 1000000) {
+				Do2(buffer, value / 10000);
+				Do4(buffer + 2, value % 10000);
+				return 6;
+			}
+			*buffer = value / 1000000 + '0';
+			Do2(buffer + 1, value / 10000 % 100);
+			Do4(buffer + 3, value % 10000);
+			return 7;
+		}
+		
+		Do8(buffer, value);
+		return 8;
+	}
+	else {
+		dword a = value / 100000000; // 2 digits
+		value %= 100000000;
+
+		if(a < 10) {
+			*buffer = a + '0';
+			Do8(buffer + 1, value);
+			return 9;
+		}
+
+		Do2(buffer, a);
+		Do8(buffer + 2, value);
+		return 10;
+	}
+}
+
+int utoa64(uint64 value, char *buffer)
+{
+	using namespace utoa_private;
+
+	if(value <= 0xffffffff)
+		return utoa32((dword)value, buffer);
+	if(value < (uint64)1000000000 * 100000000) {
+		int q = utoa32(value / 100000000, buffer);
+		Do8(buffer + q, value % 100000000);
+		return q + 8;
+	}
+	int q = utoa32(value / ((uint64)100000000 * 100000000), buffer);
+	Do8(buffer + q, value / 100000000 % 100000000);
+	Do8(buffer + 8 + q, value % 100000000);
+	return q + 16;
+}
+
+String FormatUInt64(uint64 w)
+{
+	if(w < 100000000000000)
+		return String::MakeSmall([&](char *s) { return utoa64(w, s); });
+	char h[32];
+	return String(h, utoa64(w, h));
+}
+
+String FormatInt64(int64 i)
+{
+	if(IsNull(i))
+		return String();
+	if(i < 0) {
+		i = -i;
+		if(i < 10000000000000) {
+			return String::MakeSmall([&](char *s) {
+				*s++ = '-';
+				return utoa64(i, s) + 1;
+			});
+		}
+		char h[32];
+		*h = '-';
+		return String(h, utoa64(i, h + 1) + 1);
+	}
+	if(i < 100000000000000) {
+		return String::MakeSmall([&](char *s) { return utoa64(i, s); });
+	}
+	char h[32];
+	return String(h, utoa64(i, h));
+}
+
 String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper)
 {
 	enum { BUFFER = sizeof(int) * 8 + 1 };
@@ -65,11 +218,6 @@ String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper
 		memset(o, lpad, pad);
 	memcpy8(o + pad, p, dwd);
 	return String(out);
-}
-
-String FormatInt(int i)
-{
-	return FormatIntBase(i, 10, 0, ' ', 0);
 }
 
 String FormatIntDec(int i, int width, char lpad, bool always_sign)
@@ -152,18 +300,6 @@ String FormatIntRoman(int i, bool upper)
 	return out;
 }
 
-String Format64(uint64 a)
-{
-	char b[50];
-	char *p = b + 50;
-	do {
-		*--p = char(a % 10 + '0');
-		a /= 10;
-	}
-	while(a);
-	return String(p, b + 50);
-}
-
 String Format64Hex(uint64 a)
 {
 	char b[50];
@@ -176,16 +312,9 @@ String Format64Hex(uint64 a)
 	return String(p, b + 50);
 }
 
-String FormatInteger(int a)            { return IsNull(a) ? String() : FormatInt(a); }
-String FormatUnsigned(unsigned long a) { return Sprintf("%u", a); }
 String FormatDouble(double a)          { return IsNull(a) ? String() : IsNaN(a) || IsInf(a) ? "?" : FormatDouble(a, 17, FD_REL); }
 String FormatBool(bool a)              { return a ? "true" : "false"; }
 String FormatPtr(const void *p)        { return "0x" + FormatHex(p); }
-
-String FormatInt64(int64 a)
-{
-	return IsNull(a) ? String() : a < 0 ? "-" + Format64(-a) : Format64(a);
-}
 
 static char *PutDigits(char *out, unsigned number, int count)
 {

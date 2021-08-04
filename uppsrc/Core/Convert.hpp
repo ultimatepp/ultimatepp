@@ -205,3 +205,23 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp = '.')
 	result = number;
 	return s;
 }
+
+inline
+String FormatUnsigned(dword w)
+{
+	return String::MakeSmall([&](char *s) { return utoa32(w, s); });
+}
+
+inline
+String FormatInt(int i)
+{
+	return String::MakeSmall([&](char *s) {
+		if(IsNull(i))
+			return 0;
+		if(i < 0) {
+			*s++ = '-';
+			return utoa32(-i, s) + 1;
+		}
+		return utoa32(i, s);
+	});
+}

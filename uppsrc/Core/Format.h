@@ -1,12 +1,18 @@
+int utoa32(dword value, char *buffer);
+int utoa64(uint64 value, char *buffer);
+
+String FormatUnsigned(dword w);
+String FormatInt(int i);
+String FormatUInt64(uint64 w);
+String FormatInt64(int64 i);
+
 String         FormatIntBase(int i, int base, int width = 0, char lpad = ' ', int sign = 0, bool upper = false);
-String         FormatInt(int i);
 String         FormatIntDec(int i, int width, char lpad = ' ', bool always_sign = false);
 String         FormatIntHex(int i, int width = 8, char lpad = '0');
 String         FormatIntHexUpper(int i, int width = 8, char lpad = '0');
 String         FormatIntOct(int i, int width = 12, char lpad = '0');
 String         FormatIntRoman(int i, bool upper = false);
 String         FormatIntAlpha(int i, bool upper = true);
-String         Format64(uint64 a);
 String         Format64Hex(uint64 a);
 
 #ifdef CPU_64
@@ -17,22 +23,23 @@ inline String  FormatIntHex(const void *ptr) { return FormatIntHex((int)(uintptr
 inline String  FormatHex(const void *ptr)    { return FormatIntHex((int)(uintptr_t)ptr); }
 #endif
 
-String         FormatInteger(int a);
-String         FormatInt64(int64 a);
-String         FormatUnsigned(unsigned long a);
 String         FormatDouble(double a);
 String         FormatBool(bool a);
 
-template<> inline String AsString(const short& a)           { return FormatInteger(a); }
+template<> inline String AsString(const short& a)           { return FormatInt(a); }
 template<> inline String AsString(const unsigned short& a)  { return FormatUnsigned(a); }
-template<> inline String AsString(const int& a)             { return FormatInteger(a); }
+template<> inline String AsString(const int& a)             { return FormatInt(a); }
 template<> inline String AsString(const unsigned int& a)    { return FormatUnsigned(a); }
 template<> inline String AsString(const long& a)            { return FormatInt64(a); }
-template<> inline String AsString(const unsigned long& a)   { return Format64(a); }
+template<> inline String AsString(const unsigned long& a)   { return FormatUInt64(a); }
+template<> inline String AsString(const int64& a)           { return FormatInt64(a); }
+template<> inline String AsString(const uint64& a)          { return FormatUInt64(a); }
 template<> inline String AsString(const double& a)          { return FormatDouble(a); }
 template<> inline String AsString(const float& a)           { return FormatDouble(a); }
-template<> inline String AsString(const int64& a)           { return FormatInt64(a); }
-template<> inline String AsString(const uint64& a)          { return Format64(a); }
+
+// deprecated
+inline String         FormatInteger(int a)                  { return FormatInt(a); }
+inline String         Format64(uint64 a)                    { return FormatUInt64(a); }
 
 enum
 {
