@@ -51,10 +51,8 @@ void  Do2(char *t, dword d) {
 #ifdef CPU_UNALIGNED
 	*(word *)t = *((word *)s100 + d);
 #else
-	auto Copy2 = [](char *t, dword d) {
-		t[0] = s[2 * d];
-		t[1] = s[2 * d + 1];
-	};
+	t[0] = s[2 * d];
+	t[1] = s[2 * d + 1];
 #endif
 };
 
