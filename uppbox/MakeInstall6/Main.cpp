@@ -81,7 +81,7 @@ void Make(String pkg, String exe, String method = "CLANGx64")
 
 CONSOLE_APP_MAIN
 {
-	String version = AsString(atoi(LoadFile("u:/upp-revision")));
+	String version = AsString(atoi(LoadFile("u:/upp-revision")) + 2270);
 	Log("version: " + version);
 	
 	DeleteFolderDeep(tmp);

@@ -91,7 +91,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))));
+	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))) + 2270);
 	RLOG("version: " + version);
 	
 	DeleteFolderDeep(release);

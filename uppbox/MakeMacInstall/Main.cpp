@@ -74,7 +74,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 CONSOLE_APP_MAIN
 {
-	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))));
+	String version = AsString(atoi(LoadFile(GetHomeDirFile("upp-revision"))) + 2270);
 	Log("version: " + version);
 	
 	DeleteFolderDeep(release);
