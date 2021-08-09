@@ -1240,7 +1240,7 @@ inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
 
 void InstantSetup();
 
-bool SetupSVNTrunk();
+bool SetupGITMaster();
 
 String UppHub();
 void   UppHubAuto(const String& s);

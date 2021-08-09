@@ -166,7 +166,7 @@ void AppMain___()
 #endif
 
 	if(!hasvars)
-		SetupSVNTrunk();
+		SetupGITMaster();
 
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();

@@ -480,9 +480,9 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	Vector<String> d = GetSvnDirs();
 	if(HasSvn()) {
 		bar.Separator();
-		bar.Add("Checkout and setup U++ SVN trunk sources..", [=] {
+		bar.Add("Clone U++ GitHub sources..", [=] {
 			String vars = base.Get(0);
-			SetupSVNTrunk();
+			SetupGITMaster();
 			SyncBase(vars);
 		});
 	}
