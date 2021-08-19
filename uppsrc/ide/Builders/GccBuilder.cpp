@@ -90,15 +90,16 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
-				String fn = srcfile[j];
+				String fn = NormalizePath(srcfile[j]);
 				String ext = GetSrcType(fn);
 				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".brc", ".s", ".ss") >= 0 ||
 				   objectivec && findarg(ext, ".mm", ".m") >= 0 ||
-				   +
 				   (!release && blitz && ext == ".icpp") ||
 				   ext == ".rc" && HasFlag("WIN32")) {
-					sfile.Add(fn);
-					soptions.Add(gop);
+					if(FindIndex(sfile, fn) < 0) {
+						sfile.Add(fn);
+						soptions.Add(gop);
+					}
 				}
 				else
 				if(ext == ".icpp") {

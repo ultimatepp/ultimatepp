@@ -212,12 +212,14 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
-				String fn = srcfile[j];
+				String fn = NormalizePath(srcfile[j]);
 				String ext = ToLower(GetFileExt(fn));
 				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".rc", ".brc") >= 0 ||
 				   (!release && blitz && ext == ".icpp")) {
-					sfile.Add(fn);
-					soptions.Add(gop);
+					if(FindIndex(sfile, fn) < 0) {
+						sfile.Add(fn);
+						soptions.Add(gop);
+					}
 				}
 				else
 				if(ext == ".icpp") {
