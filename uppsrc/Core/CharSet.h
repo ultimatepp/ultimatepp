@@ -251,6 +251,9 @@ bool    SaveFileBOM(const char *path, const WString& data);
 bool    SaveStreamBOMUtf8(Stream& out, const String& data);
 bool    SaveFileBOMUtf8(const char *path, const String& data);
 
+bool    Utf8BOM(Stream& in);
+
+
 // Deprecated
 
 word UnicodeCombine(word chr, word combine);

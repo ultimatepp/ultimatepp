@@ -705,6 +705,12 @@ true on success.&]
 true on success.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:Utf8BOM`(Upp`:`:Stream`&`): [@(0.0.255) bool]_[* Utf8BOM]([_^Upp`:`:Stream^ Str
+eam][@(0.0.255) `&]_[*@3 in])&]
+[s2;%% Tests for and skips UTF`-8 BOM mark in the seekable Stream 
+[%-*@3 in].&]
+[s3;%% &]
+[s4; &]
 [s5;:FromUtf8`(const char`*`,int`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 `_s], [@(0.0.255) int]_[*@3 len])&]
 [s2;%% Converts UTF`-8 to UNICODE string. Any wrong bytes and sequences 

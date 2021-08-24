@@ -2,6 +2,15 @@
 
 namespace Upp {
 
+bool Utf8BOM(Stream& in)
+{
+	int64 pos = in.GetPos();
+	if(in.Get() == 0xef && in.Get() == 0xbb && in.Get() == 0xbf)
+		return true;
+	in.Seek(pos);
+	return false;
+}
+
 static void sLoadBom(Stream& in, String *t, WString *wt, byte def_charset) 
 {
 	if(in.IsOpen()) {
