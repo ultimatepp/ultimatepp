@@ -18,6 +18,7 @@ file
 	Workspace.cpp,
 	usc.cpp,
 	BinObj.cpp,
+	Util.cpp,
 	Host readonly separator,
 	Host.h,
 	Host.cpp,

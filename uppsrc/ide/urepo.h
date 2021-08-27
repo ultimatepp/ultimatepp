@@ -26,10 +26,6 @@ String RepoSys(const char *cmd);
 
 String SvnCmd(const char *cmd);
 
-enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
-
-int    GetRepoKind(const String& p);
-int    GetRepo(String& path);
 String GetSvnDir(const String& p);
 
 String GitCmd(const char *dir, const char *command);

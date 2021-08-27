@@ -363,7 +363,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			String svn_info;
 			String build_info = "\"$(UPPOUT)/build_info.h\"";
 			if(makefile_svn_revision) {
-				Vector<String> bi = SvnInfo(wspc[i]);
+				Vector<String> bi = RepoInfo(wspc[i]);
 				for(int i = 0; i < bi.GetCount(); i++)
 					svn_info << "	echo '" << bi[i] << "' >> " << build_info << "\n";
 			}

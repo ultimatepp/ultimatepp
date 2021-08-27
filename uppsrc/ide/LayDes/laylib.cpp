@@ -311,7 +311,8 @@ void LayLib()
 	global.Add("SColorHighlight", EscColor(SColorHighlight));
 
 	global.Add("IntNull", (int)Null);
-	global.Add("DblNullLim", DOUBLE_NULL_LIM);
+	global.Add("DblNull", (double)Null);
+	global.Add("DblNullLim", -1e307);
 }
 
 void EscDraw::DrawRect(EscEscape& e)

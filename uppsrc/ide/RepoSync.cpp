@@ -558,27 +558,3 @@ String RepoSync::GetMsgs()
 {
 	return Garble(StoreAsString(*this));
 }
-
-int GetRepo(String& path)
-{
-	if(IsNull(path))
-		return NOT_REPO_DIR;
-	if(DirectoryExists(AppendFileName(path, ".svn")) || DirectoryExists(AppendFileName(path, "_svn")))
-		return SVN_DIR;
-	String path0;
-	while(path != path0) {
-		path0 = path;
-		if(DirectoryExists(AppendFileName(path, ".git")))
-			return GIT_DIR;
-		if(DirectoryExists(AppendFileName(path, ".svn")))
-			return SVN_DIR;
-		DirectoryUp(path);
-	}
-	return NOT_REPO_DIR;
-}
-
-int GetRepoKind(const String& p)
-{
-	String pp = p;
-	return GetRepo(pp);
-}

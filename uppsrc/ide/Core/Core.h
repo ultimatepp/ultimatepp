@@ -560,4 +560,9 @@ void DeletePCHFiles();
 
 String GetLineEndings(const String& data, const String& default_eol = "\r\n");
 
+enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
+
+int    GetRepoKind(const String& p);
+int    GetRepo(String& path);
+
 #endif

@@ -476,28 +476,12 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	return cc;
 }
 
-bool IsSvnDir2(const String& p)
-{ // this is a cope of usvn/IsSvnDir to avoid modular issues
-	if(IsNull(p))
-		return false;
-	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
-		return true;
-	String path = p;
-	String path0;
-	while(path != path0) {
-		path0 = path;
-		path = GetFileFolder(path);
-		if(DirectoryExists(AppendFileName(path, ".svn")))
-			return true;
-	}
-	return false;
-}
-
-Vector<String> SvnInfo(const String& package)
+Vector<String> RepoInfo(const String& package)
 {
 	Vector<String> info;
 	String d = GetFileFolder(PackagePath(package));
-	if(IsSvnDir2(d)) {
+	int repo = GetRepoKind(d);
+	if(repo == SVN_DIR) {
 		String v = Sys("svnversion " + d);
 		if(IsDigit(*v))
 			info.Add("#define bmSVN_REVISION " + AsCString(TrimBoth(v)));
@@ -510,6 +494,11 @@ Vector<String> SvnInfo(const String& package)
 				break;
 			}
 		}
+	}
+	if(repo == GIT_DIR) {
+		String v = Sys("git rev-list --count HEAD");
+		if(IsDigit(*v))
+			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
 	}
 	return info;
 }
@@ -532,7 +521,7 @@ void CppBuilder::SaveBuildInfo(const String& package)
 	info << "#define bmUSER    " << AsCString(GetUserName()) << "\r\n";
 
 	if(package == mainpackage)
-		info << Join(SvnInfo(package), "\r\n");
+		info << Join(RepoInfo(package), "\r\n");
 }
 
 String CppBuilder::DefinesTargetTime(const char *sep, const String& package, const Package& pkg)

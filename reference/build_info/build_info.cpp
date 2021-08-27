@@ -19,6 +19,9 @@ CONSOLE_APP_MAIN
 #ifdef bmSVN_REVISION
 	LOG("Svn revision " << bmSVN_REVISION);
 #endif
+#ifdef bmGIT_REVCOUNT
+	LOG("Git revcount " << bmGIT_REVCOUNT);
+#endif
 #ifdef bmSVN_URL
 	LOG("Svn url " << bmSVN_URL);
 #endif
