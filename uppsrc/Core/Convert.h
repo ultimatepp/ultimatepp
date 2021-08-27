@@ -127,10 +127,10 @@ public:
 	double         GetMax() const                    { return maxval; }
 	bool           IsNotNull() const                 { return notnull; }
 
-	static double  GetDefaultMin()                   { return DOUBLE_NULL_LIM; }
-	static double  GetDefaultMax()                   { return -DOUBLE_NULL_LIM; }
+	static double  GetDefaultMin()                   { return -std::numeric_limits<double>::max(); }
+	static double  GetDefaultMax()                   { return std::numeric_limits<double>::max(); }
 
-	ConvertDouble(double minval = DOUBLE_NULL_LIM, double maxval = -DOUBLE_NULL_LIM,
+	ConvertDouble(double minval = GetDefaultMin(), double maxval = GetDefaultMax(),
 		          bool notnull = false);
 };
 

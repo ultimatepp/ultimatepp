@@ -257,8 +257,7 @@ public:
 const int    INT_NULL           =    INT_MIN;
 const int64  INT64_NULL         =    INT64_MIN;
 
-const double DOUBLE_NULL        =    -1.0E+308;
-const double DOUBLE_NULL_LIM    =    -1.0E+307;
+constexpr double DOUBLE_NULL    =    -std::numeric_limits<double>::infinity();
 
 class Nuller {
 public:
@@ -278,7 +277,7 @@ template <class T> bool IsNull(const T& x)       { return x.IsNullInstance(); }
 
 template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
 template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
-template<> inline bool  IsNull(const double& r)  { return !(std::abs(r) < -DOUBLE_NULL); }
+template<> inline bool  IsNull(const double& r)  { return !(std::abs(r) < std::numeric_limits<double>::infinity()); }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
 
 #include "Heap.h"

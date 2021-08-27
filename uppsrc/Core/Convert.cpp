@@ -537,7 +537,7 @@ const ConvertInt& StdConvertInt() { static ConvertInt h; return h; }
 const ConvertInt& StdConvertIntNotNull() { static ConvertInt h(-INT_MAX, INT_MAX, true); return h; }
 
 const ConvertDouble& StdConvertDouble() { static ConvertDouble h; return h; }
-const ConvertDouble& StdConvertDoubleNotNull() { static ConvertDouble h(DOUBLE_NULL_LIM, -DOUBLE_NULL_LIM, true); return h; }
+const ConvertDouble& StdConvertDoubleNotNull() { static ConvertDouble h(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), true); return h; }
 
 const ConvertDate& StdConvertDate() { static ConvertDate h; return h; }
 const ConvertDate& StdConvertDateNotNull() { static ConvertDate h(Date(0, 0, 0), Date(3000, 12, 31), true); return h; }

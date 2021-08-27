@@ -25,7 +25,7 @@ struct Complex : std::complex<double>
 	void Jsonize(JsonIO& jio);
 };
 
-template<> inline bool IsNull(const Complex& r) { return r.real() < DOUBLE_NULL_LIM || r.imag() < DOUBLE_NULL_LIM; }
+template<> inline bool IsNull(const Complex& r) { return IsNull(r.real()) || IsNull(r.imag()); }
 template<> inline hash_t GetHashValue(const Complex& x) { return CombineHash(x.real(), x.imag()); }
 template<> inline String AsString(const std::complex<double>& x) { return String().Cat() << "(" << x.real() << "," << x.imag() << ")"; }
 template<> inline String AsString(const Complex& x) { return AsString((const std::complex<double>&)x); }
