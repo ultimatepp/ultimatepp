@@ -4,6 +4,7 @@ IsNull(x) = true
 IsNull(y) = false
 IsNull(1e300) = false
 IsNull(1e-320) = false
+IsNull(DBL_MAX) = false
 IsNull(0) = false
 IsNull(log(-1)) = true
 IsNull(1 / zero) = true

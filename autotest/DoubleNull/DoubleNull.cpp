@@ -12,9 +12,9 @@ CONSOLE_APP_MAIN
 	RDUMP(IsNull(y));
 	RDUMP(IsNull(1e300));
 	RDUMP(IsNull(1e-320));
+	RDUMP(IsNull(DBL_MAX));
 	RDUMP(IsNull(0));
 	RDUMP(IsNull(log(-1)));
-	
 	RDUMP(IsNull(1 / zero));
 
 	CheckLogEtalon();
