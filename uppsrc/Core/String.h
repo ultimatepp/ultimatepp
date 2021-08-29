@@ -229,6 +229,7 @@ class String0 : Moveable<String0> {
 	void SetSLen(int l);
 
 	char *Ptr()                   { return IsSmall() ? chr : ptr; }
+	char *Alloc_(int count, char& kind);
 	char *Alloc(int count, char& kind);
 
 	static String0::Rc voidptr[2];

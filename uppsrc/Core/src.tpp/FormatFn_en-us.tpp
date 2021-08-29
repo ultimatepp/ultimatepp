@@ -110,93 +110,104 @@ oid]_`*[*@3 ptr])&]
 [s2; Same as FormatIntHex.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:FormatDouble`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* F
+ormatDouble]([@(0.0.255) char]_`*[*@3 t], [@(0.0.255) double]_[*@3 x], 
+[@(0.0.255) int]_[*@3 precision], [_^Upp`:`:dword^ dword]_[*@3 flags]_`=_FD`_TOLERANCE([@3 6
+])`|FD`_MINIMAL`_EXP[@(0.0.255) `|]FD`_SPECIAL)&]
+[s5;:Upp`:`:FormatDouble`(double`,int`,Upp`:`:dword`):%- [_^Upp`:`:String^ String]_[* For
+matDouble]([@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision], 
+[_^Upp`:`:dword^ dword]_[*@3 flags]_`=_FD`_TOLERANCE([@3 6])`|FD`_MINIMAL`_EXP[@(0.0.255) `|
+]FD`_SPECIAL)&]
+[s2; Formats a floating point number [%-*@3 d] in decimal notation 
+automatically selecting ordinary or scientific (exponential) 
+notation according to the FD`_TOLERANCE flag.&]
+[s2; The first variant requires the buffer of size [%-*@3 precision] 
+`+ 30 and returns a pointer after the last character produced 
+(terminating `'`\0`' is NOT appended).&]
+[s2; [%-*@3 precision]  represents the number of valid digits.&]
+[s2; [%-*@3 flags] can be a binary combination &]
+[s0; &]
+[ {{2691:7309<288;h1; [s0; FD`_SIGN]
+:: [s0; [/ always prepend sign (`+10)]]
+:: [s0; FD`_MINUS0]
+:: [s0; [/ print minus sign for negative zero (`-0.0)]]
+:: [s0; FD`_SIGN`_EXP]
+:: [s0; [/ always prepend sign to exponent (1e`+2)]]
+:: [s0; FD`_CAP`_E]
+:: [s0; [/ capital E for exponent (1E10)]]
+:: [s0; FD`_ZEROS]
+:: [s0; [/ keep trailing zeros (1.25000)]]
+:: [s0; FD`_MINIMAL`_EXP]
+:: [s0; [/ use minimal exponent (1e5 instead 1e`+05)]]
+:: [s0; FD`_TOLERANCE(x)]
+:: [s0; [/ number of zeroes allowed between the decimal points and valid 
+digits to the right before switching to E notation]]
+:: [s0; FD`_SPECIAL]
+:: [s0; [/ allow ][*/ nan][/  / ][*/ inf][/  printing (otherwise such numbers 
+are printed as empty)]]
+:: [s0; FD`_FIX]
+:: [s0; [/ always use fixed notation]]
+:: [s0; FD`_EXP]
+:: [s0; [/ always use exponential notation]]}}&]
+[s0; &]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FormatDouble`(char`*`,double`):%- [@(0.0.255) char]_`*[* FormatDouble]([@(0.0.255) c
+har]_`*[*@3 t], [@(0.0.255) double]_[*@3 x])&]
 [s5;:FormatDouble`(double`):%- [_^String^ String]_[* FormatDouble]([@(0.0.255) double]_[*@3 a
 ])&]
-[s2; Formats a floating point [%-*@3 a] in decimal notation automatically 
-selecting ordinary or scientific (exponential) notation according 
-to the absolute value of a. In ordinary notation, the number 
-is formatted to 10 significant digits; in exponential notation, 
-the mantissa is formatted to 10 decimal digits.&]
+[s2; Same as FormatDouble with flags FD`_TOLERANCE(6)`|FD`_MINIMAL`_EXP`|FD`_SPECIAL.
+ Should represent the best default formatting. The first variant 
+requires the buffer of size [%-*@3 precision] `+ 30 and returns 
+a pointer after the last character produced terminating `'`\0`' 
+is NOT appended).&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FormatE`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
+E]([@(0.0.255) char]_`*[*@3 t], [@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision],
+ [_^Upp`:`:dword^ dword]_[*@3 flags])&]
+[s5;:Upp`:`:FormatE`(double`,int`,Upp`:`:dword`):%- [_^Upp`:`:String^ String]_[* FormatE](
+[@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision], [_^Upp`:`:dword^ dword]_[*@3 f
+lags])&]
+[s2; With default [%-*@3 flags] provides double formatting equivalent 
+to %e printf format. The first variant requires the buffer of 
+size [%-*@3 precision] `+ 30 and returns a pointer after the last 
+character produced terminating `'`\0`' is NOT appended).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FormatF`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
+F]([@(0.0.255) char]_`*[*@3 t], [@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision],
+ [_^Upp`:`:dword^ dword]_[*@3 flags])&]
+[s5;:Upp`:`:FormatF`(double`,int`,Upp`:`:dword`):%- [_^Upp`:`:String^ String]_[* FormatF](
+[@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision], [_^Upp`:`:dword^ dword]_[*@3 f
+lags])&]
+[s2; With default [%-*@3 flags] provides double formatting equivalent 
+to %f printf format. The first variant requires the buffer of 
+size [%-*@3 precision] `+ 400 and returns a pointer after the last 
+character produced terminating `'`\0`' is NOT appended).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FormatG`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
+G]([@(0.0.255) char]_`*[*@3 t], [@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision],
+ [_^Upp`:`:dword^ dword]_[*@3 flags])&]
+[s5;:Upp`:`:FormatG`(double`,int`,Upp`:`:dword`):%- [_^Upp`:`:String^ String]_[* FormatG](
+[@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 precision], [_^Upp`:`:dword^ dword]_[*@3 f
+lags])&]
+[s2; With default [%-*@3 flags] provides double formatting equivalent 
+to %g printf format. The first variant requires the buffer of 
+size [%-*@3 precision] `+ 30 and returns a pointer after the last 
+character produced terminating `'`\0`' is NOT appended).&]
+[s0; &]
 [s4;%- &]
 [s5;:FormatBool`(bool`):%- [_^String^ String]_[* FormatBool]([@(0.0.255) bool]_[*@3 a])&]
 [s2; Formats a boolean [%-*@3 a] as one of the fixed words `"true`" 
 or `"false`" (regardless of language settings).&]
 [s3; &]
-[s4;%- &]
-[s5;:FormatDouble`(double`,int`,int`,int`):%- [_^String^ String]_[* FormatDouble]([@(0.0.255) d
-ouble]_[*@3 d], [@(0.0.255) int]_[*@3 digits], [@(0.0.255) int]_[*@3 flags]_`=_[@3 0], 
-[@(0.0.255) int]_[*@3 fill`_exp]_`=_[@3 0])&]
-[s2; Formats a floating point number [%-*@3 d] in decimal notation 
-automatically selecting ordinary or scientific (exponential) 
-notation according to the absolute value of a and the given number 
-of [%-*@3 digits]. In the (default) absolute decimal mode, a number 
-is formatted in exponential notation whenever its absolute value 
-exceeds the interval `[1e`-15, 1e`+15`]; in relative (significant) 
-decimal mode (FD`_REL), a number is formatted in exponential 
-notation whenever its absolute value exceeds the interval `[10`^`-<2 
-`* digits>, 10`^`+<2 `* digits>`]. [%-*@3 flags] can be a binary 
-combination ([@(0.0.255) `|]) of&]
-[s0; &]
-[ {{2098:7902<288;h1; [s0; FD`_SIGN]
-:: [s0; [/ always prepend sign (`+10)]]
-:: [s0; FD`_REL]
-:: [s0; [/ relative decimal places (valid digits)]]
-:: [s0; FD`_SIGN`_EXP]
-:: [s0; [/ always prepend sign to exponent (1e`+2)]]
-:: [s0; FD`_CAP`_E]
-:: [s0; [/ capital E for exponent (1E10)]]
-:: [s0; FD`_ZERO]
-:: [s0; [/ keep trailing zeros (1.25000)]]
-:: [s0; FD`_FIX]
-:: [s0; [/ always use fixed notation (FormatDouble only)]]
-:: [s0; FD`_EXP]
-:: [s0; [/ always use exponential notation (FormatDouble only)]]}}&]
-[s2; &]
-[s2; [*@3 fill`_exp ]is left zero`-padding of exponent in exponential 
-notation&]
-[s3; &]
-[s4;%- &]
-[s5;:FormatDoubleFix`(double`,int`,int`):%- [_^String^ String]_[* FormatDoubleFix]([@(0.0.255) d
-ouble]_[*@3 d], [@(0.0.255) int]_[*@3 digits], [@(0.0.255) int]_[*@3 flags]_`=_[@3 0])&]
-[s2; Formats a floating point number [%-*@3 d] in ordinary decimal 
-notation (whole part, comma, decimal part). Then number of [%-*@3 digits] 
-can be interpreted either as the absolute number of decimal digits 
-(the default mode) or the relative number of significant digits 
-excluding leading zeros. Decimal point is always output as a 
-period independent on language settings. [%-*@3 flags] can be a 
-binary combination ([@(0.0.255) `|]) of&]
-[s0; &]
-[ {{2098:7902<288;h1; [s0; FD`_SIGN]
-:: [s0; [/ always prepend sign (`+10)]]
-:: [s0; FD`_REL]
-:: [s0; [/ relative decimal places (valid digits)]]
-:: [s0; FD`_ZERO]
-:: [s0; [/ keep trailing zeros (1.25000)]]}}&]
-[s3; &]
-[s4;%- &]
-[s5;:FormatDoubleExp`(double`,int`,int`,int`):%- [_^String^ String]_[* FormatDoubleExp]([@(0.0.255) d
-ouble]_[*@3 d], [@(0.0.255) int]_[*@3 digits], [@(0.0.255) int]_[*@3 flags]_`=_[@3 0], 
-[@(0.0.255) int]_[*@3 fill`_exp]_`=_[@3 0])&]
-[s2; Formats a floating point number [%-*@3 d] in scientific / exponential 
-notation (sign, single digit, period, decimal part, `"e`" decimal 
-exponent) with given number of [%-*@3 digits]. [%-*@3 flags] can 
-be a binary combination ([@(0.0.255) `|]) of&]
-[s2; &]
-[ {{2098:7902<288;h1; [s0; FD`_SIGN]
-:: [s0; [/ always prepend sign (`+10)]]
-:: [s0; FD`_SIGN`_EXP]
-:: [s0; [/ always prepend sign to exponent (1e`+2)]]
-:: [s0; FD`_CAP`_E]
-:: [s0; [/ capital E for exponent (1E10)]]
-:: [s0; FD`_ZERO]
-:: [s0; [/ keep trailing zeros (1.25000)]]}}&]
-[s2; &]
-[s2; [*@3 fill`_exp ]is left zero`-padding of exponent in exponential 
-notation&]
 [s3; &]
 [s4;%- &]
 [s5;:FormatIntBase`(int`,int`,int`,char`,int`):%- [_^String^ String]_[* FormatIntBase]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) int]_[*@3 base], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [@(0.0.255) char]_[*@3 lpad]_`=_`'_`', [@(0.0.255) int]_[*@3 sign]_`=_[@3 0])&]
+[s2;%- Formats integer [*@3 i ]with given numeric_[*@3 base], result 
+[*@3 width]_charters wide with [*@3 lpad]_padding.&]
 [s0; ]]

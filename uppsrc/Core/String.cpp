@@ -182,16 +182,6 @@ void String0::Reserve(int r)
 	Trim(l);
 }
 
-void String0::SetL(const char *s, int len)
-{
-	char *p = Alloc(len, chr[KIND]);
-	memcpy8(p, s, len);
-	p[len] = 0;
-	ptr = p;
-	LLen() = len;
-	SLen() = 15;
-}
-
 void String::AssignLen(const char *s, int slen)
 {
 	int  len = GetCount();

@@ -31,6 +31,7 @@ force_inline void SSEZero32(void *t)
 */
 
 byte b10000[10000];
+String es;
 
 CONSOLE_APP_MAIN
 {
@@ -80,28 +81,36 @@ CONSOLE_APP_MAIN
 	}
 	{
 		static Mutex mtx;
-		RTIMING("Mutex");
 		for(int i = 0; i < N; i++) {
+			RTIMING("Mutex");
 			Mutex::Lock __(mtx);
 		}
 	}
 	{
 		static SpinLock lock;
-		RTIMING("SpinLock");
 		for(int i = 0; i < N; i++) {
+			RTIMING("SpinLock");
 			SpinLock::Lock __(lock);
 		}
 	}
 	{
-		RTIMING("Alloc/Free");
 		for(int i = 0; i < N; i++) {
+			RTIMING("Alloc/Free");
 			delete[] new byte[32];
 		}
 	}
 	{
-		RTIMING("Alloc32/Free32");
 		for(int i = 0; i < N; i++) {
+			RTIMING("Alloc32/Free32");
 			MemoryFree32(MemoryAlloc32());
+		}
+	}
+	{
+		char h[32] = { 0 };
+		for(int i = 0; i < N; i++) {
+			RTIMING("String 32");
+			String s(h, 30);
+			es = s;
 		}
 	}
 	{

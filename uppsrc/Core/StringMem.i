@@ -28,7 +28,8 @@ void String0::LFree()
 		MemoryFree32_i(ptr);
 }
 
-char *String0::Alloc(int count, char& kind)
+force_inline
+char *String0::Alloc_(int count, char& kind)
 {
 	if(count < 32) {
 		kind = MEDIUM;
@@ -40,6 +41,21 @@ char *String0::Alloc(int count, char& kind)
 	rc->refcount = 1;
 	kind = min(rc->alloc, 255);
 	return rc->GetPtr();
+}
+
+char *String0::Alloc(int count, char& kind)
+{
+	return Alloc_(count, kind);
+}
+
+void String0::SetL(const char *s, int len)
+{
+	char *p = Alloc_(len, chr[KIND]);
+	memcpy8(p, s, len);
+	p[len] = 0;
+	ptr = p;
+	LLen() = len;
+	SLen() = 15;
 }
 
 void String0::LCat(int c)

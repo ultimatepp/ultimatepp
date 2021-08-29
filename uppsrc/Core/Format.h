@@ -23,8 +23,42 @@ inline String  FormatIntHex(const void *ptr) { return FormatIntHex((int)(uintptr
 inline String  FormatHex(const void *ptr)    { return FormatIntHex((int)(uintptr_t)ptr); }
 #endif
 
-String         FormatDouble(double a);
-String         FormatBool(bool a);
+enum
+{
+	FD_SIGN     = 0x01,  // always prepend sign (+10)
+	FD_MINUS0   = 0x02,  // show sign for negative zero (-0)
+	FD_SIGN_EXP = 0x04,  // always prepend sign to exponent (1e+2)
+	FD_CAP_E    = 0x08,  // capital E for exponent (1E10)
+	FD_ZEROS    = 0x10,  // keep trailing zeros (1.25000)
+	FD_FIX      = 0x20,  // always use fixed notation (FormatDouble)
+	FD_EXP      = 0x40,  // always use exponential notation (FormatDouble)
+	FD_COMMA       = 0x80,  // use ',' instead of '.'
+	FD_NOTHSEPS    = 0x100, // In i18n, do not use thousands separators
+	FD_MINIMAL_EXP = 0x1000, // Use minimal exp (1e5 instead 1e+05)
+	FD_SPECIAL     = 0x2000, // Print nan, inf (if not specified output is empty for nan/inf)
+};
+
+inline constexpr dword
+FD_TOLERANCE(int x) // how many zeroes can be on the right side of '.' until changing to E format
+{ return x << 16; }
+
+char  *FormatE(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
+String FormatE(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
+
+char *FormatF(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
+String FormatF(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
+
+char *FormatG(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_TOLERANCE(3));
+String FormatG(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_TOLERANCE(3));
+
+char *FormatDouble(char *t, double x, int precision, dword flags = FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL);
+String FormatDouble(double x, int precision, dword flags = FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL);
+
+char  *FormatDouble(char *t, double x);
+String FormatDouble(double x);
+
+String         FormatDate(Date date, const char *format, int language = 0);
+String         FormatTime(Time time, const char *format, int language = 0);
 
 template<> inline String AsString(const short& a)           { return FormatInt(a); }
 template<> inline String AsString(const unsigned short& a)  { return FormatUnsigned(a); }
@@ -36,31 +70,6 @@ template<> inline String AsString(const int64& a)           { return FormatInt64
 template<> inline String AsString(const uint64& a)          { return FormatUInt64(a); }
 template<> inline String AsString(const double& a)          { return FormatDouble(a); }
 template<> inline String AsString(const float& a)           { return FormatDouble(a); }
-
-// deprecated
-inline String         FormatInteger(int a)                  { return FormatInt(a); }
-inline String         Format64(uint64 a)                    { return FormatUInt64(a); }
-
-enum
-{
-	FD_SIGN     = 0x01,  // always prepend sign (+10)
-	FD_REL      = 0x02,  // relative decimal places (valid digits)
-	FD_SIGN_EXP = 0x04,  // always prepend sign to exponent (1e+2)
-	FD_CAP_E    = 0x08,  // capital E for exponent (1E10)
-	FD_ZEROS    = 0x10,  // keep trailing zeros (1.25000)
-	FD_FIX      = 0x20,  // always use fixed notation (FormatDouble)
-	FD_EXP      = 0x40,  // always use exponential notation (FormatDouble)
-	FD_COMMA    = 0x80,  // use ',' instead of '.'
-	FD_NOTHSEPS = 0x100, // In i18n, do not use thousands separators
-};
-
-String         FormatDoubleDigits(double d, int digits, int flags, int& exponent);
-String         FormatDouble(double d, int digits, int flags = 0, int fill_exp = 0);
-String         FormatDoubleFix(double d, int digits, int flags = 0);
-String         FormatDoubleExp(double d, int digits, int flags = 0, int fill_exp = 0);
-
-String         FormatDate(Date date, const char *format, int language = 0);
-String         FormatTime(Time time, const char *format, int language = 0);
 
 /*
 Date        ScanDate(const char *text, const char **endptr, const char *format, int language, Date base_date);
@@ -117,3 +126,7 @@ String NFormat(const char *s, const Args& ...args)
 {
 	return Format(s, gather<Vector<Value>>(args...));
 }
+
+inline String         FormatInteger(int a)                  { return FormatInt(a); }
+inline String         Format64(uint64 a)                    { return FormatUInt64(a); }
+

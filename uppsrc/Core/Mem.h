@@ -139,6 +139,13 @@ void memcpy8(void *p, const void *q, size_t count)
 		*(uint64 *)(t + count - 8) = *(uint64 *)(s + count - 8);
 		return;
 	}
+	if(count <= 32) { // improves String::LSet
+		auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
+		Copy128(count - 16);
+		Copy128(0);
+		return;
+	}
+
 	memcpy8__(t, s, count);
 }
 

@@ -215,3 +215,59 @@ inline bool FitsInInt64(double x)
 {
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
+
+#ifdef __SIZEOF_INT128__
+
+inline
+uint64 mul64(uint64 a, uint64 b, uint64& hi)
+{
+	unsigned __int128 prod =  (unsigned __int128)a * b;
+	hi = prod >> 64;
+	return prod;
+}
+
+inline
+byte addc64(uint64& result, const uint64& value, byte carry) {
+	return _addcarry_u64(carry, result, value, &result);
+}
+
+#elif defined(COMPILER_MSC) && defined(CPU_64)
+
+#include <intrin.h>
+
+inline
+uint64 mul64(uint64 a, uint64 b, uint64& hi)
+{
+	return _umul128(a, b, &hi);
+}
+
+inline
+byte addc64(uint64& result, const uint64& value, byte carry) {
+	return _addcarry_u64(carry, result, value, &result);
+}
+
+#else
+
+force_inline
+byte addc64(uint64& r, uint64 a, byte carry)
+{
+	int r1 = r;
+	r += a + carry;
+	return carry ? r <= a : r < a;
+}
+
+force_inline
+uint64 mul64(uint64 a, uint64 b, uint64& hi)
+{
+	uint64 lo_lo = (a & 0xFFFFFFFF) * (b & 0xFFFFFFFF);
+	uint64 hi_lo = (a >> 32)        * (b & 0xFFFFFFFF);
+	uint64 lo_hi = (a & 0xFFFFFFFF) * (b >> 32);
+	uint64 hi_hi = (a >> 32)        * (b >> 32);
+	
+	uint64 cross = (lo_lo >> 32) + (hi_lo & 0xFFFFFFFF) + lo_hi;
+	hi = (hi_lo >> 32) + (cross >> 32)        + hi_hi;
+
+	return (cross << 32) | (lo_lo & 0xFFFFFFFF);
+}
+
+#endif

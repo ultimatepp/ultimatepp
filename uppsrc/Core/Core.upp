@@ -131,6 +131,8 @@ file
 	Complex.h,
 	Format.h,
 	Format.cpp,
+	CvFlt.cpp,
+	ipow10.i,
 	Convert.h,
 	Convert.hpp,
 	Convert.cpp,

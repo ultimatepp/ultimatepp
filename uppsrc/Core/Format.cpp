@@ -31,8 +31,6 @@ String  VFormat(const char *fmt, va_list ptr) {
 // https://github.com/miloyip/itoa-benchmark/blob/940542a7770155ee3e9f2777ebc178dc899b43e0/src/branchlut.cpp
 // by Milo Yip
 
-namespace utoa_private {
-
 const char s100[] =
     "00010203040506070809"
     "10111213141516171819"
@@ -46,14 +44,11 @@ const char s100[] =
     "90919293949596979899"
 ;
 
+namespace utoa_private {
+
 force_inline
 void  Do2(char *t, dword d) {
-#ifdef CPU_UNALIGNED
-	*(word *)t = *((word *)s100 + d);
-#else
-	t[0] = s[2 * d];
-	t[1] = s[2 * d + 1];
-#endif
+	memcpy(t, s100 + 2 * d, 2);
 };
 
 force_inline
@@ -310,207 +305,8 @@ String Format64Hex(uint64 a)
 	return String(p, b + 50);
 }
 
-String FormatDouble(double a)          { return IsNull(a) ? String() : IsNaN(a) || IsInf(a) ? "?" : FormatDouble(a, 17, FD_REL); }
 String FormatBool(bool a)              { return a ? "true" : "false"; }
 String FormatPtr(const void *p)        { return "0x" + FormatHex(p); }
-
-static char *PutDigits(char *out, unsigned number, int count)
-{
-	char temp[10];
-	char *t = temp;
-	do
-		*t++ = number % 10 + '0';
-	while(number /= 10);
-	ASSERT(t - temp <= __countof(temp));
-	if((count -= (int)(t - temp)) > 0)
-	{
-		char *e = out + count;
-		while(out < e)
-			*out++ = '0';
-	}
-	while(t > temp)
-		*out++ = *--t;
-	return out;
-}
-
-enum { DBL_DIGITS = (int)(DBL_MANT_DIG * M_LN2 / M_LN10) + 2 };
-
-String FormatDoubleDigits(double d, int raw_digits, int flags, int& exponent)
-{
-	if(IsNull(d))
-	{
-		exponent = Null;
-		return Null;
-	}
-	d = fabs(normalize(d, exponent));
-	if(IsNull(exponent))
-		return "0";
-	int digits = raw_digits + (flags & FD_REL ? 0 : exponent + 1);
-	int count = minmax<int>(digits, 1, DBL_DIGITS - 2);
-	Buffer<char> buffer(max(digits, 0) + 10);
-	char *p = buffer;
-	if(count == 0)
-		d /= 10;
-	else
-	{
-		static double powtbl[] = { 1e0, 1e1, 1e2, 1e3, 1e4 };
-		int part1 = min(count, 5);
-		unsigned i = (unsigned)(d * powtbl[part1 - 1]);
-		p = PutDigits(p, i, 0);
-		d = double((long double)d * (long double)powtbl[part1 - 1] - i);
-		count -= part1;
-		while(count >= 4)
-		{
-			i = minmax<unsigned>(0, (unsigned)(d * 10000), 9999);
-			p = PutDigits(p, i, 4);
-			d = double((long double)d * (long double)10000 - i);
-			count -= 4;
-		}
-		if(count > 0)
-		{
-			i = (unsigned)(d * powtbl[count]);
-			p = PutDigits(p, i, count);
-			d = d * powtbl[count] - i;
-		}
-	}
-	if(p - ~buffer < DBL_DIGITS && d >= 0.5)
-	{ // round
-		while(p > ~buffer && p[-1] == '9')
-			p--;
-		if(p == ~buffer)
-		{
-			*p++ = '1';
-			exponent++;
-			if(!(flags & FD_REL))
-				digits++;
-		}
-		else
-			p[-1]++;
-	}
-	if(flags & FD_ZEROS)
-	{
-		char *e = p;
-		while(e > ~buffer && e[-1] == '0')
-			e--;
-		if(e == buffer)
-			exponent = Null;
-		e = ~buffer + digits;
-		while(p < e)
-			*p++ = '0';
-	}
-	else
-	{
-		while(p > ~buffer && p[-1] == '0')
-			p--;
-		if(p == ~buffer)
-		{
-			exponent = Null;
-			*p++ = '0';
-		}
-	}
-	return String(~buffer, (int)(p - ~buffer));
-}
-
-String FormatDouble(double d, int digits, int flags, int pad_exp)
-{
-	if(IsNull(d))
-		return Null;
-
-	double ad = fabs(d);
-	bool is_exp = (flags & FD_EXP);
-	if(!(flags & FD_FIX))
-	{
-		is_exp = ad && (ad <= 1e-15 || ad >= 1e15);
-		if(flags & FD_REL)
-		{
-			double bd = ipow10(2 * digits);
-			if(ad && (ad * bd <= 1 || ad >= bd))
-				is_exp = true;
-		}
-	}
-	if(is_exp)
-		return FormatDoubleExp(d, digits, flags, pad_exp);
-	else
-		return FormatDoubleFix(d, digits, flags);
-}
-
-String FormatDoubleFix(double d, int digits, int flags)
-{
-	if(IsNull(d))
-		return Null;
-	int exp;
-	String dig = FormatDoubleDigits(d, digits, flags, exp);
-	if(flags & FD_REL)
-		digits = max(0, digits - Nvl(exp, 0) - 1);
-	String out;
-	if(flags & FD_SIGN || d < 0 && !IsNull(exp))
-		out.Cat(d >= 0 ? '+' : '-');
-	int pointchar = (flags & FD_COMMA) ? ',' : '.';
-	if(IsNull(exp) || exp < -digits) {
-		out.Cat('0');
-		if((flags & FD_ZEROS) && digits) {
-			out.Cat(pointchar);
-			out.Cat('0', digits);
-		}
-	}
-	else if(exp < 0) {
-		out.Cat('0');
-		out.Cat(pointchar);
-		out.Cat('0', -1 - exp);
-		int fill = digits + exp + 1;
-		if(!(flags & FD_ZEROS) || dig.GetLength() >= fill)
-			out.Cat(dig, min(fill, dig.GetLength()));
-		else {
-			out.Cat(dig);
-			out.Cat('0', fill - dig.GetLength());
-		}
-	}
-	else if(exp < dig.GetLength()) {
-		out.Cat(dig, ++exp);
-		if(digits > 0 && ((flags & FD_ZEROS) || dig.GetLength() > exp)) {
-			out.Cat(pointchar);
-			if(!(flags & FD_ZEROS) || dig.GetLength() - exp >= digits)
-				out.Cat(dig.Begin() + exp, min(dig.GetLength() - exp, digits));
-			else {
-				out.Cat(dig.Begin() + exp, dig.GetLength() - exp);
-				out.Cat('0', digits - (dig.GetLength() - exp));
-			}
-		}
-	}
-	else
-	{
-		out.Cat(dig);
-		out.Cat('0', exp - dig.GetLength() + 1);
-		if(digits > 0 && (flags & FD_ZEROS))
-		{
-			out.Cat(pointchar);
-			out.Cat('0', digits);
-		}
-	}
-	return out;
-}
-
-String FormatDoubleExp(double d, int digits, int flags, int fill_exp)
-{
-	if(IsNull(d))
-		return Null;
-	int exp;
-	int pointchar = (flags & FD_COMMA) ? ',' : '.';
-	String dig = FormatDoubleDigits(d, digits, flags | FD_REL, exp);
-	exp = Nvl(exp, 0);
-	StringBuffer out;
-	if(flags & FD_SIGN || d < 0 && !IsNull(exp))
-		out.Cat(d >= 0 ? '+' : '-');
-	out.Cat(dig[0]);
-	if(dig.GetLength() > 1)
-	{
-		out.Cat(pointchar);
-		out.Cat(dig.Begin() + 1, dig.GetLength() - 1);
-	}
-	out.Cat(flags & FD_CAP_E ? 'E' : 'e');
-	out.Cat(FormatIntDec(exp, fill_exp, '0', flags & FD_SIGN_EXP));
-	return String(out);
-}
 
 String FormatDate(Date date, const char *format, int language)
 {
@@ -741,9 +537,10 @@ String RealFormatter(const Formatting& f)
 		return Null;
 	double value = f.arg;
 	const char *s = f.format;
-	int digits = 6, fill_exp = 0;
+	int digits = 6;
 	const char *id = f.id;
-	int flags = (*id++ == 'v' ? FD_REL : 0);
+	id++;
+	int flags = 0;
 	if(*s == '+') {
 		flags |= FD_SIGN;
 		s++;
@@ -761,11 +558,8 @@ String RealFormatter(const Formatting& f)
 			flags |= FD_SIGN_EXP;
 			s++;
 		}
-		if(IsDigit(*s)) {
-			fill_exp = (int)strtol(s, NULL, 10);
-			while(IsDigit(*++s))
-				;
-		}
+		while(IsDigit(*++s))
+			;
 	}
 	bool lng = false;
 	if(*id == 'l') {
@@ -775,9 +569,9 @@ String RealFormatter(const Formatting& f)
 	if(*id == 'e') flags |= FD_EXP;
 	else if(*id == 'f') flags |= FD_FIX;
 	if(lng)
-		return GetLanguageInfo(f.language).FormatDouble(value, digits, flags, fill_exp);
+		return GetLanguageInfo(f.language).FormatDouble(value, digits, flags, 0);
 	else
-		return FormatDouble(value, digits, flags, fill_exp);
+		return FormatDouble(value, digits, flags);
 }
 
 String StringFormatter(const Formatting& f)

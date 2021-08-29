@@ -150,61 +150,6 @@ int64 ScanInt64(const char *ptr)
 	return ScanInt<char, byte, uint64, int64, 10>(x, ptr, overflow) && !overflow ? x : Null;
 }
 
-double ScanDouble(const char *ptr, const char **endptr, bool accept_comma)
-{
-	double n;
-	ptr = ScanDbl<char, byte>(n, ptr, accept_comma ? ',' : '.');
-	if(ptr && endptr)
-		*endptr = ptr;
-	return ptr ? n : Null;
-}
-
-double ScanDouble(const wchar *ptr, const wchar **endptr, bool accept_comma)
-{
-	double n;
-	ptr = ScanDbl<wchar, word>(n, ptr, accept_comma ? ',' : '.');
-	if(ptr && endptr)
-		*endptr = ptr;
-	return ptr ? n : Null;
-}
-
-double ScanDouble(const char *ptr, const char **endptr)
-{
-	double n;
-	ptr = ScanDbl<char, byte>(n, ptr, ',');
-	if(ptr && endptr)
-		*endptr = ptr;
-	return ptr ? n : Null;
-}
-
-double ScanDouble(const wchar *ptr, const wchar **endptr)
-{
-	double n;
-	ptr = ScanDbl<wchar, word>(n, ptr, ',');
-	if(ptr && endptr)
-		*endptr = ptr;
-	return ptr ? n : Null;
-}
-
-double ScanDouble(const char *ptr)
-{
-	double n;
-	ptr = ScanDbl<char, byte>(n, ptr, ',');
-	return ptr ? n : Null;
-}
-
-double ScanDouble(const wchar *ptr)
-{
-	double n;
-	return ScanDbl<wchar, word>(n, ptr, ',') ? n : Null;
-}
-
-double Atof(const char *s)
-{
-	double n;
-	return ScanDbl<char, byte>(n, s, ',') ? n : 0;
-}
-
 Value StrIntValue(const char *s)
 {
 	if(s && *s) {

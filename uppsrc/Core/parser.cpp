@@ -383,19 +383,6 @@ bool CParser::IsDouble2() const
 	return IsDigit(*t);
 }
 
-double CParser::ReadDouble()
-{
-	LTIMING("ReadDouble");
-	double n;
-	const char *t = ScanDbl<char, byte>(n, term, '.');
-	if(!t) ThrowError("missing number");
-	if(!IsFin(n))
-		ThrowError("number is too big");
-	term = t;
-	DoSpaces();
-	return n;
-}
-
 dword CParser::ReadHex()
 {
 	int hex = 0;
