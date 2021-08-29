@@ -218,6 +218,8 @@ inline bool FitsInInt64(double x)
 
 #ifdef __SIZEOF_INT128__
 
+#include <intrin.h>
+
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
@@ -251,7 +253,7 @@ byte addc64(uint64& result, const uint64& value, byte carry) {
 force_inline
 byte addc64(uint64& r, uint64 a, byte carry)
 {
-	int r1 = r;
+	uint64_t r1 = r;
 	r += a + carry;
 	return carry ? r <= a : r < a;
 }

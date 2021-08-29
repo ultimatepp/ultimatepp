@@ -2,7 +2,8 @@
 
 using namespace Upp;
 
-bool print = false;
+bool print = 0;
+bool nocheck = 0;
 
 void Test(double x)
 {
@@ -18,7 +19,7 @@ void Test(double x)
 			RLOG("s = " << s);
 			RLOG("f = " << f);
 		}
-		if(check) {
+		if(check && !nocheck) {
 			s.TrimEnd("(ind)");
 			ASSERT(s == f);
 		}
@@ -89,8 +90,10 @@ void TestF()
 				RLOG("s = " << s);
 				RLOG("f = " << f);
 			}
-			ASSERT(atof(s) == atof(f));
-			ASSERT(Atof(s) == Atof(f));
+			if(!nocheck) {
+				ASSERT(atof(s) == atof(f));
+				ASSERT(Atof(s) == Atof(f));
+			}
 		}
 		x *= 0.9;
 	}

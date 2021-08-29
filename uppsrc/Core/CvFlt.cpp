@@ -188,7 +188,7 @@ int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 	}
 	LTIMING("utoa64");
 
-	auto D1 = [&](dword u) { *digits++ = u + '0'; };
+	auto D1 = [&](dword u) { *digits++ = char(u + '0'); };
 	auto D2 = [&](dword u) { memcpy(digits, s100 + 2 * u, 2); digits += 2; };
 	auto D3 = [&](dword u) { D1(u / 100); D2(u % 100); };
 	auto D4 = [&](dword u) { D2(u / 100); D2(u % 100); };
@@ -198,30 +198,30 @@ int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 	auto D8 = [&](dword u) { D4(u / 10000); D4(u % 10000); };
 
 	switch(precision) {
-	case 1: D1(u); break;
-	case 2: D2(u); break;
-	case 3: D3(u); break;
-	case 4: D4(u); break;
-	case 5: D5(u); break;
-	case 6: D6(u); break;
-	case 7: D7(u); break;
-	case 8: D8(u); break;
-	case 9: D1(u / 100000000); D8(u % 100000000); break;
-	case 10: D2(u / 100000000); D8(u % 100000000); break;
-	case 11: D3(u / 100000000); D8(u % 100000000); break;
-	case 12: D4(u / 100000000); D8(u % 100000000); break;
-	case 13: D5(u / 100000000); D8(u % 100000000); break;
-	case 14: D6(u / 100000000); D8(u % 100000000); break;
-	case 15: D7(u / 100000000); D8(u % 100000000); break;
-	case 16: D8(u / 100000000); D8(u % 100000000); break;
+	case 1: D1((dword)u); break;
+	case 2: D2((dword)u); break;
+	case 3: D3((dword)u); break;
+	case 4: D4((dword)u); break;
+	case 5: D5((dword)u); break;
+	case 6: D6((dword)u); break;
+	case 7: D7((dword)u); break;
+	case 8: D8((dword)u); break;
+	case 9: D1(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 10: D2(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 11: D3(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 12: D4(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 13: D5(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 14: D6(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 15: D7(dword(u / 100000000)); D8(dword(u % 100000000)); break;
+	case 16: D8(dword(u / 100000000)); D8(dword(u % 100000000)); break;
 	default: // 17, 18
 		uint64 u1 = u / 10000000000000000;
 		u = u % 10000000000000000;
 		if(precision == 17)
-			D1(u1);
+			D1((dword)u1);
 		else
-			D2(u1);
-		D8(u / 100000000); D8(u % 100000000);
+			D2((dword)u1);
+		D8(dword(u / 100000000)); D8(dword(u % 100000000));
 	}
 	return -e10;
 }
@@ -391,7 +391,7 @@ char *FormatDouble_(char *t, double x, int precision, dword flags)
 
 char *FormatDouble(char *t, double x, int precision, dword flags)
 {
-	return FormatDouble(t, x, precision, flags);
+	return FormatDouble_(t, x, precision, flags);
 }
 
 String FormatDouble(double x, int precision, dword flags)

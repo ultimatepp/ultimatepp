@@ -72,7 +72,7 @@ int utoa32(dword value, char *buffer)
 	if (value < 10000) {
 		if(value < 100) {
 			if(value < 10) {
-				*buffer = value + '0';
+				*buffer = char(value + '0');
 				return 1;
 			}
 			Do2(buffer, value % 100);
@@ -80,7 +80,7 @@ int utoa32(dword value, char *buffer)
 		}
 
 		if(value < 1000) {
-			*buffer = value / 100 + '0';
+			*buffer = char(value / 100 + '0');
 			Do2(buffer + 1, value % 100);
 			return 3;
 		}
@@ -91,7 +91,7 @@ int utoa32(dword value, char *buffer)
 	else if (value < 100000000) {
 		if(value < 10000000) {
 			if(value < 100000) {
-				*buffer = value / 10000 + '0';
+				*buffer = char(value / 10000 + '0');
 				Do4(buffer + 1, value % 10000);
 				return 5;
 			}
@@ -100,7 +100,7 @@ int utoa32(dword value, char *buffer)
 				Do4(buffer + 2, value % 10000);
 				return 6;
 			}
-			*buffer = value / 1000000 + '0';
+			*buffer = char(value / 1000000 + '0');
 			Do2(buffer + 1, value / 10000 % 100);
 			Do4(buffer + 3, value % 10000);
 			return 7;
@@ -114,7 +114,7 @@ int utoa32(dword value, char *buffer)
 		value %= 100000000;
 
 		if(a < 10) {
-			*buffer = a + '0';
+			*buffer = char(a + '0');
 			Do8(buffer + 1, value);
 			return 9;
 		}
@@ -132,11 +132,11 @@ int utoa64(uint64 value, char *buffer)
 	if(value <= 0xffffffff)
 		return utoa32((dword)value, buffer);
 	if(value < (uint64)1000000000 * 100000000) {
-		int q = utoa32(value / 100000000, buffer);
+		int q = utoa32(dword(value / 100000000), buffer);
 		Do8(buffer + q, value % 100000000);
 		return q + 8;
 	}
-	int q = utoa32(value / ((uint64)100000000 * 100000000), buffer);
+	int q = utoa32(dword(value / ((uint64)100000000 * 100000000)), buffer);
 	Do8(buffer + q, value / 100000000 % 100000000);
 	Do8(buffer + 8 + q, value % 100000000);
 	return q + 16;
