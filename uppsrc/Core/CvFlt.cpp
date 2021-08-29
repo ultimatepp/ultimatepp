@@ -285,8 +285,11 @@ bool do_sgn_inf_nan(char *&t, double x, dword flags = FD_SPECIAL)
 		return true;
 	}
 	if(std::isnan(x)) {
-		if(flags & FD_SPECIAL)
+		if(flags & FD_SPECIAL) {
+			if(std::signbit(x))
+				*t++ = '-';
 			tCat(t, "nan", 3);
+		}
 		return true;
 	}
 	if(std::signbit(x)) {
