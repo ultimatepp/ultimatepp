@@ -518,10 +518,10 @@ void PdfDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color outline)
 		Pointf B = A + k * dA;
 		Pointf C = D - k * dD;
 		if(!partid)
-			page << FormatDoubleFix(A.x, 2) << ' ' << FormatDoubleFix(A.y, 2) << " m\n";
-		page << FormatDoubleFix(B.x, 2) << ' ' << FormatDoubleFix(B.y, 2) << ' '
-			<< FormatDoubleFix(C.x, 2) << ' ' << FormatDoubleFix(C.y, 2) << ' '
-			<< FormatDoubleFix(D.x, 2) << ' ' << FormatDoubleFix(D.y, 2) << " c\n";
+			page << FormatF(A.x, 2) << ' ' << FormatF(A.y, 2) << " m\n";
+		page << FormatF(B.x, 2) << ' ' << FormatF(B.y, 2) << ' '
+			<< FormatF(C.x, 2) << ' ' << FormatF(C.y, 2) << ' '
+			<< FormatF(D.x, 2) << ' ' << FormatF(D.y, 2) << " c\n";
 	}
 	page << closeop << '\n';
 }
