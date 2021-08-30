@@ -130,3 +130,5 @@ String NFormat(const char *s, const Args& ...args)
 inline String         FormatInteger(int a)                  { return FormatInt(a); }
 inline String         Format64(uint64 a)                    { return FormatUInt64(a); }
 
+inline String         FormatDoubleFix(double x, int digits) { return FormatF(x, digits); }
+inline String         FormatDoubleExp(double x, int digits) { return FormatE(x, digits); }
