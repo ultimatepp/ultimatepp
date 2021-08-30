@@ -218,8 +218,6 @@ inline bool FitsInInt64(double x)
 
 #ifdef __SIZEOF_INT128__
 
-#include <intrin.h>
-
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
