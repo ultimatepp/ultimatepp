@@ -1,4 +1,4 @@
-* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\Atof.exe 22.06.2021 13:32:55, user: cxl
+* /home/cxl/out/autotest/CLANG.Debug.Debug_Full.Shared/Atof 31.08.2021 10:52:41, user: cxl
 
 ScanDouble(".23") = 0.23
 ScanDouble("1.23") = 1.23
@@ -14,7 +14,7 @@ x = 2
 x = 3
 x = 1.23
 x = 12340000000
-x = -0.0000000001345
+x = -1.345e-10
 x = 0.23
 x = 1.23
 x = 0.23
@@ -24,7 +24,7 @@ x = 2
 x = 3
 x = 1.23
 x = 12340000000
-x = -0.0000000001345
+x = -1.345e-10
 x = 0.23
 x = 1.23
 x = 0.23
@@ -34,7 +34,7 @@ x = 2
 x = 3
 x = 1.23
 x = 12340000000
-x = -0.0000000001345
+x = -1.345e-10
 x = 0.23
 x = 1
 --------
@@ -48,14 +48,14 @@ p.ReadDouble() = 2
 p.ReadDouble() = 3
 p.ReadDouble() = 1.23
 p.ReadDouble() = 12340000000
-p.ReadDouble() = -0.0000000001345
+p.ReadDouble() = -1.345e-10
 --------
 p.ReadDouble() = 1
 p.ReadDouble() = 2
 p.ReadDouble() = 3
 p.ReadDouble() = 1.23
 p.ReadDouble() = 12340000000
-p.ReadDouble() = -0.0000000001345
+p.ReadDouble() = -1.345e-10
 p.ReadDouble() = 0.23
 p.ReadDouble() = 1
 --------

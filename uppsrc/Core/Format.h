@@ -57,6 +57,8 @@ String FormatDouble(double x, int precision, dword flags = FD_TOLERANCE(6)|FD_MI
 char  *FormatDouble(char *t, double x);
 String FormatDouble(double x);
 
+String FormatDoubleN(double x);
+
 String         FormatDate(Date date, const char *format, int language = 0);
 String         FormatTime(Time time, const char *format, int language = 0);
 
@@ -68,7 +70,7 @@ template<> inline String AsString(const long& a)            { return FormatInt64
 template<> inline String AsString(const unsigned long& a)   { return FormatUInt64(a); }
 template<> inline String AsString(const int64& a)           { return FormatInt64(a); }
 template<> inline String AsString(const uint64& a)          { return FormatUInt64(a); }
-template<> inline String AsString(const double& a)          { return FormatDouble(a); }
+template<> inline String AsString(const double& a)          { return FormatDoubleN(a); }
 template<> inline String AsString(const float& a)           { return FormatDouble(a); }
 
 /*

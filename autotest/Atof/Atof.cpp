@@ -2,24 +2,15 @@
 
 using namespace Upp;
 
-double Atoff(const char *s)
-{
-	double result;
-	return ScanDbl<char, byte>(result, s) ? result : -999;
-}
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	SeedRandom(0);
 	for(int i = 0; i < 100000; i++) {
 		double x = (2 * Randomf() - 1) * pow(10, (int)Random(600) - 300);
-		String s = AsString(x);
-		double y = Atoff(s);
-//		DDUMP(s);
-//		DDUMP(atof(s));
-//		DDUMP(y);
-		ASSERT(abs((x - y) / x) < 0.00000000000001);
+		String s = FormatG(x, 17);
+		double y = Atof(s);
+		ASSERT(x == y);
 	}
 	
 	

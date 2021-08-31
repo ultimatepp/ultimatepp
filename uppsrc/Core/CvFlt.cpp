@@ -412,6 +412,12 @@ String FormatDouble(double x)
 	return String(h, FormatDouble(h, x));
 }
 
+String FormatDoubleN(double x)
+{
+	char h[512];
+	return String(h, FormatDouble_(h, x, 15, FD_TOLERANCE(6)|FD_MINIMAL_EXP));
+}
+
 char *FormatG(char *t, double x, int precision, dword flags)
 {
 	return FormatDouble_(t, x, precision, flags);
