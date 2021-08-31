@@ -403,7 +403,7 @@ String FormatDouble(double x, int precision, dword flags)
 
 char *FormatDouble(char *t, double x)
 {
-	return FormatDouble_(t, x, 17, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL);
+	return FormatDouble_(t, x, 15, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL);
 }
 
 String FormatDouble(double x)
@@ -414,7 +414,7 @@ String FormatDouble(double x)
 
 char *FormatG(char *t, double x, int precision, dword flags)
 {
-	return FormatDouble_(t, x, precision, FD_TOLERANCE(3)|FD_SPECIAL|FD_SIGN_EXP|flags);
+	return FormatDouble_(t, x, precision, flags);
 }
 
 String FormatG(double x, int precision, dword flags)

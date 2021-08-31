@@ -146,9 +146,10 @@ digits to the right before switching to E notation]]
 :: [s0; [/ allow ][*/ nan][/  / ][*/ inf][/  printing (otherwise such numbers 
 are printed as empty)]]
 :: [s0; FD`_FIX]
-:: [s0; [/ always use fixed notation]]
+:: [s0; [/ always use fixed notation (redirects FormatDouble to FormatF)]]
 :: [s0; FD`_EXP]
-:: [s0; [/ always use exponential notation]]}}&]
+:: [s0; [/ always use exponential notation (redirects FormatDouble to 
+FormatE)]]}}&]
 [s0; &]
 [s3; &]
 [s4;%- &]
@@ -156,11 +157,11 @@ are printed as empty)]]
 har]_`*[*@3 t], [@(0.0.255) double]_[*@3 x])&]
 [s5;:FormatDouble`(double`):%- [_^String^ String]_[* FormatDouble]([@(0.0.255) double]_[*@3 a
 ])&]
-[s2; Same as FormatDouble with flags FD`_TOLERANCE(6)`|FD`_MINIMAL`_EXP`|FD`_SPECIAL.
- Should represent the best default formatting. The first variant 
-requires the buffer of size [%-*@3 precision] `+ 30 and returns 
-a pointer after the last character produced terminating `'`\0`' 
-is NOT appended).&]
+[s2; Same as FormatDouble with flags FD`_TOLERANCE(6)`|FD`_MINIMAL`_EXP`|FD`_SPECIAL 
+and precision 15. Should represent the most reasonable formatting 
+for displayed output. The first variant requires the buffer of 
+size 32 and returns a pointer after the last character produced 
+(terminating `'`\0`' is NOT appended).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:FormatE`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
@@ -172,7 +173,7 @@ lags])&]
 [s2; With default [%-*@3 flags] provides double formatting equivalent 
 to %e printf format. The first variant requires the buffer of 
 size [%-*@3 precision] `+ 30 and returns a pointer after the last 
-character produced terminating `'`\0`' is NOT appended).&]
+character produced (terminating `'`\0`' is NOT appended).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:FormatF`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
@@ -184,7 +185,7 @@ lags])&]
 [s2; With default [%-*@3 flags] provides double formatting equivalent 
 to %f printf format. The first variant requires the buffer of 
 size [%-*@3 precision] `+ 400 and returns a pointer after the last 
-character produced terminating `'`\0`' is NOT appended).&]
+character produced (terminating `'`\0`' is NOT appended).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:FormatG`(char`*`,double`,int`,Upp`:`:dword`):%- [@(0.0.255) char]_`*[* Format
@@ -196,7 +197,7 @@ lags])&]
 [s2; With default [%-*@3 flags] provides double formatting equivalent 
 to %g printf format. The first variant requires the buffer of 
 size [%-*@3 precision] `+ 30 and returns a pointer after the last 
-character produced terminating `'`\0`' is NOT appended).&]
+character produced (terminating `'`\0`' is NOT appended).&]
 [s0; &]
 [s4;%- &]
 [s5;:FormatBool`(bool`):%- [_^String^ String]_[* FormatBool]([@(0.0.255) bool]_[*@3 a])&]
