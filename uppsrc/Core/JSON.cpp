@@ -147,7 +147,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 	if(v.GetType() == BOOL_V)
 		return (bool)v ? "true" : "false";
 	if(IsNumber(v))
-		return Format("%.16g", (double)v);
+		return FormatG((double)v, 17);
 	if(IsString(v))
 		return AsCString((String)v, INT_MAX, NULL, ASCSTRING_JSON);
 	if(IsDateTime(v))
