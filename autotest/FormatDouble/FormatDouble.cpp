@@ -43,7 +43,7 @@ void Test(double x)
 	dumpe(30);
 	
 	if(std::isfinite(x))
-		ASSERT(Atof(FormatDouble(x)) == x);
+		ASSERT(Atof(FormatG(x, 17)) == x);
 }
 
 void SubnormalTest()
