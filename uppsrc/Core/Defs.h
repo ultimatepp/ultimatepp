@@ -231,6 +231,11 @@ template<class T> class Function;
 #define never_inline
 #endif
 
+#ifdef _DEBUG
+#undef force_inline
+#define force_inline inline
+#endif
+
 #define BINARY(i, f) \
 extern "C" byte *i; \
 extern "C" int COMBINE(i, _length);

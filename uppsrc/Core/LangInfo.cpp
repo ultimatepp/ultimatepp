@@ -410,7 +410,6 @@ static String NlsFormatRaw(const char *n, String thousands, String decimals)
 {
 	if(*n == 0)
 		return Null;
-//	puts(String() << "NlsFormatRaw, n = <" << n << ">, thousands <" << thousands << ">, decimal <" << decimals << ">");
 	String result;
 	n = NlsCopyDigits(n, result, thousands);
 	if(*n == (wchar)'.')

@@ -82,14 +82,23 @@ bool Value::IsPolyEqual(const Value& v) const
 bool Value::operator==(const Value& v) const {
 	if(IsString() && v.IsString())
 		return data == v.data;
-	if(GetType() != v.GetType())
-		return IsPolyEqual(v) || v.IsPolyEqual(*this);
-	int st = data.GetSpecial();
-	if(st == REF)
-		return ptr()->IsEqual(v.ptr());
-	if(st == VOIDV)
-		return v.IsVoid();
-	return svo[st]->IsEqual(&data, &v.data);
+	if(GetType() != v.GetType()) {
+		if(IsPolyEqual(v) || v.IsPolyEqual(*this))
+			return true;
+	}
+	else {
+		int st = data.GetSpecial();
+		if(st == REF) {
+			if(ptr()->IsEqual(v.ptr()))
+				return true;
+		}
+		else
+		if(st != VOIDV) {
+			if(svo[st]->IsEqual(&data, &v.data))
+				return true;
+		}
+	}
+	return IsNull() && v.IsNull();
 }
 
 int Value::PolyCompare(const Value& v) const

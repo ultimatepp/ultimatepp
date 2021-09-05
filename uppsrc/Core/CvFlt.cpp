@@ -273,7 +273,7 @@ void tCat(char *&t, const char *s, int count)
 }
 
 force_inline
-bool do_sgn_inf_nan(char *&t, double x, dword flags = FD_SPECIAL)
+bool do_sgn_inf_nan(char *&t, double x, dword flags)
 {
 	LTIMING("do_sgn_inf_nan");
 	if(std::isinf(x)) {
@@ -299,7 +299,16 @@ bool do_sgn_inf_nan(char *&t, double x, dword flags = FD_SPECIAL)
 	else
 	if(flags & FD_SIGN)
 		*t++ = '+';
+	else
+	if(flags & FD_SIGN_SPACE)
+		*t++ = ' ';
 	return false;
+}
+
+force_inline
+void do_point(char *&t, dword flags)
+{
+	*t++ = flags & FD_COMMA ? ',' : '.';
 }
 
 char *FormatE(char *t, double x, int precision, dword flags)
@@ -309,7 +318,7 @@ char *FormatE(char *t, double x, int precision, dword flags)
 	if(!x) {
 		*t++ = '0';
 		if(precision) {
-			*t++ = flags & FD_COMMA ? ',' : '.';
+			do_point(t, flags);
 			tCat(t, '0', precision);
 		}
 		tCat(t, "e+00", 4);
@@ -319,11 +328,9 @@ char *FormatE(char *t, double x, int precision, dword flags)
 		precision++;
 		int ndigits = clamp(precision, 1, 18);
 		int exp = FormatDoubleDigits(x, digits, ndigits) + 1;
-		if(x < 0)
-			*t++ = '-';
 		*t++ = *digits;
 		if(precision > 1)
-			*t++ = flags & FD_COMMA ? ',' : '.';
+			do_point(t, flags);
 		tCat(t, digits + 1, ndigits - 1);
 		if(precision > 18)
 			tCat(t, '0', precision - 18);
@@ -367,11 +374,14 @@ char *FormatDouble_(char *t, double x, int precision, dword flags)
 			while(decimals > dp && digits[decimals - 1] == '0')
 				decimals--;
 		if(decimals > dp) {
-			*t++ = flags & FD_COMMA ? ',' : '.';
+			do_point(t, flags);
 			if(decimal_point < 0)
 				tCat(t, '0', -decimal_point);
 			tCat(t, digits + dp, decimals - dp);
 		}
+		else
+		if(flags & FD_POINT)
+			do_point(t, flags);
 	}
 	else {
 		*t++ = *digits;
@@ -380,9 +390,12 @@ char *FormatDouble_(char *t, double x, int precision, dword flags)
 			while(decimals > 1 && digits[decimals - 1] == '0')
 				decimals--;
 		if(decimals > 1) {
-			*t++ = flags & FD_COMMA ? ',' : '.';
+			do_point(t, flags);
 			tCat(t, digits + 1, decimals - 1);
 		}
+		else
+		if(flags & FD_POINT)
+			do_point(t, flags);
 		exp += precision - 1;
 		FormatE10(t, exp, flags);
 	}
@@ -432,12 +445,12 @@ String FormatG(double x, int precision, dword flags)
 
 char *FormatF(char *t, double x, int precision, dword flags)
 {
-	if(do_sgn_inf_nan(t, x))
+	if(do_sgn_inf_nan(t, x, flags))
 		return t;
 	if(!x) {
 		*t++ = '0';
 		if(precision) {
-			*t++ = flags & FD_COMMA ? ',' : '.';
+			do_point(t, flags);
 			tCat(t, '0', precision);
 		}
 	}
@@ -458,14 +471,14 @@ char *FormatF(char *t, double x, int precision, dword flags)
 			int n = utoa64(u, digits);
 			if(precision >= n) {
 				*t++ = '0';
-				*t++ = flags & FD_COMMA ? ',' : '.';
+				do_point(t, flags);
 				tCat(t, '0', precision - n);
 				tCat(t, digits, n);
 			}
 			else {
 				tCat(t, digits, n - precision);
 				if(precision) {
-					*t++ = flags & FD_COMMA ? ',' : '.';
+					do_point(t, flags);
 					tCat(t, digits + n - precision, precision);
 				}
 			}
@@ -475,7 +488,7 @@ char *FormatF(char *t, double x, int precision, dword flags)
 			if(e10 < 0) {
 				tCat(t, digits, 18 + e10);
 				if(precision)
-					*t++ = flags & FD_COMMA ? ',' : '.';
+					do_point(t, flags);
 				tCat(t, digits + 18 + e10, -e10);
 				zeroes += precision + e10;
 			}
@@ -483,12 +496,14 @@ char *FormatF(char *t, double x, int precision, dword flags)
 				tCat(t, digits, 18);
 				tCat(t, '0', e10);
 				if(precision)
-					*t++ = flags & FD_COMMA ? ',' : '.';
+					do_point(t, flags);
 				zeroes += precision;
 			}
 		}
 		tCat(t, '0', zeroes);
 	}
+	if(!precision && (flags & FD_POINT))
+		do_point(t, flags);
 	return t;
 }
 

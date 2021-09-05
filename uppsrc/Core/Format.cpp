@@ -531,6 +531,70 @@ String IntUpperRomanFormatter(const Formatting& f)
 	return FormatIntRoman(f.arg, true);
 }
 
+String DoubleFormatter(const Formatting& f)
+{
+	const char *s = f.format;
+	
+	bool fillz = false;
+	bool wd = true;
+	bool left = false;
+	int width = 0;
+	int precision = 6;
+
+	int flags = FD_SIGN_EXP|FD_SPECIAL|FD_MINUS0;
+	const char *id = f.id;
+	if(*id++ == 'M')
+		flags |= FD_CAP_E;
+	bool lng = false;
+	if(*id == 'l') {
+		lng = true;
+		id++;
+	}
+	if(*id == 'E') flags |= FD_EXP|FD_CAP_E;
+	if(*id == 'e') flags |= FD_EXP;
+	if(*id == 'f') flags |= FD_FIX;
+
+	while(*s) {
+		if(IsDigit(*s)) {
+			if(wd && *s == '0')
+				fillz = true;
+			dword n;
+			bool overflow = false;
+			s = ScanUint<char, byte, dword, 10>(n, s, overflow);
+			if(overflow || !s || n > (wd ? 1000 : 100))
+				return Null;
+			(wd ? width : precision) = n;
+		}
+		else
+		switch(*s++) {
+		case '-': left = true; break;
+		case '+': flags |= FD_SIGN; break;
+		case ' ': flags |= FD_SIGN_SPACE; break;
+		case ',': flags |= FD_COMMA; wd = false; break;
+		case '.': flags &= ~FD_COMMA; wd = false; break;
+		case '!': flags |= FD_ZEROS; break;
+		case '?': flags &= ~FD_SPECIAL; break;
+		case '_': flags &= ~FD_MINUS0; break;
+		case '^': flags &= ~FD_SIGN_EXP; break;
+		case '&': flags |= FD_MINIMAL_EXP; break;
+		case '#': flags |= FD_ZEROS|FD_POINT; break;
+		}
+	}
+	String r = FormatDouble(f.arg, precision, flags);
+	if(lng) {
+		int q = r.Find('.');
+		if(q >= 0)
+			r = r.Mid(0, q) + GetLanguageInfo(f.language).decimal_point + r.Mid(q + 1);
+	}
+	if(width > r.GetCount()) {
+		if(fillz && !left && !IsNull(f.arg))
+			return IsDigit(*r) ? String('0', width - r.GetCount()) + r
+			                   : r.Mid(0, 1) + String('0', width - r.GetCount()) + r.Mid(1);
+		return left ? r + String(' ', width - r.GetCount()) : String(' ', width - r.GetCount()) + r;
+	}
+	return r;
+}
+
 String RealFormatter(const Formatting& f)
 {
 	if(IsNull(f.arg))
@@ -539,7 +603,7 @@ String RealFormatter(const Formatting& f)
 	const char *s = f.format;
 	int digits = 6;
 	const char *id = f.id;
-	id++;
+	bool fn = *id++ != 'v';
 	int flags = 0;
 	if(*s == '+') {
 		flags |= FD_SIGN;
@@ -568,6 +632,8 @@ String RealFormatter(const Formatting& f)
 	}
 	if(*id == 'e') flags |= FD_EXP;
 	else if(*id == 'f') flags |= FD_FIX;
+	if(fn && value >= 1e-15 && value <= 1e15)
+		flags |= FD_FIX;
 	if(lng)
 		return GetLanguageInfo(f.language).FormatDouble(value, digits, flags, 0);
 	else
@@ -852,6 +918,17 @@ static void sRegisterFormatters()
 		// ^ .. exponent options:
 		// + .. always prepend sign to exponent
 		// <expdig> exponent padding width
+
+		RegisterNumberFormatter("m",  &DoubleFormatter);
+		RegisterNumberFormatter("me", &DoubleFormatter);
+		RegisterNumberFormatter("mf", &DoubleFormatter);
+		RegisterNumberFormatter("ml", &DoubleFormatter);
+		RegisterNumberFormatter("mle", &DoubleFormatter);
+		RegisterNumberFormatter("mlf", &DoubleFormatter);
+		RegisterNumberFormatter("M",  &DoubleFormatter);
+		RegisterNumberFormatter("mE", &DoubleFormatter);
+		RegisterNumberFormatter("Ml", &DoubleFormatter);
+		RegisterNumberFormatter("mlE", &DoubleFormatter);
 
 		RegisterNumberFormatter("a", &IntLowerAlphaFormatter);
 		RegisterNumberFormatter("A", &IntUpperAlphaFormatter);

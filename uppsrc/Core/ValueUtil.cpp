@@ -345,9 +345,8 @@ static bool sIsEqual(const Index<Value>& a, const Index<Value>& b)
 {
 	if(&a == &b) return true;
 	if(a.GetCount() != b.GetCount()) return false;
-	for(int i = 0; i < a.GetCount(); i++) {
+	for(int i = 0; i < a.GetCount(); i++)
 		if(a[i] != b[i]) return false;
-	}
 	return true;
 }
 

@@ -30,12 +30,14 @@ enum
 	FD_SIGN_EXP = 0x04,  // always prepend sign to exponent (1e+2)
 	FD_CAP_E    = 0x08,  // capital E for exponent (1E10)
 	FD_ZEROS    = 0x10,  // keep trailing zeros (1.25000)
-	FD_FIX      = 0x20,  // always use fixed notation (FormatDouble)
-	FD_EXP      = 0x40,  // always use exponential notation (FormatDouble)
+	FD_FIX      = 0x20,  // always use fixed notation (FormatF)
+	FD_EXP      = 0x40,  // always use exponential notation (FormatG)
 	FD_COMMA       = 0x80,  // use ',' instead of '.'
 	FD_NOTHSEPS    = 0x100, // In i18n, do not use thousands separators
 	FD_MINIMAL_EXP = 0x1000, // Use minimal exp (1e5 instead 1e+05)
 	FD_SPECIAL     = 0x2000, // Print nan, inf (if not specified output is empty for nan/inf)
+	FD_SIGN_SPACE  = 0x4000, // Add space in place of sign for positive numbers ( 10)
+	FD_POINT       = 0x8000, // Always add decimal point
 };
 
 inline constexpr dword
