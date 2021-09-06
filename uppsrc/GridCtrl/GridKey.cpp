@@ -10,7 +10,6 @@ bool GridCtrl::Key(dword key, int)
 	};
 
 	auto NewSelection = [&] {
-		ClearSelection();
 		if(IsValidCursor(anchor) && IsValidCursor(curpos))
 			SelectRange(Rect(anchor, curpos), true, select_row);
 		Refresh();

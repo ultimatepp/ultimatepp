@@ -1,6 +1,6 @@
 * C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\DoubleFormatter.exe 05.09.2021 14:57:08, user: cxl
 
-====================
+id====================
 x = 1e200
 Format("%g", x) = 1e+200
 Format("%m", x) = 1e+200
