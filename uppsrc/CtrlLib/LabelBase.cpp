@@ -58,11 +58,14 @@ int GetSmartTextHeight(const char *s, int cx, Font font) {
 	return h;
 }
 
-void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font, Color ink, int accesskey) {
+void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font, Color ink, int accesskey, Color qtf_ink) {
 	if(*text == '\1') {
 		RichText txt = ParseQTF(text + 1, accesskey);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
-		txt.Paint(Zoom(1, 1), draw, x, y, cx);
+		PaintInfo pi;
+		pi.darktheme = Grayscale(SColorPaper()) < 100;
+		pi.textcolor = qtf_ink;
+		txt.Paint(draw, x, y, cx, pi);
 		return;
 	}
 	DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
@@ -82,7 +85,7 @@ int  ExtractAccessKey(const char *s, String& label)
 	while(*s)
 		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
 			akey = ToAscii(ToUpper(s[1]));
-			pos = text.GetLength() + 1; 
+			pos = text.GetLength() + 1;
 			s++;
 		}
 		else

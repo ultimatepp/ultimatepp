@@ -74,7 +74,7 @@ void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, 
 	draw.DrawRect(r, paper);
 	draw.Clipoff(r);
 	PaintInfo pi;
-	pi.highlightpara = false;
+	pi.highlightpara = -1;
 	pi.zoom = Zoom(1, 1);
 	if(style & (CURSOR|SELECT|READONLY))
 		pi.textcolor = ink;

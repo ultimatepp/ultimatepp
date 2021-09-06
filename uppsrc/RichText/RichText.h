@@ -2,6 +2,7 @@
 #define RICHTEXT_H
 
 #include <Draw/Draw.h>
+#include <Draw/Draw.h>
 #include <plugin/png/png.h>
 
 namespace Upp {

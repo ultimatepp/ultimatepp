@@ -20,11 +20,12 @@ simple multi`-line or [^topic`:`/`/RichText`/srcdoc`/QTF`$en`-us^ QTF]:&]
 with next character).&]
 [s0;i150;O2; If first character is NOT `'`\1`', text is simple multi`-line 
 text with `'`\n`' used as line separator.&]
-[s0; In both cases, `'`&`' or `'`\b`' are used as access`-key flags. 
-If `'`&`' should be the part of text, it must be escaped as `"`&`&`". 
-This format is formally named `"SmartText`".&]
-[s0; Note also that U`+`+ normally distributes access`-keys automatically. 
-Providing access`-key is thus usually unnecessary.&]
+[s0; In both cases, `'`&`' or `'`\b`' are used as accelerator key 
+flags. If `'`&`' should be the part of text, it must be escaped 
+as `"`&`&`".&]
+[s0; This format is formally named `"SmartText`".&]
+[s0; Note also that U`+`+ normally distributes accelerator keys automatically. 
+Providing accelerator keys is thus usually unnecessary.&]
 [s3; &]
 [s0; &]
 [s5;:DeAmp`(const char`*`):%- [_^String^ String]_[* DeAmp]([@(0.0.255) const]_[@(0.0.255) cha
@@ -61,11 +62,12 @@ are formatted for this width.&]
 [s7; [*/ Return value]-|Height of SmartText.&]
 [s3; &]
 [s4;%- &]
-[s5;:DrawSmartText`(Draw`&`,int`,int`,int`,const char`*`,Font`,Color`,int`):%- [@(0.0.255) v
-oid]_[* DrawSmartText]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [@(0.0.255) int]_[*@3 x], 
-[@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t
-ext], [_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_DefaultInk, 
-[@(0.0.255) int]_[*@3 accesskey]_`=_[@3 0])&]
+[s5;:Upp`:`:DrawSmartText`(Upp`:`:Draw`&`,int`,int`,int`,const char`*`,Upp`:`:Font`,Upp`:`:Color`,int`,Upp`:`:Color`):%- [@(0.0.255) v
+oid]_[* DrawSmartText]([_^Upp`:`:Draw^ Draw][@(0.0.255) `&]_[*@3 w], 
+[@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [_^Upp`:`:Font^ Font]_[*@3 font]_`=_StdF
+ont(), [_^Upp`:`:Color^ Color]_[*@3 ink]_`=_SBlack(), [@(0.0.255) int]_[*@3 accesskey]_`=
+_[@3 0], [_^Upp`:`:Color^ Color]_[*@3 qtf`_ink]_`=_Null)&]
 [s2; Paints SmartText to target Draw.&]
 [s7; [%-*C@3 w]-|Draw.&]
 [s7; [%-*C@3 x, y]-|Position.&]
@@ -75,6 +77,9 @@ ext], [_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_Defa
 [s7; [%-*C@3 ink]-|Text color for non`-QTF SmartText.&]
 [s7; [%-*C@3 accesskey]-|Access`-key `- first corresponding character 
 will be painted with underline.&]
+[s7; [%-*C@3 qtf`_ink][%- -|If not Null o]verrides ink of qtf text and 
+disables the qtf text background `- useful to handle selected 
+items.&]
 [s3; &]
 [s4;%- &]
 [s5;:ExtractAccessKey`(const char`*`,String`&`):%- [_^byte^ byte]_[* ExtractAccessKey]([@(0.0.255) c
