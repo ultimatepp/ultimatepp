@@ -9,7 +9,7 @@ CONSOLE_APP_MAIN
 	for(double x : { 1e200, 1e30, 1123123123., 123123.123123123, 0.123, 0.0, 0.000123, 1.234e-9, 1.234234234e-10, exp(10000), -exp(10000), log(-1) }) {
 		for(int pass = 0; pass < 2; pass++) {
 			DLOG("====================");
-			DDUMP(x);
+			DDUMP(Sprintf("%.17g", x));
 
 			DDUMP(Format("%g", x));
 
