@@ -9,7 +9,23 @@ NAMESPACE_UPP
 #define LDUMPC(x) //DDUMPC(x)
 #define LTIMING(x)  // RTIMING(x)
 
-VirtualGui *VirtualGuiPtr;
+struct NilGui : VirtualGui {
+	virtual Size        GetSize() { return Size(0, 0); }
+	virtual dword       GetMouseButtons() { return 0; }
+	virtual dword       GetModKeys() { return 0; }
+	virtual bool        IsMouseIn() { return false; }
+	virtual bool        ProcessEvent(bool *quit) { return false; }
+	virtual void        WaitEvent(int ms) {}
+	virtual void        WakeUpGuiThread() {}
+	virtual void        Quit() {}
+	virtual bool        IsWaitingEvent() { return false; }
+	virtual SystemDraw& BeginDraw() { static SystemDraw h; static NilDraw n; h.SetTarget(&n); return h; }
+	virtual void        CommitDraw() {}
+};
+
+NilGui NilGuiInstance;
+
+VirtualGui *VirtualGuiPtr = &NilGuiInstance;
 
 Size           desktop_size;
 Ptr<Ctrl>      Ctrl::desktop;
@@ -117,9 +133,9 @@ void Ctrl::SyncTopWindows()
 	}
 }
 
-/*
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
+/*
 	if(Ctrl::invalid)
 		Ctrl::DoPaint();
 	Ctrl::invalid = false;
@@ -134,13 +150,14 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 		Subtract(Ctrl::invalid, rr);
 	}
 	Offset(r.TopLeft());
+*/
 }
 
 ViewDraw::~ViewDraw()
 {
-	Ctrl::DoUpdate();
+//	Ctrl::DoUpdate();
 }
-*/
+
 
 Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 {
