@@ -84,14 +84,18 @@
 /* Size type formatter */
 #  define TIFF_SIZE_FORMAT "%u"
 
+#ifndef TIFF_SIZE_T
 /* Unsigned size type */
 #  define TIFF_SIZE_T unsigned int
+#endif
 
 /* Signed size type formatter */
 #  define TIFF_SSIZE_FORMAT "%d"
 
+#ifndef TIFF_SSIZE_T
 /* Signed size type */
 #  define TIFF_SSIZE_T signed int
+#endif
 
 #endif
 
