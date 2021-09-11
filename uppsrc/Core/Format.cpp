@@ -632,7 +632,8 @@ String RealFormatter(const Formatting& f)
 	}
 	if(*id == 'e') flags |= FD_EXP;
 	else if(*id == 'f') flags |= FD_FIX;
-	if(fn && value >= 1e-15 && value <= 1e15)
+	double intpart;
+	if(fn && value >= 1e-15 && value <= 1e15 && modf(value, &intpart))
 		flags |= FD_FIX;
 	if(lng)
 		return GetLanguageInfo(f.language).FormatDouble(value, digits, flags, 0);
