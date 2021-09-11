@@ -14,10 +14,11 @@ CONSOLE_APP_MAIN
 		memcpy(&x, &n, 8);
 		if(std::isfinite(x)) {
 			count++;
-			double y = ScanDouble(FormatDouble(x));
+			double y = ScanDouble(FormatG(x, 17));
 			if(x != y) {
 				RLOG("ERROR");
 				RDUMP(Sprintf("%.30g", x));
+				RDUMP(Sprintf("%.30g", y));
 				RDUMP(x);
 				RDUMP(y);
 				RDUMP(count);
