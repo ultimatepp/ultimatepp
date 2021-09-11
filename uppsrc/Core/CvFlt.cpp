@@ -144,84 +144,62 @@ static const char s100[] =
     "90919293949596979899"
 ;
 
-force_inline
 int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 { // produces exactly precision valid numbers of result, returns its E
 	ASSERT(precision > 0 && precision < 19);
-	static uint64 pd[21] {
-		1,
-		10,
-		100,
-		1000,
-		10000,
-		100000,
-		1000000,
-		10000000,
-		100000000,
-		1000000000,
-		10000000000,
-		100000000000,
-		1000000000000,
-		10000000000000,
-		100000000000000,
-		1000000000000000,
-		10000000000000000,
-		100000000000000000,
-		1000000000000000000,
-		10000000000000000000u,
-	};
 	
 	LHITCOUNT("FormatDoubleDigits");
 
-	int e10 = precision - ((19738 * w.exponent) >> 16); // log10 estimate
-	// note: better estimate with mantissa involved is possible but not really faster
-	uint64 u;
-	for(;;) { // until u fits required precision
-		LHITCOUNT("iteration");
-		sF128 v = w;
-		v.MulPow10(e10);
-		u = v.GetUint64();
-		ASSERT(u >= pd[precision - 1]);
-		if(u < pd[precision])
-			break;
-		e10--;
-	}
-	LTIMING("utoa64");
+	uint64 u, u1;
+	int e10;
 
-	auto D1 = [&](dword u) { *digits++ = char(u + '0'); };
+	auto FP = [&](uint64 limit) {
+		e10 = precision - ((19728 * w.exponent) >> 16); // log10 estimate
+		// note: better estimate with mantissa involved is possible but not really faster
+		for(;;) { // until u fits required precision
+			sF128 v = w;
+			v.MulPow10(e10);
+			u = v.GetUint64();
+			ASSERT(u >= limit / 10);
+			if(u < limit)
+				break;
+			e10--;
+		}
+	};
+
+	auto D1 = [&](dword u) { *digits++ = u + '0'; };
 	auto D2 = [&](dword u) { memcpy(digits, s100 + 2 * u, 2); digits += 2; };
-	auto D3 = [&](dword u) { D1(u / 100); D2(u % 100); };
-	auto D4 = [&](dword u) { D2(u / 100); D2(u % 100); };
+
+	auto D3 = [&](dword u) { int q = (5243 * u) >> 19; D1(q); D2(u - 100 * q); }; // bit faster than / % here
+	auto D4 = [&](dword u) { int q = (5243 * u) >> 19; D2(q); D2(u - 100 * q); };
+
 	auto D5 = [&](dword u) { D1(u / 10000); D4(u % 10000); };
 	auto D6 = [&](dword u) { D2(u / 10000); D4(u % 10000); };
 	auto D7 = [&](dword u) { D3(u / 10000); D4(u % 10000); };
 	auto D8 = [&](dword u) { D4(u / 10000); D4(u % 10000); };
 
+	auto U8 = [&] { u1 = u / 100000000; u = u % 100000000; };
+	auto U16 = [&] { u1 = u / 10000000000000000; u = u % 10000000000000000; };
+
 	switch(precision) {
-	case 1: D1((dword)u); break;
-	case 2: D2((dword)u); break;
-	case 3: D3((dword)u); break;
-	case 4: D4((dword)u); break;
-	case 5: D5((dword)u); break;
-	case 6: D6((dword)u); break;
-	case 7: D7((dword)u); break;
-	case 8: D8((dword)u); break;
-	case 9: D1(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 10: D2(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 11: D3(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 12: D4(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 13: D5(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 14: D6(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 15: D7(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	case 16: D8(dword(u / 100000000)); D8(dword(u % 100000000)); break;
-	default: // 17, 18
-		uint64 u1 = u / 10000000000000000;
-		u = u % 10000000000000000;
-		if(precision == 17)
-			D1((dword)u1);
-		else
-			D2((dword)u1);
-		D8(dword(u / 100000000)); D8(dword(u % 100000000));
+	case  1: FP(10); D1(u); break;
+	case  2: FP(100); D2(u); break;
+	case  3: FP(1000); D3(u); break;
+	case  4: FP(10000); D4(u); break;
+	case  5: FP(100000); D5(u); break;
+	case  6: FP(1000000); D6(u); break;
+	case  7: FP(10000000); D7(u); break;
+	case  8: FP(100000000); D8(u); break;
+	case  9: FP(1000000000); U8(); D1(u1); D8(u); break;
+	case 10: FP(10000000000); U8(); D2(u1); D8(u); break;
+	case 11: FP(100000000000); U8(); D3(u1); D8(u); break;
+	case 12: FP(1000000000000); U8(); D4(u1); D8(u); break;
+	case 13: FP(10000000000000); U8(); D5(u1); D8(u); break;
+	case 14: FP(100000000000000); U8(); D6(u1); D8(u); break;
+	case 15: FP(1000000000000000); U8(); D7(u1); D8(u); break;
+	case 16: FP(10000000000000000); U8(); D8(u1); D8(u); break;
+	case 17: FP(100000000000000000); U16(); D1(u1); U8(); D8(u1); D8(u); break;
+	case 18: FP(1000000000000000000u); U16(); D2(u1); U8(); D8(u1); D8(u); break;
 	}
 	return -e10;
 }
