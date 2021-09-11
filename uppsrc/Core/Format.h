@@ -47,8 +47,8 @@ FD_TOLERANCE(int x) // how many zeroes can be on the right side of '.' until cha
 char  *FormatE(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
 String FormatE(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
 
-char *FormatF(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
-String FormatF(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP);
+char *FormatF(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_ZEROS);
+String FormatF(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_ZEROS);
 
 char *FormatG(char *t, double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_TOLERANCE(3));
 String FormatG(double x, int precision, dword flags = FD_SPECIAL|FD_MINUS0|FD_SIGN_EXP|FD_TOLERANCE(3));

@@ -552,7 +552,7 @@ String DoubleFormatter(const Formatting& f)
 	}
 	if(*id == 'E') flags |= FD_EXP|FD_CAP_E;
 	if(*id == 'e') flags |= FD_EXP;
-	if(*id == 'f') flags |= FD_FIX;
+	if(*id == 'f') flags |= FD_FIX|FD_ZEROS;
 
 	while(*s) {
 		if(IsDigit(*s)) {
@@ -632,8 +632,7 @@ String RealFormatter(const Formatting& f)
 	}
 	if(*id == 'e') flags |= FD_EXP;
 	else if(*id == 'f') flags |= FD_FIX;
-	double intpart;
-	if(fn && value >= 1e-15 && value <= 1e15 && modf(value, &intpart))
+	if(fn && value >= 1e-15 && value <= 1e15)
 		flags |= FD_FIX;
 	if(lng)
 		return GetLanguageInfo(f.language).FormatDouble(value, digits, flags, 0);

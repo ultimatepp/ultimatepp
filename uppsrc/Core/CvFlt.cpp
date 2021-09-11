@@ -425,11 +425,14 @@ char *FormatF(char *t, double x, int precision, dword flags)
 {
 	if(do_sgn_inf_nan(t, x, flags))
 		return t;
+	bool haspoint = false;
+	char *b = t;
 	if(!x) {
 		*t++ = '0';
 		if(precision) {
 			do_point(t, flags);
 			tCat(t, '0', precision);
+			haspoint = true;
 		}
 	}
 	else {
@@ -452,12 +455,14 @@ char *FormatF(char *t, double x, int precision, dword flags)
 				do_point(t, flags);
 				tCat(t, '0', precision - n);
 				tCat(t, digits, n);
+				haspoint = true;
 			}
 			else {
 				tCat(t, digits, n - precision);
 				if(precision) {
 					do_point(t, flags);
 					tCat(t, digits + n - precision, precision);
+					haspoint = true;
 				}
 			}
 		}
@@ -465,16 +470,20 @@ char *FormatF(char *t, double x, int precision, dword flags)
 			int e10 = FormatDoubleDigits(w, digits, 18);
 			if(e10 < 0) {
 				tCat(t, digits, 18 + e10);
-				if(precision)
+				if(precision) {
 					do_point(t, flags);
+					haspoint = true;
+				}
 				tCat(t, digits + 18 + e10, -e10);
 				zeroes += precision + e10;
 			}
 			else {
 				tCat(t, digits, 18);
 				tCat(t, '0', e10);
-				if(precision)
+				if(precision) {
 					do_point(t, flags);
+					haspoint = true;
+				}
 				zeroes += precision;
 			}
 		}
@@ -482,6 +491,14 @@ char *FormatF(char *t, double x, int precision, dword flags)
 	}
 	if(!precision && (flags & FD_POINT))
 		do_point(t, flags);
+	else
+	if(!(flags & FD_ZEROS) && haspoint) {
+		while(t > b && *(t - 1) == '0')
+			t--;
+		if(t > b && *(t - 1) == '.')
+			t--;
+	}
+
 	return t;
 }
 
