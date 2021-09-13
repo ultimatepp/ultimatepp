@@ -354,6 +354,35 @@ void String0::Swap(String0& b)
 	Dsyn(); b.Dsyn();
 }
 
+template <class Maker>
+inline
+String String::Make(int alloc, Maker m)
+{
+	String s;
+	if(alloc <= 14) {
+		int len = m(s.chr);
+		ASSERT(len <= alloc);
+		s.SLen() = len;
+		s.Dsyn();
+	}
+	else {
+		if(alloc < 32) {
+			s.chr[KIND] = MEDIUM;
+			s.ptr = (char *)MemoryAlloc32();
+		}
+		else
+			s.ptr = s.Alloc(alloc, s.chr[KIND]);
+		int len = m(s.ptr);
+		ASSERT(len <= alloc);
+		s.ptr[len] = 0;
+		s.LLen() = len;
+		s.SLen() = 15;
+		if(alloc >= 32 && alloc > 2 * len)
+			s.Shrink();
+	}
+	return s;
+}
+
 force_inline
 void StringBuffer::Strlen()
 {

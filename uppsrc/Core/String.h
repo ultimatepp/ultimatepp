@@ -404,6 +404,9 @@ public:
 	
 	template <class Maker>
 	static String MakeSmall(Maker m)                       { String s; int n = m(s.chr); ASSERT(n <= 14); s.SLen() = n; s.Dsyn(); return s; }
+
+	template <class Maker>
+	static String Make(int alloc, Maker m);
 };
 
 inline std::string to_string(const String& s)              { return std::string(s.Begin(), s.End()); }

@@ -50,10 +50,9 @@ char *String0::Alloc(int count, char& kind)
 
 void String0::SetL(const char *s, int len)
 {
-	char *p = Alloc_(len, chr[KIND]);
-	memcpy8(p, s, len);
-	p[len] = 0;
-	ptr = p;
+	ptr = Alloc_(len, chr[KIND]);
+	memcpy8(ptr, s, len);
+	ptr[len] = 0;
 	LLen() = len;
 	SLen() = 15;
 }
