@@ -167,10 +167,10 @@ public:
 
 class String0 : Moveable<String0> {
 	enum { // 
-		KIND = 14,    // chr[KIND] is String tier flag
+		KIND = 14,    // chr[KIND] is String tier flag, 0 - small, 31 - medium, 32..254 ref alloc, 255 - read alloc from Ref
 		SLEN = 15,    // chr[SLEN] stores the length of small tier strings (up to 14 bytes)
 		LLEN = 2,     // chr[LLEN] stores the length of medium (< 32) and large tier strings
-		SPECIAL = 13, // 
+		SPECIAL = 13, // chr[SPECIAL]: stores Value type
 	};
 	enum { // chr[KIND] predefined values, if > MEDIUM, it is Rc type; if <255, also stores alloc
 		SMALL = 0, // SVO ending zero, also has to be 0 because of GetSpecial, also flag of small
