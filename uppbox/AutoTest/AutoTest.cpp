@@ -41,17 +41,17 @@ void Do(const char *nest, const char *bm, bool release, bool test)
             txt << ' ' << h << ' ';
 			String c;
 			c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
-			if(first)
-				c << 'a';
+			c << 'a';
 #ifdef PLATFORM_POSIX
 			c << 's';
 #endif
 			c << ' ' << exe;
 			Cout() << c << '\n';
 			infolog << txt;
-			String out;
 			Tested += test;
 			txt << ", " << GetSysTime();
+			DeleteFile(exe);
+			String out;
 			if(Sys(c, out)) {
 				Cout() << " *** ERROR\n";
 				infolog << ": ERROR\n";
@@ -139,6 +139,10 @@ CONSOLE_APP_MAIN
 		Cout() << "Invalid smtp_account\n";
 		Exit(1);
 	}
+	
+	Cout() << "INI: " << h[0] << "\n";
+	Cout() << LoadFile(h[0]) << "\n";
+	Cout() << (String)ini["build_test"] << "\n";
 	
 	input = ini["upp_sources"];
 	Vector<String> test = Split((String)ini["auto_test"], ';');
