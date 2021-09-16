@@ -383,9 +383,7 @@ void ChHostSkin()
 	::SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
 	String name = FromSystemCharsetW(ncm.lfMenuFont.lfFaceName);
 	int height = abs((int)ncm.lfMenuFont.lfHeight);
-	DDUMP(name);
 	int q = Font::FindFaceNameIndex(name);
-	DDUMP(q);
 	if(height > 0 && height < 200) // sanity..
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 
