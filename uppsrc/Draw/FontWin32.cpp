@@ -44,7 +44,7 @@ HFONT GetWin32Font(Font fnt, int angle)
 
 	be.font = fnt;
 	be.angle = angle;
-	be.hfont = CreateFont(
+	be.hfont = CreateFontW(
 		fnt.GetHeight() ? -abs(fnt.GetHeight()) : -12,
 		fnt.GetWidth(), angle, angle, fnt.IsBold() ? FW_BOLD : FW_NORMAL,
 		fnt.IsItalic(), fnt.IsUnderline(), fnt.IsStrikeout(),
@@ -53,7 +53,7 @@ HFONT GetWin32Font(Font fnt, int angle)
 		CLIP_DEFAULT_PRECIS,
 		fnt.IsNonAntiAliased() ? NONANTIALIASED_QUALITY : DEFAULT_QUALITY,
 		DEFAULT_PITCH|FF_DONTCARE,
-		fnt.GetFaceName()
+		ToSystemCharsetW(fnt.GetFaceName())
 	);
 
 	cache[0] = be;
@@ -111,16 +111,18 @@ CommonFontInfo GetFontInfoSys(Font font)
 
 static VectorMap<String, FaceInfo> *sList;
 
-static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param)
+static int CALLBACK Win32_AddFace(const LOGFONTW *logfont, const TEXTMETRICW *, dword type, LPARAM param)
 {
 	const char *facename = (const char *)param;
-	if(facename && stricmp(logfont->lfFaceName, facename))
+
+	String name = FromSystemCharsetW(logfont->lfFaceName);
+	
+	if(facename && stricmp(name, facename))
 		return 1;
 
 	if(logfont->lfFaceName[0] == '@')
 		return 1;
 	
-	String name = FromSystemCharset(logfont->lfFaceName);
 
 	if(FindIndex(Split("Courier New CE;Courier New CYR;Courier New Greek;"
 	                   "Courier New TUR;Courier New Baltic;Arial CE;Arial CYR;"
@@ -130,8 +132,8 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 		return 1;
 
 	int q = sList->Find(name);
-	FaceInfo& f = q < 0 ? sList->Add(logfont->lfFaceName) : (*sList)[q];
-	f.name = FromSystemCharset(logfont->lfFaceName);
+	FaceInfo& f = q < 0 ? sList->Add(name) : (*sList)[q];
+	f.name = name;
 
 	if(q < 0)
 		f.info = Font::SCALEABLE;
@@ -150,7 +152,7 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 
 static int Win32_EnumFace(HDC hdc, const char *face)
 {
-	return EnumFontFamilies(hdc, face, Win32_AddFace, (LPARAM)face);
+	return EnumFontFamiliesW(hdc, face ? ~ToSystemCharsetW(face) : NULL, Win32_AddFace, (LPARAM)face);
 }
 
 static void Win32_ForceFace(HDC hdc, const char *face, const char *aface)

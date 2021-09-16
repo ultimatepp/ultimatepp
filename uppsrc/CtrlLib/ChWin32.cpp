@@ -374,17 +374,18 @@ void ChHostSkin()
 
 	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
 
-	NONCLIENTMETRICS ncm;
+	NONCLIENTMETRICSW ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
 	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
 #else
 	ncm.cbSize = sizeof(ncm);
 #endif
-	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
-	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
+	::SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
+	String name = FromSystemCharsetW(ncm.lfMenuFont.lfFaceName);
 	int height = abs((int)ncm.lfMenuFont.lfHeight);
-	
+	DDUMP(name);
 	int q = Font::FindFaceNameIndex(name);
+	DDUMP(q);
 	if(height > 0 && height < 200) // sanity..
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 
