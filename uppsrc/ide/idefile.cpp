@@ -7,6 +7,7 @@ String ViewCache()
 
 String ViewFileHash(const String& path)
 {
+	RTIMING("ViewFileHash");
 	Sha1Stream s;
 	FindFile ff(path);
 	if(ff) {
@@ -413,7 +414,7 @@ void Ide::FlushFile() {
 			RefreshBrowser();
 	}
 	else
-	if(!editfile.IsEmpty()) {
+	if(!editfile.IsEmpty() && !editor.IsView()) {
 		FileData& fd = Filedata(editfile);
 		fd.undodata = editor.PickUndoData();
 		fd.filehash = EditorHash();

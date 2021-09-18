@@ -178,17 +178,24 @@ int   TextCtrl::Load0(Stream& in, byte charset_, bool view) {
 	return m;
 }
 
-int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte charset, int max_line_len, int max_total, bool& truncated) const
+int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte charset,
+                        int max_line_len, int max_total, bool& truncated,
+                        int *view_line_count) const
 {
 	StringBuffer ln;
 	bool cr = false;
 	byte b8 = 0;
+	auto line_count = [&] { return view_line_count ? *view_line_count : ls.GetCount(); };
 	if(charset == CHARSET_UTF16_LE || charset == CHARSET_UTF16_BE) {
 		WStringBuffer wln;
 		auto put_wln = [&]() {
-			Ln& ln = ls.Add();
-			ln.len = wln.GetCount();
-			ln.text = ToUtf8(~wln, ln.len);
+			if(view_line_count)
+				(*view_line_count)++;
+			else {
+				Ln& ln = ls.Add();
+				ln.len = wln.GetCount();
+				ln.text = ToUtf8(~wln, ln.len);
+			}
 		};
 		for(;;) {
 			int c = charset == CHARSET_UTF16_LE ? in.Get16le() : in.Get16be();
@@ -204,7 +211,7 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 			truncate_line:
 				total += wln.GetCount() + 1;
 				put_wln();
-				if(ls.GetCount() >= n)
+				if(line_count() >= n)
 					goto finish;
 				wln.Clear();
 			}
@@ -248,21 +255,28 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 						ln.Cat((const char *)b, (const char *)s);
 				}
 				auto put_ln = [&]() -> bool {
-					Ln& l = ls.Add();
-					if(charset == CHARSET_UTF8) {
-						l.len = CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-						l.text = ln;
+					if(view_line_count) {
+						(*view_line_count)++;
+						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount())
+						                                                : ln.GetCount();
 					}
 					else {
-						l.len = ln.GetCount();
-						l.text = ToCharset(CHARSET_UTF8, ln, charset);
+						Ln& l = ls.Add();
+						if(charset == CHARSET_UTF8) {
+							l.len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+							l.text = ln;
+						}
+						else {
+							l.len = ln.GetCount();
+							l.text = ToCharset(CHARSET_UTF8, ln, charset);
+						}
+						if(total + l.len + 1 > max_total) {
+							ls.Drop();
+							truncated = true;
+							return false;
+						}
+						total += l.len + 1;
 					}
-					if(total + l.len + 1 > max_total) {
-						ls.Drop();
-						truncated = true;
-						return false;
-					}
-					total += l.len + 1;
 					return true;
 				};
 				while(ln.GetCount() >= max_line_len) {
@@ -275,7 +289,7 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 					truncated = true;
 					if(!put_ln())
 						goto out_of_limit;
-					if(ls.GetCount() >= n) {
+					if(line_count() >= n) {
 						in.Seek(s - posptr + pos);
 						goto finish;
 					}
@@ -289,7 +303,7 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 					if(!put_ln())
 						goto out_of_limit;
 					s++;
-					if(ls.GetCount() >= n) {
+					if(line_count() >= n) {
 						in.Seek(s - posptr + pos);
 						goto finish;
 					}
@@ -304,10 +318,16 @@ out_of_limit:
 	{
 		WString w = ToUnicode(~ln, ln.GetCount(), charset);
 		if(total + w.GetLength() <= max_total) {
-			Ln& ln = ls.Add();
-			ln.len = w.GetCount();
-			ln.text = ToUtf8(~w, ln.len);
-			total += ln.len;
+			if(view_line_count) {
+				(*view_line_count)++;
+				total += w.GetCount();
+			}
+			else {
+				Ln& ln = ls.Add();
+				ln.len = w.GetCount();
+				ln.text = ToUtf8(~w, ln.len);
+				total += ln.len;
+			}
 		}
 	}
 finish:
@@ -328,8 +348,9 @@ void TextCtrl::ViewLoading()
 		bool b;
 		int64 t = 0;
 
-		LoadLines(l, 256, t, *view, charset, 10000, INT_MAX, b);
-		viewlines += l.GetCount();
+		int line_count = 0;
+		LoadLines(l, 256, t, *view, charset, 10000, INT_MAX, b, &line_count);
+		viewlines += line_count;
 		total += t;
 		total256.Add((int)t);
 		

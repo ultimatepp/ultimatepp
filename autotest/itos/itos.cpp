@@ -47,8 +47,8 @@ CONSOLE_APP_MAIN
 		}
 	}
 	for(int i = 0; i < 1000000; i++)
-		Test(Random64());
-	
+		Test(Random());
+
 	Test((int)Null);
 	Test((int64)Null);
 	

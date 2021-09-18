@@ -145,9 +145,9 @@ int utoa64(uint64 value, char *buffer)
 String FormatUInt64(uint64 w)
 {
 	if(w < 100000000000000)
-		return String::MakeSmall([&](char *s) { return utoa64(w, s); });
-	char h[32];
-	return String(h, utoa64(w, h));
+		return String::Make(14, [&](char *s) { return utoa64(w, s); });
+	else
+		return String::Make(20, [&](char *s) { return utoa64(w, s); });
 }
 
 String FormatInt64(int64 i)
@@ -156,21 +156,20 @@ String FormatInt64(int64 i)
 		return String();
 	if(i < 0) {
 		i = -i;
-		if(i < 10000000000000) {
-			return String::MakeSmall([&](char *s) {
+		if(i < 10000000000000)
+			return String::Make(14, [&](char *s) {
 				*s++ = '-';
 				return utoa64(i, s) + 1;
 			});
-		}
-		char h[32];
-		*h = '-';
-		return String(h, utoa64(i, h + 1) + 1);
+		return String::Make(20, [&](char *s) {
+			*s++ = '-';
+			return utoa64(i, s) + 1;
+		});
 	}
-	if(i < 100000000000000) {
-		return String::MakeSmall([&](char *s) { return utoa64(i, s); });
-	}
+	if(i < 100000000000000)
+		return String::Make(14, [&](char *s) { return utoa64(i, s); });
 	char h[32];
-	return String(h, utoa64(i, h));
+	return String::Make(20, [&](char *s) { return utoa64(i, s); });
 }
 
 String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper)

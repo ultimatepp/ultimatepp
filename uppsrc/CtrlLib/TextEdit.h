@@ -132,7 +132,8 @@ protected:
 
 	int    Load0(Stream& in, byte charset, bool view);
 	int    LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte charset,
-	                 int max_line_len, int max_total, bool& truncated) const;
+	                 int max_line_len, int max_total, bool& truncated,
+	                 int *view_line_count = NULL) const;
 	void   ViewLoading();
 
 	void   SetLine(int i, const String& txt, int len) { lin[i].text = txt; lin[i].len = len; }

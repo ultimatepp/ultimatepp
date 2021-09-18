@@ -124,13 +124,13 @@ const CHAR *ScanInt(INT& result, const CHAR *s)
 inline
 String FormatUnsigned(dword w)
 {
-	return String::MakeSmall([&](char *s) { return utoa32(w, s); });
+	return String::Make(12, [&](char *s) { return utoa32(w, s); });
 }
 
 inline
 String FormatInt(int i)
 {
-	return String::MakeSmall([&](char *s) {
+	return String::Make(12, [&](char *s) {
 		if(IsNull(i))
 			return 0;
 		if(i < 0) {

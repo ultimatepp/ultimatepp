@@ -403,9 +403,6 @@ public:
 	std::string ToStd() const                              { return std::string(Begin(), End()); }
 	
 	template <class Maker>
-	static String MakeSmall(Maker m)                       { String s; int n = m(s.chr); ASSERT(n <= 14); s.SLen() = n; s.Dsyn(); return s; }
-
-	template <class Maker>
 	static String Make(int alloc, Maker m);
 };
 

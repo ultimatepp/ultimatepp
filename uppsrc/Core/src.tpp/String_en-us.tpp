@@ -251,7 +251,7 @@ gets reallocated to the exact size of source).&]
 [s5;:String`:`:ToStd`(`)const:%- [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
 td`::string]_[* ToStd]()_[@(0.0.255) const]&]
 [s2; Converts String to std`::string.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:String0`:`:operator const char`*`(`)const:%- [@(0.0.255) operator]_[@(0.0.255) const
 ]_[@(0.0.255) char]_`*()_[@(0.0.255) const]&]
@@ -264,8 +264,18 @@ td`::string]_[* ToStd]()_[@(0.0.255) const]&]
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%- [%% Returns the character at position ][*@3 i.]&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:String`:`:Make`(int`,Maker`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 M
+aker]>_[@(0.0.255) static]_[_^Upp`:`:String^ String]_[* Make]([@(0.0.255) int]_[*@3 alloc],
+ [*@4 Maker]_[*@3 m])&]
+[s2; Optimized static method for creating Strings. This method creates 
+internal buffer of at least [%-*@3 alloc] and then invokes lambda 
+[%-*@3 m] passing the char `* pointer to the internal buffer as 
+lambda parameter. Lambda is then supposed to fill the characters 
+to this buffer and return the length of string (which must be 
+<`= [%-*@3 alloc]). For the best performance, [%-*@3 alloc] should 
+be constant.&]
 [s0;%- &]
-[s0;@(0.0.255) &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 WString]]}}&]
 [s3; &]
