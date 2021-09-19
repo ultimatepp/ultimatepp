@@ -15,7 +15,7 @@ void AnythingEnd()
 }
 
 struct ProgressFilter { // Simple filter example just prints amount of data processed
-	Callback2<const void *, int> WhenOut;
+	Event<const void *, int> WhenOut;
 	void Put(const void *ptr, int size) {
 		DLOG("#### Loaded " << size << " bytes");
 		WhenOut(ptr, size);
