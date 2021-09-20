@@ -147,9 +147,14 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 
 	current = Null;
 
-	if(width == 0 || !ss && color.a == 0 && width >= FILL)
+	if(width == 0 || !ss && color.a == 0 && width >= FILL) {
+		if(co && ++emptycount + jobcount >= BATCH_SIZE) { // not to exhaust 'paths'
+			FinishPathJob();
+			FinishFillJob();
+		}
 		return newclip;
-	
+	}
+
 	if(pathattr.mtx_serial != preclip_mtx_serial) {
 		if(dopreclip) {
 			Pointf tl, br, a;
@@ -186,7 +191,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 				job.preclip = preclip;
 				job.regular = regular;
 			}
-			if(jobcount >= BATCH_SIZE)
+			if(jobcount + emptycount >= BATCH_SIZE)
 				FinishPathJob();
 			return newclip;
 		}
@@ -441,7 +446,7 @@ void BufferPainter::FinishPathJob()
 		}
 	};
 
-	jobcount = 0;
+	jobcount = emptycount = 0;
 }
 
 void BufferPainter::Finish()

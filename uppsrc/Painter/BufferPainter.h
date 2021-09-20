@@ -262,6 +262,7 @@ private:
 	
 	Array<CoJob>     cojob, cofill;
 	int              jobcount, fillcount;
+	int              emptycount; // jobs skipped because of Null color or zero width
 
 	CoWorkNX         fill_job;
 	
