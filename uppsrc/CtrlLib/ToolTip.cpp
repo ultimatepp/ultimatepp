@@ -76,9 +76,9 @@ void ShowToolTip()
 			LLOG("-> foreground");
 			Size sz = q.GetMinSize();
 			Rect r = Ctrl::GetMouseWorkArea();
-			Point p = GetMousePos() + Size(0, 22);
+			Point p = GetMousePos() + Size(0, DPI(22));
 			if(p.y + sz.cy > r.bottom)
-				p = GetMousePos() - Size(0, 6) - sz.cy;
+				p = GetMousePos() - Size(0, DPI(6)) - sz.cy;
 			q.PopUp(top, p, !showmode);
 			showmode = true;
 			KillTimeCallback((void *)EndShowMode);
