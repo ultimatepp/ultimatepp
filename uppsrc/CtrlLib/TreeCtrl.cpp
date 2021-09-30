@@ -106,6 +106,7 @@ void   TreeCtrl::Layout()
 	if(total.cx > full.cx) full.cy = red.cy;
 	sb.SetPage(full);
 	sb.SetLine(item[0].GetSize(display).cy);
+	SyncCtrls(false, NULL);
 }
 
 // 2008-04-08 mrjt
