@@ -168,7 +168,6 @@ String FormatInt64(int64 i)
 	}
 	if(i < 100000000000000)
 		return String::Make(14, [&](char *s) { return utoa64(i, s); });
-	char h[32];
 	return String::Make(20, [&](char *s) { return utoa64(i, s); });
 }
 
