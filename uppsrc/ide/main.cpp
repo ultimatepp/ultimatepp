@@ -149,9 +149,7 @@ void AppMain___()
 #ifdef PLATFORM_WIN32
 	AutoInstantSetup();
 #endif
-
 	bool hasvars = FindFile(ConfigFile("*.var"));
-
 #ifdef PLATFORM_POSIX
 	RemoveConsoleScripts(); // remove old console-script files
 

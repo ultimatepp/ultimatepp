@@ -71,15 +71,20 @@ bool Install(bool& hasvars)
 				}
 			}
 	};
-	
+
+#ifdef PLATFORM_COCOA
+	String idir = GetFileFolder(GetAppFolder());
+	String myapps = DirectoryExists(idir + "/uppsrc") ? idir + "/MyApps"  : GetHomeDirFile("MyApps");
+#else
 	String myapps = (DirectoryExists(GetExeDirFile("uppsrc")) ? GetExeDirFile  : GetHomeDirFile)("MyApps");
+#endif
 
 	for(pass = 0; pass < 2; pass++) {
 		if(pass)
 			MakeAssembly(myapps);
 	#ifdef PLATFORM_COCOA
-		Scan(GetFileFolder(GetAppFolder()) + "/uppsrc");
-		Scan(GetFileFolder(GetAppFolder()) + "/*");
+		Scan(idir + "/uppsrc");
+		Scan(idir + "/*");
 	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
