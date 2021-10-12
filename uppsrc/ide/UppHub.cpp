@@ -31,12 +31,7 @@ String FindWebsite(const String& repo)
 	}
 	
 	int idx = repo.ReverseFind(".git");
-	if (idx == -1)
-	{
-		return repo;
-	}
-	
-	return repo.Left(idx);
+	return idx == -1 ? repo : repo.Left(idx);
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
