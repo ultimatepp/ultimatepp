@@ -6,13 +6,13 @@ wchar *WString0::Alloc(int& count)
 {
 	if(count <= SMALL) {
 		count = SMALL;
-		wchar *p = (wchar *)MemoryAlloc48();
+		wchar *p = (wchar *)MemoryAlloc((SMALL + 1) * sizeof(wchar));
 		return p;
 	}
 	size_t sz = sizeof(Atomic) + ((size_t)count + 1) * sizeof(wchar);
 	Atomic *rc = (Atomic *)MemoryAllocSz(sz);
 	if(count != INT_MAX)
-		count = int(((sz - sizeof(Atomic)) >> 1) - 1);
+		count = int(((sz - sizeof(Atomic)) / sizeof(wchar)) - 1);
 	*rc = 1;
 	return (wchar *)(rc + 1);
 }
@@ -26,7 +26,7 @@ void WString0::Free()
 				MemoryFree(&rc);
 		}
 		else
-			MemoryFree48(ptr);
+			MemoryFree(ptr);
 	}
 }
 
@@ -94,15 +94,8 @@ void WString0::Set0(const WString0& src)
 		AtomicInc(Rc());
 	}
 	else {
-		ptr = (wchar *)MemoryAlloc48();
-		qword *t = (qword *)ptr;
-		qword *s = (qword *)src.ptr;
-		t[0] = s[0];
-		t[1] = s[1];
-		t[2] = s[2];
-		t[3] = s[3];
-		t[4] = s[4];
-		t[5] = s[5];
+		ptr = (wchar *)MemoryAlloc((SMALL + 1) * sizeof(wchar));
+		memcpy(ptr, src.ptr, sizeof(wchar) * (SMALL + 1));
 	}
 	Dsyn();
 }
@@ -224,6 +217,11 @@ WString::WString(const char *s) {
 	*this = ToUnicode(s, s ? (int)strlen(s) : 0, CHARSET_DEFAULT);
 }
 
+WString::WString(const char16 *s) {
+	Zero();
+	*this = ToUtf32(s);
+}
+
 WString::WString(const char *s, int n) {
 	Zero();
 	*this = ToUnicode(s, n, CHARSET_DEFAULT);
@@ -251,29 +249,19 @@ WString WString::GetVoid()
 #ifndef _HAVE_NO_STDWSTRING
 WString::WString(const std::wstring& s)
 {
-	if(sizeof(std::wstring::value_type) == sizeof(wchar)) {
-		WString0::Set0((wchar *)s.c_str(), (int)s.length());
-	}
-	else {
-		WString0::Zero();
-		std::wstring::const_iterator i = s.begin();
-		while(i < s.end())
-			Cat(*i++);
-	}
+	WString0::Zero();
+	std::wstring::const_iterator i = s.begin();
+	while(i < s.end())
+		Cat(*i++);
 }
 
 WString::operator std::wstring() const
 {
-	if(sizeof(std::wstring::value_type) == sizeof(wchar))
-		return std::wstring((std::wstring::value_type *)Begin(),
-		                    (std::wstring::value_type *)End());
-	else {
-		std::wstring r;
-		const wchar *s = Begin();
-		while(s < End())
-			r += *s++;
-		return r;
-	}
+	std::wstring r;
+	const wchar *s = Begin();
+	while(s < End())
+		r += *s++;
+	return r;
 }
 #endif
 
@@ -286,14 +274,14 @@ void WStringBuffer::Zero()
 wchar *WStringBuffer::Alloc(int count, int& alloc)
 {
 	if(count <= 23) {
-		wchar *s = (wchar *)MemoryAlloc48();
+		wchar *s = (wchar *)MemoryAlloc(24 * sizeof(wchar));
 		alloc = WString0::SMALL;
 		return s;
 	}
 	else {
 		size_t sz = sizeof(Atomic) + ((size_t)count + 1) * sizeof(wchar);
 		Atomic *rc = (Atomic *)MemoryAlloc(sz);
-		alloc = (int)min((size_t)INT_MAX, ((sz - sizeof(Atomic)) >> 1) - 1);
+		alloc = (int)min((size_t)INT_MAX, ((sz - sizeof(Atomic)) / sizeof(wchar)) - 1);
 		ASSERT(alloc >= 0);
 		*rc = 1;
 		return (wchar *)(rc + 1);
@@ -357,7 +345,7 @@ void WStringBuffer::Cat(int c, int l)
 {
 	if(pend + l > limit)
 		Expand(max(GetLength(), l) + GetLength(), NULL, l);
-	memset16(pend, c, l);
+	memset32(pend, c, l);
 	pend += l;
 }
 

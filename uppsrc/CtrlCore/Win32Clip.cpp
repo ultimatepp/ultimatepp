@@ -55,7 +55,7 @@ bool DebugClipboard()
 
 void ClipboardLog(const char *txt)
 {
-	if(!DebugClipboard()) 
+	if(!DebugClipboard())
 		return;
 	FileAppend f(GetExeDirFile("clip.log"));
 	f << GetSysTime() << ": " << txt << "\n";
@@ -232,7 +232,8 @@ void AppendClipboardText(const String& s)
 
 void AppendClipboardUnicodeText(const WString& s)
 {
-	AppendClipboard("wtext", (byte *)~s, 2 * s.GetLength());
+	Vector<char16> ws = ToUtf16(s);
+	AppendClipboard("wtext", (const byte *)ws.begin(), 2 * ws.GetCount());
 }
 
 const char *ClipFmtsText()
@@ -245,7 +246,7 @@ String GetString(PasteClip& clip)
 	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
-		return WString((const wchar *)~s, wstrlen((const wchar *)~s)).ToString();
+		return ToUtf8((const char16 *)~s, strlen16((const char16 *)~s));
 	}
 	if(clip.Accept("text"))
 		return ~clip;
@@ -257,7 +258,7 @@ WString GetWString(PasteClip& clip)
 	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
-		return WString((const wchar *)~s, wstrlen((const wchar *)~s));
+		return ToUtf32((const char16 *)~s, strlen16((const char16 *)~s));
 	}
 	if(clip.Accept("text"))
 		return (~clip).ToWString();
@@ -326,7 +327,7 @@ String ReadClipboardText()
 WString ReadClipboardUnicodeText()
 {
 	String s = ReadClipboard((const char *)CF_UNICODETEXT);
-	return WString((const wchar *)~s, wstrlen((const wchar *)~s));
+	return ToUtf32((const char16 *)~s, strlen16((const char16 *)~s));
 }
 
 bool IsClipboardAvailable(const char *id)
@@ -475,7 +476,7 @@ Vector<String> GetClipFiles(const String& data)
 	const sDROPFILES *df = (const sDROPFILES *)~data;
 	const char *s = ((const char *)df + df->offset);
 	if(df->unicode) {
-		const wchar *ws = (wchar *)s;
+		const char16 *ws = (char16 *)s;
 		while(*ws) {
 			WString fn;
 			while(*ws)

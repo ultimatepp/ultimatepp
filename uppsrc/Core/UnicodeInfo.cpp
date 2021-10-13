@@ -77,7 +77,7 @@ struct UnicodeInfo {
 	};
 	
 	Index<dword>                      composed;
-	Index<String>                     decomposed; // using String as the vessel for dwords
+	Index<String>                     decomposed; // using String as the vessel for dwords (TODO: use WString)
 	int                               canonical_count;
 
 	Index<dword> lower;

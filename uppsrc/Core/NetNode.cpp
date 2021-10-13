@@ -12,10 +12,10 @@ NetNode::NetNode()
 NetNode& NetNode::operator=(const NetNode& s)
 {
 	net = s.net;
-	local = s.local;
-	remote = s.remote;
-	comment = s.comment;
-	provider = s.provider;
+	local = clone(s.local);
+	remote = clone(s.remote);
+	comment = clone(s.comment);
+	provider = clone(s.provider);
 	name = s.name;
 	path = s.path;
 	SetPtrs();
@@ -30,25 +30,23 @@ String DosInitCaps(const char *name)
 	return InitCaps(name);
 }
 
-void NetNode::SetPtr(String& s, char *& ptr)
-{
-	if(ptr) ptr = (char *)~s;
-}
-
 void NetNode::SetPtrs()
 {
+	auto SetPtr = [](Vector<char16>& s, char16 *& ptr) { if(ptr) ptr = s; };
 	SetPtr(local, net.lpLocalName);
 	SetPtr(remote, net.lpRemoteName);
 	SetPtr(comment, net.lpComment);
 	SetPtr(provider, net.lpProvider);
 }
 
+/*
 void NetNode::Serialize(Stream& s)
 {
 	s % net.dwScope % net.dwType % net.dwDisplayType % net.dwUsage;
 	s % local % remote % comment % provider % name % path;
 	SetPtrs();
 }
+*/
 
 Array<NetNode> NetNode::Enum() const
 {
@@ -78,34 +76,35 @@ Array<NetNode> NetNode::Enum0(HANDLE hEnum)
 {
 	Array<NetNode> r;
 	DWORD cEntries = (DWORD)-1, cbBuffer = 0x4000;
-	Buffer<NETRESOURCE> lpnr(cbBuffer);
-	while(::WNetEnumResource(hEnum, &cEntries, lpnr, &cbBuffer) == 0) {
+	Buffer<NETRESOURCEW> lpnr(cbBuffer);
+	while(::WNetEnumResourceW(hEnum, &cEntries, lpnr, &cbBuffer) == 0) {
 		for(int i = 0; i < (int)cEntries; i++) {
-			NETRESOURCE& sn = lpnr[i];
-			const char *s = sn.lpRemoteName;
+			NETRESOURCEW& sn = lpnr[i];
+			const WCHAR *s = sn.lpRemoteName;
 			NetNode& nn = r.Add();
-			NETRESOURCE& n = nn.net;
+			NETRESOURCEW& n = nn.net;
 			n = sn;
-			nn.local = n.lpLocalName;
-			nn.remote = n.lpRemoteName;
-			nn.comment = n.lpComment;
-			nn.provider = n.lpProvider;
+			auto get = [](const char16 *s) { Vector<char16> x; while(s && *s) x.Add(*s++); x.Add(0); return x; };
+			nn.local = get(n.lpLocalName);
+			nn.remote = get(n.lpRemoteName);
+			nn.comment = get(n.lpComment);
+			nn.provider = get(n.lpProvider);
 			nn.SetPtrs();
 			if(s) {
 				if(s[0] == '\\' && s[1] == '\\')
-					nn.name = FromSystemCharset(DosInitCaps(GetFileName(s)));
+					nn.name = DosInitCaps(GetFileName(FromSystemCharsetW(s)));
 				else
-					nn.name = FromSystemCharset(s);
+					nn.name = FromSystemCharsetW(s);
 			}
 			if(n.lpComment && *n.lpComment) {
 				if(nn.name.GetCount())
-					nn.name = String().Cat() << FromSystemCharset(n.lpComment)
+					nn.name = String().Cat() << FromSystemCharsetW(n.lpComment)
 					                         << " (" << nn.name << ")";
 				else
-					nn.name = FromSystemCharset(n.lpComment);
+					nn.name = FromSystemCharsetW(n.lpComment);
 			}
 			if(!(n.dwUsage & RESOURCEUSAGE_CONTAINER))
-				nn.path = FromSystemCharset(n.lpRemoteName);
+				nn.path = FromSystemCharsetW(n.lpRemoteName);
 		}
 	}
 	::WNetCloseEnum(hEnum);

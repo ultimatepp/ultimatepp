@@ -77,7 +77,7 @@ void TopWindow::SyncTitle()
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		if(IsWindowUnicode(hwnd))
-			::SetWindowTextW(hwnd, (const WCHAR*)~title);
+			::SetWindowTextW(hwnd, ToSystemCharsetW(title));
 		else
 			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
 	}

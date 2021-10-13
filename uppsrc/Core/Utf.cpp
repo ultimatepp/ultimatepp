@@ -2,137 +2,154 @@
 
 namespace Upp {
 
-int strlen32(const dword *s)
+int strlen16(const char16 *s)
 {
-	const dword *s0 = s;
+	if(!s) return 0;
+	const char16 *s0 = s;
+	while(*s) s++;
+	return int(s - s0);
+}
+
+int strlen32(const wchar *s)
+{
+	if(!s) return 0;
+	const wchar *s0 = s;
 	while(*s) s++;
 	return int(s - s0);
 }
 
 bool CheckUtf8(const char *s, int len)
 {
-	return FromUtf8_([](const byte *, dword){}, s, len);
-}
-
-int Utf8Len(const dword *s, int len)
-{
-	int rlen = 0;
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf8_([&](char) { rlen++; }, *s);
-	return rlen;
-}
-
-void ToUtf8(char *t, const dword *s, int len)
-{
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf8_([&](char c) { *t++ = c; }, *s);
-}
-
-String ToUtf8(const dword *s, int len)
-{
-	String r;
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf8_([&](char c) { r.Cat(c); }, *s);
-	return r;
+	return FromUtf8_([](wchar) {}, s, len);
 }
 
 int Utf8Len(const wchar *s, int len)
 {
 	int rlen = 0;
-	FromUtf16_([&](const wchar *, dword code) { ToUtf8_([&](char c) { rlen++; }, code); }, s, len);
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf8_([&](char) { rlen++; }, *s);
 	return rlen;
 }
 
 void ToUtf8(char *t, const wchar *s, int len)
 {
-	FromUtf16_([&](const wchar *, dword code) { ToUtf8_([&](char c) { *t++ = c; }, code); }, s, len);
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf8_([&](char c) { *t++ = c; }, *s);
 }
 
 String ToUtf8(const wchar *s, int len)
 {
-	StringBuffer r;
-	r.Reserve(len);
-	FromUtf16_([&](const wchar *, dword code) { ToUtf8_([&](char c) { r.Cat(c); }, code); }, s, len);
-	return String(r);
+	String r;
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf8_([&](char c) { r.Cat(c); }, *s);
+	return r;
 }
 
-int Utf16Len(const dword *s, int len)
+int Utf8Len(const char16 *s, int len)
 {
 	int rlen = 0;
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf16_([&](wchar) { rlen++; }, *s);
+	FromUtf16_([&](wchar code) { ToUtf8_([&](char c) { rlen++; }, code); }, s, len);
 	return rlen;
 }
 
-void ToUtf16(wchar *t, const dword *s, int len)
+void ToUtf8(char *t, const char16 *s, int len)
 {
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf16_([&](wchar c) { *t++ = c; }, *s);
+	FromUtf16_([&](wchar code) { ToUtf8_([&](char c) { *t++ = c; }, code); }, s, len);
 }
 
-WString ToUtf16(const dword *s, int len)
+String ToUtf8(const char16 *s, int len)
 {
-	WStringBuffer r;
+	StringBuffer r;
 	r.Reserve(len);
-	for(const dword *lim = s + len; s < lim; s++)
-		ToUtf16_([&](wchar c) { r.Cat(c); }, *s);
-	return WString(r);
+	FromUtf16_([&](wchar code) { ToUtf8_([&](char c) { r.Cat(c); }, code); }, s, len);
+	return String(r);
+}
+
+int Utf16Len(const wchar *s, int len)
+{
+	int rlen = 0;
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf16_([&](char16) { rlen++; }, *s);
+	return rlen;
+}
+
+void ToUtf16(char16 *t, const wchar *s, int len)
+{
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf16_([&](char16 c) { *t++ = c; }, *s);
+}
+
+Vector<char16> ToUtf16(const wchar *s, int len)
+{
+	Vector<char16> r;
+	r.Reserve(len);
+	for(const wchar *lim = s + len; s < lim; s++)
+		ToUtf16_([&](char16 c) { r.Add(c); }, *s);
+	r.Add(0);
+	return r;
 }
 
 int Utf16Len(const char *s, int len)
 {
 	int rlen = 0;
-	FromUtf8_([&](const byte *, dword code) { ToUtf16_([&](wchar c) { rlen++; }, code); }, s, len);
+	FromUtf8_([&](wchar code) {
+		ToUtf16_([&](char16) { rlen++; }, code);
+	}, s, len);
 	return rlen;
 }
 
-void ToUtf16(wchar *t, const char *s, int len)
+void ToUtf16(char16 *t, const char *s, int len)
 {
-	FromUtf8_([&](const byte *, dword code) { ToUtf16_([&](wchar c) { *t++ = c; }, code); }, s, len);
+	FromUtf8_([&](wchar code) {
+		ToUtf16_([&](char16 c) { *t++ = c; }, code);
+	}, s, len);
 }
 
-WString ToUtf16(const char *s, int len)
+Vector<char16> ToUtf16(const char *s, int len)
 {
-	WStringBuffer r;
-	FromUtf8_([&](const byte *, dword code) { ToUtf16_([&](wchar c) { r.Cat(c); }, code); }, s, len);
-	return WString(r);
+	Vector<char16> r;
+	FromUtf8_([&](wchar code) {
+		ToUtf16_([&](char16 c) { r.Add(c); } , code);
+	}, s, len);
+	r.Add(0);
+	return r;
 }
 
 int Utf32Len(const char *s, int len)
 {
 	int rlen = 0;
-	FromUtf8_([&](const byte *, dword) { rlen++; }, s, len);
+	FromUtf8_([&](wchar) { rlen++; }, s, len);
 	return rlen;
 }
 
-void ToUtf32(dword *t, const char *s, int len)
+void ToUtf32(wchar *t, const char *s, int len)
 {
-	FromUtf8_([&](const byte *, dword c) { *t++ = c; }, s, len);
+	FromUtf8_([&](wchar c) { *t++ = c; }, s, len);
 }
 
-Vector<dword> ToUtf32(const char *s, int len)
+WString ToUtf32(const char *s, int len)
 {
-	Vector<dword> r;
-	FromUtf8_([&](const byte *, dword c) { r.Add(c); }, s, len);
+	WStringBuffer r;
+	FromUtf8_([&](char16 c) { r.Cat(c); }, s, len);
 	return r;
 }
 
-int Utf32Len(const wchar *s, int len)
+int Utf32Len(const char16 *s, int len)
 {
 	int rlen = 0;
-	FromUtf16_([&](const wchar *, dword) { rlen++; }, s, len);
+	FromUtf16_([&](wchar) { rlen++; }, s, len);
 	return rlen;
 }
 
-void ToUtf32(dword *t, const wchar *s, int len)
+void ToUtf32(wchar *t, const char16 *s, int len)
 {
-	FromUtf16_([&](const wchar *, dword c) { *t++ = c; }, s, len);
+	FromUtf16_([&](wchar c) { *t++ = c; }, s, len);
 }
 
-Vector<dword> ToUtf32(const wchar *s, int len)
+WString ToUtf32(const char16 *s, int len)
 {
-	Vector<dword> r;
-	FromUtf16_([&](const wchar *, dword c) { r.Add(c); }, s, len);
+	WStringBuffer r;
+	FromUtf16_([&](wchar c) { r.Cat(c); }, s, len);
 	return r;
 }
 

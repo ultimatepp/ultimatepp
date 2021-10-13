@@ -152,7 +152,7 @@ static int CALLBACK Win32_AddFace(const LOGFONTW *logfont, const TEXTMETRICW *, 
 
 static int Win32_EnumFace(HDC hdc, const char *face)
 {
-	return EnumFontFamiliesW(hdc, face ? ~ToSystemCharsetW(face) : NULL, Win32_AddFace, (LPARAM)face);
+	return EnumFontFamiliesW(hdc, face ? ToSystemCharsetW(face) : NULL, Win32_AddFace, (LPARAM)face);
 }
 
 static void Win32_ForceFace(HDC hdc, const char *face, const char *aface)

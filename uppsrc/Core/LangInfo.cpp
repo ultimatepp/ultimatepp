@@ -193,17 +193,17 @@ int CSCZLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_leng
 
 String GetLocaleInfoA(LCID lcid, LCTYPE lctype)
 {
-	wchar cbuf[1000];
+	WCHAR cbuf[1000];
 	::GetLocaleInfoW(lcid, lctype, cbuf, __countof(cbuf));
 	return FromSystemCharsetW(cbuf);
 }
 
 WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
 {
-	wchar wbuf[1000];
+	WCHAR wbuf[1000];
 	Zero(wbuf);
 	if(::GetLocaleInfoW(lcid, lctype, (WCHAR *)wbuf, __countof(wbuf)))
-		return wbuf;
+		return ToUtf32(wbuf);
 	return Null;
 }
 

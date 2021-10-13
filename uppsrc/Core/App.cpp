@@ -59,7 +59,7 @@ String  GetHomeDirectory() {
 
 String GetEnv(const char *id)
 {
-	return WString(_wgetenv(WString(id))).ToString();
+	return WString(_wgetenv(ToSystemCharsetW(id))).ToString();
 }
 
 String GetExeFilePath()
@@ -500,27 +500,27 @@ void AppInitEnvironment__()
 	int nArgs;
     LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 	if(szArglist) {
-		strcpy(Argv0__, WString(szArglist[0]).ToString());
+		strcpy(Argv0__, FromSystemCharsetW(szArglist[0]));
 		for(int i = 1; i < nArgs; i++)
-			coreCmdLine__().Add(szArglist[i]);
+			coreCmdLine__().Add(FromSystemCharsetW(szArglist[i]).ToWString());
 		LocalFree(szArglist);
     }
 		
-	wchar *env = GetEnvironmentStringsW();
-	for(wchar *ptr = env; *ptr; ptr++)
+	WCHAR *env = GetEnvironmentStringsW();
+	for(WCHAR *ptr = env; *ptr; ptr++)
 	{
-		const wchar *b = ptr;
+		const WCHAR *b = ptr;
 		if(*ptr)
 			ptr++;
 		while(*ptr && *ptr != '=')
 			ptr++;
-		WString varname(b, ptr);
+		WString varname = ToUtf32(b, ptr - b);
 		if(*ptr)
 			ptr++;
 		b = ptr;
 		while(*ptr)
 			ptr++;
-		EnvMap().GetAdd(ToUpper(varname)) = WString(b, ptr);
+		EnvMap().GetAdd(ToUpper(varname)) = ToUtf32(b, ptr - b);
 	}
 	FreeEnvironmentStringsW(env);
 
@@ -556,16 +556,16 @@ void LaunchWebBrowser(const String& url)
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 static auxthread_t auxthread__ sShellExecuteOpen(void *str)
 {
-	ShellExecuteW(NULL, L"open", (wchar *)str, NULL, L".", SW_SHOWDEFAULT);
+	ShellExecuteW(NULL, L"open", (WCHAR *)str, NULL, L".", SW_SHOWDEFAULT);
 	free(str);
 	return 0;
 }
 
 void LaunchWebBrowser(const String& url)
 {
-	WString wurl = ToSystemCharsetW(url);
+	Vector<WCHAR> wurl = ToSystemCharsetW(url);
 	if ((int64)(ShellExecuteW(NULL, L"open", wurl, NULL, L".", SW_SHOWDEFAULT)) <= 32) {
-		int l = sizeof(wchar) * wurl.GetLength() + 1;
+		int l = sizeof(wchar) * wurl.GetCount() + 1;
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
 		StartAuxThread(sShellExecuteOpen, curl);
@@ -619,26 +619,28 @@ String LoadDataFile(const char *filename)
 
 String GetComputerName()
 {
-	char temp[256];
-	*temp = 0;
 #if defined(PLATFORM_WIN32)
+	WCHAR temp[256];
+	*temp = 0;
 	dword w = 255;
-	::GetComputerNameA(temp, &w);
+	::GetComputerNameW(temp, &w);
 #else
+	char temp[256];
 	gethostname(temp, sizeof(temp));
 #endif
-	return FromSystemCharset(temp);
+	return temp;
 }
 
 String GetUserName()
 {
-	char temp[256];
-	*temp = 0;
 #if defined(PLATFORM_WIN32)
+	WCHAR temp[256];
+	*temp = 0;
 	dword w = 255;
-	::GetUserNameA(temp, &w);
-	return FromSystemCharset(temp);
+	::GetUserNameW(temp, &w);
+	return temp;
 #else
+	char temp[256];
 	return Nvl(GetEnv("USER"), "boot");
 #endif
 }
@@ -661,9 +663,9 @@ String GetDesktopManager()
 
 String GetShellFolder(int clsid) 
 {
-	wchar path[MAX_PATH];
+	WCHAR path[MAX_PATH];
 	if(SHGetFolderPathW(NULL, clsid, NULL, /*SHGFP_TYPE_CURRENT*/0, path) == S_OK)
-		return FromUnicodeBuffer(path);
+		return FromSystemCharsetW(path);
 	return Null;
 }
 
@@ -691,7 +693,7 @@ String GetDownloadFolder()
 	if(SHGetKnownFolderPath) {
 		PWSTR path = NULL;
 		if(SHGetKnownFolderPath(&MY_FOLDERID_Downloads, 0, NULL, &path) == S_OK && path) {
-			String s = FromUnicodeBuffer(path, wstrlen(path));
+			String s = FromSystemCharsetW(path);
 			CoTaskMemFree(path);
 			return s;
 		}

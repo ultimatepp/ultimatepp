@@ -219,6 +219,9 @@ int String::GetCharCount() const
 	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();
 }
 
+String::String(char16 *s) : String(ToUtf8(s)) {}
+String::String(wchar *s) : String(ToUtf8(s)) {}
+
 String::String(StringBuffer& b)
 {
 	Zero();

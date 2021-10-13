@@ -391,6 +391,10 @@ public:
 	String(int chr, int count)                             { String0::Zero(); Cat(chr, count); }
 	String(StringBuffer& b);
 
+
+	String(char16 *s);
+	String(wchar *s);
+
 	WString ToWString() const;
 	const String& ToString() const                         { return *this; }
 
@@ -834,6 +838,8 @@ public:
 	WString(const char *s);
 	WString(const char *s, int n);
 	WString(const char *s, const char *lim);
+
+	WString(const char16 *s);
 
 	static WString GetVoid();
 	bool   IsVoid() const                                   { return alloc < 0; }

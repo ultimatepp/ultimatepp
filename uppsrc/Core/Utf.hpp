@@ -1,5 +1,5 @@
 template <class Target>
-force_inline bool ToUtf8_(Target t, dword codepoint)
+force_inline bool ToUtf8_(Target t, wchar codepoint)
 {
 	if(codepoint < 0x80)
 		t((char)codepoint);
@@ -75,7 +75,7 @@ force_inline bool FromUtf8_(Target t, const char *s, size_t len)
 	bool ok = true;
 	const char *lim = s + len;
 	while(s < lim)
-		t((const byte *)s, FetchUtf8(s, lim, ok));
+		t(FetchUtf8(s, lim, ok));
 	return ok;
 }
 
@@ -83,36 +83,36 @@ template <class Target>
 force_inline bool ToUtf16_(Target t, size_t codepoint)
 {
 	if(codepoint < 0x10000)
-		t((wchar)codepoint);
+		t((char16)codepoint);
 	else
 	if(codepoint < 0x110000) {
 		codepoint -= 0x10000;
-		t(wchar(0xD800 + (0x3ff & (codepoint >> 10))));
-		t(wchar(0xDC00 + (0x3ff & codepoint)));
+		t(char16(0xD800 + (0x3ff & (codepoint >> 10))));
+		t(char16(0xDC00 + (0x3ff & codepoint)));
 	}
 	else
 		return false;
 	return true;
 }
 
-force_inline dword ReadSurrogatePair(const wchar *s, const wchar *lim)
+force_inline wchar ReadSurrogatePair(const char16 *s, const char16 *lim)
 {
 	return (*s & 0XFC00) == 0xD800 && s + 1 < lim && (s[1] & 0xFC00) == 0xDC00 ?
-		   ((dword(s[0] & 0x3ff) << 10) | (s[1] & 0x3ff)) + 0x10000 : 0;
+		   ((wchar(s[0] & 0x3ff) << 10) | (s[1] & 0x3ff)) + 0x10000 : 0;
 }
 
 template <class Target>
-force_inline void FromUtf16_(Target t, const wchar *s, size_t len)
+force_inline void FromUtf16_(Target t, const char16 *s, size_t len)
 {
-	const wchar *lim = s + len;
+	const char16 *lim = s + len;
 	while(s < lim) {
-		dword c = ReadSurrogatePair(s, lim);
+		wchar c = ReadSurrogatePair(s, lim);
 		if(c) {
-			t(s, c);
+			t(c);
 			s += 2;
 		}
 		else {
-			t(s, *s);
+			t(*s);
 			s++;
 		}
 	}
