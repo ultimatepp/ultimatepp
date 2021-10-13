@@ -577,18 +577,6 @@ int ChNoInvalid(int c)
 	return c == DEFAULTCHAR ? '_' : c;
 }
 
-#ifdef PLATFORM_WINCE
-WString ToSystemCharset(const String& src)
-{
-	return src.ToWString();
-}
-
-String FromSystemCharset(const WString& src)
-{
-	return src.ToString();
-}
-#else
-
 #ifdef PLATFORM_WIN32
 String ToSystemCharset(const String& src, int cp)
 {
@@ -638,8 +626,25 @@ String FromSystemCharset(const String& src)
 	return IsMainRunning() ? Filter(ToCharset(CHARSET_DEFAULT, src, GetLNGCharset(GetSystemLNG())), ChNoInvalid) : src;
 }
 #endif
-#endif
 
+Vector<char16> ToSystemCharsetW(const wchar *src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+Vector<char16> ToSystemCharsetW(const char *src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+String FromSystemCharsetW(const char16 *src)
+{
+	return ToUtf8(src);
+}
 
 static StaticMutex sGCfgLock;
 

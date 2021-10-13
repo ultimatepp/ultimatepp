@@ -68,7 +68,7 @@ static void sNoBlock(int fd)
 #ifdef PLATFORM_WIN32
 bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi, const char *cd)
 { // provides conversion of charset for cmdline and envptr
-	Vector<WCHAR> cmd = ToUtf16(command);
+	Vector<WCHAR> cmd = ToSystemCharsetW(command);
 	cmd.Add(0);
 #if 0 // unicode environment not necessary for now
 	wchar wenvptr = NULL;

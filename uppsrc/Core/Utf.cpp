@@ -85,7 +85,6 @@ Vector<char16> ToUtf16(const wchar *s, int len)
 	r.Reserve(len);
 	for(const wchar *lim = s + len; s < lim; s++)
 		ToUtf16_([&](char16 c) { r.Add(c); }, *s);
-	r.Add(0);
 	return r;
 }
 
@@ -111,7 +110,6 @@ Vector<char16> ToUtf16(const char *s, int len)
 	FromUtf8_([&](wchar code) {
 		ToUtf16_([&](char16 c) { r.Add(c); } , code);
 	}, s, len);
-	r.Add(0);
 	return r;
 }
 
