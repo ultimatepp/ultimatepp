@@ -294,15 +294,6 @@ double         ceilr        (double d, int digits);
 
 int SolveQuadraticEquation(double A, double B, double C, double *r);
 
-//BW - use max<double>
-//inline double fmax(double x, double y)            { return x >= y ? x : y; }
-//BW - use min<double>
-//inline double fmin(double x, double y)            { return x <= y ? x : y; }
-//BW - use minmax<double>
-//inline double fbind(double l, double x, double h) { return x >= h ? h : x <= l ? l : x; }
-//BW - use sgn<double>
-//inline int    fsgn(double x)                      { return x > 0 ? +1 : x < 0 ? -1 : 0; }
-
 // Constants rounded for 21 decimals.
 
 #ifndef M_E
