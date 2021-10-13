@@ -633,32 +633,25 @@ Stream& Stream::operator%(WString& s) {
 	if(IsError()) return *this;
 	if(IsLoading()) {
 		dword len;
-		Pack(len);
-		if(len < 256 * 1024) {
-			WStringBuffer sb(len);
-			SerializeRaw((byte*)~sb, len * sizeof(wchar));
-			s = sb;
-		}
-		else {
-			String h = GetAll(len * sizeof(wchar));
-			if(h.IsVoid())
-				LoadError();
-			else {
-				WStringBuffer sb(len);
-				memcpy8(~sb, ~h, len * sizeof(wchar));
-				s = sb;
-			}
-		}
+		len = Get();
+		if(len == 0xff)
+			len = Get32le();
+		String h = GetAll(len * sizeof(char16));
+		if(h.IsVoid())
+			LoadError();
+		else
+			s = ToUtf32((const char16 *)~h, len);
 	}
 	else {
-		dword len = s.GetLength();
+		Vector<char16> x = ToUtf16(s);
+		dword len = x.GetCount();
 		if(len < 0xff)
 			Put(len);
 		else {
 			Put(0xff);
 			Put32le(len);
 		}
-		SerializeRaw((byte*)~s, len * sizeof(wchar));
+		SerializeRaw((byte*)x.begin(), len * sizeof(char16));
 	}
 	return *this;
 }
