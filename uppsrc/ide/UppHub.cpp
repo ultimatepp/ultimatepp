@@ -6,6 +6,7 @@ struct UppHubNest : Moveable<UppHubNest> {
 	Vector<String>   packages;
 	String           description;
 	String           repo;
+	String           website;
 	String           status = "unknown";
 	String           category;
 	String           list_name;
@@ -20,6 +21,17 @@ Color StatusPaper(const String& status)
 	                                           "stable", SLtGreen(),
 	                                           "rolling", SLtCyan(),
 	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
+}
+
+String FindWebsite(const String& repo)
+{
+	if (!repo.StartsWith("https://"))
+	{
+		return {};
+	}
+	
+	int idx = repo.ReverseFind(".git");
+	return idx == -1 ? repo : repo.Left(idx);
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
@@ -160,8 +172,8 @@ void UppHubDlg::Menu(Bar& bar)
 		sep = true;
 	}
 
-	if(n && n->repo.StartsWith("https://")) {
-		bar.Add("Open " + n->name + " in Browser..", [=] { LaunchWebBrowser(n->repo); });
+	if(n && !n->website.IsEmpty()) {
+		bar.Add("Open " + n->name + " in Browser..", [=] { LaunchWebBrowser(n->website); });
 		sep = true;
 	}
 
@@ -279,7 +291,11 @@ void UppHubDlg::Sync()
 		qtf << "@(" << (int)c.GetR() << "." << (int)c.GetG() << "." << (int)c.GetB() << ")";
 	qtf << " Category: [* \1" << n->category << "\1], status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
 	if(Installed())
-		qtf << ", [*/ installed]";
+		qtf << "&Status: [* installed]";
+	if (!n->website.IsEmpty())
+	{
+		qtf << "&&Repository: [^" << n->website << "^ " << n->website << "]";
+	}
 	qtf << "}}&&";
 	String s = readme.Get(n->readme, String());
 	if(s.GetCount()) {
@@ -372,6 +388,7 @@ void UppHubDlg::Load(int tier, const String& url)
 			};
 			Attr(n.description, "description");
 			Attr(n.repo, "repository");
+			n.website = FindWebsite(n.repo);
 			Attr(n.category, "category");
 			Attr(n.status, "status");
 			Attr(n.readme, "readme");
