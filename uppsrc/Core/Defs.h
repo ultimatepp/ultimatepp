@@ -145,14 +145,16 @@ typedef short unsigned     uint16;
 typedef unsigned long      dword;
 typedef long               int32;
 typedef unsigned long      uint32;
-typedef WCHAR              wchar;
+typedef WCHAR              char16;
+
 #else
 typedef unsigned int       dword;
 typedef int                int32;
 typedef unsigned int       uint32;
-typedef word               wchar;
+typedef WCHAR              word;
 #endif
 
+typedef uint32             wchar;
 
 #ifdef COMPILER_MSC
 typedef __int64            int64;

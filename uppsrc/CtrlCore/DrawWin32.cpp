@@ -464,12 +464,12 @@ PrintDraw::PrintDraw(HDC hdc, const char *docname)
    : SystemDraw(hdc)
 {
 	GuiLock __;
-	DOCINFO di;
+	DOCINFOW di;
 	memset(&di, 0, sizeof(di));
 	di.cbSize = sizeof(di);
-	String sys_docname = ToSystemCharset(docname);
-	di.lpszDocName = ~sys_docname;
-	if(::StartDoc(hdc, &di) <= 0)
+	Vector<char16> sys_docname = ToSystemCharsetW(docname);
+	di.lpszDocName = sys_docname;
+	if(::StartDocW(hdc, &di) <= 0)
 		aborted = true;
 	else
 		InitPrinter();

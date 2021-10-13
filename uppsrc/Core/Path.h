@@ -315,15 +315,14 @@ FileSystemInfo& StdFileSystemInfo();
 #ifdef PLATFORM_WIN32
 
 class NetNode : Moveable<NetNode> {
-	NETRESOURCE net;
-	String      local, remote, comment, provider;
+	NETRESOURCEW net;
+	Vector<char16> local, remote, comment, provider;
 
-	String      name;
-	String      path;
+	String       name;
+	String       path;
 
 	static void           Copy(String& t, char *s);
 	static Array<NetNode> Enum0(HANDLE hEnum);
-	static void           SetPtr(String& s, char *& ptr);
 
 	void SetPtrs();
 
@@ -334,13 +333,11 @@ public:
 	String         GetName() const     { return name; }
 	String         GetPath() const     { return path; }
 	int            GetDisplayType() const;
-	String         GetRemote() const   { return remote; }
-	String         GetLocal() const    { return local; }
-	String         GetProvider() const { return provider; }
-	String         GetComment() const  { return comment; }
+	String         GetRemote() const   { return ToUtf8(remote); }
+	String         GetLocal() const    { return ToUtf8(local); }
+	String         GetProvider() const { return ToUtf8(provider); }
+	String         GetComment() const  { return ToUtf8(comment); }
 	Array<NetNode> Enum() const;
-
-	void           Serialize(Stream& s);
 
 	static Array<NetNode> EnumRoot();
 	static Array<NetNode> EnumRemembered();

@@ -83,30 +83,30 @@ void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
 enum {
-	K_DELTA        = 0x010000,
+	K_DELTA        = 0x200000,
 
-	K_ALT          = 0x080000,
-	K_SHIFT        = 0x040000,
-	K_CTRL         = 0x020000,
+	K_ALT          = 0x1000000,
+	K_SHIFT        = 0x800000,
+	K_CTRL         = 0x400000,
+#ifdef PLATFORM_COCOA
+	K_OPTION       = 0x2000000,
+#endif
 
-	K_KEYUP        = 0x100000,
+	K_KEYUP        = 0x4000000,
 
-	K_MOUSEMIDDLE  = 0x200000,
-	K_MOUSERIGHT   = 0x400000,
-	K_MOUSELEFT    = 0x800000,
-	K_MOUSEDOUBLE  = 0x1000000,
-	K_MOUSETRIPLE  = 0x2000000,
+	K_MOUSEMIDDLE  = 0x2,
+	K_MOUSERIGHT   = 0x4,
+	K_MOUSELEFT    = 0x8,
+	K_MOUSEDOUBLE  = 0x10,
+	K_MOUSETRIPLE  = 0x20,
 
 	K_SHIFT_CTRL = K_SHIFT|K_CTRL,
 
-#ifdef PLATFORM_COCOA
-	K_OPTION       = 0x4000000,
-#endif
 
-	K_PEN          = 0x8000000,
+	K_PEN          = 0x80,
 
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
-	
+
 	K_MOUSE_FORWARD = 0x80000001,
 	K_MOUSE_BACKWARD = 0x80000002,
 };

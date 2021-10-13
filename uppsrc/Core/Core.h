@@ -306,7 +306,6 @@ class JsonIO;
 #include "String.h"
 
 #include "TimeDate.h"
-#include "Path.h"
 #include "Stream.h"
 #include "Diag.h"
 
@@ -323,6 +322,8 @@ class JsonIO;
 #include "InVector.h"
 
 #include "CharSet.h"
+
+#include "Path.h"
 
 #include "SplitMerge.h"
 

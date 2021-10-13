@@ -72,7 +72,7 @@ HANDLE XpWidget(int widget)
 {
 	if(xp_widget_handle[widget] == NULL && XpTheme())
 		xp_widget_handle[widget] = XpTheme().OpenThemeData(NULL,
-		                            (WCHAR *)(const wchar *)WString(xp_widget_name[widget]));
+		                            ToSystemCharsetW(xp_widget_name[widget]));
 	return xp_widget_handle[widget];
 }
 
@@ -308,11 +308,11 @@ void Win32Look(Value& ch, int widget, int part, int state = 1, bool contentm = f
 
 String XpThemeInfo(LPCWSTR pszPropertyName)
 {
-	wchar theme[512], colors[512], size[512];
+	WCHAR theme[512], colors[512], size[512];
 	XpTheme().GetCurrentThemeName(theme, 512, colors, 512, size, 512);
-	wchar h[1024];
+	WCHAR h[1024];
 	XpTheme().GetThemeDocumentationProperty(theme, pszPropertyName, h, 1000);
-	return FromUnicode(h);
+	return ToUtf8(h);
 }
 
 struct sysColor {

@@ -70,7 +70,7 @@ public:
 
 	int             Compare(const wchar *a, const wchar *b) const    { return Compare(a, wstrlen(a), b, wstrlen(b)); }
 	int             Compare(WString a, WString b) const              { return Compare(a, a.GetLength(), b, b.GetLength()); }
-	int             Compare(const char *a, const char *b) const      { return Compare(ToUnicode(a, CHARSET_DEFAULT), ToUnicode(b, CHARSET_DEFAULT)); }
+	int             Compare(const char *a, const char *b) const      { return Compare(ToUtf32(a), ToUtf32(b)); }
 	int             Compare(String a, String b) const                { return Compare(a.ToWString(), b.ToWString()); }
 
 	bool            operator()(const wchar *a, const wchar *b) const { return Compare(a, b) < 0; }

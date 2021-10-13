@@ -44,11 +44,11 @@ struct FileIconMaker : ImageMaker {
 	}
 
 	virtual Image Make() const {
-		SHFILEINFO info;
+		SHFILEINFOW info;
 		AvoidPaintingCheck__();
-		SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
-		              &info, sizeof(info),
-		              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
+		SHGetFileInfoW(ToSystemCharsetW(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
+		               &info, sizeof(info),
+		               SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
 		return ProcessSHIcon(info.hIcon);
 	}
 };
@@ -587,14 +587,14 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 
 #ifdef GUI_WIN
 static Mutex       sExeMutex;
-static wchar       sExePath[1025];
+static WCHAR       sExePath[1025];
 static bool        sExeRunning;
 static SHFILEINFOW sExeInfo;
 
 static auxthread_t auxthread__ sExeIconThread(void *)
 {
 	SHFILEINFOW info;
-	wchar path[1025];
+	WCHAR path[1025];
 	CoInitialize(NULL);
 	sExeMutex.Enter();
 	wcscpy(path, sExePath);
@@ -649,7 +649,7 @@ void LazyExeFileIcons::Do()
 			sExeMutex.Enter();
 			bool running = sExeRunning;
 			if(!running) {
-				done = path == sExePath;
+				done = path == ToUtf32(sExePath);
 				memcpy(&info, &sExeInfo, sizeof(info));
 				*sExePath = '\0';
 				memset(&sExeInfo, 0, sizeof(sExeInfo));
@@ -2389,7 +2389,9 @@ FileSel::FileSel()
 	places.NoWantFocus();
 
 #ifdef PLATFORM_WIN32
-	list.IconWidth(GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx);
+	int icx = GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx;
+	if(icx)
+		list.IconWidth(icx);
 #endif
 
 	AddStandardPlaces();
