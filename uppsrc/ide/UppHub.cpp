@@ -23,17 +23,6 @@ Color StatusPaper(const String& status)
 	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
 }
 
-String FindWebsite(const String& repo)
-{
-	if (!repo.StartsWith("https://"))
-	{
-		return {};
-	}
-	
-	int idx = repo.ReverseFind(".git");
-	return idx == -1 ? repo : repo.Left(idx);
-}
-
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
@@ -293,9 +282,7 @@ void UppHubDlg::Sync()
 	if(Installed())
 		qtf << "&Status: [* installed]";
 	if (!n->website.IsEmpty())
-	{
-		qtf << "&&Repository: [^" << n->website << "^ " << n->website << "]";
-	}
+		qtf << "&&Website: [^" << n->website << "^ " << n->website << "]";
 	qtf << "}}&&";
 	String s = readme.Get(n->readme, String());
 	if(s.GetCount()) {
@@ -388,7 +375,9 @@ void UppHubDlg::Load(int tier, const String& url)
 			};
 			Attr(n.description, "description");
 			Attr(n.repo, "repository");
-			n.website = FindWebsite(n.repo);
+			Attr(n.website, "website");
+			if(IsNull(n.website))
+				n.website = TrimRight(".git", n.repo);
 			Attr(n.category, "category");
 			Attr(n.status, "status");
 			Attr(n.readme, "readme");
