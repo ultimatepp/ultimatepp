@@ -118,7 +118,7 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 		}
 		case MD_BLOCK_H:
 		{
-			txt << "[*;a20;b20;"
+			txt << "[*;a20;b20;pht300;"
 				<< clamp(6 - b.data.To<int>(), 1, 6)
 				<< " "
 				<< b.text
@@ -132,7 +132,7 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 		}
 		case MD_BLOCK_OL:
 		{
-			txt << "[N! "
+			txt << "[N!;wt300; "
 				<< Compose(b.children, b.data, false, flags|BLOCK_IN_OLIST)
 				<< "&]";
 			break;
@@ -154,11 +154,11 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 		case MD_BLOCK_P:
 		{
 			if(!b.level) {
-				txt << "[b20 " << b.text << " &]";
+				txt << "[b20;wt300 " << b.text << " &]";
 			}
 			else
 			if(notext && !i) {
-				txt << "[b20;l"
+				txt << "[b20;wt300;l"
 					<< b.level * ((flags & BLOCK_IN_QUOTE) ? 20 : 200)
 					<< ";i200;"
 					<< decode(data, '*', "OO ", '-', "O1 ", '+', "O2 ", "N1 ")
@@ -166,7 +166,7 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 					<< "&]";
 			}
 			else {
-				txt << "[b20;l"
+				txt << "[b20;wt300;l"
 					<< b.level * ((flags & BLOCK_IN_QUOTE) ? 40 : 400)
 					<< ";O_ "
 					<< b.text
@@ -179,7 +179,7 @@ String sMarkdownContext::Compose(const Array<Block>& doc, int data, bool notext,
 		{
 			txt << "{{10000;A20;B20;<"
 				<< b.level * ((flags & BLOCK_IN_QUOTE) ? 10 : 400)
-			    << ";@(250.250.250);F(230.230.230) [i10;C;1;@5;< "
+			    << ";@(250.250.250);F(230.230.230) [i10;C;2;@5;< "
 				<< b.text
 				<< " ]}}&";
 			break;
