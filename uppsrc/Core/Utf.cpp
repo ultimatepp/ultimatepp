@@ -128,7 +128,7 @@ void ToUtf32(wchar *t, const char *s, int len)
 WString ToUtf32(const char *s, int len)
 {
 	WStringBuffer r;
-	FromUtf8_([&](char16 c) { r.Cat(c); }, s, len);
+	FromUtf8_([&](wchar c) { r.Cat(c); }, s, len);
 	return r;
 }
 

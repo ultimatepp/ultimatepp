@@ -8,6 +8,7 @@ enum {
 #undef CHRSET_
 
 #define  CHARSET_TOASCII      253
+#define  CHARSET_UTF32        254 // auxilary
 #define  CHARSET_UTF8         255
 #define  CHARSET_UNICODE      255
 
@@ -32,6 +33,9 @@ wchar ReadSurrogatePair(const char16 *s, const char16 *lim);
 
 wchar FetchUtf8(const char *&s, const char *lim, bool& ok);
 inline wchar FetchUtf8(const char *&s, const char *lim) { bool ok; return FetchUtf8(s, lim, ok); }
+
+dword FetchUtf8(const char *&s, bool& ok);
+inline wchar FetchUtf8(const char *&s)                { bool ok; return FetchUtf8(s, ok); }
 
 bool   CheckUtf8(const char *s, int len);
 inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen(s)); }

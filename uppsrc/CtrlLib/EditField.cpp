@@ -944,7 +944,7 @@ bool EditField::Key(dword key, int rep)
 		}
 		return false;
 	default:
-		if(key >= ' ' && key < 65536 || key == K_SHIFT_SPACE) {
+		if(key >= ' ' && key < K_CHAR_LIM || key == K_SHIFT_SPACE) {
 			if(!RemoveSelection()) SaveUndo();
 			while(rep--)
 				Insert(key == K_SHIFT_SPACE ? ' ' : key);

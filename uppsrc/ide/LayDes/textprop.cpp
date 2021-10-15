@@ -123,7 +123,7 @@ void LTProperty::Read(CParser& p)
 String LTProperty::Save() const
 {
 	String px = ~lid;
-	String txt = FromUnicode((WString)Get(), charset);
+	String txt = FromUnicode(Get(), charset);
 	if(id)
 		return "t_(" + AsCString(px + "\a" + txt) + ')';
 	else

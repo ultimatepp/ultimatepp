@@ -32,7 +32,7 @@ int CharFilterAscii128(int c)
 
 int CharFilterUnicode(int c)
 {
-	return c >= 32 && c < 65536 ? c : 0;
+	return c >= 32 && c < 0x10FFFF ? c : 0;
 }
 
 int CharFilterDigit(int c)

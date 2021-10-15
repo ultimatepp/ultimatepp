@@ -89,7 +89,7 @@ bool SuggestCtrl::Key(dword key, int count)
 	if(cc)
 		key = cc;
 	if(EditString::Key(key, count)) {
-		if(key >= 32 && key < 65536 || key == K_BACKSPACE || key == K_CTRL_SPACE) {
+		if(key >= 32 && key < K_CHAR_LIM || key == K_BACKSPACE || key == K_CTRL_SPACE) {
 			int h;
 			WString x = CF(ReadLast(h));
 			list.Clear();

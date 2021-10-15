@@ -71,7 +71,7 @@ struct KeyCtrl : Ctrl {
 	virtual bool Key(dword _key, int) {
 		if(_key == K_ENTER || _key == K_ESCAPE)
 			return false;
-		if((_key & K_KEYUP) || _key < 65536 || _key == K_SHIFT_KEY || _key == K_ALT_KEY || _key == K_CTRL_KEY)
+		if((_key & K_KEYUP) || _key < K_CHAR_LIM || _key == K_SHIFT_KEY || _key == K_ALT_KEY || _key == K_CTRL_KEY)
 			return true;
 		if(_key == K_SPACE || _key == K_DELETE || _key == K_BACKSPACE)
 			key = 0;

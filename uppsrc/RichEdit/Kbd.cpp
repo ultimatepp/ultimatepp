@@ -184,7 +184,7 @@ bool RichEdit::Key(dword key, int count)
 		}
 		if(key == K_SHIFT_SPACE)
 			key = ' ';
-		if(key == 9 || key >= 32 && key < 65536) {
+		if(key == 9 || key >= 32 && key < K_CHAR_LIM) {
 			RichPara::Format f;
 			if(IsSelection()) {
 				f = text.GetRichPos(min(cursor, anchor)).format;
