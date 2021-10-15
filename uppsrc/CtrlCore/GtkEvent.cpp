@@ -525,7 +525,7 @@ void Ctrl::Proc()
 	case GDK_KEY_RELEASE:
 		kv = CurrentEvent.value[0];
 		hw = CurrentEvent.value[1];
-		if(kv >= 0 && kv < 65536) {
+		if(kv >= 0 && kv < K_CHAR_LIM) {
 			LLOG("keyval " << FormatIntHex(kv) << ' ' << (char)kv);
 			if(kv >= 'a' && kv <= 'z')
 				kv = kv - 'a' + 'A';

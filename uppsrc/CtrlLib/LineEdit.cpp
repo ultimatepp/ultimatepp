@@ -1007,11 +1007,11 @@ void LineEdit::MoveTextEnd(bool sel) {
 bool LineEdit::InsertChar(dword key, int count, bool canow) {
 	if(key == K_TAB && !processtab)
 		return false;
-	if(filter && key >= 32 && key < 65535)
+	if(filter && key >= 32 && key < K_CHAR_LIM)
 		key = (*filter)(key);
-	if(!IsReadOnly() && (key >= 32 && key < 65536 || key == '\t' || key == '\n' ||
+	if(!IsReadOnly() && (key >= 32 && key < K_CHAR_LIM || key == '\t' || key == '\n' ||
 	   key == K_ENTER && processenter || key == K_SHIFT_SPACE)) {
-		if(key >= 128 && key < 65536 && (charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
+		if(key >= 128 && key < K_CHAR_LIM && (charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
 		   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 			return true;
 		if(!RemoveSelection() && overwrite && key != '\n' && key != K_ENTER && canow) {

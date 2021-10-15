@@ -1294,7 +1294,7 @@ bool TreeCtrl::Key(dword key, int)
 			Open(cid);
 		break;
 	default: {
-			if(accel && key >= ' ' && key < 65536) {
+			if(accel && key >= ' ' && key < K_CHAR_LIM) {
 				int ascii_line = -1;
 				int upper_line = -1;
 				int exact_line = -1;

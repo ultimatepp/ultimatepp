@@ -68,7 +68,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		String kl;
 		dword k = keycode;
 		const char *l = "";
-		if(k < 65536) {
+		if(k < K_CHAR_LIM) {
 			kl << "CHAR \'" << ToUtf8((wchar)keycode) << "\' (" << keycode << ')';
 			l = "  ";
 		}

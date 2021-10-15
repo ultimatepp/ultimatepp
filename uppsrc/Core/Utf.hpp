@@ -29,7 +29,7 @@ force_inline bool ToUtf8_(Target t, wchar codepoint)
 	return true;
 }
 
-force_inline dword FetchUtf8(const char *&_s, const char *_lim, bool& ok)
+force_inline dword FetchUtf8(const char *&_s, bool nolim, const char *_lim, bool& ok)
 {
 	const byte *s = (const byte *)_s;
 	const byte *lim = (const byte *)_lim;
@@ -41,14 +41,14 @@ force_inline dword FetchUtf8(const char *&_s, const char *_lim, bool& ok)
 	else
 	if(code >= 0xC2) {
 		dword c;
-		if(code < 0xE0 && s + 1 < lim &&
+		if(code < 0xE0 && (nolim || s + 1 < lim) &&
 		   s[1] >= 0x80 && s[1] < 0xc0 &&
 		   (c = ((code - 0xC0) << 6) + s[1] - 0x80) >= 0x80 && c < 0x800) {
 			_s += 2;
 			return c;
 		}
 		else
-		if(code < 0xF0 && s + 2 < lim &&
+		if(code < 0xF0 && (nolim || s + 2 < lim) &&
 		   s[1] >= 0x80 && s[1] < 0xc0 && s[2] >= 0x80 && s[2] < 0xc0 &&
 		   (c = ((code - 0xE0) << 12) + ((s[1] - 0x80) << 6) + s[2] - 0x80) >= 0x800 &&
 		   !(c >= 0xEE00 && c <= 0xEEFF)) {
@@ -56,7 +56,7 @@ force_inline dword FetchUtf8(const char *&_s, const char *_lim, bool& ok)
 			return c;
 		}
 		else
-		if(code < 0xF8 && s + 3 < lim &&
+		if(code < 0xF8 && (nolim || s + 3 < lim) &&
 		   s[1] >= 0x80 && s[1] < 0xc0 && s[2] >= 0x80 && s[2] < 0xc0 && s[3] >= 0x80 && s[3] < 0xc0 &&
 		   (c = ((code - 0xF0) << 18) + ((s[1] - 0x80) << 12) + ((s[2] - 0x80) << 6) + s[3] - 0x80) >= 0x10000 &&
 		   c < 0x110000) {
@@ -67,6 +67,16 @@ force_inline dword FetchUtf8(const char *&_s, const char *_lim, bool& ok)
 	_s++;
 	ok = false;
 	return 0xEE00 + code; // ERROR ESCAPE
+}
+
+force_inline dword FetchUtf8(const char *&s, const char *lim, bool& ok)
+{
+	return FetchUtf8(s, false, lim, ok);
+}
+
+force_inline dword FetchUtf8(const char *&s, bool& ok)
+{
+	return FetchUtf8(s, true, NULL, ok);
 }
 
 template <class Target>

@@ -250,6 +250,8 @@ void DrawingDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, C
 	DrawingOp(DRAWING_DRAWARC) % const_cast<Rect&>(rc) % start % end % color % width;
 }
 
+static_assert(sizeof(wchar) == 4, "sizeof wchar");
+
 void DrawingDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                              int n, const int *dx) {
 	if(IsNull(ink)) return;
@@ -258,9 +260,13 @@ void DrawingDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fo
 	if(n == 0)
 		return;
 	Stream& s = DrawingOp(DRAWING_DRAWTEXT);
-	byte cs = CHARSET_UNICODE;
+	byte cs = CHARSET_UTF32;
 	s % x % y % angle % font % ink / n % cs;
-	s.PutW((wchar *)text, n);
+#ifdef CPU_LE
+	s.Put(text, n * sizeof(wchar));
+#else
+	#error big endiand not supported
+#endif
 	bool dxb = dx;
 	s % dxb;
 	if(dx) {
@@ -548,12 +554,17 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 					FontInfo fi = font.Info();
 					font.Height(fi.GetHeight() - fi.GetInternal());
 				}
-				bool unicode = cs == CHARSET_UNICODE;
 				WString text;
-				if(unicode) {
+				if(cs == CHARSET_UTF32) {
 					Buffer<wchar> txt(n);
-					ps.Stream::GetW(txt, n);
+					ps.Stream::Get(txt, n * sizeof(wchar));
 					text = WString(txt, n);
+				}
+				else
+				if(cs == CHARSET_UNICODE) { // backward compatibility
+					Buffer<char16> txt(n);
+					ps.Stream::GetW(txt, n);
+					text = ToUtf32(txt, n);
 				}
 				else {
 					Buffer<char> txt(n);
@@ -594,39 +605,6 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 					int ht = (int)(font.GetHeight() * min(double(ps.target.cx) / ps.source.cx, double(ps.target.cy) / ps.source.cy));
 					font.Width((int)q * font.GetWidth()).Height(ht ? ht : 1);
 					DrawText(ps.GetX(x), ps.GetY(y), angle, text, font, ink, dx);
-				/*
-					FontInfo fi = font.Info();
-					const wchar *wp = ~text;
-					int odd = (angle / 900) & 1;
-					double ang = (double) (angle % 900) * M_2PI / 3600;
-					double sx = (double) ps.target.cx / ps.source.cx;
-					double sy = (double) ps.target.cy / ps.source.cy;
-					double ang2 = atan((odd ? sx / sy : sy / sx) * tan(ang));
-					DDUMP(odd);
-					DDUMP(cx);
-					DDUMP(sy);
-					DDUMP(sin(ang));
-					DDUMP(sin(ang2));
-					double q = (odd ? sx : sy) * sin(ang) / sin(ang2);
-					double error = 0;
-					while(nn--) {
-						int cx;
-						if(dxb) {
-							ps / cx;
-							DDUMP(cx);
-						}
-						else
-							cx = fi[*wp++];
-						double ncx = q * cx + error;
-						DDUMP(q * cx);
-						*wd++ = cx = (int) ncx;
-						error = ncx - cx;
-					}
-					int ht = (int)(fi.GetFontHeight() * (sx * sin(ang) * sin(ang2) + sy * cos(ang) * cos(ang2)));
-					font.Width(int(q * fi.GetAveWidth())).Height(ht ? ht : 1);
-					DrawText(ps.GetX(x), ps.GetY(y), int(ang2 * 3600 / M_2PI) + (angle / 900) * 900,
-					         text, font, ink, dx);
-				*/
 				}
 			}
 		}

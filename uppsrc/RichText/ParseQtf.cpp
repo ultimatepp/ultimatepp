@@ -1011,25 +1011,10 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 					if(istable)
 						EndPart();
 					if(format.charset == CHARSET_UTF8) {
-						word code = (byte)*term++;
-						if(code <= 0x7F)
-							Cat(code);
-						else
-						if(code <= 0xDF) {
-							if(*term == '\0') break;
-							int c0 = (byte)*term++;
-							if(c0 < 0x80)
-								Error("Invalid UTF-8 sequence");
-							Cat(((code - 0xC0) << 6) + c0 - 0x80);
-						}
-						else
-						if(code <= 0xEF) {
-							int c0 = (byte)*term++;
-							int c1 = (byte)*term++;
-							if(c0 < 0x80 || c1 < 0x80)
-								Error("Invalid UTF-8 sequence");
-							Cat(((code - 0xE0) << 12) + ((c0 - 0x80) << 6) + c1 - 0x80);
-						}
+						bool ok = true;
+						wchar c = FetchUtf8(term, ok);
+						if(ok)
+							Cat(c);
 						else
 							Error("Invalid UTF-8 sequence");
 					}

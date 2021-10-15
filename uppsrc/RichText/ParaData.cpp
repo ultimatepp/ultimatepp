@@ -562,7 +562,7 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 			b.Reserve(512);
 			while(in.Term() >= 32 || in.Term() == 9)
 				b.Cat(in.Get());
-			part.Top().text.Cat(FromUtf8(~b));
+			part.Top().text.Cat(ToUtf32(~b));
 		}
 	if(part.Top().text.GetLength() == 0 && part.Top().IsText())
 		part.Drop();
@@ -736,7 +736,7 @@ void RichPara::Mid(int pos)
 }
 
 void ApplyCharStyle(RichPara::CharFormat& format, const RichPara::CharFormat& f0,
-                    const RichPara::CharFormat& newstyle) { 
+                    const RichPara::CharFormat& newstyle) {
 	if(format.IsBold() == f0.IsBold())
 		format.Bold(newstyle.IsBold());
 	if(format.IsUnderline() == f0.IsUnderline())

@@ -704,37 +704,6 @@ as 0 is considered as NULL pointer too...&]
 [s7; [%-*C@3 count]-|Repeat count.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:PutW`(const wchar`*`,int`):%- [@(0.0.255) void]_[* PutW]([@(0.0.255) const]_
-[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ wchar
-]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
-[s2; Writes a specified number of wchars (16`-bit character values) 
-to the stream in platform specific format (little`-endian or 
-big`-endian).&]
-[s7; [%-*C@3 s]-|String to write.&]
-[s7; [%-*C@3 count]-|Length of string.&]
-[s3; &]
-[s4;%- &]
-[s5;:Stream`:`:GetW`(wchar`*`,int`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
-word]_[* GetW]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ w
-char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
-[s2; Reads a specified number of wchars (16`-bit character values) 
-from the stream in platform specific format.&]
-[s7; [%-*C@3 s]-|Pointer to buffer to receive wchars.&]
-[s7; [%-*C@3 count]-|Number of wchars.&]
-[s7; [*/ Return value]-|Number of wchars actually read.&]
-[s3; &]
-[s4;%- &]
-[s5;:Stream`:`:GetAllW`(wchar`*`,int`):%- [@(0.0.255) bool]_[* GetAllW]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ w
-char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
-[s2; Reads a specified number of wchars (16`-bit character values) 
-from the stream in platform specific format. If there is not 
-enough data in the stream, LoadError is invoked (that in turn 
-might throw an exception).&]
-[s7; [%-*C@3 s]-|&]
-[s7; [%-*C@3 count]-|&]
-[s7; [*/ Return value]-|&]
-[s3; &]
-[s4;%- &]
 [s5;:Stream`:`:PutCrLf`(`):%- [@(0.0.255) void]_[* PutCrLf]()&]
 [s2; Writes CR`-LF pair to the stream. &]
 [s3; &]

@@ -438,10 +438,10 @@ bool DocEdit::Key(dword key, int cnt)
 		default:
 			if(filter && key >= 32 && key < 65535)
 				key = (*filter)(key);
-			if(key >= ' ' && key < 65536 || key == '\n' || key == '\t' || key == K_SHIFT_SPACE) {
+			if(key >= ' ' && key < K_CHAR_LIM || key == '\n' || key == '\t' || key == K_SHIFT_SPACE) {
 				if(key == K_TAB && !processtab)
 					return false;
-				if(key >= 128 && key < 65536 && (charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
+				if(key >= 128 && key < K_CHAR_LIM && (charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
 				   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 					return true;
 				RemoveSelection();

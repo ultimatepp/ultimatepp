@@ -366,8 +366,23 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				keycode = KEYtoK((dword)wParam) | K_KEYUP;
 			else
 			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && KEYtoK(VK_SPACE) == K_SPACE) {
-				if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX Unicode patch
+				if(IsWindowUnicode(hwnd)) { // TRC 04/10/17: ActiveX Unicode patch
+					static WCHAR surr[2];
 					keycode = (dword)wParam;
+					if((keycode & 0XFC00) == 0xD800) { // covert UTF16 surrogate pair to UTF32 codepoint
+						surr[0] = keycode;
+						return 0L;
+					}
+					if((keycode & 0xFC00) == 0xDC00) {
+						surr[1] = keycode;
+						keycode = ReadSurrogatePair(surr, surr + 2);
+						surr[0] = 0;
+						if(!keycode)
+							return 0L;
+					}
+					else
+						surr[0] = 0;
+				}
 				else {
 					char b[20];
 					::GetLocaleInfo(MAKELCID(LOWORD(GetKeyboardLayout(0)), SORT_DEFAULT),
