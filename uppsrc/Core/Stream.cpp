@@ -1075,32 +1075,28 @@ Stream& NilStream()
 	return Single<NilStreamClass>();
 }
 
-#ifdef PLATFORM_WIN32
-bool IsCoutUTF8;
-#endif
-
-void CoutUTF8()
-{
-#ifdef PLATFORM_WIN32
-	IsCoutUTF8 = true;
-	SetConsoleOutputCP(65001);
-#endif
-}
-
 #ifndef PLATFORM_WINCE
 class CoutStream : public Stream {
+#ifdef PLATFORM_WIN32
 	String buffer;
+
+	void Flush() {
+		ONCELOCK {
+			SetConsoleOutputCP(65001); // set console to UTF8 mode
+		}
+		static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+		dword dummy;
+		WriteFile(h, ~buffer, buffer.GetCount(), &dummy, NULL);
+		buffer.Clear();
+	}
+#endif
+
 
 	void Put0(int w) {
 #ifdef PLATFORM_WIN32
 		buffer.Cat(w);
-		if(CheckUtf8(buffer)) { // TODO: Use W api
-			String ws = ToSystemCharset(buffer, GetConsoleOutputCP());
-			static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-			dword dummy;
-			WriteFile(h, ~ws, ws.GetCount(), &dummy, NULL);
-			buffer.Clear();
-		}
+		if(CheckUtf8(buffer) || buffer.GetCount() > 8)
+			Flush();
 #else
 		putchar(w);
 #endif
