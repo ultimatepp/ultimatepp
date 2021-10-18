@@ -17,7 +17,7 @@ force_inline int strlen__(const char *s)  { return s ? (int)strlen(s) : 0; }
 inline int strlen__(const wchar *s)       { return s ? (int)wstrlen(s) : 0; }
 
 inline int cmpval__(char x)               { return (byte)x; }
-inline int cmpval__(wchar x)              { return (word)x; }
+inline int cmpval__(wchar x)              { return x; }
 
 int find(const char *text, int len, const char *needle, int nlen, int from);
 int find(const wchar *text, int len, const wchar *needle, int nlen, int from);
@@ -778,8 +778,8 @@ public:
 	int  GetAlloc() const                { return alloc; }
 
 	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
-	bool     IsEqual(const WString0& s) const { return s.length == length && memeq16(ptr, s.ptr, length); }
-	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq16(begin(), s, l); }
+	bool     IsEqual(const WString0& s) const { return s.length == length && memeq32(ptr, s.ptr, length); }
+	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq32(begin(), s, l); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);

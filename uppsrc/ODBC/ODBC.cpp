@@ -620,11 +620,10 @@ bool ODBCConnection::Fetch0()
 			   break;
 			if(li != SQL_NULL_DATA && li >= 0) {
 				if(ct == SQL_C_WCHAR) {
-					WStringBuffer sb;
-					sb.SetLength(li / 2);
+					Buffer<WCHAR> sb(li / 2);
 					if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 2, &li)))
 					   break;
-					v = WString(sb);
+					v = ToUtf32(sb, li / 2);
 				}
 				else {
 					StringBuffer sb;

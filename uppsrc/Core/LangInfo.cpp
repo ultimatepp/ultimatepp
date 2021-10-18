@@ -195,7 +195,7 @@ String GetLocaleInfoA(LCID lcid, LCTYPE lctype)
 {
 	WCHAR cbuf[1000];
 	::GetLocaleInfoW(lcid, lctype, cbuf, __countof(cbuf));
-	return FromSystemCharsetW(cbuf);
+	return cbuf;
 }
 
 WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
@@ -203,7 +203,7 @@ WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
 	WCHAR wbuf[1000];
 	Zero(wbuf);
 	if(::GetLocaleInfoW(lcid, lctype, (WCHAR *)wbuf, __countof(wbuf)))
-		return ToUtf32(wbuf);
+		return wbuf;
 	return Null;
 }
 

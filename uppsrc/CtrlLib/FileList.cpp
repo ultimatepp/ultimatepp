@@ -345,7 +345,7 @@ String FileList::GetCurrentName() const
 
 int FileList::Find(const char *s) {
 	for(int i = 0; i < GetCount(); i++)
-		if(strcmp(Get(i).name, s) == 0) return i;
+		if(Get(i).name == s) return i;
 	return -1;
 }
 

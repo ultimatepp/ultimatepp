@@ -321,7 +321,7 @@ String Pdb::GetSymName(adr_t modbase, dword typeindex)
 {
     WCHAR *pwszTypeName;
     if(SymGetTypeInfo(hProcess, modbase, typeindex, TI_GET_SYMNAME, &pwszTypeName)) {
-		WString w((const wchar *)pwszTypeName);
+		WString w = pwszTypeName;
 		LocalFree(pwszTypeName);
 		return w.ToString();
     }
