@@ -1,5 +1,4 @@
 topic "Stream utilities";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Stream utilities";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@2;4 Stream helpers]]}}&]
 [s0;%% &]
@@ -40,16 +40,9 @@ stream. Returns the actual number of bytes copied. With default
 [%-*@3 count] value it copies all data from [%-*@3 src] until EOF.&]
 [s3; &]
 [s4; &]
-[s5;:CoutUTF8`(`): [@(0.0.255) void]_[* CoutUTF8]()&]
-[s2;%% In Win32, setups console output for UTF8. NOP in POSIX.&]
-[s3; &]
-[s4; &]
 [s5;:Cout`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* Cout]()&]
 [s2;%% Returns special output stream representing console output. 
-Data written to this stream are displayed as characters in console. 
-In Win32, encoding is converted to default console encoding, 
-or is not convereted at all if CoutUTF8 was called.&]
-[s7;%% [*/ Return value]-|Console stream.&]
+Data written to this stream are displayed as characters in console.&]
 [s3; &]
 [s4; &]
 [s5;:Cerr`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* Cerr]()&]
