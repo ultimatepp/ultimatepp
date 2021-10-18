@@ -143,7 +143,7 @@ void Pdb::TreeExpand(int node)
 					}
 					val.address += sz;
 				}
-				TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 20);
+				TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 40);
 				SaveTree();
 				return;
 			}

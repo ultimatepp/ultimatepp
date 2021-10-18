@@ -130,7 +130,10 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 					if(sz == 1)
 						s.Cat(PeekByte(a));
 					else
+					if(sz == 2)
 						ws.Cat(PeekWord(a));
+					else
+						ws.Cat(PeekDword(a));
 				}
 				if(!(flags & MEMBER))
 					ResultCount(p.data_count);

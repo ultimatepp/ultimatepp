@@ -16,10 +16,11 @@ void Pdb::PrettyString(Pdb::Val val, const Vector<String>& tparam, int64 from, i
 void Pdb::PrettyWString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
 {
 	p.data_count = GetInt64(GetAttr(val, "length"));
-	adr_t a = DeRef(GetAttr(val, "ptr")).address;
-	p.data_type << "short int";
+	Val q = DeRef(GetAttr(val, "ptr"));
+	int sz = SizeOfType(q.type);
+	p.data_type.Add(sz == 4 ? "int" : "short int");
 	for(int i = 0; i < count; i++)
-		p.data_ptr.Add(a + from + 2 * i);
+		p.data_ptr.Add(q.address + from + sz * i);
 	p.kind = TEXT;
 }
 
