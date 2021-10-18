@@ -778,8 +778,8 @@ public:
 	int  GetAlloc() const                { return alloc; }
 
 	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
-	bool     IsEqual(const WString0& s) const { return s.length == length && memeq32(ptr, s.ptr, length); }
-	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq32(begin(), s, l); }
+	bool     IsEqual(const WString0& s) const { return s.length == length && memeq_t(ptr, s.ptr, length); }
+	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq_t(begin(), s, l); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);
