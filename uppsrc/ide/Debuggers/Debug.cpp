@@ -9,7 +9,7 @@
 #define STATUS_WX86_EXCEPTION_LASTCHANCE 0x40000021
 #define STATUS_WX86_EXCEPTION_CHAIN      0x40000022
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)   DLOG(x)
 
 String Pdb::Hex(adr_t a)
 {
@@ -257,7 +257,7 @@ void Pdb::AddThread(dword dwThreadId, HANDLE hThread)
 	f.sp = c.context32.Esp;
 #endif
 	f.hThread = hThread;
-	LLOG("Adding thread " << dwThreadId << ", Thread SP: " << Hex(f.sp) << ", handle: " << FormatIntHex((dword)(hThread)));
+	LLOG("Adding thread " << dwThreadId << ", Thread SP: " << Hex(f.sp) << ", handle: " << FormatIntHex((dword)(uintptr_t)(hThread)));
 }
 
 void Pdb::RemoveThread(dword dwThreadId)
@@ -265,7 +265,7 @@ void Pdb::RemoveThread(dword dwThreadId)
 	int q = threads.Find(dwThreadId);
 	if(q >= 0) {
 		Thread& f = threads[q];
-		LLOG("Closing thread " << dwThreadId << ", handle: " << FormatIntHex((dword)(f.hThread)));
+		LLOG("Closing thread " << dwThreadId << ", handle: " << FormatIntHex((dword)(uintptr_t)(f.hThread)));
 		CloseHandle(f.hThread);
 		threads.Remove(q);
 	}
@@ -302,7 +302,7 @@ void Pdb::RestoreForeground()
 {
 	if(hWnd) {
 		SetForegroundWindow(hWnd);
-		LLOG("Restored foreground window: " << FormatIntHex((dword)hWnd));
+		LLOG("Restored foreground window: " << FormatIntHex((dword)(uintptr_t)hWnd));
 	}
 	hWnd = NULL;
 }
@@ -365,15 +365,19 @@ bool Pdb::RunToException()
 				                            STATUS_WX86_BREAKPOINT, STATUS_WX86_SINGLE_STEP) < 0)
 				{
 					LLOG("Non-debug EXCEPTION");
-					if(event.u.Exception.dwFirstChance) {
+					String desc = Format("Exception: [* %lX] at [* %16llX]&",
+					                     (int64)x.ExceptionCode, (int64)x.ExceptionAddress);
+					bool known = false;
+					for(int i = 0; i < __countof(ex_desc); i++)
+						if(ex_desc[i].code == x.ExceptionCode) {
+							known = true;
+							desc << "[* " << DeQtf(ex_desc[i].text) << "]&";
+							break;
+						}
+					if(event.u.Exception.dwFirstChance && !known) {
 						LLOG("First chance " << FormatIntHex(x.ExceptionCode));
 						break;
 					}
-					String desc = Format("Exception: [* %lX] at [* %16llX]&",
-					                     (int64)x.ExceptionCode, (int64)x.ExceptionAddress);
-					for(int i = 0; i < __countof(ex_desc); i++)
-						if(ex_desc[i].code == x.ExceptionCode)
-							desc << "[* " << DeQtf(ex_desc[i].text) << "]&";
 					if(x.ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
 						desc << (x.ExceptionInformation[0] ? "[*@3 writing]" : "[*@4 reading]");
 						desc << Format(" at [* %08llX]", (int64)x.ExceptionInformation[1]);
