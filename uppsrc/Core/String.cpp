@@ -216,7 +216,7 @@ WString String::ToWString() const
 
 int String::GetCharCount() const
 {
-	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();
+	return GetDefaultCharset() == CHARSET_UTF8 ? Utf32Len(Begin(), GetCount()) : GetCount();
 }
 
 String::String(char16 *s) : String(ToUtf8(s)) {}

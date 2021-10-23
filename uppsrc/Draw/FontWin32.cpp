@@ -409,10 +409,20 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 		memset8(&m_matrix, 0, sizeof(m_matrix));
 		m_matrix.eM11.value = 1;
 		m_matrix.eM22.value = 1;
-		int gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, 0, NULL, &m_matrix);
+		dword flags = GGO_NATIVE|GGO_UNHINTED;
+		if(ch >= 0x10000) {
+			GlyphInfo f = GetGlyphInfo(fnt, ch);
+			if(f.IsNormal()) {
+				flags |= GGO_GLYPH_INDEX;
+				ch = f.glyphi;
+			}
+			else
+				ch = 0x25a1;
+		}
+		int gsz = GetGlyphOutlineW(hdc, ch, flags, &gm, 0, NULL, &m_matrix);
 		if(gsz >= 0) {
 			StringBuffer gb(gsz);
-			gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, gsz, ~gb, &m_matrix);
+			gsz = GetGlyphOutlineW(hdc, ch, flags, &gm, gsz, ~gb, &m_matrix);
 			if(gsz >= 0)
 				RenderCharPath(~gb, gsz, sw, x, y + fnt.GetAscent());
 		}

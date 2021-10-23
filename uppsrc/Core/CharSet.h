@@ -279,8 +279,9 @@ inline WString FromUtf8(const char *s)                 { return ToUtf32(s); }
 inline WString FromUtf8(const String& s)               { return ToUtf32(s); }
 
 inline bool utf8check(const char *s, int len)          { return CheckUtf8(s, len); }
-
+/*
 inline int utf8len(const char *s, int len)             { return Utf16Len(s, len); }
 inline int utf8len(const char *s)                      { return Utf16Len(s); }
 inline int lenAsUtf8(const char16 *s, int len)          { return Utf8Len(s, len); }
 inline int lenAsUtf8(const char16 *s)                   { return Utf8Len(s); }
+*/
