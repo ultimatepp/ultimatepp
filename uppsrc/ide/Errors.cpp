@@ -715,8 +715,8 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 		int fcy = GetStdFontCy();
 		int y = r.top + (r.GetHeight() - fcy) / 2;
 		w.DrawRect(r, paper);
-		int sl = utf8len(~h[3], atoi(h[1]));
-		int sh = utf8len(~h[3] + sl, atoi(h[2])) + sl;
+		int sl = Utf32Len(~h[3], atoi(h[1]));
+		int sh = Utf32Len(~h[3] + sl, atoi(h[2])) + sl;
 		for(int text = 0; text < 2; text++) {
 			int x = r.left;
 			for(int i = 0; i < hln.GetCount(); i++) {

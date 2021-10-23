@@ -11,6 +11,7 @@ LineEdit::LineEdit() {
 	showtabs = false;
 	tabsize = 4;
 	font = CourierZ(12);
+	SyncFont();
 	SetFrame(ViewFrame());
 	sb.NoBox();
 	AddFrame(sb);
@@ -70,8 +71,18 @@ LineEdit& LineEdit::SetFont(Font f) {
 	return *this;
 }
 
+void LineEdit::SyncFont()
+{
+	fsz = GetFontSize();
+}
+
 Size LineEdit::GetFontSize() const {
 	return Size(font.GetMonoWidth(), font.GetCy());
+}
+
+bool LineEdit::IsDoubleChar(int ch) const
+{
+	return ch >= 2048 && (IsDoubleWidth(ch) || font.GetWidth(ch) > fsz.cx);
 }
 
 void LineEdit::SetRectSelection(int64 anchor, int64 cursor)
@@ -396,7 +407,6 @@ void   LineEdit::Paint0(Draw& w) {
 	if(rectsel)
 		rect = GetRectSelection();
 	Size sz = GetSize();
-	Size fsz = GetFontSize();
 	Point sc = sb;
 	int ll = min(GetLineCount(), sz.cy / fsz.cy + sc.y + 1);
 	int  y = 0;
@@ -480,7 +490,7 @@ void   LineEdit::Paint0(Draw& w) {
 							x = fsz.cx * gp;
 						}
 						else
-						if(IsDoubleWidth(chr)) {
+						if(IsDoubleChar(chr)) {
 							x += 2 * fsz.cx;
 							gp += 2;
 						}
@@ -508,7 +518,7 @@ void   LineEdit::Paint0(Draw& w) {
 							h.ink = color[INK_SELECTED];
 						}
 						int x = gp * fsz.cx - scx;
-						bool cjk = IsDoubleWidth(h.chr);
+						bool cjk = IsDoubleChar(h.chr);
 						int xx = x + (gp + 1 + cjk) * fsz.cx;
 						if(h.chr == '\t') {
 							int ngp = (gp + tabsize) / tabsize * tabsize;
@@ -649,6 +659,7 @@ void LineEdit::RefreshChars(bool (*chars)(int c))
 }
 
 void   LineEdit::Layout() {
+	SyncFont();
 	Size sz = sb.GetReducedViewSize();
 	if(nohbar || isdrag)
 		sz.cy = GetSize().cy;
@@ -679,7 +690,7 @@ int64  LineEdit::GetGPos(int ln, int cl) const {
 				if(*s == '\t')
 					gl = (gl + tabsize) / tabsize * tabsize;
 				else
-					gl += 1 + IsDoubleWidth(*s);
+					gl += 1 + IsDoubleChar(*s);
 				if(cl < gl) break;
 				s++;
 			}
@@ -704,7 +715,7 @@ Point LineEdit::GetColumnLine(int64 pos) const {
 		if(*s == '\t')
 			p.x = (p.x + tabsize) / tabsize * tabsize;
 		else
-			p.x += 1 + IsDoubleWidth(*s);
+			p.x += 1 + IsDoubleChar(*s);
 		s++;
 	}
 	return p;
@@ -1113,7 +1124,7 @@ void LineEdit::SetHBar()
 				if(*s == '\t')
 					pos = (pos + tabsize) / tabsize * tabsize;
 				else
-					pos += 1 + IsDoubleWidth(*s);
+					pos += 1 + IsDoubleChar(*s);
 				s++;
 			}
 			mpos = max(mpos, pos);

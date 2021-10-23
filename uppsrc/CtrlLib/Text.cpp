@@ -257,13 +257,13 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 				auto put_ln = [&]() -> bool {
 					if(view_line_count) {
 						(*view_line_count)++;
-						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount())
+						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount())
 						                                                : ln.GetCount();
 					}
 					else {
 						Ln& l = ls.Add();
 						if(charset == CHARSET_UTF8) {
-							l.len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+							l.len = (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount()) : ln.GetCount();
 							l.text = ln;
 						}
 						else {
@@ -501,10 +501,24 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 			const wchar *e = txt.End();
 			if(be16)
 				for(const wchar *w = txt; w != e; w++)
-					s.Put16be(*w);
+					if(*w < 0x10000)
+						s.Put16be(*w);
+					else {
+						char16 h[2];
+						ToUtf16(h, w, 1);
+						s.Put16be(h[0]);
+						s.Put16be(h[1]);
+					}
 			else
 				for(const wchar *w = txt; w != e; w++)
-					s.Put16le(*w);
+					if(*w < 0x10000)
+						s.Put16le(*w);
+					else {
+						char16 h[2];
+						ToUtf16(h, w, 1);
+						s.Put16le(h[0]);
+						s.Put16le(h[1]);
+					}
 		}
 		return;
 	}

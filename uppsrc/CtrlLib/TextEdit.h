@@ -336,6 +336,7 @@ protected:
 
 
 	Font             font;
+	Size             fsz;
 	CharFilter       filter;
 	int              tabsize;
 	int              bordercolumn;
@@ -368,6 +369,8 @@ protected:
 	Rect   DropCaret();
 	void   RefreshDropCaret();
 	void   DoPasteColumn() { PasteColumn(); }
+	void   SyncFont();
+	bool   IsDoubleChar(int ch) const;
 
 	struct RefreshDraw;
 	friend class TextCtrl;

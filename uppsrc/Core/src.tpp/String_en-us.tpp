@@ -109,7 +109,8 @@ td`::string][@(0.0.255) `&]_[*@3 s])&]
 st]&]
 [s2; Returns a number of characters contained in String. This is 
 equal GetCount() if default charset is not UTF`-8, but different 
-for UTF`-8. It is faster equivalent of ToWString().GetCount().&]
+for UTF`-8 where it returns a number of unicode codepoints. It 
+is faster equivalent of ToWString().GetCount().&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String`:`:ToWString`(`)const:%- [_^WString^ WString]_[* ToWString]()_[@(0.0.255) const
