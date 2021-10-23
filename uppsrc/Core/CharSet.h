@@ -70,13 +70,13 @@ int Utf16Len(const char *s, int len);
 inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen(s)); }
 inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
 
-void ToUtf16(char16 *t, const wchar *s, int len);
+int ToUtf16(char16 *t, const wchar *s, int len);
 Vector<char16> ToUtf16(const wchar *s, int len);
 inline Vector<char16> ToUtf16(const wchar *s)         { return ToUtf16(s, strlen32(s)); }
 inline Vector<char16> ToUtf16(const WString& s)       { return ToUtf16(s, s.GetCount()); }
 inline Vector<char16> ToUtf16(wchar code)             { return ToUtf16(&code, 1); }
 
-void    ToUtf16(char16 *t, const char *s, int len);
+int ToUtf16(char16 *t, const char *s, int len);
 Vector<char16> ToUtf16(const char *s, int len);
 inline Vector<char16> ToUtf16(const char *s)          { return ToUtf16(s, (int)strlen(s)); }
 inline Vector<char16> ToUtf16(const String& s)        { return ToUtf16(~s, s.GetCount()); }

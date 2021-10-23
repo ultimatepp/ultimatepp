@@ -228,6 +228,10 @@ struct sRFace {
 	const char *name;
 	dword l, h;
 } sFontReplacements[] = {
+	{ "Segoe UI", 0, 0 },
+	{ "Segoe UI Emoji", 0, 0 },
+	{ "Segoe UI Historic", 0, 0 },
+	{ "Segoe UI Symbol", 0, 0 },
 	{ "Lucida Grande", 0, 0 },
 	{ "Apple Symbols", 0, 0 },
 	{ "sans-serif", 0xffee0008, 0xdc000801 },

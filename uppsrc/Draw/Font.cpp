@@ -386,7 +386,7 @@ String AsString(const Font& f) {
 struct CharEntry {
 	int64     font;
 	GlyphInfo info;
-	word      chr;
+	wchar     chr;
 };
 
 CharEntry fc_cache_global[4093];
