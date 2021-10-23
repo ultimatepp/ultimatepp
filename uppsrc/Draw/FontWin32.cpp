@@ -1,5 +1,7 @@
 #include "Draw.h"
 
+#include <usp10.h>
+
 namespace Upp {
 
 #ifndef CUSTOM_FONTSYS
@@ -183,8 +185,87 @@ Vector<FaceInfo> GetAllFacesSys()
 
 #define GLYPHINFOCACHE 31
 
+GlyphInfo GetUnicodeGlyphInfo(Font fnt, wchar ch)
+{
+	struct FontRec {
+		Font         font = Null;
+		SCRIPT_CACHE sc = NULL;
+		HDC          hdc = NULL;
+		dword        default_glyph = 0;
+	};
+
+	static FontRec cache[4];
+	static int cachei;
+	
+	int ii = -1;
+	for(int i = 0; i < 4; i++)
+		if(cache[0].font == fnt) {
+			ii = i;
+			break;
+		}
+
+	if(ii < 0) {
+		ii = cachei = (cachei + 1) & 3;
+		FontRec& f = cache[ii];
+		f.font = fnt;
+		if(!f.hdc)
+			f.hdc = ::CreateIC("DISPLAY", NULL, NULL, NULL);
+		if(f.sc) {
+			ScriptFreeCache(&f.sc);
+			f.sc = 0;
+		}
+		HFONT hfont = GetWin32Font(fnt, 0);
+		if(hfont)
+			::SelectObject(f.hdc, hfont);
+
+		SCRIPT_FONTPROPERTIES props;
+		props.cBytes = sizeof(props);
+		ScriptGetFontProperties(f.hdc, &f.sc, &props);
+		f.default_glyph = props.wgDefault;
+	}
+	
+	GlyphInfo gi;
+	
+	memset(&gi, 0, sizeof(gi));
+	gi.width = 0x8000;
+	
+	FontRec& f = cache[ii];
+
+	char16 buf[2];
+	int len = ToUtf16(buf, &ch, 1);
+
+	SCRIPT_ITEM items[2];
+	int nitems;
+	if(FAILED(ScriptItemize(buf, len, 2, 0, 0, items, &nitems)))
+		return gi;
+
+	WORD glyphs[10];
+	WORD cluster[10];
+	int nglyphs;
+	SCRIPT_VISATTR attr[10];
+	if(FAILED(ScriptShape(f.hdc, &f.sc, buf, len, 10, &items[0].a, glyphs, cluster, attr, &nglyphs)))
+		return gi;
+	
+	if(nglyphs == 0 || *glyphs == f.default_glyph)
+		return gi;
+	
+	ABC abc;
+	if(FAILED(ScriptGetGlyphABCWidth(f.hdc, &f.sc, glyphs[0], &abc)))
+		return gi;
+	
+	gi.width = abc.abcA + abc.abcB + abc.abcC;
+	gi.lspc = abc.abcA;
+	gi.rspc = abc.abcC;
+	gi.glyphi = *glyphs;
+
+	return gi;
+}
+
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
+	if(chr >= 0x10000)
+		return GetUnicodeGlyphInfo(font, chr);
+
 	static Font      fnt[GLYPHINFOCACHE];
 	static int       pg[GLYPHINFOCACHE];
 	static GlyphInfo li[GLYPHINFOCACHE][256];
@@ -203,7 +284,8 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		HFONT hfont = GetWin32Font(font, 0);
 		if(!hfont) {
 			GlyphInfo n;
-			memset8(&n, 0, sizeof(GlyphInfo));
+			memset(&n, 0, sizeof(GlyphInfo));
+			n.width = (int16)0x8000;
 			return n;
 		}
 		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);

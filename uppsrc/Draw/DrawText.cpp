@@ -42,8 +42,9 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	for(int i = 0; i < n; i++) {
 		wchar chr = text[i];
 		GlyphInfo gi = GetGlyphInfo(font, chr);
+		DDUMP(gi.width);
 		if(gi.IsNormal())
-			if(angle)
+			if(angle || chr >= 0x10000)
 				DrawTextOp(int(x + cosa * posx), int(y - sina * posx), angle, &chr, font, ink, 1, NULL);
 			else {
 				int c = 1;
