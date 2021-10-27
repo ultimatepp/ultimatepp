@@ -182,7 +182,7 @@ public:
 	String GetTextFlags() const;
 	void   ParseTextFlags(const char *s);
 	
-	String GetData() const;
+	String GetData(const char *table = NULL, int offset = 0, int size = INT_MAX) const;
 	
 	void   Render(FontGlyphConsumer& sw, double x, double y, int ch) const;
 

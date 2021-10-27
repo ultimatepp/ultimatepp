@@ -57,7 +57,7 @@ void      InvalidateFontList();
 CommonFontInfo   GetFontInfoSys(Font font);
 GlyphInfo        GetGlyphInfoSys(Font font, int chr);
 Vector<FaceInfo> GetAllFacesSys();
-String           GetFontDataSys(Font font);
+String           GetFontDataSys(Font font, const char *table, int offset, int size);
 
 void             RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt);
 

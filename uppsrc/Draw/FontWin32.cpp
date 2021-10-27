@@ -337,20 +337,22 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	return li[q][chr & 255];
 }
 
-String GetFontDataSys(Font font)
+String GetFontDataSys(Font font, const char *table, int offset, int size)
 {
 	String r;
 	HFONT hfont = GetWin32Font(font, 0);
 	if(hfont) {
 		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
-		DWORD size = GetFontData(hdc, 0, 0, NULL, 0);
-		if(size == GDI_ERROR) {
+		int tbl = table ? ((byte)table[0] << 0) | ((byte)table[1] << 8) | ((byte)table[2] << 16) | ((byte)table[3] << 24) : 0;
+		DWORD sz = GetFontData(hdc, tbl, offset, NULL, 0);
+		if(sz == GDI_ERROR) {
 			LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
 		}
 		else {
+			size = min(size, (int)sz);
 			StringBuffer b(size);
-			GetFontData(hdc, 0, 0, b, size);
+			GetFontData(hdc, tbl, offset, ~b, size);
 			r = b;
 		}
 		::SelectObject(hdc, ohfont);

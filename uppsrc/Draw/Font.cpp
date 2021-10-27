@@ -548,10 +548,11 @@ int Font::GetRightSpace(int c) const {
 	return GetGlyphMetrics(*this, c).rspc;
 }
 
-String Font::GetData() const
+String Font::GetData(const char *table, int offset, int size) const
 {
 	Mutex::Lock __(sFontLock);
-	return GetFontDataSys(*this);
+	ASSERT(!table || strlen(table) == 4);
+	return GetFontDataSys(*this, table, offset, size);
 }
 
 void Font::Render(FontGlyphConsumer& sw, double x, double y, int ch) const
