@@ -148,7 +148,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
 		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
-		fi.ttf = path.EndsWith(".ttf") || path.EndsWith(".otf");
+		fi.ttf = path.EndsWith(".ttf") || path.EndsWith(".otf") || path.EndsWith(".otc") || path.EndsWith(".ttc");
 		if(path.GetCount() < 250)
 			strcpy(fi.path, ~path);
 		else
@@ -171,7 +171,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static GlyphInfo gi;
 	const OpenGLFont& fi = resources.GetFont(font);
-	gi.width = chr < fi.chars.GetCount() 
+	gi.width = chr < fi.chars.GetCount()
 		? int(fi.chars[chr].xadvance * fi.scale + 0.5f)
 		: 0;
 	gi.lspc = 0;

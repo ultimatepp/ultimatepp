@@ -6,7 +6,7 @@
 using namespace Upp;
 
 class FontTypeReader {
-	String font;
+	String data;
 
 	struct Table : Moveable<Table> {
 		int offset;
@@ -15,7 +15,7 @@ class FontTypeReader {
 	VectorMap<String, Table> table;
 
 	struct Fail {};
-	static int Error() { throw Fail(); return 0; }
+	static int Error();
 
 	int    Peek8(const char *s);
 	int    Peek16(const char *s);
@@ -27,17 +27,14 @@ class FontTypeReader {
 	int    Read16(const char *&s);
 	int    Read32(const char *&s);
 
-	const char *Seek(const char *tab, int& len);
-	const char *Seek(const char *tab);
-//	void        Seek(const char *tab, TTFStreamIn& s);
-	String      GetTable(const char *tab);
-
 public:
 	String ps_name;
 	
 	Array<Tuple<int, int>> ranges;
+	
+	String panose;
 
-	bool   Open(const String& fnt, bool symbol = false, bool justcheck = false);
+	bool  Open(Font font, bool symbol = false, bool justcheck = false);
 };
 
 #endif

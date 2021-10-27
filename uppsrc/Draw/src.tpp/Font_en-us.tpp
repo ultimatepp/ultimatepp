@@ -347,7 +347,7 @@ there is a space inside the cell not used for glyph.&]
 [s5;:Font`:`:GetRightSpace`(int`)const: [@(0.0.255) int]_[* GetRightSpace]([@(0.0.255) int]_
 [@3 c])_[@(0.0.255) const]&]
 [s2;%% Similar to GetLeftSpace for the right edge of character cell.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Font`:`:IsFixedPitch`(`)const: [@(0.0.255) bool]_[* IsFixedPitch]()_[@(0.0.255) const]&]
 [s2;%% True if font is mono`-spaced.&]
@@ -393,6 +393,16 @@ onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s5;:Font`:`:GetData`(`)const: [_^String^ String]_[* GetData]()_[@(0.0.255) const]&]
 [s2;%% Returns the raw content of font file.&]
 [s3; &]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Font`:`:GetData`(const char`*`,int`,int`)const: [_^Upp`:`:String^ String]_[* G
+etData]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table]_`=_NULL, 
+[@(0.0.255) int]_[*@3 offset]_`=_`-[@3 1], [@(0.0.255) int]_[*@3 size]_`=_`-[@3 1])_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the raw content of font file. [%-*@3 table] [%-*@3 offset] 
+[%-*@3 size] can specify which part of TTF or OTF font data to 
+retrieve.&]
+[s0;%% &]
 [s4; &]
 [s5;:Font`:`:Render`(FontGlyphConsumer`&`,double`,double`,int`)const: [@(0.0.255) void]_
 [* Render]([_^FontGlyphConsumer^ FontGlyphConsumer][@(0.0.255) `&]_[*@3 sw], 
