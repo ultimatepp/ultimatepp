@@ -259,10 +259,10 @@ Vector<FaceInfo> GetAllFacesSys()
 }
 
 String GetFontDataSys(Font font, const char *table, int offset, int size)
-{
+{ // read truetype or opentype table
 	FileIn in(font.Fi().path);
 	int q = in.Get32be();
-	if(q == 0x74746366) { // true type collection
+	if(q == 0x74746366) { // font collection
 		in.Get32(); // skip major/minor version
 		int nfonts = in.Get32be();
 		if(font.Fi().fonti >= nfonts)
