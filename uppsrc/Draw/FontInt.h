@@ -26,7 +26,8 @@ struct CommonFontInfo {
 	bool ttf;
 	int  aux;
 
-	char path[256]; // optional
+	char path[256]; // optional (linux only)
+	int  fonti = 0; // font index in .ttc, .otc
 };
 
 class Font;

@@ -151,7 +151,7 @@ typedef WCHAR              char16;
 typedef unsigned int       dword;
 typedef int                int32;
 typedef unsigned int       uint32;
-typedef WCHAR              word;
+typedef word               char16;
 #endif
 
 typedef uint32             wchar;

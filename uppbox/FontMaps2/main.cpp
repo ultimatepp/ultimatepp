@@ -8,6 +8,8 @@ using namespace Upp;
 
 #define CMAP (MAKE_TT_TABLE_NAME('c','m','a','p'))
 
+#ifdef PLATFORM_WIN32
+
 namespace Upp {
 HFONT GetWin32Font(Font fnt, int angle);
 };
@@ -33,6 +35,8 @@ String GetFontDataSys(Font font, dword table)
 	}
 	return r;
 }
+
+#endif
 
 String ReadFontTable(Stream& in, const char *table, int fonti = 0)
 {
@@ -74,14 +78,17 @@ String ReadFontTable(Stream& in, const char *table, int fonti = 0)
 GUI_APP_MAIN
 {
 //	FileIn in("C:/Windows/Fonts/arial.ttf");
+/*
 	FileIn in("D:\\xxx\\msyh.ttc");
 	DDUMPHEX(ReadFontTable(in, "cmap", 0));
 	DDUMPHEX(ReadFontTable(in, "cmap", 1));
 	DDUMPHEX(ReadFontTable(in, "cmap", 2));
 	return;
+*/
 #if 0
-//	Font font(Font::FindFaceNameIndex("Microsoft JhengHei"), 20);
-	Font font = Roman(20);
+	Font font(Font::FindFaceNameIndex("Noto Serif CJK KR"), 20);
+
+//	Font font = Roman(20);
 	
 //	SaveFile("d:/xxx/font.bin", GetFontDataSys(font, 0));
 	
@@ -110,42 +117,35 @@ GUI_APP_MAIN
 		FontTypeReader r;
 	//	r.Open(Arial(20).GetData());
 		r.Open(fnt);
-		Sort(r.ranges, [](Tuple<int, int> a, Tuple<int, int> b) { return a.a < b.a; });
-		while(r.ranges.GetCount() > 8) {
-			int mini = 0;
-			int mind = INT_MAX;
-			for(int i = 0; i < r.ranges.GetCount() - 1; i++) {
-				int d = r.ranges[i + 1].a - r.ranges[i].b;
-				if(d < mind) {
-					mind = d;
-					mini = i;
+		if(r.panose.GetCount() == 10) {
+			dword h[8] = {0};
+			for(auto r : r.ranges) {
+				for(int c = r.a; c <= r.b; c++) {
+					c = max(c, 0);
+					if(c < 2048)
+						h[0] |= 0x80000000 >> (c >> 6);
+					else {
+						int bi = clamp(c - 2048, 0, 7*32*1024 - 1) >> 10;
+						ASSERT((bi >> 5) + 1 < 8);
+						h[(bi >> 5) + 1] |= 0x80000000 >> (bi & 31);
+					}
 				}
 			}
-			r.ranges[mini].b = r.ranges[mini + 1].b;
-			r.ranges.Remove(mini + 1);
-		}
-		if(r.ranges.GetCount()) {
 			String l;
 			l << "{ " << AsCString(f);
 			l << ", { ";
-			if(r.panose.GetCount() == 10) {
-				bool first = true;
-				for(int h : r.panose) {
-					if(first)
-						first = false;
-					else
-						l << ",";
-					l << h;
-				}
-			}
-			l << " } } { ";
 			bool first = true;
-			for(Tuple2<int, int> h : r.ranges) {
+			for(int h : r.panose) {
 				if(first)
 					first = false;
 				else
 					l << ",";
-				l << "{" << h.a << "," << h.b << "}";
+				l << h;
+			}
+			l << " }, { ";
+			for(int i = 0; i < 8; i++) {
+				if(i) l << ",";
+				l << Format("0x%08x", (int)h[i]);
 			}
 			l << " } },";
 			LOG(l);
