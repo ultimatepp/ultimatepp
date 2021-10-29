@@ -10,21 +10,35 @@ struct MyApp : TopWindow {
 		
 		w.DrawRect(GetSize(), White());
 		int y = 10;
+		int x = 10;
 		for(int i = 0; i < Font::GetFaceCount(); i++) {
-			Font fnt(i, 40);
-			w.DrawText(10, y, fnt.GetFaceName() + ": " + text, fnt);
-			y += 50;
-			if(y > GetSize().cy)
-				break;
+			Font fnt(i, 30);
+			String n = AsString(i) + ": " + fnt.GetFaceName() + ": ";
+			if(fnt.IsSpecial())
+				n << " (special)";
+			w.DrawText(x, y, n, StdFont());
+			w.DrawText(x + GetTextSize(n, StdFont()).cx, y, text, fnt);
+			y += fnt.GetLineHeight() + 10;
+			if(y > GetSize().cy) {
+				if(x > 10)
+					break;
+				x = GetSize().cx / 2;
+				y = 10;
+			}
 		}
 	}
 };
 
 GUI_APP_MAIN {
+	Vector<String> h;
 	for(int i = 0; i < Font::GetFaceCount(); i++) {
 		Font fnt(i, 40);
+		h.Add(fnt.GetFaceName());
 		if(!fnt.IsNormal('4'))
 			DLOG(fnt.GetFaceName());
 	}
-	MyApp().Run();
+	DLOG("===========");
+	Sort(h);
+	DDUMPC(h);
+	MyApp().Sizeable().Zoomable().Run();
 }

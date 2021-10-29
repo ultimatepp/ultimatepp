@@ -237,52 +237,54 @@ struct sRFace {
 bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 	String data = font.GetData("cmap");
 	DTIMING("ReadCmap");
+	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= data.GetCount() ? Peek16be(~data + i) : 0; };
+	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= data.GetCount() ? Peek32be(~data + i) : 0; };
 	for(int pass = 0; pass < 2; pass++) {
-		const char *p = data;
+		int p = 0;
 		p += 2;
-		int n = Peek16be(p);
+		int n = Get16(p);
 		p += 2;
-		while(n--) {
-			int pid = Peek16be(p); p += 2;
-			int psid = Peek16be(p); p += 2;
-			int offset = Peek32be(p); p += 4;
+		while(n-- && p < data.GetCount()) {
+			int pid = Get16(p); p += 2;
+			int psid = Get16(p); p += 2;
+			int offset = Get32(p); p += 4;
 			if(offset < 0 || offset > data.GetCount())
 				return false;
-			int format = Peek16be(~data + offset);
+			int format = Get16(offset);
 			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
 			if(pid == 3 && psid == 10 && format == 12 && pass == 0) {
-				const char *p = ~data + offset;
-				int ngroups = Peek32be(p + 12);
+				int p = offset;
+				int ngroups = Get32(p + 12);
 				p += 16; // pointer to groups table
 				DTIMING("C");
 				for(int i = 0; i < ngroups; i++) {
-					int start = Peek32be(p);
-					int end = Peek32be(p + 4);
-					range(start, end, Peek32be(p + 8));
+					int start = Get32(p);
+					int end = Get32(p + 4);
+					range(start, end, Get32(p + 8));
 					p += 12;
 				}
 				return true;
 			}
 			else
 			if(pid == 3 && psid == 1 && format == 4 && pass == 1) {
-				const char *p = ~data + offset;
-				int n = Peek16(p + 6) >> 1;
-				const char *seg_end = p + 14;
-				const char *seg_start = seg_end + 2 * n + 2;
-				const char *idDelta = seg_start + 2 * n;
-				const char *idRangeOffset = idDelta + 2 * n;
+				int p = offset;
+				int n = Get16(p + 6) >> 1;
+				int seg_end = p + 14;
+				int seg_start = seg_end + 2 * n + 2;
+				int idDelta = seg_start + 2 * n;
+				int idRangeOffset = idDelta + 2 * n;
 				for(int i = 0; i < n; i++) {
-					int start = Peek16be(seg_start + 2 * i);
-					int end = Peek16be(seg_end + 2 * i);
-					int delta = Peek16be(idDelta + 2 * i);
-					int ro = Peek16be(idRangeOffset + 2 * i);
+					int start = Get16(seg_start + 2 * i);
+					int end = Get16(seg_end + 2 * i);
+					int delta = Get16(idDelta + 2 * i);
+					int ro = Get16(idRangeOffset + 2 * i);
 					if(glyphs) {
 					    if (ro && delta == 0) {
 					        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
-							const char *q = idRangeOffset + 2 * i + ro;
+							int q = idRangeOffset + 2 * i + ro;
 							DTIMING("A");
 							for(int c = start; c <= end; c++) {
-								range(c, c, (word)Peek16be(q));
+								range(c, c, (word)Get16(q));
 								q += 2;
 							}
 					    }
