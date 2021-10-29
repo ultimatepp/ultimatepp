@@ -550,6 +550,7 @@ int Font::GetRightSpace(int c) const {
 
 String Font::GetData(const char *table, int offset, int size) const
 {
+	DTIMING("GetData");
 	Mutex::Lock __(sFontLock);
 	ASSERT(!table || strlen(table) == 4);
 	return GetFontDataSys(*this, table, offset, size);

@@ -1,12 +1,12 @@
 #include "Draw.h"
 
-#include <usp10.h>
-
 namespace Upp {
 
 #ifndef CUSTOM_FONTSYS
 
 #ifdef PLATFORM_WIN32
+
+#include <usp10.h>
 
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)

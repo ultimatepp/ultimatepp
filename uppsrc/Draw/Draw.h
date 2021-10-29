@@ -65,7 +65,7 @@ class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 	const CommonFontInfo& Fi() const;
 	
 	friend void   sInitFonts();
-	friend String GetFontDataSys(Font font);
+	friend String GetFontDataSys(Font font, const char *table, int offset, int size);
 	
 public:
 	enum {

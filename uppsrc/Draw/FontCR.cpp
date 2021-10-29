@@ -1,5 +1,7 @@
 #include "Draw.h"
 
+#define LLOG(x) // LOG(x)
+
 namespace Upp {
 
 enum {
@@ -226,52 +228,89 @@ bool Compose(Font font, int chr, ComposedGlyph& cg)
 
 struct sRFace {
 	const char *name;
-	dword l, h;
+	byte panose[10];
+	dword coverage[8];
 } sFontReplacements[] = {
-	{ "Segoe UI", 0, 0 },
-	{ "Segoe UI Emoji", 0, 0 },
-	{ "Segoe UI Historic", 0, 0 },
-	{ "Segoe UI Symbol", 0, 0 },
-	{ "Lucida Grande", 0, 0 },
-	{ "Apple Symbols", 0, 0 },
-	{ "sans-serif", 0xffee0008, 0xdc000801 },
-	{ "Arial", 0xfffe0000, 0x9c000801 },
-	{"\346\226\260\345\256\213\344\275\223", 0xfd800000, 0x9ffff00d },//SimSun (or New Song Ti)
-	{"SimSun", 0xfd800000, 0x9ffff00d },//SimSun (or New Song Ti)
-	{"\345\256\213\344\275\223", 0xfd800000, 0x9ffff00d }, // Song Ti
-	{"\345\276\256\350\275\257\351\233\205\351\273\221", 0xfd800000, 0x9ffff00f }, //MS Ya Hei
-	{"Microsoft YaHei", 0xfd800000, 0x9ffff00f }, //MS Ya Hei
-//	{"\351\273\221\344\275\223", 0xfd800000, 0x09ffff00 },  // Hei Ti
-//	{"\346\226\207\346\263\211\351\251\277\346\255\243\351\273\221", 0xfd800000, 0x09ffff00 }, //WenQuanYi Zheng Hi
-//	{"\346\226\207\346\263\211\351\251\277\347\255\211\345\256\275\345\276\256\347\261\263\351\273\221", 0xfd800000, 0x09ffff00 },//WenQuanYi Wei Hei
-//	{"\344\273\277\345\256\213", 0xfd800000, 0x09ffff00 }, //Fang Song
-//	{"\346\245\267\344\275\223", 0xfd800000, 0x09ffff00 }, // Kai Ti
-	{ "Arial Unicode MS", 0xfffc3fef, 0xfa7ff7ef },
-	{ "MS UI Gothic", 0xffc01008, 0xfffff001 },
-	{ "MS Mincho", 0xffc01008, 0xfffff001 },
-	{ "VL Gothic", 0xfd800000, 0x9a7ff80f },
-	{ "VL PGothic", 0xffe00008, 0xde7ff80f },
-	{ "UnDotum", 0xe5800000, 0xaa7ff7ef },
-	{ "UnBatang", 0xe5800000, 0xaa7ff7ef },
-	{ "DejaVu Sans Mono", 0xffec0004, 0xfc00080f },
-	{ "DejaVu Sans", 0xfffd000c, 0xfc40080f },
-	{ "AlArabiyaFreeSerif", 0xffdc0008, 0xd800000f },
-	{ "Kochi Mincho", 0xffdc0008, 0xd800000f },
-	{ "Kochi Gothic", 0xffdc0008, 0xd800000f },
-	{ "Sazanami Mincho", 0xffdc0008, 0xd800000f },
-	{ "Sazanami Gothic", 0xffdc0008, 0xd800000f },
-	{ "Gulim", 0xf7c00000, 0xba7ff7e1 },
-	{ "PMingLiU", 0xff800000, 0x9ffff001 }, // <--- SHOULD MOVE UP
-	{ "FreeSans", 0xfff23d00, 0xfc00000f },
-	{ "FreeSerif", 0xfffd3938, 0xfc00080f },
-	{ "FreeMono", 0xfffc0000, 0xbc000c01 },
-	{ "Symbol", 0xe4000000, 0x8800000f },
-	{ "NanumGothic", 0xe5800000, 0xae7ff7e1 },
-	{ "WenQuanYi Micro Hei Mono", 0xffe00008, 0xda7ff7e1 },
-	{ "NanumMyeongjo", 0xe5800000, 0x8a0007e1 },
-	{ "WenQuanYi Micro Hei", 0xffe00008, 0xda7ff7e1 },
-	{ "FontAwesome", 0xc0000000, 0x88000002 },
+	#include "Fonts.i"
 };
+
+bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
+	String data = font.GetData("cmap");
+	DTIMING("ReadCmap");
+	for(int pass = 0; pass < 2; pass++) {
+		const char *p = data;
+		p += 2;
+		int n = Peek16be(p);
+		p += 2;
+		while(n--) {
+			int pid = Peek16be(p); p += 2;
+			int psid = Peek16be(p); p += 2;
+			int offset = Peek32be(p); p += 4;
+			if(offset < 0 || offset > data.GetCount())
+				return false;
+			int format = Peek16be(~data + offset);
+			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
+			if(pid == 3 && psid == 10 && format == 12 && pass == 0) {
+				const char *p = ~data + offset;
+				int ngroups = Peek32be(p + 12);
+				p += 16; // pointer to groups table
+				DTIMING("C");
+				for(int i = 0; i < ngroups; i++) {
+					int start = Peek32be(p);
+					int end = Peek32be(p + 4);
+					range(start, end, Peek32be(p + 8));
+					p += 12;
+				}
+				return true;
+			}
+			else
+			if(pid == 3 && psid == 1 && format == 4 && pass == 1) {
+				const char *p = ~data + offset;
+				int n = Peek16(p + 6) >> 1;
+				const char *seg_end = p + 14;
+				const char *seg_start = seg_end + 2 * n + 2;
+				const char *idDelta = seg_start + 2 * n;
+				const char *idRangeOffset = idDelta + 2 * n;
+				for(int i = 0; i < n; i++) {
+					int start = Peek16be(seg_start + 2 * i);
+					int end = Peek16be(seg_end + 2 * i);
+					int delta = Peek16be(idDelta + 2 * i);
+					int ro = Peek16be(idRangeOffset + 2 * i);
+					if(glyphs) {
+					    if (ro && delta == 0) {
+					        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
+							const char *q = idRangeOffset + 2 * i + ro;
+							DTIMING("A");
+							for(int c = start; c <= end; c++) {
+								range(c, c, (word)Peek16be(q));
+								q += 2;
+							}
+					    }
+					    else {
+					        LLOG("Delta start: " << start << ", end: " << end << ", delta: " << (int16)delta);
+							DTIMING("B");
+					        range(start, end, start + delta);
+					    }
+					}
+					else
+						range(start, end, 0);
+				}
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool GetPanoseNumber(Font font, byte *panose)
+{
+	memset(panose, 0, 10);
+	String data = font.GetData("OS/2", 32, 10);
+	if(data.GetCount() != 10)
+		return false;
+	memcpy(panose, data, data.GetCount());
+	return true;
+}
 
 struct sFontMetricsReplacement {
 	Font src;
@@ -279,42 +318,123 @@ struct sFontMetricsReplacement {
 	Font mdst;
 };
 
+int  PanoseDistance(byte *a, byte *b)
+{
+	if(a[0] != b[0]) return INT_MAX;
+	int distance = 0;
+	auto Add = [&](int i) {
+		distance += a[i] && b[i] ? (a[i] - b[i]) * (a[i] - b[i]) : 256;
+	};
+	Add(1);
+	Add(2);
+//	Add(3);
+	return distance;
+}
+
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
-	static Vector<int> rface;
-//	static Vector<dword> l, h;
-	ONCELOCK {
-		for(int i = 0; i < __countof(sFontReplacements) && rface.GetCount() < 20; i++) {
+	static VectorMap<int, sRFace *> rface; // face index to font info
+	static bool all_loaded;
+	if(rface.GetCount() == 0) {
+		for(int i = 0; i < __countof(sFontReplacements); i++) {
 			int q = Font::FindFaceNameIndex(sFontReplacements[i].name);
 			if(q > 0) {
-				rface.Add(q);
-//				l.Add(sFontReplacements[i].l);
-//				h.Add(sFontReplacements[i].h);
+				rface.Add(q) = &sFontReplacements[i];
 			}
 		}
 	}
+	
+	
+	DTIMING("Replace");
 
-	Font f = fnt;
-	for(int i = 0; i < rface.GetCount(); i++) {
-		if(IsNormal(f.Face(rface[i]), chr)) {
-			int a = fnt.GetAscent();
-			static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
-			if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
-				static sFontMetricsReplacement cache[256];
-				int q = CombineHash(fnt, f) & 255;
-				if(cache[q].src != fnt || cache[q].dst != f) {
-					cache[q].src = fnt;
-					cache[q].dst = f;
-					while(f.GetAscent() > a && f.GetHeight() > 1) {
-						f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
-					}
-					cache[q].mdst = f;
-				}
-				else
-					f = cache[q].mdst;
+	byte *panose;
+	byte  panosea[10];
+	int q = rface.Find(fnt.GetFace()); // if we have this font in database, we do not need to load panose
+	if(q >= 0)
+		panose = rface[q]->panose;
+	else {
+		GetPanoseNumber(fnt, panosea); // TODO: add cache
+		panose = panosea;
+	}
+	
+	int wi;
+	dword bit;
+
+	auto ChrBit = [&](int c) {
+		wi = 0;
+		c = max(c, 0);
+		if(c < 2048)
+			bit = 0x80000000 >> (c >> 6);
+		else {
+			int bi = clamp(c - 2048, 0, 7*32*1024 - 1) >> 10;
+			ASSERT((bi >> 5) + 1 < 8);
+			wi = (bi >> 5) + 1;
+			bit = 0x80000000 >> (bi & 31);
+		}
+	};
+	
+	int from = 0;
+	
+	for(;;) {
+		Font f = fnt;
+		Vector<int> distance;
+		Vector<int> candidate;
+		ChrBit(chr);
+		for(int i = from; i < rface.GetCount(); i++)
+			if(rface[i]->coverage[wi] & bit) {
+				distance.Add(PanoseDistance(rface[i]->panose, panose));
+				candidate.Add(rface.GetKey(i));
 			}
-			rfnt = f;
-			return true;
+		{ RTIMING("Sort");
+			StableIndexSort(distance, candidate);
+		}
+		for(int fi : candidate) {
+			f.Face(fi);
+			RTIMING("Test");
+			if(IsNormal(f, chr)) {
+				int a = fnt.GetAscent();
+				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
+				if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
+					static sFontMetricsReplacement cache[256];
+					int q = CombineHash(fnt, f) & 255;
+					if(cache[q].src != fnt || cache[q].dst != f) {
+						cache[q].src = fnt;
+						cache[q].dst = f;
+						while(f.GetAscent() > a && f.GetHeight() > 1) {
+							f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
+						}
+						cache[q].mdst = f;
+					}
+					else
+						f = cache[q].mdst;
+				}
+				rfnt = f;
+				return true;
+			}
+		}
+		if(all_loaded) break;
+		all_loaded = true;
+		from = rface.GetCount();
+		DLOG("Loading all fonts");
+		DTIMING("Loading all fonts");
+		for(int i = 1; i < Font::GetFaceCount(); i++) {
+			if(rface.Find(i) < 0) {
+				Font fnt(i, 40);
+				sRFace fi;
+				memset(&fi, 0, sizeof(fi));
+				bool hascmap = ReadCmap(fnt, [&](int start, int end, int) {
+					for(int c = start; c <= end; c = (c + 64) & ~63) {
+						ChrBit(c);
+						fi.coverage[wi] |= bit;
+					}
+				});
+				if(hascmap && GetPanoseNumber(fnt, fi.panose)) {
+					static Array<sRFace> xface; // for those additionally loaded
+					sRFace& n = xface.Add();
+					n = fi;
+					rface.Add(i, &n);
+				}
+			}
 		}
 	}
 	return false;
