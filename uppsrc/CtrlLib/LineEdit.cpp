@@ -682,7 +682,7 @@ int64  LineEdit::GetGPos(int ln, int cl) const {
 		if((byte)*s < 128)
 			gl++;
 		else {
-			WString txt = FromUtf8(s, int(e - s));
+			WString txt = ToUtf32(s, int(e - s));
 			const wchar *b = txt;
 			const wchar *e = txt.End();
 			const wchar *s = b;

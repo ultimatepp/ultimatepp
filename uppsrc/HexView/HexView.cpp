@@ -85,7 +85,7 @@ void HexViewInfo::Paint(Draw& w)
 			break;
 		sh[i] = data[i];
 	}
-	WString ws = FromUtf8(sh, i);
+	WString ws = ToUtf32(sh, i);
 	w.DrawText(x, 0, ws, font, Cyan, i);
 	if(mode < 2)
 		return;

@@ -50,7 +50,7 @@ void IdeCalc::Execute()
 	Paste("$");
 	SetCursor(GetLength64());
 	Paste("\n");
-	Paste(FromUtf8(txt));
+	Paste(ToUtf32(txt));
 	Paste("\n");
 }
 

@@ -167,7 +167,7 @@ Speller *sGetSpeller(int lang)
 		while(!user.IsEof()) {
 			String s = user.GetLine();
 			if(!s.IsEmpty())
-				f.user.Add(FromUtf8(s));
+				f.user.Add(ToUtf32(s));
 		}
 		if(in.Get() != 255)
 			f.SetOld(LoadFile(path));

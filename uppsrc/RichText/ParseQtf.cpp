@@ -628,7 +628,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				case '`': format.sscript = format.sscript == 1 ? 0 : 1; break;
 				case ',': format.sscript = format.sscript == 2 ? 0 : 2; break;
 				case '^': format.link = GetText('^'); break;
-				case 'I': format.indexentry = FromUtf8(GetText(';')); break;
+				case 'I': format.indexentry = ToUtf32(GetText(';')); break;
 				case '+': format.Height(GetNumber()); break;
 				case '@': format.ink = GetColor(); break;
 				case '$': format.paper = GetColor(); break;

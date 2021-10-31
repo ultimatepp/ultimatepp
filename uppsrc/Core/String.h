@@ -622,12 +622,12 @@ inline String AsString(const String& s)     { return s; }
 template<>
 inline hash_t GetHashValue(const String& s) { return s.GetHashValue(); }
 
-int CompareNoCase(const String& a, const String& b, byte encoding = 0);
-int CompareNoCase(const String& a, const char *b, byte encoding = 0);
+int CompareNoCase(const String& a, const String& b);
+int CompareNoCase(const String& a, const char *b);
 
 inline
-int CompareNoCase(const char *a, const String& b, byte encoding = 0) {
-	return -CompareNoCase(b, a, encoding);
+int CompareNoCase(const char *a, const String& b) {
+	return -CompareNoCase(b, a);
 }
 
 String TrimLeft(const String& s);

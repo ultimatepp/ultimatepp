@@ -660,7 +660,7 @@ Stream& Stream::operator/(WString& s) {
 	if(IsError()) return *this;
 	String h = ToUtf8(s);
 	*this / h;
-	s = FromUtf8(h);
+	s = ToUtf32(h);
 	return *this;
 }
 

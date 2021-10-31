@@ -263,25 +263,3 @@ String  FromUnicode(const WString& src, byte charset = CHARSET_DEFAULT, int defc
 
 int  ToUnicode(int chr, byte charset);
 int  FromUnicode(wchar wchr, byte charset, int defchar = DEFAULTCHAR);
-
-// Deprecated
-
-char16 UnicodeCombine(char16 chr, char16 combine);
-
-inline bool IsCJKIdeograph(int c)  { return c >= 0x2e80 && c <= 0xdfaf || c >= 0xf900 && c <= 0xfaff; }
-
-
-void ToUnicode(char16 *ws, const char *s, int n, byte charset);
-void FromUnicode(char *s, const char16 *ws, int n, byte charset, int defchar = DEFAULTCHAR);
-
-inline WString FromUtf8(const char *s, int len)        { return ToUtf32(s, len); }
-inline WString FromUtf8(const char *s)                 { return ToUtf32(s); }
-inline WString FromUtf8(const String& s)               { return ToUtf32(s); }
-
-inline bool utf8check(const char *s, int len)          { return CheckUtf8(s, len); }
-/*
-inline int utf8len(const char *s, int len)             { return Utf16Len(s, len); }
-inline int utf8len(const char *s)                      { return Utf16Len(s); }
-inline int lenAsUtf8(const char16 *s, int len)          { return Utf8Len(s, len); }
-inline int lenAsUtf8(const char16 *s)                   { return Utf8Len(s); }
-*/
