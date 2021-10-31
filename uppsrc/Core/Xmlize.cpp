@@ -31,12 +31,12 @@ void Xmlize(XmlIO& xml, WString& var)
 		h = ToUtf8(var);
 	Xmlize(xml, h);
 	if(xml.IsLoading())
-		var = FromUtf8(h);
+		var = ToUtf32(h);
 }
 
 template<> void XmlAttrLoad(WString& var, const String& text)
 {
-	var = FromUtf8(text);
+	var = ToUtf32(text);
 }
 
 template<> String XmlAttrStore(const WString& var)

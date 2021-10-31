@@ -320,11 +320,11 @@ void Esc::Term(SRVal& r)
 		return;
 	}
 	if(IsString()) {
-		r = EscValue(FromUtf8(ReadString()));
+		r = EscValue(ToUtf32(ReadString()));
 		return;
 	}
 	if(IsChar('\'')) {
-		WString s = FromUtf8(ReadString('\''));
+		WString s = ToUtf32(ReadString('\''));
 		if(s.GetLength() != 1)
 			ThrowError("invalid character literal");
 		r = (int64)s[0];
