@@ -389,28 +389,36 @@ struct CharEntry {
 	wchar     chr;
 };
 
-CharEntry fc_cache_global[4093];
+CharEntry fc_cache_global[16384];
 
 inline hash_t GlyphHash(Font font, int chr)
 {
 	return FoldHash(CombineHash(font.GetHashValue(), chr));
 }
 
-bool IsNormal(Font font, int chr)
-{
+bool IsNormal_nc(Font font, int chr)
+{ // do not change cache - to be used in Replace
 	Mutex::Lock __(sFontLock);
 	font.RealizeStd();
-	CharEntry& e = fc_cache_global[GlyphHash(font, chr) % 4093];
+	CharEntry& e = fc_cache_global[GlyphHash(font, chr) & 16383];
 	if(e.font == font.AsInt64() && e.chr == chr)
 		return e.info.IsNormal();
 	return GetGlyphInfoSys(font, chr).IsNormal();
 }
 
-CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
-{
-	Mutex::Lock __(sFontLock);
-	CharEntry& e = fc_cache_global[hash % 4093];
-	if(e.font != font.AsInt64() || e.chr != chr) {
+struct GlyphInfoMaker : ValueMaker {
+	Font font;
+	int  chr;
+
+	virtual String Key() const {
+		StringBuffer s;
+		int64 h = font.AsInt64();
+		RawCat(s, h);
+		RawCat(s, chr);
+		return String(s);
+	}
+	virtual int    Make(Value& object) const {
+		CharEntry& e = CreateRawValue<CharEntry>(object);
 		e.font = font.AsInt64();
 		e.chr = chr;
 		e.info = GetGlyphInfoSys(font, chr);
@@ -429,8 +437,17 @@ CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
 			else
 				e.info.lspc = -2;
 		}
+		return sizeof(e);
 	}
-	return e;
+};
+
+CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
+{
+	Mutex::Lock __(sFontLock);
+	GlyphInfoMaker m;
+	m.font = font;
+	m.chr = chr;
+	return MakeValue(m).To<CharEntry>();
 }
 
 thread_local CharEntry fc_cache[512];
@@ -550,7 +567,6 @@ int Font::GetRightSpace(int c) const {
 
 String Font::GetData(const char *table, int offset, int size) const
 {
-	DTIMING("GetData");
 	Mutex::Lock __(sFontLock);
 	ASSERT(!table || strlen(table) == 4);
 	return GetFontDataSys(*this, table, offset, size);

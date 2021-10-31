@@ -107,7 +107,10 @@ GUI_APP_MAIN
 #endif
 	Progress pi;
 	pi.SetTotal(Font::GetFaceCount());
-	for(int i = 0; i < Font::GetFaceCount(); i++) {
+	Vector<String> name;
+	for(int i = 0; i < Font::GetFaceCount(); i++)
+		name.Add(Font::GetFaceName(i));
+	for(int i : GetSortOrder(name)) {
 		String f = Font::GetFaceName(i);
 		pi.SetText(f);
 		if(pi.StepCanceled())
