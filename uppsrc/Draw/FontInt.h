@@ -5,7 +5,7 @@
 
 struct FaceInfo : Moveable<FaceInfo> {
 	String name;
-	dword  info;
+	dword  info = 0;
 };
 
 struct CommonFontInfo {
@@ -48,7 +48,7 @@ struct GlyphInfo {
 void      Std(Font& font);
 GlyphInfo GetGlyphInfo(Font font, int chr);
 const     CommonFontInfo& GetFontInfo(Font font);
-bool      IsNormal(Font font, int chr);
+bool      IsNormal_nc(Font font, int chr);
 void      GlyphMetrics(GlyphInfo& f, Font font, int chr);
 
 void      InvalidateFontList();

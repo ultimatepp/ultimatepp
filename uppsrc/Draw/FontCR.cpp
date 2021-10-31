@@ -236,7 +236,6 @@ struct sRFace {
 
 bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 	String data = font.GetData("cmap");
-	DTIMING("ReadCmap");
 	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= data.GetCount() ? Peek16be(~data + i) : 0; };
 	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= data.GetCount() ? Peek32be(~data + i) : 0; };
 	for(int pass = 0; pass < 2; pass++) {
@@ -256,7 +255,6 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				int p = offset;
 				int ngroups = Get32(p + 12);
 				p += 16; // pointer to groups table
-				DTIMING("C");
 				for(int i = 0; i < ngroups; i++) {
 					int start = Get32(p);
 					int end = Get32(p + 4);
@@ -282,7 +280,6 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 					    if (ro && delta == 0) {
 					        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
 							int q = idRangeOffset + 2 * i + ro;
-							DTIMING("A");
 							for(int c = start; c <= end; c++) {
 								range(c, c, (word)Get16(q));
 								q += 2;
@@ -290,7 +287,6 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 					    }
 					    else {
 					        LLOG("Delta start: " << start << ", end: " << end << ", delta: " << (int16)delta);
-							DTIMING("B");
 					        range(start, end, start + delta);
 					    }
 					}
@@ -322,41 +318,59 @@ struct sFontMetricsReplacement {
 
 int  PanoseDistance(byte *a, byte *b)
 {
-	if(a[0] != b[0]) return INT_MAX;
 	int distance = 0;
-	auto Add = [&](int i) {
-		distance += a[i] && b[i] ? (a[i] - b[i]) * (a[i] - b[i]) : 256;
+	auto pval = [&](int val, int def) {
+		if(val) return val;
+		distance += 5;
+		return def;
 	};
-	Add(1);
-	Add(2);
-//	Add(3);
+	if(pval(a[0], 2) != pval(b[0], 2)) return INT_MAX;
+	
+	auto Add = [&](int i, int def) {
+		int q = pval(a[i], def) - pval(b[i], def);
+		distance += q * q;
+	};
+	Add(1, 6);
+	Add(2, 6);
+	Add(3, 4);
 	return distance;
 }
 
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
-	static VectorMap<int, sRFace *> rface; // face index to font info
+	static VectorMap<int, sRFace *> rface[2]; // face index to font info
 	static bool all_loaded;
-	if(rface.GetCount() == 0) {
+	if(rface[0].GetCount() == 0) {
 		for(int i = 0; i < __countof(sFontReplacements); i++) {
 			int q = Font::FindFaceNameIndex(sFontReplacements[i].name);
 			if(q > 0) {
-				rface.Add(q) = &sFontReplacements[i];
+				rface[0].Add(q) = &sFontReplacements[i];
 			}
 		}
 	}
-	
-	
-	DTIMING("Replace");
 
+	int face = fnt.GetFace();
 	byte *panose;
-	byte  panosea[10];
-	int q = rface.Find(fnt.GetFace()); // if we have this font in database, we do not need to load panose
+	int q = rface[0].Find(face); // if we have this font in database, we do not need to load panose
 	if(q >= 0)
-		panose = rface[q]->panose;
+		panose = rface[0][q]->panose;
 	else {
-		GetPanoseNumber(fnt, panosea); // TODO: add cache
-		panose = panosea;
+		int q = rface[1].Find(face); // if we have this font in database, we do not need to load panose
+		if(q >= 0)
+			panose = rface[1][q]->panose;
+		else {
+			struct Panose : Moveable<Panose> {
+				byte panose[10];
+			};
+			static ArrayMap<int, Panose> cache;
+			int q = cache.Find(face);
+			if(q < 0) {
+				q = cache.GetCount();
+				Font f2(face, 20);
+				GetPanoseNumber(f2, cache.Add(face).panose);
+			}
+			panose = cache[q].panose;
+		}
 	}
 	
 	int wi;
@@ -375,25 +389,20 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		}
 	};
 	
-	int from = 0;
-	
-	for(;;) {
+	for(int pass = 0; pass < 2; pass++) {
 		Font f = fnt;
 		Vector<int> distance;
 		Vector<int> candidate;
 		ChrBit(chr);
-		for(int i = from; i < rface.GetCount(); i++)
-			if(rface[i]->coverage[wi] & bit) {
-				distance.Add(PanoseDistance(rface[i]->panose, panose));
-				candidate.Add(rface.GetKey(i));
+		for(int i = 0; i < rface[pass].GetCount(); i++)
+			if(rface[pass][i]->coverage[wi] & bit) {
+				distance.Add(PanoseDistance(rface[pass][i]->panose, panose));
+				candidate.Add(rface[pass].GetKey(i));
 			}
-		{ RTIMING("Sort");
-			StableIndexSort(distance, candidate);
-		}
+		StableIndexSort(distance, candidate);
 		for(int fi : candidate) {
 			f.Face(fi);
-			RTIMING("Test");
-			if(IsNormal(f, chr)) {
+			if(IsNormal_nc(f, chr)) {
 				int a = fnt.GetAscent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
 				if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
@@ -414,27 +423,26 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 				return true;
 			}
 		}
-		if(all_loaded) break;
-		all_loaded = true;
-		from = rface.GetCount();
-		DLOG("Loading all fonts");
-		DTIMING("Loading all fonts");
-		for(int i = 1; i < Font::GetFaceCount(); i++) {
-			if(rface.Find(i) < 0) {
-				Font fnt(i, 40);
-				sRFace fi;
-				memset(&fi, 0, sizeof(fi));
-				bool hascmap = ReadCmap(fnt, [&](int start, int end, int) {
-					for(int c = start; c <= end; c = (c + 64) & ~63) {
-						ChrBit(c);
-						fi.coverage[wi] |= bit;
+		if(!all_loaded) {
+			all_loaded = true;
+			for(int i = 1; i < Font::GetFaceCount(); i++) {
+				dword fi = Font::GetFaceInfo(i);
+				if(rface[1].Find(i) < 0 && !(fi & Font::SPECIAL) && (fi & Font::SCALEABLE)) {
+					Font fnt(i, 40);
+					sRFace fi;
+					memset(&fi, 0, sizeof(fi));
+					bool hascmap = ReadCmap(fnt, [&](int start, int end, int) {
+						for(int c = start; c <= end; c = (c + 64) & ~63) {
+							ChrBit(c);
+							fi.coverage[wi] |= bit;
+						}
+					});
+					if(hascmap && GetPanoseNumber(fnt, fi.panose)) {
+						static Array<sRFace> xface; // for those additionally loaded
+						sRFace& n = xface.Add();
+						n = fi;
+						rface[1].Add(i, &n);
 					}
-				});
-				if(hascmap && GetPanoseNumber(fnt, fi.panose)) {
-					static Array<sRFace> xface; // for those additionally loaded
-					sRFace& n = xface.Add();
-					n = fi;
-					rface.Add(i, &n);
 				}
 			}
 		}
