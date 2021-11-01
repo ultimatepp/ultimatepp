@@ -163,8 +163,11 @@ String  ToSystemCharset(const String& src);
 String  FromWin32Charset(const String& src, int cp);
 String  FromSystemCharset(const String& src);
 
+Vector<char16> ToSystemCharsetW(const WString& src);
+Vector<char16> ToSystemCharsetW(const String& src);
 Vector<char16> ToSystemCharsetW(const wchar *src);
 Vector<char16> ToSystemCharsetW(const char *src);
+
 String         FromSystemCharsetW(const char16 *src);
 
 #ifdef PLATFORM_WIN32

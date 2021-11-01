@@ -627,6 +627,20 @@ String FromSystemCharset(const String& src)
 }
 #endif
 
+Vector<char16> ToSystemCharsetW(const WString& src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+Vector<char16> ToSystemCharsetW(const String& src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
 Vector<char16> ToSystemCharsetW(const wchar *src)
 {
 	Vector<char16> h = ToUtf16(src);
