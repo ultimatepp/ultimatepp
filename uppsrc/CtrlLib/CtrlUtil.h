@@ -210,40 +210,13 @@ public:
 #endif
 
 #ifdef GUI_WIN
-#ifndef PLATFORM_WINCE
 
 class TrayIcon : private Ctrl {
-	struct NotifyIconOld {
-		dword sz;
-		HWND  hwnd;
-		dword id;
-		dword flags;
-		dword message;
-		HICON icon;
-		char  tip[64];
-	};
-	struct NotifyIconNew {
-		dword sz;
-		HWND  hwnd;
-		dword id;
-		dword flags;
-		dword message;
-		HICON icon;
-		char  tip[128];
-
-		dword state;
-		dword statemask;
-		char  info[256];
-		dword timeout;
-		char  title[64];
-		dword infoflags;
-	};
-
-	Image          icon;
-	bool           visible;
-	String         tip;
-	NotifyIconNew  nid;
-	HWND           hwnd;
+	Image           icon;
+	bool            visible;
+	String          tip;
+	NOTIFYICONDATAW nid;
+	HWND            hwnd;
 
 	void Notify(dword msg);
 	void DoMenu(Bar& bar);
@@ -348,7 +321,6 @@ public:
 
 typedef FileSelNative FileSelector;
 
-#endif
 #endif
 
 #ifdef GUI_X11
