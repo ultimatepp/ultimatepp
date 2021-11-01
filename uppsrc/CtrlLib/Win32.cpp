@@ -26,8 +26,8 @@ FileSelNative::FileSelNative() {
 
 FileSelNative& FileSelNative::Type(const char *name, const char *ext) {
 	FileType& t = type.Add();
-	t.name = ToSystemCharset(name);
-	t.ext = ToSystemCharset(ext);
+	t.name = name;
+	t.ext = ext;
 	return *this;
 }
 
@@ -98,6 +98,12 @@ static UINT_PTR CALLBACK sCenterHook(HWND hdlg, UINT msg, WPARAM wParam, LPARAM 
 #endif
 
 bool FileSelNative::Execute(bool open, const char *dlgtitle) {
+	Vector<Vector<char16>> s16;
+	auto W32 = [&](const String& s) -> char16* {
+		auto& h = s16.Add();
+		h = ToSystemCharsetW(s);
+		return h;
+	};
 	String filter;
 	for(int i = 0; i < type.GetCount(); i++) {
 		filter.Cat(type[i].name);
@@ -105,7 +111,7 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 		filter.Cat(type[i].ext);
 		filter.Cat('\0');
 	}
-	OPENFILENAME ofn;
+	OPENFILENAMEW ofn;
 	memset(&ofn, 0, sizeof(ofn));
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	Ctrl *q = Ctrl::GetActiveWindow();
@@ -114,12 +120,12 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 	if(asking) ofn.Flags |= (open ? OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST : OFN_OVERWRITEPROMPT);
 	if(!rdonly) ofn.Flags |= OFN_HIDEREADONLY;
 	if(multi) ofn.Flags |= OFN_ALLOWMULTISELECT;
-	ofn.lpstrFilter = filter;
+	ofn.lpstrFilter = W32(filter);
 	ofn.nFilterIndex = activetype;
-	ofn.lpstrInitialDir = activedir;
+	ofn.lpstrInitialDir = W32(activedir);
 	ofn.lpfnHook = sCenterHook;
 	int bufsize = ofn.nMaxFile = (multi ? 32000 : _MAX_PATH);
-	Buffer<char> buffer(bufsize);
+	Buffer<char16> buffer(bufsize);
 	*(ofn.lpstrFile = buffer) = 0;
 	if(!filename.IsEmpty())
 	{
@@ -127,16 +133,16 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 		for(int i = 0; i < filename.GetCount(); i++)
 		{
 			if(*ofn.lpstrInitialDir == 0 && FindFile().Search(AppendFileName(GetFileDirectory(filename[i]), "*")))
-				ofn.lpstrInitialDir = GetFileDirectory(filename[i]);
+				ofn.lpstrInitialDir = W32(GetFileDirectory(filename[i]));
 			if(!open || FileExists(filename[i]))
 			{
 				String fn = GetFileName(filename[i]);
 				if(!IsNull(fn))
 				{
 					if(multi && fn.Find(' ') >= 0)
-						out << '\"' << ToSystemCharset(fn) << '\"';
+						out << W32(String() << '\"' << fn << '\"');
 					else
-						out << ToSystemCharset(fn);
+						out << W32(fn);
 					out.Cat(0);
 				}
 			}
@@ -145,44 +151,42 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 		memcpy(buffer, out, l + 1);
 	}
 
-	String title;
 	if(dlgtitle)
-		title = ToSystemCharset(dlgtitle);
+		ofn.lpstrTitle = W32(dlgtitle);
 	else if(open)
-		title = ToSystemCharset(t_("Open.."));
+		ofn.lpstrTitle = W32(t_("Open.."));
 	else
-		title = ToSystemCharset(t_("Save as"));
-	ofn.lpstrTitle = ~title;
+		ofn.lpstrTitle = W32(t_("Save as"));
 	if(!defext.IsEmpty())
-		ofn.lpstrDefExt = defext;
-	bool res = !!(open ? GetOpenFileName : GetSaveFileName)(&ofn);
+		ofn.lpstrDefExt = W32(defext);
+	bool res = !!(open ? GetOpenFileNameW : GetSaveFileNameW)(&ofn);
 	if(!res && CommDlgExtendedError() == FNERR_INVALIDFILENAME)
 	{
 		*buffer = 0;
-		res = !!(open ? GetOpenFileName : GetSaveFileName)(&ofn);
+		res = !!(open ? GetOpenFileNameW : GetSaveFileNameW)(&ofn);
 	}
 	if(!res && CommDlgExtendedError() == FNERR_INVALIDFILENAME)
 	{
-		ofn.lpstrInitialDir = "";
-		res = !!(open ? GetOpenFileName : GetSaveFileName)(&ofn);
+		ofn.lpstrInitialDir = W32("");
+		res = !!(open ? GetOpenFileNameW : GetSaveFileNameW)(&ofn);
 	}
 	if(!res)
 		return false;
 	filename.Clear();
 	activetype = ofn.nFilterIndex;
 	if(multi) {
-		const char *s = ofn.lpstrFile;
-		activedir = s;
-		s += strlen(s);
+		const char16 *s = ofn.lpstrFile;
+		activedir = FromSystemCharsetW(s);
+		s += strlen16(s);
 		if(s[1] == 0)
-			filename.Add() = FromSystemCharset(activedir);
+			filename.Add() = activedir;
 		else
 			do
-				filename.Add() = FromSystemCharset(AppendFileName(activedir, ++s));
-			while((s += strlen(s))[1]);
+				filename.Add() = AppendFileName(activedir, FromSystemCharsetW(++s));
+			while((s += strlen16(s))[1]);
 	}
 	else {
-		filename.Add(FromSystemCharset(ofn.lpstrFile));
+		filename.Add(FromSystemCharsetW(ofn.lpstrFile));
 		activedir = GetFileDirectory(filename[0]);
 	}
 	readonly = ofn.Flags & OFN_READONLY ? TRUE : FALSE;
