@@ -31,11 +31,11 @@ TrayIcon::TrayIcon()
 	Create(NULL, WS_POPUP, 0, false, 0, 0);
 	Ctrl::Hide();
 	Zero(nid);
-	nid.sz = IsWin2K() ? sizeof(NotifyIconNew) : sizeof(NotifyIconOld);
-	nid.message = UM_TASKBAR_;
-	nid.hwnd = GetHWND();
+	nid.cbSize = sizeof(nid);
+	nid.uCallbackMessage = UM_TASKBAR_;
+	nid.hWnd = GetHWND();
 	static int id;
-	nid.id = ++id;
+	nid.uID = ++id;
 	visible = false;
 	Show();
 }
@@ -43,22 +43,29 @@ TrayIcon::TrayIcon()
 TrayIcon::~TrayIcon()
 {
 	Hide();
-	if(nid.icon)
-		DestroyIcon(nid.icon);
+	if(nid.hIcon)
+		DestroyIcon(nid.hIcon);
+}
+
+void Wcpy(char16 *t, const String& s, int sz)
+{
+	Vector<char16> w = ToSystemCharsetW(s);
+	if(w.GetCount() > sz) {
+		w.SetCount(sz - 1);
+		w.Add(0);
+	}
+	memcpy(t, w, w.GetCount() * sizeof(char16));
 }
 
 void TrayIcon::Notify(dword msg)
 {
 	if(visible) {
-		nid.flags = NIF_ICON|NIF_MESSAGE|NIF_TIP;
-		if(nid.icon)
-			DestroyIcon(nid.icon);
-		nid.icon = SystemDraw::IconWin32(icon);
-		String stip = ToSystemCharset(tip);
-		int len = min(stip.GetLength(), 125);
-		memcpy(nid.tip, stip, len);
-		nid.tip[len] = 0;
-		BOOL Status = Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid);
+		nid.uFlags = NIF_ICON|NIF_MESSAGE|NIF_TIP;
+		if(nid.hIcon)
+			DestroyIcon(nid.hIcon);
+		nid.hIcon = SystemDraw::IconWin32(icon);
+		Wcpy(nid.szTip, tip, 128);
+		BOOL Status = Shell_NotifyIconW(msg, &nid);
 		// To prevent from Shell_NotifyIcon bugs...
 		// discussed here : http://msdn.microsoft.com/en-us/library/bb762159(v=vs.85).aspx
 		// and here : http://issuetracker.delphi-jedi.org/bug_view_advanced_page.php?bug_id=3747
@@ -71,7 +78,7 @@ void TrayIcon::Notify(dword msg)
 			if(ErrorCode == ERROR_SUCCESS || ErrorCode == ERROR_TIMEOUT) {
 				for(int retry = 0; retry < 60; retry++) {
 					Sleep(50);
-					if(Shell_NotifyIcon(NIM_MODIFY, (NOTIFYICONDATA *)&nid) == (msg != NIM_DELETE))
+					if(Shell_NotifyIconW(NIM_MODIFY, &nid) == (msg != NIM_DELETE))
 						break;
 				}
 			}
@@ -81,23 +88,12 @@ void TrayIcon::Notify(dword msg)
 
 void TrayIcon::Message(int type, const char *title, const char *text, int timeout)
 {
-	if(!IsWin2K())
-	    return;
-	nid.flags = 0x10;
-	*nid.info = *nid.title = 0;
-	if(text) {
-		String h = ToSystemCharset(text);
-		memcpy(nid.info, h, min(h.GetLength(), 255) + 1);
-		nid.info[255] = 0;
-	}
-	if(title) {
-		String h = ToSystemCharset(title);
-		memcpy(nid.title, h, min(h.GetLength(), 63) + 1);
-		nid.title[63] = 0;
-	}
-	nid.infoflags = type;
-	nid.timeout = minmax(timeout, 10, 30) * 1000;
-	Shell_NotifyIcon(NIM_MODIFY, (NOTIFYICONDATA *)&nid);
+	nid.uFlags = 0x10;
+	Wcpy(nid.szInfo, text, 256);
+	Wcpy(nid.szInfoTitle, text, 64);
+	nid.dwInfoFlags = type;
+	nid.uTimeout = minmax(timeout, 10, 30) * 1000;
+	Shell_NotifyIconW(NIM_MODIFY, &nid);
 }
 
 void TrayIcon::Show(bool b)
@@ -185,11 +181,11 @@ LRESULT TrayIcon::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			LeftUp();
 			return TRUE;
 		case WM_LBUTTONDBLCLK:
-			::SetForegroundWindow(nid.hwnd);
+			::SetForegroundWindow(nid.hWnd);
 			LeftDouble();
 			return TRUE;
 		case WM_RBUTTONDOWN:
-			::SetForegroundWindow(nid.hwnd);
+			::SetForegroundWindow(nid.hWnd);
 			MenuBar::Execute(NULL, THISBACK(DoMenu), GetMousePos());
 			return TRUE;
 		case NIN_BALLOONSHOW_:
