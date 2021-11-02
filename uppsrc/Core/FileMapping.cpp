@@ -47,7 +47,7 @@ bool FileMapping::Open(const char *file, bool delete_share)
 	write = false;
 #ifdef PLATFORM_WIN32
 	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share && IsWinNT() ? FILE_SHARE_DELETE : 0),
+		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if(hfile == INVALID_HANDLE_VALUE)
 		return false;

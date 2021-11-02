@@ -23,8 +23,7 @@ hash_t GetHashValue(const HWND& h)
 bool Ctrl::GetMsg(MSG& msg)
 {
 	if(!PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) return false;
-	return IsWindowUnicode(msg.hwnd) ? PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)
-	                                 : PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+	return PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE);
 }
 
 static bool sFinished;
@@ -153,10 +152,7 @@ DWORD WINAPI Ctrl::Win32OverwatchThread(LPVOID)
 	MSG Msg;
 	while(GetMessage(&Msg, NULL, 0, 0) > 0) {
         TranslateMessage(&Msg);
-		if(IsWindowUnicode(Msg.hwnd))
-			DispatchMessageW(&Msg);
-		else
-			DispatchMessage(&Msg);
+		DispatchMessageW(&Msg);
     }
 	ELOGW("OverWatch 3");
 	return 0;
@@ -240,58 +236,34 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 #define ILOG(x) // RLOG(x)
 	Ctrl::hInstance = hInstance;
 	ILOG("RegisterClassW");
-#ifndef PLATFORM_WINCE
-	if(IsWinNT())
-#endif
-	{
-		WNDCLASSW  wc;
-		Zero(wc);
-		wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
-		wc.hInstance     = hInstance;
-		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
-		wc.lpszClassName = L"UPP-CLASS-W";
-		RegisterClassW(&wc);
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpszClassName = L"UPP-CLASS-DS-W";
-		RegisterClassW(&wc);
-		wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpszClassName = L"UPP-CLASS-SB-W";
-		RegisterClassW(&wc);
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
-		wc.lpszClassName = L"UPP-CLASS-SB-DS-W";
-		RegisterClassW(&wc);
-	}
-
-	ILOG("RegisterClassA");
-	WNDCLASS  wc;
+	WNDCLASSW  wc;
 	Zero(wc);
 	wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
 	wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
-	wc.lpszClassName = L_("UPP-CLASS-A");
-	RegisterClass(&wc);
-	if(IsWinXP()) {
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpszClassName = L_("UPP-CLASS-DS-A");
-		RegisterClass(&wc);
-	}
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.lpszClassName = L"UPP-CLASS-W";
+	RegisterClassW(&wc);
+	wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+	wc.lpszClassName = L"UPP-CLASS-DS-W";
+	RegisterClassW(&wc);
 	wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-	wc.lpszClassName = L_("UPP-CLASS-SB-A");
-	RegisterClass(&wc);
-	if(IsWinXP()) {
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
-		wc.lpszClassName = L_("UPP-CLASS-SB-DS-A");
-		RegisterClass(&wc);
-	}
-	wc.style         = 0;
-	wc.lpszClassName = L_("UPP-TIMER");
-	wc.hCursor       = NULL;
-	wc.lpfnWndProc   = &Ctrl::UtilityProc;
-	RegisterClass(&wc);
+	wc.lpszClassName = L"UPP-CLASS-SB-W";
+	RegisterClassW(&wc);
+	wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
+	wc.lpszClassName = L"UPP-CLASS-SB-DS-W";
+	RegisterClassW(&wc);
+
+	WNDCLASS  wca;
+	Zero(wca);
+	wca.hInstance     = hInstance;
+	wca.hbrBackground = (HBRUSH)NULL;
+	wca.style         = 0;
+	wca.lpszClassName = L_("UPP-TIMER");
+	wca.hCursor       = NULL;
+	wca.lpfnWndProc   = &Ctrl::UtilityProc;
+	RegisterClass(&wca);
 
 	ILOG("InitTimer");
 	InitTimer();
@@ -307,19 +279,10 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 
 	OleInitialize(NULL);
 
-/* TRC 05/11/14: moved to GuiSleep to avoid thread creation in OCX DllMain
-	DWORD dummy;
-	OverwatchThread = CreateThread(NULL, 0x100000, Win32OverwatchThread, NULL, 0, &dummy);
-	ExitLoopEvent().Wait();
-*/
-
-// TRC 05/11/18: pSetLayeredWindowAttributes moved to GLOBAL_VAR (see below) to make OCX initialization simpler
-
 	Csizeinit();
 #undef ILOG
 
-	if(IsWin7())
-		GlobalBackPaint();
+	GlobalBackPaint();
 	
 	EnterGuiMutex();
 }
@@ -487,20 +450,12 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	top = new Top;
 	ASSERT(!parent || IsWindow(parent));
 	style &= ~WS_VISIBLE;
-	if(!IsWinXP())
-		dropshadow = false;
-	if(IsWinNT() && (!parent || IsWindowUnicode(parent)))
-		top->hwnd = CreateWindowExW(exstyle,
-		                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-		                                     : dropshadow ? L"UPP-CLASS-DS-W" : L"UPP-CLASS-W",
-		                            L"", style, 0, 0, 0, 0,
-		                            parent, NULL, hInstance, this);
-	else
-		top->hwnd = CreateWindowEx(exstyle,
-		                           savebits ? dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
-		                                    : dropshadow ? "UPP-CLASS-DS-A" : "UPP-CLASS-A",
-		                           "", style, 0, 0, 0, 0,
-		                           parent, NULL, hInstance, this);
+	dropshadow = false;
+	top->hwnd = CreateWindowEx(exstyle,
+	                           savebits ? dropshadow ? "UPP-CLASS-SB-DS-W" : "UPP-CLASS-SB-W"
+	                                    : dropshadow ? "UPP-CLASS-DS-W" : "UPP-CLASS-W",
+	                           "", style, 0, 0, 0, 0,
+	                           parent, NULL, hInstance, this);
 
 	inloop = false;
 
@@ -755,10 +710,7 @@ void Ctrl::sProcessMSG(MSG& msg)
 	DDUMP(cls);
 #endif
 
-	if(IsWindowUnicode(msg.hwnd))
-		DispatchMessageW(&msg);
-	else
-		DispatchMessage(&msg);
+	DispatchMessageW(&msg);
 }
 
 bool Ctrl::IsWaitingEvent()

@@ -158,10 +158,10 @@ void DeleteWinReg(const String& key, HKEY base, dword wow) {
 }
 
 String GetSystemDirectory() {
-	char temp[MAX_PATH];
+	WCHAR temp[MAX_PATH];
 	*temp = 0;
-	::GetSystemDirectory(temp, sizeof(temp));
-	return FromSystemCharset(temp);
+	::GetSystemDirectoryW(temp, sizeof(temp));
+	return FromSystemCharsetW(temp);
 }
 
 String GetWindowsDirectory() {

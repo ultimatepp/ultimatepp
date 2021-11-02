@@ -329,7 +329,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 	sz = Ctrl::GetVirtualScreenArea().GetSize();
 	m.img = IsPrinter() && GetDeviceCaps(GetHandle(), NUMCOLORS) == 2 ? Dither(img, 360) : img; // If printer does not support color, dither
 	cache.Get(m).Paint(*this, x, y, src, color);
-	cache.Shrink(4 * sz.cx * sz.cy, IsWinNT() ? 1000 : 100);
+	cache.Shrink(4 * sz.cx * sz.cy, 1000);
 }
 
 void ImageDraw::Section::Init(int cx, int cy)
@@ -567,12 +567,9 @@ HICON SystemDraw::IconWin32(const Image& img, bool cursor)
 	Point p = img.GetHotSpot();
 	iconinfo.xHotspot = p.x;
 	iconinfo.yHotspot = p.y;
-	static Size cursor_size(GetSystemMetrics(SM_CXCURSOR), GetSystemMetrics(SM_CYCURSOR));
 	Size tsz = sz;
-	if(!IsWin2K() && cursor)
-		tsz = cursor_size;
 	Size csz = Size(min(tsz.cx, sz.cx), min(tsz.cy, sz.cy));
-	if(IsWinXP() && !ImageFallBack) {
+	if(!ImageFallBack) {
 		RGBA *pixels;
 		BitmapInfo32__ bi(tsz.cx, tsz.cy);
 		HDC dcMem = ::CreateCompatibleDC(NULL);

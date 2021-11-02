@@ -394,8 +394,7 @@ void ChHostSkin()
 
 	ChBaseSkin();
 
-	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
-	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);
+	GUI_GlobalStyle_Write(GUISTYLE_XP);
 #ifndef PLATFORM_WINCE
 	GUI_DragFullWindow_Write(IsSysFlag(SPI_GETDRAGFULLWINDOWS));
 #endif

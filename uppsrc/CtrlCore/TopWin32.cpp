@@ -75,12 +75,8 @@ void TopWindow::SyncTitle()
 	GuiLock __;
 	LLOG("TopWindow::SyncTitle0 " << UPP::Name(this));
 	HWND hwnd = GetHWND();
-	if(hwnd) {
-		if(IsWindowUnicode(hwnd))
-			::SetWindowTextW(hwnd, ToSystemCharsetW(title));
-		else
-			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
-	}
+	if(hwnd)
+		::SetWindowTextW(hwnd, ToSystemCharsetW(title));
 }
 
 void TopWindow::DeleteIco()
