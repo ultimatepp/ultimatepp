@@ -375,7 +375,8 @@ void    Ctrl::LRep() {
 
 bool    Ctrl::NotDrag(Point p)
 {
-	return sDistMax(p, mousepos + mouseCtrl->GetRect().TopLeft()) < GUI_DragDistance();
+	return mouseCtrl &&
+	       sDistMax(p, mousepos + mouseCtrl->GetRect().TopLeft()) < GUI_DragDistance();
 }
 
 void    Ctrl::LHold() {
