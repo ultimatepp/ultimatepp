@@ -1,5 +1,7 @@
 #include "CocoMM.h"
 
+#include <dlfcn.h>
+
 #ifdef GUI_COCOA
 
 #define LLOG(x)
@@ -15,9 +17,13 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	Set(ink);
 
 	bool synth;
-	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font, synth), NULL);
 	
-	CGContextSetFont(cgHandle, cgFont);
+	CTFontRef ct_font = CT_Font(font, synth);
+
+	static void (*CTFontDrawGlyphs)(CTFontRef, const CGGlyph[], const CGPoint[], size_t, CGContextRef);
+	ONCELOCK {
+		*reinterpret_cast<void**>(&CTFontDrawGlyphs) = dlsym(RTLD_DEFAULT, "CTFontDrawGlyphs");
+	}
 
 	Point off = GetOffset();
 	CGAffineTransform tm = CGAffineTransformMakeTranslation(x + off.x, y + off.y);
@@ -52,7 +58,16 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 
 	CGContextSetFontSize(cgHandle, font.GetHeight());
-    CGContextShowGlyphsAtPositions(cgHandle, g, p, nn); }
+
+	if(CTFontDrawGlyphs)
+		CTFontDrawGlyphs(ct_font, g, p, nn, cgHandle);
+	else {
+		CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(ct_font, NULL);
+		CGContextSetFont(cgHandle, cgFont);
+	    CGContextShowGlyphsAtPositions(cgHandle, g, p, nn);
+	}
 };
+
+}
 
 #endif

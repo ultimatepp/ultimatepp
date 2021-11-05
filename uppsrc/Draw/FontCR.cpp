@@ -251,7 +251,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				return false;
 			int format = Get16(offset);
 			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
-			if(pid == 3 && psid == 10 && format == 12 && pass == 0) {
+			if((pid == 3 && psid == 10) || (pid == 0 && psid == 4) && format == 12 && pass == 0) {
 				int p = offset;
 				int ngroups = Get32(p + 12);
 				p += 16; // pointer to groups table
@@ -264,7 +264,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				return true;
 			}
 			else
-			if(pid == 3 && psid == 1 && format == 4 && pass == 1) {
+			if((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4 && pass == 1) {
 				int p = offset;
 				int n = Get16(p + 6) >> 1;
 				int seg_end = p + 14;
@@ -419,6 +419,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 					else
 						f = cache[q].mdst;
 				}
+				DLOG(chr << ' ' << f);
 				rfnt = f;
 				return true;
 			}

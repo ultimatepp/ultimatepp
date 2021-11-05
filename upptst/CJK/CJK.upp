@@ -7,4 +7,3 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "GUI X11";
-
