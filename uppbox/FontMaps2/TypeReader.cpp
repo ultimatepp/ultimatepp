@@ -115,7 +115,7 @@ bool FontTypeReader::Open(Font font, bool symbol, bool justcheck)
 				if(offset < 0 || offset > data.GetCount())
 					Error();
 				int format = Peek16(~data + offset);
-				LOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
+				LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
 				//Test with Symbol font !!!; improve - Unicode first, 256 bytes later..., symbol...
 				if(symbol) {
 					if(pid == 1 && psid == 0 && Peek16(~data + offset) == 0) {
