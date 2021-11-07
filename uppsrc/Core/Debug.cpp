@@ -40,7 +40,7 @@ void CheckLogEtalon(const char *etalon_path)
 	
 	String log = LoadLog(GetStdLogPath());
 	String etalon = LoadLog(etalon_path);
-
+	
 	ASSERT(log == etalon);
 	
 	LOG("================= OK");

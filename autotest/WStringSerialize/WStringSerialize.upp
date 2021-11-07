@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	etalon.log,
+	Etalon.log,
 	WStringSerialize.cpp;
 
 mainconfig
