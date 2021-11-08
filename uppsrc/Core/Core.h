@@ -260,7 +260,7 @@ namespace std {
 #define UPP               Upp
 
 // #define atof @ // atof is broken, as it depends on setlocale - might want ',' instead of '.' breaking a lot of code
-// Use Atof instead (which accepts both '.' and ',' as decimal separator)
+// Use Atof instead which is fixed with '.'
 
 namespace Upp {
 

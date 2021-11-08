@@ -660,7 +660,7 @@ double ScanDouble(const wchar *ptr)
 double Atof(const char *s)
 {
 	double n;
-	return ScanDbl<char, byte>(n, s, ',') ? n : 0;
+	return ScanDbl<char, byte>(n, s, 0) ? n : 0;
 }
 
 double CParser::ReadDouble()
