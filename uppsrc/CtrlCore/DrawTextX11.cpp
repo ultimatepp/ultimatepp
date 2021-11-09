@@ -135,7 +135,7 @@ GlyphInfo XftGetGlyphInfoSys(Font font, int chr)
 {
 	wchar h = chr;
 	XGlyphInfo info;
-	XftTextExtents16(Xdisplay, GetXftMetricFont(font, 0), &h, 1, &info);
+	XftTextExtents32(Xdisplay, GetXftMetricFont(font, 0), &h, 1, &info);
 	GlyphInfo gi;
 	gi.width = info.xOff;
 	gi.lspc = -info.x;

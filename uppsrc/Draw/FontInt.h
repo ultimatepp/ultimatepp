@@ -36,7 +36,7 @@ struct GlyphInfo {
 	int16 width;
 	int16 lspc;
 	int16 rspc;
-	word  glyphi; // optional, not available in Win32
+	word  glyphi = 0; // optional, not available in Win32, X11
 	
 	bool IsNormal() const     { return (word)width != 0x8000; }
 	bool IsComposed() const   { return !IsNormal() && (lspc == -1 || lspc == -11); }

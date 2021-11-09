@@ -33,15 +33,5 @@ struct MyApp : TopWindow {
 };
 
 GUI_APP_MAIN {
-	Vector<String> h;
-	for(int i = 0; i < Font::GetFaceCount(); i++) {
-		Font fnt(i, 40);
-		h.Add(fnt.GetFaceName());
-		if(!fnt.IsNormal('4'))
-			DLOG(fnt.GetFaceName());
-	}
-	DLOG("===========");
-	Sort(h);
-	DDUMPC(h);
 	MyApp().Sizeable().Zoomable().Run();
 }

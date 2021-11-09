@@ -1,7 +1,12 @@
 #include "TypeReader.h"
 
 #define LLOG(x)   // LOG(x)
-#define LDUMP(x)  // LLOG(#x << " = " << x);
+#define LDUMP(x)  // LOG(#x << " = " << x);
+
+int FontTypeReader::Error()
+{
+	throw Fail(); return 0;
+}
 
 int FontTypeReader::Error()
 {
@@ -127,7 +132,7 @@ bool FontTypeReader::Open(Font font, bool symbol, bool justcheck)
 					}
 				}
 				else
-				if(pid == 3 && psid == 10 && format == 12 && pass == 0) {
+				if((pid == 3 && psid == 10) || (pid == 0 && psid == 4) && format == 12 && pass == 0) {
 					const char *p = ~data + offset;
 					int ngroups = Peek32(p + 12);
 					p += 16; // pointer to groups table
@@ -139,7 +144,7 @@ bool FontTypeReader::Open(Font font, bool symbol, bool justcheck)
 					goto done;
 				}
 				else
-				if(pid == 3 && psid == 1 && format == 4 && pass == 1) {
+				if((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4 && pass == 1) {
 					const char *p = ~data + offset;
 					int n = Peek16(p + 6) >> 1;
 					LLOG("Found UNICODE encoding, offset " << offset << ", segments " << n);
