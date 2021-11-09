@@ -1223,7 +1223,7 @@ Rect Ctrl::GetScreenClient(HWND hwnd)
 }
 
 Rect Ctrl::GetDefaultWindowRect() {
-	HWND hwnd = ::CreateWindow("UPP-CLASS-A", "", WS_OVERLAPPED,
+	HWND hwnd = ::CreateWindow("UPP-CLASS-W", "", WS_OVERLAPPED,
 		                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 							   NULL, NULL, NULL, NULL);
 	Rect sr;

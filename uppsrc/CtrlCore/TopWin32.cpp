@@ -246,7 +246,7 @@ void TopWindow::Open(HWND hwnd)
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
 	USRLOG("   OPEN " << Desc(this));
-	LLOG("TopWindow::Open, owner HWND = " << FormatIntHex((int)hwnd, 8) << ", Active = " << FormatIntHex((int)::GetActiveWindow(), 8));
+	LLOG("TopWindow::Open, owner HWND = " << hwnd << ", Active = " << hwnd);
 	IgnoreMouseUp();
 	SyncCaption();
 	LLOG("WindowStyles: " << WindowStyleAsString(style, exstyle));

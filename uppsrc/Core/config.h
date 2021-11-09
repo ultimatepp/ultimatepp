@@ -185,4 +185,6 @@
 #define CPP_11
 #endif
 
+#define WCHAR32 1 // this version of U++ has 32 bit wchar
+
 #endif
