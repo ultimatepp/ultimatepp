@@ -102,9 +102,8 @@ inline WString ToUtf32(const String& s)               { return ToUtf32(~s, s.Get
 enum { MAX_DECOMPOSED = 18 };
 
 int           UnicodeDecompose(wchar codepoint, wchar t[MAX_DECOMPOSED], bool only_canonical = false);
-Vector<wchar> UnicodeDecompose(wchar codepoint, bool only_canonical = false);
-wchar         UnicodeCompose(const wchar *t, int count);
-inline wchar  UnicodeCompose(const Vector<wchar>& t)  { return UnicodeCompose(t, t.GetCount()); }
+WString       UnicodeDecompose(wchar codepoint, bool only_canonical = false);
+wchar         UnicodeCompose(const WString& t);
 
 void  SetDefaultCharset(byte charset);
 byte  GetDefaultCharset();

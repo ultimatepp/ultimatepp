@@ -1998,12 +1998,6 @@ int  ToAscii(int c, byte charset)
 	return cs.FromUnicode(ToAscii(cs.ToUnicode(c)));
 }
 
-word UnicodeCombine(word chr, word combine)
-{
-	dword h[2] = { chr, combine };
-	return (word)UnicodeCompose(h, 2);
-}
-
 void ToUpper(char *t, const char *s, int len, byte charset)
 {
 	charset = ResolveCharset(charset);
