@@ -133,7 +133,7 @@ WString ToUtf32(const char *s, int len)
 {
 	WStringBuffer r;
 	FromUtf8_([&](wchar c) { r.Cat(c); }, s, len);
-	return r;
+	return WString(r);
 }
 
 int Utf32Len(const char16 *s, int len)
@@ -153,7 +153,7 @@ WString ToUtf32(const char16 *s, int len)
 	WStringBuffer r;
 	r.Reserve(len);
 	FromUtf16_([&](wchar c) { r.Cat(c); }, s, len);
-	return r;
+	return WString(r);
 }
 
 String Utf8ToAscii(const String& src)
