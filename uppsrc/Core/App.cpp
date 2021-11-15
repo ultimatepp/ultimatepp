@@ -514,13 +514,13 @@ void AppInitEnvironment__()
 			ptr++;
 		while(*ptr && *ptr != '=')
 			ptr++;
-		WString varname = ToUtf32(b, ptr - b);
+		WString varname = ToUtf32(b, int(ptr - b));
 		if(*ptr)
 			ptr++;
 		b = ptr;
 		while(*ptr)
 			ptr++;
-		EnvMap().GetAdd(ToUpper(varname)) = ToUtf32(b, ptr - b);
+		EnvMap().GetAdd(ToUpper(varname)) = ToUtf32(b, int(ptr - b));
 	}
 	FreeEnvironmentStringsW(env);
 

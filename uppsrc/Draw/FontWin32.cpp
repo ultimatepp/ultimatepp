@@ -154,7 +154,7 @@ static int CALLBACK Win32_AddFace(const LOGFONTW *logfont, const TEXTMETRICW *, 
 
 static int Win32_EnumFace(HDC hdc, const char *face)
 {
-	return EnumFontFamiliesW(hdc, face ? ToSystemCharsetW(face) : NULL, Win32_AddFace, (LPARAM)face);
+	return EnumFontFamiliesW(hdc, face ? ToSystemCharsetW(face).begin() : NULL, Win32_AddFace, (LPARAM)face);
 }
 
 static void Win32_ForceFace(HDC hdc, const char *face, const char *aface)
@@ -227,7 +227,7 @@ GlyphInfo GetUnicodeGlyphInfo(Font fnt, wchar ch)
 	GlyphInfo gi;
 	
 	memset(&gi, 0, sizeof(gi));
-	gi.width = 0x8000;
+	gi.width = (int16)0x8000;
 	
 	FontRec& f = cache[ii];
 

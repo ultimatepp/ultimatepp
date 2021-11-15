@@ -1091,7 +1091,7 @@ String RTFParser::ReadBinHex(char& odd) const
 	byte v = ctoi(odd);
 	String out;
 	for(const wchar *s = text.Begin(); *s; s++) {
-		byte w = (*s >= '0' && *s <= '9' ? *s - '0'
+		byte w = (byte)(*s >= '0' && *s <= '9' ? *s - '0'
 			: *s >= 'A' && *s <= 'F' ? *s - 'A' + 10
 			: *s >= 'a' && *s <= 'f' ? *s - 'a' + 10
 			: 255);

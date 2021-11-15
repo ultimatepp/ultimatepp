@@ -427,7 +427,7 @@ struct GlyphInfoMaker : ValueMaker {
 			Font rfnt;
 			if(Compose(font, chr, cg)) {
 				e.info.lspc = -1;
-				e.info.rspc = cg.basic_char;
+				e.info.rspc = (int16)cg.basic_char;
 			}
 			else
 			if(Replace(font, chr, rfnt)) {

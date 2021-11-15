@@ -851,13 +851,13 @@ public:
 
 #ifndef _HAVE_NO_STDWSTRING
 	WString(const std::wstring& s);
-	operator std::wstring() const;
-	std::wstring ToStd() const                              { return std::wstring(Begin(), End()); }
+	operator std::wstring() const                           { return ToStd(); }
+	std::wstring ToStd() const;
 #endif
 };
 
 #ifndef _HAVE_NO_STDWSTRING
-inline std::wstring to_string(const WString& s)             { return std::wstring(s.Begin(), s.End()); }
+inline std::wstring to_string(const WString& s)             { return s.ToStd(); }
 #endif
 
 class WStringBuffer : NoCopy {

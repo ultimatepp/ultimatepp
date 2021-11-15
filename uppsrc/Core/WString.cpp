@@ -247,21 +247,27 @@ WString WString::GetVoid()
 }
 
 #ifndef _HAVE_NO_STDWSTRING
+static_assert(sizeof(wchar_t) == 4 || sizeof(wchar_t) == 2, "Invalid wchar_t size");
+
 WString::WString(const std::wstring& s)
 {
 	WString0::Zero();
-	std::wstring::const_iterator i = s.begin();
-	while(i < s.end())
-		Cat(*i++);
+	if(sizeof(wchar_t) == 4)
+		*this = WString((const wchar *)s.c_str(), (int)s.size());
+	if(sizeof(wchar_t) == 2)
+		*this = ToUtf32((char16 *)s.c_str(), (int)s.size());
 }
 
-WString::operator std::wstring() const
+std::wstring WString::ToStd() const
 {
-	std::wstring r;
-	const wchar *s = Begin();
-	while(s < End())
-		r += *s++;
-	return r;
+	if(sizeof(wchar_t) == 4) {
+		const wchar *s = begin();
+		return std::wstring((const wchar_t *)begin(), GetCount());
+	}
+	if(sizeof(wchar_t) == 2) {
+		Vector<char16> h = ToUtf16(*this);
+		return std::wstring((const wchar_t *)h.begin(), h.GetCount());
+	}
 }
 #endif
 

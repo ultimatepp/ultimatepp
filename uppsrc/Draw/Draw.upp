@@ -8,7 +8,7 @@ acceptflags
 uses
 	Core;
 
-library(WIN32) "user32 gdi32";
+library(WIN32) "user32 gdi32 usp10";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
 

@@ -78,7 +78,7 @@ int ToUtf16(char16 *t, const wchar *s, int len)
 	char16 *t0 = t;
 	for(const wchar *lim = s + len; s < lim; s++)
 		ToUtf16_([&](char16 c) { *t++ = c; }, *s);
-	return t - t0;
+	return int(t - t0);
 }
 
 Vector<char16> ToUtf16(const wchar *s, int len)
@@ -105,7 +105,7 @@ int ToUtf16(char16 *t, const char *s, int len)
 	FromUtf8_([&](wchar code) {
 		ToUtf16_([&](char16 c) { *t++ = c; }, code);
 	}, s, len);
-	return t - t0;
+	return int(t - t0);
 }
 
 Vector<char16> ToUtf16(const char *s, int len)

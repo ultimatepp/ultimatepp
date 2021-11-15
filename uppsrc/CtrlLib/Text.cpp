@@ -502,7 +502,7 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 			if(be16)
 				for(const wchar *w = txt; w != e; w++)
 					if(*w < 0x10000)
-						s.Put16be(*w);
+						s.Put16be((word)*w);
 					else {
 						char16 h[2];
 						ToUtf16(h, w, 1);
@@ -512,7 +512,7 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 			else
 				for(const wchar *w = txt; w != e; w++)
 					if(*w < 0x10000)
-						s.Put16le(*w);
+						s.Put16le((word)*w);
 					else {
 						char16 h[2];
 						ToUtf16(h, w, 1);
