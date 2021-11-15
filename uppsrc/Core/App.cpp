@@ -640,12 +640,8 @@ String GetUserName()
 	::GetUserNameW(temp, &w);
 	return temp;
 #else
-<<<<<<< HEAD
 	char temp[256];
-	return Nvl(GetEnv("USER"), "boot");
-=======
 	return Nvl(GetEnv("USER"), "root");
->>>>>>> 78de9ed8908295a7babd0988e6f8fbb8601303ac
 #endif
 }
 
