@@ -292,7 +292,7 @@ void WStringBuffer::Free()
 {
 	int all = (int)(limit - pbegin);
 	if(all == WString0::SMALL)
-		MemoryFree48(pbegin);
+		MemoryFree(pbegin);
 	if(all > WString0::SMALL)
 		MemoryFree((Atomic *)pbegin - 1);
 }

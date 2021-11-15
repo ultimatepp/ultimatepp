@@ -289,21 +289,13 @@ bool ValueMap::Data::IsNull() const {
 }
 
 void ValueMap::Data::Serialize(Stream& s) {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	s % key % value;
-#else
-	throw 0;
-#endif
 }
 
 void ValueMap::Data::Xmlize(XmlIO& xio)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Xmlize(xio, key);
 	Upp::Xmlize(xio, value);
-#else
-	throw 0;
-#endif
 }
 
 void ValueMap::Data::Jsonize(JsonIO& jio)

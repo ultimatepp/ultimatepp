@@ -174,8 +174,6 @@ size_t GetMemoryBlockSize(void *ptr)
 
 void *MemoryAlloc32()             { return MemoryAlloc(32); }
 void  MemoryFree32(void *ptr)     { return MemoryFree(ptr); }
-void *MemoryAlloc48()             { return MemoryAlloc(48); }
-void  MemoryFree48(void *ptr)     { return MemoryFree(ptr); }
 
 void MemoryCheckDebug()
 {

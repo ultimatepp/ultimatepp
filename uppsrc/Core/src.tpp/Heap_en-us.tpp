@@ -58,18 +58,6 @@ This has the same functionality as MemoryFree([%-*@3 ptr]), but
 is slightly faster.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:MemoryAlloc48`(`): [@(0.0.255) void]_`*[* MemoryAlloc48]()&]
-[s2;%% Allocates memory block of exactly 48 bytes. This has the same 
-functionality as MemoryAlloc(32), but is slightly faster.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:MemoryFree48`(void`*`): [@(0.0.255) void]_[* MemoryFree48]([@(0.0.255) void]_`*
-[*@3 ptr])&]
-[s2;%% Frees a memory block previously allocated by MemoryAlloc48. 
-This has the same functionality as MemoryFree([%-*@3 ptr]), but 
-is slightly faster.&]
-[s3;%% &]
-[s4; &]
 [s5;:Upp`:`:MemoryTryRealloc`(void`*`,size`_t`&`): [@(0.0.255) bool]_[* MemoryTryRealloc](
 [@(0.0.255) void]_`*[*@3 ptr], [_^size`_t^ size`_t][@(0.0.255) `&]_[*@3 newsize])&]
 [s2;%% Attempts to change the size of block at [%-*@3 ptr] to something 

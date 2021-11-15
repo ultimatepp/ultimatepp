@@ -125,11 +125,37 @@ void Heap::DblCheck(Page *p)
 	while(p != l);
 }
 
-int Heap::CheckFree(FreeLink *l, int k)
+int Heap::CheckFree(FreeLink *l, int k, bool pg)
 {
+	char h[200];
 	int n = 0;
+	
+	Page *page = GetPage(l);
+
+	if(l && page->klass != k) {
+		sprintf(h, "Invalid freelist block at 0x%p sz: %d (klass mismatch)", l, Ksz(k));
+		Panic(h);
+	}
+	
 	while(l) {
+		if(l->next) {
+			Page *lp = GetPage(l->next);
+			if(pg && lp != page) {
+				sprintf(h, "Invalid freelist block at 0x%p sz: %d (out of page) (-> 0x%p)", l, Ksz(k), l->next);
+				Panic(h);
+			}
+			if((4096 - ((uintptr_t)(l->next) & (uintptr_t)4095)) % Ksz(k) != 0) {
+				sprintf(h, "Invalid freelist block at 0x%p sz: %d (invalid address)", l, Ksz(k));
+				Panic(h);
+			}
+			if(lp->klass != k) {
+				sprintf(h, "Invalid freelist block at 0x%p sz: %d (next klass mismatch)", l, Ksz(k));
+				Panic(h);
+			}
+		}
+
 		DbgFreeCheckK(l, k);
+
 		l = l->next;
 		n++;
 	}
@@ -167,7 +193,7 @@ void Heap::Check() {
 				break;
 			p = p->next;
 		}
-		CheckFree(cache[i], i);
+		CheckFree(cache[i], i, false);
 	}
 
 	DLink *l = large->next;

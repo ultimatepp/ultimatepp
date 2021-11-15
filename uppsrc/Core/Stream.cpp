@@ -629,11 +629,11 @@ Stream& Stream::operator/(String& s) {
 	return *this;
 }
 
-Stream& Stream::operator%(WString& s) {
+Stream& Stream::operator%(WString& s)
+{ // we do not support BE here anymore
 	if(IsError()) return *this;
 	if(IsLoading()) {
-		dword len;
-		len = Get();
+		dword len = Get();
 		if(len == 0xff)
 			len = Get32le();
 		String h = GetAll(len * sizeof(char16));
