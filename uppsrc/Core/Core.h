@@ -63,6 +63,7 @@
 
 #ifdef CPU_X86
 #include <immintrin.h>
+#include <intrin.h>
 #endif
 
 #if defined(PLATFORM_POSIX)

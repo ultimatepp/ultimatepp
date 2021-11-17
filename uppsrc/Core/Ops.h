@@ -233,8 +233,6 @@ byte addc64(uint64& result, const uint64& value, byte carry) {
 
 #elif defined(COMPILER_MSC) && defined(CPU_64)
 
-#include <intrin.h>
-
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {

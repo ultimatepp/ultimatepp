@@ -416,6 +416,13 @@ const Pdb::Type& Pdb::GetType(int ti)
 	return t;
 }
 
+static int CALLBACK sSymEnum(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
+{
+	auto type_index = (VectorMap<String, int> *)UserContext;
+	type_index->GetAdd(pSym->Name) = pSym->TypeIndex;
+	return TRUE;
+}
+
 int Pdb::FindType(adr_t modbase, const String& name)
 {
 	static VectorMap<String, int> primitive = {
@@ -443,11 +450,7 @@ int Pdb::FindType(adr_t modbase, const String& name)
 		return q;
 	if(type_bases.Find(modbase) < 0) {
 		type_bases.Add(modbase);
-		SymEnumTypes(hProcess, current_modbase, [](PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)->int {
-			auto type_index = (VectorMap<String, int> *)UserContext;
-			type_index->GetAdd(pSym->Name) = pSym->TypeIndex;
-			return TRUE;
-		}, &type_index);
+		SymEnumTypes(hProcess, current_modbase, sSymEnum, &type_index);
 		// DDUMPM(type_index);
 	}
 	int ndx = type_index.Get(name, Null);

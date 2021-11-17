@@ -235,25 +235,48 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	sMainThreadId = GetCurrentThreadId();
 #define ILOG(x) // RLOG(x)
 	Ctrl::hInstance = hInstance;
-	ILOG("RegisterClassW");
-	WNDCLASSW  wc;
-	Zero(wc);
-	wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-	wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
-	wc.hInstance     = hInstance;
-	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wc.lpszClassName = L"UPP-CLASS-W";
-	RegisterClassW(&wc);
-	wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-	wc.lpszClassName = L"UPP-CLASS-DS-W";
-	RegisterClassW(&wc);
-	wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-	wc.lpszClassName = L"UPP-CLASS-SB-W";
-	RegisterClassW(&wc);
-	wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
-	wc.lpszClassName = L"UPP-CLASS-SB-DS-W";
-	RegisterClassW(&wc);
+	{
+		ILOG("RegisterClassW");
+		WNDCLASSW  wc;
+		Zero(wc);
+		wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
+		wc.hInstance     = hInstance;
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+		wc.lpszClassName = L"UPP-CLASS-W";
+		RegisterClassW(&wc);
+		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpszClassName = L"UPP-CLASS-DS-W";
+		RegisterClassW(&wc);
+		wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpszClassName = L"UPP-CLASS-SB-W";
+		RegisterClassW(&wc);
+		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
+		wc.lpszClassName = L"UPP-CLASS-SB-DS-W";
+		RegisterClassW(&wc);
+	}
+	{
+		ILOG("RegisterClassA");
+		WNDCLASS  wc;
+		Zero(wc);
+		wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
+		wc.hInstance     = hInstance;
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
+		wc.lpszClassName = L_("UPP-CLASS-A");
+		RegisterClass(&wc);
+		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpszClassName = L_("UPP-CLASS-DS-A");
+		RegisterClass(&wc);
+		wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
+		wc.lpszClassName = L_("UPP-CLASS-SB-A");
+		RegisterClass(&wc);
+		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
+		wc.lpszClassName = L_("UPP-CLASS-SB-DS-A");
+		RegisterClass(&wc);
+	}
 
 	WNDCLASS  wca;
 	Zero(wca);
