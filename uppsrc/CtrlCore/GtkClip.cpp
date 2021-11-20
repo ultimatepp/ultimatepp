@@ -240,7 +240,7 @@ WString GetWString(PasteClip& clip)
 {
 	GuiLock __;
 	if(clip.IsAvailable("text"))
-		return FromUtf8(clip.Get("text"));
+		return ToUtf32(clip.Get("text"));
 	return Null;
 }
 
@@ -286,7 +286,7 @@ String ReadClipboardText()
 
 WString ReadClipboardUnicodeText()
 {
-	return FromUtf8(Ctrl::gclipboard().Get("text"));
+	return ToUtf32(Ctrl::gclipboard().Get("text"));
 }
 
 bool IsClipboardAvailable(const char *id)

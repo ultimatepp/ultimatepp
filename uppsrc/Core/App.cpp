@@ -654,7 +654,7 @@ String GetDesktopManager()
     if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount())
 		return "gnome";
 	if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount())
-        return "kde"; 
+        return "kde";
 	return GetEnv("DESKTOP_SESSION");
 #endif	
 }

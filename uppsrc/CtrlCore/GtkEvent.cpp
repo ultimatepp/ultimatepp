@@ -325,7 +325,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 {
 	GuiLock __;
-	AddEvent(user_data, EVENT_TEXT, FromUtf8(str), NULL);
+	AddEvent(user_data, EVENT_TEXT, ToUtf32(str), NULL);
 }
 
 bool Ctrl::ProcessInvalids()
