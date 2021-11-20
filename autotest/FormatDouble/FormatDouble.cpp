@@ -42,8 +42,9 @@ void Test(double x)
 	dumpg(30);
 	dumpe(30);
 	
-	if(std::isfinite(x))
+	if(std::isfinite(x)) {
 		ASSERT(Atof(FormatG(x, 17)) == x);
+	}
 }
 
 void SubnormalTest()
