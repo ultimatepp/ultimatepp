@@ -222,6 +222,14 @@ int Prompt(const char *title, const Image& icon, const char *qtf, bool okcancel,
 	              icon, qtf, okcancel, button1, button2, button3, cx, Null, Null, Null);
 }
 
+int Prompt(Event<const String&> WhenLink,
+            const char *title, const Image& icon, const char *qtf, bool okcancel,
+            const char *button1, const char *button2, const char *button3, int cx)
+{
+	return Prompt(false, NULL, BEEP_NONE, WhenLink, title, icon, qtf, okcancel,
+	              button1, button2, button3, cx, Null, Null, Null);
+}
+
 int Prompt(const char *title, const Image& icon, const char *qtf,
            const char *button1, const char *button2, const char *button3,
 		   int cx)
