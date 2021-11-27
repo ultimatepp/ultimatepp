@@ -43,6 +43,10 @@ void Test(double x)
 	dumpe(30);
 	
 	if(std::isfinite(x)) {
+		RDUMP(x);
+		RDUMP(FormatG(x, 17));
+		RDUMPHEX(FormatG(x, 17));
+		RDUMP(Atof(FormatG(x, 17)));
 		ASSERT(Atof(FormatG(x, 17)) == x);
 	}
 }
