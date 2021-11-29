@@ -765,10 +765,10 @@ public:
 	void      PosSync();
 	String    IncludesMD5();
 
-	void      EditFileAssistSync2();
+	bool      EditFileAssistSync2();
 	void      EditFileAssistSync();
 	
-	TimeCallback     text_updated;
+	TimeCallback     text_updated, trigger_assist;
 	std::atomic<int> file_scan;
 	bool             file_scanned = false;
 

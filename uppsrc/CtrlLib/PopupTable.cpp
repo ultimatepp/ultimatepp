@@ -68,6 +68,7 @@ bool PopUpTable::Key(dword key, int n) {
 }
 
 void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
+	TimeStop tm;
 	if(inpopup)
 		return;
 	inpopup++;

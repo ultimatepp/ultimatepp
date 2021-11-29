@@ -4,6 +4,7 @@ namespace Upp {
 
 // #define LOG_QUEUE
 #define LLOG(x) // LOG(x)
+// #define DELAY_WATCH  1000 _DBG_
 
 int MemoryProbeInt;
 
@@ -120,7 +121,14 @@ void Ctrl::TimerProc(dword time)
 		else
 			delete todo;
 		sTimerLock.Leave();
+	#if DELAY_WATCH
+		int tm = msecs();
+	#endif
 		cb();
+	#if DELAY_WATCH
+		if(msecs() - tm > DELAY_WATCH)
+			Panic("Long timer procedure detected!");
+	#endif
 		sTimerLock.Enter();
 	}
 	time = msecs();

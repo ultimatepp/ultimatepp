@@ -6,13 +6,24 @@ namespace Upp {
 
 static StaticMutex sGLock;
 
+// #define DELAY_WATCH 1000 _DBG_
+
 static thread_local int sGLockLevel = 0;
 
 void EnterGuiMutex()
 {
 	LLOG(">EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
-	if(sGLockLevel++ == 0)
+	if(sGLockLevel++ == 0) {
+#if DELAY_WATCH
+		for(int i = 0; i < DELAY_WATCH; i++) {
+			if(sGLock.TryEnter()) return;
+			Sleep(1);
+		}
+		Panic("Long timer procedure detected!");
+#else
 		sGLock.Enter();
+#endif
+	}
 	LLOG("EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 }
 

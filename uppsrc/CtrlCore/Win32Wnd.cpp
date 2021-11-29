@@ -5,7 +5,7 @@
 namespace Upp {
 
 #define LLOG(x)    //   DLOG(x)
-#define LOGTIMING 0
+// #define LOGTIMING 1 _DBG_
 
 #ifdef _DEBUG
 #define LOGMESSAGES 0
@@ -614,9 +614,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 #if LOGMESSAGES
 	bool logblk = false;
 	if(message != WM_SETCURSOR && message != WM_CTLCOLORBTN && message != WM_TIMER &&
-#ifndef PLATFORM_WINCE
 	   message != WM_NCHITTEST  &&  message != WM_ENTERIDLE &&
-#endif
 	   message != WM_CTLCOLORDLG && message != WM_CTLCOLOREDIT && message != WM_CTLCOLORLISTBOX &&
 	   message != WM_CTLCOLORMSGBOX && message != WM_CTLCOLORSCROLLBAR &&
 	   message != WM_CTLCOLORSTATIC && message != WM_CANCELMODE &&
@@ -633,7 +631,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 #endif
 	LRESULT l = 0;
 	if(w && (w->GetHWND() || w->isdhctrl)) {
-#if defined(_DEBUG) && LOGTIMING
+#if LOGTIMING
 			int ticks = msecs();
 			String wname = w->Name();
 #endif
@@ -641,7 +639,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			l = w->WindowProc(message, wParam, lParam);
 			if(pw)
 				pw->SyncMoves();
-#if defined(_DEBUG) && LOGTIMING
+#if LOGTIMING
 			String msgname;
 			for(WinMsg *m = sWinMsg; m->ID; m++)
 				if(m->ID == message) {
@@ -650,7 +648,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 				}
 			if(IsNull(msgname))
 				msgname = NFormat("0x%04x", (int)message);
-			LLOG(NFormat("T+%d %s 0x%08x 0x%08x -> %s", msecs(ticks), msgname, (int)wParam, (int)lParam, wname));
+			RLOG(NFormat("T+%d %s 0x%08x 0x%08x -> %s", msecs(ticks), msgname, (int)wParam, (int)lParam, wname));
 #endif
 	}
 	else

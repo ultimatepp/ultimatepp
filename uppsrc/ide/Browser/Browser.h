@@ -21,6 +21,7 @@ class Browser;
 void ReduceCacheFolder(const char *path, int max_total);
 
 void LockCodeBase();
+bool TryLockCodeBase();
 void UnlockCodeBase();
 void UnlockCodeBaseAll();
 
@@ -47,6 +48,7 @@ void           NewCodeBase();
 void           ParseSrc(Stream& in, int file, Event<int, const String&> error);
 void           CodeBaseScanFile(Stream& in, const String& fn);
 void           CodeBaseScanFile(const String& fn, bool auto_check);
+bool           TryCodeBaseScanFile(Stream& in, const String& fn);
 void           ClearCodeBase();
 // void           CheckCodeBase();
 void           RescanCodeBase();
