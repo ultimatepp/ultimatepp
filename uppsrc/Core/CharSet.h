@@ -24,6 +24,7 @@ enum {
 
 #include "Utf.hpp"
 
+inline int strlen8(const char *s) { return s ? (int)strlen8(s) : 0; }
 int strlen16(const char16 *s);
 int strlen32(const wchar *s);
 
@@ -38,7 +39,7 @@ dword FetchUtf8(const char *&s, bool& ok);
 inline wchar FetchUtf8(const char *&s)                { bool ok; return FetchUtf8(s, ok); }
 
 bool   CheckUtf8(const char *s, int len);
-inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen(s)); }
+inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen8(s)); }
 inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
 
 int    Utf8Len(const wchar *s, int len);
@@ -67,7 +68,7 @@ inline int Utf16Len(const WString& s)                 { return Utf16Len(s, s.Get
 inline int Utf16Len(wchar code)                       { return Utf16Len(&code, 1); }
 
 int Utf16Len(const char *s, int len);
-inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen(s)); }
+inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen8(s)); }
 inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
 
 int ToUtf16(char16 *t, const wchar *s, int len);
@@ -78,7 +79,7 @@ inline Vector<char16> ToUtf16(wchar code)             { return ToUtf16(&code, 1)
 
 int ToUtf16(char16 *t, const char *s, int len);
 Vector<char16> ToUtf16(const char *s, int len);
-inline Vector<char16> ToUtf16(const char *s)          { return ToUtf16(s, (int)strlen(s)); }
+inline Vector<char16> ToUtf16(const char *s)          { return ToUtf16(s, (int)strlen8(s)); }
 inline Vector<char16> ToUtf16(const String& s)        { return ToUtf16(~s, s.GetCount()); }
 
 int     Utf32Len(const char16 *s, int len);
@@ -86,7 +87,7 @@ inline  int Utf32Len(const char16 *s)                 { return Utf32Len(s, strle
 inline  int Utf32Len(const Vector<char16>& s)         { return Utf32Len(s, s.GetCount()); }
 
 int    Utf32Len(const char *s, int len);
-inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen(s)); }
+inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen8(s)); }
 inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
 
 void           ToUtf32(wchar *t, const char16 *s, int len);
@@ -96,7 +97,7 @@ inline WString ToUtf32(const Vector<char16>& s)       { return ToUtf32(s, s.GetC
 
 void           ToUtf32(wchar *t, const char *s, int len);
 WString        ToUtf32(const char *s, int len);
-inline WString ToUtf32(const char *s)                 { return ToUtf32(s, (int)strlen(s)); }
+inline WString ToUtf32(const char *s)                 { return ToUtf32(s, (int)strlen8(s)); }
 inline WString ToUtf32(const String& s)               { return ToUtf32(~s, s.GetCount()); }
 
 enum { MAX_DECOMPOSED = 18 };
