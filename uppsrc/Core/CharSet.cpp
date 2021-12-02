@@ -2067,7 +2067,7 @@ String FromUnicodeBuffer(const wchar *src, int len, byte charset, int defchar)
 
 String FromUnicodeBuffer(const wchar *src)
 {
-	return FromUnicodeBuffer(src, wstrlen(src));
+	return FromUnicodeBuffer(src, strlen__(src));
 }
 
 String  FromUnicode(const WString& src, byte charset, int defchar)

@@ -1,6 +1,8 @@
 class Nuller;
 
-int wstrlen(const wchar *s);
+inline int strlen8(const char *s) { return s ? (int)strlen(s) : 0; }
+int strlen16(const char16 *s);
+int strlen32(const wchar *s);
 
 #ifdef PLATFORM_POSIX
 inline int stricmp(const char *a, const char *b)         { return strcasecmp(a, b); }
@@ -12,9 +14,8 @@ inline int stricmp(const char *a, const char *b)         { return _stricmp(a, b)
 inline int strnicmp(const char *a, const char *b, int n) { return _strnicmp(a, b, n); }
 #endif
 
-force_inline int strlen__(const char *s)  { return s ? (int)strlen(s) : 0; }
-
-inline int strlen__(const wchar *s)       { return s ? (int)wstrlen(s) : 0; }
+force_inline int strlen__(const char *s)  { return strlen8(s); }
+inline int strlen__(const wchar *s)       { return strlen32(s); }
 
 inline int cmpval__(char x)               { return (byte)x; }
 inline int cmpval__(wchar x)              { return x; }
@@ -779,7 +780,7 @@ public:
 
 	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
 	bool     IsEqual(const WString0& s) const { return s.length == length && memeq_t(ptr, s.ptr, length); }
-	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq_t(begin(), s, l); }
+	bool     IsEqual(const wchar *s) const    { int l = strlen__(s); return l == GetCount() && memeq_t(begin(), s, l); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);
@@ -891,7 +892,7 @@ public:
 	void  SetCount(int l)            { SetLength(l); }
 	int   GetLength() const          { return (int)(pend - pbegin); }
 	int   GetCount() const           { return GetLength(); }
-	void  Strlen()                   { SetLength(wstrlen(pbegin)); }
+	void  Strlen()                   { SetLength(strlen__(pbegin)); }
 	void  Clear()                    { Free(); Zero(); }
 	void  Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
@@ -899,7 +900,7 @@ public:
 	void  Cat(int c, int count);
 	void  Cat(const wchar *s, int l);
 	void  Cat(const wchar *s, const wchar *e) { Cat(s, int(e - s)); }
-	void  Cat(const wchar *s)                 { Cat(s, wstrlen(s)); }
+	void  Cat(const wchar *s)                 { Cat(s, strlen__(s)); }
 	void  Cat(const WString& s)               { Cat(s, s.GetLength()); }
 	void  Cat(const char *s)                  { Cat(WString(s)); }
 

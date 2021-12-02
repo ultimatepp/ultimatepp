@@ -402,9 +402,9 @@ int CompareNoCase(const WString& a, const WString& b)
 int CompareNoCase(const WString& a, const wchar *b)
 {
 #ifdef DEPRECATED
-	return IterCompare(a.Begin(), a.End(), b, b + wstrlen(b), WStringICompare__());
+	return IterCompare(a.Begin(), a.End(), b, b + strlen__(b), WStringICompare__());
 #else
-	return CompareRanges(a, SubRange(b, b + wstrlen(b)), WStringICompare__());
+	return CompareRanges(a, SubRange(b, b + strlen__(b)), WStringICompare__());
 #endif
 }
 

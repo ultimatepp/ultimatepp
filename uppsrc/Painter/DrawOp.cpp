@@ -215,7 +215,7 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 	if(angle)
 		Rotate(-angle * M_2PI / 3600);
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	double *ddx = NULL;
 	Buffer<double> h;
 	if(dx) {

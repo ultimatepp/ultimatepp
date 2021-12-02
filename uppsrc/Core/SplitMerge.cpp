@@ -138,7 +138,7 @@ Vector<WString> Split(int maxcount, const wchar *s, const wchar *text, bool igno
 {
 	SplitDelimWText delim;
 	delim.ds = text;
-	delim.l = wstrlen(text);
+	delim.l = strlen__(text);
 	return delim.l ? SplitGeneric<WString>(maxcount, delim, s, ignoreempty) : Vector<WString>();
 }
 

@@ -24,10 +24,6 @@ enum {
 
 #include "Utf.hpp"
 
-inline int strlen8(const char *s) { return s ? (int)strlen8(s) : 0; }
-int strlen16(const char16 *s);
-int strlen32(const wchar *s);
-
 inline bool IsUtf8Lead(int c) {	return (c & 0xc0) != 0x80; }
 
 wchar ReadSurrogatePair(const char16 *s, const char16 *lim);

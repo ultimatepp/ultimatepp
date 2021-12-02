@@ -29,7 +29,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	if(IsNull(ink)) return;
 	ink = ResolveInk(ink);
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	Std(font);
 	double sina = 0;
 	double cosa = 1;
@@ -212,7 +212,7 @@ Size GetTextSize(const wchar *text, Font font, int n)
 {
 	FontInfo fi = font.Info();
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	Size sz;
 	sz.cx = 0;
 	const wchar *wtext = (const wchar *)text;

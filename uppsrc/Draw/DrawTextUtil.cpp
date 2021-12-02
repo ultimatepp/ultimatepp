@@ -5,7 +5,7 @@ namespace Upp {
 void DrawTextEllipsis(Draw& w, int x, int y, int cx, const wchar *text, const char *ellipsis,
 				      Font font, Color ink, int n)
 {
-	if(n < 0) n = wstrlen(text);
+	if(n < 0) n = strlen__(text);
 	FontInfo f = font.Info();
 	const char *s;
 	int dtl = 0;

@@ -242,7 +242,7 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 
 Painter& Painter::Text(double x, double y, const wchar *text, Font fnt, int n, const double *dx)
 {
-	return Text(Pointf(x, y), text, fnt, n < 0 ? wstrlen(text) : n, dx);
+	return Text(Pointf(x, y), text, fnt, n < 0 ? strlen__(text) : n, dx);
 }
 
 Painter& Painter::Text(const Pointf& p, const WString& s, Font fnt, const double *dx)

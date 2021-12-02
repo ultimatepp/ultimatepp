@@ -256,7 +256,7 @@ void DrawingDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fo
                              int n, const int *dx) {
 	if(IsNull(ink)) return;
 	if(n < 0)
-		n = wstrlen((const wchar *)text);
+		n = strlen__((const wchar *)text);
 	if(n == 0)
 		return;
 	Stream& s = DrawingOp(DRAWING_DRAWTEXT);

@@ -2,11 +2,20 @@
 
 namespace Upp {
 
-int wstrlen(const wchar *s)
+int strlen16(const char16 *s)
 {
-	const wchar *q = s;
-	while(*q) q++;
-	return (int)(q - s);
+	if(!s) return 0;
+	const char16 *s0 = s;
+	while(*s) s++;
+	return int(s - s0);
+}
+
+int strlen32(const wchar *s)
+{
+	if(!s) return 0;
+	const wchar *s0 = s;
+	while(*s) s++;
+	return int(s - s0);
 }
 
 unsigned ctoi(int c)
