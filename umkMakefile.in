@@ -5448,6 +5448,7 @@ $(OutDir_Draw)FontCR.o: $(UPPDIR1)Draw/FontCR.cpp \
 	$(UPPDIR1)Draw/Display.h \
 	$(UPPDIR1)Draw/Draw.h \
 	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Fonts.i \
 	$(UPPDIR1)Draw/Image.h \
 	$(UPPDIR1)Draw/ImageOp.h \
 	$(UPPDIR1)Draw/Raster.h \
