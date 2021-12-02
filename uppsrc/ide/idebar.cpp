@@ -151,6 +151,10 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Duplicate the current line");
 	menu.Add(b, AK_FORMATCODE, THISBACK(FormatCode))
 	    .Help("Reformat code in editor");
+	menu.Add(b, AK_FORMATJSON, THISBACK(FormatJSON))
+	    .Help("Reformat JSON");
+	menu.Add(b, AK_FORMATXML, THISBACK(FormatXML))
+	    .Help("Reformat XML");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
 	    .Help("Convert letters in selection to uppercase");
 	menu.Add(b && editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))

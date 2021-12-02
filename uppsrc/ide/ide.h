@@ -666,6 +666,9 @@ public:
 
 	// Formats editor's code with Ide format parameters
 	void FormatCode();
+	void FormatJSON_XML(bool xml);
+	void FormatJSON();
+	void FormatXML();
 
 	bool      browser_closeesc;
 	bool      bookmark_pos;
