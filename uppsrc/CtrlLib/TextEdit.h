@@ -189,7 +189,7 @@ public:
 	int    GetLine(int64 pos) const           { return GetLinePos64(pos); }
 
 	const String& GetUtf8Line(int i) const;
-	WString       GetWLine(int i) const       { return FromUtf8(GetUtf8Line(i)); }
+	WString       GetWLine(int i) const       { return ToUtf32(GetUtf8Line(i)); }
 	String        GetEncodedLine(int i, byte charset = CHARSET_DEFAULT) const;
 	int           GetLineLength(int i) const;
 
@@ -336,6 +336,7 @@ protected:
 
 
 	Font             font;
+	Size             fsz;
 	CharFilter       filter;
 	int              tabsize;
 	int              bordercolumn;
@@ -368,6 +369,8 @@ protected:
 	Rect   DropCaret();
 	void   RefreshDropCaret();
 	void   DoPasteColumn() { PasteColumn(); }
+	void   SyncFont();
+	bool   IsDoubleChar(int ch) const;
 
 	struct RefreshDraw;
 	friend class TextCtrl;

@@ -7,7 +7,8 @@ int GetRepo(String& path)
 	if(DirectoryExists(AppendFileName(path, ".svn")) || DirectoryExists(AppendFileName(path, "_svn")))
 		return SVN_DIR;
 	for(;;) {
-		if(DirectoryExists(AppendFileName(path, ".git")))
+		String git = AppendFileName(path, ".git");
+		if(DirectoryExists(git) || FileExists(git))
 			return GIT_DIR;
 		if(DirectoryExists(AppendFileName(path, ".svn")))
 			return SVN_DIR;

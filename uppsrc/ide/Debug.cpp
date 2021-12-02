@@ -144,7 +144,7 @@ void Ide::ExecuteBinary()
 		Minimize();
 	if(!runexternal)
 		cmdline << '\"' << target << "\" ";
-	cmdline << ToSystemCharset(runarg);
+	cmdline << runarg;
 		
 	int exitcode;
 	switch(runmode) {

@@ -215,11 +215,11 @@ template <typename Detail, int BlkSize>
 bool BlkHeap<Detail, BlkSize>::TryRealloc(void *ptr, size_t count, size_t& n)
 {
 	ASSERT(count);
-	
+
 	BlkHeader *h = (BlkHeader *)ptr;
 	if(h->size == 0)
 		return false;
-	
+
 	word sz = h->GetSize();
 	if(sz != count) {
 		if(!JoinNext(h, (word)count) && count > sz)
@@ -271,7 +271,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
-	
+
 	// allocator options:
 	static word HPAGE; // size of master page, in 4KB units
 	static int  max_free_hpages; // maximum free master pages kept in reserve (if more, they are returned to the system)
@@ -294,7 +294,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		static_assert(__countof(sz) == 23, "NKLASS mismatch");
 		return sz[k];
 	}
-	
+
 	struct FreeLink {
 		FreeLink *next;
 	};
@@ -316,16 +316,16 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		byte *End()                        { return (byte *)this + 4096; }
 		int   Count()                      { return (int)(uintptr_t)(End() - Begin()) / Ksz(klass); }
 	};
-	
+
 	struct LargeHeapDetail {
 		BlkHeader_<LUNIT> freelist[25][1];
 		void LinkFree(BlkHeader_<LUNIT> *h);
 	};
-	
+
 	struct LargeHeap : BlkHeap<LargeHeapDetail, LUNIT> {};
-	
+
 	typedef LargeHeap::BlkHeader LBlkHeader;
-	
+
 	struct DLink : BlkPrefix { // Large Page header / big block header
 		DLink       *next;
 		DLink       *prev;
@@ -339,7 +339,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		void         LinkSelf()            { Dbl_Self(this); }
 		void         Unlink()              { Dbl_Unlink(this); }
 		void         Link(DLink *lnk)      { Dbl_LinkAfter(this, lnk);  }
-		
+
 		LargeHeap::BlkHeader *GetFirst()   { return (LargeHeap::BlkHeader *)((byte *)this + LOFFSET); } // pointer to data area
 	};
 
@@ -349,7 +349,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 
 	static_assert(sizeof(BlkPrefix) == 16, "Wrong sizeof(BlkPrefix)");
 	static_assert(sizeof(DLink) == 64, "Wrong sizeof(DLink)");
-	
+
 	static StaticMutex mutex;
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
@@ -363,7 +363,7 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 	LargeHeap lheap;
 	DLink     large[1]; // all large 64KB chunks that belong to this heap
 	int       free_lpages; // empty large pages (in reserve)
-	
+
 	void     *out[REMOTE_OUT_SZ / 8 + 1];
 	void    **out_ptr;
 	int       out_size;
@@ -377,9 +377,9 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 		void     *page;
 		HugePage *next;
 	};
-	
+
 	static HugePage *huge_pages;
-	
+
 	static DLink  big[1]; // List of all big blocks
 	static Heap   aux;    // Single global auxiliary heap to store orphans and global list of free pages
 
@@ -410,11 +410,11 @@ struct Heap : BlkHeap<HugeHeapDetail, 4096> {
 
 	void  Init();
 
-	static int   CheckFree(FreeLink *l, int k);
+	static int   CheckFree(FreeLink *l, int k, bool page = true);
 	void  Check();
 	static void  DblCheck(Page *p);
 	static void  AssertLeaks(bool b);
-	
+
 	static bool  IsSmall(void *ptr) { return (((dword)(uintptr_t)ptr) & 16) == 0; }
 	static Page *GetPage(void *ptr) { return (Page *)((uintptr_t)ptr & ~(uintptr_t)4095); }
 

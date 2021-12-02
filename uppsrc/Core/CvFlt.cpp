@@ -167,7 +167,7 @@ int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 		}
 	};
 
-	auto D1 = [&](dword u) { *digits++ = u + '0'; };
+	auto D1 = [&](dword u) { *digits++ = char(u + '0'); };
 	auto D2 = [&](dword u) { memcpy(digits, s100 + 2 * u, 2); digits += 2; };
 
 	auto D3 = [&](dword u) { int q = (5243 * u) >> 19; D1(q); D2(u - 100 * q); }; // bit faster than / % here
@@ -182,24 +182,24 @@ int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 	auto U16 = [&] { u1 = u / 10000000000000000; u = u % 10000000000000000; };
 
 	switch(precision) {
-	case  1: FP(10); D1(u); break;
-	case  2: FP(100); D2(u); break;
-	case  3: FP(1000); D3(u); break;
-	case  4: FP(10000); D4(u); break;
-	case  5: FP(100000); D5(u); break;
-	case  6: FP(1000000); D6(u); break;
-	case  7: FP(10000000); D7(u); break;
-	case  8: FP(100000000); D8(u); break;
-	case  9: FP(1000000000); U8(); D1(u1); D8(u); break;
-	case 10: FP(10000000000); U8(); D2(u1); D8(u); break;
-	case 11: FP(100000000000); U8(); D3(u1); D8(u); break;
-	case 12: FP(1000000000000); U8(); D4(u1); D8(u); break;
-	case 13: FP(10000000000000); U8(); D5(u1); D8(u); break;
-	case 14: FP(100000000000000); U8(); D6(u1); D8(u); break;
-	case 15: FP(1000000000000000); U8(); D7(u1); D8(u); break;
-	case 16: FP(10000000000000000); U8(); D8(u1); D8(u); break;
-	case 17: FP(100000000000000000); U16(); D1(u1); U8(); D8(u1); D8(u); break;
-	case 18: FP(1000000000000000000u); U16(); D2(u1); U8(); D8(u1); D8(u); break;
+	case  1: FP(10); D1((dword)u); break;
+	case  2: FP(100); D2((dword)u); break;
+	case  3: FP(1000); D3((dword)u); break;
+	case  4: FP(10000); D4((dword)u); break;
+	case  5: FP(100000); D5((dword)u); break;
+	case  6: FP(1000000); D6((dword)u); break;
+	case  7: FP(10000000); D7((dword)u); break;
+	case  8: FP(100000000); D8((dword)u); break;
+	case  9: FP(1000000000); U8(); D1((dword)u1); D8((dword)u); break;
+	case 10: FP(10000000000); U8(); D2((dword)u1); D8((dword)u); break;
+	case 11: FP(100000000000); U8(); D3((dword)u1); D8((dword)u); break;
+	case 12: FP(1000000000000); U8(); D4((dword)u1); D8((dword)u); break;
+	case 13: FP(10000000000000); U8(); D5((dword)u1); D8((dword)u); break;
+	case 14: FP(100000000000000); U8(); D6((dword)u1); D8((dword)u); break;
+	case 15: FP(1000000000000000); U8(); D7((dword)u1); D8((dword)u); break;
+	case 16: FP(10000000000000000); U8(); D8((dword)u1); D8((dword)u); break;
+	case 17: FP(100000000000000000); U16(); D1((dword)u1); U8(); D8((dword)u1); D8((dword)u); break;
+	case 18: FP(1000000000000000000u); U16(); D2((dword)u1); U8(); D8((dword)u1); D8((dword)u); break;
 	}
 	return -e10;
 }

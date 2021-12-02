@@ -158,14 +158,14 @@ void DeleteWinReg(const String& key, HKEY base, dword wow) {
 }
 
 String GetSystemDirectory() {
-	char temp[MAX_PATH];
+	WCHAR temp[MAX_PATH];
 	*temp = 0;
-	::GetSystemDirectory(temp, sizeof(temp));
-	return FromSystemCharset(temp);
+	::GetSystemDirectoryW(temp, sizeof(temp));
+	return FromSystemCharsetW(temp);
 }
 
 String GetWindowsDirectory() {
-	wchar temp[MAX_PATH];
+	WCHAR temp[MAX_PATH];
 	*temp = 0;
 	GetWindowsDirectoryW(temp, sizeof(temp));
 	return FromSystemCharsetW(temp);
@@ -179,7 +179,7 @@ void *GetDllFn(const char *dll, const char *fn)
 }
 
 String GetModuleFileName(HINSTANCE instance) {
-	wchar h[_MAX_PATH];
+	WCHAR h[_MAX_PATH];
 	GetModuleFileNameW(instance, h, _MAX_PATH);
 	return FromSystemCharsetW(h);
 }

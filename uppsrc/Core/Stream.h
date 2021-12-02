@@ -178,10 +178,6 @@ public:
 	void      PutLine(const char *s);
 	void      PutLine(const String& s);
 
-	void      PutW(const wchar *s, int count)       { Put(s, count * 2); }
-	dword     GetW(wchar *s, int count)             { return Get(s, count * 2) / 2; }
-	bool      GetAllW(wchar *s, int count)          { return GetAll(s, count * 2); }
-
 	void      Put(Stream& s, int64 size = INT64_MAX, dword click = 4096);
 
 //  Stream as serialization streamer
@@ -253,6 +249,9 @@ public:
 	void      PutIL(int c)           { Put32le(c); }
 	void      PutMW(int c)           { Put16be(c); }
 	void      PutML(int c)           { Put32be(c); }
+	void      PutW(const char16 *s, int count)       { Put(s, count * 2); }
+	dword     GetW(char16 *s, int count)             { return Get(s, count * 2) / 2; }
+	bool      GetAllW(char16 *s, int count)          { return GetAll(s, count * 2); }
 #endif
 private: // No copy
 	Stream(const Stream& s);

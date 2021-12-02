@@ -48,9 +48,9 @@ WString ToWString(CFStringRef s)
 	if(!s) return Null;
 	CFIndex l = CFStringGetLength(s);
 	if(!l) return Null;
-	WStringBuffer b(l);
-    CFStringGetCharacters(s, CFRangeMake(0, l), (UniChar *)~b);
-    return b;
+	Buffer<char16> h(l);
+    CFStringGetCharacters(s, CFRangeMake(0, l), (UniChar *)~h);
+    return ToUtf32(~h, l);
 }
 
 String ToString(CFStringRef s)
@@ -108,10 +108,10 @@ CTFontRef CT_Font(Font fnt, bool& synth)
 
 CGGlyph GetCharGlyph(CTFontRef ctfont, int chr)
 {
-    CGGlyph glyph_index;
-    UniChar h = chr;
-	CTFontGetGlyphsForCharacters(ctfont, &h, &glyph_index, 1);
-	return glyph_index;
+    CGGlyph glyph_index[2];
+    Vector<char16> h = ToUtf16(chr);
+	CTFontGetGlyphsForCharacters(ctfont, (UniChar *)h.begin(), glyph_index, h.GetCount());
+	return glyph_index[0];
 }
 
 GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr, bool bold_synth, CGRect *bounds = NULL)
@@ -270,9 +270,44 @@ Vector<FaceInfo> GetAllFacesSys()
 	return r;
 }
 
-String GetFontDataSys(Font font)
-{
-	return LoadFile(font.Fi().path);
+String GetFontDataSys(Font font, const char *table, int offset, int size)
+{ // read truetype or opentype table
+	FileIn in(font.Fi().path);
+	int q = in.Get32be();
+	if(q == 0x74746366) { // font collection
+		in.Get32(); // skip major/minor version
+		int nfonts = in.Get32be();
+		if(font.Fi().fonti >= nfonts)
+			return Null;
+		in.SeekCur(font.Fi().fonti * 4);
+		int offset = in.Get32be();
+		if(offset < 0 || offset >= in.GetSize())
+			return Null;
+		in.Seek(offset);
+		q = in.Get32be();
+	}
+	if(q != 0x74727565 && q != 0x00010000 && q != 0x4f54544f) // 0x4f54544f means CCF font!
+		return Null;
+	int n = in.Get16be();
+	in.Get32();
+	in.Get16();
+	while(n--) {
+		if(in.IsError() || in.IsEof()) return Null;
+		String tab = in.Get(4);
+		in.Get32();
+		int off = in.Get32be();
+		int len = in.Get32be();
+		if(tab == table) {
+			if(off < 0 || len < 0 || off + len > in.GetSize())
+				return Null;
+			len = min(len - offset, size);
+			if(len < 0)
+				return Null;
+			in.Seek(off + offset);
+			return in.Get(len);
+		}
+	}
+	return Null;
 }
 
 struct sCGPathTarget {

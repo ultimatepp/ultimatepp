@@ -1998,12 +1998,6 @@ int  ToAscii(int c, byte charset)
 	return cs.FromUnicode(ToAscii(cs.ToUnicode(c)));
 }
 
-word UnicodeCombine(word chr, word combine)
-{
-	dword h[2] = { chr, combine };
-	return (word)UnicodeCompose(h, 2);
-}
-
 void ToUpper(char *t, const char *s, int len, byte charset)
 {
 	charset = ResolveCharset(charset);
@@ -2050,7 +2044,7 @@ WString ToUnicode(const char *src, int l, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return FromUtf8(src, l);
+		return ToUtf32(src, l);
 	WStringBuffer result(l);
 	ToUnicode(result, src, l, charset);
 	return WString(result);
@@ -2073,7 +2067,7 @@ String FromUnicodeBuffer(const wchar *src, int len, byte charset, int defchar)
 
 String FromUnicodeBuffer(const wchar *src)
 {
-	return FromUnicodeBuffer(src, wstrlen(src));
+	return FromUnicodeBuffer(src, strlen__(src));
 }
 
 String  FromUnicode(const WString& src, byte charset, int defchar)
@@ -2089,7 +2083,7 @@ String ToCharset(byte charset, const String& src, byte scharset, int def)
 		return src;
 	int slen = src.GetLength();
 	if(scharset == CHARSET_UTF8)
-		return FromUnicode(FromUtf8(src, slen), charset, def);
+		return FromUnicode(ToUtf32(src, slen), charset, def);
 	if(charset == CHARSET_UTF8)
 		return ToUtf8(ToUnicode(src, scharset));
 	StringBuffer result(slen);
@@ -2161,7 +2155,7 @@ String ToUpper(const char *s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToUpper(FromUtf8(s)));
+		return ToUtf8(ToUpper(ToUtf32(s)));
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToUpper(r, s, l, charset);
@@ -2172,7 +2166,7 @@ String ToLower(const char *s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToLower(FromUtf8(s)));
+		return ToUtf8(ToLower(ToUtf32(s)));
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToLower(r, s, l, charset);
@@ -2183,7 +2177,7 @@ String ToAscii(const char *s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToAscii(FromUtf8(s)));
+		return ToUtf8(ToAscii(ToUtf32(s)));
 	int l = (int)strlen(s);
 	StringBuffer r(l);
 	ToAscii(r, s, l, charset);
@@ -2194,7 +2188,7 @@ String ToUpper(const String& s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToUpper(FromUtf8(s)));
+		return ToUtf8(ToUpper(ToUtf32(s)));
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToUpper(r, s, l, charset);
@@ -2205,7 +2199,7 @@ String ToLower(const String& s, byte charset)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(ToLower(FromUtf8(s)));
+		return ToUtf8(ToLower(ToUtf32(s)));
 	int l = s.GetLength();
 	StringBuffer r(l);
 	ToLower(r, s, l, charset);

@@ -7,6 +7,6 @@ CONSOLE_APP_MAIN
 	Vector<WString> x;
 	LoadFromFile(x, GetDataFile("wstring.bin"));
 	DDUMPC(x);
+	ASSERT(StoreAsString(x) == LoadDataFile("wstring.bin"));
 	CheckLogEtalon();
-	RLOG("================= OK");
 }

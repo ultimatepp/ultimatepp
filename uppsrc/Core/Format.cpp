@@ -559,7 +559,7 @@ String DoubleFormatter(const Formatting& f)
 			dword n;
 			bool overflow = false;
 			s = ScanUint<char, byte, dword, 10>(n, s, overflow);
-			if(overflow || !s || n > (wd ? 1000 : 100))
+			if(overflow || !s || n > (wd ? 1000u : 100u))
 				return Null;
 			(wd ? width : precision) = n;
 		}

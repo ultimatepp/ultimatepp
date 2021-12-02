@@ -388,6 +388,8 @@ struct HeapMutexLock {
 	~HeapMutexLock() { LeaveHeapMutex(); }
 };
 
+void MemoryFreeThread();
+
 struct HeapExitThreadGuard {
 	void Used() {}
 	~HeapExitThreadGuard() { MemoryFreeThread(); }
@@ -607,31 +609,6 @@ void  MemoryFree32_i(void *ptr)
 }
 
 void  MemoryFree32(void *ptr) { MemoryFree32_i(ptr); }
-
-void *MemoryAlloc48()
-{
-	LTIMING("MemoryAlloc48");
-	Heap *heap = heap_tls__;
-	if(heap)
-		return LogAlloc(heap->Alloc48(), 48);
-	else {
-		HeapMutexLock __;
-		return LogAlloc(MakeHeap()->Alloc48(), 48);
-	}
-}
-
-void  MemoryFree48(void *ptr)
-{
-	LTIMING("MemoryFree48");
-	LogFree(ptr);
-	Heap *heap = heap_tls__;
-	if(heap)
-		heap->Free48(ptr);
-	else {
-		HeapMutexLock __;
-		MakeHeap()->Free48(ptr);
-	}
-}
 
 #endif
 

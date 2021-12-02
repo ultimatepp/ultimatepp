@@ -203,7 +203,7 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 			return true;
 		}
 	}
-	
+
 	Mutex::Lock __(mutex);
 	if(h->heap == NULL) { // this is big block
 		LTIMING("Big realloc");
@@ -211,7 +211,7 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		DLink *d = (DLink *)h - 1;
 
 		size_t count = (newsize + sizeof(DLink) + sizeof(BlkPrefix) + 4095) >> 12;
-		
+
 		if(HugeTryRealloc(d, count)) {
 			big_size -= d->size;
 			d->size = newsize = (count << 12) - sizeof(DLink) - sizeof(BlkPrefix);
@@ -220,19 +220,21 @@ bool   Heap::TryRealloc(void *ptr, size_t& newsize)
 		}
 	}
 
+	// TODO: When small block fits, we could still return true
+
 	return false;
 }
 
 size_t Heap::LGetBlockSize(void *ptr) {
-	LBlkHeader *h = (LBlkHeader *)ptr - 1;
+	BlkPrefix *h = (BlkPrefix *)ptr - 1;
 
 	if(h->heap == NULL) { // huge block
 		Mutex::Lock __(mutex);
-		DLink *h = (DLink *)ptr - 1;
-		return h->size;
+		DLink *hh = (DLink *)h - 1;
+		return hh->size;
 	}
-	
-	return h->GetSize();
+
+	return ((int)h->GetSize() * LUNIT) - sizeof(BlkPrefix);
 }
 
 #endif

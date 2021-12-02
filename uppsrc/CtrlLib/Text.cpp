@@ -257,13 +257,13 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 				auto put_ln = [&]() -> bool {
 					if(view_line_count) {
 						(*view_line_count)++;
-						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount())
+						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount())
 						                                                : ln.GetCount();
 					}
 					else {
 						Ln& l = ls.Add();
 						if(charset == CHARSET_UTF8) {
-							l.len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+							l.len = (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount()) : ln.GetCount();
 							l.text = ln;
 						}
 						else {
@@ -501,10 +501,24 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 			const wchar *e = txt.End();
 			if(be16)
 				for(const wchar *w = txt; w != e; w++)
-					s.Put16be(*w);
+					if(*w < 0x10000)
+						s.Put16be((word)*w);
+					else {
+						char16 h[2];
+						ToUtf16(h, w, 1);
+						s.Put16be(h[0]);
+						s.Put16be(h[1]);
+					}
 			else
 				for(const wchar *w = txt; w != e; w++)
-					s.Put16le(*w);
+					if(*w < 0x10000)
+						s.Put16le((word)*w);
+					else {
+						char16 h[2];
+						ToUtf16(h, w, 1);
+						s.Put16le(h[0]);
+						s.Put16le(h[1]);
+					}
 		}
 		return;
 	}
@@ -593,7 +607,7 @@ String TextCtrl::GetEncodedLine(int i, byte charset) const
 {
 	charset = ResolveCharset(charset);
 	String h = GetUtf8Line(i);
-	return charset == CHARSET_UTF8 ? h : FromUnicode(FromUtf8(h), charset);
+	return charset == CHARSET_UTF8 ? h : FromUnicode(ToUtf32(h), charset);
 }
 
 int   TextCtrl::GetLinePos64(int64& pos) const {
@@ -717,7 +731,7 @@ String TextCtrl::Get(int64 pos, int size, byte charset) const
 			if(pos == 0 && sz == n)
 				r.Cat(s, n);
 			else
-				r.Cat(FromUtf8(s, n).Mid((int)pos, sz).ToString());
+				r.Cat(ToUtf32(s, n).Mid((int)pos, sz).ToString());
 			size -= sz;
 			if(size == 0) break;
 	#ifdef PLATFORM_WIN32
@@ -998,7 +1012,7 @@ void TextCtrl::Undo() {
 			Remove0(u.pos, u.size);
 		}
 		else {
-			WString text = FromUtf8(u.GetText());
+			WString text = ToUtf32(u.GetText());
 			r.size = Insert0(u.pos, text);
 			nc += r.size;
 		}
@@ -1025,7 +1039,7 @@ void TextCtrl::Redo() {
 		if(r.size)
 			RemoveU(r.pos, r.size);
 		else
-			nc += InsertU(r.pos, FromUtf8(r.GetText()));
+			nc += InsertU(r.pos, ToUtf32(r.GetText()));
 		redo.DropTail();
 		IncDirty();
 	}

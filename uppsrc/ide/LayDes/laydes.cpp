@@ -286,6 +286,7 @@ void LayDes::Paint(Draw& w)
 	if(HasCapture() && draghandle == 14)
 		DrawFrame(w, dragrect.Normalized(), LtRed);
 	w.End();
+	w.End();
 }
 
 void  LayDes::SaveState()

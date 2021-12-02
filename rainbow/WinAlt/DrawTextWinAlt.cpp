@@ -34,10 +34,11 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		double sina, cosa;
 		Draw::SinCos(angle, sina, cosa);
 		Size offset;
-		::ExtTextOutW(handle, x + fround(ascent * sina), y + fround(ascent * cosa), 0, NULL, (const WCHAR *)text, n, dx);
+		::ExtTextOutW(handle, x + fround(ascent * sina), y + fround(ascent * cosa), 0, NULL,
+		              ToSystemCharsetW(text), n, dx);
 	}
 	else
-		::ExtTextOutW(handle, x, y + ascent, 0, NULL, (const WCHAR *)text,
+		::ExtTextOutW(handle, x, y + ascent, 0, NULL, ToSystemCharsetW(text),
 		              n, dx);
 	::SelectObject(handle, orgfont);
 }

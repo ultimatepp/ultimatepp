@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#define UPP_VERSION 0x20200200
+#define UPP_VERSION 0x20210900
 
 #ifndef flagMT
 #define flagMT // MT is now always on
@@ -63,6 +63,11 @@
 
 #ifdef CPU_X86
 #include <immintrin.h>
+
+#ifdef PLATFORM_WIN32
+#include <intrin.h>
+#endif
+
 #endif
 
 #if defined(PLATFORM_POSIX)
@@ -306,7 +311,6 @@ class JsonIO;
 #include "String.h"
 
 #include "TimeDate.h"
-#include "Path.h"
 #include "Stream.h"
 #include "Diag.h"
 
@@ -323,6 +327,8 @@ class JsonIO;
 #include "InVector.h"
 
 #include "CharSet.h"
+
+#include "Path.h"
 
 #include "SplitMerge.h"
 

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI DEBUGCODE",
+	"" = "GUI",
+	"" = "GUI X11";
+

@@ -661,10 +661,15 @@ void Ide::ScanFile(bool check_includes)
 	}
 }
 
-void Ide::EditFileAssistSync2()
+bool Ide::EditFileAssistSync2()
 {
-	editor.Annotate(editfile);
-	editor.SyncNavigator();
+	if(TryLockCodeBase()) {
+		editor.Annotate(editfile);
+		editor.SyncNavigator();
+		UnlockCodeBase();
+		return true;
+	}
+	return false;
 }
 
 void Ide::EditFileAssistSync()
@@ -683,11 +688,14 @@ void Ide::TriggerAssistSync()
 				file_scan++;
 				if(!CoWork::TrySchedule([=] {
 					StringStream ss(s);
-					CodeBaseScanFile(ss, editfile);
+					file_scanned = TryCodeBaseScanFile(ss, editfile);
 					file_scan--;
-					file_scanned = true;
-				}))
+					if(!file_scanned)
+						trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
+				})) {
 					file_scan--;
+					trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
+				}
 			}
 		});
 	}

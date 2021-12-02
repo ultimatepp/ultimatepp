@@ -1,6 +1,8 @@
 class Nuller;
 
-int wstrlen(const wchar *s);
+inline int strlen8(const char *s) { return s ? (int)strlen(s) : 0; }
+int strlen16(const char16 *s);
+int strlen32(const wchar *s);
 
 #ifdef PLATFORM_POSIX
 inline int stricmp(const char *a, const char *b)         { return strcasecmp(a, b); }
@@ -12,12 +14,11 @@ inline int stricmp(const char *a, const char *b)         { return _stricmp(a, b)
 inline int strnicmp(const char *a, const char *b, int n) { return _strnicmp(a, b, n); }
 #endif
 
-force_inline int strlen__(const char *s)  { return s ? (int)strlen(s) : 0; }
-
-inline int strlen__(const wchar *s)       { return s ? (int)wstrlen(s) : 0; }
+force_inline int strlen__(const char *s)  { return strlen8(s); }
+inline int strlen__(const wchar *s)       { return strlen32(s); }
 
 inline int cmpval__(char x)               { return (byte)x; }
-inline int cmpval__(wchar x)              { return (word)x; }
+inline int cmpval__(wchar x)              { return x; }
 
 int find(const char *text, int len, const char *needle, int nlen, int from);
 int find(const wchar *text, int len, const wchar *needle, int nlen, int from);
@@ -391,6 +392,10 @@ public:
 	String(int chr, int count)                             { String0::Zero(); Cat(chr, count); }
 	String(StringBuffer& b);
 
+
+	String(char16 *s);
+	String(wchar *s);
+
 	WString ToWString() const;
 	const String& ToString() const                         { return *this; }
 
@@ -618,12 +623,12 @@ inline String AsString(const String& s)     { return s; }
 template<>
 inline hash_t GetHashValue(const String& s) { return s.GetHashValue(); }
 
-int CompareNoCase(const String& a, const String& b, byte encoding = 0);
-int CompareNoCase(const String& a, const char *b, byte encoding = 0);
+int CompareNoCase(const String& a, const String& b);
+int CompareNoCase(const String& a, const char *b);
 
 inline
-int CompareNoCase(const char *a, const String& b, byte encoding = 0) {
-	return -CompareNoCase(b, a, encoding);
+int CompareNoCase(const char *a, const String& b) {
+	return -CompareNoCase(b, a);
 }
 
 String TrimLeft(const String& s);
@@ -774,8 +779,8 @@ public:
 	int  GetAlloc() const                { return alloc; }
 
 	hash_t   GetHashValue() const             { return memhash(ptr, length * sizeof(wchar)); }
-	bool     IsEqual(const WString0& s) const { return s.length == length && memeq16(ptr, s.ptr, length); }
-	bool     IsEqual(const wchar *s) const    { int l = wstrlen(s); return l == GetCount() && memeq16(begin(), s, l); }
+	bool     IsEqual(const WString0& s) const { return s.length == length && memeq_t(ptr, s.ptr, length); }
+	bool     IsEqual(const wchar *s) const    { int l = strlen__(s); return l == GetCount() && memeq_t(begin(), s, l); }
 	int      Compare(const WString0& s) const;
 
 	void Remove(int pos, int count = 1);
@@ -835,6 +840,8 @@ public:
 	WString(const char *s, int n);
 	WString(const char *s, const char *lim);
 
+	WString(const char16 *s);
+
 	static WString GetVoid();
 	bool   IsVoid() const                                   { return alloc < 0; }
 
@@ -845,13 +852,13 @@ public:
 
 #ifndef _HAVE_NO_STDWSTRING
 	WString(const std::wstring& s);
-	operator std::wstring() const;
-	std::wstring ToStd() const                              { return std::wstring(Begin(), End()); }
+	operator std::wstring() const                           { return ToStd(); }
+	std::wstring ToStd() const;
 #endif
 };
 
 #ifndef _HAVE_NO_STDWSTRING
-inline std::wstring to_string(const WString& s)             { return std::wstring(s.Begin(), s.End()); }
+inline std::wstring to_string(const WString& s)             { return s.ToStd(); }
 #endif
 
 class WStringBuffer : NoCopy {
@@ -885,7 +892,7 @@ public:
 	void  SetCount(int l)            { SetLength(l); }
 	int   GetLength() const          { return (int)(pend - pbegin); }
 	int   GetCount() const           { return GetLength(); }
-	void  Strlen()                   { SetLength(wstrlen(pbegin)); }
+	void  Strlen()                   { SetLength(strlen__(pbegin)); }
 	void  Clear()                    { Free(); Zero(); }
 	void  Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
@@ -893,7 +900,7 @@ public:
 	void  Cat(int c, int count);
 	void  Cat(const wchar *s, int l);
 	void  Cat(const wchar *s, const wchar *e) { Cat(s, int(e - s)); }
-	void  Cat(const wchar *s)                 { Cat(s, wstrlen(s)); }
+	void  Cat(const wchar *s)                 { Cat(s, strlen__(s)); }
 	void  Cat(const WString& s)               { Cat(s, s.GetLength()); }
 	void  Cat(const char *s)                  { Cat(WString(s)); }
 

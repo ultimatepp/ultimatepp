@@ -646,8 +646,8 @@ void Ide::Periodic()
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
 	if(file_scanned) {
-		EditFileAssistSync2();
-		file_scanned = false;
+		if(EditFileAssistSync2())
+			file_scanned = false;
 	}
 }
 

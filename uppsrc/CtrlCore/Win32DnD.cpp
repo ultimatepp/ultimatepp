@@ -484,10 +484,7 @@ Image MakeDragImage(const Image& arrow, Image sample);
 
 Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 {
-	if(IsWin2K())
-		return MakeDragImage(arrow, sample);
-	else
-		return arrow98;
+	return MakeDragImage(arrow, sample);
 }
 
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,

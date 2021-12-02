@@ -577,25 +577,13 @@ int ChNoInvalid(int c)
 	return c == DEFAULTCHAR ? '_' : c;
 }
 
-#ifdef PLATFORM_WINCE
-WString ToSystemCharset(const String& src)
-{
-	return src.ToWString();
-}
-
-String FromSystemCharset(const WString& src)
-{
-	return src.ToString();
-}
-#else
-
 #ifdef PLATFORM_WIN32
 String ToSystemCharset(const String& src, int cp)
 {
-	WString s = src.ToWString();
-	int l = s.GetLength() * 5;
+	Vector<char16> s = ToUtf16(src);
+	int l = s.GetCount() * 8;
 	StringBuffer b(l);
-	int q = WideCharToMultiByte(cp, 0, (const WCHAR *)~s, s.GetLength(), b, l, NULL, NULL);
+	int q = WideCharToMultiByte(cp, 0, s, s.GetCount(), b, l, NULL, NULL);
 	if(q <= 0)
 		return src;
 	b.SetCount(q);
@@ -609,12 +597,11 @@ String ToSystemCharset(const String& src)
 
 String FromWin32Charset(const String& src, int cp)
 {
-	WStringBuffer b(src.GetLength());
-	int q = MultiByteToWideChar(cp, MB_PRECOMPOSED, ~src, src.GetLength(), (WCHAR*)~b, src.GetLength());
+	Buffer<char16> b(src.GetLength());
+	int q = MultiByteToWideChar(cp, MB_PRECOMPOSED, ~src, src.GetLength(), b, src.GetLength());
 	if(q <= 0)
 		return src;
-	b.SetCount(q);
-	return WString(b).ToString();
+	return ToUtf8(b, q);
 }
 
 String FromOEMCharset(const String& src)
@@ -625,16 +612,6 @@ String FromOEMCharset(const String& src)
 String FromSystemCharset(const String& src)
 {
 	return FromWin32Charset(src, CP_ACP);
-}
-
-WString ToSystemCharsetW(const char *src)
-{
-	return String(src).ToWString();
-}
-
-String FromSystemCharsetW(const wchar *src)
-{
-	return WString(src).ToString();
 }
 
 #else
@@ -649,8 +626,39 @@ String FromSystemCharset(const String& src)
 	return IsMainRunning() ? Filter(ToCharset(CHARSET_DEFAULT, src, GetLNGCharset(GetSystemLNG())), ChNoInvalid) : src;
 }
 #endif
-#endif
 
+Vector<char16> ToSystemCharsetW(const WString& src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+Vector<char16> ToSystemCharsetW(const String& src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+Vector<char16> ToSystemCharsetW(const wchar *src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+Vector<char16> ToSystemCharsetW(const char *src)
+{
+	Vector<char16> h = ToUtf16(src);
+	h.Add(0);
+	return h;
+}
+
+String FromSystemCharsetW(const char16 *src)
+{
+	return ToUtf8(src);
+}
 
 static StaticMutex sGCfgLock;
 

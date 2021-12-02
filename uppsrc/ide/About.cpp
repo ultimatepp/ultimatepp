@@ -21,6 +21,8 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 		h << "(64 bit)";
 	else
 		h << "(32 bit)";
+	if(sizeof(wchar) == 4)
+		h << " (wchar32)";
 #ifdef _MSC_VER
 	h << " (MSC)";
 #endif
@@ -114,7 +116,9 @@ void HideSplash()
 void ShowSplash()
 {
 	Single<SplashCtrl>().PopUp(nullptr, false, false);
-	SetTimeCallback(750, [] { HideSplash(); });
+	SetTimeCallback(750, [] {
+		HideSplash();
+	});
 }
 
 bool IsSplashOpen()

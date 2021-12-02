@@ -12,12 +12,7 @@ Image MakeDragImage(const Image& arrow, Image sample);
 
 Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 {
-#ifdef PLATFORM_WIN32
-	if(IsWin2K())
-		return MakeDragImage(arrow, sample);
-	else
-#endif
-		return arrow98;
+	return MakeDragImage(arrow, sample);
 }
 
 END_UPP_NAMESPACE

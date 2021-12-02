@@ -82,7 +82,7 @@ CONSOLE_APP_MAIN
 				
 				ASSERT(comb == UnicodeDecompose(code));
 				
-				Vector<dword> h = UnicodeDecompose(code, true);
+				WString h = UnicodeDecompose(code, true);
 				if(h.GetCount() > 1) {
 					DUMP(h);
 					ASSERT(code == UnicodeCompose(h));

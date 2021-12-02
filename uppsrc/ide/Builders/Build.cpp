@@ -521,10 +521,16 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	return ok;
 }
 
+void MakeBuild::BuildWorkspace(Workspace& wspc, Host& host, Builder& builder)
+{
+	Index<String> p = PackageConfig(GetIdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
+	                                host, builder);
+	wspc.Scan(GetMain(), p.GetKeys());
+}
+
 bool MakeBuild::Build()
 {
-	VectorMap<String, String> bm = GetMethodVars(method);
-	if(bm.GetCount() == 0) {
+	if(GetMethodVars(method).GetCount() == 0) {
 		PutConsole(GetInvalidBuildMethodError(method));
 		ConsoleShow();
 		return false;
@@ -534,10 +540,8 @@ bool MakeBuild::Build()
 	One<Builder> builder = CreateBuilder(&host);
 	if(!builder)
 		return false;
-	Index<String> p = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam,
-	                                host, *builder);
 	Workspace wspc;
-	wspc.Scan(GetMain(), p.GetKeys());
+	BuildWorkspace(wspc, host, *builder);
 	return Build(wspc, mainconfigparam, Null);
 }
 
@@ -568,7 +572,8 @@ void MakeBuild::Clean()
 		return;
 	builder->target = target;
 	
-	const Workspace& wspc = GetIdeWorkspace();
+	Workspace wspc;
+	BuildWorkspace(wspc, host, *builder);
 	for(int i = 0; i < wspc.GetCount(); i++)
 		CleanPackage(wspc, i);
 	

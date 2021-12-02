@@ -730,8 +730,10 @@ void Navigator::Scope()
 			litem.Add(m);
 		}
 	}
+	int lsc = list.GetScroll();
 	list.Clear();
 	list.SetVirtualCount(litem.GetCount());
+	list.ScrollTo(lsc);
 }
 
 void Navigator::ListLineEnabled(int i, bool& b)

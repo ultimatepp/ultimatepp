@@ -218,8 +218,8 @@ bool CodeEditor::RegExpFind(int64 pos, bool block)
 			for(int i = 0; i < regex.GetCount(); i++)
 				SetFound(i, WILDANY, regex.GetString(i).ToWString());
 			int off = regex.GetOffset();
-			int len = utf8len(~ln + off, regex.GetLength());
-			pos = GetPos64(line, utf8len(~ln, off) + (int)pos);
+			int len = Utf32Len(~ln + off, regex.GetLength());
+			pos = GetPos64(line, Utf32Len(~ln, off) + (int)pos);
 			foundtext = GetW(pos, len);
 			if(!block) {
 				foundsel = true;

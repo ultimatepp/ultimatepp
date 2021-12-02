@@ -223,8 +223,14 @@ void RTFEncoder::Command(const char *cmd, int param)
 void RTFEncoder::PutText(const wchar *text)
 {
 	for(; *text; text++)
-		if((uint16)*text >= 128)
-			stream.Put(Format("\\u%d?", (int16)*text));
+		if(*text >= 128) {
+			if(*text >= 65536) {
+				Vector<char16> h = ToUtf16(*text);
+				stream << "\\uc0 \\u" << (unsigned)h[0] << "\\uc1 \\u" << (unsigned)h[1];
+			}
+			else
+				stream.Put(Format("\\u%d?", (int16)*text));
+		}
 		else {
 			if(*text == '{' || *text == '}' || *text == '\\')
 				stream.Put('\\');

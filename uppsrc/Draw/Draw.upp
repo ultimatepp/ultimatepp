@@ -8,7 +8,7 @@ acceptflags
 uses
 	Core;
 
-library(WIN32) "user32 gdi32";
+library(WIN32) "user32 gdi32 usp10";
 
 link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
 
@@ -20,6 +20,7 @@ file
 	Draw.h options(BUILDER_OPTION) PCH,
 	FontInt.h,
 	Font.cpp,
+	Fonts.i,
 	FontCR.cpp,
 	FontWin32.cpp,
 	FontFc.cpp,

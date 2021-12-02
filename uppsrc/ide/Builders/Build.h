@@ -85,6 +85,7 @@ public:
 	Vector<String> GetAllLibraries(const Workspace& wspc, int index,
 	                               const VectorMap<String, String>& bm, String mainparam,
 	                               Host& host, Builder& builder);
+	void BuildWorkspace(Workspace& wspc, Host& host, Builder& builder);
 	bool Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console = true);
 	bool Build();
 	void CleanPackage(const Workspace& wspc, int package);

@@ -35,7 +35,7 @@ static void sLoadBom(Stream& in, String *t, WString *wt, byte def_charset)
 			byte *h = (byte *)&header;
 			if(h[0] == 0xef && h[1] == 0xbb && c == 0xbf) {
 				if(wt)
-					*wt = FromUtf8(LoadStream(in));
+					*wt = ToUtf32(LoadStream(in));
 				else
 					*t = ToCharset(CHARSET_DEFAULT, LoadStream(in), CHARSET_UTF8);
 				return;

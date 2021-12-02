@@ -411,12 +411,17 @@ void InvalidateFileTimeCache(const String& path)
 Time GetFileTimeCached(const String& p)
 {
 	LTIMING("GetFileTimeCached");
-	Mutex::Lock __(s_PathFileTimeMutex);
-	int q = s_PathFileTime.Find(p);
-	if(q >= 0)
-		return s_PathFileTime[q];
+	{
+		Mutex::Lock __(s_PathFileTimeMutex);
+		int q = s_PathFileTime.Find(p);
+		if(q >= 0)
+			return s_PathFileTime[q];
+	}
 	Time m = FileGetTime(p);
-	s_PathFileTime.Put(p, m);
+	{
+		Mutex::Lock __(s_PathFileTimeMutex);
+		s_PathFileTime.Put(p, m);
+	}
 	return m;
 }
 

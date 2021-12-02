@@ -76,12 +76,12 @@ struct UnicodeInfo {
 		}
 	};
 	
-	Index<dword>                      composed;
-	Index<String>                     decomposed; // using String as the vessel for dwords
+	Index<wchar>                      composed;
+	Index<WString>                    decomposed;
 	int                               canonical_count;
 
-	Index<dword> lower;
-	Index<dword> upper;
+	Index<wchar> lower;
+	Index<wchar> upper;
 	CharBits     rtl;
 	CharBits     letter;
 	CharBits     islower;
@@ -130,8 +130,8 @@ UnicodeInfo::UnicodeInfo()
 	count += data[1];
 	for(int i = 0; i < count; i++) {
 		composed.Add(data[i + 2]);
-		String h;
-		auto put = [&](dword c) { if(c) h.Cat((char *)&c, 4); };
+		WString h;
+		auto put = [&](dword c) { if(c) h.Cat(c); };
 		put(data[i + count + 2]);
 		put(data[i + 2 * count + 2]);
 		put(data[i + 3 * count + 2]);
@@ -143,11 +143,11 @@ UnicodeInfo::UnicodeInfo()
 	int offset = 4 * count + 2;
 	
 	while(data[offset]) {
-		dword code = data[offset++];
+		wchar code = data[offset++];
 		int ii = composed.Find(code);
-		String h = decomposed[ii];
+		WString h = decomposed[ii];
 		while(data[offset])
-			h.Cat((char *)&data[offset++], 4);
+			h.Cat(data[offset++]);
 		decomposed.Set(ii, h);
 		offset++;
 	}
@@ -169,54 +169,54 @@ UnicodeInfo::UnicodeInfo()
 	Load(data, ismark, offset);
 }
 
-static int sUnicodeDecompose(dword codepoint, dword *t, Vector<dword> *r, bool only_canonical)
+static int sUnicodeDecompose(wchar codepoint, wchar *t, WString *r, bool only_canonical)
 { // TODO: Add hangul support
 	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(codepoint);
 	if(q >= 0 && (!only_canonical || q < f.canonical_count)) {
-		String s = f.decomposed[q];
+		const WString& s = f.decomposed[q];
 		if(r)
-			r->SetCount(s.GetCount() >> 2);
-		int i;
-		for(i = 0; 4 * i < s.GetCount(); i++)
-			(r ? (*r)[i] : t[i]) = ((const dword *)~s)[i];
-		return i;
+			*r = s;
+		if(t)
+			memcpy(t, s, sizeof(wchar) * s.GetCount());
+		return s.GetCount();
 	}
 	return 0;
 }
 
-int UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED], bool only_canonical)
+int UnicodeDecompose(wchar codepoint, wchar t[MAX_DECOMPOSED], bool only_canonical)
 {
 	return sUnicodeDecompose(codepoint, t, NULL, only_canonical);
 }
 
-Vector<dword> UnicodeDecompose(dword codepoint, bool only_canonical)
+WString UnicodeDecompose(wchar codepoint, bool only_canonical)
 {
-	Vector<dword> r;
+	WString r;
 	sUnicodeDecompose(codepoint, NULL, &r, only_canonical);
 	return r;
 }
 
-dword UnicodeCompose(const dword *t, int count)
+wchar UnicodeCompose(const WString& s)
 {
+	int count = s.GetCount();
 	if(count < 1 || count > 3)
 		return 0;
 	if(count == 1)
-		return t[0];
-	String s((byte *)t, sizeof(dword) * count);
+		return *s;
+	
 	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.decomposed.Find(s);
 	return q >= 0 && q < f.canonical_count ? f.composed[q] : 0;
 }
 
-dword ToUpperRest_(dword c)
+wchar ToUpperRest_(wchar c)
 {
 	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.lower.Find(c);
 	return q >= 0 ? f.upper[q] : c;
 }
 
-dword ToLowerRest_(dword c)
+wchar ToLowerRest_(wchar c)
 {
 	if(c == 0x1e9e) // Capital sharp S -> small sharp S (but not reverse direction)
 		return 0xdf;
@@ -233,7 +233,7 @@ dword ToLowerRest_(dword c)
 	return q >= 0 ? f.lower[q] : c;
 }
 
-char ToAsciiRest_(dword c)
+char ToAsciiRest_(wchar c)
 {
 	const UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(c);
@@ -243,27 +243,27 @@ char ToAsciiRest_(dword c)
 	return ch >= ' ' && ch < 128 ? ch : ' ';
 }
 
-bool IsRTL_(dword c)
+bool IsRTL_(wchar c)
 {
 	return Single<UnicodeInfo>().rtl.Get(c);
 }
 
-bool IsLetter_(dword c)
+bool IsLetter_(wchar c)
 {
 	return Single<UnicodeInfo>().letter.Get(c);
 }
 
-bool IsLower_(dword c)
+bool IsLower_(wchar c)
 {
 	return c != (dword)ToUpper((int)c) || Single<UnicodeInfo>().islower.Get(c);
 }
 
-bool IsUpper_(dword c)
+bool IsUpper_(wchar c)
 {
 	return c != (dword)ToLower((int)c) || Single<UnicodeInfo>().isupper.Get(c);
 }
 
-bool IsMark_(dword c)
+bool IsMark_(wchar c)
 {
 	return Single<UnicodeInfo>().ismark.Get(c);
 }

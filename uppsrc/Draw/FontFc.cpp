@@ -148,7 +148,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
 		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
-		fi.ttf = path.EndsWith(".ttf") || path.EndsWith(".otf");
+		fi.ttf = path.EndsWith(".ttf") || path.EndsWith(".otf") || path.EndsWith(".otc") || path.EndsWith(".ttc");
+		fi.fonti = face->face_index;
 		if(path.GetCount() < 250)
 			strcpy(fi.path, ~path);
 		else
@@ -164,21 +165,6 @@ CommonFontInfo GetFontInfoSys(Font font)
 
 GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
 
-#ifdef flagLINUXGL
-#include <LinuxGl/FontGl.h>
-#include <LinuxGl/ResGl.h>
-GlyphInfo  GetGlyphInfoSys(Font font, int chr)
-{
-	static GlyphInfo gi;
-	const OpenGLFont& fi = resources.GetFont(font);
-	gi.width = chr < fi.chars.GetCount() 
-		? int(fi.chars[chr].xadvance * fi.scale + 0.5f)
-		: 0;
-	gi.lspc = 0;
-	gi.rspc = 0;
-	return gi;
-}
-#else
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
@@ -207,7 +193,6 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	}
 	return gi;
 }
-#endif
 
 Vector<FaceInfo> GetAllFacesSys()
 {
@@ -218,10 +203,11 @@ Vector<FaceInfo> GetAllFacesSys()
 		"monospace",
 	};
 	
-	Vector<FaceInfo> list;
+	VectorMap<String, FaceInfo> list;
 	for(int i = 0; i < __countof(basic_fonts); i++) {
-		FaceInfo& fi = list.Add();
-		fi.name = basic_fonts[i];
+		String name = (const char *)basic_fonts[i];
+		FaceInfo& fi = list.Add(name);
+		fi.name = name;
 		fi.info = Font::SCALEABLE;
 		if(i == Font::SERIF)
 			fi.info |= Font::SERIFSTYLE;
@@ -229,7 +215,7 @@ Vector<FaceInfo> GetAllFacesSys()
 			fi.info |= Font::FIXEDPITCH;
 	}
 	FcPattern *p = FcPatternCreate();
-	FcObjectSet *os = FcObjectSetBuild(FC_FAMILY, FC_SPACING, FC_SCALABLE, (void *)0);
+	FcObjectSet *os = FcObjectSetBuild(FC_FAMILY, FC_SPACING, FC_SCALABLE, FC_SYMBOL, FC_COLOR, (void *)0);
 	FcFontSet *fs = FcFontList(NULL, p, os);
 	FcPatternDestroy(p);
 	FcObjectSetDestroy(os);
@@ -237,29 +223,68 @@ Vector<FaceInfo> GetAllFacesSys()
 		FcChar8 *family = NULL;
 		FcPattern *pt = fs->fonts[i];
 		if(FcPatternGetString(pt, FC_FAMILY, 0, &family) == 0 && family) {
-			FaceInfo& fi = list.Add();
-			fi.name = (const char *)family;
-			fi.info = 0;
+			String name = (const char *)family;
+			FaceInfo& fi = list.GetAdd(name);
+			fi.name = name;
 			int iv;
+			FcBool bv;
 			if(FcPatternGetInteger(pt, FC_SPACING, 0, &iv) == 0 && iv == FC_MONO)
 				fi.info |= Font::FIXEDPITCH;
-			FcBool bv;
+			if(FcPatternGetBool(pt, FC_SYMBOL, 0, &bv) == 0 && bv)
+				fi.info |= Font::SPECIAL;
+			if(FcPatternGetBool(pt, FC_COLOR, 0, &bv) == 0 && bv)
+				fi.info |= Font::SPECIAL;
 			if(FcPatternGetBool(pt, FC_SCALABLE, 0, &bv) == 0 && bv)
 				fi.info |= Font::SCALEABLE;
 			String h = ToLower(fi.name);
-			if(h.Find("serif") >= 0 && h.Find("sans") < 0)
+			if((h.Find("serif") >= 0 || h.Find("roman") >= 0) && h.Find("sans") < 0)
 				fi.info |= Font::SERIFSTYLE;
 			if(h.Find("script") >= 0)
 				fi.info |= Font::SCRIPTSTYLE;
 		}
 	}
 	FcFontSetDestroy(fs);
-	return list;
+	return list.PickValues();
 }
 
-String GetFontDataSys(Font font)
-{
-	return LoadFile(font.Fi().path);
+String GetFontDataSys(Font font, const char *table, int offset, int size)
+{ // read truetype or opentype table
+	FileIn in(font.Fi().path);
+	int q = in.Get32be();
+	if(q == 0x74746366) { // font collection
+		in.Get32(); // skip major/minor version
+		int nfonts = in.Get32be();
+		if(font.Fi().fonti >= nfonts)
+			return Null;
+		in.SeekCur(font.Fi().fonti * 4);
+		int offset = in.Get32be();
+		if(offset < 0 || offset >= in.GetSize())
+			return Null;
+		in.Seek(offset);
+		q = in.Get32be();
+	}
+	if(q != 0x74727565 && q != 0x00010000 && q != 0x4f54544f) // 0x4f54544f means CCF font!
+		return Null;
+	int n = in.Get16be();
+	in.Get32();
+	in.Get16();
+	while(n--) {
+		if(in.IsError() || in.IsEof()) return Null;
+		String tab = in.Get(4);
+		in.Get32();
+		int off = in.Get32be();
+		int len = in.Get32be();
+		if(tab == table) {
+			if(off < 0 || len < 0 || off + len > in.GetSize())
+				return Null;
+			len = min(len - offset, size);
+			if(len < 0)
+				return Null;
+			in.Seek(off + offset);
+			return in.Get(len);
+		}
+	}
+	return Null;
 }
 
 static inline double ft_dbl(int p)

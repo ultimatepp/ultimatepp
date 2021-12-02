@@ -216,8 +216,11 @@ WString String::ToWString() const
 
 int String::GetCharCount() const
 {
-	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();
+	return GetDefaultCharset() == CHARSET_UTF8 ? Utf32Len(Begin(), GetCount()) : GetCount();
 }
+
+String::String(char16 *s) : String(ToUtf8(s)) {}
+String::String(wchar *s) : String(ToUtf8(s)) {}
 
 String::String(StringBuffer& b)
 {
@@ -354,26 +357,14 @@ struct StringICompare__
 	StringICompare__(int e) : encoding(e) {}
 };
 
-int CompareNoCase(const String& a, const String& b, byte encoding)
+int CompareNoCase(const String& a, const String& b)
 {
-	if(encoding == CHARSET_DEFAULT) encoding = GetDefaultCharset();
-	if(encoding == CHARSET_UTF8) return CompareNoCase(FromUtf8(a), FromUtf8(b));
-#ifdef DEPRECATED
-	return IterCompare(a.Begin(), a.End(), b.Begin(), b.End(), StringICompare__(encoding));
-#else
-	return CompareRanges(a, b, StringICompare__(encoding));
-#endif
+	return CompareNoCase(ToUtf32(a), ToUtf32(b));
 }
 
-int CompareNoCase(const String& a, const char *b, byte encoding)
+int CompareNoCase(const String& a, const char *b)
 {
-	if(encoding == CHARSET_DEFAULT) encoding = GetDefaultCharset();
-	if(encoding == CHARSET_UTF8) return CompareNoCase(FromUtf8(a), FromUtf8(b, (int)strlen(b)));
-#ifdef DEPRECATED
-	return IterCompare(a.Begin(), a.End(), b, b + strlen(b), StringICompare__(encoding));
-#else
-	return CompareRanges(a, SubRange(b, b + strlen(b)), StringICompare__(encoding));
-#endif
+	return CompareNoCase(ToUtf32(a), ToUtf32(b, (int)strlen(b)));
 }
 
 }

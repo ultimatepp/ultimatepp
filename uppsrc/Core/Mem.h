@@ -641,4 +641,22 @@ int inline_memcmp_aligned(const char *a, const char *b, size_t count)
 }
 #endif
 
+template <class T>
+bool memeq_t(const T *p, const T *q, size_t count)
+{
+	if((sizeof(T) & 15) == 0)
+		return memeq128(p, q, count * (sizeof(T) >> 4));
+	else
+	if((sizeof(T) & 7) == 0)
+		return memeq64(p, q, count * (sizeof(T) >> 3));
+	else
+	if((sizeof(T) & 3) == 0)
+		return memeq32(p, q, count * (sizeof(T) >> 2));
+	else
+	if((sizeof(T) & 1) == 0)
+		return memeq16(p, q, count * (sizeof(T) >> 1));
+	else
+		return memeq8(p, q, count * sizeof(T));
+}
+
 hash_t memhash(const void *ptr, size_t count);

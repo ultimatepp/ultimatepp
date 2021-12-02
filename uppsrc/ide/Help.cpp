@@ -147,7 +147,7 @@ void TopicCtrl::SyncDocTree()
 	
 	Vector<String> sdx;
 	for(int i = 0; i < ss.GetCount(); i++)
-		sdx.Add(ToUtf8(ToLower(FromUtf8(ss[i]))));
+		sdx.Add(ToUtf8(ToLower(ToUtf32(ss[i]))));
 
 	ClearTree();
 

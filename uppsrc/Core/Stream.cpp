@@ -629,36 +629,29 @@ Stream& Stream::operator/(String& s) {
 	return *this;
 }
 
-Stream& Stream::operator%(WString& s) {
+Stream& Stream::operator%(WString& s)
+{ // we do not support BE here anymore
 	if(IsError()) return *this;
 	if(IsLoading()) {
-		dword len;
-		Pack(len);
-		if(len < 256 * 1024) {
-			WStringBuffer sb(len);
-			SerializeRaw((byte*)~sb, len * sizeof(wchar));
-			s = sb;
-		}
-		else {
-			String h = GetAll(len * sizeof(wchar));
-			if(h.IsVoid())
-				LoadError();
-			else {
-				WStringBuffer sb(len);
-				memcpy8(~sb, ~h, len * sizeof(wchar));
-				s = sb;
-			}
-		}
+		dword len = Get();
+		if(len == 0xff)
+			len = Get32le();
+		String h = GetAll(len * sizeof(char16));
+		if(h.IsVoid())
+			LoadError();
+		else
+			s = ToUtf32((const char16 *)~h, len);
 	}
 	else {
-		dword len = s.GetLength();
+		Vector<char16> x = ToUtf16(s);
+		dword len = x.GetCount();
 		if(len < 0xff)
 			Put(len);
 		else {
 			Put(0xff);
 			Put32le(len);
 		}
-		SerializeRaw((byte*)~s, len * sizeof(wchar));
+		SerializeRaw((byte*)x.begin(), len * sizeof(char16));
 	}
 	return *this;
 }
@@ -667,7 +660,7 @@ Stream& Stream::operator/(WString& s) {
 	if(IsError()) return *this;
 	String h = ToUtf8(s);
 	*this / h;
-	s = FromUtf8(h);
+	s = ToUtf32(h);
 	return *this;
 }
 
@@ -1082,32 +1075,28 @@ Stream& NilStream()
 	return Single<NilStreamClass>();
 }
 
-#ifdef PLATFORM_WIN32
-bool IsCoutUTF8;
-#endif
-
-void CoutUTF8()
-{
-#ifdef PLATFORM_WIN32
-	IsCoutUTF8 = true;
-	SetConsoleOutputCP(65001);
-#endif
-}
-
 #ifndef PLATFORM_WINCE
 class CoutStream : public Stream {
+#ifdef PLATFORM_WIN32
 	String buffer;
+
+	void Flush() {
+		ONCELOCK {
+			SetConsoleOutputCP(65001); // set console to UTF8 mode
+		}
+		static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+		dword dummy;
+		WriteFile(h, ~buffer, buffer.GetCount(), &dummy, NULL);
+		buffer.Clear();
+	}
+#endif
+
 
 	void Put0(int w) {
 #ifdef PLATFORM_WIN32
 		buffer.Cat(w);
-		if(CheckUtf8(buffer)) { // TODO: Use W api
-			String ws = ToSystemCharset(buffer, GetConsoleOutputCP());
-			static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-			dword dummy;
-			WriteFile(h, ~ws, ws.GetCount(), &dummy, NULL);
-			buffer.Clear();
-		}
+		if(CheckUtf8(buffer) || buffer.GetCount() > 8)
+			Flush();
 #else
 		putchar(w);
 #endif

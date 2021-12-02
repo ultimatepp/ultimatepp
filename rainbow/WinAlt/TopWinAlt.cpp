@@ -78,7 +78,7 @@ void TopWindow::SyncTitle0()
 #ifndef PLATFORM_WINCE
 	if(hwnd)
 		if(IsWindowUnicode(hwnd))
-			::SetWindowTextW(hwnd, (const WCHAR*)~title);
+			::SetWindowTextW(hwnd, ToSystemCharsetW(title));
 		else
 #endif
 			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));

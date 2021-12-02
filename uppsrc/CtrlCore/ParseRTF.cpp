@@ -500,8 +500,19 @@ RTFParser::TOKEN RTFParser::Fetch()
 					break;
 				}
 			}
-		if(c && !skip)
+		if(c && !skip) {
 			text.Cat(c);
+			if(text.GetCount() >= 2) {
+				char16 h[2];
+				h[0] = text[text.GetCount() - 2];
+				h[1] = text[text.GetCount() - 1];
+				wchar c = ReadSurrogatePair(h, h + 2);
+				if(c) {
+					text.TrimLast(2);
+					text.Cat(c);
+				}
+			}
+		}
 		skip = nskip;
 	}
 
@@ -1080,7 +1091,7 @@ String RTFParser::ReadBinHex(char& odd) const
 	byte v = ctoi(odd);
 	String out;
 	for(const wchar *s = text.Begin(); *s; s++) {
-		byte w = (*s >= '0' && *s <= '9' ? *s - '0'
+		byte w = (byte)(*s >= '0' && *s <= '9' ? *s - '0'
 			: *s >= 'A' && *s <= 'F' ? *s - 'A' + 10
 			: *s >= 'a' && *s <= 'f' ? *s - 'a' + 10
 			: 255);

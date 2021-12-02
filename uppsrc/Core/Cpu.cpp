@@ -1,11 +1,7 @@
 #include "Core.h"
 
-#ifdef CPU_X86
-#ifdef COMPILER_MSC
-#include <intrin.h> 
-#else
+#if !(defined(CPU_X86) && defined(COMPILER_MSC))
 #include <cpuid.h>
-#endif
 #endif
 
 #ifdef PLATFORM_FREEBSD

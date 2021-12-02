@@ -75,12 +75,8 @@ void TopWindow::SyncTitle()
 	GuiLock __;
 	LLOG("TopWindow::SyncTitle0 " << UPP::Name(this));
 	HWND hwnd = GetHWND();
-	if(hwnd) {
-		if(IsWindowUnicode(hwnd))
-			::SetWindowTextW(hwnd, (const WCHAR*)~title);
-		else
-			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
-	}
+	if(hwnd)
+		::SetWindowTextW(hwnd, ToSystemCharsetW(title));
 }
 
 void TopWindow::DeleteIco()
@@ -250,7 +246,7 @@ void TopWindow::Open(HWND hwnd)
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
 	USRLOG("   OPEN " << Desc(this));
-	LLOG("TopWindow::Open, owner HWND = " << FormatIntHex((int)hwnd, 8) << ", Active = " << FormatIntHex((int)::GetActiveWindow(), 8));
+	LLOG("TopWindow::Open, owner HWND = " << hwnd << ", Active = " << hwnd);
 	IgnoreMouseUp();
 	SyncCaption();
 	LLOG("WindowStyles: " << WindowStyleAsString(style, exstyle));

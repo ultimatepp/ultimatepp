@@ -20,7 +20,7 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 		return WString(b);
 	}
 #endif
-	return ToUnicode(s, n, cs);
+	return ToUtf32(s, n);
 }
 
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
@@ -29,7 +29,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	if(IsNull(ink)) return;
 	ink = ResolveInk(ink);
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	Std(font);
 	double sina = 0;
 	double cosa = 1;
@@ -43,7 +43,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		wchar chr = text[i];
 		GlyphInfo gi = GetGlyphInfo(font, chr);
 		if(gi.IsNormal())
-			if(angle)
+			if(angle || chr >= 0x10000)
 				DrawTextOp(int(x + cosa * posx), int(y - sina * posx), angle, &chr, font, ink, 1, NULL);
 			else {
 				int c = 1;
@@ -212,7 +212,7 @@ Size GetTextSize(const wchar *text, Font font, int n)
 {
 	FontInfo fi = font.Info();
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	Size sz;
 	sz.cx = 0;
 	const wchar *wtext = (const wchar *)text;

@@ -8,6 +8,8 @@ using namespace Upp;
 
 #define CMAP (MAKE_TT_TABLE_NAME('c','m','a','p'))
 
+#ifdef PLATFORM_WIN32
+
 namespace Upp {
 HFONT GetWin32Font(Font fnt, int angle);
 };
@@ -34,20 +36,70 @@ String GetFontDataSys(Font font, dword table)
 	return r;
 }
 
+#endif
+
+String ReadFontTable(Stream& in, const char *table, int fonti = 0)
+{
+	in.Seek(0);
+	int q = in.Get32be();
+	if(q == 0x74746366) { // true type collection
+		in.Get32(); // skip major/minor version
+		int nfonts = in.Get32be();
+		if(fonti >= nfonts)
+			return Null;
+		in.SeekCur(fonti * 4);
+		int offset = in.Get32be();
+		if(offset < 0 || offset >= in.GetSize())
+			return Null;
+		in.Seek(offset);
+		q = in.Get32be();
+	}
+	if(q != 0x74727565 && q != 0x00010000)
+		return Null;
+	int n = in.Get16be();
+	in.Get32();
+	in.Get16();
+	while(n--) {
+		if(in.IsError() || in.IsEof()) return Null;
+		String tab = in.Get(4);
+		in.Get32();
+		int offset = in.Get32be();
+		int length = in.Get32be();
+		if(tab == table) {
+			if(offset < 0 || length < 0 || offset + length > in.GetSize())
+				return Null;
+			in.Seek(offset);
+			return in.Get(length);
+		}
+	}
+	return Null;
+}
+
 GUI_APP_MAIN
 {
+//	FileIn in("C:/Windows/Fonts/arial.ttf");
+/*
+	FileIn in("D:\\xxx\\msyh.ttc");
+	DDUMPHEX(ReadFontTable(in, "cmap", 0));
+	DDUMPHEX(ReadFontTable(in, "cmap", 1));
+	DDUMPHEX(ReadFontTable(in, "cmap", 2));
+	return;
+*/
 #if 0
-//	Font font(Font::FindFaceNameIndex("Microsoft JhengHei"), 20);
-	Font font = StdFont();
+	Font font(Font::FindFaceNameIndex("Noto Serif CJK KR"), 20);
+
+//	Font font = Roman(20);
 	
 //	SaveFile("d:/xxx/font.bin", GetFontDataSys(font, 0));
 	
-	String cmap = GetFontDataSys(font, CMAP);
-	LOGHEXDUMP(~cmap, 256);
+//	String cmap = GetFontDataSys(font, CMAP);
+//	LOGHEXDUMP(~cmap, 256);
 
 	FontTypeReader r;
 //	r.Open(Arial(20).GetData());
-	r.Open(font.GetData());
+	DDUMP(font.GetFaceName());
+	r.Open(font);
+	DDUMPHEX(r.panose);
 	return;
 	
 	
@@ -55,34 +107,52 @@ GUI_APP_MAIN
 #endif
 	Progress pi;
 	pi.SetTotal(Font::GetFaceCount());
-	for(int i = 0; i < Font::GetFaceCount(); i++) {
+	Vector<String> name;
+	for(int i = 0; i < Font::GetFaceCount(); i++)
+		name.Add(Font::GetFaceName(i));
+	for(int i : GetSortOrder(name)) {
 		String f = Font::GetFaceName(i);
 		pi.SetText(f);
 		if(pi.StepCanceled())
 			break;
 		Font fnt;
 		fnt.FaceName(f);
-		DLOG("===========");
-		DDUMP(f);
 		FontTypeReader r;
 	//	r.Open(Arial(20).GetData());
-		r.Open(fnt.GetData());
-		Sort(r.ranges, [](Tuple<int, int> a, Tuple<int, int> b) { return a.a < b.a; });
-		DDUMP(r.ranges);
-		while(r.ranges.GetCount() > 8) {
-			int mini = 0;
-			int mind = INT_MAX;
-			for(int i = 0; i < r.ranges.GetCount() - 1; i++) {
-				int d = r.ranges[i + 1].a - r.ranges[i].b;
-				if(d < mind) {
-					mind = d;
-					mini = i;
+		r.Open(fnt);
+		if(r.panose.GetCount() == 10) {
+			dword h[8] = {0};
+			for(auto r : r.ranges) {
+				for(int c = r.a; c <= r.b; c++) {
+					c = max(c, 0);
+					if(c < 2048)
+						h[0] |= 0x80000000 >> (c >> 6);
+					else {
+						int bi = clamp(c - 2048, 0, 7*32*1024 - 1) >> 10;
+						ASSERT((bi >> 5) + 1 < 8);
+						h[(bi >> 5) + 1] |= 0x80000000 >> (bi & 31);
+					}
 				}
 			}
-			r.ranges[mini].b = r.ranges[mini + 1].b;
-			r.ranges.Remove(mini + 1);
+			String l;
+			l << "{ " << AsCString(f);
+			l << ", { ";
+			bool first = true;
+			for(int h : r.panose) {
+				if(first)
+					first = false;
+				else
+					l << ",";
+				l << h;
+			}
+			l << " }, { ";
+			for(int i = 0; i < 8; i++) {
+				if(i) l << ",";
+				l << Format("0x%08x", (int)h[i]);
+			}
+			l << " } },";
+			LOG(l);
 		}
-		DDUMP(r.ranges);
 	}
 	
 //	r.Open(Font(Font::FindFaceNameIndex("Segoe UI Emoji"), 20).GetData());

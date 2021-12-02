@@ -5,7 +5,7 @@
 
 struct FaceInfo : Moveable<FaceInfo> {
 	String name;
-	dword  info;
+	dword  info = 0;
 };
 
 struct CommonFontInfo {
@@ -26,7 +26,8 @@ struct CommonFontInfo {
 	bool ttf;
 	int  aux;
 
-	char path[256]; // optional
+	char path[256]; // optional (linux only)
+	int  fonti = 0; // font index in .ttc, .otc
 };
 
 class Font;
@@ -35,7 +36,7 @@ struct GlyphInfo {
 	int16 width;
 	int16 lspc;
 	int16 rspc;
-	word  glyphi; // optional, not available in Win32
+	word  glyphi = 0; // optional, not available in Win32, X11
 	
 	bool IsNormal() const     { return (word)width != 0x8000; }
 	bool IsComposed() const   { return !IsNormal() && (lspc == -1 || lspc == -11); }
@@ -47,7 +48,7 @@ struct GlyphInfo {
 void      Std(Font& font);
 GlyphInfo GetGlyphInfo(Font font, int chr);
 const     CommonFontInfo& GetFontInfo(Font font);
-bool      IsNormal(Font font, int chr);
+bool      IsNormal_nc(Font font, int chr);
 void      GlyphMetrics(GlyphInfo& f, Font font, int chr);
 
 void      InvalidateFontList();
@@ -57,7 +58,7 @@ void      InvalidateFontList();
 CommonFontInfo   GetFontInfoSys(Font font);
 GlyphInfo        GetGlyphInfoSys(Font font, int chr);
 Vector<FaceInfo> GetAllFacesSys();
-String           GetFontDataSys(Font font);
+String           GetFontDataSys(Font font, const char *table, int offset, int size);
 
 void             RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt);
 

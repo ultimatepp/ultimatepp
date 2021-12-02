@@ -187,7 +187,7 @@ bool   PathIsEqual(const char *p1, const char *p2)
 #ifndef PLATFORM_WINCE
 String GetCurrentDirectory() {
 #if defined(PLATFORM_WIN32)
-	wchar h[MAX_PATH];
+	WCHAR h[MAX_PATH];
 	GetCurrentDirectoryW(MAX_PATH, h);
 	return FromSystemCharsetW(h);
 #elif defined(PLATFORM_POSIX)
@@ -211,7 +211,7 @@ bool SetCurrentDirectory(const char *path)
 
 String GetTempPath()
 {
-	wchar h[MAX_PATH];
+	WCHAR h[MAX_PATH];
 	GetTempPathW(MAX_PATH, h);
 	return FromSystemCharsetW(h);
 }
@@ -253,7 +253,7 @@ String ToUnixName(const char* fn, const char* stop = NULL) {
 String GetFullPath(const char *file) {
 #ifdef PLATFORM_WIN32
 	String ufn = FromUnixName(file);
-	wchar h[MAX_PATH];
+	WCHAR h[MAX_PATH];
 	GetFullPathNameW(ToSystemCharsetW(ufn), MAX_PATH, h, 0);
 	return FromSystemCharsetW(h);
 #else
@@ -364,10 +364,10 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 {
 	bool ret = false;
 	HRESULT hres;
-	IShellLink* psl;
+	IShellLinkW* psl;
 	IPersistFile* ppf;
 	CoInitialize(NULL);
-	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
+	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLinkW,
 	                        (PVOID *) &psl);
 	if(SUCCEEDED(hres)) {
 		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
@@ -375,9 +375,9 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 			hres = ppf->Load(ToSystemCharsetW(linkpath), STGM_READ);
 			if(SUCCEEDED(hres)) {
 				if(path) {
-					char fileW[_MAX_PATH] = {0};
+					WCHAR fileW[_MAX_PATH] = {0};
 					psl->GetPath(fileW, _MAX_PATH, NULL, 0);
-					*path = FromSystemCharset(fileW);
+					*path = fileW;
 				}
 				else
 					ret = true;
@@ -950,20 +950,20 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count,
 		f.filename = "\\";
 		f.root_style = ROOT_FIXED;
 #elif defined(PLATFORM_WIN32)
-		char drive[4] = "?:\\";
+		WCHAR drive[4] = L"?:\\";
 		for(int c = 'A'; c <= 'Z'; c++) {
 			*drive = c;
-			int n = GetDriveType(drive);
+			int n = GetDriveTypeW(drive);
 			if(n == DRIVE_NO_ROOT_DIR)
 				continue;
 			FileInfo& f = fi.Add();
 			f.filename = drive;
-			char name[256], system[256];
+			WCHAR name[256], system[256];
 			DWORD d;
 			if(c != 'A' && c != 'B' && n != DRIVE_UNKNOWN) {
-				bool b = GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256);
+				bool b = GetVolumeInformationW(drive, name, 256, &d, &d, &d, system, 256);
 				if(b) {
-					if(*name) f.root_desc << " " << FromSystemCharset(name);
+					if(*name) f.root_desc << " " << FromSystemCharsetW(name);
 				}
 				else if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
 					if(unmounted) {

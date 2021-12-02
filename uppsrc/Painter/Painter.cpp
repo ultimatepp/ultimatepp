@@ -242,7 +242,7 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 
 Painter& Painter::Text(double x, double y, const wchar *text, Font fnt, int n, const double *dx)
 {
-	return Text(Pointf(x, y), text, fnt, n < 0 ? wstrlen(text) : n, dx);
+	return Text(Pointf(x, y), text, fnt, n < 0 ? strlen__(text) : n, dx);
 }
 
 Painter& Painter::Text(const Pointf& p, const WString& s, Font fnt, const double *dx)
@@ -267,7 +267,7 @@ Painter& Painter::Text(double x, double y, const String& s, Font fnt, const doub
 
 Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, const double *dx)
 {
-	WString s = ToUnicode(text, CHARSET_DEFAULT);
+	WString s = ToUtf32(text, n);
 	return Text(p, s, fnt, n < 0 ? s.GetCount() : n, dx);
 }
 
