@@ -1147,3 +1147,14 @@ String Ide::IdeGetNestFolder()
 			return w[i];
 	return Null;
 }
+
+void Ide::Duplicate()
+{
+	int l, h;
+	if(editor.GetSelection(l, h)) {
+		editor.NextUndo();
+		editor.SetSelection(h, editor.Insert(h, editor.GetSelection()) + h);
+	}
+	else
+		editor.DuplicateLine();
+}

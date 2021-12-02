@@ -147,7 +147,7 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
-	menu.Add(b, AK_DUPLICATELINE, THISBACK(DuplicateLine))
+	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
 	menu.Add(b, AK_FORMATCODE, THISBACK(FormatCode))
 	    .Help("Reformat code in editor");
