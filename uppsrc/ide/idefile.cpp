@@ -690,7 +690,7 @@ void Ide::TriggerAssistSync()
 					StringStream ss(s);
 					file_scanned = TryCodeBaseScanFile(ss, editfile);
 					file_scan--;
-					if(!file_scan)
+					if(!file_scanned)
 						trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
 				})) {
 					file_scan--;
