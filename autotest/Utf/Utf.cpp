@@ -9,11 +9,11 @@ CONSOLE_APP_MAIN
 	for(dword code = 0; code <= 0x10ffff; code++) {
 		if(code < 0xee00 || code > 0xeeff) {
 			String s = ToUtf8(&code, 1);
-			Vector<dword> t = ToUtf32(s);
+			WString t = ToUtf32(s);
 			ASSERT(t[0] == code);
 			ASSERT(Utf32Len(s) == 1);
 			
-			WString ws = ToUtf16(&code, 1);
+			Vector<char16> ws = ToUtf16(&code, 1);
 			t = ToUtf32(ws);
 			ASSERT(t[0] == code);
 			ASSERT(Utf32Len(ws) == 1);
@@ -35,19 +35,19 @@ CONSOLE_APP_MAIN
 	SeedRandom(0);
 	for(int i = 0; i < 10000; i++) {
 		int n = Random(1000);
-		Vector<dword> text;
+		WString text;
 		while(text.GetCount() < n) {
 			int code = Random(0x110000);
 			if(!(code >= 0xee00 && code < 0xeeff || code >= 0xD800 && code < 0xe000))
-				text.Add(code);
+				text.Cat(code);
 		}
 
 		String s = ToUtf8(text);
-		Vector<dword> t = ToUtf32(s);
+		WString t = ToUtf32(s);
 		ASSERT(t == text);
 		ASSERT(Utf32Len(s) == n);
 		
-		WString ws = ToUtf16(text);
+		Vector<char16> ws = ToUtf16(text);
 		t = ToUtf32(ws);
 		if(t != text) {
 			DUMP(text);

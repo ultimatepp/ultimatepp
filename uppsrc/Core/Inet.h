@@ -638,6 +638,8 @@ class WebSocket {
 	dword            current_opcode;
 	
 	bool             client;
+	
+	int              redirect = 0;
 
 	enum {
 		HTTP_REQUEST_HEADER = -100,

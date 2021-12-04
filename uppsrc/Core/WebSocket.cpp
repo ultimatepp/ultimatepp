@@ -99,6 +99,7 @@ bool WebSocket::Connect(const String& uri_, const String& host_, bool ssl_, int 
 	Clear();
 	
 	client = true;
+	redirect = 0;
 	
 	uri = uri_;
 	host = host_;
@@ -252,8 +253,18 @@ void WebSocket::RequestHeader()
 void WebSocket::ResponseHeader()
 {
 	if(ReadHttpHeader()) {
-		LLOG(data);
-		if(ToLower(data).Find("upgrade: websocket") < 0) {
+		HttpHeader h;
+		h.Parse(data);
+		int code = h.GetCode();
+		if(code >= 300 && code < 400) {
+			int r = redirect + 1;
+			if(r++ < 5) {
+				Connect(h["location"]);
+				redirect = r;
+				return;
+			}
+		}
+		if(ToLower(h["upgrade"]) != "websocket") {
 			Error("Invalid server response HTTP header");
 			return;
 		}
