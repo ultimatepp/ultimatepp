@@ -38,7 +38,7 @@ void SDL2GUI::HandleSDLEvent(SDL_Event* event)
 //			break;
 	case SDL_TEXTINPUT: {
 			//send respective keyup things as char events as well
-		WString text = FromUtf8(event->text.text);
+		WString text = event->text.text;
 		for(int i = 0; i < text.GetCount(); i++) {
 			int c = text[i];
 			if(c != 127)

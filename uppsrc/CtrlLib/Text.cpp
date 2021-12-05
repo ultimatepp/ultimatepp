@@ -13,7 +13,7 @@ TextCtrl::TextCtrl()
 	incundoserial = false;
 	undo_op = false;
 	WhenBar = THISBACK(StdBar);
-	charset = CHARSET_UNICODE;
+	charset = CHARSET_UTF8;
 	color[INK_NORMAL] = SColorText;
 	color[INK_DISABLED] = SColorDisabled;
 	color[INK_SELECTED] = SColorHighlightText;

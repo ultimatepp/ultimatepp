@@ -54,7 +54,7 @@ CONSOLE_APP_MAIN
 	
 	DLOG("===== Decompose");
 	for(int i = 0; i < 0x110000; i++) {
-		Vector<dword> dc = UnicodeDecompose(i, true);
+		WString dc = UnicodeDecompose(i, true);
 		if(dc.GetCount()) {
 			VppLog() << Format64Hex(i) << "->";
 			for(int c : dc)

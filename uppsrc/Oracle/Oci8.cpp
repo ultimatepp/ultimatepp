@@ -492,7 +492,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 						sql_type = SQLT_STR;
 						if(session->utf8_session) {
 							WString wstr(v);
-							len = 1 + lenAsUtf8(wstr, wstr.GetLength());
+							len = 1 + Utf8Len(wstr, wstr.GetLength());
 						}
 						else
 							len = 1 + String(v).GetLength();
@@ -910,7 +910,7 @@ void OCI8Connection::GetColumn(int i, WString& ws) const {
 		s = (char *) c.Data();
 	}
 	if(session->utf8_session)
-		ws = FromUtf8(s);
+		ws = ToUtf32(s);
 	else
 		ws = s.ToWString();
 }
@@ -1610,13 +1610,9 @@ dword OracleClob::Read(int64 at, void *ptr, dword size) {
 			return full_bytes;
 		WString unibuf;
 		if(utf8)
-			unibuf = FromUtf8(charbuf, nchars);
-		else {
-			WStringBuffer tmp;
-			tmp.SetLength(nchars);
-			ToUnicode(tmp, charbuf, nchars, CHARSET_DEFAULT);
-			unibuf = tmp;
-		}
+			unibuf = ToUtf32(charbuf, nchars);
+		else
+			unibuf = ToUnicode(charbuf, nchars, CHARSET_DEFAULT);
 		int ulen = unibuf.GetLength();
 		int uoff = (int)(at & 1);
 		int upart = min((int)size, 2 * ulen - uoff);
@@ -1663,12 +1659,8 @@ void OracleClob::Write(int64 at, const void *ptr, dword size) {
 		String chrbuf;
 		if(utf8)
 			chrbuf = ToUtf8((const wchar *)ptr, nchars);
-		else {
-			StringBuffer tmp;
-			tmp.SetLength(nchars);
-			FromUnicode(tmp, (const wchar *)ptr, nchars, CHARSET_DEFAULT);
-			chrbuf = tmp;
-		}
+		else
+			chrbuf = FromUnicode((const wchar *)ptr, nchars, CHARSET_DEFAULT);
 		ub4 n = chrbuf.GetLength();
 		sword res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp,
 			&n, (dword)(at >> 1) + 1, (dvoid *)chrbuf.Begin(), chrbuf.GetLength(),

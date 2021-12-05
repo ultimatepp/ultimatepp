@@ -53,7 +53,7 @@ void AppendClipboardText(const String& s)
 
 void AppendClipboardUnicodeText(const WString& s)
 {
-	AppendClipboard("wtext", (byte *)~s, 2 * s.GetLength());
+	AppendClipboard("wtext", (byte *)~s, sizeof(wchar) * s.GetLength());
 }
 
 const char *ClipFmtsText()
@@ -66,7 +66,7 @@ String GetString(PasteClip& clip)
 	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
-		return WString((const wchar *)~s, wstrlen((const wchar *)~s)).ToString();
+		return WString((const wchar *)~s, strlen__((const wchar *)~s)).ToString();
 	}
 	if(clip.IsAvailable("text"))
 		return ~clip;
@@ -78,7 +78,7 @@ WString GetWString(PasteClip& clip)
 	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
-		return WString((const wchar *)~s, wstrlen((const wchar *)~s));
+		return WString((const wchar *)~s, strlen__((const wchar *)~s));
 	}
 	if(clip.IsAvailable("text"))
 		return (~clip).ToWString();

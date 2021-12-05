@@ -249,6 +249,8 @@ Vector<FaceInfo> GetAllFacesSys()
 
 String GetFontDataSys(Font font, const char *table, int offset, int size)
 { // read truetype or opentype table
+	if(!table)
+		return LoadFile(font.Fi().path);
 	FileIn in(font.Fi().path);
 	int q = in.Get32be();
 	if(q == 0x74746366) { // font collection

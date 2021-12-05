@@ -1022,7 +1022,7 @@ bool LineEdit::InsertChar(dword key, int count, bool canow) {
 		key = (*filter)(key);
 	if(!IsReadOnly() && (key >= 32 && key < K_CHAR_LIM || key == '\t' || key == '\n' ||
 	   key == K_ENTER && processenter || key == K_SHIFT_SPACE)) {
-		if(key >= 128 && key < K_CHAR_LIM && (charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
+		if(key >= 128 && key < K_CHAR_LIM && (charset != CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
 		   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 			return true;
 		if(!RemoveSelection() && overwrite && key != '\n' && key != K_ENTER && canow) {

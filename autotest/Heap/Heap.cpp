@@ -146,7 +146,6 @@ CONSOLE_APP_MAIN
 		LOG("Quick allocator test Passed");
 		HeapTest(8192, 100 * 1000000, false);
 		LOG("Allocator test Passed");
-		MemoryFreeThread();
 	}
 	LOG("Used: " << MemoryUsedKb() << " KB");
 	LOG("============== OK " << tm);

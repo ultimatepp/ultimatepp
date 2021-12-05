@@ -9,10 +9,10 @@ CONSOLE_APP_MAIN
 	dword emoticon = 0x1f60d; // Smiling Face With Heart-shaped Eyes
 	
 	String text = "Český 아침글";
-	Vector<dword> h = ToUtf32(text);
-	h.Add('\n');
-	h.Add(emoticon);
-	h.Add(31);
+	WString h = ToUtf32(text);
+	h.Cat('\n');
+	h.Cat(emoticon);
+	h.Cat(31);
 	DUMP(h);
 	
 	dword ref[] = { 268, 101, 115, 107, 253, 32, 50500, 52840, 44544, 10, 128525, 31 };

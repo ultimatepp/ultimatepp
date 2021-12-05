@@ -72,9 +72,9 @@ FtFontStyle GetFontStyle(Font font)
 	return fd.At(0).style[0];
 }
 
-String GetFontDataSys(Font font)
-{
-	return LoadFile(font.Fi().path);
+String GetFontDataSys(Font font, const char *table, int offset, int size)
+{ // TODO: Finish this!
+	return Null;
 }
 
 static FT_Library sFTlib;

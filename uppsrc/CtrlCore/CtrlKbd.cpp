@@ -60,7 +60,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 			return true;
 	dword k = keycode;
 	word l = LOWORD(keycode);
-	if(!(k & K_DELTA) && l >= 32 && l != 127 && GetDefaultCharset() != CHARSET_UNICODE)
+	if(!(k & K_DELTA) && l >= 32 && l != 127 && GetDefaultCharset() != CHARSET_UTF8)
 		k = MAKELONG((word)FromUnicode(l, CHARSET_DEFAULT), HIWORD(keycode));
 	if(!focusCtrl)
 		return false;

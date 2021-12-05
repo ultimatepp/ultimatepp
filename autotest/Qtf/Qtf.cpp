@@ -15,25 +15,23 @@ CONSOLE_APP_MAIN
 	DeleteFolderDeep(outdir);
 	RealizeDirectory(outdir);
 
-	for(FindFile ff(GetDataFile("*.qtf")); ff; ff.Next()) {
-		String qtf = LoadFile(ff.GetPath());
-		LOG(ff.GetName() << ' ' << qtf.GetCount());
-		
-		ASSERT(qtf.GetLength() > 10000);
-		RichText txt = ParseQTF(qtf);
-		String qtf2 = AsQTF(txt);
-		ASSERT(qtf2 == qtf);
-		SaveFile(AppendFileName(outdir, ff.GetName()), qtf2);
-		
-		String pdfname = ForceExt(ff.GetName(), ".pdf");
-		String pdf = Pdf(txt);
-		SaveFile(AppendFileName(outdir, pdfname), pdf);
-		
-		String h = LoadDataFile(pdfname);
-		ASSERT(h.GetCount() == pdf.GetCount());
-		int q = h.ReverseFind("trailer");
-		ASSERT(pdf.Mid(0, q) == h.Mid(0, q));
-	}
+	String qtf = LoadDataFile("test.qtf");
+
+	DDUMP(qtf.GetCount());
+	
+	ASSERT(qtf.GetLength() > 10000);
+	RichText txt = ParseQTF(qtf);
+	String qtf2 = AsQTF(txt);
+	ASSERT(qtf2 == qtf);
+	
+	String pdf = Pdf(txt);
+	String pdfpath = AppendFileName(outdir, "test.pdf");
+	SaveFile(pdfpath, pdf);
+	
+	String h = LoadDataFile("test.pdf");
+	ASSERT(h.GetCount() == pdf.GetCount());
+	int q = h.ReverseFind("trailer");
+	ASSERT(pdf.Mid(0, q) == h.Mid(0, q));
 
 	DeleteFolderDeep(outdir);
 	
