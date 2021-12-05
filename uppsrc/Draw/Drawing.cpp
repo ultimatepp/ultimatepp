@@ -561,7 +561,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 					text = WString(txt, n);
 				}
 				else
-				if(cs == CHARSET_UNICODE) { // backward compatibility
+				if(cs == CHARSET_UTF8) { // backward compatibility "CHARSET_UNICODE"
 					Buffer<char16> txt(n);
 					ps.Stream::GetW(txt, n);
 					text = ToUtf32(txt, n);

@@ -68,6 +68,17 @@ void CheckType(const T& x, bool checkhash = false)
 				RDUMP(ValueMap(vf));
 				ASSERT(ValueMap(vf) == ValueMap(x));
 			}
+			else
+			if(tt.Is<Drawing>()) {
+				PaintingPainter dw1(100, 100), dw2(100, 100);
+				dw1.DrawDrawing(0, 0, tt);
+				dw2.DrawDrawing(0, 0, vf);
+				Painting a = dw1.GetResult();
+				Painting b = dw2.GetResult();
+			//	DDUMPHEX(StoreAsString(a));
+			//	DDUMPHEX(StoreAsString(b));
+				ASSERT(a == b);
+			}
 			else {
 				RDUMP(vf.To<T>());
 				ASSERT(vf.To<T>() == x);

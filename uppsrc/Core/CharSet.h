@@ -10,7 +10,6 @@ enum {
 #define  CHARSET_TOASCII      253
 #define  CHARSET_UTF32        254 // auxilary
 #define  CHARSET_UTF8         255
-#define  CHARSET_UNICODE      255
 
 enum {
 	DEFAULTCHAR = 0x1f
