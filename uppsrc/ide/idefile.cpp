@@ -686,7 +686,7 @@ void Ide::TriggerAssistSync()
 				String s = ~editor;
 				String fn = editfile;
 				file_scan++;
-				if(!CoWork::TrySchedule([=] {
+				if(Ctrl::GetEventLevel() == 0 && !CoWork::TrySchedule([=] {
 					StringStream ss(s);
 					file_scanned = TryCodeBaseScanFile(ss, editfile);
 					file_scan--;

@@ -534,6 +534,7 @@ private:
 	static  bool      globalbackpaint;
 	static  bool      globalbackbuffer;
 	static  bool      painting;
+	static  int       EventLevel;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
 	static  int64     EventLoopNo;
@@ -729,6 +730,11 @@ private:
 	static void InstallPanicBox();
 	
 	bool IsDHCtrl() const;
+	
+	struct EventLevelDo {
+		EventLevelDo() { EventLevel++; };
+		~EventLevelDo() { EventLevel--; };
+	};
 
 private:
 			void    DoRemove();
@@ -1214,8 +1220,10 @@ public:
 	static bool IsWaitingEvent();
 	static bool ProcessEvent(bool *quit = NULL);
 	static bool ProcessEvents(bool *quit = NULL);
+	static int  GetEventLevel()     { return EventLevel; }
 
 	bool   IsPopUp() const          { return popup; }
+
 
 	static void  EventLoop(Ctrl *loopctrl = NULL);
 	static int   GetLoopLevel()     { return LoopLevel; }

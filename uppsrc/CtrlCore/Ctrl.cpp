@@ -29,6 +29,7 @@ bool (*&DisplayErrorFn())(const Value& v)
 }
 
 int64 Ctrl::eventid;
+int   Ctrl::EventLevel;
 
 Ctrl *Ctrl::LoopCtrl;
 int   Ctrl::LoopLevel;

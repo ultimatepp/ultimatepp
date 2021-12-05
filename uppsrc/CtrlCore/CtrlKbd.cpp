@@ -38,6 +38,7 @@ void Ctrl::RefreshAccessKeysDo(bool vis)
 bool Ctrl::DispatchKey(dword keycode, int count)
 {
 	GuiLock __;
+	EventLevelDo ___;
 	if(GUI_AltAccessKeys()) {
 		bool alt = GetAlt();
 		Ctrl *c = GetActiveCtrl();

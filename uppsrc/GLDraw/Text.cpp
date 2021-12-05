@@ -69,7 +69,7 @@ void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *te
 	if(angle)
 		u = Polar(-angle);
 	if(n < 0)
-		n = wstrlen(text);
+		n = strlen__(text);
 	for(int i = 0; i < n; i++) {
 		GLTexture m = GetGlyphGLTextureCached(-angle, text[i], font, ink);
 		Point h = m.GetHotSpot();

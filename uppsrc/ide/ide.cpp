@@ -645,10 +645,8 @@ void Ide::Periodic()
 	SetIcon();
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
-	if(file_scanned) {
-		if(EditFileAssistSync2())
-			file_scanned = false;
-	}
+	if(file_scanned && Ctrl::GetEventLevel() == 0 && EditFileAssistSync2())
+		file_scanned = false;
 }
 
 const Workspace& Ide::IdeWorkspace() const
