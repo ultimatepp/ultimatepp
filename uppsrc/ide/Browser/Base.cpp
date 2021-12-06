@@ -26,7 +26,9 @@ static thread_local int sGLockLevel = 0;
 bool DeadLockCheck()
 {
 	if(sGLockLevel) {
-		PostCallback([] { Exclamation("Internal error (deadlock on sGLock)"); });
+		PostCallback([] {
+			Exclamation("Internal error (deadlock on sGLock)");
+		});
 		return true;
 	}
 	return false;

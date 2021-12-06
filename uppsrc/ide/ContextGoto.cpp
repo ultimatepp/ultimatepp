@@ -408,6 +408,7 @@ void Ide::ContextGoto0(int pos)
 							try {
 								CParser p(s);
 								if(p.Id("KEY") && p.Char('(') && p.Id(ak_id)) {
+									UnlockCodeBaseAll(); // so that scan in SaveFile does not fail with deadlock
 									GotoPos(fn, line + 1);
 									return;
 								}
