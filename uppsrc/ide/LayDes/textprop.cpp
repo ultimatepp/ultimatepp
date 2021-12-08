@@ -42,7 +42,7 @@ String NoCr(const String& s)
 
 int  LTProperty::Filter(int chr) const
 {
-	return charset == CHARSET_UNICODE ? chr : FromUnicode(chr, charset) == DEFAULTCHAR ? 0 : chr;
+	return charset == CHARSET_UTF8 ? chr : FromUnicode(chr, charset) == DEFAULTCHAR ? 0 : chr;
 }
 
 void LTProperty::EditAction()
@@ -56,7 +56,7 @@ LTProperty::LTProperty()
 	context.WhenAction = THISBACK(Context);
 	id = LayImg::Id();
 	id.WhenAction = THISBACK(Id);
-	charset = CHARSET_UNICODE; //!! not good, but better than a crash; TRC 06/04/10//TODO
+	charset = CHARSET_UTF8; //!! not good, but better than a crash; TRC 06/04/10//TODO
 }
 
 void LTProperty::SyncLid()

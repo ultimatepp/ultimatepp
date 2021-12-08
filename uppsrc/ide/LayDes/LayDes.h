@@ -201,7 +201,7 @@ public:
 	String   SaveProperties(int y = 0) const;
 	String   Save(int i, int y, const String& eol) const;
 
-	LayoutItem()                        { csize.cx = -1; hide = false; charset = CHARSET_UNICODE; }
+	LayoutItem()                        { csize.cx = -1; hide = false; charset = CHARSET_UTF8; }
 };
 
 Image GetTypeIcon(const String& type, int cx, int cy, int i, Color bg);
@@ -246,7 +246,7 @@ public:
 
 	rval_default(LayoutData);
 
-	LayoutData() { size = Size(400, 200); charset = CHARSET_UNICODE; }
+	LayoutData() { size = Size(400, 200); charset = CHARSET_UTF8; }
 };
 
 class LayDesigner;
