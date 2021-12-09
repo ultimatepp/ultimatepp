@@ -644,7 +644,8 @@ void LazyExeFileIcons::Do()
 			SHFILEINFOW info;
 			bool done = false;
 			WString path = Path();
-			if(IsNull(path))
+			Vector<char16> path16 = ToUtf16(path);
+			if(IsNull(path) || path16.GetCount() > 1000)
 				return;
 			sExeMutex.Enter();
 			bool running = sExeRunning;
@@ -668,10 +669,12 @@ void LazyExeFileIcons::Do()
 		}
 
 		WString path = Path();
-		if(IsNull(path))
+		Vector<WCHAR> path16 = ToUtf16(path);
+		if(IsNull(path) || path16.GetCount() > 1000)
 			return;
 		sExeMutex.Enter();
-		memcpy(sExePath, ~path, 2 * min(1024, path.GetCount() + 1));
+		memset(sExePath, 0, sizeof(sExePath));
+		memcpy(sExePath, path16.begin(), sizeof(char16) * path16.GetCount());
 		sExeRunning = true;
 		StartAuxThread(sExeIconThread, NULL);
 		sExeMutex.Leave();
