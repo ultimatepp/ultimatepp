@@ -8,11 +8,6 @@ int FontTypeReader::Error()
 	throw Fail(); return 0;
 }
 
-int FontTypeReader::Error()
-{
-	throw Fail(); return 0;
-}
-
 int    FontTypeReader::Peek8(const char *s)
 {
 	return s + 1 < data.end() ? (byte)*s : Error();

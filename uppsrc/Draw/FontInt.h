@@ -25,6 +25,7 @@ struct CommonFontInfo {
 	bool scaleable;
 	bool ttf;
 	int  aux;
+	int  colorimg_cy; // FreeType color Emoji original height
 
 	char path[256]; // optional (linux only)
 	int  fonti = 0; // font index in .ttc, .otc

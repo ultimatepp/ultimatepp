@@ -75,6 +75,7 @@ public:
 		SPECIAL     = 0x0010,
 		SERIFSTYLE  = 0x0020,
 		SCRIPTSTYLE = 0x0040,
+		COLORIMG    = 0x0080, // freetype color bitmap font (emojis)
 	};
 
 	static int    GetFaceCount();

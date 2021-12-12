@@ -68,11 +68,11 @@ FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 	if (FcPatternGetDouble(pattern, FC_ASPECT, 0, &aspect) != FcResultMatch)
 		aspect = 1.0;
 
-	FT_F26Dot6 ysize = (FT_F26Dot6) (dsize * 64.0);
-	FT_F26Dot6 xsize = (FT_F26Dot6) (dsize * aspect * 64.0);
-
 	if(FT_New_Face(sFTlib, (const char *)filename, 0, &face))
 		return NULL;
+
+	FT_F26Dot6 ysize = (FT_F26Dot6) (dsize * 64.0);
+	FT_F26Dot6 xsize = (FT_F26Dot6) (dsize * aspect * 64.0);
 
 	FT_Set_Char_Size(face, xsize, ysize, 0, 0);
 	return face;
@@ -154,6 +154,13 @@ CommonFontInfo GetFontInfoSys(Font font)
 			strcpy(fi.path, ~path);
 		else
 			*fi.path = 0;
+		
+		if(font.GetFaceInfo() & Font::COLORIMG) {
+			fi.colorimg_cy = fi.ascent + fi.descent;
+			int h = font.GetHeight();
+			fi.ascent = h * fi.ascent / fi.colorimg_cy;
+			fi.descent = h - fi.ascent;
+		}
 	}
 	return fi;
 }
@@ -177,16 +184,21 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		LTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
 		if(glyph_index) {
-//			if(GetGlyphInfoSysXft)
-//				return (*GetGlyphInfoSysXft)(font, chr);
 			if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
 			   FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
 				FT_Glyph_Metrics& m = face->glyph->metrics;
 				int left  = FLOOR(m.horiBearingX);
 				int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);
 				gi.width = TRUNC(ROUND(face->glyph->advance.x));
-				gi.lspc = TRUNC(left);
-				gi.rspc = gi.width - width - gi.lspc;
+				if(font.GetFaceInfo() & Font::COLORIMG) {
+					gi.lspc = gi.rspc = 0;
+					int q = GetFontInfo(font).colorimg_cy;
+					gi.width = font.GetCy() * gi.width / q + max(1, font.GetCy() / 10); // add a little space there...
+				}
+				else {
+					gi.lspc = TRUNC(left);
+					gi.rspc = gi.width - width - gi.lspc;
+				}
 				gi.glyphi = glyph_index;
 			}
 		}
@@ -233,7 +245,7 @@ Vector<FaceInfo> GetAllFacesSys()
 			if(FcPatternGetBool(pt, FC_SYMBOL, 0, &bv) == 0 && bv)
 				fi.info |= Font::SPECIAL;
 			if(FcPatternGetBool(pt, FC_COLOR, 0, &bv) == 0 && bv)
-				fi.info |= Font::SPECIAL;
+				fi.info |= Font::COLORIMG;
 			if(FcPatternGetBool(pt, FC_SCALABLE, 0, &bv) == 0 && bv)
 				fi.info |= Font::SCALEABLE;
 			String h = ToLower(fi.name);

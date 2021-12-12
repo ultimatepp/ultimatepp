@@ -1,6 +1,7 @@
 // Predefined replacement fonts; if codepoint is not found in these, remaining fonts cmaps from host are loaded
 
 #if defined(PLATFORM_POSIX) && !defined(PLATFORM_COCOA)
+{ "Noto Color Emoji", { 2,0,6,9,0,0,0,0,0,0 }, { 0xa0000000,0x03a00000,0x00000000,0x00000000,0x00000038,0x00000000,0x00000000,0x00000001 } },
 { "Abyssinica SIL", { 2,0,0,0,0,0,0,0,0,0 }, { 0xfe1d0000,0x23400000,0x0080010c,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000 } },
 { "Andale Mono", { 2,11,5,9,0,0,0,0,0,4 }, { 0xff17e000,0x07000000,0x0000002c,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000 } },
 { "AnjaliOldLipi", { 2,0,6,3,0,0,0,0,0,0 }, { 0xfc100000,0x43000000,0x00000264,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000 } },
