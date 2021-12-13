@@ -20,7 +20,9 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 		return WString(b);
 	}
 #endif
-	return ToUtf32(s, n);
+	if(cs == CHARSET_UTF8)
+		return ToUtf32(s, n);
+	return ToUnicode(s, n, cs);
 }
 
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
