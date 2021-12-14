@@ -707,7 +707,11 @@ void ArrayCtrl::SetLineCy(int i, int cy)
 
 void ArrayCtrl::SetLineColor(int i, Color c)
 {
-	array.At(i).paper = c;
+	Color& lc = array.At(i).paper;
+	if(lc != c) {
+		lc = c;
+		RefreshRow(i);
+	}
 }
 
 int  ArrayCtrl::GetTotalCy() const
