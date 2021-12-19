@@ -32,6 +32,8 @@ void GLCtrl::Init()
 	Add(pane.SizePos());
 #endif
 	restore_gl_viewport__ = SetCurrentViewport;
+	MemoryIgnoreNonMainLeaks();
+	MemoryIgnoreNonUppThreadsLeaks(); // Linux drivers leak memory in threads
 }
 
 Image GLCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)

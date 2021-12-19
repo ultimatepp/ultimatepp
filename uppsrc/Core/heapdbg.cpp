@@ -2,6 +2,39 @@
 
 // #define LOGAF
 
+namespace Upp {
+
+static bool  sIgnoreNonMainLeaks;
+static bool  sIgnoreNonUppThreadsLeaks;
+
+static dword serial_number = 0;
+static dword serial_main_begin;
+static dword serial_main_end;
+
+dword MemoryGetCurrentSerial() { return serial_number; }
+
+void MemoryIgnoreNonMainLeaks()
+{ // ignore leaks outside _APP_MAIN
+	sIgnoreNonMainLeaks = true;
+}
+
+void MemoryIgnoreNonUppThreadsLeaks()
+{ // ignore leaks in threads not launched by U++ Thread
+	sIgnoreNonUppThreadsLeaks = true;
+}
+
+void MemorySetMainBegin__()
+{
+	serial_main_begin = serial_number;
+}
+
+void MemorySetMainEnd__()
+{
+	serial_main_end = serial_number;
+}
+
+};
+
 #if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 
 int sMemDiagInitCount;
@@ -85,12 +118,14 @@ void *MemoryAllocSz_(size_t& size);
 
 void  DbgSet(DbgBlkHeader *p, size_t size)
 {
-	static dword serial_number = 0;
+	bool allow_leak = s_ignoreleaks ||
+	                  sIgnoreNonUppThreadsLeaks && !Thread::IsUpp() && !Thread::IsMain()
 #if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
-	p->serial = sMemDiagInitCount == 0 || s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
-#else
-	p->serial = s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
+	                  || sMemDiagInitCount == 0
 #endif
+	;
+
+	p->serial = allow_leak ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
 	p->size = size;
 	if(s_allocbreakpoint && s_allocbreakpoint == serial_number)
 		__BREAK__;
@@ -209,7 +244,8 @@ void MemoryDumpLeaks()
 	bool leaks = false;
 	int n = 0;
 	while(p != &dbg_live) {
-		if(p->serial) {
+		dword serial = (unsigned int)~(p->serial ^ (uintptr_t)p);
+		if(p->serial && (!sIgnoreNonMainLeaks || serial >= serial_main_begin && serial < serial_main_end)) {
 			if(!leaks)
 				VppLog() << "\n\nHeap leaks detected:\n";
 			leaks = true;
@@ -222,7 +258,6 @@ void MemoryDumpLeaks()
 					++n;
 					p = p->next;
 				}
-				sprintf(b, "%d", n);
 				VppLog() << "\n*** TOO MANY LEAKS (" << n << ") TO LIST THEM ALL\n";
 				break;
 			}

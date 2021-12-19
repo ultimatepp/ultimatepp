@@ -90,6 +90,8 @@ void GLCtrl::Create()
 
 void GLCtrl::Sync()
 {
+	MemoryIgnoreLeaksBlock __;
+
 	if(win) {
 		Rect r = GetScreenView() - GetTopCtrl()->GetScreenRect().TopLeft();
 		bool b = IsVisible() && r.GetWidth() > 0 && r.GetHeight() > 0;

@@ -170,6 +170,11 @@ inline void TinyFree(int, void *ptr) { return MemoryFree(ptr); }
 
 #endif
 
+dword MemoryGetCurrentSerial();
+
+void  MemoryIgnoreNonMainLeaks();
+void  MemoryIgnoreNonUppThreadsLeaks();
+
 struct MemoryIgnoreLeaksBlock {
 	MemoryIgnoreLeaksBlock()  { MemoryIgnoreLeaksBegin(); }
 	~MemoryIgnoreLeaksBlock() { MemoryIgnoreLeaksEnd(); }

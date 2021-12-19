@@ -69,6 +69,8 @@ struct sThreadParam {
 	bool              noshutdown;
 };
 
+static thread_local bool sUppThread = false;
+
 static
 #ifdef PLATFORM_WIN32
 	#ifdef CPU_64
@@ -82,6 +84,7 @@ static
 sThreadRoutine(void *arg)
 {
 	LLOG("sThreadRoutine");
+	sUppThread = true;
 	auto p = (sThreadParam *)arg;
 	try {
 		p->cb();
@@ -189,6 +192,11 @@ Thread::~Thread()
 	vm.Leave();
 #endif
 #endif
+}
+
+bool Thread::IsUpp()
+{
+	return sUppThread;
 }
 
 bool Thread::IsST() //the containing thread (of wich there may be multiple) has not run its Run() yet

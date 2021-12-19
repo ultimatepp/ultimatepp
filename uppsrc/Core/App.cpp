@@ -440,10 +440,15 @@ void Exit(int code)
 	throw ExitExc();
 }
 
+void MemorySetMainBegin__();
+void MemorySetMainEnd__();
+
 void AppExecute__(void (*app)())
 {
 	try {
+		MemorySetMainBegin__();
 		(*app)();
+		MemorySetMainEnd__();
 	}
 	catch(ExitExc) {
 		return;

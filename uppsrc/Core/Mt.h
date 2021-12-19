@@ -80,6 +80,7 @@ public:
 
 	static bool IsST();
 	static bool IsMain();
+	static bool IsUpp();
 	static int  GetCount();
 	static void BeginShutdownThreads();
 	static void EndShutdownThreads();

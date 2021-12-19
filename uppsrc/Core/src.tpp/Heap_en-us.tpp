@@ -63,7 +63,7 @@ is slightly faster.&]
 [s2;%% Attempts to change the size of block at [%-*@3 ptr] to something 
 closer to [%-*@3 newsize]. The real value is returned in [%-*@3 newsize]. 
 Returns true on success.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:TinyAlloc`(int`): [@(0.0.255) void]_`*[* TinyAlloc]([@(0.0.255) int]_[*@3 size])&]
 [s2;%% Allocates the block of [%-*@3 size] bytes. This allows for allocation 
@@ -76,7 +76,7 @@ TinyFree.&]
 e], [@(0.0.255) void]_`*[*@3 ptr])&]
 [s2;%% Frees the block allocated with TinyAlloc, [%-*@3 size] has to 
 be the same as during allocation.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:tiny`_new`(Args`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T],
  [@(0.0.255) class...]_[*@4 Args]>_[*@4 T]_`*[* tiny`_new]([*@4 Args][@(0.0.255) ...]_args)&]
@@ -121,6 +121,43 @@ the standard log.&]
 b])&]
 [s2;%% This debug / diagnostics function limits memory usage to [%-*@3 kb] 
 KBs. If the application allocates more, it stops with error.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:MemoryGetCurrentSerial`(`): [_^Upp`:`:dword^ dword]_[* MemoryGetCurrentSerial
+]()&]
+[s2;%% In debug mode, returns the serial number of the next allocated 
+block. This number is eventually listed in the log in case there 
+are any leaks.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:MemoryIgnoreNonMainLeaks`(`): [@(0.0.255) void]_[* MemoryIgnoreNonMainLeaks](
+)&]
+[s2;%% Makes leaks detector ignore leaks by global constructors.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:MemoryIgnoreNonUppThreadsLeaks`(`): [@(0.0.255) void]_[* MemoryIgnoreNonUppTh
+readsLeaks]()&]
+[s2;%% Makes leaks dectector ignore leaks created by threads that 
+are not launched by U`+`+ Thread class.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:MemoryIgnoreLeaksBegin`(`): [@(0.0.255) void]_[* MemoryIgnoreLeaksBegin]()&]
+[s2;%% Makes leak detector ignore leaks of blocks allocated until 
+[%-* MemoryIgnoreLeaksEnd ]is called. Calls can be nested. This 
+is especially useful when working with 3rd party code that might 
+e.g. create static leaks (memory is allocated just once, but 
+library does not bother to deallocate on exit).&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:MemoryIgnoreLeaksEnd`(`): [@(0.0.255) void]_[* MemoryIgnoreLeaksEnd]()&]
+[s2;%% Ends the suppression started by MemoryIgnoreLeaksBegin.&]
+[s3;%% &]
+[s4; &]
+[s1;:Upp`:`:MemoryIgnoreLeaksBlock`:`:struct: [@(0.0.255) struct]_[* MemoryIgnoreLeaksBlo
+ck]&]
+[s2;%% This helper class calls [%-* MemoryIgnoreLeaksBegin] in constructor 
+and [%-* MemoryIgnoreLeaksEnd], in other works supresses leaks 
+till the end of block.&]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Heap tuning]]}}&]
 [s0;%% &]
