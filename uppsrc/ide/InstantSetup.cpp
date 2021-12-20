@@ -196,21 +196,23 @@ void InstantSetup()
 				default_method = Nvl(default_method, method);
 		}
 
-	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019 };
+	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, BT_2022 };
 	DirFinder df;
 
-	for(int version = VS_2015; version <= BT_2019; version++)
+	for(int version = VS_2015; version <= BT_2022; version++)
 		for(int x64 = 0; x64 < 2; x64++) {
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVC19P", BT_2019, "MSBT19",
+			                                   BT_2022, "MSBT22",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
 			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
-			                                 "MSC19"
+			                                 BT_2022, "MSC22",
+			                                 "MSC22"
 			                 ) + ToUpper(x64s);
 		
 		#ifdef INSTANT_TESTING
@@ -240,6 +242,7 @@ void InstantSetup()
 				                            BT_2019, "/microsoft visual studio/2019/buildtools/vc/tools/msvc",
 				                            VS_2019, "/microsoft visual studio/2019/community/vc/tools/msvc",
 				                            VSP_2019, "/microsoft visual studio/2019/professional/vc/tools/msvc",
+				                            BT_2022, "/microsoft visual studio/2022/buildtools/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
@@ -352,7 +355,7 @@ void InstantSetup()
 				bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
 				bmSet(bm, "DISABLE_BLITZ", "");
 				bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
-				bmSet(bm, "DEBUGGER", findarg(version, BT_2017, BT_2019) >= 0 ? String()
+				bmSet(bm, "DEBUGGER", findarg(version, BT_2017, BT_2019, BT_2022) >= 0 ? String()
 				                      : GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
 
 				bm.GetAdd("PATH") = Join(bins, ";");

@@ -125,7 +125,7 @@ bool MscBuilder::IsMsc86() const
 {
 	return HasFlag("MSC8") || HasFlag("MSC9") || HasFlag("MSC10") || HasFlag("MSC11")
 		|| HasFlag("MSC12") || HasFlag("MSC15") || HasFlag("MSC14") || HasFlag("MSC17")
-		|| HasFlag("MSC19");
+		|| HasFlag("MSC19") || HasFlag("MSC22");
 }
 
 bool MscBuilder::IsMscArm() const
@@ -137,7 +137,7 @@ bool MscBuilder::IsMsc64() const
 {
 	return HasFlag("MSC8X64") || HasFlag("MSC9X64") || HasFlag("MSC10X64") || HasFlag("MSC11X64")
 		|| HasFlag("MSC12X64") || HasFlag("MSC14X64") || HasFlag("MSC15X64") || HasFlag("MSC17X64")
-		|| HasFlag("MSC19X64");
+		|| HasFlag("MSC19X64") || HasFlag("MSC22X64");
 }
 
 String MscBuilder::LinkerName() const
@@ -491,6 +491,7 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 		|| HasFlag("MSC15") || HasFlag("MSC15X64")
 		|| HasFlag("MSC17") || HasFlag("MSC17X64")
 		|| HasFlag("MSC19") || HasFlag("MSC19X64")
+		|| HasFlag("MSC22") || HasFlag("MSC22X64")
 	;
 	bool is_shared = HasFlag("SO");
 	String linker, lib;
@@ -623,6 +624,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		|| HasFlag("MSC15") || HasFlag("MSC15X64")
 		|| HasFlag("MSC17") || HasFlag("MSC17X64")
 		|| HasFlag("MSC19") || HasFlag("MSC19X64")
+		|| HasFlag("MSC22") || HasFlag("MSC22X64")
 	;
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
@@ -756,6 +758,8 @@ INITIALIZER(MscBuilder)
 	RegisterBuilder("MSC17X64", CreateMscBuilder);
 	RegisterBuilder("MSC19", CreateMscBuilder);
 	RegisterBuilder("MSC19X64", CreateMscBuilder);
+	RegisterBuilder("MSC22", CreateMscBuilder);
+	RegisterBuilder("MSC22X64", CreateMscBuilder);
 	RegisterBuilder("EVC_ARM", CreateMscBuilder);
 	RegisterBuilder("EVC_MIPS", CreateMscBuilder);
 	RegisterBuilder("EVC_SH3", CreateMscBuilder);
