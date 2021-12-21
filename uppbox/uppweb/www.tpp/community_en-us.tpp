@@ -1,8 +1,8 @@
 topic "U++ development cycle guide";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,3#31310162474203024125188417583966:caption]
 [b83;*4 $$2,3#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; U`+`+ usage and development cycle guide&]
 [s2; Forum&]
@@ -46,14 +46,13 @@ issue can take weeks. If problem cannot be fixed immediately,
 it is usually moved to redmine issue tracking system. You can 
 check the what issues are currently open [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp`/issues^ h
 ere].&]
-[s2; SVN&]
-[s3; U`+`+ currently uses svn as cvs. Main svn is at svn://www.ultimatepp.org/upp.&]
-[s3; SVN has anonymous read`-only access, to commit you need credentials. 
-U`+`+ is using quite complex per`-directory system of rights; 
-rights to some directories are very restricted and to change 
-the code there you need to post a patch (for code review). To 
-obtain commit rights, please send forum PM message to user `'mirek`'.&]
-[s3; The SVN contains following subdirectories (U`+`+ nests):&]
+[s2; GIT&]
+[s3; U`+`+ currently uses git as their main version control tool. 
+Main git repository are located under [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ h
+ttps://github.com/ultimatepp/ultimatepp]. You could learn more 
+about U`+`+ framework development with git from following documentation 
+[^topic`:`/`/uppweb`/www`/GITRepository`_en`-us^ site].&]
+[s3; The GIT contains following sub`-directories (U`+`+ nests):&]
 [s0;2 &]
 [ {{1995:8005^ [s3;b0;a0; [* uppsrc]]
 ::= [s3;b0;a0; This contains `"canonical`" U`+`+ library packages, albeit 
@@ -68,9 +67,6 @@ releases.]
 ::^ [s3;b0;a0; [* tutorial]]
 ::= [s3;b0;a0; Companion examples for tutorials. This gets exported into 
 U`+`+ releases.]
-::^ [s3;b0;a0; [* bazaar]]
-::= [s3;b0;a0; Community contributed packages. This gets exported into 
-U`+`+ releases.]
 ::^ [s3;b0;a0; [* upptst]]
 ::= [s3;b0;a0; Manual tests.]
 ::^ [s3;b0;a0; [* autotest]]
@@ -80,13 +76,7 @@ U`+`+ releases.]
 ::^ [s3;b0;a0; [* autotst]]
 ::= [s3;b0;a0; Special packages to test the autotest system.]
 ::^ [s3;b0;a0; [* rainbow]]
-::= [s3;b0;a0; Testing area for developing new GUI backends.]
-::^ [s3;b0;a0; [* uppsrc2]]
-::= [s3;b0;a0; Obsoleted packages.]
-::^ [s3;b0;a0; [* archive]]
-::= [s3;b0;a0; Archived abandoned code.]
-::^ [s3;b0;a0; [* uppdev]]
-::= [s3;b0;a0; This is testing area, total mess. Best ignored.]}}&]
+::= [s3;b0;a0; Testing area for developing new GUI backends.]}}&]
 [s2; Redmine&]
 [s3; All longer term U`+`+ issues should be tracked. We are using 
 Redmine issue tracking system for this, which is [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp`/issues^ h
