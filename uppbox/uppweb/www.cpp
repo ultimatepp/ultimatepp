@@ -793,7 +793,6 @@ CONSOLE_APP_MAIN
 	Cout() << "PdfDir: " << pdfdir << "\n";
 
 #ifdef _DEBUG
-	doGit = false;
 	outPdf = false;
 #endif
 
@@ -851,7 +850,7 @@ CONSOLE_APP_MAIN
 		Cout() << "Processing git\n";
 		#ifdef bmGIT_REVCOUNT
 			auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
-			escape.Add("LATESTSVN", version);
+			escape.Add("LATESTGIT", version);
 		#endif
 	}
 
