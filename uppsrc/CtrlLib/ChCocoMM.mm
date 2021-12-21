@@ -51,7 +51,8 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 	    const CGRect dirtyRect = CGRectMake(20, 20, 100, 100);
 	
 		if(Upp::findarg(type, COCO_SCROLLTHUMB, COCO_SCROLLTRACK) >= 0) {
-			NSScroller *scroller = [[NSScroller alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
+			int cx = [NSScroller scrollerWidthForControlSize:NSControlSizeRegular scrollerStyle:NSScrollerStyleLegacy];
+			NSScroller *scroller = [[NSScroller alloc] initWithFrame:NSMakeRect(0, 0, 100, cx)];
 		    scroller.floatValue = 0;
 		    scroller.knobProportion = 1;
 			scroller.knobStyle = NSScrollerKnobStyleDefault;
@@ -60,7 +61,7 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 			if(type == COCO_SCROLLTHUMB)
 				[scroller drawKnob];
 			else
-				[scroller drawKnobSlotInRect:dirtyRect highlight:YES];
+				[scroller drawKnobSlotInRect:CGRectMake(20, 20, 100, cx) highlight:YES];
 			[scroller release];
 		}
 		else

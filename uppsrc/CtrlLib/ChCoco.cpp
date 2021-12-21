@@ -149,7 +149,7 @@ void ChHostSkin()
 		s.arrowsize = 0;
 		Image track = CocoImg(COCO_SCROLLTRACK);
 		Image thumb = CocoImg(COCO_SCROLLTHUMB);
-
+		
 		s.barsize = track.GetHeight();
 		s.thumbwidth = thumb.GetHeight();
 		s.thumbmin = 2 * s.barsize;
