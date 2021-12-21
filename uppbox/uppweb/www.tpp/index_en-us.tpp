@@ -101,8 +101,6 @@ is your place]]
 ::l0/25r8/25 [s0;>%% [@(114)2 Let`'s go!]]
 ::^l8/25@2-2 [s4;i150;O0;%% [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp^ Project 
 management (Redmine)]&]
-[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ SVN install 
-and permissions]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/GITRepository`_en`-us^ GIT 
 repository]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Bug reports 
