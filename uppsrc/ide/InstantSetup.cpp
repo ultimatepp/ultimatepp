@@ -62,6 +62,14 @@ DirFinder::DirFinder()
 			pf = AppendFileName(pf, "Microsoft Visual Studio");
 			if(DirectoryExists(pf))
 				GatherDirs(path, pf);
+			else {
+				pf = GetProgramsFolder();
+				pf.Set(0, drive);
+				pf = AppendFileName(pf, "Microsoft Visual Studio");
+				if(DirectoryExists(pf))
+					GatherDirs(path, pf);
+				
+			}
 		}
 	}
 
@@ -196,7 +204,7 @@ void InstantSetup()
 				default_method = Nvl(default_method, method);
 		}
 
-	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, BT_2022 };
+	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, VS_2022, BT_2022 };
 	DirFinder df;
 
 	for(int version = VS_2015; version <= BT_2022; version++)
@@ -204,14 +212,14 @@ void InstantSetup()
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVC19P", BT_2019, "MSBT19",
-			                                   BT_2022, "MSBT22",
+			                                   VS_2022, "MSVS22", BT_2022, "MSBT22",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
 			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
-			                                 BT_2022, "MSC22",
+			                                 VS_2022, "MSC22", BT_2022, "MSC22",
 			                                 "MSC22"
 			                 ) + ToUpper(x64s);
 		
@@ -243,6 +251,7 @@ void InstantSetup()
 				                            VS_2019, "/microsoft visual studio/2019/community/vc/tools/msvc",
 				                            VSP_2019, "/microsoft visual studio/2019/professional/vc/tools/msvc",
 				                            BT_2022, "/microsoft visual studio/2022/buildtools/vc/tools/msvc",
+				                            VS_2022, "/microsoft visual studio/2022/community/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
