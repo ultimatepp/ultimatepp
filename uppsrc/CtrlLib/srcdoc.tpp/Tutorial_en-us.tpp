@@ -775,7 +775,8 @@ logical coordinate the specifies the center position.&]
 [s7; -|Button lt, rt, lb, rb, lv, ht, hv, cb, rc;&]
 [s7; &]
 [s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`").Sizeable();&]
+[s7; -|-|Title(`"My application with button`").Sizeable().SetMinSize(Zsz(640, 
+480));&]
 [s7; -|-|`*this&]
 [s7; [* -|-|-|<< lt.SetLabel(`"left`-top`").LeftPos(10, 200).TopPos(10, 
 40)]&]

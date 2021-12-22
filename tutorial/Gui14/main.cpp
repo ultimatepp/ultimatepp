@@ -6,7 +6,7 @@ struct MyAppWindow : TopWindow {
 	Button lt, rt, lb, rb, lv, ht, hv, cb, rc;
 
 	MyAppWindow() {
-		Title("My application with button").Sizeable();
+		Title("My application with button").Sizeable().SetMinSize(Zsz(640, 480));
 		*this
 			<< lt.SetLabel("left-top").LeftPos(10, 200).TopPos(10, 40)
 			<< rt.SetLabel("right-top").RightPos(10, 200).TopPos(10, 40)
