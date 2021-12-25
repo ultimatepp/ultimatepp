@@ -1,5 +1,6 @@
 #include "www.h"
 
+#include <build_info.h>
 #include <plugin/ftp/ftp.h>
 
 #define IMAGECLASS WWW
@@ -45,7 +46,7 @@ String pdfdir    = "/var/www";
 String bazaar;
 bool outPdf;
 bool outHtml;
-bool doSvn;
+bool doGit;
 
 String GetRcFile(const char *s)
 {
@@ -242,46 +243,7 @@ String FormatDateRFC822(const Time& t) {
 	              tz>0?"+":"",tz/60*100+(tz+1440)%60);
 }
 
-void CreateRssFeed() {
-	String header="<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" 
-	"<channel>\n"
-	"<title>Ultimate++ svn changes</title>\n" 
-	"<link>http://ultimatepp.org/</link>\n"
-	"<description>This feed offers list of commits to Ultimate++ framework svn repository</description>\n"
-	"<lastBuildDate>"+ FormatDateRFC822(GetSysTime()) + "</lastBuildDate>\n"
-	"<language>en-us</language>\n"
-	"<atom:link href=\"http://ultimatepp.org/svnchanges.xml\" rel=\"self\" type=\"application/rss+xml\" />\n\n";
-	
-	String items;
-	for(int i = 0; i < min(30,svnlog.GetCount()); i++){
-		items+="<item>\n"
-		"<title>Revision " + svnlog[i].revision + "</title>\n" 
-		"<link>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</link>\n"
-		"<guid>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</guid>\n"
-		"<pubDate>" + FormatDateRFC822(svnlog[i].time) + "</pubDate>\n"
-		"<description><![CDATA[\n"
-		"	<table style=\"font-size:small;\">\n" 
-		"		<tr><td>Revision:</td><td><b>" + svnlog[i].revision + "</b></td></tr>\n"
-		"		<tr><td>Description:</td><td><code>" + svnlog[i].msg + "</code></td></tr>\n"
-		"		<tr><td>Submitted:</td><td><i>" + FormatDateRFC822(svnlog[i].time) + "</i> by <i>" + svnlog[i].author + "</i></td></tr>\n"
-		"		<tr><td>Affected files:</td><td>&nbsp;</td></tr>\n"
-		"		<tr><td colspan=\"2\">\n"
-		"			<div style=\"margin-left:20px;\">\n";
-		for(int j = 0; j < svnlog[i].changes.GetCount(); j++)
-			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a>&nbsp;"
-			       "<a href=\"http://code.google.com/p/upp-mirror/source/browse" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].path + "</a><br>\n";
-		items+=
-		"			</div>\n"
-		"		</td></tr>\n"
-		"	</table>\n"
-		"]]></description>\n" 
-		"</item>\n\n";
-	}
-	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
-}
-
 ArrayMap<String, Topic> tt;
-//Vector<String> ttFullTitles;
 Vector<int> ttId;
 Vector<String> ttFullIds;
 
@@ -760,7 +722,7 @@ struct ProgramData {
 	bool ftpUpload;
 	bool outPdf;
 	bool outHtml;
-	bool doSvn;
+	bool doGit;
 	void Xmlize(XmlIO xml)	{
 		xml
 			("rootdir", rootdir)
@@ -769,7 +731,7 @@ struct ProgramData {
 			("pdfdir", pdfdir)
 			("ftpUpload", ftpUpload)
 			("outPdf", outPdf)
-			("doSvn", doSvn)
+			("doGit", doGit)
 			("outHtml", outHtml)
 		;
 	}
@@ -786,7 +748,7 @@ CONSOLE_APP_MAIN
 #endif
 	outPdf = true;
 	outHtml = true;
-	doSvn = true;
+	doGit = true;
 
 
 	RLOG("--- uppweb started at " << GetSysTime());
@@ -809,7 +771,7 @@ CONSOLE_APP_MAIN
 //			ftpupload = data.ftpUpload;
 			outPdf    = data.outPdf;
 			outHtml   = data.outHtml;
-			doSvn     = data.doSvn;
+			doGit     = data.doGit;
 			cfgloaded = true;
 		}
 	}
@@ -821,7 +783,7 @@ CONSOLE_APP_MAIN
 //		data.ftpUpload = ftpupload;
 		data.outPdf    = outPdf;
 		data.outHtml   = outHtml;
-		data.doSvn	   = doSvn;
+		data.doGit	   = doGit;
 		StoreAsXMLFile(data, NULL, configFile);
 	}
 	Cout() << "RootDir: " << rootdir << "\n";
@@ -831,7 +793,6 @@ CONSOLE_APP_MAIN
 	Cout() << "PdfDir: " << pdfdir << "\n";
 
 #ifdef _DEBUG
-	doSvn = false;
 	outPdf = false;
 #endif
 
@@ -885,17 +846,12 @@ CONSOLE_APP_MAIN
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
 	
-	if (doSvn) {
-		Cout() << "Processing svn\n";
-		GetSvnList(svndata, rootdir);
-		GetSvnLog(svnlog);
-		CreateRssFeed();
-		if (svnlog.GetCount() > 0) {
-			escape.Add("LATESTSVN", svnlog[0].revision);
-			//Index<String> css;
-			//escape.Add("SVNTABLE", QtfAsHtml(SvnChanges(svnlog, "", 100), css, links, labels, targetdir));
-			//escape.Add("ANCHOR", "<span id=\"svnTableAnchor\"></span>");
-		}
+	if (doGit) {
+		Cout() << "Processing git\n";
+		#ifdef bmGIT_REVCOUNT
+			auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
+			escape.Add("LATESTGIT", version);
+		#endif
 	}
 
 	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
