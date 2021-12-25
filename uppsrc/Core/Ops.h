@@ -216,7 +216,7 @@ inline bool FitsInInt64(double x)
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
 
-#if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || defined(COMPILER_CLANG))
+#if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
 
 inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
