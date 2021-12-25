@@ -8,6 +8,7 @@ struct DirFinder {
 	Vector<String> dir;
 
 	String Get(const String& substring, const char *files);
+	String GetVisualStudioFolder(int drive, String programFolder);
 	void   GatherDirs(Index<String>& path, const String& dir);
 	
 	DirFinder();
@@ -57,18 +58,13 @@ DirFinder::DirFinder()
 	for(int i = 0; i < root.GetCount(); i++) {
 		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
 			int drive = *root[i].filename;
-			String pf = GetProgramsFolderX86();
-			pf.Set(0, drive);
-			pf = AppendFileName(pf, "Microsoft Visual Studio");
-			if(DirectoryExists(pf))
+			String x86pf = GetVisualStudioFolder(drive, GetProgramsFolderX86());
+			if(DirectoryExists(x86pf)) {
+				GatherDirs(path, x86pf);
+			}
+			String pf = GetVisualStudioFolder(drive, GetProgramsFolder());
+			if(DirectoryExists(pf)) {
 				GatherDirs(path, pf);
-			else {
-				pf = GetProgramsFolder();
-				pf.Set(0, drive);
-				pf = AppendFileName(pf, "Microsoft Visual Studio");
-				if(DirectoryExists(pf))
-					GatherDirs(path, pf);
-				
 			}
 		}
 	}
@@ -109,6 +105,15 @@ String DirFinder::Get(const String& substring, const char *files)
 		}
 	}
 	return path;
+}
+
+String DirFinder::GetVisualStudioFolder(int drive, String pf)
+{
+	constexpr auto VISUAL_STUDIO_FOLDER = "Microsoft Visual Studio";
+	
+	pf.Set(0, drive);
+	pf = AppendFileName(pf, VISUAL_STUDIO_FOLDER);
+	return pf;
 }
 
 bool CheckDirs(const Vector<String>& d, int count)
@@ -204,22 +209,22 @@ void InstantSetup()
 				default_method = Nvl(default_method, method);
 		}
 
-	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, VS_2022, BT_2022 };
+	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, VS_2022, VSP_2022, BT_2022 };
 	DirFinder df;
 
 	for(int version = VS_2015; version <= BT_2022; version++)
 		for(int x64 = 0; x64 < 2; x64++) {
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
-			                                   VS_2019, "MSVS19", VSP_2019, "MSVC19P", BT_2019, "MSBT19",
-			                                   VS_2022, "MSVS22", BT_2022, "MSBT22",
+			                                   VS_2019, "MSVS19", VSP_2019, "MSVSP19", BT_2019, "MSBT19",
+			                                   VS_2022, "MSVS22", VSP_2022, "MSVSP22", BT_2022, "MSBT22",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
 			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
-			                                 VS_2022, "MSC22", BT_2022, "MSC22",
+			                                 VS_2022, "MSC22", VSP_2022, "MSC22", BT_2022, "MSC22",
 			                                 "MSC22"
 			                 ) + ToUpper(x64s);
 		
@@ -252,6 +257,7 @@ void InstantSetup()
 				                            VSP_2019, "/microsoft visual studio/2019/professional/vc/tools/msvc",
 				                            BT_2022, "/microsoft visual studio/2022/buildtools/vc/tools/msvc",
 				                            VS_2022, "/microsoft visual studio/2022/community/vc/tools/msvc",
+				                            VSP_2022, "/microsoft visual studio/2022/professional/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
