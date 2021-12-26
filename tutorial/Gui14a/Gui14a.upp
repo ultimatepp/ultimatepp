@@ -1,0 +1,11 @@
+description "More about logical coordinates\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
