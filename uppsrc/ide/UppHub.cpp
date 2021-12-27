@@ -23,6 +23,19 @@ Color StatusPaper(const String& status)
 	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
 }
 
+void VerifyUppHubRequirements()
+{
+	if (HasGit())
+	{
+		return;
+	}
+		
+	ErrorOK(
+		"Git executable was not detected. UppHub will not work properly. Make sure git executable is present in your enviroment path. "
+		"More infromation about requierments you could find in our official UppHub [^https`:`/`/www`.ultimatepp`.org`/app`$ide`$UppHub`_en`-us`.html`#2^ documentation].&&"
+		"You could still use UppHub dialog and view available packages, but other operations like package download will do not work.");
+}
+
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
@@ -58,7 +71,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
 
 	UppHubDlg();
-	
+
 	bool Key(dword key, int count) override;
 };
 
@@ -523,6 +536,8 @@ void UppHubDlg::Reinstall()
 
 String UppHub()
 {
+	VerifyUppHubRequirements();
+	
 	UppHubDlg dlg;
 	dlg.Load();
 	dlg.Run();
