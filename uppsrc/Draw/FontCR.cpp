@@ -338,7 +338,9 @@ int  PanoseDistance(byte *a, byte *b)
 
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
+	bool prefer_color = PreferColorEmoji(chr);
 	static VectorMap<int, sRFace *> rface[2]; // face index to font info
+	static Vector<int> color[2]; // colorimg faces
 	static bool all_loaded;
 	if(rface[0].GetCount() == 0) {
 		for(int i = 0; i < __countof(sFontReplacements); i++) {
@@ -347,6 +349,9 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 				rface[0].Add(q) = &sFontReplacements[i];
 			}
 		}
+		for(int i = 0; i < Font::GetFaceCount(); i++)
+			if(Font::GetFaceInfo(i) & Font::COLORIMG)
+				color[0].Add(i);
 	}
 
 	int face = fnt.GetFace();
@@ -399,6 +404,11 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 				distance.Add(PanoseDistance(rface[pass][i]->panose, panose));
 				candidate.Add(rface[pass].GetKey(i));
 			}
+		if(prefer_color)
+			for(int fi : color[pass]) {
+				distance.Add(-1);
+				candidate.Add(fi);
+			}
 		StableIndexSort(distance, candidate);
 		for(int fi : candidate) {
 			f.Face(fi);
@@ -444,6 +454,8 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 						rface[1].Add(i, &n);
 					}
 				}
+				if((Font::GetFaceInfo(i) & Font::COLORIMG) && FindIndex(color[0], i) < 0)
+					color[1].Add(i);
 			}
 		}
 	}

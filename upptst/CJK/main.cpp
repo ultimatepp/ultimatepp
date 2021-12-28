@@ -11,6 +11,9 @@ struct MyApp : TopWindow {
 		text << " Quick brown fox, 訓民正音 (훈민정음) ";
 		
 		w.DrawRect(GetSize(), White());
+		
+//		w.DrawText(500, 500, "Hello!" + WString(0x1F970, 1).ToString() + " Hello again!");
+		
 		int y = 10;
 		int x = 10;
 		for(int i = 0; i < 3/*Font::GetFaceCount()*/; i++)

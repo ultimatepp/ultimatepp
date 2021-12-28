@@ -421,21 +421,29 @@ struct GlyphInfoMaker : ValueMaker {
 		CharEntry& e = CreateRawValue<CharEntry>(object);
 		e.font = font.AsInt64();
 		e.chr = chr;
-		e.info = GetGlyphInfoSys(font, chr);
-		if(!e.info.IsNormal()) {
-			ComposedGlyph cg;
-			Font rfnt;
-			if(Compose(font, chr, cg)) {
-				e.info.lspc = -1;
-				e.info.rspc = (int16)cg.basic_char;
+		Font rfnt;
+		if(PreferColorEmoji(chr) && !(font.GetFaceInfo() & Font::COLORIMG)
+		   && Replace(font, chr, rfnt) && rfnt != font) {
+			e.info.width = 0x8000;
+			e.info.lspc = rfnt.GetFace();
+			e.info.rspc = rfnt.GetHeight();
+		}
+		else {
+			e.info = GetGlyphInfoSys(font, chr);
+			if(!e.info.IsNormal()) {
+				ComposedGlyph cg;
+				if(Compose(font, chr, cg)) {
+					e.info.lspc = -1;
+					e.info.rspc = (int16)cg.basic_char;
+				}
+				else
+				if(Replace(font, chr, rfnt)) {
+					e.info.lspc = rfnt.GetFace();
+					e.info.rspc = rfnt.GetHeight();
+				}
+				else
+					e.info.lspc = -2;
 			}
-			else
-			if(Replace(font, chr, rfnt)) {
-				e.info.lspc = rfnt.GetFace();
-				e.info.rspc = rfnt.GetHeight();
-			}
-			else
-				e.info.lspc = -2;
 		}
 		return sizeof(e);
 	}

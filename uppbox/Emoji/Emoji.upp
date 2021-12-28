@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	TypeReader.h,
+	TypeReader.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

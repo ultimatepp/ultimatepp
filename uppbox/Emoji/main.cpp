@@ -88,14 +88,16 @@ struct MyApp : TopWindow {
 		int x = 10;
 		Font fnt(Font::FindFaceNameIndex("Noto Color Emoji"), 20);
 		FontTypeReader r;
-		r.Open(font);
+		r.Open(fnt);
 		for(auto r : r.ranges) {
 			for(int c = r.a; c <= r.b; c++) {
 				w.DrawText(x, y, WString(c, 1), fnt);
+				w.DrawText(x + fnt[c], y, WString(c, 1));
+				w.DrawText(x + fnt[c] + StdFont()[c] + 4, y, Format("%x", c));
 				y += 30;
 				if(y > GetSize().cy - 30) {
 					y = 10;
-					x += 100;
+					x += 130;
 				}
 			}
 		}
@@ -104,81 +106,4 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN {
 	MyApp().Sizeable().Zoomable().Run();
-}
-
-GUI_APP_MAIN
-{
-//	FileIn in("C:/Windows/Fonts/arial.ttf");
-/*
-	FileIn in("D:\\xxx\\msyh.ttc");
-	DDUMPHEX(ReadFontTable(in, "cmap", 0));
-	DDUMPHEX(ReadFontTable(in, "cmap", 1));
-	DDUMPHEX(ReadFontTable(in, "cmap", 2));
-	return;
-*/
-#if 1
-/*	for(int i = 0; i < Font::GetFaceCount(); i++)
-		DDUMP(Font::GetFaceName(i));
-	return;*/
-	Font font(Font::FindFaceNameIndex("Noto Color Emoji"), 20);
-	FontTypeReader r;
-	r.Open(font);
-	for(auto r : r.ranges) {
-		DUMPHEX(r.a);
-		DUMPHEX(r.b);
-		RLOG("=================");
-	}
-	return;
-#endif
-	Progress pi;
-	pi.SetTotal(Font::GetFaceCount());
-	Vector<String> name;
-	for(int i = 0; i < Font::GetFaceCount(); i++)
-		name.Add(Font::GetFaceName(i));
-	for(int i : GetSortOrder(name)) {
-		String f = Font::GetFaceName(i);
-		pi.SetText(f);
-		if(pi.StepCanceled())
-			break;
-		Font fnt;
-		fnt.FaceName(f);
-		FontTypeReader r;
-	//	r.Open(Arial(20).GetData());
-		r.Open(fnt);
-		if(r.panose.GetCount() == 10) {
-			dword h[8] = {0};
-			for(auto r : r.ranges) {
-				for(int c = r.a; c <= r.b; c++) {
-					c = max(c, 0);
-					if(c < 2048)
-						h[0] |= 0x80000000 >> (c >> 6);
-					else {
-						int bi = clamp(c - 2048, 0, 7*32*1024 - 1) >> 10;
-						ASSERT((bi >> 5) + 1 < 8);
-						h[(bi >> 5) + 1] |= 0x80000000 >> (bi & 31);
-					}
-				}
-			}
-			String l;
-			l << "{ " << AsCString(f);
-			l << ", { ";
-			bool first = true;
-			for(int h : r.panose) {
-				if(first)
-					first = false;
-				else
-					l << ",";
-				l << h;
-			}
-			l << " }, { ";
-			for(int i = 0; i < 8; i++) {
-				if(i) l << ",";
-				l << Format("0x%08x", (int)h[i]);
-			}
-			l << " } },";
-			LOG(l);
-		}
-	}
-	
-//	r.Open(Font(Font::FindFaceNameIndex("Segoe UI Emoji"), 20).GetData());
 }
