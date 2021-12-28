@@ -216,7 +216,12 @@ inline bool FitsInInt64(double x)
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
 
-#ifdef __SIZEOF_INT128__
+#if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
+
+inline
+byte addc64(uint64& result, const uint64& value, byte carry) {
+	return _addcarry_u64(carry, result, value, &result);
+}
 
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
@@ -224,11 +229,6 @@ uint64 mul64(uint64 a, uint64 b, uint64& hi)
 	unsigned __int128 prod =  (unsigned __int128)a * b;
 	hi = prod >> 64;
 	return prod;
-}
-
-inline
-byte addc64(uint64& result, const uint64& value, byte carry) {
-	return _addcarry_u64(carry, result, value, &result);
 }
 
 #elif defined(COMPILER_MSC) && defined(CPU_64)

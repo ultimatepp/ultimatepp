@@ -424,7 +424,7 @@ struct GlyphInfoMaker : ValueMaker {
 		Font rfnt;
 		if(PreferColorEmoji(chr) && !(font.GetFaceInfo() & Font::COLORIMG)
 		   && Replace(font, chr, rfnt) && rfnt != font) {
-			e.info.width = 0x8000;
+			e.info.width = (int16)0x8000;
 			e.info.lspc = rfnt.GetFace();
 			e.info.rspc = rfnt.GetHeight();
 		}
