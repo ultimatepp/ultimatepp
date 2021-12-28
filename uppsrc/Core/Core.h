@@ -68,6 +68,10 @@
 #include <intrin.h>
 #endif
 
+#ifdef COMPILER_GCC
+#include <x86intrin.h>
+#endif
+
 #endif
 
 #if defined(PLATFORM_POSIX)

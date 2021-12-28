@@ -216,12 +216,7 @@ inline bool FitsInInt64(double x)
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
 
-#if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
-
-inline
-byte addc64(uint64& result, const uint64& value, byte carry) {
-	return _addcarry_u64(carry, result, value, &result);
-}
+#ifdef __SIZEOF_INT128__
 
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
@@ -231,12 +226,22 @@ uint64 mul64(uint64 a, uint64 b, uint64& hi)
 	return prod;
 }
 
+inline
+byte addc64(uint64& result, const uint64& value, byte carry) {
+	return _addcarry_u64(carry, result, value, &result);
+}
+
 #elif defined(COMPILER_MSC) && defined(CPU_64)
 
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
 	return _umul128(a, b, &hi);
+}
+
+inline
+byte addc64(uint64& result, const uint64& value, byte carry) {
+	return _addcarry_u64(carry, result, value, &result);
 }
 
 #else
