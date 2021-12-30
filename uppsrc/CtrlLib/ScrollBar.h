@@ -185,19 +185,12 @@ inline ScrollBar::SectionInfo::SectionInfo(const ScrollBar* sb)
 inline int ScrollBarSize()                  { return ScrollBar::StyleDefault().barsize; }//!!
 
 typedef ScrollBar VScrollBar;
-// why this class even here at all?
-//
-//class VScrollBar : public ScrollBar {
-//public:
-//	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
-//};
 
 // should avoid to use.
 // introduced a full set of vtable for insignicant productivity gain.
 class HScrollBar : public ScrollBar {
 public:
-// why the following line exactly repeat what base has done?
-//	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
+	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
 
 	HScrollBar() { Horz(); }
 };
