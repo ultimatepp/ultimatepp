@@ -1,49 +1,9 @@
-struct SectionInfo{
-	
-	inline SectionInfo(const class ScrollBar* sb);
-	int Width(int section)const{
-		ASSERT(section>=0 && section<=6);
-		return End(section)-Start(section);
-	}
-	int Start(int section)const{
-		ASSERT(section>=0 && section<=7);
-		return starts[section];
-	}
-	int End(int section)const{
-		ASSERT(section>=0 && section<=6);
-		return starts[section+1];
-	}
-	String ToString()const{
-		String s;
-		s << '[' << Width(0);
-		for(int i = 1; i < 7; ++i)
-		{
-			s << ',' << Width(i);
-		}
-		s << ']';
-		return s;
-	}
-	int WhichSection(int p)const;
-	
-	int WhichSection(Point p)const
-	{
-		return !GetAll().Contains(p) ? -1 : WhichSection(horz ? p.x : p.y);
-	}
-	int GetHV(int x, int y)const{ return horz ? x : y; }
-	int& HV(int& x, int& y)const{ return horz ? x : y; }
-	Rect GetAll()const;
-	Rect Slider()const;
-	Rect GetPartRect(int i)const;
-	int  GetSliderSize()const { return End(4)-Start(2); }
-	
-	bool IsHorz()const{ return horz; }
-	int starts[8];
-	int wh; // width of a vertical scrollbar or height of a horz one.
-	bool horz;
-};
 
 class ScrollBar : public FrameCtrl<Ctrl> {
+	
 public:
+	struct SectionInfo;
+	
 	virtual Size GetStdSize() const;
 	virtual void Paint(Draw& draw);
 	virtual void LeftDown(Point p, dword);
@@ -78,8 +38,8 @@ private:
 	int     pagepos;
 	int     pagesize;
 	int     totalsize;
-	int     linesize;
-	int     minthumb;
+	int16     linesize;
+	int16     minthumb;
 
 	int8    push;
 	int8    light;
@@ -171,9 +131,52 @@ public:
 	virtual ~ScrollBar();
 
 	friend struct SectionInfo;
+	struct SectionInfo{
+		
+		inline SectionInfo(const class ScrollBar* sb);
+		int Width(int section)const{
+			ASSERT(section>=0 && section<=6);
+			return End(section)-Start(section);
+		}
+		int Start(int section)const{
+			ASSERT(section>=0 && section<=7);
+			return starts[section];
+		}
+		int End(int section)const{
+			ASSERT(section>=0 && section<=6);
+			return starts[section+1];
+		}
+		String ToString()const{
+			String s;
+			s << '[' << Width(0);
+			for(int i = 1; i < 7; ++i)
+			{
+				s << ',' << Width(i);
+			}
+			s << ']';
+			return s;
+		}
+		int WhichSection(int p)const;
+		
+		int WhichSection(Point p)const
+		{
+			return !GetAll().Contains(p) ? -1 : WhichSection(horz ? p.x : p.y);
+		}
+		int GetHV(int x, int y)const{ return horz ? x : y; }
+		int& HV(int& x, int& y)const{ return horz ? x : y; }
+		Rect GetAll()const;
+		Rect Slider()const;
+		Rect GetPartRect(int i)const;
+		int  GetSliderSize()const { return End(4)-Start(2); }
+		
+		bool IsHorz()const{ return horz; }
+		int starts[8];
+		int wh; // width of a vertical scrollbar or height of a horz one.
+		bool horz;
+	};
 };
 
-inline SectionInfo::SectionInfo(const ScrollBar* sb)
+inline ScrollBar::SectionInfo::SectionInfo(const ScrollBar* sb)
 {
 	ASSERT(sb != nullptr);
 	sb->GetSectionInfo(*this);
@@ -181,14 +184,20 @@ inline SectionInfo::SectionInfo(const ScrollBar* sb)
 
 inline int ScrollBarSize()                  { return ScrollBar::StyleDefault().barsize; }//!!
 
-class VScrollBar : public ScrollBar {
-public:
-	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
-};
+typedef ScrollBar VScrollBar;
+// why this class even here at all?
+//
+//class VScrollBar : public ScrollBar {
+//public:
+//	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
+//};
 
+// should avoid to use.
+// introduced a full set of vtable for insignicant productivity gain.
 class HScrollBar : public ScrollBar {
 public:
-	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
+// why the following line exactly repeat what base has done?
+//	int operator=(int pagepos)              { Set(pagepos); return pagepos; }
 
 	HScrollBar() { Horz(); }
 };
@@ -215,7 +224,6 @@ public:
 protected:
 	Ctrl      *box;
 	ParentCtrl the_box;
-	
 	
 	StaticRect box_bg;
 	int        box_type;

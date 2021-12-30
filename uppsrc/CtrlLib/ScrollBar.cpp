@@ -294,7 +294,7 @@ bool  ScrollBar::Set(int apagepos) {
 	if(pagepos > totalsize - pagesize) pagepos = totalsize - pagesize;
 	if(pagepos < 0) pagepos = 0;
 	int slsize = SectionInfo(this).GetSliderSize();
-	int mint = max(minthumb, style->thumbmin);
+	int mint = max((int)minthumb, style->thumbmin);
 	if(totalsize <= 0)
 		SetThumb(0, slsize);
 	else {
@@ -348,7 +348,7 @@ void ScrollBar::SetTotal(int _totalsize) {
 
 void ScrollBar::Position() {
 	int slsize = SectionInfo(this).GetSliderSize();
-	int mint = max(minthumb, style->thumbmin);
+	int mint = max((int)minthumb, style->thumbmin);
 	if(slsize < mint || totalsize <= pagesize)
 		pagepos = 0;
 	else
@@ -542,7 +542,7 @@ ScrollBar& ScrollBar::SetStyle(const Style& s)
 }
 
 
-int SectionInfo::WhichSection(int p)const
+int ScrollBar::SectionInfo::WhichSection(int p)const
 {
 	return p < starts[3] ?
 		(p<starts[1] ? (p < starts[0] ? -1 : 0) : 2):
@@ -559,7 +559,7 @@ int SectionInfo::WhichSection(int p)const
 //	return q;
 }
 
-Rect SectionInfo::GetAll()const
+Rect ScrollBar::SectionInfo::GetAll()const
 {
 	int l,t,r,b;
 	if(horz){
@@ -570,7 +570,7 @@ Rect SectionInfo::GetAll()const
 	return Rect(l, t, r, b);
 }
 
-Rect SectionInfo::Slider()const
+Rect ScrollBar::SectionInfo::Slider()const
 {
 	int l,t,r,b;
 	if(horz){
@@ -581,7 +581,7 @@ Rect SectionInfo::Slider()const
 	return Rect(l, t, r, b);
 }
 
-Rect SectionInfo::GetPartRect(int i)const{
+Rect ScrollBar::SectionInfo::GetPartRect(int i)const{
 	int l,t,r,b;
 	if(horz){
 		l = Start(i); t = 0; r = End(i); b = wh;
