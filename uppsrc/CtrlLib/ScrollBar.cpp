@@ -73,7 +73,7 @@ void ScrollBar::GetSectionInfo(SectionInfo& info)const
 
 	s2 = thumbpos;
 	s3 = ts + 2 * sbo;
-	s1 = s5 =0;
+	s1 = s5 = 0;
 
 	if(info.IsHorz()) {
 		info.wh = sz.cy;
@@ -88,8 +88,8 @@ void ScrollBar::GetSectionInfo(SectionInfo& info)const
 		if( style->isdown2 ) ++m, ++s5;
 	}
 	s0 = total > m * style->arrowsize ? style->arrowsize : 0;
-	if(s1) s1=s0;
-	if(s5) s5=s0;
+	if(s1) s1 = s0;
+	if(s5) s5 = s0;
 
 	info.starts[0] = 0;		info.starts[7] = total;
 	info.starts[1] = s0;	info.starts[6] = total - s0;
@@ -146,17 +146,6 @@ void ScrollBar::Paint(Draw& w) {
 		}
 	}
 }
-
-//int  ScrollBar::GetMousePart()
-//{
-//	SectionInfo info(this);
-//	return info.WhichSection(GetMouseViewPos());
-//}
-
-//int  ScrollBar::GetRange() const {
-//	SectionInfo info(this);
-//	return info.GetSliderSize();
-//}
 
 void ScrollBar::Bounds() {
 	int maxsize = SectionInfo(this).GetSliderSize();
@@ -544,19 +533,16 @@ ScrollBar& ScrollBar::SetStyle(const Style& s)
 
 int ScrollBar::SectionInfo::WhichSection(int p)const
 {
-	return p < starts[3] ?
-		(p<starts[1] ? (p < starts[0] ? -1 : 0) : 2):
-		(p<starts[5] ? (p < starts[4] ? 3 : 4 ) : (p<starts[7] ? 6: -1) );
-//	int i,q=-1;
-//	for(i=0; i<8; ++i)
-//	{
-//		if(p<starts[i])
-//			break;
-//		++q;
-//	}
-//	if(q==7)
-//		q=-1;
-//	return q;
+	int q=-1;
+	for(int i = 0; i < 8; ++i)
+	{
+		if(p < starts[i])
+			break;
+		++q;
+	}
+	if(q == 7)
+		q = -1;
+	return q;
 }
 
 Rect ScrollBar::SectionInfo::GetAll()const
@@ -565,7 +551,7 @@ Rect ScrollBar::SectionInfo::GetAll()const
 	if(horz){
 		l = Start(0); t = 0; r = Start(7); b = wh;
 	}else{
-		l = 0; t=Start(0); r = wh; b = Start(7);
+		l = 0; t = Start(0); r = wh; b = Start(7);
 	}
 	return Rect(l, t, r, b);
 }
