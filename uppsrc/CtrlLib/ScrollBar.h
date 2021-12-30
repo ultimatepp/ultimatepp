@@ -1,6 +1,49 @@
+struct SectionInfo{
+	
+	inline SectionInfo(const class ScrollBar* sb);
+	int Width(int section)const{
+		ASSERT(section>=0 && section<=6);
+		return End(section)-Start(section);
+	}
+	int Start(int section)const{
+		ASSERT(section>=0 && section<=7);
+		return starts[section];
+	}
+	int End(int section)const{
+		ASSERT(section>=0 && section<=6);
+		return starts[section+1];
+	}
+	String ToString()const{
+		String s;
+		s << '[' << Width(0);
+		for(int i = 1; i < 7; ++i)
+		{
+			s << ',' << Width(i);
+		}
+		s << ']';
+		return s;
+	}
+	int WhichSection(int p)const;
+	
+	int WhichSection(Point p)const
+	{
+		return !GetAll().Contains(p) ? -1 : WhichSection(horz ? p.x : p.y);
+	}
+	int GetHV(int x, int y)const{ return horz ? x : y; }
+	int& HV(int& x, int& y)const{ return horz ? x : y; }
+	Rect GetAll()const;
+	Rect Slider()const;
+	Rect GetPartRect(int i)const;
+	int  GetSliderSize()const { return End(4)-Start(2); }
+	
+	bool IsHorz()const{ return horz; }
+	int starts[8];
+	int wh; // width of a vertical scrollbar or height of a horz one.
+	bool horz;
+};
+
 class ScrollBar : public FrameCtrl<Ctrl> {
 public:
-	virtual void Layout();
 	virtual Size GetStdSize() const;
 	virtual void Paint(Draw& draw);
 	virtual void LeftDown(Point p, dword);
@@ -11,6 +54,7 @@ public:
 	virtual void LeftRepeat(Point p, dword);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void CancelMode();
+	virtual void Layout();
 
 	virtual void FrameLayout(Rect& r);
 	virtual void FrameAddSize(Size& sz);
@@ -30,40 +74,36 @@ public:
 private:
 	int     thumbpos;
 	int     thumbsize;
-	bool    horz:1;
-	bool    jump:1;
-	bool    track:1;
 	int     delta;
-	int8    push;
-	int8    light;
-
-	Button  prev, prev2, next, next2;
 	int     pagepos;
 	int     pagesize;
 	int     totalsize;
 	int     linesize;
 	int     minthumb;
+
+	int8    push;
+	int8    light;
+	bool    horz:1;
+	bool    jump:1;
+	bool    track:1;
 	bool    autohide:1;
 	bool    autodisable:1;
 	bool    is_active:1;
+	bool	disabled:1;
 
 	const Style *style;
 
-	Rect    Slider(int& cc) const;
-	Rect    Slider() const;
-	int&    HV(int& h, int& v) const;
-	int     GetHV(int h, int v) const;
-	Rect    GetPartRect(int p) const;
+	void    GetSectionInfo(SectionInfo& info)const;
+	
 	void    Bounds();
 	bool    SetThumb(int _thumbpos, int _thumbsize);
 	void    Drag(Point p);
-	int     GetMousePart();
-	int     GetRange() const;
 
 	void    Position();
 	void    Uset(int a);
 
 	int     ScrollBarSize() const           { return style->barsize; }
+	
 
 public:
 	Event<>  WhenScroll;
@@ -129,7 +169,15 @@ public:
 
 	ScrollBar();
 	virtual ~ScrollBar();
+
+	friend struct SectionInfo;
 };
+
+inline SectionInfo::SectionInfo(const ScrollBar* sb)
+{
+	ASSERT(sb != nullptr);
+	sb->GetSectionInfo(*this);
+}
 
 inline int ScrollBarSize()                  { return ScrollBar::StyleDefault().barsize; }//!!
 

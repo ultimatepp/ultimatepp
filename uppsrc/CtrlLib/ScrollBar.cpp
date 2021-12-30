@@ -45,26 +45,11 @@ ScrollBar::ScrollBar() {
 	jump = false;
 	track = true;
 	horz = false;
+	disabled = false;
 	thumbsize = 8;
 	thumbpos = 0;
 	push = light = -1;
-	Add(prev);
-	Add(prev2);
-	Add(next);
-	Add(next2);
 	NoWantFocus();
-	prev.ScrollStyle().NoWantFocus().Transparent();
-	prev.WhenPush = prev.WhenRepeat = callback(this, &ScrollBar::PrevLine);
-	prev.WhenPush << Proxy(WhenLeftClick);
-	prev2.ScrollStyle().NoWantFocus().Transparent();
-	prev2.WhenRepeat = prev.WhenRepeat;
-	prev2.WhenPush = prev.WhenPush;
-	next.ScrollStyle().NoWantFocus().Transparent();
-	next.WhenPush = next.WhenRepeat = callback(this, &ScrollBar::NextLine);
-	next.WhenPush << Proxy(WhenLeftClick);
-	next2.ScrollStyle().NoWantFocus().Transparent();
-	next2.WhenRepeat = next.WhenRepeat;
-	next2.WhenPush = next.WhenPush;
 	style = NULL;
 	SetStyle(StyleDefault());
 	BackPaint();
@@ -73,123 +58,108 @@ ScrollBar::ScrollBar() {
 
 ScrollBar::~ScrollBar() {}
 
-Rect ScrollBar::Slider(int& cc) const
+void ScrollBar::GetSectionInfo(SectionInfo& info)const
 {
+	info.horz = IsHorz();
+	
 	Size sz = GetSize();
-	Rect r;
-	if(IsHorz()) {
-		cc = sz.cx > (3 + style->isleft2 + style->isright2) * style->arrowsize ? style->arrowsize : 0;
-		r = RectC(cc, 0, sz.cx - 2 * cc, sz.cy);
-		if(style->isleft2)
-			r.right -= cc;
-		if(style->isright2)
-			r.left += cc;
-	}
-	else {
-		cc = sz.cy > (3 + style->isup2 + style->isdown2) * style->arrowsize ? style->arrowsize : 0;
-		r = RectC(0, cc, sz.cx, sz.cy - 2 * cc);
-		if(style->isup2)
-			r.bottom -= cc;
-		if(style->isdown2)
-			r.top += cc;
-	}
-	return r;
-}
+	int  s0, s1, s2, s3, s5, // width/height of each section (s6==s0)
+		 total, m=3;
 
-Rect ScrollBar::Slider() const
-{
-	int dummy;
-	return Slider(dummy);
-}
-
-int& ScrollBar::HV(int& h, int& v) const
-{
-	return IsHorz() ? h : v;
-}
-
-int ScrollBar::GetHV(int h, int v) const {
-	return IsHorz() ? h : v;
-}
-
-Rect ScrollBar::GetPartRect(int p) const {
-	Rect h = Slider();
 	int sbo = style->overthumb;
-	int off = GetHV(h.left, h.top);
 	int ts = thumbsize;
 	if(ts < style->thumbmin)
 		ts = 0;
-	switch(p) {
-	case 0:
-		HV(h.right, h.bottom) = thumbpos - sbo + ts / 2 + off;
-		break;
-	case 1:
-		HV(h.left, h.top) = thumbpos + ts / 2 + sbo + off;
-		break;
-	case 2:
-		if(!IsNull(style->thumbwidth))
-			h.Deflate((style->barsize - style->thumbwidth) / 2);
-		HV(h.left, h.top) = thumbpos - sbo + off;
-		HV(h.right, h.bottom) = thumbpos + ts + sbo + off;
-		break;
+
+	s2 = thumbpos;
+	s3 = ts + 2 * sbo;
+	s1 = s5 =0;
+
+	if(info.IsHorz()) {
+		info.wh = sz.cy;
+		total = sz.cx;
+		if( style->isleft2  ) ++m, ++s1;
+		if( style->isright2 ) ++m, ++s5;
 	}
-	return h;
+	else {
+		info.wh = sz.cx;
+		total = sz.cy;
+		if( style->isup2   ) ++m, ++s1;
+		if( style->isdown2 ) ++m, ++s5;
+	}
+	s0 = total > m * style->arrowsize ? style->arrowsize : 0;
+	if(s1) s1=s0;
+	if(s5) s5=s0;
+
+	info.starts[0] = 0;		info.starts[7] = total;
+	info.starts[1] = s0;	info.starts[6] = total - s0;
+	info.starts[2] = s0+s1; info.starts[5] = info.starts[6] - s5;
+	info.starts[3] = info.starts[2] + s2;
+	info.starts[4] = info.starts[3] + s3;
+
 }
 
 void ScrollBar::Paint(Draw& w) {
+	SectionInfo info(this);
+	
 	w.DrawRect(GetSize(), style->bgcolor);
-	int cc;
-	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
-	light = GetMousePart();
-	int p = push;
-	if(!HasCapture())
-		p = -1;
-	const Value *hl[] = { style->hlower, style->hupper, style->hthumb };
-	const Value *vl[] = { style->vupper, style->vlower, style->vthumb };
 
-	const Value **l = IsHorz() ? hl : vl;
+	Size sz = style->through ? GetSize() : info.Slider().GetSize();
+	
+	light = info.WhichSection(GetMouseViewPos());
 
-	if(prev.IsShowEnabled()) {
-		for(int i = 0; i < 3; i++) {
-			Rect pr = GetPartRect(i);
-			if(i != 2) {
-				w.Clip(pr);
-				pr = style->through ? GetSize() : Slider();
+	int p = HasCapture() ? push : -1;
+	
+	auto vs = [=](int i){
+		return disabled ? CTRL_DISABLED :
+			p == i ? CTRL_PRESSED :
+			light == i ?  CTRL_HOT : CTRL_NORMAL;
+	};
+	const Value * vl1[]={style->up.look, style->up2.look, style->vlower,
+		style->vthumb, style->vupper, style->down2.look, style->down.look};
+	const Value * hl1[] = {style->left.look, style->left2.look, style->hlower,
+		style->hthumb, style->hupper, style->right2.look, style->right.look};
+
+	const Value** looks = IsHorz() ? hl1 : vl1;
+
+	for(int i=0; i<7; ++i)
+	{
+		Rect r = info.GetPartRect(i);
+		if(r.Width() != 0 && r.Height() != 0)
+		{
+			if(disabled && i>=2 && i<=4){
+			// trying to construct from original painting logic
+			// but never tested with disabled = true;
+				if(i == 2){
+					ChPaint(w, sz, looks[2][CTRL_DISABLED]);
+				}
+				continue;
 			}
-			if(i != 2 || thumbsize >= style->thumbmin)
-				ChPaint(w, pr, l[i][p == i ? CTRL_PRESSED : light == i ? CTRL_HOT : CTRL_NORMAL]);
-			if(i != 2)
+			if(i == 2 || i == 4) {
+				w.Clip(r);
+				r = style->through ? GetSize() : info.Slider();
+			}
+			if( i!=3 || thumbsize >= style->thumbmin)
+				ChPaint(w, r, looks[i][vs(i)]);
+			if(i == 2 || i == 4)
 				w.End();
 		}
 	}
-	else
-		if(style->through)
-			ChPaint(w, sz, l[0][CTRL_DISABLED]);
-		else
-		if(IsHorz())
-			ChPaint(w, cc, 0, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
-		else
-			ChPaint(w, 0, cc, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
 }
 
+//int  ScrollBar::GetMousePart()
+//{
+//	SectionInfo info(this);
+//	return info.WhichSection(GetMouseViewPos());
+//}
 
-int  ScrollBar::GetMousePart()
-{
-	int q = -1;
-	for(int i = 2; i >= 0; i--)
-		if(HasMouseIn(GetPartRect(i))) {
-			q = i;
-			break;
-		}
-	return q;
-}
-
-int  ScrollBar::GetRange() const {
-	Size sz = Slider().GetSize();
-	return GetHV(sz.cx, sz.cy);
-}
+//int  ScrollBar::GetRange() const {
+//	SectionInfo info(this);
+//	return info.GetSliderSize();
+//}
 
 void ScrollBar::Bounds() {
-	int maxsize = GetRange();
+	int maxsize = SectionInfo(this).GetSliderSize();
 	if(thumbsize > maxsize)
 		thumbsize = maxsize;
 	if(thumbpos + thumbsize > maxsize)
@@ -217,7 +187,10 @@ void ScrollBar::Drag(Point p) {
 }
 
 void ScrollBar::LeftDown(Point p, dword) {
-	push = GetMousePart();
+	SectionInfo info(this);
+
+	push = info.WhichSection(GetMouseViewPos());
+
 	LLOG("ScrollBar::LeftDown(" << p << ")");
 	LLOG("MousePos = " << GetMousePos() << ", ScreenView = " << GetScreenView()
 	<< ", rel. pos = " << (GetMousePos() - GetScreenView().TopLeft()));
@@ -229,18 +202,29 @@ void ScrollBar::LeftDown(Point p, dword) {
 	LLOG("ScrollBar::LeftDown: mousepart = " << (int)push << ", rect = " << GetPartRect(push)
 		<< ", overthumb = " << style->overthumb << ", slider = " << Slider());
 	LLOG("thumbpos = " << thumbpos << ", thumbsize = " << thumbsize);
-	if(push == 2)
-		delta = GetHV(p.x, p.y) - thumbpos;
-	else {
+	switch(push)
+	{
+	case 0:
+	case 1:
+		PrevLine();  break;
+	case 2:
+	case 4:
 		if(jump) {
 			delta = thumbsize / 2;
 			Drag(p);
 		}
 		else
-			if(push == 0)
+			if(push==2){
 				PrevPage();
-			else
+			}else
 				NextPage();
+		break;
+
+	case 3:
+		delta = info.GetHV(p.x, p.y) - thumbpos; break;
+	case 5:
+	case 6:
+		NextLine();
 	}
 	SetCapture();
 	Refresh();
@@ -248,10 +232,13 @@ void ScrollBar::LeftDown(Point p, dword) {
 }
 
 void ScrollBar::MouseMove(Point p, dword) {
-	if(HasCapture() && push == 2)
+	SectionInfo info(this);
+
+	LLOG("Mouse in section " << info.WhichSection(p) );
+	if(HasCapture() && push == 3)
 		Drag(p);
 	else
-	if(light != GetMousePart())
+	if(light != info.WhichSection(p))
 		Refresh();
 }
 
@@ -274,11 +261,21 @@ void ScrollBar::LeftUp(Point p, dword) {
 }
 
 void ScrollBar::LeftRepeat(Point p, dword) {
-	if(jump || push < 0 || push == 2) return;
-	if(push == 0)
-		PrevPage();
-	else
-		NextPage();
+	if(jump || push < 0 || push == 3) return;
+	switch(push)
+	{
+	case 0:
+	case 1:
+		PrevLine();  break;
+	case 2:
+		PrevPage(); break;
+	case 4:
+		NextPage(); break;
+	case 5:
+	case 6:
+		NextLine();
+	}
+
 	Refresh();
 }
 
@@ -296,7 +293,7 @@ bool  ScrollBar::Set(int apagepos) {
 	pagepos = apagepos;
 	if(pagepos > totalsize - pagesize) pagepos = totalsize - pagesize;
 	if(pagepos < 0) pagepos = 0;
-	int slsize = GetRange();
+	int slsize = SectionInfo(this).GetSliderSize();
 	int mint = max(minthumb, style->thumbmin);
 	if(totalsize <= 0)
 		SetThumb(0, slsize);
@@ -336,12 +333,7 @@ void ScrollBar::Set(int _pagepos, int _pagesize, int _totalsize) {
 		WhenVisibility();
 	}
 	if(autodisable) {
-		if(prev.IsEnabled() != is_active)
-			Refresh();
-		prev.Enable(is_active);
-		next.Enable(is_active);
-		prev2.Enable(is_active);
-		next2.Enable(is_active);
+		disabled=!is_active;
 	}
 	Set(_pagepos);
 }
@@ -355,7 +347,7 @@ void ScrollBar::SetTotal(int _totalsize) {
 }
 
 void ScrollBar::Position() {
-	int slsize = GetRange();
+	int slsize = SectionInfo(this).GetSliderSize();
 	int mint = max(minthumb, style->thumbmin);
 	if(slsize < mint || totalsize <= pagesize)
 		pagepos = 0;
@@ -473,33 +465,6 @@ bool ScrollBar::HorzKey(dword key) {
 }
 
 void ScrollBar::Layout() {
-	Size sz = GetSize();
-	if(IsHorz()) {
-		prev.SetStyle(style->left);
-		next.SetStyle(style->right);
-		prev2.SetStyle(style->left2);
-		next2.SetStyle(style->right2);
-		int cc = sz.cx > (3 + style->isleft2 + style->isright2) * style->arrowsize ? style->arrowsize : 0;
-		prev.SetRect(0, 0, cc, sz.cy);
-		next.SetRect(sz.cx - cc, 0, cc, sz.cy);
-		prev2.Show(style->isleft2);
-		prev2.SetRect(sz.cx - 2 * cc, 0, cc, sz.cy);
-		next2.Show(style->isright2);
-		next2.SetRect(cc, 0, cc, sz.cy);
-	}
-	else {
-		prev.SetStyle(style->up);
-		next.SetStyle(style->down);
-		prev2.SetStyle(style->up2);
-		next2.SetStyle(style->down2);
-		int cc = sz.cy > (3 + style->isup2 + style->isdown2) * style->arrowsize ? style->arrowsize : 0;
-		prev.SetRect(0, 0, sz.cx, cc);
-		next.SetRect(0, sz.cy - cc, sz.cx, cc);
-		prev2.Show(style->isup2);
-		prev2.SetRect(0, sz.cy - 2 * cc, sz.cx, cc);
-		next2.Show(style->isdown2);
-		next2.SetRect(0, cc, sz.cx, cc);
-	}
 	Set(pagepos);
 	Refresh();
 }
@@ -560,14 +525,9 @@ ScrollBar& ScrollBar::AutoHide(bool b) {
 
 ScrollBar& ScrollBar::AutoDisable(bool b) {
 	autodisable = b;
-	if(!b) {
-		if(!prev.IsEnabled())
-			Refresh();
-		prev.Enable();
-		prev2.Enable();
-		next.Enable();
-		next2.Enable();
-	}
+	
+	if(!b)
+		disabled=false;
 	return *this;
 }
 
@@ -579,6 +539,56 @@ ScrollBar& ScrollBar::SetStyle(const Style& s)
 		Refresh();
 	}
 	return *this;
+}
+
+
+int SectionInfo::WhichSection(int p)const
+{
+	return p < starts[3] ?
+		(p<starts[1] ? (p < starts[0] ? -1 : 0) : 2):
+		(p<starts[5] ? (p < starts[4] ? 3 : 4 ) : (p<starts[7] ? 6: -1) );
+//	int i,q=-1;
+//	for(i=0; i<8; ++i)
+//	{
+//		if(p<starts[i])
+//			break;
+//		++q;
+//	}
+//	if(q==7)
+//		q=-1;
+//	return q;
+}
+
+Rect SectionInfo::GetAll()const
+{
+	int l,t,r,b;
+	if(horz){
+		l = Start(0); t = 0; r = Start(7); b = wh;
+	}else{
+		l = 0; t=Start(0); r = wh; b = Start(7);
+	}
+	return Rect(l, t, r, b);
+}
+
+Rect SectionInfo::Slider()const
+{
+	int l,t,r,b;
+	if(horz){
+		l = Start(2); t = 0; r = Start(5); b = wh;
+	}else{
+		l = 0; t=Start(2); r = wh; b = Start(5);
+	}
+	return Rect(l, t, r, b);
+}
+
+Rect SectionInfo::GetPartRect(int i)const{
+	int l,t,r,b;
+	if(horz){
+		l = Start(i); t = 0; r = End(i); b = wh;
+	}else{
+		l = 0; t=Start(i); r = wh; b = End(i);
+	}
+	return Rect(l, t, r, b);
 }
 
 Image SizeGrip::CursorImage(Point p, dword)
