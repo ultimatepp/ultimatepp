@@ -481,7 +481,6 @@ private:
 	};
 
 	Top         *top;
-	int          exitcode;
 
 	Ctrl        *prev, *next;
 	Ctrl        *firstchild, *lastchild;//16
@@ -491,6 +490,7 @@ private:
 	String       info;//16
 	int16        caretx, carety, caretcx, caretcy;//8
 
+	int          exitcode;
 	byte         overpaint;
 
 	bool         unicode:1;

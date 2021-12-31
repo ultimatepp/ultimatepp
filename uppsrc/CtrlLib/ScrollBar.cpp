@@ -788,6 +788,7 @@ ScrollBars& ScrollBars::WithSizeGrip()
 }
 
 ScrollBars::ScrollBars() {
+	x.Horz();
 	box = &the_box;
 //	the_box.NoTransparent();
 	x.WhenScroll = y.WhenScroll = callback(this, &ScrollBars::Scroll);

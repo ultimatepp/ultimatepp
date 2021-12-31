@@ -131,9 +131,11 @@ public:
 	virtual ~ScrollBar();
 
 	friend struct SectionInfo;
+	
 	struct SectionInfo{
 		
 		inline SectionInfo(const class ScrollBar* sb);
+		
 		int Width(int section)const{
 			ASSERT(section>=0 && section<=6);
 			return End(section)-Start(section);
@@ -164,12 +166,14 @@ public:
 		}
 		int GetHV(int x, int y)const{ return horz ? x : y; }
 		int& HV(int& x, int& y)const{ return horz ? x : y; }
+
 		Rect GetAll()const;
 		Rect Slider()const;
 		Rect GetPartRect(int i)const;
 		int  GetSliderSize()const { return End(4)-Start(2); }
 		
 		bool IsHorz()const{ return horz; }
+
 		int starts[8];
 		int wh; // width of a vertical scrollbar or height of a horz one.
 		bool horz;
@@ -225,8 +229,8 @@ protected:
 	void    Scroll();
 
 public:
-	HScrollBar x;
-	VScrollBar y;
+	ScrollBar x;
+	ScrollBar y;
 
 	Event<>    WhenScroll;
 	Event<>    WhenLeftClick;
