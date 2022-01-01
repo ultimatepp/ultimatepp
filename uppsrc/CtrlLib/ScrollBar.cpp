@@ -203,7 +203,7 @@ void ScrollBar::LeftDown(Point p, dword) {
 			Drag(p);
 		}
 		else
-			if(push==2){
+			if(push == 2){
 				PrevPage();
 			}else
 				NextPage();

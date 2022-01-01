@@ -481,6 +481,9 @@ private:
 	};
 
 	Top         *top;
+#if defined(_M_IX86) // 32bit MSC compiler
+	int			exitcode;
+#endif
 
 	Ctrl        *prev, *next;
 	Ctrl        *firstchild, *lastchild;//16
@@ -490,7 +493,9 @@ private:
 	String       info;//16
 	int16        caretx, carety, caretcx, caretcy;//8
 
+#if !defined(_M_IX86)
 	int          exitcode;
+#endif
 	byte         overpaint;
 
 	bool         unicode:1;
