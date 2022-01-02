@@ -297,7 +297,7 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 	of.sitalic = of.ttf = false;
 
 	TTFReader ttf;
-	if(ttf.Open(fnt.GetData(), false, true)) {
+	if(ttf.Open(fnt, false, true)) {
 		of.ttf = true;
 		of.sitalic = fnt.IsItalic() && (ttf.head.macStyle & 2) == 0;
 		of.sbold = fnt.IsBold() && (ttf.head.macStyle & 1) == 0;
@@ -906,11 +906,8 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 			EndObj();
 		}
 		else {
-			String fontbuffer;
-			fontbuffer = pdffont.GetKey(i).GetData();
-
 			TTFReader ttf;
-			if(!ttf.Open(fontbuffer))
+			if(!ttf.Open(pdffont.GetKey(i)))
 				return Null;
 
 			String name = FormatIntAlpha(i + 1, true);

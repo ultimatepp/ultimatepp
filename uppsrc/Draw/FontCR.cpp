@@ -234,20 +234,20 @@ struct sRFace {
 	#include "Fonts.i"
 };
 
-bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
-	String data = font.GetData("cmap");
-	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= data.GetCount() ? Peek16be(~data + i) : 0; };
-	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= data.GetCount() ? Peek32be(~data + i) : 0; };
+bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, bool glyphs)
+{
+	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= count ? Peek16be(ptr + i) : 0; };
+	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= count ? Peek32be(ptr + i) : 0; };
 	for(int pass = 0; pass < 2; pass++) {
 		int p = 0;
 		p += 2;
 		int n = Get16(p);
 		p += 2;
-		while(n-- && p < data.GetCount()) {
+		while(n-- && p < count) {
 			int pid = Get16(p); p += 2;
 			int psid = Get16(p); p += 2;
 			int offset = Get32(p); p += 4;
-			if(offset < 0 || offset > data.GetCount())
+			if(offset < 0 || offset > count)
 				return false;
 			int format = Get16(offset);
 			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
@@ -264,7 +264,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				return true;
 			}
 			else
-			if((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4 && pass == 1) {
+			if(((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4) && pass == 1) {
 				int p = offset;
 				int n = Get16(p + 6) >> 1;
 				int seg_end = p + 14;
@@ -298,6 +298,12 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 		}
 	}
 	return false;
+}
+
+bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs)
+{
+	String h = font.GetData("cmap");
+	return ReadCmap(h, h.GetCount(), range, glyphs);
 }
 
 bool GetPanoseNumber(Font font, byte *panose)

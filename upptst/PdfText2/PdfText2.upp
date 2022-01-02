@@ -1,0 +1,10 @@
+uses
+	Core,
+	PdfDraw;
+
+file
+	PdfText.cpp;
+
+mainconfig
+	"" = "";
+

@@ -55,16 +55,16 @@ class TTFReader {
 		virtual ~TTFStreamOut() {}
 	};
 
-	String font;
+	Font font;
+	String current_table;
 
 	struct Table : Moveable<Table> {
 		int offset;
 		int length;
 	};
 	VectorMap<String, Table> table;
-
-	word  zero[256];
-	word *cmap[256];
+	
+	VectorMap<wchar, int> glyph_map;
 
 	struct GlyphInfo : Moveable<GlyphInfo> {
 		int    offset;
@@ -92,7 +92,6 @@ class TTFReader {
 	int    Read32(const char *&s);
 	String Read(const char *&s, int n);
 
-	void   Free();
 	void   Reset();
 
 	const char *Seek(const char *tab, int& len);
@@ -217,14 +216,13 @@ public:
 	Post   post;
 	String ps_name;
 
-	int    GetGlyph(wchar chr)               { return cmap[HIBYTE(chr)][LOBYTE(chr)]; }
+	int    GetGlyph(wchar chr)               { return glyph_map.Get(chr, 0); }
 	word   GetAdvanceWidth(wchar chr)        { return glyphinfo[GetGlyph(chr)].advanceWidth; }
 
 	String Subset(const Vector<wchar>& chars, int first = 0, bool os2 = false);
-	bool   Open(const String& fnt, bool symbol = false, bool justcheck = false);
+	bool   Open(const Font& fnt, bool symbol = false, bool justcheck = false);
 
 	TTFReader();
-	~TTFReader();
 };
 
 struct PdfSignatureInfo {

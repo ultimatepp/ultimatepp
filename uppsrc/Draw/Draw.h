@@ -978,6 +978,10 @@ IsJPGFnType GetIsJPGFn();
 #include "DDARasterizer.h"
 #include "SDraw.h"
 
+bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, bool glyphs);
+bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false);
+bool GetPanoseNumber(Font font, byte *panose);
+
 }
 
 #endif

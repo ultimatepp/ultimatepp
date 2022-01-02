@@ -7,21 +7,21 @@ namespace Upp {
 
 int    TTFReader::Peek8(const char *s)
 {
-	if(s + 1 > font.End())
+	if(s + 1 > current_table.End())
 		Error();
 	return (byte)*s;
 }
 
 int    TTFReader::Peek16(const char *s)
 {
-	if(s + 2 > font.End())
+	if(s + 2 > current_table.End())
 		Error();
 	return ((byte)s[0] << 8) | (byte)s[1];
 }
 
 int    TTFReader::Peek32(const char *s)
 {
-	if(s + 4 > font.End())
+	if(s + 4 > current_table.End())
 		Error();
 	return ((byte)s[0] << 24) | ((byte)s[1] << 16) | ((byte)s[2] << 8) | (byte)s[3];
 }
@@ -58,7 +58,7 @@ int    TTFReader::Read32(const char *&s)
 
 String TTFReader::Read(const char *&s, int n)
 {
-	if(s + n > font.End())
+	if(s + n > current_table.End())
 		Error();
 	String q(s, n);
 	s += n;
@@ -67,34 +67,20 @@ String TTFReader::Read(const char *&s, int n)
 
 void TTFReader::Reset()
 {
-	memset(zero, 0, sizeof(zero));
-	for(int i = 0; i < 256; i++)
-		cmap[i] = zero;
-}
-
-void TTFReader::Free()
-{
-	for(int i = 0; i < 256; i++)
-		if(cmap[i] != zero)
-			delete[] cmap[i];
+	glyph_map.Clear();
 }
 
 void TTFReader::SetGlyph(wchar chr, word glyph)
 {
-	int h = HIBYTE(chr);
-	if(cmap[h] == zero)
-		memset(cmap[h] = new word[256], 0, 256 * sizeof(word));
-	cmap[h][LOBYTE(chr)] = glyph;
+	glyph_map.GetAdd(chr) = glyph;
 }
 
 const char *TTFReader::Seek(const char *tab, int& len)
 {
 	ASSERT(strlen(tab) == 4);
-	int q = table.Find(tab);
-	if(q < 0)
-		Error();
-	len = table[q].length;
-	return ~font + table[q].offset;
+	current_table = font.GetData(tab);
+	len = current_table.GetCount();
+	return current_table;
 }
 
 const char *TTFReader::Seek(const char *tab)
@@ -113,35 +99,17 @@ void TTFReader::Seek(const char *tab, TTFStreamIn& s)
 String TTFReader::GetTable(const char *tab)
 {
 	ASSERT(strlen(tab) == 4);
-	int q = table.Find(tab);
-	if(q < 0)
-		return Null;
-	return String(~font + table[q].offset, table[q].length);
+	return font.GetData(tab);
 }
 
-bool TTFReader::Open(const String& fnt, bool symbol, bool justcheck)
+bool TTFReader::Open(const Font& fnt, bool symbol, bool justcheck)
 {
 	try {
 		int i;
-		Free();
 		Reset();
 		table.Clear();
 		glyphinfo.Clear();
 		font = fnt;
-		const char *s = fnt;
-		int q = Read32(s);
-		if(q != 0x74727565 && q != 0x00010000)
-			Error();
-		int n = Read16(s);
-		s += 6;
-		while(n--) {
-			Table& t = table.Add(Read(s, 4));
-			s += 4;
-			t.offset = Read32(s);
-			t.length = Read32(s);
-		}
-		for(i = 0; i < table.GetCount(); i++)
-			LLOG("table: " << table.GetKey(i) << " offset: " << table[i].offset << " length: " << table[i].length);
 
 		TTFStreamIn is;
 		Seek("head", is);
@@ -186,7 +154,7 @@ bool TTFReader::Open(const String& fnt, bool symbol, bool justcheck)
 
 		glyphinfo.SetCount(maxp.numGlyphs);
 
-		s = Seek("hmtx");
+		const char *s = Seek("hmtx");
 		int aw = 0;
 		for(i = 0; i < hhea.numOfLongHorMetrics; i++) {
 			aw = glyphinfo[i].advanceWidth = (uint16)Read16(s);
@@ -212,6 +180,14 @@ bool TTFReader::Open(const String& fnt, bool symbol, bool justcheck)
 			LLOG(i << " advance: " << glyphinfo[i].advanceWidth << ", left: " << glyphinfo[i].leftSideBearing
 			      << ", offset: " << glyphinfo[i].offset << ", size: " << glyphinfo[i].size);
 
+		int len;
+		const char *cmap = Seek("cmap", len);
+		ReadCmap(cmap, len, [&](int start, int end, int glyph) {
+			for(int ch = start; ch <= end; ch++)
+				SetGlyph(ch, glyph++);
+		}, true);
+		
+	#if 0
 		s = Seek("cmap");
 		const char *p = s;
 		p += 2;
@@ -262,7 +238,7 @@ bool TTFReader::Open(const String& fnt, bool symbol, bool justcheck)
 				break;
 			}
 		}
-
+	#endif
 
 		const char *strings = Seek("name");
 		s = strings + 2;
@@ -301,11 +277,6 @@ bool TTFReader::Open(const String& fnt, bool symbol, bool justcheck)
 TTFReader::TTFReader()
 {
 	Reset();
-}
-
-TTFReader::~TTFReader()
-{
-	Free();
 }
 
 }
