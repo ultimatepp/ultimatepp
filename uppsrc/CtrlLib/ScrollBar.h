@@ -1,6 +1,7 @@
 
 class ScrollBar : public FrameCtrl<Ctrl> {
-	
+	static int counter;
+	static int maxcount;
 public:
 	struct SectionInfo;
 	

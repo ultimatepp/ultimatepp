@@ -36,7 +36,18 @@ CH_STYLE(ScrollBar, Style, StyleDefault)
 	bgcolor = SColorPaper();
 }
 
+#ifdef _DEBUG
+int ScrollBar::counter = 0;
+int ScrollBar::maxcount = 0;
+#endif
+
 ScrollBar::ScrollBar() {
+#ifdef _DEBUG
+	if(++counter>maxcount){
+		maxcount = counter;
+		LOG("ScrllBar::maxcount is " << maxcount);
+	}
+#endif
 	minthumb = DPI(16);
 	pagepos = pagesize = totalsize = 0;
 	linesize = 1;
@@ -56,7 +67,11 @@ ScrollBar::ScrollBar() {
 	is_active = false;
 }
 
-ScrollBar::~ScrollBar() {}
+ScrollBar::~ScrollBar() {
+#ifdef _DEBG
+	--counter;
+#endif
+	}
 
 void ScrollBar::GetSectionInfo(SectionInfo& info)const
 {
