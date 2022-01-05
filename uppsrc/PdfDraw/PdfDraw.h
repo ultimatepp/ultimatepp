@@ -217,7 +217,7 @@ public:
 	String ps_name;
 
 	int    GetGlyph(wchar chr)               { return glyph_map.Get(chr, 0); }
-	word   GetAdvanceWidth(wchar chr)        { return glyphinfo[GetGlyph(chr)].advanceWidth; }
+	word   GetAdvanceWidth(wchar chr)        { int i = glyph_map.Get(chr, 0); return i < glyphinfo.GetCount() ? glyphinfo[GetGlyph(chr)].advanceWidth : 0; }
 
 	String Subset(const Vector<wchar>& chars, int first = 0, bool os2 = false);
 	bool   Open(const Font& fnt, bool symbol = false, bool justcheck = false);
@@ -278,7 +278,7 @@ private:
 	struct CharPos : Moveable<CharPos>   { word fi, ci; };
 
 	struct OutlineInfo : Moveable<OutlineInfo> {
-		bool ttf;
+		bool standard_ttf;
 		bool sitalic;
 		bool sbold;
 	};

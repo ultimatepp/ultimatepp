@@ -1,10 +1,11 @@
 uses
 	Core,
-	PdfDraw;
+	PdfDraw,
+	CtrlLib;
 
 file
 	PdfText.cpp;
 
 mainconfig
-	"" = "";
+	"" = "GUI";
 

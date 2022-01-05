@@ -138,9 +138,6 @@ bool TTFReader::Open(const Font& fnt, bool symbol, bool justcheck)
 		LDUMP(post.underlineThickness);
 		LDUMP(post.italicAngle);
 
-		if(justcheck)
-			return true;
-
 		Seek("hhea", is);
 		hhea.Serialize(is);
 		LDUMP(hhea.ascent);
@@ -154,7 +151,11 @@ bool TTFReader::Open(const Font& fnt, bool symbol, bool justcheck)
 
 		glyphinfo.SetCount(maxp.numGlyphs);
 
+		if(justcheck)
+			return ReadCmap(fnt, [&](int, int, int) {}, CMAP_ALLOW_SYMBOL);
+
 		const char *s = Seek("hmtx");
+		if(!s) Error();
 		int aw = 0;
 		for(i = 0; i < hhea.numOfLongHorMetrics; i++) {
 			aw = glyphinfo[i].advanceWidth = (uint16)Read16(s);
@@ -166,6 +167,7 @@ bool TTFReader::Open(const Font& fnt, bool symbol, bool justcheck)
 		}
 
 		s = Seek("loca");
+		if(!s) Error();
 		for(i = 0; i < maxp.numGlyphs; i++)
 			if(head.indexToLocFormat) {
 				glyphinfo[i].offset = Peek32(s, i);
@@ -180,67 +182,13 @@ bool TTFReader::Open(const Font& fnt, bool symbol, bool justcheck)
 			LLOG(i << " advance: " << glyphinfo[i].advanceWidth << ", left: " << glyphinfo[i].leftSideBearing
 			      << ", offset: " << glyphinfo[i].offset << ", size: " << glyphinfo[i].size);
 
-		int len;
-		const char *cmap = Seek("cmap", len);
-		ReadCmap(cmap, len, [&](int start, int end, int glyph) {
+		ReadCmap(fnt, [&](int start, int end, int glyph) {
 			for(int ch = start; ch <= end; ch++)
 				SetGlyph(ch, glyph++);
-		}, true);
-		
-	#if 0
-		s = Seek("cmap");
-		const char *p = s;
-		p += 2;
-		n = Read16(p);
-		while(n--) {
-			int pid = Read16(p);
-			int psid = Read16(p);
-			int offset = Read32(p);
-			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << Peek16(s + offset));
-			//Test with Symbol font !!!; improve - Unicode first, 256 bytes later..., symbol...
-			if(symbol) {
-				if(pid == 1 && psid == 0 && Peek16(s + offset) == 0) {
-					LLOG("Reading symbol table");
-					p = s + offset + 6;
-					for(int i = 0; i < 256; i++)
-						SetGlyph(i, (byte)p[i]);
-					break;
-				}
-			}
-			else
-			if(pid == 3 && psid == 1) {
-				p = s + offset;
-				n = Peek16(p + 6) >> 1;
-				LLOG("Found UNICODE encoding, offset " << offset << ", segments " << n);
-				const char *seg_end = p + 14;
-				const char *seg_start = seg_end + 2 * n + 2;
-				const char *idDelta = seg_start + 2 * n;
-				const char *idRangeOffset = idDelta + 2 * n;
-				for(int i = 0; i < n; i++) {
-					int start = Peek16(seg_start, i);
-					int end = Peek16(seg_end, i);
-					int delta = Peek16(idDelta, i);
-					int ro = Peek16(idRangeOffset, i);
-				    if (ro && delta == 0) {
-				        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
-				        LLOG("ro " << ro);
-						const char *q = idRangeOffset + 2 * i + ro;
-						for(int c = start; c <= end; c++) {
-							SetGlyph(c, (word)Read16(q));
-						}
-				    }
-				    else {
-				        LLOG("start: " << start << ", end: " << end << ", delta: " << (int16)delta);
-						for(int c = start; c <= end; c++)
-							SetGlyph(c, c + delta);
-				    }
-				}
-				break;
-			}
-		}
-	#endif
+		}, CMAP_GLYPHS|CMAP_ALLOW_SYMBOL);
 
 		const char *strings = Seek("name");
+		if(!strings) Error();
 		s = strings + 2;
 		int count = Read16(s);
 		strings += (word)Read16(s);

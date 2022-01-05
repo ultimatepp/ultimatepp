@@ -1,4 +1,5 @@
 #include "PdfDraw.h"
+#include "CtrlLib/CtrlLib.h"
 
 namespace Upp {
 
@@ -294,11 +295,11 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 	if(q >= 0)
 		return outline_info[q];
 	OutlineInfo of;
-	of.sitalic = of.ttf = false;
+	of.sitalic = of.standard_ttf = false;
 
 	TTFReader ttf;
 	if(ttf.Open(fnt, false, true)) {
-		of.ttf = true;
+		of.standard_ttf = true;
 		of.sitalic = fnt.IsItalic() && (ttf.head.macStyle & 2) == 0;
 		of.sbold = fnt.IsBold() && (ttf.head.macStyle & 1) == 0;
 		LLOG(fnt << ", sbold: " << of.sbold << ", sitalic: " << of.sitalic);
@@ -324,7 +325,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	Font ff = fnt;
 	int fh = fnt.GetHeight();
 	OutlineInfo of = GetOutlineInfo(fnt);
-	if(of.ttf)
+	if(of.standard_ttf)
 		fnt.Height(FONTHEIGHT_TTF);
 	String txt;
 	PutrgColor(ink);
@@ -385,7 +386,7 @@ void PdfDraw::Escape(const String& data)
 		this->data = data.Mid(5);
 }
 
-Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg);
 
 PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 {
@@ -409,7 +410,7 @@ PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 	int y = 0;
 	while(y < rg.sz.cy) {
 		int ccy = min(16, rg.sz.cy - y);
-		Image m = RenderGlyph(rg.sz.cx, rg.x, fnt, chr, y, ccy);
+		Image m = RenderGlyph(rg.sz.cx, rg.x, fnt, chr, y, ccy, Black(), White());
 		for(int i = 0; i < m.GetHeight(); i++) {
 			fmt.Write(ob, m[i], rg.sz.cx, NULL);
 			rg.data.Cat((const char *)~ob, linebytes);
@@ -865,8 +866,8 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 					<< " "
 					<< -1000 * fi.GetDescent() / fa
 					<< " cm BI /W " << rg.sz.cx << " /H " << rg.sz.cy
-					<< " /BPC 1 /IM true /D [0 1] ID\n"
-					<< rg.data
+					<< " /BPC 1 /IM true /D [0 1]"
+					<< " ID\n" << rg.data
 					<< "\nEI Q"
 				;
 				PutStream(proc);
