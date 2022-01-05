@@ -326,12 +326,15 @@ static sysColor sSysColor[] = {
 	{ SColorText_Write, COLOR_WINDOWTEXT },
 	{ SColorHighlight_Write, COLOR_HIGHLIGHT },
 	{ SColorHighlightText_Write, COLOR_HIGHLIGHTTEXT },
+	{ SColorMenu_Write, COLOR_3DFACE },
+/*
 	{ SColorMenu_Write, COLOR_MENU },
 	{ SColorMenuText_Write, COLOR_MENUTEXT },
 	{ SColorInfo_Write, COLOR_INFOBK },
 	{ SColorInfoText_Write, COLOR_INFOTEXT },
 	{ SColorLight_Write, COLOR_3DHILIGHT },
 	{ SColorShadow_Write, COLOR_3DSHADOW },
+*/
 };
 
 bool IsSysFlag(dword flag)
