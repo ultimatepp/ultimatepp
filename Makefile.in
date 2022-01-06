@@ -68621,7 +68621,6 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Core/Map.hpp \
 	$(UPPDIR1)Core/Mem.h \
 	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/mt_.h \
 	$(UPPDIR1)Core/Obsolete.h \
 	$(UPPDIR1)Core/Ops.h \
 	$(UPPDIR1)Core/Other.h \
@@ -68657,40 +68656,6 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Core/Xmlize.h \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/lay0.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
 	$(UPPDIR1)Draw/Cham.h \
 	$(UPPDIR1)Draw/DDARasterizer.h \
 	$(UPPDIR1)Draw/Display.h \
@@ -68698,28 +68663,14 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Draw/FontInt.h \
 	$(UPPDIR1)Draw/Image.h \
 	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/Interpolator.hpp \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/ICCColorSpace.i \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
 	$(UPPDIR1)plugin/z/z.h \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_PdfDraw)  $(UPPDIR1)PdfDraw/PdfDraw.cpp -o $(OutDir_PdfDraw)PdfDraw.o
 
