@@ -359,8 +359,10 @@ private:
 		String data;
 		Size   sz;
 		int    x;
+		int    color_image = -1;
 	};
 
+	int    PdfImage(const Image& img, const Rect& src);
 	RGlyph RasterGlyph(Font fnt, int chr);
 
 public:
