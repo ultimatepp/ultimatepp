@@ -334,6 +334,8 @@ protected:
 
 	int                           status;
 	
+	bool                          use_realcase = false;
+	
 	One<Sql>                      sql;
 	One<Sql>                      sqlr;
 	
@@ -414,6 +416,9 @@ public:
 	void                          SetStatus(int s)                        { status = s; WhenDatabaseActivity(*this); }
 	bool                          operator == (int s) const               { return status == s; }
 	bool                          operator != (int s) const               { return status != s; }
+
+	void                          UseRealcase()                           { use_realcase = true; }
+	bool                          IsUseRealcase() const                   { return use_realcase; }
 
 	Callback1<const SqlSession&>  WhenDatabaseActivity;
 

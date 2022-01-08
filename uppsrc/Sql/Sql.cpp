@@ -148,8 +148,9 @@ bool Sql::Execute() {
 	session.SetStatus(SqlSession::END_EXECUTING);
 	if(!b)
 		session.SetStatus(SqlSession::EXECUTING_ERROR);
-	for(int i = 0; i < cn->info.GetCount(); i++)
-		cn->info[i].name = ToUpper(cn->info[i].name);
+	if(!session.IsUseRealcase())
+		for(int i = 0; i < cn->info.GetCount(); i++)
+			cn->info[i].name = ToUpper(cn->info[i].name);
 
 	session.SetStatus(SqlSession::AFTER_EXECUTING);
 	if(!b && session.throwonerror)
@@ -344,7 +345,8 @@ void Sql::GetColumn(SqlId colid, Ref r) const
 				GetColumn(i, r);
 				return;
 			}
-		s = ToUpper(s);
+		if(!GetSession().IsUseRealcase())
+			s = ToUpper(s);
 	}
 	r.SetNull();
 }
@@ -361,7 +363,8 @@ Value Sql::operator[](SqlId id) const {
 		for(int i = 0; i < cn->info.GetCount(); i++)
 			if(cn->info[i].name == s)
 				return operator[](i);
-		s = ToUpper(s);
+		if(!GetSession().IsUseRealcase())
+			s = ToUpper(s);
 	}
 	NEVER_(String().Cat() << "SQL [" << ~id << "] not found");
 	return Value();
