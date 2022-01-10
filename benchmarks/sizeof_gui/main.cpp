@@ -16,6 +16,8 @@ GUI_APP_MAIN
 	RDUMP(sizeof(EditField));
 	RDUMP(sizeof(EditString));
 	RDUMP(sizeof(EditIntSpin));
+	RDUMP(sizeof(ScrollBar));
+	RDUMP(sizeof(DropList));
 	RDUMP(sizeof(ArrayCtrl));
 	RDUMP(sizeof(TreeCtrl));
 	RDUMP(sizeof(TreeCtrl::Node));

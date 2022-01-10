@@ -326,12 +326,15 @@ static sysColor sSysColor[] = {
 	{ SColorText_Write, COLOR_WINDOWTEXT },
 	{ SColorHighlight_Write, COLOR_HIGHLIGHT },
 	{ SColorHighlightText_Write, COLOR_HIGHLIGHTTEXT },
+	{ SColorMenu_Write, COLOR_3DFACE },
+/*
 	{ SColorMenu_Write, COLOR_MENU },
 	{ SColorMenuText_Write, COLOR_MENUTEXT },
 	{ SColorInfo_Write, COLOR_INFOBK },
 	{ SColorInfoText_Write, COLOR_INFOTEXT },
 	{ SColorLight_Write, COLOR_3DHILIGHT },
 	{ SColorShadow_Write, COLOR_3DSHADOW },
+*/
 };
 
 bool IsSysFlag(dword flag)
@@ -388,8 +391,19 @@ void ChHostSkin()
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 
 	XpClear();
-
-	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
+	 
+	if(sEmulateDarkTheme){
+		SColorPaper_Write(Color(0x19, 0x19, 0x19));
+		SColorFace_Write(Color(0x20, 0x20, 0x20));
+		SColorText_Write(White());
+		SColorMenu_Write(Color(0x20, 0x20, 0x20));
+		SColorLight_Write(Color(0x40, 0x40, 0x40));
+		SColorShadow_Write(Color(0x40, 0x40, 0x40));
+		SColorHighlight_Write(SColorShadow());
+		SColorHighlightText_Write(SColorHighlight().GetG()<128?White():Black());
+		SColorMenuMark_Write(Color(0x80, 0x80, 0x80));
+	}
+	else for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
 		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
 	ChBaseSkin();
@@ -420,8 +434,11 @@ void ChHostSkin()
 	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
 
-	dword x = GetSysColor(COLOR_GRAYTEXT);
-	SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
+	if(!sEmulateDarkTheme){
+		dword x = GetSysColor(COLOR_GRAYTEXT);
+		SColorDisabled_Write(sAdjust(x ? Color::FromCR(x) : Color::FromCR(GetSysColor(COLOR_3DSHADOW))));
+	}
+	else SColorDisabled_Write(Color(0x80, 0x80, 0x80));
 
 	ChLookFn(XpLookFn);
 
@@ -443,7 +460,8 @@ void ChHostSkin()
 				ee = eb;
 				EditField::Style& s = EditField::StyleDefault().Write();
 				s.activeedge = true;
-				s.edge[i] = ee;
+				if(!sEmulateDarkTheme) s.edge[i] = ee;
+				else s.edge[i] = SColorShadow();
 			}
 		}
 		else {
@@ -465,27 +483,46 @@ void ChHostSkin()
 		ImageBuffer eb(ee);
 		eb.SetHotSpot(Point(ebs, ebs));
 		ee = eb;
-		ViewEdge_Write(ee);
+		if(!sEmulateDarkTheme) ViewEdge_Write(ee);
+		else ViewEdge_Write(SColorShadow());
 
 		for(chCtrlsImg *m = sImgs; m < sImgs + __countof(sImgs); m++)
 			SetXpImages(m->id, m->count, m->widget, m->part, m->state);
 
 		{
 			Button::Style& s = Button::StyleNormal().Write();
-			Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
-			SetXpColors(s.textcolor, 4, XP_BUTTON, BP_PUSHBUTTON, PBS_NORMAL, 3803/*TMT_TEXTCOLOR*/);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
+				SetXpColors(s.textcolor, 4, XP_BUTTON, BP_PUSHBUTTON, PBS_NORMAL, 3803/*TMT_TEXTCOLOR*/);
+			}
+			else{
+				s.look[0] = Blend(SColorFace(), SColorShadow());
+				s.look[1] = SColorShadow();
+				s.look[2] = SColorPaper();
+				s.look[3] = Blend(SColorFace(), SColorShadow(), 64);
+			}
 		}
 		{
 			Button::Style& s = Button::StyleOk().Write();
-			Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
-			Win32Look(s.look[0], XP_BUTTON, BP_PUSHBUTTON, PBS_DEFAULTED);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
+				Win32Look(s.look[0], XP_BUTTON, BP_PUSHBUTTON, PBS_DEFAULTED);
+			}
+			else{
+				s.look[0] = Blend(SColorFace(), SColorShadow(), 164);
+				s.look[1] = SColorShadow();
+				s.look[2] = SColorPaper();
+				s.look[3] = Blend(SColorFace(), SColorShadow(), 64);
+			}
 		}
 		{
 			ToolBar::Style& s = ToolBar::StyleDefault().Write();
 			Win32Look(s.buttonstyle.look, 6, XP_TOOLBAR, 1, 1);
 			Win32Look(ToolButton::StyleDefault().Write().look, 6, XP_TOOLBAR, 1, 1);
-			Win32Look(s.arealook, XP_REBAR, 0, 1);
-			ToImageIfDark(s.arealook);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.arealook, XP_REBAR, 0, 1);
+				ToImageIfDark(s.arealook);
+			}
 			s.breaksep.l2 = SColorLight();
 		}
 		Win32Look(StatusBar::StyleDefault().Write().look, XP_STATUS, 0, 1);
@@ -495,10 +532,18 @@ void ChHostSkin()
 			Win32Look(s.hlower, 4, XP_SCROLLBAR, SBP_UPPERTRACKHORZ);
 			Win32Look(s.vupper, 4, XP_SCROLLBAR, SBP_LOWERTRACKVERT);
 			Win32Look(s.vlower, 4, XP_SCROLLBAR, SBP_UPPERTRACKVERT);
-			Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
-			Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
-			Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTNORMAL);
-			Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTNORMAL);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
+				Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
+				Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTNORMAL);
+				Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTNORMAL);
+			}
+			else{
+				Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPHOT);
+				Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNHOT);
+				Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTHOT);
+				Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTHOT);
+			}
 		}
 		{
 			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
@@ -506,8 +551,10 @@ void ChHostSkin()
 			Win32Look(s.first, 4, XP_TAB, TABP_TABITEMLEFTEDGE);
 			Win32Look(s.last, 4, XP_TAB, TABP_TABITEM);
 			Win32Look(s.both, 4, XP_TAB, TABP_TABITEMBOTHEDGE);
-			Win32Look(s.body, XP_TAB, TABP_PANE);
-			ToImageIfDark(s.body);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.body, XP_TAB, TABP_PANE);
+				ToImageIfDark(s.body);
+			}
 		}
 		{
 			SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
@@ -582,8 +629,16 @@ void ChHostSkin()
 				s.separator.l1 = Blend(SColorMenu(), SColorShadow());
 				s.separator.l2 = SColorLight();
 			}
-			Win32Look(s.arealook, XP_REBAR, 0, 1);
-			ToImageIfDark(s.arealook);
+			if(!sEmulateDarkTheme){
+				Win32Look(s.arealook, XP_REBAR, 0, 1);
+				ToImageIfDark(s.arealook);
+			}
+			else{
+				s.topbar = s.arealook = SColorFace();
+				s.topitem[1] = s.topitem[2] = s.popupbody = s.popupiconbar = Blend(SColorFace(), SColorShadow(),92);
+				s.popupframe = Black();
+				s.item = SColorShadow();
+			}
 			CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
 			CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
 			CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
@@ -640,7 +695,7 @@ void ChHostSkin()
 
 			MultiButton::StyleDefault().Write().simple[i] = m;
 			MultiButton::StyleFrame().Write().simple[i] = m;
-
+			
 			Button::StyleNormal().Write().monocolor[i] = c;
 			Button::StyleOk().Write().monocolor[i] = c;
 			Button::StyleEdge().Write().monocolor[i] = c;
@@ -673,7 +728,7 @@ void ChHostSkin()
 			                                   paper, Size(40, 40))),
 			                14, 26);
 		}
-
+		
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));
 	}

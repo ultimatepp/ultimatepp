@@ -6,7 +6,7 @@ CONSOLE_APP_MAIN
 {
 	PdfDraw pdf;
 	int cy = 0;
-	for(int face = Font::SERIF; face < min(9, Font::GetFaceCount()); face++)
+	for(int face = Font::SERIF; face < min(20, Font::GetFaceCount()); face++)
 //	int face = 6;
 		for(int strikeout = 0; strikeout < 2; strikeout++)
 			for(int underline = 0; underline < 2; underline++)

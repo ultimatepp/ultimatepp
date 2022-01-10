@@ -1215,9 +1215,12 @@ void TreeCtrl::Scroll()
 		scroller.Scroll(*this, sb);
 }
 
-void TreeCtrl::MouseWheel(Point, int zdelta, dword)
+void TreeCtrl::MouseWheel(Point, int zdelta, dword keyflags)
 {
-	sb.WheelY(zdelta);
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
+		sb.WheelY(zdelta);
 }
 
 void TreeCtrl::ChildGotFocus()

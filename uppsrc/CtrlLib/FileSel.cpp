@@ -2390,6 +2390,8 @@ FileSel::FileSel()
 	places.NoHeader().NoGrid();
 	places.WhenLeftClick = THISBACK(GoToPlace);
 	places.NoWantFocus();
+	
+	list.NoRoundSize();
 
 #ifdef PLATFORM_WIN32
 	int icx = GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx;

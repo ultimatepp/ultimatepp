@@ -9,7 +9,6 @@ namespace Upp {
 
 #define PDF_COMPRESS
 
-
 dword PdfDraw::GetInfo() const
 {
 	return DOTS|DRAWTEXTLINES;
@@ -294,11 +293,11 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 	if(q >= 0)
 		return outline_info[q];
 	OutlineInfo of;
-	of.sitalic = of.ttf = false;
+	of.sitalic = of.standard_ttf = false;
 
 	TTFReader ttf;
-	if(ttf.Open(fnt.GetData(), false, true)) {
-		of.ttf = true;
+	if(ttf.Open(fnt, false, true)) {
+		of.standard_ttf = true;
 		of.sitalic = fnt.IsItalic() && (ttf.head.macStyle & 2) == 0;
 		of.sbold = fnt.IsBold() && (ttf.head.macStyle & 1) == 0;
 		LLOG(fnt << ", sbold: " << of.sbold << ", sitalic: " << of.sitalic);
@@ -324,7 +323,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	Font ff = fnt;
 	int fh = fnt.GetHeight();
 	OutlineInfo of = GetOutlineInfo(fnt);
-	if(of.ttf)
+	if(of.standard_ttf)
 		fnt.Height(FONTHEIGHT_TTF);
 	String txt;
 	PutrgColor(ink);
@@ -385,7 +384,7 @@ void PdfDraw::Escape(const String& data)
 		this->data = data.Mid(5);
 }
 
-Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg);
 
 PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 {
@@ -402,19 +401,28 @@ PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 	int r = fi.GetRightSpace(chr);
 	if(r < 0)
 		rg.sz.cx -= r;
-	RasterFormat fmt;
-	fmt.Set1mf();
-	int linebytes = fmt.GetByteCount(rg.sz.cx);
-	Buffer<byte> ob(linebytes);
-	int y = 0;
-	while(y < rg.sz.cy) {
-		int ccy = min(16, rg.sz.cy - y);
-		Image m = RenderGlyph(rg.sz.cx, rg.x, fnt, chr, y, ccy);
-		for(int i = 0; i < m.GetHeight(); i++) {
-			fmt.Write(ob, m[i], rg.sz.cx, NULL);
-			rg.data.Cat((const char *)~ob, linebytes);
+	if(false) {
+		Image m[2];
+		for(int i = 0; i < 2; i++)
+			m[i] = RenderGlyph(rg.sz.cx, rg.x, fnt, chr, 0, rg.sz.cy, Blue(), i ? Black() : White());
+		Image cm = RecreateAlpha(m[0], m[1]);
+		rg.color_image = PdfImage(cm, cm.GetSize());
+	}
+	else {
+		RasterFormat fmt;
+		fmt.Set1mf();
+		int linebytes = fmt.GetByteCount(rg.sz.cx);
+		Buffer<byte> ob(linebytes);
+		int y = 0;
+		while(y < rg.sz.cy) {
+			int ccy = min(16, rg.sz.cy - y);
+			Image m = RenderGlyph(rg.sz.cx, rg.x, fnt, chr, y, ccy, Black(), White());
+			for(int i = 0; i < m.GetHeight(); i++) {
+				fmt.Write(ob, m[i], rg.sz.cx, NULL);
+				rg.data.Cat((const char *)~ob, linebytes);
+			}
+			y += ccy;
 		}
-		y += ccy;
 	}
 	return rg;
 }
@@ -451,18 +459,24 @@ void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data)
 	w.DrawImage(x, y, cx, cy, sJPEGDummy());
 }
 
-void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const Rect& src, Color c)
+int PdfDraw::PdfImage(const Image& img, const Rect& src)
 {
-	Image img = _img;
-	if(!IsNull(c))
-		img = CachedSetColorKeepAlpha(img, c);
-	
 	Tuple2<int64, Rect> key = MakeTuple(img.GetSerialId(), src);
 	int q = images.Find(key);
 	if(q < 0) {
 		q = images.GetCount();
 		images.Add(key, img);
 	}
+	return q;
+}
+
+void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const Rect& src, Color c)
+{
+	Image img = _img;
+	if(!IsNull(c))
+		img = CachedSetColorKeepAlpha(img, c);
+	
+	int q = PdfImage(img, src);
 	
 	if(img.GetSerialId() == sJPEGDummy().GetSerialId())
 		jpeg.Add(data);
@@ -603,6 +617,57 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 
 	int pagecount = offset.GetCount();
 
+	// we need to generate raster glyph char procs before images because we need alpha image
+	// for color emojis
+	Vector<int> charprocs;
+	for(int i = 0; i < pdffont.GetCount(); i++) {
+		Font fnt = pdffont.GetKey(i);
+		if(fnt.GetHeight() != FONTHEIGHT_TTF) {
+			int t3ch = offset.GetCount() + 1;
+			int fa = fnt.GetCy() - fnt.GetInternal();
+			String res;
+			const Vector<wchar>& cs = pdffont[i];
+			for(int c = 0; c < cs.GetCount(); c++) {
+				RGlyph rg = RasterGlyph(fnt, pdffont[i][c]);
+				String proc;
+				if(rg.color_image >= 0)
+					proc << 1000 * fnt[cs[c]] / fa << " 0 d0\n";
+				else
+					proc
+						<< 1000 * fnt[cs[c]] / fa << " 0 0 "
+						<< -1000 * fnt.GetDescent() / fa << ' '
+						<< 1000 * (rg.sz.cx + rg.x) / fa << ' '
+						<< 1000 * rg.sz.cy / fa
+						<< " d1\n";
+				proc
+					<< "q "
+					<< 1000 * rg.sz.cx / fa
+					<< " 0 0 "
+					<< 1000 * rg.sz.cy / fa
+					<< " "
+					<< -1000 * rg.x / fa
+					<< " "
+					<< -1000 * fnt.GetDescent() / fa
+					<< " cm"
+				;
+				if(rg.color_image >= 0)
+				    proc << " /Image" << rg.color_image + 1 << " Do Q";
+				else
+					proc << " BI /W " << rg.sz.cx << " /H " << rg.sz.cy
+					     << " /BPC 1 /IM true /D [0 1]"
+					     << " ID\n" << rg.data
+					     << "\nEI Q";
+				PutStream(proc);
+			}
+			charprocs.At(i) = BeginObj();
+			out << "<<";
+			for(int c = 0; c < cs.GetCount(); c++)
+				out << " /Rgch" << c << ' ' << t3ch + c<< " 0 R";
+			out << " >>\n";
+			EndObj();
+		}
+	}
+
 	Vector<int> imageobj;
 	int jpegi = 0;
 	for(int i = 0; i < images.GetCount(); i++) {
@@ -709,7 +774,137 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		out << "<< >>\n";
 		EndObj();
 	}
+
 	
+	Vector<int> fontobj;
+	for(int i = 0; i < pdffont.GetCount(); i++) {
+		Font fnt = pdffont.GetKey(i);
+		const Vector<wchar>& cs = pdffont[i];
+		String cmap;
+		cmap <<
+			"/CIDInit /ProcSet findresource begin\n"
+			"12 dict begin\n"
+			"begincmap\n"
+			"/CIDSystemInfo\n"
+			"<< /Registry (Adobe)\n"
+			"/Ordering (UCS)\n"
+			"/Supplement 0\n"
+			">> def\n"
+			"/CMapName /UCS" << i << " def\n"
+			"/CMapType 2 def\n"
+			"1 begincodespacerange\n"
+			"<00> <" << FormatIntHex(cs.GetCount() - 1, 2) << ">\n"
+			"endcodespacerange\n"
+			"1 beginbfrange\n"
+			"<00> <" << FormatIntHex(cs.GetCount() - 1, 2) << ">\n"
+			"[\n";
+		for(int c = 0; c < cs.GetCount(); c++)
+			cmap << '<' << FormatIntHex(cs[c], 4) << ">\n";
+		cmap <<
+			"]\n"
+			"endbfrange\n"
+			"endcmap\n"
+			"CMapName currentdict /CMap defineresource pop\n"
+			"end\n"
+			"end\n";
+		int cmapi = PutStream(cmap);
+		if(fnt.GetHeight() != FONTHEIGHT_TTF) {
+			int encoding = BeginObj();
+			out << "<< /Type /Encoding /Differences [0";
+			for(int c = 0; c < cs.GetCount(); c++)
+				out << " /Rgch" << c;
+			out << "] >>\n";
+			EndObj();
+
+			int resources = BeginObj();
+			out << "<< /ProcSet [ /PDF /Text /ImageB /ImageC ]\n";
+			if(imageobj.GetCount()) {
+				out << "/XObject << ";
+				for(int i = 0; i < imageobj.GetCount(); i++)
+					out << "/Image" << (i + 1) << ' ' << imageobj[i] << " 0 R ";
+				out << ">>\n";
+			}
+			out << ">>\n";
+			EndObj();
+
+			fontobj.Add() = BeginObj();
+			out <<
+				"<< /Name /F" << i + 1 <<
+				" /Type /Font\n"
+				"/Subtype /Type3\n"
+				"/FontBBox [0 0 0 0]\n"
+				"/FontMatrix [0.001 0 0 0.001 0 0]\n"
+				"/CharProcs " << charprocs[i] << " 0 R\n"
+				"/Encoding " << encoding << " 0 R\n"
+				"/FirstChar 0\n"
+				"/LastChar " << cs.GetCount() - 1 << "\n"
+				"/Widths [";
+			int fa = fnt.GetCy() - fnt.GetInternal();
+			for(int i = 0; i < cs.GetCount(); i++)
+				out << ' ' << 1000 * fnt[cs[i]] / fa;
+			out <<
+				"]\n";
+						    
+			out << "/Resources " << resources << " 0 R\n"
+			    << "/FirstChar 0 /LastChar " << cs.GetCount() - 1 <<" /ToUnicode "
+				<< cmapi
+				<< " 0 R\n>>\n";
+			EndObj();
+		}
+		else {
+			TTFReader ttf;
+			if(!ttf.Open(pdffont.GetKey(i)))
+				return Null;
+
+			String name = FormatIntAlpha(i + 1, true);
+			name.Cat('A', 6 - name.GetLength());
+			name << '+' << ttf.ps_name;
+
+			int fonti = PutStream(ttf.Subset(cs));
+
+			BeginObj();
+			int ascent = ttf.hhea.ascent * 1000 / ttf.head.unitsPerEm;
+			int descent = ttf.hhea.descent * 1000 / ttf.head.unitsPerEm;
+			out <<
+				"<< /Type /FontDescriptor\n"
+				"/FontName /" << name << "\n"
+				"/Flags 4\n"
+				"/FontBBox [ -1000 " << descent << " 3000 " << ascent << " ]\n" //?????
+				"/ItalicAngle " << ttf.post.italicAngle / 65536.0 << "\n"
+				"/Ascent " << ascent << "\n"
+				"/Descent " << -descent << "\n"
+				"/CapHeight " << ttf.hhea.ascent * 1000 / ttf.head.unitsPerEm << "\n"
+				"/StemV 80\n"
+				"/FontFile2 " << fonti << " 0 R\n" <<
+				">>\n";
+			EndObj();
+
+			fontobj.Add() = BeginObj();
+			out <<
+				"<< /Type /Font\n"
+				"/Subtype /TrueType\n"
+				"/BaseFont /" << name << "\n"
+				"/FirstChar 0\n"
+				"/LastChar " << cs.GetCount() - 1 << "\n"
+				"/Widths [ ";
+			for(int i = 0; i < cs.GetCount(); i++)
+				out << ttf.GetAdvanceWidth(cs[i]) * 1000 / ttf.head.unitsPerEm << ' ';
+			out <<
+				"]\n"
+				"/FontDescriptor " << fonti + 1 << " 0 R\n"
+				"/ToUnicode " << cmapi << " 0 R\n" <<
+				">>\n";
+			EndObj();
+		}
+	}
+
+	int fonts = BeginObj();
+	out << "<<\n";
+	for(int i = 0; i < pdffont.GetCount(); i++)
+		out << "/F" << i + 1 << ' ' << fontobj[i] << " 0 R \n";
+	out << ">>\n";
+	EndObj();
+
 	Vector<int> patternobj;
 	patternobj.SetCount(patterns.GetCount(), -1);
 	for(int i = 0; i < patterns.GetCount(); i++) {
@@ -811,156 +1006,6 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		}
 	}
 */
-	Vector<int> fontobj;
-	for(int i = 0; i < pdffont.GetCount(); i++) {
-		Font fnt = pdffont.GetKey(i);
-		const Vector<wchar>& cs = pdffont[i];
-		String cmap;
-		cmap <<
-			"/CIDInit /ProcSet findresource begin\n"
-			"12 dict begin\n"
-			"begincmap\n"
-			"/CIDSystemInfo\n"
-			"<< /Registry (Adobe)\n"
-			"/Ordering (UCS)\n"
-			"/Supplement 0\n"
-			">> def\n"
-			"/CMapName /UCS" << i << " def\n"
-			"/CMapType 2 def\n"
-			"1 begincodespacerange\n"
-			"<00> <" << FormatIntHex(cs.GetCount() - 1, 2) << ">\n"
-			"endcodespacerange\n"
-			"1 beginbfrange\n"
-			"<00> <" << FormatIntHex(cs.GetCount() - 1, 2) << ">\n"
-			"[\n";
-		for(int c = 0; c < cs.GetCount(); c++)
-			cmap << '<' << FormatIntHex(cs[c], 4) << ">\n";
-		cmap <<
-			"]\n"
-			"endbfrange\n"
-			"endcmap\n"
-			"CMapName currentdict /CMap defineresource pop\n"
-			"end\n"
-			"end\n";
-		int cmapi = PutStream(cmap);
-		if(fnt.GetHeight() != FONTHEIGHT_TTF) {
-			FontInfo fi = fnt.Info();
-			int t3ch = offset.GetCount() + 1;
-			int fa = fi.GetHeight() - fi.GetInternal();
-			String res;
-			for(int c = 0; c < cs.GetCount(); c++) {
-				RGlyph rg = RasterGlyph(fnt, pdffont[i][c]);
-				String proc;
-				proc
-					<< 1000 * fi[cs[c]] / fa << " 0 0 "
-					<< -1000 * fi.GetDescent() / fa << ' '
-					<< 1000 * (rg.sz.cx + rg.x) / fa << ' '
-					<< 1000 * rg.sz.cy / fa
-					<< " d1\nq "
-					<< 1000 * rg.sz.cx / fa
-					<< " 0 0 "
-					<< 1000 * rg.sz.cy / fa
-					<< " "
-					<< -1000 * rg.x / fa
-					<< " "
-					<< -1000 * fi.GetDescent() / fa
-					<< " cm BI /W " << rg.sz.cx << " /H " << rg.sz.cy
-					<< " /BPC 1 /IM true /D [0 1] ID\n"
-					<< rg.data
-					<< "\nEI Q"
-				;
-				PutStream(proc);
-			}
-			int charprocs = BeginObj();
-			out << "<<";
-			for(int c = 0; c < cs.GetCount(); c++)
-				out << " /Rgch" << c << ' ' << t3ch + c<< " 0 R";
-			out << " >>\n";
-			EndObj();
-			int encoding = BeginObj();
-			out << "<< /Type /Encoding /Differences [0";
-			for(int c = 0; c < cs.GetCount(); c++)
-				out << " /Rgch" << c;
-			out << "] >>\n";
-			EndObj();
-			fontobj.Add() = BeginObj();
-			out <<
-				"<< /Name /F" << i + 1 <<
-				" /Type /Font\n"
-				"/Subtype /Type3\n"
-				"/FontBBox [0 0 0 0]\n"
-				"/FontMatrix [0.001 0 0 0.001 0 0]\n"
-				"/CharProcs " << charprocs << " 0 R\n"
-				"/Encoding " << encoding << " 0 R\n"
-				"/FirstChar 0\n"
-				"/LastChar " << cs.GetCount() - 1 << "\n"
-				"/Widths [";
-			for(int i = 0; i < cs.GetCount(); i++)
-				out << ' ' << 1000 * fi[cs[i]] / fa;
-			out <<
-				"]\n";
-			out << "/Resources << /ProcSet [ /PDF /Text /ImageB  ] >>\n"
-			    << "/FirstChar 0 /LastChar " << cs.GetCount() - 1 <<" /ToUnicode "
-				<< cmapi
-				<< " 0 R\n>>\n";
-			EndObj();
-		}
-		else {
-			String fontbuffer;
-			fontbuffer = pdffont.GetKey(i).GetData();
-
-			TTFReader ttf;
-			if(!ttf.Open(fontbuffer))
-				return Null;
-
-			String name = FormatIntAlpha(i + 1, true);
-			name.Cat('A', 6 - name.GetLength());
-			name << '+' << ttf.ps_name;
-
-			int fonti = PutStream(ttf.Subset(cs));
-
-			BeginObj();
-			int ascent = ttf.hhea.ascent * 1000 / ttf.head.unitsPerEm;
-			int descent = ttf.hhea.descent * 1000 / ttf.head.unitsPerEm;
-			out <<
-				"<< /Type /FontDescriptor\n"
-				"/FontName /" << name << "\n"
-				"/Flags 4\n"
-				"/FontBBox [ -1000 " << descent << " 3000 " << ascent << " ]\n" //?????
-				"/ItalicAngle " << ttf.post.italicAngle / 65536.0 << "\n"
-				"/Ascent " << ascent << "\n"
-				"/Descent " << -descent << "\n"
-				"/CapHeight " << ttf.hhea.ascent * 1000 / ttf.head.unitsPerEm << "\n"
-				"/StemV 80\n"
-				"/FontFile2 " << fonti << " 0 R\n" <<
-				">>\n";
-			EndObj();
-
-			fontobj.Add() = BeginObj();
-			out <<
-				"<< /Type /Font\n"
-				"/Subtype /TrueType\n"
-				"/BaseFont /" << name << "\n"
-				"/FirstChar 0\n"
-				"/LastChar " << cs.GetCount() - 1 << "\n"
-				"/Widths [ ";
-			for(int i = 0; i < cs.GetCount(); i++)
-				out << ttf.GetAdvanceWidth(cs[i]) * 1000 / ttf.head.unitsPerEm << ' ';
-			out <<
-				"]\n"
-				"/FontDescriptor " << fonti + 1 << " 0 R\n"
-				"/ToUnicode " << cmapi << " 0 R\n" <<
-				">>\n";
-			EndObj();
-		}
-	}
-
-	int fonts = BeginObj();
-	out << "<<\n";
-	for(int i = 0; i < pdffont.GetCount(); i++)
-		out << "/F" << i + 1 << ' ' << fontobj[i] << " 0 R \n";
-	out << ">>\n";
-	EndObj();
 	
 	int dflt_rgb_def = -1;
 	if(pdfa) {

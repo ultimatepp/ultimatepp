@@ -234,20 +234,21 @@ struct sRFace {
 	#include "Fonts.i"
 };
 
-bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
-	String data = font.GetData("cmap");
-	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= data.GetCount() ? Peek16be(~data + i) : 0; };
-	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= data.GetCount() ? Peek32be(~data + i) : 0; };
-	for(int pass = 0; pass < 2; pass++) {
+bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, dword flags)
+{
+	auto Get8 = [&](int i) { return i >= 0 && i + 1 <= count ? (byte)ptr[i] : 0; };
+	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= count ? Peek16be(ptr + i) : 0; };
+	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= count ? Peek32be(ptr + i) : 0; };
+	for(int pass = 0; pass < (flags & CMAP_ALLOW_SYMBOL ? 3 : 2); pass++) {
 		int p = 0;
 		p += 2;
 		int n = Get16(p);
 		p += 2;
-		while(n-- && p < data.GetCount()) {
+		while(n-- && p < count) {
 			int pid = Get16(p); p += 2;
 			int psid = Get16(p); p += 2;
 			int offset = Get32(p); p += 4;
-			if(offset < 0 || offset > data.GetCount())
+			if(offset < 0 || offset > count)
 				return false;
 			int format = Get16(offset);
 			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
@@ -263,8 +264,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				}
 				return true;
 			}
-			else
-			if((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4 && pass == 1) {
+			if(((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4) && pass == 1) {
 				int p = offset;
 				int n = Get16(p + 6) >> 1;
 				int seg_end = p + 14;
@@ -276,7 +276,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 					int end = Get16(seg_end + 2 * i);
 					int delta = Get16(idDelta + 2 * i);
 					int ro = Get16(idRangeOffset + 2 * i);
-					if(glyphs) {
+					if(flags & CMAP_GLYPHS) {
 					    if (ro && delta == 0) {
 					        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
 							int q = idRangeOffset + 2 * i + ro;
@@ -295,9 +295,21 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				}
 				return true;
 			}
+			if(pid == 1 && psid == 0 && Get16(offset) == 0 && pass == 2) {
+				LLOG("Reading symbol cmap");
+				for(int i = 0; i < 256; i++)
+					range(i, i, Get8(offset + 6 + i));
+				return true;
+			}
 		}
 	}
 	return false;
+}
+
+bool ReadCmap(Font font, Event<int, int, int> range, dword flags)
+{
+	String h = font.GetData("cmap");
+	return ReadCmap(h, h.GetCount(), range, flags);
 }
 
 bool GetPanoseNumber(Font font, byte *panose)
