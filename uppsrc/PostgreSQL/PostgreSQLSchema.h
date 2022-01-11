@@ -173,6 +173,9 @@ ATTRIBUTE("alter table @t add constraint UQ_@t$" #name " unique (" list ");", \
 #undef STRING_
 #undef STRING_ARRAY_
 
+#undef BLOB
+#undef BLOB_
+
 #undef DATE
 #undef DATE_ARRAY
 #undef DATE_

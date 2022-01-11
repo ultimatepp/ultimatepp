@@ -202,3 +202,4 @@
 #undef SCHEMA
 #undef CONFIG
 #undef UPGRADE
+#undef TIMESTAMP
