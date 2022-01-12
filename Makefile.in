@@ -68270,6 +68270,12 @@ $(OutDir_PdfDraw)TTFStream.o: $(UPPDIR1)PdfDraw/TTFStream.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
@@ -68369,6 +68375,12 @@ $(OutDir_PdfDraw)TTFStruct.o: $(UPPDIR1)PdfDraw/TTFStruct.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
@@ -68468,6 +68480,12 @@ $(OutDir_PdfDraw)TTFSubset.o: $(UPPDIR1)PdfDraw/TTFSubset.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
@@ -68567,6 +68585,12 @@ $(OutDir_PdfDraw)TTFReader.o: $(UPPDIR1)PdfDraw/TTFReader.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
@@ -68666,6 +68690,12 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/ICCColorSpace.i \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
@@ -68766,6 +68796,12 @@ $(OutDir_PdfDraw)PdfReport.o: $(UPPDIR1)PdfDraw/PdfReport.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
@@ -68865,6 +68901,12 @@ $(OutDir_PdfDraw)PdfInit.o: $(UPPDIR1)PdfDraw/PdfInit.icpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/Interpolator.hpp \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
 	$(UPPDIR1)plugin/z/lib/zlib.h \
