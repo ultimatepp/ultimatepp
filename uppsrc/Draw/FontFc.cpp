@@ -155,9 +155,9 @@ CommonFontInfo GetFontInfoSys(Font font)
 		else
 			*fi.path = 0;
 		
-		if(font.GetFaceInfo() & Font::COLORIMG) {
+		if(font.GetFaceInfo() & Font::COLORIMG) { // Experimental estimate for cairo results
 			fi.colorimg_cy = fi.ascent + fi.descent;
-			int h = font.GetHeight();
+			int h = 4 * font.GetHeight() / 3;
 			fi.ascent = h * fi.ascent / fi.colorimg_cy;
 			fi.descent = h - fi.ascent;
 		}

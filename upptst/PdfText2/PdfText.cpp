@@ -3,28 +3,48 @@
 
 using namespace Upp;
 
-CONSOLE_APP_MAIN
+void DoPaint(Draw& w, int hg, int x1, int x2, int n = INT_MAX)
 {
-	PdfDraw pdf;
 	int cy = 0;
-	pdf.DrawImage(5000, 20, 100, 100, CtrlImg::exclamation());
-//	for(int face = Font::SERIF; face < Font::GetFaceCount(); face++)
-	int face = 19;
+	w.DrawImage(x2, 20, 100, 100, CtrlImg::exclamation());
+	for(int face = Font::SERIF; face < min(n, Font::GetFaceCount()); face++)
 	{
-		Font fnt(face, 100);
+		Font fnt(face, hg);
 		Cout() << fnt << "\n";
 		LOG(face << ' ' << fnt << ", TTF: " << fnt.IsTrueType());
 		String txt = AsString(fnt) + " 訓民正音 (훈민정음) 😜 🤪 ";
-		pdf.DrawText(0, cy, txt, fnt, Black);
-		pdf.DrawText(3000, cy, AsString(fnt) << ' ' << face, StdFont(100), Black);
+		w.DrawRect(0, cy, GetTextSize(txt, fnt).cx, fnt.GetAscent(), Blend(White(), LtBlue()));
+		w.DrawRect(0, cy + fnt.GetAscent(), GetTextSize(txt, fnt).cx, fnt.GetDescent(), Blend(White(), LtRed()));
+		w.DrawText(0, cy, txt, fnt, Black);
+		w.DrawText(x1, cy, AsString(fnt) << ' ' << face, StdFont(hg), Black);
 		cy += fnt.GetLineHeight();
 		if(cy > 6000) {
-			pdf.EndPage();
-			pdf.StartPage();
+			auto *pdf = dynamic_cast<PdfDraw *>(&w);
+			if(pdf) {
+				pdf->EndPage();
+				pdf->StartPage();
+			}
 			cy = 0;
 		}
 	}
+}
+
+struct MyApp : TopWindow {
+	void Paint(Draw& w) override {
+		Size sz = GetSize();
+		w.DrawRect(sz, White());
+		DoPaint(w, 24, sz.cx / 2, sz.cx - 100, 10);
+	}
+};
+
+GUI_APP_MAIN
+{
+	PdfDraw pdf;
+	DoPaint(pdf, 100, 3000, 5000);
 	String p = GetHomeDirFile("pdf.pdf");
-	SaveFile(p, pdf.Finish());
+	String s = pdf.Finish();
+	DDUMP(s.GetCount());
+	SaveFile(p, s);
 	LaunchWebBrowser(p);
+	MyApp().Run();
 }

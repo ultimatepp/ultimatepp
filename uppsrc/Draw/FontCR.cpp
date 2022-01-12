@@ -426,15 +426,22 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 			f.Face(fi);
 			if(IsNormal_nc(f, chr)) {
 				int a = fnt.GetAscent();
+				int d = fnt.GetDescent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
-				if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
+				LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+				     ", replacement " << f << " " << f.GetAscent() << " " << f.GetDescent());
+				if((f.GetAscent() > a || f.GetDescent() > d) && apple_kbd.Find(chr) < 0) {
 					static sFontMetricsReplacement cache[256];
 					int q = CombineHash(fnt, f) & 255;
 					if(cache[q].src != fnt || cache[q].dst != f) {
 						cache[q].src = fnt;
 						cache[q].dst = f;
-						while(f.GetAscent() > a && f.GetHeight() > 1) {
-							f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
+						double h = f.GetHeight();
+						f.Height(min(h * a / max(1, f.GetAscent()), h * d / max(1, f.GetDescent())) + 1);
+						while((f.GetAscent() > a || f.GetDescent() > d) && f.GetHeight() > 1) {
+							f.Height(max(1, f.GetHeight() - 1/*max(1, f.GetHeight() / 20)*/));
+							LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+							     ", downsized " << f << " " << f.GetAscent() << " " << f.GetDescent());
 						}
 						cache[q].mdst = f;
 					}

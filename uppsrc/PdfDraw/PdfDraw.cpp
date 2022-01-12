@@ -296,7 +296,7 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 	of.sitalic = of.standard_ttf = false;
 
 	TTFReader ttf;
-	if(ttf.Open(fnt, false, true)) {
+	if((fnt.GetFaceInfo() & Font::COLORIMG) == 0 && ttf.Open(fnt, false, true)) {
 		of.standard_ttf = true;
 		of.sitalic = fnt.IsItalic() && (ttf.head.macStyle & 2) == 0;
 		of.sbold = fnt.IsBold() && (ttf.head.macStyle & 1) == 0;
@@ -310,68 +310,132 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 
 enum { FONTHEIGHT_TTF = -9999 };
 
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg);
+
+PdfDraw::CGlyph PdfDraw::ColorGlyph(Font fnt, int chr)
+{
+	auto key = MakeTuple(fnt, chr);
+	int q = color_glyph.Find(key);
+	if(q >= 0)
+		return color_glyph[q];
+
+	CGlyph cg;
+	cg.sz = { fnt[chr], fnt.GetCy() };
+	cg.x = 0;
+	int l = fnt.GetLeftSpace(chr);
+	if(l < 0) {
+		cg.x = -l;
+		cg.sz.cx -= l;
+	}
+	int r = fnt.GetRightSpace(chr);
+	if(r < 0)
+		cg.sz.cx -= r;
+
+	Image m[2];
+	for(int i = 0; i < 2; i++)
+		m[i] = RenderGlyph(cg.sz.cx, cg.x, fnt, chr, 0, cg.sz.cy, Blue(), i ? Black() : White());
+	Image cm = RecreateAlpha(m[0], m[1]);
+	cg.image = PdfImage(cm, cm.GetSize());
+	color_glyph.Add(key, cg);
+	return cg;
+}
+
 void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		                 Color ink, int n, const int *dx)
 {
-	LLOG("DrawTextOp " << x << ", " << y << "angle: " << angle << ", text: " << s << ", font " << fnt);
+	LLOG("DrawTextOp " << x << ", " << y << " angle: " << angle << ", text: " << s << ", font " << fnt);
 	if(!n) return;
-	int h = fnt.GetHeight();
-	if(h == 0)
-		fnt.Height(100);
-	if(h < 0)
-		fnt.Height(-h);
-	Font ff = fnt;
-	int fh = fnt.GetHeight();
-	OutlineInfo of = GetOutlineInfo(fnt);
-	if(of.standard_ttf)
-		fnt.Height(FONTHEIGHT_TTF);
-	String txt;
-	PutrgColor(ink);
-	PutRGColor(ink);
 	double sina = 0, cosa = 1;
 	if(angle)
 		Draw::SinCos(angle, sina, cosa);
-	int nbld = 0;
-	int sbld = 1;
-	if(of.sbold) {
-		nbld = abs(ff.GetHeight()) / 30;
-		sbld = min(5, nbld);
-	}
 	int posx = 0;
-	for(int q = 0; q <= nbld; q += sbld) {
-		page << "BT ";
-		posx = q;
-		M22 m;
-		if(of.sitalic)
-			m.c = 0.165;
-		if(angle)
-			m.Mul(cosa, sina, -sina, cosa);
+	bool straight = true;
+	OutlineInfo of = GetOutlineInfo(fnt);
+	Xform2D m;
+	if(of.sitalic) {
+		m = m.SheerX(0.165);
+		straight = false;
+	}
+	if(angle) {
+		straight = false;
+		m = Xform2D::Rotation(-angle * M_PI / 1800.0) * m;
+	}
+
+	auto Fmt = [](double x) { return FormatF(x, 5); };
+
+	if(fnt.GetFaceInfo() & Font::COLORIMG) {
 		int fi = -1;
-		bool straight = (fabs(m.a - 1) <= 1e-8 && fabs(m.b) <= 1e-8 && fabs(m.c) <= 1e-8 && fabs(m.d - 1) <= 1e-8);
 		Pointf prev(0, 0);
 		for(int i = 0; i < n; i++) {
-			Pointf next(Pt(x + posx * cosa + fround(ff.GetAscent() * sina)),
-			            Pt(pgsz.cy - (y - posx * sina) - fround(ff.GetAscent() * cosa)));
-			CharPos fp = GetCharPos(fnt, s[i]);
-			if(fi != fp.fi) {
-				fi = fp.fi;
-				PutFontHeight(fi, fh);
-			}
+			CGlyph cg = ColorGlyph(fnt, s[i]);
+			page << "q ";
 			if(straight)
-				page << (next.x - prev.x) << ' ' << (next.y - prev.y) << " Td";
-			else
-				page << m.a << ' ' << m.b << ' ' << m.c << ' ' << m.d << ' ' << next.x << ' ' << next.y << " Tm";
-			page << " <" << FormatIntHex(fp.ci, 2);
-			page << "> Tj\n";
-			posx += dx ? dx[i] : ff[s[i]];
-			prev = next;
-		}
-		page << "ET\n";
+				page << Ptf(cg.sz.cx) << " 0 0 " << Ptf(cg.sz.cy) << ' '
+			         << Ptf(x + posx + cg.x) << ' ' << Ptf(pgsz.cy - y - cg.sz.cy);
+			else {
+				Xform2D mm = m * Xform2D::Scale(Pt(cg.sz.cx), Pt(cg.sz.cy));
+				page << Fmt(mm.x.x) << ' ' << Fmt(mm.x.y) << ' ' << Fmt(mm.y.x) << ' ' << Fmt(mm.y.y)
+				     << ' ' << Ptf(x + posx * cosa + cg.sz.cx * sina)
+				     << ' ' << Ptf(pgsz.cy - (y - posx * sina) - cg.sz.cy * cosa);
+			}
+			page << " cm /Image" << cg.image + 1 << " Do Q\n";
 
-		if(q == 0 && url.GetCount()) { // For now, only 'zero angle' text can have links
+			posx += dx ? dx[i] : fnt[s[i]];
+		}
+		if(url.GetCount()) { // For now, only 'zero angle' text can have links
 			UrlInfo& u = page_url.At(offset.GetCount()).Add();
-			u.rect = RectC(x, y, posx, ff.GetCy()).Offseted(current_offset);
+			u.rect = RectC(x, y, posx, fnt.GetCy()).Offseted(current_offset);
 			u.url = url;
+		}
+	}
+	else {
+		int h = fnt.GetHeight();
+		if(h == 0)
+			fnt.Height(100);
+		if(h < 0)
+			fnt.Height(-h);
+		Font ff = fnt;
+		int fh = fnt.GetHeight();
+		if(of.standard_ttf)
+			fnt.Height(FONTHEIGHT_TTF);
+		String txt;
+		PutrgColor(ink);
+		PutRGColor(ink);
+		int nbld = 0;
+		int sbld = 1;
+		if(of.sbold) {
+			nbld = abs(ff.GetHeight()) / 30;
+			sbld = clamp(nbld, 1, 5);
+		}
+		for(int q = 0; q <= nbld; q += sbld) {
+			page << "BT ";
+			posx = q;
+			int fi = -1;
+			Pointf prev(0, 0);
+			for(int i = 0; i < n; i++) {
+				Pointf next(Pt(x + posx * cosa + ff.GetAscent() * sina),
+				            Pt(pgsz.cy - (y - posx * sina) - ff.GetAscent() * cosa));
+				CharPos fp = GetCharPos(fnt, s[i]);
+				if(fi != fp.fi) {
+					fi = fp.fi;
+					PutFontHeight(fi, fh);
+				}
+				if(straight)
+					page << Fmt(next.x - prev.x) << ' ' << Fmt(next.y - prev.y) << " Td";
+				else
+					page << Fmt(m.x.x) << ' ' << Fmt(m.x.y) << ' ' << Fmt(m.y.x) << ' ' << Fmt(m.y.y)
+					     << ' ' << Fmt(next.x) << ' ' << Fmt(next.y) << " Tm";
+				page << " <" << FormatIntHex(fp.ci, 2);
+				page << "> Tj\n";
+				posx += dx ? dx[i] : ff[s[i]];
+				prev = next;
+				if(q == 0 && url.GetCount()) { // For now, only 'zero angle' text can have links
+					UrlInfo& u = page_url.At(offset.GetCount()).Add();
+					u.rect = RectC(x, y, posx, ff.GetCy()).Offseted(current_offset);
+					u.url = url;
+				}
+			}
+			page << "ET\n";
 		}
 	}
 }
@@ -383,8 +447,6 @@ void PdfDraw::Escape(const String& data)
 	if(data.StartsWith("data:"))
 		this->data = data.Mid(5);
 }
-
-Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg);
 
 PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 {
@@ -842,8 +904,7 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 			int fa = fnt.GetCy() - fnt.GetInternal();
 			for(int i = 0; i < cs.GetCount(); i++)
 				out << ' ' << 1000 * fnt[cs[i]] / fa;
-			out <<
-				"]\n";
+			out << "]\n";
 						    
 			out << "/Resources " << resources << " 0 R\n"
 			    << "/FirstChar 0 /LastChar " << cs.GetCount() - 1 <<" /ToUnicode "
@@ -853,7 +914,7 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		}
 		else {
 			TTFReader ttf;
-			if(!ttf.Open(pdffont.GetKey(i)))
+			if(!ttf.Open(fnt))
 				return Null;
 
 			String name = FormatIntAlpha(i + 1, true);

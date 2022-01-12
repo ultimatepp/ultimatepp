@@ -1,7 +1,8 @@
 description "PDF output as Draw derived class\377128,0,255";
 
 uses
-	Draw;
+	Draw,
+	Painter;
 
 file
 	PdfDraw.h options(BUILDER_OPTION) PCH,

@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 #include <plugin/z/z.h>
-
+#include <Painter/Painter.h>
 
 namespace Upp {
 
@@ -314,7 +314,8 @@ private:
 	Vector<Point> offset_stack;
 	Point       current_offset;
 
-	inline double Pt(double dot)        { return 0.12 * dot; }
+	double Pt(double dot)               { return 0.12 * dot; }
+	String Ptf(double dot)              { return FormatF(Pt(dot), 5); }
 
 	int    Pos()                        { return offset.GetCount() + 1; }
 	int    BeginObj();
@@ -337,22 +338,6 @@ private:
 
 	OutlineInfo GetOutlineInfo(Font fnt);
 
-	struct M22 {
-		double a, b, c, d;
-
-		void Mul(double a1, double b1, double c1, double d1) {
-			M22 t;
-			t.a = a * a1 + b * c1;
-			t.b = a * b1 + b * d1;
-			t.c = c * a1 + d * c1;
-			t.d = c * b1 + d * d1;
-			*this = t;
-		}
-
-		M22(double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {}
-		M22() : a(1), b(0), c(0), d(1) {}
-	};
-
 	void Init(int pagecx, int pagecy, int margin, bool pdfa);
 
 	struct RGlyph : Moveable<RGlyph> {
@@ -361,8 +346,17 @@ private:
 		int    x;
 		int    color_image = -1;
 	};
+	
+	struct CGlyph : Moveable<CGlyph> {
+		Size   sz;
+		int    x;
+		int    image;
+	};
+	
+	VectorMap<Tuple<Font, int>, CGlyph> color_glyph;
 
 	int    PdfImage(const Image& img, const Rect& src);
+	CGlyph ColorGlyph(Font fnt, int chr);
 	RGlyph RasterGlyph(Font fnt, int chr);
 
 public:
