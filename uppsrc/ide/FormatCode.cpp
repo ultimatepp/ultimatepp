@@ -196,7 +196,7 @@ void Ide::FormatJSON_XML(bool xml)
 {
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
-	if((sel ? h - l : editor.GetLength()) > 20*1024*1024) {
+	if((sel ? h - l : editor.GetLength()) > 75*1024*1024) {
 		Exclamation("Too big to reformat");
 		return;
 	}
