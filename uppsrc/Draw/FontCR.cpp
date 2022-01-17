@@ -426,15 +426,22 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 			f.Face(fi);
 			if(IsNormal_nc(f, chr)) {
 				int a = fnt.GetAscent();
+				int d = fnt.GetDescent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
-				if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
+				LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+				     ", replacement " << f << " " << f.GetAscent() << " " << f.GetDescent());
+				if((f.GetAscent() > a || f.GetDescent() > d) && apple_kbd.Find(chr) < 0) {
 					static sFontMetricsReplacement cache[256];
 					int q = CombineHash(fnt, f) & 255;
 					if(cache[q].src != fnt || cache[q].dst != f) {
 						cache[q].src = fnt;
 						cache[q].dst = f;
-						while(f.GetAscent() > a && f.GetHeight() > 1) {
-							f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
+						double h = f.GetHeight();
+						f.Height(min(h * a / max(1, f.GetAscent()), h * d / max(1, f.GetDescent())) + 1);
+						while((f.GetAscent() > a || f.GetDescent() > d) && f.GetHeight() > 1) {
+							f.Height(max(1, f.GetHeight() - 1/*max(1, f.GetHeight() / 20)*/));
+							LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+							     ", downsized " << f << " " << f.GetAscent() << " " << f.GetDescent());
 						}
 						cache[q].mdst = f;
 					}
@@ -472,6 +479,45 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		}
 	}
 	return false;
+}
+
+String GetFontDataSysSys(Stream& in, int fonti, const char *table, int offset, int size)
+{ // read truetype or opentype table from file - common implementation
+	int q = in.Get32be();
+	if(q == 0x74746366) { // font collection
+		in.Get32(); // skip major/minor version
+		int nfonts = in.Get32be();
+		if(fonti >= nfonts)
+			return Null;
+		in.SeekCur(fonti * 4);
+		int offset = in.Get32be();
+		if(offset < 0 || offset >= in.GetSize())
+			return Null;
+		in.Seek(offset);
+		q = in.Get32be();
+	}
+	if(q != 0x74727565 && q != 0x00010000 && q != 0x4f54544f) // 0x4f54544f means CCF font!
+		return Null;
+	int n = in.Get16be();
+	in.Get32();
+	in.Get16();
+	while(n--) {
+		if(in.IsError() || in.IsEof()) return Null;
+		String tab = in.Get(4);
+		in.Get32();
+		int off = in.Get32be();
+		int len = in.Get32be();
+		if(tab == table) {
+			if(off < 0 || len < 0 || off + len > in.GetSize())
+				return Null;
+			len = min(len - offset, size);
+			if(len < 0)
+				return Null;
+			in.Seek(off + offset);
+			return in.Get(len);
+		}
+	}
+	return Null;
 }
 
 }

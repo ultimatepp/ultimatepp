@@ -91,8 +91,8 @@ void Sqlite3Connection::BindParam(int i, const Value& r) {
 		}
 		case STRING_V:
 		case WSTRING_V: {
-			WString p = r;
-			sqlite3_bind_text16(current_stmt,i,p,2*p.GetLength(),SQLITE_TRANSIENT);
+			String p = r;
+			sqlite3_bind_text(current_stmt, i, p, p.GetLength(), SQLITE_TRANSIENT);
 			break;
 		}
 		case BOOL_V:
@@ -205,7 +205,7 @@ bool Sqlite3Connection::Execute() {
 					if(coltype == "datetime")
 						field.type = TIME_V;
 					else
-						field.type = WSTRING_V;
+						field.type = STRING_V;
 					break;
 				case SQLITE_NULL:
 					if(coltype == "date")
@@ -215,7 +215,7 @@ bool Sqlite3Connection::Execute() {
 						field.type = TIME_V;
 					else
 					if(coltype.Find("char") >= 0 || coltype.Find("text") >= 0 )
-						field.type = WSTRING_V;
+						field.type = STRING_V;
 					else
 					if(coltype.Find("integer") >= 0)
 						field.type = INT_V;
@@ -304,7 +304,7 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 					f = Null;
 			}
 			else
-				f = Value(WString((const wchar*)sqlite3_column_text16(current_stmt,i)));
+				f = Value((const char *)sqlite3_column_text(current_stmt, i));
 			break;
 		case SQLITE_NULL:
 			f = Null;

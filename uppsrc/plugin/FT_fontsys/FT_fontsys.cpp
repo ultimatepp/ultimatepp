@@ -72,14 +72,29 @@ FtFontStyle GetFontStyle(Font font)
 	return fd.At(0).style[0];
 }
 
+extern String GetFontDataSysSys(Stream& in, int fonti, const char *table, int offset, int size);
+
 String GetFontDataSys(Font font, const char *table, int offset, int size)
-{ // TODO: Finish this!
-	return Null;
+{
+	FtFontStyle f = GetFontStyle(font);
+	
+	if(IsNull(f.path)) {
+		if(table) {
+			MemReadStream in(f.data, f.size);
+			return GetFontDataSysSys(in, 0, table, offset, size);
+		}
+		return String(f.data, min((int)f.size, 100*1024*1024));
+	}
+	if(table) {
+		FileIn in(f.path);
+		return GetFontDataSysSys(in, 0, table, offset, size);
+	}
+	return LoadFile(f.path);
 }
 
 static FT_Library sFTlib;
 
-EXITBLOCK 
+EXITBLOCK
 {
 	if(sFTlib)
 		FT_Done_FreeType(sFTlib);
@@ -404,7 +419,7 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 		}
 	Close:
 		path.Close();
-		first = last + 1; 
+		first = last + 1;
     }
 	return true;
 }
