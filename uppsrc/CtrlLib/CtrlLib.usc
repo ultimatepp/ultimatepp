@@ -1289,7 +1289,7 @@ ctrl RichTextView {
 	Frame SetFrame = default @1;
 	Color Background = :SWhite;
 	bool  VCenter = false;
-	bool  NoSb = false;
+	bool  NoSb = false @0;
 	bool  AutoHideSb = false;
 	int   HMargins = 0;
 	int   VMargins = 0;
@@ -1311,8 +1311,9 @@ ctrl RichTextCtrl {
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
 	Frame SetFrame = NullFrame() @1;
-	Color Background = Null;
-	bool  AutoHideSb = true;
+	Color Background = Null @0;
+	bool  NoSb = false @0;
+	bool  AutoHideSb = true @0;
 
 	Paint(w) {
 		r = GetRect();

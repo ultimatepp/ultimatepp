@@ -396,12 +396,13 @@ void ChHostSkin()
 		SColorPaper_Write(Color(0x19, 0x19, 0x19));
 		SColorFace_Write(Color(0x20, 0x20, 0x20));
 		SColorText_Write(White());
-		SColorMenu_Write(Color(0x20, 0x20, 0x20));
-		SColorLight_Write(Color(0x40, 0x40, 0x40));
-		SColorShadow_Write(Color(0x40, 0x40, 0x40));
-		SColorHighlight_Write(SColorShadow());
-		SColorHighlightText_Write(SColorHighlight().GetG()<128?White():Black());
+		SColorMenu_Write(SColorFace());
+		SColorLight_Write(FaceColor(0x20));
+		SColorShadow_Write(FaceColor(0x20));
+		SColorHighlight_Write(Color::FromCR(GetSysColor(COLOR_HIGHLIGHT)));
+		SColorHighlightText_Write(Color::FromCR(GetSysColor(COLOR_HIGHLIGHTTEXT)));
 		SColorMenuMark_Write(Color(0x80, 0x80, 0x80));
+		DropEdge_Write(Color(0x80, 0x80, 0x80));
 	}
 	else for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
 		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
@@ -491,29 +492,13 @@ void ChHostSkin()
 
 		{
 			Button::Style& s = Button::StyleNormal().Write();
-			if(!sEmulateDarkTheme){
-				Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
-				SetXpColors(s.textcolor, 4, XP_BUTTON, BP_PUSHBUTTON, PBS_NORMAL, 3803/*TMT_TEXTCOLOR*/);
-			}
-			else{
-				s.look[0] = Blend(SColorFace(), SColorShadow());
-				s.look[1] = SColorShadow();
-				s.look[2] = SColorPaper();
-				s.look[3] = Blend(SColorFace(), SColorShadow(), 64);
-			}
+			Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
+			SetXpColors(s.textcolor, 4, XP_BUTTON, BP_PUSHBUTTON, PBS_NORMAL, 3803/*TMT_TEXTCOLOR*/);
 		}
 		{
 			Button::Style& s = Button::StyleOk().Write();
-			if(!sEmulateDarkTheme){
-				Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
-				Win32Look(s.look[0], XP_BUTTON, BP_PUSHBUTTON, PBS_DEFAULTED);
-			}
-			else{
-				s.look[0] = Blend(SColorFace(), SColorShadow(), 164);
-				s.look[1] = SColorShadow();
-				s.look[2] = SColorPaper();
-				s.look[3] = Blend(SColorFace(), SColorShadow(), 64);
-			}
+			Win32Look(s.look, 4, XP_BUTTON, BP_PUSHBUTTON);
+			Win32Look(s.look[0], XP_BUTTON, BP_PUSHBUTTON, PBS_DEFAULTED);
 		}
 		{
 			ToolBar::Style& s = ToolBar::StyleDefault().Write();
@@ -532,28 +517,28 @@ void ChHostSkin()
 			Win32Look(s.hlower, 4, XP_SCROLLBAR, SBP_UPPERTRACKHORZ);
 			Win32Look(s.vupper, 4, XP_SCROLLBAR, SBP_LOWERTRACKVERT);
 			Win32Look(s.vlower, 4, XP_SCROLLBAR, SBP_UPPERTRACKVERT);
-			if(!sEmulateDarkTheme){
-				Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
-				Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
-				Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTNORMAL);
-				Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTNORMAL);
-			}
-			else{
-				Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPHOT);
-				Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNHOT);
-				Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTHOT);
-				Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTHOT);
-			}
+			Win32Look(s.up.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
+			Win32Look(s.down.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
+			Win32Look(s.left.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_LEFTNORMAL);
+			Win32Look(s.right.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_RIGHTNORMAL);
 		}
 		{
 			TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-			Win32Look(s.normal, 4, XP_TAB, TABP_TABITEM);
-			Win32Look(s.first, 4, XP_TAB, TABP_TABITEMLEFTEDGE);
-			Win32Look(s.last, 4, XP_TAB, TABP_TABITEM);
-			Win32Look(s.both, 4, XP_TAB, TABP_TABITEMBOTHEDGE);
 			if(!sEmulateDarkTheme){
+				Win32Look(s.normal, 4, XP_TAB, TABP_TABITEM);
+				Win32Look(s.first, 4, XP_TAB, TABP_TABITEMLEFTEDGE);
+				Win32Look(s.last, 4, XP_TAB, TABP_TABITEM);
+				Win32Look(s.both, 4, XP_TAB, TABP_TABITEMBOTHEDGE);
 				Win32Look(s.body, XP_TAB, TABP_PANE);
 				ToImageIfDark(s.body);
+			}
+			else{
+				s.normal[0] = s.first[0] = s.last[0] = s.both[0] = FaceColor(0x10);
+				s.normal[1] = s.first[1] = s.last[1] = s.both[1] = FaceColor(0x20);
+				s.normal[2] = s.first[2] = s.last[2] = s.both[2] = FaceColor(0x30);
+				s.normal[3] = s.first[3] = s.last[3] = s.both[3] = FaceColor(0x20);
+				s.text_color[3] = SColorDisabled();
+				s.body = SColorShadow();
 			}
 		}
 		{
