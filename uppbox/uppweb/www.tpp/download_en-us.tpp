@@ -1,11 +1,11 @@
-topic "Ultimate++ download";
+topic "U++ Download";
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [a83;*R6 $$2,4#31310162474203024125188417583966:caption]
 [b83;*4 $$3,4#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$4,4#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2;= U`+`+ download&]
+[s2;= U`+`+ Download&]
 [s3; Download latest stable release automatically&]
 [s4;~~~64; [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/latest`/download^ 
 @@rawimage:1206&287
