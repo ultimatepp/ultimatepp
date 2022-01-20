@@ -1,4 +1,4 @@
-topic "Ultimate++ is a C++ cross-platform rapid application development framework";
+topic "U++ - Cross-Platform app development framework";
 [a13;*R6 $$1,0#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [b83;*4 $$3,2#07864147445237544204411237157677:title]
