@@ -1,4 +1,4 @@
-topic "Ultimate++ FAQ";
+topic "U++ FAQ";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b167;*4 $$3,5#07864147445237544204411237157677:title]
@@ -24,7 +24,7 @@ topic "Ultimate++ FAQ";
 [b83;a42;ph*$7;2 $$23,23#AB7631167E16382768E93725BC9AFE82:question]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Ultimate`+`+ FAQ&]
+[s2; U`+`+ FAQ&]
 [s3; Installation (MS Windows)&]
 [s23; How do I un`-install U`+`+?&]
 [s22; U`+`+ now uses portable approach. All you need to do is just 
