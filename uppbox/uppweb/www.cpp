@@ -604,14 +604,15 @@ void ExportPage(int i)
 	String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
-		pageTitle = "Ultimate++";
+		pageTitle = "U++";
 	if(StartsWith(topicTitle, "examples_"))
 		pageTitle = "Demos / " + pageTitle;
 	else if(StartsWith(topicTitle, "reference_"))
 		pageTitle = "Examples / " + pageTitle;
-
-	if(pageTitle != "Ultimate++")
-		pageTitle << " :: Ultimate++";
+	
+	bool is_index = path == "topic://uppweb/www/index$en-us";
+	if(pageTitle != "U++" && !is_index)
+		pageTitle << " :: U++";
 
 	Htmls content =
 	    //"<!DOCTYPE html>" +
