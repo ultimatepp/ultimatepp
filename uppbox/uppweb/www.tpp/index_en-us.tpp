@@ -1,12 +1,11 @@
-topic "U++ - Cross-Platform app development framework";
+topic "U++ - Cross-Platform App Development Framework";
 [a13;*R6 $$1,0#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [b83;*4 $$3,2#07864147445237544204411237157677:title]
 [a25;ph2 $$4,4#49211DBAE19D880B74F16648D25AF532:resource]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[s1;%% U`+`+ is a C`+`+ cross`-platform rapid application development 
-framework&]
+[s1;%% U`+`+ `- Cross`-Platform App Development Framework&]
 [s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1%% &]
 [ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s2;r58;%% [* U`+`+] is a C`+`+ cross`-platform rapid application development 
 framework focused on programmers productivity. It includes a 
