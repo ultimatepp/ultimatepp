@@ -11,7 +11,7 @@ Ptr<Ctrl>     Ctrl::sel_ctrl;
 
 void Ctrl::SetSelectionSource(const char *fmts)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
 	sel_formats = Split(fmts, ';');
 	sel_ctrl = this;
@@ -20,7 +20,7 @@ void Ctrl::SetSelectionSource(const char *fmts)
 
 Ctrl::Xclipboard::Xclipboard()
 {
-	GuiLock __; 
+	GuiLock __;
 	XSetWindowAttributes swa;
 	win = XCreateWindow(Xdisplay, RootWindow(Xdisplay, Xscreenno),
 	                    0, 0, 10, 10, 0, CopyFromParent, InputOnly, CopyFromParent,
@@ -30,13 +30,13 @@ Ctrl::Xclipboard::Xclipboard()
 
 Ctrl::Xclipboard::~Xclipboard()
 {
-	GuiLock __; 
+	GuiLock __;
 	XDestroyWindow(Xdisplay, win);
 }
 
 void Ctrl::Xclipboard::Write(int fmt, const ClipData& _data)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SetSelectionOwner " << XAtomName(fmt));
 	data.GetAdd(fmt) = _data;
 	XSetSelectionOwner(Xdisplay, XAtom("CLIPBOARD"), win, CurrentTime);
@@ -44,7 +44,7 @@ void Ctrl::Xclipboard::Write(int fmt, const ClipData& _data)
 
 void Ctrl::Xclipboard::Request(XSelectionRequestEvent *se)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("Request " << XAtomName(se->target));
 	XEvent e;
 	e.xselection.type      = SelectionNotify;
@@ -107,7 +107,7 @@ void Ctrl::Xclipboard::Request(XSelectionRequestEvent *se)
 
 String Ctrl::Xclipboard::Read(int fmt, int selection, int property)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(data.GetCount() && (dword)selection == XAtom("CLIPBOARD")) {
 		int q = data.Find(fmt);
 		return q >= 0 ? data[q].Render() : String();
@@ -150,13 +150,13 @@ Ctrl::Xclipboard& Ctrl::xclipboard()
 
 void ClearClipboard()
 {
-	GuiLock __; 
+	GuiLock __;
 	Ctrl::xclipboard().Clear();
 }
 
 void AppendClipboard(const char *format, const Value& data, String (*render)(const Value& data))
 {
-	GuiLock __; 
+	GuiLock __;
 	Vector<String> s = Split(format, ';');
 	for(int i = 0; i < s.GetCount(); i++)
 		Ctrl::xclipboard().Write(XAtom(s[i]), ClipData(data, render));
@@ -166,43 +166,43 @@ String sRawClipData(const Value& data);
 
 void AppendClipboard(const char *fmt, const String& data)
 {
-	GuiLock __; 
+	GuiLock __;
 	AppendClipboard(fmt, data, sRawClipData);
 }
 
 String ReadClipboard(const char *fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	return Ctrl::xclipboard().Read(XAtom(fmt), XAtom("CLIPBOARD"), XAtom("CLIPDATA"));
 }
 
 void AppendClipboardText(const String& s)
 {
-	GuiLock __; 
+	GuiLock __;
 	AppendClipboard("STRING", s);
 }
 
 String ReadClipboardText()
 {
-	GuiLock __; 
+	GuiLock __;
 	return ReadClipboard("STRING");
 }
 
 void AppendClipboardUnicodeText(const WString& s)
 {
-	GuiLock __; 
+	GuiLock __;
 	AppendClipboard("UTF8_STRING", ToUtf8(s));
 }
 
 WString ReadClipboardUnicodeText()
 {
-	GuiLock __; 
-	return FromUtf8(ReadClipboard("UTF8_STRING"));
+	GuiLock __;
+	return ToUtf32(ReadClipboard("UTF8_STRING"));
 }
 
 bool Ctrl::Xclipboard::IsAvailable(int fmt, const char *type)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(data.GetCount())
 		return data.Find(fmt) >= 0;
 	String formats = Read(XAtom("TARGETS"), XAtom(type), XAtom("CLIPDATA"));
@@ -217,7 +217,7 @@ bool Ctrl::Xclipboard::IsAvailable(int fmt, const char *type)
 
 bool Ctrl::ClipHas(int type, const char *fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("ClipHas " << type << ": " << fmt);
 	if(strcmp(fmt, "files") == 0)
 		fmt = "text/uri-list";
@@ -235,7 +235,7 @@ String DnDGetData(const String& f);
 
 String Ctrl::ClipGet(int type, const char *fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("ClipGet " << type << ": " << fmt);
 	if(strcmp(fmt, "files") == 0)
 		fmt = "text/uri-list";
@@ -255,11 +255,11 @@ const char *ClipFmtsText()
 
 String GetString(PasteClip& clip)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(clip.Accept("STRING") || clip.Accept("text/plain"))
 		return ~clip;
 	if(clip.Accept("UTF8_STRING"))
-		return FromUtf8(~clip).ToString();
+		return ToUtf32(~clip).ToString();
 	if(clip.Accept("text/unicode"))
 		return Unicode__(~clip).ToString();
 	return Null;
@@ -269,7 +269,7 @@ WString GetWString(PasteClip& clip)
 {
 	GuiLock __;
 	if(clip.Accept("UTF8_STRING"))
-		return FromUtf8(~clip);
+		return ToUtf32(~clip);
 	if(clip.Accept("text/unicode"))
 		return Unicode__(~clip);
 	if(clip.Accept("STRING") || clip.Accept("text/plain"))
