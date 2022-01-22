@@ -20,10 +20,10 @@ topic "Documentation";
 [a8;2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Documentation&]
-[s5; Documentation of Ultimate`+`+ is a permanent work of progress, 
-not everything is documented yet.&]
-[s5; Ultimate`+`+ community is ready to provide an excellent support 
-in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
+[s5; Documentation of U`+`+ is a permanent work of progress, not 
+everything is documented yet.&]
+[s5; U`+`+ community is ready to provide an excellent support in 
+the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s5; &]
 [s3; [4 Installation and Configuration]&]
 [s5; &]

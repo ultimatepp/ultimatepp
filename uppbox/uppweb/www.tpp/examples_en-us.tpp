@@ -35,7 +35,7 @@ All examples are written in the pure U`+`+ framework. This is
 the best place to raise your skills in using our library. Alternatively, 
 if you still hesitate to use the U`+`+ framework in your own 
 projects, this site should solve your doubts. It will show you 
-on how many real world scenario Ultimate`+`+ can be used.&]
+on how many real world scenario U`+`+ can be used.&]
 [s5; The whole page is divided into two sections. The first one `"Sample 
 applications`" shows the complex usage of the framework. in the 
 real world application. The second `"Reference examples`" demonstrates 
