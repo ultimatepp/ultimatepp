@@ -604,14 +604,15 @@ void ExportPage(int i)
 	String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
-		pageTitle = "Ultimate++";
+		pageTitle = "U++";
 	if(StartsWith(topicTitle, "examples_"))
 		pageTitle = "Demos / " + pageTitle;
 	else if(StartsWith(topicTitle, "reference_"))
 		pageTitle = "Examples / " + pageTitle;
-
-	if(pageTitle != "Ultimate++")
-		pageTitle << " :: Ultimate++";
+	
+	bool is_index = path == "topic://uppweb/www/index$en-us";
+	if(pageTitle != "U++" && !is_index)
+		pageTitle << " :: U++";
 
 	Htmls content =
 	    //"<!DOCTYPE html>" +
@@ -945,7 +946,7 @@ CONSOLE_APP_MAIN
 		bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
 	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
-		bi << BarLink(Www("Funding", lang), t_("Funding Ultimate++"));
+		bi << BarLink(Www("Funding", lang), t_("Funding U++"));
 	//	bcom << BarLink(Www("helpus"), "Getting involved");
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
 		
@@ -990,24 +991,24 @@ CONSOLE_APP_MAIN
 
 	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
-		if (tt[i].title == "Svn releases") 
+		if (tt[i].title == "Svn releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, ""));
-		else if (tt[i].title == "Svn Web releases") 
+		else if (tt[i].title == "Svn Web releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb"));
-		else if (tt[i].title == "Svn Bazaar releases") 
+		else if (tt[i].title == "Svn Bazaar releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar"));
-		else if (tt[i].title == "Svn Upp releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));		
-		else if (tt[i].title == "Svn major releases") 
+		else if (tt[i].title == "Svn Upp releases")
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));
+		else if (tt[i].title == "Svn major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, "", true));
-		else if (tt[i].title == "Svn Web major releases") 
+		else if (tt[i].title == "Svn Web major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb", true));
-		else if (tt[i].title == "Svn Bazaar major releases") 
+		else if (tt[i].title == "Svn Bazaar major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
-		else if (tt[i].title == "Svn Upp major releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));		
+		else if (tt[i].title == "Svn Upp major releases")
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));
 		else
-		if(tt[i].title == "Nightly builds" || tt[i].title.Find("download") >= 0)
+		if(tt[i].title == "Nightly builds" || tt[i].title.Find("Download") >= 0)
 			tt[i].text.Replace(String("<#downloads#>"), downloads);
 		else if (links[i].Find("index") >= 0) {
 			String win32 = "upp-win32-RELEASE.exe";

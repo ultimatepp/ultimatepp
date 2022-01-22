@@ -1,11 +1,11 @@
 topic "Funding of U++ development";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,2#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [b83;*4 $$3,2#07864147445237544204411237157677:title]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s1; Funding Ultimate`+`+&]
-[s2; If you like Ultimate`+`+ and want to see it grow, you can consider 
+[s1; Funding U`+`+&]
+[s2; If you like U`+`+ and want to see it grow, you can consider 
 donating the money.&]
 [s2; U`+`+ is a free BSD licensed software. You do not have to pay 
 anything for downloading and using it. However, if you still 
@@ -16,8 +16,8 @@ be listed on this page.&]
 [s2; To donate, use PayPal:&]
 [s0; [IPAYPAL;2 x]&]
 [s2; Feel free to suggest new ideas with your donation.&]
-[s3; Ultimate`+`+ donors&]
-[s2; The Ultimate`+`+ donors are:&]
+[s3; U`+`+ donors&]
+[s2; The U`+`+ donors are:&]
 [s2;l160;i150;O0;~~~32; [^http`:`/`/www`.vegachess`.com^ vegachess]&]
 [s2;l160;i150;O0;~~~32; Daniel Jesús&]
 [s2;l160;i150;O0;~~~32; Pérez Burgos&]

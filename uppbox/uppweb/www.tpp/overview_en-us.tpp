@@ -1,4 +1,4 @@
-topic "Ultimate++ Overview";
+topic "U++ Overview";
 [l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -22,7 +22,7 @@ topic "Ultimate++ Overview";
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Ultimate`+`+ Overview&]
+[s2; U`+`+ Overview&]
 [s19;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s3; Table of contents&]
 [s0; &]
@@ -30,8 +30,7 @@ topic "Ultimate++ Overview";
 appetite]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#2^2 2. Everything 
 belongs somewhere]&]
-[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. Ultimate`+`+ 
-containers]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. U`+`+ containers]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#4^2 4. Who owns widgets?]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#5^2 5. Dialog templates 
 are C`+`+ templates]&]
@@ -39,8 +38,8 @@ are C`+`+ templates]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#7^2 7. Display and 
 Convert]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#8^2 8. Function]&]
-[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#9^2 9. Ultimate`+`+ 
-set of widgets]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#9^2 9. U`+`+ set of 
+widgets]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#10^2 10. SQL programming]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#11^2 11. Summary]&]
 [s0; &]
@@ -117,9 +116,9 @@ languages are able to provide automatic management of heap resources,
 U`+`+ approach provides very deterministic automatic management 
 of [/ all] resources.&]
 [s5; &]
-[s3;:3: 3. Ultimate`+`+ containers&]
-[s5; One aspect of Ultimate`+`+ is bringing a lot of criticism: [/ Ultimate`+`+ 
-is not using much of standard C`+`+ library]. There are, however, 
+[s3;:3: 3. U`+`+ containers&]
+[s5; One aspect of U`+`+ is bringing a lot of criticism: [/ U`+`+ is 
+not using much of standard C`+`+ library]. There are, however, 
 serious reasons for this. STL, with its devastating requirement 
 that each element stored in container has to have copy`-constructor, 
 makes standard containers somewhat hard to use in GUI development.&]
@@ -135,12 +134,12 @@ the price of somewhat lower performance.&]
 [s5; As a result, in Ultimate`+`+ you are for example allowed to 
 create container of .GUI widgets that edits integer numbers ( 
 [*C@(28.42.150) Array<EditInt> integer`_editors]) and even sort 
-it using standard Ultimate`+`+ [*C@(28.42.150) Sort] algorithm. 
-Doing something like this would require using pointers as elements 
+it using standard U`+`+ [*C@(28.42.150) Sort] algorithm. Doing 
+something like this would require using pointers as elements 
 in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or alternatively 
 some sort of smart pointers (probably std`::unique`_ptr), but 
-both increase code complexity and break the Ultimate`+`+ rule 
-according to which [/ everything belongs somewhere].&]
+both increase code complexity and break the U`+`+ rule according 
+to which [/ everything belongs somewhere].&]
 [s5; &]
 [s3;:4: 4. Who owns widgets?&]
 [s5; One of the things we discovered over our countless experiments 
@@ -212,15 +211,15 @@ good. All you have to deal with in Ultimate`+`+ are your instance
 variables.&]
 [s5; &]
 [s3;:6: 6. Value and Null&]
-[s5; One aspect that makes development in Ultimate`+`+ very orthogonal 
-is the existence of Value `- the dynamically typed value type. 
-Any of Ultimate`+`+ basic types (int, double, String, Color, 
-Rect, Font, Image etc...) can be stored into and retrieved from 
-a Value. Value itself can be queried for the type of value it 
-contains. It is also very easy to make any custom types Value`-compatible.&]
+[s5; One aspect that makes development in U`+`+ very orthogonal is 
+the existence of Value `- the dynamically typed value type. Any 
+of U`+`+ basic types (int, double, String, Color, Rect, Font, 
+Image etc...) can be stored into and retrieved from a Value. 
+Value itself can be queried for the type of value it contains. 
+It is also very easy to make any custom types Value`-compatible.&]
 [s5; Somewhat related to Value is the general concept of `"empty 
-value`". The Ultimate`+`+ special constant Null represents an 
-empty value. Most concrete types support Null. Null is also defined 
+value`". The U`+`+ special constant Null represents an empty 
+value. Most concrete types support Null. Null is also defined 
 for fundamental types `- int, double and int64 `- as a value 
 that is lower than any other value for specific type (for example, 
 Null is equal to INT`_MIN for int). To test whether a variable 
@@ -228,34 +227,33 @@ of a certain type is Null, you can use the generic IsNull function.&]
 [s5; Value (and Null) have a remarkable effect on GUI flexibility. 
 Many widgets logically have their `"natural`" values, (for integer 
 edit field it is the typed in number, for option widget it is 
-either true or false according to its state) and Ultimate`+`+ 
-provides uniform access to these values via Value and GetData 
-/ SetData virtual methods. For example, clearing a dialog can 
-be usually done by assigning Null to all of its widgets.&]
+either true or false according to its state) and U`+`+ provides 
+uniform access to these values via Value and GetData / SetData 
+virtual methods. For example, clearing a dialog can be usually 
+done by assigning Null to all of its widgets.&]
 [s5; &]
 [s3;:7: 7. Display and Convert&]
-[s5; Display and Convert based classes further enhance Ultimate`+`+ 
-flexibility using Value.&]
+[s5; Display and Convert based classes further enhance U`+`+ flexibility 
+using Value.&]
 [s5; Convert classes act as bidirectional Value to Value converters. 
 Usually, but not limited to, this conversion is between the value 
 of a logical type and its textual representation (conversion 
 of the textual representation to the logical type can be sometimes 
 omitted). Examples are ConvertInt or ConvertDate.&]
-[s5; Many Ultimate`+`+ widgets are able to use these Convert classes 
-as properties. An example is the EditField class, a generic input 
+[s5; Many U`+`+ widgets are able to use these Convert classes as 
+properties. An example is the EditField class, a generic input 
 field. By assigning specific Convert based class to EditField, 
 you can `"teach`" it to edit numbers, dates or anything that 
 has textual representation.&]
 [s5; Somewhat similar to Convert classes are Display based classes. 
 These are classes that describe [/ how Values should be displayed]. 
-Once again, many Ultimate`+`+ widgets are using Display classes 
-as their properties. For example, to `"teach`" the DropList widget 
-(DropList is close to something called `"combo box`" on other 
-platforms) to display colors, all you need to do is to set its 
-Display attribute to DisplayColor (remember, Color is Value compatible 
-and DropList`'s list consists of Values). Meanwhile, you can 
-use the same DisplayColor as the property of many other widget 
-classes.&]
+Once again, many U`+`+ widgets are using Display classes as their 
+properties. For example, to `"teach`" the DropList widget (DropList 
+is close to something called `"combo box`" on other platforms) 
+to display colors, all you need to do is to set its Display attribute 
+to DisplayColor (remember, Color is Value compatible and DropList`'s 
+list consists of Values). Meanwhile, you can use the same DisplayColor 
+as the property of many other widget classes.&]
 [s5; &]
 [s3;:8: 8. Function&]
 [s5; While virtual methods provide a great way to organize the [/ input] 
@@ -270,7 +268,7 @@ lambdas. The reason for not using std`::function is that in GUI,
 a lot of output events remain unassigned and std`::functions throws 
 when invoked empty `- Upp`::Function simply does nothing.&]
 [s5; &]
-[s3;:9: 9. Ultimate`+`+ set of widgets&]
+[s3;:9: 9. U`+`+ set of widgets&]
 [s5; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
 new widget classes is often a trivial task in U`+`+, any description 
@@ -330,18 +328,18 @@ of lengthy operations.&]
 [s20;= [*1 ColorButton]&]
 [s5; &]
 [s5;l128;i150;O0;~~~128; [* MenuBar ]and [* ToolBar ]handling is a little 
-unorthodox in Ultimate`+`+, as the menu actions, represented 
-as Callbacks, are passed to the methods constructing the corresponding 
-Bar. This has some serious advantages `- state and presence of 
-individual buttons or menu bar items can be easily adjusted according 
-to the current application state. It is also often possible to 
-have a single method for construction of both ToolBar and MenuBar.&]
+unorthodox in U`+`+, as the menu actions, represented as Callbacks, 
+are passed to the methods constructing the corresponding Bar. 
+This has some serious advantages `- state and presence of individual 
+buttons or menu bar items can be easily adjusted according to 
+the current application state. It is also often possible to have 
+a single method for construction of both ToolBar and MenuBar.&]
 [s5;l128;i150;O0;~~~128; [* ColumnList ]displays values in user`-adjustable 
 number of columns.&]
 [s5;l128;i150;O0;~~~128; [* FileList ]is variant of ColumnList for 
 displaying lists of files.&]
-[s5;l128;i150;O0;~~~128; Finally, Ultimate`+`+ has tools to deal 
-with advanced text formatting:&]
+[s5;l128;i150;O0;~~~128; Finally, U`+`+ has tools to deal with advanced 
+text formatting:&]
 [s5;l128;i150;O0;~~~128; [* RichText ]is a class that provides storage 
 of complex text documents, including font and paragraph formatting 
 and even nested tables support.&]
@@ -361,19 +359,18 @@ package, readily available to any U`+`+ application.&]
 [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ here].&]
 [s5; &]
 [s3;:10: 10. SQL programming&]
-[s5; One of the motivations behind Ultimate`+`+ always used to be 
-the development of enterprise class client`-server SQL applications. 
-Using general Ultimate`+`+ philosophy we believe to have achieved 
-some extraordinary results, basically making Ultimate`+`+/SQL 
-development easier that using SQL dedicated development tools.&]
+[s5; One of the motivations behind U`+`+ always used to be the development 
+of enterprise class client`-server SQL applications. Using general 
+U`+`+ philosophy we believe to have achieved some extraordinary 
+results, basically making U`+`+/SQL development easier that using 
+SQL dedicated development tools.&]
 [s5; Of course, SQL is an area where the Value abstraction hugely 
 pays off. Fetching database values and putting them to GUI widgets 
-never was as trivial as it is in Ultimate`+`+.&]
+never was as trivial as it is in U`+`+.&]
 [s5; An important tool related to SQL is idea of `"SQL expressions`". 
-SQL expression is entity that represents SQL command. Ultimate`+`+ 
-provides means to build SQL expression using C`+`+ overloading 
-mechanism. For example, Ultimate`+`+ SQL expression might look 
-like:&]
+SQL expression is entity that represents SQL command. U`+`+ provides 
+means to build SQL expression using C`+`+ overloading mechanism. 
+For example, U`+`+ SQL expression might look like:&]
 [s21; &]
 [s21; Select(NAME, SURNAME).From(PERSON).Where(PERSONID `=`= personid);&]
 [s21; &]
@@ -441,25 +438,24 @@ data interchange between dialog widgets and database records:&]
 [s5; &]
 [s3;:11: 11. Summary&]
 [s5; In this overview we have tried to summarize the most exciting 
-features of Ultimate`+`+. There are of course many more important 
-features including certain interesting implementation techniques 
-like zero overhead memory allocator, perfect image rescaling 
-etc.&]
-[s5; Since the very beginning we have kept using Ultimate`+`+ ourselves 
+features of U`+`+. There are of course many more important features 
+including certain interesting implementation techniques like 
+zero overhead memory allocator, perfect image rescaling etc.&]
+[s5; Since the very beginning we have kept using U`+`+ ourselves 
 to develop applications for our customers. Even so, in recent 
 years we never hesitated to compromise our entire code`-base 
 each time we felt that some major or minor aspect of library 
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s5; Now, after some more than 2 decades of development, Ultimate`+`+ 
-is a mature platform that brings vast reductions of development 
+[s5; Now, after some more than 2 decades of development, U`+`+ is 
+a mature platform that brings vast reductions of development 
 costs. Most interfaces seem to be finished and optimal. There 
 is of course still some work ahead, mostly in documentation an 
 IDE department.&]
-[s5; If you find our Ultimate`+`+ way of programming interesting, 
-nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
-g] it. But be careful there: you should be prepared to throw away 
+[s5; If you find our U`+`+ way of programming interesting, nothing 
+stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloading] 
+it. But be careful there: you should be prepared to throw away 
 some old habits and usual ways of thinking about how `"things 
 are always done`", or they might ruin your opportunity to receive 
 a lot in the reward, together with a healthy disrespect to certain 
