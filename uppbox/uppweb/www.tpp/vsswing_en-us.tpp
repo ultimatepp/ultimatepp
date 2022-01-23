@@ -19,13 +19,12 @@ topic "Ultimate++ vs Java/Swing";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2;= Ultimate`+`+ vs Java/Swing&]
-[s5; To compare Ultimate`+`+ with Java, we found simple Converter 
-example. Note that this example was provided for Java tutorial, 
-so it is perhaps not the best thing to use it for development 
-effectiveness comparison. However, it still might serve well 
-to get first hint about how well Ultimate`+`+ does when compared 
-to Java/Swing.&]
+[s2; U`+`+ vs Java/Swing&]
+[s5; To compare U`+`+ with Java, we found simple Converter example. 
+Note that this example was provided for Java tutorial, so it 
+is perhaps not the best thing to use it for development effectiveness 
+comparison. However, it still might serve well to get first hint 
+about how well U`+`+ does when compared to Java/Swing.&]
 [s0; &]
 [ {{4926:5074f0;g0; [s0;= 
 @@image:962&679
@@ -37,7 +36,7 @@ to Java/Swing.&]
 ]}}&]
 [s0; &]
 [s0; &]
-[ {{5000:5000h1;@(204)R(178) [s0; [* Ultimate`+`+ version]]
+[ {{5000:5000h1;@(204)R(178) [s0; [* U`+`+ version]]
 :: [s0; [* Java/Swing version]]
 ::^@2R0 [s0; [*C3 Converter.cpp]&]
 [s0; [C0 #include <CtrlLib/CtrlLib.h>]&]
