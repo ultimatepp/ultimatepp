@@ -682,11 +682,12 @@ void ExportPage(int i)
 			"a.l2:link    { color:#0066FF; }\n"
 			"a.l2:visited { color:#FF6600; }\n"
 			"a.l2:hover   { color:#BC0624; }\n"
-			"a.l2:active  { color:#BC0024; }\n"
+			"a.l2:active  { color:#BC0024; }\n")
+		.Other(
 			"<META NAME=\"keywords\" "
 			"CONTENT=\""
 			"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
-			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
+			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, macos, gui, sdl, directx, desktop"
 			"\">"
 	        "<META name=\"robots\" content=\"index,follow\">\n"
             "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">\n"
