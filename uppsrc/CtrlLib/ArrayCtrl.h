@@ -590,6 +590,7 @@ public:
 	T&         CreateCtrl(int i, int col, bool value = true) { T *c = new T; SetCtrl(i, col, c, true, value); SyncLineCtrls(i); return *c; }
 
 	ArrayCtrl& SetLineCy(int cy);
+	ArrayCtrl& SetEditLineCy()                         { return SetLineCy(EditField::GetStdHeight() + DPI(4)); }
 	void       SetLineCy(int i, int cy);
 	int        GetLineCy() const                       { return linecy; }
 	int        GetLineY(int i) const;

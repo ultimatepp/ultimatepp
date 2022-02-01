@@ -574,6 +574,12 @@ nt]_[*@3 cy])&]
 can be overriden by the two`-parameter version of this method.&]
 [s7; [*C@3 cy]-|row height in pixels&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SetEditLineCy`(`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
+]_[* SetEditLineCy]()&]
+[s2; Sets the default array row height such that EditField based 
+editors comfortably fit into the ArrayCtrl.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:SetLineCy`(int`,int`): [@(0.0.255) void]_[* SetLineCy]([@(0.0.255) int]_[*@3 i
 ], [@(0.0.255) int]_[*@3 cy])&]
