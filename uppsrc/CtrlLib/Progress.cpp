@@ -220,11 +220,31 @@ void Progress::SetText(const String& s)
 	Setxt();
 }
 
+String FitText(const String& src, int cx, Font font)
+{
+	String r = src;
+	int n = (GetTextSize(r, font).cx - cx) / font['W'] / 2;
+	while(cx > 0  && GetTextSize(r, font).cx > cx && n > 0 && 2 * n < src.GetCount()) {
+		r = src;
+		r.Remove(r.GetCount() / 2 - n, 2 * n);
+		r.Insert(r.GetCount() / 2, "...");
+		n++;
+	}
+	return r;
+}
+
+void Progress::Setxt0()
+{
+	info = FitText(Format(text, pos), info.GetSize().cx, StdFont());
+}
+
 void Progress::Setxt()
 {
 	if(!IsMainThread())
 		return;
-	info = Format(text, pos);
+
+	Setxt0();
+
 	Process();
 }
 
@@ -269,6 +289,11 @@ void Progress::Close()
 {
 	modality.End();
 	TopWindow::Close();
+}
+
+void Progress::Layout()
+{
+	Setxt0();
 }
 
 void Progress::Cancel() {

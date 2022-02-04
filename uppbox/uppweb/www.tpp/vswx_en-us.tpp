@@ -19,11 +19,10 @@ topic "U++ vs wxWidgets";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2;= Ultimate`+`+ vs wxWidgets&]
-[s5; To compare Ultimate`+`+ with wxWindows, we decided to reimplement 
-wxWindows demonstration example `"Bombs`". On the left side is 
-U`+`+ code, on the right side wxWidgets code (part of wxWidgets 
-release).&]
+[s2; U`+`+ vs wxWidgets&]
+[s5; To compare U`+`+ with wxWindows, we decided to reimplement wxWindows 
+demonstration example `"Bombs`". On the left side is U`+`+ code, 
+on the right side wxWidgets code (part of wxWidgets release).&]
 [s0;=2 &]
 [ {{5000:5000f0;g0; [s0;= [2 
 @@image:1549&1849
@@ -35,7 +34,7 @@ release).&]
 ]]}}&]
 [s0;=2 &]
 [s0;=2 &]
-[ {{5000:5000^@7 [s0; [*2 Ultimate`+`+ version]]
+[ {{5000:5000^@7 [s0; [*2 U`+`+ version]]
 :: [s0; [*2 wxWidgets version]]
 ::@2 [s0; [C0 #include <CtrlLib/CtrlLib.h>]&]
 [s0;C0 &]

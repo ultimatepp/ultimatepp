@@ -93,6 +93,8 @@ public:
 	int           GetIndex() const                { return FindKey(value); }
 	void          GoBegin()                       { if(GetCount()) SetIndex(0); }
 	void          GoEnd()                         { if(GetCount()) SetIndex(GetCount() - 1); }
+	void          GoPrev()                        { Change(-1); }
+	void          GoNext()                        { Change(1); }
 
 	bool          HasKey(const Value& k) const    { return FindKey(k) >= 0; }
 	int           FindKey(const Value& k) const;

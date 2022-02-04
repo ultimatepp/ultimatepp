@@ -182,6 +182,22 @@ public:
 	HtmlTag() {}
 };
 
+class HtmlHeader {
+public:
+	HtmlTag Create();
+	
+	HtmlHeader& Title(const String& title)             { this->title = title; return *this; }
+	HtmlHeader& Description(const String& description) { this->description = description; return *this; }
+	HtmlHeader& Css(const String& css)                 { this->css = css; return *this; }
+	HtmlHeader& Other(const String& other)             { this->other = other; return *this; }
+	
+private:
+	String title;
+	String description;
+	String css;
+	String other;
+};
+
 HtmlTag HtmlSingleTag(const char *s);
 HtmlTag HtmlInput(const char *type, const char *name = 0);
 HtmlTag HtmlEdit(String name);
@@ -200,10 +216,6 @@ Htmls   HtmlOption(Value val, const char *text, bool selected = false);
 HtmlTag HtmlTable();
 HtmlTag HtmlRow();
 HtmlTag HtmlCell();
-
-HtmlTag HtmlHeader(const char *title, String css = Null, const char *other = NULL);
-
-//HtmlTag HtmlFont(Font font);
 
 HtmlTag HtmlLink(const char *link);
 
