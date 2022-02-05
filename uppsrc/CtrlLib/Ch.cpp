@@ -338,8 +338,9 @@ Color GetInk(const Image& m)
 	RGBA avg = AvgColor(m);
 	Color ink = SBlack();
 	int   best = 0;
-	for(RGBA c : m) {
-		Unmultiply(&c, &c, 1);
+	for(RGBA s : m) {
+		RGBA c = SColorFace();
+		AlphaBlend(&c, &s, 1);
 		if(c.a > 100) {
 			c.a = 255;
 			int q = Grayscale(abs(c.r - avg.r), abs(c.g - avg.g), abs(c.b - avg.b));
@@ -429,6 +430,7 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 	int lw = macos ? 1 : DPI(1);
 	for(int i = 0; i < 4; i++) {
 		Image m = button100x100[i];
+		PNGEncoder().SaveFile("/home/cxl/ch.png", m);
 		Image m2 = macos ? button100x100[i + 4] : m;
 		auto Espots = [=](const Image& m) { return WithHotSpots(m, DPI(3), DPI(1), CH_EDITFIELD_IMAGE, DPI(3)); };
 		if(i == 0) {
