@@ -478,7 +478,7 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
 	Vector<String> d = GetSvnDirs();
-	if(HasSvn()) {
+	if(HasGit()) {
 		bar.Separator();
 		bar.Add("Clone U++ GitHub sources..", [=] {
 			String vars = base.Get(0);
