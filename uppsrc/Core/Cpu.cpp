@@ -1,6 +1,6 @@
 #include "Core.h"
 
-#if !(defined(CPU_X86) && defined(COMPILER_MSC))
+#if defined(CPU_X86) && !defined(COMPILER_MSC)
 #include <cpuid.h>
 #endif
 
