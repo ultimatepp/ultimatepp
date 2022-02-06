@@ -430,7 +430,6 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos)
 	int lw = macos ? 1 : DPI(1);
 	for(int i = 0; i < 4; i++) {
 		Image m = button100x100[i];
-		PNGEncoder().SaveFile("/home/cxl/ch.png", m);
 		Image m2 = macos ? button100x100[i + 4] : m;
 		auto Espots = [=](const Image& m) { return WithHotSpots(m, DPI(3), DPI(1), CH_EDITFIELD_IMAGE, DPI(3)); };
 		if(i == 0) {
