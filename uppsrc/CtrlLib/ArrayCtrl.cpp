@@ -747,6 +747,7 @@ Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
 	if(!hasctrls)
 		return NULL;
 	Size sz = GetSize();
+	bool visible = IsLineVisible(i);
 	for(int j = 0; j < column.GetCount(); j++) {
 		bool ct = IsCtrl(i, j);
 		if(!ct && column[j].factory) {
@@ -781,7 +782,7 @@ Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
 			}
 			p = &c;
 			Rect r;
-			if(i < min_visible_line || i > max_visible_line)
+			if(i < min_visible_line || i > max_visible_line || !visible)
 				r.bottom = r.top = -1;
 			else
 				r = GetCellRectM(i, j);

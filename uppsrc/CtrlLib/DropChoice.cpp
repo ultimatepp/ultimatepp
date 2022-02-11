@@ -3,7 +3,7 @@
 namespace Upp {
 
 DropChoice::DropChoice() {
-	always_drop = false;
+	always_drop = hide_drop = false;
 	AddButton().Main() <<= THISBACK(Drop);
 	NoDisplay();
 	list.Normal();
@@ -28,6 +28,8 @@ void DropChoice::AddTo(Ctrl& _owner)
 void DropChoice::EnableDrop(bool b)
 {
 	MainButton().Enable(b);
+	if(hide_drop)
+		MainButton().Show(b);
 }
 
 void DropChoice::PseudoPush()

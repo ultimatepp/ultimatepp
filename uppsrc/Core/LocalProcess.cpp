@@ -67,21 +67,9 @@ static void sNoBlock(int fd)
 
 #ifdef PLATFORM_WIN32
 bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi, const char *cd)
-{ // provides conversion of charset for cmdline and envptr
+{ // provides conversion of charset for cmdline
 	Vector<WCHAR> cmd = ToSystemCharsetW(command);
 	cmd.Add(0);
-#if 0 // unicode environment not necessary for now
-	wchar wenvptr = NULL;
-	Buffer<WCHAR> env(n);
-	if(envptr) {
-		int len = 0;
-		while(envptr[len] || envptr[len + 1])
-			len++;
-		WString wenv(envptr, len + 1);
-		env.Alloc(len + 2);
-		memcpy(env, wenv, (len + 2) * sizeof(wchar));
-	}
-#endif
 	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr,
 	                      cd ? ToSystemCharsetW(cd).begin() : NULL, &si, &pi);
 }

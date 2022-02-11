@@ -14,3 +14,7 @@ TOPIC("Upp_en-us")
 #include "Upp_en-us.tppi"
 END_TOPIC
 
+TOPIC("WithDropChoice_en-us")
+#include "WithDropChoice_en-us.tppi"
+END_TOPIC
+

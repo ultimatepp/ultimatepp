@@ -524,9 +524,9 @@ char CParser::GetChar()
 	return c;
 }
 
-void CParser::SkipTerm()
+void CParser::Skip()
 {
-	LTIMING("SkipTerm");
+	LTIMING("Skip");
 	if(IsId())
 		while(iscid(*term))
 			term++;
