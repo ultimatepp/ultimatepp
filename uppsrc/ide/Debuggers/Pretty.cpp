@@ -148,11 +148,12 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 			PrettyVal(val, 0, 1, p);
 			for(const VisualPart& vp : p.text.part)
 				result.Cat(vp.text, vp.ink);
-			if(p.has_data)
+			if(p.has_data) {
 				if(p.data_type.GetCount() && p.data_ptr.GetCount())
 					Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
 				else
 					Visualise(result, val, flags | RAW);
+			}
 		}
 		else { // CONTAINER
 			int count = (int)min(p.data_count, (int64)40);
