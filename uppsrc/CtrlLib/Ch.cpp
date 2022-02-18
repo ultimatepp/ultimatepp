@@ -338,8 +338,9 @@ Color GetInk(const Image& m)
 	RGBA avg = AvgColor(m);
 	Color ink = SBlack();
 	int   best = 0;
-	for(RGBA c : m) {
-		Unmultiply(&c, &c, 1);
+	for(RGBA s : m) {
+		RGBA c = SColorFace();
+		AlphaBlend(&c, &s, 1);
 		if(c.a > 100) {
 			c.a = 255;
 			int q = Grayscale(abs(c.r - avg.r), abs(c.g - avg.g), abs(c.b - avg.b));

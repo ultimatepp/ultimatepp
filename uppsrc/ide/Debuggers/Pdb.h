@@ -274,10 +274,11 @@ struct Pdb : Debugger, ParentCtrl {
 		Vector<String> data_type; // type of data items (usually type_param)
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
 		Visual         text;
+		bool           has_data = true; // do display the data for SINGLE_VALUE (false for e.g. void Value)
 
-		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); }
-		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); }
-		void           SetNull()                                 { Text("Null", SCyan); }
+		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); has_data = false; }
+		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); has_data = false; }
+		void           SetNull()                                 { Text("Null", SCyan); has_data = false; }
 	};
 
 	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int64, int, Pdb::Pretty&>>> pretty;

@@ -149,6 +149,12 @@ hoice][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0
 (client code can fill it using WhenDrop callback).&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:WithDropChoice`:`:HideDrop`(bool`): [_^Upp`:`:WithDropChoice^ WithDropChoic
+e][@(0.0.255) `&]_[* HideDrop]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Instead of disabling the drop arrow when the list is empty 
+and AlwaysDrop is false, the drop arrow is hidden.&]
+[s3;%% &]
+[s4; &]
 [s5;:WithDropChoice`:`:RdOnlyDrop`(bool`): [_^WithDropChoice^ WithDropChoice][@(0.0.255) `&
 ]_[* RdOnlyDrop]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% If active, allows changing value even by drop even if ReadOnly.&]

@@ -4,6 +4,8 @@
 
 namespace Upp {
 
+#ifdef UPP_HEAP
+
 static int64 UPP_SSL_alloc = 0;
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
@@ -77,6 +79,8 @@ static void *SslRealloc(void *ptr, size_t size)
 	return newaptr;
 }
 
+#endif
+
 void TcpSocketInit();
 
 INITIALIZER(SSL)
@@ -84,7 +88,9 @@ INITIALIZER(SSL)
 	MemoryIgnoreLeaksBlock __;
 	LLOG("SslInit");
 	TcpSocketInit();
+#ifdef UPP_HEAP
 	CRYPTO_set_mem_functions(SslAlloc, SslRealloc, SslFree);
+#endif
 	SSL_library_init();
 	SSL_load_error_strings();
 }

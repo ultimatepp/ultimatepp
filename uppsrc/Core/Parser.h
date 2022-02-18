@@ -69,7 +69,8 @@ public:
 	String ReadOneString(int delim, bool chkend = true);
 	String ReadString(int delim, bool chkend = true);
 
-	void   SkipTerm();
+	void   Skip();
+	void   SkipTerm()                         { Skip(); }
 
 	struct Pos {
 		const char *ptr;

@@ -156,8 +156,8 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	else
 		cl << exefile;
 	if(!IsNull(cmdline))
-		cl << ' ' << cmdline;
-	
+		cl << ' ' << ToSystemCharset(cmdline);
+
 	clang = clang_;
 
 	Buffer<char> cmd(cl.GetLength() + 1);
@@ -169,6 +169,7 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	bool h = CreateProcess(exefile, cmd, NULL, NULL, TRUE,
 	                       /*NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|*/DEBUG_ONLY_THIS_PROCESS/*|DEBUG_PROCESS*/,
 	                       ~env, NULL, &si, &pi);
+
 	if(!h) {
 		Exclamation("Error creating process&[* " + DeQtf(exefile) + "]&" +
 		            "Windows error: " + DeQtf(GetLastErrorMessage()));
@@ -204,6 +205,7 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 
 	if(!SymInitialize(hProcess, 0, FALSE)) {
 		Error();
+		Exclamation("Failed to load symbols");
 		return false;
 	}
 	SymSetOptions(SYMOPT_LOAD_LINES|SYMOPT_UNDNAME|SYMOPT_NO_UNQUALIFIED_LOADS);
@@ -218,7 +220,7 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	break_running = false;
 
 	RunToException();
-
+	
 	return !terminated;
 }
 

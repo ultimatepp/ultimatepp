@@ -174,6 +174,14 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 				p.data_type << "Upp::WString";
 				p.data_ptr << v.address;
 			}
+			if(st == 6) { // ERROR_V
+				p.Text("ErrorValue ", SLtRed());
+				p.has_data = true;
+				a = PeekPtr(a);
+				Val v = GetAttr(MakeVal("Upp::RawValueRep<Upp::String>", a), "v");
+				p.data_type << "Upp::String";
+				p.data_ptr << v.address;
+			}
 			if(st == 9) // VALUEARRAY_V
 				PrettyValueArray_(a, p);
 			if(st == 12)

@@ -146,14 +146,14 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 		if(p.kind == SINGLE_VALUE) {
 			Pretty p;
 			PrettyVal(val, 0, 1, p);
-			if(p.text.part.GetCount())
-				for(const VisualPart& vp : p.text.part)
-					result.Cat(vp.text, vp.ink);
-			else
-			if(p.data_type.GetCount() && p.data_ptr.GetCount())
-				Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
-			else
-				Visualise(result, val, flags | RAW);
+			for(const VisualPart& vp : p.text.part)
+				result.Cat(vp.text, vp.ink);
+			if(p.has_data) {
+				if(p.data_type.GetCount() && p.data_ptr.GetCount())
+					Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
+				else
+					Visualise(result, val, flags | RAW);
+			}
 		}
 		else { // CONTAINER
 			int count = (int)min(p.data_count, (int64)40);

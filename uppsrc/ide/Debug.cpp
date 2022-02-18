@@ -347,7 +347,7 @@ void Ide::BuildAndDebug(bool runto)
 	else
 #endif
 		debugger = GdbCreate(host, target, runarg, console);
-
+	
 	if(!debugger) {
 		IdeEndDebug();
 		SetBar();
