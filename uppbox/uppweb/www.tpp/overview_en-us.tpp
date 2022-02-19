@@ -108,8 +108,8 @@ regarding ownership of the underlying object, time of its deletion
 etc. If you need to manage data sets of variable size or polymorphic 
 type, you should prefer using one of U`+`+ containers.&]
 [s5; Speaking about it, there are no shared smart pointers (like 
-boost`::shared`_ptr) in U`+`+ used to manage heap resources at 
-interface level. They are not needed and considered bad practice.&]
+std`::shared`_ptr) in U`+`+ used to manage heap resources at interface 
+level. They are not needed and considered bad practice.&]
 [s5; In C`+`+, this approach proves to be equally good or better 
 than garbage collected languages like Java or C#. While those 
 languages are able to provide automatic management of heap resources, 
