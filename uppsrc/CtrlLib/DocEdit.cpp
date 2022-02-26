@@ -254,6 +254,7 @@ void DocEdit::PlaceCaret(int64 newpos, bool select) {
 	SelectionChanged();
 	if(IsSelection())
 		SetSelectionSource(ClipFmtsText());
+	CancelMyPreedit();
 }
 
 int DocEdit::GetMousePos(Point p)

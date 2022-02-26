@@ -10,7 +10,7 @@ private:
 	static Ptr<Ctrl>           lastActive;
 	
 	friend void CocoInit(int argc, const char **argv, const char **envptr);
-
+	
 protected:
 	virtual void MMClose() {}
 
@@ -18,6 +18,7 @@ protected:
 	static void SetNSAppImage(const Image& img);
 	static void SyncAppIcon();
 	static void ResetCocoaMouse();
+	static void DoCancelPreedit();
 
 public:
 	static void      EndSession()              {}

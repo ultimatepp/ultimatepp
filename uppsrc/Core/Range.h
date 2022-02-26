@@ -1,11 +1,14 @@
-template <class Range>
-using ValueTypeOf = typename std::remove_reference<decltype(*((typename std::remove_reference<Range>::type *)0)->begin())>::type;
+template <class T>
+T *DeclPtr__();
 
 template <class Range>
-using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->begin());
+using ValueTypeOf = typename std::remove_reference<decltype(*DeclPtr__<typename std::remove_reference<Range>::type>()->begin())>::type;
 
 template <class Range>
-using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
+using IteratorOf = decltype(DeclPtr__<typename std::remove_reference<Range>::type>()->begin());
+
+template <class Range>
+using ConstIteratorOf = decltype(DeclPtr__<const typename std::remove_reference<Range>::type>()->begin());
 
 template <class I>
 class SubRangeClass {
@@ -16,7 +19,7 @@ public:
 	typedef typename std::remove_reference<decltype(*l)>::type value_type;
 
 	int GetCount() const { return count; }
-	
+
 	SubRangeClass& Write()                   { return *this; }
 
 	value_type& operator[](int i) const { ASSERT(i >= 0 && i < count); return l[i]; }
@@ -61,15 +64,15 @@ template <class T>
 struct ConstRangeClass {
 	T   value;
 	int count;
-	
+
 	typedef T value_type;
 	typedef value_type ValueType;
-	
+
 	const value_type& operator[](int i) const { return value; }
 	int GetCount() const                      { return count; }
-	
+
 	typedef ConstIIterator<ConstRangeClass> Iterator;
-	
+
 	Iterator begin() const { return Iterator(*this, 0); }
 	Iterator end() const { return Iterator(*this, count); }
 
@@ -102,14 +105,14 @@ ConstRangeClass<T> ConstRange(int count)
 template <class BaseRange>
 struct ReverseRangeClass {
 	typename std::remove_reference<BaseRange>::type& r;
-	
+
 	typedef ValueTypeOf<BaseRange>                       value_type;
 	typedef value_type                                   ValueType;
-	
+
 	const value_type& operator[](int i) const            { return r[r.GetCount() - i - 1]; }
 	value_type& operator[](int i)                        { return r[r.GetCount() - i - 1]; }
 	int GetCount() const                                 { return r.GetCount(); }
-	
+
 	typedef IIterator<ReverseRangeClass>                  Iterator;
 	typedef ConstIIterator<ReverseRangeClass>             ConstIterator;
 
@@ -117,7 +120,7 @@ struct ReverseRangeClass {
 
 	ConstIterator begin() const                          { return ConstIterator(*this, 0); }
 	ConstIterator end() const                            { return ConstIterator(*this, r.GetCount()); }
-	
+
 	Iterator begin()                                     { return Iterator(*this, 0); }
 	Iterator end()                                       { return Iterator(*this, r.GetCount()); }
 
@@ -144,14 +147,14 @@ template <class BaseRange>
 struct ViewRangeClass {
 	typename std::remove_reference<BaseRange>::type *r;
 	Vector<int> ndx;
-	
+
 	typedef ValueTypeOf<BaseRange> value_type;
 	typedef value_type ValueType;
-	
+
 	const value_type& operator[](int i) const { return (*r)[ndx[i]]; }
 	value_type& operator[](int i)             { return (*r)[ndx[i]]; }
 	int GetCount() const                      { return ndx.GetCount(); }
-	
+
 	typedef IIterator<ViewRangeClass> Iterator;
 	typedef ConstIIterator<ViewRangeClass> ConstIterator;
 
@@ -159,7 +162,7 @@ struct ViewRangeClass {
 
 	ConstIterator begin() const { return ConstIterator(*this, 0); }
 	ConstIterator end() const  { return ConstIterator(*this, ndx.GetCount()); }
-	
+
 	Iterator begin() { return Iterator(*this, 0); }
 	Iterator end()   { return Iterator(*this, ndx.GetCount()); }
 

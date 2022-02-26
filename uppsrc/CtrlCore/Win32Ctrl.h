@@ -21,6 +21,7 @@ private:
 	static void RenderFormat(int format);
 	static void RenderAllFormats();
 	static void DestroyClipboard();
+	static void DoCancelPreedit();
 
 	void UpdateDHCtrls();
 

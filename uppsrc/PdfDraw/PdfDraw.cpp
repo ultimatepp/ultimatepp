@@ -364,7 +364,6 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	auto Fmt = [](double x) { return FormatF(x, 5); };
 
 	if(fnt.GetFaceInfo() & Font::COLORIMG) {
-		int fi = -1;
 		Pointf prev(0, 0);
 		for(int i = 0; i < n; i++) {
 			CGlyph cg = ColorGlyph(fnt, s[i]);

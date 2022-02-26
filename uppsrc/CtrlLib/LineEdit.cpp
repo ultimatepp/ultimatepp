@@ -32,6 +32,11 @@ LineEdit::LineEdit() {
 
 LineEdit::~LineEdit() {}
 
+Font LineEdit::GetPreeditFont()
+{
+	return font;
+}
+
 void LineEdit::MouseWheel(Point, int zdelta, dword keyflags) {
 	if(keyflags & K_SHIFT)
 		sb.WheelX(zdelta);

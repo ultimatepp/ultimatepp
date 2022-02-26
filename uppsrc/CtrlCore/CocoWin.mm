@@ -97,8 +97,15 @@ void *Ctrl::GetNSView() const
 	return top && top->coco ? top->coco->view : NULL;
 }
 
+void Ctrl::DoCancelPreedit()
+{
+	[[NSTextInputContext currentInputContext] discardMarkedText];
+}
+
 void Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
+	cancel_preedit = DoCancelPreedit; // We really need this just once, but whatever..
+	
 	if(owner)
 		owner = owner->GetTopCtrl();
 

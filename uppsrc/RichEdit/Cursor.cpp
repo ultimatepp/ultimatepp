@@ -107,6 +107,7 @@ void RichEdit::MoveNG(int newpos, bool select)
 	if(select)
 		SetSelectionSource(String().Cat() << "text/QTF;Rich Text Format;text/rtf;application/rtf;"
 		                   << ClipFmtsText());
+	CancelMyPreedit();
 }
 
 void RichEdit::Move(int newpos, bool select)
