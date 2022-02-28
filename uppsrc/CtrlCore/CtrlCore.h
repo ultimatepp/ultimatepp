@@ -647,6 +647,12 @@ private:
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
+	Rect    GetPreeditScreenRect();
+	void    SyncPreedit();
+	void    ShowPreedit(const WString& text, int cursor = INT_MAX);
+	static void HidePreedit();
+	static void PreeditSync(void (*enable_preedit)(Ctrl *top, bool enable));
+
 // System window interface...
 	void WndShow(bool b);
 	void WndSetPos(const Rect& rect);
@@ -700,6 +706,8 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
+	
+	static void (*cancel_preedit)();
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
@@ -880,6 +888,9 @@ public:
 	virtual void   MouseLeave();
 	
 	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);
+	
+	virtual Point  GetPreedit();
+	virtual Font   GetPreeditFont();
 
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
@@ -1127,6 +1138,10 @@ public:
 	void    SetCaret(const Rect& r);
 	Rect    GetCaret() const;
 	void    KillCaret();
+	
+	static void  CancelPreedit();
+	
+	void   CancelMyPreedit()                   { if(HasFocus()) CancelPreedit(); }
 
 	static Ctrl *GetFocusCtrl()                { return FocusCtrl(); }
 

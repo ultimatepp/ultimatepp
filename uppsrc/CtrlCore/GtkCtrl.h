@@ -4,6 +4,9 @@
 
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);
+	static void     IMPreedit(GtkIMContext *context, gpointer user_data);
+	static void     IMPreeditEnd(GtkIMContext *context, gpointer user_data);
+	static void     IMLocation(Ctrl *w);
 
 	static int      DoButtonEvent(GdkEvent *event, bool press);
 	static void     AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *event);
@@ -118,6 +121,7 @@ _DBG_
 	static void StopGrabPopup();
 	static void StartGrabPopup();
 	static bool ReleaseWndCapture0();
+	static void DoCancelPreedit();
 	
 	static Rect frameMargins;
 	static Rect GetFrameMargins();

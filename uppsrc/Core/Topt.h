@@ -323,8 +323,11 @@ public:
 	void                  pop_back()             { Drop(); } \
 
 
+template <class T>
+T *DeclPtr__();
+
 template <class Range>
-using ValueTypeOfArray = typename std::remove_reference<decltype((*((Range *)0))[0])>::type;
+using ValueTypeOfArray = typename std::remove_reference<decltype((*DeclPtr__<Range>())[0])>::type;
 
 template <class V>
 class ConstIIterator {

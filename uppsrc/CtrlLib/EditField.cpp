@@ -427,6 +427,7 @@ void EditField::SelSource()
 		SetSelectionSource(ClipFmtsText());
 	else
 		fsell = fselh = -1;
+	CancelMyPreedit();
 }
 
 void EditField::GotFocus()

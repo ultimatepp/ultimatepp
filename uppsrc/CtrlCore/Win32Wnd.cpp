@@ -489,6 +489,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	StateH(OPEN);
 	LLOG(LOG_END << "//Ctrl::Create in " <<UPP::Name(this));
 	RegisterDragDrop(top->hwnd, (LPDROPTARGET) (top->dndtgt = NewUDropTarget(this)));
+	::ImmAssociateContextEx(top->hwnd, NULL, 0);
 	CancelMode();
 	RefreshLayoutDeep();
 }
@@ -755,6 +756,10 @@ bool Ctrl::ProcessEvent(bool *quit)
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": //sProcessMSG " << FormatIntHex(msg.message));
 		DefferedFocusSync();
 		SyncCaret();
+		PreeditSync([](Ctrl *top, bool enable) {
+			if(HWND hwnd = top->GetHWND())
+			  ::ImmAssociateContextEx(hwnd, NULL, enable * IACE_DEFAULT);
+		});
 		return true;
 	}
 	return false;

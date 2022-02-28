@@ -6,7 +6,7 @@ uses
 	RichText,
 	Painter;
 
-library(WIN32) "advapi32 comdlg32 comctl32";
+library(WIN32) "advapi32 comdlg32 comctl32 Imm32 user32 gdi32";
 
 pkg_config(POSIX !OSX !VIRTUALGUI) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
 
@@ -29,6 +29,7 @@ file
 	CtrlTimer.cpp,
 	CtrlClip.cpp,
 	LocalLoop.cpp,
+	Preedit.cpp,
 	CtrlCoreInit.cpp,
 	TopWindow.h,
 	TopWindow.cpp,

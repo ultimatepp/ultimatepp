@@ -223,7 +223,8 @@ public:
 	virtual void  DragRepeat(Point p);
 	virtual void  DragLeave();
 	virtual String GetSelectionData(const String& fmt) const;
-
+	virtual Point  GetPreedit();
+	virtual Font   GetPreeditFont();
 
 private:
 	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }

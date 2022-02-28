@@ -339,12 +339,14 @@ void Ctrl::SetModify()
 {
 	GuiLock __;
 	modify = true;
+	CancelMyPreedit();
 }
 
 void Ctrl::ClearModify()
 {
 	GuiLock __;
 	modify = false;
+	CancelMyPreedit();
 }
 
 void Ctrl::ClearModifyDeep()
