@@ -557,6 +557,20 @@ Ctrl and Alt keys.&]
 when mouse cursor leaves view area of Ctrl.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:GetPreedit`(`):%- [_^Upp`:`:Point^ Point]_[* GetPreedit]()&]
+[s2; If the widget is supposed to support text input, it should return 
+top`-left corner of insertion point so that host input method 
+can eventually display a composition window near the insertion 
+point with U`+`+ displaying composition text over the spot. Should 
+return Null if widget does not require the text input. Default 
+implementation returns the position of caret.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:GetPreeditFont`(`):%- [_^Upp`:`:Font^ Font]_[* GetPreeditFont]()&]
+[s2; Should return the font that is supposed to be used for composition 
+text. Default implementation returns StdFont().&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:DragAndDrop`(Point`,PasteClip`&`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* DragAndDrop]([_^Point^ Point]_[*@3 p], [_^PasteClip^ PasteClip][@(0.0.255) `&
 ]_[*@3 d])&]
@@ -1989,6 +2003,16 @@ you do not need to remove caret when Ctrl goes out of focus).&]
 [s4;%- &]
 [s5;:Ctrl`:`:KillCaret`(`):%- [@(0.0.255) void]_[* KillCaret]()&]
 [s2;b17;a17; Removes caret from Ctrl.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:CancelPreedit`(`):%- [@(0.0.255) void]_[* CancelPreedit]()&]
+[s2; Terminates any input method composition in progress, if possible. 
+Text input widgets typically call this on status change, like 
+new cursor position or new text through SetData.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:CancelMyPreedit`(`):%- [@(0.0.255) void]_[* CancelMyPreedit]()&]
+[s2; Calls CancelPreedit if this widget has keyboard focus.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetFocusCtrl`(`):%- [@(0.0.255) static] [_^`:`:Ctrl^ Ctrl]_`*[* GetFocusCtrl](
