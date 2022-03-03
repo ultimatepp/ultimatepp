@@ -2,6 +2,8 @@
 
 #ifdef GUI_WIN
 
+#include <imm.h>
+
 namespace Upp {
 
 #define LLOG(x)    //   DLOG(x)
