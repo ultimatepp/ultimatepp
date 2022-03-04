@@ -322,10 +322,6 @@ private:
 	int   GetIndex(Point p);
 	bool  DoHot(dword key);
 	void  Updates();
-	void  RefreshCase(int i);
-
-	Rect    GetCaseRect(int i) const;
-	Rect    GetCheckRect(int i) const;
 
 public:
 	enum { GAP_SEPARATOR = 1 << 20 };

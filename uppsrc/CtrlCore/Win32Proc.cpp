@@ -4,7 +4,7 @@
 
 #include <winnls.h>
 
-//#include "imm.h"
+#include <imm.h>
 
 namespace Upp {
 

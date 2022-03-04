@@ -656,7 +656,7 @@ void Ctrl::Proc()
 				kv |= K_CTRL;
 			if(GetAlt() && kv != K_ALT_KEY)
 				kv |= K_ALT;
-			DLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
+			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
 #ifdef GDK_WINDOWING_X11
 			if(pressed)
 				for(int i = 0; i < hotkey.GetCount(); i++) {
@@ -666,7 +666,6 @@ void Ctrl::Proc()
 					}
 				}
 #endif
-			DDUMPHEX(kv);
 			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count);
 		}
 		break;

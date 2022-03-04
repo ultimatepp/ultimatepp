@@ -115,10 +115,9 @@ Switch& Switch::SetLabel(const char *text) {
 
 void  Switch::SetData(const Value& val) {
 	if(val != value) {
-		RefreshCase(GetIndex());
 		value = val;
-		RefreshCase(GetIndex());
 		Update();
+		Refresh();
 	}
 }
 
@@ -126,30 +125,15 @@ Value Switch::GetData() const {
 	return value;
 }
 
-Rect  Switch::GetCaseRect(int i) const {
-	return i >= 0 && i < cs.GetCount() ? (Rect)cs[i].rect : Rect(Null);
-}
-
-Rect  Switch::GetCheckRect(int i) const {
-	Rect r = GetCaseRect(i);
-	r.right = r.left + CtrlsImg::S0().GetSize().cx;
-	return r;
-}
-
 void Switch::EnableCase(int i, bool enable) {
 	cs.At(i).enabled = enable;
-	Refresh(GetCaseRect(i));
+	Refresh();
 }
 
 void Switch::EnableValue(const Value& val, bool enable) {
 	for(int i = 0; i < cs.GetCount(); i++)
 		if(cs[i].value == val)
 			EnableCase(i, enable);
-}
-
-void  Switch::RefreshCase(int i) {
-	if(i >= 0 && i < cs.GetCount())
-		Refresh(HasFocus() ? GetCaseRect(i) : GetCheckRect(i));
 }
 
 void Switch::GotFocus() {
@@ -246,14 +230,11 @@ void Switch::MouseMove(Point p, dword keyflags) {
 	if(keyflags & K_MOUSELEFT)
 		a = i;
 	if(pushindex != a) {
-		RefreshCase(pushindex);
-		RefreshCase(a);
 		pushindex = a;
+		Refresh();
 	}
-	if(i != light) {
-		RefreshCase(light);
-		RefreshCase(i);
-	}
+	if(i != light)
+		Refresh();
 }
 
 void Switch::LeftDown(Point p, dword keyflags) {
@@ -266,21 +247,19 @@ void Switch::LeftDown(Point p, dword keyflags) {
 void Switch::LeftUp(Point p, dword keyflags) {
 	if(IsReadOnly()) return;
 	if(pushindex >= 0 && pushindex < cs.GetCount()) {
-		RefreshCase(GetIndex());
 		const Value& v = cs[pushindex].value;
 		if(v != value) {
 			value = v;
 			UpdateAction();
 		}
-		RefreshCase(pushindex);
+		Refresh();
 	}
 	pushindex = -1;
 }
 
 void Switch::MouseLeave() {
-	RefreshCase(light);
-	RefreshCase(pushindex);
 	pushindex = -1;
+	Refresh();
 }
 
 bool Switch::Key(dword key, int) {
@@ -306,9 +285,7 @@ bool Switch::Key(dword key, int) {
 		return false;
 	if(i != index && cs[index].enabled) {
 		value = cs[index].value;
-		RefreshCase(i);
-		RefreshCase(index);
-		UpdateAction();
+		UpdateActionRefresh();
 	}
 	return true;
 }
