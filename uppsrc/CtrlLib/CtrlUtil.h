@@ -290,6 +290,7 @@ public:
 	bool Execute(bool open, const char *title = NULL);
 	bool ExecuteOpen(const char *title = NULL)   { return Execute(true, title); }
 	bool ExecuteSaveAs(const char *title = NULL) { return Execute(false, title); }
+	bool ExecuteSelectDir(const char *title = NULL);
 
 	String Get() const;
 	void  Set(const String& s)                   { filename.At(0) = s; }
