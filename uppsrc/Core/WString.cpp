@@ -260,10 +260,8 @@ WString::WString(const std::wstring& s)
 
 std::wstring WString::ToStd() const
 {
-	if(sizeof(wchar_t) == 4) {
-		const wchar *s = begin();
+	if(sizeof(wchar_t) == 4)
 		return std::wstring((const wchar_t *)begin(), GetCount());
-	}
 	if(sizeof(wchar_t) == 2) {
 		Vector<char16> h = ToUtf16(*this);
 		return std::wstring((const wchar_t *)h.begin(), h.GetCount());
