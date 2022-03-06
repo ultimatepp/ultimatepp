@@ -338,11 +338,13 @@ class FileSelNative {
 	bool   multi;
 	bool   hidden;
 	int    activetype;
+	bool   Execute0(int mode, const char *title);
 
 public:
-	bool   Execute(bool open, const char *title = NULL);
+	bool   Execute(bool open, const char *title = NULL)   { return Execute0(open, title); }
 	bool   ExecuteOpen(const char *title = NULL)          { return Execute(true, title); }
 	bool   ExecuteSaveAs(const char *title = NULL)        { return Execute(false, title); }
+	bool   ExecuteSelectDir(const char *title = NULL)     { return Execute0(2, title); }
 
 	String Get() const                                    { return path.GetCount() ? path[0] : String::GetVoid(); }
 	operator String() const                               { return Get(); }
