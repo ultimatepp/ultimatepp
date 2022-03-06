@@ -32,8 +32,10 @@ void VerifyUppHubRequirements()
 	Loge() << UPP_FUNCTION_NAME << "(): Git is not available!";
 	ErrorOK(
 		"Git executable was not detected. UppHub will not work properly. Make sure git executable is present in your enviroment path. "
-		"More infromation about requierments you could find in our official UppHub [^https`:`/`/www`.ultimatepp`.org`/app`$ide`$UppHub`_en`-us`.html`#2^ documentation].&&"
-		"You could still use UppHub dialog and view available packages, but other operations like package download will do not work.");
+		"You can find more information about requirements "
+		"[^https`:`/`/www`.ultimatepp`.org`/app`$ide`$UppHub`_en`-us`.html`#2^ here].&&"
+		"You can still use UppHub to view available packages but other operations will not work."
+	);
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
