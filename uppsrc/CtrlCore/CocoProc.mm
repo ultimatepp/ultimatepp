@@ -240,13 +240,6 @@ struct MMImp {
 		ctrl->DispatchKey(k, 1);
 		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
-		#if 0 // this is now done by NSTextInputClient
-			for(wchar c : x) {
-				if(c < 0xF700 &&
-				   (c > 32 && c != 127 || /*c == 9 && !GetOption() || */c == 32 && !GetShift()))
-					ctrl->DispatchKey(c, 1);
-			}
-		#endif
 			if(e.keyCode == kVK_ANSI_KeypadEnter && *x != 13)
 				ctrl->DispatchKey(13, 1);
 		}
@@ -335,7 +328,8 @@ struct MMImp {
 	{
 		if(ctrl)
 			for(Upp::wchar ch : s)
-				ctrl->DispatchKey(ch, 1);
+				if(ch >= 32)
+					ctrl->DispatchKey(ch, 1);
 	}
 	
 	static void CancelPreedit()

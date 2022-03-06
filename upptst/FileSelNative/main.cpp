@@ -15,7 +15,7 @@ GUI_APP_MAIN
 	sel.Type("All 2", "*");
 	sel.ActiveType(1);
 
-	while(sel.ExecuteSaveAs("Test!")) {
+	while(sel.ExecuteOpen("Test!")) {
 		for(int i = 0; i < sel.GetCount(); i++)
 			DDUMP(sel[i]);
 		sel.Multi();
@@ -23,6 +23,6 @@ GUI_APP_MAIN
 	}
 	sel = GetDataFile("main.cpp");
 	if(!sel.ExecuteSaveAs("as"))
-		return;
+		return;	
 	DDUMP(~sel);
 }

@@ -341,7 +341,7 @@ class FileSelNative {
 	bool   Execute0(int mode, const char *title);
 
 public:
-	bool   Execute(bool open, const char *title = NULL)   { return Execute0(open, title); }
+	bool   Execute(bool open, const char *title = NULL)   { return 		Execute0(open, title); }
 	bool   ExecuteOpen(const char *title = NULL)          { return Execute(true, title); }
 	bool   ExecuteSaveAs(const char *title = NULL)        { return Execute(false, title); }
 	bool   ExecuteSelectDir(const char *title = NULL)     { return Execute0(2, title); }
