@@ -6,8 +6,23 @@
 #include <commdlg.h>
 #include <cderr.h>
 
+#define Ptr Ptr_
+#define byte byte_
 #define CY win32_CY_
-#include <ShlObj.h>
+
+#include <winnls.h>
+#include <winnetwk.h>
+
+#include <wincon.h>
+
+#ifdef COMPILER_MINGW
+#undef CY
+#endif
+
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
 #undef CY
 
 #endif
