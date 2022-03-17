@@ -312,6 +312,16 @@ then used as reference point) and can contain segments `".`"
 or `"..`".&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:GetCurrentDirectoryA`(`): [_^Upp`:`:String^ String]_[* GetCurrentDirectory]()
+&]
+[s2;%% Returns current current working directory.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:ChangeCurrentDirectory`(const char`*`): [@(0.0.255) bool]_[* ChangeCurrentDir
+ectory]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2;%% Changes current working directory to [%-*@3 path].&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:DeleteFolderDeep`(const char`*`,bool`): [@(0.0.255) bool]_[* DeleteFolderDeep
 ]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dir], [@(0.0.255) bool]_[*@3 rdonly]_`=_[@(0.0.255) f
 alse])&]

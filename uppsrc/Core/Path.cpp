@@ -201,9 +201,23 @@ String GetCurrentDirectory() {
 #endif
 
 #ifdef PLATFORM_POSIX
+
 bool SetCurrentDirectory(const char *path)
 {
 	return chdir(path) == 0;
+}
+
+bool ChangeCurrentDirectory(const char *path)
+{
+	return SetCurrentDirectory(path);
+}
+
+#endif
+
+#ifdef PLATFORM_WIN32
+bool ChangeCurrentDirectory(const char *path)
+{
+	return SetCurrentDirectory(ToSystemCharset(path));
 }
 #endif
 
