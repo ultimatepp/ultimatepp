@@ -41,6 +41,7 @@ public:
 		RULERINK  = 0x00002000,
 		RULERSTYLE= 0x00001000,
 		NEWHDRFTR = 0x00000800,
+		FIRSTONPAGE = 0x00000400,
 	};
 
 	struct FormatInfo : RichPara::Format {
@@ -77,6 +78,7 @@ protected:
 		mutable Vector<int>   linecy;
 		mutable int           after;
 		mutable bool          newpage;
+		mutable bool          firstonpage;
 		mutable bool          keep;
 		mutable bool          keepnext;
 		mutable bool          orphan;
@@ -117,6 +119,7 @@ protected:
 	bool r_keep = false;
 	bool r_keepnext = false;
 	bool r_newpage = false;
+	bool r_firstonpage = false;
 
 	void       Init();
 

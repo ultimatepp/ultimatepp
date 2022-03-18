@@ -94,6 +94,8 @@ void RichTxt::FormatInfo::Combine(const RichPara::Format& fmt)
 		paravalid &= ~BULLET;
 	if(newpage != fmt.newpage)
 		paravalid &= ~NEWPAGE;
+	if(firstonpage != fmt.firstonpage)
+		paravalid &= ~FIRSTONPAGE;
 	if(keep != fmt.keep)
 		paravalid &= ~KEEP;
 	if(keepnext != fmt.keepnext)
@@ -189,6 +191,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 		fmt.bullet = bullet;
 	if(paravalid & NEWPAGE)
 		fmt.newpage = newpage;
+	if(paravalid & FIRSTONPAGE)
+		fmt.firstonpage = firstonpage;
 	if(paravalid & KEEP)
 		fmt.keep = keep;
 	if(paravalid & KEEPNEXT)

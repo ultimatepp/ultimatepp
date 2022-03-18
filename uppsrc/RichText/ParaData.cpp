@@ -175,7 +175,7 @@ RichPara::Format::Format()
 	rulerink = Black;
 	rulerstyle = RULER_SOLID;
 	bullet = 0;
-	keep = newpage = keepnext = orphan = newhdrftr = false;
+	keep = newpage = firstonpage = keepnext = orphan = newhdrftr = false;
 	tabsize = 296;
 	memset8(number, 0, sizeof(number));
 	reset_number = false;
@@ -346,6 +346,7 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 	if(format.rulerink != style.rulerink)       pattr |= 0x20000;
 	if(format.rulerstyle != style.rulerstyle)   pattr |= 0x40000;
 	if(format.newhdrftr != style.newhdrftr)     pattr |= 0x80000;
+	if(format.firstonpage != style.firstonpage) pattr |= 0x100000;
 	
 	out.Put32(pattr);
 	if(pattr & 1)      out.Put16(format.align);
@@ -403,6 +404,7 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 			out % t % f;
 		}
 	}
+	if(pattr & 0x100000)  out.Put(format.firstonpage);
 
 	obj.Clear();
 	CharFormat cf = style;
@@ -635,6 +637,8 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 			in % format.header_qtf % format.footer_qtf;
 	}
 
+	if(pattr & 0x100000) format.firstonpage = in.Get();
+
 	part.Clear();
 	int oi = 0;
 	UnpackParts(in, style, part, obj, oi);
@@ -831,6 +835,7 @@ String RichPara::Format::ToString() const
 	<< ", indent " << indent << ", before " << before << ", after " << after
 	<< ", tabsize " << tabsize << ", bullet " << bullet
 	<< (newpage  ? ", newpage" : "")
+	<< (firstonpage  ? ", firstonpage" : "")
 	<< (keep     ? ", keep" : "")
 	<< (keepnext ? ", keepnext" : "")
 	<< (orphan   ? ", orphan" : "");

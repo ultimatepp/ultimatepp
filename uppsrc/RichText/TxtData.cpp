@@ -84,6 +84,7 @@ void RichTxt::SetRefresh(int parti)
 				r_paraocy = Sum(pp.linecy, 0) + pp.before + pp.after;
 				r_keep = pp.keep;
 				r_keepnext = pp.keepnext;
+				r_firstonpage = pp.firstonpage;
 				r_newpage = pp.newpage || pp.header_qtf.GetCount() || pp.footer_qtf.GetCount();
 				break;
 			}

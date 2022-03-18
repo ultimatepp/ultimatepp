@@ -714,6 +714,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 					case 'b': format.before = GetNumber(); break;
 					case 'a': format.after = GetNumber(); break;
 					case 'P': format.newpage = !format.newpage; break;
+					case 'F': format.firstonpage = !format.firstonpage; break;
 					case 'k': format.keep = !format.keep; break;
 					case 'K': format.keepnext = !format.keepnext; break;
 					case 'H': format.ruler = GetNumber(); break;
