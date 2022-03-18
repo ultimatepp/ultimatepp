@@ -102,7 +102,7 @@ String>] is equivalent of [*C@5 Function<void (int, String)>].&]
 [s2; Creates alias for Function returning bool. For example, [*C@5 Gate<int, 
 String>] is equivalent of [*C@5 Function<bool (int, String)>]. 
 Note that empty Gate returns false (because empty Function returns 
-bool(), which is false).&]
+bool(0), which is false).&]
 [s3;%- &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 MemFn and THISFN]]}}&]
