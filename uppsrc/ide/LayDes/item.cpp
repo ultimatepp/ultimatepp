@@ -78,6 +78,7 @@ void LayoutItem::CreateProperties(const String& classname, int level)
 			ItemProperty& ip = q >= 0 ? property.Set(q, n) : property.Add(n);
 			ip.level = l;
 			ip.name = r.name;
+			DDUMP(ip.name);
 			if(!IsNull(r.defval))
 				try {
 					CParser p(r.defval);
@@ -378,6 +379,7 @@ Image GetTypeIcon(const String& type, int cx, int cy, int i, Color bg)
 	if(p.iconsize[i] != Size(cx, cy)) {
 		p.iconsize[i] = Size(cx, cy);
 		LayoutItem m;
+		DDUMP(type);
 		m.Create(type);
 		Size stdsize = Zsz(m.GetStdSize());
 		if(stdsize.cx == 0 || stdsize.cy == 0)

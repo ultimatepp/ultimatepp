@@ -90,8 +90,11 @@ String FormatColor(Color c)
 Color ReadColor(CParser& p)
 {
 	for(int i = 0; i < __countof(s_colors); i++)
-		if(p.Id(s_colors[i].name))
+		if(p.Id(s_colors[i].name)) {
+			DDUMP(s_colors[i].name);
+			DDUMP(s_colors[i].color);
 			return s_colors[i].color;
+		}
 	p.PassId("Color");
 	p.PassChar('(');
 	int r = p.ReadInt();
