@@ -329,9 +329,9 @@ TabBar::TabBar()
 	SetFrameSize(GetHeight(false));
 	BackPaint();
 	
-	ConfirmClose = [](Value v) { return true; };
+	ConfirmClose = [](Value) { return true; };
 	ConfirmCloseAll = []() { return true; };
-	ConfirmCloseSome = []() { return true; };
+	ConfirmCloseSome = [](ValueArray) { return true; };
 }
 
 int TabBar::GetLR( int c, int jd )
