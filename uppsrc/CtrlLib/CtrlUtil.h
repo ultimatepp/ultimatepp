@@ -341,7 +341,12 @@ class FileSelNative {
 	bool   Execute0(int mode, const char *title);
 
 public:
-	bool   Execute(bool open, const char *title = NULL)   { return 		Execute0(open, title); }
+	void Serialize(Stream& s);
+
+	void New()                                            { path.Clear(); }
+	bool IsNew() const                                    { return path.IsEmpty(); }
+
+	bool   Execute(bool open, const char *title = NULL)   { return Execute0(open, title); }
 	bool   ExecuteOpen(const char *title = NULL)          { return Execute(true, title); }
 	bool   ExecuteSaveAs(const char *title = NULL)        { return Execute(false, title); }
 	bool   ExecuteSelectDir(const char *title = NULL)     { return Execute0(2, title); }
@@ -356,6 +361,8 @@ public:
 
 	int    GetCount() const                               { return path.GetCount(); }
 	const  String& operator[](int i) const                { return path[i]; }
+
+	String GetActiveDir() const                           { return ipath; }
 
 	FileSelNative& Type(const char *name, const char *ext) { type.Add(MakeTuple(String(name), String(ext))); return *this; }
 	FileSelNative& AllFilesType();

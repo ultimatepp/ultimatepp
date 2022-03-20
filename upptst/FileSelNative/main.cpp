@@ -7,7 +7,7 @@ GUI_APP_MAIN
 	FileSelNative sel;
 	sel.ActiveDir(GetHomeDirectory());
 	while(sel.ExecuteSelectDir("Just a test"))
-		PromptOK(sel.Get());
+		PromptOK(sel.Get() + "&" + "active dir: " + sel.GetActiveDir());
 	
 	sel.AllFilesType();
 	sel.Type("Test2", "*.tst");

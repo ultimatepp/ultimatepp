@@ -15,6 +15,12 @@ FileSelNative& FileSelNative::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
 
+void FileSelNative::Serialize(Stream& s) {
+	int version = 1;
+	s / version;
+	s / activetype % ipath;
+}
+
 bool FileSelNative::Execute0(int mode, const char *title)
 {
 	Ctrl::ReleaseCtrlCapture();
@@ -70,6 +76,9 @@ bool FileSelNative::Execute0(int mode, const char *title)
 			g_slist_free (list);
 		}
 		ret = true;
+		gchar *h = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
+		ipath = h;
+		g_free(h);
 	}
 	gtk_widget_destroy(fc);
 	return ret;
