@@ -218,10 +218,24 @@ inline bool FitsInInt64(double x)
 
 #if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
 
+#ifdef CPU_X86
+
 inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
 	return _addcarry_u64(carry, result, value, &result);
 }
+
+#else
+
+force_inline
+byte addc64(uint64& r, uint64 a, byte carry)
+{
+	uint64_t r1 = r;
+	r += a + carry;
+	return carry ? r <= a : r < a;
+}
+
+#endif
 
 inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
