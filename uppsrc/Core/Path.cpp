@@ -1,5 +1,4 @@
 #include "Core.h"
-#include "Core.h"
 //#BLITZ_APPROVE
 
 #ifdef PLATFORM_POSIX
