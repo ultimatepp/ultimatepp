@@ -34,6 +34,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.cy = Sum(pp.linecy);
 	pp.after = p.format.after;
 	pp.newpage = p.format.newpage;
+	pp.firstonpage = p.format.firstonpage;
 	pp.keep = p.format.keep;
 	pp.keepnext = p.format.keepnext;
 	pp.orphan = p.format.orphan;
@@ -100,7 +101,8 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 			}
 			if(pp.newhdrftr && rc.text == this)
 				rc.HeaderFooter(~pp.header, ~pp.footer);
-			if(pp.newpage || rc.py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height())
+			if(pp.firstonpage && rc.py.y > rc.page.top ||
+			   pp.newpage || rc.py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height())
 				rc.Page();
 			begin = rc;
 			rc.py.y += pp.before + pp.ruler;

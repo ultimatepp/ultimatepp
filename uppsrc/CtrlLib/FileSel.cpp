@@ -40,7 +40,7 @@ struct FileIconMaker : ImageMaker {
 	bool   large;
 
 	virtual String Key() const {
-		return file + (exe ? "1" : "0") + (dir ? "1" : "0");
+		return file + "\n" + (exe ? "1" : "0") + (dir ? "1" : "0");
 	}
 
 	virtual Image Make() const {

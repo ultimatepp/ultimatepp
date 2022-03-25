@@ -15,17 +15,25 @@ FileSelNative& FileSelNative::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
 
-bool FileSelNative::Execute(bool open, const char *title)
+void FileSelNative::Serialize(Stream& s) {
+	int version = 1;
+	s / version;
+	s / activetype % ipath;
+}
+
+bool FileSelNative::Execute0(int mode, const char *title)
 {
 	Ctrl::ReleaseCtrlCapture();
 	if(!title)
-		title = open ? t_("Open") : t_("Save as");
+		title = decode(mode, 1, t_("Open"), 0, t_("Save as"), t_("Select folder"));
 	Ctrl *w = Ctrl::GetActiveWindow();
 	GtkWidget *fc = gtk_file_chooser_dialog_new(title, w ? w->gtk() : NULL,
-	                                            open ? GTK_FILE_CHOOSER_ACTION_OPEN
-	                                                 : GTK_FILE_CHOOSER_ACTION_SAVE,
+	                                            decode(mode, 0, GTK_FILE_CHOOSER_ACTION_SAVE,
+	                                                         1, GTK_FILE_CHOOSER_ACTION_OPEN,
+	                                                         GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER),
 	                                            t_("Cancel"), GTK_RESPONSE_CANCEL,
-	                                            open ? t_("Open") : t_("Save"), GTK_RESPONSE_OK,
+	                                            decode(mode, 1, t_("Open"), 0, t_("Save"), t_("Select")),
+	                                            GTK_RESPONSE_OK,
 	                                            NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(fc), confirm);
 	gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(fc), true);
@@ -68,6 +76,9 @@ bool FileSelNative::Execute(bool open, const char *title)
 			g_slist_free (list);
 		}
 		ret = true;
+		gchar *h = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
+		ipath = h;
+		g_free(h);
 	}
 	gtk_widget_destroy(fc);
 	return ret;

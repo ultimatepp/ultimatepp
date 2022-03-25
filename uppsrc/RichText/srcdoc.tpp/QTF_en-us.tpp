@@ -347,6 +347,9 @@ optimization, [*@(128.0.255) %`-] is equivalent to [@(128.0.255) %][@(0.0.255) 0
 ::= [s0; Space after paragraph in dots.]
 ::^ [s0;%- [C@(128.0.255) P]]
 ::= [s0; Page break before paragraph.]
+::^ [s0;%- [C@(128.0.255) F]]
+::= [s0; Paragraph will always be the first on page, adding page break 
+if necessary.]
 ::^ [s0;%- [C@(128.0.255) k]]
 ::= [s0; Keep paragraph on single page.]
 ::^ [s0;%- [C@(128.0.255) K]]

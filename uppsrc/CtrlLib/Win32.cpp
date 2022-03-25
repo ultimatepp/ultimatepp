@@ -6,6 +6,25 @@
 #include <commdlg.h>
 #include <cderr.h>
 
+#define Ptr Ptr_
+#define byte byte_
+#define CY win32_CY_
+
+#include <winnls.h>
+#include <winnetwk.h>
+
+#include <wincon.h>
+
+#ifdef COMPILER_MINGW
+#undef CY
+#endif
+
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
+#undef CY
+
 #endif
 #endif
 
@@ -96,6 +115,53 @@ static UINT_PTR CALLBACK sCenterHook(HWND hdlg, UINT msg, WPARAM wParam, LPARAM 
 #ifndef OFN_ENABLESIZING
 #define OFN_ENABLESIZING             0x00800000
 #endif
+
+INT CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
+{
+	if (uMsg==BFFM_INITIALIZED) {
+		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
+		SendMessage(hwnd, BFFM_SETEXPANDED, TRUE, pData);
+	}
+	return 0;
+}
+
+bool FileSelNative::ExecuteSelectDir(const char *title)
+{
+	Vector<Vector<char16>> s16;
+	auto W32 = [&](const String& s) -> char16* {
+		auto& h = s16.Add();
+		h = ToSystemCharsetW(s);
+		return h;
+	};
+
+	String ret;
+
+	BROWSEINFOW br;
+	memset(&br, 0, sizeof(BROWSEINFO));
+	Ctrl *q = Ctrl::GetActiveWindow();
+	if(q) br.hwndOwner = q->GetHWND();
+	br.lpfn = BrowseCallbackProc;
+	br.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+	br.lpszTitle = W32(title);
+	br.lParam = (LPARAM)W32(activedir);
+
+	LPITEMIDLIST pidl = NULL;
+	if((pidl = SHBrowseForFolderW(&br)) != NULL) {
+		char16 buffer[MAX_PATH];
+		if(SHGetPathFromIDListW(pidl, buffer))
+			filename << FromSystemCharsetW(buffer);
+		else
+			filename << Null;
+        IMalloc *pMalloc;
+        if(SHGetMalloc(&pMalloc) == NOERROR) {
+            pMalloc->Free(pidl);
+            pMalloc->Release();
+        }
+		return true;
+	}
+
+	return false;
+}
 
 bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 	Vector<Vector<char16>> s16;

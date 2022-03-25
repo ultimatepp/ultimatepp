@@ -97,6 +97,8 @@ Rect     RectEsc(EscValue v);
 EscValue EscFont(Font f);
 Font     FontEsc(EscValue v);
 
+void     EatUpp(CParser& p);
+
 struct ItemProperty : public Ctrl {
 	int     level;
 	String  name;

@@ -437,7 +437,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 						cache[q].src = fnt;
 						cache[q].dst = f;
 						double h = f.GetHeight();
-						f.Height(min(h * a / max(1, f.GetAscent()), h * d / max(1, f.GetDescent())) + 1);
+						f.Height((int)min(h * a / max(1, f.GetAscent()), h * d / max(1, f.GetDescent())) + 1);
 						while((f.GetAscent() > a || f.GetDescent() > d) && f.GetHeight() > 1) {
 							f.Height(max(1, f.GetHeight() - 1/*max(1, f.GetHeight() / 20)*/));
 							LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<

@@ -95,7 +95,7 @@ FontDlg::FontDlg()
 }
 
 struct FontProperty : public EditorProperty<DataPusher> {
-	virtual String   Save() const           { return FormatFont(~editor); }
+	virtual String   Save() const           { return "Upp::" + FormatFont(~editor); }
 	virtual void     Read(CParser& p);
 
 	One<FontDlg> fdlg;
@@ -113,6 +113,7 @@ struct FontProperty : public EditorProperty<DataPusher> {
 };
 
 void FontProperty::Read(CParser& p) {
+	EatUpp(p);
 	Font f = StdFont();
 	if(p.Id("StdFont") || p.Id("StdFontZ"))
 		f.Face(Font::STDFONT);

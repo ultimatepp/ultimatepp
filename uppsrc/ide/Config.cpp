@@ -185,7 +185,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 19;
+	int version = 20;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -276,6 +276,8 @@ void Ide::Serialize(Stream& s)
 	s % editor.commentdp;
 	s % bordercolumn;
 	s % bordercolor;
+	if(version >= 20)
+		s % find_pick_sel % find_pick_text % deactivate_save;
 	s % hydra1_threads;
 	if(s.IsLoading())
 		console.SetSlots(hydra1_threads);

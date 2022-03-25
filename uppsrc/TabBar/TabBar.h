@@ -424,6 +424,7 @@ public:
 	Gate<>                      ConfirmCloseAll;    // Called before closing
 	Event<>                     WhenCloseAll;       // Executed before 'Close All' action
 	Gate<ValueArray>            CancelCloseSome;    // Return true to cancel action (executed with list of closing tabs)
+	Gate<ValueArray>            ConfirmCloseSome;   // Called before closing the group
 	Event<ValueArray>           WhenCloseSome;      // Executed before any 'Close' action (with list of closing tabs)
 	Gate<int, int>              CancelDragAndDrop;  // Return true to cancel drag and drop from tab to tab
 

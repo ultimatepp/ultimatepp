@@ -38,7 +38,7 @@ void RichEdit::InsertTable()
 			h.SetStyles(text.GetStyles());
 			RichPara p;
 			p.format = formatinfo;
-			p.format.newpage = false;
+			p.format.firstonpage = p.format.newpage = false;
 			p.format.label.Clear();
 			h.Cat(p);
 			table.SetPick(i, j, pick(h));
@@ -227,7 +227,7 @@ bool RichEdit::InsertLineSpecial()
 	if(cursorp.table) {
 		RichPara::Format fmt;
 		fmt = formatinfo;
-		fmt.newpage = false;
+		fmt.firstonpage = fmt.newpage = false;
 		fmt.label.Clear();
 		if(cursorp.posintab == 0 && text.ShouldInsertParaSpecial(cursorp.table, true)) {
 			AddUndo(MakeOne<UndoInsertParaSpecial>(cursorp.table, true));
