@@ -199,12 +199,11 @@ void EatUpp(CParser& p)
 
 void ColorProperty::Read(CParser& p)
 {
-//	EatUpp(p);
+	EatUpp(p);
 	if(p.Id("Null")) {
 		editor.SetData(Null);
 		return;
 	}
-	p.Char(':');
 	editor.SetData(ReadColor(p));
 }
 
