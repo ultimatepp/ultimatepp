@@ -204,6 +204,7 @@ void ColorProperty::Read(CParser& p)
 		editor.SetData(Null);
 		return;
 	}
+	p.Char(':'); //
 	editor.SetData(ReadColor(p));
 }
 
