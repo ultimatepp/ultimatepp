@@ -285,9 +285,9 @@ CXXSTD_RE=	#empty
 if [ -z "${NO_CXXSTD}" ]; then
 
 if [ "$platform" = "FreeBSD" ]; then
-  CHECK_CXXSTD="c++14 c++1y c++11 c++0x"
+  CHECK_CXXSTD="c++17"
 else
-  CHECK_CXXSTD="c++14 c++11"
+  CHECK_CXXSTD="c++17"
 fi
 
 if [ -z "${CXXSTD}" ]; then
@@ -303,7 +303,7 @@ if [ -z "${CXXSTD}" ]; then
   if [ -n "${CXXSTD}" ]; then
     log_debug_info "The -std=${CXXSTD} is supported by '${CXX}'"
   else
-    log_debug_warning "The C++11 is not supported by '${CXX}'"
+    log_debug_warning "The C++17 is not supported by '${CXX}'"
   fi
 fi
 
