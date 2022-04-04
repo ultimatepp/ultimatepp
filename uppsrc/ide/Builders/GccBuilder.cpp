@@ -136,8 +136,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 //	if(IsVerbose())
 //		cc << " -v";
-	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
-		cc << " -mthreads";
+//	if(HasFlag("WIN32")/* && HasFlag("MT")*/) // not needed anymore
+//		cc << " -mthreads";
 
 	if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL")) {
 		cc << (HasFlag("WIN32") && HasFlag("CLANG") ? " -gcodeview -fno-limit-debug-info" : " -ggdb");
