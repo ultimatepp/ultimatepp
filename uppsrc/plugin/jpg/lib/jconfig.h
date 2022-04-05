@@ -2,8 +2,6 @@
 /* This file also works for Borland C++ 32-bit (bcc32) on Windows 9x or NT. */
 /* see jconfig.txt for explanations */
 
-#define DEFAULT_MAX_MEM 1024*1024*256
-
 #define HAVE_PROTOTYPES
 #define HAVE_UNSIGNED_CHAR
 #define HAVE_UNSIGNED_SHORT
