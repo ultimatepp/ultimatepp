@@ -9,14 +9,17 @@ GUI_APP_MAIN
 
 	RDUMP(sizeof(Image));
 	RDUMP(sizeof(RichText));
+	RDUMP(sizeof(Ctrl::LogPos));
+	RLOG("=============");
 	RDUMP(sizeof(Ctrl));
+	RDUMP(sizeof(ScrollBar));
+	RDUMP(sizeof(HeaderCtrl));
 	RDUMP(sizeof(Button));
 	RDUMP(sizeof(Switch));
 	RDUMP(sizeof(Label));
 	RDUMP(sizeof(EditField));
 	RDUMP(sizeof(EditString));
 	RDUMP(sizeof(EditIntSpin));
-	RDUMP(sizeof(ScrollBar));
 	RDUMP(sizeof(DropList));
 	RDUMP(sizeof(ArrayCtrl));
 	RDUMP(sizeof(TreeCtrl));
@@ -25,5 +28,4 @@ GUI_APP_MAIN
 	RDUMP(sizeof(RichTextView));
 	RDUMP(sizeof(ColumnList));
 	RDUMP(sizeof(RichEdit));
-	RDUMP(sizeof(Ctrl::LogPos));
 }
