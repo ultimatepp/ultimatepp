@@ -241,6 +241,10 @@ public:
 	WithDeepCopy& operator=(WithDeepCopy&& a)          { (T&)*this = pick(a); return *this; }
 
 	WithDeepCopy()                                     {}
+
+#ifdef CPP_20
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+#endif
 };
 
 // compatibility hacks

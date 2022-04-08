@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	CPPxx.cpp;
+
+mainconfig
+	"" = "";
+
