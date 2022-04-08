@@ -149,7 +149,7 @@ void Ctrl::SyncLayout(int force)
 	for(int i = 0; i < frame.GetCount(); i++) {
 		Frame& f = frame[i];
 		f.frame->FrameLayout(view);
-		if(view != f.view) {
+		if(view != Rect(f.view)) {
 			f.view = view;
 			refresh = true;
 		}

@@ -64,7 +64,7 @@ struct Size_ : Moveable< Size_<T> > {
 	Size_(T cx, T cy) : cx(cx), cy(cy) {}
 
 	Size_(const Size_<int>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}	
-	Size_(const Size_<short>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
+	Size_(const Size_<int16>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
 	Size_(const Size_<double>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
 	Size_(const Size_<int64>& sz) : cx((T)sz.cx), cy((T)sz.cy) {}
 
@@ -175,7 +175,7 @@ struct Point_ : Moveable< Point_<T> > {
 	Point_(T x, T y) : x(x), y(y) {}
 
 	Point_(const Point_<int>& pt) : x((T)pt.x), y((T)pt.y) {}
-	Point_(const Point_<short>& pt) : x((T)pt.x), y((T)pt.y) {}
+	Point_(const Point_<int16>& pt) : x((T)pt.x), y((T)pt.y) {}
 	Point_(const Point_<double>& pt) : x((T)pt.x), y((T)pt.y) {}
 	Point_(const Point_<int64>& pt) : x((T)pt.x), y((T)pt.y) {}
 
@@ -368,7 +368,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 	Rect_(Sz sz)                                { Set(0, 0, sz.cx, sz.cy); }
 
 	Rect_(const Rect_<int>& r) { Set((T)r.left, (T)r.top, (T)r.right, (T)r.bottom); }
-	Rect_(const Rect_<short>& r) { Set((T)r.left, (T)r.top, (T)r.right, (T)r.bottom); }
+	Rect_(const Rect_<int16>& r) { Set((T)r.left, (T)r.top, (T)r.right, (T)r.bottom); }
 	Rect_(const Rect_<double>& r) { Set((T)r.left, (T)r.top, (T)r.right, (T)r.bottom); }
 	Rect_(const Rect_<int64>& r) { Set((T)r.left, (T)r.top, (T)r.right, (T)r.bottom); }
 

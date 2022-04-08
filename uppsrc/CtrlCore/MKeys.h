@@ -1,4 +1,4 @@
-enum CtrlCoreKeys {
+const dword
 #ifdef GUIPLATFORM_KEYCODES_INCLUDE
 	#include GUIPLATFORM_KEYCODES_INCLUDE
 #else
@@ -357,5 +357,5 @@ enum CtrlCoreKeys {
 	K_ALT_8         = K_ALT|K_8,
 	K_ALT_9         = K_ALT|K_9,
 
-	K_CTRL_BREAK    = K_CTRL|K_BREAK,
-};
+	K_CTRL_BREAK    = K_CTRL|K_BREAK
+;

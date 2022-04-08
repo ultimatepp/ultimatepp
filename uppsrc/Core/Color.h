@@ -55,6 +55,7 @@ public:
 	bool     IsNullInstance() const    { return color == 0xffffffff; }
 	hash_t   GetHashValue() const      { return color; }
 	bool     operator==(Color c) const { return color == c.color; }
+	bool     operator==(const RGBA& c) const { return c == operator RGBA(); }
 	bool     operator!=(Color c) const { return color != c.color; }
 
 	void     Serialize(Stream& s)      { s % color; }

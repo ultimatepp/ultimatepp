@@ -177,12 +177,32 @@
 #define STD_NEWDELETE
 #endif
 
-#if __cplusplus >= 201100
+#if __cplusplus >= 201103
 #define CPP_11
 #endif
 
-#if _MSC_VER >= 1900 // MSC from VS2015 is good enough C++11 compiler...
-#define CPP_11
+#if __cplusplus >= 201402
+#define CPP_14
+#endif
+
+#if __cplusplus >= 201703
+#define CPP_17
+#endif
+
+#if __cplusplus >= 202002
+#define CPP_20
+#endif
+
+#if _MSVC_LANG >= 201402
+#define CPP_14
+#endif
+
+#if _MSVC_LANG >= 201703
+#define CPP_17
+#endif
+
+#if _MSVC_LANG >= 202002
+#define CPP_20
 #endif
 
 #define WCHAR32 1 // this version of U++ has 32 bit wchar

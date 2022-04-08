@@ -42,7 +42,7 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const Path
 		tolerance = 0.3 / attr.mtx.GetScale();
 	}
 
-	if(width == ONPATH) {
+	if(width == BufferPainter::ONPATH) {
 		g = &onpathtarget;
 		regular = false;
 	}
