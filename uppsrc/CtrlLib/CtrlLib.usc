@@ -895,6 +895,21 @@ ctrl EditDoubleNotNull {
 	bool NotNull = true;
 }
 
+ctrl EditFloat {
+	>EditNotNull;
+	double Min;
+	double Max;
+
+	PaintData(w) { PaintMinMax(w, "flt", DblStr(.Min), DblStr(.Max)); }
+}
+
+ctrl EditFloatNotNull {
+	>EditFloat;
+
+	bool NotNull = true;
+}
+
+
 ctrl EditDate {
 	>EditNotNull;
 	PaintData(w) { PaintMinMax(w, "Date", "", ""); }

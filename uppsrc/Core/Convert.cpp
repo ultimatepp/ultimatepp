@@ -484,6 +484,9 @@ const ConvertInt& StdConvertIntNotNull() { static ConvertInt h(-INT_MAX, INT_MAX
 const ConvertDouble& StdConvertDouble() { static ConvertDouble h; return h; }
 const ConvertDouble& StdConvertDoubleNotNull() { static ConvertDouble h(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), true); return h; }
 
+const ConvertFloat& StdConvertFloat() { static ConvertFloat h; return h; }
+const ConvertFloat& StdConvertFloatNotNull() { static ConvertFloat h(-std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), true); return h; }
+
 const ConvertDate& StdConvertDate() { static ConvertDate h; return h; }
 const ConvertDate& StdConvertDateNotNull() { static ConvertDate h(Date(0, 0, 0), Date(3000, 12, 31), true); return h; }
 
