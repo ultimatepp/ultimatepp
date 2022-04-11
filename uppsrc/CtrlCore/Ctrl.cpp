@@ -390,9 +390,21 @@ void Ctrl::KillCaret()
 
 void Ctrl::SetInfoPart(int i, const char *txt)
 {
-	Vector<String> f = Split(info, '\x7f', false);
+	Vector<String> f;
+	if(info_ptr) {
+		if(layout_id_literal)
+			f.At(4) = info_ptr;
+		else {
+			f = Split(info_ptr, '\x7f', false);
+			delete[] info_ptr;
+		}
+	}
 	f.At(i) = txt;
-	info = Join(f, "\x7f");
+	String h = Join(f, "\x7f");
+	char *s = new char[h.GetCount() + 1];
+	memcpy(s, ~h, h.GetCount() + 1);
+	info_ptr = s;
+	layout_id_literal = false;
 }
 
 Ctrl& Ctrl::Tip(const char *txt)
@@ -425,10 +437,24 @@ Ctrl& Ctrl::LayoutId(const char *txt)
 	return *this;
 }
 
+Ctrl& Ctrl::LayoutIdLiteral(const char *txt)
+{
+	if(info_ptr && !layout_id_literal)
+		LayoutId(txt);
+	else {
+		info_ptr = txt;
+		layout_id_literal = true;
+	}
+	return *this;
+}
+
 String Ctrl::GetInfoPart(int i) const
 {
-	Vector<String> f = Split(info, '\x7f', false);
-	return i < f.GetCount() ? f[i] : String();
+	if(info_ptr && !layout_id_literal) {
+		Vector<String> f = Split(info_ptr, '\x7f', false);
+		return i < f.GetCount() ? f[i] : String();
+	}
+	return String();
 }
 
 String Ctrl::GetTip() const
@@ -453,7 +479,16 @@ String Ctrl::GetHelpTopic() const
 
 String Ctrl::GetLayoutId() const
 {
+	if(info_ptr && layout_id_literal)
+		return info_ptr;
 	return GetInfoPart(4);
+}
+
+void Ctrl::ClearInfo()
+{
+	if(info_ptr && !layout_id_literal)
+		delete[] info_ptr;
+	info_ptr = nullptr;
 }
 
 bool  Ctrl::SetWantFocus() {
@@ -611,6 +646,8 @@ Ctrl::Ctrl() {
 	popupgrab = false;
 	fullrefresh = false;
 	akv = false;
+	layout_id_literal = false;
+	info_ptr = nullptr;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);
@@ -693,6 +730,7 @@ Ctrl::~Ctrl() {
 		parent->RemoveChild(this);
 	Close();
 	KillTimeCallbacks(this, (byte *) this + sizeof(Ctrl));
+	ClearInfo();
 }
 
 Vector<Ctrl::MouseHook>& Ctrl::mousehook() { static Vector<Ctrl::MouseHook> h; return h; }

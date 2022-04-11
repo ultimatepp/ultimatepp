@@ -1,0 +1,27 @@
+* C:\upp\out\gui_sizeof_autotest\CLANGx64.Debug.Debug_Full.Gui\CtrlInfoParts.exe 11.04.2022 18:41:30, user: cxl
+
+========================
+h.GetLayoutId() = just some literal
+h.GetTip() = 
+h.GetDescription() = 
+h.GetHelpLine() = 
+========================
+h.GetLayoutId() = just some text
+h.GetTip() = 
+h.GetDescription() = 
+h.GetHelpLine() = 
+========================
+h.GetLayoutId() = just some literal
+h.GetTip() = 
+h.GetDescription() = 
+h.GetHelpLine() = some helpline
+========================
+h.GetLayoutId() = just some text
+h.GetTip() = 
+h.GetDescription() = 
+h.GetHelpLine() = some helpline
+========================
+h.GetLayoutId() = just some literal
+h.GetTip() = this is tip
+h.GetDescription() = this is description
+h.GetHelpLine() = some helpline

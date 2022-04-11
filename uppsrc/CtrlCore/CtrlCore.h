@@ -496,7 +496,7 @@ private:
 	LogPos       pos;//8
 	Rect16       rect;
 	Mitor<Frame> frame;//16
-	String       info;//16
+	const char  *info_ptr;
 	int16        caretx, carety, caretcx, caretcy;//8
 
 	byte         overpaint;
@@ -523,6 +523,7 @@ private:
 
 	bool         akv:1;
 	bool         destroying:1;
+	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -1191,21 +1192,19 @@ public:
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }
 
-	Ctrl&   Info(const char *txt)              { info = txt; return *this; }
-	String  GetInfo() const                    { return info; }
-
 	Ctrl&   Tip(const char *txt);
 	Ctrl&   HelpLine(const char *txt);
 	Ctrl&   Description(const char *txt);
 	Ctrl&   HelpTopic(const char *txt);
 	Ctrl&   LayoutId(const char *txt);
+	Ctrl&   LayoutIdLiteral(const char *txt);
 
 	String  GetTip() const;
 	String  GetHelpLine() const;
 	String  GetDescription() const;
 	String  GetHelpTopic() const;
 	String  GetLayoutId() const;
-	void    ClearInfo()                        { info.Clear(); }
+	void    ClearInfo();
 
 	void    Add(Ctrl& ctrl)                    { AddChild(&ctrl); }
 	Ctrl&   operator<<(Ctrl& ctrl)             { Add(ctrl); return *this; }

@@ -2240,14 +2240,6 @@ l]_[*@3 ax]_`=_[@(0.0.255) true])&]
 [s7;i1120;a17; [*/ Return value]-|Value of ActiveX flag.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:Info`(const char`*`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* Info]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 txt])&]
-[s2;b17;a17; Sets Tip text of Ctrl. This text is displayed as tooltip 
-of Ctrl.&]
-[s7;i1120;a17; [%-*C@3 txt]-|Text.&]
-[s7;i1120;a17; [*/ Return value]-|`*this for method chaining.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:HelpLine`(const char`*`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* HelpLine]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 txt])&]
 [s2;b17;a17; Sets help topic link for Ctrl.&]
