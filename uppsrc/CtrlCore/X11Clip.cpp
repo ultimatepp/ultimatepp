@@ -260,8 +260,6 @@ String GetString(PasteClip& clip)
 		return ~clip;
 	if(clip.Accept("UTF8_STRING"))
 		return ToUtf32(~clip).ToString();
-	if(clip.Accept("text/unicode"))
-		return Unicode__(~clip).ToString();
 	return Null;
 }
 
@@ -270,8 +268,6 @@ WString GetWString(PasteClip& clip)
 	GuiLock __;
 	if(clip.Accept("UTF8_STRING"))
 		return ToUtf32(~clip);
-	if(clip.Accept("text/unicode"))
-		return Unicode__(~clip);
 	if(clip.Accept("STRING") || clip.Accept("text/plain"))
 		return ToUnicode(~clip, CHARSET_ISO8859_1);
 	return Null;
@@ -284,8 +280,6 @@ String GetTextClip(const WString& text, const String& fmt)
 		return text.ToString();
 	if(fmt == "UTF8_STRING")
 		return ToUtf8(text);
-	if(fmt == "text/unicode")
-		return Unicode__(text);
 	return Null;
 }
 
@@ -296,8 +290,6 @@ String GetTextClip(const String& text, const String& fmt)
 		return text;
 	if(fmt == "UTF8_STRING")
 		return ToUtf8(text.ToWString());
-	if(fmt == "text/unicode")
-		return Unicode__(text.ToWString());
 	return Null;
 }
 
@@ -313,7 +305,6 @@ void Append(VectorMap<String, ClipData>& data, const String& text) // optimize
 	data.GetAdd("STRING", text);
 	data.GetAdd("text/plain", text);
 	data.GetAdd("UTF8_STRING", ToUtf8(text.ToWString()));
-	data.GetAdd("text/unicode", Unicode__(text.ToWString()));
 }
 
 void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
@@ -322,7 +313,6 @@ void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 	data.GetAdd("STRING", text.ToString());
 	data.GetAdd("text/plain", text.ToString());
 	data.GetAdd("UTF8_STRING", ToUtf8(text));
-	data.GetAdd("text/unicode", Unicode__(text));
 }
 
 bool IsClipboardAvailable(const char *fmt)

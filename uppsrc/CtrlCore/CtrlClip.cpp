@@ -113,16 +113,6 @@ const void *GetInternalDropPtr__()
 	return sInternalPtr;
 }
 
-String Unicode__(const WString& w)
-{
-	return String((const char *)~w, 2 * w.GetLength());
-}
-
-WString Unicode__(const String& s)
-{
-	return WString((const wchar *)~s, s.GetLength() / 2);
-}
-
 void GuiPlatformAdjustDragImage(ImageBuffer& b);
 
 Image MakeDragImage(const Image& arrow, Image sample)

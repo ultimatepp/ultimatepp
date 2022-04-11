@@ -278,7 +278,8 @@ static String sText(const Value& data)
 
 static String sWText(const Value& data)
 {
-	return Unicode__(WString(data));
+	Vector<char16> h = ToUtf16(WString(data));
+	return String(h.begin(), sizeof(char16) * h.GetCount());
 }
 
 void Append(VectorMap<String, ClipData>& data, const String& text)
@@ -298,7 +299,7 @@ String GetTextClip(const WString& text, const String& fmt)
 	if(fmt == "text")
 		return text.ToString();
 	if(fmt == "wtext")
-		return Unicode__(text);
+		return sWText(text);
 	return Null;
 }
 
@@ -307,7 +308,7 @@ String GetTextClip(const String& text, const String& fmt)
 	if(fmt == "text")
 		return text;
 	if(fmt == "wtext")
-		return Unicode__(text.ToWString());
+		return sWText(text.ToWString());
 	return Null;
 }
 

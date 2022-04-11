@@ -305,9 +305,6 @@ public:
 	PasteClip();
 };
 
-String  Unicode__(const WString& w);
-WString Unicode__(const String& s);
-
 void GuiPlatformAdjustDragImage(ImageBuffer& b);
 
 Image MakeDragImage(const Image& arrow, Image sample);
