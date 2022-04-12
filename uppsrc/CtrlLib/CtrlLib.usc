@@ -970,6 +970,19 @@ ctrl EditDoubleSpin {
 	}
 }
 
+ctrl EditFloatSpin {
+	>EditDoubleSpin;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMaxText(w, "flt", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
+	}
+}
+
+
 ctrl EditDateSpin {
 	>EditDate;
 

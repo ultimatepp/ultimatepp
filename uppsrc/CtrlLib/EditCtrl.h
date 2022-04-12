@@ -526,11 +526,14 @@ void WithSpin<DataType, Base, IncType>::MouseWheel(Point, int zdelta, dword)
 typedef WithSpin<int, EditInt>               EditIntSpin;
 typedef WithSpin<int64, EditInt64>           EditInt64Spin;
 typedef WithSpin<double, EditDouble>         EditDoubleSpin;
+typedef WithSpin<double, EditFloat>          EditFloatSpin;
 typedef WithSpin<Date, EditDate, int>        EditDateSpin;
 typedef WithSpin<Time, EditTime, int>        EditTimeSpin;
 
 typedef WithSpin<int, EditIntNotNull>        EditIntNotNullSpin;
 typedef WithSpin<int64, EditInt64NotNull>    EditInt64NotNullSpin;
 typedef WithSpin<double, EditDoubleNotNull>  EditDoubleNotNullSpin;
+typedef WithSpin<double, EditFloatNotNull>   EditFloatNotNullSpin;
 typedef WithSpin<Date, EditDateNotNull, int> EditDateNotNullSpin;
 typedef WithSpin<Time, EditTimeNotNull, int> EditTimeNotNullSpin;
+

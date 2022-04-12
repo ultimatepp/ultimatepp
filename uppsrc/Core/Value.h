@@ -220,6 +220,7 @@ public:
 	operator Date() const            { return Is(DATE_V) ? GetSmallRaw<Date>() : GetOtherDate(); }
 	operator Time() const            { return Is(TIME_V) ? GetSmallRaw<Time>() : GetOtherTime(); }
 	operator double() const          { return Is(DOUBLE_V) ? GetSmallRaw<double>() : GetOtherDouble(); }
+	operator float() const           { return float(Is(DOUBLE_V) ? GetSmallRaw<double>() : GetOtherDouble()); }
 	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
