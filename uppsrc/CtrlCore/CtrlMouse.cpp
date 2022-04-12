@@ -280,7 +280,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 	Rect view = GetView();
 	if(view.Contains(p)) {
 		Point vp = p - view.TopLeft();
-		for(q = GetLastChild(); q; q = q->prev) {
+		for(q = GetLastChild(); q; q = q->GetPrev()) {
 			if(q->InView() && q->IsMouseActive()) {
 				Rect r = q->GetRect();
 				if(r.Contains(vp)) {
@@ -291,7 +291,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 		}
 		return NULL;
 	}
-	for(q = GetLastChild(); q; q = q->prev) {
+	for(q = GetLastChild(); q; q = q->GetPrev()) {
 		if(q->InFrame() && q->IsMouseActive()) {
 			Rect r = q->GetRect();
 			if(r.Contains(p)) {

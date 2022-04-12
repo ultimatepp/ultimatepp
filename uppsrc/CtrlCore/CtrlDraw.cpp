@@ -287,20 +287,20 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	bool hasviewctrls = false;
 	bool viewexcluded = false;
 	bool hiddenbychild = false;
-	for(q = firstchild; q; q = q->next)
-		if(q->IsShown()) {
-			if(q->GetRect().Contains(orect) && !q->IsTransparent())
+	for(Ctrl& q : *this)
+		if(q.IsShown()) {
+			if(q.GetRect().Contains(orect) && !q.IsTransparent())
 				hiddenbychild = true;
-			if(q->InFrame()) {
-				if(!viewexcluded && IsTransparent() && q->GetRect().Intersects(view)) {
+			if(q.InFrame()) {
+				if(!viewexcluded && IsTransparent() && q.GetRect().Intersects(view)) {
 					w.Begin();
 					w.ExcludeClip(view);
 					viewexcluded = true;
 				}
-				LEVELCHECK(w, q);
-				Point off = q->GetRect().TopLeft();
+				LEVELCHECK(w, &q);
+				Point off = q.GetRect().TopLeft();
 				w.Offset(off);
-				q->CtrlPaint(w, clip - off);
+				q.CtrlPaint(w, clip - off);
 				w.End();
 			}
 			else
@@ -329,15 +329,15 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	if(hasviewctrls && !view.IsEmpty()) {
 		Rect cl = clip & view;
 		w.Clip(cl);
-		for(q = firstchild; q; q = q->next)
-			if(q->IsShown() && q->InView()) {
-				LEVELCHECK(w, q);
-				Rect qr = q->GetRect();
+		for(Ctrl& q : *this)
+			if(q.IsShown() && q.InView()) {
+				LEVELCHECK(w, &q);
+				Rect qr = q.GetRect();
 				Point off = qr.TopLeft() + view.TopLeft();
 				Rect ocl = cl - off;
 				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
 					w.Offset(off);
-					q->CtrlPaint(w, ocl);
+					q.CtrlPaint(w, ocl);
 					w.End();
 				}
 			}
@@ -373,11 +373,11 @@ bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool
 	if(backpaint == EXCLUDEPAINT)
 		return w.ExcludeClip(r);
 	Rect cview = clip & (GetView() + off);
-	for(Ctrl *q = lastchild; q; q = q->prev)
-		if(!q->PaintOpaqueAreas(w, q->GetRect() + (q->InView() ? viewpos : off),
-		                        q->InView() ? cview : clip))
+	for(Ctrl& q : *this)
+		if(!q.PaintOpaqueAreas(w, q.GetRect() + (q.InView() ? viewpos : off),
+		                       q.InView() ? cview : clip))
 			return false;
-	if(nochild && (lastchild || GetNext()))
+	if(nochild && (GetLastChild() || GetNext()))
 		return true;
 	Rect opaque = (GetOpaqueRect() + viewpos) & clip;
 	if(opaque.IsEmpty())
@@ -461,11 +461,11 @@ void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, con
 			CombineArea(area, clip & Rect(notr.left, r.top, notr.right, notr.top));
 			CombineArea(area, clip & Rect(notr.left, notr.bottom, notr.right, r.bottom));
 		}
-		for(Ctrl *q = firstchild; q; q = q->next) {
-			Point qoff = q->InView() ? viewpos : off;
-			Rect qr = q->GetRect() + qoff;
+		for(Ctrl& q : *this) {
+			Point qoff = q.InView() ? viewpos : off;
+			Rect qr = q.GetRect() + qoff;
 			if(clip.Intersects(qr))
-				q->GatherTransparentAreas(area, w, qr, clip);
+				q.GatherTransparentAreas(area, w, qr, clip);
 		}
 	}
 }
@@ -506,9 +506,9 @@ void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
 		return;
 	}
 	Rect cview = clip & (GetView() + off);
-	for(Ctrl *q = lastchild; q; q = q->prev)
-		q->ExcludeDHCtrls(w, q->GetRect() + (q->InView() ? viewpos : off),
-		                  q->InView() ? cview : clip);
+	for(Ctrl& q : *this)
+		q.ExcludeDHCtrls(w, q.GetRect() + (q.InView() ? viewpos : off),
+		                 q.InView() ? cview : clip);
 }
 
 void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)

@@ -116,7 +116,7 @@ bool Ctrl::HotKey(dword key)
 	GuiLock __;
 	LLOG("HotKey " << GetKeyDesc(key) << " at " << Name(this));
 	if(!IsEnabled() || !IsVisible()) return false;
-	for(Ptr<Ctrl> ctrl = firstchild; ctrl; ctrl = ctrl->next)
+	for(Ptr<Ctrl> ctrl = GetFirstChild(); ctrl; ctrl = ctrl->GetNext())
 	{
 		LLOG("Trying HotKey " << GetKeyDesc(key) << " at " << Name(ctrl));
 		if(ctrl->IsOpen() && ctrl->IsVisible() && ctrl->IsEnabled() && ctrl->HotKey(key))

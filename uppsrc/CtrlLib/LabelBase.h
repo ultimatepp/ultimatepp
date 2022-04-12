@@ -29,29 +29,29 @@ Point GetDragScroll(Ctrl *ctrl, Point p, Size max);
 Point GetDragScroll(Ctrl *ctrl, Point p, int max = 16);
 
 struct DrawLabel {
+	PaintRect paintrect;
+	String    text;
+	Image     limg;
+	Image     rimg;
+	Font      font;
+	Color     lcolor;
+	Color     ink, disabledink;
+	Color     rcolor;
+
+	int       rspc;
+	int       lspc;
+
+	int       align, valign;
+
+	int       accesskey;
+	int       accesspos;
+
+	bool      nowrap;
 	bool      push;
 	bool      focus;
 	bool      disabled;
 	bool      limg_never_hide;
 	bool      rimg_never_hide;
-
-	PaintRect paintrect;
-	Image     limg;
-	Color     lcolor;
-	int       lspc;
-	String    text;
-	Font      font;
-	Color     ink, disabledink;
-	Image     rimg;
-	Color     rcolor;
-	int       rspc;
-
-	int       align, valign;
-	
-	bool      nowrap;
-
-	int       accesskey;
-	int       accesspos;
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;

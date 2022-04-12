@@ -24,29 +24,22 @@ void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 		else
 			q->parent->RemoveChild(q);
 	}
-	q->parent = this;
-	if(p) {
+	
+	if(children) {
+		if(!p) p = GetLastChild();
 		ASSERT(p->parent == this);
-		q->prev = p;
-		q->next = p->next;
-		if(p == lastchild)
-			lastchild = q;
-		else
-			p->next->prev = q;
-		p->next = q;
+		q->prev_sibling = p;
+		q->next_sibling = p->next_sibling;
+		p->next_sibling->prev_sibling = q;
+		p->next_sibling = q;
 	}
-	else
-		if(firstchild) {
-			q->prev = NULL;
-			q->next = firstchild;
-			firstchild->prev = q;
-			firstchild = q;
-		}
-		else {
-			ASSERT(lastchild == NULL);
-			firstchild = lastchild = q;
-			q->prev = q->next = NULL;
-		}
+	else {
+		ASSERT(!p);
+		children = q;
+		children->next_sibling = children->prev_sibling = children;
+	}
+	q->parent = this;
+
 	q->CancelModeDeep();
 	if(updaterect)
 		q->UpdateRect();
@@ -58,13 +51,13 @@ void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 
 void Ctrl::AddChild(Ctrl *child)
 {
-	AddChild(child, lastchild);
+	AddChild(child, GetLastChild());
 }
 
 void Ctrl::AddChildBefore(Ctrl *child, Ctrl *insbefore)
 {
 	if(insbefore)
-		AddChild(child, insbefore->prev);
+		AddChild(child, insbefore->GetPrev());
 	else
 		AddChild(child);
 }
@@ -75,15 +68,16 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 	ChildRemoved(q);
 	q->DoRemove();
 	q->parent = NULL;
-	if(q == firstchild)
-		firstchild = firstchild->next;
-	if(q == lastchild)
-		lastchild = lastchild->prev;
-	if(q->prev)
-		q->prev->next = q->next;
-	if(q->next)
-		q->next->prev = q->prev;
-	q->next = q->prev = NULL;
+
+	if(q == children) {
+		children = q->next_sibling;
+		if(children == q)
+			children = NULL;
+	}
+	
+	q->prev_sibling->next_sibling = q->next_sibling;
+	q->next_sibling->prev_sibling = q->prev_sibling;
+	q->next_sibling = q->prev_sibling = NULL;
 }
 
 void  Ctrl::RemoveChild(Ctrl *q)

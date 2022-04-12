@@ -464,7 +464,7 @@ private:
 
 		Frame()    { view.Clear(); }
 	};
-	Ctrl        *parent;
+	Ctrl        *parent = nullptr;
 
 	struct Scroll : Moveable<Scroll> {
 		Rect rect;
@@ -488,14 +488,15 @@ private:
 		Ptr<Ctrl>      owner;
 	};
 
-	Top         *top;
+	Top         *top = nullptr;
 
-	Ctrl        *prev, *next;
-	Ctrl        *firstchild, *lastchild;//16
+	Ctrl        *prev_sibling = nullptr;
+	Ctrl        *next_sibling = nullptr;
+	Ctrl        *children = nullptr;//16
 	LogPos       pos;//8
 	Rect16       rect;
 	Mitor<Frame> frame;//16
-	const char  *info_ptr;
+	const char  *info_ptr = nullptr;
 	int16        caretx, carety, caretcx, caretcy;//8
 
 	byte         overpaint;
@@ -952,11 +953,11 @@ public:
 	void             AddChild(Ctrl *child, Ctrl *insafter);
 	void             AddChildBefore(Ctrl *child, Ctrl *insbefore);
 	void             RemoveChild(Ctrl *child);
-	Ctrl            *GetParent() const           { return parent; }
-	Ctrl            *GetLastChild() const        { return lastchild; }
-	Ctrl            *GetFirstChild() const       { return firstchild; }
-	Ctrl            *GetPrev() const             { return parent ? prev : NULL; }
-	Ctrl            *GetNext() const             { return parent ? next : NULL; }
+	Ctrl            *GetParent() const     { return parent; }
+	Ctrl            *GetLastChild() const  { return children ? children->prev_sibling : nullptr; }
+	Ctrl            *GetFirstChild() const { return children; }
+	Ctrl            *GetPrev() const       { return parent && prev_sibling != parent->GetLastChild() ? prev_sibling : nullptr; }
+	Ctrl            *GetNext() const       { return parent && next_sibling != parent->children ? next_sibling : nullptr; }
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;

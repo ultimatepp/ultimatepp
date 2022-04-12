@@ -353,8 +353,8 @@ void Ctrl::ClearModifyDeep()
 {
 	GuiLock __;
 	ClearModify();
-	for(Ctrl *q = firstchild; q; q = q->next)
-		q->ClearModifyDeep();
+	for(Ctrl& q : *this)
+		q.ClearModifyDeep();
 }
 
 
@@ -368,8 +368,8 @@ bool Ctrl::IsModifiedDeep() const
 {
 	GuiLock __;
 	if(IsModified()) return true;
-	for(Ctrl *q = firstchild; q; q = q->next)
-		if(q->IsModified()) return true;
+	for(const Ctrl& q : *this)
+		if(q.IsModified()) return true;
 	return false;
 }
 
@@ -528,8 +528,8 @@ void Ctrl::UpdateActionRefresh() {
 void  Ctrl::CancelModeDeep() {
 	GuiLock __;
 	CancelMode();
-	for(Ctrl *q = firstchild; q; q = q->next)
-		q->CancelModeDeep();
+	for(Ctrl& q : *this)
+		q.CancelModeDeep();
 }
 
 String Ctrl::GetDesc() const
@@ -585,11 +585,11 @@ void Ctrl::Dump(Stream& s) const {
 	for(int i = 0; i < frame.GetCount(); i++)
 		LG("Frame " << i << ": " << typeid(decltype(*frame[i].frame)).name() << " - " << frame[i].view);
 	LG("Data: " << GetData().ToString());
-	if(firstchild) {
+	if(children) {
 		LG("Children");
 		s << LOG_BEGIN;
-		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
-			q->Dump(s);
+		for(const Ctrl& q : *this) {
+			q.Dump(s);
 			LG("------");
 		}
 		s << LOG_END;
@@ -627,8 +627,6 @@ Ctrl::Ctrl() {
 	LLOG("Ctrl::Ctrl");
 	GuiPlatformConstruct();
 	destroying = false;
-	parent = prev = next = firstchild = lastchild = NULL;
-	top = NULL;
 	frame.Add().frame = &NullFrame();
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;

@@ -157,10 +157,10 @@ void Ctrl::SyncLayout(int force)
 		if(q > overpaint) overpaint = q;
 	}
 	if(oview.Size() != view.Size() || force > 1) {
-		for(Ctrl *q = GetFirstChild(); q; q = q->next) {
-			q->rect = q->CalcRect(rect, view);
-			LLOG("Layout set rect " << q->Name() << " " << q->rect);
-			q->SyncLayout(force > 1 ? force : 0);
+		for(Ctrl& q : *this) {
+			q.rect = q.CalcRect(rect, view);
+			LLOG("Layout set rect " << q.Name() << " " << q.rect);
+			q.SyncLayout(force > 1 ? force : 0);
 		}
 		Refresh();
 	}
