@@ -54,9 +54,9 @@
 
 #define LAYOUT(nm, x, y)       template <class L, class D> \
                                void InitLayout(UPP::Ctrl& parent, L& layout, D& uts, nm##__layid&) { \
-                                  parent.LayoutId(#nm);
-#define UNTYPED(var, param)       uts.var.param; uts.var.LayoutId(#var); parent.Add(uts.var);
-#define ITEM(clss, var, param)    layout.var.param; layout.var.LayoutId(#var); parent.Add(layout.var);
+                                  parent.LayoutIdLiteral(#nm);
+#define UNTYPED(var, param)       uts.var.param; uts.var.LayoutIdLiteral(#var); parent.Add(uts.var);
+#define ITEM(clss, var, param)    layout.var.param; layout.var.LayoutIdLiteral(#var); parent.Add(layout.var);
 #define END_LAYOUT             }
 
 #include LAYOUTFILE

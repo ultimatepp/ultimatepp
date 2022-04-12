@@ -489,7 +489,6 @@ private:
 	};
 
 	Top         *top;
-	int          exitcode;
 
 	Ctrl        *prev, *next;
 	Ctrl        *firstchild, *lastchild;//16
@@ -1255,7 +1254,6 @@ public:
 	void   EndLoop(int code);
 	bool   InLoop() const;
 	bool   InCurrentLoop() const;
-	int    GetExitCode() const;
 
 	static PasteClip& Clipboard();
 	static PasteClip& Selection();

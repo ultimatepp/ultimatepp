@@ -48,6 +48,8 @@ private:
 	bool          fullscreen;
 
 	byte          center:2;
+	
+	int           exitcode = 0;
 
 	void          PlaceFocus();
 	void          ActiveFocus0(Ctrl& ctrl);
@@ -90,6 +92,8 @@ private:
 #else
 	GUIPLATFORM_TOPWINDOW_DECLS
 #endif
+
+	friend class Ctrl;
 
 public:
 	virtual     void ShutdownWindow();

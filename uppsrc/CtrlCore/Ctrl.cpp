@@ -629,7 +629,6 @@ Ctrl::Ctrl() {
 	destroying = false;
 	parent = prev = next = firstchild = lastchild = NULL;
 	top = NULL;
-	exitcode = 0;
 	frame.Add().frame = &NullFrame();
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
@@ -1102,7 +1101,8 @@ void   Ctrl::EndLoop(int code)
 {
 	GuiLock __;
 	ASSERT(!parent);
-	exitcode = code;
+	TopWindow *w = GetTopWindow();
+	w->exitcode = code;
 	EndLoop();
 }
 
@@ -1116,12 +1116,6 @@ bool   Ctrl::InCurrentLoop() const
 {
 	GuiLock __;
 	return GetLoopCtrl() == this;
-}
-
-int    Ctrl::GetExitCode() const
-{
-	GuiLock __;
-	return exitcode;
 }
 
 #ifdef HAS_TopFrameDraw
