@@ -68,13 +68,14 @@ void Ctrl::DoCancelPreedit()
 {
 	if(!focusCtrlWnd)
 		return;
-	if(focusCtrlWnd->top)
+	Top *top = focusCtrl->GetTop();
+	if(top)
 		focusCtrl->HidePreedit();
-	if(focusCtrlWnd->top && focusCtrlWnd->top->hwnd) {
-		HIMC himc = ImmGetContext(focusCtrlWnd->top->hwnd);
+	if(top && top->hwnd) {
+		HIMC himc = ImmGetContext(top->hwnd);
 		if(himc && ImmGetOpenStatus(himc)) {
 			ImmNotifyIME(himc, NI_COMPOSITIONSTR, CPS_CANCEL, 0);
-			ImmReleaseContext(focusCtrlWnd->top->hwnd, himc);
+			ImmReleaseContext(top->hwnd, himc);
 		}
 	}
 }

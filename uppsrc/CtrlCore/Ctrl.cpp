@@ -79,7 +79,9 @@ void Ctrl::Layout()                                 {}
 void Ctrl::PostInput()
 {
 	GuiLock __;
-	if(parent) parent->PostInput();
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->PostInput();
 }
 
 void Ctrl::LeftDouble(Point p, dword keyflags)
@@ -105,25 +107,33 @@ void Ctrl::RightTriple(Point p, dword keyflags)
 void Ctrl::ChildGotFocus()
 {
 	GuiLock __;
-	if(parent) parent->ChildGotFocus();
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->ChildGotFocus();
 }
 
 void Ctrl::ChildLostFocus()
 {
 	GuiLock __;
-	if(parent) parent->ChildLostFocus();
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->ChildLostFocus();
 }
 
 void Ctrl::ChildAdded(Ctrl *q)
 {
 	GuiLock __;
-	if(parent) parent->ChildAdded(q);
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->ChildAdded(q);
 }
 
 void Ctrl::ChildRemoved(Ctrl *q)
 {
 	GuiLock __;
-	if(parent) parent->ChildRemoved(q);
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->ChildRemoved(q);
 }
 
 void Ctrl::ParentChange() {}
@@ -287,6 +297,7 @@ void Ctrl::Show(bool ashow) {
 		visible = ashow;
 		fullrefresh = false;
 		RefreshFrame();
+		Ctrl *parent = GetParent();
 		if(parent)
 			StateH(SHOW);
 		if(top)
@@ -301,8 +312,9 @@ bool Ctrl::IsVisible() const {
 	const Ctrl *q = this;
 	for(;;) {
 		if(!q->visible) return false;
-		if(!q->parent) break;
-		q = q->parent;
+		Ctrl *p = q->GetParent();
+		if(!p) break;
+		q = p;
 	}
 	return q->visible;
 }
@@ -312,7 +324,7 @@ void Ctrl::Enable(bool aenable) {
 	if(enabled != aenable) {
 		enabled = aenable;
 		if(top) WndEnable(enabled);
-		if(!enabled && parent && HasFocusDeep())
+		if(!enabled && GetParent() && HasFocusDeep())
 			IterateFocusForward(this, GetTopCtrl());
 		RefreshFrame();
 		StateH(ENABLE);
@@ -322,6 +334,7 @@ void Ctrl::Enable(bool aenable) {
 
 bool Ctrl::IsShowEnabled() const {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	return IsEnabled() && (!parent || parent->IsShowEnabled());
 }
 
@@ -646,6 +659,8 @@ Ctrl::Ctrl() {
 	akv = false;
 	layout_id_literal = false;
 	info_ptr = nullptr;
+	top = false;
+	uparent = nullptr;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);
@@ -661,6 +676,7 @@ void Ctrl::DoRemove() {
 		mouseCtrl = NULL;
 	LLOG("DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
 	GuiPlatformRemove();
+	Ctrl *parent = GetParent();
 	if(HasFocusDeep()) {
 		LLOG("DoRemove - HasFocusDeep");
 		if(destroying) {
@@ -710,7 +726,7 @@ void Ctrl::Close()
 	Ctrl *q = GetTopCtrl();
 	if(!q->top) return;
 	DoRemove();
-	if(parent) return;
+	if(GetParent()) return;
 	StateH(CLOSE);
 	USRLOG("   CLOSE " + Desc(this));
 	WndDestroy();
@@ -724,6 +740,7 @@ Ctrl::~Ctrl() {
 	destroying = true;
 	while(GetFirstChild())
 		RemoveChild(GetFirstChild());
+	Ctrl *parent = GetParent();
 	if(parent)
 		parent->RemoveChild(this);
 	Close();
@@ -1072,7 +1089,7 @@ String Ctrl::Name0() const {
 		String id = q->GetLayoutId();
 		if(id.GetCount())
 			path = '.' + q->GetLayoutId() + path;
-		q = q->parent;
+		q = q->GetParent();
 	}
 	s << ' ' << path;
 #ifdef CPU_64
@@ -1080,6 +1097,7 @@ String Ctrl::Name0() const {
 #else
 	s << " : " + Format("0x%x", (int) this);
 #endif
+	Ctrl *parent = GetParent();
 	if(IsChild())
 		s << " (parent " << CppDemangle(typeid(*parent).name()) << ")";
 	return s;
@@ -1100,7 +1118,7 @@ void   Ctrl::EndLoop()
 void   Ctrl::EndLoop(int code)
 {
 	GuiLock __;
-	ASSERT(!parent);
+	ASSERT(!GetParent());
 	TopWindow *w = GetTopWindow();
 	w->exitcode = code;
 	EndLoop();

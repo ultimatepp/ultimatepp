@@ -397,7 +397,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	Vector<Ctrl *> v;
 	VectorMap< HWND, Ptr<Ctrl> >& w = Windows();
 	for(int i = 0; i < w.GetCount(); i++)
-		if(w.GetKey(i) && w[i] && !w[i]->parent)
+		if(w.GetKey(i) && w[i] && !w[i]->GetParent())
 			v.Add(w[i]);
 	return v;
 }
@@ -472,7 +472,8 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	Rect r = GetRect();
 	AdjustWindowRectEx(r, style, FALSE, exstyle);
 	isopen = true;
-	top = new Top;
+	Top *top = new Top;
+	SetTop(top);
 	ASSERT(!parent || IsWindow(parent));
 	style &= ~WS_VISIBLE;
 	dropshadow = false;
@@ -501,6 +502,7 @@ void ReleaseUDropTarget(UDropTarget *dt);
 void Ctrl::WndFree()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top) return;
 	RevokeDragDrop(GetHWND());
 	ReleaseUDropTarget(top->dndtgt);
@@ -519,13 +521,13 @@ void Ctrl::WndFree()
 		::SetFocus(owner);
 	}
 	LLOG(LOG_END << "//Ctrl::WndFree() in " <<UPP::Name(this));
-	delete top;
-	top = NULL;
+	DeleteTop();
 }
 
 void Ctrl::WndDestroy()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
 		WndFree();
@@ -563,14 +565,16 @@ sWinMsg[] = {
 void Ctrl::NcCreate(HWND hwnd)
 {
 	GuiLock __;
-	if(!parent)
+	Top *top = GetTop();
+	if(top)
 		top->hwnd = hwnd;
 }
 
 void Ctrl::NcDestroy()
 {
 	GuiLock __;
-	if(!parent)
+	Top *top = GetTop();
+	if(top)
 		WndFree();
 }
 
@@ -947,7 +951,7 @@ void Ctrl::SetAlpha(byte alpha)
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
-	if(!IsAlphaSupported() || parent || !top || !hwnd)
+	if(!IsAlphaSupported() || GetParent() || !top || !hwnd)
 		return;
 	if(alpha == 255) {
 		SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) & ~0x80000);
@@ -1234,6 +1238,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = false;
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();
 	PopUpHWND(q ? q->GetHWND() : NULL, savebits, activate, dropshadow, topmost);
+	Top *top = GetTop();
 	if(top) top->owner = owner;
 }
 

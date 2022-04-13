@@ -481,10 +481,6 @@ private:
 		Rect GetView() const          { return Rect16(view.left, view.top, view.right, view.bottom); }
 	};
 	
-	Frame frame;
-
-	Ctrl        *parent = nullptr;
-
 	struct Scroll : Moveable<Scroll> {
 		Rect rect;
 		int  dx;
@@ -507,7 +503,13 @@ private:
 		Ptr<Ctrl>      owner;
 	};
 
-	Top         *top = nullptr;
+
+	Frame frame;
+
+	union {
+		Ctrl *uparent;
+		Top  *utop;
+	};
 
 	Ctrl        *prev_sibling = nullptr;
 	Ctrl        *next_sibling = nullptr;
@@ -541,9 +543,9 @@ private:
 
 	bool         akv:1;
 	bool         destroying:1;
-	bool         layout_id_literal:
-	1; // info_ptr points to layout char * literal, no heap involved
+	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
 	bool         multi_frame:1; // there is more than single frame, they are stored in heap
+	bool         top:1;
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -719,6 +721,13 @@ private:
 	void SysEndLoop();
 
 	String Name0() const;
+	
+	Top         *GetTop()               { return top ? utop : NULL; }
+	const Top   *GetTop() const         { return top ? utop : NULL; }
+	void         DeleteTop();
+	
+	void         SetTop(Top *t)         { utop = t; top = true; }
+	void         SetParent(Ctrl *parent);
 
 	Frame&       GetFrame0(int i)       { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
 	const Frame& GetFrame0(int i) const { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
@@ -979,11 +988,11 @@ public:
 	void             AddChild(Ctrl *child, Ctrl *insafter);
 	void             AddChildBefore(Ctrl *child, Ctrl *insbefore);
 	void             RemoveChild(Ctrl *child);
-	Ctrl            *GetParent() const     { return parent; }
+	Ctrl            *GetParent() const     { return top ? NULL : uparent; }
 	Ctrl            *GetLastChild() const  { return children ? children->prev_sibling : nullptr; }
 	Ctrl            *GetFirstChild() const { return children; }
-	Ctrl            *GetPrev() const       { return parent && prev_sibling != parent->GetLastChild() ? prev_sibling : nullptr; }
-	Ctrl            *GetNext() const       { return parent && next_sibling != parent->children ? next_sibling : nullptr; }
+	Ctrl            *GetPrev() const       { Ctrl *parent = GetParent(); return parent && prev_sibling != parent->GetLastChild() ? prev_sibling : nullptr; }
+	Ctrl            *GetNext() const       { Ctrl *parent = GetParent(); return parent && next_sibling != parent->children ? next_sibling : nullptr; }
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;
@@ -994,7 +1003,7 @@ public:
 	int              GetViewChildCount() const;
 	Ctrl            *GetViewIndexChild(int ii) const;
 
-	bool             IsChild() const             { return parent; }
+	bool             IsChild() const             { return GetParent(); }
 
 	Ctrl            *ChildFromPoint(Point& pt) const;
 
@@ -1062,10 +1071,10 @@ public:
 
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
-	void        RefreshParentLayout()                    { if(parent) parent->RefreshLayout(); }
+	void        RefreshParentLayout();
 	
 	void        UpdateLayout()                           { SyncLayout(); }
-	void        UpdateParentLayout()                     { if(parent) parent->UpdateLayout(); }
+	void        UpdateParentLayout();
 
 	Ctrl&       LeftPos(int a, int size = STDSIZE);
 	Ctrl&       RightPos(int a, int size = STDSIZE);

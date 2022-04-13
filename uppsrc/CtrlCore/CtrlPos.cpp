@@ -73,6 +73,7 @@ Rect  Ctrl::GetScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect pr = inframe ? parent->GetScreenRect() : parent->GetScreenView();
 		r = r + pr.TopLeft();
@@ -92,6 +93,7 @@ Rect  Ctrl::GetVisibleScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect pr = inframe ? parent->GetVisibleScreenRect() : parent->GetVisibleScreenView();
 		Rect pr1 = inframe ? parent->GetScreenRect() : parent->GetScreenView();
@@ -174,6 +176,20 @@ void Ctrl::SyncLayout(int force)
 		RefreshFrame();
 }
 
+void Ctrl::RefreshParentLayout()
+{
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->RefreshLayout();
+}
+
+void Ctrl::UpdateParentLayout()
+{
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->UpdateLayout();
+}
+
 int Ctrl::FindMoveCtrl(const VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x)
 {
 	int q = m.Find(x);
@@ -190,10 +206,11 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 {
 	GuiLock __;
 	if(p == pos && inframe == _inframe) return;
+	Ctrl *parent = GetParent();
 	if(parent && !IsDHCtrl()) {
 		if(!globalbackbuffer) {
 			Rect from = GetRect().Size();
-			Top *top = GetTopRect(from, true)->top;
+			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
 				LTIMING("SetPos0 MoveCtrl");
 				pos = p;
@@ -229,6 +246,7 @@ void Ctrl::UpdateRect0(bool sync)
 {
 	GuiLock __;
 	LTIMING("UpdateRect0");
+	Ctrl *parent = GetParent();
 	if(parent)
 		rect = CalcRect(parent->GetRect(), parent->GetView());
 	else {
@@ -249,12 +267,13 @@ void Ctrl::UpdateRect(bool sync)
 {
 	GuiLock __;
 	UpdateRect0(sync);
-	if(parent) RefreshFrame();
+	if(GetParent()) RefreshFrame();
 }
 
 Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(p != pos || inframe != _inframe) {
 		if(parent || !IsOpen())
 			SetPos0(p, _inframe);

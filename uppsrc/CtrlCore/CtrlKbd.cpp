@@ -158,8 +158,8 @@ void Ctrl::DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 		LLOG("LostFocus: " << Name(pfocusCtrl));
 		pfocusCtrl->LostFocus();
 	}
-	if(pfocusCtrl && pfocusCtrl->parent && !pfocusCtrl->parent->destroying)
-		pfocusCtrl->parent->ChildLostFocus();
+	if(pfocusCtrl && pfocusCtrl->GetParent() && !pfocusCtrl->GetParent()->destroying)
+		pfocusCtrl->GetParent()->ChildLostFocus();
 	SyncCaret();
 }
 
@@ -179,9 +179,9 @@ void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 		nfocusCtrl->GotFocus();
 		nfocusCtrl->StateH(FOCUS);
 	}
-	if(focusCtrl == nfocusCtrl && nfocusCtrl && nfocusCtrl->parent &&
-	   !nfocusCtrl->parent->destroying)
-		nfocusCtrl->parent->ChildGotFocus();
+	if(focusCtrl == nfocusCtrl && nfocusCtrl && nfocusCtrl->GetParent() &&
+	   !nfocusCtrl->GetParent()->destroying)
+		nfocusCtrl->GetParent()->ChildGotFocus();
 	
 	SyncCaret();
 }

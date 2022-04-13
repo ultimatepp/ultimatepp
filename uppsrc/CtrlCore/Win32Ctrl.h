@@ -66,7 +66,7 @@ public:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	virtual bool    PreprocessMessage(MSG& msg);
 
-	HWND  GetHWND() const              { return parent ? NULL : top ? top->hwnd : NULL; }
+	HWND  GetHWND() const                      { return GetParent() ? NULL : GetTop() ? GetTop()->hwnd : NULL; }
 	HWND  GetOwnerHWND() const;
 
 	static Ctrl  *CtrlFromHWND(HWND hwnd);

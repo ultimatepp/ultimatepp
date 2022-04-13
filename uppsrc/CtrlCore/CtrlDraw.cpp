@@ -22,6 +22,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	if(!top && !IsDHCtrl()) {
+		Ctrl *parent = GetParent();
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -83,6 +84,7 @@ void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 bool Ctrl::AddScroll(const Rect& sr, int dx, int dy)
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return true;
 	for(int i = 0; i < top->scroll.GetCount(); i++) {
@@ -113,12 +115,12 @@ Rect  Ctrl::GetClippedView()
 	GuiLock __;
 	Rect sv = GetScreenView();
 	Rect view = sv;
-	Ctrl *q = parent;
+	Ctrl *q = GetParent();
 	Ctrl *w = this;
 	while(q) {
 		view &= w->InFrame() ? q->GetScreenRect() : q->GetScreenView();
 		w = q;
-		q = q->parent;
+		q = q->GetParent();
 	}
 	return view - GetScreenRect().TopLeft();
 }
@@ -178,7 +180,7 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 	Rect r = _r & vsz;
 	LLOG("ScrollView2 " << r << " " << dx << " " << dy);
 	Ctrl *w;
-	for(w = this; w->parent; w = w->parent)
+	for(w = this; w->GetParent(); w = w->GetParent())
 		if(w->InFrame()) {
 			Refresh();
 			return;
@@ -191,12 +193,12 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 		Refresh();
 	else {
 		LTIMING("ScrollCtrls1");
-		Top *top = GetTopCtrl()->top;
+		Top *top = GetTopCtrl()->GetTop();
 		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 			if(q->InView())
 				ScrollCtrl(top, q, r, q->GetRect(), dx, dy);
-		if(parent)
-			for(Ctrl *q = parent->GetFirstChild(); q; q = q->GetNext())
+		if(GetParent())
+			for(Ctrl *q = GetParent()->GetFirstChild(); q; q = q->GetNext())
 				if(q->InView() && q != this)
 					ScrollCtrl(top, q, r, q->GetScreenRect() - GetScreenView().TopLeft(), dx, dy);
 	}
@@ -214,6 +216,7 @@ void  Ctrl::ScrollView(int dx, int dy) {
 void  Ctrl::SyncScroll()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return;
 	Vector<Scroll> scroll = pick(top->scroll);
@@ -599,6 +602,7 @@ Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe, bool clip)
 			r &= Rect(GetSize());
 		r.Offset(GetView().TopLeft());
 	}
+	Ctrl *parent = GetParent();
 	if(parent) {
 		r.Offset(GetRect().TopLeft());
 		return parent->GetTopRect(r, InFrame(), clip);
@@ -622,6 +626,7 @@ void  Ctrl::Sync()
 {
 	GuiLock __;
 	LLOG("Sync " << Name());
+	Ctrl *parent = GetParent();
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
 		SyncScroll();
@@ -644,6 +649,7 @@ void Ctrl::Sync(const Rect& sr)
 void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect r = GetRect();
 		Ctrl *top = parent->GetTopRect(r, inframe);
@@ -676,6 +682,7 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 void Ctrl::SyncMoves()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return;
 	for(int i = 0; i < top->move.GetCount(); i++) {
