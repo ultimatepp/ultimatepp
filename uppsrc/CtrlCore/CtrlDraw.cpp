@@ -278,10 +278,12 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 		return;
 	Ctrl *q;
 	Rect view = rect;
-	for(int i = 0; i < frame.GetCount(); i++) {
+	int n = GetFrameCount();
+	for(int i = 0; i < n; i++) {
 		LEVELCHECK(w, NULL);
-		frame[i].frame->FramePaint(w, view);
-		view = frame[i].view;
+		Frame& f = GetFrame0(i);
+		f.frame->FramePaint(w, view);
+		view = f.GetView();
 	}
 	Rect oview = view.Inflated(overpaint);
 	bool hasviewctrls = false;

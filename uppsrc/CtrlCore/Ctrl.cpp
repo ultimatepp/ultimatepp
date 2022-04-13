@@ -582,8 +582,8 @@ void Ctrl::Dump(Stream& s) const {
 	   sFLAG(wantfocus) << sFLAG(editable) << sFLAG(IsModified()) << sFLAG(transparent));
 	LG("Rect:   " << GetRect());
 	LG("View:   " << GetView());
-	for(int i = 0; i < frame.GetCount(); i++)
-		LG("Frame " << i << ": " << typeid(decltype(*frame[i].frame)).name() << " - " << frame[i].view);
+	for(int i = 0; i < GetFrameCount(); i++)
+		LG("Frame " << i << ": " << typeid(decltype(*GetFrame0(i).frame)).name() << " - " << GetFrame0(i).GetView());
 	LG("Data: " << GetData().ToString());
 	if(children) {
 		LG("Children");
@@ -627,7 +627,8 @@ Ctrl::Ctrl() {
 	LLOG("Ctrl::Ctrl");
 	GuiPlatformConstruct();
 	destroying = false;
-	frame.Add().frame = &NullFrame();
+	multi_frame = false;
+	frame.frame = &NullFrame();
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
 	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
@@ -728,6 +729,7 @@ Ctrl::~Ctrl() {
 	Close();
 	KillTimeCallbacks(this, (byte *) this + sizeof(Ctrl));
 	ClearInfo();
+	FreeFrames();
 }
 
 Vector<Ctrl::MouseHook>& Ctrl::mousehook() { static Vector<Ctrl::MouseHook> h; return h; }

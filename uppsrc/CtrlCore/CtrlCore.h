@@ -458,12 +458,31 @@ private:
 	void operator=(Ctrl&);
 
 private:
-	struct Frame : Moveable<Frame> {
-		CtrlFrame *frame;
-		Rect16     view;
-
-		Frame()    { view.Clear(); }
+	struct MultiFrame { // in case there are more than 1 CtrlFrames
+		int alloc;
+		int count;
 	};
+
+	struct Rect16_ { // so that it can be in union
+		int16 left, top, right, bottom;
+	};
+
+	struct Frame {
+		union {
+			CtrlFrame *frame;
+			Frame     *frames;
+		};
+		union {
+			MultiFrame multi;
+			Rect16_    view;
+		};
+		
+		void SetView(const Rect& r) { view.left = r.left; view.right = r.right; view.top = r.top; view.bottom = r.bottom; }
+		Rect GetView() const          { return Rect16(view.left, view.top, view.right, view.bottom); }
+	};
+	
+	Frame frame;
+
 	Ctrl        *parent = nullptr;
 
 	struct Scroll : Moveable<Scroll> {
@@ -492,10 +511,9 @@ private:
 
 	Ctrl        *prev_sibling = nullptr;
 	Ctrl        *next_sibling = nullptr;
-	Ctrl        *children = nullptr;//16
+	Ctrl        *children = nullptr;
 	LogPos       pos;//8
-	Rect16       rect;
-	Mitor<Frame> frame;//16
+	Rect16       rect; //8
 	const char  *info_ptr = nullptr;
 	int16        caretx, carety, caretcx, caretcy;//8
 
@@ -523,7 +541,9 @@ private:
 
 	bool         akv:1;
 	bool         destroying:1;
-	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
+	bool         layout_id_literal:
+	1; // info_ptr points to layout char * literal, no heap involved
+	bool         multi_frame:1; // there is more than single frame, they are stored in heap
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -699,6 +719,12 @@ private:
 	void SysEndLoop();
 
 	String Name0() const;
+
+	Frame&       GetFrame0(int i)       { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
+	const Frame& GetFrame0(int i) const { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
+	void         FreeFrames()           { if(multi_frame) MemoryFree(frame.frames); }
+	Frame        AllocFrames(int alloc);
+
 
 	static void InitTimer();
 
@@ -994,13 +1020,13 @@ public:
 	Ctrl&            SetFrame(int i, CtrlFrame& frm);
 	Ctrl&            SetFrame(CtrlFrame& frm)            { return SetFrame(0, frm); }
 	Ctrl&            AddFrame(CtrlFrame& frm);
-	const CtrlFrame& GetFrame(int i = 0) const           { return *frame[i].frame; }
-	CtrlFrame&       GetFrame(int i = 0)                 { return *frame[i].frame; }
+	const CtrlFrame& GetFrame(int i = 0) const           { return *const_cast<Ctrl *>(this)->GetFrame0(i).frame; }
+	CtrlFrame&       GetFrame(int i = 0)                 { return *GetFrame0(i).frame; }
 	void             RemoveFrame(int i);
 	void             RemoveFrame(CtrlFrame& frm);
 	void             InsertFrame(int i, CtrlFrame& frm);
-	int              FindFrame(CtrlFrame& frm);
-	int              GetFrameCount() const               { return frame.GetCount(); }
+	int              FindFrame(CtrlFrame& frm) const;
+	int              GetFrameCount() const   { return multi_frame ? frame.multi.count : frame.frame ? 1 : 0; }
 	void             ClearFrames();
 
 	bool        IsOpen() const;

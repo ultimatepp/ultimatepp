@@ -124,7 +124,6 @@ DrawLabel::DrawLabel()
 	ink = disabledink = Null;
 	align = valign = ALIGN_CENTER;
 	accesskey = 0;
-	accesspos = -1;
 	font = StdFont();
 	nowrap = false;
 }

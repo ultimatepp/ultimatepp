@@ -29,14 +29,14 @@ public:
 	protected:
 		virtual void  LabelUpdate();
 
+		String      tip;
 		HeaderCtrl *header;
 		double      ratio;
-		bool        visible;
 		int         min, max;
 		int         margin;
 		Color       paper;
 		int         index;
-		String      tip;
+		bool        visible;
 
 		void        Paint(bool& first, Draw& w,
 		                  int x, int y, int cx, int cy, bool disabled, bool push, bool hl);

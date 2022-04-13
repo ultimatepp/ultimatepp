@@ -41,17 +41,16 @@ struct DrawLabel {
 	int       rspc;
 	int       lspc;
 
-	int       align, valign;
-
 	int       accesskey;
-	int       accesspos;
 
-	bool      nowrap;
-	bool      push;
-	bool      focus;
-	bool      disabled;
-	bool      limg_never_hide;
-	bool      rimg_never_hide;
+	int       align:4, valign:4;
+
+	bool      nowrap:1;
+	bool      push:1;
+	bool      focus:1;
+	bool      disabled:1;
+	bool      limg_never_hide:1;
+	bool      rimg_never_hide:1;
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;

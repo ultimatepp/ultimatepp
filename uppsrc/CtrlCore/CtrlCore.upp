@@ -22,6 +22,7 @@ file
 	CtrlMt.cpp,
 	Ctrl.cpp,
 	CtrlChild.cpp,
+	CtrlFrame.cpp,
 	CtrlPos.cpp,
 	CtrlDraw.cpp,
 	CtrlMouse.cpp,
