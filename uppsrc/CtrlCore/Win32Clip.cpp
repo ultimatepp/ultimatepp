@@ -279,7 +279,7 @@ static String sText(const Value& data)
 static String sWText(const Value& data)
 {
 	Vector<char16> h = ToUtf16(WString(data));
-	return String(h.begin(), sizeof(char16) * h.GetCount());
+	return String((char *)h.begin(), sizeof(char16) * h.GetCount());
 }
 
 void Append(VectorMap<String, ClipData>& data, const String& text)
