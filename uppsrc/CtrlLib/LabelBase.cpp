@@ -115,19 +115,6 @@ int  ChooseAccessKey(const char *text, dword used)
 	return 0;
 }
 
-DrawLabel::DrawLabel()
-{
-	push = focus = disabled = false;
-	lspc = rspc = 0;
-	limg_never_hide = false;
-	rimg_never_hide = false;
-	ink = disabledink = Null;
-	align = valign = ALIGN_CENTER;
-	accesskey = 0;
-	font = StdFont();
-	nowrap = false;
-}
-
 Size DrawLabel::GetSize(int txtcx) const
 {
 	return GetSize(txtcx, limg.GetSize(), lspc, rimg.GetSize(), rspc);
@@ -288,7 +275,17 @@ Size DrawLabel::Paint(Draw& w, int x, int y, int cx, int cy, bool vak) const
 
 void LabelBase::LabelUpdate() {}
 
+DrawLabel LabelBase::Make() const
+{
+	DrawLabel lx;
+	(DrawLabelBasic&)lx = lbl;
+	if(ext)
+		(DrawLabelExt&)lx = *ext;
+	return lx;
+}
+
 LabelBase& LabelBase::SetLeftImage(const Image& img, int spc, bool never_hide) {
+	DrawLabelExt& lbl = Ext();
 	lbl.limg = img;
 	lbl.lspc = spc;
 	lbl.limg_never_hide = never_hide;
@@ -297,6 +294,7 @@ LabelBase& LabelBase::SetLeftImage(const Image& img, int spc, bool never_hide) {
 }
 
 LabelBase& LabelBase::SetRightImage(const Image& img, int spc, bool never_hide) {
+	DrawLabelExt& lbl = Ext();
 	lbl.rimg = img;
 	lbl.rspc = spc;
 	lbl.rimg_never_hide = never_hide;
@@ -305,7 +303,7 @@ LabelBase& LabelBase::SetRightImage(const Image& img, int spc, bool never_hide) 
 }
 
 LabelBase& LabelBase::SetPaintRect(const PaintRect& paintrect) {
-	lbl.paintrect = paintrect;
+	Ext().paintrect = paintrect;
 	LabelUpdate();
 	return *this;
 }
@@ -361,7 +359,7 @@ LabelBase& LabelBase::SetVAlign(int valign) {
 
 Size LabelBase::PaintLabel(Ctrl *ctrl, Draw& w, const Rect& r, bool disabled, bool push, bool focus, bool vak)
 {
-	DrawLabel lbl1 = lbl;
+	DrawLabel lbl1 = Make();
 	lbl1.disabled = disabled;
 	lbl1.push = push;
 	lbl1.focus = focus;
@@ -386,7 +384,7 @@ Size LabelBase::PaintLabel(Draw& w, int x, int y, int cx, int cy, bool disabled,
 
 Size LabelBase::GetLabelSize() const
 {
-	return lbl.GetSize();
+	return Make().GetSize();
 }
 
 void LinkToolTipIn__();

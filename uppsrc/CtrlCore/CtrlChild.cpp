@@ -6,8 +6,11 @@ namespace Upp {
 
 void Ctrl::DeleteTop()
 {
-	if(top && utop)
+	if(top && utop) {
 		delete utop;
+		utop = nullptr;
+		top = false;
+	}
 }
 
 void Ctrl::SetParent(Ctrl *parent)

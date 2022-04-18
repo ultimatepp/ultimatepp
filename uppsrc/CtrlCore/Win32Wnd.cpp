@@ -503,11 +503,10 @@ void Ctrl::WndFree()
 {
 	GuiLock __;
 	Top *top = GetTop();
-	if(!top) return;
 	RevokeDragDrop(GetHWND());
+	if(!top) return;
 	ReleaseUDropTarget(top->dndtgt);
 	isopen = false;
-	if(!top) return;
 	HWND owner = GetWindow(top->hwnd, GW_OWNER);// CXL 31.10.2003 z DoRemove
 	bool focus = ::GetFocus() == top->hwnd;
 	LLOG("Ctrl::WndDestroy owner " << (void *)owner

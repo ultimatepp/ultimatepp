@@ -11,7 +11,6 @@ protected:
 
 	Prec           *PtrAdd();
 	static void     PtrRelease(Prec *prec);
-	static Prec    *PtrAdd(const Uuid& uuid);
 
 	PteBase();
 	~PteBase();

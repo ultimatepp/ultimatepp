@@ -505,6 +505,8 @@ private:
 
 
 	Frame frame;
+	LogPos       pos;//8
+	Rect16       rect; //8
 
 	union {
 		Ctrl *uparent;
@@ -514,8 +516,6 @@ private:
 	Ctrl        *prev_sibling = nullptr;
 	Ctrl        *next_sibling = nullptr;
 	Ctrl        *children = nullptr;
-	LogPos       pos;//8
-	Rect16       rect; //8
 	const char  *info_ptr = nullptr;
 	int16        caretx, carety, caretcx, caretcy;//8
 
