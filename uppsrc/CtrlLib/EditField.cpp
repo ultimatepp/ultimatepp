@@ -367,10 +367,9 @@ Rect EditField::GetCaretRect(int pos) const
 	             DPI(1), min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
 
-void EditField::SyncCaret()
+Rect EditField::GetCaret() const
 {
-	Rect r = GetCaretRect(cursor);
-	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
+	return GetCaretRect(cursor);
 }
 
 void EditField::Finish(bool refresh)
@@ -411,7 +410,6 @@ void EditField::Finish(bool refresh)
 	}
 	if(refresh)
 		RefreshAll();
-	SyncCaret();
 }
 
 void EditField::Layout()
@@ -645,10 +643,8 @@ void EditField::Remove(int pos, int n)
 {
 	if(IsReadOnly()) return;
 	text.Remove(pos, n);
-	if(cursor >= text.GetLength()) {
+	if(cursor >= text.GetLength())
 		cursor = text.GetLength();
-		SyncCaret();
-	}
 	Update();
 }
 
@@ -728,7 +724,6 @@ void EditField::DragRepeat(Point p)
 	if(a != sc) {
 		sc = a;
 		Refresh();
-		SyncCaret();
 	}
 }
 

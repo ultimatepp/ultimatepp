@@ -225,6 +225,7 @@ public:
 	virtual String GetSelectionData(const String& fmt) const;
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
+	virtual Rect   GetCaret() const;
 
 private:
 	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }
@@ -277,6 +278,7 @@ private:
 	static int               fixedlang;
 	RichObject               bar_object;
 	String                   bar_fieldparam;
+	Rect                     caret;
 
 	WithRichFindReplaceLayout<TopWindow> findreplace;
 

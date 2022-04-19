@@ -517,7 +517,6 @@ private:
 	Ctrl        *next_sibling = nullptr;
 	Ctrl        *children = nullptr;
 	const char  *info_ptr = nullptr;
-	int16        caretx, carety, caretcx, caretcy;//8
 
 	byte         overpaint;
 
@@ -931,6 +930,8 @@ public:
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 
+	virtual Rect   GetCaret() const;
+
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
 	virtual void   DragRepeat(Point p);
@@ -1173,11 +1174,6 @@ public:
 
 	void    CancelModeDeep();
 
-	void    SetCaret(int x, int y, int cx, int cy);
-	void    SetCaret(const Rect& r);
-	Rect    GetCaret() const;
-	void    KillCaret();
-	
 	static void  CancelPreedit();
 	
 	void   CancelMyPreedit()                   { if(HasFocus()) CancelPreedit(); }

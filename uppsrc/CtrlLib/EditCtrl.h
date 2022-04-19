@@ -63,6 +63,7 @@ public:
 	virtual void  CancelMode();
 	virtual String GetSelectionData(const String& fmt) const;
 	virtual void   State(int);
+	virtual Rect   GetCaret() const;
 
 public:
 	struct Style : ChStyle<Style> {
@@ -116,7 +117,8 @@ protected:
 
 	int        dropcursor;
 	Rect       dropcaret;
-	bool       selclick;
+
+	bool       selclick:1;
 
 	bool       password:1;
 	bool       autoformat:1;
@@ -140,7 +142,6 @@ protected:
 	int     GetStringCx(const wchar *text, int n);
 	int     GetCaret(int cursor) const;
 	int     GetCursor(int posx);
-	void    SyncCaret();
 	void    Finish(bool refresh = true);
 	void    SaveUndo();
 	void    DoAutoFormat();

@@ -264,7 +264,7 @@ Rect RichEdit::PlaceCaret()
 	Rect rr = Rect(zoom * cursorc.left, GetPosY(cursorc), zoom * cursorc.right,
 	               GetPosY(PageY(cursorc.page, cursorc.bottom)));
 	if(objectpos >= 0) {
-		KillCaret();
+		caret = Null;
 		return rr;
 	}
 	if(!IsNull(objectrect)) {
@@ -272,10 +272,15 @@ Rect RichEdit::PlaceCaret()
 		Refresh();
 	}
 	if(IsSelection())
-		KillCaret();
+		caret = Null;
 	else
-		SetCaret(GetCaretRect(cursorc));
+		caret = GetCaretRect(cursorc);
 	return rr;
+}
+
+Rect RichEdit::GetCaret() const
+{
+	return caret;
 }
 
 void RichEdit::SetupRuler()

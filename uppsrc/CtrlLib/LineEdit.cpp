@@ -799,14 +799,18 @@ void LineEdit::AlignChar() {
 	}
 }
 
+Rect LineEdit::GetCaret() const
+{
+	if(overwrite)
+		return RectC(caretpos.x, caretpos.y + fsz.cy - 2, fsz.cx, 2);
+	else
+		return RectC(caretpos.x, caretpos.y, 2, fsz.cy);
+}
+
 void LineEdit::PlaceCaret0(Point p) {
 	Size fsz = GetFontSize();
 	p -= sb;
 	caretpos = Point(p.x * fsz.cx, p.y * fsz.cy);
-	if(overwrite)
-		SetCaret(caretpos.x, caretpos.y + fsz.cy - 2, fsz.cx, 2);
-	else
-		SetCaret(caretpos.x, caretpos.y, 2, fsz.cy);
 }
 
 int LineEdit::PlaceCaretNoG(int64 newcursor, bool sel) {

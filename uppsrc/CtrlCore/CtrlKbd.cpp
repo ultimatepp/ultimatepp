@@ -344,8 +344,7 @@ void Ctrl::RefreshCaret()
 {
 	GuiLock __;
 	if(caretCtrl)
-		caretCtrl->Refresh(caretCtrl->caretx, caretCtrl->carety,
-		                   caretCtrl->caretcx, caretCtrl->caretcy);
+		caretCtrl->Refresh(caretCtrl->GetCaret());
 }
 
 Ctrl *Ctrl::GetActiveWindow()

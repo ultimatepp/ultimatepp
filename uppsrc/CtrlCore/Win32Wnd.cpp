@@ -883,24 +883,7 @@ void Ctrl::PaintCaret(SystemDraw& w)
 	GuiLock __;
 	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
 	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
-
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	LLOG("SetCaret " << Name() << " " << RectC(x, y, cx, cy));
-	if(this == caretCtrl)
-		RefreshCaret();
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	if(this == caretCtrl) {
-		WndCaretTime = msecs();
-		RefreshCaret();
-		AnimateCaret();
-	}
+		w.DrawRect(GetCaret(), InvertColor);
 }
 
 void Ctrl::SyncCaret() {

@@ -389,7 +389,8 @@ Size LabelBase::GetLabelSize() const
 
 void LinkToolTipIn__();
 
-LabelBase::~LabelBase() {
+LabelBase::~LabelBase()
+{
 	LinkToolTipIn__();
 }
 

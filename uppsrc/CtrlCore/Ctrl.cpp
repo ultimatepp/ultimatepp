@@ -386,19 +386,9 @@ bool Ctrl::IsModifiedDeep() const
 	return false;
 }
 
-void Ctrl::SetCaret(const Rect& r)
-{
-	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
-}
-
 Rect Ctrl::GetCaret() const
 {
-	return RectC(caretx, carety, caretcx, caretcy);
-}
-
-void Ctrl::KillCaret()
-{
-	SetCaret(0, 0, 0, 0);
+	return Null;
 }
 
 void Ctrl::SetInfoPart(int i, const char *txt)
@@ -647,7 +637,6 @@ Ctrl::Ctrl() {
 	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
 	inframe = false;
 	ignoremouse = transparent = false;
-	caretcx = caretcy = caretx = carety = 0;
 	pos.x = PosLeft(0, 0);
 	pos.y = PosTop(0, 0);
 	rect = Rect(0, 0, 0, 0);
