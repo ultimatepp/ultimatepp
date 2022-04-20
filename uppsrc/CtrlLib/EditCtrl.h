@@ -89,34 +89,38 @@ public:
 	};
 
 protected:
-	const Style *style;
 	
 	ActiveEdgeFrame edge;
 
 	WString    text;
-	int        sc;
-	int        cursor, anchor;
-
 	WString    undotext;
-	int        undocursor, undoanchor;
+	WString    nulltext;
+	Rect       dropcaret;
 
+	const Style    *style;
 	CharFilter      filter;
 	const Convert  *convert;
 	const Convert  *inactive_convert;
-	Font            font;
-	Color           textcolor;
-
-	WString         nulltext;
-	Color           nullink;
-	Font            nullfont;
 	Image           nullicon;
+
+	Font            font;
+	Font            nullfont;
+
+	Color           textcolor;
+	Color           nullink;
+
+	int             sc;
+	int             cursor, anchor;
+
+	int             undocursor, undoanchor;
+
 	int             maxlen;
 	int             autosize;
-	byte            charset;
 	int             fsell, fselh; // used to hold selection after LostFocus for X11 middle mouse copy
 
-	int        dropcursor;
-	Rect       dropcaret;
+	int             dropcursor;
+
+	byte            charset;
 
 	bool       selclick:1;
 

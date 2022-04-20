@@ -1152,7 +1152,7 @@ ArrayCtrl::Column& ArrayCtrl::AddRowNumColumn(const char *text, int w) {
 int ArrayCtrl::FindColumnWithPos(int pos) const
 {
 	for(int i = 0; i < column.GetCount(); i++) {
-		const Mitor<int>& m = column[i].pos;
+		const Vector<int>& m = column[i].pos;
 		for(int j = 0; j < m.GetCount(); j++)
 			if(Pos(m[j]) == pos) return i;
 	}
@@ -1168,7 +1168,7 @@ Vector<int> ArrayCtrl::FindColumnsWithPos(int pos) const
 {
 	Vector<int> r;
 	for(int i = 0; i < column.GetCount(); i++) {
-		const Mitor<int>& m = column[i].pos;
+		const Vector<int>& m = column[i].pos;
 		for(int j = 0; j < m.GetCount(); j++)
 			if(Pos(m[j]) == pos)
 				r.Add(i);
