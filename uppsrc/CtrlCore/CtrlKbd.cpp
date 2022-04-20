@@ -7,8 +7,6 @@ namespace Upp {
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
 Ptr<Ctrl> Ctrl::lastActiveWnd;
-Ptr<Ctrl> Ctrl::caretCtrl;
-Rect      Ctrl::caretRect;
 bool      Ctrl::ignorekeyup;
 
 Ptr<Ctrl>           Ctrl::defferedSetFocus;
@@ -340,13 +338,6 @@ void Ctrl::DefferedFocusSync()
 	}
 }
 
-void Ctrl::RefreshCaret()
-{
-	GuiLock __;
-	if(caretCtrl)
-		caretCtrl->Refresh(caretCtrl->GetCaret());
-}
-
 Ctrl *Ctrl::GetActiveWindow()
 {
 	GuiLock __;
@@ -362,6 +353,61 @@ bool  Ctrl::HasFocusDeep() const
 	if(!a || !a->IsPopUp()) return false;
 	a = a->GetOwnerCtrl();
 	return a && HasChildDeep(a);
+}
+Ptr<Ctrl> Ctrl::caretCtrl;
+Ptr<Ctrl> Ctrl::prevCaretCtrl;
+Rect      Ctrl::caretRect;
+int       Ctrl::WndCaretTime;
+bool      Ctrl::WndCaretVisible;
+
+void Ctrl::RefreshCaret()
+{
+	GuiLock __;
+	if(prevCaretCtrl) {
+		prevCaretCtrl->Refresh(caretRect);
+		prevCaretCtrl = nullptr;
+	}
+	if(caretCtrl) {
+		caretRect = caretCtrl->GetCaret();
+		caretCtrl->Refresh(caretRect);
+		prevCaretCtrl = caretCtrl;
+	}
+}
+
+void  Ctrl::AnimateCaret()
+{
+	GuiLock __;
+	bool v = !(((msecs() - WndCaretTime) / GetCaretBlinkTime()) & 1);
+	if(v != WndCaretVisible) {
+		WndCaretVisible = v;
+		RefreshCaret();
+	}
+}
+
+void Ctrl::PaintCaret(SystemDraw& w)
+{
+	GuiLock __;
+	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(GetCaret(), InvertColor);
+}
+
+void Ctrl::SyncCaret() {
+	GuiLock __;
+	LLOG("SyncCaret");
+	if(focusCtrl != caretCtrl) {
+		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
+		RefreshCaret();
+		caretCtrl = focusCtrl;
+		WndCaretTime = msecs();
+		RefreshCaret();
+	}
+	else {
+		if(caretCtrl && caretCtrl->GetCaret() != caretRect) {
+			WndCaretTime = msecs();
+			RefreshCaret();
+		}
+	}
 }
 
 Tuple<dword, const char *> KeyNames__[ ] = {

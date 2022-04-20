@@ -553,8 +553,6 @@ private:
 	static  Ptr<Ctrl> focusCtrl;
 	static  Ptr<Ctrl> focusCtrlWnd;
 	static  Ptr<Ctrl> lastActiveWnd;
-	static  Ptr<Ctrl> caretCtrl;
-	static  Rect      caretRect;
 	static  Ptr<Ctrl> captureCtrl;
 	static  bool      ignoreclick;
 	static  bool      ignoremouseup;
@@ -636,11 +634,19 @@ private:
 	void    RefreshAccessKeys();
 	void    RefreshAccessKeysDo(bool vis);
 	static  void  DefferedFocusSync();
-	static  void  SyncCaret();
-	static  void  RefreshCaret();
 	static  bool  DispatchKey(dword keycode, int count);
 	void    SetFocusWnd();
 	void    KillFocusWnd();
+
+	static Ptr<Ctrl> caretCtrl;
+	static Ptr<Ctrl> prevCaretCtrl;
+	static Rect      caretRect;
+	static int       WndCaretTime;
+	static bool      WndCaretVisible;
+
+	static void      AnimateCaret();
+	static void      SyncCaret();
+	static void      RefreshCaret();
 
 	static Ptr<Ctrl> dndctrl;
 	static Point     dndpos;

@@ -842,63 +842,6 @@ void Ctrl::GuiSleep(int ms)
 	EnterGuiMutex(level);
 }
 
-#if 0
-void Ctrl::WndDestroyCaret()
-{
-	DLOG("Ctrl::WndDestroyCaret()");
-	::DestroyCaret();
-}
-
-void Ctrl::WndCreateCaret(const Rect& cr)
-{
-	GuiLock __;
-	DLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
-	HWND hwnd = GetHWND();
-	if(!hwnd) return;
-	Rect r;
-	::GetClientRect(hwnd, r);
-	Point p = r.TopLeft();
-	::ClientToScreen(hwnd, p);
-	::CreateCaret(hwnd, NULL, cr.Width(), cr.Height());
-	::SetCaretPos(cr.left - p.x, cr.top - p.y);
-	::ShowCaret(hwnd);
-}
-#else
-
-int  Ctrl::WndCaretTime;
-bool Ctrl::WndCaretVisible;
-
-void  Ctrl::AnimateCaret()
-{
-	GuiLock __;
-	bool v = !(((msecs() - WndCaretTime) / GetCaretBlinkTime()) & 1);
-	if(v != WndCaretVisible) {
-		WndCaretVisible = v;
-		RefreshCaret();
-	}
-}
-
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(GetCaret(), InvertColor);
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-	LLOG("SyncCaret");
-	if(focusCtrl != caretCtrl) {
-		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
-#endif
-
-
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
@@ -1169,14 +1112,10 @@ void Ctrl::WndUpdate(const Rect& r)
 		if(GetUpdateRgn(hwnd, hrgn, FALSE) != NULLREGION) {
 			SelectClipRgn(hdc, hrgn);
 			SystemDraw draw(hdc);
-			bool hcr = focusCtrl && focusCtrl->GetTopCtrl() == top &&
-			           caretRect.Intersects(r + top->GetRect().TopLeft());
-			if(hcr) ::HideCaret(hwnd);
 			draw.Clip(r);
 			top->UpdateArea(draw, r);
 			ValidateRect(hwnd, r);
 			SelectClipRgn(hdc, NULL);
-			if(hcr) ::ShowCaret(hwnd);
 		}
 		ReleaseDC(hwnd, hdc);
 		DeleteObject(hrgn);
@@ -1187,14 +1126,8 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("WndScrollView " << UPP::Name(this));
-	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {
-#if WINCARET
-		WndDestroyCaret();
-#else
+	if(caretCtrl && caretCtrl->GetTopCtrl() == this)
 		RefreshCaret();
-#endif
-		caretRect.Clear();
-	}
 #ifdef PLATFORM_WINCE
 	::ScrollWindowEx(GetHWND(), dx, dy, r, r, NULL, NULL, 0);
 #else

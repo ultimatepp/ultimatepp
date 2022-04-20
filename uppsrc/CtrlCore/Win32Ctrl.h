@@ -4,15 +4,6 @@ private:
 	bool         activex:1;
 	bool         isdhctrl:1;
 
-#if WINCARET
-	static void WndDestroyCaret();
-	void WndCreateCaret(const Rect& cr);
-#else
-	static int                 WndCaretTime;
-	static bool                WndCaretVisible;
-	static void AnimateCaret();
-#endif
-
 	static  bool GetMsg(MSG& msg);
 
 	static  bool DumpMessage(Ctrl *w, UINT message, WPARAM wParam, LPARAM lParam);
