@@ -137,13 +137,13 @@ public:
 	virtual void FrameAddSize(Size& sz);
 
 private:
+	Value        coloredge;
 	const Value *edge;
 	const Ctrl  *ctrl;
-	Value coloredge;
-	Color color;
-	bool  mousein = false;
-	bool  push = false;
-	bool  button = false;
+	Color        color;
+	bool         mousein:1;
+	bool         push:1;
+	bool         button:1;
 
 public:
 	void Set(const Ctrl *ctrl, const Value *edge, bool active);
@@ -151,5 +151,5 @@ public:
 	void Push(bool b)                       { button = true; push = b; }
 	void SetColor(const Value& ce, Color c) { coloredge = ce; color = c; }
 
-	ActiveEdgeFrame() { edge = NULL; mousein = false; }
+	ActiveEdgeFrame() { edge = NULL; mousein = push = button = false; }
 };

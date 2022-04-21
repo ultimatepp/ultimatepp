@@ -20,6 +20,7 @@ GUI_APP_MAIN
 	RDUMP(sizeof(EditField));
 	RDUMP(sizeof(EditString));
 	RDUMP(sizeof(EditIntSpin));
+	RDUMP(sizeof(EditDoubleSpin));
 	RDUMP(sizeof(DropList));
 	RDUMP(sizeof(ArrayCtrl));
 	RDUMP(sizeof(TreeCtrl));

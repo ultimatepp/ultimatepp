@@ -297,14 +297,15 @@ void EditField::Paint(Draw& w)
 	int x = -sc;
 	w.DrawRect(0, 0, sz.cx, fcy, paper);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
-		const wchar *txt = nulltext;
+		WString nt = nulltext.ToWString();
+		const wchar *txt = nt;
 		if(!IsNull(nullicon)) {
 			int icx = nullicon.GetWidth();
 			w.DrawRect(x, 0, icx + 4, fcy, paper);
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
-		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont, Null, false);
+		Paints(w, x, fcy, txt, nullink, paper, nt.GetLength(), false, nullfont, Null, false);
 	}
 	else {
 		const wchar *txt = text;

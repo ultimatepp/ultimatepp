@@ -106,6 +106,10 @@ public:
 	static const Style& StyleScroll();
 	static const Style& StyleNaked();
 
+	static void  PaintButton(Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
+                             const String& label, Font font, const Image& img,
+                             bool monoimg, int accesskey, bool visibaleaccesskeys, bool disabled);
+
 	Button&  SetStyle(const Style& s);
 	Button&  AutoStyle();
 

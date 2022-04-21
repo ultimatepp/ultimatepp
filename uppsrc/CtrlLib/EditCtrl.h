@@ -94,7 +94,7 @@ protected:
 
 	WString    text;
 	WString    undotext;
-	WString    nulltext;
+	String     nulltext;
 	Rect       dropcaret;
 
 	const Style    *style;
