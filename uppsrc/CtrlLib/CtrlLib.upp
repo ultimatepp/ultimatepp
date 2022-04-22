@@ -18,6 +18,7 @@ file
 	PushCtrl.h,
 	Button.cpp,
 	Switch.cpp,
+	VirtualButtons.cpp,
 	EditCtrl.h,
 	EditField.cpp,
 	TextEdit.h,

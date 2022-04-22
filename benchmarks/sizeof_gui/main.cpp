@@ -10,6 +10,7 @@ GUI_APP_MAIN
 	RDUMP(sizeof(Image));
 	RDUMP(sizeof(RichText));
 	RDUMP(sizeof(Ctrl::LogPos));
+	RDUMP(sizeof(LabelBase));
 	RLOG("=============");
 	RDUMP(sizeof(Ctrl));
 	RDUMP(sizeof(ScrollBar));

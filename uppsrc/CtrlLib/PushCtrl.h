@@ -410,3 +410,30 @@ public:
 	DataPusher(const Convert& convert, const Display& display = StdDisplay()); // deprecated
 	DataPusher(const Display& display); // deprecated
 };
+
+struct VirtualButtons {
+	virtual int                  ButtonCount() const;
+	virtual Rect                 ButtonRect(int i) const;
+	virtual const Button::Style& ButtonStyle(int i) const;
+	virtual Image                ButtonImage(int i) const;
+	virtual bool                 ButtonMono(int i) const;
+	virtual bool                 ButtonEnabled(int i) const;
+
+	virtual void ButtonPush(int i);
+	virtual void ButtonRepeat(int i);
+	virtual void ButtonAction(int i);
+
+	int16  pushi = -1;
+	int16  mi = -1;
+
+	int    FindButton(Point p) const;
+	
+	void   EndPush(Ctrl *ctrl);
+
+	bool   ButtonsCancelMode(Ctrl *ctrl);
+	bool   ButtonsMouseEvent(Ctrl *ctrl, int event, Point p);
+	void   PaintButtons(Draw& w, Ctrl *ctrl);
+
+	int    ButtonVisualState(Ctrl *ctrl, int i);
+	void   RefreshButton(Ctrl *ctrl, int i);
+};
