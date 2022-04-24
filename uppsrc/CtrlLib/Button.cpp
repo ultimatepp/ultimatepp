@@ -504,6 +504,8 @@ void SpinButtons::FrameLayout(Rect& r)
 
 void SpinButtons::FrameAddSize(Size& sz)
 {
+	if(!visible)
+		return;
 	sz.cx += (1 + style->onsides) * (min(sz.cx / 2, style->width) - style->over);
 }
 

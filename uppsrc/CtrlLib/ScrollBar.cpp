@@ -294,7 +294,7 @@ void ScrollBar::Drag(Point p) {
 Image ScrollBar::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
 	if(ButtonsMouseEvent(this, event, p))
-		return Null;
+		return Image::Arrow();
 	return Ctrl::MouseEvent(event, p, zdelta, keyflags);
 }
 

@@ -130,45 +130,6 @@ public:
 
 Color ButtonMonoColor(int i);
 
-class SpinButtons : public CtrlFrame {
-public:
-	virtual void FrameLayout(Rect& r);
-	virtual void FrameAddSize(Size& sz);
-	virtual void FrameAdd(Ctrl& ctrl);
-	virtual void FrameRemove();
-
-public:
-	struct Style : ChStyle<Style> {
-		Button::Style inc;
-		Button::Style dec;
-		int           width;
-		int           over;
-		bool          onsides;
-	};
-
-private:
-	bool         visible;
-	const Style *style;
-
-public:
-	Button inc;
-	Button dec;
-
-	void         Show(bool s = true);
-	bool         IsVisible() const          { return visible; }
-
-	static const Style& StyleDefault();
-	static const Style& StyleOnSides();
-
-	SpinButtons& SetStyle(const Style& s);
-	
-	SpinButtons& OnSides(bool b = true)     { return SetStyle(b ? StyleOnSides() : StyleDefault()); }
-	bool         IsOnSides() const          { return style->onsides; }
-
-	SpinButtons();
-	virtual ~SpinButtons();
-};
-
 class Option : public Pusher {
 public:
 	virtual void   Paint(Draw& draw);
@@ -409,6 +370,45 @@ public:
 	DataPusher();
 	DataPusher(const Convert& convert, const Display& display = StdDisplay()); // deprecated
 	DataPusher(const Display& display); // deprecated
+};
+
+class SpinButtons : public CtrlFrame {
+public:
+	virtual void FrameLayout(Rect& r);
+	virtual void FrameAddSize(Size& sz);
+	virtual void FrameAdd(Ctrl& ctrl);
+	virtual void FrameRemove();
+
+public:
+	struct Style : ChStyle<Style> {
+		Button::Style inc;
+		Button::Style dec;
+		int           width;
+		int           over;
+		bool          onsides;
+	};
+
+private:
+	bool         visible;
+	const Style *style;
+
+public:
+	Button inc;
+	Button dec;
+
+	void         Show(bool s = true);
+	bool         IsVisible() const          { return visible; }
+
+	static const Style& StyleDefault();
+	static const Style& StyleOnSides();
+
+	SpinButtons& SetStyle(const Style& s);
+	
+	SpinButtons& OnSides(bool b = true)     { return SetStyle(b ? StyleOnSides() : StyleDefault()); }
+	bool         IsOnSides() const          { return style->onsides; }
+
+	SpinButtons();
+	virtual ~SpinButtons();
 };
 
 struct VirtualButtons {

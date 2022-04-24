@@ -159,6 +159,11 @@ protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
 	virtual int64 GetTotal() const             { return text.GetLength(); }
 	virtual int   GetCharAt(int64 pos) const   { return text[(int)pos]; }
+	
+	// Spin support
+	virtual void  PaintSpace(Draw& w);
+	virtual int   GetSpaceLeft() const;
+	virtual int   GetSpaceRight() const;
 
 public:
 	Event<Bar&>               WhenBar;
@@ -374,10 +379,21 @@ void WithSpin_Add(double& value, double inc, double min, bool roundfrommin) {
 }
 
 template <class DataType, class Base, class IncType = DataType>
-class WithSpin : public Base {
+class WithSpin : public Base, private VirtualButtons {
 public:
-	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
-	virtual bool Key(dword key, int repcnt);
+	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual bool  Key(dword key, int repcnt);
+	virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+
+	virtual int   GetSpaceLeft() const;
+	virtual int   GetSpaceRight() const;
+	virtual void  PaintSpace(Draw& w);
+
+	virtual int   ButtonCount() const;
+	virtual Rect  ButtonRect(int i) const;
+	virtual const Button::Style& ButtonStyle(int i) const;
+	virtual void  ButtonPush(int i);
+	virtual void  ButtonRepeat(int i);
 
 protected:
 	void            Inc();
@@ -385,9 +401,10 @@ protected:
 	void            Init();
 
 private:
-	SpinButtons     sb;
+	const SpinButtons::Style *style;
 	IncType         inc;
-	bool            roundfrommin;
+	bool            roundfrommin = false;
+	bool            visible = true;
 	bool            mousewheel = true;
 	bool            keys = true;
 
@@ -396,12 +413,14 @@ public:
 
 	WithSpin&          SetInc(IncType _inc = 1)     { inc = _inc; return *this; }
 	DataType           GetInc() const               { return inc; }
-
-	WithSpin&          OnSides(bool b = true)       { sb.OnSides(b); return *this; }
-	bool               IsOnSides() const            { return sb.IsOnSides(); }
 	
-	WithSpin&          ShowSpin(bool s = true)      { sb.Show(s); return *this; }
-	bool               IsSpinVisible() const        { return sb.IsVisible(); }
+	WithSpin&          SetStyle(SpinButtons::Style& s) { style = &s; return *this; }
+
+	WithSpin&          OnSides(bool b = true);
+	bool               IsOnSides() const            { return style->onsides; }
+	
+	WithSpin&          ShowSpin(bool b = true)      { visible = b; Base::RefreshLayout(); return *this; }
+	bool               IsSpinVisible() const        { return visible; }
 	
 	WithSpin&          RoundFromMin(bool b = true)  { roundfrommin = b; return *this; }
 	
@@ -411,122 +430,13 @@ public:
 	WithSpin&          KeySpin(bool b = true)       { keys = b; return *this; }
 	WithSpin&          NoKeySpin()                  { return KeySpin(false); }
 
-	SpinButtons&       SpinButtonsObject()          { return sb; }
-	const SpinButtons& SpinButtonsObject() const    { return sb; }
-
 	WithSpin();
 	WithSpin(IncType inc); // deprecated
 	WithSpin(DataType min, DataType max, IncType inc); // deprecated
 	virtual ~WithSpin() {}
 };
 
-template <class DataType, class Base, class IncType>
-WithSpin<DataType, Base, IncType>::WithSpin()
-:	inc(WithSpin_DefaultIncValue<IncType>())
-{
-	Init();
-}
-
-template <class DataType, class Base, class IncType>
-WithSpin<DataType, Base, IncType>::WithSpin(IncType inc)
-:	inc(inc)
-{
-	Init();
-}
-
-template <class DataType, class Base, class IncType>
-WithSpin<DataType, Base, IncType>::WithSpin(DataType min, DataType max, IncType inc)
-:	inc(WithSpin_DefaultIncValue<IncType>())
-{
-	Base::MinMax(min, max);
-	Init();
-}
-
-template <class DataType, class Base, class IncType>
-void WithSpin<DataType, Base, IncType>::Init()
-{
-	Ctrl::AddFrame(sb);
-	sb.inc.WhenRepeat = sb.inc.WhenAction = THISBACK(Inc);
-	sb.dec.WhenRepeat = sb.dec.WhenAction = THISBACK(Dec);
-	roundfrommin = false;
-}
-
-template <class DataType, class Base, class IncType>
-void WithSpin<DataType, Base, IncType>::Inc()
-{
-	if(Ctrl::IsReadOnly()) {
-		BeepExclamation();
-		return;
-	}
-	DataType d = Base::GetData();
-	if(!IsNull(d)) {
-		WithSpin_Add(d, inc, Base::GetMin(), roundfrommin);
-		if(IsNull(Base::GetMax()) || d <= Base::GetMax()) {
-			Base::SetData(d);
-			Ctrl::Action();
-		}
-	}
-	else {
-		DataType min = Base::GetMin();
-		if(IsNull(min) || min <= Base::GetDefaultMin())
-			Base::SetData(WithSpin_DefaultStartValue<DataType>());
-		else
-			Base::SetData(min);
-	}
-	Ctrl::SetFocus();
-}
-
-template <class DataType, class Base, class IncType>
-void WithSpin<DataType, Base, IncType>::Dec()
-{
-	if(Ctrl::IsReadOnly()) {
-		BeepExclamation();
-		return;
-	}
-	DataType d = Base::GetData();
-	if(!IsNull(d)) {
-		WithSpin_Add(d, -inc, Base::GetMin(), roundfrommin);
-		if(IsNull(Base::GetMin()) || d >= Base::GetMin()) {
-			Base::SetData(d);
-			Ctrl::Action();
-		}
-	}
-	else {
-		DataType max = Base::GetMax();
-		if(IsNull(max) || max >= Base::GetDefaultMax())
-			Base::SetData(WithSpin_DefaultStartValue<DataType>());
-		else
-			Base::SetData(max);
-	}
-	Ctrl::SetFocus();
-}
-
-template <class DataType, class Base, class IncType>
-bool WithSpin<DataType, Base, IncType>::Key(dword key, int repcnt)
-{
-	if(keys) {
-		if(key == K_UP) {
-			Inc();
-			return true;
-		}
-		if(key == K_DOWN) {
-			Dec();
-			return true;
-		}
-	}
-	return Base::Key(key, repcnt);
-}
-
-template <class DataType, class Base, class IncType>
-void WithSpin<DataType, Base, IncType>::MouseWheel(Point, int zdelta, dword)
-{
-	if(mousewheel) {
-		if(zdelta < 0)
-			Dec();
-		else
-			Inc();
-	}
-}
+#include "EditCtrl.hpp"
 
 typedef WithSpin<int, EditInt>               EditIntSpin;
 typedef WithSpin<int64, EditInt64>           EditInt64Spin;

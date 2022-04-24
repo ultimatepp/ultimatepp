@@ -20,6 +20,7 @@ file
 	Switch.cpp,
 	VirtualButtons.cpp,
 	EditCtrl.h,
+	EditCtrl.hpp,
 	EditField.cpp,
 	TextEdit.h,
 	Text.cpp,

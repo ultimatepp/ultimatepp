@@ -180,12 +180,28 @@ int  EditField::GetStdHeight(Font font)
 
 Size EditField::GetMinSize() const
 {
-	return AddFrameSize(10, font.GetCy() + (no_internal_margin ? 0 : 4));
+	return AddFrameSize(10 + GetSpaceLeft() + GetSpaceRight(), font.GetCy() + (no_internal_margin ? 0 : 4));
+}
+
+void EditField::PaintSpace(Draw& w)
+{
+}
+
+int EditField::GetSpaceLeft() const
+{
+	return 0;
+}
+
+int EditField::GetSpaceRight() const
+{
+	return 0;
 }
 
 int  EditField::GetCursor(int posx)
 {
-	posx -= 2;
+	posx -= GetSpaceLeft();
+	if(!no_internal_margin)
+		posx -= 2;
 	if(posx <= 0) return 0;
 
 	int count = text.GetLength();
@@ -281,21 +297,23 @@ Color EditField::GetPaper()
 
 void EditField::Paint(Draw& w)
 {
+	int lspace = GetSpaceLeft();
+	int rspace = GetSpaceRight();
 	Size sz = GetSize();
 	bool enabled = IsShowEnabled();
 	Color paper = GetPaper();
 	Color ink = enabled ? Nvl(textcolor, style->text) : style->textdisabled;
 	int fcy = font.GetCy();
 	int yy = GetTy();
+	w.DrawRect(sz, paper);
+	PaintSpace(w);
 	if(!no_internal_margin) {
-		w.DrawRect(0, 0, 2, sz.cy, paper);
-		w.DrawRect(0, 0, sz.cx, yy, paper);
-		w.DrawRect(0, yy + fcy, sz.cx, sz.cy - yy - fcy, paper);
-		w.DrawRect(sz.cx - 2, 0, 2, sz.cy, paper);
-		w.Clipoff(2, yy, sz.cx - 4, fcy);
+		lspace += 2;
+		rspace += 2;
 	}
+	if(lspace || rspace)
+		w.Clipoff(lspace, no_internal_margin ? 0 : yy, sz.cx - lspace - rspace, no_internal_margin ? 0 : fcy);
 	int x = -sc;
-	w.DrawRect(0, 0, sz.cx, fcy, paper);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		WString nt = nulltext.ToWString();
 		const wchar *txt = nt;
@@ -334,9 +352,9 @@ void EditField::Paint(Draw& w)
 				b = i;
 			}
 	}
-	if(!no_internal_margin)
-		w.End();
 	DrawTiles(w, dropcaret, CtrlImg::checkers());
+	if(lspace || rspace)
+		w.End();
 }
 
 bool EditField::GetSelection(int& l, int& h) const
@@ -363,7 +381,7 @@ bool EditField::IsSelection() const
 
 Rect EditField::GetCaretRect(int pos) const
 {
-	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin
+	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin + GetSpaceLeft()
 	               - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
 	             DPI(1), min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
@@ -391,7 +409,9 @@ void EditField::Finish(bool refresh)
 			LeftPos(r.left, sz.cx);
 		sz = GetSize();
 	}
-	sz.cx -= 2;
+	if(!no_internal_margin)
+		sz.cx -= 2;
+	sz.cx -= GetSpaceLeft() + GetSpaceRight();
 	if(sz.cx <= 0) return;
 	int x = GetCaret(cursor);
 	int rspc = max(font.GetRightSpace('o'), font.GetCy() / 5); // sometimes RightSpace is not implemented (0)

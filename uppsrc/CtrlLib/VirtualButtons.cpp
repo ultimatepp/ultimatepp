@@ -35,10 +35,11 @@ int VirtualButtons::ButtonVisualState(Ctrl *ctrl, int i)
 
 void VirtualButtons::PaintButtons(Draw& w, Ctrl *ctrl)
 {
-	for(int i = 0; i < ButtonCount(); i++)
+	for(int i = 0; i < ButtonCount(); i++) {
 		Button::PaintButton(w, ButtonRect(i), ButtonStyle(i), ButtonVisualState(ctrl, i), false,
 		                    String(), StdFont(), ButtonImage(i),
 		                    ButtonMono(i), 0, false, !ButtonEnabled(i));
+	}
 }
 
 void VirtualButtons::EndPush(Ctrl *ctrl)
@@ -56,8 +57,6 @@ void VirtualButtons::RefreshButton(Ctrl *ctrl, int i)
 
 bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 {
-	if(event == Ctrl::CURSORIMAGE)
-		return false;
 	int i = event == Ctrl::MOUSELEAVE ? -1 : FindButton(p);
 	if(i != mi) {
 		RefreshButton(ctrl, mi);
@@ -65,6 +64,8 @@ bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 	}
 	switch(event) {
 	case Ctrl::LEFTDOWN:
+	case Ctrl::LEFTDOUBLE:
+	case Ctrl::LEFTTRIPLE:
 		pushi = i;
 		if(pushi >= 0) {
 			ButtonPush(i);
