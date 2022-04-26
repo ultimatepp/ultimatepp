@@ -214,7 +214,7 @@ void ScrollBar::Paint(Draw& w)
 	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
 	light = GetMousePart();
 	int p = push;
-	if(!HasCapture())
+	if(!HasCapture() || buttons_capture)
 		p = -1;
 	const Value *hl[] = { style->hlower, style->hupper, style->hthumb };
 	const Value *vl[] = { style->vupper, style->vlower, style->vthumb };
@@ -229,7 +229,7 @@ void ScrollBar::Paint(Draw& w)
 				pr = style->through ? GetSize() : Slider();
 			}
 			if(i != 2 || thumbsize >= style->thumbmin)
-				ChPaint(w, pr, l[i][p == i ? CTRL_PRESSED : light == i ? CTRL_HOT : CTRL_NORMAL]);
+				ChPaint(w, pr, l[i][p == i ? CTRL_PRESSED : light == i && !buttons_capture ? CTRL_HOT : CTRL_NORMAL]);
 			if(i != 2)
 				w.End();
 		}
@@ -325,6 +325,7 @@ void ScrollBar::LeftDown(Point p, dword) {
 				NextPage();
 	}
 	SetCapture();
+	buttons_capture = false;
 	Refresh();
 	WhenLeftClick();
 }
@@ -371,6 +372,7 @@ void ScrollBar::MouseWheel(Point p, int zdelta, dword keyflags)
 
 void ScrollBar::CancelMode() {
 	push = light = -1;
+	ButtonsCancelMode();
 }
 
 bool  ScrollBar::Set(int apagepos) {

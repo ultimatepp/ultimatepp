@@ -23,6 +23,8 @@ int VirtualButtons::FindButton(Point p) const
 
 int VirtualButtons::ButtonVisualState(Ctrl *ctrl, int i)
 {
+	if(ctrl->HasCapture() && !buttons_capture)
+		return CTRL_NORMAL;
 	if(ButtonEnabled(i)) {
 		if(i == pushi)
 			return CTRL_PRESSED;
@@ -55,8 +57,17 @@ void VirtualButtons::RefreshButton(Ctrl *ctrl, int i)
 		ctrl->Refresh(ButtonRect(i));
 }
 
+void VirtualButtons::ButtonsCancelMode()
+{
+	pushi = -1;
+	mi = -1;
+	buttons_capture = false;
+}
+
 bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 {
+	if(ctrl->HasCapture() && !buttons_capture)
+		return false;
 	int i = event == Ctrl::MOUSELEAVE ? -1 : FindButton(p);
 	if(i != mi) {
 		RefreshButton(ctrl, mi);
@@ -70,6 +81,7 @@ bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 		if(pushi >= 0) {
 			ButtonPush(i);
 			ctrl->SetCapture();
+			buttons_capture = true;
 		}
 		else
 			EndPush(ctrl);
@@ -90,6 +102,7 @@ bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 		if(ii >= 0) {
 			EndPush(ctrl);
 			ReleaseCapture();
+			buttons_capture = false;
 			ButtonAction(ii);
 		}
 		break;

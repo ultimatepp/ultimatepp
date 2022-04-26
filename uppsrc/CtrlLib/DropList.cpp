@@ -270,7 +270,7 @@ DropList::DropList()
 	dropfocus = false;
 	notnull = false;
 	alwaysdrop = false;
-	AddButton().Main().WhenPush = THISBACK(Drop);
+	SetupDropPush([=] { Drop(); });
 	NoInitFocus();
 	EnableDrop(false);
 	list.Normal();

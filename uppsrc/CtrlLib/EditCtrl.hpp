@@ -120,6 +120,13 @@ void WithSpin<DataType, Base, IncType>::MouseWheel(Point, int zdelta, dword)
 }
 
 template <class DataType, class Base, class IncType>
+void WithSpin<DataType, Base, IncType>::CancelMode()
+{
+	Base::CancelMode();
+	ButtonsCancelMode();
+}
+
+template <class DataType, class Base, class IncType>
 int WithSpin<DataType, Base, IncType>::GetSpaceLeft() const
 {
 	if(!visible)
@@ -133,6 +140,18 @@ int WithSpin<DataType, Base, IncType>::GetSpaceRight() const
 	if(!visible)
 		return 0;
 	return min(Base::GetSize().cx / 2, style->width) - style->over;
+}
+
+template <class DataType, class Base, class IncType>
+void WithSpin<DataType, Base, IncType>::EditCapture()
+{
+	buttons_capture = false;
+}
+
+template <class DataType, class Base, class IncType>
+bool WithSpin<DataType, Base, IncType>::HasEditCapture()
+{
+	return Base::HasCapture() && !buttons_capture;
 }
 
 template <class DataType, class Base, class IncType>

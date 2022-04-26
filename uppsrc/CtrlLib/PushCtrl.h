@@ -423,14 +423,15 @@ struct VirtualButtons {
 	virtual void ButtonRepeat(int i);
 	virtual void ButtonAction(int i);
 
-	int16  pushi = -1;
-	int16  mi = -1;
+	int8    pushi = -1;
+	int8    mi = -1;
+	bool    buttons_capture = false;
 
 	int    FindButton(Point p) const;
 	
 	void   EndPush(Ctrl *ctrl);
 
-	bool   ButtonsCancelMode(Ctrl *ctrl);
+	void   ButtonsCancelMode();
 	bool   ButtonsMouseEvent(Ctrl *ctrl, int event, Point p);
 	void   PaintButtons(Draw& w, Ctrl *ctrl);
 

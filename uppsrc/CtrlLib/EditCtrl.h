@@ -164,6 +164,8 @@ protected:
 	virtual void  PaintSpace(Draw& w);
 	virtual int   GetSpaceLeft() const;
 	virtual int   GetSpaceRight() const;
+	virtual void  EditCapture();
+	virtual bool  HasEditCapture();
 
 public:
 	Event<Bar&>               WhenBar;
@@ -381,6 +383,7 @@ void WithSpin_Add(double& value, double inc, double min, bool roundfrommin) {
 template <class DataType, class Base, class IncType = DataType>
 class WithSpin : public Base, private VirtualButtons {
 public:
+	virtual void  CancelMode();
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual bool  Key(dword key, int repcnt);
 	virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
@@ -388,6 +391,8 @@ public:
 	virtual int   GetSpaceLeft() const;
 	virtual int   GetSpaceRight() const;
 	virtual void  PaintSpace(Draw& w);
+	virtual void  EditCapture();
+	virtual bool  HasEditCapture();
 
 	virtual int   ButtonCount() const;
 	virtual Rect  ButtonRect(int i) const;

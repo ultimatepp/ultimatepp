@@ -197,6 +197,15 @@ int EditField::GetSpaceRight() const
 	return 0;
 }
 
+void EditField::EditCapture()
+{
+}
+
+bool EditField::HasEditCapture()
+{
+	return HasCapture();
+}
+
 int  EditField::GetCursor(int posx)
 {
 	posx -= GetSpaceLeft();
@@ -506,6 +515,7 @@ void EditField::LeftDown(Point p, dword flags)
 		return;
 	}
 	SetCapture();
+	EditCapture();
 	Move(c, flags & K_SHIFT);
 	Finish();
 }
@@ -528,7 +538,7 @@ void EditField::LeftUp(Point p, dword flags)
 {
 	int c = GetCursor(p.x + sc);
 	int l, h;
-	if(GetSelection(l, h) && c >= l && c < h && !HasCapture() && selclick)
+	if(GetSelection(l, h) && c >= l && c < h && !HasEditCapture() && selclick)
 		Move(c, false);
 	Finish();
 	selclick = false;
@@ -550,7 +560,7 @@ void EditField::LeftTriple(Point p, dword keyflags)
 
 void EditField::MouseMove(Point p, dword flags)
 {
-	if(!HasCapture()) return;
+	if(!HasEditCapture()) return;
 	Move(GetCursor(p.x + sc), true);
 	Finish();
 }
@@ -761,7 +771,7 @@ void EditField::LeftDrag(Point p, dword flags)
 	int c = GetCursor(p.x + sc);
 	Size ssz = StdSampleSize();
 	int sell, selh;
-	if(!HasCapture() && GetSelection(sell, selh) && c >= sell && c <= selh) {
+	if(!HasEditCapture() && GetSelection(sell, selh) && c >= sell && c <= selh) {
 		WString sel = text.Mid(sell, selh - sell);
 		ImageDraw iw(ssz);
 		iw.DrawText(0, 0, sel);

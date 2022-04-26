@@ -49,8 +49,9 @@ public:
 	class SubButton {
 		friend class MultiButton;
 
+		String       label;
 		String       tip;
-		MultiButton *owner;
+		MultiButton *owner = nullptr;
 		Image        img;
 		int          cx;
 		bool         main;
@@ -58,8 +59,6 @@ public:
 		bool         monoimg;
 		bool         enabled;
 		bool         visible;
-
-		String       label;
 
 		void Refresh();
 
@@ -85,6 +84,7 @@ public:
 
 private:
 	enum {
+		NONE = -2,
 		MAIN = -1,
 		LB_IMAGE = 5, // image <-> text space
 		LB_MARGIN = 10
@@ -92,23 +92,25 @@ private:
 
 	virtual bool Frame();
 
-	const Display   *display;
-	const Convert   *convert;
+	DisplayPopup     info;
+	Array<SubButton> buttons;
+	Event<>          DropPush; // mode for droplist with single button
+
 	Value            value;
 	Value            error;
-	int              valuecy;
-	bool             push;
-	bool             nobg;
 	String           tip;
-	Rect             pushrect;
-	Color            paper = Null;
+	Rect16           pushrect;
 
-	Array<SubButton> button;
-	int              hl;
-
+	const Display   *display;
+	const Convert   *convert;
 	const Style     *style;
 
-	DisplayPopup     info;
+	int              valuecy;
+	Color            paper = Null;
+
+	int16            hl;
+	bool             push:1;
+	bool             nobg:1;
 
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
@@ -124,6 +126,9 @@ private:
 	bool Metrics(int& border, int& lx, int &rx);
 	void SyncInfo();
 	Rect Paint0(Draw& w, bool getcr);
+	void DoPush(int i);
+	void MultiButtons();
+	SubButton& Button(int i) const;
 
 	friend class SubButton;
 	friend class MultiButtonFrame;
@@ -145,8 +150,9 @@ public:
 	SubButton& AddButton();
 	SubButton& InsertButton(int i);
 	void       RemoveButton(int i);
-	int        GetButtonCount() const                { return button.GetCount(); }
-	SubButton& GetButton(int i)                      { return button[i]; }
+	int        GetButtonCount() const;
+	const MultiButton::SubButton& GetButton(int i) const;
+	SubButton& GetButton(int i);
 	SubButton& MainButton();
 
 	Rect  GetPushScreenRect() const                  { return pushrect; }
@@ -168,6 +174,8 @@ public:
 	MultiButton& NoBackground(bool b = true);
 
 	MultiButton& SetStyle(const Style& s)            { style = &s; Refresh(); return *this; }
+	
+	void SetupDropPush(Event<> push)                 { DropPush = push; }
 
 	MultiButton();
 };
