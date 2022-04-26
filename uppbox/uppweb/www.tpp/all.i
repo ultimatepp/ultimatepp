@@ -22,10 +22,6 @@ TOPIC("LearnCpp_en-us")
 #include "LearnCpp_en-us.tppi"
 END_TOPIC
 
-TOPIC("RoadmapHistorical_en-us")
-#include "RoadmapHistorical_en-us.tppi"
-END_TOPIC
-
 TOPIC("Roadmap_en-us")
 #include "Roadmap_en-us.tppi"
 END_TOPIC
