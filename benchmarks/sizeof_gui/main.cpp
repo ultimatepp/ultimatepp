@@ -20,7 +20,12 @@ GUI_APP_MAIN
 	RDUMP(sizeof(Label));
 	RDUMP(sizeof(EditField));
 	RDUMP(sizeof(EditString));
+	RDUMP(sizeof(EditInt));
+	RDUMP(sizeof(SpinButtons));
 	RDUMP(sizeof(EditIntSpin));
+	RDUMP(sizeof(DisplayPopup));
+	RDUMP(sizeof(PopUpTable));
+	RDUMP(sizeof(WithDropChoice<EditString>));
 	RDUMP(sizeof(DropList));
 	RDUMP(sizeof(ArrayCtrl));
 	RDUMP(sizeof(TreeCtrl));
