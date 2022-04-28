@@ -234,7 +234,7 @@ void ScrollBar::Paint(Draw& w)
 				w.End();
 		}
 	}
-	else
+	else {
 		if(style->through)
 			ChPaint(w, sz, l[0][CTRL_DISABLED]);
 		else
@@ -242,7 +242,7 @@ void ScrollBar::Paint(Draw& w)
 			ChPaint(w, cc, 0, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
 		else
 			ChPaint(w, 0, cc, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
-
+	}
 	PaintButtons(w, this);
 }
 
