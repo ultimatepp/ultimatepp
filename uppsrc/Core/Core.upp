@@ -101,6 +101,8 @@ file
 	Vcont.h,
 	BiCont.h,
 	Other.h,
+	Other.hpp,
+	PackedData.cpp,
 	Vcont.hpp,
 	Vcont.cpp,
 	Index.h,

@@ -98,7 +98,6 @@ private:
 
 	Value            value;
 	Value            error;
-	String           tip;
 	Rect16           pushrect;
 
 	const Display   *display;
@@ -132,6 +131,12 @@ private:
 
 	friend class SubButton;
 	friend class MultiButtonFrame;
+
+protected:
+	enum {
+		ATTR_TIP = Ctrl::ATTR_LAST,
+		ATTR_LAST
+	};
 
 public:
 	Event<>  WhenPush;
@@ -170,7 +175,7 @@ public:
 	MultiButton& SetConvert(const Convert& c);
 	MultiButton& SetValueCy(int cy);
 	MultiButton& Set(const Value& v, bool update = true);
-	MultiButton& Tip(const char *s)                  { tip = s; return *this; }
+	MultiButton& Tip(const char *s)                  { SetTextAttr(ATTR_TIP, s); return *this; }
 	MultiButton& NoBackground(bool b = true);
 
 	MultiButton& SetStyle(const Style& s)            { style = &s; Refresh(); return *this; }

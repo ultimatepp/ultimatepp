@@ -89,25 +89,28 @@ public:
 	};
 
 protected:
+	enum {
+		ATTR_TEXTCOLOR = Ctrl::ATTR_LAST,
+		ATTR_INACTIVE_CONVERT,
+		ATTR_CHARFILTER,
+		ATTR_NULLTEXT,
+		ATTR_NULLINK,
+		ATTR_NULLFONT,
+		ATTR_LAST,
+	};
 	
 	ActiveEdgeFrame edge;
 
 	WString    text;
 	WString    undotext;
-	String     nulltext;
-	Rect       dropcaret;
+	Rect16     dropcaret;
 
 	const Style    *style;
 	CharFilter      filter;
 	const Convert  *convert;
-	const Convert  *inactive_convert;
 	Image           nullicon;
 
 	Font            font;
-	Font            nullfont;
-
-	Color           textcolor;
-	Color           nullink;
 
 	int             sc;
 	int             cursor, anchor;
@@ -228,7 +231,7 @@ public:
 	bool       IsPassword() const            { return password; }
 	EditField& SetFilter(int (*f)(int))      { filter = f; return *this; }
 	EditField& SetConvert(const Convert& c)  { convert = &c; Refresh(); return *this; }
-	EditField& SetInactiveConvert(const Convert& c) { inactive_convert = &c; Refresh(); return *this; }
+	EditField& SetInactiveConvert(const Convert& c) { SetVoidPtrAttr(ATTR_INACTIVE_CONVERT, &c); Refresh(); return *this; }
 	EditField& AutoFormat(bool b = true)     { autoformat = b; return *this; }
 	EditField& NoAutoFormat()                { return AutoFormat(false); }
 	bool       IsAutoFormat() const          { return autoformat; }
@@ -239,9 +242,9 @@ public:
 	bool       IsClickSelect() const         { return clickselect; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }
 	bool       IsInitCaps() const            { return initcaps; }
-	EditField& NullText(const Image& icon, const char *text = t_("(default)"), Color ink = SColorDisabled);
+	EditField& NullText(const Image& icon, const char *text = t_("(default)"), Color ink = Null);
 	EditField& NullText(const Image& icon, const char *text, Font fnt, Color ink);
-	EditField& NullText(const char *text = t_("(default)"), Color ink = SColorDisabled);
+	EditField& NullText(const char *text = t_("(default)"), Color ink = Null);
 	EditField& NullText(const char *text, Font fnt, Color ink);
 	EditField& MaxChars(int mc)              { maxlen = mc; return *this; }
 	int        GetMaxChars() const           { return maxlen; }

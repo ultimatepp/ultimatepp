@@ -478,7 +478,7 @@ private:
 		};
 		
 		void SetView(const Rect& r) { view.left = r.left; view.right = r.right; view.top = r.top; view.bottom = r.bottom; }
-		Rect GetView() const          { return Rect16(view.left, view.top, view.right, view.bottom); }
+		Rect GetView() const        { return Rect16(view.left, view.top, view.right, view.bottom); }
 	};
 	
 	struct Scroll : Moveable<Scroll> {
@@ -504,7 +504,7 @@ private:
 	};
 
 
-	Frame frame;
+	Frame        frame;
 	LogPos       pos;//8
 	Rect16       rect; //8
 
@@ -516,7 +516,7 @@ private:
 	Ctrl        *prev_sibling = nullptr;
 	Ctrl        *next_sibling = nullptr;
 	Ctrl        *children = nullptr;
-	const char  *info_ptr = nullptr;
+	PackedData   attrs;
 
 	byte         overpaint;
 
@@ -675,8 +675,6 @@ private:
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
 	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
 	void    DoSync(Ctrl *q, Rect r, bool inframe);
-	void    SetInfoPart(int i, const char *txt);
-	String  GetInfoPart(int i) const;
 
 	Rect    GetPreeditScreenRect();
 	void    SyncPreedit();
@@ -738,6 +736,8 @@ private:
 	const Frame& GetFrame0(int i) const { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
 	void         FreeFrames()           { if(multi_frame) MemoryFree(frame.frames); }
 	Frame        AllocFrames(int alloc);
+	
+	PackedData& Attrs();
 
 
 	static void InitTimer();
@@ -800,7 +800,32 @@ protected:
 	static void     TimerProc(dword time);
 
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
-
+			
+	enum {
+		ATTR_LAYOUT_ID,
+		ATTR_TIP,
+		ATTR_HELPLINE,
+		ATTR_DESCRIPTION,
+		ATTR_HELPTOPIC,
+		ATTR_LAST
+	};
+	
+	void   SetTextAttr(int ii, const char *s);
+	void   SetTextAttr(int ii, const String& s);
+	String GetTextAttr(int ii) const;
+	
+	void   SetColorAttr(int ii, Color c);
+	Color  GetColorAttr(int ii);
+	
+	void   SetFontAttr(int ii, Font fnt);
+	Font   GetFontAttr(int ii);
+	
+	void   SetIntAttr(int ii, int val);
+	int    GetIntAttr(int ii, int def = Null);
+	
+	void   SetVoidPtrAttr(int ii, const void *ptr);
+	void  *GetVoidPtrAttr(int ii);
+	
 public:
 	enum StateReason {
 		FOCUS      = 10,

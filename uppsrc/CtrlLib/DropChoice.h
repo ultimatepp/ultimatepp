@@ -52,14 +52,14 @@ private:
 	PopUpTable         list;
 	Index<Value>       key;
 	Value              value;
-	int                dropwidth;
 	const Convert     *valueconvert;
 	const Display     *valuedisplay;
-	bool               displayall;
-	bool               dropfocus;
-	bool               notnull;
-	bool               alwaysdrop;
-	bool               usewheel;
+	int                dropwidth;
+	bool               displayall:1;
+	bool               dropfocus:1;
+	bool               notnull:1;
+	bool               alwaysdrop:1;
+	bool               usewheel:1;
 
 	void          Select();
 	void          Cancel();

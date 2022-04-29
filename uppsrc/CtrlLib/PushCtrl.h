@@ -148,13 +148,13 @@ protected:
 protected:
 	Image  edge, edged;
 	int    option;
-	bool   switchimage;
-	bool   threestate;
-	bool   notnull;
-	bool   blackedge;
-	bool   showlabel;
-	bool   box;
-	bool   autobox;
+	bool   switchimage:1;
+	bool   threestate:1;
+	bool   notnull:1;
+	bool   blackedge:1;
+	bool   showlabel:1;
+	bool   box:1;
+	bool   autobox:1;
 	Color  color;
 	
 	void   AutoSync();
@@ -267,10 +267,10 @@ public:
 	struct Case  {
 		String label;
 		Value  value;
-		int    accesskey = 0;
-		bool   enabled = true;
-		int    gap = 0;
 		Rect16 rect = Rect16(0, 0, 0, 0);
+		int    accesskey = 0;
+		int    gap = 0;
+		bool   enabled = true;
 	};
 
 private:

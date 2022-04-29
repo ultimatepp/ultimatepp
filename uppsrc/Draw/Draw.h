@@ -211,6 +211,8 @@ public:
 
 	operator Value() const          { return RichToValue(*this); }
 	Font(const Value& q)            { *this = q.Get<Font>(); }
+	
+	static Font FromInt64(int64 q)  { Font fnt; fnt.data = q; return fnt; }
 
 // BW compatibility
 	FontInfo Info() const;

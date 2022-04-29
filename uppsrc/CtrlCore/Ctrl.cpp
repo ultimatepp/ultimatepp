@@ -391,109 +391,6 @@ Rect Ctrl::GetCaret() const
 	return Null;
 }
 
-void Ctrl::SetInfoPart(int i, const char *txt)
-{
-	Vector<String> f;
-	if(info_ptr) {
-		if(layout_id_literal)
-			f.At(4) = info_ptr;
-		else {
-			f = Split(info_ptr, '\x7f', false);
-			delete[] info_ptr;
-		}
-	}
-	f.At(i) = txt;
-	String h = Join(f, "\x7f");
-	char *s = new char[h.GetCount() + 1];
-	memcpy(s, ~h, h.GetCount() + 1);
-	info_ptr = s;
-	layout_id_literal = false;
-}
-
-Ctrl& Ctrl::Tip(const char *txt)
-{
-	SetInfoPart(0, txt);
-	return *this;
-}
-
-Ctrl& Ctrl::HelpLine(const char *txt)
-{
-	SetInfoPart(1, txt);
-	return *this;
-}
-
-Ctrl& Ctrl::Description(const char *txt)
-{
-	SetInfoPart(2, txt);
-	return *this;
-}
-
-Ctrl& Ctrl::HelpTopic(const char *txt)
-{
-	SetInfoPart(3, txt);
-	return *this;
-}
-
-Ctrl& Ctrl::LayoutId(const char *txt)
-{
-	SetInfoPart(4, txt);
-	return *this;
-}
-
-Ctrl& Ctrl::LayoutIdLiteral(const char *txt)
-{
-	if(info_ptr && !layout_id_literal)
-		LayoutId(txt);
-	else {
-		info_ptr = txt;
-		layout_id_literal = true;
-	}
-	return *this;
-}
-
-String Ctrl::GetInfoPart(int i) const
-{
-	if(info_ptr && !layout_id_literal) {
-		Vector<String> f = Split(info_ptr, '\x7f', false);
-		return i < f.GetCount() ? f[i] : String();
-	}
-	return String();
-}
-
-String Ctrl::GetTip() const
-{
-	return GetInfoPart(0);
-}
-
-String Ctrl::GetHelpLine() const
-{
-	return GetInfoPart(1);
-}
-
-String Ctrl::GetDescription() const
-{
-	return GetInfoPart(2);
-}
-
-String Ctrl::GetHelpTopic() const
-{
-	return GetInfoPart(3);
-}
-
-String Ctrl::GetLayoutId() const
-{
-	if(info_ptr && layout_id_literal)
-		return info_ptr;
-	return GetInfoPart(4);
-}
-
-void Ctrl::ClearInfo()
-{
-	if(info_ptr && !layout_id_literal)
-		delete[] info_ptr;
-	info_ptr = nullptr;
-}
-
 bool  Ctrl::SetWantFocus() {
 	GuiLock __;
 	if(IsWantFocus() && IsEnabled() && IsVisible() && IsOpen())
@@ -647,7 +544,6 @@ Ctrl::Ctrl() {
 	fullrefresh = false;
 	akv = false;
 	layout_id_literal = false;
-	info_ptr = nullptr;
 	top = false;
 	uparent = nullptr;
 }

@@ -623,6 +623,7 @@ void MultiButton::SyncInfo()
 void MultiButton::MouseMove(Point p, dword flags)
 {
 	int h = FindButton(p.x);
+	String tip = GetTextAttr(ATTR_TIP);
 	Ctrl::Tip(h >= 0 && h < GetButtonCount() ? Nvl(Button(h).tip, tip) : tip);
 	if(hl != h) {
 		hl = h;

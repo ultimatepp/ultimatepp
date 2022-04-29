@@ -21,6 +21,7 @@ file
 	Frame.cpp,
 	CtrlMt.cpp,
 	Ctrl.cpp,
+	CtrlAttr.cpp,
 	CtrlChild.cpp,
 	CtrlFrame.cpp,
 	CtrlPos.cpp,

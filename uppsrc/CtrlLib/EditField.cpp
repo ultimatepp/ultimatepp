@@ -311,6 +311,7 @@ void EditField::Paint(Draw& w)
 	Size sz = GetSize();
 	bool enabled = IsShowEnabled();
 	Color paper = GetPaper();
+	Color textcolor = GetColorAttr(ATTR_TEXTCOLOR);
 	Color ink = enabled ? Nvl(textcolor, style->text) : style->textdisabled;
 	int fcy = font.GetCy();
 	int yy = GetTy();
@@ -323,6 +324,7 @@ void EditField::Paint(Draw& w)
 	if(lspace || rspace)
 		w.Clipoff(lspace, no_internal_margin ? 0 : yy, sz.cx - lspace - rspace, no_internal_margin ? 0 : fcy);
 	int x = -sc;
+	String nulltext = GetTextAttr(ATTR_NULLTEXT);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		WString nt = nulltext.ToWString();
 		const wchar *txt = nt;
@@ -332,7 +334,8 @@ void EditField::Paint(Draw& w)
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
-		Paints(w, x, fcy, txt, nullink, paper, nt.GetLength(), false, nullfont, Null, false);
+		Paints(w, x, fcy, txt, Nvl(GetColorAttr(ATTR_NULLINK), SColorDisabled()),
+		       paper, nt.GetLength(), false, Nvl(GetFontAttr(ATTR_NULLFONT), StdFont().Italic()), Null, false);
 	}
 	else {
 		const wchar *txt = text;
@@ -460,6 +463,7 @@ void EditField::SelSource()
 
 void EditField::GotFocus()
 {
+	auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 	if(autoformat && IsEditable() && !IsNull(text) && inactive_convert) {
 		Value v = convert->Scan(text);
 		if(!v.IsError()) {
@@ -481,6 +485,7 @@ void EditField::LostFocus()
 	if(autoformat && IsEditable() && !IsNull(text) && !IsDragAndDropSource()) {
 		Value v = convert->Scan(text);
 		if(!v.IsError()) {
+			auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 			const Convert * cv = inactive_convert ? inactive_convert : convert;
 			WString s = cv->Format(v);
 			if(s != text) text = s;
@@ -1007,6 +1012,7 @@ void EditField::SetText(const WString& txt)
 
 void EditField::SetData(const Value& data)
 {
+	auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 	const Convert * cv = convert;
 	if(!HasFocus() && inactive_convert)
 		cv = inactive_convert;
@@ -1036,7 +1042,6 @@ void EditField::Reset()
 	clickselect = false;
 	filter = CharFilterUnicode;
 	convert = &NoConvert();
-	inactive_convert = NULL;
 	initcaps = false;
 	maxlen = INT_MAX;
 	autosize = false;
@@ -1047,7 +1052,6 @@ void EditField::Reset()
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
-	textcolor = Null;
 	showspaces = false;
 	no_internal_margin = false;
 	fsell = fselh = -1;
@@ -1062,7 +1066,7 @@ EditField& EditField::SetFont(Font _font)
 
 EditField& EditField::SetColor(Color c)
 {
-	textcolor = c;
+	SetColorAttr(ATTR_TEXTCOLOR, c);
 	Refresh();
 	return *this;
 }
@@ -1070,17 +1074,18 @@ EditField& EditField::SetColor(Color c)
 EditField& EditField::NullText(const Image& icon, const char *text, Font fnt, Color ink)
 {
 	nullicon = icon;
-	nulltext = text;
-	nulltext << " ";
-	nullink = ink;
-	nullfont = fnt;
+	String h = text;
+	h << " ";
+	SetTextAttr(ATTR_NULLTEXT, h);
+	SetColorAttr(ATTR_NULLINK, ink);
+	SetFontAttr(ATTR_NULLFONT, fnt);
 	Refresh();
 	return *this;
 }
 
 EditField& EditField::NullText(const Image& icon, const char *text, Color ink)
 {
-	return NullText(icon, text, GetFont().Italic(), ink);
+	return NullText(icon, text, Null, ink);
 }
 
 EditField& EditField::NullText(const char *text, Font fnt, Color ink)
@@ -1090,7 +1095,7 @@ EditField& EditField::NullText(const char *text, Font fnt, Color ink)
 
 EditField& EditField::NullText(const char *text, Color ink)
 {
-	return NullText(text, GetFont().Italic(), ink);
+	return NullText(text, Null, ink);
 }
 
 EditField::EditField()
