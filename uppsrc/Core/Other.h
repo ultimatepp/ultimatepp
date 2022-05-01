@@ -125,16 +125,16 @@ public:
 	String GetString(int ii) const              { String r; GetData(ii, [&](const char *s, int n) { r = String(s, n); }); return r; }
 	
 	void   SetInt(int ii, int val)              { SetData(ii, &val, sizeof(int)); }
-	int    GetInt(int ii, int def)              { return Get<int>(ii, def); }
+	int    GetInt(int ii, int def) const        { return Get<int>(ii, def); }
 
 	void   SetDword(int ii, dword val)          { SetData(ii, &val, sizeof(dword)); }
-	int    GetDword(int ii, dword def)          { return Get<dword>(ii, def); }
+	int    GetDword(int ii, dword def) const    { return Get<dword>(ii, def); }
 
 	void   SetInt64(int ii, int64 val)          { SetData(ii, &val, sizeof(int64)); }
-	int    GetInt64(int ii, int64 def)          { return Get<int64>(ii, def); }
+	int    GetInt64(int ii, int64 def) const    { return Get<int64>(ii, def); }
 
 	void   SetPtr(int ii, void *val)            { SetData(ii, &val, sizeof(void *)); }
-	void  *GetPtr(int ii)                       { return Get<void *>(ii, nullptr); }
+	void  *GetPtr(int ii) const                 { return Get<void *>(ii, nullptr); }
 	
 	void   Clear();
 

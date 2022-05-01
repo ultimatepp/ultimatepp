@@ -80,6 +80,11 @@ void DropList::Drop() {
 	list.PopUp(this, dropwidth);
 }
 
+void DropList::DropPush()
+{
+	Drop();
+}
+
 void DropList::Select() {
 	int c = list.GetCursor();
 	if(c >= 0)
@@ -270,7 +275,7 @@ DropList::DropList()
 	dropfocus = false;
 	notnull = false;
 	alwaysdrop = false;
-	SetupDropPush([=] { Drop(); });
+	SetupDropPush();
 	NoInitFocus();
 	EnableDrop(false);
 	list.Normal();

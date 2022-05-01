@@ -1,6 +1,6 @@
 void DropEdge_Write(Value);
 
-class PopUpTable : public ArrayCtrl {
+class PopUpTable : public ArrayCtrl { // deprecated, replaced with PopUpList
 public:
 	virtual void LeftUp(Point p, dword keyflags);
 	virtual bool Key(dword key, int);
@@ -39,12 +39,57 @@ public:
 	virtual ~PopUpTable();
 };
 
+class PopUpList {
+protected:
+	void PopupDeactivate();
+	void PopupCancelMode();
+
+	struct Popup : ArrayCtrl {
+		PopUpList *list;
+		
+		virtual void LeftUp(Point p, dword keyflags);
+		virtual bool Key(dword key, int);
+		virtual void Deactivate() { list->PopupDeactivate(); }
+		virtual void CancelMode() { list->PopupCancelMode(); }
+		
+		Popup(PopUpList *list);
+	};
+
+	Vector<Value> items;
+	One<Popup>    popup;
+	int16         droplines;
+	int16         inpopup;
+
+	void          DoSelect();
+	void          DoCancel();
+	void          DoClose();
+	
+	friend class Popup;
+
+public:
+	virtual void Select();
+	virtual void Cancel();
+
+	void         PopUp(Ctrl *owner, int x, int top, int bottom, int width);
+	void         PopUp(Ctrl *owner, int width);
+	void         PopUp(Ctrl *owner);
+	
+	void         Clear();
+	void         Add(const Value& v);
+
+	PopUpList&   SetDropLines(int _droplines)          { droplines = _droplines; return *this; }
+
+	PopUpList();
+	virtual ~PopUpList();
+};
+
 class DropList : public MultiButton, public Convert {
 public:
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual bool  Key(dword key, int);
 	virtual void  SetData(const Value& data);
 	virtual Value GetData() const;
+	virtual void  DropPush();
 
 	virtual Value Format(const Value& q) const;
 

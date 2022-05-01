@@ -325,6 +325,7 @@ void EditField::Paint(Draw& w)
 		w.Clipoff(lspace, no_internal_margin ? 0 : yy, sz.cx - lspace - rspace, no_internal_margin ? 0 : fcy);
 	int x = -sc;
 	String nulltext = GetTextAttr(ATTR_NULLTEXT);
+	Image nullicon = GetAttr<Image>(ATTR_NULLICON);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		WString nt = nulltext.ToWString();
 		const wchar *txt = nt;
@@ -1055,6 +1056,7 @@ void EditField::Reset()
 	showspaces = false;
 	no_internal_margin = false;
 	fsell = fselh = -1;
+	DeleteAttr<Image>(ATTR_NULLICON);
 }
 
 EditField& EditField::SetFont(Font _font)
@@ -1073,7 +1075,8 @@ EditField& EditField::SetColor(Color c)
 
 EditField& EditField::NullText(const Image& icon, const char *text, Font fnt, Color ink)
 {
-	nullicon = icon;
+	if(!IsNull(icon))
+		CreateAttr<Image>(ATTR_NULLICON) = icon;
 	String h = text;
 	h << " ";
 	SetTextAttr(ATTR_NULLTEXT, h);
@@ -1106,6 +1109,9 @@ EditField::EditField()
 	WhenBar = THISBACK(StdBar);
 }
 
-EditField::~EditField() {}
+EditField::~EditField()
+{
+	DeleteAttr<Image>(ATTR_NULLICON);
+}
 
 }

@@ -113,7 +113,7 @@ void Ctrl::SetColorAttr(int ii, Color c)
 		attrs.SetDword(ii, c.GetRaw());
 }
 
-Color Ctrl::GetColorAttr(int ii)
+Color Ctrl::GetColorAttr(int ii) const
 {
 	if(layout_id_literal)
 		return Null;
@@ -130,7 +130,7 @@ void Ctrl::SetFontAttr(int ii, Font fnt)
 		attrs.SetInt64(ii, fnt.AsInt64());
 }
 
-Font Ctrl::GetFontAttr(int ii)
+Font Ctrl::GetFontAttr(int ii) const
 {
 	if(layout_id_literal)
 		return Null;
@@ -143,7 +143,7 @@ void Ctrl::SetIntAttr(int ii, int val)
 	Attrs().SetInt(ii, val);
 }
 
-int Ctrl::GetIntAttr(int ii, int def)
+int Ctrl::GetIntAttr(int ii, int def) const
 {
 	if(layout_id_literal)
 		return Null;
@@ -158,7 +158,7 @@ void Ctrl::SetVoidPtrAttr(int ii, const void *ptr)
 		Attrs().SetNull(ii);
 }
 
-void *Ctrl::GetVoidPtrAttr(int ii)
+void *Ctrl::GetVoidPtrAttr(int ii) const
 {
 	if(layout_id_literal)
 		return NULL;

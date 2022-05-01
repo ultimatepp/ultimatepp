@@ -94,7 +94,6 @@ private:
 
 	DisplayPopup     info;
 	Array<SubButton> buttons;
-	Event<>          DropPush; // mode for droplist with single button
 
 	Value            value;
 	Value            error;
@@ -110,6 +109,7 @@ private:
 	int16            hl;
 	bool             push:1;
 	bool             nobg:1;
+	bool             droppush:1;
 
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
@@ -128,19 +128,26 @@ private:
 	void DoPush(int i);
 	void MultiButtons();
 	SubButton& Button(int i) const;
+	bool HasMain() const;
+	void MainPush();
+	void MainClick();
 
 	friend class SubButton;
 	friend class MultiButtonFrame;
 
 protected:
 	enum {
-		ATTR_TIP = Ctrl::ATTR_LAST,
+		ATTR_ONCLICK = Ctrl::ATTR_LAST,
+		ATTR_ONPUSH,
+		ATTR_TIP,
 		ATTR_LAST
 	};
 
+	virtual void DropPush();
+
 public:
-	Event<>  WhenPush;
-	Event<>  WhenClick;
+	void OnPush(Callback cb);
+	void OnClick(Callback cb);
 
 	static const Style& StyleDefault();
 	static const Style& StyleFrame();
@@ -180,9 +187,10 @@ public:
 
 	MultiButton& SetStyle(const Style& s)            { style = &s; Refresh(); return *this; }
 	
-	void SetupDropPush(Event<> push)                 { DropPush = push; }
+	void SetupDropPush()                             { droppush = true; }
 
 	MultiButton();
+	~MultiButton();
 };
 
 class MultiButtonFrame : public MultiButton, public CtrlFrame {

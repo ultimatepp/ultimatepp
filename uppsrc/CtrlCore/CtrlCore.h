@@ -815,16 +815,25 @@ protected:
 	String GetTextAttr(int ii) const;
 	
 	void   SetColorAttr(int ii, Color c);
-	Color  GetColorAttr(int ii);
+	Color  GetColorAttr(int ii) const;
 	
 	void   SetFontAttr(int ii, Font fnt);
-	Font   GetFontAttr(int ii);
+	Font   GetFontAttr(int ii) const;
 	
 	void   SetIntAttr(int ii, int val);
-	int    GetIntAttr(int ii, int def = Null);
+	int    GetIntAttr(int ii, int def = Null) const;
 	
 	void   SetVoidPtrAttr(int ii, const void *ptr);
-	void  *GetVoidPtrAttr(int ii);
+	void  *GetVoidPtrAttr(int ii) const;
+	
+	template <class T>
+	T&    CreateAttr(int ii)      { T *q = new T; SetVoidPtrAttr(ii, q); return *q; }
+	
+	template <class T>
+	T     GetAttr(int ii) const   { void *p = GetVoidPtrAttr(ii); return p ? *(T *)p : T(); }
+
+	template <class T>
+	void  DeleteAttr(int ii)      { void *p = GetVoidPtrAttr(ii); if(p) { delete (T *)p; SetVoidPtrAttr(ii, nullptr); }; }
 	
 public:
 	enum StateReason {

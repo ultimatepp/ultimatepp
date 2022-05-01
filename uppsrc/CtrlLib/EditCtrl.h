@@ -93,6 +93,7 @@ protected:
 		ATTR_TEXTCOLOR = Ctrl::ATTR_LAST,
 		ATTR_INACTIVE_CONVERT,
 		ATTR_CHARFILTER,
+		ATTR_NULLICON,
 		ATTR_NULLTEXT,
 		ATTR_NULLINK,
 		ATTR_NULLFONT,
@@ -108,7 +109,6 @@ protected:
 	const Style    *style;
 	CharFilter      filter;
 	const Convert  *convert;
-	Image           nullicon;
 
 	Font            font;
 

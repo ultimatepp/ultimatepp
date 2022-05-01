@@ -679,7 +679,7 @@ RichEdit::RichEdit()
 
 	language <<= THISBACK(SetLanguage);
 	language.Tip(t_("Language"));
-	language.WhenClick = THISBACK(Language);
+	language.OnClick(THISBACK(Language));
 	language.Add(0, t_("None"));
 
 	for(int i = 0; fh[i]; i++)

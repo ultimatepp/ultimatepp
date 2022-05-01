@@ -115,12 +115,12 @@ MultiButton::SubButton& MultiButton::SubButton::Show(bool b)
 
 void MultiButton::MultiButtons()
 {
-	if(DropPush) {
+	if(droppush) {
 		SubButton& b = buttons.Add();
 		b.owner = this;
-		b.WhenPush = DropPush;
+		b.WhenPush = [=] { DropPush(); };
 		b.main = true;
-		DropPush.Clear();
+		droppush = false;
 	}
 }
 
@@ -154,14 +154,14 @@ void MultiButton::Reset()
 
 int MultiButton::GetButtonCount() const
 {
-	if(DropPush)
+	if(droppush)
 		return 1;
 	return buttons.GetCount();
 }
 
 MultiButton::SubButton& MultiButton::Button(int i) const
 {
-	if(DropPush) {
+	if(droppush) {
 		static SubButton b;
 		b.main = true;
 		return b;
@@ -283,7 +283,7 @@ int MultiButton::FindButton(int px)
 		if(GetPos(b, lx, rx, x, cx, px))
 			return b.enabled ? i : Null;
 	}
-	if(WhenPush || WhenClick)
+	if(HasMain())
 		return MAIN;
 	if(display)
 		for(int i = 0; i < GetButtonCount(); i++)
@@ -454,7 +454,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 		Color p = paper;
 		if(frm && style->activeedge && HasFocus())
 			p = SColorHighlight();
-		if(hotpressed && (WhenPush || WhenClick))
+		if(hotpressed && HasMain())
 			p = Nvl(fpaper, paper);
 		if(IsEnabled() && IsEditable())
 			p = Nvl(p, style->paper);
@@ -639,7 +639,7 @@ void MultiButton::MouseMove(Point p, dword flags)
 
 void MultiButton::DoPush(int i)
 {
-	if(i == 0 && DropPush)
+	if(i == 0 && droppush)
 		DropPush();
 	else
 		Button(i).WhenPush();
@@ -665,7 +665,7 @@ void MultiButton::LeftDown(Point p, dword flags)
 		if(hl >= 0)
 			DoPush(hl);
 		else
-			WhenPush();
+			MainPush();
 	}
 	SyncInfo();
 }
@@ -679,7 +679,7 @@ void MultiButton::LeftUp(Point p, dword flags)
 		if(hl >= 0)
 			Button(hl).WhenClick();
 		else
-			WhenClick();
+			MainClick();
 	}
 	SyncInfo();
 }
@@ -703,7 +703,7 @@ void MultiButton::CancelMode()
 
 bool MultiButton::IsTrivial() const
 {
-	return GetButtonCount() == 1 && IsNull(Button(0).img) && !WhenPush && !WhenClick;
+	return GetButtonCount() == 1 && IsNull(Button(0).img) && !HasMain();
 }
 
 MultiButton& MultiButton::SetDisplay(const Display& d)
@@ -786,14 +786,41 @@ void MultiButton::PseudoPush(int bi)
 void MultiButton::PseudoPush()
 {
 	hl = MAIN;
-	WhenPush();
+	MainPush();
 	Sync();
 	Sleep(50);
-	WhenClick();
+	MainClick();
 	hl = NONE;
 	push = false;
 	Sync();
 }
+
+void MultiButton::OnPush(Callback cb)
+{
+	CreateAttr<Event<>>(ATTR_ONPUSH) = cb;
+}
+
+void MultiButton::OnClick(Callback cb)
+{
+	CreateAttr<Event<>>(ATTR_ONCLICK) = cb;
+}
+
+bool MultiButton::HasMain() const
+{
+	return GetAttr<Event<>>(ATTR_ONPUSH) || GetAttr<Event<>>(ATTR_ONCLICK);
+}
+
+void MultiButton::MainPush()
+{
+	GetAttr<Event<>>(ATTR_ONPUSH)();
+}
+
+void MultiButton::MainClick()
+{
+	GetAttr<Event<>>(ATTR_ONCLICK)();
+}
+
+void MultiButton::DropPush() {}
 
 MultiButton::MultiButton()
 {
@@ -806,7 +833,16 @@ MultiButton::MultiButton()
 	SetFrame(sNullFrame());
 	nobg = false;
 	hl = NONE;
+	droppush = false;
 }
+
+MultiButton::~MultiButton()
+{
+	DeleteAttr<Event<>>(ATTR_ONPUSH);
+	DeleteAttr<Event<>>(ATTR_ONCLICK);
+}
+
+// 
 
 void MultiButtonFrame::FrameAdd(Ctrl& parent)
 {
