@@ -9,7 +9,7 @@
 	#define	tif_uint32 unsigned int
 #endif
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  // LOG(x)
 
 // #define DBGALLOC 1
 
@@ -601,10 +601,9 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	String tmpfile;
 	FileStream filebuffer;
 	struct Row {
-		Row() : x(0), size(0) {}
+		Row() {}
 
 		Buffer<byte> mapping;
-		int x, size;
 	};
 	enum { MAX_CACHE_SIZE = 50000000 };
 	RGBA palette[256];
@@ -779,19 +778,17 @@ byte *TIFRaster::Data::MapDown(int x, int y, int count, bool read)
 	else {
 		ASSERT(filebuffer.IsOpen());
 		Row& row = rows[y];
-		if(row.size >= count && row.x <= x && row.x + row.size >= x + count)
-			return &row.mapping[x - row.x];
-		if(cache_size + count >= MAX_CACHE_SIZE)
-			Flush();
-		row.mapping.Alloc(count);
-		row.x = x;
-		row.size = count;
-		cache_size += count;
-		if(read) {
-			filebuffer.Seek(row_bytes * y + x);
-			filebuffer.GetAll(row.mapping, count);
+		if(!row.mapping) {
+			if(cache_size * row_bytes >= MAX_CACHE_SIZE)
+				Flush();
+			row.mapping.Alloc(row_bytes, 0);
+			cache_size++;
+			if(read) {
+				filebuffer.Seek(row_bytes * y);
+				filebuffer.GetAll(row.mapping, count);
+			}
 		}
-		return row.mapping;
+		return row.mapping + x;
 	}
 }
 
@@ -806,13 +803,11 @@ void TIFRaster::Data::Flush()
 void TIFRaster::Data::Flush(int y)
 {
 	Row& row = rows[y];
-	if(filebuffer.IsOpen() && row.size > 0) {
-		int64 fpos = row_bytes * y + row.x;
-//		RLOG("writing row " << y << " from " << fpos << " + " << row.size << " = " << (fpos + row.size));
-		filebuffer.Seek(fpos);
-		filebuffer.Put(row.mapping, row.size);
-		cache_size -= row.size;
-		row.size = 0;
+	if(filebuffer.IsOpen() && row.mapping) {
+		LLOG("writing row " << y << " from " << fpos << " + " << row.size << " = " << (fpos + row.size));
+		filebuffer.Seek(row_bytes * y);
+		filebuffer.Put(row.mapping, row_bytes);
+		cache_size--;
 		row.mapping.Clear();
 	}
 }
