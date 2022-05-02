@@ -847,15 +847,23 @@ Image MirrorVert(const Image& img)
 
 Image FlipImage(const Image& m, int mode)
 {
-	return decode(mode,
-	              FLIP_MIRROR_HORZ, MirrorHorz(m),
-	              FLIP_ROTATE_180, Rotate180(m),
-	              FLIP_MIRROR_VERT, MirrorVert(m),
-	              FLIP_TRANSPOSE, Transpose(m),
-	              FLIP_ROTATE_CLOCKWISE, RotateClockwise(m),
-	              FLIP_TRANSVERSE, Transverse(m),
-	              FLIP_ROTATE_ANTICLOCKWISE, RotateAntiClockwise(m),
-	              m);
+	switch(mode) {
+	case FLIP_MIRROR_HORZ:
+		return MirrorHorz(m);
+	case FLIP_ROTATE_180:
+		return Rotate180(m);
+	case FLIP_MIRROR_VERT:
+		return MirrorVert(m);
+	case FLIP_TRANSPOSE:
+		return Transpose(m);
+	case FLIP_ROTATE_CLOCKWISE:
+		return RotateClockwise(m);
+	case FLIP_TRANSVERSE:
+		return Transverse(m);
+	case FLIP_ROTATE_ANTICLOCKWISE:
+		return RotateAntiClockwise(m);
+	}
+	return m;
 }
 
 static Pointf Cvp(double x, double y, double sina, double cosa)
