@@ -12,24 +12,24 @@ AskContinue()
 uname=`uname`
 
 if [ -x "$(command -v apt-get)" ]; then
-  DEP="apt-get install g++ clang make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool"
+  DEP="apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool"
 elif [ -x "$(command -v yum)" ]; then
-  DEP="yum install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="yum install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v dnf)" ]; then
-  DEP="dnf install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="dnf install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v urpmi)" ]; then
-  DEP="urpmi install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="urpmi install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v zypper)" ]; then
-  DEP="zypper install gcc-c++ clang make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
+  DEP="zypper install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif [ -x "$(command -v pacman)" ]; then
-  DEP="pacman -Sy --needed gcc make zlib bzip2 gtk3 libnotify openssl clang pkgconfig gdb"
+  DEP="pacman -Sy --needed gcc clang git make zlib bzip2 gtk3 libnotify openssl pkgconf gdb"
 elif [ -x "$(command -v pkg)" ]; then
-  DEP="pkg install bash gmake gtk3 libnotify llvm90 pkgconf"
+  DEP="pkg install bash gmake git gtk3 libnotify llvm90 pkgconf"
   if [[ "$uname" == 'SunOS' ]]; then
-     DEP="pkg install bash gtk3 libnotify developer/clang-80 build-essential"
+     DEP="pkg install bash git gtk3 libnotify developer/clang-80 build-essential"
   fi
 elif [ -x "$(command -v pkg_add)" ]; then
-  DEP="pkg_add bash gmake gtk3 libnotify clang-devel"
+  DEP="pkg_add bash git gmake gtk3 libnotify clang-devel"
 fi
 
 if [[ "$uname" == 'OpenBSD' ]]; then
