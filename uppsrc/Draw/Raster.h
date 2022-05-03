@@ -144,10 +144,13 @@ public:
 	virtual const RGBA *GetPalette();
 	virtual const RasterFormat *GetFormat();
 
+	virtual Value   GetMetaData(String id);
+	virtual void    EnumMetaData(Vector<String>& id_list);
+
 	int    GetWidth()                              { return GetSize().cx; }
 	int    GetHeight()                             { return GetSize().cy; }
 	Line   operator[](int i)                       { return GetLine(i); }
-	
+
 	Image  GetImage(int x, int y, int cx, int cy, const Gate<int, int> progress = Null);
 	Image  GetImage(const Gate<int, int> progress = Null);
 

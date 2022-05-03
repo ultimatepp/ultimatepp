@@ -583,9 +583,11 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	};
 	Array<Page>      pages;
 	int              page_index;
+	
+	VectorMap<String, Value> attr;
 
-	byte *MapDown(int x, int y, int count, bool read);
-	byte *MapUp(int x, int y, int count, bool read);
+	byte *MapDown(int x, int y, int count);
+	byte *MapUp(int x, int y, int count);
 	void  Flush();
 	void  Flush(int y);
 
@@ -634,7 +636,7 @@ static void packTileRGB(TIFRaster::Data *helper, uint32 x, uint32 y, uint32 w, u
 		const byte *src = (const byte *)helper->buffer.Begin();
 	//	unsigned srow = sizeof(uint32) * w; //, drow = helper->dest.GetUpRowBytes();
 		for(; h; h--, /*src += srow,*/ /*dest += drow*/ y++) {
-			for(byte *dest = helper->MapUp(x4, y, w4, false), *end = dest + w4; dest < end; dest += 4, src += 4) {
+			for(byte *dest = helper->MapUp(x4, y, w4), *end = dest + w4; dest < end; dest += 4, src += 4) {
 				dest[0] = src[2];
 				dest[1] = src[1];
 				dest[2] = src[0];
@@ -648,7 +650,7 @@ static void packTileRGB(TIFRaster::Data *helper, uint32 x, uint32 y, uint32 w, u
 		const byte *src = (const byte *)helper->buffer.Begin();
 	//	unsigned srow = sizeof(uint32) * w; //, drow = helper->dest.GetUpRowBytes();
 		for(; h; h--, /*src += srow,*/ /*dest += drow*/ y++) {
-			for(byte *dest = helper->MapUp(x3, y, w3, false), *end = dest + w3; dest < end; dest += 3, src += 4) {
+			for(byte *dest = helper->MapUp(x3, y, w3), *end = dest + w3; dest < end; dest += 3, src += 4) {
 				dest[0] = src[2];
 				dest[1] = src[1];
 				dest[2] = src[0];
@@ -674,7 +676,7 @@ static void putContig1(TIFFRGBAImage *img, tif_uint32 *cp,
 	const byte *src = pp;
 	int srow = (fromskew + w - 1) / helper->skewfac + 1;
 	for(; h; h--, y += drow /*dest += drow*/, src += srow)
-		BltPack11(helper->MapUp(x8, y, w8, read), src, (byte)(x & 7), w);
+		BltPack11(helper->MapUp(x8, y, w8), src, (byte)(x & 7), w);
 }
 
 static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
@@ -694,7 +696,7 @@ static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
 	const byte *src = pp;
 	int srow = (fromskew + w - 1) / helper->skewfac + 1;
 	for(; h; h--, y += drow /*dest += drow*/, src += srow)
-		BltPack22(helper->MapUp(x4, y, w4, read), src, (byte)(x & 3), w);
+		BltPack22(helper->MapUp(x4, y, w4), src, (byte)(x & 3), w);
 }
 
 static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
@@ -715,7 +717,7 @@ static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
 	const byte *src = pp;
 	int srow = (fromskew + w - 1) / helper->skewfac + 1;
 	for(; h; h--, y /*dest*/ += drow, src += srow)
-		BltPack44(helper->MapUp(x2, y, w2, read), src, shift, w);
+		BltPack44(helper->MapUp(x2, y, w2), src, shift, w);
 }
 
 static void putContig8(TIFFRGBAImage *img, tif_uint32 *cp,
@@ -732,7 +734,7 @@ static void putContig8(TIFFRGBAImage *img, tif_uint32 *cp,
 	const byte *src = pp;
 	int srow = (fromskew + w - 1) / helper->skewfac + 1;
 	for(; h; h--, y /*dest*/ += drow, src += srow)
-		memcpy(helper->MapUp(x, y, w, false), src, w);
+		memcpy(helper->MapUp(x, y, w), src, w);
 }
 
 static void putContigRGB(TIFFRGBAImage *img, tif_uint32 *cp, tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
@@ -766,12 +768,12 @@ static void putSeparate(TIFFRGBAImage *img, tif_uint32 *cp,
 	packTileRGB(helper, x, keep_y ? y : y - h + 1, w, h);
 }
 
-byte *TIFRaster::Data::MapUp(int x, int y, int count, bool read)
+byte *TIFRaster::Data::MapUp(int x, int y, int count)
 {
-	return MapDown(x, size.cy - 1 - y, count, read);
+	return MapDown(x, size.cy - 1 - y, count);
 }
 
-byte *TIFRaster::Data::MapDown(int x, int y, int count, bool read)
+byte *TIFRaster::Data::MapDown(int x, int y, int count)
 {
 	if(!imagebuf.IsEmpty())
 		return &imagebuf[row_bytes * y] + x;
@@ -783,10 +785,8 @@ byte *TIFRaster::Data::MapDown(int x, int y, int count, bool read)
 				Flush();
 			row.mapping.Alloc(row_bytes, 0);
 			cache_size++;
-			if(read) {
-				filebuffer.Seek(row_bytes * y);
-				filebuffer.GetAll(row.mapping, count);
-			}
+			filebuffer.Seek(row_bytes * y);
+			filebuffer.GetAll(row.mapping, count);
 		}
 		return row.mapping + x;
 	}
@@ -895,6 +895,84 @@ bool TIFRaster::Data::Create()
 			if(sampletypes[e] == EXTRASAMPLE_ASSOCALPHA) {
 				page.alpha = true;
 				break;
+			}
+		
+		if(i == 0) {
+				const word TIFFTAG_GEOPIXELSCALE = 33550,
+				           TIFFTAG_GEOTIEPOINTS = 33922,
+				           TIFFTAG_GEOTRANSMATRIX = 34264,
+				           TIFFTAG_GEOKEYDIRECTORY = 34735,
+				           TIFFTAG_GEODOUBLEPARAMS = 34736,
+				           TIFFTAG_GEOASCIIPARAMS = 34737;
+
+				word count = 0;
+				word *geokeys = nullptr;
+				bool pixel_is_area = false;
+				
+				if(TIFFGetField(tiff, TIFFTAG_GEOKEYDIRECTORY, &count, &geokeys) &&
+					count >= 4 && (count % 4) == 0 && geokeys[0] == 1)
+					for(int i = 4; i + 3 < count; i += 4) {
+						const word GTRasterTypeGeoKey = 1025,
+						           RasterPixelIsArea = 1,
+						           GeographicTypeGeoKey = 2048,
+						           ProjectedCSTypeGeoKey = 3072;
+
+						word value = geokeys[i + 3];
+						
+						switch(geokeys[i]) {
+						case GTRasterTypeGeoKey:
+							pixel_is_area = value == RasterPixelIsArea;
+							break;
+						case GeographicTypeGeoKey:
+						case ProjectedCSTypeGeoKey:
+							attr.GetAdd("epsg") = value;
+							break;
+						}
+					}
+
+				double geomatrix[6];
+		        geomatrix[0] = 0.0;
+		        geomatrix[1] = 1.0;
+		        geomatrix[2] = 0.0;
+		        geomatrix[3] = 0.0;
+		        geomatrix[4] = 0.0;
+		        geomatrix[5] = 1.0;
+		    
+		        double  *data;
+		        auto FinishMatrix = [&] {
+					if(!pixel_is_area) {
+						geomatrix[0] -= (geomatrix[1] * 0.5 + geomatrix[2] * 0.5);
+						geomatrix[3] -= (geomatrix[4] * 0.5 + geomatrix[5] * 0.5);
+					}
+					
+					ValueArray va;
+					for(int i = 0; i < 6; i++)
+						va << geomatrix[i];
+					attr.GetAdd("geo_matrix") = va;
+		        };
+
+				if(TIFFGetField(tiff, TIFFTAG_GEOTRANSMATRIX, &count, &data) && count == 16) {
+					geomatrix[0] = data[3];
+					geomatrix[1] = data[0];
+					geomatrix[2] = data[1];
+					geomatrix[3] = data[7];
+					geomatrix[4] = data[4];
+					geomatrix[5] = data[5];
+
+					FinishMatrix();
+				}
+				else
+				if(TIFFGetField(tiff, TIFFTAG_GEOPIXELSCALE, &count, &data) &&
+				   count >= 2 && data[0] && data[1]) {
+					geomatrix[1] = data[0];
+					geomatrix[5] = -abs(data[1]);
+					if(TIFFGetField(tiff, TIFFTAG_GEOTIEPOINTS, &count, &data) && count >= 6) {
+						geomatrix[0] = data[3] - data[0] * geomatrix[1];
+						geomatrix[3] = data[4] - data[1] * geomatrix[5];
+						
+						FinishMatrix();
+					}
+				}
 			}
 	}
 	return SeekPage(0);
@@ -1063,7 +1141,7 @@ Raster::Line TIFRaster::Data::GetLine(int line, Raster *raster)
 	}
 	if(!imagebuf.IsEmpty())
 		return Raster::Line(&imagebuf[row_bytes * line], raster, false);
-	const byte *data = MapDown(0, line, row_bytes, raster);
+	const byte *data = MapDown(0, line, row_bytes);
 	byte *tmp = new byte[row_bytes];
 	memcpy(tmp, data, row_bytes);
 	return Raster::Line(tmp, raster, true);
@@ -1126,6 +1204,16 @@ int TIFRaster::GetActivePage() const
 void TIFRaster::SeekPage(int n)
 {
 	data->SeekPage(n);
+}
+
+Value TIFRaster::GetMetaData(String id)
+{
+	return data->attr.Get(id, Value());
+}
+
+void TIFRaster::EnumMetaData(Vector<String>& id_list)
+{
+	id_list = clone(data->attr.GetKeys());
 }
 
 class TIFEncoder::Data {
