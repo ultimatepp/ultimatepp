@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#define LAYOUTFILE <Gui16/dlg.lay>
+#define LAYOUTFILE <Gui16a/dlg.lay>
 #include <CtrlCore/lay.h>
 
 struct MyAppWindow : public WithDlgLayout<TopWindow> {
