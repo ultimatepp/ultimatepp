@@ -45,6 +45,3 @@ uses
 file
 	main.cpp;
 
-mainconfig
-	"" = "GUI";
-

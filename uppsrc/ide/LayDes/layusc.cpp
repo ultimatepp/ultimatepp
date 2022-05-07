@@ -73,7 +73,7 @@ void LayUscClean()
 
 bool LayUscParse(CParser& p)
 {
-	if(p.Id("namespace")) {
+	if(p.Id("namespace")) {	
 		CurrentNamespace.Clear();
 		for(;;)
 			if(p.IsId())

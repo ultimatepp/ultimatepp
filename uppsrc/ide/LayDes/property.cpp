@@ -175,7 +175,7 @@ struct BoolProperty : public EditorProperty<Option> {
 };
 
 struct ColorProperty : public EditorProperty<ColorPusher> {
-	virtual String   Save() const           { return "Upp::" + FormatColor(~editor); }
+	virtual String   Save() const           { return FormatColor(~editor); }
 	virtual void     Read(CParser& p);
 
 	void FontChanged();
@@ -204,7 +204,7 @@ void ColorProperty::Read(CParser& p)
 		editor.SetData(Null);
 		return;
 	}
-	p.Char(':'); //
+	p.Char(':');
 	editor.SetData(ReadColor(p));
 }
 
