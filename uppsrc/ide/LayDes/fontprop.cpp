@@ -95,7 +95,7 @@ FontDlg::FontDlg()
 }
 
 struct FontProperty : public EditorProperty<DataPusher> {
-	virtual String   Save() const           { return FormatFont(~editor); }
+	virtual String   Save() const           { return "Upp::" + FormatFont(~editor); }
 	virtual void     Read(CParser& p);
 
 	One<FontDlg> fdlg;

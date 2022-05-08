@@ -1,7 +1,6 @@
-LAYOUT(DlgLayout, 208, 112)
-	ITEM(Label, dv___0, SetLabel(t_("Label")).LeftPosZ(8, 36).TopPosZ(8, 19))
-	ITEM(EditString, text, SetFrame(InsetFrame()).LeftPosZ(48, 92).TopPosZ(8, 19))
-	ITEM(Option, option, SetLabel(t_("Option")).LeftPosZ(8, 108).TopPosZ(32, 15))
-	ITEM(Label, dv___3, SetLabel(t_("TEST")).SetFont(Monospace().Italic()).SetInk(Color(170, 42, 0)).LeftPosZ(12, 40).TopPosZ(60, 19))
+LAYOUT(DlgLayout, 208, 64)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Label")).LeftPosZ(8, 36).TopPosZ(8, 19))
+	ITEM(Upp::EditString, text, LeftPosZ(48, 92).TopPosZ(8, 19))
+	ITEM(Upp::Option, option, SetLabel(t_("Option")).LeftPosZ(8, 108).TopPosZ(32, 15))
 END_LAYOUT
 
