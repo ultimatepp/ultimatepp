@@ -94,7 +94,6 @@ public:
 	Size  GetSize() const               { return size; }
 	int   GetWidth() const              { return size.cx; }
 	int   GetHeight() const             { return size.cy; }
-
 	size_t GetLength() const            { return (size_t)size.cx * size.cy; }
 
 	RGBA *operator[](int i)             { return Line(i); }

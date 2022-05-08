@@ -31,8 +31,6 @@ bool IsImgFile(const String& path)
 
 struct ImageViewModule : public IdeModule {
 	virtual String       GetID() { return "ImageViewModule"; }
-	virtual void CleanUsc() {}
-	virtual bool ParseUsc(CParser& p) { return false; }
 	virtual Image FileIcon(const char *path) {
 		return IsImgFile(path) ? IconDesImg::FileIcon() : Null;
 	}

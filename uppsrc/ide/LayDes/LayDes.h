@@ -60,8 +60,13 @@ struct LayoutType : Moveable<LayoutType> {
 	LayoutType()               { iconsize[0] = iconsize[1] = Null; }
 };
 
-VectorMap<String, VectorMap<String, String> >& LayoutEnums();
-VectorMap<String, LayoutType>&                 LayoutTypes();
+struct LayoutEnum : Moveable<LayoutEnum> {
+	String                    name_space;
+	VectorMap<String, String> items;
+};
+
+VectorMap<String, LayoutEnum>& LayoutEnums();
+VectorMap<String, LayoutType>& LayoutTypes();
 
 Point ReadPoint(CParser& p);
 

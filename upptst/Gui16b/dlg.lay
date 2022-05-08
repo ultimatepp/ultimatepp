@@ -1,0 +1,8 @@
+LAYOUT(DlgLayout, 208, 172)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Label")).LeftPosZ(8, 36).TopPosZ(8, 19))
+	ITEM(Upp::EditString, text, SetFrame(Upp::FieldFrame()).LeftPosZ(48, 92).TopPosZ(8, 19))
+	ITEM(Upp::Option, option, SetLabel(t_("Option")).LeftPosZ(8, 108).TopPosZ(32, 15))
+	ITEM(Upp::Label, dv___3, SetLabel(t_("Test")).SetAlign(Upp::ALIGN_CENTER).SetFont(Upp::SerifZ(15).Underline()).SetInk(Upp::LtBlue).SetFrame(Upp::ThinInsetFrame()).LeftPosZ(16, 156).TopPosZ(52, 44))
+	ITEM(Upp::WithDropChoice<Upp::EditInt>, dv___4, LeftPosZ(16, 64).TopPosZ(112, 19))
+END_LAYOUT
+

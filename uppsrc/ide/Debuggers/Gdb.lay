@@ -1,16 +1,16 @@
 LAYOUT(QuickwatchLayout, 400, 372)
-	ITEM(WithDropChoice<EditString>, expression, HSizePosZ(4, 4).TopPosZ(4, 19))
-	ITEM(LineEdit, value, HSizePosZ(4, 4).VSizePosZ(28, 32))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 164).BottomPosZ(6, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(76, 64).BottomPosZ(6, 22))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, expression, HSizePosZ(4, 4).TopPosZ(4, 19))
+	ITEM(Upp::LineEdit, value, HSizePosZ(4, 4).VSizePosZ(28, 32))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 164).BottomPosZ(6, 22))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(76, 64).BottomPosZ(6, 22))
 END_LAYOUT
 
 LAYOUT(GotoMemoryLayout, 384, 64)
-	ITEM(Label, dv___0, SetLabel(t_("Address")).LeftPosZ(8, 48).TopPosZ(8, 19))
-	ITEM(EditString, adr, LeftPosZ(60, 208).TopPosZ(8, 19))
-	ITEM(Label, dv___2, SetLabel(t_("bytes")).LeftPosZ(276, 36).TopPosZ(8, 19))
-	ITEM(WithDropChoice<EditInt>, count, LeftPosZ(312, 64).TopPosZ(8, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 84).BottomPosZ(6, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Address")).LeftPosZ(8, 48).TopPosZ(8, 19))
+	ITEM(Upp::EditString, adr, LeftPosZ(60, 208).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("bytes")).LeftPosZ(276, 36).TopPosZ(8, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditInt>, count, LeftPosZ(312, 64).TopPosZ(8, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 84).BottomPosZ(6, 22))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
 END_LAYOUT
 

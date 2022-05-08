@@ -55,10 +55,10 @@ void CleanUsc()
 	Escape(UscGlobal(), "dump(x)", ESC_dump);
 }
 
-static bool (*sIdeModuleUsc)(CParser& p);
+static bool (*sIdeModuleUsc)(CParser& p, String&);
 static void (*sReadMacro)(CParser& p);
 
-void SetIdeModuleUsc(bool (*IdeModuleUsc)(CParser& p))
+void SetIdeModuleUsc(bool (*IdeModuleUsc)(CParser& p,String&))
 {
 	sIdeModuleUsc = IdeModuleUsc;
 }
@@ -72,6 +72,7 @@ void ParseUscFile(const char *filename)
 {
 	String d = LoadFile(filename);
 	try {
+		String current_namespace;
 		CParser p(d, filename);
 		while(!p.IsEof()) {
 			if(p.Id("fn")) {
@@ -82,7 +83,7 @@ void ParseUscFile(const char *filename)
 			if(p.Id("macro") && sReadMacro)
 				sReadMacro(p);
 			else
-			if(!sIdeModuleUsc || !sIdeModuleUsc(p)) {
+			if(!sIdeModuleUsc || !sIdeModuleUsc(p, current_namespace)) {
 				EscValue& v = UscGlobal().GetPut(p.ReadId());
 				v = ReadLambda(p);
 			}

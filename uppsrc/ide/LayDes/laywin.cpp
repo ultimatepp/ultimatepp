@@ -391,7 +391,7 @@ LayDesigner *CreateLayDesigner(const char *filename, byte charset, const char *c
 }
 
 void LayUscClean();
-bool LayUscParse(CParser& p);
+bool LayUscParse(CParser& p, String& current_namespace);
 void SerializeLayEditPos(Stream& s);
 
 bool IsLayFile(const char *path)
@@ -404,8 +404,8 @@ struct LayDesModule : public IdeModule {
 	virtual void CleanUsc() {
 		LayUscClean();
 	}
-	virtual bool ParseUsc(CParser& p) {
-		return LayUscParse(p);
+	virtual bool ParseUsc(CParser& p, String& current_namespace) {
+		return LayUscParse(p, current_namespace);
 	}
 	virtual Image FileIcon(const char *path) {
 		return IsLayFile(path) ? LayImg::Layout() : Null;
