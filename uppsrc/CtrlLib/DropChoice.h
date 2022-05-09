@@ -43,14 +43,21 @@ class PopUpList {
 protected:
 	void PopupDeactivate();
 	void PopupCancelMode();
-
-	struct Popup : ArrayCtrl {
+	
+	struct PopupArrayCtrl : ArrayCtrl {
 		PopUpList *list;
-		
+
 		virtual void LeftUp(Point p, dword keyflags);
 		virtual bool Key(dword key, int);
-		virtual void Deactivate() { list->PopupDeactivate(); }
-		virtual void CancelMode() { list->PopupCancelMode(); }
+	};
+
+	struct Popup : Ctrl {
+		PopUpList     *list;
+		PopupArrayCtrl ac;
+		bool           closing = false;
+		
+		virtual void Deactivate() { if(!closing) list->PopupDeactivate(); }
+		virtual void CancelMode() { if(!closing) list->PopupCancelMode(); }
 		
 		Popup(PopUpList *list);
 	};
@@ -76,7 +83,7 @@ public:
 	
 	void         Clear();
 	void         Add(const Value& v);
-
+	
 	PopUpList&   SetDropLines(int _droplines)          { droplines = _droplines; return *this; }
 
 	PopUpList();
@@ -99,7 +106,7 @@ private:
 	Value              value;
 	const Convert     *valueconvert;
 	const Display     *valuedisplay;
-	int                dropwidth;
+	int16              dropwidth;
 	bool               displayall:1;
 	bool               dropfocus:1;
 	bool               notnull:1;

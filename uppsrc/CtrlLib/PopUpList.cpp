@@ -8,7 +8,7 @@ CtrlFrame& DropFrame();
 void PopUpList::Clear()
 {
 	if(popup)
-		popup->SetVirtualCount(0);
+		popup->ac.SetVirtualCount(0);
 	items.Clear();
 }
 
@@ -16,15 +16,7 @@ void PopUpList::Add(const Value& v)
 {
 	items.Add(v);
 	if(popup)
-		popup->SetVirtualCount(items.GetCount());
-}
-
-void PopUpList::Select()
-{
-}
-
-void PopUpList::Cancel()
-{
+		popup->ac.SetVirtualCount(items.GetCount());
 }
 
 void PopUpList::PopupCancelMode() {
@@ -33,8 +25,10 @@ void PopUpList::PopupCancelMode() {
 }
 
 void PopUpList::DoClose() {
-	if(!inpopup)
+	if(!inpopup && popup) {
+		popup->closing = true; // prevent infinite recursion
 		popup.Clear();
+	}
 }
 
 void PopUpList::PopupDeactivate() {
@@ -44,12 +38,14 @@ void PopUpList::PopupDeactivate() {
 	}
 }
 
-void PopUpList::Popup::LeftUp(Point p, dword keyflags) {
+void PopUpList::PopupArrayCtrl::LeftUp(Point p, dword keyflags)
+{
 	ArrayCtrl::LeftUp(p, keyflags);
 	list->DoSelect();
 }
 
-bool PopUpList::Popup::Key(dword key, int n) {
+bool PopUpList::PopupArrayCtrl::Key(dword key, int n)
+{
 	switch(key) {
 	case K_ENTER:
 	case K_ALT_DOWN:
@@ -77,17 +73,18 @@ bool PopUpList::Popup::Key(dword key, int n) {
 PopUpList::Popup::Popup(PopUpList *list)
 :	list(list)
 {
-	SetFrame(DropFrame());
-	AddRowNumColumn().Accel().ConvertBy([=] (const Value& i) -> Value {
+	ac.list = list;
+	ac.SetFrame(DropFrame());
+	ac.AddRowNumColumn().Accel().ConvertBy([=] (const Value& i) -> Value {
 		return list->items[i];
 	});
-	NoHeader();
-	HeaderTab(0).SetMargin(0);
-	MouseMoveCursor();
-	NoGrid();
-	AutoHideSb();
-	SetLineCy(Draw::GetStdFontCy());
-	SetVirtualCount(list->items.GetCount());
+	ac.NoHeader();
+	ac.HeaderTab(0).SetMargin(0);
+	ac.MouseMoveCursor();
+	ac.NoGrid();
+	ac.AutoHideSb();
+	ac.SetLineCy(Draw::GetStdFontCy());
+	ac.SetVirtualCount(list->items.GetCount());
 }
 
 void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
@@ -96,8 +93,12 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	inpopup++;
 	DoClose();
 	popup.Create(this);
-	int h = popup->AddFrameSize(width, min(droplines * popup->GetLineCy(), popup->GetTotalCy())).cy;
+	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
+	DDUMP(droplines * popup->ac.GetLineCy());
+	DDUMP(popup->ac.GetTotalCy());
+	DDUMP(h);
 	Rect rt = RectC(x, bottom, width, h);
+	DDUMP(rt);
 	Rect area = Ctrl::GetWorkArea(Point(x, top));
 	bool up = false;
 	if(rt.bottom > area.bottom) {
@@ -105,14 +106,18 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		rt.top = top - h;
 		rt.bottom = rt.top + h;
 	}
-	if(up)
+	if(up) {
 		popup->SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
-	else
+		popup->Add(popup->ac.TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
+	}
+	else {
 		popup->SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
+		popup->Add(popup->ac.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
+	}
 	if(GUI_PopUpEffect()) {
-		popup->CenterCursor();
+		popup->ac.CenterCursor();
 		popup->PopUp(owner, true, true, GUI_DropShadows());
-		popup->SetFocus();
+		popup->ac.SetFocus();
 		Ctrl::ProcessEvents();
 		Animate(*popup, rt, GUIEFFECT_SLIDE);
 	}
@@ -120,9 +125,13 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		popup->SetRect(rt);
 		if(!popup->IsOpen())
 			popup->PopUp(owner, true, true, GUI_DropShadows());
-		popup->CenterCursor();
-		popup->SetFocus();
+		popup->ac.CenterCursor();
+		popup->ac.SetFocus();
 	}
+	DDUMP(popup->ac.GetScreenRect());
+	DDUMP(popup->GetScreenRect());
+	DDUMP(popup->GetScreenView());
+	DDUMP(popup->GetFrameCount());
 	inpopup--;
 }
 
