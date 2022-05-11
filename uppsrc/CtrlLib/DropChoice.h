@@ -61,31 +61,67 @@ protected:
 		
 		Popup(PopUpList *list);
 	};
-
-	Vector<Value> items;
-	One<Popup>    popup;
-	int16         droplines;
-	int16         inpopup;
-
+	
+	Vector<Value>           items;
+	Vector<word>            lineinfo;
+	Vector<const Display *> linedisplay;
+	One<Popup>              popup;
+	const ScrollBar::Style *sb_style = nullptr;
+	const Display          *display;
+	const Convert          *convert;
+	int                     linecy;
+	int                     cursor = -1;
+	int16                   droplines;
+	int16                   inpopup;
+	
 	void          DoSelect();
 	void          DoCancel();
 	void          DoClose();
 	
+	void          Reset();
+	
 	friend class Popup;
 
 public:
-	virtual void Select();
-	virtual void Cancel();
+	Event<>      WhenCancel;
+	Event<>      WhenSelect;
 
 	void         PopUp(Ctrl *owner, int x, int top, int bottom, int width);
 	void         PopUp(Ctrl *owner, int width);
 	void         PopUp(Ctrl *owner);
 	
 	void         Clear();
+	void         SetCount(int n);
 	void         Add(const Value& v);
-	
-	PopUpList&   SetDropLines(int _droplines)          { droplines = _droplines; return *this; }
+	void         AddSeparator();
+	void         Remove(int i);
+	void         Insert(int i, const Value& v);
 
+	void         SetCursor(int i);
+	int          GetCursor() const;
+	
+	int          GetCount() const                              { return items.GetCount(); }
+	void         Set(int i, const Value& v);
+	Value        Get(int i) const                              { return items[i]; }
+	int          Find(const Value& v) const;
+	void         SetScrollBarStyle(const ScrollBar::Style& s);
+	void         SetLineCy(int cy);
+	int          GetLineCy() const                             { return linecy; }
+	void         SetLineCy(int ii, int cy);
+	int          GetLineCy(int ii) const;
+	bool         Key(int c);
+	bool         IsLineEnabled(int ii) const;
+	
+	void           SetDisplay(const Display& d);
+	const Display& GetDisplay() const                          { return *display; }
+
+	void           SetDisplay(int i, const Display& d);
+	const Display& GetDisplay(int i) const;
+	
+	void           SetConvert(const Convert& c);
+	
+	PopUpList&   SetDropLines(int _droplines)                  { droplines = _droplines; return *this; }
+	
 	PopUpList();
 	virtual ~PopUpList();
 };
@@ -101,7 +137,7 @@ public:
 	virtual Value Format(const Value& q) const;
 
 private:
-	PopUpTable         list;
+	PopUpList          list;
 	Index<Value>       key;
 	Value              value;
 	const Convert     *valueconvert;
@@ -157,7 +193,7 @@ public:
 	void          Trim(int n);
 	const Value&  GetKey(int i) const             { return key[i]; }
 
-	Value         GetValue(int i) const           { return list.Get(i, 0); }
+	Value         GetValue(int i) const           { return list.Get(i); }
 	Value         GetValue() const;
 	void          SetValue(int i, const Value& v);
 	void          SetValue(const Value& v);
@@ -165,10 +201,10 @@ public:
 
 	void          Adjust();
 	void          Adjust(const Value& k);
-
+/*
 	const PopUpTable& GetList() const                   { return list; }
 	PopUpTable&   ListObject()                          { return list; }
-
+*/
 	DropList&     SetDropLines(int d)                   { list.SetDropLines(d); return *this; }
 	DropList&     SetValueConvert(const Convert& cv);
 	DropList&     SetConvert(const Convert& cv);
@@ -212,7 +248,7 @@ public:
 	virtual void       Serialize(Stream& s); //empty
 
 protected:
-	PopUpTable         list;
+	PopUpList          list;
 	Ctrl              *owner;
 	bool               appending : 1;
 	bool               dropfocus : 1;
@@ -241,12 +277,12 @@ public:
 	void        Add(const Value& data);
 	int         Find(const Value& data) const         { return list.Find(data); }
 	void        FindAdd(const Value& data);
-	void        Set(int i, const Value& data)         { list.Set(i, 0, data); }
+	void        Set(int i, const Value& data)         { list.Set(i, data); }
 	void        Remove(int i);
 	void        SerializeList(Stream& s);
 	
 	int         GetCount() const                      { return list.GetCount(); }
-	Value       Get(int i) const                      { return list.Get(i, 0); }
+	Value       Get(int i) const                      { return list.Get(i); }
 
 	void        AddHistory(const Value& data, int max = 12);
 
@@ -256,11 +292,11 @@ public:
 	Value       Get() const;
 	int         GetIndex() const;
 
-	DropChoice& SetDisplay(int i, const Display& d)   { list.SetDisplay(i, 0, d); return *this; }
-	DropChoice& SetDisplay(const Display& d)          { list.ColumnAt(0).SetDisplay(d); return *this; }
+	DropChoice& SetDisplay(int i, const Display& d)   { list.SetDisplay(i, d); return *this; }
+	DropChoice& SetDisplay(const Display& d)          { list.SetDisplay(d); return *this; }
 	DropChoice& SetLineCy(int lcy)                    { list.SetLineCy(lcy); return *this; }
 	DropChoice& SetDisplay(const Display& d, int lcy) { SetDisplay(d); SetLineCy(lcy); return *this; }
-	DropChoice& SetConvert(const Convert& d)          { list.ColumnAt(0).SetConvert(d); return *this; }
+	DropChoice& SetConvert(const Convert& d)          { list.SetConvert(d); return *this; }
 	DropChoice& SetDropLines(int n)                   { list.SetDropLines(n); return *this; }
 	DropChoice& Appending()                           { appending = true; return *this; }
 	DropChoice& AlwaysDrop(bool e = true);

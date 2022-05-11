@@ -7,16 +7,157 @@ CtrlFrame& DropFrame();
 
 void PopUpList::Clear()
 {
-	if(popup)
-		popup->ac.SetVirtualCount(0);
 	items.Clear();
+	lineinfo.Clear();
+	linedisplay.Clear();
+	cursor = -1;
+	if(popup)
+		popup->ac.Clear();
+}
+
+void PopUpList::Remove(int i)
+{
+	items.Remove(i);
+	if(i < lineinfo.GetCount())
+		lineinfo.Remove(i);
+	if(i < linedisplay.GetCount())
+		linedisplay.Remove(i);
+	if(popup)
+		popup->ac.Remove(i);
+	if(cursor > i)
+		cursor--;
+}
+
+void PopUpList::Insert(int i, const Value& v)
+{
+	items.Insert(i, v);
+	if(i < lineinfo.GetCount())
+		lineinfo.Insert(i, 0x7fff);
+	if(i < linedisplay.GetCount())
+		linedisplay.Insert(i, nullptr);
+	if(popup)
+		popup->ac.Insert(i, Vector<Value>() << v);
+	if(cursor >= i)
+		cursor++;
+}
+
+void PopUpList::SetCount(int n)
+{
+	items.SetCount(n);
+	if(popup)
+		popup->ac.SetCount(n);
+}
+
+void PopUpList::AddSeparator()
+{
+	word& x = lineinfo.At(items.GetCount(), 0x7fff);
+	x |= 0x8000;
+	items.Add(Null);
+	if(popup)
+		popup->ac.AddSeparator();
 }
 
 void PopUpList::Add(const Value& v)
 {
 	items.Add(v);
 	if(popup)
-		popup->ac.SetVirtualCount(items.GetCount());
+		popup->ac.Add(v);
+}
+
+void PopUpList::SetLineCy(int ii, int cy)
+{
+	ASSERT(cy >= 0 && cy < 32000);
+	word& x = lineinfo.At(ii, 0x7fff);
+	x = x & 0x8000 | cy;
+	if(popup)
+		popup->ac.SetLineCy(ii, cy);
+}
+
+int PopUpList::GetLineCy(int ii) const
+{
+	if(ii >= 0 && ii < lineinfo.GetCount()) {
+		word h = lineinfo[ii] & 0x7fff;
+		if(h != 0x7fff)
+			return h;
+	}
+	return linecy;
+}
+
+bool PopUpList::IsLineEnabled(int ii) const
+{
+	return !(ii >= 0 && ii < lineinfo.GetCount() && ((lineinfo[ii] & 0x8000) || (lineinfo[ii] & 0x7fff) == 0));
+}
+
+void PopUpList::Set(int i, const Value& v)
+{
+	items.At(i) = v;
+	if(popup)
+		popup->ac.Set(i, 0, v);
+}
+
+int PopUpList::Find(const Value& v) const
+{
+	return FindIndex(items, v);
+}
+
+void PopUpList::SetScrollBarStyle(const ScrollBar::Style& s)
+{
+	sb_style = &s;
+	if(popup)
+		popup->ac.SetScrollBarStyle(*sb_style);
+}
+
+void PopUpList::SetLineCy(int cy)
+{
+	linecy = cy;
+	if(popup)
+		popup->ac.SetLineCy(linecy);
+}
+
+void PopUpList::SetDisplay(const Display& d)
+{
+	display = &d;
+	if(popup)
+		popup->ac.ColumnAt(0).SetDisplay(d);
+}
+
+void PopUpList::SetDisplay(int i, const Display& d)
+{
+	linedisplay.At(i, nullptr) = &d;
+	if(popup)
+		popup->ac.SetDisplay(i, 0, d);
+}
+
+const Display& PopUpList::GetDisplay(int i) const
+{
+	if(i >= 0 && i < linedisplay.GetCount() && linedisplay[i])
+		return *linedisplay[i];
+	return *display;
+}
+
+void PopUpList::SetConvert(const Convert& c)
+{
+	convert = &c;
+	if(popup)
+		popup->ac.ColumnAt(0).SetConvert(c);
+}
+
+void PopUpList::SetCursor(int i)
+{
+	cursor = i;
+	if(popup)
+		popup->ac.SetCursor(i);
+}
+
+int PopUpList::GetCursor() const
+{
+	return popup ? popup->ac.GetCursor() : cursor;
+}
+
+bool PopUpList::Key(int c)
+{
+	// TODO!
+	return false;
 }
 
 void PopUpList::PopupCancelMode() {
@@ -27,6 +168,7 @@ void PopUpList::PopupCancelMode() {
 void PopUpList::DoClose() {
 	if(!inpopup && popup) {
 		popup->closing = true; // prevent infinite recursion
+		cursor = popup->ac.GetCursor();
 		popup.Clear();
 	}
 }
@@ -84,7 +226,19 @@ PopUpList::Popup::Popup(PopUpList *list)
 	ac.NoGrid();
 	ac.AutoHideSb();
 	ac.SetLineCy(Draw::GetStdFontCy());
-	ac.SetVirtualCount(list->items.GetCount());
+	for(int i = 0; i < list->items.GetCount(); i++) {
+		Value v = list->items[i];
+		word w = i < list->lineinfo.GetCount() ? list->lineinfo[i] : 0x7fff;
+		if(w & 0x8000)
+			ac.AddSeparator();
+		else
+			ac.Add(v);
+		w &= 0x7fff;
+		if(w != 0x7fff)
+			ac.SetLineCy(i, w);
+	}
+	ac.SetCursor(list->GetCursor());
+	ac.CenterCursor();
 }
 
 void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
@@ -94,11 +248,7 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	DoClose();
 	popup.Create(this);
 	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
-	DDUMP(droplines * popup->ac.GetLineCy());
-	DDUMP(popup->ac.GetTotalCy());
-	DDUMP(h);
 	Rect rt = RectC(x, bottom, width, h);
-	DDUMP(rt);
 	Rect area = Ctrl::GetWorkArea(Point(x, top));
 	bool up = false;
 	if(rt.bottom > area.bottom) {
@@ -128,10 +278,6 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		popup->ac.CenterCursor();
 		popup->ac.SetFocus();
 	}
-	DDUMP(popup->ac.GetScreenRect());
-	DDUMP(popup->GetScreenRect());
-	DDUMP(popup->GetScreenView());
-	DDUMP(popup->GetFrameCount());
 	inpopup--;
 }
 
@@ -152,18 +298,21 @@ void PopUpList::PopUp(Ctrl *owner)
 void PopUpList::DoSelect()
 {
 	DoClose();
-	Select();
+	WhenSelect();
 }
 
 void PopUpList::DoCancel()
 {
 	DoClose();
-	Cancel();
+	WhenCancel();
 }
 
 PopUpList::PopUpList() {
 	droplines = 16;
 	inpopup = 0;
+	linecy = Draw::GetStdFontCy();
+	display = &StdDisplay();
+	convert = NULL;
 }
 
 PopUpList::~PopUpList() {}
