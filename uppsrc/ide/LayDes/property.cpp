@@ -10,9 +10,23 @@ void ItemProperty::Paint(Draw& w)
 	           GetData() == defval ? StdFont()() : StdFont().Bold());
 }
 
+int ItemProperty::GetLabelWidth() const
+{
+	return GetTextSize(name, StdFont().Bold()).cx + 2;
+}
+
 int ItemProperty::GetHeight() const
 {
 	return EditField::GetStdHeight() + 5;
+}
+
+void ItemProperty::AdjustLabelWidth(int cx)
+{
+}
+
+bool ItemProperty::InlineEditor() const
+{
+	return false;
 }
 
 bool ItemProperty::PlaceFocus(dword, int) { return false; }
@@ -113,10 +127,6 @@ struct IntProperty : public EditorProperty<EditInt> {
 		return IsNull(q) ? "Null" : AsString(q);
 	}
 
-	IntProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
-	}
-
 	static ItemProperty *Create() { return new IntProperty; }
 };
 
@@ -131,10 +141,6 @@ struct DoubleProperty : public EditorProperty<EditDouble> {
 		return FormatDouble(~editor, 10);
 	}
 
-	DoubleProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
-	}
-
 	static ItemProperty *Create() { return new DoubleProperty; }
 };
 
@@ -147,9 +153,6 @@ struct StringProperty : public EditorProperty<EditString> {
 	}
 	virtual String   Save() const {
 		return AsCString(~editor);
-	}
-	StringProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
 	}
 
 	static ItemProperty *Create() { return new StringProperty; }
@@ -168,7 +171,7 @@ struct BoolProperty : public EditorProperty<Option> {
 		return (int)~editor ? "true" : "false";
 	}
 	BoolProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(3));
+		editor.TopPos(3);
 	}
 
 	static ItemProperty *Create() { return new BoolProperty; }
@@ -184,7 +187,6 @@ struct ColorProperty : public EditorProperty<ColorPusher> {
 	typedef ColorProperty CLASSNAME;
 
 	ColorProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
 		editor.WithText().SColors().NullText("Null").Track();
 	}
 

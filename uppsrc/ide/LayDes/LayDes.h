@@ -118,6 +118,10 @@ struct ItemProperty : public Ctrl {
 	virtual void     Read(CParser& p);
 	virtual String   Save() const;
 	virtual bool     PlaceFocus(dword k, int c);
+	virtual void     AdjustLabelWidth(int cx);
+	virtual bool     InlineEditor() const;
+
+	int     GetLabelWidth() const;
 
 	ItemProperty() { NoWantFocus(); level = 0; }
 	virtual ~ItemProperty() {}
@@ -132,6 +136,8 @@ class EditorProperty : public ItemProperty {
 public:
 	virtual Value    GetData() const            { return ~editor; }
 	virtual bool     PlaceFocus(dword k, int c) { editor.SetFocus(); return editor.Key(k, c); }
+	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(2)); }
+	virtual bool     InlineEditor() const       { return true; }
 
 protected:
 	void EditAction()                           { this->UpdateActionRefresh(); }
@@ -139,6 +145,7 @@ protected:
 	Editor editor;
 
 	EditorProperty() {
+		Add(editor.HSizePosZ(100, 2).TopPos(2));
 		editor.WhenAction = callback(this, &EditorProperty::EditAction);
 	}
 };
@@ -151,10 +158,6 @@ struct RawProperty : public EditorProperty<EditString>
 	virtual void     Read(CParser& p);
 
 	static ItemProperty *Create()            { return new RawProperty; }
-
-	RawProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
-	}
 };
 
 struct PropertyPane : StaticRect {

@@ -8,7 +8,6 @@ struct EnumProperty : public EditorProperty<DropList> {
 	virtual void     Read(CParser& p)          { SetData(ReadPropertyParam(p)); }
 
 	EnumProperty(LayoutEnum& e) {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
 		for(int i = 0; i < e.items.GetCount(); i++)
 			editor.Add(e.items.GetKey(i), e.items[i]);
 		if(e.items.GetCount())
