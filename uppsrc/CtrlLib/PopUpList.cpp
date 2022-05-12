@@ -217,9 +217,10 @@ PopUpList::Popup::Popup(PopUpList *list)
 {
 	ac.list = list;
 	ac.SetFrame(DropFrame());
-	ac.AddRowNumColumn().Accel().ConvertBy([=] (const Value& i) -> Value {
-		return list->items[i];
-	});
+	auto& col = ac.AddColumn();
+	if(list->convert)
+		col.SetConvert(*list->convert);
+	col.SetDisplay(*list->display);
 	ac.NoHeader();
 	ac.HeaderTab(0).SetMargin(0);
 	ac.MouseMoveCursor();
