@@ -8,11 +8,11 @@ enum ImageKind {
 	IMAGE_OPAQUE,
 };
 
-inline void Fill(RGBA *t, RGBA c, int n) { memset32(t, *(dword *)&c, n); }
+inline void Fill(RGBA *t, RGBA c, size_t n) { memset32(t, *(dword *)&c, n); }
 inline void Copy(RGBA *t, const RGBA *s, int n) { memcpy_t(t, s, n); }
 
-int  Premultiply(RGBA *t, const RGBA *s, int len);
-int  Unmultiply(RGBA *t, const RGBA *s, int len);
+int  Premultiply(RGBA *t, const RGBA *s, size_t len);
+int  Unmultiply(RGBA *t, const RGBA *s, size_t len);
 
 void TransformComponents(RGBA *t, const RGBA *s, int len,
 	const byte r[], const byte g[], const byte b[], const byte a[]);
@@ -167,26 +167,26 @@ private:
 	void         SetAuxData(uint64 data);
 
 public:
-	Size  GetSize() const                     { return data ? data->buffer.GetSize() : Size(0, 0); }
-	int   GetWidth() const                    { return GetSize().cx; }
-	int   GetHeight() const                   { return GetSize().cy; }
-	int   GetLength() const                   { return data ? data->buffer.GetLength() : 0; }
-	Point GetHotSpot() const;
-	Point Get2ndSpot() const;
-	Size  GetDots() const;
-	Size  GetDPI() const;
-	int   GetKindNoScan() const;
-	int   GetKind() const;
-	int   GetResolution() const;
-	bool  IsOpaque() const                    { return GetKind() == IMAGE_OPAQUE; }
+	Size   GetSize() const                     { return data ? data->buffer.GetSize() : Size(0, 0); }
+	int    GetWidth() const                    { return GetSize().cx; }
+	int    GetHeight() const                   { return GetSize().cy; }
+	size_t GetLength() const                   { return data ? data->buffer.GetLength() : 0; }
+	Point  GetHotSpot() const;
+	Point  Get2ndSpot() const;
+	Size   GetDots() const;
+	Size   GetDPI() const;
+	int    GetKindNoScan() const;
+	int    GetKind() const;
+	int    GetResolution() const;
+	bool   IsOpaque() const                    { return GetKind() == IMAGE_OPAQUE; }
 
-	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; }
-	const RGBA *begin() const                 { return Begin(); }
-	const RGBA *End() const                   { return Begin() + GetLength(); }
-	const RGBA *end() const                   { return End(); }
-	const RGBA* operator~() const             { return Begin(); }
-	operator const RGBA*() const              { return Begin(); }
-	const RGBA* operator[](int i) const       { ASSERT(data); return data->buffer[i]; }
+	const RGBA *Begin() const                  { return data ? ~data->buffer : NULL; }
+	const RGBA *begin() const                  { return Begin(); }
+	const RGBA *End() const                    { return Begin() + GetLength(); }
+	const RGBA *end() const                    { return End(); }
+	const RGBA* operator~() const              { return Begin(); }
+	operator const RGBA*() const               { return Begin(); }
+	const RGBA* operator[](int i) const        { ASSERT(data); return data->buffer[i]; }
 
 	int64 GetSerialId() const                 { return data ? data->serial : 0; }
 	bool  IsSame(const Image& img) const      { return GetSerialId() == img.GetSerialId(); }

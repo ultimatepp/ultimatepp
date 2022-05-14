@@ -82,7 +82,7 @@ String PackRLE(const RGBA *s, int len)
 	return String(r);
 }
 
-int Premultiply(RGBA *t, const RGBA *s, int len)
+int Premultiply(RGBA *t, const RGBA *s, size_t len)
 {
 	const RGBA *e = s + len;
 	while(s < e) {
@@ -125,7 +125,7 @@ void sInitUmTable__()
 	}
 }
 
-int Unmultiply(RGBA *t, const RGBA *s, int len)
+int Unmultiply(RGBA *t, const RGBA *s, size_t len)
 {
 	sInitUmTable__();
 	const RGBA *e = s + len;

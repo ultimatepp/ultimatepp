@@ -347,7 +347,7 @@ Image Equalight(const Image& img, int thold)
 		histogram[Grayscale(*s)]++;
 		s++;
 	}
-	int n = (thold * img.GetLength()) >> 8;
+	size_t n = (thold * img.GetLength()) >> 8;
 	int h = 255;
 	int l = 0;
 	while(l < h) {

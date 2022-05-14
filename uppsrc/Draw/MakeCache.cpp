@@ -21,7 +21,7 @@ struct scImageMaker : ValueMaker {
 		if(paintonly && !IsNull(img) && img.GetRefCount() == 1)
 			SetPaintOnly__(img);
 		object = img;
-		return img.GetLength() + 64;
+		return (int)min((size_t) INT_MAX, img.GetLength()) + 64;
 	}
 };
 
@@ -36,7 +36,7 @@ void SysImageRealized(const Image& img)
 		ValueCacheAdjustSize([](const Value& v) -> int {
 			if(v.Is<Image>()) {
 				const Image& img = v.To<Image>();
-				return 64 + (~img ? img.GetLength() : 0);
+				return 64 + (~img ? (int)min((size_t) INT_MAX, img.GetLength()) : 0);
 			}
 			return -1;
 		});
