@@ -124,14 +124,16 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 		iw.DrawImage(1, 1, sz.cx, sz.cy, sample);
 		dnd_icon = iw;
 	}
-#if GTK_CHECK_VERSION(3, 10, 0)
-	gtk_drag_begin_with_coordinates(w->top->window, list, GdkDragAction(gdk_actions),
-	                                GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3,
-	                                CurrentEvent.event, -1, -1);
-#else
-	gtk_drag_begin(w->top->window, list, GdkDragAction(gdk_actions),
-	               GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3, CurrentEvent.event);
-#endif
+	Top *top = w->GetTop();
+	if(top)
+	#if GTK_CHECK_VERSION(3, 10, 0)
+		gtk_drag_begin_with_coordinates(top->window, list, GdkDragAction(gdk_actions),
+		                                GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3,
+		                                CurrentEvent.event, -1, -1);
+	#else
+		gtk_drag_begin(top->window, list, GdkDragAction(gdk_actions),
+		               GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3, CurrentEvent.event);
+	#endif
 	while(dnd_source && GetTopCtrls().GetCount())
 		ProcessEvents();
 	dnd_source_data = NULL;
@@ -329,6 +331,9 @@ gboolean Ctrl::GtkDragDrop(GtkWidget *widget, GdkDragContext *context, gint x, g
 
 void Ctrl::DndInit()
 {
+	Top *top = GetTop();
+	if(!top)
+		return;
 	GtkWidget *w = top->window;
 	gpointer id = (gpointer)(uintptr_t)top->id;
 	g_signal_connect(w, "drag-begin", G_CALLBACK(GtkDragBegin), id);
@@ -345,6 +350,7 @@ void Ctrl::DndInit()
 
 void Ctrl::DndExit()
 {
+	Top *top = GetTop();
 	if(top)
 		gtk_drag_dest_unset(top->window);
 }

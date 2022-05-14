@@ -101,7 +101,7 @@ bool VirtualButtons::ButtonsMouseEvent(Ctrl *ctrl, int event, Point p)
 		int ii = pushi;
 		if(ii >= 0) {
 			EndPush(ctrl);
-			ReleaseCapture();
+			ctrl->ReleaseCapture();
 			buttons_capture = false;
 			ButtonAction(ii);
 		}

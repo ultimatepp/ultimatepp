@@ -33,15 +33,18 @@ void    TopWindow::SyncSizeHints()
 	m.max_width = LSC(sz.cx);
 	m.max_height = LSC(sz.cy);
 	gtk_window_set_resizable(gtk(), sizeable);
-	gtk_window_set_geometry_hints(gtk(), top->window, &m,
-	                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
-	gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
+	Top *top = GetTop();
+	if(top) {
+		gtk_window_set_geometry_hints(gtk(), top->window, &m,
+		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
+	}
 }
 
 void TopWindow::SyncTitle()
 {
 	GuiLock __;
-	if(top)
+	if(GetTop())
 		gtk_window_set_title(gtk(), FromUnicode(title, CHARSET_UTF8));
 }
 
@@ -127,7 +130,9 @@ void TopWindow::Open(Ctrl *owner)
 		CenterRect(owner);
 	IgnoreMouseUp();
 	Create(owner, false);
-	g_signal_connect(top->window, "window-state-event", G_CALLBACK(StateEvent), this);
+	Top *top = GetTop();
+	if(top)
+		g_signal_connect(top->window, "window-state-event", G_CALLBACK(StateEvent), this);
 	SyncSizeHints();
 	SyncCaption();
 	PlaceFocus();

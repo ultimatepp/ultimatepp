@@ -64,6 +64,20 @@ void Ctrl::InstallPanicBox()
 {
 }
 
+GdkWindow *Ctrl::gdk() const
+{
+	const Top *top = GetTop();
+	return top ? gtk_widget_get_window(top->window) : NULL;
+}
+
+GtkWindow *Ctrl::gtk() const
+{
+	const Top *top = GetTop();
+	return top ? (GtkWindow *)top->window : NULL;
+}
+
+
+
 }
 
 #endif
