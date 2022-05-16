@@ -1,0 +1,6 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\BiCreate.exe 16.05.2022 13:32:31, user: cxl
+
+m = [(1, 2), (3, 4)]
+m = [(5, 6), (7, 8)]
+m = [(9, 10), (11, 12)]
+((Foo&)m.Tail()).c = 13

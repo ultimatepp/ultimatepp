@@ -88,6 +88,20 @@ reference to the newly added default constructed element.&]
 [s6; Invalidates iterators and references to the BiVector.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:BiVector`:`:CreateHead`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* CreateHead]([*@4 Args][@(0.0.255) `&`&...]_[*@3 a
+rgs])&]
+[s2; Creates a new element at the head with [%-*@3 args] constructor 
+parameters.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiVector`:`:CreateTail`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* CreateTail]([*@4 Args][@(0.0.255) `&`&...]_[*@3 a
+rgs])&]
+[s2; Creates a new element at the tail with [%-*@3 args] constructor 
+parameters.&]
+[s3; &]
+[s4;%- &]
 [s5;:BiVector`:`:AddHead`(const T`&`):%- [@(0.0.255) void]_[* AddHead]([@(0.0.255) const]_[*@4 T
 ][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds a new element with the specified value [%-*@3 x ]at the head 
