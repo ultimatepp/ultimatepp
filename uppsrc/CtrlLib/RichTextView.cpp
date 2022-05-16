@@ -208,10 +208,12 @@ void  RichTextView::RefreshSel()
 		SetSelectionSource(ClipFmtsText());
 }
 
-void RichTextView::LostFocus()
+void RichTextView::ClearSelection()
 {
-	anchor = cursor;
-	RefreshSel();
+	if(IsSelection()) {
+		anchor = cursor;
+		RefreshSel();
+	}
 }
 
 void  RichTextView::LeftDown(Point p, dword keyflags)
@@ -232,6 +234,7 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 		SetFocus();
 		SetCapture();
 	}
+	WhenLeftClick();
 }
 
 void RichTextView::LeftDouble(Point p, dword keyflags)

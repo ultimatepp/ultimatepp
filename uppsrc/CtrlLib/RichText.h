@@ -14,7 +14,6 @@ public:
 	virtual void  LeftTriple(Point p, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
 	virtual String GetSelectionData(const String& fmt) const;
-	virtual void  LostFocus();
 
 private:
 	Rect          margin;
@@ -55,6 +54,7 @@ protected:
 public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
+	Event<>              WhenLeftClick;
 
 	void            Clear();
 	void            Pick(RichText&& t);
@@ -81,6 +81,7 @@ public:
 	int             GetLength() const                         { return text.GetLength(); }
 
 	bool            IsSelection() const                       { return anchor != cursor; }
+	void            ClearSelection();
 	void            Copy();
 
 	void            ScrollUp()                                { sb.PrevLine(); }
