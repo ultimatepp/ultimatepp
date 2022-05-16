@@ -208,6 +208,12 @@ void  RichTextView::RefreshSel()
 		SetSelectionSource(ClipFmtsText());
 }
 
+void RichTextView::LostFocus()
+{
+	anchor = cursor;
+	RefreshSel();
+}
+
 void  RichTextView::LeftDown(Point p, dword keyflags)
 {
 	int pos = GetPointPos(p);
