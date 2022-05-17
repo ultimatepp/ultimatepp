@@ -2800,7 +2800,10 @@ void ArrayCtrl::CancelMode()
 }
 
 void ArrayCtrl::MouseWheel(Point p, int zdelta, dword keyflags) {
-	sb.Wheel(zdelta);
+	if(keyflags & K_SHIFT)
+		header.sb.Wheel(zdelta);
+	else
+		sb.Wheel(zdelta);
 }
 
 Vector<Value> ArrayCtrl::ReadRow(int i) const {

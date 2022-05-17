@@ -15,6 +15,7 @@ GUI_APP_MAIN
 	a.Add("Short line");
 	
 	TopWindow win;
+	win.Sizeable();
 	win.Add(a.SizePos());
 	win.Run();
 }
