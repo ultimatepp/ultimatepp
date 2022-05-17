@@ -17,6 +17,8 @@ bool Patch::Load0(Stream& in, Progress& pi)
 			if(in.IsEof())
 				return ok;
 			ln = in.GetLine();
+			if(ln.StartsWith("-- ")) // git format-patch "EOF"
+				return ok;
 		}
 		ln = TrimLeft(ln);
 		int q = ln.Find('\t');
@@ -30,6 +32,8 @@ bool Patch::Load0(Stream& in, Progress& pi)
 			if(in.IsEof())
 				return ok;
 			ln0 = ln = in.GetLine();
+			if(ln.StartsWith("-- ")) // git format-patch "EOF"
+				return ok;
 		}
 		while(ln.TrimStart("@@")) {
 			if(pi.StepCanceled())
@@ -45,6 +49,10 @@ bool Patch::Load0(Stream& in, Progress& pi)
 					if(in.IsEof())
 						return ok;
 					ln0 = ln = in.GetLine();
+					if(ln.StartsWith("-- ")) // git format-patch "EOF"
+						return ok;
+					if(ln.StartsWith("--- "))
+						break;
 					if(*ln == ' ') {
 						ch.orig.Add(ln.Mid(1));
 						ch.patch.Add(ln.Mid(1));
@@ -179,10 +187,9 @@ String Patch::GetPatchedFile(int i, const String& text) const
 			auto Match = [&](int li) {
 				if(li < 0)
 					return false;
-				for(int i = 0; i < ch.orig.GetCount(); i++) {
+				for(int i = 0; i < ch.orig.GetCount(); i++)
 					if(li + i >= lines.GetCount() || ch.orig[i] != lines[li + i])
 						return false;
-				}
 				return true;
 			};
 			if(Match(ch.line + d)) {
