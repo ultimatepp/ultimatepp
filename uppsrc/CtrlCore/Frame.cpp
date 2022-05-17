@@ -13,6 +13,62 @@ void NullFrameClass::FrameAddSize(Size& sz) {}
 
 CtrlFrame& NullFrame() { return Single<NullFrameClass>(); }
 
+void MarginFrame::FrameAdd(Ctrl& parent)
+{
+	owner = &parent;
+}
+
+void MarginFrame::FrameRemove()
+{
+	owner = NULL;
+}
+
+void MarginFrame::FrameLayout(Rect& r)
+{
+	r.left += margins.left;
+	r.right -= margins.right;
+	r.top += margins.top;
+	r.bottom -= margins.bottom;
+}
+
+void MarginFrame::FramePaint(Draw& w, const Rect& r)
+{
+	if(IsNull(color))
+		return;
+	w.DrawRect(r.left, r.top, r.Width(), margins.top, color);
+	w.DrawRect(r.left, r.bottom - margins.bottom, r.Width(), margins.bottom, color);
+	int h = r.GetHeight() - margins.top - margins.bottom;
+	w.DrawRect(r.left, r.top + margins.top, margins.left, h, color);
+	w.DrawRect(r.right - margins.right, r.top + margins.top, margins.right, h, color);
+}
+
+void MarginFrame::SetMargins(const Rect& r)
+{
+	margins = r;
+	if(owner)
+		owner->RefreshLayout();
+}
+
+void MarginFrame::SetColor(Color c)
+{
+	color = c;
+	if(owner)
+		owner->RefreshLayout();
+}
+
+void MarginFrame::FrameAddSize(Size& sz)
+{
+	sz.cx += margins.left + margins.right;
+	sz.cy += margins.bottom + margins.top;
+}
+
+MarginFrame::MarginFrame()
+{
+	margins = Rect(0, 0, 0, 0);
+	color = SColorFace();
+	owner = nullptr;
+}
+
 void BorderFrame::FrameLayout(Rect& r)
 {
 	Size sz = r.GetSize();

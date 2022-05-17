@@ -191,6 +191,26 @@ struct NullFrameClass : public CtrlFrame {
 
 CtrlFrame& NullFrame();
 
+class MarginFrame : public CtrlFrame {
+public:
+	virtual void FrameLayout(Rect& r);
+	virtual void FramePaint(Draw& w, const Rect& r);
+	virtual void FrameAddSize(Size& sz);
+	virtual void FrameAdd(Ctrl& parent);
+	virtual void FrameRemove();
+
+private:
+	Ctrl  *owner;
+	Color  color;
+	Rect   margins;
+
+public:
+	void SetMargins(const Rect& r);
+	void SetColor(Color c);
+
+	MarginFrame();
+};
+
 class BorderFrame : public CtrlFrame {
 public:
 	virtual void FrameLayout(Rect& r);
