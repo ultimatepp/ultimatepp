@@ -8,4 +8,10 @@ CONSOLE_APP_MAIN
 	Cout() << s;
 	ASSERT(s.GetCount() > 0);
 	ASSERT(LoadFile("/proc/this_file_does_not_exist").IsVoid());
+	String path = GetHomeDirFile("empty_file");
+	SaveFile(path, String());
+	s = LoadFile(path);
+	DDUMP(s.GetCount());
+	ASSERT(!s.IsVoid() && s.GetCount() == 0);
+	DeleteFile(path);
 }

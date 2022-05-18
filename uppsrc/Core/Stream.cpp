@@ -1227,7 +1227,7 @@ String LoadFile(const char *filename) {
 					s.SetCount(n + CHUNK);
 					int len = read(fd, ~s + n, CHUNK);
 					if(len != CHUNK) {
-						if(len > 0)
+						if(len >= 0)
 							s.SetCount(n + len);
 						return s;
 					}
