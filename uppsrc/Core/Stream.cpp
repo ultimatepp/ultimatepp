@@ -1229,6 +1229,7 @@ String LoadFile(const char *filename) {
 					if(len != CHUNK) {
 						if(len >= 0)
 							s.SetCount(n + len);
+						close(fd);
 						return s;
 					}
 				}
