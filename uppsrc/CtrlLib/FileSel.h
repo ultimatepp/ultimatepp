@@ -224,6 +224,7 @@ protected:
 	bool        bidname;
 	bool        appmodal;
 	bool        loaded;
+	bool        noexeicons;
 
 	Ctrl       *file_ctrl = NULL;
 	int         file_ctrl_cx;
@@ -355,6 +356,7 @@ public:
 	FileSel& FileCtrl(Ctrl& ext, int cx)         { file_ctrl = &ext; file_ctrl_cx = cx; return *this; }
 	FileSel& FileCtrl(Ctrl& ext)                 { return FileCtrl(ext, ext.GetMinSize().cx); }
 	FileSel& DefaultName(const String& s)        { default_name = s; return *this; }
+	FileSel& NoExeIcons(bool b = true)           { noexeicons = b; return *this; }
 
 	FileSel();
 	virtual ~FileSel();

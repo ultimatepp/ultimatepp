@@ -922,7 +922,8 @@ void FileSel::SearchLoad()
 		SortBy(list, ~sortby);
 	Update();
 #ifdef GUI_WIN
-	lazyicons.Start(list, d, WhenIcon);
+	if(!noexeicons)
+		lazyicons.Start(list, d, WhenIcon);
 #endif
 	StartLI();
 }
@@ -2374,6 +2375,7 @@ FileSel::FileSel()
 	multi = false;
 	bidname = false;
 	appmodal = true;
+	noexeicons = false;
 
 	AddChildBefore(GetFirstChild(), &sizegrip);
 

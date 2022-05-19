@@ -332,4 +332,11 @@ the width from GetMinSize().&]
 ]_[*@3 s])&]
 [s2;%% Specifies the default name for Save As operation.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FileSel`:`:NoExeIcons`(bool`): [_^Upp`:`:FileSel^ FileSel][@(0.0.255) `&]_[* No
+ExeIcons]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In Win32 environment, FileSel is using background thread to 
+load icons from .exe files. In some contexts, this can be causing 
+problems. NoExeIcons suppresses loading of this information.&]
+[s3;%% &]
 [s3;%% ]]
