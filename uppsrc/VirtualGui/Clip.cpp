@@ -96,29 +96,20 @@ static String sText(const Value& data)
 	return data;
 }
 
-static String sWText(const Value& data)
-{
-	return Unicode__(WString(data));
-}
-
 void Append(VectorMap<String, ClipData>& data, const String& text)
 {
 	data.GetAdd("text", ClipData(text, sText));
-	data.GetAdd("wtext", ClipData(text, sWText));
 }
 
 void Append(VectorMap<String, ClipData>& data, const WString& text)
 {
 	data.GetAdd("text", ClipData(text, sText));
-	data.GetAdd("wtext", ClipData(text, sWText));
 }
 
 String GetTextClip(const WString& text, const String& fmt)
 {
 	if(fmt == "text")
 		return text.ToString();
-	if(fmt == "wtext")
-		return Unicode__(text);
 	return Null;
 }
 
@@ -126,8 +117,6 @@ String GetTextClip(const String& text, const String& fmt)
 {
 	if(fmt == "text")
 		return text;
-	if(fmt == "wtext")
-		return Unicode__(text.ToWString());
 	return Null;
 }
 
