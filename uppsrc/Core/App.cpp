@@ -650,7 +650,7 @@ String GetUserName()
 }
 
 String GetDesktopManager()
-{
+{	
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 	return "windows";
 #endif

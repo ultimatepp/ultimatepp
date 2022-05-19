@@ -328,7 +328,7 @@ struct MMImp {
 	{
 		if(ctrl)
 			for(Upp::wchar ch : s)
-				if(ch >= 32)
+				if(ch >= 32 && ch != 127)
 					ctrl->DispatchKey(ch, 1);
 	}
 	
