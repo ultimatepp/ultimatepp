@@ -242,6 +242,8 @@ struct MMImp {
 			WString x = ToWString((CFStringRef)(e.characters));
 			if(e.keyCode == kVK_ANSI_KeypadEnter && *x != 13)
 				ctrl->DispatchKey(13, 1);
+			if(e.keyCode == kVK_Space && !(k & K_SHIFT))
+				ctrl->DispatchKey(' ', 1);
 		}
 		return true;
 	}
@@ -328,7 +330,7 @@ struct MMImp {
 	{
 		if(ctrl)
 			for(Upp::wchar ch : s)
-				if(ch >= 32 && ch != 127)
+				if(ch >= 32 && ch != 127 && ch != ' ')
 					ctrl->DispatchKey(ch, 1);
 	}
 	
