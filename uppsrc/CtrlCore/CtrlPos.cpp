@@ -149,9 +149,15 @@ void Ctrl::SyncLayout(int force)
 	Rect oview = GetView();
 	Rect view = GetRect().Size();
 	overpaint = OverPaint();
+<<<<<<< HEAD
 	int n = GetFrameCount();
 	for(int i = 0; i < n; i++) {
 		Frame& f = GetFrame0(i);
+=======
+	bool dolog = parent && !parent->GetParent() && parent->IsOpen();
+	for(int i = 0; i < frame.GetCount(); i++) {
+		Frame& f = frame[i];
+>>>>>>> master
 		f.frame->FrameLayout(view);
 		if(view != f.GetView()) {
 			f.SetView(view);

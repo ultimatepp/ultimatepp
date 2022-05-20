@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#define UPP_VERSION 0x20210900
+#define UPP_VERSION 0x20220100
 
 #ifndef flagMT
 #define flagMT // MT is now always on

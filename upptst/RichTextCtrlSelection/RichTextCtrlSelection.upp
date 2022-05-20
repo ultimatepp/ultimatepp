@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	RichTextCtrlSelection.h,
+	main.cpp,
+	RichTextCtrlSelection.lay;
+
+mainconfig
+	"" = "GUI";
+

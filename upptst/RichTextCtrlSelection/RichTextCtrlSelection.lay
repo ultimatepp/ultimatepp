@@ -1,0 +1,6 @@
+LAYOUT(RichTextCtrlSelectionLayout, 424, 324)
+	ITEM(Upp::RichTextCtrl, a, LeftPosZ(4, 416).TopPosZ(4, 112))
+	ITEM(Upp::RichTextCtrl, b, LeftPosZ(4, 416).TopPosZ(120, 112))
+	ITEM(Upp::EditString, dv___2, LeftPosZ(8, 64).TopPosZ(264, 19))
+END_LAYOUT
+

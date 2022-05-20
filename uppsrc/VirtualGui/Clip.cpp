@@ -53,21 +53,17 @@ void AppendClipboardText(const String& s)
 
 void AppendClipboardUnicodeText(const WString& s)
 {
-	AppendClipboard("wtext", (byte *)~s, sizeof(wchar) * s.GetLength());
+	AppendClipboardText(s.ToString());
 }
 
 const char *ClipFmtsText()
 {
-	return "wtext;text";
+	return "text";
 }
 
 String GetString(PasteClip& clip)
 {
 	GuiLock __;
-	if(clip.Accept("wtext")) {
-		String s = ~clip;
-		return WString((const wchar *)~s, strlen__((const wchar *)~s)).ToString();
-	}
 	if(clip.IsAvailable("text"))
 		return ~clip;
 	return Null;
@@ -76,10 +72,6 @@ String GetString(PasteClip& clip)
 WString GetWString(PasteClip& clip)
 {
 	GuiLock __;
-	if(clip.Accept("wtext")) {
-		String s = ~clip;
-		return WString((const wchar *)~s, strlen__((const wchar *)~s));
-	}
 	if(clip.IsAvailable("text"))
 		return (~clip).ToWString();
 	return Null;
@@ -128,9 +120,6 @@ String ReadClipboardText()
 
 WString ReadClipboardUnicodeText()
 {
-	String w = ReadClipboard("wtext");
-	if(w.GetCount())
-		return WString((const wchar *)~w, w.GetLength() / 2);
 	return ReadClipboard("text").ToWString();
 }
 
@@ -141,7 +130,7 @@ bool IsClipboardAvailable(const char *id)
 
 bool IsClipboardAvailableText()
 {
-	return IsClipboardAvailable("text") || IsClipboardAvailable("wtext");
+	return IsClipboardAvailable("text");
 }
 
 const char *ClipFmtsImage()

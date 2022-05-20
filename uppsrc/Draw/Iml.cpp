@@ -17,7 +17,7 @@ Vector<ImageIml> UnpackImlData(const void *ptr, int len)
 		ib.SetHotSpot(Point(Peek16le(s + 5), Peek16le(s + 7)));
 		ib.Set2ndSpot(Point(Peek16le(s + 9), Peek16le(s + 11)));
 		s += 13;
-		int len = ib.GetLength();
+		size_t len = ib.GetLength();
 		RGBA *t = ib;
 		const RGBA *e = t + len;
 		if(s + 4 * len > data.End())

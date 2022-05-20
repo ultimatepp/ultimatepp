@@ -36,7 +36,7 @@ END_LAYOUT
 
 LAYOUT(CredentialLayout, 368, 140)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Url (or directory)")).LeftPosZ(8, 92).TopPosZ(8, 19))
-	ITEM(WithDropChoice<EditString>, url, LeftPosZ(112, 248).TopPosZ(8, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, url, LeftPosZ(112, 248).TopPosZ(8, 19))
 	ITEM(Upp::Label, dv___2, SetLabel(t_("Username")).LeftPosZ(8, 92).TopPosZ(32, 19))
 	ITEM(Upp::EditString, username, LeftPosZ(112, 248).TopPosZ(32, 19))
 	ITEM(Upp::Label, dv___4, SetLabel(t_("Password / token")).LeftPosZ(8, 92).TopPosZ(56, 19))
@@ -44,7 +44,7 @@ LAYOUT(CredentialLayout, 368, 140)
 	ITEM(Upp::Option, show_password, SetLabel(t_("Show password")).LeftPosZ(8, 108).TopPosZ(108, 20))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(228, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(296, 64).BottomPosZ(8, 24))
-	ITEM(Upp::Label, dv___9, SetLabel(t_("Note: To use github OAuth token, leave the username empty")).SetFont(StdFont().Italic()).LeftPosZ(8, 360).TopPosZ(84, 19))
+	ITEM(Upp::Label, dv___9, SetLabel(t_("Note: To use github OAuth token, leave the username empty")).SetFont(Upp::StdFont().Italic()).LeftPosZ(8, 360).TopPosZ(84, 19))
 END_LAYOUT
 
 LAYOUT(PasskeyLayout, 368, 92)

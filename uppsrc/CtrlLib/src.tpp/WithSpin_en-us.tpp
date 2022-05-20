@@ -103,6 +103,8 @@ KeySpin]()&]
 4], [_^EditInt64^ EditInt64]>_[* EditInt64Spin]&]
 [s5;:EditDoubleSpin`:`:typedef:%- [@(0.0.255) typedef]_[_^WithSpin^ WithSpin]<[@(0.0.255) d
 ouble], [_^EditDouble^ EditDouble]>_[* EditDoubleSpin]&]
+[s5;:Upp`:`:EditFloatSpin`:`:typedef:%- [@(0.0.255) typedef]_[_^Upp`:`:WithSpin^ WithSpin
+]<[@(0.0.255) float], [_^Upp`:`:EditFloat^ EditFloat]>_[* EditFloatSpin]&]
 [s5;:EditDateSpin`:`:typedef:%- [@(0.0.255) typedef]_[_^WithSpin^ WithSpin]<[_^Date^ Date],
  [_^EditDate^ EditDate], [@(0.0.255) int]>_[* EditDateSpin]&]
 [s5;:EditTimeSpin`:`:typedef:%- [@(0.0.255) typedef]_[_^WithSpin^ WithSpin]<[_^Time^ Time],
@@ -119,4 +121,5 @@ ate], [_^EditDateNotNull^ EditDateNotNull], [@(0.0.255) int]>_[* EditDateNotNull
 ime], [_^EditTimeNotNull^ EditTimeNotNull], [@(0.0.255) int]>_[* EditTimeNotNullSpin]&]
 [s2; These typedefs predefine common EditField based value editors 
 with spin buttons.&]
+[s3;%- &]
 [s3; ]]

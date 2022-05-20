@@ -200,6 +200,9 @@ struct TextProperty : public SmartTextEditProperty<EditString>
 	virtual int      GetHeight() const {
 		return 2 * EditField::GetStdHeight() + 6;
 	}
+	
+	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(2)); }
+	virtual bool     InlineEditor() const       { return true; }
 
 	TextProperty() {
 		Add(editor.HSizePosZ(100, 2).TopPos(2));

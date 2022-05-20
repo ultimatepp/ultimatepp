@@ -118,9 +118,9 @@ END_LAYOUT
 
 LAYOUT(RichFindReplaceLayout, 264, 128)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("&Find:")).LeftPosZ(4, 46).TopPosZ(4, 19))
-	ITEM(WithDropChoice<EditString>, find, HSizePosZ(50, 4).TopPosZ(4, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, find, HSizePosZ(50, 4).TopPosZ(4, 19))
 	ITEM(Upp::Label, dv___2, SetLabel(t_("&Replace:")).LeftPosZ(4, 46).TopPosZ(28, 19))
-	ITEM(WithDropChoice<EditString>, replace, HSizePosZ(50, 4).TopPosZ(28, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, replace, HSizePosZ(50, 4).TopPosZ(28, 19))
 	ITEM(Upp::Option, wholeword, SetLabel(t_("&Whole word")).LeftPosZ(4, 256).TopPosZ(56, 18))
 	ITEM(Upp::Option, ignorecase, SetLabel(t_("&Ignore case")).LeftPosZ(4, 256).TopPosZ(76, 18))
 	ITEM(Upp::Button, amend, SetLabel(t_("&Replace")).LeftPosZ(4, 72).BottomPosZ(4, 24))

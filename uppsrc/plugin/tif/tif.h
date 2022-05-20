@@ -56,6 +56,9 @@ public:
 	virtual int                 GetActivePage() const;
 	virtual void                SeekPage(int n);
 
+	virtual Value               GetMetaData(String id);
+	virtual void                EnumMetaData(Vector<String>& id_list);
+
 private:
 	bool                        Init();
 };

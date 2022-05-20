@@ -177,7 +177,7 @@ ArrayMap<String, EscValue>& UscGlobal();
 Array<IdeMacro>&            UscMacros();
 
 void UscSetCleanModules(void (*CleanModules)());
-void SetIdeModuleUsc(bool (*IdeModuleUsc)(CParser& p));
+void SetIdeModuleUsc(bool (*IdeModuleUsc)(CParser& p,String&));
 void UscSetReadMacro(void (*ReadMacro)(CParser& p));
 
 void CleanUsc();

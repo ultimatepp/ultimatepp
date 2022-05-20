@@ -60,8 +60,13 @@ struct LayoutType : Moveable<LayoutType> {
 	LayoutType()               { iconsize[0] = iconsize[1] = Null; }
 };
 
-VectorMap<String, VectorMap<String, String> >& LayoutEnums();
-VectorMap<String, LayoutType>&                 LayoutTypes();
+struct LayoutEnum : Moveable<LayoutEnum> {
+	String                    name_space;
+	VectorMap<String, String> items;
+};
+
+VectorMap<String, LayoutEnum>& LayoutEnums();
+VectorMap<String, LayoutType>& LayoutTypes();
 
 Point ReadPoint(CParser& p);
 
@@ -113,6 +118,10 @@ struct ItemProperty : public Ctrl {
 	virtual void     Read(CParser& p);
 	virtual String   Save() const;
 	virtual bool     PlaceFocus(dword k, int c);
+	virtual void     AdjustLabelWidth(int cx);
+	virtual bool     InlineEditor() const;
+
+	int     GetLabelWidth() const;
 
 	ItemProperty() { NoWantFocus(); level = 0; }
 	virtual ~ItemProperty() {}
@@ -127,6 +136,8 @@ class EditorProperty : public ItemProperty {
 public:
 	virtual Value    GetData() const            { return ~editor; }
 	virtual bool     PlaceFocus(dword k, int c) { editor.SetFocus(); return editor.Key(k, c); }
+	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(2)); }
+	virtual bool     InlineEditor() const       { return true; }
 
 protected:
 	void EditAction()                           { this->UpdateActionRefresh(); }
@@ -134,6 +145,7 @@ protected:
 	Editor editor;
 
 	EditorProperty() {
+		Add(editor.HSizePosZ(100, 2).TopPos(2));
 		editor.WhenAction = callback(this, &EditorProperty::EditAction);
 	}
 };
@@ -146,10 +158,6 @@ struct RawProperty : public EditorProperty<EditString>
 	virtual void     Read(CParser& p);
 
 	static ItemProperty *Create()            { return new RawProperty; }
-
-	RawProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
-	}
 };
 
 struct PropertyPane : StaticRect {

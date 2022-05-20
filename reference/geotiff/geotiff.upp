@@ -1,0 +1,13 @@
+description "Demonstrates minimal geotiff support in plugin/tif\377";
+
+uses
+	Core,
+	plugin/tif,
+	Geom;
+
+file
+	geotiff.cpp;
+
+mainconfig
+	"" = "";
+

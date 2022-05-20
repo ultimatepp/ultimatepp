@@ -117,8 +117,6 @@ bool IsMDFile(const char *path)
 
 struct MDDesModule : public IdeModule {
 	virtual String       GetID() { return "MDDesModule"; }
-	virtual void CleanUsc() {}
-	virtual bool ParseUsc(CParser& p) { return false; }
 
 	virtual Image FileIcon(const char *path) {
 		return IsMDFile(path) ? IdeCommonImg::MD() : Null;

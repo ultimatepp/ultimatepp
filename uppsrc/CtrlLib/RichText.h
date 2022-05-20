@@ -54,6 +54,7 @@ protected:
 public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
+	Event<>              WhenLeftClick;
 
 	void            Clear();
 	void            Pick(RichText&& t);
@@ -80,6 +81,7 @@ public:
 	int             GetLength() const                         { return text.GetLength(); }
 
 	bool            IsSelection() const                       { return anchor != cursor; }
+	void            ClearSelection();
 	void            Copy();
 
 	void            ScrollUp()                                { sb.PrevLine(); }

@@ -193,11 +193,6 @@ subctrl NormalSize {
 subctrl Base {
 	>NormalSize;
 
-	Font   SetFont = StdFont();
-	Color  SetInk = :SBlack;
-	Frame  SetFrame @1;
-//	Qtf    SetInfo @1 ? "Info of control" ;
-
 	ViewRect(w) {
 		r = GetRect();
 		DrawCtrlFrame(w, r, .SetFrame);
@@ -210,7 +205,17 @@ subctrl Base {
 };
 
 subctrl Unknown {
-	> Base;
+	>NormalSize;
+
+	ViewRect(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		return r;
+	}
+	ViewSize(w) {
+		r = ViewRect(w);
+		return Size(r.right - r.left, r.bottom - r.top);
+	}
 };
 
 subctrl TextCtrl {
@@ -969,6 +974,19 @@ ctrl EditDoubleSpin {
 		PaintMinMaxText(w, "dbl", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
 	}
 }
+
+ctrl EditFloatSpin {
+	>EditDoubleSpin;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMaxText(w, "flt", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
+	}
+}
+
 
 ctrl EditDateSpin {
 	>EditDate;

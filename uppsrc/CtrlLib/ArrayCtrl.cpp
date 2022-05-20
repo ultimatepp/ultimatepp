@@ -1068,11 +1068,8 @@ void ArrayCtrl::HeaderScroll()
 
 void ArrayCtrl::HeaderScrollVisibility()
 {
-	scrollbox.Height(ScrollBarSize());
-	if(header.IsScroll())
-		sb.SetFrame(scrollbox);
-	else
-		sb.SetFrame(NullFrame());
+	scrollbox.SetMargins(Rect(0, 0, 0, header.IsScroll() ? ScrollBarSize() : 0));
+	scrollbox.SetColor(IsTransparent() ? Null : SColorFace());
 }
 
 void ArrayCtrl::RefreshRow(int i)
@@ -2800,7 +2797,10 @@ void ArrayCtrl::CancelMode()
 }
 
 void ArrayCtrl::MouseWheel(Point p, int zdelta, dword keyflags) {
-	sb.Wheel(zdelta);
+	if(keyflags & K_SHIFT)
+		header.sb.Wheel(zdelta);
+	else
+		sb.Wheel(zdelta);
 }
 
 Vector<Value> ArrayCtrl::ReadRow(int i) const {
@@ -3111,6 +3111,7 @@ ArrayCtrl::ArrayCtrl() {
 	Reset();
 	AddFrame(sb);
 	AddFrame(header);
+	sb.AddFrame(scrollbox);
 	header.WhenLayout = THISBACK(HeaderLayout);
 	header.WhenScroll = THISBACK(HeaderScroll);
 	sb.WhenScroll = THISBACK(Scroll);

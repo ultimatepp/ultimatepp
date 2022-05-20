@@ -53,6 +53,16 @@ int Raster::GetPageDisposal(int n)
 	return 0;	
 }
 
+Value Raster::GetMetaData(String id)
+{
+	return Value();
+}
+
+void Raster::EnumMetaData(Vector<String>& id_list)
+{
+	id_list.Clear();
+}
+
 void Raster::Line::Pick(Line&& b)
 {
 	data = b.data;

@@ -61,8 +61,6 @@ bool IsImlFile(const char *path)
 
 struct IconDesModule : public IdeModule {
 	virtual String       GetID() { return "IconDesModule"; }
-	virtual void CleanUsc() {}
-	virtual bool ParseUsc(CParser& p) { return false; }
 	virtual Image FileIcon(const char *path) {
 		return IsImlFile(path) ? IconDesImg::FileIcon() : Null;
 	}

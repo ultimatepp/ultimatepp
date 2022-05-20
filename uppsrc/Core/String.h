@@ -617,6 +617,9 @@ inline String& operator<<(String&& s, const char& x)
 template<>
 inline bool  IsNull(const String& s)       { return s.IsEmpty(); }
 
+inline
+bool IsVoid(const String& s)               { return s.IsVoid(); }
+
 template<>
 inline String AsString(const String& s)     { return s; }
 

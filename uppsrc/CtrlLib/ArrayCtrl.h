@@ -200,7 +200,6 @@ private:
 	Vector<Ln>                 ln;
 	Vector< Vector<CellInfo> > cellinfo;
 	Vector<bool>               modify;
-	FrameBottom<ParentCtrl>    scrollbox;
 	Vector<int>                column_width, column_pos;
 	DisplayPopup               info;
 	const Order               *columnsortsecondary;
@@ -208,6 +207,7 @@ private:
 	int                        ctrl_low, ctrl_high;
 	int                        sorting_from;
 	Index<String>              id_ndx;
+	MarginFrame                scrollbox;
 
 	int   keypos;
 	int   cursor;

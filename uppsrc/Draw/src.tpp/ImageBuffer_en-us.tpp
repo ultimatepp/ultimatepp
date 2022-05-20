@@ -128,8 +128,8 @@ t]&]
 [s2;%% Same as GetSize().cy.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:GetLength`(`)const: [*@(0.0.255) int][* _GetLength()_][*@(0.0.255) cons
-t]&]
+[s5;:ImageBuffer`:`:GetLength`(`)const: [*@(0.0.255) size`_t][* _GetLength()_][*@(0.0.255) c
+onst]&]
 [s2;%% Returns the number of pixels in the image. Same as GetSize().cx 
 `* GetSize().cy.&]
 [s3; &]

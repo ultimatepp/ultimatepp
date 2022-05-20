@@ -161,7 +161,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 	
 	failed.Show(failed_count);
 	failed.SetInk(SRed());
-	failed = String() << failed_count << " file(s) failed";
+	failed = String() << failed_count << " failed";
 
 	ShowResult();
 	

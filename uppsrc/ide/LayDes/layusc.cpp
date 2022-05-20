@@ -6,19 +6,17 @@ VectorMap<String, LayoutType>& LayoutTypes()
 	return q;
 }
 
-VectorMap<String, VectorMap<String, String> >& LayoutEnums()
+VectorMap<String, LayoutEnum>& LayoutEnums()
 {
-	static VectorMap<String, VectorMap<String, String> > q;
+	static VectorMap<String, LayoutEnum> q;
 	return q;
 }
 
-String CurrentNamespace; // this is ugly hack, but better than rewrite everything
-
-void ReadClass(CParser& p, int kind)
+void ReadClass(CParser& p, int kind, const String& current_namespace)
 {
 	LayoutType& m = LayoutTypes().GetAdd(p.ReadId());
 	m.kind = kind;
-	m.name_space = CurrentNamespace;
+	m.name_space = current_namespace;
 	p.PassChar('{');
 	while(!p.Char('}')) {
 		if(p.Char('>')) {
@@ -65,45 +63,45 @@ void  LayLib();
 
 void LayUscClean()
 {
-	CurrentNamespace.Clear();
 	LayoutEnums().Clear();
 	LayoutTypes().Clear();
 	LayLib();
 }
 
-bool LayUscParse(CParser& p)
+bool LayUscParse(CParser& p, String& current_namespace)
 {
 	if(p.Id("namespace")) {
-		CurrentNamespace.Clear();
+		current_namespace.Clear();
 		for(;;)
 			if(p.IsId())
-				CurrentNamespace << p.ReadId();
+				current_namespace << p.ReadId();
 			else
 			if(p.Char2(':', ':'))
-				CurrentNamespace << "::";
+				current_namespace << "::";
 			else
 				break;
 		p.Char(';');
 	}
 	else
 	if(p.Id("ctrl"))
-		ReadClass(p, LAYOUT_CTRL);
+		ReadClass(p, LAYOUT_CTRL, current_namespace);
 	else
 	if(p.Id("subctrl"))
-		ReadClass(p, LAYOUT_SUBCTRL);
+		ReadClass(p, LAYOUT_SUBCTRL, current_namespace);
 	else
 	if(p.Id("template"))
-		ReadClass(p, LAYOUT_TEMPLATE);
+		ReadClass(p, LAYOUT_TEMPLATE, current_namespace);
 	else
 	if(p.Id("enum_property")) {
-		VectorMap<String, String>& e = LayoutEnums().GetAdd(p.ReadId());
+		LayoutEnum& e = LayoutEnums().GetAdd(p.ReadId());
 		p.PassChar('{');
 		for(;;) {
 			String key = p.IsString() ? p.ReadString() : p.ReadId();
 			String text = key;
 			if(p.Char(':'))
 				text = p.IsString() ? p.ReadString() : p.ReadId();
-			e.Add(key, text);
+			e.items.Add(key, text);
+			e.name_space = current_namespace;
 			if(p.Char('}'))
 				break;
 			p.PassChar(',');

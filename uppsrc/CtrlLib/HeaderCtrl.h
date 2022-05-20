@@ -114,6 +114,8 @@ protected:
 	void   InvalidateDistribution()                              { oszcx = -1; }
 	void   RefreshDistribution();
 	Vector<int> GetVisibleCi(int from);
+	
+	friend class ArrayCtrl;
 
 public:
 	Event<>       WhenLayout;

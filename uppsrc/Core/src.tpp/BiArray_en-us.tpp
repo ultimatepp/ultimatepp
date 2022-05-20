@@ -166,14 +166,30 @@ be at position GetCount() `- 1.&]
 [s7; [*/ Return value]-|Reference to the object `- [* `*newt].&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:BiArray`:`:CreateHead`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* CreateHead]([*@4 Args][@(0.0.255) `&`&...]_[*@3 a
+rgs])&]
+[s2; Creates a new element at the head with [%-*@3 args] constructor 
+parameters.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:CreateTail`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* CreateTail]([*@4 Args][@(0.0.255) `&`&...]_[*@3 a
+rgs])&]
+[s2; Creates a new element at the tail with [%-*@3 args] constructor 
+parameters.&]
+[s3; &]
+[s4;%- &]
 [s5;:Upp`:`:BiArray`:`:CreateHead`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>
-_[*@4 TT][@(0.0.255) `&]_[* CreateHead]()&]
-[s2; Creates a new element of type [%-*@4 TT] at the head.&]
+_[*@4 TT][@(0.0.255) `&]_[* CreateHead]([*@4 Args][@(0.0.255) `&`&...]_[*@3 args])&]
+[s2; Creates a new element of type [%-*@4 TT] at the head with [%-*@3 args] 
+constructor parameters.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:BiArray`:`:CreateTail`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>
-_[*@4 TT][@(0.0.255) `&]_[* CreateTail]()&]
-[s2; Creates a new element of type [%-*@4 TT] at the tail.&]
+_[*@4 TT][@(0.0.255) `&]_[* CreateTail]([*@4 Args][@(0.0.255) `&`&...]_[*@3 args])&]
+[s2; Creates a new element of type [%-*@4 TT] at the tail with [%-*@3 args] 
+constructor parameters.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:BiArray`:`:AddHead`(Upp`:`:One`<T`>`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddHead](

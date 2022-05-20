@@ -272,7 +272,7 @@ CONSOLE_APP_MAIN
 				for(const String& s : runargs)
 					Add(s);
 				args.Add(NULL);
-				SetExitCode(execv(ide.target, args.begin()));
+				SetExitCode((int)execv(ide.target, args.begin()));
 			}
 		}
 		else
