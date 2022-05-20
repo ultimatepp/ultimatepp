@@ -12,7 +12,7 @@
 
 #include <CtrlCore/CocoMM.h>
 #include "ChCocoMM.h"
-
+	
 void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 {
 	auto cg = (CGContextRef) cgcontext	;

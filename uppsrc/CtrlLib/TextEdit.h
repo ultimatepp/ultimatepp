@@ -298,6 +298,7 @@ public:
 	virtual void   DragLeave();
 	virtual void   Layout();
 	virtual void   RefreshLine(int i);
+	virtual Font   GetPreeditFont();
 
 protected:
 	virtual void    SetSb();

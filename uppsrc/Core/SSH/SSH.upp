@@ -15,7 +15,7 @@ library(POSIX) "crypto ssl z";
 
 library(WIN32) "ssl crypto";
 
-library(WIN32) "gdi32 ws2_32";
+library(WIN32) "usp10 gdi32 ws2_32";
 
 link(WIN32 MSC SO) /nodefaultlib:libc;
 

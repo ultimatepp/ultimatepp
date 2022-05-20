@@ -26,9 +26,56 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2021.1 (rev. 15947) (May 2021)&]
+[s3; 2022.1 (rev. 16236) (April 2022)&]
 [s5;po*/ &]
 [s5;po [*/ Current stable release]&]
+[s5;po &]
+[s5; [* Release highlights]&]
+[s5;l128;i150;O0; sizeof(wchar) is changed to 4 (32 bits) to support 
+non BMP unicode characters&]
+[s5;l288; This might bring some incompatibilities in the code that 
+expects wchar to be 16 bit, which&]
+[s5;l288; escpecially involves dealing with Win32 (and to lesser 
+extend MacOS) APIs, so if your application&]
+[s5;l288; is doing that, please check all instances of WCHAR (UniChar 
+on MacOS) or even wchar&]
+[s5;l288; especially type casts.&]
+[s5;l288; To support host APIs, char16 is introduced (but there is 
+no 16`-bit String varian).&]
+[s5;l288; Use ToSystemCharsetW, FromSystemCharsetW to convert texts 
+to Win32 API.&]
+[s0;l256;ph &]
+[s5;l128;i150;O0; Support of drawing non`-BMP characters in GUI&]
+[s5;l128;i150;O0; Vastly improved character font replacement code 
+(when drawing characters missing with requested font, replacement 
+font is used)&]
+[s5;l128;i150;O0; Last instances of Win32 ANSI calls (those ending 
+with A) are removed&]
+[s5;l128;i150;O0; UTF handling routines are refactored and their`'s 
+naming is unified&]
+[s5;l128;i150;O0; RTF is now being able to handle non`-BMP characters 
+(RTF is used as clipboard format for RichText)&]
+[s5;l128;i150;O0; Improved input method (aka preedit in Linux, aka 
+marked text in MacOS) support&]
+[s5;l128;i150;O0; ConvertFloat and EditFloat to handle float vs double 
+precision differences&]
+[s5;l128;i150;O0; Improved FP <`-> text conversion routines&]
+[s5;* &]
+[s5; [* TheIDE]&]
+[s5;l128;i150;O0; UppHub now raises error when Git is missing&]
+[s5;* &]
+[s5; [* `'Win32 release]&]
+[s5;l128;i150;O0; clang updated to actual version (llvm14)&]
+[s5;l128;i150;O0; zlib updated to 1.2.12&]
+[s5;l128;i150;O0; openssl updated to 1.1.1n&]
+[s5;l128;i150;O0; jpeg updated to 9e&]
+[s5;l128;i150;O0; Instant setup for VS 2022&]
+[s5;* &]
+[s5; [* POSIX]&]
+[s5;l128;i150;O0; In order to satisfy UppHub requirements, Git dependency 
+was added&]
+[s5;* &]
+[s3; 2021.1 (rev. 15947) (May 2021)&]
 [s5;po &]
 [s5;po [* Release highlights]&]
 [s5;l160;i150;poO0; New system for 3rd party modules, `"UppHub`": 

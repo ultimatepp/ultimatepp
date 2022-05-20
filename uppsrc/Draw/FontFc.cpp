@@ -155,9 +155,9 @@ CommonFontInfo GetFontInfoSys(Font font)
 		else
 			*fi.path = 0;
 		
-		if(font.GetFaceInfo() & Font::COLORIMG) {
+		if(font.GetFaceInfo() & Font::COLORIMG) { // Experimental estimate for cairo results
 			fi.colorimg_cy = fi.ascent + fi.descent;
-			int h = font.GetHeight();
+			int h = 4 * font.GetHeight() / 3;
 			fi.ascent = h * fi.ascent / fi.colorimg_cy;
 			fi.descent = h - fi.ascent;
 		}
@@ -259,46 +259,14 @@ Vector<FaceInfo> GetAllFacesSys()
 	return list.PickValues();
 }
 
+extern String GetFontDataSysSys(Stream& in, int fonti, const char *table, int offset, int size);
+
 String GetFontDataSys(Font font, const char *table, int offset, int size)
-{ // read truetype or opentype table
+{
 	if(!table)
 		return LoadFile(font.Fi().path);
 	FileIn in(font.Fi().path);
-	int q = in.Get32be();
-	if(q == 0x74746366) { // font collection
-		in.Get32(); // skip major/minor version
-		int nfonts = in.Get32be();
-		if(font.Fi().fonti >= nfonts)
-			return Null;
-		in.SeekCur(font.Fi().fonti * 4);
-		int offset = in.Get32be();
-		if(offset < 0 || offset >= in.GetSize())
-			return Null;
-		in.Seek(offset);
-		q = in.Get32be();
-	}
-	if(q != 0x74727565 && q != 0x00010000 && q != 0x4f54544f) // 0x4f54544f means CCF font!
-		return Null;
-	int n = in.Get16be();
-	in.Get32();
-	in.Get16();
-	while(n--) {
-		if(in.IsError() || in.IsEof()) return Null;
-		String tab = in.Get(4);
-		in.Get32();
-		int off = in.Get32be();
-		int len = in.Get32be();
-		if(tab == table) {
-			if(off < 0 || len < 0 || off + len > in.GetSize())
-				return Null;
-			len = min(len - offset, size);
-			if(len < 0)
-				return Null;
-			in.Seek(off + offset);
-			return in.Get(len);
-		}
-	}
-	return Null;
+	return GetFontDataSysSys(in, font.Fi().fonti, table, offset, size);
 }
 
 static inline double ft_dbl(int p)

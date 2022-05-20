@@ -234,20 +234,21 @@ struct sRFace {
 	#include "Fonts.i"
 };
 
-bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
-	String data = font.GetData("cmap");
-	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= data.GetCount() ? Peek16be(~data + i) : 0; };
-	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= data.GetCount() ? Peek32be(~data + i) : 0; };
-	for(int pass = 0; pass < 2; pass++) {
+bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, dword flags)
+{
+	auto Get8 = [&](int i) { return i >= 0 && i + 1 <= count ? (byte)ptr[i] : 0; };
+	auto Get16 = [&](int i) { return i >= 0 && i + 2 <= count ? Peek16be(ptr + i) : 0; };
+	auto Get32 = [&](int i) { return i >= 0 && i + 4 <= count ? Peek32be(ptr + i) : 0; };
+	for(int pass = 0; pass < (flags & CMAP_ALLOW_SYMBOL ? 3 : 2); pass++) {
 		int p = 0;
 		p += 2;
 		int n = Get16(p);
 		p += 2;
-		while(n-- && p < data.GetCount()) {
+		while(n-- && p < count) {
 			int pid = Get16(p); p += 2;
 			int psid = Get16(p); p += 2;
 			int offset = Get32(p); p += 4;
-			if(offset < 0 || offset > data.GetCount())
+			if(offset < 0 || offset > count)
 				return false;
 			int format = Get16(offset);
 			LLOG("cmap pid: " << pid << " psid: " << psid << " format: " << format);
@@ -263,8 +264,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				}
 				return true;
 			}
-			else
-			if((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4 && pass == 1) {
+			if(((pid == 3 && psid == 1) || (pid == 0 && psid == 3) && format == 4) && pass == 1) {
 				int p = offset;
 				int n = Get16(p + 6) >> 1;
 				int seg_end = p + 14;
@@ -276,7 +276,7 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 					int end = Get16(seg_end + 2 * i);
 					int delta = Get16(idDelta + 2 * i);
 					int ro = Get16(idRangeOffset + 2 * i);
-					if(glyphs) {
+					if(flags & CMAP_GLYPHS) {
 					    if (ro && delta == 0) {
 					        LLOG("RangeOffset start: " << start << ", end: " << end << ", delta: " << (int16)delta);
 							int q = idRangeOffset + 2 * i + ro;
@@ -295,9 +295,21 @@ bool ReadCmap(Font font, Event<int, int, int> range, bool glyphs = false) {
 				}
 				return true;
 			}
+			if(pid == 1 && psid == 0 && Get16(offset) == 0 && pass == 2) {
+				LLOG("Reading symbol cmap");
+				for(int i = 0; i < 256; i++)
+					range(i, i, Get8(offset + 6 + i));
+				return true;
+			}
 		}
 	}
 	return false;
+}
+
+bool ReadCmap(Font font, Event<int, int, int> range, dword flags)
+{
+	String h = font.GetData("cmap");
+	return ReadCmap(h, h.GetCount(), range, flags);
 }
 
 bool GetPanoseNumber(Font font, byte *panose)
@@ -414,15 +426,22 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 			f.Face(fi);
 			if(IsNormal_nc(f, chr)) {
 				int a = fnt.GetAscent();
+				int d = fnt.GetDescent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
-				if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
+				LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+				     ", replacement " << f << " " << f.GetAscent() << " " << f.GetDescent());
+				if((f.GetAscent() > a || f.GetDescent() > d) && apple_kbd.Find(chr) < 0) {
 					static sFontMetricsReplacement cache[256];
 					int q = CombineHash(fnt, f) & 255;
 					if(cache[q].src != fnt || cache[q].dst != f) {
 						cache[q].src = fnt;
 						cache[q].dst = f;
-						while(f.GetAscent() > a && f.GetHeight() > 1) {
-							f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
+						double h = f.GetHeight();
+						f.Height((int)min(h * a / max(1, f.GetAscent()), h * d / max(1, f.GetDescent())) + 1);
+						while((f.GetAscent() > a || f.GetDescent() > d) && f.GetHeight() > 1) {
+							f.Height(max(1, f.GetHeight() - 1/*max(1, f.GetHeight() / 20)*/));
+							LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
+							     ", downsized " << f << " " << f.GetAscent() << " " << f.GetDescent());
 						}
 						cache[q].mdst = f;
 					}
@@ -460,6 +479,45 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		}
 	}
 	return false;
+}
+
+String GetFontDataSysSys(Stream& in, int fonti, const char *table, int offset, int size)
+{ // read truetype or opentype table from file - common implementation
+	int q = in.Get32be();
+	if(q == 0x74746366) { // font collection
+		in.Get32(); // skip major/minor version
+		int nfonts = in.Get32be();
+		if(fonti >= nfonts)
+			return Null;
+		in.SeekCur(fonti * 4);
+		int offset = in.Get32be();
+		if(offset < 0 || offset >= in.GetSize())
+			return Null;
+		in.Seek(offset);
+		q = in.Get32be();
+	}
+	if(q != 0x74727565 && q != 0x00010000 && q != 0x4f54544f) // 0x4f54544f means CCF font!
+		return Null;
+	int n = in.Get16be();
+	in.Get32();
+	in.Get16();
+	while(n--) {
+		if(in.IsError() || in.IsEof()) return Null;
+		String tab = in.Get(4);
+		in.Get32();
+		int off = in.Get32be();
+		int len = in.Get32be();
+		if(tab == table) {
+			if(off < 0 || len < 0 || off + len > in.GetSize())
+				return Null;
+			len = min(len - offset, size);
+			if(len < 0)
+				return Null;
+			in.Seek(off + offset);
+			return in.Get(len);
+		}
+	}
+	return Null;
 }
 
 }

@@ -2,6 +2,26 @@
 
 namespace Upp {
 
+Point RichEdit::GetPreedit()
+{
+	Rect r = GetCaretRect();
+	if(formatinfo.sscript == 2) {
+		Point p = r.BottomRight();
+		p.y -= 3 * r.GetHeight() / 5;
+		return p;
+	}
+	return r.TopRight();
+}
+	
+Font RichEdit::GetPreeditFont()
+{
+	Font fnt = formatinfo;
+	int h = abs(fnt.GetHeight());
+	if(formatinfo.sscript)
+		h = 3 * h / 5;
+	return fnt(max(GetZoom() * abs(h), 1));
+}
+
 void RichEdit::ApplyFormat(dword charvalid, dword paravalid)
 {
 	if(IsReadOnly())

@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 #include <plugin/z/z.h>
-
+#include <Painter/Painter.h>
 
 namespace Upp {
 
@@ -55,16 +55,16 @@ class TTFReader {
 		virtual ~TTFStreamOut() {}
 	};
 
-	String font;
+	Font font;
+	String current_table;
 
 	struct Table : Moveable<Table> {
 		int offset;
 		int length;
 	};
 	VectorMap<String, Table> table;
-
-	word  zero[256];
-	word *cmap[256];
+	
+	VectorMap<wchar, int> glyph_map;
 
 	struct GlyphInfo : Moveable<GlyphInfo> {
 		int    offset;
@@ -92,7 +92,6 @@ class TTFReader {
 	int    Read32(const char *&s);
 	String Read(const char *&s, int n);
 
-	void   Free();
 	void   Reset();
 
 	const char *Seek(const char *tab, int& len);
@@ -217,14 +216,13 @@ public:
 	Post   post;
 	String ps_name;
 
-	int    GetGlyph(wchar chr)               { return cmap[HIBYTE(chr)][LOBYTE(chr)]; }
-	word   GetAdvanceWidth(wchar chr)        { return glyphinfo[GetGlyph(chr)].advanceWidth; }
+	int    GetGlyph(wchar chr)               { return glyph_map.Get(chr, 0); }
+	word   GetAdvanceWidth(wchar chr)        { int i = glyph_map.Get(chr, 0); return i < glyphinfo.GetCount() ? glyphinfo[GetGlyph(chr)].advanceWidth : 0; }
 
 	String Subset(const Vector<wchar>& chars, int first = 0, bool os2 = false);
-	bool   Open(const String& fnt, bool symbol = false, bool justcheck = false);
+	bool   Open(const Font& fnt, bool symbol = false, bool justcheck = false);
 
 	TTFReader();
-	~TTFReader();
 };
 
 struct PdfSignatureInfo {
@@ -280,7 +278,7 @@ private:
 	struct CharPos : Moveable<CharPos>   { word fi, ci; };
 
 	struct OutlineInfo : Moveable<OutlineInfo> {
-		bool ttf;
+		bool standard_ttf;
 		bool sitalic;
 		bool sbold;
 	};
@@ -316,7 +314,8 @@ private:
 	Vector<Point> offset_stack;
 	Point       current_offset;
 
-	inline double Pt(double dot)        { return 0.12 * dot; }
+	double Pt(double dot)               { return 0.12 * dot; }
+	String Ptf(double dot)              { return FormatF(Pt(dot), 5); }
 
 	int    Pos()                        { return offset.GetCount() + 1; }
 	int    BeginObj();
@@ -339,30 +338,25 @@ private:
 
 	OutlineInfo GetOutlineInfo(Font fnt);
 
-	struct M22 {
-		double a, b, c, d;
-
-		void Mul(double a1, double b1, double c1, double d1) {
-			M22 t;
-			t.a = a * a1 + b * c1;
-			t.b = a * b1 + b * d1;
-			t.c = c * a1 + d * c1;
-			t.d = c * b1 + d * d1;
-			*this = t;
-		}
-
-		M22(double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {}
-		M22() : a(1), b(0), c(0), d(1) {}
-	};
-
 	void Init(int pagecx, int pagecy, int margin, bool pdfa);
 
 	struct RGlyph : Moveable<RGlyph> {
 		String data;
 		Size   sz;
 		int    x;
+		int    color_image = -1;
 	};
+	
+	struct CGlyph : Moveable<CGlyph> {
+		Size   sz;
+		int    x;
+		int    image;
+	};
+	
+	VectorMap<Tuple<Font, int>, CGlyph> color_glyph;
 
+	int    PdfImage(const Image& img, const Rect& src);
+	CGlyph ColorGlyph(Font fnt, int chr);
 	RGlyph RasterGlyph(Font fnt, int chr);
 
 public:

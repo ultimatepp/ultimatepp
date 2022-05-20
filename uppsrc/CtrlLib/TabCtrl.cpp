@@ -1,5 +1,4 @@
 #include "CtrlLib.h"
-#include "CtrlLib.h"
 
 namespace Upp {
 

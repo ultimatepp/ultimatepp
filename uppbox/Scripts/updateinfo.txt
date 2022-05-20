@@ -18,6 +18,8 @@ rename old clang to clang.old before deleting
 rename to clang
 delete aarch and arm7 folders and .exe from bin
 
+2022-03-05 CLANG-14
+
 ------------------------------------------------------------------
 OpenSSL
 
@@ -106,6 +108,7 @@ nmake
 libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
 
 2020-09-03: 1.1.1g
+2022-03-05: 1.1.1n
 
 ------------------------------------------------------------------
 plugin/jpg
@@ -239,6 +242,7 @@ https://zlib.net/
 current version 1.2.11
 2019-03-22: 1.2.11
 2020-09-03: 1.2.11 (no update)
+2022-03-05: 1.2.12
 
 -------------------------------------------------------------------
 plugin/lz4

@@ -448,7 +448,7 @@ void RichEdit::InsertLine()
 	}
 	anchor = cursor = cursor + 1;
 	begtabsel = false;
-	formatinfo.newpage = formatinfo.newhdrftr = false;
+	formatinfo.firstonpage = formatinfo.newpage = formatinfo.newhdrftr = false;
 	if(st) {
 		Uuid next = text.GetStyle(b.styleid).next;
 		if(next != formatinfo.styleid) {

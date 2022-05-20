@@ -11,9 +11,6 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	LOG("-- Starting new run of Sqlite3 simple test");
-#ifdef _DEBUG
-	LOG("Debug mode!");
-#endif
 
 	Sqlite3Session sqlite3;
 	sqlite3.LogErrors(true);

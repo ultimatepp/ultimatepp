@@ -130,8 +130,10 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 
 	switch(event->type) {
 	case GDK_DELETE:
+		p->CancelPreedit();
 		break;
 	case GDK_FOCUS_CHANGE:
+		p->CancelPreedit();
 		if(p) {
 			if(((GdkEventFocus *)event)->in)
 				gtk_im_context_focus_in(p->top->im_context);
@@ -144,16 +146,19 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_LEAVE_NOTIFY:
 		break;
 	case GDK_BUTTON_PRESS:
+		p->CancelPreedit();
 		value = DoButtonEvent(event, true);
 		if(IsNull(value))
 			return false;
 		break;
 	case GDK_2BUTTON_PRESS:
+		p->CancelPreedit();
 		value = DoButtonEvent(event, true);
 		if(IsNull(value))
 			return false;
 		break;
 	case GDK_BUTTON_RELEASE:
+		p->CancelPreedit();
 		value = DoButtonEvent(event, false);
 		if(IsNull(value))
 			return false;
@@ -288,7 +293,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.count = 1;
 	e.event = NULL;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	GdkDevice *d = gdk_event_get_source_device(event);
+	GdkDevice *d = event ? gdk_event_get_source_device(event) : NULL;
 	if(d && findarg(gdk_device_get_source(d), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
 		e.pen = true;
 		e.pen_barrel = MouseState & GDK_BUTTON3_MASK;
@@ -326,6 +331,48 @@ void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 {
 	GuiLock __;
 	AddEvent(user_data, EVENT_TEXT, ToUtf32(str), NULL);
+}
+
+void Ctrl::IMLocation(Ctrl *w)
+{
+	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit())) {
+		GdkRectangle r;
+		Rect e = w->GetPreeditScreenRect();
+		Rect q = w->GetScreenRect();
+		GdkRectangle gr;
+		gr.x = LSC(e.left - q.left);
+		gr.y = LSC(e.top - q.top);
+		gr.width = LSC(e.GetWidth());
+		gr.height = LSC(e.GetHeight());
+		gtk_im_context_set_cursor_location(w->top->im_context, &gr);
+	}
+}
+
+void Ctrl::IMPreedit(GtkIMContext *context, gpointer user_data)
+{
+	GuiLock __;
+	Ctrl *w = GetTopCtrlFromId((uint32)(uintptr_t)user_data);
+	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit())) {
+		PangoAttrList *attrs;
+		gchar *str;
+		gint   cursor_pos;
+		gtk_im_context_get_preedit_string(context, &str, &attrs, &cursor_pos);
+		WString text = ToUtf32(str);
+		g_free(str);
+		pango_attr_list_unref(attrs);
+		w->ShowPreedit(text, cursor_pos);
+		IMLocation(w);
+	}
+	else
+		CancelPreedit();
+}
+
+void Ctrl::IMPreeditEnd(GtkIMContext *context, gpointer user_data)
+{
+	GuiLock __;
+	Ctrl *w = GetTopCtrlFromId((uint32)(uintptr_t)user_data);
+	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit()))
+		w->HidePreedit();
 }
 
 bool Ctrl::ProcessInvalids()
@@ -367,7 +414,7 @@ bool Ctrl::IsWaitingEvent()
 struct ProcStop {
 	TimeStop tm;
 	String   ev;
-	
+
 	~ProcStop() { LOG("* " << ev << " elapsed " << tm); }
 };
 
@@ -439,7 +486,7 @@ void Ctrl::Proc()
 	pen.pressure = CurrentEvent.pen_pressure;
 	pen.rotation = CurrentEvent.pen_rotation;
 	pen.tilt = CurrentEvent.pen_tilt;
-	
+
 	is_pen_event = CurrentEvent.pen;
 
 	auto DoPen = [&](Point p) {
@@ -452,7 +499,7 @@ void Ctrl::Proc()
 		}
 		else
 			for(Ctrl *t = q; t; t=q->ChildFromPoint(p)) q = t;
-		
+
 		q->Pen(p, pen, GetMouseFlags());
 		SyncCaret();
 		Image m = CursorOverride();
@@ -464,7 +511,7 @@ void Ctrl::Proc()
 	   findarg(CurrentEvent.type, GDK_MOTION_NOTIFY, GDK_BUTTON_PRESS, GDK_BUTTON_RELEASE) >= 0)
 	{
 		pen.action = decode(CurrentEvent.type, GDK_BUTTON_PRESS, PEN_DOWN, GDK_BUTTON_RELEASE, PEN_UP, 0);
-		
+
 		DoPen(GetMousePos() - GetScreenRect().TopLeft());
 	}
 #endif
@@ -490,7 +537,7 @@ void Ctrl::Proc()
 			ignoreclick = false;
 			ignoremouseup = false;
 		}
-		
+
 		if(!ignoreclick) {
 			bool dbl = msecs(clicktime) < 250;
 			clicktime = dbl ? clicktime - 1000 : msecs();
@@ -693,8 +740,10 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
 		FocusSync();
 		CaptureSync();
-		if(w)
+		if(w) {
+			IMLocation(w);
 			w->Proc();
+		}
 		r = true;
 	}
 	if(quit)
@@ -752,6 +801,9 @@ void WakeUpGuiThread()
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
+
+	cancel_preedit = DoCancelPreedit; // We really need this just once, but whatever..
+
 	ASSERT_(IsMainThread(), "EventLoop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;

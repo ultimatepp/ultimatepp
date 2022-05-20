@@ -90,8 +90,14 @@ Xform2D Xform2D::Rotation(double fi)
 Xform2D Xform2D::Sheer(double fi)
 {
 	Xform2D m;
-	m.x.x = m.y.y = 1;
 	m.x.y = atan(fi);
+	return m;
+}
+
+Xform2D Xform2D::SheerX(double fi)
+{
+	Xform2D m;
+	m.y.x = atan(fi);
 	return m;
 }
 

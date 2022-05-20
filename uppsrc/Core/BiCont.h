@@ -27,6 +27,10 @@ public:
 
 	T&       AddHead()               { return *new(AddHead0()) T; }
 	T&       AddTail()               { return *new(AddTail0()) T; }
+	template <class... Args>
+	T&       CreateHead(Args&&... args) { return *new(AddHead0()) T(std::forward<Args>(args)...); }
+	template <class... Args>
+	T&       CreateTail(Args&&... args) { return *new(AddTail0()) T(std::forward<Args>(args)...); }
 	void     AddHead(const T& x)     { new(AddHead0()) T(x); }
 	void     AddTail(const T& x)     { new(AddTail0()) T(x); }
 	void     AddHead(T&& x)          { new(AddHead0()) T(pick(x)); }
@@ -108,8 +112,14 @@ public:
 	void     AddTail(const T& x)           { bv.AddTail(new T(x)); }
 	T&       AddHead(T *newt)              { bv.AddHead(newt); return *newt; }
 	T&       AddTail(T *newt)              { bv.AddTail(newt); return *newt; }
-	template <class TT> TT& CreateHead()   { TT *q = new TT; bv.AddHead(q); return *q; }
-	template <class TT> TT& CreateTail()   { TT *q = new TT; bv.AddTail(q); return *q; }
+	template <class... Args>
+	T& CreateHead(Args&&... args)          { T *q = new T(std::forward<Args>(args)...); bv.AddHead(q); return *q; }
+	template <class... Args>
+	T& CreateTail(Args&&... args)          { T *q = new T(std::forward<Args>(args)...); bv.AddTail(q); return *q; }
+	template <class TT, class... Args>
+	TT& CreateHead(Args&&... args)         { TT *q = new TT(std::forward<Args>(args)...); bv.AddHead(q); return *q; }
+	template <class TT, class... Args>
+	TT& CreateTail(Args&&... args)         { TT *q = new TT(std::forward<Args>(args)...); bv.AddTail(q); return *q; }
 	T&       AddHead(One<T>&& one)         { ASSERT(one); return AddHead(one.Detach()); }
 	T&       AddTail(One<T>&& one)         { ASSERT(one); return AddTail(one.Detach()); }
 	T&       Head()                        { return *(T *) bv.Head(); }

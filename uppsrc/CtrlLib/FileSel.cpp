@@ -40,7 +40,7 @@ struct FileIconMaker : ImageMaker {
 	bool   large;
 
 	virtual String Key() const {
-		return file + (exe ? "1" : "0") + (dir ? "1" : "0");
+		return file + "\n" + (exe ? "1" : "0") + (dir ? "1" : "0");
 	}
 
 	virtual Image Make() const {
@@ -922,7 +922,8 @@ void FileSel::SearchLoad()
 		SortBy(list, ~sortby);
 	Update();
 #ifdef GUI_WIN
-	lazyicons.Start(list, d, WhenIcon);
+	if(!noexeicons)
+		lazyicons.Start(list, d, WhenIcon);
 #endif
 	StartLI();
 }
@@ -2374,6 +2375,7 @@ FileSel::FileSel()
 	multi = false;
 	bidname = false;
 	appmodal = true;
+	noexeicons = false;
 
 	AddChildBefore(GetFirstChild(), &sizegrip);
 
@@ -2390,6 +2392,8 @@ FileSel::FileSel()
 	places.NoHeader().NoGrid();
 	places.WhenLeftClick = THISBACK(GoToPlace);
 	places.NoWantFocus();
+	
+	list.NoRoundSize();
 
 #ifdef PLATFORM_WIN32
 	int icx = GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx;

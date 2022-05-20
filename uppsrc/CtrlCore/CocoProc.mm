@@ -102,6 +102,8 @@ struct MMImp {
 	
 	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
+		if(!view->ctrl)
+			return false;
 		Flags(e);
 		sCurrentMouseEvent__ = e;
 		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
@@ -167,6 +169,8 @@ struct MMImp {
 
 	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
 	{
+		if(!view->ctrl)
+			return false;
 		Upp::Ctrl::lastActive = view->ctrl;
 		if(Ctrl::ignoremouseup) {
 			Ctrl::KillRepeat();
@@ -196,11 +200,15 @@ struct MMImp {
 	
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
 	{
+		if(!ctrl)
+			return;
 		ctrl->fullrefresh = false;
 		ctrl->UpdateArea(w, r);
 	}
 
 	static bool KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up) {
+		if(!ctrl)
+			return false;
 		Flags(e);
 		if(!ctrl->IsEnabled())
 			return false;
@@ -232,19 +240,18 @@ struct MMImp {
 		ctrl->DispatchKey(k, 1);
 		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
-			for(wchar c : x) {
-				if(c < 0xF700 &&
-				   (c > 32 && c != 127 || /*c == 9 && !GetOption() || */c == 32 && !GetShift()))
-					ctrl->DispatchKey(c, 1);
-			}
 			if(e.keyCode == kVK_ANSI_KeypadEnter && *x != 13)
 				ctrl->DispatchKey(13, 1);
+			if(e.keyCode == kVK_Space && !(k & K_SHIFT))
+				ctrl->DispatchKey(' ', 1);
 		}
 		return true;
 	}
 
 	static void BecomeKey(Upp::Ctrl *ctrl)
 	{
+		if(!ctrl)
+			return;
 		LLOG("Become key " << Upp::Name(ctrl));
 		Upp::Ctrl::lastActive = ctrl;
 		ctrl->ActivateWnd();
@@ -260,6 +267,8 @@ struct MMImp {
 
 	static void ResignKey(Upp::Ctrl *ctrl)
 	{
+		if(!ctrl)
+			return;
 		LLOG("Resign key " << Upp::Name(ctrl));
 		ctrl->KillFocusWnd();
 		Upp::Ctrl::ReleaseCtrlCapture();
@@ -267,12 +276,16 @@ struct MMImp {
 	
 	static void DoClose(Upp::Ctrl *ctrl)
 	{
+		if(!ctrl)
+			return;
 		ctrl->MMClose();
 		Upp::Ctrl::ReleaseCtrlCapture();
 	}
 
 	static int  DnD(Upp::Ctrl *ctrl, id<NSDraggingInfo> info, bool paste = false)
 	{
+		if(!ctrl)
+			return false;
 		NSView *nsview = (NSView *)ctrl->GetNSView();
 		PasteClip clip;
 		clip.nspasteboard = info.draggingPasteboard;
@@ -298,6 +311,32 @@ struct MMImp {
 	static void DoCursorShape()
 	{
 		Ctrl::DoCursorShape();
+	}
+	
+	static void ShowPreedit(Ctrl *ctrl, const WString& text)
+	{
+		if(ctrl)
+			ctrl->GetTopCtrl()->ShowPreedit(text, INT_MAX);
+	}
+	
+	static NSRect PreeditRect(Ctrl *ctrl)
+	{
+		if(ctrl)
+			return DesktopRect(ctrl->GetTopCtrl()->GetPreeditScreenRect());
+		return NSRect();
+	}
+	
+	static void PreeditText(Ctrl *ctrl, const WString& s)
+	{
+		if(ctrl)
+			for(Upp::wchar ch : s)
+				if(ch >= 32 && ch != 127 && ch != ' ')
+					ctrl->DispatchKey(ch, 1);
+	}
+	
+	static void CancelPreedit()
+	{
+		Ctrl::HidePreedit();
 	}
 };
 
@@ -357,6 +396,7 @@ struct MMImp {
 }
 
 - (void)keyDown:(NSEvent *)e {
+    [self interpretKeyEvents: [NSArray arrayWithObject: e]];
 	if(!Upp::MMImp::KeyEvent(ctrl, e, 0))
 		[super keyDown:e];
 }
@@ -445,6 +485,69 @@ struct MMImp {
 	        userInfo:nil];
 	[self addTrackingArea:ta];
 	[ta release];
+}
+
+// NSTextInputClient methods
+
+-(void)insertText:(id)aString replacementRange:(NSRange)replacementRange
+{
+    (void) replacementRange;
+
+    NSString* pInsert = [aString isMemberOfClass: [NSAttributedString class]] ? [aString string] : aString;
+
+	if(pInsert)
+		Upp::MMImp::PreeditText(ctrl, Upp::ToWString(pInsert));
+}
+
+- (NSRange)markedRange
+{
+	return NSMakeRange( NSNotFound, 0 );
+}
+
+- (NSRange)selectedRange
+{
+	return NSMakeRange( NSNotFound, 0 );
+}
+
+- (NSRect)firstRectForCharacterRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange
+{
+	return Upp::MMImp::PreeditRect(ctrl);
+}
+
+- (void)setMarkedText:(id)aString selectedRange:(NSRange)selRange replacementRange:(NSRange)replacementRange
+{
+    if(![aString isKindOfClass:[NSAttributedString class]] )
+        aString = [[[NSAttributedString alloc] initWithString:aString] autorelease];
+
+	Upp::MMImp::ShowPreedit(ctrl, Upp::ToWString([aString string]));
+}
+
+- (BOOL)hasMarkedText
+{
+    return true;
+}
+
+- (void)unmarkText
+{
+	Upp::MMImp::CancelPreedit();
+}
+
+- (NSArray *)validAttributesForMarkedText
+{
+    return [NSArray arrayWithObjects:NSUnderlineStyleAttributeName, nil];
+}
+
+- (NSAttributedString *)attributedSubstringForProposedRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange
+{
+	(void) aRange;
+	(void) actualRange;
+	return nil;
+}
+
+- (NSUInteger)characterIndexForPoint:(NSPoint)thePoint
+{
+	(void)thePoint;
+	return 0;
 }
 
 @end

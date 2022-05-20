@@ -1,23 +1,38 @@
 #include "LayDes.h"
 
 struct EnumProperty : public EditorProperty<DropList> {
+	String name_space;
+
 	virtual void     SetData(const Value& v);
-	virtual String   Save() const              { return ~editor; }
+	virtual String   Save() const;
 	virtual void     Read(CParser& p)          { SetData(ReadPropertyParam(p)); }
 
-	EnumProperty(VectorMap<String, String>& e) {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
-		for(int i = 0; i < e.GetCount(); i++)
-			editor.Add(e.GetKey(i), e[i]);
-		SetData(defval = e.GetKey(0));
+	EnumProperty(LayoutEnum& e) {
+		for(int i = 0; i < e.items.GetCount(); i++)
+			editor.Add(e.items.GetKey(i), e.items[i]);
+		if(e.items.GetCount())
+			SetData(defval = e.items.GetKey(0));
+		name_space = e.name_space;
 	}
 };
 
 void  EnumProperty::SetData(const Value& v)
 {
-	if(!editor.HasKey(v))
-		editor.Add(v, v);
-	editor <<= v;
+	String s = ~v;
+	int q = s.ReverseFind(':');
+	if(q >= 0)
+		s = s.Mid(q + 1);
+	if(!editor.HasKey(s))
+		editor.Add(s, s);
+	editor <<= s;
+}
+
+String EnumProperty::Save() const
+{
+	String s = ~~editor;
+	if(name_space.GetCount() && iscib(*s))
+		s = name_space + "::" + s;
+	return s;
 }
 
 bool ParseTemplate(String& type, String& temp)
@@ -211,11 +226,34 @@ String LayoutItem::Save(int i, int y, const String& eol) const
 		out << "\tUNTYPED(";
 	else {
 		String s = type;
-		int q = LayoutTypes().Find(type);
+		CParser p(type);
+		int q = -1;
+		if(p.IsId())
+			q = LayoutTypes().Find(p.ReadId());
 		if(q >= 0) {
 			String n = LayoutTypes()[q].name_space;
-			if(n.GetCount())
-				s = n + "::" + s;
+			if(n.GetCount()) {
+				s.Clear();
+				CParser p(type);
+				while(!p.IsEof()) {
+					if(p.IsId())
+						s << n << "::" << p.ReadId();
+					else
+					if(p.Char('<'))
+						s << '<';
+					else
+					if(p.Char(':'))
+						s << ':';
+					else
+					if(p.Char('>'))
+						s << '>';
+					else
+					if(p.Char(','))
+						s << ',';
+					else
+						p.SkipTerm();
+				}
+			}
 		}
 		out << "\tITEM(" << s << ", ";
 	}

@@ -1,14 +1,15 @@
 description "PDF output as Draw derived class\377128,0,255";
 
 uses
-	Draw;
+	Draw,
+	Painter;
 
 file
 	PdfDraw.h options(BUILDER_OPTION) PCH,
 	TTFStream.cpp,
 	TTFStruct.cpp,
-	TTFReader.cpp,
 	TTFSubset.cpp,
+	TTFReader.cpp,
 	ICCColorSpace.i,
 	PdfDraw.cpp,
 	PdfReport.cpp,

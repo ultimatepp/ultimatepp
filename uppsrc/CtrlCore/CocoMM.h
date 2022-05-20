@@ -76,9 +76,11 @@ struct RectCG {
 	RectCG();
 };
 
+NSRect DesktopRect(const Upp::Rect& r);
+
 }
 
-@interface CocoView : NSView <NSWindowDelegate>
+@interface CocoView : NSView <NSWindowDelegate, NSTextInputClient>
 {
 	@public
 	Upp::Ptr<Upp::Ctrl> ctrl;

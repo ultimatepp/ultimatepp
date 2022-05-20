@@ -163,10 +163,10 @@ void CleanModules()
 		GetIdeModule(i).CleanUsc();
 }
 
-bool IdeModuleUsc(CParser& p)
+bool IdeModuleUsc(CParser& p, String& current_namespace)
 {
 	for(int i = 0; i < GetIdeModuleCount(); i++)
-		if(GetIdeModule(i).ParseUsc(p))
+		if(GetIdeModule(i).ParseUsc(p, current_namespace))
 			return true;
 	return false;
 }

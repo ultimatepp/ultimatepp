@@ -734,7 +734,8 @@ void SpinLock::Wait()
 	#ifdef CPU_X86
 		_mm_pause();
 	#endif
-		if(n++ > 500)
+		n = n + 1;
+		if(n > 500)
 			Sleep(0);
 	}
 }

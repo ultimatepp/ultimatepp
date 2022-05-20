@@ -31,12 +31,11 @@ topic "Examples";
 [s0;^topic`:`/`/uppweb`/www`/examples`$en`-us`#3^ &]
 [s3;:1: 1. Introduction&]
 [s5; We would like to present to you a complete collection of examples. 
-All examples are written in the pure Ultimate`+`+ framework. 
-This is the best place to raise your skills in using our library. 
-Alternatively, if you still hesitate to use the U`+`+ framework 
-in your own projects, this site should solve your doubts. It 
-will show you on how many real world scenario Ultimate`+`+ can 
-be used.&]
+All examples are written in the pure U`+`+ framework. This is 
+the best place to raise your skills in using our library. Alternatively, 
+if you still hesitate to use the U`+`+ framework in your own 
+projects, this site should solve your doubts. It will show you 
+on how many real world scenario U`+`+ can be used.&]
 [s5; The whole page is divided into two sections. The first one `"Sample 
 applications`" shows the complex usage of the framework. in the 
 real world application. The second `"Reference examples`" demonstrates 
@@ -47,8 +46,8 @@ additional information such as:&]
 is doing&]
 [s5;l160;i150;O0; the screen`-shot of a working application&]
 [s5; All source code packages that are listed on this site are available 
-in standard Ultimate`+`+ distribution. So, you can easily select 
-example that you are interested in and build it in TheIDE.&]
+in standard U`+`+ distribution. So, you can easily select example 
+that you are interested in and build it in TheIDE.&]
 [s3;:2: 2. Sample applications&]
 [s5; This section contains the source code of complex applications 
 written in U`+`+.]]

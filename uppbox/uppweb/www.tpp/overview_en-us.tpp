@@ -1,4 +1,4 @@
-topic "Ultimate++ Overview";
+topic "U++ Overview";
 [l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -22,7 +22,7 @@ topic "Ultimate++ Overview";
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Ultimate`+`+ Overview&]
+[s2; U`+`+ Overview&]
 [s19;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s3; Table of contents&]
 [s0; &]
@@ -30,8 +30,7 @@ topic "Ultimate++ Overview";
 appetite]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#2^2 2. Everything 
 belongs somewhere]&]
-[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. Ultimate`+`+ 
-containers]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. U`+`+ containers]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#4^2 4. Who owns widgets?]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#5^2 5. Dialog templates 
 are C`+`+ templates]&]
@@ -39,25 +38,25 @@ are C`+`+ templates]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#7^2 7. Display and 
 Convert]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#8^2 8. Function]&]
-[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#9^2 9. Ultimate`+`+ 
-set of widgets]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#9^2 9. U`+`+ set of 
+widgets]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#10^2 10. SQL programming]&]
 [s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#11^2 11. Summary]&]
 [s0; &]
 [s3;:1: 1. Whetting your appetite&]
-[s5; Ultimate`+`+ promises radical reduction of code complexity of 
-typical desktop applications. Let us start with a_simple example 
-`- an application that displays the number of days between two 
-dates. The number of days is refreshed as user types or edits 
-dates into the input fields:&]
+[s5; U`+`+ promises radical reduction of code complexity of typical 
+desktop applications. Let us start with a_simple example `- an 
+application that displays the number of days between two dates. 
+The number of days is refreshed as user types or edits dates 
+into the input fields:&]
 [s0; &]
 [s0;= 
 @@rawimage:2000&581
 (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)
 &]
 [s0; &]
-[s5; The application window layout is created using Ultimate`+`+ 
-visual designer:&]
+[s5; The application window layout is created using U`+`+ visual 
+designer:&]
 [s0; &]
 [s0;= 
 @@rawimage:3578&1770
@@ -98,49 +97,47 @@ and %```", abs(Date(`~date1) `- Date(`~date2)), `~date1, `~date2);]&]
 [s0;i128;*C@(28.42.150)2 &]
 [s0;i128;*C@(28.42.150) &]
 [s3;:2: 2. Everything belongs somewhere&]
-[s5; In Ultimate`+`+, most objects are bound to some logical scope. 
-As a result, you will not see many [*/ new ]operators in code using 
-Ultimate`+`+ and almost no [*/ delete ]operators outside the implementation 
+[s5; In U`+`+, most objects are bound to some logical scope. As a 
+result, you will not see many [*/ new ]operators in code using 
+U`+`+ and almost no [*/ delete ]operators outside the implementation 
 of containers.&]
 [s5; That of course does not mean you are not allowed to use pointers, 
 but it is good practice to use pointers just to point to things, 
 never to manage heap resources. This also avoids all confusion 
 regarding ownership of the underlying object, time of its deletion 
 etc. If you need to manage data sets of variable size or polymorphic 
-type, you should prefer using one of Ultimate`+`+ containers.&]
+type, you should prefer using one of U`+`+ containers.&]
 [s5; Speaking about it, there are no shared smart pointers (like 
-boost`::shared`_ptr) in Ultimate`+`+ used to manage heap resources 
-at interface level. They are not needed and considered bad practice.&]
+std`::shared`_ptr) in U`+`+ used to manage heap resources at interface 
+level. They are not needed and considered bad practice.&]
 [s5; In C`+`+, this approach proves to be equally good or better 
 than garbage collected languages like Java or C#. While those 
 languages are able to provide automatic management of heap resources, 
 U`+`+ approach provides very deterministic automatic management 
 of [/ all] resources.&]
 [s5; &]
-[s3;:3: 3. Ultimate`+`+ containers&]
-[s5; One aspect of Ultimate`+`+ is bringing a lot of criticism: [/ Ultimate`+`+ 
-is not using much of standard C`+`+ library]. There are, however, 
+[s3;:3: 3. U`+`+ containers&]
+[s5; One aspect of U`+`+ is bringing a lot of criticism: [/ U`+`+ is 
+not using much of standard C`+`+ library]. There are, however, 
 serious reasons for this. STL, with its devastating requirement 
 that each element stored in container has to have copy`-constructor, 
 makes standard containers somewhat hard to use in GUI development.&]
-[s5; There is no such general requirement for Ultimate`+`+ containers. 
-Instead, Ultimate`+`+ containers come in two flavors.&]
+[s5; There is no such general requirement for U`+`+ containers. Instead, 
+U`+`+ containers come in two flavors.&]
 [s5; Vector flavor has Moveable requirement that allows very fast 
 implementation for certain types (e.g., element insertion at 
-arbitrary position of Ultimate`+`+ Vector<String> is much faster 
-than the same operation with typical implementation of std`::vector<std`::string>).
-&]
+arbitrary position of U`+`+ Vector<String> is much faster than 
+the same operation with typical implementation of std`::vector<std`::string>).&]
 [s5; Array flavor has no requirements for element types at all, at 
 the price of somewhat lower performance.&]
-[s5; As a result, in Ultimate`+`+ you are for example allowed to 
-create container of .GUI widgets that edits integer numbers ( 
-[*C@(28.42.150) Array<EditInt> integer`_editors]) and even sort 
-it using standard Ultimate`+`+ [*C@(28.42.150) Sort] algorithm. 
-Doing something like this would require using pointers as elements 
-in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or alternatively 
-some sort of smart pointers (probably std`::unique`_ptr), but 
-both increase code complexity and break the Ultimate`+`+ rule 
-according to which [/ everything belongs somewhere].&]
+[s5; As a result, in U`+`+ you are for example allowed to create 
+container of .GUI widgets that edits integer numbers ( [*C@(28.42.150) Array<EditIn
+t> integer`_editors]) and even sort it using standard U`+`+ [*C@(28.42.150) Sort] 
+algorithm. Doing something like this would require using pointers 
+as elements in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or 
+alternatively some sort of smart pointers (probably std`::unique`_ptr), 
+but both increase code complexity and break the U`+`+ rule according 
+to which [/ everything belongs somewhere].&]
 [s5; &]
 [s3;:4: 4. Who owns widgets?&]
 [s5; One of the things we discovered over our countless experiments 
@@ -154,8 +151,8 @@ time it is always a stand`-alone entity with its set of attributes
 that can be modified or queried regardless of its current GUI 
 status.&]
 [s5; This has many serious implications. The most important is that 
-Ultimate`+`+ does not require widget objects to be allocated 
-on the heap. That in turn allows us to arrange GUI dialog structure 
+U`+`+ does not require widget objects to be allocated on the 
+heap. That in turn allows us to arrange GUI dialog structure 
 in a very effective way, instead of&]
 [s21; &]
 [s21; struct MyDialog `{&]
@@ -179,8 +176,7 @@ time.&]
 [s5; &]
 [s3;:5: 5. Dialog templates are C`+`+ templates&]
 [s5; Now that we have laid down the foundations, it is time to introduce 
-the coolest aspect of Ultimate`+`+ GUI programming `- layout 
-templates:&]
+the coolest aspect of U`+`+ GUI programming `- layout templates:&]
 [s5; If you visually design a layout (usually, but not limited to, 
 the layout of a dialog box) using TheIDE`'s [/ Layout designer], 
 this layout is in in your code reflected as a C`+`+ template 
@@ -208,19 +204,18 @@ as its base class, not just the one that represents dialog windows
 [s5; This approach provides radical reduction of complexity `- many 
 annoying things that seem to be necessary to identify widgets 
 in client code (like widget IDs or names) are simply gone for 
-good. All you have to deal with in Ultimate`+`+ are your instance 
-variables.&]
+good. All you have to deal with in U`+`+ are your instance variables.&]
 [s5; &]
 [s3;:6: 6. Value and Null&]
-[s5; One aspect that makes development in Ultimate`+`+ very orthogonal 
-is the existence of Value `- the dynamically typed value type. 
-Any of Ultimate`+`+ basic types (int, double, String, Color, 
-Rect, Font, Image etc...) can be stored into and retrieved from 
-a Value. Value itself can be queried for the type of value it 
-contains. It is also very easy to make any custom types Value`-compatible.&]
+[s5; One aspect that makes development in U`+`+ very orthogonal is 
+the existence of Value `- the dynamically typed value type. Any 
+of U`+`+ basic types (int, double, String, Color, Rect, Font, 
+Image etc...) can be stored into and retrieved from a Value. 
+Value itself can be queried for the type of value it contains. 
+It is also very easy to make any custom types Value`-compatible.&]
 [s5; Somewhat related to Value is the general concept of `"empty 
-value`". The Ultimate`+`+ special constant Null represents an 
-empty value. Most concrete types support Null. Null is also defined 
+value`". The U`+`+ special constant Null represents an empty 
+value. Most concrete types support Null. Null is also defined 
 for fundamental types `- int, double and int64 `- as a value 
 that is lower than any other value for specific type (for example, 
 Null is equal to INT`_MIN for int). To test whether a variable 
@@ -228,34 +223,33 @@ of a certain type is Null, you can use the generic IsNull function.&]
 [s5; Value (and Null) have a remarkable effect on GUI flexibility. 
 Many widgets logically have their `"natural`" values, (for integer 
 edit field it is the typed in number, for option widget it is 
-either true or false according to its state) and Ultimate`+`+ 
-provides uniform access to these values via Value and GetData 
-/ SetData virtual methods. For example, clearing a dialog can 
-be usually done by assigning Null to all of its widgets.&]
+either true or false according to its state) and U`+`+ provides 
+uniform access to these values via Value and GetData / SetData 
+virtual methods. For example, clearing a dialog can be usually 
+done by assigning Null to all of its widgets.&]
 [s5; &]
 [s3;:7: 7. Display and Convert&]
-[s5; Display and Convert based classes further enhance Ultimate`+`+ 
-flexibility using Value.&]
+[s5; Display and Convert based classes further enhance U`+`+ flexibility 
+using Value.&]
 [s5; Convert classes act as bidirectional Value to Value converters. 
 Usually, but not limited to, this conversion is between the value 
 of a logical type and its textual representation (conversion 
 of the textual representation to the logical type can be sometimes 
 omitted). Examples are ConvertInt or ConvertDate.&]
-[s5; Many Ultimate`+`+ widgets are able to use these Convert classes 
-as properties. An example is the EditField class, a generic input 
+[s5; Many U`+`+ widgets are able to use these Convert classes as 
+properties. An example is the EditField class, a generic input 
 field. By assigning specific Convert based class to EditField, 
 you can `"teach`" it to edit numbers, dates or anything that 
 has textual representation.&]
 [s5; Somewhat similar to Convert classes are Display based classes. 
 These are classes that describe [/ how Values should be displayed]. 
-Once again, many Ultimate`+`+ widgets are using Display classes 
-as their properties. For example, to `"teach`" the DropList widget 
-(DropList is close to something called `"combo box`" on other 
-platforms) to display colors, all you need to do is to set its 
-Display attribute to DisplayColor (remember, Color is Value compatible 
-and DropList`'s list consists of Values). Meanwhile, you can 
-use the same DisplayColor as the property of many other widget 
-classes.&]
+Once again, many U`+`+ widgets are using Display classes as their 
+properties. For example, to `"teach`" the DropList widget (DropList 
+is close to something called `"combo box`" on other platforms) 
+to display colors, all you need to do is to set its Display attribute 
+to DisplayColor (remember, Color is Value compatible and DropList`'s 
+list consists of Values). Meanwhile, you can use the same DisplayColor 
+as the property of many other widget classes.&]
 [s5; &]
 [s3;:8: 8. Function&]
 [s5; While virtual methods provide a great way to organize the [/ input] 
@@ -270,7 +264,7 @@ lambdas. The reason for not using std`::function is that in GUI,
 a lot of output events remain unassigned and std`::functions throws 
 when invoked empty `- Upp`::Function simply does nothing.&]
 [s5; &]
-[s3;:9: 9. Ultimate`+`+ set of widgets&]
+[s3;:9: 9. U`+`+ set of widgets&]
 [s5; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
 new widget classes is often a trivial task in U`+`+, any description 
@@ -330,18 +324,18 @@ of lengthy operations.&]
 [s20;= [*1 ColorButton]&]
 [s5; &]
 [s5;l128;i150;O0;~~~128; [* MenuBar ]and [* ToolBar ]handling is a little 
-unorthodox in Ultimate`+`+, as the menu actions, represented 
-as Callbacks, are passed to the methods constructing the corresponding 
-Bar. This has some serious advantages `- state and presence of 
-individual buttons or menu bar items can be easily adjusted according 
-to the current application state. It is also often possible to 
-have a single method for construction of both ToolBar and MenuBar.&]
+unorthodox in U`+`+, as the menu actions, represented as Callbacks, 
+are passed to the methods constructing the corresponding Bar. 
+This has some serious advantages `- state and presence of individual 
+buttons or menu bar items can be easily adjusted according to 
+the current application state. It is also often possible to have 
+a single method for construction of both ToolBar and MenuBar.&]
 [s5;l128;i150;O0;~~~128; [* ColumnList ]displays values in user`-adjustable 
 number of columns.&]
 [s5;l128;i150;O0;~~~128; [* FileList ]is variant of ColumnList for 
 displaying lists of files.&]
-[s5;l128;i150;O0;~~~128; Finally, Ultimate`+`+ has tools to deal 
-with advanced text formatting:&]
+[s5;l128;i150;O0;~~~128; Finally, U`+`+ has tools to deal with advanced 
+text formatting:&]
 [s5;l128;i150;O0;~~~128; [* RichText ]is a class that provides storage 
 of complex text documents, including font and paragraph formatting 
 and even nested tables support.&]
@@ -361,19 +355,18 @@ package, readily available to any U`+`+ application.&]
 [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ here].&]
 [s5; &]
 [s3;:10: 10. SQL programming&]
-[s5; One of the motivations behind Ultimate`+`+ always used to be 
-the development of enterprise class client`-server SQL applications. 
-Using general Ultimate`+`+ philosophy we believe to have achieved 
-some extraordinary results, basically making Ultimate`+`+/SQL 
-development easier that using SQL dedicated development tools.&]
+[s5; One of the motivations behind U`+`+ always used to be the development 
+of enterprise class client`-server SQL applications. Using general 
+U`+`+ philosophy we believe to have achieved some extraordinary 
+results, basically making U`+`+/SQL development easier that using 
+SQL dedicated development tools.&]
 [s5; Of course, SQL is an area where the Value abstraction hugely 
 pays off. Fetching database values and putting them to GUI widgets 
-never was as trivial as it is in Ultimate`+`+.&]
+never was as trivial as it is in U`+`+.&]
 [s5; An important tool related to SQL is idea of `"SQL expressions`". 
-SQL expression is entity that represents SQL command. Ultimate`+`+ 
-provides means to build SQL expression using C`+`+ overloading 
-mechanism. For example, Ultimate`+`+ SQL expression might look 
-like:&]
+SQL expression is entity that represents SQL command. U`+`+ provides 
+means to build SQL expression using C`+`+ overloading mechanism. 
+For example, U`+`+ SQL expression might look like:&]
 [s21; &]
 [s21; Select(NAME, SURNAME).From(PERSON).Where(PERSONID `=`= personid);&]
 [s21; &]
@@ -441,25 +434,24 @@ data interchange between dialog widgets and database records:&]
 [s5; &]
 [s3;:11: 11. Summary&]
 [s5; In this overview we have tried to summarize the most exciting 
-features of Ultimate`+`+. There are of course many more important 
-features including certain interesting implementation techniques 
-like zero overhead memory allocator, perfect image rescaling 
-etc.&]
-[s5; Since the very beginning we have kept using Ultimate`+`+ ourselves 
+features of U`+`+. There are of course many more important features 
+including certain interesting implementation techniques like 
+zero overhead memory allocator, perfect image rescaling etc.&]
+[s5; Since the very beginning we have kept using U`+`+ ourselves 
 to develop applications for our customers. Even so, in recent 
 years we never hesitated to compromise our entire code`-base 
 each time we felt that some major or minor aspect of library 
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s5; Now, after some more than 2 decades of development, Ultimate`+`+ 
-is a mature platform that brings vast reductions of development 
+[s5; Now, after some more than 2 decades of development, U`+`+ is 
+a mature platform that brings vast reductions of development 
 costs. Most interfaces seem to be finished and optimal. There 
 is of course still some work ahead, mostly in documentation an 
 IDE department.&]
-[s5; If you find our Ultimate`+`+ way of programming interesting, 
-nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
-g] it. But be careful there: you should be prepared to throw away 
+[s5; If you find our U`+`+ way of programming interesting, nothing 
+stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloading] 
+it. But be careful there: you should be prepared to throw away 
 some old habits and usual ways of thinking about how `"things 
 are always done`", or they might ruin your opportunity to receive 
 a lot in the reward, together with a healthy disrespect to certain 

@@ -108,6 +108,12 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo, bool 
 		newhdrftr = Null;
 		newhdrftr.ThreeState();
 	}
+	if(RichText::FIRSTONPAGE & formatinfo.paravalid)
+		firstonpage = formatinfo.firstonpage;
+	else {
+		firstonpage = Null;
+		firstonpage.ThreeState();
+	}
 	if(RichText::NEWPAGE & formatinfo.paravalid)
 		page = formatinfo.newpage;
 	else {
@@ -207,6 +213,10 @@ dword ParaFormatting::Get(RichText::FormatInfo& formatinfo)
 	if(!IsNull(page)) {
 		formatinfo.newpage = page;
 		v |= RichText::NEWPAGE;
+	}
+	if(!IsNull(firstonpage)) {
+		formatinfo.firstonpage = firstonpage;
+		v |= RichText::FIRSTONPAGE;
 	}
 	if(!IsNull(newhdrftr)) {
 		formatinfo.newhdrftr = newhdrftr;
@@ -539,6 +549,7 @@ StyleManager::StyleManager()
 	ff.Add(Font::ROMAN);
 	ff.Add(Font::COURIER);
 	Setup(ff, UNIT_DOT);
+	para.page.Disable();
 }
 
 }

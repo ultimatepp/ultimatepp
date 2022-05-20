@@ -200,7 +200,6 @@ private:
 	Vector<Ln>                 ln;
 	Vector< Vector<CellInfo> > cellinfo;
 	Vector<bool>               modify;
-	FrameBottom<ParentCtrl>    scrollbox;
 	Vector<int>                column_width, column_pos;
 	DisplayPopup               info;
 	const Order               *columnsortsecondary;
@@ -208,6 +207,7 @@ private:
 	int                        ctrl_low, ctrl_high;
 	int                        sorting_from;
 	Index<String>              id_ndx;
+	MarginFrame                scrollbox;
 
 	int   keypos;
 	int   cursor;
@@ -590,6 +590,7 @@ public:
 	T&         CreateCtrl(int i, int col, bool value = true) { T *c = new T; SetCtrl(i, col, c, true, value); SyncLineCtrls(i); return *c; }
 
 	ArrayCtrl& SetLineCy(int cy);
+	ArrayCtrl& SetEditLineCy()                         { return SetLineCy(EditField::GetStdHeight() + DPI(4)); }
 	void       SetLineCy(int i, int cy);
 	int        GetLineCy() const                       { return linecy; }
 	int        GetLineY(int i) const;

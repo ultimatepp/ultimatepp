@@ -51,6 +51,7 @@ class Progress : public WithProgressLayout<TopWindow> {
 public:
 	ProgressIndicator pi;
 	virtual void Close();
+	virtual void Layout();
 
 protected:
 	bool     cancel;
@@ -65,6 +66,7 @@ protected:
 	Modality modality;
 	Mutex    mtx;
 
+	void     Setxt0();
 	void     Setxt();
 	void     Init();
 	void     Process();

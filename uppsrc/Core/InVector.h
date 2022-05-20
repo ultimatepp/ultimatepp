@@ -154,7 +154,9 @@ public:
 	String   ToString() const;
 	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+#ifndef CPP_20
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+#endif
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
@@ -382,7 +384,9 @@ public:
 	String   ToString() const;
 	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+#ifndef CPP_20
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+#endif
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
@@ -528,7 +532,9 @@ public:
 	hash_t   GetHashValue() const                        { return HashBySerialize(*this); }
 	
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+#ifndef CPP_20
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+#endif
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }

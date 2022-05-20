@@ -83,8 +83,9 @@ public:
 	operator const String&() const               { return ToString(); }
 	const String&  operator~() const             { return ToString(); }
 	bool           operator==(const Id& b) const { return id == b.id; }
+	bool           operator==(const String& b) const { return id == b; }
+	bool           operator==(const char *b) const { return id == b; }
 	bool           operator!=(const Id& b) const { return id != b.id; }
-
 	operator bool() const                        { return id.GetCount(); }
 
 	Id()                                         {}

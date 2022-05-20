@@ -22,10 +22,6 @@ TOPIC("LearnCpp_en-us")
 #include "LearnCpp_en-us.tppi"
 END_TOPIC
 
-TOPIC("RoadmapHistorical_en-us")
-#include "RoadmapHistorical_en-us.tppi"
-END_TOPIC
-
 TOPIC("Roadmap_en-us")
 #include "Roadmap_en-us.tppi"
 END_TOPIC
@@ -156,5 +152,21 @@ END_TOPIC
 
 TOPIC("videotutorials_en-us")
 #include "videotutorials_en-us.tppi"
+END_TOPIC
+
+TOPIC("vsqt_en-us")
+#include "vsqt_en-us.tppi"
+END_TOPIC
+
+TOPIC("vsstd_en-us")
+#include "vsstd_en-us.tppi"
+END_TOPIC
+
+TOPIC("vsswing_en-us")
+#include "vsswing_en-us.tppi"
+END_TOPIC
+
+TOPIC("vswx_en-us")
+#include "vswx_en-us.tppi"
 END_TOPIC
 

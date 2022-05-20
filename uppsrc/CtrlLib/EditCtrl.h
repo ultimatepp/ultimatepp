@@ -291,10 +291,12 @@ public:
 typedef EditMinMax<int, ConvertInt>              EditInt;
 typedef EditMinMax<int64, ConvertInt64>          EditInt64;
 typedef EditMinMax<double, ConvertDouble>        EditDouble;
+typedef EditMinMax<double, ConvertFloat>         EditFloat;
 typedef EditMinMax<Date, ConvertDate>            EditDate;
 typedef EditMinMax<Time, ConvertTime>            EditTime;
 typedef EditMinMaxNotNull<int, EditInt>          EditIntNotNull;
 typedef EditMinMaxNotNull<int64, EditInt64>      EditInt64NotNull;
+typedef EditMinMaxNotNull<double, EditFloat>     EditFloatNotNull;
 typedef EditMinMaxNotNull<double, EditDouble>    EditDoubleNotNull;
 typedef EditMinMaxNotNull<Date, EditDate>        EditDateNotNull;
 typedef EditMinMaxNotNull<Time, EditTime>        EditTimeNotNull;
@@ -524,11 +526,14 @@ void WithSpin<DataType, Base, IncType>::MouseWheel(Point, int zdelta, dword)
 typedef WithSpin<int, EditInt>               EditIntSpin;
 typedef WithSpin<int64, EditInt64>           EditInt64Spin;
 typedef WithSpin<double, EditDouble>         EditDoubleSpin;
+typedef WithSpin<double, EditFloat>          EditFloatSpin;
 typedef WithSpin<Date, EditDate, int>        EditDateSpin;
 typedef WithSpin<Time, EditTime, int>        EditTimeSpin;
 
 typedef WithSpin<int, EditIntNotNull>        EditIntNotNullSpin;
 typedef WithSpin<int64, EditInt64NotNull>    EditInt64NotNullSpin;
 typedef WithSpin<double, EditDoubleNotNull>  EditDoubleNotNullSpin;
+typedef WithSpin<double, EditFloatNotNull>   EditFloatNotNullSpin;
 typedef WithSpin<Date, EditDateNotNull, int> EditDateNotNullSpin;
 typedef WithSpin<Time, EditTimeNotNull, int> EditTimeNotNullSpin;
+

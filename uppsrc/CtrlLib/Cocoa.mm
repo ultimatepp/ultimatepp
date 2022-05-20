@@ -19,8 +19,8 @@ FileSelNative& FileSelNative::AllFilesType()
 	return Type(t_("All files"), "*.*");
 }
 
-bool FileSelNative::Execute(bool open, const char *title)
-{
+bool FileSelNative::Execute0(int open, const char *title)
+{	
 	path.Clear();
 	Ctrl::ReleaseCtrlCapture();
 	if(!title)
@@ -36,6 +36,14 @@ bool FileSelNative::Execute(bool open, const char *title)
 		NSOpenPanel *panel = [NSOpenPanel openPanel];
 		[panel setAllowsMultipleSelection: multi ? YES : NO];
 		[panel setMessage:(NSString *)~mmtitle];
+		if(open == 2) {
+			[panel setCanChooseDirectories: YES];
+			[panel setCanChooseFiles: NO];
+		}
+		else {
+			[panel setCanChooseDirectories: NO];
+			[panel setCanChooseFiles: YES];
+		}
 		if([panel runModal] == NSModalResponseOK) {
 			NSArray* urls = [panel URLs];
 			for(int i = 0; i < urls.count; i++)

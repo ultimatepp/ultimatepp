@@ -376,7 +376,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 		int x = 0;
 		int ii = 0;
 		while(ii < hln.GetCount() - 1) {
-			Font fnt = font;
 			LineEdit::Highlight& h = hln[ii];
 			int l = 1;
 			while(ii + l < hln.GetCount() - 1 && hln[ii + l].paper == h.paper)

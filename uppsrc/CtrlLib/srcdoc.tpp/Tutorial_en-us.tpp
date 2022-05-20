@@ -928,7 +928,7 @@ is such that it can be directly included into C`+`+:&]
 [s7; &]
 [s7; using namespace Upp;&]
 [s7; &]
-[s7; [* #define LAYOUTFILE <Gui16/dlg.lay>]&]
+[s7; [* #define LAYOUTFILE <Gui16a/dlg.lay>]&]
 [s7; [* #include <CtrlCore/lay.h>]&]
 [s7; &]
 [s7; struct MyAppWindow : public [* WithDlgLayout<TopWindow>] `{&]
@@ -1004,17 +1004,16 @@ variable name used for unnamed layout members (0 is index of
 member).]&]
 [s22;:16`.2: 16.2 Upp namespace agnostic implementation&]
 [s5; If you prefer to write code that is namespace agnostic, you 
-are not forced to use using namespace Upp in the context of using 
-layouts. Below implementation presents how you can avoid such 
-situation:&]
+are not forced to use `"using namespace Upp`" in the context 
+of using layouts. Below implementation presents how you could 
+avoid such situation:&]
 [s0; &]
 [s7; #include <CtrlLib/CtrlLib.h>&]
 [s7; &]
-[s7; #define LAYOUTFILE <Gui16/dlg.lay>&]
+[s7; #define LAYOUTFILE <Gui16b/dlg.lay>&]
 [s7; #include <CtrlCore/lay.h>&]
 [s7; &]
-[s7; struct MyAppWindow : public Upp`::WithDlgLayout<Upp`::TopWindow> 
-`{&]
+[s7; struct MyAppWindow : public WithDlgLayout<Upp`::TopWindow> `{&]
 [s7; -|MyAppWindow() `{&]
 [s7; -|-|CtrlLayout(`*this, `"MyDialog`");&]
 [s7; -|`}&]
@@ -1024,17 +1023,7 @@ situation:&]
 [s7; `{&]
 [s7; -|MyAppWindow().Run();&]
 [s7; `}&]
-[s0; &]
-[s5; Please note that from version 2021.1 of U`+`+ framework surrounding 
-inclusion with namespace is not longer required:&]
-[s0; &]
-[s7; namespace Upp `{&]
-[s7; -|#define LAYOUTFILE <Gui16/dlg.lay>&]
-[s7; -|#include <CtrlCore/lay.h>&]
-[s7; `}&]
-[s0; &]
-[s5; However, for backward compatibility above construction is still 
-valid.&]
+[s5; &]
 [s3;:17: 17. Value of widget&]
 [s5; Many widgets have some sort of natural value. E.g. the value 
 of [^`:`:EditString^ EditString] is String entered by user, whereas 

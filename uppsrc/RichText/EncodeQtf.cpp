@@ -103,6 +103,8 @@ void QTFEncodeParaFormat(String& qtf, const RichPara::Format& format, const Rich
 	FmtNumber(qtf, 'a', style.after, format.after);
 	if(style.newpage != format.newpage)
 		qtf << 'P';
+	if(style.firstonpage != format.firstonpage)
+		qtf << 'F';
 	if(style.keep != format.keep)
 		qtf << 'k';
 	if(style.keepnext != format.keepnext)

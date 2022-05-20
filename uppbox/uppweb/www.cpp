@@ -446,23 +446,76 @@ int GetLinkLanguage(const String &link) {
 	return 0;
 }
 
+String TrimDescription(String description)
+{
+	description.Replace("\"", "");
+	description.Replace(":", ".");
+	
+	constexpr int DESCRIPTION_SIZE_LIMIT = 158;
+	if (description.GetLength() <= DESCRIPTION_SIZE_LIMIT) {
+		return description;
+	}
+	
+	description.Trim(DESCRIPTION_SIZE_LIMIT);
+	
+	int trim_idx = -1;
+	for (int i = description.GetCount() - 1; i >= 0; i--)
+	{
+		if (description[i] != '.' && description[i] != '?') {
+			continue;
+		}
+		
+		trim_idx = i + 1;
+		break;
+	}
+	
+	if (trim_idx == -1 || trim_idx == 0) {
+		return description;
+	}
+	
+	description.Trim(trim_idx);
+	return description;
+}
+
+String FindPageDescription(const RichText& qtf)
+{
+	String description;
+	Uuid style_id = qtf.GetStyleId("text");
+	if (!style_id.IsNullInstance()) {
+		RichStyle style = qtf.GetStyle(style_id);
+		for (int i = 0; i < qtf.GetPartCount(); i++) {
+			if (!qtf.IsPara(i)) {
+				continue;
+			}
+			
+			RichPara para = qtf.Get(i);
+			if (style_id == qtf.GetParaStyle(i)) {
+				description = para.GetText().ToString();
+				break;
+			}
+		}
+	}
+	
+	return TrimDescription(description);
+}
+
 void ExportPage(int i)
 {
 	Index<String> css;
 	String path = links.GetKey(i);
 	RLOG("Exporting " << path);
 	
-	int ilang = GetLinkLanguage(path); 
+	int ilang = GetLinkLanguage(path);
 	SetLanguage(languages[ilang]);
 	String text = GetText(path);
-	int h;
-	h = ParseQTF(tt[i].text).GetHeight(1000);
+	RichText qtf = ParseQTF(tt[i].text);
+	int h = qtf.GetHeight(1000);
 	
 	int isvn = svndata.Find(tt.GetKey(i));
 	String qtflangs;
-	String googleFile;	
-	if (isvn > -1) {   				
-		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";	
+	String googleFile;
+	if (isvn > -1) {
+		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";
 		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
 		googleFile = svndata[isvn].fullPath;
 		if (googleFile.GetCount() > rootdir.GetCount())
@@ -604,19 +657,20 @@ void ExportPage(int i)
 	String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
-		pageTitle = "Ultimate++";
-	if(StartsWith(topicTitle, "examples_"))
+		pageTitle = "U++";
+	else if(StartsWith(topicTitle, "examples"))
 		pageTitle = "Demos / " + pageTitle;
-	else if(StartsWith(topicTitle, "reference_"))
+	else if(StartsWith(topicTitle, "reference"))
 		pageTitle = "Examples / " + pageTitle;
-
-	if(pageTitle != "Ultimate++")
-		pageTitle << " :: Ultimate++";
-
-	Htmls content =
-	    //"<!DOCTYPE html>" +
-	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
-		HtmlHeader(pageTitle, AsCss(css) +
+	
+	bool is_index = path == "topic://uppweb/www/index$en-us";
+	if(pageTitle != "U++" && !is_index)
+		pageTitle << " :: U++";
+	
+	auto htmlHeader = HtmlHeader()
+		.Title(pageTitle)
+		.Description(FindPageDescription(qtf))
+		.Css(AsCss(css) +
 			"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
 			              "font-weight: normal; }\n"
 			"a.l1:link    { color:#000000; }\n"
@@ -628,18 +682,22 @@ void ExportPage(int i)
 			"a.l2:link    { color:#0066FF; }\n"
 			"a.l2:visited { color:#FF6600; }\n"
 			"a.l2:hover   { color:#BC0624; }\n"
-			"a.l2:active  { color:#BC0024; }\n",
+			"a.l2:active  { color:#BC0024; }\n")
+		.Other(
 			"<META NAME=\"keywords\" "
 			"CONTENT=\""
 			"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
-			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
+			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, macos, gui, sdl, directx, desktop"
 			"\">"
 	        "<META name=\"robots\" content=\"index,follow\">\n"
             "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">\n"
-            "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\">\n"
-		)
-
-
+            "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\">\n")
+		.Create();
+	
+	Htmls content =
+	    //"<!DOCTYPE html>" +
+	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
+		htmlHeader
 	    .BgColor(bg)
 	    .Alink(Red).Link(Black).Vlink(Blue)
 	    / html;
@@ -841,7 +899,7 @@ CONSOLE_APP_MAIN
 	if (outHtml)
 		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "15947";
+	String release = "16236";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
@@ -945,7 +1003,7 @@ CONSOLE_APP_MAIN
 		bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
 	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
-		bi << BarLink(Www("Funding", lang), t_("Funding Ultimate++"));
+		bi << BarLink(Www("Funding", lang), t_("Funding U++"));
 	//	bcom << BarLink(Www("helpus"), "Getting involved");
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
 		
@@ -990,24 +1048,24 @@ CONSOLE_APP_MAIN
 
 	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
-		if (tt[i].title == "Svn releases") 
+		if (tt[i].title == "Svn releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, ""));
-		else if (tt[i].title == "Svn Web releases") 
+		else if (tt[i].title == "Svn Web releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb"));
-		else if (tt[i].title == "Svn Bazaar releases") 
+		else if (tt[i].title == "Svn Bazaar releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar"));
-		else if (tt[i].title == "Svn Upp releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));		
-		else if (tt[i].title == "Svn major releases") 
+		else if (tt[i].title == "Svn Upp releases")
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));
+		else if (tt[i].title == "Svn major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, "", true));
-		else if (tt[i].title == "Svn Web major releases") 
+		else if (tt[i].title == "Svn Web major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb", true));
-		else if (tt[i].title == "Svn Bazaar major releases") 
+		else if (tt[i].title == "Svn Bazaar major releases")
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
-		else if (tt[i].title == "Svn Upp major releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));		
+		else if (tt[i].title == "Svn Upp major releases")
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));
 		else
-		if(tt[i].title == "Nightly builds" || tt[i].title.Find("download") >= 0)
+		if(tt[i].title == "Nightly builds" || tt[i].title.Find("Download") >= 0)
 			tt[i].text.Replace(String("<#downloads#>"), downloads);
 		else if (links[i].Find("index") >= 0) {
 			String win32 = "upp-win32-RELEASE.exe";

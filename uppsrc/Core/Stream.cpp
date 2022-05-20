@@ -1216,6 +1216,27 @@ String LoadStream(Stream& in) {
 String LoadFile(const char *filename) {
 	FindFile ff(filename);
 	if(ff && ff.IsFile()) {
+	#ifdef PLATFORM_POSIX
+		if(ff.GetLength() == 0) { // handle special cases like /proc/...
+			int fd = open(filename,O_RDONLY);
+			if(fd >= 0) {
+				const int CHUNK = 32768;
+				StringBuffer s;
+				for(;;) {
+					int n = s.GetCount();
+					s.SetCount(n + CHUNK);
+					int len = read(fd, ~s + n, CHUNK);
+					if(len != CHUNK) {
+						if(len >= 0)
+							s.SetCount(n + len);
+						close(fd);
+						return s;
+					}
+				}
+			}
+			return String::GetVoid();
+		}
+	#endif
 		FileIn in(filename);
 		return LoadStream(in);
 	}

@@ -31,15 +31,6 @@ String ToHtml(const char *s)
 	return result;
 }
 
-/*
-Htmls& Htmls::Qtf(const char *qtf) {
-	HtmlDocOut html;
-	html.Qtf(qtf);
-	Cat(html.Get());
-	return *this;
-}
-*/
-
 Htmls& Htmls::Text(const char *s)                  { Cat(ToHtml(s)); return *this; }
 Htmls& Htmls::Quote(const char *s)                 { Cat('\"' + ToHtml(s) + '\"'); return *this; }
 Htmls& Htmls::Color(class Color color)             { Quote(ColorToHtml(color)); return *this; }
@@ -311,24 +302,6 @@ HtmlTag HtmlCell() {
 	return HtmlTag("TD");
 }
 
-/*
-HtmlTag HtmlFont(Font font) {
-	HtmlTag tag;
-	if(font.IsBold())
-		tag /= HtmlTag("B");
-	if(font.IsItalic())
-		tag /= HtmlTag("I");
-	if(font.IsUnderline())
-		tag /= HtmlTag("U");
-	if(font.IsStrikeout())
-		tag /= HtmlTag("S");
-	HtmlTag fnt("FONT");
-	fnt.Face(FontFaceToHtml(font));
-	fnt.Size(FontSizeToHtml(font));
-	return tag / fnt;
-}
-*/
-
 HtmlTag HtmlLink(const char *link)
 {
 	return HtmlTag("A").Href(link);
@@ -352,19 +325,22 @@ Htmls HtmlBlock(Htmls html, double width, double left, double top, double right,
 		                 : html;
 }
 
-HtmlTag HtmlHeader(const char *title, String css, const char *other)
+HtmlTag HtmlHeader::Create()
 {
 	String h =
-		"HTML>\r\n"
-	    "<HEAD>\t\n"
-	    "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\t\n"
-	    "<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">\t\n"
-	    "<TITLE>" + String(title) + "</TITLE>\r\n"
-	;
-	if(!IsNull(css))
-		h << "<STYLE TYPE=\"text/css\"><!--\r\n"
+		"HTML lang=\"en-us\">\n"
+	    "<HEAD>\n"
+	    "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\n"
+	    "<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">\n"
+	    ;
+	if(!description.IsEmpty())
+		h << "<META NAME=\"Description\" CONTENT=\"" + description + "\">\n";
+	if(!title.IsEmpty())
+		h << "<TITLE>" + title + "</TITLE>\n";
+	if(!css.IsEmpty())
+		h << "<STYLE TYPE=\"text/css\"><!--\n"
 		  << css << "\r\n-->\r\n</STYLE>\r\n";
-	if(other)
+	if(!other.IsEmpty())
 		h << other;
 	h << "</HEAD";
 	return HtmlSingleTag(h) / HtmlTag("BODY");
@@ -377,23 +353,6 @@ Htmls operator+(const HtmlTag& tag1, const HtmlTag& tag2)
 	h.Cat(tag2);
 	return h;
 }
-/*
-Htmls operator+(const String& s, const HtmlTag& tag)
-{
-	Htmls h;
-	h.Cat(s);
-	h.Cat(tag);
-	return h;
-}
-
-Htmls operator+(const HtmlTag& tag, const String& s)
-{
-	Htmls h;
-	h.Cat(tag);
-	h.Cat(s);
-	return h;
-}
-*/
 
 Htmls operator+(const char *s, const HtmlTag& tag) {
 	Htmls h;

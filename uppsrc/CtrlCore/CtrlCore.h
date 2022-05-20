@@ -82,7 +82,7 @@ typedef ImageDraw SystemImageDraw;
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
-enum {
+enum CtrlCoreFlags {
 	K_DELTA        = 0x200000,
 	K_CHAR_LIM     = 0x200000, // lower that this, key in Key is Unicode codepoint
 
@@ -109,10 +109,21 @@ enum {
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
 
 	K_MOUSE_FORWARD = 0x80000001,
-	K_MOUSE_BACKWARD = 0x80000002,
+	K_MOUSE_BACKWARD = 0x80000002
 };
 
 #include "MKeys.h"
+
+//C++20 requires these
+inline constexpr dword operator|(CtrlCoreFlags flag, CtrlCoreKeys key)
+{
+	return (int)flag | (int)key;
+}
+
+inline constexpr dword operator|(CtrlCoreKeys key, CtrlCoreFlags flag)
+{
+	return (int)flag | (int)key;
+}
 
 bool GetShift();
 bool GetCtrl();
@@ -179,6 +190,26 @@ struct NullFrameClass : public CtrlFrame {
 };
 
 CtrlFrame& NullFrame();
+
+class MarginFrame : public CtrlFrame {
+public:
+	virtual void FrameLayout(Rect& r);
+	virtual void FramePaint(Draw& w, const Rect& r);
+	virtual void FrameAddSize(Size& sz);
+	virtual void FrameAdd(Ctrl& parent);
+	virtual void FrameRemove();
+
+private:
+	Ctrl  *owner;
+	Color  color;
+	Rect   margins;
+
+public:
+	void SetMargins(const Rect& r);
+	void SetColor(Color c);
+
+	MarginFrame();
+};
 
 class BorderFrame : public CtrlFrame {
 public:
@@ -293,9 +324,6 @@ public:
 
 	PasteClip();
 };
-
-String  Unicode__(const WString& w);
-WString Unicode__(const String& s);
 
 void GuiPlatformAdjustDragImage(ImageBuffer& b);
 
@@ -642,6 +670,12 @@ private:
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
+	Rect    GetPreeditScreenRect();
+	void    SyncPreedit();
+	void    ShowPreedit(const WString& text, int cursor = INT_MAX);
+	static void HidePreedit();
+	static void PreeditSync(void (*enable_preedit)(Ctrl *top, bool enable));
+
 // System window interface...
 	void WndShow(bool b);
 	void WndSetPos(const Rect& rect);
@@ -695,6 +729,8 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
+	
+	static void (*cancel_preedit)();
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
@@ -875,6 +911,9 @@ public:
 	virtual void   MouseLeave();
 	
 	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);
+	
+	virtual Point  GetPreedit();
+	virtual Font   GetPreeditFont();
 
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
@@ -1122,6 +1161,10 @@ public:
 	void    SetCaret(const Rect& r);
 	Rect    GetCaret() const;
 	void    KillCaret();
+	
+	static void  CancelPreedit();
+	
+	void   CancelMyPreedit()                   { if(HasFocus()) CancelPreedit(); }
 
 	static Ctrl *GetFocusCtrl()                { return FocusCtrl(); }
 

@@ -241,6 +241,10 @@ public:
 	WithDeepCopy& operator=(WithDeepCopy&& a)          { (T&)*this = pick(a); return *this; }
 
 	WithDeepCopy()                                     {}
+
+#ifdef CPP_20
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+#endif
 };
 
 // compatibility hacks
@@ -323,8 +327,11 @@ public:
 	void                  pop_back()             { Drop(); } \
 
 
+template <class T>
+T *DeclPtr__();
+
 template <class Range>
-using ValueTypeOfArray = typename std::remove_reference<decltype((*((Range *)0))[0])>::type;
+using ValueTypeOfArray = typename std::remove_reference<decltype((*DeclPtr__<Range>())[0])>::type;
 
 template <class V>
 class ConstIIterator {

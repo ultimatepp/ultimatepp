@@ -103,11 +103,11 @@ public:
 		SANSSERIF,
 		MONOSPACE,
 	#ifdef PLATFORM_WIN32
-		SYMBOL,
-		WINGDINGS,
-		TAHOMA,
+		SYMBOL, // deprecated
+		WINGDINGS, // deprecated
+		TAHOMA, // deprecated
 	#endif
-		OTHER,
+		OTHER, // deprecated
 
 	// Backward compatibility:
 		ROMAN = SERIF,
@@ -977,6 +977,15 @@ IsJPGFnType GetIsJPGFn();
 #include "Cham.h"
 #include "DDARasterizer.h"
 #include "SDraw.h"
+
+enum {
+	CMAP_GLYPHS = 1,
+	CMAP_ALLOW_SYMBOL = 2,
+};
+
+bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, dword flags = 0);
+bool ReadCmap(Font font, Event<int, int, int> range, dword flags = 0);
+bool GetPanoseNumber(Font font, byte *panose);
 
 }
 

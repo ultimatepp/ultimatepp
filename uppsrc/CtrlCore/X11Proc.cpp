@@ -179,9 +179,9 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 				int len = Xutf8LookupString(w.xic, &event->xkey, buff, sizeof(buff), &keysym, &status);
 				buff[len] = 0;
 				if(status == XLookupChars || status == XLookupBoth) {
-					chr = FromUtf8(buff, len)[0];
+					chr = ToUtf32(buff, len)[0];
 					if(status == XLookupChars)
-						wtext = FromUtf8(buff, len);
+						wtext = ToUtf32(buff, len);
 				}
 				else
 				if(status != XLookupKeySym && status != XLookupBoth)
@@ -190,9 +190,9 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			else {
 				int len = XLookupString(&event->xkey, buff, sizeof(buff), &keysym, NULL);
 				buff[len] = 0;
-				chr = FromUtf8(buff, len)[0];
+				chr = ToUtf32(buff, len)[0];
 				if(len > 1)
-					wtext = FromUtf8(buff, len);
+					wtext = ToUtf32(buff, len);
 			}
 			if(keysym == XK_Control_L || keysym == XK_Control_R) {
 				keysym = XK_Control_L;

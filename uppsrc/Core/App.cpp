@@ -645,13 +645,12 @@ String GetUserName()
 	::GetUserNameW(temp, &w);
 	return temp;
 #else
-	char temp[256];
 	return Nvl(GetEnv("USER"), "root");
 #endif
 }
 
 String GetDesktopManager()
-{
+{	
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 	return "windows";
 #endif

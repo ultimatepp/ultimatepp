@@ -900,6 +900,7 @@ HeaderCtrl::HeaderCtrl() {
 	Reset();
 	NoWantFocus();
 	sb.AutoHide();
+	sb.SetLine(StdFont()['Y']);
 	autohidesb = true;
 	sb.WhenScroll = THISBACK(Scroll);
 	WhenScroll = THISBACK(WScroll);

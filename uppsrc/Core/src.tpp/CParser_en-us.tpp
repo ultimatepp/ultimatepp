@@ -348,10 +348,14 @@ permissive as it allows unterminated string literals `- string
 is then also delimited by end of line or text.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:SkipTerm`(`): [@(0.0.255) void]_[* SkipTerm]()&]
+[s5;:Upp`:`:CParser`:`:Skip`(`): [@(0.0.255) void]_[* Skip]()&]
 [s2;%% Skips a single symbol. Decimal numbers, identifiers and string 
 literals are skipped as whole symbols, otherwise input position 
 is advanced by 1 character.&]
+[s3; &]
+[s4; &]
+[s5;:CParser`:`:SkipTerm`(`): [@(0.0.255) void]_[* SkipTerm]()&]
+[s2;%% Same as Skip, legacy name.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:GetPtr`(`)const: [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetPtr]()_[@(0.0.255) c

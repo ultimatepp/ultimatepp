@@ -1,5 +1,4 @@
 #include "ide.h"
-
 struct UppHubNest : Moveable<UppHubNest> {
 	int              tier = -1;
 	String           name;
@@ -21,6 +20,22 @@ Color StatusPaper(const String& status)
 	                                           "stable", SLtGreen(),
 	                                           "rolling", SLtCyan(),
 	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
+}
+
+void VerifyUppHubRequirements()
+{
+	if (HasGit())
+	{
+		return;
+	}
+	
+	Loge() << UPP_FUNCTION_NAME << "(): Git is not available!";
+	ErrorOK(
+		"Git executable was not detected. UppHub will not work properly. Make sure git executable is present in your enviroment path. "
+		"You can find more information about requirements "
+		"[^https`:`/`/www`.ultimatepp`.org`/app`$ide`$UppHub`_en`-us`.html`#2^ here].&&"
+		"You can still use UppHub to view available packages but other operations will not work."
+	);
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
@@ -58,7 +73,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
 
 	UppHubDlg();
-	
+
 	bool Key(dword key, int count) override;
 };
 
@@ -523,6 +538,8 @@ void UppHubDlg::Reinstall()
 
 String UppHub()
 {
+	VerifyUppHubRequirements();
+	
 	UppHubDlg dlg;
 	dlg.Load();
 	dlg.Run();

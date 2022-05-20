@@ -42,6 +42,8 @@ String  GetCurrentDirectory();
 bool SetCurrentDirectory(const char *path);
 #endif
 
+bool ChangeCurrentDirectory(const char *path);
+
 struct FileTime;
 
 int Compare_FileTime(const FileTime& fa, const FileTime& fb);

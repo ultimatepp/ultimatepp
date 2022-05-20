@@ -1,0 +1,11 @@
+uses
+	Core,
+	PdfDraw,
+	CtrlLib;
+
+file
+	PdfText.cpp;
+
+mainconfig
+	"" = "GUI";
+

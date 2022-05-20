@@ -290,6 +290,7 @@ public:
 	bool Execute(bool open, const char *title = NULL);
 	bool ExecuteOpen(const char *title = NULL)   { return Execute(true, title); }
 	bool ExecuteSaveAs(const char *title = NULL) { return Execute(false, title); }
+	bool ExecuteSelectDir(const char *title = NULL);
 
 	String Get() const;
 	void  Set(const String& s)                   { filename.At(0) = s; }
@@ -337,11 +338,18 @@ class FileSelNative {
 	bool   multi;
 	bool   hidden;
 	int    activetype;
+	bool   Execute0(int mode, const char *title);
 
 public:
-	bool   Execute(bool open, const char *title = NULL);
+	void Serialize(Stream& s);
+
+	void New()                                            { path.Clear(); }
+	bool IsNew() const                                    { return path.IsEmpty(); }
+
+	bool   Execute(bool open, const char *title = NULL)   { return Execute0(open, title); }
 	bool   ExecuteOpen(const char *title = NULL)          { return Execute(true, title); }
 	bool   ExecuteSaveAs(const char *title = NULL)        { return Execute(false, title); }
+	bool   ExecuteSelectDir(const char *title = NULL)     { return Execute0(2, title); }
 
 	String Get() const                                    { return path.GetCount() ? path[0] : String::GetVoid(); }
 	operator String() const                               { return Get(); }
@@ -353,6 +361,8 @@ public:
 
 	int    GetCount() const                               { return path.GetCount(); }
 	const  String& operator[](int i) const                { return path[i]; }
+
+	String GetActiveDir() const                           { return ipath; }
 
 	FileSelNative& Type(const char *name, const char *ext) { type.Add(MakeTuple(String(name), String(ext))); return *this; }
 	FileSelNative& AllFilesType();

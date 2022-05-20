@@ -193,11 +193,6 @@ subctrl NormalSize {
 subctrl Base {
 	>NormalSize;
 
-	Font   SetFont = StdFont();
-	Color  SetInk = :SBlack;
-	Frame  SetFrame @1;
-//	Qtf    SetInfo @1 ? "Info of control" ;
-
 	ViewRect(w) {
 		r = GetRect();
 		DrawCtrlFrame(w, r, .SetFrame);
@@ -210,7 +205,17 @@ subctrl Base {
 };
 
 subctrl Unknown {
-	> Base;
+	>NormalSize;
+
+	ViewRect(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		return r;
+	}
+	ViewSize(w) {
+		r = ViewRect(w);
+		return Size(r.right - r.left, r.bottom - r.top);
+	}
 };
 
 subctrl TextCtrl {
@@ -895,6 +900,21 @@ ctrl EditDoubleNotNull {
 	bool NotNull = true;
 }
 
+ctrl EditFloat {
+	>EditNotNull;
+	double Min;
+	double Max;
+
+	PaintData(w) { PaintMinMax(w, "flt", DblStr(.Min), DblStr(.Max)); }
+}
+
+ctrl EditFloatNotNull {
+	>EditFloat;
+
+	bool NotNull = true;
+}
+
+
 ctrl EditDate {
 	>EditNotNull;
 	PaintData(w) { PaintMinMax(w, "Date", "", ""); }
@@ -954,6 +974,19 @@ ctrl EditDoubleSpin {
 		PaintMinMaxText(w, "dbl", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
 	}
 }
+
+ctrl EditFloatSpin {
+	>EditDoubleSpin;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMaxText(w, "flt", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
+	}
+}
+
 
 ctrl EditDateSpin {
 	>EditDate;
@@ -1289,7 +1322,7 @@ ctrl RichTextView {
 	Frame SetFrame = default @1;
 	Color Background = :SWhite;
 	bool  VCenter = false;
-	bool  NoSb = false;
+	bool  NoSb = false @0;
 	bool  AutoHideSb = false;
 	int   HMargins = 0;
 	int   VMargins = 0;
@@ -1311,8 +1344,9 @@ ctrl RichTextCtrl {
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
 	Frame SetFrame = NullFrame() @1;
-	Color Background = Null;
-	bool  AutoHideSb = true;
+	Color Background = Null @0;
+	bool  NoSb = false @0;
+	bool  AutoHideSb = true @0;
 
 	Paint(w) {
 		r = GetRect();

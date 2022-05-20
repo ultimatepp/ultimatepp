@@ -97,8 +97,6 @@ bool IsQtfFile(const char *path)
 
 struct QtfDesModule : public IdeModule {
 	virtual String       GetID() { return "QtfDesModule"; }
-	virtual void CleanUsc() {}
-	virtual bool ParseUsc(CParser& p) { return false; }
 
 	virtual Image FileIcon(const char *path) {
 		return IsQtfFile(path) ? IdeCommonImg::Qtf() : Null;

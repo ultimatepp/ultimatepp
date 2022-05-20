@@ -226,18 +226,26 @@ public:
 
 template< class Function, class... Args>
 AsyncWork<
+#ifdef CPP_20
+	std::invoke_result_t<Function, Args...>
+#else
 	typename std::result_of<
 		typename std::decay<Function>::type
 			(typename std::decay<Args>::type...)
 	>::type
+#endif
 >
 Async(Function&& f, Args&&... args)
 {
 	AsyncWork<
+#ifdef CPP_20
+		std::invoke_result_t<Function, Args...>
+#else
 		typename std::result_of<
 			typename std::decay<Function>::type
 				(typename std::decay<Args>::type...)
 		>::type
+#endif
 	> h;
 	h.Do(f, args...);
 	return pick(h);

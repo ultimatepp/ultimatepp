@@ -18,7 +18,7 @@ Source0:	http://www.ultimatepp.org/downloads/%{name}-x11-src-%{version}.tar.gz
 Obsoletes:	upp-devel < %{version}-%{release}
 
 # Common BuildRequires
-BuildRequires:	gtk3-devel gnome-shell libnotify-devel pkgconfig
+BuildRequires:	gtk3-devel gnome-shell libnotify-devel pkgconfig git
 
 # Mandriva specific BuildRequires
 %if 0%{?mandriva_version}

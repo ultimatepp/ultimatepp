@@ -20,11 +20,14 @@ topic "Documentation";
 [a8;2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Documentation&]
-[s5; Documentation of Ultimate`+`+ is a permanent work of progress, 
-not everything is documented yet.&]
-[s5; Ultimate`+`+ community is ready to provide an excellent support 
-in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
-[s5; &]
+[s5; On this page you can find documentation for U`+`+ framework. 
+It is organized thematically. Each major package has a dedicated 
+section. Not everything is documented as we want. However, during 
+the last few years we have made significant progress in covering 
+white stains. Enjoy your reading!&]
+[s5; If you find that something is missing and you have questions. 
+U`+`+ community is ready to provide excellent support on the 
+[^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s3; [4 Installation and Configuration]&]
 [s5; &]
 [s0;l160; [*^topic`:`/`/ide`/app`/install`_win32`_en`-us^3 Win32 Installation 

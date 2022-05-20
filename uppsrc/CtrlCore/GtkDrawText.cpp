@@ -38,15 +38,15 @@ void FontSysData::Init(Font font, int angle)
 
 	cairo_matrix_init_scale(font_matrix, fh, fh);
 
-	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) {
-		cairo_matrix_t sheer[1];
-		cairo_matrix_init_identity(sheer);
-		sheer->xy = -0.2;
-		cairo_matrix_multiply(font_matrix, font_matrix, sheer);
-	}
-	
 	if(angle)
-		cairo_matrix_rotate(font_matrix, -angle * M_2PI / 3600);
+		cairo_matrix_rotate(font_matrix, -angle * M_PI / 1800);
+
+	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) { // Synthetic italic
+		cairo_matrix_t shear[1];
+		cairo_matrix_init_identity(shear);
+		shear->xy = -0.165;
+		cairo_matrix_multiply(font_matrix, shear, font_matrix);
+	}
 
 	cairo_font_options_t *opt = cairo_font_options_create();
 	scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);

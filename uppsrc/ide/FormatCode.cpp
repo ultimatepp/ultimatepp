@@ -192,11 +192,34 @@ void Ide::FormatCode()
 	}
 }
 
+bool ReFormatJSON_XML( String& text, bool xml)
+{
+	if(xml) {
+		try {
+			XmlNode n = ParseXML(text);
+			text = AsXML(n);
+		}
+		catch(XmlError) {
+			Exclamation("Error passing the XML!");
+			return false;
+		}
+	}
+	else {
+		Value v = ParseJSON(text);
+		if(v.IsError()) {
+			Exclamation("Error passing the JSON!");
+			return false;
+		}
+		text = AsJSON(v, true);
+	}
+	return true;
+}
+
 void Ide::FormatJSON_XML(bool xml)
 {
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
-	if((sel ? h - l : editor.GetLength()) > 20*1024*1024) {
+	if((sel ? h - l : editor.GetLength()) > 75*1024*1024) {
 		Exclamation("Too big to reformat");
 		return;
 	}
@@ -207,24 +230,8 @@ void Ide::FormatJSON_XML(bool xml)
 		SaveFile();
 		text = LoadFile(editfile);
 	}
-	if(xml) {
-		try {
-			XmlNode n = ParseXML(text);
-			text = AsXML(n);
-		}
-		catch(XmlError) {
-			Exclamation("Error passing the XML!");
-			return;
-		}
-	}
-	else {
-		Value v = ParseJSON(text);
-		if(v.IsError()) {
-			Exclamation("Error passing the JSON!");
-			return;
-		}
-		text = AsJSON(v, true);
-	}
+	if(!ReFormatJSON_XML(text, xml))
+		return;
 	editor.NextUndo();
 	if(sel) {
 		editor.Remove(l, h - l);
@@ -244,4 +251,20 @@ void Ide::FormatJSON()
 void Ide::FormatXML()
 {
 	FormatJSON_XML(true);
+}
+
+void Ide::FormatJSON_XML_File(bool xml)
+{
+	if(IsNull(editfile))
+		return;
+	if(GetFileLength(editfile) >= 75*1024*1024)
+		Exclamation("Too big to reformat");
+	SaveFile();
+	String text = LoadFile(editfile);
+	if(!ReFormatJSON_XML(text, xml))
+		return;
+	if(PromptYesNo("Overwrite \1" + editfile + "\1 with reformated " + (xml ? "XML" : "JSON") + "?")) {
+		Upp::SaveFile(editfile, text);
+		EditAsText();
+	}
 }

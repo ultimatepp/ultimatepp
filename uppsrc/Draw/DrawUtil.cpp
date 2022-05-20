@@ -611,22 +611,22 @@ IsJPGFnType GetIsJPGFn()
 	return sIsJPG;
 }
 
-Image (*render_glyph)(int cx, int x, Font font, int chr, int py, int pcy);
+Image (*render_glyph)(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg);
 
-Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy)
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg)
 {
 	if(render_glyph)
-		return (*render_glyph)(cx, x, font, chr, py, pcy);
+		return (*render_glyph)(cx, x, font, chr, py, pcy, fg, bg);
 	if(ImageAnyDraw::IsAvailable()) {
 		ImageAnyDraw iw(cx, pcy);
-		iw.DrawRect(0, 0, cx, pcy, White);
-		iw.DrawText(x, -py, WString(chr, 1), font, Black);
+		iw.DrawRect(0, 0, cx, pcy, bg);
+		iw.DrawText(x, -py, WString(chr, 1), font, fg);
 		return iw;
 	}
 	return Null;
 }
 
-void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pcy))
+void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pcy, Color fg, Color bg))
 {
 	render_glyph = f;
 }

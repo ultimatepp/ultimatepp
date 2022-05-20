@@ -803,6 +803,8 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
 		menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
+		menu.Add(AK_REFORMAT_JSON, [=] { FormatJSON_XML_File(false); });
+		menu.Add(AK_REFORMAT_XML, [=] { FormatJSON_XML_File(true); });
 		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));

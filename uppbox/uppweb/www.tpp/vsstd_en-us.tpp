@@ -1,21 +1,20 @@
 topic "U++ Code vs standard C++ library";
+[b42;a42;ph2 $$1,1#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R6 U`+`+ Core vs standard C`+`+ library]&]
-[s0; &]
-[s0; [2 Ultimate`+`+ can be easily accused of reinventing the wheel. 
-While the main reason of not using standard C`+`+ library is 
-not quite performance related, the interface definition of U`+`+ 
-containers allows very effective implementation. Matched with 
-U`+`+ heap allocator which overloads global new and delete operators, 
-U`+`+ is able to boost the speed of applications a bit.]&]
-[s0;2 &]
-[s0; [2 In the benchmark example, we are comparing `"out`-of`-box`" 
+[s1; U`+`+ can be easily accused of reinventing the wheel. While 
+the main reason of not using standard C`+`+ library is not quite 
+performance related, the interface definition of U`+`+ containers 
+allows very effective implementation. Matched with U`+`+ heap 
+allocator which overloads global new and delete operators, U`+`+ 
+is able to boost the speed of applications a bit.&]
+[s1; In the benchmark example, we are comparing `"out`-of`-box`" 
 performance of standard library implementations coming with widely 
 used compilers with performance of U`+`+ Core with the same compilers 
 in simple example. The purpose of code is to scan through file, 
 find all identifiers (by C lexical definition) and print them 
-sorted by the name, with list of lines where they occur.]&]
+sorted by the name, with list of lines where they occur.&]
 [s0;2 &]
 [s0; [2 Implementation use std`::map, std`::tr1`::unordered`_map (or equivalent 
 stdext`::hash`_map with microsoft compiler) with std`::string and 
@@ -352,4 +351,4 @@ ms `\n`";]&]
 [s0; [*C@5;2 -|`}]&]
 [s0; [*C@5;2 `}]&]
 [s0; ]}}&]
-[s0; ]
+[s0; ]]

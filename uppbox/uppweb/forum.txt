@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-<html>
+<html lang="en-us">
 <head>
 <title>{GVAR: FORUM_TITLE}{VAR: TITLE_EXTRA}</title>
 <META NAME="keywords" CONTENT="framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"><meta name="robots" content="index,follow"></HEAD>
@@ -74,7 +74,7 @@ google_color_url = "008000";
 <TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="http://upp.wikispaces.com/" CLASS="l1">Wiki</A>
 </TD>
 </TR>
-<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$Funding$en-us.html" CLASS="l1">Funding Ultimate++</A>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$Funding$en-us.html" CLASS="l1">Funding U++</A>
 </TD>
 </TR>
 </TABLE>

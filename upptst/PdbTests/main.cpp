@@ -196,6 +196,12 @@ GUI_APP_MAIN
 	v = m;
 	DDUMP(v);
 	
+	v = ErrorValue();
+	DDUMP(v);
+	
+	v = ErrorValue("HellO!");
+	DDUMP(v);
+	
 	
 	Value& ref = v;
 	Value *ptr = &v;

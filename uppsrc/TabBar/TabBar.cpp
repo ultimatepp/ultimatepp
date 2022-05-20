@@ -329,8 +329,9 @@ TabBar::TabBar()
 	SetFrameSize(GetHeight(false));
 	BackPaint();
 	
-	ConfirmClose = [](Value v) { return true; };
+	ConfirmClose = [](Value) { return true; };
 	ConfirmCloseAll = []() { return true; };
+	ConfirmCloseSome = [](ValueArray) { return true; };
 }
 
 int TabBar::GetLR( int c, int jd )
@@ -515,15 +516,13 @@ void TabBar::ContextMenu(Bar& bar)
 
 void TabBar::CloseAll(int exception, int last_closed)
 {
-	if(!ConfirmCloseAll())
-		return;
-
 	ValueArray vv;
 	for(int i = last_closed; i < tabs.GetCount(); i++)
 		if(i != exception)
 			vv.Add(tabs[i].key);
 		
-	if(exception < 0 && last_closed == 0 ? CancelCloseAll() : CancelCloseSome(vv))
+	if(exception < 0 && last_closed == 0 ? !ConfirmCloseAll() || CancelCloseAll()
+	                                     : !ConfirmCloseSome(vv) || CancelCloseSome(vv))
 		return;
 	
 	WhenCloseSome(vv);
@@ -532,7 +531,7 @@ void TabBar::CloseAll(int exception, int last_closed)
 
 	for(int i = tabs.GetCount() - 1; i >= last_closed; i--)
 		if(i != exception) {
-			if (!CancelClose(tabs[i].key)) {
+			if (!CancelClose(tabs[i].key) && ConfirmClose(tabs[i].key)) {
 				WhenClose(tabs[i].key);
 				TabClosed(tabs[i].key);
 				tabs.Remove(i);
@@ -836,7 +835,7 @@ void TabBar::DoCloseGroup(int n)
 				nTabs++;
 			}
 		// at first, we check for CancelCloseSome()
-		if(vv.GetCount() && !CancelCloseSome(vv)) {
+		if(vv.GetCount() && !CancelCloseSome(vv) && ConfirmCloseSome(vv)) {
 			// we didn't cancel globally, now we check CancelClose()
 			// for each tab -- group gets removed ONLY if ALL of
 			// group tabs are closed
@@ -861,8 +860,8 @@ void TabBar::DoCloseGroup(int n)
 			{
 				if (!CancelClose(vv[i]) && ConfirmClose(vv[i])) {
 					WhenClose(vv[i]);
-	 				TabClosed(vv[i]);
-	 				tabs.Remove(vi[i]);
+					TabClosed(vv[i]);
+					tabs.Remove(vi[i]);
 				}
 			}
 			// remove group if all of its tabs get closed
@@ -2212,7 +2211,7 @@ void TabBar::MiddleDown(Point p, dword keyflags)
         ValueArray vv;
         vv.Add(v);
         int highlightBack = highlight;
-        if (!CancelClose(v) && ! CancelCloseSome(vv) && ConfirmClose(v)) {
+        if (!CancelClose(v) && !CancelCloseSome(vv) && ConfirmCloseSome(vv) && ConfirmClose(v)) {
             // highlight can be changed by the prompt. When reading "v", it can be invalid. I use the value from before the prompt to fix it
             Value v = tabs[highlightBack].key;
             // 2014/03/06 - FIRST the callbacks, THEN remove the tab

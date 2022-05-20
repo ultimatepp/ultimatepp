@@ -93,6 +93,8 @@ public:
 	int           GetIndex() const                { return FindKey(value); }
 	void          GoBegin()                       { if(GetCount()) SetIndex(0); }
 	void          GoEnd()                         { if(GetCount()) SetIndex(GetCount() - 1); }
+	void          GoPrev()                        { Change(-1); }
+	void          GoNext()                        { Change(1); }
 
 	bool          HasKey(const Value& k) const    { return FindKey(k) >= 0; }
 	int           FindKey(const Value& k) const;
@@ -160,11 +162,12 @@ public:
 protected:
 	PopUpTable         list;
 	Ctrl              *owner;
-	bool               appending;
-	bool               dropfocus;
-	bool               always_drop;
-	bool               updownkeys;
-	bool               rodrop;
+	bool               appending : 1;
+	bool               dropfocus : 1;
+	bool               always_drop : 1;
+	bool               hide_drop : 1;
+	bool               updownkeys : 1;
+	bool               rodrop : 1;
 
 	void        Select();
 	void        Drop();
@@ -209,6 +212,7 @@ public:
 	DropChoice& SetDropLines(int n)                   { list.SetDropLines(n); return *this; }
 	DropChoice& Appending()                           { appending = true; return *this; }
 	DropChoice& AlwaysDrop(bool e = true);
+	DropChoice& HideDrop(bool e = true)               { hide_drop = e; AlwaysDrop(always_drop); return *this; }
 	DropChoice& RdOnlyDrop(bool e = true)             { rodrop = e; return *this; }
 	DropChoice& NoDropFocus()                         { dropfocus = false; return *this; }
 
@@ -277,6 +281,7 @@ public:
 	WithDropChoice& SetDisplay(const Display& d, int lcy) { select.SetDisplay(d, lcy); return *this; }
 	WithDropChoice& SetConvert(const Convert& d)          { select.SetConvert(d); return *this; }
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
+	WithDropChoice& HideDrop(bool b = true)               { select.HideDrop(b); return *this; }
 	WithDropChoice& RdOnlyDrop(bool b = true)             { select.RdOnlyDrop(b); return *this; }
 	WithDropChoice& WithWheel(bool b = true)              { withwheel = b; return *this; }
 	WithDropChoice& NoWithWheel()                         { return WithWheel(false); }

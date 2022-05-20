@@ -819,8 +819,10 @@ void Ide::EditFile(const String& p)
 		}
 	}
 	filelist.KillCursor();
-	package.KillCursor();
-	package.SetCursor(package.GetCount() - 2);
+	if(!IsAux() || IsMeta()) {
+		package.KillCursor();
+		package.SetCursor(package.GetCount() - 2); // use temp-aux
+	}
 	AddEditFile(path);
 }
 

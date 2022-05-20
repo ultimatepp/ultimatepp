@@ -43,6 +43,8 @@ void Check(int A, int B = 0)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	double m = msecs();
 
 	SeedRandom(0);
 	
@@ -54,5 +56,5 @@ CONSOLE_APP_MAIN
 	Check(60000);
 	Check(1000000);
 	
-	LOG("================= OK");
+	LOG("================= OK " << (msecs() - m) / 1000 << " s");
 }

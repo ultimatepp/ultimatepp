@@ -137,6 +137,7 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 			   r_paraocy == Sum(pp.linecy, 0) + pp.ruler + pp.before + pp.after &&
 			   r_keep == pp.keep &&
 			   r_keepnext == pp.keepnext &&
+			   r_firstonpage == pp.firstonpage &&
 			   r_newpage == pp.newpage) {
 				bottom = GetAdvanced(r_parti, rc, begin).py;
 				return true;

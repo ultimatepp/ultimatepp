@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	LoadProcFile.cpp;
+
+mainconfig
+	"" = "";
+

@@ -137,6 +137,17 @@ public:
 const ConvertDouble& StdConvertDouble();
 const ConvertDouble& StdConvertDoubleNotNull();
 
+struct ConvertFloat : public ConvertDouble {
+	static double  GetDefaultMin()                   { return -std::numeric_limits<float>::max(); }
+	static double  GetDefaultMax()                   { return std::numeric_limits<float>::max(); }
+
+	ConvertFloat(double minval = GetDefaultMin(), double maxval = GetDefaultMax(), bool notnull = false)
+	:	ConvertDouble(minval, maxval, notnull) { Pattern("%.7g"); }
+};
+
+const ConvertFloat& StdConvertFloat();
+const ConvertFloat& StdConvertFloatNotNull();
+
 class ConvertDate : public Convert {
 public:
 	virtual Value Format(const Value& q) const;

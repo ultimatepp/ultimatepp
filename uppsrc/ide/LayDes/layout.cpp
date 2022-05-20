@@ -50,15 +50,32 @@ Array<LayoutItem> ReadItems(CParser& p, byte charset)
 		String type;
 		if(p.Id("ITEM")) {
 			p.PassChar('(');
+			int lvl = 0;
 			for(;;)
-				if(p.Char2(':', ':'))
-					type << "::";
+				if(p.IsId()) {
+					String id = p.ReadId();
+					while(p.Char2(':', ':'))
+						id = p.ReadId();
+					type << id;
+				}
 				else
-				if(p.IsId())
-					type << p.ReadIdt();
+				if(p.Char('<')) {
+					type << '<';
+					lvl++;
+				}
+				else
+				if(p.Char(':'))
+					type << ':';
+				else
+				if(p.Char('>')) {
+					type << '>';
+					lvl--;
+				}
+				else
+				if(p.Char(',') && lvl)
+					type << ',';
 				else
 					break;
-			p.PassChar(',');
 		}
 		else
 		if(p.Id("UNTYPED"))

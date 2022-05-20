@@ -1,5 +1,4 @@
 topic "EditField derived classes";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "EditField derived classes";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*@3+150 EditField derived classes]&]
 [s9; Widgets editing values in text representation are based on EditField 
@@ -128,6 +128,14 @@ ouble], [_^ConvertDouble^ ConvertDouble][@(0.0.255) >]_[* EditDouble]&]
 [s2; Edit field for double values.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:EditFloat`:`:typedef:%- [@(0.0.255) typedef]_[_^Upp`:`:EditMinMax^ EditMinMax
+]<[@(0.0.255) double], ConvertFloat>_[* EditFloat]&]
+[s2; Edit field for float values. The difference from EditDouble 
+is that when decimals are rounded to be presented to user, EditFloat 
+rounds to just 7 valid digits to reflect the precision of float 
+type.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:EditDoubleNotNull`:`:typedef:%- [@(0.0.255) typedef]_[_^EditMinMaxNotNull^ EditMinMa
 xNotNull][@(0.0.255) <double], [_^ConvertDouble^ ConvertDouble][@(0.0.255) >]_[* EditDoub
 leNotNull]&]
@@ -142,6 +150,18 @@ leNotNull]&]
 [s5;:EditIntNotNull`:`:typedef:%- [@(0.0.255) typedef]_[_^EditMinMaxNotNull^ EditMinMaxNo
 tNull][@(0.0.255) <int], [_^ConvertInt^ ConvertInt][@(0.0.255) >]_[* EditIntNotNull]&]
 [s2; Edit field for not null integer values.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:EditInt64NotNull`:`:typedef:%- [@(0.0.255) typedef]_[_^Upp`:`:EditMinMaxNotNull^ E
+ditMinMaxNotNull]<[_^Upp`:`:int64^ int64], [_^Upp`:`:EditInt64^ EditInt64]>_[* EditInt6
+4NotNull]&]
+[s2; Edit field for not null int64 values.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:EditFloatNotNull`:`:typedef:%- [@(0.0.255) typedef]_[_^Upp`:`:EditMinMaxNotNull^ E
+ditMinMaxNotNull]<[@(0.0.255) double], [_^Upp`:`:EditFloat^ EditFloat]>_[* EditFloatNot
+Null]&]
+[s2; Edit field for not null float values.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:EditInt64`:`:typedef:%- [@(0.0.255) typedef]_[_^EditMinMax^ EditMinMax][@(0.0.255) <][_^int64^ i

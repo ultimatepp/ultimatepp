@@ -241,7 +241,7 @@ CONSOLE_APP_MAIN
 {
 	SDL2GUI gui;
 	gui.Create(RectC(100, 100, 1024, 768), "SDL2GL Virtual Gui Test");
-	
+
 	RunVirtualGui(gui, [] {
 		SetLanguage(LNG_ENGLISH);
 		SetDefaultCharset(CHARSET_UTF8);

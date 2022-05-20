@@ -303,15 +303,16 @@ onvert]&]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
 [s3;%- &]
 [s5;:ConvertDouble`:`:ConvertDouble`(double`,double`,bool`):%- [* ConvertDouble]([@(0.0.255) d
-ouble]_[*@3 minval]_`=_DOUBLE`_NULL`_LIM, [@(0.0.255) double]_[*@3 maxval]_`=_`-DOUBLE`_
-NULL`_LIM, [@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
+ouble]_[*@3 minval]_`=_`-std`::numeric`_limits<double>`::max(), [@(0.0.255) double]_[*@3 m
+axval]_`=_std`::numeric`_limits<double>`::max(), [@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) f
+alse])&]
 [s2; Constructor.&]
 [s7; [%-*C@3 minval]-|Lower limit `- default value means there is no 
 limit.&]
 [s7; [%-*C@3 maxval]-|Upper limit `- default value means there is no 
 limit.&]
 [s7; [%-*C@3 notnull]-|If true, Nulls are not allowed.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:ConvertDouble`:`:`~ConvertDouble`(`):%- [@(0.0.255) `~][* ConvertDouble]()&]
 [s2; Default destructor.&]
@@ -382,6 +383,31 @@ onst]&]
 [s7; [*/ Return value]-|true is Nulls are disallowed.&]
 [s3; &]
 [s0; &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertFloat]]}}&]
+[s3; &]
+[s3; &]
+[s1;:Upp`:`:ConvertFloat`:`:struct:%- [@(0.0.255)3 struct][3 _][*3 ConvertFloat][3 _:_][@(0.0.255)3 p
+ublic][3 _][*@3;3 ConvertDouble]&]
+[s2; This helper class changes precision of double`->text conversion 
+to 7 digits to reflect the precision of float type.&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s0; &]
+[s5;:Upp`:`:ConvertFloat`:`:GetDefaultMin`(`):%- [@(0.0.255) static] 
+[@(0.0.255) double]_[* GetDefaultMin]()&]
+[s2; Returns the minimal number representable by float.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ConvertFloat`:`:GetDefaultMax`(`):%- [@(0.0.255) static] 
+[@(0.0.255) double]_[* GetDefaultMax]()&]
+[s2; Returns the maximal number representable by float.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ConvertFloat`:`:ConvertFloat`(double`,double`,bool`):%- [* ConvertFloat]([@(0.0.255) d
+ouble]_[*@3 minval]_`=_GetDefaultMin(), [@(0.0.255) double]_[*@3 maxval]_`=_GetDefaultM
+ax(), [@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
+[s2;  [%-*@3 minval] [%-*@3 maxval] [%-*@3 notnull] .&]
 [s0; &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 ConvertInt]]}}&]

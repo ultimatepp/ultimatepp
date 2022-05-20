@@ -297,8 +297,8 @@ private:
 	void FinishFillJob()                                       { fill_job.Finish(); }
 
 	void SyncCo();
-	                               
-	enum { FILL = -1, CLIP = -2, ONPATH = -3 };
+
+	static const int FILL = -1, CLIP = -2, ONPATH = -3;
 
 public:
 	ImageBuffer&       GetBuffer()                             { return *ip; }
