@@ -581,7 +581,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			}
 				
 			if(mine.GetCount() || theirs.GetCount() || original.GetCount()) {
-				menu.Sub("SVN Conflict", [=] (Bar& bar) {
+				menu.Sub(editfile_repo == GIT_DIR ? "GIT Conflict" : "SVN Conflict", [=] (Bar& bar) {
 					if(mine.GetCount() && theirs.GetCount())
 						bar.Add("Compare mine <-> theirs", [=] { DiffFiles("mine", mine, "theirs", theirs); });
 					if(mine.GetCount() && original.GetCount())
@@ -609,8 +609,6 @@ void Ide::FilePropertiesMenu(Bar& menu)
 					});
 				});
 			}
-		}
-		if(editfile.GetCount() && editfile_repo == GIT_DIR) {
 		}
 	}
 }
