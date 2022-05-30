@@ -26,11 +26,39 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2022.1 (rev. 16236) (April 2022)&]
+[s3; 2022.2 (rev. 16270) (May 2022)&]
 [s5;po*/ &]
 [s5;po [*/ Current stable release]&]
-[s5;po &]
-[s5; [* Release highlights]&]
+[s5; &]
+[s5; This release serves mainly as a service pack to 2022.1 and contains 
+significant number of resolved issues. There are limited set 
+of new features.&]
+[s0;ph [* Release highlights]&]
+[s5;l128;i150;O0; Core: IsVoid(String) function to avoid confusion 
+with IsVoid(Value)&]
+[s5;l128;i150;O0; Core: LoadFile fixed to be work with special files 
+in POSIX /proc/&]
+[s5;l128;i150;O0; Core: BiVector, BiArray Create with constructor 
+parameters&]
+[s5;l128;i150;O0; CtrlLib: RichTextView WhenLeftClick, ClearSelection&]
+[s5;l128;i150;O0; CtrlLib: FileSel`::NoExeIcons to suppress loading 
+of icons from .exe files in background&]
+[s5;l128;i150;O0; CtrlLib: Fixed issues with namespace agnostic layouts&]
+[s5;l128;i150;O0; Image: Support for >2G pixel images (ImageBuffer`::GetLength 
+now returns size`_t)&]
+[s5;l128;i150;O0; Draw: Fixed/optimised FlipImage&]
+[s5;l128;i150;O0; plugin/tif: Minimal geotiff support via metadata 
+(see reference/geotiff)&]
+[s5; &]
+[s5; [* TheIDE:]&]
+[s5;l128;i150;O0; ide: git format`-patch patch format support&]
+[s5; &]
+[s5; [* POSIX]&]
+[s5;l128;i150;O0; Fix Manjaro (GNU/Linux) installation dependencies&]
+[s5;* &]
+[s3; 2022.1 (rev. 16236) (April 2022)&]
+[s5;po*/ &]
+[s5;po [* Release highlights]&]
 [s5;l128;i150;O0; sizeof(wchar) is changed to 4 (32 bits) to support 
 non BMP unicode characters&]
 [s5;l288; This might bring some incompatibilities in the code that 
