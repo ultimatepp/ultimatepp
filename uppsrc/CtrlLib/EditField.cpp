@@ -180,12 +180,37 @@ int  EditField::GetStdHeight(Font font)
 
 Size EditField::GetMinSize() const
 {
-	return AddFrameSize(10, font.GetCy() + (no_internal_margin ? 0 : 4));
+	return AddFrameSize(10 + GetSpaceLeft() + GetSpaceRight(), font.GetCy() + (no_internal_margin ? 0 : 4));
+}
+
+void EditField::PaintSpace(Draw& w)
+{
+}
+
+int EditField::GetSpaceLeft() const
+{
+	return 0;
+}
+
+int EditField::GetSpaceRight() const
+{
+	return 0;
+}
+
+void EditField::EditCapture()
+{
+}
+
+bool EditField::HasEditCapture()
+{
+	return HasCapture();
 }
 
 int  EditField::GetCursor(int posx)
 {
-	posx -= 2;
+	posx -= GetSpaceLeft();
+	if(!no_internal_margin)
+		posx -= 2;
 	if(posx <= 0) return 0;
 
 	int count = text.GetLength();
@@ -281,30 +306,37 @@ Color EditField::GetPaper()
 
 void EditField::Paint(Draw& w)
 {
+	int lspace = GetSpaceLeft();
+	int rspace = GetSpaceRight();
 	Size sz = GetSize();
 	bool enabled = IsShowEnabled();
 	Color paper = GetPaper();
+	Color textcolor = GetColorAttr(ATTR_TEXTCOLOR);
 	Color ink = enabled ? Nvl(textcolor, style->text) : style->textdisabled;
 	int fcy = font.GetCy();
 	int yy = GetTy();
+	w.DrawRect(sz, paper);
+	PaintSpace(w);
 	if(!no_internal_margin) {
-		w.DrawRect(0, 0, 2, sz.cy, paper);
-		w.DrawRect(0, 0, sz.cx, yy, paper);
-		w.DrawRect(0, yy + fcy, sz.cx, sz.cy - yy - fcy, paper);
-		w.DrawRect(sz.cx - 2, 0, 2, sz.cy, paper);
-		w.Clipoff(2, yy, sz.cx - 4, fcy);
+		lspace += 2;
+		rspace += 2;
 	}
+	if(lspace || rspace)
+		w.Clipoff(lspace, no_internal_margin ? 0 : yy, sz.cx - lspace - rspace, no_internal_margin ? 0 : fcy);
 	int x = -sc;
-	w.DrawRect(0, 0, sz.cx, fcy, paper);
+	String nulltext = GetTextAttr(ATTR_NULLTEXT);
+	Image nullicon = GetAttr<Image>(ATTR_NULLICON);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
-		const wchar *txt = nulltext;
+		WString nt = nulltext.ToWString();
+		const wchar *txt = nt;
 		if(!IsNull(nullicon)) {
 			int icx = nullicon.GetWidth();
 			w.DrawRect(x, 0, icx + 4, fcy, paper);
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
-		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont, Null, false);
+		Paints(w, x, fcy, txt, Nvl(GetColorAttr(ATTR_NULLINK), SColorDisabled()),
+		       paper, nt.GetLength(), false, Nvl(GetFontAttr(ATTR_NULLFONT), StdFont().Italic()), Null, false);
 	}
 	else {
 		const wchar *txt = text;
@@ -333,9 +365,9 @@ void EditField::Paint(Draw& w)
 				b = i;
 			}
 	}
-	if(!no_internal_margin)
-		w.End();
 	DrawTiles(w, dropcaret, CtrlImg::checkers());
+	if(lspace || rspace)
+		w.End();
 }
 
 bool EditField::GetSelection(int& l, int& h) const
@@ -362,15 +394,14 @@ bool EditField::IsSelection() const
 
 Rect EditField::GetCaretRect(int pos) const
 {
-	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin
+	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin + GetSpaceLeft()
 	               - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
 	             DPI(1), min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
 
-void EditField::SyncCaret()
+Rect EditField::GetCaret() const
 {
-	Rect r = GetCaretRect(cursor);
-	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
+	return GetCaretRect(cursor);
 }
 
 void EditField::Finish(bool refresh)
@@ -391,7 +422,9 @@ void EditField::Finish(bool refresh)
 			LeftPos(r.left, sz.cx);
 		sz = GetSize();
 	}
-	sz.cx -= 2;
+	if(!no_internal_margin)
+		sz.cx -= 2;
+	sz.cx -= GetSpaceLeft() + GetSpaceRight();
 	if(sz.cx <= 0) return;
 	int x = GetCaret(cursor);
 	int rspc = max(font.GetRightSpace('o'), font.GetCy() / 5); // sometimes RightSpace is not implemented (0)
@@ -411,7 +444,6 @@ void EditField::Finish(bool refresh)
 	}
 	if(refresh)
 		RefreshAll();
-	SyncCaret();
 }
 
 void EditField::Layout()
@@ -432,6 +464,7 @@ void EditField::SelSource()
 
 void EditField::GotFocus()
 {
+	auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 	if(autoformat && IsEditable() && !IsNull(text) && inactive_convert) {
 		Value v = convert->Scan(text);
 		if(!v.IsError()) {
@@ -453,6 +486,7 @@ void EditField::LostFocus()
 	if(autoformat && IsEditable() && !IsNull(text) && !IsDragAndDropSource()) {
 		Value v = convert->Scan(text);
 		if(!v.IsError()) {
+			auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 			const Convert * cv = inactive_convert ? inactive_convert : convert;
 			WString s = cv->Format(v);
 			if(s != text) text = s;
@@ -487,6 +521,7 @@ void EditField::LeftDown(Point p, dword flags)
 		return;
 	}
 	SetCapture();
+	EditCapture();
 	Move(c, flags & K_SHIFT);
 	Finish();
 }
@@ -509,7 +544,7 @@ void EditField::LeftUp(Point p, dword flags)
 {
 	int c = GetCursor(p.x + sc);
 	int l, h;
-	if(GetSelection(l, h) && c >= l && c < h && !HasCapture() && selclick)
+	if(GetSelection(l, h) && c >= l && c < h && !HasEditCapture() && selclick)
 		Move(c, false);
 	Finish();
 	selclick = false;
@@ -531,7 +566,7 @@ void EditField::LeftTriple(Point p, dword keyflags)
 
 void EditField::MouseMove(Point p, dword flags)
 {
-	if(!HasCapture()) return;
+	if(!HasEditCapture()) return;
 	Move(GetCursor(p.x + sc), true);
 	Finish();
 }
@@ -645,10 +680,8 @@ void EditField::Remove(int pos, int n)
 {
 	if(IsReadOnly()) return;
 	text.Remove(pos, n);
-	if(cursor >= text.GetLength()) {
+	if(cursor >= text.GetLength())
 		cursor = text.GetLength();
-		SyncCaret();
-	}
 	Update();
 }
 
@@ -706,7 +739,7 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 		dc = RectC(x - sc + 2 - font.GetRightSpace('o'), GetTy(),
 		           1, min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 	}
-	if(dc != dropcaret) {
+	if((Rect16)dc != dropcaret) {
 		Refresh(dropcaret);
 		dropcaret = dc;
 		Refresh(dropcaret);
@@ -728,7 +761,6 @@ void EditField::DragRepeat(Point p)
 	if(a != sc) {
 		sc = a;
 		Refresh();
-		SyncCaret();
 	}
 }
 
@@ -745,7 +777,7 @@ void EditField::LeftDrag(Point p, dword flags)
 	int c = GetCursor(p.x + sc);
 	Size ssz = StdSampleSize();
 	int sell, selh;
-	if(!HasCapture() && GetSelection(sell, selh) && c >= sell && c <= selh) {
+	if(!HasEditCapture() && GetSelection(sell, selh) && c >= sell && c <= selh) {
 		WString sel = text.Mid(sell, selh - sell);
 		ImageDraw iw(ssz);
 		iw.DrawText(0, 0, sel);
@@ -981,6 +1013,7 @@ void EditField::SetText(const WString& txt)
 
 void EditField::SetData(const Value& data)
 {
+	auto inactive_convert = (const Convert *)GetVoidPtrAttr(ATTR_INACTIVE_CONVERT);
 	const Convert * cv = convert;
 	if(!HasFocus() && inactive_convert)
 		cv = inactive_convert;
@@ -1010,7 +1043,6 @@ void EditField::Reset()
 	clickselect = false;
 	filter = CharFilterUnicode;
 	convert = &NoConvert();
-	inactive_convert = NULL;
 	initcaps = false;
 	maxlen = INT_MAX;
 	autosize = false;
@@ -1021,10 +1053,10 @@ void EditField::Reset()
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
-	textcolor = Null;
 	showspaces = false;
 	no_internal_margin = false;
 	fsell = fselh = -1;
+	DeleteAttr<Image>(ATTR_NULLICON);
 }
 
 EditField& EditField::SetFont(Font _font)
@@ -1036,25 +1068,27 @@ EditField& EditField::SetFont(Font _font)
 
 EditField& EditField::SetColor(Color c)
 {
-	textcolor = c;
+	SetColorAttr(ATTR_TEXTCOLOR, c);
 	Refresh();
 	return *this;
 }
 
 EditField& EditField::NullText(const Image& icon, const char *text, Font fnt, Color ink)
 {
-	nullicon = icon;
-	nulltext = text;
-	nulltext << " ";
-	nullink = ink;
-	nullfont = fnt;
+	if(!IsNull(icon))
+		CreateAttr<Image>(ATTR_NULLICON) = icon;
+	String h = text;
+	h << " ";
+	SetTextAttr(ATTR_NULLTEXT, h);
+	SetColorAttr(ATTR_NULLINK, ink);
+	SetFontAttr(ATTR_NULLFONT, fnt);
 	Refresh();
 	return *this;
 }
 
 EditField& EditField::NullText(const Image& icon, const char *text, Color ink)
 {
-	return NullText(icon, text, GetFont().Italic(), ink);
+	return NullText(icon, text, Null, ink);
 }
 
 EditField& EditField::NullText(const char *text, Font fnt, Color ink)
@@ -1064,7 +1098,7 @@ EditField& EditField::NullText(const char *text, Font fnt, Color ink)
 
 EditField& EditField::NullText(const char *text, Color ink)
 {
-	return NullText(text, GetFont().Italic(), ink);
+	return NullText(text, Null, ink);
 }
 
 EditField::EditField()
@@ -1075,6 +1109,9 @@ EditField::EditField()
 	WhenBar = THISBACK(StdBar);
 }
 
-EditField::~EditField() {}
+EditField::~EditField()
+{
+	DeleteAttr<Image>(ATTR_NULLICON);
+}
 
 }

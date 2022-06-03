@@ -116,6 +116,8 @@ void Bits::Serialize(Stream& s)
 	if(s.IsStoring())
 		dwords = GetLast() + 1;
 	s % dwords;
+	if(dwords < 0)
+		s.LoadError();
 	if(s.IsLoading())
 		CreateRaw(dwords);
 	s.SerializeRaw(bp, dwords);

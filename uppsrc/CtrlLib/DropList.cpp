@@ -12,9 +12,9 @@ void DropList::Sync() {
 	if(displayall)
 		v = value;
 	int i = key.Find(value);
-	const Display& d = valuedisplay ? *valuedisplay : i >= 0 ? list.GetDisplay(i, 0)
-	                                                         : list.GetDisplay(0);
-	if(i >= 0) v = list.Get(i, 0);
+	const Display& d = valuedisplay ? *valuedisplay : i >= 0 ? list.GetDisplay(i)
+	                                                         : list.GetDisplay();
+	if(i >= 0) v = list.Get(i);
 	MultiButton::SetDisplay(d);
 	MultiButton::SetValueCy(list.GetLineCy());
 	v = valueconvert->Format(v);
@@ -55,7 +55,7 @@ bool DropList::Key(dword k, int) {
 		break;
 	default:
 		if(k >= 32 && k < K_CHAR_LIM) {
-			bool b = list.Key(k, 1);
+			bool b = list.Key(k);
 			if(list.GetCursor() >= 0 && list.GetCursor() < key.GetCount() && key[list.GetCursor()] != value)
 				Select();
 			return b;
@@ -78,6 +78,11 @@ void DropList::Drop() {
 	WhenDrop();
 	list.SetCursor(key.Find(value));
 	list.PopUp(this, dropwidth);
+}
+
+void DropList::DropPush()
+{
+	Drop();
 }
 
 void DropList::Select() {
@@ -107,7 +112,6 @@ void DropList::ClearList() {
 	key.Clear();
 	list.Clear();
 	Sync();
-	list.Refresh();
 	EnableDrop(false);
 }
 
@@ -124,7 +128,6 @@ DropList& DropList::Add(const Value& _key, const Value& text, bool enable)
 	list.Add(text);
 	if(!enable)
 		list.SetLineCy(list.GetCount() - 1, 0);
-	list.Refresh();
 	EnableDrop();
 	Sync();
 	return *this;
@@ -143,7 +146,6 @@ DropList& DropList::AddSeparator()
 {
 	key.Add(RawToValue(DummyValue__()));
 	list.AddSeparator();
-	list.Refresh();
 	EnableDrop();
 	Sync();
 	return *this;
@@ -155,7 +157,6 @@ void DropList::Trim(int n) {
 	key.Trim(n);
 	list.SetCount(n);
 	Sync();
-	list.Refresh();
 	EnableDrop(n);
 }
 
@@ -177,7 +178,7 @@ Value DropList::GetValue() const {
 }
 
 void  DropList::SetValue(int i, const Value& v) {
-	list.Set(i, 0, v);
+	list.Set(i, v);
 	EnableDrop();
 	Sync();
 }
@@ -198,20 +199,20 @@ DropList& DropList::SetValueConvert(const Convert& cv)
 
 DropList& DropList::SetConvert(const Convert& cv)
 {
-	list.ColumnAt(0).SetConvert(cv);
+	list.SetConvert(cv);
 	return SetValueConvert(cv);
 }
 
 DropList& DropList::SetDisplay(int i, const Display& d)
 {
-	list.SetDisplay(i, 0, d);
+	list.SetDisplay(i, d);
 	Sync();
 	return *this;
 }
 
 DropList& DropList::SetDisplay(const Display& d)
 {
-	list.ColumnAt(0).SetDisplay(d);
+	list.SetDisplay(d);
 	Sync();
 	return *this;
 }
@@ -270,10 +271,9 @@ DropList::DropList()
 	dropfocus = false;
 	notnull = false;
 	alwaysdrop = false;
-	AddButton().Main().WhenPush = THISBACK(Drop);
+	SetupDropPush();
 	NoInitFocus();
 	EnableDrop(false);
-	list.Normal();
 	list.WhenSelect = THISBACK(Select);
 	list.WhenCancel = THISBACK(Cancel);
 	dropwidth = 0;

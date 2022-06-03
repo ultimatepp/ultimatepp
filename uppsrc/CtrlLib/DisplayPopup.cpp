@@ -1,55 +1,55 @@
 #include "CtrlLib.h"
 
 namespace Upp {
-
-Point DisplayPopup::Op(Point p)
+	
+Point DisplayPopup::PopUp::Op(Point p)
 {
 	return p + GetScreenView().TopLeft() - ctrl->GetScreenView().TopLeft();
 }
 
-void DisplayPopup::LeftDown(Point p, dword flags)
+void DisplayPopup::PopUp::LeftDown(Point p, dword flags)
 {
 	if(ctrl) ctrl->LeftDown(Op(p), flags);
 }
 
-void DisplayPopup::LeftDrag(Point p, dword flags)
+void DisplayPopup::PopUp::LeftDrag(Point p, dword flags)
 {
 	if(ctrl) ctrl->LeftDrag(Op(p), flags);
 }
 
-void DisplayPopup::LeftDouble(Point p, dword flags)
+void DisplayPopup::PopUp::LeftDouble(Point p, dword flags)
 {
 	if(ctrl) ctrl->LeftDouble(Op(p), flags);
 }
 
-void DisplayPopup::RightDown(Point p, dword flags)
+void DisplayPopup::PopUp::RightDown(Point p, dword flags)
 {
 	if(ctrl) ctrl->RightDown(Op(p), flags);
 }
 
-void DisplayPopup::LeftUp(Point p, dword flags)
+void DisplayPopup::PopUp::LeftUp(Point p, dword flags)
 {
 	if(ctrl) ctrl->LeftUp(Op(p), flags);
 }
 
-void DisplayPopup::MouseWheel(Point p, int zdelta, dword flags)
+void DisplayPopup::PopUp::MouseWheel(Point p, int zdelta, dword flags)
 {
 	if(ctrl) ctrl->MouseWheel(Op(p), zdelta, flags);
 }
 
-void DisplayPopup::MouseLeave()
+void DisplayPopup::PopUp::MouseLeave()
 {
 	Cancel();
 }
 
-void DisplayPopup::MouseMove(Point p, dword flags)
+void DisplayPopup::PopUp::MouseMove(Point p, dword flags)
 {
 	p += GetScreenView().TopLeft();
 	if(!slim.Contains(p))
 		MouseLeave();
 }
 
-void DisplayPopup::Paint(Draw& w)
+void DisplayPopup::PopUp::Paint(Draw& w)
 {
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
@@ -62,13 +62,13 @@ void DisplayPopup::Paint(Draw& w)
 	}
 }
 
-Vector<DisplayPopup *>& DisplayPopup::all()
+Vector<DisplayPopup::PopUp *>& DisplayPopup::PopUp::all()
 {
-	static Vector<DisplayPopup *> all;
+	static Vector<DisplayPopup::PopUp *> all;
 	return all;
 }
 
-DisplayPopup::DisplayPopup()
+DisplayPopup::PopUp::PopUp()
 {
 	SetFrame(BlackFrame());
 	display = NULL;
@@ -83,14 +83,14 @@ DisplayPopup::DisplayPopup()
 	all().Add(this);
 }
 
-DisplayPopup::~DisplayPopup()
+DisplayPopup::PopUp::~PopUp()
 {
 	int q = FindIndex(all(), this);
 	if(q >= 0)
 		all().Remove(q);
 }
 
-void DisplayPopup::Sync()
+void DisplayPopup::PopUp::Sync()
 {
 	if(!IsMainThread()) {
 		PostCallback(PTEBACK(Sync));
@@ -144,20 +144,20 @@ void DisplayPopup::Sync()
 		}
 	}
 	if(IsOpen() && !GetDragAndDropSource())
-		Close();
+		WhenClose();
 }
 
-void DisplayPopup::SyncAll()
+void DisplayPopup::PopUp::SyncAll()
 {
 	int n = 0;
-	for(DisplayPopup *p : all())
+	for(DisplayPopup::PopUp *p : all())
 		if(p->ctrl && p->ctrl->IsOpen()) {
 			p->Sync();
 			n++;
 		}
 }
 
-bool DisplayPopup::StateHook(Ctrl *, int reason)
+bool DisplayPopup::PopUp::StateHook(Ctrl *, int reason)
 {
 	if(reason == FOCUS)
 		SyncAll();
@@ -165,13 +165,13 @@ bool DisplayPopup::StateHook(Ctrl *, int reason)
 }
 
 
-bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
+bool DisplayPopup::PopUp::MouseHook(Ctrl *, bool, int, Point, int, dword)
 {
 	SyncAll();
 	return false;
 }
 
-void DisplayPopup::Cancel()
+void DisplayPopup::PopUp::Cancel()
 {
 	if(GetDragAndDropSource())
 		return;
@@ -179,17 +179,17 @@ void DisplayPopup::Cancel()
 	Sync();
 }
 
-bool DisplayPopup::IsOpen()
+bool DisplayPopup::PopUp::IsOpen()
 {
 	return Ctrl::IsOpen();
 }
 
-bool DisplayPopup::HasMouse()
+bool DisplayPopup::PopUp::HasMouse()
 {
 	return Ctrl::HasMouse() || ctrl && ctrl->HasMouse();
 }
 
-void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
+void DisplayPopup::PopUp::Set(Ctrl *_ctrl, const Rect& _item,
                        const Value& _value, const Display *_display,
                        Color _ink, Color _paper, dword _style, int _margin)
 {
@@ -210,6 +210,46 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		Sync();
 		Refresh();
 	}
+}
+
+
+void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display, Color ink, Color paper, dword style, int margin)
+{
+	if(!popup) {
+		popup.Create();
+		popup->usedisplaystdsize = usedisplaystdsize;
+		popup->WhenClose << [=] { PostCallback([=] { popup.Clear(); }); };
+	}
+	popup->Set(ctrl, item, v, display, ink, paper, style, margin);
+}
+
+void DisplayPopup::Cancel()
+{
+	if(popup)
+		popup->Cancel();
+}
+
+bool DisplayPopup::IsOpen()
+{
+	return popup && popup->IsOpen();
+}
+
+bool DisplayPopup::HasMouse()
+{
+	return popup && popup->HasMouse();
+}
+
+void DisplayPopup::UseDisplayStdSize()
+{
+	usedisplaystdsize = true;
+	if(popup)
+		popup->usedisplaystdsize = true;
+}
+
+DisplayPopup::~DisplayPopup()
+{
+	if(popup)
+		popup->Close();
 }
 
 }

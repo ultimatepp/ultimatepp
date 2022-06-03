@@ -1978,33 +1978,6 @@ pointer to it.&]
 its descendants.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:SetCaret`(int`,int`,int`,int`):%- [@(0.0.255) void]_[* SetCaret]([@(0.0.255) i
-nt]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])&]
-[s2;b17;a17; Place caret rectangle block at given position in view 
-area. Caret rectangle is full flashing box and usually indicates 
-place where text is to entered. Ctrl can have just one caret. 
-Only Ctrl with focus has its caret displayed (also means that 
-you do not need to remove caret when Ctrl goes out of focus).&]
-[s7;i1120;a17; [%-*C@3 x]-|X position.&]
-[s7;i1120;a17; [%-*C@3 y]-|Y position.&]
-[s7;i1120;a17; [%-*C@3 cx]-|Horizontal size.&]
-[s7;i1120;a17; [%-*C@3 cy]-|Vertical size.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:SetCaret`(const `:`:Rect`&`):%- [@(0.0.255) void]_[* SetCaret]([@(0.0.255) con
-st]_[_^`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 r])&]
-[s2;b17;a17; Place caret rectangle block at given position in view 
-area. Caret rectangle is full flashing box and usually indicates 
-place where text is to entered. Ctrl can have just one caret. 
-Only Ctrl with focus has its caret displayed (also means that 
-you do not need to remove caret when Ctrl goes out of focus).&]
-[s7;i1120;a17; [%-*C@3 r]-|Caret block rectangle.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:KillCaret`(`):%- [@(0.0.255) void]_[* KillCaret]()&]
-[s2;b17;a17; Removes caret from Ctrl.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:CancelPreedit`(`):%- [@(0.0.255) void]_[* CancelPreedit]()&]
 [s2; Terminates any input method composition in progress, if possible. 
 Text input widgets typically call this on status change, like 
@@ -2238,14 +2211,6 @@ l]_[*@3 ax]_`=_[@(0.0.255) true])&]
 [s4;%- &]
 [s5;:Ctrl`:`:IsActiveX`(`)const:%- [@(0.0.255) bool]_[* IsActiveX]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|Value of ActiveX flag.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:Info`(const char`*`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* Info]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 txt])&]
-[s2;b17;a17; Sets Tip text of Ctrl. This text is displayed as tooltip 
-of Ctrl.&]
-[s7;i1120;a17; [%-*C@3 txt]-|Text.&]
-[s7;i1120;a17; [*/ Return value]-|`*this for method chaining.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:HelpLine`(const char`*`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* HelpLine]([@(0.0.255) c

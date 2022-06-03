@@ -35,6 +35,7 @@ bool           Ctrl::invalid;
 
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
+
 Rect           Ctrl::fbCaretRect;
 int            Ctrl::fbCaretTm;
 bool           Ctrl::fbEndSession;
@@ -73,9 +74,9 @@ Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	int q = FindTopCtrl();
-	if(q > 0 && topctrl[q]->top) {
-		Ctrl *x = topctrl[q]->top->owner_window;
-		LDUMP(Upp::Name(x));
+	Top *top = topctrl[q]->GetTop();
+	if(q > 0 && top) {
+		Ctrl *x = top->owner_window;
 		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
@@ -87,36 +88,13 @@ Ctrl *Ctrl::GetActiveCtrl()
 	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
-// Vector<Callback> Ctrl::hotkey;
-
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
-/*	ASSERT(key >= K_DELTA);
-	int q = hotkey.GetCount();
-	for(int i = 0; i < hotkey.GetCount(); i++)
-		if(!hotkey[i]) {
-			q = i;
-			break;
-		}
-	hotkey.At(q) = cb;
-	dword mod = 0;
-	if(key & K_ALT)
-		mod |= MOD_ALT;
-	if(key & K_SHIFT)
-		mod |= MOD_SHIFT;
-	if(key & K_CTRL)
-		mod |= MOD_CONTROL;
-	
-	return RegisterHotKey(NULL, q, mod, key & 0xffff) ? q : -1;*/
 	return -1;
 }
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
-/*	if(id >= 0 && id < hotkey.GetCount()) {
-		UnregisterHotKey(NULL, id);
-		hotkey[id].Clear();
-	}*/
 }
 
 bool Ctrl::IsWaitingEvent()
@@ -135,29 +113,11 @@ void Ctrl::SyncTopWindows()
 
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
-/*
-	if(Ctrl::invalid)
-		Ctrl::DoPaint();
-	Ctrl::invalid = false;
-	Ctrl::RemoveCursor();
-	Ctrl::RemoveCaret();
-	Rect r = ctrl->GetScreenView();
-	Ctrl::invalid.Add(r);
-	Ctrl::AddUpdate(r);
-	for(int i = max(ctrl->GetTopCtrl()->FindTopCtrl() + 1, 0); i < Ctrl::topctrl.GetCount(); i++) {
-		Rect rr = Ctrl::topctrl[i]->GetScreenRect();
-		ExcludeClip(rr);
-		Subtract(Ctrl::invalid, rr);
-	}
-	Offset(r.TopLeft());
-*/
 }
 
 ViewDraw::~ViewDraw()
 {
-//	Ctrl::DoUpdate();
 }
-
 
 Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 {
@@ -306,18 +266,18 @@ int Ctrl::GetKbdSpeed()
 
 void Ctrl::DestroyWnd()
 {
-	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
+	for(int i = 0; i < topctrl.GetCount(); i++) {
+		Top *top = topctrl[i]->GetTop();
+		if(top && top->owner_window == this)
 			topctrl[i]->WndDestroy();
+	}
 	int q = FindTopCtrl();
 	if(q >= 0) {
 		Invalidate();
 		topctrl.Remove(q);
 	}
-	if(top) {
-		delete top;
-		top = NULL;
-	}
+	if(top)
+		DeleteTop();
 	isopen = false;
 	TopWindow *win = dynamic_cast<TopWindow *>(this);
 	if(win)
@@ -341,8 +301,11 @@ void Ctrl::PutForeground()
 	}
 	Vector< Ptr<Ctrl> > fw;
 	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i] && topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i] != this)
-			fw.Add(topctrl[i]);
+		if(topctrl[i]) {
+			Top *top = topctrl[i]->GetTop();
+			if(top && top->owner_window == this && topctrl[i] != this)
+				fw.Add(topctrl[i]);
+		}
 	for(int i = 0; i < fw.GetCount(); i++)
 		if(fw[i])
 			fw[i]->PutForeground();
@@ -355,8 +318,8 @@ void Ctrl::SetWndForeground()
 	if(IsWndForeground())
 		return;
 	Ctrl *to = this;
-	while(to->top && to->top->owner_window)
-		to = to->top->owner_window;
+	while(to->GetTop() && to->GetTop()->owner_window)
+		to = to->GetTop()->owner_window;
 	to->PutForeground();
 	if(this != focusCtrl)
 		ActivateWnd();
@@ -445,7 +408,8 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 		ASSERT(owner_window->IsOpen());
 		if(owner_window != desktop) {
 			owner_window->SetForeground();
-			top->owner_window = owner_window;
+			if(GetTop())
+				GetTop()->owner_window = owner_window;
 		}
 	}
 	topctrl.Add(this);
@@ -496,10 +460,8 @@ void Ctrl::SysEndLoop()
 
 void Ctrl::DeleteDesktopTop()
 {
-	if(desktop && desktop->top) {
-		delete desktop->top;
-		desktop->top = NULL;
-	}
+	if(desktop && desktop->GetTop())
+		desktop->DeleteTop();
 }
 
 void Ctrl::SetDesktop(Ctrl& q)

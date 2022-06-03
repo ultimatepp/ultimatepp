@@ -105,7 +105,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 		h->descent = max(h->ydelta, 0);
 		h->external = 0;
 		lines.object.Add(part.object);
-		h->object = &lines.object.Top();		
+		h->object = &lines.object.Top();
 		h++;
 		*t++ = 'x';
 		*p++ = pos;

@@ -62,7 +62,7 @@ template<> void   XmlAttrLoad(dword& var, const String& text)
 
 template<> String XmlAttrStore(const double& var)
 {
-	return FormatG(var, 17);
+	return FormatG(var, 15);
 }
 
 template<> void XmlAttrLoad(double& var, const String& text)

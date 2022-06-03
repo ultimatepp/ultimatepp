@@ -299,6 +299,7 @@ public:
 	virtual void   Layout();
 	virtual void   RefreshLine(int i);
 	virtual Font   GetPreeditFont();
+	virtual Rect   GetCaret() const;
 
 protected:
 	virtual void    SetSb();
@@ -507,6 +508,8 @@ public:
 	virtual void  DragLeave();
 	virtual void  LeftDrag(Point p, dword flags);
 
+	virtual Rect  GetCaret() const;
+
 protected:
 	virtual void  ClearLines();
 	virtual void  InsertLines(int line, int count);
@@ -527,6 +530,7 @@ protected:
 	ScrollBar    sb;
 	int          cx;
 	bool         updownleave, eofline;
+	Rect         caret;
 
 	struct Fmt {
 		FontInfo      fi;

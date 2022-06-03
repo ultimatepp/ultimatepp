@@ -103,117 +103,50 @@ public:
 	void operator=(const Bits&) = delete;
 };
 
-//# System dependent
-template <class T>
-class Mitor : Moveable< Mitor<T> > {
-	union {
-		mutable unsigned   count;
-		mutable Vector<T> *vector;
-	};
-	byte elem0[sizeof(T)];
-
-	T&        Get(int i) const;
-	void      Pick(Mitor&& m);
-	void      Copy(const Mitor& m);
-	void      Chk() const               { ASSERT(count != 2); }
+class PackedData {
+	void *ptr = nullptr;
+	
+	template <class T>
+	T Get(int ii, T def) const;
 
 public:
-	T&        operator[](int i)         { return Get(i); }
-	const T&  operator[](int i) const   { return Get(i); }
-	int       GetCount() const;
-	T&        Add();
-	void      Add(const T& x);
-	void      Clear();
-	void      Shrink();
+	void   SetRawPtr(void *p)                   { ptr = p; }
+	void  *GetRawPtr() const                    { return ptr; }
 
-	Mitor(Mitor&& m)                    { Pick(pick(m)); }
-	void operator=(Mitor&& m)           { if(this != &m) { Clear(); Pick(pick(m)); } }
+	void   SetData(int ii, const void *data, int datalen);
 
-	Mitor(Mitor& m, int)                { Copy(m); }
+	template <class F>
+	bool   GetData(int ii, F out) const;
+	
+	void   SetNull(int ii)                      { SetData(ii, NULL, 0); }
 
-	Mitor()                             { count = 0; }
-	~Mitor()                            { Clear(); }
+	void   SetString(int ii, const char *s)     { SetData(ii, s, strlen(s)); }
+	void   SetString(int ii, const String& s)   { SetData(ii, s, s.GetCount()); }
+	String GetString(int ii) const              { String r; GetData(ii, [&](const char *s, int n) { r = String(s, n); }); return r; }
+	
+	void   SetInt(int ii, int val)              { SetData(ii, &val, sizeof(int)); }
+	int    GetInt(int ii, int def) const        { return Get<int>(ii, def); }
+
+	void   SetDword(int ii, dword val)          { SetData(ii, &val, sizeof(dword)); }
+	int    GetDword(int ii, dword def) const    { return Get<dword>(ii, def); }
+
+	void   SetInt64(int ii, int64 val)          { SetData(ii, &val, sizeof(int64)); }
+	int64  GetInt64(int ii, int64 def) const    { return Get<int64>(ii, def); }
+
+	void   SetPtr(int ii, void *val)            { SetData(ii, &val, sizeof(void *)); }
+	void  *GetPtr(int ii) const                 { return Get<void *>(ii, nullptr); }
+	
+	void   Clear();
+
+	Vector<String> Unpack() const;
+	size_t         GetPackedSize() const;
+	String         GetPacked() const           { return String((const char *)ptr, GetPackedSize()); }
+
+	PackedData() {}
+	PackedData(const PackedData&) = delete;
+	~PackedData();
 };
 
-template <class T>
-T& Mitor<T>::Get(int i) const
-{
-	ASSERT(i >= 0 && i < GetCount());
-	return i == 0 ? *(T*)elem0 : (*const_cast<Vector<T>*>(vector))[i - 1];
-}
-
-template <class T>
-void Mitor<T>::Pick(Mitor&& m)
-{
-	m.Chk();
-	vector = m.vector;
-	memcpy(&elem0, &m.elem0, sizeof(T));
-	m.count = 2;
-}
-
-template <class T>
-void Mitor<T>::Copy(const Mitor& m)
-{
-	m.Chk();
-	if(m.count > 0)
-		DeepCopyConstruct(elem0, (const T*)m.elem0);
-	if(m.count > 1)
-		vector = new Vector<T>(*m.vector, 1);
-}
-
-template <class T>
-int Mitor<T>::GetCount() const
-{
-	Chk();
-	return count > 1 ? vector->GetCount() + 1 : count;
-}
-
-template <class T>
-T& Mitor<T>::Add()
-{
-	Chk();
-	if(count == 0) {
-		count = 1;
-		return *new(elem0) T;
-	}
-	if(count == 1)
-		vector = new Vector<T>;
-	return vector->Add();
-}
-
-template <class T>
-void Mitor<T>::Add(const T& x)
-{
-	Chk();
-	if(count == 0) {
-		count = 1;
-		new((T*) elem0) T(x);
-	}
-	else {
-		if(count == 1)
-			vector = new Vector<T>;
-		vector->Add(x);
-	}
-}
-
-template <class T>
-void Mitor<T>::Clear()
-{
-	if(count > 2)
-		delete vector;
-	if(count && count != 2)
-		((T*)elem0)->~T();
-	count = 0;
-}
-
-template <class T>
-void Mitor<T>::Shrink()
-{
-	if(count > 2)
-		vector->Shrink();
-}
-
-//#
 template <class T, int N = 1>
 struct Link {
 	T *link_prev[N];
@@ -336,169 +269,4 @@ public:
 	LRUCache() { head = -1; size = 0; count = 0; ClearCounters(); }
 };
 
-template <class T, class K>
-void LRUCache<T, K>::LinkHead(int i)
-{
-	Item& m = data[i];
-	if(head >= 0) {
-		int tail = data[head].prev;
-		m.next = head;
-		m.prev = tail;
-		data[head].prev = i;
-		data[tail].next = i;
-	}
-	else
-		m.prev = m.next = i;
-	head = i;
-	count++;
-}
-
-
-template <class T, class K>
-void LRUCache<T, K>::Unlink(int i)
-{
-	Item& m = data[i];
-	if(m.prev == i)
-		head = -1;
-	else {
-		if(head == i)
-			head = m.next;
-		data[m.next].prev = m.prev;
-		data[m.prev].next = m.next;
-	}
-	count--;
-}
-
-template <class T, class K>
-T& LRUCache<T, K>::GetLRU()
-{
-	int tail = data[head].prev;
-	return *data[tail].data;
-}
-
-template <class T, class K>
-const K& LRUCache<T, K>::GetLRUKey()
-{
-	int tail = data[head].prev;
-	return key[tail].key;
-}
-
-template <class T, class K>
-void LRUCache<T, K>::DropLRU()
-{
-	if(head >= 0) {
-		int tail = data[head].prev;
-		size -= data[tail].size;
-		data[tail].data.Clear();
-		Unlink(tail);
-		key.Unlink(tail);
-	}
-}
-
-template <class T, class K>
-template <class P>
-void LRUCache<T, K>::AdjustSize(P getsize)
-{
-	size = 0;
-	count = 0;
-	for(int i = 0; i < data.GetCount(); i++)
-		if(!key.IsUnlinked(i)) {
-			int sz = getsize(*data[i].data);
-			if(sz >= 0)
-				data[i].size = sz + InternalSize;
-			size += data[i].size;
-			count++;
-		}
-}
-
-template <class T, class K>
-template <class P>
-int LRUCache<T, K>::Remove(P predicate)
-{
-	int n = 0;
-	int i = 0;
-	while(i < data.GetCount())
-		if(!key.IsUnlinked(i) && predicate(*data[i].data)) {
-			size -= data[i].size;
-			Unlink(i);
-			key.Unlink(i);
-			n++;
-		}
-		else
-			i++;
-	return n;
-}
-
-template <class T, class K>
-template <class P>
-bool LRUCache<T, K>::RemoveOne(P predicate)
-{
-	int i = head;
-	if(i >= 0)
-		for(;;) {
-			int next = data[i].next;
-			if(predicate(*data[i].data)) {
-				size -= data[i].size;
-				Unlink(i);
-				key.Unlink(i);
-				return true;
-			}
-			if(i == next || next == head || next < 0)
-				break;
-			i = next;
-		}
-	return false;
-}
-
-template <class T, class K>
-void LRUCache<T, K>::Shrink(int maxsize, int maxcount)
-{
-	if(maxsize >= 0 && maxcount >= 0)
-		while(count > maxcount || size > maxsize)
-			DropLRU();
-}
-
-template <class T, class K>
-void LRUCache<T, K>::Clear()
-{
-	head = -1;
-	size = 0;
-	count = 0;
-	newsize = foundsize = 0;
-	key.Clear();
-	data.Clear();
-}
-
-template <class T, class K>
-void LRUCache<T, K>::ClearCounters()
-{
-	flag = !flag;
-	newsize = foundsize = 0;
-}
-
-template <class T, class K>
-T& LRUCache<T, K>::Get(const Maker& m)
-{
-	Key k;
-	k.key = m.Key();
-	k.type = typeid(m).name();
-	int q = key.Find(k);
-	if(q < 0) {
-		q = key.Put(k);
-		Item& t = data.At(q);
-		t.size = m.Make(t.data.Create()) + InternalSize;
-		size += t.size;
-		newsize += t.size;
-		t.flag = flag;
-	}
-	else {
-		Item& t = data[q];
-		Unlink(q);
-		if(t.flag != flag) {
-			t.flag = flag;
-			foundsize += t.size;
-		}
-	}
-	LinkHead(q);
-	return *data[q].data;
-}
+#include "Other.hpp"

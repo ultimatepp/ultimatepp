@@ -737,11 +737,12 @@ void BiVector<T>::Free() {
 	}
 }
 
-#ifdef UPP
 template <class T>
 void BiVector<T>::Serialize(Stream& s) {
 	int n = items;
 	s / n;
+	if(n < 0)
+		s.LoadError();
 	if(s.IsLoading()) {
 		Clear();
 		while(n--)
@@ -757,8 +758,6 @@ String BiVector<T>::ToString() const
 {
 	return AsStringArray(*this);
 }
-
-#endif
 
 template <class T>
 BiVector<T>::BiVector(std::initializer_list<T> init)
@@ -794,11 +793,12 @@ void BiArray<T>::DeepCopy0(const BiArray<T>& v) {
 		bv.AddTail() = new T(clone(v[i]));
 }
 
-#ifdef UPP
 template <class T>
 void BiArray<T>::Serialize(Stream& s) {
 	int n = bv.GetCount();
 	s / n;
+	if(n < 0)
+		s.LoadError();
 	if(s.IsLoading()) {
 		Clear();
 		while(n--)
@@ -821,8 +821,6 @@ BiArray<T>::BiArray(std::initializer_list<T> init)
 	for(const auto& q : init)
 		AddTail(q);
 }
-
-#endif
 
 inline
 void   Bits::Set(int i, dword bits, int count)

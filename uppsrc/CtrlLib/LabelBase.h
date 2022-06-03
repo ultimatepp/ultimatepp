@@ -28,30 +28,41 @@ void DrawVertDrop(Draw& w, int x, int y, int cy);
 Point GetDragScroll(Ctrl *ctrl, Point p, Size max);
 Point GetDragScroll(Ctrl *ctrl, Point p, int max = 16);
 
-struct DrawLabel {
-	bool      push;
-	bool      focus;
-	bool      disabled;
-	bool      limg_never_hide;
-	bool      rimg_never_hide;
-
-	PaintRect paintrect;
-	Image     limg;
-	Color     lcolor;
-	int       lspc;
+struct DrawLabelBasic {
 	String    text;
 	Font      font;
-	Color     ink, disabledink;
-	Image     rimg;
-	Color     rcolor;
-	int       rspc;
-
-	int       align, valign;
-	
-	bool      nowrap;
+	Color     ink;
+	Color     disabledink;
 
 	int       accesskey;
-	int       accesspos;
+
+	int       align:4;
+	int       valign:4;
+	
+	bool      nowrap:1;
+	
+	DrawLabelBasic() { align = valign = ALIGN_CENTER; nowrap = false; accesskey = 0; font = StdFont(); }
+};
+
+struct DrawLabelExt {
+	PaintRect paintrect;
+
+	Image     limg;
+	Image     rimg;
+
+	Color     lcolor;
+	int       lspc = 0;
+	Color     rcolor;
+	int       rspc = 0;
+
+	bool      limg_never_hide = false;
+	bool      rimg_never_hide = false;
+};
+
+struct DrawLabel : DrawLabelBasic, DrawLabelExt {
+	bool      push = false;
+	bool      focus = false;
+	bool      disabled = false;
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;
@@ -59,8 +70,6 @@ struct DrawLabel {
 	Size      Paint(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, const Rect& r, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
-
-	DrawLabel();
 };
 
 Image DisabledImage(const Image& img, bool disabled = true);
@@ -70,7 +79,11 @@ class LabelBase {
 protected:
 	virtual void  LabelUpdate();
 
-	DrawLabel   lbl;
+	DrawLabelBasic    lbl;
+	One<DrawLabelExt> ext;
+	
+	DrawLabelExt& Ext()                                      { if(!ext) ext.Create() ; return *ext; }
+	DrawLabel     Make() const;
 
 public:
 	LabelBase&  SetLeftImage(const Image& bmp1, int spc = 0, bool never_hide = false);
@@ -94,7 +107,7 @@ public:
 
 	int         GetAlign() const                             { return lbl.align; }
 	int         GetVAlign() const                            { return lbl.valign; }
-	PaintRect   GetPaintRect() const                         { return lbl.paintrect; }
+	PaintRect   GetPaintRect() const                         { return ext ? ext->paintrect : PaintRect(); }
 	String      GetText() const                              { return lbl.text; }
 	Font        GetFont() const                              { return lbl.font; }
 	Color       GetInk() const                               { return lbl.ink; }
@@ -108,6 +121,9 @@ public:
 	Size        PaintLabel(Draw& w, int x, int y, int cx, int cy,
 	                       bool disabled = false, bool push = false, bool focus = false, bool vak = true);
 	Size        GetLabelSize() const;
+	
+	LabelBase(const LabelBase& src)   { lbl = src.lbl; if(src.ext) ext = clone(src.ext); }
+	LabelBase()                       {}
 
 	virtual ~LabelBase();
 };
@@ -121,13 +137,13 @@ public:
 	virtual void FrameAddSize(Size& sz);
 
 private:
+	Value        coloredge;
 	const Value *edge;
 	const Ctrl  *ctrl;
-	Value coloredge;
-	Color color;
-	bool  mousein = false;
-	bool  push = false;
-	bool  button = false;
+	Color        color;
+	bool         mousein:1;
+	bool         push:1;
+	bool         button:1;
 
 public:
 	void Set(const Ctrl *ctrl, const Value *edge, bool active);
@@ -135,5 +151,5 @@ public:
 	void Push(bool b)                       { button = true; push = b; }
 	void SetColor(const Value& ce, Color c) { coloredge = ce; color = c; }
 
-	ActiveEdgeFrame() { edge = NULL; mousein = false; }
+	ActiveEdgeFrame() { edge = NULL; mousein = push = button = false; }
 };

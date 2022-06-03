@@ -2710,7 +2710,7 @@ void TabBar::Serialize(Stream& s)
 	int version = 1;
 	s / version;
 
-	s % id;		
+	s % id;
 	s % crosses;
 	s % crosses_side;
 	s % grouping;

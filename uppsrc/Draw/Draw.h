@@ -36,7 +36,7 @@ class FontInfo;
 
 inline
 bool PreferColorEmoji(int c)
-{ // for these codepoints we prefer replacemnet color emoji even if glyphs is in the font
+{ // for these codepoints we prefer replacement color emoji even if glyphs is in the font
 	return c >= 0x2600 && c <= 0x27ef || c >= 0x1f004 && c <= 0x1f251 || c >= 0x1f300 && c <= 0x1faf6;
 }
 
@@ -211,6 +211,8 @@ public:
 
 	operator Value() const          { return RichToValue(*this); }
 	Font(const Value& q)            { *this = q.Get<Font>(); }
+	
+	static Font FromInt64(int64 q)  { Font fnt; fnt.data = q; return fnt; }
 
 // BW compatibility
 	FontInfo Info() const;

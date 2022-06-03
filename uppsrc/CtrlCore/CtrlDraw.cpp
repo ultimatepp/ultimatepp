@@ -22,6 +22,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	if(!top && !IsDHCtrl()) {
+		Ctrl *parent = GetParent();
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -83,6 +84,7 @@ void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 bool Ctrl::AddScroll(const Rect& sr, int dx, int dy)
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return true;
 	for(int i = 0; i < top->scroll.GetCount(); i++) {
@@ -113,12 +115,12 @@ Rect  Ctrl::GetClippedView()
 	GuiLock __;
 	Rect sv = GetScreenView();
 	Rect view = sv;
-	Ctrl *q = parent;
+	Ctrl *q = GetParent();
 	Ctrl *w = this;
 	while(q) {
 		view &= w->InFrame() ? q->GetScreenRect() : q->GetScreenView();
 		w = q;
-		q = q->parent;
+		q = q->GetParent();
 	}
 	return view - GetScreenRect().TopLeft();
 }
@@ -178,7 +180,7 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 	Rect r = _r & vsz;
 	LLOG("ScrollView2 " << r << " " << dx << " " << dy);
 	Ctrl *w;
-	for(w = this; w->parent; w = w->parent)
+	for(w = this; w->GetParent(); w = w->GetParent())
 		if(w->InFrame()) {
 			Refresh();
 			return;
@@ -191,12 +193,12 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 		Refresh();
 	else {
 		LTIMING("ScrollCtrls1");
-		Top *top = GetTopCtrl()->top;
+		Top *top = GetTopCtrl()->GetTop();
 		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 			if(q->InView())
 				ScrollCtrl(top, q, r, q->GetRect(), dx, dy);
-		if(parent)
-			for(Ctrl *q = parent->GetFirstChild(); q; q = q->GetNext())
+		if(GetParent())
+			for(Ctrl *q = GetParent()->GetFirstChild(); q; q = q->GetNext())
 				if(q->InView() && q != this)
 					ScrollCtrl(top, q, r, q->GetScreenRect() - GetScreenView().TopLeft(), dx, dy);
 	}
@@ -214,6 +216,7 @@ void  Ctrl::ScrollView(int dx, int dy) {
 void  Ctrl::SyncScroll()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return;
 	Vector<Scroll> scroll = pick(top->scroll);
@@ -278,29 +281,31 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 		return;
 	Ctrl *q;
 	Rect view = rect;
-	for(int i = 0; i < frame.GetCount(); i++) {
+	int n = GetFrameCount();
+	for(int i = 0; i < n; i++) {
 		LEVELCHECK(w, NULL);
-		frame[i].frame->FramePaint(w, view);
-		view = frame[i].view;
+		Frame& f = GetFrame0(i);
+		f.frame->FramePaint(w, view);
+		view = f.GetView();
 	}
 	Rect oview = view.Inflated(overpaint);
 	bool hasviewctrls = false;
 	bool viewexcluded = false;
 	bool hiddenbychild = false;
-	for(q = firstchild; q; q = q->next)
-		if(q->IsShown()) {
-			if(q->GetRect().Contains(orect) && !q->IsTransparent())
+	for(Ctrl& q : *this)
+		if(q.IsShown()) {
+			if(q.GetRect().Contains(orect) && !q.IsTransparent())
 				hiddenbychild = true;
-			if(q->InFrame()) {
-				if(!viewexcluded && IsTransparent() && q->GetRect().Intersects(view)) {
+			if(q.InFrame()) {
+				if(!viewexcluded && IsTransparent() && q.GetRect().Intersects(view)) {
 					w.Begin();
 					w.ExcludeClip(view);
 					viewexcluded = true;
 				}
-				LEVELCHECK(w, q);
-				Point off = q->GetRect().TopLeft();
+				LEVELCHECK(w, &q);
+				Point off = q.GetRect().TopLeft();
 				w.Offset(off);
-				q->CtrlPaint(w, clip - off);
+				q.CtrlPaint(w, clip - off);
 				w.End();
 			}
 			else
@@ -329,15 +334,15 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	if(hasviewctrls && !view.IsEmpty()) {
 		Rect cl = clip & view;
 		w.Clip(cl);
-		for(q = firstchild; q; q = q->next)
-			if(q->IsShown() && q->InView()) {
-				LEVELCHECK(w, q);
-				Rect qr = q->GetRect();
+		for(Ctrl& q : *this)
+			if(q.IsShown() && q.InView()) {
+				LEVELCHECK(w, &q);
+				Rect qr = q.GetRect();
 				Point off = qr.TopLeft() + view.TopLeft();
 				Rect ocl = cl - off;
 				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
 					w.Offset(off);
-					q->CtrlPaint(w, ocl);
+					q.CtrlPaint(w, ocl);
 					w.End();
 				}
 			}
@@ -373,11 +378,11 @@ bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool
 	if(backpaint == EXCLUDEPAINT)
 		return w.ExcludeClip(r);
 	Rect cview = clip & (GetView() + off);
-	for(Ctrl *q = lastchild; q; q = q->prev)
-		if(!q->PaintOpaqueAreas(w, q->GetRect() + (q->InView() ? viewpos : off),
-		                        q->InView() ? cview : clip))
+	for(Ctrl& q : *this)
+		if(!q.PaintOpaqueAreas(w, q.GetRect() + (q.InView() ? viewpos : off),
+		                       q.InView() ? cview : clip))
 			return false;
-	if(nochild && (lastchild || GetNext()))
+	if(nochild && (GetLastChild() || GetNext()))
 		return true;
 	Rect opaque = (GetOpaqueRect() + viewpos) & clip;
 	if(opaque.IsEmpty())
@@ -461,11 +466,11 @@ void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, con
 			CombineArea(area, clip & Rect(notr.left, r.top, notr.right, notr.top));
 			CombineArea(area, clip & Rect(notr.left, notr.bottom, notr.right, r.bottom));
 		}
-		for(Ctrl *q = firstchild; q; q = q->next) {
-			Point qoff = q->InView() ? viewpos : off;
-			Rect qr = q->GetRect() + qoff;
+		for(Ctrl& q : *this) {
+			Point qoff = q.InView() ? viewpos : off;
+			Rect qr = q.GetRect() + qoff;
 			if(clip.Intersects(qr))
-				q->GatherTransparentAreas(area, w, qr, clip);
+				q.GatherTransparentAreas(area, w, qr, clip);
 		}
 	}
 }
@@ -506,9 +511,9 @@ void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
 		return;
 	}
 	Rect cview = clip & (GetView() + off);
-	for(Ctrl *q = lastchild; q; q = q->prev)
-		q->ExcludeDHCtrls(w, q->GetRect() + (q->InView() ? viewpos : off),
-		                  q->InView() ? cview : clip);
+	for(Ctrl& q : *this)
+		q.ExcludeDHCtrls(w, q.GetRect() + (q.InView() ? viewpos : off),
+		                 q.InView() ? cview : clip);
 }
 
 void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
@@ -597,6 +602,7 @@ Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe, bool clip)
 			r &= Rect(GetSize());
 		r.Offset(GetView().TopLeft());
 	}
+	Ctrl *parent = GetParent();
 	if(parent) {
 		r.Offset(GetRect().TopLeft());
 		return parent->GetTopRect(r, InFrame(), clip);
@@ -620,6 +626,7 @@ void  Ctrl::Sync()
 {
 	GuiLock __;
 	LLOG("Sync " << Name());
+	Ctrl *parent = GetParent();
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
 		SyncScroll();
@@ -642,6 +649,7 @@ void Ctrl::Sync(const Rect& sr)
 void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect r = GetRect();
 		Ctrl *top = parent->GetTopRect(r, inframe);
@@ -674,6 +682,7 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 void Ctrl::SyncMoves()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(!top)
 		return;
 	for(int i = 0; i < top->move.GetCount(); i++) {

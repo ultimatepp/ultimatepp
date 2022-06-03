@@ -2,27 +2,6 @@
 
 namespace Upp {
 
-/* Faster, but consuming more memory....
-PteBase::Prec *PteBase::PtrAdd()
-{
-	AtomicInc(prec->n);
-	return prec;
-}
-
-void PteBase::PtrRelease(Prec *prec)
-{
-	if(prec && AtomicDec(prec->n) == 0)
-		delete prec;
-}
-
-PteBase::PteBase()
-{
-	prec = new Prec;
-	prec->n = 1;
-	prec->ptr = this;
-}
-*/
-
 static StaticMutex sPteLock;
 
 PteBase::Prec *PteBase::PtrAdd()

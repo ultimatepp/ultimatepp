@@ -25,8 +25,8 @@ GUI_APP_MAIN
 	RDUMP(sizeof(EditIntSpin));
 	RDUMP(sizeof(DisplayPopup));
 	RDUMP(sizeof(PopUpTable));
-	RDUMP(sizeof(WithDropChoice<EditString>));
 	RDUMP(sizeof(DropList));
+	RDUMP(sizeof(WithDropChoice<EditString>));
 	RDUMP(sizeof(ArrayCtrl));
 	RDUMP(sizeof(TreeCtrl));
 	RDUMP(sizeof(TreeCtrl::Node));

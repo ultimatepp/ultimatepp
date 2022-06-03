@@ -74,6 +74,7 @@ Image Ctrl::FrameMouseEventH(int event, Point p, int zdelta, dword keyflags)
 	if(this_)
 		LogMouseEvent("FRAME ", this, event, p, zdelta, keyflags);
 	eventCtrl = this_;
+	Ctrl *parent = GetParent();
 	if(parent && this_)
 		parent->ChildFrameMouseEvent(this, event, p, zdelta, keyflags);
 	return this_ ? FrameMouseEvent(event, p, zdelta, keyflags) : Image();
@@ -93,6 +94,7 @@ Image Ctrl::MouseEvent0(int event, Point p, int zdelta, dword keyflags)
 	bool pb = sPropagated;
 	sPropagated = false;
 	Image m = this_ ? MouseEvent(event, p, zdelta, keyflags) : Image();
+	Ctrl *parent = this_ ? this_->GetParent() : NULL;
 	if(event == MOUSEWHEEL && !sPropagated && this_ && parent)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
 	sPropagated = pb;
@@ -108,6 +110,7 @@ Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 			return Image::Arrow();
 	if(this_)
 		LogMouseEvent(NULL, this, event, p, zdelta, keyflags);
+	Ctrl *parent = this_ ? this_->GetParent() : NULL;
 	if(this_ && parent && event != MOUSEWHEEL)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
 	return MouseEvent0(event, p, zdelta, keyflags);
@@ -115,6 +118,7 @@ Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 
 void Ctrl::MouseWheel(Point p, int zd, dword kf)
 {
+	Ctrl *parent = GetParent();
 	if(parent) {
 		p += GetScreenView().TopLeft();
 		Rect r = parent->GetScreenView();
@@ -128,6 +132,7 @@ void Ctrl::MouseWheel(Point p, int zd, dword kf)
 void Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(parent)
 		parent->ChildFrameMouseEvent(child, event, p, zdelta, keyflags);
 }
@@ -135,6 +140,7 @@ void Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dwo
 void Ctrl::ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(parent)
 		parent->ChildMouseEvent(child, event, p, zdelta, keyflags);
 }
@@ -280,7 +286,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 	Rect view = GetView();
 	if(view.Contains(p)) {
 		Point vp = p - view.TopLeft();
-		for(q = GetLastChild(); q; q = q->prev) {
+		for(q = GetLastChild(); q; q = q->GetPrev()) {
 			if(q->InView() && q->IsMouseActive()) {
 				Rect r = q->GetRect();
 				if(r.Contains(vp)) {
@@ -291,7 +297,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 		}
 		return NULL;
 	}
-	for(q = GetLastChild(); q; q = q->prev) {
+	for(q = GetLastChild(); q; q = q->GetPrev()) {
 		if(q->InFrame() && q->IsMouseActive()) {
 			Rect r = q->GetRect();
 			if(r.Contains(p)) {

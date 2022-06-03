@@ -679,6 +679,8 @@ void Gdb::SerializeSession(Stream& s)
 	s / version;
 	int n = watches.GetCount();
 	s / n;
+	if(n < 0)
+		s.LoadError();
 	for(int i = 0; i < n; i++) {
 		String w;
 		if(s.IsStoring())

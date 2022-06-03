@@ -2,12 +2,73 @@
 
 namespace Upp {
 
+CH_COLOR(LabelBoxColor, SColorShadow());
+
+CH_COLOR(LabelBoxTextColor, SColorText());
+CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
+
+StaticText& StaticText::SetFont(Font font)
+{
+	SetFontAttr(ATTR_FONT, font);
+	Refresh();
+	return *this;
+}
+
+StaticText& StaticText::SetInk(Color color)
+{
+	SetColorAttr(ATTR_INK, color);
+	Refresh();
+	return *this;
+}
+
+StaticText& StaticText::SetAlign(int align)
+{
+	SetIntAttr(ATTR_ALIGN, align);
+	Refresh();
+	return *this;
+}
+
+StaticText& StaticText::SetImage(const Image& img, int spc)
+{
+	CreateAttr<Image>(ATTR_IMAGE) = img;
+	if(spc)
+		SetIntAttr(ATTR_IMAGE_SPC, spc);
+	Refresh();
+	return *this;
+}
+
+StaticText& StaticText::SetText(const char *s)
+{
+	text = s;
+	Refresh();
+	return *this;
+}
+
+void StaticText::MakeDrawLabel(DrawLabel& l) const
+{
+	l.text = text;
+	l.font = Nvl(GetFontAttr(ATTR_FONT), StdFont());
+	l.ink = Nvl(GetColorAttr(ATTR_INK), SColorText());
+	l.align = Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT);
+	l.limg = GetAttr<Image>(ATTR_IMAGE);
+	l.lspc = Nvl(GetIntAttr(ATTR_IMAGE_SPC), 0);
+	l.disabled = !IsShowEnabled();
+	l.accesskey = accesskey;
+	if(dynamic_cast<const LabelBox *>(this)) {
+		l.valign = ALIGN_TOP;
+		l.disabledink = LabelBoxDisabledTextColor();
+	}
+}
+
 void StaticText::Paint(Draw& w)
 {
+	DrawLabel l;
+	MakeDrawLabel(l);
 	Size sz = GetSize();
 	if(!IsTransparent())
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
-	PaintLabel(this, w, 0, 0, sz.cx, sz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
+
+	l.Paint(this, w, sz, VisibleAccessKeys());
 }
 
 Size StaticText::GetMinSize() const
@@ -15,8 +76,11 @@ Size StaticText::GetMinSize() const
 	return GetLabelSize();
 }
 
-void StaticText::LabelUpdate() {
-	Refresh();
+Size StaticText::GetLabelSize() const
+{
+	DrawLabel l;
+	MakeDrawLabel(l);
+	return l.GetSize();
 }
 
 StaticText::StaticText()
@@ -24,13 +88,17 @@ StaticText::StaticText()
 	NoWantFocus();
 	IgnoreMouse();
 	Transparent();
-	SetAlign(ALIGN_LEFT);
+}
+
+StaticText::~StaticText()
+{
+	DeleteAttr<Image>(ATTR_IMAGE);
 }
 
 Label& Label::SetText(const char *text)
 {
-	LabelBase::SetText(text);
-	lbl.accesskey = 0;
+	accesskey = 0;
+	StaticText::SetText(text);
 	noac = false;
 	return *this;
 }
@@ -38,14 +106,13 @@ Label& Label::SetText(const char *text)
 Label& Label::SetLabel(const char *_text)
 {
 	String text;
-	int accesskey = ExtractAccessKey(_text, text);
-	LabelBase::SetText(text);
-	lbl.accesskey = accesskey;
+	accesskey = ExtractAccessKey(_text, text);
+	StaticText::SetText(text);
 	return *this;
 }
 
 bool Label::HotKey(dword key) {
-	if(CompareAccessKey(lbl.accesskey, key)) {
+	if(CompareAccessKey(accesskey, key)) {
 		IterateFocusForward(this, GetParent());
 		return true;
 	}
@@ -54,7 +121,7 @@ bool Label::HotKey(dword key) {
 
 dword Label::GetAccessKeys() const
 {
-	return AccessKeyBit(lbl.accesskey);
+	return AccessKeyBit(accesskey);
 }
 
 void  Label::AssignAccessKeys(dword used)
@@ -62,12 +129,12 @@ void  Label::AssignAccessKeys(dword used)
 	if(noac)
 		return;
 	Ctrl *next = GetNext();
-	if(!lbl.accesskey && next && next->IsInitFocus()) {
+	if(!accesskey && next && next->IsInitFocus()) {
 		next->AssignAccessKeys(used);
 		if(!next->GetAccessKeysDeep()) {
-			lbl.accesskey = ChooseAccessKey(GetText(), used);
-			if(lbl.accesskey) Refresh();
-			used |= AccessKeyBit(lbl.accesskey);
+			accesskey = ChooseAccessKey(text, used);
+			if(accesskey) Refresh();
+			used |= AccessKeyBit(accesskey);
 		}
 	}
 	Ctrl::AssignAccessKeys(used);
@@ -79,16 +146,10 @@ Label::Label() {
 
 Label::~Label() {}
 
-CH_COLOR(LabelBoxColor, SColorShadow());
-
-CH_COLOR(LabelBoxTextColor, SColorText());
-CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
-
 LabelBox::LabelBox()
 {
 	color = Null;
-	LabelBase::SetInk(LabelBoxTextColor(), LabelBoxDisabledTextColor());
-	SetVAlign(ALIGN_TOP);
+	SetInk(LabelBoxTextColor());
 }
 
 void  LabelBox::AssignAccessKeys(dword used)
@@ -192,7 +253,9 @@ void LabelBox::Paint(Draw& w)
 	Size lsz = GetLabelSize();
 	int d = lsz.cy >> 1;
 	int ty = sz.cy < 2 * Draw::GetStdFontCy() ? (sz.cy - lsz.cy) / 2 : 0;
-	Size ts = PaintLabel(w, d + DPI(2), ty, sz.cx, lsz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
+	DrawLabel l;
+	MakeDrawLabel(l);
+	Size ts = l.Paint(this, w, d + DPI(2), ty, sz.cx, lsz.cy);
 	w.Begin();
 	w.ExcludeClip(d, ty, ts.cx + DPI(4), ts.cy);
 	PaintLabelBox(w, sz, color, d);

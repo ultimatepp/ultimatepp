@@ -14,9 +14,6 @@ Vector<Ctrl::Win> Ctrl::wins;
 
 Ptr<Ctrl>         Ctrl::activeCtrl;
 
-int               Ctrl::WndCaretTime;
-bool              Ctrl::WndCaretVisible;
-
 bool              Ctrl::invalids;
 
 int Ctrl::FindId(int id)
@@ -84,7 +81,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 	else
 		topctrl = GetActiveCtrl();
 	if(topctrl)
-		top = topctrl->top;
+		top = topctrl->GetTop();
 	if(top && id != top->cursor_id) {
 		top->cursor_id = id;
 		int64 aux = image.GetAuxData();
@@ -122,6 +119,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	return IsOpen() ? top->owner : NULL;
 }
 
@@ -150,52 +148,6 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 #endif
 
-void  Ctrl::AnimateCaret()
-{
-	GuiLock __;
-	int v = !(((msecs() - WndCaretTime) / 500) & 1);
-	if(v != WndCaretVisible) {
-		WndCaretVisible = v;
-		RefreshCaret();
-	}
-}
-
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
-
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	LLOG("SetCaret " << Name());
-	if(this == caretCtrl)
-		RefreshCaret();
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	if(this == caretCtrl) {
-		WndCaretTime = msecs();
-		RefreshCaret();
-		AnimateCaret();
-	}
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-	LLOG("SyncCaret");
-	if(focusCtrl != caretCtrl) {
-		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
-
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
@@ -213,7 +165,9 @@ void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << Name() << ", " << b);
-	if(IsOpen()) {
+	Top *top = GetTop();
+	if(IsOpen() && top) {
+		
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
@@ -224,6 +178,7 @@ void Ctrl::WndShow(bool b)
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
+	const Top *top = GetTop();
 	return top && top->window && gtk_widget_get_window(top->window);
 }
 
@@ -400,12 +355,13 @@ void Ctrl::DoCancelPreedit()
 {
 	if(!focusCtrl)
 		return;
-	if(focusCtrl->top)
+	Top *top = focusCtrl->GetTop();
+	if(top)
 		focusCtrl->HidePreedit();
-	if(focusCtrl->top) {
-		gtk_im_context_reset(focusCtrl->top->im_context);
-		gtk_im_context_focus_out(focusCtrl->top->im_context);
-		gtk_im_context_focus_in(focusCtrl->top->im_context);
+	if(top) {
+		gtk_im_context_reset(top->im_context);
+		gtk_im_context_focus_out(top->im_context);
+		gtk_im_context_focus_in(top->im_context);
 	}
 }
 
@@ -458,7 +414,8 @@ bool Ctrl::SweepConfigure(bool wait)
 	FetchEvents(wait);
 	for(int i = 0; i < Events.GetCount() && this_; i++) {
 		GEvent& e = Events[i];
-		if(e.type == GDK_CONFIGURE && this_ && top->id == e.windowid) {
+		Top *top = GetTop();
+		if(e.type == GDK_CONFIGURE && this_ && top && top->id == e.windowid) {
 			Rect rect = e.value;
 			LLOG("SweepConfigure " << rect);
 			if(GetRect() != rect)
@@ -495,6 +452,7 @@ void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
 	if(IsOpen()) {
+		Top *top = GetTop();
 		gtk_widget_set_sensitive(top->window, b);
 		StateH(ENABLE);
 	}

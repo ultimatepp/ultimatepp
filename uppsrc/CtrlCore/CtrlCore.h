@@ -478,14 +478,29 @@ private:
 	void operator=(Ctrl&);
 
 private:
-	struct Frame : Moveable<Frame> {
-		CtrlFrame *frame;
-		Rect16     view;
-
-		Frame()    { view.Clear(); }
+	struct MultiFrame { // in case there are more than 1 CtrlFrames
+		int alloc;
+		int count;
 	};
-	Ctrl        *parent;
 
+	struct Rect16_ { // so that it can be in union
+		int16 left, top, right, bottom;
+	};
+
+	struct Frame {
+		union {
+			CtrlFrame *frame;
+			Frame     *frames;
+		};
+		union {
+			MultiFrame multi;
+			Rect16_    view;
+		};
+		
+		void SetView(const Rect& r) { view.left = r.left; view.right = r.right; view.top = r.top; view.bottom = r.bottom; }
+		Rect GetView() const        { return Rect16(view.left, view.top, view.right, view.bottom); }
+	};
+	
 	struct Scroll : Moveable<Scroll> {
 		Rect rect;
 		int  dx;
@@ -508,16 +523,20 @@ private:
 		Ptr<Ctrl>      owner;
 	};
 
-	Top         *top;
-	int          exitcode;
 
-	Ctrl        *prev, *next;
-	Ctrl        *firstchild, *lastchild;//16
+	Frame        frame;
 	LogPos       pos;//8
-	Rect16       rect;
-	Mitor<Frame> frame;//16
-	String       info;//16
-	int16        caretx, carety, caretcx, caretcy;//8
+	Rect16       rect; //8
+
+	union {
+		Ctrl *uparent;
+		Top  *utop;
+	};
+
+	Ctrl        *prev_sibling = nullptr;
+	Ctrl        *next_sibling = nullptr;
+	Ctrl        *children = nullptr;
+	PackedData   attrs;
 
 	byte         overpaint;
 
@@ -543,6 +562,9 @@ private:
 
 	bool         akv:1;
 	bool         destroying:1;
+	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
+	bool         multi_frame:1; // there is more than single frame, they are stored in heap
+	bool         top:1;
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -551,8 +573,6 @@ private:
 	static  Ptr<Ctrl> focusCtrl;
 	static  Ptr<Ctrl> focusCtrlWnd;
 	static  Ptr<Ctrl> lastActiveWnd;
-	static  Ptr<Ctrl> caretCtrl;
-	static  Rect      caretRect;
 	static  Ptr<Ctrl> captureCtrl;
 	static  bool      ignoreclick;
 	static  bool      ignoremouseup;
@@ -634,11 +654,19 @@ private:
 	void    RefreshAccessKeys();
 	void    RefreshAccessKeysDo(bool vis);
 	static  void  DefferedFocusSync();
-	static  void  SyncCaret();
-	static  void  RefreshCaret();
 	static  bool  DispatchKey(dword keycode, int count);
 	void    SetFocusWnd();
 	void    KillFocusWnd();
+
+	static Ptr<Ctrl> caretCtrl;
+	static Ptr<Ctrl> prevCaretCtrl;
+	static Rect      caretRect;
+	static int       WndCaretTime;
+	static bool      WndCaretVisible;
+
+	static void      AnimateCaret();
+	static void      SyncCaret();
+	static void      RefreshCaret();
 
 	static Ptr<Ctrl> dndctrl;
 	static Point     dndpos;
@@ -667,8 +695,6 @@ private:
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
 	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
 	void    DoSync(Ctrl *q, Rect r, bool inframe);
-	void    SetInfoPart(int i, const char *txt);
-	String  GetInfoPart(int i) const;
 
 	Rect    GetPreeditScreenRect();
 	void    SyncPreedit();
@@ -718,6 +744,21 @@ private:
 	void SysEndLoop();
 
 	String Name0() const;
+	
+	Top         *GetTop()               { return top ? utop : NULL; }
+	const Top   *GetTop() const         { return top ? utop : NULL; }
+	void         DeleteTop();
+	
+	void         SetTop(Top *t)         { utop = t; top = true; }
+	void         SetParent(Ctrl *parent);
+
+	Frame&       GetFrame0(int i)       { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
+	const Frame& GetFrame0(int i) const { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
+	void         FreeFrames()           { if(multi_frame) MemoryFree(frame.frames); }
+	Frame        AllocFrames(int alloc);
+	
+	PackedData& Attrs();
+
 
 	static void InitTimer();
 
@@ -779,7 +820,44 @@ protected:
 	static void     TimerProc(dword time);
 
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
+			
+	enum {
+		ATTR_LAYOUT_ID,
+		ATTR_TIP,
+		ATTR_HELPLINE,
+		ATTR_DESCRIPTION,
+		ATTR_HELPTOPIC,
+		ATTR_LAST
+	};
+	
+	void   SetTextAttr(int ii, const char *s);
+	void   SetTextAttr(int ii, const String& s);
+	String GetTextAttr(int ii) const;
+	
+	void   SetColorAttr(int ii, Color c);
+	Color  GetColorAttr(int ii) const;
+	
+	void   SetFontAttr(int ii, Font fnt);
+	Font   GetFontAttr(int ii) const;
+	
+	void   SetIntAttr(int ii, int val);
+	int    GetIntAttr(int ii, int def = Null) const;
 
+	void   SetInt64Attr(int ii, int64 val);
+	int    GetInt64Attr(int ii, int64 def = Null) const;
+	
+	void   SetVoidPtrAttr(int ii, const void *ptr);
+	void  *GetVoidPtrAttr(int ii) const;
+	
+	template <class T>
+	T&    CreateAttr(int ii)      { T *q = new T; SetVoidPtrAttr(ii, q); return *q; }
+	
+	template <class T>
+	T     GetAttr(int ii) const   { void *p = GetVoidPtrAttr(ii); return p ? *(T *)p : T(); }
+
+	template <class T>
+	void  DeleteAttr(int ii)      { void *p = GetVoidPtrAttr(ii); if(p) { delete (T *)p; SetVoidPtrAttr(ii, nullptr); }; }
+	
 public:
 	enum StateReason {
 		FOCUS      = 10,
@@ -915,6 +993,8 @@ public:
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 
+	virtual Rect   GetCaret() const;
+
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   FrameDragAndDrop(Point p, PasteClip& d);
 	virtual void   DragRepeat(Point p);
@@ -972,11 +1052,11 @@ public:
 	void             AddChild(Ctrl *child, Ctrl *insafter);
 	void             AddChildBefore(Ctrl *child, Ctrl *insbefore);
 	void             RemoveChild(Ctrl *child);
-	Ctrl            *GetParent() const           { return parent; }
-	Ctrl            *GetLastChild() const        { return lastchild; }
-	Ctrl            *GetFirstChild() const       { return firstchild; }
-	Ctrl            *GetPrev() const             { return parent ? prev : NULL; }
-	Ctrl            *GetNext() const             { return parent ? next : NULL; }
+	Ctrl            *GetParent() const     { return top ? NULL : uparent; }
+	Ctrl            *GetLastChild() const  { return children ? children->prev_sibling : nullptr; }
+	Ctrl            *GetFirstChild() const { return children; }
+	Ctrl            *GetPrev() const       { Ctrl *parent = GetParent(); return parent && prev_sibling != parent->GetLastChild() ? prev_sibling : nullptr; }
+	Ctrl            *GetNext() const       { Ctrl *parent = GetParent(); return parent && next_sibling != parent->children ? next_sibling : nullptr; }
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;
@@ -987,7 +1067,7 @@ public:
 	int              GetViewChildCount() const;
 	Ctrl            *GetViewIndexChild(int ii) const;
 
-	bool             IsChild() const             { return parent; }
+	bool             IsChild() const             { return GetParent(); }
 
 	Ctrl            *ChildFromPoint(Point& pt) const;
 
@@ -1013,13 +1093,13 @@ public:
 	Ctrl&            SetFrame(int i, CtrlFrame& frm);
 	Ctrl&            SetFrame(CtrlFrame& frm)            { return SetFrame(0, frm); }
 	Ctrl&            AddFrame(CtrlFrame& frm);
-	const CtrlFrame& GetFrame(int i = 0) const           { return *frame[i].frame; }
-	CtrlFrame&       GetFrame(int i = 0)                 { return *frame[i].frame; }
+	const CtrlFrame& GetFrame(int i = 0) const           { return *const_cast<Ctrl *>(this)->GetFrame0(i).frame; }
+	CtrlFrame&       GetFrame(int i = 0)                 { return *GetFrame0(i).frame; }
 	void             RemoveFrame(int i);
 	void             RemoveFrame(CtrlFrame& frm);
 	void             InsertFrame(int i, CtrlFrame& frm);
-	int              FindFrame(CtrlFrame& frm);
-	int              GetFrameCount() const               { return frame.GetCount(); }
+	int              FindFrame(CtrlFrame& frm) const;
+	int              GetFrameCount() const   { return multi_frame ? frame.multi.count : frame.frame ? 1 : 0; }
 	void             ClearFrames();
 
 	bool        IsOpen() const;
@@ -1055,10 +1135,10 @@ public:
 
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
-	void        RefreshParentLayout()                    { if(parent) parent->RefreshLayout(); }
+	void        RefreshParentLayout();
 	
 	void        UpdateLayout()                           { SyncLayout(); }
-	void        UpdateParentLayout()                     { if(parent) parent->UpdateLayout(); }
+	void        UpdateParentLayout();
 
 	Ctrl&       LeftPos(int a, int size = STDSIZE);
 	Ctrl&       RightPos(int a, int size = STDSIZE);
@@ -1157,11 +1237,6 @@ public:
 
 	void    CancelModeDeep();
 
-	void    SetCaret(int x, int y, int cx, int cy);
-	void    SetCaret(const Rect& r);
-	Rect    GetCaret() const;
-	void    KillCaret();
-	
 	static void  CancelPreedit();
 	
 	void   CancelMyPreedit()                   { if(HasFocus()) CancelPreedit(); }
@@ -1211,21 +1286,19 @@ public:
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }
 
-	Ctrl&   Info(const char *txt)              { info = txt; return *this; }
-	String  GetInfo() const                    { return info; }
-
 	Ctrl&   Tip(const char *txt);
 	Ctrl&   HelpLine(const char *txt);
 	Ctrl&   Description(const char *txt);
 	Ctrl&   HelpTopic(const char *txt);
 	Ctrl&   LayoutId(const char *txt);
+	Ctrl&   LayoutIdLiteral(const char *txt);
 
 	String  GetTip() const;
 	String  GetHelpLine() const;
 	String  GetDescription() const;
 	String  GetHelpTopic() const;
 	String  GetLayoutId() const;
-	void    ClearInfo()                        { info.Clear(); }
+	void    ClearInfo();
 
 	void    Add(Ctrl& ctrl)                    { AddChild(&ctrl); }
 	Ctrl&   operator<<(Ctrl& ctrl)             { Add(ctrl); return *this; }
@@ -1276,7 +1349,6 @@ public:
 	void   EndLoop(int code);
 	bool   InLoop() const;
 	bool   InCurrentLoop() const;
-	int    GetExitCode() const;
 
 	static PasteClip& Clipboard();
 	static PasteClip& Selection();

@@ -106,6 +106,10 @@ public:
 	static const Style& StyleScroll();
 	static const Style& StyleNaked();
 
+	static void  PaintButton(Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
+                             const String& label, Font font, const Image& img,
+                             bool monoimg, int accesskey, bool visibaleaccesskeys, bool disabled);
+
 	Button&  SetStyle(const Style& s);
 	Button&  AutoStyle();
 
@@ -126,45 +130,6 @@ public:
 
 Color ButtonMonoColor(int i);
 
-class SpinButtons : public CtrlFrame {
-public:
-	virtual void FrameLayout(Rect& r);
-	virtual void FrameAddSize(Size& sz);
-	virtual void FrameAdd(Ctrl& ctrl);
-	virtual void FrameRemove();
-
-public:
-	struct Style : ChStyle<Style> {
-		Button::Style inc;
-		Button::Style dec;
-		int           width;
-		int           over;
-		bool          onsides;
-	};
-
-private:
-	bool         visible;
-	const Style *style;
-
-public:
-	Button inc;
-	Button dec;
-
-	void         Show(bool s = true);
-	bool         IsVisible() const          { return visible; }
-
-	static const Style& StyleDefault();
-	static const Style& StyleOnSides();
-
-	SpinButtons& SetStyle(const Style& s);
-	
-	SpinButtons& OnSides(bool b = true)     { return SetStyle(b ? StyleOnSides() : StyleDefault()); }
-	bool         IsOnSides() const          { return style->onsides; }
-
-	SpinButtons();
-	virtual ~SpinButtons();
-};
-
 class Option : public Pusher {
 public:
 	virtual void   Paint(Draw& draw);
@@ -183,13 +148,13 @@ protected:
 protected:
 	Image  edge, edged;
 	int    option;
-	bool   switchimage;
-	bool   threestate;
-	bool   notnull;
-	bool   blackedge;
-	bool   showlabel;
-	bool   box;
-	bool   autobox;
+	bool   switchimage:1;
+	bool   threestate:1;
+	bool   notnull:1;
+	bool   blackedge:1;
+	bool   showlabel:1;
+	bool   box:1;
+	bool   autobox:1;
 	Color  color;
 	
 	void   AutoSync();
@@ -302,10 +267,10 @@ public:
 	struct Case  {
 		String label;
 		Value  value;
-		int    accesskey = 0;
-		bool   enabled = true;
-		int    gap = 0;
 		Rect16 rect = Rect16(0, 0, 0, 0);
+		int    accesskey = 0;
+		int    gap = 0;
+		bool   enabled = true;
 	};
 
 private:
@@ -405,4 +370,71 @@ public:
 	DataPusher();
 	DataPusher(const Convert& convert, const Display& display = StdDisplay()); // deprecated
 	DataPusher(const Display& display); // deprecated
+};
+
+class SpinButtons : public CtrlFrame {
+public:
+	virtual void FrameLayout(Rect& r);
+	virtual void FrameAddSize(Size& sz);
+	virtual void FrameAdd(Ctrl& ctrl);
+	virtual void FrameRemove();
+
+public:
+	struct Style : ChStyle<Style> {
+		Button::Style inc;
+		Button::Style dec;
+		int           width;
+		int           over;
+		bool          onsides;
+	};
+
+private:
+	bool         visible;
+	const Style *style;
+
+public:
+	Button inc;
+	Button dec;
+
+	void         Show(bool s = true);
+	bool         IsVisible() const          { return visible; }
+
+	static const Style& StyleDefault();
+	static const Style& StyleOnSides();
+
+	SpinButtons& SetStyle(const Style& s);
+	
+	SpinButtons& OnSides(bool b = true)     { return SetStyle(b ? StyleOnSides() : StyleDefault()); }
+	bool         IsOnSides() const          { return style->onsides; }
+
+	SpinButtons();
+	virtual ~SpinButtons();
+};
+
+struct VirtualButtons {
+	virtual int                  ButtonCount() const;
+	virtual Rect                 ButtonRect(int i) const;
+	virtual const Button::Style& ButtonStyle(int i) const;
+	virtual Image                ButtonImage(int i) const;
+	virtual bool                 ButtonMono(int i) const;
+	virtual bool                 ButtonEnabled(int i) const;
+
+	virtual void ButtonPush(int i);
+	virtual void ButtonRepeat(int i);
+	virtual void ButtonAction(int i);
+
+	int8    pushi = -1;
+	int8    mi = -1;
+	bool    buttons_capture = false;
+
+	int    FindButton(Point p) const;
+	
+	void   EndPush(Ctrl *ctrl);
+
+	void   ButtonsCancelMode();
+	bool   ButtonsMouseEvent(Ctrl *ctrl, int event, Point p);
+	void   PaintButtons(Draw& w, Ctrl *ctrl);
+
+	int    ButtonVisualState(Ctrl *ctrl, int i);
+	void   RefreshButton(Ctrl *ctrl, int i);
 };
