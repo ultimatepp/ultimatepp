@@ -21,18 +21,18 @@ trl][3 , ][@(0.0.255)3 public][3 _][*@3;3 LabelBase]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:StaticText`:`:SetFont`(Font`): [@(0.0.255) virtual] [_^StaticText^ StaticText][@(0.0.255) `&
-]_[* SetFont]([_^Font^ Font]_[*@3 font])&]
+[s5;:StaticText`:`:SetFont`(Font`): [_^StaticText^ StaticText][@(0.0.255) `&]_[* SetFont]([_^Font^ F
+ont]_[*@3 font])&]
 [s2;%% Sets the [%-*@3 font] of text.&]
 [s3;%% &]
 [s4; &]
-[s5;:StaticText`:`:SetInk`(Color`): [@(0.0.255) virtual] [_^StaticText^ StaticText][@(0.0.255) `&
-]_[* SetInk]([_^Color^ Color]_[*@3 color])&]
+[s5;:StaticText`:`:SetInk`(Color`): [_^StaticText^ StaticText][@(0.0.255) `&]_[* SetInk]([_^Color^ C
+olor]_[*@3 color])&]
 [s2;%% Sets the [%-*@3 color] of text.&]
 [s3;%% &]
 [s4; &]
-[s5;:StaticText`:`:SetAlign`(int`): [@(0.0.255) virtual] [_^StaticText^ StaticText][@(0.0.255) `&
-]_[* SetAlign]([@(0.0.255) int]_[*@3 align])&]
+[s5;:StaticText`:`:SetAlign`(int`): [_^StaticText^ StaticText][@(0.0.255) `&]_[* SetAlign](
+[@(0.0.255) int]_[*@3 align])&]
 [s2;%% Sets alignment [%-*@3 align]. Allowed values are ALIGN`_LEFT, 
 ALIGN`_CENTER, ALIGN`_RIGHT.&]
 [s3;%% &]
@@ -52,21 +52,25 @@ ALIGN`_CENTER, ALIGN`_RIGHT.&]
 [s2;%% Same as SetAlign(ALIGN`_RIGHT).&]
 [s3; &]
 [s4; &]
-[s5;:StaticText`:`:SetImage`(const Image`&`,int`): [@(0.0.255) virtual] 
-[_^StaticText^ StaticText][@(0.0.255) `&]_[* SetImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
-]_[*@3 img], [@(0.0.255) int]_[*@3 spc]_`=_[@3 0])&]
+[s5;:StaticText`:`:SetImage`(const Image`&`,int`): [_^StaticText^ StaticText][@(0.0.255) `&
+]_[* SetImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) int]_[*@3 spc]_`=_[@3 0])&]
 [s2;%% Sets the Image to be displayed before the text. [%-*@3 spc] 
 is space between the text and Image.&]
 [s3;%% &]
 [s4; &]
-[s5;:StaticText`:`:SetText`(const char`*`): [@(0.0.255) virtual] [_^StaticText^ StaticTex
-t][@(0.0.255) `&]_[* SetText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
+[s5;:StaticText`:`:SetText`(const char`*`): [_^StaticText^ StaticText][@(0.0.255) `&]_[* Se
+tText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
 [s5;:StaticText`:`:operator`=`(const char`*`): [_^StaticText^ StaticText][@(0.0.255) `&]_
 [* operator`=]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Sets [%-*@3 text]. `"`\1`" at the beginning of text activates 
 QTF.&]
 [s3;%% &]
-[s0;%% &]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:StaticText`:`:GetText`(`)const: [_^Upp`:`:String^ String]_[* GetText]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the text.&]
 [s0;%% &]
 [s0; &]
 [ {{10000@3 [s0;%% [*@(229)4 Label]]}}&]
@@ -81,12 +85,12 @@ by U`+`+ library, however they can also by preassigned using
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Label`:`:SetText`(const char`*`): [@(0.0.255) virtual] [_^Label^ Label][@(0.0.255) `&]_
-[* SetText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
-[s5;:Label`:`:operator`=`(const char`*`): [@(0.0.255) virtual] [_^Label^ Label][@(0.0.255) `&
-]_[* operator`=]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Label`:`:SetText`(const char`*`): [_^Label^ Label][@(0.0.255) `&]_[* SetText]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 text])&]
+[s5;:Label`:`:operator`=`(const char`*`): [_^Label^ Label][@(0.0.255) `&]_[* operator`=]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Sets the text. Ignores `'`&`' used to mark hotkeys.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Label`:`:SetLabel`(const char`*`): [_^Label^ Label][@(0.0.255) `&]_[* SetLabel]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 lbl])&]

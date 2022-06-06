@@ -28,6 +28,8 @@ public:
 	StaticText& AlignRight()                            { return SetAlign(ALIGN_RIGHT); }
 	StaticText& SetImage(const Image& img, int spc = 0);
 	StaticText& SetText(const char *text);
+	
+	String      GetText() const                         { return text; }
 
 	StaticText& operator=(const char *s)                { SetText(s); return *this; }
 
