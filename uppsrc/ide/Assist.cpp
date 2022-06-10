@@ -810,6 +810,12 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
+	_DBG_
+	if(key == K_F12) {
+		ClangFile(theide->editfile, Get(), Split(theide->GetIncludePath(), ';'));
+		return true;
+	}
+
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
