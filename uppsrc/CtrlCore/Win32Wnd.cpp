@@ -487,6 +487,16 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 
 	ASSERT(top->hwnd);
 	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
+
+	HRESULT (WINAPI *DwmSetWindowAttribute)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
+	DllFn(DwmSetWindowAttribute, "dwmapi.dll", "DwmSetWindowAttribute");
+	if (DwmSetWindowAttribute) {
+		BOOL useDarkTheme = IsDarkTheme(); 
+		DwmSetWindowAttribute(
+			top->hwnd, 20, /* 20 is DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE */
+			&useDarkTheme, sizeof(useDarkTheme));
+	}
+
 	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
 //	::UpdateWindow(hwnd);
 	StateH(OPEN);
