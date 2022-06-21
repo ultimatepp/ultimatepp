@@ -141,6 +141,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
+
 	Index<String>      assist_type;
 	Array<CppItemInfo> assist_item;
 	Vector<int>        assist_item_ndx;
@@ -152,7 +153,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           assist_active;
 	bool           commentdp;
 	bool           inbody;
-	bool           thisback, thisbackn;
 	bool           include_assist;
 	WString        cachedline;
 	int            cachedpos;
@@ -183,7 +183,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	
 	bool      navigator_right = true;
 
-
+	CurrentFileContext CurrentContext();
+	void               SetAsCurrentFile();
+	
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	static bool    WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelta, dword keyflags);
@@ -263,4 +265,5 @@ struct AssistEditor : CodeEditor, Navigator {
 	typedef AssistEditor CLASSNAME;
 
 	AssistEditor();
+	~AssistEditor();
 };

@@ -123,12 +123,12 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 			const CppItem& im = n[i];
 			if(im.kind == STRUCT || im.kind == STRUCTTEMPLATE)
 				base << im.qptype << ';';
-			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && IsNull(type)))
+			if((im.IsCode() || (im.IsData() || im.IsMacro() && IsNull(type)))
 			   && (!op || im.access == PUBLIC)) {
 				AssistItemAdd(ntp, im, typei);
 			}
 		}
-		if(!thisback) {
+		{
 			Vector<String> b = Split(base, ';');
 			Index<String> h;
 			for(int i = 0; i < b.GetCount(); i++)

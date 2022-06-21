@@ -568,6 +568,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				const int view_limit = 256*1024*1024;
 				if(view_file.GetSize() < view_limit || editastext.Find(editfile) >= 0 && view_file.GetSize() < max_size) {
 					le = editor.Load(view_file, charset);
+					editor.SetAsCurrentFile();
 					view_file.Close();
 				}
 				else

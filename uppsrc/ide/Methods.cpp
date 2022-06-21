@@ -784,6 +784,7 @@ void Ide::SetupBuildMethods()
 
 void ExtractIncludes(Index<String>& r, String h)
 {
+	DDUMP(h);
 #ifdef PLATFORM_WIN32
 	h.Replace("\r", "");
 #endif

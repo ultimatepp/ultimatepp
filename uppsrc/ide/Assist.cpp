@@ -82,8 +82,6 @@ AssistEditor::AssistEditor()
 	annotation_popup.Margins(6);
 	annotation_popup.NoSb();
 	
-	thisback = false;
-	
 	cachedpos = INT_MAX;
 	cachedln = -1;
 	
@@ -100,6 +98,11 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 }
 
+AssistEditor::~AssistEditor()
+{
+	CancelAutoComplete();
+}
+
 int CppItemInfoOrder(const Value& va, const Value& vb) {
 	const CppItemInfo& a = ValueTo<CppItemInfo>(va);
 	const CppItemInfo& b = ValueTo<CppItemInfo>(vb);
@@ -108,6 +111,7 @@ int CppItemInfoOrder(const Value& va, const Value& vb) {
 
 void AssistEditor::CloseAssist()
 {
+	CancelAutoComplete();
 	if(popup.IsOpen())
 		popup.Close();
 	if(annotation_popup.IsOpen())
@@ -450,6 +454,20 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
+CurrentFileContext AssistEditor::CurrentContext()
+{
+	CurrentFileContext cfx;
+	cfx.filename = theide->editfile;
+	cfx.includes = theide->GetIncludePath();
+	cfx.content = Get(); // TODO: limit it!
+	return cfx;
+}
+
+void AssistEditor::SetAsCurrentFile()
+{
+	SetCurrentFile(CurrentContext());
+}
+
 void AssistEditor::Assist()
 {
 	LTIMING("Assist");
@@ -463,6 +481,25 @@ void AssistEditor::Assist()
 	include_assist = false;
 	if(IncludeAssist())
 		return;
+
+	int pos = GetCursor();
+	int line = GetLinePos(pos);
+	StartAutoComplete(CurrentContext(), line + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
+		DDUMP(items.GetCount());
+		for(const AutoCompleteItem& m : items) {
+			CppItemInfo& f = assist_item.Add();
+			f.name = m.name;
+			f.natural = m.signature;
+			DDUMP(m.signature);
+			f.access = 0;
+			f.kind = 0;
+		}
+		DDUMP(assist_item.GetCount());
+		PopUpAssist();
+		DDUMP(assist_item.GetCount());
+	});
+
+/*
 	ParserContext parser;
 	Context(parser, GetCursor32());
 	Index<String> in_types;
@@ -525,6 +562,7 @@ void AssistEditor::Assist()
 	LTIMING("Assist3");
 	RemoveDuplicates();
 	PopUpAssist();
+*/
 }
 
 Ptr<Ctrl> AssistEditor::assist_ptr;
@@ -743,7 +781,7 @@ void AssistEditor::AssistInsert()
 			String txt = f.name;
 			int l = txt.GetCount();
 			int pl = txt.GetCount();
-			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
+			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
 				txt << "()";
 			int cl = GetCursor32();
 			int ch = cl;
@@ -753,35 +791,18 @@ void AssistEditor::AssistInsert()
 				ch++;
 			Remove(cl, ch - cl);
 			SetCursor(cl);
-			if(thisback)
-				for(;;) {
-					int c = Ch(cl++);
-					if(!c || Ch(cl) == ',' || Ch(cl) == ')')
-						break;
-					if(c != ' ') {
-						if(thisbackn)
-							txt << ", ";
-						txt << ')';
-						break;
-					}
-				}
 			if(findarg(f.kind, CONSTRUCTOR, DESTRUCTOR) >= 0)
 				txt << "()";
 			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
-			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
+			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
 				if(f.natural.EndsWith("()"))
 					SetCursor(GetCursor32() + 1);
 			}
 			else
-			if(thisback) {
-				if(thisbackn)
-					SetCursor(GetCursor32() - 1);
-			}
-			else
 			if(!inbody)
-				SetCursor(cl + n - thisbackn);
+				SetCursor(cl + n);
 			else
 			if(pl > l)
 				SetSelection(cl + l, cl + pl);
@@ -812,7 +833,9 @@ bool AssistEditor::Key(dword key, int count)
 {
 	_DBG_
 	if(key == K_F12) {
-		ClangFile(theide->editfile, Get(), Split(theide->GetIncludePath(), ';'));
+		int pos = GetCursor();
+		int line = GetLinePos(pos);
+		ClangFile(theide->editfile, Get(), Split(theide->GetIncludePath(), ';'), line + 1, pos + 1);
 		return true;
 	}
 
