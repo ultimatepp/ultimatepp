@@ -100,10 +100,11 @@ characters&]
 second line of long if condition&]
 [s3;l160;i150;O2; There are no recommendation about C`+`+ formatting, 
 put spaces and place `{ as you please&]
-[s3;l160;i150;O2; All C`+`+03 core language features are allowed, 
-of course library wise U`+`+ has preference over standard library&]
-[s3;l160;i150;O2; For now, U`+`+ library code should be C`+`+11 compatible, 
-but C`+`+11 should not be required. Parts intended to support 
-C`+`+11 features should be conditionally included using #ifdef 
-CPP`_11&]
+[s3;l160;i150;O2; All C`+`+14 core language features are allowed 
+and it is minimal standard to compile U`+`+&]
+[s3;l160;i150;O2; For now, U`+`+ library code is C`+`+20 compatible, 
+but C`+`+20 is not required. Parts intended to support C`+`+20 
+features should be conditionally included using #ifdef CPP`_20&]
+[s3;l160;i150;O2; Prefer U`+`+ features over equivalents in the standard 
+library for example use Upp`::Index instead of std`::set&]
 [s0;2 ]]
