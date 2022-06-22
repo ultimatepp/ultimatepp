@@ -1,11 +1,21 @@
 topic "U++ development cycle guide";
 [a83;*R6 $$1,3#31310162474203024125188417583966:caption]
-[b83;*4 $$2,3#07864147445237544204411237157677:title]
+[H4;b83;t300;*4 $$2,3#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; U`+`+ usage and development cycle guide&]
-[s2; Forum&]
+[s2; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/www`/community`_en`-us`#1^2 1. Forum]&]
+[s0; [^topic`:`/`/uppweb`/www`/community`_en`-us`#2^2 2. Reporting 
+bugs]&]
+[s0; [^topic`:`/`/uppweb`/www`/community`_en`-us`#3^2 3. GIT]&]
+[s0; [^topic`:`/`/uppweb`/www`/community`_en`-us`#4^2 4. Issue tracking]&]
+[s0; [^topic`:`/`/uppweb`/www`/community`_en`-us`#5^2 5. Something 
+about coding standards]&]
+[s0; &]
+[s2;:1: 1. Forum&]
 [s3; After you have installed U`+`+ and tried some examples, you 
 might have came to conclusion that you are going to give it a 
 try. Now first thing that you should do at this moment is to 
@@ -21,7 +31,7 @@ corner`".&]
 in U`+`+ development, please provide an information about your 
 real name (so that you can be later added to contributors lists 
 without further asking etc...).&]
-[s2; Reporting bugs&]
+[s2;:2: 2. Reporting bugs&]
 [s3; If you do think that you have found a problem with U`+`+ library, 
 you should report it in the forum. In order to make dealing with 
 the issue as efficient as possible please, following steps would 
@@ -46,7 +56,7 @@ issue can take weeks. If problem cannot be fixed immediately,
 it is usually moved to redmine issue tracking system. You can 
 check the what issues are currently open [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp`/issues^ h
 ere].&]
-[s2; GIT&]
+[s2;:3: 3. GIT&]
 [s3; U`+`+ currently uses git as their main version control tool. 
 Main git repository are located under [^https`:`/`/github`.com`/ultimatepp`/ultimatepp^ h
 ttps://github.com/ultimatepp/ultimatepp]. You could learn more 
@@ -77,11 +87,12 @@ U`+`+ releases.]
 ::= [s3;b0;a0; Special packages to test the autotest system.]
 ::^ [s3;b0;a0; [* rainbow]]
 ::= [s3;b0;a0; Testing area for developing new GUI backends.]}}&]
-[s2; Redmine&]
+[s0; &]
+[s2;:4: 4. Issue tracking&]
 [s3; All longer term U`+`+ issues should be tracked. We are using 
-Redmine issue tracking system for this, which is [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp`/issues^ h
+[* Redmine] issue tracking system for this, which is [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp`/issues^ h
 ere].&]
-[s2; Something about coding standards&]
+[s2;:5: 5. Something about coding standards&]
 [s3; General, I believe that there will be a little problems with 
 coding standard, as the reason that made you use U`+`+ was probably 
 its way of doing things in the first place. However, to recapitulate:&]
@@ -100,10 +111,11 @@ characters&]
 second line of long if condition&]
 [s3;l160;i150;O2; There are no recommendation about C`+`+ formatting, 
 put spaces and place `{ as you please&]
-[s3;l160;i150;O2; All C`+`+03 core language features are allowed, 
-of course library wise U`+`+ has preference over standard library&]
-[s3;l160;i150;O2; For now, U`+`+ library code should be C`+`+11 compatible, 
-but C`+`+11 should not be required. Parts intended to support 
-C`+`+11 features should be conditionally included using #ifdef 
-CPP`_11&]
+[s3;l160;i150;O2; All C`+`+14 core language features are allowed 
+and it is minimal standard to compile U`+`+&]
+[s3;l160;i150;O2; For now, U`+`+ library code is C`+`+20 compatible, 
+but C`+`+20 is not required. Parts intended to support C`+`+20 
+features should be conditionally included using #ifdef CPP`_20&]
+[s3;l160;i150;O2; Prefer U`+`+ features over equivalents in the standard 
+library for example use Upp`::Index instead of std`::set&]
 [s0;2 ]]

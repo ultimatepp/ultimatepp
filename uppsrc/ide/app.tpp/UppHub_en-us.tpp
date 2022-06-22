@@ -35,14 +35,17 @@ Windows]&]
 POSIX]&]
 [s0;         [^topic`:`/`/ide`/app`/UppHub`_en`-us`#2`.1`.3^ 2.1.3 
 macOS]&]
-[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#2^ 3. UppHub module developer 
+[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3^ 3. Package developer 
 perspective]&]
-[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3^ 4. UppHub maintainer 
-information]&]
+[s0;     [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3`.1^ 3.1 Overview]&]
+[s0;     [^topic`:`/`/ide`/app`/UppHub`_en`-us`#3`.2^ 3.2 Publishing 
+package]&]
+[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#4^ 4. Maintainer information]&]
+[s0; [^topic`:`/`/ide`/app`/UppHub`_en`-us`#4^ 5. Global registry]&]
 [s0; &]
 [s3;:1: 1. User perspective&]
 [s5; UppHub is a system intended to catalogue and install independently 
-developed U`+`+ packages.&]
+developed U`+`+ packages over the network.&]
 [s0; &]
 [s0;= [* 
 @@image:3434&2082
@@ -96,7 +99,8 @@ be installed with U`+`+ installation script that user must lunch&]
 through environment. Git could be installed with brew package 
 manager.&]
 [s0; &]
-[s3;:3: 3. UppHub module developer perspective&]
+[s3;:3: 3. Package developer perspective&]
+[s22;:3`.1: 3.1 Overview&]
 [s5; U`+`+ modules are developed as git repositories representing 
 U`+`+ nests. The name of module and of core packages that are 
 intended to be used in other projects should have unique name 
@@ -118,12 +122,28 @@ format), consider putting it to [* plugin ](like plugin/md)&]
 / run automatically and fail with non`-zero exit, e.g. with ASSERT) 
 into [* autotest ]directory&]
 [s5;l128;i150;O0; put other tests to [* test]&]
-[s5; &]
-[s3;:4: 4. UppHub maintainer information&]
-[s5; This information is only important for maintainers of UppHub. 
-Module nests are listed in json files that are accessible through 
-http. JSON file specifies information about individual module 
-lists, but can also reference other lists of modules:&]
+[s22;:3`.2: 3.2 Publishing package&]
+[s5; In order to publish the package to a wider audience you need 
+to create git repository that is publicly available and created 
+according to the instructions in the previous point. After that, 
+you need to let us know that your package should be entered into 
+the global registry. You could do it by creating appropriate 
+thread in UppHub [^https`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=62`&^ f
+orum] or by creating issue in this [^https`:`/`/github`.com`/ultimatepp`/UppHub^ re
+pository]. Do not forget to describe what the package is supposed 
+to do. This will help with verification. If everything will be 
+alright, our maintainers will do the rest.&]
+[s5; The process is very easy and even beginners shouldn`'t have 
+problem with it.&]
+[s5; We encourage all U`+`+ users to create own packages and to share 
+them with the community. Thanks to that we will grow as a framework 
+and community.&]
+[s3;:4: 4. Maintainer information&]
+[s5; This information is only important for maintainers of UppHub 
+and packages owners. Module nests are listed in json files that 
+are accessible through http. JSON file specifies information 
+about individual module lists, but can also reference other lists 
+of modules:&]
 [s7; &]
 [s0;l321; [C@5+75 `{]&]
 [s7;   `"nests`": `[&]
@@ -156,4 +176,9 @@ tag or branch can be specified in [* branch]. Alternatively, the
 entry can by defined with [* url] which points to https location 
 with the same content.&]
 [s5; Additionally, the list can contain [* links] to other lists.&]
+[s3; 5. Global registry&]
+[s5; The global json file with all packages list is stored in [^https`:`/`/github`.com`/ultimatepp`/UppHub^ t
+his] public repository. It is read by TheIDE by obtaining this 
+file via network request. It is downloaded each time UppHub dialog 
+is being opened.&]
 [s5; ]]
