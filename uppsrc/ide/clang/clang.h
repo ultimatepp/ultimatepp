@@ -30,6 +30,7 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 	String parent;
 	String name;
 	String signature;
+	int    kind;
 };
 
 struct CurrentFileContext {

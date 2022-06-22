@@ -120,9 +120,10 @@ Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 int GetItemHeight(const CppItem& m, int cx);
 
 enum AdditionalKinds {
-	KIND_INCLUDEFILE = 100,
+	KIND_INCLUDEFILE = -1000,
 	KIND_INCLUDEFILE_ANY,
 	KIND_INCLUDEFOLDER,
+	KIND_COMPLETE,
 };
 
 void PaintText(Draw& w, int& x, int y, const char *text,

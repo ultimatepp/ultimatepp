@@ -12,41 +12,12 @@
 
 #define LTIMING(x) // DTIMING(x)
 
-class IndexSeparatorFrameCls : public CtrlFrame {
-	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
-	virtual void FramePaint(Draw& w, const Rect& r) {
-		w.DrawRect(r.right - 1, r.top, 1, r.Height(), SColorShadow);
-	}
-	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
-};
-
-Value AssistEditor::AssistItemConvert::Format(const Value& q) const
-{
-	int ii = q;
-	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount()) {
-		ii = editor->assist_item_ndx[ii];
-		if(ii < editor->assist_item.GetCount())
-			return RawToValue(editor->assist_item[ii]);
-	}
-	CppItemInfo empty;
-	return RawToValue(empty);
-}
-
-void AssistEditor::SyncNavigatorPlacement()
-{
-	int sz = navigatorframe.GetSize();
-	if(navigator_right)
-		navigatorframe.Right(navigatorpane, sz);
-	else
-		navigatorframe.Left(navigatorpane, sz);
-}
-
 AssistEditor::AssistEditor()
 {
-	assist_convert.editor = this;
+	assist_display.editor = this;
 	assist.NoHeader();
 	assist.NoGrid();
-	assist.AddRowNumColumn().Margin(0).SetConvert(assist_convert).SetDisplay(Single<CppItemInfoDisplay>());
+	assist.AddRowNumColumn().Margin(0).SetDisplay(assist_display);
 	assist.NoWantFocus();
 	assist.WhenLeftClick = THISBACK(AssistInsert);
 	type.NoHeader();
@@ -85,17 +56,28 @@ AssistEditor::AssistEditor()
 	cachedpos = INT_MAX;
 	cachedln = -1;
 	
-	parami = 0;
-
-	param_info.Margins(2);
-	param_info.Background(SColorPaper());
-	param_info.SetFrame(BlackFrame());
-	param_info.BackPaint();
-	param_info.NoSb();
+	param_popup.SetFrame(BlackFrame());
 	
 	include_assist = false;
 	
 	NoFindReplace();
+}
+
+class IndexSeparatorFrameCls : public CtrlFrame {
+	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
+	virtual void FramePaint(Draw& w, const Rect& r) {
+		w.DrawRect(r.right - 1, r.top, 1, r.Height(), SColorShadow);
+	}
+	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
+};
+
+void AssistEditor::SyncNavigatorPlacement()
+{
+	int sz = navigatorframe.GetSize();
+	if(navigator_right)
+		navigatorframe.Right(navigatorpane, sz);
+	else
+		navigatorframe.Left(navigatorpane, sz);
 }
 
 AssistEditor::~AssistEditor()
@@ -341,20 +323,14 @@ void AssistEditor::SyncAssist()
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
 	for(int pass = 0; pass < 2; pass++) {
-		VectorMap<String, int> over;
 		for(int i = 0; i < assist_item.GetCount(); i++) {
-			const CppItemInfo& m = assist_item[i];
+			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
-			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) &&
-			   (!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")) {
-					int q = include_assist ? -1 : over.Find(m.qitem);
-					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
-						found[i] = true;
-						assist_item_ndx.Add(i);
-						if(q < 0)
-							over.Add(m.qitem, m.typei);
-					}
+			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))// &&
+			   /*(!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")*/) { _DBG_
+					found[i] = true;
+					assist_item_ndx.Add(i);
 			}
 		}
 	}
@@ -430,18 +406,18 @@ bool AssistEditor::IncludeAssist()
 		String fn = folder[i];
 		if(fnset.Find(fn) < 0) {
 			fnset.Add(fn);
-			CppItemInfo& f = assist_item.Add();
-			f.name = f.natural = fn;
-			f.access = 0;
+			AssistItem& f = assist_item.Add();
+			f.name = f.signature = fn;
+			f.uname = ToUpper(f.name);
 			f.kind = KIND_INCLUDEFOLDER;
 		}
 	}
 	IndexSort(upper_file, file);
 	for(int i = 0; i < file.GetCount(); i++) {
 		String fn = file[i];
-		CppItemInfo& f = assist_item.Add();
-		f.name = f.natural = fn;
-		f.access = 0;
+		AssistItem& f = assist_item.Add();
+		f.name = f.signature = fn;
+		f.uname = ToUpper(f.name);
 		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
 		String fext = GetFileExt(fn);
 		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 || fext.GetCount() == 0 ? KIND_INCLUDEFILE
@@ -483,86 +459,16 @@ void AssistEditor::Assist()
 		return;
 
 	int pos = GetCursor();
-	int line = GetLinePos(pos);
+	int line = GetLinePos(pos); // TODO: limit, solve subincludes
 	StartAutoComplete(CurrentContext(), line + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
-		DDUMP(items.GetCount());
 		for(const AutoCompleteItem& m : items) {
-			CppItemInfo& f = assist_item.Add();
-			f.name = m.name;
-			f.natural = m.signature;
-			DDUMP(m.signature);
-			f.access = 0;
-			f.kind = 0;
+			AssistItem& f = assist_item.Add();
+			(AutoCompleteItem&)f = m;
+			f.uname = ToUpper(f.name);
+			f.typei = assist_type.FindAdd(m.parent);
 		}
-		DDUMP(assist_item.GetCount());
 		PopUpAssist();
-		DDUMP(assist_item.GetCount());
 	});
-
-/*
-	ParserContext parser;
-	Context(parser, GetCursor32());
-	Index<String> in_types;
-	while(iscid(Ch(q - 1)) || Ch(q - 1) == '~')
-		q--;
-	SkipSpcBack(q);
-	thisback = false;
-	current_type.Clear();
-	LTIMING("Assist2");
-	if(Ch(q - 1) == '(') {
-		int qq = q - 1;
-		String id = IdBack(qq);
-		int tn = findarg(id, "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4");
-		if(tn >= 0) {
-			thisback = true;
-			thisbackn = tn > 0;
-			GatherItems(parser.current_scope, false, in_types, false);
-			RemoveDuplicates();
-			PopUpAssist();
-			return;
-		}
-	}
-	if(Ch(q - 1) == ':' && Ch(q - 2) == ':') {
-		q -= 2;
-		Vector<String> tparam;
-		String scope = ParseTemplatedType(Qualify(parser.current_scope,
-		                                          CompleteIdBack(q, parser.local.GetIndex()),
-		                                          parser.context.namespace_using),
-		                                  tparam);
-		GatherItems(scope, false, in_types, true);
-		current_type = scope;
-	}
-	else {
-		String tp;
-		Vector<String> xp = ReadBack(q, parser.local.GetIndex());
-		bool isok = false;
-		if(xp.GetCount() && xp[0].StartsWith("::")) // ::Foo().
-			xp[0] = xp[0].Mid(2);
-		for(int i = 0; i < xp.GetCount(); i++)
-			if(iscib(*xp[i])) {
-				isok = true;
-				break;
-			}
-		if(xp.GetCount()) {
-			if(isok) { // Do nothing on pressing '.' when there is no identifier before
-				Index<String> typeset = EvaluateExpressionType(parser, xp);
-				for(int i = 0; i < typeset.GetCount(); i++)
-					if(typeset[i].GetCount())
-						GatherItems(typeset[i], xp[0] != "this", in_types, false);
-			}
-		}
-		else {
-			GatherItems(parser.current_scope, false, in_types, true);
-			Vector<String> ns = parser.GetNamespaces();
-			for(int i = 0; i < ns.GetCount(); i++)
-				if(parser.current_scope != ns[i]) // Do not scan namespace already scanned
-					GatherItems(ns[i], false, in_types, true);
-		}
-	}
-	LTIMING("Assist3");
-	RemoveDuplicates();
-	PopUpAssist();
-*/
 }
 
 Ptr<Ctrl> AssistEditor::assist_ptr;
@@ -683,10 +589,9 @@ void AssistEditor::Complete()
 			Paste(h.Mid(q.GetCount()).ToWString());
 	}
 	for(int i = 0; i < id.GetCount(); i++) {
-		CppItemInfo& f = assist_item.Add();
-		f.name = f.natural = f.qitem = id[i];
-		f.access = 0;
-		f.kind = 100;
+		AssistItem& f = assist_item.Add();
+		f.name = f.signature = id[i];
+		f.kind = KIND_COMPLETE;
 	}
 	assist_type.Clear();
 	PopUpAssist(true);
@@ -744,7 +649,7 @@ void AssistEditor::AssistInsert()
 			IgnoreMouseUp();
 			return;
 		}
-		const CppItemInfo& f = assist_item[ii];
+		const AssistItem& f = assist_item[ii];
 		if(include_assist) {
 			int ln = GetLine(GetCursor32());
 			int pos = GetPos32(ln);
@@ -777,7 +682,7 @@ void AssistEditor::AssistInsert()
 				}
 			}
 		}
-		else {
+		else { _DBG_ // TODO
 			String txt = f.name;
 			int l = txt.GetCount();
 			int pl = txt.GetCount();
@@ -797,7 +702,7 @@ void AssistEditor::AssistInsert()
 			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
-				if(f.natural.EndsWith("()"))
+				if(f.signature.EndsWith("()"))
 					SetCursor(GetCursor32() + 1);
 			}
 			else

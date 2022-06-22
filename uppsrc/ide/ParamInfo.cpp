@@ -23,7 +23,7 @@ void AssistEditor::SyncParamInfo()
 						int ch = Ch(i++);
 						if(i > c) {
 							if(par < mpar) {
-								qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
+								qtf = "[A1  " + DeQtf(m.item.signature); // TODO
 								mpar = par;
 								pos = m.pos;
 							}
@@ -75,7 +75,7 @@ void AssistEditor::SyncParamInfo()
 	}
 }
 
-void AssistEditor::StartParamInfo(const CppItem& m, int pos)
+void AssistEditor::StartParamInfo(const AssistItem& m, int pos)
 {
 	int x = GetCursor32();
 	ParamInfo& f = param[parami];

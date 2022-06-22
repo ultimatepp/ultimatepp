@@ -46,6 +46,7 @@ file
 	t.cpp,
 	Assist.h,
 	Cpp.cpp,
+	AssistDisplay.cpp,
 	Assist.cpp,
 	DCopy.cpp,
 	ContextGoto.cpp,

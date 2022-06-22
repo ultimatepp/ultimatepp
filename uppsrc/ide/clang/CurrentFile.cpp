@@ -26,15 +26,19 @@ void CurrentFileThread()
 			serial = autocomplete_serial;
 			autocomplete_do = do_autocomplete;
 		}
+		String fn = ConfigFile("fake.cpp"); // for some reason, Autocomplete is slow if file does not exist on disk
+		ONCELOCK {
+			SaveFile(fn, String());
+		};
 		if(f.filename != parsed_file.filename || f.includes != parsed_file.includes) {
 			parsed_file = f;
 			DisposeTU();
 			String cmdline;
-			cmdline << f.filename << RedefineMacros() << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -xc++ -std=c++17 ";
+			cmdline << fn << RedefineMacros() << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -xc++ -std=c++17 ";
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
-			RTIMING("Translate");
-			tu = Clang(cmdline, { { f.filename, f.content } },
+			TIMESTOP("Translate");
+			tu = Clang(cmdline, { { ~fn, f.content } },
 			           CXTranslationUnit_PrecompiledPreamble|
 			           CXTranslationUnit_CreatePreambleOnFirstParse|
 			           CXTranslationUnit_KeepGoing|
@@ -42,12 +46,15 @@ void CurrentFileThread()
 		}
 		if(Thread::IsShutdownThreads()) break;
 		if(autocomplete_do && tu) {
-			CXUnsavedFile ufile = { ~f.filename, ~f.content, (unsigned)f.content.GetCount() };
-			CXCodeCompleteResults *results = clang_codeCompleteAt(tu, f.filename, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
-										CXCodeComplete_IncludeCodePatterns);
+			CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
+			CXCodeCompleteResults *results;
+			{
+				TIMESTOP("clang_codeCompleteAt");
+				results = clang_codeCompleteAt(tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
+											CXCodeComplete_IncludeCodePatterns);
+			}
 			if(results) {
 				Vector<AutoCompleteItem> item;
-				DDUMP(results->NumResults);
 				for(int i = 0; i < results->NumResults; i++) {
 					const CXCursorKind kind = results->Results[i].CursorKind;
 					const CXCompletionString& string = results->Results[i].CompletionString;
@@ -79,6 +86,8 @@ void CurrentFileThread()
 					m.name = name;
 					m.parent = FetchString(clang_getCompletionParent(string, NULL));
 					m.signature = signature;
+					m.kind = kind;
+					DLOG((int)kind << " " << signature);
 				}
 				clang_disposeCodeCompleteResults(results);
 				Ctrl::Call([&] {

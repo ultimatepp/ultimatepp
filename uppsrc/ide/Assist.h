@@ -110,6 +110,8 @@ struct Navigator {
 	Navigator();
 };
 
+Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int& paramcount);
+
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
@@ -131,20 +133,25 @@ struct AssistEditor : CodeEditor, Navigator {
 	StaticRect     navigatorpane;
 	Splitter       navigator_splitter;
 	
-	struct AssistItemConvert : Convert {
-		AssistEditor *editor;
-
-		virtual Value Format(const Value& q) const;
-	}
-	assist_convert;
-	
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
+	
+	struct AssistItem : AutoCompleteItem {
+		int    typei = -1;
+		String uname;
+	};
 
-	Index<String>      assist_type;
-	Array<CppItemInfo> assist_item;
-	Vector<int>        assist_item_ndx;
+	Index<String>     assist_type;
+	Array<AssistItem> assist_item;
+	Vector<int>       assist_item_ndx;
+	
+	struct AssistDisplay : Display {
+		AssistEditor *editor;
+
+		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
+	} assist_display;
+
 	RichTextCtrl   annotation_popup;
 	
 	int            assist_cursor;
@@ -161,23 +168,29 @@ struct AssistEditor : CodeEditor, Navigator {
 	int            include_back;
 	String         include_path;
 	int            scan_counter;
-	
-	RichTextCtrl   param_info;
-	String         param_qtf;
-	struct ParamInfo {
+
+	struct ParamInfoPopup : Ctrl {
+		int        parami = 0;
+		AssistItem m;
+		String signature;
+	};
+
+	struct ParamInfo { // we can have multiple in progress..
 		int            line;
 		int            pos;
 		WString        test;
-		CppItem        item;
+		AssistItem     item;
 		String         editfile;
 		
 		ParamInfo()    { line = -1; }
 	};
-	enum { PARAMN = 16 };
-	ParamInfo param[PARAMN];
-	int       parami;
 
-	String    current_type;
+	enum { PARAMN = 16 };
+	ParamInfo      param[PARAMN];
+	ParamInfoPopup param_popup;
+	int            paramcount;
+
+//	String    current_type;
 	
 	static Ptr<Ctrl> assist_ptr;
 	
@@ -198,7 +211,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           InCode();
 	
 	void           SyncParamInfo();
-	void           StartParamInfo(const CppItem& m, int pos);
+	void           StartParamInfo(const AssistItem& m, int pos);
 
 	void           Complete();
 	void           Abbr();
@@ -227,10 +240,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           DCopy();
 	void           Virtuals();
 	void           Thisbacks();
-	void           AssistItemAdd(const String& scope, const CppItem& m, int typei);
-	void           GatherItems(const String& type, bool only_public, Index<String>& in_types,
-	                           bool types);
-	void           RemoveDuplicates();
 
 	void           SelParam();
 	int            Ch(int q);
