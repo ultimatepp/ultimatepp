@@ -5,10 +5,10 @@ struct Navigator {
 		bool           impl:1;
 		int            file:31;
 		int            line;
-		
+
 		bool operator<(const NavLine& b) const;
 	};
-	
+
 	struct NavItem {
 		String          nest;
 		String          qitem;
@@ -31,12 +31,12 @@ struct Navigator {
 		bool            decl;
 		int8            pass;
 		Vector<NavLine> linefo;
-		
+
 		void Set(const CppItem& m);
 	};
-	
+
 	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE, KIND_SRCFILE };
-	
+
 	struct ScopeDisplay : Display {
 		Navigator *navigator;
 
@@ -44,7 +44,7 @@ struct Navigator {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
 	};
-	
+
 	struct LineDisplay : Display {
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style, int x) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
@@ -53,12 +53,12 @@ struct Navigator {
 
 	struct NavigatorDisplay : Display {
 		const Vector<NavItem *>& item;
-	
+
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
-	
+
 		NavigatorDisplay(const Vector<NavItem *>& item) : item(item) {}
 	};
 
@@ -81,9 +81,9 @@ struct Navigator {
 	ArrayCtrl         list;
 	ArrayCtrl         navlines;
 	EditString        search;
-	
+
 	ScopeDisplay      scope_display;
-	
+
 	void TriggerSearch();
 	void NavGroup(bool local);
 	void Search();
@@ -104,13 +104,15 @@ struct Navigator {
 
 	static bool SortByLines(const NavItem *a, const NavItem *b);
 	static bool SortByNames(const NavItem *a, const NavItem *b);
-	
+
 	typedef Navigator CLASSNAME;
 
 	Navigator();
 };
 
-Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int& paramcount);
+String SignatureQtf(const String& name, const String& signature, int pari);
+
+Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info = NULL);
 
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
@@ -132,11 +134,11 @@ struct AssistEditor : CodeEditor, Navigator {
 	SplitterFrame  navigatorframe;
 	StaticRect     navigatorpane;
 	Splitter       navigator_splitter;
-	
+
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
-	
+
 	struct AssistItem : AutoCompleteItem {
 		int    typei = -1;
 		String uname;
@@ -145,7 +147,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	Index<String>     assist_type;
 	Array<AssistItem> assist_item;
 	Vector<int>       assist_item_ndx;
-	
+
 	struct AssistDisplay : Display {
 		AssistEditor *editor;
 
@@ -153,7 +155,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl   annotation_popup;
-	
+
 	int            assist_cursor;
 	bool           auto_assist;
 	bool           auto_check;
@@ -169,36 +171,28 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         include_path;
 	int            scan_counter;
 
-	struct ParamInfoPopup : Ctrl {
-		int        parami = 0;
-		AssistItem m;
-		String signature;
-	};
-
-	struct ParamInfo { // we can have multiple in progress..
+	RichTextCtrl   param_info;
+	String         param_qtf;
+	struct ParamInfo {
 		int            line;
 		int            pos;
 		WString        test;
 		AssistItem     item;
 		String         editfile;
-		
+
 		ParamInfo()    { line = -1; }
 	};
-
 	enum { PARAMN = 16 };
-	ParamInfo      param[PARAMN];
-	ParamInfoPopup param_popup;
-	int            paramcount;
+	ParamInfo param[PARAMN];
+	int       parami;
 
-//	String    current_type;
-	
 	static Ptr<Ctrl> assist_ptr;
-	
+
 	bool      navigator_right = true;
 
 	CurrentFileContext CurrentContext();
 	void               SetAsCurrentFile();
-	
+
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	static bool    WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelta, dword keyflags);
@@ -209,7 +203,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncAssist();
 	void           AssistInsert();
 	bool           InCode();
-	
+
 	void           SyncParamInfo();
 	void           StartParamInfo(const AssistItem& m, int pos);
 
@@ -250,7 +244,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         CompleteIdBack(int& q, const Index<String>& locals);
 
 	void           SwapSContext(ParserContext& p);
-	
+
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
 	void           SyncAnnotationPopup();
@@ -258,16 +252,16 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Annotate(const String& filename);
 	void           OpenTopic(String topic, String create, bool before);
 	void           NewTopic(String group, String coderef);
-	
+
 	bool           Esc();
-	
+
 	bool           IsNavigator() const                             { return navigator; }
 	void           Navigator(bool navigator);
 	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
 	void           SyncNavigatorPlacement();
-	
+
 	Event<int>     WhenFontScroll;
 	Event<>        WhenSelectionChanged;
 

@@ -23,7 +23,7 @@ void AssistEditor::SyncParamInfo()
 						int ch = Ch(i++);
 						if(i > c) {
 							if(par < mpar) {
-								qtf = "[A1  " + DeQtf(m.item.signature); // TODO
+								qtf = "[A1  " + SignatureQtf(m.item.name, m.item.signature, pari);
 								mpar = par;
 								pos = m.pos;
 							}

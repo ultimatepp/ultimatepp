@@ -85,7 +85,7 @@ void CurrentFileThread()
 					AutoCompleteItem& m = item.Add();
 					m.name = name;
 					m.parent = FetchString(clang_getCompletionParent(string, NULL));
-					m.signature = signature;
+					m.signature = CleanupSignature(signature);
 					m.kind = kind;
 					DLOG((int)kind << " " << signature);
 				}

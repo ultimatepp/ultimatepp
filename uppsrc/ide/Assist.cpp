@@ -52,14 +52,20 @@ AssistEditor::AssistEditor()
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
 	annotation_popup.NoSb();
-	
+
 	cachedpos = INT_MAX;
 	cachedln = -1;
-	
-	param_popup.SetFrame(BlackFrame());
-	
+
+	parami = 0;
+
+	param_info.Margins(2);
+	param_info.Background(SColorPaper());
+	param_info.SetFrame(BlackFrame());
+	param_info.BackPaint();
+	param_info.NoSb();
+
 	include_assist = false;
-	
+
 	NoFindReplace();
 }
 
@@ -564,7 +570,7 @@ void AssistEditor::Complete()
 			return;
 		}
 	}
-	
+
 	Vector<String> id = ids.PickKeys();
 	Upp::Sort(id, sILess);
 
@@ -682,11 +688,13 @@ void AssistEditor::AssistInsert()
 				}
 			}
 		}
-		else { _DBG_ // TODO
+		else {
 			String txt = f.name;
 			int l = txt.GetCount();
 			int pl = txt.GetCount();
-			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
+			int param_count;
+			ParseSignature(f.name, f.signature, &param_count);
+			if(param_count >= 0)
 				txt << "()";
 			int cl = GetCursor32();
 			int ch = cl;
@@ -696,14 +704,12 @@ void AssistEditor::AssistInsert()
 				ch++;
 			Remove(cl, ch - cl);
 			SetCursor(cl);
-			if(findarg(f.kind, CONSTRUCTOR, DESTRUCTOR) >= 0)
-				txt << "()";
 			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
-			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
+			if(param_count > 0) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
-				if(f.signature.EndsWith("()"))
-					SetCursor(GetCursor32() + 1);
+//				if(f.signature.EndsWith("()"))
+//					SetCursor(GetCursor32() + 1);
 			}
 			else
 			if(!inbody)
@@ -953,9 +959,9 @@ bool AssistEditor::Esc()
 		CloseAssist();
 		r = true;
 	}
+	for(int i = 0; i < PARAMN; i++)
+		param[i].line = -1;
 	if(param_info.IsOpen()) {
-		for(int i = 0; i < PARAMN; i++)
-			param[i].line = -1;
 		param_info.Close();
 		r = true;
 	}
@@ -1011,7 +1017,7 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	if(version >= 5)
 		s % navigator_right;
 	Navigator(navigator);
-	
+
 	if(s.IsLoading())
 		SyncNavigatorPlacement();
 }

@@ -41,6 +41,8 @@ struct CurrentFileContext {
 
 void StartCurrentFileParserThread();
 
+String CleanupSignature(const String& signature);
+
 void SetCurrentFile(const CurrentFileContext& ctx);
 void StartAutoComplete(const CurrentFileContext& c, int line, int column, Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();

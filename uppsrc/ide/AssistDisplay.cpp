@@ -10,11 +10,19 @@ INITBLOCK {
 		sOperatorTab[(int)*s] = true;
 }
 
-Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int& paramcount)
+bool IsBasicType(const String& id)
+{
+	static Index<String> kt = { "__int16", "__int32", "__int64", "__int8", "auto", "char",
+	                            "char8_t", "char16_t", "char32_t", "double", "float", "int",
+	                            "long", "short", "unsigned", "void", "wchar_t" };
+	return kt.Find(id) >= 0;
+}
+
+Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info)
 {
 	Vector<ItemTextPart> part;
-	int len = name.GetLength();
-	if(len == 0) {
+	int name_len = name.GetLength();
+	if(name_len == 0) {
 		ItemTextPart& p = part.Add();
 		p.pos = 0;
 		p.len = signature.GetLength();
@@ -23,10 +31,13 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 		return part;
 	}
 	bool param = false;
+	bool was_type = false;
 	int pari = -1;
 	int par = 0;
 	int lastidi = -1;
 	const char *s = signature;
+	if(fn_info)
+		*fn_info = -1;
 	while(*s) {
 		ItemTextPart& p = part.Add();
 		p.pos = (int)(s - ~signature);
@@ -40,22 +51,43 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 		}
 		else
 		if(iscid(*s)) {
-			String id;
-			n = 0;
-			while(iscid(s[n]))
-				id.Cat(s[n++]);
-			if(id == name) {
+			if(strncmp(s, name, name_len) == 0 && !iscid(s[name_len])) { // need strncmp because of e.g. operator++
 				p.type = ITEM_NAME;
-				param = true;
+				n = name_len;
+				const char *q = s + name_len;
+				while(*q == ' ')
+					q++;
+				if(*q == '(') {
+					param = true;
+					if(fn_info)
+						*fn_info = 0;
+				}
 			}
-			else
-			if(IsCppType(id))
-				p.type = ITEM_CPP_TYPE;
-			else
-			if(IsCppKeyword(id))
-				p.type = ITEM_CPP;
-			else
-				lastidi = part.GetCount() - 1; // can be a parameter name
+			else {
+				String id;
+				n = 0;
+				while(iscid(s[n]))
+					id.Cat(s[n++]);
+				if(IsBasicType(id)) {
+					if(param && par == 0)
+						was_type = true;
+					p.type = ITEM_CPP_TYPE;
+				}
+				else
+				if(IsCppType(id))
+					p.type = ITEM_CPP_TYPE;
+				else
+				if(IsCppKeyword(id))
+					p.type = ITEM_CPP;
+				else
+				if(param) {
+					if(lastidi >= 0 && par == 0)
+						was_type = true;
+					lastidi = part.GetCount() - 1; // can be a parameter name
+				}
+				if(param && fn_info)
+					*fn_info = 1;
+			}
 		}
 		else
 		if(sOperatorTab[*s]) {
@@ -66,13 +98,15 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 		else {
 			auto Pname = [&] {
 				if(lastidi >= 0) {
-					part[lastidi].type = ITEM_PNAME;
+					if(was_type)
+						part[lastidi].type = ITEM_PNAME;
 					lastidi = -1;
 				}
+				was_type = false;
 			};
 			p.type = ITEM_SIGN;
 			if(pari >= 0) {
-				if(*s == '(')
+				if(*s == '(' || *s == '<')
 					par++;
 				if(*s == ')') {
 					par--;
@@ -83,6 +117,8 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 						Pname();
 					}
 				}
+				if(*s == '>')
+					par--;
 				if(*s == ',' && par == 0) {
 					Pname();
 					p.pari = -1;
@@ -117,8 +153,7 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 		x += Zx(16);
 		int y = ry - Draw::GetStdFontCy() / 2;
 		int x0 = x;
-		int dummy;
-		Vector<ItemTextPart> n = ParseSignature(m.name, m.signature, dummy);
+		Vector<ItemTextPart> n = ParseSignature(m.name, m.signature);
 
 #if 0
 		DLOG("========================");
@@ -137,4 +172,40 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 
 //		StdDisplay().Paint(w, r, m.signature, ink, paper, style);
 	}
+}
+
+String SignatureQtf(const String& name, const String& signature, int pari)
+{
+	String qtf = "[%00-00K ";
+	Vector<ItemTextPart> n = ParseSignature(name, signature);
+	for(int i = 0; i < n.GetCount(); i++) {
+		ItemTextPart& p = n[i];
+		qtf << "[";
+		if(p.pari == pari)
+			qtf << "$y";
+		switch(p.type) {
+		case ITEM_PNAME:
+			qtf << "*";
+		case ITEM_NUMBER:
+			qtf << "@r";
+			break;
+		case ITEM_TNAME:
+			qtf << "*@g";
+			break;
+		case ITEM_NAME:
+			qtf << "*";
+			break;
+		case ITEM_UPP:
+			qtf << "@c";
+			break;
+		case ITEM_CPP_TYPE:
+		case ITEM_CPP:
+			qtf << "@B";
+			break;
+		}
+		qtf << ' ';
+		qtf << '\1' << signature.Mid(p.pos, p.len) << '\1';
+		qtf << ']';
+	}
+	return qtf + "]";
 }
