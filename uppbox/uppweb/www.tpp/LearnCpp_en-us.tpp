@@ -39,7 +39,7 @@ Pi] is a key to learn programing among young people.&]
 [s5; TheIDE is not only intended to be only IDE for Ultimate`+`+ 
 purpose. It works well with standardized C`+`+. Currently with 
  embedded compiler on Microsoft Windows TheIDE fully supports 
-C`+`+11 and C11. On GNU/Linux the capability is similar due to 
+C`+`+20 and C17. On GNU/Linux the capability is similar due to 
 usage of operating system bundled compiler. Please notice that 
 projects created on one system can be easily moved to another 
 without any modification. If you don`'t know what is compiler 
