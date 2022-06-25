@@ -428,6 +428,7 @@ bool AssistEditor::IncludeAssist()
 		String fext = GetFileExt(fn);
 		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 || fext.GetCount() == 0 ? KIND_INCLUDEFILE
 		                                                                        : KIND_INCLUDEFILE_ANY;
+		f.priority = 0;
 	}
 	include_assist = true;
 	if(include_path.GetCount())
@@ -467,12 +468,15 @@ void AssistEditor::Assist()
 	int pos = GetCursor();
 	int line = GetLinePos(pos); // TODO: limit, solve subincludes
 	StartAutoComplete(CurrentContext(), line + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
+		Index<int> kinds; _DBG_
 		for(const AutoCompleteItem& m : items) {
 			AssistItem& f = assist_item.Add();
 			(AutoCompleteItem&)f = m;
 			f.uname = ToUpper(f.name);
 			f.typei = assist_type.FindAdd(m.parent);
+			kinds.FindAdd(f.kind);
 		}
+		DDUMP(kinds);
 		PopUpAssist();
 	});
 }
@@ -493,6 +497,9 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	LTIMING("PopUpAssist");
 	if(assist_item.GetCount() == 0)
 		return;
+	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
+		return CombineCompare(b.priority, a.priority)(a.uname, b.uname) > 0;
+	});
 	int lcy = max(16, BrowserFont().Info().GetHeight());
 	type.Clear();
 	type.Add(AttrText("<all>").Ink(SColorHighlight()));
@@ -696,6 +703,8 @@ void AssistEditor::AssistInsert()
 			ParseSignature(f.name, f.signature, &param_count);
 			if(param_count >= 0)
 				txt << "()";
+			if(f.signature.EndsWith("::"))
+				txt << "::";
 			int cl = GetCursor32();
 			int ch = cl;
 			while(iscid(Ch(cl - 1)))
@@ -708,8 +717,6 @@ void AssistEditor::AssistInsert()
 			if(param_count > 0) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
-//				if(f.signature.EndsWith("()"))
-//					SetCursor(GetCursor32() + 1);
 			}
 			else
 			if(!inbody)

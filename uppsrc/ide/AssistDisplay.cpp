@@ -137,6 +137,8 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 	return part;
 }
 
+Image CxxIcon(int kind);
+
 void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
@@ -148,29 +150,18 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 
 		int x = r.left;
 		int ry = r.top + r.GetHeight() / 2;
-//		PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);
+		
+		Image img = CxxIcon(m.kind);
+		Size isz = img.GetSize();
+		w.DrawImage(x + (DPI(16) - isz.cx) / 2, r.top + (r.GetHeight() - isz.cy) / 2, img);
 	
-		x += Zx(16);
+		x += DPI(16);
 		int y = ry - Draw::GetStdFontCy() / 2;
 		int x0 = x;
 		Vector<ItemTextPart> n = ParseSignature(m.name, m.signature);
 
-#if 0
-		DLOG("========================");
-		LOG(m.signature);
-		for(auto& h : n)
-			LOG(m.signature.Mid(h.pos, h.len) << " " << h.pari);
-#endif
 		int starti = 0;
-/*		if(namestart)
-			for(int i = 0; i < n.GetCount(); i++)
-				if(n[i].type == ITEM_NAME) {
-					starti = i;
-					break;
-				}
-*/		PaintText(w, x, y, m.signature, n, starti, n.GetCount(), focuscursor, ink, false);
-
-//		StdDisplay().Paint(w, r, m.signature, ink, paper, style);
+		PaintText(w, x, y, m.signature, n, starti, n.GetCount(), focuscursor, ink, false);
 	}
 }
 

@@ -87,7 +87,7 @@ void CurrentFileThread()
 					m.parent = FetchString(clang_getCompletionParent(string, NULL));
 					m.signature = CleanupSignature(signature);
 					m.kind = kind;
-					DLOG((int)kind << " " << signature);
+					m.priority = clang_getCompletionPriority(string);
 				}
 				clang_disposeCodeCompleteResults(results);
 				Ctrl::Call([&] {
