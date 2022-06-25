@@ -35,6 +35,7 @@ void CurrentFileThread()
 			DisposeTU();
 			String cmdline;
 			cmdline << fn << RedefineMacros() << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -xc++ -std=c++17 ";
+			cmdline << " -I" << GetFileFolder(current_file.filename) << " -I-";
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
 			TIMESTOP("Translate");
@@ -50,9 +51,9 @@ void CurrentFileThread()
 			CXCodeCompleteResults *results;
 			{
 				TIMESTOP("clang_codeCompleteAt");
-				results = clang_codeCompleteAt(tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
-											CXCodeComplete_IncludeCodePatterns);
+				results = clang_codeCompleteAt(tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 			}
+			DumpDiagnostics(tu);
 			if(results) {
 				Vector<AutoCompleteItem> item;
 				for(int i = 0; i < results->NumResults; i++) {

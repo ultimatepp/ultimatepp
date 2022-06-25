@@ -42,6 +42,8 @@ struct CurrentFileContext {
 
 void StartCurrentFileParserThread();
 
+void DumpDiagnostics(CXTranslationUnit tu);
+
 String CleanupSignature(const String& signature);
 
 void SetCurrentFile(const CurrentFileContext& ctx);

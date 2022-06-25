@@ -202,34 +202,6 @@ void ClangFile(const String& filename, const String& content_, const Vector<Stri
 		tu = Clang(cmdline, { { filename, content } }, CXTranslationUnit_PrecompiledPreamble|CXTranslationUnit_CreatePreambleOnFirstParse|CXTranslationUnit_KeepGoing|CXTranslationUnit_RetainExcludedConditionalBlocks);
 	}
 
-	size_t num_diagnostics = clang_getNumDiagnostics(tu);
-
-	for (size_t i = 0; i < num_diagnostics; ++i) {
-		CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
-		auto Dump = [&](CXDiagnostic diagnostic) {
-			CXFile file;
-			unsigned line;
-			unsigned column;
-			unsigned offset;
-			CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
-			clang_getExpansionLocation(location, &file, &line, &column, &offset);
-			DLOG(FetchString(clang_getFileName(file)) <<
-				" (" << line << ":" << column << ") " <<
-				FetchString(clang_getDiagnosticSpelling(diagnostic)));
-		};
-		Dump(diagnostic);
-	#if 0
-		CXDiagnosticSet set = clang_getChildDiagnostics(diagnostic);
-		int n = clang_getNumDiagnosticsInSet(set);
-		for(int i = 0; i < n; i++) {
-			CXDiagnostic d = clang_getDiagnosticInSet(set, i);
-			Dump(d);
-			clang_disposeDiagnostic(d);
-		}
-	#endif
-		clang_disposeDiagnostic(diagnostic);
-	}
-	
 //	CXCursor rootCursor  = clang_getTranslationUnitCursor(tu);
 //	unsigned int treeLevel = 0;
 //	clang_visitChildren(rootCursor, visitor, &treeLevel);
@@ -374,3 +346,34 @@ void ClangFile(const String& filename, const String& content_, const Vector<Stri
 			Panic("Reparse failed");
 	}
 #endif
+
+void DumpDiagnostics(CXTranslationUnit tu)
+{
+	size_t num_diagnostics = clang_getNumDiagnostics(tu);
+
+	for (size_t i = 0; i < num_diagnostics; ++i) {
+		CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
+		auto Dump = [&](CXDiagnostic diagnostic) {
+			CXFile file;
+			unsigned line;
+			unsigned column;
+			unsigned offset;
+			CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
+			clang_getExpansionLocation(location, &file, &line, &column, &offset);
+			DLOG(FetchString(clang_getFileName(file)) <<
+				" (" << line << ":" << column << ") " <<
+				FetchString(clang_getDiagnosticSpelling(diagnostic)));
+		};
+		Dump(diagnostic);
+	#if 0
+		CXDiagnosticSet set = clang_getChildDiagnostics(diagnostic);
+		int n = clang_getNumDiagnosticsInSet(set);
+		for(int i = 0; i < n; i++) {
+			CXDiagnostic d = clang_getDiagnosticInSet(set, i);
+			Dump(d);
+			clang_disposeDiagnostic(d);
+		}
+	#endif
+		clang_disposeDiagnostic(diagnostic);
+	}
+}

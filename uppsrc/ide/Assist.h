@@ -190,7 +190,7 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	bool      navigator_right = true;
 
-	CurrentFileContext CurrentContext();
+	CurrentFileContext CurrentContext(int& line_delta);
 	void               SetAsCurrentFile();
 
 	void           PopUpAssist(bool auto_insert = false);

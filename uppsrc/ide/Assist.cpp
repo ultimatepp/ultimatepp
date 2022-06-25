@@ -437,18 +437,91 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-CurrentFileContext AssistEditor::CurrentContext()
+bool IsSourceFile(const String& path)
+{
+	String ext = ToLower(GetFileExt(path));
+	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
+}
+
+const char *it_namespace = "___it_namespace_";
+
+bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta)
+{ // create pseudo source file for autocomplete in include file
+	for(int i = 0; i < pk.file.GetCount(); i++) {
+		String path = SourcePath(pk_name, pk.file[i]);
+		if(!PathIsEqual(cfx.filename, path) && IsSourceFile(path)) {
+			DDUMP(path);
+			DDUMP(HdependGetDependencies(path));
+			if(FindIndex(HdependGetDependencies(path), cfx.filename) >= 0 && GetFileLength(path) < 200000) {
+				String r;
+				int last = 0;
+				int last_ln = 0;
+				int line = 0;
+				FileIn in(path);
+				while(!in.IsEof()) {
+					String l = in.GetLine();
+					r << l << "\n";
+					line++;
+					if(TrimLeft(l).StartsWith("#include")) {
+						last = r.GetCount();
+						last_ln = line;
+					}
+				}
+				r.Trim(last);
+				r << "namespace " << it_namespace << " {\n";
+				StringStream in2(cfx.content);
+				while(!in2.IsEof()) {
+					String l = in2.GetLine();
+					if(TrimLeft(l).StartsWith("#include"))
+						l.Clear();
+					r << l << "\n";
+				}
+				
+				cfx.content = r;
+				DDUMP(cfx.content);
+				line_delta = last_ln + 1;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 {
 	CurrentFileContext cfx;
 	cfx.filename = theide->editfile;
 	cfx.includes = theide->GetIncludePath();
-	cfx.content = Get(); // TODO: limit it!
+	line_delta = 0;
+	if(GetLength() < 200000) {
+		cfx.content = Get();
+		if(!IsSourceFile(cfx.filename)) {
+			for(int pass = 0; pass < 2; pass++) { // all packages in second pass
+				const Workspace& wspc = GetIdeWorkspace();
+				for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
+					const Package& pk = wspc.GetPackage(i);
+					String n = wspc[i];
+					if(pass) {
+						if(MakeIncludeTrick(pk, n, cfx, line_delta))
+							return cfx;
+					}
+					else
+					for(int i = 0; i < pk.file.GetCount(); i++) {
+						if(PathIsEqual(cfx.filename, SourcePath(n, pk.file[i])))
+							if(MakeIncludeTrick(pk, n, cfx, line_delta))
+								return cfx;
+					}
+				}
+			}
+		}
+	}
 	return cfx;
 }
 
 void AssistEditor::SetAsCurrentFile()
 {
-	SetCurrentFile(CurrentContext());
+	int dummy;
+	SetCurrentFile(CurrentContext(dummy));
 }
 
 void AssistEditor::Assist()
@@ -467,18 +540,28 @@ void AssistEditor::Assist()
 
 	int pos = GetCursor();
 	int line = GetLinePos(pos); // TODO: limit, solve subincludes
-	StartAutoComplete(CurrentContext(), line + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
-		Index<int> kinds; _DBG_
-		for(const AutoCompleteItem& m : items) {
-			AssistItem& f = assist_item.Add();
-			(AutoCompleteItem&)f = m;
-			f.uname = ToUpper(f.name);
-			f.typei = assist_type.FindAdd(m.parent);
-			kinds.FindAdd(f.kind);
-		}
-		DDUMP(kinds);
-		PopUpAssist();
-	});
+	int line_delta;
+	CurrentFileContext cfx = CurrentContext(line_delta);
+	if(cfx.content.GetCount())
+		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
+			Index<int> kinds; _DBG_
+			for(const AutoCompleteItem& m : items) {
+				AssistItem& f = assist_item.Add();
+				(AutoCompleteItem&)f = m;
+				if(line_delta) { // we are using pseudo source for include with typename trick
+					static const String itr = it_namespace;
+					static const String itrn = itr + "::";
+					f.parent.Replace(itrn, "");
+					f.parent.Replace(itr, "");
+					f.signature.Replace(itrn, "");
+					f.signature.Replace(itr, "");
+				}
+				f.uname = ToUpper(f.name);
+				f.typei = assist_type.FindAdd(f.parent);
+				kinds.FindAdd(f.kind);
+			}
+			PopUpAssist();
+		});
 }
 
 Ptr<Ctrl> AssistEditor::assist_ptr;

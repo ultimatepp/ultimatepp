@@ -9,6 +9,6 @@ file
 	clang.h,
 	macros.cpp,
 	Util.cpp,
-	CurrentFile.cpp,
-	clang.cpp;
+	clang.cpp,
+	CurrentFile.cpp;
 
