@@ -26,16 +26,14 @@ void CurrentFileThread()
 			serial = autocomplete_serial;
 			autocomplete_do = do_autocomplete;
 		}
-		String fn = ConfigFile("fake.cpp"); // for some reason, Autocomplete is slow if file does not exist on disk
-		ONCELOCK {
-			SaveFile(fn, String());
-		};
+		String fn = f.filename;
+		if(!IsSourceFile(fn))
+			fn.Cat(".cpp");
 		if(f.filename != parsed_file.filename || f.includes != parsed_file.includes) {
 			parsed_file = f;
 			DisposeTU();
 			String cmdline;
-			cmdline << fn << RedefineMacros() << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -xc++ -std=c++17 ";
-			cmdline << " -I" << GetFileFolder(current_file.filename) << " -I-";
+			cmdline << fn << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
 			TIMESTOP("Translate");
@@ -53,7 +51,7 @@ void CurrentFileThread()
 				TIMESTOP("clang_codeCompleteAt");
 				results = clang_codeCompleteAt(tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 			}
-			DumpDiagnostics(tu);
+//			DumpDiagnostics(tu);
 			if(results) {
 				Vector<AutoCompleteItem> item;
 				for(int i = 0; i < results->NumResults; i++) {

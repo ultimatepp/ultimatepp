@@ -1,8 +1,10 @@
 #include "clang.h"
 
+#define LTIMING(x)
+
 String CleanupSignature(const String& signature)
 {
-	DTIMING("CleanupSignature");
+	LTIMING("CleanupSignature");
 	StringBuffer result;
 	const char *s = signature;
 	while(*s)
@@ -33,4 +35,10 @@ String CleanupSignature(const String& signature)
 		else
 			result.Cat(*s++);
 	return result;
+}
+
+bool IsSourceFile(const String& path)
+{
+	String ext = ToLower(GetFileExt(path));
+	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
 }

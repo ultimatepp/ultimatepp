@@ -333,10 +333,9 @@ void AssistEditor::SyncAssist()
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
-			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))// &&
-			   /*(!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")*/) { _DBG_
-					found[i] = true;
-					assist_item_ndx.Add(i);
+			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))) {
+				found[i] = true;
+				assist_item_ndx.Add(i);
 			}
 		}
 	}
@@ -437,12 +436,6 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-bool IsSourceFile(const String& path)
-{
-	String ext = ToLower(GetFileExt(path));
-	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
-}
-
 const char *it_namespace = "___it_namespace_";
 
 bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta)
@@ -450,8 +443,6 @@ bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContex
 	for(int i = 0; i < pk.file.GetCount(); i++) {
 		String path = SourcePath(pk_name, pk.file[i]);
 		if(!PathIsEqual(cfx.filename, path) && IsSourceFile(path)) {
-			DDUMP(path);
-			DDUMP(HdependGetDependencies(path));
 			if(FindIndex(HdependGetDependencies(path), cfx.filename) >= 0 && GetFileLength(path) < 200000) {
 				String r;
 				int last = 0;
@@ -478,8 +469,8 @@ bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContex
 				}
 				
 				cfx.content = r;
-				DDUMP(cfx.content);
 				line_delta = last_ln + 1;
+				cfx.filename = path;
 				return true;
 			}
 		}
@@ -544,7 +535,6 @@ void AssistEditor::Assist()
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
-			Index<int> kinds; _DBG_
 			for(const AutoCompleteItem& m : items) {
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;
@@ -558,7 +548,6 @@ void AssistEditor::Assist()
 				}
 				f.uname = ToUpper(f.name);
 				f.typei = assist_type.FindAdd(f.parent);
-				kinds.FindAdd(f.kind);
 			}
 			PopUpAssist();
 		});
@@ -832,14 +821,6 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
-	_DBG_
-	if(key == K_F12) {
-		int pos = GetCursor();
-		int line = GetLinePos(pos);
-		ClangFile(theide->editfile, Get(), Split(theide->GetIncludePath(), ';'), line + 1, pos + 1);
-		return true;
-	}
-
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;

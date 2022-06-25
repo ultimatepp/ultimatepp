@@ -821,7 +821,7 @@ String RedefineMacros()
 		StringStream ss(s);
 		while(!ss.IsEof()) {
 			String line = ss.GetLine();
-			if(line.TrimStart("#define ")) {
+			if(line.TrimStart("#define ") && line.Find('\"') < 0) {
 				int q = line.Find(' ');
 				r.GetAdd(TrimBoth(line.Mid(0, q))) = TrimBoth(line.Mid(q + 1));
 			}

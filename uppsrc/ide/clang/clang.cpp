@@ -1,5 +1,7 @@
 #include "clang.h"
 
+#define LLOG(x)
+
 String FetchString(CXString cs)
 {
 	String result = clang_getCString(cs);
@@ -88,14 +90,18 @@ CXChildVisitResult visitor( CXCursor cursor, CXCursor /* parent */, CXClientData
 	return CXChildVisit_Continue;
 }
 
-CXTranslationUnit Clang(const String& cmdline, Vector<Tuple2<String, String>> file, unsigned options)
+CXTranslationUnit Clang(const String& cmdline_, Vector<Tuple2<String, String>> file, unsigned options)
 {
 	static CXIndex index = clang_createIndex(0, 0);
 	if (!index) {
-		DLOG("createIndex failed");
+		LLOG("createIndex failed");
 		return nullptr;
 	}
+	
+	String cmdline = cmdline_;
 
+	cmdline << RedefineMacros();
+ 
 	Vector<String> sa = Split(cmdline, ' ');
 	
 	Buffer<const char *> argv(sa.GetCount());
@@ -119,6 +125,7 @@ CXTranslationUnit Clang(const String& cmdline, Vector<Tuple2<String, String>> fi
 	return tu;
 }
 
+#if 0
 String PrecompileHeader(String& content, const Vector<String>& includes)
 {
 	String out;
@@ -145,8 +152,6 @@ String PrecompileHeader(String& content, const Vector<String>& includes)
 	
 	out << LoadStream(ss);
 	content = out;
-	
-	DDUMP(content);
 	
 	String pch_header2 = "c:/xxx/$pch.h";
 	String pch_file = pch_header2 + ".pch";
@@ -346,6 +351,7 @@ void ClangFile(const String& filename, const String& content_, const Vector<Stri
 			Panic("Reparse failed");
 	}
 #endif
+#endif
 
 void DumpDiagnostics(CXTranslationUnit tu)
 {
@@ -360,8 +366,7 @@ void DumpDiagnostics(CXTranslationUnit tu)
 			unsigned offset;
 			CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
 			clang_getExpansionLocation(location, &file, &line, &column, &offset);
-			DLOG(FetchString(clang_getFileName(file)) <<
-				" (" << line << ":" << column << ") " <<
+			LOG(FetchString(clang_getFileName(file)) << " (" << line << ":" << column << ") " <<
 				FetchString(clang_getDiagnosticSpelling(diagnostic)));
 		};
 		Dump(diagnostic);

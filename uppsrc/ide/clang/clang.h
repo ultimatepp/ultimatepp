@@ -45,6 +45,7 @@ void StartCurrentFileParserThread();
 void DumpDiagnostics(CXTranslationUnit tu);
 
 String CleanupSignature(const String& signature);
+bool   IsSourceFile(const String& path);
 
 void SetCurrentFile(const CurrentFileContext& ctx);
 void StartAutoComplete(const CurrentFileContext& c, int line, int column, Event<const Vector<AutoCompleteItem>&> done);

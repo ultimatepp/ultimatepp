@@ -784,7 +784,6 @@ void Ide::SetupBuildMethods()
 
 void ExtractIncludes(Index<String>& r, String h)
 {
-	DDUMP(h);
 #ifdef PLATFORM_WIN32
 	h.Replace("\r", "");
 #endif
@@ -797,7 +796,7 @@ void ExtractIncludes(Index<String>& r, String h)
 }
 
 String Ide::GetIncludePath()
-{ _DBG_ // #REMOVE
+{
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
