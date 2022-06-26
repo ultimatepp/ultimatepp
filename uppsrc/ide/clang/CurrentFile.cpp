@@ -8,6 +8,8 @@ Event<const Vector<AutoCompleteItem>&> autocomplete_done;
 
 void CurrentFileThread()
 {
+	MemoryIgnoreLeaksBlock __;
+
 	CurrentFileContext parsed_file;
 	CXTranslationUnit tu = nullptr;
 	int64 serial;
@@ -37,11 +39,19 @@ void CurrentFileThread()
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
 			TIMESTOP("Translate");
+			#ifdef PLATFORM_WIN32
 			tu = Clang(cmdline, { { ~fn, f.content } },
 			           CXTranslationUnit_PrecompiledPreamble|
 			           CXTranslationUnit_CreatePreambleOnFirstParse|
 			           CXTranslationUnit_KeepGoing|
 			           CXTranslationUnit_RetainExcludedConditionalBlocks);
+			#else
+			tu = Clang(cmdline, { { ~fn, f.content } },
+			           CXTranslationUnit_KeepGoing|
+			           CXTranslationUnit_RetainExcludedConditionalBlocks);
+			#endif
+
+//			DumpDiagnostics(tu);
 		}
 		if(Thread::IsShutdownThreads()) break;
 		if(autocomplete_do && tu) {
@@ -103,6 +113,8 @@ void CurrentFileThread()
 
 void StartCurrentFileParserThread()
 {
+	MemoryIgnoreNonMainLeaks();
+	MemoryIgnoreNonUppThreadsLeaks(); // Linux drivers leak memory in threads
 	Thread::StartNice([] { CurrentFileThread(); });
 }
 

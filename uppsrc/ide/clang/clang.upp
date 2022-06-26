@@ -5,6 +5,8 @@ uses
 
 library(WIN32) libclang.lib;
 
+library(POSIX) clang;
+
 file
 	clang.h,
 	macros.cpp,
