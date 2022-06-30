@@ -951,8 +951,12 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 						dword st;
 						Color fg, bg;
 						Value q;
+						bool heading = i < array.GetCount() && array[i].heading;
 						const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
 						if(sample || w.IsPainting(r)) {
+							if(heading)
+								r.right = cw = size.cx;
+							else
 							if(spanwidecells)
 								SpanWideCell(d, q, cm, cw, r, i, j);
 							
@@ -971,6 +975,8 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 						x += cw;
 						if(vertgrid)
 							w.DrawRect(x - 1, r.top, 1, r.Height(), gridcolor);
+						if(heading)
+							break;
 					}
 				if(horzgrid)
 					w.DrawRect(0, r.bottom, size.cx, 1, gridcolor);
@@ -2148,6 +2154,14 @@ void ArrayCtrl::AddSeparator()
 	SetLineCy(ii, Draw::GetStdFontCy() / 2);
 	for(int i = 0; i < GetColumnCount(); i++)
 		SetDisplay(ii, i, Single<ArrayCtrlSeparatorDisplay>());
+	DisableLine(ii);
+}
+
+void ArrayCtrl::AddHeading(const Value& v)
+{
+	int ii = GetCount();
+	Add(v);
+	array.At(ii).heading = true;
 	DisableLine(ii);
 }
 

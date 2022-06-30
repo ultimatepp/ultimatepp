@@ -1889,6 +1889,17 @@ onst]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns a row as ValueArray.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:AddSeparator`(`):%- [@(0.0.255) void]_[* AddSeparator]()&]
+[s2; Adds separator line.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:AddHeading`(const Upp`:`:Value`&`):%- [@(0.0.255) void]_[* AddHe
+ading]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2; Adds a special disabled line where the first column is spanned 
+over all other values in the line. Useful for inserting informative 
+titles.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`): [@(0.0.255) void]_[* Se
 t]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String],
