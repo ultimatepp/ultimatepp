@@ -505,6 +505,7 @@ public:
 
 	void       AddSeparator();
 	void       AddHeading(const Value& v);
+	bool       IsHeading(int i) const                           { return i < array.GetCount() && array[i].heading; }
 
 	void       Insert(int i);
 	void       Insert(int i, int count);

@@ -951,7 +951,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 						dword st;
 						Color fg, bg;
 						Value q;
-						bool heading = i < array.GetCount() && array[i].heading;
+						bool heading = IsHeading(i);
 						const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
 						if(sample || w.IsPainting(r)) {
 							if(heading)
