@@ -6,6 +6,7 @@ void AssistEditor::Annotate(const String& filename)
 	int fi = GetSourceFileIndex(filename);
 	CppBase& base = CodeBase();
 	ClearAnnotations();
+#if 0
 	for(int j = 0; j < base.GetCount(); j++) {
 		String nest = base.GetKey(j);
 		if(*nest != '@') { // Annotations of anonymous structures not suported
@@ -22,6 +23,7 @@ void AssistEditor::Annotate(const String& filename)
 			}
 		}
 	}
+#endif
 }
 
 bool IsCodeItem(const RichTxt& txt, int i)

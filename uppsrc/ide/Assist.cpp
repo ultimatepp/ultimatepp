@@ -88,7 +88,7 @@ void AssistEditor::SyncNavigatorPlacement()
 
 AssistEditor::~AssistEditor()
 {
-	CancelAutoComplete();
+	CancelCurrentFile();
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {
@@ -484,7 +484,7 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	cfx.filename = theide->editfile;
 	cfx.includes = theide->GetIncludePath();
 	line_delta = 0;
-	if(GetLength() < 200000) {
+	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();
 		if(!IsSourceFile(cfx.filename)) {
 			for(int pass = 0; pass < 2; pass++) { // all packages in second pass
@@ -509,13 +509,21 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	return cfx;
 }
 
-void AssistEditor::SetAsCurrentFile()
+void AssistEditor::SyncCurrentFile()
 {
-	int dummy;
-	SetCurrentFile(CurrentContext(dummy));
+	int line_delta;
+	CurrentFileContext cfx = CurrentContext(line_delta);
+	if(cfx.content.GetCount())
+		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations) {
+			for(const auto& m : annotations)
+				SetAnnotation(m.line - 1,
+				              GetRefLinks(m.item).GetCount() ? IdeImg::tpp_doc()
+				                                       : IdeImg::tpp_pen(),
+				              m.item);
+		});
 }
 
-void AssistEditor::Assist()
+void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
 	if(!assist_active)
@@ -534,7 +542,7 @@ void AssistEditor::Assist()
 	int line_delta;
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	if(cfx.content.GetCount())
-		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, [=](const Vector<AutoCompleteItem>& items) {
+		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			for(const AutoCompleteItem& m : items) {
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;
@@ -570,7 +578,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	if(assist_item.GetCount() == 0)
 		return;
 	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
-		return CombineCompare(b.priority, a.priority)(a.uname, b.uname) > 0;
+		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
 	});
 	int lcy = max(16, BrowserFont().Info().GetHeight());
 	type.Clear();
@@ -750,7 +758,7 @@ void AssistEditor::AssistInsert()
 			                << (f.kind == KIND_INCLUDEFOLDER ? "/" : include_local ? "\"" : ">")
 			                , CHARSET_WIN1250));
 			if(f.kind == KIND_INCLUDEFOLDER) {
-				Assist();
+				Assist(false);
 				IgnoreMouseUp();
 				return;
 			}
@@ -866,7 +874,7 @@ bool AssistEditor::Key(dword key, int count)
 			if(b) {
 				CloseAssist();
 				if(include_assist ? (key == '/' || key == '\\') : key == '.')
-					Assist();
+					Assist(false);
 			}
 		}
 		else
@@ -877,17 +885,10 @@ bool AssistEditor::Key(dword key, int count)
 		if(InCode()) {
 			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
 			   key == ':' && Ch(GetCursor32() - 2) == ':')
-				Assist();
-			else
-			if(key == '(') {
-				int q = GetCursor32() - 1;
-				String id = IdBack(q);
-				if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
-					Assist();
-			}
+				Assist(false);
 		}
 		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
-			Assist();
+			Assist(false);
 	}
 	return b;
 }

@@ -110,10 +110,6 @@ struct Navigator {
 	Navigator();
 };
 
-String SignatureQtf(const String& name, const String& signature, int pari);
-
-Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info = NULL);
-
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
@@ -191,12 +187,12 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      navigator_right = true;
 
 	CurrentFileContext CurrentContext(int& line_delta);
-	void               SetAsCurrentFile();
+	void               SyncCurrentFile();
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	static bool    WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelta, dword keyflags);
-	void           Assist();
+	void           Assist(bool macros);
 	bool           IncludeAssist();
 	String         ReadIdBackPos(int& pos, bool include);
 	String         ReadIdBack(int q, bool include = false, bool *destructor = NULL);

@@ -418,6 +418,7 @@ void Ide::FlushFile() {
 		fd.undodata = editor.PickUndoData();
 		fd.filehash = EditorHash();
 	}
+	CancelCurrentFile();
 	editfile.Clear();
 	editfile_repo = NOT_REPO_DIR;
 	editfile_isfolder = false;
@@ -568,7 +569,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				const int view_limit = 256*1024*1024;
 				if(view_file.GetSize() < view_limit || editastext.Find(editfile) >= 0 && view_file.GetSize() < max_size) {
 					le = editor.Load(view_file, charset);
-					editor.SetAsCurrentFile();
 					view_file.Close();
 				}
 				else
@@ -625,6 +625,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
+	editor.SyncCurrentFile();
 	editfile_repo = GetRepoKind(editfile);
 	editfile_includes = IncludesMD5();
 }
@@ -682,6 +683,7 @@ void Ide::EditFileAssistSync()
 void Ide::TriggerAssistSync()
 {
 	if(auto_rescan && editor.GetLength64() < 500000 && !file_scan) {
+	/*
 		text_updated.KillSet(1000, [=] {
 			if(!file_scan && IsCppBaseFile()) {
 				String s = ~editor;
@@ -699,6 +701,8 @@ void Ide::TriggerAssistSync()
 				}
 			}
 		});
+	*/
+		editor.SyncCurrentFile();
 	}
 }
 
