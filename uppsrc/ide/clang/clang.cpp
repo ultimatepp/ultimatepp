@@ -101,6 +101,8 @@ CXTranslationUnit Clang(const String& cmdline_, Vector<Tuple2<String, String>> f
 	String cmdline = cmdline_;
 
 	cmdline << RedefineMacros();
+
+	DDUMP(cmdline);
  
 	Vector<String> sa = Split(cmdline, ' ');
 	

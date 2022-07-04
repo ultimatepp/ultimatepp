@@ -815,6 +815,8 @@ String RedefineMacros()
 {
 	String cmdline;
 
+#ifdef PLATFORM_WIN32
+
 	VectorMap<String, String> um, dm;
 	auto Parse = [&](const char *s) {
 		VectorMap<String, String> r;
@@ -844,7 +846,9 @@ String RedefineMacros()
 		if(um.Find(h.key) < 0)
 			cmdline << " -D" << h.key << "=" << h.value;
 		
+#endif
+
 	cmdline << " -Dlint";
-	
+
 	return cmdline;
 }
