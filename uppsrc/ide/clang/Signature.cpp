@@ -45,10 +45,10 @@ String CleanupId(const char *s)
 	bool operator_def = false; // between operator and ( - suppress < > handling
 	while(*s && *s != '{') {
 		if(iscid(*s)) {
-			StringBuffer idb;
+			const char *b = s;
 			while(iscid(*s) || *s == ':')
-				idb.Cat(*s++);
-			String id = idb;
+				s++;
+			String id(b, s);
 			if((*s == ',' || *s == ')') && was_param_type) {
 				was_param_type = false;
 				continue;
@@ -65,7 +65,7 @@ String CleanupId(const char *s)
 				const char *s = ~id + id.GetCount() - 8;
 				operator_def = IsOperator(s) && !iscid(s[-1]);
 			}
-			if(function && IsBasicType(id) || !IsCppKeyword(id)) // TODO optimize this (IsCppKeywordNoType)
+			if(function && (IsBasicType(id) || !IsCppKeyword(id))) // TODO optimize this (IsCppKeywordNoType)
 				was_param_type = true;
 			if(was_id)
 				mm.Cat(' ');
@@ -80,7 +80,6 @@ String CleanupId(const char *s)
 		}
 		else
 		if(*s == '<' && !function && !operator_def) { // remove template stuff before params, e.g. Buffer<T>();
-			DDUMP(operator_def);
 			int lvl = 1;
 			s++;
 			while(*s && lvl) {

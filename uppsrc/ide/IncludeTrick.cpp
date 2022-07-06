@@ -2,29 +2,30 @@
 
 // libclang is unable to parse include files so we create fake .cpp content
 
-bool DoIncludeTrick(StringBuffer& out, String path, const String& target_path, int& line_delta)
+bool DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta)
 {
 	String filedir = GetFileDirectory(path);
 	bool comment = false;
-goinclude:
 	if(GetFileLength(path) > 200000 || out.GetCount() > 200000)
 		return false;
+	visited.Add(path);
 	FileIn in(path);
 	while(!in.IsEof()) {
 		String l = in.GetLine();
 		String tl = TrimLeft(l);
 		if(!comment && tl.TrimStart("#include") && (*tl == ' ' || *tl == '\t')) {
 			String ipath = FindIncludeFile(tl, filedir);
-			if(NormalizePath(ipath) == NormalizePath(target_path)) {
-				out << LoadFile(ipath);
-				return true;
-			}
-			if(FindIndex(HdependGetDependencies(ipath), target_path) >= 0) {
-				path = ipath;
-				goto goinclude;
-			}
 			if(ipath.GetCount()) {
+				if(NormalizePath(ipath) == NormalizePath(target_path))
+					return true;
+				if(FindIndex(HdependGetDependencies(ipath), target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
+				   && DoIncludeTrick(visited, level + 1, out, ipath, target_path, line_delta))
+					return true;
 				out << "#include <" << ipath << ">\n";
+				line_delta++;
+			}
+			else {
+				out << l << '\n';
 				line_delta++;
 			}
 		}
@@ -54,8 +55,9 @@ bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContex
 		if(!PathIsEqual(cfx.filename, path) && IsSourceFile(path)) {
 			if(FindIndex(HdependGetDependencies(path), cfx.filename) >= 0 && GetFileLength(path) < 200000) {
 				StringBuffer out;
-				if(DoIncludeTrick(out, path, cfx.filename, line_delta))
-					cfx.content = out;
+				Index<String> visited;
+				if(DoIncludeTrick(visited, 0, out, path, cfx.filename, line_delta))
+					cfx.content = String(out) + cfx.content;
 				else
 					cfx.content.Clear();
 				return true;

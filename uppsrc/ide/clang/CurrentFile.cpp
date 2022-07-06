@@ -71,6 +71,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 			scope << "::";
 
 		auto Dump = [&] {
+			#if 0
 				SourceLocation location(cxlocation);
 				LOG("=====================");
 //				DDUMP(location);
@@ -82,7 +83,6 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 				DDUMP(CleanupId(id));
 				DDUMP(scope);
 				DDUMP(clang_isCursorDefinition(cursor));
-			#if 0
 				static CXPrintingPolicy pp = clang_getCursorPrintingPolicy(cursor);
 				ONCELOCK {
 					for(int i = 0; i <= CXPrintingPolicy_LastProperty; i++)
@@ -151,7 +151,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 			m << scope << name;
 			break;
 		case CXCursor_ConversionFunction:
-			m = "operator " + type;
+			m << scope << "operator " << type;
 			break;
 		case CXCursor_MacroDefinition:
 			m = name;
@@ -190,8 +190,6 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 					clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_SuppressScope, 1);
 				}
 				r.pretty = CleanupSignature(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
-				DDUMP(r.id);
-				DDUMP(r.pretty);
 			}
 		}
 	}
@@ -232,14 +230,12 @@ void CurrentFileThread()
 
 	auto DisposeTU = [&] {
 		if(tu) clang_disposeTranslationUnit(tu);
-		if(tu) DLOG("DisposeTU" << tu);
 		tu = nullptr;
 	};
 
 	auto DoAnnotations = [&] {
 		if(!tu || !annotations_done) return;
 		Vector<AnnotationItem> item;
-		DLOG("DoAnnotations " << tu);
 		clang_visitChildren(clang_getTranslationUnitCursor(tu), current_file_visitor, &item);
 		Ctrl::Call([&] {
 			if(parsed_file.filename == current_file.filename &&
@@ -267,13 +263,11 @@ void CurrentFileThread()
 		if(f.filename != parsed_file.filename || f.includes != parsed_file.includes ||
 		   f.real_filename != parsed_file.real_filename || !tu) {
 			parsed_file = f;
-			DDUMP(f.real_filename);
 			DisposeTU();
 			String cmdline;
 			cmdline << fn << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
-			TIMESTOP("Parse");
 			#ifdef PLATFORM_WIN32
 			tu = Clang(cmdline, { { ~fn, f.content } },
 			           CXTranslationUnit_DetailedPreprocessingRecord|
@@ -286,7 +280,6 @@ void CurrentFileThread()
 			           CXTranslationUnit_KeepGoing|
 			           CXTranslationUnit_RetainExcludedConditionalBlocks);
 			#endif
-			DLOG("Parsed " << f.real_filename << " " << tu);
 			DoAnnotations();
 			annotations_do = false;
 //			DumpDiagnostics(tu);
