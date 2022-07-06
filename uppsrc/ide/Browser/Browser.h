@@ -4,6 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <CppBase/CppBase.h>
 #include <ide/Common/Common.h>
+#include <ide/clang/clang.h>
 #include <RichEdit/RichEdit.h>
 #include <PdfDraw/PdfDraw.h>
 
@@ -87,29 +88,6 @@ struct CppItemInfo : CppItem {
 	CppItemInfo() { over = overed = virt = false; inherited = line = 0; }
 };
 
-enum {
-	ITEM_TEXT,
-	ITEM_NAME,
-	ITEM_CPP_TYPE,
-	ITEM_CPP,
-	ITEM_PNAME,
-	ITEM_TNAME,
-	ITEM_NUMBER,
-	ITEM_SIGN,
-	ITEM_UPP,
-	ITEM_TYPE,
-	
-	ITEM_PTYPE = ITEM_TYPE + 10000,
-};
-
-struct ItemTextPart : Moveable<ItemTextPart> {
-	int pos;
-	int len;
-	int type;
-	int ii;
-	int pari;
-};
-
 Vector<ItemTextPart> ParseItemNatural(const String& name, const String& natural, const String& ptype,
                                       const String& pname, const String& type, const String& tname,
                                       const String& ctname, const char *s);
@@ -118,13 +96,6 @@ Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 
 int GetItemHeight(const CppItem& m, int cx);
-
-enum AdditionalKinds {
-	KIND_INCLUDEFILE = -1000,
-	KIND_INCLUDEFILE_ANY,
-	KIND_INCLUDEFOLDER,
-	KIND_COMPLETE,
-};
 
 void PaintText(Draw& w, int& x, int y, const char *text,
                const Vector<ItemTextPart>& n, int starti, int count, bool focuscursor,
@@ -205,8 +176,7 @@ void            SyncTopicFile(const String& link);
 String          GetTopicTitle(const String& link);
 void            InvalidateTopicInfoPath(const String& path);
 
-bool LegacyRef(String& ref);
-
+Vector<String>  AnnotationCandidates(const String& ref);
 Vector<String>  GetRefLinks(const String& ref);
 
 int             TopicWordIndex(const String& w);

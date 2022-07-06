@@ -1,5 +1,9 @@
 #include "clang.h"
 
+#include <cxxabi.h>
+
+#define LLOG(x)
+
 Semaphore                              current_file_event;
 CurrentFileContext                     current_file;
 bool                                   do_autocomplete;
@@ -15,6 +19,26 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 	CXSourceLocation cxlocation = clang_getCursorLocation(cursor);
 	bool valid = clang_Location_isFromMainFile(cxlocation);
 
+
+	// TODO: change this for MT
+	static CXPrintingPolicy pp_id = clang_getCursorPrintingPolicy(cursor);
+	ONCELOCK {
+		for(int i = 0; i <= CXPrintingPolicy_LastProperty; i++)
+			clang_PrintingPolicy_setProperty(pp_id, (CXPrintingPolicyProperty)i, 0);
+		
+		for(CXPrintingPolicyProperty p : {
+				CXPrintingPolicy_SuppressSpecifiers,
+				CXPrintingPolicy_SuppressTagKeyword,
+				CXPrintingPolicy_SuppressUnwrittenScope,
+				CXPrintingPolicy_SuppressInitializers,
+				CXPrintingPolicy_SuppressStrongLifetime,
+				CXPrintingPolicy_SuppressLifetimeQualifiers,
+				CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors,
+				CXPrintingPolicy_TerseOutput,
+				CXPrintingPolicy_SuppressImplicitBase,
+				CXPrintingPolicy_FullyQualifiedName })
+		clang_PrintingPolicy_setProperty(pp_id, p, 1);
+	};
 	
 	if(valid) {
 		String m;
@@ -25,8 +49,21 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 	
 		String name = GetCursorSpelling(cursor);
 		String type = GetTypeSpelling(cursor);
-		String display = FetchString(clang_getCursorDisplayName(cursor));
+		String id = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
 		String scope = GetTypeSpelling(parent);
+		if(scope.GetCount() == 0) { // type is fully qualified, otherwise scan up for namespaces
+			CXCursor p = parent;
+			for(;;) {
+				CXCursorKind k = clang_getCursorKind(p);
+				if(findarg(k, CXCursor_Namespace, CXCursor_ClassTemplate) < 0)
+					break;
+				String q = GetCursorSpelling(p);
+				if(scope.GetCount())
+					q << "::" << scope;
+				scope = q;
+				p = clang_getCursorSemanticParent(p);
+			}
+		}
 		int q = scope.Find('('); // 'Struct::(unnamed enum at C:\u\upp.src\upptst\Annotations\main.cpp:47:2)'
 		if(q >= 0)
 			scope.Trim(q);
@@ -34,69 +71,98 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 			scope << "::";
 
 		auto Dump = [&] {
-			#if 1
+				SourceLocation location(cxlocation);
 				LOG("=====================");
-				DDUMP((int)cursorKind);
+//				DDUMP(location);
+//				DDUMP((int)cursorKind);
 				DDUMP(GetCursorKindName(cursorKind));
 				DDUMP(name);
 				DDUMP(type);
-				DDUMP(display);
+				DDUMP(id);
+				DDUMP(CleanupId(id));
 				DDUMP(scope);
 				DDUMP(clang_isCursorDefinition(cursor));
+			#if 0
 				static CXPrintingPolicy pp = clang_getCursorPrintingPolicy(cursor);
-				clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_TerseOutput, 1);
-				clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_SuppressScope, 1);
-				DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
-				DDUMP(GetCursorKindName(parentKind));
-				DDUMP(GetCursorSpelling(parent));
-				DDUMP(GetTypeSpelling(parent));
-	//			DDUMP(location);
+				ONCELOCK {
+					for(int i = 0; i <= CXPrintingPolicy_LastProperty; i++)
+						clang_PrintingPolicy_setProperty(pp, (CXPrintingPolicyProperty)i, 0);
+					
+					for(CXPrintingPolicyProperty p : {
+							CXPrintingPolicy_SuppressSpecifiers,
+							CXPrintingPolicy_SuppressTagKeyword,
+//							CXPrintingPolicy_IncludeTagDefinition,
+//							CXPrintingPolicy_SuppressScope,
+							CXPrintingPolicy_SuppressUnwrittenScope,
+							CXPrintingPolicy_SuppressInitializers,
+//							CXPrintingPolicy_ConstantArraySizeAsWritten,
+//							CXPrintingPolicy_AnonymousTagLocations,
+							CXPrintingPolicy_SuppressStrongLifetime,
+							CXPrintingPolicy_SuppressLifetimeQualifiers,
+							CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors,
+//							CXPrintingPolicy_Bool,
+//							CXPrintingPolicy_Restrict,
+//							CXPrintingPolicy_Alignof,
+//							CXPrintingPolicy_UnderscoreAlignof,
+//							CXPrintingPolicy_UseVoidForZeroParams,
+							CXPrintingPolicy_TerseOutput,
+//							CXPrintingPolicy_PolishForDeclaration,
+//							CXPrintingPolicy_Half,
+//							CXPrintingPolicy_MSWChar,
+//							CXPrintingPolicy_IncludeNewlines,
+//							CXPrintingPolicy_MSVCFormatting,
+//							CXPrintingPolicy_ConstantsAsWritten,
+							CXPrintingPolicy_SuppressImplicitBase,
+							CXPrintingPolicy_FullyQualifiedName })
+					clang_PrintingPolicy_setProperty(pp, p, 1);
+				};
+				{
+//					DTIMING("PrettyPrinting");
+//					DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
+				}
+//				DDUMP(FetchString(clang_Cursor_getMangling(cursor)));
+//				DDUMP(CxxDemangle(FetchString(clang_Cursor_getMangling(cursor))));
+//				DDUMP(GetCursorKindName(parentKind));
+//				DDUMP(GetCursorSpelling(parent));
+//				DDUMP(GetTypeSpelling(parent));
 			#endif
 		};
-		
-		Dump();
+
+//		Dump();
 
 		switch(cursorKind) {
-		case CXCursor_VarDecl:
-			if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod) >= 0) {
-				valid = false;
-				break;
-			}
-		case CXCursor_FieldDecl:
-		case CXCursor_CXXMethod:
-			m << scope << display;
-			break;
 		case CXCursor_StructDecl:
-			m = type << "::struct";
-			break;
 		case CXCursor_UnionDecl:
-			m = type << "::union";
-			break;
-		case CXCursor_ClassTemplate:
-			Dump();
 		case CXCursor_ClassDecl:
-			m = type << "::class";
-			break;
 		case CXCursor_FunctionTemplate:
 		case CXCursor_FunctionDecl:
-			m = display;
-			break;
 		case CXCursor_Constructor:
 		case CXCursor_Destructor:
-			m << scope << display;
+		case CXCursor_CXXMethod:
+			m = id;
+			break;
+		case CXCursor_VarDecl:
+			if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod) >= 0) {
+				valid = false; // local variable
+				break;
+			}
+		case CXCursor_ClassTemplate:
+		case CXCursor_FieldDecl:
+			m << scope << name;
+			break;
+		case CXCursor_ConversionFunction:
+			m = "operator " + type;
 			break;
 		case CXCursor_MacroDefinition:
 			m = name;
 			break;
 		case CXCursor_EnumConstantDecl:
-			Dump();
 			m << scope << name;
 			break;
 		case CXCursor_EnumDecl:
 //		case CXCursor_ParmDecl:
 		case CXCursor_TypedefDecl:
 		case CXCursor_Namespace:
-		case CXCursor_ConversionFunction:
 		case CXCursor_UnexposedDecl:
 //		case CXCursor_NamespaceAlias:
 			break;
@@ -114,24 +180,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 				clang_getExpansionLocation(cxlocation, &file, &line_, &column_, &offset_);
 				AnnotationItem& r = static_cast<Vector<AnnotationItem> *>(clientData)->Add();
 				r.line = line_;
-				const char *s = m;
-				StringBuffer mm;
-				while(*s) {
-					if(iscid(*s)) {
-						while(iscid(*s))
-							mm.Cat(*s++);
-						while(*s == ' ')
-							s++;
-						if(iscid(*s))
-							mm.Cat(' ');
-					}
-					else
-					if(*s == ' ')
-						s++; // filter out spaces that are not necessary
-					else
-						mm.Cat(*s++);
-				}
-				r.item = mm;
+				r.id = CleanupId(m);
 				static CXPrintingPolicy pp;
 				ONCELOCK {
 					pp = clang_getCursorPrintingPolicy(cursor);
@@ -140,9 +189,10 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 					clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_TerseOutput, 1);
 					clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_SuppressScope, 1);
 				}
-				r.pretty = FetchString(clang_getCursorPrettyPrinted(cursor, pp));
+				r.pretty = CleanupSignature(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
+				DDUMP(r.id);
+				DDUMP(r.pretty);
 			}
-//			DLOG(">> " << GetCursorKindName(cursorKind) << ": " << m);
 		}
 	}
 	clang_visitChildren(cursor, current_file_visitor, clientData);
@@ -182,15 +232,19 @@ void CurrentFileThread()
 
 	auto DisposeTU = [&] {
 		if(tu) clang_disposeTranslationUnit(tu);
+		if(tu) DLOG("DisposeTU" << tu);
 		tu = nullptr;
 	};
 
 	auto DoAnnotations = [&] {
 		if(!tu || !annotations_done) return;
 		Vector<AnnotationItem> item;
+		DLOG("DoAnnotations " << tu);
 		clang_visitChildren(clang_getTranslationUnitCursor(tu), current_file_visitor, &item);
 		Ctrl::Call([&] {
-			if(parsed_file.filename == current_file.filename && parsed_file.includes == current_file.includes)
+			if(parsed_file.filename == current_file.filename &&
+			   parsed_file.real_filename == current_file.real_filename &&
+			   parsed_file.includes == current_file.includes)
 				annotations_done(item);
 			do_annotations = false;
 		});
@@ -210,8 +264,10 @@ void CurrentFileThread()
 		String fn = f.filename;
 		if(!IsSourceFile(fn))
 			fn.Cat(".cpp");
-		if(f.filename != parsed_file.filename || f.includes != parsed_file.includes || !tu) {
+		if(f.filename != parsed_file.filename || f.includes != parsed_file.includes ||
+		   f.real_filename != parsed_file.real_filename || !tu) {
 			parsed_file = f;
+			DDUMP(f.real_filename);
 			DisposeTU();
 			String cmdline;
 			cmdline << fn << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
@@ -230,13 +286,14 @@ void CurrentFileThread()
 			           CXTranslationUnit_KeepGoing|
 			           CXTranslationUnit_RetainExcludedConditionalBlocks);
 			#endif
+			DLOG("Parsed " << f.real_filename << " " << tu);
 			DoAnnotations();
 			annotations_do = false;
 //			DumpDiagnostics(tu);
 		}
 		if(Thread::IsShutdownThreads()) break;
+		CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
 		if(autocomplete_do && tu) {
-			CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
 			CXCodeCompleteResults *results;
 			{
 				TIMESTOP("clang_codeCompleteAt");
@@ -272,10 +329,13 @@ void CurrentFileThread()
 			GuiLock __;
 			do_autocomplete = false;
 		}
+		if(Thread::IsShutdownThreads()) break;
 		if(annotations_do && tu) {
 			TIMESTOP("ReParse");
-			clang_reparseTranslationUnit(tu, 0, nullptr, 0);
-			DoAnnotations();
+			if(clang_reparseTranslationUnit(tu, 1, &ufile, 0))
+				DisposeTU();
+			else
+				DoAnnotations();
 		}
 		current_file_event.Wait(500);
 	}
@@ -285,7 +345,7 @@ void CurrentFileThread()
 void StartCurrentFileParserThread()
 {
 	MemoryIgnoreNonMainLeaks();
-	MemoryIgnoreNonUppThreadsLeaks(); // Linux drivers leak memory in threads
+	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 	Thread::StartNice([] { CurrentFileThread(); });
 }
 

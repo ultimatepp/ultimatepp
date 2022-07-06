@@ -1,4 +1,4 @@
-#include "clang.h"
+#include <ide/ide.h>
 
 Image CxxIcon(int kind)
 {

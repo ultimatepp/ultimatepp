@@ -2,6 +2,97 @@
 
 #define LTIMING(x)
 
+bool IsSourceFile(const String& path)
+{
+	String ext = ToLower(GetFileExt(path));
+	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp", ".c") >= 0;
+}
+
+bool IsCppKeyword(const String& id);
+bool IsCppType(const String& id);
+
+static bool sOperatorTab[256];
+
+INITBLOCK {
+	for(const char *s = "!+-*^/%~&|=[]:?."; *s; s++)
+		sOperatorTab[(int)*s] = true;
+}
+
+bool IsBasicType(const String& id)
+{
+	static Index<String> kt = { "__int16", "__int32", "__int64", "__int8", "auto", "char",
+	                            "char8_t", "char16_t", "char32_t", "double", "float", "int",
+	                            "long", "short", "unsigned", "void", "wchar_t" };
+	return kt.Find(id) >= 0;
+}
+
+bool IsIgnored(const String& id)
+{
+	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "template" };
+	return kt.Find(id) >= 0;
+}
+
+String CleanupId(const char *s)
+{ // removes unnecessary spaces, removes parameter names
+	DTIMING("CleanupId");
+	StringBuffer mm;
+	bool was_param_type = false;
+	bool was_id = false;
+	bool was_space = false;
+	bool was_name = false;
+	bool function = false;
+	while(*s && *s != '{') {
+		if(iscid(*s)) {
+			StringBuffer idb;
+			while(iscid(*s) || *s == ':')
+				idb.Cat(*s++);
+			String id = idb;
+			if((*s == ',' || *s == ')') && was_param_type) {
+				was_param_type = false;
+				continue;
+			}
+			if(IsIgnored(id))
+				continue;
+			if(function && IsBasicType(id) || !IsCppKeyword(id)) // TODO optimize this (IsCppKeywordNoType)
+				was_param_type = true;
+			if(was_id)
+				mm.Cat(' ');
+			mm.Cat(id);
+			was_id = true;
+			was_name = true;
+		}
+		else
+		if(*s == ' ') { // filter out spaces that are not necessary
+			was_space = true;
+			s++;
+		}
+		else
+		if(*s == '<' && !function) { // remove template stuff before params, e.g. Buffer<T>();
+			int lvl = 1;
+			s++;
+			while(*s && lvl) {
+				if(*s == '>')
+					lvl--;
+				if(*s == '<')
+					lvl++;
+				s++;
+			}
+		}
+		else {
+			was_id = was_space = false;
+			if(*s == '(') {
+				function = true;
+				was_param_type = false;
+			}
+			if((*s == '*' || *s == '&') && !was_name) // skip *& before parameter list
+				s++;
+			else
+				mm.Cat(*s++);
+		}
+	}
+	return mm;
+}
+
 String CleanupSignature(const String& signature)
 {
 	LTIMING("CleanupSignature");
@@ -50,30 +141,6 @@ String CleanupSignature(const String& signature)
 		else
 			result.Cat(*s++);
 	return result;
-}
-
-bool IsSourceFile(const String& path)
-{
-	String ext = ToLower(GetFileExt(path));
-	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
-}
-
-bool IsCppKeyword(const String& id);
-bool IsCppType(const String& id);
-
-static bool sOperatorTab[256];
-
-INITBLOCK {
-	for(const char *s = "!+-*^/%~&|=[]:?."; *s; s++)
-		sOperatorTab[(int)*s] = true;
-}
-
-bool IsBasicType(const String& id)
-{
-	static Index<String> kt = { "__int16", "__int32", "__int64", "__int8", "auto", "char",
-	                            "char8_t", "char16_t", "char32_t", "double", "float", "int",
-	                            "long", "short", "unsigned", "void", "wchar_t" };
-	return kt.Find(id) >= 0;
 }
 
 Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info)

@@ -97,8 +97,10 @@ void AssistEditor::SyncAnnotationPopup()
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		RichText result;
-		String cr = coderef;
-		for(int pass = 0; pass < 2; pass++) {
+	#ifdef _DEBUG
+		result = ParseQTF("[A1 [@b* " + DeQtf(coderef) + "]&");
+	#endif
+		for(String cr : AnnotationCandidates(coderef)) {
 			for(int i = 0; i < topic_text.GetPartCount(); i++)
 				if(topic_text.IsTable(i)) {
 					const RichTable& t = topic_text.GetTable(i);
@@ -107,7 +109,7 @@ void AssistEditor::SyncAnnotationPopup()
 						for(int x = 0; x < sz.cx; x++) {
 							const RichTxt& txt = t.Get(y, x);
 							for(int i = 0; i < txt.GetPartCount(); i++) {
-								if(txt.IsPara(i) && txt.Get(i, topic_text.GetStyles()).format.label == cr) {
+								if(txt.IsPara(i) && CleanupId(txt.Get(i, topic_text.GetStyles()).format.label) == cr) {
 									RichTable r(t, 1);
 									result.CatPick(pick(r));
 									goto done;
@@ -116,7 +118,7 @@ void AssistEditor::SyncAnnotationPopup()
 						}
 				}
 				else
-				if(IsCodeItem(topic_text, i) && topic_text.Get(i).format.label == cr) {
+				if(IsCodeItem(topic_text, i) && CleanupId(topic_text.Get(i).format.label) == cr) {
 					while(i > 0 && IsCodeItem(topic_text, i)) i--;
 					if(!IsCodeItem(topic_text, i)) i++;
 					while(IsCodeItem(topic_text, i))
@@ -130,11 +132,8 @@ void AssistEditor::SyncAnnotationPopup()
 							result.CatPick(pick(table));
 						}
 					}
-					pass = 2;
-					break;
+					goto done;
 				}
-			if(pass == 0 && !LegacyRef(cr))
-				break;
 		}
 	done:
 		result.SetStyles(topic_text.GetStyles());
@@ -192,14 +191,15 @@ void AssistEditor::EditAnnotation(bool leftclick)
 		auto GoToTopic = [&] (int i) {
 			if(theide) {
 				theide->ShowTopics();
-				if(!theide->doc.GoTo(tl[i] + '#' + coderef) && LegacyRef(coderef))
-					theide->doc.GoTo(tl[i] + '#' + coderef);
+				for(String cr : AnnotationCandidates(coderef))
+					if(theide->doc.GoTo(tl[i] + '#' + cr))
+						break;
 			}
 		};
 		if(tl.GetCount() > 1) {
 			MenuBar bar;
 			for(int i = 0; i < tl.GetCount(); i++)
-				bar.Add(tl[i], [&] { GoToTopic(i); });
+				bar.Add(tl[i], [=] { GoToTopic(i); });
 			bar.Execute();
 			return;
 		}

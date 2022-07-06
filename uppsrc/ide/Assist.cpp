@@ -436,52 +436,21 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-const char *it_namespace = "___it_namespace_";
+String it_namespace = "___it_namespace_"; // fake namespace to allow .h file in libclang
+String it_namespace_n = it_namespace + "::";
 
-bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta)
-{ // create pseudo source file for autocomplete in include file
-	for(int i = 0; i < pk.file.GetCount(); i++) {
-		String path = SourcePath(pk_name, pk.file[i]);
-		if(!PathIsEqual(cfx.filename, path) && IsSourceFile(path)) {
-			if(FindIndex(HdependGetDependencies(path), cfx.filename) >= 0 && GetFileLength(path) < 200000) {
-				String r;
-				int last = 0;
-				int last_ln = 0;
-				int line = 0;
-				FileIn in(path);
-				while(!in.IsEof()) {
-					String l = in.GetLine();
-					r << l << "\n";
-					line++;
-					if(TrimLeft(l).StartsWith("#include")) {
-						last = r.GetCount();
-						last_ln = line;
-					}
-				}
-				r.Trim(last);
-				r << "namespace " << it_namespace << " {\n";
-				StringStream in2(cfx.content);
-				while(!in2.IsEof()) {
-					String l = in2.GetLine();
-					if(TrimLeft(l).StartsWith("#include"))
-						l.Clear();
-					r << l << "\n";
-				}
-				
-				cfx.content = r;
-				line_delta = last_ln + 1;
-				cfx.filename = path;
-				return true;
-			}
-		}
-	}
-	return false;
+void FixItNamespace(String& m)
+{
+	m.Replace(it_namespace_n, "");
+	m.Replace(it_namespace, "");
 }
+
+bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta);
 
 CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 {
 	CurrentFileContext cfx;
-	cfx.filename = theide->editfile;
+	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetIncludePath();
 	line_delta = 0;
 	if(!IsView() && GetLength() < 200000) {
@@ -515,11 +484,19 @@ void AssistEditor::SyncCurrentFile()
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	if(cfx.content.GetCount())
 		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations) {
-			for(const auto& m : annotations)
-				SetAnnotation(m.line - 1,
-				              GetRefLinks(m.item).GetCount() ? IdeImg::tpp_doc()
-				                                       : IdeImg::tpp_pen(),
-				              m.item);
+			ClearAnnotations();
+			for(auto& m : annotations) {
+				int l = m.line - line_delta - 1;
+				if(l >= 0) {
+					String mm = m.id;
+					if(line_delta)
+						FixItNamespace(mm);
+					SetAnnotation(l,
+					              GetRefLinks(mm).GetCount() ? IdeImg::tpp_doc()
+					                                         : IdeImg::tpp_pen(),
+					              mm);
+				}
+			}
 		});
 }
 
@@ -547,12 +524,8 @@ void AssistEditor::Assist(bool macros)
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;
 				if(line_delta) { // we are using pseudo source for include with typename trick
-					static const String itr = it_namespace;
-					static const String itrn = itr + "::";
-					f.parent.Replace(itrn, "");
-					f.parent.Replace(itr, "");
-					f.signature.Replace(itrn, "");
-					f.signature.Replace(itr, "");
+					FixItNamespace(f.parent);
+					FixItNamespace(f.signature);
 				}
 				f.uname = ToUpper(f.name);
 				f.typei = assist_type.FindAdd(f.parent);

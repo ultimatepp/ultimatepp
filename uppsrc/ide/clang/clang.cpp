@@ -102,8 +102,6 @@ CXTranslationUnit Clang(const String& cmdline_, Vector<Tuple2<String, String>> f
 
 	cmdline << RedefineMacros();
 
-	DDUMP(cmdline);
- 
 	Vector<String> sa = Split(cmdline, ' ');
 	
 	Buffer<const char *> argv(sa.GetCount());

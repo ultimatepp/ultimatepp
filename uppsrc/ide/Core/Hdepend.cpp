@@ -24,7 +24,7 @@ String FindIncludeFile(const char *s, const String& filedir, const Vector<String
 				for(int i = 0; i < incdir.GetCount(); i++) {
 					String fn = CatAnyPath(incdir[i], name);
 					if(FileExists(fn))
-						return fn;
+						return NormalizePath(fn);
 				}
 				break;
 			}
@@ -124,12 +124,14 @@ static const char *SkipComment(const char *s) {
 
 void Hdepend::ScanFile(const String& path, int map_index) {
 	Info& info = map[map_index];
-	String src = LoadFile(path);
+	String src;
+	if(GetFileLength(path) < 10000000)
+		src = LoadFile(path);
 	const char *term = src;
 	info.depend.Clear();
 	info.bydefine.Clear();
-	info.macroinclude.Clear();;
-	info.define.Clear();;
+	info.macroinclude.Clear();
+	info.define.Clear();
 	info.guarded = false;
 	info.blitzprohibit = false;
 	String filedir = GetFileDirectory(path);

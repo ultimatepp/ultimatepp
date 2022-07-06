@@ -358,11 +358,9 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 {
 	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
-		if(!editor.GotoLabel(link)) {
-			String l = link;
-			LegacyRef(l);
-			editor.GotoLabel(l);
-		}
+		for(String cr : AnnotationCandidates(link))
+			if(editor.GotoLabel(link))
+				break;
 		if(!IsNull(create)) {
 			if(!before)
 				for(int pass = 0; pass < 2; pass++)
