@@ -359,7 +359,7 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
 		for(String cr : AnnotationCandidates(link))
-			if(editor.GotoLabel(link))
+			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupId(id.ToString()); }))
 				break;
 		if(!IsNull(create)) {
 			if(!before)

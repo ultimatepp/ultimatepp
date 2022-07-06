@@ -33,7 +33,7 @@ enum AdditionalKinds {
 	KIND_COMPLETE,
 };
 
-Image CxxIcon(int kind);
+Image CxxIcon(int kind); // TODO: Move here
 String SignatureQtf(const String& name, const String& signature, int pari);
 
 enum {

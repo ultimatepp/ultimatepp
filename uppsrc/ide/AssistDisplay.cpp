@@ -1,6 +1,31 @@
 #include "ide.h"
 
-Image CxxIcon(int kind);
+Image CxxIcon(int kind)
+{
+	switch(kind) {
+	case CXCursor_CXXMethod: return BrowserImg::instance_function();
+	case CXCursor_Destructor: return BrowserImg::destructor();
+	case CXCursor_EnumConstantDecl: return BrowserImg::type_enum();
+	case CXCursor_ClassDecl: return BrowserImg::type_struct();
+	case CXCursor_StructDecl: return BrowserImg::type_struct();
+	case CXCursor_FunctionTemplate: return BrowserImg::template_function();
+	case CXCursor_ConversionFunction: return BrowserImg::function();
+	case CXCursor_FieldDecl: return BrowserImg::instance_data();
+	case CXCursor_VarDecl: return BrowserImg::data();
+	case CXCursor_TypedefDecl: return BrowserImg::type_def();
+	case CXCursor_FunctionDecl: return BrowserImg::function();
+	case CXCursor_Constructor: return BrowserImg::constructor();
+	case CXCursor_EnumDecl: return BrowserImg::type_enum();
+	case CXCursor_UnionDecl: return BrowserImg::type_struct();
+	case CXCursor_TypeAliasDecl: return BrowserImg::type_def();
+	case CXCursor_TypeAliasTemplateDecl: return BrowserImg::type_def();
+	case CXCursor_MacroDefinition: return BrowserImg::macro();
+	case KIND_INCLUDEFILE: return IdeCommonImg::Header();
+	case KIND_INCLUDEFILE_ANY: return CtrlImg::File();
+	case KIND_INCLUDEFOLDER: return CtrlImg::Dir();
+	}
+	return BrowserImg::unknown();
+}
 
 void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {

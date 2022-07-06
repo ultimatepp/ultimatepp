@@ -190,6 +190,12 @@ void AssistEditor::EditAnnotation(bool leftclick)
 	if(leftclick) {
 		auto GoToTopic = [&] (int i) {
 			if(theide) {
+				theide->doc.WhenMatchLabel = [](const WString& lbl, const WString& ref) {
+					DDUMP(lbl.ToString());
+					DDUMP(CleanupId(lbl.ToString()));
+					DDUMP(ref.ToString());
+					return CleanupId(lbl.ToString()) == ref.ToString();
+				};
 				theide->ShowTopics();
 				for(String cr : AnnotationCandidates(coderef))
 					if(theide->doc.GoTo(tl[i] + '#' + cr))

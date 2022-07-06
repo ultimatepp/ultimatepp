@@ -1,11 +1,11 @@
 #ifndef IDE_H
 #define IDE_H
 
+#include <RichEdit/RichEdit.h>
+
 #include <ide/Common/Common.h>
 
 #include <ide/clang/clang.h>
-
-#include <RichEdit/RichEdit.h>
 
 #include <Report/Report.h>
 

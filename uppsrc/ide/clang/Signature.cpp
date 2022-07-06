@@ -34,13 +34,15 @@ bool IsIgnored(const String& id)
 
 String CleanupId(const char *s)
 { // removes unnecessary spaces, removes parameter names
-	DTIMING("CleanupId");
 	StringBuffer mm;
 	bool was_param_type = false;
 	bool was_id = false;
 	bool was_space = false;
 	bool was_name = false;
 	bool function = false;
+	static String operator_id1 = "operator";
+	static String operator_id2 = ":operator";
+	bool operator_def = false; // between operator and ( - suppress < > handling
 	while(*s && *s != '{') {
 		if(iscid(*s)) {
 			StringBuffer idb;
@@ -53,6 +55,16 @@ String CleanupId(const char *s)
 			}
 			if(IsIgnored(id))
 				continue;
+			auto IsOperator = [](const char *s) {
+				return s[0] == 'o' && s[1] == 'p' && s[2] == 'e' && s[3] == 'r' &&
+				       s[4] == 'a' && s[5] == 't' && s[6] == 'o' && s[7] == 'r';
+			};
+			if(id.GetCount() == 8 && IsOperator(id))
+				operator_def = true;
+			if(id.GetCount() > 8) {
+				const char *s = ~id + id.GetCount() - 8;
+				operator_def = IsOperator(s) && !iscid(s[-1]);
+			}
 			if(function && IsBasicType(id) || !IsCppKeyword(id)) // TODO optimize this (IsCppKeywordNoType)
 				was_param_type = true;
 			if(was_id)
@@ -67,7 +79,8 @@ String CleanupId(const char *s)
 			s++;
 		}
 		else
-		if(*s == '<' && !function) { // remove template stuff before params, e.g. Buffer<T>();
+		if(*s == '<' && !function && !operator_def) { // remove template stuff before params, e.g. Buffer<T>();
+			DDUMP(operator_def);
 			int lvl = 1;
 			s++;
 			while(*s && lvl) {
@@ -83,6 +96,7 @@ String CleanupId(const char *s)
 			if(*s == '(') {
 				function = true;
 				was_param_type = false;
+				operator_def = false;
 			}
 			if((*s == '*' || *s == '&') && !was_name) // skip *& before parameter list
 				s++;

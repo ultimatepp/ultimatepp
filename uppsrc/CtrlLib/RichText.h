@@ -75,6 +75,7 @@ public:
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;
 
+	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false);
 	bool            GotoLabel(const String& lbl, bool highlight = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
 
@@ -318,6 +319,8 @@ public:
 	virtual Topic AcquireTopic(const String& topic);
 	virtual void  FinishText(RichText& text);
 	virtual void  BarEx(Bar& bar);
+	
+	Gate<const WString&, const WString&> WhenMatchLabel;
 
 	bool GoTo(const String& link);
 
