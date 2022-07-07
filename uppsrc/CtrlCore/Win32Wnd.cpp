@@ -463,6 +463,23 @@ UDropTarget *NewUDropTarget(Ctrl *);
 
 String WindowStyleAsString(dword style, dword exstyle);
 
+void Ctrl::UseImmersiveDarkModeForWindowBorder()
+{
+	static HRESULT (WINAPI *DwmSetWindowAttribute)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
+	ONCELOCK {
+		DllFn(DwmSetWindowAttribute, "dwmapi.dll", "DwmSetWindowAttribute");
+	}
+	if (!DwmSetWindowAttribute) {
+		return;
+	}
+	const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+	
+	BOOL useDarkTheme = IsDarkTheme();
+	DwmSetWindowAttribute(
+		utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
+		&useDarkTheme, sizeof(useDarkTheme));
+}
+
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
 	GuiLock __;
@@ -486,9 +503,12 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	inloop = false;
 
 	ASSERT(top->hwnd);
+	
+	UseImmersiveDarkModeForWindowBorder();
+	
 	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
 	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
-//	::UpdateWindow(hwnd);
+	
 	StateH(OPEN);
 	LLOG(LOG_END << "//Ctrl::Create in " <<UPP::Name(this));
 	RegisterDragDrop(top->hwnd, (LPDROPTARGET) (top->dndtgt = NewUDropTarget(this)));
