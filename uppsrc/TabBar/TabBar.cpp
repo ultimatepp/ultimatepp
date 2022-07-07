@@ -2629,7 +2629,7 @@ TabBar::Style& TabBar::Style::Variant1Crosses()
 	crosses[0] = TabBarImg::VARIANT1_CR0();
 	crosses[1] = TabBarImg::VARIANT1_CR1();
 	crosses[2] = TabBarImg::VARIANT1_CR2();
-	return *this;	
+	return *this;
 }
 
 TabBar::Style& TabBar::Style::Variant2Crosses()
@@ -2637,7 +2637,15 @@ TabBar::Style& TabBar::Style::Variant2Crosses()
 	crosses[0] = TabBarImg::VARIANT2_CR0();
 	crosses[1] = TabBarImg::VARIANT2_CR1();
 	crosses[2] = TabBarImg::VARIANT2_CR2();
-	return *this;	
+	return *this;
+}
+
+TabBar::Style& TabBar::Style::Variant3Crosses()
+{
+	crosses[0] = TabBarImg::VARIANT3_CR0();
+	crosses[1] = TabBarImg::VARIANT3_CR1();
+	crosses[2] = TabBarImg::VARIANT3_CR2();
+	return *this;
 }
 
 TabBar::Style& TabBar::Style::GroupSeparators(Value horz, Value vert)
@@ -2767,7 +2775,7 @@ CH_STYLE(TabBar, Style, StyleDefault)
 	Assign(TabCtrl::StyleDefault());
 #ifdef PLATFORM_WIN32
 	if(IsWinVista())
-		Variant2Crosses();
+		Variant3Crosses();
 	else
 		DefaultCrosses();
 #else
