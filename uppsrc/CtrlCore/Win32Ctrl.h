@@ -15,6 +15,8 @@ private:
 	static void DoCancelPreedit();
 
 	void UpdateDHCtrls();
+	
+	void UseImmersiveDarkMode();
 
 public:
 	static Win32Event ExitLoopEvent;
