@@ -94,6 +94,7 @@ void AssistEditor::SyncAnnotationPopup()
 		static String   last_path;
 		static RichText topic_text;
 		String path = GetTopicPath(tl);
+		DUMP(path);
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		RichText result;
@@ -109,7 +110,7 @@ void AssistEditor::SyncAnnotationPopup()
 						for(int x = 0; x < sz.cx; x++) {
 							const RichTxt& txt = t.Get(y, x);
 							for(int i = 0; i < txt.GetPartCount(); i++) {
-								if(txt.IsPara(i) && CleanupId(txt.Get(i, topic_text.GetStyles()).format.label) == cr) {
+								if(txt.IsPara(i) && CleanupTppId(txt.Get(i, topic_text.GetStyles()).format.label) == cr) {
 									RichTable r(t, 1);
 									result.CatPick(pick(r));
 									goto done;
@@ -118,7 +119,7 @@ void AssistEditor::SyncAnnotationPopup()
 						}
 				}
 				else
-				if(IsCodeItem(topic_text, i) && CleanupId(topic_text.Get(i).format.label) == cr) {
+				if(IsCodeItem(topic_text, i) && CleanupTppId(topic_text.Get(i).format.label) == cr) {
 					while(i > 0 && IsCodeItem(topic_text, i)) i--;
 					if(!IsCodeItem(topic_text, i)) i++;
 					while(IsCodeItem(topic_text, i))
@@ -191,7 +192,7 @@ void AssistEditor::EditAnnotation(bool leftclick)
 		auto GoToTopic = [&] (int i) {
 			if(theide) {
 				theide->doc.WhenMatchLabel = [](const WString& lbl, const WString& ref) {
-					return CleanupId(lbl.ToString()) == ref.ToString();
+					return CleanupTppId(lbl.ToString()) == ref.ToString();
 				};
 				theide->ShowTopics();
 				for(String cr : AnnotationCandidates(coderef))

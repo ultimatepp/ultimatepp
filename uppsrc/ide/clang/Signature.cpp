@@ -97,6 +97,8 @@ String CleanupId(const char *s)
 				was_param_type = false;
 				operator_def = false;
 			}
+			if(*s == ',')
+				was_param_type = false;
 			if((*s == '*' || *s == '&') && !was_name) // skip *& before parameter list
 				s++;
 			else

@@ -176,6 +176,7 @@ void            SyncTopicFile(const String& link);
 String          GetTopicTitle(const String& link);
 void            InvalidateTopicInfoPath(const String& path);
 
+String          CleanupTppId(const String& ref);
 Vector<String>  AnnotationCandidates(const String& ref);
 Vector<String>  GetRefLinks(const String& ref);
 

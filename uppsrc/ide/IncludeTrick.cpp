@@ -18,9 +18,13 @@ bool DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String
 			if(ipath.GetCount()) {
 				if(NormalizePath(ipath) == NormalizePath(target_path))
 					return true;
+				int q = out.GetCount();
+				int qq = line_delta;
 				if(FindIndex(HdependGetDependencies(ipath), target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
 				   && DoIncludeTrick(visited, level + 1, out, ipath, target_path, line_delta))
 					return true;
+				out.SetCount(q);
+				line_delta = qq;
 				out << "#include <" << ipath << ">\n";
 				line_delta++;
 			}

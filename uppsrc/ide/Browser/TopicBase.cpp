@@ -43,13 +43,18 @@ VectorMap<String, TopicInfo>& topic_info()
 	return x;
 }
 
-void AddLinkRef(const String& link, const String& ref_)
+String CleanupTppId(const String& ref_)
 {
 	String ref = ref_;
-	ref.TrimEnd("::struct");
+	ref.TrimEnd("::struct"); // fix legacy format
 	ref.TrimEnd("::class");
 	ref.TrimEnd("::union");
-	ref = CleanupId(ref_);
+	return CleanupId(ref);
+}
+
+void AddLinkRef(const String& link, const String& ref_)
+{
+	String ref = CleanupTppId(ref_);
 	int q = ref_link().Put(link);
 	if(q < ref_ref().GetCount())
 		ref_ref().Set(q, ref);
@@ -243,23 +248,35 @@ void SyncRefs()
 }
 
 String LegacyRef(String ref)
-{
-	if(ref.StartsWith("Upp::")) { // Fix links with legacy docs
-		ref = ref.Mid(5);
-		ref.Replace(" Upp::", " ");
-		ref.Replace("(Upp::", "(");
-		ref.Replace(",Upp::", ",");
-		ref.Replace("<Upp::", "<");
-		ref.Replace("const Upp::", "const ");
-	}
+{ // Fix links with legacy docs
+	ref.TrimStart("Upp::");
+	ref.Replace(" Upp::", " ");
+	ref.Replace("(Upp::", "(");
+	ref.Replace(",Upp::", ",");
+	ref.Replace("<Upp::", "<");
+	ref.Replace("const Upp::", "const ");
 	return ref;
 }
 
 Vector<String> AnnotationCandidates(const String& ref)
-{ // This is potentially fix any bugs of previous code reference ids
+{ // Make older refs compatible
 	Index<String> l;
 	l.FindAdd(ref);
-	l.FindAdd(LegacyRef(ref));
+	String lr = LegacyRef(ref);
+	l.FindAdd(lr);
+	int lvl = 0;
+	StringBuffer h;
+	for(const char *s = lr; *s; s++) { // remove template arguments - Vector<T> -> Vector
+		if(*s == '<')
+			lvl++;
+		else
+		if(*s == '>')
+			lvl--;
+		else
+		if(lvl == 0)
+			h.Cat(*s);
+	}
+	l.FindAdd(h);
 	return l.PickKeys();
 }
 
