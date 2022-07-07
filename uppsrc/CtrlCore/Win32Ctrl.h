@@ -16,7 +16,7 @@ private:
 
 	void UpdateDHCtrls();
 	
-	void UseImmersiveDarkMode();
+	void UseImmersiveDarkModeForWindowBorder();
 
 public:
 	static Win32Event ExitLoopEvent;
