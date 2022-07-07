@@ -278,7 +278,7 @@ void CreateTopic(const char *fn, int lang, const String& ss)
 	SaveFile(fn,  WriteTopic("", ParseQTF(ss + "[{_}%" + LNGAsText(lang) + " ")));
 }
 
-bool TopicEditor::NewTopicEx(const String& iname, const String& create)
+bool TopicEditor::NewTopicEx(const String& iname, const AnnotationItem *create)
 {
 	TopicDlg<WithNewTopicLayout<TopWindow> > d("New topic");
 	d.lang <<= lastlang;
@@ -326,14 +326,14 @@ bool TopicEditor::NewTopicEx(const String& iname, const String& create)
 	topics_list.FindSetCursor(GetFileTitle(fn));
 	editor.SetFocus();
 	serial++;
-	if(create.GetCount())
-		InsertNew(create);
+	if(create)
+		InsertNew(*create);
 	return true;
 }
 
 void TopicEditor::NewTopic()
 {
-	NewTopicEx(Null, Null);
+	NewTopicEx(Null, nullptr);
 }
 
 void TopicEditor::RemoveTopic()

@@ -36,6 +36,9 @@ enum AdditionalKinds {
 Image CxxIcon(int kind); // TODO: Move here
 String SignatureQtf(const String& name, const String& signature, int pari);
 
+bool IsStruct(int kind);
+bool IsTemplate(int kind);
+
 enum {
 	ITEM_TEXT,
 	ITEM_NAME,
@@ -70,7 +73,9 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 };
 
 struct AnnotationItem : Moveable<AnnotationItem> {
+	int    kind;
 	int    line;
+	String name;
 	String id;
 	String pretty;
 };

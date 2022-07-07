@@ -972,7 +972,7 @@ public:
 		void  CheckCodeBase();
 		void  RescanCode();
 		void  QueryId();
-		void  OpenTopic(const String& topic, const String& createafter, bool before);
+		void  OpenTopic(const String& topic, const String& create_id, bool before);
 		void  OpenTopic(const String& topic);
 		void  OpenATopic();
 		void  ToggleNavigator();
