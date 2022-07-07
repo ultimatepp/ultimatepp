@@ -268,18 +268,12 @@ void CurrentFileThread()
 			cmdline << fn << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
 			for(String s : Split(f.includes, ';'))
 				cmdline << " -I" << s;
-			#ifdef PLATFORM_WIN32
 			tu = Clang(cmdline, { { ~fn, f.content } },
 			           CXTranslationUnit_DetailedPreprocessingRecord|
 			           CXTranslationUnit_PrecompiledPreamble|
 			           CXTranslationUnit_CreatePreambleOnFirstParse|
 			           CXTranslationUnit_KeepGoing|
 			           CXTranslationUnit_RetainExcludedConditionalBlocks);
-			#else
-			tu = Clang(cmdline, { { ~fn, f.content } },
-			           CXTranslationUnit_KeepGoing|
-			           CXTranslationUnit_RetainExcludedConditionalBlocks);
-			#endif
 			DoAnnotations();
 			annotations_do = false;
 //			DumpDiagnostics(tu);
