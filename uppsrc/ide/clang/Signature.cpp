@@ -2,22 +2,6 @@
 
 #define LTIMING(x)
 
-bool IsStruct(int kind)
-{
-	return findarg(kind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0;
-}
-
-bool IsTemplate(int kind)
-{
-	return findarg(kind, CXCursor_FunctionTemplate, CXCursor_ClassTemplate) >= 0;
-}
-
-bool IsSourceFile(const String& path)
-{
-	String ext = ToLower(GetFileExt(path));
-	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp", ".c") >= 0;
-}
-
 bool IsCppKeyword(const String& id);
 bool IsCppType(const String& id);
 
@@ -50,8 +34,8 @@ String CleanupId(const char *s)
 	bool was_space = false;
 	bool was_name = false;
 	bool function = false;
-	static String operator_id1 = "operator";
-	static String operator_id2 = ":operator";
+	bool destructor = false;
+	int name_pos = 0; // to filter out eventual return value of function
 	bool operator_def = false; // between operator and ( - suppress < > handling
 	while(*s && *s != '{') {
 		if(iscid(*s)) {
@@ -79,6 +63,7 @@ String CleanupId(const char *s)
 				was_param_type = true;
 			if(was_id)
 				mm.Cat(' ');
+			name_pos = mm.GetCount();
 			mm.Cat(id);
 			was_id = true;
 			was_name = true;
@@ -89,7 +74,7 @@ String CleanupId(const char *s)
 			s++;
 		}
 		else
-		if(*s == '<' && !function && !operator_def) { // remove template stuff before params, e.g. Buffer<T>();
+		if(*s == '<' && !operator_def) { // remove template stuff e.g. Buffer<T>(Vector<T>) -> Buffer(Vector);
 			int lvl = 1;
 			s++;
 			while(*s && lvl) {
@@ -102,10 +87,16 @@ String CleanupId(const char *s)
 		}
 		else {
 			was_id = was_space = false;
+			if(*s == '~' && !operator_def) // prevent culling of 'return value' in destructor
+				destructor = true;
 			if(*s == '(') {
 				function = true;
 				was_param_type = false;
 				operator_def = false;
+				if(name_pos && !destructor) {
+					String h = String(mm).Mid(name_pos);
+					mm = h;
+				}
 			}
 			if(*s == ',')
 				was_param_type = false;
@@ -118,12 +109,26 @@ String CleanupId(const char *s)
 	return mm;
 }
 
-String CleanupSignature(const String& signature)
+String CleanupPretty(const String& signature)
 {
-	LTIMING("CleanupSignature");
+	LTIMING("CleanupPretty");
 	StringBuffer result;
 	const char *s = signature;
 	while(*s)
+		if(iscib(*s)) {
+			const char *b = s;
+			while(iscid(*s))
+				s++;
+			int len = s - b;
+			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
+			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0)) {
+			   while(*s == ' ')
+			       s++;
+			   continue;
+			}
+			result.Cat(b, s);
+		}
+		else
 		if(s[0] == ' ' && s[1] == '*' && s[2] == ' ') {
 			result.Cat(' ');
 			result.Cat('*');

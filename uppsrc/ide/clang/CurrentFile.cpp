@@ -50,19 +50,18 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 		String name = GetCursorSpelling(cursor);
 		String type = GetTypeSpelling(cursor);
 		String id = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
-		String scope = GetTypeSpelling(parent);
-		if(scope.GetCount() == 0) { // type is fully qualified, otherwise scan up for namespaces
-			CXCursor p = parent;
-			for(;;) {
-				CXCursorKind k = clang_getCursorKind(p);
-				if(findarg(k, CXCursor_Namespace, CXCursor_ClassTemplate) < 0)
-					break;
-				String q = GetCursorSpelling(p);
-				if(scope.GetCount())
-					q << "::" << scope;
-				scope = q;
-				p = clang_getCursorSemanticParent(p);
-			}
+		CXCursor p = parent;
+		String scope;
+		String nspace;
+		for(;;) {
+			CXCursorKind k = clang_getCursorKind(p);
+			if(findarg(k, CXCursor_Namespace, CXCursor_ClassTemplate, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl) < 0)
+				break;
+			String q = GetCursorSpelling(p);
+			scope = scope.GetCount() ? q + "::" + scope : q;
+			if(k == CXCursor_Namespace)
+				nspace = nspace.GetCount() ? q + "::" + nspace : q;
+			p = clang_getCursorSemanticParent(p);
 		}
 		int q = scope.Find('('); // 'Struct::(unnamed enum at C:\u\upp.src\upptst\Annotations\main.cpp:47:2)'
 		if(q >= 0)
@@ -71,7 +70,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 			scope << "::";
 
 		auto Dump = [&] {
-			#if 0
+			#if 1
 				SourceLocation location(cxlocation);
 				LOG("=====================");
 //				DDUMP(location);
@@ -82,6 +81,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 				DDUMP(id);
 				DDUMP(CleanupId(id));
 				DDUMP(scope);
+				DDUMP(nspace);
 				DDUMP(clang_isCursorDefinition(cursor));
 				static CXPrintingPolicy pp = clang_getCursorPrintingPolicy(cursor);
 				ONCELOCK {
@@ -128,50 +128,52 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 			#endif
 		};
 
-//		Dump();
+		Dump();
 
-		switch(cursorKind) {
-		case CXCursor_StructDecl:
-		case CXCursor_UnionDecl:
-		case CXCursor_ClassDecl:
-		case CXCursor_FunctionTemplate:
-		case CXCursor_FunctionDecl:
-		case CXCursor_Constructor:
-		case CXCursor_Destructor:
-		case CXCursor_CXXMethod:
-			m = id;
-			break;
-		case CXCursor_VarDecl:
-			if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod) >= 0) {
-				valid = false; // local variable
+		bool external = false;
+		if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod,
+		                       CXCursor_Constructor, CXCursor_Destructor) >= 0)
+			valid = false; // local variable
+		else
+			switch(cursorKind) {
+			case CXCursor_StructDecl:
+			case CXCursor_UnionDecl:
+			case CXCursor_ClassDecl:
+			case CXCursor_FunctionTemplate:
+			case CXCursor_FunctionDecl:
+			case CXCursor_Constructor:
+			case CXCursor_Destructor:
+			case CXCursor_CXXMethod:
+				m = id;
+				break;
+			case CXCursor_VarDecl:
+				external = clang_Cursor_hasVarDeclExternalStorage(cursor);
+			case CXCursor_FieldDecl:
+			case CXCursor_ClassTemplate:
+				m << scope << name;
+				break;
+			case CXCursor_ConversionFunction:
+				m << scope << "operator " << type;
+				break;
+			case CXCursor_MacroDefinition:
+				m = name;
+				break;
+			case CXCursor_EnumConstantDecl:
+				m << scope << name;
+				break;
+			case CXCursor_EnumDecl:
+	//		case CXCursor_ParmDecl:
+			case CXCursor_TypedefDecl:
+			case CXCursor_Namespace:
+			case CXCursor_UnexposedDecl:
+	//		case CXCursor_NamespaceAlias:
+				break;
+			default:
+				valid = false;
 				break;
 			}
-		case CXCursor_ClassTemplate:
-		case CXCursor_FieldDecl:
-			m << scope << name;
-			break;
-		case CXCursor_ConversionFunction:
-			m << scope << "operator " << type;
-			break;
-		case CXCursor_MacroDefinition:
-			m = name;
-			break;
-		case CXCursor_EnumConstantDecl:
-			m << scope << name;
-			break;
-		case CXCursor_EnumDecl:
-//		case CXCursor_ParmDecl:
-		case CXCursor_TypedefDecl:
-		case CXCursor_Namespace:
-		case CXCursor_UnexposedDecl:
-//		case CXCursor_NamespaceAlias:
-			break;
-		default:
-			valid = false;
-			break;
-		}
 		if(valid) {
-			Dump();
+//			Dump();
 			if(m.GetCount()) {
 				CXFile file;
 				unsigned line_;
@@ -183,6 +185,9 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 				r.name = name;
 				r.line = line_;
 				r.id = CleanupId(m);
+				r.definition = clang_isCursorDefinition(cursor);
+				r.external = external;
+				r.nspace = nspace;
 				static CXPrintingPolicy pp;
 				ONCELOCK {
 					pp = clang_getCursorPrintingPolicy(cursor);
@@ -191,7 +196,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 					clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_TerseOutput, 1);
 					clang_PrintingPolicy_setProperty(pp, CXPrintingPolicy_SuppressScope, 1);
 				}
-				r.pretty = CleanupSignature(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
+				r.pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp)));
 			}
 		}
 	}
@@ -239,7 +244,9 @@ void CurrentFileThread()
 	auto DoAnnotations = [&] {
 		if(!tu || !annotations_done) return;
 		Vector<AnnotationItem> item;
+		{ TIMESTOP("DoAnnotations");
 		clang_visitChildren(clang_getTranslationUnitCursor(tu), current_file_visitor, &item);
+		}
 		Ctrl::Call([&] {
 			if(parsed_file.filename == current_file.filename &&
 			   parsed_file.real_filename == current_file.real_filename &&
@@ -311,7 +318,7 @@ void CurrentFileThread()
 					AutoCompleteItem& m = item.Add();
 					m.name = name;
 					m.parent = FetchString(clang_getCompletionParent(string, NULL));
-					m.signature = CleanupSignature(signature);
+					m.signature = CleanupPretty(signature);
 					m.kind = kind;
 					m.priority = clang_getCompletionPriority(string);
 				}
@@ -341,7 +348,7 @@ void StartCurrentFileParserThread()
 {
 	MemoryIgnoreNonMainLeaks();
 	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
-	Thread::StartNice([] { CurrentFileThread(); });
+	Thread::Start([] { CurrentFileThread(); });
 }
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done)

@@ -482,22 +482,24 @@ void AssistEditor::SyncCurrentFile()
 {
 	int line_delta;
 	CurrentFileContext cfx = CurrentContext(line_delta);
+	annotations_dirty = true;
 	if(cfx.content.GetCount())
 		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations_) {
 			ClearAnnotations();
 			annotations = clone(annotations_);
 			for(auto& m : annotations) {
-				int l = m.line - line_delta - 1;
-				if(l >= 0) {
+				m.line -= line_delta + 1;
+				if(m.line >= 0) {
 					String mm = m.id;
 					if(line_delta)
 						FixItNamespace(mm);
-					SetAnnotation(l,
+					SetAnnotation(m.line,
 					              GetRefLinks(mm).GetCount() ? IdeImg::tpp_doc()
 					                                         : IdeImg::tpp_pen(),
 					              mm);
 				}
 			}
+			annotations_dirty = false;
 		});
 }
 
@@ -803,6 +805,25 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
+#ifdef _DEBUG
+	if(key == K_F12) {
+		int l = GetLine(GetCursor());
+		for(const AnnotationItem& m : annotations)
+			if(m.line == l) {
+				PromptOK(String() <<
+					"kind: \1" << m.kind << "\1&" <<
+					"name: \1" << m.name << "\1&" <<
+					"id: \1" << m.id << "\1&" <<
+					"pretty: \1" << m.pretty << "\1&" <<
+					"nspace: \1" << m.nspace << "\1&" <<
+					"definition: \1" << m.definition << "\1&" <<
+					"extern: \1" << m.external << "\1&"
+				);
+				return true;
+			}
+		Exclamation("No annotation for this line.");
+	}
+#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;

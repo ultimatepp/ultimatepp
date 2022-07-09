@@ -151,6 +151,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl   annotation_popup;
+	bool                   annotations_dirty = true;
 	Vector<AnnotationItem> annotations;
 
 	int            assist_cursor;
@@ -248,7 +249,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
 	void           SyncAnnotationPopup();
 	void           EditAnnotation(bool fastedit);
-	void           Annotate(const String& filename);
 	void           OpenTopic(String topic, String create, bool before);
 	void           NewTopic(String group, String coderef);
 

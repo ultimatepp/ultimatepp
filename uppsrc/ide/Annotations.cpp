@@ -1,31 +1,5 @@
 #include "ide.h"
 
-void AssistEditor::Annotate(const String& filename)
-{
-	CodeBaseLock __;
-	int fi = GetSourceFileIndex(filename);
-	CppBase& base = CodeBase();
-	ClearAnnotations();
-#if 0
-	for(int j = 0; j < base.GetCount(); j++) {
-		String nest = base.GetKey(j);
-		if(*nest != '@') { // Annotations of anonymous structures not suported
-			const Array<CppItem>& n = base[j];
-			for(int k = 0; k < n.GetCount(); k++) {
-				const CppItem& m = n[k];
-				if(m.file == fi) {
-					String coderef = MakeCodeRef(nest, m.qitem);
-					SetAnnotation(m.line - 1,
-					              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
-					                                              : IdeImg::tpp_pen(),
-					              coderef);
-				}
-			}
-		}
-	}
-#endif
-}
-
 bool IsCodeItem(const RichTxt& txt, int i)
 {
 	static Uuid codeitem = CodeItemUuid();

@@ -403,7 +403,6 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 		qtf << "[s4 &]";
 	String st = str ? "[s2;" : "[s1;";
 	String k = st + ":" + DeQtf(m.id) + ": ";
-	DDUMP(m.id);
 	if(IsTemplate(m.kind) && str) {
 		int q = 0;
 		int w = 0;
@@ -450,8 +449,6 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 	}
 	qtf << "&]";
 	qtf << "[s7 &]";
-	DDUMP(qtf);
-	DDUMP(AsQTF(ParseQTF(qtf)));
 	return qtf;
 }
 
