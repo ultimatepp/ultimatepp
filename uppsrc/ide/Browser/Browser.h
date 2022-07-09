@@ -302,7 +302,8 @@ protected:
 
 	String GetCurrentTopicPath();
 
-	void   InsertNew(const String& coderef);
+	void   InsertNew(const String& id, const String& pretty);
+	void   InsertNew(const AnnotationItem& m);
 	void   NewTopic();
 	void   MoveTopic();
 	void   RemoveTopic();
@@ -364,10 +365,10 @@ public:
 	typedef TopicEditor CLASSNAME;
 
 	void ShowEditor(bool b)                          { editor.Show(b); }
-	bool NewTopicEx(const String& name, const String& create);
+	bool NewTopicEx(const String& name, const AnnotationItem *create);
 	void Open(const String& grouppath);
 	void OpenFile(const String& path);
-	void GoTo(const String& topic, const String& link, const String& create, bool before);
+	void GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before);
 	void PersistentFindReplace(bool b)               { editor.PersistentFindReplace(b); }
 	
 	static int  GetSerial();

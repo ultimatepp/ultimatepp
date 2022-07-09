@@ -483,8 +483,9 @@ void AssistEditor::SyncCurrentFile()
 	int line_delta;
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	if(cfx.content.GetCount())
-		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations) {
+		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations_) {
 			ClearAnnotations();
+			annotations = clone(annotations_);
 			for(auto& m : annotations) {
 				int l = m.line - line_delta - 1;
 				if(l >= 0) {

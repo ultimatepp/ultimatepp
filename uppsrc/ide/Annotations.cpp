@@ -161,6 +161,14 @@ void AssistEditor::OpenTopic(String topic, String create, bool before)
 		theide->OpenTopic(topic, create, before);
 }
 
+const AnnotationItem *AssistEditor::GetAnnotationPtr(const String& id)
+{
+	for(const AnnotationItem& h : annotations)
+		if(h.id == id)
+			return &h;
+	return nullptr;
+}
+
 void AssistEditor::NewTopic(String group, String coderef)
 {
 	if(!theide)
@@ -175,7 +183,7 @@ void AssistEditor::NewTopic(String group, String coderef)
 		return;
 	String scope, item;
 	SplitCodeRef(coderef, scope, item);
-	if(!te->NewTopicEx(IsNull(scope) ? n : Join(Split(scope, ':'), "_"), coderef))
+	if(!te->NewTopicEx(IsNull(scope) ? n : Join(Split(scope, ':'), "_"), GetAnnotationPtr(coderef)))
 		theide->EditFile(ef);
 }
 

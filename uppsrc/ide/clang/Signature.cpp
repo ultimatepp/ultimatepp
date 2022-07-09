@@ -2,6 +2,16 @@
 
 #define LTIMING(x)
 
+bool IsStruct(int kind)
+{
+	return findarg(kind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0;
+}
+
+bool IsTemplate(int kind)
+{
+	return findarg(kind, CXCursor_FunctionTemplate, CXCursor_ClassTemplate) >= 0;
+}
+
 bool IsSourceFile(const String& path)
 {
 	String ext = ToLower(GetFileExt(path));

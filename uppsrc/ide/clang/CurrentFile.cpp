@@ -179,6 +179,8 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 				unsigned offset_;
 				clang_getExpansionLocation(cxlocation, &file, &line_, &column_, &offset_);
 				AnnotationItem& r = static_cast<Vector<AnnotationItem> *>(clientData)->Add();
+				r.kind = cursorKind;
+				r.name = name;
 				r.line = line_;
 				r.id = CleanupId(m);
 				static CXPrintingPolicy pp;

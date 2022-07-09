@@ -294,7 +294,7 @@ String TopicEditor::GetLang() const
 }
 
 void TopicEditor::InsertItem()
-{
+{ // TODO: Fix this when we have new codebase!
 	if(IsNull(topicpath))
 		return;
 	Save();
@@ -343,16 +343,128 @@ void TopicEditor::InsertItem()
 	editor.PrevPara();
 }
 
-void TopicEditor::InsertNew(const String& coderef)
+String DecoratedItem(const String& name, const String& pretty)
 {
-	const CppItem *m = GetCodeRefItem(coderef);
-	if(!m)
-		return;
+	String qtf = "[%00-00K ";
+	Vector<ItemTextPart> n = ParseSignature(name, pretty);
+/* TODO
+	if(pari < 0) {
+		if(m.virt)
+			qtf << "[@B virtual] ";
+		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
+			qtf << "[@B static] ";
+	}
+*/
+//	Vector<String> qt = Split(m.qptype, sSplitT, false);
+//	Vector<String> tt = Split(m.qtype, sSplitT, false);
+	for(int i = 0; i < n.GetCount(); i++) {
+		ItemTextPart& p = n[i];
+		qtf << "[";
+		switch(p.type) {
+		case ITEM_PNAME:
+			qtf << "*";
+		case ITEM_NUMBER:
+			qtf << "@r";
+			break;
+		case ITEM_TNAME:
+			qtf << "*@g";
+			break;
+		case ITEM_NAME:
+			qtf << "*";
+			break;
+		case ITEM_UPP:
+			qtf << "@c";
+			break;
+		case ITEM_CPP_TYPE:
+		case ITEM_CPP:
+			qtf << "@B";
+			break;
+/*		default:
+			int q = p.type - ITEM_PTYPE;
+			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]) && pari < 0)
+				qtf << "_^" << qt[q] << '^';
+			q = p.type - ITEM_TYPE;
+			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]) && pari < 0)
+				qtf << "_^" << tt[q] << '^';
+			break;
+*/		}
+		qtf << " \1";
+		qtf << String(~pretty + p.pos, p.len);
+		qtf << "\1]";
+	}
+	return qtf + "]";
+}
+
+String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = false)
+{
+	String qtf;
+	bool str = IsStruct(m.kind);
+	if(!str)
+		qtf << "[s4 &]";
+	String st = str ? "[s2;" : "[s1;";
+	String k = st + ":" + DeQtf(m.id) + ": ";
+	DDUMP(m.id);
+	if(IsTemplate(m.kind) && str) {
+		int q = 0;
+		int w = 0;
+		while(q < m.pretty.GetLength()) {
+			if(m.pretty[q] == '<')
+				w++;
+			if(m.pretty[q] == '>') {
+				w--;
+				if(w == 0) {
+					q++;
+					break;
+				}
+			}
+			q++;
+		}
+		qtf << "[s2:noref: " << DecoratedItem(m.name, m.pretty.Mid(0, q)) << "&][s2 " << k;
+		if(q < m.pretty.GetLength()) {
+			while((byte)m.pretty[q] <= 32)
+				q++;
+			qtf << DecoratedItem(m.name, m.pretty.Mid(q));
+		}
+	}
+	else
+		qtf << k << DecoratedItem(m.name, m.pretty);
+
+	qtf << "&]";
+	if(onlyhdr)
+		return qtf;
+
+	qtf << "[s3%" << lang << " ";
+
+	if(!str) {
+		Vector<ItemTextPart> n = ParseSignature(m.name, m.pretty);
+		if(!str) {
+			bool was;
+			for(const auto& h : n)
+				if(h.type == ITEM_PNAME) {
+					qtf << " [%-*@r \1" << m.pretty.Mid(h.pos, h.len) << "\1]";
+					was = true;
+				}
+			if(was)
+				qtf << " .";
+		}
+	}
+	qtf << "&]";
+	qtf << "[s7 &]";
+	DDUMP(qtf);
+	DDUMP(AsQTF(ParseQTF(qtf)));
+	return qtf;
+}
+
+void TopicEditor::InsertNew(const AnnotationItem& m)
+{
 	editor.BeginOp();
-	editor.PasteText(ParseQTF(styles + CreateQtf(coderef, m->name, *m, GetLang())));
+	editor.PasteText(ParseQTF(styles + CreateQtf(m, GetLang())));
 	editor.PrevPara();
 	editor.PrevPara();
 }
+
+/* TODO: remove
+	void GoTo(const String& topic, const String& link, const String& create, bool before);
 
 void TopicEditor::GoTo(const String& _topic, const String& link, const String& create, bool before)
 {
@@ -374,6 +486,31 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 							break;
 					}
 			InsertNew(create);
+		}
+	}
+}
+*/
+
+void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before)
+{
+	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
+		editor.Select(editor.GetLength(), 0);
+		for(String cr : AnnotationCandidates(link))
+			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupTppId(id.ToString()); }))
+				break;
+		if(create) {
+			if(!before)
+				for(int pass = 0; pass < 2; pass++)
+					for(;;) {
+						int c = editor.GetCursor();
+						RichText::FormatInfo f = editor.GetFormatInfo();
+						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && pass)
+							break;
+						editor.NextPara();
+						if(editor.GetCursor() == c)
+							break;
+					}
+			InsertNew(*create);
 		}
 	}
 }

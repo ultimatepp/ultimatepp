@@ -151,6 +151,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl   annotation_popup;
+	Vector<AnnotationItem> annotations;
 
 	int            assist_cursor;
 	bool           auto_assist;
@@ -240,6 +241,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         CompleteIdBack(int& q, const Index<String>& locals);
 
 	void           SwapSContext(ParserContext& p);
+
+	const AnnotationItem *GetAnnotationPtr(const String& id);
 
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
