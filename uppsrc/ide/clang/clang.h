@@ -38,6 +38,9 @@ String SignatureQtf(const String& name, const String& signature, int pari);
 
 bool IsStruct(int kind);
 bool IsTemplate(int kind);
+bool IsFunction(int kind);
+bool IsVariable(int kind);
+int  FindId(const char *s, const String& id);
 
 enum {
 	ITEM_TEXT,
@@ -75,9 +78,12 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
 	int    line;
+	bool   definition;
+	bool   external;
 	String name;
 	String id;
 	String pretty;
+	String nspace;
 };
 
 struct CurrentFileContext {
@@ -93,8 +99,9 @@ void StartCurrentFileParserThread();
 
 void DumpDiagnostics(CXTranslationUnit tu);
 
-String CleanupSignature(const String& signature);
 String CleanupId(const char *s);
+String CleanupPretty(const String& signature);
+
 bool   IsSourceFile(const String& path);
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done);

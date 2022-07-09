@@ -623,7 +623,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.SyncNavigatorShow();
 	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
-	editor.Annotate(editfile);
 	editor.SyncNavigator();
 	editor.SyncCurrentFile();
 	editfile_repo = GetRepoKind(editfile);
@@ -666,8 +665,8 @@ void Ide::ScanFile(bool check_includes)
 bool Ide::EditFileAssistSync2()
 {
 	if(TryLockCodeBase()) {
-		editor.Annotate(editfile);
 		editor.SyncNavigator();
+		editor.SyncCurrentFile();
 		UnlockCodeBase();
 		return true;
 	}
@@ -1026,7 +1025,6 @@ void Ide::PassEditor()
 	editor2.CheckEdited();
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
-	editor2.Annotate(editfile2);
 	editor2.SpellcheckComments(editor.GetSpellcheckComments());
 }
 

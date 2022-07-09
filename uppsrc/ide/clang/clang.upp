@@ -10,6 +10,7 @@ library(POSIX) clang;
 file
 	clang.h,
 	help.txt,
+	util.cpp,
 	macros.cpp,
 	CxxIcon.cpp,
 	Signature.cpp,
