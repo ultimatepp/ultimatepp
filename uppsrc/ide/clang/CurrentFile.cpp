@@ -200,6 +200,7 @@ CXChildVisitResult current_file_visitor( CXCursor cursor, CXCursor p, CXClientDa
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
 {
 	const int chunkCount = clang_getNumCompletionChunks(string);
+	DDUMP(chunkCount);
 	for(int j = 0; j < chunkCount; j++) {
 		const CXCompletionChunkKind chunkKind = clang_getCompletionChunkKind(string, j);
 		String text = FetchString(clang_getCompletionChunkText(string, j));
@@ -270,13 +271,16 @@ void CurrentFileThread()
 				cmdline << " -I" << s;
 			tu = Clang(cmdline, { { ~fn, f.content } },
 			           CXTranslationUnit_DetailedPreprocessingRecord|
+			#ifdef PLATFORM_WIN32
 			           CXTranslationUnit_PrecompiledPreamble|
 			           CXTranslationUnit_CreatePreambleOnFirstParse|
+			#endif
 			           CXTranslationUnit_KeepGoing|
 			           CXTranslationUnit_RetainExcludedConditionalBlocks);
+
 			DoAnnotations();
 			annotations_do = false;
-//			DumpDiagnostics(tu);
+			DumpDiagnostics(tu);
 		}
 		if(Thread::IsShutdownThreads()) break;
 		CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
@@ -286,10 +290,12 @@ void CurrentFileThread()
 				TIMESTOP("clang_codeCompleteAt");
 				results = clang_codeCompleteAt(tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
 				                               macros ? CXCodeComplete_IncludeMacros : 0);
+				DumpDiagnostics(tu);
 			}
 //			DumpDiagnostics(tu);
 			if(results) {
 				Vector<AutoCompleteItem> item;
+				DDUMP(results->NumResults);
 				for(int i = 0; i < results->NumResults; i++) {
 					const CXCompletionString& string = results->Results[i].CompletionString;
 					int kind = results->Results[i].CursorKind;
