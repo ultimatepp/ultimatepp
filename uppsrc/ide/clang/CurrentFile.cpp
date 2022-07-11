@@ -34,7 +34,6 @@ void CurrentFileThread()
 
 	auto DoAnnotations = [&] {
 		if(!clang.tu || !annotations_done) return;
-		RTIMING("DoAnnotations");
 		CurrentFileVisitor v;
 		v.Do(clang.tu);
 		Ctrl::Call([&] {

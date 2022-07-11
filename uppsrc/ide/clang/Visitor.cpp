@@ -81,7 +81,6 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 			break;
 		}
 	if(annotation && m.GetCount()) {
-		RTIMING("ValidNide");
 		CXFile file;
 		unsigned line_;
 		unsigned column_;
