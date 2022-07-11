@@ -77,7 +77,6 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
 	int    line;
 	bool   definition;
-	bool   external;
 	String name;
 	String id;
 	String pretty;
@@ -127,7 +126,6 @@ class ClangVisitor {
 	String   scope;
 	String   nspace;
 	String   pretty;
-	bool     external;
 	bool     annotation;
 	int      line;
 	int      column;
@@ -147,7 +145,6 @@ public:
 	String GetNamespace() const { return nspace; }
 	String GetPretty() const    { return pretty; }
 	bool   IsDefinition() const { return clang_isCursorDefinition(cursor); }
-	bool   IsExtern() const     { return external; }
 	bool   IsAnnotation() const { return annotation; }
 	int    GetLine() const      { return line; }
 	int    GetColumn() const    { return column; }

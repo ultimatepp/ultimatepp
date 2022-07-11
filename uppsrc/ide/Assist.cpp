@@ -824,8 +824,7 @@ bool AssistEditor::Key(dword key, int count)
 					"id: \1" << m.id << "\1&" <<
 					"pretty: \1" << m.pretty << "\1&" <<
 					"nspace: \1" << m.nspace << "\1&" <<
-					"definition: \1" << m.definition << "\1&" <<
-					"extern: \1" << m.external << "\1&"
+					"definition: \1" << m.definition << "\1&"
 				);
 				return true;
 			}

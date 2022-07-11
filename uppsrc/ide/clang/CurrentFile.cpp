@@ -18,7 +18,6 @@ struct CurrentFileVisitor : ClangVisitor {
 		r.id = GetId();
 		r.pretty = GetPretty();
 		r.definition = IsDefinition();
-		r.external = IsExtern();
 		r.nspace = GetNamespace();
 	}
 };

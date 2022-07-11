@@ -78,9 +78,7 @@ void AssistEditor::DCopy()
 					}
 					else { // just toggle extern
 						String h = m.pretty;
-						if(m.external)
-							h.TrimStart("extern ");
-						else
+						if(FindId(GetUtf8Line(m.line), "extern") < 0)
 							h = "extern " + h;
 						result << h << ";\n";
 					}

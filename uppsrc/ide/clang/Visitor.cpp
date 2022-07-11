@@ -38,7 +38,6 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 		scope << "::";
 
 	annotation = true;
-	external = false;
 	if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod,
 	                       CXCursor_Constructor, CXCursor_Destructor) >= 0)
 		annotation = false; // local variable
@@ -55,7 +54,6 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 			m = pid;
 			break;
 		case CXCursor_VarDecl:
-//			external = clang_Cursor_hasVarDeclExternalStorage(cursor);
 		case CXCursor_FieldDecl:
 		case CXCursor_ClassTemplate:
 			m << scope << name;
