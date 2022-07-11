@@ -101,7 +101,7 @@ _DBG_
 	static Ptr<Ctrl>         activeCtrl;
 	static bool              invalids; // there are active invalid areas
 
-	static int FindId(int id);
+	static int FindGtkId(int id);
 	static int FindCtrl(Ctrl *ctrl);
 	static int FindGtkWindow(GtkWidget *gtk);
 	static int FindGdkWindow(GdkWindow *gdk);

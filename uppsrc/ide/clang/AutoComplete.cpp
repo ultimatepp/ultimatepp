@@ -79,7 +79,7 @@ void AutocompleteThread()
 					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
 					                               macros ? CXCodeComplete_IncludeMacros : 0);
 				}
-	//			DumpDiagnostics(tu);
+				DumpDiagnostics(clang.tu);
 				if(results) {
 					Vector<AutoCompleteItem> item;
 					for(int i = 0; i < results->NumResults; i++) {

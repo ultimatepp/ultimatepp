@@ -447,7 +447,15 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 {
 	CurrentFileContext cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
+	
+// TODO: Fix this properly
+#ifdef PLATFORM_WIN32
 	cfx.includes = theide->GetIncludePath();
+#else
+	VectorMap<String, String> bm = GetMethodVars(theide->method);
+	cfx.includes = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+#endif
+
 	line_delta = 0;
 	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();

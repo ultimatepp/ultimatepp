@@ -55,7 +55,7 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 			m = pid;
 			break;
 		case CXCursor_VarDecl:
-			external = clang_Cursor_hasVarDeclExternalStorage(cursor);
+//			external = clang_Cursor_hasVarDeclExternalStorage(cursor);
 		case CXCursor_FieldDecl:
 		case CXCursor_ClassTemplate:
 			m << scope << name;

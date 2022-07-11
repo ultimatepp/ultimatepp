@@ -56,7 +56,7 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
 	cmdline << RedefineMacros();
-
+	
 	Vector<String> args;
 	for(const String& s : Split(includes, ';'))
 		args.Add("-I" + s);
