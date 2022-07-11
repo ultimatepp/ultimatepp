@@ -388,7 +388,6 @@ void Ide::SaveFile0(bool always)
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
 	if(editor.IsDirty()) {
-		text_updated.Kill();
 		if(IsCppBaseFile())
 			CodeBaseScanFile(editfile, auto_check);
 	}
@@ -419,6 +418,7 @@ void Ide::FlushFile() {
 		fd.filehash = EditorHash();
 	}
 	CancelCurrentFile();
+	CancelAutoComplete();
 	editfile.Clear();
 	editfile_repo = NOT_REPO_DIR;
 	editfile_isfolder = false;
@@ -467,8 +467,6 @@ bool Ide::FileRemove()
 
 void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername)
 {
-	text_updated.Kill();
-
 	AKEditor();
 	editor.CheckEdited(false);
 	editor.CloseAssist();
@@ -624,7 +622,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
 	editor.SyncNavigator();
-	editor.SyncCurrentFile();
+	editor.NewFile();
 	editfile_repo = GetRepoKind(editfile);
 	editfile_includes = IncludesMD5();
 }
@@ -677,32 +675,6 @@ void Ide::EditFileAssistSync()
 {
 	ScanFile(false);
 	EditFileAssistSync2();
-}
-
-void Ide::TriggerAssistSync()
-{
-	if(auto_rescan && editor.GetLength64() < 500000 && !file_scan) {
-	/*
-		text_updated.KillSet(1000, [=] {
-			if(!file_scan && IsCppBaseFile()) {
-				String s = ~editor;
-				String fn = editfile;
-				file_scan++;
-				if(Ctrl::GetEventLevel() == 0 && !CoWork::TrySchedule([=] {
-					StringStream ss(s);
-					file_scanned = TryCodeBaseScanFile(ss, editfile);
-					file_scan--;
-					if(!file_scanned)
-						trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
-				})) {
-					file_scan--;
-					trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
-				}
-			}
-		});
-	*/
-		editor.SyncCurrentFile();
-	}
 }
 
 void Ide::EditAsHex()

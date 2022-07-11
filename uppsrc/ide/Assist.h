@@ -72,6 +72,7 @@ struct Navigator {
 	NavigatorDisplay navidisplay;
 	bool             navigating;
 	TimeCallback     search_trigger;
+	TimeCallback     annotate_trigger;
 	bool             navigator_global;
 	ToolButton       sortitems;
 	bool             sorting;
@@ -151,7 +152,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl   annotation_popup;
-	bool                   annotations_dirty = true;
 	Vector<AnnotationItem> annotations;
 
 	int            assist_cursor;
@@ -189,7 +189,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      navigator_right = true;
 
 	CurrentFileContext CurrentContext(int& line_delta);
+	void               SyncCurrentFile(CurrentFileContext& ctx, int line_delta);
 	void               SyncCurrentFile();
+	void               NewFile();
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();

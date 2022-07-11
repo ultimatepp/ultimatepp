@@ -320,6 +320,7 @@ void AppMain___()
 			SaveFile(ppdefs, GetStdDefs());
 
 		StartCurrentFileParserThread();
+		StartAutoCompleteThread();
 
 		SetPPDefs(LoadFile(ppdefs));
 		

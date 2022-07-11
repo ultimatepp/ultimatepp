@@ -774,12 +774,6 @@ public:
 	bool      EditFileAssistSync2();
 	void      EditFileAssistSync();
 	
-	TimeCallback     text_updated, trigger_assist;
-	std::atomic<int> file_scan;
-	bool             file_scanned = false;
-
-	void      TriggerAssistSync();
-
 	void      AKEditor();
 	
 	void      PackageMenu(Bar& menu);

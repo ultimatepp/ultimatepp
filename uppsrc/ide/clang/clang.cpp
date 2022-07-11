@@ -75,7 +75,7 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 
 	tu = clang_parseTranslationUnit(index, nullptr, argv, argv.GetCount(), &ufile, 1, options);
 
-	DumpDiagnostics(tu);
+//	DumpDiagnostics(tu);
 	
 	return tu;
 }

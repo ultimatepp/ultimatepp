@@ -25,15 +25,15 @@ void AssistEditor::DCopy()
 		return;
 	}
 
-	if(annotations_dirty) {
+	if(IsCurrentFileDirty()) {
 		Progress pi("Parsing");
-		while(annotations_dirty)
+		while(IsCurrentFileDirty())
 			if(pi.StepCanceled())
 				return;
 	}
 	
 	String result;
-	
+
 	for(const AnnotationItem& m : annotations) {
 		if(first_line <= m.line && m.line <= last_line) {
 			String cls = m.id;

@@ -1,3 +1,151 @@
 #include "clang.h"
 
-void foo() {}
+#define LLOG(x)
+
+Semaphore                              autocomplete_event;
+CurrentFileContext                     autocomplete_file;
+bool                                   do_autocomplete;
+bool                                   autocomplete_macros;
+Point                                  autocomplete_pos;
+int64                                  autocomplete_serial;
+Event<const Vector<AutoCompleteItem>&> autocomplete_done;
+
+void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
+{
+	const int chunkCount = clang_getNumCompletionChunks(string);
+	for(int j = 0; j < chunkCount; j++) {
+		const CXCompletionChunkKind chunkKind = clang_getCompletionChunkKind(string, j);
+		String text = FetchString(clang_getCompletionChunkText(string, j));
+		if(chunkKind == CXCompletionChunk_Optional)
+			for(int i = 0; i < clang_getNumCompletionChunks(string); i++)
+				ReadAutocomplete(clang_getCompletionChunkCompletionString(string, i), name, signature);
+		else
+		if(chunkKind == CXCompletionChunk_TypedText) {
+			name = text;
+			signature << text;
+		}
+		else {
+			signature << text;
+			if (chunkKind == CXCompletionChunk_ResultType) {
+				signature << ' ';
+			}
+		}
+	}
+}
+
+void AutocompleteThread()
+{
+	MemoryIgnoreLeaksBlock __;
+
+	CurrentFileContext parsed_file;
+	int64 serial;
+	
+	Clang clang;
+
+	while(!Thread::IsShutdownThreads()) {
+		CurrentFileContext f;
+		bool autocomplete_do, macros;
+		{
+			GuiLock __;
+			f = autocomplete_file;
+			serial = autocomplete_serial;
+			autocomplete_do = do_autocomplete;
+			macros = autocomplete_macros;
+		}
+		if(f.filename.GetCount()) {
+			
+			String fn = f.filename;
+			if(!IsSourceFile(fn))
+				fn.Cat(".cpp");
+			if(f.filename != parsed_file.filename || f.includes != parsed_file.includes ||
+			   f.real_filename != parsed_file.real_filename || !clang.tu) {
+				parsed_file = f;
+				clang.Dispose();
+				TIMESTOP("Autocomplete parse");
+				clang.Parse(fn, f.content, f.includes, String(),
+				            CXTranslationUnit_DetailedPreprocessingRecord|
+				            CXTranslationUnit_PrecompiledPreamble|
+				            CXTranslationUnit_CreatePreambleOnFirstParse|
+				            CXTranslationUnit_KeepGoing|
+				            CXTranslationUnit_RetainExcludedConditionalBlocks);
+			}
+
+			if(Thread::IsShutdownThreads()) break;
+			CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
+			if(autocomplete_do && clang.tu) {
+				CXCodeCompleteResults *results;
+				{
+					TIMESTOP("clang_codeCompleteAt");
+					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
+					                               macros ? CXCodeComplete_IncludeMacros : 0);
+				}
+	//			DumpDiagnostics(tu);
+				if(results) {
+					Vector<AutoCompleteItem> item;
+					for(int i = 0; i < results->NumResults; i++) {
+						const CXCompletionString& string = results->Results[i].CompletionString;
+						int kind = results->Results[i].CursorKind;
+						if(kind == CXCursor_MacroDefinition && !macros) // we probably want this only on Ctrl+Space
+							continue;
+						if(kind == CXCursor_NotImplemented)
+							continue;
+						String name;
+						String signature;
+						ReadAutocomplete(string, name, signature);
+						AutoCompleteItem& m = item.Add();
+						m.name = name;
+						m.parent = FetchString(clang_getCompletionParent(string, NULL));
+						m.signature = CleanupPretty(signature);
+						m.kind = kind;
+						m.priority = clang_getCompletionPriority(string);
+					}
+					clang_disposeCodeCompleteResults(results);
+					Ctrl::Call([&] {
+						if(serial == autocomplete_serial)
+							autocomplete_done(item);
+					});
+				}
+				GuiLock __;
+				do_autocomplete = false;
+			}
+			if(Thread::IsShutdownThreads()) break;
+		}
+		autocomplete_event.Wait(500);
+	}
+}
+
+void SetAutoCompleteFile(const CurrentFileContext& ctx)
+{
+	GuiLock __;
+	autocomplete_file = ctx;
+	autocomplete_event.Release();
+}
+
+void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
+                       Event<const Vector<AutoCompleteItem>&> done)
+{
+	GuiLock __;
+	static int64 serial;
+	autocomplete_pos.y = line;
+	autocomplete_pos.x = column;
+	do_autocomplete = true;
+	autocomplete_macros = macros;
+	autocomplete_serial = serial++;
+	autocomplete_done = done;
+	autocomplete_file = ctx;
+	autocomplete_event.Release();
+}
+
+void CancelAutoComplete()
+{
+	GuiLock __;
+	autocomplete_done.Clear();
+	do_autocomplete = false;
+}
+
+void StartAutoCompleteThread()
+{
+	MemoryIgnoreNonMainLeaks();
+	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
+	Thread::Start([] { AutocompleteThread(); });
+}

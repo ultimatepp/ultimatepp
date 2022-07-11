@@ -106,6 +106,7 @@ struct Clang {
 // void CurrentFileVisit(CXTranslationUnit tu);
 
 void StartCurrentFileParserThread();
+void StartAutoCompleteThread();
 
 void DumpDiagnostics(CXTranslationUnit tu);
 
@@ -131,7 +132,7 @@ class ClangVisitor {
 	int      line;
 	int      column;
 
-	void ProcessNode(CXCursor c);
+	bool ProcessNode(CXCursor c);
 
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
 
@@ -156,9 +157,12 @@ public:
 };
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done);
+void CancelCurrentFile();
+bool IsCurrentFileDirty();
+
+void SetAutoCompleteFile(const CurrentFileContext& ctx);
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();
-void CancelCurrentFile();
 
 #endif

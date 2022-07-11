@@ -615,13 +615,10 @@ Ide::Ide()
 	error_count = 0;
 	warning_count = 0;
 	
-	editor.WhenUpdate = THISBACK(TriggerAssistSync);
-
 	editfile_isfolder = false;
 	editfile_repo = NOT_REPO_DIR;
 	
 	auto_rescan = auto_check = true;
-	file_scan = 0;
 
 	editfile_line_endings = Null;
 

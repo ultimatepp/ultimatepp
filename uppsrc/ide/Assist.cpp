@@ -67,6 +67,10 @@ AssistEditor::AssistEditor()
 	include_assist = false;
 
 	NoFindReplace();
+	
+	WhenUpdate << [=] {
+		annotate_trigger.KillSet(100, [=] { SyncCurrentFile(); });
+	};
 }
 
 class IndexSeparatorFrameCls : public CtrlFrame {
@@ -88,6 +92,7 @@ void AssistEditor::SyncNavigatorPlacement()
 
 AssistEditor::~AssistEditor()
 {
+	CancelAutoComplete();
 	CancelCurrentFile();
 }
 
@@ -436,15 +441,6 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-String it_namespace = "___it_namespace_"; // fake namespace to allow .h file in libclang
-String it_namespace_n = it_namespace + "::";
-
-void FixItNamespace(String& m)
-{
-	m.Replace(it_namespace_n, "");
-	m.Replace(it_namespace, "");
-}
-
 bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta);
 
 CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
@@ -478,29 +474,38 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	return cfx;
 }
 
-void AssistEditor::SyncCurrentFile()
+void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
 {
-	int line_delta;
-	CurrentFileContext cfx = CurrentContext(line_delta);
-	annotations_dirty = true;
 	if(cfx.content.GetCount())
-		SetCurrentFile(CurrentContext(line_delta), [=](const Vector<AnnotationItem>& annotations_) {
+		SetCurrentFile(cfx, [=](const Vector<AnnotationItem>& annotations_) {
+			RTIMING("SyncCurrentFile");
 			ClearAnnotations();
 			annotations = clone(annotations_);
 			for(auto& m : annotations) {
 				m.line -= line_delta + 1;
 				if(m.line >= 0) {
-					String mm = m.id;
-					if(line_delta)
-						FixItNamespace(mm);
 					SetAnnotation(m.line,
-					              GetRefLinks(mm).GetCount() ? IdeImg::tpp_doc()
-					                                         : IdeImg::tpp_pen(),
-					              mm);
+					              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
+					                                           : IdeImg::tpp_pen(),
+					              m.id);
 				}
 			}
-			annotations_dirty = false;
 		});
+}
+
+void AssistEditor::SyncCurrentFile()
+{
+	int line_delta;
+	CurrentFileContext cfx = CurrentContext(line_delta);
+	SyncCurrentFile(cfx, line_delta);
+}
+
+void AssistEditor::NewFile()
+{
+	int line_delta;
+	CurrentFileContext cfx = CurrentContext(line_delta);
+	SyncCurrentFile(cfx, line_delta);
+	SetAutoCompleteFile(cfx);
 }
 
 void AssistEditor::Assist(bool macros)
@@ -526,10 +531,6 @@ void AssistEditor::Assist(bool macros)
 			for(const AutoCompleteItem& m : items) {
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;
-				if(line_delta) { // we are using pseudo source for include with typename trick
-					FixItNamespace(f.parent);
-					FixItNamespace(f.signature);
-				}
 				f.uname = ToUpper(f.name);
 				f.typei = assist_type.FindAdd(f.parent);
 			}
