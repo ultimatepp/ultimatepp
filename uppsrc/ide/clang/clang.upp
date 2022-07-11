@@ -16,5 +16,7 @@ file
 	Signature.cpp,
 	clang.cpp,
 	Codebase.cpp,
+	Visitor.cpp,
+	AutoComplete.cpp,
 	CurrentFile.cpp;
 

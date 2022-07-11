@@ -22,9 +22,7 @@ struct SourceLocation {
 	SourceLocation(CXSourceLocation location);
 };
 
-void ClangFile(const String& filename, const String& content, const Vector<String>& includes, int line, int column);
 String RedefineMacros();
-CXTranslationUnit Clang(const String& cmdline, Vector<Tuple2<String, String>> file, unsigned options = 0);
 
 enum AdditionalKinds {
 	KIND_INCLUDEFILE = -1000,
@@ -93,6 +91,18 @@ struct CurrentFileContext {
 	String                   content;
 };
 
+struct Clang {
+	CXIndex           index = nullptr;
+	CXTranslationUnit tu = nullptr;
+
+	void Dispose();
+	bool Parse(const String& filename, const String& content, const String& includes, const String& defines, dword options);
+	bool ReParse(const String& filename, const String& content);
+	
+	Clang();
+	~Clang();
+};
+
 // void CurrentFileVisit(CXTranslationUnit tu);
 
 void StartCurrentFileParserThread();
@@ -103,6 +113,47 @@ String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
 
 bool   IsSourceFile(const String& path);
+
+class ClangVisitor {
+	bool initialized = false;
+	CXPrintingPolicy pp_id, pp_pretty;
+	
+	CXCursor cursor;
+	int      kind;
+	String   name;
+	String   id;
+	String   type;
+	String   scope;
+	String   nspace;
+	String   pretty;
+	bool     external;
+	bool     annotation;
+	int      line;
+	int      column;
+
+	void ProcessNode(CXCursor c);
+
+	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
+
+public:
+	virtual void Item() = 0;
+
+	int    GetKind() const      { return kind; }
+	String GetId() const        { return id; }
+	String GetName() const      { return name; }
+	String GetType() const      { return type; }
+	String GetScope() const     { return scope; }
+	String GetNamespace() const { return nspace; }
+	String GetPretty() const    { return pretty; }
+	bool   IsDefinition() const { return clang_isCursorDefinition(cursor); }
+	bool   IsExtern() const     { return external; }
+	bool   IsAnnotation() const { return annotation; }
+	int    GetLine() const      { return line; }
+	int    GetColumn() const    { return column; }
+
+	void Do(CXTranslationUnit tu);
+	~ClangVisitor();
+};
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done);
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,

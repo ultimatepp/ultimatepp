@@ -1,10 +1,32 @@
 #include "clang.h"
 
+// TODO: Remove
+
 #define LLOG(x)
 
 CXChildVisitResult current_file_visitor2( CXCursor cursor, CXCursor p, CXClientData clientData )
 {
 #if 0
+		auto Dump = [&] {
+			#if 1
+				SourceLocation location(cxlocation);
+				LOG("=====================");
+//				DDUMP(location);
+//				DDUMP((int)cursorKind);
+				DDUMP(GetCursorKindName(cursorKind));
+				DDUMP(name);
+				DDUMP(type);
+				DDUMP(pid);
+				DDUMP(CleanupId(pid));
+				DDUMP(scope);
+				DDUMP(nspace);
+				DDUMP(clang_isCursorDefinition(cursor));
+			#endif
+		};
+
+
+
+
 	static Index<unsigned> visited;
 	unsigned h = clang_hashCursor(cursor);
 	if(visited.Find(h) >= 0)
