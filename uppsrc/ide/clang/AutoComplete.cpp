@@ -57,17 +57,17 @@ void AutocompleteThread()
 			String fn = f.filename;
 			if(!IsSourceFile(fn))
 				fn.Cat(".cpp");
-			if(f.filename != parsed_file.filename || f.includes != parsed_file.includes ||
-			   f.real_filename != parsed_file.real_filename || !clang.tu) {
+			if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
+			   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
+			   !clang.tu) {
 				parsed_file = f;
 				clang.Dispose();
 				TIMESTOP("Autocomplete parse");
-				clang.Parse(fn, f.content, f.includes, String(),
+				clang.Parse(fn, f.content, f.includes, f.defines,
 				            CXTranslationUnit_DetailedPreprocessingRecord|
 				            CXTranslationUnit_PrecompiledPreamble|
 				            CXTranslationUnit_CreatePreambleOnFirstParse|
-				            CXTranslationUnit_KeepGoing|
-				            CXTranslationUnit_RetainExcludedConditionalBlocks);
+				            CXTranslationUnit_KeepGoing);
 			}
 
 			if(Thread::IsShutdownThreads()) break;

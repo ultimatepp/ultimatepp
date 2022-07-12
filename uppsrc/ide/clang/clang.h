@@ -87,6 +87,7 @@ struct CurrentFileContext {
 	String                   filename;
 	String                   real_filename;
 	String                   includes;
+	String                   defines;
 	String                   content;
 };
 

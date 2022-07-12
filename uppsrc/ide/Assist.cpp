@@ -327,7 +327,7 @@ Vector<String> AssistEditor::ReadBack(int q, const Index<String>& locals)
 void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
-	bool destructor;
+	bool destructor; // TODO: remove
 	String name = ReadIdBack(GetCursor32(), include_assist, &destructor);
 	String uname = ToUpper(name);
 	assist_item_ndx.Clear();
@@ -447,15 +447,8 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 {
 	CurrentFileContext cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
-	
-// TODO: Fix this properly
-#ifdef PLATFORM_WIN32
-	cfx.includes = theide->GetIncludePath();
-#else
-	VectorMap<String, String> bm = GetMethodVars(theide->method);
-	cfx.includes = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
-#endif
-
+	cfx.includes = theide->GetCurrentIncludePath();
+	cfx.defines = theide->GetCurrentDefines();
 	line_delta = 0;
 	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();
@@ -761,8 +754,6 @@ void AssistEditor::AssistInsert()
 		}
 		else {
 			String txt = f.name;
-			int l = txt.GetCount();
-			int pl = txt.GetCount();
 			int param_count;
 			ParseSignature(f.name, f.signature, &param_count);
 			if(param_count >= 0)
@@ -782,14 +773,6 @@ void AssistEditor::AssistInsert()
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
 			}
-			else
-			if(!inbody)
-				SetCursor(cl + n);
-			else
-			if(pl > l)
-				SetSelection(cl + l, cl + pl);
-			else
-				SetCursor(cl + l);
 		}
 	}
 	CloseAssist();

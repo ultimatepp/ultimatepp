@@ -29,6 +29,27 @@ String SourceLocation::ToString() const
 	return String() << filename << " (" << line << ":" << column << ")";
 }
 
+#ifdef PLATFORM_WIN32
+String GetClangInternalIncludes()
+{
+	static String includes;
+	ONCELOCK {
+		String dummy = ConfigFile("dummy.cpp");
+		Upp::SaveFile(dummy, String());
+		String h = Sys(GetExeDirFile("bin/clang/bin/c++") + " -v -x c++ -E " + dummy);
+		DeleteFile(dummy);
+		h.Replace("\r", "");
+		Vector<String> ln = Split(h, '\n');
+		for(int i = 0; i < ln.GetCount(); i++) {
+			String dir = TrimBoth(ln[i]);
+			if(DirectoryExists(dir))
+				MergeWith(includes, ";", NormalizePath(dir));
+		}
+	}
+	return includes;
+}
+#endif
+
 SourceLocation::SourceLocation(CXSourceLocation location)
 {
 	CXFile file;
@@ -48,7 +69,7 @@ void Clang::Dispose()
 	tu = nullptr;
 }
 
-bool Clang::Parse(const String& filename, const String& content, const String& includes, const String& defines, dword options)
+bool Clang::Parse(const String& filename, const String& content, const String& includes_, const String& defines, dword options)
 {
 	if(!index) return false;
 
@@ -57,11 +78,16 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagBLITZ -DflagWIN32 -DflagMAIN -DflagGUI -xc++ -std=c++17 ";
 	cmdline << RedefineMacros();
 	
+	String includes = includes_;
+#ifdef PLATFORM_WIN32
+	MergeWith(includes, ";", GetClangInternalIncludes());
+#endif
+
 	Vector<String> args;
 	for(const String& s : Split(includes, ';'))
 		args.Add("-I" + s);
 
-	for(const String& s : Split(defines, ';'))
+	for(const String& s : Split(defines + ";CLANG", ';'))
 		args.Add("-D" + s);
 
 	args.Append(Split(cmdline, ' '));

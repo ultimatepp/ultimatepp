@@ -2,6 +2,8 @@ enum { REMOTE_TIMEOUT = 2000 };
 
 extern String HostConsole;
 
+void AddHostFlags(Index<String>& cfg);
+
 struct Host {
 	struct FileInfo : Time, Moveable<FileInfo> {
 		int length;

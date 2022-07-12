@@ -1,5 +1,8 @@
 #include "clang.h"
 
+// we are (for now?) using libclang.dll for MSVC and therefore need to redefine standard macros
+// to mingw clang
+
 const char umacros[] =
 R"(#define CHECK_GRID(g) 
 #define CHECK_MATRIX(g) 

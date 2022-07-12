@@ -1162,6 +1162,8 @@ public:
 	void      ShowTopicsWin();
 
 	String    GetIncludePath();
+	String    GetCurrentIncludePath();
+	String    GetCurrentDefines();
 
 	void      TopicBack();
 
