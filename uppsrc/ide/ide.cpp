@@ -655,7 +655,9 @@ void Ide::SyncClang()
 	int phase = msecs() / 30;
 	auto Animate = [=](int& animator, int& dir, bool animate) -> Color {
 		if(animator <= 0 && !animate) return Null;
-		if(!animate)
+		if(animate)
+			dir = clamp(dir, -1, 1);
+		else
 			dir = -3;
 		if(animator >= 15)
 			dir = -1;

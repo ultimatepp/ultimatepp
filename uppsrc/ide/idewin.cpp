@@ -346,7 +346,6 @@ void CursorInfoCtrl::Paint(Draw& w)
 	Size tsz = GetTextSize(text, StdFont());
 	int x = sz.cx - tsz.cx;
 	int y = (sz.cy - tsz.cy) / 2;
-	DDUMP(animate);
 	w.DrawRect(x, 0, tsz.cx, sz.cy, animate);
 	w.DrawText(x, y, text, StdFont(), SColorText());
 }

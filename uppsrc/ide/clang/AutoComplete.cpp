@@ -113,7 +113,6 @@ void AutocompleteThread()
 				GuiLock __;
 				do_autocomplete = false;
 			}
-			if(Thread::IsShutdownThreads()) break;
 		}
 		autocomplete_event.Wait(500);
 	}
