@@ -58,6 +58,8 @@ void EditorBar::Paint(Draw& w)
 	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
 	Size sz = GetSize();
 	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
+	for(int i = 0; i < animate.GetCount(); i++)
+		w.DrawRect(i, 0, 1, sz.cy, animate[i]);
 	if(!editor) return;
 	int fy = editor->GetFontSize().cy;
 	int hy = fy >> 1;

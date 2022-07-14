@@ -155,10 +155,12 @@ public:
 };
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done);
+bool IsCurrentFileParsing();
 void CancelCurrentFile();
 bool IsCurrentFileDirty();
 
 void SetAutoCompleteFile(const CurrentFileContext& ctx);
+bool IsAutocompleteParsing();
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();

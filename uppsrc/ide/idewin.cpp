@@ -340,6 +340,22 @@ static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln,
 	es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
 }
 
+void CursorInfoCtrl::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	Size tsz = GetTextSize(text, StdFont());
+	int x = sz.cx - tsz.cx;
+	int y = (sz.cy - tsz.cy) / 2;
+	DDUMP(animate);
+	w.DrawRect(x, 0, tsz.cx, sz.cy, animate);
+	w.DrawText(x, y, text, StdFont(), SColorText());
+}
+
+CursorInfoCtrl::CursorInfoCtrl()
+{
+	Transparent();
+}
+
 Ide::Ide()
 {
 	DiffDlg::WhenHighlight = callback(sHighlightLine);
@@ -359,8 +375,6 @@ Ide::Ide()
 	chstyle = 0;
 
 	Sizeable().Zoomable();
-
-	display.SetAlign(ALIGN_RIGHT);
 
 	filelist.Columns(2);
 	package.Columns(2);
