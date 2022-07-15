@@ -344,6 +344,18 @@ struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 	WebSearchTab();
 };
 
+struct CursorInfoCtrl : Ctrl {
+	String text;
+	Color  animate = Null;
+
+	void Paint(Draw& w) override;
+
+	void Set(const String& s) { text = s; Refresh(); }
+	void Animate(Color c)     { animate = c; Refresh(); }
+	
+	CursorInfoCtrl();
+};
+
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
@@ -677,7 +689,7 @@ public:
 	bool      bookmark_pos;
 
 	FrameTop<StaticBarArea> bararea;
-	Label                   display;
+	CursorInfoCtrl          display;
 
 
 	byte      hilite_scope;
@@ -710,6 +722,10 @@ public:
 	
 	bool          hlstyle_is_default = true; // default style reacts to dark / light theme settings
 	
+	int           animate_current_file = 0, animate_current_file_dir = 0;
+	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
+	int           animate_phase = 0;
+
 // ------------------------------------
 
 	Time      config_time;
@@ -1121,9 +1137,10 @@ public:
 	void      ManageDisplayVisibility();
 
 	void      SetIcon();
-	bool      IsCppBaseFile();
+	bool      IsCppBaseFile(); // TODO: remove
 	void      CheckFileUpdate();
 	void      Periodic();
+	void      SyncClang();
 
 	void      PassEditor();
 	void      SyncEditorSplit();

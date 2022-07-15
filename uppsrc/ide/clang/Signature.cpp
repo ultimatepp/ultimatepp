@@ -121,7 +121,8 @@ String CleanupPretty(const String& signature)
 				s++;
 			int len = s - b;
 			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
-			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0)) {
+			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0) ||
+			   len == 8 && (memcmp(b, "override", 8) == 0 || memcmp(b, "noexcept", 8) == 0)) {
 			   while(*s == ' ')
 			       s++;
 			   continue;
@@ -170,7 +171,10 @@ String CleanupPretty(const String& signature)
 		}
 		else
 			result.Cat(*s++);
-	return result;
+	String r = result;
+	while(*r.Last() == ' ')
+		r.TrimLast();
+	return r;
 }
 
 Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info)

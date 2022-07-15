@@ -2,6 +2,7 @@
 
 #define LLOG(x)
 
+bool                                   autocomplete_parsing;
 Semaphore                              autocomplete_event;
 CurrentFileContext                     autocomplete_file;
 bool                                   do_autocomplete;
@@ -63,11 +64,13 @@ void AutocompleteThread()
 				parsed_file = f;
 				clang.Dispose();
 				TIMESTOP("Autocomplete parse");
+				autocomplete_parsing = true;
 				clang.Parse(fn, f.content, f.includes, f.defines,
 				            CXTranslationUnit_DetailedPreprocessingRecord|
 				            CXTranslationUnit_PrecompiledPreamble|
 				            CXTranslationUnit_CreatePreambleOnFirstParse|
 				            CXTranslationUnit_KeepGoing);
+				autocomplete_parsing = false;
 			}
 
 			if(Thread::IsShutdownThreads()) break;
@@ -76,8 +79,10 @@ void AutocompleteThread()
 				CXCodeCompleteResults *results;
 				{
 					TIMESTOP("clang_codeCompleteAt");
+					autocomplete_parsing = false;
 					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
 					                               macros ? CXCodeComplete_IncludeMacros : 0);
+					autocomplete_parsing = true;
 				}
 				DumpDiagnostics(clang.tu);
 				if(results) {
@@ -108,7 +113,6 @@ void AutocompleteThread()
 				GuiLock __;
 				do_autocomplete = false;
 			}
-			if(Thread::IsShutdownThreads()) break;
 		}
 		autocomplete_event.Wait(500);
 	}
@@ -148,4 +152,9 @@ void StartAutoCompleteThread()
 	MemoryIgnoreNonMainLeaks();
 	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 	Thread::Start([] { AutocompleteThread(); });
+}
+
+bool IsAutocompleteParsing()
+{
+	return autocomplete_parsing;
 }

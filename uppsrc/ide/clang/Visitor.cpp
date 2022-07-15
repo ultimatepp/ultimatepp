@@ -127,6 +127,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 		clang_PrintingPolicy_setProperty(pp_id, p, 1);
 
 	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_TerseOutput, 1);
+	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_Bool, 1);
 	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_SuppressScope, 1);
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);

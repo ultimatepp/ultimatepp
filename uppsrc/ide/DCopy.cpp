@@ -37,7 +37,18 @@ void AssistEditor::DCopy()
 	for(const AnnotationItem& m : annotations) {
 		if(first_line <= m.line && m.line <= last_line) {
 			String cls = m.id;
-			int q = FindId(cls, m.name);
+			int q;
+			if(m.kind == CXCursor_Constructor) {
+				q = cls.Find("::" + m.name + "(");
+				if(q >= 0)
+					q += 2;
+			}
+			else
+			if(m.kind == CXCursor_Destructor) {
+				q = cls.Find('~');
+			}
+			else
+				q = FindId(cls, m.name);
 			if(q >= 0) {
 				cls.Trim(q);
 				if(m.nspace.GetCount())

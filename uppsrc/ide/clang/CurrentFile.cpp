@@ -2,7 +2,8 @@
 
 #define LLOG(x)
 
-Semaphore                              current_file_event;
+bool                                   current_file_parsing;
+Semaphore                              current_file_event; // TODO?
 CurrentFileContext                     current_file;
 int64                                  current_file_serial;
 int64                                  current_file_done_serial;
@@ -66,18 +67,23 @@ void CurrentFileThread()
 				clang.Dispose();
 				{
 					TIMESTOP("CurrentFile parse");
+					current_file_parsing = true;
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_DetailedPreprocessingRecord|
 					            CXTranslationUnit_PrecompiledPreamble|
 					            CXTranslationUnit_CreatePreambleOnFirstParse|
 					            CXTranslationUnit_KeepGoing);
+					current_file_parsing = false;
 				}
 				DoAnnotations();
 			}
 			if(Thread::IsShutdownThreads()) break;
 			if(clang.tu && serial != done_serial) {
 				TIMESTOP("ReParse");
-				if(clang.ReParse(fn, f.content))
+				current_file_parsing = true;
+				bool b = clang.ReParse(fn, f.content);
+				current_file_parsing = false;
+				if(b)
 					DoAnnotations();
 			}
 		}
@@ -105,6 +111,11 @@ bool IsCurrentFileDirty()
 {
 	GuiLock __;
 	return current_file_serial != current_file_done_serial;
+}
+
+bool IsCurrentFileParsing()
+{
+	return current_file_parsing;
 }
 
 void CancelCurrentFile()

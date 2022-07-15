@@ -540,7 +540,7 @@ void Ide::DoDisplay()
 	editor.GetSelection(l, h);
 	if(h > l)
 		s << ", Sel " << h - l;
-	display.SetLabel(s);
+	display.Set(s);
 	
 	ManageDisplayVisibility();
 }
@@ -645,6 +645,45 @@ void Ide::Periodic()
 	SetIcon();
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
+	SyncClang();
+}
+
+void Ide::SyncClang()
+{
+	Vector<Color> a;
+	Color display_ink = Null;
+	int phase = msecs() / 30;
+	auto Animate = [=](int& animator, int& dir, bool animate) -> Color {
+		if(animator <= 0 && !animate) return Null;
+		if(animate)
+			dir = clamp(dir, -1, 1);
+		else
+			dir = -3;
+		if(animator >= 15)
+			dir = -1;
+		if(animator <= 0)
+			dir = 1;
+		if(phase != animate_phase)
+			animator = max(animator + dir, 0);
+		Color bg;
+		if(IsDarkTheme())
+			bg = GrayColor(70 + animator);
+		else {
+			bg = SColorLtFace();
+			auto C = [&](int c) { return clamp(c - animator, 0, 255); };
+			bg = Color(C(bg.GetR()), C(bg.GetG()), C(bg.GetG()));
+		}
+		return bg;
+	};
+	Color bg = Animate(animate_current_file, animate_current_file_dir, IsCurrentFileParsing());
+	if(!IsNull(bg)) {
+		int cx = editor.GetBarSize().cx;
+		for(int i = 0; i < cx; i++)
+			a.Add(bg);
+	}
+	editor.AnimateBar(pick(a));
+	display.Animate(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
+	animate_phase = phase;
 }
 
 const Workspace& Ide::IdeWorkspace() const

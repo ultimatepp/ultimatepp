@@ -467,6 +467,8 @@ bool Ide::FileRemove()
 
 void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername)
 {
+	animate_current_file = animate_current_file_dir = animate_autocomplete = animate_autocomplete_dir = 0;
+
 	AKEditor();
 	editor.CheckEdited(false);
 	editor.CloseAssist();
