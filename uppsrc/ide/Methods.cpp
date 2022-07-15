@@ -883,17 +883,20 @@ String Ide::GetCurrentIncludePath()
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
 
 	const Workspace& wspc = GetIdeWorkspace();
-	Host dummy_host;
-	One<Builder> b = CreateBuilder(&dummy_host);
+	
+	Host host;
+	CreateHost(host, false, false);
+	One<Builder> b = CreateBuilder(&host);
+	Index<String> cfg = PackageConfig(wspc, GetPackageIndex(), GetMethodVars(method), mainconfigparam, host, *b);
 	Index<String> pkg_config;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
-		for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
+		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
-
+	
 	static VectorMap<String, String> cflags;
 	for(String s : pkg_config) {
 		int q = cflags.Find(s);
