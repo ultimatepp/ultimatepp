@@ -23,6 +23,7 @@ struct SourceLocation {
 };
 
 String RedefineMacros();
+String GetClangInternalIncludes();
 
 enum AdditionalKinds {
 	KIND_INCLUDEFILE = -1000,

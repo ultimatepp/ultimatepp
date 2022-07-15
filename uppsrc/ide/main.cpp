@@ -116,8 +116,6 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		return Upp::GetExitCode(); \
 }
 
-String GetClangInternalIncludes();
-
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
