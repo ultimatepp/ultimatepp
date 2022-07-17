@@ -361,6 +361,7 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 		DeactivationSave(true);
 		SaveFile();
 		DeactivationSave(false);
+		editor.SyncHeaders();
 	}
 	TopWindow::DeactivateBy(new_focus);
 }

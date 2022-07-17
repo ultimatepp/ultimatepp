@@ -351,7 +351,7 @@ struct CursorInfoCtrl : Ctrl {
 	void Paint(Draw& w) override;
 
 	void Set(const String& s) { text = s; Refresh(); }
-	void Animate(Color c)     { animate = c; Refresh(); }
+	void Animate(Color c)     { if(animate != c) { animate = c; Refresh(); } }
 	
 	CursorInfoCtrl();
 };

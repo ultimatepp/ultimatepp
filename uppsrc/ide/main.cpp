@@ -143,6 +143,7 @@ void AppMain___()
 	auto arg = clone(cmd_handler.GetArgs());
 
 	SetVppLogSizeLimit(200000000);
+//	SetVppLogSizeLimit(2000000000); _DBG_
 	
 	if(!CheckLicense())
 		return;

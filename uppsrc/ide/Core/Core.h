@@ -37,6 +37,57 @@ class  Ctrl;
 class  Image;
 }
 
+class Hdepend {
+	struct Info {
+		Time                      time;
+		Vector<int>               depend;
+		Vector<bool>              bydefine;
+		Index<String>             macroinclude; // includes by macro, like #include LAYOUTFILE
+		Vector<String>            define;
+		bool                      flag;
+		bool                      macroflag; // prevent infinite recursion in GetMacroIndex
+		bool                      timedirty;
+		bool                      guarded; // has guards or BLITZ_APPROVED
+		bool                      blitzprohibit; // has BLITZ_PROHIBIT
+
+		bool                      CanBlitz() { return guarded && !blitzprohibit; }
+
+		Info()                   { time = Null; flag = false; timedirty = true; guarded = false; }
+	};
+
+	ArrayMap<String, Info>            map;
+	Vector<String>                    incdir; // include directories
+	VectorMap<String, Index<String> > depends; // externally forced dependecies
+	bool                              cache_time = false;
+
+	void   Include(const char *trm, Info& info, const String& filedir, bool bydefine);
+	void   ScanFile(const String& path, int map_index);
+	int    File(const String& path);
+	Time   FileTime(int i);
+	void   ClearFlag();
+	void   ClearMacroFlag();
+	void   GetMacroIndex(Index<String>& dest, int ix);
+
+public:
+	void  SetDirs(Vector<String>&& id)         { incdir = pick(id); map.Clear(); }
+	void  SetDirs(const String& includes)      { incdir = pick(Split(includes, ';')); map.Clear(); }
+	void  TimeDirty();
+
+	void                  ClearDependencies()  { depends.Clear(); }
+	void                  AddDependency(const String& file, const String& depends);
+
+	Time                  FileTime(const String& path);
+	bool                  BlitzApproved(const String& path);
+	
+	static String         FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
+
+	String                FindIncludeFile(const char *s, const String& filedir) { return FindIncludeFile(s, filedir, incdir); }
+	const Vector<String>& GetDefines(const String& path);
+	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
+	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
+	void                  CacheTime()                             { cache_time = true; }
+};
+
 class IdeContext
 {
 public:
@@ -501,15 +552,12 @@ struct Builder {
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());
 
-String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdir);
-
 void                  HdependSetDirs(Vector<String> pick_ id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);
 Time                  HdependFileTime(const String& path);
 Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
-String                FindIncludeFile(const char *s, const String& filedir);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
 const Vector<String>& HdependGetAllFiles();

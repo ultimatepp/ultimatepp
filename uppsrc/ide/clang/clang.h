@@ -115,6 +115,7 @@ String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
 
 bool   IsSourceFile(const String& path);
+bool   IsHeaderFile(const String& path);
 
 class ClangVisitor {
 	bool initialized = false;

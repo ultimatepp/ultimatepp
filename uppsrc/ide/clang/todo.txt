@@ -1,0 +1,41 @@
+- autocomplete <Functions>, <macros>, ....
+
+- autocomplete <symbols>
+
+- TMPDIR?
+
+- inbody
+
+- failed AC keeps running (sites[i]. instead of ->)
+
+- writing to text is slow (IsSource detection?)
+
+- background thread problem
+
+- MSVC
+
+- Enum annotations
+
+- optimise loading
+
+- TPP HELP WINDOW->EDITOR - go to active label
+
+- Do TODOs
+
+- QTF :\1label\1:
+
+- autocomplete templates ?
+
+- recognized headers slow
+
+- unrecognized headers slow
+
+- header header
+
+- aux files / autocomplete
+
+- this is just a test                               
+
+
+
+                         

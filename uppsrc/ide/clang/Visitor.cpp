@@ -1,22 +1,52 @@
 #include "clang.h"
 
+// #define DUMPTREE
+
 bool ClangVisitor::ProcessNode(CXCursor c)
 {
 	cursor = c;
 	CXSourceLocation cxlocation = clang_getCursorLocation(cursor);
 
+	CXCursorKind cursorKind = clang_getCursorKind(cursor);
+
+#ifdef DUMPTREE
+	_DBG_
+	DLOG("=====================================");
+	DDUMP(GetCursorKindName(cursorKind));
+	DDUMP(SourceLocation(cxlocation));
+#endif
+
 	if(!clang_Location_isFromMainFile(cxlocation))
-		return false;
+		return findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
+		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
+		                           CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ClassTemplate,
+		                           CXCursor_ClassTemplatePartialSpecialization, CXCursor_UnexposedDecl,
+		                           CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
+		                           CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
 
 	String m;
 
 	CXCursor parent = clang_getCursorSemanticParent(cursor);
-	CXCursorKind cursorKind = clang_getCursorKind(cursor);
 	CXCursorKind parentKind = clang_getCursorKind(parent);
 
 	name = GetCursorSpelling(cursor);
 	type = GetTypeSpelling(cursor);
 	String pid = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
+
+#ifdef DUMPTREE
+	_DBG_
+	CXCursor ref = clang_getCursorReferenced(cursor);
+	CXCursorKind refKind = clang_getCursorKind(ref);
+
+	String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_pretty));
+	if(rs.GetCount()) {
+		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+		DDUMP(FetchString(clang_getCursorPrettyPrinted(parent, pp_pretty)));
+		DDUMP(GetCursorKindName(refKind));
+		DDUMP(FetchString(clang_getCursorUSR(ref)));
+		DDUMP(rs);
+	}
+#endif
 
 	CXCursor p = parent;
 	scope.Clear();
@@ -96,9 +126,15 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 
 
 CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData) {
+#ifdef DUMPTREE
+	LOGBEGIN();
+#endif
 	ClangVisitor *v = (ClangVisitor *)clientData;
-	v->ProcessNode(cursor);
-	clang_visitChildren(cursor, clang_visitor, clientData);
+	if(v->ProcessNode(cursor))
+		clang_visitChildren(cursor, clang_visitor, clientData);
+#ifdef DUMPTREE
+	LOGEND();
+#endif
 	return CXChildVisit_Continue;
 }
 

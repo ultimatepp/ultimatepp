@@ -453,23 +453,11 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();
 		if(!IsSourceFile(cfx.filename)) {
-			for(int pass = 0; pass < 2; pass++) { // all packages in second pass
-				const Workspace& wspc = GetIdeWorkspace();
-				for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
-					const Package& pk = wspc.GetPackage(i);
-					String n = wspc[i];
-					if(pass) {
-						if(MakeIncludeTrick(pk, n, cfx, line_delta))
-							return cfx;
-					}
-					else
-					for(int i = 0; i < pk.file.GetCount(); i++) {
-						if(PathIsEqual(cfx.filename, SourcePath(n, pk.file[i])))
-							if(MakeIncludeTrick(pk, n, cfx, line_delta))
-								return cfx;
-					}
-				}
-			}
+			if(master_source.GetCount())
+				MakeIncludeTrick(cfx, line_delta);
+			else
+			if(!IsHeaderFile(cfx.filename))
+				cfx.content.Clear();
 		}
 	}
 	return cfx;
@@ -506,6 +494,7 @@ void AssistEditor::NewFile()
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	SyncCurrentFile(cfx, line_delta);
 	SetAutoCompleteFile(cfx);
+	SyncHeaders();
 }
 
 void AssistEditor::Assist(bool macros)
@@ -813,6 +802,23 @@ bool AssistEditor::Key(dword key, int count)
 			}
 		Exclamation("No annotation for this line.");
 	}
+	if(key == K_F11) {
+		HdependTimeDirty();
+		VectorMap<String, Vector<String>> deps;
+		{
+			TIMESTOP("Scan");
+			const Workspace& wspc = GetIdeWorkspace();
+			for(int i = 0; i < wspc.GetCount(); i++) {
+				const Package& pk = wspc.GetPackage(i);
+				String n = wspc[i];
+				for(int i = 0; i < pk.file.GetCount(); i++) {
+					String path = SourcePath(n, pk.file[i]);
+					deps.GetAdd(path) = pick(HdependGetDependencies(path));
+				}
+			}
+		}
+		DDUMPM(deps);
+	}
 #endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
@@ -945,6 +951,7 @@ String AssistEditor::RemoveDefPar(const char *s)
 	return r;
 }
 
+// TODO: remove
 String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 {
 	String n = TrimLeft(_n);

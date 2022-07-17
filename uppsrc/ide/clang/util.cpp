@@ -6,6 +6,12 @@ bool IsSourceFile(const String& path)
 	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp", ".c") >= 0;
 }
 
+bool IsHeaderFile(const String& path)
+{
+	String ext = ToLower(GetFileExt(path));
+	return findarg(ext, ".h", ".hxx", ".hpp", ".hh") >= 0;
+}
+
 bool IsStruct(int kind)
 {
 	return findarg(kind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,

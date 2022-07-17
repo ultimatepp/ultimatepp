@@ -187,11 +187,17 @@ struct AssistEditor : CodeEditor, Navigator {
 	static Ptr<Ctrl> assist_ptr;
 
 	bool      navigator_right = true;
+	
+	Hdepend   hdepend;
+	String    master_source;
 
 	CurrentFileContext CurrentContext(int& line_delta);
 	void               SyncCurrentFile(CurrentFileContext& ctx, int line_delta);
 	void               SyncCurrentFile();
+	void               SyncHeaders();
 	void               NewFile();
+	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
+	void               MakeIncludeTrick(CurrentFileContext& cfx, int& line_delta);
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();

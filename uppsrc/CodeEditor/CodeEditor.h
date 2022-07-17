@@ -138,7 +138,7 @@ public:
 	
 	int      GetActiveAnnotationLine() const { return active_annotation; }
 	
-	void     SetAnimate(Vector<Color>&& a)   { animate = pick(a); Refresh(); }
+	void     SetAnimate(const Vector<Color>& a)   { if(a != animate) { animate = clone(a); Refresh(); } }
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -514,7 +514,7 @@ public:
 	int      GetActiveAnnotationLine() const          { return bar.GetActiveAnnotationLine(); }
 	Size     GetBarSize() const                       { return bar.GetSize(); }
 	void     HideBar()                                { bar.Hide(); }
-	void     AnimateBar(Vector<Color>&& a)            { bar.SetAnimate(pick(a)); }
+	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
