@@ -333,8 +333,10 @@ void AppMain___()
 				ide.SaveLastMain();
 				ide.isscanning++;
 				ide.MakeTitle();
-				if(!ide.IsEditorMode())
+				if(!ide.IsEditorMode()) {
 					SyncRefs();
+					StartIndexing(ide.GetCurrentIncludePath(), ide.GetCurrentDefines());
+				}
 				ide.FileSelected();
 				ide.isscanning--;
 				ide.MakeTitle();

@@ -1068,8 +1068,10 @@ EditField& EditField::SetFont(Font _font)
 
 EditField& EditField::SetColor(Color c)
 {
-	SetColorAttr(ATTR_TEXTCOLOR, c);
-	Refresh();
+	if(GetColorAttr(ATTR_TEXTCOLOR) != c) {
+		SetColorAttr(ATTR_TEXTCOLOR, c);
+		Refresh();
+	}
 	return *this;
 }
 

@@ -4,8 +4,8 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
            int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
 	static int maxascent = MaxAscent(BrowserFont());
-	for(int i = starti; i < count; i++) {
-		const ItemTextPart& p = n[i];
+	for(int i = 0; i < count; i++) {
+		const ItemTextPart& p = n[starti + i];
 		Font f = BrowserFont();
 		Color ink = SColorText;
 		switch(p.type) {

@@ -27,6 +27,38 @@ Image CxxIcon(int kind)
 	return BrowserImg::unknown();
 }
 
+int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last)
+{
+	int x = r.left;
+	
+	Image img = CxxIcon(kind);
+	Size isz = img.GetSize();
+	w.DrawImage(x + (DPI(16) - isz.cx) / 2, r.top + (r.GetHeight() - isz.cy) / 2, img);
+
+	x += DPI(16);
+	int y = r.top + (r.GetHeight() - Draw::GetStdFontCy()) / 2;
+
+#ifdef _DEBUG
+	String ks = " [" + AsString(kind) + "] ";
+	w.DrawText(x, y, ks);
+	x += GetTextSize(ks, StdFont()).cx;
+#endif
+
+	Vector<ItemTextPart> n = ParsePretty(name, pretty);
+	int count = n.GetCount();
+	if(retval_last)
+		for(int i = 0; i < n.GetCount(); i++)
+			if(n[i].type == ITEM_NAME) {
+				PaintText(w, x, y, pretty, n, i, count - i, focuscursor, ink, false);
+				w.DrawText(x, y, " → ", StdFont(), SGray());
+				x += GetTextSize(" → ", StdFont()).cx;
+				count = i;
+				break;
+			}
+	PaintText(w, x, y, pretty, n, 0, count, focuscursor, ink, false);
+	return x;
+}
+
 void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
@@ -34,26 +66,7 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 		AutoCompleteItem& m = editor->assist_item[editor->assist_item_ndx[ii]];
 
 		w.DrawRect(r, paper);
-		bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-
-		int x = r.left;
-		int ry = r.top + r.GetHeight() / 2;
 		
-		Image img = CxxIcon(m.kind);
-		Size isz = img.GetSize();
-		w.DrawImage(x + (DPI(16) - isz.cx) / 2, r.top + (r.GetHeight() - isz.cy) / 2, img);
-	
-		x += DPI(16);
-		int y = ry - Draw::GetStdFontCy() / 2;
-	#ifdef _DEBUG
-		String ks = " [" + AsString(m.kind) + "] ";
-		w.DrawText(x, y, ks);
-		x += GetTextSize(ks, StdFont()).cx;
-	#endif
-		int x0 = x;
-		Vector<ItemTextPart> n = ParseSignature(m.name, m.signature);
-
-		int starti = 0;
-		PaintText(w, x, y, m.signature, n, starti, n.GetCount(), focuscursor, ink, false);
+		PaintCpp(w, r, m.kind, m.name, m.signature, ink, (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT));
 	}
 }

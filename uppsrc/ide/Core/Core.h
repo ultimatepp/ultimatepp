@@ -58,7 +58,7 @@ class Hdepend {
 	ArrayMap<String, Info>            map;
 	Vector<String>                    incdir; // include directories
 	VectorMap<String, Index<String> > depends; // externally forced dependecies
-	bool                              cache_time = false;
+	bool                              console = true;
 
 	void   Include(const char *trm, Info& info, const String& filedir, bool bydefine);
 	void   ScanFile(const String& path, int map_index);
@@ -69,8 +69,8 @@ class Hdepend {
 	void   GetMacroIndex(Index<String>& dest, int ix);
 
 public:
-	void  SetDirs(Vector<String>&& id)         { incdir = pick(id); map.Clear(); }
-	void  SetDirs(const String& includes)      { incdir = pick(Split(includes, ';')); map.Clear(); }
+	void  SetDirs(Vector<String>&& id);
+	void  SetDirs(const String& includes);
 	void  TimeDirty();
 
 	void                  ClearDependencies()  { depends.Clear(); }
@@ -85,7 +85,7 @@ public:
 	const Vector<String>& GetDefines(const String& path);
 	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
 	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
-	void                  CacheTime()                             { cache_time = true; }
+	void                  NoConsole()                             { console = false; }
 };
 
 class IdeContext
@@ -153,8 +153,8 @@ public:
 	virtual ~IdeContext() {}
 };
 
-IdeContext *TheIde();
-void        TheIde(IdeContext *context);
+Ide *TheIde();
+void TheIde(Ide *context);
 
 bool      IsVerbose();
 void      PutConsole(const char *s);
@@ -391,7 +391,6 @@ public:
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }
-		rval_default(File);
 	};
 	struct Config {
 		String name;

@@ -54,6 +54,7 @@ file
 	GoToLine.cpp,
 	Swaps.cpp,
 	ParamInfo.cpp,
+	Navigator2.cpp,
 	Navigator.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,

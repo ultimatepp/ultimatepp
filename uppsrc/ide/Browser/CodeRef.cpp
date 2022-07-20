@@ -346,7 +346,7 @@ void TopicEditor::InsertItem()
 String DecoratedItem(const String& name, const String& pretty)
 {
 	String qtf = "[%00-00K ";
-	Vector<ItemTextPart> n = ParseSignature(name, pretty);
+	Vector<ItemTextPart> n = ParsePretty(name, pretty);
 /* TODO
 	if(pari < 0) {
 		if(m.virt)
@@ -435,7 +435,7 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 	qtf << "[s3%" << lang << " ";
 
 	if(!str) {
-		Vector<ItemTextPart> n = ParseSignature(m.name, m.pretty);
+		Vector<ItemTextPart> n = ParsePretty(m.name, m.pretty);
 		if(!str) {
 			bool was;
 			for(const auto& h : n)

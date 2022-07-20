@@ -1,4 +1,4 @@
-#include "Browser.h"
+#include <ide/ide.h>
 
 #include <plugin/lz4/lz4.h>
 

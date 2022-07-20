@@ -10,7 +10,7 @@ bool IsCSourceFile(const char *path)
 bool IsCHeaderFile(const char *path)
 {
 	String ext = ToLower(GetFileExt(path));
-	return ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx";
+	return ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx" || ext == ".i";
 }
 
 bool IsFullDirectory(const String& d) {

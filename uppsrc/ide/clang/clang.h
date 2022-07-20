@@ -32,8 +32,9 @@ enum AdditionalKinds {
 	KIND_COMPLETE,
 };
 
-Image CxxIcon(int kind); // TODO: Move here
-String SignatureQtf(const String& name, const String& signature, int pari);
+Image  CxxIcon(int kind); // TODO: Move here
+int    PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last = false);
+String SignatureQtf(const String& name, const String& pretty, int pari);
 
 bool IsStruct(int kind);
 bool IsTemplate(int kind);
@@ -64,12 +65,12 @@ struct ItemTextPart : Moveable<ItemTextPart> {
 	int pari;
 };
 
-Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info = NULL);
+Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info = NULL);
 
 struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 	String parent;
 	String name;
-	String signature;
+	String signature; // TODO: rename to pretty
 	int    kind;
 	int    priority;
 };
@@ -78,10 +79,15 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
 	int    line;
 	bool   definition;
-	String name;
-	String id;
-	String pretty;
-	String nspace;
+	String name; // Method
+	String id; // Upp::Class::Method(Upp::Point p)
+	String pretty; // void Class::Method(Point p)
+	String nspace; // Upp
+	String uname; // METHOD
+	String nest; // Upp::Class
+	String unest; // UPP::CLASS
+	
+	~AnnotationItem() { DHITCOUNT("AnnotationItem"); }
 };
 
 struct CurrentFileContext {
@@ -91,6 +97,8 @@ struct CurrentFileContext {
 	String                   defines;
 	String                   content;
 };
+
+enum { PARSE_FILE = 0x80000000 };
 
 struct Clang {
 	CXIndex           index = nullptr;
@@ -121,36 +129,14 @@ class ClangVisitor {
 	bool initialized = false;
 	CXPrintingPolicy pp_id, pp_pretty;
 	
-	CXCursor cursor;
-	int      kind;
-	String   name;
-	String   id;
-	String   type;
-	String   scope;
-	String   nspace;
-	String   pretty;
-	bool     annotation;
-	int      line;
-	int      column;
-
 	bool ProcessNode(CXCursor c);
 
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
 
 public:
-	virtual void Item() = 0;
-
-	int    GetKind() const      { return kind; }
-	String GetId() const        { return id; }
-	String GetName() const      { return name; }
-	String GetType() const      { return type; }
-	String GetScope() const     { return scope; }
-	String GetNamespace() const { return nspace; }
-	String GetPretty() const    { return pretty; }
-	bool   IsDefinition() const { return clang_isCursorDefinition(cursor); }
-	bool   IsAnnotation() const { return annotation; }
-	int    GetLine() const      { return line; }
-	int    GetColumn() const    { return column; }
+	VectorMap<String, Vector<AnnotationItem>> item;
+	
+	Gate<const String&> WhenFile;
 
 	void Do(CXTranslationUnit tu);
 	~ClangVisitor();
@@ -166,5 +152,19 @@ bool IsAutocompleteParsing();
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();
+
+
+struct FileAnnotation {
+	String defines;
+	String includes;
+	Time   time;
+	
+	Vector<AnnotationItem> items;
+};
+
+bool IsIndexing();
+void StartIndexing(const String& includes, const String& defines);
+
+const ArrayMap<String, FileAnnotation>& CodeIndex();
 
 #endif

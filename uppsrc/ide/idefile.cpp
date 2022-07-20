@@ -303,7 +303,6 @@ void Ide::SaveFile(bool always)
 {
 	issaving++;
 	SaveFile0(always);
-	editor.SyncHeaders();
 	issaving--;
 }
 

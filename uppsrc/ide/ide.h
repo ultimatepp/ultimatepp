@@ -724,6 +724,7 @@ public:
 	
 	int           animate_current_file = 0, animate_current_file_dir = 0;
 	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
+	int           animate_indexer = 0, animate_indexer_dir = 0;
 	int           animate_phase = 0;
 
 // ------------------------------------

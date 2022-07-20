@@ -8,13 +8,9 @@
 
 - failed AC keeps running (sites[i]. instead of ->)
 
-- writing to text is slow (IsSource detection?)
-
 - background thread problem
 
 - MSVC
-
-- Enum annotations
 
 - optimise loading
 
@@ -36,6 +32,61 @@
 
 - this is just a test                               
 
+- OpenWind.h autocomplete
+
+- server_methods.i
+
+- fixups?
+
+- enum annotation popup (Ctrl::)
+
+- .txt is pulsing all time
+
+- Remove template < > in autocomplete
+
+- newly created file looks like parsing until first function(?)
+
+- current file indexing
+
+- check editor mode
+
+- navlines
+
+- navigator - GotoDesignerFile
+
+- i < items crash at start occassionally
+
+- * nest in navigator local file
+
+- remove $blitz items
+
+- constructor/destructor name is not bold (check destructor in navigator display)
+
+- PaintCpp ending spaces in navigator
+
+- Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
+
+- x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
+
+LATER:
+
+- slow .txt
+
+- optimise hdepend (then maybe remove .h limitation for syncheaders)
 
 
-                         
+
+DONE:
+
+- Upp:: missing from Vector
+
+- class Ctrl
+
+- class Logc
+
+- writing to text is slow (IsSource detection?)
+
+- .txt keeps syncing
+
+- Enum annotations
+

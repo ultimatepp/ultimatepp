@@ -1,3 +1,7 @@
+#if 0
+
+// TODO: remove
+
 #include "ide.h"
 
 #define LTIMING(x) // RTIMING(x)
@@ -750,3 +754,5 @@ void Navigator::NaviSort()
 	sorting = !sorting;
 	Search();
 }
+
+#endif

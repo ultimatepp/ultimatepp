@@ -1,4 +1,4 @@
-#include "Browser.h"
+#include <ide/ide.h>
 
 bool IsTopicFile(const char *path)
 {

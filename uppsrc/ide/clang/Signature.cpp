@@ -177,7 +177,7 @@ String CleanupPretty(const String& signature)
 	return r;
 }
 
-Vector<ItemTextPart> ParseSignature(const String& name, const String& signature, int *fn_info)
+Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info)
 {
 	Vector<ItemTextPart> part;
 	int name_len = name.GetLength();
@@ -233,14 +233,12 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 					p.type = ITEM_CPP_TYPE;
 				}
 				else
-				if(IsCppType(id)) {
-					p.type = ITEM_CPP_TYPE;
-					if(lastidi >= 0 && par == 0)
-						was_type = true;
+				if(IsCppKeyword(id)) {
+					if(id == "virtual")
+						part.Drop();
+					else
+						p.type = ITEM_CPP;
 				}
-				else
-				if(IsCppKeyword(id))
-					p.type = ITEM_CPP;
 				else
 				if(param) {
 					if(lastidi >= 0 && par == 0)
@@ -301,10 +299,10 @@ Vector<ItemTextPart> ParseSignature(const String& name, const String& signature,
 
 Image CxxIcon(int kind);
 
-String SignatureQtf(const String& name, const String& signature, int pari)
+String SignatureQtf(const String& name, const String& pretty, int pari)
 {
 	String qtf = "[%00-00K ";
-	Vector<ItemTextPart> n = ParseSignature(name, signature);
+	Vector<ItemTextPart> n = ParsePretty(name, pretty);
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
@@ -331,7 +329,7 @@ String SignatureQtf(const String& name, const String& signature, int pari)
 			break;
 		}
 		qtf << ' ';
-		qtf << '\1' << signature.Mid(p.pos, p.len) << '\1';
+		qtf << '\1' << pretty.Mid(p.pos, p.len) << '\1';
 		qtf << ']';
 	}
 	return qtf + "]";

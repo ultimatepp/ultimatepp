@@ -5,11 +5,12 @@
 void AssistEditor::SyncHeaders()
 {
 //	hdepend.CacheTime();
+	TIMESTOP("SyncHeaders");
 	hdepend.TimeDirty();
 	hdepend.SetDirs(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 	master_source.Clear();
 	String editfile = NormalizePath(theide->editfile);
-	if(editfile.GetCount() && !IsSourceFile(editfile)) {
+	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
 		for(int pass = 0; pass < 2; pass++) { // all packages in second pass
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file

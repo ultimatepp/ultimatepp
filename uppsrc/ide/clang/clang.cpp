@@ -77,6 +77,8 @@ void Clang::Dispose()
 bool Clang::Parse(const String& filename, const String& content, const String& includes_, const String& defines, dword options)
 {
 	if(!index) return false;
+	
+	Dispose();
 
 	String cmdline;
 
@@ -99,10 +101,12 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 
 	for(const String& s : args)
 		argv.Add(~s);
-	
-	CXUnsavedFile ufile = { ~filename, ~content, (unsigned)content.GetCount() };
 
-	tu = clang_parseTranslationUnit(index, nullptr, argv, argv.GetCount(), &ufile, 1, options);
+	CXUnsavedFile ufile = { ~filename, ~content, (unsigned)content.GetCount() };
+	tu = clang_parseTranslationUnit(index, nullptr, argv, argv.GetCount(),
+	                                options & PARSE_FILE ? nullptr : &ufile,
+	                                options & PARSE_FILE ? 0 : 1,
+	                                options);
 
 //	DumpDiagnostics(tu);
 	

@@ -69,7 +69,8 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 	
 	WhenUpdate << [=] {
-		annotate_trigger.KillSet(100, [=] { SyncCurrentFile(); });
+		annotating = true;
+		annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
 	};
 }
 
@@ -460,6 +461,10 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 				cfx.content.Clear();
 		}
 	}
+#ifdef _DEBUG
+	if(cfx.content.GetCount())
+		SaveFile(ConfigFile("pseudo_header_src.cpp"), cfx.content);
+#endif
 	return cfx;
 }
 
@@ -478,6 +483,9 @@ void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
 					              m.id);
 				}
 			}
+			annotating = false;
+			if(!navigator_global)
+				Search();
 		});
 }
 
@@ -490,11 +498,11 @@ void AssistEditor::SyncCurrentFile()
 
 void AssistEditor::NewFile()
 {
+	SyncHeaders();
 	int line_delta;
 	CurrentFileContext cfx = CurrentContext(line_delta);
 	SyncCurrentFile(cfx, line_delta);
 	SetAutoCompleteFile(cfx);
-	SyncHeaders();
 }
 
 void AssistEditor::Assist(bool macros)
@@ -744,7 +752,7 @@ void AssistEditor::AssistInsert()
 		else {
 			String txt = f.name;
 			int param_count;
-			ParseSignature(f.name, f.signature, &param_count);
+			ParsePretty(f.name, f.signature, &param_count);
 			if(param_count >= 0)
 				txt << "()";
 			if(f.signature.EndsWith("::"))
@@ -803,21 +811,7 @@ bool AssistEditor::Key(dword key, int count)
 		Exclamation("No annotation for this line.");
 	}
 	if(key == K_F11) {
-		HdependTimeDirty();
-		VectorMap<String, Vector<String>> deps;
-		{
-			TIMESTOP("Scan");
-			const Workspace& wspc = GetIdeWorkspace();
-			for(int i = 0; i < wspc.GetCount(); i++) {
-				const Package& pk = wspc.GetPackage(i);
-				String n = wspc[i];
-				for(int i = 0; i < pk.file.GetCount(); i++) {
-					String path = SourcePath(n, pk.file[i]);
-					deps.GetAdd(path) = pick(HdependGetDependencies(path));
-				}
-			}
-		}
-		DDUMPM(deps);
+		StartIndexing(theide->GetCurrentIncludePath(), theide->GetCurrentDefines());
 	}
 #endif
 	if(popup.IsOpen()) {

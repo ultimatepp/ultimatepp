@@ -85,7 +85,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 
 	auto Id = [&](const char *id) {
 		int n = strlen(id);
-		if(memcmp(term, id, n) == 0 && findarg(term[n], ' ', '\t')) {
+		if(memcmp(term, id, n) == 0 && findarg(term[n], ' ', '\t') >= 0) {
 			term += n + 1;
 			return true;
 		}
@@ -160,6 +160,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 							if(p.Char('#') && p.Id("define") && p.IsId() && id == p.ReadId())
 								info.guarded = true;
 						}
+						term = p.GetPtr();
 					}
 					catch(CParser::Error) {}
 				}
@@ -268,29 +269,19 @@ int Hdepend::File(const String& f)
 	Info& info = map[ii];
 	if(info.flag) return ii;
 	info.flag = true;
-	if(cache_time) {
+	Time file_time = FileGetTime(path);
+	if(IsNull(file_time) || file_time == info.time) {
 		if(info.timedirty) {
-			info.time = FileGetTime(path);
 			for(int i = 0; i < info.depend.GetCount(); i++)
 				File(map.GetKey(info.depend[i]));
 			info.timedirty = false;
 		}
 	}
 	else {
-		Time file_time = FileGetTime(path);
-		if(IsNull(file_time) || file_time == info.time) {
-			if(info.timedirty) {
-				for(int i = 0; i < info.depend.GetCount(); i++)
-					File(map.GetKey(info.depend[i]));
-				info.timedirty = false;
-			}
-		}
-		else {
-			info.time = file_time;
-			if(info.time > GetSysTime() + 10)
-				PutConsole(String().Cat() << "WARNING: " << path << " has invalid (future) time " << info.time);
-			ScanFile(path, ii);
-		}
+		info.time = file_time;
+		if(console && info.time > GetSysTime() + 10)
+			PutConsole(String().Cat() << "WARNING: " << path << " has invalid (future) time " << info.time);
+		ScanFile(path, ii);
 	}
 	return ii;
 }
@@ -355,6 +346,19 @@ void Hdepend::ClearMacroFlag()
 		map[i].macroflag = false;
 }
 
+void Hdepend::SetDirs(Vector<String>&& id)
+{
+	if(incdir != id) {
+		incdir = pick(id);
+		map.Clear();
+	}
+}
+
+void Hdepend::SetDirs(const String& includes)
+{
+	SetDirs(pick(Split(includes, ';')));
+}
+
 void Hdepend::TimeDirty()
 {
 	for(int i = 0; i < map.GetCount(); i++)
@@ -376,7 +380,7 @@ Time Hdepend::FileTime(const String& path)
 			FindFile ff(dep[i]);
 			if(ff) {
 				Time tm = ff.GetLastWriteTime();
-				if(tm > GetSysTime() + 10)
+				if(console && tm > GetSysTime() + 10)
 					PutConsole(String().Cat() << "WARNING: " << dep[i] << " has invalid (future) time " << tm);
 				if(tm > h)
 					h = tm;
@@ -398,8 +402,9 @@ bool Hdepend::BlitzApproved(const String& path)
 		return true;
 	for(int i = 0; i < info.depend.GetCount(); i++)
 		if(!info.bydefine[i] && !map[info.depend[i]].CanBlitz()) {
-			PutVerbose(String().Cat() << map.GetKey(info.depend[i])
-			           << "(1) : blocks BLITZ of " << path);
+			if(console)
+				PutVerbose(String().Cat() << map.GetKey(info.depend[i])
+				           << "(1) : blocks BLITZ of " << path);
 			return false;
 		}
 	return true;

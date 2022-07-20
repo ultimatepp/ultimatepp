@@ -62,7 +62,6 @@ void AutocompleteThread()
 			   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
 			   !clang.tu) {
 				parsed_file = f;
-				clang.Dispose();
 				TIMESTOP("Autocomplete parse");
 				autocomplete_parsing = true;
 				clang.Parse(fn, f.content, f.includes, f.defines,
@@ -79,10 +78,10 @@ void AutocompleteThread()
 				CXCodeCompleteResults *results;
 				{
 					TIMESTOP("clang_codeCompleteAt");
-					autocomplete_parsing = false;
+					autocomplete_parsing = true;
 					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
 					                               macros ? CXCodeComplete_IncludeMacros : 0);
-					autocomplete_parsing = true;
+					autocomplete_parsing = false;
 				}
 				DumpDiagnostics(clang.tu);
 				if(results) {

@@ -361,7 +361,6 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 		DeactivationSave(true);
 		SaveFile();
 		DeactivationSave(false);
-		editor.SyncHeaders();
 	}
 	TopWindow::DeactivateBy(new_focus);
 }
@@ -657,32 +656,19 @@ void Ide::SyncClang()
 	auto Animate = [=](int& animator, int& dir, bool animate) -> Color {
 		if(animator <= 0 && !animate) return Null;
 		if(animate)
-			dir = clamp(dir, -1, 1);
+			animator = 20;
 		else
-			dir = -3;
-		if(animator >= 15)
-			dir = -1;
-		if(animator <= 0)
-			dir = 1;
-		if(phase != animate_phase)
-			animator = max(animator + dir, 0);
-		Color bg;
-		if(IsDarkTheme())
-			bg = GrayColor(70 + animator);
-		else {
-			bg = SColorLtFace();
-			auto C = [&](int c) { return clamp(c - animator, 0, 255); };
-			bg = Color(C(bg.GetR()), C(bg.GetG()), C(bg.GetG()));
-		}
-		return bg;
+			animator -= 3;
+		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
 	};
-	Color bg = Animate(animate_current_file, animate_current_file_dir, IsCurrentFileParsing());
+	Color bg = Animate(animate_current_file, animate_current_file_dir, editor.annotating || IsCurrentFileParsing());
 	if(!IsNull(bg)) {
 		int cx = editor.GetBarSize().cx;
 		for(int i = 0; i < cx; i++)
-			a.Add(bg);
+			a.Add(i > cx - DPI(6) ? bg : Null);
 	}
 	editor.AnimateBar(pick(a));
+	editor.search.SetColor(Animate(animate_indexer, animate_indexer_dir, IsIndexing()));
 	display.Animate(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
 	animate_phase = phase;
 }

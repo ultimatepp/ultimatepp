@@ -9,20 +9,6 @@ int64                                  current_file_serial;
 int64                                  current_file_done_serial;
 Event<const Vector<AnnotationItem>&>   annotations_done;
 
-struct CurrentFileVisitor : ClangVisitor {
-	Vector<AnnotationItem> item;
-	virtual void Item() {
-		AnnotationItem& r = item.Add();
-		r.kind = GetKind();
-		r.name = GetName();
-		r.line = GetLine();
-		r.id = GetId();
-		r.pretty = GetPretty();
-		r.definition = IsDefinition();
-		r.nspace = GetNamespace();
-	}
-};
-
 void CurrentFileThread()
 {
 	MemoryIgnoreLeaksBlock __;
@@ -34,7 +20,7 @@ void CurrentFileThread()
 
 	auto DoAnnotations = [&] {
 		if(!clang.tu || !annotations_done) return;
-		CurrentFileVisitor v;
+		ClangVisitor v;
 		v.Do(clang.tu);
 	//	DumpDiagnostics(clang.tu);
 		Ctrl::Call([&] {
@@ -42,7 +28,7 @@ void CurrentFileThread()
 			   parsed_file.real_filename == current_file.real_filename &&
 			   parsed_file.includes == current_file.includes &&
 			   serial == current_file_serial)
-				annotations_done(v.item);
+				annotations_done(v.item[0]);
 			current_file_done_serial = serial;
 		});
 	};
@@ -64,7 +50,6 @@ void CurrentFileThread()
 			   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
 			   !clang.tu) { // TODO: same is in autocomplete
 				parsed_file = f;
-				clang.Dispose();
 				{
 					TIMESTOP("CurrentFile parse");
 					current_file_parsing = true;

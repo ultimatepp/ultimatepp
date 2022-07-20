@@ -9,7 +9,13 @@ struct Navigator {
 		bool operator<(const NavLine& b) const;
 	};
 
-	struct NavItem {
+	enum KindEnum { KIND_LINE = -4000, KIND_NEST, KIND_FILE, KIND_SRCFILE };
+
+	struct NavItem : AnnotationItem {
+	//	int             priority = 0; // for sorting based on search accuracy
+	/*	int decl_line = 0;
+		int decl_file = 0;
+
 		String          nest;
 		String          qitem;
 		String          name;
@@ -30,12 +36,10 @@ struct Navigator {
 		bool            impl;
 		bool            decl;
 		int8            pass;
+	
 		Vector<NavLine> linefo;
-
-		void Set(const CppItem& m);
+	*/
 	};
-
-	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE, KIND_SRCFILE };
 
 	struct ScopeDisplay : Display {
 		Navigator *navigator;
@@ -52,23 +56,22 @@ struct Navigator {
 	};
 
 	struct NavigatorDisplay : Display {
-		const Vector<NavItem *>& item;
+		const Vector<const NavItem *>& item;
 
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
 
-		NavigatorDisplay(const Vector<NavItem *>& item) : item(item) {}
+		NavigatorDisplay(const Vector<const NavItem *>& item) : item(item) {}
 	};
 
 	Ide             *theide;
 
 	Array<NavItem>                             nitem;
-	VectorMap<String, Vector<NavItem *> >      gitem;
-	Vector<NavItem *>                          litem;
-	Array<NavItem>                             nest_item;
-	VectorMap<int, SortedVectorMap<int, int> > linefo;
+	Vector<const NavItem *>                    litem;
+	Array<NavItem>                             nest_item; // list separators with nest (scope) or file
+	VectorMap<int, SortedVectorMap<int, int> > linefo; // TODO remove?
 	NavigatorDisplay navidisplay;
 	bool             navigating;
 	TimeCallback     search_trigger;
@@ -86,7 +89,6 @@ struct Navigator {
 	ScopeDisplay      scope_display;
 
 	void TriggerSearch();
-	void NavGroup(bool local);
 	void Search();
 	void Scope();
 	void ListLineEnabled(int i, bool& b);
@@ -102,9 +104,6 @@ struct Navigator {
 	void           SyncNavLines();
 	void           GoToNavLine();
 	void           SyncCursor();
-
-	static bool SortByLines(const NavItem *a, const NavItem *b);
-	static bool SortByNames(const NavItem *a, const NavItem *b);
 
 	typedef Navigator CLASSNAME;
 
@@ -152,6 +151,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl   annotation_popup;
+	bool                   annotating = false;
 	Vector<AnnotationItem> annotations;
 
 	int            assist_cursor;

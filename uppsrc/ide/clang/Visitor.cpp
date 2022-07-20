@@ -2,9 +2,8 @@
 
 // #define DUMPTREE
 
-bool ClangVisitor::ProcessNode(CXCursor c)
+bool ClangVisitor::ProcessNode(CXCursor cursor)
 {
-	cursor = c;
 	CXSourceLocation cxlocation = clang_getCursorLocation(cursor);
 
 	CXCursorKind cursorKind = clang_getCursorKind(cursor);
@@ -16,23 +15,40 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 	DDUMP(SourceLocation(cxlocation));
 #endif
 
-	if(!clang_Location_isFromMainFile(cxlocation))
+	bool     position_loaded = false;
+	unsigned line;
+	unsigned column;
+	unsigned offset;
+	String   path;
+	
+	auto LoadPosition = [&] {
+		if(position_loaded) return;
+		CXFile file;
+		clang_getExpansionLocation(cxlocation, &file, &line, &column, &offset);
+		path = FetchString(clang_getFileName(file));
+		position_loaded = true;
+	};
+
+	if(WhenFile)
+		LoadPosition();
+	if(!(WhenFile ? WhenFile(path) : clang_Location_isFromMainFile(cxlocation))) {
 		return findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
 		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
 		                           CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ClassTemplate,
 		                           CXCursor_ClassTemplatePartialSpecialization, CXCursor_UnexposedDecl,
 		                           CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
 		                           CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
+	}
 
 	String m;
 
 	CXCursor parent = clang_getCursorSemanticParent(cursor);
 	CXCursorKind parentKind = clang_getCursorKind(parent);
 
-	name = GetCursorSpelling(cursor);
-	type = GetTypeSpelling(cursor);
+	String name = GetCursorSpelling(cursor);
+	String type = GetTypeSpelling(cursor);
 	String pid = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
-
+	
 #ifdef DUMPTREE
 	_DBG_
 	CXCursor ref = clang_getCursorReferenced(cursor);
@@ -49,16 +65,18 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 #endif
 
 	CXCursor p = parent;
-	scope.Clear();
-	nspace.Clear();
+	String scope;
+	String nspace;
 	for(;;) {
 		CXCursorKind k = clang_getCursorKind(p);
-		if(findarg(k, CXCursor_Namespace, CXCursor_ClassTemplate, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl) < 0)
-			break;
-		String q = GetCursorSpelling(p);
-		scope = scope.GetCount() ? q + "::" + scope : q;
-		if(k == CXCursor_Namespace)
-			nspace = nspace.GetCount() ? q + "::" + nspace : q;
+		if(k != CXCursor_EnumDecl) {
+			if(findarg(k, CXCursor_Namespace, CXCursor_ClassTemplate, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl) < 0)
+				break;
+			String q = GetCursorSpelling(p);
+			scope = scope.GetCount() ? q + "::" + scope : q;
+			if(k == CXCursor_Namespace)
+				nspace = nspace.GetCount() ? q + "::" + nspace : q;
+		}
 		p = clang_getCursorSemanticParent(p);
 	}
 	int q = scope.Find('('); // 'Struct::(unnamed enum at C:\u\upp.src\upptst\Annotations\main.cpp:47:2)'
@@ -67,7 +85,7 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 	if(scope.GetCount() && *scope.Last() != ':')
 		scope << "::";
 
-	annotation = true;
+	bool annotation = true;
 	if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod,
 	                       CXCursor_Constructor, CXCursor_Destructor) >= 0)
 		annotation = false; // local variable
@@ -76,6 +94,8 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 		case CXCursor_StructDecl:
 		case CXCursor_UnionDecl:
 		case CXCursor_ClassDecl:
+			m = type;
+			break;
 		case CXCursor_FunctionTemplate:
 		case CXCursor_FunctionDecl:
 		case CXCursor_Constructor:
@@ -109,17 +129,22 @@ bool ClangVisitor::ProcessNode(CXCursor c)
 			break;
 		}
 	if(annotation && m.GetCount()) {
-		CXFile file;
-		unsigned line_;
-		unsigned column_;
-		unsigned offset_;
-		clang_getExpansionLocation(cxlocation, &file, &line_, &column_, &offset_);
-		line = line_;
-		column = column_;
-		kind = cursorKind;
-		pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
-		id = CleanupId(m);
-		Item();
+		LoadPosition();
+		AnnotationItem& r = item.GetAdd(path).Add();
+		r.kind = cursorKind;
+		r.name = name;
+		r.line = line;
+		r.id = CleanupId(m);
+		r.pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+		r.definition = clang_isCursorDefinition(cursor);
+		r.nspace = nspace;
+		int q = FindId(r.id, r.name);
+		if(q >= 0) {
+			r.nest = r.id.Mid(0, q);
+			r.nest.TrimEnd("::");
+		}
+		r.uname = ToUpper(name);
+		r.unest = ToUpper(r.nest);
 	}
 	return true;
 }

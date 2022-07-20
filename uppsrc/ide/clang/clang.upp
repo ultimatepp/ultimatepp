@@ -11,6 +11,7 @@ file
 	clang.h,
 	todo.txt,
 	help.txt,
+	blitz.cpp,
 	util.cpp,
 	macros.cpp,
 	CxxIcon.cpp,
@@ -19,5 +20,6 @@ file
 	Codebase.cpp,
 	Visitor.cpp,
 	AutoComplete.cpp,
-	CurrentFile.cpp;
+	CurrentFile.cpp,
+	Indexer.cpp;
 
