@@ -11,6 +11,7 @@ void AssistEditor::SyncHeaders()
 	master_source.Clear();
 	String editfile = NormalizePath(theide->editfile);
 	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
+		DLOG("============= " << editfile);
 		for(int pass = 0; pass < 2; pass++) { // all packages in second pass
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
@@ -23,6 +24,7 @@ void AssistEditor::SyncHeaders()
 						if(!PathIsEqual(editfile, path) && IsSourceFile(path)) {
 							if(FindIndex(hdepend.GetDependencies(path), editfile) >= 0 && GetFileLength(path) < 200000) {
 								master_source = path;
+								DDUMP(master_source);
 								return true;
 							}
 						}
@@ -55,12 +57,16 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 		return false;
 	visited.Add(path);
 	FileIn in(path);
+	DDUMP(target_path);
 	while(!in.IsEof()) {
 		String l = in.GetLine();
 		String tl = TrimLeft(l);
 		if(!comment && tl.TrimStart("#include") && (*tl == ' ' || *tl == '\t')) {
+			DDUMP(tl);
 			String ipath = hdepend.FindIncludeFile(tl, filedir);
+			DDUMP(ipath);
 			if(ipath.GetCount()) {
+				DDUMP(HdependGetDependencies(ipath));
 				if(NormalizePath(ipath) == NormalizePath(target_path))
 					return true;
 				int q = out.GetCount();

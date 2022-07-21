@@ -83,6 +83,9 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 	String cmdline;
 
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -xc++ -std=c++17 ";
+	
+	DDUMP(cmdline);
+	
 	cmdline << RedefineMacros();
 	
 	String includes = includes_;

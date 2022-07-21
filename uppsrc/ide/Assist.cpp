@@ -454,14 +454,19 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();
 		if(!IsSourceFile(cfx.filename)) {
-			if(master_source.GetCount())
+			if(master_source.GetCount()) {
 				MakeIncludeTrick(cfx, line_delta);
+				cfx.filename = master_source;
+			}
 			else
 			if(!IsHeaderFile(cfx.filename))
 				cfx.content.Clear();
 		}
 	}
 #ifdef _DEBUG
+	DDUMP(master_source);
+	DDUMP(cfx.filename);
+	DDUMP(cfx.real_filename);
 	if(cfx.content.GetCount())
 		SaveFile(ConfigFile("pseudo_header_src.cpp"), cfx.content);
 #endif

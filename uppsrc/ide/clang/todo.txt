@@ -40,8 +40,6 @@
 
 - enum annotation popup (Ctrl::)
 
-- .txt is pulsing all time
-
 - Remove template < > in autocomplete
 
 - newly created file looks like parsing until first function(?)
@@ -54,8 +52,6 @@
 
 - navigator - GotoDesignerFile
 
-- i < items crash at start occassionally
-
 - * nest in navigator local file
 
 - remove $blitz items
@@ -67,6 +63,8 @@
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
 
 - x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
+
+- immediate reparse (probably Update?)
 
 LATER:
 
@@ -89,4 +87,10 @@ DONE:
 - .txt keeps syncing
 
 - Enum annotations
+
+- .txt is pulsing all time
+
+- i < items crash at start occassionally
+
+- ide/Core.h - no annotations
 

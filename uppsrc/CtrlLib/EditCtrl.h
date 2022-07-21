@@ -97,6 +97,7 @@ protected:
 		ATTR_NULLTEXT,
 		ATTR_NULLINK,
 		ATTR_NULLFONT,
+		ATTR_BACKGROUND,
 		ATTR_LAST,
 	};
 	
@@ -238,6 +239,7 @@ public:
 	EditField& SetCharset(byte cs)           { charset = cs; return *this; }
 	EditField& SetFont(Font _font);
 	EditField& SetColor(Color c);
+	EditField& SetBackground(Color c);
 	EditField& ClickSelect(bool b = true)    { clickselect = b; return *this; }
 	bool       IsClickSelect() const         { return clickselect; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }

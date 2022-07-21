@@ -652,13 +652,14 @@ void Ide::SyncClang()
 {
 	Vector<Color> a;
 	Color display_ink = Null;
-	int phase = msecs() / 30;
+	int phase = msecs() / 30; // TODO: Use phase
 	auto Animate = [=](int& animator, int& dir, bool animate) -> Color {
 		if(animator <= 0 && !animate) return Null;
 		if(animate)
 			animator = 20;
 		else
 			animator -= 3;
+		DDUMP(animator);
 		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
 	};
 	Color bg = Animate(animate_current_file, animate_current_file_dir, editor.annotating || IsCurrentFileParsing());
@@ -668,7 +669,10 @@ void Ide::SyncClang()
 			a.Add(i > cx - DPI(6) ? bg : Null);
 	}
 	editor.AnimateBar(pick(a));
-	editor.search.SetColor(Animate(animate_indexer, animate_indexer_dir, IsIndexing()));
+	DDUMP(IsIndexing());
+	DDUMP(Animate(animate_indexer, animate_indexer_dir, IsIndexing()));
+	DDUMP(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
+	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, IsIndexing()));
 	display.Animate(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
 	animate_phase = phase;
 }

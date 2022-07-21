@@ -37,6 +37,10 @@ class  Ctrl;
 class  Image;
 }
 
+String CacheDir();
+String CacheFile(const char *name);
+void   ReduceCache(int mb_limit);
+
 class Hdepend {
 	struct Info {
 		Time                      time;
@@ -51,6 +55,8 @@ class Hdepend {
 		bool                      blitzprohibit; // has BLITZ_PROHIBIT
 
 		bool                      CanBlitz() { return guarded && !blitzprohibit; }
+		
+		void Serialize(Stream& s);
 
 		Info()                   { time = Null; flag = false; timedirty = true; guarded = false; }
 	};
@@ -86,6 +92,8 @@ public:
 	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
 	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
 	void                  NoConsole()                             { console = false; }
+	
+	void                  Serialize(Stream& s);
 };
 
 class IdeContext

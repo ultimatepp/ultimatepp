@@ -22,12 +22,12 @@ void CurrentFileThread()
 		if(!clang.tu || !annotations_done) return;
 		ClangVisitor v;
 		v.Do(clang.tu);
-	//	DumpDiagnostics(clang.tu);
 		Ctrl::Call([&] {
 			if(parsed_file.filename == current_file.filename &&
 			   parsed_file.real_filename == current_file.real_filename &&
 			   parsed_file.includes == current_file.includes &&
-			   serial == current_file_serial)
+			   serial == current_file_serial &&
+			   v.item.GetCount())
 				annotations_done(v.item[0]);
 			current_file_done_serial = serial;
 		});
@@ -44,6 +44,7 @@ void CurrentFileThread()
 		}
 		if(f.filename.GetCount()) {
 			String fn = f.filename;
+			DDUMP(fn);
 			if(!IsSourceFile(fn))
 				fn.Cat(".cpp");
 			if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
@@ -53,12 +54,14 @@ void CurrentFileThread()
 				{
 					TIMESTOP("CurrentFile parse");
 					current_file_parsing = true;
+					DDUMP(fn);
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_DetailedPreprocessingRecord|
 					            CXTranslationUnit_PrecompiledPreamble|
 					            CXTranslationUnit_CreatePreambleOnFirstParse|
 					            CXTranslationUnit_KeepGoing);
 					current_file_parsing = false;
+					DumpDiagnostics(clang.tu); _DBG_
 				}
 				DoAnnotations();
 			}

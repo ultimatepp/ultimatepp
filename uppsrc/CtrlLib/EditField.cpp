@@ -295,8 +295,12 @@ void EditField::State(int)
 Color EditField::GetPaper()
 {
 	bool enabled = IsShowEnabled();
-	Color paper = enabled && !IsReadOnly() ? (HasFocus() ? style->focus : style->paper)
-	                                       : style->disabled;
+	Color paper = GetColorAttr(ATTR_BACKGROUND);
+	DDUMP(paper);
+	if(IsNull(paper))
+		paper = enabled && !IsReadOnly() ? (HasFocus() ? style->focus
+	                                                   : style->paper)
+	                                     : style->disabled;
 	if(nobg)
 		paper = Null;
 	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
@@ -1070,6 +1074,16 @@ EditField& EditField::SetColor(Color c)
 {
 	if(GetColorAttr(ATTR_TEXTCOLOR) != c) {
 		SetColorAttr(ATTR_TEXTCOLOR, c);
+		Refresh();
+	}
+	return *this;
+}
+
+EditField& EditField::SetBackground(Color c)
+{
+	DDUMP(c);
+	if(GetColorAttr(ATTR_BACKGROUND) != c) {
+		SetColorAttr(ATTR_BACKGROUND, c);
 		Refresh();
 	}
 	return *this;

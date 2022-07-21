@@ -1,6 +1,21 @@
 #include "Core.h"
 #include "Core.h"
 
+void Hdepend::Info::Serialize(Stream& s)
+{
+	s %	time
+	  % depend
+	  % bydefine
+	  % macroinclude
+	  % define
+	  % flag
+	  % macroflag
+	  % timedirty
+	  % guarded
+	  % blitzprohibit
+	;
+}
+
 String Hdepend::FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs)
 {
 	while(*s == ' ' || *s == '\t')
@@ -36,6 +51,7 @@ void Hdepend::AddDependency(const String& file, const String& dep)
 }
 
 void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir, bool bydefine) {
+	DLOG("#include " << s);
 	while(*s == ' ' || *s == '\t')
 		s++;
 	if(iscib(*s)) { // #include MACRO
@@ -46,6 +62,7 @@ void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir,
 	}
 	else { // normal include
 		String fn = FindIncludeFile(s, filedir);
+		DDUMP(fn);
 		if(!IsNull(fn)) {
 			info.depend.Add(File(fn));
 			info.bydefine.Add(bydefine);
@@ -70,6 +87,7 @@ static const char *SkipComment(const char *s) {
 
 void Hdepend::ScanFile(const String& path, int map_index)
 {
+	DDUMP(path);
 	Info& info = map[map_index];
 	info.depend.Clear();
 	info.bydefine.Clear();
@@ -161,6 +179,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 								info.guarded = true;
 						}
 						term = p.GetPtr();
+						goto begin;
 					}
 					catch(CParser::Error) {}
 				}
@@ -171,6 +190,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 				       if(p.IsId())
 				          info.define.Add(p.ReadId());
 				       term = p.GetPtr();
+				       goto begin;
 			       }
 			       catch(CParser::Error) {}
 				}
@@ -184,6 +204,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 						if(p.Id("BLITZ_PROHIBIT"))
 							info.blitzprohibit = true;
 						term = p.GetPtr();
+						goto begin;
 				    }
 				    catch(CParser::Error) {}
 				}
