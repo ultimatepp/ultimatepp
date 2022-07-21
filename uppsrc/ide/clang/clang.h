@@ -87,7 +87,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String nest; // Upp::Class
 	String unest; // UPP::CLASS
 	
-	~AnnotationItem() { DHITCOUNT("AnnotationItem"); }
+	void Serialize(Stream& s);
 };
 
 struct CurrentFileContext {

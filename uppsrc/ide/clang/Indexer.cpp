@@ -4,6 +4,21 @@
 #define LTIMESTOP(x)
 #define LLOG(x)
 
+void AnnotationItem::Serialize(Stream& s)
+{
+	s % kind
+	  % line
+	  % definition
+	  % name
+	  % id
+	  % pretty
+	  % nspace
+	  % uname
+	  % nest
+	  % unest;
+
+}
+
 struct BlitzMaker {
 	Time           time;
 	String         blitz;

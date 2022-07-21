@@ -51,7 +51,6 @@ void Hdepend::AddDependency(const String& file, const String& dep)
 }
 
 void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir, bool bydefine) {
-	DLOG("#include " << s);
 	while(*s == ' ' || *s == '\t')
 		s++;
 	if(iscib(*s)) { // #include MACRO
@@ -62,7 +61,6 @@ void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir,
 	}
 	else { // normal include
 		String fn = FindIncludeFile(s, filedir);
-		DDUMP(fn);
 		if(!IsNull(fn)) {
 			info.depend.Add(File(fn));
 			info.bydefine.Add(bydefine);
@@ -87,7 +85,6 @@ static const char *SkipComment(const char *s) {
 
 void Hdepend::ScanFile(const String& path, int map_index)
 {
-	DDUMP(path);
 	Info& info = map[map_index];
 	info.depend.Clear();
 	info.bydefine.Clear();

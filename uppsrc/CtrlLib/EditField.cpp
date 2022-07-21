@@ -296,7 +296,6 @@ Color EditField::GetPaper()
 {
 	bool enabled = IsShowEnabled();
 	Color paper = GetColorAttr(ATTR_BACKGROUND);
-	DDUMP(paper);
 	if(IsNull(paper))
 		paper = enabled && !IsReadOnly() ? (HasFocus() ? style->focus
 	                                                   : style->paper)
@@ -1081,7 +1080,6 @@ EditField& EditField::SetColor(Color c)
 
 EditField& EditField::SetBackground(Color c)
 {
-	DDUMP(c);
 	if(GetColorAttr(ATTR_BACKGROUND) != c) {
 		SetColorAttr(ATTR_BACKGROUND, c);
 		Refresh();

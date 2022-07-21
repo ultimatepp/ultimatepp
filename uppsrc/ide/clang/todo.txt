@@ -20,8 +20,6 @@
 
 - QTF :\1label\1:
 
-- autocomplete templates ?
-
 - recognized headers slow
 
 - unrecognized headers slow
@@ -66,6 +64,17 @@
 
 - immediate reparse (probably Update?)
 
+- Navigator -> (constructor does not have return value)
+
+- local file navigation off by 1 line
+
+- global navigation not working
+
+- operator bool - wrong nest (Core/Speller.cpp)
+
+- constructor - worng nest(Core/Speller.cpp)
+
+
 LATER:
 
 - slow .txt
@@ -93,4 +102,8 @@ DONE:
 - i < items crash at start occassionally
 
 - ide/Core.h - no annotations
+
+REJECTED:
+
+- autocomplete templates ?
 

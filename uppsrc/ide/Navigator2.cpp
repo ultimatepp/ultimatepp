@@ -352,9 +352,9 @@ void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const 
 		return;
 	const NavItem& m = *item[ii];
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0)
-		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
-		                                    : SColorFace);
+	if(findarg(m.kind, KIND_NEST) >= 0)
+		w.DrawRect(r, focuscursor ? paper : m.pretty.Find('\xff') >= 0 ? SColorFace()
+		                                  : Blend(SColorMark, SColorPaper, 220));
 	else
 		w.DrawRect(r, paper);
 }
@@ -369,16 +369,16 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
 
 	int x = r.left;
-	int y = (r.GetHeight() - Draw::GetStdFontCy()) / 2;
-
-	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0) {
-		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
-		                                  : SColorFace);
-		if(findarg(m.kind, KIND_FILE) >= 0)
+	int y = r.top + (r.GetHeight() - Draw::GetStdFontCy()) / 2;
+	
+	if(m.kind == KIND_NEST) {
+		bool fn = m.pretty.Find('\xff') >= 0;
+		w.DrawRect(r, focuscursor ? paper : fn ? SColorFace()
+		                                  : Blend(SColorMark(), SColorPaper(), 220));
+		if(fn)
 			return PaintFileName(w, r, m.pretty, ink);
-		String h = FormatNest(m.pretty);
-		w.DrawText(x, y, h, StdFont().Bold(), ink);
-		return GetTextSize(h, StdFont().Bold()).cx;
+		w.DrawText(x, y, m.pretty, StdFont().Bold(), ink);
+		return GetTextSize(m.pretty, StdFont().Bold()).cx;
 	}
 
 	w.DrawRect(r, paper);
@@ -439,15 +439,18 @@ void Navigator::Search()
 	int lineno = StrInt(s);
 	nitem.Clear();
 	Index<String> nests;
-	if(IsNull(theide->editfile))
-		return;
 	int fileii = GetSourceFileIndex(theide->editfile);
+	auto Nest = [&](const AnnotationItem& m, const String& path) {
+		if(m.nspace == m.nest)
+			return m.nest + "\xff" + path;
+		return m.nest;
+	};
+	nests.Add(Null);
 	if(!IsNull(lineno)) {
 		NavItem& m = nitem.Add();
 		m.pretty = "Go to line " + AsString(lineno);
 		m.kind = KIND_LINE;
 		m.line = lineno;
-		nests.Add(Null);
 	}
 	else
 	if(IsNull(s) && !sorting) {
@@ -457,7 +460,7 @@ void Navigator::Search()
 			for(const AnnotationItem& m : theide->editor.annotations) {
 				NavItem& n = nitem.Add();
 				(AnnotationItem&)n = m;
-				nests.FindAdd(n.nest);
+				nests.FindAdd(n.nest = Nest(m, theide->editfile));
 			}
 		SortIndex(nests);
 	}
@@ -482,7 +485,7 @@ void Navigator::Search()
 						visited.Add(m.id);
 						NavItem& n = nitem.Add();
 						(AnnotationItem&)n = m;
-						nests.FindAdd(n.nest);
+						nests.FindAdd(n.nest = Nest(m, theide->editfile));
 					}
 				}
 		
@@ -498,13 +501,13 @@ void Navigator::Search()
 					m.pretty = wspc[i] + "/" + p[j];
 					m.id = SourcePath(wspc[i], p[j]);
 					m.line = 0;
-					nests.FindAdd("<files>");
+					m.nest = "<files>";
+					nests.FindAdd(m.nest);
 				}
 			}
 		}
 	}
 	scope.Clear();
-	scope.Add(Null);
 	for(String n : nests)
 		scope.Add(n);
 	scope.ScrollTo(sc);
@@ -533,7 +536,7 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 		return x;
 	}
 	String h = q;
-	if(*h == '\xff') // TODO
+	if(h.Find('\xff') >= 0) // TODO
 		return PaintFileName(w, r, h, ink);
 	else
 		h = FormatNest(h);
@@ -560,17 +563,17 @@ void Navigator::Scope()
 	linefo.Clear();
 	String sc = scope.GetKey();
 	String nest;
-	for(const NavItem& n : nitem) {
+	for(const NavItem& n : nitem)
 		if(IsNull(sc) || n.nest == sc) {
 			if(!sorting && n.nest != nest) {
 				NavItem& m = nest_item.Add();
-				m.kind = KIND_NEST; // TODO: KIND_FILE
+				m.kind = KIND_NEST;
 				nest = m.pretty = n.nest;
+				DDUMP(n.nest);
 				litem.Add(&m);
 			}
 			litem.Add(&n);
 		}
-	}
 	
 	// TODO sorting
 		
@@ -584,7 +587,7 @@ void Navigator::ListLineEnabled(int i, bool& b)
 {
 	if(i >= 0 && i < litem.GetCount()) {
 		int kind = litem[i]->kind;
-		if(findarg(kind, KIND_FILE, KIND_NEST) >= 0)
+		if(findarg(kind, KIND_NEST) >= 0)
 			b = false;
 	}
 }
