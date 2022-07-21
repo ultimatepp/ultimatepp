@@ -153,7 +153,7 @@ from [%-*@4 TT]. [%-*@4 T] must be polymorphic.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 MakeOne]]}}&]
 [s0; &]
-[s5;:Upp`:`:MakeOne`(Args`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
+[s5;:Upp`:`:MakeOne`(Args`&`&`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
 [@(0.0.255) class...]_[*@4 Args]>_[_^Upp`:`:One^ One]<[*@4 T]>_[* MakeOne]([*@4 Args][@(0.0.255) .
 ..]_args)&]
 [s2;%% This simple utility function creates One<T> instance.&]
