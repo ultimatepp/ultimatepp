@@ -1244,7 +1244,9 @@ public:
 		void  MacroTarget(EscEscape& e);
 	
 	String GetAndroidSdkPath();
-	
+
+	void TriggerIndexer();
+
 	typedef   Ide CLASSNAME;
 
 	enum {

@@ -38,7 +38,7 @@ AssistEditor::AssistEditor()
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
 	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
-	navigator_splitter.Vert() << scope << list << navlines;
+	navigator_splitter.Vert() << scope << list;
 	navigator_splitter.SetPos(1500, 0);
 	navigator_splitter.SetPos(9500, 1);
 
@@ -816,7 +816,7 @@ bool AssistEditor::Key(dword key, int count)
 		Exclamation("No annotation for this line.");
 	}
 	if(key == K_F11) {
-		StartIndexing(theide->GetCurrentIncludePath(), theide->GetCurrentDefines());
+		Indexer::Start(theide->main, theide->GetCurrentIncludePath(), theide->GetCurrentDefines());
 	}
 #endif
 	if(popup.IsOpen()) {

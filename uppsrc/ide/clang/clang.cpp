@@ -1,6 +1,7 @@
 #include "clang.h"
 
 #define LLOG(x)
+#define LTIMESTOP(x) TIMESTOP(x)
 
 String FetchString(CXString cs)
 {
@@ -77,6 +78,8 @@ void Clang::Dispose()
 bool Clang::Parse(const String& filename, const String& content, const String& includes_, const String& defines, dword options)
 {
 	if(!index) return false;
+	
+//	LTIMESTOP("Parse " << filename << " " << includes_ << " " << defines);
 	
 	Dispose();
 

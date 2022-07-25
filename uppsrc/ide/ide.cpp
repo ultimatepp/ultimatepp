@@ -668,7 +668,7 @@ void Ide::SyncClang()
 			a.Add(i > cx - DPI(6) ? bg : Null);
 	}
 	editor.AnimateBar(pick(a));
-	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, IsIndexing()));
+	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, Indexer::IsRunning()));
 	display.Animate(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
 	animate_phase = phase;
 }
@@ -791,4 +791,9 @@ void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const
 	ConflictDiff diff;
 	diff.Set(lname, LoadConflictFile(l), rname, LoadConflictFile(r));
 	diff.Execute();
+}
+
+void Ide::TriggerIndexer()
+{
+	Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
 }

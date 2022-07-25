@@ -3,7 +3,7 @@
 #define LLOG(x)
 
 bool                                   autocomplete_parsing;
-Semaphore                              autocomplete_event;
+CoEvent                                autocomplete_event;
 CurrentFileContext                     autocomplete_file;
 bool                                   do_autocomplete;
 bool                                   autocomplete_macros;
@@ -121,7 +121,7 @@ void SetAutoCompleteFile(const CurrentFileContext& ctx)
 {
 	GuiLock __;
 	autocomplete_file = ctx;
-	autocomplete_event.Release();
+	autocomplete_event.Broadcast();
 }
 
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
@@ -136,7 +136,7 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
 	autocomplete_serial = serial++;
 	autocomplete_done = done;
 	autocomplete_file = ctx;
-	autocomplete_event.Release();
+	autocomplete_event.Broadcast();
 }
 
 void CancelAutoComplete()

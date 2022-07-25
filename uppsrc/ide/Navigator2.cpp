@@ -83,13 +83,8 @@ Navigator::Navigator()
 	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
-	list.WhenSel = THISBACK(SyncNavLines);
 	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
-	navlines.NoHeader().NoWantFocus();
-	navlines.WhenLeftClick = THISBACK(GoToNavLine);
-	navlines.AddColumn().SetDisplay(Single<LineDisplay>());
-
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
 	search.WhenEnter = THISBACK(NavigatorEnter);
@@ -107,8 +102,10 @@ void Navigator::SyncCursor()
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 
+	// TODO
+/*
 	if(!navigating && theide->editfile.GetCount()) {
-		navlines.KillCursor();
+
 		int q = linefo.Find(GetSourceFileIndex(theide->editfile));
 		if(q < 0)
 			return;
@@ -119,44 +116,9 @@ void Navigator::SyncCursor()
 			list.SetCursor(m[q]);
 		navigating = false;
 	}
-	SyncLines();
+*/
 	if(scope.IsCursor())
 		scope.RefreshRow(scope.GetCursor());
-}
-
-void Navigator::SyncLines()
-{
-	if(IsNull(theide->editfile) || navigating)
-		return;
-	int ln = GetCurrentLine() + 1;
-	int fi = GetSourceFileIndex(theide->editfile);
-	int q = -1;
-	for(int i = 0; i < navlines.GetCount(); i++) {
-		const NavLine& l = navlines.Get(i, 0).To<NavLine>();
-		if(l.file == fi && l.line <= ln && i < navlines.GetCount())
-			q = i;
-	}
-	if(dlgmode)
-		navlines.GoBegin();
-	else
-	if(q >= 0)
-		navlines.SetCursor(q);
-}
-
-void Navigator::SyncNavLines()
-{
-	int sc = navlines.GetScroll();
-	navlines.Clear();
-	int ii = list.GetCursor();
-	if(ii >= 0 && ii < litem.GetCount()) {
-		Vector<NavLine> l = GetNavLines(*litem[ii]);
-		for(int i = 0; i < l.GetCount(); i++) {
-			String p = GetSourceFilePath(l[i].file);
-			navlines.Add(RawToValue(l[i]));
-		}
-		navlines.ScrollTo(sc);
-		SyncLines();
-	}
 }
 
 int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style, int x) const
@@ -185,52 +147,6 @@ Size Navigator::LineDisplay::GetStdSize(const Value& q) const
 	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0, 0), StdFont().Bold().GetCy());
 }
 
-void Navigator::GoToNavLine()
-{
-	if(dlgmode)
-		return;
-	int ii = navlines.GetClickPos().y;
-	if(ii >= 0 && ii < navlines.GetCount() && theide) {
-		const NavLine& l = navlines.Get(ii, 0).To<NavLine>();
-		theide->GotoPos(GetSourceFilePath(l.file), l.line);
-	}
-}
-
-bool Navigator::NavLine::operator<(const NavLine& b) const
-{
-	String p1 = GetSourceFilePath(file);
-	String p2 = GetSourceFilePath(b.file);
-	return CombineCompare/*(!impl, !b.impl)*/
-	                     (GetFileExt(p2), GetFileExt(p1)) // .h > .c
-	                     (GetFileName(p1), GetFileName(p2))
-	                     (p1, p2)
-	                     (line, b.line) < 0;
-}
-
-Vector<Navigator::NavLine> Navigator::GetNavLines(const NavItem& m)
-{
-	_DBG_
-	Vector<NavLine> l;
-/*
-	CodeBaseLock __;
-	int q = CodeBase().Find(m.nest);
-	if(q < 0 || IsNull(m.qitem))
-		return l;
-	const Array<CppItem>& a = CodeBase()[q];
-	for(int i = 0; i < a.GetCount(); i++) {
-		const CppItem& mm = a[i];
-		if(mm.qitem == m.qitem) {
-			NavLine& nl = l.Add();
-			nl.impl = mm.impl;
-			nl.file = mm.file;
-			nl.line = mm.line;
-		}
-	}
-	Sort(l);
-*/
-	return l;
-}
-
 void Navigator::Navigate()
 {
 	if(navigating)
@@ -256,20 +172,7 @@ void Navigator::Navigate()
 			theide->AddHistory();
 		}
 		else {
-			Vector<NavLine> l = GetNavLines(m);
-			int q = l.GetCount() - 1;
-			for(int i = 0; i < l.GetCount(); i++)
-				if(GetSourceFilePath(l[i].file) == NormalizeSourcePath(theide->editfile) && l[i].line == ln) {
-					q = (i + l.GetCount() + 1) % l.GetCount();
-					break;
-				}
-			if(q >= 0 && q < l.GetCount()) {
-				String path = GetSourceFilePath(l[q].file);
-				// TODO:
-				_DBG_
-//				if(!theide->GotoDesignerFile(path, m.nest, m.name, l[q].line))
-//					theide->GotoPos(path, l[q].line);
-			}
+			theide->GotoPos(m.path, m.line);
 		}
 	}
 	navigating = false;
@@ -432,7 +335,7 @@ void Navigator::Search()
 		wholeclass = *s == '.' && search_nest.GetCount();
 	}
 	else {
-		search_name = search_nest = ~search;
+		search_name = ~search;
 		both = true;
 	}
 	s = Join(Split(s, '.'), "::") + (s.EndsWith(".") ? "::" : "");
@@ -460,23 +363,26 @@ void Navigator::Search()
 			for(const AnnotationItem& m : theide->editor.annotations) {
 				NavItem& n = nitem.Add();
 				(AnnotationItem&)n = m;
+				n.path = theide->editfile;
 				nests.FindAdd(n.nest = Nest(m, theide->editfile));
 			}
 		SortIndex(nests);
 	}
-	else { // TODO: Sort codeindex paths, add files in that order to make things stable
+	else {
 		navigator_global = true;
 		String usearch_nest = ToUpper(search_nest);
 		String usearch_name = ToUpper(search_name);
 		Index<String> visited;
+		SortByKey(CodeIndex());
 		for(int pass = 0; pass < 2; pass++)
 			for(const auto& f : ~CodeIndex())
 				for(const AnnotationItem& m : f.value.items) {
 					int q = visited.Find(m.id);
-					if(q >= 0) { // replace definition (.cpp) with declaration (.h)
-						AnnotationItem& n = nitem[q];
-						if(n.definition && !m.definition) { // file: make it stable
+					if(q >= 0) { // replace declaration (.h) with definition (.cpp)
+						NavItem& n = nitem[q];
+						if(!n.definition && m.definition) {
 							(AnnotationItem&)n = m;
+							n.path = f.key;
 						}
 					}
 					else
@@ -485,6 +391,7 @@ void Navigator::Search()
 						visited.Add(m.id);
 						NavItem& n = nitem.Add();
 						(AnnotationItem&)n = m;
+						n.path = f.key;
 						nests.FindAdd(n.nest = Nest(m, theide->editfile));
 					}
 				}
@@ -560,7 +467,6 @@ void Navigator::Scope()
 	LTIMING("FINALIZE");
 	litem.Clear();
 	nest_item.Clear();
-	linefo.Clear();
 	String sc = scope.GetKey();
 	String nest;
 	for(const NavItem& n : nitem)
@@ -569,7 +475,6 @@ void Navigator::Scope()
 				NavItem& m = nest_item.Add();
 				m.kind = KIND_NEST;
 				nest = m.pretty = n.nest;
-				DDUMP(n.nest);
 				litem.Add(&m);
 			}
 			litem.Add(&n);

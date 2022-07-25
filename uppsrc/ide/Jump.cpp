@@ -8,8 +8,8 @@ struct NavDlg : WithJumpLayout<TopWindow>, Navigator {
 	virtual int GetCurrentLine();
 	
 	void GoTo();
-	void Ok()               { if(navlines.IsCursor()) Break(IDOK); }
-	void ListSel()          { navlines.GoBegin(); }
+	void Ok()               { Break(IDOK); }
+	void ListSel() {}
 	
 	void Serialize(Stream& s);
 
@@ -35,7 +35,6 @@ NavDlg::NavDlg()
 	Icon(IdeImg::Navigator());
 	list.WhenSel << THISBACK(ListSel);
 	list.WhenLeftDouble = THISBACK(Ok);
-	navlines.WhenLeftDouble = THISBACK(Ok);
 }
 
 bool NavDlg::Key(dword key, int count)
@@ -52,10 +51,11 @@ bool NavDlg::Key(dword key, int count)
 
 void NavDlg::GoTo()
 {
-	if(navlines.IsCursor()) {
+	// TODO
+/*	if(navlines.IsCursor()) {
 		const NavLine& l = navlines.Get(0).To<NavLine>();
 		theide->GotoPos(GetSourceFilePath(l.file), l.line);
-	}
+	}*/
 }
 
 int NavDlg::GetCurrentLine()

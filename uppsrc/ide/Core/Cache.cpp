@@ -2,11 +2,16 @@
 
 String CacheDir()
 {
+	String dir;
 #ifdef PLATFORM_WIN32
-	return ConfigFile("cache");
+	dir = ConfigFile("cache");
 #else
-	return ConfigFile(".cache/upp.cache");
+	dir = ConfigFile(".cache/upp.cache");
 #endif
+	ONCELOCK {
+		RealizeDirectory(dir);
+	}
+	return dir;
 }
 
 String CacheFile(const char *name)
@@ -16,4 +21,5 @@ String CacheFile(const char *name)
 
 void ReduceCache(int mb_limit)
 {
+	// TODO
 }

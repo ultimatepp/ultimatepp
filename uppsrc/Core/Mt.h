@@ -415,7 +415,7 @@ typedef StaticMutex StaticCriticalSection;
 #endif
 
 // Auxiliary multithreading - this is not using/cannot use U++ heap, so does not need cleanup.
-// Used to resolve some host platform issues.
+// Used to resolve some host platform issues. Do not use.
 
 #ifdef PLATFORM_WIN32
 #define auxthread_t DWORD

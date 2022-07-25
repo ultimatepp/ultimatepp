@@ -1,5 +1,7 @@
 #include "clang.h"
 
+// TODO: remove
+
 #if 0
 	case FUNCTIONTEMPLATE:
 		bk = BrowserImg::template_function();

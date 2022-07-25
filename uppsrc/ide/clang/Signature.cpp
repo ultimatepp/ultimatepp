@@ -53,17 +53,18 @@ String CleanupId(const char *s)
 				return s[0] == 'o' && s[1] == 'p' && s[2] == 'e' && s[3] == 'r' &&
 				       s[4] == 'a' && s[5] == 't' && s[6] == 'o' && s[7] == 'r';
 			};
+			if(was_id)
+				mm.Cat(' ');
+			if(!operator_def) // because of conversion operators e.g. Foo::operator bool()
+				name_pos = mm.GetCount();
 			if(id.GetCount() == 8 && IsOperator(id))
 				operator_def = true;
-			if(id.GetCount() > 8) {
+			if(id.GetCount() > 8) { // conversion operator?
 				const char *s = ~id + id.GetCount() - 8;
 				operator_def = IsOperator(s) && !iscid(s[-1]);
 			}
 			if(function && (IsBasicType(id) || !IsCppKeyword(id))) // TODO optimize this (IsCppKeywordNoType)
 				was_param_type = true;
-			if(was_id)
-				mm.Cat(' ');
-			name_pos = mm.GetCount();
 			mm.Cat(id);
 			was_id = true;
 			was_name = true;
@@ -90,13 +91,13 @@ String CleanupId(const char *s)
 			if(*s == '~' && !operator_def) // prevent culling of 'return value' in destructor
 				destructor = true;
 			if(*s == '(') {
-				function = true;
-				was_param_type = false;
-				operator_def = false;
 				if(name_pos && !destructor) {
 					String h = String(mm).Mid(name_pos);
 					mm = h;
 				}
+				function = true;
+				was_param_type = false;
+				operator_def = false;
 			}
 			if(*s == ',')
 				was_param_type = false;
@@ -209,7 +210,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 			p.type = ITEM_NUMBER;
 		}
 		else
-		if(iscid(*s)) {
+		if(iscid(*s) || (*s == '~' && *name == '~')) {
 			if(strncmp(s, name, name_len) == 0 && !iscid(s[name_len])) { // need strncmp because of e.g. operator++
 				p.type = ITEM_NAME;
 				n = name_len;
@@ -222,7 +223,8 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 						*fn_info = 0;
 				}
 			}
-			else {
+			else
+			if(*s != '~') {
 				String id;
 				n = 0;
 				while(iscid(s[n]))
@@ -248,6 +250,8 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				if(param && fn_info)
 					*fn_info = 1;
 			}
+			else // should not happen, but be safe
+				s++;
 		}
 		else
 		if(sOperatorTab[*s]) {

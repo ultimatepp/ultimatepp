@@ -887,7 +887,7 @@ String Ide::GetCurrentIncludePath()
 	Host host;
 	CreateHost(host, false, false);
 	One<Builder> b = CreateBuilder(&host);
-	Index<String> cfg = PackageConfig(wspc, GetPackageIndex(), GetMethodVars(method), mainconfigparam, host, *b);
+	Index<String> cfg = PackageConfig(wspc, max(GetPackageIndex(), 0), GetMethodVars(method), mainconfigparam, host, *b);
 	Index<String> pkg_config;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);

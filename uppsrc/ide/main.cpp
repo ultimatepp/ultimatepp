@@ -331,7 +331,7 @@ void AppMain___()
 				ide.MakeTitle();
 				if(!ide.IsEditorMode()) {
 					SyncRefs();
-					StartIndexing(ide.GetCurrentIncludePath(), ide.GetCurrentDefines());
+					ide.TriggerIndexer();
 				}
 				ide.FileSelected();
 				ide.isscanning--;
@@ -366,6 +366,7 @@ void AppMain___()
 	}
 #endif
 #endif
+	Ctrl::ShutdownThreads();
 }
 
 #ifdef flagPEAKMEM

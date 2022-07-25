@@ -8,6 +8,7 @@ Image CxxIcon(int kind)
 	case CXCursor_EnumConstantDecl: return BrowserImg::type_enum();
 	case CXCursor_ClassDecl: return BrowserImg::type_struct();
 	case CXCursor_StructDecl: return BrowserImg::type_struct();
+	case CXCursor_ClassTemplate: return BrowserImg::template_struct();
 	case CXCursor_FunctionTemplate: return BrowserImg::template_function();
 	case CXCursor_ConversionFunction: return BrowserImg::function();
 	case CXCursor_FieldDecl: return BrowserImg::instance_data();
@@ -50,9 +51,18 @@ int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String&
 		for(int i = 0; i < n.GetCount(); i++)
 			if(n[i].type == ITEM_NAME) {
 				PaintText(w, x, y, pretty, n, i, count - i, focuscursor, ink, false);
-				w.DrawText(x, y, " → ", StdFont(), SGray());
-				x += GetTextSize(" → ", StdFont()).cx;
 				count = i;
+				while(count) { // remove trailing spaces
+					const ItemTextPart& p = n[count - 1];
+					if(p.len == 1 && pretty[p.pos] == ' ')
+						count--;
+					else
+						break;
+				}
+				if(count) {
+					w.DrawText(x, y, " → ", StdFont(), SGray());
+					x += GetTextSize(" → ", StdFont()).cx;
+				}
 				break;
 			}
 	PaintText(w, x, y, pretty, n, 0, count, focuscursor, ink, false);

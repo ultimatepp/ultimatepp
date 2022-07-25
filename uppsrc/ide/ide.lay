@@ -813,7 +813,6 @@ LAYOUT(JumpLayout, 692, 496)
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).TopPosZ(4, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).TopPosZ(4, 24))
 	UNTYPED(scope, LeftPosZ(4, 176).VSizePosZ(32, 104))
-	UNTYPED(navlines, LeftPosZ(4, 176).BottomPosZ(4, 96))
 	UNTYPED(list, HSizePosZ(184, 8).VSizePosZ(32, 4))
 END_LAYOUT
 

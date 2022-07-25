@@ -12,33 +12,7 @@ struct Navigator {
 	enum KindEnum { KIND_LINE = -4000, KIND_NEST, KIND_FILE, KIND_SRCFILE };
 
 	struct NavItem : AnnotationItem {
-	//	int             priority = 0; // for sorting based on search accuracy
-	/*	int decl_line = 0;
-		int decl_file = 0;
-
-		String          nest;
-		String          qitem;
-		String          name;
-		String          uname;
-		String          natural;
-		String          type;
-		String          pname;
-		String          ptype;
-		String          tname;
-		String          ctname;
-		byte            access;
-		byte            kind;
-		int16           at;
-		int             line;
-		int             file;
-		int             decl_line; // header position
-		int             decl_file;
-		bool            impl;
-		bool            decl;
-		int8            pass;
-	
-		Vector<NavLine> linefo;
-	*/
+		String path;
 	};
 
 	struct ScopeDisplay : Display {
@@ -71,7 +45,6 @@ struct Navigator {
 	Array<NavItem>                             nitem;
 	Vector<const NavItem *>                    litem;
 	Array<NavItem>                             nest_item; // list separators with nest (scope) or file
-	VectorMap<int, SortedVectorMap<int, int> > linefo; // TODO remove?
 	NavigatorDisplay navidisplay;
 	bool             navigating;
 	TimeCallback     search_trigger;
@@ -83,7 +56,6 @@ struct Navigator {
 
 	ArrayCtrl         scope;
 	ArrayCtrl         list;
-	ArrayCtrl         navlines;
 	EditString        search;
 
 	ScopeDisplay      scope_display;
@@ -94,15 +66,10 @@ struct Navigator {
 	void ListLineEnabled(int i, bool& b);
 	void NaviSort();
 
-	Vector<NavLine> GetNavLines(const NavItem& m);
-
 	void           Navigate();
 	void           ScopeDblClk();
 	void           NavigatorClick();
 	void           NavigatorEnter();
-	void           SyncLines();
-	void           SyncNavLines();
-	void           GoToNavLine();
 	void           SyncCursor();
 
 	typedef Navigator CLASSNAME;

@@ -28,11 +28,7 @@
 
 - aux files / autocomplete
 
-- this is just a test                               
-
 - OpenWind.h autocomplete
-
-- server_methods.i
 
 - fixups?
 
@@ -46,17 +42,9 @@
 
 - check editor mode
 
-- navlines
-
 - navigator - GotoDesignerFile
 
-- * nest in navigator local file
-
 - remove $blitz items
-
-- constructor/destructor name is not bold (check destructor in navigator display)
-
-- PaintCpp ending spaces in navigator
 
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
 
@@ -64,7 +52,7 @@
 
 - immediate reparse (probably Update?)
 
-- Navigator -> (constructor does not have return value)
+- navlines
 
 - local file navigation off by 1 line
 
@@ -72,7 +60,45 @@
 
 - operator bool - wrong nest (Core/Speller.cpp)
 
-- constructor - worng nest(Core/Speller.cpp)
+- Speller.cpp - Speller type has {}, Line too
+
+- Core/String.h - empty macros at the start in navigator
+
+- Core/String.h - operator const void *() - wrong highlighting (all bold)
+
+- Core/String.h - conversion operators wrong nests
+
+- for .txt file, navigator keeps showing previous local file
+
+- StringBuffer does not work in debugger pdb
+
+- Speller.cpp: structures have wrong nest (missing itself)
+
+- check dialog mode
+
+- void Navigator::SyncCursor()
+
+- void NavDlg::GoTo()
+
+- Hdepend NoConsole
+
+- AltC static method(); (header->source) retains static
+
+- Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
+
+- indexer TabBar missing
+
+- when scope is selected in navigator, search should be ingored
+
+- unicode is very long because { 123 , 41234234
+
+- use codeindex info for file annotations
+
+- save file annotation to codeindex
+
+- rescan everything function
+
+- C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
 
 
 LATER:
@@ -84,6 +110,18 @@ LATER:
 
 
 DONE:
+
+- destructor name is not bold (clang/visitor.cpp)
+
+- constructor - worng nest(Core/Speller.cpp)
+
+- AString type [31] - wrong icon
+
+- * nest in navigator local file
+
+- PaintCpp ending spaces in navigator
+
+- Navigator -> (constructor does not have return value)
 
 - Upp:: missing from Vector
 

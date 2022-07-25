@@ -31,6 +31,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 
 	if(WhenFile)
 		LoadPosition();
+
 	if(!(WhenFile ? WhenFile(path) : clang_Location_isFromMainFile(cxlocation))) {
 		return findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
 		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
@@ -134,15 +135,32 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.kind = cursorKind;
 		r.name = name;
 		r.line = line;
+//		DDUMP(m);
 		r.id = CleanupId(m);
 		r.pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = nspace;
-		int q = FindId(r.id, r.name);
-		if(q >= 0) {
-			r.nest = r.id.Mid(0, q);
-			r.nest.TrimEnd("::");
+//		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+//		DDUMP(r.pretty);
+//		DDUMP(r.id);
+//		DDUMP(r.name);
+//		DDUMP(scope);
+		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
+			int q = r.id.Find('(');
+			if(q >= 0) {
+				q = r.id.ReverseFind("::", q);
+				if(q >= 0)
+					r.nest = r.id.Mid(0, q);
+			}
 		}
+		else {
+			int q = FindId(r.id, r.name);
+			if(q >= 0) {
+				r.nest = r.id.Mid(0, q);
+				r.nest.TrimEnd("::");
+			}
+		}
+//		DDUMP(r.nest);
 		r.uname = ToUpper(name);
 		r.unest = ToUpper(r.nest);
 	}

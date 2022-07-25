@@ -6,6 +6,15 @@
 
 using namespace Upp;
 
+class CoEvent {
+	Mutex             lock;
+	ConditionVariable cv;
+
+public:
+	void Wait(int timeout_ms)   { lock.Enter(); cv.Wait(lock, timeout_ms); lock.Leave(); }
+	void Broadcast()            { cv.Broadcast(); }
+};
+
 String FetchString(CXString cs);
 String GetCursorKindName(CXCursorKind cursorKind);
 String GetCursorSpelling(CXCursor cursor);
@@ -153,18 +162,45 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();
 
+String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& header_file);
 
-struct FileAnnotation {
-	String defines;
+struct FileAnnotation0 {
+	String defines = "<not_loaded>";
 	String includes;
 	Time   time;
-	
-	Vector<AnnotationItem> items;
 };
 
-bool IsIndexing();
-void StartIndexing(const String& includes, const String& defines);
+struct FileAnnotation : FileAnnotation0 {
+	Vector<AnnotationItem> items;
+	
+	void Serialize(Stream& s);
+};
 
-const ArrayMap<String, FileAnnotation>& CodeIndex();
+ArrayMap<String, FileAnnotation>& CodeIndex();
+
+class Indexer {
+	struct Job : Moveable<Job> {
+		String                      path;
+		String                      blitz;
+		String                      includes;
+		String                      defines;
+		WithDeepCopy<VectorMap<String, Time>> file_times;
+	};
+
+	static CoEvent            event;
+	static Workspace          wspc;
+	static Hdepend            hdepend;
+	static Mutex              mutex;
+	static Vector<Job>        jobs;
+	static int                jobi;
+	static std::atomic<int>   running_indexers;
+	static VectorMap<String, String> master_file; // header -> first file that includes it
+	
+	static void IndexerThread();
+
+public:
+	static void Start(const String& main, const String& includes, const String& defines);
+	static bool IsRunning()                    { return running_indexers; }
+};
 
 #endif

@@ -3,7 +3,7 @@
 #define LLOG(x)
 
 bool                                   current_file_parsing;
-Semaphore                              current_file_event; // TODO?
+CoEvent                                current_file_event;
 CurrentFileContext                     current_file;
 int64                                  current_file_serial;
 int64                                  current_file_done_serial;
@@ -44,7 +44,6 @@ void CurrentFileThread()
 		}
 		if(f.filename.GetCount()) {
 			String fn = f.filename;
-			DDUMP(fn);
 			if(!IsSourceFile(fn))
 				fn.Cat(".cpp");
 			if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
@@ -54,7 +53,6 @@ void CurrentFileThread()
 				{
 					TIMESTOP("CurrentFile parse");
 					current_file_parsing = true;
-					DDUMP(fn);
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_DetailedPreprocessingRecord|
 					            CXTranslationUnit_PrecompiledPreamble|
@@ -91,7 +89,7 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<Annotation
 	GuiLock __;
 	current_file = ctx;
 	annotations_done = done;
-	current_file_event.Release();
+	current_file_event.Broadcast();
 	current_file_serial++;
 }
 
