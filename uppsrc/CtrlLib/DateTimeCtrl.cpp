@@ -83,7 +83,7 @@ void Calendar::Reset()
 Calendar& Calendar::SetStyle(const Style& s)
 {
 	style = &s;
-	nbg = CtrlImg::Bg();
+	nbg = Colorize(IsDarkTheme() ? DarkTheme(CtrlImg::Bg()) : CtrlImg::Bg(), s.header);
 	Refresh();
 	return *this;
 }
@@ -800,7 +800,7 @@ LineCtrl::LineCtrl()
 Clock& Clock::SetStyle(const Style& s)
 {
 	style = &s;
-	nbg = CtrlImg::Bg();
+	nbg = Colorize(IsDarkTheme() ? DarkTheme(CtrlImg::Bg()) : CtrlImg::Bg(), s.header);
 	Refresh();
 	return *this;
 }
