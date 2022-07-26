@@ -46,7 +46,7 @@ struct Navigator {
 	Vector<const NavItem *>                    litem;
 	Array<NavItem>                             nest_item; // list separators with nest (scope) or file
 	NavigatorDisplay navidisplay;
-	bool             navigating;
+	bool             navigating; // click on item
 	TimeCallback     search_trigger;
 	TimeCallback     annotate_trigger;
 	bool             navigator_global;

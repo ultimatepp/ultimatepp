@@ -476,20 +476,23 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
 {
 	if(cfx.content.GetCount())
-		SetCurrentFile(cfx, [=](const Vector<AnnotationItem>& annotations_) {
+		SetCurrentFile(cfx, [=](const Vector<AnnotationItem>& anns) {
 			ClearAnnotations();
-			annotations = clone(annotations_);
-			for(auto& m : annotations) {
+			annotations.Clear();
+			for(AnnotationItem m : anns) {
 				m.line -= line_delta;
-				if(m.line >= 0)
+				if(m.line >= 0) {
+					annotations.Add(m);
 					SetAnnotation(m.line,
 					              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
 					                                           : IdeImg::tpp_pen(),
 					              m.id);
+				}
 			}
 			annotating = false;
 			if(!navigator_global)
 				Search();
+			SyncCursor();
 		});
 }
 

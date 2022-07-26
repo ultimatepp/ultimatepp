@@ -136,7 +136,11 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.name = name;
 		r.line = line - 1;
 		r.id = CleanupId(m);
-		r.pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+		if(cursorKind == CXCursor_MacroDefinition) {
+			DLOG("#define " << r.name << " " << path << " " << line);
+		}
+		r.pretty = cursorKind == CXCursor_MacroDefinition ? r.name
+                   : CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = nspace;
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
@@ -205,6 +209,9 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_SuppressScope, 1);
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
+	
+	for(Vector<AnnotationItem>& f : item) // sort by line because macros are first
+		Sort(f, [](const AnnotationItem& a, const AnnotationItem& b) { return a.line < b.line; });
 }
 
 ClangVisitor::~ClangVisitor()

@@ -234,6 +234,7 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			Mutex::Lock __(mutex);
 			hdepend.NoConsole();
 			hdepend.SetDirs(includes);
+			hdepend.TimeDirty();
 			jobs.Clear();
 	
 			master_file.Clear();

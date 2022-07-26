@@ -101,22 +101,26 @@ void Navigator::SyncCursor()
 	String k = "(" + GetKeyDesc(IdeKeys::AK_GOTO().key[0]) + ") ";
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
-
-	// TODO
-/*
-	if(!navigating && theide->editfile.GetCount()) {
-
-		int q = linefo.Find(GetSourceFileIndex(theide->editfile));
-		if(q < 0)
-			return;
+	
+	if(!navigating && !navigator_global) {
+		AnnotationItem q;
+		for(const AnnotationItem& m : theide->editor.annotations) {
+			if(m.line <= GetCurrentLine())
+				q = m;
+			else
+				break;
+		}
 		navigating = true;
-		SortedVectorMap<int, int>& m = linefo[q];
-		q = m.FindUpperBound(GetCurrentLine() + 1) - 1;
-		if(q >= 0 && q < m.GetCount())
-			list.SetCursor(m[q]);
+		for(int i = 0; i < list.GetCount(); i++) {
+			const NavItem& m = *litem[i];
+			if(m.id == q.id && m.line == q.line) {
+				list.SetCursor(i);
+				break;
+			}
+		}
 		navigating = false;
 	}
-*/
+
 	if(scope.IsCursor())
 		scope.RefreshRow(scope.GetCursor());
 }

@@ -42,19 +42,11 @@
 
 - x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
 
-- operator bool - wrong nest (Core/Speller.cpp)
-
-- Core/String.h - empty macros at the start in navigator
-
-- Core/String.h - conversion operators wrong nests
+- Core/String.h - conversion operators wrong nests (template argument)
 
 - for .txt file, navigator keeps showing previous local file
 
-- StringBuffer does not work in debugger pdb
-
 - check dialog mode of navigator
-
-- void Navigator::SyncCursor()
 
 - void NavDlg::GoTo()
 
@@ -87,7 +79,16 @@ void AppExit__()
 
 - class AString : public B { - remove template<> in navigator
 
+- unnamed union in String0
 
+- StringBuffer does not work in debugger pdb
+
+
+NTH:
+
+- even better operator pretty rendering
+
+- current file
 
 LATER:
 
@@ -95,6 +96,12 @@ LATER:
 
 
 DONE:
+
+- Core/String.h - empty macros at the start in navigator
+
+- void Navigator::SyncCursor()
+
+- operator bool - wrong nest (Core/Speller.cpp)
 
 - Core/String.h - operator const void *() - wrong highlighting (all bold)
 
