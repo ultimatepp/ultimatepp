@@ -12,6 +12,7 @@ class CoEvent {
 
 public:
 	void Wait(int timeout_ms)   { lock.Enter(); cv.Wait(lock, timeout_ms); lock.Leave(); }
+	void Wait()                 { lock.Enter(); cv.Wait(lock); lock.Leave(); }
 	void Broadcast()            { cv.Broadcast(); }
 };
 
@@ -54,6 +55,7 @@ int  FindId(const char *s, const String& id);
 enum {
 	ITEM_TEXT,
 	ITEM_NAME,
+	ITEM_OPERATOR,
 	ITEM_CPP_TYPE,
 	ITEM_CPP,
 	ITEM_PNAME,

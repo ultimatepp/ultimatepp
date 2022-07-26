@@ -36,13 +36,16 @@ bool IsVariable(int kind)
 
 int FindId(const char *s, const String& id)
 {
-	CParser p(s);
-	while(!p.IsEof()) {
-		const char *q = p.GetPtr();
-		if(p.Id(id))
-			return q - s;
-		else
-			p.Skip();
+	try {
+		CParser p(s);
+		while(!p.IsEof()) {
+			const char *q = p.GetPtr();
+			if(p.Id(id))
+				return q - s;
+			else
+				p.Skip();
+		}
 	}
+	catch(CParser::Error) {}
 	return -1;
 }

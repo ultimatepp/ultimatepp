@@ -480,13 +480,12 @@ void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
 			ClearAnnotations();
 			annotations = clone(annotations_);
 			for(auto& m : annotations) {
-				m.line -= line_delta + 1;
-				if(m.line >= 0) {
+				m.line -= line_delta;
+				if(m.line >= 0)
 					SetAnnotation(m.line,
 					              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
 					                                           : IdeImg::tpp_pen(),
 					              m.id);
-				}
 			}
 			annotating = false;
 			if(!navigator_global)

@@ -134,17 +134,11 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		AnnotationItem& r = item.GetAdd(path).Add();
 		r.kind = cursorKind;
 		r.name = name;
-		r.line = line;
-//		DDUMP(m);
+		r.line = line - 1;
 		r.id = CleanupId(m);
 		r.pretty = CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = nspace;
-//		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
-//		DDUMP(r.pretty);
-//		DDUMP(r.id);
-//		DDUMP(r.name);
-//		DDUMP(scope);
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
 			if(q >= 0) {
@@ -159,8 +153,9 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 				r.nest = r.id.Mid(0, q);
 				r.nest.TrimEnd("::");
 			}
+			if(IsStruct(cursorKind))
+				MergeWith(r.nest, "::", name);
 		}
-//		DDUMP(r.nest);
 		r.uname = ToUpper(name);
 		r.unest = ToUpper(r.nest);
 	}

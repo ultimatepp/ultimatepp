@@ -11,7 +11,7 @@ void Ide::GotoPos(String path, int line)
 			DoEditAsText(path);
 		EditFile(path);
 	}
-	editor.SetCursor(editor.GetPos64(line - 1));
+	editor.SetCursor(editor.GetPos64(line));
 	editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
@@ -63,7 +63,7 @@ void Ide::GotoPosition()
 			String pf = PosFn(pkg, n);
 			int q = f.GetCount() - pf.GetCount() - 1;
 			if(pf == f || q >= 0 && f.EndsWith(PosFn(pkg, n)) && f[q] == '/') {
-				GotoPos(SourcePath(pkg, n), line);
+				GotoPos(SourcePath(pkg, n), line - 1);
 				return;
 			}
 		}

@@ -203,7 +203,8 @@ void Indexer::IndexerThread()
 			LLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
 			DumpIndex(); // TODO remove
 		}
-		event.Wait(500);
+		event.Wait();
+		DLOG("Indexers Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
 	LLOG("Done");
 }
@@ -213,8 +214,12 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 	DLOG("Indexer::Start =============================== ");
 
 	ONCELOCK {
+		Thread::AtShutdown([] {
+			DLOG("Shutdown indexers");
+			event.Broadcast();
+		});
 		for(int i = 0; i < CPU_Cores(); i++) // TODO: CPU_Cores?
-			Thread::StartNice([=] { Indexer::IndexerThread(); });
+			Thread::StartNice([] { Indexer::IndexerThread(); });
 	}
 	
 	Thread::Start([=] {

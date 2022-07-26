@@ -83,6 +83,8 @@ public:
 	static bool IsUpp();
 	static int  GetCount();
 	static void BeginShutdownThreads();
+	static void AtShutdown(void (*shutdownfn)());
+	static void TryShutdownThreads();
 	static void EndShutdownThreads();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();

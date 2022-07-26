@@ -73,8 +73,10 @@ void CurrentFileThread()
 					DoAnnotations();
 			}
 		}
-		current_file_event.Wait(500);
+		current_file_event.Wait();
+		DLOG("Current file Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
+	DLOG("Current file thread exit");
 }
 
 void StartCurrentFileParserThread()
@@ -82,6 +84,10 @@ void StartCurrentFileParserThread()
 	MemoryIgnoreNonMainLeaks();
 	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 	Thread::Start([] { CurrentFileThread(); });
+	Thread::AtShutdown([] {
+		DLOG("Shutdown current file");
+		current_file_event.Broadcast();
+	});
 }
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done)

@@ -8,8 +8,6 @@
 
 - failed AC keeps running (sites[i]. instead of ->)
 
-- background thread problem
-
 - MSVC
 
 - optimise loading
@@ -19,10 +17,6 @@
 - Do TODOs
 
 - QTF :\1label\1:
-
-- recognized headers slow
-
-- unrecognized headers slow
 
 - header header
 
@@ -44,27 +38,13 @@
 
 - navigator - GotoDesignerFile
 
-- remove $blitz items
-
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
 
 - x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
 
-- immediate reparse (probably Update?)
-
-- navlines
-
-- local file navigation off by 1 line
-
-- global navigation not working
-
 - operator bool - wrong nest (Core/Speller.cpp)
 
-- Speller.cpp - Speller type has {}, Line too
-
 - Core/String.h - empty macros at the start in navigator
-
-- Core/String.h - operator const void *() - wrong highlighting (all bold)
 
 - Core/String.h - conversion operators wrong nests
 
@@ -72,9 +52,7 @@
 
 - StringBuffer does not work in debugger pdb
 
-- Speller.cpp: structures have wrong nest (missing itself)
-
-- check dialog mode
+- check dialog mode of navigator
 
 - void Navigator::SyncCursor()
 
@@ -86,30 +64,53 @@
 
 - Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
 
-- indexer TabBar missing
-
 - when scope is selected in navigator, search should be ingored
-
-- unicode is very long because { 123 , 41234234
 
 - use codeindex info for file annotations
 
 - save file annotation to codeindex
 
-- rescan everything function
-
 - C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
+
+- Alt+C 	static void AtShutdown(void (*shutdownfn)());
+
+- remove StartAutoCompleteThread, StartCurrentFileParserThread, change to oncelock
+
+- should call Ctrl::ShutdownThreads in gui
+void AppExit__()
+{
+	Thread::ShutdownThreads();
+
+- popup tip is going white
+
+- AssistTest missing istream
+
+- class AString : public B { - remove template<> in navigator
+
 
 
 LATER:
 
-- slow .txt
-
 - optimise hdepend (then maybe remove .h limitation for syncheaders)
 
 
-
 DONE:
+
+- Core/String.h - operator const void *() - wrong highlighting (all bold)
+
+- immediate reparse (probably Update?)
+
+- Speller.cpp - Speller type has {}, Line too
+
+- global navigation not working properly
+
+- rescan everything function
+
+- unicode is very long because { 123 , 41234234
+
+- local file navigation off by 1 line
+
+- indexer TabBar missing
 
 - destructor name is not bold (clang/visitor.cpp)
 
@@ -144,4 +145,8 @@ DONE:
 REJECTED:
 
 - autocomplete templates ?
+
+- navlines
+
+- Speller.cpp: structures have wrong nest (missing itself)
 

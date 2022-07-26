@@ -783,8 +783,13 @@ void Ide::BrowseMenu(Bar& menu)
 		
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
-			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
-			menu.Add("Rescan all source files", THISBACK(RescanCode));
+			menu.Add("Check source files for changes (old)", THISBACK(CheckCodeBase));
+			menu.Add("Rescan all source files (old)", THISBACK(RescanCode));
+			menu.Add("Reindex all source files", [=] {
+				for(FileAnnotation& m : CodeIndex())
+					m.time = Null;
+				TriggerIndexer();
+			});
 			if(!auto_rescan)
 				menu.Add(AK_RESCANCURRENTFILE, THISBACK(EditFileAssistSync));
 			menu.MenuSeparator();

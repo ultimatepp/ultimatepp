@@ -17,8 +17,8 @@ file
 	CxxIcon.cpp,
 	Signature.cpp,
 	clang.cpp,
+	Visitor.cpp,
 	AutoComplete.cpp,
 	CurrentFile.cpp,
-	Visitor.cpp,
 	Indexer.cpp;
 

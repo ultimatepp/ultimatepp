@@ -115,7 +115,10 @@ String CleanupPretty(const String& signature)
 	LTIMING("CleanupPretty");
 	StringBuffer result;
 	const char *s = signature;
-	while(*s)
+	while(*s && *s != '{')
+		if(memcmp(s, " = {", 4) == 0)
+			break;
+		else
 		if(iscib(*s)) {
 			const char *b = s;
 			while(iscid(*s))
@@ -180,6 +183,7 @@ String CleanupPretty(const String& signature)
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info)
 {
+	bool op = memcmp(name, "operator", 8) == 0 && !iscid(name[8]);
 	Vector<ItemTextPart> part;
 	int name_len = name.GetLength();
 	if(name_len == 0) {
@@ -211,7 +215,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		}
 		else
 		if(iscid(*s) || (*s == '~' && *name == '~')) {
-			if(strncmp(s, name, name_len) == 0 && !iscid(s[name_len])) { // need strncmp because of e.g. operator++
+			if(memcmp(s, name, name_len) == 0 && !iscid(s[name_len]) && !op) { // need strncmp because of e.g. operator++
 				p.type = ITEM_NAME;
 				n = name_len;
 				const char *q = s + name_len;
@@ -234,6 +238,9 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 						was_type = true;
 					p.type = ITEM_CPP_TYPE;
 				}
+				else
+				if(id == "operator")
+					p.type = ITEM_OPERATOR;
 				else
 				if(IsCppKeyword(id)) {
 					if(id == "virtual")

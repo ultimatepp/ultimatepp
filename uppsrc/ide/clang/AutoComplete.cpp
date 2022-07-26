@@ -113,8 +113,10 @@ void AutocompleteThread()
 				do_autocomplete = false;
 			}
 		}
-		autocomplete_event.Wait(500);
+		autocomplete_event.Wait();
+		DLOG("Autocomplete Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
+	DLOG("Autocomplete thread exit");
 }
 
 void SetAutoCompleteFile(const CurrentFileContext& ctx)
@@ -151,6 +153,10 @@ void StartAutoCompleteThread()
 	MemoryIgnoreNonMainLeaks();
 	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 	Thread::Start([] { AutocompleteThread(); });
+	Thread::AtShutdown([] {
+		DLOG("Shutdown autocomplete");
+		autocomplete_event.Broadcast();
+	});
 }
 
 bool IsAutocompleteParsing()

@@ -24,6 +24,7 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
+		case ITEM_OPERATOR:
 		case ITEM_SIGN:
 			ink = SLtBlue();
 			break;
