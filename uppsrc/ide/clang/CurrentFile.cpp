@@ -79,19 +79,17 @@ void CurrentFileThread()
 	DLOG("Current file thread exit");
 }
 
-void StartCurrentFileParserThread()
-{
-	MemoryIgnoreNonMainLeaks();
-	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
-	Thread::Start([] { CurrentFileThread(); });
-	Thread::AtShutdown([] {
-		DLOG("Shutdown current file");
-		current_file_event.Broadcast();
-	});
-}
-
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done)
 {
+	ONCELOCK {
+		MemoryIgnoreNonMainLeaks();
+		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
+		Thread::Start([] { CurrentFileThread(); });
+		Thread::AtShutdown([] {
+			DLOG("Shutdown current file");
+			current_file_event.Broadcast();
+		});
+	}
 	GuiLock __;
 	current_file = ctx;
 	annotations_done = done;

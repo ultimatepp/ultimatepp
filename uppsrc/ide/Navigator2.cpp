@@ -96,6 +96,19 @@ Navigator::Navigator()
 	dlgmode = false;
 }
 
+AnnotationItem AssistEditor::FindCurrentAnnotation()
+{
+	int current_line = GetCurrentLine();
+	AnnotationItem q;
+	for(const AnnotationItem& m : annotations) {
+		if(m.line <= current_line)
+			q = m;
+		else
+			break;
+	}
+	return q;
+}
+
 void Navigator::SyncCursor()
 {
 	String k = "(" + GetKeyDesc(IdeKeys::AK_GOTO().key[0]) + ") ";
@@ -103,13 +116,7 @@ void Navigator::SyncCursor()
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 	
 	if(!navigating && !navigator_global) {
-		AnnotationItem q;
-		for(const AnnotationItem& m : theide->editor.annotations) {
-			if(m.line <= GetCurrentLine())
-				q = m;
-			else
-				break;
-		}
+		AnnotationItem q = theide->editor.FindCurrentAnnotation();
 		navigating = true;
 		for(int i = 0; i < list.GetCount(); i++) {
 			const NavItem& m = *litem[i];

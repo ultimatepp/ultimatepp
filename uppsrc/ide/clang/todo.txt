@@ -1,6 +1,11 @@
-- autocomplete <Functions>, <macros>, ....
+CRITICAL:
 
-- autocomplete <symbols>
+- Alt+I - functions do not work
+
+- when scope is selected in navigator, search should be ingored
+
+
+ISUES:
 
 - TMPDIR?
 
@@ -56,8 +61,6 @@
 
 - Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
 
-- when scope is selected in navigator, search should be ingored
-
 - use codeindex info for file annotations
 
 - save file annotation to codeindex
@@ -66,8 +69,6 @@
 
 - Alt+C 	static void AtShutdown(void (*shutdownfn)());
 
-- remove StartAutoCompleteThread, StartCurrentFileParserThread, change to oncelock
-
 - should call Ctrl::ShutdownThreads in gui
 void AppExit__()
 {
@@ -75,20 +76,41 @@ void AppExit__()
 
 - popup tip is going white
 
-- AssistTest missing istream
-
 - class AString : public B { - remove template<> in navigator
 
 - unnamed union in String0
 
+- options to disable assist
+
+- * line in navigator
+
+- Ide::SwapS - local struct members annotated
+
+- Alt+I - if single, we still want to go to annotation line
+
+- reindex all source files seems to run twice
+
+- reduce cache
+
+- reindex source files - add progress
+
+NONCLANG:
+
 - StringBuffer does not work in debugger pdb
 
-
 NTH:
+
+- Use BlitzFile
+
+- autocomplete <Functions>, <macros>, ....
+
+- autocomplete <symbols>
 
 - even better operator pretty rendering
 
 - current file
+
+- Alt+I should try previous method
 
 LATER:
 
@@ -96,6 +118,15 @@ LATER:
 
 
 DONE:
+
+- ide.h is not indexed
+
+- AssistTest missing istream
+
+- Alt+I by name
+- Alt+I by nest
+
+- remove StartAutoCompleteThread, StartCurrentFileParserThread, change to oncelock
 
 - Core/String.h - empty macros at the start in navigator
 

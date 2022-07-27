@@ -10,6 +10,17 @@
 #define LLOG(x)
 #endif
 
+bool AssistEditor::WaitCurrentFile()
+{
+	if(IsCurrentFileDirty()) {
+		Progress pi("Parsing");
+		while(IsCurrentFileDirty())
+			if(pi.StepCanceled())
+				return false;
+	}
+	return true;
+}
+
 void AssistEditor::DCopy()
 { // changes declaration <-> definition
 	String r;
@@ -25,13 +36,9 @@ void AssistEditor::DCopy()
 		return;
 	}
 
-	if(IsCurrentFileDirty()) {
-		Progress pi("Parsing");
-		while(IsCurrentFileDirty())
-			if(pi.StepCanceled())
-				return;
-	}
-	
+	if(!WaitCurrentFile())
+		return;
+
 	String result;
 
 	for(const AnnotationItem& m : annotations) {

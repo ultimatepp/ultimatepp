@@ -121,6 +121,15 @@ void AutocompleteThread()
 
 void SetAutoCompleteFile(const CurrentFileContext& ctx)
 {
+	ONCELOCK {
+		MemoryIgnoreNonMainLeaks();
+		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
+		Thread::Start([] { AutocompleteThread(); });
+		Thread::AtShutdown([] {
+			DLOG("Shutdown autocomplete");
+			autocomplete_event.Broadcast();
+		});
+	}
 	GuiLock __;
 	autocomplete_file = ctx;
 	autocomplete_event.Broadcast();
@@ -137,8 +146,7 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
 	autocomplete_macros = macros;
 	autocomplete_serial = serial++;
 	autocomplete_done = done;
-	autocomplete_file = ctx;
-	autocomplete_event.Broadcast();
+	SetAutoCompleteFile(ctx);
 }
 
 void CancelAutoComplete()
@@ -146,17 +154,6 @@ void CancelAutoComplete()
 	GuiLock __;
 	autocomplete_done.Clear();
 	do_autocomplete = false;
-}
-
-void StartAutoCompleteThread()
-{
-	MemoryIgnoreNonMainLeaks();
-	MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
-	Thread::Start([] { AutocompleteThread(); });
-	Thread::AtShutdown([] {
-		DLOG("Shutdown autocomplete");
-		autocomplete_event.Broadcast();
-	});
 }
 
 bool IsAutocompleteParsing()

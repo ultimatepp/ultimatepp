@@ -123,11 +123,6 @@ struct Clang {
 	~Clang();
 };
 
-// void CurrentFileVisit(CXTranslationUnit tu);
-
-void StartCurrentFileParserThread();
-void StartAutoCompleteThread();
-
 void DumpDiagnostics(CXTranslationUnit tu);
 
 String CleanupId(const char *s);

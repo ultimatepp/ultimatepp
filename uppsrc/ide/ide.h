@@ -991,7 +991,7 @@ public:
 		void  Goto();
 		void  NavigatorDlg();
 		void  ScanFile(bool check_includes);
-		bool  SwapSIf(const char *cref);
+		bool  SwapSIf(const char *cref); // TODO: remove
 		void  SwapS();
 		void  FindId(const String& id);
 		bool  OpenLink(const String& s, int pos);

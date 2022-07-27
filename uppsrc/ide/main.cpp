@@ -316,9 +316,6 @@ void AppMain___()
 	#endif
 			SaveFile(ppdefs, GetStdDefs());
 
-		StartCurrentFileParserThread();
-		StartAutoCompleteThread();
-
 		SetPPDefs(LoadFile(ppdefs));
 		
 		if(!clset)

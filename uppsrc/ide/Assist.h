@@ -202,6 +202,8 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	Index<String>  EvaluateExpressionType(const ParserContext& parser, const Vector<String>& xp);
 
+	AnnotationItem FindCurrentAnnotation();
+
 	String         RemoveDefPar(const char *s);
 	String         MakeDefinition(const String& cls, const String& _n);
 	void           DCopy();
@@ -216,6 +218,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         IdBack(int& qq);
 	String         CompleteIdBack(int& q, const Index<String>& locals);
 
+	bool           WaitCurrentFile();
 	void           SwapSContext(ParserContext& p);
 
 	const AnnotationItem *GetAnnotationPtr(const String& id);
