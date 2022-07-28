@@ -196,6 +196,46 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	catch(CParser::Error) {}
+	
+	if(!editor.WaitCurrentFile())
+		return;
+
+	String ref_id;
+	int ci = 0;
+	DDUMP(li);
+	DDUMP(lp);
+	for(const ReferenceItem& m : editor.references) {
+		DLOG(m.id << " " << m.pos);
+		DDUMP(m.pos.y == li);
+		DDUMP(m.pos.x <= lp);
+		DDUMP(m.pos.x >= ci);
+		if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci) {
+			ref_id = m.id;
+			ci = m.pos.x;
+		}
+	}
+	
+	DDUMP(ref_id);
+	
+	if(ref_id.GetCount()) {
+		String found_path;
+		int    found_line = INT_MAX;
+		bool   found_definition = false;
+		
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& m : f.value.items) {
+				if(m.id == ref_id &&
+				   (IsNull(found_path) || CombineCompare(found_definition, m.definition)(f.key, found_path)(m.line, found_line) < 0)) {
+					found_path = f.key;
+					found_line = m.line;
+					found_definition = m.definition;
+				}
+			}
+		if(found_path.GetCount())
+			GotoPos(found_path, found_line);
+	}
+
+#if 0
 	int q = pos;
 	while(iscid(editor.Ch(q - 1)))
 		q--;
@@ -420,6 +460,7 @@ void Ide::ContextGoto0(int pos)
 				}
 		}
 	}
+#endif
 }
 
 void Ide::ContextGoto()

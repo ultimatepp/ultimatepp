@@ -7,7 +7,8 @@ CoEvent                                current_file_event;
 CurrentFileContext                     current_file;
 int64                                  current_file_serial;
 int64                                  current_file_done_serial;
-Event<const Vector<AnnotationItem>&>   annotations_done;
+
+Event<const CppFileInfo&>  annotations_done;
 
 void CurrentFileThread()
 {
@@ -22,13 +23,33 @@ void CurrentFileThread()
 		if(!clang.tu || !annotations_done) return;
 		ClangVisitor v;
 		v.Do(clang.tu);
+		CppFileInfo f;
+		if(v.item.GetCount()) {
+			f.items = pick(v.item[0]);
+			f.items.RemoveIf([&](int i) { return f.items[i].line < parsed_file.line_delta; });
+			for(AnnotationItem& m : f.items)
+				m.line -= parsed_file.line_delta;
+		}
+		if(v.refs.GetCount()) {
+			f.refs = pick(v.refs[0]);
+			f.refs.RemoveIf([&](int i) { return f.refs[i].pos.y < parsed_file.line_delta; });
+			for(ReferenceItem& m : f.refs)
+				m.pos.y -= parsed_file.line_delta;
+		}
 		Ctrl::Call([&] {
 			if(parsed_file.filename == current_file.filename &&
 			   parsed_file.real_filename == current_file.real_filename &&
 			   parsed_file.includes == current_file.includes &&
 			   serial == current_file_serial &&
-			   v.item.GetCount())
-				annotations_done(v.item[0]);
+			   v.item.GetCount()) {
+				annotations_done(f);
+				FileAnnotation fa;
+				fa.defines = parsed_file.defines;
+				fa.includes = parsed_file.includes;
+				fa.items = pick(f.items);
+				fa.time = Time::Low();
+				CodeIndex().GetAdd(NormalizePath(parsed_file.real_filename)) = pick(fa);
+			}
 			current_file_done_serial = serial;
 		});
 	};
@@ -79,7 +100,7 @@ void CurrentFileThread()
 	DLOG("Current file thread exit");
 }
 
-void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done)
+void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
 {
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();

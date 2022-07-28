@@ -101,12 +101,28 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	void Serialize(Stream& s);
 };
 
+struct ReferenceItem : Moveable<ReferenceItem> {
+	String id;
+	Point  pos;
+	
+	bool operator==(const ReferenceItem& b) const { return id == b.id && pos == b.pos; }
+	hash_t GetHashValue() const                   { return CombineHash(id, pos); }
+	
+	void Serialize(Stream& s);
+};
+
 struct CurrentFileContext {
 	String                   filename;
-	String                   real_filename;
+	String                   real_filename; // in case we need to present .h as .cpp
+	int                      line_delta = 0; // in case we need to present .h as .cpp
 	String                   includes;
 	String                   defines;
 	String                   content;
+};
+
+struct CppFileInfo {
+	Vector<AnnotationItem> items;
+	Vector<ReferenceItem>  refs;
 };
 
 enum { PARSE_FILE = 0x80000000 };
@@ -138,9 +154,12 @@ class ClangVisitor {
 	bool ProcessNode(CXCursor c);
 
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
+	
+	VectorMap<String, Index<ReferenceItem>>   ref_done; // avoid self-references, multiple references
 
 public:
 	VectorMap<String, Vector<AnnotationItem>> item;
+	VectorMap<String, Vector<ReferenceItem>>  refs;
 	
 	Gate<const String&> WhenFile;
 
@@ -148,7 +167,7 @@ public:
 	~ClangVisitor();
 };
 
-void SetCurrentFile(const CurrentFileContext& ctx, Event<const Vector<AnnotationItem>&> done);
+void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done);
 bool IsCurrentFileParsing();
 void CancelCurrentFile();
 bool IsCurrentFileDirty();
@@ -167,9 +186,7 @@ struct FileAnnotation0 {
 	Time   time;
 };
 
-struct FileAnnotation : FileAnnotation0 {
-	Vector<AnnotationItem> items;
-	
+struct FileAnnotation : FileAnnotation0, CppFileInfo {
 	void Serialize(Stream& s);
 };
 

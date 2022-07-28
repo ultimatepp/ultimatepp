@@ -63,11 +63,11 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 	return false;
 }
 
-void AssistEditor::MakeIncludeTrick(CurrentFileContext& cfx, int& line_delta)
+void AssistEditor::MakeIncludeTrick(CurrentFileContext& cfx)
 { // create pseudo source file for autocomplete in include file
 	Index<String> visited;
 	StringBuffer out;
-	if(DoIncludeTrick(visited, 0, out, master_source, cfx.filename, line_delta))
+	if(DoIncludeTrick(visited, 0, out, master_source, cfx.filename, cfx.line_delta))
 		cfx.content = String(out) + cfx.content;
 	else
 		cfx.content.Clear();

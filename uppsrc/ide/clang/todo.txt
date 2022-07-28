@@ -1,9 +1,10 @@
 CRITICAL:
 
-- Alt+I - functions do not work
-
 - when scope is selected in navigator, search should be ingored
 
+- use codeindex info for file annotations
+
+- out of sync SetCurrentFile
 
 ISUES:
 
@@ -61,10 +62,6 @@ ISUES:
 
 - Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
 
-- use codeindex info for file annotations
-
-- save file annotation to codeindex
-
 - C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
 
 - Alt+C 	static void AtShutdown(void (*shutdownfn)());
@@ -73,8 +70,6 @@ ISUES:
 void AppExit__()
 {
 	Thread::ShutdownThreads();
-
-- popup tip is going white
 
 - class AString : public B { - remove template<> in navigator
 
@@ -92,13 +87,21 @@ void AppExit__()
 
 - reduce cache
 
-- reindex source files - add progress
+- id = main(int,const char*argv[]) - argv[] should not be there
+
+- first macro in the file (AssistTest) is ignored
+
 
 NONCLANG:
 
 - StringBuffer does not work in debugger pdb
 
+- popup tip is going white
+
+
 NTH:
+
+- reindex source files - add progress
 
 - Use BlitzFile
 
@@ -118,6 +121,10 @@ LATER:
 
 
 DONE:
+
+- save file annotation to codeindex
+
+- Alt+I - functions do not work
 
 - ide.h is not indexed
 

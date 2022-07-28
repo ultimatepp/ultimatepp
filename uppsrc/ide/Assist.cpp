@@ -442,20 +442,17 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-bool MakeIncludeTrick(const Package& pk, const String pk_name, CurrentFileContext& cfx, int& line_delta);
-
-CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
+CurrentFileContext AssistEditor::CurrentContext()
 {
 	CurrentFileContext cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	line_delta = 0;
 	if(!IsView() && GetLength() < 200000) {
 		cfx.content = Get();
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
-				MakeIncludeTrick(cfx, line_delta);
+				MakeIncludeTrick(cfx);
 				cfx.filename = master_source;
 			}
 			else
@@ -473,22 +470,21 @@ CurrentFileContext AssistEditor::CurrentContext(int& line_delta)
 	return cfx;
 }
 
-void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
+void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
 	if(cfx.content.GetCount())
-		SetCurrentFile(cfx, [=](const Vector<AnnotationItem>& anns) {
+		SetCurrentFile(cfx, [=](const CppFileInfo& f) {
 			ClearAnnotations();
 			annotations.Clear();
-			for(AnnotationItem m : anns) {
-				m.line -= line_delta;
-				if(m.line >= 0) {
-					annotations.Add(m);
-					SetAnnotation(m.line,
-					              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
-					                                           : IdeImg::tpp_pen(),
-					              m.id);
-				}
+			references.Clear();
+			for(AnnotationItem m : f.items) {
+				annotations.Add(m);
+				SetAnnotation(m.line,
+				              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
+				                                           : IdeImg::tpp_pen(),
+				              m.id);
 			}
+			references = clone(f.refs);
 			annotating = false;
 			if(!navigator_global)
 				Search();
@@ -499,16 +495,15 @@ void AssistEditor::SyncCurrentFile(CurrentFileContext& cfx, int line_delta)
 void AssistEditor::SyncCurrentFile()
 {
 	int line_delta;
-	CurrentFileContext cfx = CurrentContext(line_delta);
-	SyncCurrentFile(cfx, line_delta);
+	CurrentFileContext cfx = CurrentContext();
+	SyncCurrentFile(cfx);
 }
 
 void AssistEditor::NewFile()
 {
 	SyncHeaders();
-	int line_delta;
-	CurrentFileContext cfx = CurrentContext(line_delta);
-	SyncCurrentFile(cfx, line_delta);
+	CurrentFileContext cfx = CurrentContext();
+	SyncCurrentFile(cfx);
 	SetAutoCompleteFile(cfx);
 }
 
@@ -529,7 +524,7 @@ void AssistEditor::Assist(bool macros)
 	int pos = GetCursor();
 	int line = GetLinePos(pos); // TODO: limit, solve subincludes
 	int line_delta;
-	CurrentFileContext cfx = CurrentContext(line_delta);
+	CurrentFileContext cfx = CurrentContext();
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			for(const AutoCompleteItem& m : items) {

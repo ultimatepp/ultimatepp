@@ -81,13 +81,13 @@ void Ide::SwapS()
 		bool   definition;
 	};
 	Vector<Sf> set, list;
-	for(int pass = 0; pass < 3 && set.GetCount() < 2; pass++) {
+	for(int pass = 0; pass < 4 && set.GetCount() < 2; pass++) {
 		set.Clear();
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
-				if(pass == 0 ? m.id == cm.id :
+				if(findarg(pass, 0, 3) >= 0 ? m.id == cm.id : // 3 in case nothing was found in pass 2
 				   pass == 1 ? m.nest == cm.nest && m.name == cm.name :
-				               m.nest == cm.nest && IsStruct(m.kind)) {
+				               m.nest == cm.nest && IsStruct(m.kind) && cm.nest.GetCount()) {
 					Sf& sf = set.Add();
 					sf.path = f.key;
 					sf.line = m.line;

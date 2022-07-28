@@ -120,6 +120,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	RichTextCtrl   annotation_popup;
 	bool                   annotating = false;
 	Vector<AnnotationItem> annotations;
+	Vector<ReferenceItem>  references;
 
 	int            assist_cursor;
 	bool           auto_assist;
@@ -158,13 +159,13 @@ struct AssistEditor : CodeEditor, Navigator {
 	Hdepend   hdepend;
 	String    master_source;
 
-	CurrentFileContext CurrentContext(int& line_delta);
-	void               SyncCurrentFile(CurrentFileContext& ctx, int line_delta);
+	CurrentFileContext CurrentContext();
+	void               SyncCurrentFile(const CurrentFileContext& ctx);
 	void               SyncCurrentFile();
 	void               SyncHeaders();
 	void               NewFile();
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
-	void               MakeIncludeTrick(CurrentFileContext& cfx, int& line_delta);
+	void               MakeIncludeTrick(CurrentFileContext& cfx);
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();

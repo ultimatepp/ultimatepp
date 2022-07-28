@@ -1,12 +1,13 @@
 #include "clang.h"
 
-#define LTIMING(x)
+#define LTIMING(x)   TIMING(x)
 #define LTIMESTOP(x) TIMESTOP(x)
-#define LLOG(x) DLOG(x)
+#define LLOG(x)      // DLOG(x)
+#define LDUMP(x)
+#define LDUMPM(x)
 
 String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& header_file)
 {
-	DDUMP(header_file);
 	String master_source;
 	for(int pass = 0; pass < 2; pass++) { // all packages in second pass
 		for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
@@ -17,7 +18,6 @@ String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& h
 				for(int i = 0; i < pk.file.GetCount(); i++) {
 					String path = SourcePath(pk_name, pk.file[i]);
 					if(!PathIsEqual(header_file, path) && IsSourceFile(path)) {
-						DDUMP(hdepend.GetDependencies(path));
 						if(FindIndex(hdepend.GetDependencies(path), header_file) >= 0 && GetFileLength(path) < 200000) {
 							master_source = path;
 							return true;
@@ -58,12 +58,19 @@ void AnnotationItem::Serialize(Stream& s)
 	  % unest;
 }
 
+void ReferenceItem::Serialize(Stream& s)
+{
+	s % id
+	  % pos;
+}
+
 void FileAnnotation::Serialize(Stream& s)
 {
 	s % defines
 	  % includes
 	  % time
-	  % items;
+	  % items
+	  % refs;
 }
 
 String CachedAnnotationPath(const String& source_file, const String& defines, const String& includes, const String& master)
@@ -148,8 +155,6 @@ void Indexer::IndexerThread()
 			if(Thread::IsShutdownThreads())
 				break;
 	
-			bool ide_h = false;
-
 			ClangVisitor v;
 			if(clang.tu) {
 				DumpDiagnostics(clang.tu);
@@ -175,14 +180,6 @@ void Indexer::IndexerThread()
 								Mutex::Lock __(mutex);
 								do_file = job.file_times.Find(master_file.Get(NormalizePath(path), Null)) >= 0;
 								do_file_cache.Add(path, do_file);
-								if(path.EndsWith("istream")) { _DBG_
-									DDUMP(path);
-									DDUMP(job.file_times);
-									DDUMP(master_file.Get(NormalizePath(path), Null));
-									DDUMP(job.file_times.GetKeys());
-									DDUMP(do_file);
-									ide_h = do_file;
-								}
 							}
 							else
 								do_file = do_file_cache[q];
@@ -192,10 +189,6 @@ void Indexer::IndexerThread()
 				};
 	
 				v.Do(clang.tu);
-			}
-	
-			if(ide_h) {
-				DDUMPM(job.file_times);
 			}
 	
 			for(const auto& m : ~job.file_times) // in create entries even if there are no items to avoid recompiling
@@ -220,14 +213,14 @@ void Indexer::IndexerThread()
 		}
 	#endif
 		event.Wait();
-		DLOG("Indexers Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
+		LLOG("Indexers Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
-	LLOG("Done");
+	LLOG("Exiting IndexerThread");
 }
 
 void Indexer::Start(const String& main, const String& includes_, const String& defines)
 {
-	DLOG("Indexer::Start =============================== ");
+	LLOG("Indexer::Start =============================== ");
 
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();
@@ -245,15 +238,15 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 
 		{
 			GuiLock __;
-			DTIMING("Load workspace");
+			LTIMING("Load workspace");
 			wspc.Scan(main);
 		}
 		
 		{
-			DTIMING("Create indexer jobs");
+			LTIMING("Create indexer jobs");
 			Mutex::Lock __(mutex);
 			hdepend.NoConsole();
-			DDUMP(includes);
+			LDUMP(includes);
 			hdepend.SetDirs(includes);
 			hdepend.TimeDirty();
 			jobs.Clear();
@@ -276,7 +269,7 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 				}
 			}
 			
-			DDUMPM(master_file);
+			LDUMPM(master_file);
 			
 			for(String path : master_file.GetKeys()) {
 				FileAnnotation0 f;
@@ -327,10 +320,6 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 							GuiLock __;
 							f = CodeIndex().GetAdd(path);
 						}
-						DLOG("===========");
-						DDUMP(path);
-						DDUMP(time);
-						DDUMP(f.time);
 						if(f.defines != defines || f.includes != includes || f.time != time) {
 							if(hdepend.BlitzApproved(path) && !pk[i].noblitz) {
 								BlitzFile(blitz, path, hdepend, i);
