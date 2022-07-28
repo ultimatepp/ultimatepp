@@ -55,45 +55,51 @@ void CurrentFileThread()
 	};
 
 	while(!Thread::IsShutdownThreads()) {
-		CurrentFileContext f;
-		int64 done_serial;
-		{
-			GuiLock __;
-			f = current_file;
-			serial = current_file_serial;
-			done_serial = current_file_done_serial;
-		}
-		if(f.filename.GetCount()) {
-			String fn = f.filename;
-			if(!IsSourceFile(fn))
-				fn.Cat(".cpp");
-			if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
-			   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
-			   !clang.tu) { // TODO: same is in autocomplete
-				parsed_file = f;
-				{
-					TIMESTOP("CurrentFile parse");
-					current_file_parsing = true;
-					clang.Parse(fn, f.content, f.includes, f.defines,
-					            CXTranslationUnit_DetailedPreprocessingRecord|
-					            CXTranslationUnit_PrecompiledPreamble|
-					            CXTranslationUnit_CreatePreambleOnFirstParse|
-					            CXTranslationUnit_KeepGoing);
-					current_file_parsing = false;
-					DumpDiagnostics(clang.tu); _DBG_
-				}
-				DoAnnotations();
+		bool was_parsing;
+		do {
+			CurrentFileContext f;
+			int64 done_serial;
+			{
+				GuiLock __;
+				f = current_file;
+				serial = current_file_serial;
+				done_serial = current_file_done_serial;
 			}
-			if(Thread::IsShutdownThreads()) break;
-			if(clang.tu && serial != done_serial) {
-				TIMESTOP("ReParse");
-				current_file_parsing = true;
-				bool b = clang.ReParse(fn, f.content);
-				current_file_parsing = false;
-				if(b)
+			if(f.filename.GetCount()) {
+				String fn = f.filename;
+				if(!IsSourceFile(fn))
+					fn.Cat(".cpp");
+				if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
+				   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
+				   !clang.tu) { // TODO: same is in autocomplete
+					parsed_file = f;
+					{
+						TIMESTOP("CurrentFile parse");
+						current_file_parsing = true;
+						clang.Parse(fn, f.content, f.includes, f.defines,
+						            CXTranslationUnit_DetailedPreprocessingRecord|
+						            CXTranslationUnit_PrecompiledPreamble|
+						            CXTranslationUnit_CreatePreambleOnFirstParse|
+						            CXTranslationUnit_KeepGoing);
+						current_file_parsing = false;
+						DumpDiagnostics(clang.tu); _DBG_
+					}
 					DoAnnotations();
+					was_parsing = true;
+				}
+				if(Thread::IsShutdownThreads()) break;
+				if(clang.tu && serial != done_serial) {
+					TIMESTOP("ReParse");
+					current_file_parsing = true;
+					bool b = clang.ReParse(fn, f.content);
+					current_file_parsing = false;
+					if(b)
+						DoAnnotations();
+					was_parsing = true;
+				}
 			}
 		}
+		while(was_parsing);
 		current_file_event.Wait();
 		DLOG("Current file Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}

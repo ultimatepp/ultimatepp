@@ -1,9 +1,5 @@
 CRITICAL:
 
-- when scope is selected in navigator, search should be ingored
-
-- use codeindex info for file annotations
-
 - out of sync SetCurrentFile
 
 ISUES:
@@ -90,6 +86,10 @@ void AppExit__()
 - id = main(int,const char*argv[]) - argv[] should not be there
 
 - first macro in the file (AssistTest) is ignored
+
+- when scope is selected in navigator, search should be ingored
+
+- use codeindex info for file annotations
 
 
 NONCLANG:

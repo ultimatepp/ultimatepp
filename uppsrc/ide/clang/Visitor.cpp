@@ -42,7 +42,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		CXCursor parent = clang_getCursorSemanticParent(cursor);
 		CXCursorKind parentKind = clang_getCursorKind(parent);
 	
-		String name = GetCursorSpelling(cursor);
+		name = GetCursorSpelling(cursor);
 		String type = GetTypeSpelling(cursor);
 		String pid = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
 		
@@ -98,12 +98,12 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 				break;
 	/*
 			case CXCursor_EnumDecl:
-	//		case CXCursor_ParmDecl:
+			case CXCursor_ParmDecl:
 			case CXCursor_TypedefDecl:
 			case CXCursor_Namespace:
 			case CXCursor_UnexposedDecl:
-	//		case CXCursor_NamespaceAlias:
-	//				break;
+			case CXCursor_NamespaceAlias:
+					break;
 	*/
 			default:;
 			}
@@ -128,14 +128,13 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	if(WhenFile)
 		LoadPosition();
 
-	if(!(WhenFile ? WhenFile(path) : clang_Location_isFromMainFile(cxlocation))) {
+	if(!(WhenFile ? WhenFile(path) : clang_Location_isFromMainFile(cxlocation)))
 		return findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
 		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
 		                           CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ClassTemplate,
 		                           CXCursor_ClassTemplatePartialSpecialization, CXCursor_UnexposedDecl,
 		                           CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
 		                           CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
-	}
 	
 	MakeCursorInfo(cursor);
 	
