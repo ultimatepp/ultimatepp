@@ -129,9 +129,6 @@ void Ide::SetMain(const String& package)
 	SetBar();
 	HideBottom();
 	SyncUsc();
-	InvalidateIncludes();
-	if(auto_check)
-		NewCodeBase();
 	if(IsNull(e))
 		e = GetFirstFile();
 	EditFile(e);
@@ -178,10 +175,8 @@ void Ide::NewMainPackage()
 		CreateHost(h, false, false);
 		h.Launch(GetExeFilePath() + " --nosplash");
 	}
-	else {
-		SaveCodeBase();
+	else
 		OpenMainPackage();
-	}
 }
 
 void Ide::PackageCursor()
@@ -294,16 +289,9 @@ void Ide::SyncUsc()
 	}
 }
 
-void Ide::CodeBaseSync()
-{
-	if(auto_check)
-		SyncCodeBase();
-}
-
 void Ide::SyncWorkspace()
 {
 	SyncUsc();
-	CodeBaseSync();
 }
 
 bool IsTextFile(const String& file, int maxline) {
@@ -367,7 +355,7 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 
 void Ide::Activate()
 {
-	InvalidateFileTimeCache();
+	TriggerIndexer();
 	TopWindow::Activate();
 }
 
@@ -427,9 +415,6 @@ bool Ide::Key(dword key, int count)
 	case K_OPTION|K_TAB:
 #endif
 		CycleFiles();
-		return true;
-	case K_ALT_C|K_SHIFT:
-		CodeBrowser();
 		return true;
 	case K_MOUSE_BACKWARD:
 		History(-1);

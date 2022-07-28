@@ -310,14 +310,6 @@ void AppMain___()
 			Ini::user_log = true;
 		}
 		
-		String ppdefs = ConfigFile("global.defs");
-	#ifndef _DEBUG
-		if(!FileExists(ppdefs))
-	#endif
-			SaveFile(ppdefs, GetStdDefs());
-
-		SetPPDefs(LoadFile(ppdefs));
-		
 		if(!clset)
 			ide.LoadLastMain();
 		do {
@@ -342,7 +334,6 @@ void AppMain___()
 		}
 		while(IdeAgain);
 
-		SaveCodeBase();
 		DelTemps();
 		DeletePCHFiles();
 		ReduceCache();

@@ -91,6 +91,36 @@ void AppExit__()
 
 - use codeindex info for file annotations
 
+GREAT CODEBASE PURGE:
+
+- ReferenceDlg
+
+- void LayDes::GotoUsing()
+
+- bool IsCodeRefType(const String& type)
+
+- void TopicEditor::InsertItem()
+
+- void   TopicEditor::FixTopic()
+
+- 	bool      auto_rescan;
+	bool      auto_check;
+
+- TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
+
+- IdeGotoCodeRef
+
+- virtuals
+
+- thisbacks
+
+- void MainConfigDlg::FlagDlg()
+
+- Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+
+- Alt+J bool IsIgnored(const String& id) jump on Find
+
+
 
 NONCLANG:
 

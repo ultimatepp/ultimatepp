@@ -74,11 +74,13 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Label& v1 = ctrl.Create<Label>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
+	int total = 0;
+#if 0 // TODO
 	CodeBaseLock __;
 	const CppBase& cpp = CodeBase();
-	int total = 0;
 	for(int i = 0; i < cpp.GetCount(); i++)
 		total += cpp[i].GetCount();
+#endif
 	String h;
 	h << GenerateVersionInfo() << "\n";
 	h << "Using: " << MemoryUsedKb()
@@ -87,8 +89,8 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 #else
 		<< " KB\n";
 #endif
-	if(cpp.GetCount())
-		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
+//	if(cpp.GetCount())
+//		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	if(IsUHDMode())
 		h << "UHD mode\n";
 	v1 = h;

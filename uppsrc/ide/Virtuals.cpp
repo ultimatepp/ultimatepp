@@ -1,6 +1,8 @@
 #include "ide.h"
 
-struct AssistItemInfo : CppItem {
+// TODO
+
+struct AssistItemInfo : AnnotationItem {
 	String defined;
 	String overed;
 	String name;
@@ -9,6 +11,7 @@ struct AssistItemInfo : CppItem {
 void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
                     Index<String>& done)
 {
+#if 0 
 	CodeBaseLock __;
 	if(IsNull(scope))
 		return;
@@ -31,7 +34,7 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
 	}
 	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
-		if(im.IsCode()) {
+		if(im.IsCode()) { // TODO
 			String k = im.qitem;
 			if(im.IsCode()) {
 				int q = item.Find(k);
@@ -47,6 +50,7 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
 			}
 		}
 	}
+#endif
 }
 
 struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
@@ -66,6 +70,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		String k = list.GetKey();
 		list.Clear();
 		for(int i = 0; i < item.GetCount(); i++)
+		#if 0
 			if(ToLower(item[i].name).Find(name) >= 0) {
 				CppItemInfo f;
 				(CppItem&)f = item[i];
@@ -74,6 +79,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 				list.Add(item.GetKey(i), f.natural, RawToValue(f),
 					item[i].defined, item[i].overed);
 			}
+		#endif
 		if(!list.FindSetCursor(k))
 			list.GoBegin();
 	}
@@ -100,7 +106,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		CtrlLayoutOKCancel(*this, "Virtual methods");
 		list.AddIndex();
 		list.AddIndex();
-		list.AddColumn("Virtual function").SetDisplay(Single<CppItemInfoDisplay>());
+//		list.AddColumn("Virtual function").SetDisplay(Single<CppItemInfoDisplay>());
 		list.AddColumn("Defined in");
 		list.AddColumn("Last override");
 		list.SetLineCy(Arial(Zy(11)).Info().GetHeight() + DPI(3));
@@ -110,7 +116,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.EvenRowColor();
 		Sizeable().Zoomable();
 		find.NullText("Search (Ctrl+K)");
-		find.SetFilter(SearchItemFilter);
+//		find.SetFilter(SearchItemFilter);
 		find <<= THISBACK(Sync);
 		add_override <<= true;
 		add_virtual <<= false;
@@ -125,6 +131,7 @@ INITBLOCK
 
 void AssistEditor::Virtuals()
 {
+#if 0
 	ParserContext ctx;
 	Context(ctx, GetCursor32());
 	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || ctx.IsInBody())
@@ -153,4 +160,5 @@ void AssistEditor::Virtuals()
 		}
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);
+#endif
 }

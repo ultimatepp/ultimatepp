@@ -513,8 +513,8 @@ void InstantSetup()
 	Ide *ide = dynamic_cast<Ide *>(TheIde());
 	if(dirty && ide) {
 		ide->SyncBuildMode();
-		ide->CodeBaseSync();
 		ide->SetBar();
+		ide->TriggerIndexer();
 	}
 }
 

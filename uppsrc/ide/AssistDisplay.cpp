@@ -1,5 +1,7 @@
 #include "ide.h"
 
+// TODO: Move to (renamed) ide/Browser
+
 Image CxxIcon(int kind)
 {
 	switch(kind) {
@@ -26,6 +28,44 @@ Image CxxIcon(int kind)
 	case KIND_INCLUDEFOLDER: return CtrlImg::Dir();
 	}
 	return BrowserImg::unknown();
+}
+
+void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
+           int starti, int count, bool focuscursor, Color _ink, bool italic)
+{
+	static int maxascent = MaxAscent(BrowserFont());
+	for(int i = 0; i < count; i++) {
+		const ItemTextPart& p = n[starti + i];
+		Font f = BrowserFont();
+		Color ink = SColorText;
+		switch(p.type) {
+		case ITEM_PNAME:
+			f.Bold();
+		case ITEM_NUMBER:
+			ink = SRed();
+			break;
+		case ITEM_TNAME:
+			ink = SGreen();
+		case ITEM_NAME:
+			f.Bold();
+			break;
+		case ITEM_UPP:
+			ink = SCyan();
+			break;
+		case ITEM_CPP_TYPE:
+		case ITEM_CPP:
+		case ITEM_OPERATOR:
+		case ITEM_SIGN:
+			ink = SLtBlue();
+			break;
+		}
+		if(italic)
+			f.Italic();
+		Size fsz = GetTextSize(text + p.pos, f, p.len);
+		w.DrawText(x, y + maxascent - f.GetAscent(), text + p.pos,
+		           f, focuscursor ? _ink : ink, p.len);
+		x += fsz.cx;
+	}
 }
 
 int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last)

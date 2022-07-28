@@ -97,12 +97,6 @@ AssistEditor::~AssistEditor()
 	CancelCurrentFile();
 }
 
-int CppItemInfoOrder(const Value& va, const Value& vb) {
-	const CppItemInfo& a = ValueTo<CppItemInfo>(va);
-	const CppItemInfo& b = ValueTo<CppItemInfo>(vb);
-	return CombineCompare(a.name, b.name)(a.natural, b.natural);
-}
-
 void AssistEditor::CloseAssist()
 {
 	CancelAutoComplete();
@@ -510,8 +504,6 @@ void AssistEditor::NewFile()
 void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
-	if(!assist_active)
-		return;
 	CloseAssist();
 	int q = GetCursor32();
 	assist_cursor = q;
@@ -999,6 +991,8 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 void Ide::IdeGotoCodeRef(String coderef)
 {
 	LLOG("IdeGotoLink " << coderef);
+	// TODO
+/*
 	CodeBaseLock __;
 	if(IsNull(coderef)) return;
 	String scope, item;
@@ -1010,6 +1004,7 @@ void Ide::IdeGotoCodeRef(String coderef)
 	q = FindItem(n, item);
 	if(q >= 0)
 		JumpToDefinition(n, q, scope);
+*/
 }
 
 bool AssistEditor::Esc()

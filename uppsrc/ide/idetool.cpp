@@ -70,39 +70,6 @@ void Ide::GotoPosition()
 	}
 }
 
-void Ide::GotoCpp(const CppItem& pos)
-{
-	GotoPos(GetSourceFilePath(pos.file), pos.line);
-}
-
-void Ide::CheckCodeBase()
-{
-	InvalidateFileTimeCache();
-	InvalidateIncludes();
-	CodeBaseSync();
-}
-
-void Ide::RescanCode()
-{
-/*
-	TimeStop tm;
-	for(int i = 0; i < 10; i++)
-		ReQualifyCodeBase();
-	LOG(tm);
-	PutConsole(AsString(tm));
-//*/
-//*
-	InvalidateIncludes();
-	SaveFile();
-	TimeStop t;
-	console.Clear();
-	RescanCodeBase();
-	SyncRefsShowProgress = true;
-	SyncRefs();
-	editor.SyncNavigator();
-//*/
-}
-
 void Ide::OpenTopic(const String& topic, const String& create_id, bool before)
 {
 	TopicLink tl = ParseTopicLink(topic);

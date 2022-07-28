@@ -37,6 +37,14 @@ bool AssistEditor::GetAnnotationRefs(Vector<String>& tl, String& coderef, int q)
 	return true;
 }
 
+int GetMatchLen(const char *s, const char *t)
+{
+	int i = 0;
+	while(s[i] == t[i] && s[i])
+		i++;
+	return i;
+}
+
 bool AssistEditor::GetAnnotationRef(String& t, String& coderef, int q)
 {
 	Vector<String> tl;
@@ -141,6 +149,20 @@ const AnnotationItem *AssistEditor::GetAnnotationPtr(const String& id)
 		if(h.id == id)
 			return &h;
 	return nullptr;
+}
+
+void SplitCodeRef(const String& s, String& scope, String& item)
+{
+	int q = s.FindFirstOf("( ");
+	q = q >= 0 ? s.ReverseFind(':', q) : s.ReverseFind(':');
+	if(q < 0) {
+		scope.Clear();
+		item = s;
+	}
+	else {
+		scope = s.Mid(0, max(q - 1, 0));
+		item = s.Mid(q + 1);
+	}
 }
 
 void AssistEditor::NewTopic(String group, String coderef)

@@ -23,12 +23,6 @@ struct Navigator {
 		virtual Size GetStdSize(const Value& q) const;
 	};
 
-	struct LineDisplay : Display {
-		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style, int x) const;
-		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
-		virtual Size GetStdSize(const Value& q) const;
-	};
-
 	struct NavigatorDisplay : Display {
 		const Vector<const NavItem *>& item;
 
@@ -125,7 +119,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	int            assist_cursor;
 	bool           auto_assist;
 	bool           auto_check;
-	bool           assist_active;
 	bool           commentdp;
 	bool           inbody;
 	bool           include_assist;
@@ -184,7 +177,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Complete();
 	void           Abbr();
 
-	void           Context(ParserContext& parser, int pos);
 	void           ExpressionType(const String& type,
 	                              const String& context_type,
 	                              const String& usings,
@@ -199,10 +191,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	                              Index<String>& typeset, bool variable, int lvl);
 //	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 //	                              Index<String>& typeset);
-	Index<String>  ExpressionType(const ParserContext& parser, const Vector<String>& xp);
-
-	Index<String>  EvaluateExpressionType(const ParserContext& parser, const Vector<String>& xp);
-
 	AnnotationItem FindCurrentAnnotation();
 
 	String         RemoveDefPar(const char *s);
@@ -220,7 +208,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	String         CompleteIdBack(int& q, const Index<String>& locals);
 
 	bool           WaitCurrentFile();
-	void           SwapSContext(ParserContext& p);
 
 	const AnnotationItem *GetAnnotationPtr(const String& id);
 

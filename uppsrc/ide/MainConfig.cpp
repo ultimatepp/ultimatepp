@@ -38,6 +38,7 @@ void sSetOption(One<Ctrl>& ctrl)
 void MainConfigDlg::FlagDlg()
 {
 	VectorMap<String, Index<String>> flags;
+#if 0 // TODO
 	{
 		CodeBaseLock __;
 		const CppBase& b = CodeBase();
@@ -54,6 +55,7 @@ void MainConfigDlg::FlagDlg()
 			}
 		}
 	}
+#endif
 	SortByKey(flags);
 	
 	WithConfLayout<TopWindow> cfg;

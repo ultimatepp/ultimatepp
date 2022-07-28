@@ -1,5 +1,6 @@
 #include "Browser.h"
 
+/* TODO
 void ReferenceDlg::EnterItem()
 {
 	reference <<= GetCodeRef();
@@ -30,3 +31,4 @@ ReferenceDlg::ReferenceDlg()
 	display.showtopic = true;
 	Load();
 }
+*/

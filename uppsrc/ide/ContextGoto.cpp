@@ -10,48 +10,6 @@
 #define LLOG(x)
 #endif
 
-bool GetIdScope(String& os, const String& scope, const String& id, Index<String>& done)
-{
-	CodeBaseLock __;
-	if(done.Find(scope) >= 0)
-		return Null;
-	done.Add(scope);
-	Vector<String> tparam;
-	String n = ParseTemplatedType(scope, tparam);
-	String nn = n + "::" + id;
-	if(CodeBase().Find(nn) >= 0) { // Console -> LineEdit::EditPos
-		os = nn;
-		return true;
-	}
-	int q = CodeBase().Find(n);
-	if(q < 0)
-		return Null;
-	const Array<CppItem>& m = CodeBase()[q];
-	Vector<String> r;
-	if(FindName(m, id) >= 0) {
-		os = n;
-		return true;
-	}
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsType()) {
-			Vector<String> b = Split(im.qptype, ';');
-			ResolveTParam(b, tparam);
-			for(int i = 0; i < b.GetCount(); i++) {
-				if(GetIdScope(os, b[i], id, done))
-					return true;
-			}
-		}
-	}
-	return false;
-}
-
-bool GetIdScope(String& os, const String& scope, const String& id)
-{
-	Index<String> done;
-	return GetIdScope(os, scope, id, done);
-}
-
 bool IsPif(const String& l)
 {
 	return l.Find("#if") >= 0;
@@ -89,12 +47,6 @@ void Ide::FindId(const String& id)
 		else
 			pos++;
 	}
-}
-
-String RemoveTemplateParams(const String& s)
-{
-	Vector<String> dummy;
-	return ParseTemplatedType(s, dummy);
 }
 
 bool Ide::OpenLink(const String& s, int pos)
@@ -508,42 +460,6 @@ bool Ide::GotoDesignerFile(const String& path, const String& scope, const String
 		return true;
 	}
 	return false;
-}
-
-void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
-{
-	String qitem = n[q].qitem;
-	int i = q;
-	int qml = 0;
-	int qcpp = -1;
-	int qcppml = 0;
-	int qimpl = -1;
-	int qimplml = 0;
-	String currentfile = editfile;
-	while(i < n.GetCount() && n[i].qitem == qitem) {
-		const CppItem& m = n[i];
-		int ml = GetMatchLen(editfile, GetSourceFilePath(m.file));
-		if(m.impl && ml > qimplml) {
-			qimplml = ml;
-			qimpl = i;
-		}
-		if((m.filetype == FILE_CPP || m.filetype == FILE_C) && ml > qcppml) {
-			qcpp = i;
-			qcppml = ml;
-		}
-		if(ml > qml) {
-			q = i;
-			qml = ml;
-		}
-		i++;
-	}
-	CppItem pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
-	String path = GetSourceFilePath(pos.file);
-	editastext.RemoveKey(path);
-	editashex.RemoveKey(path);
-	UnlockCodeBaseAll();
-	if(!GotoDesignerFile(path, scope, pos.name, pos.line))
-		GotoCpp(pos);
 }
 
 void Ide::GotoFileAndId(const String& path, const String& id)

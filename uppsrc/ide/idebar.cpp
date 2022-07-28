@@ -626,8 +626,6 @@ void Ide::BuildFileMenu(Bar& menu)
 		menu.Add(b, "Show assembler code for " + GetFileName(editfile), THISBACK1(Preprocess, true))
 			.Key(AK_ASSEMBLERCODE)
 			.Help("Compile the file into assembler code");
-	if(console.verbosebuild)
-		menu.Add(b, "Internal Preprocess " + GetFileName(editfile), IdeImg::HeaderInternal(), THISBACK(PreprocessInternal));
 }
 
 void Ide::BuildPackageMenu(Bar& menu)
@@ -783,15 +781,11 @@ void Ide::BrowseMenu(Bar& menu)
 		
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
-			menu.Add("Check source files for changes (old)", THISBACK(CheckCodeBase));
-			menu.Add("Rescan all source files (old)", THISBACK(RescanCode));
 			menu.Add("Reindex all source files", [=] {
 				for(FileAnnotation& m : CodeIndex())
 					m.time = Null;
 				TriggerIndexer();
 			});
-			if(!auto_rescan)
-				menu.Add(AK_RESCANCURRENTFILE, THISBACK(EditFileAssistSync));
 			menu.MenuSeparator();
 		}
 	}

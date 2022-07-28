@@ -447,8 +447,7 @@ void Ide::SetMethod(const String& m)
 {
 	method = m;
 	current_builder = GetMethodVars(method).Get("BUILDER", "");
-	if(auto_check)
-		NewCodeBase();
+	TriggerIndexer();
 }
 
 void Ide::SelectMethod()

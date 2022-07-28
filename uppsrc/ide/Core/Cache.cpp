@@ -23,3 +23,35 @@ void ReduceCache(int mb_limit)
 {
 	// TODO
 }
+
+void ReduceCacheFolder(const char *path, int max_total)
+{
+	struct RCB_FileInfo {
+		String path;
+		Time   time;
+		int64  length;
+		
+		bool operator<(const RCB_FileInfo& a) const { return time > a.time; }
+	};
+	
+	Array<RCB_FileInfo> file;
+	FindFile ff(AppendFileName(path, "*.*"));
+	int64 total = 0;
+	while(ff) {
+		if(ff.IsFile()) {
+			RCB_FileInfo& m = file.Add();
+			m.path = ff.GetPath();
+			m.time = ff.GetLastAccessTime();
+			m.length = ff.GetLength();
+			total += m.length;
+		}
+		ff.Next();
+	}
+	Sort(file);
+	while(total > max_total && file.GetCount()) {
+		if(DeleteFile(file.Top().path))
+			total -= file.Top().length;
+		file.Drop();
+	}
+}
+

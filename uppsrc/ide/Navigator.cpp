@@ -1,7 +1,3 @@
-#if 0
-
-// TODO: remove
-
 #include "ide.h"
 
 #define LTIMING(x) // RTIMING(x)
@@ -67,6 +63,8 @@ void DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
 
 int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 {
+	if(*h == '\xff')
+		h.Remove(0, 1);
 	return DrawFileName0(w, r, h, ink, 0);
 }
 
@@ -85,13 +83,8 @@ Navigator::Navigator()
 	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
-	list.WhenSel = THISBACK(SyncNavLines);
 	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
-	navlines.NoHeader().NoWantFocus();
-	navlines.WhenLeftClick = THISBACK(GoToNavLine);
-	navlines.AddColumn().SetDisplay(Single<LineDisplay>());
-
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
 	search.WhenEnter = THISBACK(NavigatorEnter);
@@ -103,131 +96,40 @@ Navigator::Navigator()
 	dlgmode = false;
 }
 
+AnnotationItem AssistEditor::FindCurrentAnnotation()
+{
+	int current_line = GetCurrentLine();
+	AnnotationItem q;
+	for(const AnnotationItem& m : annotations) {
+		if(m.line <= current_line)
+			q = m;
+		else
+			break;
+	}
+	return q;
+}
+
 void Navigator::SyncCursor()
 {
 	String k = "(" + GetKeyDesc(IdeKeys::AK_GOTO().key[0]) + ") ";
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
-
-	if(!navigating && theide->editfile.GetCount()) {
-		navlines.KillCursor();
-		int q = linefo.Find(GetSourceFileIndex(theide->editfile));
-		if(q < 0)
-			return;
+	
+	if(!navigating && !navigator_global) {
+		AnnotationItem q = theide->editor.FindCurrentAnnotation();
 		navigating = true;
-		SortedVectorMap<int, int>& m = linefo[q];
-		q = m.FindUpperBound(GetCurrentLine() + 1) - 1;
-		if(q >= 0 && q < m.GetCount())
-			list.SetCursor(m[q]);
+		for(int i = 0; i < list.GetCount(); i++) {
+			const NavItem& m = *litem[i];
+			if(m.id == q.id && m.line == q.line) {
+				list.SetCursor(i);
+				break;
+			}
+		}
 		navigating = false;
 	}
-	SyncLines();
+
 	if(scope.IsCursor())
 		scope.RefreshRow(scope.GetCursor());
-}
-
-void Navigator::SyncLines()
-{
-	if(IsNull(theide->editfile) || navigating)
-		return;
-	int ln = GetCurrentLine() + 1;
-	int fi = GetSourceFileIndex(theide->editfile);
-	int q = -1;
-	for(int i = 0; i < navlines.GetCount(); i++) {
-		const NavLine& l = navlines.Get(i, 0).To<NavLine>();
-		if(l.file == fi && l.line <= ln && i < navlines.GetCount())
-			q = i;
-	}
-	if(dlgmode)
-		navlines.GoBegin();
-	else
-	if(q >= 0)
-		navlines.SetCursor(q);
-}
-
-void Navigator::SyncNavLines()
-{
-	int sc = navlines.GetScroll();
-	navlines.Clear();
-	int ii = list.GetCursor();
-	if(ii >= 0 && ii < litem.GetCount()) {
-		Vector<NavLine> l = GetNavLines(*litem[ii]);
-		for(int i = 0; i < l.GetCount(); i++) {
-			String p = GetSourceFilePath(l[i].file);
-			navlines.Add(RawToValue(l[i]));
-		}
-		navlines.ScrollTo(sc);
-		SyncLines();
-	}
-}
-
-int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style, int x) const
-{
-	w.DrawRect(r, paper);
-	const NavLine& l = q.To<NavLine>();
-	x += r.left;
-	String p = GetSourceFilePath(l.file);
-	int y = r.top + (r.GetHeight() - StdFont().GetCy()) / 2;
-	PaintTeXt(w, x, y, GetFileName(GetFileFolder(p)) + "/", StdFont(), ink);
-	PaintTeXt(w, x, y, GetFileName(p), StdFont().Bold(), ink);
-	PaintTeXt(w, x, y, " (", StdFont(), ink);
-	PaintTeXt(w, x, y, AsString(l.line), StdFont().Bold(), ink);
-	PaintTeXt(w, x, y, ")", StdFont(), ink);
-	return x - r.left;
-}
-
-void Navigator::LineDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
-{
-	DoPaint(w, r, q, ink, paper, style, min(r.GetWidth() - GetStdSize(q).cx, 0));
-}
-
-Size Navigator::LineDisplay::GetStdSize(const Value& q) const
-{
-	NilDraw w;
-	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0, 0), StdFont().Bold().GetCy());
-}
-
-void Navigator::GoToNavLine()
-{
-	if(dlgmode)
-		return;
-	int ii = navlines.GetClickPos().y;
-	if(ii >= 0 && ii < navlines.GetCount() && theide) {
-		const NavLine& l = navlines.Get(ii, 0).To<NavLine>();
-		theide->GotoPos(GetSourceFilePath(l.file), l.line);
-	}
-}
-
-bool Navigator::NavLine::operator<(const NavLine& b) const
-{
-	String p1 = GetSourceFilePath(file);
-	String p2 = GetSourceFilePath(b.file);
-	return CombineCompare/*(!impl, !b.impl)*/
-	                     (GetFileExt(p2), GetFileExt(p1)) // .h > .c
-	                     (GetFileName(p1), GetFileName(p2))
-	                     (p1, p2)
-	                     (line, b.line) < 0;
-}
-
-Vector<Navigator::NavLine> Navigator::GetNavLines(const NavItem& m)
-{
-	CodeBaseLock __;
-	Vector<NavLine> l;
-	int q = CodeBase().Find(m.nest);
-	if(q < 0 || IsNull(m.qitem))
-		return l;
-	const Array<CppItem>& a = CodeBase()[q];
-	for(int i = 0; i < a.GetCount(); i++) {
-		const CppItem& mm = a[i];
-		if(mm.qitem == m.qitem) {
-			NavLine& nl = l.Add();
-			nl.impl = mm.impl;
-			nl.file = mm.file;
-			nl.line = mm.line;
-		}
-	}
-	Sort(l);
-	return l;
 }
 
 void Navigator::Navigate()
@@ -251,22 +153,11 @@ void Navigator::Navigate()
 		else
 		if(m.kind == KIND_SRCFILE) {
 			theide->AddHistory();
-			theide->EditFile(m.ptype);
+			theide->EditFile(m.id);
 			theide->AddHistory();
 		}
 		else {
-			Vector<NavLine> l = GetNavLines(m);
-			int q = l.GetCount() - 1;
-			for(int i = 0; i < l.GetCount(); i++)
-				if(GetSourceFilePath(l[i].file) == NormalizeSourcePath(theide->editfile) && l[i].line == ln) {
-					q = (i + l.GetCount() + 1) % l.GetCount();
-					break;
-				}
-			if(q >= 0 && q < l.GetCount()) {
-				String path = GetSourceFilePath(l[q].file);
-				if(!theide->GotoDesignerFile(path, m.nest, m.name, l[q].line))
-					theide->GotoPos(path, l[q].line);
-			}
+			theide->GotoPos(m.path, m.line);
 		}
 	}
 	navigating = false;
@@ -327,6 +218,7 @@ void Ide::SearchCode()
 	}
 }
 
+//TODO: What is this?
 void Ide::SwitchHeader() {
 	int c = filelist.GetCursor();
 	if(c < 0) return;
@@ -341,26 +233,6 @@ void Ide::SwitchHeader() {
 	}
 }
 
-void Navigator::NavItem::Set(const CppItem& m)
-{
-	qitem = m.qitem;
-	name = m.name;
-	uname = m.uname;
-	natural = m.natural;
-	type = m.type;
-	pname = m.pname;
-	ptype = m.ptype;
-	tname = m.tname;
-	ctname = m.ctname;
-	access = m.access;
-	kind = m.kind;
-	at = m.at;
-	line = m.line;
-	file = m.file;
-	impl = m.impl;
-	pass = false;
-}
-
 void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
@@ -368,9 +240,9 @@ void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const 
 		return;
 	const NavItem& m = *item[ii];
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0)
-		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
-		                                    : SColorFace);
+	if(findarg(m.kind, KIND_NEST) >= 0)
+		w.DrawRect(r, focuscursor ? paper : m.pretty.Find('\xff') >= 0 ? SColorFace()
+		                                  : Blend(SColorMark, SColorPaper, 220));
 	else
 		w.DrawRect(r, paper);
 }
@@ -385,48 +257,29 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
 
 	int x = r.left;
-	int ry = r.top + r.GetHeight() / 2;
-	int y = ry - Draw::GetStdFontCy() / 2;
-
-	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0) {
-		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
-		                                    : SColorFace);
-		if(findarg(m.kind, KIND_FILE) >= 0)
-			return PaintFileName(w, r, m.type, ink);
-		String h = FormatNest(m.type);
-		w.DrawText(x, y, h, StdFont().Bold(), ink);
-		return GetTextSize(h, StdFont().Bold()).cx;
-	}
+	int y = r.top + (r.GetHeight() - Draw::GetStdFontCy()) / 2;
 	
+	if(m.kind == KIND_NEST) {
+		bool fn = m.pretty.Find('\xff') >= 0;
+		w.DrawRect(r, focuscursor ? paper : fn ? SColorFace()
+		                                  : Blend(SColorMark(), SColorPaper(), 220));
+		if(fn)
+			return PaintFileName(w, r, m.pretty, ink);
+		w.DrawText(x, y, m.pretty, StdFont().Bold(), ink);
+		return GetTextSize(m.pretty, StdFont().Bold()).cx;
+	}
+
 	w.DrawRect(r, paper);
 
 	if(m.kind == KIND_SRCFILE)
-		return PaintFileName(w, r, m.type, ink);
+		return PaintFileName(w, r, m.pretty, ink);
 
 	if(m.kind == KIND_LINE) {
-		w.DrawText(x, y, m.type, StdFont().Bold(), ink);
-		return GetTextSize(m.type, StdFont().Bold()).cx;
+		w.DrawText(x, y, m.pretty, StdFont().Bold(), ink);
+		return GetTextSize(m.pretty, StdFont().Bold()).cx;
 	}
 
-	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);
-
-	x += Zx(15);
-	Vector<ItemTextPart> n = ParseItemNatural(m.name, m.natural, m.ptype, m.pname, m.type,
-	                                          m.tname, m.ctname, ~m.natural + m.at);
-	int starti = 0;
-	for(int i = 0; i < n.GetCount(); i++)
-		if(n[i].type == ITEM_NAME) {
-			starti = i;
-			break;
-		}
-	PaintText(w, x, y, m.natural, n, starti, n.GetCount(), focuscursor, ink, false);
-	if(starti) {
-		const char *h = " : ";
-		w.DrawText(x, y, h, BrowserFont(), SColorText);
-		x += GetTextSize(h, BrowserFont()).cx;
-	}
-	PaintText(w, x, y, m.natural, n, 0, starti, focuscursor, ink, false);
-	return x;
+	return PaintCpp(w, r, m.kind, m.name, m.pretty, ink, focuscursor, true);
 }
 
 void Navigator::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
@@ -445,49 +298,8 @@ void Navigator::TriggerSearch()
 	search_trigger.KillSet(100, THISBACK(Search));
 }
 
-void Navigator::NavGroup(bool local)
-{
-	CodeBaseLock __;
-	for(int i = 0; i < nitem.GetCount(); i++) {
-		NavItem& m = nitem[i];
-		String g = m.nest;
-		if(m.kind == TYPEDEF)
-			g.Trim(max(g.ReverseFind("::"), 0));
-		if(IsNull(g) || CodeBase().namespaces.Find(m.nest) >= 0) {
-			if(g.GetCount()) // We want to show the namespace
-				g << '\xff';
-			else
-				g.Clear();
-			g << GetSourceFilePath(m.decl_file);
-			g = '\xff' + g;
-		}
-		if(!local)
-			g = (char)(m.pass + 10) + g;
-		if(local)
-			if(gitem.GetCount() && gitem.TopKey() == g)
-				gitem.Top().Add(&m);
-			else
-				gitem.Add(g).Add(&m);
-		else
-			gitem.GetAdd(g).Add(&m);
-	}
-}
-
-force_inline
-bool Navigator::SortByLines(const NavItem *a, const NavItem *b)
-{
-	return CombineCompare(a->decl_file, b->decl_file)(a->decl_line, b->decl_line) < 0;
-}
-
-force_inline
-bool Navigator::SortByNames(const NavItem *a, const NavItem *b)
-{
-	return CombineCompare(a->name, b->name)(a->qitem, b->qitem) < 0;
-}
-
 void Navigator::Search()
 {
-	CodeBaseLock __;
 	sortitems.Check(sorting);
 	int sc = scope.GetScroll();
 	String key = scope.GetKey();
@@ -508,129 +320,67 @@ void Navigator::Search()
 		wholeclass = *s == '.' && search_nest.GetCount();
 	}
 	else {
-		search_name = search_nest = ~search;
+		search_name = ~search;
 		both = true;
 	}
 	s = Join(Split(s, '.'), "::") + (s.EndsWith(".") ? "::" : "");
 	int lineno = StrInt(s);
-	gitem.Clear();
 	nitem.Clear();
-	if(IsNull(theide->editfile))
-		return;
-	int fileii = GetSourceFileIndex(theide->editfile);
+	Index<String> nests;
+	auto Nest = [&](const AnnotationItem& m, const String& path) {
+		if(m.nspace == m.nest)
+			return m.nest + "\xff" + path;
+		return m.nest;
+	};
+	nests.Add(Null);
 	if(!IsNull(lineno)) {
 		NavItem& m = nitem.Add();
-		m.type = "Go to line " + AsString(lineno);
+		m.pretty = "Go to line " + AsString(lineno);
 		m.kind = KIND_LINE;
 		m.line = lineno;
-		gitem.Add(Null).Add(&m);
 	}
 	else
 	if(IsNull(s) && !sorting) {
-		const CppBase& b = CodeBase();
 		bool sch = GetFileExt(theide->editfile) == ".sch";
-		for(int i = 0; i < b.GetCount(); i++) {
-			String nest = b.GetKey(i);
-			const Array<CppItem>& ci = b[i];
-			for(int j = 0; j < ci.GetCount(); j++) {
-				const CppItem& m = ci[j];
-				if(m.file == fileii && (!sch || !m.IsData() || m.type != "SqlId")) {
-					NavItem& n = nitem.Add();
-					n.Set(m);
-					n.nest = nest;
-					n.decl_line = m.line;
-					n.decl_file = m.file;
-					n.decl = !m.impl;
-					NavLine& l = n.linefo.Add();
-					l.impl = m.impl;
-					l.file = m.file;
-					l.line = m.line;
-				}
+		Ide *theide = TheIde();
+		if(theide)
+			for(const AnnotationItem& m : theide->editor.annotations) {
+				NavItem& n = nitem.Add();
+				(AnnotationItem&)n = m;
+				n.path = theide->editfile;
+				nests.FindAdd(n.nest = Nest(m, theide->editfile));
 			}
-		}
-		Sort(nitem, FieldRelation(&NavItem::line, StdLess<int>()));
-		NavGroup(true);
+		SortIndex(nests);
 	}
 	else {
 		navigator_global = true;
-		const CppBase& b = CodeBase();
 		String usearch_nest = ToUpper(search_nest);
 		String usearch_name = ToUpper(search_name);
-		ArrayMap<String, NavItem> imap;
-		bool local = sorting && IsNull(s);
-		VectorMap<String, int> nest_pass;
-		for(int pass = -1; pass < 2; pass++) {
-			for(int i = 0; i < b.GetCount(); i++) {
-				String nest = b.GetKey(i);
-				bool foundnest = (wholeclass ? pass < 0 ? false :
-				                               pass ? ToUpper(nest) == usearch_nest
-				                                    : nest == search_nest
-				                             : pass < 0 ? nest == search_nest :
-				                               (pass ? ToUpper(nest).Find(usearch_nest) >= 0
-				                                     : nest.StartsWith(search_nest)))
-				                 && nest.Find('@') < 0;
-				if(local || foundnest || both) {
-					const Array<CppItem>& ci = b[i];
-					for(int j = 0; j < ci.GetCount(); j++) {
-						const CppItem& m = ci[j];
-						if(local ? m.file == fileii
-						         : m.uname.Find('@') < 0 && (pass < 0 ? m.name == search_name :
-						                               pass ? m.uname.Find(usearch_name) >= 0
-						                                    : m.name.StartsWith(search_name))
-						           || both && foundnest) {
-							String key = nest + '\1' + m.qitem;
-							int q = nest_pass.Find(nest);
-							int p = pass;
-							if(q < 0) // We do not want classes to be split based on pass
-								nest_pass.Add(nest, pass);
-							else
-								p = nest_pass[q];
-							q = imap.Find(key);
-							if(q < 0) {
-								NavItem& ni = imap.Add(key);
-								ni.Set(m);
-								ni.nest = nest;
-								ni.decl_line = ni.line;
-								ni.decl_file = ni.file;
-								ni.decl = !ni.impl;
-								ni.pass = p;
-								NavLine& l = ni.linefo.Add();
-								l.impl = m.impl;
-								l.file = m.file;
-								l.line = m.line;
-							}
-							else {
-								NavItem& mm = imap[q];
-								if(!m.impl &&
-								  (!mm.decl
-								    || CombineCompare(mm.decl_file, m.file)(mm.decl_line, m.line) < 0)) {
-										mm.decl = true;
-										mm.decl_line = m.line;
-										mm.decl_file = m.file;
-										mm.natural = m.natural;
-								}
-								NavLine& l = mm.linefo.Add();
-								l.impl = m.impl;
-								l.file = m.file;
-								l.line = m.line;
-							}
+		Index<String> visited;
+		SortByKey(CodeIndex());
+		for(int pass = 0; pass < 2; pass++)
+			for(const auto& f : ~CodeIndex())
+				for(const AnnotationItem& m : f.value.items) {
+					int q = visited.Find(m.id);
+					if(q >= 0) { // replace declaration (.h) with definition (.cpp)
+						NavItem& n = nitem[q];
+						if(!n.definition && m.definition) {
+							(AnnotationItem&)n = m;
+							n.path = f.key;
 						}
 					}
+					else
+					if((pass == 0 ? m.name.StartsWith(search_name) : m.uname.Find(usearch_name) >= 0) &&
+					   (pass == 0 ? m.nest.Find(search_nest) >= 0 : m.unest.Find(usearch_nest) >= 0)) {
+						visited.Add(m.id);
+						NavItem& n = nitem.Add();
+						(AnnotationItem&)n = m;
+						n.path = f.key;
+						nests.FindAdd(n.nest = Nest(m, theide->editfile));
+					}
 				}
-			}
-		}
-		nitem = imap.PickValues();
-		NavGroup(false);
-		SortByKey(gitem);
-		Vector<String> keys = gitem.PickKeys();
-		Vector<Vector<NavItem *> > values = gitem.PickValues();
-		IndexSort(keys, values);
-		for(int i = 0; i < keys.GetCount(); i++)
-			keys[i].Remove(0);
-		VectorMap<String, Vector<NavItem *> > h(pick(keys), pick(values));
-		gitem = pick(h);
-		for(int i = 0; i < gitem.GetCount(); i++)
-			Sort(gitem[i], sorting ? SortByNames : SortByLines);
+		
+		SortIndex(nests);
 		const Workspace& wspc = GetIdeWorkspace();
 		String s = ToUpper(TrimBoth(~search));
 		for(int i = 0; i < wspc.GetCount(); i++) {
@@ -639,24 +389,18 @@ void Navigator::Search()
 				if(!p[j].separator && ToUpper(p[j]).Find(s) >= 0) {
 					NavItem& m = nitem.Add();
 					m.kind = KIND_SRCFILE;
-					m.type = wspc[i] + "/" + p[j];
-					m.ptype = SourcePath(wspc[i], p[j]);
+					m.pretty = wspc[i] + "/" + p[j];
+					m.id = SourcePath(wspc[i], p[j]);
 					m.line = 0;
-					gitem.GetAdd("<files>").Add(&m);
+					m.nest = "<files>";
+					nests.FindAdd(m.nest);
 				}
 			}
 		}
 	}
 	scope.Clear();
-	scope.Add(Null);
-	Index<String> done;
-	for(int i = 0; i < gitem.GetCount(); i++) {
-		String s = gitem.GetKey(i);
-		if(done.Find(s) < 0) {
-			done.Add(s);
-			scope.Add(s);
-		}
-	}
+	for(String n : nests)
+		scope.Add(n);
 	scope.ScrollTo(sc);
 	if(!navigator_global || !scope.FindSetCursor(key))
 		scope.GoBegin();
@@ -675,7 +419,7 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 		if(ii >= 0 && ii < navigator->litem.GetCount()) {
 			const NavItem& m = *navigator->litem[ii];
 			String txt = m.nest;
-			if(IsCppCode(m.kind))
+			if(IsFunction(m.kind))
 				txt << "::" << m.name;
 			w.DrawText(r.left + x, r.top, txt, StdFont().Bold(), ink);
 			x += GetTextSize(txt, StdFont().Bold()).cx;
@@ -683,7 +427,7 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 		return x;
 	}
 	String h = q;
-	if(*h == '\xff')
+	if(h.Find('\xff') >= 0) // TODO
 		return PaintFileName(w, r, h, ink);
 	else
 		h = FormatNest(h);
@@ -707,31 +451,21 @@ void Navigator::Scope()
 	LTIMING("FINALIZE");
 	litem.Clear();
 	nest_item.Clear();
-	linefo.Clear();
-	bool all = scope.GetCursor() <= 0;
 	String sc = scope.GetKey();
-	for(int i = 0; i < gitem.GetCount(); i++) {
-		String grp = gitem.GetKey(i);
-		int    kind = KIND_NEST;
-		if(*grp == '\xff')
-			kind = KIND_FILE;
-		if(all) {
-			NavItem& m = nest_item.Add();
-			m.kind = kind;
-			m.type = FormatNest(grp);
-			litem.Add(&m);
+	String nest;
+	for(const NavItem& n : nitem)
+		if(IsNull(sc) || n.nest == sc) {
+			if(!sorting && n.nest != nest) {
+				NavItem& m = nest_item.Add();
+				m.kind = KIND_NEST;
+				nest = m.pretty = n.nest;
+				litem.Add(&m);
+			}
+			litem.Add(&n);
 		}
-		else
-		if(grp != sc)
-			continue;
-		const Vector<NavItem *>& ia = gitem[i];
-		for(int i = 0; i < ia.GetCount(); i++) {
-			NavItem *m = ia[i];
-			for(int j = 0; j < m->linefo.GetCount(); j++)
-				linefo.GetAdd(m->linefo[j].file).Add(m->linefo[j].line, litem.GetCount());
-			litem.Add(m);
-		}
-	}
+	
+	// TODO sorting
+		
 	int lsc = list.GetScroll();
 	list.Clear();
 	list.SetVirtualCount(litem.GetCount());
@@ -742,7 +476,7 @@ void Navigator::ListLineEnabled(int i, bool& b)
 {
 	if(i >= 0 && i < litem.GetCount()) {
 		int kind = litem[i]->kind;
-		if(findarg(kind, KIND_FILE, KIND_NEST) >= 0)
+		if(findarg(kind, KIND_NEST) >= 0)
 			b = false;
 	}
 }
@@ -752,5 +486,3 @@ void Navigator::NaviSort()
 	sorting = !sorting;
 	Search();
 }
-
-#endif

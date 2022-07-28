@@ -342,8 +342,7 @@ void Ide::SaveFile0(bool always)
 		designer->Save();
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
-		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
-			CodeBaseScanFile(fn, auto_check);
+		TriggerIndexer();
 		return;
 	}
 
@@ -387,10 +386,8 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
-	if(editor.IsDirty()) {
-		if(IsCppBaseFile())
-			CodeBaseScanFile(editfile, auto_check);
-	}
+	if(editor.IsDirty())
+		TriggerIndexer();
 
 	editor.ClearDirty();
 
@@ -405,7 +402,6 @@ void Ide::FlushFile() {
 	editor.CloseAssist();
 	SaveFile();
 	CacheViewFile(editor, editfile);
-	editor.assist_active = false;
 	if(designer) {
 		designer->SaveEditPos();
 		designer->DesignerCtrl().SetFrame(NullFrame());
@@ -622,7 +618,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	MakeTitle();
 	SetBar();
 	editor.SyncNavigatorShow();
-	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
 	editor.SyncNavigator();
 	editor.NewFile();
@@ -644,40 +639,6 @@ String Ide::IncludesMD5()
 		catch(CParser::Error) {}
 	}
 	return md5.FinishString();
-}
-
-void Ide::ScanFile(bool check_includes)
-{
-	if(IsCppBaseFile()) {
-		if(check_includes) {
-			String imd5 = IncludesMD5();
-			if(editfile_includes != imd5) {
-				editfile_includes = imd5;
-				SaveFile(true);
-				return;
-			}
-		}
-		String s = ~editor;
-		StringStream ss(s);
-		CodeBaseScanFile(ss, editfile);
-	}
-}
-
-bool Ide::EditFileAssistSync2()
-{
-	if(TryLockCodeBase()) {
-		editor.SyncNavigator();
-		editor.SyncCurrentFile();
-		UnlockCodeBase();
-		return true;
-	}
-	return false;
-}
-
-void Ide::EditFileAssistSync()
-{
-	ScanFile(false);
-	EditFileAssistSync2();
 }
 
 void Ide::EditAsHex()
@@ -805,12 +766,6 @@ void Ide::EditFile(const String& p)
 	AddEditFile(path);
 }
 
-bool Ide::IsCppBaseFile()
-{
-	return IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile) ||
-	                                   ToUpper(GetFileExt(editfile)) == ".SCH");
-}
-
 void Ide::CheckFileUpdate()
 {
 	if(editfile.IsEmpty() || !IsForeground() || designer) return;
@@ -824,8 +779,6 @@ void Ide::CheckFileUpdate()
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
 
-	if(IsCppBaseFile())
-		CodeBaseScanFile(editfile, auto_check);
 	ReloadFile();
 }
 

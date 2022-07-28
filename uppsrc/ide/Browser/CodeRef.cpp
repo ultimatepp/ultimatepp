@@ -23,6 +23,7 @@ void TopicEditor::JumpToDefinition()
 void TopicEditor::Label(String& label)
 {
 	Save();
+/* TODO ReferenceDlg
 	if(ref.item.IsMultiSelect())
 		ref.item.ClearSelection();
 	ref.item.MultiSelect(false);
@@ -32,6 +33,7 @@ void TopicEditor::Label(String& label)
 	if(ref.Execute() != IDOK)
 		return;
 	label = ref.Get();
+*/
 }
 
 Uuid CodeItemUuid()
@@ -72,8 +74,9 @@ void TopicEditor::FindBrokenRef()
 					RichPara para = txt.Get(i);
 					if(para.format.label == "noref")
 						continue;
-					if(!IsNull(para.format.label) && GetCodeRefItem(para.format.label))
-						continue;
+					// TODO ReferenceDlg
+//					if(!IsNull(para.format.label) && GetCodeRefItem(para.format.label))
+//						continue;
 					editor.Move(txt.GetPartPos(i));
 					return;
 				}
@@ -169,117 +172,10 @@ bool IsCodeRefType(const String& type)
 {
 	if(type.GetCount() == 0)
 		return false;
-	CodeBaseLock __;
-	return CodeBase().Find(type) >= 0;
-}
-
-String DecoratedItem(const String& name, const CppItem& m, const char *natural, int pari)
-{
-	String qtf = "[%00-00K ";
-	Vector<ItemTextPart> n = ParseItemNatural(name, m, natural);
-	if(pari < 0) {
-		if(m.virt)
-			qtf << "[@B virtual] ";
-		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
-			qtf << "[@B static] ";
-	}
-	Vector<String> qt = Split(m.qptype, sSplitT, false);
-	Vector<String> tt = Split(m.qtype, sSplitT, false);
-	for(int i = 0; i < n.GetCount(); i++) {
-		ItemTextPart& p = n[i];
-		qtf << "[";
-		if(p.pari == pari)
-			qtf << "$C";
-		switch(p.type) {
-		case ITEM_PNAME:
-			qtf << "*";
-		case ITEM_NUMBER:
-			qtf << "@r";
-			break;
-		case ITEM_TNAME:
-			qtf << "*@g";
-			break;
-		case ITEM_NAME:
-			qtf << "*";
-			break;
-		case ITEM_UPP:
-			qtf << "@c";
-			break;
-		case ITEM_CPP_TYPE:
-		case ITEM_CPP:
-			qtf << "@B";
-			break;
-		default:
-			int q = p.type - ITEM_PTYPE;
-			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]) && pari < 0)
-				qtf << "_^" << qt[q] << '^';
-			q = p.type - ITEM_TYPE;
-			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]) && pari < 0)
-				qtf << "_^" << tt[q] << '^';
-			break;
-		}
-		qtf << ' ';
-		qtf << NaturalDeQtf(String(~m.natural + p.pos, p.len));
-		qtf << ']';
-	}
-	return qtf + "]";
-}
-
-String CreateQtf(const String& item, const String& name, const CppItem& m, const String& lang, bool onlyhdr = false)
-{
-	String qtf;
-	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
-	if(!str)
-		qtf << "[s4 &]";
-	String st = str ? "[s2;" : "[s1;";
-	String k = st + ':' + DeQtf(item) + ": ";
-	if(m.IsTemplate() && str) {
-		int q = 0;
-		int w = 0;
-		while(q < m.natural.GetLength()) {
-			if(m.natural[q] == '<')
-				w++;
-			if(m.natural[q] == '>') {
-				w--;
-				if(w == 0) {
-					q++;
-					break;
-				}
-			}
-			q++;
-		}
-		qtf << "[s2:noref: " << DecoratedItem(name, m, m.natural.Mid(0, q)) << "&][s2 " << k;
-		if(q < m.natural.GetLength()) {
-			while((byte)m.natural[q] <= 32)
-				q++;
-			qtf << DecoratedItem(name, m, m.natural.Mid(q));
-		}
-	}
-	else
-		qtf << k << DecoratedItem(name, m, m.natural);
-
-	qtf << "&]";
-	if(onlyhdr)
-		return qtf;
-	qtf << "[s3%" << lang << " ";
-	String d;
-	Vector<String> t = Split(m.tname, ';');
-	for(int i = 0; i < t.GetCount(); i++) {
-		if(i)
-			d << ' ';
-		d << "[%-*@g " << DeQtf(t[i]) << "]";
-	}
-	d.Clear();
-	d << "[%" << lang << " ";
-	Vector<String> p = Split(m.pname, ';');
-	if(!str)
-		for(int i = 0; i < p.GetCount(); i++)
-			d << " [%-*@r " << DeQtf(p[i]) << "]";
-	if(!str && p.GetCount())
-		qtf << d << " .";
-	qtf << "&]";
-	qtf << "[s7 &]";
-	return qtf;
+	return false;
+	// TODO
+//	CodeBaseLock __;
+//	return CodeBase().Find(type) >= 0;
 }
 
 String TopicEditor::GetLang() const
@@ -295,6 +191,7 @@ String TopicEditor::GetLang() const
 
 void TopicEditor::InsertItem()
 { // TODO: Fix this when we have new codebase!
+#if 0
 	if(IsNull(topicpath))
 		return;
 	Save();
@@ -341,6 +238,7 @@ void TopicEditor::InsertItem()
 	editor.PasteText(ParseQTF(styles + qtf));
 	editor.PrevPara();
 	editor.PrevPara();
+#endif
 }
 
 String DecoratedItem(const String& name, const String& pretty)
@@ -514,6 +412,8 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const Annotatio
 
 void   TopicEditor::FixTopic()
 {
+	// TODO
+#if 0
 	String nest;
 	if(!EditText(nest, "Fix topic", "Nest"))
 		return;
@@ -592,6 +492,7 @@ void   TopicEditor::FixTopic()
 	editor.BeginOp();
 	editor.SetSelection(0, txt.GetLength());
 	editor.PasteText(result);
+#endif
 }
 
 String TopicEditor::GetFileName() const

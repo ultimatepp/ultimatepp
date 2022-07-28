@@ -173,8 +173,8 @@ void LayDes::GotoUsing()
 		String n = wspc[i];
 		for(int i = 0; i < pk.GetCount(); i++) {
 			String path = SourcePath(n, pk.file[i]);
-			if(IsCPPFile(path) || IsHFile(path)) {
-				if(HasCPPFileKeyword(path, lid)) {
+			if(IsSourceFile(path) || IsHeaderFile(path)) {
+				if(false) { // TODO
 					IdeGotoFileAndId(path, lid);
 					return;
 				}

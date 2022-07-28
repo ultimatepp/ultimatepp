@@ -777,9 +777,9 @@ void Ide::SetupBuildMethods()
 		}
 	}
 	InvalidateIncludes();
-	CodeBaseSync();
 	SyncBuildMode();
 	SetBar();
+	TriggerIndexer();
 }
 
 void ExtractIncludes(Index<String>& r, String h)
@@ -926,10 +926,4 @@ String Ide::GetCurrentDefines()
 String Ide::IdeGetIncludePath()
 {
 	return GetIncludePath();
-}
-
-void Ide::InvalidateIncludes()
-{
-	InvalidatePPCache();
-	include_path.Clear();
 }

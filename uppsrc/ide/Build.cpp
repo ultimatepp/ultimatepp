@@ -21,11 +21,6 @@ void Ide::DoProcessEvents()
 	ProcessEvents();
 }
 
-void Ide::ReQualifyCodeBase()
-{
-	FinishCodeBase();
-}
-
 String Ide::GetMain()
 {
 	return main;
@@ -152,22 +147,6 @@ void Ide::FileCompile()
 	onefile.Clear();
 	EndBuilding(ok);
 	SetErrorEditor();
-}
-
-void Ide::PreprocessInternal()
-{
-	if(editor.GetLength64() >= 1000000) // Sanity...
-		return;
-	int l = editor.GetCurrentLine();
-	PPSync(GetIncludePath());
-	String pfn = ConfigFile(GetFileTitle(editfile) + ".i.tmp");
-	Upp::SaveFile(pfn, PreprocessCpp(editor.Get(), editfile));
-	HideBottom();
-	EditFile(pfn);
-	EditAsText();
-	if(!editor.IsReadOnly())
-		ToggleReadOnly();
-	editor.SetCursor(editor.GetPos64(l));
 }
 
 void Ide::Preprocess(bool asmout) {

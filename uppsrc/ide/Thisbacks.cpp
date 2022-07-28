@@ -41,6 +41,7 @@ void ThisbacksDlg::CbEdit(One<Ctrl>& ctrl)
 
 ThisbacksDlg::ThisbacksDlg(const String& scope)
 {
+#if 0
 	CodeBaseLock __;
 	CtrlLayoutOKCancel(*this, "Events");
 	list.AddColumn("Defined in");
@@ -61,11 +62,13 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 		nname.FindAdd(n[i].name);
 	Index<String> done;
 	GatherCallbacks("", done, scope, PRIVATE);
+#endif
 }
 
 void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
                                    const String& scope, int access)
 {
+#if 0
 	CodeBaseLock __;
 	if(IsNull(scope))
 		return;
@@ -124,6 +127,7 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 		   && !m.name.StartsWith("dv___"))
 			GatherCallbacks(pfx + "." + m.name, done, m.qtype, min(access, (int)PUBLIC));
 	}
+#endif
 }
 
 void ThisbacksDlg::Generate(String& ins, String& clip, const String& scope)
@@ -169,6 +173,7 @@ INITBLOCK
 
 void AssistEditor::Thisbacks()
 {
+#if 0
 	ParserContext ctx;
 	Context(ctx, GetCursor32());
 	if(IsNull(ctx.current_scope) || !ctx.IsInBody())
@@ -183,4 +188,5 @@ void AssistEditor::Thisbacks()
 	dlg.Generate(a, b, ctx.current_scope);
 	Paste(a.ToWString());
 	WriteClipboardText(b);
+#endif
 }

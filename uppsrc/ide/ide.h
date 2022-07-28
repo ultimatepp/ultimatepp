@@ -449,7 +449,6 @@ public:
 	virtual void   EndBuilding(bool ok);
 	virtual void   ClearErrorEditor();
 	virtual void   DoProcessEvents();
-	virtual void   ReQualifyCodeBase();
 	virtual void   SetErrorEditor();
 	virtual String GetMain();
 
@@ -788,9 +787,6 @@ public:
 	void      PosSync();
 	String    IncludesMD5();
 
-	bool      EditFileAssistSync2();
-	void      EditFileAssistSync();
-	
 	void      AKEditor();
 	
 	void      PackageMenu(Bar& menu);
@@ -799,7 +795,6 @@ public:
 	void      UscProcessDir(const String& dir);
 	void      UscProcessDirDeep(const String& dir);
 	void      SyncUsc();
-	void      CodeBaseSync();
 
 	void      RefreshBrowser();
 
@@ -814,7 +809,6 @@ public:
 	void      SerializeOutputMode(Stream& s);
 
 	void      GotoPos(String path, int line);
-	void      GotoCpp(const CppItem& pos);
 	
 	void      LoadAbbr();
 	void      SaveAbbr();
@@ -936,7 +930,6 @@ public:
 		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
 		void  CreateHostRunDir(Host& h);
-		void  PreprocessInternal();
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();
@@ -980,8 +973,6 @@ public:
 		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 	
 	void      BrowseMenu(Bar& menu);
-		void  CheckCodeBase();
-		void  RescanCode();
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
 		void  OpenTopic(const String& topic);
@@ -990,8 +981,6 @@ public:
 		void  SearchCode();
 		void  Goto();
 		void  NavigatorDlg();
-		void  ScanFile(bool check_includes);
-		bool  SwapSIf(const char *cref); // TODO: remove
 		void  SwapS();
 		void  FindId(const String& id);
 		bool  OpenLink(const String& s, int pos);
@@ -1052,8 +1041,6 @@ public:
 	
 	String    include_path; // cached value of include path, GetIncludePath
 	
-	virtual void      InvalidateIncludes();
-
 	virtual void      LaunchTerminal(const char *dir);
 	
 //	Console&  GetConsole();
@@ -1138,7 +1125,6 @@ public:
 	void      ManageDisplayVisibility();
 
 	void      SetIcon();
-	bool      IsCppBaseFile(); // TODO: remove
 	void      CheckFileUpdate();
 	void      Periodic();
 	void      SyncClang();
@@ -1173,7 +1159,6 @@ public:
 	void      NewMainPackage();
 
 	bool      GotoDesignerFile(const String& path, const String& scope, const String& name, int line);
-	void      JumpToDefinition(const Array<CppItem>& n, int q, const String& scope);
 	void      GotoFileAndId(const String& path, const String& id);
 	void      SearchTopics();
 	void      ShowTopics();

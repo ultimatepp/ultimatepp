@@ -40,6 +40,7 @@ class  Image;
 String CacheDir();
 String CacheFile(const char *name);
 void   ReduceCache(int mb_limit);
+void   ReduceCacheFolder(const char *path, int max_total);
 
 class Hdepend {
 	struct Info {
