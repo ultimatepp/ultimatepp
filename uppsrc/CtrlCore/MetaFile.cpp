@@ -150,8 +150,7 @@ void WinMetaFile::Serialize(Stream& s) {
 		Clear();
 		s % size;
 		if(size) {
-			Buffer<byte> buffer(size);
-			s.SerializeRaw(buffer, size);
+			String buffer = s.GetAll(size);
 			HENHMETAFILE hemf = ::SetEnhMetaFileBits(size, buffer);
 			Attach(hemf);
 		}

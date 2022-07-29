@@ -397,7 +397,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	Vector<Ctrl *> v;
 	VectorMap< HWND, Ptr<Ctrl> >& w = Windows();
 	for(int i = 0; i < w.GetCount(); i++)
-		if(w.GetKey(i) && w[i] && !w[i]->parent)
+		if(w.GetKey(i) && w[i] && !w[i]->GetParent())
 			v.Add(w[i]);
 	return v;
 }
@@ -463,6 +463,23 @@ UDropTarget *NewUDropTarget(Ctrl *);
 
 String WindowStyleAsString(dword style, dword exstyle);
 
+void Ctrl::UseImmersiveDarkModeForWindowBorder()
+{
+	static HRESULT (WINAPI *DwmSetWindowAttribute)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
+	ONCELOCK {
+		DllFn(DwmSetWindowAttribute, "dwmapi.dll", "DwmSetWindowAttribute");
+	}
+	if (!DwmSetWindowAttribute) {
+		return;
+	}
+	const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+	
+	BOOL useDarkTheme = IsDarkTheme();
+	DwmSetWindowAttribute(
+		utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
+		&useDarkTheme, sizeof(useDarkTheme));
+}
+
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
 	GuiLock __;
@@ -472,7 +489,8 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	Rect r = GetRect();
 	AdjustWindowRectEx(r, style, FALSE, exstyle);
 	isopen = true;
-	top = new Top;
+	Top *top = new Top;
+	SetTop(top);
 	ASSERT(!parent || IsWindow(parent));
 	style &= ~WS_VISIBLE;
 	dropshadow = false;
@@ -485,9 +503,12 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	inloop = false;
 
 	ASSERT(top->hwnd);
+	
+	UseImmersiveDarkModeForWindowBorder();
+	
 	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
 	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
-//	::UpdateWindow(hwnd);
+	
 	StateH(OPEN);
 	LLOG(LOG_END << "//Ctrl::Create in " <<UPP::Name(this));
 	RegisterDragDrop(top->hwnd, (LPDROPTARGET) (top->dndtgt = NewUDropTarget(this)));
@@ -501,11 +522,11 @@ void ReleaseUDropTarget(UDropTarget *dt);
 void Ctrl::WndFree()
 {
 	GuiLock __;
-	if(!top) return;
+	Top *top = GetTop();
 	RevokeDragDrop(GetHWND());
+	if(!top) return;
 	ReleaseUDropTarget(top->dndtgt);
 	isopen = false;
-	if(!top) return;
 	HWND owner = GetWindow(top->hwnd, GW_OWNER);// CXL 31.10.2003 z DoRemove
 	bool focus = ::GetFocus() == top->hwnd;
 	LLOG("Ctrl::WndDestroy owner " << (void *)owner
@@ -519,13 +540,13 @@ void Ctrl::WndFree()
 		::SetFocus(owner);
 	}
 	LLOG(LOG_END << "//Ctrl::WndFree() in " <<UPP::Name(this));
-	delete top;
-	top = NULL;
+	DeleteTop();
 }
 
 void Ctrl::WndDestroy()
 {
 	GuiLock __;
+	Top *top = GetTop();
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
 		WndFree();
@@ -563,14 +584,16 @@ sWinMsg[] = {
 void Ctrl::NcCreate(HWND hwnd)
 {
 	GuiLock __;
-	if(!parent)
+	Top *top = GetTop();
+	if(top)
 		top->hwnd = hwnd;
 }
 
 void Ctrl::NcDestroy()
 {
 	GuiLock __;
-	if(!parent)
+	Top *top = GetTop();
+	if(top)
 		WndFree();
 }
 
@@ -839,80 +862,6 @@ void Ctrl::GuiSleep(int ms)
 	EnterGuiMutex(level);
 }
 
-#if 0
-void Ctrl::WndDestroyCaret()
-{
-	DLOG("Ctrl::WndDestroyCaret()");
-	::DestroyCaret();
-}
-
-void Ctrl::WndCreateCaret(const Rect& cr)
-{
-	GuiLock __;
-	DLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
-	HWND hwnd = GetHWND();
-	if(!hwnd) return;
-	Rect r;
-	::GetClientRect(hwnd, r);
-	Point p = r.TopLeft();
-	::ClientToScreen(hwnd, p);
-	::CreateCaret(hwnd, NULL, cr.Width(), cr.Height());
-	::SetCaretPos(cr.left - p.x, cr.top - p.y);
-	::ShowCaret(hwnd);
-}
-#else
-
-int  Ctrl::WndCaretTime;
-bool Ctrl::WndCaretVisible;
-
-void  Ctrl::AnimateCaret()
-{
-	GuiLock __;
-	bool v = !(((msecs() - WndCaretTime) / GetCaretBlinkTime()) & 1);
-	if(v != WndCaretVisible) {
-		WndCaretVisible = v;
-		RefreshCaret();
-	}
-}
-
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
-
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	LLOG("SetCaret " << Name() << " " << RectC(x, y, cx, cy));
-	if(this == caretCtrl)
-		RefreshCaret();
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	if(this == caretCtrl) {
-		WndCaretTime = msecs();
-		RefreshCaret();
-		AnimateCaret();
-	}
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-	LLOG("SyncCaret");
-	if(focusCtrl != caretCtrl) {
-		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
-#endif
-
-
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
@@ -947,7 +896,7 @@ void Ctrl::SetAlpha(byte alpha)
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
-	if(!IsAlphaSupported() || parent || !top || !hwnd)
+	if(!IsAlphaSupported() || GetParent() || !top || !hwnd)
 		return;
 	if(alpha == 255) {
 		SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) & ~0x80000);
@@ -1183,14 +1132,10 @@ void Ctrl::WndUpdate(const Rect& r)
 		if(GetUpdateRgn(hwnd, hrgn, FALSE) != NULLREGION) {
 			SelectClipRgn(hdc, hrgn);
 			SystemDraw draw(hdc);
-			bool hcr = focusCtrl && focusCtrl->GetTopCtrl() == top &&
-			           caretRect.Intersects(r + top->GetRect().TopLeft());
-			if(hcr) ::HideCaret(hwnd);
 			draw.Clip(r);
 			top->UpdateArea(draw, r);
 			ValidateRect(hwnd, r);
 			SelectClipRgn(hdc, NULL);
-			if(hcr) ::ShowCaret(hwnd);
 		}
 		ReleaseDC(hwnd, hdc);
 		DeleteObject(hrgn);
@@ -1201,14 +1146,8 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("WndScrollView " << UPP::Name(this));
-	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {
-#if WINCARET
-		WndDestroyCaret();
-#else
+	if(caretCtrl && caretCtrl->GetTopCtrl() == this)
 		RefreshCaret();
-#endif
-		caretRect.Clear();
-	}
 #ifdef PLATFORM_WINCE
 	::ScrollWindowEx(GetHWND(), dx, dy, r, r, NULL, NULL, 0);
 #else
@@ -1234,6 +1173,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = false;
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();
 	PopUpHWND(q ? q->GetHWND() : NULL, savebits, activate, dropshadow, topmost);
+	Top *top = GetTop();
 	if(top) top->owner = owner;
 }
 

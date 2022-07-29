@@ -1,5 +1,10 @@
 #include "ide.h"
 
+String RepoCfgFile(const String& path)
+{
+	return ConfigFile("cfg/repo-" + SHA1String(path));
+}
+
 String GetGitUrl(const String& repo_dir)
 {
 	Vector<String> ln = Split(GitCmd(repo_dir, "config --get remote.origin.url"), CharFilterCrLf);
@@ -78,6 +83,33 @@ RepoSync::RepoSync()
 		}
 		EditCredentials(hint.PickKeys());
 	};
+}
+
+RepoSync::~RepoSync()
+{
+	int repoi = 0;
+	for(int i = 0; i < list.GetCount(); i++) {
+		SvnOptions *svn = dynamic_cast<SvnOptions *>(list.GetCtrl(i, 0));
+		GitOptions *git = dynamic_cast<GitOptions *>(list.GetCtrl(i, 0));
+		if(svn || git) {
+			String s;
+			if(svn) {
+				if(svn->commit)
+					s << "commit;";
+				if(svn->update)
+					s << "update;";
+			}
+			if(git) {
+				if(git->pull)
+					s << "pull;";
+				if(git->commit)
+					s << "commit;";
+				if(git->push)
+					s << "push;";
+			}
+			SaveChangedFile(RepoCfgFile(work.GetKey(repoi++)), s);
+		}
+	}
 }
 
 int CharFilterSvnMsgRepo(int c)
@@ -228,10 +260,10 @@ void RepoSync::SyncCommits()
 	bool commit = true;
 	for(int i = 0; i < list.GetCount(); i++) {
 		if(SvnOptions *o = dynamic_cast<SvnOptions *>(list.GetCtrl(i, 0)))
-			commit = o->commit;
+			commit = o->commit.IsEnabled() && o->commit;
 		else
 		if(GitOptions *o = dynamic_cast<GitOptions *>(list.GetCtrl(i, 0)))
-			commit = o->commit;
+			commit = o->commit.IsEnabled() && o->commit;
 		else {
 			for(int j = 0; j < 2; j++) {
 				Ctrl *ctrl = list.GetCtrl(i, j);
@@ -249,6 +281,12 @@ void RepoSync::SyncList()
 	svndir.Clear();
 	for(const auto& w : ~work) {
 		String path = GetFullPath(w.key);
+		String cfg = LoadFile(RepoCfgFile(path));
+		auto Default = [&](const char *s) {
+			if(cfg.IsVoid())
+				return true;
+			return cfg.Find(s) >= 0;
+		};
 		int hi = list.GetCount();
 		Color bk = AdjustIfDark(LtYellow());
 		list.Add(REPOSITORY, path,
@@ -260,12 +298,11 @@ void RepoSync::SyncList()
 		if(w.value == SVN_DIR) {
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);
 			o.SizePos();
-			o.commit = true;
+			o.commit = Default("commit");
 			o.commit << [=] { SyncCommits(); };
-			o.update = true;
+			o.update = Default("update");
 			actions = ListSvn(path);
 			if(!actions) {
-				o.commit = false;
 				o.commit.Disable();
 			}
 			credentials.Show();
@@ -274,13 +311,12 @@ void RepoSync::SyncList()
 		if(w.value == GIT_DIR) {
 			auto& o = list.CreateCtrl<GitOptions>(hi, 0, false);
 			o.SizePos();
-			o.commit = true;
+			o.commit = Default("commit");
 			o.commit << [=] { SyncCommits(); };
-			o.push = true;
-			o.pull = true;
+			o.push = Default("push");
+			o.pull = Default("pull");
 			actions = ListGit(path);
 			if(!actions) {
-				o.commit = false;
 				o.push = false;
 				o.commit.Disable();
 			}
@@ -428,6 +464,8 @@ again:
 					int action = list.Get(l, 0);
 					if(action == REPOSITORY)
 						break;
+					if(action == MESSAGE)
+						msgmap.GetAdd(repo_dir) = list.Get(l, 3);
 					l++;
 				}
 				continue;
@@ -439,7 +477,7 @@ again:
 				break;
 			String path = list.Get(l, 1);
 			bool revert = list.Get(l, 2) == 1;
-			if(svn && svn->commit) {
+			if(svn && svn->commit.IsEnabled() && svn->commit) {
 				if(action == MESSAGE && commit) {
 					String msg = list.Get(l, 3);
 					if(sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\""))
@@ -451,7 +489,7 @@ again:
 				if(SvnFile(sys, filelist, action, path, revert))
 					commit = true;
 			}
-			if(git && git->commit) {
+			if(git && git->commit.IsEnabled() && git->commit) {
 				if(action == MESSAGE && commit) {
 					String msg = list.Get(l, 3);
 					if(sys.Git(repo_dir, "commit -a -m \"" << msg << "\""))

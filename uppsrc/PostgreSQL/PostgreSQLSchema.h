@@ -147,75 +147,72 @@ ATTRIBUTE("alter table @t add constraint UQ_@t$" #name " unique (" list ");", \
 #undef INT_ARRAY
 #undef INT_
 #undef INT_ARRAY_
-
 #undef INT64
 #undef INT64_ARRAY
 #undef INT64_
 #undef INT64_ARRAY_
-
 #undef SERIAL
 #undef SERIAL_ARRAY
 #undef SERIAL_
 #undef SERIAL_ARRAY_
-
+#undef ISERIAL
+#undef ISERIAL_ARRAY
+#undef ISERIAL_
+#undef ISERIAL_ARRAY_
 #undef BIGSERIAL
 #undef BIGSERIAL_ARRAY
 #undef BIGSERIAL_
 #undef BIGSERIAL_ARRAY_
-
 #undef DOUBLE
 #undef DOUBLE_ARRAY
 #undef DOUBLE_
 #undef DOUBLE_ARRAY_
-
 #undef STRING
 #undef STRING_ARRAY
 #undef STRING_
 #undef STRING_ARRAY_
-
 #undef DATE
 #undef DATE_ARRAY
 #undef DATE_
 #undef DATE_ARRAY_
-
 #undef TIME
 #undef TIME_ARRAY
 #undef TIME_
 #undef TIME_ARRAY_
-
 #undef TIME_SEC
 #undef TIME_SEC_ARRAY
 #undef TIME_SEC_
 #undef TIME_SEC_ARRAY_
-
 #undef BOOL
 #undef BOOL_ARRAY
 #undef BOOL_
 #undef BOOL_ARRAY_
-
 #undef LONG
 #undef LONG_
-
 #undef LONGRAW
 #undef LONGRAW_
-
+#undef BLOB
+#undef BLOB_
+#undef CLOB
+#undef CLOB_
 #undef SEQUENCE
-
+#undef SEQUENCE_
 #undef PRIMARY_KEY
 #undef NOT_NULL
-#undef INDEX
-#undef PARTIAL_INDEX
 #undef UNIQUE
 #undef SQLDEFAULT
+#undef INDEX
+#undef PARTIAL_INDEX
+#undef PARTIAL_INDEX_
 #undef REFERENCES
-#undef REFERENCES_
 #undef REFERENCES_CASCADE
+#undef REFERENCES_
 #undef REFERENCES_CASCADE_
 #undef DUAL_PRIMARY_KEY
 #undef DUAL_UNIQUE
-#undef UNIQUE_LIST
 #undef SQLCHECK
-#undef INDEX_LIST
-#undef PARTIAL_INDEX_LIST
 #undef PRIMARY_KEY_LIST
 #undef REFERENCES_LIST
+#undef INDEX_LIST
+#undef PARTIAL_INDEX_LIST
+#undef UNIQUE_LIST

@@ -72,13 +72,6 @@ public:
 
     SshSession(SshSession&&) = default;
 
-    // DEPRECATED stuff.
-    enum Hash           { HASH_MD5, HASH_SHA1, HASH_SHA256 };
-    [[deprecated("Will be removed with U++ 2021.2. Use GetxxxFingerprint() methods instead.")]]
-	String      GetFingerprint() const              { return session->fingerprint; }
-    [[deprecated("Will be removed with U++ 2021.2. Use GetxxxFingerprint() methods instead.")]]
-    SshSession& HashType(Hash h)                    { session->hashtype = h; return *this; }
-
 private:
     void                Exit() override;
     String              GetHostKeyHash(int type, int length) const;
@@ -88,8 +81,6 @@ private:
     
     struct SessionData {
         TcpSocket       socket;
-        String          fingerprint;
-        int             hashtype;
         String          authmethods;
         int             authmethod;
         String          prikey;

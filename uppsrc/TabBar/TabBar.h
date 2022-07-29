@@ -109,6 +109,7 @@ public:
 		Style&  DefaultCrosses();
 		Style&  Variant1Crosses();
 		Style&  Variant2Crosses();
+		Style&  Variant3Crosses();
 		
 		Style&  DefaultGroupSeparators();
 		Style&  GroupSeparators(Value horz, Value vert);

@@ -290,6 +290,8 @@ bool ValueMap::Data::IsNull() const {
 
 void ValueMap::Data::Serialize(Stream& s) {
 	s % key % value;
+	if(key.GetCount() != value.GetCount())
+		s.LoadError();
 }
 
 void ValueMap::Data::Xmlize(XmlIO& xio)

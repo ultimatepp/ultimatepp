@@ -1,4 +1,4 @@
-class ScrollBar : public FrameCtrl<Ctrl> {
+class ScrollBar : public FrameCtrl<Ctrl>, private VirtualButtons {
 public:
 	virtual void Layout();
 	virtual Size GetStdSize() const;
@@ -15,6 +15,16 @@ public:
 	virtual void FrameLayout(Rect& r);
 	virtual void FrameAddSize(Size& sz);
 
+	virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+
+	virtual int                  ButtonCount() const;
+	virtual Rect                 ButtonRect(int i) const;
+	virtual const Button::Style& ButtonStyle(int i) const;
+	virtual bool                 ButtonEnabled(int i) const;
+
+	virtual void ButtonPush(int i);
+	virtual void ButtonRepeat(int i);
+
 public:
 	struct Style : ChStyle<Style> {
 		Color bgcolor;
@@ -30,19 +40,20 @@ public:
 private:
 	int     thumbpos;
 	int     thumbsize;
-	bool    horz:1;
-	bool    jump:1;
-	bool    track:1;
 	int     delta;
-	int8    push;
-	int8    light;
 
-	Button  prev, prev2, next, next2;
+	enum { PREV, PREV2, NEXT, NEXT2, BUTTONCOUNT };
+//	Button  prev, prev2, next, next2;
 	int     pagepos;
 	int     pagesize;
 	int     totalsize;
 	int     linesize;
 	int     minthumb;
+	int8    push;
+	int8    light;
+	bool    horz:1;
+	bool    jump:1;
+	bool    track:1;
 	bool    autohide:1;
 	bool    autodisable:1;
 	bool    is_active:1;

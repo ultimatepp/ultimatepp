@@ -135,10 +135,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_FOCUS_CHANGE:
 		p->CancelPreedit();
 		if(p) {
-			if(((GdkEventFocus *)event)->in)
-				gtk_im_context_focus_in(p->top->im_context);
-			else
-				gtk_im_context_focus_out(p->top->im_context);
+			Top *top = p->GetTop();
+			if(top) {
+				if(((GdkEventFocus *)event)->in)
+					gtk_im_context_focus_in(top->im_context);
+				else
+					gtk_im_context_focus_out(top->im_context);
+			}
 			AddEvent(user_data, EVENT_FOCUS_CHANGE, value, event);
 		}
 		return false;
@@ -181,8 +184,11 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		value << (int) key->keyval << (int) key->hardware_keycode;
 		if(pressed) {
 			p = GetTopCtrlFromId(user_data);
-			if(p && gtk_im_context_filter_keypress(p->top->im_context, key))
-				return true;
+			if(p) {
+				Top *top = p->GetTop();
+				if(top && gtk_im_context_filter_keypress(top->im_context, key))
+					return true;
+			}
 		}
 		break;
 	case GDK_CONFIGURE: {
@@ -344,7 +350,9 @@ void Ctrl::IMLocation(Ctrl *w)
 		gr.y = LSC(e.top - q.top);
 		gr.width = LSC(e.GetWidth());
 		gr.height = LSC(e.GetHeight());
-		gtk_im_context_set_cursor_location(w->top->im_context, &gr);
+		Top *top = w->GetTop();
+		if(top)
+			gtk_im_context_set_cursor_location(top->im_context, &gr);
 	}
 }
 

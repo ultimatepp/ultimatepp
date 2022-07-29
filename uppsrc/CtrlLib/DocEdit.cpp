@@ -222,6 +222,11 @@ int  DocEdit::GetCursorPos(Point p) {
 	return GetLength32();
 }
 
+Rect DocEdit::GetCaret() const
+{
+	return caret;
+}
+
 void DocEdit::PlaceCaret(bool scroll) {
 	Point cr = GetCaret((int)cursor);
 	int fy = font.Info().GetLineHeight();
@@ -231,7 +236,7 @@ void DocEdit::PlaceCaret(bool scroll) {
 		else
 			sb.ScrollInto(cr.y, fy + 2);
 	}
-	SetCaret(cr.x + 1, cr.y - sb, 1, fy);
+	caret = RectC(cr.x + 1, cr.y - sb, 1, fy);
 	WhenSel();
 }
 

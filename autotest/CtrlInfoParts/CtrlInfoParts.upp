@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	etalon.log,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

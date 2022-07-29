@@ -113,6 +113,8 @@ template <class K, class T, class V>
 void AMap<K, T, V>::Serialize(Stream& s) {
 	int version = 0;
 	s / version % key % value;
+	if(key.GetCount() != value.GetCount())
+		s.LoadError();
 }
 
 template <class K, class T, class V>
@@ -167,6 +169,8 @@ void AMap<K, T, V>::Sweep()
 template <class K, class T, class V, class Less>
 void FixedAMap<K, T, V, Less>::Serialize(Stream& s) {
 	s % key % value;
+	if(key.GetCount() != value.GetCount())
+		s.LoadError();
 }
 
 template <class K, class T, class V, class Less>

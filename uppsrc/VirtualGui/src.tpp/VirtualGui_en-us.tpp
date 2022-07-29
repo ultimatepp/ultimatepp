@@ -25,7 +25,7 @@ some font system to measure fonts (e.g. DrawGL and plugin/FT`_fontsys).&]
 [s5;:Upp`:`:VirtualGui`:`:GetOptions`(`): [@(0.0.255) virtual] [_^Upp`:`:dword^ dword]_[* G
 etOptions]()&]
 [s2;%% Returns a set of flags describing some aspects of VirtualGui 
-behaviour. Available option flags are:-|&]
+behaviour. Available option flags are:&]
 [s2;%% &]
 [s7;i1120;a17;:Ctrl`:`:CENTER:%% [%-*C@3 GUI`_SETMOUSECURSOR]-|Use the 
 SetMouseCursor() method instead of painting the cursor.&]

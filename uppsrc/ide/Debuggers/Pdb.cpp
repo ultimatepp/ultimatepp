@@ -234,6 +234,8 @@ void Pdb::SerializeSession(Stream& s)
 	s / version;
 	int n = watches.GetCount();
 	s / n;
+	if(n < 0)
+		LoadingError();
 	for(int i = 0; i < n; i++) {
 		String w;
 		if(s.IsStoring())

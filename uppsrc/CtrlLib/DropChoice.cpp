@@ -6,7 +6,6 @@ DropChoice::DropChoice() {
 	always_drop = hide_drop = false;
 	AddButton().Main() <<= THISBACK(Drop);
 	NoDisplay();
-	list.Normal();
 	list.WhenSelect = [=] { Select(); };
 	dropfocus = true;
 	EnableDrop(false);
@@ -42,7 +41,11 @@ void DropChoice::Drop() {
 	WhenDrop();
 	if(dropfocus)
 		owner->SetWantFocus();
-	if(!list.FindSetCursor(owner->GetData()) && list.GetCount() > 0)
+	int i = list.Find(owner->GetData());
+	if(i >= 0)
+		list.SetCursor(i);
+	else
+	if(list.GetCount() > 0)
 		list.SetCursor(0);
 	list.PopUp(owner,dropwidth);
 }
@@ -56,7 +59,7 @@ Value DropChoice::Get() const {
 	if(!owner || owner->IsReadOnly() && !rodrop) return Value();
 	int c = list.GetCursor();
 	if(c < 0) return Value();
-	return list.Get(c, 0);
+	return list.Get(c);
 }
 
 int DropChoice::GetIndex() const
@@ -172,7 +175,7 @@ void DropChoice::SerializeList(Stream& s) {
 	}
 	else
 		for(int i = 0; i < n; i++) {
-			v = list.Get(i, 0);
+			v = list.Get(i);
 			s % v;
 		}
 	EnableDrop(list.GetCount() || always_drop);
@@ -181,15 +184,15 @@ void DropChoice::SerializeList(Stream& s) {
 void DropChoice::AddHistory(const Value& v, int max) {
 	if(IsNull(v)) return;
 	for(int i = 0; i < list.GetCount(); i++)
-		if(list.Get(i, 0) == v) {
+		if(list.Get(i) == v) {
 			list.Remove(i);
 			break;
 		}
-	list.Insert(0, Vector<Value>() << v);
+	list.Insert(0, v);
 	if(list.GetCount() > max)
 		list.SetCount(max);
 	EnableDrop(list.GetCount() || always_drop);
-	list.KillCursor();
+	list.SetCursor(-1);
 }
 
 DropChoice& DropChoice::AlwaysDrop(bool e)

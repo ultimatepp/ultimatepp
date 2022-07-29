@@ -47,9 +47,11 @@ MultiButton::SubButton::SubButton()
 
 void MultiButton::SubButton::Refresh()
 {
-	owner->Refresh();
-	if(owner->Frame() && owner->GetParent())
-		owner->GetParent()->RefreshLayout();
+	if(owner) {
+		owner->Refresh();
+		if(owner->Frame() && owner->GetParent())
+			owner->GetParent()->RefreshLayout();
+	}
 }
 
 MultiButton::SubButton& MultiButton::SubButton::SetImage(const Image& m)
@@ -111,30 +113,89 @@ MultiButton::SubButton& MultiButton::SubButton::Show(bool b)
 	return *this;
 }
 
+void MultiButton::MultiButtons()
+{
+	if(droppush) {
+		SubButton& b = buttons.Add();
+		b.owner = this;
+		b.WhenPush = [=] { DropPush(); };
+		b.main = true;
+		droppush = false;
+	}
+}
+
 MultiButton::SubButton& MultiButton::AddButton()
 {
-	SubButton& b = button.Add();
+	MultiButtons();
+	SubButton& b = buttons.Add();
 	b.owner = this;
 	return b;
 }
 
 MultiButton::SubButton& MultiButton::InsertButton(int i)
 {
-	SubButton& b = button.Insert(i);
+	MultiButtons();
+	SubButton& b = buttons.Insert(i);
 	b.owner = this;
 	return b;
 }
 
 void MultiButton::RemoveButton(int i)
 {
-	button.Remove(i);
+	MultiButtons();
+	buttons.Remove(i);
+}
+
+void MultiButton::Reset()
+{
+	MultiButtons();
+	buttons.Clear();
+}
+
+int MultiButton::GetButtonCount() const
+{
+	if(droppush)
+		return 1;
+	return buttons.GetCount();
+}
+
+MultiButton::SubButton& MultiButton::Button(int i) const
+{
+	if(droppush) {
+		static SubButton b;
+		b.main = true;
+		return b;
+	}
+	return const_cast<MultiButton *>(this)->buttons[i];
+}
+
+const MultiButton::SubButton& MultiButton::GetButton(int i) const
+{
+	return Button(i);
+}
+
+MultiButton::SubButton& MultiButton::GetButton(int i)
+{
+	MultiButtons();
+	return Button(i);
+}
+
+MultiButton::SubButton& MultiButton::MainButton()
+{
+	for(int i = 0; i < GetButtonCount(); i++) {
+		SubButton& b = GetButton(i);
+		if(b.main)
+			return b;
+	}
+	NEVER();
+	return GetButton(0);
 }
 
 MultiButton::SubButton& MultiButton::SubButton::Main(bool b)
 {
-	if(b)
-		for(int i = 0; i < owner->button.GetCount(); i++)
-			owner->button[i].main = false;
+	if(b && owner)
+		for(int i = 0; i < owner->GetButtonCount(); i++)
+			owner->GetButton(i).main = false;
 	main = b;
 	return *this;
 }
@@ -212,21 +273,21 @@ int MultiButton::FindButton(int px)
 {
 	if(IsReadOnly())
 		return Null;
-	if(IsTrivial() && !Frame())
-		return button[0].enabled ? 0 : Null;
+	if(IsTrivial() && !Frame() && GetButtonCount())
+		return GetButton(0).enabled ? 0 : Null;
 	int border, lx, rx;
 	Metrics(border, lx, rx);
-	for(int i = 0; i < button.GetCount(); i++) {
-		SubButton& b = button[i];
+	for(int i = 0; i < GetButtonCount(); i++) {
+		SubButton& b = Button(i);
 		int x = 0, cx = 0;
 		if(GetPos(b, lx, rx, x, cx, px))
 			return b.enabled ? i : Null;
 	}
-	if(WhenPush || WhenClick)
+	if(HasMain())
 		return MAIN;
 	if(display)
-		for(int i = 0; i < button.GetCount(); i++)
-			if(button[i].main)
+		for(int i = 0; i < GetButtonCount(); i++)
+			if(Button(i).main)
 				return i;
 	return Null;
 }
@@ -262,7 +323,7 @@ void MultiButton::GetPos(int ii, int& x, int& cx)
 	Metrics(border, lx, rx);
 	x = cx = 0;
 	for(int i = 0; i <= ii; i++) {
-		SubButton& b = button[i];
+		SubButton& b = Button(i);
 		GetPos(b, lx, rx, x, cx);
 	}
 }
@@ -273,8 +334,8 @@ void MultiButton::GetLR(int& lx, int& rx)
 	Metrics(border, lx, rx);
 	int x = 0;
 	int cx = 0;
-	for(int i = 0; i < button.GetCount(); i++) {
-		SubButton& b = button[i];
+	for(int i = 0; i < GetButtonCount(); i++) {
+		SubButton& b = Button(i);
 		GetPos(b, lx, rx, x, cx);
 	}
 }
@@ -286,13 +347,13 @@ int MultiButton::ChState(int i)
 	if(i == MAIN && frm && style->activeedge) {
 		int q = 0;
 		if(p)
-			q = !p->IsEnabled() || !IsEnabled() || p->IsReadOnly() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
+			q = !p->IsEnabled() || !IsEnabled() || p->IsReadOnly() ? CTRL_DISABLED
 			    : p->HasFocus() || push ? CTRL_PRESSED
 			    : p->HasMouse() || hl >= 0 ? CTRL_HOT
 			    : CTRL_NORMAL;
 		return q;
 	}
-	if(!IsShowEnabled() || IsReadOnly() || frm && p && p->IsReadOnly() || i >= 0 && !button[i].enabled)
+	if(!IsShowEnabled() || IsReadOnly() || frm && p && p->IsReadOnly() || i >= 0 && !Button(i).enabled)
 		return CTRL_DISABLED;
 	if(IsTrivial() && !frm)
 		i = 0;
@@ -317,8 +378,8 @@ void MultiButton::Lay(Rect& r, bool minsize)
 	bool frm = Metrics(border, lx, rx);
 	bool left = false;
 	bool right = false;
-	for(int i = 0; i < button.GetCount(); i++) {
-		SubButton& b = button[i];
+	for(int i = 0; i < GetButtonCount(); i++) {
+		SubButton& b = Button(i);
 		int cx = 0; int x = 0;
 		GetPos(b, lx, rx, x, cx);
 		(b.left ? left : right) = true;
@@ -393,7 +454,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 		Color p = paper;
 		if(frm && style->activeedge && HasFocus())
 			p = SColorHighlight();
-		if(hotpressed && (WhenPush || WhenClick))
+		if(hotpressed && HasMain())
 			p = Nvl(fpaper, paper);
 		if(IsEnabled() && IsEditable())
 			p = Nvl(p, style->paper);
@@ -404,8 +465,8 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 	}
 	bool left = false;
 	bool right = false;
-	for(int i = 0; i < button.GetCount(); i++) {
-		SubButton& b = button[i];
+	for(int i = 0; i < GetButtonCount(); i++) {
+		SubButton& b = Button(i);
 		int st = ChState(i);
 		int x = 0, cx = 0;
 		GetPos(b, lx, rx, x, cx);
@@ -562,7 +623,8 @@ void MultiButton::SyncInfo()
 void MultiButton::MouseMove(Point p, dword flags)
 {
 	int h = FindButton(p.x);
-	Ctrl::Tip(h >= 0 && h < button.GetCount() ? Nvl(button[h].tip, tip) : tip);
+	String tip = GetTextAttr(ATTR_TIP);
+	Ctrl::Tip(h >= 0 && h < GetButtonCount() ? Nvl(Button(h).tip, tip) : tip);
 	if(hl != h) {
 		hl = h;
 		Refresh();
@@ -575,12 +637,20 @@ void MultiButton::MouseMove(Point p, dword flags)
 	SyncInfo();
 }
 
+void MultiButton::DoPush(int i)
+{
+	if(i == 0 && droppush)
+		DropPush();
+	else
+		Button(i).WhenPush();
+}
+
 void MultiButton::LeftDown(Point p, dword flags)
 {
 	push = true;
 	Refresh();
-	if(IsNull(hl))
-		pushrect = Null;
+	if(hl == NONE)
+		pushrect.Clear();
 	else {
 		if(hl == MAIN)
 			pushrect = GetScreenRect();
@@ -593,9 +663,9 @@ void MultiButton::LeftDown(Point p, dword flags)
 		}
 		Sync();
 		if(hl >= 0)
-			button[hl].WhenPush();
+			DoPush(hl);
 		else
-			WhenPush();
+			MainPush();
 	}
 	SyncInfo();
 }
@@ -605,11 +675,11 @@ void MultiButton::LeftUp(Point p, dword flags)
 	push = false;
 	Refresh();
 	Sync();
-	if(!IsNull(hl)) {
+	if(hl != NONE) {
 		if(hl >= 0)
-			button[hl].WhenClick();
+			Button(hl).WhenClick();
 		else
-			WhenClick();
+			MainClick();
 	}
 	SyncInfo();
 }
@@ -617,7 +687,7 @@ void MultiButton::LeftUp(Point p, dword flags)
 void MultiButton::MouseLeave()
 {
 	if(!info.IsOpen()) {
-		hl = Null;
+		hl = NONE;
 		Refresh();
 		SyncInfo();
 	}
@@ -625,7 +695,7 @@ void MultiButton::MouseLeave()
 
 void MultiButton::CancelMode()
 {
-	hl = Null;
+	hl = NONE;
 	push = false;
 	Refresh();
 	info.Cancel();
@@ -633,21 +703,7 @@ void MultiButton::CancelMode()
 
 bool MultiButton::IsTrivial() const
 {
-	return button.GetCount() == 1 && IsNull(button[0].img) && !WhenPush && !WhenClick;
-}
-
-MultiButton::SubButton& MultiButton::MainButton()
-{
-	for(int i = 0; i < button.GetCount(); i++)
-		if(button[i].main)
-			return button[i];
-	NEVER();
-	return button[0];
-}
-
-void MultiButton::Reset()
-{
-	button.Clear();
+	return GetButtonCount() == 1 && IsNull(Button(0).img) && !HasMain();
 }
 
 MultiButton& MultiButton::SetDisplay(const Display& d)
@@ -718,11 +774,11 @@ void MultiButton::PseudoPush(int bi)
 {
 	hl = bi;
 	push = true;
-	button[bi].WhenPush();
+	DoPush(bi);
 	Sync();
 	Sleep(50);
-	button[bi].WhenClick();
-	hl = Null;
+	Button(bi).WhenClick();
+	hl = NONE;
 	push = false;
 	Sync();
 }
@@ -730,14 +786,31 @@ void MultiButton::PseudoPush(int bi)
 void MultiButton::PseudoPush()
 {
 	hl = MAIN;
-	WhenPush();
+	MainPush();
 	Sync();
 	Sleep(50);
-	WhenClick();
-	hl = Null;
+	MainClick();
+	hl = NONE;
 	push = false;
 	Sync();
 }
+
+bool MultiButton::HasMain() const
+{
+	return WhenPush || WhenClick;
+}
+
+void MultiButton::MainPush()
+{
+	WhenPush();
+}
+
+void MultiButton::MainClick()
+{
+	WhenClick();
+}
+
+void MultiButton::DropPush() {}
 
 MultiButton::MultiButton()
 {
@@ -749,7 +822,11 @@ MultiButton::MultiButton()
 	push = false;
 	SetFrame(sNullFrame());
 	nobg = false;
+	hl = NONE;
+	droppush = false;
 }
+
+// 
 
 void MultiButtonFrame::FrameAdd(Ctrl& parent)
 {

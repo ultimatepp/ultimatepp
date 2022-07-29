@@ -84,6 +84,7 @@ public:
 	void DoSync();
 	
 	RepoSync();
+	~RepoSync();
 };
 
 

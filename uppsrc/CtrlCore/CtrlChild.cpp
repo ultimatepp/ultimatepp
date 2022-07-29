@@ -4,6 +4,25 @@ namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
+void Ctrl::DeleteTop()
+{
+	if(top && utop) {
+		delete utop;
+		utop = nullptr;
+		top = false;
+	}
+}
+
+void Ctrl::SetParent(Ctrl *parent)
+{
+	if(top && utop) {
+		Close();
+		DeleteTop(); // if Close did not work as expected...:
+	}
+	uparent = parent;
+	top = false;
+}
+
 bool Ctrl::IsDHCtrl() const {
 	return dynamic_cast<const DHCtrl *>(this);
 }
@@ -15,38 +34,31 @@ void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 	LLOG("Add " << UPP::Name(q) << " to: " << Name());
 	if(p == q) return;
 	bool updaterect = true;
-	if(q->parent) {
+	Ctrl *qparent = q->GetParent();
+	if(qparent) {
 		ASSERT(!q->inframe);
-		if(q->parent == this) {
+		if(qparent == this) {
 			RemoveChild0(q);
 			updaterect = false;
 		}
 		else
-			q->parent->RemoveChild(q);
+			qparent->RemoveChild(q);
 	}
-	q->parent = this;
-	if(p) {
-		ASSERT(p->parent == this);
-		q->prev = p;
-		q->next = p->next;
-		if(p == lastchild)
-			lastchild = q;
-		else
-			p->next->prev = q;
-		p->next = q;
+	
+	if(children) {
+		if(!p) p = GetLastChild();
+		ASSERT(p->GetParent() == this);
+		q->prev_sibling = p;
+		q->next_sibling = p->next_sibling;
+		p->next_sibling->prev_sibling = q;
+		p->next_sibling = q;
 	}
-	else
-		if(firstchild) {
-			q->prev = NULL;
-			q->next = firstchild;
-			firstchild->prev = q;
-			firstchild = q;
-		}
-		else {
-			ASSERT(lastchild == NULL);
-			firstchild = lastchild = q;
-			q->prev = q->next = NULL;
-		}
+	else {
+		ASSERT(!p);
+		children = q->next_sibling = q->prev_sibling = q;
+	}
+	q->SetParent(this);
+
 	q->CancelModeDeep();
 	if(updaterect)
 		q->UpdateRect();
@@ -58,13 +70,13 @@ void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 
 void Ctrl::AddChild(Ctrl *child)
 {
-	AddChild(child, lastchild);
+	AddChild(child, GetLastChild());
 }
 
 void Ctrl::AddChildBefore(Ctrl *child, Ctrl *insbefore)
 {
 	if(insbefore)
-		AddChild(child, insbefore->prev);
+		AddChild(child, insbefore->GetPrev());
 	else
 		AddChild(child);
 }
@@ -73,23 +85,26 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 {
 	GuiLock __;
 	ChildRemoved(q);
+	if(!q->GetParent()) return; // ChildRemoved can remove q
 	q->DoRemove();
-	q->parent = NULL;
-	if(q == firstchild)
-		firstchild = firstchild->next;
-	if(q == lastchild)
-		lastchild = lastchild->prev;
-	if(q->prev)
-		q->prev->next = q->next;
-	if(q->next)
-		q->next->prev = q->prev;
-	q->next = q->prev = NULL;
+	if(!q->GetParent()) return; // DoRemove can remove q
+	q->SetParent(NULL);
+
+	if(q == children) {
+		children = q->next_sibling;
+		if(children == q)
+			children = NULL;
+	}
+	
+	q->prev_sibling->next_sibling = q->next_sibling;
+	q->next_sibling->prev_sibling = q->prev_sibling;
+	q->next_sibling = q->prev_sibling = NULL;
 }
 
 void  Ctrl::RemoveChild(Ctrl *q)
 {
 	GuiLock __;
-	if(q->parent != this) return;
+	if(q->GetParent() != this) return;
 	q->RefreshFrame();
 	RemoveChild0(q);
 	q->ParentChange();
@@ -100,6 +115,7 @@ void  Ctrl::RemoveChild(Ctrl *q)
 void  Ctrl::Remove()
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(parent)
 		parent->RemoveChild(this);
 }
@@ -171,15 +187,16 @@ Ctrl * Ctrl::GetViewIndexChild(int ii) const
 bool Ctrl::HasChild(Ctrl *q) const
 {
 	GuiLock __;
-	return q && q->IsChild() && q->parent == this;
+	return q && q->GetParent() == this;
 }
 
 bool Ctrl::HasChildDeep(Ctrl *q) const
 {
 	GuiLock __;
 	while(q && q->IsChild()) {
-		if(q->parent == this) return true;
-		q = q->parent;
+		Ctrl *qparent = q->GetParent();
+		if(qparent == this) return true;
+		q = qparent;
 	}
 	return false;
 }
@@ -260,9 +277,12 @@ Ctrl *Ctrl::GetTopCtrl()
 {
 	GuiLock __;
 	Ctrl *q = this;
-	while(q->parent)
-		q = q->parent;
-	return q;
+	for(;;) {
+		Ctrl *qparent = q->GetParent();
+		if(!qparent)
+			return q;
+		q = qparent;
+	}
 }
 
 const Ctrl *Ctrl::GetTopCtrl() const      { return const_cast<Ctrl *>(this)->GetTopCtrl(); }
@@ -270,7 +290,7 @@ const Ctrl *Ctrl::GetOwner() const        { return const_cast<Ctrl *>(this)->Get
 Ctrl       *Ctrl::GetTopCtrlOwner()       { return GetTopCtrl()->GetOwner(); }
 const Ctrl *Ctrl::GetTopCtrlOwner() const { return GetTopCtrl()->GetOwner(); }
 
-Ctrl       *Ctrl::GetOwnerCtrl()          { GuiLock __; return !IsChild() && top ? top->owner : NULL; }
+Ctrl       *Ctrl::GetOwnerCtrl()          { GuiLock __; return !IsChild() && top && utop ? utop->owner : NULL; }
 const Ctrl *Ctrl::GetOwnerCtrl() const    { return const_cast<Ctrl *>(this)->GetOwnerCtrl(); }
 
 TopWindow *Ctrl::GetTopWindow()

@@ -55,7 +55,7 @@ public:
 	class Column : FormatConvert {
 		ArrayCtrl            *arrayctrl;
 		int                   index;
-		Mitor<int>            pos;
+		Vector<int>           pos;
 		const Convert        *convert;
 		Function<Value(const Value&)> convertby;
 		Ptr<Ctrl>             edit;

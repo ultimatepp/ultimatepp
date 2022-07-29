@@ -48,6 +48,8 @@ private:
 	bool          fullscreen;
 
 	byte          center:2;
+	
+	int           exitcode = 0;
 
 	void          PlaceFocus();
 	void          ActiveFocus0(Ctrl& ctrl);
@@ -91,6 +93,8 @@ private:
 	GUIPLATFORM_TOPWINDOW_DECLS
 #endif
 
+	friend class Ctrl;
+
 public:
 	virtual     void ShutdownWindow();
 
@@ -125,6 +129,8 @@ public:
 	int        Execute();
 	bool       ExecuteOK()                            { return Execute() == IDOK;     }
 	bool       ExecuteCancel()                        { return Execute() == IDCANCEL; }
+	
+	int        GetExitCode() const                    { return exitcode; }
 
 	void       Minimize(bool effect = false);
 	void       Maximize(bool effect = false);

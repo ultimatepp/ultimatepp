@@ -343,15 +343,19 @@ void Index<T>::Serialize(Stream& s)
 		h.Serialize(s);
 		if(s.IsLoading())
 			for(int i = 0; i < h.GetCount(); i++)
-				if(h[i] & 0x80000000)
+				if(i < GetCount() && h[i] & 0x80000000)
 					Unlink(i);
 	}
 	else {
 		Vector<int> u = GetUnlinked();
 		u.Serialize(s);
 		if(s.IsLoading())
-			for(int i : ReverseRange(u)) // Reverse range to ensure the correct order of Put
-				Unlink(i);
+			for(int i : ReverseRange(u)) { // Reverse range to ensure the correct order of Put
+				if(i >= 0 && i < GetCount())
+					Unlink(i);
+				else
+					s.LoadError();
+			}
 	}
 }
 

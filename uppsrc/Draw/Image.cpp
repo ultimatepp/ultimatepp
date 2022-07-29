@@ -234,6 +234,8 @@ void Image::Serialize(Stream& s)
 		p2 = spot2;
 		s % p2;
 	}
+	if(sz.cx < 0 || sz.cy < 0)
+		s.LoadError();
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
 	if(s.IsLoading()) {
 		if(len) {

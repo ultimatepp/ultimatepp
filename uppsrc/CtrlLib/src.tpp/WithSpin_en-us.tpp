@@ -94,14 +94,6 @@ is active.&]
 [s5;:Upp`:`:WithSpin`:`:NoKeySpin`(`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&]_[* No
 KeySpin]()&]
 [s2; Same as KeySpin(false).&]
-[s3;%- &]
-[s4; &]
-[s5;:WithSpin`:`:SpinButtonsObject`(`):%- [_^SpinButtons^ SpinButtons][@(0.0.255) `&]_[* Sp
-inButtonsObject]()&]
-[s5;:WithSpin`:`:SpinButtonsObject`(`)const:%- [@(0.0.255) const]_[_^SpinButtons^ SpinBut
-tons][@(0.0.255) `&]_[* SpinButtonsObject]()_[@(0.0.255) const]&]
-[s2; Returns a reference to internal SpinButtons object.&]
-[s0; &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Predefined WithSpin widgets]]}}&]
 [s3;%- &]

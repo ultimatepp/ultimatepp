@@ -15,7 +15,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
 
-	top = new Top;
+	Top *top = new Top;
+	SetTop(top);
 	top->window = gtk_window_new(popup && owner ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
 	top->owner = owner;
 
@@ -111,12 +112,13 @@ void Ctrl::WndDestroy()
 		if(HasFocusDeep() || !GetFocusCtrl())
 			activeCtrl = owner;
 	}
+	Top *top = GetTop();
 	if(top->im_context)
 		g_object_unref(top->im_context);
 	gtk_widget_destroy(top->window);
 	isopen = false;
 	popup = false;
-	delete top;
+	DeleteTop();
 	top = NULL;
 	int q = FindCtrl(this);
 	if(q >= 0)

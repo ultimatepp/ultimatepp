@@ -60,7 +60,8 @@ Rect Ctrl::GetRect() const
 Rect Ctrl::GetView() const
 {
 	GuiLock __;
-	return frame.GetCount() == 0 ? Rect(Size(rect.Size())) : Rect(frame[frame.GetCount() - 1].view);
+	int n = GetFrameCount();
+	return n == 0 ? Rect(Size(rect.Size())) : Rect(GetFrame0(n - 1).GetView());
 }
 
 Size Ctrl::GetSize() const
@@ -72,6 +73,7 @@ Rect  Ctrl::GetScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect pr = inframe ? parent->GetScreenRect() : parent->GetScreenView();
 		r = r + pr.TopLeft();
@@ -91,6 +93,7 @@ Rect  Ctrl::GetVisibleScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
+	Ctrl *parent = GetParent();
 	if(parent) {
 		Rect pr = inframe ? parent->GetVisibleScreenRect() : parent->GetVisibleScreenView();
 		Rect pr1 = inframe ? parent->GetScreenRect() : parent->GetScreenView();
@@ -111,8 +114,8 @@ Size  Ctrl::AddFrameSize(int cx, int cy) const
 {
 	GuiLock __;
 	Size sz = Size(cx, cy);
-	for(int i = frame.GetCount() - 1; i >= 0; i--)
-		frame[i].frame->FrameAddSize(sz);
+	for(int i = GetFrameCount() - 1; i >= 0; i--)
+		GetFrame0(i).frame->FrameAddSize(sz);
 	return sz;
 }
 
@@ -146,21 +149,22 @@ void Ctrl::SyncLayout(int force)
 	Rect oview = GetView();
 	Rect view = GetRect().Size();
 	overpaint = OverPaint();
-	for(int i = 0; i < frame.GetCount(); i++) {
-		Frame& f = frame[i];
+	int n = GetFrameCount();
+	for(int i = 0; i < n; i++) {
+		Frame& f = GetFrame0(i);
 		f.frame->FrameLayout(view);
-		if(view != Rect(f.view)) {
-			f.view = view;
+		if(view != f.GetView()) {
+			f.SetView(view);
 			refresh = true;
 		}
 		int q = f.frame->OverPaint();
 		if(q > overpaint) overpaint = q;
 	}
 	if(oview.Size() != view.Size() || force > 1) {
-		for(Ctrl *q = GetFirstChild(); q; q = q->next) {
-			q->rect = q->CalcRect(rect, view);
-			LLOG("Layout set rect " << q->Name() << " " << q->rect);
-			q->SyncLayout(force > 1 ? force : 0);
+		for(Ctrl& q : *this) {
+			q.rect = q.CalcRect(rect, view);
+			LLOG("Layout set rect " << q.Name() << " " << q.rect);
+			q.SyncLayout(force > 1 ? force : 0);
 		}
 		Refresh();
 	}
@@ -170,6 +174,20 @@ void Ctrl::SyncLayout(int force)
 	}
 	if(refresh)
 		RefreshFrame();
+}
+
+void Ctrl::RefreshParentLayout()
+{
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->RefreshLayout();
+}
+
+void Ctrl::UpdateParentLayout()
+{
+	Ctrl *parent = GetParent();
+	if(parent)
+		parent->UpdateLayout();
 }
 
 int Ctrl::FindMoveCtrl(const VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x)
@@ -188,10 +206,11 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 {
 	GuiLock __;
 	if(p == pos && inframe == _inframe) return;
+	Ctrl *parent = GetParent();
 	if(parent && !IsDHCtrl()) {
 		if(!globalbackbuffer) {
 			Rect from = GetRect().Size();
-			Top *top = GetTopRect(from, true)->top;
+			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
 				LTIMING("SetPos0 MoveCtrl");
 				pos = p;
@@ -227,6 +246,7 @@ void Ctrl::UpdateRect0(bool sync)
 {
 	GuiLock __;
 	LTIMING("UpdateRect0");
+	Ctrl *parent = GetParent();
 	if(parent)
 		rect = CalcRect(parent->GetRect(), parent->GetView());
 	else {
@@ -247,12 +267,13 @@ void Ctrl::UpdateRect(bool sync)
 {
 	GuiLock __;
 	UpdateRect0(sync);
-	if(parent) RefreshFrame();
+	if(GetParent()) RefreshFrame();
 }
 
 Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 {
 	GuiLock __;
+	Ctrl *parent = GetParent();
 	if(p != pos || inframe != _inframe) {
 		if(parent || !IsOpen())
 			SetPos0(p, _inframe);
@@ -334,93 +355,6 @@ void Ctrl::SetFrameRectX(int x, int cx) {
 
 void Ctrl::SetFrameRectY(int y, int cy) {
 	SetFramePosY(PosTop(y, cy));
-}
-
-Ctrl& Ctrl::SetFrame(int i, CtrlFrame& fr) {
-	GuiLock __;
-	LLOG("SetFrame " << typeid(fr).name());
-	while(frame.GetCount() <= i)
-		frame.Add().frame = &NullFrame();
-	frame[i].frame->FrameRemove();
-	frame[i].frame = &fr;
-	fr.FrameAdd(*this);
-	SyncLayout();
-	RefreshFrame();
-	return *this;
-}
-
-Ctrl& Ctrl::AddFrame(CtrlFrame& fr) {
-	GuiLock __;
-	LLOG("AddFrame " << typeid(fr).name());
-	frame.Add().frame = &fr;
-	fr.FrameAdd(*this);
-	SyncLayout();
-	RefreshFrame();
-	return *this;
-}
-
-void Ctrl::ClearFrames() {
-	GuiLock __;
-	for(int i = 0; i < frame.GetCount(); i++)
-		frame[i].frame->FrameRemove();
-	frame.Clear();
-	frame.Add().frame = &NullFrame();
-	RefreshFrame();
-	SyncLayout();
-}
-
-void Ctrl::RemoveFrame(int i) {
-	GuiLock __;
-	int n = frame.GetCount();
-	Mitor<Frame> m;
-	if(n > 1)
-		for(int q = 0; q < n; q++) {
-			if(q != i)
-				m.Add().frame = frame[q].frame;
-			else
-				frame[q].frame->FrameRemove();
-		}
-	frame = pick(m);
-	if(frame.GetCount() == 0)
-		frame.Add().frame = &NullFrame();
-	RefreshFrame();
-	SyncLayout();
-}
-
-int  Ctrl::FindFrame(CtrlFrame& frm)
-{
-	GuiLock __;
-	for(int i = 0; i < frame.GetCount(); i++)
-		if(frame[i].frame == &frm)
-			return i;
-	return -1;
-}
-
-void Ctrl::RemoveFrame(CtrlFrame& frm)
-{
-	GuiLock __;
-	int i = FindFrame(frm);
-	if(i >= 0)
-		RemoveFrame(i);
-}
-
-void Ctrl::InsertFrame(int i, CtrlFrame& fr)
-{
-	GuiLock __;
-	ASSERT(i >= 0 && i <= frame.GetCount());
-	int n = frame.GetCount();
-	Mitor<Frame> m;
-	if(n >= 1)
-		for(int q = 0; q < n; q++) {
-			if(q == i) m.Add().frame = &fr;
-			m.Add().frame = frame[q].frame;
-		}
-	if(i == n)
-		m.Add().frame = &fr;
-	frame = pick(m);
-	fr.FrameAdd(*this);
-	SyncLayout();
-	RefreshFrame();
 }
 
 Ctrl& Ctrl::LeftPos(int a, int size) {

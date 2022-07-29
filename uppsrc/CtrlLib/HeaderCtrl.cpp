@@ -743,6 +743,8 @@ void HeaderCtrl::Serialize(Stream& s) {
 	if(version >= 0x04) {
 		int n = col.GetCount();
 		s / n;
+		if(n < 0 || n > 10000)
+			s.LoadError();
 		Array<Column> col2 = clone(col);
 		if(s.IsLoading())
 			col2.InsertN(0, n);
@@ -757,10 +759,10 @@ void HeaderCtrl::Serialize(Stream& s) {
 					}
 			col2[i].index = ndx;
 			s % col2[i].ratio;
-			s % col2[i].visible;			
+			s % col2[i].visible;
 		}
 		if(s.IsLoading() && n == col.GetCount()) {
-			col2.Trim(n);
+			col2.SetCount(n);
 			col = pick(col2);
 		}
 	}

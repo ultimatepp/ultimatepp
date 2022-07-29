@@ -339,32 +339,38 @@ const Button::Style *Button::St() const
 	return st;
 }
 
-void Button::Paint(Draw& w)
+void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
+                         const String& label, Font font, const Image& img,
+                         bool monoimg, int accesskey, bool visibleaccesskeys, bool disabled)
 {
-	const Style *st = St();
-	Size sz = GetSize();
-	bool ds = !IsShowEnabled();
 	DrawLabel dl;
 	dl.text = label;
-	dl.font = Nvl(font, st->font);
+	dl.font = Nvl(font, st.font);
 	dl.limg = img;
-	dl.disabled = ds;
+	dl.disabled = disabled;
 	dl.lspc = !label.IsEmpty() && !img.IsEmpty() ? 4 : 0;
 	if(*label == '\1')
 		dl.align = ALIGN_LEFT;
-	if(VisibleAccessKeys())
+	if(visibleaccesskeys)
 		dl.accesskey = accesskey;
 	if(monoimg)
 		dl.lcolor = SColorText;
-	int i = GetVisualState();
-	ChPaint(w, sz, st->look[i]);
-	dl.ink = st->textcolor[i];
+	ChPaint(w, r, st.look[visualstate]);
+	dl.ink = st.textcolor[visualstate];
 	if(monoimg)
-		dl.lcolor = st->monocolor[i];
-	dl.Paint(w, 3 + IsPush() * st->pressoffset.x, 3 + IsPush() * st->pressoffset.y,
-	         sz.cx - 6, sz.cy - 6);
-	if(HasFocus())
-		DrawFocus(w, Rect(sz).Deflated(st->focusmargin));
+		dl.lcolor = st.monocolor[visualstate];
+	bool push = visualstate == CTRL_PRESSED;
+	dl.Paint(w, r.left + 3 + push * st.pressoffset.x, r.top + 3 + push * st.pressoffset.y,
+	         r.GetWidth() - 6, r.GetHeight() - 6);
+	if(focus)
+		DrawFocus(w, r.Deflated(st.focusmargin));
+}
+
+void Button::Paint(Draw& w)
+{
+	PaintButton(w, GetSize(), *St(), GetVisualState(), HasFocus(),
+	            label, font, img,
+	            monoimg, accesskey, VisibleAccessKeys(), !IsShowEnabled());
 }
 
 void  Button::MouseEnter(Point, dword)
@@ -498,6 +504,8 @@ void SpinButtons::FrameLayout(Rect& r)
 
 void SpinButtons::FrameAddSize(Size& sz)
 {
+	if(!visible)
+		return;
 	sz.cx += (1 + style->onsides) * (min(sz.cx / 2, style->width) - style->over);
 }
 

@@ -593,7 +593,7 @@ void SelectPackageDlg::SyncList(const String& find)
 				   d.ispackage &&
 				   (!(fk == MAIN) || d.main) &&
 				   (!(fk == NONMAIN) || !d.main) &&
-				   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
+				   ToUpper(d.package + d.description).Find(s) >= 0 &&
 				   added.Find(d.package) < 0) {
 					packages.Add() = d;
 					if(!d.main)

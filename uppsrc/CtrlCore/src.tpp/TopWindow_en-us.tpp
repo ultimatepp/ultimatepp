@@ -260,6 +260,11 @@ while performing loop. If false, only TopWindow`'s relative windows
 [s7;%% [*/ Return value]-|Result true if Cancel otherwise false.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:TopWindow`:`:GetExitCode`(`)const: [@(0.0.255) int]_[* GetExitCode]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the result code of last Execute or Run methods.&]
+[s3; &]
+[s4; &]
 [s5;:TopWindow`:`:Minimize`(bool`): [@(0.0.255) void]_[* Minimize]([@(0.0.255) bool]_[*@3 eff
 ect]_`=_[@(0.0.255) false])&]
 [s2;%% Minimize window.&]

@@ -1,19 +1,40 @@
-class StaticText : public Ctrl, public LabelBase {
+class StaticText : public Ctrl {
 public:
 	virtual void   Paint(Draw& w);
 	virtual Size   GetMinSize() const;
-	virtual void   LabelUpdate();
 
+	enum {
+		ATTR_INK = Ctrl::ATTR_LAST,
+		ATTR_FONT,
+		ATTR_ALIGN,
+		ATTR_IMAGE,
+		ATTR_IMAGE_SPC,
+		ATTR_LAST,
+	};
+
+protected:
+	String text;
+	int    accesskey = 0;
+
+	void MakeDrawLabel(DrawLabel& l) const;
+	Size GetLabelSize() const;
+	
 public:
-	StaticText& SetFont(Font font)                      { LabelBase::SetFont(font); return *this; }
-	StaticText& SetInk(Color color)                     { LabelBase::SetInk(color); return *this; }
-	StaticText& SetAlign(int align)                     { LabelBase::SetAlign(align); return *this; }
-	StaticText& SetImage(const Image& img, int spc = 0) { LabelBase::SetImage(img, spc); return *this; }
-	StaticText& SetText(const char *text)               { LabelBase::SetText(text); return *this; }
+	StaticText& SetFont(Font font);
+	StaticText& SetInk(Color color);
+	StaticText& SetAlign(int align);
+	StaticText& AlignLeft()                             { return SetAlign(ALIGN_LEFT); }
+	StaticText& AlignCenter()                           { return SetAlign(ALIGN_CENTER); }
+	StaticText& AlignRight()                            { return SetAlign(ALIGN_RIGHT); }
+	StaticText& SetImage(const Image& img, int spc = 0);
+	StaticText& SetText(const char *text);
+	
+	String      GetText() const                         { return text; }
 
 	StaticText& operator=(const char *s)                { SetText(s); return *this; }
 
 	StaticText();
+	~StaticText();
 };
 
 class Label : public StaticText {

@@ -96,44 +96,17 @@ bool Ctrl::DoKeyFB(dword key, int cnt)
 	return b;
 }
 
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	fbCaretTm = msecs();
-	SyncCaret();
-}
-
-void Ctrl::SyncCaret()
-{
-	CursorSync();
-}
-
 void Ctrl::CursorSync()
 {
 	LLOG("@ CursorSync");
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
 	Rect cr = Null;
-	if(focusCtrl && (((msecs() - fbCaretTm) / 500) & 1) == 0)
-		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
-		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-
 	if(fbCursorPos != p) {
 		fbCursorPos = p;
 		if(!(VirtualGuiPtr->GetOptions() & GUI_SETMOUSECURSOR))
 			Invalidate();
 	}
 
-	if(cr != fbCaretRect) {
-		fbCaretRect = cr;
-		if(VirtualGuiPtr->GetOptions() & GUI_SETCARET)
-			VirtualGuiPtr->SetCaret(cr);
-		else
-			Invalidate();
-	}
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
@@ -159,6 +132,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	LLOG("TimerProc invoked at " << msecs());
 	TimerProc(msecs());
 	LLOG("TimerProc elapsed: " << tm);
+	AnimateCaret();
 	SweepMkImageCache();
 	DoPaint();
 	return ret;
