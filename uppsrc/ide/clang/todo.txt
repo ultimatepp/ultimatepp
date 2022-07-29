@@ -120,6 +120,10 @@ GREAT CODEBASE PURGE:
 
 - Alt+J bool IsIgnored(const String& id) jump on Find
 
+- Implement typedefs
+
+- Implement annotation columns
+
 
 
 NONCLANG:

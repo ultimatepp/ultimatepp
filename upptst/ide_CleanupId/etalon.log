@@ -1,0 +1,4 @@
+* C:\upp\out\llvm_tests\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 29.07.2022 01:06:12, user: cxl
+
+CleanupId("Upp::Index<Upp::String>::Find(const Upp::String &k) const") = Upp::Index::Find(const Upp::String&)const
+CleanupId("clang_PrintingPolicy_setProperty(CXPrintingPolicy Policy, enum CXPrintingPolicyProperty Property, unsigned int Value) __attribute__((dllimport))") = clang_PrintingPolicy_setProperty(CXPrintingPolicy,CXPrintingPolicyProperty,unsigned int)

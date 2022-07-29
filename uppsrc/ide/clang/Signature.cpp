@@ -47,7 +47,7 @@ bool IsBasicType(const String& id)
 
 bool IsIgnored(const String& id)
 {
-	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "template" };
+	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "template", "enum" };
 	return kt.Find(id) >= 0;
 }
 
@@ -62,12 +62,36 @@ String CleanupId(const char *s)
 	bool destructor = false;
 	int name_pos = 0; // to filter out eventual return value of function
 	bool operator_def = false; // between operator and ( - suppress < > handling
+	static String s_attribute = "__attribute__";
+	auto SkipT = [&] {
+		int lvl = 1;
+		s++;
+		while(*s && lvl) {
+			if(*s == '>')
+				lvl--;
+			if(*s == '<')
+				lvl++;
+			s++;
+		}
+	};
 	while(*s && *s != '{') {
 		if(iscid(*s)) {
 			const char *b = s;
-			while(iscid(*s) || *s == ':')
+			String id;
+			while(iscid(*s) || *s == ':') {
 				s++;
-			String id(b, s);
+				if(*s == '<' && !operator_def) {
+					id.Cat(b, s);
+					SkipT();
+					b = s;
+				}
+			}
+			id.Cat(b, s);
+			if(id == s_attribute) {
+				while(mm.GetCount() && mm[mm.GetCount() - 1] == ' ')
+					mm.SetLength(mm.GetCount() - 1);
+				break;
+			}
 			if((*s == ',' || *s == ')') && was_param_type) {
 				was_param_type = false;
 				continue;
@@ -75,8 +99,7 @@ String CleanupId(const char *s)
 			if(IsIgnored(id))
 				continue;
 			auto IsOperator = [](const char *s) {
-				return s[0] == 'o' && s[1] == 'p' && s[2] == 'e' && s[3] == 'r' &&
-				       s[4] == 'a' && s[5] == 't' && s[6] == 'o' && s[7] == 'r';
+				return memcmp(s, "operator", 8) == 0;
 			};
 			if(was_id)
 				mm.Cat(' ');
@@ -101,15 +124,7 @@ String CleanupId(const char *s)
 		}
 		else
 		if(*s == '<' && !operator_def) { // remove template stuff e.g. Buffer<T>(Vector<T>) -> Buffer(Vector);
-			int lvl = 1;
-			s++;
-			while(*s && lvl) {
-				if(*s == '>')
-					lvl--;
-				if(*s == '<')
-					lvl++;
-				s++;
-			}
+			SkipT();
 		}
 		else {
 			was_id = was_space = false;

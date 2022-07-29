@@ -347,13 +347,12 @@ void AppMain___()
 		ErrorOK("Exception " + e);
 		LOG("!!!!! Exception " << e);
 	}
-#ifdef PLATFORM_POSIX
 	catch(...) {
 		ErrorOK("Unknown exception !");
 		LOG("!!!!! Unknown exception");
 	}
 #endif
-#endif
+	DLOG("Exit1");
 	Ctrl::ShutdownThreads();
 }
 

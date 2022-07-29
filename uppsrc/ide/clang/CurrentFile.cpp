@@ -1,6 +1,6 @@
 #include "clang.h"
 
-#define LLOG(x)
+#define LLOG(x) // LOG(x)
 
 bool                                   current_file_parsing;
 CoEvent                                current_file_event;
@@ -101,9 +101,9 @@ void CurrentFileThread()
 		}
 		while(was_parsing);
 		current_file_event.Wait();
-		DLOG("Current file Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
+		LLOG("Current file Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
-	DLOG("Current file thread exit");
+	LLOG("Current file thread exit");
 }
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
@@ -113,7 +113,7 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> don
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 		Thread::Start([] { CurrentFileThread(); });
 		Thread::AtShutdown([] {
-			DLOG("Shutdown current file");
+			LLOG("Shutdown current file");
 			current_file_event.Broadcast();
 		});
 	}

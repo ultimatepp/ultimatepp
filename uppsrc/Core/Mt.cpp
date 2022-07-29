@@ -269,9 +269,7 @@ void Thread::TryShutdownThreads()
 void Thread::ShutdownThreads()
 {
 	BeginShutdownThreads();
-	DLOG("Shutdown " << GetCount() << " threads");
 	while(GetCount()) {
-		DLOG("Trying to shutdown " << GetCount());
 		TryShutdownThreads();
 		Sleep(100);
 	}

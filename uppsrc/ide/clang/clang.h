@@ -156,6 +156,7 @@ class ClangVisitor {
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
 	
 	VectorMap<String, Index<ReferenceItem>>   ref_done; // avoid self-references, multiple references
+	VectorMap<Tuple<String, int>, String> tfn; // to convert e.g. Index<String>::Find(String) to Index::Find(T)
 
 public:
 	VectorMap<String, Vector<AnnotationItem>> item;
@@ -202,7 +203,6 @@ class Indexer {
 	};
 
 	static CoEvent            event;
-	static Workspace          wspc;
 	static Hdepend            hdepend;
 	static Mutex              mutex;
 	static Vector<Job>        jobs;

@@ -1,6 +1,6 @@
 #include "clang.h"
 
-#define LLOG(x)
+#define LLOG(x) // DLOG(x)
 
 bool                                   autocomplete_parsing;
 CoEvent                                autocomplete_event;
@@ -114,9 +114,9 @@ void AutocompleteThread()
 			}
 		}
 		autocomplete_event.Wait();
-		DLOG("Autocomplete Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
+		LLOG("Autocomplete Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
-	DLOG("Autocomplete thread exit");
+	LLOG("Autocomplete thread exit");
 }
 
 void SetAutoCompleteFile(const CurrentFileContext& ctx)
@@ -126,7 +126,7 @@ void SetAutoCompleteFile(const CurrentFileContext& ctx)
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 		Thread::Start([] { AutocompleteThread(); });
 		Thread::AtShutdown([] {
-			DLOG("Shutdown autocomplete");
+			LLOG("Shutdown autocomplete");
 			autocomplete_event.Broadcast();
 		});
 	}

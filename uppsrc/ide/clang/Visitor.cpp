@@ -19,32 +19,34 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
 	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 
-	CXCursor ref = clang_getCursorReferenced(cursor);
-
-	DDUMP(clang_Cursor_isNull(ref));
-
-	String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
-	if(rs.GetCount()) {
-		DDUMP(GetCursorKindName(clang_getCursorKind(ref)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(ref, pp_pretty)));
-		DDUMP(FetchString(clang_getCursorUSR(ref)));
-		DDUMP(rs);
+	{
+		CXCursor ref = clang_getCursorReferenced(cursor);
+	
+		DDUMP(clang_Cursor_isNull(ref));
+	
+		String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
+		if(rs.GetCount()) {
+			DDUMP(GetCursorKindName(clang_getCursorKind(ref)));
+			DDUMP(FetchString(clang_getCursorPrettyPrinted(ref, pp_pretty)));
+			DDUMP(FetchString(clang_getCursorUSR(ref)));
+			DDUMP(rs);
+		}
 	}
 #endif
 
+	String pid = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
 	String id;
 	String name;
 	String nspace;
 
 	auto MakeCursorInfo = [&](CXCursor cursor) {
 		String m;
-	
+
 		CXCursor parent = clang_getCursorSemanticParent(cursor);
 		CXCursorKind parentKind = clang_getCursorKind(parent);
-	
+
 		name = GetCursorSpelling(cursor);
 		String type = GetTypeSpelling(cursor);
-		String pid = FetchString(clang_getCursorPrettyPrinted(cursor, pp_id));
 		
 		CXCursor p = parent;
 		String scope;
@@ -66,7 +68,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 			scope.Trim(q);
 		if(scope.GetCount() && *scope.Last() != ':')
 			scope << "::";
-	
+
 		if(findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod,
 		                       CXCursor_Constructor, CXCursor_Destructor) < 0) { // local variable, TODO (members of local structure)
 			switch(cursorKind) {
@@ -116,7 +118,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	unsigned column;
 	unsigned offset;
 	String   path;
-	
+
 	auto LoadPosition = [&] {
 		if(position_loaded) return;
 		CXFile file;
@@ -128,16 +130,21 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	if(WhenFile)
 		LoadPosition();
 
+	if(findarg(cursorKind, CXCursor_CXXMethod, CXCursor_FunctionTemplate) >= 0) {
+		LoadPosition();
+		tfn.GetAdd(MakeTuple(path, line)) = pid;
+	}
+
 	if(!(WhenFile ? WhenFile(path) : clang_Location_isFromMainFile(cxlocation)))
 		return findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
 		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
-		                           CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ClassTemplate,
+		                           CXCursor_Destructor,
 		                           CXCursor_ClassTemplatePartialSpecialization, CXCursor_UnexposedDecl,
 		                           CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
 		                           CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
-	
+
 	MakeCursorInfo(cursor);
-	
+
 	CXCursor ref = clang_getCursorReferenced(cursor);
 	bool reference = !clang_Cursor_isNull(ref);
 	if(id.GetCount() || reference)
@@ -181,16 +188,24 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	}
 
 	if(reference) {
+		cursorKind = clang_getCursorKind(ref);
+		pid = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
+		if(pid.Find('<') >= 0) { // might be a template specialization
+			CXFile file;
+			unsigned line;
+			unsigned column;
+			unsigned offset;
+			clang_getExpansionLocation(clang_getCursorLocation(ref), &file, &line, &column, &offset);
+			pid = tfn.Get(MakeTuple(FetchString(clang_getFileName(file)), line), pid);
+		}
+		MakeCursorInfo(ref);
 		ReferenceItem rm;
 		rm.pos = pos;
-		cursorKind = clang_getCursorKind(ref);
-		MakeCursorInfo(ref);
 		rm.id = id;
 		Index<ReferenceItem>& rd = ref_done.GetAdd(path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);
 			refs.GetAdd(path).Add(rm);
-			DLOG("Ref " << rm.id << " " << rm.pos);
 		}
 	}
 	return true;
@@ -219,7 +234,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 		clang_PrintingPolicy_setProperty(pp_id, (CXPrintingPolicyProperty)i, 0);
 		clang_PrintingPolicy_setProperty(pp_pretty, (CXPrintingPolicyProperty)i, 0);
 	}
-	
+
 	for(CXPrintingPolicyProperty p : {
 			CXPrintingPolicy_SuppressSpecifiers,
 			CXPrintingPolicy_SuppressTagKeyword,
@@ -238,7 +253,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_SuppressScope, 1);
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
-	
+
 	for(Vector<AnnotationItem>& f : item) // sort by line because macros are first
 		Sort(f, [](const AnnotationItem& a, const AnnotationItem& b) { return a.line < b.line; });
 }
