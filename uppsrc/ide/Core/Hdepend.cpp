@@ -335,6 +335,7 @@ Time Hdepend::FileTime(int ii)
 
 Vector<String> Hdepend::GetDependencies(const String& path, bool bydefine_too)
 {
+	DTIMING("GetDependecies");
 	ClearFlag();
 	Index<int> out;
 	out.Add(File(path));

@@ -25,11 +25,6 @@ String GetTypeSpelling(CXCursor cursor)
 	return FetchString(clang_getTypeSpelling(clang_getCursorType(cursor)));
 }
 
-String SourceLocation::ToString() const
-{
-	return String() << filename << " (" << line << ":" << column << ")";
-}
-
 String GetClangInternalIncludes()
 {
 	static String includes;
@@ -54,19 +49,6 @@ String GetClangInternalIncludes()
 		}
 	}
 	return includes;
-}
-
-SourceLocation::SourceLocation(CXSourceLocation location)
-{
-	CXFile file;
-	unsigned line_;
-	unsigned column_;
-	unsigned offset_;
-	clang_getExpansionLocation(location, &file, &line_, &column_, &offset_);
-	line = line_;
-	column = column_;
-	offset = offset_;
-	filename = FetchString(clang_getFileName(file));
 }
 
 void Clang::Dispose()

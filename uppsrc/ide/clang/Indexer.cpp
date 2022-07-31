@@ -6,6 +6,20 @@
 #define LDUMP(x)     //DDUMP(x)
 #define LDUMPM(x)    //DDUMPM(x)
 
+struct Timest { // TODO remove
+	String name;
+	int tm;
+	Timest(const String& name) : name(name) { tm = msecs(); }
+	~Timest() {
+		tm = msecs() - tm;
+		if(tm > 500)
+			DLOG(name << " " << tm / 1000.0);
+	}
+};
+
+#define ITIMESTOP(x)  Timest COMBINE(sTmStop, __LINE__)(x);
+
+
 String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& header_file)
 {
 	String master_source;
@@ -107,7 +121,9 @@ ArrayMap<String, FileAnnotation>& CodeIndex()
 
 void DumpIndex()
 {
+	ITIMESTOP("DumpIndex");
 	GuiLock __;
+	ITIMESTOP("DumpIndex2");
 	FileOut out(ConfigFile("current_index.dump"));
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
 	for(const auto& m : ~x) {
@@ -118,37 +134,47 @@ void DumpIndex()
 }
 
 CoEvent              Indexer::event;
-Hdepend              Indexer::hdepend;
+CoEvent              Indexer::scheduler;
 Mutex                Indexer::mutex;
 Vector<Indexer::Job> Indexer::jobs;
 int                  Indexer::jobi;
 std::atomic<int>     Indexer::running_indexers;
 VectorMap<String, String> Indexer::master_file;
+String               Indexer::main;
+String               Indexer::includes;
+String               Indexer::defines;
 
 void Indexer::IndexerThread()
 {
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
 		int tm0 = msecs();
-		running_indexers++;
 		bool was_job = false; // for diagnostics
-		for(;;) {
+		++running_indexers;
+		while(!Thread::IsShutdownThreads()) {
 			Job job;
 			{
-				DTIMESTOP("Acquire job");
+				ITIMESTOP("Acquire job");
 				Mutex::Lock __(mutex);
-				if(jobi >= jobs.GetCount())
+				if(jobi < jobs.GetCount())
+					job = jobs[jobi++];
+				else
 					break;
-				job = jobs[jobi++];
 				was_job = true;
 			}
+
+			if(Thread::IsShutdownThreads())
+				break;
+			
+		//	if(job.path != "C:\\upp\\ide$$$blitz.cpp")
+		//		continue;
 			
 			{
-				DTIMESTOP("Parsing " + job.path + " " + AsString(job.file_times));
+				ITIMESTOP("Parsing " + job.path + " " + AsString(job.file_times));
 				clang.Parse(job.path, job.blitz, job.includes, job.defines,
 				            CXTranslationUnit_DetailedPreprocessingRecord|
 				            CXTranslationUnit_KeepGoing|
-				            CXTranslationUnit_SkipFunctionBodies|
+			//	            CXTranslationUnit_SkipFunctionBodies|
 				            (job.blitz.GetCount() ? 0 : PARSE_FILE));
 			//	DumpDiagnostics(clang.tu);
 			}
@@ -165,6 +191,7 @@ void Indexer::IndexerThread()
 				VectorMap<String, bool> do_file_cache;
 	
 				v.WhenFile = [&](const String& path) {
+					DTIMING("WhenFile");
 					if(IsNull(path))
 						return false;
 					if(current_file != path) {
@@ -178,6 +205,7 @@ void Indexer::IndexerThread()
 							current_file = path;
 							int q = do_file_cache.Find(path);
 							if(q < 0) {
+								DTIMING("WhenFile 2");
 								Mutex::Lock __(mutex);
 								do_file = job.file_times.Find(master_file.Get(NormalizePath(path), Null)) >= 0;
 								do_file_cache.Add(path, do_file);
@@ -188,10 +216,14 @@ void Indexer::IndexerThread()
 					}
 					return do_file;
 				};
-	
+
+				ITIMESTOP("Visitor " + job.path + " " + AsString(job.file_times));
 				v.Do(clang.tu);
 			}
 	
+			if(Thread::IsShutdownThreads())
+				break;
+			
 			for(const auto& m : ~job.file_times) // in create entries even if there are no items to avoid recompiling
 				v.item.GetAdd(NormalizePath(m.key));
 			
@@ -202,45 +234,72 @@ void Indexer::IndexerThread()
 				f.includes = job.includes;
 				f.items = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
+				ITIMESTOP("Save");
 				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, master_file.Get(path, Null)), StoreAsString(f), true);
+				ITIMESTOP("Set");
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
 			}
+			
+		}
+		bool last = false;
+		{
+			Mutex::Lock __(mutex);
+			if(--running_indexers == 0 && jobs.GetCount()) {
+				DLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
+				jobs.Clear();
+				scheduler.Broadcast();
+				last = true;
+			}
 		}
 	#ifdef _DEBUG
-		if(--running_indexers == 0 && was_job) {
-			DLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
+		if(last)
 			DumpIndex(); // TODO remove
-		}
 	#endif
+		if(Thread::IsShutdownThreads())
+			break;
 		event.Wait();
 		LLOG("Indexers Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
 	LLOG("Exiting IndexerThread");
 }
 
-void Indexer::Start(const String& main, const String& includes_, const String& defines)
+void Indexer::Start(const String& main, const String& includes, const String& defines)
 {
-	LLOG("Indexer::Start =============================== ");
-
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 		Thread::AtShutdown([] {
 			LLOG("Shutdown indexers");
 			event.Broadcast();
+			scheduler.Broadcast();
 		});
 		for(int i = 0; i < CPU_Cores(); i++) // TODO: CPU_Cores?
 			Thread::StartNice([] { Indexer::IndexerThread(); });
+		Thread::StartNice([] { SchedulerThread(); });
 	}
 	
-	Thread::Start([=] {
-		String includes = Merge(";", includes_, GetClangInternalIncludes());
+	GuiLock __;
+	Indexer::main = main;
+	Indexer::includes = includes;
+	Indexer::defines = defines;
+	if(jobs.GetCount() == 0)
+		scheduler.Broadcast();
+}
+
+void Indexer::SchedulerThread()
+{
+	Hdepend hdepend;
+	while(!Thread::IsShutdownThreads()) {
+		scheduler.Wait();
+
+		Mutex::Lock __(mutex);
+		String includes, defines;
 		
 		VectorMap<String, Vector<Tuple<String, bool>>> sources;
 		{
 			GuiLock __;
-			DTIMESTOP("Load workspace");
+			ITIMESTOP("Load workspace");
 			Workspace wspc;
 			wspc.Scan(main);
 
@@ -254,12 +313,14 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 						ps.Add({ NormalizePath(path), pk[i].noblitz });
 				}
 			}
+			includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
+			defines = Indexer::defines;
 		}
 		
 		{
-			DTIMESTOP("Create indexer jobs");
+			ITIMESTOP("Create indexer jobs");
 			Mutex::Lock __(mutex);
-			DTIMESTOP("Create indexer jobs after lock");
+			ITIMESTOP("Create indexer jobs after lock");
 			hdepend.NoConsole();
 			LDUMP(includes);
 			hdepend.SetDirs(includes);
@@ -267,9 +328,10 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 			jobs.Clear();
 
 			{
-				DTIMESTOP("Master files"); // <<<< this is slow
+				ITIMESTOP("Master files"); // <<<< this is slow
 				master_file.Clear();
-				for(const auto& pk : sources)
+				for(int i = sources.GetCount() - 1; i >= 0; i--) {
+					const auto& pk = sources[i];
 					for(const auto& f : pk) {
 						master_file.Add(f.a, f.a);
 						for(String p : hdepend.GetDependencies(f.a)) {
@@ -278,12 +340,13 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 								master_file.Add(p, f.a);
 						}
 					}
+				}
 			}
 			
-			LDUMPM(master_file);
+			DUMPM(master_file);
 			
 			{
-				DTIMESTOP("Loading from cache");
+				ITIMESTOP("Loading from cache");
 				for(String path : master_file.GetKeys()) {
 					FileAnnotation0 f;
 					{
@@ -305,7 +368,7 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 			}
 			
 			{ // remove files that are not in project anymore
-				DTIMESTOP("Removing files");
+				ITIMESTOP("Removing files");
 				GuiLock __;
 				for(int i = 0; i < CodeIndex().GetCount(); i++)
 					if(master_file.Find(CodeIndex().GetKey(i)) < 0)
@@ -313,7 +376,7 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 				CodeIndex().Sweep();
 			}
 	
-			DTIMESTOP("Create indexer jobs2");
+			ITIMESTOP("Create indexer jobs2");
 			jobi = 0;
 			for(const auto& pkg : ~sources) {
 				String blitz;
@@ -349,7 +412,9 @@ void Indexer::Start(const String& main, const String& includes_, const String& d
 				}
 			}
 		}
-		
-		event.Broadcast();
-	});
+		if(jobs.GetCount()) {
+			DLOG("======= Unleash indexers");
+			event.Broadcast();
+		}
+	}
 }

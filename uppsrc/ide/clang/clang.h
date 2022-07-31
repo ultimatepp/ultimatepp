@@ -21,15 +21,14 @@ String GetCursorKindName(CXCursorKind cursorKind);
 String GetCursorSpelling(CXCursor cursor);
 String GetTypeSpelling(CXCursor cursor);
 
-struct SourceLocation {
-	int    line;
-	int    column;
-	int    offset;
-	String filename;
+struct SourceLocation : Moveable<SourceLocation> {
+	String path;
+	Point  pos;
 	
-	String ToString() const;
-
-	SourceLocation(CXSourceLocation location);
+	bool operator==(const SourceLocation& b) const { return path == b.path && pos == b.pos; }
+	bool operator!=(const SourceLocation& b) const { return !operator==(b); }
+	void Serialize(Stream& s)                      { s % path % pos; }
+	hash_t GetHashValue() const                    { return CombineHash(path, pos); }
 };
 
 String RedefineMacros();
@@ -88,7 +87,7 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 
 struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
-	int    line;
+	int    line; // TODO: Point
 	bool   definition;
 	String name; // Method
 	String id; // Upp::Class::Method(Upp::Point p)
@@ -151,12 +150,19 @@ class ClangVisitor {
 	bool initialized = false;
 	CXPrintingPolicy pp_id, pp_pretty;
 	
-	bool ProcessNode(CXCursor c);
+	bool           ProcessNode(CXCursor c);
+	SourceLocation GetLocation(CXSourceLocation c);
 
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
-	
+
+	VectorMap<CXFile, String>                 cxfile; // accelerate CXFile (CXFile has to be valid across tree as there is no Dispose)
 	VectorMap<String, Index<ReferenceItem>>   ref_done; // avoid self-references, multiple references
-	VectorMap<Tuple<String, int>, String> tfn; // to convert e.g. Index<String>::Find(String) to Index::Find(T)
+	
+	struct MCXCursor : Moveable<MCXCursor> {
+		CXCursor cursor;
+	};
+	
+	ArrayMap<SourceLocation, MCXCursor>  tfn; // to convert e.g. Index<String>::Find(String) to Index::Find(T)
 
 public:
 	VectorMap<String, Vector<AnnotationItem>> item;
@@ -202,15 +208,16 @@ class Indexer {
 		WithDeepCopy<VectorMap<String, Time>> file_times;
 	};
 
-	static CoEvent            event;
-	static Hdepend            hdepend;
+	static CoEvent            event, scheduler;
 	static Mutex              mutex;
 	static Vector<Job>        jobs;
 	static int                jobi;
 	static std::atomic<int>   running_indexers;
 	static VectorMap<String, String> master_file; // header -> first file that includes it
+	static String             main, includes, defines;
 	
 	static void IndexerThread();
+	static void SchedulerThread();
 
 public:
 	static void Start(const String& main, const String& includes, const String& defines);

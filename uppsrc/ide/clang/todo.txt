@@ -124,6 +124,8 @@ GREAT CODEBASE PURGE:
 
 - Implement annotation columns
 
+- Indexer::IsRunning should account for SchedulerThread
+
 
 
 NONCLANG:
