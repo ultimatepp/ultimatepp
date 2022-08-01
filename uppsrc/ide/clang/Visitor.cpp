@@ -292,12 +292,12 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
 
 		ReferenceItem rm;
-		rm.pos = ref_loc.pos;
+		rm.pos = loc.pos;
 		rm.id = ref_ci.Id();
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);
-			refs.GetAdd(ref_loc.path).Add(rm);
+			refs.GetAdd(loc.path).Add(rm);
 		}
 	}
 	return true;
