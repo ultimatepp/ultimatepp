@@ -26,9 +26,9 @@ void CurrentFileThread()
 		CppFileInfo f;
 		if(v.item.GetCount()) {
 			f.items = pick(v.item[0]);
-			f.items.RemoveIf([&](int i) { return f.items[i].line < parsed_file.line_delta; });
+			f.items.RemoveIf([&](int i) { return f.items[i].pos.y < parsed_file.line_delta; });
 			for(AnnotationItem& m : f.items)
-				m.line -= parsed_file.line_delta;
+				m.pos.y -= parsed_file.line_delta;
 		}
 		if(v.refs.GetCount()) {
 			f.refs = pick(v.refs[0]);

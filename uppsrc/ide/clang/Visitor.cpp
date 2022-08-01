@@ -252,7 +252,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		AnnotationItem& r = item.GetAdd(loc.path).Add();
 		r.kind = ci.Kind();
 		r.name = ci.Name();
-		r.line = loc.pos.y;
+		r.pos = loc.pos;
 		r.id = id;
 		r.pretty = ci.Kind() == CXCursor_MacroDefinition ? r.name
                    : CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
@@ -347,7 +347,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	clang_visitChildren(cursor, clang_visitor, this);
 
 	for(Vector<AnnotationItem>& f : item) // sort by line because macros are first
-		Sort(f, [](const AnnotationItem& a, const AnnotationItem& b) { return a.line < b.line; });
+		Sort(f, [](const AnnotationItem& a, const AnnotationItem& b) { return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0; });
 }
 
 ClangVisitor::~ClangVisitor()

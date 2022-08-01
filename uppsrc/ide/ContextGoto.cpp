@@ -166,20 +166,22 @@ void Ide::ContextGoto0(int pos)
 	
 	if(ref_id.GetCount()) {
 		String found_path;
-		int    found_line = INT_MAX;
+		Point  found_pos(INT_MAX, INT_MAX);
 		bool   found_definition = false;
 		
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
 				if(m.id == ref_id &&
-				   (IsNull(found_path) || CombineCompare(found_definition, m.definition)(f.key, found_path)(m.line, found_line) < 0)) {
+				   (IsNull(found_path) ||
+				    CombineCompare(found_definition, m.definition)(f.key, found_path)
+				                  (m.pos.y, found_pos.y)(m.pos.x, found_pos.x) < 0)) {
 					found_path = f.key;
-					found_line = m.line;
+					found_pos = m.pos;
 					found_definition = m.definition;
 				}
 			}
 		if(found_path.GetCount())
-			GotoPos(found_path, found_line);
+			GotoPos(found_path, found_pos);
 	}
 }
 

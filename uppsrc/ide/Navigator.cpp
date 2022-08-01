@@ -98,14 +98,24 @@ Navigator::Navigator()
 
 AnnotationItem AssistEditor::FindCurrentAnnotation()
 {
-	int current_line = GetCurrentLine();
+	Point pos = GetCurrentPos();
 	AnnotationItem q;
-	for(const AnnotationItem& m : annotations) {
-		if(m.line <= current_line)
+	bool line1st = true;
+	for(const AnnotationItem& m : annotations)
+		if(m.pos.y < pos.y)
 			q = m;
 		else
+		if(m.pos.y == pos.y) {
+			if(line1st) {
+				q = m;
+				line1st = false;
+			}
+			else
+			if(m.pos.x < pos.x)
+				q = m;
+		}
+		else
 			break;
-	}
 	return q;
 }
 
@@ -120,7 +130,7 @@ void Navigator::SyncCursor()
 		navigating = true;
 		for(int i = 0; i < list.GetCount(); i++) {
 			const NavItem& m = *litem[i];
-			if(m.id == q.id && m.line == q.line) {
+			if(m.id == q.id && m.pos == q.pos) {
 				list.SetCursor(i);
 				break;
 			}
@@ -142,7 +152,7 @@ void Navigator::Navigate()
 		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
 		if(m.kind == KIND_LINE || IsNull(search)) {
-			theide->GotoPos(Null, m.line);
+			theide->GotoPos(Null, m.pos);
 			if(m.kind == KIND_LINE) { // Go to line - restore file view
 				search.Clear();
 				Search();
@@ -157,7 +167,7 @@ void Navigator::Navigate()
 			theide->AddHistory();
 		}
 		else {
-			theide->GotoPos(m.path, m.line);
+			theide->GotoPos(m.path, m.pos);
 		}
 	}
 	navigating = false;
@@ -337,7 +347,8 @@ void Navigator::Search()
 		NavItem& m = nitem.Add();
 		m.pretty = "Go to line " + AsString(lineno);
 		m.kind = KIND_LINE;
-		m.line = lineno;
+		m.pos.y = lineno;
+		m.pos.x = 0;
 	}
 	else
 	if(IsNull(s) && !sorting) {
@@ -391,7 +402,7 @@ void Navigator::Search()
 					m.kind = KIND_SRCFILE;
 					m.pretty = wspc[i] + "/" + p[j];
 					m.id = SourcePath(wspc[i], p[j]);
-					m.line = 0;
+					m.pos = Point(0, 0);
 					m.nest = "<files>";
 					nests.FindAdd(m.nest);
 				}

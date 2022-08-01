@@ -4,6 +4,11 @@
 
 void Ide::GotoPos(String path, int line)
 {
+	GotoPos(path, Point(0, line));
+}
+
+void Ide::GotoPos(String path, Point pos)
+{
 	LLOG("GotoPos " << path << ':' << line);
 	if(path.GetCount()) {
 		AddHistory();
@@ -11,7 +16,7 @@ void Ide::GotoPos(String path, int line)
 			DoEditAsText(path);
 		EditFile(path);
 	}
-	editor.SetCursor(editor.GetPos64(line));
+	editor.SetCursor(editor.GetPos64(pos.y, pos.x));
 	editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();

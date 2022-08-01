@@ -11,7 +11,7 @@ void Ide::SwapS()
 	AnnotationItem cm = editor.FindCurrentAnnotation();
 	struct Sf : Moveable<Sf> {
 		String path;
-		int    line;
+		Point  pos;
 		bool   definition;
 	};
 	Vector<Sf> set, list;
@@ -24,7 +24,7 @@ void Ide::SwapS()
 				               m.nest == cm.nest && IsStruct(m.kind) && cm.nest.GetCount()) {
 					Sf& sf = set.Add();
 					sf.path = f.key;
-					sf.line = m.line;
+					sf.pos = m.pos;
 					sf.definition = m.definition;
 				}
 				if(set.GetCount() > 20) // sanity
@@ -38,7 +38,7 @@ void Ide::SwapS()
 		return;
 
 	Sort(set, [](const Sf& a, const Sf& b) {
-		return CombineCompare(a.path, b.path)(a.line, b.line) < 0;
+		return CombineCompare(a.path, b.path)(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 	});
 	
 	bool deff = false;
@@ -54,7 +54,7 @@ void Ide::SwapS()
 		deff = !deff;
 	}
 	list.Append(set); // add remaining items
-	int q = max(FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.line == editor.GetCurrentLine(); }), 0);
+	int q = max(FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == editor.GetCurrentLine(); }), 0);
 	q = (q + 1) % list.GetCount();
-	GotoPos(list[q].path, list[q].line);
+	GotoPos(list[q].path, list[q].pos);
 }

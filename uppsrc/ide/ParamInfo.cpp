@@ -95,6 +95,15 @@ void AssistEditor::State(int reason)
 	CodeEditor::State(reason);
 }
 
+Point AssistEditor::GetCurrentPos() const
+{
+	int64 pos = GetCursor64();
+	Point p;
+	p.y = GetLinePos64(pos);
+	p.x = (int)pos;
+	return p;
+}
+
 int AssistEditor::GetCurrentLine()
 {
 	return GetLine(GetCursor64());

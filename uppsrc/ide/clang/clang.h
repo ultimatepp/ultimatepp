@@ -87,7 +87,7 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 
 struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
-	int    line; // TODO: Point
+	Point  pos;
 	bool   definition;
 	String name; // Method
 	String id; // Upp::Class::Method(Upp::Point p)

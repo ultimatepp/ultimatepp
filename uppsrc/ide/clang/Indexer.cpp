@@ -61,7 +61,7 @@ String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& h
 void AnnotationItem::Serialize(Stream& s)
 {
 	s % kind
-	  % line
+	  % pos
 	  % definition
 	  % name
 	  % id

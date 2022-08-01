@@ -42,7 +42,7 @@ void AssistEditor::DCopy()
 	String result;
 
 	for(const AnnotationItem& m : annotations) {
-		if(first_line <= m.line && m.line <= last_line) {
+		if(first_line <= m.pos.y && m.pos.y <= last_line) {
 			String cls = m.id;
 			int q;
 			if(m.kind == CXCursor_Constructor) {
@@ -96,7 +96,7 @@ void AssistEditor::DCopy()
 					}
 					else { // just toggle extern
 						String h = m.pretty;
-						if(FindId(GetUtf8Line(m.line), "extern") < 0)
+						if(FindId(GetUtf8Line(m.pos.y), "extern") < 0)
 							h = "extern " + h;
 						result << h << ";\n";
 					}

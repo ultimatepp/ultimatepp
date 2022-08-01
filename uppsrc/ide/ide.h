@@ -809,6 +809,7 @@ public:
 	void      SerializeOutputMode(Stream& s);
 
 	void      GotoPos(String path, int line);
+	void      GotoPos(String path, Point pos);
 	
 	void      LoadAbbr();
 	void      SaveAbbr();

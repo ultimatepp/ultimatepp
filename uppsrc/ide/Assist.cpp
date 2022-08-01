@@ -471,9 +471,9 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 			ClearAnnotations();
 			annotations.Clear();
 			references.Clear();
-			for(AnnotationItem m : f.items) {
+			for(const AnnotationItem& m : f.items) {
 				annotations.Add(m);
-				SetAnnotation(m.line,
+				SetAnnotation(m.pos.y,
 				              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
 				                                           : IdeImg::tpp_pen(),
 				              m.id);
@@ -791,7 +791,7 @@ bool AssistEditor::Key(dword key, int count)
 	if(key == K_F12) {
 		int l = GetLine(GetCursor());
 		for(const AnnotationItem& m : annotations)
-			if(m.line == l) {
+			if(m.pos.y == l) {
 				PromptOK(String() <<
 					"kind: \1" << m.kind << "\1&" <<
 					"name: \1" << m.name << "\1&" <<

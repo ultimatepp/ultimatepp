@@ -91,6 +91,8 @@ void AppExit__()
 
 - use codeindex info for file annotations
 
+- remove duplicate lines
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -125,6 +127,8 @@ GREAT CODEBASE PURGE:
 - Implement annotation columns
 
 - Indexer::IsRunning should account for SchedulerThread
+
+- Visitor.cpp hasid = false - remove initialisation
 
 
 
