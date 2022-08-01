@@ -62,11 +62,6 @@ ISUES:
 
 - Alt+C 	static void AtShutdown(void (*shutdownfn)());
 
-- should call Ctrl::ShutdownThreads in gui
-void AppExit__()
-{
-	Thread::ShutdownThreads();
-
 - class AString : public B { - remove template<> in navigator
 
 - unnamed union in String0
@@ -76,8 +71,6 @@ void AppExit__()
 - * line in navigator
 
 - Ide::SwapS - local struct members annotated
-
-- Alt+I - if single, we still want to go to annotation line
 
 - reindex all source files seems to run twice
 
@@ -91,7 +84,7 @@ void AppExit__()
 
 - use codeindex info for file annotations
 
-- remove duplicate lines
+- AutoComplete remove duplicate lines
 
 GREAT CODEBASE PURGE:
 
@@ -124,19 +117,22 @@ GREAT CODEBASE PURGE:
 
 - Implement typedefs
 
-- Implement annotation columns
-
 - Indexer::IsRunning should account for SchedulerThread
 
 - Visitor.cpp hasid = false - remove initialisation
 
-
+- Remove //$
 
 NONCLANG:
 
 - StringBuffer does not work in debugger pdb
 
 - popup tip is going white
+
+- should call Ctrl::ShutdownThreads in gui
+void AppExit__()
+{
+	Thread::ShutdownThreads();
 
 
 NTH:
@@ -161,6 +157,10 @@ LATER:
 
 
 DONE:
+
+- Alt+I - if single, we still want to go to annotation line
+
+- Implement annotation columns
 
 - save file annotation to codeindex
 

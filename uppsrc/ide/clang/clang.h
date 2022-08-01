@@ -119,7 +119,7 @@ struct CurrentFileContext {
 	String                   content;
 };
 
-struct CppFileInfo {
+struct CppFileInfo : Moveable<CppFileInfo> {
 	Vector<AnnotationItem> items;
 	Vector<ReferenceItem>  refs;
 };
@@ -165,8 +165,7 @@ class ClangVisitor {
 	ArrayMap<SourceLocation, MCXCursor>  tfn; // to convert e.g. Index<String>::Find(String) to Index::Find(T)
 
 public:
-	VectorMap<String, Vector<AnnotationItem>> item;
-	VectorMap<String, Vector<ReferenceItem>>  refs;
+	VectorMap<String, CppFileInfo> info;
 	
 	Gate<const String&> WhenFile;
 

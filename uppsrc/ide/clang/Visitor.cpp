@@ -249,7 +249,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	if(id.GetCount()) {
 		DTIMING("Has ID");
 		LoadLocation();
-		AnnotationItem& r = item.GetAdd(loc.path).Add();
+		AnnotationItem& r = info.GetAdd(loc.path).items.Add();
 		r.kind = ci.Kind();
 		r.name = ci.Name();
 		r.pos = loc.pos;
@@ -297,7 +297,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);
-			refs.GetAdd(loc.path).Add(rm);
+			info.GetAdd(loc.path).refs.Add(rm);
 		}
 	}
 	return true;
@@ -346,8 +346,10 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
 
-	for(Vector<AnnotationItem>& f : item) // sort by line because macros are first
-		Sort(f, [](const AnnotationItem& a, const AnnotationItem& b) { return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0; });
+	for(CppFileInfo& f : info) // sort by line because macros are first TODO move it after macros are by HDepend
+		Sort(f.items, [](const AnnotationItem& a, const AnnotationItem& b) {
+			return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
+		});
 }
 
 ClangVisitor::~ClangVisitor()

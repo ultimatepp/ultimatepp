@@ -130,6 +130,8 @@ void DumpIndex()
 		out << m.key << "\n";
 		for(const auto& n : m.value.items)
 			out << '\t' << n.name << "   " << n.id << "   " << n.pretty << "\n";
+		for(const auto& n : m.value.refs)
+			out << '\t' << n.pos << "   " << n.id << "\n";
 	}
 }
 
@@ -225,14 +227,14 @@ void Indexer::IndexerThread()
 				break;
 			
 			for(const auto& m : ~job.file_times) // in create entries even if there are no items to avoid recompiling
-				v.item.GetAdd(NormalizePath(m.key));
+				v.info.GetAdd(NormalizePath(m.key));
 			
-			for(const auto& m : ~v.item) {
+			for(const auto& m : ~v.info) {
 				String path = NormalizePath(m.key);
 				FileAnnotation f;
 				f.defines = job.defines;
 				f.includes = job.includes;
-				f.items = pick(m.value);
+				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
 				ITIMESTOP("Save");
 				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, master_file.Get(path, Null)), StoreAsString(f), true);

@@ -24,14 +24,11 @@ void CurrentFileThread()
 		ClangVisitor v;
 		v.Do(clang.tu);
 		CppFileInfo f;
-		if(v.item.GetCount()) {
-			f.items = pick(v.item[0]);
+		if(v.info.GetCount()) {
+			f = pick(v.info[0]);
 			f.items.RemoveIf([&](int i) { return f.items[i].pos.y < parsed_file.line_delta; });
 			for(AnnotationItem& m : f.items)
 				m.pos.y -= parsed_file.line_delta;
-		}
-		if(v.refs.GetCount()) {
-			f.refs = pick(v.refs[0]);
 			f.refs.RemoveIf([&](int i) { return f.refs[i].pos.y < parsed_file.line_delta; });
 			for(ReferenceItem& m : f.refs)
 				m.pos.y -= parsed_file.line_delta;
@@ -40,8 +37,7 @@ void CurrentFileThread()
 			if(parsed_file.filename == current_file.filename &&
 			   parsed_file.real_filename == current_file.real_filename &&
 			   parsed_file.includes == current_file.includes &&
-			   serial == current_file_serial &&
-			   v.item.GetCount()) {
+			   serial == current_file_serial) {
 				annotations_done(f);
 				FileAnnotation fa;
 				fa.defines = parsed_file.defines;
