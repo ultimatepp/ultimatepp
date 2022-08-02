@@ -983,6 +983,7 @@ public:
 		void  Goto();
 		void  NavigatorDlg();
 		void  SwapS();
+		void  References();
 		void  FindId(const String& id);
 		bool  OpenLink(const String& s, int pos);
 		void  ContextGoto0(int pos);
@@ -1078,6 +1079,7 @@ public:
 	void      ShowError();
 	void      SetFFound(int ii);
 	ArrayCtrl& FFound();
+	void      FFoundFinish(bool files = false);
 	void      ShowFound();
 	void      CopyFound(bool all);
 	void      FFoundMenu(Bar& bar);
@@ -1114,7 +1116,7 @@ public:
 	void      InsertWildcard(const char *s);
 	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
-		                   bool wholeword, bool ignorecase, int& n, RegExp *regexp);
+		                   bool wholeword, bool ignorecase, RegExp *regexp);
 	void      SyncFindInFiles();
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);

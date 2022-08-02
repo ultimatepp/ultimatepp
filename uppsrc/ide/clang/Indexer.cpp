@@ -345,7 +345,7 @@ void Indexer::SchedulerThread()
 				}
 			}
 			
-			DUMPM(master_file);
+			// DUMPM(master_file);
 			
 			{
 				ITIMESTOP("Loading from cache");

@@ -2,6 +2,8 @@ CRITICAL:
 
 - out of sync SetCurrentFile
 
+- NewFile gets called on .log update resulting in SetCurrentFile and SyncHeaders (maybe not?)
+
 ISUES:
 
 - TMPDIR?
@@ -17,8 +19,6 @@ ISUES:
 - TPP HELP WINDOW->EDITOR - go to active label
 
 - Do TODOs
-
-- QTF :\1label\1:
 
 - header header
 
@@ -86,6 +86,23 @@ ISUES:
 
 - AutoComplete remove duplicate lines
 
+- Indexer.cpp refs
+ 	[3, 417]   Upp::Stream::operator // operator<< ?
+	[3, 417]   Upp::operator
+	[3, 417]   Upp::VppLog()
+	[3, 417]   Upp::EOL
+	[3, 418]   CoEvent::Broadcast() // somehow choose Indexer::event here
+	[9, 418]   CoEvent::Broadcast()
+	[3, 418]   Indexer::event
+
+
+- IdeBar.cpp 	[35, 35]   M::*)(A1,A2,A3,A4,A5,MP1,MP2,MP3,MP4,MP5),P1,P2,P3,P4,P5)
+  // probably method pointer in parameters list
+
+- Wait for indexer?
+
+- FFound key to reuse pane for repeated finds
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -124,6 +141,8 @@ GREAT CODEBASE PURGE:
 - Remove //$
 
 NONCLANG:
+
+- QTF :\1label\1:
 
 - StringBuffer does not work in debugger pdb
 

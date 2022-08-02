@@ -58,3 +58,45 @@ void Ide::SwapS()
 	q = (q + 1) % list.GetCount();
 	GotoPos(list[q].path, list[q].pos);
 }
+
+String GetFileLine(const String& path, int linei)
+{
+	static String         lpath;
+	static Vector<String> line;
+	if(path != lpath) {
+		lpath = path;
+		FileIn in(path);
+		line.Clear();
+		if(in.GetSize() < 1000000)
+			while(!in.IsEof())
+				line.Add(in.GetLine());
+	}
+	return linei >= 0 && linei < line.GetCount() ? line[linei] : String();
+}
+
+void Ide::References()
+{
+	if(designer)
+		return;
+	if(!editor.WaitCurrentFile())
+		return;
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	SetFFound(ffoundi_next);
+	FFound().Clear();
+	for(const auto& f : ~CodeIndex())
+		for(const ReferenceItem& m : f.value.refs)
+			if(m.id == cm.id) {
+				String ln = GetFileLine(f.key, m.pos.y);
+				int count = 0;
+				int pos = 0;
+				if(cm.name.GetCount()) {
+					pos = ::FindId(ln + m.pos.x, cm.name);
+					if(pos >= 0)
+						count = cm.name.GetCount();
+					else
+						pos = 0;
+				}
+				AddFoundFile(f.key, m.pos.y + 1, ln, pos, count);
+			}
+	FFoundFinish();
+}
