@@ -185,6 +185,7 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
 void CancelAutoComplete();
 
 String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& header_file);
+String FindMasterSource(PPInfo& hdepend, const Workspace& wspc, const String& header_file);
 
 struct FileAnnotation0 {
 	String defines = "<not_loaded>";

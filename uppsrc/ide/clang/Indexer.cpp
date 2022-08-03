@@ -58,6 +58,49 @@ String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& h
 	return master_source;
 }
 
+String FindMasterSource(PPInfo& hdepend, const Workspace& wspc, const String& header_file_)
+{
+	String master_source;
+	String header_file = NormalizePath(header_file_);
+	DDUMP(header_file);
+	for(int pass = 0; pass < 2; pass++) { // all packages in second pass
+		VectorMap<String, Time> deps;
+		for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
+			const Package& pk = wspc.GetPackage(i);
+			String pk_name = wspc[i];
+
+			auto Chk = [&] {
+				for(int i = 0; i < pk.file.GetCount(); i++) {
+					String path = SourcePath(pk_name, pk.file[i]);
+					if(!PathIsEqual(header_file, path) && IsSourceFile(path) && GetFileLength(path) < 200000) {
+						hdepend.GatherDependencies(path, deps);
+						DDUMP(deps);
+						if(deps.Find(header_file) >= 0) {
+							master_source = path;
+							return true;
+						}
+					}
+				}
+				return false;
+			};
+
+			if(pass) { // check all files
+				if(Chk())
+					return master_source;
+			}
+			else
+			for(int i = 0; i < pk.file.GetCount(); i++) { // check files of package
+				if(PathIsEqual(header_file, SourcePath(pk_name, pk.file[i]))) {
+					if(Chk())
+						return master_source;
+					break;
+				}
+			}
+		}
+	}
+	return master_source;
+}
+
 void AnnotationItem::Serialize(Stream& s)
 {
 	s % kind

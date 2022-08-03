@@ -150,6 +150,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      navigator_right = true;
 	
 	Hdepend   hdepend;
+	PPInfo    hdepend2;
 	String    master_source;
 
 	CurrentFileContext CurrentContext();

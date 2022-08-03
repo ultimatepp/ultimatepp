@@ -97,6 +97,53 @@ public:
 	void                  Serialize(Stream& s);
 };
 
+class PPInfo {
+	enum { AUTO, APPROVED, PROHIBITED };
+	struct PPFile : Moveable<PPFile> {
+		VectorMap<String, int>    flags; // "#if... flagXXXX"
+		VectorMap<String, String> defines; // #define ...
+		Index<String>             includes;
+		Index<String>             define_includes; // #define LAYOUTFILE
+		bool                      guarded; // has include guards
+		int                       blitz; // AUTO, APPROVED, PROHIBITED
+		Time                      time = Null; // file time
+		
+		bool                      dirty = true; // need to be rechecked
+		
+		void Dirty()                          { dirty = true; time = Null; }
+		void Parse(Stream& in);
+		void Serialize(Stream& s)             { s % time % flags % defines % includes % define_includes % guarded % blitz; }
+	};
+	
+	ArrayMap<String, PPFile>                   files;
+	Vector<String>                             includes; // include dirs
+	VectorMap<String, String>                  inc_cache; // cache for FindIncludeFile
+	VectorMap<String, VectorMap<String, Time>> dir_cache; // cache for GetFileTime, FileExists
+
+	PPFile& File(const String& path);
+
+	bool FileExists2(const String& s);
+
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes);
+
+public:
+	Event<const String&, const String&> WhenBlitzBlock;
+	Time                  GetFileTime(const String& path);
+	bool                  FileExists(const String& path)                        { return !IsNull(GetFileTime(path)); }
+
+	void                  SetIncludes(const String& includes);
+
+	String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
+	String                FindIncludeFile(const char *s, const String& filedir);
+
+	bool                  BlitzApproved(const String& path);
+
+	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result);
+	Time                  GetTime(const String& path);
+
+	void                  Dirty();
+};
+
 class IdeContext
 {
 public:

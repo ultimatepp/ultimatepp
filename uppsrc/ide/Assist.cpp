@@ -805,8 +805,25 @@ bool AssistEditor::Key(dword key, int count)
 		Exclamation("No annotation for this line.");
 	}
 	if(key == K_F11) {
-		Indexer::Start(theide->main, theide->GetCurrentIncludePath(), theide->GetCurrentDefines());
-	}
+/*		Workspace wspc;
+		wspc.Scan(theide->main);
+		
+		DDUMP(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
+
+		PPInfo ppi;
+		ppi.SetIncludes(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
+		Index<String> files;
+		for(int pi = 0; pi < wspc.GetCount(); pi++) {
+			String pk_name = wspc[pi];
+			const Package& pk = wspc.GetPackage(pi);
+			for(int i = 0; i < pk.GetCount(); i++) {
+				String path = SourcePath(pk_name, pk[i]);
+				ppi.GatherDependencies(path, files);
+			}
+		}
+		
+		DDUMP(files);
+*/	}
 #endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;

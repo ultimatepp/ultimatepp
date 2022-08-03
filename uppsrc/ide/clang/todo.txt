@@ -103,6 +103,10 @@ ISUES:
 
 - FFound key to reuse pane for repeated finds
 
+- Sort navigator in header order
+
+- mainconfig/dependecies
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -140,6 +144,8 @@ GREAT CODEBASE PURGE:
 
 - Remove //$
 
+- Reindex all files should clear .ppi cache for hdepends too.
+
 NONCLANG:
 
 - QTF :\1label\1:
@@ -153,12 +159,16 @@ void AppExit__()
 {
 	Thread::ShutdownThreads();
 
+- tree drag/drop does not show texts
+
 
 NTH:
 
+- BLITZ dialog
+
 - reindex source files - add progress
 
-- Use BlitzFile
+- Use BlitzFile function
 
 - autocomplete <Functions>, <macros>, ....
 

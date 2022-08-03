@@ -10,8 +10,20 @@ void AssistEditor::SyncHeaders()
 	hdepend.SetDirs(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 	master_source.Clear();
 	String editfile = NormalizePath(theide->editfile);
-	if(editfile.GetCount() && IsCHeaderFile(editfile))
-		master_source = FindMasterSource(hdepend, GetIdeWorkspace(), editfile);
+	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
+//		master_source = FindMasterSource(hdepend, GetIdeWorkspace(), editfile);
+		hdepend2.Dirty();
+		hdepend2.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
+		master_source = FindMasterSource(hdepend2, GetIdeWorkspace(), editfile);
+		DLOG("Master source " << editfile << " -> " << master_source);
+	}
+	
+	// TODO: Remove
+	hdepend2.WhenBlitzBlock = [=](const String& inc, const String& path) {
+		PutConsole(String() << inc << " blocks BLITZ of " << path);
+	};
+	if(hdepend2.BlitzApproved(editfile))
+		PutConsole(editfile + " BLITZ approved");
 }
 
 bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta)
