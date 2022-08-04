@@ -71,11 +71,19 @@ String MonName(int i, int lang)
 static thread_local char s_date_format_thread[64];
 static char s_date_format_main[64] = "%2:02d/%3:02d/%1:4d";
 
-void   SetDateFormat(const char *fmt)
+void SetDateFormat(const char *fmt)
 {
 	strncpy(s_date_format_thread, fmt, 63);
 	if(Thread::IsMain())
 		strncpy(s_date_format_main, fmt, 63);
+}
+
+String Format(Date date, const char *fmt)
+{
+	String  s;
+	if(IsNull(date))
+		return String();
+	return Format(fmt, date.year, date.month, date.day, DayOfWeek(date));
 }
 
 String   Format(Date date) {
