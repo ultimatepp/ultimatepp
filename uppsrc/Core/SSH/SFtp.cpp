@@ -550,39 +550,6 @@ String SFtp::DirEntry::ToString() const
 				GetName());
 }
 
-String SFtp::DirEntry::ToXml() const
-{
-	if(!valid) return XmlTag("<N/A>").Text("<N/A>");
-	static const char *hypen = "-", *r = "r", *w = "w", *x = "x";
-	return XmlTag("sftp:direntry")
-			("type", (IsFile()
-				? "file" : (IsDirectory()
-				? "directory" : (IsSymLink()
-				? "symlink" : (IsSocket()
-				? "socket" : (IsPipe()
-				? "pipe" : (IsBlock()
-				? "block-special" : (IsSpecial()
-				? "character-special" : "other")
-			)))))))
-			("uid", AsString(GetUid()))
-			("gid", AsString(GetGid()))
-			("size", AsString(GetSize()))
-			("modified", AsString(GetLastModified()))
-			("accessed", AsString(GetLastAccessed()))
-			("permissions", Format("%c%c%c%c%c%c%c%c%c",
-				((a->permissions & IRUSR) ? *r : *hypen),
-				((a->permissions & IWUSR) ? *w : *hypen),
-				((a->permissions & IXUSR) ? *x : *hypen),
-				((a->permissions & IRGRP) ? *r : *hypen),
-				((a->permissions & IWGRP) ? *w : *hypen),
-				((a->permissions & IXGRP) ? *x : *hypen),
-				((a->permissions & IROTH) ? *r : *hypen),
-				((a->permissions & IWOTH) ? *w : *hypen),
-				((a->permissions & IXOTH) ? *x : *hypen)
-			))
-			.Text(GetName());
-}
-
 FileSystemInfo::FileInfo SFtp::DirEntry::ToFileInfo() const
 {
 	FileSystemInfo::FileInfo fi;
