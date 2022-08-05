@@ -107,6 +107,30 @@ ISUES:
 
 - mainconfig/dependecies
 
+- Alt+J bool IsIgnored(const String& id) jump on Find
+
+- Implement typedefs
+
+- Indexer::IsRunning should account for SchedulerThread
+
+- Visitor.cpp hasid = false - remove initialisation
+
+- Remove //$
+
+- Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
+  Alt+I next line "No relevant..."
+
+- No autocomplete in void MainConfigDlg::FlagDlg()
+
+- void MainConfigDlg::FlagDlg() no Upp function on Ctrl+Space
+
+- TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
+
+- TriggerIndexer on theide exit
+
+- different master header currentfile / index issue
+
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -122,29 +146,12 @@ GREAT CODEBASE PURGE:
 - 	bool      auto_rescan;
 	bool      auto_check;
 
-- TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
-
 - IdeGotoCodeRef
 
 - virtuals
 
 - thisbacks
 
-- void MainConfigDlg::FlagDlg()
-
-- Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
-
-- Alt+J bool IsIgnored(const String& id) jump on Find
-
-- Implement typedefs
-
-- Indexer::IsRunning should account for SchedulerThread
-
-- Visitor.cpp hasid = false - remove initialisation
-
-- Remove //$
-
-- Reindex all files should clear .ppi cache for hdepends too.
 
 NONCLANG:
 
@@ -163,6 +170,16 @@ void AppExit__()
 
 
 NTH:
+
+- replace/remove Hdepend
+
+- resolve '.' in FlagDlg
+
+- figure out how to add info to config flags
+
+- improve main config dialog
+
+- current file errors
 
 - BLITZ dialog
 
@@ -186,6 +203,12 @@ LATER:
 
 
 DONE:
+
+- FlagDlg
+
+- Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+
+- Reindex all files should clear .ppi cache for hdepends too.
 
 - Alt+I - if single, we still want to go to annotation line
 

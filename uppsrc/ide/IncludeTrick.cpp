@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define LLOG(x)
+
 // libclang is unable to parse include files so we create fake .cpp content
 
 void AssistEditor::SyncHeaders()
@@ -15,7 +17,7 @@ void AssistEditor::SyncHeaders()
 		hdepend2.Dirty();
 		hdepend2.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 		master_source = FindMasterSource(hdepend2, GetIdeWorkspace(), editfile);
-		DLOG("Master source " << editfile << " -> " << master_source);
+		LLOG("Master source " << editfile << " -> " << master_source);
 	}
 	
 	// TODO: Remove

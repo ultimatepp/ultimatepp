@@ -84,7 +84,7 @@ void PPInfo::PPFile::Parse(Stream& in)
 	
 	auto Flag = [&](const String& id) {
 		if(id.StartsWith("flag"))
-			flags.FindAdd(id);
+			flags.Add({ id, linei });
 	};
 
 	auto Blitz = [&](const char *s) {
@@ -119,10 +119,8 @@ void PPInfo::PPFile::Parse(Stream& in)
 				if(p.Id("define") && p.IsId()) {
 					p.NoSkipSpaces().NoSkipComments(); // '#define TEST(x)' is different form '#define TEST (x)' - later is parameterless
 					String id = p.ReadId();
-					if(id == guard_id) {
-						DLOG("Guard #define " << id);
+					if(id == guard_id)
 						guarded = true;
-					}
 					if(p.Char('(')) {
 						id << "(";
 						p.SkipSpaces();
@@ -146,10 +144,8 @@ void PPInfo::PPFile::Parse(Stream& in)
 				if(p.Id("ifndef") && p.IsId()) {
 					String id = p.ReadId();
 					Flag(id);
-					if(first) {
-						DLOG("Guard #ifndef " << id);
+					if(first)
 						guard_id = id;
-					}
 				}
 				else
 				if(p.Id("ifdef") && p.IsId()) {
@@ -195,14 +191,12 @@ void PPInfo::SetIncludes(const String& incs)
 
 Time PPInfo::GetFileTime(const String& path)
 {
-	DTIMING("FileExists");
 	String dir = GetFileFolder(path);
 	String name = GetFileName(path);
 	int q = dir_cache.Find(dir);
 	if(q < 0) {
 		q = dir_cache.GetCount();
 		VectorMap<String, Time>& files = dir_cache.Add(dir);
-		RTIMING("LoadDirCache");
 		for(FindFile ff(dir + "/*.*"); ff; ff.Next())
 			if(ff.IsFile())
 				files.Add(ff.GetName(), ff.GetLastWriteTime());
@@ -212,7 +206,6 @@ Time PPInfo::GetFileTime(const String& path)
 
 String PPInfo::FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs)
 {
-	DTIMING("FindIncludeFile");
 	while(*s == ' ' || *s == '\t')
 		s++;
 	int type = *s;
@@ -259,28 +252,25 @@ void PPInfo::Dirty()
 	dir_cache.Clear();
 }
 
+std::atomic<int> PPInfo::scan_serial;
+
 PPInfo::PPFile& PPInfo::File(const String& path)
 {
-	DLOG("PPInfo::File " << path);
 	PPFile& f = files.GetAdd(path);
 	if(f.dirty) {
 		Time tm;
 		
 		tm = GetFileTime(path);
-		if(tm != f.time) {
+		if(tm != f.time || scan_serial != f.scan_serial) {
 			String cache_path = CacheFile(GetFileTitle(path) + "$" + SHA1String(path) + ".ppi");
-
-/* TODO: Just temporary for debugging
 			if(IsNull(f.time)) {
-				DTIMING("Load PPInfo");
 				LoadFromFile(f, cache_path);
 			}
-*/			
-			if(tm != f.time) {
+			if(tm != f.time || scan_serial) {
 				FileIn in(path);
-				DLOG("Parse " << path);
 				f.Parse(in); // TODO: If open fails, try to reopen!
 				f.time = tm;
+				f.scan_serial = scan_serial;
 				StoreToFile(f, cache_path);
 			}
 		}
@@ -289,7 +279,8 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 	return f;
 }
 
-Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes)
+Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
+                                Vector<Tuple<String, String, int>>& flags)
 {
 	PPFile& f = File(path);
 	String dir = GetFileFolder(path);
@@ -297,14 +288,20 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 		define_includes.FindAdd(i);
 	
 	Time ftm = GetFileTime(path);
+	
+	for(const Tuple<String, int>& x : f.flags)
+		flags.Add({ path, x.a, x.b });
 
 	auto DoInclude = [&](const String& inc) {
 		String ipath = FindIncludeFile(inc, dir);
-		if(ipath.GetCount() && result.Find(ipath) < 0) {
-			int q = result.GetCount();
-			result.Add(ipath); // prevent infinite recursion
-			result[q] = GetFileTime(ipath); // temporary
-			result[q] = GatherDependencies(ipath, result, define_includes);
+		if(ipath.GetCount()) {
+			int q = result.Find(ipath);
+			if(q < 0) {
+				q = result.GetCount();
+				result.Add(ipath); // prevent infinite recursion
+				result[q] = GetFileTime(ipath); // temporary
+				result[q] = GatherDependencies(ipath, result, define_includes, flags);
+			}
 			ftm = max(result[q], ftm);
 		}
 	};
@@ -314,21 +311,31 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	for(const String& id : define_includes)
 		for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q))
 			DoInclude(f.defines[q]);
+
+	result.Add(path, ftm);
 	
 	return ftm;
 }
 
-void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result)
+void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
+                                Vector<Tuple<String, String, int>>& flags)
 {
 	Index<String> define_includes;
-	GatherDependencies(path, result, define_includes);
+	GatherDependencies(path, result, define_includes, flags);
+}
+
+void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result)
+{
+	Vector<Tuple<String, String, int>> flags;
+	GatherDependencies(path, result, flags);
 }
 
 Time PPInfo::GetTime(const String& path)
 {
 	VectorMap<String, Time> result;
 	Index<String> define_includes;
-	return GatherDependencies(path, result, define_includes);
+	Vector<Tuple<String, String, int>> flags;
+	return GatherDependencies(NormalizePath(path), result, define_includes, flags);
 }
 
 bool PPInfo::BlitzApproved(const String& path)

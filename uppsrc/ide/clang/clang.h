@@ -184,13 +184,13 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();
 
-String FindMasterSource(Hdepend& hdepend, const Workspace& wspc, const String& header_file);
 String FindMasterSource(PPInfo& hdepend, const Workspace& wspc, const String& header_file);
 
 struct FileAnnotation0 {
 	String defines = "<not_loaded>";
 	String includes;
-	Time   time;
+	String master_file;
+	Time   time = Time::Low();
 };
 
 struct FileAnnotation : FileAnnotation0, CppFileInfo {
@@ -201,11 +201,12 @@ ArrayMap<String, FileAnnotation>& CodeIndex();
 
 class Indexer {
 	struct Job : Moveable<Job> {
-		String                      path;
-		String                      blitz;
-		String                      includes;
-		String                      defines;
-		WithDeepCopy<VectorMap<String, Time>> file_times;
+		String                                  path;
+		String                                  blitz;
+		String                                  includes;
+		String                                  defines;
+		WithDeepCopy<VectorMap<String, Time>>   file_times;
+		WithDeepCopy<VectorMap<String, String>> master_files;
 	};
 
 	static CoEvent            event, scheduler;
@@ -213,7 +214,6 @@ class Indexer {
 	static Vector<Job>        jobs;
 	static int                jobi;
 	static std::atomic<int>   running_indexers;
-	static VectorMap<String, String> master_file; // header -> first file that includes it
 	static String             main, includes, defines;
 	
 	static void IndexerThread();

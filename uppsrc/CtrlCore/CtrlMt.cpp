@@ -110,7 +110,6 @@ void Ctrl::ShutdownThreads()
 {
 	Thread::BeginShutdownThreads();
 	while(Thread::GetCount()) {
-		DLOG("Ctrl::ShutdownThreads " << Thread::GetCount());
 		Thread::TryShutdownThreads();
 		ProcessEvents();
 		GuiUnlock __;

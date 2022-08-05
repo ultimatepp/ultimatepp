@@ -154,15 +154,11 @@ void Ide::ContextGoto0(int pos)
 
 	String ref_id;
 	int ci = 0;
-	for(const ReferenceItem& m : editor.references) {
-		DLOG(m.id << " " << m.pos);
+	for(const ReferenceItem& m : editor.references)
 		if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci) {
 			ref_id = m.id;
 			ci = m.pos.x;
 		}
-	}
-	
-	DDUMP(ref_id);
 	
 	if(ref_id.GetCount()) {
 		String found_path;

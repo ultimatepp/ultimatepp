@@ -78,7 +78,7 @@ void CurrentFileThread()
 						            CXTranslationUnit_CreatePreambleOnFirstParse|
 						            CXTranslationUnit_KeepGoing);
 						current_file_parsing = false;
-						DumpDiagnostics(clang.tu); _DBG_
+					//	DumpDiagnostics(clang.tu); _DBG_
 					}
 					DoAnnotations();
 					was_parsing = true;

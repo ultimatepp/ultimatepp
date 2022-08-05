@@ -28,44 +28,35 @@ String GetSw(Ctrl& sw, const char *flag) {
 	return Null;
 }
 
-
-static
-void sSetOption(One<Ctrl>& ctrl)
-{
-	ctrl.Create<Option>().NoWantFocus();
-}
-
 void MainConfigDlg::FlagDlg()
 {
 	VectorMap<String, Index<String>> flags;
-#if 0 // TODO
-	{
-		CodeBaseLock __;
-		const CppBase& b = CodeBase();
-		for(int i = 0; i < b.GetCount(); i++) {
-			String nest = b.GetKey(i);
-			const Array<CppItem>& ci = b[i];
-			for(int j = 0; j < ci.GetCount(); j++) {
-				const CppItem& m = ci[j];
-				if(m.kind == FLAGTEST) {
-					String n = m.name;
-					n.TrimStart("flag");
-					flags.GetAdd(n).FindAdd(GetSourcePackage(GetSourceFilePath(m.file)));
-				}
+
+	PPInfo pp;
+	pp.SetIncludes(TheIde()->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
+	const Workspace& wspc = GetIdeWorkspace();
+
+	for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
+		const Package& pk = wspc.GetPackage(i);
+		String pk_name = wspc[i];
+		for(int i = 0; i < pk.file.GetCount(); i++)
+			for(const Tuple<String, int>& m : pp.GetFileFlags(SourcePath(pk_name, pk.file[i]))) {
+				String f = m.a;
+				f.TrimStart("flag");
+				flags.GetAdd(f).FindAdd(pk_name);
 			}
-		}
 	}
-#endif
+	
 	SortByKey(flags);
 	
 	WithConfLayout<TopWindow> cfg;
 	CtrlLayoutOKCancel(cfg, "Configuration flags");
 	cfg.Sizeable().MaximizeBox();
 	Vector<String> flg = SplitFlags0(~~fe);
-	Vector<String> accepts = wspc.GetAllAccepts(0);
-	Sort(accepts, GetLanguageInfo());
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
-	cfg.accepts.AddColumn("Set").Ctrls(sSetOption);
+	cfg.accepts.AddColumn("Set").With([](One<Ctrl>& ctrl) {
+		ctrl.Create<Option>().NoWantFocus();
+	});
 	cfg.accepts.AddColumn("Flag");
 	cfg.accepts.AddColumn("Packages");
 	cfg.accepts.SetLineCy(Zy(20));
@@ -81,7 +72,7 @@ void MainConfigDlg::FlagDlg()
 		String f = flg[i];
 		if(!SetSw(f, cfg.gui, "GUI") &&
 		   !SetSw(f, cfg.debugcode, "DEBUGCODE")) {
-			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1) || cfg.accepts.Find(f, CC_NAME);
+			int x = *f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : cfg.accepts.Find(f, CC_NAME);
 			if(x >= 0)
 				cfg.accepts.Set(x, CC_SET, true);
 			else {

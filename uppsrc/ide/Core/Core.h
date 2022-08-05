@@ -100,15 +100,16 @@ public:
 class PPInfo {
 	enum { AUTO, APPROVED, PROHIBITED };
 	struct PPFile : Moveable<PPFile> {
-		VectorMap<String, int>    flags; // "#if... flagXXXX"
-		VectorMap<String, String> defines; // #define ...
-		Index<String>             includes;
-		Index<String>             define_includes; // #define LAYOUTFILE
-		bool                      guarded; // has include guards
-		int                       blitz; // AUTO, APPROVED, PROHIBITED
-		Time                      time = Null; // file time
+		int                           scan_serial = 0;
+		Vector<Tuple<String, int>>    flags; // "#if... flagXXXX"
+		VectorMap<String, String>     defines; // #define ...
+		Index<String>                 includes;
+		Index<String>                 define_includes; // #define LAYOUTFILE
+		bool                          guarded; // has include guards
+		int                           blitz; // AUTO, APPROVED, PROHIBITED
+		Time                          time = Null; // file time
 		
-		bool                      dirty = true; // need to be rechecked
+		bool                          dirty = true; // need to be rechecked
 		
 		void Dirty()                          { dirty = true; time = Null; }
 		void Parse(Stream& in);
@@ -119,14 +120,17 @@ class PPInfo {
 	Vector<String>                             includes; // include dirs
 	VectorMap<String, String>                  inc_cache; // cache for FindIncludeFile
 	VectorMap<String, VectorMap<String, Time>> dir_cache; // cache for GetFileTime, FileExists
+	static std::atomic<int>                    scan_serial;
+	
 
 	PPFile& File(const String& path);
 
-	bool FileExists2(const String& s);
-
-	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes);
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
+	                                         Vector<Tuple<String, String, int>>& flags);
 
 public:
+	static void           RescanAll()                                           { scan_serial++; }
+
 	Event<const String&, const String&> WhenBlitzBlock;
 	Time                  GetFileTime(const String& path);
 	bool                  FileExists(const String& path)                        { return !IsNull(GetFileTime(path)); }
@@ -138,8 +142,13 @@ public:
 
 	bool                  BlitzApproved(const String& path);
 
+	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         Vector<Tuple<String, String, int>>& flags);
 	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result);
 	Time                  GetTime(const String& path);
+	
+	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).defines; }
+	const Vector<Tuple<String, int>>& GetFileFlags(const String& path)  { return File(NormalizePath(path)).flags; }
 
 	void                  Dirty();
 };

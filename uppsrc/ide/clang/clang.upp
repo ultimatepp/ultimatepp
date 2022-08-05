@@ -11,7 +11,6 @@ file
 	clang.h,
 	todo.txt,
 	help.txt,
-	blitz.cpp,
 	util.cpp,
 	macros.cpp,
 	CxxIcon.cpp,
