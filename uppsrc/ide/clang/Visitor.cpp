@@ -245,9 +245,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	CXCursor ref = clang_getCursorReferenced(cursor);
 
 	String id = ci.Id();
-	DHITCOUNT("Resolved ID");
 	if(id.GetCount()) {
-		DTIMING("Has ID");
 		LoadLocation();
 		AnnotationItem& r = info.GetAdd(loc.path).items.Add();
 		r.kind = ci.Kind();
@@ -284,7 +282,6 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	}
 
 	if(!clang_Cursor_isNull(ref)) {
-		DTIMING("Ref");
 		LoadLocation();
 		SourceLocation ref_loc = GetLocation(clang_getCursorLocation(ref));
 		int q = tfn.Find(ref_loc);

@@ -76,38 +76,45 @@ String CleanupId(const char *s)
 	};
 	while(*s && *s != '{') {
 		if(iscid(*s)) {
+			auto IsOperator = [](const char *s) {
+				return memcmp(s, "operator", 8) == 0;
+			};
+
 			const char *b = s;
 			String id;
 			while(iscid(*s) || *s == ':') {
-				s++;
-				if(*s == '<' && !operator_def) {
-					id.Cat(b, s);
-					SkipT();
+				id.Cat(*s++);
+				if(*s == '<') {
+					if(id.GetCount() == 8 && IsOperator(id))
+						break;
+					if(id.GetCount() > 8) {
+						const char *s = ~id + id.GetCount() - 8;
+						if(IsOperator(s) && !iscid(s[-1]))
+							break;
+					}
+					SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
 					b = s;
+					
 				}
 			}
-			id.Cat(b, s);
 			if(id == s_attribute) {
 				while(mm.GetCount() && mm[mm.GetCount() - 1] == ' ')
 					mm.SetLength(mm.GetCount() - 1);
 				break;
 			}
-			if((*s == ',' || *s == ')') && was_param_type) {
+			if((*s == ',' || *s == ')' || *s == '[') && was_param_type) {
 				was_param_type = false;
 				continue;
 			}
 			if(IsIgnored(id))
 				continue;
-			auto IsOperator = [](const char *s) {
-				return memcmp(s, "operator", 8) == 0;
-			};
 			if(was_id)
 				mm.Cat(' ');
 			if(!operator_def) // because of conversion operators e.g. Foo::operator bool()
 				name_pos = mm.GetCount();
 			if(id.GetCount() == 8 && IsOperator(id))
 				operator_def = true;
-			if(id.GetCount() > 8) { // conversion operator?
+			if(id.GetCount() > 8) {
 				const char *s = ~id + id.GetCount() - 8;
 				operator_def = IsOperator(s) && !iscid(s[-1]);
 			}

@@ -118,15 +118,6 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-#if 0 _DBG_
-	PPInfo ppi;
-	VectorMap<String, Time> files;
-	ppi.SetIncludes("C:\\u\\llvm_ide\\uppsrc\\Core");
-	ppi.GatherDependencies("C:\\u\\llvm_ide\\uppsrc\\Core\\Cpu.cpp", files);
-	DDUMPM(files);
-	return;
-#endif
-	
 //	Ctrl::ShowRepaint(50);
 
 #ifdef flagPEAKMEM

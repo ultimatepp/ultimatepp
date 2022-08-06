@@ -1,7 +1,7 @@
 #include "clang.h"
 
 #define LTIMING(x)   //TIMING(x)
-#define LTIMESTOP(x) DTIMESTOP(x)
+#define LTIMESTOP(x) //DTIMESTOP(x)
 #define LLOG(x)      //DLOG(x)
 #define LDUMP(x)     //DDUMP(x)
 #define LDUMPM(x)    //DDUMPM(x)
@@ -179,7 +179,7 @@ void Indexer::IndexerThread()
 				VectorMap<String, bool> do_file_cache;
 	
 				v.WhenFile = [&](const String& path) {
-					DTIMING("WhenFile");
+					LTIMING("WhenFile");
 					if(IsNull(path))
 						return false;
 					if(current_file != path) {
@@ -193,7 +193,7 @@ void Indexer::IndexerThread()
 							current_file = path;
 							int q = do_file_cache.Find(path);
 							if(q < 0) {
-								DTIMING("WhenFile 2");
+								LTIMING("WhenFile 2");
 								Mutex::Lock __(mutex);
 								do_file = job.file_times.Find(NormalizePath(path)) >= 0;
 								do_file_cache.Add(path, do_file);
@@ -222,7 +222,7 @@ void Indexer::IndexerThread()
 				f.includes = job.includes;
 				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
-				DLOG("Storing " << path);
+				LLOG("Storing " << path);
 				// TODO: Compress ?
 				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, job.master_files.Get(path, Null)), StoreAsString(f), true);
 				GuiLock __;
@@ -234,7 +234,7 @@ void Indexer::IndexerThread()
 		{
 			Mutex::Lock __(mutex);
 			if(--running_indexers == 0 && jobs.GetCount()) {
-				DLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
+				LLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
 				jobs.Clear();
 				scheduler.Broadcast();
 				last = true;
@@ -242,7 +242,7 @@ void Indexer::IndexerThread()
 		}
 	#ifdef _DEBUG
 		if(last)
-			DumpIndex(); // TODO remove
+			DumpIndex(); // TODO remove?
 	#endif
 		if(Thread::IsShutdownThreads())
 			break;
@@ -281,7 +281,7 @@ void Indexer::SchedulerThread()
 	while(!Thread::IsShutdownThreads()) {
 		scheduler.Wait();
 
-		DTIMESTOP("Scheduler");
+		LTIMESTOP("Scheduler");
 		Mutex::Lock __(mutex);
 		String includes, defines;
 
@@ -303,7 +303,7 @@ void Indexer::SchedulerThread()
 			ppi.Dirty();
 
 			{
-				DTIMING("Load workspace");
+				LTIMING("Load workspace");
 				Workspace wspc;
 				wspc.Scan(main);
 	
@@ -325,7 +325,7 @@ void Indexer::SchedulerThread()
 		}
 			
 		{ // TODO different master header currentfile / index issue
-			DTIMING("Dependencies");
+			LTIMING("Dependencies");
 			for(const Vector<Tuple<String, bool>>& pk : sources)
 				for(const Tuple<String, bool>& m : pk) {
 					if(IsCSourceFile(m.a)) {
@@ -346,9 +346,6 @@ void Indexer::SchedulerThread()
 	
 		Index<String> dirty_files; // files that need to be recompiled (including headers)
 
-		DDUMPM(files);
-		DDUMP(dirty_files);
-		
 		{
 			LTIMESTOP("Loading from cache, checking filetimes");
 			for(const auto& m : ~files) {
@@ -390,7 +387,6 @@ void Indexer::SchedulerThread()
 
 		{
 			LTIMESTOP("Create indexer jobs");
-			LDUMP(includes);
 			jobs.Clear();
 			jobi = 0;
 			for(const auto& pkg : ~sources) {
@@ -401,7 +397,7 @@ void Indexer::SchedulerThread()
 					job.file_times.Add(path, files.Get(path, Time::Low()));
 					for(int q = master.Find(path); q >= 0; q = master.FindNext(q)) {
 						String hpath = header[q];
-						if(dirty_files.Find(hpath) >= 0) {
+						if(dirty_files.Find(hpath) >= 0) { // TODO: Ignore external includes if times are ok
 							job.file_times.Add(hpath, files.Get(hpath, Time::Low()));
 							job.master_files.Add(header[q], path);
 						}
@@ -438,7 +434,7 @@ void Indexer::SchedulerThread()
 			}
 		}
 		if(jobs.GetCount()) {
-			DLOG("======= Unleash indexers");
+			LLOG("======= Unleash indexers");
 			event.Broadcast();
 		}
 	}

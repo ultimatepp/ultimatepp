@@ -386,10 +386,8 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
-	if(editor.IsDirty()) {
-		DLOG("========= Saved " << editfile);
+	if(editor.IsDirty())
 		TriggerIndexer();
-	}
 
 	editor.ClearDirty();
 

@@ -436,14 +436,14 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-CurrentFileContext AssistEditor::CurrentContext()
+CurrentFileContext AssistEditor::CurrentContext(int pos)
 {
 	CurrentFileContext cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
 	if(!IsView() && GetLength() < 200000) {
-		cfx.content = Get();
+		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
 				MakeIncludeTrick(cfx);
@@ -459,7 +459,7 @@ CurrentFileContext AssistEditor::CurrentContext()
 	DDUMP(cfx.filename);
 	DDUMP(cfx.real_filename);
 	if(cfx.content.GetCount())
-		SaveFile(ConfigFile("pseudo_header_src.cpp"), cfx.content);
+		SaveFile(ConfigFile("CurrentContext.cpp"), cfx.content);
 #endif
 	return cfx;
 }
@@ -514,9 +514,10 @@ void AssistEditor::Assist(bool macros)
 		return;
 
 	int pos = GetCursor();
-	int line = GetLinePos(pos); // TODO: limit, solve subincludes
+	ReadIdBackPos(pos, false); // libclang does now work well if file is not truncated for autocomplete
+	CurrentFileContext cfx = CurrentContext(pos);
+	int line = GetLinePos(pos);
 	int line_delta;
-	CurrentFileContext cfx = CurrentContext();
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			for(const AutoCompleteItem& m : items) {

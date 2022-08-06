@@ -153,7 +153,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	PPInfo    hdepend2;
 	String    master_source;
 
-	CurrentFileContext CurrentContext();
+	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
 	void               SyncCurrentFile();
 	void               SyncHeaders();

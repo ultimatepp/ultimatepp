@@ -20,7 +20,7 @@ ISUES:
 
 - Do TODOs
 
-- header header
+- header without .cpp speed
 
 - aux files / autocomplete
 
@@ -76,8 +76,6 @@ ISUES:
 
 - reduce cache
 
-- id = main(int,const char*argv[]) - argv[] should not be there
-
 - first macro in the file (AssistTest) is ignored
 
 - when scope is selected in navigator, search should be ingored
@@ -86,11 +84,12 @@ ISUES:
 
 - AutoComplete remove duplicate lines
 
-- Indexer.cpp refs
- 	[3, 417]   Upp::Stream::operator // operator<< ?
+- Indexer.cpp refs (issue with macro)
 	[3, 417]   Upp::operator
 	[3, 417]   Upp::VppLog()
 	[3, 417]   Upp::EOL
+
+- Indexer.cpp refs
 	[3, 418]   CoEvent::Broadcast() // somehow choose Indexer::event here
 	[9, 418]   CoEvent::Broadcast()
 	[3, 418]   Indexer::event
@@ -120,16 +119,25 @@ ISUES:
 - Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
   Alt+I next line "No relevant..."
 
-- No autocomplete in void MainConfigDlg::FlagDlg()
-
-- void MainConfigDlg::FlagDlg() no Upp function on Ctrl+Space
-
 - TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
 
 - TriggerIndexer on theide exit
 
 - different master header currentfile / index issue
 
+- DLOG(CleanupId(s)); - jump on CleanupId does go to DLOG (it has a good reason to, but anyway...)
+
+- In CONSOLE_APP_MAIN jumps do not wrok
+
+- Alt-K - maybe should show declaration/definition too?
+
+- Indexer.cpp	[7, 423]   (Indexer::Job&,const Upp::String&)const
+
+- Indexer.cpp 	[32, 368]   FileAnnotation&&)(false)
+
+- Alt-K in void AssistEditor::Assist(bool macros) does not show all (_Bool problem?)
+
+- In Navigator, Assist should be before AssistEditor, when search is "Assist"
 
 GREAT CODEBASE PURGE:
 
@@ -203,6 +211,15 @@ LATER:
 
 
 DONE:
+
+- No autocomplete in void MainConfigDlg::FlagDlg()
+
+- void MainConfigDlg::FlagDlg() no Upp function on Ctrl+Space
+
+- id = main(int,const char*argv[]) - argv[] should not be there
+
+- Indexer.cpp refs
+ 	[3, 417]   Upp::Stream::operator // operator<< ?
 
 - FlagDlg
 

@@ -19,13 +19,15 @@ void AssistEditor::SyncHeaders()
 		master_source = FindMasterSource(hdepend2, GetIdeWorkspace(), editfile);
 		LLOG("Master source " << editfile << " -> " << master_source);
 	}
-	
+
+#ifdef _DEBUG
 	// TODO: Remove
 	hdepend2.WhenBlitzBlock = [=](const String& inc, const String& path) {
 		PutConsole(String() << inc << " blocks BLITZ of " << path);
 	};
 	if(hdepend2.BlitzApproved(editfile))
 		PutConsole(editfile + " BLITZ approved");
+#endif
 }
 
 bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta)
