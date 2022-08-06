@@ -505,6 +505,7 @@ class Workspace {
 
 public:
 	ArrayMap<String, Package> package;
+	Vector<int>               use_order;
 
 	void           Clear()                     { package.Clear(); }
 	String         operator[](int i) const     { return package.GetKey(i); }

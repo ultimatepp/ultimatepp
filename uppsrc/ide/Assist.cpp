@@ -806,8 +806,13 @@ bool AssistEditor::Key(dword key, int count)
 		Exclamation("No annotation for this line.");
 	}
 	if(key == K_F11) {
-/*		Workspace wspc;
+		Workspace wspc;
 		wspc.Scan(theide->main);
+		DLOG("==============");
+		for(int i : wspc.use_order) {
+			DDUMP(wspc[i]);
+		}
+/*
 		
 		DDUMP(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
 

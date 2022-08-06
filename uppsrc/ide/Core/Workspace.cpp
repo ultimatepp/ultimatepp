@@ -228,20 +228,25 @@ void Workspace::AddUses(Package& p, bool match, const Vector<String>& flag)
 		if((!match || MatchWhen(p.uses[i].when, flag)) && package.Find(uses) < 0)
 			AddLoad(uses, match, flag);
 	}
+	int n = package.GetCount();
 	for(int i = q; i < package.GetCount(); i++)
 		AddUses(package[i], match, flag);
+	for(int i = q; i < n; i++)
+		use_order.Add(i);
 }
 
 void Workspace::Scan(const char *prjname) {
 	package.Clear();
 	AddLoad(prjname, false, Vector<String>());
 	AddUses(package[0], false, Vector<String>());
+	use_order.Add(0);
 }
 
 void Workspace::Scan(const char *prjname, const Vector<String>& flag) {
 	package.Clear();
 	AddLoad(prjname, true, flag);
 	AddUses(package[0], true, flag);
+	use_order.Add(0);
 }
 
 void Workspace::Dump() {

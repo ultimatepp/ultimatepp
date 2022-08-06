@@ -139,6 +139,10 @@ ISUES:
 
 - In Navigator, Assist should be before AssistEditor, when search is "Assist"
 
+- Ctrl+Space is sort of slow (too many items?)
+
+- Cancel Assist when cursor moves out (test with above)
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
