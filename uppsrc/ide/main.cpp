@@ -50,7 +50,7 @@ int CommaSpace(int c)
 	return c == ',' ? ' ' : c;
 }
 
-void ReduceCache()
+void ReduceCfgCache()
 {
 	String cfgdir = ConfigFile("cfg");
 	FindFile ff(AppendFileName(cfgdir, "*.*"));
@@ -118,6 +118,10 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
+	// Set this for storing libclang preamble
+	// TODO CLANG flag?
+	SetEnvironmentVariable("TMPDIR", CacheDir());
+	SetEnvironmentVariable("TMP", CacheDir()); // Looks like libclang ignores TMPDIR
 //	Ctrl::ShowRepaint(50);
 
 #ifdef flagPEAKMEM
@@ -336,7 +340,7 @@ void AppMain___()
 
 		DelTemps();
 		DeletePCHFiles();
-		ReduceCache();
+		ReduceCfgCache();
 #ifndef _DEBUG
 	}
 	catch(const CParser::Error& e) {

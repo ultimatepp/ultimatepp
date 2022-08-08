@@ -6,8 +6,6 @@ CRITICAL:
 
 ISUES:
 
-- TMPDIR?
-
 - inbody
 
 - failed AC keeps running (sites[i]. instead of ->)
@@ -73,8 +71,6 @@ ISUES:
 - Ide::SwapS - local struct members annotated
 
 - reindex all source files seems to run twice
-
-- reduce cache
 
 - first macro in the file (AssistTest) is ignored
 
@@ -143,6 +139,11 @@ ISUES:
 
 - Cancel Assist when cursor moves out (test with above)
 
+- ReduceCfgCache - move tdx files to Cache
+
+- .c files
+
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -166,6 +167,10 @@ GREAT CODEBASE PURGE:
 
 
 NONCLANG:
+
+- Debugger Threads should show active threads first
+
+- Debugger Threads clicks on threads do not work anymore
 
 - QTF :\1label\1:
 
@@ -215,6 +220,10 @@ LATER:
 
 
 DONE:
+
+- reduce cache
+
+- TMPDIR?
 
 - No autocomplete in void MainConfigDlg::FlagDlg()
 

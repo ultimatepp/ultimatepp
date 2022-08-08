@@ -11,41 +11,22 @@ String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header
 	LTIMING("FindMasterSource");
 	String master_source;
 	String header_file = NormalizePath(header_file_);
-	for(int pass = 0; pass < 2; pass++) { // all packages in second pass
-		VectorMap<String, Time> deps;
-		for(int i = wspc.GetCount() - 1; i >= 0; i--) { // going back improves the performance of indexer
-			const Package& pk = wspc.GetPackage(i);
-			String pk_name = wspc[i];
 
-			auto Chk = [&] {
-				for(int i = 0; i < pk.file.GetCount(); i++) {
-					String path = SourcePath(pk_name, pk.file[i]);
-					if(!pk.file[i].separator && ppi.FileExists(path) && !PathIsEqual(header_file, path) && IsSourceFile(path) && GetFileLength(path) < 200000) {
-						ppi.GatherDependencies(path, deps);
-						if(deps.Find(header_file) >= 0) {
-							master_source = path;
-							return true;
-						}
-					}
-				}
-				return false;
-			};
-
-			if(pass) { // check all files
-				if(Chk())
-					return master_source;
-			}
-			else
-			for(int i = 0; i < pk.file.GetCount(); i++) { // check files of package
-				if(PathIsEqual(header_file, SourcePath(pk_name, pk.file[i]))) {
-					if(Chk())
-						return master_source;
-					break;
-				}
+	VectorMap<String, Time> deps;
+	for(int i : wspc.use_order) {
+		const Package& pk = wspc.GetPackage(i);
+		String pk_name = wspc[i];
+		for(int i = 0; i < pk.file.GetCount(); i++) {
+			String path = SourcePath(pk_name, pk.file[i]);
+			if(!pk.file[i].separator && ppi.FileExists(path) && !PathIsEqual(header_file, path) &&
+			   IsCppSourceFile(path) && GetFileLength(path) < 200000) {
+				ppi.GatherDependencies(path, deps);
+				if(deps.Find(header_file) >= 0)
+					return path;
 			}
 		}
 	}
-	return master_source;
+	return Null;
 }
 
 void AnnotationItem::Serialize(Stream& s)
@@ -307,7 +288,7 @@ void Indexer::SchedulerThread()
 				Workspace wspc;
 				wspc.Scan(main);
 	
-				for(int pi = wspc.GetCount() - 1; pi >= 0; pi--) { // reverse order heuristics to more evenly distribute external headers
+				for(int pi : wspc.use_order) {
 					String pk_name = wspc[pi];
 					Vector<Tuple<String, bool>>& ps = sources.GetAdd(pk_name);
 					const Package& pk = wspc.GetPackage(pi);
@@ -324,7 +305,7 @@ void Indexer::SchedulerThread()
 			}
 		}
 			
-		{ // TODO different master header currentfile / index issue
+		{
 			LTIMING("Dependencies");
 			for(const Vector<Tuple<String, bool>>& pk : sources)
 				for(const Tuple<String, bool>& m : pk) {
@@ -333,7 +314,7 @@ void Indexer::SchedulerThread()
 						ppi.GatherDependencies(m.a, files);
 						for(int i = n; i < files.GetCount(); i++) {
 							String p = files.GetKey(i);
-							if(!IsCSourceFile(p) && header.Find(p) < 0) {
+							if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
 								master.Add(m.a);
 								header.Add(p);
 							}
@@ -437,5 +418,6 @@ void Indexer::SchedulerThread()
 			LLOG("======= Unleash indexers");
 			event.Broadcast();
 		}
+		ReduceCache(); // good place to do this
 	}
 }

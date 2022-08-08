@@ -19,11 +19,6 @@ String CacheFile(const char *name)
 	return AppendFileName(CacheDir(), name);
 }
 
-void ReduceCache(int mb_limit)
-{
-	// TODO
-}
-
 void ReduceCacheFolder(const char *path, int max_total)
 {
 	struct RCB_FileInfo {
@@ -55,3 +50,7 @@ void ReduceCacheFolder(const char *path, int max_total)
 	}
 }
 
+void ReduceCache()
+{ // TODO: Parametrize limits
+	ReduceCacheFolder(CacheDir(), 4096 * 1024);
+}

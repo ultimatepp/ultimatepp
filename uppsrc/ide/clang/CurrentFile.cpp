@@ -53,6 +53,7 @@ void CurrentFileThread()
 	while(!Thread::IsShutdownThreads()) {
 		bool was_parsing;
 		do {
+			was_parsing = false;
 			CurrentFileContext f;
 			int64 done_serial;
 			{

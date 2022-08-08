@@ -143,6 +143,7 @@ void DumpDiagnostics(CXTranslationUnit tu);
 String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
 
+bool   IsCppSourceFile(const String& path);
 bool   IsSourceFile(const String& path);
 bool   IsHeaderFile(const String& path);
 
@@ -184,7 +185,7 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();
 
-String FindMasterSource(PPInfo& hdepend, const Workspace& wspc, const String& header_file);
+String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header_file);
 
 struct FileAnnotation0 {
 	String defines = "<not_loaded>";

@@ -39,6 +39,7 @@ class  Image;
 
 String CacheDir();
 String CacheFile(const char *name);
+void   ReduceCache();
 void   ReduceCache(int mb_limit);
 void   ReduceCacheFolder(const char *path, int max_total);
 
@@ -500,8 +501,9 @@ public:
 String IdeCharsetName(byte charset);
 
 class Workspace {
-	void     AddUses(Package& p, bool match, const Vector<String>& flag);
-	void     AddLoad(const String& name, bool match, const Vector<String>& flag);
+	void     AddUses(Package& p, const Vector<String> *flag);
+	void     AddLoad(const String& name);
+	void     Scan(const char *prjname, const Vector<String> *flag);
 
 public:
 	ArrayMap<String, Package> package;
@@ -513,8 +515,8 @@ public:
 	const Package& GetPackage(int i) const     { return package[i]; }
 	int            GetCount() const            { return package.GetCount(); }
 
-	void           Scan(const char *prjname);
-	void           Scan(const char *prjname, const Vector<String>& flag);
+	void           Scan(const char *prjname)   { Scan(prjname, nullptr); }
+	void           Scan(const char *prjname, const Vector<String>& flag) { Scan(prjname, &flag); }
 
 	Vector<String> GetAllAccepts(int pk) const;
 

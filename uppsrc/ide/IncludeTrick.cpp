@@ -4,7 +4,7 @@
 
 // libclang is unable to parse include files so we create fake .cpp content
 
-void AssistEditor::SyncHeaders()
+void AssistEditor::SyncMaster()
 {
 //	hdepend.CacheTime();
 	TIMESTOP("SyncHeaders");
@@ -22,6 +22,7 @@ void AssistEditor::SyncHeaders()
 
 #ifdef _DEBUG
 	// TODO: Remove
+	PutConsole("Master source " << editfile << " -> " << master_source);
 	hdepend2.WhenBlitzBlock = [=](const String& inc, const String& path) {
 		PutConsole(String() << inc << " blocks BLITZ of " << path);
 	};

@@ -156,7 +156,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
 	void               SyncCurrentFile();
-	void               SyncHeaders();
+	void               SyncMaster();
 	void               NewFile();
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
 	void               MakeIncludeTrick(CurrentFileContext& cfx);

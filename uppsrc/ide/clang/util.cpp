@@ -1,5 +1,11 @@
 #include "clang.h"
 
+bool IsCppSourceFile(const String& path)
+{
+	String ext = ToLower(GetFileExt(path));
+	return findarg(ext, ".cpp", ".cc", ".cxx") >= 0;
+}
+
 bool IsSourceFile(const String& path)
 {
 	String ext = ToLower(GetFileExt(path));

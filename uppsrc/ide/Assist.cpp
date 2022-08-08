@@ -495,7 +495,7 @@ void AssistEditor::SyncCurrentFile()
 
 void AssistEditor::NewFile()
 {
-	SyncHeaders();
+	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
 	SyncCurrentFile(cfx);
 	SetAutoCompleteFile(cfx);

@@ -215,37 +215,31 @@ bool   GetFlag(const Vector<String>& conf, const char *flag) {
 	return FindIndex(conf, flag) >= 0;
 }
 
-void Workspace::AddLoad(const String& name, bool match, const Vector<String>& flag)
+void Workspace::AddLoad(const String& name)
 {
 	package.Add(name).Load(PackagePath(name));
 }
 
-void Workspace::AddUses(Package& p, bool match, const Vector<String>& flag)
+void Workspace::AddUses(Package& p, const Vector<String> *flag)
 {
 	int q = package.GetCount();
 	for(int i = 0; i < p.uses.GetCount(); i++) {
 		String uses = UnixPath(p.uses[i].text);
-		if((!match || MatchWhen(p.uses[i].when, flag)) && package.Find(uses) < 0)
-			AddLoad(uses, match, flag);
+		if((!flag || MatchWhen(p.uses[i].when, *flag)) && package.Find(uses) < 0)
+			AddLoad(uses);
 	}
 	int n = package.GetCount();
 	for(int i = q; i < package.GetCount(); i++)
-		AddUses(package[i], match, flag);
+		AddUses(package[i], flag);
 	for(int i = q; i < n; i++)
 		use_order.Add(i);
 }
 
-void Workspace::Scan(const char *prjname) {
+void Workspace::Scan(const char *prjname, const Vector<String> *flag) {
 	package.Clear();
-	AddLoad(prjname, false, Vector<String>());
-	AddUses(package[0], false, Vector<String>());
-	use_order.Add(0);
-}
-
-void Workspace::Scan(const char *prjname, const Vector<String>& flag) {
-	package.Clear();
-	AddLoad(prjname, true, flag);
-	AddUses(package[0], true, flag);
+	use_order.Clear();
+	AddLoad(prjname);
+	AddUses(package[0], flag);
 	use_order.Add(0);
 }
 
