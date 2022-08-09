@@ -35,6 +35,7 @@ public:
 	String       Name();
 	bool         NoId();
 	String       Id();
+	String       Bases();
 
 	ClangCursorInfo(CXCursor cursor, CXPrintingPolicy pp_id);
 };
@@ -121,8 +122,8 @@ String ClangCursorInfo::Id()
 		                       CXCursor_Constructor, CXCursor_Destructor) < 0) { // local variable, TODO (members of local structure)
 			switch(cursorKind) {
 			case CXCursor_StructDecl:
-			case CXCursor_UnionDecl:
 			case CXCursor_ClassDecl:
+			case CXCursor_UnionDecl:
 				m = Type();
 				break;
 			case CXCursor_FunctionTemplate:
@@ -132,9 +133,9 @@ String ClangCursorInfo::Id()
 			case CXCursor_CXXMethod:
 				m = RawId();
 				break;
+			case CXCursor_ClassTemplate:
 			case CXCursor_VarDecl:
 			case CXCursor_FieldDecl:
-			case CXCursor_ClassTemplate:
 				m << Scope() << Name();
 				break;
 			case CXCursor_ConversionFunction:
@@ -162,6 +163,23 @@ String ClangCursorInfo::Id()
 		hasid = true;
 	}
 	return id;
+}
+
+String ClangCursorInfo::Bases()
+{
+	String result;
+	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0)
+		clang_visitChildren(cursor,
+			[](CXCursor cursor, CXCursor p, CXClientData clientData) -> CXChildVisitResult {
+				if(clang_getCursorKind(cursor) == CXCursor_CXXBaseSpecifier) {
+					String& result = *(String *)clientData;
+					MergeWith(result, ";", GetTypeSpelling(cursor));
+				}
+				return CXChildVisit_Continue;
+			},
+			&result
+		);
+	return result;
 }
 
 SourceLocation ClangVisitor::GetLocation(CXSourceLocation cxlocation)
@@ -194,14 +212,16 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 #ifdef DUMPTREE
 	_DBG_
 	DLOG("=====================================");
-	DDUMP((int)cursorKind);
-	DDUMP(GetCursorKindName(cursorKind));
-	DDUMP(SourceLocation(cxlocation));
+	DDUMP(ci.Kind());
+	DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
 	DDUMP(GetCursorSpelling(cursor));
+	DDUMP(ci.RawId());
+	DDUMP(ci.Type());
 	DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
 	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
 	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 
+#if 0
 	{
 		CXCursor ref = clang_getCursorReferenced(cursor);
 	
@@ -215,6 +235,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 			DDUMP(rs);
 		}
 	}
+#endif
 #endif
 
 	
@@ -235,12 +256,9 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		LoadLocation();
 
 	if(!(WhenFile ? WhenFile(loc.path) : clang_Location_isFromMainFile(cxlocation)))
-		return findarg(ci.Kind(), CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
-		                           CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
-		                           CXCursor_Destructor,
-		                           CXCursor_ClassTemplatePartialSpecialization, CXCursor_UnexposedDecl,
-		                           CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
-		                           CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
+		return findarg(ci.Kind(), CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
+		                          CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_UsingDeclaration, CXCursor_VarDecl, CXCursor_EnumConstantDecl,
+		                          CXCursor_TypeAliasTemplateDecl, CXCursor_EnumDecl, CXCursor_ConversionFunction) < 0;
 
 	CXCursor ref = clang_getCursorReferenced(cursor);
 
@@ -253,9 +271,11 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.pos = loc.pos;
 		r.id = id;
 		r.pretty = ci.Kind() == CXCursor_MacroDefinition ? r.name
-                   : CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+	               : CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = ci.Nspace();
+		r.bases = ci.Bases();
+		r.isvirtual = ci.Kind() == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
 			if(q >= 0) {
@@ -279,13 +299,18 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		rm.pos = loc.pos;
 		rm.id = r.id;
 		ref_done.GetAdd(loc.path).FindAdd(rm);
+		
+		_DBG_
+		if(r.nest == "Upp::Ctrl") {
+			DLOG(r.id << " " << r.isvirtual);
+		}
 	}
 
 	if(!clang_Cursor_isNull(ref)) {
 		LoadLocation();
 		SourceLocation ref_loc = GetLocation(clang_getCursorLocation(ref));
 		int q = tfn.Find(ref_loc);
-		
+	
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
 
 		ReferenceItem rm;

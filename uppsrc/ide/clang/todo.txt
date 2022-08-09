@@ -54,7 +54,7 @@ ISUES:
 
 - AltC static method(); (header->source) retains static
 
-- Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
+- AltC Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
 
 - C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
 
@@ -135,14 +135,21 @@ ISUES:
 
 - In Navigator, Assist should be before AssistEditor, when search is "Assist"
 
-- Ctrl+Space is sort of slow (too many items?)
-
 - Cancel Assist when cursor moves out (test with above)
 
 - ReduceCfgCache - move tdx files to Cache
 
 - .c files
 
+- CUtils:: - no assist after "::" (but works with Ctrl+Space)
+
+- check default parameters and virtuals / alt+c
+
+- String GetClass(const AnnotationItem& m) vs m.nest - do we need GetClass?
+
+- Wind/MetMastLayer.cpp:427 - no current file - 208KB :)
+
+- virtuals do not work with With...Layout<TopWindow> base
 
 GREAT CODEBASE PURGE:
 
@@ -165,8 +172,9 @@ GREAT CODEBASE PURGE:
 
 - thisbacks
 
-
 NONCLANG:
+
+- Wind/MetTimeProf.cpp:881 jump on CUtil::
 
 - Debugger Threads should show active threads first
 
@@ -187,6 +195,8 @@ void AppExit__()
 
 
 NTH:
+
+- Find all overrides
 
 - replace/remove Hdepend
 
@@ -220,6 +230,8 @@ LATER:
 
 
 DONE:
+
+- Ctrl+Space is sort of slow (too many items?)
 
 - reduce cache
 

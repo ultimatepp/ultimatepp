@@ -41,7 +41,7 @@ String CacheDir();
 String CacheFile(const char *name);
 void   ReduceCache();
 void   ReduceCache(int mb_limit);
-void   ReduceCacheFolder(const char *path, int max_total);
+void   ReduceCacheFolder(const char *path, int64 max_total);
 
 class Hdepend {
 	struct Info {

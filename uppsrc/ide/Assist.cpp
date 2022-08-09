@@ -244,81 +244,6 @@ String AssistEditor::CompleteIdBack(int& q, const Index<String>& locals)
 	return id;
 }
 
-Vector<String> AssistEditor::ReadBack(int q, const Index<String>& locals)
-{
-	Vector<String> r;
-	type.Clear();
-	bool wasid = true;
-	for(;;) {
-		if(r.GetCount() > 200) {
-			r.Clear();
-			type.Clear();
-			break;
-		}
-		SkipSpcBack(q);
-		int c = Ch(q - 1);
-		if(c == '>' && !wasid) {
-			q--;
-			r.Add() = CompleteIdBack(q, locals) + ">";
-			wasid = true;
-			continue;
-		}
-		if(iscid(c)) {
-			if(wasid)
-				break;
-			String id;
-			for(;;) {
-				id = IdBack(q) + id;
-				SkipSpcBack(q);
-				if(!(Ch(q - 1) == ':' && Ch(q - 2) == ':'))
-					break;
-				q -= 2;
-				id = "::" + id;
-				SkipSpcBack(q);
-			}
-			r.Add() = id;
-			wasid = true;
-			continue;
-		}
-		else {
-//			if(findarg(c, '(', '[', '{') >= 0)
-//				break;
-			if(c == ']') {
-				if(wasid)
-					break;
-				r.Add("[]");
-				q = ParsBack(q - 1);
-				wasid = false;
-				continue;
-			}
-			else
-			if(c == ')') {
-				if(wasid)
-					break;
-				r.Add("()");
-				q = ParsBack(q - 1);
-				wasid = false;
-				continue;
-			}
-			wasid = false;
-			c = Ch(q - 1);
-			if(c == '>' && Ch(q - 2) == '-') {
-				r.Add("->");
-				q -= 2;
-				continue;
-			}
-			if(c == '.') {
-				r.Add(".");
-				q--;
-				continue;
-			}
-		}
-		break;
-	}
-	Reverse(r);
-	return r;
-}
-
 void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
@@ -455,9 +380,6 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 		}
 	}
 #ifdef _DEBUG
-	DDUMP(master_source);
-	DDUMP(cfx.filename);
-	DDUMP(cfx.real_filename);
 	if(cfx.content.GetCount())
 		SaveFile(ConfigFile("CurrentContext.cpp"), cfx.content);
 #endif
@@ -915,100 +837,6 @@ void AssistEditor::LeftDown(Point p, dword keyflags)
 void AssistEditor::LostFocus()
 {
 	CloseAssist();
-}
-
-String AssistEditor::RemoveDefPar(const char *s)
-{
-	String r;
-	int lvl = 0;
-	bool dp = true;
-	while(*s) {
-		byte c = *s++;
-		if(c == '(')
-			lvl++;
-		if(lvl == 0) {
-			if(c == '=') {
-				dp = false;
-				if(commentdp)
-					r.Cat("/* ");
-				else
-					while(r.GetCount() && *r.Last() == ' ')
-						r.Trim(r.GetCount() - 1);
-			}
-			if(c == ')') {
-				if(!dp && commentdp)
-					r.Cat("*/");
-				r.Cat(')');
-				try {
-					if(CParser(s).Char('='))
-						break;
-				}
-				catch(CParser::Error) {}
-				r.Cat(s);
-				break;
-			}
-			if(c == ',') {
-				if(!dp && commentdp)
-					r.Cat("*/");
-				dp = true;
-			}
-		}
-		else
-		if(c == ')')
-			lvl--;
-		if(dp || commentdp)
-			r.Cat(c);
-	}
-	return r;
-}
-
-// TODO: remove
-String AssistEditor::MakeDefinition(const String& cls, const String& _n)
-{
-	String n = TrimLeft(_n);
-	auto RemoveId = [&](const char *s) {
-		int len = strlen(s);
-		int q = n.Find(s);
-		if(q >= 0 && (q == 0 || !iscid(n[q - 1])) && (q + len >= n.GetCount() || !iscid(n[q + len])))
-			n.Remove(q, len);
-	};
-	RemoveId("override");
-	RemoveId("final");
-	CParser p(n);
-	try {
-		bool dest = false;
-		const char *beg = n;
-		while(!p.IsEof()) {
-			const char *b = p.GetPtr();
-			if(p.Id("operator"))
-				return cls.GetCount() ? NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b)
-				                      : NormalizeSpaces(String(beg, b) + ' ' + b);
-			if(p.Char('~')) {
-				beg = p.GetPtr();
-				dest = true;
-			}
-			else
-			if(p.IsId()) {
-				String id = p.ReadId();
-				if(p.Char('(')) {
-					String rp = RemoveDefPar(p.GetPtr());
-					auto merge = [](String a, String b) {
-						return IsAlNum(*a.Last()) && IsAlNum(*b) ? a + ' ' + b : a + b;
-					};
-					if(cls.GetCount() == 0)
-						return NormalizeSpaces(merge(String(beg, b), id) + '(' + rp);
-					if(dest)
-						return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
-					else
-						return NormalizeSpaces(merge(String(beg, b), cls) + "::" + id + '(' + rp);
-				}
-			}
-			else
-				p.SkipTerm();
-		}
-	}
-	catch(CParser::Error) {}
-	return n;
 }
 
 void Ide::IdeGotoCodeRef(String coderef)

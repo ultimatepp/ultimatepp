@@ -159,7 +159,7 @@ void Ide::ContextGoto0(int pos)
 			ref_id = m.id;
 			ci = m.pos.x;
 		}
-	
+
 	if(ref_id.GetCount()) {
 		String found_path;
 		Point  found_pos(INT_MAX, INT_MAX);

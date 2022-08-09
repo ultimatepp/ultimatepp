@@ -181,8 +181,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	Point          GetCurrentPos() const;
 	AnnotationItem FindCurrentAnnotation();
 
-	String         RemoveDefPar(const char *s);
-	String         MakeDefinition(const String& cls, const String& _n);
 	void           DCopy();
 	void           Virtuals();
 	void           Thisbacks();
@@ -190,7 +188,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SelParam();
 	int            Ch(int q);
 	int            ParsBack(int q);
-	Vector<String> ReadBack(int q, const Index<String>& locals);
 	void           SkipSpcBack(int& q);
 	String         IdBack(int& qq);
 	String         CompleteIdBack(int& q, const Index<String>& locals);

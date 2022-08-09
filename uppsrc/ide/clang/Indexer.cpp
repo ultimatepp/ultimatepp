@@ -34,6 +34,7 @@ void AnnotationItem::Serialize(Stream& s)
 	s % kind
 	  % pos
 	  % definition
+	  % isvirtual
 	  % name
 	  % id
 	  % pretty
@@ -41,6 +42,7 @@ void AnnotationItem::Serialize(Stream& s)
 	  % uname
 	  % nest
 	  % unest
+	  % bases
 	;
 }
 
@@ -108,6 +110,7 @@ CoEvent              Indexer::scheduler;
 Mutex                Indexer::mutex;
 Vector<Indexer::Job> Indexer::jobs;
 int                  Indexer::jobi;
+bool                 Indexer::running_scheduler;
 std::atomic<int>     Indexer::running_indexers;
 String               Indexer::main;
 String               Indexer::includes;
@@ -262,162 +265,175 @@ void Indexer::SchedulerThread()
 	while(!Thread::IsShutdownThreads()) {
 		scheduler.Wait();
 
-		LTIMESTOP("Scheduler");
-		Mutex::Lock __(mutex);
-		String includes, defines;
-
-		VectorMap<String, Time>   files; // all files of project, including external headers
-
-		Index<String>             workspace_headers;
-
-		Index<String>             master; // bidirectional map, including files
-		Index<String>             header; // included files
-
-		VectorMap<String, Vector<Tuple<String, bool>>> sources; // bool is "noblitz"
 		{
-			GuiLock __;
-
-			includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
-			defines = Indexer::defines;
-
-			ppi.SetIncludes(includes);
-			ppi.Dirty();
-
-			{
-				LTIMING("Load workspace");
-				Workspace wspc;
-				wspc.Scan(main);
+			LTIMESTOP("Scheduler");
+			Mutex::Lock __(mutex);
+			running_scheduler = true;
 	
-				for(int pi : wspc.use_order) {
-					String pk_name = wspc[pi];
-					Vector<Tuple<String, bool>>& ps = sources.GetAdd(pk_name);
-					const Package& pk = wspc.GetPackage(pi);
-					for(int i = 0; i < pk.GetCount(); i++) {
-						String path = NormalizePath(SourcePath(pk_name, pk[i]));
-						if(!pk.file[i].separator && ppi.FileExists(path)) {
-							if(IsCSourceFile(path))
-								ps.Add({ NormalizePath(path), pk[i].noblitz });
-							else
-								workspace_headers.FindAdd(path);
-						}
-					}
-				}
-			}
-		}
-			
-		{
-			LTIMING("Dependencies");
-			for(const Vector<Tuple<String, bool>>& pk : sources)
-				for(const Tuple<String, bool>& m : pk) {
-					if(IsCSourceFile(m.a)) {
-						int n = files.GetCount();
-						ppi.GatherDependencies(m.a, files);
-						for(int i = n; i < files.GetCount(); i++) {
-							String p = files.GetKey(i);
-							if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-								master.Add(m.a);
-								header.Add(p);
+			String includes, defines;
+	
+			VectorMap<String, Time>   files; // all files of project, including external headers
+	
+			Index<String>             workspace_headers;
+	
+			Index<String>             master; // bidirectional map, including files
+			Index<String>             header; // included files
+	
+			VectorMap<String, Vector<Tuple<String, bool>>> sources; // bool is "noblitz"
+			{
+				GuiLock __;
+	
+				includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
+				defines = Indexer::defines;
+	
+				ppi.SetIncludes(includes);
+				ppi.Dirty();
+	
+				{
+					LTIMING("Load workspace");
+					Workspace wspc;
+					wspc.Scan(main);
+		
+					for(int pi : wspc.use_order) {
+						String pk_name = wspc[pi];
+						Vector<Tuple<String, bool>>& ps = sources.GetAdd(pk_name);
+						const Package& pk = wspc.GetPackage(pi);
+						for(int i = 0; i < pk.GetCount(); i++) {
+							String path = NormalizePath(SourcePath(pk_name, pk[i]));
+							if(!pk.file[i].separator && ppi.FileExists(path)) {
+								if(IsCSourceFile(path))
+									ps.Add({ NormalizePath(path), pk[i].noblitz });
+								else
+									workspace_headers.FindAdd(path);
 							}
 						}
 					}
 				}
-		}
-		
-//		DDUMP(workspace_headers);
-	
-		Index<String> dirty_files; // files that need to be recompiled (including headers)
-
-		{
-			LTIMESTOP("Loading from cache, checking filetimes");
-			for(const auto& m : ~files) {
-				String path = m.key;
-				String master_file;
-				int q = header.Find(path);
-				if(q >= 0)
-					master_file = master[q];
-				FileAnnotation0 f;
-				{
-					GuiLock __;
-					f = CodeIndex().GetAdd(path);
-				}
-				if(f.includes != includes || f.defines != defines || f.master_file != master_file) {
-					String h = LoadFile(CachedAnnotationPath(path, defines, includes, master_file));
-					if(h.GetCount()) {
-						FileAnnotation lf;
-						if(LoadFromString(lf, h)) {
-							GuiLock __;
-							f = lf;
-							CodeIndex().GetAdd(path) = pick(lf);
-						}
-					}
-				}
-				if(f.defines != defines || f.includes != includes || f.time != m.value)
-					dirty_files.FindAdd(path);
 			}
-		}
-
-		
-		{ // remove files that are not in project anymore
-			LTIMESTOP("Removing files");
-			GuiLock __;
-			for(int i = 0; i < CodeIndex().GetCount(); i++)
-				if(files.Find(CodeIndex().GetKey(i)) < 0)
-					CodeIndex().Unlink(i);
-			CodeIndex().Sweep();
-		}
-
-		{
-			LTIMESTOP("Create indexer jobs");
-			jobs.Clear();
-			jobi = 0;
-			for(const auto& pkg : ~sources) {
-				Job blitz_job;
-				blitz_job.includes = includes;
-				blitz_job.defines = defines;
-				auto JobAdd = [&](Job& job, const String& path) {
-					job.file_times.Add(path, files.Get(path, Time::Low()));
-					for(int q = master.Find(path); q >= 0; q = master.FindNext(q)) {
-						String hpath = header[q];
-						if(dirty_files.Find(hpath) >= 0) { // TODO: Ignore external includes if times are ok
-							job.file_times.Add(hpath, files.Get(hpath, Time::Low()));
-							job.master_files.Add(header[q], path);
+				
+			{
+				LTIMING("Dependencies");
+				for(const Vector<Tuple<String, bool>>& pk : sources)
+					for(const Tuple<String, bool>& m : pk) {
+						if(IsCSourceFile(m.a)) {
+							int n = files.GetCount();
+							ppi.GatherDependencies(m.a, files);
+							for(int i = n; i < files.GetCount(); i++) {
+								String p = files.GetKey(i);
+								if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
+									master.Add(m.a);
+									header.Add(p);
+								}
+							}
 						}
 					}
-					return job;
-				};
-				int blitz_index = 0;
-				for(const auto& pf : pkg.value) {
+			}
+			
+	//		DDUMP(workspace_headers);
+		
+			Index<String> dirty_files; // files that need to be recompiled (including headers)
+	
+			{
+				LTIMESTOP("Loading from cache, checking filetimes");
+				for(const auto& m : ~files) {
+					String path = m.key;
+					String master_file;
+					int q = header.Find(path);
+					if(q >= 0)
+						master_file = master[q];
 					FileAnnotation0 f;
 					{
 						GuiLock __;
-						f = CodeIndex().GetAdd(pf.a);
+						f = CodeIndex().GetAdd(path);
 					}
-					if(dirty_files.Find(pf.a) >= 0) {
-						if(ppi.BlitzApproved(pf.a) && !pf.b) {
-							BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
-							JobAdd(blitz_job, pf.a);
-						}
-						else {
-							Job& job = jobs.Add();
-							job.includes = includes;
-							job.defines = defines;
-							job.path = pf.a;
-							JobAdd(job, pf.a);
+					if(f.includes != includes || f.defines != defines || f.master_file != master_file) {
+						String h = LoadFile(CachedAnnotationPath(path, defines, includes, master_file));
+						if(h.GetCount()) {
+							FileAnnotation lf;
+							if(LoadFromString(lf, h)) {
+								GuiLock __;
+								f = lf;
+								CodeIndex().GetAdd(path) = pick(lf);
+							}
 						}
 					}
-				}
-				
-				if(blitz_job.blitz.GetCount()) {
-					Job& job = jobs.Add();
-					job = blitz_job;
-					job.path = ConfigFile(pkg.key + "$$$blitz.cpp"); // the path is fake, file does not exist
+					if(f.defines != defines || f.includes != includes || f.time != m.value)
+						dirty_files.FindAdd(path);
 				}
 			}
-		}
-		if(jobs.GetCount()) {
-			LLOG("======= Unleash indexers");
-			event.Broadcast();
+	
+			
+			{ // remove files that are not in project anymore
+				LTIMESTOP("Removing files");
+				GuiLock __;
+				for(int i = 0; i < CodeIndex().GetCount(); i++)
+					if(files.Find(CodeIndex().GetKey(i)) < 0)
+						CodeIndex().Unlink(i);
+				CodeIndex().Sweep();
+			}
+	
+			{
+				LTIMESTOP("Create indexer jobs");
+				jobs.Clear();
+				jobi = 0;
+				for(const auto& pkg : ~sources) {
+					Job blitz_job;
+					blitz_job.includes = includes;
+					blitz_job.defines = defines;
+					auto JobAdd = [&](Job& job, const String& path) {
+						job.file_times.Add(path, files.Get(path, Time::Low()));
+						for(int q = master.Find(path); q >= 0; q = master.FindNext(q)) {
+							String hpath = header[q];
+							if(dirty_files.Find(hpath) >= 0) { // TODO: Ignore external includes if times are ok
+								job.file_times.Add(hpath, files.Get(hpath, Time::Low()));
+								job.master_files.Add(header[q], path);
+							}
+						}
+						return job;
+					};
+					int blitz_index = 0;
+					for(const auto& pf : pkg.value) {
+						FileAnnotation0 f;
+						{
+							GuiLock __;
+							f = CodeIndex().GetAdd(pf.a);
+						}
+						if(dirty_files.Find(pf.a) >= 0) {
+							if(ppi.BlitzApproved(pf.a) && !pf.b) {
+								BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
+								JobAdd(blitz_job, pf.a);
+							}
+							else {
+								Job& job = jobs.Add();
+								job.includes = includes;
+								job.defines = defines;
+								job.path = pf.a;
+								JobAdd(job, pf.a);
+							}
+						}
+					}
+					
+					if(blitz_job.blitz.GetCount()) {
+						Job& job = jobs.Add();
+						job = blitz_job;
+						job.path = ConfigFile(pkg.key + "$$$blitz.cpp"); // the path is fake, file does not exist
+					}
+				}
+			}
+			if(jobs.GetCount()) {
+				LLOG("======= Unleash indexers");
+				event.Broadcast();
+			}
+			running_scheduler = false;
 		}
 		ReduceCache(); // good place to do this
 	}
+}
+
+bool Indexer::IsRunning()
+{
+	if(running_scheduler)
+		return true;
+	Mutex::Lock __(mutex);
+	return jobi < jobs.GetCount();
 }

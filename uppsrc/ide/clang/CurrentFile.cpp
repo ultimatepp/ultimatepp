@@ -77,6 +77,8 @@ void CurrentFileThread()
 						            CXTranslationUnit_DetailedPreprocessingRecord|
 						            CXTranslationUnit_PrecompiledPreamble|
 						            CXTranslationUnit_CreatePreambleOnFirstParse|
+				                    CXTranslationUnit_SkipFunctionBodies|
+						            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 						            CXTranslationUnit_KeepGoing);
 						current_file_parsing = false;
 					//	DumpDiagnostics(clang.tu); _DBG_

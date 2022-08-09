@@ -43,63 +43,41 @@ void AssistEditor::DCopy()
 
 	for(const AnnotationItem& m : annotations) {
 		if(first_line <= m.pos.y && m.pos.y <= last_line) {
-			String cls = m.id;
-			int q;
-			if(m.kind == CXCursor_Constructor) {
-				q = cls.Find("::" + m.name + "(");
-				if(q >= 0)
-					q += 2;
+			String cls = GetClass(m);
+			if(IsFunction(m.kind)) {
+				if(m.definition) {
+					if(cls.GetCount())
+						result << '\t';
+					result << m.pretty << ";\n";
+				}
+				else {
+					result << MakeDefinition(m);
+				}
 			}
-			else
-			if(m.kind == CXCursor_Destructor) {
-				q = cls.Find('~');
-			}
-			else
-				q = FindId(cls, m.name);
-			if(q >= 0) {
-				cls.Trim(q);
-				if(m.nspace.GetCount())
-					cls.TrimStart(m.nspace + "::");
-				if(IsFunction(m.kind)) {
+			if(m.kind == CXCursor_VarDecl) {
+				if(cls.GetCount()) { // class variable
 					if(m.definition) {
-						if(cls.GetCount())
-							result << '\t';
-						result << m.pretty << ";\n";
+						int q = FindId(m.pretty, m.name);
+						if(q >= 0) {
+							int w = m.pretty.ReverseFind(' ', q);
+							if(w >= 0)
+								result << "\tstatic " << m.pretty.Mid(0, w + 1) << m.pretty.Mid(q) << "\n";
+						}
 					}
 					else {
-						int q = FindId(m.pretty, m.name);
-						if(q < 0)
-							result << m.pretty;
-						else
-							result << m.pretty.Mid(0, q) << cls << m.pretty.Mid(q);
-						result << "\n{\n}\n\n";
+						String h = m.pretty;
+						h.TrimStart("static ");
+						h = TrimLeft(h);
+						int q = FindId(h, m.name);
+						if(q >= 0)
+							result << h.Mid(0, q) << cls << h.Mid(q) << ";\n";
 					}
 				}
-				if(m.kind == CXCursor_VarDecl) {
-					if(cls.GetCount()) { // class variable
-						if(m.definition) {
-							int q = FindId(m.pretty, m.name);
-							if(q >= 0) {
-								int w = m.pretty.ReverseFind(' ', q);
-								if(w >= 0)
-									result << "\tstatic " << m.pretty.Mid(0, w + 1) << m.pretty.Mid(q) << "\n";
-							}
-						}
-						else {
-							String h = m.pretty;
-							h.TrimStart("static ");
-							h = TrimLeft(h);
-							int q = FindId(h, m.name);
-							if(q >= 0)
-								result << h.Mid(0, q) << cls << h.Mid(q) << ";\n";
-						}
-					}
-					else { // just toggle extern
-						String h = m.pretty;
-						if(FindId(GetUtf8Line(m.pos.y), "extern") < 0)
-							h = "extern " + h;
-						result << h << ";\n";
-					}
+				else { // just toggle extern
+					String h = m.pretty;
+					if(FindId(GetUtf8Line(m.pos.y), "extern") < 0)
+						h = "extern " + h;
+					result << h << ";\n";
 				}
 			}
 		}

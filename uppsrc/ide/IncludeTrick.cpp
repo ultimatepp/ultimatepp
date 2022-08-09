@@ -35,7 +35,7 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 {
 	String filedir = GetFileDirectory(path);
 	bool comment = false;
-	if(GetFileLength(path) > 200000 || out.GetCount() > 200000)
+	if(GetFileLength(path) > 4000000 || out.GetCount() > 4000000)
 		return false;
 	visited.Add(path);
 	FileIn in(path);

@@ -76,7 +76,6 @@ void AssistEditor::SyncAnnotationPopup()
 		static String   last_path;
 		static RichText topic_text;
 		String path = GetTopicPath(tl);
-		DUMP(path);
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		RichText result;

@@ -173,6 +173,7 @@ String CleanupPretty(const String& signature)
 			int len = s - b;
 			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
 			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0) ||
+			   len == 7 && (memcmp(b, "virtual", 7) == 0) ||
 			   len == 8 && (memcmp(b, "override", 8) == 0 || memcmp(b, "noexcept", 8) == 0)) {
 			   while(*s == ' ')
 			       s++;
@@ -391,4 +392,42 @@ String SignatureQtf(const String& name, const String& pretty, int pari)
 		qtf << ']';
 	}
 	return qtf + "]";
+}
+
+String GetClass(const AnnotationItem& m)
+{
+	String cls = m.id;
+	int q;
+	if(m.kind == CXCursor_Constructor) {
+		q = cls.Find("::" + m.name + "(");
+		if(q >= 0)
+			q += 2;
+	}
+	else
+	if(m.kind == CXCursor_Destructor) {
+		q = cls.Find('~');
+	}
+	else
+		q = FindId(cls, m.name);
+
+	if(q >= 0) {
+		cls.Trim(q);
+		if(m.nspace.GetCount())
+			cls.TrimStart(m.nspace + "::");
+		return cls;
+	}
+	
+	return Null;
+}
+
+String MakeDefinition(const AnnotationItem& m)
+{
+	String result;
+	int q = FindId(m.pretty, m.name);
+	if(q < 0)
+		result << m.pretty;
+	else
+		result << m.pretty.Mid(0, q) << GetClass(m) << m.pretty.Mid(q);
+	result << "\n{\n}\n\n";
+	return result;
 }

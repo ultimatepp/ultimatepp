@@ -70,7 +70,7 @@ protected:
 		String            output;
 		String            key;
 		String            group;
-		Stream            *outfile;
+		Stream           *outfile;
 		bool              quiet;
 		int               exitcode;
 		int               last_msecs;

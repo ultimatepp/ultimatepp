@@ -89,6 +89,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind;
 	Point  pos;
 	bool   definition;
+	bool   isvirtual;
 	String name; // Method
 	String id; // Upp::Class::Method(Upp::Point p)
 	String pretty; // void Class::Method(Point p)
@@ -96,9 +97,13 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String uname; // METHOD
 	String nest; // Upp::Class
 	String unest; // UPP::CLASS
+	String bases; // base classes of struct/class
 	
 	void Serialize(Stream& s);
 };
+
+String GetClass(const AnnotationItem& m);
+String MakeDefinition(const AnnotationItem& m);
 
 struct ReferenceItem : Moveable<ReferenceItem> {
 	String id;
@@ -215,6 +220,7 @@ class Indexer {
 	static Vector<Job>        jobs;
 	static int                jobi;
 	static std::atomic<int>   running_indexers;
+	static bool               running_scheduler;
 	static String             main, includes, defines;
 	
 	static void IndexerThread();
@@ -222,7 +228,7 @@ class Indexer {
 
 public:
 	static void Start(const String& main, const String& includes, const String& defines);
-	static bool IsRunning()                    { return running_indexers; }
+	static bool IsRunning();
 };
 
 #endif
