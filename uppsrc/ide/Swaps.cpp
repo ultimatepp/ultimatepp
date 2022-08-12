@@ -8,7 +8,11 @@ void Ide::SwapS()
 		return;
 	if(!editor.WaitCurrentFile())
 		return;
-	AnnotationItem cm = editor.FindCurrentAnnotation();
+	Cycle(editor.FindCurrentAnnotation());
+}
+
+void Ide::Cycle(const AnnotationItem& cm)
+{
 	struct Sf : Moveable<Sf> {
 		String path;
 		Point  pos;
@@ -41,7 +45,7 @@ void Ide::SwapS()
 		return CombineCompare(a.path, b.path)(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 	});
 	
-	bool deff = false;
+	bool deff = true;
 	
 	for(;;) { // create a list of candidates alternating definition and declaration
 		int q = FindMatch(set, [&](const Sf& a) { return a.definition == deff; });
@@ -83,20 +87,28 @@ void Ide::References()
 	AnnotationItem cm = editor.FindCurrentAnnotation();
 	SetFFound(ffoundi_next);
 	FFound().Clear();
-	for(const auto& f : ~CodeIndex())
-		for(const ReferenceItem& m : f.value.refs)
-			if(m.id == cm.id) {
-				String ln = GetFileLine(f.key, m.pos.y);
-				int count = 0;
-				int pos = 0;
-				if(cm.name.GetCount()) {
-					pos = ::FindId(ln + m.pos.x, cm.name);
-					if(pos >= 0)
-						count = cm.name.GetCount();
-					else
-						pos = 0;
-				}
-				AddFoundFile(f.key, m.pos.y + 1, ln, pos, count);
+	SortByKey(CodeIndex());
+	for(const auto& f : ~CodeIndex()) {
+		auto Add = [&](Point mpos) {
+			String ln = GetFileLine(f.key, mpos.y);
+			int count = 0;
+			int pos = 0;
+			if(cm.name.GetCount()) {
+				pos = ::FindId(ln + mpos.x, cm.name);
+				if(pos >= 0)
+					count = cm.name.GetCount();
+				else
+					pos = 0;
 			}
+			AddFoundFile(f.key, mpos.y + 1, ln, pos, count);
+		};
+		for(const AnnotationItem& m : f.value.items)
+			if(m.id == cm.id)
+				Add(m.pos);
+		for(const ReferenceItem& m : f.value.refs)
+			if(m.id == cm.id)
+				Add(m.pos);
+	}
+
 	FFoundFinish();
 }

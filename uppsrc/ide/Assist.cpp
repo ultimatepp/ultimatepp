@@ -367,7 +367,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	if(!IsView() && GetLength() < 200000) {
+	if(!IsView() && GetLength() < 4000000) {
 		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {

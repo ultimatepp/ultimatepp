@@ -8,7 +8,6 @@ struct VirtualMethod : AnnotationItem {
 void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls,
                     Index<String>& visited, bool first)
 {
-	DDUMP(cls);
 	if(IsNull(cls) || visited.Find(cls) >= 0)
 		return;
 	visited.Add(cls);
@@ -113,16 +112,23 @@ INITBLOCK
 	RegisterGlobalConfig("VirtualsDlg");
 }
 
-void AssistEditor::Virtuals()
+String AssistEditor::FindCurrentNest()
 {
 	if(!WaitCurrentFile())
-		return;
+		return Null;
 	AnnotationItem cm = FindCurrentAnnotation();
-	if(IsNull(cm.nest)) {
+	if(IsNull(cm.nest))
 		Exclamation("No class can be associated with current position.");
+	return cm.nest;
+}
+
+void AssistEditor::Virtuals()
+{
+	SortByKey(CodeIndex());
+	String nest = FindCurrentNest();
+	if(IsNull(nest))
 		return;
-	}
-	VirtualsDlg dlg(cm.nest);
+	VirtualsDlg dlg(nest);
 	LoadFromGlobal(dlg, "VirtualsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "VirtualsDlg");
@@ -133,7 +139,7 @@ void AssistEditor::Virtuals()
 	if(!dlg.list.IsSelection() && dlg.list.IsCursor())
 		dlg.list.Select(dlg.list.GetCursor());
 	for(int i = 0; i < dlg.list.GetCount(); i++)
-		if(dlg.list.IsSelected(i)) {
+		if(dlg.list.IsSel(i)) {
 			VirtualMethod m = dlg.list.Get(i, 0).To<VirtualMethod>();
 			text << "\t";
 			if(dlg.add_virtual)

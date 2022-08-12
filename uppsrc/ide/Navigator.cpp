@@ -167,7 +167,7 @@ void Navigator::Navigate()
 			theide->AddHistory();
 		}
 		else {
-			theide->GotoPos(m.path, m.pos);
+			theide->Cycle(m);
 		}
 	}
 	navigating = false;
@@ -367,29 +367,22 @@ void Navigator::Search()
 		navigator_global = true;
 		String usearch_nest = ToUpper(search_nest);
 		String usearch_name = ToUpper(search_name);
-		Index<String> visited;
 		SortByKey(CodeIndex());
-		for(int pass = 0; pass < 2; pass++)
-			for(const auto& f : ~CodeIndex())
-				for(const AnnotationItem& m : f.value.items) {
-					int q = visited.Find(m.id);
-					if(q >= 0) { // replace declaration (.h) with definition (.cpp)
-						NavItem& n = nitem[q];
-						if(!n.definition && m.definition) {
+		Index<String> set;
+		for(int definition = 0; definition < 2; definition++) // we prefer header order
+			for(int pass = 0; pass < 3; pass++)
+				for(const auto& f : ~CodeIndex())
+					for(const AnnotationItem& m : f.value.items) {
+						if(m.definition == definition && set.Find(m.id) < 0 &&
+						   (pass == 0 ? m.name == search_name : pass == 1 ? m.name.StartsWith(search_name) : m.uname.Find(usearch_name) >= 0) &&
+						   (pass == 2 ? m.unest.Find(usearch_nest) >= 0 : m.nest.Find(search_nest) >= 0)) {
+							NavItem& n = nitem.Add();
 							(AnnotationItem&)n = m;
 							n.path = f.key;
+							nests.FindAdd(n.nest = Nest(m, theide->editfile));
+							set.Add(m.id);
 						}
 					}
-					else
-					if((pass == 0 ? m.name.StartsWith(search_name) : m.uname.Find(usearch_name) >= 0) &&
-					   (pass == 0 ? m.nest.Find(search_nest) >= 0 : m.unest.Find(usearch_nest) >= 0)) {
-						visited.Add(m.id);
-						NavItem& n = nitem.Add();
-						(AnnotationItem&)n = m;
-						n.path = f.key;
-						nests.FindAdd(n.nest = Nest(m, theide->editfile));
-					}
-				}
 		
 		SortIndex(nests);
 		const Workspace& wspc = GetIdeWorkspace();

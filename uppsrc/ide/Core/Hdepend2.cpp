@@ -72,7 +72,10 @@ void PPInfo::PPFile::Parse(Stream& in)
 
 	flags.Clear();
 	defines.Clear();
-	includes.Clear();
+	includes[0].Clear();
+	includes[1].Clear();
+	define_includes[0].Clear();
+	define_includes[1].Clear();
 	guarded = false;
 	blitz = AUTO;
 
@@ -81,6 +84,7 @@ void PPInfo::PPFile::Parse(Stream& in)
 	
 	String guard_id;
 	bool first = true;
+	int speculative = 0;
 	
 	auto Flag = [&](const String& id) {
 		if(id.StartsWith("flag"))
@@ -119,8 +123,10 @@ void PPInfo::PPFile::Parse(Stream& in)
 				if(p.Id("define") && p.IsId()) {
 					p.NoSkipSpaces().NoSkipComments(); // '#define TEST(x)' is different form '#define TEST (x)' - later is parameterless
 					String id = p.ReadId();
-					if(id == guard_id)
+					if(id == guard_id) {
 						guarded = true;
+						speculative = 0;
+					}
 					if(p.Char('(')) {
 						id << "(";
 						p.SkipSpaces();
@@ -146,25 +152,32 @@ void PPInfo::PPFile::Parse(Stream& in)
 					Flag(id);
 					if(first)
 						guard_id = id;
+					speculative++;
 				}
 				else
 				if(p.Id("ifdef") && p.IsId()) {
 					Flag(p.ReadId());
+					speculative++;
 				}
 				else
-				if(p.Id("if"))
+				if(p.Id("if")) {
 					while(!p.IsEof()) {
 						if(p.IsId())
 							Flag(p.ReadId());
 						else
 							p.Skip();
 					}
+					speculative++;
+				}
+				else
+				if(p.Id("endif"))
+					speculative--;
 				else
 				if(p.Id("include")) {
 					if(p.IsId())
-						define_includes.Add(p.ReadId());
+						define_includes[!!speculative].Add(p.ReadId());
 					else
-						includes.FindAdd(TrimBoth(p.GetPtr()));
+						includes[!!speculative].FindAdd(TrimBoth(p.GetPtr()));
 				}
 				else
 				if(p.Id("pragma"))
@@ -182,6 +195,21 @@ void PPInfo::PPFile::Parse(Stream& in)
 		linei++;
 	}
 }
+
+void PPInfo::PPFile::Serialize(Stream& s)
+{
+	s % time
+	  % flags
+	  % defines
+	  % includes[0]
+	  % includes[1]
+	  % define_includes[0]
+	  % define_includes[1]
+	  % guarded
+	  % blitz
+	;
+}
+
 
 void PPInfo::SetIncludes(const String& incs)
 {
@@ -279,13 +307,17 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 	return f;
 }
 
-Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
-                                Vector<Tuple<String, String, int>>& flags)
+Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
+                                ArrayMap<String, Index<String>>& define_includes,
+                                Vector<Tuple<String, String, int>>& flags, bool speculative)
 {
 	PPFile& f = File(path);
 	String dir = GetFileFolder(path);
-	for(const String& i : f.define_includes)
-		define_includes.FindAdd(i);
+	Index<String>& dics = define_includes.GetAdd(path);
+	for(int i = 0; i <= (int)speculative; i++) {
+		for(const String& i : f.define_includes[i])
+			dics.FindAdd(i);
+	}
 	
 	Time ftm = GetFileTime(path);
 	
@@ -300,42 +332,43 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 				q = result.GetCount();
 				result.Add(ipath); // prevent infinite recursion
 				result[q] = GetFileTime(ipath); // temporary
-				result[q] = GatherDependencies(ipath, result, define_includes, flags);
+				result[q] = GatherDependencies(ipath, result, define_includes, flags, speculative);
 			}
 			ftm = max(result[q], ftm);
+			q = define_includes.Find(ipath);
+			if(q >= 0)
+				for(const String& i : define_includes[q])
+					dics.FindAdd(i);
 		}
 	};
 
-	for(const String& inc : f.includes)
-		DoInclude(inc);
-	for(const String& id : define_includes)
-		for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q))
-			DoInclude(f.defines[q]);
-
+	for(int i = 0; i <= (int)speculative; i++) {
+		for(const String& inc : f.includes[i])
+			DoInclude(inc);
+		for(const String& id : dics)
+			for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q))
+				DoInclude(f.defines[q]);
+	}
+	
 	result.Add(path, ftm);
 	
 	return ftm;
 }
 
 void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
-                                Vector<Tuple<String, String, int>>& flags)
-{
-	Index<String> define_includes;
-	GatherDependencies(path, result, define_includes, flags);
-}
-
-void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result)
+                                ArrayMap<String, Index<String>>& define_includes,
+                                bool speculative)
 {
 	Vector<Tuple<String, String, int>> flags;
-	GatherDependencies(path, result, flags);
+	GatherDependencies(path, result, define_includes, flags, speculative);
 }
 
 Time PPInfo::GetTime(const String& path)
 {
 	VectorMap<String, Time> result;
-	Index<String> define_includes;
+	ArrayMap<String, Index<String>> define_includes;
 	Vector<Tuple<String, String, int>> flags;
-	return GatherDependencies(NormalizePath(path), result, define_includes, flags);
+	return GatherDependencies(NormalizePath(path), result, define_includes, flags, true);
 }
 
 bool PPInfo::BlitzApproved(const String& path)
@@ -346,19 +379,20 @@ bool PPInfo::BlitzApproved(const String& path)
 	if(f.blitz == PROHIBITED)
 		return false;
 	String dir = GetFileFolder(path);
-	for(const String& inc : f.includes) {
-		String ipath = FindIncludeFile(inc, dir);
-		if(ipath.GetCount()) {
-			PPFile& f = File(ipath);
-			if(f.blitz == APPROVED)
-				return true;
-			if(f.blitz == PROHIBITED)
-				return false;
-			if(!f.guarded) {
-				WhenBlitzBlock(ipath, path);
-				return false;
+	for(int speculative = 0; speculative < 2; speculative++)
+		for(const String& inc : f.includes[speculative]) {
+			String ipath = FindIncludeFile(inc, dir);
+			if(ipath.GetCount()) {
+				PPFile& f = File(ipath);
+				if(f.blitz == APPROVED)
+					return true;
+				if(f.blitz == PROHIBITED)
+					return false;
+				if(!f.guarded) {
+					WhenBlitzBlock(ipath, path);
+					return false;
+				}
 			}
 		}
-	}
 	return true;
 }

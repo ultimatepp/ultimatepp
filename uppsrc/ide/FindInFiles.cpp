@@ -310,7 +310,7 @@ void Ide::FFoundFinish(bool files)
 	int n = FFound().GetCount();
 	FFound().HeaderTab(2).SetText(Format("Source line (%d)", n));
 	if(files)
-		FFound().Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
+		FFound().Add(Null, Null, AsString(n) + " matching file(s) have been found.");
 	else
 		FFound().Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
 }

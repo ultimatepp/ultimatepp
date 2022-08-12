@@ -29,6 +29,7 @@ struct SourceLocation : Moveable<SourceLocation> {
 	bool operator!=(const SourceLocation& b) const { return !operator==(b); }
 	void Serialize(Stream& s)                      { s % path % pos; }
 	hash_t GetHashValue() const                    { return CombineHash(path, pos); }
+	String ToString() const                        { return path + ": " + AsString(pos); }
 };
 
 String RedefineMacros();
@@ -91,6 +92,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	bool   definition;
 	bool   isvirtual;
 	String name; // Method
+	String type; // for String x, Upp::String, surely valid for variables only
 	String id; // Upp::Class::Method(Upp::Point p)
 	String pretty; // void Class::Method(Point p)
 	String nspace; // Upp

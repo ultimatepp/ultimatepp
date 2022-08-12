@@ -211,15 +211,20 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 
 #ifdef DUMPTREE
 	_DBG_
-	DLOG("=====================================");
-	DDUMP(ci.Kind());
-	DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
-	DDUMP(GetCursorSpelling(cursor));
-	DDUMP(ci.RawId());
-	DDUMP(ci.Type());
-	DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
-	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
-	DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+	{
+		DLOG("=====================================");
+		DDUMP(ci.Kind());
+		DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
+		DDUMP(GetCursorSpelling(cursor));
+		DDUMP(ci.RawId());
+		DDUMP(ci.Type());
+		DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
+		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
+		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
+		DDUMP(GetLocation(cxlocation));
+		DDUMP(clang_Cursor_isNull(clang_getCursorReferenced(cursor)));
+		DDUMP(clang_Location_isFromMainFile(cxlocation));
+	}
 
 #if 0
 	{
@@ -268,6 +273,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		AnnotationItem& r = info.GetAdd(loc.path).items.Add();
 		r.kind = ci.Kind();
 		r.name = ci.Name();
+		r.type = ci.Type();
 		r.pos = loc.pos;
 		r.id = id;
 		r.pretty = ci.Kind() == CXCursor_MacroDefinition ? r.name
@@ -299,11 +305,6 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		rm.pos = loc.pos;
 		rm.id = r.id;
 		ref_done.GetAdd(loc.path).FindAdd(rm);
-		
-		_DBG_
-		if(r.nest == "Upp::Ctrl") {
-			DLOG(r.id << " " << r.isvirtual);
-		}
 	}
 
 	if(!clang_Cursor_isNull(ref)) {
@@ -312,7 +313,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		int q = tfn.Find(ref_loc);
 	
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
-
+		
 		ReferenceItem rm;
 		rm.pos = loc.pos;
 		rm.id = ref_ci.Id();

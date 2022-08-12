@@ -56,7 +56,7 @@ file
 	Navigator.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,
-	Thisbacks.cpp,
+	Events.cpp,
 	Log.cpp,
 	Jump.cpp,
 	MainConfig.cpp,

@@ -106,8 +106,6 @@ ISUES:
 
 - Implement typedefs
 
-- Indexer::IsRunning should account for SchedulerThread
-
 - Visitor.cpp hasid = false - remove initialisation
 
 - Remove //$
@@ -119,21 +117,16 @@ ISUES:
 
 - TriggerIndexer on theide exit
 
-- different master header currentfile / index issue
-
 - DLOG(CleanupId(s)); - jump on CleanupId does go to DLOG (it has a good reason to, but anyway...)
+  -> Problem is with clang_Location_isFromMainFile, for expanded macro, it returns false
 
 - In CONSOLE_APP_MAIN jumps do not wrok
-
-- Alt-K - maybe should show declaration/definition too?
 
 - Indexer.cpp	[7, 423]   (Indexer::Job&,const Upp::String&)const
 
 - Indexer.cpp 	[32, 368]   FileAnnotation&&)(false)
 
 - Alt-K in void AssistEditor::Assist(bool macros) does not show all (_Bool problem?)
-
-- In Navigator, Assist should be before AssistEditor, when search is "Assist"
 
 - Cancel Assist when cursor moves out (test with above)
 
@@ -149,7 +142,19 @@ ISUES:
 
 - Wind/MetMastLayer.cpp:427 - no current file - 208KB :)
 
-- virtuals do not work with With...Layout<TopWindow> base
+- Alt+K in void Ide::FFoundFinish(bool files)
+
+- Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
+
+- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
+
+- Wind/MetMastLayer.cpp:6331 jumps to sqr
+
+- Wind/MetMastLayer.cpp:6358 no jump
+
+- Wind/MetMastLayer.cpp:1324 no jump
+
+- Alt-J on layout
 
 GREAT CODEBASE PURGE:
 
@@ -167,8 +172,6 @@ GREAT CODEBASE PURGE:
 	bool      auto_check;
 
 - IdeGotoCodeRef
-
-- virtuals
 
 - thisbacks
 
@@ -196,7 +199,7 @@ void AppExit__()
 
 NTH:
 
-- Find all overrides
+- Find all virtual method overrides
 
 - replace/remove Hdepend
 
@@ -230,6 +233,18 @@ LATER:
 
 
 DONE:
+
+- virtuals
+
+- different master header currentfile / index issue
+
+- Alt-K - maybe should show declaration/definition too?
+
+- Indexer::IsRunning should account for SchedulerThread
+
+- In Navigator, Assist should be before AssistEditor, when search is "Assist"
+
+- virtuals do not work with With...Layout<TopWindow> base
 
 - Ctrl+Space is sort of slow (too many items?)
 

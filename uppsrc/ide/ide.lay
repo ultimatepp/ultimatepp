@@ -723,9 +723,10 @@ LAYOUT(UppOptPushDlg, 340, 92)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(ThisbacksLayout, 712, 496)
+LAYOUT(EventsLayout, 712, 496)
 	ITEM(Upp::ArrayCtrl, list, HSizePosZ(8, 8).VSizePosZ(8, 40))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Insert methods")).RightPosZ(76, 108).BottomPosZ(8, 24))
+	ITEM(Upp::Button, yes, SetLabel(t_("Insert inlines")).RightPosZ(188, 108).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 

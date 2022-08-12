@@ -982,6 +982,7 @@ public:
 		void  SearchCode();
 		void  Goto();
 		void  NavigatorDlg();
+		void  Cycle(const AnnotationItem& cm);
 		void  SwapS();
 		void  References();
 		void  FindId(const String& id);

@@ -182,8 +182,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	AnnotationItem FindCurrentAnnotation();
 
 	void           DCopy();
+	String         FindCurrentNest();
 	void           Virtuals();
-	void           Thisbacks();
+	void           Events();
 
 	void           SelParam();
 	int            Ch(int q);

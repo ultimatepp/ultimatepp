@@ -12,17 +12,20 @@ String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header
 	String master_source;
 	String header_file = NormalizePath(header_file_);
 
-	VectorMap<String, Time> deps;
-	for(int i : wspc.use_order) {
-		const Package& pk = wspc.GetPackage(i);
-		String pk_name = wspc[i];
-		for(int i = 0; i < pk.file.GetCount(); i++) {
-			String path = SourcePath(pk_name, pk.file[i]);
-			if(!pk.file[i].separator && ppi.FileExists(path) && !PathIsEqual(header_file, path) &&
-			   IsCppSourceFile(path) && GetFileLength(path) < 200000) {
-				ppi.GatherDependencies(path, deps);
-				if(deps.Find(header_file) >= 0)
-					return path;
+	for(int speculative = 0; speculative < 2; speculative++) {
+		VectorMap<String, Time> deps;
+		ArrayMap<String, Index<String>> dics;
+		for(int i : wspc.use_order) {
+			const Package& pk = wspc.GetPackage(i);
+			String pk_name = wspc[i];
+			for(int i = 0; i < pk.file.GetCount(); i++) {
+				String path = SourcePath(pk_name, pk.file[i]);
+				if(!pk.file[i].separator && ppi.FileExists(path) && !PathIsEqual(header_file, path) &&
+				   IsCppSourceFile(path) && GetFileLength(path) < 4000000) {
+					ppi.GatherDependencies(path, deps, dics, speculative);
+					if(deps.Find(header_file) >= 0)
+						return path;
+				}
 			}
 		}
 	}
@@ -36,6 +39,7 @@ void AnnotationItem::Serialize(Stream& s)
 	  % definition
 	  % isvirtual
 	  % name
+	  % type
 	  % id
 	  % pretty
 	  % nspace
@@ -99,7 +103,7 @@ void DumpIndex()
 	for(const auto& m : ~x) {
 		out << m.key << "\n";
 		for(const auto& n : m.value.items)
-			out << '\t' << n.name << "   " << n.id << "   " << n.pretty << "\n";
+			out << '\t' << n.name << "   " << n.type << "   " << n.id << "   " << n.pretty << "\n";
 		for(const auto& n : m.value.refs)
 			out << '\t' << n.pos << "   " << n.id << "\n";
 	}
@@ -137,9 +141,6 @@ void Indexer::IndexerThread()
 			
 			if(Thread::IsShutdownThreads())
 				break;
-			
-		//	if(job.path != "C:\\upp\\ide$$$blitz.cpp")
-		//		continue;
 			
 			{
 				LTIMESTOP("Parsing " + job.path + " " + AsString(job.file_times));
@@ -313,25 +314,32 @@ void Indexer::SchedulerThread()
 				
 			{
 				LTIMING("Dependencies");
-				for(const Vector<Tuple<String, bool>>& pk : sources)
-					for(const Tuple<String, bool>& m : pk) {
-						if(IsCSourceFile(m.a)) {
-							int n = files.GetCount();
-							ppi.GatherDependencies(m.a, files);
-							for(int i = n; i < files.GetCount(); i++) {
-								String p = files.GetKey(i);
-								if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-									master.Add(m.a);
-									header.Add(p);
+				for(int speculative = 0; speculative < 2; speculative++) {
+					files.Clear();
+					ArrayMap<String, Index<String>> dics;
+					for(const Vector<Tuple<String, bool>>& pk : sources)
+						for(const Tuple<String, bool>& m : pk) {
+							if(IsCSourceFile(m.a)) {
+								int n = files.GetCount();
+								ppi.GatherDependencies(m.a, files, dics, speculative);
+								for(int i = n; i < files.GetCount(); i++) {
+									String p = files.GetKey(i);
+									if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
+										master.Add(m.a);
+										header.Add(p);
+									}
 								}
 							}
 						}
-					}
+				}
 			}
 			
-	//		DDUMP(workspace_headers);
-		
+//			DDUMPC(header);
+			
 			Index<String> dirty_files; // files that need to be recompiled (including headers)
+			
+//			DDUMPC(dirty_files);
+//			DDUMPM(files);
 	
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");
@@ -384,10 +392,8 @@ void Indexer::SchedulerThread()
 						job.file_times.Add(path, files.Get(path, Time::Low()));
 						for(int q = master.Find(path); q >= 0; q = master.FindNext(q)) {
 							String hpath = header[q];
-							if(dirty_files.Find(hpath) >= 0) { // TODO: Ignore external includes if times are ok
-								job.file_times.Add(hpath, files.Get(hpath, Time::Low()));
-								job.master_files.Add(header[q], path);
-							}
+							job.file_times.Add(hpath, files.Get(hpath, Time::Low()));
+							job.master_files.Add(header[q], path);
 						}
 						return job;
 					};

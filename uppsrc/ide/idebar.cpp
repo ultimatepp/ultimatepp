@@ -765,7 +765,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
 			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
 			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
+			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
 			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));

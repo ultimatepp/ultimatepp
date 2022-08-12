@@ -154,10 +154,14 @@ void Ide::ContextGoto0(int pos)
 
 	String ref_id;
 	int ci = 0;
-	for(const ReferenceItem& m : editor.references)
-		if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci) {
-			ref_id = m.id;
-			ci = m.pos.x;
+	String id = editor.ReadIdBack(pos);
+	for(int pass = 0; pass < 2; pass++)
+		for(const ReferenceItem& m : editor.references) {
+			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
+			   (m.id.Mid(max(m.id.ReverseFind(':'), 0)) == id || pass == 1)) {
+				ref_id = m.id;
+				ci = m.pos.x;
+			}
 		}
 
 	if(ref_id.GetCount()) {

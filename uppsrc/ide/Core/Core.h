@@ -104,8 +104,8 @@ class PPInfo {
 		int                           scan_serial = 0;
 		Vector<Tuple<String, int>>    flags; // "#if... flagXXXX"
 		VectorMap<String, String>     defines; // #define ...
-		Index<String>                 includes;
-		Index<String>                 define_includes; // #define LAYOUTFILE
+		Index<String>                 includes[2]; // 1 - speculative includes
+		Index<String>                 define_includes[2]; // #define LAYOUTFILE
 		bool                          guarded; // has include guards
 		int                           blitz; // AUTO, APPROVED, PROHIBITED
 		Time                          time = Null; // file time
@@ -114,7 +114,7 @@ class PPInfo {
 		
 		void Dirty()                          { dirty = true; time = Null; }
 		void Parse(Stream& in);
-		void Serialize(Stream& s)             { s % time % flags % defines % includes % define_includes % guarded % blitz; }
+		void Serialize(Stream& s);
 	};
 	
 	ArrayMap<String, PPFile>                   files;
@@ -125,9 +125,6 @@ class PPInfo {
 	
 
 	PPFile& File(const String& path);
-
-	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
-	                                         Vector<Tuple<String, String, int>>& flags);
 
 public:
 	static void           RescanAll()                                           { scan_serial++; }
@@ -143,9 +140,13 @@ public:
 
 	bool                  BlitzApproved(const String& path);
 
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         Vector<Tuple<String, String, int>>& flags, bool speculative = true);
 	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
-	                                         Vector<Tuple<String, String, int>>& flags);
-	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result);
+	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         bool speculative = true);
+
 	Time                  GetTime(const String& path);
 	
 	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).defines; }
