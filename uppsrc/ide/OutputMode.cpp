@@ -447,7 +447,6 @@ void Ide::SetMethod(const String& m)
 {
 	method = m;
 	current_builder = GetMethodVars(method).Get("BUILDER", "");
-	TriggerIndexer();
 }
 
 void Ide::SelectMethod()
@@ -460,6 +459,7 @@ void Ide::SelectMethod()
 	}
 	SyncBuildMode();
 	SetHdependDirs();
+	TriggerIndexer();
 }
 
 void Ide::DropModeList()

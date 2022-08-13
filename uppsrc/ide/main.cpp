@@ -120,8 +120,13 @@ void AppMain___()
 {
 	// Set this for storing libclang preamble
 	// TODO CLANG flag?
+#ifdef PLATFORM_POSIX
+	setenv("TMPDIR", CacheDir(), 1);
+	setenv("TMP", CacheDir(), 1);
+#else
 	SetEnvironmentVariable("TMPDIR", CacheDir());
 	SetEnvironmentVariable("TMP", CacheDir()); // Looks like libclang ignores TMPDIR
+#endif
 //	Ctrl::ShowRepaint(50);
 
 #ifdef flagPEAKMEM
