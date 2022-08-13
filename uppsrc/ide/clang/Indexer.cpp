@@ -103,7 +103,7 @@ void DumpIndex()
 	for(const auto& m : ~x) {
 		out << m.key << "\n";
 		for(const auto& n : m.value.items)
-			out << '\t' << n.name << "   " << n.type << "   " << n.id << "   " << n.pretty << "\n";
+			out << '\t' << n.name << "   " << n.type << "   " << n.id << "   " << n.pretty << "   " << n.bases << "\n";
 		for(const auto& n : m.value.refs)
 			out << '\t' << n.pos << "   " << n.id << "\n";
 	}

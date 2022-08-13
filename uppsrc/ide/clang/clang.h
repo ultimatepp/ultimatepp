@@ -50,7 +50,7 @@ bool IsStruct(int kind);
 bool IsTemplate(int kind);
 bool IsFunction(int kind);
 bool IsVariable(int kind);
-int  FindId(const char *s, const String& id);
+int  FindId(const String& s, const String& id);
 
 enum {
 	ITEM_TEXT,

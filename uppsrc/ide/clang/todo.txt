@@ -162,6 +162,10 @@ ISUES:
 
 - remove bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
 
+- Usage .lay of FileSel::dir adds some strange lines
+
+- Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -178,8 +182,6 @@ GREAT CODEBASE PURGE:
 	bool      auto_check;
 
 - IdeGotoCodeRef
-
-- thisbacks
 
 NONCLANG:
 
@@ -239,6 +241,8 @@ LATER:
 
 
 DONE:
+
+- thisbacks
 
 - virtuals
 

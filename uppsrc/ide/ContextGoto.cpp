@@ -25,6 +25,7 @@ bool IsPendif(const String& l)
 	return l.Find("#endif") >= 0;
 }
 
+/* TODO remove
 void Ide::FindId(const String& id)
 {
 	int pos = editor.GetCursor();
@@ -48,6 +49,7 @@ void Ide::FindId(const String& id)
 			pos++;
 	}
 }
+*/
 
 bool Ide::OpenLink(const String& s, int pos)
 { // try to find link at cursor, either http, https or file
@@ -184,6 +186,7 @@ void Ide::ContextGoto0(int pos)
 					found_nest = m.nest;
 				}
 			}
+		
 		if(found_path.GetCount()) {
 			AddHistory();
 			EditFile(found_path);
@@ -226,40 +229,46 @@ void Ide::CtrlClick(int64 pos)
 		ContextGoto0((int)pos);
 }
 
-bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
+void Ide::FindDesignerItemReferences(const String& id, const String& name)
 {
-	if(ToLower(GetFileExt(path)) == ".lay") {
-		AddHistory();
-		EditFile(path);
-		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
-		if(l) {
-			if(scope.StartsWith("With"))
-				l->FindLayout(scope.Mid(4), name);
-			else
-			if(name.StartsWith("SetLayout_"))
-				l->FindLayout(name.Mid(10), Null);
+	String path = NormalizePath(editfile);
+	int q = CodeIndex().Find(path);
+	if(q >= 0) {
+		AnnotationItem cm;
+		for(const AnnotationItem& m : CodeIndex()[q].items)
+			if(m.id.EndsWith(id) &&
+			   (m.id.GetCount() <= id.GetCount() || !iscid(m.id[m.id.GetCount() - id.GetCount() - 1]))) {
+				cm = m;
+				break;
+			}
+
+		if(cm.id.GetCount()) {
+			Vector<Tuple<String, Point>> set;
+			for(const auto& f : ~CodeIndex()) {
+				if(f.key != path) {
+					for(const AnnotationItem& m : f.value.items)
+						if(FindId(m.type, cm.id) >= 0 || FindId(m.bases, cm.id) >= 0 || FindId(m.pretty, cm.id) >= 0)
+							set.Add({ f.key, m.pos });
+					for(const ReferenceItem& m : f.value.refs)
+						if(FindId(m.id, id) >= 0)
+							set.Add({ f.key, m.pos });
+				}
+			}
+			if(set.GetCount()) {
+				if(set.GetCount() > 1) {
+					SetFFound(ffoundi_next);
+					FFound().Clear();
+					for(auto& m : set)
+						AddReferenceLine(m.a, m.b, name);
+					SortByKey(CodeIndex());
+					FFoundFinish();
+				}
+				GotoPos(set[0].a, set[0].b);
+				return;
+			}
 		}
-		else {
-			editor.SetCursor(editor.GetPos64(line - 1));
-			editor.TopCursor(4);
-			editor.SetFocus();
-		}
-		AddHistory();
-		return true;
 	}
-	else
-	if(ToLower(GetFileExt(path)) == ".iml") {
-		AddHistory();
-		EditFile(path);
-		IdeIconDes *l = dynamic_cast<IdeIconDes *>(~designer);
-		if(l)
-			l->FindId(name);
-		else
-			editor.SetFocus();
-		AddHistory();
-		return true;
-	}
-	return false;
+	Exclamation("No usage has been found.");
 }
 
 void Ide::GotoFileAndId(const String& path, const String& id)

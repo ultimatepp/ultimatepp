@@ -40,18 +40,9 @@ bool IsVariable(int kind)
 	return findarg(kind, CXCursor_VarDecl, CXCursor_FieldDecl) >= 0;
 }
 
-int FindId(const char *s, const String& id)
-{
-	try {
-		CParser p(s);
-		while(!p.IsEof()) {
-			const char *q = p.GetPtr();
-			if(p.Id(id))
-				return q - s;
-			else
-				p.Skip();
-		}
-	}
-	catch(CParser::Error) {}
-	return -1;
-}
+int FindId(const String& s, const String& id) {
+	int q = s.Find(id);
+	return q < 0 ||
+	       q > 0 && iscid(s[q - 1]) ||
+	       q + id.GetCount() < s.GetCount() && iscid(s[q + id.GetCount()]) ? -1 : q;
+};

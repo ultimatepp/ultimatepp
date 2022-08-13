@@ -78,6 +78,23 @@ String GetFileLine(const String& path, int linei)
 	return linei >= 0 && linei < line.GetCount() ? line[linei] : String();
 }
 
+void Ide::AddReferenceLine(const String& path, Point mpos, const String& name)
+{
+	String ln = GetFileLine(path, mpos.y);
+	int count = 0;
+	int pos = 0;
+	if(name.GetCount()) {
+		pos = FindId(ln.Mid(mpos.x), name);
+		if(pos >= 0) {
+			count = name.GetCount();
+			pos += mpos.x;
+		}
+		else
+			pos = 0;
+	}
+	AddFoundFile(path, mpos.y + 1, ln, pos, count);
+}
+
 void Ide::References()
 {
 	if(designer)
@@ -90,17 +107,6 @@ void Ide::References()
 	SortByKey(CodeIndex());
 	for(const auto& f : ~CodeIndex()) {
 		auto Add = [&](Point mpos) {
-			String ln = GetFileLine(f.key, mpos.y);
-			int count = 0;
-			int pos = 0;
-			if(cm.name.GetCount()) {
-				pos = ::FindId(ln + mpos.x, cm.name);
-				if(pos >= 0)
-					count = cm.name.GetCount();
-				else
-					pos = 0;
-			}
-			AddFoundFile(f.key, mpos.y + 1, ln, pos, count);
 		};
 		for(const AnnotationItem& m : f.value.items)
 			if(m.id == cm.id)

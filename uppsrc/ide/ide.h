@@ -985,8 +985,9 @@ public:
 		void  NavigatorDlg();
 		void  Cycle(const AnnotationItem& cm);
 		void  SwapS();
+		void  AddReferenceLine(const String& path, Point pos, const String& name);
 		void  References();
-		void  FindId(const String& id);
+//		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
@@ -1001,6 +1002,7 @@ public:
 		void  DoPatchDiff();
 		void  AsErrors();
 		void  RemoveDs();
+		void  FindDesignerItemReferences(const String& id, const String& name);
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1163,8 +1165,8 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
-	bool      GotoDesignerFile(const String& path, const String& scope, const String& name, int line);
 	void      GotoFileAndId(const String& path, const String& id);
+	void      GotoDesignerItem(const String& path, const String& id);
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();
