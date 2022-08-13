@@ -166,6 +166,9 @@ ISUES:
 
 - Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 
 
+- Wind/MetTimeProf.cpp:881 jump on CUtil::
+
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg
@@ -184,8 +187,6 @@ GREAT CODEBASE PURGE:
 - IdeGotoCodeRef
 
 NONCLANG:
-
-- Wind/MetTimeProf.cpp:881 jump on CUtil::
 
 - Debugger Threads should show active threads first
 
