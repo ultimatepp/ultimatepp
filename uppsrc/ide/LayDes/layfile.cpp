@@ -83,11 +83,13 @@ void LayDes::RestoreEditPos()
 
 void LayDes::FindLayout(const String& name, const String& item_name)
 {
+	DDUMP(item_name);
 	for(int i = 0; i < layout.GetCount(); i++)
 		if(layout[i].name == name) {
 			GoTo(i);
 			if(!IsNull(item_name)) {
 				int q = item.Find(item_name, 1);
+				DDUMP(q);
 				if(q >= 0)
 					SelectOne(q, 0);
 			}

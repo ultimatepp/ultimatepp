@@ -2,6 +2,14 @@
 
 #define LLOG(x) // DLOG(x)
 
+void Ide::GotoPos(Point pos)
+{
+	editor.SetCursor(editor.GetPos64(pos.y, pos.x));
+	editor.TopCursor(4);
+	editor.SetFocus();
+	AddHistory();
+}
+
 void Ide::GotoPos(String path, int line)
 {
 	GotoPos(path, Point(0, line));
@@ -16,10 +24,7 @@ void Ide::GotoPos(String path, Point pos)
 			DoEditAsText(path);
 		EditFile(path);
 	}
-	editor.SetCursor(editor.GetPos64(pos.y, pos.x));
-	editor.TopCursor(4);
-	editor.SetFocus();
-	AddHistory();
+	GotoPos(pos);
 }
 
 String PosFn(const String& pkg, const String& n)

@@ -156,6 +156,12 @@ ISUES:
 
 - Alt-J on layout
 
+- Alt-J relaxed rules if not found (in templates, different parameters)
+
+- Remove IdeGotoFileAndId (after fixing laydes Alt+K)
+
+- remove bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
+
 GREAT CODEBASE PURGE:
 
 - ReferenceDlg

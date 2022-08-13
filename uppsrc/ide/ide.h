@@ -808,6 +808,7 @@ public:
 	void      SelectMode();
 	void      SerializeOutputMode(Stream& s);
 
+	void      GotoPos(Point pos);
 	void      GotoPos(String path, int line);
 	void      GotoPos(String path, Point pos);
 	

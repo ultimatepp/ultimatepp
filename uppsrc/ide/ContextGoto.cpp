@@ -168,6 +168,8 @@ void Ide::ContextGoto0(int pos)
 		String found_path;
 		Point  found_pos(INT_MAX, INT_MAX);
 		bool   found_definition = false;
+		String found_name;
+		String found_nest;
 		
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
@@ -178,10 +180,38 @@ void Ide::ContextGoto0(int pos)
 					found_path = f.key;
 					found_pos = m.pos;
 					found_definition = m.definition;
+					found_name = m.name;
+					found_nest = m.nest;
 				}
 			}
-		if(found_path.GetCount())
-			GotoPos(found_path, found_pos);
+		if(found_path.GetCount()) {
+			AddHistory();
+			EditFile(found_path);
+			LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
+			if(l) {
+				String cls = found_nest;
+				int q = cls.ReverseFind(':');
+				if(q >= 0)
+					cls = cls.Mid(q + 1);
+				if(cls.TrimStart("With")) {
+					l->FindLayout(cls, found_name);
+					return;
+				}
+				else
+				if(found_name.TrimStart("SetLayout_")) {
+					l->FindLayout(found_name, Null);
+					return;
+				}
+				DoEditAsText(found_path);
+			}
+			IdeIconDes *k = dynamic_cast<IdeIconDes *>(~designer);
+			if(k) {
+				k->FindId(found_name);
+				return;
+			}
+			GotoPos(found_pos);
+			AddHistory();
+		}
 	}
 }
 
