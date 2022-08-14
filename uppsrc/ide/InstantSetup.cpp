@@ -191,12 +191,18 @@ void InstantSetup()
 			bins.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
 
 			incs.At(0) = GetExeDirFile("bin/SDL2/include");
-			incs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
-			incs.At(2) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
-
 			libs.At(0) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
+
+			incs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
 			libs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
+
+			incs.At(2) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
 			libs.At(2) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+
+			if(x64) {
+				incs.At(3) = GetExeDirFile("bin/llvm");
+				libs.At(3) = GetExeDirFile("bin/llvm");
+			}
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
@@ -325,7 +331,7 @@ void InstantSetup()
 				String& myinc = incs.At(ii++);
 				if(IsNull(myinc) || ToLower(myinc).Find("mysql") >= 0)
 					myinc = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
-				
+
 				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
@@ -348,9 +354,9 @@ void InstantSetup()
 					pglib = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
 
 				String& mylib = libs.At(ii++);
-				if(IsNull(mylib) || ToLower(mylib).Find("pgsql") >= 0)
+				if(IsNull(mylib) || ToLower(mylib).Find("mysql") >= 0)
 					mylib = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
-			
+
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
 				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
