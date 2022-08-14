@@ -258,12 +258,14 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 				if(set.GetCount() > 1) {
 					SetFFound(ffoundi_next);
 					FFound().Clear();
+					Index<String> unique;
 					for(auto& m : set)
-						AddReferenceLine(m.a, m.b, name);
+						AddReferenceLine(m.a, m.b, name, unique);
 					SortByKey(CodeIndex());
 					FFoundFinish();
 				}
-				GotoPos(set[0].a, set[0].b);
+				else
+					GotoPos(set[0].a, set[0].b);
 				return;
 			}
 		}

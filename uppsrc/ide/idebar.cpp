@@ -761,7 +761,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-			menu.Add(!designer, AK_REFERENCES, THISBACK(References));
+			menu.Add(!designer, AK_USAGE, THISBACK(Usage));
 			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
 			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
 			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));

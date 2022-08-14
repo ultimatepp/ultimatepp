@@ -985,8 +985,8 @@ public:
 		void  NavigatorDlg();
 		void  Cycle(const AnnotationItem& cm);
 		void  SwapS();
-		void  AddReferenceLine(const String& path, Point pos, const String& name);
-		void  References();
+		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
+		void  Usage();
 //		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
 		void  ContextGoto0(int pos);

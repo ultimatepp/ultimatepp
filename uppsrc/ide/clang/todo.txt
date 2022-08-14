@@ -168,6 +168,8 @@ ISUES:
 
 - Wind/MetTimeProf.cpp:881 jump on CUtil::
 
+- Alt-U on IconDes::Arrow shows Image::Arrow too
+
 
 GREAT CODEBASE PURGE:
 

@@ -78,7 +78,7 @@ String GetFileLine(const String& path, int linei)
 	return linei >= 0 && linei < line.GetCount() ? line[linei] : String();
 }
 
-void Ide::AddReferenceLine(const String& path, Point mpos, const String& name)
+void Ide::AddReferenceLine(const String& path, Point mpos, const String& name, Index<String>& unique)
 {
 	String ln = GetFileLine(path, mpos.y);
 	int count = 0;
@@ -92,10 +92,14 @@ void Ide::AddReferenceLine(const String& path, Point mpos, const String& name)
 		else
 			pos = 0;
 	}
-	AddFoundFile(path, mpos.y + 1, ln, pos, count);
+	String h = String() << path << '\t' << mpos.y << '\t' << ln << '\t' << pos << '\t' << count;
+	if(unique.Find(h) < 0) {
+		unique.Add(h);
+		AddFoundFile(path, mpos.y + 1, ln, pos, count);
+	}
 }
 
-void Ide::References()
+void Ide::Usage()
 {
 	if(designer)
 		return;
@@ -105,8 +109,10 @@ void Ide::References()
 	SetFFound(ffoundi_next);
 	FFound().Clear();
 	SortByKey(CodeIndex());
+	Index<String> unique;
 	for(const auto& f : ~CodeIndex()) {
 		auto Add = [&](Point mpos) {
+			AddReferenceLine(f.key, mpos, cm.name, unique);
 		};
 		for(const AnnotationItem& m : f.value.items)
 			if(m.id == cm.id)
