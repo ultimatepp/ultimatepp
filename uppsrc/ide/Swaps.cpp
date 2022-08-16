@@ -13,6 +13,8 @@ void Ide::SwapS()
 
 void Ide::Cycle(const AnnotationItem& cm)
 {
+	if(IsNull(cm.id))
+		return;
 	struct Sf : Moveable<Sf> {
 		String path;
 		Point  pos;

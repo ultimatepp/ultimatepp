@@ -40,3 +40,9 @@ void InitializeTopicModule()
 {
 	RegisterIdeModule(Single<TopicModule>());
 }
+
+INITIALIZER(CodeBase)
+{
+	void InitializeTopicModule();
+	InitializeTopicModule();
+}

@@ -74,11 +74,19 @@ void TopicEditor::FindBrokenRef()
 					RichPara para = txt.Get(i);
 					if(para.format.label == "noref")
 						continue;
-					// TODO ReferenceDlg
-//					if(!IsNull(para.format.label) && GetCodeRefItem(para.format.label))
-//						continue;
-					editor.Move(txt.GetPartPos(i));
-					return;
+					bool found = false;
+					String lbl_id = CleanupTppId(para.format.label);
+					if(!IsNull(para.format.label))
+						for(const auto& f : ~CodeIndex())
+							for(const AnnotationItem& m : f.value.items)
+								if(FindIndex(AnnotationCandidates(m.id), lbl_id) >= 0) {
+									found = true;
+									break;
+								}
+					if(!found) {
+						editor.Move(txt.GetPartPos(i));
+						return;
+					}
 				}
 			}
 		}
@@ -97,12 +105,10 @@ void TopicEditor::FindBrokenRef()
 
 void TopicEditor::Tools(Bar& bar)
 {
-	bar.Add("Insert code item..", IdeCommonImg::InsertItem(), THISBACK(InsertItem))
-	   .Key(K_CTRL_INSERT);
 	String l = editor.GetFormatInfo().label;
 	bool b = l.GetCount() > 2 && l != "noref";
-	bar.Add(b, "See referenced code", IdeCommonImg::Source(), THISBACK(JumpToDefinition))
-	   .Key(K_ALT_J).Key(K_ALT_I);
+	bar.Add(b, "See referenced code", IdeCommonImg::Cpp(), THISBACK(JumpToDefinition))
+	   .Key(K_ALT_U).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
 #ifdef REPAIR
@@ -168,16 +174,6 @@ static int sSplitT(int c) {
 	return c == ';' || c == '<' || c == '>' || c == ',';
 }
 
-bool IsCodeRefType(const String& type)
-{
-	if(type.GetCount() == 0)
-		return false;
-	return false;
-	// TODO
-//	CodeBaseLock __;
-//	return CodeBase().Find(type) >= 0;
-}
-
 String TopicEditor::GetLang() const
 {
 	int q = topicpath.ReverseFind('@');
@@ -187,58 +183,6 @@ String TopicEditor::GetLang() const
 			return LNGAsText(lang);
 	}
 	return "%";
-}
-
-void TopicEditor::InsertItem()
-{ // TODO: Fix this when we have new codebase!
-#if 0
-	if(IsNull(topicpath))
-		return;
-	Save();
-	ref.Title("Insert");
-	if(ref.item.IsCursor())
-		ref.item.SetFocus();
-	ref.item.MultiSelect();
-	ref.classlist.Show();
-	int c = ref.Execute();
-	if(c == IDCANCEL)
-		return;
-	if(c == IDYES) {
-		String qtf = "&{{1 ";
-		bool next = false;
-		for(int i = 0; i < ref.scope.GetCount(); i++) {
-			String s = ref.scope.Get(i, 1);
-			if(*s != '<') {
-				if(next)
-					qtf << ":: ";
-				qtf << DeQtf(s);
-				next = true;
-			}
-		}
-		qtf << "}}&";
-		editor.PasteText(ParseQTF(qtf));
-		return;
-	}
-	String qtf;
-	if(ref.item.IsSelection()) {
-		for(int i = 0; i < ref.item.GetCount(); i++)
-			if(ref.item.IsSelected(i)) {
-				CppItemInfo m = ref.GetItemInfo(i);
-				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m, GetLang());
-			}
-	}
-	else
-	if(ref.item.IsCursor()) {
-		CppItemInfo m = ref.GetItemInfo();
-		qtf << CreateQtf(ref.GetCodeRef(), m.name, m, GetLang());
-	}
-	else
-		return;
-	editor.BeginOp();
-	editor.PasteText(ParseQTF(styles + qtf));
-	editor.PrevPara();
-	editor.PrevPara();
-#endif
 }
 
 String DecoratedItem(const String& name, const String& pretty)

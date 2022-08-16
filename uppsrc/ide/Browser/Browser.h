@@ -11,6 +11,8 @@
 #define IMAGEFILE <ide/Browser/Browser.iml>
 #include <Draw/iml_header.h>
 
+INITIALIZE(CodeBase)
+
 inline Font BrowserFont() { return StdFont(); }
 
 struct TopicInfo : Moveable<TopicInfo> {
@@ -18,10 +20,6 @@ struct TopicInfo : Moveable<TopicInfo> {
 	String         path;
 	String         title;
 	Vector<int>    words;
-
-	TopicInfo() {}
-
-	rval_default(TopicInfo);
 };
 
 String          GetTopicPath(const TopicLink& link);
@@ -47,21 +45,6 @@ bool            MatchTopicLink(const String& link, const Vector<String>& query);
 
 #define LAYOUTFILE <ide/Browser/Topic.lay>
 #include <CtrlCore/lay.h>
-
-/*
-struct ReferenceDlg : WithReferenceDlgLayout<TopWindow>, CodeBrowser {
-	void   EnterItem();
-	void   EnterItemOk();
-	void   Set(const String& s);
-	String Get() const            { return ~reference; }
-
-	void   Serialize(Stream& s)   { SerializePlacement(s); }
-
-	typedef ReferenceDlg CLASSNAME;
-
-	ReferenceDlg();
-};
-*/
 
 
 #define IMAGEFILE <ide/Browser/Topic.iml>
@@ -197,7 +180,6 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-	void   InsertItem();
 
 	void   FindBrokenRef();
 	void   JumpToDefinition();

@@ -395,7 +395,6 @@ void Ide::SaveFile0(bool always)
 		SyncUsc();
 
 	MakeTitle();
-	TriggerIndexer();
 }
 
 void Ide::FlushFile() {

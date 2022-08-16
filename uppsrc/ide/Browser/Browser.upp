@@ -13,7 +13,6 @@ file
 	Browser.iml,
 	Topic readonly separator,
 	TopicBase.cpp,
-	Reference.cpp,
 	File.cpp,
 	Topic.cpp,
 	Template.cpp,

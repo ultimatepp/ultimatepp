@@ -170,23 +170,10 @@ ISUES:
 
 - Alt-U on IconDes::Arrow shows Image::Arrow too
 
+- bool IsCodeRefType(const String& type) Alt-U does not work
 
-GREAT CODEBASE PURGE:
+- ow "stdev" in Navigator produces second weird set of references that lead just to class
 
-- ReferenceDlg
-
-- void LayDes::GotoUsing()
-
-- bool IsCodeRefType(const String& type)
-
-- void TopicEditor::InsertItem()
-
-- void   TopicEditor::FixTopic()
-
-- 	bool      auto_rescan;
-	bool      auto_check;
-
-- IdeGotoCodeRef
 
 NONCLANG:
 
@@ -209,6 +196,8 @@ void AppExit__()
 
 
 NTH:
+
+- Find all debug logs
 
 - Find all virtual method overrides
 
@@ -244,6 +233,25 @@ LATER:
 
 
 DONE:
+
+- GREAT CODEBASE PURGE:
+
+- ReferenceDlg
+
+- bool IsCodeRefType(const String& type)
+
+- void TopicEditor::InsertItem()
+
+- void TopicEditor::Label(String& label)
+
+- void   TopicEditor::FixTopic()
+
+- 	bool      auto_rescan;
+	bool      auto_check;
+
+- IdeGotoCodeRef
+
+- void LayDes::GotoUsing()
 
 - thisbacks
 

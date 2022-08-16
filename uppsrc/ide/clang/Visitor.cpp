@@ -1,6 +1,6 @@
 #include "clang.h"
 
-// #define DUMPTREE
+#define DUMPTREE
 
 class ClangCursorInfo {
 	CXCursor     cursor;
@@ -124,6 +124,8 @@ String ClangCursorInfo::Id()
 			case CXCursor_StructDecl:
 			case CXCursor_ClassDecl:
 			case CXCursor_UnionDecl:
+			case CXCursor_TypedefDecl:
+			case CXCursor_TypeAliasDecl:
 				m = Type();
 				break;
 			case CXCursor_FunctionTemplate:
@@ -147,10 +149,10 @@ String ClangCursorInfo::Id()
 			case CXCursor_EnumConstantDecl:
 				m << Scope() << Name();
 				break;
+				
 	/*
 			case CXCursor_EnumDecl:
 			case CXCursor_ParmDecl:
-			case CXCursor_TypedefDecl:
 			case CXCursor_Namespace:
 			case CXCursor_UnexposedDecl:
 			case CXCursor_NamespaceAlias:
