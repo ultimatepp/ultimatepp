@@ -479,6 +479,11 @@ void Stream::SerializeRaw(word *data, int64 count)
 #endif
 }
 
+void Stream::SerializeRaw(int16 *data, int64 count)
+{
+	SerializeRaw((word *)data, count);
+}
+
 void Stream::SerializeRaw(dword *data, int64 count)
 {
 	ASSERT(count >= 0);
@@ -491,6 +496,11 @@ void Stream::SerializeRaw(dword *data, int64 count)
 #endif
 }
 
+void Stream::SerializeRaw(int *data, int64 count)
+{
+	SerializeRaw((dword *)data, count);
+}
+
 void Stream::SerializeRaw(uint64 *data, int64 count)
 {
 	ASSERT(count >= 0);
@@ -501,6 +511,16 @@ void Stream::SerializeRaw(uint64 *data, int64 count)
 #ifdef CPU_BE
 	EndianSwap(data, count);
 #endif
+}
+
+void Stream::SerializeRaw(float *data, int64 count)
+{
+	SerializeRaw((dword *)data, count);
+}
+
+void Stream::SerializeRaw(double *data, int64 count)
+{
+	SerializeRaw((uint64 *)data, count);
 }
 
 void Stream::Pack(dword& w) {
@@ -928,7 +948,7 @@ void CompareStream::Open(Stream& astream) {
 	style = STRM_WRITE|STRM_SEEK;
 	stream = &astream;
 	size = pos = 0;
-	wrlim = buffer + 128;
+	wrlim = buffer + 1024;
 	ptr = buffer;
 	equal = true;
 	ClearError();

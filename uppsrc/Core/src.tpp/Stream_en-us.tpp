@@ -766,37 +766,32 @@ the end is written.&]
 [* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
 yte]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[*@3 count])&]
-[s2; Serializes raw 8`-bit data. Might invoke LoadError if there 
-is not enough data to load. Data are always stored in little`-endian 
-mode (conversion performed on BE systems as necessary).&]
-[s3; &]
-[s4;%- &]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:word`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
 [* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:word`:`:typedef^ w
 ord]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[*@3 count])&]
-[s2; Serializes raw 16`-bit data. Might invoke LoadError if there 
-is not enough data to load. Data are always stored in little`-endian 
-mode (conversion performed on BE systems as necessary).&]
-[s3; &]
-[s4;%- &]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:int16`*`,Upp`:`:int64`):%- [@(0.0.255) void] 
+[* SerializeRaw](int16 [@(0.0.255) `*][*@3 data], int64 [*@3 count])&]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:dword`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
 [* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
 word]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[*@3 count])&]
-[s2; Serializes raw 32`-bit data. Might invoke LoadError if there 
-is not enough data to load. Data are always stored in little`-endian 
-mode (conversion performed on BE systems as necessary).&]
-[s3; &]
-[s4;%- &]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(int`*`,Upp`:`:int64`):%- [@(0.0.255) void] 
+[* SerializeRaw]([@(0.0.255) int] [@(0.0.255) `*][*@3 data], int64 [*@3 count])&]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:uint64`*`,Upp`:`:int64`):%- [@(0.0.255) void
 ]_[* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:uint64`:`:typedef^ u
 int64]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[*@3 count])&]
-[s2; Serializes raw 64`-bit data. Might invoke LoadError if there 
-is not enough data to load. Data are always stored in little`-endian 
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(float`*`,Upp`:`:int64`):%- [@(0.0.255) void] 
+[* SerializeRaw]([@(0.0.255) float] [@(0.0.255) `*][*@3 data], int64 
+[*@3 count])&]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(double`*`,Upp`:`:int64`):%- [@(0.0.255) void] 
+[* SerializeRaw]([@(0.0.255) double] [@(0.0.255) `*][*@3 data], int64 
+[*@3 count])&]
+[s2; Serializes raw data. Might invoke LoadError if there is not 
+enough data to load. Data are always stored in little`-endian 
 mode (conversion performed on BE systems as necessary).&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Stream`:`:SerializeRLE`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRLE]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
 yte]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
