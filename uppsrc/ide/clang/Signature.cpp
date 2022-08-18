@@ -420,14 +420,32 @@ String GetClass(const AnnotationItem& m)
 	return Null;
 }
 
+String GetNameFromId(const String& id)
+{
+	String name;
+	try {
+		CParser p(id);
+		while(!p.IsEof())
+			if(p.IsId())
+				name = p.ReadId();
+			else
+			if(!p.Char(':'))
+				break;
+	}
+	catch(CParser::Error) {}
+	return name;
+}
+
 String MakeDefinition(const AnnotationItem& m)
 {
 	String result;
-	int q = FindId(m.pretty, m.name);
+	String pretty = m.pretty;
+	pretty.TrimStart("static ");
+	int q = FindId(pretty, m.name);
 	if(q < 0)
-		result << m.pretty;
+		result << pretty;
 	else
-		result << m.pretty.Mid(0, q) << GetClass(m) << m.pretty.Mid(q);
+		result << pretty.Mid(0, q) << GetClass(m) << pretty.Mid(q);
 	result << "\n{\n}\n\n";
 	return result;
 }

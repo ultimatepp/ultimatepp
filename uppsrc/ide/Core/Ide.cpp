@@ -242,10 +242,3 @@ void IdePutErrorLine(const String& s)
 	if(the_ide)
 		the_ide->IdePutErrorLine(s);
 }
-
-void IdeGotoFileAndId(const String& path, const String& id)
-{
-	if(the_ide)
-		the_ide->IdeGotoFileAndId(path, id);
-}
-

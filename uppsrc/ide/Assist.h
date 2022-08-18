@@ -111,10 +111,11 @@ struct AssistEditor : CodeEditor, Navigator {
 		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
 	} assist_display;
 
-	RichTextCtrl   annotation_popup;
+	RichTextCtrl           annotation_popup;
 	bool                   annotating = false;
 	Vector<AnnotationItem> annotations;
 	Vector<ReferenceItem>  references;
+	Vector<AnnotationItem> locals;
 
 	int            assist_cursor;
 	bool           auto_assist;

@@ -54,6 +54,7 @@ void Ide::PutConsole(const char *s)
 void Ide::PutVerbose(const char *s)
 {
 	LOG("VERBOSE: " << s);
+	GuiLock __;
 	if(console.verbosebuild) {
 		PutConsole(s);
 		console.Sync();
@@ -176,11 +177,6 @@ void Ide::IdePutErrorLine(const String& line)
 		ConsoleRunEnd();
 		ConsoleLine(line, true);
 	}
-}
-
-void Ide::IdeGotoFileAndId(const String& path, const String& id)
-{
-	GotoFileAndId(path, id);
 }
 
 void Ide::IdeEndDebug()

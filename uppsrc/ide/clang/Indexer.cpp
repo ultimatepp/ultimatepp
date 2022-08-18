@@ -142,52 +142,25 @@ void Indexer::IndexerThread()
 			if(Thread::IsShutdownThreads())
 				break;
 			
-			{
-				LTIMESTOP("Parsing " + job.path + " " + AsString(job.file_times));
-				clang.Parse(job.path, job.blitz, job.includes, job.defines,
-				            CXTranslationUnit_DetailedPreprocessingRecord|
-				            CXTranslationUnit_KeepGoing|
-			//	            CXTranslationUnit_SkipFunctionBodies|
-				            (job.blitz.GetCount() ? 0 : PARSE_FILE));
-			//	DumpDiagnostics(clang.tu);
-			}
+			clang.Parse(job.path, job.blitz, job.includes, job.defines,
+//			            CXTranslationUnit_DetailedPreprocessingRecord|
+			            CXTranslationUnit_KeepGoing|
+			            (job.blitz.GetCount() ? 0 : PARSE_FILE));
+
+			int tm = msecs();
 			
 			if(Thread::IsShutdownThreads())
 				break;
 	
 			ClangVisitor v;
 			if(clang.tu) {
-			//	DumpDiagnostics(clang.tu);
-	
-				String current_file;
-				bool   do_file = false;
-				VectorMap<String, bool> do_file_cache;
-	
 				v.WhenFile = [&](const String& path) {
 					LTIMING("WhenFile");
-					if(IsNull(path))
+					if(IsNull(path) || path.EndsWith("$$$blitz.cpp"))
 						return false;
-					if(current_file != path) {
-						current_file = path;
-						if(IsNull(path) || path.EndsWith("$$$blitz.cpp"))
-							do_file = false;
-						else
-						if(IsCSourceFile(path))
-							do_file = true;
-						else {
-							current_file = path;
-							int q = do_file_cache.Find(path);
-							if(q < 0) {
-								LTIMING("WhenFile 2");
-								Mutex::Lock __(mutex);
-								do_file = job.file_times.Find(NormalizePath(path)) >= 0;
-								do_file_cache.Add(path, do_file);
-							}
-							else
-								do_file = do_file_cache[q];
-						}
-					}
-					return do_file;
+					if(IsCSourceFile(path))
+						return true;
+					return job.file_times.Find(NormalizePath(path)) >= 0;
 				};
 
 				LTIMESTOP("Visitor " + job.path + " " + AsString(job.file_times));
@@ -213,7 +186,8 @@ void Indexer::IndexerThread()
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
 			}
-			
+
+			PutVerbose(String() << job.path << " indexed in " << msecs() - tm << " ms");
 		}
 		bool last = false;
 		{
@@ -441,5 +415,5 @@ bool Indexer::IsRunning()
 	if(running_scheduler)
 		return true;
 	Mutex::Lock __(mutex);
-	return jobi < jobs.GetCount();
+	return jobs.GetCount();
 }

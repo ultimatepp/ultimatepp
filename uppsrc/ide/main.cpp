@@ -120,12 +120,16 @@ void AppMain___()
 {
 	// Set this for storing libclang preamble
 	// TODO CLANG flag?
+	
+	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
+	RealizeDirectory(preamble_dir);
+	
 #ifdef PLATFORM_POSIX
-	setenv("TMPDIR", CacheDir(), 1);
-	setenv("TMP", CacheDir(), 1);
+	setenv("TMPDIR", preamble_dir, 1);
+	setenv("TMP", preamble_dir, 1);
 #else
-	SetEnvironmentVariable("TMPDIR", CacheDir());
-	SetEnvironmentVariable("TMP", CacheDir()); // Looks like libclang ignores TMPDIR
+	SetEnvironmentVariable("TMPDIR", preamble_dir);
+	SetEnvironmentVariable("TMP", preamble_dir); // Looks like libclang ignores TMPDIR
 #endif
 //	Ctrl::ShowRepaint(50);
 
@@ -362,6 +366,9 @@ void AppMain___()
 	}
 #endif
 	Ctrl::ShutdownThreads();
+	for(FindFile ff(AppendFileName(CacheDir(), "*.*")); ff; ff.Next())
+		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-"))
+			DeleteFolderDeep(ff.GetPath()); // if still in use, this fails
 }
 
 #ifdef flagPEAKMEM

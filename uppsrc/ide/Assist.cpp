@@ -401,6 +401,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 				              m.id);
 			}
 			references = clone(f.refs);
+			locals = clone(f.locals);
 			annotating = false;
 			if(!navigator_global)
 				Search();

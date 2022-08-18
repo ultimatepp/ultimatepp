@@ -61,33 +61,35 @@ void AutocompleteThread()
 			if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
 			   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
 			   !clang.tu) {
+				int tm = msecs();
 				parsed_file = f;
 				TIMESTOP("Autocomplete parse");
 				autocomplete_parsing = true;
 				clang.Parse(fn, f.content, f.includes, f.defines,
-				            CXTranslationUnit_DetailedPreprocessingRecord|
+//				            CXTranslationUnit_DetailedPreprocessingRecord|
 				            CXTranslationUnit_PrecompiledPreamble|
 				            CXTranslationUnit_CreatePreambleOnFirstParse|
 				            CXTranslationUnit_SkipFunctionBodies|
-				            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
+//				            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
+//				            CXTranslationUnit_CacheCompletionResults|
 				            CXTranslationUnit_KeepGoing);
-				DumpDiagnostics(clang.tu);
+//				DumpDiagnostics(clang.tu);
 				autocomplete_parsing = false;
+				PutVerbose(String() << "Current file autocomplete parsed in " << msecs() - tm << " ms");
 			}
 
 			if(Thread::IsShutdownThreads()) break;
 			CXUnsavedFile ufile = { ~fn, ~f.content, (unsigned)f.content.GetCount() };
 			if(autocomplete_do && clang.tu) {
 				CXCodeCompleteResults *results;
-				{
-					TIMESTOP("clang_codeCompleteAt");
-					autocomplete_parsing = true;
-					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
-					                               macros ? CXCodeComplete_IncludeMacros : 0);
-					autocomplete_parsing = false;
-				}
-				DumpDiagnostics(clang.tu);
+				autocomplete_parsing = true;
+				int tm = msecs();
+				results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
+				                               macros ? CXCodeComplete_IncludeMacros : 0);
+				PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
+//				DumpDiagnostics(clang.tu);
 				if(results) {
+					int tm = msecs();
 					Vector<AutoCompleteItem> item;
 					for(int i = 0; i < results->NumResults; i++) {
 						const CXCompletionString& string = results->Results[i].CompletionString;
@@ -111,7 +113,9 @@ void AutocompleteThread()
 						if(serial == autocomplete_serial)
 							autocomplete_done(item);
 					});
+					PutVerbose(String() << "Autocomplete processed in " << msecs() - tm << " ms");
 				}
+				autocomplete_parsing = false;
 				GuiLock __;
 				do_autocomplete = false;
 			}

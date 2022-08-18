@@ -105,6 +105,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 };
 
 String GetClass(const AnnotationItem& m);
+String GetNameFromId(const String& id);
 String MakeDefinition(const AnnotationItem& m);
 
 struct ReferenceItem : Moveable<ReferenceItem> {
@@ -128,6 +129,7 @@ struct CurrentFileContext {
 
 struct CppFileInfo : Moveable<CppFileInfo> {
 	Vector<AnnotationItem> items;
+	Vector<AnnotationItem> locals;
 	Vector<ReferenceItem>  refs;
 };
 
@@ -159,11 +161,11 @@ class ClangVisitor {
 	CXPrintingPolicy pp_id, pp_pretty;
 	
 	bool           ProcessNode(CXCursor c);
-	SourceLocation GetLocation(CXSourceLocation c);
 
 	friend CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData);
 
 	VectorMap<CXFile, String>                 cxfile; // accelerate CXFile (CXFile has to be valid across tree as there is no Dispose)
+	VectorMap<CXFile, bool>                   do_file; // accelerate WhenFile
 	VectorMap<String, Index<ReferenceItem>>   ref_done; // avoid self-references, multiple references
 	
 	struct MCXCursor : Moveable<MCXCursor> {
@@ -172,10 +174,22 @@ class ClangVisitor {
 	
 	ArrayMap<SourceLocation, MCXCursor>  tfn; // to convert e.g. Index<String>::Find(String) to Index::Find(T)
 
+	struct CXLocation {
+		Point  pos;
+		CXFile file;
+	};
+
+	CXLocation      GetLocation(CXSourceLocation cxlocation);
+	SourceLocation  GetSourceLocation(const CXLocation& p);
+	
+	bool locals = false;
+
 public:
 	VectorMap<String, CppFileInfo> info;
 	
 	Gate<const String&> WhenFile;
+	
+	bool dolocals = false;
 
 	void Do(CXTranslationUnit tu);
 	~ClangVisitor();
@@ -216,7 +230,7 @@ class Indexer {
 		WithDeepCopy<VectorMap<String, Time>>   file_times;
 		WithDeepCopy<VectorMap<String, String>> master_files;
 	};
-
+	
 	static CoEvent            event, scheduler;
 	static Mutex              mutex;
 	static Vector<Job>        jobs;

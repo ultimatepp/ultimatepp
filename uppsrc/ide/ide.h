@@ -438,7 +438,6 @@ public:
 	virtual   String    IdeGetCurrentBuildMethod();
 	virtual   String    IdeGetCurrentMainPackage();
 	virtual   void      IdePutErrorLine(const String& e);
-	virtual   void      IdeGotoFileAndId(const String& path, const String& id);
 
 	virtual void   ConsoleShow();
 	virtual void   ConsoleSync();
@@ -1165,7 +1164,6 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
-	void      GotoFileAndId(const String& path, const String& id);
 	void      GotoDesignerItem(const String& path, const String& id);
 	void      SearchTopics();
 	void      ShowTopics();

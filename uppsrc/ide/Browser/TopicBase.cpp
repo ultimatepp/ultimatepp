@@ -108,9 +108,7 @@ int NoSlashDot(int c)
 
 String TopicCacheName(const char *path)
 {
-	String cfg = ConfigFile("cfg");
-	RealizeDirectory(cfg);
-	return AppendFileName(cfg, ForceExt(Filter(path, NoSlashDot), ".tdx"));
+	return CacheFile(ForceExt(Filter(path, NoSlashDot), ".tdx"));
 }
 
 const char *tdx_version = "tdx version 2.0";

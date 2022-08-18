@@ -41,8 +41,16 @@ bool IsVariable(int kind)
 }
 
 int FindId(const String& s, const String& id) {
-	int q = s.Find(id);
-	return q < 0 ||
-	       q > 0 && iscid(s[q - 1]) ||
-	       q + id.GetCount() < s.GetCount() && iscid(s[q + id.GetCount()]) ? -1 : q;
+	if(id.GetCount() == 0)
+		return -1;
+	int q = 0;
+	for(;;) {
+		q = s.Find(id, q);
+		if(q < 0)
+			return -1;
+		if((q == 0 || !iscid(s[q - 1])) && // character before id
+		   (q + id.GetCount() >= s.GetCount() || !iscid(s[q + id.GetCount()]))) // and after..
+			return q;
+		q++;
+	}
 };

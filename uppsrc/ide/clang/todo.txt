@@ -30,13 +30,9 @@ ISUES:
 
 - Remove template < > in autocomplete
 
-- newly created file looks like parsing until first function(?)
-
 - current file indexing
 
 - check editor mode
-
-- navigator - GotoDesignerFile
 
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
 
@@ -52,8 +48,6 @@ ISUES:
 
 - Hdepend NoConsole
 
-- AltC static method(); (header->source) retains static
-
 - AltC Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
 
 - C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
@@ -67,10 +61,6 @@ ISUES:
 - options to disable assist
 
 - * line in navigator
-
-- Ide::SwapS - local struct members annotated
-
-- reindex all source files seems to run twice
 
 - first macro in the file (AssistTest) is ignored
 
@@ -104,8 +94,6 @@ ISUES:
 
 - Alt+J bool IsIgnored(const String& id) jump on Find
 
-- Implement typedefs
-
 - Visitor.cpp hasid = false - remove initialisation
 
 - Remove //$
@@ -117,9 +105,6 @@ ISUES:
 
 - TriggerIndexer on theide exit
 
-- DLOG(CleanupId(s)); - jump on CleanupId does go to DLOG (it has a good reason to, but anyway...)
-  -> Problem is with clang_Location_isFromMainFile, for expanded macro, it returns false
-
 - In CONSOLE_APP_MAIN jumps do not wrok
 
 - Indexer.cpp	[7, 423]   (Indexer::Job&,const Upp::String&)const
@@ -129,8 +114,6 @@ ISUES:
 - Alt-K in void AssistEditor::Assist(bool macros) does not show all (_Bool problem?)
 
 - Cancel Assist when cursor moves out (test with above)
-
-- ReduceCfgCache - move tdx files to Cache
 
 - .c files
 
@@ -142,11 +125,11 @@ ISUES:
 
 - Wind/MetMastLayer.cpp:427 - no current file - 208KB :)
 
-- Alt+K in void Ide::FFoundFinish(bool files)
-
 - Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 
-- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
+- Handle templates
+	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
+	- Alt-J relaxed rules if not found (in templates, different parameters)
 
 - Wind/MetMastLayer.cpp:6331 jumps to sqr
 
@@ -154,26 +137,21 @@ ISUES:
 
 - Wind/MetMastLayer.cpp:1324 no jump
 
-- Alt-J on layout
-
-- Alt-J relaxed rules if not found (in templates, different parameters)
-
-- Remove IdeGotoFileAndId (after fixing laydes Alt+K)
-
-- remove bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
-
-- Usage .lay of FileSel::dir adds some strange lines
-
 - Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 
 
 - Wind/MetTimeProf.cpp:881 jump on CUtil::
-
-- Alt-U on IconDes::Arrow shows Image::Arrow too
 
 - bool IsCodeRefType(const String& type) Alt-U does not work
 
 - ow "stdev" in Navigator produces second weird set of references that lead just to class
 
+- alt-U ide/clang/clang.h:23 on SourceLocation
+
+- Alt-J ide/clang/AutoComplete.cpp:68
+
+- Alt-U ide/Core/Core.cpp:396
+
+- Macros with PPInfo
 
 NONCLANG:
 
@@ -233,6 +211,37 @@ LATER:
 
 
 DONE:
+
+- newly created file looks like parsing until first function(?)
+
+- Handle local variables on jumps
+
+- ReduceCfgCache - move tdx files to Cache
+
+- Implement typedefs
+
+- Alt+K in void Ide::FFoundFinish(bool files)
+
+- reindex all source files seems to run twice
+
+- remove bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
+
+- Usage .lay of FileSel::dir adds some strange lines
+
+- Remove IdeGotoFileAndId (after fixing laydes Alt+K)
+
+- Alt-J on layout
+
+- Alt-U on IconDes::Arrow shows Image::Arrow too
+
+- AltC static method(); (header->source) retains static
+
+- Ide::SwapS - local struct members annotated
+
+- DLOG(CleanupId(s)); - jump on CleanupId does go to DLOG (it has a good reason to, but anyway...)
+  -> Problem is with clang_Location_isFromMainFile, for expanded macro, it returns false
+
+- navigator - GotoDesignerFile
 
 - GREAT CODEBASE PURGE:
 

@@ -22,12 +22,17 @@ void CurrentFileThread()
 	auto DoAnnotations = [&] {
 		if(!clang.tu || !annotations_done) return;
 		ClangVisitor v;
+		v.dolocals = true;
+		v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
 		v.Do(clang.tu);
 		CppFileInfo f;
 		if(v.info.GetCount()) {
 			f = pick(v.info[0]);
 			f.items.RemoveIf([&](int i) { return f.items[i].pos.y < parsed_file.line_delta; });
 			for(AnnotationItem& m : f.items)
+				m.pos.y -= parsed_file.line_delta;
+			f.locals.RemoveIf([&](int i) { return f.locals[i].pos.y < parsed_file.line_delta; });
+			for(AnnotationItem& m : f.locals)
 				m.pos.y -= parsed_file.line_delta;
 			f.refs.RemoveIf([&](int i) { return f.refs[i].pos.y < parsed_file.line_delta; });
 			for(ReferenceItem& m : f.refs)
@@ -70,30 +75,35 @@ void CurrentFileThread()
 				   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
 				   !clang.tu) { // TODO: same is in autocomplete
 					parsed_file = f;
-					{
-						TIMESTOP("CurrentFile parse");
-						current_file_parsing = true;
-						clang.Parse(fn, f.content, f.includes, f.defines,
-						            CXTranslationUnit_DetailedPreprocessingRecord|
-						            CXTranslationUnit_PrecompiledPreamble|
-						            CXTranslationUnit_CreatePreambleOnFirstParse|
-				                    CXTranslationUnit_SkipFunctionBodies|
-						            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
-						            CXTranslationUnit_KeepGoing);
-						current_file_parsing = false;
-					//	DumpDiagnostics(clang.tu); _DBG_
-					}
+					int tm = msecs();
+					current_file_parsing = true;
+					clang.Parse(fn, f.content, f.includes, f.defines,
+					            CXTranslationUnit_DetailedPreprocessingRecord|
+					//            CXTranslationUnit_PrecompiledPreamble|
+					//            CXTranslationUnit_CreatePreambleOnFirstParse|
+			                    CXTranslationUnit_SkipFunctionBodies|
+					            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
+					            CXTranslationUnit_KeepGoing);
+				//	DumpDiagnostics(clang.tu); _DBG_
+					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
+					tm = msecs();
 					DoAnnotations();
+					PutVerbose(String() << "Current file parser output processed in " << msecs() - tm << " ms");
+					current_file_parsing = false;
 					was_parsing = true;
 				}
 				if(Thread::IsShutdownThreads()) break;
 				if(clang.tu && serial != done_serial) {
 					TIMESTOP("ReParse");
 					current_file_parsing = true;
+					int tm = msecs();
 					bool b = clang.ReParse(fn, f.content);
-					current_file_parsing = false;
+					PutVerbose(String() << "Current file reparsed in " << msecs() - tm << " ms");
+					tm = msecs();
 					if(b)
 						DoAnnotations();
+					PutVerbose(String() << "Current file reparsed output processed in " << msecs() - tm << " ms");
+					current_file_parsing = false;
 					was_parsing = true;
 				}
 			}

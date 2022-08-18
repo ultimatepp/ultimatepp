@@ -25,32 +25,6 @@ bool IsPendif(const String& l)
 	return l.Find("#endif") >= 0;
 }
 
-/* TODO remove
-void Ide::FindId(const String& id)
-{
-	int pos = editor.GetCursor();
-	int h = min(editor.GetLength(), pos + 4000);
-	for(;;) {
-		if(pos >= h || editor[pos] == ';')
-			break;
-		if(iscib(editor[pos])) {
-			int p0 = pos;
-			String tid;
-			while(pos < h && iscid(editor[pos])) {
-				tid.Cat(editor[pos]);
-				pos++;
-			}
-			if(tid == id) {
-				editor.SetCursor(p0);
-				return;
-			}
-		}
-		else
-			pos++;
-	}
-}
-*/
-
 bool Ide::OpenLink(const String& s, int pos)
 { // try to find link at cursor, either http, https or file
 	auto IsLinkChar = [](int c) { return findarg(c, '\'', '\"', '\t', ' ', '\0') < 0; };
@@ -156,16 +130,16 @@ void Ide::ContextGoto0(int pos)
 
 	String ref_id;
 	int ci = 0;
-	String id = editor.ReadIdBack(pos);
-	for(int pass = 0; pass < 2; pass++)
+	String name = editor.ReadIdBack(pos);
+	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
 		for(const ReferenceItem& m : editor.references) {
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
-			   (m.id.Mid(max(m.id.ReverseFind(':'), 0)) == id || pass == 1)) {
+			   (GetNameFromId(m.id) == name || pass == 1)) {
 				ref_id = m.id;
 				ci = m.pos.x;
 			}
 		}
-
+	
 	if(ref_id.GetCount()) {
 		String found_path;
 		Point  found_pos(INT_MAX, INT_MAX);
@@ -173,19 +147,37 @@ void Ide::ContextGoto0(int pos)
 		String found_name;
 		String found_nest;
 		
-		for(const auto& f : ~CodeIndex())
-			for(const AnnotationItem& m : f.value.items) {
-				if(m.id == ref_id &&
-				   (IsNull(found_path) ||
-				    CombineCompare(found_definition, m.definition)(f.key, found_path)
-				                  (m.pos.y, found_pos.y)(m.pos.x, found_pos.x) < 0)) {
-					found_path = f.key;
+		auto Check = [&](const String& path, const AnnotationItem& m) {
+		};
+		
+		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
+		if(IsFunction(cm.kind)) { // do local variables
+			for(const AnnotationItem& m : editor.locals) {
+				int ppy = -1;
+				if(m.id == ref_id && m.pos.y >= cm.pos.y && m.pos.y <= li && m.pos.y > ppy) {
+					ppy = m.pos.y;
+					found_path = editfile;
 					found_pos = m.pos;
 					found_definition = m.definition;
 					found_name = m.name;
 					found_nest = m.nest;
 				}
 			}
+		}
+		
+		if(IsNull(found_path))
+			for(const auto& f : ~CodeIndex())
+				for(const AnnotationItem& m : f.value.items)
+					if(m.id == ref_id &&
+					   (IsNull(found_path) ||
+					    CombineCompare(found_definition, m.definition)(f.key, found_path)
+					                  (m.pos.y, found_pos.y)(m.pos.x, found_pos.x) < 0)) {
+						found_path = f.key;
+						found_pos = m.pos;
+						found_definition = m.definition;
+						found_name = m.name;
+						found_nest = m.nest;
+					}
 		
 		if(found_path.GetCount()) {
 			AddHistory();
@@ -241,7 +233,6 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 				cm = m;
 				break;
 			}
-
 		if(cm.id.GetCount()) {
 			Vector<Tuple<String, Point>> set;
 			for(const auto& f : ~CodeIndex()) {
@@ -250,7 +241,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 						if(FindId(m.type, cm.id) >= 0 || FindId(m.bases, cm.id) >= 0 || FindId(m.pretty, cm.id) >= 0)
 							set.Add({ f.key, m.pos });
 					for(const ReferenceItem& m : f.value.refs)
-						if(FindId(m.id, id) >= 0)
+						if(FindId(m.id, cm.id) >= 0)
 							set.Add({ f.key, m.pos });
 				}
 			}
@@ -271,28 +262,4 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 		}
 	}
 	Exclamation("No usage has been found.");
-}
-
-void Ide::GotoFileAndId(const String& path, const String& id)
-{
-	AddHistory();
-	EditFile(path);
-	WString wid = id.ToWString();
-	if(editor.GetLength64() < 100000) {
-		for(int i = 0; i < editor.GetLineCount(); i++) {
-			WString ln = editor.GetWLine(i);
-			int q = ln.Find(wid);
-			while(q >= 0) {
-				if(q == 0 || !iscid(ln[q - 1]) && !iscid(ln[q + wid.GetCount()])) {
-					editor.SetCursor(editor.GetPos64(i, q));
-					editor.CenterCursor();
-					return;
-				}
-				if(q + 1 >= ln.GetCount())
-					break;
-				q = ln.Find(wid, q + 1);
-			}
-		}
-	}
-	AddHistory();
 }
