@@ -3,6 +3,13 @@
 #define LLOG(x)
 #define LTIMESTOP(x) TIMESTOP(x)
 
+#ifdef DYNAMIC_CLANG
+#define DLLFILENAME "libclang.dll"
+#define DLIMODULE   Clang
+#define DLIHEADER   <ide/clang/clang.dli>
+#include <Core/dli.h>
+#endif
+
 String FetchString(CXString cs)
 {
 	String result = clang_getCString(cs);

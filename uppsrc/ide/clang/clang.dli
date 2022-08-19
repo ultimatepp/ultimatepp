@@ -1,0 +1,65 @@
+FN(CXCursorKind, clang_getCursorKind, (CXCursor));
+FN(CXCursor, clang_getCursorSemanticParent, (CXCursor cursor));
+FN(CXString, clang_getCursorPrettyPrinted, (CXCursor Cursor,
+                                                     CXPrintingPolicy Policy));
+FN(const char *, clang_getCString, (CXString string));
+
+FN(void, clang_disposeString, (CXString string));
+FN(CXString, clang_getCursorKindSpelling, (enum CXCursorKind Kind));
+FN(CXString, clang_getCursorSpelling, (CXCursor));
+FN(CXType, clang_getCursorType, (CXCursor C));
+FN(CXString, clang_getTypeSpelling, (CXType CT));
+FN(CXIndex, clang_createIndex, (int excludeDeclarationsFromPCH,
+                                         int displayDiagnostics));
+FN(void, clang_disposeIndex, (CXIndex index));
+
+FN(unsigned, clang_visitChildren, (CXCursor parent,
+                                            CXCursorVisitor visitor,
+                                            CXClientData client_data));
+FN(void, clang_getExpansionLocation, (CXSourceLocation location,
+                                               CXFile *file, unsigned *line,
+                                               unsigned *column,
+                                               unsigned *offset));
+FN(CXString, clang_getFileName, (CXFile SFile));
+FN(CXSourceLocation, clang_getCursorLocation, (CXCursor));
+FN(CXCursor, clang_getCursorReferenced, (CXCursor));
+FN(unsigned, clang_isCursorDefinition, (CXCursor));
+FN(unsigned, clang_CXXMethod_isVirtual, (CXCursor C));
+FN(int, clang_Cursor_isNull, (CXCursor cursor));
+FN(CXCursor, clang_getTranslationUnitCursor, (CXTranslationUnit));
+FN(void, clang_PrintingPolicy_setProperty, (CXPrintingPolicy Policy,
+                                 enum CXPrintingPolicyProperty Property,
+                                 unsigned Value));
+FN(CXPrintingPolicy, clang_getCursorPrintingPolicy, (CXCursor));
+FN(void, clang_PrintingPolicy_dispose, (CXPrintingPolicy Policy));
+FN(unsigned, clang_getNumCompletionChunks, (CXCompletionString completion_string));
+FN(void, clang_disposeTranslationUnit, (CXTranslationUnit));
+FN(CXTranslationUnit, clang_parseTranslationUnit, (
+    CXIndex CIdx, const char *source_filename,
+    const char *const *command_line_args, int num_command_line_args,
+    struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files,
+    unsigned options));
+FN(int, clang_reparseTranslationUnit, (CXTranslationUnit TU, unsigned num_unsaved_files,
+                             struct CXUnsavedFile *unsaved_files,
+                             unsigned options));
+FN(unsigned, clang_getNumDiagnostics, (CXTranslationUnit Unit));
+FN(CXDiagnostic, clang_getDiagnostic, (CXTranslationUnit Unit,
+                                                unsigned Index));
+FN(CXSourceLocation, clang_getDiagnosticLocation, (CXDiagnostic));
+FN(CXString, clang_getDiagnosticSpelling, (CXDiagnostic));
+FN(void, clang_disposeDiagnostic, (CXDiagnostic Diagnostic));
+FN(enum CXCompletionChunkKind, clang_getCompletionChunkKind, (CXCompletionString completion_string,
+                             unsigned chunk_number));
+FN(CXString, clang_getCompletionChunkText, (
+    CXCompletionString completion_string, unsigned chunk_number));
+FN(CXCompletionString, clang_getCompletionChunkCompletionString, (
+    CXCompletionString completion_string, unsigned chunk_number));
+FN(CXString, clang_getCompletionParent, (
+    CXCompletionString completion_string, enum CXCursorKind *kind));
+FN(unsigned, clang_getCompletionPriority, (CXCompletionString completion_string));
+
+FN(CXCodeCompleteResults *, clang_codeCompleteAt, (CXTranslationUnit TU, const char *complete_filename,
+                     unsigned complete_line, unsigned complete_column,
+                     struct CXUnsavedFile *unsaved_files,
+                     unsigned num_unsaved_files, unsigned options));
+FN(void, clang_disposeCodeCompleteResults, (CXCodeCompleteResults *Results));

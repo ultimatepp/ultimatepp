@@ -155,6 +155,8 @@ ISUES:
 
 - Heap leaks in Linux
 
+- CXGlobalOpt_ThreadBackgroundPriorityForIndexing
+
 NONCLANG:
 
 - Debugger Threads should show active threads first

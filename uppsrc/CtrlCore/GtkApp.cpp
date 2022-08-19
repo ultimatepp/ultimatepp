@@ -1,7 +1,8 @@
 #include <CtrlCore/CtrlCore.h>
-#include <X11/Xlib.h>
 
 #ifdef GUI_GTK
+
+#include <X11/Xlib.h>
 
 #define CATCH_ERRORS 1
 

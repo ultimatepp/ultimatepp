@@ -9,6 +9,8 @@ library(POSIX) clang;
 
 file
 	clang.h,
+	libclang.h,
+	clang.dli,
 	todo.txt,
 	help.txt,
 	util.cpp,

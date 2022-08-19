@@ -1,8 +1,15 @@
 #ifndef _clang_clang_h
 #define _clang_clang_h
 
+// #define DYNAMIC_LIBCLANG // dynamic loading of clang
+
 #include <ide/Common/Common.h>
+
+#ifdef DYNAMIC_LIBCLANG
+#include "libclang.h"
+#else
 #include <clang-c/Index.h>
+#endif
 
 using namespace Upp;
 
