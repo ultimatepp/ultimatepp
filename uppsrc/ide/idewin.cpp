@@ -587,7 +587,7 @@ Ide::Ide()
 
 	default_charset = CHARSET_UTF8;
 
-	TheIde(this);
+	SetTheIde(this);
 
 	targetmode = 0;
 
@@ -648,7 +648,7 @@ Ide::Ide()
 
 Ide::~Ide()
 {
-	TheIde(NULL);
+	SetTheIde(NULL);
 }
 
 void Ide::Paint(Draw&) {}

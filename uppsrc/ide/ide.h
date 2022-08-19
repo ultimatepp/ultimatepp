@@ -1248,7 +1248,9 @@ public:
 	~Ide();
 };
 
-inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
+inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
+
+inline void ShowConsole() { if(TheIde()) TheIde()->ShowConsole(); }
 
 void InstantSetup();
 

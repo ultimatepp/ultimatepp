@@ -1,9 +1,9 @@
-#include <ide/ide.h>
+#include "Core.h"
 
-static Ide *the_ide;
+static IdeContext *the_ide;
 
-Ide *TheIde() { return the_ide; }
-void TheIde(Ide *context) { the_ide = context; }
+IdeContext *TheIdeContext()                    { return the_ide; }
+void        SetTheIde(IdeContext *context)     { the_ide = context; }
 
 bool IsVerbose()               { return the_ide ? the_ide->IsVerbose() : false; }
 void PutConsole(const char *s) { if(the_ide) the_ide->PutConsole(s); }

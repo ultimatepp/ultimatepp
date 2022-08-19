@@ -219,8 +219,8 @@ public:
 	virtual ~IdeContext() {}
 };
 
-Ide *TheIde();
-void TheIde(Ide *context);
+IdeContext *TheIdeContext();
+void        SetTheIde(IdeContext *context);
 
 bool      IsVerbose();
 void      PutConsole(const char *s);

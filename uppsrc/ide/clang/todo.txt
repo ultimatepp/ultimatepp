@@ -153,6 +153,8 @@ ISUES:
 
 - Macros with PPInfo
 
+- Heap leaks in Linux
+
 NONCLANG:
 
 - Debugger Threads should show active threads first
