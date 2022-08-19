@@ -1,4 +1,5 @@
 #include <CtrlCore/CtrlCore.h>
+#include <X11/Xlib.h>
 
 #ifdef GUI_GTK
 
@@ -55,6 +56,8 @@ int Ctrl::scale;
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
+	
+	XInitThreads(); // otherwise there are errors despide GuiLock
 
 #if GTK_CHECK_VERSION(3, 10, 0)
 	gdk_set_allowed_backends("x11"); // this fixes wayland issues

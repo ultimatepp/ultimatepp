@@ -345,9 +345,11 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	for(int i = 0; i <= (int)speculative; i++) {
 		for(const String& inc : f.includes[i])
 			DoInclude(inc);
-		for(const String& id : dics)
+		for(int i = 0; i < dics.GetCount(); i++) { // cannot use range for as dics can change
+			String id = dics[i];
 			for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q))
 				DoInclude(f.defines[q]);
+		}
 	}
 	
 	result.Add(path, ftm);

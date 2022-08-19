@@ -283,7 +283,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	CXCursor ref = clang_getCursorReferenced(cursor);
 
 	String id = ci.Id();
-	if(id.GetCount() && dolocals) {
+	if(id.GetCount() && (!locals || dolocals)) {
 		LoadSourceLocation();
 		CppFileInfo& f = info.GetAdd(sl.path);
 		AnnotationItem& r = locals ? f.locals.Add() : f.items.Add();

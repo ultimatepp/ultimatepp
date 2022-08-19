@@ -43,7 +43,7 @@ void   ReduceCache();
 void   ReduceCache(int mb_limit);
 void   ReduceCacheFolder(const char *path, int64 max_total);
 
-class Hdepend {
+class Hdepend { // to be replaced by PPInfo
 	struct Info {
 		Time                      time;
 		Vector<int>               depend;

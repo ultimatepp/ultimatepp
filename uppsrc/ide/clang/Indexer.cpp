@@ -138,20 +138,20 @@ void Indexer::IndexerThread()
 					break;
 				was_job = true;
 			}
-			
+
 			if(Thread::IsShutdownThreads())
 				break;
-			
+
+			int tm = msecs();
+
 			clang.Parse(job.path, job.blitz, job.includes, job.defines,
 //			            CXTranslationUnit_DetailedPreprocessingRecord|
 			            CXTranslationUnit_KeepGoing|
 			            (job.blitz.GetCount() ? 0 : PARSE_FILE));
 
-			int tm = msecs();
-			
 			if(Thread::IsShutdownThreads())
 				break;
-	
+
 			ClangVisitor v;
 			if(clang.tu) {
 				v.WhenFile = [&](const String& path) {
@@ -166,13 +166,13 @@ void Indexer::IndexerThread()
 				LTIMESTOP("Visitor " + job.path + " " + AsString(job.file_times));
 				v.Do(clang.tu);
 			}
-	
+
 			if(Thread::IsShutdownThreads())
 				break;
-			
+
 			for(const auto& m : ~job.file_times) // in create entries even if there are no items to avoid recompiling
 				v.info.GetAdd(NormalizePath(m.key));
-			
+
 			for(const auto& m : ~v.info) {
 				String path = NormalizePath(m.key);
 				FileAnnotation f;
@@ -193,7 +193,7 @@ void Indexer::IndexerThread()
 		{
 			Mutex::Lock __(mutex);
 			if(--running_indexers == 0 && jobs.GetCount()) {
-				LLOG("Done everything " << (msecs() - tm0) / 1000.0 << " s");
+				PutVerbose(String() << "Indexing finished in " << (msecs() - tm0) / 1000.0 << " s");
 				jobs.Clear();
 				scheduler.Broadcast();
 				last = true;
@@ -225,7 +225,7 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			Thread::StartNice([] { Indexer::IndexerThread(); });
 		Thread::StartNice([] { SchedulerThread(); });
 	}
-	
+
 	GuiLock __;
 	Indexer::main = main;
 	Indexer::includes = includes;
@@ -244,31 +244,31 @@ void Indexer::SchedulerThread()
 			LTIMESTOP("Scheduler");
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
-	
+
 			String includes, defines;
-	
+
 			VectorMap<String, Time>   files; // all files of project, including external headers
-	
+
 			Index<String>             workspace_headers;
-	
+
 			Index<String>             master; // bidirectional map, including files
 			Index<String>             header; // included files
-	
+
 			VectorMap<String, Vector<Tuple<String, bool>>> sources; // bool is "noblitz"
 			{
 				GuiLock __;
-	
+
 				includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
 				defines = Indexer::defines;
-	
+
 				ppi.SetIncludes(includes);
 				ppi.Dirty();
-	
+
 				{
 					LTIMING("Load workspace");
 					Workspace wspc;
 					wspc.Scan(main);
-		
+
 					for(int pi : wspc.use_order) {
 						String pk_name = wspc[pi];
 						Vector<Tuple<String, bool>>& ps = sources.GetAdd(pk_name);
@@ -285,7 +285,7 @@ void Indexer::SchedulerThread()
 					}
 				}
 			}
-				
+
 			{
 				LTIMING("Dependencies");
 				for(int speculative = 0; speculative < 2; speculative++) {
@@ -307,14 +307,14 @@ void Indexer::SchedulerThread()
 						}
 				}
 			}
-			
+
 //			DDUMPC(header);
-			
+
 			Index<String> dirty_files; // files that need to be recompiled (including headers)
-			
+
 //			DDUMPC(dirty_files);
 //			DDUMPM(files);
-	
+
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");
 				for(const auto& m : ~files) {
@@ -343,8 +343,8 @@ void Indexer::SchedulerThread()
 						dirty_files.FindAdd(path);
 				}
 			}
-	
-			
+
+
 			{ // remove files that are not in project anymore
 				LTIMESTOP("Removing files");
 				GuiLock __;
@@ -353,7 +353,7 @@ void Indexer::SchedulerThread()
 						CodeIndex().Unlink(i);
 				CodeIndex().Sweep();
 			}
-	
+
 			{
 				LTIMESTOP("Create indexer jobs");
 				jobs.Clear();
@@ -392,7 +392,7 @@ void Indexer::SchedulerThread()
 							}
 						}
 					}
-					
+
 					if(blitz_job.blitz.GetCount()) {
 						Job& job = jobs.Add();
 						job = blitz_job;
