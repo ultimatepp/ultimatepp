@@ -301,6 +301,7 @@ private:
 	StringBuffer out;
 	StringBuffer page;
 	Size        pgsz;
+	int			dpi;
 	Color       rgcolor;
 	Color       RGcolor;
 	int         fontid;
@@ -314,7 +315,7 @@ private:
 	Vector<Point> offset_stack;
 	Point       current_offset;
 
-	double Pt(double dot)               { return 0.12 * dot; }
+	double Pt(double dot)               { return 72 * dot / dpi ; }
 	String Ptf(double dot)              { return FormatF(Pt(dot), 5); }
 
 	int    Pos()                        { return offset.GetCount() + 1; }
@@ -338,7 +339,7 @@ private:
 
 	OutlineInfo GetOutlineInfo(Font fnt);
 
-	void Init(int pagecx, int pagecy, int margin, bool pdfa);
+	void Init(int pagecx, int pagecy, int dpi, int margin, bool pdfa);
 
 	struct RGlyph : Moveable<RGlyph> {
 		String data;
@@ -364,8 +365,8 @@ public:
 	void   Clear();
 	bool   IsEmpty() const                                   { return empty; }
 	
-	PdfDraw(int pagecx, int pagecy, bool pdfa = false)       { Init(pagecx, pagecy, 0, pdfa); }
-	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }
+	PdfDraw(int pagecx, int pagecy,int dpi = 600 , bool pdfa = false)       { Init(pagecx, pagecy, dpi, 0, pdfa); }
+	PdfDraw(Size pgsz = Size(5100, 6600),int dpi = 600, bool pdfa = false) { Init(pgsz.cx, pgsz.cy, dpi, 0, pdfa); }
 };
 
 void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data);

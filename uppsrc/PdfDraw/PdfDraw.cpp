@@ -19,13 +19,14 @@ Size PdfDraw::GetPageSize() const
 	return pgsz;
 }
 
-void PdfDraw::Init(int pagecx, int pagecy, int _margin, bool _pdfa)
+void PdfDraw::Init(int pagecx, int pagecy,int _dpi, int _margin, bool _pdfa)
 {
 	Clear();
 	margin = _margin;
 	pdfa = _pdfa;
 	pgsz.cx = pagecx;
 	pgsz.cy = pagecy;
+	dpi = _dpi;
 	pgsz += margin;
 	current_offset = Point(0, 0);
 	StartPage();
@@ -517,6 +518,7 @@ static Image sJPEGDummy()
 void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data)
 {
 	w.Escape("data:" + jpeg_data);
+	
 	w.DrawImage(x, y, cx, cy, sJPEGDummy());
 }
 
@@ -528,6 +530,7 @@ int PdfDraw::PdfImage(const Image& img, const Rect& src)
 		q = images.GetCount();
 		images.Add(key, img);
 	}
+	
 	return q;
 }
 
@@ -541,7 +544,6 @@ void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const
 	
 	if(img.GetSerialId() == sJPEGDummy().GetSerialId())
 		jpeg.Add(data);
-	
 	page << "q "
 	     << Pt(cx) << " 0 0 " << Pt(cy) << ' '
 	     << Pt(x) << ' ' << Pt(pgsz.cy - y - cy)
