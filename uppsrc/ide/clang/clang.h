@@ -1,7 +1,7 @@
 #ifndef _clang_clang_h
 #define _clang_clang_h
 
-// #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in
+ // #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in
 // Win32)
 
 #include <ide/Common/Common.h>
