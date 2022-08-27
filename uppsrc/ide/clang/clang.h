@@ -1,7 +1,8 @@
 #ifndef _clang_clang_h
 #define _clang_clang_h
 
-// #define DYNAMIC_LIBCLANG // dynamic loading of clang
+// #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in
+// Win32)
 
 #include <ide/Common/Common.h>
 
@@ -94,19 +95,19 @@ struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 };
 
 struct AnnotationItem : Moveable<AnnotationItem> {
-	int    kind;
-	Point  pos;
-	bool   definition;
-	bool   isvirtual;
+	String id; // Upp::Class::Method(Upp::Point p)
 	String name; // Method
 	String type; // for String x, Upp::String, surely valid for variables only
-	String id; // Upp::Class::Method(Upp::Point p)
 	String pretty; // void Class::Method(Point p)
 	String nspace; // Upp
 	String uname; // METHOD
 	String nest; // Upp::Class
 	String unest; // UPP::CLASS
 	String bases; // base classes of struct/class
+	Point  pos;
+	int    kind;
+	bool   definition;
+	bool   isvirtual;
 	
 	void Serialize(Stream& s);
 };
@@ -207,8 +208,9 @@ bool IsCurrentFileParsing();
 void CancelCurrentFile();
 bool IsCurrentFileDirty();
 
-void SetAutoCompleteFile(const CurrentFileContext& ctx);
-bool IsAutocompleteParsing();
+// TODO remove
+// void SetAutoCompleteFile(const CurrentFileContext& ctx);
+// bool IsAutocompleteParsing();
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
 void CancelAutoComplete();

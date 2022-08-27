@@ -318,12 +318,11 @@ int64 Ide::EditorHash()
 
 void Ide::SaveEditorFile(Stream& out)
 {
-	if(GetFileExt(editfile) == ".t") {
+	if(GetFileExt(editfile) == ".t")
 		for(int i = 0; i < editor.GetLineCount(); i++) {
 			if(i) out.PutCrLf();
 			out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
 		}
-	}
 	else {
 		int le = line_endings;
 		if(le == DETECT_CRLF)

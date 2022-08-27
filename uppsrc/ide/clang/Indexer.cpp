@@ -124,6 +124,7 @@ void Indexer::IndexerThread()
 {
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
+		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
 		int tm0 = msecs();
 		bool was_job = false; // for diagnostics
 		++running_indexers;
@@ -145,7 +146,6 @@ void Indexer::IndexerThread()
 			int tm = msecs();
 
 			clang.Parse(job.path, job.blitz, job.includes, job.defines,
-//			            CXTranslationUnit_DetailedPreprocessingRecord|
 			            CXTranslationUnit_KeepGoing|
 			            (job.blitz.GetCount() ? 0 : PARSE_FILE));
 

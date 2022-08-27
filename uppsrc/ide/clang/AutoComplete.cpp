@@ -1,6 +1,10 @@
 #include "clang.h"
 
+// TODO: Remove
+
 #define LLOG(x) // DLOG(x)
+
+#if 0
 
 bool                                   autocomplete_parsing;
 CoEvent                                autocomplete_event;
@@ -167,3 +171,5 @@ bool IsAutocompleteParsing()
 {
 	return autocomplete_parsing;
 }
+
+#endif

@@ -60,6 +60,7 @@ String CleanupId(const char *s)
 	bool was_name = false;
 	bool function = false;
 	bool destructor = false;
+	bool inparams = false;
 	int name_pos = 0; // to filter out eventual return value of function
 	bool operator_def = false; // between operator and ( - suppress < > handling
 	static String s_attribute = "__attribute__";
@@ -138,13 +139,16 @@ String CleanupId(const char *s)
 			if(*s == '~' && !operator_def) // prevent culling of 'return value' in destructor
 				destructor = true;
 			if(*s == '(') {
-				if(name_pos && !destructor) {
-					String h = String(mm).Mid(name_pos);
-					mm = h;
+				if(!inparams) {
+					if(name_pos && !destructor) {
+						String h = String(mm).Mid(name_pos);
+						mm = h;
+					}
+					function = true;
+					was_param_type = false;
+					operator_def = false;
 				}
-				function = true;
-				was_param_type = false;
-				operator_def = false;
+				inparams = true;
 			}
 			if(*s == ',')
 				was_param_type = false;

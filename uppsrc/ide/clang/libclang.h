@@ -1628,80 +1628,92 @@ enum CXCodeComplete_Flags {
 
 typedef void *CXDiagnostic;
 
-extern "C" {
+typedef enum {
+  /**
+   * Used to indicate that no special CXIndex options are needed.
+   */
+  CXGlobalOpt_None = 0x0,
 
-#define CINDEX_LINKAGE __declspec(dllimport)
+  /**
+   * Used to indicate that threads that libclang creates for indexing
+   * purposes should use background priority.
+   *
+   * Affects #clang_indexSourceFile, #clang_indexTranslationUnit,
+   * #clang_parseTranslationUnit, #clang_saveTranslationUnit.
+   */
+  CXGlobalOpt_ThreadBackgroundPriorityForIndexing = 0x1,
 
-CINDEX_LINKAGE enum CXCursorKind clang_getCursorKind(CXCursor);
-CINDEX_LINKAGE CXCursor clang_getCursorSemanticParent(CXCursor cursor);
-CINDEX_LINKAGE CXString clang_getCursorPrettyPrinted(CXCursor Cursor,
-                                                     CXPrintingPolicy Policy);
-CINDEX_LINKAGE const char *clang_getCString(CXString string);
+  /**
+   * Used to indicate that threads that libclang creates for editing
+   * purposes should use background priority.
+   *
+   * Affects #clang_reparseTranslationUnit, #clang_codeCompleteAt,
+   * #clang_annotateTokens
+   */
+  CXGlobalOpt_ThreadBackgroundPriorityForEditing = 0x2,
 
-CINDEX_LINKAGE void clang_disposeString(CXString string);
-CINDEX_LINKAGE CXString clang_getCursorKindSpelling(enum CXCursorKind Kind);
-CINDEX_LINKAGE CXString clang_getCursorSpelling(CXCursor);
-CINDEX_LINKAGE CXType clang_getCursorType(CXCursor C);
-CINDEX_LINKAGE CXString clang_getTypeSpelling(CXType CT);
-CINDEX_LINKAGE CXIndex clang_createIndex(int excludeDeclarationsFromPCH,
-                                         int displayDiagnostics);
-CINDEX_LINKAGE void clang_disposeIndex(CXIndex index);
+  /**
+   * Used to indicate that all threads that libclang creates should use
+   * background priority.
+   */
+  CXGlobalOpt_ThreadBackgroundPriorityForAll =
+      CXGlobalOpt_ThreadBackgroundPriorityForIndexing |
+      CXGlobalOpt_ThreadBackgroundPriorityForEditing
 
-CINDEX_LINKAGE unsigned clang_visitChildren(CXCursor parent,
-                                            CXCursorVisitor visitor,
-                                            CXClientData client_data);
-CINDEX_LINKAGE void clang_getExpansionLocation(CXSourceLocation location,
-                                               CXFile *file, unsigned *line,
-                                               unsigned *column,
-                                               unsigned *offset);
-CINDEX_LINKAGE CXString clang_getFileName(CXFile SFile);
-CINDEX_LINKAGE CXSourceLocation clang_getCursorLocation(CXCursor);
-CINDEX_LINKAGE CXCursor clang_getCursorReferenced(CXCursor);
-CINDEX_LINKAGE unsigned clang_isCursorDefinition(CXCursor);
-CINDEX_LINKAGE unsigned clang_CXXMethod_isVirtual(CXCursor C);
-CINDEX_LINKAGE int clang_Cursor_isNull(CXCursor cursor);
-CINDEX_LINKAGE CXCursor clang_getTranslationUnitCursor(CXTranslationUnit);
-CINDEX_LINKAGE CXPrintingPolicy clang_getCursorPrintingPolicy(CXCursor);
-CINDEX_LINKAGE void clang_PrintingPolicy_setProperty(CXPrintingPolicy Policy,
-                                 enum CXPrintingPolicyProperty Property,
-                                 unsigned Value);
-CINDEX_LINKAGE CXPrintingPolicy clang_getCursorPrintingPolicy(CXCursor);
-CINDEX_LINKAGE void clang_PrintingPolicy_dispose(CXPrintingPolicy Policy);
-CINDEX_LINKAGE unsigned clang_getNumCompletionChunks(CXCompletionString completion_string);
-CINDEX_LINKAGE void clang_disposeTranslationUnit(CXTranslationUnit);
-CINDEX_LINKAGE CXTranslationUnit clang_parseTranslationUnit(
+} CXGlobalOptFlags;
+
+enum CXCursorKind clang_getCursorKind(CXCursor);
+CXCursor clang_getCursorSemanticParent(CXCursor cursor);
+CXString clang_getCursorPrettyPrinted(CXCursor Cursor, CXPrintingPolicy Policy);
+const char *clang_getCString(CXString string);
+void clang_disposeString(CXString string);
+CXString clang_getCursorKindSpelling(enum CXCursorKind Kind);
+CXString clang_getCursorSpelling(CXCursor);
+CXType clang_getCursorType(CXCursor C);
+CXString clang_getTypeSpelling(CXType CT);
+CXIndex clang_createIndex(int excludeDeclarationsFromPCH, int displayDiagnostics);
+void clang_disposeIndex(CXIndex index);
+unsigned clang_visitChildren(CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);
+void clang_getExpansionLocation(CXSourceLocation location, CXFile *file, unsigned *line, unsigned *column, unsigned *offset);
+CXString clang_getFileName(CXFile SFile);
+CXSourceLocation clang_getCursorLocation(CXCursor);
+CXCursor clang_getCursorReferenced(CXCursor);
+unsigned clang_isCursorDefinition(CXCursor);
+unsigned clang_CXXMethod_isVirtual(CXCursor C);
+int clang_Cursor_isNull(CXCursor cursor);
+CXCursor clang_getTranslationUnitCursor(CXTranslationUnit);
+CXPrintingPolicy clang_getCursorPrintingPolicy(CXCursor);
+void clang_PrintingPolicy_setProperty(CXPrintingPolicy Policy, enum CXPrintingPolicyProperty Property, unsigned Value);
+CXPrintingPolicy clang_getCursorPrintingPolicy(CXCursor);
+void clang_PrintingPolicy_dispose(CXPrintingPolicy Policy);
+unsigned clang_getNumCompletionChunks(CXCompletionString completion_string);
+void clang_disposeTranslationUnit(CXTranslationUnit);
+
+CXTranslationUnit clang_parseTranslationUnit(
     CXIndex CIdx, const char *source_filename,
     const char *const *command_line_args, int num_command_line_args,
     struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files,
     unsigned options);
-CINDEX_LINKAGE int
-clang_reparseTranslationUnit(CXTranslationUnit TU, unsigned num_unsaved_files,
-                             struct CXUnsavedFile *unsaved_files,
-                             unsigned options);
-CINDEX_LINKAGE unsigned clang_getNumDiagnostics(CXTranslationUnit Unit);
-CINDEX_LINKAGE CXDiagnostic clang_getDiagnostic(CXTranslationUnit Unit,
-                                                unsigned Index);
-CINDEX_LINKAGE CXSourceLocation clang_getDiagnosticLocation(CXDiagnostic);
-CINDEX_LINKAGE CXString clang_getDiagnosticSpelling(CXDiagnostic);
-CINDEX_LINKAGE void clang_disposeDiagnostic(CXDiagnostic Diagnostic);
-CINDEX_LINKAGE enum CXCompletionChunkKind
-clang_getCompletionChunkKind(CXCompletionString completion_string,
-                             unsigned chunk_number);
-CINDEX_LINKAGE CXString clang_getCompletionChunkText(
-    CXCompletionString completion_string, unsigned chunk_number);
-CINDEX_LINKAGE CXCompletionString clang_getCompletionChunkCompletionString(
-    CXCompletionString completion_string, unsigned chunk_number);
-CINDEX_LINKAGE CXString clang_getCompletionParent(
-    CXCompletionString completion_string, enum CXCursorKind *kind);
-CINDEX_LINKAGE unsigned
-clang_getCompletionPriority(CXCompletionString completion_string);
-CINDEX_LINKAGE
-CXCodeCompleteResults *
-clang_codeCompleteAt(CXTranslationUnit TU, const char *complete_filename,
-                     unsigned complete_line, unsigned complete_column,
-                     struct CXUnsavedFile *unsaved_files,
-                     unsigned num_unsaved_files, unsigned options);
-CINDEX_LINKAGE
+
+int clang_reparseTranslationUnit(CXTranslationUnit TU, unsigned num_unsaved_files,
+                                 struct CXUnsavedFile *unsaved_files,
+                                 unsigned options);
+
+unsigned clang_getNumDiagnostics(CXTranslationUnit Unit);
+CXDiagnostic clang_getDiagnostic(CXTranslationUnit Unit, unsigned Index);
+CXSourceLocation clang_getDiagnosticLocation(CXDiagnostic);
+CXString clang_getDiagnosticSpelling(CXDiagnostic);
+void clang_disposeDiagnostic(CXDiagnostic Diagnostic);
+enum CXCompletionChunkKind clang_getCompletionChunkKind(CXCompletionString completion_string, unsigned chunk_number);
+CXString clang_getCompletionChunkText(CXCompletionString completion_string, unsigned chunk_number);
+CXCompletionString clang_getCompletionChunkCompletionString(CXCompletionString completion_string, unsigned chunk_number);
+CXString clang_getCompletionParent(CXCompletionString completion_string, enum CXCursorKind *kind);
+unsigned clang_getCompletionPriority(CXCompletionString completion_string);
+CXCodeCompleteResults *clang_codeCompleteAt(CXTranslationUnit TU, const char *complete_filename,
+                                            unsigned complete_line, unsigned complete_column,
+                                            struct CXUnsavedFile *unsaved_files,
+                                            unsigned num_unsaved_files, unsigned options);
+
 void clang_disposeCodeCompleteResults(CXCodeCompleteResults *Results);
 
-};
+void clang_CXIndex_setGlobalOptions(CXIndex, unsigned options);

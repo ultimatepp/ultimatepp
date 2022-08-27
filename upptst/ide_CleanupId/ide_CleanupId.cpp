@@ -7,7 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 #if 0
-	String s = CleanupId("main(int argc, const char *argv[])");
+	String s = CleanupId("Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)");
 	DDUMP(s);
 	return;
 #endif
@@ -21,6 +21,7 @@ CONSOLE_APP_MAIN
 		"Foo3<int>::Foo3() noexcept",
 		"Foo1::operator*(int)",
 		"main(int argc, const char *argv[])",
+		"Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)",
 	}) {
 		DLOG("======");
 		DLOG(s);

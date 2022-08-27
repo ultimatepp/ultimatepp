@@ -1,4 +1,4 @@
-* C:\upp\out\llvm_tests\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 06.08.2022 14:31:04, user: cxl
+* C:\upp\out\llvm_tests\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 27.08.2022 19:10:56, user: cxl
 
 ======
 Foo1::operator<<(int)
@@ -24,3 +24,6 @@ Foo1::operator*(int)
 ======
 main(int argc, const char *argv[])
 main(int,const char*[])
+======
+Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
+Ns::EditText(int&,const char*,const char*,int(*)(int),int,bool notnull)

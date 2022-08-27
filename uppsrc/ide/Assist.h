@@ -119,9 +119,7 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	int            assist_cursor;
 	bool           auto_assist;
-	bool           auto_check;
 	bool           commentdp;
-	bool           inbody;
 	bool           include_assist;
 	WString        cachedline;
 	int            cachedpos;
@@ -129,7 +127,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           include_local;
 	int            include_back;
 	String         include_path;
-	int            scan_counter;
 
 	RichTextCtrl   param_info;
 	String         param_qtf;
@@ -150,8 +147,7 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	bool      navigator_right = true;
 	
-	Hdepend   hdepend;
-	PPInfo    hdepend2;
+	PPInfo    ppi;
 	String    master_source;
 
 	CurrentFileContext CurrentContext(int pos = INT_MAX);

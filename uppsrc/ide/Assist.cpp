@@ -27,7 +27,7 @@ AssistEditor::AssistEditor()
 	type.NoWantFocus();
 	popup.Horz(type, assist);
 	popup.SetPos(2000);
-	auto_assist = auto_check = true;
+	auto_assist = true;
 	commentdp = false;
 
 	SyncNavigatorPlacement();
@@ -69,8 +69,10 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 	
 	WhenUpdate << [=] {
-		annotating = true;
-		annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
+		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+			annotating = true;
+			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
+		}
 	};
 }
 
@@ -421,7 +423,6 @@ void AssistEditor::NewFile()
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
 	SyncCurrentFile(cfx);
-	SetAutoCompleteFile(cfx);
 }
 
 void AssistEditor::Assist(bool macros)

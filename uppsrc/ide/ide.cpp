@@ -654,7 +654,6 @@ void Ide::SyncClang()
 	}
 	editor.AnimateBar(pick(a));
 	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, Indexer::IsRunning()));
-	display.Animate(Animate(animate_autocomplete, animate_autocomplete_dir, IsAutocompleteParsing()));
 	animate_phase = phase;
 }
 

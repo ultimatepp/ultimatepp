@@ -383,7 +383,8 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 			CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors,
 			CXPrintingPolicy_TerseOutput,
 			CXPrintingPolicy_SuppressImplicitBase,
-			CXPrintingPolicy_FullyQualifiedName })
+			CXPrintingPolicy_FullyQualifiedName,
+			CXPrintingPolicy_Bool })
 		clang_PrintingPolicy_setProperty(pp_id, p, 1);
 
 	clang_PrintingPolicy_setProperty(pp_pretty, CXPrintingPolicy_TerseOutput, 1);

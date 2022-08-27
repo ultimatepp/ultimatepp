@@ -1,0 +1,183 @@
+DONE:
+
+- Alt+J on CurrentFileContext
+
+- Indexer.cpp refs (issue with macro)
+	[3, 417]   Upp::operator
+	[3, 417]   Upp::VppLog()
+	[3, 417]   Upp::EOL
+
+- Indexer.cpp refs
+	[3, 418]   CoEvent::Broadcast() // somehow choose Indexer::event here
+	[9, 418]   CoEvent::Broadcast()
+	[3, 418]   Indexer::event
+
+
+- failed AC keeps running (sites[i]. instead of ->)
+
+- aux files / autocomplete
+
+- inbody
+
+- newly created file looks like parsing until first function(?)
+
+- Handle local variables on jumps
+
+- ReduceCfgCache - move tdx files to Cache
+
+- Implement typedefs
+
+- Alt+K in void Ide::FFoundFinish(bool files)
+
+- reindex all source files seems to run twice
+
+- remove bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
+
+- Usage .lay of FileSel::dir adds some strange lines
+
+- Remove IdeGotoFileAndId (after fixing laydes Alt+K)
+
+- Alt-J on layout
+
+- Alt-U on IconDes::Arrow shows Image::Arrow too
+
+- AltC static method(); (header->source) retains static
+
+- Ide::SwapS - local struct members annotated
+
+- DLOG(CleanupId(s)); - jump on CleanupId does go to DLOG (it has a good reason to, but anyway...)
+  -> Problem is with clang_Location_isFromMainFile, for expanded macro, it returns false
+
+- navigator - GotoDesignerFile
+
+- GREAT CODEBASE PURGE:
+
+- ReferenceDlg
+
+- bool IsCodeRefType(const String& type)
+
+- void TopicEditor::InsertItem()
+
+- void TopicEditor::Label(String& label)
+
+- void   TopicEditor::FixTopic()
+
+- 	bool      auto_rescan;
+	bool      auto_check;
+
+- IdeGotoCodeRef
+
+- void LayDes::GotoUsing()
+
+- thisbacks
+
+- virtuals
+
+- different master header currentfile / index issue
+
+- Alt-K - maybe should show declaration/definition too?
+
+- Indexer::IsRunning should account for SchedulerThread
+
+- In Navigator, Assist should be before AssistEditor, when search is "Assist"
+
+- virtuals do not work with With...Layout<TopWindow> base
+
+- Ctrl+Space is sort of slow (too many items?)
+
+- reduce cache
+
+- TMPDIR?
+
+- No autocomplete in void MainConfigDlg::FlagDlg()
+
+- void MainConfigDlg::FlagDlg() no Upp function on Ctrl+Space
+
+- id = main(int,const char*argv[]) - argv[] should not be there
+
+- Indexer.cpp refs
+ 	[3, 417]   Upp::Stream::operator // operator<< ?
+
+- FlagDlg
+
+- Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+
+- Reindex all files should clear .ppi cache for hdepends too.
+
+- Alt+I - if single, we still want to go to annotation line
+
+- Implement annotation columns
+
+- save file annotation to codeindex
+
+- Alt+I - functions do not work
+
+- ide.h is not indexed
+
+- AssistTest missing istream
+
+- Alt+I by name
+- Alt+I by nest
+
+- remove StartAutoCompleteThread, StartCurrentFileParserThread, change to oncelock
+
+- Core/String.h - empty macros at the start in navigator
+
+- void Navigator::SyncCursor()
+
+- operator bool - wrong nest (Core/Speller.cpp)
+
+- Core/String.h - operator const void *() - wrong highlighting (all bold)
+
+- immediate reparse (probably Update?)
+
+- Speller.cpp - Speller type has {}, Line too
+
+- global navigation not working properly
+
+- rescan everything function
+
+- unicode is very long because { 123 , 41234234
+
+- local file navigation off by 1 line
+
+- indexer TabBar missing
+
+- destructor name is not bold (clang/visitor.cpp)
+
+- constructor - worng nest(Core/Speller.cpp)
+
+- AString type [31] - wrong icon
+
+- * nest in navigator local file
+
+- PaintCpp ending spaces in navigator
+
+- Navigator -> (constructor does not have return value)
+
+- Upp:: missing from Vector
+
+- class Ctrl
+
+- class Logc
+
+- writing to text is slow (IsSource detection?)
+
+- .txt keeps syncing
+
+- Enum annotations
+
+- .txt is pulsing all time
+
+- i < items crash at start occassionally
+
+- ide/Core.h - no annotations
+
+REJECTED:
+
+- autocomplete templates ?
+
+- navlines
+
+- Speller.cpp: structures have wrong nest (missing itself)
+
