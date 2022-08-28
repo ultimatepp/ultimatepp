@@ -8,10 +8,11 @@ void Ide::SwapS()
 		return;
 	if(!editor.WaitCurrentFile())
 		return;
-	Cycle(editor.FindCurrentAnnotation());
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	Cycle(cm, cm.pos.y, false);
 }
 
-void Ide::Cycle(const AnnotationItem& cm)
+void Ide::Cycle(const AnnotationItem& cm, int liney, bool navigate)
 {
 	if(IsNull(cm.id))
 		return;
@@ -22,7 +23,7 @@ void Ide::Cycle(const AnnotationItem& cm)
 		bool   definition;
 	};
 	Vector<Sf> set, list;
-	for(int pass = 0; pass < 4 && set.GetCount() < 2; pass++) {
+	for(int pass = 0; pass < 4; pass++) {
 		set.Clear();
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
@@ -37,7 +38,7 @@ void Ide::Cycle(const AnnotationItem& cm)
 				if(set.GetCount() > 20) // sanity
 					break;
 			}
-		if(set.GetCount() > 1)
+		if(set.GetCount() > 1 || set.GetCount() && navigate)
 			break;
 	}
 	
@@ -61,8 +62,8 @@ void Ide::Cycle(const AnnotationItem& cm)
 		deff = !deff;
 	}
 	list.Append(set); // add remaining items
-	int q = max(FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == cm.pos.y; }), 0);
-	q = (q + 1) % list.GetCount();
+	int q = FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == liney; });
+	q = q < 0 ? 0 : (q + 1) % list.GetCount();
 	GotoPos(list[q].path, list[q].pos);
 }
 

@@ -151,6 +151,9 @@ void Navigator::Navigate()
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
 		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
+		DLOG("Navigate");
+		DDUMP(m.path);
+		DDUMP(m.pos);
 		if(m.kind == KIND_LINE || IsNull(search)) {
 			theide->GotoPos(Null, m.pos);
 			if(m.kind == KIND_LINE) { // Go to line - restore file view
@@ -167,7 +170,7 @@ void Navigator::Navigate()
 			theide->AddHistory();
 		}
 		else {
-			theide->Cycle(m);
+			theide->Cycle(m, GetCurrentLine(), true);
 		}
 	}
 	navigating = false;
@@ -228,8 +231,8 @@ void Ide::SearchCode()
 	}
 }
 
-//TODO: What is this?
-void Ide::SwitchHeader() {
+void Ide::SwitchHeader()
+{
 	int c = filelist.GetCursor();
 	if(c < 0) return;
 	String currfile = filelist[c];
@@ -381,6 +384,12 @@ void Navigator::Search()
 							n.path = f.key;
 							nests.FindAdd(n.nest = Nest(m, theide->editfile));
 							set.Add(m.id);
+							if(usearch_name.GetCount()) {
+								DDUMP(f.key);
+								DDUMP(m.pos);
+								DDUMP(m.nest);
+								DDUMP(m.id);
+							}
 						}
 					}
 		

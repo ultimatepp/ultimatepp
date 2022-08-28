@@ -982,7 +982,7 @@ public:
 		void  SearchCode();
 		void  Goto();
 		void  NavigatorDlg();
-		void  Cycle(const AnnotationItem& cm);
+		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  Usage();

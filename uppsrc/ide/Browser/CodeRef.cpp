@@ -221,15 +221,7 @@ String DecoratedItem(const String& name, const String& pretty)
 		case ITEM_CPP:
 			qtf << "@B";
 			break;
-/*		default:
-			int q = p.type - ITEM_PTYPE;
-			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]) && pari < 0)
-				qtf << "_^" << qt[q] << '^';
-			q = p.type - ITEM_TYPE;
-			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]) && pari < 0)
-				qtf << "_^" << tt[q] << '^';
-			break;
-*/		}
+		}
 		qtf << " \1";
 		qtf << String(~pretty + p.pos, p.len);
 		qtf << "\1]";

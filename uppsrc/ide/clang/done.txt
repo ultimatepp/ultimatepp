@@ -1,5 +1,7 @@
 DONE:
 
+- ow "stdev" in Navigator produces second weird set of references that lead just to class GetStdevStdevVCounts
+
 - alt-U ide/clang/clang.h:23 on SourceLocation
 
 - Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 

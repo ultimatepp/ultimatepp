@@ -94,10 +94,6 @@ ISUES:
 
 - Wind/MetMastLayer.cpp:6354 no jump on sqrt (?)
 
-- bool IsCodeRefType(const String& type) Alt-U does not work
-
-- ow "stdev" in Navigator produces second weird set of references that lead just to class
-
 - Macros with PPInfo
 
 - Heap leaks in Linux
