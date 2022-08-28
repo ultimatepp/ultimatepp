@@ -78,6 +78,7 @@ void CurrentFileThread()
 				fa.defines = parsed_file.defines;
 				fa.includes = parsed_file.includes;
 				fa.items = pick(f.items);
+				fa.refs = pick(f.refs);
 				fa.time = Time::Low();
 				CodeIndex().GetAdd(NormalizePath(parsed_file.real_filename)) = pick(fa);
 			}

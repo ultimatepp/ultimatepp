@@ -1,6 +1,6 @@
 #include "clang.h"
 
-// TODO: Remove
+// TODO: Remove (moved to current file)
 
 #define LLOG(x) // DLOG(x)
 

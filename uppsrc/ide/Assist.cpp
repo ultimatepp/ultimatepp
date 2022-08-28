@@ -438,7 +438,7 @@ void AssistEditor::Assist(bool macros)
 		return;
 
 	int pos = GetCursor();
-	ReadIdBackPos(pos, false); // libclang does now work well if file is not truncated for autocomplete
+	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
 	int line_delta;

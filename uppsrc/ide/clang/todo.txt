@@ -16,8 +16,6 @@ ISUES:
 
 - header without .cpp speed
 
-- OpenWind.h autocomplete
-
 - enum annotation popup (Ctrl::)
 
 - Remove template < > in autocomplete
@@ -62,9 +60,6 @@ ISUES:
 
 - AutoComplete remove duplicate lines
 
-- IdeBar.cpp 	[35, 35]   M::*)(A1,A2,A3,A4,A5,MP1,MP2,MP3,MP4,MP5),P1,P2,P3,P4,P5)
-  // probably method pointer in parameters list
-
 - Wait for indexer?
 
 - FFound key to reuse pane for repeated finds
@@ -79,32 +74,17 @@ ISUES:
 
 - Remove //$
 
-- Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
-  Alt+I next line "No relevant..."
-
 - TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
 
 - TriggerIndexer on theide exit
-
-- In CONSOLE_APP_MAIN jumps do not wrok
-
-- Indexer.cpp	[7, 423]   (Indexer::Job&,const Upp::String&)const
-
-- Indexer.cpp 	[32, 368]   FileAnnotation&&)(false)
-
-- Alt-K in void AssistEditor::Assist(bool macros) does not show all (_Bool problem?)
 
 - Cancel Assist when cursor moves out (test with above)
 
 - .c files
 
-- CUtils:: - no assist after "::" (but works with Ctrl+Space)
-
 - check default parameters and virtuals / alt+c, commentdp
 
 - String GetClass(const AnnotationItem& m) vs m.nest - do we need GetClass?
-
-- Wind/MetMastLayer.cpp:427 - no current file - 208KB :)
 
 - Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 
@@ -112,31 +92,15 @@ ISUES:
 	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
 	- Alt-J relaxed rules if not found (in templates, different parameters)
 
-- Wind/MetMastLayer.cpp:6331 jumps to sqr
-
-- Wind/MetMastLayer.cpp:6358 no jump
-
-- Wind/MetMastLayer.cpp:1324 no jump
-
-- Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 
-
-- Wind/MetTimeProf.cpp:881 jump on CUtil::
+- Wind/MetMastLayer.cpp:6354 no jump on sqrt (?)
 
 - bool IsCodeRefType(const String& type) Alt-U does not work
 
 - ow "stdev" in Navigator produces second weird set of references that lead just to class
 
-- alt-U ide/clang/clang.h:23 on SourceLocation
-
-- Alt-J ide/clang/AutoComplete.cpp:68
-
-- Alt-U ide/Core/Core.cpp:396
-
 - Macros with PPInfo
 
 - Heap leaks in Linux
-
-- CXGlobalOpt_ThreadBackgroundPriorityForIndexing
 
 - Option "first config only"
 

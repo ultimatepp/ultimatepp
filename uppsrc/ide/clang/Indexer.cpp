@@ -99,6 +99,7 @@ void DumpIndex()
 {
 	GuiLock __;
 	FileOut out(ConfigFile("current_index.dump"));
+	out << GetSysTime() << "\n";
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
 	for(const auto& m : ~x) {
 		out << m.key << "\n";

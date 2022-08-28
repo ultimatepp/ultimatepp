@@ -41,7 +41,7 @@ bool IsBasicType(const String& id)
 {
 	static Index<String> kt = { "__int16", "__int32", "__int64", "__int8", "auto", "char",
 	                            "char8_t", "char16_t", "char32_t", "double", "float", "int",
-	                            "long", "short", "unsigned", "void", "wchar_t" };
+	                            "long", "short", "unsigned", "void", "wchar_t", "bool" };
 	return kt.Find(id) >= 0;
 }
 

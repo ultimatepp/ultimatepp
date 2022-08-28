@@ -61,7 +61,7 @@ void Ide::Cycle(const AnnotationItem& cm)
 		deff = !deff;
 	}
 	list.Append(set); // add remaining items
-	int q = max(FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == editor.GetCurrentLine(); }), 0);
+	int q = max(FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == cm.pos.y; }), 0);
 	q = (q + 1) % list.GetCount();
 	GotoPos(list[q].path, list[q].pos);
 }

@@ -1,5 +1,39 @@
 DONE:
 
+- alt-U ide/clang/clang.h:23 on SourceLocation
+
+- Alt-J at CtrlLib/CtrlUtil.cpp:143 does not 
+
+- Wind/MetMastLayer.cpp:1324 no jump
+
+- Wind/MetMastLayer.cpp:6358 no jump
+
+- CXGlobalOpt_ThreadBackgroundPriorityForIndexing
+
+- Wind/MetTimeProf.cpp:881 jump on CUtil::
+
+- Wind/MetMastLayer.cpp:6331 jumps to sqr
+
+- Wind/MetMastLayer.cpp:427 - no current file - 208KB :)
+
+- CUtils:: - no assist after "::" (but works with Ctrl+Space)
+
+- Alt-K in void AssistEditor::Assist(bool macros) does not show all (_Bool problem?)
+
+- Indexer.cpp	[7, 423]   (Indexer::Job&,const Upp::String&)const
+
+- Indexer.cpp 	[32, 368]   FileAnnotation&&)(false)
+
+- In CONSOLE_APP_MAIN jumps do not wrok
+
+- Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result, Index<String>& define_includes,
+  Alt+I next line "No relevant..."
+
+- IdeBar.cpp 	[35, 35]   M::*)(A1,A2,A3,A4,A5,MP1,MP2,MP3,MP4,MP5),P1,P2,P3,P4,P5)
+  // probably method pointer in parameters list
+
+- OpenWind.h autocomplete
+
 - Alt+J on CurrentFileContext
 
 - Indexer.cpp refs (issue with macro)
