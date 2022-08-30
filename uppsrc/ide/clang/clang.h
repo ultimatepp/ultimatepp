@@ -1,8 +1,7 @@
 #ifndef _clang_clang_h
 #define _clang_clang_h
 
- // #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in
-// Win32)
+// #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
 
 #include <ide/Common/Common.h>
 
@@ -244,6 +243,7 @@ class Indexer {
 	static Mutex              mutex;
 	static Vector<Job>        jobs;
 	static int                jobi;
+	static int                jobs_done;
 	static std::atomic<int>   running_indexers;
 	static bool               running_scheduler;
 	static String             main, includes, defines;
@@ -254,6 +254,7 @@ class Indexer {
 public:
 	static void Start(const String& main, const String& includes, const String& defines);
 	static bool IsRunning();
+	static double Progress();
 };
 
 #endif

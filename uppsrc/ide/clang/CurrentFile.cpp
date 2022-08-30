@@ -190,7 +190,7 @@ void CurrentFileThread()
 	LLOG("Current file thread exit");
 }
 
-void SetCurrentFile(const CurrentFileContext& ctx)
+void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
 {
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();
@@ -201,17 +201,12 @@ void SetCurrentFile(const CurrentFileContext& ctx)
 			current_file_event.Broadcast();
 		});
 	}
-	GuiLock __;
-	current_file = ctx;
-	current_file_event.Broadcast();
-}
 
-void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
-{
 	GuiLock __;
 	annotations_done = done;
 	current_file_serial++;
-	SetCurrentFile(ctx);
+	current_file = ctx;
+	current_file_event.Broadcast();
 }
 
 bool IsCurrentFileDirty()
@@ -243,6 +238,7 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
 	autocomplete_serial = serial++;
 	autocomplete_done = done;
 	autocomplete_file = ctx;
+	current_file_event.Broadcast();
 }
 
 void CancelAutoComplete()

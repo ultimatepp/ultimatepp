@@ -104,6 +104,9 @@ ISUES:
 
 - Icons Alt-J/I/U
 
+- Autocomplete Size sz; sz.ct - when the name is not found, list is missing (should not be)
+
+
 NONCLANG:
 
 - Debugger Threads should show active threads first

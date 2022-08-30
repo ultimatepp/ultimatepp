@@ -420,6 +420,9 @@ void AssistEditor::SyncCurrentFile()
 
 void AssistEditor::NewFile()
 {
+	annotations.Clear();
+	references.Clear();
+	Search();
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
 	SyncCurrentFile(cfx);
@@ -441,9 +444,8 @@ void AssistEditor::Assist(bool macros)
 	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	int line_delta;
 	if(cfx.content.GetCount())
-		StartAutoComplete(cfx, line + line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			for(const AutoCompleteItem& m : items) {
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;

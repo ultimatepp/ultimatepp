@@ -633,6 +633,25 @@ void Ide::Periodic()
 	SyncClang();
 }
 
+struct IndexerProgress : ImageMaker {
+	double pos;
+
+	String Key() const override {
+		String h;
+		RawCat(h, pos);
+		return h;
+	}
+	
+	Image Make() const override {
+		Size sz = IdeImg::Indexer().GetSize();
+		ImagePainter iw(sz);
+		iw.Clear(RGBAZero());
+		iw.Move(sz.cx / 2, sz.cy / 2).Arc(sz.cx / 2, sz.cy / 2, sz.cx / 2, -M_PI/2, pos * M_2PI).Line(sz.cx / 2, sz.cy / 2).Fill(SGray());
+		iw.DrawImage(0, 0, IdeImg::Indexer());
+		return iw;
+	}
+};
+
 void Ide::SyncClang()
 {
 	Vector<Color> a;
@@ -654,6 +673,13 @@ void Ide::SyncClang()
 	}
 	editor.AnimateBar(pick(a));
 	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, Indexer::IsRunning()));
+	if(Indexer::IsRunning()) {
+		IndexerProgress mi;
+		mi.pos = Indexer::Progress();
+		display.Set(MakeImage(mi));
+	}
+	else
+		display.Set(Image());
 	animate_phase = phase;
 }
 

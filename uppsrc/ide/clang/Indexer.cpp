@@ -115,6 +115,7 @@ CoEvent              Indexer::scheduler;
 Mutex                Indexer::mutex;
 Vector<Indexer::Job> Indexer::jobs;
 int                  Indexer::jobi;
+int                  Indexer::jobs_done;
 bool                 Indexer::running_scheduler;
 std::atomic<int>     Indexer::running_indexers;
 String               Indexer::main;
@@ -189,6 +190,8 @@ void Indexer::IndexerThread()
 			}
 
 			PutVerbose(String() << job.path << " indexed in " << msecs() - tm << " ms");
+			Mutex::Lock __(mutex);
+			jobs_done++;
 		}
 		bool last = false;
 		{
@@ -359,6 +362,7 @@ void Indexer::SchedulerThread()
 				LTIMESTOP("Create indexer jobs");
 				jobs.Clear();
 				jobi = 0;
+				jobs_done = 0;
 				for(const auto& pkg : ~sources) {
 					Job blitz_job;
 					blitz_job.includes = includes;
@@ -417,4 +421,14 @@ bool Indexer::IsRunning()
 		return true;
 	Mutex::Lock __(mutex);
 	return jobs.GetCount();
+}
+
+double Indexer::Progress()
+{
+	if(running_scheduler)
+		return 0;
+	Mutex::Lock __(mutex);
+	if(jobs.GetCount() == 0)
+		return 1;
+	return (double)(jobs_done + jobi) / (2 * jobs.GetCount());
 }

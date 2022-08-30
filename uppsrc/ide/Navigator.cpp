@@ -151,9 +151,6 @@ void Navigator::Navigate()
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
 		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
-		DLOG("Navigate");
-		DDUMP(m.path);
-		DDUMP(m.pos);
 		if(m.kind == KIND_LINE || IsNull(search)) {
 			theide->GotoPos(Null, m.pos);
 			if(m.kind == KIND_LINE) { // Go to line - restore file view
@@ -384,12 +381,6 @@ void Navigator::Search()
 							n.path = f.key;
 							nests.FindAdd(n.nest = Nest(m, theide->editfile));
 							set.Add(m.id);
-							if(usearch_name.GetCount()) {
-								DDUMP(f.key);
-								DDUMP(m.pos);
-								DDUMP(m.nest);
-								DDUMP(m.id);
-							}
 						}
 					}
 		

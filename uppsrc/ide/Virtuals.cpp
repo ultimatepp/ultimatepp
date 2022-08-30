@@ -141,6 +141,7 @@ void AssistEditor::Virtuals()
 	for(int i = 0; i < dlg.list.GetCount(); i++)
 		if(dlg.list.IsSel(i)) {
 			VirtualMethod m = dlg.list.Get(i, 0).To<VirtualMethod>();
+			m.pretty.TrimEnd(" = 0");
 			text << "\t";
 			if(dlg.add_virtual)
 				text << "virtual ";

@@ -61,7 +61,7 @@ void AssistEditor::DCopy()
 						if(q >= 0) {
 							int w = m.pretty.ReverseFind(' ', q);
 							if(w >= 0)
-								result << "\tstatic " << m.pretty.Mid(0, w + 1) << m.pretty.Mid(q) << "\n";
+								result << "\tstatic " << m.pretty.Mid(0, w + 1) << m.pretty.Mid(q) << ";\n";
 						}
 					}
 					else {

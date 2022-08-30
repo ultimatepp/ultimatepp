@@ -1,5 +1,11 @@
 DONE:
 
+- ImagePainter iw; iw.Arc - CtrlSpace shows nothing
+
+- Alt+C int                  Indexer::jobs_done; missing ;
+
+- virtuals - remove = 0 (e.g. ImageMaker)
+
 - ow "stdev" in Navigator produces second weird set of references that lead just to class GetStdevStdevVCounts
 
 - alt-U ide/clang/clang.h:23 on SourceLocation
