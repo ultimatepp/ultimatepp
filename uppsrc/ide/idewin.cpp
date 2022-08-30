@@ -339,10 +339,6 @@ static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln,
 void CursorInfoCtrl::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	if(!IsNull(img)) {
-		Size isz = img.GetSize();
-		w.DrawImage(0, (sz.cy - isz.cy) / 2, img);
-	}
 	Size tsz = GetTextSize(text, StdFont());
 	int x = sz.cx - tsz.cx;
 	int y = (sz.cy - tsz.cy) / 2;
@@ -637,6 +633,8 @@ Ide::Ide()
 	HideBottom();
 	SetupBars();
 	SetBar();
+
+	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
 
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {

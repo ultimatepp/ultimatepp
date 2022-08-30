@@ -346,14 +346,10 @@ struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 
 struct CursorInfoCtrl : Ctrl {
 	String text;
-//	Color  animate = Null;
-	Image  img;
 
 	void Paint(Draw& w) override;
 
 	void Set(const String& s) { text = s; Refresh(); }
-	void Set(const Image& m)  { if(!m.IsSame(img)) { img = m; Refresh(); }}
-//	void Animate(Color c)     { if(animate != c) { animate = c; Refresh(); } }
 	
 	CursorInfoCtrl();
 };
@@ -690,7 +686,7 @@ public:
 
 	FrameTop<StaticBarArea> bararea;
 	CursorInfoCtrl          display;
-
+	ImageCtrl               indeximage;
 
 	byte      hilite_scope;
 	int       hilite_bracket;

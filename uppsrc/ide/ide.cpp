@@ -676,10 +676,10 @@ void Ide::SyncClang()
 	if(Indexer::IsRunning()) {
 		IndexerProgress mi;
 		mi.pos = Indexer::Progress();
-		display.Set(MakeImage(mi));
+		indeximage.SetImage(MakeImage(mi));
 	}
 	else
-		display.Set(Image());
+		indeximage.SetImage(Null);
 	animate_phase = phase;
 }
 
