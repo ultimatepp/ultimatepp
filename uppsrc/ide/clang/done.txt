@@ -1,5 +1,7 @@
 DONE:
 
+- for .txt file, navigator keeps showing previous local file
+
 - ImagePainter iw; iw.Arc - CtrlSpace shows nothing
 
 - Alt+C int                  Indexer::jobs_done; missing ;
