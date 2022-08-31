@@ -113,6 +113,8 @@ void CurrentFileThread()
 					parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;
+					DDUMP(f.includes);
+					DDUMP(f.defines);
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_PrecompiledPreamble|
 					            CXTranslationUnit_CreatePreambleOnFirstParse|
@@ -120,7 +122,7 @@ void CurrentFileThread()
 					            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 				//	            CXTranslationUnit_CacheCompletionResults|
 					            CXTranslationUnit_KeepGoing);
-				//	DumpDiagnostics(clang.tu); _DBG_
+					DumpDiagnostics(clang.tu); _DBG_
 					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					DoAnnotations();
@@ -134,7 +136,10 @@ void CurrentFileThread()
 					CXCodeCompleteResults *results;
 					current_file_parsing = true;
 					int tm = msecs();
-					results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
+					{
+						MemoryIgnoreLeaksBlock __;
+						results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
+					}
 					PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
 	//				DumpDiagnostics(clang.tu);
 					if(results) {
@@ -157,7 +162,10 @@ void CurrentFileThread()
 							m.kind = kind;
 							m.priority = clang_getCompletionPriority(string);
 						}
-						clang_disposeCodeCompleteResults(results);
+						{
+							MemoryIgnoreLeaksBlock __;
+							clang_disposeCodeCompleteResults(results);
+						}
 						Ctrl::Call([&] {
 							if(aserial == autocomplete_serial)
 								autocomplete_done(item);

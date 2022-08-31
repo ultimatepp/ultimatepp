@@ -273,6 +273,7 @@ void Clang::Dispose()
 
 bool Clang::Parse(const String& filename, const String& content, const String& includes_, const String& defines, dword options)
 {
+	MemoryIgnoreLeaksBlock __;
 	if(!index) return false;
 	
 //	LTIMESTOP("Parse " << filename << " " << includes_ << " " << defines);
@@ -315,6 +316,7 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 
 bool Clang::ReParse(const String& filename, const String& content)
 {
+	MemoryIgnoreLeaksBlock __;
 	CXUnsavedFile ufile = { ~filename, ~content, (unsigned)content.GetCount() };
 	if(clang_reparseTranslationUnit(tu, 1, &ufile, 0)) {
 		Dispose();
@@ -325,11 +327,13 @@ bool Clang::ReParse(const String& filename, const String& content)
 
 Clang::Clang()
 {
+	MemoryIgnoreLeaksBlock __;
 	index = clang_createIndex(0, 0);
 }
 
 Clang::~Clang()
 {
+	MemoryIgnoreLeaksBlock __;
 	Dispose();
 	clang_disposeIndex(index);
 }
