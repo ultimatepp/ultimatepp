@@ -26,6 +26,7 @@ Image CxxIcon(int kind)
 	case KIND_INCLUDEFILE: return IdeCommonImg::Header();
 	case KIND_INCLUDEFILE_ANY: return CtrlImg::File();
 	case KIND_INCLUDEFOLDER: return CtrlImg::Dir();
+	case KIND_ERROR: return IdeImg::errors();
 	}
 	return BrowserImg::unknown();
 }

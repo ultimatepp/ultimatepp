@@ -20,7 +20,6 @@ file
 	Signature.cpp,
 	clang.cpp,
 	Visitor.cpp,
-	AutoComplete.cpp,
 	CurrentFile.cpp,
 	Indexer.cpp;
 

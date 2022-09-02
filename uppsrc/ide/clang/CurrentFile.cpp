@@ -113,8 +113,6 @@ void CurrentFileThread()
 					parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;
-					DDUMP(f.includes);
-					DDUMP(f.defines);
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_PrecompiledPreamble|
 					            CXTranslationUnit_CreatePreambleOnFirstParse|
@@ -122,7 +120,7 @@ void CurrentFileThread()
 					            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 				//	            CXTranslationUnit_CacheCompletionResults|
 					            CXTranslationUnit_KeepGoing);
-					DumpDiagnostics(clang.tu); _DBG_
+				//	DumpDiagnostics(clang.tu); _DBG_
 					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					DoAnnotations();
@@ -142,9 +140,9 @@ void CurrentFileThread()
 					}
 					PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
 	//				DumpDiagnostics(clang.tu);
+					Vector<AutoCompleteItem> item;
 					if(results) {
 						int tm = msecs();
-						Vector<AutoCompleteItem> item;
 						for(int i = 0; i < results->NumResults; i++) {
 							const CXCompletionString& string = results->Results[i].CompletionString;
 							int kind = results->Results[i].CursorKind;
@@ -166,12 +164,12 @@ void CurrentFileThread()
 							MemoryIgnoreLeaksBlock __;
 							clang_disposeCodeCompleteResults(results);
 						}
-						Ctrl::Call([&] {
-							if(aserial == autocomplete_serial)
-								autocomplete_done(item);
-						});
 						PutVerbose(String() << "Autocomplete processed in " << msecs() - tm << " ms");
 					}
+					Ctrl::Call([&] {
+						if(aserial == autocomplete_serial)
+							autocomplete_done(item);
+					});
 					current_file_parsing = false;
 					GuiLock __;
 					do_autocomplete = false;
@@ -247,6 +245,11 @@ void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool
 	autocomplete_done = done;
 	autocomplete_file = ctx;
 	current_file_event.Broadcast();
+}
+
+bool IsAutocompleteParsing()
+{
+	return do_autocomplete;
 }
 
 void CancelAutoComplete()

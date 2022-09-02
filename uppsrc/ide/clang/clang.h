@@ -47,6 +47,7 @@ enum AdditionalKinds {
 	KIND_INCLUDEFILE_ANY,
 	KIND_INCLUDEFOLDER,
 	KIND_COMPLETE,
+	KIND_ERROR,
 };
 
 Image  CxxIcon(int kind); // TODO: Move here
@@ -212,6 +213,7 @@ bool IsCurrentFileDirty();
 // bool IsAutocompleteParsing();
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
+bool IsAutocompleteParsing();
 void CancelAutoComplete();
 
 String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header_file);

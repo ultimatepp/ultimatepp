@@ -470,8 +470,11 @@ bool AssistEditor::WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelt
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
 	LTIMING("PopUpAssist");
-	if(assist_item.GetCount() == 0)
-		return;
+	if(assist_item.GetCount() == 0) {
+		AssistItem& m = assist_item.Add();
+		m.kind = KIND_ERROR;
+		m.signature = "No relevant autocomplete info found";
+	}
 	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
 		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
 	});
