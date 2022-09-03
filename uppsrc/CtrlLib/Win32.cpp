@@ -195,7 +195,7 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 	*(ofn.lpstrFile = buffer) = 0;
 	if(!filename.IsEmpty())
 	{
-		String out;
+		Vector<char16> out;
 		for(int i = 0; i < filename.GetCount(); i++)
 		{
 			if(*ofn.lpstrInitialDir == 0 && FindFile().Search(AppendFileName(GetFileDirectory(filename[i]), "*")))
@@ -206,14 +206,14 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 				if(!IsNull(fn))
 				{
 					if(multi && fn.Find(' ') >= 0)
-						out << W32(String() << '\"' << fn << '\"');
+						out.Append( ToSystemCharsetW('\"' + fn + '\"'));
 					else
-						out << W32(fn);
-					out.Cat(0);
+						out.Append(ToSystemCharsetW(fn));
+					out.Add(0);
 				}
 			}
 		}
-		int l = min(out.GetLength(), bufsize - 1);
+		int l = min(out.GetCount()*2, bufsize - 1);
 		memcpy(buffer, out, l + 1);
 	}
 
