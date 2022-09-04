@@ -1579,39 +1579,6 @@ kex_method_diffie_hellman_group_exchange_sha256_key_exchange
 }
 
 
-#if LIBSSH2_ECDSA
-
-/* kex_session_ecdh_curve_type
- * returns the EC curve type by name used in key exchange
- */
-
-static int
-kex_session_ecdh_curve_type(const char *name, libssh2_curve_type *out_type)
-{
-    int ret = 0;
-    libssh2_curve_type type;
-
-    if(name == NULL)
-        return -1;
-
-    if(strcmp(name, "ecdh-sha2-nistp256") == 0)
-        type = LIBSSH2_EC_CURVE_NISTP256;
-    else if(strcmp(name, "ecdh-sha2-nistp384") == 0)
-        type = LIBSSH2_EC_CURVE_NISTP384;
-    else if(strcmp(name, "ecdh-sha2-nistp521") == 0)
-        type = LIBSSH2_EC_CURVE_NISTP521;
-    else {
-        ret = -1;
-    }
-
-    if(ret == 0 && out_type) {
-        *out_type = type;
-    }
-
-    return ret;
-}
-
-
 /* LIBSSH2_KEX_METHOD_EC_SHA_HASH_CREATE_VERIFY
  *
  * Macro that create and verifies EC SHA hash with a given digest bytes
@@ -1721,6 +1688,39 @@ kex_session_ecdh_curve_type(const char *name, libssh2_curve_type *out_type)
 }                                                                       \
 
 
+#if LIBSSH2_ECDSA
+
+/* kex_session_ecdh_curve_type
+ * returns the EC curve type by name used in key exchange
+ */
+
+static int
+kex_session_ecdh_curve_type(const char *name, libssh2_curve_type *out_type)
+{
+    int ret = 0;
+    libssh2_curve_type type;
+
+    if(name == NULL)
+        return -1;
+
+    if(strcmp(name, "ecdh-sha2-nistp256") == 0)
+        type = LIBSSH2_EC_CURVE_NISTP256;
+    else if(strcmp(name, "ecdh-sha2-nistp384") == 0)
+        type = LIBSSH2_EC_CURVE_NISTP384;
+    else if(strcmp(name, "ecdh-sha2-nistp521") == 0)
+        type = LIBSSH2_EC_CURVE_NISTP521;
+    else {
+        ret = -1;
+    }
+
+    if(ret == 0 && out_type) {
+        *out_type = type;
+    }
+
+    return ret;
+}
+
+
 /* ecdh_sha2_nistp
  * Elliptic Curve Diffie Hellman Key Exchange
  */
@@ -1752,26 +1752,24 @@ static int ecdh_sha2_nistp(LIBSSH2_SESSION *session, libssh2_curve_type type,
         /* parse INIT reply data */
 
         /* host key K_S */
-        unsigned char *s = data + 1; /* Advance past packet type */
         unsigned char *server_public_key;
         size_t server_public_key_len;
-        size_t host_sig_len;
+        struct string_buf buf;
 
-        session->server_hostkey_len =
-            _libssh2_ntohu32((const unsigned char *)s);
-        s += 4;
+        buf.data = data;
+        buf.len = data_len;
+        buf.dataptr = buf.data;
+        buf.dataptr++; /* Advance past packet type */
 
-        session->server_hostkey = LIBSSH2_ALLOC(session,
-                                                session->server_hostkey_len);
-        if(!session->server_hostkey) {
-            ret = _libssh2_error(session, LIBSSH2_ERROR_ALLOC,
-                                 "Unable to allocate memory for a copy "
-                                 "of the host key");
+         if(_libssh2_copy_string(session, &buf, &(session->server_hostkey),
+                                &server_public_key_len)) {
+             ret = _libssh2_error(session, LIBSSH2_ERROR_ALLOC,
+                                  "Unable to allocate memory for a copy "
+                                  "of the host key");
             goto clean_exit;
         }
 
-        memcpy(session->server_hostkey, s, session->server_hostkey_len);
-        s += session->server_hostkey_len;
+        session->server_hostkey_len = (uint32_t)server_public_key_len;
 
 #if LIBSSH2_MD5
         {
@@ -1870,19 +1868,20 @@ static int ecdh_sha2_nistp(LIBSSH2_SESSION *session, libssh2_curve_type type,
         }
 
         /* server public key Q_S */
-        server_public_key_len = _libssh2_ntohu32((const unsigned char *)s);
-        s += 4;
-
-        server_public_key = s;
-        s += server_public_key_len;
+        if(_libssh2_get_string(&buf, &server_public_key,
+                               &server_public_key_len)) {
+            ret = _libssh2_error(session, LIBSSH2_ERROR_PROTO,
+                                     "Unexpected key length");
+            goto clean_exit;
+        }
 
         /* server signature */
-        host_sig_len = _libssh2_ntohu32((const unsigned char *)s);
-        s += 4;
-
-        exchange_state->h_sig = s;
-        exchange_state->h_sig_len = host_sig_len;
-        s += host_sig_len;
+        if(_libssh2_get_string(&buf, &exchange_state->h_sig,
+           &(exchange_state->h_sig_len))) {
+            ret = _libssh2_error(session, LIBSSH2_ERROR_HOSTKEY_INIT,
+                                 "Unexpected ecdh server sig length");
+            goto clean_exit;
+        }
 
         /* Compute the shared secret K */
         rc = _libssh2_ecdh_gen_k(&exchange_state->k, private_key,
@@ -3177,7 +3176,11 @@ static int kexinit(LIBSSH2_SESSION * session)
 
         *(s++) = SSH_MSG_KEXINIT;
 
-        _libssh2_random(s, 16);
+        if(_libssh2_random(s, 16)) {
+            return _libssh2_error(session, LIBSSH2_ERROR_RANDGEN,
+                                  "Unable to get random bytes "
+                                  "for KEXINIT cookie");
+        }
         s += 16;
 
         /* Ennumerating through these lists twice is probably (certainly?)
@@ -3287,11 +3290,21 @@ kex_agree_instr(unsigned char *haystack, unsigned long haystack_len,
                 const unsigned char *needle, unsigned long needle_len)
 {
     unsigned char *s;
+    unsigned char *end_haystack;
+    unsigned long left;
 
-    /* Haystack too short to bother trying */
-    if(haystack_len < needle_len) {
+    if(haystack == NULL || needle == NULL) {
         return NULL;
     }
+
+    /* Haystack too short to bother trying */
+    if(haystack_len < needle_len || needle_len == 0) {
+        return NULL;
+    }
+
+    s = haystack;
+    end_haystack = &haystack[haystack_len];
+    left = end_haystack - s;
 
     /* Needle at start of haystack */
     if((strncmp((char *) haystack, (char *) needle, needle_len) == 0) &&
@@ -3299,12 +3312,18 @@ kex_agree_instr(unsigned char *haystack, unsigned long haystack_len,
         return haystack;
     }
 
-    s = haystack;
     /* Search until we run out of comas or we run out of haystack,
        whichever comes first */
-    while((s = (unsigned char *) strchr((char *) s, ','))
-           && ((haystack_len - (s - haystack)) > needle_len)) {
-        s++;
+    while((s = (unsigned char *) memchr((char *) s, ',', left))) {
+        /* Advance buffer past coma if we can */
+        left = end_haystack - s;
+        if((left >= 1) && (left <= haystack_len) && (left > needle_len)) {
+            s++;
+        }
+        else {
+            return NULL;
+        }
+
         /* Needle at X position */
         if((strncmp((char *) s, (char *) needle, needle_len) == 0) &&
             (((s - haystack) + needle_len) == haystack_len
@@ -4069,7 +4088,7 @@ LIBSSH2_API int libssh2_session_supported_algs(LIBSSH2_SESSION* session,
       supported algorithms (needed to allocate the proper size of array) and
       the second time to actually copy the pointers.  Typically this function
       will not be called often (typically at the beginning of a session) and
-      the number of algorithms (i.e. niumber of iterations in one loop) will
+      the number of algorithms (i.e. number of iterations in one loop) will
       not be high (typically it will not exceed 20) for quite a long time.
 
       So double looping really shouldn't be an issue and it is definitely a

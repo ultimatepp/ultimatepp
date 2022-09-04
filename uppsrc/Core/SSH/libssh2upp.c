@@ -2,6 +2,7 @@
 #define _UPP_SSH_libssh2upp_h_
 
 #include  "libssh2/agent.c"
+#include  "libssh2/agent_win.c"
 #include  "libssh2/bcrypt_pbkdf.c"
 #include  "libssh2/blowfish.c"
 #include  "libssh2/channel.c"
