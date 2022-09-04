@@ -209,12 +209,11 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 						out.Append( ToSystemCharsetW('\"' + fn + '\"'));
 					else
 						out.Append(ToSystemCharsetW(fn));
-					out.Add(0);
 				}
 			}
 		}
 		int l = min(out.GetCount()*2, bufsize - 1);
-		memcpy(buffer, out, l + 1);
+		memcpy(buffer, out, l);
 	}
 
 	if(dlgtitle)
