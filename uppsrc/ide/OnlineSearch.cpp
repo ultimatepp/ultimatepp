@@ -195,11 +195,19 @@ void Ide::OnlineSearchMenu(Bar& menu)
 {
 	static Time search_engines_tm = Null;
 	static Value search_engines;
-	
-	Time h = FileGetTime(SearchEnginesFile());
-	if(h != search_engines_tm) {
-		search_engines = LoadSearchEngines();
-		search_engines_tm = h;
+	static Vector<Image> search_icon;
+	static Vector<bool> search_icon_loaded;
+	static Time next_check = Time::Low();
+
+	Time ct = GetSysTime();
+	if(ct > next_check) {
+		next_check = ct + 4;
+		Time h = FileGetTime(SearchEnginesFile());
+		if(h != search_engines_tm) {
+			search_engines = LoadSearchEngines();
+			search_engines_tm = h;
+			search_icon_loaded.Clear();
+		}
 	}
 	
 	bool b = editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
@@ -211,7 +219,13 @@ void Ide::OnlineSearchMenu(Bar& menu)
 	};
 	
 	auto Icon = [&](int i) {
-		return StreamRaster::LoadStringAny(Decode64(search_engines[i]["Icon"]));
+		bool& b = search_icon_loaded.At(i, false);
+		Image& m = search_icon.At(i);
+		if(!b) {
+			b = true;
+			m = StreamRaster::LoadStringAny(Decode64(search_engines[i]["Icon"]));
+		}
+		return m;
 	};
 
 	String name, uri;

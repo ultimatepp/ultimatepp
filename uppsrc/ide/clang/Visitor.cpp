@@ -283,21 +283,22 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	CXCursor ref = clang_getCursorReferenced(cursor);
 
 	String id = ci.Id();
+	int kind = ci.Kind();
 	if(id.GetCount() && (!locals || dolocals)) {
 		LoadSourceLocation();
 		CppFileInfo& f = info.GetAdd(sl.path);
 		AnnotationItem& r = locals ? f.locals.Add() : f.items.Add();
-		r.kind = ci.Kind();
+		r.kind = kind;
 		r.name = ci.Name();
 		r.type = ci.Type();
 		r.pos = loc.pos;
 		r.id = id;
-		r.pretty = ci.Kind() == CXCursor_MacroDefinition ? r.name
+		r.pretty = kind == CXCursor_MacroDefinition ? r.name
 	               : CleanupPretty(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = ci.Nspace();
 		r.bases = ci.Bases();
-		r.isvirtual = ci.Kind() == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
+		r.isvirtual = kind == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
 			if(q >= 0) {
@@ -312,7 +313,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 				r.nest = r.id.Mid(0, q);
 				r.nest.TrimEnd("::");
 			}
-			if(IsStruct(ci.Kind()))
+			if(IsStruct(kind))
 				MergeWith(r.nest, "::", r.name);
 		}
 		r.uname = ToUpper(r.name);
@@ -340,22 +341,24 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		}
 	}
 
-	if(findarg(ci.Kind(), CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
+	if(findarg(kind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_Constructor,
 		                  CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ConversionFunction) >= 0)
 		locals = true;
 
-	return true;
+	return findarg(kind, CXCursor_FieldDecl, CXCursor_VarDecl) < 0;
 }
 
 CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData) {
 #ifdef DUMPTREE
 	LOGBEGIN();
 #endif
+	LOGBEGIN();
 	ClangVisitor *v = (ClangVisitor *)clientData;
 	bool bak_locals = v->locals;
 	if(v->ProcessNode(cursor))
 		clang_visitChildren(cursor, clang_visitor, clientData);
 	v->locals = bak_locals;
+	LOGEND();
 #ifdef DUMPTREE
 	LOGEND();
 #endif

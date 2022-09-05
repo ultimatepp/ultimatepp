@@ -86,15 +86,9 @@ ISUES:
 
 - Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 
-- Handle templates
-	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
-	- Alt-J relaxed rules if not found (in templates, different parameters)
-
 - Wind/MetMastLayer.cpp:6354 no jump on sqrt (?)
 
 - Macros with PPInfo
-
-- Heap leaks in Linux
 
 - Option "first config only"
 
@@ -102,11 +96,11 @@ ISUES:
 
 - Icons Alt-J/I/U
 
-- Autocomplete Size sz; sz.ct - when the name is not found, list is missing (should not be)
-
 - Occasional freeze probably due to reindexing
 
 - void ClearTurbineVarsCache() - after switching main config, reparse file
+
+- Raster/RasterLayer.cpp:841 J on NewRc
 
 
 NONCLANG:
@@ -164,6 +158,10 @@ NTH:
 - current file
 
 - Alt+I should try previous method
+
+- Handle templates
+	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
+	- Alt-J relaxed rules if not found (in templates, different parameters)
 
 LATER:
 

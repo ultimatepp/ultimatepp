@@ -1,5 +1,11 @@
 DONE:
 
+- Heap leaks in Linux
+
+- Alt-I on AssistDisplay::Paint
+
+- Autocomplete Size sz; sz.ct - when the name is not found, list is missing (should not be)
+
 - for .txt file, navigator keeps showing previous local file
 
 - ImagePainter iw; iw.Arc - CtrlSpace shows nothing

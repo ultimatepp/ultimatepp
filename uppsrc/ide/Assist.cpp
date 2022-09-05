@@ -497,8 +497,6 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		popup.NoZoom();
 	}
 	type.SetCursor(0);
-	if(!assist.GetCount())
-		return;
 	LTIMING("PopUpAssist2");
 	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
