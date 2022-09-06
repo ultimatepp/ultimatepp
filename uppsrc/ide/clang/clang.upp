@@ -20,6 +20,7 @@ file
 	Signature.cpp,
 	clang.cpp,
 	Visitor.cpp,
+	CurrentFile.cpp.bak,
 	CurrentFile.cpp,
 	Indexer.cpp;
 

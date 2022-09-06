@@ -104,6 +104,10 @@ ISUES:
 
 - Vector/VectorLayer.cpp:870 J on GetBuffer
 
+- OpenWind/PowerCurve.cpp:3883 J on GetElevation
+
+- (unnamed) BAD -> LogicalReport - fix enum in autocomplete
+
 NONCLANG:
 
 - Debugger Threads should show active threads first

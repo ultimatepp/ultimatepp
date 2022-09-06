@@ -17,27 +17,6 @@ Point                                  autocomplete_pos;
 int64                                  autocomplete_serial;
 Event<const Vector<AutoCompleteItem>&> autocomplete_done;
 
-struct CurrentFileClang {
-	CurrentFileContext parsed_file;
-	Clang              clang;
-};
-
-CurrentFileClang& GetCurrentFileClang(const String& filename)
-{
-	static Array<CurrentFileClang> cf;
-	
-	for(int i = 0; i < cf.GetCount(); i++)
-		if(cf[i].parsed_file.filename == filename) {
-			DLOG("Found " << filename << " at " << i);
-			cf.Move(i, 0); // LRU...
-			return cf[0];
-		}
-	
-	DLOG("New " << filename << " " << cf.GetCount());
-	return cf.GetCount() < 8 ? cf.Add() : cf.Top(); // TODO: Limit
-}
-
-
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
 {
 	const int chunkCount = clang_getNumCompletionChunks(string);
@@ -61,57 +40,61 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 	}
 }
 
-void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
-	if(!cfc.clang.tu || !annotations_done) return;
-	ClangVisitor v;
-	v.dolocals = true;
-	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
-	v.Do(cfc.clang.tu);
-	CppFileInfo f;
-	if(v.info.GetCount()) {
-		f = pick(v.info[0]);
-		f.items.RemoveIf([&](int i) { return f.items[i].pos.y < cfc.parsed_file.line_delta; });
-		for(AnnotationItem& m : f.items)
-			m.pos.y -= cfc.parsed_file.line_delta;
-		f.locals.RemoveIf([&](int i) { return f.locals[i].pos.y < cfc.parsed_file.line_delta; });
-		for(AnnotationItem& m : f.locals)
-			m.pos.y -= cfc.parsed_file.line_delta;
-		f.refs.RemoveIf([&](int i) { return f.refs[i].pos.y < cfc.parsed_file.line_delta; });
-		for(ReferenceItem& m : f.refs)
-			m.pos.y -= cfc.parsed_file.line_delta;
-	}
-	Ctrl::Call([&] {
-		if(cfc.parsed_file.filename == current_file.filename &&
-		   cfc.parsed_file.real_filename == current_file.real_filename &&
-		   cfc.parsed_file.includes == current_file.includes &&
-		   serial == current_file_serial) {
-			annotations_done(f);
-			FileAnnotation fa;
-			fa.defines = cfc.parsed_file.defines;
-			fa.includes = cfc.parsed_file.includes;
-			fa.items = pick(f.items);
-			fa.refs = pick(f.refs);
-			fa.time = Time::Low();
-			CodeIndex().GetAdd(NormalizePath(cfc.parsed_file.real_filename)) = pick(fa);
-		}
-		current_file_done_serial = serial;
-	});
-};
-
 void CurrentFileThread()
 {
 	MemoryIgnoreLeaksBlock __;
+
+	CurrentFileContext parsed_file;
+	int64 serial;
+	
+	Clang clang;
+
+	auto DoAnnotations = [&] {
+		if(!clang.tu || !annotations_done) return;
+		ClangVisitor v;
+		v.dolocals = true;
+		v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
+		v.Do(clang.tu);
+		CppFileInfo f;
+		if(v.info.GetCount()) {
+			f = pick(v.info[0]);
+			f.items.RemoveIf([&](int i) { return f.items[i].pos.y < parsed_file.line_delta; });
+			for(AnnotationItem& m : f.items)
+				m.pos.y -= parsed_file.line_delta;
+			f.locals.RemoveIf([&](int i) { return f.locals[i].pos.y < parsed_file.line_delta; });
+			for(AnnotationItem& m : f.locals)
+				m.pos.y -= parsed_file.line_delta;
+			f.refs.RemoveIf([&](int i) { return f.refs[i].pos.y < parsed_file.line_delta; });
+			for(ReferenceItem& m : f.refs)
+				m.pos.y -= parsed_file.line_delta;
+		}
+		Ctrl::Call([&] {
+			if(parsed_file.filename == current_file.filename &&
+			   parsed_file.real_filename == current_file.real_filename &&
+			   parsed_file.includes == current_file.includes &&
+			   serial == current_file_serial) {
+				annotations_done(f);
+				FileAnnotation fa;
+				fa.defines = parsed_file.defines;
+				fa.includes = parsed_file.includes;
+				fa.items = pick(f.items);
+				fa.refs = pick(f.refs);
+				fa.time = Time::Low();
+				CodeIndex().GetAdd(NormalizePath(parsed_file.real_filename)) = pick(fa);
+			}
+			current_file_done_serial = serial;
+		});
+	};
 
 	while(!Thread::IsShutdownThreads()) {
 		bool was_parsing;
 		do {
 			was_parsing = false;
 			CurrentFileContext f, af;
-			int64 serial;
 			int64 done_serial;
 			int64 aserial;
 			bool autocomplete_do;
-			{ // fetch the work to do
+			{
 				GuiLock __;
 				f = current_file;
 				af = autocomplete_file;
@@ -121,42 +104,39 @@ void CurrentFileThread()
 				aserial = autocomplete_serial;
 			}
 			if(f.filename.GetCount()) {
-				CurrentFileClang& cfc = GetCurrentFileClang(f.filename);
 				String fn = f.filename;
 				if(!IsSourceFile(fn))
 					fn.Cat(".cpp");
-				DDUMP(f.real_filename);
-				DDUMP(cfc.parsed_file.filename);
-				if(f.filename != cfc.parsed_file.filename || f.real_filename != cfc.parsed_file.real_filename ||
-				   f.includes != cfc.parsed_file.includes || f.defines != cfc.parsed_file.defines ||
-				   !cfc.clang.tu) { // TODO: same is in autocomplete
-					cfc.parsed_file = f;
+				if(f.filename != parsed_file.filename || f.real_filename != parsed_file.real_filename ||
+				   f.includes != parsed_file.includes || f.defines != parsed_file.defines ||
+				   !clang.tu) { // TODO: same is in autocomplete
+					parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;
-					cfc.clang.Parse(fn, f.content, f.includes, f.defines,
-					                CXTranslationUnit_PrecompiledPreamble|
-					                CXTranslationUnit_CreatePreambleOnFirstParse|
-			                        CXTranslationUnit_SkipFunctionBodies|
-					                CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
-					                CXTranslationUnit_KeepGoing);
+					clang.Parse(fn, f.content, f.includes, f.defines,
+					            CXTranslationUnit_PrecompiledPreamble|
+					            CXTranslationUnit_CreatePreambleOnFirstParse|
+			                    CXTranslationUnit_SkipFunctionBodies|
+					            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
+				//	            CXTranslationUnit_CacheCompletionResults|
+					            CXTranslationUnit_KeepGoing);
 				//	DumpDiagnostics(clang.tu); _DBG_
 					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
 					tm = msecs();
-					DoAnnotations(cfc, serial);
-					done_serial = serial;
+					DoAnnotations();
 					PutVerbose(String() << "Current file parser output processed in " << msecs() - tm << " ms");
 					current_file_parsing = false;
 					was_parsing = true;
 				}
 				if(Thread::IsShutdownThreads()) break;
-				if(cfc.clang.tu && autocomplete_do) {
+				if(clang.tu && autocomplete_do) {
 					CXUnsavedFile ufile = { ~fn, ~af.content, (unsigned)af.content.GetCount() };
 					CXCodeCompleteResults *results;
 					current_file_parsing = true;
 					int tm = msecs();
 					{
 						MemoryIgnoreLeaksBlock __;
-						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
+						results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 					}
 					PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
 	//				DumpDiagnostics(clang.tu);
@@ -194,15 +174,15 @@ void CurrentFileThread()
 					GuiLock __;
 					do_autocomplete = false;
 				}
-				if(cfc.clang.tu && serial != done_serial) {
+				if(clang.tu && serial != done_serial) {
 					TIMESTOP("ReParse");
 					current_file_parsing = true;
 					int tm = msecs();
-					bool b = cfc.clang.ReParse(fn, f.content);
+					bool b = clang.ReParse(fn, f.content);
 					PutVerbose(String() << "Current file reparsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					if(b)
-						DoAnnotations(cfc, serial);
+						DoAnnotations();
 					PutVerbose(String() << "Current file reparsed output processed in " << msecs() - tm << " ms");
 					current_file_parsing = false;
 					was_parsing = true;
