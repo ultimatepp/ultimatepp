@@ -28,15 +28,12 @@ CurrentFileClang& GetCurrentFileClang(const String& filename)
 	
 	for(int i = 0; i < cf.GetCount(); i++)
 		if(cf[i].parsed_file.filename == filename) {
-			DLOG("Found " << filename << " at " << i);
 			cf.Move(i, 0); // LRU...
 			return cf[0];
 		}
-	
-	DLOG("New " << filename << " " << cf.GetCount());
+
 	return cf.GetCount() < 8 ? cf.Add() : cf.Top(); // TODO: Limit
 }
-
 
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
 {
@@ -125,8 +122,6 @@ void CurrentFileThread()
 				String fn = f.filename;
 				if(!IsSourceFile(fn))
 					fn.Cat(".cpp");
-				DDUMP(f.real_filename);
-				DDUMP(cfc.parsed_file.filename);
 				if(f.filename != cfc.parsed_file.filename || f.real_filename != cfc.parsed_file.real_filename ||
 				   f.includes != cfc.parsed_file.includes || f.defines != cfc.parsed_file.defines ||
 				   !cfc.clang.tu) { // TODO: same is in autocomplete
