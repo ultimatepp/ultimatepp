@@ -71,19 +71,11 @@ int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 Navigator::Navigator()
 :	navidisplay(litem)
 {
-	scope_display.navigator = this;
-	scope.NoHeader();
-	scope.AddColumn().SetDisplay(scope_display);
-	scope.NoWantFocus();
-	scope.WhenSel = THISBACK(Scope);
-	scope.WhenLeftDouble = THISBACK(ScopeDblClk);
-
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);
 	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
-	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
@@ -125,21 +117,21 @@ void Navigator::SyncCursor()
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 	
-	if(!navigating && !navigator_global) {
+	if(!navigating) {
 		AnnotationItem q = theide->editor.FindCurrentAnnotation();
 		navigating = true;
-		for(int i = 0; i < list.GetCount(); i++) {
-			const NavItem& m = *litem[i];
-			if(m.id == q.id && m.pos == q.pos) {
-				list.SetCursor(i);
-				break;
+		for(int pass = 0; pass < 2; pass++)
+			for(int i = 0; i < list.GetCount(); i++) {
+				const NavItem& m = *litem[i];
+				if(m.id == q.id && (pass || m.pos == q.pos)) {
+					list.SetCursor(i);
+					navigating = false;
+					return;
+				}
 			}
-		}
+		list.KillCursor();
 		navigating = false;
 	}
-
-	if(scope.IsCursor())
-		scope.RefreshRow(scope.GetCursor());
 }
 
 void Navigator::Navigate()
@@ -151,6 +143,23 @@ void Navigator::Navigate()
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
 		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
+		if(m.kind == KIND_NEST) {
+			String h = m.pretty;
+			int q = h.Find("\xff");
+			if(q >= 0) {
+				search.Clear();
+				theide->AddHistory();
+				theide->EditFile(h.Mid(q + 1));
+				theide->AddHistory();
+			}
+			else {
+				h.Replace("::", ".");
+				h << ".";
+				search <<= h;
+				Search();
+			}
+		}
+		else
 		if(m.kind == KIND_LINE || IsNull(search)) {
 			theide->GotoPos(Null, m.pos);
 			if(m.kind == KIND_LINE) { // Go to line - restore file view
@@ -171,19 +180,6 @@ void Navigator::Navigate()
 		}
 	}
 	navigating = false;
-}
-
-void Navigator::ScopeDblClk()
-{
-	if(!scope.IsCursor())
-		return;
-	String h = scope.GetKey();
-	if((byte)*h == 0xff)
-		theide->GotoPos(h.Mid(1), 1);
-	else {
-		list.GoBegin();
-		Navigate();
-	}
 }
 
 void Navigator::NavigatorClick()
@@ -311,8 +307,6 @@ void Navigator::TriggerSearch()
 void Navigator::Search()
 {
 	sortitems.Check(sorting);
-	int sc = scope.GetScroll();
-	String key = scope.GetKey();
 	String s = TrimBoth(~search);
 	String search_name, search_nest;
 	bool wholeclass = false;
@@ -402,87 +396,24 @@ void Navigator::Search()
 			}
 		}
 	}
-	scope.Clear();
-	for(String n : nests)
-		scope.Add(n);
-	scope.ScrollTo(sc);
-	if(!navigator_global || !scope.FindSetCursor(key))
-		scope.GoBegin();
-}
 
-int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
-{
-	w.DrawRect(r, paper);
-	if(IsNull(q)) {
-		const char *txt = "* ";
-		int x = 0;
-		w.DrawText(r.left, r.top, txt, StdFont().Bold().Italic(),
-		           style & CURSOR ? ink : HighlightSetup::GetHlStyle(HighlightSetup::INK_KEYWORD).color);
-		x += GetTextSize(txt, StdFont().Bold().Italic()).cx;
-		int ii = navigator->list.GetCursor();
-		if(ii >= 0 && ii < navigator->litem.GetCount()) {
-			const NavItem& m = *navigator->litem[ii];
-			String txt = m.nest;
-			if(IsFunction(m.kind))
-				txt << "::" << m.name;
-			w.DrawText(r.left + x, r.top, txt, StdFont().Bold(), ink);
-			x += GetTextSize(txt, StdFont().Bold()).cx;
-		}
-		return x;
-	}
-	String h = q;
-	if(h.Find('\xff') >= 0) // TODO
-		return PaintFileName(w, r, h, ink);
-	else
-		h = FormatNest(h);
-	w.DrawText(r.left, r.top, h, StdFont(), ink);
-	return GetTextSize(h, StdFont()).cx;
-}
-
-void Navigator::ScopeDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
-{
-	DoPaint(w, r, q, ink, paper, style);
-}
-
-Size Navigator::ScopeDisplay::GetStdSize(const Value& q) const
-{
-	NilDraw w;
-	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
-}
-
-void Navigator::Scope()
-{
-	LTIMING("FINALIZE");
 	litem.Clear();
 	nest_item.Clear();
-	String sc = scope.GetKey();
 	String nest;
-	for(const NavItem& n : nitem)
-		if(IsNull(sc) || n.nest == sc) {
-			if(!sorting && n.nest != nest) {
-				NavItem& m = nest_item.Add();
-				m.kind = KIND_NEST;
-				nest = m.pretty = n.nest;
-				litem.Add(&m);
-			}
-			litem.Add(&n);
+	for(const NavItem& n : nitem) {
+		if(!sorting && n.nest != nest) {
+			NavItem& m = nest_item.Add();
+			m.kind = KIND_NEST;
+			nest = m.pretty = n.nest;
+			litem.Add(&m);
 		}
+		litem.Add(&n);
+	}
 	
-	// TODO sorting
-		
 	int lsc = list.GetScroll();
 	list.Clear();
 	list.SetVirtualCount(litem.GetCount());
 	list.ScrollTo(lsc);
-}
-
-void Navigator::ListLineEnabled(int i, bool& b)
-{
-	if(i >= 0 && i < litem.GetCount()) {
-		int kind = litem[i]->kind;
-		if(findarg(kind, KIND_NEST) >= 0)
-			b = false;
-	}
 }
 
 void Navigator::NaviSort()

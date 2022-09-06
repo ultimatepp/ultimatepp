@@ -102,6 +102,7 @@ ISUES:
 
 - Raster/RasterLayer.cpp:841 J on NewRc
 
+- Vector/VectorLayer.cpp:870 J on GetBuffer
 
 NONCLANG:
 

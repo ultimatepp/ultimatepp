@@ -267,7 +267,12 @@ String GetClangInternalIncludes()
 
 void Clang::Dispose()
 {
-	if(tu) clang_disposeTranslationUnit(tu);
+	if(tu) {
+		INTERLOCKED { // Otherwise dispose takes much longer, probably due to clang allocator lock contention
+//			TIMESTOP("clang_disposeTranslationUnit");
+			clang_disposeTranslationUnit(tu);
+		}
+	}
 	tu = nullptr;
 }
 
