@@ -345,7 +345,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		                  CXCursor_Destructor, CXCursor_CXXMethod, CXCursor_ConversionFunction) >= 0)
 		locals = true;
 
-	return findarg(kind, CXCursor_FieldDecl, CXCursor_VarDecl) < 0;
+	return true;
 }
 
 CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clientData) {
@@ -396,10 +396,20 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
 
-	for(CppFileInfo& f : info) // sort by line because macros are first TODO move it after macros are by HDepend
+	for(CppFileInfo& f : info) { // sort by line because macros are first TODO move it after macros are by HDepend
 		Sort(f.items, [](const AnnotationItem& a, const AnnotationItem& b) {
 			return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 		});
+		// remove duplicates
+		Vector<int> toremove;
+		for(int i = 1; i < f.items.GetCount(); i++) {
+			AnnotationItem& a = f.items[i - 1];
+			AnnotationItem& b = f.items[i];
+			if(a.pos == b.pos && a.id == b.id)
+				toremove.Add(i);
+		}
+		f.items.Remove(toremove);
+	}
 }
 
 ClangVisitor::~ClangVisitor()

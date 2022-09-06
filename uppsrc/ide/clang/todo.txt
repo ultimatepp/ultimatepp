@@ -1,10 +1,10 @@
 CRITICAL:
 
+ISUES:
+
 - out of sync SetCurrentFile
 
 - NewFile gets called on .log update resulting in SetCurrentFile and SyncHeaders (maybe not?)
-
-ISUES:
 
 - MSVC
 
@@ -96,17 +96,11 @@ ISUES:
 
 - Icons Alt-J/I/U
 
-- Occasional freeze probably due to reindexing
-
 - void ClearTurbineVarsCache() - after switching main config, reparse file
 
-- Raster/RasterLayer.cpp:841 J on NewRc
-
-- Vector/VectorLayer.cpp:870 J on GetBuffer
-
-- OpenWind/PowerCurve.cpp:3883 J on GetElevation
-
 - (unnamed) BAD -> LogicalReport - fix enum in autocomplete
+
+- navigator "BAD" - should be first
 
 NONCLANG:
 

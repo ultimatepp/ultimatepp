@@ -1,5 +1,13 @@
 DONE:
 
+- OpenWind/PowerCurve.cpp:3883 J on GetElevation
+
+- Vector/VectorLayer.cpp:870 J on GetBuffer
+
+- Raster/RasterLayer.cpp:841 J on NewRc
+
+- Occasional freeze probably due to reindexing
+
 - Heap leaks in Linux
 
 - Alt-I on AssistDisplay::Paint
