@@ -147,9 +147,6 @@ void Ide::ContextGoto0(int pos)
 		String found_name;
 		String found_nest;
 		
-		auto Check = [&](const String& path, const AnnotationItem& m) {
-		};
-		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 		if(IsFunction(cm.kind)) { // do local variables
 			for(const AnnotationItem& m : editor.locals) {

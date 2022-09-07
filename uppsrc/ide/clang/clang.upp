@@ -19,7 +19,7 @@ file
 	libclang.cpp,
 	clang.cpp,
 	Visitor.cpp,
-	AutoComplete.cpp,
+	CurrentFile.cpp.bak,
 	CurrentFile.cpp,
 	Indexer.cpp;
 

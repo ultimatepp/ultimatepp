@@ -26,6 +26,7 @@ Image CxxIcon(int kind)
 	case KIND_INCLUDEFILE: return IdeCommonImg::Header();
 	case KIND_INCLUDEFILE_ANY: return CtrlImg::File();
 	case KIND_INCLUDEFOLDER: return CtrlImg::Dir();
+	case KIND_ERROR: return IdeImg::errors();
 	}
 	return BrowserImg::unknown();
 }
@@ -117,6 +118,6 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 
 		w.DrawRect(r, paper);
 		
-		PaintCpp(w, r, m.kind, m.name, m.signature, ink, (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT));
+		PaintCpp(w, r, m.kind, m.name, m.signature, ink, (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT), true);
 	}
 }

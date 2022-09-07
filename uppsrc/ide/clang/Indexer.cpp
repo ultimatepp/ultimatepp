@@ -197,12 +197,13 @@ void Indexer::IndexerThread()
 		{
 			Mutex::Lock __(mutex);
 			if(--running_indexers == 0 && jobs.GetCount()) {
-				PutVerbose(String() << "Indexing finished in " << (msecs() - tm0) / 1000.0 << " s");
 				jobs.Clear();
 				scheduler.Broadcast();
 				last = true;
 			}
 		}
+		if(last)
+			PutVerbose(String() << "Indexing finished in " << (msecs() - tm0) / 1000.0 << " s");
 	#ifdef _DEBUG
 		if(last)
 			DumpIndex(); // TODO remove?

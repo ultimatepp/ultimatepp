@@ -63,7 +63,12 @@ void Clang::Dispose()
 {
 	if(!HasLibClang())
 		return;
-	if(tu) clang_disposeTranslationUnit(tu);
+	if(tu) {
+		INTERLOCKED { // Otherwise dispose takes much longer, probably due to clang allocator lock contention
+//			TIMESTOP("clang_disposeTranslationUnit");
+			clang_disposeTranslationUnit(tu);
+		}
+	}
 	tu = nullptr;
 }
 
@@ -83,7 +88,7 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++17 ";
 	
-//	cmdline << RedefineMacros();
+	cmdline << RedefineMacros();
 	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());

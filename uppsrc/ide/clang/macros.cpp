@@ -1,8 +1,6 @@
 #include "clang.h"
 
-// TODO remove this
-
-// we are (for now?) using libclang.dll for MSVC and therefore need to redefine standard macros
+// we are using libclang.dll for MSVC and therefore need to redefine standard macros
 // to mingw clang
 
 const char umacros[] =

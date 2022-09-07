@@ -657,20 +657,25 @@ void Ide::SyncClang()
 	Vector<Color> a;
 	Color display_ink = Null;
 	int phase = msecs() / 30; // TODO: Use phase
+	auto AnimColor = [](int animator) {
+		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
+	};
 	auto Animate = [=](int& animator, int& dir, bool animate) -> Color {
 		if(animator <= 0 && !animate) return Null;
 		if(animate)
 			animator = 20;
 		else
 			animator -= 3;
-		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
+		return AnimColor(animator);
 	};
 	Color bg = Animate(animate_current_file, animate_current_file_dir, editor.annotating || IsCurrentFileParsing());
+	int cx = editor.GetBarSize().cx;
 	if(!IsNull(bg)) {
-		int cx = editor.GetBarSize().cx;
 		for(int i = 0; i < cx; i++)
 			a.Add(i > cx - DPI(6) ? bg : Null);
 	}
+	if(IsAutocompleteParsing())
+		a.At((phase % DPI(6)) + cx - DPI(6)) = SGray();
 	editor.AnimateBar(pick(a));
 	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, Indexer::IsRunning()));
 	if(Indexer::IsRunning()) {

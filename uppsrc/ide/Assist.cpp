@@ -37,10 +37,7 @@ AssistEditor::AssistEditor()
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
-	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
-	navigator_splitter.Vert() << scope << list;
-	navigator_splitter.SetPos(1500, 0);
-	navigator_splitter.SetPos(9500, 1);
+	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
 
 	navigator = true;
 
@@ -67,7 +64,7 @@ AssistEditor::AssistEditor()
 	include_assist = false;
 
 	NoFindReplace();
-	
+
 	WhenUpdate << [=] {
 		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
 			annotating = true;
@@ -470,8 +467,11 @@ bool AssistEditor::WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelt
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
 	LTIMING("PopUpAssist");
-	if(assist_item.GetCount() == 0)
-		return;
+	if(assist_item.GetCount() == 0) {
+		AssistItem& m = assist_item.Add();
+		m.kind = KIND_ERROR;
+		m.signature = "No relevant autocomplete info found";
+	}
 	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
 		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
 	});
@@ -494,8 +494,6 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		popup.NoZoom();
 	}
 	type.SetCursor(0);
-	if(!assist.GetCount())
-		return;
 	LTIMING("PopUpAssist2");
 	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
@@ -739,7 +737,7 @@ bool AssistEditor::Key(dword key, int count)
 			DDUMP(wspc[i]);
 		}
 /*
-		
+
 		DDUMP(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
 
 		PPInfo ppi;
@@ -753,7 +751,7 @@ bool AssistEditor::Key(dword key, int count)
 				ppi.GatherDependencies(path, files);
 			}
 		}
-		
+
 		DDUMP(files);
 */	}
 #endif
@@ -914,7 +912,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 5;
+	int version = 6;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -922,8 +920,10 @@ void AssistEditor::SerializeNavigator(Stream& s)
 		Splitter dummy;
 		s % dummy;
 	}
-	if(version >= 4)
-		s % navigator_splitter;
+	if(version >= 4 && version < 6) {
+		Splitter dummy;
+		s % dummy;
+	}
 	if(version >= 5)
 		s % navigator_right;
 	Navigator(navigator);

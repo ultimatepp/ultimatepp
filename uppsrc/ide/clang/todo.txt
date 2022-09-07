@@ -1,10 +1,10 @@
 CRITICAL:
 
+ISUES:
+
 - out of sync SetCurrentFile
 
 - NewFile gets called on .log update resulting in SetCurrentFile and SyncHeaders (maybe not?)
-
-ISUES:
 
 - MSVC
 
@@ -86,15 +86,9 @@ ISUES:
 
 - Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 
-- Handle templates
-	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
-	- Alt-J relaxed rules if not found (in templates, different parameters)
-
 - Wind/MetMastLayer.cpp:6354 no jump on sqrt (?)
 
 - Macros with PPInfo
-
-- Heap leaks in Linux
 
 - Option "first config only"
 
@@ -102,11 +96,15 @@ ISUES:
 
 - Icons Alt-J/I/U
 
-- Autocomplete Size sz; sz.ct - when the name is not found, list is missing (should not be)
-
-- Occasional freeze probably due to reindexing
-
 - void ClearTurbineVarsCache() - after switching main config, reparse file
+
+- (unnamed) BAD -> LogicalReport - fix enum in autocomplete
+
+- navigator "BAD" - should be first
+
+- Core/Parser.h slow for some reason...
+
+- inside AutoObstacleTerrainsLayerMulti, J inside CoFor
 
 NONCLANG:
 
@@ -126,6 +124,8 @@ void AppExit__()
 	Thread::ShutdownThreads();
 
 - tree drag/drop does not show texts
+
+- Ide::Ide.iml - showing flags (like HD) is delayed
 
 
 NTH:
@@ -161,6 +161,10 @@ NTH:
 - current file
 
 - Alt+I should try previous method
+
+- Handle templates
+	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
+	- Alt-J relaxed rules if not found (in templates, different parameters)
 
 LATER:
 
