@@ -113,8 +113,6 @@ void CurrentFileThread()
 					parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;
-					DDUMP(f.includes);
-					DDUMP(f.defines);
 					clang.Parse(fn, f.content, f.includes, f.defines,
 					            CXTranslationUnit_PrecompiledPreamble|
 					            CXTranslationUnit_CreatePreambleOnFirstParse|
@@ -122,7 +120,7 @@ void CurrentFileThread()
 					            CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 				//	            CXTranslationUnit_CacheCompletionResults|
 					            CXTranslationUnit_KeepGoing);
-					DumpDiagnostics(clang.tu); _DBG_
+				//	DumpDiagnostics(clang.tu); _DBG_
 					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					DoAnnotations();
@@ -141,7 +139,7 @@ void CurrentFileThread()
 						results = clang_codeCompleteAt(clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 					}
 					PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
-	//				DumpDiagnostics(clang.tu);
+				//	DumpDiagnostics(clang.tu);
 					if(results) {
 						int tm = msecs();
 						Vector<AutoCompleteItem> item;
@@ -200,6 +198,9 @@ void CurrentFileThread()
 
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
 {
+	if(!HasLibClang())
+		return;
+
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
@@ -237,6 +238,9 @@ void CancelCurrentFile()
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done)
 {
+	if(!HasLibClang())
+		return;
+
 	GuiLock __;
 	static int64 serial;
 	autocomplete_pos.y = line;

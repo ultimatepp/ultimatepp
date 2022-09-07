@@ -108,7 +108,6 @@ ISUES:
 
 - void ClearTurbineVarsCache() - after switching main config, reparse file
 
-
 NONCLANG:
 
 - Debugger Threads should show active threads first

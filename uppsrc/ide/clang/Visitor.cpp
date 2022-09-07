@@ -364,6 +364,9 @@ CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clien
 
 void ClangVisitor::Do(CXTranslationUnit tu)
 {
+	if(!HasLibClang())
+		return;
+
 	if(!tu) return;
 	CXCursor cursor = clang_getTranslationUnitCursor(tu);
 	pp_id = clang_getCursorPrintingPolicy(cursor);
@@ -401,6 +404,9 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 
 ClangVisitor::~ClangVisitor()
 {
+	if(!HasLibClang())
+		return;
+
 	if(initialized) {
 		clang_PrintingPolicy_dispose(pp_id);
 		clang_PrintingPolicy_dispose(pp_pretty);

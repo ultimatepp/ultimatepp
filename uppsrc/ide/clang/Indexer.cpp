@@ -217,6 +217,9 @@ void Indexer::IndexerThread()
 
 void Indexer::Start(const String& main, const String& includes, const String& defines)
 {
+	if(!HasLibClang())
+		return;
+
 	ONCELOCK {
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads

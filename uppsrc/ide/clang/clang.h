@@ -1,14 +1,32 @@
 #ifndef _clang_clang_h
 #define _clang_clang_h
 
-// #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
-
 #include <ide/Common/Common.h>
 
+#ifdef PLATFORM_POSIX
+#define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
+#endif
+
 #ifdef DYNAMIC_LIBCLANG
+
 #include "libclang.h"
+bool LoadLibClang(const char *path);
+
+inline bool HasLibClang()
+{
+	extern bool hasLibClang;
+	return hasLibClang;
+}
+
 #else
+
 #include <clang-c/Index.h>
+
+inline bool HasLibClang()
+{
+	return true;
+}
+
 #endif
 
 using namespace Upp;

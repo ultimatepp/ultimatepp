@@ -112,15 +112,30 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		return Upp::GetExitCode(); \
 }
 
+#ifdef PLATFORM_POSIX
+void TryLoadLibClang()
+{
+	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	if(LoadLibClang(libdir + "/libclang.so"))
+		return;
+	if(LoadLibClang("/usr/lib/libclang.so"))
+		return;
+	for(int i = 20; i >= 10; i--)
+		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib/libclang.so"))
+			return;
+}
+#endif
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
 void AppMain___()
 #endif
 {
-	// Set this for storing libclang preamble
-	// TODO CLANG flag?
-	
+#ifdef PLATFORM_POSIX
+	TryLoadLibClang();
+#endif
+
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
 	RealizeDirectory(preamble_dir);
 	
