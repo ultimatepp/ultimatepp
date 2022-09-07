@@ -22,17 +22,17 @@ struct CurrentFileClang {
 	Clang              clang;
 };
 
+static Array<CurrentFileClang> s_cf;
+
 CurrentFileClang& GetCurrentFileClang(const String& filename)
 {
-	static Array<CurrentFileClang> cf;
-	
-	for(int i = 0; i < cf.GetCount(); i++)
-		if(cf[i].parsed_file.filename == filename) {
-			cf.Move(i, 0); // LRU...
-			return cf[0];
+	for(int i = 0; i < s_cf.GetCount(); i++)
+		if(s_cf[i].parsed_file.filename == filename) {
+			s_cf.Move(i, 0); // LRU...
+			return s_cf[0];
 		}
 
-	return cf.GetCount() < 8 ? cf.Add() : cf.Top(); // TODO: Limit
+	return s_cf.GetCount() < 8 ? s_cf.Add() : s_cf.Top(); // TODO: Limit
 }
 
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
@@ -135,11 +135,11 @@ void CurrentFileThread()
 					                CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 					                CXTranslationUnit_KeepGoing);
 				//	DumpDiagnostics(clang.tu); _DBG_
-					PutVerbose(String() << "Current file parsed in " << msecs() - tm << " ms");
+					PutVerbose(String()  << cfc.parsed_file.filename<< " parsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					DoAnnotations(cfc, serial);
 					done_serial = serial;
-					PutVerbose(String() << "Current file parser output processed in " << msecs() - tm << " ms");
+					PutVerbose(String() << cfc.parsed_file.filename << " parser output processed in " << msecs() - tm << " ms");
 					current_file_parsing = false;
 					was_parsing = true;
 				}
@@ -153,7 +153,7 @@ void CurrentFileThread()
 						MemoryIgnoreLeaksBlock __;
 						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 					}
-					PutVerbose(String() << "Autocomplete in " << msecs() - tm << " ms");
+					PutVerbose(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
 	//				DumpDiagnostics(clang.tu);
 					Vector<AutoCompleteItem> item;
 					if(results) {
@@ -179,7 +179,7 @@ void CurrentFileThread()
 							MemoryIgnoreLeaksBlock __;
 							clang_disposeCodeCompleteResults(results);
 						}
-						PutVerbose(String() << "Autocomplete processed in " << msecs() - tm << " ms");
+						PutVerbose(String() << cfc.parsed_file.filename << " autocomplete processed in " << msecs() - tm << " ms");
 					}
 					Ctrl::Call([&] {
 						if(aserial == autocomplete_serial)
@@ -194,11 +194,11 @@ void CurrentFileThread()
 					current_file_parsing = true;
 					int tm = msecs();
 					bool b = cfc.clang.ReParse(fn, f.content);
-					PutVerbose(String() << "Current file reparsed in " << msecs() - tm << " ms");
+					PutVerbose(String() << cfc.parsed_file.filename << " reparsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					if(b)
 						DoAnnotations(cfc, serial);
-					PutVerbose(String() << "Current file reparsed output processed in " << msecs() - tm << " ms");
+					PutVerbose(String() << cfc.parsed_file.filename << " reparsed output processed in " << msecs() - tm << " ms");
 					current_file_parsing = false;
 					was_parsing = true;
 				}
@@ -219,6 +219,7 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> don
 		Thread::Start([] { CurrentFileThread(); });
 		Thread::AtShutdown([] {
 			LLOG("Shutdown current file");
+			s_cf.Clear();
 			current_file_event.Broadcast();
 		});
 	}

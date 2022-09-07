@@ -102,6 +102,10 @@ ISUES:
 
 - navigator "BAD" - should be first
 
+- Core/Parser.h slow for some reason...
+
+- inside AutoObstacleTerrainsLayerMulti, J inside CoFor
+
 NONCLANG:
 
 - Debugger Threads should show active threads first

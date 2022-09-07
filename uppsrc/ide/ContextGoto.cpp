@@ -131,10 +131,8 @@ void Ide::ContextGoto0(int pos)
 	String ref_id;
 	int ci = 0;
 	String name = editor.ReadIdBack(pos);
-	DDUMP(name);
 	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
 		for(const ReferenceItem& m : editor.references) {
-			DDUMP(m.id);
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
 			   (GetNameFromId(m.id) == name || pass == 1)) {
 				ref_id = m.id;
@@ -148,9 +146,6 @@ void Ide::ContextGoto0(int pos)
 		bool   found_definition = false;
 		String found_name;
 		String found_nest;
-		
-		auto Check = [&](const String& path, const AnnotationItem& m) {
-		};
 		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 		if(IsFunction(cm.kind)) { // do local variables
