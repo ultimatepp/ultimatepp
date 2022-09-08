@@ -421,7 +421,6 @@ public:
 	virtual   bool      IdeIsDebugLock() const;
 
 	virtual   void      IdeSetBar();
-	virtual   void      IdeGotoCodeRef(String coderef);
 	virtual   void      IdeOpenTopicFile(const String& file);
 	virtual   void      IdeFlushFile();
 

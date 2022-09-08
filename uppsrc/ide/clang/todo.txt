@@ -106,6 +106,13 @@ ISUES:
 
 - inside AutoObstacleTerrainsLayerMulti, J inside CoFor
 
+- Enel/Scenarios.cpp:52	int i = list.;
+
+- missing preamble folder - check preamble creation
+
+- Navigator: () -> operator char *
+
+
 NONCLANG:
 
 - Debugger Threads should show active threads first

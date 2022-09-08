@@ -12,9 +12,11 @@
 
 bool AssistEditor::WaitCurrentFile()
 {
-	if(IsCurrentFileDirty()) {
+	if(annotating) {
+		if(!IsCurrentFileParsing())
+			SyncCurrentFile();
 		Progress pi("Parsing");
-		while(IsCurrentFileDirty())
+		while(annotating)
 			if(pi.StepCanceled())
 				return false;
 	}

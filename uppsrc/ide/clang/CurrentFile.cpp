@@ -61,7 +61,6 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 	if(!cfc.clang.tu || !annotations_done) return;
 	ClangVisitor v;
-	v.dolocals = true;
 	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
 	v.Do(cfc.clang.tu);
 	CppFileInfo f;
@@ -154,7 +153,7 @@ void CurrentFileThread()
 						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
 					}
 					PutVerbose(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
-	//				DumpDiagnostics(clang.tu);
+					// DumpDiagnostics(cfc.clang.tu);
 					Vector<AutoCompleteItem> item;
 					if(results) {
 						int tm = msecs();

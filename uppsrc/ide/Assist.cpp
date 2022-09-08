@@ -385,27 +385,30 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 	return cfx;
 }
 
+void AssistEditor::SetAnnotations(const CppFileInfo& f)
+{
+	ClearAnnotations();
+	annotations.Clear();
+	references.Clear();
+	for(const AnnotationItem& m : f.items) {
+		annotations.Add(m);
+		SetAnnotation(m.pos.y,
+		              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
+		                                           : IdeImg::tpp_pen(),
+		              m.id);
+	}
+	references = clone(f.refs);
+	locals = clone(f.locals);
+	annotating = false;
+	if(!navigator_global)
+		Search();
+	SyncCursor();
+}
+
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
 	if(cfx.content.GetCount())
-		SetCurrentFile(cfx, [=](const CppFileInfo& f) {
-			ClearAnnotations();
-			annotations.Clear();
-			references.Clear();
-			for(const AnnotationItem& m : f.items) {
-				annotations.Add(m);
-				SetAnnotation(m.pos.y,
-				              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
-				                                           : IdeImg::tpp_pen(),
-				              m.id);
-			}
-			references = clone(f.refs);
-			locals = clone(f.locals);
-			annotating = false;
-			if(!navigator_global)
-				Search();
-			SyncCursor();
-		});
+		SetCurrentFile(cfx, [=](const CppFileInfo& f) { SetAnnotations(f); });
 }
 
 void AssistEditor::SyncCurrentFile()
@@ -422,6 +425,22 @@ void AssistEditor::NewFile()
 	Search();
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
+
+//	DLOG("=============");
+//	DDUMP(cfx.real_filename);
+	annotating = true;
+	int q = CodeIndex().Find(cfx.real_filename);
+//	DDUMP(q);
+	if(q >= 0) {
+		const FileAnnotation& f = CodeIndex()[q];
+		SetAnnotations(f);
+//		DDUMP(f.time);
+		if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
+			annotating = false;
+			PutVerbose(cfx.real_filename + " annotations loaded from index");
+		}
+	}
+
 	SyncCurrentFile(cfx);
 }
 
@@ -839,25 +858,6 @@ void AssistEditor::LeftDown(Point p, dword keyflags)
 void AssistEditor::LostFocus()
 {
 	CloseAssist();
-}
-
-void Ide::IdeGotoCodeRef(String coderef)
-{
-	LLOG("IdeGotoLink " << coderef);
-	// TODO
-/*
-	CodeBaseLock __;
-	if(IsNull(coderef)) return;
-	String scope, item;
-	SplitCodeRef(coderef, scope, item);
-	int q = CodeBase().Find(scope);
-	if(q < 0)
-		return;
-	const Array<CppItem>& n = CodeBase()[q];
-	q = FindItem(n, item);
-	if(q >= 0)
-		JumpToDefinition(n, q, scope);
-*/
 }
 
 bool AssistEditor::Esc()

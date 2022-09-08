@@ -198,7 +198,6 @@ public:
 	virtual bool      IdeDebugUnLock() = 0;
 	virtual bool      IdeIsDebugLock() const = 0;
 	virtual void      IdeSetBar() = 0;
-	virtual void      IdeGotoCodeRef(String link) = 0;
 	virtual void      IdeOpenTopicFile(const String& file) = 0;
 	virtual void      IdeFlushFile() = 0;
 	virtual String    IdeGetFileName() = 0;
@@ -243,7 +242,6 @@ void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 bool             IdeConsoleWait(int slot);
 void             IdeConsoleOnFinish(Event<>  cb);
-void             IdeGotoCodeRef(String s);
 
 String GetSourcePackage(const String& path);
 

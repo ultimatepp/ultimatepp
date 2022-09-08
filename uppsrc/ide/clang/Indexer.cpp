@@ -253,7 +253,7 @@ void Indexer::SchedulerThread()
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
 
-			String includes, defines;
+			String base_includes, includes, defines;
 
 			VectorMap<String, Time>   files; // all files of project, including external headers
 
@@ -266,10 +266,10 @@ void Indexer::SchedulerThread()
 			{
 				GuiLock __;
 
-				includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
+				includes = Indexer::includes;
 				defines = Indexer::defines;
 
-				ppi.SetIncludes(includes);
+				ppi.SetIncludes(Merge(";", base_includes, GetClangInternalIncludes()));
 				ppi.Dirty();
 
 				{

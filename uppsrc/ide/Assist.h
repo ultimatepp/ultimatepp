@@ -136,6 +136,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	String    master_source;
 
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
+	void               SetAnnotations(const CppFileInfo& f);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
 	void               SyncCurrentFile();
 	void               SyncMaster();

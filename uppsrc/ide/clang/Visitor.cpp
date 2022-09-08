@@ -284,7 +284,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 
 	String id = ci.Id();
 	int kind = ci.Kind();
-	if(id.GetCount() && (!locals || dolocals)) {
+	if(id.GetCount()) {
 		LoadSourceLocation();
 		CppFileInfo& f = info.GetAdd(sl.path);
 		AnnotationItem& r = locals ? f.locals.Add() : f.items.Add();

@@ -140,11 +140,6 @@ void IdeConsoleOnFinish(Event<>  cb)
 	if(the_ide) the_ide->IdeConsoleOnFinish(cb);
 }
 
-void IdeGotoCodeRef(String s)
-{
-	if(the_ide) the_ide->IdeGotoCodeRef(s);
-}
-
 void IdeSetBottom(Ctrl& ctrl)
 {
 	if(the_ide) the_ide->IdeSetBottom(ctrl);

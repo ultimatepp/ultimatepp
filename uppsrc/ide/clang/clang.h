@@ -214,8 +214,6 @@ public:
 	VectorMap<String, CppFileInfo> info;
 	
 	Gate<const String&> WhenFile;
-	
-	bool dolocals = false;
 
 	void Do(CXTranslationUnit tu);
 	~ClangVisitor();

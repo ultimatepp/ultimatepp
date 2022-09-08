@@ -137,7 +137,9 @@ void AppMain___()
 #endif
 
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
-	RealizeDirectory(preamble_dir);
+	if(!RealizeDirectory(preamble_dir)) // temporary (?)
+		Exclamation("Failed to create preamble dir&\1" + preamble_dir
+		            + "\1&\1" + GetLastErrorMessage());
 	
 #ifdef PLATFORM_POSIX
 	setenv("TMPDIR", preamble_dir, 1);
@@ -381,8 +383,12 @@ void AppMain___()
 	}
 #endif
 	Ctrl::ShutdownThreads();
+
+	DeleteFolderDeep(preamble_dir);
+	
+	// delete crashed preamble dirs older than one day
 	for(FindFile ff(AppendFileName(CacheDir(), "*.*")); ff; ff.Next())
-		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-"))
+		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-") && Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
 			DeleteFolderDeep(ff.GetPath()); // if still in use, this fails
 }
 
