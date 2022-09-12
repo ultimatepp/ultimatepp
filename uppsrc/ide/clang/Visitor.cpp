@@ -33,7 +33,6 @@ public:
 	String       Nspace()                    { Scope(); return nspace; }
 	String       Type();
 	String       Name();
-	bool         NoId();
 	String       Id();
 	String       Bases();
 
@@ -101,17 +100,6 @@ String ClangCursorInfo::Scope()
 		hasscope = true;
 	}
 	return scope;
-}
-
-bool   ClangCursorInfo::NoId()
-{ // TODO: remove
-	return findarg(parentKind, CXCursor_FunctionTemplate, CXCursor_FunctionDecl, CXCursor_CXXMethod,
-		                       CXCursor_Constructor, CXCursor_Destructor) >= 0 ||
-		   findarg(cursorKind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl, CXCursor_FunctionTemplate,
-		                       CXCursor_FunctionDecl, CXCursor_Constructor, CXCursor_Destructor, CXCursor_CXXMethod,
-		                       CXCursor_VarDecl, CXCursor_FieldDecl, CXCursor_ClassTemplate,
-		                       CXCursor_ConversionFunction, CXCursor_MacroDefinition,
-		                       CXCursor_EnumConstantDecl) < 0;
 }
 
 String ClangCursorInfo::Id()
@@ -308,7 +296,8 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 			}
 		}
 		else {
-			int q = FindId(r.id, r.name);
+			static String op = "operator";
+			int q = FindId(r.id, r.kind == CXCursor_ConversionFunction ? "operator" : r.name);
 			if(q >= 0) {
 				r.nest = r.id.Mid(0, q);
 				r.nest.TrimEnd("::");
@@ -352,13 +341,11 @@ CXChildVisitResult clang_visitor(CXCursor cursor, CXCursor p, CXClientData clien
 #ifdef DUMPTREE
 	LOGBEGIN();
 #endif
-	LOGBEGIN();
 	ClangVisitor *v = (ClangVisitor *)clientData;
 	bool bak_locals = v->locals;
 	if(v->ProcessNode(cursor))
 		clang_visitChildren(cursor, clang_visitor, clientData);
 	v->locals = bak_locals;
-	LOGEND();
 #ifdef DUMPTREE
 	LOGEND();
 #endif

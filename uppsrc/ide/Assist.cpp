@@ -113,6 +113,7 @@ void AssistEditor::PostInsert(int pos, const WString& s)
 		CancelAutoComplete();
 		assist_cursor = -1;
 	}
+	CodeEditor::PostInsert(pos, s);
 }
 
 void AssistEditor::PostRemove(int pos, int size)
@@ -121,6 +122,7 @@ void AssistEditor::PostRemove(int pos, int size)
 		CancelAutoComplete();
 		assist_cursor = -1;
 	}
+	CodeEditor::PostRemove(pos, size);
 }
 
 bool isincludefnchar(int c)

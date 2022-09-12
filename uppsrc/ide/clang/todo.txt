@@ -47,8 +47,6 @@ ISUES:
 
 - x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
 
-- Core/String.h - conversion operators wrong nests (template argument)
-
 - void NavDlg::GoTo()
 
 - unnamed union in String0
@@ -65,8 +63,6 @@ ISUES:
 
 - TriggerIndexer on theide exit
 
-- Cancel Assist when cursor moves out (test with above)
-
 - check default parameters and virtuals / alt+c, commentdp
 
 - String GetClass(const AnnotationItem& m) vs m.nest - do we need GetClass?
@@ -82,6 +78,8 @@ ISUES:
 - Core/Parser.h slow for some reason...
 
 - AssistEditor Virtual methods not showing LineEdit etc..
+
+- AssistTest updates delayed
 
 NONCLANG:
 
@@ -103,6 +101,8 @@ void AppExit__()
 - tree drag/drop does not show texts
 
 - Ide::Ide.iml - showing flags (like HD) is delayed
+
+
 
 
 NTH:

@@ -1,5 +1,7 @@
 DONE:
 
+- Core/String.h - conversion operators wrong nests (template argument)
+
 - out of sync SetCurrentFile
 
 - MSVC
