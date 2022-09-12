@@ -773,7 +773,7 @@ public:
 	void      ChangeCharset();
 	void      FlushFile();
 	void      EditFile0(const String& path, byte charset, int spellcheck_comments,
-	                    const String& headername = Null);
+	                    const String& headername = Null, bool reloading = false);
 	void      EditFile(const String& path);
 	void      AddEditFile(const String& path);
 	void      ReloadFile();

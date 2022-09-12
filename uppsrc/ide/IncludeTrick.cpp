@@ -6,7 +6,6 @@
 
 void AssistEditor::SyncMaster()
 {
-	TIMESTOP("SyncHeaders");
 	master_source.Clear();
 	String editfile = NormalizePath(theide->editfile);
 	if(editfile.GetCount() && IsCHeaderFile(editfile)) {

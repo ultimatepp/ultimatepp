@@ -90,7 +90,7 @@ int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String&
 	int count = n.GetCount();
 	if(retval_last)
 		for(int i = 0; i < n.GetCount(); i++)
-			if(n[i].type == ITEM_NAME || pretty[n[i].pos] == '(') {
+			if(findarg(n[i].type, ITEM_NAME, ITEM_OPERATOR) >= 0 || pretty[n[i].pos] == '(') {
 				PaintText(w, x, y, pretty, n, i, count - i, focuscursor, ink, false);
 				count = i;
 				while(count) { // remove trailing spaces

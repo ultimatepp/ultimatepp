@@ -1,5 +1,33 @@
 DONE:
 
+- check dialog mode of navigator
+
+- missing preamble folder - check preamble creation
+
+- AutoComplete remove duplicate lines
+
+- use codeindex info for file annotations
+
+- Hdepend NoConsole
+
+- current file indexing
+
+- Navigator: () -> operator char *
+
+- when scope is selected in navigator, search should be ingored
+
+- optimise loading
+
+- NewFile gets called on .log update resulting in SetCurrentFile and SyncHeaders (maybe not?)
+
+- Alt+J bool IsIgnored(const String& id) jump on Find
+
+- * line in navigator
+
+- Enel/Scenarios.cpp:52	int i = list.;
+
+- inside AutoObstacleTerrainsLayerMulti, J inside CoFor
+
 - OpenWind/PowerCurve.cpp:3883 J on GetElevation
 
 - Vector/VectorLayer.cpp:870 J on GetBuffer

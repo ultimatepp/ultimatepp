@@ -758,7 +758,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
 				.Enable(!designer)
 				.Help("Go to given line");
-			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
+//			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 			menu.Add(!designer, AK_USAGE, THISBACK(Usage));

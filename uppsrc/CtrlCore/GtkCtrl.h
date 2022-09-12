@@ -1,5 +1,3 @@
-//$ namespace Upp {
-//$ class Ctrl {
 	void Create(Ctrl *owner, bool popup);
 
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -213,5 +211,3 @@ public:
 	GtkWindow *gtk() const;
 
 	static GdkFilterReturn RootKeyFilter(GdkXEvent *xevent, GdkEvent *event, gpointer data);
-
-//$ }};

@@ -97,6 +97,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	} assist_display;
 
 	RichTextCtrl           annotation_popup;
+	bool                   is_source_file = false;
 	bool                   annotating = false;
 	Vector<AnnotationItem> annotations;
 	Vector<ReferenceItem>  references;
@@ -140,7 +141,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
 	void               SyncCurrentFile();
 	void               SyncMaster();
-	void               NewFile();
+	void               NewFile(bool reloading);
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
 	void               MakeIncludeTrick(CurrentFileContext& cfx);
 

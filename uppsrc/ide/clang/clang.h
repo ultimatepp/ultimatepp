@@ -151,6 +151,7 @@ struct CurrentFileContext {
 	String                   includes;
 	String                   defines;
 	String                   content;
+	bool                     is_source_file = true;
 };
 
 struct CppFileInfo : Moveable<CppFileInfo> {

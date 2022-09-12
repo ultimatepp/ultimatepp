@@ -374,8 +374,10 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 				cfx.filename = master_source;
 			}
 			else
-			if(!IsHeaderFile(cfx.filename))
+			if(!IsHeaderFile(cfx.filename)) {
 				cfx.content.Clear();
+				cfx.is_source_file = false;
+			}
 		}
 	}
 #ifdef _DEBUG
@@ -413,12 +415,14 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 
 void AssistEditor::SyncCurrentFile()
 {
-	int line_delta;
-	CurrentFileContext cfx = CurrentContext();
-	SyncCurrentFile(cfx);
+	if(is_source_file) {
+		int line_delta;
+		CurrentFileContext cfx = CurrentContext();
+		SyncCurrentFile(cfx);
+	}
 }
 
-void AssistEditor::NewFile()
+void AssistEditor::NewFile(bool reloading)
 {
 	annotations.Clear();
 	references.Clear();
@@ -426,22 +430,26 @@ void AssistEditor::NewFile()
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
 
-//	DLOG("=============");
-//	DDUMP(cfx.real_filename);
-	annotating = true;
-	int q = CodeIndex().Find(cfx.real_filename);
-//	DDUMP(q);
-	if(q >= 0) {
-		const FileAnnotation& f = CodeIndex()[q];
-		SetAnnotations(f);
-//		DDUMP(f.time);
-		if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
-			annotating = false;
-			PutVerbose(cfx.real_filename + " annotations loaded from index");
-		}
-	}
+	if(!reloading)
+		is_source_file = cfx.is_source_file;
 
-	SyncCurrentFile(cfx);
+	if(is_source_file) {
+	//	DLOG("=============");
+	//	DDUMP(cfx.real_filename);
+		annotating = true;
+		int q = CodeIndex().Find(cfx.real_filename);
+	//	DDUMP(q);
+		if(q >= 0) {
+			const FileAnnotation& f = CodeIndex()[q];
+			SetAnnotations(f);
+	//		DDUMP(f.time);
+			if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
+				annotating = false;
+				PutVerbose(cfx.real_filename + " annotations loaded from index");
+			}
+		}
+		SyncCurrentFile(cfx);
+	}
 }
 
 void AssistEditor::Assist(bool macros)
@@ -544,6 +552,9 @@ bool sILess(const String& a, const String& b)
 
 void AssistEditor::Complete()
 {
+	if(!is_source_file)
+		return;
+
 	CloseAssist();
 
 	int c = GetCursor32();

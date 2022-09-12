@@ -460,7 +460,7 @@ bool Ide::FileRemove()
 	return true;
 }
 
-void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername)
+void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername, bool reloading)
 {
 	animate_current_file = animate_current_file_dir = animate_autocomplete = animate_autocomplete_dir = 0;
 
@@ -618,7 +618,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.SyncNavigatorShow();
 	editor.CheckEdited(true);
 	editor.SyncNavigator();
-	editor.NewFile();
+	editor.NewFile(reloading);
 	editfile_repo = GetRepoKind(editfile);
 	editfile_includes = IncludesMD5();
 }
@@ -855,7 +855,7 @@ void Ide::ReloadFile()
 	int ln = editor.GetCursorLine();
 	editfile.Clear();
 	int sc = filelist.GetSbPos();
-	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments());
+	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments(), Null, true);
 	filelist.SetSbPos(sc);
 	int l = LocateLine(data, ln, ~editor);
 	editor.SetCursor(editor.GetPos64(l));

@@ -1,14 +1,35 @@
-CRITICAL:
+EPICS:
+
+= Handling of C files
+- C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
+- .c files
+
+= AltC fixes
+- AltC Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
+- Alt+C 	static void AtShutdown(void (*shutdownfn)());
+
+= Assist configuration
+- Option "first config only"
+- Option "reindex manual" (autosetup based on CPU cores)
+- options to disable assist
+
+= Annotations/Visitor/formatting
+
+= Navigator
+- class AString : public B { - remove template<> in navigator
+- navigator "BAD" - should be first
+- Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
+- (unnamed) BAD -> LogicalReport - fix enum in autocomplete
+- Sort navigator in header order
+
+= Macros
+- first macro in the file (AssistTest) is ignored
 
 ISUES:
 
 - out of sync SetCurrentFile
 
-- NewFile gets called on .log update resulting in SetCurrentFile and SyncHeaders (maybe not?)
-
 - MSVC
-
-- optimise loading
 
 - TPP HELP WINDOW->EDITOR - go to active label
 
@@ -20,8 +41,6 @@ ISUES:
 
 - Remove template < > in autocomplete
 
-- current file indexing
-
 - check editor mode
 
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
@@ -30,43 +49,15 @@ ISUES:
 
 - Core/String.h - conversion operators wrong nests (template argument)
 
-- check dialog mode of navigator
-
 - void NavDlg::GoTo()
 
-- Hdepend NoConsole
-
-- AltC Vector<Job> Indexer::jobs; should be: Vector<Indexer::Job> Indexer::jobs;
-
-- C:\u\llvm_ide\uppsrc\plugin\z\lib\compress.c (22:24) unknown type name 'dest' - do we need CBLITZ?
-
-- Alt+C 	static void AtShutdown(void (*shutdownfn)());
-
-- class AString : public B { - remove template<> in navigator
-
 - unnamed union in String0
-
-- options to disable assist
-
-- * line in navigator
-
-- first macro in the file (AssistTest) is ignored
-
-- when scope is selected in navigator, search should be ingored
-
-- use codeindex info for file annotations
-
-- AutoComplete remove duplicate lines
 
 - Wait for indexer?
 
 - FFound key to reuse pane for repeated finds
 
-- Sort navigator in header order
-
 - mainconfig/dependecies
-
-- Alt+J bool IsIgnored(const String& id) jump on Find
 
 - Visitor.cpp hasid = false - remove initialisation
 
@@ -78,39 +69,19 @@ ISUES:
 
 - Cancel Assist when cursor moves out (test with above)
 
-- .c files
-
 - check default parameters and virtuals / alt+c, commentdp
 
 - String GetClass(const AnnotationItem& m) vs m.nest - do we need GetClass?
-
-- Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 
 - Wind/MetMastLayer.cpp:6354 no jump on sqrt (?)
 
 - Macros with PPInfo
 
-- Option "first config only"
-
-- Option "reindex manual" (autosetup based on CPU cores)
-
 - Icons Alt-J/I/U
 
 - void ClearTurbineVarsCache() - after switching main config, reparse file
 
-- (unnamed) BAD -> LogicalReport - fix enum in autocomplete
-
-- navigator "BAD" - should be first
-
 - Core/Parser.h slow for some reason...
-
-- inside AutoObstacleTerrainsLayerMulti, J inside CoFor
-
-- Enel/Scenarios.cpp:52	int i = list.;
-
-- missing preamble folder - check preamble creation
-
-- Navigator: () -> operator char *
 
 
 NONCLANG:
