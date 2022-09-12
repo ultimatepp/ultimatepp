@@ -65,6 +65,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	virtual void SelectionChanged();
 	virtual void DirtyFrom(int line);
 	virtual void State(int reason);
+	virtual void PostInsert(int pos, const WString& s);
+	virtual void PostRemove(int pos, int size);
 
 	virtual int  GetCurrentLine();
 
@@ -107,9 +109,11 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           auto_assist;
 	bool           commentdp;
 	bool           include_assist;
-	WString        cachedline;
-	int            cachedpos;
-	int            cachedln;
+
+	WString        cachedline; // for Ch method
+	int            cachedpos; // for Ch method
+	int            cachedln; // for Ch method
+
 	bool           include_local;
 	int            include_back;
 	String         include_path;

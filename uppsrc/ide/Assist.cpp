@@ -107,6 +107,22 @@ void AssistEditor::CloseAssist()
 	CloseTip();
 }
 
+void AssistEditor::PostInsert(int pos, const WString& s)
+{
+	if(pos < assist_cursor) {
+		CancelAutoComplete();
+		assist_cursor = -1;
+	}
+}
+
+void AssistEditor::PostRemove(int pos, int size)
+{
+	if(pos < assist_cursor) {
+		CancelAutoComplete();
+		assist_cursor = -1;
+	}
+}
+
 bool isincludefnchar(int c)
 {
 	return c && c != '<' && c != '>' && c != '?' &&
@@ -247,7 +263,7 @@ void AssistEditor::SyncAssist()
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
-			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))) {
+			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
 				found[i] = true;
 				assist_item_ndx.Add(i);
 			}
@@ -447,7 +463,6 @@ void AssistEditor::Assist(bool macros)
 	LTIMING("Assist");
 	CloseAssist();
 	int q = GetCursor32();
-	assist_cursor = q;
 	assist_type.Clear();
 	assist_item.Clear();
 	include_assist = false;
@@ -455,7 +470,8 @@ void AssistEditor::Assist(bool macros)
 		return;
 
 	int pos = GetCursor();
-	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete
+	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete (?)
+	assist_cursor = pos;
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
 	if(cfx.content.GetCount())
@@ -484,6 +500,11 @@ bool AssistEditor::WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelt
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
 	LTIMING("PopUpAssist");
+	int pos = GetCursor();
+	ReadIdBackPos(pos, false);
+	if(pos != assist_cursor)
+		return;
+		
 	if(assist_item.GetCount() == 0) {
 		AssistItem& m = assist_item.Add();
 		m.kind = KIND_ERROR;

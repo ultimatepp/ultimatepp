@@ -11,7 +11,11 @@ EPICS:
 = Assist configuration
 - Option "first config only"
 - Option "reindex manual" (autosetup based on CPU cores)
+- Number of indexer threads
+- Number of cached files
 - options to disable assist
+- option for logging
+- in linux, show libclang path
 
 = Annotations/Visitor/formatting
 
@@ -77,6 +81,7 @@ ISUES:
 
 - Core/Parser.h slow for some reason...
 
+- AssistEditor Virtual methods not showing LineEdit etc..
 
 NONCLANG:
 
