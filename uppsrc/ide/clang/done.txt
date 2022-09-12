@@ -1,5 +1,11 @@
 DONE:
 
+- out of sync SetCurrentFile
+
+- MSVC
+
+- Remove //$
+
 - check dialog mode of navigator
 
 - missing preamble folder - check preamble creation

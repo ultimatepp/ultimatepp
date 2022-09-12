@@ -125,18 +125,9 @@ String AssistEditor::ReadIdBackPos(int& pos, bool include)
 	return id;
 }
 
-String AssistEditor::ReadIdBack(int q, bool include, bool *destructor)
+String AssistEditor::ReadIdBack(int q, bool include)
 {
-	String id = ReadIdBackPos(q, include);
-	if(destructor) {
-		int n = 0;
-		while(q > 0 && isspace(GetChar(q - 1)) && n < 100) {
-			q--;
-			n++;
-		}
-		*destructor = q > 0 && GetChar(q - 1) == '~';
-	}
-	return id;
+	return ReadIdBackPos(q, include);
 }
 
 void AssistEditor::DirtyFrom(int line)
@@ -246,8 +237,7 @@ String AssistEditor::CompleteIdBack(int& q, const Index<String>& locals)
 void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
-	bool destructor; // TODO: remove
-	String name = ReadIdBack(GetCursor32(), include_assist, &destructor);
+	String name = ReadIdBack(GetCursor32(), include_assist);
 	String uname = ToUpper(name);
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
@@ -336,7 +326,7 @@ bool AssistEditor::IncludeAssist()
 		if(fnset.Find(fn) < 0) {
 			fnset.Add(fn);
 			AssistItem& f = assist_item.Add();
-			f.name = f.signature = fn;
+			f.name = f.pretty = fn;
 			f.uname = ToUpper(f.name);
 			f.kind = KIND_INCLUDEFOLDER;
 		}
@@ -345,7 +335,7 @@ bool AssistEditor::IncludeAssist()
 	for(int i = 0; i < file.GetCount(); i++) {
 		String fn = file[i];
 		AssistItem& f = assist_item.Add();
-		f.name = f.signature = fn;
+		f.name = f.pretty = fn;
 		f.uname = ToUpper(f.name);
 		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
 		String fext = GetFileExt(fn);
@@ -497,7 +487,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	if(assist_item.GetCount() == 0) {
 		AssistItem& m = assist_item.Add();
 		m.kind = KIND_ERROR;
-		m.signature = "No relevant autocomplete info found";
+		m.pretty = "No relevant autocomplete info found";
 	}
 	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
 		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
@@ -606,7 +596,7 @@ void AssistEditor::Complete()
 	}
 	for(int i = 0; i < id.GetCount(); i++) {
 		AssistItem& f = assist_item.Add();
-		f.name = f.signature = id[i];
+		f.name = f.pretty = id[i];
 		f.kind = KIND_COMPLETE;
 	}
 	assist_type.Clear();
@@ -701,10 +691,10 @@ void AssistEditor::AssistInsert()
 		else {
 			String txt = f.name;
 			int param_count;
-			ParsePretty(f.name, f.signature, &param_count);
+			ParsePretty(f.name, f.pretty, &param_count);
 			if(param_count >= 0)
 				txt << "()";
-			if(f.signature.EndsWith("::"))
+			if(f.pretty.EndsWith("::"))
 				txt << "::";
 			int cl = GetCursor32();
 			int ch = cl;

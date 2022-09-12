@@ -165,12 +165,12 @@ void CurrentFileThread()
 							if(kind == CXCursor_NotImplemented)
 								continue;
 							String name;
-							String signature;
-							ReadAutocomplete(string, name, signature);
+							String pretty;
+							ReadAutocomplete(string, name, pretty);
 							AutoCompleteItem& m = item.Add();
 							m.name = name;
 							m.parent = FetchString(clang_getCompletionParent(string, NULL));
-							m.signature = CleanupPretty(signature);
+							m.pretty = CleanupPretty(pretty);
 							m.kind = kind;
 							m.priority = clang_getCompletionPriority(string);
 						}

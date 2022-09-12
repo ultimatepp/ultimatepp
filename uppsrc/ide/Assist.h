@@ -151,7 +151,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Assist(bool macros);
 	bool           IncludeAssist();
 	String         ReadIdBackPos(int& pos, bool include);
-	String         ReadIdBack(int q, bool include = false, bool *destructor = NULL);
+	String         ReadIdBack(int q, bool include = false);
 	void           SyncAssist();
 	void           AssistInsert();
 	bool           InCode();

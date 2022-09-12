@@ -107,7 +107,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 struct AutoCompleteItem : Moveable<AutoCompleteItem> {
 	String parent;
 	String name;
-	String signature; // TODO: rename to pretty
+	String pretty;
 	int    kind;
 	int    priority;
 };

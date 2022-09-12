@@ -118,6 +118,6 @@ void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, 
 
 		w.DrawRect(r, paper);
 		
-		PaintCpp(w, r, m.kind, m.name, m.signature, ink, (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT), true);
+		PaintCpp(w, r, m.kind, m.name, m.pretty, ink, (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT), true);
 	}
 }

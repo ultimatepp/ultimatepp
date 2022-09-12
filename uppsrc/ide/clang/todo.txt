@@ -27,10 +27,6 @@ EPICS:
 
 ISUES:
 
-- out of sync SetCurrentFile
-
-- MSVC
-
 - TPP HELP WINDOW->EDITOR - go to active label
 
 - Do TODOs
@@ -60,8 +56,6 @@ ISUES:
 - mainconfig/dependecies
 
 - Visitor.cpp hasid = false - remove initialisation
-
-- Remove //$
 
 - TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
 
