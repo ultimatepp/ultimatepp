@@ -1,6 +1,448 @@
    Changelog for the libssh2 project. Generated with git2news.pl
 
-GitHub (11 Nov 2020)
+Daniel Stenberg (29 Aug 2021)
+- [Will Cosgrove brought this change]
+
+  updated docs for 1.10.0 release
+
+Marc Hörsken (30 May 2021)
+- [Laurent Stacul brought this change]
+
+  [tests] Try several times to connect the ssh server
+  
+  Sometimes, as the OCI container is run in detached mode, it is possible
+  the actual server is not ready yet to handle SSH traffic. The goal of
+  this PR is to try several times (max 3). The mechanism is the same as
+  for the connection to the docker machine.
+
+- [Laurent Stacul brought this change]
+
+  Remove openssh_server container on test exit
+
+- [Laurent Stacul brought this change]
+
+  Allow the tests to run inside a container
+  
+  The current tests suite starts SSH server as OCI container. This commit
+  add the possibility to run the tests in a container provided that:
+  
+  * the docker client is installed builder container
+  * the host docker daemon unix socket has been mounted in the builder
+    container (with, if needed, the DOCKER_HOST environment variable
+    accordingly set, and the permission to write on this socket)
+  * the builder container is run on the default bridge network, or the
+    host network. This PR does not handle the case where the builder
+    container is on another network.
+
+Marc Hoersken (28 May 2021)
+- CI/appveyor: run SSH server for tests on GitHub Actions (#607)
+  
+  No longer rely on DigitalOcean to host the Docker container.
+  
+  Unfortunately we require a small dispatcher script that has
+  access to a GitHub access token with scope repo in order to
+  trigger the daemon workflow on GitHub Actions also for PRs.
+  
+  This script is hosted by myself for the time being until GitHub
+  provides a tighter scope to trigger the workflow_dispatch event.
+
+GitHub (26 May 2021)
+- [Will Cosgrove brought this change]
+
+  openssl.c: guards around calling FIPS_mode() #596 (#603)
+  
+  Notes:
+  FIPS_mode() is not implemented in LibreSSL and this API is removed in OpenSSL 3.0 and was introduced in 0.9.7. Added guards around making this call.
+  
+  Credit:
+  Will Cosgrove
+
+- [Will Cosgrove brought this change]
+
+  configure.ac: don't undefine scoped variable (#594)
+  
+  * configure.ac: don't undefine scoped variable
+  
+  To get this script to run with Autoconf 2.71 on macOS I had to remove the undefine of the backend for loop variable. It seems scoped to the for loop and also isn't referenced later in the script so it seems OK to remove it.
+  
+  * configure.ac: remove cygwin specific CFLAGS #598
+  
+  Notes:
+  Remove cygwin specific Win32 CFLAGS and treat the build like a posix build
+  
+  Credit:
+  Will Cosgrove, Brian Inglis
+
+- [Laurent Stacul brought this change]
+
+  tests: Makefile.am: Add missing tests client keys in distribution tarball (#604)
+  
+  Notes:
+  Added missing test keys.
+  
+  Credit:
+  Laurent Stacul
+
+- [Laurent Stacul brought this change]
+
+  Makefile.am: Add missing test keys in the distribution tarball (#601)
+  
+  Notes:
+  Fix tests missing key to build the OCI image
+  
+  Credit:
+  Laurent Stacul
+
+Daniel Stenberg (16 May 2021)
+- dist: add src/agent.h
+  
+  Fixes #597
+  Closes #599
+
+GitHub (12 May 2021)
+- [Will Cosgrove brought this change]
+
+  packet.c: Reset read timeout after received a packet (#576) (#586)
+  
+  File:
+  packet.c
+  
+  Notes:
+  Attempt keyboard interactive login (Azure AD 2FA login) and use more than 60 seconds to complete the login, the connection fails.
+  
+  The _libssh2_packet_require function does almost the same as _libssh2_packet_requirev but this function sets state->start = 0 before returning.
+  
+  Credit:
+  teottin, Co-authored-by: Tor Erik Ottinsen <tor.ottinsen@kdi.kongsberg.com>
+
+- [kkoenig brought this change]
+
+  Support ECDSA certificate authentication (#570)
+  
+  Files: hostkey.c, userauth.c, test_public_key_auth_succeeds_with_correct_ecdsa_key.c
+  
+  Notes:
+  Support ECDSA certificate authentication
+  
+  Add a test for:
+    - Existing ecdsa basic public key authentication
+    - ecdsa public key authentication with a signed public key
+  
+  Credit:
+  kkoenig
+
+- [Gabriel Smith brought this change]
+
+  agent.c: Add support for Windows OpenSSH agent (#517)
+  
+  Files: agent.c, agent.h, agent_win.c
+  
+  Notes:
+  * agent: Add support for Windows OpenSSH agent
+  
+  The implementation was partially taken and modified from that found in
+  the Portable OpenSSH port to Win32 by the PowerShell team, but mostly
+  based on the existing Unix OpenSSH agent support.
+  
+  https://github.com/PowerShell/openssh-portable
+  
+  Regarding the partial transfer support implementation: partial transfers
+  are easy to deal with, but you need to track additional state when
+  non-blocking IO enters the picture. A tracker of how many bytes have
+  been transfered has been placed in the transfer context struct as that's
+  where it makes most sense. This tracker isn't placed behind a WIN32
+   #ifdef as it will probably be useful for other agent implementations.
+  
+  * agent: win32 openssh: Disable overlapped IO
+  
+  Non-blocking IO is not currently supported by the surrounding agent
+  code, despite a lot of the code having everything set up to handle it.
+  
+  Credit:
+  Co-authored-by: Gabriel Smith <gabriel.smith@precisionot.com>
+
+- [Zenju brought this change]
+
+  Fix detailed _libssh2_error being overwritten (#473)
+  
+  Files: openssl.c, pem.c, userauth.c
+  
+  Notes:
+  * Fix detailed _libssh2_error being overwritten by generic errors
+  * Unified error handling
+  
+  Credit:
+  Zenju
+
+- [Paul Capron brought this change]
+
+  Fix _libssh2_random() silently discarding errors (#520)
+  
+  Notes:
+  * Make _libssh2_random return code consistent
+  
+  Previously, _libssh2_random was advertized in HACKING.CRYPTO as
+  returning `void` (and was implemented that way in os400qc3.c), but that
+  was in other crypto backends a lie; _libssh2_random is (a macro
+  expanding) to an int-value expression or function.
+  
+  Moreover, that returned code was:
+    — 0 or success, -1 on error for the MbedTLS & WinCNG crypto backends
+  But also:
+    — 1 on success, -1 or 0 on error for the OpenSSL backend!
+    – 1 on success, error cannot happen for libgcrypt!
+  
+  This commit makes explicit that _libssh2_random can fail (because most of
+  the underlying crypto functions can indeed fail!), and it makes its result
+  code consistent: 0 on success, -1 on error.
+  
+  This is related to issue #519 https://github.com/libssh2/libssh2/issues/519
+  It fixes the first half of it.
+  
+  * Don't silent errors of _libssh2_random
+  
+  Make sure to check the returned code of _libssh2_random(), and
+  propagates any failure.
+  
+  A new LIBSSH_ERROR_RANDGEN constant is added to libssh2.h
+  None of the existing error constants seemed fit.
+  
+  This commit is related to d74285b68450c0e9ea6d5f8070450837fb1e74a7
+  and to https://github.com/libssh2/libssh2/issues/519 (see the issue
+  for more info.)  It closes #519.
+  
+  Credit:
+  Paul Capron
+
+- [Gabriel Smith brought this change]
+
+  ci: Remove caching of docker image layers (#589)
+  
+  Notes:
+  continued ci reliability work.
+  
+  Credit:
+  Gabriel Smith
+
+- [Gabriel Smith brought this change]
+
+  ci: Speed up docker builds for tests (#587)
+  
+  Notes:
+  The OpenSSH server docker image used for tests is pre-built to prevent
+  wasting time building it during a test, and unneeded rebuilds are
+  prevented by caching the image layers.
+  
+  Credit:
+  Gabriel Smith
+
+- [Will Cosgrove brought this change]
+
+  userauth.c: don't error if using keys without RSA (#555)
+  
+  file: userauth.c
+  
+  notes: libssh2 now supports many other key types besides RSA, if the library is built without RSA support and a user attempts RSA auth it shouldn't be an automatic error
+  
+  credit:
+  Will Cosgrove
+
+- [Marc brought this change]
+
+  openssl.c: Avoid OpenSSL latent error in FIPS mode (#528)
+  
+  File:
+  openssl.c
+  
+  Notes:
+  Avoid initing MD5 digest, which is not permitted in OpenSSL FIPS certified cryptography mode.
+  
+  Credit:
+  Marc
+
+- [Laurent Stacul brought this change]
+
+  openssl.c: Fix EVP_Cipher interface change in openssl 3 #463
+  
+  File:
+  openssl.c
+  
+  Notes:
+  Fixes building with OpenSSL 3, #463.
+  
+  The change is described there:
+  https://github.com/openssl/openssl/commit/f7397f0d58ce7ddf4c5366cd1846f16b341fbe43
+  
+  Credit:
+  Laurent Stacul, reported by Sergei
+
+- [Gabriel Smith brought this change]
+
+  openssh_fixture.c: Fix potential overwrite of buffer when reading stdout of command (#580)
+  
+  File:
+  openssh_fixture.c
+  Notes:
+  If reading the full output from the executed command took multiple
+  passes (such as when reading multiple lines) the old code would read
+  into the buffer starting at the some position (the start) every time.
+  The old code only works if fgets updated p or had an offset parameter,
+  both of which are not true.
+  
+  Credit:
+  Gabriel Smith
+
+- [Gabriel Smith brought this change]
+
+  ci: explicitly state the default branch (#585)
+  
+  Notes:
+  It looks like the $default-branch macro only works in templates, not
+  workflows. This is not explicitly stated anywhere except the linked PR
+  comment.
+  
+  https://github.com/actions/starter-workflows/pull/590#issuecomment-672360634
+  
+  credit:
+  Gabriel Smith
+
+- [Gabriel Smith brought this change]
+
+  ci: Swap from Travis to Github Actions (#581)
+  
+  Files: ci files
+  
+  Notes:
+  Move Linux CI using Github Actions
+  
+  Credit:
+  Gabriel Smith, Marc Hörsken
+
+- [Mary brought this change]
+
+  libssh2_priv.h: add iovec on 3ds (#575)
+  
+  file: libssh2_priv.h
+  note: include iovec for 3DS
+  credit: Mary Mstrodl
+
+- [Laurent Stacul brought this change]
+
+  Tests: Fix unused variables warning (#561)
+  
+  file: test_public_key_auth_succeeds_with_correct_ed25519_key_from_mem.c
+  
+  notes: fixed unused vars
+  
+  credit:
+  Laurent Stacul
+
+- [Viktor Szakats brought this change]
+
+  bcrypt_pbkdf.c: fix clang10 false positive warning (#563)
+  
+  File: bcrypt_pbkdf.c
+  
+  Notes:
+  blf_enc() takes a number of 64-bit blocks to encrypt, but using
+  sizeof(uint64_t) in the calculation triggers a warning with
+  clang 10 because the actual data type is uint32_t. Pass
+  BCRYPT_BLOCKS / 2 for the number of blocks like libc bcrypt(3)
+  does.
+  
+  Ref: https://github.com/openbsd/src/commit/04a2240bd8f465bcae6b595d912af3e2965856de
+  
+  Fixes #562
+  
+  Credit:
+  Viktor Szakats
+
+- [Will Cosgrove brought this change]
+
+  transport.c: release payload on error (#554)
+  
+  file: transport.c
+  notes: If the payload is invalid and there is an early return, we could leak the payload
+  credit:
+  Will Cosgrove
+
+- [Will Cosgrove brought this change]
+
+  ssh2_client_fuzzer.cc: fixed building
+  
+  The GitHub web editor did some funky things
+
+- [Will Cosgrove brought this change]
+
+  ssh_client_fuzzer.cc: set blocking mode on (#553)
+  
+  file: ssh_client_fuzzer.cc
+  
+  notes: the session needs blocking mode turned on to avoid EAGAIN being returned from libssh2_session_handshake()
+  
+  credit:
+  Will Cosgrove, reviewed by Michael Buckley
+
+- [Etienne Samson brought this change]
+
+  Add a LINT option to CMake (#372)
+  
+  * ci: make style-checking available locally
+  
+  * cmake: add a linting target
+  
+  * tests: check test suite syntax with checksrc.pl
+
+- [Will Cosgrove brought this change]
+
+  kex.c: kex_agree_instr() improve string reading (#552)
+  
+  * kex.c: kex_agree_instr() improve string reading
+  
+  file: kex.c
+  notes: if haystack isn't null terminated we should use memchr() not strchar(). We should also make sure we don't walk off the end of the buffer.
+  credit:
+  Will Cosgrove, reviewed by Michael Buckley
+
+- [Will Cosgrove brought this change]
+
+  kex.c: use string_buf in ecdh_sha2_nistp (#551)
+  
+  * kex.c: use string_buf in ecdh_sha2_nistp
+  
+  file: kex.c
+  
+  notes:
+  use string_buf in ecdh_sha2_nistp() to avoid attempting to parse malformed data
+
+- [Will Cosgrove brought this change]
+
+  kex.c: move EC macro outside of if check #549 (#550)
+  
+  File: kex.c
+  
+  Notes:
+  Moved the macro LIBSSH2_KEX_METHOD_EC_SHA_HASH_CREATE_VERIFY outside of the LIBSSH2_ECDSA since it's also now used by the ED25519 code.
+  
+  Sha 256, 384 and 512 need to be defined for all backends now even if they aren't used directly. I believe this is already the case, but just a heads up.
+  
+  Credit:
+  Stefan-Ghinea
+
+- [Tim Gates brought this change]
+
+  kex.c: fix simple typo, niumber -> number (#545)
+  
+  File: kex.c
+  
+  Notes:
+  There is a small typo in src/kex.c.
+  
+  Should read `number` rather than `niumber`.
+  
+  Credit:
+  Tim Gates
+
 - [Tseng Jun brought this change]
 
   session.c: Correct a typo which may lead to stack overflow (#533)
@@ -3200,7 +3642,7 @@ Alexander Lamaison (13 Mar 2015)
       - Without zlib
   
   Conflicts:
-  	README
+          README
 
 - Man man syntax tests fail gracefully if man version is not suitable.
 
@@ -3275,18 +3717,18 @@ Guenter Knauf (8 Jan 2015)
 Marc Hoersken (29 Dec 2014)
 - knownhost.c: fix use of uninitialized argument variable wrote
   
-  Detected by clang scan in	line 1195, column 18.
+  Detected by clang scan in       line 1195, column 18.
 
 - examples/x11.c: fix result of operation is garbage or undefined
   
   Fix use of uninitialized structure w_size_bck.
-  Detected by clang scan in	line 386, column 28.
+  Detected by clang scan in       line 386, column 28.
 
 - examples/x11.c: remove dead assigments of some return values
   
   Detected by clang scan in line 212, column 9.
   Detected by clang scan in line 222, column 13.
-  Detected by clang scan in	line 410, column 13.
+  Detected by clang scan in       line 410, column 13.
 
 - examples/x11.c: fix possible memory leak if read fails
   
@@ -6387,155 +6829,3 @@ Peter Stuge (17 Jun 2010)
 
 Daniel Stenberg (16 Jun 2010)
 - libssh2_session_callback_set: extended the man page
-
-- [John brought this change]
-
-  LIBSSH2_DEBUG: macro uses incorrect function variable
-  
-  The LIBSSH2_DEBUG macro, defined in libssh2_priv.h, incorrectly uses the
-  function variable ssh_msg_disconnect when it should use ssh_msg_debug.
-  
-  This shows that the LIBSSH2_CALLBACK_DEBUG callback never has worked...
-
-- warning: fix a compiler warning 'pointer differs in signedness'
-  
-  As reported in bug #177
-
-- portability: introduce LIBSSH2_INT64_T_FORMAT for 64bit printf()s
-  
-  As pointed out in bug #177, some of the Windows compilers use
-  %I64 to output 64 bit variables with the printf family.
-
-- debug: avoid sending NULL to sprintf %s
-  
-  Via the _libssh2_debug() macro/function. Pointed out by john in bug report
-
-- sftp docs: show macro on macro page, only function on function page
-  
-  The individual man pages for macros now show the full convenience
-  macro as defined, and then the man page for the actual function
-  only shows the function.
-
-- code police: make the code use less than 80 columns
-
-- libssh2_channel_write_ex: remove macros, added wording on buffer size
-
-- libssh2_sftp_write: document buffer size and changed some ordering
-
-- libssh2_channel_write_stderr: show how the macro is defined
-
-- libssh2_channel_write: show how the macro is defined
-
-- SFTP: limit write() to not produce overly large packets
-  
-  sftp_write() now limits how much data it gets at a time even more
-  than before. Since this function creates a complete outgoing
-  packet based on what gets passed to it, it is crucial that it
-  doesn't create too large packets.
-  
-  With this method, there's also no longer any problem to use very
-  large buffers in your application and feed that to libssh2. I've
-  done numerous tests now with uploading data over SFTP using 100K
-  buffers and I've had no problems with that.
-
-- scp_write_nonblock: add transfer time info
-  
-  Using the same timing logic and output format as
-  sftp_write_nonblock allows us to very easily run benchmarks on
-  SCP vs SFTP uploads using libssh2.
-
-- sftp_write_nonblock: select() on socket, use *BIG* buffer, time transfer
-  
-  The select() is just to make it nicer so that it doesn't
-  crazy-loop on EAGAIN. The buffer size thing is mostly to verify
-  that this really work as supposed.
-  
-  Transfer timing is just a minor thing, but it can just as well be
-  there and help us time and work on performance easier using out
-  of the box examples.
-
-- agent: use _libssh2_error() when returning errors
-  
-  As pointed out in bug report #173, this module basically never
-  used _libssh2_error() which made it work inconstently with other
-  parts of the libssh2 code base. This is my first take at making
-  this code more in line with the rest.
-
-- inputchecks: make lots of API functions check for NULL pointers
-  
-  If an application accidentally provides a NULL handle pointer to
-  the channel or sftp public functions, they now return an error
-  instead of segfaulting.
-
-- libssh2_channel_eof: clarify that it returns negative on errors
-
-- SFTP: keep the sftp error code as 32 bit
-  
-  'last_errno' holds to the error code from the SFTP protocol and
-  since that is 32 bits on the wire there's no point in using a
-  long for this internally which is larger on some platforms.
-
-- agent: make the code better deal with unexpected code flows
-  
-  agent->ops gets initialized by the libssh2_agent_connect() call
-  but we need to make sure that we don't segfault even if a bad
-  sequence of function calls is used.
-
-Alexander Lamaison (10 Jun 2010)
-- Better handling of invalid key files.
-  
-  Passing an invalid public key to libssh2_userauth_publickey_fromfile_ex
-  triggered an assertion.  Replaced this with a runtime check that rejects
-  obviously invalid key data.
-
-Daniel Stenberg (10 Jun 2010)
-- version: we start working on 1.2.7 now
-
-Version 1.2.6 (10 Jun 2010)
-
-Daniel Stenberg (10 Jun 2010)
-- NEWS: add the 1.2.6 release details
-
-- RELEASE-NOTES: 1.2.6 details added
-
-Guenter Knauf (10 Jun 2010)
-- fixed libssh2.dsw to use the generated libssh2.dsp; removed old *.dsp files.
-
-- moved MSVC strdup define to libssh2_config.h which we include already.
-
-- added missing source files to src/NMakefile.
-
-Daniel Stenberg (8 Jun 2010)
-- libssh2_poll: refer to poll(3) and select(3) instead
-
-- example: fix strdup() for MSVC compiles
-  
-  MSVC has a _strdup() that we better use. This was reported in bug
-
-- SFTP: fail init SFTP if session isn't authenticated
-  
-  Alexander Lamaison filed bug #172
-  (http://trac.libssh2.org/ticket/172), and pointed out that SFTP
-  init would do bad if the session isn't yet authenticated at the
-  time of the call, so we now check for this situation and returns
-  an error if detected. Calling sftp_init() at this point is bad
-  usage to start with.
-
-- direct_tcpip: bring back inclusion of libssh2_config.h
-  
-  In order to increase portability of this example, I'm bringing
-  the inclusion of libssh2_config.h back, and I also added an
-  require that header for this example to compile.
-  
-  I also made all code lines fit within 80 columns.
-
-Guenter Knauf (3 Jun 2010)
-- cast away a warning.
-
-- moved CRT_SECURE_NO_DEPRECATE define up so its defined before the winsock headers are included.
-
-- fixed platform detection for MingW32 test makefile.
-
-- MingW32 has gettimeofday() implemented, so proper ifdef this function here.
-
-- removed MSVC ifdef since seems we can use __int64 still with latest headers.
