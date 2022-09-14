@@ -509,6 +509,7 @@ void Ide::SetupFormat() {
 		(assist.rescan, auto_rescan)
 		(assist.check, auto_check)
 		(assist.navigator_right, editor.navigator_right)
+		(assist.diagnostics, AssistDiagnostics)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)

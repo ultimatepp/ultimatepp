@@ -460,6 +460,7 @@ void Ide::SelectMethod()
 	SyncBuildMode();
 	SetHdependDirs();
 	TriggerIndexer();
+	editor.SyncCurrentFile();
 }
 
 void Ide::DropModeList()

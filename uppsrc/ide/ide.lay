@@ -592,6 +592,7 @@ LAYOUT(SetupAssistLayout, 532, 212)
 	ITEM(Upp::Option, navigator_right, SetLabel(t_("Place navigator to the right")).LeftPosZ(4, 252).TopPosZ(164, 16))
 	ITEM(Upp::Option, header_guards, SetLabel(t_("Insert guards to new headers")).LeftPosZ(272, 252).TopPosZ(4, 16))
 	ITEM(Upp::Switch, insert_include, SetLabel(t_("No #include in new sources\n#include first\n#include previous")).LeftPosZ(272, 252).TopPosZ(24, 52))
+	ITEM(Upp::Option, diagnostics, SetLabel(t_("Assist diagnostics (verbose mode)")).LeftPosZ(4, 252).TopPosZ(184, 16))
 END_LAYOUT
 
 LAYOUT(SetupIdeLayout, 512, 336)

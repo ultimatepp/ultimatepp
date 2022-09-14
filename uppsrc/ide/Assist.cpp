@@ -755,49 +755,6 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
-#ifdef _DEBUG
-	if(key == K_F12) {
-		int l = GetLine(GetCursor());
-		for(const AnnotationItem& m : annotations)
-			if(m.pos.y == l) {
-				PromptOK(String() <<
-					"kind: \1" << m.kind << "\1&" <<
-					"name: \1" << m.name << "\1&" <<
-					"id: \1" << m.id << "\1&" <<
-					"pretty: \1" << m.pretty << "\1&" <<
-					"nspace: \1" << m.nspace << "\1&" <<
-					"definition: \1" << m.definition << "\1&"
-				);
-				return true;
-			}
-		Exclamation("No annotation for this line.");
-	}
-	if(key == K_F11) {
-		Workspace wspc;
-		wspc.Scan(theide->main);
-		DLOG("==============");
-		for(int i : wspc.use_order) {
-			DDUMP(wspc[i]);
-		}
-/*
-
-		DDUMP(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
-
-		PPInfo ppi;
-		ppi.SetIncludes(Merge(";", theide->GetCurrentIncludePath(), GetClangInternalIncludes()));
-		Index<String> files;
-		for(int pi = 0; pi < wspc.GetCount(); pi++) {
-			String pk_name = wspc[pi];
-			const Package& pk = wspc.GetPackage(pi);
-			for(int i = 0; i < pk.GetCount(); i++) {
-				String path = SourcePath(pk_name, pk[i]);
-				ppi.GatherDependencies(path, files);
-			}
-		}
-
-		DDUMP(files);
-*/	}
-#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;

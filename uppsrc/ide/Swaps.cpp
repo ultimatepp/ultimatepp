@@ -9,6 +9,7 @@ void Ide::SwapS()
 	if(!editor.WaitCurrentFile())
 		return;
 	AnnotationItem cm = editor.FindCurrentAnnotation();
+	PutAssist("Swap: " + cm.id);
 	Cycle(cm, cm.pos.y, false);
 }
 

@@ -140,6 +140,8 @@ void Ide::ContextGoto0(int pos)
 			}
 		}
 	
+	PutAssist("ref_id: " + ref_id);
+	
 	if(ref_id.GetCount()) {
 		String found_path;
 		Point  found_pos(INT_MAX, INT_MAX);
@@ -148,6 +150,7 @@ void Ide::ContextGoto0(int pos)
 		String found_nest;
 		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
+		PutAssist("Context: " + cm.id);
 		if(IsFunction(cm.kind)) { // do local variables
 			for(const AnnotationItem& m : editor.locals) {
 				int ppy = -1;
@@ -158,6 +161,7 @@ void Ide::ContextGoto0(int pos)
 					found_definition = m.definition;
 					found_name = m.name;
 					found_nest = m.nest;
+					PutAssist("Found Local: " + AsString(m.pos));
 				}
 			}
 		}
@@ -174,6 +178,7 @@ void Ide::ContextGoto0(int pos)
 						found_definition = m.definition;
 						found_name = m.name;
 						found_nest = m.nest;
+						PutAssist("Found Global: " + found_path);
 					}
 		
 		if(found_path.GetCount()) {

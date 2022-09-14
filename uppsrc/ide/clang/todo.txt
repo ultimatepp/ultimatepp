@@ -39,15 +39,11 @@ ISUES:
 
 - enum annotation popup (Ctrl::)
 
-- Remove template < > in autocomplete
-
 - check editor mode
 
 - Error output: (): x += GetTextSize(" Ôćĺ ", StdFont());
 
 - x += GetTextSize(" Ôćĺ ", StdFont()) - autocomplete fails on UTF8
-
-- void NavDlg::GoTo()
 
 - unnamed union in String0
 
@@ -56,8 +52,6 @@ ISUES:
 - FFound key to reuse pane for repeated finds
 
 - mainconfig/dependecies
-
-- Visitor.cpp hasid = false - remove initialisation
 
 - TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
 
@@ -79,7 +73,7 @@ ISUES:
 
 - AssistEditor Virtual methods not showing LineEdit etc..
 
-- AssistTest updates delayed
+- Enel/ProjectDB.cpp:46 - does not see ts.table Alt-J
 
 NONCLANG:
 
@@ -102,7 +96,7 @@ void AppExit__()
 
 - Ide::Ide.iml - showing flags (like HD) is delayed
 
-
+- Visitor.cpp - jump on CXPrintingPolicyProperty
 
 
 NTH:
@@ -142,6 +136,9 @@ NTH:
 - Handle templates
 	- Alt-J if everything fails (template, e.g. OpenWindUtil/Utils.h:348), go by the name
 	- Alt-J relaxed rules if not found (in templates, different parameters)
+
+- Remove template < > in autocomplete
+
 
 LATER:
 

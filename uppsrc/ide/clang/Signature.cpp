@@ -166,6 +166,7 @@ String CleanupPretty(const String& signature)
 	LTIMING("CleanupPretty");
 	StringBuffer result;
 	const char *s = signature;
+	int plvl = 0;
 	while(*s && *s != '{')
 		if(memcmp(s, " = {", 4) == 0)
 			break;
@@ -226,7 +227,13 @@ String CleanupPretty(const String& signature)
 			result.Cat(' ');
 		}
 		else
+		if(*s == '=' && plvl == 0)
+			break;
+		else {
+			if(*s == '(') plvl++;
+			if(*s == ')') plvl--;
 			result.Cat(*s++);
+		}
 	String r = result;
 	while(*r.Last() == ' ')
 		r.TrimLast();

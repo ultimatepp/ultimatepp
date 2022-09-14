@@ -1,5 +1,7 @@
 DONE:
 
+- Visitor.cpp hasid = false - remove initialisation
+
 - Core/String.h - conversion operators wrong nests (template argument)
 
 - out of sync SetCurrentFile
@@ -274,4 +276,8 @@ REJECTED:
 - navlines
 
 - Speller.cpp: structures have wrong nest (missing itself)
+
+- void NavDlg::GoTo()
+
+- AssistTest updates delayed
 

@@ -185,7 +185,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 20;
+	int version = 21;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -273,6 +273,8 @@ void Ide::Serialize(Stream& s)
 		s % auto_rescan;
 	if(version >= 10)
 		s % auto_check;
+	if(version >= 21)
+		s % AssistDiagnostics;
 	s % editor.commentdp;
 	s % bordercolumn;
 	s % bordercolor;

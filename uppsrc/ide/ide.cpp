@@ -356,6 +356,7 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 void Ide::Activate()
 {
 	TriggerIndexer();
+	editor.SyncCurrentFile();
 	TopWindow::Activate();
 }
 

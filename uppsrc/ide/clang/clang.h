@@ -3,6 +3,10 @@
 
 #include <ide/Common/Common.h>
 
+extern bool AssistDiagnostics;
+
+void PutAssist(const char *s);
+
 #ifdef PLATFORM_POSIX
 #define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
 #endif
@@ -275,5 +279,7 @@ public:
 	static bool IsRunning();
 	static double Progress();
 };
+
+void DumpIndex(const char *file);
 
 #endif

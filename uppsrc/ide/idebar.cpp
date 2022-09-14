@@ -808,6 +808,15 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));
 	}
+	
+	if(AssistDiagnostics) {
+		menu.Separator();
+		menu.Add("Dump and show current index", [=] {
+			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
+			DumpIndex(path);
+			EditFile(path);
+		});
+	}
 }
 
 void Ide::HelpMenu(Bar& menu)

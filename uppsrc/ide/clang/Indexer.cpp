@@ -95,16 +95,16 @@ ArrayMap<String, FileAnnotation>& CodeIndex()
 	return m;
 }
 
-void DumpIndex()
+void DumpIndex(const char *file)
 {
 	GuiLock __;
-	FileOut out(ConfigFile("current_index.dump"));
+	FileOut out(file);
 	out << GetSysTime() << "\n";
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
 	for(const auto& m : ~x) {
 		out << m.key << "\n";
 		for(const auto& n : m.value.items)
-			out << '\t' << n.name << "   " << n.type << "   " << n.id << "   " << n.pretty << "   " << n.bases << "\n";
+			out << '\t' << n.pos.y << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
 		for(const auto& n : m.value.refs)
 			out << '\t' << n.pos << "   " << n.id << "\n";
 	}
@@ -189,7 +189,7 @@ void Indexer::IndexerThread()
 				CodeIndex().GetAdd(path) = pick(f);
 			}
 
-			PutVerbose(String() << job.path << " indexed in " << msecs() - tm << " ms");
+			PutAssist(String() << job.path << " indexed in " << msecs() - tm << " ms");
 			Mutex::Lock __(mutex);
 			jobs_done++;
 		}
@@ -203,11 +203,7 @@ void Indexer::IndexerThread()
 			}
 		}
 		if(last)
-			PutVerbose(String() << "Indexing finished in " << (msecs() - tm0) / 1000.0 << " s");
-	#ifdef _DEBUG
-		if(last)
-			DumpIndex(); // TODO remove?
-	#endif
+			PutAssist(String() << "Indexing finished in " << (msecs() - tm0) / 1000.0 << " s");
 		if(Thread::IsShutdownThreads())
 			break;
 		event.Wait();
@@ -253,7 +249,7 @@ void Indexer::SchedulerThread()
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
 
-			String base_includes, includes, defines;
+			String includes, defines;
 
 			VectorMap<String, Time>   files; // all files of project, including external headers
 
@@ -266,10 +262,10 @@ void Indexer::SchedulerThread()
 			{
 				GuiLock __;
 
-				includes = Indexer::includes;
 				defines = Indexer::defines;
+				includes = Merge(";", Indexer::includes, GetClangInternalIncludes());
 
-				ppi.SetIncludes(Merge(";", base_includes, GetClangInternalIncludes()));
+				ppi.SetIncludes(includes);
 				ppi.Dirty();
 
 				{
@@ -316,12 +312,12 @@ void Indexer::SchedulerThread()
 				}
 			}
 
-//			DDUMPC(header);
+			DDUMPC(header);
 
 			Index<String> dirty_files; // files that need to be recompiled (including headers)
 
 //			DDUMPC(dirty_files);
-//			DDUMPM(files);
+			DDUMPM(files);
 
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");

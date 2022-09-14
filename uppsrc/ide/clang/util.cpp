@@ -1,5 +1,14 @@
 #include "clang.h"
 
+bool AssistDiagnostics;
+
+void PutAssist(const char *s)
+{
+	GuiLock __;
+	if(AssistDiagnostics)
+		PutConsole(s);
+}
+
 bool IsCppSourceFile(const String& path)
 {
 	String ext = ToLower(GetFileExt(path));

@@ -12,18 +12,16 @@ void AssistEditor::SyncMaster()
 		ppi.Dirty();
 		ppi.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 		master_source = FindMasterSource(ppi, GetIdeWorkspace(), editfile);
-		LLOG("Master source " << editfile << " -> " << master_source);
 	}
 
-#ifdef _DEBUG
-	// TODO: Remove
-	PutConsole("Master source " << editfile << " -> " << master_source);
-	ppi.WhenBlitzBlock = [=](const String& inc, const String& path) {
-		PutConsole(String() << inc << " blocks BLITZ of " << path);
-	};
-	if(ppi.BlitzApproved(editfile))
-		PutConsole(editfile + " BLITZ approved");
-#endif
+	if(AssistDiagnostics) {
+		PutConsole("Master source " << editfile << " -> " << master_source);
+		ppi.WhenBlitzBlock = [=](const String& inc, const String& path) {
+			PutConsole(String() << inc << " blocks BLITZ of " << path);
+		};
+		if(ppi.BlitzApproved(editfile))
+			PutConsole(editfile + " BLITZ approved");
+	}
 }
 
 bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta)
