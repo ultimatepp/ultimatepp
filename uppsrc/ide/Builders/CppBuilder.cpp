@@ -379,8 +379,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				if(p.Id("exclude_path")) {
 					ExtExclude(p, packageFolder, include_path, flags);
 				}
-				else {
-					p.PassId("includes");
+				if(p.Id("includes")) {
 					bool apply = CheckImportCondition(p, flags);
 					Vector<String> e = ReadPatterns(p);
 					if(apply) {
