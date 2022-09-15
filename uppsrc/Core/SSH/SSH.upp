@@ -48,7 +48,7 @@ file
 	Docs readonly separator,
 	src.tpp,
 	Info readonly separator,
-	ReadMe,
+	ReadMe.md,
 	Copying,
 	Todo,
 	Issues;

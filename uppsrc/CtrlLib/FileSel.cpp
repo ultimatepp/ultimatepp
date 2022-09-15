@@ -1036,7 +1036,10 @@ void FileSel::AddName(Vector<String>& fn, String& f) {
 		f = TrimDot(f);
 		if(f[0] == '\"' && f.GetCount() > 2)
 			f = f.Mid(1, f.GetCount() - 2);
-		if(f.Find('.') < 0) {
+		int q = f.ReverseFind('.');
+		if(q < 0 || Filter(f.Mid(q + 1), // "(file.xxx)" should add extension too, allow just some
+		                   [](int c) { return IsAlNum(c) || findarg(c, '_', '-') >= 0 ? 0 : c; }
+		   ).GetCount()) {
 			String t = GetMask();
 			int q = t.Find('.');
 			if(q >= 0 && IsAlNum(t[q + 1])) {
@@ -1305,8 +1308,12 @@ void FileSel::Open() {
 				}
 			}
 		}
-		if(mode != SELECTDIR) Finish();
+		if(mode != SELECTDIR)
+			Finish();
 	}
+	else
+	if(mode == SAVEAS)
+		Finish();
 }
 
 String DirectoryUp(String& dir, bool basedir)

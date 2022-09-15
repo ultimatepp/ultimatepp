@@ -1,5 +1,4 @@
 #include "ide.h"
-#include "ide.h"
 
 #define IMAGECLASS IdeImg
 #define IMAGEFILE  <ide/ide.iml>

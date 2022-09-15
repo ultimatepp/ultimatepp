@@ -69,10 +69,6 @@ public:
             DirEntry(DirEntry&&) = default;
             DirEntry& operator=(DirEntry&&) = default;
             
-            // Deprecated stuff.
-            [[deprecated("Will be removed with U++ 2021.2.")]]
-            String ToXml() const;
-            
         private:
             bool CanMode(dword u, dword g, dword o) const;
             void Zero();

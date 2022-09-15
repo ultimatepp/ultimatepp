@@ -31,7 +31,7 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ * USE OF TH☕IS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
 
@@ -42,9 +42,9 @@
 #define PACKAGE           "Upp::SSH"
 #define PACKAGE_BUGREPORT "https://github.com/ultimatepp/ultimatepp/issues"
 #define PACKAGE_NAME      "Ultimate++ SSH package"
-#define PACKAGE_STRING    "Ultimate++ SSH package, a libssh2 wrapper, (ver. 2021.1)"
+#define PACKAGE_STRING    "Ultimate++ SSH package, a libssh2 wrapper, (ver. 2022.2)"
 #define PACKAGE_URL       "https://github.com/ultimatepp/ultimatepp"
-#define PACKAGE_VERSION   "2021.1"
+#define PACKAGE_VERSION   "2022.2 (libssh2 v.1.10.0)"
 
 /* Headers */
 #define HAVE_INTTYPES_H

@@ -188,8 +188,12 @@ public:
 
 	void      SerializeRaw(byte *data, int64 count);
 	void      SerializeRaw(word *data, int64 count);
+	void      SerializeRaw(int16 *data, int64 count);
 	void      SerializeRaw(dword *data, int64 count);
+	void      SerializeRaw(int *data, int64 count);
 	void      SerializeRaw(uint64 *data, int64 count);
+	void      SerializeRaw(float *data, int64 count);
+	void      SerializeRaw(double *data, int64 count);
 
 	String    GetAllRLE(int size);
 	void      SerializeRLE(byte *data, int count);
@@ -496,7 +500,7 @@ private:
 	Stream  *stream;
 	bool     equal;
 	int64    size;
-	byte     h[128];
+	byte     h[1024];
 
 	void     Compare(int64 pos, const void *data, int size);
 

@@ -411,7 +411,7 @@ is that [* pos] is range checked in debug mode.&]
 [s7; [*/ Return value]-|Iterator.&]
 [s3; &]
 [s4; &]
-[s5;K%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][^`:`:BiArray^@(64) BiArray][@(64) `&_][@3 a
+[s5;K%- friend_[@(0.0.255) void][@(64) _][* Swap][@(64) (][^`:`:BiArray^@(64) BiArray][@(64) `&_][@3 a
 ][@(64) , ][^`:`:BiArray^@(64) BiArray][@(64) `&_][@3 b][@(64) )]&]
 [s2; Specialization of the generic [* Swap] for BiArrays. Swaps BiArray 
 in low constant time operation.&]

@@ -114,7 +114,7 @@ ideas]]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Code style]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/slack`$en`-us^ Team collaboration 
 (Slack)]&]
-[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^ Bazaar]&]
+[s4;i150;O0;%% [^topic`:`/`/ide`/app`/UppHub`_en`-us^ UppHub]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^ Authors `& License]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]

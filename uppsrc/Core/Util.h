@@ -476,10 +476,14 @@ size_t SizeBySerialize(const T& cont)
 template <class T>
 bool IsEqualBySerialize(const T& a, const T& b)
 {
-	StringStream sa, sb;
+	StringStream sa;
 	const_cast<T&>(a).Serialize(sa);
-	const_cast<T&>(b).Serialize(sb);
-	return sa.GetResult() == sb.GetResult();
+	
+	StringStream ss(sa.GetResult());
+	CompareStream cs(ss);
+
+	const_cast<T&>(b).Serialize(cs);
+	return cs;
 }
 
 String  Replace(const String& s, const Vector<String>& find, const Vector<String>& replace);

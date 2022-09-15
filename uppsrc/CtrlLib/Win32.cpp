@@ -191,31 +191,22 @@ bool FileSelNative::Execute(bool open, const char *dlgtitle) {
 	ofn.lpstrInitialDir = W32(activedir);
 	ofn.lpfnHook = sCenterHook;
 	int bufsize = ofn.nMaxFile = (multi ? 32000 : _MAX_PATH);
-	Buffer<char16> buffer(bufsize);
-	*(ofn.lpstrFile = buffer) = 0;
-	if(!filename.IsEmpty())
-	{
-		String out;
-		for(int i = 0; i < filename.GetCount(); i++)
-		{
-			if(*ofn.lpstrInitialDir == 0 && FindFile().Search(AppendFileName(GetFileDirectory(filename[i]), "*")))
-				ofn.lpstrInitialDir = W32(GetFileDirectory(filename[i]));
-			if(!open || FileExists(filename[i]))
-			{
-				String fn = GetFileName(filename[i]);
-				if(!IsNull(fn))
-				{
-					if(multi && fn.Find(' ') >= 0)
-						out << W32(String() << '\"' << fn << '\"');
-					else
-						out << W32(fn);
-					out.Cat(0);
-				}
-			}
+	Buffer<char16> buffer(bufsize, 0);
+	if(filename.GetCount()) {
+		if(*ofn.lpstrInitialDir == 0 && FindFile().Search(AppendFileName(GetFileDirectory(filename[0]), "*")))
+			ofn.lpstrInitialDir = W32(GetFileDirectory(filename[0]));
+		if(!open || FileExists(filename[0])) {
+			String out;
+			String fn = GetFileName(filename[0]);
+			if(multi && fn.Find(' ') >= 0)
+				out << String() << '\"' << fn << '\"';
+			else
+				out << fn;
+			Vector<char16> w32 = ToSystemCharsetW(out);
+			memcpy(buffer, w32, min(bufsize - 1, int(w32.GetCount() * sizeof(wchar))));
 		}
-		int l = min(out.GetLength(), bufsize - 1);
-		memcpy(buffer, out, l + 1);
 	}
+	ofn.lpstrFile = buffer;
 
 	if(dlgtitle)
 		ofn.lpstrTitle = W32(dlgtitle);

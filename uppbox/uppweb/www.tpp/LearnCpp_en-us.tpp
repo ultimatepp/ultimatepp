@@ -33,18 +33,18 @@ learning programing TheIDE is what you are looking for. It runs
 on most modern operating system and allows to develop applications 
 according to the latest standards. Moreover, TheIDE code base 
 allows to launch it on different kind of architecture like ARM. 
-In Ultimate`+`+ foundation, we strongly believe that cheap ARM 
-computers like [^https`:`/`/www`.raspberrypi`.org`/^ Raspberry 
-Pi] is a key to learn programing among young people.&]
-[s5; TheIDE is not only intended to be only IDE for Ultimate`+`+ 
-purpose. It works well with standardized C`+`+. Currently with 
- embedded compiler on Microsoft Windows TheIDE fully supports 
-C`+`+11 and C11. On GNU/Linux the capability is similar due to 
-usage of operating system bundled compiler. Please notice that 
-projects created on one system can be easily moved to another 
-without any modification. If you don`'t know what is compiler 
-I hasten to explain. It is a program that translates your code 
-into a format that is understandable by your computer.&]
+In U`+`+ foundation, we strongly believe that cheap ARM computers 
+like [^https`:`/`/www`.raspberrypi`.org`/^ Raspberry Pi] is a key 
+to learn programing among young people.&]
+[s5; TheIDE is not only intended to be only IDE for U`+`+ purpose. 
+It works well with standardized C`+`+. Currently with  embedded 
+compiler on Microsoft Windows TheIDE fully supports C`+`+20 and 
+C17. On GNU/Linux the capability is similar due to usage of operating 
+system bundled compiler. Please notice that projects created 
+on one system can be easily moved to another without any modification. 
+If you don`'t know what is compiler I hasten to explain. It is 
+a program that translates your code into a format that is understandable 
+by your computer.&]
 [s5; One of the biggest advantage of TheIDE is that it is an open 
 source project. For the long term perspective, it contributed 
 to the maturity and stability. It was also created by people 
@@ -86,9 +86,9 @@ believe that communication is the key. Ask and we certainly find
 a solution for your problem.&]
 [s5; The easiest way to start a journey with open source is to find 
 a bug and deliver an appropriate patch. It should come naturally 
-when you work daily with Ultimate`+`+ and TheIDE. Later you can 
-implement your own features. If you are looking for inspiration, 
-please visit our [^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$gsoc2014`$en`-us`.html^ G
+when you work daily with U`+`+ and TheIDE. Later you can implement 
+your own features. If you are looking for inspiration, please 
+visit our [^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$gsoc2014`$en`-us`.html^ G
 oogle Summer of Code] site.&]
 [s5; It is also possible to write your thesis based on and within 
 U`+`+ framework.&]

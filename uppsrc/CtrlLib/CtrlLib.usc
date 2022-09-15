@@ -324,6 +324,7 @@ ctrl LabelBox {
 
 	>Base;
 	Text SetLabel ? "Box label" ;
+	Font SetFont = StdFont();
 
 	Paint(w) {
 		sz = GetSize();

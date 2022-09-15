@@ -3,7 +3,7 @@
 namespace Upp {
 
 double Distance(Pointf X, Pointf A, Pointf B, double *arg)
-{
+{ // distance from line segment (not line!)
 	Pointf AB = B - A;
 	Pointf AX = X - A;
 	double ab2 = Squared(AB);

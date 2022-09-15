@@ -92,6 +92,7 @@ CONSOLE_APP_MAIN
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
 	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32_dlls/dbghelp.dll"));
+	SaveFile(upptmp + "/libclang.dll", LoadFile(bin + "/win32_dlls/libclang.dll"));
 	SaveFile(upptmp + "/README",
 ///////////////////////////////////////////////////////////////////////////////
 R"--(U++ Windows Installation

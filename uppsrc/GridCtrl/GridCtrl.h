@@ -1556,6 +1556,7 @@ class GridCtrl : public Ctrl
 		void DoGoPageUp();
 		void DoGoPageDn();
 		void DoFind();
+		void DoPaste();
 
 		void StdMenuBar(Bar &bar);
 		void StdToolBar(Bar &bar);
@@ -1774,7 +1775,6 @@ class GridCtrl : public Ctrl
 		void PasteCallbacks(bool new_row);
 		void Paste(int mode = 0);
 		void DoCopy();
-		void DoPaste();
 		void DoPasteInsertedRows();
 		void DoPasteAppendedRows();
 

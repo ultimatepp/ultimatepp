@@ -63,7 +63,7 @@ END_LAYOUT
 LAYOUT(PanelLayout, 408, 572)
 	ITEM(Upp::Button, clear_grid, SetLabel(t_("Clear grid")).RightPosZ(308, 96).BottomPosZ(4, 20))
 	ITEM(Upp::Button, reset_grid, SetLabel(t_("Reset grid")).RightPosZ(208, 92).BottomPosZ(4, 20))
-	ITEM(Upp::LineEdit, log0, SetFont(MonospaceZ(12)).RightPosZ(4, 200).VSizePosZ(4, 28))
+	ITEM(Upp::LineEdit, log0, SetFont(Upp::MonospaceZ(12)).RightPosZ(4, 200).VSizePosZ(4, 28))
 	ITEM(Upp::Button, clear, SetLabel(t_("Clear")).RightPosZ(4, 64).BottomPosZ(4, 20))
 	ITEM(Upp::Button, debug, SetLabel(t_("Debug")).RightPosZ(140, 64).BottomPosZ(4, 20))
 	ITEM(Upp::TabCtrl, opts, RightPosZ(208, 196).VSizePosZ(4, 28))

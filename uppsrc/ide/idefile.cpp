@@ -562,7 +562,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				view_file.Seek(0);
 				int le = Null;
 			#ifdef CPU_64
-				const int64 max_size = (int64)4096*1024*1024;
+				const int64 max_size = (int64)2047*1024*1024;
 			#else
 				const int64 max_size = 768*1024*1024;
 			#endif

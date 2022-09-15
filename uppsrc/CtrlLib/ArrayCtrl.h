@@ -181,10 +181,11 @@ private:
 		bool          select:1;
 		bool          enabled:1;
 		bool          visible:1;
+		bool          heading:1;
 		Color         paper;
 		Vector<Value> line;
 
-		Line() { select = false; enabled = true; visible = true; paper = Null; }
+		Line() { select = false; enabled = true; visible = true; heading = false; paper = Null; }
 	};
 	
 	static int StdValueCompare(const Value& a, const Value& b) { return Upp::StdValueCompare(a, b); }
@@ -501,6 +502,8 @@ public:
 	ValueArray GetArray(int i) const;
 
 	void       AddSeparator();
+	void       AddHeading(const Value& v);
+	bool       IsHeading(int i) const                           { return i < array.GetCount() && array[i].heading; }
 
 	void       Insert(int i);
 	void       Insert(int i, int count);
