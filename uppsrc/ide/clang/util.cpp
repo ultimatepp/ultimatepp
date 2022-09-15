@@ -1,5 +1,6 @@
 #include "clang.h"
 
+bool LibClangEnabled;
 bool AssistDiagnostics;
 bool AutoIndexer;
 int  IndexerThreads;
@@ -9,6 +10,7 @@ void ClangConfigSerialize(Stream& s)
 {
 	int version = 0;
 	s % version
+	  % LibClangEnabled
 	  % AssistDiagnostics
 	  % AutoIndexer
 	  % IndexerThreads

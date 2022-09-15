@@ -5,6 +5,7 @@
 
 // Configuration
 
+extern bool LibClangEnabled;
 extern bool AssistDiagnostics;
 extern bool AutoIndexer;
 extern int  IndexerThreads;
@@ -27,7 +28,7 @@ bool LoadLibClang(const char *path);
 inline bool HasLibClang()
 {
 	extern bool hasLibClang;
-	return hasLibClang;
+	return hasLibClang && LibClangEnabled;
 }
 
 #else
@@ -36,7 +37,7 @@ inline bool HasLibClang()
 
 inline bool HasLibClang()
 {
-	return true;
+	return LibClangEnabled;
 }
 
 #endif

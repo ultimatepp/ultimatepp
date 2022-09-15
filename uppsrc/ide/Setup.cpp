@@ -498,6 +498,7 @@ void Ide::SetupFormat() {
 		(edt.persistent_find_replace, persistent_find_replace)
 		(edt.find_replace_restore_pos, find_replace_restore_pos)
 
+		(assist.enabled, LibClangEnabled)
 		(assist.barline, barline)
 		(assist.auto_enclose, auto_enclose)
 		(assist.commentdp, editor.commentdp)
