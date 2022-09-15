@@ -32,7 +32,7 @@ CurrentFileClang& GetCurrentFileClang(const String& filename)
 			return s_cf[0];
 		}
 
-	return s_cf.GetCount() < 8 ? s_cf.Add() : s_cf.Top(); // TODO: Limit
+	return s_cf.GetCount() < ParsedFiles ? s_cf.Add() : s_cf.Top();
 }
 
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)

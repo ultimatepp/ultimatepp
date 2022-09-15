@@ -225,7 +225,7 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < CPU_Cores(); i++) // TODO: CPU_Cores?
+		for(int i = 0; i < IndexerThreads; i++) // TODO: CPU_Cores?
 			Thread::StartNice([] { Indexer::IndexerThread(); });
 		Thread::StartNice([] { SchedulerThread(); });
 	}
@@ -312,12 +312,12 @@ void Indexer::SchedulerThread()
 				}
 			}
 
-			DDUMPC(header);
+//			DDUMPC(header);
 
 			Index<String> dirty_files; // files that need to be recompiled (including headers)
 
 //			DDUMPC(dirty_files);
-			DDUMPM(files);
+//			DDUMPM(files);
 
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");

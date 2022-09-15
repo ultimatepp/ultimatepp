@@ -809,7 +809,13 @@ void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const
 	diff.Execute();
 }
 
-void Ide::TriggerIndexer()
+void Ide::TriggerIndexer0()
 {
 	Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
+}
+
+void Ide::TriggerIndexer()
+{
+	if(AutoIndexer)
+		Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
 }

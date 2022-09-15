@@ -361,11 +361,16 @@ void Ide::SaveFile0(bool always)
 	TouchFile(editfile);
 	if(!FileExists(editfile))
 		InvalidateIncludes();
+	int auto_retry = 10; // file can be open by indexer
 	for(;;) {
 		FileOut out(editfile);
 		SaveEditorFile(out);
 		if(!out.IsError())
 			break;
+		if(auto_retry-- > 0) { // try for 2 seconds before asking
+			Sleep(300);
+			continue;
+		}
 		int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
 			"Unable to save current file.&"
 			"Retry save, ignore it or save file to another location?",

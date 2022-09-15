@@ -1,5 +1,19 @@
 DONE:
 
+= Navigator
+- class AString : public B { - remove template<> in navigator
+
+= Assist configuration
+- Option "reindex manual" (autosetup based on CPU cores)
+- Number of indexer threads
+- Number of cached files
+- options to disable assist
+- option for logging
+
+- Enel/ProjectDB.cpp:46 - does not see ts.table Alt-J
+
+- AssistEditor Virtual methods not showing LineEdit etc..
+
 - Visitor.cpp hasid = false - remove initialisation
 
 - Core/String.h - conversion operators wrong nests (template argument)

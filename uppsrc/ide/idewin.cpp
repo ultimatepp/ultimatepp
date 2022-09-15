@@ -626,8 +626,6 @@ Ide::Ide()
 	editfile_isfolder = false;
 	editfile_repo = NOT_REPO_DIR;
 	
-	auto_rescan = auto_check = true;
-
 	editfile_line_endings = Null;
 
 	HideBottom();

@@ -786,7 +786,7 @@ void Ide::BrowseMenu(Bar& menu)
 				PPInfo::RescanAll();
 				for(FileAnnotation& m : CodeIndex())
 					m.time = Null;
-				TriggerIndexer();
+				TriggerIndexer0();
 			});
 			menu.MenuSeparator();
 		}

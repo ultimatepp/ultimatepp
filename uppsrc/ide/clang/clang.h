@@ -3,7 +3,15 @@
 
 #include <ide/Common/Common.h>
 
+// Configuration
+
 extern bool AssistDiagnostics;
+extern bool AutoIndexer;
+extern int  IndexerThreads;
+extern int  ParsedFiles;
+
+void ClangConfigSerialize(Stream& s);
+void ClangConfigSetDefaults();
 
 void PutAssist(const char *s);
 
@@ -229,9 +237,6 @@ bool IsCurrentFileParsing();
 void CancelCurrentFile();
 bool IsCurrentFileDirty();
 
-// TODO remove
-// void SetAutoCompleteFile(const CurrentFileContext& ctx);
-// bool IsAutocompleteParsing();
 void StartAutoComplete(const CurrentFileContext& ctx, int line, int column, bool macros,
                        Event<const Vector<AutoCompleteItem>&> done);
 bool IsAutocompleteParsing();

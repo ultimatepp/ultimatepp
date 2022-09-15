@@ -11,7 +11,6 @@ file
 	clang.dli,
 	todo.txt,
 	done.txt,
-	help.txt,
 	util.cpp,
 	macros.cpp,
 	CxxIcon.cpp,

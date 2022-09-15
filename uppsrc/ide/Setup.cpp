@@ -506,10 +506,11 @@ void Ide::SetupFormat() {
 		(assist.mark_lines, mark_lines)
 		(assist.qtfsel, qtfsel)
 		(assist.assist, editor.auto_assist)
-		(assist.rescan, auto_rescan)
-		(assist.check, auto_check)
+		(assist.auto_indexer, AutoIndexer)
 		(assist.navigator_right, editor.navigator_right)
 		(assist.diagnostics, AssistDiagnostics)
+		(assist.indexer_threads, IndexerThreads)
+		(assist.parsed_files, ParsedFiles)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)

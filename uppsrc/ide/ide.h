@@ -634,8 +634,6 @@ public:
 	Color     bordercolor;
 	bool      persistent_find_replace;
 	bool      find_replace_restore_pos;
-	bool      auto_rescan;
-	bool      auto_check;
 	int       spellcheck_comments;
 	bool      wordwrap_comments = true;
 	bool      wordwrap = false;
@@ -1232,6 +1230,7 @@ public:
 	
 	String GetAndroidSdkPath();
 
+	void TriggerIndexer0();
 	void TriggerIndexer();
 
 	typedef   Ide CLASSNAME;

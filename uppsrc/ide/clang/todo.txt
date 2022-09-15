@@ -10,17 +10,11 @@ EPICS:
 
 = Assist configuration
 - Option "first config only"
-- Option "reindex manual" (autosetup based on CPU cores)
-- Number of indexer threads
-- Number of cached files
-- options to disable assist
-- option for logging
 - in linux, show libclang path
 
 = Annotations/Visitor/formatting
 
 = Navigator
-- class AString : public B { - remove template<> in navigator
 - navigator "BAD" - should be first
 - Navigator cycling struct AssistEditor : CodeEditor, Navigator { goes to contructor as well
 - (unnamed) BAD -> LogicalReport - fix enum in autocomplete
@@ -30,6 +24,10 @@ EPICS:
 - first macro in the file (AssistTest) is ignored
 
 ISUES:
+
+- Saving
+
+- commentdp
 
 - TPP HELP WINDOW->EDITOR - go to active label
 
@@ -51,8 +49,6 @@ ISUES:
 
 - FFound key to reuse pane for repeated finds
 
-- mainconfig/dependecies
-
 - TriggerIndexer should probably also restart CurrentFile and maybe autocomplete
 
 - TriggerIndexer on theide exit
@@ -70,10 +66,6 @@ ISUES:
 - void ClearTurbineVarsCache() - after switching main config, reparse file
 
 - Core/Parser.h slow for some reason...
-
-- AssistEditor Virtual methods not showing LineEdit etc..
-
-- Enel/ProjectDB.cpp:46 - does not see ts.table Alt-J
 
 NONCLANG:
 

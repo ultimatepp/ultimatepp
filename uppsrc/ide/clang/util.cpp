@@ -1,6 +1,41 @@
 #include "clang.h"
 
 bool AssistDiagnostics;
+bool AutoIndexer;
+int  IndexerThreads;
+int  ParsedFiles;
+
+void ClangConfigSerialize(Stream& s)
+{
+	int version = 0;
+	s % version
+	  % AssistDiagnostics
+	  % AutoIndexer
+	  % IndexerThreads
+	  % ParsedFiles
+	;
+}
+
+void ClangConfigSetDefaults()
+{
+	IndexerThreads = max(CPU_Cores() - 2, 1);
+
+#ifdef CPU_ARM
+	AutoIndexer = CPU_Cores() >= 8;
+#else
+	AutoIndexer = CPU_Cores() >= 4;
+#endif
+
+	uint64 total, avail;
+	GetSystemMemoryStatus(total, avail);
+	int mem_mb = int(total >> 20);
+	
+	ParsedFiles = clamp(mem_mb / 500, 1, 12);
+}
+
+INITBLOCK {
+	ClangConfigSetDefaults();
+}
 
 void PutAssist(const char *s)
 {
