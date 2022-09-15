@@ -1380,7 +1380,7 @@ ctrl DropDate {
 		n = r.bottom - r.top;
 		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
-			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "01/05/2007", Arial(10), :SMagenta);
+			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "25/07/2022", Arial(10), :SMagenta);
 	}
 }
 
@@ -1408,7 +1408,7 @@ ctrl DropTime {
 		n = r.bottom - r.top;
 		DrawDropButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
-			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "01/05/2007 10:34:58", Arial(10), :SMagenta);
+			(.SetEditable ? "" : "R/O ") + (.NotNull ? "!" : "") + "25/07/2022 10:34:58", Arial(10), :SMagenta);
 	}
 }
 
@@ -1588,7 +1588,7 @@ ctrl Calendar {
 			}
 		}
 
-		today = "Today: 01/19/2007";
+		today = "Today: 25/07/2022";
 		ts = GetTextSize(today, StdFont().Bold());
 		w.DrawText((r.right - ts.cx) / 2, r.bottom - 3 - ts.cy, today, f.Bold(), :SBlue);
 
@@ -1602,7 +1602,7 @@ ctrl Calendar {
 		right = r.right;
 		r.left -= 15 + 40;
 		r.right -= 15 + 40;
-		PaintCenterText(w, (r.left + right) / 2, (r.top + r.bottom) / 2, "2007", f.Bold(), :SWhite);
+		PaintCenterText(w, (r.left + right) / 2, (r.top + r.bottom) / 2, "2022", f.Bold(), :SWhite);
 
 		DrawCtrlFrame(w, ro, .SetFrame);
 	}
