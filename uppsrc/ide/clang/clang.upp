@@ -1,0 +1,21 @@
+description "\377B";
+
+uses
+	ide/Core;
+
+library(WIN32) libclang.lib;
+
+file
+	clang.h,
+	libclang.h,
+	clang.dli,
+	util.cpp,
+	macros.cpp,
+	CxxIcon.cpp,
+	Signature.cpp,
+	libclang.cpp,
+	clang.cpp,
+	Visitor.cpp,
+	CurrentFile.cpp,
+	Indexer.cpp;
+

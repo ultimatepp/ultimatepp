@@ -6,7 +6,6 @@ uses
 	IconDes,
 	CodeEditor,
 	ide/Common,
-	CppBase,
 	ide/Browser;
 
 file

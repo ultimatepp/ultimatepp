@@ -106,7 +106,7 @@ const char *PeFile::FindExportRaw(const char *name, bool case_sensitive) const
 HMODULE CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& plist)
 {
 	HMODULE hmod = LoadLibrary(fn);
-
+	
 	if(!hmod)
 		return 0;
 
@@ -154,18 +154,10 @@ void FreeDll__(HMODULE hmod)
 
 void *CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& plist)
 {
+	Upp::MemoryIgnoreLeaksBlock __;
 	void *hmod = dlopen(fn, RTLD_LAZY | RTLD_GLOBAL);
-	if(!hmod) {
-		RLOG("Error loading library " << fn << ": " << dlerror());
-/*
-		for(int i = 0; i < 100; i++) {
-			hmod = dlopen(fn + ("." + UPP::AsString(i)), RTLD_LAZY | RTLD_GLOBAL);
-			if(hmod)
-				break;
-		}
-		if(!hmod)
-*/			return 0;
-	}
+	if(!hmod)
+		return 0;
 
 	int missing = 0;
 	for(const char *const *p = names; *p; p++) {
@@ -175,15 +167,15 @@ void *CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& 
 		void *proc = dlsym(hmod, exp);
 		if(!proc && !optional) {
 			if(!missing) {
-				RLOG(fn << " missing exports:");
+				LOG(fn << " missing exports:");
 			}
-			RLOG(exp);
+			LOG(exp);
 		}
 		plist.Add(proc);
 	}
 
 	if(missing) {
-		RLOG(missing << " missing symbols total");
+		LOG(missing << " missing symbols total");
 		dlclose(hmod);
 		return 0;
 	}

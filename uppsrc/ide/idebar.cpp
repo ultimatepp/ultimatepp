@@ -626,8 +626,6 @@ void Ide::BuildFileMenu(Bar& menu)
 		menu.Add(b, "Show assembler code for " + GetFileName(editfile), THISBACK1(Preprocess, true))
 			.Key(AK_ASSEMBLERCODE)
 			.Help("Compile the file into assembler code");
-	if(console.verbosebuild)
-		menu.Add(b, "Internal Preprocess " + GetFileName(editfile), IdeImg::HeaderInternal(), THISBACK(PreprocessInternal));
 }
 
 void Ide::BuildPackageMenu(Bar& menu)
@@ -760,13 +758,14 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
 				.Enable(!designer)
 				.Help("Go to given line");
-			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
+//			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-			menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
+			menu.Add(!designer, AK_USAGE, THISBACK(Usage));
+			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
 			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
 			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
+			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
 			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
@@ -783,10 +782,12 @@ void Ide::BrowseMenu(Bar& menu)
 		
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
-			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
-			menu.Add("Rescan all source files", THISBACK(RescanCode));
-			if(!auto_rescan)
-				menu.Add(AK_RESCANCURRENTFILE, THISBACK(EditFileAssistSync));
+			menu.Add("Reindex all source files", [=] {
+				PPInfo::RescanAll();
+				for(FileAnnotation& m : CodeIndex())
+					m.time = Null;
+				TriggerIndexer0();
+			});
 			menu.MenuSeparator();
 		}
 	}
@@ -806,6 +807,15 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));
+	}
+	
+	if(AssistDiagnostics) {
+		menu.Separator();
+		menu.Add("Dump and show current index", [=] {
+			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
+			DumpIndex(path);
+			EditFile(path);
+		});
 	}
 }
 

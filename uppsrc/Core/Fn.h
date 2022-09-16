@@ -6,9 +6,6 @@
 #undef max
 #endif
 
-//$-template <class T> inline constexpr const T& min(const T& a, const T& b, ...);
-//$-template <class T> inline constexpr const T& max(const T& a, const T& b, ...);
-
 template <class T>
 constexpr const T& min(const T& a, const T& b)
 {
@@ -33,15 +30,11 @@ constexpr const T& max(const T& a, const T& b, const Args& ...args)
 	return max(a, max(b, args...));
 }
 
-//$+
-
 template <class T>
 constexpr T clamp(const T& x, const T& min_, const T& max_)
 {
 	return min(max(x, min_), max_);
 }
-
-//$-constexpr int findarg(const T& x, const T1& p0, ...);
 
 template <class T, class K>
 constexpr int findarg(const T& x, const K& k)
@@ -57,8 +50,6 @@ constexpr int findarg(const T& sel, const K& k, const L& ...args)
 	int q = findarg(sel, args...);
 	return q >= 0 ? q + 1 : -1;
 }
-
-//$-constexpr auto decode(const T& x, const T1& p0, const V1& v0, ...);
 
 template <class T>
 constexpr const char *decode_chr_(const T& sel, const char *def)
@@ -90,8 +81,6 @@ constexpr V decode(const T& sel, const K& k, const V& v, const L& ...args)
 	return sel == k ? v : (V)decode(sel, args...);
 }
 
-//$-constexpr T get_i(int i, const T& p0, const T1& p1, ...);
-
 template <typename A, typename... T>
 constexpr A get_i(int i, const A& p0, const T& ...args)
 {
@@ -106,8 +95,6 @@ constexpr const P *get_i(int i, const P* p0, const T& ...args)
 	return list[clamp(i, 0, (int)sizeof...(args))];
 }
 
-//$-void foreach_arg(F fn, const T& p0, const T1& p1, ...);
-
 template <class F, class V>
 void foreach_arg(F fn, V&& v)
 {
@@ -120,8 +107,6 @@ void foreach_arg(F fn, V&& v, Args&& ...args)
 	fn(std::forward<V>(v));
 	foreach_arg(fn, std::forward<Args>(args)...);
 }
-
-//$+
 
 template <class I, typename... Args>
 void iter_set(I t, Args&& ...args)

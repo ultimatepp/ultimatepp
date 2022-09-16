@@ -429,29 +429,6 @@ hash_t memhash(const void *ptr, size_t size);
 template <class T>
 inline hash_t GetHashValue(const T& x)                              { return x.GetHashValue(); }
 
-struct CombineHash {
-	hash_t hash;
-
-	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
-
-public:
-	CombineHash& Put(hash_t h)                                      { hash = HASH_CONST2 * hash + h; return *this; }
-
-	operator hash_t() const                                         { return hash; }
-
-	CombineHash()                                                   { hash = HASH_CONST1; }
-	template <class T>
-	CombineHash(const T& h1)                                        { hash = HASH_CONST1; Do(h1); }
-	template <class T, class U>
-	CombineHash(const T& h1, const U& h2)                           { hash = HASH_CONST1; Do(h1); Do(h2); }
-	template <class T, class U, class V>
-	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); }
-	template <class T, class U, class V, class W>
-	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
-
-	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
-};
-
 template<> inline hash_t GetHashValue(const char& a)           { return (hash_t)a; }
 template<> inline hash_t GetHashValue(const signed char& a)    { return (const hash_t)a; }
 template<> inline hash_t GetHashValue(const unsigned char& a)  { return (const hash_t)a; }
@@ -478,11 +455,34 @@ template<> inline hash_t GetHashValue(const double& a)         { return memhash(
 #ifdef CPU_32
 inline hash_t GetPtrHashValue(const void *a)                   { return (int)a; }
 #else
-inline hash_t GetPtrHashValue(const void *a)                   { return CombineHash((hash_t)(uintptr_t)a); }
+inline hash_t GetPtrHashValue(const void *a)                   { return (hash_t)(uintptr_t)a; }
 #endif
 
 template <class T>
 inline hash_t GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
+
+struct CombineHash {
+	hash_t hash;
+
+	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
+
+public:
+	CombineHash& Put(hash_t h)                                      { hash = HASH_CONST2 * hash + h; return *this; }
+
+	operator hash_t() const                                         { return hash; }
+
+	CombineHash()                                                   { hash = HASH_CONST1; }
+	template <class T>
+	CombineHash(const T& h1)                                        { hash = HASH_CONST1; Do(h1); }
+	template <class T, class U>
+	CombineHash(const T& h1, const U& h2)                           { hash = HASH_CONST1; Do(h1); Do(h2); }
+	template <class T, class U, class V>
+	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); }
+	template <class T, class U, class V, class W>
+	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
+
+	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
+};
 
 template <int size>
 struct Data_S_ : Moveable< Data_S_<size> >

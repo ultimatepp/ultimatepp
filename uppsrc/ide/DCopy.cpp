@@ -10,8 +10,89 @@
 #define LLOG(x)
 #endif
 
-void AssistEditor::DCopy()
+bool AssistEditor::WaitCurrentFile()
 {
+	if(annotating) {
+		if(!IsCurrentFileParsing())
+			SyncCurrentFile();
+		Progress pi("Parsing");
+		while(annotating)
+			if(pi.StepCanceled())
+				return false;
+	}
+	return true;
+}
+
+void AssistEditor::DCopy()
+{ // changes declaration <-> definition
+	String r;
+	int l, h;
+	if(!GetSelection32(l, h))
+		l = h = GetCursor();
+
+	int first_line = GetLine(l);
+	int last_line = GetLine(h);
+	
+	if(last_line - first_line > 10000) {
+		Exclamation("Too many lines.");
+		return;
+	}
+
+	if(!WaitCurrentFile())
+		return;
+
+	String result;
+
+	for(const AnnotationItem& m : annotations) {
+		if(first_line <= m.pos.y && m.pos.y <= last_line) {
+			String cls = GetClass(m);
+			if(IsFunction(m.kind)) {
+				if(m.definition) {
+					if(cls.GetCount())
+						result << '\t';
+					result << m.pretty << ";\n";
+				}
+				else {
+					result << MakeDefinition(m);
+				}
+			}
+			if(m.kind == CXCursor_VarDecl) {
+				if(cls.GetCount()) { // class variable
+					if(m.definition) {
+						int q = FindId(m.pretty, m.name);
+						if(q >= 0) {
+							int w = m.pretty.ReverseFind(' ', q);
+							if(w >= 0)
+								result << "\tstatic " << m.pretty.Mid(0, w + 1) << m.pretty.Mid(q) << ";\n";
+						}
+					}
+					else {
+						String h = m.pretty;
+						h.TrimStart("static ");
+						h = TrimLeft(h);
+						int q = FindId(h, m.name);
+						if(q >= 0)
+							result << h.Mid(0, q) << cls << h.Mid(q) << ";\n";
+					}
+				}
+				else { // just toggle extern
+					String h = m.pretty;
+					if(FindId(GetUtf8Line(m.pos.y), "extern") < 0)
+						h = "extern " + h;
+					result << h << ";\n";
+				}
+			}
+		}
+	}
+
+	if(result.GetCount() == 0) {
+		PromptOK("No relevant declarations found.");
+		return;
+	}
+	
+	WriteClipboardText(result);
+
+#if 0
 	String r;
 	int l, h;
 	bool decla = false;
@@ -42,7 +123,7 @@ void AssistEditor::DCopy()
 	}
 	else
 		decla = true;
-
+	
 	ParserContext ctx;
 	Context(ctx, l);
 	String txt = Get(l, h - l);
@@ -62,88 +143,74 @@ void AssistEditor::DCopy()
 	CppBase cpp;
 	SimpleParse(cpp, txt, cls);
 
-	if(cpp.GetCount() == 0) { // scan for THISBACKs
-		Index<String> id;
-		CParser p(txt);
-		try {
-			while(!p.IsEof()) {
-				if(p.Id("THISBACK") && p.Char('('))
-					id.FindAdd(p.ReadId());
-				p.SkipTerm();
-			}
-		}
-		catch(CParser::Error) {
-		}
-		for(int i = 0; i < id.GetCount(); i++)
-			r << "\tvoid " << id[i] << "();\n";
-	}
-	else
-		for(int i = 0; i < cpp.GetCount(); i++) {
-			const Array<CppItem>& n = cpp[i];
-			bool decl = decla;
-			for(int j = 0; j < n.GetCount(); j++)
-				if(n[j].impl)
-					decl = false;
-			for(int j = 0; j < n.GetCount(); j++) {
-				const CppItem& m = n[j];
-				if(m.IsCode()) {
-					if(decl)
-						r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
-					else {
-						if(cpp.IsType(i))
-						   r << String('\t', Split(cpp.GetKey(i), ':').GetCount());
-						r << m.natural << ";\n";
-					}
+	for(int i = 0; i < cpp.GetCount(); i++) {
+		const Array<CppItem>& n = cpp[i];
+		bool decl = decla;
+		for(int j = 0; j < n.GetCount(); j++)
+			if(n[j].impl)
+				decl = false;
+		for(int j = 0; j < n.GetCount(); j++) {
+			const CppItem& m = n[j];
+			if(m.IsCode()) {
+				if(decl)
+					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
+				else {
+					if(cpp.IsType(i))
+					   r << String('\t', Split(cpp.GetKey(i), ':').GetCount());
+					r << m.natural << ";\n";
 				}
-				if(m.IsData()) {
-					String nat = m.natural;
-					if(cls.GetCount()) {
-						nat.Replace("static", "");
-						nat = TrimLeft(nat);
-						const char *s = nat;
-						while(*s) {
-							if(iscib(*s)) {
-								const char *b = s;
-								while(iscid(*s)) s++;
-								String id(b, s);
-								if(m.name == id) {
-									if(cls.GetCount())
-										r << cls << "::" << m.name << s;
-									else
-										r << m.name << s;
-									break;
-								}
-								r << id;
+			}
+			if(m.IsData()) {
+				String nat = m.natural;
+				if(cls.GetCount()) {
+					nat.Replace("static", "");
+					nat = TrimLeft(nat);
+					const char *s = nat;
+					while(*s) {
+						if(iscib(*s)) {
+							const char *b = s;
+							while(iscid(*s)) s++;
+							String id(b, s);
+							if(m.name == id) {
+								if(cls.GetCount())
+									r << cls << "::" << m.name << s;
+								else
+									r << m.name << s;
+								break;
 							}
-							else
-								r << *s++;
-						}
-					}
-					else {
-						int q = nat.ReverseFind("::");
-						if(q >= 0) { // Foo Class2 :: Class::variable; -> static Foo variable;
-							int e = q + 2;
-							for(;;) {
-								while(q >= 0 && nat[q - 1] == ' ')
-									q--;
-								if(q == 0 || !iscid(nat[q - 1]))
-									break;
-								while(q >= 0 && iscid(nat[q - 1]))
-									q--;
-								int w = nat.ReverseFind("::", q);
-								if(w < 0)
-									break;
-								q = w;
-							}
-							nat.Remove(q, e - q);
-							r << "static " << nat;
+							r << id;
 						}
 						else
-							r << "extern " << nat;
+							r << *s++;
 					}
-					r << ";\n";
 				}
+				else {
+					int q = nat.ReverseFind("::");
+					if(q >= 0) { // Foo Class2 :: Class::variable; -> static Foo variable;
+						int e = q + 2;
+						for(;;) {
+							while(q >= 0 && nat[q - 1] == ' ')
+								q--;
+							if(q == 0 || !iscid(nat[q - 1]))
+								break;
+							while(q >= 0 && iscid(nat[q - 1]))
+								q--;
+							int w = nat.ReverseFind("::", q);
+							if(w < 0)
+								break;
+							q = w;
+						}
+						nat.Remove(q, e - q);
+						r << "static " << nat;
+					}
+					else
+						r << "extern " << nat;
+				}
+				r << ";\n";
 			}
 		}
+	}
+
 	WriteClipboardText(r);
+#endif
 }

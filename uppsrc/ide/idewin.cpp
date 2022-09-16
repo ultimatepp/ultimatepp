@@ -53,6 +53,7 @@ void Ide::PutConsole(const char *s)
 void Ide::PutVerbose(const char *s)
 {
 	LOG("VERBOSE: " << s);
+	GuiLock __;
 	if(console.verbosebuild) {
 		PutConsole(s);
 		console.Sync();
@@ -175,11 +176,6 @@ void Ide::IdePutErrorLine(const String& line)
 		ConsoleRunEnd();
 		ConsoleLine(line, true);
 	}
-}
-
-void Ide::IdeGotoFileAndId(const String& path, const String& id)
-{
-	GotoFileAndId(path, id);
 }
 
 void Ide::IdeEndDebug()
@@ -339,6 +335,20 @@ static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln,
 	es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
 }
 
+void CursorInfoCtrl::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	Size tsz = GetTextSize(text, StdFont());
+	int x = sz.cx - tsz.cx;
+	int y = (sz.cy - tsz.cy) / 2;
+	w.DrawText(x, y, text, StdFont(), SColorText());
+}
+
+CursorInfoCtrl::CursorInfoCtrl()
+{
+	Transparent();
+}
+
 Ide::Ide()
 {
 	DiffDlg::WhenHighlight = callback(sHighlightLine);
@@ -358,8 +368,6 @@ Ide::Ide()
 	chstyle = 0;
 
 	Sizeable().Zoomable();
-
-	display.SetAlign(ALIGN_RIGHT);
 
 	filelist.Columns(2);
 	package.Columns(2);
@@ -577,7 +585,7 @@ Ide::Ide()
 
 	default_charset = CHARSET_UTF8;
 
-	TheIde(this);
+	SetTheIde(this);
 
 	targetmode = 0;
 
@@ -614,19 +622,16 @@ Ide::Ide()
 	error_count = 0;
 	warning_count = 0;
 	
-	editor.WhenUpdate = THISBACK(TriggerAssistSync);
-
 	editfile_isfolder = false;
 	editfile_repo = NOT_REPO_DIR;
 	
-	auto_rescan = auto_check = true;
-	file_scan = 0;
-
 	editfile_line_endings = Null;
 
 	HideBottom();
 	SetupBars();
 	SetBar();
+
+	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
 
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {
@@ -641,7 +646,7 @@ Ide::Ide()
 
 Ide::~Ide()
 {
-	TheIde(NULL);
+	SetTheIde(NULL);
 }
 
 void Ide::Paint(Draw&) {}

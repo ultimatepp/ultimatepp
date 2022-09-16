@@ -1,56 +1,53 @@
 #include "ide.h"
 
-struct AssistItemInfo : CppItem {
+struct VirtualMethod : AnnotationItem {
 	String defined;
-	String overed;
-	String name;
+	String last_override;
 };
 
-void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
-                    Index<String>& done)
+void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls,
+                    Index<String>& visited, bool first)
 {
-	CodeBaseLock __;
-	if(IsNull(scope))
+	if(IsNull(cls) || visited.Find(cls) >= 0)
 		return;
-	if(done.Find(scope) >= 0)
-		return;
-	done.Add(scope);
-	Vector<String> tparam;
-	int q = CodeBase().Find(ParseTemplatedType(scope, tparam));
-	if(q < 0)
-		return;
-	const Array<CppItem>& m = CodeBase()[q];
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsType()) {
-			Vector<String> b = Split(im.qptype, ';');
-			ResolveTParam(b, tparam);
-			for(int i = 0; i < b.GetCount(); i++)
-				GatherVirtuals(item, b[i], done);
-		}
-	}
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsCode()) {
-			String k = im.qitem;
-			if(im.IsCode()) {
-				int q = item.Find(k);
-				if(q >= 0)
-					item[q].overed = scope;
-				else
-				if(im.virt) {
-					AssistItemInfo& f = item.GetAdd(k);
-					f.defined = f.overed = scope;
-					f.name = im.name;
-					(CppItem&)f = im;
+	visited.Add(cls);
+	for(const auto& f : ~CodeIndex()) // do base classes first
+		for(const AnnotationItem& m : f.value.items)
+			if(m.id == cls && IsStruct(m.kind)) {
+				// we cheat with With..<TopWindow> by splitting it to With... and TopWindow
+				for(String s : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
+					GatherVirtuals(virtuals, s, visited, false);
+			}
+
+	if(!first)
+		for(const auto& f : ~CodeIndex()) // now gather virtual methods of this class
+			for(const AnnotationItem& m : f.value.items) {
+				if(m.nest == cls && IsFunction(m.kind)) {
+					String signature = m.id.Mid(m.nest.GetCount());
+					int q = virtuals.Find(signature);
+					if(q >= 0)
+						virtuals[q].last_override = cls;
+					else
+					if(m.isvirtual && !m.definition) {
+						VirtualMethod& vm = virtuals.Add(signature);
+						(AnnotationItem&)vm = m;
+						vm.defined = cls;
+					}
 				}
 			}
-		}
-	}
 }
 
+struct VirtualsDisplay : Display {
+	void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
+		w.DrawRect(r, paper);
+		VirtualMethod m = q.To<VirtualMethod>();
+		bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
+		PaintCpp(w, r, m.kind, m.name, m.pretty, ink, focuscursor, true);
+	}
+};
+
 struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
-	ArrayMap<String, AssistItemInfo> item;
+	ArrayMap<String, VirtualMethod> virtuals;
 
 	virtual bool Key(dword key, int count)
 	{
@@ -62,18 +59,12 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 	}
 
 	void Sync() {
-		String name = ToLower((String)~find);
+		String name = ~find;
 		String k = list.GetKey();
 		list.Clear();
-		for(int i = 0; i < item.GetCount(); i++)
-			if(ToLower(item[i].name).Find(name) >= 0) {
-				CppItemInfo f;
-				(CppItem&)f = item[i];
-				f.virt = false;
-				f.name = item[i].name;
-				list.Add(item.GetKey(i), f.natural, RawToValue(f),
-					item[i].defined, item[i].overed);
-			}
+		for(const auto& m : ~virtuals)
+			if(ToUpper(m.value.name).Find(name) >= 0)
+				list.Add(RawToValue(m.value), m.value.defined, m.value.last_override);
 		if(!list.FindSetCursor(k))
 			list.GoBegin();
 	}
@@ -94,13 +85,11 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	typedef VirtualsDlg CLASSNAME;
 
-	VirtualsDlg(const String& scope) {
+	VirtualsDlg(const String& nest) {
 		Index<String> done;
-		GatherVirtuals(item, scope, done);
+		GatherVirtuals(virtuals, nest, done, true);
 		CtrlLayoutOKCancel(*this, "Virtual methods");
-		list.AddIndex();
-		list.AddIndex();
-		list.AddColumn("Virtual function").SetDisplay(Single<CppItemInfoDisplay>());
+		list.AddColumn("Virtual function").SetDisplay(Single<VirtualsDisplay>());
 		list.AddColumn("Defined in");
 		list.AddColumn("Last override");
 		list.SetLineCy(Arial(Zy(11)).Info().GetHeight() + DPI(3));
@@ -110,7 +99,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.EvenRowColor();
 		Sizeable().Zoomable();
 		find.NullText("Search (Ctrl+K)");
-		find.SetFilter(SearchItemFilter);
+		find.SetFilter([](int c) { return iscid(c) ? ToUpper(c) : 0; });
 		find <<= THISBACK(Sync);
 		add_override <<= true;
 		add_virtual <<= false;
@@ -123,13 +112,23 @@ INITBLOCK
 	RegisterGlobalConfig("VirtualsDlg");
 }
 
+String AssistEditor::FindCurrentNest()
+{
+	if(!WaitCurrentFile())
+		return Null;
+	AnnotationItem cm = FindCurrentAnnotation();
+	if(IsNull(cm.nest))
+		Exclamation("No class can be associated with current position.");
+	return cm.nest;
+}
+
 void AssistEditor::Virtuals()
 {
-	ParserContext ctx;
-	Context(ctx, GetCursor32());
-	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || ctx.IsInBody())
+	SortByKey(CodeIndex());
+	String nest = FindCurrentNest();
+	if(IsNull(nest))
 		return;
-	VirtualsDlg dlg(ctx.current_scope);
+	VirtualsDlg dlg(nest);
 	LoadFromGlobal(dlg, "VirtualsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "VirtualsDlg");
@@ -140,16 +139,17 @@ void AssistEditor::Virtuals()
 	if(!dlg.list.IsSelection() && dlg.list.IsCursor())
 		dlg.list.Select(dlg.list.GetCursor());
 	for(int i = 0; i < dlg.list.GetCount(); i++)
-		if(dlg.list.IsSelected(i)) {
-			String n = (String)dlg.list.Get(i, 1);
+		if(dlg.list.IsSel(i)) {
+			VirtualMethod m = dlg.list.Get(i, 0).To<VirtualMethod>();
+			m.pretty.TrimEnd(" = 0");
 			text << "\t";
 			if(dlg.add_virtual)
 				text << "virtual ";
-			text << RemoveDefPar(n);
+			text << m.pretty;
 			if(dlg.add_override)
 				text << " override";
 			text << ";\r\n";
-			ctext << MakeDefinition(ctx.current_scope, n) << "\n{\n}\n\n";
+			ctext << MakeDefinition(m);
 		}
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);

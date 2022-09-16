@@ -2,6 +2,8 @@
 
 #ifdef GUI_GTK
 
+#include <X11/Xlib.h>
+
 #define CATCH_ERRORS 1
 
 namespace Upp {
@@ -55,6 +57,8 @@ int Ctrl::scale;
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
+	
+	XInitThreads(); // otherwise there are errors despide GuiLock
 
 #if GTK_CHECK_VERSION(3, 10, 0)
 	gdk_set_allowed_backends("x11"); // this fixes wayland issues

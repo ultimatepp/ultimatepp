@@ -126,8 +126,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	FFound().Add(fn, ln, f.message, RawToValue(f));
 }
 
-bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
-                       int& n, RegExp *regexp) {
+bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase, RegExp *regexp) {
 	FileIn in(fn);
 	if(!in) return true;
 	int ln = 1;
@@ -151,7 +150,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 					AddFoundFile(fn, ln, line, int(s - line), count);
 					sync = true;
 					infile++;
-					n++;
 					break;
 				}
 				if(wb) bw = !iscid(*s);
@@ -284,12 +282,11 @@ void Ide::FindInFiles(bool replace) {
 			pi.SetTotal(files.GetCount());
 			FFound().Clear();
 			pi.SetPos(0);
-			int n = 0;
 			for(int i = 0; i < files.GetCount(); i++) {
 				pi.SetText(files[i]);
 				if(pi.StepCanceled()) break;
 				if(!IsNull(pattern)) {
-					if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n, regexp))
+					if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, regexp))
 						break;
 				}
 				else {
@@ -301,18 +298,22 @@ void Ide::FindInFiles(bool replace) {
 					f.message = files[i];
 					FFound().Add(f.file, 1, f.message, RawToValue(f));
 					FFound().Sync();
-					n++;
 				}
 			}
-			FFound().HeaderTab(2).SetText(Format("Source line (%d)", FFound().GetCount()));
-			if(!IsNull(pattern))
-				FFound().Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
-			else
-				FFound().Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
+			FFoundFinish(!IsNull(pattern));
 		}
 	}
 }
 
+void Ide::FFoundFinish(bool files)
+{
+	int n = FFound().GetCount();
+	FFound().HeaderTab(2).SetText(Format("Source line (%d)", n));
+	if(files)
+		FFound().Add(Null, Null, AsString(n) + " matching file(s) have been found.");
+	else
+		FFound().Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
+}
 
 void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 {
@@ -324,8 +325,7 @@ void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 		WString ln = editor.GetWLine(linei);
 		AddFoundFile(editfile, linei + 1, ln.ToString(), Utf8Len(~ln, (int)pos.a), Utf8Len(~ln + pos.a, pos.b));
 	}
-	FFound().HeaderTab(2).SetText(Format("Source line (%d)", FFound().GetCount()));
-	FFound().Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
+	FFoundFinish();
 }
 	
 void Ide::FindString(bool back)

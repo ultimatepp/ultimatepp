@@ -516,7 +516,6 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 	}
 	EndBuilding(ok);
-	ReQualifyCodeBase();
 	SetErrorEditor();
 	return ok;
 }

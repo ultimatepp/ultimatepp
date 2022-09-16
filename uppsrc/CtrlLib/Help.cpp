@@ -29,7 +29,12 @@ bool HelpWindow::GoTo0(const String& link)
 		FinishText(txt);
 		view.Pick(pick(txt), zoom);
 		current_link = link;
-		return view.GotoLabel(label, true);;
+		if(WhenMatchLabel) {
+			WString lw = label.ToWString();
+			return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true);
+		}
+		else
+			return view.GotoLabel(label, true);;
 	}
 	return false;
 }

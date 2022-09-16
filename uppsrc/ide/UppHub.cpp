@@ -1,4 +1,5 @@
 #include "ide.h"
+
 struct UppHubNest : Moveable<UppHubNest> {
 	int              tier = -1;
 	String           name;

@@ -83,6 +83,8 @@ public:
 	static bool IsUpp();
 	static int  GetCount();
 	static void BeginShutdownThreads();
+	static void AtShutdown(void (*shutdownfn)());
+	static void TryShutdownThreads();
 	static void EndShutdownThreads();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();
@@ -415,7 +417,7 @@ typedef StaticMutex StaticCriticalSection;
 #endif
 
 // Auxiliary multithreading - this is not using/cannot use U++ heap, so does not need cleanup.
-// Used to resolve some host platform issues.
+// Used to resolve some host platform issues. Do not use.
 
 #ifdef PLATFORM_WIN32
 #define auxthread_t DWORD

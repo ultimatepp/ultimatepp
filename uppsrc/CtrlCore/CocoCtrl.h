@@ -1,4 +1,3 @@
-//$ class Upp::Ctrl {
 private:
 	friend struct MMCtrl;
 	friend struct MMImp;
@@ -31,4 +30,3 @@ public:
 	void   RegisterCocoaDropFormats();
 
 	static Rect GetScreenArea(Point pt);
-//$ };

@@ -50,7 +50,7 @@ int CommaSpace(int c)
 	return c == ',' ? ' ' : c;
 }
 
-void ReduceCache()
+void ReduceCfgCache()
 {
 	String cfgdir = ConfigFile("cfg");
 	FindFile ff(AppendFileName(cfgdir, "*.*"));
@@ -104,10 +104,6 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 	ide.EditorMode();
 }
 
-// TODO: I do not like that we need to define macro here.
-// I opt for std::function version. We need to fix that API
-// in 2018.2 release. #1901
-
 #undef  GUI_APP_MAIN_HOOK
 #define GUI_APP_MAIN_HOOK \
 { \
@@ -116,12 +112,42 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		return Upp::GetExitCode(); \
 }
 
+#ifdef PLATFORM_POSIX
+void TryLoadLibClang()
+{
+	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	if(LoadLibClang(libdir + "/libclang.so"))
+		return;
+	if(LoadLibClang("/usr/lib/libclang.so"))
+		return;
+	for(int i = 20; i >= 10; i--)
+		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib/libclang.so"))
+			return;
+}
+#endif
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
 void AppMain___()
 #endif
 {
+#ifdef PLATFORM_POSIX
+	TryLoadLibClang();
+#endif
+
+	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
+	if(!RealizeDirectory(preamble_dir)) // temporary (?)
+		Exclamation("Failed to create preamble dir&\1" + preamble_dir
+		            + "\1&\1" + GetLastErrorMessage());
+	
+#ifdef PLATFORM_POSIX
+	setenv("TMPDIR", preamble_dir, 1);
+	setenv("TMP", preamble_dir, 1);
+#else
+	SetEnvironmentVariable("TMPDIR", preamble_dir);
+	SetEnvironmentVariable("TMP", preamble_dir); // Looks like libclang ignores TMPDIR
+#endif
 //	Ctrl::ShowRepaint(50);
 
 #ifdef flagPEAKMEM
@@ -143,6 +169,7 @@ void AppMain___()
 	auto arg = clone(cmd_handler.GetArgs());
 
 	SetVppLogSizeLimit(200000000);
+//	SetVppLogSizeLimit(2000000000); _DBG_
 	
 	if(!CheckLicense())
 		return;
@@ -313,14 +340,6 @@ void AppMain___()
 			Ini::user_log = true;
 		}
 		
-		String ppdefs = ConfigFile("global.defs");
-	#ifndef _DEBUG
-		if(!FileExists(ppdefs))
-	#endif
-			SaveFile(ppdefs, GetStdDefs());
-
-		SetPPDefs(LoadFile(ppdefs));
-		
 		if(!clset)
 			ide.LoadLastMain();
 		do {
@@ -329,8 +348,10 @@ void AppMain___()
 				ide.SaveLastMain();
 				ide.isscanning++;
 				ide.MakeTitle();
-				if(!ide.IsEditorMode())
+				if(!ide.IsEditorMode()) {
 					SyncRefs();
+					ide.TriggerIndexer();
+				}
 				ide.FileSelected();
 				ide.isscanning--;
 				ide.MakeTitle();
@@ -343,10 +364,9 @@ void AppMain___()
 		}
 		while(IdeAgain);
 
-		SaveCodeBase();
 		DelTemps();
 		DeletePCHFiles();
-		ReduceCache();
+		ReduceCfgCache();
 #ifndef _DEBUG
 	}
 	catch(const CParser::Error& e) {
@@ -357,13 +377,19 @@ void AppMain___()
 		ErrorOK("Exception " + e);
 		LOG("!!!!! Exception " << e);
 	}
-#ifdef PLATFORM_POSIX
 	catch(...) {
 		ErrorOK("Unknown exception !");
 		LOG("!!!!! Unknown exception");
 	}
 #endif
-#endif
+	Ctrl::ShutdownThreads();
+
+	DeleteFolderDeep(preamble_dir);
+	
+	// delete crashed preamble dirs older than one day
+	for(FindFile ff(AppendFileName(CacheDir(), "*.*")); ff; ff.Next())
+		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-") && Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
+			DeleteFolderDeep(ff.GetPath()); // if still in use, this fails
 }
 
 #ifdef flagPEAKMEM

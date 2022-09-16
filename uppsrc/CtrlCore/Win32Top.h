@@ -1,4 +1,3 @@
-//$ class Upp::TopWindow {
 public:
 	virtual LRESULT  WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -16,4 +15,3 @@ public:
 	dword      GetStyle() const                       { return style; }
 	TopWindow& ExStyle(dword _exstyle);
 	dword      GetExStyle() const                     { return exstyle; }
-//$ };

@@ -37,6 +37,124 @@ class  Ctrl;
 class  Image;
 }
 
+String CacheDir();
+String CacheFile(const char *name);
+void   ReduceCache();
+void   ReduceCache(int mb_limit);
+void   ReduceCacheFolder(const char *path, int64 max_total);
+
+class Hdepend { // to be replaced by PPInfo
+	struct Info {
+		Time                      time;
+		Vector<int>               depend;
+		Vector<bool>              bydefine;
+		Index<String>             macroinclude; // includes by macro, like #include LAYOUTFILE
+		Vector<String>            define;
+		bool                      flag;
+		bool                      macroflag; // prevent infinite recursion in GetMacroIndex
+		bool                      timedirty;
+		bool                      guarded; // has guards or BLITZ_APPROVED
+		bool                      blitzprohibit; // has BLITZ_PROHIBIT
+
+		bool                      CanBlitz() { return guarded && !blitzprohibit; }
+		
+		void Serialize(Stream& s);
+
+		Info()                   { time = Null; flag = false; timedirty = true; guarded = false; }
+	};
+
+	ArrayMap<String, Info>            map;
+	Vector<String>                    incdir; // include directories
+	VectorMap<String, Index<String> > depends; // externally forced dependecies
+	bool                              console = true;
+
+	void   Include(const char *trm, Info& info, const String& filedir, bool bydefine);
+	void   ScanFile(const String& path, int map_index);
+	int    File(const String& path);
+	Time   FileTime(int i);
+	void   ClearFlag();
+	void   ClearMacroFlag();
+	void   GetMacroIndex(Index<String>& dest, int ix);
+
+public:
+	void  SetDirs(Vector<String>&& id);
+	void  SetDirs(const String& includes);
+	void  TimeDirty();
+
+	void                  ClearDependencies()  { depends.Clear(); }
+	void                  AddDependency(const String& file, const String& depends);
+
+	Time                  FileTime(const String& path);
+	bool                  BlitzApproved(const String& path);
+	
+	static String         FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
+
+	String                FindIncludeFile(const char *s, const String& filedir) { return FindIncludeFile(s, filedir, incdir); }
+	const Vector<String>& GetDefines(const String& path);
+	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
+	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
+	void                  NoConsole()                             { console = false; }
+	
+	void                  Serialize(Stream& s);
+};
+
+class PPInfo {
+	enum { AUTO, APPROVED, PROHIBITED };
+	struct PPFile : Moveable<PPFile> {
+		int                           scan_serial = 0;
+		Vector<Tuple<String, int>>    flags; // "#if... flagXXXX"
+		VectorMap<String, String>     defines; // #define ...
+		Index<String>                 includes[2]; // 1 - speculative includes
+		Index<String>                 define_includes[2]; // #define LAYOUTFILE
+		bool                          guarded; // has include guards
+		int                           blitz; // AUTO, APPROVED, PROHIBITED
+		Time                          time = Null; // file time
+		
+		bool                          dirty = true; // need to be rechecked
+		
+		void Dirty()                          { dirty = true; time = Null; }
+		void Parse(Stream& in);
+		void Serialize(Stream& s);
+	};
+	
+	ArrayMap<String, PPFile>                   files;
+	Vector<String>                             includes; // include dirs
+	VectorMap<String, String>                  inc_cache; // cache for FindIncludeFile
+	VectorMap<String, VectorMap<String, Time>> dir_cache; // cache for GetFileTime, FileExists
+	static std::atomic<int>                    scan_serial;
+	
+
+	PPFile& File(const String& path);
+
+public:
+	static void           RescanAll()                                           { scan_serial++; }
+
+	Event<const String&, const String&> WhenBlitzBlock;
+	Time                  GetFileTime(const String& path);
+	bool                  FileExists(const String& path)                        { return !IsNull(GetFileTime(path)); }
+
+	void                  SetIncludes(const String& includes);
+
+	String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
+	String                FindIncludeFile(const char *s, const String& filedir);
+
+	bool                  BlitzApproved(const String& path);
+
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         Vector<Tuple<String, String, int>>& flags, bool speculative = true);
+	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         bool speculative = true);
+
+	Time                  GetTime(const String& path);
+	
+	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).defines; }
+	const Vector<Tuple<String, int>>& GetFileFlags(const String& path)  { return File(NormalizePath(path)).flags; }
+
+	void                  Dirty();
+};
+
 class IdeContext
 {
 public:
@@ -80,7 +198,6 @@ public:
 	virtual bool      IdeDebugUnLock() = 0;
 	virtual bool      IdeIsDebugLock() const = 0;
 	virtual void      IdeSetBar() = 0;
-	virtual void      IdeGotoCodeRef(String link) = 0;
 	virtual void      IdeOpenTopicFile(const String& file) = 0;
 	virtual void      IdeFlushFile() = 0;
 	virtual String    IdeGetFileName() = 0;
@@ -97,13 +214,12 @@ public:
 	virtual String    IdeGetCurrentBuildMethod() = 0;
 	virtual String    IdeGetCurrentMainPackage() = 0;
 	virtual void      IdePutErrorLine(const String&) = 0;
-	virtual void      IdeGotoFileAndId(const String& path, const String& id) = 0;
 
 	virtual ~IdeContext() {}
 };
 
-IdeContext *TheIde();
-void        TheIde(IdeContext *context);
+IdeContext *TheIdeContext();
+void        SetTheIde(IdeContext *context);
 
 bool      IsVerbose();
 void      PutConsole(const char *s);
@@ -126,7 +242,6 @@ void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 bool             IdeConsoleWait(int slot);
 void             IdeConsoleOnFinish(Event<>  cb);
-void             IdeGotoCodeRef(String s);
 
 String GetSourcePackage(const String& path);
 
@@ -154,13 +269,10 @@ bool      IdeIsDebugLock();
 
 void      IdeSetBar();
 
-void      IdeGotoFileAndId(const String& path, const String& id);
-
 int       IdeGetHydraThreads();
 String    IdeGetCurrentBuildMethod();
 String    IdeGetCurrentMainPackage();
 void      IdePutErrorLine(const String& s);
-void      IdeGotoFileAndId(const String& path, const String& id);
 
 #include "Host.h"
 
@@ -340,7 +452,6 @@ public:
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }
-		rval_default(File);
 	};
 	struct Config {
 		String name;
@@ -385,11 +496,13 @@ public:
 String IdeCharsetName(byte charset);
 
 class Workspace {
-	void     AddUses(Package& p, bool match, const Vector<String>& flag);
-	void     AddLoad(const String& name, bool match, const Vector<String>& flag);
+	void     AddUses(Package& p, const Vector<String> *flag);
+	void     AddLoad(const String& name);
+	void     Scan(const char *prjname, const Vector<String> *flag);
 
 public:
 	ArrayMap<String, Package> package;
+	Vector<int>               use_order;
 
 	void           Clear()                     { package.Clear(); }
 	String         operator[](int i) const     { return package.GetKey(i); }
@@ -397,8 +510,8 @@ public:
 	const Package& GetPackage(int i) const     { return package[i]; }
 	int            GetCount() const            { return package.GetCount(); }
 
-	void           Scan(const char *prjname);
-	void           Scan(const char *prjname, const Vector<String>& flag);
+	void           Scan(const char *prjname)   { Scan(prjname, nullptr); }
+	void           Scan(const char *prjname, const Vector<String>& flag) { Scan(prjname, &flag); }
 
 	Vector<String> GetAllAccepts(int pk) const;
 
@@ -501,15 +614,12 @@ struct Builder {
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());
 
-String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdir);
-
 void                  HdependSetDirs(Vector<String> pick_ id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);
 Time                  HdependFileTime(const String& path);
 Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
-String                FindIncludeFile(const char *s, const String& filedir);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
 const Vector<String>& HdependGetAllFiles();

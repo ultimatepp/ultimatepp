@@ -2,73 +2,130 @@
 
 #define LLOG(x)  // DLOG(x)
 
-void AssistEditor::SwapSContext(ParserContext& p)
-{
-	int i = GetCursor32();
-	if(Ch(i - 1) == ';')
-		i--;
-	else
-		for(;;) {
-			int c = Ch(i);
-			if(c == '{') {
-				i++;
-				break;
-			}
-			if(c == 0 || c == ';' || c == '}')
-				break;
-			i++;
-		}
-	Context(p, i);
-}
-
-bool Ide::SwapSIf(const char *cref)
-{
-	if(designer || !editor.assist_active)
-		return false;
-	ParserContext p;
-	editor.SwapSContext(p);
-	CodeBaseLock __;
-	int q = CodeBase().Find(p.current_scope);
-	LLOG("SwapS scope: " << p.current_scope << ", name " << p.current_name << ", key " << p.current_key);
-	if(q < 0)
-		return false;
-	const Array<CppItem>& nn = CodeBase()[q];
-	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref || IsNull(p.current_name))
-		return false;
-	Vector<const CppItem *> n;
-	bool destructor = p.current_key.Find('~') >= 0;
-	for(int i = 0; i < nn.GetCount(); i++) {
-		const CppItem& m = nn[i];
-		if(m.name == p.current_name && destructor == (m.kind == DESTRUCTOR) && !m.IsType())
-			n.Add(&m);
-	}
-	if(!cref && n.GetCount() < 2)
-		for(int i = 0; i < nn.GetCount(); i++)
-			if(nn[i].IsType()) {
-				UnlockCodeBaseAll();
-				GotoCpp(nn[i]);
-				return false;
-			}
-	if(n.GetCount() == 0 || IsNull(editfile))
-		return false;
-	int file = GetSourceFileIndex(editfile);
-	int line = p.current.line;
-	LLOG("SwapS line: " << line);
-	int i;
-	for(i = 0; i < n.GetCount(); i++) {
-		LLOG("file: " << GetSourceFilePath(n[i]->file) << ", line: " << n[i]->line);
-		if(n[i]->file == file && n[i]->line == line) {
-			i++;
-			break;
-		}
-	}
-	CppItem m = *n[i % n.GetCount()];
-	UnlockCodeBaseAll();
-	GotoCpp(m);
-	return true;
-}
-
 void Ide::SwapS()
 {
-	SwapSIf(NULL);
+	if(designer)
+		return;
+	if(!editor.WaitCurrentFile())
+		return;
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	PutAssist("Swap: " + cm.id);
+	Cycle(cm, cm.pos.y, false);
+}
+
+void Ide::Cycle(const AnnotationItem& cm, int liney, bool navigate)
+{
+	if(IsNull(cm.id))
+		return;
+	
+	struct Sf : Moveable<Sf> {
+		String path;
+		Point  pos;
+		bool   definition;
+	};
+	Vector<Sf> set, list;
+	for(int pass = 0; pass < 4; pass++) {
+		set.Clear();
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& m : f.value.items) {
+				if(findarg(pass, 0, 3) >= 0 ? m.id == cm.id : // 3 in case nothing was found in pass 2
+				   pass == 1 ? m.nest == cm.nest && m.name == cm.name :
+				               m.nest == cm.nest && IsStruct(m.kind) && cm.nest.GetCount()) {
+					Sf& sf = set.Add();
+					sf.path = f.key;
+					sf.pos = m.pos;
+					sf.definition = m.definition;
+				}
+				if(set.GetCount() > 20) // sanity
+					break;
+			}
+		if(set.GetCount() > 1 || set.GetCount() && navigate)
+			break;
+	}
+	
+	if(set.GetCount() == 0)
+		return;
+
+	Sort(set, [](const Sf& a, const Sf& b) {
+		return CombineCompare(a.path, b.path)(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
+	});
+	
+	bool deff = true;
+	
+	for(;;) { // create a list of candidates alternating definition and declaration
+		int q = FindMatch(set, [&](const Sf& a) { return a.definition == deff; });
+		if(q >= 0) {
+			list.Add(set[q]);
+			set.Remove(q);
+		}
+		else
+			break;
+		deff = !deff;
+	}
+	list.Append(set); // add remaining items
+	int q = FindMatch(list, [&](const Sf& a) { return a.path == editfile && a.pos.y == liney; });
+	q = q < 0 ? 0 : (q + 1) % list.GetCount();
+	GotoPos(list[q].path, list[q].pos);
+}
+
+String GetFileLine(const String& path, int linei)
+{
+	static String         lpath;
+	static Vector<String> line;
+	if(path != lpath) {
+		lpath = path;
+		FileIn in(path);
+		line.Clear();
+		if(in.GetSize() < 1000000)
+			while(!in.IsEof())
+				line.Add(in.GetLine());
+	}
+	return linei >= 0 && linei < line.GetCount() ? line[linei] : String();
+}
+
+void Ide::AddReferenceLine(const String& path, Point mpos, const String& name, Index<String>& unique)
+{
+	String ln = GetFileLine(path, mpos.y);
+	int count = 0;
+	int pos = 0;
+	if(name.GetCount()) {
+		pos = FindId(ln.Mid(mpos.x), name);
+		if(pos >= 0) {
+			count = name.GetCount();
+			pos += mpos.x;
+		}
+		else
+			pos = 0;
+	}
+	String h = String() << path << '\t' << mpos.y << '\t' << ln << '\t' << pos << '\t' << count;
+	if(unique.Find(h) < 0) {
+		unique.Add(h);
+		AddFoundFile(path, mpos.y + 1, ln, pos, count);
+	}
+}
+
+void Ide::Usage()
+{
+	if(designer)
+		return;
+	if(!editor.WaitCurrentFile())
+		return;
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	SetFFound(ffoundi_next);
+	FFound().Clear();
+	SortByKey(CodeIndex());
+	Index<String> unique;
+	for(const auto& f : ~CodeIndex()) {
+		auto Add = [&](Point mpos) {
+			AddReferenceLine(f.key, mpos, cm.name, unique);
+		};
+		for(const AnnotationItem& m : f.value.items)
+			if(m.id == cm.id)
+				Add(m.pos);
+		for(const ReferenceItem& m : f.value.refs)
+			if(m.id == cm.id)
+				Add(m.pos);
+	}
+
+	FFoundFinish();
 }

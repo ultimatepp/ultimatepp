@@ -25,10 +25,10 @@ public:
 };
 
 struct TimeStopper {
-	const char *name;
+	String   name;
 	TimeStop tm;
 	
-	TimeStopper(const char *name) : name(name) {}
+	TimeStopper(const String& name) : name(name) {}
 	~TimeStopper() { RLOG(name << " " << tm); }
 };
 
