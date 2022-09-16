@@ -9,8 +9,6 @@ file
 	clang.h,
 	libclang.h,
 	clang.dli,
-	todo.txt,
-	done.txt,
 	util.cpp,
 	macros.cpp,
 	CxxIcon.cpp,
@@ -18,7 +16,6 @@ file
 	libclang.cpp,
 	clang.cpp,
 	Visitor.cpp,
-	CurrentFile.cpp.bak,
 	CurrentFile.cpp,
 	Indexer.cpp;
 
