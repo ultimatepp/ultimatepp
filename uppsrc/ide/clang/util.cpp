@@ -1,6 +1,6 @@
 #include "clang.h"
 
-bool LibClangEnabled;
+bool LibClangEnabled = true;
 bool AssistDiagnostics;
 bool AutoIndexer;
 int  IndexerThreads;
