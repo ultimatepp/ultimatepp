@@ -21,7 +21,8 @@ uses
 	ide/MacroManager,
 	Report,
 	Core/SSL,
-	plugin/md;
+	plugin/md,
+	ide/clang;
 
 file
 	IDE readonly separator,
@@ -45,7 +46,8 @@ file
 	Bottom.cpp,
 	t.cpp,
 	Assist.h,
-	Cpp.cpp,
+	AssistDisplay.cpp,
+	IncludeTrick.cpp,
 	Assist.cpp,
 	DCopy.cpp,
 	ContextGoto.cpp,
@@ -55,7 +57,7 @@ file
 	Navigator.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,
-	Thisbacks.cpp,
+	Events.cpp,
 	Log.cpp,
 	Jump.cpp,
 	MainConfig.cpp,

@@ -112,7 +112,7 @@ Mutex vm; //a common access synchronizer
 #endif
 #endif
 
-//to sMain: an Application can start more than one thread, without having *any* one of them called Run() of any Thread instace
+//to sMain: an Application can start more than one thread, without having *any* one of them called Run() of any Thread instance
 //when Run() is called *anytime*, it means, the term of *MainThread* has to be running anyway,
 //otherwise no child threads could run. they are created by main.
 //now each thread, having any Thread instance can start a first Run()
@@ -243,11 +243,36 @@ void Thread::EndShutdownThreads()
 	sShutdown--;
 }
 
+
+// TODO: Document this
+
+static StaticMutex mtx;
+
+static Vector<void (*)()>& sShutdownFns()
+{
+	static Vector<void (*)()> m;
+	return m;
+}
+
+void Thread::AtShutdown(void (*shutdownfn)())
+{
+	Mutex::Lock __(mtx);
+	sShutdownFns().Add(shutdownfn);
+}
+
+void Thread::TryShutdownThreads()
+{
+	for(auto fn : sShutdownFns())
+		(*fn)();
+}
+
 void Thread::ShutdownThreads()
 {
 	BeginShutdownThreads();
-	while(GetCount())
+	while(GetCount()) {
+		TryShutdownThreads();
 		Sleep(100);
+	}
 	EndShutdownThreads();
 }
 

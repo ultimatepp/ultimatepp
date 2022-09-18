@@ -1,5 +1,3 @@
-//$ namespace Upp {
-//$ class Ctrl {
 	void Create(Ctrl *owner, bool popup);
 
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -101,7 +99,7 @@ _DBG_
 	static Ptr<Ctrl>         activeCtrl;
 	static bool              invalids; // there are active invalid areas
 
-	static int FindId(int id);
+	static int FindGtkId(int id);
 	static int FindCtrl(Ctrl *ctrl);
 	static int FindGtkWindow(GtkWidget *gtk);
 	static int FindGdkWindow(GdkWindow *gdk);
@@ -213,5 +211,3 @@ public:
 	GtkWindow *gtk() const;
 
 	static GdkFilterReturn RootKeyFilter(GdkXEvent *xevent, GdkEvent *event, gpointer data);
-
-//$ }};

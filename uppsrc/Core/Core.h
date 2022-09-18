@@ -419,13 +419,11 @@ NTL_MOVEABLE(RECT)
 
 //Place it to the begining of each file to be the first function called in whole executable...
 //This is now backup to init_priority attribute in heapdbg.cpp
-//$-
 struct MemDiagCls {
 	MemDiagCls();
 	~MemDiagCls();
 };
 static const MemDiagCls sMemDiagHelper__upp__;
-//$+
 
 
 #endif

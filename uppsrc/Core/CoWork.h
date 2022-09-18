@@ -57,11 +57,6 @@ public:
 	
 	Atomic             index;
 
-// experimental pipe support
-	Mutex stepmutex;
-	Array<BiVector<Function<void ()>>> step;
-	Vector<bool> steprunning;
-	
 public:
 	static bool TrySchedule(Function<void ()>&& fn);
 	static bool TrySchedule(const Function<void ()>& fn)      { return TrySchedule(clone(fn)); }
@@ -83,7 +78,6 @@ public:
 	int      Next()                                           { return ++index - 1; }
 
 	int  GetScheduledCount() const                            { return todo; }
-	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 
 	static void FinLock();
 	

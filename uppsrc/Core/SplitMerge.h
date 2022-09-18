@@ -19,27 +19,6 @@ Vector<WString> Split(const wchar *s, const wchar *text, bool ignoreempty = true
 String  Join(const Vector<String>& im, const String& delim, bool ignoreempty = false);
 WString Join(const Vector<WString>& im, const WString& delim, bool ignoreempty = false);
 
-//$ bool   SplitTo(const char *s, int delim, bool ignoreempty, String& p1...);
-//$ bool   SplitTo(const char *s, int delim, String& p1...);
-//$ bool   SplitTo(const char *s, int (*filter)(int), String& p1...);
-//$ bool   SplitTo(const char *s, int (*filter)(int), String& p1...);
-//$ bool   SplitTo(const char *s, const char *delim, bool ignoreempty, String& p1...);
-//$ bool   SplitTo(const char *s, const char *delim, String& p1...);
-
-//$ bool   SplitTo(const wchar *s, int delim, bool ignoreempty, WString& p1...);
-//$ bool   SplitTo(const wchar *s, int delim, WString& p1...);
-//$ bool   SplitTo(const wchar *s, int (*filter)(int), WString& p1...);
-//$ bool   SplitTo(const wchar *s, int (*filter)(int), WString& p1...);
-//$ bool   SplitTo(const wchar *s, const wchar *delim, bool ignoreempty, WString& p1...);
-//$ bool   SplitTo(const wchar *s, const wchar *delim, WString& p1...);
-
-//$ String Merge(const char *delim, String& p1...);
-//$ WString Merge(const wchar *delim, WString& p1...);
-
-//$ void   MergeWith(String& dest, const char *delim, String& p1...);
-//$ void   MergeWith(WString& dest, const wchar *delim, WString& p1...);
-
-//$-
 template <typename... Args>
 bool SplitTo(const char *s, int delim, bool ignoreempty, Args& ...args)
 {
@@ -151,5 +130,3 @@ WString Merge(const wchar *delim, const Args& ...args)
 	MergeWith(r, delim, args...);
 	return r;
 }
-
-//$-

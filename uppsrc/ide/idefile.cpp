@@ -318,12 +318,11 @@ int64 Ide::EditorHash()
 
 void Ide::SaveEditorFile(Stream& out)
 {
-	if(GetFileExt(editfile) == ".t") {
+	if(GetFileExt(editfile) == ".t")
 		for(int i = 0; i < editor.GetLineCount(); i++) {
 			if(i) out.PutCrLf();
 			out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
 		}
-	}
 	else {
 		int le = line_endings;
 		if(le == DETECT_CRLF)
@@ -342,8 +341,7 @@ void Ide::SaveFile0(bool always)
 		designer->Save();
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
-		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
-			CodeBaseScanFile(fn, auto_check);
+		TriggerIndexer();
 		return;
 	}
 
@@ -363,11 +361,16 @@ void Ide::SaveFile0(bool always)
 	TouchFile(editfile);
 	if(!FileExists(editfile))
 		InvalidateIncludes();
+	int auto_retry = 10; // file can be open by indexer
 	for(;;) {
 		FileOut out(editfile);
 		SaveEditorFile(out);
 		if(!out.IsError())
 			break;
+		if(auto_retry-- > 0) { // try for 2 seconds before asking
+			Sleep(300);
+			continue;
+		}
 		int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
 			"Unable to save current file.&"
 			"Retry save, ignore it or save file to another location?",
@@ -387,11 +390,8 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
-	if(editor.IsDirty()) {
-		text_updated.Kill();
-		if(IsCppBaseFile())
-			CodeBaseScanFile(editfile, auto_check);
-	}
+	if(editor.IsDirty())
+		TriggerIndexer();
 
 	editor.ClearDirty();
 
@@ -405,7 +405,6 @@ void Ide::FlushFile() {
 	editor.CloseAssist();
 	SaveFile();
 	CacheViewFile(editor, editfile);
-	editor.assist_active = false;
 	if(designer) {
 		designer->SaveEditPos();
 		designer->DesignerCtrl().SetFrame(NullFrame());
@@ -418,6 +417,8 @@ void Ide::FlushFile() {
 		fd.undodata = editor.PickUndoData();
 		fd.filehash = EditorHash();
 	}
+	CancelCurrentFile();
+	CancelAutoComplete();
 	editfile.Clear();
 	editfile_repo = NOT_REPO_DIR;
 	editfile_isfolder = false;
@@ -464,9 +465,9 @@ bool Ide::FileRemove()
 	return true;
 }
 
-void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername)
+void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername, bool reloading)
 {
-	text_updated.Kill();
+	animate_current_file = animate_current_file_dir = animate_autocomplete = animate_autocomplete_dir = 0;
 
 	AKEditor();
 	editor.CheckEdited(false);
@@ -620,10 +621,9 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	MakeTitle();
 	SetBar();
 	editor.SyncNavigatorShow();
-	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
-	editor.Annotate(editfile);
 	editor.SyncNavigator();
+	editor.NewFile(reloading);
 	editfile_repo = GetRepoKind(editfile);
 	editfile_includes = IncludesMD5();
 }
@@ -642,63 +642,6 @@ String Ide::IncludesMD5()
 		catch(CParser::Error) {}
 	}
 	return md5.FinishString();
-}
-
-void Ide::ScanFile(bool check_includes)
-{
-	if(IsCppBaseFile()) {
-		if(check_includes) {
-			String imd5 = IncludesMD5();
-			if(editfile_includes != imd5) {
-				editfile_includes = imd5;
-				SaveFile(true);
-				return;
-			}
-		}
-		String s = ~editor;
-		StringStream ss(s);
-		CodeBaseScanFile(ss, editfile);
-	}
-}
-
-bool Ide::EditFileAssistSync2()
-{
-	if(TryLockCodeBase()) {
-		editor.Annotate(editfile);
-		editor.SyncNavigator();
-		UnlockCodeBase();
-		return true;
-	}
-	return false;
-}
-
-void Ide::EditFileAssistSync()
-{
-	ScanFile(false);
-	EditFileAssistSync2();
-}
-
-void Ide::TriggerAssistSync()
-{
-	if(auto_rescan && editor.GetLength64() < 500000 && !file_scan) {
-		text_updated.KillSet(1000, [=] {
-			if(!file_scan && IsCppBaseFile()) {
-				String s = ~editor;
-				String fn = editfile;
-				file_scan++;
-				if(Ctrl::GetEventLevel() == 0 && !CoWork::TrySchedule([=] {
-					StringStream ss(s);
-					file_scanned = TryCodeBaseScanFile(ss, editfile);
-					file_scan--;
-					if(!file_scanned)
-						trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
-				})) {
-					file_scan--;
-					trigger_assist.KillSet(100, [=] { TriggerAssistSync(); });
-				}
-			}
-		});
-	}
 }
 
 void Ide::EditAsHex()
@@ -826,12 +769,6 @@ void Ide::EditFile(const String& p)
 	AddEditFile(path);
 }
 
-bool Ide::IsCppBaseFile()
-{
-	return IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile) ||
-	                                   ToUpper(GetFileExt(editfile)) == ".SCH");
-}
-
 void Ide::CheckFileUpdate()
 {
 	if(editfile.IsEmpty() || !IsForeground() || designer) return;
@@ -845,8 +782,6 @@ void Ide::CheckFileUpdate()
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
 
-	if(IsCppBaseFile())
-		CodeBaseScanFile(editfile, auto_check);
 	ReloadFile();
 }
 
@@ -925,7 +860,7 @@ void Ide::ReloadFile()
 	int ln = editor.GetCursorLine();
 	editfile.Clear();
 	int sc = filelist.GetSbPos();
-	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments());
+	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments(), Null, true);
 	filelist.SetSbPos(sc);
 	int l = LocateLine(data, ln, ~editor);
 	editor.SetCursor(editor.GetPos64(l));
@@ -1021,7 +956,6 @@ void Ide::PassEditor()
 	editor2.CheckEdited();
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
-	editor2.Annotate(editfile2);
 	editor2.SpellcheckComments(editor.GetSpellcheckComments());
 }
 

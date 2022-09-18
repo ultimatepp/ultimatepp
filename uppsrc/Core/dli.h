@@ -71,6 +71,7 @@ private:
 // ---------
 
 DLLTYPE& DLIMODULE();
+DLLTYPE& DLIMODULE(const char *path);
 DLLTYPE& COMBINE(DLIMODULE, _)();
 
 #endif
@@ -88,6 +89,13 @@ DLLTYPE& DLIMODULE()
 {
 	DLLTYPE& out = COMBINE(DLIMODULE, _)();
 	out.Load();
+	return out;
+}
+
+DLLTYPE& DLIMODULE(const char *path)
+{
+	DLLTYPE& out = COMBINE(DLIMODULE, _)();
+	out.Load(path);
 	return out;
 }
 

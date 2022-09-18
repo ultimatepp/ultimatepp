@@ -490,10 +490,8 @@ public:
 	void       Add(Vector<Value>&& v)                           { Set(array.GetCount(), pick(v)); }
 	void       Add(const Nuller& null)                          { Add((Value)Null); }
 	void       Add(const VectorMap<String, Value>& m);
-//$-void Add(const Value& [, const Value& ]...);
 	template <typename... Args>
 	void       Add(const Args& ...args)                         { Add(gather<Vector<Value>>(args...)); }
-//$+
 
 	void       SetMap(int i, const ValueMap& m);
 	void       AddMap(const ValueMap& m);

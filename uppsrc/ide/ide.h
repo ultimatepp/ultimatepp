@@ -1,9 +1,11 @@
 #ifndef IDE_H
 #define IDE_H
 
+#include <RichEdit/RichEdit.h>
+
 #include <ide/Common/Common.h>
 
-#include <RichEdit/RichEdit.h>
+#include <ide/clang/clang.h>
 
 #include <Report/Report.h>
 
@@ -68,7 +70,7 @@ protected:
 		String            output;
 		String            key;
 		String            group;
-		Stream            *outfile;
+		Stream           *outfile;
 		bool              quiet;
 		int               exitcode;
 		int               last_msecs;
@@ -342,6 +344,16 @@ struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 	WebSearchTab();
 };
 
+struct CursorInfoCtrl : Ctrl {
+	String text;
+
+	void Paint(Draw& w) override;
+
+	void Set(const String& s) { text = s; Refresh(); }
+	
+	CursorInfoCtrl();
+};
+
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
@@ -409,7 +421,6 @@ public:
 	virtual   bool      IdeIsDebugLock() const;
 
 	virtual   void      IdeSetBar();
-	virtual   void      IdeGotoCodeRef(String coderef);
 	virtual   void      IdeOpenTopicFile(const String& file);
 	virtual   void      IdeFlushFile();
 
@@ -424,7 +435,6 @@ public:
 	virtual   String    IdeGetCurrentBuildMethod();
 	virtual   String    IdeGetCurrentMainPackage();
 	virtual   void      IdePutErrorLine(const String& e);
-	virtual   void      IdeGotoFileAndId(const String& path, const String& id);
 
 	virtual void   ConsoleShow();
 	virtual void   ConsoleSync();
@@ -435,7 +445,6 @@ public:
 	virtual void   EndBuilding(bool ok);
 	virtual void   ClearErrorEditor();
 	virtual void   DoProcessEvents();
-	virtual void   ReQualifyCodeBase();
 	virtual void   SetErrorEditor();
 	virtual String GetMain();
 
@@ -625,8 +634,6 @@ public:
 	Color     bordercolor;
 	bool      persistent_find_replace;
 	bool      find_replace_restore_pos;
-	bool      auto_rescan;
-	bool      auto_check;
 	int       spellcheck_comments;
 	bool      wordwrap_comments = true;
 	bool      wordwrap = false;
@@ -675,8 +682,8 @@ public:
 	bool      bookmark_pos;
 
 	FrameTop<StaticBarArea> bararea;
-	Label                   display;
-
+	CursorInfoCtrl          display;
+	ImageCtrl               indeximage;
 
 	byte      hilite_scope;
 	int       hilite_bracket;
@@ -708,6 +715,11 @@ public:
 	
 	bool          hlstyle_is_default = true; // default style reacts to dark / light theme settings
 	
+	int           animate_current_file = 0, animate_current_file_dir = 0;
+	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
+	int           animate_indexer = 0, animate_indexer_dir = 0;
+	int           animate_phase = 0;
+
 // ------------------------------------
 
 	Time      config_time;
@@ -759,7 +771,7 @@ public:
 	void      ChangeCharset();
 	void      FlushFile();
 	void      EditFile0(const String& path, byte charset, int spellcheck_comments,
-	                    const String& headername = Null);
+	                    const String& headername = Null, bool reloading = false);
 	void      EditFile(const String& path);
 	void      AddEditFile(const String& path);
 	void      ReloadFile();
@@ -769,15 +781,6 @@ public:
 	void      PosSync();
 	String    IncludesMD5();
 
-	bool      EditFileAssistSync2();
-	void      EditFileAssistSync();
-	
-	TimeCallback     text_updated, trigger_assist;
-	std::atomic<int> file_scan;
-	bool             file_scanned = false;
-
-	void      TriggerAssistSync();
-
 	void      AKEditor();
 	
 	void      PackageMenu(Bar& menu);
@@ -786,7 +789,6 @@ public:
 	void      UscProcessDir(const String& dir);
 	void      UscProcessDirDeep(const String& dir);
 	void      SyncUsc();
-	void      CodeBaseSync();
 
 	void      RefreshBrowser();
 
@@ -800,8 +802,9 @@ public:
 	void      SelectMode();
 	void      SerializeOutputMode(Stream& s);
 
+	void      GotoPos(Point pos);
 	void      GotoPos(String path, int line);
-	void      GotoCpp(const CppItem& pos);
+	void      GotoPos(String path, Point pos);
 	
 	void      LoadAbbr();
 	void      SaveAbbr();
@@ -923,7 +926,6 @@ public:
 		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
 		void  CreateHostRunDir(Host& h);
-		void  PreprocessInternal();
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();
@@ -967,20 +969,19 @@ public:
 		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 	
 	void      BrowseMenu(Bar& menu);
-		void  CheckCodeBase();
-		void  RescanCode();
 		void  QueryId();
-		void  OpenTopic(const String& topic, const String& createafter, bool before);
+		void  OpenTopic(const String& topic, const String& create_id, bool before);
 		void  OpenTopic(const String& topic);
 		void  OpenATopic();
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
 		void  NavigatorDlg();
-		void  ScanFile(bool check_includes);
-		bool  SwapSIf(const char *cref);
+		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
-		void  FindId(const String& id);
+		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
+		void  Usage();
+//		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
@@ -995,6 +996,7 @@ public:
 		void  DoPatchDiff();
 		void  AsErrors();
 		void  RemoveDs();
+		void  FindDesignerItemReferences(const String& id, const String& name);
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1039,8 +1041,6 @@ public:
 	
 	String    include_path; // cached value of include path, GetIncludePath
 	
-	virtual void      InvalidateIncludes();
-
 	virtual void      LaunchTerminal(const char *dir);
 	
 //	Console&  GetConsole();
@@ -1077,6 +1077,7 @@ public:
 	void      ShowError();
 	void      SetFFound(int ii);
 	ArrayCtrl& FFound();
+	void      FFoundFinish(bool files = false);
 	void      ShowFound();
 	void      CopyFound(bool all);
 	void      FFoundMenu(Bar& bar);
@@ -1113,7 +1114,7 @@ public:
 	void      InsertWildcard(const char *s);
 	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
-		                   bool wholeword, bool ignorecase, int& n, RegExp *regexp);
+		                   bool wholeword, bool ignorecase, RegExp *regexp);
 	void      SyncFindInFiles();
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
@@ -1125,9 +1126,9 @@ public:
 	void      ManageDisplayVisibility();
 
 	void      SetIcon();
-	bool      IsCppBaseFile();
 	void      CheckFileUpdate();
 	void      Periodic();
+	void      SyncClang();
 
 	void      PassEditor();
 	void      SyncEditorSplit();
@@ -1158,14 +1159,14 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
-	bool      GotoDesignerFile(const String& path, const String& scope, const String& name, int line);
-	void      JumpToDefinition(const Array<CppItem>& n, int q, const String& scope);
-	void      GotoFileAndId(const String& path, const String& id);
+	void      GotoDesignerItem(const String& path, const String& id);
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();
 
 	String    GetIncludePath();
+	String    GetCurrentIncludePath();
+	String    GetCurrentDefines();
 
 	void      TopicBack();
 
@@ -1228,7 +1229,10 @@ public:
 		void  MacroTarget(EscEscape& e);
 	
 	String GetAndroidSdkPath();
-	
+
+	void TriggerIndexer0();
+	void TriggerIndexer();
+
 	typedef   Ide CLASSNAME;
 
 	enum {
@@ -1240,7 +1244,9 @@ public:
 	~Ide();
 };
 
-inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
+inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
+
+inline void ShowConsole() { if(TheIde()) TheIde()->ShowConsole(); }
 
 void InstantSetup();
 

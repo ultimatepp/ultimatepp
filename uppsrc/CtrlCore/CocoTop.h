@@ -1,4 +1,3 @@
-//$ class Upp::TopWindow {
 protected:
 	friend struct MMImp;
 	
@@ -22,4 +21,3 @@ public:
 	Event<Bar&> WhenDockMenu;
 
 	void SetMainMenu(Event<Bar&> menu);
-//$ };

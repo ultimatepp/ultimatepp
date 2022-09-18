@@ -10,9 +10,11 @@ uses
 file
 	Core.h options(BUILDER_OPTION) PCH,
 	Ide.cpp,
+	Cache.cpp,
 	Core.cpp,
 	Builder.cpp,
 	Hdepend.cpp,
+	Hdepend2.cpp,
 	Assembly.cpp,
 	Package.cpp,
 	Workspace.cpp,

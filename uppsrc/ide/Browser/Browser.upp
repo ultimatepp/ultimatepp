@@ -1,7 +1,6 @@
 description "TheIDE - code browser and Topic++\377B";
 
 uses
-	CppBase,
 	PdfDraw,
 	RichEdit,
 	plugin/lz4,
@@ -10,19 +9,10 @@ uses
 file
 	Browser.h options(BUILDER_OPTION) PCH,
 	CodeBase readonly separator,
-	Lay.cpp,
-	Iml.cpp,
-	Sch.cpp,
 	Util.cpp,
-	Base.cpp,
-	Item.cpp,
-	ItemDisplay.cpp,
-	CodeBrowser.cpp,
-	Browser.lay,
 	Browser.iml,
 	Topic readonly separator,
 	TopicBase.cpp,
-	Reference.cpp,
 	File.cpp,
 	Topic.cpp,
 	Template.cpp,

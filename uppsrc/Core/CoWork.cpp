@@ -311,36 +311,6 @@ void CoWork::SetPoolSize(int n)
 	p.InitThreads(n);
 }
 
-void CoWork::Pipe(int stepi, Function<void ()>&& fn)
-{
-	Mutex::Lock __(stepmutex);
-	auto& q = step.At(stepi);
-	LLOG("Step " << stepi << ", count: " << q.GetCount() << ", running: " << steprunning.GetCount());
-	q.AddHead(pick(fn));
-	if(!steprunning.At(stepi, false)) {
-		steprunning.At(stepi) = true;
-		*this & [=]() {
-			LLOG("Starting step " << stepi << " processor");
-			stepmutex.Enter();
-			for(;;) {
-				Function<void ()> f;
-				auto& q = step[stepi];
-				LLOG("StepWork " << stepi << ", todo:" << q.GetCount());
-				if(q.GetCount() == 0)
-					break;
-				f = pick(q.Tail());
-				q.DropTail();
-				stepmutex.Leave();
-				f();
-				stepmutex.Enter();
-			}
-			steprunning.At(stepi) = false;
-			stepmutex.Leave();
-			LLOG("Exiting step " << stepi << " processor");
-		};
-	}
-}
-
 void CoWork::Reset()
 {
 	try {

@@ -1,7 +1,5 @@
 //#BLITZ_APPROVE
 
-//$-
-
 #define IMAGE_META(k, v)
 #define IMAGE_SCAN(s)
 #define IMAGE_PACKED(n, d)

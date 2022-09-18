@@ -443,15 +443,20 @@ void RichEdit::GotoEntry()
 	GotoType(RichText::INDEXENTRIES, indexentry);
 }
 
-bool RichEdit::GotoLabel(const String& lbl)
+bool RichEdit::GotoLabel(Gate<const WString&> match)
 {
 	Vector<RichValPos> f = text.GetValPos(pagesz, RichText::LABELS);
 	for(int i = 0; i < f.GetCount(); i++)
-		if(f[i].data == WString(lbl)) {
+		if(match(f[i].data)) {
 			Move(f[i].pos);
 			return true;
 		}
 	return false;
+}
+
+bool RichEdit::GotoLabel(const String& lbl)
+{
+	return GotoLabel([=](const WString& data) { return data == WString(lbl); });
 }
 
 void RichEdit::BeginPara()

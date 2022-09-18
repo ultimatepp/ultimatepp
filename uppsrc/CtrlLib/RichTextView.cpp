@@ -317,13 +317,12 @@ void  RichTextView::Scroll()
 	scroller.Scroll(*this, Rect(GetSize()).Deflated(margin), sb * GetZoom());
 }
 
-bool RichTextView::GotoLabel(const String& lbl, bool dohighlight)
+bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight)
 {
 	Vector<RichValPos> f = text.GetValPos(GetPage(), RichText::LABELS);
 	highlight = Null;
-	WString lw = lbl.ToWString();
 	for(int i = 0; i < f.GetCount(); i++) {
-		if(f[i].data == lw) {
+		if(match(f[i].data)) {
 			sb = f[i].py.y;
 			if(dohighlight)
 				highlight = f[i].pos;
@@ -332,6 +331,12 @@ bool RichTextView::GotoLabel(const String& lbl, bool dohighlight)
 		}
 	}
 	return false;
+}
+
+bool RichTextView::GotoLabel(const String& lbl, bool dohighlight)
+{
+	WString lw = lbl.ToWString();
+	return GotoLabel([&](const WString& data) { return data == lw; }, dohighlight);
 }
 
 void  RichTextView::Clear()

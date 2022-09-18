@@ -16,7 +16,7 @@ Ptr<Ctrl>         Ctrl::activeCtrl;
 
 bool              Ctrl::invalids;
 
-int Ctrl::FindId(int id)
+int Ctrl::FindGtkId(int id)
 {
 	for(int i = 0; i < wins.GetCount(); i++)
 		if(wins[i].id == id)

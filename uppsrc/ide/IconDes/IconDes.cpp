@@ -3,6 +3,8 @@
 #include <plugin/bmp/bmp.h>
 #include <plugin/png/png.h>
 
+#include <ide/ide.h>
+
 bool IdeIconDes::Load(const char *_filename)
 {
 	Clear();
@@ -66,8 +68,13 @@ void IdeIconDes::Save()
 void IdeIconDes::ToolEx(Bar& bar)
 {
 	bar.Separator();
-	if(!IsSingleMode())
+	if(!IsSingleMode()) {
 		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
+		bar.Add("Find references..", IdeCommonImg::Cpp(), [=] {
+			String name = GetCurrentName();
+			TheIde()->FindDesignerItemReferences(name + "()", name);
+		});
+	}
 }
 
 void IdeIconDes::FileProperties()

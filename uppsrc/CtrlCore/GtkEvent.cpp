@@ -69,7 +69,7 @@ Tuple2<int, const char *> xEvent[] = {
 
 Ctrl *Ctrl::GetTopCtrlFromId(int id)
 {
-	int q = FindId(id);
+	int q = FindGtkId(id);
 	if(q >= 0) {
 		Ctrl *p = wins[q].ctrl;
 		if(p && p->top)

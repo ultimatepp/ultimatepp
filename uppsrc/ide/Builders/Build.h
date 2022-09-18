@@ -38,7 +38,6 @@ public:
 	virtual void EndBuilding(bool ok) = 0;
 	virtual void ClearErrorEditor() = 0;
 	virtual void DoProcessEvents() = 0;
-	virtual void ReQualifyCodeBase() = 0;
 	virtual void SetErrorEditor() = 0;
 	virtual String GetMain() = 0;
 

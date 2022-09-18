@@ -1,6 +1,7 @@
 #include "LayDes.h"
 
 #include <ide/Common/Common.h>
+#include <ide/ide.h>
 
 #define LTIMING(x) //TIMING(x)
 
@@ -165,23 +166,11 @@ void LayDes::GotoUsing()
 {
 	if(IsNull(currentlayout))
 		return;
-	
-	String lid = "With" + CurrentLayout().name;
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) { // find lowest file time
-		const Package& pk = wspc.GetPackage(i);
-		String n = wspc[i];
-		for(int i = 0; i < pk.GetCount(); i++) {
-			String path = SourcePath(n, pk.file[i]);
-			if(IsCPPFile(path) || IsHFile(path)) {
-				if(HasCPPFileKeyword(path, lid)) {
-					IdeGotoFileAndId(path, lid);
-					return;
-				}
-			}
-		}
-	}
-	Exclamation("No code found using this layout.");
+
+	if(item.IsCursor()) // TODO not for label
+		TheIde()->FindDesignerItemReferences("With" + CurrentLayout().name + "::" + ~item.Get(1), ~item.Get(1));
+	else
+		TheIde()->FindDesignerItemReferences(CurrentLayout().name + "__layid", "With" + CurrentLayout().name);
 }
 
 void LayDes::OptionBar(Bar& bar)

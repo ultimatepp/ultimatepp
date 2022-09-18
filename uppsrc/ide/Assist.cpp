@@ -12,41 +12,12 @@
 
 #define LTIMING(x) // DTIMING(x)
 
-class IndexSeparatorFrameCls : public CtrlFrame {
-	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
-	virtual void FramePaint(Draw& w, const Rect& r) {
-		w.DrawRect(r.right - 1, r.top, 1, r.Height(), SColorShadow);
-	}
-	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
-};
-
-Value AssistEditor::AssistItemConvert::Format(const Value& q) const
-{
-	int ii = q;
-	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount()) {
-		ii = editor->assist_item_ndx[ii];
-		if(ii < editor->assist_item.GetCount())
-			return RawToValue(editor->assist_item[ii]);
-	}
-	CppItemInfo empty;
-	return RawToValue(empty);
-}
-
-void AssistEditor::SyncNavigatorPlacement()
-{
-	int sz = navigatorframe.GetSize();
-	if(navigator_right)
-		navigatorframe.Right(navigatorpane, sz);
-	else
-		navigatorframe.Left(navigatorpane, sz);
-}
-
 AssistEditor::AssistEditor()
 {
-	assist_convert.editor = this;
+	assist_display.editor = this;
 	assist.NoHeader();
 	assist.NoGrid();
-	assist.AddRowNumColumn().Margin(0).SetConvert(assist_convert).SetDisplay(Single<CppItemInfoDisplay>());
+	assist.AddRowNumColumn().Margin(0).SetDisplay(assist_display);
 	assist.NoWantFocus();
 	assist.WhenLeftClick = THISBACK(AssistInsert);
 	type.NoHeader();
@@ -56,7 +27,7 @@ AssistEditor::AssistEditor()
 	type.NoWantFocus();
 	popup.Horz(type, assist);
 	popup.SetPos(2000);
-	auto_assist = auto_check = true;
+	auto_assist = true;
 	commentdp = false;
 
 	SyncNavigatorPlacement();
@@ -66,10 +37,7 @@ AssistEditor::AssistEditor()
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
-	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
-	navigator_splitter.Vert() << scope << list << navlines;
-	navigator_splitter.SetPos(1500, 0);
-	navigator_splitter.SetPos(9500, 1);
+	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
 
 	navigator = true;
 
@@ -81,12 +49,10 @@ AssistEditor::AssistEditor()
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
 	annotation_popup.NoSb();
-	
-	thisback = false;
-	
+
 	cachedpos = INT_MAX;
 	cachedln = -1;
-	
+
 	parami = 0;
 
 	param_info.Margins(2);
@@ -94,26 +60,69 @@ AssistEditor::AssistEditor()
 	param_info.SetFrame(BlackFrame());
 	param_info.BackPaint();
 	param_info.NoSb();
-	
+
 	include_assist = false;
-	
+
 	NoFindReplace();
+
+	WhenUpdate << [=] {
+		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+			annotating = true;
+			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
+		}
+	};
 }
 
-int CppItemInfoOrder(const Value& va, const Value& vb) {
-	const CppItemInfo& a = ValueTo<CppItemInfo>(va);
-	const CppItemInfo& b = ValueTo<CppItemInfo>(vb);
-	return CombineCompare(a.name, b.name)(a.natural, b.natural);
+class IndexSeparatorFrameCls : public CtrlFrame {
+	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
+	virtual void FramePaint(Draw& w, const Rect& r) {
+		w.DrawRect(r.right - 1, r.top, 1, r.Height(), SColorShadow);
+	}
+	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
+};
+
+void AssistEditor::SyncNavigatorPlacement()
+{
+	int sz = navigatorframe.GetSize();
+	if(navigator_right)
+		navigatorframe.Right(navigatorpane, sz);
+	else
+		navigatorframe.Left(navigatorpane, sz);
+}
+
+AssistEditor::~AssistEditor()
+{
+	CancelAutoComplete();
+	CancelCurrentFile();
 }
 
 void AssistEditor::CloseAssist()
 {
+	CancelAutoComplete();
 	if(popup.IsOpen())
 		popup.Close();
 	if(annotation_popup.IsOpen())
 		annotation_popup.Close();
 	assist_item.Clear();
 	CloseTip();
+}
+
+void AssistEditor::PostInsert(int pos, const WString& s)
+{
+	if(pos < assist_cursor) {
+		CancelAutoComplete();
+		assist_cursor = -1;
+	}
+	CodeEditor::PostInsert(pos, s);
+}
+
+void AssistEditor::PostRemove(int pos, int size)
+{
+	if(pos < assist_cursor) {
+		CancelAutoComplete();
+		assist_cursor = -1;
+	}
+	CodeEditor::PostRemove(pos, size);
 }
 
 bool isincludefnchar(int c)
@@ -134,18 +143,9 @@ String AssistEditor::ReadIdBackPos(int& pos, bool include)
 	return id;
 }
 
-String AssistEditor::ReadIdBack(int q, bool include, bool *destructor)
+String AssistEditor::ReadIdBack(int q, bool include)
 {
-	String id = ReadIdBackPos(q, include);
-	if(destructor) {
-		int n = 0;
-		while(q > 0 && isspace(GetChar(q - 1)) && n < 100) {
-			q--;
-			n++;
-		}
-		*destructor = q > 0 && GetChar(q - 1) == '~';
-	}
-	return id;
+	return ReadIdBackPos(q, include);
 }
 
 void AssistEditor::DirtyFrom(int line)
@@ -252,105 +252,22 @@ String AssistEditor::CompleteIdBack(int& q, const Index<String>& locals)
 	return id;
 }
 
-Vector<String> AssistEditor::ReadBack(int q, const Index<String>& locals)
-{
-	Vector<String> r;
-	type.Clear();
-	bool wasid = true;
-	for(;;) {
-		if(r.GetCount() > 200) {
-			r.Clear();
-			type.Clear();
-			break;
-		}
-		SkipSpcBack(q);
-		int c = Ch(q - 1);
-		if(c == '>' && !wasid) {
-			q--;
-			r.Add() = CompleteIdBack(q, locals) + ">";
-			wasid = true;
-			continue;
-		}
-		if(iscid(c)) {
-			if(wasid)
-				break;
-			String id;
-			for(;;) {
-				id = IdBack(q) + id;
-				SkipSpcBack(q);
-				if(!(Ch(q - 1) == ':' && Ch(q - 2) == ':'))
-					break;
-				q -= 2;
-				id = "::" + id;
-				SkipSpcBack(q);
-			}
-			r.Add() = id;
-			wasid = true;
-			continue;
-		}
-		else {
-//			if(findarg(c, '(', '[', '{') >= 0)
-//				break;
-			if(c == ']') {
-				if(wasid)
-					break;
-				r.Add("[]");
-				q = ParsBack(q - 1);
-				wasid = false;
-				continue;
-			}
-			else
-			if(c == ')') {
-				if(wasid)
-					break;
-				r.Add("()");
-				q = ParsBack(q - 1);
-				wasid = false;
-				continue;
-			}
-			wasid = false;
-			c = Ch(q - 1);
-			if(c == '>' && Ch(q - 2) == '-') {
-				r.Add("->");
-				q -= 2;
-				continue;
-			}
-			if(c == '.') {
-				r.Add(".");
-				q--;
-				continue;
-			}
-		}
-		break;
-	}
-	Reverse(r);
-	return r;
-}
-
 void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
-	bool destructor;
-	String name = ReadIdBack(GetCursor32(), include_assist, &destructor);
+	String name = ReadIdBack(GetCursor32(), include_assist);
 	String uname = ToUpper(name);
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
 	for(int pass = 0; pass < 2; pass++) {
-		VectorMap<String, int> over;
 		for(int i = 0; i < assist_item.GetCount(); i++) {
-			const CppItemInfo& m = assist_item[i];
+			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
-			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) &&
-			   (!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")) {
-					int q = include_assist ? -1 : over.Find(m.qitem);
-					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
-						found[i] = true;
-						assist_item_ndx.Add(i);
-						if(q < 0)
-							over.Add(m.qitem, m.typei);
-					}
+			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
+				found[i] = true;
+				assist_item_ndx.Add(i);
 			}
 		}
 	}
@@ -426,22 +343,23 @@ bool AssistEditor::IncludeAssist()
 		String fn = folder[i];
 		if(fnset.Find(fn) < 0) {
 			fnset.Add(fn);
-			CppItemInfo& f = assist_item.Add();
-			f.name = f.natural = fn;
-			f.access = 0;
+			AssistItem& f = assist_item.Add();
+			f.name = f.pretty = fn;
+			f.uname = ToUpper(f.name);
 			f.kind = KIND_INCLUDEFOLDER;
 		}
 	}
 	IndexSort(upper_file, file);
 	for(int i = 0; i < file.GetCount(); i++) {
 		String fn = file[i];
-		CppItemInfo& f = assist_item.Add();
-		f.name = f.natural = fn;
-		f.access = 0;
+		AssistItem& f = assist_item.Add();
+		f.name = f.pretty = fn;
+		f.uname = ToUpper(f.name);
 		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
 		String fext = GetFileExt(fn);
 		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 || fext.GetCount() == 0 ? KIND_INCLUDEFILE
 		                                                                        : KIND_INCLUDEFILE_ANY;
+		f.priority = 0;
 	}
 	include_assist = true;
 	if(include_path.GetCount())
@@ -450,81 +368,124 @@ bool AssistEditor::IncludeAssist()
 	return true;
 }
 
-void AssistEditor::Assist()
+CurrentFileContext AssistEditor::CurrentContext(int pos)
+{
+	CurrentFileContext cfx;
+	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
+	cfx.includes = theide->GetCurrentIncludePath();
+	cfx.defines = theide->GetCurrentDefines();
+	if(!IsView() && GetLength() < 4000000) {
+		cfx.content = Get(0, min(GetLength(), pos));
+		if(!IsSourceFile(cfx.filename)) {
+			if(master_source.GetCount()) {
+				MakeIncludeTrick(cfx);
+				cfx.filename = master_source;
+			}
+			else
+			if(!IsHeaderFile(cfx.filename)) {
+				cfx.content.Clear();
+				cfx.is_source_file = false;
+			}
+		}
+	}
+#ifdef _DEBUG
+	if(cfx.content.GetCount())
+		SaveFile(ConfigFile("CurrentContext.cpp"), cfx.content);
+#endif
+	return cfx;
+}
+
+void AssistEditor::SetAnnotations(const CppFileInfo& f)
+{
+	ClearAnnotations();
+	annotations.Clear();
+	references.Clear();
+	for(const AnnotationItem& m : f.items) {
+		annotations.Add(m);
+		SetAnnotation(m.pos.y,
+		              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
+		                                           : IdeImg::tpp_pen(),
+		              m.id);
+	}
+	references = clone(f.refs);
+	locals = clone(f.locals);
+	annotating = false;
+	if(!navigator_global)
+		Search();
+	SyncCursor();
+}
+
+void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
+{
+	if(cfx.content.GetCount())
+		SetCurrentFile(cfx, [=](const CppFileInfo& f) { SetAnnotations(f); });
+}
+
+void AssistEditor::SyncCurrentFile()
+{
+	if(is_source_file) {
+		int line_delta;
+		CurrentFileContext cfx = CurrentContext();
+		SyncCurrentFile(cfx);
+	}
+}
+
+void AssistEditor::NewFile(bool reloading)
+{
+	annotations.Clear();
+	references.Clear();
+	Search();
+	SyncMaster();
+	CurrentFileContext cfx = CurrentContext();
+
+	if(!reloading)
+		is_source_file = cfx.is_source_file;
+
+	if(is_source_file) {
+	//	DLOG("=============");
+	//	DDUMP(cfx.real_filename);
+		annotating = true;
+		int q = CodeIndex().Find(cfx.real_filename);
+	//	DDUMP(q);
+		if(q >= 0) {
+			const FileAnnotation& f = CodeIndex()[q];
+			SetAnnotations(f);
+	//		DDUMP(f.time);
+			if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
+				annotating = false;
+				PutVerbose(cfx.real_filename + " annotations loaded from index");
+			}
+		}
+		SyncCurrentFile(cfx);
+	}
+}
+
+void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
-	if(!assist_active)
-		return;
 	CloseAssist();
 	int q = GetCursor32();
-	assist_cursor = q;
 	assist_type.Clear();
 	assist_item.Clear();
 	include_assist = false;
 	if(IncludeAssist())
 		return;
-	ParserContext parser;
-	Context(parser, GetCursor32());
-	Index<String> in_types;
-	while(iscid(Ch(q - 1)) || Ch(q - 1) == '~')
-		q--;
-	SkipSpcBack(q);
-	thisback = false;
-	current_type.Clear();
-	LTIMING("Assist2");
-	if(Ch(q - 1) == '(') {
-		int qq = q - 1;
-		String id = IdBack(qq);
-		int tn = findarg(id, "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4");
-		if(tn >= 0) {
-			thisback = true;
-			thisbackn = tn > 0;
-			GatherItems(parser.current_scope, false, in_types, false);
-			RemoveDuplicates();
+
+	int pos = GetCursor();
+	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete (?)
+	assist_cursor = pos;
+	CurrentFileContext cfx = CurrentContext(pos);
+	int line = GetLinePos(pos);
+	if(cfx.content.GetCount())
+		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+			for(const AutoCompleteItem& m : items) {
+				AssistItem& f = assist_item.Add();
+				(AutoCompleteItem&)f = m;
+				f.uname = ToUpper(f.name);
+				f.typei = assist_type.FindAdd(f.parent);
+			}
 			PopUpAssist();
-			return;
-		}
-	}
-	if(Ch(q - 1) == ':' && Ch(q - 2) == ':') {
-		q -= 2;
-		Vector<String> tparam;
-		String scope = ParseTemplatedType(Qualify(parser.current_scope,
-		                                          CompleteIdBack(q, parser.local.GetIndex()),
-		                                          parser.context.namespace_using),
-		                                  tparam);
-		GatherItems(scope, false, in_types, true);
-		current_type = scope;
-	}
-	else {
-		String tp;
-		Vector<String> xp = ReadBack(q, parser.local.GetIndex());
-		bool isok = false;
-		if(xp.GetCount() && xp[0].StartsWith("::")) // ::Foo().
-			xp[0] = xp[0].Mid(2);
-		for(int i = 0; i < xp.GetCount(); i++)
-			if(iscib(*xp[i])) {
-				isok = true;
-				break;
-			}
-		if(xp.GetCount()) {
-			if(isok) { // Do nothing on pressing '.' when there is no identifier before
-				Index<String> typeset = EvaluateExpressionType(parser, xp);
-				for(int i = 0; i < typeset.GetCount(); i++)
-					if(typeset[i].GetCount())
-						GatherItems(typeset[i], xp[0] != "this", in_types, false);
-			}
-		}
-		else {
-			GatherItems(parser.current_scope, false, in_types, true);
-			Vector<String> ns = parser.GetNamespaces();
-			for(int i = 0; i < ns.GetCount(); i++)
-				if(parser.current_scope != ns[i]) // Do not scan namespace already scanned
-					GatherItems(ns[i], false, in_types, true);
-		}
-	}
-	LTIMING("Assist3");
-	RemoveDuplicates();
-	PopUpAssist();
+		});
 }
 
 Ptr<Ctrl> AssistEditor::assist_ptr;
@@ -541,8 +502,19 @@ bool AssistEditor::WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelt
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
 	LTIMING("PopUpAssist");
-	if(assist_item.GetCount() == 0)
+	int pos = GetCursor();
+	ReadIdBackPos(pos, false);
+	if(pos != assist_cursor)
 		return;
+		
+	if(assist_item.GetCount() == 0) {
+		AssistItem& m = assist_item.Add();
+		m.kind = KIND_ERROR;
+		m.pretty = "No relevant autocomplete info found";
+	}
+	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
+		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
+	});
 	int lcy = max(16, BrowserFont().Info().GetHeight());
 	type.Clear();
 	type.Add(AttrText("<all>").Ink(SColorHighlight()));
@@ -562,8 +534,6 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		popup.NoZoom();
 	}
 	type.SetCursor(0);
-	if(!assist.GetCount())
-		return;
 	LTIMING("PopUpAssist2");
 	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
@@ -595,6 +565,9 @@ bool sILess(const String& a, const String& b)
 
 void AssistEditor::Complete()
 {
+	if(!is_source_file)
+		return;
+
 	CloseAssist();
 
 	int c = GetCursor32();
@@ -620,7 +593,7 @@ void AssistEditor::Complete()
 			return;
 		}
 	}
-	
+
 	Vector<String> id = ids.PickKeys();
 	Upp::Sort(id, sILess);
 
@@ -645,10 +618,9 @@ void AssistEditor::Complete()
 			Paste(h.Mid(q.GetCount()).ToWString());
 	}
 	for(int i = 0; i < id.GetCount(); i++) {
-		CppItemInfo& f = assist_item.Add();
-		f.name = f.natural = f.qitem = id[i];
-		f.access = 0;
-		f.kind = 100;
+		AssistItem& f = assist_item.Add();
+		f.name = f.pretty = id[i];
+		f.kind = KIND_COMPLETE;
 	}
 	assist_type.Clear();
 	PopUpAssist(true);
@@ -706,7 +678,7 @@ void AssistEditor::AssistInsert()
 			IgnoreMouseUp();
 			return;
 		}
-		const CppItemInfo& f = assist_item[ii];
+		const AssistItem& f = assist_item[ii];
 		if(include_assist) {
 			int ln = GetLine(GetCursor32());
 			int pos = GetPos32(ln);
@@ -722,7 +694,7 @@ void AssistEditor::AssistInsert()
 			                << (f.kind == KIND_INCLUDEFOLDER ? "/" : include_local ? "\"" : ">")
 			                , CHARSET_WIN1250));
 			if(f.kind == KIND_INCLUDEFOLDER) {
-				Assist();
+				Assist(false);
 				IgnoreMouseUp();
 				return;
 			}
@@ -741,10 +713,12 @@ void AssistEditor::AssistInsert()
 		}
 		else {
 			String txt = f.name;
-			int l = txt.GetCount();
-			int pl = txt.GetCount();
-			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
+			int param_count;
+			ParsePretty(f.name, f.pretty, &param_count);
+			if(param_count >= 0)
 				txt << "()";
+			if(f.pretty.EndsWith("::"))
+				txt << "::";
 			int cl = GetCursor32();
 			int ch = cl;
 			while(iscid(Ch(cl - 1)))
@@ -753,40 +727,11 @@ void AssistEditor::AssistInsert()
 				ch++;
 			Remove(cl, ch - cl);
 			SetCursor(cl);
-			if(thisback)
-				for(;;) {
-					int c = Ch(cl++);
-					if(!c || Ch(cl) == ',' || Ch(cl) == ')')
-						break;
-					if(c != ' ') {
-						if(thisbackn)
-							txt << ", ";
-						txt << ')';
-						break;
-					}
-				}
-			if(findarg(f.kind, CONSTRUCTOR, DESTRUCTOR) >= 0)
-				txt << "()";
 			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
-			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
+			if(param_count > 0) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
-				if(f.natural.EndsWith("()"))
-					SetCursor(GetCursor32() + 1);
 			}
-			else
-			if(thisback) {
-				if(thisbackn)
-					SetCursor(GetCursor32() - 1);
-			}
-			else
-			if(!inbody)
-				SetCursor(cl + n - thisbackn);
-			else
-			if(pl > l)
-				SetSelection(cl + l, cl + pl);
-			else
-				SetCursor(cl + l);
 		}
 	}
 	CloseAssist();
@@ -855,7 +800,7 @@ bool AssistEditor::Key(dword key, int count)
 			if(b) {
 				CloseAssist();
 				if(include_assist ? (key == '/' || key == '\\') : key == '.')
-					Assist();
+					Assist(false);
 			}
 		}
 		else
@@ -866,17 +811,10 @@ bool AssistEditor::Key(dword key, int count)
 		if(InCode()) {
 			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
 			   key == ':' && Ch(GetCursor32() - 2) == ':')
-				Assist();
-			else
-			if(key == '(') {
-				int q = GetCursor32() - 1;
-				String id = IdBack(q);
-				if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
-					Assist();
-			}
+				Assist(false);
 		}
 		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
-			Assist();
+			Assist(false);
 	}
 	return b;
 }
@@ -903,115 +841,6 @@ void AssistEditor::LostFocus()
 	CloseAssist();
 }
 
-String AssistEditor::RemoveDefPar(const char *s)
-{
-	String r;
-	int lvl = 0;
-	bool dp = true;
-	while(*s) {
-		byte c = *s++;
-		if(c == '(')
-			lvl++;
-		if(lvl == 0) {
-			if(c == '=') {
-				dp = false;
-				if(commentdp)
-					r.Cat("/* ");
-				else
-					while(r.GetCount() && *r.Last() == ' ')
-						r.Trim(r.GetCount() - 1);
-			}
-			if(c == ')') {
-				if(!dp && commentdp)
-					r.Cat("*/");
-				r.Cat(')');
-				try {
-					if(CParser(s).Char('='))
-						break;
-				}
-				catch(CParser::Error) {}
-				r.Cat(s);
-				break;
-			}
-			if(c == ',') {
-				if(!dp && commentdp)
-					r.Cat("*/");
-				dp = true;
-			}
-		}
-		else
-		if(c == ')')
-			lvl--;
-		if(dp || commentdp)
-			r.Cat(c);
-	}
-	return r;
-}
-
-String AssistEditor::MakeDefinition(const String& cls, const String& _n)
-{
-	String n = TrimLeft(_n);
-	auto RemoveId = [&](const char *s) {
-		int len = strlen(s);
-		int q = n.Find(s);
-		if(q >= 0 && (q == 0 || !iscid(n[q - 1])) && (q + len >= n.GetCount() || !iscid(n[q + len])))
-			n.Remove(q, len);
-	};
-	RemoveId("override");
-	RemoveId("final");
-	CParser p(n);
-	try {
-		bool dest = false;
-		const char *beg = n;
-		while(!p.IsEof()) {
-			const char *b = p.GetPtr();
-			if(p.Id("operator"))
-				return cls.GetCount() ? NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b)
-				                      : NormalizeSpaces(String(beg, b) + ' ' + b);
-			if(p.Char('~')) {
-				beg = p.GetPtr();
-				dest = true;
-			}
-			else
-			if(p.IsId()) {
-				String id = p.ReadId();
-				if(p.Char('(')) {
-					String rp = RemoveDefPar(p.GetPtr());
-					auto merge = [](String a, String b) {
-						return IsAlNum(*a.Last()) && IsAlNum(*b) ? a + ' ' + b : a + b;
-					};
-					if(cls.GetCount() == 0)
-						return NormalizeSpaces(merge(String(beg, b), id) + '(' + rp);
-					if(dest)
-						return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
-					else
-						return NormalizeSpaces(merge(String(beg, b), cls) + "::" + id + '(' + rp);
-				}
-			}
-			else
-				p.SkipTerm();
-		}
-	}
-	catch(CParser::Error) {}
-	return n;
-}
-
-void Ide::IdeGotoCodeRef(String coderef)
-{
-	LLOG("IdeGotoLink " << coderef);
-	CodeBaseLock __;
-	if(IsNull(coderef)) return;
-	String scope, item;
-	SplitCodeRef(coderef, scope, item);
-	int q = CodeBase().Find(scope);
-	if(q < 0)
-		return;
-	const Array<CppItem>& n = CodeBase()[q];
-	q = FindItem(n, item);
-	if(q >= 0)
-		JumpToDefinition(n, q, scope);
-}
-
 bool AssistEditor::Esc()
 {
 	bool r = false;
@@ -1019,9 +848,9 @@ bool AssistEditor::Esc()
 		CloseAssist();
 		r = true;
 	}
+	for(int i = 0; i < PARAMN; i++)
+		param[i].line = -1;
 	if(param_info.IsOpen()) {
-		for(int i = 0; i < PARAMN; i++)
-			param[i].line = -1;
 		param_info.Close();
 		r = true;
 	}
@@ -1064,7 +893,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 5;
+	int version = 6;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1072,12 +901,14 @@ void AssistEditor::SerializeNavigator(Stream& s)
 		Splitter dummy;
 		s % dummy;
 	}
-	if(version >= 4)
-		s % navigator_splitter;
+	if(version >= 4 && version < 6) {
+		Splitter dummy;
+		s % dummy;
+	}
 	if(version >= 5)
 		s % navigator_right;
 	Navigator(navigator);
-	
+
 	if(s.IsLoading())
 		SyncNavigatorPlacement();
 }

@@ -43,8 +43,18 @@ VectorMap<String, TopicInfo>& topic_info()
 	return x;
 }
 
-void AddLinkRef(const String& link, const String& ref)
+String CleanupTppId(const String& ref_)
 {
+	String ref = ref_;
+	ref.TrimEnd("::struct"); // fix legacy format
+	ref.TrimEnd("::class");
+	ref.TrimEnd("::union");
+	return CleanupId(ref);
+}
+
+void AddLinkRef(const String& link, const String& ref_)
+{
+	String ref = CleanupTppId(ref_);
 	int q = ref_link().Put(link);
 	if(q < ref_ref().GetCount())
 		ref_ref().Set(q, ref);
@@ -98,9 +108,7 @@ int NoSlashDot(int c)
 
 String TopicCacheName(const char *path)
 {
-	String cfg = ConfigFile("cfg");
-	RealizeDirectory(cfg);
-	return AppendFileName(cfg, ForceExt(Filter(path, NoSlashDot), ".tdx"));
+	return CacheFile(ForceExt(Filter(path, NoSlashDot), ".tdx"));
 }
 
 const char *tdx_version = "tdx version 2.0";
@@ -229,6 +237,7 @@ void SyncRefs()
 		SyncRefsShowProgress = true;
 		return;
 	}
+	TIMESTOP("SyncRefs");
 	Progress pi;
 	pi.AlignText(ALIGN_LEFT);
 	Vector<String> upp = GetUppDirs();
@@ -237,35 +246,50 @@ void SyncRefs()
 	SyncRefsFinished = true;
 }
 
-bool LegacyRef(String& ref)
-{
-	if(ref.StartsWith("Upp::")) { // Fix links with legacy docs
-		ref = ref.Mid(5);
-		ref.Replace(" Upp::", " ");
-		ref.Replace("(Upp::", "(");
-		ref.Replace(",Upp::", ",");
-		ref.Replace("<Upp::", "<");
-		ref.Replace("const Upp::", "const ");
-		return true;
-	}
-	return false;
+String LegacyRef(String ref)
+{ // Fix links with legacy docs
+	ref.TrimStart("Upp::");
+	ref.Replace(" Upp::", " ");
+	ref.Replace("(Upp::", "(");
+	ref.Replace(",Upp::", ",");
+	ref.Replace("<Upp::", "<");
+	ref.Replace("const Upp::", "const ");
+	return ref;
 }
 
-Vector<String> GetRefLinks(const String& ref_)
+Vector<String> AnnotationCandidates(const String& ref)
+{ // Make older refs compatible
+	Index<String> l;
+	l.FindAdd(ref);
+	String lr = LegacyRef(ref);
+	l.FindAdd(lr);
+	int lvl = 0;
+	StringBuffer h;
+	for(const char *s = lr; *s; s++) { // remove template arguments - Vector<T> -> Vector
+		if(*s == '<')
+			lvl++;
+		else
+		if(*s == '>')
+			lvl--;
+		else
+		if(lvl == 0)
+			h.Cat(*s);
+	}
+	l.FindAdd(h);
+	return l.PickKeys();
+}
+
+Vector<String> GetRefLinks(const String& ref)
 {
-	String ref = ref_;
-	Vector<String> l;
-	for(int pass = 0; pass < 2; pass++) {
-		int q = ref_ref().Find(ref);
+	Index<String> l;
+	for(String cr : AnnotationCandidates(ref)) {
+		int q = ref_ref().Find(cr);
 		while(q >= 0) {
-			l.Add(ref_link()[q]);
+			l.FindAdd(ref_link()[q]);
 			q = ref_ref().FindNext(q);
 		}
-		
-		if(pass == 0 && !LegacyRef(ref))
-			break;
-	}
-	return l;
+	};
+	return l.PickKeys();
 }
 
 String GetTopicTitle(const String& link)

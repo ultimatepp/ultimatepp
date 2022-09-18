@@ -307,11 +307,8 @@ void Host::Launch(const char *_cmdline, bool console)
 #endif
 }
 
-void Host::AddFlags(Index<String>& cfg)
+void AddHostFlags(Index<String>& cfg)
 {
-	if(HasPlatformFlag(cfg))
-		return;
-	
 #if   defined(PLATFORM_WIN32)
 	cfg.Add("WIN32");
 #endif
@@ -359,6 +356,13 @@ void Host::AddFlags(Index<String>& cfg)
 #ifdef PLATFORM_OSX11
 	cfg.Add("OSX11");
 #endif
+}
+
+void Host::AddFlags(Index<String>& cfg)
+{
+	if(HasPlatformFlag(cfg))
+		return;
+	AddHostFlags(cfg);
 }
 
 const Vector<String>& Host::GetExecutablesDirs() const

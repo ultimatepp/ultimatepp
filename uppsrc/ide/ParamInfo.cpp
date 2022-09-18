@@ -23,7 +23,7 @@ void AssistEditor::SyncParamInfo()
 						int ch = Ch(i++);
 						if(i > c) {
 							if(par < mpar) {
-								qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
+								qtf = "[A1  " + SignatureQtf(m.item.name, m.item.pretty, pari);
 								mpar = par;
 								pos = m.pos;
 							}
@@ -75,7 +75,7 @@ void AssistEditor::SyncParamInfo()
 	}
 }
 
-void AssistEditor::StartParamInfo(const CppItem& m, int pos)
+void AssistEditor::StartParamInfo(const AssistItem& m, int pos)
 {
 	int x = GetCursor32();
 	ParamInfo& f = param[parami];
@@ -93,6 +93,15 @@ void AssistEditor::State(int reason)
 	if(reason == FOCUS)
 		SyncParamInfo();
 	CodeEditor::State(reason);
+}
+
+Point AssistEditor::GetCurrentPos() const
+{
+	int64 pos = GetCursor64();
+	Point p;
+	p.y = GetLinePos64(pos);
+	p.x = (int)pos;
+	return p;
 }
 
 int AssistEditor::GetCurrentLine()

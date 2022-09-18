@@ -777,9 +777,10 @@ void Ide::SetupBuildMethods()
 		}
 	}
 	InvalidateIncludes();
-	CodeBaseSync();
 	SyncBuildMode();
 	SetBar();
+	TriggerIndexer();
+	editor.SyncCurrentFile();
 }
 
 void ExtractIncludes(Index<String>& r, String h)
@@ -796,7 +797,7 @@ void ExtractIncludes(Index<String>& r, String h)
 }
 
 String Ide::GetIncludePath()
-{
+{ // TODO: remove
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
@@ -853,6 +854,7 @@ String Ide::GetIncludePath()
 		}
 	}
 
+// TODO: replicate with clang
 	const Workspace& wspc = GetIdeWorkspace();
 	Host dummy_host;
 	One<Builder> b = CreateBuilder(&dummy_host);
@@ -875,13 +877,54 @@ String Ide::GetIncludePath()
 	return include_path;
 }
 
+String Ide::GetCurrentIncludePath()
+{
+	String include_path;
+	VectorMap<String, String> bm = GetMethodVars(method);
+	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+
+	const Workspace& wspc = GetIdeWorkspace();
+	
+	Host host;
+	CreateHost(host, false, false);
+	One<Builder> b = CreateBuilder(&host);
+	Index<String> cfg = PackageConfig(wspc, max(GetPackageIndex(), 0), GetMethodVars(method), mainconfigparam, host, *b);
+	Index<String> pkg_config;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
+		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
+			pkg_config.FindAdd(h);
+	}
+	
+	static VectorMap<String, String> cflags;
+	for(String s : pkg_config) {
+		int q = cflags.Find(s);
+		if(q < 0) {
+			q = cflags.GetCount();
+			cflags.Add(s, Sys("pkg-config --cflags " + s));
+		}
+		for(String p : Split(cflags[q], ' '))
+			if(p.TrimStart("-I"))
+				MergeWith(include_path, ";", p);
+	}
+
+	return include_path;
+}
+
+String Ide::GetCurrentDefines()
+{
+	Index<String> flags;
+	flags = SplitFlags(mainconfigparam, false); // TODO: MAIN
+	AddHostFlags(flags);
+	String r;
+	for(String s : flags)
+		MergeWith(r, ";", "flag" + s);
+	return r;
+}
+
 String Ide::IdeGetIncludePath()
 {
 	return GetIncludePath();
-}
-
-void Ide::InvalidateIncludes()
-{
-	InvalidatePPCache();
-	include_path.Clear();
 }

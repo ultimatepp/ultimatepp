@@ -1,4 +1,3 @@
-//$ class Upp::TopWindow {
 protected:
 	virtual void    EventProc(XWindow& w, XEvent *event);
 private:
@@ -20,4 +19,4 @@ private:
 	WString                title2;
 
 	static  Rect           windowFrameMargin;
-//$ };
+

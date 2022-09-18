@@ -2,8 +2,8 @@
 
 static IdeContext *the_ide;
 
-IdeContext *TheIde() { return the_ide; }
-void        TheIde(IdeContext *context) { the_ide = context; }
+IdeContext *TheIdeContext()                    { return the_ide; }
+void        SetTheIde(IdeContext *context)     { the_ide = context; }
 
 bool IsVerbose()               { return the_ide ? the_ide->IsVerbose() : false; }
 void PutConsole(const char *s) { if(the_ide) the_ide->PutConsole(s); }
@@ -140,11 +140,6 @@ void IdeConsoleOnFinish(Event<>  cb)
 	if(the_ide) the_ide->IdeConsoleOnFinish(cb);
 }
 
-void IdeGotoCodeRef(String s)
-{
-	if(the_ide) the_ide->IdeGotoCodeRef(s);
-}
-
 void IdeSetBottom(Ctrl& ctrl)
 {
 	if(the_ide) the_ide->IdeSetBottom(ctrl);
@@ -242,10 +237,3 @@ void IdePutErrorLine(const String& s)
 	if(the_ide)
 		the_ide->IdePutErrorLine(s);
 }
-
-void IdeGotoFileAndId(const String& path, const String& id)
-{
-	if(the_ide)
-		the_ide->IdeGotoFileAndId(path, id);
-}
-

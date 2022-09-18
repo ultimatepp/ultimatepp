@@ -2742,7 +2742,8 @@ should terminate.&]
 s]()&]
 [s2; Similiar to Thread`::ShutdownThreads, but as part of waiting 
 for threads to finish calls ProcessEvents so that any Call methods 
-can finish.&]
+can finish and also periodically unlocks GuiLock so that threads 
+waiting on it can finish.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetEventId`(`):%- [@(0.0.255) static] [_^int64^ int64]_[* GetEventId]()&]

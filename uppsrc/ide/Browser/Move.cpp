@@ -1,4 +1,4 @@
-#include "Browser.h"
+#include <ide/ide.h>
 
 struct MoveTopicDlg : public WithMoveTopicLayout<TopWindow> {
 	typedef MoveTopicDlg CLASSNAME;

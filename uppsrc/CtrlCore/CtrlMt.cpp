@@ -110,8 +110,10 @@ void Ctrl::ShutdownThreads()
 {
 	Thread::BeginShutdownThreads();
 	while(Thread::GetCount()) {
+		Thread::TryShutdownThreads();
 		ProcessEvents();
-		Sleep(0);
+		GuiUnlock __;
+		Sleep(100);
 	}
 	Thread::EndShutdownThreads();
 }

@@ -2165,7 +2165,6 @@ void ArrayCtrl::AddHeading(const Value& v)
 	DisableLine(ii);
 }
 
-//$-
 #define E__Addv(I)    Set0(q, I - 1, p##I)
 #define E__AddF(I) \
 void ArrayCtrl::Add(__List##I(E__Value)) { \
@@ -2174,7 +2173,6 @@ void ArrayCtrl::Add(__List##I(E__Value)) { \
 	AfterSet(q); \
 }
 __Expand(E__AddF)
-//$+
 
 void  ArrayCtrl::Insert(int i, int count) {
 	if(i < array.GetCount()) {

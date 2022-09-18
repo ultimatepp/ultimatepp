@@ -1,5 +1,4 @@
 topic "EditField";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "EditField";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@(229)4 EditField]]}}&]
 [s3; &]
@@ -278,6 +278,11 @@ ont]_[*@3 `_font])&]
 olor]_[*@3 c])&]
 [s2;%% [%- Sets the color] of displayed text. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:EditField`:`:SetBackground`(Upp`:`:Color`): EditField[@(0.0.255) `&] 
+[* SetBackground](Color [*@3 c])&]
+[s2;%% Sets the background color. Returns `*this.&]
+[s3; &]
 [s4; &]
 [s5;:EditField`:`:ClickSelect`(bool`): [_^EditField^ EditField][@(0.0.255) `&]_[* ClickSele
 ct]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]

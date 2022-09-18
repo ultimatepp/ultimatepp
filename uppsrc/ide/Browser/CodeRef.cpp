@@ -17,12 +17,14 @@ static const char styles[] =
 
 void TopicEditor::JumpToDefinition()
 {
-	PostCallback(callback1(IdeGotoCodeRef, editor.GetFormatInfo().label));
+	//TODO
+//	PostCallback(callback1(IdeGotoCodeRef, editor.GetFormatInfo().label));
 }
 
 void TopicEditor::Label(String& label)
 {
 	Save();
+/* TODO ReferenceDlg
 	if(ref.item.IsMultiSelect())
 		ref.item.ClearSelection();
 	ref.item.MultiSelect(false);
@@ -32,6 +34,7 @@ void TopicEditor::Label(String& label)
 	if(ref.Execute() != IDOK)
 		return;
 	label = ref.Get();
+*/
 }
 
 Uuid CodeItemUuid()
@@ -72,10 +75,19 @@ void TopicEditor::FindBrokenRef()
 					RichPara para = txt.Get(i);
 					if(para.format.label == "noref")
 						continue;
-					if(!IsNull(para.format.label) && GetCodeRefItem(para.format.label))
-						continue;
-					editor.Move(txt.GetPartPos(i));
-					return;
+					bool found = false;
+					String lbl_id = CleanupTppId(para.format.label);
+					if(!IsNull(para.format.label))
+						for(const auto& f : ~CodeIndex())
+							for(const AnnotationItem& m : f.value.items)
+								if(FindIndex(AnnotationCandidates(m.id), lbl_id) >= 0) {
+									found = true;
+									break;
+								}
+					if(!found) {
+						editor.Move(txt.GetPartPos(i));
+						return;
+					}
 				}
 			}
 		}
@@ -94,12 +106,10 @@ void TopicEditor::FindBrokenRef()
 
 void TopicEditor::Tools(Bar& bar)
 {
-	bar.Add("Insert code item..", IdeCommonImg::InsertItem(), THISBACK(InsertItem))
-	   .Key(K_CTRL_INSERT);
 	String l = editor.GetFormatInfo().label;
 	bool b = l.GetCount() > 2 && l != "noref";
-	bar.Add(b, "See referenced code", IdeCommonImg::Source(), THISBACK(JumpToDefinition))
-	   .Key(K_ALT_J).Key(K_ALT_I);
+	bar.Add(b, "See referenced code", IdeCommonImg::Cpp(), THISBACK(JumpToDefinition))
+	   .Key(K_ALT_U).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
 #ifdef REPAIR
@@ -165,31 +175,34 @@ static int sSplitT(int c) {
 	return c == ';' || c == '<' || c == '>' || c == ',';
 }
 
-bool IsCodeRefType(const String& type)
+String TopicEditor::GetLang() const
 {
-	if(type.GetCount() == 0)
-		return false;
-	CodeBaseLock __;
-	return CodeBase().Find(type) >= 0;
+	int q = topicpath.ReverseFind('@');
+	if(q >= 0) {
+		int lang = LNGFromText(~topicpath + q + 1);
+		if(lang)
+			return LNGAsText(lang);
+	}
+	return "%";
 }
 
-String DecoratedItem(const String& name, const CppItem& m, const char *natural, int pari)
+String DecoratedItem(const String& name, const String& pretty)
 {
 	String qtf = "[%00-00K ";
-	Vector<ItemTextPart> n = ParseItemNatural(name, m, natural);
+	Vector<ItemTextPart> n = ParsePretty(name, pretty);
+/* TODO
 	if(pari < 0) {
 		if(m.virt)
 			qtf << "[@B virtual] ";
 		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
 			qtf << "[@B static] ";
 	}
-	Vector<String> qt = Split(m.qptype, sSplitT, false);
-	Vector<String> tt = Split(m.qtype, sSplitT, false);
+*/
+//	Vector<String> qt = Split(m.qptype, sSplitT, false);
+//	Vector<String> tt = Split(m.qtype, sSplitT, false);
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
-		if(p.pari == pari)
-			qtf << "$C";
 		switch(p.type) {
 		case ITEM_PNAME:
 			qtf << "*";
@@ -209,37 +222,29 @@ String DecoratedItem(const String& name, const CppItem& m, const char *natural, 
 		case ITEM_CPP:
 			qtf << "@B";
 			break;
-		default:
-			int q = p.type - ITEM_PTYPE;
-			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]) && pari < 0)
-				qtf << "_^" << qt[q] << '^';
-			q = p.type - ITEM_TYPE;
-			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]) && pari < 0)
-				qtf << "_^" << tt[q] << '^';
-			break;
 		}
-		qtf << ' ';
-		qtf << NaturalDeQtf(String(~m.natural + p.pos, p.len));
-		qtf << ']';
+		qtf << " \1";
+		qtf << String(~pretty + p.pos, p.len);
+		qtf << "\1]";
 	}
 	return qtf + "]";
 }
 
-String CreateQtf(const String& item, const String& name, const CppItem& m, const String& lang, bool onlyhdr = false)
+String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = false)
 {
 	String qtf;
-	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
+	bool str = IsStruct(m.kind);
 	if(!str)
 		qtf << "[s4 &]";
 	String st = str ? "[s2;" : "[s1;";
-	String k = st + ':' + DeQtf(item) + ": ";
-	if(m.IsTemplate() && str) {
+	String k = st + ":" + DeQtf(m.id) + ": ";
+	if(IsTemplate(m.kind) && str) {
 		int q = 0;
 		int w = 0;
-		while(q < m.natural.GetLength()) {
-			if(m.natural[q] == '<')
+		while(q < m.pretty.GetLength()) {
+			if(m.pretty[q] == '<')
 				w++;
-			if(m.natural[q] == '>') {
+			if(m.pretty[q] == '>') {
 				w--;
 				if(w == 0) {
 					q++;
@@ -248,121 +253,58 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, const
 			}
 			q++;
 		}
-		qtf << "[s2:noref: " << DecoratedItem(name, m, m.natural.Mid(0, q)) << "&][s2 " << k;
-		if(q < m.natural.GetLength()) {
-			while((byte)m.natural[q] <= 32)
+		qtf << "[s2:noref: " << DecoratedItem(m.name, m.pretty.Mid(0, q)) << "&][s2 " << k;
+		if(q < m.pretty.GetLength()) {
+			while((byte)m.pretty[q] <= 32)
 				q++;
-			qtf << DecoratedItem(name, m, m.natural.Mid(q));
+			qtf << DecoratedItem(m.name, m.pretty.Mid(q));
 		}
 	}
 	else
-		qtf << k << DecoratedItem(name, m, m.natural);
+		qtf << k << DecoratedItem(m.name, m.pretty);
 
 	qtf << "&]";
 	if(onlyhdr)
 		return qtf;
+
 	qtf << "[s3%" << lang << " ";
-	String d;
-	Vector<String> t = Split(m.tname, ';');
-	for(int i = 0; i < t.GetCount(); i++) {
-		if(i)
-			d << ' ';
-		d << "[%-*@g " << DeQtf(t[i]) << "]";
+
+	if(!str) {
+		Vector<ItemTextPart> n = ParsePretty(m.name, m.pretty);
+		if(!str) {
+			bool was;
+			for(const auto& h : n)
+				if(h.type == ITEM_PNAME) {
+					qtf << " [%-*@r \1" << m.pretty.Mid(h.pos, h.len) << "\1]";
+					was = true;
+				}
+			if(was)
+				qtf << " .";
+		}
 	}
-	d.Clear();
-	d << "[%" << lang << " ";
-	Vector<String> p = Split(m.pname, ';');
-	if(!str)
-		for(int i = 0; i < p.GetCount(); i++)
-			d << " [%-*@r " << DeQtf(p[i]) << "]";
-	if(!str && p.GetCount())
-		qtf << d << " .";
 	qtf << "&]";
 	qtf << "[s7 &]";
 	return qtf;
 }
 
-String TopicEditor::GetLang() const
+void TopicEditor::InsertNew(const AnnotationItem& m)
 {
-	int q = topicpath.ReverseFind('@');
-	if(q >= 0) {
-		int lang = LNGFromText(~topicpath + q + 1);
-		if(lang)
-			return LNGAsText(lang);
-	}
-	return "%";
-}
-
-void TopicEditor::InsertItem()
-{
-	if(IsNull(topicpath))
-		return;
-	Save();
-	ref.Title("Insert");
-	if(ref.item.IsCursor())
-		ref.item.SetFocus();
-	ref.item.MultiSelect();
-	ref.classlist.Show();
-	int c = ref.Execute();
-	if(c == IDCANCEL)
-		return;
-	if(c == IDYES) {
-		String qtf = "&{{1 ";
-		bool next = false;
-		for(int i = 0; i < ref.scope.GetCount(); i++) {
-			String s = ref.scope.Get(i, 1);
-			if(*s != '<') {
-				if(next)
-					qtf << ":: ";
-				qtf << DeQtf(s);
-				next = true;
-			}
-		}
-		qtf << "}}&";
-		editor.PasteText(ParseQTF(qtf));
-		return;
-	}
-	String qtf;
-	if(ref.item.IsSelection()) {
-		for(int i = 0; i < ref.item.GetCount(); i++)
-			if(ref.item.IsSelected(i)) {
-				CppItemInfo m = ref.GetItemInfo(i);
-				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m, GetLang());
-			}
-	}
-	else
-	if(ref.item.IsCursor()) {
-		CppItemInfo m = ref.GetItemInfo();
-		qtf << CreateQtf(ref.GetCodeRef(), m.name, m, GetLang());
-	}
-	else
-		return;
 	editor.BeginOp();
-	editor.PasteText(ParseQTF(styles + qtf));
+	editor.PasteText(ParseQTF(styles + CreateQtf(m, GetLang())));
 	editor.PrevPara();
 	editor.PrevPara();
 }
 
-void TopicEditor::InsertNew(const String& coderef)
-{
-	const CppItem *m = GetCodeRefItem(coderef);
-	if(!m)
-		return;
-	editor.BeginOp();
-	editor.PasteText(ParseQTF(styles + CreateQtf(coderef, m->name, *m, GetLang())));
-	editor.PrevPara();
-	editor.PrevPara();
-}
+/* TODO: remove
+	void GoTo(const String& topic, const String& link, const String& create, bool before);
 
 void TopicEditor::GoTo(const String& _topic, const String& link, const String& create, bool before)
 {
 	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
-		if(!editor.GotoLabel(link)) {
-			String l = link;
-			LegacyRef(l);
-			editor.GotoLabel(l);
-		}
+		for(String cr : AnnotationCandidates(link))
+			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupTppId(id.ToString()); }))
+				break;
 		if(!IsNull(create)) {
 			if(!before)
 				for(int pass = 0; pass < 2; pass++)
@@ -379,9 +321,36 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 		}
 	}
 }
+*/
+
+void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before)
+{
+	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
+		editor.Select(editor.GetLength(), 0);
+		for(String cr : AnnotationCandidates(link))
+			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupTppId(id.ToString()); }))
+				break;
+		if(create) {
+			if(!before)
+				for(int pass = 0; pass < 2; pass++)
+					for(;;) {
+						int c = editor.GetCursor();
+						RichText::FormatInfo f = editor.GetFormatInfo();
+						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && pass)
+							break;
+						editor.NextPara();
+						if(editor.GetCursor() == c)
+							break;
+					}
+			InsertNew(*create);
+		}
+	}
+}
 
 void   TopicEditor::FixTopic()
 {
+	// TODO
+#if 0
 	String nest;
 	if(!EditText(nest, "Fix topic", "Nest"))
 		return;
@@ -460,6 +429,7 @@ void   TopicEditor::FixTopic()
 	editor.BeginOp();
 	editor.SetSelection(0, txt.GetLength());
 	editor.PasteText(result);
+#endif
 }
 
 String TopicEditor::GetFileName() const

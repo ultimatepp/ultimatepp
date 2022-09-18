@@ -65,7 +65,7 @@ CONSOLE_APP_MAIN
 #endif
 
 	Ide ide;
-	TheIde(&ide);
+	SetTheIde(&ide);
 	ide.console.SetSlots(CPU_Cores());
 	ide.console.console = true;
 

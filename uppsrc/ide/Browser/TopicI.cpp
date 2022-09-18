@@ -1,4 +1,4 @@
-#include "Browser.h"
+#include <ide/ide.h>
 
 bool IsTopicFile(const char *path)
 {
@@ -39,4 +39,10 @@ struct TopicModule : public IdeModule {
 void InitializeTopicModule()
 {
 	RegisterIdeModule(Single<TopicModule>());
+}
+
+INITIALIZER(CodeBase)
+{
+	void InitializeTopicModule();
+	InitializeTopicModule();
 }

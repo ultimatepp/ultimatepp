@@ -785,6 +785,7 @@ public:
 	Value           GetVar(const String& id) const           { return vars.Get(id, Value()); }
 	void            EvaluateFields();
 
+	bool            GotoLabel(Gate<const WString&> match);
 	bool            GotoLabel(const String& lbl);
 	void            BeginPara();
 	void            NextPara();

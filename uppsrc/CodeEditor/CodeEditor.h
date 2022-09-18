@@ -82,6 +82,7 @@ private:
 	bool             ignored_next_edit;
 	int              next_age;
 	int              active_annotation;
+	Vector<Color>    animate;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
@@ -136,6 +137,8 @@ public:
 	bool     IsHiliteIfEndif() const         { return hilite_if_endif; }
 	
 	int      GetActiveAnnotationLine() const { return active_annotation; }
+	
+	void     SetAnimate(const Vector<Color>& a)   { if(a != animate) { animate = clone(a); Refresh(); } }
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -509,15 +512,16 @@ public:
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }
 	String   GetAnnotation(int i) const               { return bar.GetAnnotation(i); }
 	int      GetActiveAnnotationLine() const          { return bar.GetActiveAnnotationLine(); }
-
+	Size     GetBarSize() const                       { return bar.GetSize(); }
 	void     HideBar()                                { bar.Hide(); }
+	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 	
 	void     Illuminate(const WString& text);
 	WString  GetIlluminated() const                   { return illuminated; }
-
+	
 	void     Zoom(int d);
 
 	One<EditorSyntax> GetSyntax(int line);
