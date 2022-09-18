@@ -58,6 +58,7 @@ class Smtp : public TcpSocket {
 	void        Authenticate();
 	void        Quit();
  
+	bool       NoAdd(const char *id);
 	String     GetMessage(bool chunks);
 	
 

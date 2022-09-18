@@ -303,6 +303,11 @@ String Smtp::GetMessageID()
 	return message_id + (q >= 0 ? sender.Mid(q) : "@unknown_host.org");
 }
 
+bool Smtp::NoAdd(const char *id)
+{
+	return !(add_header.StartsWith(id + String(":")) || add_header.Find(String("\n") + id + ":") >= 0);
+}
+
 String Smtp::GetMessage(bool chunks)
 {
 	String delimiter = "?";
@@ -343,11 +348,12 @@ String Smtp::GetMessage(bool chunks)
 			if(pos)
 				msg << "\r\n";
 		}
-		if(!IsNull(subject))
+		if(!IsNull(subject) && NoAdd("Subject"))
 			msg << "Subject: " << Encode(subject) << "\r\n";
-		if(!IsNull(reply_to))
+		if(!IsNull(reply_to) && NoAdd("Reply-To"))
 			msg << "Reply-To: " << FormatAddr(reply_to, reply_to_name) << "\r\n";
-		msg << "Message-ID: <" << GetMessageID() << ">\r\n";
+		if(NoAdd("Message-ID"))
+			msg << "Message-ID: <" << GetMessageID() << ">\r\n";
 		if(!IsNull(time_sent)) {
 			static const char *dayofweek[] =
 			{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -360,7 +366,7 @@ String Smtp::GetMessage(bool chunks)
 				                  time_sent.hour, time_sent.minute, time_sent.second)
 				<< "\r\n";
 		}
-		if(multi || alter)
+		if((multi || alter) && NoAdd("Content-Type"))
 			msg << "Content-Type: multipart/" << (alter ? "alternative" : "mixed")
 				<< "; boundary=\"" << delimiter << "\"\r\n"
 				"\r\n";
@@ -448,6 +454,8 @@ String Smtp::GetMessage(bool chunks)
 
 bool Smtp::Send(const String& msg_)
 {
+	DDUMP(GetMessage(true));
+
 	smtp_code = 0;
 	smtp_msg.Clear();
 

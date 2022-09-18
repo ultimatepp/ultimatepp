@@ -1,0 +1,13 @@
+description "Using Core/SMTP to send email via gmail\377";
+
+uses
+	Core,
+	Core/SMTP,
+	Core/SSL;
+
+file
+	SMTP.cpp;
+
+mainconfig
+	"" = "";
+
