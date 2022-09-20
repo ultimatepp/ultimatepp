@@ -135,10 +135,10 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String nest; // Upp::Class
 	String unest; // UPP::CLASS
 	String bases; // base classes of struct/class
-	Point  pos;
-	int    kind;
-	bool   definition;
-	bool   isvirtual;
+	Point  pos = Null;
+	int    kind = Null;
+	bool   definition = false;
+	bool   isvirtual = false;
 	
 	void Serialize(Stream& s);
 };

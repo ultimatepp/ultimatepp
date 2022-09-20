@@ -18,6 +18,7 @@ TreeCtrl::TreeCtrl()
 	multiroot = false;
 	chldlck = false;
 	highlight_ctrl = false;
+	hasctrls = false;
 	Clear();
 	SetFrame(ViewFrame());
 	AddFrame(sb);

@@ -529,6 +529,7 @@ Ctrl::Ctrl() {
 	destroying = false;
 	multi_frame = false;
 	frame.frame = &NullFrame();
+	frame.SetView(Null);
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
 	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
