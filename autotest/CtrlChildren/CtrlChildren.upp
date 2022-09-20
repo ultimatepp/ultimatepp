@@ -2,7 +2,7 @@ uses
 	CtrlLib;
 
 file
-	etalon.log,
+	Etalon.log,
 	main.cpp;
 
 mainconfig
