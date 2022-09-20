@@ -531,7 +531,7 @@ public:
 		LineEdit::EditPos  editpos;
 		Point              columnline;
 		LineEdit::UndoData undodata;
-		int64              filehash; // make sure undodata work
+		int64              filehash = 0; // make sure undodata work
 		LineInfo           lineinfo;
 		LineInfoRem        lineinforem;
 

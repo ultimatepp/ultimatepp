@@ -1053,11 +1053,11 @@ void EditField::Reset()
 	errorbg = nobg = false;
 	charset = CHARSET_UTF8;
 	alignright = false;
+	showspaces = false;
+	no_internal_margin = false;
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
-	showspaces = false;
-	no_internal_margin = false;
 	fsell = fselh = -1;
 	DeleteAttr<Image>(ATTR_NULLICON);
 }

@@ -74,14 +74,19 @@ static void sSeed(uint64 *s)
 force_inline
 static uint64 *sState()
 {
+	static bool forked;
 	thread_local uint64 *s;
-	if(!s) {
+	if(!s || forked && Thread::IsMain()) {
 		thread_local uint64 state[4];
 		s = state;
 		sSeed(s);
 #ifdef PLATFORM_POSIX
-		if(Thread::IsMain()) // non-main threads do not work with fork anyway
-			pthread_atfork(NULL, NULL, [] { sSeed(s); }); // reseed random generator after fork
+		if(Thread::IsMain()) { // non-main threads do not work with fork anyway
+			ONCELOCK {
+				pthread_atfork(NULL, NULL, [] { forked = true; });  // reseed random generator after fork
+			}
+			forked = false;
+		}
 #endif
 	}
 	return s;

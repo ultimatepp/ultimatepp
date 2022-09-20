@@ -33,7 +33,7 @@ void ImageBuffer::Create(int cx, int cy)
 	ASSERT(cx >= 0 && cy >= 0);
 	size.cx = cx;
 	size.cy = cy;
-	pixels.Alloc(GetLength());
+	pixels.Alloc(GetLength(), RGBAZero());
 #ifdef _DEBUG
 	RGBA *s = pixels;
 	RGBA *e = pixels + GetLength();

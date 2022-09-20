@@ -207,6 +207,7 @@ void CurrentFileThread()
 		current_file_event.Wait();
 		LLOG("Current file Thread::IsShutdownThreads() " << Thread::IsShutdownThreads());
 	}
+	s_cf.Clear();
 	LLOG("Current file thread exit");
 }
 
@@ -221,7 +222,6 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> don
 		Thread::Start([] { CurrentFileThread(); });
 		Thread::AtShutdown([] {
 			LLOG("Shutdown current file");
-			s_cf.Clear();
 			current_file_event.Broadcast();
 		});
 	}
