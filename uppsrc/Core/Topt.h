@@ -427,7 +427,7 @@ unsigned PrimeBound(unsigned i);
 hash_t memhash(const void *ptr, size_t size);
 
 template <class T>
-inline hash_t GetHashValue(const T& x)                              { return x.GetHashValue(); }
+inline hash_t GetHashValue(const T& x)                         { return x.GetHashValue(); }
 
 template<> inline hash_t GetHashValue(const char& a)           { return (hash_t)a; }
 template<> inline hash_t GetHashValue(const signed char& a)    { return (const hash_t)a; }
@@ -445,18 +445,14 @@ template<> inline hash_t GetHashValue(const wchar_t& a)        { return (const h
 template<> inline hash_t GetHashValue(const int64& a)          { return (const hash_t)a; }
 template<> inline hash_t GetHashValue(const uint64& a)         { return (const hash_t)a; }
 #else
-template<> inline hash_t GetHashValue(const int64& a)          { return CombineHash((hash_t)a, (hash_t)(a >> 32)); }
+template<> inline hash_t GetHashValue(const int64& a)          { return HASH_CONST2 * (hash_t)a + (hash_t)(a >> 32); }
 template<> inline hash_t GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
 #endif
 
 template<> inline hash_t GetHashValue(const double& a)         { return memhash(&a, sizeof(a)); }
 //template<> inline hash_t GetHashValue(const float& a)          { double memhash(&a, sizeof(a)); }
 
-#ifdef CPU_32
-inline hash_t GetPtrHashValue(const void *a)                   { return (int)a; }
-#else
 inline hash_t GetPtrHashValue(const void *a)                   { return (hash_t)(uintptr_t)a; }
-#endif
 
 template <class T>
 inline hash_t GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
