@@ -816,6 +816,8 @@ void Ide::BrowseMenu(Bar& menu)
 			DumpIndex(path);
 			EditFile(path);
 		});
+		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });
+		menu.Add("Current file autocomplete errors", [=] { EditFile(CacheFile("autocomplete_errors")); });
 	}
 }
 

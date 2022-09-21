@@ -151,7 +151,7 @@ Clang::~Clang()
 	clang_disposeIndex(index);
 }
 
-void DumpDiagnostics(CXTranslationUnit tu)
+void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool> out)
 {
 	if(!HasLibClang())
 		return;
@@ -160,26 +160,32 @@ void DumpDiagnostics(CXTranslationUnit tu)
 
 	for (size_t i = 0; i < num_diagnostics; ++i) {
 		CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
-		auto Dump = [&](CXDiagnostic diagnostic) {
+		auto Dump = [&](CXDiagnostic diagnostic, bool detail) {
 			CXFile file;
 			unsigned line;
 			unsigned column;
 			unsigned offset;
 			CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
 			clang_getExpansionLocation(location, &file, &line, &column, &offset);
-			LOG(FetchString(clang_getFileName(file)) << " (" << line << ":" << column << ") " <<
-				FetchString(clang_getDiagnosticSpelling(diagnostic)));
+			out(FetchString(clang_getFileName(file)), Point(column - 1, line - 1), FetchString(clang_getDiagnosticSpelling(diagnostic)), detail);
 		};
-		Dump(diagnostic);
-	#if 0
+		Dump(diagnostic, false);
 		CXDiagnosticSet set = clang_getChildDiagnostics(diagnostic);
 		int n = clang_getNumDiagnosticsInSet(set);
 		for(int i = 0; i < n; i++) {
 			CXDiagnostic d = clang_getDiagnosticInSet(set, i);
-			Dump(d);
+			Dump(d, true);
 			clang_disposeDiagnostic(d);
 		}
-	#endif
 		clang_disposeDiagnostic(diagnostic);
 	}
+}
+
+void Diagnostics(CXTranslationUnit tu, Stream& out)
+{
+	Diagnostics(tu, [&](const String& filename, Point pos, const String& text, bool detail) {
+		if(detail)
+			out << "\t";
+		out << filename << " (" << pos.y + 1 << "): " << text << "\r\n";
+	});
 }

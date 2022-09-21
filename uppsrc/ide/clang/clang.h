@@ -187,7 +187,8 @@ struct Clang {
 	~Clang();
 };
 
-void DumpDiagnostics(CXTranslationUnit tu);
+void   Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool> out);
+void   Diagnostics(CXTranslationUnit tu, Stream& out);
 
 String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
