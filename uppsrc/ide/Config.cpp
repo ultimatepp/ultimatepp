@@ -272,11 +272,11 @@ void Ide::Serialize(Stream& s)
 	if(version >= 9)
 		s % AutoIndexer;
 	if(version >= 10) {
-		bool dummy;
+		bool dummy = false;
 		s % dummy;
 	}
 	if(version >= 21) {
-		bool dummy;
+		bool dummy = false;
 		s % dummy;
 	}
 	s % editor.commentdp;
