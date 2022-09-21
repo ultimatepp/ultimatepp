@@ -37,11 +37,11 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		    String txt;
 		    txt << bm;
 		    if(release)
-                       txt << "-R ";
+               txt << "-R ";
             txt << ' ' << h << ' ';
 			String c;
 			c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
-			c << 'a';
+//			c << 'a';
 #ifdef PLATFORM_POSIX
 			c << 's';
 #endif

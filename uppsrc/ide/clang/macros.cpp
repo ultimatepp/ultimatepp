@@ -3,6 +3,8 @@
 // we are using libclang.dll for MSVC and therefore need to redefine standard macros
 // to mingw clang
 
+//#BLITZ_PROHIBIT
+
 const char umacros[] =
 R"(#define CHECK_GRID(g) 
 #define CHECK_MATRIX(g) 

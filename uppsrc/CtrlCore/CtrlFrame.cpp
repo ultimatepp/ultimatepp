@@ -10,6 +10,7 @@ Ctrl::Frame Ctrl::AllocFrames(int alloc)
 	size_t sz0 = alloc * sizeof(Frame);
 	size_t sz = sz0;
 	m.frames = (Frame *)MemoryAllocSz(sz);
+//	memset(m.frames, 0, sz); _DBG_
 	m.multi.alloc = alloc + (int)((sz - sz0) / sizeof(Frame));
 	return m;
 }
@@ -42,6 +43,7 @@ void Ctrl::InsertFrame(int i, CtrlFrame& fr)
 		else
 			memmove(frame.frames + i + 1, frame.frames + i, (frame.multi.count - i) * sizeof(Frame));
 		frame.frames[i].frame = &fr;
+		frame.frames[i].SetView(Null);
 		frame.multi.count++;
 	}
 	fr.FrameAdd(*this);

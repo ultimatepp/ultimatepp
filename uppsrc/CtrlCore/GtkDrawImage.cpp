@@ -114,6 +114,8 @@ Draw& ImageDraw::Alpha()
 	if(!alpha_surface) {
 		alpha_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
 		alpha.cr = cairo_create(alpha_surface);
+	//	cairo_set_source_rgb(alpha.cr, 0, 0, 0);
+	//	cairo_paint(alpha.cr);
 	}
 	return alpha;
 }
@@ -181,6 +183,8 @@ void ImageDraw::Init(Size sz)
 	isz = sz;
 	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
 	cr = cairo_create(surface);
+//	cairo_set_source_rgb(cr, 0, 0, 0);
+//	cairo_paint(cr);
 	alpha_surface = NULL;
 	del = true;
 }
