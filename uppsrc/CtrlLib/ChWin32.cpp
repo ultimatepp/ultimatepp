@@ -601,8 +601,9 @@ void ChHostSkin()
 		{
 			MenuBar::Style& s = MenuBar::StyleDefault().Write();
 			if(vista_aero) {
-				s.topitemtext[0] = s.topitemtext[1] = s.topitemtext[2] =
-					s.itemtext = XpColor(XP_MENU, 8 /*MENU_POPUPITEM*/,
+				s.topitemtext[0] = s.topitemtext[1] = s.topitemtext[2] = XpColor(XP_MENU, 8 /*MENU_BARITEM*/,
+					2 /*HOT*/, 3803/*TMT_TEXTCOLOR*/);
+				s.itemtext = XpColor(XP_MENU, 14 /*MENU_POPUPITEM*/,
 					2 /*HOT*/, 3803/*TMT_TEXTCOLOR*/);
 				Win32Look(s.item, XP_MENU, 14 /*MENU_POPUPITEM*/, 2 /*HOT*/);
 				Win32Look(s.topitem[1], XP_MENU, 8 , 2 /*HOT*/);
