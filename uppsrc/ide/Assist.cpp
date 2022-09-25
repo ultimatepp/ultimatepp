@@ -466,12 +466,14 @@ void AssistEditor::Assist(bool macros)
 	assist_type.Clear();
 	assist_item.Clear();
 	include_assist = false;
-	if(IncludeAssist())
-		return;
 
 	int pos = GetCursor();
 	ReadIdBackPos(pos, false); // libclang does not work well if file is not truncated for autocomplete (?)
 	assist_cursor = pos;
+
+	if(IncludeAssist())
+		return;
+
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
 	if(cfx.content.GetCount())
