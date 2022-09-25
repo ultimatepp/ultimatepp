@@ -136,10 +136,10 @@ write core Android applications using Java programming language.&]
 [s0;b42;a42; [/2 Attention: On MS Window may occur problems with 64 
 bit Java version, so please be careful.]&]
 [s3;:5: 5. Linking Android builder with Android NDK&]
-[s2; Ultimate`+`+ is C`+`+ framework, so it is natural that we want 
-to write applications in that language. To do that we need to 
-link Android builder with Android NDK. NDK by default allows 
-writing application on Android using C/C`+`+.&]
+[s2; U`+`+ is C`+`+ framework, so it is natural that we want to write 
+applications in that language. To do that we need to link Android 
+builder with Android NDK. NDK by default allows writing application 
+on Android using C/C`+`+.&]
 [s2; First of all we need to download NDK from official site: [^https`:`/`/developer`.android`.com`/ndk`/downloads`/index`.html^ h
 ttps://developer.android.com/ndk/downloads/index.html]. On the 
 site, you will need to select the version suited to your operating 
@@ -222,7 +222,7 @@ menubar entry: [/ Setup `-> Android `-> AVD Manager].&]
 [s2; The android builder code is not fully complete. Sometimes there 
 are also errors in the code. If you found something disturbing 
 please let us know about it. You can do this by posting the topic 
-on the official Ultimate`+`+ forum.&]
+on the official U`+`+ forum.&]
 [s6;l160;i150;O0; Debugging doesn`'t work `- functionality is not 
 implemented.&]
 [s6;l160;i150;O0; Graphical interface for signing applications in 
@@ -233,5 +233,5 @@ compatibility we make copy of project files.&]
 [s6;l160;i150;O0; Java sources compile in single thread.&]
 [s0; &]
 [s3;:9: 9. Appendix&]
-[s2; In the near future we plan to port the whole Ultimate`+`+ library 
-to Android.]]
+[s2; In the near future we plan to port the whole U`+`+ library to 
+Android.]]
