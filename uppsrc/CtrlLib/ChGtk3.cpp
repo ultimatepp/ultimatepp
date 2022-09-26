@@ -280,6 +280,16 @@ Image Gtk_IconAdjusted(const char *icon_name, int size)
 	return m;
 }
 
+void Gtk_OverrideCtrlImgIcon(int i, const char *s)
+{
+	auto icon = Gtk_Icon(s, DPI(48));
+	if (icon.IsEmpty()) {
+		return;
+	}
+	
+	CtrlImg::Set(i, icon);
+}
+
 void ChHostSkin()
 {
 	SetupFont();
@@ -410,19 +420,18 @@ void ChHostSkin()
 		}
 	}
 
-	auto DialogIcon = [](int i, const char *s) { CtrlImg::Set(i, Gtk_Icon(s, DPI(48))); };
 	if (!gtk_check_version(3, 10, 0)) {
-		DialogIcon(CtrlImg::I_information, "dialog-information");
-		DialogIcon(CtrlImg::I_question, "dialog-question");
-		DialogIcon(CtrlImg::I_exclamation, "dialog-warning");
-		DialogIcon(CtrlImg::I_error, "dialog-error");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_information, "dialog-information");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_question, "dialog-question");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_exclamation, "dialog-warning");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_error, "dialog-error");
 	} else {
 		// gtk-dialog-* icons deprecated since 3.10 version (2013-09-23)
 		// https://docs.gtk.org/gtk3/const.STOCK_DIALOG_INFO.html
-		DialogIcon(CtrlImg::I_information, "gtk-dialog-info");
-		DialogIcon(CtrlImg::I_question, "gtk-dialog-question");
-		DialogIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
-		DialogIcon(CtrlImg::I_error, "gtk-dialog-error");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_information, "gtk-dialog-info");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_question, "gtk-dialog-question");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
+		Gtk_OverrideCtrlImgIcon(CtrlImg::I_error, "gtk-dialog-error");
 	}
 	
 	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
