@@ -72,15 +72,16 @@ void Clang::Dispose()
 	tu = nullptr;
 }
 
-bool Clang::Parse(const String& filename, const String& content, const String& includes_, const String& defines, dword options)
+bool Clang::Parse(const String& filename, const String& content,
+                  const String& includes_, const String& defines,
+                  dword options,
+                  const String& filename2, const String& content2)
 {
 	if(!HasLibClang())
 		return false;
 
 	MemoryIgnoreLeaksBlock __;
 	if(!index) return false;
-	
-//	LTIMESTOP("Parse " << filename << " " << includes_ << " " << defines);
 	
 	Dispose();
 
@@ -107,10 +108,13 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 	for(const String& s : args)
 		argv.Add(~s);
 
-	CXUnsavedFile ufile = { ~filename, ~content, (unsigned)content.GetCount() };
+	CXUnsavedFile ufile[2] = {
+		{ ~filename, ~content, (unsigned)content.GetCount() },
+		{ ~filename2, ~content2, (unsigned)content2.GetCount() },
+	};
 	tu = clang_parseTranslationUnit(index, nullptr, argv, argv.GetCount(),
-	                                options & PARSE_FILE ? nullptr : &ufile,
-	                                options & PARSE_FILE ? 0 : 1,
+	                                options & PARSE_FILE ? nullptr : ufile,
+	                                options & PARSE_FILE ? 0 : (filename2.GetCount() ? 2 : 1),
 	                                options);
 
 //	DumpDiagnostics(tu);
@@ -118,14 +122,18 @@ bool Clang::Parse(const String& filename, const String& content, const String& i
 	return tu;
 }
 
-bool Clang::ReParse(const String& filename, const String& content)
+bool Clang::ReParse(const String& filename, const String& content,
+                    const String& filename2, const String& content2)
 {
 	if(!HasLibClang())
 		return false;
 
 	MemoryIgnoreLeaksBlock __;
-	CXUnsavedFile ufile = { ~filename, ~content, (unsigned)content.GetCount() };
-	if(clang_reparseTranslationUnit(tu, 1, &ufile, 0)) {
+	CXUnsavedFile ufile[2] = {
+		{ ~filename, ~content, (unsigned)content.GetCount() },
+		{ ~filename2, ~content2, (unsigned)content2.GetCount() },
+	};
+	if(clang_reparseTranslationUnit(tu, filename2.GetCount() ? 2 : 1, ufile, 0)) {
 		Dispose();
 		return false;
 	}
