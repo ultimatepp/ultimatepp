@@ -24,6 +24,7 @@ void PutAssist(const char *s);
 
 #include "libclang.h"
 bool LoadLibClang(const char *path);
+bool LoadLibClangAutomatically();
 
 inline bool HasLibClang()
 {

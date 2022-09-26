@@ -15,6 +15,24 @@ bool LoadLibClang(const char *path)
 	return hasLibClang;
 }
 
+bool LoadLibClangAutomatically()
+{
+	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	if(LoadLibClang(libdir + "/libclang.so")) {
+		return true;
+	}
+	if(LoadLibClang("/usr/lib/libclang.so")) {
+		return true;
+	}
+	for(int i = 20; i >= 10; i--) {
+		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib/libclang.so")) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 enum CXCursorKind clang_getCursorKind(CXCursor cursor)
 {
 	return LibClang().clang_getCursorKind(cursor);
