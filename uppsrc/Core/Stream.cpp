@@ -230,6 +230,9 @@ int Stream::GetUtf8()
 		return -1;
 	}
 
+	if(code < 0x80)
+		return code;
+	
 	if(code >= 0xC2) {
 		dword c = 0;
 		if(code < 0xE0) {
