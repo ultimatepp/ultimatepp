@@ -426,7 +426,7 @@ void ChHostSkin()
 		Gtk_OverrideDialogIcon(CtrlImg::I_exclamation, "dialog-warning");
 		Gtk_OverrideDialogIcon(CtrlImg::I_error, "dialog-error");
 	} else {
-		// gtk-dialog-* icons deprecated since 3.10 version (2013-09-23)
+		// gtk-dialog-* icons deprecated since 3.10 version (2013-09-23) in favor of dialog-*
 		// https://docs.gtk.org/gtk3/const.STOCK_DIALOG_INFO.html
 		Gtk_OverrideDialogIcon(CtrlImg::I_information, "gtk-dialog-info");
 		Gtk_OverrideDialogIcon(CtrlImg::I_question, "gtk-dialog-question");
