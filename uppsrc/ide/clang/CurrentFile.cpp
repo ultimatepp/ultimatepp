@@ -59,6 +59,10 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 }
 
 void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
+	{
+		GuiLock __;
+		current_file_done_serial = serial;
+	}
 	if(!cfc.clang.tu || !annotations_done) return;
 	ClangVisitor v;
 	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
@@ -90,7 +94,6 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 			fa.time = Time::Low();
 			CodeIndex().GetAdd(NormalizePath(cfc.parsed_file.real_filename)) = pick(fa);
 		}
-		current_file_done_serial = serial;
 	});
 };
 
