@@ -1,0 +1,15 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2022.09
+    resource_class: large
+    environment:
+      NUMBER_OF_CPUS: 4
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
+      - run: make -f Makefile -j ${NUMBER_OF_CPUS}
+      - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
