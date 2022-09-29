@@ -9,5 +9,7 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
+      - run: echo "${nproc}"
+      - run: c++ --version
       - run: make -f Makefile -j ${nproc}
       - run: make -f umkMakefile.in -j ${nproc}
