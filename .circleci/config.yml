@@ -1,0 +1,10 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:2022.09
+    steps:
+      - checkout
+      - run: make -f Makefile
+      - run: make -f umkMakefile.in
