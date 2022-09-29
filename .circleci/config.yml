@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: cimg/base:2022.09
     resource_class: large
-    enviroment:
+    environment:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
