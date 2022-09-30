@@ -104,6 +104,19 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 	ide.EditorMode();
 }
 
+void LoadLibs()
+{
+#ifdef DYNAMIC_LIBCLANG
+	if (!LoadLibClangAutomatically()) {
+		String msg =
+			"Failed to load libclang! TheIDE will continue starting up, but some "
+			"fucnionalities like Assit`+`+ will not work.";
+		Loge() << UPP_FUNCTION_NAME << "(): " << msg;
+		ErrorOK(msg);
+	}
+#endif
+}
+
 #undef  GUI_APP_MAIN_HOOK
 #define GUI_APP_MAIN_HOOK \
 { \
@@ -112,29 +125,13 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		return Upp::GetExitCode(); \
 }
 
-#ifdef PLATFORM_POSIX
-void TryLoadLibClang()
-{
-	String libdir = TrimBoth(Sys("llvm-config --libdir"));
-	if(LoadLibClang(libdir + "/libclang.so"))
-		return;
-	if(LoadLibClang("/usr/lib/libclang.so"))
-		return;
-	for(int i = 20; i >= 10; i--)
-		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib/libclang.so"))
-			return;
-}
-#endif
-
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
 void AppMain___()
 #endif
 {
-#ifdef PLATFORM_POSIX
-	TryLoadLibClang();
-#endif
+	LoadLibs();
 
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
 	if(!RealizeDirectory(preamble_dir)) // temporary (?)

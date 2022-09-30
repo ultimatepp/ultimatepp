@@ -17,5 +17,7 @@ file
 	clang.cpp,
 	Visitor.cpp,
 	CurrentFile.cpp,
-	Indexer.cpp;
+	Indexer.cpp,
+	Info readonly separator,
+	Copying;
 

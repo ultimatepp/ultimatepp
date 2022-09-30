@@ -109,7 +109,7 @@ control.&]
 UHD displays and Dark theme]&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
 [s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
-Ultimate`+`+  packages]&]
+U`+`+  packages]&]
 [s0;l160; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]
 [s0;l160;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
 [s0;l160; [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Coding style]&]

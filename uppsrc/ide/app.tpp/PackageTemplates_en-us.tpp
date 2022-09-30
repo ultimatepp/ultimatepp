@@ -123,9 +123,9 @@ topic "U++ package/project templates";
 or even identical parts of code. One way to avoid unnecessary 
 typing or similar work when creating a new project like that, 
 is to use a parameterized template.&]
-[s5; An Ultimate`+`+ package template (UPT) is such a parameterized 
-template. It is used to create one or more package files which 
-can be edited further. There can be more than one UPT.&]
+[s5; An U`+`+ package template (UPT) is such a parameterized template. 
+It is used to create one or more package files which can be edited 
+further. There can be more than one UPT.&]
 [s5; And you can create a new UPT yourself! To enable you to do this, 
 is the main purpose of this document.&]
 [s0; &]
@@ -143,7 +143,7 @@ worked on.&]
 [s0; &]
 [s3;:3: 3. Ready`-to`-use Templates&]
 [s42;:3`_1: 3.1 Overview&]
-[s5; Ultimate`+`+ is shipped with the following six UPTs:&]
+[s5; U`+`+ is shipped with the following six UPTs:&]
 [s5;l160;i150;O2; Basic CtrlLib application&]
 [s5;l160;i150;O2; Console application (no U`+`+)&]
 [s5;l160;i150;O2; Core console project&]
@@ -159,15 +159,15 @@ a header file (with include guards) and to add the `"multithreaded`"
 build flag.&]
 [s42;:3`_3: 3.3 Console application (no U`+`+)&]
 [s5; This UPT creates the foundations of a plain C`+`+ console application. 
-Even the non`-GUI facilities of Ultimate`+`+ cannot be used. 
-There aren`'t any options.&]
+Even the non`-GUI facilities of U`+`+ cannot be used. There aren`'t 
+any options.&]
 [s5; This template comes in handy when you just want to exploit TheIDE.&]
 [s42;:3`_4: 3.4 Core console project&]
 [s5; This UPT builds the foundations of a console application which 
-uses only the non`-GUI facilities of Ultimate`+`+. You have the 
-options to create a header file (with include guards) and to 
-add the `"multithreaded`" build flag. Additionally you can direct 
-the template to include code which reads the command line arguments 
+uses only the non`-GUI facilities of U`+`+. You have the options 
+to create a header file (with include guards) and to add the 
+`"multithreaded`" build flag. Additionally you can direct the 
+template to include code which reads the command line arguments 
 into a const Vector<String>. (Please note that this is not the 
 same as char`* argv`[`], the `"pointees`" of which are modifiable 
 and include an additional string `- argv`[0`], the path and name 
@@ -183,17 +183,17 @@ Finally there is an option to generate an image list file and
 an option to add the `"multithreaded`" build flag.&]
 [s42;:3`_6: 3.6 SDL project (no U`+`+)&]
 [s5; This UPT generates the foundations of a Simple DirectMedia Layer 
-(SDL) console application. The Ultimate`+`+ facilities cannot 
-be used. Apart from an option to create a header file and an 
-option to write an event loop, there are three more multimedia`-specific 
+(SDL) console application. The U`+`+ facilities cannot be used. 
+Apart from an option to create a header file and an option to 
+write an event loop, there are three more multimedia`-specific 
 options.&]
 [s5; This template comes in handy when you just want to exploit TheIDE.&]
 [s42;:3`_7: 3.7 SDL with Core package&]
 [s5; This UPT builds the foundations of a Simple DirectMedia Layer 
-(SDL) console application. Additionally, the non`-GUI Ultimate`+`+ 
-facilities are enabled. Apart from an option to create a header 
-file and an option to write an event loop, there are three more 
-multimedia`-specific options .&]
+(SDL) console application. Additionally, the non`-GUI U`+`+ facilities 
+are enabled. Apart from an option to create a header file and 
+an option to write an event loop, there are three more multimedia`-specific 
+options .&]
 [s0; &]
 [s3;:4: 4. Template File Layout&]
 [s42;:4`_1: 4.1 Extension&]
@@ -367,8 +367,8 @@ transformed into uppercase letters, is assigned. If there were
 uppercase letters before, they are not changed.&]
 [s5;l160; The reason for the existence of this variable is a well`-established 
 practice to write uppercase include guards in .hpp`- (.h`-) files.&]
-[s5;l160; `"PACKAGE`_TOUPPER`" is only available with Ultimate`+`+ 
-releases later than `"609`-dev3`".&]
+[s5;l160; `"PACKAGE`_TOUPPER`" is only available with U`+`+ releases 
+later than `"609`-dev3`".&]
 [s42;l160;:5`_7`_2: 5.7.2 Usage&]
 [s5;l160; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`" always 
 contains the path part `- if any `- of the `"Package name`" input 
@@ -385,7 +385,7 @@ vice versa. Furthermore `"/`" is replaced by `"`_`", e.g.:&]
 [s5;l160; MyPath/MyPackage `-> MY`_PATH`_MY`_PACKAGE&]
 [s5;l160; The reason for the existence of this variable is a well`-established 
 practice to write uppercase include guards in .hpp`- (.h`-) files.&]
-[s5;l160; `"PACKAGE`_TOUPPER`_CAPS`" is only available with Ultimate`+`+ 
+[s5;l160; `"PACKAGE`_TOUPPER`_CAPS`" is only available with U`+`+ 
 releases later than `"609`-dev3`".&]
 [s42;l160;:5`_8`_2: 5.8.2-|Usage&]
 [s5;l160; In contrast to `"PACKAGE`", `"PACKAGE`_TOUPPER`_CAPS`" 
@@ -564,20 +564,20 @@ characters show up as usual.&]
 [s5; Sub`-directories are also scanned.&]
 [s28;l0;~~~256; &]
 [s3;:8: 8. Epilogue&]
-[s5; This documentation is valid for Ultimate`+`+ releases starting 
-with `"610`-dev3`".&]
+[s5; This documentation is valid for U`+`+ releases starting with 
+`"610`-dev3`".&]
 [s5; If you find any mistakes, be they just linguistic or typographic, 
-please report them on the Ultimate`+`+ forum (http://www.arilect.com/upp/forum/).&]
+please report them on the U`+`+ forum (http://www.arilect.com/upp/forum/).&]
 [s5; If something is not clear or seems to be not clear, please report 
-so on the Ultimate`+`+ forum.&]
+so on the U`+`+ forum.&]
 [s5; If this documentation is insufficient or seems to be insufficient, 
-please say so on the Ultimate`+`+ forum.&]
+please say so on the U`+`+ forum.&]
 [s0; &]
 [s3;:9: 9. UPP File Syntax&]
 [s5; Each package has a package definition file, the name of which 
 must be the same as the name of the package folder. The extension 
 is `".upp`".&]
-[s5; If you create Ultimate`+`+ GUI applications, the UPP file normally 
+[s5; If you create U`+`+ GUI applications, the UPP file normally 
 has the following three sections:&]
 [s38;l160; &]
 [s39;l160; uses&]

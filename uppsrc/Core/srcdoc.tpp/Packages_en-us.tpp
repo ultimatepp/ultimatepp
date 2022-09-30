@@ -22,7 +22,7 @@ topic "Standard Ultimate++  packages";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2; Standard Ultimate`+`+  packages&]
+[s2; Standard U`+`+  packages&]
 [ {{1851:8149 [s0; Core]
 :: [s0; core components, like streams, string, containers, callbacks...]
 :: [s0; Draw]
