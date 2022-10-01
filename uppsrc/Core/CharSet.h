@@ -38,6 +38,10 @@ bool   CheckUtf8(const char *s, int len);
 inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen8(s)); }
 inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
 
+int    CheckUtf8Split(const char *s, int len);
+inline int    CheckUtf8Split(const char *s)             { return CheckUtf8Split(s, (int)strlen8(s)); }
+inline int    CheckUtf8Split(const String& s)           { return CheckUtf8Split(~s, s.GetCount()); }
+
 int    Utf8Len(const wchar *s, int len);
 inline int    Utf8Len(const wchar *s)                 { return Utf8Len(s, strlen32(s)); }
 inline int    Utf8Len(wchar code)                     { return Utf8Len(&code, 1); }

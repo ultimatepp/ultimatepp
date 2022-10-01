@@ -40,6 +40,23 @@ source is specified as pointer [%-*@3 s] without [%-*@3 len], its
 must be zero`-terminated.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CheckUtf8Split`(const char`*`,int`): [@(0.0.255) int]_[* CheckUtf8Split]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
+[s5;:Upp`:`:CheckUtf8Split`(const char`*`): [@(0.0.255) int]_[* CheckUtf8Split]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Upp`:`:CheckUtf8Split`(const Upp`:`:String`&`): [@(0.0.255) int]_[* CheckUtf8Split](
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Checks whether the string  [%-*@3 s] contains an incomplete 
+(possibly split) UTF`-8 sequence at the end. If the source is 
+specified as pointer [%-*@3 s] without a [%-*@3 len], its must be 
+zero`-terminated. Returns 0 if the string does not end with an 
+incomplete UTF`-8 byte sequence. On incomplete UTF`-8 sequences, 
+the function returns the position of the first byte of the incomplete 
+sequence, relative to the end of the buffer. (E.g. in case of 
+a single missing byte of a three`-byte UTF`-8 sequence, the function 
+will return 2)&]
+[s3;%% &]
+[s4;%% &]
 [s5;:Upp`:`:Utf8Len`(const Upp`:`:dword`*`,int`): [@(0.0.255) int]_[* Utf8Len]([@(0.0.255) c
 onst]_[_^Upp`:`:dword^ dword]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [s5;:Upp`:`:Utf8Len`(const Upp`:`:dword`*`): [@(0.0.255) int]_[* Utf8Len]([@(0.0.255) const

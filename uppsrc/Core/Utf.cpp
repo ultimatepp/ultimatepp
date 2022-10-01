@@ -7,6 +7,17 @@ bool CheckUtf8(const char *s, int len)
 	return FromUtf8_([](wchar) {}, s, len);
 }
 
+int CheckUtf8Split(const char *s, int len)
+{
+	for(int i = len - 1, n = 1; i >= 0; --i, ++n) {
+		if(n >= 1 && ((s[i] & 0x80) == 0x00)) return len - (i + 1);
+		if(n >= 2 && ((s[i] & 0xE0) == 0xC0)) return len - (i + 2);
+		if(n >= 3 && ((s[i] & 0xF0) == 0xE0)) return len - (i + 3);
+		if(n >= 4 && ((s[i] & 0xF8) == 0xF0)) return len - (i + 4);
+	}
+	return 0;
+}
+
 int Utf8Len(const wchar *s, int len)
 {
 	int rlen = 0;
