@@ -59,6 +59,10 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 }
 
 void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
+	{
+		GuiLock __;
+		current_file_done_serial = serial;
+	}
 	if(!cfc.clang.tu || !annotations_done) return;
 	ClangVisitor v;
 	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
@@ -90,7 +94,6 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 			fa.time = Time::Low();
 			CodeIndex().GetAdd(NormalizePath(cfc.parsed_file.real_filename)) = pick(fa);
 		}
-		current_file_done_serial = serial;
 	});
 };
 
@@ -118,6 +121,12 @@ void CurrentFileThread()
 			}
 			if(f.filename.GetCount()) {
 				CurrentFileClang& cfc = GetCurrentFileClang(f.filename);
+				auto DumpDiagnostics = [&](const char *filename) {
+					if(AssistDiagnostics) {
+						FileOut out(CacheFile(filename));
+						Diagnostics(cfc.clang.tu, out);
+					}
+				};
 				String fn = f.filename;
 				if(!IsSourceFile(fn))
 					fn.Cat(".cpp");
@@ -133,7 +142,7 @@ void CurrentFileThread()
 			                        CXTranslationUnit_SkipFunctionBodies|
 					                CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
 					                CXTranslationUnit_KeepGoing);
-				//	DumpDiagnostics(clang.tu); _DBG_
+					DumpDiagnostics("parse_errors");
 					PutAssist(String()  << cfc.parsed_file.filename<< " parsed in " << msecs() - tm << " ms");
 					tm = msecs();
 					DoAnnotations(cfc, serial);
@@ -151,6 +160,7 @@ void CurrentFileThread()
 					{
 						MemoryIgnoreLeaksBlock __;
 						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
+						DumpDiagnostics("autocomplete_errors");
 					}
 					PutAssist(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
 					// DumpDiagnostics(cfc.clang.tu);
@@ -195,8 +205,10 @@ void CurrentFileThread()
 					bool b = cfc.clang.ReParse(fn, f.content);
 					PutAssist(String() << cfc.parsed_file.filename << " reparsed in " << msecs() - tm << " ms");
 					tm = msecs();
-					if(b)
+					if(b) {
+						DumpDiagnostics("parse_errors");
 						DoAnnotations(cfc, serial);
+					}
 					PutAssist(String() << cfc.parsed_file.filename << " reparsed output processed in " << msecs() - tm << " ms");
 					current_file_parsing = false;
 					was_parsing = true;
