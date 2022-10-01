@@ -38,8 +38,6 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 		if(!comment && tl.TrimStart("#include") && (*tl == ' ' || *tl == '\t')) {
 			tl = TrimBoth(tl);
 			String ipath = ppi.FindIncludeFile(tl, filedir);
-			DDUMP(ppi.BlitzApproved(path));
-			DDUMP(ipath);
 			if(ipath.GetCount()) {
 				if(NormalizePath(ipath) == NormalizePath(target_path))
 					return true;
@@ -52,11 +50,8 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 				line_delta = qq;
 				if(*tl == '\"')
 					out << "#include <" << ipath << ">\n";
-				else {
+				else
 					out << l << '\n';
-					if(ppi.BlitzApproved(path))
-						DDUMP("accel #include " << l);
-				}
 				line_delta++;
 			}
 			else {
