@@ -4,7 +4,7 @@
 
 #define DLLFILENAME "libclang.dll"
 #define DLIMODULE   LibClang
-#define DLIHEADER   <ide/clang/clang.dli>
+#define DLIHEADER <ide/clang/clang.dli>
 #include <Core/dli.h>
 
 bool hasLibClang = false;
