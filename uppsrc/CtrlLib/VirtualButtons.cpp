@@ -38,9 +38,11 @@ int VirtualButtons::ButtonVisualState(Ctrl *ctrl, int i)
 void VirtualButtons::PaintButtons(Draw& w, Ctrl *ctrl)
 {
 	for(int i = 0; i < ButtonCount(); i++) {
-		Button::PaintButton(w, ButtonRect(i), ButtonStyle(i), ButtonVisualState(ctrl, i), false,
-		                    String(), StdFont(), ButtonImage(i),
-		                    ButtonMono(i), 0, false, !ButtonEnabled(i));
+		Rect r = ButtonRect(i);
+		if(!IsNull(r))
+			Button::PaintButton(w, ButtonRect(i), ButtonStyle(i), ButtonVisualState(ctrl, i), false,
+			                    String(), StdFont(), ButtonImage(i),
+			                    ButtonMono(i), 0, false, !ButtonEnabled(i));
 	}
 }
 

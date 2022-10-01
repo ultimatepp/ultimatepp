@@ -181,14 +181,19 @@ struct Clang {
 	CXTranslationUnit tu = nullptr;
 
 	void Dispose();
-	bool Parse(const String& filename, const String& content, const String& includes, const String& defines, dword options);
-	bool ReParse(const String& filename, const String& content);
+	bool Parse(const String& filename, const String& content,
+	           const String& includes, const String& defines,
+	           dword options,
+	           const String& filename2 = Null, const String& content2 = Null);
+	bool ReParse(const String& filename, const String& content,
+	             const String& filename2 = Null, const String& content2 = Null);
 	
 	Clang();
 	~Clang();
 };
 
-void DumpDiagnostics(CXTranslationUnit tu);
+void   Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool> out);
+void   Diagnostics(CXTranslationUnit tu, Stream& out);
 
 String CleanupId(const char *s);
 String CleanupPretty(const String& signature);

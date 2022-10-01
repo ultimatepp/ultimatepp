@@ -136,7 +136,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	static Ptr<Ctrl> assist_ptr;
 
 	bool      navigator_right = true;
-	
+
 	PPInfo    ppi;
 	String    master_source;
 
