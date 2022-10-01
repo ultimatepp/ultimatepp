@@ -223,7 +223,7 @@ int64  Stream::_Get64() {
 
 int Stream::GetUtf8()
 {
-	int code = Get(), pos = GetPos();
+	int code = Get();
 	
 	if(code <= 0) {
 		LoadError();
