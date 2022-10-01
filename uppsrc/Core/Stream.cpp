@@ -271,7 +271,8 @@ int Stream::GetUtf8()
 			if(c2 < 0)
 				LoadError();
 		}
-		Seek(pos); // Rewind (to represent each invalid byte).
+		if(!IsError())
+			Seek(pos); // Rewind (to represent each invalid byte).
 	}
 
 	return -1;
