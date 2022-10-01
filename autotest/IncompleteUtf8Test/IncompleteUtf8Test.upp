@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	IncompleteUtf8Test.cpp;
+
+mainconfig
+	"" = "";
+
