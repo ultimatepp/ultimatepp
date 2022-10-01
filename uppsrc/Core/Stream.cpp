@@ -223,7 +223,7 @@ int64  Stream::_Get64() {
 
 int Stream::GetUtf8()
 {
-	int code = Get();
+	int code = Get(), pos = GetPos();
 	
 	if(code <= 0) {
 		LoadError();
@@ -234,7 +234,7 @@ int Stream::GetUtf8()
 		return code;
 	
 	if(code >= 0xC2) {
-		dword c = 0;
+		int c = 0, pos = GetPos();
 		if(code < 0xE0) {
 			int c0 = Get();
 			if(c0 >= 0x80 && c0 < 0xC0 &&
@@ -271,6 +271,7 @@ int Stream::GetUtf8()
 			if(c2 < 0)
 				LoadError();
 		}
+		Seek(pos); // Rewind (to represent each invalid byte).
 	}
 
 	return -1;
