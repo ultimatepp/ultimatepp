@@ -280,6 +280,16 @@ Image Gtk_IconAdjusted(const char *icon_name, int size)
 	return m;
 }
 
+void Gtk_OverrideDialogIcon(int i, const char *s)
+{
+	auto icon = Gtk_Icon(s, DPI(48));
+	if (icon.IsEmpty()) {
+		return;
+	}
+	
+	CtrlImg::Set(i, icon);
+}
+
 void ChHostSkin()
 {
 	SetupFont();
@@ -313,11 +323,6 @@ void ChHostSkin()
 	SColorInfoText_Write(tooltip_ink);
 
 	ChBaseSkin();
-
-#if 0 // TODO (?)
-		{ SColorLight_Write, 2*5 + 0 },
-		{ SColorShadow_Write, 3*5 + 0 },
-#endif
 
 	Gtk_New("radiobutton radio");
 	SOImages(CtrlsImg::I_S0, GTK_STATE_FLAG_NORMAL);
@@ -415,11 +420,19 @@ void ChHostSkin()
 		}
 	}
 
-	auto DialogIcon = [](int i, const char *s) { CtrlImg::Set(i, Gtk_Icon(s, DPI(48))); };
-	DialogIcon(CtrlImg::I_information, "gtk-dialog-info");
-	DialogIcon(CtrlImg::I_question, "gtk-dialog-question");
-	DialogIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
-	DialogIcon(CtrlImg::I_error, "gtk-dialog-error");
+	if (!gtk_check_version(3, 10, 0)) {
+		Gtk_OverrideDialogIcon(CtrlImg::I_information, "dialog-information");
+		Gtk_OverrideDialogIcon(CtrlImg::I_question, "dialog-question");
+		Gtk_OverrideDialogIcon(CtrlImg::I_exclamation, "dialog-warning");
+		Gtk_OverrideDialogIcon(CtrlImg::I_error, "dialog-error");
+	} else {
+		// gtk-dialog-* icons deprecated since 3.10 version (2013-09-23) in favor of dialog-*
+		// https://docs.gtk.org/gtk3/const.STOCK_DIALOG_INFO.html
+		Gtk_OverrideDialogIcon(CtrlImg::I_information, "gtk-dialog-info");
+		Gtk_OverrideDialogIcon(CtrlImg::I_question, "gtk-dialog-question");
+		Gtk_OverrideDialogIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
+		Gtk_OverrideDialogIcon(CtrlImg::I_error, "gtk-dialog-error");
+	}
 	
 	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
 	NoButtonImage_Write(Gtk_IconAdjusted("gtk-no", DPI(16)));
