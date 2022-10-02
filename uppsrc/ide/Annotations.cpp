@@ -79,9 +79,8 @@ void AssistEditor::SyncAnnotationPopup()
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		RichText result;
-	#ifdef _DEBUG
-		result = ParseQTF("[A1 [@b* " + DeQtf(coderef) + "]&");
-	#endif
+		if(AssistDiagnostics)
+			result = ParseQTF("[A1 [@b* " + DeQtf(coderef) + "]&");
 		for(String cr : AnnotationCandidates(coderef)) {
 			for(int i = 0; i < topic_text.GetPartCount(); i++)
 				if(topic_text.IsTable(i)) {

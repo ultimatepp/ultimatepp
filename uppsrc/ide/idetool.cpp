@@ -100,7 +100,7 @@ void Ide::OpenTopic(const String& topic)
 
 void Ide::OpenATopic()
 {
-	String t = doc.GetCurrent();
+	String t = doc.GetCurrentLink();
 	if(!t.StartsWith("topic:"))
 		return;
 	OpenTopic(t);

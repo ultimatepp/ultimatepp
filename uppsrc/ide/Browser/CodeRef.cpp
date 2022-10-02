@@ -323,6 +323,8 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 }
 */
 
+
+
 void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before)
 {
 	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
@@ -345,6 +347,12 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const Annotatio
 			InsertNew(*create);
 		}
 	}
+}
+
+void TopicEditor::GoToPart(int ii)
+{
+	if(ii >= 0 && ii < editor.Get().GetPartCount())
+		editor.Move(editor.Get().GetPartPos(ii));
 }
 
 void   TopicEditor::FixTopic()

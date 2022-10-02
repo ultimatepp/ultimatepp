@@ -78,7 +78,7 @@ public:
 	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false);
 	bool            GotoLabel(const String& lbl, bool highlight = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
-
+	
 	int             GetLength() const                         { return text.GetLength(); }
 
 	bool            IsSelection() const                       { return anchor != cursor; }
