@@ -65,3 +65,7 @@ FN(CXCodeCompleteResults *, clang_codeCompleteAt, (CXTranslationUnit TU, const c
 FN(void, clang_disposeCodeCompleteResults, (CXCodeCompleteResults *Results))
 
 FN(void, clang_CXIndex_setGlobalOptions, (CXIndex, unsigned options))
+
+FN(CXDiagnosticSet, clang_getChildDiagnostics, (CXDiagnostic D))
+FN(unsigned, clang_getNumDiagnosticsInSet, (CXDiagnosticSet Diags))
+FN(CXDiagnostic, clang_getDiagnosticInSet, (CXDiagnosticSet Diags, unsigned Index))

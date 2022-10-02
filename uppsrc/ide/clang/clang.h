@@ -23,6 +23,7 @@ void PutAssist(const char *s);
 #ifdef DYNAMIC_LIBCLANG
 
 #include "libclang.h"
+
 bool LoadLibClang(const char *path);
 bool LoadLibClangAutomatically();
 

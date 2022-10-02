@@ -287,6 +287,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 SOFTWARE.
 */
 
+// Reference: https://github.com/hdoc/llvm-project/tree/release/15.x/clang/include/clang-c
 
 typedef struct {
   const void *data;
@@ -1917,6 +1918,7 @@ enum CXCodeComplete_Flags {
 };
 
 typedef void *CXDiagnostic;
+typedef void *CXDiagnosticSet;
 
 typedef enum {
   /**
@@ -2007,3 +2009,7 @@ CXCodeCompleteResults *clang_codeCompleteAt(CXTranslationUnit TU, const char *co
 void clang_disposeCodeCompleteResults(CXCodeCompleteResults *Results);
 
 void clang_CXIndex_setGlobalOptions(CXIndex, unsigned options);
+
+unsigned clang_getNumDiagnosticsInSet(CXDiagnosticSet Diags);
+CXDiagnosticSet clang_getChildDiagnostics(CXDiagnostic D);
+CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet Diags, unsigned Index);
