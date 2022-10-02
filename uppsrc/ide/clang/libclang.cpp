@@ -239,4 +239,19 @@ void clang_CXIndex_setGlobalOptions(CXIndex index, unsigned int options)
 	LibClang().clang_CXIndex_setGlobalOptions(index, options);
 }
 
+CXDiagnosticSet clang_getChildDiagnostics(CXDiagnostic d)
+{
+	return LibClang().clang_getChildDiagnostics(d);
+}
+
+unsigned clang_getNumDiagnosticsInSet(CXDiagnosticSet diags)
+{
+	return LibClang().clang_getNumDiagnosticsInSet(diags);
+}
+
+CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet diags, unsigned index)
+{
+	return LibClang().clang_getDiagnosticInSet(diags, index);
+}
+
 #endif
