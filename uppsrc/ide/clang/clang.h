@@ -16,15 +16,17 @@ void ClangConfigSetDefaults();
 
 void PutAssist(const char *s);
 
-#ifdef PLATFORM_POSIX
-#define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
+#ifndef flagLCLANG
+	#ifdef PLATFORM_POSIX
+	#define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
+	#endif
 #endif
 
 #ifdef DYNAMIC_LIBCLANG
 
 #include "libclang.h"
 
-bool LoadLibClang(const char *path);
+bool LoadLibClang(const char *dir);
 bool LoadLibClangAutomatically();
 
 inline bool HasLibClang()

@@ -7,29 +7,27 @@
 #define DLIHEADER   <ide/clang/clang.dli>
 #include <Core/dli.h>
 
-bool hasLibClang = false;
+bool   hasLibClang = false;
+String LibClangPath;
 
-bool LoadLibClang(const char *path)
+bool LoadLibClang0(const char *dir, const char *file)
 {
+	String path = AppendFileName(dir, file);
 	hasLibClang = LibClang(path);
+	if(hasLibClang) {
+		LibClangPath = path;
+		Logi() << "libclang path:" << path;
+	}
 	return hasLibClang;
 }
 
-bool LoadLibClangAutomatically()
+bool LoadLibClang(const char *dir)
 {
-	String libdir = TrimBoth(Sys("llvm-config --libdir"));
-	if(LoadLibClang(libdir + "/libclang.so")) {
+	if(LoadLibClang0(dir, "libclang.so"))
 		return true;
-	}
-	if(LoadLibClang("/usr/lib/libclang.so")) {
-		return true;
-	}
-	for(int i = 20; i >= 10; i--) {
-		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib/libclang.so")) {
+	for(int i = 0; i < 20; i++)
+		if(LoadLibClang0(dir, "libclang.so." + AsString(i)))
 			return true;
-		}
-	}
-	
 	return false;
 }
 

@@ -124,6 +124,7 @@ file
 
 mainconfig
 	"" = "GUI",
+	"" = "GUI LCLANG",
 	"" = "GUI USEMALLOC",
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
