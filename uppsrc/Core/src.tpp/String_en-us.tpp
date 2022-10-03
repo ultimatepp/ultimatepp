@@ -25,9 +25,9 @@ conversions performed e.g. in operator`[`]. If you need to access
 individual UTF`-8 characters, the best practice in most cases 
 is to convert it to WString (and eventually back after processing).&]
 [s9; String is also often used to store raw binary data.&]
-[s9; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
-String and WString share a number of common functions through 
-the AString interface.&]
+[s9; WString is similar to String, but it uses 32 bit encoding. String 
+and WString share a number of common functions through the AString 
+interface.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]

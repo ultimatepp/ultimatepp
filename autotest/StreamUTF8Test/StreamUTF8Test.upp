@@ -1,0 +1,11 @@
+description "Check's Stream's Utf8 decoder for incomplete, invalid and overlong sequences\377";
+
+uses
+	Core;
+
+file
+	StreamUTF8Test.cpp;
+
+mainconfig
+	"" = "";
+

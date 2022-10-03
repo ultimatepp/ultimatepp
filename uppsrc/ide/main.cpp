@@ -86,35 +86,26 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		return;
 	}
 	
-	Vector<String> dir = Split(LoadFile(GetHomeDirFile("usc.path")), ';');
-	for(int i = 0; i < dir.GetCount(); i++)
-		ide.UscProcessDirDeep(dir[i]);
+	bool editor = false;
 	for(int i = 0; i < args.GetCount(); i++) {
-		if(args[i] != "-f") {
+		if(*args[i] != '-') {
 			String file_path = NormalizePath(args[i]);
 			
 			Logd() << FUNCTION_NAME << "Opening file \"" << file_path << "\".";
 			
 			ide.EditFile(file_path);
 			ide.FileSelected();
+			editor = true;
 		}
 	}
 	
-	clset = true;
-	ide.EditorMode();
-}
-
-void LoadLibs()
-{
-#ifdef DYNAMIC_LIBCLANG
-	if (!LoadLibClangAutomatically()) {
-		String msg =
-			"Failed to load libclang! TheIDE will continue starting up, but some "
-			"fucnionalities like Assit`+`+ will not work.";
-		Loge() << UPP_FUNCTION_NAME << "(): " << msg;
-		ErrorOK(msg);
+	if(editor) {
+		clset = true;
+		Vector<String> dir = Split(LoadFile(GetHomeDirFile("usc.path")), ';');
+		for(int i = 0; i < dir.GetCount(); i++)
+			ide.UscProcessDirDeep(dir[i]);
+		ide.EditorMode();
 	}
-#endif
 }
 
 #undef  GUI_APP_MAIN_HOOK
@@ -125,13 +116,44 @@ void LoadLibs()
 		return Upp::GetExitCode(); \
 }
 
+#ifdef DYNAMIC_LIBCLANG
+bool TryLoadLibClang()
+{
+	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	if(LoadLibClang(libdir))
+		return true;
+	if(LoadLibClang("/usr/lib"))
+		return true;
+	for(int i = 20; i >= 10; i--)
+		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib"))
+			return true;
+	return false;
+}
+#endif
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
 void AppMain___()
 #endif
 {
-	LoadLibs();
+#ifdef DYNAMIC_LIBCLANG
+	if(FindIndex(CommandLine(), "--noclang") < 0) {
+		String wfile = ConfigFile(".nolibclang");
+		if(TryLoadLibClang()) {
+			if(FileExists(wfile)) {
+				PromptOK("Library libclang was detected.&Assist`+`+ functions should be now available.");
+				DeleteFile(wfile);
+			}
+		}
+		else
+		if(!FileExists(wfile)) {
+			DeleteFile(wfile);
+			PromptOK("Library libclang was not found.&Assist`+`+ will not be available.");
+			SaveFile(wfile, String());
+		}
+	}
+#endif
 
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
 	if(!RealizeDirectory(preamble_dir)) // temporary (?)

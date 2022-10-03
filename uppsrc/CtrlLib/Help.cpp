@@ -34,7 +34,7 @@ bool HelpWindow::GoTo0(const String& link)
 			return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true);
 		}
 		else
-			return view.GotoLabel(label, true);;
+			return view.GotoLabel(label, true);
 	}
 	return false;
 }

@@ -213,6 +213,7 @@ public:
 	void Open(const String& grouppath);
 	void OpenFile(const String& path);
 	void GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before);
+	void GoToPart(int ii);
 	void PersistentFindReplace(bool b)               { editor.PersistentFindReplace(b); }
 	
 	static int  GetSerial();
