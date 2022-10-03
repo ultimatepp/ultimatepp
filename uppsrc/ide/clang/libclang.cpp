@@ -16,7 +16,7 @@ bool LoadLibClang0(const char *dir, const char *file)
 	hasLibClang = LibClang(path);
 	if(hasLibClang) {
 		LibClangPath = path;
-		Logi() << "libclang path:" << path;
+		Logi() << UPP_FUNCTION_NAME << "(): libclang path: \"" << path << "\"";
 	}
 	return hasLibClang;
 }
