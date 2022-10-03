@@ -225,7 +225,7 @@ int Stream::GetUtf8()
 {
 	int code = Get();
 	
-	if(code <= 0) {
+	if(code < 0) {
 		LoadError();
 		return -1;
 	}
@@ -238,11 +238,8 @@ int Stream::GetUtf8()
 		if(code < 0xE0) {
 			int c0 = Get();
 			if(c0 >= 0x80 && c0 < 0xC0 &&
-			   (c = ((code - 0xC0) << 6) + c0 - 0x80) >= 0x80 && c < 0x800) {
-					return c;
-			}
-			if(c0 < 0)
-				LoadError();
+			   (c = ((code - 0xC0) << 6) + c0 - 0x80) >= 0x80 && c < 0x800)
+				return c;
 		}
 		else
 		if(code < 0xF0) {
@@ -250,12 +247,8 @@ int Stream::GetUtf8()
 			int c1 = Get();
 			if(c1 >= 0x80 && c1 < 0xC0 &&
 			   c0 >= 0x80 && c0 < 0xC0 &&
-			   (c = ((code - 0xE0) << 12) + ((c0 - 0x80) << 6) + c1 - 0x80) >= 0x800 && c < 0x10000) {
-					return c;
-			}
-			if(c1 < 0)
-				LoadError();
-			   
+			   (c = ((code - 0xE0) << 12) + ((c0 - 0x80) << 6) + c1 - 0x80) >= 0x800 && c < 0x10000)
+				return c;
 		}
 		else
 		if(code < 0xF8) {
@@ -265,16 +258,12 @@ int Stream::GetUtf8()
 			if(c2 >= 0x80 && c2 < 0xC0 &&
 			   c1 >= 0x80 && c1 < 0xC0 &&
 			   c0 >= 0x80 && c0 < 0xC0 &&
-			   (c = ((code - 0xF0) << 18) + ((c0 - 0x80) << 12) + ((c1 - 0x80) << 6) + c2 - 0x80) >= 0x10000 && c < 0x110000) {
-					return c;
-			}
-			if(c2 < 0)
-				LoadError();
+			   (c = ((code - 0xF0) << 18) + ((c0 - 0x80) << 12) + ((c1 - 0x80) << 6) + c2 - 0x80) >= 0x10000 && c < 0x110000)
+				return c;
 		}
-		if(!IsError())
-			Seek(pos); // Rewind (to represent each invalid byte).
 	}
 
+	LoadError();
 	return -1;
 }
 
