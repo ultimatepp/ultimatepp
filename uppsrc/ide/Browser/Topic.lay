@@ -68,3 +68,10 @@ LAYOUT(SaveTemplateLayout, 248, 96)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(176, 64).TopPosZ(60, 24))
 END_LAYOUT
 
+LAYOUT(EditRefLayout, 548, 68)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("ID")).LeftPosZ(8, 16).TopPosZ(8, 19))
+	ITEM(Upp::EditString, label, HSizePosZ(28, 8).TopPosZ(8, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(408, 64).TopPosZ(36, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(476, 64).TopPosZ(36, 24))
+END_LAYOUT
+

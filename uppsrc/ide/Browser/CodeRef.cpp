@@ -24,17 +24,11 @@ void TopicEditor::JumpToDefinition()
 void TopicEditor::Label(String& label)
 {
 	Save();
-/* TODO ReferenceDlg
-	if(ref.item.IsMultiSelect())
-		ref.item.ClearSelection();
-	ref.item.MultiSelect(false);
-	ref.Title("Reference");
-	ref.Set(label);
-	ref.classlist.Hide();
-	if(ref.Execute() != IDOK)
-		return;
-	label = ref.Get();
-*/
+	WithEditRefLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Code reference");
+	dlg.label <<= label;
+	if(dlg.Execute() == IDOK)
+		label = ~dlg.label;
 }
 
 Uuid CodeItemUuid()
@@ -112,11 +106,6 @@ void TopicEditor::Tools(Bar& bar)
 	   .Key(K_ALT_U).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
-#ifdef REPAIR
-	bar.Separator();
-	bar.Add("Repair!", CtrlImg::Toggle(), THISBACK(Repair)).Key(K_ALT_F5);
-	bar.Separator();
-#endif
 }
 
 void TopicEditor::MainTool(Bar& bar)
@@ -353,91 +342,6 @@ void TopicEditor::GoToPart(int ii)
 {
 	if(ii >= 0 && ii < editor.Get().GetPartCount())
 		editor.Move(editor.Get().GetPartPos(ii));
-}
-
-void   TopicEditor::FixTopic()
-{
-	// TODO
-#if 0
-	String nest;
-	if(!EditText(nest, "Fix topic", "Nest"))
-		return;
-	CodeBaseLock __;
-	CppBase& base = CodeBase();
-	int q = base.Find(nest);
-	if(q < 0) {
-		Exclamation("Nest not found");
-		return;
-	}
-	Array<CppItem>& n = base[q];
-	Index<String> natural;
-	Vector<String> link;
-	for(int i = 0; i < n.GetCount(); i++) {
-		const CppItem& m = n[i];
-		String nat;
-		if(m.virt)
-			nat << "virtual ";
-		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
-			nat << "static ";
-		nat << m.natural;
-		natural.Add(nat);
-		link.Add(MakeCodeRef(nest, n[i].qitem));
-	}
-	RichText result;
-	const RichText& txt = editor.Get();
-	bool started = false;
-
-	int l, h;
-	if(editor.GetSelection(l, h)) {
-		l = txt.FindPart(l);
-		h = txt.FindPart(h);
-	}
-	else {
-		l = 0;
-		h = txt.GetPartCount();
-	}
-
-	for(int i = 0; i < txt.GetPartCount(); i++)
-		if(txt.IsPara(i)) {
-			RichPara p = txt.Get(i);
-			if(i >= l && i < h) {
-				WString h = p.GetText();
-				String nat;
-				const wchar *s = h;
-				while(*s)
-					if(*s == 160 || *s == ' ') {
-						nat.Cat(' ');
-						while(*s == 160 || *s == ' ') s++;
-					}
-					else
-						nat.Cat(*s++);
-				int q = nat.GetCount() ? natural.Find(nat) : -1;
-				if(q >= 0) {
-					started = true;
-					const CppItem& m = n[q];
-					RichText h = ParseQTF(styles + ("[s7; &]" + CreateQtf(link[q], n[q].name, m, GetLang(), true)));
-					if(h.GetPartCount())
-						h.RemovePart(h.GetPartCount() - 1);
-					result.CatPick(pick(h));
-				}
-				else
-				if(!started || p.GetLength())
-					result.Cat(p);
-			}
-			else
-				result.Cat(p);
-		}
-		else {
-			RichTable b;
-			b <<= txt.GetTable(i);
-			result.CatPick(pick(b));
-		}
-	RichPara empty;
-	result.Cat(empty);
-	editor.BeginOp();
-	editor.SetSelection(0, txt.GetLength());
-	editor.PasteText(result);
-#endif
 }
 
 String TopicEditor::GetFileName() const

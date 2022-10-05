@@ -185,8 +185,6 @@ protected:
 	void   JumpToDefinition();
 	String GetLang() const;
 
-	void   FixTopic();
-	
 	void   OnSearch();
 	void   DoSearch();
 	
