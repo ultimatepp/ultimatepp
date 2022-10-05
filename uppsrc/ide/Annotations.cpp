@@ -250,5 +250,7 @@ void AssistEditor::EditAnnotation(bool leftclick)
 	}
 	bar.Add("New reference topic..", THISBACK2(NewTopic, "src", coderef));
 	bar.Add("New implementation topic..", THISBACK2(NewTopic, "srcimp", coderef));
+	bar.Separator();
+	bar.Add("Copy code reference id", [=] { WriteClipboardText(coderef); });
 	bar.Execute();
 }

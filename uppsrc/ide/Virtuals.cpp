@@ -60,12 +60,14 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	void Sync() {
 		String name = ~find;
-		String k = list.GetKey();
+		String k;
+		if(list.IsCursor())
+			k = list.Get("id");
 		list.Clear();
 		for(const auto& m : ~virtuals)
 			if(ToUpper(m.value.name).Find(name) >= 0)
-				list.Add(RawToValue(m.value), m.value.defined, m.value.last_override);
-		if(!list.FindSetCursor(k))
+				list.Add(RawToValue(m.value), m.value.defined, m.value.last_override, m.value.id);
+		if(!list.FindSetCursor(k, "id"))
 			list.GoBegin();
 	}
 
@@ -92,6 +94,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.AddColumn("Virtual function").SetDisplay(Single<VirtualsDisplay>());
 		list.AddColumn("Defined in");
 		list.AddColumn("Last override");
+		list.AddIndex("id");
 		list.SetLineCy(Arial(Zy(11)).Info().GetHeight() + DPI(3));
 		list.ColumnWidths("500 100 100");
 		list.WhenLeftDouble = THISBACK(DblClk);

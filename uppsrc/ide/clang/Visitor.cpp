@@ -112,6 +112,7 @@ String ClangCursorInfo::Id()
 		case CXCursor_UnionDecl:
 		case CXCursor_TypedefDecl:
 		case CXCursor_TypeAliasDecl:
+		case CXCursor_EnumDecl:
 			m = Type();
 			break;
 		case CXCursor_FunctionTemplate:
@@ -137,7 +138,6 @@ String ClangCursorInfo::Id()
 			break;
 			
 /*
-		case CXCursor_EnumDecl:
 		case CXCursor_ParmDecl:
 		case CXCursor_Namespace:
 		case CXCursor_UnexposedDecl:

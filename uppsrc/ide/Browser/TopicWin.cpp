@@ -226,7 +226,7 @@ void TopicEditor::FileBar(Bar& bar)
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
 	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
 	bar.Add("Export to HTML..", THISBACK(ExportHTML));
-	bar.Add("Export group  to HTML..", THISBACK(ExportGroupHTML));
+	bar.Add("Export group to HTML..", THISBACK(ExportGroupHTML));
 }
 
 void TopicEditor::EditMenu(Bar& bar)
@@ -380,9 +380,6 @@ void TopicEditor::SetBar()
 bool TopicEditor::Key(dword key, int cnt)
 {
 	switch(key) {
-	case K_ALT_F10:
-		FixTopic();
-		return true;
 	case K_ALT_UP:
 		return topics_list.Key(K_UP, 0);
 	case K_ALT_DOWN:
