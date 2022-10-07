@@ -923,8 +923,7 @@ LAYOUT(InsertAsLayout, 276, 168)
 END_LAYOUT
 
 LAYOUT(UppHubLayout, 992, 656)
-	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 480).VSizePosZ(4, 36))
-	ITEM(Upp::RichTextView, info, RightPosZ(4, 472).VSizePosZ(4, 36))
+	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Upp::EditString, search, LeftPosZ(4, 216).BottomPosZ(9, 19))
 	ITEM(Upp::Button, help, SetLabel(t_("?")).Tip(t_("Learn more about UppHub..")).RightPosZ(344, 20).BottomPosZ(6, 24))
 	ITEM(Upp::Button, action, SetLabel(t_("Install")).RightPosZ(276, 64).BottomPosZ(6, 24))

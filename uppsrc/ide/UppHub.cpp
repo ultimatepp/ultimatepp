@@ -76,6 +76,10 @@ void UppHubSettingsDlg::RefreshCtrls()
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
+	SplitterFrame splitter;
+	ArrayCtrl list;
+	RichTextView info;
+	
 	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
@@ -120,6 +124,9 @@ UppHubDlg::UppHubDlg()
 {
 	CtrlLayoutCancel(*this, "UppHub");
 	Sizeable().Zoomable();
+	
+	parent.Add(list.SizePos());
+	parent.AddFrame(splitter.Right(info, 560));
 	
 	list.AddKey("NAME");
 	list.AddColumn("Name").Sorting();
