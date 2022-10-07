@@ -120,11 +120,16 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 bool TryLoadLibClang()
 {
 	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	int q = FindIndex(CommandLine(), "--clangdir");
+	if(q >= 0 && q + 1 < CommandLine().GetCount()) {
+		libdir = CommandLine()[q + 1];
+		CommandLineRemove(q, 2);
+	}
 	if(LoadLibClang(libdir))
 		return true;
 	if(LoadLibClang("/usr/lib"))
 		return true;
-	for(int i = 20; i >= 10; i--)
+	for(int i = 200; i >= 10; i--)
 		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib"))
 			return true;
 	return false;

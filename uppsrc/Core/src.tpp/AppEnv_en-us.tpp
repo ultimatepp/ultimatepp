@@ -140,6 +140,11 @@ This array does not contain main`'s argv`[0`], so the number
 of elements is argc `- 1.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:CommandLineRemove`(int`,int`): [@(0.0.255) void] [* CommandLineRemove]([@(0.0.255) i
+nt] [*@3 i], [@(0.0.255) int] [*@3 count] [@(0.0.255) `=] [@3 1])&]
+[s2;%% Removes commandline argument(s).&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:GetArgv0`(`): [_^Upp`:`:String^ String]_[* GetArgv0]()&]
 [s2;%% Returns the argv`[0`] argument to main (contains the name 
 of executable).&]
