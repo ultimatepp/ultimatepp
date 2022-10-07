@@ -111,21 +111,35 @@ void Ide::Usage()
 	if(!editor.WaitCurrentFile())
 		return;
 	AnnotationItem cm = editor.FindCurrentAnnotation();
+	Usage(cm.id, cm.name);
+}
+
+void Ide::Usage(const String& id, const String& name)
+{
+	if(IsNull(id))
+		return;
 	SetFFound(ffoundi_next);
 	FFound().Clear();
 	SortByKey(CodeIndex());
 	Index<String> unique;
 	for(const auto& f : ~CodeIndex()) {
 		auto Add = [&](Point mpos) {
-			AddReferenceLine(f.key, mpos, cm.name, unique);
+			AddReferenceLine(f.key, mpos, name, unique);
 		};
 		for(const AnnotationItem& m : f.value.items)
-			if(m.id == cm.id)
+			if(m.id == id)
 				Add(m.pos);
 		for(const ReferenceItem& m : f.value.refs)
-			if(m.id == cm.id)
+			if(m.id == id)
 				Add(m.pos);
 	}
 
 	FFoundFinish();
+}
+
+void Ide::IdUsage()
+{
+	String name;
+	String ref_id = GetRefId(editor.GetCursor(), name);
+	Usage(ref_id, name);
 }
