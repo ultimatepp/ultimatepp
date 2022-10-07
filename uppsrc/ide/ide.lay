@@ -937,11 +937,11 @@ LAYOUT(UppHubLayout, 992, 656)
 	ITEM(Upp::Option, broken, SetLabel(t_("Show broken")).LeftPosZ(492, 116).BottomPosZ(10, 16))
 END_LAYOUT
 
-LAYOUT(UppHubSettingsLayout, 512, 64)
-	ITEM(Upp::Option, seturl, SetLabel(t_("Override UppHub URL with")).LeftPosZ(8, 152).TopPosZ(8, 16))
-	ITEM(Upp::EditString, url, LeftPosZ(152, 328).TopPosZ(7, 19))
-	ITEM(Upp::Button, selfile, LeftPosZ(484, 20).TopPosZ(7, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(372, 64).TopPosZ(32, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(440, 64).TopPosZ(32, 24))
+LAYOUT(UppHubSettingsLayout, 544, 64)
+	ITEM(Upp::Option, seturl, SetLabel(t_("Override UppHub URL with")).LeftPosZ(8, 164).TopPosZ(8, 16))
+	ITEM(Upp::EditString, url, HSizePosZ(176, 32).TopPosZ(7, 19))
+	ITEM(Upp::Button, selfile, RightPosZ(8, 20).TopPosZ(7, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
