@@ -45,6 +45,24 @@ bool Ide::OpenLink(const String& s, int pos)
 	return true;
 }
 
+String Ide::GetRefId(int pos, String& name)
+{
+	int ci = 0;
+	name = editor.ReadIdBack(pos);
+	String ref_id;
+	int lp = pos;
+	int li = editor.GetLinePos(lp);
+	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
+		for(const ReferenceItem& m : editor.references) {
+			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
+			   (GetNameFromId(m.id) == name || pass == 1)) {
+				ref_id = m.id;
+				ci = m.pos.x;
+			}
+		}
+	return ref_id;
+}
+
 void Ide::ContextGoto0(int pos)
 {
 	if(designer)
@@ -128,17 +146,8 @@ void Ide::ContextGoto0(int pos)
 	if(!editor.WaitCurrentFile())
 		return;
 
-	String ref_id;
-	int ci = 0;
-	String name = editor.ReadIdBack(pos);
-	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
-		for(const ReferenceItem& m : editor.references) {
-			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
-			   (GetNameFromId(m.id) == name || pass == 1)) {
-				ref_id = m.id;
-				ci = m.pos.x;
-			}
-		}
+	String name;
+	String ref_id = GetRefId(pos, name);
 	
 	PutAssist("ref_id: " + ref_id);
 	

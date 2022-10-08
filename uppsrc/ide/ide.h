@@ -981,8 +981,11 @@ public:
 		void  SwapS();
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  Usage();
+		void  IdUsage();
+		void  Usage(const String& id, const String& name);
 //		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
+		String GetRefId(int pos, String& name);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  GoToLine();
