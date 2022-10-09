@@ -39,7 +39,52 @@ void VerifyUppHubRequirements()
 	);
 }
 
+class UppHubSettingsDlg final : public WithUppHubSettingsLayout<TopWindow> {
+public:
+	static constexpr auto GLOBAL_CONFIG_NAME = "UppHubDlgSettings";
+	
+public:
+	UppHubSettingsDlg();
+	
+	void LoadGlobalSettings();
+	void SaveGlobalSettings();
+	
+private:
+	void RefreshCtrls();
+};
+
+UppHubSettingsDlg::UppHubSettingsDlg()
+{
+	CtrlLayoutOKCancel(*this, "Settings");
+	FileSelectOpen(url, selfile);
+	seturl.WhenAction = [=] {
+		RefreshCtrls();
+	};
+}
+
+void UppHubSettingsDlg::LoadGlobalSettings()
+{
+	LoadFromGlobal(*this, GLOBAL_CONFIG_NAME);
+	RefreshCtrls();
+}
+
+void UppHubSettingsDlg::SaveGlobalSettings()
+{
+	StoreToGlobal(*this, GLOBAL_CONFIG_NAME);
+}
+
+void UppHubSettingsDlg::RefreshCtrls()
+{
+	auto enable = static_cast<bool>(seturl.Get());
+	url.Enable(enable);
+	selfile.Enable(enable);
+}
+
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
+	SplitterFrame splitter;
+	ArrayCtrl list;
+	RichTextView info;
+	
 	VectorMap<String, UppHubNest> upv;
 	Index<String> loaded;
 	Progress pi;
@@ -53,7 +98,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	bool         loading = false;
 	HttpRequest  http;
 
-	WithUppHubSettingsLayout<TopWindow> settings;
+	UppHubSettingsDlg settings;
 
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
@@ -84,9 +129,9 @@ UppHubDlg::UppHubDlg()
 {
 	CtrlLayoutCancel(*this, "UppHub");
 	Sizeable().Zoomable();
-
-	CtrlLayoutOKCancel(settings, "Settings");
-	FileSelectOpen(settings.url, settings.selfile);
+	
+	parent.Add(list.SizePos());
+	parent.AddFrame(splitter.Right(info, 560));
 	
 	list.AddKey("NAME");
 	list.AddColumn("Name").Sorting();
@@ -146,13 +191,13 @@ UppHubDlg::UppHubDlg()
 	broken <<= false;
 	
 	category ^= experimental ^= broken ^= [=] { SyncList(); };
-
-	LoadFromGlobal(settings, "UppHubDlgSettings");
+	
+	settings.LoadGlobalSettings();
 }
 
 INITBLOCK
 {
-	RegisterGlobalConfig("UppHubDlgSettings");
+	RegisterGlobalConfig(UppHubSettingsDlg::GLOBAL_CONFIG_NAME);
 }
 
 bool UppHubDlg::Key(dword key, int count)
@@ -321,10 +366,13 @@ void UppHubDlg::Sync()
 
 void UppHubDlg::Settings()
 {
-	if(settings.Execute() == IDOK) {
-		StoreToGlobal(settings, "UppHubDlgSettings");
-		Load();
+	settings.LoadGlobalSettings();
+	if(settings.Execute() != IDOK) {
+		return;
 	}
+	
+	settings.SaveGlobalSettings();
+	Load();
 }
 
 Value UppHubDlg::LoadJson(const String& url)
