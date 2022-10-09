@@ -168,6 +168,7 @@ void AppMain___()
 #ifdef PLATFORM_POSIX
 	setenv("TMPDIR", preamble_dir, 1);
 	setenv("TMP", preamble_dir, 1);
+	setenv("LIBCLANG_NOTHREADS", "1", 1);
 #else
 	SetEnvironmentVariable("TMPDIR", preamble_dir);
 	SetEnvironmentVariable("TMP", preamble_dir); // Looks like libclang ignores TMPDIR
