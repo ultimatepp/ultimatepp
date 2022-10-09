@@ -3,6 +3,8 @@
 
 #include <ide/Common/Common.h>
 
+#define UBUNTU2204_WORKAROUND // there appears to be a bug in Ubuntu 22.04.1LTS libclang 14
+
 // Configuration
 
 extern bool LibClangEnabled;
