@@ -415,6 +415,11 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	SyncCursor();
 }
 
+bool NotIncludedFrom(const String& s)
+{
+	return s.Find("in file included from") < 0;
+}
+
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
 	if(cfx.content.GetCount())
@@ -430,7 +435,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 			while(di < ds.GetCount() && err.GetCount() < 30) {
 				int k = ds[di].kind;
 				auto Do = [&](const Diagnostic& d) {
-					if(d.path == path)
+					if(d.path == path && NotIncludedFrom(d.text))
 						err.Add(d.pos);
 				};
 				if(IsWarning(k) || IsError(k)) {
@@ -455,11 +460,11 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 		int ii0 = di;
 		bool found = false;
 		if(IsWarning(k) || IsError(k)) {
-			if(errors[di].path == path && errors[di].pos == pos)
+			if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
 				found = true;
 			di++;
 			while(di < errors.GetCount() && errors[di].detail) {
-				if(errors[di].path == path && errors[di].pos == pos)
+				if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
 					found = true;
 				di++;
 			}
@@ -471,7 +476,7 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 				if(i > ii0)
 					qtf << "&";
 				qtf << "[";
-				if(d.path == path && d.pos == pos)
+				if(d.path == path && d.pos == pos && NotIncludedFrom(d.text))
 					qtf << "*";
 				qtf << " ";
 				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
