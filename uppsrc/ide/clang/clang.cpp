@@ -159,7 +159,7 @@ Clang::~Clang()
 	clang_disposeIndex(index);
 }
 
-void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool> out)
+void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool, int> out)
 {
 	if(!HasLibClang())
 		return;
@@ -175,7 +175,8 @@ void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&
 			unsigned offset;
 			CXSourceLocation location = clang_getDiagnosticLocation(diagnostic);
 			clang_getExpansionLocation(location, &file, &line, &column, &offset);
-			out(FetchString(clang_getFileName(file)), Point(column - 1, line - 1), FetchString(clang_getDiagnosticSpelling(diagnostic)), detail);
+			out(FetchString(clang_getFileName(file)), Point(column - 1, line - 1), FetchString(clang_getDiagnosticSpelling(diagnostic)),
+			                detail, clang_getDiagnosticSeverity(diagnostic));
 		};
 		Dump(diagnostic, false);
 		CXDiagnosticSet set = clang_getChildDiagnostics(diagnostic);
@@ -191,9 +192,16 @@ void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&
 
 void Diagnostics(CXTranslationUnit tu, Stream& out)
 {
-	Diagnostics(tu, [&](const String& filename, Point pos, const String& text, bool detail) {
+	Diagnostics(tu, [&](const String& filename, Point pos, const String& text, bool detail, int severity) {
 		if(detail)
 			out << "\t";
+		if(IsWarning(severity))
+			out << "WARNING: ";
+		else
+		if(IsError(severity))
+			out << "ERROR: ";
+		else
+			out << "NOTE: ";
 		out << filename << " (" << pos.y + 1 << "): " << text << "\r\n";
 	});
 }

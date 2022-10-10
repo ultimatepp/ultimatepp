@@ -197,8 +197,11 @@ struct Clang {
 	~Clang();
 };
 
-void   Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool> out);
+void   Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&, bool, int> out);
 void   Diagnostics(CXTranslationUnit tu, Stream& out);
+
+inline bool IsWarning(int q) { return q == CXDiagnostic_Warning; }
+inline bool IsError(int q) { return findarg(q, CXDiagnostic_Error, CXDiagnostic_Fatal) >= 0; }
 
 String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
@@ -244,7 +247,15 @@ public:
 	~ClangVisitor();
 };
 
-void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done);
+struct Diagnostic : Moveable<Diagnostic> {
+	int    kind;
+	bool   detail;
+	String path;
+	Point  pos;
+	String text;
+};
+
+void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&, const Vector<Diagnostic>&> done);
 bool IsCurrentFileParsing();
 void CancelCurrentFile();
 bool IsCurrentFileDirty();

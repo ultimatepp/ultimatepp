@@ -140,6 +140,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	PPInfo    ppi;
 	String    master_source;
 
+	Vector<Diagnostic> errors;
+
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SetAnnotations(const CppFileInfo& f);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
@@ -162,6 +164,8 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	void           SyncParamInfo();
 	void           StartParamInfo(const AssistItem& m, int pos);
+
+	bool           AssistTip(CodeEditor::MouseTip& mt);
 
 	void           Complete();
 	void           Abbr();

@@ -2013,3 +2013,13 @@ void clang_CXIndex_setGlobalOptions(CXIndex, unsigned options);
 unsigned clang_getNumDiagnosticsInSet(CXDiagnosticSet Diags);
 CXDiagnosticSet clang_getChildDiagnostics(CXDiagnostic D);
 CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet Diags, unsigned Index);
+
+enum CXDiagnosticSeverity {
+  CXDiagnostic_Ignored = 0,
+  CXDiagnostic_Note = 1,
+  CXDiagnostic_Warning = 2,
+  CXDiagnostic_Error = 3,
+  CXDiagnostic_Fatal = 4
+};
+
+enum CXDiagnosticSeverity clang_getDiagnosticSeverity(CXDiagnostic);

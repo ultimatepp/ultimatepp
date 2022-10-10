@@ -7,7 +7,8 @@ CoEvent                                current_file_event;
 CurrentFileContext                     current_file;
 int64                                  current_file_serial;
 int64                                  current_file_done_serial;
-Event<const CppFileInfo&>              annotations_done;
+
+Event<const CppFileInfo&, const Vector<Diagnostic>&> annotations_done;
 
 CurrentFileContext                     autocomplete_file;
 
@@ -80,12 +81,22 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 		for(ReferenceItem& m : f.refs)
 			m.pos.y -= cfc.parsed_file.line_delta;
 	}
+	
+	Vector<Diagnostic> ds;
+	Diagnostics(cfc.clang.tu, [&](const String& filename, Point pos, const String& text, bool detail, int severity) {
+		Diagnostic& d = ds.Add();
+		d.kind = severity;
+		d.detail = detail;
+		d.path = NormalizePath(filename);
+		d.pos = pos;
+		d.text = text;
+	});
 	Ctrl::Call([&] {
 		if(cfc.parsed_file.filename == current_file.filename &&
 		   cfc.parsed_file.real_filename == current_file.real_filename &&
 		   cfc.parsed_file.includes == current_file.includes &&
 		   serial == current_file_serial) {
-			annotations_done(f);
+			annotations_done(f, ds);
 			FileAnnotation fa;
 			fa.defines = cfc.parsed_file.defines;
 			fa.includes = cfc.parsed_file.includes;
@@ -223,7 +234,7 @@ void CurrentFileThread()
 	LLOG("Current file thread exit");
 }
 
-void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&> done)
+void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&, const Vector<Diagnostic>&> done)
 {
 	if(!HasLibClang())
 		return;

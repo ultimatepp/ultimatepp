@@ -736,8 +736,15 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 	if(!MouseSelSpecial(p, flags))
 		LineEdit::MouseMove(p, flags);
 	if(IsSelection()) return;
-	int64 h = GetMousePos(p);
-	tippos = h < INT_MAX ? (int)h : -1;
+
+	if(p.x > 0) { // ignore calls from EditorBar::MouseMove
+		Size fsz = GetFontSize();
+		p = (p + fsz * (Size)sb.Get()) / fsz;
+		int64 h = GetGPos(p.y, p.x);
+		tippos = h < INT_MAX ? (int)h : -1;
+	}
+	else
+		tippos = Null;
 	SyncTip();
 }
 
@@ -1142,6 +1149,9 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int64 
 				q++;
 		}
 	}
+	for(Point p : errors)
+		if(p.y == line && p.x < hl.GetCount())
+			hl[p.x].paper = Blend(LtRed(), SColorPaper(), 100);
 }
 
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)
