@@ -135,10 +135,12 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	static Ptr<Ctrl> assist_ptr;
 
-	bool      navigator_right = true;
+	bool      navigator_right = false;
 
 	PPInfo    ppi;
 	String    master_source;
+
+	Vector<Diagnostic> errors;
 
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SetAnnotations(const CppFileInfo& f);
@@ -162,6 +164,8 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	void           SyncParamInfo();
 	void           StartParamInfo(const AssistItem& m, int pos);
+
+	bool           AssistTip(CodeEditor::MouseTip& mt);
 
 	void           Complete();
 	void           Abbr();

@@ -291,7 +291,7 @@ protected:
 	};
 	
 	Tip   tip;
-	int   tippos;
+	int   tippos = Null;
 	
 	int   replacei;
 	
@@ -300,6 +300,8 @@ protected:
 	One<Progress> search_progress;
 	
 	String        refresh_info; // serialized next line syntax context to detect the need of full Refresh
+
+	Vector<Point> errors; // current file (compilation) errors
 
 	struct HlSt;
 	
@@ -518,6 +520,8 @@ public:
 
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
+	
+	void     Errors(Vector<Point>&& errs)             { errors = pick(errs); Refresh(); }
 	
 	void     Illuminate(const WString& text);
 	WString  GetIlluminated() const                   { return illuminated; }

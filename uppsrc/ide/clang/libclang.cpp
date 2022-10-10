@@ -252,4 +252,9 @@ CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet diags, unsigned index)
 	return LibClang().clang_getDiagnosticInSet(diags, index);
 }
 
+enum CXDiagnosticSeverity clang_getDiagnosticSeverity(CXDiagnostic d)
+{
+	return LibClang().clang_getDiagnosticSeverity(d);
+}
+
 #endif

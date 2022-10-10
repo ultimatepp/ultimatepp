@@ -69,6 +69,8 @@ AssistEditor::AssistEditor()
 		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
 			annotating = true;
 			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
+			errors.Clear();
+			Errors(Vector<Point>());
 		}
 	};
 }
@@ -413,10 +415,89 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	SyncCursor();
 }
 
+bool NotIncludedFrom(const String& s)
+{
+	return s.Find("in file included from") < 0;
+}
+
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
 	if(cfx.content.GetCount())
-		SetCurrentFile(cfx, [=](const CppFileInfo& f) { SetAnnotations(f); });
+		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
+			SetAnnotations(f);
+
+			errors = clone(ds);
+
+			Vector<Point> err;
+
+			int di = 0;
+			String path = NormalizePath(theide->editfile);
+			while(di < ds.GetCount() && err.GetCount() < 30) {
+				int k = ds[di].kind;
+				auto Do = [&](const Diagnostic& d) {
+					if(d.path == path && NotIncludedFrom(d.text))
+						err.Add(d.pos);
+				};
+				if(IsWarning(k) || IsError(k)) {
+					Do(ds[di++]);
+					while(di < ds.GetCount() && ds[di].detail)
+						Do(ds[di++]);
+				}
+			}
+			Errors(pick(err));
+		});
+}
+
+bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
+{
+	int p = mt.pos;
+	int line = GetLinePos(p);
+	Point pos(p, line);
+	int di = 0;
+	String path = NormalizePath(theide->editfile);
+	while(di < errors.GetCount()) {
+		int k = errors[di].kind;
+		int ii0 = di;
+		bool found = false;
+		if(IsWarning(k) || IsError(k)) {
+			if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
+				found = true;
+			di++;
+			while(di < errors.GetCount() && errors[di].detail) {
+				if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
+					found = true;
+				di++;
+			}
+		}
+		if(found) {
+			String qtf = "[g ";
+			for(int i = ii0; i < di; i++) {
+				Diagnostic& d = errors[i];
+				if(i > ii0)
+					qtf << "&";
+				qtf << "[";
+				if(d.path == path && d.pos == pos && NotIncludedFrom(d.text))
+					qtf << "*";
+				qtf << " ";
+				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
+				if(IsWarning(d.kind))
+					qtf << "[@m warning: ]";
+				if(IsError(d.kind))
+					qtf << "[@r error: ]";
+				qtf << "\1" << d.text << "\1";
+				qtf << "]";
+			}
+			mt.value = qtf;
+			mt.display = &QTFDisplay();
+
+			RichText txt = ParseQTF(qtf);
+			txt.ApplyZoom(GetRichTextStdScreenZoom());
+			mt.sz.cx = min(4 * GetWorkArea().GetWidth() / 5, txt.GetWidth()) + DPI(2);
+			mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+			return true;
+		}
+	}
+	return false;
 }
 
 void AssistEditor::SyncCurrentFile()

@@ -307,15 +307,23 @@ Vector<WString>& coreCmdLine__()
 	return h;
 }
 
+static Mutex sCmdMutex;
+static Vector<String> sCmd;
+
 const Vector<String>& CommandLine()
 {
-	static Vector<String> cmd;
+	Mutex::Lock __(sCmdMutex);
 	ONCELOCK {
-		auto& src = coreCmdLine__();
-		for(int i = 0; i < src.GetCount(); i++)
-			cmd.Add(src[i].ToString());
+		for(WString s : coreCmdLine__())
+			sCmd.Add(s.ToString());
 	}
-	return cmd;
+	return sCmd;
+}
+
+void CommandLineRemove(int i, int count)
+{
+	CommandLine();
+	sCmd.Remove(i, count);
 }
 
 String GetArgv0()

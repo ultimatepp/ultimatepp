@@ -120,7 +120,18 @@ String ClangCursorInfo::Id()
 		case CXCursor_Constructor:
 		case CXCursor_Destructor:
 		case CXCursor_CXXMethod:
+#ifdef UBUNTU2204_WORKAROUND
+			{
+				String h = RawId();
+				int q = 0;
+				while(findarg(h[q], ':', '*', '&', '(', ')', ' ') >= 0)
+					q++;
+				m = Scope();
+				m.Cat(~h + q, h.GetCount() - q);
+			}
+#else
 			m = RawId();
+#endif
 			break;
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
@@ -376,7 +387,9 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 			CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors,
 			CXPrintingPolicy_TerseOutput,
 			CXPrintingPolicy_SuppressImplicitBase,
+#ifndef UBUNTU2204_WORKAROUND
 			CXPrintingPolicy_FullyQualifiedName,
+#endif
 			CXPrintingPolicy_Bool })
 		clang_PrintingPolicy_setProperty(pp_id, p, 1);
 

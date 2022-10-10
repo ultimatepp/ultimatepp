@@ -369,7 +369,7 @@ void Ide::CommentLines()
 	AlterText(sCommentLines);
 }
 
-static WString sUncomment(const WString& s) 
+static WString sUncomment(const WString& s)
 {
 	WString h = s;
 	h.Replace("/*", "");
