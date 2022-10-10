@@ -31,6 +31,7 @@ String  GetConfigGroup();
 
 
 const Vector<String>& CommandLine();
+void   CommandLineRemove(int i, int count = 1);
 String GetArgv0();
 const VectorMap<String, String>& Environment();
 
