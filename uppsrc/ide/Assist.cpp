@@ -521,15 +521,11 @@ void AssistEditor::NewFile(bool reloading)
 		is_source_file = cfx.is_source_file;
 
 	if(is_source_file) {
-	//	DLOG("=============");
-	//	DDUMP(cfx.real_filename);
 		annotating = true;
 		int q = CodeIndex().Find(cfx.real_filename);
-	//	DDUMP(q);
 		if(q >= 0) {
 			const FileAnnotation& f = CodeIndex()[q];
 			SetAnnotations(f);
-	//		DDUMP(f.time);
 			if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
 				annotating = false;
 				PutVerbose(cfx.real_filename + " annotations loaded from index");
