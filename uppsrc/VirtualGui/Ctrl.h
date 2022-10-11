@@ -42,6 +42,8 @@ private:
 
 	static void DeleteDesktopTop();
 
+	static int    GetCaretBlinkTime()               { return 500; }
+	
 protected:
 	static int PaintLock;
 

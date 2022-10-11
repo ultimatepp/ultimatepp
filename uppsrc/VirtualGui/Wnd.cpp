@@ -74,10 +74,12 @@ Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	int q = FindTopCtrl();
-	Top *top = topctrl[q]->GetTop();
-	if(q > 0 && top) {
-		Ctrl *x = top->owner_window;
-		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
+	if(q >= 0) {
+		Top *top = topctrl[q]->GetTop();
+		if(q > 0 && top) {
+			Ctrl *x = top->owner_window;
+			return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
+		}
 	}
 	return NULL;
 }
