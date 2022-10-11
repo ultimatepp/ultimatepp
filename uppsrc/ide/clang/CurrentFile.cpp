@@ -88,7 +88,10 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 		d.kind = severity;
 		d.detail = detail;
 		d.path = NormalizePath(filename);
+		if(d.path == current_file.filename)
+			d.path = current_file.real_filename;
 		d.pos = pos;
+		d.pos.y -= cfc.parsed_file.line_delta;
 		d.text = text;
 	});
 	Ctrl::Call([&] {
