@@ -516,6 +516,8 @@ void AssistEditor::NewFile(bool reloading)
 	Search();
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
+	errors.Clear();
+	Errors(Vector<Point>());
 
 	if(!reloading)
 		is_source_file = cfx.is_source_file;
