@@ -7,24 +7,26 @@ jobs:
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
-      BUILD_ESSNETIALS: upp-posix-build-essential-${CIRCLE_SHA1}
-      BUILD_ESSENTIALS_DIR: ${CIRCLE_WORKING_DIRECTORY}/${BUILD_ESSNETIALS}
     steps:
       - checkout
-      - run: echo "$BUILD_ESSENTIALS_DIR"
       - run:
-          name: Downloading Dependencies
+          name: Setup Enviroment Variables
+          command: |
+            echo 'export BUILD_ESSNETIALS=upp-posix-build-essential-"$CIRCLE_SHA1" >> "$BASH_ENV"
+            echo 'export BUILD_ESSENTIALS_DIR="$CIRCLE_WORKING_DIRECTORY"/"$BUILD_ESSNETIALS" >> "$BASH_ENV"
+      - run:
+          name: Download Dependencies
           command: |
             sudo apt-get update;
             sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
       - run:
-          name: Building TheIDE
+          name: Build TheIDE
           command: make -f Makefile -j ${NUMBER_OF_CPUS}
       - run:
-          name: Building UMK
+          name: Build UMK
           command: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
       - run:
-          name: Creating Artifacts
+          name: Create Artifacts
           command: |
             mkdir -p ${BUILD_ESSENTIALS_DIR}
             cp uppsrc ${BUILD_ESSENTIALS_DIR}
