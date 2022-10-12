@@ -88,7 +88,6 @@ void Ide::Usage(const String& id, const String& name)
 	if(isvirtual) {
 		String sgn = id;
 		sgn.TrimStart(cls);
-		DDUMP(sgn);
 		Index<String> visited;
 		GatherVirtuals(cls, id.Mid(cls.GetCount()), ids, visited);
 	}
