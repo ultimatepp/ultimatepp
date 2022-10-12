@@ -11,6 +11,7 @@ jobs:
       BUILD_ESSENTIALS_DIR: ${CIRCLE_WORKING_DIRECTORY}/${BUILD_ESSNETIALS}
     steps:
       - checkout
+      - run: echo "$BUILD_ESSENTIALS_DIR"
       - run:
           name: Downloading Dependencies
           command: |
