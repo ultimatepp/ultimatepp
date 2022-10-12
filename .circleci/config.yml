@@ -7,7 +7,8 @@ jobs:
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
-      BUILD_ESSENTIALS_DIR: ${CIRCLE_WORKING_DIRECTORY}/upp-posix-build-essential-${CIRCLE_SHA1}
+      BUILD_ESSNETIALS: upp-posix-build-essential-${CIRCLE_SHA1}
+      BUILD_ESSENTIALS_DIR: ${CIRCLE_WORKING_DIRECTORY}/${BUILD_ESSNETIALS}
     steps:
       - checkout
       - run:
@@ -27,5 +28,6 @@ jobs:
             mkdir -p ${BUILD_ESSENTIALS_DIR}
             cp uppsrc ${BUILD_ESSENTIALS_DIR}
             cp umk ${BUILD_ESSENTIALS_DIR}
-    - store_artifacts:
-        path: ${BUILD_ESSENTIALS_DIR}
+      - store_artifacts:
+          path: ${BUILD_ESSENTIALS_DIR}
+          destintation:
