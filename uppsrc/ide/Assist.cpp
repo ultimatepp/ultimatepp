@@ -530,7 +530,7 @@ void AssistEditor::NewFile(bool reloading)
 			SetAnnotations(f);
 			if(f.defines == cfx.defines && f.includes == cfx.includes && f.time >= GetFileTime(cfx.real_filename)) {
 				annotating = false;
-				PutVerbose(cfx.real_filename + " annotations loaded from index");
+				PutAssist(cfx.real_filename + " annotations loaded from index");
 			}
 		}
 		SyncCurrentFile(cfx);
