@@ -29,7 +29,7 @@ jobs:
           name: Create Artifacts
           command: |
             mkdir -p ${BUILD_ESSENTIALS_DIR}
-            cp uppsrc ${BUILD_ESSENTIALS_DIR}
+            cp -r uppsrc ${BUILD_ESSENTIALS_DIR}
             cp umk ${BUILD_ESSENTIALS_DIR}
       - store_artifacts:
           path: ${BUILD_ESSENTIALS_DIR}
