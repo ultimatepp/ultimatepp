@@ -471,6 +471,8 @@ void Ide::StopDebug()
 bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 {
 	DR_LOG("EditorTip");
+	if(editor.AssistTip(mt))
+		return true;
 	if(debugger) {
 		int pos = mt.pos;
 		String e;
@@ -501,5 +503,5 @@ bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 		DR_LOG("debugger->Tip");
 		return debugger->Tip(e, mt);
 	}
-	return editor.AssistTip(mt);
+	return false;
 }

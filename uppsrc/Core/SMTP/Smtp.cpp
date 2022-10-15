@@ -454,8 +454,6 @@ String Smtp::GetMessage(bool chunks)
 
 bool Smtp::Send(const String& msg_)
 {
-	DDUMP(GetMessage(true));
-
 	smtp_code = 0;
 	smtp_msg.Clear();
 

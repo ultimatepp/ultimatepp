@@ -450,7 +450,7 @@ template<> inline hash_t GetHashValue(const uint64& a)         { return GetHashV
 #endif
 
 template<> inline hash_t GetHashValue(const double& a)         { return memhash(&a, sizeof(a)); }
-//template<> inline hash_t GetHashValue(const float& a)          { double memhash(&a, sizeof(a)); }
+template<> inline hash_t GetHashValue(const float& a)          { return memhash(&a, sizeof(a)); }
 
 inline hash_t GetPtrHashValue(const void *a)                   { return (hash_t)(uintptr_t)a; }
 
