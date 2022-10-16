@@ -435,8 +435,12 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 			while(di < ds.GetCount() && err.GetCount() < 30) {
 				int k = ds[di].kind;
 				auto Do = [&](const Diagnostic& d) {
-					if(d.path == path && NotIncludedFrom(d.text))
-						err.Add(d.pos);
+					if(d.path == path && NotIncludedFrom(d.text)) {
+						// ignore errors after the end of header (e.g. missing })
+						if(!IsHeaderFile(path) || d.pos.y < GetLineCount() - 1 ||
+						   d.pos.y == GetLineCount() - 1 && d.pos.x < GetLineLength(GetLineCount() - 1))
+							err.Add(d.pos);
+					}
 				};
 				if(IsWarning(k) || IsError(k)) {
 					Do(ds[di++]);
