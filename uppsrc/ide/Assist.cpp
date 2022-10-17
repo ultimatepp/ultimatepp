@@ -71,6 +71,7 @@ AssistEditor::AssistEditor()
 			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
 			errors.Clear();
 			Errors(Vector<Point>());
+			StatusImage(Null);
 		}
 	};
 }
@@ -448,6 +449,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 						Do(ds[di++]);
 				}
 			}
+			StatusImage(err.GetCount() ? IdeImg::CurrentErrors() : IdeImg::CurrentOK());
 			Errors(pick(err));
 		});
 }

@@ -1150,8 +1150,10 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int64 
 		}
 	}
 	for(Point p : errors)
-		if(p.y == line && p.x < hl.GetCount())
+		if(p.y == line && p.x < hl.GetCount()) {
 			hl[p.x].paper = Blend(LtRed(), SColorPaper(), 100);
+			hl[p.x].flags |= LineEdit::NOENDFILL;
+		}
 }
 
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)

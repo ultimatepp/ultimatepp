@@ -83,6 +83,7 @@ private:
 	int              next_age;
 	int              active_annotation;
 	Vector<Color>    animate;
+	Image            status_image;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
@@ -139,6 +140,8 @@ public:
 	int      GetActiveAnnotationLine() const { return active_annotation; }
 	
 	void     SetAnimate(const Vector<Color>& a)   { if(a != animate) { animate = clone(a); Refresh(); } }
+	
+	void     StatusImage(const Image& m);
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -527,6 +530,8 @@ public:
 	WString  GetIlluminated() const                   { return illuminated; }
 	
 	void     Zoom(int d);
+	
+	void     StatusImage(const Image& m)              { bar.StatusImage(m); }
 
 	One<EditorSyntax> GetSyntax(int line);
 	bool IsCursorBracket(int64 pos) const;

@@ -60,6 +60,7 @@ void EditorBar::Paint(Draw& w)
 	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 	for(int i = 0; i < animate.GetCount(); i++)
 		w.DrawRect(i, 0, 1, sz.cy, animate[i]);
+	w.DrawImage(0, 0, status_image);
 	if(!editor) return;
 	int fy = editor->GetFontSize().cy;
 	int hy = fy >> 1;
@@ -488,7 +489,7 @@ void EditorBar::SyncSize()
 		i++;
 		n /= 10;
 	}
-	int w = (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + Zx(12 + 4) + annotations;
+	int w = max(DPI(32), (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + Zx(12 + 4) + annotations);
 	if(w != GetWidth())
 		Width(w);
 	Refresh();
@@ -518,6 +519,14 @@ EditorBar::EditorBar()
 	next_age = 0;
 	active_annotation = -1;
 	SyncSize();
+}
+
+void EditorBar::StatusImage(const Image& m)
+{
+	if(status_image.IsSame(m))
+		return;
+	status_image = m;
+	Refresh();
 }
 
 EditorBar::~EditorBar()
