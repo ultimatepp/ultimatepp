@@ -136,6 +136,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	static Ptr<Ctrl> assist_ptr;
 
 	bool      navigator_right = false;
+	bool      show_errors = true;
+	bool      show_errors_status = true;
 
 	PPInfo    ppi;
 	String    master_source;
@@ -150,6 +152,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void               NewFile(bool reloading);
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
 	void               MakeIncludeTrick(CurrentFileContext& cfx);
+	void               ClearErrors();
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();

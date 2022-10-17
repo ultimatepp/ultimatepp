@@ -1151,7 +1151,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int64 
 	}
 	for(Point p : errors)
 		if(p.y == line && p.x < hl.GetCount()) {
-			hl[p.x].paper = Blend(LtRed(), SColorPaper(), 100);
+			hl[p.x].paper = hl_style[PAPER_ERROR_FILE].color;
 			hl[p.x].flags |= LineEdit::NOENDFILL;
 		}
 }

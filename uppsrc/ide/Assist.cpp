@@ -69,9 +69,7 @@ AssistEditor::AssistEditor()
 		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
 			annotating = true;
 			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
-			errors.Clear();
-			Errors(Vector<Point>());
-			StatusImage(Null);
+			ClearErrors();
 		}
 	};
 }
@@ -83,6 +81,13 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	}
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
+
+void AssistEditor::ClearErrors()
+{
+	errors.Clear();
+	Errors(Vector<Point>());
+	StatusImage(Null);
+}
 
 void AssistEditor::SyncNavigatorPlacement()
 {
@@ -427,30 +432,35 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
-			errors = clone(ds);
-
-			Vector<Point> err;
-
-			int di = 0;
-			String path = NormalizePath(theide->editfile);
-			while(di < ds.GetCount() && err.GetCount() < 30) {
-				int k = ds[di].kind;
-				auto Do = [&](const Diagnostic& d) {
-					if(d.path == path && NotIncludedFrom(d.text)) {
-						// ignore errors after the end of header (e.g. missing })
-						if(!IsHeaderFile(path) || d.pos.y < GetLineCount() - 1 ||
-						   d.pos.y == GetLineCount() - 1 && d.pos.x < GetLineLength(GetLineCount() - 1))
-							err.Add(d.pos);
-					}
-				};
-				if(IsWarning(k) || IsError(k)) {
-					Do(ds[di++]);
-					while(di < ds.GetCount() && ds[di].detail)
+			ClearErrors();
+			if(!IsCurrentFileDirty()) {
+				errors = clone(ds);
+	
+				Vector<Point> err;
+	
+				int di = 0;
+				String path = NormalizePath(theide->editfile);
+				while(di < ds.GetCount() && err.GetCount() < 30) {
+					int k = ds[di].kind;
+					auto Do = [&](const Diagnostic& d) {
+						if(d.path == path && NotIncludedFrom(d.text)) {
+							// ignore errors after the end of header (e.g. missing })
+							if(!IsHeaderFile(path) || d.pos.y < GetLineCount() - 1 ||
+							   d.pos.y == GetLineCount() - 1 && d.pos.x < GetLineLength(GetLineCount() - 1))
+								err.Add(d.pos);
+						}
+					};
+					if(IsWarning(k) || IsError(k)) {
 						Do(ds[di++]);
+						while(di < ds.GetCount() && ds[di].detail)
+							Do(ds[di++]);
+					}
 				}
+				if(show_errors_status)
+					StatusImage(err.GetCount() ? IdeImg::CurrentErrors() : IdeImg::CurrentOK());
+				if(show_errors)
+					Errors(pick(err));
 			}
-			StatusImage(err.GetCount() ? IdeImg::CurrentErrors() : IdeImg::CurrentOK());
-			Errors(pick(err));
 		});
 }
 
@@ -978,7 +988,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 6;
+	int version = 7;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -996,4 +1006,7 @@ void AssistEditor::SerializeNavigator(Stream& s)
 
 	if(s.IsLoading())
 		SyncNavigatorPlacement();
+	
+	if(version >= 7)
+		s % show_errors % show_errors_status;
 }
