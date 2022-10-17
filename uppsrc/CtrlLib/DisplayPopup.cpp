@@ -106,7 +106,7 @@ void DisplayPopup::PopUp::Sync()
 				if(slim.Contains(GetMousePos())) {
 					Rect r = item;
 					r.right = max(r.right, r.left + sz.cx + 2 * margin);
-					r.bottom = max(r.bottom, r.top + sz.cy);
+					r.bottom = max(r.bottom, r.top + sz.cy + 2 * margin);
 					r.Inflate(1, 1);
 					Rect v = ctrl->GetScreenView();
 					r.Offset(v.TopLeft());
