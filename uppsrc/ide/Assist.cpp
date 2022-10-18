@@ -421,9 +421,9 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	SyncCursor();
 }
 
-bool NotIncludedFrom(const String& s)
+bool InFileIncludedFrom(const String& s)
 {
-	return s.Find("in file included from") < 0;
+	return s.Find("in file included from") >= 0;
 }
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
@@ -442,19 +442,38 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 				String path = NormalizePath(theide->editfile);
 				while(di < ds.GetCount() && err.GetCount() < 30) {
 					int k = ds[di].kind;
+					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
-						if(d.path == path && NotIncludedFrom(d.text)) {
-							// ignore errors after the end of header (e.g. missing })
-							if(!IsHeaderFile(path) || d.pos.y < GetLineCount() - 1 ||
-							   d.pos.y == GetLineCount() - 1 && d.pos.x < GetLineLength(GetLineCount() - 1))
-								err.Add(d.pos);
+						if(d.pos.y < 0 || InFileIncludedFrom(d.text))
+							return;
+						bool error = true;
+						int pos = GetPos(d.pos.y, d.pos.x);
+						if(IsHeaderFile(path) && pos > GetLength() - 100) { // ignore errors after the end of header (e.g. missing })
+							error = false;
+							while(pos < GetLength()) {
+								if(GetChar(pos) > ' ') {
+									error = true;
+									break;
+								}
+								pos++;
+							}
 						}
+						if(!error)
+							return;
+
+						err.Add(d.pos);
+
+						if(d.path == path)
+							group_valid = true;
 					};
+					int q = err.GetCount();
 					if(IsWarning(k) || IsError(k)) {
 						Do(ds[di++]);
 						while(di < ds.GetCount() && ds[di].detail)
 							Do(ds[di++]);
 					}
+					if(!group_valid)
+						err.Trim(q);
 				}
 				if(show_errors_status)
 					StatusImage(err.GetCount() ? IdeImg::CurrentErrors() : IdeImg::CurrentOK());
@@ -476,11 +495,11 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 		int ii0 = di;
 		bool found = false;
 		if(IsWarning(k) || IsError(k)) {
-			if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
+			if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
 				found = true;
 			di++;
 			while(di < errors.GetCount() && errors[di].detail) {
-				if(errors[di].path == path && errors[di].pos == pos && NotIncludedFrom(errors[di].text))
+				if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
 					found = true;
 				di++;
 			}
@@ -492,7 +511,7 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 				if(i > ii0)
 					qtf << "&";
 				qtf << "[";
-				if(d.path == path && d.pos == pos && NotIncludedFrom(d.text))
+				if(d.path == path && d.pos == pos && !InFileIncludedFrom(d.text))
 					qtf << "*";
 				qtf << " ";
 				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
@@ -532,8 +551,7 @@ void AssistEditor::NewFile(bool reloading)
 	Search();
 	SyncMaster();
 	CurrentFileContext cfx = CurrentContext();
-	errors.Clear();
-	Errors(Vector<Point>());
+	ClearErrors();
 
 	if(!reloading)
 		is_source_file = cfx.is_source_file;
