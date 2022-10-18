@@ -22,6 +22,7 @@ int main(int argc, char **argv, const char **envptr) { \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::ExitGtkApp(); \
+	UPP::Ctrl::ShutdownThreads(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

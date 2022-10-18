@@ -21,6 +21,8 @@ int main(int argc, const char **argv, const char **envptr) { \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::CocoExit(); \
+	UPP::Ctrl::ShutdownThreads(); \
+	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \
  \
