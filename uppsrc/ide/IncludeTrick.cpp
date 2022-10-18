@@ -26,7 +26,7 @@ void AssistEditor::SyncMaster()
 
 bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta)
 {
-	String filedir = GetFileDirectory(target_path);
+	String filedir = GetFileDirectory(path);
 	bool comment = false;
 	if(GetFileLength(path) > 4000000 || out.GetCount() > 4000000)
 		return false;

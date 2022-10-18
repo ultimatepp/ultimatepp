@@ -396,7 +396,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 			}
 		}
 	}
-	if(AssistDiagnostics && cfx.content.GetCount())
+	if(AssistDiagnostics)
 		SaveFile(CacheFile("CurrentContext.cpp"), cfx.content);
 	return cfx;
 }
@@ -481,6 +481,11 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 					Errors(pick(err));
 			}
 		});
+	else {
+		ClearErrors();
+		CppFileInfo none;
+		SetAnnotations(none);
+	}
 }
 
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
