@@ -1189,7 +1189,44 @@ void CodeEditor::Clear()
 	found = notfoundfw = notfoundbk = false;
 }
 
-CodeEditor::CodeEditor() {
+void CodeEditor::ScrollBarItems::Paint(Draw& w)
+{
+	Rect sr = sb.GetSliderRect();
+	for(const Tuple<int, Image, Color>& x : pos) {
+		int y = sb.GetSliderPos(x.Get<int>());
+		if(!IsNull(y)) {
+			Image m = x.Get<Image>();
+			Size isz = m.GetSize();
+			w.DrawImage(sr.CenterPoint().x - isz.cx / 2, sr.top + y - isz.cy / 2, m, x.Get<Color>());
+		}
+	}
+}
+
+CodeEditor::ScrollBarItems::ScrollBarItems(ScrollBar& sb)
+:	sb(sb) {
+	sb.Add(SizePos());
+	Transparent();
+	IgnoreMouse();
+}
+
+void CodeEditor::Errors(Vector<Point>&& errs)
+{
+	errors = pick(errs);
+	Refresh();
+	sbi.pos.Clear();
+	for(Point p : errors)
+		sbi.pos.Add({ p.y, CodeEditorImg::dot(), Red() });
+	sbi.Refresh();
+}
+
+void CodeEditor::Layout()
+{
+	sbi.Refresh();
+	LineEdit::Layout();
+}
+
+CodeEditor::CodeEditor()
+:	sbi(sb.y) {
 	bracket_flash = false;
 	highlight_bracket_pos0 = 0;
 	bracket_start = 0;

@@ -375,6 +375,14 @@ void ScrollBar::CancelMode() {
 	ButtonsCancelMode();
 }
 
+int ScrollBar::GetSliderPos(int pos) const
+{
+	if(totalsize <= 0)
+		return Null;
+	else
+		return pos * GetRange() / totalsize;
+}
+
 bool  ScrollBar::Set(int apagepos) {
 	int op = pagepos;
 	pagepos = apagepos;

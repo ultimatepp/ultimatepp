@@ -198,6 +198,7 @@ public:
 	virtual void  Serialize(Stream& s);
 	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
+	virtual void  Layout();
 
 protected:
 	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int64 pos);
@@ -305,6 +306,19 @@ protected:
 	String        refresh_info; // serialized next line syntax context to detect the need of full Refresh
 
 	Vector<Point> errors; // current file (compilation) errors
+
+	struct ScrollBarItems : Ctrl {
+		ScrollBar& sb;
+	
+		void Paint(Draw& w);
+		
+		Vector<Tuple<int, Image, Color>> pos;
+		
+		ScrollBarItems(ScrollBar& sb);
+	};
+	
+	ScrollBarItems sbi;
+
 
 	struct HlSt;
 	
@@ -524,7 +538,7 @@ public:
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 	
-	void     Errors(Vector<Point>&& errs)             { errors = pick(errs); Refresh(); }
+	void     Errors(Vector<Point>&& errs);
 	
 	void     Illuminate(const WString& text);
 	WString  GetIlluminated() const                   { return illuminated; }
