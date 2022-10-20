@@ -8,6 +8,8 @@
 
 namespace Upp {
 
+void XpClear(); // Clear cached windows theme handles
+
 #define LLOG(x)  // DLOG(x)
 
 dword Ctrl::KEYtoK(dword chr) {
@@ -528,7 +530,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(owner && (owner->IsForeground() || IsForeground()) && !owner->SetWantFocus())
 				IterateFocusForward(owner, owner);
 		}
-		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
+		if(IsWindowUnicode(hwnd))
 			DefWindowProcW(hwnd, message, wParam, lParam);
 		else
 			DefWindowProc(hwnd, message, wParam, lParam);
@@ -590,6 +592,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_ACTIVATE:
 		LLOG("WM_ACTIVATE " << Name() << ", wParam = " << (int)wParam << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		ignorekeyup = true;
+	case 0x031A: // WM_THEMECHANGED
+		XpClear();
 		break;
 	case WM_SETFOCUS:
 		LLOG("WM_SETFOCUS " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
