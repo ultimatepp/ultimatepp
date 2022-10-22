@@ -50,8 +50,8 @@ void CloseToolTip()
 {
 	ToolTip& q = AppToolTip();
 	if(q.IsOpen()) {
-		LLOG("CLOSE: CloseToolTip");
-		q.Close();
+		LLOG("CLOSE: CloseToolTip " << q.Get());
+		Ctrl::Call([] { AppToolTip().Close(); }); // we can be called from another thread's disable of something
 	}
 }
 
