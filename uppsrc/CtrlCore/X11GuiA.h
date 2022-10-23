@@ -17,6 +17,7 @@ int main(int argc, const char **argv, const char **envptr) { \
 	UPP::Ctrl::InitX11(NULL); \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::ExitX11(); \
+	UPP::Ctrl::ShutdownThreads(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

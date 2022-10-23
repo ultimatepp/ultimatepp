@@ -25,6 +25,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 		GuiMainFn_(); \
 	} \
 	UPP::Ctrl::ExitWin32(); \
+	UPP::Ctrl::ShutdownThreads(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \
@@ -44,6 +45,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::Ctrl::ExitWin32(); \
+	UPP::Ctrl::ShutdownThreads(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

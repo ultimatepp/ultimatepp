@@ -61,95 +61,103 @@ void EditorBar::Paint(Draw& w)
 	for(int i = 0; i < animate.GetCount(); i++)
 		w.DrawRect(i, 0, 1, sz.cy, animate[i]);
 	if(!editor) return;
-	int fy = editor->GetFontSize().cy;
-	int hy = fy >> 1;
-	int y = 0;
-	int i = editor->GetScrollPos().y;
-	int cy = GetSize().cy;
-	String hl = editor->GetHighlight();
-	bool hi_if = (hilite_if_endif && findarg(hl, "cpp", "cs", "java") >= 0);
-	Vector<IfState> previf;
-	if(hi_if)
-		previf <<= editor->GetIfStack(i);
-	int ptri[2];
-	for(int q = 0; q < 2; q++)
-		ptri[q] = ptrline[q] >= 0 ? GetLineNo(ptrline[q]) : -1;
-	while(y < cy) {
-		String b;
-		int err = 0;
-		int edit = 0;
-		String ann;
-		Image  icon;
-		if(i < li.GetCount()) {
-			const LnInfo& l = li[i];
-			b = l.breakpoint;
-			err = l.error;
-			edit = l.edited;
-			icon = l.icon;
-			ann = l.annotation;
-		}
-		if(editor->GetCaret().top == y && editor->barline)
-			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), bg, 200));
-		if(line_numbers && i < editor->GetLineCount()) {
-			String n = AsString((i + 1) % 1000000);
-			Font fnt = editor->GetFont();
-			Size tsz = GetTextSize(n, fnt);
-			w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, SBrown());
-		}
-		if(hi_if) {
-			Vector<IfState> nextif;
-			if(i < li.GetCount())
-				nextif <<= editor->GetIfStack(i + 1);
-			int pifl = previf.GetCount(), nifl = nextif.GetCount();
-			int dif = max(pifl, nifl);
-			if(--dif >= 0) {
-				char p = (dif < pifl ? previf[dif].state : 0);
-				char n = (dif < nifl ? nextif[dif].state : 0);
-				int wd = min(2 * (dif + 1), sz.cx);
-				int x = sz.cx - wd;
-				Color cn = EditorSyntax::IfColor(n);
-				if(p == n)
-					w.DrawRect(x, y, 1, fy, cn);
-				else {
-					Color cp = EditorSyntax::IfColor(p);
-					w.DrawRect(x, y, 1, hy, cp);
-					w.DrawRect(x, y + hy, wd, 1, Nvl(cn, cp));
-					w.DrawRect(x, y + hy, 1, fy - hy, cn);
+	for(int pass = 0; pass < 2; pass++) {
+		int fy = editor->GetFontSize().cy;
+		int hy = fy >> 1;
+		int y = 0;
+		int i = editor->GetScrollPos().y;
+		int cy = GetSize().cy;
+		String hl = editor->GetHighlight();
+		bool hi_if = (hilite_if_endif && findarg(hl, "cpp", "cs", "java") >= 0);
+		Vector<IfState> previf;
+		if(hi_if)
+			previf <<= editor->GetIfStack(i);
+		int ptri[2];
+		for(int q = 0; q < 2; q++)
+			ptri[q] = ptrline[q] >= 0 ? GetLineNo(ptrline[q]) : -1;
+		while(y < cy) {
+			String b;
+			int err = 0;
+			int edit = 0;
+			String ann;
+			Image  icon;
+			if(i < li.GetCount()) {
+				const LnInfo& l = li[i];
+				b = l.breakpoint;
+				err = l.error;
+				edit = l.edited;
+				icon = l.icon;
+				ann = l.annotation;
+			}
+			if(pass == 0) {
+				if(editor->GetCaret().top == y && editor->barline)
+					w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), bg, 200));
+				if(line_numbers && i < editor->GetLineCount()) {
+					String n = AsString((i + 1) % 1000000);
+					Font fnt = editor->GetFont();
+					Size tsz = GetTextSize(n, fnt);
+					w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, SBrown());
+				}
+				if(hi_if) {
+					Vector<IfState> nextif;
+					if(i < li.GetCount())
+						nextif <<= editor->GetIfStack(i + 1);
+					int pifl = previf.GetCount(), nifl = nextif.GetCount();
+					int dif = max(pifl, nifl);
 					if(--dif >= 0) {
-						x = sz.cx - min(2 * (dif + 1), sz.cx);
-						if(!p)
-							w.DrawRect(x, y, 1, hy, EditorSyntax::IfColor(dif < pifl ? previf[dif].state : 0));
-						if(!n)
-							w.DrawRect(x, y + hy, 1, fy - hy, EditorSyntax::IfColor(dif < nifl ? nextif[dif].state : 0));
+						char p = (dif < pifl ? previf[dif].state : 0);
+						char n = (dif < nifl ? nextif[dif].state : 0);
+						int wd = min(2 * (dif + 1), sz.cx);
+						int x = sz.cx - wd;
+						Color cn = EditorSyntax::IfColor(n);
+						if(p == n)
+							w.DrawRect(x, y, 1, fy, cn);
+						else {
+							Color cp = EditorSyntax::IfColor(p);
+							w.DrawRect(x, y, 1, hy, cp);
+							w.DrawRect(x, y + hy, wd, 1, Nvl(cn, cp));
+							w.DrawRect(x, y + hy, 1, fy - hy, cn);
+							if(--dif >= 0) {
+								x = sz.cx - min(2 * (dif + 1), sz.cx);
+								if(!p)
+									w.DrawRect(x, y, 1, hy, EditorSyntax::IfColor(dif < pifl ? previf[dif].state : 0));
+								if(!n)
+									w.DrawRect(x, y + hy, 1, fy - hy, EditorSyntax::IfColor(dif < nifl ? nextif[dif].state : 0));
+							}
+						}
 					}
+					previf = pick(nextif);
+				}
+				if(editor->GetMarkLines()) {
+					int width = CodeEditorImg::Breakpoint().GetWidth() >> 1;
+					if(edit)
+					{
+						int age = (int)(log((double)(editor->GetUndoCount() + 1 - edit)) * 30);
+						w.DrawRect(0, y, width, fy, Blend(SLtBlue(), bg, min(220, age)));
+					}
+					if(err)
+						w.DrawRect(width, y, width, fy, err == 1 ? LtRed() : (err == 2 ? Color(255, 175, 0) : SGreen()));
 				}
 			}
-			previf = pick(nextif);
-		}
-		if(editor->GetMarkLines()) {
-			int width = CodeEditorImg::Breakpoint().GetWidth() >> 1;
-			if(edit)
-			{
-				int age = (int)(log((double)(editor->GetUndoCount() + 1 - edit)) * 30);
-				w.DrawRect(0, y, width, fy, Blend(SLtBlue(), bg, min(220, age)));
+			
+			if(pass == 1) {
+				if(!b.IsEmpty())
+					sPaintImage(w, y, fy, b == "1"   ? CodeEditorImg::Breakpoint() :
+					                      b == "\xe" ? CodeEditorImg::InvalidBreakpoint() :
+					                                   CodeEditorImg::CondBreakpoint());
+				for(int q = 0; q < 2; q++)
+					if(ptri[q] == i)
+						sPaintImage(w, y, fy, ptrimg[q]);
+		
+				if(annotations && !IsNull(icon))
+					w.DrawImage(sz.cx - annotations, y + (fy - icon.GetSize().cy) / 2, icon);
 			}
-			if(err)
-				w.DrawRect(width, y, width, fy, err == 1 ? LtRed() : (err == 2 ? Color(255, 175, 0) : SGreen()));
+	
+			y += fy;
+			i++;
 		}
-
-		if(!b.IsEmpty())
-			sPaintImage(w, y, fy, b == "1"   ? CodeEditorImg::Breakpoint() :
-			                      b == "\xe" ? CodeEditorImg::InvalidBreakpoint() :
-			                                   CodeEditorImg::CondBreakpoint());
-		for(int q = 0; q < 2; q++)
-			if(ptri[q] == i)
-				sPaintImage(w, y, fy, ptrimg[q]);
-
-		if(annotations && !IsNull(icon))
-			w.DrawImage(sz.cx - annotations, y + (fy - icon.GetSize().cy) / 2, icon);
-
-		y += fy;
-		i++;
+		if(pass == 0)
+			w.DrawImage(0, 0, status_image);
 	}
 }
 
@@ -488,7 +496,7 @@ void EditorBar::SyncSize()
 		i++;
 		n /= 10;
 	}
-	int w = (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + Zx(12 + 4) + annotations;
+	int w = max(DPI(32), (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + Zx(12 + 4) + annotations);
 	if(w != GetWidth())
 		Width(w);
 	Refresh();
@@ -518,6 +526,14 @@ EditorBar::EditorBar()
 	next_age = 0;
 	active_annotation = -1;
 	SyncSize();
+}
+
+void EditorBar::StatusImage(const Image& m)
+{
+	if(status_image.IsSame(m))
+		return;
+	status_image = m;
+	Refresh();
 }
 
 EditorBar::~EditorBar()

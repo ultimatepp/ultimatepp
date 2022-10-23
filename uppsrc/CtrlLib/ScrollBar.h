@@ -115,6 +115,9 @@ public:
 	int     GetPage() const                 { return pagesize; }
 	int     GetTotal() const                { return totalsize; }
 	int     GetLine() const                 { return linesize; }
+	
+	Rect    GetSliderRect() const           { return Slider(); }
+	int     GetSliderPos(int pos) const;
 
 	static const Style& StyleDefault();
 
@@ -255,7 +258,7 @@ public:
 	void    HideY()                                  { ShowY(false); }
 	void    Show(bool show = true)                   { x.Show(show); y.Show(show); }
 	void    Hide()                                   { Show(false); }
-
+	
 	ScrollBars& SetLine(int linex, int liney);
 	ScrollBars& SetLine(Size line)                   { return SetLine(line.cx, line.cy); }
 	ScrollBars& SetLine(int line)                    { return SetLine(line, line); }

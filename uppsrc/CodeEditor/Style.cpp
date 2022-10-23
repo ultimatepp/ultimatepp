@@ -155,6 +155,7 @@ void HighlightSetup::DarkTheme()
 	SetHlStyle(INK_DIFF_COMMENT,          Color(173, 255, 173));
 	SetHlStyle(PAPER_SELWORD,             Color(99, 99, 0));
 	SetHlStyle(PAPER_ERROR,               Color(90, 40, 40));
+	SetHlStyle(PAPER_ERROR_FILE,          Color(120, 40, 40));
 	SetHlStyle(PAPER_WARNING,             Color(21, 21, 0));
 	SetHlStyle(SHOW_LINE,                 Color(27, 75, 26));
 	SetHlStyle(SHOW_COLUMN,               Color(56, 33, 29));
@@ -221,6 +222,7 @@ void HighlightSetup::WhiteTheme()
 	SetHlStyle(PAPER_SELWORD, Yellow);
 
 	SetHlStyle(PAPER_ERROR, Blend(White(), LtRed(), 50));
+	SetHlStyle(PAPER_ERROR_FILE, Blend(White(), LtRed(), 150));
 	SetHlStyle(PAPER_WARNING, Blend(White(), Yellow(), 50));
 
 	SetHlStyle(SHOW_LINE, Color(199, 247, 198));
