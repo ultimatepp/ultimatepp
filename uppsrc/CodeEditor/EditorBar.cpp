@@ -11,20 +11,18 @@ void Renumber(LineInfo& lf)
 		t.breakpoint = lf[0].breakpoint;
 		t.lineno = 0;
 		t.count = lf[0].count;
-		t.error = lf[0].error;
 		t.firstedited = lf[0].firstedited;
 		t.edited = lf[0].edited;
 		l += t.count;
 	}
 	for(int i = 1; i < lf.GetCount(); i++) {
 		LineInfoRecord& r = lf[i];
-		if(r.breakpoint.IsEmpty() && r.error == 0 && r.edited == 0 &&
-			tf.Top().breakpoint.IsEmpty() && tf.Top().error == 0 && tf.Top().edited == 0)
+		if(r.breakpoint.IsEmpty() && r.edited == 0 &&
+			tf.Top().breakpoint.IsEmpty() && tf.Top().edited == 0)
 			tf.Top().count += r.count;
 		else {
 			LineInfoRecord& t = tf.Add();
 			t.breakpoint = r.breakpoint;
-			t.error = r.error;
 			t.firstedited = r.firstedited;
 			t.edited = r.edited;
 			t.count = r.count;
@@ -84,7 +82,6 @@ void EditorBar::Paint(Draw& w)
 			if(i < li.GetCount()) {
 				const LnInfo& l = li[i];
 				b = l.breakpoint;
-				err = l.error;
 				edit = l.edited;
 				icon = l.icon;
 				ann = l.annotation;
@@ -288,12 +285,11 @@ LineInfo EditorBar::GetLineInfo() const
 	int l = -2;
 	for(int i = 0; i < li.GetCount(); i++) {
 		const LnInfo& ln = li[i];
-		if(!ln.breakpoint.IsEmpty() || ln.error || ln.edited) {
+		if(!ln.breakpoint.IsEmpty() || ln.edited) {
 			LineInfoRecord& r = lf.Add();
 			r.lineno = ln.lineno;
 			r.count = 1;
 			r.breakpoint = ln.breakpoint;
-			r.error = ln.error;
 			r.firstedited = ln.firstedited;
 			r.edited = ln.edited;
 			l = -2;
@@ -326,7 +322,6 @@ void EditorBar::SetLineInfo(const LineInfo& lf, int total)
 				LnInfo& ln = li.Add();
 				ln.lineno = l;
 				ln.breakpoint = r.breakpoint;
-				ln.error = r.error;
 				ln.firstedited = r.firstedited;
 				ln.edited = r.edited;
 				if(l >= 0) l++;
@@ -434,28 +429,6 @@ void EditorBar::ClearEdited()
 	Refresh();
 }
 
-void EditorBar::SetError(int ln, int err)
-{
-	li.At(ln).error = err;
-}
-
-void EditorBar::ClearErrors(int line)
-{
-	int count;
-	if(line < 0) {
-		line = 0;
-		count = li.GetCount();
-	}
-	else
-	if(line >= li.GetCount())
-		return;
-	else
-		count = line + 1;
-
-	for(int i = line; i < count; i++)
-		li[i].error = 0;
-}
-
 int  EditorBar::GetLineNo(int lineno) const {
 	for(int i = 0; i < li.GetCount(); i++) {
 		if(lineno <= li[i].lineno)
@@ -538,17 +511,6 @@ void EditorBar::StatusImage(const Image& m)
 
 EditorBar::~EditorBar()
 {
-}
-
-void ClearErrors(LineInfo& li)
-{
-	for(int i = 0; i < li.GetCount(); i++)
-		li[i].error = 0;
-}
-
-void SetError(LineInfo& li, int line, int err)
-{
-	li.At(line).error = err;
 }
 
 }

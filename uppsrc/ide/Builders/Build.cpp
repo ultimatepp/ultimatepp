@@ -429,7 +429,6 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	start_time = GetFileTime(hfile); // Defensive way to get correct filetime of start
 	DeleteFile(hfile);
 	
-	ClearErrorEditor();
 	BeginBuilding(clear_console);
 	bool ok = true;
 	main_conf.Clear();

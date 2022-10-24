@@ -226,32 +226,6 @@ void Ide::FindPrevError() {
 		if(FindLineError(l)) return;
 }
 
-void Ide::ClearErrorEditor()
-{
-	if(!mark_lines)
-		return;
-
-	for(int i = 0; i < filedata.GetCount(); i++) {
-		ClearErrorEditor(filedata.GetKey(i));
-	}
-	
-	SetErrorFiles(Vector<String>());
-}
-
-void Ide::ClearErrorEditor(String file)
-{
-	linking = false;
-
-	if(!mark_lines)
-		return;
-	if(file == editfile)
-		editor.ClearErrors();
-	else {
-		FileData& fd = Filedata(file);
-		ClearErrors(fd.lineinfo);
-	}
-}
-
 void Ide::SetErrorEditor()
 {
 	if(error.GetCount()) {
@@ -260,12 +234,7 @@ void Ide::SetErrorEditor()
 //			error.GoBegin();
 	}
 
-	if(!mark_lines)
-		return;
-
 	bool refresh = false;
-	String    hfile;
-	EditorBar hbar;
 	Vector<String> errorfiles;
 	FindLineErrorCache cache;
 	for(int i = 0; i < console.GetLineCount(); i++) {
@@ -277,23 +246,8 @@ void Ide::SetErrorEditor()
 		#else
 			errorfiles.Add(file);
 		#endif
-			if(editfile == file) {
-				editor.SetError(f.lineno - 1, f.kind);
-				refresh = true;
-			}
-			else {
-				if(hfile != file) {
-					if(hfile.GetCount())
-						Filedata(hfile).lineinfo = hbar.GetLineInfo();
-					hbar.SetLineInfo(Filedata(file).lineinfo, -1);
-					hfile = file;
-				}
-				hbar.SetError(f.lineno - 1, f.kind);
-			}
 		}
 	}
-	if(hfile.GetCount())
-		Filedata(hfile).lineinfo = hbar.GetLineInfo();
 	if(refresh)
 		editor.RefreshFrame();
 	SetErrorFiles(errorfiles);

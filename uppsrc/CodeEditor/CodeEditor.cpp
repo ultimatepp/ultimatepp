@@ -74,10 +74,8 @@ void CodeEditor::DirtyFrom(int line) {
 		if(syntax_cache[i].line >= line)
 			syntax_cache[i].Clear();
 
-	if(check_edited) {
-		bar.ClearErrors(line);
+	if(check_edited)
 		bar.Refresh();
-	}
 }
 
 inline bool IsComment(int a, int b) {
@@ -130,6 +128,7 @@ void CodeEditor::PreRemove(int pos, int size) {
 			refresh_info = GetRefreshInfo(pos);
 		}
 	}
+	sbi.Refresh();
 }
 
 void CodeEditor::PostRemove(int pos, int size) {
@@ -139,10 +138,12 @@ void CodeEditor::PostRemove(int pos, int size) {
 	EditorBarLayout();
 	if(GetRefreshInfo(pos) != refresh_info)
 		Refresh();
+	sbi.Refresh();
 }
 
 void CodeEditor::ClearLines() {
 	bar.ClearLines();
+	sbi.Refresh();
 }
 
 void CodeEditor::InsertLines(int line, int count) {
@@ -1200,10 +1201,22 @@ void CodeEditor::ScrollBarItems::Paint(Draw& w)
 			w.DrawImage(sr.CenterPoint().x - isz.cx / 2, sr.top + y - isz.cy / 2, m, x.Get<Color>());
 		}
 	}
+	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
+	for(int i = 0; i < editor.bar.li.GetCount(); i++) {
+		int edit = editor.bar.li[i].edited;
+		if(edit) {
+			int age = (int)(log((double)(editor.GetUndoCount() + 1 - edit)) * 30);
+			int y = sb.GetSliderPos(i);
+			if(!IsNull(y))
+				w.DrawRect(sr.left + DPI(2), sr.top + y, DPI(2),
+				           max(sb.GetTotal() / sr.GetHeight(), DPI(4)),
+				           Blend(SLtBlue(), bg, min(220, age)));
+		}
+	}
 }
 
-CodeEditor::ScrollBarItems::ScrollBarItems(ScrollBar& sb)
-:	sb(sb) {
+CodeEditor::ScrollBarItems::ScrollBarItems(ScrollBar& sb, CodeEditor& e)
+:	sb(sb), editor(e) {
 	sb.Add(SizePos());
 	Transparent();
 	IgnoreMouse();
@@ -1215,7 +1228,7 @@ void CodeEditor::Errors(Vector<Point>&& errs)
 	Refresh();
 	sbi.pos.Clear();
 	for(Point p : errors)
-		sbi.pos.Add({ p.y, CodeEditorImg::dot(), Red() });
+		sbi.pos.Add({ p.y, CodeEditorImg::dot(), LtRed() });
 	sbi.Refresh();
 }
 
@@ -1226,7 +1239,7 @@ void CodeEditor::Layout()
 }
 
 CodeEditor::CodeEditor()
-:	sbi(sb.y) {
+:	sbi(sb.y, *this) {
 	bracket_flash = false;
 	highlight_bracket_pos0 = 0;
 	bracket_start = 0;
