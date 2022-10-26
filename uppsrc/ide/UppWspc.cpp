@@ -23,7 +23,7 @@ Font WorkspaceWork::ListFont()
 
 void WorkspaceWork::SetErrorFiles(const Vector<String>& files)
 {
-	errorfiles <<= Index<String>(files, 1);
+	errorfiles = clone(files);
 	int i = filelist.GetCursor();
 	int s = filelist.GetSbPos();
 	SaveLoadPackage(false);

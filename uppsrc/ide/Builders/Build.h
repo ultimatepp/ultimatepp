@@ -35,10 +35,9 @@ public:
 	virtual void SetupDefaultMethod() = 0;
 	virtual Vector<String> PickErrors() = 0; //console.PickErrors()
 	virtual void BeginBuilding(bool clear_console) = 0;
-	virtual void EndBuilding(bool ok) = 0;
-	virtual void ClearErrorEditor() = 0;
-	virtual void DoProcessEvents() = 0;
 	virtual void SetErrorEditor() = 0;
+	virtual void EndBuilding(bool ok) = 0;
+	virtual void DoProcessEvents() = 0;
 	virtual String GetMain() = 0;
 
 	struct TransferFileInfo

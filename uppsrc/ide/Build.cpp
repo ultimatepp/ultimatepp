@@ -132,7 +132,7 @@ void Ide::FileCompile()
 {
 	if(editfile.IsEmpty())
 		return;
-	ClearErrorEditor(editfile);
+	linking = false;
 	SwitchHeader();
 	BeginBuilding(true);
 	const Workspace& wspc = IdeWorkspace();

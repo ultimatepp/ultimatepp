@@ -86,7 +86,7 @@ protected:
 		int               msecs;
 		int               raw_msecs;
 	};
-	
+
 	struct Finisher {
 		int               serial;
 		Event<>           cb;
@@ -137,7 +137,7 @@ public:
 	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return pick(e); }
 	void Wait(int slot);
 	bool Wait();
-	
+
 	void OnFinish(Event<>  cb);
 
 	void WrapText(bool w)                     { wrap_text = w; }
@@ -184,11 +184,11 @@ private:
 	DropList   lang;
 	bool       internal;
 	bool       showwords, all;
-	
+
 	VectorMap<String, VectorMap<String, Index<String> > > map;
 	Index<String> lang_list;
 	Vector<int>   spos;
-	
+
 	static  Index<String> idelink;
 
 	void OpenTopic();
@@ -323,12 +323,12 @@ struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 	WString itext;
 
 	virtual bool Key(dword key, int count);
-	
+
 	void Setup(bool replace);
 	void Sync();
 
 	typedef FindInFilesDlg CLASSNAME;
-	
+
 	FindInFilesDlg();
 };
 
@@ -340,7 +340,7 @@ struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 	void Sync();
 	void Edit();
 	void Default();
-	
+
 	WebSearchTab();
 };
 
@@ -350,7 +350,7 @@ struct CursorInfoCtrl : Ctrl {
 	void Paint(Draw& w) override;
 
 	void Set(const String& s) { text = s; Refresh(); }
-	
+
 	CursorInfoCtrl();
 };
 
@@ -443,7 +443,6 @@ public:
 	virtual Vector<String> PickErrors();
 	virtual void   BeginBuilding(bool clear_console);
 	virtual void   EndBuilding(bool ok);
-	virtual void   ClearErrorEditor();
 	virtual void   DoProcessEvents();
 	virtual void   SetErrorEditor();
 	virtual String GetMain();
@@ -462,7 +461,7 @@ public:
 	int        idestate;
 	int        debuglock;
 	int        hydra1_threads;
-	
+
 	int        chstyle;
 
 	One<IdeDesigner> designer;
@@ -477,7 +476,7 @@ public:
 	StaticRect  bottom;
 	Splitter    editor_bottom;
 	Console     console;
-	
+
 	ArrayCtrl   ffound[3];
 	int         ffoundi_next = 0;
 
@@ -555,7 +554,7 @@ public:
 	ArrayMap<String, FileData> filedata;
 	Index<String> editastext;
 	Index<String> editashex;
-	
+
 	Vector<String> difflru;
 
 	DropList   mainconfiglist;
@@ -625,7 +624,7 @@ public:
 	bool      header_guards;
 	int       filetabs;
 	bool      auto_enclose;
-	bool      mark_lines;
+	bool      mark_lines = true;
 	bool      find_pick_sel;
 	bool      find_pick_text;
 	bool      deactivate_save;
@@ -667,7 +666,7 @@ public:
 	bool	astyle_EmptyLineFill;
 	bool	astyle_TabSpaceConversionMode;
 	WString	astyle_TestBox;
-	
+
 	// Formats a string of code with a given formatter
 	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
 
@@ -704,17 +703,17 @@ public:
 	TopicCtrl     windoc;
 
 	int           state_icon;
-	
+
 	String        export_dir;
 	VectorMap<String, String> abbr;
-	
+
 	int           issaving;
 	int           isscanning;
-	
+
 	String        current_builder;
-	
+
 	bool          hlstyle_is_default = true; // default style reacts to dark / light theme settings
-	
+
 	int           animate_current_file = 0, animate_current_file_dir = 0;
 	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
 	int           animate_indexer = 0, animate_indexer_dir = 0;
@@ -742,7 +741,7 @@ public:
 	void      EditorEdit();
 	void      GotoBookmark(const Bookmark& b);
 	bool      IsHistDiff(int i);
-	
+
 	void      IdePaste(String& s);
 
 	bool      HasFileData(const String& file);
@@ -782,7 +781,7 @@ public:
 	String    IncludesMD5();
 
 	void      AKEditor();
-	
+
 	void      PackageMenu(Bar& menu);
 
 	void      UscFile(const String& file);
@@ -805,7 +804,7 @@ public:
 	void      GotoPos(Point pos);
 	void      GotoPos(String path, int line);
 	void      GotoPos(String path, Point pos);
-	
+
 	void      LoadAbbr();
 	void      SaveAbbr();
 
@@ -880,7 +879,7 @@ public:
 		bool  Next(ArrayCtrl& ctrl, int d);
 		void  FindNextError();
 		void  FindPrevError();
-	
+
 	void      EditSpecial(Bar& menu);
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
@@ -961,13 +960,13 @@ public:
 		void  DoMacroManager();
 		void  UpgradeTheIDE();
 		void  InstallDesktop();
-	
+
 	void      SetupMobilePlatforms(Bar& bar);
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
-	
+
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -1037,15 +1036,15 @@ public:
 	void      CycleFiles();
 
 	void      Renumber();
-	
+
 	String    GetTargetLogPath();
 	String    GetIdeLogPath();
 	void      OpenLog(const String& logFilePath);
-	
+
 	String    include_path; // cached value of include path, GetIncludePath
-	
+
 	virtual void      LaunchTerminal(const char *dir);
-	
+
 //	Console&  GetConsole();
 
 	struct FindLineErrorCache {
@@ -1054,7 +1053,7 @@ public:
 		String                    upp;
 		bool                      is_java;
 		bool                      init;
-		
+
 		void Clear()            { init = false; file.Clear(); wspc_paths.Clear(); }
 	};
 
@@ -1066,10 +1065,10 @@ public:
 		int    kind;
 		String message;
 		String error_pos;
-		
+
 		ErrorInfo() { lineno = linepos = kind = len = 0; }
 	};
-	
+
 	FindLineErrorCache error_cache;
 	void      ConsoleLine(const String& line, bool assist = false);
 	void      ConsoleRunEnd();
@@ -1088,7 +1087,7 @@ public:
 	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
-	
+
 	struct FoundDisplay : Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 	};
@@ -1101,14 +1100,13 @@ public:
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
 	};
-	
+
 	bool      FindLineError(int l);
 	void      GoToError(const ErrorInfo& f);
 	void      GoToError(ArrayCtrl& a);
-	
+
 	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
 	void      FindError();
-	void	  ClearErrorEditor(String file);
 
 	void      FindWildcard();
 	void      FindFolder();
@@ -1153,8 +1151,8 @@ public:
 	void      SetMenuBar();
 	void      SetToolBar();
 	TimeCallback delayed_toolbar;
-	
-	
+
+
 	void      UpdateFormat(CodeEditor& editor);
 	void      UpdateFormat();
 	void      ReadHlStyles(ArrayCtrl& hlstyle);
@@ -1230,7 +1228,7 @@ public:
 		void  MacroPackageFiles(EscEscape& e);
 		void  MacroAllPackages(EscEscape& e);
 		void  MacroTarget(EscEscape& e);
-	
+
 	String GetAndroidSdkPath();
 
 	void TriggerIndexer0();

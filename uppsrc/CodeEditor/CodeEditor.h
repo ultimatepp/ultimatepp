@@ -22,16 +22,13 @@ struct LineInfoRecord {
 	int    lineno;
 	String breakpoint;
 	int    count;
-	int    error;
 	int    firstedited;
 	int    edited;
 
-	LineInfoRecord() { error = 0; edited = 0; }
+	LineInfoRecord() { edited = 0; }
 };
 
 typedef Array<LineInfoRecord> LineInfo;
-
-void ClearErrors(LineInfo& li);
 
 struct LineInfoRemRecord : Moveable<LineInfoRemRecord> {
 	int    firstedited;
@@ -58,15 +55,12 @@ public:
 
 private:
 	struct LnInfo : Moveable<LnInfo> {
-		int    lineno;
+		int    lineno = -1;
 		String breakpoint;
-		int    error;
-		int    firstedited;
-		int    edited;
+		int    firstedited = 0;
+		int    edited = 0;
 		Image  icon;
 		String annotation;
-
-		LnInfo() { lineno = -1; error = 0; firstedited = 0; edited = 0; }
 	};
 	
 	Vector<LnInfo>   li;
@@ -87,6 +81,8 @@ private:
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
+	
+	friend class CodeEditor;
 
 public:
 	Event<int> WhenBreakpoint;
@@ -110,8 +106,6 @@ public:
 	void    SetBreakpoint(int ln, const String& s);
 	void    SetEdited(int ln, int count = 1);
 	void    ClearEdited();
-	void    SetError(int ln, int err);
-	void    ClearErrors(int ln);
 
 	void SetEditor(CodeEditor *e)           { editor = e; }
 
@@ -309,12 +303,13 @@ protected:
 
 	struct ScrollBarItems : Ctrl {
 		ScrollBar& sb;
+		CodeEditor& editor;
 	
 		void Paint(Draw& w);
 		
 		Vector<Tuple<int, Image, Color>> pos;
 		
-		ScrollBarItems(ScrollBar& sb);
+		ScrollBarItems(ScrollBar& sb, CodeEditor& e);
 	};
 	
 	ScrollBarItems sbi;
@@ -484,8 +479,6 @@ public:
 	void     HidePtr()                                { bar.HidePtr(); }
 	String   GetBreakpoint(int line)                  { return bar.GetBreakpoint(line); }
 	void     SetBreakpoint(int line, const String& b) { bar.SetBreakpoint(line, b); }
-	void     SetError(int line, int err)              { bar.SetError(line, err); }
-	void     ClearErrors(int line = -1)               { bar.ClearErrors(line); }
 	void     ClearEdited()                            { bar.ClearEdited(); }
 	int		 GetUndoCount()                           { return undo.GetCount(); }
 	void     GotoLine(int line);

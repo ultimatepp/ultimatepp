@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 #if defined(COMPILER_MINGW) && !defined(FLASHW_ALL)
 	// MINGW headers don't include this in (some versions of) windows

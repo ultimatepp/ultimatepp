@@ -982,7 +982,7 @@ void TreeCtrl::SyncInfo()
 			Size csz = m.GetCtrlSize();
 			if(m.ctrl && !highlight_ctrl)
 				x += csz.cx;
-			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetValueSize(display).cy);
+			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetValueSize(display).cy + 2 * m.margin);
 			if(r.Contains(p)) {
 				Color fg, bg;
 				dword st;

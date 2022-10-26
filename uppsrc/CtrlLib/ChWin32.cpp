@@ -1,5 +1,7 @@
 #include "CtrlLib.h"
 
+// #define STATIC_IMAGES // avoids calling theming API while app is running - probably wrong path
+
 #ifdef GUI_WIN
 
 #define LLOG(x)   // RLOG(x)
@@ -63,7 +65,11 @@ static VectorMap<XpElement, int> xp_opaque;
 
 void XpClear()
 {
-	memset(xp_widget_handle, 0, sizeof(xp_widget_handle));
+	for(int i = 0; i < XP_COUNT; i++)
+		if(xp_widget_handle[i]) {
+			XpTheme().CloseThemeData(xp_widget_handle[i]);
+			xp_widget_handle[i] = NULL;
+		}
 	xp_margin.Clear();
 	xp_opaque.Clear();
 }
@@ -210,6 +216,7 @@ struct Win32ImageMaker : ImageMaker {
 	}
 };
 
+#ifndef STATIC_IMAGES
 Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 {
 	if(IsTypeRaw<XpElement>(v)) {
@@ -271,6 +278,7 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 	}
 	return Null;
 }
+#endif
 
 struct chCtrlsImg {
 	int id;
@@ -297,7 +305,22 @@ void Win32Look(Value *ch, int count, int widget, int part, int state = 1, bool c
 		e.part = part;
 		e.state = state + i;
 		e.contentm = contentm;
+	#ifdef STATIC_IMAGES
+		Image m = XpImage(widget, part, state + i);
+		int hotspot;
+		if(contentm) {
+			Rect r(0, 0, 100, 100);
+			Rect cr;
+			HANDLE htheme = XpWidget(widget);
+			XpTheme().GetThemeBackgroundContentRect(htheme, NULL, e.part, e.state, r, cr);
+			hotspot = cr.left;
+		}
+		else
+			hotspot = XpMargin(e);
+		ch[i] = WithHotSpot(m, hotspot, hotspot);
+	#else
 		ch[i] = RawToValue(e);
+	#endif
 	}
 }
 
@@ -441,7 +464,9 @@ void ChHostSkin()
 	}
 	else SColorDisabled_Write(Color(0x80, 0x80, 0x80));
 
+#ifndef STATIC_IMAGES
 	ChLookFn(XpLookFn);
+#endif
 
 	if(XpWidget(XP_BUTTON)) {
 		GUI_GlobalStyle_Write(GUISTYLE_XP);
