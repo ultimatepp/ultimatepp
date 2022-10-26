@@ -155,6 +155,7 @@ void CurrentFileThread()
 					                CXTranslationUnit_CreatePreambleOnFirstParse|
 			                        CXTranslationUnit_SkipFunctionBodies|
 					                CXTranslationUnit_LimitSkipFunctionBodiesToPreamble|
+					                CXTranslationUnit_DetailedPreprocessingRecord|
 					                CXTranslationUnit_KeepGoing);
 					DumpDiagnostics("parse_errors");
 					PutAssist(String()  << cfc.parsed_file.filename<< " parsed in " << msecs() - tm << " ms");
@@ -173,7 +174,8 @@ void CurrentFileThread()
 					int tm = msecs();
 					{
 						MemoryIgnoreLeaksBlock __;
-						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1, 0);
+						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
+						                               CXCodeComplete_IncludeMacros);
 						DumpDiagnostics("autocomplete_errors");
 					}
 					PutAssist(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
@@ -184,8 +186,8 @@ void CurrentFileThread()
 						for(int i = 0; i < results->NumResults; i++) {
 							const CXCompletionString& string = results->Results[i].CompletionString;
 							int kind = results->Results[i].CursorKind;
-							if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space
-								continue;
+						//	if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space
+						//		continue;
 							if(kind == CXCursor_NotImplemented)
 								continue;
 							String name;

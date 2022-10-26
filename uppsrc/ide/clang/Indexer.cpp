@@ -149,6 +149,7 @@ void Indexer::IndexerThread()
 
 			clang.Parse(job.path, job.blitz, job.includes, job.defines,
 			            CXTranslationUnit_KeepGoing|
+		                CXTranslationUnit_DetailedPreprocessingRecord|
 			            (job.blitz.GetCount() ? 0 : PARSE_FILE));
 
 			if(Thread::IsShutdownThreads())

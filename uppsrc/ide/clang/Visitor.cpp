@@ -145,8 +145,9 @@ String ClangCursorInfo::Id()
 			m << Scope() << "operator " << Type();
 			break;
 		case CXCursor_MacroDefinition:
-			m = Name();
-			break;
+			id = Name();
+			hasid = true;
+			return id;
 		case CXCursor_EnumConstantDecl:
 			m << Scope() << Name();
 			break;
