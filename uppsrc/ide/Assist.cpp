@@ -448,7 +448,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 							return;
 						bool error = true;
 						int pos = GetPos(d.pos.y, d.pos.x);
-						if(IsHeaderFile(path) && pos > GetLength() - 100) { // ignore errors after the end of header (e.g. missing })
+						if(!IsSourceFile(path) && pos > GetLength() - 100) { // ignore errors after the end of header (e.g. missing })
 							error = false;
 							while(pos < GetLength()) {
 								if(GetChar(pos) > ' ') {
