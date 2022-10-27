@@ -797,7 +797,7 @@ void ExtractIncludes(Index<String>& r, String h)
 }
 
 String Ide::GetIncludePath()
-{ // TODO: remove
+{
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
@@ -880,7 +880,28 @@ String Ide::GetIncludePath()
 String Ide::GetCurrentIncludePath()
 {
 	String include_path;
-	VectorMap<String, String> bm = GetMethodVars(method);
+	
+	static String clang_method;
+
+	VectorMap<String, String> bm;
+	if(clang_method.GetCount())
+		bm = GetMethodVars(clang_method);
+	if(bm.GetCount() == 0) {
+		String exact, x64, clang;
+		for(FindFile ff(ConfigFile(GetMethodName("*"))); ff; ff.Next()) {
+			String n = ToLower(GetFileTitle(ff.GetName()));
+			if(n == "clangx64")
+				exact = n;
+			if(n.StartsWith("clangx64"))
+				x64 = n;
+			if(n.StartsWith("clang"))
+				clang = n;
+		}
+		clang_method = Nvl(exact, x64, clang);
+		if(clang_method.GetCount())
+			bm = GetMethodVars(clang_method);
+	}
+	
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
 
 	const Workspace& wspc = GetIdeWorkspace();
