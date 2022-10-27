@@ -190,7 +190,7 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	bool           WaitCurrentFile();
 
-	const AnnotationItem *GetAnnotationPtr(const String& id);
+	AnnotationItem GetCodeAnnotation(const String& id);
 
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);

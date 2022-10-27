@@ -314,14 +314,14 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 
 
 
-void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before)
+void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem& create, bool before)
 {
 	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
 		for(String cr : AnnotationCandidates(link))
 			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupTppId(id.ToString()); }))
 				break;
-		if(create) {
+		if(create.id.GetCount()) {
 			if(!before)
 				for(int pass = 0; pass < 2; pass++)
 					for(;;) {
@@ -333,7 +333,7 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const Annotatio
 						if(editor.GetCursor() == c)
 							break;
 					}
-			InsertNew(*create);
+			InsertNew(create);
 		}
 	}
 }
