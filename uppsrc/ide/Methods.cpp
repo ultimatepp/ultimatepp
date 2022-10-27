@@ -905,7 +905,7 @@ String Ide::GetCurrentIncludePath()
 			q = cflags.GetCount();
 			cflags.Add(s, Sys("pkg-config --cflags " + s));
 		}
-		for(String p : Split(cflags[q], ' '))
+		for(String p : Split(cflags[q], CharFilterWhitespace))
 			if(p.TrimStart("-I"))
 				MergeWith(include_path, ";", p);
 	}
