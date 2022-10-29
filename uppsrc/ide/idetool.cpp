@@ -88,7 +88,7 @@ void Ide::OpenTopic(const String& topic, const String& create_id, bool before)
 		if(designer) {
 			TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 			if(te)
-				te->GoTo(tl.topic, tl.label, editor.GetAnnotationPtr(create_id), before);
+				te->GoTo(tl.topic, tl.label, editor.GetCodeAnnotation(create_id), before);
 		}
 	}
 }
@@ -117,7 +117,7 @@ void Ide::IdeOpenTopicFile(const String& file)
 	if(designer) {
 		TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 		if(te)
-			te->GoTo(GetFileTitle(file), "", nullptr, false);
+			te->GoTo(GetFileTitle(file), "", AnnotationItem(), false);
 	}
 }
 

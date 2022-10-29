@@ -382,7 +382,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	if(!IsView() && GetLength() < 4000000 && cfx.filename != CacheFile("CurrentContext.cpp")) {
+	if(!IsView() && GetLength() < 4000000 && cfx.filename != CacheFile("CurrentContext.txt")) {
 		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
@@ -397,7 +397,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 		}
 	}
 	if(AssistDiagnostics)
-		SaveFile(CacheFile("CurrentContext.cpp"), cfx.content);
+		SaveFile(CacheFile("CurrentContext.txt"), cfx.content);
 	return cfx;
 }
 
@@ -447,15 +447,16 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 						if(d.pos.y < 0 || InFileIncludedFrom(d.text))
 							return;
 						bool error = true;
-						int pos = GetPos(d.pos.y, d.pos.x);
-						if(IsHeaderFile(path) && pos > GetLength() - 100) { // ignore errors after the end of header (e.g. missing })
+						if(!IsSourceFile(path) && d.pos.y > GetLineCount() - 10) { // ignore errors after the end of header (e.g. missing })
+							int line = d.pos.y;
 							error = false;
-							while(pos < GetLength()) {
-								if(GetChar(pos) > ' ') {
+							int pos = d.pos.x;
+							while(line < GetLineCount()) {
+								String l = GetUtf8Line(line++);
+								String s = TrimBoth(l);
+								if(s.GetCount() && pos < l.GetCount() && *s != '#')
 									error = true;
-									break;
-								}
-								pos++;
+								pos = 0;
 							}
 						}
 						if(!error)
@@ -596,11 +597,24 @@ void AssistEditor::Assist(bool macros)
 	int line = GetLinePos(pos);
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+			bool has_globals = false;
+			bool has_macros = false;
+			for(const AutoCompleteItem& m : items) {
+				if(m.kind == CXCursor_MacroDefinition)
+					has_macros = true;
+				else
+				if(IsNull(m.parent))
+					has_globals = true;
+			}
+			if(has_macros)
+				assist_type.Add("<macros>");
+			if(has_globals)
+				assist_type.Add(Null);
 			for(const AutoCompleteItem& m : items) {
 				AssistItem& f = assist_item.Add();
 				(AutoCompleteItem&)f = m;
 				f.uname = ToUpper(f.name);
-				f.typei = assist_type.FindAdd(f.parent);
+				f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
 			}
 			PopUpAssist();
 		});
@@ -647,7 +661,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 			if(s[0] == '<')
 				type.Add(AttrText(s).Ink(SColorMark()));
 			else
-				type.Add(Nvl(s, "<globals>"));
+				type.Add(s);
 		}
 		popup.NoZoom();
 	}

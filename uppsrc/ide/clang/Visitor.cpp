@@ -115,7 +115,6 @@ String ClangCursorInfo::Id()
 		case CXCursor_EnumDecl:
 			m = Type();
 			break;
-		case CXCursor_FunctionTemplate:
 		case CXCursor_FunctionDecl:
 		case CXCursor_Constructor:
 		case CXCursor_Destructor:
@@ -133,6 +132,10 @@ String ClangCursorInfo::Id()
 			m = RawId();
 #endif
 			break;
+		case CXCursor_FunctionTemplate:
+			hasid = true;
+			id = Scope() + CleanupId(RawId());
+			return id;
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
 		case CXCursor_FieldDecl:
@@ -142,8 +145,9 @@ String ClangCursorInfo::Id()
 			m << Scope() << "operator " << Type();
 			break;
 		case CXCursor_MacroDefinition:
-			m = Name();
-			break;
+			id = Name();
+			hasid = true;
+			return id;
 		case CXCursor_EnumConstantDecl:
 			m << Scope() << Name();
 			break;

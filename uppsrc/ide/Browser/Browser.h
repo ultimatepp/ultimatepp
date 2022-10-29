@@ -207,10 +207,10 @@ public:
 	typedef TopicEditor CLASSNAME;
 
 	void ShowEditor(bool b)                          { editor.Show(b); }
-	bool NewTopicEx(const String& name, const AnnotationItem *create);
+	bool NewTopicEx(const String& iname, const AnnotationItem& create);
 	void Open(const String& grouppath);
 	void OpenFile(const String& path);
-	void GoTo(const String& _topic, const String& link, const AnnotationItem *create, bool before);
+	void GoTo(const String& _topic, const String& link, const AnnotationItem& create, bool before);
 	void GoToPart(int ii);
 	void PersistentFindReplace(bool b)               { editor.PersistentFindReplace(b); }
 	

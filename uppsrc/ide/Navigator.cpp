@@ -373,7 +373,7 @@ void Navigator::Search()
 							NavItem& n = nitem.Add();
 							(AnnotationItem&)n = m;
 							n.path = f.key;
-							nests.FindAdd(n.nest = Nest(m, theide->editfile));
+							nests.FindAdd(n.nest = Nest(m, f.key));
 							set.Add(m.id);
 						}
 					}
