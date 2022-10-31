@@ -194,6 +194,15 @@ public:
 	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
 	virtual void  Layout();
 
+public:
+	struct MouseTip {
+		int            pos;
+		Value          value;
+		const Display *display;
+		Size           sz;
+		bool           delayed = false;
+	};
+
 protected:
 	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int64 pos);
 	virtual void PreInsert(int pos, const WString& s);
@@ -210,6 +219,8 @@ protected:
 	virtual void NewScrollPos();
 
 	virtual String  GetPasteText();
+	
+	TimeCallback delayed;
 
 	EditorBar   bar;
 	Vector<int> line2;
@@ -288,6 +299,7 @@ protected:
 		Tip();
 	};
 	
+	bool  delayed_tip = false;
 	Tip   tip;
 	int   tippos = Null;
 	
@@ -368,13 +380,6 @@ protected:
 	String GetRefreshInfo(int pos);
 
 public:
-	struct MouseTip {
-		int            pos;
-		Value          value;
-		const Display *display;
-		Size           sz;
-	};
-
 	Event<>            WhenSelection;
 	Gate<MouseTip&>    WhenTip;
 	Event<>            WhenLeftDown;
@@ -391,6 +396,8 @@ public:
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
+
+	virtual bool DelayedTip(MouseTip& tip);
 
 	static dword find_next_key;
 	static dword find_prev_key;
@@ -528,9 +535,6 @@ public:
 	void     HideBar()                                { bar.Hide(); }
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 
-	void     SyncTip();
-	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
-	
 	void     Errors(Vector<Point>&& errs);
 	
 	void     Illuminate(const WString& text);
@@ -555,6 +559,9 @@ public:
 	
 	FindReplaceData GetFindReplaceData();
 	void            SetFindReplaceData(const FindReplaceData& d);
+
+	void     SyncTip();
+	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 
 	typedef CodeEditor CLASSNAME;
 

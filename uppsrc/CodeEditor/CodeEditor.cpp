@@ -691,14 +691,19 @@ CodeEditor::Tip::Tip()
 
 void CodeEditor::SyncTip()
 {
+	Rect wa = GetWorkArea();
+	Point p = Upp::GetMousePos();
 	MouseTip mt;
 	mt.pos = tippos;
-	if(tippos >= 0 && IsVisible() && WhenTip(mt)) {
+	mt.sz.cx = wa.GetWidth() - p.x - DPI(2);
+	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
 		tip.d = mt.display;
 		tip.v = mt.value;
-		Point p = Upp::GetMousePos();
 		Size sz = tip.AddFrameSize(mt.sz);
-		tip.SetRect(p.x, p.y + 24, sz.cx, sz.cy);
+		int y = p.y + DPI(24);
+		if(y + sz.cy > wa.bottom)
+			y = max(0, p.y - sz.cy);
+		tip.SetRect(RectC(p.x, y, sz.cx, sz.cy) & wa);
 		if(!tip.IsOpen())
 			tip.PopUp(this, false, false, true);
 		tip.Refresh();
@@ -746,8 +751,16 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 	}
 	else
 		tippos = Null;
+	
 	SyncTip();
+	delayed_tip = false;
+	delayed.KillSet(1000, [=] {
+		delayed_tip = true;
+		SyncTip();
+	});
 }
+
+bool CodeEditor::DelayedTip(MouseTip& tip) { return false; }
 
 Image CodeEditor::CursorImage(Point p, dword keyflags)
 {
@@ -760,8 +773,10 @@ Image CodeEditor::CursorImage(Point p, dword keyflags)
 
 void CodeEditor::MouseLeave()
 {
+	delayed_tip = false;
 	tippos = -1;
 	LineEdit::MouseLeave();
+	CloseTip();
 }
 
 WString CodeEditor::GetI()

@@ -419,6 +419,7 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	if(!navigator_global)
 		Search();
 	SyncCursor();
+	SyncTip();
 }
 
 bool InFileIncludedFrom(const String& s)
@@ -489,6 +490,56 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	}
 }
 
+void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
+{
+	mt.value = qtf;
+	mt.display = &QTFDisplay();
+
+	RichText txt = ParseQTF(qtf);
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	mt.sz.cx = min(mt.sz.cx, txt.GetWidth() + DPI(2));
+	mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+}
+
+bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
+{
+	if(GetChar(mt.pos) <= 32)
+		return false;
+	String name;
+	String ref_id = theide->GetRefId(mt.pos, name);
+	if(ref_id.GetCount() == 0)
+		return false;
+
+	AnnotationItem m, m1;
+
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& q : f.value.items)
+			if(q.id == ref_id)
+				(q.definition ? m1 : m) = q;
+	
+	if(m.id.GetCount() == 0)
+		m = m1;
+	
+	if(m.id.GetCount() == 0)
+		return false;
+	
+	String qtf = "[g ";
+	if(m.nest.GetCount())
+		qtf << "[@b* \1" << m.nest << "::\1]&";
+
+	String tl = BestTopic(GetRefLinks(ref_id));
+	if(tl.GetCount()) {
+		RichText txt = GetCodeTopic(tl, ref_id);
+		qtf << AsQTF(txt);
+	}
+	else
+		qtf << SignatureQtf(m.name, m.pretty);
+
+	SetQTF(mt, qtf);
+
+	return true;
+}
+
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
 	int p = mt.pos;
@@ -528,13 +579,8 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 				qtf << "\1" << d.text << "\1";
 				qtf << "]";
 			}
-			mt.value = qtf;
-			mt.display = &QTFDisplay();
-
-			RichText txt = ParseQTF(qtf);
-			txt.ApplyZoom(GetRichTextStdScreenZoom());
-			mt.sz.cx = min(4 * GetWorkArea().GetWidth() / 5, txt.GetWidth()) + DPI(2);
-			mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+			
+			SetQTF(mt, qtf);
 			return true;
 		}
 	}
