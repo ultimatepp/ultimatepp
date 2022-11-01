@@ -64,7 +64,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.usecache = true;
 	pi.sizetracking = sizetracking;
 	pi.shrink_oversized_objects = shrink_oversized_objects;
-	pi.darktheme = Grayscale(SColorPaper()) < 100;
+	pi.darktheme = IsDarkTheme();
 	Rect pg = GetPage();
 	pg.top = TopY();
 	text.Paint(pw, pg, pi);

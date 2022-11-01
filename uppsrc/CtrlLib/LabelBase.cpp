@@ -63,7 +63,7 @@ void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font
 		RichText txt = ParseQTF(text + 1, accesskey);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
 		PaintInfo pi;
-		pi.darktheme = Grayscale(SColorPaper()) < 100;
+		pi.darktheme = IsDarkTheme();
 		pi.textcolor = qtf_ink;
 		txt.Paint(draw, x, y, cx, pi);
 		return;

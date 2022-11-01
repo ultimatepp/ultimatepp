@@ -536,6 +536,7 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 		qtf << SignatureQtf(m.name, m.pretty);
 
 	SetQTF(mt, qtf);
+	mt.background = AdjustIfDark(Color(245, 255, 221));
 
 	return true;
 }
@@ -581,6 +582,7 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 			}
 			
 			SetQTF(mt, qtf);
+			mt.background = AdjustIfDark(Color(255, 234, 207));
 			return true;
 		}
 	}

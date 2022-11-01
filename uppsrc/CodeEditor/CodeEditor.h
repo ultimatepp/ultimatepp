@@ -201,6 +201,7 @@ public:
 		const Display *display;
 		Size           sz;
 		bool           delayed = false;
+		Color          background;
 	};
 
 protected:
@@ -292,6 +293,7 @@ protected:
 	
 	struct Tip : Ctrl {
 		Value v;
+		Color background;
 		const Display *d;
 		
 		virtual void Paint(Draw& w);

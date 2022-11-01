@@ -179,7 +179,7 @@ void RichText::Paint(Zoom zoom, Draw& w, int x, int y, int cx) const
 	PaintInfo pi;
 	pi.highlightpara = -1;
 	pi.zoom = zoom;
-	pi.darktheme = Grayscale(SColorPaper()) < 100;
+	pi.darktheme = IsDarkTheme();
 	Paint(w, x, y, cx, pi);
 }
 

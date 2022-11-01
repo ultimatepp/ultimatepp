@@ -677,10 +677,10 @@ void CodeEditor::LeftDown(Point p, dword keyflags) {
 void CodeEditor::Tip::Paint(Draw& w)
 {
 	Rect r = GetSize();
-	w.DrawRect(r, SColorInfo());
+	w.DrawRect(r, background);
 	r.left++;
 	if(d)
-		d->Paint(w, r, v, SColorText(), SColorPaper(), 0);
+		d->Paint(w, r, v, SColorText(), background, 0);
 }
 
 CodeEditor::Tip::Tip()
@@ -694,11 +694,13 @@ void CodeEditor::SyncTip()
 	Rect wa = GetWorkArea();
 	Point p = Upp::GetMousePos();
 	MouseTip mt;
+	mt.background = SColorInfo();
 	mt.pos = tippos;
 	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
 	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
 		tip.d = mt.display;
 		tip.v = mt.value;
+		tip.background = mt.background;
 		Size sz = tip.AddFrameSize(mt.sz);
 		int y = p.y + DPI(24);
 		if(y + sz.cy > wa.bottom)
