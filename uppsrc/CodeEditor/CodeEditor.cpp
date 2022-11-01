@@ -695,7 +695,7 @@ void CodeEditor::SyncTip()
 	Point p = Upp::GetMousePos();
 	MouseTip mt;
 	mt.pos = tippos;
-	mt.sz.cx = wa.GetWidth() - p.x - DPI(2);
+	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
 	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
 		tip.d = mt.display;
 		tip.v = mt.value;
@@ -703,7 +703,10 @@ void CodeEditor::SyncTip()
 		int y = p.y + DPI(24);
 		if(y + sz.cy > wa.bottom)
 			y = max(0, p.y - sz.cy);
-		tip.SetRect(RectC(p.x, y, sz.cx, sz.cy) & wa);
+		int x = p.x;
+		if(x + sz.cx > wa.right)
+			x = max(0, wa.right - sz.cx);
+		tip.SetRect(RectC(x, y, sz.cx, sz.cy) & wa);
 		if(!tip.IsOpen())
 			tip.PopUp(this, false, false, true);
 		tip.Refresh();
