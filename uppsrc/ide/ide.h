@@ -639,6 +639,7 @@ public:
 	bool      setmain_newide;
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
+	String    libclang_options;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele

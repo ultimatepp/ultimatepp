@@ -166,45 +166,59 @@ void CurrentFileThread()
 					current_file_parsing = false;
 					was_parsing = true;
 				}
+				if(!cfc.clang.tu) {
+					{
+						GuiLock __;
+						IdeShowConsole();
+						PutConsole("libclang parser has failed, please fix libclang options");
+					}
+					String h = LibClangCommandLine();
+					while(h == LibClangCommandLine()) {
+						Sleep(500);
+						if(Thread::IsShutdownThreads()) break;
+					}
+				}
 				if(Thread::IsShutdownThreads()) break;
 				if(cfc.clang.tu && autocomplete_do) {
-					CXUnsavedFile ufile = { ~fn, ~af.content, (unsigned)af.content.GetCount() };
-					CXCodeCompleteResults *results;
-					current_file_parsing = true;
-					int tm = msecs();
-					{
-						MemoryIgnoreLeaksBlock __;
-						results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
-						                               CXCodeComplete_IncludeMacros);
-						DumpDiagnostics("autocomplete_errors");
-					}
-					PutAssist(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
-					// DumpDiagnostics(cfc.clang.tu);
 					Vector<AutoCompleteItem> item;
-					if(results) {
+					if(cfc.clang.tu) {
+						CXUnsavedFile ufile = { ~fn, ~af.content, (unsigned)af.content.GetCount() };
+						CXCodeCompleteResults *results;
+						current_file_parsing = true;
 						int tm = msecs();
-						for(int i = 0; i < results->NumResults; i++) {
-							const CXCompletionString& string = results->Results[i].CompletionString;
-							int kind = results->Results[i].CursorKind;
-						//	if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space
-						//		continue;
-							if(kind == CXCursor_NotImplemented)
-								continue;
-							String name;
-							String pretty;
-							ReadAutocomplete(string, name, pretty);
-							AutoCompleteItem& m = item.Add();
-							m.name = name;
-							m.parent = FetchString(clang_getCompletionParent(string, NULL));
-							m.pretty = CleanupPretty(pretty);
-							m.kind = kind;
-							m.priority = clang_getCompletionPriority(string);
-						}
 						{
 							MemoryIgnoreLeaksBlock __;
-							clang_disposeCodeCompleteResults(results);
+							results = clang_codeCompleteAt(cfc.clang.tu, fn, autocomplete_pos.y, autocomplete_pos.x, &ufile, 1,
+							                               CXCodeComplete_IncludeMacros);
+							DumpDiagnostics("autocomplete_errors");
 						}
-						PutAssist(String() << cfc.parsed_file.filename << " autocomplete processed in " << msecs() - tm << " ms");
+						PutAssist(String() << cfc.parsed_file.filename << " autocomplete in " << msecs() - tm << " ms");
+						// DumpDiagnostics(cfc.clang.tu);
+						if(results) {
+							int tm = msecs();
+							for(int i = 0; i < results->NumResults; i++) {
+								const CXCompletionString& string = results->Results[i].CompletionString;
+								int kind = results->Results[i].CursorKind;
+							//	if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space
+							//		continue;
+								if(kind == CXCursor_NotImplemented)
+									continue;
+								String name;
+								String pretty;
+								ReadAutocomplete(string, name, pretty);
+								AutoCompleteItem& m = item.Add();
+								m.name = name;
+								m.parent = FetchString(clang_getCompletionParent(string, NULL));
+								m.pretty = CleanupPretty(pretty);
+								m.kind = kind;
+								m.priority = clang_getCompletionPriority(string);
+							}
+							{
+								MemoryIgnoreLeaksBlock __;
+								clang_disposeCodeCompleteResults(results);
+							}
+							PutAssist(String() << cfc.parsed_file.filename << " autocomplete processed in " << msecs() - tm << " ms");
+						}
 					}
 					Ctrl::Call([&] {
 						if(aserial == autocomplete_serial)
@@ -214,7 +228,7 @@ void CurrentFileThread()
 					GuiLock __;
 					do_autocomplete = false;
 				}
-				if(cfc.clang.tu && serial != done_serial) {
+				if(serial != done_serial) {
 					TIMESTOP("ReParse");
 					current_file_parsing = true;
 					int tm = msecs();
