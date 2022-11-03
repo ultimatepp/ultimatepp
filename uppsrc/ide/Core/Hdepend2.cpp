@@ -295,8 +295,14 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 				LoadFromFile(f, cache_path);
 			}
 			if(tm != f.time || scan_serial) {
+				int retry = 0;
+			again:
 				FileIn in(path);
-				f.Parse(in); // TODO: If open fails, try to reopen!
+				if(!in && ++retry < 6) {
+					Sleep(retry * 100);
+					goto again;
+				}
+				f.Parse(in);
 				f.time = tm;
 				f.scan_serial = scan_serial;
 				StoreToFile(f, cache_path);

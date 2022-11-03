@@ -51,6 +51,6 @@ void ReduceCacheFolder(const char *path, int64 max_total)
 }
 
 void ReduceCache()
-{ // TODO: Parametrize limits
+{
 	ReduceCacheFolder(CacheDir(), (int64)4096 * 1024 * 1024);
 }

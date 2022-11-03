@@ -226,7 +226,7 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < IndexerThreads; i++) // TODO: CPU_Cores?
+		for(int i = 0; i < IndexerThreads; i++)
 			Thread::StartNice([] { Indexer::IndexerThread(); });
 		Thread::StartNice([] { SchedulerThread(); });
 	}

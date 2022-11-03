@@ -664,6 +664,10 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
+	if(GetLineLength(line) < 1000) { // sanity
+		WString x = GetWLine(line); // clang treats utf-8 subcodes as whole characters
+		pos = x.Mid(0, pos).ToString().GetCount();
+	}
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;

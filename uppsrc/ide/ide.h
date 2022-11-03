@@ -983,7 +983,6 @@ public:
 		void  Usage();
 		void  IdUsage();
 		void  Usage(const String& id, const String& name);
-//		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
 		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);
