@@ -135,6 +135,7 @@ String ClangCursorInfo::Id()
 #endif
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
+		case CXCursor_ParmDecl:
 		case CXCursor_FieldDecl:
 			m << Scope() << Name();
 			break;

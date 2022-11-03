@@ -109,8 +109,6 @@ bool Clang::Parse(const String& filename, const String& content,
 	for(const String& s : args)
 		argv.Add(~s);
 	
-	DDUMP(argv);
-
 	CXUnsavedFile ufile[2] = {
 		{ ~filename, ~content, (unsigned)content.GetCount() },
 		{ ~filename2, ~content2, (unsigned)content2.GetCount() },

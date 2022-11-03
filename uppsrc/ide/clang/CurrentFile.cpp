@@ -146,7 +146,7 @@ void CurrentFileThread()
 					fn.Cat(".cpp");
 				if(f.filename != cfc.parsed_file.filename || f.real_filename != cfc.parsed_file.real_filename ||
 				   f.includes != cfc.parsed_file.includes || f.defines != cfc.parsed_file.defines ||
-				   !cfc.clang.tu) { // TODO: same is in autocomplete
+				   !cfc.clang.tu) {
 					cfc.parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;

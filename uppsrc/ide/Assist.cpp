@@ -510,15 +510,33 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 	if(ref_id.GetCount() == 0)
 		return false;
 
+	int lp = mt.pos;
+	int li = GetLinePos(lp);
+
+	bool found_local = false;
 	AnnotationItem m, m1;
 
-	for(const auto& f : ~CodeIndex())
-		for(const AnnotationItem& q : f.value.items)
-			if(q.id == ref_id)
-				(q.definition ? m1 : m) = q;
-	
-	if(m.id.GetCount() == 0)
-		m = m1;
+	AnnotationItem cm = FindCurrentAnnotation(); // what function body are we in?
+	if(IsFunction(cm.kind)) { // do local variables
+		for(const AnnotationItem& lm : locals) {
+			int ppy = -1;
+			if(lm.id == ref_id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
+				ppy = m.pos.y;
+				m = lm;
+				found_local = true;
+			}
+		}
+	}
+
+	if(!found_local) {
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& q : f.value.items)
+				if(q.id == ref_id)
+					(q.definition ? m1 : m) = q;
+		
+		if(m.id.GetCount() == 0)
+			m = m1;
+	}
 	
 	if(m.id.GetCount() == 0)
 		return false;
