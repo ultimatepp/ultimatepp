@@ -36,8 +36,31 @@ void Ide::AddReferenceLine(const String& path, Point mpos, const String& name, I
 	}
 }
 
+String ScopeWorkaround(const char *s)
+{ // we are sometimes getting incorrect signatures with missing param qualifiers ([Upp::]CodeEditor::MouseTip
+	StringBuffer r;
+	while(*s) {
+		const char *b = s;
+		if(iscib(*s)) {
+			s++;
+			while(iscid(*s))
+				s++;
+			if(s[0] == ':' && s[1] == ':')
+				s += 2;
+			else
+				r.Cat(b, s);
+		}
+		else {
+			while(*s && !iscib(*s))
+				s++;
+			r.Cat(b, s);
+		}
+	}
+	return r;
+}
+
 void GatherVirtuals(const String& cls, const String& signature, Index<String>& ids, Index<String>& visited)
-{ // find all virtual methods with the same id
+{ // find all virtual methods with the same signature
 	if(IsNull(cls) || visited.Find(cls) >= 0)
 		return;
 	visited.Add(cls);
@@ -53,7 +76,7 @@ void GatherVirtuals(const String& cls, const String& signature, Index<String>& i
 
 	for(const auto& f : ~CodeIndex()) // now gather virtual methods of this class
 		for(const AnnotationItem& m : f.value.items) {
-			if(m.nest == cls && IsFunction(m.kind) && m.isvirtual && m.id.Mid(m.nest.GetCount()) == signature) {
+			if(m.nest == cls && IsFunction(m.kind) && m.isvirtual && ScopeWorkaround(m.id.Mid(m.nest.GetCount())) == signature) {
 				ids.FindAdd(m.id); // found virtual method in the class
 				for(const auto& f : ~CodeIndex()) // check derived classes for overrides
 					for(const AnnotationItem& m : f.value.items)
@@ -86,12 +109,10 @@ void Ide::Usage(const String& id, const String& name)
 	ids.FindAdd(id);
 	
 	if(isvirtual) {
-		String sgn = id;
-		sgn.TrimStart(cls);
 		Index<String> visited;
-		GatherVirtuals(cls, id.Mid(cls.GetCount()), ids, visited);
+		GatherVirtuals(cls, ScopeWorkaround(id.Mid(cls.GetCount())), ids, visited);
 	}
-
+	
 	SetFFound(ffoundi_next);
 	FFound().Clear();
 	SortByKey(CodeIndex());

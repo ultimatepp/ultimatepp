@@ -402,7 +402,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
 
-	for(CppFileInfo& f : info) { // sort by line because macros are first TODO move it after macros are by HDepend
+	for(CppFileInfo& f : info) { // sort by line because macros are first
 		Sort(f.items, [](const AnnotationItem& a, const AnnotationItem& b) {
 			return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 		});
