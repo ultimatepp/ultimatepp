@@ -124,6 +124,7 @@ void Ide::Usage()
 void Ide::IdUsage()
 {
 	String name;
-	String ref_id = GetRefId(editor.GetCursor(), name);
+	Point ref_pos;
+	String ref_id = GetRefId(editor.GetCursor(), name, ref_pos);
 	Usage(ref_id, name);
 }

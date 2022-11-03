@@ -506,7 +506,8 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 	if(GetChar(mt.pos) <= 32)
 		return false;
 	String name;
-	String ref_id = theide->GetRefId(mt.pos, name);
+	Point ref_pos;
+	String ref_id = theide->GetRefId(mt.pos, name, ref_pos);
 	if(ref_id.GetCount() == 0)
 		return false;
 
@@ -524,6 +525,8 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 				ppy = m.pos.y;
 				m = lm;
 				found_local = true;
+				if(ref_pos == lm.pos)
+					break;
 			}
 		}
 	}

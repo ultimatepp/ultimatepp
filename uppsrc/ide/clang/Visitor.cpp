@@ -336,6 +336,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		ReferenceItem rm;
 		rm.pos = sl.pos;
 		rm.id = ref_ci.Id();
+		rm.ref_pos = ref_loc.pos;
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);

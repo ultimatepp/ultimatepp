@@ -156,6 +156,7 @@ String MakeDefinition(const AnnotationItem& m);
 struct ReferenceItem : Moveable<ReferenceItem> {
 	String id;
 	Point  pos;
+	Point  ref_pos;
 	
 	bool operator==(const ReferenceItem& b) const { return id == b.id && pos == b.pos; }
 	hash_t GetHashValue() const                   { return CombineHash(id, pos); }

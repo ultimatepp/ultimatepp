@@ -45,7 +45,7 @@ bool Ide::OpenLink(const String& s, int pos)
 	return true;
 }
 
-String Ide::GetRefId(int pos, String& name)
+String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 {
 	int ci = 0;
 	name = editor.ReadIdBack(pos);
@@ -57,6 +57,7 @@ String Ide::GetRefId(int pos, String& name)
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
 			   (GetNameFromId(m.id) == name || pass == 1)) {
 				ref_id = m.id;
+				ref_pos = m.ref_pos;
 				ci = m.pos.x;
 			}
 		}
@@ -147,7 +148,8 @@ void Ide::ContextGoto0(int pos)
 		return;
 
 	String name;
-	String ref_id = GetRefId(pos, name);
+	Point  ref_pos;
+	String ref_id = GetRefId(pos, name, ref_pos);
 	
 	PutAssist("ref_id: " + ref_id);
 	
@@ -171,6 +173,8 @@ void Ide::ContextGoto0(int pos)
 					found_name = m.name;
 					found_nest = m.nest;
 					PutAssist("Found Local: " + AsString(m.pos));
+					if(ref_pos == m.pos)
+						break;
 				}
 			}
 		}

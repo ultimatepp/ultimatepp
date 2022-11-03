@@ -53,7 +53,8 @@ void AnnotationItem::Serialize(Stream& s)
 void ReferenceItem::Serialize(Stream& s)
 {
 	s % id
-	  % pos;
+	  % pos
+	  % ref_pos;
 }
 
 void FileAnnotation::Serialize(Stream& s)
@@ -106,7 +107,7 @@ void DumpIndex(const char *file)
 		for(const auto& n : m.value.items)
 			out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
 		for(const auto& n : m.value.refs)
-			out << '\t' << n.pos << "   " << n.id << "\n";
+			out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
 	}
 }
 
