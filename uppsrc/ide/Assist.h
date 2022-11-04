@@ -144,6 +144,12 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	Vector<Diagnostic> errors;
 
+	int                ToUtf8x(int line, int pos);
+	int                FromUtf8x(int line, int pos);
+	
+	void               ToUtf8x(Point& p)                   { p.x = ToUtf8x(p.y, p.x); }
+	void               FromUtf8x(Point& p)                 { p.x = FromUtf8x(p.y, p.x); }
+
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SetAnnotations(const CppFileInfo& f);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);

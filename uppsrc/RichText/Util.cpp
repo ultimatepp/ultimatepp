@@ -79,8 +79,6 @@ void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, 
 	pi.zoom = Zoom(1, 1);
 	if(style & (CURSOR|SELECT|READONLY))
 		pi.textcolor = ink;
-	else
-		pi.textcolor = SColorText();
 	pi.darktheme = IsDarkTheme();
 	if(Vcenter()) {
 		int cy = rtext.GetHeight(Zoom(1, 1), r.Width());
