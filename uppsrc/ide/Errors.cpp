@@ -607,7 +607,7 @@ void Ide::SelError()
 		return;
 	if(error.IsCursor()) {
 		Value v = error.Get("NOTES");
-		if(v != "0") {
+		if(v != "0") { // "0" - expanded note
 			int sc = error.GetScroll();
 			removing_notes = true;
 			for(int i = error.GetCount() - 1; i >= 0; i--)
@@ -620,19 +620,27 @@ void Ide::SelError()
 			int ii = error.GetCursor();
 			for(int i = 0; i < n.GetCount(); i++) {
 				const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
-				error.Insert(++ii);
-				error.Set(ii, 0, f.file);
-				error.Set(ii, 1, f.lineno);
-				int linecy;
-				if(f.error_pos.GetCount()) {
-					error.Set(ii, 2, FormatErrorLineEP(f.message, f.error_pos, linecy));
-					error.SetDisplay(ii, 2, Single<ElepDisplay>());
+				bool ok = true;
+				for(const char *s = f.message; *s; s++)
+					if((byte)*s >= 128) { // clang UTF-8 is messy, just ignore those notes
+						ok = false;
+						break;
+					}
+				if(ok) {
+					error.Insert(++ii);
+					error.Set(ii, 0, f.file);
+					error.Set(ii, 1, f.lineno);
+					int linecy;
+					if(f.error_pos.GetCount()) {
+						error.Set(ii, 2, FormatErrorLineEP(f.message, f.error_pos, linecy));
+						error.SetDisplay(ii, 2, Single<ElepDisplay>());
+					}
+					else
+						error.Set(ii, 2, FormatErrorLine(f.message, linecy));
+					error.Set(ii, "INFO", n[i]);
+					error.Set(ii, "NOTES", "0");
+					error.SetLineCy(ii, linecy);
 				}
-				else
-					error.Set(ii, 2, FormatErrorLine(f.message, linecy));
-				error.Set(ii, "INFO", n[i]);
-				error.Set(ii, "NOTES", "0");
-				error.SetLineCy(ii, linecy);
 			}
 		}
 		GoToError(error);
