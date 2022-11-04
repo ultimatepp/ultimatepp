@@ -746,6 +746,9 @@ void CodeEditor::LeftRepeat(Point p, dword flags)
 void CodeEditor::MouseMove(Point p, dword flags) {
 	if(!MouseSelSpecial(p, flags))
 		LineEdit::MouseMove(p, flags);
+
+	tippos = Null;
+
 	if(IsSelection()) return;
 
 	if(p.x > 0) { // ignore calls from EditorBar::MouseMove
@@ -754,8 +757,6 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 		int64 h = GetGPos(p.y, p.x);
 		tippos = h < INT_MAX ? (int)h : -1;
 	}
-	else
-		tippos = Null;
 	
 	SyncTip();
 	delayed_tip = false;
