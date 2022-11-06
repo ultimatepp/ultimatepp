@@ -185,6 +185,7 @@ enum { PARSE_FILE = 0x80000000 };
 struct Clang {
 	CXIndex           index = nullptr;
 	CXTranslationUnit tu = nullptr;
+	String            iquote;
 
 	void Dispose();
 	bool Parse(const String& filename, const String& content,

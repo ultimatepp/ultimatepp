@@ -150,6 +150,7 @@ void CurrentFileThread()
 					cfc.parsed_file = f;
 					int tm = msecs();
 					current_file_parsing = true;
+					cfc.clang.iquote = GetFileFolder(f.real_filename);
 					cfc.clang.Parse(fn, f.content, f.includes, f.defines,
 					                CXTranslationUnit_PrecompiledPreamble|
 					                CXTranslationUnit_CreatePreambleOnFirstParse|
