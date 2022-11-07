@@ -20,9 +20,3 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-
----
-The above license applies to all code in this repository except for the situation when the
-directory contains the "Copying" file. In this case, the license contained in this file
-is valid for source codes within the directory in which it is present. Moreover, the new license
-applies to source files in child directories.
