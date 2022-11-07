@@ -22,7 +22,7 @@ U++ supports following platforms on the production level: **Windows**, **macOS**
 You can use both, or you can use whichever you need.
 
 ## License
-U++ uses BSD license.
+U++ uses BSD-2 Clause license. The license applies to all source code in this repository except for the situation when the directory contains the "Copying" file. In this case, the license contained in this file is valid for source codes within the directory in which it is present. Moreover, the new license stored in "Copying" file applies to source files in child directories.
 
 ## Download
 
