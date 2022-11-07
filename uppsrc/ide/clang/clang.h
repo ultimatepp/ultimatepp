@@ -89,7 +89,7 @@ enum AdditionalKinds {
 
 Image  CxxIcon(int kind); // TODO: Move here
 int    PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last = false);
-String SignatureQtf(const String& name, const String& pretty, int pari);
+String SignatureQtf(const String& name, const String& pretty, int pari = INT_MAX);
 
 bool IsStruct(int kind);
 bool IsTemplate(int kind);
@@ -156,6 +156,7 @@ String MakeDefinition(const AnnotationItem& m);
 struct ReferenceItem : Moveable<ReferenceItem> {
 	String id;
 	Point  pos;
+	Point  ref_pos;
 	
 	bool operator==(const ReferenceItem& b) const { return id == b.id && pos == b.pos; }
 	hash_t GetHashValue() const                   { return CombineHash(id, pos); }

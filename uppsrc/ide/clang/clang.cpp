@@ -87,9 +87,10 @@ bool Clang::Parse(const String& filename, const String& content,
 
 	String cmdline;
 
-	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++17 ";
+	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++14 "
+	        << RedefineMacros()
+	        << " " << LibClangCommandLine();
 	
-	cmdline << RedefineMacros();
 	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
@@ -107,7 +108,7 @@ bool Clang::Parse(const String& filename, const String& content,
 
 	for(const String& s : args)
 		argv.Add(~s);
-
+	
 	CXUnsavedFile ufile[2] = {
 		{ ~filename, ~content, (unsigned)content.GetCount() },
 		{ ~filename2, ~content2, (unsigned)content2.GetCount() },

@@ -106,6 +106,7 @@ String ClangCursorInfo::Id()
 {
 	if(!hasid) {
 		String m;
+		int q = 0;
 		switch(cursorKind) {
 		case CXCursor_StructDecl:
 		case CXCursor_ClassDecl:
@@ -118,26 +119,23 @@ String ClangCursorInfo::Id()
 		case CXCursor_FunctionDecl:
 		case CXCursor_Constructor:
 		case CXCursor_Destructor:
+		case CXCursor_FunctionTemplate:
 		case CXCursor_CXXMethod:
 #ifdef UBUNTU2204_WORKAROUND
-			{
-				String h = RawId();
-				int q = 0;
-				while(findarg(h[q], ':', '*', '&', '(', ')', ' ') >= 0)
-					q++;
-				m = Scope();
-				m.Cat(~h + q, h.GetCount() - q);
-			}
+			m = CleanupId(RawId());
+			while(findarg(m[q], ':', '*', '&', '(', ')', ' ') >= 0)
+				q++;
+			id = Scope();
+			id.Cat(~m + q, m.GetCount() - q);
+			hasid = true;
+			return id;
 #else
 			m = RawId();
-#endif
 			break;
-		case CXCursor_FunctionTemplate:
-			hasid = true;
-			id = Scope() + CleanupId(RawId());
-			return id;
+#endif
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
+		case CXCursor_ParmDecl:
 		case CXCursor_FieldDecl:
 			m << Scope() << Name();
 			break;
@@ -338,6 +336,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		ReferenceItem rm;
 		rm.pos = sl.pos;
 		rm.id = ref_ci.Id();
+		rm.ref_pos = ref_loc.pos;
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);
@@ -403,7 +402,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
 
-	for(CppFileInfo& f : info) { // sort by line because macros are first TODO move it after macros are by HDepend
+	for(CppFileInfo& f : info) { // sort by line because macros are first
 		Sort(f.items, [](const AnnotationItem& a, const AnnotationItem& b) {
 			return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 		});

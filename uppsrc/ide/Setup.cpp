@@ -511,6 +511,7 @@ void Ide::SetupFormat() {
 		(assist.navigator_right, editor.navigator_right)
 		(assist.show_errors, editor.show_errors)
 		(assist.show_errors_status, editor.show_errors_status)
+		(assist.libclang_options, libclang_options)
 		(assist.diagnostics, AssistDiagnostics)
 		(assist.indexer_threads, IndexerThreads)
 		(assist.parsed_files, ParsedFiles)

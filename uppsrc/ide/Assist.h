@@ -169,6 +169,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           StartParamInfo(const AssistItem& m, int pos);
 
 	bool           AssistTip(CodeEditor::MouseTip& mt);
+	bool           DelayedTip(CodeEditor::MouseTip& mt);
+	void           SetQTF(CodeEditor::MouseTip& mt, const String& qtf);
 
 	void           Complete();
 	void           Abbr();
@@ -193,7 +195,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	AnnotationItem GetCodeAnnotation(const String& id);
 
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
+	String         BestTopic(const Vector<String>& tl);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
+	RichText       GetCodeTopic(const String& tl, const String& coderef);
 	void           SyncAnnotationPopup();
 	void           EditAnnotation(bool fastedit);
 	void           OpenTopic(String topic, String create, bool before);

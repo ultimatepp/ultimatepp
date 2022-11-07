@@ -630,6 +630,8 @@ Ide::Ide()
 	HideBottom();
 	SetupBars();
 	SetBar();
+	
+	libclang_options = "-Wno-logical-op-parentheses";
 
 	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
 
@@ -647,6 +649,21 @@ Ide::Ide()
 Ide::~Ide()
 {
 	SetTheIde(NULL);
+}
+
+String LibClangCommandLine()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	return q ? ((Ide *)q)->libclang_options : String();
+}
+
+void IdeShowConsole()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	if(q)
+		((Ide *)q)->ShowConsole();
 }
 
 void Ide::Paint(Draw&) {}

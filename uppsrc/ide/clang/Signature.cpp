@@ -119,7 +119,7 @@ String CleanupId(const char *s)
 				const char *s = ~id + id.GetCount() - 8;
 				operator_def = IsOperator(s) && !iscid(s[-1]);
 			}
-			if(function && (IsBasicType(id) || !IsCppKeyword(id))) // TODO optimize this (IsCppKeywordNoType)
+			if(function && (IsBasicType(id) || !IsCppKeyword(id)))
 				was_param_type = true;
 			mm.Cat(id);
 			was_id = true;

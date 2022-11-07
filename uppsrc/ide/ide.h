@@ -639,6 +639,7 @@ public:
 	bool      setmain_newide;
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
+	String    libclang_options;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
@@ -982,9 +983,8 @@ public:
 		void  Usage();
 		void  IdUsage();
 		void  Usage(const String& id, const String& name);
-//		void  FindId(const String& id); TODO remove
 		bool  OpenLink(const String& s, int pos);
-		String GetRefId(int pos, String& name);
+		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  GoToLine();

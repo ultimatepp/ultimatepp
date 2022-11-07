@@ -797,7 +797,7 @@ void ExtractIncludes(Index<String>& r, String h)
 }
 
 String Ide::GetIncludePath()
-{
+{ // this is 'real' include path defined by current build method
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
@@ -878,7 +878,7 @@ String Ide::GetIncludePath()
 }
 
 String Ide::GetCurrentIncludePath()
-{
+{ // this is include path for libclang / assist
 	String include_path;
 	
 	static String clang_method;
@@ -937,7 +937,7 @@ String Ide::GetCurrentIncludePath()
 String Ide::GetCurrentDefines()
 {
 	Index<String> flags;
-	flags = SplitFlags(mainconfigparam, false); // TODO: MAIN
+	flags = SplitFlags(mainconfigparam, false);
 	AddHostFlags(flags);
 	String r;
 	for(String s : flags)

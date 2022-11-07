@@ -677,10 +677,10 @@ void CodeEditor::LeftDown(Point p, dword keyflags) {
 void CodeEditor::Tip::Paint(Draw& w)
 {
 	Rect r = GetSize();
-	w.DrawRect(r, SColorInfo());
+	w.DrawRect(r, background);
 	r.left++;
 	if(d)
-		d->Paint(w, r, v, SColorText(), SColorPaper(), 0);
+		d->Paint(w, r, v, SColorText(), background, 0);
 }
 
 CodeEditor::Tip::Tip()
@@ -691,14 +691,24 @@ CodeEditor::Tip::Tip()
 
 void CodeEditor::SyncTip()
 {
+	Rect wa = GetWorkArea();
+	Point p = Upp::GetMousePos();
 	MouseTip mt;
+	mt.background = SColorInfo();
 	mt.pos = tippos;
-	if(tippos >= 0 && IsVisible() && WhenTip(mt)) {
+	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
+	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
 		tip.d = mt.display;
 		tip.v = mt.value;
-		Point p = Upp::GetMousePos();
+		tip.background = mt.background;
 		Size sz = tip.AddFrameSize(mt.sz);
-		tip.SetRect(p.x, p.y + 24, sz.cx, sz.cy);
+		int y = p.y + DPI(24);
+		if(y + sz.cy > wa.bottom)
+			y = max(0, p.y - sz.cy);
+		int x = p.x;
+		if(x + sz.cx > wa.right)
+			x = max(0, wa.right - sz.cx);
+		tip.SetRect(RectC(x, y, sz.cx, sz.cy) & wa);
 		if(!tip.IsOpen())
 			tip.PopUp(this, false, false, true);
 		tip.Refresh();
@@ -736,6 +746,9 @@ void CodeEditor::LeftRepeat(Point p, dword flags)
 void CodeEditor::MouseMove(Point p, dword flags) {
 	if(!MouseSelSpecial(p, flags))
 		LineEdit::MouseMove(p, flags);
+
+	tippos = Null;
+
 	if(IsSelection()) return;
 
 	if(p.x > 0) { // ignore calls from EditorBar::MouseMove
@@ -744,10 +757,16 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 		int64 h = GetGPos(p.y, p.x);
 		tippos = h < INT_MAX ? (int)h : -1;
 	}
-	else
-		tippos = Null;
+	
 	SyncTip();
+	delayed_tip = false;
+	delayed.KillSet(1000, [=] {
+		delayed_tip = true;
+		SyncTip();
+	});
 }
+
+bool CodeEditor::DelayedTip(MouseTip& tip) { return false; }
 
 Image CodeEditor::CursorImage(Point p, dword keyflags)
 {
@@ -760,8 +779,10 @@ Image CodeEditor::CursorImage(Point p, dword keyflags)
 
 void CodeEditor::MouseLeave()
 {
+	delayed_tip = false;
 	tippos = -1;
 	LineEdit::MouseLeave();
+	CloseTip();
 }
 
 WString CodeEditor::GetI()

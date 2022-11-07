@@ -4,8 +4,10 @@
 
 void Ide::GotoPos(Point pos)
 {
+	int sc = editor.GetScrollPos().y;
 	editor.SetCursor(editor.GetPos64(pos.y, pos.x));
-	editor.TopCursor(4);
+	if(sc != editor.GetScrollPos().y)
+		editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
 }

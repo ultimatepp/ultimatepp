@@ -110,4 +110,7 @@ String GetInternalGitPath();
 
 int  MaxAscent(Font f);
 
+String LibClangCommandLine();
+void   IdeShowConsole();
+
 #endif

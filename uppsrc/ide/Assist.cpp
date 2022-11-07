@@ -419,6 +419,7 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	if(!navigator_global)
 		Search();
 	SyncCursor();
+	SyncTip();
 }
 
 bool InFileIncludedFrom(const String& s)
@@ -489,6 +490,78 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	}
 }
 
+void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
+{
+	mt.value = qtf;
+	mt.display = &QTFDisplay();
+
+	RichText txt = ParseQTF(qtf);
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	mt.sz.cx = min(mt.sz.cx, txt.GetWidth() + DPI(2));
+	mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+}
+
+bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
+{
+	if(GetChar(mt.pos) <= 32)
+		return false;
+	String name;
+	Point ref_pos;
+	String ref_id = theide->GetRefId(mt.pos, name, ref_pos);
+	if(ref_id.GetCount() == 0)
+		return false;
+
+	int lp = mt.pos;
+	int li = GetLinePos(lp);
+
+	bool found_local = false;
+	AnnotationItem m, m1;
+
+	AnnotationItem cm = FindCurrentAnnotation(); // what function body are we in?
+	if(IsFunction(cm.kind)) { // do local variables
+		for(const AnnotationItem& lm : locals) {
+			int ppy = -1;
+			if(lm.id == ref_id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
+				ppy = m.pos.y;
+				m = lm;
+				found_local = true;
+				if(ref_pos == lm.pos)
+					break;
+			}
+		}
+	}
+
+	if(!found_local) {
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& q : f.value.items)
+				if(q.id == ref_id)
+					(q.definition ? m1 : m) = q;
+		
+		if(m.id.GetCount() == 0)
+			m = m1;
+	}
+	
+	if(m.id.GetCount() == 0)
+		return false;
+	
+	String qtf = "[g ";
+	if(m.nest.GetCount())
+		qtf << "[@b* \1" << m.nest << "::\1]&";
+
+	String tl = BestTopic(GetRefLinks(ref_id));
+	if(tl.GetCount()) {
+		RichText txt = GetCodeTopic(tl, ref_id);
+		qtf << AsQTF(txt);
+	}
+	else
+		qtf << SignatureQtf(m.name, m.pretty);
+
+	SetQTF(mt, qtf);
+	mt.background = AdjustIfDark(Color(245, 255, 221));
+
+	return true;
+}
+
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
 	int p = mt.pos;
@@ -528,13 +601,9 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 				qtf << "\1" << d.text << "\1";
 				qtf << "]";
 			}
-			mt.value = qtf;
-			mt.display = &QTFDisplay();
-
-			RichText txt = ParseQTF(qtf);
-			txt.ApplyZoom(GetRichTextStdScreenZoom());
-			mt.sz.cx = min(4 * GetWorkArea().GetWidth() / 5, txt.GetWidth()) + DPI(2);
-			mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+			
+			SetQTF(mt, qtf);
+			mt.background = AdjustIfDark(Color(255, 234, 207));
 			return true;
 		}
 	}
@@ -595,6 +664,10 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
+	if(GetLineLength(line) < 1000) { // sanity
+		WString x = GetWLine(line); // clang treats utf-8 subcodes as whole characters
+		pos = x.Mid(0, pos).ToString().GetCount();
+	}
 	if(cfx.content.GetCount())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;

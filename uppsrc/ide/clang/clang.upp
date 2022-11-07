@@ -13,7 +13,6 @@ file
 	clang.dli,
 	util.cpp,
 	macros.cpp,
-	CxxIcon.cpp,
 	Signature.cpp,
 	libclang.cpp,
 	clang.cpp,

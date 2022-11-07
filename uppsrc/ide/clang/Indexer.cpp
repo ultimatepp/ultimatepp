@@ -53,7 +53,8 @@ void AnnotationItem::Serialize(Stream& s)
 void ReferenceItem::Serialize(Stream& s)
 {
 	s % id
-	  % pos;
+	  % pos
+	  % ref_pos;
 }
 
 void FileAnnotation::Serialize(Stream& s)
@@ -106,7 +107,7 @@ void DumpIndex(const char *file)
 		for(const auto& n : m.value.items)
 			out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
 		for(const auto& n : m.value.refs)
-			out << '\t' << n.pos << "   " << n.id << "\n";
+			out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
 	}
 }
 
@@ -184,7 +185,6 @@ void Indexer::IndexerThread()
 				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
 				LLOG("Storing " << path);
-				// TODO: Compress ?
 				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, job.master_files.Get(path, Null)), StoreAsString(f), true);
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
@@ -226,7 +226,7 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < IndexerThreads; i++) // TODO: CPU_Cores?
+		for(int i = 0; i < IndexerThreads; i++)
 			Thread::StartNice([] { Indexer::IndexerThread(); });
 		Thread::StartNice([] { SchedulerThread(); });
 	}

@@ -600,7 +600,6 @@ struct Builder {
 	Builder()          { doall = false; main_conf = false; }
 	virtual ~Builder() {}
 
-	// TODO: move other methods if needed
 	void                   ChDir(const String& path);
 	String                 GetPathQ(const String& path) const;
 	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
