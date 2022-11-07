@@ -4,7 +4,7 @@
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 21;
+	int version = 22;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -126,6 +126,8 @@ void Ide::SerializeWorkspace(Stream& s) {
 		SerializePlacement(s);
 	if(version >= 20)
 		s % difflru;
+	if(version >= 22)
+		editor.SerializeNavigatorWorkspace(s);
 }
 
 void Ide::SerializeLastMain(Stream& s)

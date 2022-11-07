@@ -40,8 +40,8 @@ struct Navigator {
 	bool             sorting;
 	bool             dlgmode;
 
-	ArrayCtrl         list;
-	EditString        search;
+	ArrayCtrl                   list;
+	WithDropChoice<EditString>  search;
 
 	void TriggerSearch();
 	void Search();
@@ -60,6 +60,7 @@ struct Navigator {
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
+	virtual void ChildLostFocus();
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
@@ -216,6 +217,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
+	void           SerializeNavigatorWorkspace(Stream& s);
 	void           SyncNavigatorPlacement();
 
 	Event<int>     WhenFontScroll;

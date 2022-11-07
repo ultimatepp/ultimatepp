@@ -1063,6 +1063,11 @@ void AssistEditor::LeftDown(Point p, dword keyflags)
 	CodeEditor::LeftDown(p, keyflags);
 }
 
+void AssistEditor::ChildLostFocus()
+{
+	search.AddHistory();
+}
+
 void AssistEditor::LostFocus()
 {
 	CloseAssist();
@@ -1141,4 +1146,11 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 7)
 		s % show_errors % show_errors_status;
+}
+
+void AssistEditor::SerializeNavigatorWorkspace(Stream& s)
+{
+	int version = 0;
+	s / version;
+	search.SerializeList(s);
 }

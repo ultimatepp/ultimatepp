@@ -96,11 +96,11 @@ bool Clang::Parse(const String& filename, const String& content,
 
 	Vector<String> args;
 
-	if(iquote.GetCount()) // path to real_filename for #include "xxx" handling
-		args.Add("-I" + iquote);
-
 	for(const String& s : Split(includes, ';'))
 		args.Add("-I" + s);
+
+	if(iquote.GetCount()) // path to real_filename for #include "xxx" handling
+		args.Add("-I" + iquote);
 	
 	for(const String& s : Split(defines + ";CLANG", ';'))
 		args.Add("-D" + s);
