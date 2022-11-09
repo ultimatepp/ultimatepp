@@ -2,9 +2,9 @@
 
 ![alt text](uppbox/uppweb/Resources/Images/Logo.png?raw=true "U++ Logo")
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ultimatepp/ultimatepp/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/ultimatepp/ultimatepp/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/ultimatepp/ultimatepp/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/ultimatepp/ultimatepp/tree/master) [![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, etc.), and an integrated development environment.
+U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), and an integrated development environment.
 
 Rapid development is achieved by the [smart and aggressive use of C++](https://www.ultimatepp.org/www$uppweb$overview$en-us.html) rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.
 
@@ -22,7 +22,7 @@ U++ supports following platforms on the production level: **Windows**, **macOS**
 You can use both, or you can use whichever you need.
 
 ## License
-U++ uses BSD license.
+U++ uses BSD-2 Clause license. The license applies to all source code in this repository except for the situation when the directory contains the "Copying" file. In this case, the license contained in this file is valid for source codes within the directory in which it is present. Moreover, the new license stored in "Copying" file applies to source files in child directories.
 
 ## Download
 
@@ -85,6 +85,8 @@ If you would like to see more screenshots, click [here](https://www.ultimatepp.o
 ## Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
+* **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
+* **tutorial** - exemplary code from our [tutorials](https://www.ultimatepp.org/www$uppweb$Tutorials$en-us.html)
 * **uppsrc** - main sources of the framework
