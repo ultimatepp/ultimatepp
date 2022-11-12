@@ -254,12 +254,30 @@ void CurrentFileThread()
 	LLOG("Current file thread exit");
 }
 
+const char sFakeBuildInfo[] =
+R"(
+#define bmYEAR   2022
+#define bmMONTH  10
+#define bmDAY    25
+#define bmHOUR   19
+#define bmMINUTE 18
+#define bmSECOND 32
+#define bmTIME   Time(2022, 10, 25, 19, 18, 32)
+#define bmMACHINE "DESKTOP-UGRVJFA"
+#define bmUSER    "cxl"
+#define bmGIT_REVCOUNT "14242"
+)";
+
 void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&, const Vector<Diagnostic>&> done)
 {
 	if(!HasLibClang())
 		return;
 
 	ONCELOCK {
+		String path = CacheFile("fake_build_info") + "/" + "build_info.h";
+		RealizePath(path);
+		SaveChangedFile(path, sFakeBuildInfo);
+
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
 		Thread::Start([] { CurrentFileThread(); });

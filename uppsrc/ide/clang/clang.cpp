@@ -102,6 +102,8 @@ bool Clang::Parse(const String& filename, const String& content,
 	if(iquote.GetCount()) // path to real_filename for #include "xxx" handling
 		args.Add("-I" + iquote);
 	
+	args.Add("-I" + CacheFile("fake_build_info"));
+	
 	for(const String& s : Split(defines + ";CLANG", ';'))
 		args.Add("-D" + s);
 
