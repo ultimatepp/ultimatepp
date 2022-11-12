@@ -1,5 +1,9 @@
 #include "umake.h"
 
+#ifndef bmYEAR
+#include <build_info.h>
+#endif
+
 bool SilentMode;
 
 String GetUmkFile(const char *fn)
@@ -56,6 +60,14 @@ String GetAndroidSDKPath()
 }
 
 #ifdef flagMAIN
+
+String GenerateVersionNumber()
+{
+#ifdef bmGIT_REVCOUNT
+	return AsString(atoi(bmGIT_REVCOUNT) + 2270);
+#endif
+	return "";
+}
 
 CONSOLE_APP_MAIN
 {
@@ -278,11 +290,14 @@ CONSOLE_APP_MAIN
 		else
 			SetExitCode(1);
 	}
-	else
-		Puts("Usage: [-options] umk assembly main_package [build_method] [+flags] [output]\n\n"
+	else {
+		String version = GenerateVersionNumber();
+		Puts("UMK (U++MaKe) " + version + "\n\n"
+		     "Usage: [-options] umk assembly main_package [build_method] [+flags] [output]\n"
 		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
 		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
-		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");
+		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details.\n");
+	}
 }
 
 #endif
