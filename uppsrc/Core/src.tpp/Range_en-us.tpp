@@ -60,6 +60,12 @@ nge]([*@4 I]_[*@3 begin], [@(0.0.255) int]_[*@3 count])&]
 [s2; Makes a Range as subrange of some other Range (e.g. container).&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:SubRangeFrom`(C`&`&`,int`):%- [@(0.0.255) template] <C> 
+[@(0.0.255) auto] [* SubRangeFrom](C[@(0.0.255) `&`&] [*@3 c], [@(0.0.255) int] 
+[*@3 pos])&]
+[s2; Same as SubRange([%-*@3 c], [%-*@3 pos] ,[%-*@3 c].GetCount() `- pos).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Upp`:`:SubRangeOf`:`:typedef:%- [@(0.0.255) template <class ][*@4 Range][@(0.0.255) > 
 using]_[* SubRangeOf];&]
 [s2; Returns the type of SubRange of some Range.&]

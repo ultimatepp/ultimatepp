@@ -134,6 +134,9 @@ String CleanupId(const char *s)
 		if(*s == '<' && !operator_def) { // remove template stuff e.g. Buffer<T>(Vector<T>) -> Buffer(Vector);
 			SkipT();
 		}
+		else
+		if(*s == '-' && s[1] == '>') // ignore return value in -> notation (auto Foo() -> double)
+			return TrimRight(mm);
 		else {
 			was_id = was_space = false;
 			if(*s == '~' && !operator_def) // prevent culling of 'return value' in destructor
@@ -226,6 +229,9 @@ String CleanupPretty(const String& signature)
 				s++;
 			result.Cat(' ');
 		}
+		else
+		if(s[0] == '-' && s[1] == '>')
+			break;
 		else
 		if(*s == '=' && plvl == 0)
 			break;
