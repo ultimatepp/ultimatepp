@@ -90,15 +90,20 @@ bool Clang::Parse(const String& filename, const String& content,
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++14 "
 	        << RedefineMacros()
 	        << " " << LibClangCommandLine();
-	
-	
+
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
 
 	Vector<String> args;
+
 	for(const String& s : Split(includes, ';'))
 		args.Add("-I" + s);
 
+	if(iquote.GetCount()) // path to real_filename for #include "xxx" handling
+		args.Add("-I" + iquote);
+	
+	args.Add("-I" + CacheFile("fake_build_info"));
+	
 	for(const String& s : Split(defines + ";CLANG", ';'))
 		args.Add("-D" + s);
 

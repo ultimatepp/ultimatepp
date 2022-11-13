@@ -102,9 +102,27 @@ RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef)
 			if(IsCodeItem(topic_text, i) && CleanupTppId(topic_text.Get(i).format.label) == cr) {
 				while(i > 0 && IsCodeItem(topic_text, i)) i--;
 				if(!IsCodeItem(topic_text, i)) i++;
-				while(IsCodeItem(topic_text, i))
-					result.Cat(topic_text.Get(i++));
+				while(IsCodeItem(topic_text, i)) {
+					if(CleanupTppId(topic_text.Get(i).format.label) == cr)
+						result.Cat(topic_text.Get(i));
+					i++;
+				}
 				while(i < topic_text.GetPartCount() && !IsCodeItem(topic_text, i)
+				      && !IsBeginEnd(topic_text, i)) {
+					if(topic_text.IsPara(i))
+						result.Cat(topic_text.Get(i++));
+					else {
+						RichTable table(topic_text.GetTable(i++), 1);
+						result.CatPick(pick(table));
+					}
+				}
+				goto done;
+			}
+			else
+			if(CleanupTppId(topic_text.Get(i).format.label) == cr) {
+				while(CleanupTppId(topic_text.Get(i).format.label) == cr)
+					result.Cat(topic_text.Get(i++));
+				while(i < topic_text.GetPartCount() && topic_text.Get(i).format.label.GetCount() == 0
 				      && !IsBeginEnd(topic_text, i)) {
 					if(topic_text.IsPara(i))
 						result.Cat(topic_text.Get(i++));

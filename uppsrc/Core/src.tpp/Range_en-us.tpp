@@ -1,5 +1,4 @@
 topic "Range";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Range";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Range]]}}&]
 [s1;O_; &]
@@ -51,7 +51,7 @@ e]([*@4 I]_[*@3 begin], [*@4 I]_[*@3 end])&]
 [s5;:Upp`:`:SubRange`(I`,int`):%- [_^Upp`:`:SubRangeClass^ SubRangeClass]<[*@4 I]>_[* SubRa
 nge]([*@4 I]_[*@3 begin], [@(0.0.255) int]_[*@3 count])&]
 [s2; Makes a Range based on begin iterator and count.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:SubRange`(C`&`&`,int`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
 ]>&]
@@ -59,6 +59,12 @@ nge]([*@4 I]_[*@3 begin], [@(0.0.255) int]_[*@3 count])&]
 `&]_[*@3 c], [@(0.0.255) int]_[*@3 pos], [@(0.0.255) int]_[*@3 count]);&]
 [s2; Makes a Range as subrange of some other Range (e.g. container).&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SubRangeFrom`(C`&`&`,int`):%- [@(0.0.255) template] <C> 
+[@(0.0.255) auto] [* SubRangeFrom](C[@(0.0.255) `&`&] [*@3 c], [@(0.0.255) int] 
+[*@3 pos])&]
+[s2; Same as SubRange([%-*@3 c], [%-*@3 pos] ,[%-*@3 c].GetCount() `- pos).&]
+[s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:SubRangeOf`:`:typedef:%- [@(0.0.255) template <class ][*@4 Range][@(0.0.255) > 
 using]_[* SubRangeOf];&]

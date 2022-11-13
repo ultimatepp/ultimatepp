@@ -445,25 +445,27 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 					int k = ds[di].kind;
 					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
-						if(d.pos.y < 0 || InFileIncludedFrom(d.text))
+						if(d.pos.y < 0 || InFileIncludedFrom(d.text) || path != d.path)
 							return;
+						Point pos = d.pos;
+						FromUtf8x(pos);
 						bool error = true;
-						if(!IsSourceFile(path) && d.pos.y > GetLineCount() - 10) { // ignore errors after the end of header (e.g. missing })
-							int line = d.pos.y;
+						if(!IsSourceFile(path) && pos.y > GetLineCount() - 10) { // ignore errors after the end of header (e.g. missing })
+							int line = pos.y;
 							error = false;
-							int pos = d.pos.x;
+							int xpos = pos.x;
 							while(line < GetLineCount()) {
 								String l = GetUtf8Line(line++);
 								String s = TrimBoth(l);
-								if(s.GetCount() && pos < l.GetCount() && *s != '#')
+								if(s.GetCount() && xpos < l.GetCount() && *s != '#')
 									error = true;
-								pos = 0;
+								xpos = 0;
 							}
 						}
 						if(!error)
 							return;
 
-						err.Add(d.pos);
+						err.Add(pos);
 
 						if(d.path == path)
 							group_valid = true;
@@ -567,6 +569,7 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 	int p = mt.pos;
 	int line = GetLinePos(p);
 	Point pos(p, line);
+	ToUtf8x(pos);
 	int di = 0;
 	String path = NormalizePath(theide->editfile);
 	while(di < errors.GetCount()) {
@@ -646,6 +649,29 @@ void AssistEditor::NewFile(bool reloading)
 	}
 }
 
+int  AssistEditor::ToUtf8x(int line, int pos)
+{ // libclang treats utf-8 bytes as whole characters
+	if(line < GetLineCount() && GetLineLength(line) < 1000) {
+		WString w = GetWLine(line);
+		if(pos <= w.GetCount())
+	        return w.Mid(0, pos).ToString().GetCount();
+	}
+	return pos;
+}
+
+int AssistEditor::FromUtf8x(int line, int pos)
+{ // libclang treats utf-8 bytes as whole characters
+	if(line < GetLineCount() && GetLineLength(line) < 1000) {
+		bool isutf8 = false;
+		const String& h = GetUtf8Line(line);
+		if(pos <= h.GetCount())
+			for(const char ch : h)
+				if((byte)ch >= 128)
+					return h.Mid(0, pos).ToWString().GetCount();
+	}
+	return pos;
+}
+
 void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
@@ -664,12 +690,8 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	if(GetLineLength(line) < 1000) { // sanity
-		WString x = GetWLine(line); // clang treats utf-8 subcodes as whole characters
-		pos = x.Mid(0, pos).ToString().GetCount();
-	}
 	if(cfx.content.GetCount())
-		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;
 			for(const AutoCompleteItem& m : items) {
@@ -1041,6 +1063,11 @@ void AssistEditor::LeftDown(Point p, dword keyflags)
 	CodeEditor::LeftDown(p, keyflags);
 }
 
+void AssistEditor::ChildLostFocus()
+{
+	search.AddHistory();
+}
+
 void AssistEditor::LostFocus()
 {
 	CloseAssist();
@@ -1119,4 +1146,11 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 7)
 		s % show_errors % show_errors_status;
+}
+
+void AssistEditor::SerializeNavigatorWorkspace(Stream& s)
+{
+	int version = 0;
+	s / version;
+	search.SerializeList(s);
 }

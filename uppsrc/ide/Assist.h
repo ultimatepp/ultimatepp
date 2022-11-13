@@ -40,8 +40,8 @@ struct Navigator {
 	bool             sorting;
 	bool             dlgmode;
 
-	ArrayCtrl         list;
-	EditString        search;
+	ArrayCtrl                   list;
+	WithDropChoice<EditString>  search;
 
 	void TriggerSearch();
 	void Search();
@@ -60,6 +60,7 @@ struct Navigator {
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
+	virtual void ChildLostFocus();
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
@@ -144,6 +145,12 @@ struct AssistEditor : CodeEditor, Navigator {
 
 	Vector<Diagnostic> errors;
 
+	int                ToUtf8x(int line, int pos);
+	int                FromUtf8x(int line, int pos);
+	
+	void               ToUtf8x(Point& p)                   { p.x = ToUtf8x(p.y, p.x); }
+	void               FromUtf8x(Point& p)                 { p.x = FromUtf8x(p.y, p.x); }
+
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SetAnnotations(const CppFileInfo& f);
 	void               SyncCurrentFile(const CurrentFileContext& ctx);
@@ -210,6 +217,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
+	void           SerializeNavigatorWorkspace(Stream& s);
 	void           SyncNavigatorPlacement();
 
 	Event<int>     WhenFontScroll;

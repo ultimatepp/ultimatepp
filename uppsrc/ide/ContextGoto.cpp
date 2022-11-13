@@ -61,6 +61,8 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 				ci = m.pos.x;
 			}
 		}
+	if(ref_id.GetCount())
+		editor.FromUtf8x(ref_pos);
 	return ref_id;
 }
 

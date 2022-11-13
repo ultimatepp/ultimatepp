@@ -138,6 +138,7 @@ void Navigator::Navigate()
 {
 	if(navigating)
 		return;
+	search.AddHistory();
 	navigating = true;
 	int ii = list.GetCursor();
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
@@ -156,6 +157,7 @@ void Navigator::Navigate()
 				h.Replace("::", ".");
 				h << ".";
 				search <<= h;
+				search.AddHistory();
 				Search();
 			}
 		}
@@ -201,6 +203,7 @@ void Navigator::NavigatorEnter()
 
 void Ide::ToggleNavigator()
 {
+	editor.search.AddHistory();
 	editor.Navigator(!editor.navigator);
 }
 
