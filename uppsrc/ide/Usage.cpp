@@ -90,43 +90,68 @@ void GatherVirtuals(const String& cls, const String& signature, Index<String>& i
 		}
 }
 
-void Ide::Usage(const String& id, const String& name)
+void Ide::Usage(const String& id, const String& name, Point ref_pos)
 {
 	if(IsNull(id))
 		return;
 
-	bool isvirtual = false;
-	String cls;
-	for(const auto& f : ~CodeIndex())
-		for(const AnnotationItem& m : f.value.items)
-			if(m.id == id && m.isvirtual) {
-				isvirtual = true;
-				cls = m.nest;
-				break;
+	int li = editor.GetCursorLine();
+
+	bool local = false;
+	AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
+	if(IsFunction(cm.kind)) { // do local variables
+		for(const AnnotationItem& lm : editor.locals) {
+			int ppy = -1;
+			if(lm.id == id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
+				if(ref_pos == lm.pos) {
+					local = true;
+					break;
+				}
 			}
-	
-	Index<String> ids;
-	ids.FindAdd(id);
-	
-	if(isvirtual) {
-		Index<String> visited;
-		GatherVirtuals(cls, ScopeWorkaround(id.Mid(cls.GetCount())), ids, visited);
+		}
 	}
 	
 	SetFFound(ffoundi_next);
 	FFound().Clear();
-	SortByKey(CodeIndex());
+
 	Index<String> unique;
-	for(const auto& f : ~CodeIndex()) {
-		auto Add = [&](Point mpos) {
-			AddReferenceLine(f.key, mpos, name, unique);
-		};
-		for(const AnnotationItem& m : f.value.items)
-			if(ids.Find(m.id) >= 0)
-				Add(m.pos);
-		for(const ReferenceItem& m : f.value.refs)
-			if(ids.Find(m.id) >= 0)
-				Add(m.pos);
+	if(local) {
+		for(const ReferenceItem& lm : editor.references) {
+			if(lm.id == id && lm.ref_pos == ref_pos)
+				AddReferenceLine(editfile, lm.pos, name, unique);
+		}
+	}
+	else {
+		bool isvirtual = false;
+		String cls;
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& m : f.value.items)
+				if(m.id == id && m.isvirtual) {
+					isvirtual = true;
+					cls = m.nest;
+					break;
+				}
+		
+		Index<String> ids;
+		ids.FindAdd(id);
+		
+		if(isvirtual) {
+			Index<String> visited;
+			GatherVirtuals(cls, ScopeWorkaround(id.Mid(cls.GetCount())), ids, visited);
+		}
+		
+		SortByKey(CodeIndex());
+		for(const auto& f : ~CodeIndex()) {
+			auto Add = [&](Point mpos) {
+				AddReferenceLine(f.key, mpos, name, unique);
+			};
+			for(const AnnotationItem& m : f.value.items)
+				if(ids.Find(m.id) >= 0)
+					Add(m.pos);
+			for(const ReferenceItem& m : f.value.refs)
+				if(ids.Find(m.id) >= 0)
+					Add(m.pos);
+		}
 	}
 
 	FFoundFinish();
@@ -139,7 +164,7 @@ void Ide::Usage()
 	if(!editor.WaitCurrentFile())
 		return;
 	AnnotationItem cm = editor.FindCurrentAnnotation();
-	Usage(cm.id, cm.name);
+	Usage(cm.id, cm.name, cm.pos);
 }
 
 void Ide::IdUsage()
@@ -147,5 +172,5 @@ void Ide::IdUsage()
 	String name;
 	Point ref_pos;
 	String ref_id = GetRefId(editor.GetCursor(), name, ref_pos);
-	Usage(ref_id, name);
+	Usage(ref_id, name, ref_pos);
 }
