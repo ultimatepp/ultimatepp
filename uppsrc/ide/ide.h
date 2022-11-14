@@ -976,7 +976,6 @@ public:
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
-		void  NavigatorDlg();
 		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
@@ -987,6 +986,8 @@ public:
 		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
+		bool  GotoId(const String& ref_id, const String& name, Point ref_pos, int li);
+		void  GotoCodeRef(const String& ref_id);
 		void  GoToLine();
 		void  CtrlClick(int64 pos);
 		void  Qtf();

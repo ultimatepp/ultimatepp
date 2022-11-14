@@ -146,14 +146,17 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	catch(CParser::Error) {}
-	
 	if(!editor.WaitCurrentFile())
 		return;
 
 	String name;
 	Point  ref_pos;
 	String ref_id = GetRefId(pos, name, ref_pos);
-	
+	GotoId(ref_id, name, ref_pos, li);
+}
+
+bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li)
+{
 	PutAssist("ref_id: " + ref_id);
 	
 	if(ref_id.GetCount()) {
@@ -165,7 +168,7 @@ void Ide::ContextGoto0(int pos)
 		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 		PutAssist("Context: " + cm.id);
-		if(IsFunction(cm.kind)) { // do local variables
+		if(IsFunction(cm.kind) && li >= 0) { // do local variables
 			for(const AnnotationItem& m : editor.locals) {
 				int ppy = -1;
 				if(m.id == ref_id && m.pos.y >= cm.pos.y && m.pos.y <= li && m.pos.y > ppy) {
@@ -208,29 +211,54 @@ void Ide::ContextGoto0(int pos)
 					cls = cls.Mid(q + 1);
 				if(cls.TrimStart("With")) {
 					l->FindLayout(cls, found_name);
-					return;
+					return true;
 				}
 				else
 				if(found_name.TrimStart("SetLayout_")) {
 					l->FindLayout(found_name, Null);
-					return;
+					return true;
 				}
 				DoEditAsText(found_path);
 			}
 			IdeIconDes *k = dynamic_cast<IdeIconDes *>(~designer);
 			if(k) {
 				k->FindId(found_name);
-				return;
+				return true;
 			}
 			GotoPos(found_pos);
 			AddHistory();
+			return true;
 		}
 	}
+	return false;
 }
 
 void Ide::ContextGoto()
 {
 	ContextGoto0(editor.GetCursor());
+}
+
+void Ide::GotoCodeRef(const String& ref_id)
+{
+	String id = CleanupTppId(ref_id);
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& m : f.value.items)
+			if(m.id == id) {
+				GotoId(m.id, m.name, m.pos, -1);
+				return;
+			}
+
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& m : f.value.items)
+			if(FindIndex(AnnotationCandidates(m.id), id) >= 0) {
+				GotoId(m.id, m.name, m.pos, -1);
+				return;
+			}
+}
+
+void IdeGotoCodeRef(const String& ref_id)
+{
+	TheIde()->GotoCodeRef(ref_id);
 }
 
 void Ide::CtrlClick(int64 pos)

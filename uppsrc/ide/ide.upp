@@ -60,7 +60,6 @@ file
 	Virtuals.cpp,
 	Events.cpp,
 	Log.cpp,
-	Jump.cpp,
 	MainConfig.cpp,
 	Setup.cpp,
 	Custom.cpp,
