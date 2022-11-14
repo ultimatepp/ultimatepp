@@ -422,9 +422,9 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	SyncTip();
 }
 
-bool InFileIncludedFrom(const String& s)
+bool IgnoredError(const String& s)
 {
-	return s.Find("in file included from") >= 0;
+	return s.Find("in file included from") >= 0 || s.Find("to match this '{'") >= 0;
 }
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
@@ -445,7 +445,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 					int k = ds[di].kind;
 					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
-						if(d.pos.y < 0 || InFileIncludedFrom(d.text) || path != d.path)
+						if(d.pos.y < 0 || IgnoredError(d.text) || path != d.path)
 							return;
 						Point pos = d.pos;
 						FromUtf8x(pos);
@@ -577,11 +577,11 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 		int ii0 = di;
 		bool found = false;
 		if(IsWarning(k) || IsError(k)) {
-			if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+			if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 				found = true;
 			di++;
 			while(di < errors.GetCount() && errors[di].detail) {
-				if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+				if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 					found = true;
 				di++;
 			}
@@ -590,10 +590,12 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 			String qtf = "[g ";
 			for(int i = ii0; i < di; i++) {
 				Diagnostic& d = errors[i];
+				if(d.pos.y < 0 || IgnoredError(d.text))
+					continue;
 				if(i > ii0)
 					qtf << "&";
 				qtf << "[";
-				if(d.path == path && d.pos == pos && !InFileIncludedFrom(d.text))
+				if(d.path == path && d.pos == pos)
 					qtf << "*";
 				qtf << " ";
 				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
