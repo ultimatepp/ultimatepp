@@ -218,11 +218,11 @@ void AssistEditor::EditAnnotation(bool leftclick)
 	if(!GetAnnotationRefs(tl, coderef))
 		return;
 	SetCursor(GetPos64(GetActiveAnnotationLine()));
-	if(leftclick) {
+	if(leftclick) { // show documentation in help widget
 		auto GoToTopic = [&] (int i) {
 			if(theide) {
 				theide->doc.WhenMatchLabel = [](const WString& lbl, const WString& ref) {
-					return CleanupTppId(lbl.ToString()) == ref.ToString();
+					return ref.ToString() == CleanupTppId(lbl.ToString());
 				};
 				theide->ShowTopics();
 				for(String cr : AnnotationCandidates(coderef))

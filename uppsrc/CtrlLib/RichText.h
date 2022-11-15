@@ -75,8 +75,8 @@ public:
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;
 
-	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false);
-	bool            GotoLabel(const String& lbl, bool highlight = false);
+	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false, bool match_last = false);
+	bool            GotoLabel(const String& lbl, bool highlight = false, bool match_last = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
 	
 	int             GetLength() const                         { return text.GetLength(); }
@@ -300,6 +300,7 @@ private:
 	String         topic;
 	String         label;
 	String         current_link;
+	int            doing_goto = 0;
 
 	bool GoTo0(const String& link);
 	void Back();
