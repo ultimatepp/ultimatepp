@@ -78,6 +78,11 @@ void SetDateFormat(const char *fmt)
 		strncpy(s_date_format_main, fmt, 63);
 }
 
+String GetDateFormat()
+{
+	return *s_date_format_thread ? s_date_format_thread : s_date_format_main;
+}
+
 String Format(Date date, const char *fmt)
 {
 	String  s;
