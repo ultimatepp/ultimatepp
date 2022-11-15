@@ -80,6 +80,8 @@ void   SetDateFormat(const char *fmt);
 void   SetDateScan(const char *scan);
 void   SetDateFilter(const char *seps);
 
+String GetDateFormat();
+
 const char *StrToDate(const char *fmt, Date& d, const char *s, Date def = Null);
 const char *StrToDate(Date& d, const char *s, Date def);
 const char *StrToDate(Date& d, const char *s);
