@@ -366,20 +366,30 @@ void Navigator::Search()
 		String usearch_name = ToUpper(search_name);
 		SortByKey(CodeIndex());
 		Index<String> set;
-		for(int definition = 0; definition < 2; definition++) // we prefer header order
-			for(int pass = 0; pass < 3; pass++)
-				for(const auto& f : ~CodeIndex())
-					for(const AnnotationItem& m : f.value.items) {
-						if(m.definition == definition && set.Find(m.id) < 0 &&
-						   (pass == 0 ? m.name == search_name : pass == 1 ? m.name.StartsWith(search_name) : m.uname.Find(usearch_name) >= 0) &&
-						   (pass == 2 ? m.unest.Find(usearch_nest) >= 0 : m.nest.Find(search_nest) >= 0)) {
-							NavItem& n = nitem.Add();
-							(AnnotationItem&)n = m;
-							n.path = f.key;
-							nests.FindAdd(n.nest = Nest(m, f.key));
-							set.Add(m.id);
-						}
+		for(int nest_pass = 0; nest_pass < 3; nest_pass++) {
+			for(int name_pass = 0; name_pass < 4; name_pass++)
+				for(int source_pass = 0; source_pass < 2; source_pass++) // we prefer header order
+					for(const auto& f : ~CodeIndex()) {
+						if(source_pass == (findarg(ToLower(GetFileExt(f.key)), ".h", ".hh") >= 0))
+							for(const AnnotationItem& m : f.value.items) {
+								if(set.Find(m.id) < 0 &&
+								   (name_pass == 3 ? m.uname.Find(usearch_name) >= 0 :
+								    name_pass == 2 ? m.name.Find(search_name) >= 0 :
+								    name_pass == 1 ? m.name.StartsWith(search_name) :
+								                     m.name == search_name) &&
+								   (search_nest.GetCount() == 0 ||
+									   (nest_pass == 2 ? m.unest.Find(usearch_nest) >= 0 :
+									    nest_pass == 1 ? m.nest.Find(search_nest) >= 0 :
+									                     m.nest == search_nest))) {
+									NavItem& n = nitem.Add();
+									(AnnotationItem&)n = m;
+									n.path = f.key;
+									nests.FindAdd(n.nest = Nest(m, f.key));
+									set.Add(m.id);
+								}
+							}
 					}
+		}
 		
 		SortIndex(nests);
 		const Workspace& wspc = GetIdeWorkspace();
