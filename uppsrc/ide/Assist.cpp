@@ -566,6 +566,8 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
+	if(assist.IsOpen())
+		return false;
 	int p = mt.pos;
 	int line = GetLinePos(p);
 	Point pos(p, line);
