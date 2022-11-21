@@ -125,6 +125,7 @@ String               Indexer::defines;
 
 void Indexer::IndexerThread()
 {
+	Thread::DumpDiagnostics();
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
 		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
@@ -226,8 +227,12 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < IndexerThreads; i++)
-			Thread::StartNice([] { Indexer::IndexerThread(); });
+		for(int i = 0; i < IndexerThreads; i++) {
+			Thread t;
+			t.StackSize(8192*1024);
+			t.RunNice([] { Indexer::IndexerThread(); });
+			t.Detach();
+		}
 		Thread::StartNice([] { SchedulerThread(); });
 	}
 
