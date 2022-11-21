@@ -1,5 +1,4 @@
 #include "Core.h"
-#include "Core.h"
 
 void Hdepend::Info::Serialize(Stream& s)
 {

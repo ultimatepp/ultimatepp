@@ -256,7 +256,7 @@ void Thread::EndShutdownThreads()
 
 void Thread::DumpDiagnostics()
 {
-#ifdef PLATFORM_POSIX
+#ifdef PLATFORM_LINUX
 	INTERLOCKED {
 		int s, i;
 		void *stkaddr;

@@ -1,4 +1,4 @@
-#include "clang.h"
+#include <ide/ide.h>
 
 #define LTIMING(x)   //TIMING(x)
 #define LTIMESTOP(x) //DTIMESTOP(x)
@@ -123,6 +123,12 @@ String               Indexer::main;
 String               Indexer::includes;
 String               Indexer::defines;
 
+void Indexer::BuildingPause()
+{
+	while(TheIde() && TheIde()->idestate == Ide::BUILDING)
+		Sleep(200);
+}
+
 void Indexer::IndexerThread()
 {
 	Thread::DumpDiagnostics();
@@ -146,6 +152,8 @@ void Indexer::IndexerThread()
 
 			if(Thread::IsShutdownThreads())
 				break;
+
+			BuildingPause();
 
 			int tm = msecs();
 
@@ -252,6 +260,8 @@ void Indexer::SchedulerThread()
 
 		{
 			LTIMESTOP("Scheduler");
+			BuildingPause();
+
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
 

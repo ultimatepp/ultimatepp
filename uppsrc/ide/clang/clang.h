@@ -303,6 +303,7 @@ class Indexer {
 	
 	static void IndexerThread();
 	static void SchedulerThread();
+	static void BuildingPause();
 
 public:
 	static void Start(const String& main, const String& includes, const String& defines);
