@@ -968,6 +968,7 @@ public:
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 
+	void      AssistMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);

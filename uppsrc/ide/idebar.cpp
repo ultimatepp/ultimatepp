@@ -748,17 +748,8 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
-void Ide::BrowseMenu(Bar& menu)
+void Ide::AssistMenu(Bar& menu)
 {
-	if(!IsEditorMode()) {
-		if(menu.IsMenuBar()) {
-			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
-				.Check(editor.IsNavigator())
-				.Enable(!designer);
-			menu.Add(AK_GOTO, THISBACK(SearchCode))
-				.Enable(!designer)
-				.Help("Go to given line");
-//			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 			menu.Add(!designer, AK_USAGE, [=] { Usage(); });
@@ -769,6 +760,19 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
 			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+}
+
+void Ide::BrowseMenu(Bar& menu)
+{
+	if(!IsEditorMode()) {
+		if(menu.IsMenuBar()) {
+			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
+				.Check(editor.IsNavigator())
+				.Enable(!designer);
+			menu.Add(AK_GOTO, THISBACK(SearchCode))
+				.Enable(!designer)
+				.Help("Go to given line");
+			AssistMenu(menu);
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
 			AssistEdit(menu);
 			menu.MenuSeparator();
