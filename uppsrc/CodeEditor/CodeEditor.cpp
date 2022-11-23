@@ -698,6 +698,7 @@ void CodeEditor::SyncTip()
 	mt.pos = tippos;
 	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
 	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
+		mt.sz.cy = min(wa.GetHeight() / 2 - DPI(20), mt.sz.cy);
 		tip.d = mt.display;
 		tip.v = mt.value;
 		tip.background = mt.background;
