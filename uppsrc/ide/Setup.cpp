@@ -515,6 +515,7 @@ void Ide::SetupFormat() {
 		(assist.diagnostics, AssistDiagnostics)
 		(assist.indexer_threads, IndexerThreads)
 		(assist.parsed_files, ParsedFiles)
+		(assist.no_empty_autocomplete, editor.no_empty_autocomplete)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)

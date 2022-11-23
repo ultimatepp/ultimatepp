@@ -739,6 +739,8 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		return;
 		
 	if(assist_item.GetCount() == 0) {
+		if(no_empty_autocomplete)
+			return;
 		AssistItem& m = assist_item.Add();
 		m.kind = KIND_ERROR;
 		m.pretty = "No relevant autocomplete info found";
@@ -1129,7 +1131,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 7;
+	int version = 8;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1150,6 +1152,9 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 7)
 		s % show_errors % show_errors_status;
+
+	if(version >= 8)
+		s % no_empty_autocomplete;
 }
 
 void AssistEditor::SerializeNavigatorWorkspace(Stream& s)
