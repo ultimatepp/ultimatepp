@@ -68,9 +68,7 @@ Size QTFDisplayCls::RatioSize(const Value& q, int cx, int cy) const
 
 void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, Color paper, dword style) const
 {
-	String s;
-	s << "[@(" << ink.GetR() << "." << ink.GetG() << "." << ink.GetB() << ") " << v;
-	RichText rtext = ParseQTF(s);
+	RichText rtext = ParseQTF(~v);
 	rtext.ApplyZoom(GetRichTextStdScreenZoom());
 	draw.DrawRect(r, paper);
 	draw.Clipoff(r);
