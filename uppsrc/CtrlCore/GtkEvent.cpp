@@ -646,7 +646,8 @@ void Ctrl::Proc()
 						              GDKEY(5), GDKEY(6), GDKEY(7), GDKEY(8), GDKEY(9) }) {
 							GdkKeymapKey *keys;
 							gint n_keys;
-							if(gdk_keymap_get_entries_for_keyval(NULL, k, &keys, &n_keys)) {
+
+							if(gdk_keymap_get_entries_for_keyval(gdk_keymap_get_for_display(gdk_display_get_default()), k, &keys, &n_keys)) {
 								for(int j = 0; j < n_keys; j++)
 									if(keys[j].group == 0)
 										hwkv.Add(keys[j].keycode, k);
@@ -658,6 +659,7 @@ void Ctrl::Proc()
 				}
 				kv += K_DELTA;
 			}
+			GetKeyDesc(kv);
 			if(GetShift() && kv != K_SHIFT_KEY)
 				kv |= K_SHIFT;
 			if(GetCtrl() && kv != K_CTRL_KEY)

@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  //  DLOG(x)
+#define LLOG(x)    // DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -87,7 +87,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		if(p->IsEnabled() && p->Key(p->unicode ? keycode : k, count))
 		{
 			LLOG("Ctrl::DispatchKey(" << FormatIntHex(keycode) << ", " << GetKeyDesc(keycode)
-				<< "): eaten in " << Desc(p));
+				<< "): consumed in " << Desc(p));
 			if(Ini::user_log)
 				USRLOG("  -> " << Desc(p));
 			eventCtrl = focusCtrl;
@@ -387,14 +387,14 @@ void  Ctrl::AnimateCaret()
 void Ctrl::PaintCaret(SystemDraw& w)
 {
 	GuiLock __;
-	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	// LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
 	if(this == caretCtrl && WndCaretVisible)
 		w.DrawRect(GetCaret(), InvertColor);
 }
 
 void Ctrl::SyncCaret() {
 	GuiLock __;
-	LLOG("SyncCaret");
+	// LLOG("SyncCaret");
 	if(focusCtrl != caretCtrl) {
 		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();

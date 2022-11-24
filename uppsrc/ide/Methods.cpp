@@ -853,28 +853,44 @@ String Ide::GetIncludePath()
 			}
 		}
 	}
+	
+	IncludeAddPkgConfig(include_path, Null);
 
-// TODO: replicate with clang
+	return include_path;
+}
+
+void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
+{
+#ifdef PLATFORM_POSIX
 	const Workspace& wspc = GetIdeWorkspace();
-	Host dummy_host;
-	One<Builder> b = CreateBuilder(&dummy_host);
+	Host host;
+	if(clang_method.GetCount())
+		CreateHost(host, clang_method, false, false);
+	else
+		CreateHost(host, false, false);
+	One<Builder> b = CreateBuilder(&host);
 	Index<String> pkg_config;
+	Index<String> cfg = PackageConfig(wspc, max(GetPackageIndex(), 0), GetMethodVars(method), mainconfigparam, host, *b);
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
-		for(String h : Split(Gather(pkg.pkg_config, b->config.GetKeys()), ' '))
+		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
-
-#ifdef PLATFORM_POSIX
-	for(String s : pkg_config)
-		for(String p : Split(Sys("pkg-config --cflags " + s), ' '))
+	
+	static VectorMap<String, String> cflags;
+	for(String s : pkg_config) {
+		int q = cflags.Find(s);
+		if(q < 0) {
+			q = cflags.GetCount();
+			cflags.Add(s, Sys("pkg-config --cflags " + s));
+		}
+		for(String p : Split(cflags[q], CharFilterWhitespace))
 			if(p.TrimStart("-I"))
 				MergeWith(include_path, ";", p);
+	}
 #endif
-
-	return include_path;
 }
 
 String Ide::GetCurrentIncludePath()
@@ -903,33 +919,8 @@ String Ide::GetCurrentIncludePath()
 	}
 	
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
-
-	const Workspace& wspc = GetIdeWorkspace();
 	
-	Host host;
-	CreateHost(host, false, false);
-	One<Builder> b = CreateBuilder(&host);
-	Index<String> cfg = PackageConfig(wspc, max(GetPackageIndex(), 0), GetMethodVars(method), mainconfigparam, host, *b);
-	Index<String> pkg_config;
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.include.GetCount(); j++)
-			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
-		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
-			pkg_config.FindAdd(h);
-	}
-	
-	static VectorMap<String, String> cflags;
-	for(String s : pkg_config) {
-		int q = cflags.Find(s);
-		if(q < 0) {
-			q = cflags.GetCount();
-			cflags.Add(s, Sys("pkg-config --cflags " + s));
-		}
-		for(String p : Split(cflags[q], CharFilterWhitespace))
-			if(p.TrimStart("-I"))
-				MergeWith(include_path, ";", p);
-	}
+	IncludeAddPkgConfig(include_path, clang_method);
 
 	return include_path;
 }
