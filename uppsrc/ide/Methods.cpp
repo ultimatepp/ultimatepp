@@ -896,7 +896,6 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 void AddDirs(String& include_path, const String& dir)
 {
 	MergeWith(include_path, ";", dir);
-	DLOG("AddDirs " << dir);
 	for(FindFile ff(dir + "/*.*"); ff; ff.Next())
 		if(ff.IsFolder())
 			AddDirs(include_path, ff.GetPath());

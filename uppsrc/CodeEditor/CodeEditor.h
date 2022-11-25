@@ -302,6 +302,7 @@ protected:
 	};
 	
 	bool  delayed_tip = false;
+	Point delayed_pos = Null;
 	Tip   tip;
 	int   tippos = Null;
 	

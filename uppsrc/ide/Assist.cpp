@@ -988,6 +988,7 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
+	CloseTip();
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
