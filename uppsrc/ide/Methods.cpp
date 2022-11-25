@@ -797,7 +797,7 @@ void ExtractIncludes(Index<String>& r, String h)
 }
 
 String Ide::GetIncludePath()
-{ // this is 'real' include path defined by current build method
+{ // this is 'real' include path defined by current build method, for Alt+J and #include assist
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
@@ -893,6 +893,15 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 #endif
 }
 
+void AddDirs(String& include_path, const String& dir)
+{
+	MergeWith(include_path, ";", dir);
+	DLOG("AddDirs " << dir);
+	for(FindFile ff(dir + "/*.*"); ff; ff.Next())
+		if(ff.IsFolder())
+			AddDirs(include_path, ff.GetPath());
+}
+
 String Ide::GetCurrentIncludePath()
 { // this is include path for libclang / assist
 	String include_path;
@@ -921,6 +930,14 @@ String Ide::GetCurrentIncludePath()
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
 	
 	IncludeAddPkgConfig(include_path, clang_method);
+
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.GetCount(); j++)
+			if(pkg[j] == "import.ext")
+				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
+	}
 
 	return include_path;
 }
