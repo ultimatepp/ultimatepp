@@ -276,6 +276,7 @@ void Ide::CtrlClick(int64 pos)
 
 void Ide::FindDesignerItemReferences(const String& id, const String& name)
 {
+	ResetFileLine();
 	String path = NormalizePath(editfile);
 	int q = CodeIndex().Find(path);
 	if(q >= 0) {

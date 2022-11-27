@@ -979,6 +979,8 @@ public:
 		void  Goto();
 		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
+		void  ResetFileLine();
+		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
