@@ -139,6 +139,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      navigator_right = false;
 	bool      show_errors = true;
 	bool      show_errors_status = true;
+	bool      no_empty_autocomplete = false;
 
 	PPInfo    ppi;
 	String    master_source;

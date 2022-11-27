@@ -42,6 +42,9 @@ class Thread : NoCopy {
 #ifdef PLATFORM_POSIX
 	pthread_t  handle;
 #endif
+
+	size_t stack_size = 0;
+
 public:
 	bool       Run(Function<void ()> cb, bool noshutdown = false);
 	bool       RunNice(Function<void ()> cb, bool noshutdown = false);
@@ -68,6 +71,7 @@ public:
 	Handle      GetHandle() const              { return handle; }
 	
 	bool        Priority(int percent); // 0 = lowest, 100 = normal
+	void        StackSize(int bytes)           { stack_size = bytes; }
 	
 	void        Nice()                         { Priority(25); }
 	void        Critical()                     { Priority(150); }
@@ -91,6 +95,8 @@ public:
 	static void (*AtExit(void (*exitfn)()))();
 
 	static void Exit();
+	
+	static void DumpDiagnostics();
 
 #ifdef PLATFORM_WIN32
 	static Handle GetCurrentHandle()          { return GetCurrentThread(); }

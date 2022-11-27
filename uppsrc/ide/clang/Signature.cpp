@@ -171,8 +171,15 @@ String CleanupPretty(const String& signature)
 	const char *s = signature;
 	int plvl = 0;
 	while(*s && *s != '{')
-		if(memcmp(s, " = {", 4) == 0)
+		if(s[0] == ' ' && s[1] == '=' && s[2] == ' ' && s[3] == '{')
 			break;
+		else
+		if(s[0] == '(' && s[1] == 'u' && s[2] == 'n' && s[3] == 'n' && s[4] == 'a' &&
+		   s[5] == 'm' && s[6] == 'e' && s[7] == 'd' && s[8] == ')') { // remove (unnamed)
+			s += 9;
+			while(*s == ' ')
+				s++;
+		}
 		else
 		if(iscib(*s)) {
 			const char *b = s;

@@ -186,7 +186,7 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 	if(format.ruler && hy >= 0 && hy + format.ruler < rc.page.bottom)
 		DrawRuler(pw.Page(phy), z * rc.page.left + z * format.lm, z * hy,
 		                        z * rc.page.right - z * rc.page.left - z * format.rm - z * format.lm,
-			                    max(1, z * format.ruler), format.rulerink, format.rulerstyle);
+			                    max(1, z * format.ruler), pi.ResolveInk(format.rulerink), format.rulerstyle);
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= rc.py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : rc.page.top);

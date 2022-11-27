@@ -143,6 +143,12 @@ reality, current implementation supports only 5 levels, 25%,
 75%, 125%, 175% and more than 175%; last two levels require root 
 privileges. Returns true if setting the priority was successful.&]
 [s4;%- &]
+[s5;:Upp`:`:Thread`:`:StackSize`(int`):%- [@(0.0.255) void] [* StackSize]([@(0.0.255) int] 
+[*@3 bytes])&]
+[s2; Sets the stacksize of thread, needs to by used before the thread 
+is started.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Upp`:`:Thread`:`:Nice`(`):%- [_^Upp`:`:Thread^ Thread][@(0.0.255) `&]_[* Nice]()&]
 [s2; Sets the priority suitable for long running threads.&]
 [s3;%- &]

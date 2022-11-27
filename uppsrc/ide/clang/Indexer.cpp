@@ -1,4 +1,4 @@
-#include "clang.h"
+#include <ide/ide.h>
 
 #define LTIMING(x)   //TIMING(x)
 #define LTIMESTOP(x) //DTIMESTOP(x)
@@ -123,8 +123,15 @@ String               Indexer::main;
 String               Indexer::includes;
 String               Indexer::defines;
 
+void Indexer::BuildingPause()
+{
+	while(TheIde() && TheIde()->idestate == Ide::BUILDING)
+		Sleep(200);
+}
+
 void Indexer::IndexerThread()
 {
+	Thread::DumpDiagnostics();
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
 		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
@@ -145,6 +152,8 @@ void Indexer::IndexerThread()
 
 			if(Thread::IsShutdownThreads())
 				break;
+
+			BuildingPause();
 
 			int tm = msecs();
 
@@ -226,8 +235,12 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < IndexerThreads; i++)
-			Thread::StartNice([] { Indexer::IndexerThread(); });
+		for(int i = 0; i < IndexerThreads; i++) {
+			Thread t;
+			t.StackSize(8192*1024);
+			t.RunNice([] { Indexer::IndexerThread(); });
+			t.Detach();
+		}
 		Thread::StartNice([] { SchedulerThread(); });
 	}
 
@@ -247,6 +260,8 @@ void Indexer::SchedulerThread()
 
 		{
 			LTIMESTOP("Scheduler");
+			BuildingPause();
+
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
 

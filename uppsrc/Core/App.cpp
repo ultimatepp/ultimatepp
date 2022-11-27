@@ -658,7 +658,7 @@ String GetUserName()
 }
 
 String GetDesktopManager()
-{	
+{
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 	return "windows";
 #endif
@@ -721,11 +721,11 @@ String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
 	String ret;
 	if(FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs")))
 		return ret;
-  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
-  		return ret;
-  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
-  		return ret;
-  	return Null;
+	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
+		return ret;
+	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
+		return ret;
+	return Null;
 }
 
 String GetPathDataXdg(String fileConfig, const char *folder) 

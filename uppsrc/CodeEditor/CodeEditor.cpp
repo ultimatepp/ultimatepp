@@ -691,13 +691,16 @@ CodeEditor::Tip::Tip()
 
 void CodeEditor::SyncTip()
 {
+	if(!HasMouse())
+		return;
 	Rect wa = GetWorkArea();
 	Point p = Upp::GetMousePos();
 	MouseTip mt;
 	mt.background = SColorInfo();
 	mt.pos = tippos;
 	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
-	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt))) {
+	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt) && p == delayed_pos)) {
+		mt.sz.cy = min(wa.GetHeight() / 2 - DPI(20), mt.sz.cy);
 		tip.d = mt.display;
 		tip.v = mt.value;
 		tip.background = mt.background;
@@ -760,6 +763,7 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 	
 	SyncTip();
 	delayed_tip = false;
+	delayed_pos = Upp::GetMousePos();
 	delayed.KillSet(1000, [=] {
 		delayed_tip = true;
 		SyncTip();
@@ -780,9 +784,11 @@ Image CodeEditor::CursorImage(Point p, dword keyflags)
 void CodeEditor::MouseLeave()
 {
 	delayed_tip = false;
+	delayed_pos = Null;
 	tippos = -1;
 	LineEdit::MouseLeave();
 	CloseTip();
+	delayed.Kill();
 }
 
 WString CodeEditor::GetI()

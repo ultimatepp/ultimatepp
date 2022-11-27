@@ -968,6 +968,7 @@ public:
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 
+	void      AssistMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -1166,6 +1167,7 @@ public:
 	void      ShowTopics();
 	void      ShowTopicsWin();
 
+	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();

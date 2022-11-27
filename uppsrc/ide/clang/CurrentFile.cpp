@@ -280,7 +280,10 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&, con
 
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
-		Thread::Start([] { CurrentFileThread(); });
+		Thread t;
+		t.StackSize(8192*1024);
+		t.Run([] { CurrentFileThread(); });
+		t.Detach();
 		Thread::AtShutdown([] {
 			LLOG("Shutdown current file");
 			current_file_event.Broadcast();

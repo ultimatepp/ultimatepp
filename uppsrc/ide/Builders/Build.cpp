@@ -93,9 +93,8 @@ String NoCr(const char *s)
 	return out;
 }
 
-void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
+void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd)
 {
-	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	{
 		VectorMap<String, String> env = clone(Environment());
@@ -133,6 +132,12 @@ void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
 		host.environment.Cat(0);
 		host.cmdout = &cmdout;
 	}
+}
+
+void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
+{
+	SetupDefaultMethod();
+	CreateHost(host, method, darkmode, disable_uhd);
 }
 
 One<Builder> MakeBuild::CreateBuilder(Host *host)

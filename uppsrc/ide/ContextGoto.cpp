@@ -165,6 +165,7 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 		bool   found_definition = false;
 		String found_name;
 		String found_nest;
+		String found_id;
 		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 		PutAssist("Context: " + cm.id);
@@ -178,6 +179,7 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 					found_definition = m.definition;
 					found_name = m.name;
 					found_nest = m.nest;
+					found_id = m.id;
 					PutAssist("Found Local: " + AsString(m.pos));
 					if(ref_pos == m.pos)
 						break;
@@ -197,6 +199,7 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 						found_definition = m.definition;
 						found_name = m.name;
 						found_nest = m.nest;
+						found_id = m.id;
 						PutAssist("Found Global: " + found_path);
 					}
 		
@@ -213,7 +216,11 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 					l->FindLayout(cls, found_name);
 					return true;
 				}
-				else
+				cls = name;
+				if(cls.TrimStart("With")) {
+					l->FindLayout(cls, Null);
+					return true;
+				}
 				if(found_name.TrimStart("SetLayout_")) {
 					l->FindLayout(found_name, Null);
 					return true;
