@@ -66,11 +66,7 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 
 	WhenUpdate << [=] {
-		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
-			annotating = true;
-			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
-			ClearErrors();
-		}
+		TriggerSyncFile(500);
 	};
 }
 
@@ -81,6 +77,15 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	}
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
+
+void AssistEditor::TriggerSyncFile(int delay_ms)
+{
+	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+		annotating = true;
+		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
+		ClearErrors();
+	}
+}
 
 void AssistEditor::ClearErrors()
 {

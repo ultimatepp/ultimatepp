@@ -780,7 +780,7 @@ void Ide::SetupBuildMethods()
 	SyncBuildMode();
 	SetBar();
 	TriggerIndexer();
-	editor.SyncCurrentFile();
+	editor.TriggerSyncFile(0);
 }
 
 void ExtractIncludes(Index<String>& r, String h)

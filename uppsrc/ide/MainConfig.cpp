@@ -158,4 +158,33 @@ void Ide::MainConfig() {
 	SyncMainConfigList();
 	SetHdependDirs();
 	MakeTitle();
+	TriggerIndexer();
+	editor.TriggerSyncFile(0);
+}
+
+void Ide::SyncMainConfigList()
+{
+	mainconfiglist.Clear();
+	const Workspace& wspc = IdeWorkspace();
+	if(wspc.GetCount() <= 0) return;
+	const Array<Package::Config>& f = wspc.GetPackage(0).config;
+	for(int i = 0; i < f.GetCount(); i++)
+		mainconfiglist.Add(f[i].param, Nvl(f[i].name, f[i].param));
+	SetMainConfigList();
+}
+
+void Ide::SetMainConfigList()
+{
+	mainconfiglist <<= mainconfigparam;
+	mainconfigname = mainconfiglist.GetValue();
+	mainconfiglist.Tip("Main configuration: " + mainconfigparam);
+}
+
+void Ide::OnMainConfigList()
+{
+	mainconfigparam = ~mainconfiglist;
+	SetMainConfigList();
+	MakeTitle();
+	TriggerIndexer();
+	editor.TriggerSyncFile(0);
 }

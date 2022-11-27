@@ -218,31 +218,6 @@ void Ide::SaveWorkspace()
 	StoreToFile(THISBACK(SerializeWorkspace), WorkspaceFile());
 }
 
-void Ide::SyncMainConfigList()
-{
-	mainconfiglist.Clear();
-	const Workspace& wspc = IdeWorkspace();
-	if(wspc.GetCount() <= 0) return;
-	const Array<Package::Config>& f = wspc.GetPackage(0).config;
-	for(int i = 0; i < f.GetCount(); i++)
-		mainconfiglist.Add(f[i].param, Nvl(f[i].name, f[i].param));
-	SetMainConfigList();
-}
-
-void Ide::SetMainConfigList()
-{
-	mainconfiglist <<= mainconfigparam;
-	mainconfigname = mainconfiglist.GetValue();
-	mainconfiglist.Tip("Main configuration: " + mainconfigparam);
-}
-
-void Ide::OnMainConfigList()
-{
-	mainconfigparam = ~mainconfiglist;
-	SetMainConfigList();
-	MakeTitle();
-}
-
 void Ide::UscFile(const String& file)
 {
 	try {
@@ -356,7 +331,7 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 void Ide::Activate()
 {
 	TriggerIndexer();
-	editor.SyncCurrentFile();
+	editor.TriggerSyncFile(0);
 	TopWindow::Activate();
 }
 
@@ -817,5 +792,5 @@ void Ide::TriggerIndexer0()
 void Ide::TriggerIndexer()
 {
 	if(AutoIndexer)
-		Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
+		TriggerIndexer0();
 }

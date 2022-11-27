@@ -161,6 +161,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
 	void               MakeIncludeTrick(CurrentFileContext& cfx);
 	void               ClearErrors();
+	void               TriggerSyncFile(int delay_ms);
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
