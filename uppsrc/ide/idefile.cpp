@@ -625,7 +625,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.SyncNavigator();
 	editor.NewFile(reloading);
 	editfile_repo = GetRepoKind(editfile);
-	editfile_includes = IncludesMD5();
 }
 
 String Ide::IncludesMD5()

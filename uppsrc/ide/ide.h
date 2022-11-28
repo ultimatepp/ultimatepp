@@ -509,7 +509,6 @@ public:
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
-	String    editfile_includes;
 
 	String    editfile2;
 
