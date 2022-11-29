@@ -376,7 +376,7 @@ void AndroidBuilder::DetectAndManageUnusedPackages(
     const Index<String>& packages)
 {
 	for(FindFile ff(AppendFileName(nest, "*")); ff; ff.Next()) {
-		if(!ff.IsHidden() && ff.IsDirectory()) {
+		if(!ff.IsHidden() && ff.IsFolder()) {
 			String name = ff.GetName();
 			if(packages.Find(name) == -1)
 				CleanPackage(name, "");
