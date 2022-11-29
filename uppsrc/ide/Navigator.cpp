@@ -103,7 +103,7 @@ AnnotationItem AssistEditor::FindCurrentAnnotation()
 				line1st = false;
 			}
 			else
-			if(m.pos.x < pos.x)
+			if(m.pos.x <= pos.x)
 				q = m;
 		}
 		else

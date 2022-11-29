@@ -1,6 +1,6 @@
 #include "clang.h"
 
-// #define DUMPTREE
+#define DUMPTREE
 
 class ClangCursorInfo {
 	CXCursor     cursor;
