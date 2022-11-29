@@ -10,6 +10,7 @@ void Ide::GotoPos(Point pos)
 		editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
+	editor.SyncCursor();
 }
 
 void Ide::GotoPos(String path, int line)
