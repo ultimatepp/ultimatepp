@@ -1,4 +1,4 @@
-* C:\upp\out\upptst\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 13.11.2022 17:20:51, user: cxl
+* C:\upp\out\upptst\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 29.11.2022 09:49:19, user: cxl
 
 ======
 Foo1::operator<<(int)
@@ -36,3 +36,11 @@ main(int argc, const char *argv[])
 Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
 Ns::EditText(int&,const char*,const char*,int(*)(int),int,bool)
 Ns::EditText(int& s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
+======
+template <class C> auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
+SubRange(C&&,int,int)
+template <C> auto SubRange(C&& c, int pos, int count)
+======
+inline void Foo()
+Foo()
+void Foo()

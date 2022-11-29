@@ -22,7 +22,8 @@ CONSOLE_APP_MAIN
 		"Foo1::operator*(int)",
 		"main(int argc, const char *argv[])",
 		"Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)",
-		"template <class C> auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))"
+		"template <class C> auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))",
+		"inline void Foo()"
 	}) {
 		DLOG("======");
 		DLOG(s);
