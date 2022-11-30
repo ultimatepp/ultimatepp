@@ -512,6 +512,7 @@ void Ide::SetupFormat() {
 		(assist.show_errors, editor.show_errors)
 		(assist.show_errors_status, editor.show_errors_status)
 		(assist.libclang_options, libclang_options)
+		(assist.libclang_coptions, libclang_coptions)
 		(assist.diagnostics, AssistDiagnostics)
 		(assist.indexer_threads, IndexerThreads)
 		(assist.parsed_files, ParsedFiles)

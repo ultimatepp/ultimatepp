@@ -153,7 +153,7 @@ void Indexer::IndexerThread()
 					break;
 				was_job = true;
 			}
-
+			
 			if(Thread::IsShutdownThreads())
 				break;
 
@@ -170,6 +170,7 @@ void Indexer::IndexerThread()
 				break;
 
 			ClangVisitor v;
+
 			if(clang.tu) {
 				v.WhenFile = [&](const String& path) {
 					LTIMING("WhenFile");
@@ -318,17 +319,19 @@ void Indexer::SchedulerThread()
 					ArrayMap<String, Index<String>> dics;
 					for(const Vector<Tuple<String, bool>>& pk : sources)
 						for(const Tuple<String, bool>& m : pk) {
-							if(IsCppSourceFile(m.a)) { // we completely ignore .c files for now
+							if(IsCSourceFile(m.a)) {
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
-								for(int i = n; i < files.GetCount(); i++) {
-									String p = files.GetKey(i);
-									if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-										master.Add(m.a);
-										header.Add(p);
+								if(IsCppSourceFile(m.a)) // we completely ignore .c file dependecies for now
+									for(int i = n; i < files.GetCount(); i++) {
+										String p = files.GetKey(i);
+										if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
+											master.Add(m.a);
+											header.Add(p);
+										}
 									}
-								}
 							}
+							
 						}
 				}
 			}
@@ -400,6 +403,7 @@ void Indexer::SchedulerThread()
 						return job;
 					};
 					int blitz_index = 0;
+					int c_blitz_index = 0;
 					for(const auto& pf : pkg.value) {
 						FileAnnotation0 f;
 						{
@@ -407,7 +411,7 @@ void Indexer::SchedulerThread()
 							f = CodeIndex().GetAdd(pf.a);
 						}
 						if(dirty_files.Find(pf.a) >= 0) {
-							if(ppi.BlitzApproved(pf.a) && !pf.b) {
+							if(ppi.BlitzApproved(pf.a) && !pf.b && IsCppSourceFile(pf.a)) {
 								BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
 								JobAdd(blitz_job, pf.a);
 							}
