@@ -61,6 +61,7 @@ void FileAnnotation::Serialize(Stream& s)
 {
 	s % defines
 	  % includes
+	  % master_file
 	  % time
 	  % items
 	  % refs;
@@ -73,6 +74,9 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 	  << defines
 	  << includes
 	  << master_file
+#ifdef _DEBUG
+	  << "debug" // to have different codebase for development
+#endif
 	;
 	return CacheFile(GetFileTitle(source_file) + "$" + s.FinishString() + ".code_index");
 }
@@ -193,8 +197,9 @@ void Indexer::IndexerThread()
 				f.includes = job.includes;
 				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
+				f.master_file = job.master_files.Get(path, Null);
 				LLOG("Storing " << path);
-				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, job.master_files.Get(path, Null)), StoreAsString(f), true);
+				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, f.master_file), StoreAsString(f), true);
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
 			}
@@ -313,7 +318,7 @@ void Indexer::SchedulerThread()
 					ArrayMap<String, Index<String>> dics;
 					for(const Vector<Tuple<String, bool>>& pk : sources)
 						for(const Tuple<String, bool>& m : pk) {
-							if(IsCSourceFile(m.a)) {
+							if(IsCppSourceFile(m.a)) { // we completely ignore .c files for now
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
 								for(int i = n; i < files.GetCount(); i++) {
@@ -334,6 +339,7 @@ void Indexer::SchedulerThread()
 
 //			DDUMPC(dirty_files);
 //			DDUMPM(files);
+
 
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");
@@ -359,8 +365,9 @@ void Indexer::SchedulerThread()
 							}
 						}
 					}
-					if(f.defines != defines || f.includes != includes || f.time != m.value)
-						dirty_files.FindAdd(path);
+					if(f.defines != defines || f.includes != includes || f.time != m.value) {
+						dirty_files.FindAdd(Nvl(master_file, path));
+					}
 				}
 			}
 

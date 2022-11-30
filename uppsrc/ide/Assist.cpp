@@ -994,6 +994,20 @@ bool isaid(int c)
 bool AssistEditor::Key(dword key, int count)
 {
 	CloseTip();
+#ifdef _DEBUG
+	if(key == K_F12) {
+		DLOG("==================");
+		PPInfo ppi;
+		VectorMap<String, Time> result;
+		ArrayMap<String, Index<String>> define_includes;
+		String includes = theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes();
+		ppi.SetIncludes(includes);
+		ppi.GatherDependencies(theide->editfile, result, define_includes);
+		DDUMP(includes);
+		DDUMPM(result);
+		DDUMPM(define_includes);
+	}
+#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;

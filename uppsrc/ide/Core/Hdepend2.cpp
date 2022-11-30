@@ -358,7 +358,7 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 		}
 	}
 	
-	result.Add(path, ftm);
+	result.GetAdd(path) = ftm;
 	
 	return ftm;
 }
