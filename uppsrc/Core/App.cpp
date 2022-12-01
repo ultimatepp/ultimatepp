@@ -30,6 +30,13 @@ static StaticMutex sHlock;
 static char sHomeDir[_MAX_PATH + 1];
 static char Argv0__[_MAX_PATH + 1];
 
+void (*CrashHook)();
+
+void InstallCrashHook(void (*h)())
+{
+	CrashHook = h;
+}
+
 void    SetHomeDirectory(const char *dir)
 {
 	INTERLOCKED_(sHlock) {
@@ -467,16 +474,19 @@ void AppExecute__(void (*app)())
 
 void s_ill_handler(int)
 {
+	CrashHook();
 	Panic("Illegal instruction!");
 }
 
 void s_segv_handler(int)
 {
+	CrashHook();
 	Panic("Invalid memory access!");
 }
 
 void s_fpe_handler(int)
 {
+	CrashHook();
 	Panic("Invalid arithmetic operation!");
 }
 

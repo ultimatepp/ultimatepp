@@ -136,6 +136,15 @@ bool TryLoadLibClang()
 }
 #endif
 
+char crash_file[2048];
+
+void OnCrash()
+{ // we deliberately avoid using heap here
+#ifdef PLATFORM_POSIX
+	open(crash_file, O_CREAT|O_RDWR|O_TRUNC, 0644);
+#endif
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
@@ -160,6 +169,9 @@ void AppMain___()
 	}
 #endif
 
+	strcpy(crash_file, ToSystemCharset(ConfigFile("ide_crashed")));
+	InstallCrashHook(OnCrash);
+	
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
 	if(!RealizeDirectory(preamble_dir)) // temporary (?)
 		Exclamation("Failed to create preamble dir&\1" + preamble_dir
@@ -364,6 +376,15 @@ void AppMain___()
 	#endif
 			Ini::user_log = true;
 		}
+
+		if(FileExists(crash_file)) {
+			Exclamation("TheIDE has crashed the last time it was run. As the possible "
+			            "cause is libclang incompatibility, we are disabling Assist features for now.&"
+			            "You can have them reenabled in Setup / Settings..");
+			DeleteFile(crash_file);
+			LibClangEnabled = false;
+		}
+	
 		
 		if(!clset)
 			ide.LoadLastMain();
