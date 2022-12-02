@@ -434,7 +434,7 @@ bool IgnoredError(const String& s)
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
@@ -699,7 +699,7 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;

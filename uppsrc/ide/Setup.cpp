@@ -659,13 +659,15 @@ void Ide::SetupFormat() {
 	FinishConfig();
 	SaveConfig();
 	
-	for(int cpp = 0; cpp < 2; cpp++) {
-		Clang h;
-		if(!h.Parse(GetHomeDirFile(cpp ? "test.cpp" : "test.c"), "", GetCurrentIncludePath(), GetCurrentDefines(), 0)) {
-			Exclamation("libclang additional compiler options do not seem do be correct. Assist might not work.");
-			return;
+	
+	if(HasLibClang())
+		for(int cpp = 0; cpp < 2; cpp++) {
+			Clang h;
+			if(!h.Parse(GetHomeDirFile(cpp ? "test.cpp" : "test.c"), "", GetCurrentIncludePath(), GetCurrentDefines(), 0)) {
+				Exclamation("libclang additional compiler options do not seem do be correct. Assist might not work.");
+				return;
+			}
 		}
-	}
 }
 
 void Ide::FinishConfig()

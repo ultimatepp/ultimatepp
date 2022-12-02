@@ -12,6 +12,8 @@
 
 bool AssistEditor::WaitCurrentFile()
 {
+	if(!HasLibClang())
+		return false;
 	if(annotating) {
 		if(!IsCurrentFileParsing())
 			SyncCurrentFile();
