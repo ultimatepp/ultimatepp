@@ -69,6 +69,8 @@ protected:
 	void GenerateMakeFile();
 	bool GenerateRFile();
 	bool GenerateDexFile();
+	bool GenerateDexFileUsingD8();
+	bool GenerateDexFileUsingDx();
 	
 protected:
 	bool ValidateBuilderEnviorement();

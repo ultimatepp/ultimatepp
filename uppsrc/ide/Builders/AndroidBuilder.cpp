@@ -702,26 +702,60 @@ bool AndroidBuilder::GenerateDexFile()
 	
 	PutConsole("-----");
 	
-	String cmd;
-	StringStream ss;
 	if (sdk.HasD8()) {
-		PutConsole("Creating dex file using d8...");
-			
-		cmd << NormalizeExePath(sdk.D8Path());
-		cmd << " --output=" << project->GetBinDir() << DIR_SEPS << "classes.jar ";
-		auto classesFiles = project->GetClassessFiles();
-		for (const auto& file : classesFiles) {
-			cmd << file << " ";
-		}
-	} else {
-		PutConsole("Creating dex file using dx...");
-		
-		cmd << NormalizeExePath(sdk.DxPath());
-		cmd << " --dex ";
-		cmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
-		cmd << project->GetClassesDir();
+		return GenerateDexFileUsingD8();
 	}
 	
+	return GenerateDexFileUsingDx();
+}
+
+bool AndroidBuilder::GenerateDexFileUsingD8()
+{
+	PutConsole("Creating dex file using d8...");
+	
+	String cmd;
+	StringStream ss;
+	const auto outputFile = project->GetIntermediatesDir() << DIR_SEPS << "classes.jar";
+		
+	cmd << NormalizeExePath(sdk.D8Path());
+	cmd << " --output=" << outputFile << " ";
+	auto classesFiles = project->GetClassessFiles();
+	for (const auto& file : classesFiles) {
+		cmd << file << " ";
+	}
+		
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	cmd.Clear();
+	
+	String currentDir = GetCurrentDirectory();
+	ChangeCurrentDirectory(project->GetBinDir());
+	cmd << NormalizeExePath(jdk->GetJarPath()) << " xf " << outputFile;
+	PutConsole(cmd);
+	if(Execute(cmd, ss) != 0) {
+		ChangeCurrentDirectory(currentDir);
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	ChangeCurrentDirectory(currentDir);
+	
+	return true;
+}
+
+bool AndroidBuilder::GenerateDexFileUsingDx()
+{
+	PutConsole("Creating dex file using dx...");
+	
+	String cmd;
+	StringStream ss;
+	
+	cmd << NormalizeExePath(sdk.DxPath());
+	cmd << " --dex ";
+	cmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
+	cmd << project->GetClassesDir();
+		
 	if(Execute(cmd, ss) != 0) {
 		PutConsole(ss.GetResult());
 		return false;

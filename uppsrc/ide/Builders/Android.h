@@ -20,8 +20,8 @@ public:
 	String GetResDir() const;
 	String GetBuildDir() const;
 	String GetClassesDir() const;
-	String GetBinDir() const;
 	String GetIntermediatesDir() const;
+	String GetBinDir() const;
 	String GetObjDir() const;
 	String GetObjLocalDir() const;
 	

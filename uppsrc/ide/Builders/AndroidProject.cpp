@@ -50,7 +50,12 @@ String AndroidProject::GetBuildDir() const
 
 String AndroidProject::GetClassesDir() const
 {
-	return this->dir + DIR_SEPS + "classes";
+	return GetIntermediatesDir() + DIR_SEPS + "classes";
+}
+
+String AndroidProject::GetIntermediatesDir() const
+{
+	return this->dir + DIR_SEPS + "intermediates";
 }
 
 String AndroidProject::GetBinDir() const
