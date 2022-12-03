@@ -127,10 +127,10 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 
 	Index<String> unique;
 	if(local) {
-		for(const ReferenceItem& lm : editor.references) {
+		AddReferenceLine(editfile, ref_pos, name, unique);
+		for(const ReferenceItem& lm : editor.references)
 			if(lm.id == id && lm.ref_pos == ref_pos)
 				AddReferenceLine(editfile, lm.pos, name, unique);
-		}
 	}
 	else {
 		bool isvirtual = false;
