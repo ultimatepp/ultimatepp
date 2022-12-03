@@ -87,6 +87,37 @@ String AndroidProject::GetJniApplicationMakeFilePath() const
 
 // -------------------------------------------------------------------
 
+Vector<String> AndroidProject::GetClassessFiles() const
+{
+	BiVector<String> dirs = { GetClassesDir() };
+	
+	Vector<String> classesFiles;
+	while(!dirs.IsEmpty())
+	{
+		for(FindFile ff(AppendFileName(dirs.Head(), "*")); ff; ff.Next()) {
+			if (ff.IsHidden() || ff.IsSymLink()) {
+				continue;
+			}
+			
+			auto path = ff.GetPath();
+			if (ff.IsFolder()) {
+				dirs.AddTail(path);
+				continue;
+			}
+			
+			if (path.EndsWith(".class")) {
+				classesFiles.Add(path);
+				continue;
+			}
+		}
+		dirs.DropHead();
+	}
+	
+	return classesFiles;
+}
+
+// -------------------------------------------------------------------
+
 bool AndroidProject::IsDebug() const
 {
 	return debug;

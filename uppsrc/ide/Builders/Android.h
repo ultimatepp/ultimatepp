@@ -21,12 +21,15 @@ public:
 	String GetBuildDir() const;
 	String GetClassesDir() const;
 	String GetBinDir() const;
+	String GetIntermediatesDir() const;
 	String GetObjDir() const;
 	String GetObjLocalDir() const;
 	
 	String GetManifestPath() const;
 	String GetJniMakeFilePath() const;
 	String GetJniApplicationMakeFilePath() const;
+	
+	Vector<String> GetClassessFiles() const;
 	
 	bool IsDebug() const;
 	bool IsRelease() const;

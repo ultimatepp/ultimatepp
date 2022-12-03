@@ -244,4 +244,9 @@ String AndroidSDK::ToolsDir() const
 
 // ---------------------------------------------------------------
 
+bool AndroidSDK::HasD8() const
+{
+	return FileExists(D8Path());
+}
+
 }

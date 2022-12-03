@@ -68,6 +68,7 @@ protected:
 	void GenerateApplicationMakeFile();
 	void GenerateMakeFile();
 	bool GenerateRFile();
+	bool GenerateDexFile();
 	
 protected:
 	bool ValidateBuilderEnviorement();

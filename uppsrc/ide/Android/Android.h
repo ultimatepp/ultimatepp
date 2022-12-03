@@ -65,8 +65,11 @@ public:
 	String PlatformToolsDir() const;
 	String ToolsDir() const;
 	
+	bool HasD8() const;
+	
 	String AaptPath() const       { return ConcreteBuildToolsDir() + DIR_SEPS + "aapt" + GetExeExt(); }
 	String DxPath() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "dx" + Android::GetScriptExt(); }
+	String D8Path() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "d8" + Android::GetScriptExt(); }
 	String ZipalignPath() const   { return ConcreteBuildToolsDir() + DIR_SEPS + "zipalign" + GetExeExt(); }
 	String AndroidJarPath() const { return ConcretePlatformDir() + DIR_SEPS + "android.jar"; }
 	String AdbPath() const        { return PlatformToolsDir() + DIR_SEPS + "adb" + GetExeExt(); }

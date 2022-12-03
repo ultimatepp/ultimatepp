@@ -196,21 +196,24 @@ bool AndroidBuilder::Link(
 	bool createmap)
 {
 	InitProject();
-	if(!ValidateBuilderEnviorement())
+	if(!ValidateBuilderEnviorement()) {
 		return false;
+	}
 	
 	ManageProjectCohesion();
 	
 	PutConsole("Building Android Project");
-	StringStream ss;
-	if(!GenerateRFile())
+	if(!GenerateRFile()) {
 		return false;
-	if(!RealizeLinkDirectories())
+	}
+	if(!RealizeLinkDirectories()) {
 		return false;
+	}
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
 	// We don't know which packages contain resources.
 	int time;
+	StringStream ss;
 	if(linkfile.GetCount()) {
 		PutConsole("-----");
 		PutConsole("Compiling java sources...");
@@ -250,18 +253,8 @@ bool AndroidBuilder::Link(
 		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
 	}
 	
-	if(DirectoryExists(project->GetClassesDir())) {
-		PutConsole("-----");
-		PutConsole("Creating dex file...");
-		String dxCmd;
-		dxCmd << NormalizeExePath(sdk.DxPath());
-		dxCmd << " --dex ";
-		dxCmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
-		dxCmd << project->GetClassesDir();
-		if(Execute(dxCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
+	if (!GenerateDexFile()) {
+		return false;
 	}
 	
 	PutConsole("Creating apk file...");
@@ -289,8 +282,9 @@ bool AndroidBuilder::Link(
 	}
 	
 	// In release mode we definitly shouldn't signing apk!!!
-	if(!SignApk(target, unsignedApkPath))
+	if(!SignApk(target, unsignedApkPath)) {
 		return false;
+	}
 	
 	return true;
 }
@@ -695,6 +689,42 @@ bool AndroidBuilder::GenerateRFile()
 			PutConsole(ss.GetResult());
 			return false;
 		}
+	}
+	
+	return true;
+}
+
+bool AndroidBuilder::GenerateDexFile()
+{
+	if(!DirectoryExists(project->GetClassesDir())) {
+		return true;
+	}
+	
+	PutConsole("-----");
+	
+	String cmd;
+	StringStream ss;
+	if (sdk.HasD8()) {
+		PutConsole("Creating dex file using d8...");
+			
+		cmd << NormalizeExePath(sdk.D8Path());
+		cmd << " --output=" << project->GetBinDir() << DIR_SEPS << "classes.jar ";
+		auto classesFiles = project->GetClassessFiles();
+		for (const auto& file : classesFiles) {
+			cmd << file << " ";
+		}
+	} else {
+		PutConsole("Creating dex file using dx...");
+		
+		cmd << NormalizeExePath(sdk.DxPath());
+		cmd << " --dex ";
+		cmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
+		cmd << project->GetClassesDir();
+	}
+	
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
 	}
 	
 	return true;
