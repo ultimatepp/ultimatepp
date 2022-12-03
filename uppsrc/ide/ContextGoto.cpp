@@ -62,8 +62,24 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 				ci = m.pos.x;
 			}
 		}
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	if(cm.pos.y == li && cm.pos.x <= lp && cm.pos.x >= ci && cm.name == name) {
+		ref_id = cm.id;
+		ref_pos = cm.pos;
+	}
+
+	if(IsFunction(cm.kind))
+		for(const AnnotationItem& m : editor.locals) {
+			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci && m.name == name) {
+				ref_id = m.id;
+				ref_pos = m.pos;
+				ci = m.pos.x;
+			}
+		}
+
 	if(ref_id.GetCount())
 		editor.FromUtf8x(ref_pos);
+		
 	return ref_id;
 }
 
