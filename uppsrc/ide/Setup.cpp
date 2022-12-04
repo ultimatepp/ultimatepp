@@ -512,6 +512,7 @@ void Ide::SetupFormat() {
 		(assist.show_errors, editor.show_errors)
 		(assist.show_errors_status, editor.show_errors_status)
 		(assist.libclang_options, libclang_options)
+		(assist.libclang_coptions, libclang_coptions)
 		(assist.diagnostics, AssistDiagnostics)
 		(assist.indexer_threads, IndexerThreads)
 		(assist.parsed_files, ParsedFiles)
@@ -657,6 +658,16 @@ void Ide::SetupFormat() {
 	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
 	FinishConfig();
 	SaveConfig();
+	
+	
+	if(HasLibClang())
+		for(int cpp = 0; cpp < 2; cpp++) {
+			Clang h;
+			if(!h.Parse(GetHomeDirFile(cpp ? "test.cpp" : "test.c"), "", GetCurrentIncludePath(), GetCurrentDefines(), 0)) {
+				Exclamation("libclang additional compiler options do not seem do be correct. Assist might not work.");
+				return;
+			}
+		}
 }
 
 void Ide::FinishConfig()

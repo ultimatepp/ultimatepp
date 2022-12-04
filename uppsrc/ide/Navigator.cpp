@@ -103,7 +103,7 @@ AnnotationItem AssistEditor::FindCurrentAnnotation()
 				line1st = false;
 			}
 			else
-			if(m.pos.x < pos.x)
+			if(m.pos.x <= pos.x)
 				q = m;
 		}
 		else
@@ -154,22 +154,21 @@ void Navigator::Navigate()
 				theide->AddHistory();
 			}
 			else {
+				String id = h;
 				h.Replace("::", ".");
 				h << ".";
 				search <<= h;
 				search.AddHistory();
 				Search();
+				PostCallback([=] {
+					for(int i = 0; i < litem.GetCount(); i++)
+						if(IsStruct(litem[i]->kind) && litem[i]->id == id) {
+							list.SetCursor(i);
+							Navigate();
+							return;
+						}
+				});
 			}
-		}
-		else
-		if(m.kind == KIND_LINE || IsNull(search)) {
-			theide->GotoPos(Null, m.pos);
-			if(m.kind == KIND_LINE) { // Go to line - restore file view
-				search.Clear();
-				Search();
-				navigating = false;
-			}
-			SyncCursor();
 		}
 		else
 		if(m.kind == KIND_SRCFILE) {
@@ -177,11 +176,26 @@ void Navigator::Navigate()
 			theide->EditFile(m.id);
 			theide->AddHistory();
 		}
-		else {
-			theide->Cycle(m, GetCurrentLine(), true);
+		else
+		if(m.kind == KIND_LINE) {
+			theide->GotoPos(Null, m.pos);
+			if(m.kind == KIND_LINE) { // Go to line - restore file view
+				search.Clear();
+				Search();
+				navigating = false;
+			}
 		}
+		else
+		if(GetAlt())
+			theide->Usage(m.id, m.name, m.pos);
+		else
+		if(IsNull(search)) // current file - do not cycle
+			theide->GotoPos(Null, m.pos);
+		else
+			theide->Cycle(m, GetCurrentLine(), true);
 	}
 	navigating = false;
+	SyncCursor();
 }
 
 void Navigator::NavigatorClick()
@@ -224,21 +238,6 @@ void Ide::SearchCode()
 			editor.Search();
 		}
 		editor.search.SetFocus();
-	}
-}
-
-void Ide::SwitchHeader()
-{
-	int c = filelist.GetCursor();
-	if(c < 0) return;
-	String currfile = filelist[c];
-	const char *ext = GetFileExtPos(currfile);
-	if(!stricmp(ext, ".h") || !stricmp(ext, ".hpp")
-	|| !stricmp(ext, ".lay") || !stricmp(ext, ".iml")) {
-		int f = filelist.Find(ForceExt(currfile, ".cpp"));
-		if(f < 0) f = filelist.Find(ForceExt(currfile, ".c"));
-		if(f < 0) f = filelist.Find(ForceExt(currfile, ".cc"));
-		if(f >= 0) filelist.SetCursor(f);
 	}
 }
 
@@ -370,7 +369,7 @@ void Navigator::Search()
 			for(int name_pass = 0; name_pass < 4; name_pass++)
 				for(int source_pass = 0; source_pass < 2; source_pass++) // we prefer header order
 					for(const auto& f : ~CodeIndex()) {
-						if(source_pass == (findarg(ToLower(GetFileExt(f.key)), ".h", ".hh") >= 0))
+						if(source_pass == (findarg(ToLower(GetFileExt(f.key)), ".h", ".hh") < 0))
 							for(const AnnotationItem& m : f.value.items) {
 								if(set.Find(m.id) < 0 &&
 								   (name_pass == 3 ? m.uname.Find(usearch_name) >= 0 :

@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 23;
+	int version = 24;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -268,6 +268,8 @@ void Ide::Serialize(Stream& s)
 	s % insert_include;
 	if(version >= 23)
 		s % libclang_options;
+	if(version >= 24)
+		s % libclang_coptions;
 	SerializeGlobalConfigs(s);
 	doc.Serialize(s);
 	s % right_split;

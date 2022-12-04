@@ -49,7 +49,7 @@ void PutAssist(const char *s)
 bool IsCppSourceFile(const String& path)
 {
 	String ext = ToLower(GetFileExt(path));
-	return findarg(ext, ".cpp", ".cc", ".cxx") >= 0;
+	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
 }
 
 bool IsSourceFile(const String& path)

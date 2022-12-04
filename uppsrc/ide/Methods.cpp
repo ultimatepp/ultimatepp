@@ -780,7 +780,7 @@ void Ide::SetupBuildMethods()
 	SyncBuildMode();
 	SetBar();
 	TriggerIndexer();
-	editor.SyncCurrentFile();
+	editor.TriggerSyncFile(0);
 }
 
 void ExtractIncludes(Index<String>& r, String h)
@@ -871,6 +871,7 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 	One<Builder> b = CreateBuilder(&host);
 	Index<String> pkg_config;
 	Index<String> cfg = PackageConfig(wspc, max(GetPackageIndex(), 0), GetMethodVars(method), mainconfigparam, host, *b);
+	String main_conf;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
@@ -930,12 +931,25 @@ String Ide::GetCurrentIncludePath()
 	
 	IncludeAddPkgConfig(include_path, clang_method);
 
+	String main_conf;
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.GetCount(); j++)
+		for(int j = 0; j < pkg.GetCount(); j++) {
 			if(pkg[j] == "import.ext")
 				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
+
+			if(pkg[j] == "main.conf") {
+				main_conf << LoadFile(SourcePath(wspc[i], "main.conf")) << "\r\n";
+			}
+		}
+	}
+
+	if(main_conf.GetCount()) {
+		String main_conf_dir = CacheFile("main_conf_" + SHA1String(main_conf));
+		RealizeDirectory(main_conf_dir);
+		SaveChangedFile(AppendFileName(main_conf_dir, "main.conf.h"), main_conf);
+		return Merge(";", main_conf_dir, include_path);
 	}
 
 	return include_path;
@@ -949,6 +963,16 @@ String Ide::GetCurrentDefines()
 	String r;
 	for(String s : flags)
 		MergeWith(r, ";", "flag" + s);
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.GetCount(); j++) {
+			if(pkg[j] == "main.conf") {
+				MergeWith(r, ";", "MAIN_CONF");
+				return r;
+			}
+		}
+	}
 	return r;
 }
 

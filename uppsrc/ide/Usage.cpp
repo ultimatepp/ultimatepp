@@ -1,9 +1,18 @@
 #include "ide.h"
 
-String GetFileLine(const String& path, int linei)
+static String         lpath;
+static Vector<String> line;
+
+void   Ide::ResetFileLine()
 {
-	static String         lpath;
-	static Vector<String> line;
+	lpath.Clear();
+}
+
+String Ide::GetFileLine(const String& path, int linei)
+{
+	if(path == editfile)
+		return linei >= 0 && linei < editor.GetLineCount() ? editor.GetUtf8Line(linei)
+		                                                   : String();
 	if(path != lpath) {
 		lpath = path;
 		FileIn in(path);
@@ -95,6 +104,8 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	if(IsNull(id))
 		return;
 
+	ResetFileLine();
+
 	int li = editor.GetCursorLine();
 
 	bool local = false;
@@ -116,10 +127,10 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 
 	Index<String> unique;
 	if(local) {
-		for(const ReferenceItem& lm : editor.references) {
+		AddReferenceLine(editfile, ref_pos, name, unique);
+		for(const ReferenceItem& lm : editor.references)
 			if(lm.id == id && lm.ref_pos == ref_pos)
 				AddReferenceLine(editfile, lm.pos, name, unique);
-		}
 	}
 	else {
 		bool isvirtual = false;

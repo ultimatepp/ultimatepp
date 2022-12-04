@@ -167,18 +167,6 @@ void CurrentFileThread()
 					current_file_parsing = false;
 					was_parsing = true;
 				}
-				if(!cfc.clang.tu) {
-					{
-						GuiLock __;
-						IdeShowConsole();
-						PutConsole("libclang parser has failed, please fix libclang options");
-					}
-					String h = LibClangCommandLine();
-					while(h == LibClangCommandLine()) {
-						Sleep(500);
-						if(Thread::IsShutdownThreads()) break;
-					}
-				}
 				if(Thread::IsShutdownThreads()) break;
 				if(cfc.clang.tu && autocomplete_do) {
 					Vector<AutoCompleteItem> item;

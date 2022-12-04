@@ -61,6 +61,7 @@ void FileAnnotation::Serialize(Stream& s)
 {
 	s % defines
 	  % includes
+	  % master_file
 	  % time
 	  % items
 	  % refs;
@@ -73,6 +74,9 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 	  << defines
 	  << includes
 	  << master_file
+#ifdef _DEBUG
+	  << "debug" // to have different codebase for development
+#endif
 	;
 	return CacheFile(GetFileTitle(source_file) + "$" + s.FinishString() + ".code_index");
 }
@@ -149,7 +153,7 @@ void Indexer::IndexerThread()
 					break;
 				was_job = true;
 			}
-
+			
 			if(Thread::IsShutdownThreads())
 				break;
 
@@ -166,6 +170,7 @@ void Indexer::IndexerThread()
 				break;
 
 			ClangVisitor v;
+
 			if(clang.tu) {
 				v.WhenFile = [&](const String& path) {
 					LTIMING("WhenFile");
@@ -193,8 +198,9 @@ void Indexer::IndexerThread()
 				f.includes = job.includes;
 				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
+				f.master_file = job.master_files.Get(path, Null);
 				LLOG("Storing " << path);
-				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, job.master_files.Get(path, Null)), StoreAsString(f), true);
+				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, f.master_file), StoreAsString(f), true);
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
 			}
@@ -316,14 +322,16 @@ void Indexer::SchedulerThread()
 							if(IsCSourceFile(m.a)) {
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
-								for(int i = n; i < files.GetCount(); i++) {
-									String p = files.GetKey(i);
-									if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-										master.Add(m.a);
-										header.Add(p);
+								if(IsCppSourceFile(m.a)) // we completely ignore .c file dependecies for now
+									for(int i = n; i < files.GetCount(); i++) {
+										String p = files.GetKey(i);
+										if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
+											master.Add(m.a);
+											header.Add(p);
+										}
 									}
-								}
 							}
+							
 						}
 				}
 			}
@@ -334,6 +342,7 @@ void Indexer::SchedulerThread()
 
 //			DDUMPC(dirty_files);
 //			DDUMPM(files);
+
 
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");
@@ -359,8 +368,9 @@ void Indexer::SchedulerThread()
 							}
 						}
 					}
-					if(f.defines != defines || f.includes != includes || f.time != m.value)
-						dirty_files.FindAdd(path);
+					if(f.defines != defines || f.includes != includes || f.time != m.value) {
+						dirty_files.FindAdd(Nvl(master_file, path));
+					}
 				}
 			}
 
@@ -393,6 +403,7 @@ void Indexer::SchedulerThread()
 						return job;
 					};
 					int blitz_index = 0;
+					int c_blitz_index = 0;
 					for(const auto& pf : pkg.value) {
 						FileAnnotation0 f;
 						{
@@ -400,7 +411,7 @@ void Indexer::SchedulerThread()
 							f = CodeIndex().GetAdd(pf.a);
 						}
 						if(dirty_files.Find(pf.a) >= 0) {
-							if(ppi.BlitzApproved(pf.a) && !pf.b) {
+							if(ppi.BlitzApproved(pf.a) && !pf.b && IsCppSourceFile(pf.a)) {
 								BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
 								JobAdd(blitz_job, pf.a);
 							}

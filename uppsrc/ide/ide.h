@@ -509,7 +509,6 @@ public:
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
-	String    editfile_includes;
 
 	String    editfile2;
 
@@ -640,6 +639,7 @@ public:
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
 	String    libclang_options;
+	String    libclang_coptions;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
@@ -966,7 +966,6 @@ public:
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
-		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 
 	void      AssistMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
@@ -979,6 +978,8 @@ public:
 		void  Goto();
 		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
+		void  ResetFileLine();
+		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();

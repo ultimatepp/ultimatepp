@@ -97,6 +97,7 @@ public:
 
 private:
 	static String GetInvalidBuildMethodError(const String& method);
+	bool IsAndroidMethod(const String& method) const;
 };
 
 extern bool output_per_assembly;

@@ -35,28 +35,31 @@ String GetTypeSpelling(CXCursor cursor)
 
 String GetClangInternalIncludes()
 {
-	static String includes;
-	ONCELOCK {
-		String dummy = ConfigFile("dummy.cpp");
-		Upp::SaveFile(dummy, String());
-		String h = Sys(
-		#ifdef PLATFORM_WIN32
-				GetExeDirFile("bin/clang/bin/c++") +
-		#else
-				"clang++"
-		#endif
-				" -v -x c++ -E " + dummy
-		);
-		DeleteFile(dummy);
-		h.Replace("\r", "");
-		Vector<String> ln = Split(h, '\n');
-		for(int i = 0; i < ln.GetCount(); i++) {
-			String dir = TrimBoth(ln[i]);
-			if(DirectoryExists(dir))
-				MergeWith(includes, ";", NormalizePath(dir));
+	INTERLOCKED {
+		static String includes;
+		ONCELOCK {
+			String dummy = ConfigFile("dummy.cpp");
+			Upp::SaveFile(dummy, String());
+			String h = Sys(
+			#ifdef PLATFORM_WIN32
+					GetExeDirFile("bin/clang/bin/c++") +
+			#else
+					"clang++"
+			#endif
+					" -v -x c++ -E " + dummy
+			);
+			DeleteFile(dummy);
+			h.Replace("\r", "");
+			Vector<String> ln = Split(h, '\n');
+			for(int i = 0; i < ln.GetCount(); i++) {
+				String dir = TrimBoth(ln[i]);
+				if(DirectoryExists(dir))
+					MergeWith(includes, ";", NormalizePath(dir));
+			}
 		}
+		return includes;
 	}
-	return includes;
+	return String();
 }
 
 void Clang::Dispose()
@@ -87,10 +90,17 @@ bool Clang::Parse(const String& filename, const String& content,
 
 	String cmdline;
 
-	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++14 "
-	        << RedefineMacros()
-	        << " " << LibClangCommandLine();
+	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG ";
 
+	if(IsCppSourceFile(filename))
+		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
+	else
+		cmdline << " -xc " << LibClangCommandLineC() << " ";
+	
+	String cmdline0 = cmdline;
+
+	cmdline << RedefineMacros() << " ";
+	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
 
@@ -123,6 +133,8 @@ bool Clang::Parse(const String& filename, const String& content,
 	                                options & PARSE_FILE ? 0 : (filename2.GetCount() ? 2 : 1),
 	                                options);
 
+	if(!tu)
+		PutAssist("Failed commandline: " + cmdline0);
 //	DumpDiagnostics(tu);
 	
 	return tu;

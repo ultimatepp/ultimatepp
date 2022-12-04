@@ -66,11 +66,7 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 
 	WhenUpdate << [=] {
-		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
-			annotating = true;
-			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
-			ClearErrors();
-		}
+		TriggerSyncFile(500);
 	};
 }
 
@@ -81,6 +77,15 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	}
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
+
+void AssistEditor::TriggerSyncFile(int delay_ms)
+{
+	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+		annotating = true;
+		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
+		ClearErrors();
+	}
+}
 
 void AssistEditor::ClearErrors()
 {
@@ -429,7 +434,7 @@ bool IgnoredError(const String& s)
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
@@ -694,7 +699,7 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;
@@ -989,6 +994,20 @@ bool isaid(int c)
 bool AssistEditor::Key(dword key, int count)
 {
 	CloseTip();
+#ifdef _DEBUG
+	if(key == K_F12) {
+		DLOG("==================");
+		PPInfo ppi;
+		VectorMap<String, Time> result;
+		ArrayMap<String, Index<String>> define_includes;
+		String includes = theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes();
+		ppi.SetIncludes(includes);
+		ppi.GatherDependencies(theide->editfile, result, define_includes);
+		DDUMP(includes);
+		DDUMPM(result);
+		DDUMPM(define_includes);
+	}
+#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
