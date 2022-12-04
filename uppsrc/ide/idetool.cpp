@@ -573,21 +573,10 @@ void Ide::RemoveDs()
 
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 {
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.GetLauchSDKManagerCmd()));
+	PromptOK("SDK managment is not yet implemented in TheIDE. Use Android Studio for this purpose instead.");
 }
 
 void Ide::LaunchAndroidAVDManager(const AndroidSDK& androidSDK)
 {
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.GetLauchAVDManagerCmd()));
-}
-
-void Ide::LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK)
-{
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.MonitorPath()));
+	PromptOK("AVD managment is not yet implemented in TheIDE. Use Android Studio for this purpose instead.");
 }
