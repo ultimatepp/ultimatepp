@@ -740,7 +740,7 @@ bool AndroidBuilder::GenerateDexFileUsingD8()
 	const auto outputFile = project->GetIntermediatesDir() << DIR_SEPS << "classes.jar";
 		
 	cmd << NormalizeExePath(sdk.D8Path());
-	cmd << " --output=" << outputFile << " ";
+	cmd << " --output " << outputFile << " ";
 	auto classesFiles = project->GetClassessFiles();
 	for (const auto& file : classesFiles) {
 		cmd << file << " ";
