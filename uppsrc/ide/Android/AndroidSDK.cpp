@@ -37,7 +37,7 @@ void AndroidSDK::DeducePlatform()
 
 void AndroidSDK::DeduceBuildToolsRelease()
 {
-	buildToolsRelease = FindDefaultBuildToolsRelease();
+	build_tools_release = FindDefaultBuildToolsRelease();
 }
 
 bool AndroidSDK::Validate() const
@@ -224,7 +224,7 @@ String AndroidSDK::PlatformsDir() const
 
 String AndroidSDK::ConcreteBuildToolsDir() const
 {
-	return BuildToolsDir() + DIR_SEPS + buildToolsRelease;
+	return BuildToolsDir() + DIR_SEPS + build_tools_release;
 }
 
 String AndroidSDK::ConcretePlatformDir() const

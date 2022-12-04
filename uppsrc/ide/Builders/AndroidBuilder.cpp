@@ -63,8 +63,6 @@ bool AndroidBuilder::BuildPackage(
 	
 	Index<String> noBlitzNativeSourceFiles;
 	
-	String androidManifestPath;
-	
 	String javaSourcesDir    = project->GetJavaDir();
 	String jniSourcesDir     = project->GetJniDir();
 	String pkgJavaSourcesDir = javaSourcesDir + DIR_SEPS + package;
@@ -115,16 +113,21 @@ bool AndroidBuilder::BuildPackage(
 		}
 		else
 		if(BuilderUtils::IsXmlFile(filePath)) {
-			if(isMainPackage && fileName == "AndroidManifest.xml") {
-				if(androidManifestPath.GetCount()) {
-					PutConsole("AndroidManifest.xml is duplicated.");
+			if(isMainPackage && fileName == AndroidManifest::FILE_NAME) {
+				if (manifest) {
+					PutConsole("Manifest file already exists. There should be only one AndroidManifest.xml in the project.");
 					return false;
 				}
 				
-				if(!FileCopy(filePath, project->GetManifestPath()))
+				if(!FileCopy(filePath, project->GetManifestPath())) {
 					return false;
+				}
 					
-				androidManifestPath = filePath;
+				manifest.Create(filePath);
+				if (!manifest->Parse()) {
+					PutConsole("Failed to parse AndroidManifest.xml.");
+					return false;
+				}
 			}
 		}
 		else
@@ -138,8 +141,8 @@ bool AndroidBuilder::BuildPackage(
 		}
 	}
 	
-	if(isMainPackage && androidManifestPath.IsEmpty()) {
-		PutConsole("Failed to find Android manifest file.");
+	if(isMainPackage && !manifest) {
+		PutConsole("Failed to find Android manifest file in. Make sure AndroidManifest.xml is present in main package.");
 		return false;
 	}
 	
@@ -203,6 +206,10 @@ bool AndroidBuilder::Link(
 	ManageProjectCohesion();
 	
 	PutConsole("Building Android Project");
+	if(!manifest) {
+		PutConsole("Android manifest has not been detected. Make sure your main package contains AndroidManifest.xml.");
+		return false;
+	}
 	if(!GenerateRFile()) {
 		return false;
 	}
@@ -566,7 +573,7 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 	#endif
 		aaptAddCmd << " " << sharedLibsToAdd[i] << "";
 	}
-	PutConsole(aaptAddCmd);
+	
 	StringStream ss;
 	if(Execute(aaptAddCmd, ss) != 0) {
 		PutConsole(ss.GetResult());
@@ -622,8 +629,13 @@ void AndroidBuilder::UpdateFile(const String& path, const String& data)
 
 void AndroidBuilder::GenerateApplicationMakeFile()
 {
+	String platform;
+	
 	AndroidApplicationMakeFile makeFile;
-	makeFile.SetPlatform(sdk.GetPlatform());
+	if (manifest && manifest->uses_sdk && !IsNull(manifest->uses_sdk->minSdkVersion)) {
+		String platform = "android-" + IntStr(manifest->uses_sdk->minSdkVersion);
+		makeFile.SetPlatform(platform);
+	}
 	makeFile.SetArchitectures(ndkArchitectures);
 	makeFile.SetCppRuntime(ndkCppRuntime);
 	makeFile.SetCppFlags(ndkCppFlags);
@@ -636,6 +648,7 @@ void AndroidBuilder::GenerateApplicationMakeFile()
 	PutVerbose("CppFlags: " + ndkCppFlags);
 	PutVerbose("CFlags: " + ndkCFlags);
 	PutVerbose("Toolchain: " + ndkToolchain);
+	PutVerbose("Platform: " + platform);
 	
 	UpdateFile(project->GetJniApplicationMakeFilePath(), makeFile.ToString());
 }
@@ -739,15 +752,19 @@ bool AndroidBuilder::GenerateDexFileUsingD8()
 	}
 	cmd.Clear();
 	
-	String currentDir = GetCurrentDirectory();
-	ChangeCurrentDirectory(project->GetBinDir());
-	cmd << NormalizeExePath(jdk->GetJarPath()) << " xf " << outputFile;
-	if(Execute(cmd, ss) != 0) {
+	{
+		// TODO: Replace with ScopeExit once it will be present in upp core..
+		String currentDir = GetCurrentDirectory();
+		
+		ChangeCurrentDirectory(project->GetBinDir());
+		cmd << NormalizeExePath(jdk->GetJarPath()) << " xf " << outputFile;
+		if(Execute(cmd, ss) != 0) {
+			ChangeCurrentDirectory(currentDir);
+			PutConsole(ss.GetResult());
+			return false;
+		}
 		ChangeCurrentDirectory(currentDir);
-		PutConsole(ss.GetResult());
-		return false;
 	}
-	ChangeCurrentDirectory(currentDir);
 	
 	return true;
 }

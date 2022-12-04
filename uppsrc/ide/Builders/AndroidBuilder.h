@@ -103,6 +103,7 @@ private:
 	One<Jdk>                    jdk;
 	One<AndroidProject>         project;
 	One<AndroidBuilderCommands> commands;
+	One<AndroidManifest>        manifest;
 	
 	const Workspace&            wspc;
 
