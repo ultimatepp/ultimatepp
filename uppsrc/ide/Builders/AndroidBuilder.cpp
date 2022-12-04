@@ -277,12 +277,18 @@ bool AndroidBuilder::Link(
 	
 	if(DirectoryExists(project->GetLibsDir())) {
 		PutConsole("Adding native libraries to apk...");
-		if(!AddSharedLibsToApk(unsignedApkPath))
+		if(!AddSharedLibsToApk(unsignedApkPath)) {
 			return false;
+		}
 	}
 	
-	// In release mode we definitly shouldn't signing apk!!!
-	if(!SignApk(target, unsignedApkPath)) {
+	String unsignedAlignedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".aligned.unsigned.apk";
+	DeleteFile(unsignedAlignedApkPath);
+	if(!AlignApk(unsignedAlignedApkPath, unsignedApkPath)) {
+		return false;
+	}
+	
+	if(!SignApk(target, unsignedAlignedApkPath)) {
 		return false;
 	}
 	
@@ -453,54 +459,50 @@ bool AndroidBuilder::RealizeLinkDirectories() const
 	return true;
 }
 
-bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath)
+bool AndroidBuilder::AlignApk(const String& target, const String& unsignedApkPath)
 {
 	StringStream ss;
 	
-	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
-	if(HasFlag("DEBUG")) {
-		String keystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
-		if(!GenerateDebugKey(keystorePath))
-			return false;
-	
-		PutConsole("Signing apk file...");
-		DeleteFile(signedApkPath);
-		String jarsignerCmd;
-		jarsignerCmd << NormalizeExePath(jdk->GetJarsignerPath());
-		
-		// Up to Java 6.0 below alogirms was by default
-		// (In Java 7.0 and above we need to manually specific this algorithms)
-		jarsignerCmd << " -sigalg SHA1withRSA";
-		jarsignerCmd << " -digestalg SHA1";
-		
-		jarsignerCmd << " -keystore " + keystorePath;
-		jarsignerCmd << " -storepass android";
-		jarsignerCmd << " -keypass android";
-		// TODO: not sure about below line. But I think for debug purpose we shouldn't use tsa.
-		// http://en.wikipedia.org/wiki/Trusted_timestamping
-		//jarsignerCmd << " -tsa https://timestamp.geotrust.com/tsa";
-		jarsignerCmd << " -signedjar " << signedApkPath;
-		jarsignerCmd << " " << unsignedApkPath;
-		jarsignerCmd << " androiddebugkey";
-		//PutConsole(jarsignerCmd);
-		if(Execute(jarsignerCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
-		
-		PutConsole("Aliging apk file...");
-		DeleteFile(target);
-		String zipalignCmd;
-		zipalignCmd << NormalizeExePath(sdk.ZipalignPath());
-		zipalignCmd << " -f 4 ";
-		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
-		zipalignCmd << target;
-		//PutConsole(zipalignCmd);
-		if(Execute(zipalignCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
+	PutConsole("Aliging apk file...");
+	DeleteFile(target);
+	String zipalignCmd;
+	zipalignCmd << NormalizeExePath(sdk.ZipalignPath()) << " -f 4 ";
+	zipalignCmd << unsignedApkPath << " " << target;
+	if(Execute(zipalignCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
 	}
+	
+	return true;
+}
+
+bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath)
+{
+	if(!HasFlag("DEBUG")) {
+		return false;
+	}
+	
+	StringStream ss;
+	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
+	
+	String keystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
+	if(!GenerateDebugKey(keystorePath)) {
+		return false;
+	}
+
+	PutConsole("Signing apk file...");
+	DeleteFile(signedApkPath);
+	
+	String cmd;
+	cmd << NormalizeExePath(sdk.ApksignerPath());
+	cmd << " sign --ks " << keystorePath << " --ks-pass pass:android" << " --out " << target << " " << unsignedApkPath;
+	PutConsole(cmd);
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	
+	CopyFile(target, signedApkPath);
 	
 	return true;
 }

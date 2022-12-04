@@ -68,6 +68,7 @@ public:
 	bool HasD8() const;
 	
 	String AaptPath() const       { return ConcreteBuildToolsDir() + DIR_SEPS + "aapt" + GetExeExt(); }
+	String ApksignerPath() const  { return ConcreteBuildToolsDir() + DIR_SEPS + "apksigner" + Android::GetScriptExt(); }
 	String DxPath() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "dx" + Android::GetScriptExt(); }
 	String D8Path() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "d8" + Android::GetScriptExt(); }
 	String ZipalignPath() const   { return ConcreteBuildToolsDir() + DIR_SEPS + "zipalign" + GetExeExt(); }

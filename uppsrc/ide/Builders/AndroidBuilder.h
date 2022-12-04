@@ -76,6 +76,7 @@ protected:
 	bool ValidateBuilderEnviorement();
 	void PutErrorOnConsole(const String& msg);
 	
+	bool AlignApk(const String& target, const String& unsignedApkPath);
 	bool SignApk(const String& target, const String& unsignedApkPath);
 	bool GenerateDebugKey(const String& keystorePath);
 	
