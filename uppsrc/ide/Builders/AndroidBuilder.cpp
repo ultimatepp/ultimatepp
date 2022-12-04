@@ -531,8 +531,8 @@ bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
 
 bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 {
-	// TODO: A little bit workearound (I know one thing that shared libs should be in "lib" directory not in "libs")
-	// So, we need to create temporary lib directory with .so files :(
+	// TODO: Consider using environment variable NDK_LIBS_OUT form NDK r9 instead of
+	// creating temporary lib directory that will be deleted after inserting files to APK.
 	const String libDir = project->GetDir() + DIR_SEPS + "lib";
 	
 	Vector<String> sharedLibsToAdd;
@@ -558,16 +558,24 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 	String aaptAddCmd;
 	aaptAddCmd << NormalizeExePath(sdk.AaptPath());
 	aaptAddCmd << " add " << apkPath;
-	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++)
-		aaptAddCmd << " " << sharedLibsToAdd[i];
-	// PutConsole(aaptAddCmd);
+	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++) {
+	#ifdef PLATFORM_WIN32
+		// NOTE: Without conversion to UNIX directory format libraries will be added at the top
+		// of APK file and APK will be broken.
+		sharedLibsToAdd[i].Replace("\\", "/");
+	#endif
+		aaptAddCmd << " " << sharedLibsToAdd[i] << "";
+	}
+	PutConsole(aaptAddCmd);
 	StringStream ss;
 	if(Execute(aaptAddCmd, ss) != 0) {
 		PutConsole(ss.GetResult());
 		return false;
 	}
-	if(!DeleteFolderDeep(libDir))
+	
+	if(!DeleteFolderDeep(libDir)) {
 		return false;
+	}
 	
 	return true;
 }
