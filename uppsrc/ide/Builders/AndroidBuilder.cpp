@@ -495,8 +495,7 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 	
 	String cmd;
 	cmd << NormalizeExePath(sdk.ApksignerPath());
-	cmd << " sign --ks " << keystorePath << " --ks-pass pass:android" << " --out " << target << " " << unsignedApkPath;
-	PutConsole(cmd);
+	cmd << " sign --ks " << keystorePath << " --ks-pass pass:android" << " --out " << signedApkPath << " " << unsignedApkPath;
 	if(Execute(cmd, ss) != 0) {
 		PutConsole(ss.GetResult());
 		return false;
@@ -735,7 +734,6 @@ bool AndroidBuilder::GenerateDexFileUsingD8()
 	String currentDir = GetCurrentDirectory();
 	ChangeCurrentDirectory(project->GetBinDir());
 	cmd << NormalizeExePath(jdk->GetJarPath()) << " xf " << outputFile;
-	PutConsole(cmd);
 	if(Execute(cmd, ss) != 0) {
 		ChangeCurrentDirectory(currentDir);
 		PutConsole(ss.GetResult());
