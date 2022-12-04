@@ -76,11 +76,6 @@ public:
 	String AdbPath() const        { return PlatformToolsDir() + DIR_SEPS + "adb" + GetExeExt(); }
 	String AndroidPath() const    { return ToolsDir() + DIR_SEPS + "android" + Android::GetScriptExt(); }
 	String EmulatorPath() const   { return ToolsDir() + DIR_SEPS + "emulator" + GetExeExt(); }
-	String MonitorPath() const    { return ToolsDir() + DIR_SEPS + "monitor" + Android::GetScriptExt(); }
-	
-public:
-	String GetLauchSDKManagerCmd() const { return NormalizeExePath(AndroidPath()) + " sdk"; }
-	String GetLauchAVDManagerCmd() const { return NormalizeExePath(AndroidPath()) + " avd"; }
 	
 public:
 	String GetPath() const              { return this->path; }
