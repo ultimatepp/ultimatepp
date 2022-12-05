@@ -816,9 +816,14 @@ void Ide::BrowseMenu(Bar& menu)
 
 	if(AssistDiagnostics) {
 		menu.Separator();
-		menu.Add("Dump and show current index", [=] {
+		menu.Add("Dump and show whole current index", [=] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path);
+			EditFile(path);
+		});
+		menu.Add("Dump and show current file index", [=] {
+			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
+			DumpIndex(path, editfile);
 			EditFile(path);
 		});
 		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });

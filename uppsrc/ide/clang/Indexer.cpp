@@ -100,19 +100,20 @@ ArrayMap<String, FileAnnotation>& CodeIndex()
 	return m;
 }
 
-void DumpIndex(const char *file)
+void DumpIndex(const char *file, const String& what_file)
 {
 	GuiLock __;
 	FileOut out(file);
 	out << GetSysTime() << "\n";
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
-	for(const auto& m : ~x) {
-		out << m.key << "\n";
-		for(const auto& n : m.value.items)
-			out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
-		for(const auto& n : m.value.refs)
-			out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
-	}
+	for(const auto& m : ~x)	
+		if(IsNull(what_file) || m.key == what_file) {
+			out << m.key << "\n";
+			for(const auto& n : m.value.items)
+				out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
+			for(const auto& n : m.value.refs)
+				out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
+		}
 }
 
 CoEvent              Indexer::event;

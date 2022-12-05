@@ -311,6 +311,6 @@ public:
 	static double Progress();
 };
 
-void DumpIndex(const char *file);
+void DumpIndex(const char *file, const String& what = Null);
 
 #endif

@@ -68,32 +68,45 @@ String ScopeWorkaround(const char *s)
 	return r;
 }
 
-void GatherVirtuals(const String& cls, const String& signature, Index<String>& ids, Index<String>& visited)
-{ // find all virtual methods with the same signature
+void GatherBaseVirtuals(const String& cls, const String& signature, Index<String>& ids, Index<String>& visited)
+{ // find all ancestor classes that contain signature
 	if(IsNull(cls) || visited.Find(cls) >= 0)
 		return;
 	visited.Add(cls);
-	for(const auto& f : ~CodeIndex()) // find base and derived classes
+	for(const auto& f : ~CodeIndex()) // check base classes
 		for(const AnnotationItem& m : f.value.items)
-			if(IsStruct(m.kind)) {
-				if(m.id == cls) // Find base classes
-					// we cheat with With..<TopWindow> by splitting it to With... and TopWindow
-					for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
-						GatherVirtuals(bcls, signature, ids, visited);
-			}
+			if(IsStruct(m.kind) && m.id == cls)
+				// we cheat with With..<TopWindow> by splitting it to With... and TopWindow as
+				// two bases
+				for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
+					GatherBaseVirtuals(bcls, signature, ids, visited);
 	
 
-	for(const auto& f : ~CodeIndex()) // now gather virtual methods of this class
+	for(const auto& f : ~CodeIndex()) // now check virtual methods of this cls
+		for(const AnnotationItem& m : f.value.items) {
+			if(m.nest == cls && IsFunction(m.kind) && m.isvirtual && ScopeWorkaround(m.id.Mid(m.nest.GetCount())) == signature) {
+				ids.FindAdd(cls); // found virtual method in the class
+				return;
+			}
+		}
+}
+
+void GatherVirtuals(const VectorMap<String, String>& bases, const String& cls,
+                    const String& signature, Index<String>& ids, Index<String>& visited)
+{ // find all virtual methods with the same signature
+	if(IsNull(cls) || visited.Find(cls) >= 0)
+		return;
+
+	visited.Add(cls);
+
+	for(int q = bases.Find(cls); q >= 0; q = bases.FindNext(q)) {
+		GatherVirtuals(bases, bases[q], signature, ids, visited);
+	}
+
+	for(const auto& f : ~CodeIndex()) // now check virtual methods of this cls
 		for(const AnnotationItem& m : f.value.items) {
 			if(m.nest == cls && IsFunction(m.kind) && m.isvirtual && ScopeWorkaround(m.id.Mid(m.nest.GetCount())) == signature) {
 				ids.FindAdd(m.id); // found virtual method in the class
-				for(const auto& f : ~CodeIndex()) // check derived classes for overrides
-					for(const AnnotationItem& m : f.value.items)
-						if(IsStruct(m.kind) && visited.Find(m.id) < 0) {
-							for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
-								if(bcls == cls) // Find derived classes
-									GatherVirtuals(m.id, signature, ids, visited);
-						}
 				return;
 			}
 		}
@@ -148,7 +161,24 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 		
 		if(isvirtual) {
 			Index<String> visited;
-			GatherVirtuals(cls, ScopeWorkaround(id.Mid(cls.GetCount())), ids, visited);
+			String signature = ScopeWorkaround(id.Mid(cls.GetCount()));
+			Index<String> base_id;
+			GatherBaseVirtuals(cls, signature, base_id, visited);
+			
+
+			VectorMap<String, String> bases;
+			for(const auto& f : ~CodeIndex()) // check derived classes
+				for(const AnnotationItem& m : f.value.items)
+					if(IsStruct(m.kind))
+						for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
+							bases.Add(bcls, m.id);
+
+			
+
+			visited.Clear();
+			for(const String& cls : base_id)
+				GatherVirtuals(bases, cls, signature, ids, visited);
+			
 		}
 		
 		SortByKey(CodeIndex());
