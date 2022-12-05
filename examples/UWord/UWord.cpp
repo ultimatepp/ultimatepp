@@ -214,7 +214,7 @@ void UWord::Pdf()
 
 void UWord::About()
 {
-	PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ Ultimate`+`+] technology.");
+	PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ U`+`+] technology.");
 }
 
 void UWord::Destroy()

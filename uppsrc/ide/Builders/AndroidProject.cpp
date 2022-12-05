@@ -50,7 +50,12 @@ String AndroidProject::GetBuildDir() const
 
 String AndroidProject::GetClassesDir() const
 {
-	return this->dir + DIR_SEPS + "classes";
+	return GetIntermediatesDir() + DIR_SEPS + "classes";
+}
+
+String AndroidProject::GetIntermediatesDir() const
+{
+	return this->dir + DIR_SEPS + "intermediates";
 }
 
 String AndroidProject::GetBinDir() const
@@ -83,6 +88,37 @@ String AndroidProject::GetJniMakeFilePath() const
 String AndroidProject::GetJniApplicationMakeFilePath() const
 {
 	return GetJniDir() + DIR_SEPS + "Application.mk";
+}
+
+// -------------------------------------------------------------------
+
+Vector<String> AndroidProject::GetClassessFiles() const
+{
+	BiVector<String> dirs = { GetClassesDir() };
+	
+	Vector<String> classesFiles;
+	while(!dirs.IsEmpty())
+	{
+		for(FindFile ff(AppendFileName(dirs.Head(), "*")); ff; ff.Next()) {
+			if (ff.IsHidden() || ff.IsSymLink()) {
+				continue;
+			}
+			
+			auto path = ff.GetPath();
+			if (ff.IsFolder()) {
+				dirs.AddTail(path);
+				continue;
+			}
+			
+			if (path.EndsWith(".class")) {
+				classesFiles.Add(path);
+				continue;
+			}
+		}
+		dirs.DropHead();
+	}
+	
+	return classesFiles;
 }
 
 // -------------------------------------------------------------------

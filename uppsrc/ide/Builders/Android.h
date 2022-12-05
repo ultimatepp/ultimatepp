@@ -20,6 +20,7 @@ public:
 	String GetResDir() const;
 	String GetBuildDir() const;
 	String GetClassesDir() const;
+	String GetIntermediatesDir() const;
 	String GetBinDir() const;
 	String GetObjDir() const;
 	String GetObjLocalDir() const;
@@ -27,6 +28,8 @@ public:
 	String GetManifestPath() const;
 	String GetJniMakeFilePath() const;
 	String GetJniApplicationMakeFilePath() const;
+	
+	Vector<String> GetClassessFiles() const;
 	
 	bool IsDebug() const;
 	bool IsRelease() const;

@@ -65,32 +65,31 @@ public:
 	String PlatformToolsDir() const;
 	String ToolsDir() const;
 	
+	bool HasD8() const;
+	
 	String AaptPath() const       { return ConcreteBuildToolsDir() + DIR_SEPS + "aapt" + GetExeExt(); }
+	String ApksignerPath() const  { return ConcreteBuildToolsDir() + DIR_SEPS + "apksigner" + Android::GetScriptExt(); }
 	String DxPath() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "dx" + Android::GetScriptExt(); }
+	String D8Path() const         { return ConcreteBuildToolsDir() + DIR_SEPS + "d8" + Android::GetScriptExt(); }
 	String ZipalignPath() const   { return ConcreteBuildToolsDir() + DIR_SEPS + "zipalign" + GetExeExt(); }
 	String AndroidJarPath() const { return ConcretePlatformDir() + DIR_SEPS + "android.jar"; }
 	String AdbPath() const        { return PlatformToolsDir() + DIR_SEPS + "adb" + GetExeExt(); }
 	String AndroidPath() const    { return ToolsDir() + DIR_SEPS + "android" + Android::GetScriptExt(); }
 	String EmulatorPath() const   { return ToolsDir() + DIR_SEPS + "emulator" + GetExeExt(); }
-	String MonitorPath() const    { return ToolsDir() + DIR_SEPS + "monitor" + Android::GetScriptExt(); }
-	
-public:
-	String GetLauchSDKManagerCmd() const { return NormalizeExePath(AndroidPath()) + " sdk"; }
-	String GetLauchAVDManagerCmd() const { return NormalizeExePath(AndroidPath()) + " avd"; }
 	
 public:
 	String GetPath() const              { return this->path; }
 	String GetPlatform() const          { return this->platform; }
-	String GetBuildToolsRelease() const { return this->buildToolsRelease; }
+	String GetBuildToolsRelease() const { return this->build_tools_release; }
 	
 	void SetPath(const String& path)                           { this->path = path; }
 	void SetPlatform(const String& platform)                   { this->platform = platform; }
-	void SetBuildToolsRelease(const String& buildToolsRelease) { this->buildToolsRelease = buildToolsRelease; }
+	void SetBuildToolsRelease(const String& build_tools_release) { this->build_tools_release = build_tools_release; }
 	
 private:
 	String path;
 	String platform;
-	String buildToolsRelease;
+	String build_tools_release;
 };
 
 class AndroidNDK {
@@ -151,11 +150,26 @@ private:
 
 class AndroidManifest {
 public:
-	AndroidManifest();
+	static constexpr const char* FILE_NAME = "AndroidManifest.xml";
+	
+	class UsesSdk {
+	public:
+		int minSdkVersion    = Null;
+		int targetSdkVersion = Null;
+		int maxSdkVersion    = Null;
+	};
+	
+public:
+	AndroidManifest(const String& path);
 	virtual ~AndroidManifest();
 	
-private:
+	bool Parse();
 	
+public:
+	One<UsesSdk> uses_sdk;
+	
+private:
+	String path;
 };
 
 }
