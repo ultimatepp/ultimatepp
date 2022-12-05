@@ -749,16 +749,16 @@ void Ide::DebugMenu(Bar& menu)
 
 void Ide::AssistMenu(Bar& menu)
 {
-			menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
-			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-			menu.Add(!designer, AK_USAGE, [=] { Usage(); });
-			menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
-			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
-			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
-			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+	menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
+	menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
+	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
+	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
+	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
+	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 }
 
 void Ide::BrowseMenu(Bar& menu)

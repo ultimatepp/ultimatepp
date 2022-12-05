@@ -182,17 +182,19 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 		}
 		
 		SortByKey(CodeIndex());
-		for(const auto& f : ~CodeIndex()) {
-			auto Add = [&](Point mpos) {
-				AddReferenceLine(f.key, mpos, name, unique);
-			};
-			for(const AnnotationItem& m : f.value.items)
-				if(ids.Find(m.id) >= 0)
-					Add(m.pos);
-			for(const ReferenceItem& m : f.value.refs)
-				if(ids.Find(m.id) >= 0)
-					Add(m.pos);
-		}
+		for(int src = 0; src < 2; src++)
+			for(const auto& f : ~CodeIndex())
+				if((findarg(GetFileExt(f.key), ".h", "") < 0) == src) { // headers first
+					auto Add = [&](Point mpos) {
+						AddReferenceLine(f.key, mpos, name, unique);
+					};
+					for(const AnnotationItem& m : f.value.items)
+						if(ids.Find(m.id) >= 0)
+							Add(m.pos);
+					for(const ReferenceItem& m : f.value.refs)
+						if(ids.Find(m.id) >= 0)
+							Add(m.pos);
+				}
 	}
 
 	FFoundFinish();
