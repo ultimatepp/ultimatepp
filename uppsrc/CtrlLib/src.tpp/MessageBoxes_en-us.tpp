@@ -23,13 +23,6 @@ next `'`\1`'), e.g.:&]
 [s10;l160;%% [/@(28.42.150) PromptOK(DeQtf(`"C:`\`\Program Files`\`\Upp`\`\theide`"));]&]
 [s10;l160;%% [/@(28.42.150) PromptOK(`"`\1C:`\`\Program Files`\`\Upp`\`\theide`");]&]
 [s10; &]
-[s5;:Upp`:`:PromptOK`(const char`*`): [@(0.0.255) void]_[* PromptOK]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 qtf])&]
-[s2;%%  [%-*@3 qtf] .&]
-[s3;%% &]
-[s10; &]
-[s10; &]
-[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Functions]]}}&]
 [s3; &]
 [s5;:Upp`:`:PromptOKCancel`(const char`*`): [@(0.0.255) int]_[* PromptOKCancel]([@(0.0.255) c
