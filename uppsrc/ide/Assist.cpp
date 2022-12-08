@@ -387,7 +387,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	if(!IsView() && GetLength() < 4000000 && cfx.filename != CacheFile("CurrentContext.txt")) {
+	if(!IsView() && GetLength() < 4000000) {
 		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
@@ -401,8 +401,6 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 			}
 		}
 	}
-	if(AssistDiagnostics)
-		SaveFile(CacheFile("CurrentContext.txt"), cfx.content);
 	return cfx;
 }
 
@@ -1063,8 +1061,19 @@ bool AssistEditor::Key(dword key, int count)
 	if(auto_assist) {
 		if(InCode()) {
 			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
-			   key == ':' && Ch(GetCursor32() - 2) == ':')
-				Assist(false);
+			   key == ':' && Ch(GetCursor32() - 2) == ':') {
+				String id;
+				int pos = GetCursor() - 2;
+				int n = 50;
+				while(pos >= 0 && n-- >= 0) {
+					int c = GetChar(pos--);
+					if(c > ' ') {
+						if(IsAlNum(c) || c == ')' || c == ']') // where we can realistically expect autocomplete...
+							Assist(false);
+						break;
+					}
+				}
+			}
 		}
 		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
 			Assist(false);

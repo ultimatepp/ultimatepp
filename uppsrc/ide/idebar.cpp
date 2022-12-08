@@ -827,7 +827,11 @@ void Ide::BrowseMenu(Bar& menu)
 		});
 		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });
 		menu.Add("Current file autocomplete errors", [=] { EditFile(CacheFile("autocomplete_errors")); });
-		menu.Add("Current parsed file content", [=] { EditFile(CacheFile("CurrentContext.txt")); });
+		menu.Add("Current parsed file content", [=] {
+			String p = CacheFile("CurrentContext" + AsString(Random()) + AsString(Random()) + ".txt");
+			Upp::SaveFile(p, editor.CurrentContext().content);
+			EditFile(p);
+		});
 	}
 }
 
