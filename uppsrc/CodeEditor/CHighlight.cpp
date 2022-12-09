@@ -54,15 +54,20 @@ void CSyntax::Bracket(int64 pos, HighlightOutput& hls, CodeEditor *editor) // TO
 const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool octal, bool css)
 {
 	int c = octal ? HighlightSetup::INK_CONST_OCT : HighlightSetup::INK_CONST_INT;
+	auto SkipDigits = [&] {
+		while(IsDigit(*p) || *p == '\'')
+			if(*p++ == '\'')
+				ts = false;
+	};
 	const wchar *t = p;
-	while(IsDigit(*p)) p++;
+	SkipDigits();
 	int fixdigits = int(p - t);
 	bool u = false;
 	if(*p == '.') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
 	}
-	while(IsDigit(*p)) p++;
+	SkipDigits();
 	if(*p == 'e' || *p == 'E') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
