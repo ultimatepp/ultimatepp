@@ -1066,12 +1066,13 @@ bool AssistEditor::Key(dword key, int count)
 				int pos = GetCursor() - 2;
 				int n = 50;
 				while(pos >= 0 && n-- >= 0) {
-					int c = GetChar(pos--);
+					int c = GetChar(pos);
 					if(c > ' ') {
-						if(IsAlNum(c) || c == ')' || c == ']') // where we can realistically expect autocomplete...
+						if(iscib(*ReadIdBack(pos)) || c == ')' || c == ']') // where we can realistically expect autocomplete...
 							Assist(false);
 						break;
 					}
+					pos--;
 				}
 			}
 		}
