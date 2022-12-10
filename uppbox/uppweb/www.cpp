@@ -626,18 +626,31 @@ void ExportPage(int i)
 					LoadFile(GetRcFile("adlinks.txt")) +
 					(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
 					                                : "") +
-			       	"<br><br><br>" +
+					"<br><br><br>" +
 //						LoadFile(GetRcFile("referral.txt")) +
 //						LoadFile(GetRcFile("referral2.txt")) +
 //						LoadFile(GetRcFile("donations.txt")) +
 //						"<br><br>" +
 //						amazon[i % amazon.GetCount()] +
-			       	"<br><br><br>" +
+					"<br><br><br>" +
 					~(HtmlLink("https://sourceforge.net/projects/upp/") /
 					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
 					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
-			       	"<br><br>" +
-			       	(links[i] == "index.html" ? lastUpdate : Htmls())
+					"<br><br>" +
+					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
+						~(HtmlLink("https://github.com/ultimatepp") /
+						   HtmlImg(GetImageSrc(WWW::GitHub),
+					           "GitHub Logo").Border(0).Width(125).Height(35)) +
+					"</div>" +
+					"<br>" +
+					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
+					"<div style=\"height:5\"></div>" +
+					   ~(HtmlLink("https://discord.gg/8XzqQzXZzb") /
+					      HtmlImg("https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg",
+					           "Discord Logo").Border(0).Width(125).Height(25)) +
+					"</div>" +
+					"<br>" +
+					(links[i] == "index.html" ? lastUpdate : Htmls())
 				) +
 				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
 				HtmlTCell().Width(-100).BgColor(bg) / (
