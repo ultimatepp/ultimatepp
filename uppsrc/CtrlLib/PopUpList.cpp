@@ -68,7 +68,7 @@ void PopUpList::SetLineCy(int ii, int cy)
 {
 	ASSERT(cy >= 0 && cy < 32000);
 	word& x = lineinfo.At(ii, 0x7fff);
-	x = x & 0x8000 | cy;
+	x = (x & 0x8000) | cy;
 	if(popup)
 		popup->ac.SetLineCy(ii, cy);
 }

@@ -64,7 +64,6 @@ int ScrollBar::ButtonCount() const
 }
 
 void ScrollBar::Layout() {
-	Size sz = GetSize();
 	Set(pagepos);
 	Refresh();
 }

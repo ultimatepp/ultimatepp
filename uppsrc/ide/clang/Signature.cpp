@@ -81,7 +81,6 @@ String CleanupId(const char *s)
 				return memcmp(s, "operator", 8) == 0;
 			};
 
-			const char *b = s;
 			String id;
 			while(iscid(*s) || *s == ':') {
 				id.Cat(*s++);
@@ -94,8 +93,6 @@ String CleanupId(const char *s)
 							break;
 					}
 					SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
-					b = s;
-					
 				}
 			}
 			if(id == s_attribute) {

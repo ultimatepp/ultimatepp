@@ -257,7 +257,6 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
 {
 	int parti = 0;
-	int pos = 0;
 	int ti = 0;
 	if(part.GetCount()) {
 		while(parti < part.GetCount()) {
@@ -274,7 +273,6 @@ RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) con
 			}
 			if(IsTable(parti))
 				ti += 1 + GetTable(parti).GetTableCount();
-			pos += GetPartLength(parti) + 1;
 			parti++;
 			rc = next;
 		}
