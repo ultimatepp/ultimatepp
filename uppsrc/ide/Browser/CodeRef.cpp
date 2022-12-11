@@ -161,10 +161,6 @@ String NaturalDeQtf(const char *s) {
 	return String(r);
 }
 
-static int sSplitT(int c) {
-	return c == ';' || c == '<' || c == '>' || c == ',';
-}
-
 String TopicEditor::GetLang() const
 {
 	int q = topicpath.ReverseFind('@');
