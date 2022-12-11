@@ -270,8 +270,8 @@ void Thread::DumpDiagnostics()
 			               PTHREAD_EXPLICIT_SCHED, "PTHREAD_EXPLICIT_SCHED",
 			               "UNKNOWN getinheritsched VALUE"));
 	
-		if(pthread_attr_getschedpolicy(attr, &i) == 0)
-			RLOG(decode(i, SCHED_OTHER, "SCHED_OTHER",
+		if(pthread_attr_getschedpolicy(attr, &s) == 0)
+			RLOG(decode(s, SCHED_OTHER, "SCHED_OTHER",
 			               SCHED_FIFO, "SCHED_FIFO",
 			               SCHED_RR, "SCHED_RR",
 			               SCHED_IDLE, "SCHED_IDLE",
