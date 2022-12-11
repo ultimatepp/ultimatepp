@@ -330,8 +330,8 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				s++;
 		}
 		else
-		if(sOperatorTab[*s]) {
-			while(sOperatorTab[s[n]])
+		if(sOperatorTab[uint8(*s)]) {
+			while(sOperatorTab[uint8(s[n])])
 				n++;
 			p.type = ITEM_CPP;
 		}
