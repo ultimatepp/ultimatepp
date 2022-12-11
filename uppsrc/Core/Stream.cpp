@@ -234,7 +234,7 @@ int Stream::GetUtf8()
 		return code;
 	
 	if(code >= 0xC2) {
-		int c = 0, pos = GetPos();
+		int c = 0;
 		if(code < 0xE0) {
 			int c0 = Get();
 			if(c0 >= 0x80 && c0 < 0xC0 &&

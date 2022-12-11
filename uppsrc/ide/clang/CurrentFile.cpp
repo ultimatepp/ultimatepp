@@ -43,7 +43,7 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 		const CXCompletionChunkKind chunkKind = clang_getCompletionChunkKind(string, j);
 		String text = FetchString(clang_getCompletionChunkText(string, j));
 		if(chunkKind == CXCompletionChunk_Optional)
-			for(int i = 0; i < clang_getNumCompletionChunks(string); i++)
+			for(unsigned i = 0; i < clang_getNumCompletionChunks(string); i++)
 				ReadAutocomplete(clang_getCompletionChunkCompletionString(string, i), name, signature);
 		else
 		if(chunkKind == CXCompletionChunk_TypedText) {
@@ -185,7 +185,7 @@ void CurrentFileThread()
 						// DumpDiagnostics(cfc.clang.tu);
 						if(results) {
 							int tm = msecs();
-							for(int i = 0; i < results->NumResults; i++) {
+							for(unsigned i = 0; i < results->NumResults; i++) {
 								const CXCompletionString& string = results->Results[i].CompletionString;
 								int kind = results->Results[i].CursorKind;
 							//	if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space

@@ -623,7 +623,6 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 void AssistEditor::SyncCurrentFile()
 {
 	if(is_source_file) {
-		int line_delta;
 		CurrentFileContext cfx = CurrentContext();
 		SyncCurrentFile(cfx);
 	}

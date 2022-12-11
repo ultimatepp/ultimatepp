@@ -230,7 +230,7 @@ void ImageSysData::CreateHBMP(HDC dc, const RGBA *data)
 	RGBA *pixels;
 	HBITMAP hbmp32 = CreateDIBSection(dcMem, bi, DIB_RGB_COLORS, (void **)&pixels, NULL, 0);
 	HDC hbmpOld = (HDC) ::SelectObject(dcMem, hbmp32);
-	Copy(pixels, data, img.GetLength());
+	Copy(pixels, data, (int)img.GetLength());
 	HDC dcMem2 = ::CreateCompatibleDC(dc);
 	hbmp = ::CreateCompatibleBitmap(dc, sz.cx, sz.cy);
 	HBITMAP o2 = (HBITMAP)::SelectObject(dcMem2, hbmp);
@@ -260,7 +260,7 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 			BitmapInfo32__ bi(sz.cx, sz.cy);
 			himg = CreateDIBSection(ScreenHDC(), bi, DIB_RGB_COLORS, (void **)&section, NULL, 0);
 			if(!himg) return; // Return on release.
-			Copy(section, ~img, img.GetLength());
+			Copy(section, ~img, (int)img.GetLength());
 		}
 		LTIMING("Image Alpha blit");
 		BLENDFUNCTION bf;
@@ -294,7 +294,7 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 	Image img;
 
 	virtual int64  Key() const                      { return img.GetSerialId(); }
-	virtual int    Make(ImageSysData& object) const { object.Init(img); return img.GetLength(); }
+	virtual int    Make(ImageSysData& object) const { object.Init(img); return (int)img.GetLength(); }
 };
 
 void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
@@ -320,7 +320,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 	ImageSysDataMaker m;
 	static LRUCache<ImageSysData, int64> cache;
 	static int Rsz;
-	Rsz += img.GetLength();
+	Rsz += (int)img.GetLength();
 	if(Rsz > 200 * 200) { // we do not want to do this for each small image painted...
 		Rsz = 0;
 		cache.Remove([](const ImageSysData& object) { return object.img.GetRefCount() == 1; });

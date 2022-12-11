@@ -134,7 +134,7 @@ Font Ctrl::GetFontAttr(int ii) const
 {
 	if(layout_id_literal)
 		return Null;
-	static dword nullval = Font(Null).AsInt64();
+	static int64 nullval = Font(Null).AsInt64();
 	return Font::FromInt64(attrs.GetInt64(ii, nullval));
 }
 
@@ -155,7 +155,7 @@ void Ctrl::SetInt64Attr(int ii, int64 val)
 	Attrs().SetInt64(ii, val);
 }
 
-int Ctrl::GetInt64Attr(int ii, int64 def) const
+int64 Ctrl::GetInt64Attr(int ii, int64 def) const
 {
 	if(layout_id_literal)
 		return def;

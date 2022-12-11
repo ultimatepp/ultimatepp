@@ -368,7 +368,7 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 					SetResolution(m.image, IMAGE_RESOLUTION_UHD);
 				if(c.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))
 					SetResolution(m.image, IMAGE_RESOLUTION_NONE);
-				bl += c.image.GetLength();
+				bl += (int)c.image.GetLength();
 				bn++;
 			}
 			String bs = PackImlData(bimg);

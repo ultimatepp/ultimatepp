@@ -844,7 +844,7 @@ protected:
 	int    GetIntAttr(int ii, int def = Null) const;
 
 	void   SetInt64Attr(int ii, int64 val);
-	int    GetInt64Attr(int ii, int64 def = Null) const;
+	int64  GetInt64Attr(int ii, int64 def = Null) const;
 	
 	void   SetVoidPtrAttr(int ii, const void *ptr);
 	void  *GetVoidPtrAttr(int ii) const;

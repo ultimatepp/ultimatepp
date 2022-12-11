@@ -182,9 +182,9 @@ void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&
 	if(!HasLibClang())
 		return;
 
-	size_t num_diagnostics = clang_getNumDiagnostics(tu);
+	unsigned num_diagnostics = clang_getNumDiagnostics(tu);
 
-	for (size_t i = 0; i < num_diagnostics; ++i) {
+	for (unsigned i = 0; i < num_diagnostics; ++i) {
 		CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
 		auto Dump = [&](CXDiagnostic diagnostic, bool detail) {
 			CXFile file;

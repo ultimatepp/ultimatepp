@@ -43,7 +43,7 @@ class Thread : NoCopy {
 	pthread_t  handle;
 #endif
 
-	size_t stack_size = 0;
+	int stack_size = 0;
 
 public:
 	bool       Run(Function<void ()> cb, bool noshutdown = false);

@@ -83,7 +83,7 @@ void IconDes::Paint(Draw& w)
 			while(b < pb[y] + isz.cx)
 				*b++ = cc1;
 		}
-		AlphaBlend(pb, image, image.GetLength());
+		AlphaBlend(pb, image, (int)image.GetLength());
 		if(!pastepaint)
 			for(int y = 0; y < isz.cy; y++) {
 				const RGBA *m = selection[y];

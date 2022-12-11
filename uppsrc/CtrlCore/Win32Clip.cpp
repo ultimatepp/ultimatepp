@@ -409,7 +409,7 @@ String sDib(const Value& image)
 	header.biBitCount = 32;
 	header.biPlanes = 1;
 	header.biCompression = BI_RGB;
-	StringBuffer b(sizeof(header) + 4 * img.GetLength());
+	StringBuffer b(int(sizeof(header) + 4 * img.GetLength()));
 	byte *p = (byte *)~b;
 	memcpy(p, &header, sizeof(header));
 	memcpy(p + sizeof(header), ~img, 4 * img.GetLength());

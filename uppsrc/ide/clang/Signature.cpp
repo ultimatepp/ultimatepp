@@ -185,7 +185,7 @@ String CleanupPretty(const String& signature)
 			const char *b = s;
 			while(iscid(*s))
 				s++;
-			int len = s - b;
+			int len = int(s - b);
 			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
 			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0 || memcmp(b, "inline", 6) == 0) ||
 			   len == 7 && (memcmp(b, "virtual", 7) == 0) ||
