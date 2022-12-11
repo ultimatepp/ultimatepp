@@ -279,7 +279,6 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	Rect orect = rect.Inflated(overpaint);
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
 		return;
-	Ctrl *q;
 	Rect view = rect;
 	int n = GetFrameCount();
 	for(int i = 0; i < n; i++) {

@@ -404,7 +404,6 @@ void Indexer::SchedulerThread()
 						return job;
 					};
 					int blitz_index = 0;
-					int c_blitz_index = 0;
 					for(const auto& pf : pkg.value) {
 						FileAnnotation0 f;
 						{

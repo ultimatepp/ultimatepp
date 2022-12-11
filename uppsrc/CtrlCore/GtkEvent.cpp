@@ -342,7 +342,6 @@ void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 void Ctrl::IMLocation(Ctrl *w)
 {
 	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit())) {
-		GdkRectangle r;
 		Rect e = w->GetPreeditScreenRect();
 		Rect q = w->GetScreenRect();
 		GdkRectangle gr;
