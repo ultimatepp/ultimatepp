@@ -80,7 +80,7 @@ protected:
 	
 	void          Reset();
 	
-	friend class Popup;
+	friend struct Popup;
 
 public:
 	Event<>      WhenCancel;
