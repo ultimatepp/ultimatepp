@@ -508,6 +508,8 @@ void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
 
 bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 {
+	if(annotating)
+		return false;
 	if(GetChar(mt.pos) <= 32)
 		return false;
 	String name;
