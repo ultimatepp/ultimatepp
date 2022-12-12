@@ -893,7 +893,7 @@ void Union(Vector<Rect>& rr, const Rect& add);
 
 Vector<Rect> Intersection(const Vector<Rect>& b, const Rect& a);
 
-void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r);
+void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r, double ctolerance = 2);
 
 void DrawDragFrame(Draw& w, const Rect& r, int n, const int *pattern, Color color, int animation);
 void DrawDragFrame(Draw& w, const Rect& r, int n, int pattern, Color color, int animation);

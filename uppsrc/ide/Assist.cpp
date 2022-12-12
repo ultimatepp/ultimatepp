@@ -1059,8 +1059,10 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist) {
 		if(InCode()) {
-			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
-			   key == ':' && Ch(GetCursor32() - 2) == ':') {
+			if(key == '>' && Ch(GetCursor32() - 2) == '-' || key == ':' && Ch(GetCursor32() - 2) == ':')
+				Assist(false);
+			else
+			if(key == '.')  {
 				String id;
 				int pos = GetCursor() - 2;
 				int n = 50;
