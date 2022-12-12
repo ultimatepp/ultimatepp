@@ -220,111 +220,6 @@ void Ide::ReadHlStyles(ArrayCtrl& hlstyle)
 	}
 }
 
-class AStyleSetupDialog : public WithSetupAstyleLayout<ParentCtrl> {
-	Ide *ide;
-
-	typedef AStyleSetupDialog CLASSNAME;
-
-public:
-	AStyleSetupDialog(Ide *_ide);
-	void AstyleTest();
-	void UppDefaults();
-};
-
-AStyleSetupDialog::AStyleSetupDialog(Ide *_ide)
-{
-	ide = _ide;
-
-	BracketFormatMode.Add(astyle::NONE_MODE, "none");
-	BracketFormatMode.Add(astyle::ATTACH_MODE, "attach");
-	BracketFormatMode.Add(astyle::BREAK_MODE, "break");
-	ParensPaddingMode.Add(astyle::PAD_NONE, "no space pad around parenthesis");
-	ParensPaddingMode.Add(astyle::PAD_INSIDE, "pad parenthesis inside with space");
-	ParensPaddingMode.Add(astyle::PAD_OUTSIDE, "pad parenthesis outside with space");
-	ParensPaddingMode.Add(astyle::PAD_BOTH, "pad both parenthesis sides with spaces");
-
-	Test <<= THISBACK(AstyleTest);
-	Defaults << THISBACK(UppDefaults);
-
-}
-
-void AStyleSetupDialog::AstyleTest()
-{
-	astyle::ASFormatter Formatter;
-
-	// sets up parameters from astyle dialog
-	Formatter.setBracketIndent(BracketIndent);
-	Formatter.setNamespaceIndent(NamespaceIndent);
-	Formatter.setBlockIndent(BlockIndent);
-	Formatter.setCaseIndent(CaseIndent);
-	Formatter.setClassIndent(ClassIndent);
-	Formatter.setLabelIndent(LabelIndent);
-	Formatter.setSwitchIndent(SwitchIndent);
-	Formatter.setPreprocessorIndent(PreprocessorIndent);
-	Formatter.setMaxInStatementIndentLength(MaxInStatementIndentLength);
-	Formatter.setMinConditionalIndentLength(MinInStatementIndentLength);
-	Formatter.setBreakClosingHeaderBracketsMode(BreakClosingHeaderBracketsMode);
-	Formatter.setBreakElseIfsMode(BreakElseIfsMode);
-	Formatter.setBreakOneLineBlocksMode(BreakOneLineBlocksMode);
-	Formatter.setSingleStatementsMode(SingleStatementsMode);
-	Formatter.setBreakBlocksMode(BreakBlocksMode);
-	Formatter.setBreakClosingHeaderBlocksMode(BreakClosingHeaderBlocksMode);
-	Formatter.setBracketFormatMode((astyle::BracketMode)BracketFormatMode.GetIndex());
-	switch(ParensPaddingMode.GetIndex()) {
-	case astyle::PAD_INSIDE :
-		Formatter.setParensInsidePaddingMode(true);
-		Formatter.setParensOutsidePaddingMode(false);
-		break;
-	case astyle::PAD_OUTSIDE :
-		Formatter.setParensInsidePaddingMode(false);
-		Formatter.setParensOutsidePaddingMode(true);
-		break;
-	case astyle::PAD_BOTH :
-		Formatter.setParensInsidePaddingMode(true);
-		Formatter.setParensOutsidePaddingMode(true);
-		break;
-	default :
-		Formatter.setParensOutsidePaddingMode(false);
-		Formatter.setParensInsidePaddingMode(false);
-		break;
-	}
-	Formatter.setParensUnPaddingMode(ParensUnPaddingMode);
-	Formatter.setOperatorPaddingMode(OperatorPaddingMode);
-	Formatter.setEmptyLineFill(EmptyLineFill);
-	Formatter.setTabSpaceConversionMode(TabSpaceConversionMode);
-	Formatter.setTabIndentation(ide->editortabsize, ide->indent_spaces ? false : true);
-	Formatter.setSpaceIndentation(ide->indent_spaces ? ide->indent_amount : ide->editortabsize);
-
-	// formats text in test box
-	TestBox.Set(ide->FormatCodeString(TestBox.GetW(), Formatter));
-}
-
-void AStyleSetupDialog::UppDefaults()
-{
-	BracketIndent = false;
-	NamespaceIndent = true;
-	BlockIndent = false;
-	CaseIndent = true;
-	ClassIndent = true;
-	LabelIndent = true;
-	SwitchIndent = true;
-	PreprocessorIndent = false;
-	MaxInStatementIndentLength = 20;
-	MinInStatementIndentLength = 2;
-	BreakClosingHeaderBracketsMode = 0;
-	BreakElseIfsMode = true;
-	BreakOneLineBlocksMode = true;
-	SingleStatementsMode = true;
-	BreakBlocksMode = false;
-	BreakClosingHeaderBlocksMode = false;
-	BracketFormatMode.SetIndex(1);
-	ParensPaddingMode.SetIndex(0);
-	ParensUnPaddingMode = true;
-	OperatorPaddingMode = false;
-	EmptyLineFill = false;
-	TabSpaceConversionMode = false;
-}
-
 void SetConsole(EditString *e, const char *text)
 {
 	*e <<= text;
@@ -391,7 +286,6 @@ void Ide::SetupFormat() {
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
 	WebSearchTab web_search;
-	AStyleSetupDialog ast(this);
 	edt.lineends
 		.Add(LF, "LF")
 		.Add(CRLF, "CRLF")
@@ -415,7 +309,6 @@ void Ide::SetupFormat() {
 	dlg.Add(edt, "Editor");
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
-	dlg.Add(ast, "Code formatting");
 	dlg.Add(web_search, "Web search");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 
@@ -531,30 +424,6 @@ void Ide::SetupFormat() {
 		(ide.output_per_assembly, output_per_assembly)
 		(ide.setmain_newide, setmain_newide)
 		(ide.gui_font, gui_font_override)
-
-		(ast.BracketIndent,					astyle_BracketIndent)
-		(ast.NamespaceIndent,               astyle_NamespaceIndent)
-		(ast.BlockIndent,                   astyle_BlockIndent)
-		(ast.CaseIndent,                    astyle_CaseIndent)
-		(ast.ClassIndent,                   astyle_ClassIndent)
-		(ast.LabelIndent,                   astyle_LabelIndent)
-		(ast.SwitchIndent,                  astyle_SwitchIndent)
-		(ast.PreprocessorIndent,            astyle_PreprocessorIndent)
-		(ast.MinInStatementIndentLength,    astyle_MinInStatementIndentLength)
-		(ast.MaxInStatementIndentLength,    astyle_MaxInStatementIndentLength)
-		(ast.BreakClosingHeaderBracketsMode,astyle_BreakClosingHeaderBracketsMode)
-		(ast.BreakElseIfsMode,              astyle_BreakElseIfsMode)
-		(ast.BreakOneLineBlocksMode,        astyle_BreakOneLineBlocksMode)
-		(ast.SingleStatementsMode,          astyle_SingleStatementsMode)
-		(ast.BreakBlocksMode,               astyle_BreakBlocksMode)
-		(ast.BreakClosingHeaderBlocksMode,  astyle_BreakClosingHeaderBlocksMode)
-		(ast.BracketFormatMode,             astyle_BracketFormatMode)
-		(ast.ParensPaddingMode,             astyle_ParensPaddingMode)
-		(ast.ParensUnPaddingMode,           astyle_ParensUnPaddingMode)
-		(ast.OperatorPaddingMode,           astyle_OperatorPaddingMode)
-		(ast.EmptyLineFill,                 astyle_EmptyLineFill)
-		(ast.TabSpaceConversionMode,        astyle_TabSpaceConversionMode)
-		(ast.TestBox,						astyle_TestBox)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);

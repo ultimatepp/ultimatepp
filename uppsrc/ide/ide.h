@@ -38,8 +38,6 @@
 
 #include "version.h"
 
-#include <plugin/astyle/astyle.h>
-
 #include <ide/Builders/Builders.h>
 
 const char *FindTag(const char *txt, const char *tag);
@@ -644,35 +642,8 @@ public:
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
 	*/
-	bool	astyle_BracketIndent;
-	bool	astyle_NamespaceIndent;
-	bool	astyle_BlockIndent;
-	bool	astyle_CaseIndent;
-	bool	astyle_ClassIndent;
-	bool	astyle_LabelIndent;
-	bool	astyle_SwitchIndent;
-	bool	astyle_PreprocessorIndent;
-	int		astyle_MinInStatementIndentLength;
-	int		astyle_MaxInStatementIndentLength;
-	bool	astyle_BreakClosingHeaderBracketsMode;
-	bool	astyle_BreakElseIfsMode;
-	bool	astyle_BreakOneLineBlocksMode;
-	bool	astyle_SingleStatementsMode;
-	bool	astyle_BreakBlocksMode;
-	bool	astyle_BreakClosingHeaderBlocksMode;
-	int		astyle_BracketFormatMode;
-	int		astyle_ParensPaddingMode;
-	bool	astyle_ParensUnPaddingMode;
-	bool	astyle_OperatorPaddingMode;
-	bool	astyle_EmptyLineFill;
-	bool	astyle_TabSpaceConversionMode;
-	WString	astyle_TestBox;
-
-	// Formats a string of code with a given formatter
-	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
 
 	// Formats editor's code with Ide format parameters
-	void FormatCode();
 	void FormatJSON_XML(bool xml);
 	void FormatJSON();
 	void FormatXML();
