@@ -42,6 +42,8 @@ CONSOLE_APP_MAIN
 		SFtpTransparency(session);
 #elif defined(SSH_SFTP_MT)
 		SFtpAsyncGet(session);
+#elif defined(SSH_SFTP_MT_LOOP)
+		SFtpAsyncGet2(session);
 #elif defined(SSH_EXEC)
 		ExecListDir(session);
 #elif defined(SSH_EXEC_MT)

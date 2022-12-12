@@ -10,6 +10,7 @@ void SFtpGet(SshSession& session);
 void SFtpStreamGet(SshSession& session);
 void SFtpTransparency(SshSession& session);
 void SFtpAsyncGet(SshSession& session);
+void SFtpAsyncGet2(SshSession& session);
 void ExecListDir(SshSession& session);
 void ExecAsyncListDir(SshSession& session);
 void ShellConsole(SshSession& session);
