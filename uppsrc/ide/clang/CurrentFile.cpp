@@ -18,6 +18,8 @@ Point                                  autocomplete_pos;
 int64                                  autocomplete_serial;
 Event<const Vector<AutoCompleteItem>&> autocomplete_done;
 
+bool                                   delete_cfc;
+
 struct CurrentFileClang {
 	CurrentFileContext parsed_file;
 	Clang              clang;
@@ -34,6 +36,11 @@ CurrentFileClang& GetCurrentFileClang(const String& filename)
 		}
 
 	return s_cf.GetCount() < ParsedFiles ? s_cf.Add() : s_cf.Top();
+}
+
+void CurrentFileDeleteCache()
+{
+	delete_cfc = true;
 }
 
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
@@ -124,6 +131,7 @@ void CurrentFileThread()
 			int64 done_serial;
 			int64 aserial;
 			bool autocomplete_do;
+			bool del_cfc;
 			{ // fetch the work to do
 				GuiLock __;
 				f = current_file;
@@ -132,8 +140,12 @@ void CurrentFileThread()
 				done_serial = current_file_done_serial;
 				autocomplete_do = do_autocomplete;
 				aserial = autocomplete_serial;
+				del_cfc = delete_cfc;
+				delete_cfc = false;
 			}
 			if(f.filename.GetCount()) {
+				if(del_cfc)
+					s_cf.Clear();
 				CurrentFileClang& cfc = GetCurrentFileClang(f.filename);
 				auto DumpDiagnostics = [&](const char *filename) {
 					if(AssistDiagnostics) {

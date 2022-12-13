@@ -604,8 +604,8 @@ Ide::Ide()
 	SetupBars();
 	SetBar();
 	
-	libclang_options = "-Wno-logical-op-parentheses";
-	libclang_coptions = "-Wno-logical-op-parentheses";
+	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";
+	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
 	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
 

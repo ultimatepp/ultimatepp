@@ -313,4 +313,6 @@ public:
 
 void DumpIndex(const char *file, const String& what = Null);
 
+void CurrentFileDeleteCache();
+
 #endif

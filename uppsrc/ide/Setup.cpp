@@ -529,7 +529,7 @@ void Ide::SetupFormat() {
 	SaveConfig();
 	
 	
-	if(HasLibClang())
+	if(HasLibClang()) {
 		for(int cpp = 0; cpp < 2; cpp++) {
 			Clang h;
 			if(!h.Parse(GetHomeDirFile(cpp ? "test.cpp" : "test.c"), "", GetCurrentIncludePath(), GetCurrentDefines(), 0)) {
@@ -537,6 +537,9 @@ void Ide::SetupFormat() {
 				return;
 			}
 		}
+		CurrentFileDeleteCache();
+		editor.SyncCurrentFile();
+	}
 }
 
 void Ide::FinishConfig()
