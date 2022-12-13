@@ -35,8 +35,6 @@ OutDir_plugin_bz2 = $(UPPOUT)plugin/bz2/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_bz2 = $(Macro)
 OutDir_HexView = $(UPPOUT)HexView/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_HexView = $(Macro)
-OutDir_plugin_astyle = $(UPPOUT)plugin/astyle/GCC-Gcc-Gui-Linux-Posix-Shared/
-Macro_plugin_astyle = $(Macro)
 OutDir_TextDiffCtrl = $(UPPOUT)TextDiffCtrl/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_TextDiffCtrl = $(Macro)
 OutDir_TabBar = $(UPPOUT)TabBar/GCC-Gcc-Gui-Linux-Posix-Shared/
@@ -118,7 +116,6 @@ prepare: \
 	$(OutDir_CtrlLib) \
 	$(OutDir_plugin_bz2) \
 	$(OutDir_HexView) \
-	$(OutDir_plugin_astyle) \
 	$(OutDir_TextDiffCtrl) \
 	$(OutDir_TabBar) \
 	$(OutDir_ide_Designers) \
@@ -229,7 +226,6 @@ $(OutFile): build_info  \
 	$(OutDir_CtrlLib)CtrlLib.a \
 	$(OutDir_plugin_bz2)bz2.a \
 	$(OutDir_HexView)HexView.a \
-	$(OutDir_plugin_astyle)astyle.a \
 	$(OutDir_TextDiffCtrl)TextDiffCtrl.a \
 	$(OutDir_TabBar)TabBar.a \
 	$(OutDir_ide_Designers)Designers.a \
@@ -346,7 +342,6 @@ $(OutFile): build_info  \
 			$(OutDir_CtrlLib)CtrlLib.a \
 			$(OutDir_plugin_bz2)bz2.a \
 			$(OutDir_HexView)HexView.a \
-			$(OutDir_plugin_astyle)astyle.a \
 			$(OutDir_TextDiffCtrl)TextDiffCtrl.a \
 			$(OutDir_TabBar)TabBar.a \
 			$(OutDir_ide_Designers)Designers.a \
@@ -586,8 +581,6 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -800,8 +793,6 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -1014,8 +1005,6 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -1228,8 +1217,6 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -1442,8 +1429,6 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -1656,8 +1641,6 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -1870,8 +1853,6 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -2084,8 +2065,6 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -2298,8 +2277,6 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -2512,8 +2489,6 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -2726,8 +2701,6 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -2940,8 +2913,6 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -3154,8 +3125,6 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -3368,8 +3337,6 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -3582,8 +3549,6 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -3796,8 +3761,6 @@ $(OutDir_ide)AssistDisplay.o: $(UPPDIR1)ide/AssistDisplay.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -4010,8 +3973,6 @@ $(OutDir_ide)IncludeTrick.o: $(UPPDIR1)ide/IncludeTrick.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -4224,8 +4185,6 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -4438,8 +4397,6 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -4652,8 +4609,6 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -4866,8 +4821,6 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -5080,8 +5033,6 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -5294,8 +5245,6 @@ $(OutDir_ide)Usage.o: $(UPPDIR1)ide/Usage.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -5508,8 +5457,6 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -5722,8 +5669,6 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -5936,8 +5881,6 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -6150,8 +6093,6 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -6364,8 +6305,6 @@ $(OutDir_ide)Events.o: $(UPPDIR1)ide/Events.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -6578,8 +6517,6 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -6792,8 +6729,6 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -7006,8 +6941,6 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -7220,8 +7153,6 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -7434,8 +7365,6 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -7648,8 +7577,6 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -7862,8 +7789,6 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -8076,8 +8001,6 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -8290,8 +8213,6 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -8506,8 +8427,6 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -8721,8 +8640,6 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -8936,8 +8853,6 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -9303,8 +9218,6 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -9517,8 +9430,6 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -9731,8 +9642,6 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -9945,8 +9854,6 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -10159,8 +10066,6 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -10373,8 +10278,6 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -10587,8 +10490,6 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -10801,8 +10702,6 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -11015,8 +10914,6 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -11229,8 +11126,6 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -11443,8 +11338,6 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -11657,8 +11550,6 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -11872,8 +11763,6 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -12086,8 +11975,6 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -12300,8 +12187,6 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -12514,8 +12399,6 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -12728,8 +12611,6 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -12944,8 +12825,6 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -13158,8 +13037,6 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -13372,8 +13249,6 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -13586,8 +13461,6 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -13800,8 +13673,6 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -14014,8 +13885,6 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -14228,8 +14097,6 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -14442,8 +14309,6 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -14656,8 +14521,6 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -14870,8 +14733,6 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -15084,8 +14945,6 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -15300,8 +15159,6 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -19628,8 +19485,6 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -19874,8 +19729,6 @@ $(OutDir_ide_IconDes)IconDes.o: $(UPPDIR1)ide/IconDes/IconDes.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -27306,8 +27159,6 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -27697,8 +27548,6 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -39783,471 +39632,6 @@ $(OutDir_HexView)HexView.a: \
 	$(AR) $(OutDir_HexView)HexView.a \
 		$(OutDir_HexView)HexView.o
 
-$(OutDir_plugin_astyle):
-	mkdir -p $(OutDir_plugin_astyle)
-
-$(OutDir_plugin_astyle)ASStringTools.o: $(UPPDIR1)plugin/astyle/ASStringTools.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_astyle)  $(UPPDIR1)plugin/astyle/ASStringTools.cpp -o $(OutDir_plugin_astyle)ASStringTools.o
-
-$(OutDir_plugin_astyle)ASBeautifier.o: $(UPPDIR1)plugin/astyle/ASBeautifier.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_astyle)  $(UPPDIR1)plugin/astyle/ASBeautifier.cpp -o $(OutDir_plugin_astyle)ASBeautifier.o
-
-$(OutDir_plugin_astyle)ASEnhancer.o: $(UPPDIR1)plugin/astyle/ASEnhancer.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_astyle)  $(UPPDIR1)plugin/astyle/ASEnhancer.cpp -o $(OutDir_plugin_astyle)ASEnhancer.o
-
-$(OutDir_plugin_astyle)ASFormatter.o: $(UPPDIR1)plugin/astyle/ASFormatter.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_astyle)  $(UPPDIR1)plugin/astyle/ASFormatter.cpp -o $(OutDir_plugin_astyle)ASFormatter.o
-
-$(OutDir_plugin_astyle)ASResource.o: $(UPPDIR1)plugin/astyle/ASResource.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/SIMD_NEON.h \
-	$(UPPDIR1)Core/SIMD_SSE2.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
-	$(UPPDIR1)plugin/z/lib/zconf.h \
-	$(UPPDIR1)plugin/z/lib/zlib.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_astyle)  $(UPPDIR1)plugin/astyle/ASResource.cpp -o $(OutDir_plugin_astyle)ASResource.o
-
-$(OutDir_plugin_astyle)astyle.a: \
-	$(OutDir_plugin_astyle)ASStringTools.o \
-	$(OutDir_plugin_astyle)ASBeautifier.o \
-	$(OutDir_plugin_astyle)ASEnhancer.o \
-	$(OutDir_plugin_astyle)ASFormatter.o \
-	$(OutDir_plugin_astyle)ASResource.o
-	$(AR) $(OutDir_plugin_astyle)astyle.a \
-		$(OutDir_plugin_astyle)ASStringTools.o \
-		$(OutDir_plugin_astyle)ASBeautifier.o \
-		$(OutDir_plugin_astyle)ASEnhancer.o \
-		$(OutDir_plugin_astyle)ASFormatter.o \
-		$(OutDir_plugin_astyle)ASResource.o
-
 $(OutDir_TextDiffCtrl):
 	mkdir -p $(OutDir_TextDiffCtrl)
 
@@ -41812,8 +41196,6 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42026,8 +41408,6 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42240,8 +41620,6 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42454,8 +41832,6 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42668,8 +42044,6 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -42882,8 +42256,6 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -43096,8 +42468,6 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -43310,8 +42680,6 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
@@ -47306,8 +46674,6 @@ $(OutDir_ide_clang)Indexer.o: $(UPPDIR1)ide/clang/Indexer.cpp \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)PdfDraw/PdfDraw.h \
-	$(UPPDIR1)plugin/astyle/ASStringTools.hpp \
-	$(UPPDIR1)plugin/astyle/astyle.h \
 	$(UPPDIR1)plugin/bmp/bmp.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/bz2/lib/bzlib.h \
