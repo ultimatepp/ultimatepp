@@ -47,10 +47,10 @@ StaticText& StaticText::SetText(const char *s)
 void StaticText::MakeDrawLabel(DrawLabel& l) const
 {
 	l.text = text;
-	l.font = Nvl(GetFontAttr(ATTR_FONT), StdFont());
-	l.ink = Nvl(GetColorAttr(ATTR_INK), SColorText());
-	l.align = Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT);
-	l.limg = GetAttr<Image>(ATTR_IMAGE);
+	l.font = GetFont();
+	l.ink = GetInk();
+	l.align = GetAlign();
+	l.limg = GetImage();
 	l.lspc = Nvl(GetIntAttr(ATTR_IMAGE_SPC), 0);
 	l.disabled = !IsShowEnabled();
 	l.accesskey = accesskey;
