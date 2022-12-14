@@ -1008,7 +1008,7 @@ CONSOLE_APP_MAIN
 			}
 		}
 		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
-		bi << BarLink(Www("bazaar", lang), t_("Bazaar"));
+		bi << BarLink(Www("UppHub", lang, "topic://ide/app/"), t_("UppHub"));
 		bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
 		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
