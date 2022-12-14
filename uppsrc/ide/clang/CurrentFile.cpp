@@ -73,7 +73,10 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 	}
 	if(!cfc.clang.tu || !annotations_done) return;
 	ClangVisitor v;
-	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
+	String tpath = current_file.filename;
+	if(GetFileExt(tpath) == ".icpp")
+		tpath = ForceExt(tpath, ".cpp");
+	v.WhenFile = [&] (const String& path) { return path == tpath; };
 	v.Do(cfc.clang.tu);
 	CppFileInfo f;
 	if(v.info.GetCount()) {
@@ -156,6 +159,8 @@ void CurrentFileThread()
 				String fn = f.filename;
 				if(!IsSourceFile(fn))
 					fn.Cat(".cpp");
+				if(GetFileExt(fn) == ".icpp")
+					fn = ForceExt(fn, ".cpp");
 				if(f.filename != cfc.parsed_file.filename || f.real_filename != cfc.parsed_file.real_filename ||
 				   f.includes != cfc.parsed_file.includes || f.defines != cfc.parsed_file.defines ||
 				   !cfc.clang.tu) {

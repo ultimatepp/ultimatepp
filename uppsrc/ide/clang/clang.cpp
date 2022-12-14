@@ -75,7 +75,7 @@ void Clang::Dispose()
 	tu = nullptr;
 }
 
-bool Clang::Parse(const String& filename, const String& content,
+bool Clang::Parse(const String& filename_, const String& content,
                   const String& includes_, const String& defines,
                   dword options,
                   const String& filename2, const String& content2)
@@ -89,9 +89,16 @@ bool Clang::Parse(const String& filename, const String& content,
 	Dispose();
 
 	String cmdline;
+	
+	String filename = filename_;
+	if((options & PARSE_FILE) && GetFileExt(filename) == ".icpp") {
+		String src = "#include \"" + filename + "\"";
+		filename = CacheFile(GetFileName(filename) + "$" + SHA1String(src) + ".cpp");
+		SaveChangedFile(filename, src);
+	}
 
 	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG ";
-
+	
 	if(IsCppSourceFile(filename))
 		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
 	else

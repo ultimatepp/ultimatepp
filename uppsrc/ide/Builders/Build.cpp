@@ -616,16 +616,12 @@ bool MakeBuild::IsAndroidMethod(const String& method) const
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "");
-	if (builder.IsEmpty()) {
-		Loge() << METHOD_NAME << "Failed to find builder.";
+	if (builder.IsEmpty())
 		return false;
-	}
 	
 	auto pBuilder = (*BuilderMap().Get(builder))();
-	if (!pBuilder) {
-		Loge() << METHOD_NAME << "Failed to get builder from builder map.";
+	if (!pBuilder)
 		return false;
-	}
 	
 	return AndroidBuilder::GetBuildersNames().Find(builder) > -1;
 }

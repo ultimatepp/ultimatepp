@@ -106,7 +106,7 @@ void DumpIndex(const char *file, const String& what_file)
 	FileOut out(file);
 	out << GetSysTime() << "\n";
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
-	for(const auto& m : ~x)	
+	for(const auto& m : ~x)
 		if(IsNull(what_file) || m.key == what_file) {
 			out << m.key << "\n";
 			for(const auto& n : m.value.items)
