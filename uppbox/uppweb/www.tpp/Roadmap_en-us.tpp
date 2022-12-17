@@ -26,6 +26,35 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
+[s3; 2022.3 (rev. 16624?) (Dec 2022)&]
+[s5;po*/ &]
+[s5;po [*/ Current stable release]&]
+[s5; &]
+[s0;ph [* Release highlights]&]
+[s5; &]
+[s5;l128;i150;O0; Homegrown C`+`+ parser in theide is replaced with 
+libclang resulting in new and improved Assist`+`+ features&]
+[s5;l128;i150;O0; Optimised memory consumption of U`+`+ widgets.&]
+[s5;l128;i150;O0; MacOS version is not released with 2022.3. We hope 
+to provide it again with the 2023.1.&]
+[s5; &]
+[s5; [* TheIDE:]&]
+[s5;l128;i150;O0; Autocomplete now correctly works in most cases 
+(except in template bodies, which is libclang limitation)&]
+[s5;l128;i150;O0; Code navigator refactored and improved&]
+[s5;l128;i150;O0; TheIDE now shows C`+`+ errors while editing sources&]
+[s5;l128;i150;O0; TheIDE now shows information tips about program 
+symbols when you leave mouse over it (documentation if available, 
+declaration signature if not)&]
+[s5;l128;i150;O0; New function `"Usage`" shows all usages of current 
+symbol through all project sources based on C`+`+ analysis. With 
+virtual methods, it shows all overrides of base class method.&]
+[s5; &]
+[s5; [* CtrlCore, CtrlLib:]&]
+[s5;l128;i150;O0; Memory consumption (esp. sizeof) of widgets greatly 
+reduced (by up to 70%).&]
+[s5;l128;i150;O0; LabelBox now allows center and right alignment.&]
+[s5; &]
 [s3; 2022.2 (rev. 16270) (May 2022)&]
 [s5;po*/ &]
 [s5;po [*/ Current stable release]&]
