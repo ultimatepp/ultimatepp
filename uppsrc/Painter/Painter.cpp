@@ -267,8 +267,8 @@ Painter& Painter::Text(double x, double y, const String& s, Font fnt, const doub
 
 Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, const double *dx)
 {
-	WString s = ToUtf32(text, n);
-	return Text(p, s, fnt, n < 0 ? s.GetCount() : n, dx);
+	WString s = ToUtf32(text, n < 0 ? strlen(text) : n);
+	return Text(p, s, fnt, s.GetCount(), dx);
 }
 
 Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, const double *dx)
