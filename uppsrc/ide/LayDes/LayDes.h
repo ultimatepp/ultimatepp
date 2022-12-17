@@ -343,7 +343,9 @@ private:
 	bool              usegrid;
 	bool              ignoreminsize;
 	bool              sizespring;
-
+	
+	String            hlStyles;
+	
 	WithMatrixLayout<TopWindow>  matrix;
 	WithSettingLayout<TopWindow> setting;
 
@@ -510,7 +512,7 @@ public:
 	void FindLayout(const String& name, const String& item) { designer.FindLayout(name, item); }
 	String GetCurrentLayout() const             { return designer.GetLayoutName(); }
 
-	LayDesigner()                               { parent.Add(designer.DesignerCtrl().SizePos()); }
+	LayDesigner(const String& hlStyles);
 };
 
 #endif

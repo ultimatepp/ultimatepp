@@ -31,7 +31,7 @@ void LayDes::EditBar(Bar& bar)
 	bar.Add(iscursor, AK_MATRIXDUPLICATE, THISBACK(Matrix));
 	bar.Add(islayout, "Select all", CtrlImg::select_all(), THISBACK(SelectAll))
 	   .Key(K_CTRL_A);
-	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
+	bar.Add(islayout, AK_VISGEN, LayImg::Members(), [=] { VisGen(); });
 	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
 	bar.Separator();
 	bar.Add(islayout && CurrentLayout().IsUndo(), "Undo", CtrlImg::undo(), THISBACK(Undo))
@@ -369,14 +369,15 @@ LayDes::LayDes()
 	setting.gridy <<= 4;
 }
 
-LayDesigner *CreateLayDesigner(const char *filename, byte charset, const char *cfgname)
+LayDesigner *CreateLayDesigner(
+	const char *filename, byte charset, const char *cfgname, const String& hlStyles)
 {
-	LayDesigner *q = new LayDesigner();
+	LayDesigner *q = new LayDesigner(hlStyles);
 	LoadFromGlobal(*q, "laydes-ctrl");
 	if(q->Load(filename, charset))
 		return q;
 	delete q;
-	return NULL;
+	return nullptr;
 }
 
 void LayUscClean();
@@ -389,24 +390,29 @@ bool IsLayFile(const char *path)
 }
 
 struct LayDesModule : public IdeModule {
-	virtual String       GetID() { return "LayDesModule"; }
-	virtual void CleanUsc() {
+	virtual String GetID() override { return "LayDesModule"; }
+	
+	virtual void CleanUsc() override {
 		LayUscClean();
 	}
-	virtual bool ParseUsc(CParser& p, String& current_namespace) {
+	
+	virtual bool ParseUsc(CParser& p, String& current_namespace) override {
 		return LayUscParse(p, current_namespace);
 	}
-	virtual Image FileIcon(const char *path) {
+	
+	virtual Image FileIcon(const char *path) override {
 		return IsLayFile(path) ? LayImg::Layout() : Null;
 	}
-	virtual IdeDesigner *CreateDesigner(const char *path, byte cs) {
+	
+	virtual IdeDesigner *CreateDesigner(Ide *ide, const char *path, byte cs) override {
 		if(IsLayFile(path)) {
-			LayDesigner *d = CreateLayDesigner(path, cs, "laydes-ctrl");
+			LayDesigner *d = CreateLayDesigner(path, cs, "laydes-ctrl", ide->editor.StoreHlStyles());
 			return d;
 		}
 		return NULL;
 	}
-	virtual void Serialize(Stream& s) {
+	
+	virtual void Serialize(Stream& s) override {
 		int version = 0;
 		s / version;
 		SerializeLayEditPos(s);

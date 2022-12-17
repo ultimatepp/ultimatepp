@@ -11,7 +11,7 @@ struct VisGenDlg : public WithVisGenLayout<TopWindow> {
 
 	typedef VisGenDlg CLASSNAME;
 
-	VisGenDlg(LayoutData& layout, const Vector<int>& cursor);
+	VisGenDlg(LayoutData& layout, const Vector<int>& cursor, const String& hlStyles);
 };
 
 bool VisGenDlg::HasItem(const char *id)
@@ -248,7 +248,7 @@ void VisGenDlg::Type()
 	Refresh();
 }
 
-VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
+VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor, const String& hlStyles)
 :	layout(layout)
 {
 	type <<= 0;
@@ -270,11 +270,11 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 			
 	name << [=] { Refresh(); };
 	
-
 	Refresh();
 	view.Highlight("cpp");
 	view.HideBar();
 	view.SetFont(CourierZ(12));
+	view.LoadHlStyles(hlStyles);
 	if(cursor.GetCount())
 		sel <<= cursor;
 	else
@@ -286,7 +286,7 @@ void LayDes::VisGen()
 {
 	if(IsNull(currentlayout))
 		return;
-	VisGenDlg dlg(CurrentLayout(), cursor);
+	VisGenDlg dlg(CurrentLayout(), cursor, hlStyles);
 	if(dlg.Run() == IDOK)
 		WriteClipboardText(~dlg.view);
 }
