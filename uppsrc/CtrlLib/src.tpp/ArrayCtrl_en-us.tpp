@@ -2564,7 +2564,9 @@ controls whether header is exported.&]
 [s5;:ArrayCtrl`:`:WhenSel: [_^Callback^ Callback]_[* WhenSel]&]
 [s2; Called whenever cursor or selection changes. This probably the 
 most common ArrayCtrl callback. We recommend to start with this 
-one first and use others only if necessary.&]
+one first and use others only if necessary. Note that WhenSel 
+can be invoked several times per single input event, that is 
+a feature, not a bug.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenLeftClick: [_^Callback^ Callback]_[* WhenLeftClick]&]

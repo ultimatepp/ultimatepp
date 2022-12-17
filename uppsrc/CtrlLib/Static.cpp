@@ -255,9 +255,9 @@ void LabelBox::Paint(Draw& w)
 	int ty = sz.cy < 2 * Draw::GetStdFontCy() ? (sz.cy - lsz.cy) / 2 : 0;
 	DrawLabel l;
 	MakeDrawLabel(l);
-	Size ts = l.Paint(this, w, d + DPI(2), ty, sz.cx, lsz.cy);
+	Rect tr = l.PaintRect(this, w, d + DPI(2), ty, sz.cx - 2 * (d + DPI(2)), lsz.cy);
 	w.Begin();
-	w.ExcludeClip(d, ty, ts.cx + DPI(4), ts.cy);
+	w.ExcludeClip(tr.left - DPI(2), ty, tr.GetWidth() + DPI(4), tr.GetHeight());
 	PaintLabelBox(w, sz, color, d);
 	w.End();
 }

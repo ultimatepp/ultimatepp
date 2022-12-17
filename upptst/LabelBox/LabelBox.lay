@@ -1,5 +1,8 @@
 LAYOUT(LabelBoxLayout, 340, 252)
-	ITEM(LabelBox, dv___0, SetLabel(t_("Standard")).LeftPosZ(4, 324).TopPosZ(4, 36))
-	ITEM(LabelBox, dv___1, SetLabel(t_("Magenta")).SetInk(LtMagenta).LeftPosZ(4, 324).TopPosZ(44, 36))
+	ITEM(Upp::LabelBox, dv___0, SetLabel(t_("Standard")).LeftPosZ(4, 324).TopPosZ(4, 36))
+	ITEM(Upp::LabelBox, dv___1, SetLabel(t_("Magenta")).SetInk(Upp::LtMagenta).LeftPosZ(4, 324).TopPosZ(44, 36))
+	ITEM(Upp::LabelBox, center, SetLabel(t_("Center")).LeftPosZ(4, 324).TopPosZ(88, 36))
+	ITEM(Upp::LabelBox, right, SetLabel(t_("Right")).LeftPosZ(4, 324).TopPosZ(132, 36))
+	ITEM(Upp::LabelBox, center2, SetLabel(t_("Center Red")).SetInk(Upp::Red).SetAlign(Upp::ALIGN_CENTER).LeftPosZ(4, 324).TopPosZ(176, 36))
 END_LAYOUT
 

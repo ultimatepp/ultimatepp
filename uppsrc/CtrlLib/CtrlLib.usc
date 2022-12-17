@@ -323,13 +323,19 @@ ctrl LabelBox {
 	GetStdSize() { return Size(64, 24); }
 
 	>Base;
-	Text SetLabel ? "Box label" ;
+	Text SetLabel ? "Box label";
 	Font SetFont = StdFont();
+	Color SetInk = :SBlack;
+	Align  SetAlign = ALIGN_LEFT;
 
 	Paint(w) {
 		sz = GetSize();
 		ts = GetSmartTextSize(.SetLabel, .SetFont);
 		d = ts.cy / 2;
+		if(.SetAlign == "ALIGN_RIGHT")
+			d = sz.cx - d;
+		if(.SetAlign == "ALIGN_CENTER")
+			d = sz.cx / 2 - d;
 		if(2 * GetSmartTextSize("X").cy > sz.cy) {
 			d = sz.cy / 2;
 			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
@@ -342,7 +348,7 @@ ctrl LabelBox {
 			d = ts.cy / 2;
 			DrawButtonFrame(w, RectC(0, d, sz.cx, sz.cy - d));
 			w.DrawRect(8, 0, ts.cx + 4, ts.cy, :SLtGray);
-			w.DrawSmartText(10, 0, .SetLabel, .SetFont);
+			w.DrawSmartText(10, 0, .SetLabel, .SetFont, .SetInk);
 		}
 	}
 }
