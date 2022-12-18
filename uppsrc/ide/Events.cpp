@@ -164,7 +164,7 @@ void AssistEditor::Events()
 	LoadFromGlobal(dlg, "EventsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "EventsDlg");
-	if(c == IDOK)
+	if(c != IDOK)
 		return;
 	String a, b;
 	dlg.Generate(a, b, nest, c == IDYES);

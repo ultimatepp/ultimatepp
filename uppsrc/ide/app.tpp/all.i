@@ -10,14 +10,6 @@ TOPIC("AndroidBuilder_en-us")
 #include "AndroidBuilder_en-us.tppi"
 END_TOPIC
 
-TOPIC("Assist2_en-us")
-#include "Assist2_en-us.tppi"
-END_TOPIC
-
-TOPIC("AssistParserDirectives_en-us")
-#include "AssistParserDirectives_en-us.tppi"
-END_TOPIC
-
 TOPIC("Assist_en-us")
 #include "Assist_en-us.tppi"
 END_TOPIC
