@@ -61,6 +61,7 @@ public:
 	static void           DarkTheme();
 	static void           WhiteTheme();
 	static void           DefaultHlStyles();
+	static void           InitOnce();
 
 	static const char    *GetHlName(int i);
 	static bool           HasHlFont(int i);

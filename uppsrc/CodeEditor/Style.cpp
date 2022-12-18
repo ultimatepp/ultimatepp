@@ -30,23 +30,46 @@ static bool s_hl_font[] = {
 };
 #undef  HL_COLOR
 
+void HighlightSetup::DefaultHlStyles()
+{
+	if(IsDarkTheme())
+		DarkTheme();
+	else
+		WhiteTheme();
+}
+
+inline void HighlightSetup::InitOnce()
+{
+	ONCELOCK {
+		static bool initialised;
+		if(!initialised) {
+			initialised = true;
+			DefaultHlStyles();
+		}
+	}
+}
+
 const HlStyle& HighlightSetup::GetHlStyle(int i)
 {
+	InitOnce();
 	return hl_style[i];
 }
 
 const char *HighlightSetup::GetHlName(int i)
 {
+	InitOnce();
 	return s_hl_name[i];
 }
 
 bool HighlightSetup::HasHlFont(int i)
 {
+	InitOnce();
 	return s_hl_font[i];
 }
 
 void  HighlightSetup::SetHlStyle(int i, Color c, bool bold, bool italic, bool underline)
 {
+	InitOnce();
 	HlStyle& st = hl_style[i];
 	st.color = c;
 	st.bold = bold;
@@ -230,14 +253,6 @@ void HighlightSetup::WhiteTheme()
 	
 	SetHlStyle(WHITESPACE, Blend(SColorLight, SColorHighlight));
 	SetHlStyle(WARN_WHITESPACE, Blend(SColorLight, SRed));
-}
-
-void HighlightSetup::DefaultHlStyles()
-{
-	if(IsDarkTheme())
-		DarkTheme();
-	else
-		WhiteTheme();
 }
 
 }

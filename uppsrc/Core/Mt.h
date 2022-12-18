@@ -283,7 +283,8 @@ typedef std::atomic<bool> OnceFlag;
 
 #define ONCELOCK_(o_b_) \
 for(static ::Upp::Mutex o_ss_; !o_b_.load(std::memory_order_acquire);) \
-	for(::Upp::Mutex::Lock o_ss_lock__(o_ss_); !o_b_.load(std::memory_order_acquire); o_b_.store(true, std::memory_order_release))
+	for(::Upp::Mutex::Lock o_ss_lock__(o_ss_); !o_b_.load(std::memory_order_acquire); \
+	    o_b_.store(true, std::memory_order_release))
 
 #define ONCELOCK \
 for(static ::Upp::OnceFlag o_b_; !o_b_.load(std::memory_order_acquire);) ONCELOCK_(o_b_)
