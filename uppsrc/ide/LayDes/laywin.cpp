@@ -370,8 +370,13 @@ LayDes::LayDes()
 }
 
 LayDesigner *CreateLayDesigner(
-	const char *filename, byte charset, const char *cfgname, const String& hlStyles)
+	Ide* ide, const char *filename, byte charset, const char *cfgname)
 {
+	String hlStyles;
+	if (ide) {
+		hlStyles = ide->editor.StoreHlStyles();
+	}
+	
 	LayDesigner *q = new LayDesigner(hlStyles);
 	LoadFromGlobal(*q, "laydes-ctrl");
 	if(q->Load(filename, charset))
@@ -406,7 +411,7 @@ struct LayDesModule : public IdeModule {
 	
 	virtual IdeDesigner *CreateDesigner(Ide *ide, const char *path, byte cs) override {
 		if(IsLayFile(path)) {
-			LayDesigner *d = CreateLayDesigner(path, cs, "laydes-ctrl", ide->editor.StoreHlStyles());
+			LayDesigner *d = CreateLayDesigner(ide, path, cs, "laydes-ctrl");
 			return d;
 		}
 		return NULL;
