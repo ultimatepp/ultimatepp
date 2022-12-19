@@ -57,8 +57,7 @@ reduced (by up to 70%).&]
 [s5; &]
 [s3; 2022.2 (rev. 16270) (May 2022)&]
 [s5;po*/ &]
-[s5;po [*/ Current stable release]&]
-[s5; &]
+[s5;po*/ &]
 [s5; This release serves mainly as a service pack to 2022.1 and contains 
 significant number of resolved issues. There are limited set 
 of new features.&]

@@ -43,8 +43,8 @@ bool SetupGITMaster()
 	String myapps = GetExeDirFile("MyApps");
 #else
 	String out = GetHomeDirFile("out");
-	String ass = GetConfigFolder();
-	String myapps = GetHomeDirFile("MyApps");
+	String ass = GetConfigFolder();mc
+	String myapps = GetHomeDirFile("MyApps");make
 #endif
 	RealizeDirectory(out);
 	

@@ -619,7 +619,7 @@ bool MakeBuild::IsAndroidMethod(const String& method) const
 	if (builder.IsEmpty())
 		return false;
 	
-	auto pBuilder = (*BuilderMap().Get(builder))();
+	One<Builder> pBuilder = (*BuilderMap().Get(builder))();
 	if (!pBuilder)
 		return false;
 	

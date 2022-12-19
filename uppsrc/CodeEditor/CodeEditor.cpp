@@ -1283,6 +1283,7 @@ CodeEditor::CodeEditor()
 	bar.WhenAnnotationRightClick = WhenAnnotationRightClick.Proxy();
 	barline = true;
 	sb.WithSizeGrip();
+	HighlightSetup::InitOnce();
 	Highlight(Null);
 	sb.y.NoAutoHide();
 	sb.y.AddFrame(topsbbutton);
