@@ -444,6 +444,11 @@ Ide::Ide()
 	editor.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
+	tabs.WhenClose = [=](Value file) { // remove file from Ctrl+Tab logic
+		int q = FindIndex(tablru, ~file);
+		if(q >= 0)
+			tablru.Remove(q);
+	};
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
 //	editor2.SetFrame(NullFrame());
 	editor2.theide = this;
