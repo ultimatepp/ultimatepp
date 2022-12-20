@@ -19,6 +19,7 @@ private:
 	Rect          margin;
 	Color         background;
 	Color         textcolor;
+	Color         highlight_color = SYellow();
 	Zoom          zoom;
 	int           cx;
 	ScrollBar     sb;
@@ -96,6 +97,7 @@ public:
 	RichTextView&   SetZoom(Zoom z);
 	RichTextView&   Background(Color _color);
 	RichTextView&   TextColor(Color _color);
+	RichTextView&   Highlight(Color _color);
 	RichTextView&   VCenter(bool b = true);
 	RichTextView&   NoVCenter()                               { return VCenter(false); }
 	RichTextView&   Margins(const Rect& m);

@@ -53,6 +53,7 @@ void  RichTextView::Paint(Draw& w)
 	}
 	pi.indexentry = Null;
 	pi.highlightpara = highlight;
+	pi.highlight = highlight_color;
 	pi.zoom = GetZoom();
 	pi.textcolor = textcolor;
 	int q = sb * pi.zoom;
@@ -402,6 +403,13 @@ RichTextView& RichTextView::Background(Color c)
 RichTextView& RichTextView::TextColor(Color _color)
 {
 	textcolor = _color;
+	Refresh();
+	return *this;
+}
+
+RichTextView& RichTextView::Highlight(Color _color)
+{
+	highlight_color = _color;
 	Refresh();
 	return *this;
 }
