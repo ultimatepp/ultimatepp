@@ -179,6 +179,8 @@ public:
 	virtual bool             IdeConsoleWait() = 0;
 	virtual bool             IdeConsoleWait(int slot) = 0;
 	virtual void             IdeConsoleOnFinish(Event<>  cb) = 0;
+	
+	virtual void             IdeProcessEvents() = 0;
 
 	virtual bool      IdeIsDebug() const = 0;
 	virtual void      IdeEndDebug() = 0;
@@ -242,6 +244,8 @@ void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 bool             IdeConsoleWait(int slot);
 void             IdeConsoleOnFinish(Event<>  cb);
+
+void             IdeProcessEvents();
 
 String GetSourcePackage(const String& path);
 
@@ -576,6 +580,8 @@ struct Builder {
 	Vector<String>   Macro;
 
 	VectorMap<String, int> tmpfilei; // for naming automatic response files
+	
+	static VectorMap<String, String> cmdx_cache; // caching e.g. pkg-config
 
 	String                 CmdX(const char *s);
 

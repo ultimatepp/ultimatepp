@@ -256,12 +256,20 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
 	LLOG("epipe[" << epipe[0] << ", " << epipe[1] << "]");
 
-#ifdef CPU_BLACKFIN
-	pid = vfork(); //we *can* use vfork here, since exec is done later or the parent will exit
-#else
+	Vector<const char *> env;
+	if(envptr) { // need to do this while heap is working
+		const char *from = envptr;
+		while(*from) {
+			env.Add(from);
+			from += strlen(from) + 1;
+		}
+		env.Add(NULL);
+	}
+	
 	pid = fork();
-#endif
-	LLOG("\tfork, pid = " << (int)pid << ", getpid = " << (int)getpid());
+	// Warning: other threads are dead after this point, which means heap might be locked
+
+	LLOG("\tfork, pid = " << (int)pid << ", getpid = " << (int)getpid()); // LOGs are iffy because of ^^^^
 	if(pid < 0)
 		return false;
 //		throw Exc(NFormat(t_("fork() error; error code = %d"), errno));
@@ -330,12 +338,6 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 
 	LLOG("running execve, app = " << app << ", #args = " << args.GetCount());
 	if(envptr) {
-		const char *from = envptr;
-		Vector<const char *> env;
-		while(*from) {
-			env.Add(from);
-			from += strlen(from) + 1;
-		}
 		env.Add(NULL);
 		execve(app_full, args.Begin(), (char *const *)env.Begin());
 	}

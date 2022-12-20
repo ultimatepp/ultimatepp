@@ -135,6 +135,11 @@ void Ide::IdeConsoleOnFinish(Event<>  cb)
 	console.OnFinish(cb);
 }
 
+void Ide::IdeProcessEvents()
+{
+	Ctrl::ProcessEvents();
+}
+
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
 	right.Add(ctrl.SizePos());
