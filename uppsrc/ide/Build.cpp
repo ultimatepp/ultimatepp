@@ -30,6 +30,7 @@ void Ide::BeginBuilding(bool clear_console)
 {
 	SetupDefaultMethod();
 	HdependTimeDirty();
+	Builder::cmdx_cache.Clear();
 	Renumber();
 	StopDebug();
 	ShowConsole();

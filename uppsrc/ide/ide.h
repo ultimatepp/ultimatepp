@@ -399,6 +399,7 @@ public:
 	virtual   bool             IdeConsoleWait();
 	virtual   bool             IdeConsoleWait(int slot);
 	virtual   void             IdeConsoleOnFinish(Event<>  cb);
+	virtual   void             IdeProcessEvents();
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();

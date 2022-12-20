@@ -444,6 +444,7 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console)
 {
 	InitBlitz();
+	Builder::cmdx_cache.Clear();
 
 	String hfile = outfile + ".xxx";
 	SaveFile(hfile, "");

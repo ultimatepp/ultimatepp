@@ -11,6 +11,8 @@ void PutVerbose(const char *s) { if(the_ide) the_ide->PutVerbose(s); }
 void PutLinking()              { if(the_ide) the_ide->PutLinking(); }
 void PutLinkingEnd(bool ok)    { if(the_ide) the_ide->PutLinkingEnd(ok); }
 
+void IdeProcessEvents()        { if(the_ide) the_ide->IdeProcessEvents(); }
+
 const Workspace& GetIdeWorkspace()
 {
 	if(the_ide)
