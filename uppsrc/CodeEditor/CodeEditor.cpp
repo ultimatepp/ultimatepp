@@ -696,7 +696,7 @@ void CodeEditor::SyncTip()
 	Rect wa = GetWorkArea();
 	Point p = Upp::GetMousePos();
 	MouseTip mt;
-	mt.background = SColorInfo();
+	mt.background = Blend(SWhite(), SLtYellow());
 	mt.pos = tippos;
 	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
 	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt) && p == delayed_pos)) {
