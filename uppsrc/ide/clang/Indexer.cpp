@@ -136,7 +136,7 @@ void Indexer::BuildingPause()
 
 void Indexer::IndexerThread()
 {
-	Thread::DumpDiagnostics();
+//	Thread::DumpDiagnostics();
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
 		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
