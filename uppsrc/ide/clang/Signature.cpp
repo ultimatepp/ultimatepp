@@ -158,7 +158,9 @@ String CleanupId(const char *s)
 				mm.Cat(*s++);
 		}
 	}
-	return mm;
+	String m = mm;
+	m.TrimEnd("=0");
+	return m;
 }
 
 String CleanupPretty(const String& signature)

@@ -63,6 +63,8 @@ public:
 	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1));
 	const RichText& Get() const                               { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const      { return AsQTF(text, cs); }
+	
+	int             GetCursor() const                         { return cursor; }
 
 	int             GetWidth() const                          { return text.GetWidth(); }
 	int             GetHeight(int cx) const                   { return text.GetHeight(Zoom(1, 1), cx); }
