@@ -512,13 +512,13 @@ void Ide::SetupFormat() {
 			hlstyle_is_default = true;
 		}
 		if(c == 334 && PromptYesNo("Set white theme?")) {
-			editor.WhiteTheme();
+			editor.WhiteTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
 		}
 		if(c == 335 && PromptYesNo("Set dark theme?")) {
-			editor.DarkTheme();
+			editor.DarkTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
