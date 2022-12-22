@@ -23,9 +23,6 @@ TextCtrl::TextCtrl()
 	color[WHITESPACE] = Blend(SColorLight, SColorHighlight);
 	color[WARN_WHITESPACE] = Blend(SColorLight, SRed);
 	
-	DDUMP(color[INK_NORMAL]);
-	DDUMP(color[PAPER_NORMAL]);
-
 	processtab = true;
 	processenter = true;
 	nobg = false;
