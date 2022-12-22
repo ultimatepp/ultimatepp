@@ -323,7 +323,10 @@ void AppMain___()
 			if(h.gui_font_override)
 				SetStdFont(h.gui_font);
 			auto v = GetAllChSkins();
+			DLOG("SetSkin ===== ");
 			Ctrl::SetSkin(v[clamp(h.chstyle, 0, v.GetCount() - 1)].a);
+			DDUMP(SColorText());
+			DDUMP(SColorPaper());
 		}
 
 		Ide ide;
