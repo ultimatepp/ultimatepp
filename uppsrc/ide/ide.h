@@ -833,6 +833,7 @@ public:
 		void  InsertMenu(Bar& bar);
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
+		void  InsertReformat(Bar& bar);
 		void  AssistEdit(Bar& menu);
 		void  EditorMenu(Bar& bar);
 		void  ToggleWordwrap();
@@ -840,9 +841,9 @@ public:
         void  CopyPosition();
         void  GotoPosition();
         
-    void      Reformat(Bar& menu);
-        bool  ReformatCurrentFile();
-        bool  ReformatSelection();
+    void      ReformatMenu(Bar& menu);
+        void  ReformatFile();
+        void  ReformatComment();
 
 	void OnlineSearchMenu(Bar& menu);
 
@@ -872,7 +873,6 @@ public:
 		void  ToComment();
 		void  CommentLines();
 		void  UnComment();
-		void  ReformatComment();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();

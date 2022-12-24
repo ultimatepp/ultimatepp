@@ -76,3 +76,13 @@ void Ide::FormatJSON_XML_File(bool xml)
 		EditAsText();
 	}
 }
+
+void Ide::ReformatFile()
+{
+	
+}
+
+void Ide::ReformatComment()
+{
+	editor.ReformatComment();
+}
