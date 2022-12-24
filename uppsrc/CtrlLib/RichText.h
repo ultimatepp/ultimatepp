@@ -56,6 +56,7 @@ public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
 	Event<>              WhenLeftClick;
+	Gate<const String&>  WhenHighlight;
 
 	void            Clear();
 	void            Pick(RichText&& t);

@@ -53,6 +53,7 @@ void  RichTextView::Paint(Draw& w)
 	}
 	pi.indexentry = Null;
 	pi.highlightpara = highlight;
+	pi.WhenHighlight = WhenHighlight;
 	pi.highlight = highlight_color;
 	pi.zoom = GetZoom();
 	pi.textcolor = textcolor;
@@ -325,9 +326,10 @@ bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool 
 	bool ret = false;
 	for(int i = 0; i < f.GetCount(); i++) {
 		if(match(f[i].data)) {
-			sb = f[i].py.y;
 			if(dohighlight)
 				highlight = f[i].pos;
+			else
+				sb = f[i].py.y;
 			Refresh();
 			if(!find_last)
 				return true;
