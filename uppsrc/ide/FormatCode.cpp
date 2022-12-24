@@ -1,6 +1,6 @@
 #include "ide.h"
 
-bool ReFormatJSON_XML( String& text, bool xml)
+bool ReFormatJSON_XML(String& text, bool xml)
 {
 	if(xml) {
 		try {
@@ -63,7 +63,25 @@ void Ide::FormatXML()
 
 void Ide::ReformatFile()
 {
+	String cmd;
+	cmd << "clang-format --style=Google " << editfile;
 	
+	Host host;
+	CreateHost(host);
+	
+	StringStream ss;
+	int code = host.Execute(cmd, ss);
+	if (code < 0) {
+		ErrorOK(IntStr(code));
+		return;
+	}
+	
+	PutConsole(cmd);
+	PutConsole(IntStr(code));
+	
+	editor.NextUndo();
+	editor.Remove(0, editor.GetLength());
+	editor.Insert(0, String(ss));
 }
 
 void Ide::ReformatComment()

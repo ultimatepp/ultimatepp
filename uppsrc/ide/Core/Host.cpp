@@ -378,6 +378,7 @@ void Host::AddExecutable(const String& dir, const String& exe)
 		Loge() << METHOD_NAME << "Following executable file \"" << p << "\" doesn't exists.";
 		return;
 	}
+	Logd() << METHOD_NAME << dir;
 	exedirs.Add(dir);
 }
 

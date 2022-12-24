@@ -102,8 +102,8 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 		VectorMap<String, String> env = clone(Environment());
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
 #ifdef PLATFORM_WIN32
-		host.AddExecutable("bin/mingit/cmd", "git.exe");
-		host.AddExecutable("bin/clang-format", "clang-format.exe");
+		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
+		host.AddExecutable(GetExeDirFile("bin/clang-format"), "clang-format.exe");
 		
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 #else
