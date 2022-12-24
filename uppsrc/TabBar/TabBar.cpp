@@ -2234,6 +2234,10 @@ int TabBar::GetTargetTab(Point p)
 
 	int f = GetFirst();
 	int l = GetLast();
+	int n = tabs.GetCount();
+
+	if(f < 0 || f >= n || l < 0 || l >= n)
+		return -1;
 	
 	if(tabs[f].visible && p.x < tabs[f].pos.x + tabs[f].size.cx / 2)
 		return f;
@@ -2251,9 +2255,9 @@ int TabBar::GetTargetTab(Point p)
 		l = FindStackHead(tabs[l].stack);
 		
 	if(t == l)
-		t = tabs.GetCount();
+		t = n;
 	else
-	 	t = GetNext(t);
+		t = GetNext(t);
 
 	return t;
 }
