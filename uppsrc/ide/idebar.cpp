@@ -149,9 +149,9 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
-	menu.Add(b, AK_FORMATJSON, THISBACK(FormatJSON))
+	menu.Add(b, AK_FORMAT_JSON, THISBACK(FormatJSON))
 	    .Help("Reformat JSON");
-	menu.Add(b, AK_FORMATXML, THISBACK(FormatXML))
+	menu.Add(b, AK_FORMAT_XML, THISBACK(FormatXML))
 	    .Help("Reformat XML");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
 	    .Help("Convert letters in selection to uppercase");
@@ -285,6 +285,11 @@ void Ide::Edit(Bar& menu)
 
 	if(!designer && menu.IsMenuBar())
 		InsertAdvanced(menu);
+}
+
+void Ide::Reformat(Bar& menu)
+{
+	// menu.Add("Reformat file
 }
 
 bool Ide::HasMacros()

@@ -839,6 +839,10 @@ public:
 
         void  CopyPosition();
         void  GotoPosition();
+        
+    void      Reformat(Bar& menu);
+        bool  ReformatCurrentFile();
+        bool  ReformatSelection();
 
 	void OnlineSearchMenu(Bar& menu);
 
