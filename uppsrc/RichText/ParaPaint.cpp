@@ -180,7 +180,7 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		pw.tracer->Paragraph(rc.page, h, *this);
 	}
 	
-	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
+	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len || pi.WhenHighlight(format.label);
 	int hy = rc.py.y - format.before - format.ruler;
 	int phy = rc.py.page;
 	if(format.ruler && hy >= 0 && hy + format.ruler < rc.page.bottom)
