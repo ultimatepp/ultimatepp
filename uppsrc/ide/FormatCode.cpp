@@ -61,22 +61,6 @@ void Ide::FormatXML()
 	FormatJSON_XML(true);
 }
 
-void Ide::FormatJSON_XML_File(bool xml)
-{
-	if(IsNull(editfile))
-		return;
-	if(GetFileLength(editfile) >= 75*1024*1024)
-		Exclamation("Too big to reformat");
-	SaveFile();
-	String text = LoadFile(editfile);
-	if(!ReFormatJSON_XML(text, xml))
-		return;
-	if(PromptYesNo("Overwrite \1" + editfile + "\1 with reformated " + (xml ? "XML" : "JSON") + "?")) {
-		Upp::SaveFile(editfile, text);
-		EditAsText();
-	}
-}
-
 void Ide::ReformatFile()
 {
 	

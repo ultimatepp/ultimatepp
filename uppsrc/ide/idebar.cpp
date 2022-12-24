@@ -296,13 +296,9 @@ void Ide::ReformatMenu(Bar& menu)
 	menu.Add(b, AK_REFORMAT_CODE, [=] { ReformatFile(); })
 		.Help("Reformat current file with clang-format");
 	menu.Separator();
-	// TODO: Below options looks like the duplication of functionality
-	// Discuss it's removal during code review process...
-	menu.Add(AK_REFORMAT_JSON, [=] { FormatJSON_XML_File(false); });
-		menu.Add(AK_REFORMAT_XML, [=] { FormatJSON_XML_File(true); });
-	menu.Add(b, AK_FORMAT_JSON, [=] { FormatJSON(); })
+	menu.Add(b, AK_REFORMAT_JSON, [=] { FormatJSON(); })
 	    .Help("Reformat JSON");
-	menu.Add(b, AK_FORMAT_XML, [=] { FormatXML(); })
+	menu.Add(b, AK_REFORMAT_XML, [=] { FormatXML(); })
 	    .Help("Reformat XML");
 	menu.Separator();
 	menu.Add(b, AK_REFORMAT_COMMENT, [=] { ReformatComment(); })
