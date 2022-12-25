@@ -1,0 +1,18 @@
+---
+BasedOnStyle: LLVM
+UseTab: AlignWithSpaces 
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 96
+---
+Language: Cpp
+BreakBeforeBraces: Stroustrup
+BreakConstructorInitializers: BeforeComma
+CompactNamespaces: true
+DerivePointerAlignment: false
+PointerAlignment: Left
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+    AfterControlStatements: false
+IndentAccessModifiers: false
+IndentPPDirectives: BeforeHash

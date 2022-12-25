@@ -64,7 +64,7 @@ void Ide::FormatXML()
 void Ide::ReformatFile()
 {
 	String cmd;
-	cmd << "clang-format --style=Google " << editfile;
+	cmd << "clang-format " << editfile;
 	
 	Host host;
 	CreateHost(host);
