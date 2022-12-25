@@ -27,7 +27,7 @@ void Ide::FormatJSON_XML(bool xml)
 {
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
-	if((sel ? h - l : editor.GetLength()) > 75*1024*1024) {
+	if((sel ? h - l : editor.GetLength()) > 75 * 1024 * 1024) {
 		Exclamation("Too big to reformat");
 		return;
 	}
@@ -51,40 +51,32 @@ void Ide::FormatJSON_XML(bool xml)
 	}
 }
 
-void Ide::FormatJSON()
-{
-	FormatJSON_XML(false);
-}
-
-void Ide::FormatXML()
-{
-	FormatJSON_XML(true);
-}
+void Ide::FormatJSON() { FormatJSON_XML(false); }
+void Ide::FormatXML() { FormatJSON_XML(true); }
 
 void Ide::ReformatFile()
 {
+	SaveFile();
+
 	String cmd;
 	cmd << "clang-format " << editfile;
-	
+
 	Host host;
 	CreateHost(host);
-	
+
 	StringStream ss;
 	int code = host.Execute(cmd, ss);
-	if (code < 0) {
+	if(code < 0) {
 		ErrorOK(IntStr(code));
 		return;
 	}
-	
+
 	PutConsole(cmd);
 	PutConsole(IntStr(code));
-	
+
 	editor.NextUndo();
 	editor.Remove(0, editor.GetLength());
 	editor.Insert(0, String(ss));
 }
 
-void Ide::ReformatComment()
-{
-	editor.ReformatComment();
-}
+void Ide::ReformatComment() { editor.ReformatComment(); }
