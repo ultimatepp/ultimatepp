@@ -270,7 +270,7 @@ String ClangFormat::GenerateClangFormatFileNotFoundErrorMsg()
 {
 	return "Error: Failed to find associated .clang-format or _clang-format. "
 		   "Make sure this file exists in your source tree. We highly "
-		   "recommend to keep it on assembly level.\nMoreover, please keep in mind that "
+		   "recommend to keep it on assembly level. Moreover, please keep in mind that "
 		   ".clang-format file should be bundle with U++ installation and available for "
 		   "common assemblies. If you do not have this file try to make fresh instalaltion "
 		   "of U++.";
