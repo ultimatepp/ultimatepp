@@ -638,7 +638,7 @@ void Ctrl::Proc()
 			if(x)
 				kv = x->b;
 			else {
-				if(GetCtrl() | GetAlt()) {// fix Ctrl+Shift+1 etc...
+				if(GetCtrl() || GetAlt()) {// fix Ctrl+Shift+1 etc...
 					static VectorMap<int, int> hwkv;
 					ONCELOCK {
 						for(int k : { GDKEY(0), GDKEY(1), GDKEY(2), GDKEY(3), GDKEY(4),
