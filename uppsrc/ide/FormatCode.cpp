@@ -149,7 +149,9 @@ ClangFormat::Output ClangFormat::Execute(const Parameters& params)
 	}
 	cmd << temp_file;
 	
-	m_ide->PutConsole(cmd);
+	if (m_ide->IsVerbose()) {
+		m_ide->PutConsole(cmd);
+	}
 	
 	auto output = Execute0(cmd);
 	DeleteFile(temp_file);
@@ -227,38 +229,28 @@ void Ide::ReformatFile()
 	try {
 		replacmenets = output.FindReplacments();
 	} catch(const XmlError& e) {
-		PutConsole("XML Parsing error: " + e); // TODO: Better error handling...
+		PutConsole(String() << "Error: Failed to parse clang-format ouput with error \"" << e << "\".");
 		return;
 	}
-	PutConsole(String() << "Replacmenets: " << replacmenets.GetCount());
 	
 	editor.NextUndo();
+	int shift = 0;
 	for(const auto& replacmenet : replacmenets) {
 		int data_count = replacmenet.m_data.GetCount();
 		int length = replacmenet.m_length;
-		int offset = replacmenet.m_offset;
+		int offset = replacmenet.m_offset + shift;
 		
 		if (length > 0) {
 			editor.SetSelection(offset, offset + length);
 			editor.RemoveSelection();
-			//editor.Remove(offset, length);
+			
+			shift -= length;
 		}
 		if (data_count > 0) {
 			editor.Insert(offset, replacmenet.m_data);
+			shift += data_count;
 		}
 	}
-	
-	/*
-	editor.NextUndo();
-	if(sel) {
-		editor.Remove(l, h - l);
-		editor.SetSelection(l, l + editor.Insert(l, output.m_raw_result));
-	}
-	else {
-		editor.Remove(0, editor.GetLength());
-		editor.Insert(0, output.m_raw_result);
-	}
-	*/
 }
 
 void Ide::ReformatComment() { editor.ReformatComment(); }
