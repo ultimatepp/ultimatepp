@@ -83,6 +83,7 @@ public:
 	Output Execute(const Parameters& params);
 
 private:
+	String SaveTemporaryFileToFormat(const String& file);
 	Output Execute0(const String& cmd);
 	
 	static String GenerateClangFormatNotFoundErrorMsg();
@@ -106,15 +107,20 @@ Vector<ClangFormat::Output::Replacment> ClangFormat::Output::FindReplacments() c
 	}
 	p.PassTag("replacements");
 	while (!p.End()) {
-		if(p.TagE("replacement")) {
+		if(p.Tag("replacement")) {
 			Replacment replacment;
 			replacment.m_offset = p.Int("offset");
 			replacment.m_length = p.Int("length");
-			replacment.m_data = p.ReadText();
-			replacmenets.Add(replacment);
-		}
 			
-		p.Skip();
+			if (p.IsText()) {
+				replacment.m_data = p.ReadText();
+			}
+			replacmenets.Add(replacment);
+			
+			p.PassEnd();
+		} else {
+			p.Skip();
+		}
 	}
 	
 	return replacmenets;
@@ -128,6 +134,12 @@ ClangFormat::ClangFormat(Ide* ide)
 
 ClangFormat::Output ClangFormat::Execute(const Parameters& params)
 {
+	auto temp_file = SaveTemporaryFileToFormat(params.m_file);
+	if (temp_file.IsEmpty()) {
+		PutConsole(String() << "Error: failed to save temporary file for formatting.");
+		return {"", -1};
+	}
+	
 	String cmd = "clang-format ";
 	if (params.m_output_replacments_xml) {
 		cmd << "--output-replacements-xml ";
@@ -135,9 +147,32 @@ ClangFormat::Output ClangFormat::Execute(const Parameters& params)
 	if (!IsNull(params.m_offset) && !IsNull(params.m_length)) {
 		cmd << "--offset=" << IntStr(params.m_offset) << " --length=" << IntStr(params.m_length) << " ";
 	}
-	cmd << params.m_file;
+	cmd << temp_file;
+	
 	m_ide->PutConsole(cmd);
-	return Execute0(cmd);
+	
+	auto output = Execute0(cmd);
+	DeleteFile(temp_file);
+	
+	return output;
+}
+
+String ClangFormat::SaveTemporaryFileToFormat(const String& file)
+{
+	auto file_name = GetFileName(file);
+	
+	auto temp_file = file.Left(file.ReverseFind(DIR_SEPS) + 1);
+	m_ide->PutConsole(temp_file);
+	temp_file += "_ide_file_to_format_" + file_name;
+	
+	if (FileExists(temp_file)) {
+		DeleteFile(temp_file);
+	}
+	
+	FileOut out(temp_file);
+	m_ide->editor.Save(out, CHARSET_UTF8, TextCtrl::LE_LF);
+	
+	return temp_file;
 }
 
 ClangFormat::Output ClangFormat::Execute0(const String& cmd)
@@ -171,8 +206,6 @@ String ClangFormat::GenerateClangFormatNotFoundErrorMsg() {
 
 void Ide::ReformatFile()
 {
-	SaveFile();
-
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
 
@@ -180,7 +213,7 @@ void Ide::ReformatFile()
 	params.m_file = editfile;
 	if (sel) {
 		params.m_offset = l;
-		params.m_length = h - l;
+		params.m_length = (h - l);
 	}
 	params.m_output_replacments_xml = true;
 
@@ -194,16 +227,28 @@ void Ide::ReformatFile()
 	try {
 		replacmenets = output.FindReplacments();
 	} catch(const XmlError& e) {
-		PutConsole(e); // TODO: Better error handling...
+		PutConsole("XML Parsing error: " + e); // TODO: Better error handling...
 		return;
 	}
 	PutConsole(String() << "Replacmenets: " << replacmenets.GetCount());
 	
 	editor.NextUndo();
 	for(const auto& replacmenet : replacmenets) {
+		int data_count = replacmenet.m_data.GetCount();
+		int length = replacmenet.m_length;
+		int offset = replacmenet.m_offset;
 		
+		if (length > 0) {
+			editor.SetSelection(offset, offset + length);
+			editor.RemoveSelection();
+			//editor.Remove(offset, length);
+		}
+		if (data_count > 0) {
+			editor.Insert(offset, replacmenet.m_data);
+		}
 	}
 	
+	/*
 	editor.NextUndo();
 	if(sel) {
 		editor.Remove(l, h - l);
@@ -213,6 +258,7 @@ void Ide::ReformatFile()
 		editor.Remove(0, editor.GetLength());
 		editor.Insert(0, output.m_raw_result);
 	}
+	*/
 }
 
 void Ide::ReformatComment() { editor.ReformatComment(); }
