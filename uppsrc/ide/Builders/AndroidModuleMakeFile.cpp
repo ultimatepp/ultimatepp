@@ -140,14 +140,14 @@ void AndroidModuleMakeFile::AppendModules(String& makeFile) const
 			if(i == 0)
 				makeFile << "\n";
 			
-			const String androidPrefix = "android_";
+			const String android_prefix = "android_";
 			
-			String module = staticModuleLibraries[i];
-			if(module.StartsWith(androidPrefix))
-				module.Remove(0, androidPrefix.GetCount());
-			module = "android/" + module;
+			String module_name = staticModuleLibraries[i];
+			if(module_name.StartsWith(android_prefix))
+				module_name.Remove(0, android_prefix.GetCount());
+			module_name = "android/" + module_name;
 			
-			makeFile << "$(call import-module, " << module << ")\n";
+			makeFile << "$(call import-module, " << module_name << ")\n";
 		}
 	}
 }
