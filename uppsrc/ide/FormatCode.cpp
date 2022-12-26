@@ -80,13 +80,18 @@ public:
 public:
 	ClangFormat(Ide* ide);
 
+	void PutErrorOnConsole(const String& output);
+	static bool HasAssociatedClangFormatFile(const String& file);
 	Output Execute(const Parameters& params);
 
 private:
+	static bool HasClangFormatFile(const String& dir);
+
 	String SaveTemporaryFileToFormat(const String& file);
 	Output Execute0(const String& cmd);
 
 	static String GenerateClangFormatNotFoundErrorMsg();
+	static String GenerateClangFormatFileNotFoundErrorMsg();
 
 private:
 	String m_file;
@@ -133,11 +138,56 @@ ClangFormat::ClangFormat(Ide* ide)
 	m_ide->CreateHost(m_host);
 }
 
+void ClangFormat::PutErrorOnConsole(const String& output)
+{
+	m_ide->ConsoleClear();
+	m_ide->ConsoleShow();
+	PutConsole(output);
+	m_ide->BeepMuteExclamation();
+}
+
+bool ClangFormat::HasAssociatedClangFormatFile(const String& file)
+{
+	String dir = GetFileFolder(file);
+
+	while(!dir.IsEmpty()) {
+		if(HasClangFormatFile(dir)) {
+			return true;
+		}
+
+		auto dir_sep_pos = dir.ReverseFind(DIR_SEPS);
+		if(dir_sep_pos == -1) {
+			break;
+		}
+		dir = dir.Left(dir.ReverseFind(DIR_SEPS));
+	}
+
+	return false;
+}
+
+bool ClangFormat::HasClangFormatFile(const String& dir)
+{
+	const Vector<String> valid_files = {".clang-format", "_clang-format"};
+	for(const auto& valid_file : valid_files) {
+		String path = dir + DIR_SEPS + valid_file;
+		Logd() << path;
+		if(FileExists(path)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 ClangFormat::Output ClangFormat::Execute(const Parameters& params)
 {
+	if(!HasAssociatedClangFormatFile(params.m_file)) {
+		PutErrorOnConsole(GenerateClangFormatFileNotFoundErrorMsg());
+		return {"", -1};
+	}
+
 	auto temp_file = SaveTemporaryFileToFormat(params.m_file);
 	if(temp_file.IsEmpty()) {
-		PutConsole(String() << "Error: failed to save temporary file for formatting.");
+		PutConsole("Error: failed to save temporary file for formatting.");
 		return {"", -1};
 	}
 
@@ -165,8 +215,12 @@ String ClangFormat::SaveTemporaryFileToFormat(const String& file)
 {
 	auto file_name = GetFileName(file);
 
-	auto temp_file = file.Left(file.ReverseFind(DIR_SEPS) + 1);
-	m_ide->PutConsole(temp_file);
+	auto dir_sep_pos = file.ReverseFind(DIR_SEPS);
+	if(dir_sep_pos == -1) {
+		return {};
+	}
+
+	auto temp_file = file.Left(dir_sep_pos + 1);
 	temp_file += "_ide_file_to_format_" + file_name;
 
 	if(FileExists(temp_file)) {
@@ -184,19 +238,18 @@ ClangFormat::Output ClangFormat::Execute0(const String& cmd)
 	StringStream ss;
 	int code = m_host.Execute(cmd, ss);
 	if(code != 0) {
-		m_ide->ConsoleClear();
-		m_ide->ConsoleShow();
+		String error;
 		if(IsNull(code)) {
-			PutConsole(String() << "Error: " << GenerateClangFormatNotFoundErrorMsg());
+			error << "Error: " << GenerateClangFormatNotFoundErrorMsg();
 		}
 		else {
-			PutConsole(String() << "Error: clang-format ended with \"" << IntStr(code)
-			                    << "\" error code.");
+			error << "Error: clang-format ended with \"" << IntStr(code) << "\" error code.";
 			if(!ss.GetResult().IsEmpty()) {
-				PutConsole(String() << "\nProgram output:\n" << ss.GetResult());
+				error << "\nProgram output:\n" << ss.GetResult();
 			}
 		}
-		m_ide->BeepMuteExclamation();
+		PutErrorOnConsole(error);
+
 		return {"", code};
 	}
 	return {ss.GetResult(), code};
@@ -205,12 +258,22 @@ ClangFormat::Output ClangFormat::Execute0(const String& cmd)
 String ClangFormat::GenerateClangFormatNotFoundErrorMsg()
 {
 #ifdef PLATFORM_WIN32
-	return "Failed to find clang-format command. Make sure you have valid TheIDE installation "
-	       "and clang-format is available under bin folder.";
+	return "Failed to find clang-format command. Please make sure you have valid TheIDE "
+		   "installation and clang-format is available under bin folder.";
 #else
-	return "Failed to find clang-format command. Make sure it is added to the enviroment "
-	       "variables.";
+	return "Failed to find clang-format command. Please make sure it is added to the "
+		   "enviroment variables.";
 #endif
+}
+
+String ClangFormat::GenerateClangFormatFileNotFoundErrorMsg()
+{
+	return "Error: Failed to find associated .clang-format or _clang-format. "
+		   "Make sure this file exists in your source tree. We highly "
+		   "recommend to keep it on assembly level.\nMoreover, please keep in mind that "
+		   ".clang-format file should be bundle with U++ installation and available for "
+		   "common assemblies. If you do not have this file try to make fresh instalaltion "
+		   "of U++.";
 }
 
 void Ide::ReformatFile()
