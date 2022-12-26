@@ -687,8 +687,7 @@ void ScrollBars::Set(Point pos, Size page, Size total) {
 }
 
 bool ScrollBars::Set(int _x, int _y) {
-	bool b = x.Set(_x) | y.Set(_y);
-	return b;
+	return x.Set(_x) + y.Set(_y);
 }
 
 bool ScrollBars::Set(Point pos) {
@@ -714,11 +713,11 @@ void ScrollBars::SetTotal(Size total) {
 }
 
 bool ScrollBars::ScrollInto(Point pos, Size linesize) {
-	return x.ScrollInto(pos.x, linesize.cx) | y.ScrollInto(pos.y, linesize.cy);
+	return x.ScrollInto(pos.x, linesize.cx) + y.ScrollInto(pos.y, linesize.cy);
 }
 
 bool ScrollBars::ScrollInto(Point pos) {
-	return x.ScrollInto(pos.x) | y.ScrollInto(pos.y);
+	return x.ScrollInto(pos.x) + y.ScrollInto(pos.y);
 }
 
 ScrollBars& ScrollBars::SetLine(int linex, int liney) {
