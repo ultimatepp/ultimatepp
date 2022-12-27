@@ -218,7 +218,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 
 #ifdef DUMPTREE
 	_DBG_
-	{
+	if(GetCursorSpelling(cursor).Find("DeleteFile") >= 0) {
 		DLOG("=====================================");
 		DDUMP(ci.Kind());
 		DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
@@ -231,7 +231,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		DDUMP(clang_Cursor_isNull(clang_getCursorReferenced(cursor)));
 		DDUMP(clang_Location_isFromMainFile(cxlocation));
 	}
-
+/*
 	{
 		CXCursor ref = clang_getCursorReferenced(cursor);
 	
@@ -245,6 +245,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 			DDUMP(rs);
 		}
 	}
+*/
 #endif
 
 	
