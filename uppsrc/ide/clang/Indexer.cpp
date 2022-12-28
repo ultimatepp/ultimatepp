@@ -174,6 +174,17 @@ void Indexer::IndexerThread()
 
 			if(clang.tu) {
 				v.WhenFile = [&](const String& path) {
+				#if 0
+					if(path.Find("fileapi.h") >= 0) {
+						INTERLOCKED {
+							DLOG("===============");
+							DDUMP(path);
+							DDUMP(job.path);
+							DDUMP(job.file_times.Find(NormalizePath(path)));
+							DDUMPM(job.file_times);
+						}
+					}
+				#endif
 					LTIMING("WhenFile");
 					if(IsNull(path) || path.EndsWith("$$$blitz.cpp"))
 						return false;
@@ -320,7 +331,7 @@ void Indexer::SchedulerThread()
 					ArrayMap<String, Index<String>> dics;
 					for(const Vector<Tuple<String, bool>>& pk : sources)
 						for(const Tuple<String, bool>& m : pk) {
-							if(IsCSourceFile(m.a)) {
+							if(IsCppSourceFile(m.a)) {
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
 								if(IsCppSourceFile(m.a)) // we completely ignore .c file dependecies for now
@@ -332,7 +343,9 @@ void Indexer::SchedulerThread()
 										}
 									}
 							}
-							
+							else
+							if(IsCSourceFile(m.a))
+								files.GetAdd(m.a) = ppi.GetFileTime(m.a);
 						}
 				}
 			}

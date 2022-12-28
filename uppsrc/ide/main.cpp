@@ -378,11 +378,10 @@ void AppMain___()
 		}
 
 		if(FileExists(crash_file)) {
-			Exclamation("TheIDE has crashed the last time it was run. As the possible "
-			            "cause is libclang incompatibility, we are disabling Assist features for now.&"
-			            "You can have them reenabled in Setup / Settings..");
+			if(PromptYesNo("TheIDE has crashed the last time it was run. As the possible "
+			               "cause is libclang incompatibility, we are suggesting to disable Assist features for now."))
+				LibClangEnabled = false;
 			DeleteFile(crash_file);
-			LibClangEnabled = false;
 		}
 	
 		
