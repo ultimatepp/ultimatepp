@@ -26,7 +26,7 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2022.3 (rev. 16624?) (Dec 2022)&]
+[s3; 2022.3 (rev. 16660) (Dec 2022)&]
 [s5;po*/ &]
 [s5;po [*/ Current stable release]&]
 [s5; &]
@@ -38,7 +38,7 @@ parser, you will noticed changes in plus immediately. From other
 things we optimized memory consumption used by our widgets. All 
 applications recompiled with the newest version of U`+`+ will 
 be the beneficiaries of this change. Furthermore, we refreshed 
-TheIDE`'s AndroidBuilder and it is now capable of building Andorid 
+TheIDE`'s AndroidBuilder and it is now capable of building Android 
 project using the latest toolchains from Google.&]
 [s5; &]
 [s5; We would like to thank all of our amazing contributors and users! 
