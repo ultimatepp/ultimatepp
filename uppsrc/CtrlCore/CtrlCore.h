@@ -685,6 +685,7 @@ private:
 	void    SyncScroll();
 	void    Refresh0(const Rect& area);
 	void    PaintCaret(SystemDraw& w);
+	int16        caretx, carety, caretcx, caretcy;//8  //aris002
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);

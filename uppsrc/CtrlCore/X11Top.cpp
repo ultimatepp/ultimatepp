@@ -321,7 +321,8 @@ void TopWindow::Open(Ctrl *owner)
 	XSetClassHint(Xdisplay, GetWindow(), class_hint);
 	LLOG("WndShow(" << visible << ")");
 	WndShow(visible);
-	if(visible) {
+	Top *top = GetTop(); //aris002
+	if(top && visible) { //aris002
 		XEvent e;
 		LLOG("XWindowEvent");
 		XWindowEvent(Xdisplay, top->window, VisibilityChangeMask, &e);
@@ -355,6 +356,7 @@ void TopWindow::Open(Ctrl *owner)
 	LLOG(">OPENED " << Name());
 	PlaceFocus();
 	StateH(OPEN);
+	
 	Vector<int> fe = GetPropertyInts(top->window, XAtom("_NET_FRAME_EXTENTS"));
 	if(fe.GetCount() >= 4 &&
 	   fe[0] >= 0 && fe[0] <= 16 && fe[1] >= 0 && fe[1] <= 16 && //fluxbox returns wrong numbers - quick&dirty workaround

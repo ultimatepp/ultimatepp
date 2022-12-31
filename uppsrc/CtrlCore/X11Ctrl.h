@@ -11,8 +11,8 @@ protected:
 
 private:
 	static ArrayMap<Window, XWindow>& Xwindow();
-	static int       WndCaretTime;
-	static bool      WndCaretVisible;
+//	static int       WndCaretTime;
+//	static bool      WndCaretVisible;
 	static int       Xbuttons;
 	static int       Xbuttontime;
 	static Point     Xbuttonpos;
@@ -26,7 +26,7 @@ private:
 	static void     TimerAndPaint();
 	static void     ProcessEvent(XEvent& event);
 	       void     Invalidate(XWindow& xw, const Rect& r);
-	static void     AnimateCaret();
+//	static void     AnimateCaret();
 	       void     DoPaint(const Vector<Rect>& invalid);
 	       void     SetLastActive(XWindow *w, Ctrl *la);
 	       XWindow *GetXWindow();
@@ -94,7 +94,9 @@ public:
 
 	virtual void    EventProc(XWindow& w, XEvent *event);
 	virtual bool    HookProc(XEvent *event);
-	Window  GetWindow() const         { return top ? top->window : None; }
+	Window  GetWindow() const         { return top && utop ? utop->window : None; }  //aris002
+	static int    GetCaretBlinkTime()               { return 500; } //aris002
+    void SetCaret(int x, int y, int cx, int cy); //aris002
 	static  Ctrl   *CtrlFromWindow(Window w);
 	static bool    TrapX11Errors();
 	static void    UntrapX11Errors(bool b);

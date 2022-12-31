@@ -6,6 +6,7 @@ namespace Upp {
 
 void Ctrl::GuiPlatformConstruct()
 {
+	caretcx = caretcy = caretx = carety = 0; //aris002
 }
 
 void Ctrl::GuiPlatformDestruct()
@@ -92,12 +93,12 @@ void GuiPlatformAfterMenuPopUp()
 	Ctrl::ProcessEvents();
 }
 
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
+//void Ctrl::PaintCaret(SystemDraw& w)  //aris002
+//{
+//	GuiLock __;
+//	if(this == caretCtrl && WndCaretVisible)
+//		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+//}
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
@@ -113,14 +114,14 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 		RefreshCaret();
 }
 
-void Ctrl::SyncCaret() {
-	GuiLock __;
-	if(focusCtrl != caretCtrl) {
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
+//void Ctrl::SyncCaret() {  //aris002
+//	GuiLock __;
+//	if(focusCtrl != caretCtrl) {
+//		RefreshCaret();
+//		caretCtrl = focusCtrl;
+//		RefreshCaret();
+//	}
+//}
 
 }
 
