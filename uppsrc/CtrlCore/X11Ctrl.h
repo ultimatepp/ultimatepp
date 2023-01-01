@@ -11,8 +11,6 @@ protected:
 
 private:
 	static ArrayMap<Window, XWindow>& Xwindow();
-//	static int       WndCaretTime;
-//	static bool      WndCaretVisible;
 	static int       Xbuttons;
 	static int       Xbuttontime;
 	static Point     Xbuttonpos;
@@ -26,7 +24,6 @@ private:
 	static void     TimerAndPaint();
 	static void     ProcessEvent(XEvent& event);
 	       void     Invalidate(XWindow& xw, const Rect& r);
-//	static void     AnimateCaret();
 	       void     DoPaint(const Vector<Rect>& invalid);
 	       void     SetLastActive(XWindow *w, Ctrl *la);
 	       XWindow *GetXWindow();
