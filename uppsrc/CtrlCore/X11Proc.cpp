@@ -420,10 +420,7 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 		break;
 	case MotionNotify:
 		Window xwin = GetWindow();
-		if(!xwin)
-			break;
-		else
-		{
+		if(xwin) {
 			while(XCheckWindowEvent(Xdisplay, xwin, PointerMotionMask, event));
 			EndIgnore();
 			mousePos = Point(event->xmotion.x_root, event->xmotion.y_root);
@@ -434,8 +431,8 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			sModState = event->xmotion.state;
 			DispatchMouse(MOUSEMOVE, Point(event->xmotion.x, event->xmotion.y));
 			DoCursorShape();
-			break;
 		}
+		break;
 	}
 	DropEvent(w, event);
 }
