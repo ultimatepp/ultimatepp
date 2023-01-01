@@ -321,7 +321,8 @@ void TopWindow::Open(Ctrl *owner)
 	XSetClassHint(Xdisplay, GetWindow(), class_hint);
 	LLOG("WndShow(" << visible << ")");
 	WndShow(visible);
-	if(visible) {
+	Top *top = GetTop();
+	if(top && visible) {
 		XEvent e;
 		LLOG("XWindowEvent");
 		XWindowEvent(Xdisplay, top->window, VisibilityChangeMask, &e);
