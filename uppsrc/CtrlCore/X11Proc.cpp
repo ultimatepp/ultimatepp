@@ -94,16 +94,16 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 // added support for windowed controls
 //			if(top)
 //				XTranslateCoordinates(Xdisplay, top->window, Xroot, 0, 0, &x, &y, &dummy);
-			Top *top = GetTop();
-			if(top) {
+			Window xwin = GetWindow();
+			if(xwin) {
 				Window DestW = (GetParent() ? GetParentWindow() : Xroot);
-				XTranslateCoordinates(Xdisplay, top->window, DestW, 0, 0, &x, &y, &dummy);
+				XTranslateCoordinates(Xdisplay, xwin, DestW, 0, 0, &x, &y, &dummy);
 				Rect rect = RectC(x, y, e.width, e.height);
 				LLOG("CongigureNotify " << rect);
 				if(GetRect() != rect)
 					SetWndRect(rect);
-				// Synchronizes native windows (NOT the main one)
 			}
+			// Synchronizes native windows (NOT the main one)
 			SyncNativeWindows();
 // 01/12/2007 - END
 
@@ -419,9 +419,12 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 		}
 		break;
 	case MotionNotify:
-		Top *top = GetTop();
-		if(top) {
-			while(XCheckWindowEvent(Xdisplay, top->window, PointerMotionMask, event));
+		Window xwin = GetWindow();
+		if(!xwin)
+			break;
+		else
+		{
+			while(XCheckWindowEvent(Xdisplay, xwin, PointerMotionMask, event));
 			EndIgnore();
 			mousePos = Point(event->xmotion.x_root, event->xmotion.y_root);
 			Xeventtime = event->xmotion.time;
