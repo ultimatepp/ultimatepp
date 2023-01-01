@@ -197,8 +197,9 @@ bool DHCtrl::Init()
 	    			)
 	    : NULL;
 
-	utop = new Top;
-	utop->window = hwnd;
+	Top* top = new Top;
+	top->window = hwnd;
+	SetTop(top);
 
 	long im_event_mask = 0;
 	if(cw->xic)
@@ -274,19 +275,20 @@ void DHCtrl::Terminate(void)
 
 	// Unmaps the window
 	MapWindow(false);
-	if(utop) {
+	Window xwin = GetWindow();
+	if(xwin) {
 	// gathers data from XWindow (needs Input Context...)
-		XWindow *cw = XWindowFromWindow(utop->window);
+		XWindow *cw = XWindowFromWindow(xwin);
 	
 		// Frees input context as needed
-		if(cw->xic)
+		if(cw && cw->xic)
 		{
 			XDestroyIC(cw->xic);
 			cw->xic = NULL;
 		}
 	
 		// Removes XWindow from Upp list
-		RemoveXWindow(utop->window);
+		RemoveXWindow(xwin);
 	
 		// Destroys the window
 		// Not to do, it's done destroying the parent window by X11 system
