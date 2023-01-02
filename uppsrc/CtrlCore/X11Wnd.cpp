@@ -108,9 +108,9 @@ Ctrl *Ctrl::CtrlFromWindow(Window w)
 Ctrl::XWindow *Ctrl::GetXWindow()
 {
 	GuiLock __;
-	Top *top = GetTop();
-	if(!top) return NULL;
-	int q = Xwindow().Find(top->window);
+	Window xwin = GetWindow();
+	if(!xwin) return NULL;
+	int q = Xwindow().Find(xwin);
 	return q >= 0 ? &Xwindow()[q] : NULL;
 }
 // 01/12/2007 - mdelfede
@@ -506,9 +506,9 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 		                   XNClientWindow, w,
 		                   NULL);
 	}
-	utop = new Top;
-	utop->window = w;
-	top = true; //aris002 I am not very sure it must be here. We need to agree on concepts what isopen and when istop
+	Top *top = new Top;
+	top->window = w;
+	SetTop(top);
 	long im_event_mask = 0;
 	if(cw.xic)
 		XGetICValues(cw.xic, XNFilterEvents, &im_event_mask, NULL);
@@ -539,7 +539,7 @@ void Ctrl::WndDestroy()
 	GuiLock __;
 	LLOG("WndDestroy " << Name());
 	Window xwin = GetWindow();
-	if(!utop || !isopen) return;
+	if(!xwin || !isopen) return;
 	AddGlobalRepaint();
 	bool revertfocus = HasWndFocus() || !GetFocusCtrl();
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
