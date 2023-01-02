@@ -201,10 +201,7 @@ public:
 
 	void          Adjust();
 	void          Adjust(const Value& k);
-/*
-	const PopUpTable& GetList() const                   { return list; }
-	PopUpTable&   ListObject()                          { return list; }
-*/
+
 	DropList&     SetDropLines(int d)                   { list.SetDropLines(d); return *this; }
 	DropList&     SetValueConvert(const Convert& cv);
 	DropList&     SetConvert(const Convert& cv);
