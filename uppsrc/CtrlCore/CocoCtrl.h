@@ -2,10 +2,8 @@ private:
 	friend struct MMCtrl;
 	friend struct MMImp;
 
-	static int                 WndCaretTime;
-	static bool                WndCaretVisible;
 	static bool                local_dnd_copy;
-	static void AnimateCaret();
+	static int    GetCaretBlinkTime()               { return 500; }
 	static Ptr<Ctrl>           lastActive;
 	
 	friend void CocoInit(int argc, const char **argv, const char **envptr);

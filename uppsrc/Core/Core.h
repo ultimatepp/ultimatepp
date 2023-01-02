@@ -228,6 +228,9 @@
 #include <netdb.h>
 #include <netinet/in.h>
 //#include <libiberty.h>
+#ifdef __APPLE__
+#undef TCP_NODELAY
+#endif
 enum
 {
 	INVALID_SOCKET = -1,
