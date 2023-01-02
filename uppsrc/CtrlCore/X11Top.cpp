@@ -321,11 +321,11 @@ void TopWindow::Open(Ctrl *owner)
 	XSetClassHint(Xdisplay, GetWindow(), class_hint);
 	LLOG("WndShow(" << visible << ")");
 	WndShow(visible);
-	Top *top = GetTop();
-	if(top && visible) {
+	Window xwin = GetWindow();
+	if(xwin && visible) {
 		XEvent e;
 		LLOG("XWindowEvent");
-		XWindowEvent(Xdisplay, top->window, VisibilityChangeMask, &e);
+		XWindowEvent(Xdisplay, xwin, VisibilityChangeMask, &e);
 		ignoretakefocus = true;
 		SetTimeCallback(500, THISBACK(EndIgnoreTakeFocus));
 		LLOG("SetWndFocus");
@@ -335,13 +335,13 @@ void TopWindow::Open(Ctrl *owner)
 			// and move the window into position after FocusIn - but not if we want WM to
 			// place the window
 			if(weplace)
-				while(XCheckTypedWindowEvent(Xdisplay, top->window, ConfigureNotify, &e)) {
-					if(e.xconfigure.window != top->window)
+				while(XCheckTypedWindowEvent(Xdisplay, xwin, ConfigureNotify, &e)) {
+					if(e.xconfigure.window != xwin)
 						ProcessEvent(&e);
 				}
-			if(XCheckTypedWindowEvent(Xdisplay, top->window, FocusIn, &e)) {
+			if(XCheckTypedWindowEvent(Xdisplay, xwin, FocusIn, &e)) {
 				ProcessEvent(&e);
-				if(e.xfocus.window == top->window)
+				if(e.xfocus.window == xwin)
 					break;
 			}
 			Sleep(10);
@@ -356,7 +356,7 @@ void TopWindow::Open(Ctrl *owner)
 	LLOG(">OPENED " << Name());
 	PlaceFocus();
 	StateH(OPEN);
-	Vector<int> fe = GetPropertyInts(top->window, XAtom("_NET_FRAME_EXTENTS"));
+	Vector<int> fe = GetPropertyInts(xwin, XAtom("_NET_FRAME_EXTENTS"));
 	if(fe.GetCount() >= 4 &&
 	   fe[0] >= 0 && fe[0] <= 16 && fe[1] >= 0 && fe[1] <= 16 && //fluxbox returns wrong numbers - quick&dirty workaround
 	   fe[2] >= 0 && fe[2] <= 64 && fe[3] >= 0 && fe[3] <= 48)
@@ -367,6 +367,7 @@ void TopWindow::Open(Ctrl *owner)
 		windowFrameMargin.top = max(windowFrameMargin.top, fe[2]);
 		windowFrameMargin.bottom = max(windowFrameMargin.bottom, fe[3]);
 	}
+	Top *top = GetTop();
 	if(IsOpen() && top)
 		top->owner = owner;
 
@@ -381,14 +382,13 @@ void TopWindow::Open(Ctrl *owner)
 		                PropModeReplace, (byte *) &curr_pid, 1);
 	}
 
-	Window win = GetWindow();
-	XChangeProperty(Xdisplay, win, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
+	XChangeProperty(Xdisplay, xwin, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
 	                PropModeReplace, (byte *) &curr_pid, 1);
-	XChangeProperty(Xdisplay, win, XAtom("WM_CLIENT_LEADER"),
+	XChangeProperty(Xdisplay, xwin, XAtom("WM_CLIENT_LEADER"),
 	                XA_WINDOW, 32, PropModeReplace, (byte *)&wm_client_leader, 1);
 
 	int version = 5;
-	XChangeProperty(Xdisplay, win, XAtom("XdndAware"), XA_ATOM, 32,
+	XChangeProperty(Xdisplay, xwin, XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
 
 	SyncState();
