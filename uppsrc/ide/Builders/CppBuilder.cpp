@@ -547,15 +547,23 @@ bool CppBuilder::HasAnyDebug() const
 	return HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL");
 }
 
-String SourceToObjName(const String& package, const String& srcfile_)
+String SourceToObjName(const String& /* package */, const String& srcfile_)
 {
 	String srcfile = srcfile_;
 	srcfile.TrimEnd(".cpp");
-	int q = GetFileFolder(PackagePath(package)).GetCount() + 1;
-	if(q >= srcfile.GetCount())
-		return GetFileTitle(srcfile);
 	String r;
-	for(const char *s = ~srcfile + q; *s; s++)
-		r.Cat(findarg(*s, '/', '\\') >= 0 ? '_' : *s);
+	for(const char *s = ~srcfile; *s; s++)
+	{
+		if(*s == '/' || *s == '\\')
+			r.Cat('_');
+		else if(*s == '.' && *(s+1) == '.')
+		{
+			r.Cat('_');
+			r.Cat('_');
+			s++;
+		}
+		else
+			r.Cat(*s);
+	}
 	return r;
 }
