@@ -1,4 +1,4 @@
-#include "clang.h"
+#include <ide/ide.h>
 
 #define LTIMING(x)   //TIMING(x)
 #define LTIMESTOP(x) //DTIMESTOP(x)
@@ -61,6 +61,7 @@ void FileAnnotation::Serialize(Stream& s)
 {
 	s % defines
 	  % includes
+	  % master_file
 	  % time
 	  % items
 	  % refs;
@@ -73,6 +74,9 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 	  << defines
 	  << includes
 	  << master_file
+#ifdef _DEBUG
+	  << "debug" // to have different codebase for development
+#endif
 	;
 	return CacheFile(GetFileTitle(source_file) + "$" + s.FinishString() + ".code_index");
 }
@@ -96,19 +100,20 @@ ArrayMap<String, FileAnnotation>& CodeIndex()
 	return m;
 }
 
-void DumpIndex(const char *file)
+void DumpIndex(const char *file, const String& what_file)
 {
 	GuiLock __;
 	FileOut out(file);
 	out << GetSysTime() << "\n";
 	ArrayMap<String, FileAnnotation>& x = CodeIndex();
-	for(const auto& m : ~x) {
-		out << m.key << "\n";
-		for(const auto& n : m.value.items)
-			out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
-		for(const auto& n : m.value.refs)
-			out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
-	}
+	for(const auto& m : ~x)
+		if(IsNull(what_file) || m.key == what_file) {
+			out << m.key << "\n";
+			for(const auto& n : m.value.items)
+				out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
+			for(const auto& n : m.value.refs)
+				out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
+		}
 }
 
 CoEvent              Indexer::event;
@@ -123,8 +128,15 @@ String               Indexer::main;
 String               Indexer::includes;
 String               Indexer::defines;
 
+void Indexer::BuildingPause()
+{
+	while(TheIde() && TheIde()->idestate == Ide::BUILDING)
+		Sleep(200);
+}
+
 void Indexer::IndexerThread()
 {
+//	Thread::DumpDiagnostics();
 	while(!Thread::IsShutdownThreads()) {
 		Clang clang;
 		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
@@ -142,9 +154,11 @@ void Indexer::IndexerThread()
 					break;
 				was_job = true;
 			}
-
+			
 			if(Thread::IsShutdownThreads())
 				break;
+
+			BuildingPause();
 
 			int tm = msecs();
 
@@ -157,8 +171,20 @@ void Indexer::IndexerThread()
 				break;
 
 			ClangVisitor v;
+
 			if(clang.tu) {
 				v.WhenFile = [&](const String& path) {
+				#if 0
+					if(path.Find("fileapi.h") >= 0) {
+						INTERLOCKED {
+							DLOG("===============");
+							DDUMP(path);
+							DDUMP(job.path);
+							DDUMP(job.file_times.Find(NormalizePath(path)));
+							DDUMPM(job.file_times);
+						}
+					}
+				#endif
 					LTIMING("WhenFile");
 					if(IsNull(path) || path.EndsWith("$$$blitz.cpp"))
 						return false;
@@ -184,8 +210,9 @@ void Indexer::IndexerThread()
 				f.includes = job.includes;
 				(CppFileInfo&)f = pick(m.value);
 				f.time = job.file_times.Get(path, Time::Low());
+				f.master_file = job.master_files.Get(path, Null);
 				LLOG("Storing " << path);
-				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, job.master_files.Get(path, Null)), StoreAsString(f), true);
+				SaveChangedFile(CachedAnnotationPath(path, f.defines, f.includes, f.master_file), StoreAsString(f), true);
 				GuiLock __;
 				CodeIndex().GetAdd(path) = pick(f);
 			}
@@ -226,8 +253,12 @@ void Indexer::Start(const String& main, const String& includes, const String& de
 			event.Broadcast();
 			scheduler.Broadcast();
 		});
-		for(int i = 0; i < IndexerThreads; i++)
-			Thread::StartNice([] { Indexer::IndexerThread(); });
+		for(int i = 0; i < IndexerThreads; i++) {
+			Thread t;
+			t.StackSize(8192*1024);
+			t.RunNice([] { Indexer::IndexerThread(); });
+			t.Detach();
+		}
 		Thread::StartNice([] { SchedulerThread(); });
 	}
 
@@ -247,6 +278,8 @@ void Indexer::SchedulerThread()
 
 		{
 			LTIMESTOP("Scheduler");
+			BuildingPause();
+
 			Mutex::Lock __(mutex);
 			running_scheduler = true;
 
@@ -298,17 +331,21 @@ void Indexer::SchedulerThread()
 					ArrayMap<String, Index<String>> dics;
 					for(const Vector<Tuple<String, bool>>& pk : sources)
 						for(const Tuple<String, bool>& m : pk) {
-							if(IsCSourceFile(m.a)) {
+							if(IsCppSourceFile(m.a)) {
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
-								for(int i = n; i < files.GetCount(); i++) {
-									String p = files.GetKey(i);
-									if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-										master.Add(m.a);
-										header.Add(p);
+								if(IsCppSourceFile(m.a)) // we completely ignore .c file dependecies for now
+									for(int i = n; i < files.GetCount(); i++) {
+										String p = files.GetKey(i);
+										if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
+											master.Add(m.a);
+											header.Add(p);
+										}
 									}
-								}
 							}
+							else
+							if(IsCSourceFile(m.a))
+								files.GetAdd(m.a) = ppi.GetFileTime(m.a);
 						}
 				}
 			}
@@ -319,6 +356,7 @@ void Indexer::SchedulerThread()
 
 //			DDUMPC(dirty_files);
 //			DDUMPM(files);
+
 
 			{
 				LTIMESTOP("Loading from cache, checking filetimes");
@@ -344,8 +382,9 @@ void Indexer::SchedulerThread()
 							}
 						}
 					}
-					if(f.defines != defines || f.includes != includes || f.time != m.value)
-						dirty_files.FindAdd(path);
+					if(f.defines != defines || f.includes != includes || f.time != m.value) {
+						dirty_files.FindAdd(Nvl(master_file, path));
+					}
 				}
 			}
 
@@ -385,7 +424,7 @@ void Indexer::SchedulerThread()
 							f = CodeIndex().GetAdd(pf.a);
 						}
 						if(dirty_files.Find(pf.a) >= 0) {
-							if(ppi.BlitzApproved(pf.a) && !pf.b) {
+							if(ppi.BlitzApproved(pf.a) && !pf.b && IsCppSourceFile(pf.a)) {
 								BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
 								JobAdd(blitz_job, pf.a);
 							}

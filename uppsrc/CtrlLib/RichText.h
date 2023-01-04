@@ -19,6 +19,7 @@ private:
 	Rect          margin;
 	Color         background;
 	Color         textcolor;
+	Color         highlight_color = SYellow();
 	Zoom          zoom;
 	int           cx;
 	ScrollBar     sb;
@@ -55,6 +56,7 @@ public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
 	Event<>              WhenLeftClick;
+	Gate<const String&>  WhenHighlight;
 
 	void            Clear();
 	void            Pick(RichText&& t);
@@ -62,6 +64,8 @@ public:
 	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1));
 	const RichText& Get() const                               { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const      { return AsQTF(text, cs); }
+	
+	int             GetCursor() const                         { return cursor; }
 
 	int             GetWidth() const                          { return text.GetWidth(); }
 	int             GetHeight(int cx) const                   { return text.GetHeight(Zoom(1, 1), cx); }
@@ -75,8 +79,8 @@ public:
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;
 
-	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false);
-	bool            GotoLabel(const String& lbl, bool highlight = false);
+	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false, bool match_last = false);
+	bool            GotoLabel(const String& lbl, bool highlight = false, bool match_last = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
 	
 	int             GetLength() const                         { return text.GetLength(); }
@@ -96,6 +100,7 @@ public:
 	RichTextView&   SetZoom(Zoom z);
 	RichTextView&   Background(Color _color);
 	RichTextView&   TextColor(Color _color);
+	RichTextView&   Highlight(Color _color);
 	RichTextView&   VCenter(bool b = true);
 	RichTextView&   NoVCenter()                               { return VCenter(false); }
 	RichTextView&   Margins(const Rect& m);
@@ -300,6 +305,7 @@ private:
 	String         topic;
 	String         label;
 	String         current_link;
+	int            doing_goto = 0;
 
 	bool GoTo0(const String& link);
 	void Back();

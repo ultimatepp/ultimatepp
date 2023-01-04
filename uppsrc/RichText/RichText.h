@@ -284,6 +284,7 @@ struct PaintInfo {
 	Color   showcodes;
 	Bits  (*spellingchecker)(const RichPara& para);
 	int     highlightpara;
+	Gate<const String&> WhenHighlight;
 	Color   highlight;
 	bool    darktheme;
 	void   *context;

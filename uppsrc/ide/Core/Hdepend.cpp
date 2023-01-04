@@ -1,5 +1,4 @@
 #include "Core.h"
-#include "Core.h"
 
 void Hdepend::Info::Serialize(Stream& s)
 {
@@ -99,7 +98,7 @@ void Hdepend::ScanFile(const String& path, int map_index)
 	const char *term = src;
 
 	auto Id = [&](const char *id) {
-		int n = strlen(id);
+		int n = (int)strlen(id);
 		if(memcmp(term, id, n) == 0 && findarg(term[n], ' ', '\t') >= 0) {
 			term += n + 1;
 			return true;

@@ -53,8 +53,8 @@ PaintInfo::PaintInfo()
 	showcodes = Null;
 	spellingchecker = NULL;
 	highlightpara = -1;
-	highlight = Yellow();
-	indexentry = LtGreen();
+	highlight = SYellow();
+	indexentry = SLtGreen();
 	indexentrybg = false;
 	darktheme = false;
 	context = NULL;

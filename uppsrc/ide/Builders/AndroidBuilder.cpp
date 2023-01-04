@@ -63,8 +63,6 @@ bool AndroidBuilder::BuildPackage(
 	
 	Index<String> noBlitzNativeSourceFiles;
 	
-	String androidManifestPath;
-	
 	String javaSourcesDir    = project->GetJavaDir();
 	String jniSourcesDir     = project->GetJniDir();
 	String pkgJavaSourcesDir = javaSourcesDir + DIR_SEPS + package;
@@ -115,16 +113,21 @@ bool AndroidBuilder::BuildPackage(
 		}
 		else
 		if(BuilderUtils::IsXmlFile(filePath)) {
-			if(isMainPackage && fileName == "AndroidManifest.xml") {
-				if(androidManifestPath.GetCount()) {
-					PutConsole("AndroidManifest.xml is duplicated.");
+			if(isMainPackage && fileName == AndroidManifest::FILE_NAME) {
+				if (manifest) {
+					PutConsole("Manifest file already exists. There should be only one AndroidManifest.xml in the project.");
 					return false;
 				}
 				
-				if(!FileCopy(filePath, project->GetManifestPath()))
+				if(!FileCopy(filePath, project->GetManifestPath())) {
 					return false;
+				}
 					
-				androidManifestPath = filePath;
+				manifest.Create(filePath);
+				if (!manifest->Parse()) {
+					PutConsole("Failed to parse AndroidManifest.xml.");
+					return false;
+				}
 			}
 		}
 		else
@@ -138,8 +141,8 @@ bool AndroidBuilder::BuildPackage(
 		}
 	}
 	
-	if(isMainPackage && androidManifestPath.IsEmpty()) {
-		PutConsole("Failed to find Android manifest file.");
+	if(isMainPackage && !manifest) {
+		PutConsole("Failed to find Android manifest file in. Make sure AndroidManifest.xml is present in main package.");
 		return false;
 	}
 	
@@ -196,21 +199,28 @@ bool AndroidBuilder::Link(
 	bool createmap)
 {
 	InitProject();
-	if(!ValidateBuilderEnviorement())
+	if(!ValidateBuilderEnviorement()) {
 		return false;
+	}
 	
 	ManageProjectCohesion();
 	
 	PutConsole("Building Android Project");
-	StringStream ss;
-	if(!GenerateRFile())
+	if(!manifest) {
+		PutConsole("Android manifest has not been detected. Make sure your main package contains AndroidManifest.xml.");
 		return false;
-	if(!RealizeLinkDirectories())
+	}
+	if(!GenerateRFile()) {
 		return false;
+	}
+	if(!RealizeLinkDirectories()) {
+		return false;
+	}
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
 	// We don't know which packages contain resources.
 	int time;
+	StringStream ss;
 	if(linkfile.GetCount()) {
 		PutConsole("-----");
 		PutConsole("Compiling java sources...");
@@ -250,18 +260,8 @@ bool AndroidBuilder::Link(
 		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
 	}
 	
-	if(DirectoryExists(project->GetClassesDir())) {
-		PutConsole("-----");
-		PutConsole("Creating dex file...");
-		String dxCmd;
-		dxCmd << NormalizeExePath(sdk.DxPath());
-		dxCmd << " --dex ";
-		dxCmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
-		dxCmd << project->GetClassesDir();
-		if(Execute(dxCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
+	if (!GenerateDexFile()) {
+		return false;
 	}
 	
 	PutConsole("Creating apk file...");
@@ -284,13 +284,20 @@ bool AndroidBuilder::Link(
 	
 	if(DirectoryExists(project->GetLibsDir())) {
 		PutConsole("Adding native libraries to apk...");
-		if(!AddSharedLibsToApk(unsignedApkPath))
+		if(!AddSharedLibsToApk(unsignedApkPath)) {
 			return false;
+		}
 	}
 	
-	// In release mode we definitly shouldn't signing apk!!!
-	if(!SignApk(target, unsignedApkPath))
+	String unsignedAlignedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".aligned.unsigned.apk";
+	DeleteFile(unsignedAlignedApkPath);
+	if(!AlignApk(unsignedAlignedApkPath, unsignedApkPath)) {
 		return false;
+	}
+	
+	if(!SignApk(target, unsignedAlignedApkPath)) {
+		return false;
+	}
 	
 	return true;
 }
@@ -376,7 +383,7 @@ void AndroidBuilder::DetectAndManageUnusedPackages(
     const Index<String>& packages)
 {
 	for(FindFile ff(AppendFileName(nest, "*")); ff; ff.Next()) {
-		if(!ff.IsHidden() && ff.IsDirectory()) {
+		if(!ff.IsHidden() && ff.IsFolder()) {
 			String name = ff.GetName();
 			if(packages.Find(name) == -1)
 				CleanPackage(name, "");
@@ -459,54 +466,49 @@ bool AndroidBuilder::RealizeLinkDirectories() const
 	return true;
 }
 
-bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath)
+bool AndroidBuilder::AlignApk(const String& target, const String& unsignedApkPath)
 {
 	StringStream ss;
 	
-	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
-	if(HasFlag("DEBUG")) {
-		String keystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
-		if(!GenerateDebugKey(keystorePath))
-			return false;
-	
-		PutConsole("Signing apk file...");
-		DeleteFile(signedApkPath);
-		String jarsignerCmd;
-		jarsignerCmd << NormalizeExePath(jdk->GetJarsignerPath());
-		
-		// Up to Java 6.0 below alogirms was by default
-		// (In Java 7.0 and above we need to manually specific this algorithms)
-		jarsignerCmd << " -sigalg SHA1withRSA";
-		jarsignerCmd << " -digestalg SHA1";
-		
-		jarsignerCmd << " -keystore " + keystorePath;
-		jarsignerCmd << " -storepass android";
-		jarsignerCmd << " -keypass android";
-		// TODO: not sure about below line. But I think for debug purpose we shouldn't use tsa.
-		// http://en.wikipedia.org/wiki/Trusted_timestamping
-		//jarsignerCmd << " -tsa https://timestamp.geotrust.com/tsa";
-		jarsignerCmd << " -signedjar " << signedApkPath;
-		jarsignerCmd << " " << unsignedApkPath;
-		jarsignerCmd << " androiddebugkey";
-		//PutConsole(jarsignerCmd);
-		if(Execute(jarsignerCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
-		
-		PutConsole("Aliging apk file...");
-		DeleteFile(target);
-		String zipalignCmd;
-		zipalignCmd << NormalizeExePath(sdk.ZipalignPath());
-		zipalignCmd << " -f 4 ";
-		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
-		zipalignCmd << target;
-		//PutConsole(zipalignCmd);
-		if(Execute(zipalignCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
+	PutConsole("Aliging apk file...");
+	DeleteFile(target);
+	String zipalignCmd;
+	zipalignCmd << NormalizeExePath(sdk.ZipalignPath()) << " -f 4 ";
+	zipalignCmd << unsignedApkPath << " " << target;
+	if(Execute(zipalignCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
 	}
+	
+	return true;
+}
+
+bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath)
+{
+	if(!HasFlag("DEBUG")) {
+		return false;
+	}
+	
+	StringStream ss;
+	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
+	
+	String keystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
+	if(!GenerateDebugKey(keystorePath)) {
+		return false;
+	}
+
+	PutConsole("Signing apk file...");
+	DeleteFile(signedApkPath);
+	
+	String cmd;
+	cmd << NormalizeExePath(sdk.ApksignerPath());
+	cmd << " sign --ks " << keystorePath << " --ks-pass pass:android" << " --out " << signedApkPath << " " << unsignedApkPath;
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	
+	CopyFile(target, signedApkPath);
 	
 	return true;
 }
@@ -536,8 +538,8 @@ bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
 
 bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 {
-	// TODO: A little bit workearound (I know one thing that shared libs should be in "lib" directory not in "libs")
-	// So, we need to create temporary lib directory with .so files :(
+	// TODO: Consider using environment variable NDK_LIBS_OUT form NDK r9 instead of
+	// creating temporary lib directory that will be deleted after inserting files to APK.
 	const String libDir = project->GetDir() + DIR_SEPS + "lib";
 	
 	Vector<String> sharedLibsToAdd;
@@ -563,16 +565,24 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 	String aaptAddCmd;
 	aaptAddCmd << NormalizeExePath(sdk.AaptPath());
 	aaptAddCmd << " add " << apkPath;
-	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++)
-		aaptAddCmd << " " << sharedLibsToAdd[i];
-	// PutConsole(aaptAddCmd);
+	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++) {
+	#ifdef PLATFORM_WIN32
+		// NOTE: Without conversion to UNIX directory format libraries will be added at the top
+		// of APK file and APK will be broken.
+		sharedLibsToAdd[i].Replace("\\", "/");
+	#endif
+		aaptAddCmd << " " << sharedLibsToAdd[i] << "";
+	}
+	
 	StringStream ss;
 	if(Execute(aaptAddCmd, ss) != 0) {
 		PutConsole(ss.GetResult());
 		return false;
 	}
-	if(!DeleteFolderDeep(libDir))
+	
+	if(!DeleteFolderDeep(libDir)) {
 		return false;
+	}
 	
 	return true;
 }
@@ -619,8 +629,13 @@ void AndroidBuilder::UpdateFile(const String& path, const String& data)
 
 void AndroidBuilder::GenerateApplicationMakeFile()
 {
+	String platform;
+	
 	AndroidApplicationMakeFile makeFile;
-	makeFile.SetPlatform(sdk.GetPlatform());
+	if (manifest && manifest->uses_sdk && !IsNull(manifest->uses_sdk->minSdkVersion)) {
+		String platform = "android-" + IntStr(manifest->uses_sdk->minSdkVersion);
+		makeFile.SetPlatform(platform);
+	}
 	makeFile.SetArchitectures(ndkArchitectures);
 	makeFile.SetCppRuntime(ndkCppRuntime);
 	makeFile.SetCppFlags(ndkCppFlags);
@@ -633,6 +648,7 @@ void AndroidBuilder::GenerateApplicationMakeFile()
 	PutVerbose("CppFlags: " + ndkCppFlags);
 	PutVerbose("CFlags: " + ndkCFlags);
 	PutVerbose("Toolchain: " + ndkToolchain);
+	PutVerbose("Platform: " + platform);
 	
 	UpdateFile(project->GetJniApplicationMakeFilePath(), makeFile.ToString());
 }
@@ -695,6 +711,79 @@ bool AndroidBuilder::GenerateRFile()
 			PutConsole(ss.GetResult());
 			return false;
 		}
+	}
+	
+	return true;
+}
+
+bool AndroidBuilder::GenerateDexFile()
+{
+	if(!DirectoryExists(project->GetClassesDir())) {
+		return true;
+	}
+	
+	PutConsole("-----");
+	
+	if (sdk.HasD8()) {
+		return GenerateDexFileUsingD8();
+	}
+	
+	return GenerateDexFileUsingDx();
+}
+
+bool AndroidBuilder::GenerateDexFileUsingD8()
+{
+	PutConsole("Creating dex file using d8...");
+	
+	String cmd;
+	StringStream ss;
+	const auto outputFile = project->GetIntermediatesDir() << DIR_SEPS << "classes.jar";
+		
+	cmd << NormalizeExePath(sdk.D8Path());
+	cmd << " --output " << outputFile << " ";
+	auto classesFiles = project->GetClassessFiles();
+	for (const auto& file : classesFiles) {
+		cmd << file << " ";
+	}
+		
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	cmd.Clear();
+	
+	{
+		// TODO: Replace with ScopeExit once it will be present in upp core..
+		String currentDir = GetCurrentDirectory();
+		
+		ChangeCurrentDirectory(project->GetBinDir());
+		cmd << NormalizeExePath(jdk->GetJarPath()) << " xf " << outputFile;
+		if(Execute(cmd, ss) != 0) {
+			ChangeCurrentDirectory(currentDir);
+			PutConsole(ss.GetResult());
+			return false;
+		}
+		ChangeCurrentDirectory(currentDir);
+	}
+	
+	return true;
+}
+
+bool AndroidBuilder::GenerateDexFileUsingDx()
+{
+	PutConsole("Creating dex file using dx...");
+	
+	String cmd;
+	StringStream ss;
+	
+	cmd << NormalizeExePath(sdk.DxPath());
+	cmd << " --dex ";
+	cmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
+	cmd << project->GetClassesDir();
+		
+	if(Execute(cmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
 	}
 	
 	return true;

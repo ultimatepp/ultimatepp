@@ -68,11 +68,15 @@ protected:
 	void GenerateApplicationMakeFile();
 	void GenerateMakeFile();
 	bool GenerateRFile();
+	bool GenerateDexFile();
+	bool GenerateDexFileUsingD8();
+	bool GenerateDexFileUsingDx();
 	
 protected:
 	bool ValidateBuilderEnviorement();
 	void PutErrorOnConsole(const String& msg);
 	
+	bool AlignApk(const String& target, const String& unsignedApkPath);
 	bool SignApk(const String& target, const String& unsignedApkPath);
 	bool GenerateDebugKey(const String& keystorePath);
 	
@@ -99,6 +103,7 @@ private:
 	One<Jdk>                    jdk;
 	One<AndroidProject>         project;
 	One<AndroidBuilderCommands> commands;
+	One<AndroidManifest>        manifest;
 	
 	const Workspace&            wspc;
 

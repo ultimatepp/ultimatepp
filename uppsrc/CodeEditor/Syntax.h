@@ -58,9 +58,11 @@ public:
 	static void           SetHlStyle(int i, Color c, bool bold = false, bool italic = false, bool underline = false);
 	static void           LoadHlStyles(const char *s);
 	static String         StoreHlStyles();
-	static void           DarkTheme();
-	static void           WhiteTheme();
+	static void           HostColors();
+	static void           DarkTheme(bool host_colors = true);
+	static void           WhiteTheme(bool host_colors = true);
 	static void           DefaultHlStyles();
+	static void           InitOnce();
 
 	static const char    *GetHlName(int i);
 	static bool           HasHlFont(int i);

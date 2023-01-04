@@ -22,6 +22,7 @@ TextCtrl::TextCtrl()
 	color[PAPER_SELECTED] = SColorHighlight;
 	color[WHITESPACE] = Blend(SColorLight, SColorHighlight);
 	color[WARN_WHITESPACE] = Blend(SColorLight, SRed);
+	
 	processtab = true;
 	processenter = true;
 	nobg = false;

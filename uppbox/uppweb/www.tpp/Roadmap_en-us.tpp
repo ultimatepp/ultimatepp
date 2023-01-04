@@ -26,10 +26,65 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2022.2 (rev. 16270) (May 2022)&]
+[s3; 2022.3 (rev. 16660) (Dec 2022)&]
 [s5;po*/ &]
 [s5;po [*/ Current stable release]&]
 [s5; &]
+[s5; The leading entity for this release is migration for our homegrown 
+C`+`+ parser to LibClang. This is the revolutionary change in 
+the context of how easy is to develop code with our integrated 
+development environment TheIDE. If you are familiar with older 
+parser, you will noticed changes in plus immediately. From other 
+things we optimized memory consumption used by our widgets. All 
+applications recompiled with the newest version of U`+`+ will 
+be the beneficiaries of this change. Furthermore, we refreshed 
+TheIDE`'s AndroidBuilder and it is now capable of building Andorid 
+project using the latest tool`-chains from Google.&]
+[s5; &]
+[s5; We would like to thank all of our amazing contributors and users! 
+Without your help we wouldn`'t be in the place we are today. 
+Also, many thanks to our UppHub contributors who do a great job. 
+Your additional packages are very helpful and needed for our 
+users.&]
+[s0;ph* &]
+[s0;ph [* Release highlights]&]
+[s5; &]
+[s5;l128;i150;O0; Homegrown C`+`+ parser in TheIDE is replaced with 
+LibClang resulting in new and improved Assist`+`+ features&]
+[s5;l128;i150;O0; Optimised memory consumption of U`+`+ widgets.&]
+[s5;l128;i150;O0; macOS version is not released with 2022.3. Our 
+main priority is to leverage this inconvenience in one of 2023.x 
+releases. If you want to use U`+`+ on macOS please use 2022.2 
+instead.&]
+[s5; &]
+[s5; [* TheIDE:]&]
+[s5;l128;i150;O0; Autocomplete now correctly works in most cases 
+(except in template bodies, which is libclang limitation)&]
+[s5;l128;i150;O0; Code navigator refactored and improved&]
+[s5;l128;i150;O0; TheIDE now shows C`+`+ errors while editing sources&]
+[s5;l128;i150;O0; TheIDE now shows information tips about program 
+symbols when you leave mouse over it (documentation if available, 
+declaration signature if not)&]
+[s5;l128;i150;O0; New function `"Usage`" shows all usages of current 
+symbol through all project sources based on C`+`+ analysis. With 
+virtual methods, it shows all overrides of base class method.&]
+[s5;l128;i150;O0; Android Builder was updated and it is compatible 
+with the latest Android platform version. At the time of writing 
+these words it is version 33.&]
+[s5; &]
+[s5; [* UMK]&]
+[s5;l128;i150;O0; UMK displays version when run without parameters&]
+[s5; &]
+[s5; [* CtrlCore, CtrlLib:]&]
+[s5;l128;i150;O0; Memory consumption (esp. sizeof) of widgets greatly 
+reduced (by up to 70%).&]
+[s5;l128;i150;O0; LabelBox now allows center and right alignment.&]
+[s5;l128;i150;O0; Fix issue with not working drag and drop for files 
+on Windows&]
+[s5; &]
+[s3; 2022.2 (rev. 16270) (May 2022)&]
+[s5;po*/ &]
+[s5;po*/ &]
 [s5; This release serves mainly as a service pack to 2022.1 and contains 
 significant number of resolved issues. There are limited set 
 of new features.&]

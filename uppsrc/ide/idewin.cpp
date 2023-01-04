@@ -135,6 +135,11 @@ void Ide::IdeConsoleOnFinish(Event<>  cb)
 	console.OnFinish(cb);
 }
 
+void Ide::IdeProcessEvents()
+{
+	Ctrl::ProcessEvents();
+}
+
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
 	right.Add(ctrl.SizePos());
@@ -444,6 +449,11 @@ Ide::Ide()
 	editor.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
+	tabs.WhenClose = [=](Value file) { // remove file from Ctrl+Tab logic
+		int q = FindIndex(tablru, ~file);
+		if(q >= 0)
+			tablru.Remove(q);
+	};
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
 //	editor2.SetFrame(NullFrame());
 	editor2.theide = this;
@@ -516,33 +526,6 @@ Ide::Ide()
 #else
 	setmain_newide = false;
 #endif
-	/*
-		astyle code formatter control vars
-		added 2008.01.27 by Massimo Del Fedele
-	*/
-	astyle_BracketIndent = false;
-	astyle_NamespaceIndent = true;
-	astyle_BlockIndent = false;
-	astyle_CaseIndent = true;
-	astyle_ClassIndent = true;
-	astyle_LabelIndent = true;
-	astyle_SwitchIndent = true;
-	astyle_PreprocessorIndent = false;
-	astyle_MinInStatementIndentLength = 2;
-	astyle_MaxInStatementIndentLength = 20;
-	astyle_BreakClosingHeaderBracketsMode = true;
-	astyle_BreakElseIfsMode = true;
-	astyle_BreakOneLineBlocksMode = true;
-	astyle_SingleStatementsMode = true;
-	astyle_BreakBlocksMode = true;
-	astyle_BreakClosingHeaderBlocksMode = true;
-	astyle_BracketFormatMode = astyle::BREAK_MODE;
-	astyle_ParensPaddingMode = astyle::PAD_BOTH;
-	astyle_ParensUnPaddingMode = true;
-	astyle_OperatorPaddingMode = true;
-	astyle_EmptyLineFill = false;
-	astyle_TabSpaceConversionMode = false;
-	astyle_TestBox = "#include <stdio.h>\n#ifndef __abcd_h\n#include <abcd.h>\n#endif\n\nvoid test(int a, int b)\n{\n  /* this is a switch */\n  switch(a)\n\n  {\n    case 1:\n      b = 2;\n      break;\n    case 2:\n      b = 4;\n      break;\n    default:\n    break;\n  }\n\n  /* this are more statements on one line */\n  a = 2*a;b=-5;a=2*(b+2)*(a+3)/4;\n\n  /* single line blocks */\n  {int z;z = 2*a+b;}\n\n  /* loop */\n  for(int i = 0;i< 10;i++) { a = b+2*i;}\n\n}\n";
 	
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
@@ -631,7 +614,8 @@ Ide::Ide()
 	SetupBars();
 	SetBar();
 	
-	libclang_options = "-Wno-logical-op-parentheses";
+	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";
+	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
 	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
 
@@ -656,6 +640,13 @@ String LibClangCommandLine()
 	GuiLock __;
 	IdeContext *q = TheIdeContext();
 	return q ? ((Ide *)q)->libclang_options : String();
+}
+
+String LibClangCommandLineC()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	return q ? ((Ide *)q)->libclang_coptions : String();
 }
 
 void IdeShowConsole()

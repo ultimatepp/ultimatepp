@@ -81,7 +81,6 @@ String CleanupId(const char *s)
 				return memcmp(s, "operator", 8) == 0;
 			};
 
-			const char *b = s;
 			String id;
 			while(iscid(*s) || *s == ':') {
 				id.Cat(*s++);
@@ -94,8 +93,6 @@ String CleanupId(const char *s)
 							break;
 					}
 					SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
-					b = s;
-					
 				}
 			}
 			if(id == s_attribute) {
@@ -161,7 +158,9 @@ String CleanupId(const char *s)
 				mm.Cat(*s++);
 		}
 	}
-	return mm;
+	String m = mm;
+	m.TrimEnd("=0");
+	return m;
 }
 
 String CleanupPretty(const String& signature)
@@ -171,16 +170,23 @@ String CleanupPretty(const String& signature)
 	const char *s = signature;
 	int plvl = 0;
 	while(*s && *s != '{')
-		if(memcmp(s, " = {", 4) == 0)
+		if(s[0] == ' ' && s[1] == '=' && s[2] == ' ' && s[3] == '{')
 			break;
+		else
+		if(s[0] == '(' && s[1] == 'u' && s[2] == 'n' && s[3] == 'n' && s[4] == 'a' &&
+		   s[5] == 'm' && s[6] == 'e' && s[7] == 'd' && s[8] == ')') { // remove (unnamed)
+			s += 9;
+			while(*s == ' ')
+				s++;
+		}
 		else
 		if(iscib(*s)) {
 			const char *b = s;
 			while(iscid(*s))
 				s++;
-			int len = s - b;
+			int len = int(s - b);
 			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
-			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0) ||
+			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0 || memcmp(b, "inline", 6) == 0) ||
 			   len == 7 && (memcmp(b, "virtual", 7) == 0) ||
 			   len == 8 && (memcmp(b, "override", 8) == 0 || memcmp(b, "noexcept", 8) == 0)) {
 			   while(*s == ' ')
@@ -326,8 +332,8 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				s++;
 		}
 		else
-		if(sOperatorTab[*s]) {
-			while(sOperatorTab[s[n]])
+		if(sOperatorTab[(byte)*s]) {
+			while(sOperatorTab[(byte)s[n]])
 				n++;
 			p.type = ITEM_CPP;
 		}

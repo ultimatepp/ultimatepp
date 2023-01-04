@@ -180,13 +180,13 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		pw.tracer->Paragraph(rc.page, h, *this);
 	}
 	
-	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
+	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len || pi.WhenHighlight(format.label);
 	int hy = rc.py.y - format.before - format.ruler;
 	int phy = rc.py.page;
 	if(format.ruler && hy >= 0 && hy + format.ruler < rc.page.bottom)
 		DrawRuler(pw.Page(phy), z * rc.page.left + z * format.lm, z * hy,
 		                        z * rc.page.right - z * rc.page.left - z * format.rm - z * format.lm,
-			                    max(1, z * format.ruler), format.rulerink, format.rulerstyle);
+			                    max(1, z * format.ruler), pi.ResolveInk(format.rulerink), format.rulerstyle);
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= rc.py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : rc.page.top);

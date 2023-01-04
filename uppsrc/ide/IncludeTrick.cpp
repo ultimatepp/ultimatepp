@@ -34,16 +34,19 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 	FileIn in(path);
 	while(!in.IsEof()) {
 		String l = in.GetLine();
-		String tl = TrimLeft(l);
-		if(!comment && tl.TrimStart("#include") && (*tl == ' ' || *tl == '\t')) {
-			tl = TrimBoth(tl);
+		CParser p(l);
+		if(!comment && p.Char('#') && p.Id("include")) {
+			String tl = TrimBoth(p.GetPtr());
 			String ipath = ppi.FindIncludeFile(tl, filedir);
 			if(ipath.GetCount()) {
 				if(NormalizePath(ipath) == NormalizePath(target_path))
 					return true;
 				int q = out.GetCount();
 				int qq = line_delta;
-				if(FindIndex(HdependGetDependencies(ipath), target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
+				VectorMap<String, Time> result;
+				ArrayMap<String, Index<String>> define_includes;
+				ppi.GatherDependencies(ipath, result, define_includes);
+				if(result.Find(target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
 				   && DoIncludeTrick(visited, level + 1, out, ipath, target_path, line_delta))
 					return true;
 				out.SetCount(q);

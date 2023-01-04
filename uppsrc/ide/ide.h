@@ -38,8 +38,6 @@
 
 #include "version.h"
 
-#include <plugin/astyle/astyle.h>
-
 #include <ide/Builders/Builders.h>
 
 const char *FindTag(const char *txt, const char *tag);
@@ -401,6 +399,7 @@ public:
 	virtual   bool             IdeConsoleWait();
 	virtual   bool             IdeConsoleWait(int slot);
 	virtual   void             IdeConsoleOnFinish(Event<>  cb);
+	virtual   void             IdeProcessEvents();
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();
@@ -509,7 +508,6 @@ public:
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
-	String    editfile_includes;
 
 	String    editfile2;
 
@@ -640,39 +638,13 @@ public:
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
 	String    libclang_options;
+	String    libclang_coptions;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
 	*/
-	bool	astyle_BracketIndent;
-	bool	astyle_NamespaceIndent;
-	bool	astyle_BlockIndent;
-	bool	astyle_CaseIndent;
-	bool	astyle_ClassIndent;
-	bool	astyle_LabelIndent;
-	bool	astyle_SwitchIndent;
-	bool	astyle_PreprocessorIndent;
-	int		astyle_MinInStatementIndentLength;
-	int		astyle_MaxInStatementIndentLength;
-	bool	astyle_BreakClosingHeaderBracketsMode;
-	bool	astyle_BreakElseIfsMode;
-	bool	astyle_BreakOneLineBlocksMode;
-	bool	astyle_SingleStatementsMode;
-	bool	astyle_BreakBlocksMode;
-	bool	astyle_BreakClosingHeaderBlocksMode;
-	int		astyle_BracketFormatMode;
-	int		astyle_ParensPaddingMode;
-	bool	astyle_ParensUnPaddingMode;
-	bool	astyle_OperatorPaddingMode;
-	bool	astyle_EmptyLineFill;
-	bool	astyle_TabSpaceConversionMode;
-	WString	astyle_TestBox;
-
-	// Formats a string of code with a given formatter
-	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
 
 	// Formats editor's code with Ide format parameters
-	void FormatCode();
 	void FormatJSON_XML(bool xml);
 	void FormatJSON();
 	void FormatXML();
@@ -966,8 +938,8 @@ public:
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
-		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 
+	void      AssistMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -976,17 +948,20 @@ public:
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
-		void  NavigatorDlg();
 		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
+		void  ResetFileLine();
+		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
-		void  Usage(const String& id, const String& name);
+		void  Usage(const String& id, const String& name, Point ref_pos);
 		bool  OpenLink(const String& s, int pos);
 		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
+		bool  GotoId(const String& ref_id, const String& name, Point ref_pos, int li);
+		void  GotoCodeRef(const String& ref_id);
 		void  GoToLine();
 		void  CtrlClick(int64 pos);
 		void  Qtf();
@@ -1165,6 +1140,7 @@ public:
 	void      ShowTopics();
 	void      ShowTopicsWin();
 
+	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();

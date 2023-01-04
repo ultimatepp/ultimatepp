@@ -458,18 +458,6 @@ again:
 		l++;
 		String message;
 		String filelist;   // <-- list of files to update
-		if(git && git->pull)
-			if(sys.Git(repo_dir, "pull --ff-only", true)) {
-				while(l < list.GetCount()) {
-					int action = list.Get(l, 0);
-					if(action == REPOSITORY)
-						break;
-					if(action == MESSAGE)
-						msgmap.GetAdd(repo_dir) = list.Get(l, 3);
-					l++;
-				}
-				continue;
-			}
 		bool commit = false;
 		while(l < list.GetCount()) {
 			int action = list.Get(l, 0);
@@ -505,6 +493,18 @@ again:
 		}
 		if(svn && svn->update)
 			sys.CheckSystem(SvnCmd(sys, "update", repo_dir).Cat() << repo_dir);
+		if(git && git->pull)
+			if(sys.Git(repo_dir, "pull --ff-only", true)) {
+				while(l < list.GetCount()) {
+					int action = list.Get(l, 0);
+					if(action == REPOSITORY)
+						break;
+					if(action == MESSAGE)
+						msgmap.GetAdd(repo_dir) = list.Get(l, 3);
+					l++;
+				}
+				continue;
+			}
 		if(git && git->push)
 			sys.Git(repo_dir, "push", true);
 	}

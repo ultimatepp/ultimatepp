@@ -30,6 +30,10 @@ public:
 	StaticText& SetText(const char *text);
 	
 	String      GetText() const                         { return text; }
+	Font        GetFont() const                         { return Nvl(GetFontAttr(ATTR_FONT), StdFont()); }
+	Color       GetInk() const                          { return Nvl(GetColorAttr(ATTR_INK), SColorText()); }
+	int         GetAlign() const                        { return Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT); }
+	Image       GetImage() const                        { return GetAttr<Image>(ATTR_IMAGE); }
 
 	StaticText& operator=(const char *s)                { SetText(s); return *this; }
 

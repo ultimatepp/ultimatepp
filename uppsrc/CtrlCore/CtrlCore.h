@@ -108,8 +108,8 @@ enum CtrlCoreFlags {
 
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
 
-	K_MOUSE_FORWARD = 0x80000001,
-	K_MOUSE_BACKWARD = 0x80000002
+	K_MOUSE_FORWARD = 0x40000002,
+	K_MOUSE_BACKWARD = 0x40000003
 };
 
 #include "MKeys.h"
@@ -844,7 +844,7 @@ protected:
 	int    GetIntAttr(int ii, int def = Null) const;
 
 	void   SetInt64Attr(int ii, int64 val);
-	int    GetInt64Attr(int ii, int64 def = Null) const;
+	int64  GetInt64Attr(int ii, int64 def = Null) const;
 	
 	void   SetVoidPtrAttr(int ii, const void *ptr);
 	void  *GetVoidPtrAttr(int ii) const;

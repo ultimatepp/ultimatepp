@@ -127,7 +127,7 @@ void PPInfo::PPFile::Parse(Stream& in)
 						guarded = true;
 						speculative = 0;
 					}
-					if(p.Char('(')) {
+					if(p.Char('(')) { // skip argument list
 						id << "(";
 						p.SkipSpaces();
 						p.Spaces();
@@ -358,7 +358,7 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 		}
 	}
 	
-	result.Add(path, ftm);
+	result.GetAdd(path) = ftm;
 	
 	return ftm;
 }

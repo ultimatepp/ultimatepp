@@ -88,7 +88,7 @@ int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String&
 
 	Vector<ItemTextPart> n = ParsePretty(name, pretty);
 	int count = n.GetCount();
-	if(retval_last)
+	if(retval_last) {
 		for(int i = 0; i < n.GetCount(); i++)
 			if(findarg(n[i].type, ITEM_NAME, ITEM_OPERATOR) >= 0 || pretty[n[i].pos] == '(') {
 				PaintText(w, x, y, pretty, n, i, count - i, focuscursor, ink, false);
@@ -106,6 +106,13 @@ int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String&
 				}
 				break;
 			}
+		if(count > 2) { // autocomplete sometimes fully qualifies the the name, looks ugly, remove XXX:: from the end
+			ItemTextPart& p = n[count - 1];
+			if(p.type == ITEM_CPP && p.len == 2 && pretty[p.pos] == ':' && pretty[p.pos + 1] == ':' &&
+			   n[count - 2].type == ITEM_TEXT)
+				count -= 2;
+		}
+	}
 	PaintText(w, x, y, pretty, n, 0, count, focuscursor, ink, false);
 	return x;
 }

@@ -149,8 +149,6 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
-	menu.Add(b, AK_FORMATCODE, THISBACK(FormatCode))
-	    .Help("Reformat code in editor");
 	menu.Add(b, AK_FORMATJSON, THISBACK(FormatJSON))
 	    .Help("Reformat JSON");
 	menu.Add(b, AK_FORMATXML, THISBACK(FormatXML))
@@ -425,9 +423,8 @@ void Ide::SetupMobilePlatforms(Bar& menu)
 
 void Ide::SetupAndroidMobilePlatform(Bar& menu, const AndroidSDK& androidSDK)
 {
-	menu.Add("SDK Manager", THISBACK1(LaunchAndroidSDKManager, androidSDK));
-	menu.Add("AVD Manager", THISBACK1(LaunchAndroidAVDManager, androidSDK));
-	menu.Add("Device monitor", THISBACK1(LauchAndroidDeviceMonitor, androidSDK));
+	menu.Add("SDK Manager", [=] { LaunchAndroidSDKManager(androidSDK); });
+	menu.Add("AVD Manager", [=] { LaunchAndroidAVDManager(androidSDK); });
 }
 
 void Ide::ProjectRepo(Bar& menu)
@@ -748,6 +745,20 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
+void Ide::AssistMenu(Bar& menu)
+{
+	menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
+	menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
+	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
+	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
+	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
+	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+}
+
 void Ide::BrowseMenu(Bar& menu)
 {
 	if(!IsEditorMode()) {
@@ -758,17 +769,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
 				.Enable(!designer)
 				.Help("Go to given line");
-//			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
-			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
-			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-			menu.Add(!designer, AK_USAGE, [=] { Usage(); });
-			menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
-			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
-			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
-			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+			AssistMenu(menu);
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
 			AssistEdit(menu);
 			menu.MenuSeparator();
@@ -812,14 +813,23 @@ void Ide::BrowseMenu(Bar& menu)
 
 	if(AssistDiagnostics) {
 		menu.Separator();
-		menu.Add("Dump and show current index", [=] {
+		menu.Add("Dump and show whole current index", [=] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path);
 			EditFile(path);
 		});
+		menu.Add("Dump and show current file index", [=] {
+			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
+			DumpIndex(path, editfile);
+			EditFile(path);
+		});
 		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });
 		menu.Add("Current file autocomplete errors", [=] { EditFile(CacheFile("autocomplete_errors")); });
-		menu.Add("Current parsed file content", [=] { EditFile(CacheFile("CurrentContext.txt")); });
+		menu.Add("Current parsed file content", [=] {
+			String p = CacheFile("CurrentContext" + AsString(Random()) + AsString(Random()) + ".txt");
+			Upp::SaveFile(p, editor.CurrentContext().content);
+			EditFile(p);
+		});
 	}
 }
 

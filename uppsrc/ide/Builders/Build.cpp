@@ -3,6 +3,8 @@
 
 #include <plugin/bz2/bz2.h>
 
+#define METHOD_NAME "MakeBuild::" << UPP_FUNCTION_NAME << "(): "
+
 #define LDUMP(x) // DUMP(x)
 
 MakeBuild::MakeBuild()
@@ -93,9 +95,8 @@ String NoCr(const char *s)
 	return out;
 }
 
-void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
+void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd)
 {
-	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	{
 		VectorMap<String, String> env = clone(Environment());
@@ -125,14 +126,30 @@ void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
 #ifdef PLATFORM_COCOA
 		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")); // sometimes some of these are missing..
 #endif
+		
+		if (IsAndroidMethod(method)) {
+			auto jdkPath = bm.Get("JDK_PATH", "");
+			if (!jdkPath.IsEmpty()) {
+				Cout() << "JDK Path: " << jdkPath << "\n";
+				env.GetAdd("JAVA_HOME") = jdkPath;
+			}
+		}
+		
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);
 			host.environment << env.GetKey(i) << '=' << env[i] << '\0';
 		}
+		
 		host.environment.Cat(0);
 		host.cmdout = &cmdout;
 	}
+}
+
+void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
+{
+	SetupDefaultMethod();
+	CreateHost(host, method, darkmode, disable_uhd);
 }
 
 One<Builder> MakeBuild::CreateBuilder(Host *host)
@@ -144,43 +161,47 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	if(q < 0) {
 		PutConsole("Invalid builder " + builder);
 		ConsoleShow();
-		return NULL;
+		return nullptr;
 	}
 	Builder* b = (*BuilderMap().Get(builder))();
 	b->host = host;
 	b->script = bm.Get("SCRIPT", "");
 	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
-		AndroidBuilder* ab = dynamic_cast<AndroidBuilder*>(b);
-		ab->sdk.SetPath((bm.Get("SDK_PATH", "")));
-		ab->ndk.SetPath((bm.Get("NDK_PATH", "")));
-		ab->SetJdk(One<Jdk>(new Jdk(bm.Get("JDK_PATH", ""), host)));
+		AndroidBuilder* pAb = dynamic_cast<AndroidBuilder*>(b);
+		if (!pAb) {
+			Loge() << METHOD_NAME << "Converting builder to android builder failed.";
+			return nullptr;
+		}
+		pAb->sdk.SetPath((bm.Get("SDK_PATH", "")));
+		pAb->ndk.SetPath((bm.Get("NDK_PATH", "")));
+		pAb->SetJdk(One<Jdk>(new Jdk(bm.Get("JDK_PATH", ""), host)));
 		
 		String platformVersion = bm.Get("SDK_PLATFORM_VERSION", "");
 		if(!platformVersion.IsEmpty())
-			ab->sdk.SetPlatform(platformVersion);
+			pAb->sdk.SetPlatform(platformVersion);
 		else
-			ab->sdk.DeducePlatform();
+			pAb->sdk.DeducePlatform();
 		String buildToolsRelease = bm.Get("SDK_BUILD_TOOLS_RELEASE", "");
 		if(!buildToolsRelease.IsEmpty())
-			ab->sdk.SetBuildToolsRelease(buildToolsRelease);
+			pAb->sdk.SetBuildToolsRelease(buildToolsRelease);
 		else
-			ab->sdk.DeduceBuildToolsRelease();
+			pAb->sdk.DeduceBuildToolsRelease();
 		
-		ab->ndk_blitz = bm.Get("NDK_BLITZ", "") == "1";
+		pAb->ndk_blitz = bm.Get("NDK_BLITZ", "") == "1";
 		if(bm.Get("NDK_ARCH_ARMEABI_V7A", "") == "1")
-			ab->ndkArchitectures.Add("armeabi-v7a");
+			pAb->ndkArchitectures.Add("armeabi-v7a");
 		if(bm.Get("NDK_ARCH_ARM64_V8A", "") == "1")
-			ab->ndkArchitectures.Add("arm64-v8a");
+			pAb->ndkArchitectures.Add("arm64-v8a");
 		if(bm.Get("NDK_ARCH_X86", "") == "1")
-			ab->ndkArchitectures.Add("x86");
+			pAb->ndkArchitectures.Add("x86");
 		if(bm.Get("NDK_ARCH_X86_64", "") == "1")
-			ab->ndkArchitectures.Add("x86_64");
-		ab->ndkToolchain = bm.Get("NDK_TOOLCHAIN", "");
-		ab->ndkCppRuntime = bm.Get("NDK_CPP_RUNTIME", "");
-		ab->ndkCppFlags = bm.Get("NDK_COMMON_CPP_OPTIONS", "");
-		ab->ndkCFlags = bm.Get("NDK_COMMON_C_OPTIONS", "");
+			pAb->ndkArchitectures.Add("x86_64");
+		pAb->ndkToolchain = bm.Get("NDK_TOOLCHAIN", "");
+		pAb->ndkCppRuntime = bm.Get("NDK_CPP_RUNTIME", "");
+		pAb->ndkCppFlags = bm.Get("NDK_COMMON_CPP_OPTIONS", "");
+		pAb->ndkCFlags = bm.Get("NDK_COMMON_C_OPTIONS", "");
 		
-		b = ab;
+		b = pAb;
 	}
 	else {
 		// TODO: cpp builder variables only!!!
@@ -423,6 +444,7 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console)
 {
 	InitBlitz();
+	Builder::cmdx_cache.Clear();
 
 	String hfile = outfile + ".xxx";
 	SaveFile(hfile, "");
@@ -589,4 +611,18 @@ void MakeBuild::RebuildAll()
 String MakeBuild::GetInvalidBuildMethodError(const String& method)
 {
 	return "Invalid build method " + method + " (" + GetMethodPath(method) + ").";
+}
+
+bool MakeBuild::IsAndroidMethod(const String& method) const
+{
+	VectorMap<String, String> bm = GetMethodVars(method);
+	String builder = bm.Get("BUILDER", "");
+	if (builder.IsEmpty())
+		return false;
+	
+	One<Builder> pBuilder = (*BuilderMap().Get(builder))();
+	if (!pBuilder)
+		return false;
+	
+	return AndroidBuilder::GetBuildersNames().Find(builder) > -1;
 }

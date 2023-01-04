@@ -66,11 +66,7 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 
 	WhenUpdate << [=] {
-		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
-			annotating = true;
-			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
-			ClearErrors();
-		}
+		TriggerSyncFile(500);
 	};
 }
 
@@ -81,6 +77,15 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	}
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
+
+void AssistEditor::TriggerSyncFile(int delay_ms)
+{
+	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+		annotating = true;
+		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
+		ClearErrors();
+	}
+}
 
 void AssistEditor::ClearErrors()
 {
@@ -382,7 +387,7 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	if(!IsView() && GetLength() < 4000000 && cfx.filename != CacheFile("CurrentContext.txt")) {
+	if(!IsView() && GetLength() < 4000000) {
 		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
@@ -396,8 +401,6 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 			}
 		}
 	}
-	if(AssistDiagnostics)
-		SaveFile(CacheFile("CurrentContext.txt"), cfx.content);
 	return cfx;
 }
 
@@ -422,14 +425,14 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	SyncTip();
 }
 
-bool InFileIncludedFrom(const String& s)
+bool IgnoredError(const String& s)
 {
-	return s.Find("in file included from") >= 0;
+	return s.Find("in file included from") >= 0 || s.Find("to match this '{'") >= 0;
 }
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
@@ -445,7 +448,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 					int k = ds[di].kind;
 					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
-						if(d.pos.y < 0 || InFileIncludedFrom(d.text) || path != d.path)
+						if(d.pos.y < 0 || IgnoredError(d.text) || path != d.path)
 							return;
 						Point pos = d.pos;
 						FromUtf8x(pos);
@@ -505,6 +508,8 @@ void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
 
 bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 {
+	if(annotating)
+		return false;
 	if(GetChar(mt.pos) <= 32)
 		return false;
 	String name;
@@ -524,7 +529,7 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 		for(const AnnotationItem& lm : locals) {
 			int ppy = -1;
 			if(lm.id == ref_id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
-				ppy = m.pos.y;
+				ppy = lm.pos.y;
 				m = lm;
 				found_local = true;
 				if(ref_pos == lm.pos)
@@ -566,6 +571,8 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
+	if(assist.IsOpen())
+		return false;
 	int p = mt.pos;
 	int line = GetLinePos(p);
 	Point pos(p, line);
@@ -577,11 +584,11 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 		int ii0 = di;
 		bool found = false;
 		if(IsWarning(k) || IsError(k)) {
-			if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+			if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 				found = true;
 			di++;
 			while(di < errors.GetCount() && errors[di].detail) {
-				if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+				if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 					found = true;
 				di++;
 			}
@@ -590,10 +597,12 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 			String qtf = "[g ";
 			for(int i = ii0; i < di; i++) {
 				Diagnostic& d = errors[i];
+				if(d.pos.y < 0 || IgnoredError(d.text))
+					continue;
 				if(i > ii0)
 					qtf << "&";
 				qtf << "[";
-				if(d.path == path && d.pos == pos && !InFileIncludedFrom(d.text))
+				if(d.path == path && d.pos == pos)
 					qtf << "*";
 				qtf << " ";
 				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
@@ -616,7 +625,6 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 void AssistEditor::SyncCurrentFile()
 {
 	if(is_source_file) {
-		int line_delta;
 		CurrentFileContext cfx = CurrentContext();
 		SyncCurrentFile(cfx);
 	}
@@ -690,7 +698,7 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	if(cfx.content.GetCount())
+	if(cfx.content.GetCount() && HasLibClang())
 		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;
@@ -735,6 +743,8 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		return;
 		
 	if(assist_item.GetCount() == 0) {
+		if(no_empty_autocomplete)
+			return;
 		AssistItem& m = assist_item.Add();
 		m.kind = KIND_ERROR;
 		m.pretty = "No relevant autocomplete info found";
@@ -982,6 +992,21 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
+	CloseTip();
+#ifdef _DEBUG
+	if(key == K_F12) {
+		DLOG("==================");
+		PPInfo ppi;
+		VectorMap<String, Time> result;
+		ArrayMap<String, Index<String>> define_includes;
+		String includes = theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes();
+		ppi.SetIncludes(includes);
+		ppi.GatherDependencies(theide->editfile, result, define_includes);
+		DDUMP(includes);
+		DDUMPM(result);
+		DDUMPM(define_includes);
+	}
+#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
@@ -1036,9 +1061,23 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist) {
 		if(InCode()) {
-			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
-			   key == ':' && Ch(GetCursor32() - 2) == ':')
+			if(key == '>' && Ch(GetCursor32() - 2) == '-' || key == ':' && Ch(GetCursor32() - 2) == ':')
 				Assist(false);
+			else
+			if(key == '.')  {
+				String id;
+				int pos = GetCursor() - 2;
+				int n = 50;
+				while(pos >= 0 && n-- >= 0) {
+					int c = GetChar(pos);
+					if(c > ' ') {
+						if(iscib(*ReadIdBack(pos)) || c == ')' || c == ']') // where we can realistically expect autocomplete...
+							Assist(false);
+						break;
+					}
+					pos--;
+				}
+			}
 		}
 		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
 			Assist(false);
@@ -1125,7 +1164,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 7;
+	int version = 8;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1146,6 +1185,9 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 7)
 		s % show_errors % show_errors_status;
+
+	if(version >= 8)
+		s % no_empty_autocomplete;
 }
 
 void AssistEditor::SerializeNavigatorWorkspace(Stream& s)

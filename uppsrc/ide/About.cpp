@@ -74,7 +74,6 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Label& v1 = ctrl.Create<Label>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
-	int total = 0;
 
 	Index<String> classes;
 	Index<String> items;

@@ -66,10 +66,13 @@ struct DrawLabel : DrawLabelBasic, DrawLabelExt {
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;
+	Rect      PaintRect(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const;
 	Size      Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey = true) const;
 	Size      Paint(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
+	Rect      PaintRect(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, const Rect& r, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
+	Rect      PaintRect(Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
 };
 
 Image DisabledImage(const Image& img, bool disabled = true);

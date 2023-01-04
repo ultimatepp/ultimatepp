@@ -18,6 +18,8 @@ Point                                  autocomplete_pos;
 int64                                  autocomplete_serial;
 Event<const Vector<AutoCompleteItem>&> autocomplete_done;
 
+bool                                   delete_cfc;
+
 struct CurrentFileClang {
 	CurrentFileContext parsed_file;
 	Clang              clang;
@@ -36,6 +38,11 @@ CurrentFileClang& GetCurrentFileClang(const String& filename)
 	return s_cf.GetCount() < ParsedFiles ? s_cf.Add() : s_cf.Top();
 }
 
+void CurrentFileDeleteCache()
+{
+	delete_cfc = true;
+}
+
 void ReadAutocomplete(const CXCompletionString& string, String& name, String& signature)
 {
 	const int chunkCount = clang_getNumCompletionChunks(string);
@@ -43,7 +50,7 @@ void ReadAutocomplete(const CXCompletionString& string, String& name, String& si
 		const CXCompletionChunkKind chunkKind = clang_getCompletionChunkKind(string, j);
 		String text = FetchString(clang_getCompletionChunkText(string, j));
 		if(chunkKind == CXCompletionChunk_Optional)
-			for(int i = 0; i < clang_getNumCompletionChunks(string); i++)
+			for(unsigned i = 0; i < clang_getNumCompletionChunks(string); i++)
 				ReadAutocomplete(clang_getCompletionChunkCompletionString(string, i), name, signature);
 		else
 		if(chunkKind == CXCompletionChunk_TypedText) {
@@ -66,7 +73,10 @@ void DoAnnotations(CurrentFileClang& cfc, int64 serial) {
 	}
 	if(!cfc.clang.tu || !annotations_done) return;
 	ClangVisitor v;
-	v.WhenFile = [&] (const String& path) { return path == current_file.filename; };
+	String tpath = current_file.filename;
+	if(GetFileExt(tpath) == ".icpp")
+		tpath = ForceExt(tpath, ".cpp");
+	v.WhenFile = [&] (const String& path) { return path == tpath; };
 	v.Do(cfc.clang.tu);
 	CppFileInfo f;
 	if(v.info.GetCount()) {
@@ -124,6 +134,7 @@ void CurrentFileThread()
 			int64 done_serial;
 			int64 aserial;
 			bool autocomplete_do;
+			bool del_cfc;
 			{ // fetch the work to do
 				GuiLock __;
 				f = current_file;
@@ -132,8 +143,12 @@ void CurrentFileThread()
 				done_serial = current_file_done_serial;
 				autocomplete_do = do_autocomplete;
 				aserial = autocomplete_serial;
+				del_cfc = delete_cfc;
+				delete_cfc = false;
 			}
 			if(f.filename.GetCount()) {
+				if(del_cfc)
+					s_cf.Clear();
 				CurrentFileClang& cfc = GetCurrentFileClang(f.filename);
 				auto DumpDiagnostics = [&](const char *filename) {
 					if(AssistDiagnostics) {
@@ -144,6 +159,8 @@ void CurrentFileThread()
 				String fn = f.filename;
 				if(!IsSourceFile(fn))
 					fn.Cat(".cpp");
+				if(GetFileExt(fn) == ".icpp")
+					fn = ForceExt(fn, ".cpp");
 				if(f.filename != cfc.parsed_file.filename || f.real_filename != cfc.parsed_file.real_filename ||
 				   f.includes != cfc.parsed_file.includes || f.defines != cfc.parsed_file.defines ||
 				   !cfc.clang.tu) {
@@ -167,18 +184,6 @@ void CurrentFileThread()
 					current_file_parsing = false;
 					was_parsing = true;
 				}
-				if(!cfc.clang.tu) {
-					{
-						GuiLock __;
-						IdeShowConsole();
-						PutConsole("libclang parser has failed, please fix libclang options");
-					}
-					String h = LibClangCommandLine();
-					while(h == LibClangCommandLine()) {
-						Sleep(500);
-						if(Thread::IsShutdownThreads()) break;
-					}
-				}
 				if(Thread::IsShutdownThreads()) break;
 				if(cfc.clang.tu && autocomplete_do) {
 					Vector<AutoCompleteItem> item;
@@ -197,7 +202,7 @@ void CurrentFileThread()
 						// DumpDiagnostics(cfc.clang.tu);
 						if(results) {
 							int tm = msecs();
-							for(int i = 0; i < results->NumResults; i++) {
+							for(unsigned i = 0; i < results->NumResults; i++) {
 								const CXCompletionString& string = results->Results[i].CompletionString;
 								int kind = results->Results[i].CursorKind;
 							//	if(kind == CXCursor_MacroDefinition) // we probably want this only on Ctrl+Space
@@ -280,7 +285,10 @@ void SetCurrentFile(const CurrentFileContext& ctx, Event<const CppFileInfo&, con
 
 		MemoryIgnoreNonMainLeaks();
 		MemoryIgnoreNonUppThreadsLeaks(); // clangs leaks static memory in threads
-		Thread::Start([] { CurrentFileThread(); });
+		Thread t;
+		t.StackSize(8192*1024);
+		t.Run([] { CurrentFileThread(); });
+		t.Detach();
 		Thread::AtShutdown([] {
 			LLOG("Shutdown current file");
 			current_file_event.Broadcast();

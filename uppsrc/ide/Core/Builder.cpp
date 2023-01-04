@@ -32,6 +32,8 @@ Time Builder::GetFileTime(const String& path) const
 	return GetFileInfo(path);
 }
 
+VectorMap<String, String> Builder::cmdx_cache;
+
 String Builder::CmdX(const char *s)
 { // expand ` character delimited sections by executing them as commands
 	String r, cmd;
@@ -39,7 +41,15 @@ String Builder::CmdX(const char *s)
 	for(; *s; s++)
 		if(*s == '`') {
 			if(cmdf) {
-				r << Sys(cmd);
+				int q = cmdx_cache.Find(cmd);
+				if(q >= 0)
+					r << cmdx_cache[q];
+				else {
+					String h = Sys(cmd);
+					r << h;
+					cmdx_cache.Add(cmd, h);
+					IdeProcessEvents();
+				}
 				cmd.Clear();
 			}
 			cmdf = !cmdf;

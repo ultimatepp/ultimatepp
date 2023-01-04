@@ -15,10 +15,11 @@ static const char styles[] =
 	"[0 $$7,0#" ENDSTYLE ":end]"
 ;
 
+void IdeGotoCodeRef(const String& ref_id);
+
 void TopicEditor::JumpToDefinition()
 {
-	//TODO
-//	PostCallback(callback1(IdeGotoCodeRef, editor.GetFormatInfo().label));
+	PostCallback([=] { IdeGotoCodeRef(editor.GetFormatInfo().label); });
 }
 
 void TopicEditor::Label(String& label)
@@ -158,10 +159,6 @@ String NaturalDeQtf(const char *s) {
 		s++;
 	}
 	return String(r);
-}
-
-static int sSplitT(int c) {
-	return c == ';' || c == '<' || c == '>' || c == ',';
 }
 
 String TopicEditor::GetLang() const

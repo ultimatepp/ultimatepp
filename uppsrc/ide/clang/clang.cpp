@@ -35,28 +35,31 @@ String GetTypeSpelling(CXCursor cursor)
 
 String GetClangInternalIncludes()
 {
-	static String includes;
-	ONCELOCK {
-		String dummy = ConfigFile("dummy.cpp");
-		Upp::SaveFile(dummy, String());
-		String h = Sys(
-		#ifdef PLATFORM_WIN32
-				GetExeDirFile("bin/clang/bin/c++") +
-		#else
-				"clang++"
-		#endif
-				" -v -x c++ -E " + dummy
-		);
-		DeleteFile(dummy);
-		h.Replace("\r", "");
-		Vector<String> ln = Split(h, '\n');
-		for(int i = 0; i < ln.GetCount(); i++) {
-			String dir = TrimBoth(ln[i]);
-			if(DirectoryExists(dir))
-				MergeWith(includes, ";", NormalizePath(dir));
+	INTERLOCKED {
+		static String includes;
+		ONCELOCK {
+			String dummy = ConfigFile("dummy.cpp");
+			Upp::SaveFile(dummy, String());
+			String h = Sys(
+			#ifdef PLATFORM_WIN32
+					GetExeDirFile("bin/clang/bin/c++") +
+			#else
+					"clang++"
+			#endif
+					" -v -x c++ -E " + dummy
+			);
+			DeleteFile(dummy);
+			h.Replace("\r", "");
+			Vector<String> ln = Split(h, '\n');
+			for(int i = 0; i < ln.GetCount(); i++) {
+				String dir = TrimBoth(ln[i]);
+				if(DirectoryExists(dir))
+					MergeWith(includes, ";", NormalizePath(dir));
+			}
 		}
+		return includes;
 	}
-	return includes;
+	return String();
 }
 
 void Clang::Dispose()
@@ -72,7 +75,7 @@ void Clang::Dispose()
 	tu = nullptr;
 }
 
-bool Clang::Parse(const String& filename, const String& content,
+bool Clang::Parse(const String& filename_, const String& content,
                   const String& includes_, const String& defines,
                   dword options,
                   const String& filename2, const String& content2)
@@ -86,11 +89,25 @@ bool Clang::Parse(const String& filename, const String& content,
 	Dispose();
 
 	String cmdline;
+	
+	String filename = filename_;
+	if((options & PARSE_FILE) && GetFileExt(filename) == ".icpp") {
+		String src = "#include \"" + filename + "\"";
+		filename = CacheFile(GetFileName(filename) + "$" + SHA1String(src) + ".cpp");
+		SaveChangedFile(filename, src);
+	}
 
-	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG -xc++ -std=c++14 "
-	        << RedefineMacros()
-	        << " " << LibClangCommandLine();
+	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG ";
+	
+	if(IsCppSourceFile(filename))
+		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
+	else
+		cmdline << " -xc " << LibClangCommandLineC() << " ";
+	
+	String cmdline0 = cmdline;
 
+	cmdline << RedefineMacros() << " ";
+	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
 
@@ -123,6 +140,8 @@ bool Clang::Parse(const String& filename, const String& content,
 	                                options & PARSE_FILE ? 0 : (filename2.GetCount() ? 2 : 1),
 	                                options);
 
+	if(!tu)
+		PutAssist("Failed commandline: " + cmdline0);
 //	DumpDiagnostics(tu);
 	
 	return tu;
@@ -170,9 +189,9 @@ void Diagnostics(CXTranslationUnit tu, Event<const String&, Point, const String&
 	if(!HasLibClang())
 		return;
 
-	size_t num_diagnostics = clang_getNumDiagnostics(tu);
+	unsigned num_diagnostics = clang_getNumDiagnostics(tu);
 
-	for (size_t i = 0; i < num_diagnostics; ++i) {
+	for (unsigned i = 0; i < num_diagnostics; ++i) {
 		CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
 		auto Dump = [&](CXDiagnostic diagnostic, bool detail) {
 			CXFile file;

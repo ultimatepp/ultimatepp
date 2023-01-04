@@ -47,10 +47,10 @@ StaticText& StaticText::SetText(const char *s)
 void StaticText::MakeDrawLabel(DrawLabel& l) const
 {
 	l.text = text;
-	l.font = Nvl(GetFontAttr(ATTR_FONT), StdFont());
-	l.ink = Nvl(GetColorAttr(ATTR_INK), SColorText());
-	l.align = Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT);
-	l.limg = GetAttr<Image>(ATTR_IMAGE);
+	l.font = GetFont();
+	l.ink = GetInk();
+	l.align = GetAlign();
+	l.limg = GetImage();
 	l.lspc = Nvl(GetIntAttr(ATTR_IMAGE_SPC), 0);
 	l.disabled = !IsShowEnabled();
 	l.accesskey = accesskey;
@@ -255,9 +255,9 @@ void LabelBox::Paint(Draw& w)
 	int ty = sz.cy < 2 * Draw::GetStdFontCy() ? (sz.cy - lsz.cy) / 2 : 0;
 	DrawLabel l;
 	MakeDrawLabel(l);
-	Size ts = l.Paint(this, w, d + DPI(2), ty, sz.cx, lsz.cy);
+	Rect tr = l.PaintRect(this, w, d + DPI(2), ty, sz.cx - 2 * (d + DPI(2)), lsz.cy);
 	w.Begin();
-	w.ExcludeClip(d, ty, ts.cx + DPI(4), ts.cy);
+	w.ExcludeClip(tr.left - DPI(2), ty, tr.GetWidth() + DPI(4), tr.GetHeight());
 	PaintLabelBox(w, sz, color, d);
 	w.End();
 }

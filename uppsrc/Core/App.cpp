@@ -30,6 +30,13 @@ static StaticMutex sHlock;
 static char sHomeDir[_MAX_PATH + 1];
 static char Argv0__[_MAX_PATH + 1];
 
+void (*CrashHook)();
+
+void InstallCrashHook(void (*h)())
+{
+	CrashHook = h;
+}
+
 void    SetHomeDirectory(const char *dir)
 {
 	INTERLOCKED_(sHlock) {
@@ -467,16 +474,19 @@ void AppExecute__(void (*app)())
 
 void s_ill_handler(int)
 {
+	CrashHook();
 	Panic("Illegal instruction!");
 }
 
 void s_segv_handler(int)
 {
+	CrashHook();
 	Panic("Invalid memory access!");
 }
 
 void s_fpe_handler(int)
 {
+	CrashHook();
 	Panic("Invalid arithmetic operation!");
 }
 
@@ -658,7 +668,7 @@ String GetUserName()
 }
 
 String GetDesktopManager()
-{	
+{
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 	return "windows";
 #endif
@@ -690,6 +700,7 @@ String GetPicturesFolder()	  { return GetShellFolder(CSIDL_MYPICTURES);}
 String GetVideoFolder()		  { return GetShellFolder(CSIDL_MYVIDEO);}
 String GetDocumentsFolder()	  { return GetShellFolder(/*CSIDL_MYDOCUMENTS*/0x0005);}
 String GetTemplatesFolder()	  { return GetShellFolder(CSIDL_TEMPLATES);}
+String GetProgramDataFolder() { return GetShellFolder(CSIDL_COMMON_APPDATA); }
 
 #define MY_DEFINE_KNOWN_FOLDER(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
 static const GUID name = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
@@ -721,11 +732,11 @@ String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
 	String ret;
 	if(FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs")))
 		return ret;
-  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
-  		return ret;
-  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
-  		return ret;
-  	return Null;
+	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
+		return ret;
+	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
+		return ret;
+	return Null;
 }
 
 String GetPathDataXdg(String fileConfig, const char *folder) 
@@ -785,15 +796,17 @@ String GetDesktopFolder()
 		return ret;
 }
 
-String GetProgramsFolder()  { return String("/usr/bin"); }
-String GetAppDataFolder()   { return GetHomeDirectory(); }
-String GetMusicFolder()	    { return GetShellFolder("XDG_MUSIC_DIR", "MUSIC"); }
-String GetPicturesFolder()  { return GetShellFolder("XDG_PICTURES_DIR", "PICTURES"); }
-String GetVideoFolder()     { return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS"); }
-String GetDocumentsFolder() { return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS"); }
-String GetTemplatesFolder() { return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR"); }
-String GetDownloadFolder()  { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR"); }
+String GetProgramsFolder()    { return String("/usr/bin"); }
+String GetAppDataFolder()     { return GetHomeDirectory(); }
+String GetMusicFolder()	      { return GetShellFolder("XDG_MUSIC_DIR", "MUSIC"); }
+String GetPicturesFolder()    { return GetShellFolder("XDG_PICTURES_DIR", "PICTURES"); }
+String GetVideoFolder()       { return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS"); }
+String GetDocumentsFolder()   { return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS"); }
+String GetTemplatesFolder()   { return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR"); }
+String GetDownloadFolder()    { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR"); }
+String GetProgramDataFolder() { return String("/var/opt"); }
 
 #endif
+
 
 }

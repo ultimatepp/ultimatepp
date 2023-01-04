@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 23;
+	int version = 25;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -268,6 +268,8 @@ void Ide::Serialize(Stream& s)
 	s % insert_include;
 	if(version >= 23)
 		s % libclang_options;
+	if(version >= 24)
+		s % libclang_coptions;
 	SerializeGlobalConfigs(s);
 	doc.Serialize(s);
 	s % right_split;
@@ -297,29 +299,56 @@ void Ide::Serialize(Stream& s)
 	}
 	s % doc;
 	s % chstyle;
-	s % astyle_BracketIndent;
-	s % astyle_NamespaceIndent;
-	s % astyle_BlockIndent;
-	s % astyle_CaseIndent;
-	s % astyle_ClassIndent;
-	s % astyle_LabelIndent;
-	s % astyle_SwitchIndent;
-	s % astyle_PreprocessorIndent;
-	s % astyle_MinInStatementIndentLength;
-	s % astyle_MaxInStatementIndentLength;
-	s % astyle_BreakClosingHeaderBracketsMode;
-	s % astyle_BreakElseIfsMode;
-	s % astyle_BreakOneLineBlocksMode;
-	s % astyle_SingleStatementsMode;
-	s % astyle_BreakBlocksMode;
-	s % astyle_BreakClosingHeaderBlocksMode;
-	s % astyle_BracketFormatMode;
-	s % astyle_ParensPaddingMode;
-	s % astyle_ParensUnPaddingMode;
-	s % astyle_OperatorPaddingMode;
-	s % astyle_EmptyLineFill;
-	s % astyle_TabSpaceConversionMode;
-	s % astyle_TestBox;
+	if(version < 25) { // deprecated
+		bool	astyle_BracketIndent;
+		bool	astyle_NamespaceIndent;
+		bool	astyle_BlockIndent;
+		bool	astyle_CaseIndent;
+		bool	astyle_ClassIndent;
+		bool	astyle_LabelIndent;
+		bool	astyle_SwitchIndent;
+		bool	astyle_PreprocessorIndent;
+		int		astyle_MinInStatementIndentLength;
+		int		astyle_MaxInStatementIndentLength;
+		bool	astyle_BreakClosingHeaderBracketsMode;
+		bool	astyle_BreakElseIfsMode;
+		bool	astyle_BreakOneLineBlocksMode;
+		bool	astyle_SingleStatementsMode;
+		bool	astyle_BreakBlocksMode;
+		bool	astyle_BreakClosingHeaderBlocksMode;
+		int		astyle_BracketFormatMode;
+		int		astyle_ParensPaddingMode;
+		bool	astyle_ParensUnPaddingMode;
+		bool	astyle_OperatorPaddingMode;
+		bool	astyle_EmptyLineFill;
+		bool	astyle_TabSpaceConversionMode;
+		WString	astyle_TestBox;
+
+		s % astyle_BracketIndent;
+		s % astyle_NamespaceIndent;
+		s % astyle_BlockIndent;
+		s % astyle_CaseIndent;
+		s % astyle_ClassIndent;
+		s % astyle_LabelIndent;
+		s % astyle_SwitchIndent;
+		s % astyle_PreprocessorIndent;
+		s % astyle_MinInStatementIndentLength;
+		s % astyle_MaxInStatementIndentLength;
+		s % astyle_BreakClosingHeaderBracketsMode;
+		s % astyle_BreakElseIfsMode;
+		s % astyle_BreakOneLineBlocksMode;
+		s % astyle_SingleStatementsMode;
+		s % astyle_BreakBlocksMode;
+		s % astyle_BreakClosingHeaderBlocksMode;
+		s % astyle_BracketFormatMode;
+		s % astyle_ParensPaddingMode;
+		s % astyle_ParensUnPaddingMode;
+		s % astyle_OperatorPaddingMode;
+		s % astyle_EmptyLineFill;
+		s % astyle_TabSpaceConversionMode;
+		s % astyle_TestBox;
+	}
+	
 	if(version >= 6 && version < 8) {
 		String dummy;
 		s % dummy;

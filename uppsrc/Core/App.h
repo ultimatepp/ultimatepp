@@ -106,3 +106,6 @@ String GetVideoFolder();
 String GetDocumentsFolder();
 String GetTemplatesFolder();
 String GetDownloadFolder();
+String GetProgramDataFolder();
+
+void   InstallCrashHook(void (*h)());

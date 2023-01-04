@@ -65,6 +65,7 @@ public:
 
 	bool         makefile_svn_revision = true;
 
+	void CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd);
 	void CreateHost(Host& host, bool darkmode = false, bool disable_uhd = false);
 
 	const TargetMode& GetTargetMode();
@@ -96,6 +97,7 @@ public:
 
 private:
 	static String GetInvalidBuildMethodError(const String& method);
+	bool IsAndroidMethod(const String& method) const;
 };
 
 extern bool output_per_assembly;
