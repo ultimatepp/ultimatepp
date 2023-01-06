@@ -70,6 +70,19 @@ public:
 		Vector<Replacment> FindReplacments() const;
 	};
 
+	class OutputNormalizer {
+	public:
+		using Replacmenets = Vector<Output::Replacment>;
+
+	public:
+		OutputNormalizer(Ide* ide);
+
+		Replacmenets Normalize(Replacmenets replacmenets);
+
+	private:
+		Ide* m_ide;
+	};
+
 	struct Parameters {
 		String m_file;
 		int m_start_line = Null;
@@ -130,6 +143,42 @@ Vector<ClangFormat::Output::Replacment> ClangFormat::Output::FindReplacments() c
 	return replacmenets;
 }
 
+ClangFormat::OutputNormalizer::OutputNormalizer(Ide* ide)
+	: m_ide(ide)
+{
+}
+
+ClangFormat::OutputNormalizer::Replacmenets
+ClangFormat::OutputNormalizer::Normalize(Replacmenets replacmenets)
+{
+	if(replacmenets.IsEmpty()) {
+		return {};
+	}
+
+	WString text = m_ide->editor.GetW();
+
+	int byte_count = 0;
+	int replacmenet_count = 0;
+	for(int i = 0; i < text.GetCount(); i++) {
+		byte_count += Utf8Len(text[i]);
+
+		const auto offset = replacmenets[replacmenet_count].m_offset;
+		if(byte_count == offset) {
+			if(offset != i + 1) {
+				m_ide->PutConsole(String() << "Replacing offset " << offset << " with " << i + 1);
+				replacmenets[replacmenet_count].m_offset = i + 1;
+			}
+			replacmenet_count++;
+		}
+
+		if(replacmenet_count >= replacmenets.GetCount()) {
+			break;
+		}
+	}
+
+	return replacmenets;
+}
+
 ClangFormat::ClangFormat(Ide* ide)
 	: m_ide(ide)
 {
@@ -138,7 +187,7 @@ ClangFormat::ClangFormat(Ide* ide)
 
 void ClangFormat::PutErrorOnConsole(const String& output)
 {
-	if (!m_ide->IsVerbose()) {
+	if(!m_ide->IsVerbose()) {
 		m_ide->ConsoleClear();
 	}
 	m_ide->ConsoleShow();
@@ -297,7 +346,7 @@ void Ide::ReformatFile()
 
 	Vector<ClangFormat::Output::Replacment> replacmenets;
 	try {
-		replacmenets = output.FindReplacments();
+		replacmenets = ClangFormat::OutputNormalizer(this).Normalize(output.FindReplacments());
 		if(replacmenets.IsEmpty()) {
 			return;
 		}
@@ -325,9 +374,6 @@ void Ide::ReformatFile()
 			editor.Insert(offset, replacmenet.m_data);
 			shift += data_count;
 		}
-
-		PutConsole(String("Shift: ") << IntStr(shift) << ", Length: " << IntStr(length)
-		                             << ", DataCount: " << IntStr(data_count));
 	}
 }
 
