@@ -23,7 +23,8 @@ bool ReFormatJSON_XML(String& text, bool xml)
 	return true;
 }
 
-void Ide::FormatJSON_XML(bool xml) {
+void Ide::FormatJSON_XML(bool xml)
+{
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
 	if((sel ? h - l : editor.GetLength()) > 75 * 1024 * 1024) {
@@ -137,7 +138,9 @@ ClangFormat::ClangFormat(Ide* ide)
 
 void ClangFormat::PutErrorOnConsole(const String& output)
 {
-	m_ide->ConsoleClear();
+	if (!m_ide->IsVerbose()) {
+		m_ide->ConsoleClear();
+	}
 	m_ide->ConsoleShow();
 	PutConsole(output);
 	m_ide->BeepMuteExclamation();
@@ -240,7 +243,7 @@ ClangFormat::Output ClangFormat::Execute0(const String& cmd)
 			error << "Error: " << GenerateClangFormatNotFoundErrorMsg();
 		}
 		else {
-			error << "Error: clang-format ended with \"" << IntStr(code) << "\" error code.";
+			error << "Error: clang-format ended with \"" << IntStr(code) << "\" error code.\n";
 			if(!ss.GetResult().IsEmpty()) {
 				error << "\nProgram output:\n" << ss.GetResult();
 			}
@@ -282,7 +285,7 @@ void Ide::ReformatFile()
 	params.m_file = editfile;
 	if(sel) {
 		params.m_start_line = editor.GetLine(l) + 1;
-		params.m_end_line = editor.GetLine(h - l) + 1;
+		params.m_end_line = editor.GetLine(h) + 1;
 	}
 	params.m_output_replacments_xml = true;
 
@@ -300,8 +303,8 @@ void Ide::ReformatFile()
 		}
 	}
 	catch(const XmlError& e) {
-		PutConsole(String() << "Error: Failed to parse clang-format ouput with error \"" << e
-		                    << "\".");
+		clang_format.PutErrorOnConsole(
+			String("Error: Failed to parse clang-format ouput with error \"" << e) << "\".");
 		return;
 	}
 
@@ -322,8 +325,9 @@ void Ide::ReformatFile()
 			editor.Insert(offset, replacmenet.m_data);
 			shift += data_count;
 		}
-		
-		PutConsole(String("Shift: ") << IntStr(shift) << ", Length: " << IntStr(length) << ", DataCount: " << IntStr(data_count));
+
+		PutConsole(String("Shift: ") << IntStr(shift) << ", Length: " << IntStr(length)
+		                             << ", DataCount: " << IntStr(data_count));
 	}
 }
 
