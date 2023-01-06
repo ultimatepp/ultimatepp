@@ -68,19 +68,7 @@ public:
 
 		bool IsSuccessful() const { return m_code == 0; }
 		Vector<Replacment> FindReplacments() const;
-	};
-
-	class OutputNormalizer {
-	public:
-		using Replacmenets = Vector<Output::Replacment>;
-
-	public:
-		OutputNormalizer(Ide* ide);
-
-		Replacmenets Normalize(Replacmenets replacmenets);
-
-	private:
-		Ide* m_ide;
+		Vector<Replacment> FindNormalizedReplacmenets(const WString& editor_text) const;
 	};
 
 	struct Parameters {
@@ -89,6 +77,9 @@ public:
 		int m_end_line = Null;
 		bool m_output_replacments_xml = false;
 	};
+
+public:
+	using Replacmenets = Vector<Output::Replacment>;
 
 public:
 	ClangFormat(Ide* ide);
@@ -143,29 +134,24 @@ Vector<ClangFormat::Output::Replacment> ClangFormat::Output::FindReplacments() c
 	return replacmenets;
 }
 
-ClangFormat::OutputNormalizer::OutputNormalizer(Ide* ide)
-	: m_ide(ide)
+Vector<ClangFormat::Output::Replacment>
+ClangFormat::Output::FindNormalizedReplacmenets(const WString& editor_text) const
 {
-}
-
-ClangFormat::OutputNormalizer::Replacmenets
-ClangFormat::OutputNormalizer::Normalize(Replacmenets replacmenets)
-{
+	auto replacmenets = FindReplacments();
 	if(replacmenets.IsEmpty()) {
 		return {};
 	}
 
-	WString text = m_ide->editor.GetW();
-
 	int byte_count = 0;
 	int replacmenet_count = 0;
-	for(int i = 0; i < text.GetCount(); i++) {
-		byte_count += Utf8Len(text[i]);
+	for(int i = 0; i < editor_text.GetCount(); i++) {
+		byte_count += Utf8Len(editor_text[i]);
 
 		const auto offset = replacmenets[replacmenet_count].m_offset;
 		if(byte_count == offset) {
 			if(offset != i + 1) {
-				m_ide->PutConsole(String() << "Replacing offset " << offset << " with " << i + 1);
+				// m_ide->PutConsole(String()
+				//                   << "Replacing offset " << offset << " with " << i + 1);
 				replacmenets[replacmenet_count].m_offset = i + 1;
 			}
 			replacmenet_count++;
@@ -346,7 +332,7 @@ void Ide::ReformatFile()
 
 	Vector<ClangFormat::Output::Replacment> replacmenets;
 	try {
-		replacmenets = ClangFormat::OutputNormalizer(this).Normalize(output.FindReplacments());
+		replacmenets = output.FindNormalizedReplacmenets(editor.GetW());
 		if(replacmenets.IsEmpty()) {
 			return;
 		}
