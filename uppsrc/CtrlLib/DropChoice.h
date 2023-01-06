@@ -11,7 +11,7 @@ protected:
 
 	struct Popup : Ctrl {
 		PopUpTable *table;
-		
+
 		virtual void Deactivate() { table->PopupDeactivate(); }
 		virtual void CancelMode() { table->PopupCancelMode(); }
 	};
@@ -43,7 +43,7 @@ class PopUpList {
 protected:
 	void PopupDeactivate();
 	void PopupCancelMode();
-	
+
 	struct PopupArrayCtrl : ArrayCtrl {
 		PopUpList *list;
 
@@ -55,13 +55,13 @@ protected:
 		PopUpList     *list;
 		PopupArrayCtrl ac;
 		bool           closing = false;
-		
+
 		virtual void Deactivate() { if(!closing) list->PopupDeactivate(); }
 		virtual void CancelMode() { if(!closing) list->PopupCancelMode(); }
-		
+
 		Popup(PopUpList *list);
 	};
-	
+
 	Vector<Value>           items;
 	Vector<word>            lineinfo;
 	Vector<const Display *> linedisplay;
@@ -72,14 +72,13 @@ protected:
 	int                     linecy;
 	int                     cursor = -1;
 	int16                   droplines;
-	int16                   inpopup;
-	
+	int16                   inpopup:15;
+	bool                    permanent:1;
+
 	void          DoSelect();
 	void          DoCancel();
 	void          DoClose();
-	
-	void          Reset();
-	
+
 	friend struct Popup;
 
 public:
@@ -90,6 +89,8 @@ public:
 	void         PopUp(Ctrl *owner, int width);
 	void         PopUp(Ctrl *owner);
 	
+	ArrayCtrl&   Permanent();
+
 	void         Clear();
 	void         SetCount(int n);
 	void         Add(const Value& v);
@@ -99,7 +100,7 @@ public:
 
 	void         SetCursor(int i);
 	int          GetCursor() const;
-	
+
 	int          GetCount() const                              { return items.GetCount(); }
 	void         Set(int i, const Value& v);
 	Value        Get(int i) const                              { return items[i]; }
@@ -111,17 +112,17 @@ public:
 	int          GetLineCy(int ii) const;
 	bool         Key(int c);
 	bool         IsLineEnabled(int ii) const;
-	
+
 	void           SetDisplay(const Display& d);
 	const Display& GetDisplay() const                          { return *display; }
 
 	void           SetDisplay(int i, const Display& d);
 	const Display& GetDisplay(int i) const;
-	
+
 	void           SetConvert(const Convert& c);
-	
+
 	PopUpList&   SetDropLines(int _droplines)                  { droplines = _droplines; return *this; }
-	
+
 	PopUpList();
 	virtual ~PopUpList();
 };
@@ -169,7 +170,7 @@ public:
 	void          Remove(int i);
 	void          ClearList();
 	void          Clear();
-	
+
 	DropList&     AddSeparator();
 
 	void          Drop();
@@ -201,10 +202,9 @@ public:
 
 	void          Adjust();
 	void          Adjust(const Value& k);
-/*
-	const PopUpTable& GetList() const                   { return list; }
-	PopUpTable&   ListObject()                          { return list; }
-*/
+
+	ArrayCtrl&    ListObject()                          { return list.Permanent(); }
+
 	DropList&     SetDropLines(int d)                   { list.SetDropLines(d); return *this; }
 	DropList&     SetValueConvert(const Convert& cv);
 	DropList&     SetConvert(const Convert& cv);
@@ -280,7 +280,7 @@ public:
 	void        Set(int i, const Value& data)         { list.Set(i, data); }
 	void        Remove(int i);
 	void        SerializeList(Stream& s);
-	
+
 	int         GetCount() const                      { return list.GetCount(); }
 	Value       Get(int i) const                      { return list.Get(i); }
 

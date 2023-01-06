@@ -169,7 +169,12 @@ void PopUpList::DoClose() {
 	if(!inpopup && popup) {
 		popup->closing = true; // prevent infinite recursion
 		cursor = popup->ac.GetCursor();
-		popup.Clear();
+		if(permanent) {
+			popup->Close();
+			popup->closing = false;
+		}
+		else
+			popup.Clear();
 	}
 }
 
@@ -242,12 +247,21 @@ PopUpList::Popup::Popup(PopUpList *list)
 	ac.CenterCursor();
 }
 
+ArrayCtrl& PopUpList::Permanent()
+{
+	if(!popup)
+		popup.Create(this);
+	permanent = true;
+	return popup->ac;
+}
+
 void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	if(inpopup)
 		return;
 	inpopup++;
 	DoClose();
-	popup.Create(this);
+	if(!popup)
+		popup.Create(this);
 	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
 	Rect rt = RectC(x, bottom, width, h);
 	Rect area = Ctrl::GetWorkArea(Point(x, top));
@@ -311,6 +325,7 @@ void PopUpList::DoCancel()
 PopUpList::PopUpList() {
 	droplines = 16;
 	inpopup = 0;
+	permanent = false;
 	linecy = Draw::GetStdFontCy();
 	display = &StdDisplay();
 	convert = NULL;
