@@ -23,8 +23,7 @@ bool ReFormatJSON_XML(String& text, bool xml)
 	return true;
 }
 
-void Ide::FormatJSON_XML(bool xml)
-{
+void Ide::FormatJSON_XML(bool xml) {
 	int l, h;
 	bool sel = editor.GetSelection(l, h);
 	if((sel ? h - l : editor.GetLength()) > 75 * 1024 * 1024) {
@@ -72,8 +71,8 @@ public:
 
 	struct Parameters {
 		String m_file;
-		int m_offset = Null;
-		int m_length = Null;
+		int m_start_line = Null;
+		int m_end_line = Null;
 		bool m_output_replacments_xml = false;
 	};
 
@@ -95,8 +94,6 @@ private:
 
 private:
 	String m_file;
-	int m_offset;
-	int m_length;
 
 	Host m_host;
 	Ide* m_ide;
@@ -195,8 +192,8 @@ ClangFormat::Output ClangFormat::Execute(const Parameters& params)
 	if(params.m_output_replacments_xml) {
 		cmd << "--output-replacements-xml ";
 	}
-	if(!IsNull(params.m_offset) && !IsNull(params.m_length)) {
-		cmd << "--offset=" << IntStr(params.m_offset) << " --length=" << IntStr(params.m_length)
+	if(!IsNull(params.m_start_line) && !IsNull(params.m_end_line)) {
+		cmd << "--lines=" << IntStr(params.m_start_line) << ":" << IntStr(params.m_end_line)
 			<< " ";
 	}
 	cmd << temp_file;
@@ -278,14 +275,14 @@ String ClangFormat::GenerateClangFormatFileNotFoundErrorMsg()
 
 void Ide::ReformatFile()
 {
-	int l, h;
+	int64 l, h;
 	bool sel = editor.GetSelection(l, h);
 
 	ClangFormat::Parameters params;
 	params.m_file = editfile;
 	if(sel) {
-		params.m_offset = l;
-		params.m_length = (h - l);
+		params.m_start_line = editor.GetLine(l) + 1;
+		params.m_end_line = editor.GetLine(h - l) + 1;
 	}
 	params.m_output_replacments_xml = true;
 
@@ -325,6 +322,8 @@ void Ide::ReformatFile()
 			editor.Insert(offset, replacmenet.m_data);
 			shift += data_count;
 		}
+		
+		PutConsole(String("Shift: ") << IntStr(shift) << ", Length: " << IntStr(length) << ", DataCount: " << IntStr(data_count));
 	}
 }
 
