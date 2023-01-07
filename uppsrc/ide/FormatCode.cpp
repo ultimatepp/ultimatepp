@@ -68,7 +68,6 @@ public:
 
 		bool IsSuccessful() const { return m_code == 0; }
 		Vector<Replacment> FindReplacments() const;
-		Vector<Replacment> FindNormalizedReplacmenets(const WString& editor_text) const;
 	};
 
 	struct Parameters {
@@ -128,37 +127,6 @@ Vector<ClangFormat::Output::Replacment> ClangFormat::Output::FindReplacments() c
 		}
 		else {
 			p.Skip();
-		}
-	}
-
-	return replacmenets;
-}
-
-Vector<ClangFormat::Output::Replacment>
-ClangFormat::Output::FindNormalizedReplacmenets(const WString& editor_text) const
-{
-	auto replacmenets = FindReplacments();
-	if(replacmenets.IsEmpty()) {
-		return {};
-	}
-
-	int byte_count = 0;
-	int replacmenet_count = 0;
-	for(int i = 0; i < editor_text.GetCount(); i++) {
-		byte_count += Utf8Len(editor_text[i]);
-
-		const auto offset = replacmenets[replacmenet_count].m_offset;
-		if(byte_count == offset) {
-			if(offset != i + 1) {
-				// m_ide->PutConsole(String()
-				//                   << "Replacing offset " << offset << " with " << i + 1);
-				replacmenets[replacmenet_count].m_offset = i + 1;
-			}
-			replacmenet_count++;
-		}
-
-		if(replacmenet_count >= replacmenets.GetCount()) {
-			break;
 		}
 	}
 
@@ -332,7 +300,7 @@ void Ide::ReformatFile()
 
 	Vector<ClangFormat::Output::Replacment> replacmenets;
 	try {
-		replacmenets = output.FindNormalizedReplacmenets(editor.GetW());
+		replacmenets = output.FindReplacments();
 		if(replacmenets.IsEmpty()) {
 			return;
 		}
