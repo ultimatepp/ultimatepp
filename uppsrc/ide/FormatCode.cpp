@@ -146,7 +146,7 @@ ClangFormat::Output::FindNormalizedReplacmenets(WString file_text) const
 		return reps;
 	}
 
-	// NOTE: Looks like bug there shouldn't be /r symbol here at all.
+	// FIXME: Looks like bug there shouldn't be /r symbol here at all.
 	file_text.Replace("\r", "");
 
 	Logd() << "File length: " << file_text.GetLength() << ", " << file_text.GetCount();
