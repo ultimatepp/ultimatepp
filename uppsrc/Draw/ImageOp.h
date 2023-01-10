@@ -12,6 +12,8 @@ Image WithResolution(const Image& m, int res);
 Image WithResolution(const Image& m, const Image& res);
 
 void  ScanOpaque(Image& m);
+void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
+                           void (*op)(RGBA *t, const RGBA *s, int n));
 
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Over(Image& dest, const Image& src);
