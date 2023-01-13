@@ -99,7 +99,7 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 	int pos = GetPointPos(p);
 	if(WhenLink && pos >= 0 && !IsNull(GetLink(pos, p)))
 		return Image::Hand();
-	if(HasCapture())
+	if(HasCapture() && icursor)
 		return Image::IBeam();
 	return Image::Arrow();
 }
@@ -235,8 +235,8 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 		RefreshSel();
 		SetFocus();
 		SetCapture();
+		WhenLeftClick();
 	}
-	WhenLeftClick();
 }
 
 void RichTextView::LeftDouble(Point p, dword keyflags)

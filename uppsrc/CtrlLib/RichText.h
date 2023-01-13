@@ -33,6 +33,7 @@ private:
 	int           cursor, anchor;
 	bool          lazy;
 	bool          shrink_oversized_objects;
+	bool          icursor = true;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -115,6 +116,8 @@ public:
 	RichTextView&   NoLazy()                                  { return Lazy(false); }
 	RichTextView&   ShrinkOversizedObjects(bool b = true)     { shrink_oversized_objects = b; Refresh(); return *this; }
 	RichTextView&   NoShrinkOversizedObjects()                { return ShrinkOversizedObjects(false); }
+	RichTextView&   ICursor(bool b)                           { icursor = b; return *this; }
+	RichTextView&   NoICursor()                               { return ICursor(false); }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 
