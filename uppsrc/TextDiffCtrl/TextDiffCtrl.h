@@ -73,21 +73,29 @@ private:
 	Font           font;
 	Font           number_font;
 	Color          number_bg;
-	Color          gutter_fg;
-	Color          gutter_bg;
 	Size           letter;
 	int            tabsize;
 	int            number_width;
 	int            number_yshift;
-	int            gutter_width;
 	int            cursor;
 	int            anchor;
-	bool           gutter_capture;
 	bool           show_line_number;
 	bool           show_white_space;
 	bool           show_diff_highlight;
 	bool           change_paper_color;
 	bool           left = false;
+	
+	struct ScrollBarItems : Ctrl {
+		TextCompareCtrl& diff;
+	
+		void Paint(Draw& w);
+		
+		ScrollBarItems(TextCompareCtrl& e);
+	};
+	
+	ScrollBarItems sbi;
+	
+	void PaintScrollBarItems(Draw& w);
 
 	typedef TextCompareCtrl CLASSNAME;
 	
@@ -114,9 +122,6 @@ public:
 	void           AutoHideSb(bool ssb=true){ scroll.AutoHide(ssb); }
 	void           ShowSb(bool ssb)         { scroll.ShowY(ssb); }
 	void           HideSb()                 { ShowSb(false); }
-
-	void           Gutter(int size)         { gutter_width = size; Refresh(); }
-	void           NoGutter()               { gutter_width = 0; Refresh(); }
 
 	void           TabSize(int t);
 	int            GetTabSize() const { return tabsize; }
