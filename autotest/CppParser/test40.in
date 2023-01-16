@@ -1,4 +1,0 @@
-struct Foo {
-	Foo() noexcept : a(1), b(2) {}
-	Foo(int) noexcept(noexcept(anything)) : a(1), b(2) {}
-};

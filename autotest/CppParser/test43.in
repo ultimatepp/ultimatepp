@@ -1,3 +1,0 @@
-template<typename A>
-template<typename B>
-void Foo<A>::Bar(B v) {}
