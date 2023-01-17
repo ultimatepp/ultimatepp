@@ -1,7 +1,0 @@
-struct StaticVariableTest {
-	static int foo;
-	static String bar;
-}
-
-int    StaticVariableTest::foo;
-String StaticVariableTest::bar;

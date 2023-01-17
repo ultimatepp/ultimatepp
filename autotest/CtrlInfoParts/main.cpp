@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-GUI_APP_MAIN
+CONSOLE_APP_MAIN
 {
 	auto Print = [&](Ctrl& h) {
 		DLOG("========================");

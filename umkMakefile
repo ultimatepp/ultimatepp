@@ -9966,6 +9966,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)plugin/lzma/lib/7zTypes.h \
+	$(UPPDIR1)plugin/lzma/lib/LzmaDec.h \
 	$(UPPDIR1)plugin/lzma/lib/LzmaEnc.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
@@ -10568,6 +10569,7 @@ $(OutDir_plugin_zstd)huf_decompress.o: $(UPPDIR1)plugin/zstd/lib/huf_decompress.
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
 	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/huf_decompress.c -o $(OutDir_plugin_zstd)huf_decompress.o
@@ -10629,7 +10631,12 @@ $(OutDir_plugin_zstd)zstd_decompress_block.o: $(UPPDIR1)plugin/zstd/lib/zstd_dec
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_decompress_block.c -o $(OutDir_plugin_zstd)zstd_decompress_block.o
 
 $(OutDir_plugin_zstd)entropy_common.o: $(UPPDIR1)plugin/zstd/lib/entropy_common.c \
+	$(UPPDIR1)plugin/zstd/lib/bitstream.h \
+	$(UPPDIR1)plugin/zstd/lib/compiler.h \
+	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/entropy_common.c -o $(OutDir_plugin_zstd)entropy_common.o
@@ -10639,6 +10646,7 @@ $(OutDir_plugin_zstd)fse_compress.o: $(UPPDIR1)plugin/zstd/lib/fse_compress.c \
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/hist.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
@@ -10649,6 +10657,7 @@ $(OutDir_plugin_zstd)fse_decompress.o: $(UPPDIR1)plugin/zstd/lib/fse_decompress.
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/fse_decompress.c -o $(OutDir_plugin_zstd)fse_decompress.o
@@ -10658,7 +10667,9 @@ $(OutDir_plugin_zstd)huf_compress.o: $(UPPDIR1)plugin/zstd/lib/huf_compress.c \
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/hist.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/huf_compress.c -o $(OutDir_plugin_zstd)huf_compress.o
@@ -15907,7 +15918,8 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/z.cpp -o $(OutDir_Core)z.o
 
-$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c
+$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c \
+	$(UPPDIR1)Core/lib/lz4.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/lib/lz4.c -o $(OutDir_Core)lz4.o
 
 $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \

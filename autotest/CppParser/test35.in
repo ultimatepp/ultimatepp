@@ -1,2 +1,0 @@
-	byte         backpaint:2;//2
-	bool         hasdhctrl:1;
