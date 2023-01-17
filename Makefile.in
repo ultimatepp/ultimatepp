@@ -52309,7 +52309,8 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/z.cpp -o $(OutDir_Core)z.o
 
-$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c
+$(OutDir_Core)lz4.o: $(UPPDIR1)Core/lib/lz4.c \
+	$(UPPDIR1)Core/lib/lz4.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/lib/lz4.c -o $(OutDir_Core)lz4.o
 
 $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \
@@ -53783,6 +53784,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 	$(UPPDIR1)Core/Xmlize.hpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)plugin/lzma/lib/7zTypes.h \
+	$(UPPDIR1)plugin/lzma/lib/LzmaDec.h \
 	$(UPPDIR1)plugin/lzma/lib/LzmaEnc.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
 	$(UPPDIR1)plugin/z/lib/zconf.h \
@@ -54385,6 +54387,7 @@ $(OutDir_plugin_zstd)huf_decompress.o: $(UPPDIR1)plugin/zstd/lib/huf_decompress.
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
 	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/huf_decompress.c -o $(OutDir_plugin_zstd)huf_decompress.o
@@ -54446,7 +54449,12 @@ $(OutDir_plugin_zstd)zstd_decompress_block.o: $(UPPDIR1)plugin/zstd/lib/zstd_dec
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/zstd_decompress_block.c -o $(OutDir_plugin_zstd)zstd_decompress_block.o
 
 $(OutDir_plugin_zstd)entropy_common.o: $(UPPDIR1)plugin/zstd/lib/entropy_common.c \
+	$(UPPDIR1)plugin/zstd/lib/bitstream.h \
+	$(UPPDIR1)plugin/zstd/lib/compiler.h \
+	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/entropy_common.c -o $(OutDir_plugin_zstd)entropy_common.o
@@ -54456,6 +54464,7 @@ $(OutDir_plugin_zstd)fse_compress.o: $(UPPDIR1)plugin/zstd/lib/fse_compress.c \
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/hist.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
@@ -54466,6 +54475,7 @@ $(OutDir_plugin_zstd)fse_decompress.o: $(UPPDIR1)plugin/zstd/lib/fse_decompress.
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/fse_decompress.c -o $(OutDir_plugin_zstd)fse_decompress.o
@@ -54475,7 +54485,9 @@ $(OutDir_plugin_zstd)huf_compress.o: $(UPPDIR1)plugin/zstd/lib/huf_compress.c \
 	$(UPPDIR1)plugin/zstd/lib/compiler.h \
 	$(UPPDIR1)plugin/zstd/lib/debug.h \
 	$(UPPDIR1)plugin/zstd/lib/error_private.h \
+	$(UPPDIR1)plugin/zstd/lib/fse.h \
 	$(UPPDIR1)plugin/zstd/lib/hist.h \
+	$(UPPDIR1)plugin/zstd/lib/huf.h \
 	$(UPPDIR1)plugin/zstd/lib/mem.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd_errors.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_zstd)  $(UPPDIR1)plugin/zstd/lib/huf_compress.c -o $(OutDir_plugin_zstd)huf_compress.o
@@ -60394,6 +60406,7 @@ $(OutDir_plugin_jpg)jpgreg.o: $(UPPDIR1)plugin/jpg/jpgreg.icpp \
 $(OutDir_plugin_jpg)jaricom.o: $(UPPDIR1)plugin/jpg/lib/jaricom.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60402,6 +60415,7 @@ $(OutDir_plugin_jpg)jaricom.o: $(UPPDIR1)plugin/jpg/lib/jaricom.c \
 $(OutDir_plugin_jpg)jcapimin.o: $(UPPDIR1)plugin/jpg/lib/jcapimin.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60410,6 +60424,7 @@ $(OutDir_plugin_jpg)jcapimin.o: $(UPPDIR1)plugin/jpg/lib/jcapimin.c \
 $(OutDir_plugin_jpg)jcapistd.o: $(UPPDIR1)plugin/jpg/lib/jcapistd.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60418,6 +60433,7 @@ $(OutDir_plugin_jpg)jcapistd.o: $(UPPDIR1)plugin/jpg/lib/jcapistd.c \
 $(OutDir_plugin_jpg)jcarith.o: $(UPPDIR1)plugin/jpg/lib/jcarith.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60426,6 +60442,7 @@ $(OutDir_plugin_jpg)jcarith.o: $(UPPDIR1)plugin/jpg/lib/jcarith.c \
 $(OutDir_plugin_jpg)jccoefct.o: $(UPPDIR1)plugin/jpg/lib/jccoefct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60434,6 +60451,7 @@ $(OutDir_plugin_jpg)jccoefct.o: $(UPPDIR1)plugin/jpg/lib/jccoefct.c \
 $(OutDir_plugin_jpg)jccolor.o: $(UPPDIR1)plugin/jpg/lib/jccolor.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60443,6 +60461,7 @@ $(OutDir_plugin_jpg)jcdctmgr.o: $(UPPDIR1)plugin/jpg/lib/jcdctmgr.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60451,6 +60470,7 @@ $(OutDir_plugin_jpg)jcdctmgr.o: $(UPPDIR1)plugin/jpg/lib/jcdctmgr.c \
 $(OutDir_plugin_jpg)jchuff.o: $(UPPDIR1)plugin/jpg/lib/jchuff.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60459,6 +60479,7 @@ $(OutDir_plugin_jpg)jchuff.o: $(UPPDIR1)plugin/jpg/lib/jchuff.c \
 $(OutDir_plugin_jpg)jcinit.o: $(UPPDIR1)plugin/jpg/lib/jcinit.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60467,6 +60488,7 @@ $(OutDir_plugin_jpg)jcinit.o: $(UPPDIR1)plugin/jpg/lib/jcinit.c \
 $(OutDir_plugin_jpg)jcmainct.o: $(UPPDIR1)plugin/jpg/lib/jcmainct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60475,6 +60497,7 @@ $(OutDir_plugin_jpg)jcmainct.o: $(UPPDIR1)plugin/jpg/lib/jcmainct.c \
 $(OutDir_plugin_jpg)jcmarker.o: $(UPPDIR1)plugin/jpg/lib/jcmarker.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60483,6 +60506,7 @@ $(OutDir_plugin_jpg)jcmarker.o: $(UPPDIR1)plugin/jpg/lib/jcmarker.c \
 $(OutDir_plugin_jpg)jcmaster.o: $(UPPDIR1)plugin/jpg/lib/jcmaster.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60491,6 +60515,7 @@ $(OutDir_plugin_jpg)jcmaster.o: $(UPPDIR1)plugin/jpg/lib/jcmaster.c \
 $(OutDir_plugin_jpg)jcomapi.o: $(UPPDIR1)plugin/jpg/lib/jcomapi.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60499,6 +60524,7 @@ $(OutDir_plugin_jpg)jcomapi.o: $(UPPDIR1)plugin/jpg/lib/jcomapi.c \
 $(OutDir_plugin_jpg)jcparam.o: $(UPPDIR1)plugin/jpg/lib/jcparam.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60507,6 +60533,7 @@ $(OutDir_plugin_jpg)jcparam.o: $(UPPDIR1)plugin/jpg/lib/jcparam.c \
 $(OutDir_plugin_jpg)jcprepct.o: $(UPPDIR1)plugin/jpg/lib/jcprepct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60515,6 +60542,7 @@ $(OutDir_plugin_jpg)jcprepct.o: $(UPPDIR1)plugin/jpg/lib/jcprepct.c \
 $(OutDir_plugin_jpg)jcsample.o: $(UPPDIR1)plugin/jpg/lib/jcsample.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60523,6 +60551,7 @@ $(OutDir_plugin_jpg)jcsample.o: $(UPPDIR1)plugin/jpg/lib/jcsample.c \
 $(OutDir_plugin_jpg)jctrans.o: $(UPPDIR1)plugin/jpg/lib/jctrans.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60531,6 +60560,7 @@ $(OutDir_plugin_jpg)jctrans.o: $(UPPDIR1)plugin/jpg/lib/jctrans.c \
 $(OutDir_plugin_jpg)jdapimin.o: $(UPPDIR1)plugin/jpg/lib/jdapimin.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60539,6 +60569,7 @@ $(OutDir_plugin_jpg)jdapimin.o: $(UPPDIR1)plugin/jpg/lib/jdapimin.c \
 $(OutDir_plugin_jpg)jdapistd.o: $(UPPDIR1)plugin/jpg/lib/jdapistd.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60547,6 +60578,7 @@ $(OutDir_plugin_jpg)jdapistd.o: $(UPPDIR1)plugin/jpg/lib/jdapistd.c \
 $(OutDir_plugin_jpg)jdarith.o: $(UPPDIR1)plugin/jpg/lib/jdarith.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60573,6 +60605,7 @@ $(OutDir_plugin_jpg)jdatasrc.o: $(UPPDIR1)plugin/jpg/lib/jdatasrc.c \
 $(OutDir_plugin_jpg)jdcoefct.o: $(UPPDIR1)plugin/jpg/lib/jdcoefct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60581,6 +60614,7 @@ $(OutDir_plugin_jpg)jdcoefct.o: $(UPPDIR1)plugin/jpg/lib/jdcoefct.c \
 $(OutDir_plugin_jpg)jdcolor.o: $(UPPDIR1)plugin/jpg/lib/jdcolor.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60590,6 +60624,7 @@ $(OutDir_plugin_jpg)jddctmgr.o: $(UPPDIR1)plugin/jpg/lib/jddctmgr.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60598,6 +60633,7 @@ $(OutDir_plugin_jpg)jddctmgr.o: $(UPPDIR1)plugin/jpg/lib/jddctmgr.c \
 $(OutDir_plugin_jpg)jdhuff.o: $(UPPDIR1)plugin/jpg/lib/jdhuff.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60606,6 +60642,7 @@ $(OutDir_plugin_jpg)jdhuff.o: $(UPPDIR1)plugin/jpg/lib/jdhuff.c \
 $(OutDir_plugin_jpg)jdinput.o: $(UPPDIR1)plugin/jpg/lib/jdinput.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60614,6 +60651,7 @@ $(OutDir_plugin_jpg)jdinput.o: $(UPPDIR1)plugin/jpg/lib/jdinput.c \
 $(OutDir_plugin_jpg)jdmainct.o: $(UPPDIR1)plugin/jpg/lib/jdmainct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60622,6 +60660,7 @@ $(OutDir_plugin_jpg)jdmainct.o: $(UPPDIR1)plugin/jpg/lib/jdmainct.c \
 $(OutDir_plugin_jpg)jdmarker.o: $(UPPDIR1)plugin/jpg/lib/jdmarker.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60630,6 +60669,7 @@ $(OutDir_plugin_jpg)jdmarker.o: $(UPPDIR1)plugin/jpg/lib/jdmarker.c \
 $(OutDir_plugin_jpg)jdmaster.o: $(UPPDIR1)plugin/jpg/lib/jdmaster.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60638,6 +60678,7 @@ $(OutDir_plugin_jpg)jdmaster.o: $(UPPDIR1)plugin/jpg/lib/jdmaster.c \
 $(OutDir_plugin_jpg)jdmerge.o: $(UPPDIR1)plugin/jpg/lib/jdmerge.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60646,6 +60687,7 @@ $(OutDir_plugin_jpg)jdmerge.o: $(UPPDIR1)plugin/jpg/lib/jdmerge.c \
 $(OutDir_plugin_jpg)jdpostct.o: $(UPPDIR1)plugin/jpg/lib/jdpostct.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60654,6 +60696,7 @@ $(OutDir_plugin_jpg)jdpostct.o: $(UPPDIR1)plugin/jpg/lib/jdpostct.c \
 $(OutDir_plugin_jpg)jdsample.o: $(UPPDIR1)plugin/jpg/lib/jdsample.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60662,6 +60705,7 @@ $(OutDir_plugin_jpg)jdsample.o: $(UPPDIR1)plugin/jpg/lib/jdsample.c \
 $(OutDir_plugin_jpg)jdtrans.o: $(UPPDIR1)plugin/jpg/lib/jdtrans.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60681,6 +60725,7 @@ $(OutDir_plugin_jpg)jfdctflt.o: $(UPPDIR1)plugin/jpg/lib/jfdctflt.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60690,6 +60735,7 @@ $(OutDir_plugin_jpg)jfdctfst.o: $(UPPDIR1)plugin/jpg/lib/jfdctfst.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60699,6 +60745,7 @@ $(OutDir_plugin_jpg)jfdctint.o: $(UPPDIR1)plugin/jpg/lib/jfdctint.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60708,6 +60755,7 @@ $(OutDir_plugin_jpg)jidctflt.o: $(UPPDIR1)plugin/jpg/lib/jidctflt.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60717,6 +60765,7 @@ $(OutDir_plugin_jpg)jidctfst.o: $(UPPDIR1)plugin/jpg/lib/jidctfst.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60726,6 +60775,7 @@ $(OutDir_plugin_jpg)jidctint.o: $(UPPDIR1)plugin/jpg/lib/jidctint.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jdct.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60734,6 +60784,7 @@ $(OutDir_plugin_jpg)jidctint.o: $(UPPDIR1)plugin/jpg/lib/jidctint.c \
 $(OutDir_plugin_jpg)jmemansi.o: $(UPPDIR1)plugin/jpg/lib/jmemansi.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmemsys.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
@@ -60753,6 +60804,7 @@ $(OutDir_plugin_jpg)jmemmgr.o: $(UPPDIR1)plugin/jpg/lib/jmemmgr.c \
 $(OutDir_plugin_jpg)jquant1.o: $(UPPDIR1)plugin/jpg/lib/jquant1.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60761,6 +60813,7 @@ $(OutDir_plugin_jpg)jquant1.o: $(UPPDIR1)plugin/jpg/lib/jquant1.c \
 $(OutDir_plugin_jpg)jquant2.o: $(UPPDIR1)plugin/jpg/lib/jquant2.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60769,6 +60822,7 @@ $(OutDir_plugin_jpg)jquant2.o: $(UPPDIR1)plugin/jpg/lib/jquant2.c \
 $(OutDir_plugin_jpg)jutils.o: $(UPPDIR1)plugin/jpg/lib/jutils.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h
@@ -60854,6 +60908,7 @@ $(OutDir_plugin_jpg)rdtarga.o: $(UPPDIR1)plugin/jpg/lib/rdtarga.c \
 $(OutDir_plugin_jpg)transupp.o: $(UPPDIR1)plugin/jpg/lib/transupp.c \
 	$(UPPDIR1)plugin/jpg/lib/jconfig.h \
 	$(UPPDIR1)plugin/jpg/lib/jerror.h \
+	$(UPPDIR1)plugin/jpg/lib/jinclude.h \
 	$(UPPDIR1)plugin/jpg/lib/jmorecfg.h \
 	$(UPPDIR1)plugin/jpg/lib/jpegint.h \
 	$(UPPDIR1)plugin/jpg/lib/jpeglib.h \
