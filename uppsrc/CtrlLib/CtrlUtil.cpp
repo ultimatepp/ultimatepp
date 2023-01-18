@@ -49,6 +49,7 @@ void Animate(Ctrl& c, const Rect& target, int type)
 			else
 				break;
 			c.Sync();
+			c.ProcessEvents();
 			Sleep(0);
 #ifdef SLOWANIMATION
 			Sleep(100);
