@@ -321,11 +321,19 @@ void Ide::SetupFormat() {
 	ide.mate.Hide();
 	ide.lxde.Hide();
 #else
+	#ifdef PLATFORM_BSD
+	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/konsole -e");
+	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/local/bin/gnome-terminal -x");
+	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/local/bin/mate-terminal -x");
+	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/lxterminal -e");
+	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/local/bin/xterm -e");
+	#else
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
 	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
+	#endif
 #endif
 
 	FontSelectManager ed, vf, con, f1, f2, tf, gui;

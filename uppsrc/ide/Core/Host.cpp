@@ -223,6 +223,16 @@ void Host::Launch(const char *_cmdline, bool console)
 		cmdline = "/usr/bin/open " + script;
 #else
 	String lc;
+	
+	#ifdef PLATFORM_BSD
+	static const char *term[] = {
+		"/usr/local/bin/mate-terminal -x",
+		"/usr/local/bin/gnome-terminal --window -x",
+		"/usr/local/bin/konsole -e",
+		"/usr/local/bin/lxterminal -e",
+		"/usr/local/bin/xterm -e",
+	};
+	#else
 	static const char *term[] = {
 		"/usr/bin/mate-terminal -x",
 		"/usr/bin/gnome-terminal --window -x",
@@ -230,6 +240,7 @@ void Host::Launch(const char *_cmdline, bool console)
 		"/usr/bin/lxterminal -e",
 		"/usr/bin/xterm -e",
 	};
+	#endif
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
 		int c = HostConsole.FindFirstOf(" ");
