@@ -551,10 +551,15 @@ String SourceToObjName(const String& package, const String& srcfile_)
 {
 	String srcfile = srcfile_;
 	srcfile.TrimEnd(".cpp");
-	int q = GetFileFolder(PackagePath(package)).GetCount() + 1;
-	if(q >= srcfile.GetCount())
-		return GetFileTitle(srcfile);
 	String r;
+	int q = 0;
+	if(srcfile.TrimStart(".."))
+		r << "__";
+	else {
+		q = GetFileFolder(PackagePath(package)).GetCount() + 1;
+		if(q >= srcfile.GetCount())
+			return GetFileTitle(srcfile);
+	}
 	for(const char *s = ~srcfile + q; *s; s++)
 		r.Cat(findarg(*s, '/', '\\') >= 0 ? '_' : *s);
 	return r;

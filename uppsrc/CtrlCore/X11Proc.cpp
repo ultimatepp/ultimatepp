@@ -94,15 +94,16 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 // added support for windowed controls
 //			if(top)
 //				XTranslateCoordinates(Xdisplay, top->window, Xroot, 0, 0, &x, &y, &dummy);
-			if(top) {
-				Window DestW = (parent ? GetParentWindow() : Xroot);
-				XTranslateCoordinates(Xdisplay, top->window, DestW, 0, 0, &x, &y, &dummy);
+			Window xwin = GetWindow();
+			if(xwin) {
+				Window DestW = (GetParent() ? GetParentWindow() : Xroot);
+				XTranslateCoordinates(Xdisplay, xwin, DestW, 0, 0, &x, &y, &dummy);
 				Rect rect = RectC(x, y, e.width, e.height);
 				LLOG("CongigureNotify " << rect);
 				if(GetRect() != rect)
 					SetWndRect(rect);
-				// Synchronizes native windows (NOT the main one)
 			}
+			// Synchronizes native windows (NOT the main one)
 			SyncNativeWindows();
 // 01/12/2007 - END
 
@@ -418,16 +419,19 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 		}
 		break;
 	case MotionNotify:
-		while(XCheckWindowEvent(Xdisplay, top->window, PointerMotionMask, event));
-		EndIgnore();
-		mousePos = Point(event->xmotion.x_root, event->xmotion.y_root);
-		Xeventtime = event->xmotion.time;
-		Point p = mousePos - Xbuttonpos;
-		if(max(abs(p.x), abs(p.y)) > 4)
-			Xbuttontime = Xeventtime - 0x80000000;
-		sModState = event->xmotion.state;
-		DispatchMouse(MOUSEMOVE, Point(event->xmotion.x, event->xmotion.y));
-		DoCursorShape();
+		Window xwin = GetWindow();
+		if(xwin) {
+			while(XCheckWindowEvent(Xdisplay, xwin, PointerMotionMask, event));
+			EndIgnore();
+			mousePos = Point(event->xmotion.x_root, event->xmotion.y_root);
+			Xeventtime = event->xmotion.time;
+			Point p = mousePos - Xbuttonpos;
+			if(max(abs(p.x), abs(p.y)) > 4)
+				Xbuttontime = Xeventtime - 0x80000000;
+			sModState = event->xmotion.state;
+			DispatchMouse(MOUSEMOVE, Point(event->xmotion.x, event->xmotion.y));
+			DoCursorShape();
+		}
 		break;
 	}
 	DropEvent(w, event);

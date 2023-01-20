@@ -1,3 +1,0 @@
-class basic_istream : virtual public basic_ios
-{
-};

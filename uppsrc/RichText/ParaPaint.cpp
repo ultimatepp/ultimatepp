@@ -592,7 +592,7 @@ void  RichPara::GatherIndexes(Vector<RichValPos>& info, RichContext rc, int pos)
 
 void FontHeightRound(Font& fnt, Zoom z)
 {
-	fnt.Height((fnt.GetHeight() * z.m + (z.d >> 1)) / z.d);
+	fnt.Height(max((fnt.GetHeight() * z.m + (z.d >> 1)) / z.d, 1)); // do not allow to fall to zero (that is default font height)
 }
 
 void operator*=(RichPara::Format& format, Zoom z)

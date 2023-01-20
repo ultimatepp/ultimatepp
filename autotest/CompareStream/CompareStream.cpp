@@ -7,7 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	Vector<int> a, b;
 	for(int i = 0; i < 200000; i++) {
-		if(i % 100000 == 0)
+		if(i % 10000 == 0)
 			LOG(i);
 		int q = Random();
 		a.Add(q);

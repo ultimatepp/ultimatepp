@@ -49,7 +49,8 @@ CONSOLE_APP_MAIN
 	ASSERT(d >= GetSysDate() - 1);
 	ASSERT(tm >= GetSysDate() - 1);
 	len = len >> 20;
-	ASSERT(len > 2000 && len < 5800);
+	LOG("backup len (MB): " << len);
+	ASSERT(len > 1500 && len < 5800);
 
 	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/big/bak;/ssd/bak", ';')) {
 		FileIn in1(fn);

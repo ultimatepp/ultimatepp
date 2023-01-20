@@ -330,6 +330,7 @@ void EditField::Paint(Draw& w)
 	String nulltext = GetTextAttr(ATTR_NULLTEXT);
 	Image nullicon = GetAttr<Image>(ATTR_NULLICON);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
+		x = 0;
 		WString nt = nulltext.ToWString();
 		const wchar *txt = nt;
 		if(!IsNull(nullicon)) {

@@ -1,9 +1,7 @@
 uses
-	CtrlLib,
-	VirtualGui;
+	CtrlLib;
 
 file
-	Etalon.log,
 	main.cpp;
 
 mainconfig
