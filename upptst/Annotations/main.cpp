@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+// this is for testing TheIDE annotations
+
 using namespace Upp;
 /*
 	STRUCT,
@@ -66,15 +68,6 @@ struct Struct {
 
 String Struct::meta_attribute;
 
-void Struct::Method(String param)
-{
-	String x;
-}
-
-void Struct::Test()
-{
-}
-
 void Struct::ClassMethod(int param)
 {
 }
@@ -95,12 +88,6 @@ Struct::~Struct()
 {
 }
 
-Struct h;
-
-void Foo() {
-	h.
-}
-
 class Class {
 	int x;
 	
@@ -116,6 +103,8 @@ template <class T>
 struct TemplateFoo {
 	int y;
 };
+
+struct Foo { int bar; };
 
 typedef Foo Typedef;
 
@@ -153,10 +142,6 @@ namespace Namespace {
 	};
 	
 	String Struct::meta_attribute;
-	
-	void Struct::Method(String param)
-	{
-	}
 	
 	void Struct::ClassMethod(int param)
 	{
