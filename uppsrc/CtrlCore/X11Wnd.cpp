@@ -134,9 +134,9 @@ Window Ctrl::GetParentWindow(void) const
 Ctrl *Ctrl::GetParentWindowCtrl(void) const
 {
 	GuiLock __;
-	Ctrl *q = uparent;
+	Ctrl *q = GetParent();
 	while(q && !q->utop)
-		q = q->uparent;
+		q = q->GetParent();
 	return q;
 
 } // END Ctrl::GetParentWindowCtrl()
@@ -146,9 +146,9 @@ Rect Ctrl::GetRectInParentWindow(void) const
 {
 	GuiLock __;
 	Rect r = GetScreenRect();
-	Ctrl *q = uparent;
+	Ctrl *q = GetParent();
 	while(q && !q->utop)
-		q = q->uparent;
+		q = q->GetParent();
 	if(q)
 	{
 		Rect pr = q->GetScreenRect();
@@ -443,6 +443,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 		while(IsWaitingEvent()) {
 			LTIMING("XNextEvent");
 			XNextEvent(Xdisplay, &event);
+			DDUMP(event.type);
 			ProcessEvent(&event);
 		}
 		TimerAndPaint();
@@ -594,7 +595,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	Vector<Ctrl *> v;
 	const ArrayMap<Window, Ctrl::XWindow>& w = Xwindow();
 	for(int i = 0; i < w.GetCount(); i++)
-		if(w.GetKey(i) && w[i].ctrl && !w[i].ctrl->uparent) //aris002 might be owner here?
+		if(w.GetKey(i) && w[i].ctrl && !w[i].ctrl->GetParent())
 			v.Add(w[i].ctrl);
 	return v;
 }
@@ -929,16 +930,18 @@ Window Ctrl::GetXServerFocusWindow()
 	GuiLock __;
 	Window w;
 	int    dummy;
+	DLOG("XGetInputFocus");
 	XGetInputFocus(Xdisplay, &w, &dummy);
 	return w;
 }
 
 void Ctrl::FocusSync()
 {
+	DLOG("FocusSync");
 	GuiLock __;
 	Window fw = GetXServerFocusWindow();
 	if(fw != focusWindow) {
-		LLOG("FocusSync to " << FormatIntHex(fw));
+		DLOG("FocusSync to " << FormatIntHex(fw));
 		if(fw) {
 			int q = Xwindow().Find(fw);
 			if(q >= 0) {
@@ -1103,7 +1106,7 @@ void Ctrl::SyncNativeWindows(void)
 	{
 		XWindow &xw = xwindows[i];
 		Window w = xwindows.GetKey(i);
-		if(xw.ctrl && xw.ctrl->uparent && w)
+		if(xw.ctrl && xw.ctrl->GetParent() && w)
 		{
 			Window dummy;
 			int x, y;

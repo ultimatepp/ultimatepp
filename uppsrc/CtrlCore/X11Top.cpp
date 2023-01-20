@@ -134,7 +134,7 @@ void TopWindow::SyncState()
 	GuiLock __;
 	LLOG("SyncState");
 	SyncCaption();
-	if(IsOpen() && GetWindow()) {		
+	if(IsOpen() && GetWindow()) {
 		Window w = GetWindow();
 		WmState(w, topmost, XAtom("_NET_WM_STATE_ABOVE"));
 		WmState(w, state == MAXIMIZED, XAtom("_NET_WM_STATE_MAXIMIZED_HORZ"), XAtom("_NET_WM_STATE_MAXIMIZED_VERT"));
@@ -248,7 +248,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
-		
+
 		if (GetVirtualScreenArea().Contains(p)) {
 			r = RectC(p.x, p.y, sz.cx, sz.cy);
 			wr.left += fm.left;
@@ -264,7 +264,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 			minsize.cx = min(minsize.cx, r.GetWidth());
 			minsize.cy = min(minsize.cy, r.GetHeight());
 			SetRect(r);
-		}	
+		}
 	}
 }
 
@@ -382,13 +382,14 @@ void TopWindow::Open(Ctrl *owner)
 		                PropModeReplace, (byte *) &curr_pid, 1);
 	}
 
-	XChangeProperty(Xdisplay, xwin, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
+	Window win = GetWindow();
+	XChangeProperty(Xdisplay, win, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
 	                PropModeReplace, (byte *) &curr_pid, 1);
-	XChangeProperty(Xdisplay, xwin, XAtom("WM_CLIENT_LEADER"),
+	XChangeProperty(Xdisplay, win, XAtom("WM_CLIENT_LEADER"),
 	                XA_WINDOW, 32, PropModeReplace, (byte *)&wm_client_leader, 1);
 
 	int version = 5;
-	XChangeProperty(Xdisplay, xwin, XAtom("XdndAware"), XA_ATOM, 32,
+	XChangeProperty(Xdisplay, win, XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
 
 	SyncState();
