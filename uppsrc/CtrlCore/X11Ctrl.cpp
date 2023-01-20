@@ -92,36 +92,6 @@ void GuiPlatformAfterMenuPopUp()
 	Ctrl::ProcessEvents();
 }
 
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
-
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	if(this == caretCtrl)
-		RefreshCaret();
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	WndCaretTime = msecs();
-	if(this == caretCtrl)
-		RefreshCaret();
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-	if(focusCtrl != caretCtrl) {
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
-
 }
 
 #endif
