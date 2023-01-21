@@ -1,6 +1,6 @@
 #include "ide.h"
 
-bool ReFormatJSON_XML( String& text, bool xml)
+bool ReFormatJSON_XML(String& text, bool xml)
 {
 	if(xml) {
 		try {

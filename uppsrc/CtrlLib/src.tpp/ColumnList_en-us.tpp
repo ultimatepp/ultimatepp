@@ -355,7 +355,7 @@ onst]&]
 ]_[* RoundSize]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% This mode visually changes the decorative frame of ColumnList 
 so that there are no empty areas at the bottom of view (GetSize().cy 
-% GetItemHeight()). Default is off. Returns `*this for method 
+% GetItemHeight()). Default is on. Returns `*this for method 
 chaining.&]
 [s3;%% &]
 [s4; &]
