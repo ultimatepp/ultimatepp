@@ -239,13 +239,15 @@ void TextCompareCtrl::ScrollBarItems::Paint(Draw& w)
 
 void TextCompareCtrl::PaintScrollBarItems(Draw& w)
 {
-	Size isz = DiffImg::dot().GetSize();
 	Rect sr = scroll.y.GetSliderRect();
-	for(int i = 0; i < lines.GetCount(); i++)
-		if(lines[i].level > 1)
-			w.DrawImage(sr.CenterPoint().x - isz.cx / 2,
-			            sr.top + scroll.y.GetSliderPos(i) - isz.cy / 2,
-			            DiffImg::dot());
+	for(int pass = 0; pass < 2; pass++) {
+		Size isz = pass ? DiffImg::dot1().GetSize() : DiffImg::dot().GetSize();
+		for(int i = 0; i < lines.GetCount(); i++)
+			if(lines[i].level > 1)
+				w.DrawImage(sr.CenterPoint().x - isz.cx / 2,
+				            sr.top + scroll.y.GetSliderPos(i) - isz.cy / 2,
+				            pass ? DiffImg::dot1() : DiffImg::dot());
+	}
 }
 
 void TextCompareCtrl::Paint(Draw& draw)

@@ -809,7 +809,7 @@ LAYOUT(RenamePackage2Layout, 228, 100)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(NewPackageFileLayout, 260, 88)
+LAYOUT(NewPackageFileLayout, 280, 88)
 	ITEM(Upp::EditString, name, HSizePosZ(48, 8).TopPosZ(28, 19))
 	ITEM(Upp::Label, dv___1, SetLabel(t_("Name ")).LeftPosZ(4, 40).TopPosZ(28, 19))
 	ITEM(Upp::DropList, type, HSizePosZ(4, 8).TopPosZ(4, 19))
