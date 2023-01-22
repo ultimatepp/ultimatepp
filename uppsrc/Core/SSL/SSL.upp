@@ -8,9 +8,11 @@ library(OSX) "libcrypto.a libssl.a";
 
 file
 	SSL.h,
+	RSA.h,
 	Util.cpp,
 	InitExit.cpp,
 	Socket.cpp,
 	P7S.cpp,
-	SSL.icpp;
+	SSL.icpp,
+	RSA.cpp;
 
