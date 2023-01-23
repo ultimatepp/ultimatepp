@@ -69,6 +69,15 @@ String GetEnv(const char *id)
 	return WString(_wgetenv(ToSystemCharsetW(id))).ToString();
 }
 
+bool SetEnv(const char *name, const char *value)
+{
+	String env;
+	env << name << "=" << value;
+	auto wenv = ToUtf16(env);
+	wenv.Add(wchar_t(0));
+	return _wputenv(wenv.begin()) == 0;
+}
+
 String GetExeFilePath()
 {
 	return GetModuleFileName();
@@ -81,6 +90,11 @@ String GetExeFilePath()
 String GetEnv(const char *id)
 {
 	return FromSystemCharset(getenv(id));
+}
+
+bool SetEnv(const char *name, const char *value)
+{
+	return setenv(name, value, 1) == 0;
 }
 
 static void sSetArgv0__(const char *title)
