@@ -71,20 +71,74 @@ Fb2xssDFdcL95It4forEamwBVQmkvK6gPEPl+fti+LrlGsi5eAF2eBnVpBkAnjIJ
 XFuZd1c2EdJnctB6B4kRx8ExKqrGgktPU82LYhJb+gB45YnDle+7t2ECAwEAAQ==
 -----END RSA PUBLIC KEY-----)";
 
-CONSOLE_APP_MAIN
+static void LoadSignVerify()
 {
+	// load keys
 	RSAPrivateKey priv(PrivateKey);
 	ASSERT(priv);
-	
+
 	RSAPublicKey pub(PublicKey);
 	ASSERT(pub);
-	
+
+	// sign message
 	String message = "hello world";
 	String signature = priv.SignRS256(message);
-	
+
+	// verify signature
 	ASSERT(pub.VerifyRS256(message, signature));
-	
+
+	// modify message and fail verify
 	String message2;
 	message2 << message << "x";
 	ASSERT(!pub.VerifyRS256(message2, signature));
+}
+
+static void GenerateSignVerify()
+{
+	// generate key
+	RSAPrivateKey priv;
+	ASSERT(!priv);
+	priv.Generate(2048);
+	ASSERT(priv);
+	// sign message
+	String message = "hello world again";
+	String signature = priv.SignRS256(message);
+	// extract public key and verfify
+	RSAPublicKey pub = priv.GetPublicKey();
+	ASSERT(pub);
+	ASSERT(pub.VerifyRS256(message, signature));
+}
+
+static void GenerateExportLoadSignVerify()
+{
+	// generate key
+	RSAPrivateKey priv;
+	ASSERT(!priv);
+	priv.Generate(2048);
+	ASSERT(priv);
+	// extract public key
+	RSAPublicKey pub = priv.GetPublicKey();
+	ASSERT(pub);
+	// get pem string keys
+	String privPem = priv.GetKey();
+	ASSERT(!privPem.IsVoid());
+	String pubPem = pub.GetKey();
+	ASSERT(!pubPem.IsVoid());
+	ASSERT(privPem != pubPem);
+	// load pem strings into new keys
+	RSAPrivateKey priv2(privPem);
+	ASSERT(priv2);
+	RSAPublicKey pub2(pubPem);
+	ASSERT(pub2);
+	// use them to sign/verify message
+	String message = "hello world again again";
+	String signature = priv2.SignRS256(message);
+	ASSERT(pub2.VerifyRS256(message, signature));
+}
+
+CONSOLE_APP_MAIN
+{
+	LoadSignVerify();
+	GenerateSignVerify();
+	GenerateExportLoadSignVerify();
 }

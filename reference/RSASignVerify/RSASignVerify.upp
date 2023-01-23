@@ -1,0 +1,12 @@
+description "Demonstrates signing and verifying RS256 signatures\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	RSASignVerify.cpp;
+
+mainconfig
+	"" = "";
+
