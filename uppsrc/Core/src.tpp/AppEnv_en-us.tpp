@@ -27,6 +27,12 @@ tring]_[* GetEnv]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])&]
 [s2;%% Returns the value of the environment variable [*@3 id].&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:SetEnv`(const char`*`,const char`*`): [@(0.0.255) bool] 
+[* SetEnv]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 name], 
+[@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 value])&]
+[s2;%% Sets the value of the environment variable [%-*@3 name] to [%-*@3 value].&]
+[s3; &]
+[s4; &]
 [s5;:GetExeDirFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[* GetExeDirFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fp])&]
 [s2;%% Returns the absolute path of a file that is found in the folder 
