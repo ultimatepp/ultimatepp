@@ -214,8 +214,8 @@ public:
 private:
 	struct Item : Moveable<Item> {
 		int    prev, next;
-		int    size;
-		One<T> data;
+		int    size; // TODO: size_t?
+		One<T> data; // TODO: Value?
 		bool   flag;
 	};
 	
