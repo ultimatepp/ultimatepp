@@ -184,9 +184,12 @@ T& LRUCache<T, K>::Get(const Maker& m)
 	k.type = typeid(m).name();
 	int q = key.Find(k);
 	if(q < 0) {
+		One<T> val;
+		int sz = m.Make(val.Create());
 		q = key.Put(k);
 		Item& t = data.At(q);
-		t.size = m.Make(t.data.Create()) + InternalSize;
+		t.data = pick(val);
+		t.size = sz + InternalSize;
 		size += t.size;
 		newsize += t.size;
 		t.flag = flag;

@@ -63,8 +63,8 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 				if(test) {
 					Tested++;
 					LocalProcess p;
-					setenv("UPP_MAIN__", ff.GetPath(), 1);
-					setenv("UPP_ASSEMBLY__", GetFileFolder(ff.GetPath()), 1);
+					SetEnv("UPP_MAIN__", ff.GetPath());
+					SetEnv("UPP_ASSEMBLY__", GetFileFolder(ff.GetPath()));
 					if(!p.Start(exe)) {
 						Cout() << "FAILED TO RUN\n";
 						infolog << ", FAILED TO RUN";

@@ -1,4 +1,5 @@
 String  GetEnv(const char *id);
+bool    SetEnv(const char *name, const char *value);
 
 String  GetExeFilePath();
 String  GetExeTitle();
