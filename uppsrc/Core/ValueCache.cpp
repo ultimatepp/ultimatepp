@@ -64,7 +64,7 @@ Value MakeValue(ValueMaker& m)
 {
 	Mutex::Lock __(ValueCacheMutex);
 	LLOG("MakeValue cache size before make: " << TheValueCache().GetSize());
-	Value v = TheValueCache().Get(m);
+	Value v = TheValueCache().Get(m, [] { ValueCacheMutex.Leave(); }, [] { ValueCacheMutex.Enter(); });
 	LLOG("MakeValue cache size after make: " << TheValueCache().GetSize());
 	ShrinkValueCache();
 	LLOG("-------------");

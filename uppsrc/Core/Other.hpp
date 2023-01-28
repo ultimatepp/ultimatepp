@@ -177,7 +177,8 @@ void LRUCache<T, K>::ClearCounters()
 }
 
 template <class T, class K>
-T& LRUCache<T, K>::Get(const Maker& m)
+template <class B, class A>
+T& LRUCache<T, K>::Get(const Maker& m, B before_make, A after_make)
 {
 	Key k;
 	k.key = m.Key();
@@ -185,7 +186,9 @@ T& LRUCache<T, K>::Get(const Maker& m)
 	int q = key.Find(k);
 	if(q < 0) {
 		One<T> val;
+		before_make();
 		int sz = m.Make(val.Create());
+		after_make();
 		q = key.Put(k);
 		Item& t = data.At(q);
 		t.data = pick(val);

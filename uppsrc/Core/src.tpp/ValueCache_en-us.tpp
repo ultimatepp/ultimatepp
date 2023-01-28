@@ -24,7 +24,7 @@ alueMaker][@(0.0.255) `&]_[*@3 m])&]
 derived from ValueMaker, which is class with two virtual methods:&]
 [s2; &]
 [s2; virtual String [* Key]() const;&]
-[s2; virtual int [* Make](T`& object) const;&]
+[s2; virtual int [* Make](Value`& object) const;&]
 [s2; &]
 [s2; [* Key] should return unique identifier for Value requested with 
 ValueMaker derived class. Note that the type of ValueMaker derived 
@@ -34,7 +34,10 @@ the corresponding Value and returns the approximate memory consumption
 needed to store that Value. [* MakeValue] first checks whether 
 Value corresponding to given ValueMaker and Key are in the cache, 
 if yes then it returns Value from the cache, otherwise calls 
-ValueMaker`::Make to obtain the Value and stores it to the cache.&]
+ValueMaker`::Make to obtain the Value and stores it to the cache. 
+Note that this function allows full reentrancy (from various 
+threads as well as recursive calls (through Make method) in single 
+thread&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:IsValueCacheActive`(`):%- [@(0.0.255) bool]_[* IsValueCacheActive]()&]
