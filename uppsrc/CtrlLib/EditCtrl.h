@@ -424,7 +424,7 @@ public:
 	WithSpin&          SetInc(IncType _inc = 1)     { inc = _inc; return *this; }
 	DataType           GetInc() const               { return inc; }
 	
-	WithSpin&          SetStyle(const SpinButtons::Style& s) { style = &s; return *this; }
+	WithSpin&          SetSpinStyle(const SpinButtons::Style& s) { style = &s; return *this; }
 
 	WithSpin&          OnSides(bool b = true);
 	bool               IsOnSides() const            { return style->onsides; }
