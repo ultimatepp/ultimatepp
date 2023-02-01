@@ -16,7 +16,7 @@ void EditorSyntax::Serialize(Stream& s)
 
 void EditorSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 {
-	editor.InsertChar(chr, count);
+	editor.InsertChar(chr, count, true);
 }
 
 bool EditorSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)

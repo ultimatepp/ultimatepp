@@ -80,7 +80,7 @@ void PythonSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 		}
 	}
 	if(count > 0)
-		editor.InsertChar(chr, count);
+		editor.InsertChar(chr, count, true);
 }
 
 bool PythonSyntax::LineHasColon(const WString& line)
