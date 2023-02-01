@@ -57,23 +57,23 @@ void Ide::FormatXML() { FormatJSON_XML(true); }
 String Ide::FindClangFormatPath()
 {
 	String p;
-	auto Check = [&](const String& dir) {
-		for(String fn : { ".clang-format", "_clang-format" }) {
-			p = AppendFileName(dir, fn);
-			if(FileExists(p))
-				return true;
+	auto Check = [&](String dir) {
+		while(dir.GetCount() > 3) {
+			for(String fn : { ".clang-format", "_clang-format" }) {
+				p = AppendFileName(dir, fn);
+				if(FileExists(p))
+					return true;
+			}
+			dir = GetFileFolder(dir);
 		}
 		return false;
 	};
 
-	for(String dir = GetFileFolder(editfile); dir.GetCount() > 3; dir = GetFileFolder(dir))
+	if(Check(GetFileFolder(editfile)))
+		return p;
+	for(String dir : GetUppDirs())
 		if(Check(dir))
 			return p;
-	
-	for(String dir : GetUppDirs())
-		for(; dir.GetCount() > 3; dir = GetFileFolder(dir))
-			if(Check(dir))
-				return p;
 	
 	return Null;
 }
