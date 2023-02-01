@@ -129,7 +129,7 @@ void CSyntax::IndentInsert0(CodeEditor& e, int chr, int count, bool reformat)
 	int cl = e.GetCursorLine();
 	WString l = e.GetWLine(cl);
 	if(chr != '{' && chr != '}' || count > 1) {
-		e.InsertChar(chr, 1, true);
+		e.InsertChar(chr, count, true);
 		return;
 	}
 	const wchar *s;
