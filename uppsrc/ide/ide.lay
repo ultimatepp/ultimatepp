@@ -907,3 +907,15 @@ LAYOUT(UppHubSettingsLayout, 544, 64)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
+LAYOUT(ReformatLayout, 1024, 724)
+	ITEM(Upp::DropList, base, LeftPosZ(4, 360).TopPosZ(8, 19))
+	ITEM(Upp::ParentCtrl, options, LeftPosZ(4, 360).TopPosZ(32, 652))
+	ITEM(CodeEditor, view, LeftPosZ(368, 652).TopPosZ(8, 676))
+	ITEM(Upp::Button, save, SetLabel(t_("Save..")).RightPosZ(956, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, load, SetLabel(t_("Load..")).RightPosZ(888, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, clear, SetLabel(t_("Clear")).RightPosZ(820, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Label, error, SetLabel(t_("error")).SetAlign(Upp::ALIGN_CENTER).SetFont(Upp::StdFont().Bold()).SetInk(Upp::SRed).LeftPosZ(216, 656).TopPosZ(692, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(8, 24))
+END_LAYOUT
+

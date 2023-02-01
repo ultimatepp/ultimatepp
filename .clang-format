@@ -1,0 +1,24 @@
+# .clang-format file for U++ framework
+
+---
+BasedOnStyle: LLVM
+UseTab: AlignWithSpaces 
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 96
+---
+Language: Cpp
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: All
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBraces: Stroustrup
+BreakConstructorInitializers: BeforeComma
+CompactNamespaces: true
+DerivePointerAlignment: false
+IfMacros: ['ONCELOCK']
+PointerAlignment: Left
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+    AfterControlStatements: false
+IndentAccessModifiers: false
+IndentPPDirectives: None

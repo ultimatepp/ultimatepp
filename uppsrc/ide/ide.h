@@ -648,7 +648,6 @@ public:
 	void FormatJSON_XML(bool xml);
 	void FormatJSON();
 	void FormatXML();
-	void FormatJSON_XML_File(bool xml);
 
 	bool      browser_closeesc;
 	bool      bookmark_pos;
@@ -833,12 +832,19 @@ public:
 		void  InsertMenu(Bar& bar);
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
+		void  Reformat(Bar& bar);
 		void  AssistEdit(Bar& menu);
 		void  EditorMenu(Bar& bar);
 		void  ToggleWordwrap();
 
         void  CopyPosition();
         void  GotoPosition();
+        
+    void      ReformatMenu(Bar& menu);
+	    void  ReformatCodeDlg();
+	    void  ReformatCode();
+	    void  ReformatComment();
+		String FindClangFormatPath();
 
 	void OnlineSearchMenu(Bar& menu);
 
@@ -868,7 +874,6 @@ public:
 		void  ToComment();
 		void  CommentLines();
 		void  UnComment();
-		void  ReformatComment();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();

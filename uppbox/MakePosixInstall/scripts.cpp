@@ -12,7 +12,7 @@ AskContinue()
 uname=`uname`
 
 if [ -x "$(command -v apt-get)" ]; then
-  DEP="apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool"
+  DEP="apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool clang-format"
 elif [ -x "$(command -v yum)" ]; then
   DEP="yum install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v dnf)" ]; then

@@ -1,8 +1,9 @@
 #include "Core.h"
 
-#define LLOG(x)
-
 #include <plugin/bz2/bz2.h>
+
+#define LLOG(x)
+#define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
 Host::Host()
 {
@@ -379,6 +380,17 @@ void Host::AddFlags(Index<String>& cfg)
 const Vector<String>& Host::GetExecutablesDirs() const
 {
 	return exedirs;
+}
+
+void Host::AddExecutable(const String& dir, const String& exe)
+{
+	String p = dir + DIR_SEPS + exe;
+	if(!FileExists(p)) {
+		Loge() << METHOD_NAME << "Following executable file \"" << p << "\" doesn't exists.";
+		return;
+	}
+	
+	exedirs.Add(dir);
 }
 
 bool Host::HasPlatformFlag(const Index<String>& cfg)

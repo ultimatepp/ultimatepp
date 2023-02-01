@@ -307,6 +307,7 @@ void Ide::EditorMenu(Bar& bar)
 {
 	bar.Sub("Assist", [=](Bar& bar) { AssistMenu(bar); });
 	InsertAdvanced(bar);
+	Reformat(bar);
 	bar.MenuSeparator();
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),

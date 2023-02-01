@@ -127,6 +127,12 @@ void Ide::InsertAdvanced(Bar& bar)
 	bar.Add(b, "Advanced", THISBACK(EditSpecial));
 }
 
+void Ide::Reformat(Bar& bar)
+{
+	bool b = !editor.IsReadOnly();
+	bar.Sub(b, "Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
+}
+
 void Ide::EditSpecial(Bar& menu)
 {
 	bool b = !editor.IsReadOnly();
@@ -149,10 +155,6 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
-	menu.Add(b, AK_FORMATJSON, THISBACK(FormatJSON))
-	    .Help("Reformat JSON");
-	menu.Add(b, AK_FORMATXML, THISBACK(FormatXML))
-	    .Help("Reformat XML");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
 	    .Help("Convert letters in selection to uppercase");
 	menu.Add(b && editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))
@@ -171,8 +173,6 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Comment code lines");
 	menu.Add(b && editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
-	menu.Add(b, AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
-	    .Help("Reformat multiline comment into paragraph");
 	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
 	menu.MenuSeparator();
 	menu.Add(AK_COPY_POSITION, [=] { CopyPosition(); });
@@ -283,8 +283,27 @@ void Ide::Edit(Bar& menu)
 
 	menu.Add("Find and Replace", THISBACK(SearchMenu));
 
-	if(!designer && menu.IsMenuBar())
+	if(!designer && menu.IsMenuBar()) {
 		InsertAdvanced(menu);
+		Reformat(menu);
+	}
+}
+
+void Ide::ReformatMenu(Bar& menu)
+{
+	bool b = !editor.IsReadOnly();
+	
+	menu.Add(b, AK_REFORMAT_CODE, [=] { ReformatCode(); })
+		.Help("Reformat current file with clang-format");
+	menu.Add(b, AK_REFORMAT_CODE2, [=] { ReformatCodeDlg(); });
+	menu.Separator();
+	menu.Add(b, AK_REFORMAT_JSON, [=] { FormatJSON(); })
+	    .Help("Reformat JSON");
+	menu.Add(b, AK_REFORMAT_XML, [=] { FormatXML(); })
+	    .Help("Reformat XML");
+	menu.Separator();
+	menu.Add(b, AK_REFORMAT_COMMENT, [=] { ReformatComment(); })
+	    .Help("Reformat multiline comment into paragraph");
 }
 
 bool Ide::HasMacros()
@@ -772,6 +791,7 @@ void Ide::BrowseMenu(Bar& menu)
 			AssistMenu(menu);
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
 			AssistEdit(menu);
+			Reformat(menu);
 			menu.MenuSeparator();
 		}
 
@@ -804,8 +824,6 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
 		menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
-		menu.Add(AK_REFORMAT_JSON, [=] { FormatJSON_XML_File(false); });
-		menu.Add(AK_REFORMAT_XML, [=] { FormatJSON_XML_File(true); });
 		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));

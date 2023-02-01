@@ -45,6 +45,7 @@ struct Host {
 	void                  AddFlags(Index<String>& cfg);
 	
 	const Vector<String>& GetExecutablesDirs() const;
+	void AddExecutable(const String& dir, const String& exe);
 	
 private:
 	bool HasPlatformFlag(const Index<String>& cfg);

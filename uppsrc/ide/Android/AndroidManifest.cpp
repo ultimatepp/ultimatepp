@@ -38,7 +38,8 @@ bool AndroidManifest::Parse()
 			
 			p.Skip();
 		}
-	} catch(const XmlError& e) {
+	}
+	catch(const XmlError& e) {
 		Loge() << METHOD_NAME << "Failed to parse manifest file with error \"" + e + "\".";
 		return false;
 	}

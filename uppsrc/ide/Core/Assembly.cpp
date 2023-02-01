@@ -10,25 +10,6 @@ String LocalPath(const String& filename)
 	return AppendFileName(GetLocalDir(), filename);
 }
 
-Vector<String> IgnoreList()
-{
-	Vector<String> ignore;
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pk = wspc.GetPackage(i);
-		for(int j = 0; j < pk.GetCount(); j++)
-			if(!pk[j].separator && pk[j] == "ignorelist") {
-				FileIn in(SourcePath(wspc[i], pk[j]));
-				while(in && !in.IsEof()) {
-					String s = in.GetLine();
-					if(!s.IsEmpty())
-						ignore.Add(s);
-				}
-			}
-	}
-	return ignore;
-}
-
 String FollowCygwinSymlink(const String& file) {
 	for(String fn = file;;) {
 		if(fn.IsEmpty())

@@ -345,7 +345,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		execv(app_full, args.Begin());
 	LLOG("execve failed, errno = " << errno);
 //	printf("Error running '%s', error code %d\n", command, errno);
-	exit(-errno);
+	abort(); // do not use exit here: it calls global destructors...
 	return true;
 #endif
 }

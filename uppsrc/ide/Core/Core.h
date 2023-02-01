@@ -365,8 +365,6 @@ String GetPackagePathNest(const String& path);
 String GetLocalDir();
 String LocalPath(const String& filename);
 
-Vector<String> IgnoreList();
-
 bool   IsFullDirectory(const String& d);
 bool   IsFolder(const String& path);
 
