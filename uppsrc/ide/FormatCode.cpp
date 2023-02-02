@@ -386,7 +386,6 @@ ReformatDlg::ReformatDlg()
 	view.SetReadOnly();
 
 	String p = TheIde()->FindClangFormatPath();
-	DDUMP(p);
 	if(p.GetCount())
 		base.Add(Null, ".clang-format file " + p);
 	for(String id : { "LLVM", "Google", "Chromium", "Mozilla", "WebKit", "Microsoft", "GNU" })
