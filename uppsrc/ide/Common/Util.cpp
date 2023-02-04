@@ -252,30 +252,12 @@ bool HasSvn()
 	return b;
 }
 
-#ifdef PLATFORM_WIN32
-
-String GetInternalGitPath()
-{
-	return GetExeDirFile("bin/mingit/cmd/git.exe");
-}
-
 bool HasGit()
 {
 	String dummy;
-	static bool b = FileExists(GetInternalGitPath()) || Sys("git", dummy) >= 0;
+	static bool b = HostSys("git", dummy) >= 0;
 	return b;
 }
-
-#else
-
-bool HasGit()
-{
-	String dummy;
-	static bool b = Sys("git", dummy) >= 0;
-	return b;
-}
-
-#endif
 
 int MaxAscent(Font f)
 {

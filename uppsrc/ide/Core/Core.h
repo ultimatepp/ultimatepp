@@ -673,6 +673,9 @@ void DeletePCHFiles();
 
 String GetLineEndings(const String& data, const String& default_eol = "\r\n");
 
+int    HostSys(const char *cmd, String& r); // like Sys, but with current method paths added (and also internal paths in win32)
+String HostSys(const char *cmd);
+
 enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);

@@ -626,3 +626,24 @@ bool MakeBuild::IsAndroidMethod(const String& method) const
 	
 	return AndroidBuilder::GetBuildersNames().Find(builder) > -1;
 }
+
+
+int HostSys(const char *cmd, String& out)
+{
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
+	if(!mb)
+		return Null;
+	Host host;
+	mb->CreateHost(host, false, false);
+	LocalProcess p;
+	host.canlog = false;
+	if(host.StartProcess(p, cmd))
+		return p.Finish(out);
+	return Null;
+}
+
+String HostSys(const char *cmd)
+{
+	String out;
+	return HostSys(cmd, out) == 0 ? out : String::GetVoid();
+}

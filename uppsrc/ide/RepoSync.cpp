@@ -14,7 +14,7 @@ String GetGitUrl(const String& repo_dir)
 
 String GetSvnUrl(const String& repo_dir)
 {
-	Vector<String> ln = Split(RepoSys("svn info --show-item repos-root-url " + repo_dir), CharFilterCrLf);
+	Vector<String> ln = Split(HostSys("svn info --show-item repos-root-url " + repo_dir), CharFilterCrLf);
 	return ln.GetCount() ? ln[0] : String();
 }
 
@@ -138,7 +138,7 @@ bool IsConflictFile(String path)
 
 bool RepoSync::ListSvn(const String& path)
 {
-	Vector<String> ln = Split(RepoSys("svn status " + path), CharFilterCrLf);
+	Vector<String> ln = Split(HostSys("svn status " + path), CharFilterCrLf);
 	bool actions = false;
 	for(int pass = 0; pass < 2; pass++)
 		for(int i = 0; i < ln.GetCount(); i++) {
@@ -208,7 +208,7 @@ String GitCmd(const char *dir, const char *command)
 	LOG("GitCmd " << dir << ", " << command);
 	String h = GetCurrentDirectory();
 	SetCurrentDirectory(dir);
-	String r = RepoSys(String() << "git " << command);
+	String r = HostSys(String() << "git " << command);
 	SetCurrentDirectory(h);
 	return r;
 }
@@ -557,7 +557,7 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 			RepoMoveSvn(path, tp);
 			sRepoDeleteFolderDeep(path);
 			FileMove(tp, path);
-			Vector<String> ln = Split(RepoSys("svn status \"" + path + "\""), CharFilterCrLf);
+			Vector<String> ln = Split(HostSys("svn status \"" + path + "\""), CharFilterCrLf);
 			for(int l = 0; l < ln.GetCount(); l++) {
 				String h = ln[l];
 				if(h.GetCount() > 7) {

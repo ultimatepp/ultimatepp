@@ -495,7 +495,7 @@ Vector<String> RepoInfo(const String& package)
 		}
 	}
 	if(repo == GIT_DIR) {
-		String v = Sys("git rev-list --count HEAD");
+		String v = HostSys("git rev-list --count HEAD");
 		if(IsDigit(*v))
 			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
 	}

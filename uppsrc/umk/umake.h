@@ -91,7 +91,6 @@ struct Ide : public IdeContext, public MakeBuild {
 	Workspace wspc;
 	Console   console;
 	String    onefile;
-	String    mainconfigpatam;
 	bool      verbose;
 	String    main;
 	int       build_time;

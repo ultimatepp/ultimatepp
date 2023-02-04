@@ -87,7 +87,7 @@ file
 	Xml.cpp,
 	Json.cpp,
 	MacroManager.cpp,
-	SetupSVN.cpp,
+	SetupGIT.cpp,
 	Upgrade.cpp,
 	UppHub.cpp,
 	Compile readonly separator,
