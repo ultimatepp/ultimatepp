@@ -764,6 +764,8 @@ void Ide::DebugMenu(Bar& menu)
 		#endif
 
 			menu.Separator();
+			if(HasLinter())
+				GetLinter().StdMenu(menu);
 		}
 	}
 	if(menu.IsMenuBar()) {
