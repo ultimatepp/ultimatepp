@@ -118,7 +118,7 @@ VectorMap<String, String> ReadClangFormatFile(Stream& in)
 
 String ReformatCpp(CodeEditor& editor, bool setcursor)
 {
-	if(editor.GetLength() > 10000000)
+	if(editor.GetLength() > 1000000)
 		return "File is too big to reformat.";
 
 	String clang_format_path = ClangFormatPath();
@@ -169,31 +169,32 @@ String ReformatCpp(CodeEditor& editor, bool setcursor)
 	Vector<String> ln = Split(r, '\n', false);
 	for(String& s : ln)
 		s.TrimEnd("\r");
-	int n = editor.GetLineCount();
-	l = h = n;
-	for(int i = 0; i < n; i++)
-		if(i >= ln.GetCount() || editor.GetUtf8Line(i) != ln[i]) {
-			l = i;
-			break;
+
+	Vector<String> ln2;
+	for(int i = 0; i < editor.GetLineCount(); i++)
+		ln2.Add(editor.GetUtf8Line(i));
+
+	int lined = 0; // adjustment for source line
+	int cursor = editor.GetCursor();
+	bool nu = true;
+	for(const auto& ts : CompareLineMaps(ln2, ln)) {
+		if(!ts.same) {
+			int tpos = editor.GetPos(ts.start1 + lined);
+			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
+			if(nu) {
+				editor.NextUndo();
+				nu = false;
+			}
+			editor.Remove(tpos, tsz);
+			String rtext;
+			for(int i = 0; i < ts.count2; i++)
+				rtext << ln[ts.start2 + i] << "\n";
+			cursor = editor.Insert(tpos, rtext);
+			lined += ts.count2 - ts.count1;
 		}
-	for(int i = 0; i < n; i++)
-		if(i >= ln.GetCount() || editor.GetUtf8Line(n - 1 - i) != ln[ln.GetCount() - 1 - i]) {
-			h = i;
-			break;
-		}
-	
-	if(l + h >= n)
-		return Null;
-	
-	editor.NextUndo();
-	int from = editor.GetPos(l);
-	editor.Remove(from, editor.GetPos(editor.GetLineCount() - h) - from);
-	ln.Remove(0, l);
-	ln.Trim(ln.GetCount() - h);
-	int sz = editor.Insert(from, Join(ln, "\n") + "\n", CHARSET_UTF8);
+	}
 	if(setcursor)
-		editor.SetCursor(from + sz);
-	
+		editor.SetCursor(cursor);
 	return Null;
 }
 
