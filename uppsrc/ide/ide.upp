@@ -21,7 +21,8 @@ uses
 	Report,
 	Core/SSL,
 	plugin/md,
-	ide/clang;
+	ide/clang,
+	ide/Linter;
 
 file
 	IDE readonly separator,

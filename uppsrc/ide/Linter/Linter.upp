@@ -1,0 +1,13 @@
+description "TheIDE, static analyzer modules.\377B0,0,0";
+
+file
+	Linter.h,
+	Linter.cpp,
+	Config.cpp,
+	Linter.key,
+	Linter.lay,
+	Linter.iml,
+	Info readonly separator,
+	Copying,
+	Todo.txt;
+
