@@ -118,6 +118,9 @@ VectorMap<String, String> ReadClangFormatFile(Stream& in)
 
 String ReformatCpp(CodeEditor& editor, bool setcursor)
 {
+	if(editor.GetLength() > 10000000)
+		return "File is too big to reformat.";
+
 	String clang_format_path = ClangFormatPath();
 	FileIn in(clang_format_path);
 	VectorMap<String, String> fv = ReadClangFormatFile(in);
@@ -146,7 +149,7 @@ String ReformatCpp(CodeEditor& editor, bool setcursor)
 	cmd << "\"--style=file:" << clang_format_path << "\" ";
 	
 	String r;
-	int code = Sys(cmd + temp_path, r);
+	int code = HostSys(cmd + temp_path, r);
 	
 	DeleteFile(temp_path);
 	
@@ -187,9 +190,9 @@ String ReformatCpp(CodeEditor& editor, bool setcursor)
 	editor.Remove(from, editor.GetPos(editor.GetLineCount() - h) - from);
 	ln.Remove(0, l);
 	ln.Trim(ln.GetCount() - h);
-	int pos = editor.Insert(from, Join(ln, "\n") + "\n", CHARSET_UTF8);
+	int sz = editor.Insert(from, Join(ln, "\n") + "\n", CHARSET_UTF8);
 	if(setcursor)
-		editor.SetCursor(pos);
+		editor.SetCursor(from + sz);
 	
 	return Null;
 }

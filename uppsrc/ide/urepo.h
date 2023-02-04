@@ -22,8 +22,6 @@ public:
 	UrepoConsole();
 };
 
-String RepoSys(const char *cmd);
-
 String SvnCmd(const char *cmd);
 
 String GetSvnDir(const String& p);
