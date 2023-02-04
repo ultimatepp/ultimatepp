@@ -33,6 +33,7 @@ private:
     String  GetPackageName();
     String  GetPackagePath();
     String  GetCmdLine();
+    void    SysCmd(const String& cmd, Event<const String&> cb);
     void    DoCheck(Vector<String>& paths);
     void    ParseResults(const XmlNode& results);
 };

@@ -102,7 +102,8 @@ String Linter::GetCmdLine()
 {
 	Value v = LoadConfig()["CppCheck"];
 	if(IsNull(v))
-		return String::GetVoid();
+		return sExeFilePath
+			+ " --languge=c++ --std=c++14 --platform=native --enable=all, --xml ";
 
 	int depth = v["depth"];
 	int jobs  = v["jobs"];
@@ -126,6 +127,31 @@ String Linter::GetCmdLine()
 	return s;
 }
 
+void Linter::SysCmd(const String& cmd, Event<const String&> cb)
+{
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
+	if(!mb)
+		throw Exc("Cannot get TheIde context");
+	Host host;
+	mb->CreateHost(host, false, false);
+	LocalProcess p;
+	host.canlog = false;
+	if(!host.StartProcess(p, ~cmd))
+		throw Exc("Cannot start cppcheck process");
+	for(;;) {
+		String out = p.Get();
+		if(p.IsRunning()) {
+			if(!IsNull(out))
+				cb(out);
+		}
+		else {
+			if(out.IsVoid())
+				break;
+			cb(out);
+		}
+	}
+}
+
 void Linter::DoCheck(Vector<String>& paths)
 {
 	Ide   *ide  = TheIde();
@@ -137,32 +163,19 @@ void Linter::DoCheck(Vector<String>& paths)
 		FileOut fo(tmp);
 		if(!fo)
 			throw Exc("Unable to open temporary file");
-		Host h;
-		LocalProcess lp;
 		ide->ConsoleClear();
 		ide->ShowConsole();
-		ide->CreateHost(h, ide->darkmode, ide->disable_uhd);
 		ide->PutConsole("Running cppcheck..");
-		if(!h.StartProcess(lp, GetCmdLine() + path))
-			throw Exc("Error running cppcheck!");
 		Progress pi;
-		pi.Title("CppCheck");
+		pi.Title("Cpcheck");
 		pi.SetText("Analyzing " + (paths.GetCount() == 1 ? Upp::GetFileName(paths[0]) : "all packages"));
-		for(;;) {
-			String out = lp.Get();
-			if(lp.IsRunning()) {
-				if(!IsNull(out))
-					fo.Put(out);
-			}
-			else {
-				if(out.IsVoid())
-					break;
-				fo.Put(out);
-			}
+		auto progress = [&fo, &pi](const String& out) {
 			if(pi.Canceled())
-				throw Exc("Cppcheck canceled.");
+				throw Exc("User break.");
+			fo.Put(out);
 			pi.Step();
-		}
+		};
+		SysCmd(GetCmdLine() + path, progress);
 		fo.Close();
 		ide->Sync();
 		ide->PutConsole("Parsing cppcheck output..");
