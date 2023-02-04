@@ -258,8 +258,8 @@ ArrayCtrl& PopUpList::Permanent()
 void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	if(inpopup)
 		return;
-	inpopup++;
 	DoClose();
+	inpopup++;
 	if(!popup)
 		popup.Create(this);
 	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
