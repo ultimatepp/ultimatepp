@@ -199,7 +199,7 @@ $(OutFile): build_info  \
 	$(OutDir_ide)Xml.o \
 	$(OutDir_ide)Json.o \
 	$(OutDir_ide)MacroManager.o \
-	$(OutDir_ide)SetupSVN.o \
+	$(OutDir_ide)SetupGIT.o \
 	$(OutDir_ide)Upgrade.o \
 	$(OutDir_ide)UppHub.o \
 	$(OutDir_ide)MethodsCtrls.o \
@@ -315,7 +315,7 @@ $(OutFile): build_info  \
 		$(OutDir_ide)Xml.o \
 		$(OutDir_ide)Json.o \
 		$(OutDir_ide)MacroManager.o \
-		$(OutDir_ide)SetupSVN.o \
+		$(OutDir_ide)SetupGIT.o \
 		$(OutDir_ide)Upgrade.o \
 		$(OutDir_ide)UppHub.o \
 		$(OutDir_ide)MethodsCtrls.o \
@@ -11794,7 +11794,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/MacroManager.cpp -o $(OutDir_ide)MacroManager.o
 
-$(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
+$(OutDir_ide)SetupGIT.o: $(UPPDIR1)ide/SetupGIT.cpp \
 	$(UPPDIR1)CodeEditor/CodeEditor.h \
 	$(UPPDIR1)CodeEditor/CSyntax.h \
 	$(UPPDIR1)CodeEditor/DiffSyntax.h \
@@ -12004,7 +12004,7 @@ $(OutDir_ide)SetupSVN.o: $(UPPDIR1)ide/SetupSVN.cpp \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)TextDiffCtrl/TextDiffCtrl.h \
 	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/SetupSVN.cpp -o $(OutDir_ide)SetupSVN.o
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/SetupGIT.cpp -o $(OutDir_ide)SetupGIT.o
 
 $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)CodeEditor/CodeEditor.h \
