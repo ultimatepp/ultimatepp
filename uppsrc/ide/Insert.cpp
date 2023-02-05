@@ -276,6 +276,24 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
 	bar.Add("Insert file as..", THISBACK(InsertFileBase64));
+	bar.Add(IdeKeys::AK_INSERTDATE, [=] {
+		Date d = GetSysDate();
+		InsertText(Format("%d-%02d-%02d", d.year, d.month, d.day));
+	});
+	bar.Add(IdeKeys::AK_INSERTTIME, [=] {
+		Time d = GetSysTime();
+		InsertText(Format("%d-%02d-%02d %02d:%02d:%02d", d.year, d.month, d.day, d.hour, d.minute, d.second));
+	});
+	bar.Add(IdeKeys::AK_INSERTGUID, [=] {
+		Uuid uuid;
+		uuid.New();
+		InsertText(Format(uuid));
+	});
+	bar.Add(IdeKeys::AK_INSERTGUID2, [=] {
+		Uuid uuid;
+		uuid.New();
+		InsertText(FormatWithDashes(uuid));
+	});
 }
 
 void Ide::InsertInclude(Bar& bar)
