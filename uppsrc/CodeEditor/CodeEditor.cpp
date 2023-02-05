@@ -343,7 +343,7 @@ void CodeEditor::IndentInsert(int chr, int count) {
 	if(s)
 		s->IndentInsert(*this, chr, count);
 	else
-		InsertChar(chr, count);
+		InsertChar(chr, count, true);
 }
 
 void CodeEditor::Make(Event<String&> op)

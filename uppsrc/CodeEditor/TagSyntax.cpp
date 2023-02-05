@@ -276,7 +276,7 @@ void TagSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 	if(status == SCRIPT)
 		script.IndentInsert(editor, chr, count);
 	else
-		editor.InsertChar(chr, count);
+		editor.InsertChar(chr, count, true);
 }
 
 bool TagSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)
