@@ -11,7 +11,11 @@
 
 using namespace LinterKeys;
 
+#ifdef flagWIN32
+static String sExeFilePath = "C:\\Program Files\\CppCheck\\cppcheck.exe"; // PATH?
+#else
 static String sExeFilePath;
+#endif
 
 Linter& GetLinter()
 {
@@ -38,9 +42,15 @@ bool Linter::Exists()
 	static bool b = false;
 	ONCELOCK
 	{
-		String out;
-		if(!(b = Sys("which cppcheck", sExeFilePath) == 0))
-			sExeFilePath.Clear();
+#ifdef flagWIN32
+		constexpr const char *exe = "C:\\Program Files\\CppCheck\\cppcheck.exe";
+		b = FileExists(exe);
+		if(b) sExeFilePath << "\"" << exe << "\"";
+#else
+		b = Sys("which cppcheck", sExeFilePath) == 0;
+		if(b) sExeFilePath = TrimRight(sExeFilePath);
+		else  sExeFilePath.Clear();
+#endif
 	}
 	return b && TheIde();
 }
@@ -76,7 +86,7 @@ void Linter::CheckFile()
 {
 	if(!Exists())
 		return;
-	Vector<String> paths = { GetFilePath() };
+	Vector<String> paths = { "\"" + GetFilePath() + "\"" };
 	DoCheck(paths);
 }
 
@@ -84,7 +94,7 @@ void Linter::CheckPackage()
 {
 	if(!Exists())
 		return;
-	Vector<String> paths = { GetFileFolder(GetPackagePath()) };
+	Vector<String> paths = { "\"" + GetFileFolder(GetPackagePath()) + "\"" };
 	DoCheck(paths);
 }
 
@@ -95,7 +105,8 @@ void Linter::CheckAll()
 	Vector<String> paths;
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
-		paths.Add() = GetFileFolder(PackagePath(wspc[i]));
+		paths.Add() = "\"" + GetFileFolder(PackagePath(wspc[i])) + "\"";
+	DoCheck(paths);
 }
 
 String Linter::GetCmdLine()
@@ -124,31 +135,41 @@ String Linter::GetCmdLine()
 	  << "-j "              << AsString(clamp(jobs, 1, 1024)) << " ";
 	if(severity.GetCount())
 		s << "--enable="    << Join(severity, ",", true) << " ";
+
 	return s;
 }
 
-void Linter::SysCmd(const String& cmd, Event<const String&> cb)
+void Linter::SysCmd(const String& cmd, const String& text, Stream& fs)
 {
 	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
 	if(!mb)
-		throw Exc("Cannot get TheIde context");
+		throw Exc("Cannot get TheIDE context");
 	Host host;
 	mb->CreateHost(host, false, false);
 	LocalProcess p;
-	host.canlog = false;
 	if(!host.StartProcess(p, ~cmd))
 		throw Exc("Cannot start cppcheck process");
+	Progress pi;
+	pi.Title("CppCheck");
+	pi.SetText(text);
 	for(;;) {
 		String out = p.Get();
 		if(p.IsRunning()) {
 			if(!IsNull(out))
-				cb(out);
+				fs.Put(out);
 		}
 		else {
 			if(out.IsVoid())
 				break;
-			cb(out);
+			else
+				fs.Put(out);
 		}
+		if(pi.StepCanceled()) {
+			pi.Close();
+			p.Kill();
+			throw Exc("User break.");
+		}
+		IdeProcessEvents();
 	}
 }
 
@@ -166,16 +187,8 @@ void Linter::DoCheck(Vector<String>& paths)
 		ide->ConsoleClear();
 		ide->ShowConsole();
 		ide->PutConsole("Running cppcheck..");
-		Progress pi;
-		pi.Title("Cpcheck");
-		pi.SetText("Analyzing " + (paths.GetCount() == 1 ? Upp::GetFileName(paths[0]) : "all packages"));
-		auto progress = [&fo, &pi](const String& out) {
-			if(pi.Canceled())
-				throw Exc("User break.");
-			fo.Put(out);
-			pi.Step();
-		};
-		SysCmd(GetCmdLine() + path, progress);
+		String text = "Analyzing " + (paths.GetCount() == 1 ? Upp::GetFileName(paths[0]) : "all packages");
+		SysCmd(GetCmdLine() + path, text, fo);
 		fo.Close();
 		ide->Sync();
 		ide->PutConsole("Parsing cppcheck output..");
@@ -201,8 +214,6 @@ void Linter::DoCheck(Vector<String>& paths)
 
 void Linter::ParseResults(const XmlNode& results)
 {
-	Ide *ide = TheIde();
-	
 	if(results.IsTag("results")) {
 		ParseResults(results["errors"]);
 	}
@@ -244,7 +255,6 @@ void Linter::StdMenu(Bar& menu)
 {
 	FileMenu(menu);
 	PackageMenu(menu);
-	Ide *ide = TheIde();
 	menu.Add(CanCheck(), "Analyze all..", [this]() { CheckAll(); })
 		.Key(AK_CHECKALL)
 		.Help(t_("Analyze project using cppcheck"));
@@ -253,7 +263,6 @@ void Linter::StdMenu(Bar& menu)
 
 void Linter::FileMenu(Bar& menu)
 {
-	Ide *ide = TheIde();
 	menu.Add(CanCheck(), "Analyze " + GetFileName(), [this]() { CheckFile(); })
 		.Key(AK_CHECKFILE)
 		.Help(t_("Analyze file using cppcheck"));
@@ -261,7 +270,6 @@ void Linter::FileMenu(Bar& menu)
 
 void Linter::PackageMenu(Bar& menu)
 {
-	Ide *ide = TheIde();
 	menu.Add(CanCheck(), "Analyze package " +  GetPackageName(), [this]() { CheckPackage(); })
 		.Key(AK_CHECKPACKAGE)
 		.Help(t_("Analyze package using cppcheck"));
