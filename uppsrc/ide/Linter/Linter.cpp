@@ -11,11 +11,7 @@
 
 using namespace LinterKeys;
 
-#ifdef flagWIN32
-static String sExeFilePath = "C:\\Program Files\\CppCheck\\cppcheck.exe"; // PATH?
-#else
 static String sExeFilePath;
-#endif
 
 Linter& GetLinter()
 {
