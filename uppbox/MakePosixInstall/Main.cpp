@@ -96,6 +96,8 @@ CONSOLE_APP_MAIN
 	
 	DeleteFolderDeep(release);
 	RealizeDirectory(release);
+	
+	SaveFile(release + "/uppsrc/.clang-format", LoadFile(upp_src + "/.clang-format"));
 
 	String uppsrc = upp_src + "/uppsrc";
 	String dstsrc = release + "/uppsrc";

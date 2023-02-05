@@ -88,6 +88,8 @@ CONSOLE_APP_MAIN
 	RealizeDirectory(tmp);
 	
 	RealizeDirectory("u:/upload");
+	
+	SaveFile(upptmp + "/uppsrc/.clang-format", LoadFile(upp + "/.clang-format"));
 
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
