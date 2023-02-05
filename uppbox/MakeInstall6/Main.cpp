@@ -89,8 +89,6 @@ CONSOLE_APP_MAIN
 	
 	RealizeDirectory("u:/upload");
 	
-	SaveFile(upptmp + "/uppsrc/.clang-format", LoadFile(upp + "/.clang-format"));
-
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
 	SaveFile(upptmp + "/dbghelp.dll", LoadFile(bin + "/win32_dlls/dbghelp.dll"));
@@ -115,6 +113,7 @@ and Windows 7 64 or 32 with latest patches for compiled applications.)--");
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
+	SaveFile(upptmp + "/uppsrc/.clang-format", LoadFile(upp + "/.clang-format"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 	Make("ide", "theide.exe");
 	Make("umk", "umk.exe");
