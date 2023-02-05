@@ -185,10 +185,14 @@ String ReformatCpp(CodeEditor& editor, bool setcursor)
 				editor.NextUndo();
 				nu = false;
 			}
-			editor.Remove(tpos, tsz);
 			String rtext;
 			for(int i = 0; i < ts.count2; i++)
 				rtext << ln[ts.start2 + i] << "\n";
+			if(tsz && rtext.GetCount()) { // we can remove the last '\n' to have more precise blue bars
+				rtext.TrimLast();
+				tsz--;
+			}
+			editor.Remove(tpos, tsz);
 			cursor = editor.Insert(tpos, rtext);
 			lined += ts.count2 - ts.count1;
 		}
