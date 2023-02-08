@@ -25,7 +25,7 @@ struct ButtonApp : TopWindow {
 	{
 		count = 0;
 		button <<= THISBACK(Click);
-		button.SetLabel("&I'm an Ultimate++ button!");
+		button.SetLabel("&I'm an U++ button!");
 		Add(button.VCenterPos(20).HCenterPos(200));
 		Add(label.BottomPos(0, 20).HCenterPos(200));
 		label.SetAlign(ALIGN_CENTER);
