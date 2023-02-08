@@ -13,10 +13,10 @@ uname=`uname`
 
 if [ -x "$(command -v apt-get)" ]; then
   DEP="apt-get install g++ clang clang-format git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool"
-elif [ -x "$(command -v yum)" ]; then
-  DEP="yum install gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v dnf)" ]; then
   DEP="dnf install gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+elif [ -x "$(command -v yum)" ]; then
+  DEP="yum install gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v urpmi)" ]; then
   DEP="urpmi install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v zypper)" ]; then
