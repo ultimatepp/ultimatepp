@@ -9,7 +9,7 @@ CONSOLE_APP_MAIN
 	HttpRequest::Trace();
 	WebSocket::Trace();
 #if 0
-	for(int ssl = 1; ssl < 2; ssl++)
+	for(int ssl = 0; ssl < 2; ssl++)
 		for(int blocking = 0; blocking < 2; blocking++) {
 			DDUMP(ssl);
 			DDUMP(blocking);
@@ -38,6 +38,7 @@ CONSOLE_APP_MAIN
 			
 			DLOG("... ok");
 		}
-#endif
+
 	DLOG("============= OK");
+#endif
 }
