@@ -639,10 +639,7 @@ public:
 	Font      gui_font = StdFont();
 	String    libclang_options;
 	String    libclang_coptions;
-	/*
-		astyle code formatter control vars
-		added 2008.01.27 by Massimo Del Fedele
-	*/
+	bool      prefer_clang_format = false;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -844,7 +841,7 @@ public:
 	    void  ReformatCodeDlg();
 	    void  ReformatCode();
 	    void  ReformatComment();
-		String FindClangFormatPath();
+		String FindClangFormatPath(bool local = false);
 
 	void OnlineSearchMenu(Bar& menu);
 

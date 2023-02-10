@@ -54,7 +54,7 @@ void Ide::FormatJSON_XML(bool xml)
 void Ide::FormatJSON() { FormatJSON_XML(false); }
 void Ide::FormatXML() { FormatJSON_XML(true); }
 
-String Ide::FindClangFormatPath()
+String Ide::FindClangFormatPath(bool local)
 {
 	String p;
 	auto Check = [&](String dir) {
@@ -71,6 +71,10 @@ String Ide::FindClangFormatPath()
 
 	if(Check(GetFileFolder(editfile)))
 		return p;
+	
+	if(local)
+		return Null;
+	
 	for(String dir : GetUppDirs())
 		if(Check(dir))
 			return p;
@@ -116,16 +120,21 @@ VectorMap<String, String> ReadClangFormatFile(Stream& in)
 	return val;
 }
 
-String ReformatCpp(CodeEditor& editor, bool setcursor)
+String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 {
 	if(editor.GetLength() > 1000000)
 		return "File is too big to reformat.";
 
-	String clang_format_path = ClangFormatPath();
-	FileIn in(clang_format_path);
-	VectorMap<String, String> fv = ReadClangFormatFile(in);
-	if(IsNull(fv.Get("BasedOnStyle", Null)))
+	String clang_format_path;
+	if(prefer_clang_format)
 		clang_format_path = TheIde()->FindClangFormatPath();
+	if(IsNull(clang_format_path)) {
+		clang_format_path = ClangFormatPath();
+		FileIn in(clang_format_path);
+		VectorMap<String, String> fv = ReadClangFormatFile(in);
+		if(IsNull(fv.Get("BasedOnStyle", Null)))
+			clang_format_path = TheIde()->FindClangFormatPath();
+	}
 	int64 l, h;
 	bool sel = editor.GetSelection(l, h);
 
@@ -395,11 +404,13 @@ ReformatDlg::ReformatDlg()
 
 	String p = TheIde()->FindClangFormatPath();
 	if(p.GetCount())
-		base.Add(Null, ".clang-format file " + p);
+		base.Add(Null, ".clang-format file, current: " + p);
 	for(String id : { "LLVM", "Google", "Chromium", "Mozilla", "WebKit", "Microsoft", "GNU" })
 		base.Add("BasedOnStyle: " + id, "Based on style " + id);
 	base << [=] { Sync(); };
 	base.SetIndex(0);
+	
+	prefer_clang_format <<= TheIde()->prefer_clang_format;
 	
 	int cy = EditField::GetStdHeight();
 	int y = 0;
@@ -482,6 +493,7 @@ ReformatDlg::ReformatDlg()
 
 ReformatDlg::~ReformatDlg()
 {
+	TheIde()->prefer_clang_format = ~prefer_clang_format;
 	Sync();
 }
 
@@ -576,7 +588,7 @@ void ReformatDlg::Sync()
 	
 	Upp::SaveFile(ClangFormatPath(), Get());
 	
-	String err = ReformatCpp(view, false);
+	String err = ReformatCpp(view, false, false);
 	if(IsNull(err)) {
 		error.SetLabel("");
 		ok.Enable();
@@ -625,7 +637,7 @@ void Ide::ReformatCodeDlg()
 	dlg.Sync();
 
 	if(dlg.Execute() == IDOK) {
-		String error = ReformatCpp(editor, true);
+		String error = ReformatCpp(editor, true, false);
 		if(error.GetCount())
 			PromptOK("clang-format has failed:&\1" + error);
 	}
@@ -640,7 +652,7 @@ void Ide::ReformatCode()
 		return;
 	}
 
-	if(ReformatCpp(editor, true).GetCount())
+	if(ReformatCpp(editor, true, prefer_clang_format).GetCount())
 		ReformatCodeDlg();
 }
 
