@@ -6,6 +6,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	Vector<int> a, b;
+	int tm0 = msecs();
 	for(int i = 0; i < 200000; i++) {
 		if(i % 10000 == 0)
 			LOG(i);
@@ -20,5 +21,5 @@ CONSOLE_APP_MAIN
 		ASSERT(IsEqualBySerialize(a, b));
 		ASSERT(IsEqualBySerialize(b, a));
 	}
-	LOG("=========== OK");
+	DLOG("=========== OK in " << (tm0 - msecs()) / 1000.0 << " seconds");
 }
