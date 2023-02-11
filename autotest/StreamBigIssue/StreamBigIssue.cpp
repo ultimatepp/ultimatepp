@@ -6,6 +6,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
+	int tm0 = msecs();
 	int n = 0;
 	for(;;) {
 		String data;
@@ -69,5 +70,5 @@ CONSOLE_APP_MAIN
 		DLOG(n++);
 	}
 
-	LOG("============= OK");
+	LOG("============= OK, " << (msecs() - tm0) / 1000.0 << " seconds");
 }

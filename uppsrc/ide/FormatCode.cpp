@@ -499,7 +499,7 @@ ReformatDlg::~ReformatDlg()
 
 void ReformatDlg::MouseWheel(Point, int zdelta, dword)
 {
-	sb.Wheel(zdelta, EditField::GetStdHeight() + DPI(2));
+	sb.Wheel(zdelta);
 }
 
 void ReformatDlg::Set(Stream& in)
@@ -577,6 +577,7 @@ String ReformatDlg::Get()
 void ReformatDlg::Layout()
 {
 	sb.SetPage(options.GetSize().cy);
+	sb.SetLine(3 * EditField::GetStdHeight() + DPI(2));
 }
 
 void ReformatDlg::Sync()
