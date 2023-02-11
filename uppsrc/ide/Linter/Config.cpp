@@ -2,36 +2,21 @@
 
 LinterConfigTab::LinterConfigTab()
 {
-	language
-		.Add("c")
-		.Add("c++"); // default.
+	for(const Value& v : { "c", "c++"})
+		language.Add(v);
 
-	standard
-		.Add("c89")
-		.Add("c99")
-		.Add("c11")
-		.Add("c++03")
-		.Add("c++11")
-		.Add("c++14")  // default.
-		.Add("c++17")
-		.Add("c++20");
+	for(const Value& v : { "c89", "c99", "c11", "c++03", "c++11", "c++14", "c++17", "c++20"})
+		standard.Add(v);
 
-	platform
-	    .Add("native") // default.
-		.Add("unix32")
-		.Add("unix64")
-		.Add("win32A")
-		.Add("win32W")
-		.Add("win64");
+	for(const Value& v :  { "native", "unix32", "unix64", "win32A", "win32W", "win64"})
+		platform.Add(v);
 
-	depth
-		.Add(1)
-		.Add(2) // default.
-		.Add(3)
-		.Add(4)
-		.Add(5)
-		.Add(6);
-
+	for(int i = 0; i < 6; i++)
+		depth.Add(i);
+	
+	libpath_sel.SetImage(CtrlImg::Dir()) << [this]{ libs <<= SelectDirectory(); };
+	pluginpath_sel.SetImage(CtrlImg::Dir()) << [this]{ plugins <<= SelectDirectory(); };
+		
 	defaults.WhenAction = [this] { Reset(); };
 	Reset();
 }
@@ -73,6 +58,10 @@ void LinterConfigTab::Load()
 		LoadList(depth,    "depth",    2);
 	
 		jobs <<= clamp((int) v["jobs"], 1, INT_MAX);
+		
+		libs <<= v["libraries_path"];
+		plugins <<= v["plugins_path"];
+		options <<= v["cmdline_options"];
 	
 		for(const Value& q : v["severity"]) {
 			if(q == "warning")
@@ -123,6 +112,9 @@ void LinterConfigTab::Save()
 	j("depth",    depth.GetValue());
 	j("jobs",     ~jobs);
 	j("severity", ja);
-
+	j("libraries_path", ~libs);
+	j("plugins_path", ~plugins);
+	j("cmdline_options", ~options);
+	
 	SaveChangedFile(Linter::GetConfigFilePath(), Json("CppCheck", j));
 }

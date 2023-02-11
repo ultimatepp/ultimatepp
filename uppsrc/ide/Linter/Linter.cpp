@@ -105,6 +105,15 @@ void Linter::CheckAll()
 	DoCheck(paths);
 }
 
+Vector<String> Linter::GetPaths(const String& dir, const String& pattern)
+{
+	Vector<String> v;
+	if(!IsNull(dir) && DirectoryExists(dir))
+		for(auto& ff : FindFile(dir + DIR_SEPS + pattern))
+				v.Add() = ff.GetPath();
+	return v;
+}
+
 String Linter::GetCmdLine()
 {
 	Value v = LoadConfig()["CppCheck"];
@@ -131,6 +140,12 @@ String Linter::GetCmdLine()
 	  << "-j "              << AsString(clamp(jobs, 1, 1024)) << " ";
 	if(severity.GetCount())
 		s << "--enable="    << Join(severity, ",", true) << " ";
+
+	for(const String& q : GetPaths(v["libraries_path"], "*.cfg"))
+		s << "--library=\"" << q << "\" ";
+
+	for(const String& q : GetPaths(v["plugins_path"], "*.py"))
+		s << "--plugin=\"" << q << "\" ";
 
 	return s;
 }

@@ -4,12 +4,11 @@ DONE
 + TheIDE linter setup pane in Setup dialog.
 + Ability to select severity message types.
 + Core configuration settings (language, standard, platform, etc.)
++ Add Windows cppcheck executable detection.
++ Add library file(s) support.
++ Add the ability to pass additional command line options.
 
 TODO:
-- Add Windows cppcheck executable detection.
 - Add configurable cppcheck build dir path (to speed-up analysis)
-- Add library file support.
-- Add Package/File list menu entries.
 - Add CLANG backend switch.
-- Add the ability to pass additional command line options.
 - Filter out non C/C++ files (*.tpp, *.log, etc).
