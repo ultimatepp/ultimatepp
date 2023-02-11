@@ -1,4 +1,4 @@
-class DisplayPopup {
+class DisplayPopup : public Pte<DisplayPopup> {
 private:
 	struct PopUp : public Ctrl, public Link<DisplayPopup::PopUp> {
 		virtual void  Paint(Draw& w);

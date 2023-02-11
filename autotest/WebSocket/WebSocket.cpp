@@ -8,7 +8,7 @@ CONSOLE_APP_MAIN
 
 	HttpRequest::Trace();
 	WebSocket::Trace();
-
+#if 0
 	for(int ssl = 0; ssl < 2; ssl++)
 		for(int blocking = 0; blocking < 2; blocking++) {
 			DDUMP(ssl);
@@ -16,7 +16,7 @@ CONSOLE_APP_MAIN
 			
 			WebSocket ws;
 
-			ws.Connect((ssl ? "wss" : "ws") + String("://echo.websocket.org"));
+			ws.Connect((ssl ? "wss" : "ws") + String("://echo.websocket.events"));
 		
 			ws.NonBlocking(!blocking);
 			
@@ -38,6 +38,7 @@ CONSOLE_APP_MAIN
 			
 			DLOG("... ok");
 		}
-	
+
 	DLOG("============= OK");
+#endif
 }

@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 25;
+	int version = 26;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -369,6 +369,9 @@ void Ide::Serialize(Stream& s)
 	if(version >= 22) {
 		ClangConfigSerialize(s);
 	}
+	
+	if(version >= 26)
+		s % prefer_clang_format;
 
 #ifdef PLATFORM_WIN32
 	if(s.IsLoading() && HostConsole == "/usr/bin/xterm -e")

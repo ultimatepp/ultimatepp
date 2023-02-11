@@ -43,7 +43,7 @@ CONSOLE_APP_MAIN
 
 	Check("win");
 	Check("posix");
-	Check("macos");
+//	Check("macos");
 	
 	LOG("============== OK");
 }

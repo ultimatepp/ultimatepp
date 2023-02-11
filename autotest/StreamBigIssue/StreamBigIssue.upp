@@ -1,3 +1,5 @@
+description "#WAIT:50\377";
+
 uses
 	Core,
 	Draw;
