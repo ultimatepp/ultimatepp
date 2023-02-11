@@ -1,5 +1,9 @@
 description "TheIDE, static analyzer modules.\377B0,0,0";
 
+uses
+	ide/Core,
+	ide/Common;
+
 file
 	Linter.h,
 	Linter.cpp,
