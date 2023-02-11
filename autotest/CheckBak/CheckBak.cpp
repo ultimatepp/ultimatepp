@@ -52,7 +52,7 @@ CONSOLE_APP_MAIN
 	LOG("backup len (MB): " << len);
 	ASSERT(len > 1500 && len < 5800);
 
-	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/big/bak;/ssd/bak", ';')) {
+	for(auto dir : Split("/big/bak;/ssd/bak", ';')) { // /net/nas1/bak;/net/nas/bak;
 		FileIn in1(fn);
 		
 		String p = dir + '/' + GetFileName(fn);
