@@ -65,13 +65,13 @@ void TiffAllocStat()
 
 extern "C" tdata_t _TIFFmalloc(tsize_t s)
 {
-	byte *p = new byte[s + 4];
+	byte *p = new byte[s + 16];
 	Poke32le(p, s);
 #if DBGALLOC
 	alloc_calls++;
 	dbgAddAlloc(p, s);
 #endif
-	return (tdata_t)(p + 4);
+	return (tdata_t)(p + 16);
 }
 
 extern "C" void* _TIFFcalloc(tmsize_t nmemb, tmsize_t siz)
@@ -85,7 +85,7 @@ extern "C" void* _TIFFcalloc(tmsize_t nmemb, tmsize_t siz)
 extern "C" void    _TIFFfree(tdata_t p)
 {
 	if(p) {
-		byte *rawp = (byte *)p - 4;
+		byte *rawp = (byte *)p - 16;
 #if DBGALLOC
 		free_calls++;
 		dbgAddFree(p, Peek32le(rawp));
@@ -96,26 +96,22 @@ extern "C" void    _TIFFfree(tdata_t p)
 
 extern "C" tdata_t _TIFFrealloc(tdata_t p, tsize_t s)
 {
-	int oldsize = (p ? Peek32le((const byte *)p - 4) : 0);
-	if(s <= oldsize) {
-		Poke32le((byte *)p - 4, s);
-		return p;
-	}
-	byte *newptr = new byte[s + 4];
+	int oldsize = (p ? Peek32le((const byte *)p - 16) : 0);
+	byte *newptr = new byte[s + 16];
 #if DBGALLOC
 	alloc_calls++;
 	dbgAddAlloc(newptr, s);
 #endif
 	if(oldsize) {
-		memcpy(newptr + 4, p, min<int>(oldsize, s));
+		memcpy(newptr + 16, p, min<int>(oldsize, s));
 #if DBGALLOC
 		free_calls++;
 		dbgAddFree(newptr, oldsize);
 #endif
-		delete[] ((byte *)p - 4);
+		delete[] ((byte *)p - 16);
 	}
 	Poke32le(newptr, s);
-	return (tdata_t)(newptr + 4);
+	return (tdata_t)(newptr + 16);
 }
 
 extern "C" void _TIFFmemset(void* p, int v, tmsize_t c)           { memset(p, v, c); }
