@@ -372,6 +372,7 @@ struct ReformatDlg : WithReformatLayout<TopWindow> {
 	String code;
 	bool   sel;
 	int    l, h;
+	int    lines_before, lines_after;
 
 	Array<Ctrl>  option;
 	Array<Label> lbl;
@@ -599,13 +600,18 @@ void ReformatDlg::Sync()
 		ok.Disable();
 	}
 	
+
+	if(sel && lines_before + lines_after < view.GetLineCount()) {
+		view.SetSelection(view.GetPos(lines_before), view.GetPos(view.GetLineCount() + 1 - lines_after));
+	}
+	else
+		view.SetCursor(l);
+	
 	for(Ctrl& q : option)
 		q.Enable(!IsNull(base));
 
 	for(Label& q : lbl)
 		q.SetInk(IsNull(base) ? SColorDisabled() : SColorText());
-
-	view.SetCursor(l);
 
 	int ii = 0;
 	int li = 0;
@@ -627,7 +633,10 @@ void ReformatDlg::Sync()
 void ReformatDlg::Set(LineEdit& editor)
 {
 	sel = editor.GetSelection(l, h);
+	lines_before = editor.GetLine(l);
+	lines_after = editor.GetLineCount() - editor.GetLine(h);
 	code = editor.Get(CHARSET_UTF8);
+	Sync();
 }
 
 void Ide::ReformatCodeDlg()
