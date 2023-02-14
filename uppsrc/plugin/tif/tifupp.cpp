@@ -559,7 +559,6 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	Raster::Line     GetLine(int i, Raster *owner);
 	bool             SeekPage(int page);
 	bool             FetchPage();
-	void             CloseTmpFile();
 
 	static void      Warning(const char* module, const char* fmt, va_list ap);
 	static void      Error(const char* module, const char* fmt, va_list ap);
@@ -584,8 +583,6 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 
 	byte *MapDown(int x, int y, int count);
 	byte *MapUp(int x, int y, int count);
-	void  Flush();
-	void  Flush(int y);
 
 	Size size;
 	int bpp;
@@ -596,8 +593,6 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	bool page_fetched;
 	bool page_error;
 	Vector<byte> imagebuf;
-	String tmpfile;
-	FileStream filebuffer;
 	struct Row {
 		Row() {}
 
@@ -771,41 +766,7 @@ byte *TIFRaster::Data::MapUp(int x, int y, int count)
 
 byte *TIFRaster::Data::MapDown(int x, int y, int count)
 {
-	if(!imagebuf.IsEmpty())
-		return &imagebuf[row_bytes * y] + x;
-	else {
-		ASSERT(filebuffer.IsOpen());
-		Row& row = rows[y];
-		if(!row.mapping) {
-			if(cache_size * row_bytes >= MAX_CACHE_SIZE)
-				Flush();
-			row.mapping.Alloc(row_bytes, 0);
-			cache_size++;
-			filebuffer.Seek(row_bytes * y);
-			filebuffer.GetAll(row.mapping, count);
-		}
-		return row.mapping + x;
-	}
-}
-
-void TIFRaster::Data::Flush()
-{
-	LLOG("Flush, cache size = " << cache_size);
-	for(int y = 0; y < size.cy; y++)
-		Flush(y);
-	ASSERT(cache_size == 0);
-}
-
-void TIFRaster::Data::Flush(int y)
-{
-	Row& row = rows[y];
-	if(filebuffer.IsOpen() && row.mapping) {
-		LLOG("writing row " << y << " from " << fpos << " + " << row.size << " = " << (fpos + row.size));
-		filebuffer.Seek(row_bytes * y);
-		filebuffer.Put(row.mapping, row_bytes);
-		cache_size--;
-		row.mapping.Clear();
-	}
+	return &imagebuf[row_bytes * y] + x;
 }
 
 void TIFRaster::Data::Warning(const char *fn, const char *fmt, va_list ap)
@@ -848,7 +809,6 @@ TIFRaster::Data::~Data()
 	if(tiff) {
 		if(page_open)
 			TIFFRGBAImageEnd(this);
-		CloseTmpFile();
 		TIFFClose(tiff);
 	}
 }
@@ -985,7 +945,6 @@ bool TIFRaster::Data::SeekPage(int pgx)
 	page_index = pgx;
 	page_error = false;
 	TIFFSetDirectory(tiff, page_index);
-	CloseTmpFile();
 
 	char emsg[1024];
 	if(!TIFFRGBAImageBegin(this, tiff, 0, emsg)) {
@@ -1006,7 +965,8 @@ bool TIFRaster::Data::SeekPage(int pgx)
 		separate = put.separate;
 		put.separate = putSeparate;
 	}
-	if(alpha = pages[page_index].alpha) {
+	alpha = pages[page_index].alpha;
+	if(alpha) {
 		format.Set32le(0xFF << 16, 0xFF << 8, 0xFF, 0xFF << 24);
 		bpp = 32;
 	}
@@ -1049,15 +1009,6 @@ bool TIFRaster::Data::SeekPage(int pgx)
 	return true;
 }
 
-void TIFRaster::Data::CloseTmpFile()
-{
-	if(filebuffer.IsOpen()) {
-		filebuffer.Close();
-		FileDelete(tmpfile);
-	}
-	tmpfile = Null;
-}
-
 bool TIFRaster::Data::FetchPage()
 {
 	if(page_error)
@@ -1068,47 +1019,11 @@ bool TIFRaster::Data::FetchPage()
 	cache_size = 0;
 	rows.Clear();
 	int64 bytes = row_bytes * (int64)height;
-	if(bytes >= 1 << 28) {
-		tmpfile = GetTempFileName();
-		if(!filebuffer.Open(tmpfile, FileStream::CREATE)) {
-			page_error = true;
-			return false;
-		}
-		filebuffer.SetSize(bytes);
-		if(filebuffer.IsError()) {
-			filebuffer.Close();
-			FileDelete(tmpfile);
-			page_error = true;
-			return false;
-		}
-		rows.Alloc(size.cy);
-	}
-	else
-		imagebuf.SetCount(size.cy * row_bytes, 0);
-
-//	RTIMING("TiffWrapper::GetArray/RGBAImageGet");
+	imagebuf.SetCount(size.cy * row_bytes, 0);
 
 	bool res = TIFFRGBAImageGet(this, 0, width, height);
 	TIFFRGBAImageEnd(this);
 	page_open = false;
-
-	if(filebuffer.IsOpen()) {
-		Flush();
-		if(filebuffer.IsError() || !res) {
-			filebuffer.Close();
-			FileDelete(tmpfile);
-			page_error = true;
-			return false;
-		}
-//		imagebuf.SetCount(size.cy * row_bytes);
-//		filebuffer.Seek(0);
-//		filebuffer.GetAll(imagebuf.Begin(), imagebuf.GetCount());
-//		filebuffer.Close();
-//		FileDelete(tmpfile);
-	}
-//	imagebuf.SetDotSize(pages[page_index].dot_size);
-//	dest_image.palette = palette;
-//	return dest_image;
 
 	page_fetched = true;
 	return true;
