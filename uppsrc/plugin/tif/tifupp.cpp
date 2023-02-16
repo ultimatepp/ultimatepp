@@ -842,6 +842,8 @@ bool TIFRaster::Data::Create()
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &page.bits_per_sample);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_SAMPLESPERPIXEL, &page.samples_per_pixel);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_PHOTOMETRIC, &page.photometric);
+		TIFFGetField(tiff, TIFFTAG_ORIENTATION, &page.orientation);
+		attr.GetAdd("tiff_orientation") = Value((int)page.orientation);
 		double dots_per_unit = (resunit == RESUNIT_INCH ? 600.0 : resunit == RESUNIT_CENTIMETER
 			? 600.0 / 2.54 : 0);
 		page.dot_size.cx = (xres ? fround(page.width * dots_per_unit / xres) : 0);
@@ -1157,6 +1159,7 @@ bool TIFRaster::Data::FetchPage()
 	rows.Clear();
 	int64 bytes = row_bytes * (int64)height;
 	imagebuf.SetCount(size.cy * row_bytes, 0);
+	req_orientation = pages[page_index].orientation;
 
 	bool res = TIFFRGBAImageGet(this, 0, width, height);
 	TIFFRGBAImageEnd(this);
