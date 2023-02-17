@@ -178,6 +178,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	cancel.WhenAction = WhenClose = THISBACK(OnCancel);
 	clist.Columns(4);
 	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
+	alist.AutoHideSb();
 	alist.AddColumn("Package").Add(3);
 	alist.AddColumn("Nest");
 	alist.AddColumn("Description");
@@ -212,7 +213,6 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
 	search << [=] { SyncList(Null); };
-	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
 	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
 	clist.BackPaintHint();
@@ -593,7 +593,7 @@ void SelectPackageDlg::SyncList(const String& find)
 				   d.ispackage &&
 				   (!(fk == MAIN) || d.main) &&
 				   (!(fk == NONMAIN) || !d.main) &&
-				   ToUpper(d.package + d.description).Find(s) >= 0 &&
+				   ToUpper(d.package + d.description).Find(ToUpper(s)) >= 0 &&
 				   added.Find(d.package) < 0) {
 					packages.Add() = d;
 					if(!d.main)
