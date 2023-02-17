@@ -842,7 +842,7 @@ bool TIFRaster::Data::Create()
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &page.bits_per_sample);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_SAMPLESPERPIXEL, &page.samples_per_pixel);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_PHOTOMETRIC, &page.photometric);
-		TIFFGetField(tiff, TIFFTAG_ORIENTATION, &page.orientation);
+		TIFFGetFieldDefaulted(tiff, TIFFTAG_ORIENTATION, &page.orientation);
 		attr.GetAdd("tiff_orientation") = Value((int)page.orientation);
 		double dots_per_unit = (resunit == RESUNIT_INCH ? 600.0 : resunit == RESUNIT_CENTIMETER
 			? 600.0 / 2.54 : 0);
@@ -1389,7 +1389,7 @@ void TIFEncoder::Data::Start(Size sz, Size dots, int bpp_, const RGBA *palette)
 	}
 //	TIFFSetField(tiff, TIFFTAG_REFERENCEBLACKWHITE, refblackwhite);
 //	TIFFSetField(tiff, TIFFTAG_TRANSFERFUNCTION, gray);
-	if (dots.cx && dots.cy) { 
+	if(dots.cx && dots.cy) {
 		TIFFSetField(tiff, TIFFTAG_RESOLUTIONUNIT, (uint16)RESUNIT_INCH);
 		float xres = float(sz.cx * 600.0 / dots.cx);
 		TIFFSetField(tiff, TIFFTAG_XRESOLUTION, xres);
