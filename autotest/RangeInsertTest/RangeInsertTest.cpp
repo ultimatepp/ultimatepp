@@ -20,7 +20,7 @@ CONSOLE_APP_MAIN
 #endif
 	{
 		if(v.GetCount() > 100000) {
-			int pos = Random(v.GetCount() + 1);
+			int pos = Random(v.GetCount() - 1);
 			int count = Random(v.GetCount() - pos);
 			LOG(i << ": removing " << pos << ", " << count);
 			v.Remove(pos, count);
