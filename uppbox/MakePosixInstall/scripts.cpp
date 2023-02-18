@@ -18,7 +18,7 @@ elif [ -x "$(command -v dnf)" ]; then
 elif [ -x "$(command -v yum)" ]; then
   DEP="yum install gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v urpmi)" ]; then
-  DEP="urpmi install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="urpmi gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif [ -x "$(command -v zypper)" ]; then
   DEP="zypper install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif [ -x "$(command -v pacman)" ]; then
