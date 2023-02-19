@@ -713,12 +713,13 @@ void AssistEditor::Assist(bool macros)
 				assist_type.Add("<macros>");
 			if(has_globals)
 				assist_type.Add(Null);
-			for(const AutoCompleteItem& m : items) {
-				AssistItem& f = assist_item.Add();
-				(AutoCompleteItem&)f = m;
-				f.uname = ToUpper(f.name);
-				f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
-			}
+			for(const AutoCompleteItem& m : items)
+				if(!m.name.StartsWith("dv___")) {
+					AssistItem& f = assist_item.Add();
+					(AutoCompleteItem&)f = m;
+					f.uname = ToUpper(f.name);
+					f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
+				}
 			PopUpAssist();
 		});
 }

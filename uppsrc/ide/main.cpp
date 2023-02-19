@@ -145,6 +145,10 @@ void OnCrash()
 #endif
 }
 
+INITBLOCK { // libclang does not work in Linux unless this is set
+	SetEnv("LC_CTYPE", "en_US.UTF-8");
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
