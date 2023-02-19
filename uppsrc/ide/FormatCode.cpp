@@ -138,7 +138,7 @@ String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 	int64 l, h;
 	bool sel = editor.GetSelection(l, h);
 
-	String cmd = "clang-format ";
+	String cmd = "clang-format --style=file ";
 	if(sel) {
 		l = editor.GetLine(l) + 1;
 		h = editor.GetLine(h) + 1;
@@ -154,9 +154,9 @@ String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 			return "Failed to save temporary file " + temp_path;
 		}
 	}
-
-	cmd << "\"--style=file:" << clang_format_path << "\" ";
 	
+	SaveChangedFile(CacheFile(".clang-format"), LoadFile(clang_format_path));
+
 	String r;
 	int code = HostSys(cmd + temp_path, r);
 	
