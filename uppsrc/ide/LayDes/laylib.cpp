@@ -170,24 +170,24 @@ Font FontEsc(EscValue v)
 void SIC_StdFont(EscEscape& e)
 {
 	if(e.GetCount() == 1)
-		e = EscFont(StdFont()(Zy(e.Int(0))));
+		e = EscFont(StdFont()(LayDes::Zy(e.Int(0))));
 	else
-		e = EscFont(StdFont());
+		e = EscFont(StdFont()(LayDes::Zy(Draw::GetStdFontCy())));
 }
 
 void SIC_Arial(EscEscape& e)
 {
-	e = EscFont(Arial(Zy(e.Int(0))));
+	e = EscFont(Arial(LayDes::Zy(e.Int(0))));
 }
 
 void SIC_Roman(EscEscape& e)
 {
-	e = EscFont(Roman(Zy(e.Int(0))));
+	e = EscFont(Roman(LayDes::Zy(e.Int(0))));
 }
 
 void SIC_Courier(EscEscape& e)
 {
-	e = EscFont(Courier(Zy(e.Int(0))));
+	e = EscFont(Courier(LayDes::Zy(e.Int(0))));
 }
 
 void SIC_GetImageSize(EscEscape& e)

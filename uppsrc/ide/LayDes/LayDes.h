@@ -19,9 +19,6 @@
 #define KEYFILE      <ide/LayDes/laydes.key>
 #include             <CtrlLib/key_header.h>
 
-inline Font LayFont() { return Arial(Zy(11)); }
-inline Font LayFont2() { return Arial(Zy(14)); }
-
 class DiffPacker {
 	String master;
 	int         mapn;
@@ -356,6 +353,11 @@ private:
 		friend unsigned GetHashValue(const TempGroup& g) { return 0; }
 		TempGroup(const String& temp, const String& group) : temp(temp), group(group) {}
 	};
+	
+	static void   GetZoomRatio(Size& csz, Size& dsz);
+	static Size   LayoutZoom(Size sz);
+	static int    HorzLayoutZoom(int x);
+	static int    VertLayoutZoom(int y);
 
 	Rect   CtrlRect(Ctrl::LogPos pos, Size sz);
 	Rect   CtrlRectZ(Ctrl::LogPos pos, Size sz);
@@ -487,9 +489,14 @@ private:
 	LayDes();
 
 public:
+	static int     Zoom;
+	static int     Zy(int y);
 	Ctrl&          DesignerCtrl()             { return km; }
 	void           Serialize(Stream& s) override;
 };
+
+inline Font LayFont() { return Arial(LayDes::Zy(11)); }
+inline Font LayFont2() { return Arial(Zy(14)); }
 
 class LayDesigner : public IdeDesigner {
 	LayDes         designer;

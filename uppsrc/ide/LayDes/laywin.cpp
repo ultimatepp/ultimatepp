@@ -175,6 +175,12 @@ void LayDes::GotoUsing()
 
 void LayDes::OptionBar(Bar& bar)
 {
+	bar.Add("Zoom " + AsString((4 - Zoom) * 25) + "%", decode(Zoom, 1, LayImg::Zoom2(), 2, LayImg::Zoom1(), LayImg::Zoom3()),
+		[=] {
+	          Zoom = (Zoom + 1) % 3;
+		      Refresh();
+		      SetBar();
+		});
 	bar.Add("Use grid", LayImg::Grid(), THISBACK(ToggleGrid))
 	   .Check(usegrid);
 	bar.Add("Ignore min size", LayImg::MinSize(), THISBACK(ToggleMinSize))
@@ -248,7 +254,7 @@ class CVFrame : public CtrlFrame {
 
 void LayDes::Serialize(Stream& s)
 {
-	int version = 1;
+	int version = 2;
 	s / version;
 	s % setting.gridx % setting.gridy;
 	s % setting.paintgrid % setting.showicons;
@@ -256,6 +262,8 @@ void LayDes::Serialize(Stream& s)
 	if(version >= 1)
 		s % sizespring;
 	s % lsplit % isplit % rsplit;
+	if(version >= 2)
+		s % Zoom;
 	item.SerializeHeader(s);
 	SetBar();
 }

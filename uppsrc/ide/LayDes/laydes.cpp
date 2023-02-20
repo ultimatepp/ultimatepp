@@ -11,6 +11,44 @@ using namespace LayoutKeys;
 
 #define MARGIN 8
 
+int LayDes::Zoom;
+
+void LayDes::GetZoomRatio(Size& csz, Size& dsz)
+{
+	Ctrl::GetZoomRatio(csz, dsz);
+	if(dsz.cx == 0 || dsz.cy == 0)
+		csz = dsz = Size(1, 1);
+	
+	if(Zoom)
+		csz = max(Size(1, 1), (4 - Zoom) * csz / 4);
+}
+
+int LayDes::Zy(int y)
+{
+	return VertLayoutZoom(y);
+}
+
+int LayDes::HorzLayoutZoom(int x)
+{
+	Size csz, dsz;
+	GetZoomRatio(csz, dsz);
+	return x * csz.cx / dsz.cx;
+}
+
+int LayDes::VertLayoutZoom(int y)
+{
+	Size csz, dsz;
+	GetZoomRatio(csz, dsz);
+	return y * csz.cy / dsz.cy;
+}
+
+Size LayDes::LayoutZoom(Size sz)
+{
+	Size csz, dsz;
+	GetZoomRatio(csz, dsz);
+	return Size(sz.cx * csz.cx / dsz.cx, sz.cy * csz.cy / dsz.cy);
+}
+
 static void sLay1(int& pos, int& r, int align, int a, int b, int sz)
 {
 	pos = a;
