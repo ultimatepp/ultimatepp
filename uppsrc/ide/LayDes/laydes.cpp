@@ -92,6 +92,7 @@ void LayDes::SetSb()
 	double scale = GetScale();
 	sb.SetTotal(scale * sz);
 	sb.SetPage(sb.GetReducedViewSize());
+	sb.SetLine(DPI(8));
 }
 
 void LayDes::Scroll()
@@ -281,9 +282,21 @@ void LayDes::Paint2(Draw& w)
 		DrawFrame(w, dragrect.Normalized(), LtRed);
 }
 
+void LayDes::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	if(keyflags & K_CTRL) {
+        Zoom = clamp(Zoom - sgn(zdelta), 0, 15);
+		Refresh();
+		SetBar();
+		SetSb();
+	}
+	else
+		sb.WheelY(zdelta);
+}
+
 double LayDes::GetScale()
 {
-	return decode(Zoom, 1, 0.75, 2, 0.5, 1);
+	return (20 - Zoom) / 20.0;
 }
 
 void LayDes::Paint(Draw& w)
@@ -299,6 +312,7 @@ void LayDes::Paint(Draw& w)
 
 	if(Zoom) {
 		DrawPainter sw(w, sz);
+		sw.Co();
 		sw.Clear(SColorPaper());
 		sw.Offset(-sb.Get());
 		sw.Offset(MARGIN, MARGIN);

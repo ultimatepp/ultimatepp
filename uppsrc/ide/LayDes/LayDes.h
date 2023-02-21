@@ -275,6 +275,7 @@ public:
 	virtual void   LeftDown(Point p, dword keyflags) override;
 	virtual void   LeftRepeat(Point p, dword keyflags) override;
 	virtual void   MouseMove(Point p, dword keyflags) override;
+	virtual void   MouseWheel(Point p, int zdelta, dword keyflags) override;
 	virtual void   LeftUp(Point p, dword keyflags) override;
 	virtual void   RightDown(Point p, dword keyflags) override;
 	virtual void   Layout() override;
