@@ -52,8 +52,6 @@ Packages and Assemblies]&]
 [s0;l160; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us^ Command 
 line arguments]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
-[s0;l160; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
-`- parser directives]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Blitz`_en`-us^ BLITZ]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
