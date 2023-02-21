@@ -91,7 +91,8 @@ bool  RichTextView::Key(dword key, int count)
 
 void  RichTextView::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	sb.Wheel(zdelta);
+	if(!WhenMouseWheel(zdelta, keyflags))
+		sb.Wheel(zdelta);
 }
 
 Image RichTextView::CursorImage(Point p, dword keyflags)

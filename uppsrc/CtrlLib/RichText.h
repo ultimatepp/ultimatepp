@@ -56,6 +56,7 @@ protected:
 public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
+	Gate<int, dword>     WhenMouseWheel;
 	Event<>              WhenLeftClick;
 	Gate<const String&>  WhenHighlight;
 
@@ -288,7 +289,7 @@ void RedirectPrompts(RedirectPromptFn r);
 
 class HelpWindow : public TopWindow {
 public:
-	virtual bool Key(dword key, int);
+	bool Key(dword key, int) override;
 
 private:
 	RichTextView   view;
@@ -334,7 +335,7 @@ public:
 	bool GoTo(const String& link);
 
 	void SetBar();
-	void Serialize(Stream& s);
+	void Serialize(Stream& s) override;
 
 	void ClearTree();
 	int  AddTree(int parent, const Image& img, const String& topic, const String& title);
