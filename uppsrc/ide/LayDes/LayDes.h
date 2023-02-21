@@ -354,16 +354,15 @@ private:
 		TempGroup(const String& temp, const String& group) : temp(temp), group(group) {}
 	};
 	
-	static void   GetZoomRatio(Size& csz, Size& dsz);
-	static Size   LayoutZoom(Size sz);
-	static int    HorzLayoutZoom(int x);
-	static int    VertLayoutZoom(int y);
-
+	int             Zoom = 0;
+	
 	Rect   CtrlRect(Ctrl::LogPos pos, Size sz);
 	Rect   CtrlRectZ(Ctrl::LogPos pos, Size sz);
 	void   AddHandle(Draw& w, int x, int y);
 	Point  Normalize(Point p);
+	double GetScale();
 	Point  ZPoint(Point p);
+	void   Paint2(Draw& w);
 	int    FindHandle(Point p);
 	int    FindItem(Point p, bool cursor_first = false);
 	void   GetSprings(Rect& l, Rect& t, Rect& r, Rect& b);
@@ -489,13 +488,11 @@ private:
 	LayDes();
 
 public:
-	static int     Zoom;
-	static int     Zy(int y);
 	Ctrl&          DesignerCtrl()             { return km; }
 	void           Serialize(Stream& s) override;
 };
 
-inline Font LayFont() { return Arial(LayDes::Zy(11)); }
+inline Font LayFont() { return Arial(Zy(11)); }
 inline Font LayFont2() { return Arial(Zy(14)); }
 
 class LayDesigner : public IdeDesigner {

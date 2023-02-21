@@ -11,44 +11,6 @@ using namespace LayoutKeys;
 
 #define MARGIN 8
 
-int LayDes::Zoom;
-
-void LayDes::GetZoomRatio(Size& csz, Size& dsz)
-{
-	Ctrl::GetZoomRatio(csz, dsz);
-	if(dsz.cx == 0 || dsz.cy == 0)
-		csz = dsz = Size(1, 1);
-	
-	if(Zoom)
-		csz = max(Size(1, 1), (4 - Zoom) * csz / 4);
-}
-
-int LayDes::Zy(int y)
-{
-	return VertLayoutZoom(y);
-}
-
-int LayDes::HorzLayoutZoom(int x)
-{
-	Size csz, dsz;
-	GetZoomRatio(csz, dsz);
-	return x * csz.cx / dsz.cx;
-}
-
-int LayDes::VertLayoutZoom(int y)
-{
-	Size csz, dsz;
-	GetZoomRatio(csz, dsz);
-	return y * csz.cy / dsz.cy;
-}
-
-Size LayDes::LayoutZoom(Size sz)
-{
-	Size csz, dsz;
-	GetZoomRatio(csz, dsz);
-	return Size(sz.cx * csz.cx / dsz.cx, sz.cy * csz.cy / dsz.cy);
-}
-
 static void sLay1(int& pos, int& r, int align, int a, int b, int sz)
 {
 	pos = a;
@@ -95,7 +57,9 @@ Point LayDes::Normalize(Point p)
 {
 	p += sb;
 	p.Offset(-MARGIN, -MARGIN);
-	return p;
+	Pointf h = p;
+	h /= GetScale();
+	return h;
 }
 
 Point LayDes::ZPoint(Point p)
@@ -118,14 +82,15 @@ void LayDes::SetSb()
 		for(int i = 0; i < l.item.GetCount(); i++)
 			sz = max(sz, (Size)CtrlRect(l.item[i].pos, l.size).BottomRight());
 	}
-	sz += Size(MARGIN, MARGIN);
+	sz += 2 * Size(MARGIN, MARGIN);
 	Size csz, dsz;
 	GetZoomRatio(csz, dsz);
 	if(csz.cx && csz.cy && dsz.cx && dsz.cy) {
 		sz.cx = sz.cx * csz.cx / dsz.cx;
 		sz.cy = sz.cy * csz.cy / dsz.cy;
 	}
-	sb.SetTotal(sz);
+	double scale = GetScale();
+	sb.SetTotal(scale * sz);
 	sb.SetPage(sb.GetReducedViewSize());
 }
 
@@ -258,18 +223,9 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 	passed.Drop();
 }
 
-void LayDes::Paint(Draw& w)
+void LayDes::Paint2(Draw& w)
 {
-	LTIMING("Paint");
-	Size sz = GetSize();
-	w.DrawRect(sz, SColorPaper);
-	if(!IsNull(fileerror))
-		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
-	if(IsNull(currentlayout))
-		return;
-	w.Offset(-sb.Get());
 	LayoutData& l = CurrentLayout();
-	w.Offset(MARGIN, MARGIN);
 	Size lsz = LayoutZoom(l.size);
 	w.DrawRect(0, 0, lsz.cx, lsz.cy, SLtGray);
 	if(setting.paintgrid) {
@@ -323,8 +279,42 @@ void LayDes::Paint(Draw& w)
 	}
 	if(HasCapture() && draghandle == 14)
 		DrawFrame(w, dragrect.Normalized(), LtRed);
-	w.End();
-	w.End();
+}
+
+double LayDes::GetScale()
+{
+	return decode(Zoom, 1, 0.75, 2, 0.5, 1);
+}
+
+void LayDes::Paint(Draw& w)
+{
+	LTIMING("Paint");
+	Size sz = GetSize();
+	if(!IsNull(fileerror)) {
+		w.DrawRect(sz, SColorPaper());
+		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
+	}
+	if(IsNull(currentlayout))
+		return;
+
+	if(Zoom) {
+		DrawPainter sw(w, sz);
+		sw.Clear(SColorPaper());
+		sw.Offset(-sb.Get());
+		sw.Offset(MARGIN, MARGIN);
+		sw.Scale(GetScale());
+		Paint2(sw);
+		sw.End();
+		sw.End();
+	}
+	else {
+		w.DrawRect(sz, SColorPaper());
+		w.Offset(-sb.Get());
+		w.Offset(MARGIN, MARGIN);
+		Paint2(w);
+		w.End();
+		w.End();
+	}
 }
 
 void  LayDes::SaveState()
