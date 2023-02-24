@@ -43,61 +43,6 @@ void   ReduceCache();
 void   ReduceCache(int mb_limit);
 void   ReduceCacheFolder(const char *path, int64 max_total);
 
-class Hdepend { // to be replaced by PPInfo
-	struct Info {
-		Time                      time;
-		Vector<int>               depend;
-		Vector<bool>              bydefine;
-		Index<String>             macroinclude; // includes by macro, like #include LAYOUTFILE
-		Vector<String>            define;
-		bool                      flag;
-		bool                      macroflag; // prevent infinite recursion in GetMacroIndex
-		bool                      timedirty;
-		bool                      guarded; // has guards or BLITZ_APPROVED
-		bool                      blitzprohibit; // has BLITZ_PROHIBIT
-
-		bool                      CanBlitz() { return guarded && !blitzprohibit; }
-		
-		void Serialize(Stream& s);
-
-		Info()                   { time = Null; flag = false; timedirty = true; guarded = false; }
-	};
-
-	ArrayMap<String, Info>            map;
-	Vector<String>                    incdir; // include directories
-	VectorMap<String, Index<String> > depends; // externally forced dependecies
-	bool                              console = true;
-
-	void   Include(const char *trm, Info& info, const String& filedir, bool bydefine);
-	void   ScanFile(const String& path, int map_index);
-	int    File(const String& path);
-	Time   FileTime(int i);
-	void   ClearFlag();
-	void   ClearMacroFlag();
-	void   GetMacroIndex(Index<String>& dest, int ix);
-
-public:
-	void  SetDirs(Vector<String>&& id);
-	void  SetDirs(const String& includes);
-	void  TimeDirty();
-
-	void                  ClearDependencies()  { depends.Clear(); }
-	void                  AddDependency(const String& file, const String& depends);
-
-	Time                  FileTime(const String& path);
-	bool                  BlitzApproved(const String& path);
-	
-	static String         FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
-
-	String                FindIncludeFile(const char *s, const String& filedir) { return FindIncludeFile(s, filedir, incdir); }
-	const Vector<String>& GetDefines(const String& path);
-	Vector<String>        GetDependencies(const String& path, bool bydefine_too = true);
-	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
-	void                  NoConsole()                             { console = false; }
-	
-	void                  Serialize(Stream& s);
-};
-
 class PPInfo {
 	enum { AUTO, APPROVED, PROHIBITED };
 	struct PPFile : Moveable<PPFile> {
@@ -117,12 +62,19 @@ class PPInfo {
 		void Serialize(Stream& s);
 	};
 	
+	struct Dir : Moveable<Dir> {
+		Index<String>           subdirs;
+		VectorMap<String, Time> files;
+		
+		void Load(const String& dir);
+	};
+	
 	ArrayMap<String, PPFile>                   files;
 	Vector<String>                             includes; // include dirs
 	VectorMap<String, String>                  inc_cache; // cache for FindIncludeFile
-	VectorMap<String, VectorMap<String, Time>> dir_cache; // cache for GetFileTime, FileExists
+	VectorMap<String, Dir>                     dir_cache; // cache for GetFileTime, FileExists, DirExists
 	static std::atomic<int>                    scan_serial;
-	
+	VectorMap<String, Index<String> >          depends; // externally forced dependecies
 
 	PPFile& File(const String& path);
 
@@ -133,12 +85,16 @@ public:
 	Time                  GetFileTime(const String& path);
 	bool                  FileExists(const String& path)                        { return !IsNull(GetFileTime(path)); }
 
+	void                  SetIncludes(Vector<String>&& includes);
 	void                  SetIncludes(const String& includes);
 
 	String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs);
 	String                FindIncludeFile(const char *s, const String& filedir);
 
 	bool                  BlitzApproved(const String& path);
+
+	void                  ClearDependencies()  { depends.Clear(); }
+	void                  AddDependency(const String& file, const String& depends);
 
 	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
@@ -154,6 +110,15 @@ public:
 
 	void                  Dirty();
 };
+
+void                  HdependSetDirs(Vector<String>&& id);
+void                  HdependTimeDirty();
+void                  HdependClearDependencies();
+void                  HdependAddDependency(const String& file, const String& depends);
+Time                  HdependFileTime(const String& path);
+Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
+bool                  HdependBlitzApproved(const String& path);
+const Vector<String>& HdependGetDefines(const String& path);
 
 class IdeContext
 {
@@ -616,16 +581,6 @@ struct Builder {
 
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());
-
-void                  HdependSetDirs(Vector<String> pick_ id);
-void                  HdependTimeDirty();
-void                  HdependClearDependencies();
-void                  HdependAddDependency(const String& file, const String& depends);
-Time                  HdependFileTime(const String& path);
-Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
-bool                  HdependBlitzApproved(const String& path);
-const Vector<String>& HdependGetDefines(const String& path);
-const Vector<String>& HdependGetAllFiles();
 
 bool IsHeaderExt(const String& ext);
 

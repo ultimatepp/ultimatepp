@@ -81,19 +81,6 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 	return CacheFile(GetFileTitle(source_file) + "$" + s.FinishString() + ".code_index");
 }
 
-void BlitzFile(String& blitz, const String& sourceFile, PPInfo& ppi, int index)
-{
-	blitz << "\r\n"
-	      << "#define BLITZ_INDEX__ F" << index << "\r\n"
-	      << "#include \"" << sourceFile << "\"\r\n";
-	const VectorMap<String, String>& d = ppi.GetFileDefines(sourceFile);
-	for(const String& s : d.GetKeys())
-		blitz << "#ifdef " << s << "\r\n"
-		      << "#undef " << s << "\r\n"
-		      << "#endif\r\n";
-	blitz << "#undef BLITZ_INDEX__\r\n";
-}
-
 ArrayMap<String, FileAnnotation>& CodeIndex()
 {
 	static ArrayMap<String, FileAnnotation> m;
@@ -425,7 +412,7 @@ void Indexer::SchedulerThread()
 						}
 						if(dirty_files.Find(pf.a) >= 0) {
 							if(ppi.BlitzApproved(pf.a) && !pf.b && IsCppSourceFile(pf.a)) {
-								BlitzFile(blitz_job.blitz, pf.a, ppi, blitz_index++);
+								BlitzFile(blitz_job.blitz, pf.a, ppi.GetFileDefines(pf.a).GetKeys(), blitz_index++);
 								JobAdd(blitz_job, pf.a);
 							}
 							else {

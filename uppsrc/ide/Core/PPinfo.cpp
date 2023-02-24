@@ -211,10 +211,26 @@ void PPInfo::PPFile::Serialize(Stream& s)
 }
 
 
-void PPInfo::SetIncludes(const String& incs)
+void PPInfo::SetIncludes(Vector<String>&& incs)
 {
 	inc_cache.Clear();
-	includes = Split(incs, ';');
+	includes = pick(incs);
+}
+
+void PPInfo::SetIncludes(const String& incs)
+{
+	SetIncludes(Split(incs, ';'));
+}
+
+void PPInfo::Dir::Load(const String& dir)
+{
+	for(FindFile ff(dir + "/*.*"); ff; ff.Next()) {
+		String n = ff.GetName();
+		if(ff.IsFile())
+			files.Add(n, ff.GetLastWriteTime());
+		if(ff.IsFolder())
+			subdirs.FindAdd(n);
+	}
 }
 
 Time PPInfo::GetFileTime(const String& path)
@@ -223,13 +239,22 @@ Time PPInfo::GetFileTime(const String& path)
 	String name = GetFileName(path);
 	int q = dir_cache.Find(dir);
 	if(q < 0) {
+		String pdir = GetFileFolder(dir); // check that dir does make some sense...
+		bool valid_dir = true;
+		if(pdir.GetCount() > 3) {
+			int dq = dir_cache.Find(pdir);
+			if(dq < 0) {
+				dq = dir_cache.GetCount();
+				dir_cache.Add(pdir).Load(pdir);
+			}
+			valid_dir = dir_cache[dq].subdirs.Find(GetFileName(dir)) >= 0;
+		}
 		q = dir_cache.GetCount();
-		VectorMap<String, Time>& files = dir_cache.Add(dir);
-		for(FindFile ff(dir + "/*.*"); ff; ff.Next())
-			if(ff.IsFile())
-				files.Add(ff.GetName(), ff.GetLastWriteTime());
+		Dir& d = dir_cache.Add(dir);
+		if(valid_dir)
+			d.Load(dir);
 	}
-	return dir_cache[q].Get(name, Null);
+	return dir_cache[q].files.Get(name, Null);
 }
 
 String PPInfo::FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs)
@@ -313,6 +338,11 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 	return f;
 }
 
+void PPInfo::AddDependency(const String& file, const String& dep)
+{
+	depends.GetAdd(NormalizePath(file)).FindAdd(NormalizePath(dep));
+}
+
 Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
                                 ArrayMap<String, Index<String>>& define_includes,
                                 Vector<Tuple<String, String, int>>& flags, bool speculative)
@@ -357,9 +387,8 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 				DoInclude(f.defines[q]);
 		}
 	}
-	
+
 	result.GetAdd(path) = ftm;
-	
 	return ftm;
 }
 
@@ -373,10 +402,24 @@ void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 
 Time PPInfo::GetTime(const String& path)
 {
+	String p = NormalizePath(path);
+
 	VectorMap<String, Time> result;
 	ArrayMap<String, Index<String>> define_includes;
 	Vector<Tuple<String, String, int>> flags;
-	return GatherDependencies(NormalizePath(path), result, define_includes, flags, true);
+	Time ftm = GatherDependencies(p, result, define_includes, flags, true);
+
+	int d = depends.Find(p);
+	if(d >= 0) {
+		const Index<String>& dep = depends[d];
+		for(int i = 0; i < dep.GetCount(); i++) {
+			Time tm = GetFileTime(dep[i]);
+			if(tm > ftm)
+				ftm = tm;
+		}
+	}
+
+	return ftm;
 }
 
 bool PPInfo::BlitzApproved(const String& path)
@@ -403,4 +446,53 @@ bool PPInfo::BlitzApproved(const String& path)
 			}
 		}
 	return true;
+}
+
+static PPInfo hdepend;
+
+void HdependSetDirs(Vector<String>&& id)
+{
+	hdepend.SetIncludes(pick(id));
+}
+
+void HdependTimeDirty()
+{
+	hdepend.Dirty();
+}
+
+void HdependClearDependencies()
+{
+	hdepend.ClearDependencies();
+}
+
+void HdependAddDependency(const String& file, const String& depends)
+{
+	hdepend.AddDependency(file, depends);
+}
+
+Time HdependFileTime(const String& path)
+{
+	return hdepend.GetTime(path);
+}
+
+Vector<String> HdependGetDependencies(const String& path, bool bydefine_too)
+{
+	String p = NormalizePath(path);
+
+	VectorMap<String, Time> result;
+	ArrayMap<String, Index<String>> define_includes;
+	Vector<Tuple<String, String, int>> flags;
+
+	hdepend.GatherDependencies(p, result, define_includes, flags, bydefine_too);
+	return result.PickKeys();
+}
+
+bool HdependBlitzApproved(const String& path)
+{
+	return hdepend.BlitzApproved(path);
+}
+
+const Vector<String>& HdependGetDefines(const String& path)
+{
+	return hdepend.GetFileDefines(path).GetKeys();
 }

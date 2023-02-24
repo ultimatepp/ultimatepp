@@ -30,6 +30,8 @@ String BlitzBaseFile();
 void   ResetBlitz();
 void   InitBlitz();
 
+void BlitzFile(String& blitz, const String& sourceFile, const Vector<String>& defines, int index);
+
 class BlitzBuilderComponent : public BuilderComponent {
 public:
 	BlitzBuilderComponent(Builder *builder);

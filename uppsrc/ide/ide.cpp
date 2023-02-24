@@ -789,7 +789,7 @@ void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const
 
 void Ide::TriggerIndexer0()
 {
-	Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
+	Indexer::Start(main, GetCurrentIncludePath(true), GetCurrentDefines());
 }
 
 void Ide::TriggerIndexer()
