@@ -902,7 +902,7 @@ void AddDirs(String& include_path, const String& dir)
 			AddDirs(include_path, ff.GetPath());
 }
 
-String Ide::GetCurrentIncludePath(bool with_internal_includes)
+String Ide::GetCurrentIncludePath()
 { // this is include path for libclang / assist
 	String include_path;
 	
@@ -943,7 +943,7 @@ String Ide::GetCurrentIncludePath(bool with_internal_includes)
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.GetCount(); j++) {
-			if(pkg[j] == "import.ext" && with_internal_includes)
+			if(pkg[j] == "import.ext")
 				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
 			if(pkg[j] == "main.conf")
 				main_conf << LoadFile(SourcePath(wspc[i], "main.conf")) << "\r\n";

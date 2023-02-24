@@ -1144,7 +1144,7 @@ public:
 
 	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetIncludePath();
-	String    GetCurrentIncludePath(bool with_internal_includes = false);
+	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();
 
 	void      TopicBack();
