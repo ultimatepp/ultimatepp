@@ -198,7 +198,7 @@ void LayDes::OptionBar(Bar& bar)
 	im.zoom = GetScale();
 	bar.Add("Zoom " + AsString(GetScale() * 100) + "%", MakeImage(im),
 		[=] {
-	          Zoom = (Zoom + 1) % 3;
+	          Zoom = Zoom < 5 ? 5 : Zoom < 10 ? 10 : 0;
 		      Refresh();
 		      SetBar();
 		      SetSb();

@@ -11,7 +11,7 @@ namespace Upp {
 #endif
 
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)  RLOG(x)
 
 int  GetClipboardFormatCode(const char *format_id);
 
@@ -162,7 +162,7 @@ void UDropTarget::Repeat()
 STDMETHODIMP CLANG_NOTHROW UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
 	GuiLock __;
-	LLOG("DragEnter " << pt);
+	LLOG("DragEnter " << Point(pt.x, pt.y));
 	data = pDataObj;
 	data->AddRef();
 	fmt.Clear();
@@ -186,7 +186,7 @@ STDMETHODIMP CLANG_NOTHROW UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD g
 
 STDMETHODIMP CLANG_NOTHROW UDropTarget::DragOver(DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
-	LLOG("DragOver " << pt << " keys: " << grfKeyState);
+	LLOG("DragOver " << Point(pt.x, pt.y) << " keys: " << grfKeyState);
 	DnD(pt, false, pdwEffect, grfKeyState);
 	return NOERROR;
 }

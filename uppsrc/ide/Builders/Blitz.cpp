@@ -34,6 +34,21 @@ void InitBlitz()
 		blitz_base_time = max(blitz_base_time, ltm + 3 * 60); // should solve first build after install/checkout
 }
 
+void BlitzFile(String& blitz, const String& sourceFile, const Vector<String>& defines, int index)
+{
+	blitz << "\r\n"
+	      << "#define BLITZ_INDEX__ F" << index << "\r\n"
+	      << "#include \"" << sourceFile << "\"\r\n";
+	for(String s : defines) {
+		int q = s.Find('(');
+		if(q >= 0) s.Trim(q);
+		blitz << "#ifdef " << s << "\r\n"
+		      << "#undef " << s << "\r\n"
+		      << "#endif\r\n";
+	}
+	blitz << "#undef BLITZ_INDEX__\r\n";
+}
+
 BlitzBuilderComponent::BlitzBuilderComponent(Builder* builder)
 	: BuilderComponent(builder)
 	, workingDir(builder->outdir)
@@ -75,16 +90,8 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		   && noblitz.Find(sourceFile) < 0) {
 			if(HdependFileTime(sourceFile) > blitztime)
 				b.build = true;
-			blitz << "\r\n"
-			      << "#define BLITZ_INDEX__ F" << i << "\r\n"
-			      << "#include \"" << sourceFile << "\"\r\n";
+			BlitzFile(blitz, sourceFile, HdependGetDefines(sourceFile), i);
 			b.info << ' ' << GetFileName(sourceFile);
-			const Vector<String>& d = HdependGetDefines(sourceFile);
-			for(int i = 0; i < d.GetCount(); i++)
-				blitz << "#ifdef " << d[i] << "\r\n"
-				      << "#undef " << d[i] << "\r\n"
-				      << "#endif\r\n";
-			blitz << "#undef BLITZ_INDEX__\r\n";
 			b.count++;
 		}
 		else {

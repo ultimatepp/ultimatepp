@@ -403,48 +403,46 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	}
 
 	String tmpFileName;
-	if(HasFlag("LINUX") || HasFlag("WIN32")) {
-		if(lib.GetCount() + llib.GetCount() >= 8192)
+	if(lib.GetCount() + llib.GetCount() >= 8192)
+	{
+		tmpFileName = CacheFile(SHA1String(lib + llib));
+		// we can't simply put all data on a single line
+		// as it has a limit of around 130000 chars too, so we split
+		// in multiple lines
+		String out;
+		while(llib != "")
 		{
-			tmpFileName = GetTempFileName();
-			// we can't simply put all data on a single line
-			// as it has a limit of around 130000 chars too, so we split
-			// in multiple lines
-			FileOut f(tmpFileName);
-			while(llib != "")
+			int found = 0;
+			bool quotes = false;
+			int lim = min(8192, llib.GetCount());
+			for(int i = 0; i < lim; i++)
 			{
-				int found = 0;
-				bool quotes = false;
-				int lim = min(8192, llib.GetCount());
-				for(int i = 0; i < lim; i++)
-				{
-					char c = llib[i];
-					if(isspace(c) && !quotes)
-						found = i;
-					else if(c == '"')
-						quotes = !quotes;
-				}
-				if(!found)
-					found = llib.GetCount();
-
-				// replace all '\' with '/'`
-				llib = UnixPath(llib);
-				
-				f.PutLine(llib.Left(found));
-				llib.Remove(0, found);
+				char c = llib[i];
+				if(isspace(c) && !quotes)
+					found = i;
+				else if(c == '"')
+					quotes = !quotes;
 			}
-			f.Close();
-			lib << " @" << tmpFileName;
+			if(!found)
+				found = llib.GetCount();
+
+			// replace all '\' with '/'`
+			llib = UnixPath(llib);
+			
+			out << llib.Left(found);
+		#ifdef PLATFORM_WIN32
+			out << '\r';
+		#endif
+			out << '\n';
+			llib.Remove(0, found);
 		}
-		else
-			lib << llib;
+		SaveChangedFile(tmpFileName, out);
+		lib << " @" << tmpFileName;
 	}
 	else
 		lib << llib;
 
 	int res = Execute(lib);
-	if(tmpFileName.GetCount())
-		FileDelete(tmpFileName);
 	String folder, libF, soF, linkF;
 	if(HasFlag("POSIX")) {
 		if(is_shared)

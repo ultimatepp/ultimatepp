@@ -331,6 +331,14 @@ HelpWindow::HelpWindow()
 	SetBar();
 	tree.BackPaint();
 	view.BackPaintHint();
+	view.WhenMouseWheel = [=] (int zdelta, dword keyflags) {
+		if(keyflags & K_CTRL) {
+			zoom.m = clamp((zoom.m / 5 + sgn(zdelta)) * 5, 60, 600);
+			SetZoom();
+			return true;
+		}
+		return false;
+	};
 }
 
 }

@@ -945,10 +945,8 @@ String Ide::GetCurrentIncludePath()
 		for(int j = 0; j < pkg.GetCount(); j++) {
 			if(pkg[j] == "import.ext")
 				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
-
-			if(pkg[j] == "main.conf") {
+			if(pkg[j] == "main.conf")
 				main_conf << LoadFile(SourcePath(wspc[i], "main.conf")) << "\r\n";
-			}
 		}
 	}
 
