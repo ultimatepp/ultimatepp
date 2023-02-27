@@ -98,6 +98,10 @@ public:
 
 	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         Vector<Tuple<String, String, int>>& flags, bool speculative,
+	                                         const String& include, Vector<String>& chain, bool& found);
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         ArrayMap<String, Index<String>>& define_includes,
 	                                         Vector<Tuple<String, String, int>>& flags, bool speculative = true);
 	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,

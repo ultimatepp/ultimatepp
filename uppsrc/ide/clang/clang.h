@@ -269,6 +269,17 @@ void CancelAutoComplete();
 
 String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header_file);
 
+struct MasterSourceCacheRecord : Moveable<MasterSourceCacheRecord> {
+	String master;
+	VectorMap<String, Time> chain;
+	
+	bool CheckTimes(PPInfo& ppi) const;
+	void Serialize(Stream& s);
+};
+
+const VectorMap<String, Time>& FindMasterSourceCached(PPInfo& ppi, const Workspace& wspc, const String& header_file,
+                                                      VectorMap<String, MasterSourceCacheRecord>& cache);
+
 struct FileAnnotation0 {
 	String defines = "<not_loaded>";
 	String includes;

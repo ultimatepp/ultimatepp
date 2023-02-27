@@ -141,10 +141,13 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      show_errors_status = true;
 	bool      no_empty_autocomplete = false;
 
-	PPInfo    ppi;
-	String    master_source;
+	PPInfo             ppi;
+	String             master_source;
+	Vector<String>     master_chain; // current include -> source file
 
 	Vector<Diagnostic> errors;
+
+	VectorMap<String, MasterSourceCacheRecord> ms_cache;
 
 	int                ToUtf8x(int line, int pos);
 	int                FromUtf8x(int line, int pos);
