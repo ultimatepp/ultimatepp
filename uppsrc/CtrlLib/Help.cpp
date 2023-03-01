@@ -102,6 +102,7 @@ void HelpWindow::SetZoom()
 	current_link = Null;
 	GoTo0(topic);
 	Refresh();
+	SetBar();
 }
 
 void HelpWindow::FontSize()
@@ -130,7 +131,7 @@ void HelpWindow::Tools(Bar& bar)
 	bar.Add(forward.GetCount(), t_("Go Forward"), CtrlImg::go_forward(), THISBACK(Forward))
 	   .Key(K_ALT_RIGHT);
 	bar.Gap();
-	bar.Add(t_("Font size"), CtrlImg::font_size(), THISBACK(FontSize));
+	bar.Add(t_("Font size"), MakeZoomIcon(zoom.m / 160.0), THISBACK(FontSize));
 	bar.Gap();
 #ifndef PLATFORM_PDA
 	bar.Add(t_("Print"), CtrlImg::print(), THISBACK(Print));
