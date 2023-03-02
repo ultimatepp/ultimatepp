@@ -1142,6 +1142,8 @@ public:
 	void      ShowTopics();
 	void      ShowTopicsWin();
 
+	const Workspace& AssistWorkspace() const;
+
 	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
