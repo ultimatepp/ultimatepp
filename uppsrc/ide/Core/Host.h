@@ -14,8 +14,6 @@ struct Host {
 
 	String        *cmdout;
 	
-	String         onefile; // support for Ctrl+F7 - build single file
-	
 	bool           canlog = true; // it does PutVerbose for commands
 
 	void    DoDir(const String& s);

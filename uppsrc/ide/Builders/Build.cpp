@@ -293,8 +293,8 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	}
 	Host host;
 	CreateHost(host, false, false);
-	host.onefile = onefile;
 	One<Builder> b = CreateBuilder(&host);
+	b->onefile = onefile;
 	if(!b)
 		return false;
 	b->config = PackageConfig(wspc, pkindex, bm, mainparam, host, *b);

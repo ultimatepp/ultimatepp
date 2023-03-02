@@ -495,7 +495,7 @@ void HdependAddDependency(const String& file, const String& depends)
 	hdepend.AddDependency(file, depends);
 }
 
-Time HdependFileTime(const String& path)
+Time HdependGetFileTime(const String& path)
 {
 	return hdepend.GetTime(path);
 }

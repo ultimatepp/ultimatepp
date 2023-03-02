@@ -34,6 +34,12 @@ Time Builder::GetFileTime(const String& path) const
 
 VectorMap<String, String> Builder::cmdx_cache;
 
+Time Builder::HdependFileTime(const String& path)
+{
+	return onefile.GetCount() ? path == onefile ? GetSysTime() : Time::Low()
+	                          : HdependGetFileTime(path);
+}
+
 String Builder::CmdX(const char *s)
 { // expand ` character delimited sections by executing them as commands
 	String r, cmd;

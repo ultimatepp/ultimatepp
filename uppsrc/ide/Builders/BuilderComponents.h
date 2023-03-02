@@ -40,6 +40,7 @@ public:
 	void SetBlitzFileName(const String& blitzFileName) { this->blitzFileName = blitzFileName; }
 	
 	Blitz MakeBlitzStep(
+		Builder& b,
 		Vector<String>& sfile, Vector<String>& soptions,
 		Vector<String>& obj, Vector<String>& immfile,
 		const char *objext, const Index<String>& noblitz,
