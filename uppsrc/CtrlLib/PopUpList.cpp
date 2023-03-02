@@ -156,7 +156,16 @@ int PopUpList::GetCursor() const
 
 bool PopUpList::Key(int c)
 {
-	// TODO!
+	int q = GetCursor();
+	q = q >= 0 ? q + 1 : 0;
+	c = ToUpperAscii(c);
+	for(int i = 0; i < GetCount(); i++) {
+		int ii = (q + i) % GetCount();
+		if(ToUpperAscii(*StdFormat(items[ii]).ToWString()) == c) {
+			SetCursor(ii);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -222,7 +231,7 @@ PopUpList::Popup::Popup(PopUpList *list)
 {
 	ac.list = list;
 	ac.SetFrame(DropFrame());
-	auto& col = ac.AddColumn();
+	auto& col = ac.AddColumn().Accel();
 	if(list->convert)
 		col.SetConvert(*list->convert);
 	col.SetDisplay(*list->display);
