@@ -946,8 +946,14 @@ String Ide::GetCurrentIncludePath()
 			if(pkg[j] == "import.ext")
 				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
 	}
-	
+
 	::MainConf(wspc, include_path);
+
+	for(int i = 0; i < wspc.GetCount(); i++) { // internal includes
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
+	}
 
 	return include_path;
 }
