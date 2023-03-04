@@ -166,7 +166,7 @@ bool AndroidBuilder::BuildPackage(
 		bc.SetWorkingDir(project->GetJniDir() + DIR_SEPS + package);
 		bc.SetBlitzFileName("blitz");
 		
-		Blitz blitz = bc.MakeBlitzStep(
+		Blitz blitz = bc.MakeBlitzStep(*this,
 			nativeSources, nativeSourcesOptions,
 		    nativeObjects, immfile, ".o",
 		    noBlitzNativeSourceFiles);

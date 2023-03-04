@@ -4,4 +4,4 @@ public:
 	~ViewDraw();
 };
 
-class DHCtrl : Ctrl {};
+class DHCtrl : public Ctrl {};

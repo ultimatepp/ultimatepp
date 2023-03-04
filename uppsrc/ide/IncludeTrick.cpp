@@ -11,7 +11,8 @@ void AssistEditor::SyncMaster()
 	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
 		ppi.Dirty();
 		ppi.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
-		master_source = FindMasterSource(ppi, GetIdeWorkspace(), editfile);
+		master_chain = clone(FindMasterSourceCached(ppi, GetIdeWorkspace(), editfile, ms_cache).GetKeys());
+		master_source = master_chain.GetCount() ? master_chain.Top() : String();
 	}
 
 	if(AssistDiagnostics) {
@@ -43,10 +44,8 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 					return true;
 				int q = out.GetCount();
 				int qq = line_delta;
-				VectorMap<String, Time> result;
-				ArrayMap<String, Index<String>> define_includes;
-				ppi.GatherDependencies(ipath, result, define_includes);
-				if(result.Find(target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
+				if(level < master_chain.GetCount() - 1 && master_chain[master_chain.GetCount() - 2 - level] == ipath &&
+				   visited.Find(ipath) < 0 && level < 10
 				   && DoIncludeTrick(visited, level + 1, out, ipath, target_path, line_delta))
 					return true;
 				out.SetCount(q);

@@ -345,7 +345,8 @@ void PPInfo::AddDependency(const String& file, const String& dep)
 
 Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
                                 ArrayMap<String, Index<String>>& define_includes,
-                                Vector<Tuple<String, String, int>>& flags, bool speculative)
+                                Vector<Tuple<String, String, int>>& flags, bool speculative,
+                                const String& include, Vector<String>& chain, bool& found)
 {
 	PPFile& f = File(path);
 	String dir = GetFileFolder(path);
@@ -359,6 +360,9 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	
 	for(const Tuple<String, int>& x : f.flags)
 		flags.Add({ path, x.a, x.b });
+	
+	if(include.GetCount() && path == include)
+		found = true;
 
 	auto DoInclude = [&](const String& inc) {
 		String ipath = FindIncludeFile(inc, dir);
@@ -368,7 +372,8 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 				q = result.GetCount();
 				result.Add(ipath); // prevent infinite recursion
 				result[q] = GetFileTime(ipath); // temporary
-				result[q] = GatherDependencies(ipath, result, define_includes, flags, speculative);
+				result[q] = GatherDependencies(ipath, result, define_includes, flags, speculative,
+				                               include, chain, found);
 			}
 			ftm = max(result[q], ftm);
 			q = define_includes.Find(ipath);
@@ -379,17 +384,37 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	};
 
 	for(int i = 0; i <= (int)speculative; i++) {
-		for(const String& inc : f.includes[i])
+		for(const String& inc : f.includes[i]) {
 			DoInclude(inc);
+			if(found)
+				goto done;
+		}
 		for(int i = 0; i < dics.GetCount(); i++) { // cannot use range for as dics can change
 			String id = dics[i];
-			for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q))
+			for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q)) {
 				DoInclude(f.defines[q]);
+				if(found)
+					goto done;
+			}
 		}
 	}
 
+done:
 	result.GetAdd(path) = ftm;
+	if(found)
+		chain.Add(path);
 	return ftm;
+}
+
+Time PPInfo::GatherDependencies(const String& path,
+                                VectorMap<String, Time>& result,
+                                ArrayMap<String, Index<String>>& define_includes,
+                                Vector<Tuple<String, String, int>>& flags,
+                                bool speculative)
+{
+	Vector<String> chain;
+	bool found = false;
+	return GatherDependencies(path, result, define_includes, flags, speculative, String(), chain, found);
 }
 
 void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& result,
@@ -470,7 +495,7 @@ void HdependAddDependency(const String& file, const String& depends)
 	hdepend.AddDependency(file, depends);
 }
 
-Time HdependFileTime(const String& path)
+Time HdependGetFileTime(const String& path)
 {
 	return hdepend.GetTime(path);
 }

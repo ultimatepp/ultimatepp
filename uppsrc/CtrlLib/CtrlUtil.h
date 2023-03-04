@@ -510,6 +510,8 @@ struct OpenFileButton  : FileSelButton { OpenFileButton(const char *title = NULL
 struct SaveFileButton  : FileSelButton { SaveFileButton(const char *title = NULL) : FileSelButton(MODE_SAVE, title) {} };
 struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NULL) : FileSelButton(MODE_DIR,  title) {} };
 
+Image MakeZoomIcon(double scale);
+
 void Set(ArrayCtrl& array, int ii, IdCtrls& m);
 void Get(ArrayCtrl& array, int ii, IdCtrls& m);
 

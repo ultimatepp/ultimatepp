@@ -1165,7 +1165,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 8;
+	int version = 9;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1189,6 +1189,9 @@ void AssistEditor::SerializeNavigator(Stream& s)
 
 	if(version >= 8)
 		s % no_empty_autocomplete;
+	
+	if(version >= 9)
+		s % ms_cache;
 }
 
 void AssistEditor::SerializeNavigatorWorkspace(Stream& s)

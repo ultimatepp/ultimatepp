@@ -14,7 +14,7 @@ int RichTxt::GetWidth(const RichStyles& st) const
 			cx = max(cx, ccx);
 		}
 		else
-			return GetTable(i).GetWidth(st);
+			cx = max(cx, GetTable(i).GetWidth(st));
 	}
 	return cx;
 }

@@ -57,6 +57,7 @@ BlitzBuilderComponent::BlitzBuilderComponent(Builder* builder)
 }
 
 Blitz BlitzBuilderComponent::MakeBlitzStep(
+	Builder& builder,
 	Vector<String>& sourceFiles, Vector<String>& soptions,
 	Vector<String>& obj, Vector<String>& immfile,
 	const char *objext, const Index<String>& noblitz,
@@ -88,7 +89,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		   && HdependBlitzApproved(sourceFile) && IsNull(soptions[i])
 		   && sourceFileTime < blitz_base_time
 		   && noblitz.Find(sourceFile) < 0) {
-			if(HdependFileTime(sourceFile) > blitztime)
+			if(builder.HdependFileTime(sourceFile) > blitztime)
 				b.build = true;
 			BlitzFile(blitz, sourceFile, HdependGetDefines(sourceFile), i);
 			b.info << ' ' << GetFileName(sourceFile);

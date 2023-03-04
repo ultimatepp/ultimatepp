@@ -27,6 +27,9 @@ int CharFilterSlash(int c);
 String GetDefaultMethod();
 VectorMap<String, String> GetMethodVars(const String& method);
 
+String MainConf(const Workspace& wspc, String& add_includes);
+String SaveMainConf(const String& main_conf);
+
 class MakeBuild {
 public:
 	virtual void ConsoleShow() = 0; //		ShowConsole();	console.Sync();
@@ -75,6 +78,7 @@ public:
 	String OutDir(const Index<String>& cfg, const String& package,
 	              const VectorMap<String, String>& bm, bool use_target = false);
 	void PkgConfig(const Workspace& wspc, const Index<String>& config, Index<String>& pkg_config);
+	void MainConf(const Workspace& wspc);
 	bool BuildPackage(const Workspace& wspc, int pkindex, int pknumber, int pkcount,
 	                  String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
 	                  String& linkopt, bool link = false);

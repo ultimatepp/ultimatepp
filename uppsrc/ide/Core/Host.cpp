@@ -39,13 +39,6 @@ Vector<Host::FileInfo> Host::GetFileInfo(const Vector<String>& path)
 			(Time&)f = Time::Low();
 			f.length = Null;
 		}
-
-		if(onefile.GetCount()) {
-			if(path[i] == onefile)
-				(Time &)f = GetSysTime();
-			else
-				(Time &)f = Time::Low();
-		}
 	}
 	return fi;
 }

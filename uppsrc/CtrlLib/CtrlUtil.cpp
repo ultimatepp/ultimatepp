@@ -432,4 +432,37 @@ void FileSelButton::Detach()
 	if(p) p->RemoveFrame(button);
 }
 
+struct ZoomIconMaker : ImageMaker {
+	double zoom;
+
+	String Key() const override {
+		return String((byte *)&zoom, sizeof(zoom));
+	}
+	Image Make() const override {
+		Size sz(DPI(16), DPI(16));
+		ImagePainter w(sz);
+		w.Clear(RGBAZero());
+		w.Move(DPI(11), DPI(11)).Line(DPI(16), DPI(16)).Stroke(DPI(2), SBlack());
+		w.Circle(DPI(7), DPI(7), IsUHDMode() ? 12 : 6.5).Stroke(IsUHDMode() ? 3 : 1, SBlack());
+		String txt = AsString(int(zoom * 100));
+		Image numbers = IsUHDMode() ? CtrlImg::Numbers2() : CtrlImg::Numbers1();
+		int gcx = IsUHDMode() ? 6 : 4;
+		Size tsz(txt.GetCount() * gcx, numbers.GetHeight());
+		int y = DPI(7) - tsz.cy / 2;
+		int x = DPI(7) - tsz.cx / 2;
+		for(int c : txt) {
+			w.DrawImage(x, y, gcx, tsz.cy, numbers, RectC((c - '0') * gcx, 0, gcx, tsz.cy), SLtBlue());
+			x += gcx;
+		}
+		return w;
+	}
+};
+
+Image MakeZoomIcon(double scale)
+{
+	ZoomIconMaker m;
+	m.zoom = scale;
+	return MakeImage(m);
+}
+
 }

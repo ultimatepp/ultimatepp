@@ -939,22 +939,20 @@ String Ide::GetCurrentIncludePath()
 	IncludeAddPkgConfig(include_path, clang_method);
 
 	String main_conf;
-	const Workspace& wspc = GetIdeWorkspace();
+	const Workspace& wspc = AssistWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.GetCount(); j++) {
+		for(int j = 0; j < pkg.GetCount(); j++)
 			if(pkg[j] == "import.ext")
 				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
-			if(pkg[j] == "main.conf")
-				main_conf << LoadFile(SourcePath(wspc[i], "main.conf")) << "\r\n";
-		}
 	}
 
-	if(main_conf.GetCount()) {
-		String main_conf_dir = CacheFile("main_conf_" + SHA1String(main_conf));
-		RealizeDirectory(main_conf_dir);
-		SaveChangedFile(AppendFileName(main_conf_dir, "main.conf.h"), main_conf);
-		return Merge(";", main_conf_dir, include_path);
+	::MainConf(wspc, include_path);
+
+	for(int i = 0; i < wspc.GetCount(); i++) { // internal includes
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
 	}
 
 	return include_path;
@@ -968,7 +966,8 @@ String Ide::GetCurrentDefines()
 	String r;
 	for(String s : flags)
 		MergeWith(r, ";", "flag" + s);
-	const Workspace& wspc = GetIdeWorkspace();
+
+	const Workspace& wspc = AssistWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.GetCount(); j++) {

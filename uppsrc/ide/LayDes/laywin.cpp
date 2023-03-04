@@ -173,30 +173,9 @@ void LayDes::GotoUsing()
 		TheIde()->FindDesignerItemReferences(CurrentLayout().name + "__layid", "With" + CurrentLayout().name);
 }
 
-struct MakeZoomIcon : ImageMaker {
-	double zoom;
-
-	String Key() const override {
-		return String((byte *)&zoom, sizeof(zoom));
-	}
-	Image Make() const override {
-		Size sz(DPI(16), DPI(16));
-		ImagePainter w(sz);
-		w.Clear(RGBAZero());
-		w.Move(DPI(11), DPI(11)).Line(DPI(16), DPI(16)).Stroke(DPI(2), SBlack());
-		w.Circle(DPI(7), DPI(7), DPI(6)).Stroke(DPI(2), SBlack());
-		Font fnt = Arial((int)DPI(7) * zoom);
-		Size tsz = GetTextSize("Z", fnt);
-		w.DrawText(DPI(7) - tsz.cx / 2, DPI(7) - tsz.cy / 2, "Z", fnt, SLtBlue());
-		return w;
-	}
-};
-
 void LayDes::OptionBar(Bar& bar)
 {
-	MakeZoomIcon im;
-	im.zoom = GetScale();
-	bar.Add("Zoom " + AsString(GetScale() * 100) + "%", MakeImage(im),
+	bar.Add("Zoom " + AsString(GetScale() * 100) + "%", MakeZoomIcon(GetScale()),
 		[=] {
 	          Zoom = Zoom < 5 ? 5 : Zoom < 10 ? 10 : 0;
 		      Refresh();

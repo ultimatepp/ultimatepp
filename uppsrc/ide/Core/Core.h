@@ -98,6 +98,10 @@ public:
 
 	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
+	                                         Vector<Tuple<String, String, int>>& flags, bool speculative,
+	                                         const String& include, Vector<String>& chain, bool& found);
+	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
+	                                         ArrayMap<String, Index<String>>& define_includes,
 	                                         Vector<Tuple<String, String, int>>& flags, bool speculative = true);
 	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
@@ -115,7 +119,7 @@ void                  HdependSetDirs(Vector<String>&& id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);
-Time                  HdependFileTime(const String& path);
+Time                  HdependGetFileTime(const String& path);
 Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
@@ -529,6 +533,7 @@ struct Builder {
 	String           debug_link;
 	String           release_link;
 	String           version;
+	String           onefile; // Support for Ctrl-F7 - build single file
 
 	String           script;
 	String           mainpackage;
@@ -547,6 +552,8 @@ struct Builder {
 	static VectorMap<String, String> cmdx_cache; // caching e.g. pkg-config
 
 	String                 CmdX(const char *s);
+	
+	Time                   HdependFileTime(const String& path);
 
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
 	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize)

@@ -278,6 +278,43 @@ void MakeBuild::PkgConfig(const Workspace& wspc, const Index<String>& config, In
 			pkg_config.FindAdd(h);
 }
 
+String SaveMainConf(const String& main_conf)
+{
+	String main_conf_dir = CacheFile("main_conf_" + SHA1String(main_conf));
+	RealizeDirectory(main_conf_dir);
+	String path = AppendFileName(main_conf_dir, "main.conf.h");
+	SaveChangedFile(path, main_conf);
+	return path;
+}
+
+String MainConf(const Workspace& wspc, String& add_includes)
+{
+	String main_conf;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.package[i];
+		for(int j = 0; j < pk.GetCount(); j++)
+			if(pk[j] == "main.conf") {
+				String pn = wspc[i];
+				String p = SourcePath(pn, "main.conf");
+				main_conf << "// " << pn << "\r\n" << LoadFile(p) << "\r\n";
+				PutConsole("Found " + p);
+			}
+	}
+
+	if(main_conf.GetCount()) {
+		String path = SaveMainConf(main_conf);
+		PutConsole("Saving " + path);
+		PutVerbose(main_conf);
+		MergeWith(add_includes, ";", GetFileFolder(path));
+	}
+	return main_conf;
+}
+
+void MakeBuild::MainConf(const Workspace& wspc)
+{
+	main_conf = ::MainConf(wspc, add_includes);
+}
+
 bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, int pkcount,
 	String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
 	String& linkopt, bool link)
@@ -293,8 +330,8 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	}
 	Host host;
 	CreateHost(host, false, false);
-	host.onefile = onefile;
 	One<Builder> b = CreateBuilder(&host);
+	b->onefile = onefile;
 	if(!b)
 		return false;
 	b->config = PackageConfig(wspc, pkindex, bm, mainparam, host, *b);
@@ -452,38 +489,13 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	DeleteFile(hfile);
 	
 	BeginBuilding(clear_console);
+
+	MainConf(wspc);
+
 	bool ok = true;
 	main_conf.Clear();
 	add_includes.Clear();
 	if(wspc.GetCount()) {
-		for(int i = 0; i < wspc.GetCount(); i++) {
-			const Package& pk = wspc.package[i];
-			for(int j = 0; j < pk.GetCount(); j++)
-				if(pk[j] == "main.conf") {
-					String pn = wspc[i];
-					String p = SourcePath(pn, "main.conf");
-					main_conf << "// " << pn << "\r\n" << LoadFile(p) << "\r\n";
-					PutConsole("Found " + p);
-				}
-		}
-
-		if(main_conf.GetCount()) {
-			VectorMap<String, String> bm = GetMethodVars(method);
-			Host host;
-			CreateHost(host, false, false);
-			One<Builder> b = CreateBuilder(&host);
-			if(b) {
-				Index<String> mcfg = PackageConfig(wspc, 0, bm, mainparam, host, *b, NULL);
-				String outdir = OutDir(mcfg, wspc[0], bm, false);
-				String path = AppendFileName(outdir, "main.conf.h");
-				RealizePath(path);
-				SaveChangedFile(path, main_conf);
-				PutConsole("Saving " + path);
-				PutVerbose(main_conf);
-				add_includes << outdir << ';';
-			}
-		}
-
 		Vector<int> build_order;
 		if(cfg.Find("SO") < 0) {
 			for(int i = 1; i < wspc.GetCount(); i++)

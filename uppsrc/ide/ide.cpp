@@ -685,6 +685,27 @@ const Workspace& Ide::IdeWorkspace() const
 	return wspc;
 }
 
+const Workspace& Ide::AssistWorkspace() const
+{
+	static Workspace wspc;
+	static String _main;
+	bool update = false;
+	if(main != _main || wspc.GetCount() == 0) {
+		update = true;
+		_main = main;
+	}
+	else {
+		for(int i = 0; i < wspc.GetCount(); i++)
+			if(wspc.GetPackage(i).time != FileGetTime(PackagePath(wspc[i]))) {
+				update = true;
+				break;
+			}
+	}
+	if(update)
+		wspc.Scan(main, SplitFlags(mainconfigparam, false));
+	return wspc;
+}
+
 void Ide::AddPackage(const String& p)
 {
 	const Workspace& wspc = IdeWorkspace();

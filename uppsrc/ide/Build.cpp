@@ -142,6 +142,7 @@ void Ide::FileCompile()
 	if(wspc.GetCount()) {
 		Vector<String> linkfile, immfile;
 		String linkopt;
+		MainConf(wspc);
 		for(int i = 0; i < wspc.GetCount(); i++)
 			BuildPackage(wspc, i, 1, wspc.GetCount(), mainconfigparam, Null, linkfile, immfile, linkopt, false);
 	}

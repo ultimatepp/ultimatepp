@@ -9,7 +9,6 @@
 String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header_file_)
 {
 	LTIMING("FindMasterSource");
-	String master_source;
 	String header_file = NormalizePath(header_file_);
 
 	for(int speculative = 0; speculative < 2; speculative++) {
@@ -30,6 +29,58 @@ String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header
 		}
 	}
 	return Null;
+}
+
+bool MasterSourceCacheRecord::CheckTimes(PPInfo& ppi) const
+{
+	for(int i = 1; i < chain.GetCount(); i++)
+		if(ppi.GetFileTime(chain.GetKey(i)) != chain[i])
+			return false;
+	return true;
+}
+
+void MasterSourceCacheRecord::Serialize(Stream& s)
+{
+	int version = 0;
+	s / version;
+	s % master % chain;
+}
+
+const VectorMap<String, Time>& FindMasterSourceCached(PPInfo& ppi, const Workspace& wspc, const String& header_file_,
+                                                      VectorMap<String, MasterSourceCacheRecord>& cache)
+{
+	String header_file = NormalizePath(header_file_);
+	
+	if(cache.GetCount() > 2000) // 2000 cached headers is enough for everybody, right?
+		cache.Clear();
+
+	int q = cache.Find(header_file);
+	if(q >= 0 && cache[q].CheckTimes(ppi))
+		return cache[q].chain;
+
+	String master = FindMasterSource(ppi, wspc, header_file);
+	if(master.GetCount()) {
+		for(int speculative = 0; speculative < 2; speculative++) {
+			Vector<String> chain;
+			bool found = false;
+			VectorMap<String, Time> deps;
+			ArrayMap<String, Index<String>> dics;
+			Vector<Tuple<String, String, int>> flags;
+			ppi.GatherDependencies(master, deps, dics, flags, speculative, header_file, chain, found);
+			
+			MasterSourceCacheRecord& m = cache.GetAdd(header_file);
+			m.chain.Clear();
+			m.master = master;
+			for(const String& f : chain)
+				m.chain.Add(f, ppi.GetFileTime(f));
+			
+			if(found)
+				return m.chain;
+		}
+	}
+
+	static VectorMap<String, Time> empty;
+	return empty;
 }
 
 void AnnotationItem::Serialize(Stream& s)
