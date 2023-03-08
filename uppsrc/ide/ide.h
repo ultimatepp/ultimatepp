@@ -819,6 +819,7 @@ public:
 		void  ClearEditedAll();
 		void  FindFileAll(const Vector<Tuple<int64, int>>& f);
 		void  InsertColor();
+		void  InsertImage();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const Package& pkg, const String& fn, String classname);
 		void  InsertText(const String& text);

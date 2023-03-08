@@ -274,6 +274,8 @@ enum {
 	IML_IMAGE_FLAG_DARK         = 0x10,
 };
 
+Image MakeImlImage(const String& id, Function<ImageIml (int, const String&)> GetRaw, dword global_flags);
+
 class Iml {
 	struct IImage : Moveable<IImage> {
 		std::atomic<bool>  loaded;

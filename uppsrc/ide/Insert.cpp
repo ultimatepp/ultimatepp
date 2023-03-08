@@ -243,6 +243,7 @@ void Ide::InsertMenu(Bar& bar)
 	if(bar.IsScanKeys())
 		return;
 	bar.Add("Insert color..", THISBACK(InsertColor));
+	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	int pi = GetPackageIndex();
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= 0 && pi < wspc.GetCount()) {

@@ -63,6 +63,7 @@ file
 	Setup.cpp,
 	Custom.cpp,
 	Print.cpp,
+	InsertImage.cpp,
 	Insert.cpp,
 	idetool.cpp,
 	Install.cpp,
