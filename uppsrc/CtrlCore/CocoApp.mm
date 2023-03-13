@@ -22,9 +22,6 @@ NSMenu *Cocoa_DockMenu();
 
 namespace Upp {
 
-int  Ctrl::WndCaretTime;
-bool Ctrl::WndCaretVisible;
-
 static NSAutoreleasePool *main_coco_pool;
 
 void SyncPopupFocus(NSWindow *win)
@@ -251,52 +248,6 @@ void WakeUpGuiThread(void)
 	}
 }
 
-void  Ctrl::AnimateCaret()
-{
-	GuiLock __;
-	int v = !(((msecs() - WndCaretTime) / 500) & 1);
-	if(v != WndCaretVisible) {
-		WndCaretVisible = v;
-		RefreshCaret();
-	}
-}
-
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-}
-
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	LLOG("SetCaret " << Name());
-	if(this == caretCtrl)
-		RefreshCaret();
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	if(this == caretCtrl) {
-		WndCaretTime = msecs();
-		RefreshCaret();
-		AnimateCaret();
-	}
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-//	LLOG("SyncCaret");
-	if(focusCtrl != caretCtrl) {
-		LLOG("SyncCaret DO " << Name(caretCtrl) << " -> " << Name(focusCtrl));
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-}
-
 Rect Ctrl::GetWorkArea() const
 {
 	return GetWorkArea(GetScreenRect().TopLeft());
@@ -403,9 +354,9 @@ TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 {
 	EnterGuiMutex();
 	ctrl = ctrl->GetTopCtrl();
-	ASSERT(ctrl->top->coco);
+	ASSERT(ctrl->GetTop()->coco);
 	Rect tr = ctrl->GetScreenRect();
-	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->top->coco->window];
+	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->GetTop()->coco->window];
 	Init([gc CGContext], NULL);
 
 	CGContextTranslateCTM(cgHandle, 0, tr.GetHeight());
