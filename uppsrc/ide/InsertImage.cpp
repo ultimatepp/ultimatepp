@@ -1,6 +1,8 @@
 #include "ide.h"
 
 struct InsertImageDlg : WithInsertImageLayout<TopWindow>, Display {
+	TimeCallback tm;
+
 	VectorMap<String, VectorMap<String, Image>> imap;
 	
 	struct Img {
@@ -9,10 +11,14 @@ struct InsertImageDlg : WithInsertImageLayout<TopWindow>, Display {
 	};
 	
 	int tcx;
+	
+	bool warning = false;
 
 	void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
 	void Layout() override;
 	void Serialize(Stream& s) override { SerializePlacement(s); s % noupp % index; }
+	
+	void Load();
 	
 	void Sync();
 
@@ -68,10 +74,8 @@ void InsertImageDlg::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Co
 	           r.top + DPI(32), m.text, StdFont(), ink);
 }
 
-InsertImageDlg::InsertImageDlg()
+void InsertImageDlg::Load()
 {
-	CtrlLayoutOKCancel(*this, "Insert .iml Image");
-
 	for(const auto& f : ~CodeIndex())
 		if(ToLower(GetFileExt(f.key)) == ".iml") {
 			Array<ImlImage> img0;
@@ -109,12 +113,22 @@ InsertImageDlg::InsertImageDlg()
 			tcx = max(tcx, GetTextSize("I_" + n.key + "::" + m.key, StdFont()).cx);
 		}
 
+	Value key = nest.GetKey();
+	nest.Clear();
+	for(const auto& n : ~imap)
+		nest.Add(n.key);
+	
+	if(!nest.FindSetCursor(key))
+		nest.GoBegin();
+}
+
+InsertImageDlg::InsertImageDlg()
+{
+	CtrlLayoutOKCancel(*this, "Insert .iml Image");
+
 	nest.NoHeader().NoGrid();
 	nest.AddColumn();
 	nest.Add(AttrText("<all>").Italic().NormalInk(SColorHighlight()));
-
-	for(const auto& n : ~imap)
-		nest.Add(n.key);
 
 	search.NullText("Search");
 	search.SetFilter([](int c) { return iscid(c) ? ToUpper(c) : 0; });
@@ -134,6 +148,23 @@ InsertImageDlg::InsertImageDlg()
 	list.ItemWidth(min(Zx(300), tcx) + DPI(2));
 	
 	Sizeable();
+	
+	Load();
+	
+	auto SyncWarning = [=] {
+		bool b = Indexer::IsRunning() && Indexer::Progress();
+		if(b != warning) {
+			warning = b;
+			warning_lbl.Show(warning);
+			if(!warning)
+				Load();
+		}
+	};
+	
+	warning_lbl.Hide();
+	SyncWarning();
+	
+	tm.Set(-250, [=] { SyncWarning(); });
 }
 
 void Ide::InsertImage()
