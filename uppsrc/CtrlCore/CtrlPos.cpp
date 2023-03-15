@@ -437,4 +437,18 @@ Rect Ctrl::GetWorkArea(Point pt)
 	return GetPrimaryWorkArea();
 }
 
+Rect Ctrl::StdGetWorkArea() const
+{
+	GuiLock __;
+
+	static Array<Rect> rc;
+	if(rc.IsEmpty())
+		GetWorkArea(rc);
+	
+	const Ctrl *top = GetTopCtrl();
+	if(top && top->IsOpen())
+		return GetWorkArea(top->GetScreenRect().TopLeft());
+	return GetPrimaryWorkArea();
+}
+
 }

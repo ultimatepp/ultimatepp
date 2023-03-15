@@ -23,7 +23,6 @@ private:
 	Zoom          zoom;
 	int           cx;
 	ScrollBar     sb;
-	Scroller      scroller;
 	RichText      text;
 	bool          sizetracking;
 	bool          vcenter;

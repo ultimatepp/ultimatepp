@@ -820,6 +820,8 @@ protected:
 	static void     TimerProc(dword time);
 
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
+
+	Rect StdGetWorkArea() const;
 			
 	enum {
 		ATTR_LAYOUT_ID,

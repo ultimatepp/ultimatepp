@@ -250,7 +250,7 @@ void WakeUpGuiThread(void)
 
 Rect Ctrl::GetWorkArea() const
 {
-	return GetWorkArea(GetScreenRect().TopLeft());
+	return StdGetWorkArea();
 }
 
 Rect MakeScreenRect(NSScreen *screen, CGRect r)
