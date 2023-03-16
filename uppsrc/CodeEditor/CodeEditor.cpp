@@ -689,9 +689,17 @@ CodeEditor::Tip::Tip()
 	BackPaint();
 }
 
+bool CodeEditor::SyncCloseTip()
+{
+	if(HasMouse() && IsVisible() && GetTopCtrl()->HasFocusDeep())
+		return false;
+	CloseTip();
+	return true;
+}
+
 void CodeEditor::SyncTip()
 {
-	if(!HasMouse())
+	if(SyncCloseTip())
 		return;
 	Rect wa = GetWorkArea();
 	Point p = Upp::GetMousePos();
@@ -699,7 +707,8 @@ void CodeEditor::SyncTip()
 	mt.background = Blend(SWhite(), SLtYellow());
 	mt.pos = tippos;
 	mt.sz.cx = min(DPI(1000), 2 * wa.GetWidth() / 3);
-	if(tippos >= 0 && IsVisible() && (WhenTip(mt) || delayed_tip && DelayedTip(mt) && p == delayed_pos)) {
+	if(tippos >= 0 &&
+	   (WhenTip(mt) || delayed_tip && DelayedTip(mt) && p == delayed_pos)) {
 		mt.sz.cy = min(wa.GetHeight() / 2 - DPI(20), mt.sz.cy);
 		tip.d = mt.display;
 		tip.v = mt.value;
@@ -1299,6 +1308,7 @@ CodeEditor::CodeEditor()
 	selkind = SEL_CHARS;
 	withfindreplace = true;
 	wordwrap = false;
+	closetip.Set(-200, [=] { SyncCloseTip(); });
 }
 
 CodeEditor::~CodeEditor() {}
