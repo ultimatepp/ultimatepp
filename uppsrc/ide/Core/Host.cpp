@@ -181,7 +181,43 @@ void RemoveConsoleScripts()
 			FileDelete(ff.GetPath());
 	}
 }
+
+String ResolveHostConsole()
+{
+	String lc;
+	
+	#ifdef PLATFORM_BSD
+	static const char *term[] = {
+		"/usr/local/bin/mate-terminal -x",
+		"/usr/local/bin/gnome-terminal --window -x",
+		"/usr/local/bin/konsole -e",
+		"/usr/local/bin/lxterminal -e",
+		"/usr/local/bin/io.elementary.terminal -n -x",
+		"/usr/local/bin/xterm -e",
+	};
+	#else
+	static const char *term[] = {
+		"/usr/bin/mate-terminal -x",
+		"/usr/bin/gnome-terminal --window -x",
+		"/usr/bin/konsole -e",
+		"/usr/bin/lxterminal -e",
+		"/usr/bin/io.elementary.terminal -n -x",
+		"/usr/bin/xterm -e",
+	};
+	#endif
+	int ii = 0;
+	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
+		int c = HostConsole.Find(' ');
+		lc = c < 0 ? HostConsole : HostConsole.Left(c);
+		if(ii >= __countof(term) || FileExists(lc))
+			break;
+		HostConsole = term[ii++];
+	}
+	return lc;
+}
+
 #endif
+
 
 void Host::Launch(const char *_cmdline, bool console)
 {
@@ -216,33 +252,7 @@ void Host::Launch(const char *_cmdline, bool console)
 	if(console)
 		cmdline = "/usr/bin/open " + script;
 #else
-	String lc;
-	
-	#ifdef PLATFORM_BSD
-	static const char *term[] = {
-		"/usr/local/bin/mate-terminal -x",
-		"/usr/local/bin/gnome-terminal --window -x",
-		"/usr/local/bin/konsole -e",
-		"/usr/local/bin/lxterminal -e",
-		"/usr/local/bin/xterm -e",
-	};
-	#else
-	static const char *term[] = {
-		"/usr/bin/mate-terminal -x",
-		"/usr/bin/gnome-terminal --window -x",
-		"/usr/bin/konsole -e",
-		"/usr/bin/lxterminal -e",
-		"/usr/bin/xterm -e",
-	};
-	#endif
-	int ii = 0;
-	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
-		int c = HostConsole.FindFirstOf(" ");
-		lc = c < 0 ? HostConsole : HostConsole.Left(c);
-		if(ii >= __countof(term) || FileExists(lc))
-			break;
-		HostConsole = term[ii++];
-	}
+	String lc = ResolveHostConsole();
 	if(FileExists(lc))
 	{
 		if(console)
