@@ -15,6 +15,7 @@ struct InsertImageDlg : WithInsertImageLayout<TopWindow>, Display {
 	bool warning = false;
 
 	void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
+	void Paint(Draw& w) override { return TopWindow::Paint(w); } // silence clang warning
 	void Layout() override;
 	void Serialize(Stream& s) override { SerializePlacement(s); s % noupp % index; }
 	

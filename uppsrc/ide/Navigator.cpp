@@ -142,7 +142,6 @@ void Navigator::Navigate()
 	navigating = true;
 	int ii = list.GetCursor();
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
-		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
 		if(m.kind == KIND_NEST) {
 			String h = m.pretty;
@@ -311,8 +310,6 @@ void Navigator::Search()
 	sortitems.Check(sorting);
 	String s = TrimBoth(~search);
 	String search_name, search_nest;
-	bool wholeclass = false;
-	bool both = false;
 	navigator_global = false;
 	if(s.Find('.') >= 0) {
 		Vector<String> h = Split((String)~search, '.');
@@ -323,12 +320,9 @@ void Navigator::Search()
 			if(h.GetCount())
 				search_nest = Join(h, "::");
 		}
-		wholeclass = *s == '.' && search_nest.GetCount();
 	}
-	else {
+	else
 		search_name = ~search;
-		both = true;
-	}
 	s = Join(Split(s, '.'), "::") + (s.EndsWith(".") ? "::" : "");
 	int lineno = StrInt(s);
 	nitem.Clear();
@@ -348,7 +342,6 @@ void Navigator::Search()
 	}
 	else
 	if(IsNull(s) && !sorting) {
-		bool sch = GetFileExt(theide->editfile) == ".sch";
 		Ide *theide = TheIde();
 		if(theide)
 			for(const AnnotationItem& m : theide->editor.annotations) {

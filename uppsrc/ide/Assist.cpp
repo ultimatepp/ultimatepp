@@ -670,7 +670,6 @@ int  AssistEditor::ToUtf8x(int line, int pos)
 int AssistEditor::FromUtf8x(int line, int pos)
 { // libclang treats utf-8 bytes as whole characters
 	if(line < GetLineCount() && GetLineLength(line) < 1000) {
-		bool isutf8 = false;
 		const String& h = GetUtf8Line(line);
 		if(pos <= h.GetCount())
 			for(const char ch : h)
@@ -684,7 +683,6 @@ void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
 	CloseAssist();
-	int q = GetCursor32();
 	assist_type.Clear();
 	assist_item.Clear();
 	include_assist = false;
@@ -965,7 +963,7 @@ void AssistEditor::AssistInsert()
 				ch++;
 			Remove(cl, ch - cl);
 			SetCursor(cl);
-			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
+			Paste(ToUnicode(txt, CHARSET_WIN1250));
 			if(param_count > 0) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);

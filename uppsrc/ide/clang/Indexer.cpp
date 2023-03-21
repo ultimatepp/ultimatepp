@@ -179,7 +179,6 @@ void Indexer::IndexerThread()
 		Clang clang;
 		clang_CXIndex_setGlobalOptions(clang.index, CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
 		int tm0 = msecs();
-		bool was_job = false; // for diagnostics
 		++running_indexers;
 		while(!Thread::IsShutdownThreads()) {
 			Job job;
@@ -190,7 +189,6 @@ void Indexer::IndexerThread()
 					job = jobs[jobi++];
 				else
 					break;
-				was_job = true;
 			}
 			
 			if(Thread::IsShutdownThreads())

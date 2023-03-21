@@ -5,6 +5,7 @@
 
 //#BLITZ_PROHIBIT
 
+#ifdef PLATFORM_WIN32
 const char umacros[] =
 R"(#define CHECK_GRID(g) 
 #define CHECK_MATRIX(g) 
@@ -815,6 +816,8 @@ R"(#define CHECK_GRID(g)
 #define _pascal __attribute__((__pascal__))
 #define _stdcall __attribute__((__stdcall__))
 #define _thiscall __attribute__((__thiscall__)))";
+
+#endif
 
 String RedefineMacros()
 {
