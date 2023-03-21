@@ -119,6 +119,10 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 #ifdef DYNAMIC_LIBCLANG
 bool TryLoadLibClang()
 {
+#ifdef PLATFORM_MACOS
+	if(LoadLibClang("/Library/Developer/CommandLineTools/usr/lib"))
+		return true;
+#endif
 	String libdir = TrimBoth(Sys("llvm-config --libdir"));
 	int q = FindIndex(CommandLine(), "--clangdir");
 	if(q >= 0 && q + 1 < CommandLine().GetCount()) {
