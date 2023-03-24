@@ -341,7 +341,7 @@ void Navigator::Search()
 		m.pos.x = 0;
 	}
 	else
-	if(IsNull(s) && !sorting) {
+	if(IsNull(s)) {
 		Ide *theide = TheIde();
 		if(theide)
 			for(const AnnotationItem& m : theide->editor.annotations) {
@@ -396,6 +396,7 @@ void Navigator::Search()
 					m.id = SourcePath(wspc[i], p[j]);
 					m.pos = Point(0, 0);
 					m.nest = "<files>";
+					m.uname = ToUpper(p[j]);
 					nests.FindAdd(m.nest);
 				}
 			}
@@ -414,6 +415,11 @@ void Navigator::Search()
 		}
 		litem.Add(&n);
 	}
+	
+	if(sorting)
+		StableSort(litem, [=](const NavItem *a, const NavItem *b) {
+			return a->uname < b->uname;
+		});
 	
 	int lsc = list.GetScroll();
 	list.Clear();
