@@ -2017,9 +2017,6 @@ bool FileSel::Execute(int _mode) {
 			}
 		}
 	}
-	
-	DDUMP(force_ext);
-	DDUMP(allowed_ext);
 
 	FileUpdate();
 	Update();
