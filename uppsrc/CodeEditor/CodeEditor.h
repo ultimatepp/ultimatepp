@@ -221,7 +221,7 @@ protected:
 
 	virtual String  GetPasteText();
 	
-	TimeCallback delayed;
+	TimeCallback delayed, closetip;
 
 	EditorBar   bar;
 	Vector<int> line2;
@@ -379,6 +379,7 @@ protected:
 	bool   SearchProgress(int line);
 	bool   SearchCanceled();
 	void   EndSearchProgress();
+	bool   SyncCloseTip();
 
 	String GetRefreshInfo(int pos);
 

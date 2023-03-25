@@ -162,7 +162,6 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 {
 	PaintInfo pi = _pi;
 	int parti = 0;
-	int pos = 0;
 	RichPara::Number n;
 	while(rc.py < pi.bottom && parti < part.GetCount()) {
 		if(part[parti].Is<RichTable>()) {
@@ -202,7 +201,6 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 		pi.highlightpara -= l;
 		pi.sell -= l;
 		pi.selh -= l;
-		pos += l;
 		++parti;
 	}
 }

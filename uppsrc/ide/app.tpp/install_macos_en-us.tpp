@@ -6,21 +6,16 @@ topic "U++ macOS Installation";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; U`+`+ macOS installation&]
-[s3; U`+`+ for POSIX (OpenBSD, FreeBSD) comes as single sandboxed 
-archive. After downloading, you need to unpack this archive to 
-suitable location with&]
-[ {{10000G1@7 [s4; tar xf upp`-posix`-14411.tar.xz]}}&]
-[s3; (replace 14411 with the revision you have downloaded). Of course, 
-you can use your desktop environment desktop GUI utility as well.&]
-[s3; U`+`+ requires C`+`+ toolchain to build applications. You can 
-find a description how to install this toolchain e.g. [^http`:`/`/osxdaily`.com`/2014`/02`/12`/install`-command`-line`-tools`-mac`-os`-x`/^ h
-ere].&]
-[s3; Some other tools and libraries can be installed with [^https`:`/`/brew`.sh`/^ home
-brew]. Following packages are recommended (as in they might be 
-required in certain contexts):&]
-[s3;l128;i150;O0;%- gdb&]
-[s3;l128;i150;O0;%- openssl&]
-[s3;l128;i150;O0;%- libssh2&]
+[s3; After downloading the archive, unpack it to your home folder. 
+Inside there is a theide application. (You will probably be denied 
+running as it is from unrecognized source, you can override this 
+by using local menu Open when running it for the first time).&]
+[s3; U`+`+ requires C`+`+ toolchain to build applications. The installation 
+in recent MacOS versions is trivial: open terminal and type `"clang`" 
+`- macos will then install commandline tools required by U`+`+.&]
+[s3; Additionally, U`+`+ needs openssl library (and some packages 
+require ssh2 as well). Install with [^https`:`/`/brew`.sh`/^ homebrew]:&]
+[s3; [C brew install openssl libssh2]&]
 [s3; As long as you keep [*/ theide ](or [*/ umk]) just in the original 
 directory, nothing will be written outside of it `- its `"sandboxed`". 
 If you get bored with U`+`+ and need to clean the space, simply 

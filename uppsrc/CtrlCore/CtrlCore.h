@@ -82,7 +82,7 @@ typedef ImageDraw SystemImageDraw;
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
-enum CtrlCoreFlags {
+enum CtrlCoreFlags : dword {
 	K_DELTA        = 0x200000,
 	K_CHAR_LIM     = 0x200000, // lower that this, key in Key is Unicode codepoint
 
@@ -820,6 +820,8 @@ protected:
 	static void     TimerProc(dword time);
 
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
+
+	Rect StdGetWorkArea() const;
 			
 	enum {
 		ATTR_LAYOUT_ID,

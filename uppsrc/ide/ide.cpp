@@ -633,7 +633,6 @@ struct IndexerProgress : ImageMaker {
 void Ide::SyncClang()
 {
 	Vector<Color> a;
-	Color display_ink = Null;
 	int phase = msecs() / 30; // TODO: Use phase
 	auto AnimColor = [](int animator) {
 		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);

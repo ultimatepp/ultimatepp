@@ -28,6 +28,8 @@ Image Hot3(const Image& m); // Adds resizing hotspots at 1/3
 Image ChHot(const Image& m, int n = 2); // Adds resizing hotspots DPI(n)
 Color AvgColor(const Image& m, const Rect& rr);
 Color AvgColor(const Image& m, int margin = 0);
+Color AvgColor(const Image& m, RGBA bg, const Rect& rr);
+Color AvgColor(const Image& m, RGBA bg, int margin = 0);
 
 Color GetInk(const Image& m); // the color that is most different from AvgColor
 int   GetRoundness(const Image& m);

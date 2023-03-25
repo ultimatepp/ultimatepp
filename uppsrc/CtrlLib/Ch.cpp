@@ -308,6 +308,32 @@ Image ChHot(const Image& m, int n)
 	return WithHotSpots(m, DPI(n), DPI(n), 0, 0);
 }
 
+Color AvgColor(const Image& m, RGBA bg, const Rect& rr)
+{
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	int n = 0;
+	for(int y = rr.top; y < rr.bottom; y++)
+		for(int x = rr.left; x < rr.right; x++) {
+			RGBA c = m[y][x];
+			AlphaBlend(&c, &bg, 1);
+			Unmultiply(&c, &c, 1);
+			if(c.a > 20) {
+				r += c.r;
+				g += c.g;
+				b += c.b;
+				n++;
+			}
+		}
+	return n ? Color(r / n, g / n, b / n) : SWhite();
+}
+
+Color AvgColor(const Image& m, RGBA bg, int margin)
+{
+	return AvgColor(m, Rect(m.GetSize()).Deflated(margin));
+}
+
 Color AvgColor(const Image& m, const Rect& rr)
 {
 	int r = 0;

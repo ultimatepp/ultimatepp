@@ -50,5 +50,6 @@ private:
 };
 
 #ifdef PLATFORM_POSIX
-void RemoveConsoleScripts();
+void   RemoveConsoleScripts();
+String ResolveHostConsole();
 #endif

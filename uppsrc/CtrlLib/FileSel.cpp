@@ -1037,7 +1037,12 @@ void FileSel::AddName(Vector<String>& fn, String& f) {
 		if(f[0] == '\"' && f.GetCount() > 2)
 			f = f.Mid(1, f.GetCount() - 2);
 		int q = f.ReverseFind('.');
-		if(q < 0 || Filter(f.Mid(q + 1), // "(file.xxx)" should add extension too, allow just some
+		String typed_ext; // typed by user
+		if(q >= 0)
+			typed_ext = f.Mid(q + 1);
+		if(q < 0 || // no extension
+		   force_ext && allowed_ext.Find(typed_ext) < 0 ||
+		   Filter(f.Mid(q + 1), // "(file.xxx)" should add extension too, allow just some
 		                   [](int c) { return IsAlNum(c) || findarg(c, '_', '-') >= 0 ? 0 : c; }
 		   ).GetCount()) {
 			String t = GetMask();
@@ -1991,6 +1996,28 @@ bool FileSel::Execute(int _mode) {
 	}
 	if(default_name.GetCount() && mode == SAVEAS)
 		file <<= default_name;
+
+	force_ext = true;
+	allowed_ext.Clear();
+	for(String mm : mask) {
+		if(!force_ext)
+			break;
+		for(String m : Split(mm, ' ')) {
+			if(!force_ext)
+				break;
+			int q = m.Find('.');
+			if(q < 0)
+				force_ext = false;
+			else {
+				m = m.Mid(q + 1);
+				if(m.Find('*') >= 0 || m.Find('?') >= 0)
+					force_ext = false;
+				else
+					allowed_ext.FindAdd(m);
+			}
+		}
+	}
+
 	FileUpdate();
 	Update();
 	int c = TopWindow::Run(appmodal);

@@ -74,7 +74,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
 		Rect r, wr;
-		wr = Ctrl::GetWorkArea();
+		wr = Ctrl::GetPrimaryWorkArea();
 		Rect fm = GetFrameMargins();
 		if(center == 1)
 			r = owner->GetRect();

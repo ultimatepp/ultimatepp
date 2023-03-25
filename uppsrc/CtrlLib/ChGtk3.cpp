@@ -333,6 +333,7 @@ void ChHostSkin()
 	SOImages(CtrlsImg::I_O2, GTK_STATE_FLAG_INCONSISTENT);
 
 	CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
+/*
 	{
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;
@@ -377,6 +378,7 @@ void ChHostSkin()
 		s.topitem[2] = Hot3(CairoImage(32, 16));
 		s.topitemtext[2] = GetInkColor();
 	}
+*/
 	CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
 	CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
 	CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
@@ -526,6 +528,10 @@ void ChHostSkin()
 		s.topitem[0] = Null;
 		s.topitem[2] = Hot3(CairoImage(32, 16));
 		s.topitemtext[2] = GetInkColor();
+		if(Diff(AvgColor(s.topitem[2], SColorFace(), 0), s.topitemtext[2]) < 100) {
+			s.topitem[2] = SColorHighlight();
+			s.topitemtext[2] = SColorHighlightText();
+		}
 	}
 
 	SwapOKCancel_Write(Environment().Get("KDE_FULL_SESSION", String()) != "true");

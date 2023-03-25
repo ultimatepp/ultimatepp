@@ -518,7 +518,6 @@ void ReformatDlg::Set(Stream& in)
 	int ii = 0;
 	String master_id;
 	for(const ClangFormat& f : clang_format) {
-		int x = 0;
 		String id = f.id;
 		if(*id == ' ')
 			id = master_id + ":" + TrimBoth(id);

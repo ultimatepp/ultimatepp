@@ -47,7 +47,6 @@ void TextCompareCtrl::DoSelection(int y, bool shift)
 
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 {
-	Size sz = GetSize();
 	DoSelection(pt.y, keyflags & K_SHIFT);
 	SetCapture();
 	SetWantFocus();

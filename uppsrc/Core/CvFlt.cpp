@@ -85,9 +85,9 @@ void sF128::MulPow10(int powi)
 	LTIMING("MulPow10");
 	ASSERT(l == 0); // we can only do F64xF128 multiplication
 	const auto& pow10 = ipow10table[powi + 350];
-	uint64 hh, midh, midl;
+	uint64 hh, midh;
 	l = mul64(h, pow10.h, hh);
-	midl = mul64(h, pow10.l, midh);
+	mul64(h, pow10.l, midh);
 	h = hh + addc64(l, midh, 0);
 	exponent += pow10.exponent;
 	if((h & ((uint64)1 << 63)) == 0) { // renormalize

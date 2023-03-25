@@ -240,7 +240,6 @@ RichCaret RichTable::GetCaret(int pos, RichContext rc) const
 	ASSERT(pos >= 0);
 	int nx = format.column.GetCount();
 	int ny = cell.GetCount();
-	int ti = 0;
 	const TabLayout& tab = Realize(rc);
 	for(int i = 0; i < ny; i++) {
 		const PaintRow& pr = tab[i];
@@ -252,7 +251,6 @@ RichCaret RichTable::GetCaret(int pos, RichContext rc) const
 				int l = cl.text.GetLength() + 1;
 				if(pos < l)
 					return cl.GetCaret(pos, pr[j].MakeRichContext(MakeRichContext(rc, pr.py)), pyy);
-				ti += cl.text.GetTableCount();
 				pos -= l;
 			}
 		}

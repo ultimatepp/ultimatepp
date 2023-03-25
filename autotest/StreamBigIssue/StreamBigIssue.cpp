@@ -7,8 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 	int tm0 = msecs();
-	int n = 0;
-	for(;;) {
+	for(int n = 0; n < 10; n++) {
 		String data;
 		for(int i = 0; i < 40000000; i++)
 			data.Cat(Random(96) + 32);
@@ -67,7 +66,7 @@ CONSOLE_APP_MAIN
 			data = "Something smaller";
 		}
 		
-		DLOG(n++);
+		DLOG(n);
 	}
 
 	LOG("============= OK, " << (msecs() - tm0) / 1000.0 << " seconds");

@@ -795,6 +795,7 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	LoadFromGlobal(dlg, c);
 	dlg.SyncBrief();
 	dlg.SyncFilter();
+	dlg.CenterScreen();
 	String b = dlg.Run(nest, startwith);
 	StoreToGlobal(dlg, c);
 	return b;

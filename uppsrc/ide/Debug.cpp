@@ -196,10 +196,13 @@ void Ide::LaunchTerminal(const char *dir)
 	;
 	h.Launch("/usr/bin/open " + script);
 #else
+	ResolveHostConsole();
 	String c = HostConsole;
-	int q = c.Find(' ');
+	int q = c.ReverseFind(' ');
 	if(q >= 0)
 		c.Trim(q);
+	if(c.Find("io.elementary.terminal") >= 0) // elementary seems to ignore current dir
+		c <<  " -w \"" << dir << "\"";
 	h.Launch(Nvl(c, "/usr/bin/xterm"), false);
 #endif
 }

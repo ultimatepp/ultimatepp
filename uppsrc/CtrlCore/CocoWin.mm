@@ -35,14 +35,14 @@ static Vector<Ptr<Ctrl>> mmtopctrl; // should work without Ptr, but let us be de
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
-	return top && top->coco ? top->coco->owner : NULL;
+	return top && GetTop()->coco ? GetTop()->coco->owner : NULL;
 }
 
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
 	for(Ctrl *p : mmtopctrl)
-		if(p && p->top && p->top->coco && p->top->coco->window.keyWindow)
+		if(p && p->top && p->GetTop()->coco && p->GetTop()->coco->window.keyWindow)
 			return p;
 	return lastActive;
 }
@@ -50,12 +50,12 @@ Ctrl *Ctrl::GetActiveCtrl()
 bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
-	if(top && top->coco) {
-		[top->coco->window orderFront:top->coco->window];
-		if([top->coco->window canBecomeKeyWindow])
-			[top->coco->window makeKeyWindow];
-		if(dynamic_cast<TopWindow *>(this) && [top->coco->window canBecomeMainWindow])
-			[top->coco->window makeMainWindow];
+	if(top && GetTop()->coco) {
+		[GetTop()->coco->window orderFront:GetTop()->coco->window];
+		if([GetTop()->coco->window canBecomeKeyWindow])
+			[GetTop()->coco->window makeKeyWindow];
+		if(dynamic_cast<TopWindow *>(this) && [GetTop()->coco->window canBecomeMainWindow])
+			[GetTop()->coco->window makeMainWindow];
 	}
 	return true;
 }
@@ -89,12 +89,12 @@ NSRect DesktopRect(const Rect& r)
 
 void *Ctrl::GetNSWindow() const
 {
-	return top && top->coco ? top->coco->window : NULL;
+	return top && GetTop()->coco ? GetTop()->coco->window : NULL;
 }
 
 void *Ctrl::GetNSView() const
 {
-	return top && top->coco ? top->coco->view : NULL;
+	return top && GetTop()->coco ? GetTop()->coco->view : NULL;
 }
 
 void Ctrl::DoCancelPreedit()
@@ -109,16 +109,16 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	if(owner)
 		owner = owner->GetTopCtrl();
 
-	top = new Top;
-	top->coco = new CocoTop;
-	top->coco->owner = owner;
+	SetTop(new Top);
+	GetTop()->coco = new CocoTop;
+	GetTop()->coco->owner = owner;
 	
 	NSRect frame = DesktopRect(GetRect());
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
-	top->coco->window = window;
-	if(owner && owner->top && owner->top->coco)
-		[owner->top->coco->window addChildWindow:window ordered:NSWindowAbove];
+	GetTop()->coco->window = window;
+	if(owner && owner->top && owner->GetTop()->coco)
+		[owner->GetTop()->coco->window addChildWindow:window ordered:NSWindowAbove];
 
 	window->ctrl = this;
 	window->active = active;
@@ -128,7 +128,7 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
 	view->ctrl = this;
-	top->coco->view = view;
+	GetTop()->coco->view = view;
 	[window setContentView:view];
 	[window setDelegate:view];
 	[window setAcceptsMouseMovedEvents:YES];
@@ -154,10 +154,9 @@ void Ctrl::WndDestroy()
 		return;
 	bool focus = HasFocusDeep();
 	Ptr<Ctrl> owner = GetOwner();
-	[top->coco->window close];
-	delete top->coco;
-	delete top;
-	top = NULL;
+	[GetTop()->coco->window close];
+	delete GetTop()->coco;
+	DeleteTop();
 	popup = isopen = false;
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
@@ -179,7 +178,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	LLOG("Invalidate Rect " << r);
 	if(top)
-		[top->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r.Inflated(10, 10))];
+		[GetTop()->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r.Inflated(10, 10))];
 }
 
 void Ctrl::WndScrollView(const Rect& r, int dx, int dy)
@@ -250,7 +249,7 @@ void TopWindow::SyncTitle()
 	if(top) {
 		LLOG("SyncTitle " << title);
 		CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, (const char *)~title.ToString(), kCFStringEncodingUTF8);
-		[top->coco->window setTitle:(NSString *)~s];
+		[GetTop()->coco->window setTitle:(NSString *)~s];
 	}
 }
 
@@ -277,7 +276,7 @@ void TopWindow::SyncCaption()
 	GuiLock __;
 	if(top) {
 		SyncTitle();
-		NSWindow *window = top->coco->window;
+		NSWindow *window = GetTop()->coco->window;
 		[[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:!minimizebox];
 		[[window standardWindowButton:NSWindowZoomButton] setHidden:!maximizebox];
 	}
@@ -295,7 +294,7 @@ void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
 	if(top) {
-		NSWindow *window = top->coco->window;
+		NSWindow *window = GetTop()->coco->window;
 		dword style = GetMMStyle();
 		Size sz = GetRect().GetSize();
 		[window setMinSize:MMFrameSize(sizeable ? GetMinSize() : sz, style)];
@@ -314,8 +313,8 @@ void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
 	if(top)
-		[top->coco->window setFrame:
-			[top->coco->window frameRectForContentRect:DesktopRect(rect)]
+		[GetTop()->coco->window setFrame:
+			[GetTop()->coco->window frameRectForContentRect:DesktopRect(rect)]
 			display:YES];
 }
 
@@ -333,37 +332,37 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 void TopWindow::Maximize(bool effect)
 {
 	state = MAXIMIZED;
-	if(top && top->coco && top->coco->window && !top->coco->window.zoomed) {
+	if(top && GetTop()->coco && GetTop()->coco->window && !GetTop()->coco->window.zoomed) {
 		if(effect)
-			[top->coco->window performZoom:top->coco->window];
+			[GetTop()->coco->window performZoom:GetTop()->coco->window];
 		else
-			[top->coco->window zoom:top->coco->window];
+			[GetTop()->coco->window zoom:GetTop()->coco->window];
 	}
 }
 
 void TopWindow::Minimize(bool effect)
 {
 	state = MINIMIZED;
-	if(top && top->coco && top->coco->window && !top->coco->window.miniaturized) {
+	if(top && GetTop()->coco && GetTop()->coco->window && !GetTop()->coco->window.miniaturized) {
 		if(effect)
-			[top->coco->window performMiniaturize:top->coco->window];
+			[GetTop()->coco->window performMiniaturize:GetTop()->coco->window];
 		else
-			[top->coco->window miniaturize:top->coco->window];
+			[GetTop()->coco->window miniaturize:GetTop()->coco->window];
 	}
 }
 
 void TopWindow::Overlap(bool effect)
 {
 	state = OVERLAPPED;
-	if(top && top->coco && top->coco->window && top->coco->window.zoomed)
-		[top->coco->window zoom:top->coco->window];
-	if(top && top->coco && top->coco->window && top->coco->window.miniaturized)
-		[top->coco->window deminiaturize:top->coco->window];
+	if(top && GetTop()->coco && GetTop()->coco->window && GetTop()->coco->window.zoomed)
+		[GetTop()->coco->window zoom:GetTop()->coco->window];
+	if(top && GetTop()->coco && GetTop()->coco->window && GetTop()->coco->window.miniaturized)
+		[GetTop()->coco->window deminiaturize:GetTop()->coco->window];
 }
 
 bool Ctrl::IsCocoActive() const
 {
-	return top && top->coco && top->coco->window && top->coco->window->active;
+	return top && GetTop()->coco && GetTop()->coco->window && GetTop()->coco->window->active;
 }
 
 }

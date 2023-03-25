@@ -58,7 +58,6 @@ void  RichTextView::Paint(Draw& w)
 	pi.zoom = GetZoom();
 	pi.textcolor = textcolor;
 	int q = sb * pi.zoom;
-	scroller.Set(q);
 	w.Offset(0, -q);
 	SimplePageDraw pw(w);
 	pi.top = PageY(0, sb);
@@ -317,7 +316,7 @@ void  RichTextView::SetData(const Value& v)
 
 void  RichTextView::Scroll()
 {
-	scroller.Scroll(*this, Rect(GetSize()).Deflated(margin), sb * GetZoom());
+	Refresh();
 }
 
 bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool find_last)

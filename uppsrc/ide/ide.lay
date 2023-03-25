@@ -920,3 +920,14 @@ LAYOUT(ReformatLayout, 1024, 724)
 	ITEM(Upp::Option, prefer_clang_format, SetLabel(t_("Reformat without options should prefer .clang-format")).LeftPosZ(4, 360).TopPosZ(28, 20))
 END_LAYOUT
 
+LAYOUT(InsertImageLayout, 1016, 480)
+	ITEM(Upp::ArrayCtrl, nest, LeftPosZ(4, 150).VSizePosZ(4, 40))
+	ITEM(Upp::Option, noupp, SetLabel(t_("Without Upp::")).LeftPosZ(428, 96).TopPosZ(448, 24))
+	ITEM(Upp::Option, index, SetLabel(t_("Index")).LeftPosZ(536, 56).TopPosZ(448, 24))
+	ITEM(Upp::ColumnList, list, HSizePosZ(160, 4).VSizePosZ(4, 40))
+	ITEM(Upp::Button, ok, SetLabel(t_("Insert")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::EditString, search, LeftPosZ(160, 176).BottomPosZ(11, 19))
+	ITEM(Upp::Label, warning_lbl, SetLabel(t_("Indexer is running - the list can be incomplete")).SetFont(Upp::StdFont().Bold().Italic()).SetInk(Upp::SRed).LeftPosZ(600, 268).TopPosZ(448, 24))
+END_LAYOUT
+

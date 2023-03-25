@@ -156,7 +156,7 @@ void TopWindow::SetupRect(Ctrl *owner)
 		r.SetSize(max(r.GetSize(), GetMinSize()));
 		SetRect(r);
 		if(r.left == 0 && r.top == 0 && center == 1) {
-			Rect area = owner ? owner->GetWorkArea() : Ctrl::GetWorkArea();
+			Rect area = owner ? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
 			SetRect(area.CenterRect(min(area.Size(), r.Size())));
 		}
 	}

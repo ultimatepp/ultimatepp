@@ -23,6 +23,10 @@ bool LoadLibClang0(const char *dir, const char *file)
 
 bool LoadLibClang(const char *dir)
 {
+#ifdef PLATFORM_MACOS0 // it does not seem to work for some reason, block it for now
+	if(LoadLibClang0(dir, "libclang.dylib"))
+		return true;
+#endif
 	if(LoadLibClang0(dir, "libclang.so"))
 		return true;
 	for(int i = 0; i < 20; i++)

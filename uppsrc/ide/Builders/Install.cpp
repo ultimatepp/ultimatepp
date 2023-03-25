@@ -156,8 +156,8 @@ void CreateBuildMethods()
 	auto Fix = [=](const char *s) {
 		String r = s;
 		if(openbsd) {
-			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/include\";");
-			r.Replace("LIB = \"\";", "LIB = \"/usr/local/lib\";");
+			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/opt/openssl/include\";");
+			r.Replace("LIB = \"\";", "LIB = \"/usr/local/opt/openssl/lib\";");
 		}
 		return r;
 	};
