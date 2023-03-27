@@ -8,12 +8,15 @@ struct VirtualMethod : AnnotationItem {
 void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls,
                     Index<String>& visited, bool first)
 {
+	DDUMP(cls);
 	if(IsNull(cls) || visited.Find(cls) >= 0)
 		return;
 	visited.Add(cls);
+	DDUMP(visited);
 	for(const auto& f : ~CodeIndex()) // do base classes first
 		for(const AnnotationItem& m : f.value.items)
 			if(m.id == cls && IsStruct(m.kind)) {
+				DDUMP(m.bases);
 				// we cheat with With..<TopWindow> by splitting it to With... and TopWindow
 				for(String s : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
 					GatherVirtuals(virtuals, s, visited, false);
@@ -28,10 +31,10 @@ void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls
 					if(q >= 0)
 						virtuals[q].last_override = cls;
 					else
-					if(m.isvirtual && !m.definition) {
+					if(m.isvirtual) {
 						VirtualMethod& vm = virtuals.Add(signature);
 						(AnnotationItem&)vm = m;
-						vm.defined = cls;
+						vm.defined = vm.last_override = cls;
 					}
 				}
 			}
@@ -88,6 +91,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 	typedef VirtualsDlg CLASSNAME;
 
 	VirtualsDlg(const String& nest) {
+		DLOG("====================");
 		Index<String> done;
 		GatherVirtuals(virtuals, nest, done, true);
 		CtrlLayoutOKCancel(*this, "Virtual methods");
