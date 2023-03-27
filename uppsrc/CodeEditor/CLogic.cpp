@@ -279,7 +279,7 @@ bool CSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)
 
 bool CSyntax::CanAssist() const
 {
-	return !comment && !string && !linecomment;
+	return !comment && !string && !linecomment && IsNull(raw_string);
 }
 
 Vector<IfState> CSyntax::PickIfStack()
