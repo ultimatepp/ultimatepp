@@ -1,5 +1,7 @@
 #include "ide.h"
 
+VectorMap<String, String> git_branch_cache;
+
 void Ide::MakeTitle()
 {
 	String title;
@@ -44,6 +46,35 @@ void Ide::MakeTitle()
 	title << " { " << GetAssemblyId() << " }";
 	if(isscanning)
 		title << " (scanning files)";
+
+	String dir = GetFileFolder(editfile);
+	int q = git_branch_cache.Find(dir);
+	String branch;
+	if(q < 0) {
+		String git_dir = dir;
+		if(GetRepo(git_dir) == GIT_DIR) {
+			q = git_branch_cache.Find(git_dir);
+			if(q < 0) {
+				q = git_branch_cache.GetCount();
+				branch = GitCmd(git_dir, "branch --show");
+				int j = branch.Find('\n');
+				if(j >= 0)
+					branch.Trim(j);
+				git_branch_cache.Add(git_dir, branch);
+			}
+			branch = git_branch_cache[q];
+		}
+		q = git_branch_cache.Find(dir);
+		if(q < 0) {
+			q = git_branch_cache.GetCount();
+			git_branch_cache.Add(dir, branch);
+		}
+	}
+	branch = git_branch_cache[q];
+	
+	if(branch.GetCount())
+		title << " [ " << branch << " ] ";
+	
 	Title(title.ToWString());
 }
 
@@ -335,6 +366,8 @@ void Ide::Activate()
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
 	TopWindow::Activate();
+	git_branch_cache.Clear();
+	MakeTitle();
 }
 
 bool Ide::Key(dword key, int count)

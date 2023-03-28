@@ -2,198 +2,116 @@
 
 namespace Upp {
 	
-Point DisplayPopup::PopUp::Op(Point p)
-{
-	return p + GetScreenView().TopLeft() - ctrl->GetScreenView().TopLeft();
-}
-
-void DisplayPopup::PopUp::LeftDown(Point p, dword flags)
-{
-	if(ctrl) ctrl->LeftDown(Op(p), flags);
-}
-
-void DisplayPopup::PopUp::LeftDrag(Point p, dword flags)
-{
-	if(ctrl) ctrl->LeftDrag(Op(p), flags);
-}
-
-void DisplayPopup::PopUp::LeftDouble(Point p, dword flags)
-{
-	if(ctrl) ctrl->LeftDouble(Op(p), flags);
-}
-
-void DisplayPopup::PopUp::RightDown(Point p, dword flags)
-{
-	if(ctrl) ctrl->RightDown(Op(p), flags);
-}
-
-void DisplayPopup::PopUp::LeftUp(Point p, dword flags)
-{
-	if(ctrl) ctrl->LeftUp(Op(p), flags);
-}
-
-void DisplayPopup::PopUp::MouseWheel(Point p, int zdelta, dword flags)
-{
-	if(ctrl) ctrl->MouseWheel(Op(p), zdelta, flags);
-}
-
-void DisplayPopup::PopUp::MouseLeave()
-{
-	Cancel();
-}
-
-void DisplayPopup::PopUp::MouseMove(Point p, dword flags)
-{
-	p += GetScreenView().TopLeft();
-	if(!slim.Contains(p))
-		MouseLeave();
-}
-
-void DisplayPopup::PopUp::Paint(Draw& w)
+void DisplayPopup::Pop::PopCtrl::Paint(Draw& w)
 {
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
-	if(display) {
-		display->PaintBackground(w, r, value, ink, paper, style);
-		r.left += margin;
-		if(usedisplaystdsize)
-			r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
-		display->Paint(w, r, value, ink, paper, style);
+	if(!p) return;
+	if(p->display) {
+		p->display->PaintBackground(w, r, p->value, p->ink, p->paper, p->style);
+		r.left += p->margin;
+		if(p->usedisplaystdsize)
+			r.top += (r.Height() - p->display->GetStdSize(p->value).cy) / 2;
+		p->display->Paint(w, r, p->value, p->ink, p->paper, p->style);
 	}
 }
 
-Vector<DisplayPopup::PopUp *>& DisplayPopup::PopUp::all()
+Vector<DisplayPopup::Pop *>& DisplayPopup::Pop::all()
 {
-	static Vector<DisplayPopup::PopUp *> all;
+	static Vector<DisplayPopup::Pop *> all;
 	return all;
 }
 
-DisplayPopup::PopUp::PopUp()
+DisplayPopup::Pop::Pop()
 {
-	SetFrame(BlackFrame());
 	display = NULL;
 	paper = ink = Null;
 	style = 0;
-	item = slim = Null;
+	item = Null;
 	margin = 0;
-	ONCELOCK {
-		InstallStateHook(StateHook);
-		InstallMouseHook(MouseHook);
-	}
 	all().Add(this);
+	view.IgnoreMouse();
+	view.SetFrame(BlackFrame());
+	frame.IgnoreMouse();
+	frame.SetFrame(BlackFrame());
+	view.p = this;
+	frame.p = this;
 }
 
-DisplayPopup::PopUp::~PopUp()
+DisplayPopup::Pop::~Pop()
 {
+	view.p = nullptr;
+	frame.p = nullptr;
 	int q = FindIndex(all(), this);
 	if(q >= 0)
 		all().Remove(q);
 }
 
-void DisplayPopup::PopUp::Sync()
+void DisplayPopup::Pop::Sync()
 {
 	if(!IsMainThread()) {
-		PostCallback(PTEBACK(Sync));
+		Ptr<Pop> p;
+		PostCallback([=] { if(p) p->Sync(); });
 		return;
 	}
-	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !IsDragAndDropTarget()) {
+	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())) {
 		Ctrl *top = ctrl->GetTopCtrl();
 		if(top && top->HasFocusDeep()) {
 			Size sz = display->GetStdSize(value);
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
 				Rect vw = ctrl->GetScreenView();
-				slim = (item + vw.TopLeft()) & vw;
-				if(slim.Contains(GetMousePos())) {
-					Rect r = item;
-					r.right = max(r.right, r.left + sz.cx + 2 * margin);
+				Rect r = (item + vw.TopLeft()) & vw;
+				if(r.Contains(GetMousePos())) {
+					Rect wa = top->GetScreenRect();
+					r.right = min(wa.right, r.left + sz.cx + 2 * margin);
 					r.bottom = max(r.bottom, r.top + sz.cy);
 					r.Inflate(1, 1);
-					Rect v = ctrl->GetScreenView();
-					r.Offset(v.TopLeft());
-
-					Rect wa = GetWorkArea(r.BottomLeft());
-					Size sz = r.GetSize();
-					if(r.left < wa.left) {
-						r.left = wa.left;
-						r.right = min(wa.right, r.left + sz.cx);
-					}
-					else
-					if(r.right > wa.right) {
-						r.left = max(wa.left, wa.right - sz.cx);
-						r.right = wa.right;
-					}
-					if(r.top < wa.top) {
-						r.top = wa.top;
-						r.bottom = min(wa.bottom, wa.top + sz.cy);
-					}
-					else
-					if(r.bottom > wa.bottom) {
-						if(wa.bottom - r.top < r.top - wa.top) { // there is more space upside
-							r.bottom = item.bottom + v.top;
-							r.top = max(wa.top, r.bottom - sz.cy);
-						}
-						else
-							r.bottom = wa.bottom;
-					}
-					SetRect(r);
-					if(!IsOpen())
-						Ctrl::PopUp(ctrl, true, false, false);
+					view.SetRect(r - top->GetScreenView().TopLeft());
+					frame.SetFrameRect(r - wa.TopLeft());
+					if(!frame.GetParent())
+						*top << view << frame;
 					return;
 				}
 			}
 		}
 	}
-	if(IsOpen() && !GetDragAndDropSource())
-		WhenClose();
+	WhenClose();
 }
 
-void DisplayPopup::PopUp::SyncAll()
+DisplayPopup::DisplayPopup()
 {
-	int n = 0;
-	for(DisplayPopup::PopUp *p : all())
-		if(p->ctrl && p->ctrl->IsOpen()) {
+	ONCELOCK {
+		Ctrl::InstallStateHook(StateHook);
+		Ctrl::InstallMouseHook(MouseHook);
+	}
+}
+
+void DisplayPopup::SyncAll()
+{
+	for(DisplayPopup::Pop *p : Pop::all())
+		if(p->ctrl && p->ctrl->IsOpen())
 			p->Sync();
-			n++;
-		}
 }
 
-bool DisplayPopup::PopUp::StateHook(Ctrl *, int reason)
+bool DisplayPopup::StateHook(Ctrl *, int reason)
 {
-	if(reason == FOCUS)
+	if(reason == Ctrl::FOCUS)
 		SyncAll();
 	return false;
 }
 
 
-bool DisplayPopup::PopUp::MouseHook(Ctrl *, bool, int, Point, int, dword)
+bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
 {
 	SyncAll();
 	return false;
 }
 
-void DisplayPopup::PopUp::Cancel()
+void DisplayPopup::Pop::Set(Ctrl *_ctrl, const Rect& _item,
+                            const Value& _value, const Display *_display,
+                            Color _ink, Color _paper, dword _style, int _margin)
 {
-	if(GetDragAndDropSource())
-		return;
-	display = NULL;
-	Sync();
-}
-
-bool DisplayPopup::PopUp::IsOpen()
-{
-	return Ctrl::IsOpen();
-}
-
-bool DisplayPopup::PopUp::HasMouse()
-{
-	return Ctrl::HasMouse() || ctrl && ctrl->HasMouse();
-}
-
-void DisplayPopup::PopUp::Set(Ctrl *_ctrl, const Rect& _item,
-                       const Value& _value, const Display *_display,
-                       Color _ink, Color _paper, dword _style, int _margin)
-{
-	if(!GUI_ToolTips() || GetDragAndDropSource())
+	if(!GUI_ToolTips())
 		return;
 	if(item != _item || ctrl != _ctrl || value != _value || display != _display || ink != _ink ||
 	   paper != _paper || style != _style) {
@@ -205,13 +123,16 @@ void DisplayPopup::PopUp::Set(Ctrl *_ctrl, const Rect& _item,
 		paper = _paper;
 		style = _style;
 		margin = _margin;
-		if(ctrl)
-			Tip(ctrl->GetTip());
+		if(ctrl) {
+			String h = ctrl->GetTip();
+			view.Tip(h);
+			frame.Tip(h);
+		}
 		Sync();
-		Refresh();
+		view.Refresh();
+		frame.Refresh();
 	}
 }
-
 
 void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display, Color ink, Color paper, dword style, int margin)
 {
@@ -226,18 +147,20 @@ void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Displ
 
 void DisplayPopup::Cancel()
 {
-	if(popup)
-		popup->Cancel();
+	if(popup) {
+		popup->display = nullptr;
+		popup->Sync();
+	}
 }
 
 bool DisplayPopup::IsOpen()
 {
-	return popup && popup->IsOpen();
+	return popup && popup->view.GetParent();
 }
 
 bool DisplayPopup::HasMouse()
-{
-	return popup && popup->HasMouse();
+{ // TODO: remove
+	return popup && (popup->view.HasMouse() || popup->frame.HasMouse());
 }
 
 void DisplayPopup::UseDisplayStdSize()
@@ -250,7 +173,7 @@ void DisplayPopup::UseDisplayStdSize()
 DisplayPopup::~DisplayPopup()
 {
 	if(popup)
-		popup->Close();
+		popup.Clear();
 }
 
 }

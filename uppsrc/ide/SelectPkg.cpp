@@ -477,6 +477,7 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 		.Key(K_CTRL_ENTER);
 	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
+	bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
 	Vector<String> d = GetSvnDirs();
 	if(HasGit()) {
 		bar.Separator();
@@ -532,6 +533,53 @@ void SelectPackageDlg::OnBaseRemove()
 		else
 			SyncBase(next);
 	}
+}
+
+void SelectPackageDlg::RemoveInvalid()
+{
+	String vars = base.GetKey();
+	WithRemoveInvalidAssembliesLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Remove assemblies");
+	dlg.list.AddColumn("Remove")
+	        .Ctrls([=](int, One<Ctrl> &c) { c.Create<Option>().NoWantFocus(); });
+	dlg.list.AddColumn("Assembly");
+	dlg.list.AddColumn("Error", 7);
+	dlg.list.ColumnWidths("53 125 499");
+	Vector<String> oks;
+	for(int i = 0; i < base.GetCount(); i++) {
+		String vars = base.Get(i, 0);
+		VectorMap<String, String> var;
+		LoadVarFile(VarFilePath(vars), var);
+		Vector<String> dirs = Split(var.Get("UPP", ""), ';');
+		String missing;
+		for(String d : dirs)
+			if(!DirectoryExists(d)) {
+				MergeWith(missing, ", ", d);
+				break;
+			}
+		if(dirs.GetCount() == 0)
+			missing = "Empty";
+		if(missing.GetCount())
+			dlg.list.Add(true, vars, missing);
+		else
+			oks.Add(vars);
+	}
+	for(String s : oks)
+		dlg.list.Add(false, s);
+again:
+	if(dlg.Run() != IDOK)
+		return;
+	int n = 0;
+	for(int i = 0; i < dlg.list.GetCount(); i++)
+		if((bool)dlg.list.Get(i, 0))
+			n++;
+	if(n)
+		if(!PromptYesNo("Remove " + AsString(n) + " assemblies?"))
+			goto again;
+		for(int i = 0; i < dlg.list.GetCount(); i++)
+			if((bool)dlg.list.Get(i, 0))
+				DeleteFile(VarFilePath(~dlg.list.Get(i, 1)));
+	SyncBase(vars);
 }
 
 int DirSep(int c)

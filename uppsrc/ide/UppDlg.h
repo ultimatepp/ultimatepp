@@ -197,6 +197,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           OnBaseAdd();
 	void           OnBaseEdit();
 	void           OnBaseRemove();
+	void           RemoveInvalid();
 
 	void           OnOK();
 	void           OnCancel();

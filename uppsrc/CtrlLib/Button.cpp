@@ -692,7 +692,7 @@ void  Option::PerformAction() {
 Option& Option::Set(int b)
 {
 	if(b != option) {
-		option = b;
+		option = IsNull(b) ? Null : (bool)b;
 		Update();
 		RefreshPush();
 		AutoSync();

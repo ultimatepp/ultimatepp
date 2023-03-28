@@ -28,10 +28,10 @@ void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls
 					if(q >= 0)
 						virtuals[q].last_override = cls;
 					else
-					if(m.isvirtual && !m.definition) {
+					if(m.isvirtual) {
 						VirtualMethod& vm = virtuals.Add(signature);
 						(AnnotationItem&)vm = m;
-						vm.defined = cls;
+						vm.defined = vm.last_override = cls;
 					}
 				}
 			}
