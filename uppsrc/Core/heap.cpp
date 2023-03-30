@@ -37,7 +37,7 @@ const char *asString(int i)
 	static thread_local char h[4][1024];
 	static thread_local int ii;
 	ii = (ii + 1) & 3;
-	sprintf(h[ii], "%d", i);
+	snprintf(h[ii], 1024, "%d", i);
 	return h[ii];
 }
 
@@ -46,7 +46,7 @@ const char *asString(void *ptr)
 	static thread_local char h[4][1024];
 	static thread_local int ii;
 	ii = (ii + 1) & 3;
-	sprintf(h[ii], "%p", ptr);
+	snprintf(h[ii], 1024, "%p", ptr);
 	return h[ii];
 }
 
@@ -133,7 +133,7 @@ int Heap::CheckFree(FreeLink *l, int k, bool pg)
 	Page *page = GetPage(l);
 
 	if(l && page->klass != k) {
-		sprintf(h, "Invalid freelist block at 0x%p sz: %d (klass mismatch)", l, Ksz(k));
+		snprintf(h, 200, "Invalid freelist block at 0x%p sz: %d (klass mismatch)", l, Ksz(k));
 		Panic(h);
 	}
 	
@@ -141,15 +141,15 @@ int Heap::CheckFree(FreeLink *l, int k, bool pg)
 		if(l->next) {
 			Page *lp = GetPage(l->next);
 			if(pg && lp != page) {
-				sprintf(h, "Invalid freelist block at 0x%p sz: %d (out of page) (-> 0x%p)", l, Ksz(k), l->next);
+				snprintf(h, 200, "Invalid freelist block at 0x%p sz: %d (out of page) (-> 0x%p)", l, Ksz(k), l->next);
 				Panic(h);
 			}
 			if((4096 - ((uintptr_t)(l->next) & (uintptr_t)4095)) % Ksz(k) != 0) {
-				sprintf(h, "Invalid freelist block at 0x%p sz: %d (invalid address)", l, Ksz(k));
+				snprintf(h, 200, "Invalid freelist block at 0x%p sz: %d (invalid address)", l, Ksz(k));
 				Panic(h);
 			}
 			if(lp->klass != k) {
-				sprintf(h, "Invalid freelist block at 0x%p sz: %d (next klass mismatch)", l, Ksz(k));
+				snprintf(h, 200, "Invalid freelist block at 0x%p sz: %d (next klass mismatch)", l, Ksz(k));
 				Panic(h);
 			}
 		}

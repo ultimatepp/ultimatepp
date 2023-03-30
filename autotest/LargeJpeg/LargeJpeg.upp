@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/jpg;
+
+file
+	LargeJpeg.cpp;
+
+mainconfig
+	"" = "";
+

@@ -76,7 +76,7 @@ void LogOut::Create(bool append)
 			if(rot == 0)
 				strcpy(current, filepath);
 			else
-				sprintf(current, rot > 1 && (options & LOG_ROTATE_GZIP) ? "%s.%d.gz" : "%s.%d",
+				snprintf(current, 512, rot > 1 && (options & LOG_ROTATE_GZIP) ? "%s.%d.gz" : "%s.%d",
 				        filepath, rot);
 			if(FileExists(current)) {
 				if(rot == rotn)
@@ -133,9 +133,9 @@ void LogOut::Create(bool append)
 #endif
 
 	char h[1200];
-	sprintf(h, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
-	           FromSysChrSet(exe),
-	           t.day, t.month, t.year, t.hour, t.minute, t.second, user);
+	snprintf(h, 1200, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
+	         FromSysChrSet(exe),
+	         t.day, t.month, t.year, t.hour, t.minute, t.second, user);
 #ifdef PLATFORM_WIN32
 	dword n;
 	WriteFile(hfile, h, (dword)strlen(h), &n, NULL);
@@ -149,7 +149,7 @@ void LogOut::Create(bool append)
 		write(hfile, h, strlen(h))
 	);
 	if(part) {
-		sprintf(h, ", #%d", part);
+		snprintf(h, 1200, ", #%d", part);
 		IGNORE_RESULT(
 			write(hfile, h, strlen(h))
 		);
@@ -179,13 +179,13 @@ void LogOut::Line(const char *s, int len, int depth)
 	
 	ASSERT(len < 600);
 
-	char h[600];
+	char h[1200]; // 2 * 600 to make snprintf easier
 	char *p = h;
 	int   ll = 0;
 	if(options & LOG_ELAPSED) {
 		int t = msecs();
 		int e = prev_msecs ? t - prev_msecs : 0;
-		ll = sprintf(p, "[+%6d ms] ", e);
+		ll = snprintf(p, 600, "[+%6d ms] ", e);
 		if(ll < 0)
 			return;
 		p += ll;
@@ -193,8 +193,8 @@ void LogOut::Line(const char *s, int len, int depth)
 	}
 	if((options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) && line_begin) {
 		Time t = (options & LOG_TIMESTAMP_UTC) ? GetUtcTime() : GetSysTime();
-		ll = sprintf(p, "%02d.%02d.%04d %02d:%02d:%02d ",
-		                t.day, t.month, t.year, t.hour, t.minute, t.second);
+		ll = snprintf(p, 600, "%02d.%02d.%04d %02d:%02d:%02d ",
+		              t.day, t.month, t.year, t.hour, t.minute, t.second);
 		if(ll < 0)
 			return;
 		p += ll;
