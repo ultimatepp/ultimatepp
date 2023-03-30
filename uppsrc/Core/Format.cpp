@@ -9,7 +9,7 @@ String  VFormat(const char *fmt, va_list ptr) {
 	int limit = 2 * (int)strlen(fmt) + 1024;
 	if(limit < 1500) {
 		char buffer[1500];
-		vsprintf(buffer, fmt, ptr);
+		vsnprintf(buffer, 1500, fmt, ptr);
 		va_end(ptr);
 		int len = (int)strlen(buffer);
 		ASSERT(len <= limit);
@@ -17,7 +17,7 @@ String  VFormat(const char *fmt, va_list ptr) {
 	}
 	else {
 		Buffer<char> buffer(limit);
-		vsprintf(buffer, fmt, ptr);
+		vsnprintf(buffer, 1500, fmt, ptr);
 		va_end(ptr);
 		int len = (int)strlen(buffer);
 		ASSERT(len <= limit);
@@ -497,7 +497,7 @@ String IntFormatter(const Formatting& f)
 		return AsString((int)f.arg);
 	StringBuffer q;
 	q.SetLength(1000);
-	q.SetLength(sprintf(q, '%' + f.format + f.id, (int)f.arg));
+	q.SetLength(snprintf(q, 1000, '%' + f.format + f.id, (int)f.arg));
 	return String(q);
 }
 
@@ -505,7 +505,7 @@ String Int64Formatter(const Formatting& f)
 {
 	StringBuffer q;
 	q.SetLength(1000);
-	q.SetLength(sprintf(q, '%' + f.format + f.id, (int64)f.arg));
+	q.SetLength(snprintf(q, 1000, '%' + f.format + f.id, (int64)f.arg));
 	return String(q);
 }
 
@@ -686,19 +686,10 @@ String FloatFormatter(const Formatting& f)
 	double d = f.arg;
 	String fmt = '%' + f.format + f.id;
 	char h[256];
-#ifdef COMPILER_MSC
-	int n = _snprintf(h, 256, fmt, d);
-	if(n < 0)
-#else
 	int n = snprintf(h, 255, fmt, d);
-	if(n >= 254)
-#endif
-	{
-#ifdef COMPILER_MSC
-		n = _scprintf(fmt, d);
-#endif
+	if(n >= 254) {
 		Buffer<char> ah(n + 1);
-		sprintf(ah, fmt, d);
+		snprintf(ah, n + 1, fmt, d);
 		sFixPoint(ah);
 		return String(ah, n);
 	}

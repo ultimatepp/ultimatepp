@@ -174,13 +174,17 @@ bool RichEdit::Key(dword key, int count)
 			break;
 		}
 	default:
-		if(key >= K_ALT_0 && key <= K_ALT_9) {
-			ApplyStyleKey(key - K_ALT_0);
-			return true;
-		}
-		if(key >= (K_SHIFT|K_ALT_0) && key <= (K_SHIFT|K_ALT_9)) {
-			ApplyStyleKey(key - (K_SHIFT|K_ALT_0) + 10);
-			return true;
+		static int altkeys[10] = { K_ALT_0, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,
+		                           K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9 };
+		for(int i = 0; i < 10; i++) {
+			if(key == altkeys[i]) {
+				ApplyStyleKey(i);
+				break;
+			}
+			if(key == (K_SHIFT|altkeys[i])) {
+				ApplyStyleKey(i);
+				break;
+			}
 		}
 		if(key == K_SHIFT_SPACE)
 			key = ' ';
