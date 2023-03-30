@@ -79,7 +79,7 @@ struct alignas(16) DbgBlkHeader {
 
 static const char *DbgFormat(char *b, DbgBlkHeader *p)
 {
-	sprintf(b, "--memory-breakpoint__ %u ", (unsigned int)~(p->serial ^ (uintptr_t)p));
+	snprintf(b, 100, "--memory-breakpoint__ %u ", (unsigned int)~(p->serial ^ (uintptr_t)p));
 	return b;
 }
 

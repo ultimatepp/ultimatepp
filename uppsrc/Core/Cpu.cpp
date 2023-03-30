@@ -7,9 +7,19 @@
 #ifdef PLATFORM_FREEBSD
 #include <sys/vmmeter.h>
 #endif
+
 #ifdef PLATFORM_MACOS
 #include <mach/mach.h>
 #include <mach/vm_statistics.h>
+#endif
+
+#ifdef PLATFORM_POSIX
+#ifdef PLATFORM_BSD
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#else
+#include <sys/sysinfo.h>
+#endif
 #endif
 
 namespace Upp {
@@ -62,15 +72,6 @@ bool CpuSSE2()       { sCheckCPU(); return sHasSSE2; }
 bool CpuSSE3()       { sCheckCPU(); return sHasSSE3; }
 bool CpuAVX()        { sCheckCPU(); return sHasAVX; }
 bool CpuHypervisor() { sCheckCPU(); return sHypervisor; }
-
-#ifdef PLATFORM_POSIX
-#ifdef PLATFORM_BSD
-#include <sys/param.h>
-#include <sys/sysctl.h>
-#else
-#include <sys/sysinfo.h>
-#endif
-#endif
 
 int CPU_Cores()
 {

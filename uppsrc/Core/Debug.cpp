@@ -13,7 +13,7 @@ void __LOGF__(const char *fmt, ...) {
 	char buffer[1024];
 	va_list argptr;
 	va_start(argptr, fmt);
-	vsprintf(buffer, fmt, argptr);
+	vsnprintf(buffer, 1024, fmt, argptr);
 	va_end(argptr);
 	VppLog().Put(buffer);
 }
@@ -134,20 +134,20 @@ void  HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize) {
 		if(adr) {
 		#ifdef CPU_64
 			uint64 aa = a + (uint64)ptr;
-			sprintf(h, "%+6d 0x%08X%08X ", a, (int)(aa >> 32), (int)aa);
+			snprintf(h, 256, "%+6d 0x%08X%08X ", a, (int)(aa >> 32), (int)aa);
 			s.Put(h);
 		#else
-			sprintf(h, "%+6d 0x%08X ", a, int(a + dword(ptr)));
+			snprintf(h, 256, "%+6d 0x%08X ", a, int(a + dword(ptr)));
 			s.Put(h);
 		#endif
 		}
 		else {
-			sprintf(h, "%+6d ", a);
+			snprintf(h, 256, "%+6d ", a);
 			s.Put(h);
 		}
 		for(b = 0; b < 16; b++)
 			if(a + b < size) {
-				sprintf(h, "%02X ", q[a + b]);
+				snprintf(h, 256, "%02X ", q[a + b]);
 				s.Put(h);
 			}
 			else
@@ -167,7 +167,7 @@ void  HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize) {
 
 void  HexDump(Stream& s, const void *ptr, int size, int maxsize) {
 	char h[256];
-	sprintf(h, "Memory at 0x%p, size 0x%X = %d\n", ptr, size, size);
+	snprintf(h, 256, "Memory at 0x%p, size 0x%X = %d\n", ptr, size, size);
 	s.Put(h);
 #ifdef PLATFORM_WIN32
 	if(IsBadReadPtr(ptr, size)) {
