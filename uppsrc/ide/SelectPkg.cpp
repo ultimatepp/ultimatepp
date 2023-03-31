@@ -17,6 +17,11 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
 	menu.Add(b, "Delete package..", [=] { DeletePackage(); });
 	menu.Add(b, "Change description..", [=] { ChangeDescription(); });
+	if(b) {
+		menu.Separator();
+		String dir = GetFileFolder(PackagePath(GetCurrentName()));
+		menu.Add(b, "Terminal at " + dir, [=] { TheIde()->LaunchTerminal(dir); });
+	}
 }
 
 bool RenamePackageFs(const String& upp, const String& npf, const String& nupp, bool copy)
@@ -440,7 +445,7 @@ void SelectPackageDlg::OnNew() {
 	StoreToGlobal(dlg, "NewPackage");
 }
 
-Vector<String> SelectPackageDlg::GetSvnDirs()
+Vector<String> SelectPackageDlg::GetRepoDirs()
 {
 	Vector<String> r;
 	Vector<String> dirs = SplitDirs(GetVar("UPP"));
@@ -452,15 +457,15 @@ Vector<String> SelectPackageDlg::GetSvnDirs()
 	return r;
 }
 
-void SelectPackageDlg::SyncSvnDir(const String& dir)
+void SelectPackageDlg::SyncRepoDir(const String& dir)
 {
 	RepoSyncDirs(Vector<String>() << dir);
 	Load();
 }
 
-void SelectPackageDlg::SyncSvnDirs()
+void SelectPackageDlg::SyncRepoDirs()
 {
-	RepoSyncDirs(GetSvnDirs());
+	RepoSyncDirs(GetRepoDirs());
 	Load();
 }
 
@@ -478,7 +483,13 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
 	bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
-	Vector<String> d = GetSvnDirs();
+	Vector<String> dirs = SplitDirs(GetVar("UPP"));
+	if(dirs.GetCount()) {
+		bar.Separator();
+		for(String s : dirs)
+			bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
+	}
+	Vector<String> d = GetRepoDirs();
 	if(HasGit()) {
 		bar.Separator();
 		bar.Add("Clone U++ GitHub sources..", [=] {
@@ -490,8 +501,8 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	if(d.GetCount()) {
 		bar.Separator();
 		for(int i = 0; i < d.GetCount(); i++)
-			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
-		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
+			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
+		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
 	}
 }
 
