@@ -253,7 +253,7 @@ void Ide::SetErrorEditor()
 	SetErrorFiles(errorfiles);
 }
 
-void Ide::GoToError(const ErrorInfo& f)
+void Ide::GoToError(const ErrorInfo& f, bool error)
 {
 	if(IsNull(f.file))
 		return;
@@ -261,7 +261,8 @@ void Ide::GoToError(const ErrorInfo& f)
 	DoEditAsText(file);
 	EditFile(file);
 	int lp = max(f.linepos - 1, 0);
-	int pos = editor.GetPos(editor.GetLineNo(f.lineno - 1), lp);
+	int l = f.lineno - 1;
+	int pos = editor.GetPos(error ? editor.GetLineNo(l) : l, lp);
 	editor.SetCursor(pos);
 	if(*f.message == '\1') {
 		Vector<String> h = Split(~f.message + 1, '\1', false);
@@ -273,18 +274,18 @@ void Ide::GoToError(const ErrorInfo& f)
 	Sync();
 }
 
-void Ide::GoToError(ArrayCtrl& a)
+void Ide::GoToError(ArrayCtrl& a, bool error)
 {
 	Value v = a.Get("INFO");
 	if(v.Is<ErrorInfo>())
-		GoToError(ValueTo<ErrorInfo>(v));
+		GoToError(ValueTo<ErrorInfo>(v), error);
 }
 
 bool Ide::FindLineError(int l) {
 	ErrorInfo f;
 	FindLineErrorCache cache;
 	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
-		GoToError(f);
+		GoToError(f, true);
 		console.SetSelection(console.GetPos64(l), console.GetPos64(l + 1));
 		if(btabs.GetCursor() != BCONSOLE && !BottomIsFindInFiles())
 			ShowConsole();
@@ -566,7 +567,7 @@ void Ide::ConsoleRunEnd()
 void Ide::ShowFound()
 {
 	if(FFound().IsCursor())
-		GoToError(FFound());
+		GoToError(FFound(), false);
 }
 
 String Ide::GetErrorsText(bool all, bool src)
@@ -643,14 +644,14 @@ void Ide::SelError()
 				}
 			}
 		}
-		GoToError(error);
+		GoToError(error, true);
 	}
 }
 
 void Ide::ShowError()
 {
 	if(error.IsCursor())
-		GoToError(error);
+		GoToError(error, true);
 }
 
 void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const

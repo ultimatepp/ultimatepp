@@ -1080,8 +1080,8 @@ public:
 	};
 
 	bool      FindLineError(int l);
-	void      GoToError(const ErrorInfo& f);
-	void      GoToError(ArrayCtrl& a);
+	void      GoToError(const ErrorInfo& f, bool error);
+	void      GoToError(ArrayCtrl& a, bool error);
 
 	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
 	void      FindError();
