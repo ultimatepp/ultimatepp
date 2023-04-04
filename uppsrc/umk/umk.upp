@@ -12,5 +12,6 @@ file
 	umake.cpp;
 
 mainconfig
-	"" = "";
+	"" = "",
+	"" = "NOMM";
 

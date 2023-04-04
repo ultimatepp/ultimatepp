@@ -59,15 +59,13 @@ fi
 
 if [[ "$uname" == 'Darwin' ]]; then
 	echo Configuring $1 for MacOS
-	sed -i.bak 's/\`pkg-config --cflags libpng\` \`pkg-config --cflags freetype2\` \`pkg-config --cflags x11\` \`pkg-config --cflags fontconfig\` \`pkg-config --cflags xcb\` \`pkg-config --cflags expat\`/ /' $1
 	sed -i.bak 's/-Wl,--gc-sections $(LINKOPTIONS)/$(LINKOPTIONS)/' $1
-	sed -i.bak 's/$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) -Wl,-O,2 $(LDFLAGS) -Wl,--start-group/$(LINKER) -o "$(OutFile)" $(LIBPATH) $(LDFLAGS)/' $1
-	sed -i.bak 's/\`pkg-config --libs libpng\`/ /' $1
-	sed -i.bak 's/\`pkg-config --libs freetype2\`/ /' $1
-	sed -i.bak 's/\`pkg-config --libs x11\`/ /' $1
-	sed -i.bak 's/\`pkg-config --libs fontconfig\`/ /' $1
-	sed -i.bak 's/\`pkg-config --libs xcb\`/ /' $1
-	sed -i.bak 's/\`pkg-config --libs expat\`/ /' $1
-	sed -i.bak 's/-lrt /-lpng /' $1
+	sed -i.bak 's/\`pkg-config --cflags .*\`/ /' $1
+	sed -i.bak 's/\`pkg-config --libs .*\`/ /' $1
+	sed -i.bak 's/-lrt / -framework Foundation -framework Cocoa -framework Carbon /' $1
+	sed -i.bak 's/-lpng / /' $1
+	sed -i.bak 's/-Wl,-s/ /' $1
+	sed -i.bak 's/-Wl,--start-group/ /' $1
 	sed -i.bak 's/-Wl,--end-group/ /' $1
+	sed -i.bak 's/-DflagLINUX/-DflagBSD -DflagOSX -DflagNOMM/' $1
 fi
