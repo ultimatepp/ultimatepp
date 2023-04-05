@@ -1,0 +1,11 @@
+description "creates 128 bit power 10 table for FP conversion\377";
+
+uses
+	Core;
+
+file
+	pow10.cpp;
+
+mainconfig
+	"" = "";
+
