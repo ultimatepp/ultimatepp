@@ -1,5 +1,5 @@
 const char *install_script =
-R"--(#!/usr/bin/env bash
+R"--(##!/usr/bin/env bash
 
 AskContinue()
 {
@@ -83,10 +83,12 @@ if [ -z "$UMK" ]; then
   UMK="./umk"
 fi
 
-if clang++ 2>/dev/null; then
+if clang++ --version >/dev/null; then
+	echo $UMK ./uppsrc ide CLANG -brs ./theide
 	$UMK ./uppsrc ide CLANG -brs ./theide
 	$UMK ./uppsrc umk CLANG -brs ./umk
 else
+	echo $UMK ./uppsrc ide GCC -brs ./theide
 	$UMK ./uppsrc ide GCC -brs ./theide
 	$UMK ./uppsrc umk GCC -brs ./umk
 fi

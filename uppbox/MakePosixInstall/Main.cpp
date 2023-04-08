@@ -131,9 +131,9 @@ CONSOLE_APP_MAIN
 #endif
 
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
-	FixMakefile(release + "/umkMakefile", release + "/Makefile");
+	FixMakefile(release + "/umkMakefile.in", release + "/Makefile");
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
-	FixMakefile(release + "/Makefile", release + "/Makefile");
+	FixMakefile(release + "/Makefile.in", release + "/Makefile");
 
 	SaveFile(release + "/license.chk", "1");
 	

@@ -3,7 +3,7 @@
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-#if !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA)
+#if !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA) && !defined(flagNOMM)
 
 #define Point NS_Point
 #define Rect  NS_Rect

@@ -451,7 +451,7 @@ ReformatDlg::ReformatDlg()
 				else
 				if(*f.type) {
 					DropList& dl = option.Create<DropList>();
-					dl.Add(Null, AttrText("default").Italic().NormalInk(SCyan()));
+					dl.Add(Null, AttrText("default").Italic().NormalInk(SColorDisabled()));
 					for(const String& s : Split(f.type, ':'))
 						dl.Add(s);
 					dl << [=] { Sync(); };

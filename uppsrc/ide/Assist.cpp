@@ -37,7 +37,10 @@ AssistEditor::AssistEditor()
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
-	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
+	navigatorpane.Add(scope_list.VSizePos(cy, 0).HSizePos());
+	
+	scope_list.Vert() << scope << list;
+	scope_list.SetPos(1500);
 
 	navigator = true;
 
@@ -1163,7 +1166,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 9;
+	int version = 10;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1190,6 +1193,9 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 9)
 		s % ms_cache;
+	
+	if(version >= 10)
+		s % scope_list;
 }
 
 void AssistEditor::SerializeNavigatorWorkspace(Stream& s)

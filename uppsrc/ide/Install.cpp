@@ -92,10 +92,12 @@ bool Install(bool& hasvars)
 		Scan(GetHomeDirFile("upp.src/*"));
 		Scan(GetHomeDirFile("upp/uppsrc"));
 		Scan(GetHomeDirFile("upp/*"));
+	#ifndef PLATFORM_COCOA // otherwise macos complains about Documents/Music etc...
 		Scan(GetHomeDirFile("*"));
 		for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
 			if(ff.IsFolder())
 				Scan(ff.GetPath() + "/*");
+	#endif
 	}
 
 	CreateBuildMethods();

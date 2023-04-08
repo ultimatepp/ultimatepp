@@ -143,9 +143,10 @@ in the current file:&]
 &]
 [s5; &]
 [s5; You can write a [/ symbol] name into Symbol/line field, or [/ scope].[/ symbol]. 
-Navigator will sort entries based on relevance: complete case 
-sensitive matches are first in the list, then entries that start 
-with search field case`-sensitive, then entries that contain 
+(either of which can be ommited `- [/ scope]. or [/ .symbol ]are 
+ok). Navigator will sort entries based on relevance: complete 
+case sensitive matches are first in the list, then entries that 
+start with search field case`-sensitive, then entries that contain 
 the text, case insensitive.&]
 [s5; U`+`+ Assist navigation functions require the database of all 
 symbols of project. This database is updated by background threads 

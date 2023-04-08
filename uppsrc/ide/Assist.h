@@ -26,6 +26,12 @@ struct Navigator {
 		NavigatorDisplay(const Vector<const NavItem *>& item) : item(item) {}
 	};
 
+	struct ScopeDisplay : Display {
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
+	};
+
 	Ide             *theide;
 
 	Array<NavItem>                             nitem;
@@ -40,11 +46,13 @@ struct Navigator {
 	bool             sorting;
 	bool             dlgmode;
 
+	ArrayCtrl                   scope;
 	ArrayCtrl                   list;
 	WithDropChoice<EditString>  search;
 
 	void TriggerSearch();
 	void Search();
+	void SetList();
 	void NaviSort();
 
 	void           Navigate();
@@ -78,6 +86,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	};
 	bool           navigator;
 	SplitterFrame  navigatorframe;
+	Splitter       scope_list;
 	StaticRect     navigatorpane;
 
 	Splitter       popup;

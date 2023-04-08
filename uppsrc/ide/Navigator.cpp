@@ -77,6 +77,12 @@ Navigator::Navigator()
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
 	
+	scope.NoHeader();
+	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
+	scope.SetLineCy(max(16, GetStdFontCy()));
+	scope.NoWantFocus();
+	scope.WhenSel = [=] { SetList(); };
+	
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
 	search.WhenEnter = THISBACK(NavigatorEnter);
@@ -300,6 +306,37 @@ Size Navigator::NavigatorDisplay::GetStdSize(const Value& q) const
 	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), Draw::GetStdFontCy());
 }
 
+int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	w.DrawRect(r, paper);
+	if(IsNull(q) || q == "*") {
+		const char *txt = "*";
+		int x = 0;
+		w.DrawText(r.left, r.top, txt, StdFont().Bold().Italic(),
+		           style & CURSOR ? ink : HighlightSetup::GetHlStyle(HighlightSetup::INK_KEYWORD).color);
+		x += GetTextSize(txt, StdFont().Bold().Italic()).cx;
+		return x;
+	}
+	String h = q;
+	if(*h == '\xff')
+		return PaintFileName(w, r, h, ink);
+	else
+		h = FormatNest(h);
+	w.DrawText(r.left, r.top, h, StdFont(), ink);
+	return GetTextSize(h, StdFont()).cx;
+}
+
+void Navigator::ScopeDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	DoPaint(w, r, q, ink, paper, style);
+}
+
+Size Navigator::ScopeDisplay::GetStdSize(const Value& q) const
+{
+	NilDraw w;
+	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
+}
+
 void Navigator::TriggerSearch()
 {
 	search_trigger.KillSet(100, THISBACK(Search));
@@ -333,6 +370,8 @@ void Navigator::Search()
 		return m.nest;
 	};
 	nests.Add(Null);
+	String usearch_nest = ToUpper(search_nest);
+	String usearch_name = ToUpper(search_name);
 	if(!IsNull(lineno)) {
 		NavItem& m = nitem.Add();
 		m.pretty = "Go to line " + AsString(lineno);
@@ -354,8 +393,6 @@ void Navigator::Search()
 	}
 	else {
 		navigator_global = true;
-		String usearch_nest = ToUpper(search_nest);
-		String usearch_name = ToUpper(search_name);
 		SortByKey(CodeIndex());
 		Index<String> set;
 		for(int nest_pass = 0; nest_pass < 3; nest_pass++) {
@@ -402,18 +439,45 @@ void Navigator::Search()
 			}
 		}
 	}
+	
+	String k = scope.GetKey();
+	scope.Clear();
+	scope.Add("*");
+	Index<String> set;
+	for(int nest_pass = 0; nest_pass < 3; nest_pass++)
+		for(String s : nests) {
+			if(s.GetCount() &&
+			   set.Find(s) < 0 &&
+			   (nest_pass == 2 ? ToUpper(s).Find(usearch_nest) >= 0 :
+			    nest_pass == 1 ? s.Find(search_nest) >= 0 :
+			                     s == search_nest)) {
+				scope.Add(s);
+				set.Add(s);
+			}
+		}
+	if(!scope.FindSetCursor(k))
+		scope.GoBegin();
+	SetList();
+}
 
+void Navigator::SetList()
+{
 	litem.Clear();
 	nest_item.Clear();
 	String nest;
+	String snest = scope.GetKey();
+	if(snest == "*")
+		snest.Clear();
 	for(const NavItem& n : nitem) {
-		if(!sorting && n.nest != nest) {
-			NavItem& m = nest_item.Add();
-			m.kind = KIND_NEST;
-			nest = m.pretty = n.nest;
-			litem.Add(&m);
+		if(IsNull(snest) || n.nest == snest) {
+			if(!sorting && n.nest != nest) {
+				NavItem& m = nest_item.Add();
+				m.kind = KIND_NEST;
+				nest = m.pretty = n.nest;
+				litem.Add(&m);
+			}
+			litem.Add(&n);
 		}
-		litem.Add(&n);
 	}
 	
 	if(sorting)
@@ -430,5 +494,5 @@ void Navigator::Search()
 void Navigator::NaviSort()
 {
 	sorting = !sorting;
-	Search();
+	SetList();
 }
