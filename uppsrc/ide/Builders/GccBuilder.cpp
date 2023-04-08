@@ -226,7 +226,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	sfile.AppendPick(pick(isfile));
 	soptions.AppendPick(pick(isoptions));
 
-	int ccount = 0;
 	for(i = 0; i < sfile.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -295,7 +294,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				DeleteFile(objfile);
 			error |= execerr;
 			PutVerbose("compiled in " + GetPrintTime(time));
-			ccount++;
 		}
 		immfile.Add(objfile);
 		if(init)
@@ -305,8 +303,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	if(error) {
-//		if(ccount)
-//			PutCompileTime(time, ccount);
 		IdeConsoleEndGroup();
 		return false;
 	}

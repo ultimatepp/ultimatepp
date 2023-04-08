@@ -347,8 +347,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	sfile.AppendPick(pick(isfile));
 	soptions.AppendPick(pick(isoptions));
 
-	int ccount = 0;
-
 	for(i = 0; i < sfile.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -408,7 +406,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				DeleteFile(objfile);
 			error |= execerr;
 			PutVerbose("compiled in " + GetPrintTime(time));
-			ccount++;
 		}
 		if(init)
 			linkfile.Add(objfile);
