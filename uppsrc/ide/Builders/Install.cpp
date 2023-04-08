@@ -27,8 +27,8 @@ DEBUGGER = "gdb";
 ALLOW_PRECOMPILED_HEADERS = "0";
 DISABLE_BLITZ = "0";
 PATH = "";
-INCLUDE = "/opt/local/include;/usr/include";
-LIB = "/opt/local/lib;/usr/lib";
+INCLUDE = "$INCLUDE$";
+LIB = "$LIB$;
 LINKMODE_LOCK = "0";)";
 
 #elif PLATFORM_SOLARIS
@@ -148,9 +148,23 @@ LINKMODE_LOCK = "0";)";
 void CreateBuildMethods()
 {
 #ifdef PLATFORM_COCOA
-	String bm = ConfigFile("CLANG.bm");
-	if(IsNull(LoadFile(bm)))
-		SaveFile(bm, clang_bm);
+	String bm_path = ConfigFile("CLANG.bm");
+	if(IsNull(LoadFile(bm_path))) {
+		String bm = clang_bm;
+		
+		auto Path = [&](const char *var, const char *path) {
+			String h;
+			for(String s : Split(path, ';'))
+				if(DirectoryExists(s))
+					MergeWith(h, ";", s);
+			bm.Replace(var, h);
+		};
+		
+		Path("$INCLUDE$", "/opt/local/include;/usr/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
+		Path("$LIB$", "/opt/local/lib;/usr/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
+
+		SaveFile(bm_path, bm);
+	}
 #else
 	bool openbsd = ToLower(Sys("uname")).Find("openbsd") >= 0;
 	auto Fix = [=](const char *s) {
