@@ -290,7 +290,7 @@ void Ctrl::SetNSAppImage(const Image& img)
 void  Ctrl::SetMouseCursor(const Image& img)
 {
 	if(GetDragAndDropSource())
-			return;
+		return;
 	int64 h = img.GetAuxData();
 	if(h) {
 		[GetNSCursor(h) set];

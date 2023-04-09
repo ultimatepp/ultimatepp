@@ -80,6 +80,7 @@ bool Clang::Parse(const String& filename_, const String& content,
                   dword options,
                   const String& filename2, const String& content2)
 {
+	LLOG("Parse " << filename_);
 	if(!HasLibClang())
 		return false;
 
@@ -88,25 +89,12 @@ bool Clang::Parse(const String& filename_, const String& content,
 	
 	Dispose();
 
-	String cmdline;
-	
 	String filename = filename_;
 	if((options & PARSE_FILE) && GetFileExt(filename) == ".icpp") {
 		String src = "#include \"" + filename + "\"";
 		filename = CacheFile(GetFileName(filename) + "$" + SHA1String(src) + ".cpp");
 		SaveChangedFile(filename, src);
 	}
-
-	cmdline << filename << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG ";
-	
-	if(IsCppSourceFile(filename))
-		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
-	else
-		cmdline << " -xc " << LibClangCommandLineC() << " ";
-	
-	String cmdline0 = cmdline;
-
-	cmdline << RedefineMacros() << " ";
 	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
@@ -123,6 +111,19 @@ bool Clang::Parse(const String& filename_, const String& content,
 	
 	for(const String& s : Split(defines + ";CLANG", ';'))
 		args.Add("-D" + s);
+
+	String cmdline;
+	
+	if(IsCppSourceFile(filename))
+		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
+	else
+		cmdline << " -xc " << LibClangCommandLineC() << " ";
+
+	cmdline << " -DflagDEBUG -DflagDEBUG_FULL -DflagMAIN -DflagCLANG " << filename;
+	
+	String cmdline0 = cmdline;
+
+	cmdline << RedefineMacros() << " ";
 
 	args.Append(Split(cmdline, ' '));
 	
@@ -142,7 +143,7 @@ bool Clang::Parse(const String& filename_, const String& content,
 
 	if(!tu)
 		PutAssist("Failed commandline: " + cmdline0);
-//	DumpDiagnostics(tu);
+	// Diagnostics(tu, VppLog());_DBG_
 	
 	return tu;
 }
@@ -150,6 +151,8 @@ bool Clang::Parse(const String& filename_, const String& content,
 bool Clang::ReParse(const String& filename, const String& content,
                     const String& filename2, const String& content2)
 {
+	LLOG("ReParse " << filename);
+
 	if(!HasLibClang())
 		return false;
 
