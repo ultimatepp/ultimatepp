@@ -308,7 +308,7 @@ protected:
 	
 	int   replacei;
 	
-	bool          search_canceled;
+	bool          search_canceled = false;
 	int           search_time0;
 	One<Progress> search_progress;
 	
