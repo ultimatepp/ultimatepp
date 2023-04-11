@@ -116,6 +116,7 @@ void InsertImageDlg::Load()
 
 	Value key = nest.GetKey();
 	nest.Clear();
+	nest.Add("*");
 	for(const auto& n : ~imap)
 		nest.Add(n.key);
 	
