@@ -9,9 +9,8 @@ int RichTxt::GetWidth(const RichStyles& st) const
 		if(IsPara(i)) {
 			RichPara p = Get(i, st, true);
 			RichPara::Lines pl = p.FormatLines(INT_MAX);
-			int ccx = 0;
-			Sum(ccx, ~pl.width, ~pl.width + pl.clen);
-			cx = max(cx, ccx);
+			if(pl.GetCount())
+				cx = max(cx, pl[0].xpos + pl[0].cx);
 		}
 		else
 			cx = max(cx, GetTable(i).GetWidth(st));
