@@ -447,6 +447,8 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	
 				int di = 0;
 				String path = NormalizePath(theide->editfile);
+				if(path.TrimEnd(".icpp"))
+					path << ".cpp";
 				while(di < ds.GetCount() && err.GetCount() < 30) {
 					int k = ds[di].kind;
 					bool group_valid = false;
@@ -582,6 +584,8 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 	ToUtf8x(pos);
 	int di = 0;
 	String path = NormalizePath(theide->editfile);
+	if(path.TrimEnd(".icpp"))
+		path << ".cpp";
 	while(di < errors.GetCount()) {
 		int k = errors[di].kind;
 		int ii0 = di;

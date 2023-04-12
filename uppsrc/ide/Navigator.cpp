@@ -449,7 +449,6 @@ void Navigator::Search()
 			   (nest_pass == 2 ? ToUpper(s).Find(usearch_nest) >= 0 :
 			    nest_pass == 1 ? s.Find(search_nest) >= 0 :
 			                     s == search_nest)) {
-				DDUMPHEX(s);
 				scope.Add(s);
 				set.Add(s);
 			}
