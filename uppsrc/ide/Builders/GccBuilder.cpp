@@ -399,6 +399,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	}
 
 	String tmpFileName;
+#ifndef PLATFORM_BSD // BSD/MacOS ar does not support response files, OTOH has 1MB commandline limit
 	if(lib.GetCount() + llib.GetCount() >= 8192)
 	{
 		tmpFileName = CacheFile(SHA1String(lib + llib));
@@ -436,6 +437,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 		lib << " @" << tmpFileName;
 	}
 	else
+#endif
 		lib << llib;
 
 	int res = Execute(lib);
