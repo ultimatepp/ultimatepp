@@ -168,10 +168,10 @@ String ClangCursorInfo::Id()
 String ClangCursorInfo::Bases()
 {
 	String result;
-	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0)
+	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0) {
 		clang_visitChildren(cursor,
 			[](CXCursor cursor, CXCursor p, CXClientData clientData) -> CXChildVisitResult {
-				if(clang_getCursorKind(cursor) == CXCursor_CXXBaseSpecifier) {
+				if(findarg(clang_getCursorKind(cursor), CXCursor_CXXBaseSpecifier) >= 0) {
 					String& result = *(String *)clientData;
 					MergeWith(result, ";", GetTypeSpelling(cursor));
 				}
@@ -179,6 +179,12 @@ String ClangCursorInfo::Bases()
 			},
 			&result
 		);
+	}
+	if(cursorKind == CXCursor_TypedefDecl) {
+		CXType type = clang_getTypedefDeclUnderlyingType(cursor);
+		ClangCursorInfo cci(clang_getTypeDeclaration(type), pp_id);
+		result = CleanupId(cci.Type());
+	}
 	return result;
 }
 
@@ -218,18 +224,36 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 
 #ifdef DUMPTREE
 	_DBG_
-	if(GetCursorSpelling(cursor).Find("DeleteFile") >= 0) {
+//	if(GetCursorSpelling(cursor).Find("DeleteFile") >= 0)
+	{
 		DLOG("=====================================");
 		DDUMP(ci.Kind());
 		DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
 		DDUMP(GetCursorSpelling(cursor));
+		DDUMP(GetTypeSpelling(cursor));
 		DDUMP(ci.RawId());
 		DDUMP(ci.Type());
+		DDUMP(ci.Scope());
 		DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
 		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
 		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
 		DDUMP(clang_Cursor_isNull(clang_getCursorReferenced(cursor)));
 		DDUMP(clang_Location_isFromMainFile(cxlocation));
+		CXCursor ref = clang_getCursorReferenced(cursor);
+		DDUMP(GetCursorSpelling(clang_getCursorReferenced(cursor)));
+		ClangCursorInfo cir(ref, pp_id);
+		DDUMP(cir.Scope());
+		DDUMP(GetTypeSpelling(clang_getCursorReferenced(cursor)));
+		DDUMP(FetchString(clang_getCursorPrettyPrinted(clang_getCursorReferenced(cursor), pp_id)));
+
+		if(ci.Kind() == CXCursor_TypedefDecl) {
+			CXType type = clang_getTypedefDeclUnderlyingType(cursor);
+			DDUMP(FetchString(clang_getTypeSpelling(type)));
+			ClangCursorInfo cit(clang_getTypeDeclaration(type), pp_id);
+			DDUMP(cit.Id());
+			DDUMP(cit.Scope());
+			DDUMP(cit.Type());
+		}
 	}
 /*
 	{
