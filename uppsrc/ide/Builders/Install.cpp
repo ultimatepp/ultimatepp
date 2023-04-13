@@ -10,8 +10,8 @@ COMPILER = "clang++";
 COMMON_OPTIONS = "-mmacosx-version-min=10.13";
 COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
-COMMON_LINK = "";
-COMMON_FLAGS = "";
+COMMON_LINK = "$COMMON$";
+COMMON_FLAGS = "$COMMON$";
 DEBUG_INFO = "2";
 DEBUG_BLITZ = "1";
 DEBUG_LINKMODE = "1";
@@ -162,6 +162,12 @@ void CreateBuildMethods()
 		
 		Path("$INCLUDE$", "/opt/local/include;/usr/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
 		Path("$LIB$", "/opt/local/lib;/usr/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
+		
+		String common;
+	#ifdef CPU_ARM
+		common = "-arch arm64";
+	#endif
+		bm.Replace("$COMMON$", common);
 
 		SaveFile(bm_path, bm);
 	}
