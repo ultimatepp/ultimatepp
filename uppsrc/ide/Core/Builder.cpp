@@ -63,7 +63,12 @@ String Builder::CmdX(const char *s)
 		else
 			(cmdf ? cmd : r).Cat(*s);
 	int q = r.Find(' ');
-	if(r.GetCount() > 8000 && q >= 0) {
+#ifdef PLATFORM_BSD
+	const int limit = 1000000;
+#else
+	const int limit = 8000;
+#endif
+	if(r.GetCount() > limit && q >= 0) {
 		String rn = CatAnyPath(outdir, AsString(tmpfilei.GetAdd(outdir, 0)++) + ".cmd");
 		PutVerbose("Generating response file: " << rn);
 		PutVerbose(r);
