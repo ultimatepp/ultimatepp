@@ -152,7 +152,7 @@ void AssistEditor::Virtuals()
 			if(dlg.add_override)
 				text << " override";
 			text << ";\r\n";
-			ctext << MakeDefinition(m);
+			ctext << MakeDefinition(m, nest + "::");
 		}
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);

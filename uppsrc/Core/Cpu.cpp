@@ -73,6 +73,17 @@ bool CpuSSE3()       { sCheckCPU(); return sHasSSE3; }
 bool CpuAVX()        { sCheckCPU(); return sHasAVX; }
 bool CpuHypervisor() { sCheckCPU(); return sHypervisor; }
 
+#endif
+
+#ifdef PLATFORM_ANDROID
+#include <cpu-features.h>
+int CPU_Cores()
+{
+	return android_getCpuCount();
+}
+
+#else
+
 int CPU_Cores()
 {
 	static int n;
@@ -108,31 +119,6 @@ int CPU_Cores()
 	}
 	return n;
 }
-#else
-
-#ifdef PLATFORM_LINUX
-	#ifdef PLATFORM_ANDROID
-	#include <cpu-features.h>
-	
-	int CPU_Cores()
-	{
-		return android_getCpuCount();
-	}
-	
-	#else
-	#include <sys/sysinfo.h>
-
-	int CPU_Cores()
-	{
-		return minmax(get_nprocs(), 1, 256);
-	}
-	#endif
-#else
-int CPU_Cores()
-{
-	return 1;
-}
-#endif
 
 #endif
 

@@ -459,7 +459,7 @@ String GetNameFromId(const String& id)
 	return name;
 }
 
-String MakeDefinition(const AnnotationItem& m)
+String MakeDefinition(const AnnotationItem& m, const String& klass)
 {
 	String result;
 	String pretty = m.pretty;
@@ -468,7 +468,12 @@ String MakeDefinition(const AnnotationItem& m)
 	if(q < 0)
 		result << pretty;
 	else
-		result << pretty.Mid(0, q) << GetClass(m) << pretty.Mid(q);
+		result << pretty.Mid(0, q) << klass << pretty.Mid(q);
 	result << "\n{\n}\n\n";
 	return result;
+}
+
+String MakeDefinition(const AnnotationItem& m)
+{
+	return MakeDefinition(m, GetClass(m));
 }

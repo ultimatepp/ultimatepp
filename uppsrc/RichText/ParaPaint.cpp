@@ -194,7 +194,6 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 			pi.DrawSelection(pw.Page(p), z * rc.page.left, top, z * rc.page.right - z * rc.page.left, bottom - top);
 		}
 	opy = rc.py;
-	int oi = 0;
 	int x = 0;
 	int y0 = 0;
 	int lineascent = 0;
@@ -375,8 +374,6 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		}
 		else
 			while(i < ilim) {
-				if(hg->object)
-					oi++;
 				i++;
 				hg++;
 			}

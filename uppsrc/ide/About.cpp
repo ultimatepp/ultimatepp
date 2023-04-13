@@ -44,6 +44,15 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 	h << " (C++11)";
 #endif
 
+#if CPU_ARM
+	h << "(ARM";
+	#if __ARM_FEATURE_UNALIGNED
+		h << " unaligned";
+	#endif
+	h << ")";
+#endif
+
+
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif

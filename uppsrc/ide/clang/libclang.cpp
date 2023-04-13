@@ -23,7 +23,7 @@ bool LoadLibClang0(const char *dir, const char *file)
 
 bool LoadLibClang(const char *dir)
 {
-#ifdef PLATFORM_MACOS0 // it does not seem to work for some reason, block it for now
+#ifdef PLATFORM_MACOS // it does not seem to work for some reason, block it for now
 	if(LoadLibClang0(dir, "libclang.dylib"))
 		return true;
 #endif

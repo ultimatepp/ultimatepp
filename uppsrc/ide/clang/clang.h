@@ -151,6 +151,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 
 String GetClass(const AnnotationItem& m);
 String GetNameFromId(const String& id);
+String MakeDefinition(const AnnotationItem& m, const String& klass);
 String MakeDefinition(const AnnotationItem& m);
 
 struct ReferenceItem : Moveable<ReferenceItem> {

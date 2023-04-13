@@ -226,7 +226,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	sfile.AppendPick(pick(isfile));
 	soptions.AppendPick(pick(isoptions));
 
-	int ccount = 0;
 	for(i = 0; i < sfile.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -295,7 +294,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				DeleteFile(objfile);
 			error |= execerr;
 			PutVerbose("compiled in " + GetPrintTime(time));
-			ccount++;
 		}
 		immfile.Add(objfile);
 		if(init)
@@ -305,8 +303,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	if(error) {
-//		if(ccount)
-//			PutCompileTime(time, ccount);
 		IdeConsoleEndGroup();
 		return false;
 	}
@@ -403,6 +399,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	}
 
 	String tmpFileName;
+#ifndef PLATFORM_BSD // BSD/MacOS ar does not support response files, OTOH has 1MB commandline limit
 	if(lib.GetCount() + llib.GetCount() >= 8192)
 	{
 		tmpFileName = CacheFile(SHA1String(lib + llib));
@@ -440,6 +437,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 		lib << " @" << tmpFileName;
 	}
 	else
+#endif
 		lib << llib;
 
 	int res = Execute(lib);

@@ -227,7 +227,9 @@ void Ctrl::GuiSleep(int ms)
 {
 	ASSERT(IsMainThread());
 	sGuiSleep = true;
+	int n = LeaveGuiMutexAll();
 	GetNextEvent([NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]);
+	EnterGuiMutex(n);
 	sGuiSleep = false;
 }
 

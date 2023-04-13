@@ -297,14 +297,11 @@ String MainConf(const Workspace& wspc, String& add_includes)
 				String pn = wspc[i];
 				String p = SourcePath(pn, "main.conf");
 				main_conf << "// " << pn << "\r\n" << LoadFile(p) << "\r\n";
-				PutConsole("Found " + p);
 			}
 	}
 
 	if(main_conf.GetCount()) {
 		String path = SaveMainConf(main_conf);
-		PutConsole("Saving " + path);
-		PutVerbose(main_conf);
 		MergeWith(add_includes, ";", GetFileFolder(path));
 	}
 	return main_conf;
@@ -490,11 +487,12 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	
 	BeginBuilding(clear_console);
 
-	MainConf(wspc);
-
 	bool ok = true;
 	main_conf.Clear();
 	add_includes.Clear();
+	MainConf(wspc);
+	PutConsole("Saving " + add_includes);
+	PutVerbose(main_conf);
 	if(wspc.GetCount()) {
 		Vector<int> build_order;
 		if(cfg.Find("SO") < 0) {

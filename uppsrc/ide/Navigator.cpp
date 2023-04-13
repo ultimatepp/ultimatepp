@@ -253,9 +253,8 @@ void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const 
 		return;
 	const NavItem& m = *item[ii];
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-	if(findarg(m.kind, KIND_NEST) >= 0)
-		w.DrawRect(r, focuscursor ? paper : m.pretty.Find('\xff') >= 0 ? SColorFace()
-		                                  : Blend(SColorMark, SColorPaper, 220));
+	if(m.kind == KIND_NEST && !focuscursor)
+		w.DrawRect(r, Blend(SColorMark, SColorPaper, 220));
 	else
 		w.DrawRect(r, paper);
 }
@@ -272,11 +271,10 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	int x = r.left;
 	int y = r.top + (r.GetHeight() - Draw::GetStdFontCy()) / 2;
 	
+	PaintBackground(w, r, q, ink, paper, style);
+
 	if(m.kind == KIND_NEST) {
-		bool fn = m.pretty.Find('\xff') >= 0;
-		w.DrawRect(r, focuscursor ? paper : fn ? SColorFace()
-		                                  : Blend(SColorMark(), SColorPaper(), 220));
-		if(fn)
+		if(m.pretty.Find('\xff') >= 0)
 			return PaintFileName(w, r, m.pretty, ink);
 		w.DrawText(x, y, m.pretty, StdFont().Bold(), ink);
 		return GetTextSize(m.pretty, StdFont().Bold()).cx;
@@ -318,7 +316,7 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 		return x;
 	}
 	String h = q;
-	if(*h == '\xff')
+	if(h.Find('\xff') >= 0)
 		return PaintFileName(w, r, h, ink);
 	else
 		h = FormatNest(h);

@@ -938,7 +938,9 @@ void CodeEditor::StartSearchProgress(int64, int64)
 
 bool CodeEditor::SearchProgress(int line)
 {
-	if(search_progress && !search_canceled && msecs(search_time0) > 20) {
+	if(!search_progress)
+		return true;
+	if(!search_canceled && msecs(search_time0) > 20) {
 		search_time0 = msecs();
 		search_progress->Create();
 		search_canceled = IsView() ? search_progress->SetCanceled(int(GetPos64(line) >> 8), int(GetViewSize() >> 8))
@@ -949,7 +951,7 @@ bool CodeEditor::SearchProgress(int line)
 
 bool CodeEditor::SearchCanceled()
 {
-	return search_canceled;
+	return search_progress && search_canceled;
 }
 
 void CodeEditor::EndSearchProgress()

@@ -920,7 +920,7 @@ LAYOUT(ReformatLayout, 1024, 724)
 	ITEM(Upp::Option, prefer_clang_format, SetLabel(t_("Reformat without options should prefer .clang-format")).LeftPosZ(4, 360).TopPosZ(28, 20))
 END_LAYOUT
 
-LAYOUT(InsertImageLayout, 1016, 480)
+LAYOUT(InsertImageLayout, 1016, 748)
 	ITEM(Upp::ArrayCtrl, nest, LeftPosZ(4, 150).VSizePosZ(4, 40))
 	ITEM(Upp::Option, noupp, SetLabel(t_("Without Upp::")).LeftPosZ(428, 96).TopPosZ(448, 24))
 	ITEM(Upp::Option, index, SetLabel(t_("Index")).LeftPosZ(536, 56).TopPosZ(448, 24))
