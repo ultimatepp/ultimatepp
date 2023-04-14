@@ -1981,6 +1981,9 @@ void clang_PrintingPolicy_dispose(CXPrintingPolicy Policy);
 unsigned clang_getNumCompletionChunks(CXCompletionString completion_string);
 void clang_disposeTranslationUnit(CXTranslationUnit);
 
+CXType clang_getTypedefDeclUnderlyingType(CXCursor C);
+CXCursor clang_getTypeDeclaration(CXType T);
+
 CXTranslationUnit clang_parseTranslationUnit(
     CXIndex CIdx, const char *source_filename,
     const char *const *command_line_args, int num_command_line_args,

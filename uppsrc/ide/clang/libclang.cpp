@@ -155,6 +155,16 @@ unsigned int clang_getNumCompletionChunks(CXCompletionString completion_string)
 	return LibClang().clang_getNumCompletionChunks(completion_string);
 }
 
+CXType clang_getTypedefDeclUnderlyingType(CXCursor C)
+{
+	return LibClang().clang_getTypedefDeclUnderlyingType(C);
+}
+
+CXCursor clang_getTypeDeclaration(CXType T)
+{
+	return LibClang().clang_getTypeDeclaration(T);
+}
+
 void clang_disposeTranslationUnit(CXTranslationUnit tu)
 {
 	LibClang().clang_disposeTranslationUnit(tu);
