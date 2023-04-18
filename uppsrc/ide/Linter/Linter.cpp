@@ -105,15 +105,6 @@ void Linter::CheckAll()
 	DoCheck(paths);
 }
 
-Vector<String> Linter::GetPaths(const String& dir, const String& pattern)
-{
-	Vector<String> v;
-	if(!IsNull(dir) && DirectoryExists(dir))
-		for(auto& ff : FindFile(dir + DIR_SEPS + pattern))
-				v.Add() = ff.GetPath();
-	return v;
-}
-
 String Linter::GetCmdLine()
 {
 	Value v = LoadConfig()["CppCheck"];
@@ -140,12 +131,14 @@ String Linter::GetCmdLine()
 	  << "-j "              << AsString(clamp(jobs, 1, 1024)) << " ";
 	if(severity.GetCount())
 		s << "--enable="    << Join(severity, ",", true) << " ";
+	
+	for(const String& q : v["libraries"])
+		if(FileExists(q))
+			s << "--library=\"" << q << "\" ";
 
-	for(const String& q : GetPaths(v["libraries_path"], "*.cfg"))
-		s << "--library=\"" << q << "\" ";
-
-	for(const String& q : GetPaths(v["plugins_path"], "*.py"))
-		s << "--plugin=\"" << q << "\" ";
+	for(const String& q : v["addons"])
+		if(FileExists(q))
+			s << "--plugin=\"" << q << "\" ";
 
 	return s;
 }
@@ -262,6 +255,14 @@ void Linter::ParseResults(const XmlNode& results)
 	}
 }
 
+void Linter::Settings()
+{
+	LinterConfigDlg dlg;
+	dlg.Load();
+	if(dlg.ExecuteOK())
+		dlg.Save();
+}
+
 void Linter::StdMenu(Bar& menu)
 {
 	FileMenu(menu);
@@ -269,6 +270,10 @@ void Linter::StdMenu(Bar& menu)
 	menu.Add(CanCheck(), "Analyze all..", [this]() { CheckAll(); })
 		.Key(AK_CHECKALL)
 		.Help(t_("Analyze project using cppcheck"));
+	menu.Separator();
+	menu.Add(CanCheck(), "Configure linter..", [this]() { Settings(); })
+		.Key(AK_CONFIGURE)
+		.Help(t_("Configure cppcheck options"));
 	menu.Separator();
 }
 
