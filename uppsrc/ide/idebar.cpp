@@ -74,11 +74,13 @@ void Ide::File(Bar& menu)
 		    .Help("Close the current file tab");
 		menu.Add(AK_CLOSETABS, THISBACK(ClearTabs))
 		    .Help("Close all file tabs");
+	#ifndef PLATFORM_COCOA
 		if(!designer) {
 			menu.Add("Bookmarks", THISBACK(FileBookmark))
 				.Help("Set one of available bookmarks (1..9, 0) on current file");
 			menu.MenuSeparator();
 		}
+	#endif
 		menu.Add("Show/hide bottom pane", THISBACK(SwapBottom))
 			.Check(IsBottomShown())
 			.Key(K_ESCAPE)

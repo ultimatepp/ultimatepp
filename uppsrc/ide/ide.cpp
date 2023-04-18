@@ -433,6 +433,7 @@ bool Ide::Key(dword key, int count)
 	case K_MOUSE_FORWARD:
 		History(1);
 		return true;
+	#ifndef PLATFORM_COCOA
 	default:
 		if(key >= K_SHIFT_CTRL_0 && key <= K_SHIFT_CTRL_9) {
 			Bookmark& b = bookmark[key - K_SHIFT_CTRL_0];
@@ -445,6 +446,7 @@ bool Ide::Key(dword key, int count)
 			GotoBookmark(bookmark[key - K_CTRL_0]);
 			return true;
 		}
+	#endif
 	}
 	return false;
 }
