@@ -1,33 +1,42 @@
 #include "Linter.h"
 
-LinterConfigTab::LinterConfigTab()
+LinterConfigDlg::LinterConfigDlg()
 {
+	CtrlLayoutOKCancel(*this, "Linter Settings");
+	
 	for(const Value& v : { "c", "c++"})
 		language.Add(v);
 
 	for(const Value& v : { "c89", "c99", "c11", "c++03", "c++11", "c++14", "c++17", "c++20"})
 		standard.Add(v);
 
-	for(const Value& v :  { "native", "unix32", "unix64", "win32A", "win32W", "win64"})
+	for(const Value& v : { "native", "unix32", "unix64", "win32A", "win32W", "win64"})
 		platform.Add(v);
 
 	for(int i = 0; i < 6; i++)
 		depth.Add(i);
 	
-	libpath_sel.SetImage(CtrlImg::Dir()) << [this]{ libs <<= SelectDirectory(); };
-	pluginpath_sel.SetImage(CtrlImg::Dir()) << [this]{ plugins <<= SelectDirectory(); };
-		
+	CtrlLayout(libs);
+	CtrlLayout(addons);
+	
+	libs.dirpath.WhenAction   = [this] { libs.Load(SelectDirectory(), "*.cfg");  };
+	addons.dirpath.WhenAction = [this] { addons.Load(SelectDirectory(), "*.py"); };
+
+	tabs.Add(libs.SizePos(), "Libraries");
+	tabs.Add(addons.SizePos(), "Addons");
+	
 	defaults.WhenAction = [this] { Reset(); };
+
 	Reset();
 }
 
-void LinterConfigTab::Reset()
+void LinterConfigDlg::Reset()
 {
 	language.SetIndex(1);
 	standard.SetIndex(5);
 	platform.SetIndex(0);
 	depth.SetIndex(1);
-	jobs <<= CPU_Cores();
+	jobs.MinMax(1, CPU_Cores()) <<= CPU_Cores();
 	warning     = false;
 	style       = false;
 	performance = false;
@@ -35,9 +44,20 @@ void LinterConfigTab::Reset()
 	information = false;
 	unusedfunction = false;
 	missinginclude = false;
+	
+#ifdef flagWIN32
+	constexpr const char *deflibrarypath = "C:\\Program Files\\CppCheck\\cfg";
+	constexpr const char *defpluginspath = "C:\\Program Files\\CppCheck\\addons";
+#else
+	constexpr const char *deflibrarypath = "/usr/share/cppcheck/cfg";
+	constexpr const char *defpluginspath = "/usr/share/cppcheck/addons";
+#endif		
+
+	libs.Load(deflibrarypath, "*.cfg");
+	addons.Load(defpluginspath, "*.py");
 }
 
-void LinterConfigTab::Load()
+void LinterConfigDlg::Load()
 {
 	Reset();
 	
@@ -47,7 +67,8 @@ void LinterConfigTab::Load()
 		if(IsNull(v))
 			return;
 	
-		auto LoadList = [this, &v](DropList& lst, const String& id, const Value& def) {
+		auto LoadList = [this, &v](DropList& lst, const String& id, const Value& def)
+		{
 			int i = lst.FindValue(v[id]);
 			lst.SetIndex(i >= 0 ? i : lst.FindValue(def));
 		};
@@ -58,9 +79,7 @@ void LinterConfigTab::Load()
 		LoadList(depth,    "depth",    2);
 	
 		jobs <<= clamp((int) v["jobs"], 1, INT_MAX);
-		
-		libs <<= v["libraries_path"];
-		plugins <<= v["plugins_path"];
+
 		options <<= v["cmdline_options"];
 	
 		for(const Value& q : v["severity"]) {
@@ -85,6 +104,9 @@ void LinterConfigTab::Load()
 			if(q == "missingInglude")
 				missinginclude = true;
 		}
+
+		libs   <<= v["libraries"];
+		addons <<= v["addons"];
 	}
 	catch(...)
 	{
@@ -92,8 +114,12 @@ void LinterConfigTab::Load()
 	}
 }
 
-void LinterConfigTab::Save()
+void LinterConfigDlg::Save()
 {
+	JsonArray jl, jq;
+	for(const String& s : ~libs) jl << s;
+	for(const String& s : ~addons) jq << s;
+
 	JsonArray ja;
 
 	if(~warning)		ja << "warning";
@@ -112,9 +138,62 @@ void LinterConfigTab::Save()
 	j("depth",    depth.GetValue());
 	j("jobs",     ~jobs);
 	j("severity", ja);
-	j("libraries_path", ~libs);
-	j("plugins_path", ~plugins);
+	j("libraries", jl);
+	j("addons", jq);
 	j("cmdline_options", ~options);
 	
-	SaveChangedFile(Linter::GetConfigFilePath(), Json("CppCheck", j));
+	SaveFile(Linter::GetConfigFilePath(), Json("CppCheck", j));
 }
+
+LinterConfigDlg::Pane::Pane()
+{
+	struct NameDisplay : Display
+	{
+		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override
+		{
+			StdDisplay().Paint(w, r, GetFileTitle(q.To<String>()), ink, paper, style);
+		};
+	};
+	
+	list.AddColumn("Enable").Ctrls<Option>();
+	list.AddColumn("Name").SetDisplay(Single<NameDisplay>());;
+	list.ColumnWidths("20 300");
+	dirpath.NullText("Select a valid library path");
+}
+
+void LinterConfigDlg::Pane::SetData(const Value& data)
+{
+	if(IsValueArray(data)) {
+		for(const Value& q : data) {
+			int i = list.Find(q, 1);
+			if(i >= 0)
+				list.Set(i, 0, true);
+		}
+	}
+}
+
+Value LinterConfigDlg::Pane::GetData() const
+{
+	ValueArray va;
+	for(int i = 0; i < list.GetCount(); i++)
+		if(list.Get(i, 0) == true)
+			va << list.Get(i, 1);
+	return va;
+}
+
+void LinterConfigDlg::Pane::Load(const String& path, const String& ext)
+{
+	if(path.IsEmpty())
+		return;
+	if(!DirectoryExists(path)) {
+		dirpath <<= Null;
+		return;
+	}
+	list.Clear();
+	for(const FindFile& f : FindFile(AppendFileName(path, ext)))
+		list.Add(false, f.GetPath());
+	dirpath <<= path;
+	list.Enable(list.GetCount());
+}
+
+

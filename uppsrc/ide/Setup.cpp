@@ -286,8 +286,7 @@ void Ide::SetupFormat() {
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
 	WebSearchTab web_search;
-	LinterConfigTab linter_config;
-	
+
 	edt.lineends
 		.Add(LF, "LF")
 		.Add(CRLF, "CRLF")
@@ -312,8 +311,6 @@ void Ide::SetupFormat() {
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(web_search, "Web search");
-	if(HasLinter())
-		dlg.Add(linter_config, "CppCheck");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 
 #ifdef PLATFORM_WIN32
@@ -369,7 +366,6 @@ void Ide::SetupFormat() {
 	DlSpellerLangs(edt.spellcheck_comments);
 	
 	web_search.Load();
-	linter_config.Load();
 
 	rtvr
 		(hlt.hilite_scope, hs)
@@ -513,7 +509,6 @@ void Ide::SetupFormat() {
 		UpdateFormat();
 		
 		web_search.Save();
-		linter_config.Save();
 		
 		if(c == IDEXIT)
 			break;

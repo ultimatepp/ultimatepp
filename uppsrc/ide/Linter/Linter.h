@@ -13,45 +13,55 @@
 
 class Linter final {
 public:
-	Linter() {}
-	~Linter() {}
+    Linter() {}
+    ~Linter() {}
 
-	bool Exists();
-	bool CanCheck();
-	void CheckFile();
-	void CheckPackage();
-	void CheckAll();
+    bool Exists();
+    bool CanCheck();
+    void CheckFile();
+    void CheckPackage();
+    void CheckAll();
 
-	static Value LoadConfig();
-	static String GetConfigFilePath();
+    static Value LoadConfig();
+    static String GetConfigFilePath();
 
-	void StdMenu(Bar& menu);
-	void FileMenu(Bar& menu);
-	void PackageMenu(Bar& menu);
+    void Settings();
+    
+    void StdMenu(Bar& menu);
+    void FileMenu(Bar& menu);
+    void PackageMenu(Bar& menu);
 
 private:
-	String GetFileName();
-	String GetFilePath();
-	String GetPackageName();
-	String GetPackagePath();
-	String GetCmdLine();
+    String GetFileName();
+    String GetFilePath();
+    String GetPackageName();
+    String GetPackagePath();
+    String GetCmdLine();
 
-	Vector<String> GetPaths(const String& dir, const String& pattern);
-	
-	void SysCmd(const String& cmd, const String& text, Stream& fs);
-	void DoCheck(Vector<String>& paths);
-	void ParseResults(const XmlNode& results);
+    void SysCmd(const String& cmd, const String& text, Stream& fs);
+    void DoCheck(Vector<String>& paths);
+    void ParseResults(const XmlNode& results);
 };
 
 Linter& GetLinter();
 bool HasLinter();
 
-struct LinterConfigTab : WithLinterConfigLayout<Ctrl> {
-	LinterConfigTab();
+struct LinterConfigDlg : WithLinterConfigLayout<TopWindow> {
+    LinterConfigDlg();
 
-	void Load();
-	void Save();
-	void Reset();
+    void Load();
+    void Save();
+    void Reset();
+    
+    struct Pane : WithPaneLayout<ParentCtrl> {
+        Pane();
+
+        void    SetData(const Value& data) override;
+        Value   GetData() const override;
+        void    Load(const String& path, const String& ext);
+    };
+    
+    Pane libs, addons;
 };
 
 #define KEYGROUPNAME "Linter"
