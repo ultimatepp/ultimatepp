@@ -70,3 +70,6 @@ FN(CXDiagnosticSet, clang_getChildDiagnostics, (CXDiagnostic D))
 FN(unsigned, clang_getNumDiagnosticsInSet, (CXDiagnosticSet Diags))
 FN(CXDiagnostic, clang_getDiagnosticInSet, (CXDiagnosticSet Diags, unsigned Index))
 FN(enum CXDiagnosticSeverity, clang_getDiagnosticSeverity, (CXDiagnostic))
+
+FN(CXType, clang_getTypedefDeclUnderlyingType, (CXCursor C))
+FN(CXCursor, clang_getTypeDeclaration, (CXType T))

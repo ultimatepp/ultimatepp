@@ -293,7 +293,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
 					Rasterizer::Filler *rf = rg;
-					if(clip.GetCount()) {
+					if(clip.GetCount() && clip.Top()) {
 						const ClippingLine& s = clip.Top()[y];
 						if(s.IsEmpty()) goto empty;
 						if(!s.IsFull()) {
@@ -389,11 +389,13 @@ void BufferPainter::FinishPathJob()
 							subpixel_filler.t = (*ip)[y];
 							subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 							if(clip.GetCount()) {
-								MaskFillerFilter mf;
-								const ClippingLine& s = clip.Top()[y];
-								if(!s.IsEmpty() && !s.IsFull()) {
-									mf.Set(&subpixel_filler, s);
-									j.rasterizer.Render(y, mf, j.evenodd);
+								if(clip.Top()) {
+									MaskFillerFilter mf;
+									const ClippingLine& s = clip.Top()[y];
+									if(!s.IsEmpty() && !s.IsFull()) {
+										mf.Set(&subpixel_filler, s);
+										j.rasterizer.Render(y, mf, j.evenodd);
+									}
 								}
 							}
 							else
@@ -413,11 +415,13 @@ void BufferPainter::FinishPathJob()
 							solid_filler.invert = j.attr.invert;
 							solid_filler.t = (*ip)[y];
 							if(clip.GetCount()) {
-								MaskFillerFilter mf;
-								const ClippingLine& s = clip.Top()[y];
-								if(!s.IsEmpty() && !s.IsFull()) {
-									mf.Set(&solid_filler, s);
-									j.rasterizer.Render(y, mf, j.evenodd);
+								if(clip.Top()) {
+									MaskFillerFilter mf;
+									const ClippingLine& s = clip.Top()[y];
+									if(!s.IsEmpty() && !s.IsFull()) {
+										mf.Set(&solid_filler, s);
+										j.rasterizer.Render(y, mf, j.evenodd);
+									}
 								}
 							}
 							else

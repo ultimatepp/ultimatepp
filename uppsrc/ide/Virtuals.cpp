@@ -12,13 +12,13 @@ void GatherVirtuals(ArrayMap<String, VirtualMethod>& virtuals, const String& cls
 		return;
 	visited.Add(cls);
 	for(const auto& f : ~CodeIndex()) // do base classes first
-		for(const AnnotationItem& m : f.value.items)
-			if(m.id == cls && IsStruct(m.kind)) {
+		for(const AnnotationItem& m : f.value.items) {
+			if(m.id == cls && m.bases.GetCount()) {
 				// we cheat with With..<TopWindow> by splitting it to With... and TopWindow
 				for(String s : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
 					GatherVirtuals(virtuals, s, visited, false);
 			}
-
+		}
 	if(!first)
 		for(const auto& f : ~CodeIndex()) // now gather virtual methods of this class
 			for(const AnnotationItem& m : f.value.items) {
@@ -87,9 +87,13 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	typedef VirtualsDlg CLASSNAME;
 
-	VirtualsDlg(const String& nest) {
+	VirtualsDlg(const String& nest, const String& local_bases) {
 		Index<String> done;
-		GatherVirtuals(virtuals, nest, done, true);
+		if(local_bases.GetCount())
+			for(String b : Split(local_bases, ';'))
+				GatherVirtuals(virtuals, b, done, false);
+		else
+			GatherVirtuals(virtuals, nest, done, true);
 		CtrlLayoutOKCancel(*this, "Virtual methods");
 		list.AddColumn("Virtual function").SetDisplay(Single<VirtualsDisplay>());
 		list.AddColumn("Defined in");
@@ -115,23 +119,38 @@ INITBLOCK
 	RegisterGlobalConfig("VirtualsDlg");
 }
 
-String AssistEditor::FindCurrentNest()
+String AssistEditor::FindCurrentNest(String *local_bases)
 {
 	if(!WaitCurrentFile())
 		return Null;
 	AnnotationItem cm = FindCurrentAnnotation();
-	if(IsNull(cm.nest))
+	int li = GetCursorLine();
+	if(IsFunction(cm.kind) && local_bases) { // do local classes
+		for(const AnnotationItem& lm : locals) {
+			if(lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.bases.GetCount())
+				cm = lm;
+			if(lm.pos.y > li)
+				break;
+		}
+		*local_bases = cm.bases;
+		return cm.nest;
+	}
+
+	if(IsNull(cm.nest)) {
 		Exclamation("No class can be associated with current position.");
+		return Null;
+	}
 	return cm.nest;
 }
 
 void AssistEditor::Virtuals()
 {
 	SortByKey(CodeIndex());
-	String nest = FindCurrentNest();
+	String local_bases;
+	String nest = FindCurrentNest(&local_bases);
 	if(IsNull(nest))
 		return;
-	VirtualsDlg dlg(nest);
+	VirtualsDlg dlg(nest, local_bases);
 	LoadFromGlobal(dlg, "VirtualsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "VirtualsDlg");

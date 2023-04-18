@@ -22,6 +22,7 @@ struct App : TopWindow {
 	virtual void   Activate()
 	{
 		Log("Activate");
+		SetFocus();
 	}
 
 	virtual void   Deactivate()

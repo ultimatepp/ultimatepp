@@ -45,11 +45,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 
 #if CPU_ARM
-	h << "(ARM";
-	#if __ARM_FEATURE_UNALIGNED
-		h << " unaligned";
-	#endif
-	h << ")";
+	h << " (ARM)";
 #endif
 
 
@@ -60,6 +56,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #ifdef bmTIME
 	h << "Compiled: " << bmTIME;
 #endif
+
+	h << separator;
+	h << GetExeFilePath();
 
 	return h;
 }

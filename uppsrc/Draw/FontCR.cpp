@@ -350,6 +350,12 @@ int  PanoseDistance(byte *a, byte *b)
 
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
+#ifdef PLATFORM_COCOA
+	static WString apple_kbd = "⌘⌃⇧⌥"; // these need special handling on macos to look nice
+	if(apple_kbd.Find(chr) >= 0)
+		fnt.Face(Font::SANSSERIF); // otherwise devangari font is used, which looks off
+#endif
+
 	bool prefer_color = PreferColorEmoji(chr);
 	static VectorMap<int, sRFace *> rface[2]; // face index to font info
 	static Vector<int> color[2]; // colorimg faces
@@ -430,7 +436,11 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
 				LLOG("Original font: " << fnt << " " << fnt.GetAscent() << " " << f.GetDescent() <<
 				     ", replacement " << f << " " << f.GetAscent() << " " << f.GetDescent());
-				if((f.GetAscent() > a || f.GetDescent() > d) && apple_kbd.Find(chr) < 0) {
+				if((f.GetAscent() > a || f.GetDescent() > d)
+			#ifdef PLATFORM_COCOA
+				 && apple_kbd.Find(chr) < 0
+			#endif
+				) {
 					static sFontMetricsReplacement cache[256];
 					int q = CombineHash(fnt, f) & 255;
 					if(cache[q].src != fnt || cache[q].dst != f) {

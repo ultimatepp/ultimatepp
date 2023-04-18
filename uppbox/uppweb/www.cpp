@@ -731,11 +731,10 @@ struct DownloadItem {
 String Downloads()
 {
 	String r;
-	r << "{{1:2:2:2^@L "
+	r << "{{1:2:2^@L "
 	     "Date:: "
 	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/BSD/Solaris]:: "
-	     "[^app$ide$install_macos_en-us.html^ U`+`+ for MacOS]";
+	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/MacOS/BSD/Solaris]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 
 	SortedArrayMap<Date, Array<DownloadItem>> downs;
@@ -767,12 +766,11 @@ String Downloads()
 	
 	Date d = GetSysDate();
 	
-	for(int i = 0;i < 14; i++, d--) {
+	for(int i = 0; i < 14; i++, d--) {
 		Array<DownloadItem>& a = downs.GetAdd(d);
 		r << "::@W " << FormatDate(d, "YYYY-MM-DD") << ":: "
 		  << FindDown(a, "win") << ":: "
-		  << FindDown(a, "posix") << ":: "
-		  << FindDown(a, "macos");
+		  << FindDown(a, "posix");
 	}
 	r << "}}";
 	

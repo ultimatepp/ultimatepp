@@ -11,7 +11,7 @@
 { K_UP, NSUpArrowFunctionKey },
 { K_RIGHT, NSRightArrowFunctionKey },
 { K_DOWN, NSDownArrowFunctionKey },
-{ K_INSERT, NSInsertFunctionKey },
+// { K_INSERT, NSInsertFunctionKey }, // displayed as ? in a box in the menu - we do not want that
 { K_DELETE, NSDeleteFunctionKey },
 { K_F1, NSF1FunctionKey },
 { K_F2, NSF2FunctionKey },

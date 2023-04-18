@@ -130,7 +130,7 @@ CONSOLE_APP_MAIN
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
 #endif
 
-	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC +NOMM -rvsM");
 	FixMakefile(release + "/umkMakefile.in", release + "/Makefile");
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
 	FixMakefile(release + "/Makefile.in", release + "/Makefile");

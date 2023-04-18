@@ -215,14 +215,14 @@ struct MMImp {
 		Upp::dword k = e.keyCode;
 		WString x = ToWString((CFStringRef)(e.charactersIgnoringModifiers));
 		if(x.GetCount() == 1)
-		#define KEY(x) case #x[0]: k = kVK_ANSI_##x; break;
 			switch(ToUpper(x[0])) {
+			#define KEY(c) case #c[0]: k = kVK_ANSI_##c; break;
 				KEY(A); KEY(B); KEY(C); KEY(D); KEY(E); KEY(F); KEY(G); KEY(H); KEY(I); KEY(J);
 				KEY(K); KEY(L); KEY(M); KEY(N); KEY(O); KEY(P); KEY(Q); KEY(R); KEY(S); KEY(T);
 				KEY(U); KEY(V); KEY(W); KEY(X); KEY(Y); KEY(Z);
 			}
 		#undef KEY
-
+		
 		k = decode(k, kVK_ANSI_KeypadEnter, K_ENTER, kVK_Tab, K_TAB, K_DELTA|k)|up;
 
 		if(GetCtrl())

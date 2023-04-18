@@ -6,16 +6,13 @@ topic "U++ macOS Installation";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; U`+`+ macOS installation&]
-[s3; After downloading the archive, unpack it to your home folder. 
-Inside there is a theide application. (You will probably be denied 
-running as it is from unrecognized source, you can override this 
-by using local menu Open when running it for the first time).&]
-[s3; U`+`+ requires C`+`+ toolchain to build applications. The installation 
-in recent MacOS versions is trivial: open terminal and type `"clang`" 
-`- macos will then install commandline tools required by U`+`+.&]
-[s3; Additionally, U`+`+ needs openssl library (and some packages 
-require ssh2 as well). Install with [^https`:`/`/brew`.sh`/^ homebrew]:&]
-[s3; [C brew install openssl libssh2]&]
+[s3; After downloading the archive, unpack it and in terminal, invoke 
+./install script. If you do not have commandline toolchain installed, 
+the script should invoke the standard GUI installation of these 
+(you have to wait for installation to finish before proceeding).&]
+[s3; Additionally, U`+`+ needs openssl library and automatically 
+installs Homebrew package manager (if it is not installed yet) 
+and uses it to install openssl.&]
 [s3; As long as you keep [*/ theide ](or [*/ umk]) just in the original 
 directory, nothing will be written outside of it `- its `"sandboxed`". 
 If you get bored with U`+`+ and need to clean the space, simply 
