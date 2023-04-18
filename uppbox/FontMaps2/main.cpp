@@ -74,7 +74,7 @@ String ReadFontTable(Stream& in, const char *table, int fonti = 0)
 	}
 	return Null;
 }
-
+/*
 struct MyApp : TopWindow {
 	void Paint(Draw& w) {
 		String text;
@@ -88,7 +88,7 @@ struct MyApp : TopWindow {
 		int x = 10;
 		Font fnt(Font::FindFaceNameIndex("Noto Color Emoji"), 20);
 		FontTypeReader r;
-		r.Open(font);
+		r.Open(fnt);
 		for(auto r : r.ranges) {
 			for(int c = r.a; c <= r.b; c++) {
 				w.DrawText(x, y, WString(c, 1), fnt);
@@ -105,6 +105,7 @@ struct MyApp : TopWindow {
 GUI_APP_MAIN {
 	MyApp().Sizeable().Zoomable().Run();
 }
+*/
 
 GUI_APP_MAIN
 {
@@ -116,7 +117,7 @@ GUI_APP_MAIN
 	DDUMPHEX(ReadFontTable(in, "cmap", 2));
 	return;
 */
-#if 1
+#if 0
 /*	for(int i = 0; i < Font::GetFaceCount(); i++)
 		DDUMP(Font::GetFaceName(i));
 	return;*/
