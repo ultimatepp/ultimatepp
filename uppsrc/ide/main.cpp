@@ -122,6 +122,8 @@ bool TryLoadLibClang()
 #ifdef PLATFORM_MACOS
 	if(LoadLibClang("/Library/Developer/CommandLineTools/usr/lib"))
 		return true;
+	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
+		return true;
 #endif
 	String libdir = TrimBoth(Sys("llvm-config --libdir"));
 	int q = FindIndex(CommandLine(), "--clangdir");
