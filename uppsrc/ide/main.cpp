@@ -120,6 +120,8 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 bool TryLoadLibClang()
 {
 #ifdef PLATFORM_MACOS
+	if(LoadLibClang(TrimBoth(Sys("xcode-select -p")) + "/usr/lib"))
+		return true;
 	if(LoadLibClang("/Library/Developer/CommandLineTools/usr/lib"))
 		return true;
 	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))

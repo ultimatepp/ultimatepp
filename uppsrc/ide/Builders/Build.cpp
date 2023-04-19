@@ -100,7 +100,9 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	VectorMap<String, String> bm = GetMethodVars(method);
 	{
 		VectorMap<String, String> env = clone(Environment());
+		DDUMP(env);
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
+		DDUMP(env.Get("PATH", ""));
 #ifdef PLATFORM_WIN32
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
 		host.AddExecutable(GetExeDirFile("bin/llvm/bin"), "clang-format.exe");
@@ -124,7 +126,7 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 		}
 #endif
 #ifdef PLATFORM_COCOA
-		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")); // sometimes some of these are missing..
+		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin")); // sometimes some of these are missing..
 #endif
 		
 		if (IsAndroidMethod(method)) {
@@ -647,6 +649,7 @@ int HostSys(const char *cmd, String& out)
 	mb->CreateHost(host, false, false);
 	LocalProcess p;
 	host.canlog = false;
+	DDUMP(cmd);
 	if(host.StartProcess(p, cmd))
 		return p.Finish(out);
 	return Null;
