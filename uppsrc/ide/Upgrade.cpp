@@ -15,7 +15,7 @@ void Ide::UpgradeTheIDE()
 	bakpath = idepath + "/" + name + ".bak.app";
 	idepath << "/" << name << ".app";
 #else
-	idepath = GetExeFilePath()
+	idepath = GetExeFilePath();
 	newpath = idepath + ".new";
 	bakpath = String(~idepath, GetFileExtPos(idepath));
 	bakpath << ".bak" << GetExeExt();
