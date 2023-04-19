@@ -159,7 +159,6 @@ String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 
 	String r;
 	int code = HostSys(cmd + temp_path, r);
-	DDUMP(code);
 	
 	DeleteFile(temp_path);
 	
