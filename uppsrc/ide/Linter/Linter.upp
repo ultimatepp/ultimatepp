@@ -7,10 +7,16 @@ uses
 file
 	Linter.h,
 	Linter.cpp,
-	Config.cpp,
+	CppCheck readonly separator,
+	CppCheck.h,
+	CppCheck.cpp,
+	CppCheckConfig.cpp,
+	CppCheckConfig.lay,
+	Resources readonly separator,
 	Linter.key,
-	Linter.lay,
 	Linter.iml,
+	Docs readonly separator,
+	src.tpp,
 	Info readonly separator,
 	Copying,
 	Todo.txt;

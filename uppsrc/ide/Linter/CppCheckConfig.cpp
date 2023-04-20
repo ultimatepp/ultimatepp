@@ -1,6 +1,6 @@
-#include "Linter.h"
+#include "CppCheck.h"
 
-LinterConfigDlg::LinterConfigDlg()
+CppCheckConfigDlg::CppCheckConfigDlg()
 {
 	CtrlLayoutOKCancel(*this, "Linter Settings");
 	
@@ -30,7 +30,7 @@ LinterConfigDlg::LinterConfigDlg()
 	Reset();
 }
 
-void LinterConfigDlg::Reset()
+void CppCheckConfigDlg::Reset()
 {
 	language.SetIndex(1);
 	standard.SetIndex(5);
@@ -44,6 +44,7 @@ void LinterConfigDlg::Reset()
 	information = false;
 	unusedfunction = false;
 	missinginclude = false;
+	options <<= "-isrc.tpp -isrcdoc.tpp";
 	
 #ifdef flagWIN32
 	constexpr const char *deflibrarypath = "C:\\Program Files\\CppCheck\\cfg";
@@ -57,13 +58,13 @@ void LinterConfigDlg::Reset()
 	addons.Load(defpluginspath, "*.py");
 }
 
-void LinterConfigDlg::Load()
+void CppCheckConfigDlg::Load()
 {
 	Reset();
 	
 	try
 	{
-		Value v = Linter::LoadConfig()["CppCheck"];
+		Value v = GetLinter().LoadConfig()["CppCheck"];
 		if(IsNull(v))
 			return;
 	
@@ -107,6 +108,8 @@ void LinterConfigDlg::Load()
 
 		libs   <<= v["libraries"];
 		addons <<= v["addons"];
+		
+		verbose <<= v["verbose_mode"];
 	}
 	catch(...)
 	{
@@ -114,7 +117,7 @@ void LinterConfigDlg::Load()
 	}
 }
 
-void LinterConfigDlg::Save()
+void CppCheckConfigDlg::Save()
 {
 	JsonArray jl, jq;
 	for(const String& s : ~libs) jl << s;
@@ -141,11 +144,12 @@ void LinterConfigDlg::Save()
 	j("libraries", jl);
 	j("addons", jq);
 	j("cmdline_options", ~options);
+	j("verbose_mode", ~verbose);
 	
-	SaveFile(Linter::GetConfigFilePath(), Json("CppCheck", j));
+	SaveFile(GetLinter().GetConfigFilePath(), Json("CppCheck", j));
 }
 
-LinterConfigDlg::Pane::Pane()
+CppCheckConfigDlg::Pane::Pane()
 {
 	struct NameDisplay : Display
 	{
@@ -161,7 +165,7 @@ LinterConfigDlg::Pane::Pane()
 	dirpath.NullText("Select a valid library path");
 }
 
-void LinterConfigDlg::Pane::SetData(const Value& data)
+void CppCheckConfigDlg::Pane::SetData(const Value& data)
 {
 	if(IsValueArray(data)) {
 		for(const Value& q : data) {
@@ -172,7 +176,7 @@ void LinterConfigDlg::Pane::SetData(const Value& data)
 	}
 }
 
-Value LinterConfigDlg::Pane::GetData() const
+Value CppCheckConfigDlg::Pane::GetData() const
 {
 	ValueArray va;
 	for(int i = 0; i < list.GetCount(); i++)
@@ -181,7 +185,7 @@ Value LinterConfigDlg::Pane::GetData() const
 	return va;
 }
 
-void LinterConfigDlg::Pane::Load(const String& path, const String& ext)
+void CppCheckConfigDlg::Pane::Load(const String& path, const String& ext)
 {
 	if(path.IsEmpty())
 		return;

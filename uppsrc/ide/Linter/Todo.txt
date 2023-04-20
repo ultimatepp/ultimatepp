@@ -1,14 +1,22 @@
 DONE
-+ Check file, package, project (all) commands.
-+ TheIDe linter keyboard shortcuts for check file, package, and project commands.
-+ TheIDE linter setup pane in Setup dialog.
-+ Ability to select severity message types.
-+ Core configuration settings (language, standard, platform, etc.)
-+ Add Windows cppcheck executable detection.
-+ Add library file(s) support.
-+ Add the ability to pass additional command line options.
++ Linter package: Check file, package, project (all) commands.
++ Linter package: TheIDe linter keyboard shortcuts for check file, package, and project commands.
++ Linter package: TheIDE linter setup pane in Setup dialog.
++ CppCheck module: Ability to select severity message types.
++ CppCheck module: ore configuration settings (language, standard, platform, etc.)
++ CppCheck module: Add Windows cppcheck executable detection.
++ CppCheck module: Add library file(s) support.
++ CppCheck module: Add the ability to pass additional command line options.
++ Linter package: Redesigned as a framework to utilize multiple command-line-driven static analysis tools.
++ Linter package: Added initial API docs for implmenting linter modules.
++ CppCheck module: Re-implemented as a linter module.
++ CppCheck module: Can now show verbose messages.
++ CppCheck module: Can now show inconclusive results.
++ CppCheck module: Filtering out non C/C++ files and directories (*.tpp, *.log, etc).
 
 TODO:
-- Add configurable cppcheck build dir path (to speed-up analysis)
-- Add CLANG backend switch.
-- Filter out non C/C++ files (*.tpp, *.log, etc).
+- CppCheck module: Add configurable build dir path (to speed-up analysis).
+- CppCheck module: Add CLANG backend switch to CppCheck module.
+- CppCheck module: Allow per-project configuration file.
+- Linter package: Add a mechanism to switch between linter modules on-the-fly.
+- Linter package: Add a clang-tidy module.
