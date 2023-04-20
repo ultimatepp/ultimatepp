@@ -29,24 +29,24 @@ driven static analysis tools in TheIDE.&]
 [s3; &]
 [s5;:Linter`:`:GetConfigFilePath`(`): [@(0.0.255) virtual] String [* GetConfigFilePath]()
  `= 0&]
-[s2;%%  Should return the path of the linter module`'s configuration 
-file.&]
+[s2;%%  This method should return the path of the linter module`'s 
+configuration file.&]
 [s3; &]
 [s4; &]
 [s5;:Linter`:`:LoadConfig`(`): [@(0.0.255) virtual] Value [* LoadConfig]() 
 `= 0&]
-[s2;%%  Should loads the linter module`'s configuration.&]
+[s2;%%  This method should load the linter module`'s configuration.&]
 [s3; &]
 [s4; &]
 [s5;:Linter`:`:Exists`(`): [@(0.0.255) virtual] [@(0.0.255) bool] [* Exists]() 
 `= 0&]
-[s2;%%  Should returns true if the linter (e.g. cppcheck, clang`-tidy) 
-is present on the system.&]
+[s2;%%  This method should return true if the linter (e.g. cppcheck, 
+clang`-tidy) is present on the system.&]
 [s3; &]
 [s4; &]
 [s5;:Linter`:`:Settings`(`): [@(0.0.255) virtual] [@(0.0.255) void] [* Settings]() 
 `= 0&]
-[s2;%%  Should opens up the linter`'s configuration window.&]
+[s2;%%  This method should open up the linter`'s configuration window.&]
 [s3; &]
 [s4; &]
 [s5;:Linter`:`:CanCheck`(`): [@(0.0.255) bool] [* CanCheck]()&]
