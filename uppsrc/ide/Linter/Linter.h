@@ -8,69 +8,60 @@
 #include <ide/Core/Core.h>
 #include <ide/ide.h>
 
-#define LAYOUTFILE <ide/Linter/Linter.lay>
-#include <CtrlCore/lay.h>
+#define IMAGECLASS LinterImg
+#define IMAGEFILE <ide/Linter/Linter.iml>
+#include <Draw/iml_header.h>
 
-class Linter final {
+// Base class for command-line driven linter modules (static analyzers)
+class Linter {
 public:
-    Linter() {}
-    ~Linter() {}
+	Linter() {}
+	virtual ~Linter() {}
+	
+	virtual String GetConfigFilePath() = 0;
+	virtual Value  LoadConfig() = 0;
+	virtual bool   Exists()   = 0;
+	virtual void   Settings() = 0;
 
-    bool Exists();
-    bool CanCheck();
-    void CheckFile();
-    void CheckPackage();
-    void CheckAll();
+	bool CanCheck();
+	void CheckFile();
+	void CheckPackage();
+	void CheckProject();
+	
+	void StdMenu(Bar& menu);
+	void FileMenu(Bar& menu);
+	void PackageMenu(Bar& menu);
+	
+	struct Config {
+		virtual void Load()  = 0;
+		virtual void Save()  = 0;
+		virtual void Reset() = 0;
+	};
 
-    static Value LoadConfig();
-    static String GetConfigFilePath();
-
-    void Settings();
-    
-    void StdMenu(Bar& menu);
-    void FileMenu(Bar& menu);
-    void PackageMenu(Bar& menu);
+protected:
+	virtual String MakeCmdLine(Vector<String>& paths) = 0;
+	virtual void   OnResults(const String& results) = 0;
+	
+	String GetFileName();
+	String GetFilePath();
+	String GetPackageName();
+	String GetPackagePath();
 
 private:
-    String GetFileName();
-    String GetFilePath();
-    String GetPackageName();
-    String GetPackagePath();
-    String GetCmdLine();
-
-    void SysCmd(const String& cmd, const String& text, Stream& fs);
-    void DoCheck(Vector<String>& paths);
-    void ParseResults(const XmlNode& results);
+	void SysCmd(const String& cmd, const String& text, Stream& fs);
+	void DoCheck(Vector<String>& paths);
 };
 
 Linter& GetLinter();
 bool HasLinter();
 
-struct LinterConfigDlg : WithLinterConfigLayout<TopWindow> {
-    LinterConfigDlg();
-
-    void Load();
-    void Save();
-    void Reset();
-    
-    struct Pane : WithPaneLayout<ParentCtrl> {
-        Pane();
-
-        void    SetData(const Value& data) override;
-        Value   GetData() const override;
-        void    Load(const String& path, const String& ext);
-    };
-    
-    Pane libs, addons;
-};
+// Static analyzer modules.
+#include "CppCheck.h"
+//#include "ClangTidy.h"
 
 #define KEYGROUPNAME "Linter"
 #define KEYNAMESPACE LinterKeys
 #define KEYFILE <ide/Linter/Linter.key>
 #include <CtrlLib/key_header.h>
-
-#define IMAGECLASS LinterImg
-#define IMAGEFILE <ide/Linter/Linter.iml>
-#include <Draw/iml_header.h>
 
 #endif
