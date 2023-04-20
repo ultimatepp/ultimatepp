@@ -531,7 +531,7 @@ bool inline_memeq8_aligned(const void *p, const void *q, size_t count)
 		s += 2;
 		t += 2;
 	}
-	if(count & 2) {
+	if(count & 1) {
 		if(*t != *s)
 			return false;
 	}

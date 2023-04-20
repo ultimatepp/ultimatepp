@@ -124,7 +124,7 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 		}
 #endif
 #ifdef PLATFORM_COCOA
-		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")); // sometimes some of these are missing..
+		host.exedirs.Append(SplitDirs("/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin")); // sometimes some of these are missing..
 #endif
 		
 		if (IsAndroidMethod(method)) {

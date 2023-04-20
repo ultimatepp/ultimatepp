@@ -2,11 +2,25 @@
 
 void Ide::UpgradeTheIDE()
 {
-	String idepath = GetExeFilePath();
-	String newpath = idepath + ".new";
-	String bakpath(~idepath, GetFileExtPos(idepath));
-	bakpath << ".bak" << GetExeExt();
+	String idepath, newpath, bakpath;
+#ifdef PLATFORM_COCOA
+	idepath = GetAppFolder();
+	String name = GetFileTitle(idepath);
+	idepath = GetFileFolder(idepath);
+	String target_dir = idepath + "/" + name + ".new";
+	DeleteFolderDeep(target_dir);
+	RealizeDirectory(target_dir);
 	
+	newpath = target_dir + "/" + name + ".app";
+	bakpath = idepath + "/" + name + ".bak.app";
+	idepath << "/" << name << ".app";
+#else
+	idepath = GetExeFilePath();
+	newpath = idepath + ".new";
+	bakpath = String(~idepath, GetFileExtPos(idepath));
+	bakpath << ".bak" << GetExeExt();
+#endif
+
 	int tbak = targetmode;
 	String tmbak = StoreAsString(release);
 
@@ -26,7 +40,11 @@ void Ide::UpgradeTheIDE()
 	targetmode = 1;
 
 	if(Build()) {
-		FileDelete(bakpath);
+		#ifdef PLATFORM_COCOA
+			DeleteFolderDeep(bakpath);
+		#else
+			FileDelete(bakpath);
+		#endif
 		if(FileExists(bakpath))
 			Exclamation("Unable to delete&" + bakpath);
 		else {
@@ -34,10 +52,14 @@ void Ide::UpgradeTheIDE()
 			FileMove(idepath, bakpath);
 			PutVerbose("Moving " + newpath + " to " + idepath);
 			FileMove(newpath, idepath);
+		#ifdef PLATFORM_COCOA
+			DeleteFolderDeep(target_dir);
+		#endif
 			PutConsole("Upgrade finished, please restart theide.");
 		}
 	}
 
+	
 	LoadFromString(release, tmbak);
 	targetmode = tbak;
 }

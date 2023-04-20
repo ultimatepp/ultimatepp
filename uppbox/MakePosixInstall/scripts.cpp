@@ -20,7 +20,7 @@ if [[ "$uname" == 'Darwin' ]]; then
     AskContinue
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
-  brew install openssl
+  brew install openssl clang-format
   if clang++ --version; then
     echo "Commandline Development Tools already installed"
   else

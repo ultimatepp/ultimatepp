@@ -2,7 +2,7 @@ const char *readme =
 ///////////////////////////////////////////////////////////////////////////////
 R"--(U++ POSIX Installation
 
-U++ for POSIX (Linux, OpenBSD, FreeBSD, OpenSolaris) comes as single sandboxed
+U++ for POSIX (Linux, MacOS, OpenBSD, FreeBSD, OpenSolaris) comes as single sandboxed
 archive. After downloading, you need to unpack this archive to suitable location with
 
 tar xf upp-posix-14411.tar.xz
@@ -42,7 +42,7 @@ Setup / Install theide.desktop. This will write proper .desktop file to
 ~/.local/share/applications - the effect of this on most desktop environments
 is that TheIDE will appear in the desktop menu somewhere, usually in the Start
 menu under Programming category. Sometimes desktop environment needs restart
-for this to take effect.
+for this to take effect. (This does not apply to MacOS).
 
 
 OpenBSD specific notes

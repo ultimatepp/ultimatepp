@@ -416,15 +416,15 @@ void Ide::Setup(Bar& menu)
 		}
 	});
 
-#ifndef PLATFORM_COCOA
 	const Workspace& wspc = IdeWorkspace();
 	if(wspc[0] == "ide")
 		for(int i = 0; i < wspc.GetCount(); i++)
-			if(wspc[i] == "ide/Core")
+			if(wspc[i] == "ide/Core") {
 				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
-#ifdef PLATFORM_POSIX
+				break;
+			}
+#ifndef PLATFORM_COCOA
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
-#endif
 #endif
 
 	if(menu.IsMenuBar())
