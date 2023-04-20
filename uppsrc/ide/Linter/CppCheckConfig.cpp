@@ -44,6 +44,7 @@ void CppCheckConfigDlg::Reset()
 	information = false;
 	unusedfunction = false;
 	missinginclude = false;
+	verbose = false;
 	options <<= "-isrc.tpp -isrcdoc.tpp";
 	
 #ifdef flagWIN32
