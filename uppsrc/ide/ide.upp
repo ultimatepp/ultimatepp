@@ -21,8 +21,9 @@ uses
 	Report,
 	Core/SSL,
 	plugin/md,
-	ide/clang,
-	ide/Linter;
+	ide/clang;
+
+uses(LINTER) ide/Linter;
 
 file
 	IDE readonly separator,
@@ -132,7 +133,8 @@ mainconfig
 	"" = "GUI CHECKCLIPBOARD",
 	"" = "GUI PEAKMEM",
 	"" = "GUI HEAPLOG",
-	"" = "GUI X11";
+	"" = "GUI X11",
+	"" = "GUI LINTER";
 
 custom() "",
 	"ASDFASDFASDF",

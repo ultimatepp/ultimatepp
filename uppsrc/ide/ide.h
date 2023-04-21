@@ -16,11 +16,14 @@
 #include <ide/Java/Java.h>
 #include <ide/LayDes/LayDes.h>
 #include <ide/Debuggers/Debuggers.h>
-#include <ide/Linter/Linter.h>
 #include <TextDiffCtrl/TextDiffCtrl.h>
 #include <ide/Designers/Designers.h>
 #include <ide/Android/Android.h>
 #include <plugin/md/Markdown.h>
+
+#ifdef flagLINTER
+#include <ide/Linter/Linter.h>
+#endif
 
 #include "About.h"
 #include "MethodsCtrls.h"
