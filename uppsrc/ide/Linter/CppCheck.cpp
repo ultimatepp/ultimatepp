@@ -41,7 +41,9 @@ void CppCheck::Settings()
 
 String CppCheck::MakeCmdLine(Vector<String>& paths)
 {
-	String path = Join(paths, " ", true);
+	String path;
+	for(const String& s : paths)
+		path << "\"" << s << "\" ";
 	
 	Value v = LoadConfig()["CppCheck"];
 	if(IsNull(v))

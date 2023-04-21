@@ -2,7 +2,7 @@
 
 CppCheckConfigDlg::CppCheckConfigDlg()
 {
-	CtrlLayoutOKCancel(*this, "Linter Settings");
+	CtrlLayoutOKCancel(*this, "CppCheck Settings");
 	
 	for(const Value& v : { "c", "c++"})
 		language.Add(v);
