@@ -86,9 +86,8 @@ lock mode..&]
 [* MakeCmdLine](Vector<String>[@(0.0.255) `&] [*@3 paths]) `= 0&]
 [s2;%% The deriving module must define this function to create and 
 return a [/ complete ]command line to be executed by TheIDE.  [%-*@3 paths] 
-contain the path of one or more files to be analysed, depending 
-on the range of the given operation (file, package, project). 
-Note that each path is enclosed in quotes&]
+contain the path of one or more files to be analyzed, depending 
+on the range of the given operation (file, package, project).&]
 [s3;%%  &]
 [s4; &]
 [s5;:Linter`:`:OnResults`(const Upp`:`:String`&`): [@(0.0.255) virtual] 

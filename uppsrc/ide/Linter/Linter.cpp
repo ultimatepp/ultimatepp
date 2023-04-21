@@ -52,7 +52,7 @@ void Linter::CheckFile()
 {
 	if(!Exists())
 		return;
-	Vector<String> paths = { "\"" + GetFilePath() + "\"" };
+	Vector<String> paths = { GetFilePath() };
 	DoCheck(paths);
 }
 
@@ -60,7 +60,7 @@ void Linter::CheckPackage()
 {
 	if(!Exists())
 		return;
-	Vector<String> paths = { "\"" + GetFileFolder(GetPackagePath()) + "\"" };
+	Vector<String> paths = { GetFileFolder(GetPackagePath()) };
 	DoCheck(paths);
 }
 
@@ -71,7 +71,7 @@ void Linter::CheckProject()
 	Vector<String> paths;
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
-		paths.Add() = "\"" + GetFileFolder(PackagePath(wspc[i])) + "\"";
+		paths.Add() = GetFileFolder(PackagePath(wspc[i]));
 	DoCheck(paths);
 }
 
