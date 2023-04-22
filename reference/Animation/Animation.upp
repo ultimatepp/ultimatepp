@@ -1,0 +1,13 @@
+description "Skinning Button using Chameleon\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Chameleon.lay,
+	Chameleon.iml;
+
+mainconfig
+	"" = "GUI";
+

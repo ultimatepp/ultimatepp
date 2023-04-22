@@ -339,7 +339,7 @@ const Button::Style *Button::St() const
 	return st;
 }
 
-void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
+void Button::PaintButton(Draw& w, Ctrl *ctrl, const Rect& r, const Button::Style& st, int visualstate, bool focus,
                          const String& label, Font font, const Image& img,
                          bool monoimg, int accesskey, bool visibleaccesskeys, bool disabled)
 {
@@ -355,7 +355,7 @@ void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int vi
 		dl.accesskey = accesskey;
 	if(monoimg)
 		dl.lcolor = SColorText;
-	ChPaint(w, r, st.look[visualstate]);
+	Upp::ChPaint(w, ctrl, r, st.look[visualstate]);
 	dl.ink = st.textcolor[visualstate];
 	if(monoimg)
 		dl.lcolor = st.monocolor[visualstate];
@@ -368,7 +368,7 @@ void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int vi
 
 void Button::Paint(Draw& w)
 {
-	PaintButton(w, GetSize(), *St(), GetVisualState(), HasFocus(),
+	PaintButton(w, this, GetSize(), *St(), GetVisualState(), HasFocus(),
 	            label, font, img,
 	            monoimg, accesskey, VisibleAccessKeys(), !IsShowEnabled());
 }

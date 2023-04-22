@@ -92,7 +92,7 @@ void ChLookWith(Value *look, const Image& image, const Color *color, int n)
 		look[i] = ChLookWith(look[i], image, color[i]);
 }
 
-Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink = Null);
+Value sChOp(Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink = Null);
 
 struct sChBorder {
 	const ColorF *border;
@@ -160,7 +160,7 @@ static void sDrawScrollbarThumb(Draw& w, int x, int y, int cx, int cy, const Ima
 	DrawPart(ter, ecx); // right ending
 }
 
-Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
+Value StdChLookFn(Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink)
 {
 	if(IsType<sChLookWith>(v)) {
 		const sChLookWith& x = ValueTo<sChLookWith>(v);
@@ -177,7 +177,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 				w.DrawImage(p.x, p.y, x.img);
 			return 1;
 		}
-		return sChOp(w, r, x.look, op);
+		return sChOp(w, ctrl, r, x.look, op);
 	}
 	if(IsType<sChBorder>(v)) {
 		sChBorder b = ValueTo<sChBorder>(v);
@@ -343,7 +343,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 	return Null;
 }
 
-typedef Value (*ChPainterFn)(Draw& w, const Rect& r, const Value& v, int op, Color ink);
+typedef Function<Value(Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink)> ChPainterFn;
 
 Vector<ChPainterFn>& sChps()
 {
@@ -351,10 +351,18 @@ Vector<ChPainterFn>& sChps()
 	return x;
 }
 
+void ChLookFn(Value (*fn)(Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink))
+{
+//	if(FindIndex(sChps(), fn) < 0)
+		sChps().Add(fn);
+}
+
 void ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& v, int op, Color ink))
 {
-	if(FindIndex(sChps(), fn) < 0)
-		sChps().Add(fn);
+//	if(FindIndex(sChps(), fn) < 0)
+		sChps().Add([=](Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink) {
+			return fn(w, r, v, op, ink);
+		});
 }
 
 struct sStyleCh : Moveable<sStyleCh> {
@@ -421,41 +429,41 @@ void ChFinish()
 	sLabelTextColorMismatch = IsDark(SColorText()) != IsDark(SColorLabel());
 }
 
-Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink)
+Value sChOp(Draw& w, Ctrl *ctrl, const Rect& r, const Value& v, int op, Color ink)
 {
 	if(r.right < r.left || r.bottom < r.top)
 		return Rect(0, 0, 0, 0);
 	Value q;
 	if(!IsNull(v))
 		for(int i = sChps().GetCount() - 1; i >= 0; i--) {
-			q = (*sChps()[i])(w, r, v, op, ink);
+			q = sChps()[i](w, ctrl, r, v, op, ink);
 			if(!IsNull(q))
 				break;
 		}
 	return q;
 }
 
-void ChPaint(Draw& w, const Rect& r, const Value& look, Color ink)
+void ChPaint(Draw& w, Ctrl *ctrl, const Rect& r, const Value& look, Color ink)
 {
-	sChOp(w, r, look, LOOK_PAINT, ink);
+	sChOp(w, ctrl, r, look, LOOK_PAINT, ink);
 }
 
-void ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+void ChPaint(Draw& w, Ctrl *ctrl, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
-	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINT, ink);
+	sChOp(w, ctrl, RectC(x, y, cx, cy), look, LOOK_PAINT, ink);
 }
 
-void ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink)
+void ChPaintEdge(Draw& w, Ctrl *ctrl, const Rect& r, const Value& look, Color ink)
 {
-	sChOp(w, r, look, LOOK_PAINTEDGE, ink);
+	sChOp(w, ctrl, r, look, LOOK_PAINTEDGE, ink);
 }
 
-void ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+void ChPaintEdge(Draw& w, Ctrl *ctrl, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
-	sChOp(w, RectC(x, y, cx, cy), look, LOOK_PAINTEDGE, ink);
+	sChOp(w, ctrl, RectC(x, y, cx, cy), look, LOOK_PAINTEDGE, ink);
 }
 
-void ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink)
+void ChPaintBody(Draw& w, Ctrl *ctrl, const Rect& r, const Value& look, Color ink)
 {
 	Rect m = ChMargins(look);
 	w.Clip(r);
@@ -464,15 +472,50 @@ void ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink)
 	w.End();
 }
 
-void ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+void ChPaintBody(Draw& w, Ctrl *ctrl, int x, int y, int cx, int cy, const Value& look, Color ink)
 {
 	ChPaintBody(w, RectC(x, y, cx, cy), look, ink);
 }
 
-Rect ChMargins(const Value& look)
+Rect ChMargins(Ctrl *ctrl, const Value& look)
 {
 	NilDraw w;
-	return sChOp(w, Null, look, LOOK_MARGINS);
+	return sChOp(w, ctrl, Null, look, LOOK_MARGINS);
+}
+
+void ChPaint(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	ChPaint(w, NULL, r, look, ink);
+}
+
+void ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	ChPaint(w, NULL, x, y, cx, cy, look, ink);
+}
+
+void ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	ChPaintEdge(w, NULL, r, look, ink);
+}
+
+void ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	ChPaintEdge(w, NULL, x, y, cx, cy, look, ink);
+}
+
+void ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	ChPaintBody(w, NULL, r, look, ink);
+}
+
+void ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	ChPaintBody(w, NULL, x, y, cx, cy, look, ink);
+}
+
+Rect ChMargins(const Value& look)
+{
+	return ChMargins(NULL, look);
 }
 
 void   DeflateMargins(Rect& r, const Rect& m)

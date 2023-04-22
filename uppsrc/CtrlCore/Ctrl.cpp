@@ -1023,6 +1023,42 @@ bool   Ctrl::InCurrentLoop() const
 	return GetLoopCtrl() == this;
 }
 
+void Ctrl::ChPaint(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	Upp::ChPaint(w, this, r, look, ink);
+}
+
+void Ctrl::ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	Upp::ChPaint(w, this, x, y, cx, cy, look, ink);
+}
+
+void Ctrl::ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	Upp::ChPaintEdge(w, this, r, look, ink);
+}
+
+void Ctrl::ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	Upp::ChPaintEdge(w, this, x, y, cx, cy, look, ink);
+}
+
+void Ctrl::ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink)
+{
+	Upp::ChPaintBody(w, this, r, look, ink);
+}
+
+void Ctrl::ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink)
+{
+	Upp::ChPaintBody(w, this, x, y, cx, cy, look, ink);
+}
+
+Rect Ctrl::ChMargins(const Value& look)
+{
+	return Upp::ChMargins(this, look);
+}
+
+
 #ifdef HAS_TopFrameDraw
 
 ViewDraw::ViewDraw(Ctrl *ctrl, const Rect& r)

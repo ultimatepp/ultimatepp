@@ -214,7 +214,7 @@ void StatusBar::TopFrame::FrameLayout(Rect& r)
 
 void StatusBar::TopFrame::FramePaint(Draw& w, const Rect& r)
 {
-	ChPaint(w, r, style->look);
+	Upp::ChPaint(w, r, style->look);
 }
 
 void StatusBar::Paint(Draw& w)

@@ -1371,7 +1371,16 @@ public:
 	static Size  StdSampleSize()    { return Size(DPI(126), DPI(106)); }
 	
 	static PenInfo GetPenInfo()     { return pen; }
-	
+
+public:
+	void   ChPaint(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+	void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+	void   ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+	void   ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+	void   ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink = Null);
+	void   ChPaintBody(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+	Rect   ChMargins(const Value& look);
+
 public:
 	static void SetSkin(void (*skin)());
 

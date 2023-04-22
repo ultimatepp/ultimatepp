@@ -105,8 +105,14 @@ template <class K, class T, class V>
 template <class KK, class TT>
 T&  AMap<K, T, V>::GetPut_(KK&& k, TT&& x)
 {
-	int i = key.FindPut(std::forward<KK>(k));
-	return i < value.GetCount() ? value[i] : value.Add(std::forward<TT>(x));
+	int i = key.Find(std::forward<KK>(k));
+	if(i < 0) {
+		i = key.Put(k);
+		if(i < value.GetCount())
+			return value[i] = std::forward<TT>(x);
+		return value.Add(std::forward<TT>(x));
+	}
+	return value[i];
 }
 
 template <class K, class T, class V>
