@@ -20,6 +20,7 @@ public:
 	
 	virtual String GetConfigFilePath() = 0;
 	virtual Value  LoadConfig() = 0;
+	virtual void   SaveConfig(const Value& cfg) = 0;
 	virtual bool   Exists()   = 0;
 	virtual void   Settings() = 0;
 
@@ -39,7 +40,9 @@ public:
 	};
 
 protected:
-	virtual String MakeCmdLine(Vector<String>& paths) = 0;
+	enum class Scope { File, Package, Project };
+	
+	virtual String MakeCmdLine(Scope sc, Vector<String>& paths) = 0;
 	virtual void   OnResults(const String& results) = 0;
 	
 	String GetFileName();
@@ -49,7 +52,7 @@ protected:
 
 private:
 	void SysCmd(const String& cmd, const String& text, Stream& fs);
-	void DoCheck(Vector<String>& paths);
+	void DoCheck(Scope sc, Vector<String>& paths);
 };
 
 Linter& GetLinter();

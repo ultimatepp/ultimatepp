@@ -10,11 +10,12 @@ class CppCheck final : public Linter {
 public:
 	String GetConfigFilePath() final;
 	Value  LoadConfig() final;
+	void   SaveConfig(const Value& cfg) final;
 	bool   Exists() final;
 	void   Settings() final;
 
 protected:
-	String MakeCmdLine(Vector<String>& paths) final;
+	String MakeCmdLine(Scope sc, Vector<String>& paths) final;
 	void   OnResults(const String& results) final;
 private:
 	void DecodeXML(const XmlNode& results);

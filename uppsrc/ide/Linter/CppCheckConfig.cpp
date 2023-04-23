@@ -57,6 +57,8 @@ void CppCheckConfigDlg::Reset()
 
 	libs.Load(deflibrarypath, "*.cfg");
 	addons.Load(defpluginspath, "*.py");
+	
+	Title("CppCheck Configuration [" + IdeGetCurrentMainPackage() + "]");
 }
 
 void CppCheckConfigDlg::Load()
@@ -147,7 +149,7 @@ void CppCheckConfigDlg::Save()
 	j("cmdline_options", ~options);
 	j("verbose_mode", ~verbose);
 	
-	SaveFile(GetLinter().GetConfigFilePath(), Json("CppCheck", j));
+	GetLinter().SaveConfig(Json("CppCheck", j).ToString());
 }
 
 CppCheckConfigDlg::Pane::Pane()
