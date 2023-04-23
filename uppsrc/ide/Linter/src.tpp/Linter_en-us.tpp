@@ -17,6 +17,18 @@ topic "Linter";
 This class provides a generic interface for integrating command`-line 
 driven static analysis tools in TheIDE.&]
 [s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Enumerators]]}}&]
+[s0;%% &]
+[s0; enum_[@(0.0.255) class ][* Scope]&]
+[s2;b17;a17;%% Constants used to indicate the scope of the analysis.&]
+[s7;i1120;a17;:Ctrl`:`:CENTER:%% [%-*C@3 File]-|Denotes a single file 
+analysis.&]
+[s7;i1120;a17;:Ctrl`:`:LEFT:%% [%-*C@3 Package]-|Denotes a single package 
+analysis&]
+[s7;i1120;a17;:Ctrl`:`:RIGHT:%% [%-*C@3 Project]-|Denotes a complete 
+(all packages `+ files) analysis.&]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s5;:Linter`:`:Linter`(`): [* Linter]()&]
 [s2;%% Default constructor.&]
@@ -36,6 +48,12 @@ configuration file.&]
 [s5;:Linter`:`:LoadConfig`(`): [@(0.0.255) virtual] Value [* LoadConfig]() 
 `= 0&]
 [s2;%%  This method should load the linter module`'s configuration.&]
+[s3; &]
+[s4; &]
+[s5;:Linter`:`:SaveConfig`(const Upp`:`:Value`&`): [@(0.0.255) void] 
+[* SaveConfig]([@(0.0.255) const] Value[@(0.0.255) `&] [*@3 cfg])&]
+[s2;%% This method should save the linter module`'s configuration 
+to file.&]
 [s3; &]
 [s4; &]
 [s5;:Linter`:`:Exists`(`): [@(0.0.255) virtual] [@(0.0.255) bool] [* Exists]() 
@@ -89,6 +107,15 @@ return a [/ complete ]command line to be executed by TheIDE.  [%-*@3 paths]
 contain the path of one or more files to be analyzed, depending 
 on the range of the given operation (file, package, project).&]
 [s3;%%  &]
+[s4; &]
+[s5;:Linter`:`:MakeCmdLine`(Linter`:`:Scope`,Vector`&`): String [* MakeCmdLine]([@(0.0.255) e
+num] Scope [*@3 sc], Vector<String>[@(0.0.255) `&] [*@3 paths])&]
+[s2;%% The deriving module must define this function to create and 
+return a [/ complete ]command line to be executed by TheIDE.  [%-*@3 paths] 
+contain the path of one or more files to be analyzed, depending 
+on the range of the given operation (file, package, project). 
+[%-*@3 sc] indicates the scope of the operation.&]
+[s3; &]
 [s4; &]
 [s5;:Linter`:`:OnResults`(const Upp`:`:String`&`): [@(0.0.255) virtual] 
 [@(0.0.255) void] [* OnResults]([@(0.0.255) const] String[@(0.0.255) `&] 

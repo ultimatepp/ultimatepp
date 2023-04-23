@@ -53,7 +53,7 @@ void Linter::CheckFile()
 	if(!Exists())
 		return;
 	Vector<String> paths = { GetFilePath() };
-	DoCheck(paths);
+	DoCheck(Scope::File, paths);
 }
 
 void Linter::CheckPackage()
@@ -61,7 +61,7 @@ void Linter::CheckPackage()
 	if(!Exists())
 		return;
 	Vector<String> paths = { GetFileFolder(GetPackagePath()) };
-	DoCheck(paths);
+	DoCheck(Scope::Package, paths);
 }
 
 void Linter::CheckProject()
@@ -72,7 +72,7 @@ void Linter::CheckProject()
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
 		paths.Add() = GetFileFolder(PackagePath(wspc[i]));
-	DoCheck(paths);
+	DoCheck(Scope::Project, paths);
 }
 
 void Linter::SysCmd(const String& cmd, const String& text, Stream& fs)
@@ -109,7 +109,7 @@ void Linter::SysCmd(const String& cmd, const String& text, Stream& fs)
 	}
 }
 
-void Linter::DoCheck(Vector<String>& paths)
+void Linter::DoCheck(Scope sc, Vector<String>& paths)
 {
 	Ide   *ide  = TheIde();
 	String tmp  = GetTempFileName();
@@ -122,7 +122,7 @@ void Linter::DoCheck(Vector<String>& paths)
 		ide->ShowConsole();
 		ide->PutConsole("Running linter..");
 		String text = "Analyzing " + (paths.GetCount() == 1 ? Upp::GetFileName(paths[0]) : "all packages");
-		SysCmd(MakeCmdLine(paths), text, fo);
+		SysCmd(MakeCmdLine(sc, paths), text, fo);
 		fo.Close();
 		ide->Sync();
 		ide->PutConsole("Parsing linter output..");

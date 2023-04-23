@@ -5,12 +5,23 @@ static bool sVerboseMode = false;
 
 String CppCheck::GetConfigFilePath()
 {
-	return ConfigFile("cppcheck.json");
+	return ConfigFile(AppendFileName("cppcheck", IdeGetCurrentMainPackage() + "-cppcheck.json"));
 }
 
 Value CppCheck::LoadConfig()
 {
-	return ParseJSON(LoadFile(GetConfigFilePath()));
+	String path = GetConfigFilePath();
+	if(!FileExists(path))
+		RealizePath(path);
+	return ParseJSON(LoadFile(path));
+}
+
+void CppCheck::SaveConfig(const Value& cfg)
+{
+	String path = GetConfigFilePath();
+	if(!FileExists(path))
+		RealizePath(path);
+	SaveChangedFile(path, cfg);
 }
 
 bool CppCheck::Exists()
@@ -39,7 +50,7 @@ void CppCheck::Settings()
 		dlg.Save();
 }
 
-String CppCheck::MakeCmdLine(Vector<String>& paths)
+String CppCheck::MakeCmdLine(Scope sc, Vector<String>& paths)
 {
 	String path;
 	for(const String& s : paths)
