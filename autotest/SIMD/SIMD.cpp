@@ -12,6 +12,12 @@ CONSOLE_APP_MAIN
 #ifdef CPU_SIMD
 	{
 		RGBA x = Color(11, 22, 33);
+	#ifdef PLATFORM_MACOS0 // not ideal, but we need 255 11 22 33
+		x.b = 255;
+		x.g = 11;
+		x.r = 22;
+		x.a = 33;
+	#endif
 		RGBA *s = &x;
 		
 		DUMP(LoadRGBAF(&x));
