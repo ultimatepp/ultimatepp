@@ -2,8 +2,6 @@
 
 using namespace Upp;
 
-#ifdef CPP_11
-
 template <class T>
 void Test()
 {
@@ -78,14 +76,3 @@ CONSOLE_APP_MAIN
 	DLOG("--------------------------");
 	DLOG("Everything OK");
 }
-
-#else
-
-CONSOLE_APP_MAIN
-{
-	StdLogSetup(LOG_COUT|LOG_FILE);
-
-	DLOG("Not a C++11 compiler - test omitted");
-}
-
-#endif
