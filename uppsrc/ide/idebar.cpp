@@ -798,10 +798,18 @@ void Ide::BrowseMenu(Bar& menu)
 		}
 
 		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK1(History, -1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_LEFT)
+		#else
 			.Key(K_ALT_LEFT)
+		#endif
 			.Enable(GetHistory(-1) >= 0);
 		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK1(History, 1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_RIGHT)
+		#else
 			.Key(K_ALT_RIGHT)
+		#endif
 			.Enable(GetHistory(1) >= 0);
 
 		if(menu.IsMenuBar()) {
