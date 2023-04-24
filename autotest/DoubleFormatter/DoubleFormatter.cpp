@@ -81,6 +81,10 @@ CONSOLE_APP_MAIN
 			x = -x;
 		}
 	}
-	
+
+#ifdef PLATFORM_BSD
+	CheckLogEtalon(GetDataFile("MacEtalon.log"));
+#else
 	CheckLogEtalon();
+#endif
 }
