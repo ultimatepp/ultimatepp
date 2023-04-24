@@ -11,7 +11,7 @@ CONSOLE_APP_MAIN
 	
 	LOG(downloads);
 	
-	int q = downloads.FindAfter(">U++ for MacOS</a></p>");
+	int q = downloads.FindAfter("U++ for Linux/MacOS/BSD/Solaris</a></p>");
 	ASSERT(q > 0);
 	q = downloads.Find(">202", q); // should be good until 2030...:)
 	ASSERT(q > 0);
