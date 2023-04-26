@@ -649,6 +649,8 @@ int64 GetFileLength(const char *name) {
 }
 
 bool DirectoryExists(const char *name) {
+	if(*name == '\0')
+		return false;
 	FindFile ff(name + String("/*"));
 	return ff;
 }

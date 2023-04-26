@@ -42,7 +42,7 @@ void AndroidSDK::DeduceBuildToolsRelease()
 
 bool AndroidSDK::Validate() const
 {
-	if(!DirectoryExists(path) || !FileExists(AndroidPath())) return false;
+	if(IsNull(path) || !DirectoryExists(path) || !FileExists(AndroidPath())) return false;
 	
 	return true;
 }
