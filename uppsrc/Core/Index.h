@@ -93,8 +93,8 @@ public:
 	int         Put(T&& k)                  { return Put0(pick(k), Smear(k)); }
 	int         FindPut(const T& k, bool& p){ return FindPut0(k, p); }
 	int         FindPut(T&& k, bool& p)     { return FindPut0(pick(k), p); }
-	int         FindPut(const T& k)         { bool p; return FindPut0(k); }
-	int         FindPut(T&& k)              { bool p; return FindPut0(pick(k)); }
+	int         FindPut(const T& k)         { bool p; return FindPut0(k, p); }
+	int         FindPut(T&& k)              { bool p; return FindPut0(pick(k), p); }
 
 	void        Unlink(int i);
 	int         UnlinkKey(const T& k);
