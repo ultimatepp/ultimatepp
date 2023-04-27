@@ -185,7 +185,6 @@ int Console::Flush()
 
 int Console::Execute(One<AProcess> pick_ p, const char *command, Stream *out, bool q)
 {
-	DLOG("Execute " << command);
 	Wait();
 	if(!Run(pick(p), command, out, q, 0))
 		return -1;
