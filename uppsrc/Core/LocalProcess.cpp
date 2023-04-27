@@ -430,6 +430,7 @@ bool LocalProcess::IsRunning() {
 		return false;
 	if(GetExitCodeProcess(hProcess, &exitcode) && exitcode == STILL_ACTIVE)
 		return true;
+	WaitForSingleObject(hProcess, 200); // this is needed to finish pushing the output to the pipe, 200ms instead of INFINITE just prudence
 	dword n;
 	if(PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) && n)
 		return true;
