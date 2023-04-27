@@ -1,0 +1,12 @@
+description "Testing VectorMap::GetPut\377";
+
+uses
+	Core;
+
+file
+	Etalon.log,
+	GetPut.cpp;
+
+mainconfig
+	"" = "";
+

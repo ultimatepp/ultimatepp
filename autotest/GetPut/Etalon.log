@@ -1,0 +1,11 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\GetPut.exe 27.04.2023 08:59:05, user: cxl
+
+data = {0: zero, 1: one}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = one
+data = {0: zero, UNLINKED 1: one}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = ONE
+data = {0: zero, 1: I}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = I
