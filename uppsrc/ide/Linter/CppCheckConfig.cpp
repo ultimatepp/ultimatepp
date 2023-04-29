@@ -1,6 +1,7 @@
 #include "CppCheck.h"
 
-CppCheckConfigDlg::CppCheckConfigDlg()
+CppCheckConfigDlg::CppCheckConfigDlg(Linter& l)
+: Linter::Config(l)
 {
 	CtrlLayoutOKCancel(*this, "CppCheck Settings");
 	
@@ -67,10 +68,10 @@ void CppCheckConfigDlg::Load()
 	
 	try
 	{
-		Value v = GetLinter().LoadConfig()["CppCheck"];
+		Value v = linter.LoadConfig()["CppCheck"];
 		if(IsNull(v))
 			return;
-	
+		
 		auto LoadList = [this, &v](DropList& lst, const String& id, const Value& def)
 		{
 			int i = lst.FindValue(v[id]);
@@ -148,8 +149,8 @@ void CppCheckConfigDlg::Save()
 	j("addons", jq);
 	j("cmdline_options", ~options);
 	j("verbose_mode", ~verbose);
-	
-	GetLinter().SaveConfig(Json("CppCheck", j).ToString());
+
+	linter.SaveConfig(Json("CppCheck", j).ToString());
 }
 
 CppCheckConfigDlg::Pane::Pane()

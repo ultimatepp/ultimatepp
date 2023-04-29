@@ -8,21 +8,27 @@
 
 class CppCheck final : public Linter {
 public:
-	String GetConfigFilePath() final;
+	CppCheck(const String& name) : Linter(name) {}
+	
+	String GetConfigFilePath() const final;
 	Value  LoadConfig() final;
 	void   SaveConfig(const Value& cfg) final;
-	bool   Exists() final;
+
+	bool   Exists() const final;
 	void   Settings() final;
 
 protected:
 	String MakeCmdLine(Scope sc, Vector<String>& paths) final;
 	void   OnResults(const String& results) final;
+
 private:
 	void DecodeXML(const XmlNode& results);
 };
 
+INITIALIZE(CppCheck);
+
 struct CppCheckConfigDlg final : Linter::Config, WithCppCheckConfigLayout<TopWindow> {
-	CppCheckConfigDlg();
+	CppCheckConfigDlg(Linter& l);
 
 	void Load() final;
 	void Save() final;

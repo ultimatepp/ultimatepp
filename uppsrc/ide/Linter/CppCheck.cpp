@@ -3,7 +3,7 @@
 static String sExeFilePath;
 static bool sVerboseMode = false;
 
-String CppCheck::GetConfigFilePath()
+String CppCheck::GetConfigFilePath() const
 {
 	return ConfigFile(AppendFileName("cppcheck", IdeGetCurrentMainPackage() + "-cppcheck.json"));
 }
@@ -24,7 +24,7 @@ void CppCheck::SaveConfig(const Value& cfg)
 	SaveChangedFile(path, cfg);
 }
 
-bool CppCheck::Exists()
+bool CppCheck::Exists() const
 {
 	static bool b = false;
 	ONCELOCK
@@ -44,7 +44,7 @@ bool CppCheck::Exists()
 
 void CppCheck::Settings()
 {
-	CppCheckConfigDlg dlg;
+	CppCheckConfigDlg dlg(static_cast<Linter&>(*this));
 	dlg.Load();
 	if(dlg.ExecuteOK())
 		dlg.Save();
@@ -153,6 +153,11 @@ void CppCheck::DecodeXML(const XmlNode& results)
 			error.SetLineCy(error.GetCount() - 1, linecy);
 		}
 	}
+}
+
+INITIALIZER(CppCheck)
+{
+	RegisterLinterModule(Single<CppCheck>("CppCheck"));
 }
 
 
