@@ -11,39 +11,68 @@
 
 using namespace LinterKeys;
 
-Linter& GetLinter()
+static String sActiveModuleName;
+
+static Vector<Linter*>& sLM()
 {
-	return Single<CppCheck>();
+	static Vector<Linter*> m;
+	return m;
 }
 
-bool HasLinter()
+void RegisterLinterModule(Linter& linter_module)
 {
-	return GetLinter().Exists();
+	sLM().Add(&linter_module);
 }
 
-bool Linter::CanCheck()
+int GetLinterModuleCount()
+{
+	return sLM().GetCount();
+}
+
+Linter& GetLinterModule(int i)
+{
+	ASSERT(i >= 0 && i < GetLinterModuleCount());
+	return *sLM()[i];
+}
+
+Linter* GetActiveLinterModulePtr()
+{
+	for(Linter *p : sLM())
+		if(p->Exists() && p->GetName() == sActiveModuleName)
+			return p;
+	
+	for(Linter *p : sLM())
+		if(p->Exists()) {
+			sActiveModuleName = p->GetName();
+			return p;
+		}
+
+	return nullptr;
+}
+
+bool Linter::CanCheck() const
 {
 	return TheIde()
 		&& TheIde()->idestate == Ide::EDITING
 		&& !IdeIsDebugLock();
 }
 
-String Linter::GetFileName()
+String Linter::GetFileName() const
 {
 	return Nvl(TheIde()->GetActiveFileName(), Upp::GetFileName(TheIde()->editfile));
 }
 
-String Linter::GetFilePath()
+String Linter::GetFilePath() const
 {
 	return Nvl(TheIde()->GetActiveFilePath(), TheIde()->editfile);
 }
 
-String Linter::GetPackageName()
+String Linter::GetPackageName() const
 {
 	return TheIde()->GetActivePackage();
 }
 
-String Linter::GetPackagePath()
+String Linter::GetPackagePath() const
 {
 	return TheIde()->GetActivePackagePath();
 }
@@ -146,25 +175,65 @@ void Linter::DoCheck(Scope sc, Vector<String>& paths)
 	}
 }
 
+void sListMenu(Linter& l, Bar& menu)
+{
+	auto list = [&l](Bar& menu) {
+		Vector<int> ndx = FindAll(sLM(), [](const Linter *p) { return p->Exists(); });
+		for(int i : ndx) {
+			Linter& q = GetLinterModule(i);
+			menu.Add(q.GetName(), [&q]() { sActiveModuleName = q.GetName(); })
+				.Radio(q.GetName() == l.GetName());
+		}
+		menu.Separator();
+		menu.Add("Configure " + l.GetName(), [&l]() { l.Settings(); })
+			.Key(AK_CONFIGURE);
+	};
+	
+	menu.Sub("Static analyzers", list);
+}
+
+void sFileMenu(Linter& l, String name, Bar& menu)
+{
+	menu.Add(l.CanCheck(), "Analyze " + name, [&l]() { l.CheckFile(); })
+		.Key(AK_CHECKFILE);
+}
+
+void sPackageMenu(Linter& l, String name, Bar& menu)
+{
+	menu.Add(l.CanCheck(), "Analyze package " +  name, [&l]() { l.CheckPackage(); })
+		.Key(AK_CHECKPACKAGE);
+}
+
 void Linter::StdMenu(Bar& menu)
 {
-	FileMenu(menu);
-	PackageMenu(menu);
-	menu.Add(CanCheck(), "Analyze all..", [this]() { CheckProject(); })
+	Linter *p = GetActiveLinterModulePtr();
+	if(!p)
+		return;
+	sListMenu(*p, menu);
+	sFileMenu(*p, p->GetFileName(), menu);
+	sPackageMenu(*p, p->GetPackageName(), menu);
+	menu.Add(p->CanCheck(), "Analyze all..", [p]() { p->CheckProject(); })
 		.Key(AK_CHECKALL);
-	menu.Add(CanCheck(), "Configure linter..", [this]() { Settings(); })
-		.Key(AK_CONFIGURE);
 	menu.Separator();
 }
 
 void Linter::FileMenu(Bar& menu)
 {
-	menu.Add(CanCheck(), "Analyze " + GetFileName(), [this]() { CheckFile(); })
-		.Key(AK_CHECKFILE);
+	Linter *p = GetActiveLinterModulePtr();
+	if(p) sFileMenu(*p, p->GetFileName(), menu);
 }
 
 void Linter::PackageMenu(Bar& menu)
 {
-	menu.Add(CanCheck(), "Analyze package " +  GetPackageName(), [this]() { CheckPackage(); })
-		.Key(AK_CHECKPACKAGE);
+	Linter *p = GetActiveLinterModulePtr();
+	if(p) sPackageMenu(*p, p->GetFileName(), menu);
+}
+
+INITIALIZER(Linter)
+{
+	RegisterGlobalSerialize("Linters", [](Stream& s) {
+		int version = 0;
+		s / version;
+		s % sActiveModuleName;
+	});
 }

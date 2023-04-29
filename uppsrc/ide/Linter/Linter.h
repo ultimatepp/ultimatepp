@@ -15,28 +15,34 @@
 // Base class for command-line driven linter modules (static analyzers)
 class Linter {
 public:
-	Linter() {}
+	Linter(const String& name) : module_name(name) {}
 	virtual ~Linter() {}
 	
-	virtual String GetConfigFilePath() = 0;
+	virtual String GetConfigFilePath() const = 0;
 	virtual Value  LoadConfig() = 0;
 	virtual void   SaveConfig(const Value& cfg) = 0;
-	virtual bool   Exists()   = 0;
+	virtual bool   Exists() const = 0;
 	virtual void   Settings() = 0;
 
-	bool CanCheck();
+	String GetName() const { return module_name; }
+	
+	bool CanCheck() const;
 	void CheckFile();
 	void CheckPackage();
 	void CheckProject();
 	
-	void StdMenu(Bar& menu);
-	void FileMenu(Bar& menu);
-	void PackageMenu(Bar& menu);
+	static void StdMenu(Bar& menu);
+	static void FileMenu(Bar& menu);
+	static void PackageMenu(Bar& menu);
 	
-	struct Config {
+	class Config {
+	public:
+		Config(Linter& l) : linter(l) {}
 		virtual void Load()  = 0;
 		virtual void Save()  = 0;
 		virtual void Reset() = 0;
+	protected:
+		Linter& linter;
 	};
 
 protected:
@@ -45,20 +51,25 @@ protected:
 	virtual String MakeCmdLine(Scope sc, Vector<String>& paths) = 0;
 	virtual void   OnResults(const String& results) = 0;
 	
-	String GetFileName();
-	String GetFilePath();
-	String GetPackageName();
-	String GetPackagePath();
+	String GetFileName() const;
+	String GetFilePath() const;
+	String GetPackageName() const;
+	String GetPackagePath() const;
 
 private:
 	void SysCmd(const String& cmd, const String& text, Stream& fs);
 	void DoCheck(Scope sc, Vector<String>& paths);
+	String module_name;
 };
 
-Linter& GetLinter();
-bool HasLinter();
+INITIALIZE(Linter)
 
-// Static analyzer modules.
+void    RegisterLinterModule(Linter& linter_module);
+int     GetLinterModuleCount();
+Linter& GetLinterModule(int i);
+Linter* GetActiveLinterModulePtr();
+
+// Available static analyzer modules.
 #include "CppCheck.h"
 //#include "ClangTidy.h"
 
