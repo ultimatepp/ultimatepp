@@ -546,7 +546,11 @@ Ide::Ide()
 
 	use_target = true;
 
+#ifdef PLATFORM_COCOA
+	runmode = RUN_CONSOLE;
+#else
 	runmode = RUN_WINDOW;
+#endif
 	runexternal = false;
 	consolemode = 0;
 	console_utf8 = false;

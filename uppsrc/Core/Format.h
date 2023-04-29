@@ -61,6 +61,9 @@ String FormatDouble(double x);
 
 String FormatDoubleN(double x);
 
+inline String FormatFloat(float x) { return FormatDouble(x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL); }
+inline String FormatFloatN(float x) { return FormatDouble(x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP); }
+
 String         FormatDate(Date date, const char *format, int language = 0);
 String         FormatTime(Time time, const char *format, int language = 0);
 
@@ -73,7 +76,7 @@ template<> inline String AsString(const unsigned long& a)   { return FormatUInt6
 template<> inline String AsString(const int64& a)           { return FormatInt64(a); }
 template<> inline String AsString(const uint64& a)          { return FormatUInt64(a); }
 template<> inline String AsString(const double& a)          { return FormatDoubleN(a); }
-template<> inline String AsString(const float& a)           { return FormatDouble(a); }
+template<> inline String AsString(const float& a)           { return FormatFloatN(a); }
 
 /*
 Date        ScanDate(const char *text, const char **endptr, const char *format, int language, Date base_date);

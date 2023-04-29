@@ -17,6 +17,8 @@ struct Complex : std::complex<double>
 
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
+	bool operator==(double x) const         { return (const C&)(*this) == x; }
+	bool operator!=(double x) const         { return (const C&)(*this) != x; }
 	
 	int  Compare(const Complex& c) const    { NEVER(); return 0; }
 

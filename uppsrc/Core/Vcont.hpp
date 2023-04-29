@@ -752,7 +752,7 @@ void BiVector<T>::ReAlloc(int newalloc) {
 template <class T>
 void BiVector<T>::DeepCopy0(const BiVector& src) {
 	alloc = items = src.items;
-	vector = alloc ? (T *) new byte[alloc * sizeof(T)] : NULL;
+	vector = alloc ? (T *) MemoryAlloc(alloc * sizeof(T)) : NULL;
 	if(items) {
 		int end = src.start + src.items;
 		if(end <= src.alloc)
@@ -843,7 +843,7 @@ BiVector<T>::BiVector(std::initializer_list<T> init)
 		vector = NULL;
 		return;
 	}
-	vector = (T *) new byte[alloc * sizeof(T)];
+	vector = (T *) MemoryAlloc(alloc * sizeof(T));
 	T *t = vector;
 	for(const auto& q : init)
 		new (t++) T(q);

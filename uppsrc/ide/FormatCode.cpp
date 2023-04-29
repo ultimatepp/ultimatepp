@@ -35,6 +35,11 @@ void Ide::FormatJSON_XML(bool xml)
 	if(sel)
 		text = editor.GetSelection();
 	else {
+		FindFile ff(editfile);
+		if(!ff || ff.IsReadOnly()) {
+			Exclamation("File is read only!");
+			return;
+		}
 		SaveFile();
 		text = LoadFile(editfile);
 	}
@@ -48,6 +53,9 @@ void Ide::FormatJSON_XML(bool xml)
 	else {
 		editor.Remove(0, editor.GetLength());
 		editor.Insert(0, text);
+		editor.SetEditable();
+		editor.SetCursor(0);
+		MakeTitle();
 	}
 }
 

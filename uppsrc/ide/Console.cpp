@@ -147,22 +147,28 @@ int Console::Flush()
 		Slot& slot = processes[i];
 		if(!slot.process)
 			continue;
-		String s;
-		slot.process->Read(s);
-		if(!IsNull(s)) {
-			done_output = true;
-			if(slot.outfile)
-				slot.outfile->Put(s);
-			if(!slot.quiet) {
-				if(console_lock < 0 || console_lock == i) {
-					console_lock = i;
-					AppendOutput(s);
+		auto Read = [&] {
+			String s;
+			slot.process->Read(s);
+			if(!IsNull(s)) {
+				done_output = true;
+				if(slot.outfile)
+					slot.outfile->Put(s);
+				if(!slot.quiet) {
+					if(console_lock < 0 || console_lock == i) {
+						console_lock = i;
+						AppendOutput(s);
+					}
+					else
+						slot.output.Cat(s);
 				}
-				else
-					slot.output.Cat(s);
+				return true;
 			}
-		}
+			return false;
+		};
+		Read();
 		if(!slot.process->IsRunning()) {
+			while(Read());
 			Kill(i);
 			if(slot.exitcode != 0 && verbosebuild)
 				spooled_output.Cat("Error executing " + slot.cmdline + "\n");
@@ -183,6 +189,7 @@ int Console::Execute(One<AProcess> pick_ p, const char *command, Stream *out, bo
 	if(!Run(pick(p), command, out, q, 0))
 		return -1;
 	Wait();
+	Flush();
 	return processes[0].exitcode;
 }
 

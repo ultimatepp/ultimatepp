@@ -24,7 +24,6 @@ void RegisterExample(const char *name, void (*ex)(Painter& pw))
 
 void App::DoPaint0(Painter& sw)
 {
-	LOG("==== PAINT");
 	sw.Translate(~ctrl.translate_x, ~ctrl.translate_y);
 	sw.Rotate(~ctrl.rotate);
 	sw.Scale(~ctrl.scale, (double)~ctrl.scale * (double)~ctrl.scale_x);

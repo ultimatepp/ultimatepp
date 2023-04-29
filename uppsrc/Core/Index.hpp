@@ -242,10 +242,12 @@ int Index<T>::Put0(U&& k, dword sh)
 template <class T>
 template <class U>
 force_inline
-int Index<T>::FindPut0(U&& k) {
+int Index<T>::FindPut0(U&& k, bool& put)
+{
 	dword sh = Smear(k);
 	int& m = map[sh & mask];
 	int i = m;
+	put = false;
 	if(i >= 0)
 		do {
 			if(key[i] == k)
@@ -253,6 +255,7 @@ int Index<T>::FindPut0(U&& k) {
 			i = hash[i].next;
 		}
 		while(i != m);
+	put = true;
 	return Put0(std::forward<U>(k), sh);
 }
 

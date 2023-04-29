@@ -31,7 +31,7 @@ AllTrue(x == y) = false
 AllTrue(x == x) = true
 x + y = 2 5 5 8
 x - y = 0 -1 1 0
-x / y = 1 0.666667 1.5 1
+x / y = 1 0.6666667 1.5 1
 x * y = 1 6 6 16
 ----------------
 BroadcastLH0(x) = 4 4 4 4  8 8 8 8

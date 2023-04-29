@@ -66,7 +66,7 @@ class Index : MoveableAndDeepCopyOption<Index<T>>, IndexCommon {
 	template <typename U> void AddS(U&& k, dword sh);
 
 	template <class OP, class U> int FindAdd(U&& k, OP add_op);
-	template <class U> int FindPut0(U&& k);
+	template <class U> int FindPut0(U&& k, bool& put);
 
 	template <typename U> int Put0(U&& k, dword sh);
 	template <typename U> void Set0(int i, U&& k);
@@ -91,8 +91,10 @@ public:
 
 	int         Put(const T& k)             { return Put0(k, Smear(k)); }
 	int         Put(T&& k)                  { return Put0(pick(k), Smear(k)); }
-	int         FindPut(const T& k)         { return FindPut0(k); }
-	int         FindPut(T&& k)              { return FindPut0(pick(k)); }
+	int         FindPut(const T& k, bool& p){ return FindPut0(k, p); }
+	int         FindPut(T&& k, bool& p)     { return FindPut0(pick(k), p); }
+	int         FindPut(const T& k)         { bool p; return FindPut0(k, p); }
+	int         FindPut(T&& k)              { bool p; return FindPut0(pick(k), p); }
 
 	void        Unlink(int i);
 	int         UnlinkKey(const T& k);

@@ -1,6 +1,6 @@
 #ifdef PLATFORM_MACOS
 struct RGBA : Moveable<RGBA> {
-        byte a, r, g, b;
+	byte a, r, g, b;
 };
 #else
 struct RGBA : Moveable<RGBA> {

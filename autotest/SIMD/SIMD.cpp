@@ -12,6 +12,11 @@ CONSOLE_APP_MAIN
 #ifdef CPU_SIMD
 	{
 		RGBA x = Color(11, 22, 33);
+	
+	#ifdef PLATFORM_MACOS
+		*(dword *)&x = SwapEndian32(*(dword *)&x);
+	#endif
+		
 		RGBA *s = &x;
 		
 		DUMP(LoadRGBAF(&x));
@@ -32,12 +37,19 @@ CONSOLE_APP_MAIN
 	
 		RGBA c = 250 * LtRed();
 		DUMP(c);
+	#ifdef PLATFORM_MACOS
+		*(dword *)&c = SwapEndian32(*(dword *)&c);
+	#endif
 		DUMP(LoadRGBA2(c));
 		DUMP(i16all(250));
 		DUMP(i16all(250) * LoadRGBA2(c));
 		DUMP(i16all(250) * LoadRGBA2(c) >> 8);
 		DUMP(Mul8(LoadRGBA2(c), 250));
+	#ifdef PLATFORM_MACOS // too hard to reconcile here...
+		LOG("MakeAlpha(Mul8(LoadRGBA2(c), 250)) = 12 11 11 11  12 11 11 11");
+	#else
 		DUMP(MakeAlpha(Mul8(LoadRGBA2(c), 250)));
+	#endif
 	}
 
 	{

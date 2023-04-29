@@ -1,5 +1,4 @@
 topic "Index";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Index";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Index]]}}&]
 [s3; &]
@@ -267,24 +267,11 @@ with the specified value is appended to the end of AIndex using
 [s6; Invalidates references to Index.&]
 [s3; &]
 [s4;%- &]
-[s5;:Index`:`:FindPut`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) co
-nst]_[*@4 T][@(0.0.255) `&]_[*@3 key], [@(0.0.255) unsigned]_[*@3 `_hash])&]
-[s5;:Upp`:`:Index`:`:FindPut`(T`&`&`,unsigned`):%- [@(0.0.255) int]_[* FindPut]([*@4 T][@(0.0.255) `&
-`&]_[*@3 key], [@(0.0.255) unsigned]_[*@3 hash])&]
-[s2; Retrieves the position of the first element with the value [%-*@3 key] 
-in AIndex, using a precomputed [%-*@3 `_hash]. The precomputed 
-hash value must be the same as the hash value that would be the 
-result of HashFn. If the specified value does not exist in the 
-AIndex, it is placed to it using [* Put(const T`& x, unsigned `_hash).] 
-The position of the found or placed element is returned.&]
-[s6;~~~.992; Invalidates multi`-key ordering.&]
-[s6; Invalidates iterators to AIndex.&]
-[s6; Invalidates references to Index.&]
-[s6;%- The precomputed [@3 `_hash] must be the same as the hash specified 
-by HashFn.&]
-[s2;  [%-*@3 key] .&]
-[s3; &]
-[s4;%- &]
+[s5;:Upp`:`:Index`:`:FindPut`(const T`&`,bool`&`):%- [@(0.0.255) int] 
+[* FindPut]([@(0.0.255) const] T[@(0.0.255) `&] [*@3 key], [@(0.0.255) bool`&] 
+[*@3 put])&]
+[s5;:Upp`:`:Index`:`:FindPut`(T`&`&`,bool`&`):%- [@(0.0.255) int] [* FindPut](T[@(0.0.255) `&
+`&] [*@3 key], [@(0.0.255) bool`&] [*@3 put])&]
 [s5;:Index`:`:FindPut`(const T`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 key])&]
 [s5;:Upp`:`:Index`:`:FindPut`(T`&`&`):%- [@(0.0.255) int]_[* FindPut]([*@4 T][@(0.0.255) `&`&
@@ -292,11 +279,12 @@ by HashFn.&]
 [s2; Retrieves the position of the first element with value [%-*@3 key] 
 in AIndex. If the element does not exist in the AIndex, it is 
 placed to it using [* Put(const T`& x).] The position of the found 
-or placed element is returned.&]
+or placed element is returned. If element is placed, variants 
+with [%-*@3 put] set it to true.&]
 [s6; Invalidates multi`-key ordering.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Index`:`:Set`(int`,const T`&`,unsigned`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_ha

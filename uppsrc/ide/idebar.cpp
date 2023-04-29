@@ -131,8 +131,7 @@ void Ide::InsertAdvanced(Bar& bar)
 
 void Ide::Reformat(Bar& bar)
 {
-	bool b = !editor.IsReadOnly();
-	bar.Sub(b, "Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
+	bar.Sub("Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
 }
 
 void Ide::EditSpecial(Bar& menu)
@@ -299,9 +298,9 @@ void Ide::ReformatMenu(Bar& menu)
 		.Help("Reformat current file with clang-format");
 	menu.Add(b, AK_REFORMAT_CODE2, [=] { ReformatCodeDlg(); });
 	menu.Separator();
-	menu.Add(b, AK_REFORMAT_JSON, [=] { FormatJSON(); })
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_JSON, [=] { FormatJSON(); })
 	    .Help("Reformat JSON");
-	menu.Add(b, AK_REFORMAT_XML, [=] { FormatXML(); })
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_XML, [=] { FormatXML(); })
 	    .Help("Reformat XML");
 	menu.Separator();
 	menu.Add(b, AK_REFORMAT_COMMENT, [=] { ReformatComment(); })
@@ -450,6 +449,8 @@ void Ide::SetupAndroidMobilePlatform(Bar& menu, const AndroidSDK& androidSDK)
 
 void Ide::ProjectRepo(Bar& menu)
 {
+	if(menu.IsScanKeys())
+		return; // avoid loading RepoDirs
 	Vector<String> w = RepoDirs(true);
 	for(int i = 0; i < w.GetCount(); i++)
 		menu.Add("Synchronize " + w[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, w[i]));
@@ -802,10 +803,18 @@ void Ide::BrowseMenu(Bar& menu)
 		}
 
 		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK1(History, -1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_LEFT)
+		#else
 			.Key(K_ALT_LEFT)
+		#endif
 			.Enable(GetHistory(-1) >= 0);
 		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK1(History, 1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_RIGHT)
+		#else
 			.Key(K_ALT_RIGHT)
+		#endif
 			.Enable(GetHistory(1) >= 0);
 
 		if(menu.IsMenuBar()) {

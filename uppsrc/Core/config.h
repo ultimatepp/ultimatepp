@@ -112,6 +112,9 @@
 		#define CPU_LE 1
 		#define CPU_LITTLE_ENDIAN 1
 		#define CPU_UNALIGNED 1
+		#ifdef __ARM_NEON
+			#define CPU_NEON 1
+		#endif
 	#elif __arm__
 		#define CPU_32 1
 		#define CPU_ARM 1
