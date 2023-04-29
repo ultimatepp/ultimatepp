@@ -180,7 +180,7 @@ void sListMenu(Linter& l, Bar& menu)
 	auto list = [&l](Bar& menu) {
 		Vector<int> ndx = FindAll(sLM(), [](const Linter *p) { return p->Exists(); });
 		for(int i : ndx) {
-			Linter& q = GetLinterModule(i);
+			const Linter& q = GetLinterModule(i);
 			menu.Add(q.GetName(), [&q]() { sActiveModuleName = q.GetName(); })
 				.Radio(q.GetName() == l.GetName());
 		}
