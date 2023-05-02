@@ -293,8 +293,9 @@ void JPGRaster::Data::ScanMetaData()
 			key = "COM";
 		else if(p->marker >= JPEG_APP0 && p->marker <= JPEG_APP0 + 15) {
 			key = Format("APP%d", p->marker - JPEG_APP0);
-			if(p->marker == JPEG_APP0 + 1 && !memcmp(data, "Exif\0\0", 6))
+			if(p->marker == JPEG_APP0 + 1 && !memcmp(data, "Exif\0\0", 6)) {
 				ScanExifData(data.GetIter(6), data.end());
+			}
 		}
 		if(metadata.Find(key) >= 0) {
 			for(int i = 1;; i++) {
@@ -319,9 +320,11 @@ double JPGRaster::Data::ExifF5(const char *s, const char *end)
 
 int JPGRaster::Data::ExifDir(const char *begin, const char *end, int offset, IFD_TYPE type)
 {
+	if(offset < 0 || begin + offset > end)
+		return 0;
+
 	const char *e = begin + offset;
 	int nitems = Exif16(e, end);
-//	puts(NFormat("directory %08x: %d items", dir, nitems));
 	e += 2;
 	for(int i = 0; i < nitems; i++, e += 12) {
 		int tag = Exif16(e, end);
@@ -336,20 +339,40 @@ int JPGRaster::Data::ExifDir(const char *begin, const char *end, int offset, IFD
 		const char *data = e + 8;
 		if(len > 4)
 			data = begin + Exif32(data, end);
-//		puts(NFormat("[%d]: tag %04x fmt %d, count %d, data %s",
-//			i, tag, fmt, count, BinHexEncode(data, data + len)));
+
+		auto Text20 = [&](int atag, const char *id) {
+			if(tag == atag) {
+				String s;
+				const char *e = min(end, data + 20);
+				while(data < e && *data)
+					s.Cat(*data++);
+				metadata.Add(id, s);
+			}
+		};
+			
+		auto F5 = [&](int atag, const char *id) {
+			if(tag == atag && fmt == EXIF_RATIONAL)
+				metadata.Add(id, ExifF5(data, end));
+		};
+		
+		auto I16 = [&](int atag, const char *id) {
+			if(tag == atag && fmt == 3)
+				metadata.Add(id, Exif16(data, end));
+		};
+
 		if(type == BASE_IFD) {
-			if(tag == 0x112)
-				metadata.Add("orientation", Exif16(data, end));
-			if(tag == 0x132)
-				metadata.Add("DateTime", String(data, 20));
-			if(tag == 0x9003)
-				metadata.Add("DateTimeOriginal", String(data, 20));
-			if(tag == 0x9004)
-				metadata.Add("DateTimeDigitized", String(data, 20));
-			if(tag == 0x8825) {
+			I16(0x112, "orientation");
+			I16(0x112, "Orientation");
+			Text20(0x131, "Software");
+			Text20(0x132, "DateTime");
+			Text20(0x9003, "DateTimeOriginal");
+			Text20(0x9004, "DateTimeDigitized");
+			F5(0x011a, "XResolution");
+			F5(0x011b, "YResolution");
+			I16(0x0128, "ResolutionUnit");
+			
+			if(tag == 0x8825 && data + 20 < end) {
 				int offset = Exif32(data, end);
-	//			puts(NFormat("GPS IFD at %08x", offset));
 				ExifDir(begin, end, offset, GPS_IFD);
 			}
 		}
@@ -357,7 +380,6 @@ int JPGRaster::Data::ExifDir(const char *begin, const char *end, int offset, IFD
 			if((tag == 2 || tag == 4) && fmt == EXIF_RATIONAL && count == 3) {
 				metadata.Add(tag == 2 ? "GPSLatitude" : "GPSLongitude",
 					ExifF5(data + 0, end) + ExifF5(data + 8, end) / 60 + ExifF5(data + 16, end) / 3600);
-//				puts(NFormat("GPSLatitude: %n %n %n", n1, n2, n3));
 			}
 			else if(tag == 6 && fmt == EXIF_RATIONAL && count == 1)
 				metadata.Add("GPSAltitude", ExifF5(data, end));
@@ -367,9 +389,7 @@ int JPGRaster::Data::ExifDir(const char *begin, const char *end, int offset, IFD
 				metadata.Add("GPSImgDirection", ExifF5(data + 0, end));
 		}
 	}
-	int nextoff = Exif32(e, end);
-//	puts(NFormat("next offset = %08x", nextoff));
-	return nextoff;
+	return Exif32(e, end);
 }
 
 void JPGRaster::Data::ScanExifData(const char *begin, const char *end)
