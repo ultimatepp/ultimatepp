@@ -133,6 +133,13 @@ int ScanInt(const char *ptr)
 	return ScanInt<char, byte, uint32, int, 10>(x, ptr, overflow) && !overflow ? x : Null;
 }
 
+int Atoi(const char *ptr)
+{
+	int x;
+	bool overflow = false;
+	return ScanInt<char, byte, uint32, int, 10>(x, ptr, overflow) && !overflow ? x : 0;
+}
+
 int64 ScanInt64(const char *ptr, const char **endptr)
 {
 	int64 x;
@@ -148,6 +155,13 @@ int64 ScanInt64(const char *ptr)
 	int64 x;
 	bool overflow = false;
 	return ScanInt<char, byte, uint64, int64, 10>(x, ptr, overflow) && !overflow ? x : Null;
+}
+
+int64 Atoi64(const char *ptr)
+{
+	int64 x;
+	bool overflow = false;
+	return ScanInt<char, byte, uint64, int64, 10>(x, ptr, overflow) && !overflow ? x : 0;
 }
 
 Value StrIntValue(const char *s)

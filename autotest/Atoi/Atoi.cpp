@@ -157,5 +157,15 @@ CONSOLE_APP_MAIN
 	DDUMP(CParser("123456123").ReadNumber64(8));
 	DDUMP(CParser("123456123").ReadNumber64(16));
 	
+	DDUMP(Atoi(""));
+	DDUMP(Atoi("x"));
+	DDUMP(Atoi("123"));
+	DDUMP(Atoi("-123"));
+
+	DDUMP(Atoi64(""));
+	DDUMP(Atoi64("x"));
+	DDUMP(Atoi64("123"));
+	DDUMP(Atoi64("-123"));
+	
 	CheckLogEtalon();
 }
