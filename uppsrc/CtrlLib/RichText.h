@@ -165,6 +165,23 @@ int Prompt(const char *title, const Image& icon, const char *qtf,
 
 enum { BEEP_NONE, BEEP_INFORMATION, BEEP_EXCLAMATION, BEEP_QUESTION, BEEP_ERROR };
 
+int Prompt(Event<const String&> WhenLink, int beep,
+           const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
+           const char *button1, const char *button2, const char *button3,
+		   int cx,
+		   Image im1, Image im2, Image im3);
+
+int Prompt(Event<const String&> WhenLink, int beep,
+           const char *title, const Image& icon, const char *qtf, bool okcancel,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
+int Prompt(int beep, const char *title, const Image& icon, const char *qtf, bool okcancel,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
+int Prompt(int beep, const char *title, const Image& icon, const char *qtf,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
+
 int PromptOpt(const char *opt_id, int beep, Event<const String&> WhenLink,
               const char *title, const Image& icon, const char *qtf, bool okcancel,
               const char *button1, const char *button2, const char *button3,
