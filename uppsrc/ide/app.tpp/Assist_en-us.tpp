@@ -38,7 +38,7 @@ conversion]&]
 [s0; [^topic`:`/`/ide`/app`/Assist`_en`-us`#8^ 8. Showing errors while 
 editing, information tips]&]
 [s0; [^topic`:`/`/ide`/app`/Assist`_en`-us`#9^ 9. Virtual functions]&]
-[s0; [^topic`:`/`/ide`/app`/Assist`_en`-us`#9^ 10. Events]&]
+[s0; [^topic`:`/`/ide`/app`/Assist`_en`-us`#10^ 10. Events]&]
 [s0; [^topic`:`/`/ide`/app`/Assist`_en`-us`#11^ 11. Layout code generation]&]
 [s0; &]
 [s3;:1: 1. Introduction&]

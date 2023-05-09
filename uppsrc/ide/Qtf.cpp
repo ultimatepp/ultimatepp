@@ -79,13 +79,9 @@ void QtfDlg::Editor()
 
 void QtfDlg::OnHelpLink(const String& link)
 {
-	auto label_idx = link.ReverseFind("#");
-	if (label_idx == -1) {
-		return;
-	}
-	
-	constexpr bool highlight = true;
-	help.GotoLabel(link.Mid(label_idx + 1), highlight);
+	int q = link.ReverseFind("#");
+	if(q >= 0)
+		help.GotoLabel(link.Mid(q + 1));
 }
 
 QtfDlg::QtfDlg()
