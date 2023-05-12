@@ -423,7 +423,9 @@ void Ide::Setup(Bar& menu)
 				break;
 			}
 #ifndef PLATFORM_COCOA
+#ifndef PLATFORM_WIN32
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
+#endif
 #endif
 
 	if(menu.IsMenuBar())
