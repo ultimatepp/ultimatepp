@@ -324,7 +324,7 @@ bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool 
 	Vector<RichValPos> f = text.GetValPos(GetPage(), RichText::LABELS);
 	highlight = Null;
 	bool ret = false;
-	for(int i = 0; i < f.GetCount(); i++) {
+	for(int i = 0; i < f.GetCount(); i++)
 		if(match(f[i].data)) {
 			if(dohighlight)
 				highlight = f[i].pos;
@@ -335,7 +335,6 @@ bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool 
 				return true;
 			ret = true;
 		}
-	}
 	return ret;
 }
 
