@@ -160,12 +160,21 @@ bool hubdir_resolved;
 
 void SetHubDir(const String& path)
 {
-	SaveFile(DefaultHubFilePath(), path);
+	SaveChangedFile(DefaultHubFilePath(), path);
 	hubdir_resolved = false;
+}
+
+static String override_hub_dir;
+
+void OverrideHubDir(const String& path)
+{
+	override_hub_dir = path;
 }
 
 String GetHubDir()
 {
+	if(override_hub_dir.GetCount())
+		return override_hub_dir;
 	static String d;
 	if(hubdir_resolved)
 		return d;
