@@ -294,6 +294,7 @@ Nest& MainNest();
 String DefaultHubFilePath();
 
 void   SetHubDir(const String& path);
+void   OverrideHubDir(const String& path);
 String GetHubDir();
 bool   InUppHub(const String& p);
 

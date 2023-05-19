@@ -69,11 +69,28 @@ String GenerateVersionNumber()
 	return "";
 }
 
+void SetupUmkUppHub()
+{
+	String cfgdir = GetFileFolder(GetFileFolder(ConfigFile("x")));
+	for(const char *q : { "umk", "theide", "ide" }) {
+		String dir = cfgdir + "/" + q + "/UppHub";
+		if(DirectoryExists(dir)) {
+			for(FindFile ff(dir + "/*"); ff; ff.Next())
+				if(ff.IsFolder() && *ff.GetName() != '.') {
+					OverrideHubDir(dir);
+					return;
+				}
+		}
+	}
+}
+
 CONSOLE_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
 	CreateBuildMethods();
+
+	SetupUmkUppHub();
 #endif
 
 	Ide ide;
@@ -292,10 +309,10 @@ CONSOLE_APP_MAIN
 	}
 	else {
 		String version = GenerateVersionNumber();
-		Puts("UMK (U++MaKe) " + version + "\n\n"
-		     "Usage: [-options] umk assembly main_package [build_method] [+flags] [output]\n"
-		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
-		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
+		Puts("umk (U++MaKe) " + version + "\n\n"
+		     "Usage: umk assembly main_package [build_method] [-options] [+flags] [output]\n"
+		     "Examples: umk examples Bombs CLANG -ab +GUI,SHARED ~/bombs\n"
+		     "          umk ~/upp.src/examples,~/upp.src/uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
 		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details.\n");
 	}
 }
