@@ -127,6 +127,16 @@ bool TryLoadLibClang()
 	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
 		return true;
 #endif
+	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
+	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
+		int n = Atoi(s);
+		if(n >= 5 && n < 30) { // update in 10 years...
+			if(LoadLibClang("/usr/lib/llvm-" + AsString(n) + "/lib"))
+				return true;
+			break;
+		}
+	}
+
 	String libdir = TrimBoth(Sys("llvm-config --libdir"));
 	int q = FindIndex(CommandLine(), "--clangdir");
 	if(q >= 0 && q + 1 < CommandLine().GetCount()) {
