@@ -531,7 +531,7 @@ void UppHubDlg::Update()
 	for(const UppHubNest& n : upv) {
 		String dir = GetHubDir() + "/" + n.name;
 		if(DirectoryExists(dir))
-			console.Git(dir, "pull --ff-only");
+			console.Git(dir, "pull --rebase");
 	}
 }
 

@@ -494,7 +494,7 @@ again:
 		if(svn && svn->update)
 			sys.CheckSystem(SvnCmd(sys, "update", repo_dir).Cat() << repo_dir);
 		if(git && git->pull)
-			if(sys.Git(repo_dir, "pull --ff-only", true)) {
+			if(sys.Git(repo_dir, "pull --rebase", true)) {
 				while(l < list.GetCount()) {
 					int action = list.Get(l, 0);
 					if(action == REPOSITORY)
