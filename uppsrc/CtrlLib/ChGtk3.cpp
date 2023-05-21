@@ -511,15 +511,16 @@ void ChHostSkin()
 		Image item;
 		s.item = item = Hot3(CairoImage(32, 16));
 		Over(body, item);
-		c = AvgColor(body);
+		c = AvgColor(Crop(body, item.GetSize()));
 		if(Diff(c, s.itemtext) < 100) // itemtext color too close to highlight color, fix it
 			s.itemtext = IsDark(c) ? White() : Black();
 		
 		m = CreateImage(Size(DPI(32), DPI(16)), SColorFace());
 		Gtk_New("frame");
 		Over(m, CairoImage(DPI(32), DPI(16)));
-		Gtk_New("frame border");
-		Over(m, CairoImage(DPI(32), DPI(16)));
+	//	PNGEncoder().SaveFile("/home/cxl/frame.png", m);
+	//	Gtk_New("frame border");
+	//	Over(m, CairoImage(DPI(32), DPI(16)));
 		Gtk_New("menubar");
 		Over(m, CairoImage(DPI(32), DPI(16)));
 		s.look = Hot3(m);
