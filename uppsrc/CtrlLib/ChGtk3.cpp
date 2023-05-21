@@ -511,7 +511,7 @@ void ChHostSkin()
 		Image item;
 		s.item = item = Hot3(CairoImage(32, 16));
 		Over(body, item);
-		c = AvgColor(item);
+		c = AvgColor(body);
 		if(Diff(c, s.itemtext) < 100) // itemtext color too close to highlight color, fix it
 			s.itemtext = IsDark(c) ? White() : Black();
 		
