@@ -510,9 +510,8 @@ void ChHostSkin()
 		s.itemtext = GetInkColor();
 		Image item;
 		s.item = item = Hot3(CairoImage(32, 16));
-		PNGEncoder().SaveFile("/home/cxl/item.png", item);
 		Over(body, item);
-		c = AvgColor(body);
+		c = AvgColor(item);
 		if(Diff(c, s.itemtext) < 100) // itemtext color too close to highlight color, fix it
 			s.itemtext = IsDark(c) ? White() : Black();
 		
