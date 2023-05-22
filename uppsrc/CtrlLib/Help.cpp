@@ -17,6 +17,7 @@ bool HelpWindow::GoTo0(const String& link)
 {
 	if(IsNull(link) || doing_goto)
 		return true;
+	bool lnk = false;
 	if(current_link != link) {
 		Topic t = AcquireTopic(link);
 		SetBar();
@@ -33,12 +34,13 @@ bool HelpWindow::GoTo0(const String& link)
 		FinishText(txt);
 		view.Pick(pick(txt), zoom);
 		current_link = link;
+		lnk = true;
 	}
 	if(WhenMatchLabel) {
 		WString lw = label.ToWString();
-		return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true, true);
+		return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true, true) || lnk;
 	}
-	return view.GotoLabel(label, true, true);
+	return view.GotoLabel(label, true, true) || lnk;
 }
 
 HelpWindow::Pos HelpWindow::GetPos()
@@ -51,13 +53,14 @@ HelpWindow::Pos HelpWindow::GetPos()
 
 bool HelpWindow::GoTo(const String& link)
 {
-	if(IsNull(link))
+	if(IsNull(link) || doing_goto)
 		return false;
 	Pos p = GetPos();
 	if(GoTo0(link)) {
-		if(!IsNull(p.link))
+		if(!IsNull(p.link) && p.link != link) {
 			back.Add(p);
-		forward.Clear();
+			forward.Clear();
+		}
 		SetBar();
 		return true;
 	}
@@ -71,7 +74,8 @@ bool HelpWindow::GoTo(const String& link)
 void HelpWindow::Back()
 {
 	Pos p = GetPos();
-	if(back.GetCount() && GoTo0(back.Top().link)) {
+	if(back.GetCount()) {
+		GoTo0(back.Top().link);
 		if(back.GetCount()) {
 			view.SetSb(back.Top().scy);
 			back.Drop();
@@ -85,7 +89,8 @@ void HelpWindow::Back()
 void HelpWindow::Forward()
 {
 	Pos p = GetPos();
-	if(forward.GetCount() && GoTo0(forward.Top().link)) {
+	if(forward.GetCount()) {
+		GoTo0(forward.Top().link);
 		if(forward.GetCount()) {
 			view.SetSb(forward.Top().scy);
 			forward.Drop();

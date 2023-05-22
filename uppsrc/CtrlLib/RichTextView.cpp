@@ -326,10 +326,9 @@ bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool 
 	bool ret = false;
 	for(int i = 0; i < f.GetCount(); i++)
 		if(match(f[i].data)) {
+			sb = f[i].py.y;
 			if(dohighlight)
 				highlight = f[i].pos;
-			else
-				sb = f[i].py.y;
 			Refresh();
 			if(!find_last)
 				return true;
