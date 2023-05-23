@@ -537,10 +537,9 @@ void ChHostSkin()
 		s.topitem[2] = topitem;
 		s.topitemtext[2] = GetInkColor();
 		Over(m, topitem);
-		if(Diff(AvgColor(m), s.topitemtext[2]) < 100) {
-			s.topitem[2] = SColorHighlight();
-			s.topitemtext[2] = SColorHighlightText();
-		}
+		c = AvgColor(m);
+		if(Diff(c, s.topitemtext[2]) < 100)
+			s.topitemtext[2] = IsDark(c) ? White() : Black();
 	}
 
 	SwapOKCancel_Write(Environment().Get("KDE_FULL_SESSION", String()) != "true");
