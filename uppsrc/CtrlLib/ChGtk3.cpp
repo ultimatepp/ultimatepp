@@ -533,9 +533,11 @@ void ChHostSkin()
 		s.topitemtext[1] = s.topitemtext[0];
 		Gtk_New("menubar menuitem", CTRL_HOT);
 		s.topitem[0] = Null;
-		s.topitem[2] = Hot3(CairoImage(32, 16));
+		Image topitem = Hot3(CairoImage(DPI(32), DPI(16)));
+		s.topitem[2] = topitem;
 		s.topitemtext[2] = GetInkColor();
-		if(Diff(AvgColor(s.topitem[2], SColorFace(), 0), s.topitemtext[2]) < 100) {
+		Over(m, topitem);
+		if(Diff(AvgColor(m), s.topitemtext[2]) < 100) {
 			s.topitem[2] = SColorHighlight();
 			s.topitemtext[2] = SColorHighlightText();
 		}
