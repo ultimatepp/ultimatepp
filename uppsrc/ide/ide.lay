@@ -885,7 +885,7 @@ LAYOUT(InsertAsLayout, 276, 168)
 	ITEM(Upp::Label, dv___3, SetLabel(t_("Data length will be put into the clipboard")).LeftPosZ(8, 260).TopPosZ(108, 19))
 END_LAYOUT
 
-LAYOUT(UppHubLayout, 992, 656)
+LAYOUT(UppHubLayout, 1000, 656)
 	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Upp::EditString, search, LeftPosZ(4, 216).BottomPosZ(9, 19))
 	ITEM(Upp::Button, help, SetLabel(t_("?")).Tip(t_("Learn more about UppHub..")).RightPosZ(344, 20).BottomPosZ(6, 24))
