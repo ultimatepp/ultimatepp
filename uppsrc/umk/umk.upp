@@ -1,7 +1,8 @@
 description "Commandline U++ package/assembly builder\377";
 
 uses
-	ide\Builders;
+	ide\Builders,
+	Core/SSL;
 
 file
 	umake.h,
@@ -9,6 +10,7 @@ file
 	IdeContext.cpp,
 	MakeBuild.cpp,
 	Export.cpp,
+	UppHub.cpp,
 	umake.cpp;
 
 mainconfig

@@ -5,6 +5,8 @@
 
 extern bool SilentMode;
 
+bool UppHubAuto(const String& main);
+
 class Console {
 public:
 	virtual void Append(const String& s);
