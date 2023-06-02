@@ -127,7 +127,7 @@ CONSOLE_APP_MAIN
 #endif
 
 #ifdef PLATFORM_LINUX
-	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS + "+NOSSL " + release + "/umks32");
 #endif
 
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC +NOMM -rvsM");

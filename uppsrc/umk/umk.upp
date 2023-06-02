@@ -1,8 +1,9 @@
 description "Commandline U++ package/assembly builder\377";
 
 uses
-	ide\Builders,
-	Core/SSL;
+	ide\Builders;
+
+uses(!NOSSL) Core/SSL;
 
 file
 	umake.h,
@@ -15,5 +16,6 @@ file
 
 mainconfig
 	"" = "",
-	"" = "NOMM";
+	"" = "NOMM",
+	"" = "NOSSL";
 

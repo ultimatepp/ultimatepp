@@ -151,7 +151,6 @@ void UppHubDlg::Install(const Index<String>& ii_)
 
 bool UppHubAuto(const String& main)
 {
-	bool noprompt = false;
 	Index<String> pmissing;
 	for(;;) {
 		Workspace wspc;
@@ -176,7 +175,6 @@ bool UppHubAuto(const String& main)
 
 		if(found.GetCount() == missing.GetCount() && missing != pmissing) {
 			dlg.Install(found);
-			noprompt = true;
 			pmissing = clone(missing);
 			continue;
 		}
