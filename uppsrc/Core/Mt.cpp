@@ -258,7 +258,7 @@ void Thread::DumpDiagnostics()
 {
 #ifdef PLATFORM_LINUX
 	INTERLOCKED {
-		int s, i;
+		int i;
 		void *stkaddr;
 		pthread_attr_t attr[1];
 		
