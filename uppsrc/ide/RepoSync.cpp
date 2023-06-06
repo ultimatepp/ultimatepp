@@ -317,7 +317,6 @@ void RepoSync::SyncList()
 			o.pull = Default("pull");
 			actions = ListGit(path);
 			if(!actions) {
-				o.push = false;
 				o.commit.Disable();
 			}
 		}

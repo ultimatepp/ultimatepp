@@ -131,22 +131,13 @@ bool GetCredentials(const String& url, const String& dir, String& username, Stri
 	int best = 0;
 	if(LoadCredentials(cr)) {
 		for(const Credential& c : cr) {
-			for(int pass = 0; pass < 2; pass++) {
-				const String& u = pass ? url : dir;
-				int n = min(u.GetCount(), c.url.GetCount());
-				int ml;
-				for(ml = 0; ml < n; ml++)
-					if(u[ml] != c.url[ml])
-						break;
-				if(ml > best) {
-					best = ml;
-					username = c.username;
-					password = c.password;
-				}
+			if(url.StartsWith(c.url) || dir.StartsWith(c.url)) {
+				username = c.username;
+				password = c.password;
 			}
 		}
 	}
-	return best;
+	return false;
 }
 
 struct CredentialDlg : WithCredentialLayout<TopWindow> {
