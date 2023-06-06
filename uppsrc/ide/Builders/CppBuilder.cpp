@@ -498,6 +498,9 @@ Vector<String> RepoInfo(const String& package)
 		String v = HostSys("git rev-list --count HEAD");
 		if(IsDigit(*v))
 			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
+		v = HostSys("git rev-parse HEAD");
+		if(v.GetCount())
+			info.Add("#define bmGIT_HASH " + AsCString(TrimBoth(v)));
 	}
 	return info;
 }
