@@ -574,8 +574,11 @@ bool  XmlParser::IsEnd()
 
 bool  XmlParser::End()
 {
-	if(IsEof())
+	if(IsEof()) {
+		if(relaxed)
+			return true;
 		throw XmlError("Unexpected end of file");
+	}
 	if(IsEnd()) {
 		LLOG("EndTag " << tagtext);
 		if(!raw) {

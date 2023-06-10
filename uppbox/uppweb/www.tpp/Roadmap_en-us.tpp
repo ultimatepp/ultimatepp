@@ -26,10 +26,50 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
+[s3; 2023.1 (rev. 16847) (May 2023)&]
+[s0; &]
+[s0; [*/ Current stable release]&]
+[s0;*/ &]
+[s0; The new release brings some long awaited features. As you might 
+remember for the last release we removed the old deprecated library 
+for code formatting. In the current release formatting is back 
+based on clang`-format. Also TheIDE has got a special dialog 
+when you can adjust formatting to your needs. Formatting is available 
+under `"Assist`" `-> `"Reformat`" menu.&]
+[s0; &]
+[s0; macOS support, temporarily removed in previous release, is back. 
+Our POSIX installation is now universal, covering Linux, BSDs 
+and MacOS, which means that when you unpack it on macOS you just 
+run ./install script to download all dependencies using brew 
+and build umk and theide just like on other POSIX platforms. 
+It is compatible with X86`_64 and Apple ARM CPUs.&]
+[s0; &]
+[s0; In other news, libclang based Assist`+`+ has been significantly 
+stabilized and some corner cases are now fixed.&]
+[s0; &]
+[s0; Happy coding with U`+`+ and TheIDE! We are glad that you decided 
+to try our software!&]
+[s0; &]
+[s0; Core&]
+[s0; &]
+[s0;i150;O0; MacOS is supported again; POSIX and macOS releases are 
+now merged to single archive&]
+[s0;i150;O0; X11 backend compiles again&]
+[s0; &]
+[s0; TheIDE&]
+[s0; &]
+[s0;i150;O0; clang`-format integration&]
+[s0;i150;O0; assist stablization&]
+[s0;i150;O0; .iml Image selection database tool&]
+[s0; &]
+[s0; CtrlLib&]
+[s0; &]
+[s0;i150;O0; Menubar GTK based styling has been improved&]
+[s0; &]
+[s0; &]
 [s3; 2022.3 (rev. 16660) (Dec 2022)&]
 [s5;po*/ &]
-[s5;po [*/ Current stable release]&]
-[s5; &]
+[s5;po*/ &]
 [s5; The leading entity for this release is migration for our homegrown 
 C`+`+ parser to LibClang. This is the revolutionary change in 
 the context of how easy is to develop code with our integrated 

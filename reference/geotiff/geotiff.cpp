@@ -42,4 +42,8 @@ CONSOLE_APP_MAIN
 	Rectf r = Rectf(Pointf(0, 0) * transform, Pointf(isz.cx, isz.cy) * transform).Normalized();
 
 	LOG("Coordinates: " << r);
+
+	DUMP(tif.GetMetaData("BITSPERSAMPLE"));
+	DUMP(tif.GetMetaData("SAMPLESPERPIXEL"));
+	DUMP(tif.GetMetaData("PHOTOMETRIC"));
 }

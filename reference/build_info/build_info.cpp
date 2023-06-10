@@ -22,6 +22,9 @@ CONSOLE_APP_MAIN
 #ifdef bmGIT_REVCOUNT
 	LOG("Git revcount " << bmGIT_REVCOUNT);
 #endif
+#ifdef bmGIT_HASH
+	LOG("Git hash " << bmGIT_HASH);
+#endif
 #ifdef bmSVN_URL
 	LOG("Svn url " << bmSVN_URL);
 #endif

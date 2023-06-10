@@ -89,8 +89,6 @@ CONSOLE_APP_MAIN
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
 	CreateBuildMethods();
-
-	SetupUmkUppHub();
 #endif
 
 	Ide ide;
@@ -114,6 +112,7 @@ CONSOLE_APP_MAIN
 	bool deletedir = true;
 	int  exporting = 0;
 	bool run = false;
+	bool auto_hub = false;
 	String mkf;
 
 	Vector<String> param, runargs;
@@ -138,6 +137,7 @@ CONSOLE_APP_MAIN
 				case 'k': deletedir = false; break;
 				case 'u': ide.use_target = true; break;
 				case 'j': ccfile = true; break;
+				case 'h': auto_hub = true; break;
 				case 'M': {
 					makefile = true;
 					if(s[1] == '=') {
@@ -186,6 +186,11 @@ CONSOLE_APP_MAIN
 			param.Add(a);
 	}
 
+	if(auto_hub)
+		DeleteFolderDeep(GetHubDir());
+	else
+		SetupUmkUppHub();
+
 	if(param.GetCount() >= 2) {
 		String v = GetUmkFile(param[0] + ".var");
 		if(IsNull(v)) {
@@ -213,14 +218,20 @@ CONSOLE_APP_MAIN
 			PutVerbose("Assembly: " + GetVar("UPP"));
 		}
 		PutVerbose("Output directory: " + GetVar("OUTPUT"));
-		v = SourcePath(param[1], GetFileTitle(param[1]) + ".upp");
+		ide.main = param[1];
+		v = SourcePath(ide.main, GetFileTitle(ide.main) + ".upp");
 		PutVerbose("Main package: " + v);
 		if(!FileExists(v)) {
-			Puts("Package does not exist\n");
+			Puts("Package " + ide.main + " does not exist\n");
 			SetExitCode(2);
 			return;
 		}
-		ide.main = param[1];
+		if(auto_hub) {
+			if(!UppHubAuto(ide.main)) {
+				SetExitCode(6);
+				return;
+			}
+		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();
 		if(!wspc.GetCount()) {

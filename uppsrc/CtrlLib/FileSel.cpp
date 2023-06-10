@@ -1997,7 +1997,7 @@ bool FileSel::Execute(int _mode) {
 	if(default_name.GetCount() && mode == SAVEAS)
 		file <<= default_name;
 
-	force_ext = true;
+	force_ext = mode == SAVEAS;
 	allowed_ext.Clear();
 	for(String mm : mask) {
 		if(!force_ext)

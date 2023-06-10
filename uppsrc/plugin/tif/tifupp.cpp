@@ -621,6 +621,7 @@ TIFFErrorHandler _TIFFwarningHandler = TIFRaster::Data::Warning;
 TIFFErrorHandler _TIFFerrorHandler   = TIFRaster::Data::Error;
 
 };
+
 static void packTileRGB(TIFRaster::Data *helper, uint32 x, uint32 y, uint32 w, uint32 h)
 {
 	if(helper->alpha) {
@@ -843,7 +844,6 @@ bool TIFRaster::Data::Create()
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_SAMPLESPERPIXEL, &page.samples_per_pixel);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_PHOTOMETRIC, &page.photometric);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_ORIENTATION, &page.orientation);
-		attr.GetAdd("tiff_orientation") = Value((int)page.orientation);
 		double dots_per_unit = (resunit == RESUNIT_INCH ? 600.0 : resunit == RESUNIT_CENTIMETER
 			? 600.0 / 2.54 : 0);
 		page.dot_size.cx = (xres ? fround(page.width * dots_per_unit / xres) : 0);
@@ -856,219 +856,219 @@ bool TIFRaster::Data::Create()
 				page.alpha = true;
 				break;
 			}
-
+		
 		if(i == 0) {
-				const word TIFFTAG_GEOPIXELSCALE = 33550,
-				           TIFFTAG_GEOTIEPOINTS = 33922,
-				           TIFFTAG_GEOTRANSMATRIX = 34264,
-				           TIFFTAG_GEOKEYDIRECTORY = 34735,
-				           TIFFTAG_GEODOUBLEPARAMS = 34736,
-				           TIFFTAG_GEOASCIIPARAMS = 34737;
+			const word TIFFTAG_GEOPIXELSCALE = 33550,
+			           TIFFTAG_GEOTIEPOINTS = 33922,
+			           TIFFTAG_GEOTRANSMATRIX = 34264,
+			           TIFFTAG_GEOKEYDIRECTORY = 34735,
+			           TIFFTAG_GEODOUBLEPARAMS = 34736,
+			           TIFFTAG_GEOASCIIPARAMS = 34737;
 
-				word count = 0;
-				word *geokeys = nullptr;
-				bool pixel_is_area = true; // Default is true, usually only DTM/DEM use 'RasterPixelIsPoint' and generally include the GeoKey in such case
+			word count = 0;
+			word *geokeys = nullptr;
+			bool pixel_is_area = true; // Default is true, usually only DTM/DEM use 'RasterPixelIsPoint' and generally include the GeoKey in such case
 
-				int dpc = 0;
-				double *doubleparams = 0;
+			int dpc = 0;
+			double *doubleparams = 0;
 
-				int apc = 0;
-				char *asciiparams = 0;
+			int apc = 0;
+			char *asciiparams = 0;
 
-				TIFFGetField(tiff, TIFFTAG_GEODOUBLEPARAMS, &dpc, &doubleparams);
-				TIFFGetField(tiff, TIFFTAG_GEOASCIIPARAMS, &apc, &asciiparams);
+			TIFFGetField(tiff, TIFFTAG_GEODOUBLEPARAMS, &dpc, &doubleparams);
+			TIFFGetField(tiff, TIFFTAG_GEOASCIIPARAMS, &apc, &asciiparams);
 
-				if(TIFFGetField(tiff, TIFFTAG_GEOKEYDIRECTORY, &count, &geokeys) &&
-					count >= 4 && (count % 4) == 0 && geokeys[0] == 1)
-					for(int i = 4; i + 3 < count; i += 4) {
-						const word GTRasterTypeGeoKey = 1025,
-						           RasterPixelIsArea = 1,
-						           GeographicTypeGeoKey = 2048,
-						           ProjectedCSTypeGeoKey = 3072;
+			if(TIFFGetField(tiff, TIFFTAG_GEOKEYDIRECTORY, &count, &geokeys) &&
+				count >= 4 && (count % 4) == 0 && geokeys[0] == 1)
+				for(int i = 4; i + 3 < count; i += 4) {
+					const word GTRasterTypeGeoKey = 1025,
+					           RasterPixelIsArea = 1,
+					           GeographicTypeGeoKey = 2048,
+					           ProjectedCSTypeGeoKey = 3072;
 
-						word value = geokeys[i + 3];
+					word value = geokeys[i + 3];
 
-						switch(geokeys[i]) {
-						case GTRasterTypeGeoKey:
-							pixel_is_area = value == RasterPixelIsArea;
+					switch(geokeys[i]) {
+					case GTRasterTypeGeoKey:
+						pixel_is_area = value == RasterPixelIsArea;
+						break;
+					case GeographicTypeGeoKey:
+					case ProjectedCSTypeGeoKey:
+						attr.GetAdd("epsg") = value;
+						break;
+					}
+
+					switch(geokeys[i+1]){ // by type
+						case TIFFTAG_GEOASCIIPARAMS:
+							if(geokeys[i+3]<=apc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(String(&asciiparams[geokeys[i+3]],geokeys[i+2]));
 							break;
-						case GeographicTypeGeoKey:
-						case ProjectedCSTypeGeoKey:
-							attr.GetAdd("epsg") = value;
+						case TIFFTAG_GEODOUBLEPARAMS:
+							if(geokeys[i+3]<=dpc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(doubleparams[geokeys[i+3]]);
 							break;
-						}
+						default:
+							attr.GetAdd(Format("GK%d",geokeys[i])) = Value(geokeys[i+3]);
+							break;
+					}
+				}
 
-						switch(geokeys[i+1]){ // by type
-							case TIFFTAG_GEOASCIIPARAMS:
-								if(geokeys[i+3]<=apc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(String(&asciiparams[geokeys[i+3]],geokeys[i+2]));
+			double geomatrix[6];
+	        geomatrix[0] = 0.0;
+	        geomatrix[1] = 1.0;
+	        geomatrix[2] = 0.0;
+	        geomatrix[3] = 0.0;
+	        geomatrix[4] = 0.0;
+	        geomatrix[5] = 1.0;
+	        
+	        auto AdjustMatrixOrientation = [&](double dx, double dy) {
+				geomatrix[0] += (geomatrix[1] * dx + geomatrix[2] * dy);
+				geomatrix[3] += (geomatrix[4] * dx + geomatrix[5] * dy);
+				if(dx!=0){
+					geomatrix[1] = -geomatrix[1];
+					geomatrix[4] = -geomatrix[4];
+				}
+				if(dy!=0){
+					geomatrix[2] = -geomatrix[2];
+					geomatrix[5] = -geomatrix[5];
+				}
+	        };
+	        
+			auto NormalizeOrientation = [&] {
+				if(!pixel_is_area) {
+					geomatrix[0] -= (geomatrix[1] * 0.5 + geomatrix[2] * 0.5);
+					geomatrix[3] -= (geomatrix[4] * 0.5 + geomatrix[5] * 0.5);
+				}
+				if(page.orientation>=5){
+					Swap(geomatrix[1],geomatrix[2]);
+					Swap(geomatrix[4],geomatrix[5]);
+				}
+				switch(page.orientation){
+					case 2:
+						AdjustMatrixOrientation(page.width, 0);
+						break;
+					case 3:
+						AdjustMatrixOrientation(page.width, page.height);
+						break;
+					case 4:
+						AdjustMatrixOrientation(0, page.height);
+						break;
+					case 6:
+						AdjustMatrixOrientation(page.height, 0);
+						break;
+					case 7:
+						AdjustMatrixOrientation(page.height, page.width);
+						break;
+					case 8:
+						AdjustMatrixOrientation(0, page.width);
+						break;
+				}
+				// TIFF orientations:
+				// 1 = FLIP_MIRROR_VERT,
+				// 2 = FLIP_ROTATE_180,
+				// 3 = FLIP_MIRROR_HORZ,
+				// 4 = FLIP_NONE,
+				// 5 = FLIP_ROTATE_CLOCKWISE,
+				// 6 = FLIP_TRANSPOSE,
+				// 7 = FLIP_ROTATE_ANTICLOCKWISE,
+				// 8 = FLIP_TRANSVERSE,
+			};
+	    
+	        double  *data;
+	        auto FinishMatrix = [&] {
+				ValueArray va;
+				for(int i = 0; i < 6; i++)
+					va << geomatrix[i];
+				attr.GetAdd("geo_matrix") = va;
+	        };
+	        
+			if(TIFFGetField(tiff, TIFFTAG_GEOTRANSMATRIX, &count, &data) && count == 16) {
+				geomatrix[0] = data[3];
+				geomatrix[1] = data[0];
+				geomatrix[2] = data[1];
+				geomatrix[3] = data[7];
+				geomatrix[4] = data[4];
+				geomatrix[5] = data[5];
+
+				NormalizeOrientation();
+				FinishMatrix();
+			}
+			else
+			if(TIFFGetField(tiff, TIFFTAG_GEOTIEPOINTS, &count, &data) && count >= 6) {
+				if(count>=18){ // 3 tiepoints needed for Xform2D::Map()
+					for(int t=0; t<count; t+=6){
+						if(page.orientation>=5) Swap(data[t + 0], data[t + 1]);
+						switch(page.orientation){
+							case 1:
 								break;
-							case TIFFTAG_GEODOUBLEPARAMS:
-								if(geokeys[i+3]<=dpc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(doubleparams[geokeys[i+3]]);
+							case 2:
+								data[t + 0] = page.width - data[t + 0];
 								break;
-							default:
-								attr.GetAdd(Format("GK%d",geokeys[i])) = Value(geokeys[i+3]);
+							case 3:
+								data[t + 0] = page.width - data[t + 0];
+								data[t + 1] = page.height - data[t + 1];
+								break;
+							case 4:
+								data[t + 1] = page.height - data[t + 1];
+								break;
+							case 5:
+								break;
+							case 6:
+								data[t + 0] = page.height - data[t + 0];
+								break;
+							case 7:
+								data[t + 0] = page.height - data[t + 0];
+								data[t + 1] = page.width - data[t + 1];
+								break;
+							case 8:
+								data[t + 1] = page.width - data[t + 1];
 								break;
 						}
 					}
 
-				double geomatrix[6];
-		        geomatrix[0] = 0.0;
-		        geomatrix[1] = 1.0;
-		        geomatrix[2] = 0.0;
-		        geomatrix[3] = 0.0;
-		        geomatrix[4] = 0.0;
-		        geomatrix[5] = 1.0;
-		        
-		        auto AdjustMatrixOrientation = [&](double dx, double dy) {
-					geomatrix[0] += (geomatrix[1] * dx + geomatrix[2] * dy);
-					geomatrix[3] += (geomatrix[4] * dx + geomatrix[5] * dy);
-					if(dx!=0){
-						geomatrix[1] = -geomatrix[1];
-						geomatrix[4] = -geomatrix[4];
-					}
-					if(dy!=0){
-						geomatrix[2] = -geomatrix[2];
-						geomatrix[5] = -geomatrix[5];
-					}
-		        };
-		        
-				auto NormalizeOrientation = [&] {
+					Xform2D xf = Xform2D::Map(Pointf(data[0],data[1]),Pointf(data[6+0],data[6+1]),Pointf(data[12+0],data[12+1]),
+												Pointf(data[3],data[4]),Pointf(data[6+3],data[6+4]),Pointf(data[12+3],data[12+4]));
+
+					geomatrix[0] = xf.t.x;
+					geomatrix[1] = xf.x.x;
+					geomatrix[2] = xf.y.x;
+					geomatrix[3] = xf.t.y;
+					geomatrix[4] = xf.x.y;
+					geomatrix[5] = xf.y.y;
+
 					if(!pixel_is_area) {
 						geomatrix[0] -= (geomatrix[1] * 0.5 + geomatrix[2] * 0.5);
 						geomatrix[3] -= (geomatrix[4] * 0.5 + geomatrix[5] * 0.5);
 					}
-					if(page.orientation>=5){
-						Swap(geomatrix[1],geomatrix[2]);
-						Swap(geomatrix[4],geomatrix[5]);
-					}
-					switch(page.orientation){
-						case 2:
-							AdjustMatrixOrientation(page.width, 0);
-							break;
-						case 3:
-							AdjustMatrixOrientation(page.width, page.height);
-							break;
-						case 4:
-							AdjustMatrixOrientation(0, page.height);
-							break;
-						case 6:
-							AdjustMatrixOrientation(page.height, 0);
-							break;
-						case 7:
-							AdjustMatrixOrientation(page.height, page.width);
-							break;
-						case 8:
-							AdjustMatrixOrientation(0, page.width);
-							break;
-					}
-					// TIFF orientations:
-					// 1 = FLIP_MIRROR_VERT,
-					// 2 = FLIP_ROTATE_180,
-					// 3 = FLIP_MIRROR_HORZ,
-					// 4 = FLIP_NONE,
-					// 5 = FLIP_ROTATE_CLOCKWISE,
-					// 6 = FLIP_TRANSPOSE,
-					// 7 = FLIP_ROTATE_ANTICLOCKWISE,
-					// 8 = FLIP_TRANSVERSE,
-				};
-		    
-		        double  *data;
-		        auto FinishMatrix = [&] {
-					ValueArray va;
-					for(int i = 0; i < 6; i++)
-						va << geomatrix[i];
-					attr.GetAdd("geo_matrix") = va;
-		        };
-		        
-				if(TIFFGetField(tiff, TIFFTAG_GEOTRANSMATRIX, &count, &data) && count == 16) {
-					geomatrix[0] = data[3];
-					geomatrix[1] = data[0];
-					geomatrix[2] = data[1];
-					geomatrix[3] = data[7];
-					geomatrix[4] = data[4];
-					geomatrix[5] = data[5];
-
-					NormalizeOrientation();
 					FinishMatrix();
 				}
-				else
-				if(TIFFGetField(tiff, TIFFTAG_GEOTIEPOINTS, &count, &data) && count >= 6) {
-					if(count>=18){ // 3 tiepoints needed for Xform2D::Map()
-						for(int t=0; t<count; t+=6){
-							if(page.orientation>=5) Swap(data[t + 0], data[t + 1]);
-							switch(page.orientation){
-								case 1:
-									break;
-								case 2:
-									data[t + 0] = page.width - data[t + 0];
-									break;
-								case 3:
-									data[t + 0] = page.width - data[t + 0];
-									data[t + 1] = page.height - data[t + 1];
-									break;
-								case 4:
-									data[t + 1] = page.height - data[t + 1];
-									break;
-								case 5:
-									break;
-								case 6:
-									data[t + 0] = page.height - data[t + 0];
-									break;
-								case 7:
-									data[t + 0] = page.height - data[t + 0];
-									data[t + 1] = page.width - data[t + 1];
-									break;
-								case 8:
-									data[t + 1] = page.width - data[t + 1];
-									break;
-							}
-						}
+				else{
+					double x = data[0];
+					double y = data[1];
+					double e = data[3];
+					double n = data[4];
 
-						Xform2D xf = Xform2D::Map(Pointf(data[0],data[1]),Pointf(data[6+0],data[6+1]),Pointf(data[12+0],data[12+1]),
-													Pointf(data[3],data[4]),Pointf(data[6+3],data[6+4]),Pointf(data[12+3],data[12+4]));
+					if(TIFFGetField(tiff, TIFFTAG_GEOPIXELSCALE, &count, &data) && count >= 2 && data[0] && data[1]) {
+						double dx = data[0];
+						double dy = -abs(data[1]);
 
-						geomatrix[0] = xf.t.x;
-						geomatrix[1] = xf.x.x;
-						geomatrix[2] = xf.y.x;
-						geomatrix[3] = xf.t.y;
-						geomatrix[4] = xf.x.y;
-						geomatrix[5] = xf.y.y;
+						geomatrix[0] = e - x * dx;
+						geomatrix[1] = dx;
+						geomatrix[2] = 0;
+						geomatrix[3] = n - y * dy;
+						geomatrix[4] = 0;
+						geomatrix[5] = dy;
 
-						if(!pixel_is_area) {
-							geomatrix[0] -= (geomatrix[1] * 0.5 + geomatrix[2] * 0.5);
-							geomatrix[3] -= (geomatrix[4] * 0.5 + geomatrix[5] * 0.5);
-						}
+						NormalizeOrientation();
 						FinishMatrix();
 					}
-					else{
-						double x = data[0];
-						double y = data[1];
-						double e = data[3];
-						double n = data[4];
+				}
+			}
 
-						if(TIFFGetField(tiff, TIFFTAG_GEOPIXELSCALE, &count, &data) && count >= 2 && data[0] && data[1]) {
-							double dx = data[0];
-							double dy = -abs(data[1]);
-
-							geomatrix[0] = e - x * dx;
-							geomatrix[1] = dx;
-							geomatrix[2] = 0;
-							geomatrix[3] = n - y * dy;
-							geomatrix[4] = 0;
-							geomatrix[5] = dy;
-
-							NormalizeOrientation();
-							FinishMatrix();
-						}
-					}
+			if(TIFFGetField(tiff, 42113, &count, &data) && // TIFFTAG_GDAL_NODATA = 42113
+				count >= 1){
+					attr.GetAdd("nodata") = String((const char*)data, count);
 				}
 
-				if(TIFFGetField(tiff, 42113, &count, &data) && // TIFFTAG_GDAL_NODATA = 42113
-					count >= 1){
-						attr.GetAdd("nodata") = String((const char*)data, count);
-					}
-
-			}
+		}
 	}
 	return SeekPage(0);
 }
@@ -1104,7 +1104,13 @@ bool TIFRaster::Data::SeekPage(int pgx)
 		separate = put.separate;
 		put.separate = putSeparate;
 	}
-	alpha = pages[page_index].alpha;
+	
+	attr.GetAdd("BITSPERSAMPLE") = page.bits_per_sample;
+	attr.GetAdd("SAMPLESPERPIXEL") = page.samples_per_pixel;
+	attr.GetAdd("PHOTOMETRIC") = page.photometric;
+	attr.GetAdd("tiff_orientation") = Value((int)page.orientation);
+
+	alpha = page.alpha;
 	if(alpha) {
 		format.Set32le(0xFF << 16, 0xFF << 8, 0xFF, 0xFF << 24);
 		bpp = 32;

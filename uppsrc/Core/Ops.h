@@ -262,7 +262,6 @@ byte addc64(uint64& result, const uint64& value, byte carry) {
 force_inline
 byte addc64(uint64& r, uint64 a, byte carry)
 {
-	uint64_t r1 = r;
 	r += a + carry;
 	return carry ? r <= a : r < a;
 }

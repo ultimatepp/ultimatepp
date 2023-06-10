@@ -60,7 +60,7 @@ class ImageBuffer : NoCopy {
 	void         Set(Image& img);
 	void         DeepCopy(const ImageBuffer& img);
 
-	RGBA*        Line(int i) const      { ASSERT(i >= 0 && i < size.cy); return (RGBA *)~pixels + i * size.cx; }
+	RGBA*        Line(int i) const      { ASSERT(i >= 0 && i < size.cy); return (RGBA *)~pixels + i * (size_t)size.cx; }
 	friend void  DropPixels___(ImageBuffer& b) { b.pixels.Clear(); }
 	void         InitAttrs();
 

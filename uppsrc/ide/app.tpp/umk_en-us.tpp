@@ -87,7 +87,13 @@ arguments after [*C@(0.0.255)3 !] as its arguments.&]
 ::= [s0; [3 Create mafile with given name.]]
 ::^ [s0;%- [*C@4;3 H][*/C@3;3 n]]
 ::= [s0; [3 Number of threads used for building. Default is number of logical 
-cores available.]]}}&]
+cores available.]]
+::^ [s0;%- [*C@4;3 h]]
+::= [s0; [3 If present, umk deletes its UppHub folder. Then, when there 
+are any missing packages that can be found in UppHub, they are 
+installed into umk`'s UppHub folder (by git clone). In other 
+words this option makes sure that latest versions of UppHub packages 
+required to build are downloaded.]]}}&]
 [s0; &]
 [s12;:3: 3. Examples&]
 [s11; Sample usage of UMK is located below:&]

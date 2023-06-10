@@ -28,10 +28,10 @@ LAYOUT(SvnOptionsLayout, 140, 16)
 	ITEM(Upp::Option, update, SetLabel(t_("Update")).LeftPosZ(72, 68).VCenterPosZ(16, 0))
 END_LAYOUT
 
-LAYOUT(GitOptionsLayout, 164, 16)
-	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(4, 68).VCenterPosZ(16, 0))
-	ITEM(Upp::Option, pull, SetLabel(t_("Pull(ff)")).LeftPosZ(64, 48).VCenterPosZ(16, 0))
-	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
+LAYOUT(GitOptionsLayout, 180, 16)
+	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, pull, SetLabel(t_("Pull(rebase)")).LeftPosZ(60, 72).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(132, 48).VCenterPosZ(16, 0))
 END_LAYOUT
 
 LAYOUT(CredentialLayout, 368, 140)
