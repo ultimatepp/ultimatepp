@@ -30,8 +30,8 @@ END_LAYOUT
 
 LAYOUT(GitOptionsLayout, 180, 16)
 	ITEM(Upp::Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
-	ITEM(Upp::Option, pull, SetLabel(t_("Pull(rebase)")).LeftPosZ(60, 72).VCenterPosZ(16, 0))
-	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(132, 48).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, pull, SetLabel(t_("Pull")).LeftPosZ(68, 72).VCenterPosZ(16, 0))
+	ITEM(Upp::Option, push, SetLabel(t_("Push")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
 END_LAYOUT
 
 LAYOUT(CredentialLayout, 368, 140)
