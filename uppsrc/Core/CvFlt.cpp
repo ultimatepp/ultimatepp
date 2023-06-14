@@ -510,7 +510,7 @@ String FormatF(double x, int precision, dword flags)
 }
 
 template <typename CHAR, typename BYTE>
-const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp)
+const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp, bool E = true)
 {
 	SkipSpaces__<CHAR, BYTE>(s);
 
@@ -571,7 +571,7 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp)
 		ReadNumber();
 		exp += int(s0 - s) + ignored;
 	}
-	if(*s == 'e' || *s == 'E') {
+	if(E && (*s == 'e' || *s == 'E')) {
 		dword e = 0;
 		bool overflow = false;
 		s++;
@@ -668,6 +668,19 @@ double CParser::ReadDouble()
 	LTIMING("ReadDouble");
 	double n;
 	const char *t = ScanDbl<char, byte>(n, term, '.');
+	if(!t) ThrowError("missing number");
+	if(!IsFin(n))
+		ThrowError("invalid number");
+	term = t;
+	DoSpaces();
+	return n;
+}
+
+double CParser::ReadDoubleNoE()
+{
+	LTIMING("ReadDouble No E");
+	double n;
+	const char *t = ScanDbl<char, byte>(n, term, '.', false);
 	if(!t) ThrowError("missing number");
 	if(!IsFin(n))
 		ThrowError("invalid number");

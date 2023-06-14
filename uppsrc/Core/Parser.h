@@ -64,6 +64,7 @@ public:
 	bool   IsDouble() const                   { return IsInt(); }
 	bool   IsDouble2() const;
 	double ReadDouble();
+	double ReadDoubleNoE();
 	bool   IsString() const                   { return IsChar('\"'); };
 	String ReadOneString(bool chkend = true);
 	String ReadString(bool chkend = true);
