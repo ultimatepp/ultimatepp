@@ -67,6 +67,13 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 		clip = ParseRTF(~d);
 		return true;
 	}
+	if(d.Accept("HTML Format")) {
+		String h = ~d;
+		int q = h.Find('<');
+		if(q >= 0)
+			clip = ParseTrivialHtml(h.Mid(q));
+		return true;
+	}
 	if(d.Accept("text/html")) {
 		fmt = "text/html";
 	#ifdef PLATFORM_WIN32
