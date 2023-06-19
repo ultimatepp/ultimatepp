@@ -317,20 +317,25 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				r.bottom = z * r.bottom;
 				Rect r1 = r;
 				r1.Deflate(max(1, q));
+				Color bullet_ink = format.ink;
+				if(format.bullet) {
+					if(part.GetCount())
+						bullet_ink = part[0].format.ink;
+				}
 				switch(format.bullet) {
 				case BULLET_BOX:
-					draw.DrawRect(r, pi.ResolveInk(format.ink));
+					draw.DrawRect(r, pi.ResolveInk(bullet_ink));
 					break;
 				case BULLET_BOXWHITE:
-					draw.DrawRect(r, pi.ResolveInk(format.ink));
+					draw.DrawRect(r, pi.ResolveInk(bullet_ink));
 					draw.DrawRect(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUNDWHITE:
-					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
+					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
 					draw.DrawEllipse(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUND:
-					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
+					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
 					break;
 				default:
 					String s = n.AsText(format);

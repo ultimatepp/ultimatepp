@@ -67,6 +67,12 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 		clip = ParseRTF(~d);
 		return true;
 	}
+	if(d.Accept("text/html")) {
+		fmt = "text/html";
+		String h = ~d;
+		clip = ParseTrivialHtml(ToUtf8((char16*)~h, h.GetCount() / 2));
+		return true;
+	}
 	for(int i = 0; i < RichObject::GetTypeCount(); i++) {
 		RichObjectType& rt = RichObject::GetType(i);
 		if(rt.Accept(d)) {
