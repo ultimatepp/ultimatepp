@@ -119,17 +119,24 @@ Size Display::GetStdSize(const Value& q) const
 
 // With CtrlLib, support qtf '\1' escape
 
-Size (*extGetSmartTextSize)(const char *text, Font font, int cx) =
-[](const char *text, Font font, int cx) {
-	return GetTLTextSize(ToUnicode(text, CHARSET_DEFAULT), font);
-};
+Size (*extGetSmartTextSize)(const char *text, Font font, int cx);
+
+Size ExtGetSmartTextSize(const char *text, Font font, int cx)
+{
+	return extGetSmartTextSize ? extGetSmartTextSize(text, font, cx)
+	                           : GetTLTextSize(ToUnicode(text, CHARSET_DEFAULT), font);
+}
 
 void (*extDrawSmartText)(Draw& draw, int x, int y, int cx, const char *text, Font font,
-                         Color ink, int accesskey, Color qtf_ink) =
-[](Draw& draw, int x, int y, int cx, const char *text, Font font,
-   Color ink, int accesskey, Color qtf_ink) {
-	DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
-};
+                         Color ink, int accesskey, Color qtf_ink);
+
+void ExtDrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font,
+                      Color ink, int accesskey, Color qtf_ink) {
+	if(extDrawSmartText)
+		extDrawSmartText(draw, x, y, cx, text, font, ink, accesskey, qtf_ink);
+	else
+		DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
+}
 
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
                              Color ink, Color paper, dword s) const {
@@ -162,7 +169,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	Size tsz = extGetSmartTextSize(txt, font, INT_MAX);
+	Size tsz = ExtGetSmartTextSize(txt, font, INT_MAX);
 	if(txt.GetCount() == 0)
 		tsz.cy = 0;
 	if(a == ALIGN_RIGHT)
@@ -175,12 +182,12 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 		Size isz = DrawImg::threedots().GetSize();
 		int wd = width - isz.cx;
 		w.Clip(r.left, r.top, wd, r.GetHeight());
-		extDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
+		ExtDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
 		w.End();
 		w.DrawImage(r.left + wd, tt + font.Info().GetAscent() - isz.cy, DrawImg::threedots(), ink);
 	}
 	else
-		extDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
+		ExtDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
 }
 
 void StdDisplayClass::Paint(Draw& w, const Rect& r, const Value& q,
@@ -206,7 +213,7 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	Size sz = extGetSmartTextSize(txt, font, INT_MAX);
+	Size sz = ExtGetSmartTextSize(txt, font, INT_MAX);
 	if(txt.GetCount() == 0)
 		sz.cy = 0;
 	return Size(sz.cx + isz.cx, max(sz.cy, isz.cy));

@@ -502,6 +502,17 @@ void Ide::Project(Bar& menu)
 				if(FileExists(pp))
 					RunRepoDiff(pp);
 			});
+			pp = GetFileFolder(pp);
+			menu.Add("Invoke gitk at " + pp, [=] {
+				Host h;
+				CreateHost(h, false, false);
+				h.ChDir(pp);
+			#ifdef PLATFORM_WIN32
+				h.Launch("gitk.exe", false);
+			#else
+				h.Launch("gitk", false)
+			#endif
+			});
 			if(menu.IsMenuBar())
 				menu.Add("Repo", THISBACK(ProjectRepo));
 			else

@@ -74,7 +74,7 @@ void RepoDiff::Execute(const String& f)
 					msg << l;
 				}
 				if(commit.GetCount())
-					r.Add(commit, "[g [@b \1" + date + "\1] [@r \1" + author + "\1]: [* \1" + Join(Split(msg, CharFilterWhitespace), " "));
+					r.Add(commit, "\1[g [@b \1" + date + "\1] [@r \1" + author + "\1]: [* \1" + Join(Split(msg, CharFilterWhitespace), " "));
 				date = commit = author = Null;
 			}
 			else
