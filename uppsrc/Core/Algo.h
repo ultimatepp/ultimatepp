@@ -271,3 +271,12 @@ C MakeIota(V end, V start = 0, V step = 1)
 		x.Add(i);
 	return x;
 }
+
+dword Random(dword n);
+
+template <class Range>
+void RandomShuffle(Range& r)
+{
+	for(int i = r.GetCount() - 1; i > 0; i--)
+		Swap(r[i], r[Random(i)]);
+}

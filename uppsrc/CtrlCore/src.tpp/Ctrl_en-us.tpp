@@ -2154,32 +2154,6 @@ Event<> object is not destroyed during the call.&]
 after user changes values of Ctrl.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:BackPaint`(int`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* BackPaint]([@(0.0.255) i
-nt]_[*@3 bp]_`=_FULLBACKPAINT)&]
-[s2;b17;a17; Activates back`-paint mode for Ctrl.&]
-[s7;i1120;a17; [%-*C@3 bp]-|Back`-paint mode.&]
-[s7;i1120;a17; [*/ Return value]-|`*this for method chaining.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:TransparentBackPaint`(`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* TransparentBa
-ckPaint]()&]
-[s7;i1120;a17; [*/ Return value]-|BackPaint(TRANSPARENTBACKPAINT).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:NoBackPaint`(`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* NoBackPaint]()&]
-[s7;i1120;a17; [*/ Return value]-|BackPaint(NOBACKPAINT).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:BackPaintHint`(`):%- [_^Ctrl^ Ctrl][@(0.0.255) `&]_[* BackPaintHint]()&]
-[s2; Activates FULLBACKPAINT mode if computer is a `"decent machine`" 
-(simple heurestics to identify fast enough PC with enough memory).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:GetBackPaint`(`)const:%- [@(0.0.255) int]_[* GetBackPaint]()_[@(0.0.255) const
-]&]
-[s7;i1120;a17; [*/ Return value]-|Current back`-paint mode of Ctrl.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:Transparent`(bool`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* Transparent]([@(0.0.255) b
 ool]_[*@3 bp]_`=_[@(0.0.255) true])&]
 [s2;b17;a17; Sets transparency flag of Ctrl. If transparency flag 

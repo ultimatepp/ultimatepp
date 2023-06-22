@@ -1067,7 +1067,9 @@ public:
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
 
 	struct FoundDisplay : Display {
+		Size DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
 	};
 
 	struct TopAlignedDisplay : Display {

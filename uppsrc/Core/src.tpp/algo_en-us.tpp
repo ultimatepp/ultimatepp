@@ -274,4 +274,9 @@ r<[@(0.0.255) int]>, [@(0.0.255) class]_[*@4 V]>_&]
 of numbers starting at [%-*@3 start] and less than [%-*@3 end] increasing 
 by [%-*@3 step] increments.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:RandomShuffle`(Range`&`): [@(0.0.255) template] <Range> 
+[@(0.0.255) void] [* RandomShuffle](Range[@(0.0.255) `&] [*@3 r])&]
+[s2;%% Randomly reorders elements in [%-*@3 r].&]
+[s3; &]
 [s0;%% ]]
