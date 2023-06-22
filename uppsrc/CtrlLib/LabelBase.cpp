@@ -65,6 +65,7 @@ void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font
 		PaintInfo pi;
 		pi.darktheme = IsDarkTheme();
 		pi.textcolor = qtf_ink;
+		DDUMP(qtf_ink);
 		txt.Paint(draw, x, y, cx, pi);
 		return;
 	}
