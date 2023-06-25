@@ -510,7 +510,7 @@ void Ide::Project(Bar& menu)
 			#ifdef PLATFORM_WIN32
 				h.Launch("gitk.exe", false);
 			#else
-				h.Launch("gitk", false)
+				h.Launch("gitk", false);
 			#endif
 			});
 			if(menu.IsMenuBar())
