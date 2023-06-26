@@ -165,6 +165,7 @@ std::atomic<int>     Indexer::running_indexers;
 String               Indexer::main;
 String               Indexer::includes;
 String               Indexer::defines;
+bool                 Indexer::relaxed;
 
 void Indexer::BuildingPause()
 {
@@ -370,14 +371,15 @@ void Indexer::SchedulerThread()
 							if(IsCppSourceFile(m.a)) {
 								int n = files.GetCount();
 								ppi.GatherDependencies(m.a, files, dics, speculative);
-								if(IsCppSourceFile(m.a)) // we completely ignore .c file dependecies for now
-									for(int i = n; i < files.GetCount(); i++) {
-										String p = files.GetKey(i);
-										if(!IsCSourceFile(p) && header.Find(p) < 0 && IsCppSourceFile(m.a)) {
-											master.Add(m.a);
-											header.Add(p);
-										}
+								for(int i = n; i < files.GetCount(); i++) {
+									String p = files.GetKey(i);
+									if(!IsCSourceFile(p) && header.Find(p) < 0) {
+										master.Add(m.a);
+										header.Add(p);
 									}
+									if(RelaxedIndexerDependencies)
+										files[i] = ppi.GetFileTime(p);
+								}
 							}
 							else
 							if(IsCSourceFile(m.a))

@@ -10,6 +10,7 @@
 extern bool LibClangEnabled;
 extern bool AssistDiagnostics;
 extern bool AutoIndexer;
+extern bool RelaxedIndexerDependencies; // basically: Do not rescan all .cpps on .h change
 extern int  IndexerThreads;
 extern int  ParsedFiles;
 
@@ -312,6 +313,7 @@ class Indexer {
 	static std::atomic<int>   running_indexers;
 	static bool               running_scheduler;
 	static String             main, includes, defines;
+	static bool               relaxed;
 	
 	static void IndexerThread();
 	static void SchedulerThread();
