@@ -661,7 +661,10 @@ Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink,
 		return Size(1, 1);
 	One<EditorSyntax> es = EditorSyntax::Create(h[0]);
 	es->IgnoreErrors();
-	WString ln = h[3].ToWString();
+	String txt = h[3];
+	if(txt.GetCount() > 500)
+		txt.Trim(500);
+	WString ln = txt.ToWString();
 	Vector<LineEdit::Highlight> hln;
 	hln.SetCount(ln.GetCount() + 1);
 	for(int i = 0; i < ln.GetCount(); i++) {
@@ -676,8 +679,8 @@ Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink,
 	int fcy = GetStdFontCy();
 	int y = r.top + (r.GetHeight() - fcy) / 2;
 	w.DrawRect(r, paper);
-	int sl = Utf32Len(~h[3], atoi(h[1]));
-	int sh = Utf32Len(~h[3] + sl, atoi(h[2])) + sl;
+	int sl = Utf32Len(txt, atoi(h[1]));
+	int sh = Utf32Len(txt + sl, atoi(h[2])) + sl;
 	int x;
 	for(int text = 0; text < 2; text++) { // first pass draws background
 		x = r.left;

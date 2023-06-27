@@ -479,6 +479,7 @@ public:
 	Console     console;
 
 	ArrayCtrl   ffound[3];
+	Button      freplace[3];
 	int         ffoundi_next = 0;
 
 	ArrayCtrl   error;
@@ -848,6 +849,8 @@ public:
 
 	void OnlineSearchMenu(Bar& menu);
 
+	void ReplaceFound(int i);
+
 	void SearchMenu(Bar& bar);
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
 		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }
@@ -1059,7 +1062,7 @@ public:
 	void      ShowError();
 	void      SetFFound(int ii);
 	ArrayCtrl& FFound();
-	void      FFoundFinish(bool files = false);
+	void      FFoundFinish(bool replace = true);
 	void      ShowFound();
 	void      CopyFound(bool all);
 	void      FFoundMenu(Bar& bar);
