@@ -355,6 +355,8 @@ struct CursorInfoCtrl : Ctrl {
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
+int ApplyChanges(CodeEditor& editor, const String& new_content);
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
