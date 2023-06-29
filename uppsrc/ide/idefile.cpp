@@ -781,9 +781,10 @@ void Ide::CheckFileUpdate()
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
 
-	if(!editor.IsView() && !editor.IsReadOnly() &&
+	if(!editor.IsView() && !editor.IsReadOnly() && editor.GetUndoCount() &&
 	   max((int64)editor.GetLength(), ff.GetLength()) < 30*1024*1024) {
 		ApplyChanges(editor, LoadFile(editfile));
+		editor.ClearDirty(); // as it is "loaded"
 	}
 	else
 		ReloadFile();
