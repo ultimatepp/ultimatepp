@@ -139,9 +139,11 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		bool bw = true;
 		int  count;
 		if(regexp) {
-			if(regexp->Match(line)) {
-				AddFoundFile(fn, ln, line, regexp->GetOffset(), regexp->GetLength());
+			const char *s = line;
+			while(regexp->Match(s)) {
+				AddFoundFile(fn, ln, line, regexp->GetOffset() + int(s - line), regexp->GetLength());
 				sync = true;
+				s += regexp->GetLength();
 			}
 		}
 		else
@@ -150,7 +152,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 					AddFoundFile(fn, ln, line, int(s - line), count);
 					sync = true;
 					infile++;
-					break;
+					s += count;
 				}
 				if(wb) bw = !iscid(*s);
 			}
