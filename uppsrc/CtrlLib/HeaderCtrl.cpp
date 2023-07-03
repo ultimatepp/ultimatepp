@@ -907,7 +907,6 @@ HeaderCtrl::HeaderCtrl() {
 	sb.WhenScroll = THISBACK(Scroll);
 	WhenScroll = THISBACK(WScroll);
 	sb.WhenVisibility = THISBACK(ScrollVisibility);
-	BackPaintHint();
 }
 
 HeaderCtrl::~HeaderCtrl() {}

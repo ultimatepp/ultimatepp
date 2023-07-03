@@ -654,59 +654,78 @@ void Ide::ShowError()
 		GoToError(error, true);
 }
 
-void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const
+{
+	Vector<String> h = Split(s + 1, '\1', false);
+	if(h.GetCount() < 4)
+		return Size(1, 1);
+	One<EditorSyntax> es = EditorSyntax::Create(h[0]);
+	es->IgnoreErrors();
+	String txt = h[3];
+	if(txt.GetCount() > 500)
+		txt.Trim(500);
+	WString ln = txt.ToWString();
+	Vector<LineEdit::Highlight> hln;
+	hln.SetCount(ln.GetCount() + 1);
+	for(int i = 0; i < ln.GetCount(); i++) {
+		LineEdit::Highlight& h = hln[i];
+		h.paper = paper;
+		h.ink = SColorText();
+		h.chr = ln[i];
+		h.font = StdFont();
+	}
+	HighlightOutput hl(hln);
+	es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
+	int fcy = GetStdFontCy();
+	int y = r.top + (r.GetHeight() - fcy) / 2;
+	w.DrawRect(r, paper);
+	int sl = Utf32Len(txt, atoi(h[1]));
+	int sh = Utf32Len(txt + sl, atoi(h[2])) + sl;
+	int x;
+	for(int text = 0; text < 2; text++) { // first pass draws background
+		x = r.left;
+		for(int i = 0; i < hln.GetCount(); i++) {
+			Font fnt = StdFont();
+			int a = fnt.GetAscent();
+			LineEdit::Highlight& h = hln[i];
+			fnt.Bold(h.font.IsBold());
+			fnt.Italic(h.font.IsItalic());
+			fnt.Underline(h.font.IsUnderline());
+			a -= fnt.GetAscent();
+			int cw = fnt[h.chr];
+			if(h.chr == '\t')
+				cw = 4 * fnt[' '];
+			Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
+			Color hink = h.ink;
+			if(IsDarkMismatch()) {
+				hpaper = paper;
+				hink = ink;
+			}
+			if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
+				w.DrawRect(x, y, cw, fcy, hpaper);
+			if(h.chr != '\t' && text)
+				w.DrawText(x, y + a, &h.chr, fnt, hink, 1);
+			x += cw;
+		}
+	}
+	return Size(x, fcy);
+}
+
+Size Ide::FoundDisplay::GetStdSize(const Value& q) const
 {
 	String s = q;
 	if(*s == '\1') {
-		Vector<String> h = Split(~s + 1, '\1', false);
-		if(h.GetCount() < 4)
-			return;
-		One<EditorSyntax> es = EditorSyntax::Create(h[0]);
-		es->IgnoreErrors();
-		WString ln = h[3].ToWString();
-		Vector<LineEdit::Highlight> hln;
-		hln.SetCount(ln.GetCount() + 1);
-		for(int i = 0; i < ln.GetCount(); i++) {
-			LineEdit::Highlight& h = hln[i];
-			h.paper = paper;
-			h.ink = SColorText();
-			h.chr = ln[i];
-			h.font = StdFont();
-		}
-		HighlightOutput hl(hln);
-		es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
-		int fcy = GetStdFontCy();
-		int y = r.top + (r.GetHeight() - fcy) / 2;
-		w.DrawRect(r, paper);
-		int sl = Utf32Len(~h[3], atoi(h[1]));
-		int sh = Utf32Len(~h[3] + sl, atoi(h[2])) + sl;
-		for(int text = 0; text < 2; text++) {
-			int x = r.left;
-			for(int i = 0; i < hln.GetCount(); i++) {
-				Font fnt = StdFont();
-				int a = fnt.GetAscent();
-				LineEdit::Highlight& h = hln[i];
-				fnt.Bold(h.font.IsBold());
-				fnt.Italic(h.font.IsItalic());
-				fnt.Underline(h.font.IsUnderline());
-				a -= fnt.GetAscent();
-				int cw = fnt[h.chr];
-				if(h.chr == '\t')
-					cw = 4 * fnt[' '];
-				Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
-				Color hink = h.ink;
-				if(IsDarkMismatch()) {
-					hpaper = paper;
-					hink = ink;
-				}
-				if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
-					w.DrawRect(x, y, cw, fcy, hpaper);
-				if(h.chr != '\t' && text)
-					w.DrawText(x, y + a, &h.chr, fnt, hink, 1);
-				x += cw;
-			}
-		}
+		NilDraw nil;
+		return DrawHl(nil, s, RectC(0, 0, INT_MAX, INT_MAX), Black(), White(), 0);
 	}
+	return StdDisplay().GetStdSize(q);
+}
+
+void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	String s = q;
+	if(*s == '\1')
+		DrawHl(w, s, r, ink, paper, style);
 	else
 		StdDisplay().Paint(w, r, q, ink, paper, style);
 }

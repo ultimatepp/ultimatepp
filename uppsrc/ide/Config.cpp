@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 26;
+	int version = 27;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -277,6 +277,8 @@ void Ide::Serialize(Stream& s)
 	s % editor.auto_assist;
 	if(version >= 9)
 		s % AutoIndexer;
+	if(version >= 27)
+		s % RelaxedIndexerDependencies;
 	if(version >= 10) {
 		bool dummy = false;
 		s % dummy;

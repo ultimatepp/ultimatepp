@@ -796,7 +796,7 @@ void RichPara::Dump()
 	for(i = 0; i < format.tab.GetCount(); i++)
 		LOG("TAB " << format.tab[i].pos << " : " << format.tab[i].align);
 	for(i = 0; i < part.GetCount(); i++)
-		LOG("Part[" << i << "] = \"" << part[i].text << "\" "
+		LOG("Part[" << i << "] = " << AsCString(part[i].text.ToString()) << " "
 		    << part[i].format);
 	LOG(LOG_END << "---------");
 }

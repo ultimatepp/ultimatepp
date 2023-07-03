@@ -59,9 +59,8 @@ void RepoDiff::Execute(const String& f)
 		StringStream ss(log);
 		String author, date, commit;
 		while(!ss.IsEof()) {
-			String l = ss.GetLine();
-			Vector<String> s = Split(l, CharFilterWhitespace);
-			if(s.GetCount() == 0) {
+			String l = TrimBoth(ss.GetLine());
+			if(l.GetCount() == 0) {
 				while(!ss.IsEof()) {
 					l = ss.GetLine();
 					if(l.GetCount())
@@ -75,21 +74,20 @@ void RepoDiff::Execute(const String& f)
 					msg << l;
 				}
 				if(commit.GetCount())
-					r.Add(commit, date + ' ' + author + ": " + Join(Split(msg, CharFilterWhitespace), " "));
+					r.Add(commit, "\1[g [@b \1" + date + "\1] [@r \1" + author + "\1]: [* \1" + Join(Split(msg, CharFilterWhitespace), " "));
 				date = commit = author = Null;
 			}
 			else
-			if(s.GetCount() >= 2) {
-				String k = ToLower(s[0]);
-				if(k == "author:") {
-					s.Remove(0);
-					author = Join(s, " ");
-				}
-				if(k == "date:")
-					date = s[1];
-				if(k == "commit")
-					commit = s[1];
+			if(l.TrimStart("Author:")) {
+				int q = l.Find('<');
+				author = TrimBoth(q >= 0 ? l.Mid(0, q) : l);
 			}
+			else
+			if(l.TrimStart("Date:"))
+				date = TrimBoth(l);
+			else
+			if(l.TrimStart("commit"))
+				commit = TrimBoth(l);
 		}
 		Load();
 	}

@@ -474,29 +474,6 @@ void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, con
 	}
 }
 
-Ctrl *Ctrl::FindBestOpaque(const Rect& clip)
-{
-	GuiLock __;
-	Ctrl *w = NULL;
-	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
-		if(q->IsVisible() && GetScreenView().Contains(q->GetScreenRect())) {
-			Rect sw = q->GetScreenView();
-			if((q->GetOpaqueRect() + sw.TopLeft()).Contains(clip)) {
-				w = q;
-				Ctrl *h = q->FindBestOpaque(clip);
-				if(h) w = h;
-			}
-			else
-			if(q->GetScreenView().Contains(clip))
-				w = q->FindBestOpaque(clip);
-			else
-			if(q->GetScreenRect().Intersects(clip))
-				w = NULL;
-		}
-	}
-	return w;
-}
-
 void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
 {
 	GuiLock __;
@@ -537,7 +514,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		LLOG("========== END (FULLBACKPAINT)");
 		return;
 	}
-	if(backpaint == TRANSPARENTBACKPAINT) {
+/*	if(backpaint == TRANSPARENTBACKPAINT) {
 		LLOG("TransparentBackpaint");
 		Vector<Rect> area;
 		GatherTransparentAreas(area, draw, GetRect().GetSize(), clip);
@@ -559,7 +536,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		PaintOpaqueAreas(draw, GetRect().GetSize(), clip);
 		LLOG("========== END");
 		return;
-	}
+	}*/
 	CtrlPaint(draw, clip);
 	LLOG("========== END");
 }
@@ -573,15 +550,7 @@ void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 		return;
 	RemoveFullRefresh();
 	Point sp = GetScreenRect().TopLeft();
-	Ctrl *b = FindBestOpaque(clip + sp);
-	if(b) {
-		Point p = b->GetScreenRect().TopLeft() - sp;
-		draw.Offset(p);
-		b->UpdateArea0(draw, clip.Offseted(-p), backpaint);
-		draw.End();
-	}
-	else
-		UpdateArea0(draw, clip, backpaint);
+	UpdateArea0(draw, clip, backpaint);
 	SweepMkImageCache();
 }
 
@@ -700,13 +669,6 @@ void Ctrl::SyncMoves()
 	}
 	top->move.Clear();
 	top->scroll_move.Clear();
-}
-
-Ctrl& Ctrl::BackPaintHint()
-{
-	GuiLock __;
-		BackPaint();
-	return *this;
 }
 
 void  Ctrl::GlobalBackPaint(bool b)

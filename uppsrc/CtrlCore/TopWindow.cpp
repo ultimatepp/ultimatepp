@@ -494,7 +494,6 @@ TopWindow::TopWindow()
 {
 	GuiLock __;
 	GuiPlatformConstruct();
-	TransparentBackPaint();
 	background = PaintRect(Single<DialogBackground>(), Null);
 	SetStyle(StyleDefault());
 	center = 1;

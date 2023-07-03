@@ -117,25 +117,47 @@ Size Display::GetStdSize(const Value& q) const
 	return Single<StdDisplayClass>().GetStdSize(q);
 }
 
+// With CtrlLib, support qtf '\1' escape
+
+Size (*extGetSmartTextSize)(const char *text, Font font, int cx);
+
+Size ExtGetSmartTextSize(const char *text, Font font, int cx)
+{
+	return extGetSmartTextSize ? extGetSmartTextSize(text, font, cx)
+	                           : GetTLTextSize(ToUnicode(text, CHARSET_DEFAULT), font);
+}
+
+void (*extDrawSmartText)(Draw& draw, int x, int y, int cx, const char *text, Font font,
+                         Color ink, int accesskey, Color qtf_ink);
+
+void ExtDrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font,
+                      Color ink, int accesskey, Color qtf_ink) {
+	if(extDrawSmartText)
+		extDrawSmartText(draw, x, y, cx, text, font, ink, accesskey, qtf_ink);
+	else
+		DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
+}
+
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
                              Color ink, Color paper, dword s) const {
 	LLOG("StdDisplay::Paint0: " << q << " ink:" << ink << " paper:" << paper);
-	WString txt;
+	String txt;
 	Font font = StdFont();
 	int a = align;
 	int x = r.left;
 	int width = r.GetWidth();
+	bool alter_color = s & (CURSOR|SELECT|READONLY);
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text;
+		txt = t.text.ToString();
 		font = t.font;
 		if(!IsNull(t.paper))
 			paper = t.paper;
 		if(!IsNull(t.ink))
 			ink = t.ink;
-		if(!IsNull(t.normalink) && !(s & (CURSOR|SELECT|READONLY)))
+		if(!IsNull(t.normalink) && !alter_color)
 			ink = t.normalink;
-		if(!IsNull(t.normalpaper) && !(s & (CURSOR|SELECT|READONLY)))
+		if(!IsNull(t.normalpaper) && !alter_color)
 			paper = t.normalpaper;
 		if(!IsNull(t.align))
 			a = t.align;
@@ -147,7 +169,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	Size tsz = GetTLTextSize(txt, font);
+	Size tsz = ExtGetSmartTextSize(txt, font, INT_MAX);
 	if(txt.GetCount() == 0)
 		tsz.cy = 0;
 	if(a == ALIGN_RIGHT)
@@ -160,12 +182,12 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 		Size isz = DrawImg::threedots().GetSize();
 		int wd = width - isz.cx;
 		w.Clip(r.left, r.top, wd, r.GetHeight());
-		DrawTLText(w, x, tt, width, txt, font, ink);
+		ExtDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
 		w.End();
 		w.DrawImage(r.left + wd, tt + font.Info().GetAscent() - isz.cy, DrawImg::threedots(), ink);
 	}
 	else
-		DrawTLText(w, x, tt, width, txt, font, ink);
+		ExtDrawSmartText(w, x, tt, tsz.cx, txt, font, ink, 0, alter_color ? ink : Null);
 }
 
 void StdDisplayClass::Paint(Draw& w, const Rect& r, const Value& q,
@@ -178,11 +200,11 @@ void StdDisplayClass::Paint(Draw& w, const Rect& r, const Value& q,
 Size StdDisplayClass::GetStdSize(const Value& q) const
 {
 	Font font = StdFont();
-	WString txt;
+	String txt;
 	Size isz(0, 0);
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text;
+		txt = t.text.ToString();
 		font = t.font;
 		if(!IsNull(t.img)) {
 			isz = t.img.GetSize();
@@ -191,7 +213,7 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	Size sz = GetTLTextSize(txt, font);
+	Size sz = ExtGetSmartTextSize(txt, font, INT_MAX);
 	if(txt.GetCount() == 0)
 		sz.cy = 0;
 	return Size(sz.cx + isz.cx, max(sz.cy, isz.cy));

@@ -147,14 +147,21 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	}
 	else {
 		bool isvirtual = false;
+		bool istype = false;
 		String cls;
 		for(const auto& f : ~CodeIndex())
-			for(const AnnotationItem& m : f.value.items)
+			for(const AnnotationItem& m : f.value.items) {
 				if(m.id == id && m.isvirtual) {
 					isvirtual = true;
 					cls = m.nest;
 					break;
 				}
+				if(m.id == id && IsStruct(m.kind)) {
+					istype = true;
+					cls = m.nest;
+					break;
+				}
+			}
 		
 		Index<String> ids;
 		ids.FindAdd(id);
@@ -180,7 +187,10 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 				GatherVirtuals(bases, cls, signature, ids, visited);
 			
 		}
-		
+
+		int q = id.ReverseFind("::");
+		String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
+		String destructor = id + "::~(";
 		SortByKey(CodeIndex());
 		for(int src = 0; src < 2; src++)
 			for(const auto& f : ~CodeIndex())
@@ -188,15 +198,24 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 					auto Add = [&](Point mpos) {
 						AddReferenceLine(f.key, mpos, name, unique);
 					};
-					for(const AnnotationItem& m : f.value.items)
-						if(ids.Find(m.id) >= 0)
+					for(const AnnotationItem& m : f.value.items) {
+						if(ids.Find(m.id) >= 0 || istype && (m.id.StartsWith(constructor) || m.id.StartsWith(destructor)))
 							Add(m.pos);
+					}
 					for(const ReferenceItem& m : f.value.refs)
 						if(ids.Find(m.id) >= 0)
 							Add(m.pos);
 				}
 	}
 
+	FFound().Sort(3, [](const Value& va, const Value& vb)->int {
+		const ErrorInfo& a = va.To<ErrorInfo>();
+		const ErrorInfo& b = vb.To<ErrorInfo>();
+		return CombineCompare(GetFileName(a.file), GetFileName(b.file))
+		                     (a.file, b.file)
+		                     (a.lineno, b.lineno)
+		                     (a.linepos, b.linepos);
+	});
 	FFoundFinish();
 }
 
@@ -214,6 +233,13 @@ void Ide::IdUsage()
 {
 	String name;
 	Point ref_pos;
-	String ref_id = GetRefId(editor.GetCursor(), name, ref_pos);
+	String ref_id;
+	for(int pass = 0; pass < 2; pass++) { // bit of heuristics - if stored info has correct id at current pos, do not wait for rescan
+		ref_id = GetRefId(editor.GetCursor(), name, ref_pos);
+		if(ref_id.GetCount())
+			break;
+		if(!editor.WaitCurrentFile())
+			return;
+	}
 	Usage(ref_id, name, ref_pos);
 }

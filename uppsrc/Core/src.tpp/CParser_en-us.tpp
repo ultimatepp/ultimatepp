@@ -208,13 +208,22 @@ position.&]
 [s5;:CParser`:`:IsId`(const char`*`)const: [@(0.0.255) bool]_[* IsId]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s])_[@(0.0.255) const]&]
 [s2;%% Tests whether there is C`-like identifier [%-*@3 s] at current 
-position.&]
+position. Note that matched text actually does not need to follow 
+C identifier rules, e.g. IsId(`"family`-name`") will work `- 
+the only thing that is tested that [/ after] the matched text, 
+there is no continuation with character allowed inside C identifier. 
+(E.g. CParser(`"family`-names`").IsId(`"family`-name`") is false 
+while CParser(`"family`-name;`").IsId(`"family`-name`") is true).&]
 [s3;%% &]
 [s4; &]
 [s5;:CParser`:`:ReadId`(`): [_^String^ String]_[* ReadId]()&]
 [s2;%% Reads C`-like identifier from the current position. If there 
 is none, a [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ CPa
 rser`::Error] is thrown.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CParser`:`:ReadIdh`(`): String [* ReadIdh]()&]
+[s2;%% Special variant of ReadId that allows hypens inside identifier.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadIdt`(`): [_^String^ String]_[* ReadIdt]()&]
@@ -301,6 +310,12 @@ with decimal point, like `'.21`'.&]
 [s2;%% Reads a floating point number with C based lexical rules. 
 As an exception to C lexical rules, ReadDouble also recognizes 
 form starting with decimal point, like `".21`".&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CParser`:`:ReadDoubleNoE`(`): [@(0.0.255) double] [* ReadDoubleNoE]()&]
+[s2;%% Speacial variant of ReadDouble that ignores exponential part 
+of number. E.g. CParser(`"1.2em`").ReadDoubleNoE() returns 1.2 
+(and does not throw error for invalid double).&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:IsString`(`)const: [@(0.0.255) bool]_[* IsString]()_[@(0.0.255) const]&]

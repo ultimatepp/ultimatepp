@@ -1,4 +1,5 @@
 namespace Upp;
+namespace Upp;
 
 enum_property Frame {
 	"NullFrame()",
@@ -25,6 +26,11 @@ enum_property Align {
 fn IsUHD()
 {
 	return GetTextSize("X", StdFont()).cy > 24;
+}
+
+fn DPI(n)
+{
+	return IsUHD() ? 2 * n : n;
 }
 
 fn DeflateRect(&r)
@@ -599,11 +605,11 @@ ctrl Option {
 			d = (textsize.cy - osz) / 2;
 			w.DrawRect(8, 0, osz + textsize.cx + 8, textsize.cy, :SLtGray);
 			DrawOption(w, 10, d, kind);
-			w.DrawSmartText(osz + 14, 0, .SetLabel, .SetFont);
+			w.DrawSmartText(osz + 10 + DPI(4), 0, .SetLabel, .SetFont);
 		}
 		else {
 			DrawOption(w, 0, (sz.cy - osz) / 2, kind);
-			w.DrawSmartText(osz + 4, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
+			w.DrawSmartText(osz + DPI(4), (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
 		}
 	}
 }
@@ -703,14 +709,14 @@ ctrl Switch {
 				if(horz) {
 					if(pass) {
 						DrawOption(w, x, (sz.cy - osz) / 2, 2);
-						w.DrawSmartText(x + osz + 4, (sz.cy - tcy) / 2, cs[i], .SetFont);
+						w.DrawSmartText(x + osz + DPI(4), (sz.cy - tcy) / 2, cs[i], .SetFont);
 					}
-					x += osz + 4 + textsize.cx + tcy / 2;
+					x += osz + DPI(4) + textsize.cx + tcy / 2;
 				}
 				else {
 					if(pass) {
 						DrawOption(w, x, y, 2);
-						w.DrawSmartText(x + osz + 4, y + (osz - tcy) / 2, cs[i], .SetFont);
+						w.DrawSmartText(x + osz + DPI(4), y + (osz - tcy) / 2, cs[i], .SetFont);
 					}
 					y += linecy;
 				}

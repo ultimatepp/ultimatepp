@@ -184,6 +184,19 @@ String CParser::ReadId() {
 	return String(b, (int)(uintptr_t)(p - b));
 }
 
+String CParser::ReadIdh() {
+	if(!IsId())
+		ThrowError("missing id");
+	String result;
+	const char *b = term;
+	const char *p = b;
+	while(iscid(*p) || *p == '-')
+		p++;
+	term = p;
+	DoSpaces();
+	return String(b, (int)(uintptr_t)(p - b));
+}
+
 String CParser::ReadIdt() {
 	if(!IsId())
 		ThrowError("missing id");

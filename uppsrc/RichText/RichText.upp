@@ -32,6 +32,7 @@ file
 	EncodeQtf.cpp,
 	ParseQtf.cpp,
 	EncodeHTML.cpp,
+	ParseHTML.cpp,
 	Util.cpp,
 	RichText.iml,
 	Info readonly separator,

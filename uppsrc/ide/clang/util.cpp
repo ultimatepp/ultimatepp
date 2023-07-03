@@ -3,6 +3,7 @@
 bool LibClangEnabled = true;
 bool AssistDiagnostics;
 bool AutoIndexer;
+bool RelaxedIndexerDependencies = true;
 int  IndexerThreads;
 int  ParsedFiles;
 

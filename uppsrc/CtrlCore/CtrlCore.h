@@ -689,7 +689,6 @@ private:
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
-	Ctrl   *FindBestOpaque(const Rect& clip);
 	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
@@ -1280,10 +1279,10 @@ public:
 	void    UpdateActionRefresh();
 
 	Ctrl&   BackPaint(int bp = FULLBACKPAINT)  { backpaint = bp; return *this; }
-	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
+	Ctrl&   BackPaintHint()                    { return BackPaint(); }
+/*	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
 	Ctrl&   NoBackPaint()                      { return BackPaint(NOBACKPAINT); }
-	Ctrl&   BackPaintHint();
-	int     GetBackPaint() const               { return backpaint; }
+	int     GetBackPaint() const               { return backpaint; }*/
 	Ctrl&   Transparent(bool bp = true)        { transparent = bp; return *this; }
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }

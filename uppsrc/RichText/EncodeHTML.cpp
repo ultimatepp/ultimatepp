@@ -33,7 +33,18 @@ String HtmlFontStyle(Font f)
 	style << Sprintf("font-size:%dpt;", f.GetHeight() * 72 / 600);
 	style << (f.IsBold() ? "font-weight:bold;" : "font-weight:normal;");
 	style << (f.IsItalic() ? "font-style:italic;" : "font-style:normal;");
-	style << (f.IsUnderline() ? "text-decoration:underline;" : "text-decoration:none;");
+	if(f.IsUnderline() || f.IsStrikeout()) {
+		style << "text-decoration:";
+		if(f.IsUnderline())
+			style << "underline";
+		if(f.IsStrikeout()) {
+			if(f.IsUnderline())
+				style << ' ';
+			style << "line-through";
+		}
+	}
+	else
+		style << "text-decoration:none;";
 	return style;
 }
 

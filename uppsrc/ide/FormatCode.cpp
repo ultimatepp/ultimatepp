@@ -128,6 +128,42 @@ VectorMap<String, String> ReadClangFormatFile(Stream& in)
 	return val;
 }
 
+int ApplyChanges(CodeEditor& editor, const String& new_content)
+{ // apply changes so that undo works correctly
+	Vector<String> ln = Split(new_content, '\n', false);
+	for(String& s : ln)
+		s.TrimEnd("\r");
+
+	Vector<String> ln2;
+	for(int i = 0; i < editor.GetLineCount(); i++)
+		ln2.Add(editor.GetUtf8Line(i));
+
+	int lined = 0; // adjustment for source line
+	int cursor = editor.GetCursor();
+	bool nu = true;
+	for(const auto& ts : CompareLineMaps(ln2, ln)) {
+		if(!ts.same) {
+			int tpos = editor.GetPos(ts.start1 + lined);
+			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
+			if(nu) {
+				editor.NextUndo();
+				nu = false;
+			}
+			String rtext;
+			for(int i = 0; i < ts.count2; i++)
+				rtext << ln[ts.start2 + i] << "\n";
+			if(tsz && rtext.GetCount()) { // we can remove the last '\n' to have more precise blue bars
+				rtext.TrimLast();
+				tsz--;
+			}
+			editor.Remove(tpos, tsz);
+			cursor = editor.Insert(tpos, rtext);
+			lined += ts.count2 - ts.count1;
+		}
+	}
+	return cursor;
+}
+
 String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 {
 	if(editor.GetLength() > 1000000)
@@ -182,38 +218,7 @@ String ReformatCpp(CodeEditor& editor, bool setcursor, bool prefer_clang_format)
 			return TrimLeft(l.Mid(q + 6));
 		return Nvl(l, "Unspecified error.");
 	}
-
-	Vector<String> ln = Split(r, '\n', false);
-	for(String& s : ln)
-		s.TrimEnd("\r");
-
-	Vector<String> ln2;
-	for(int i = 0; i < editor.GetLineCount(); i++)
-		ln2.Add(editor.GetUtf8Line(i));
-
-	int lined = 0; // adjustment for source line
-	int cursor = editor.GetCursor();
-	bool nu = true;
-	for(const auto& ts : CompareLineMaps(ln2, ln)) {
-		if(!ts.same) {
-			int tpos = editor.GetPos(ts.start1 + lined);
-			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
-			if(nu) {
-				editor.NextUndo();
-				nu = false;
-			}
-			String rtext;
-			for(int i = 0; i < ts.count2; i++)
-				rtext << ln[ts.start2 + i] << "\n";
-			if(tsz && rtext.GetCount()) { // we can remove the last '\n' to have more precise blue bars
-				rtext.TrimLast();
-				tsz--;
-			}
-			editor.Remove(tpos, tsz);
-			cursor = editor.Insert(tpos, rtext);
-			lined += ts.count2 - ts.count1;
-		}
-	}
+	int cursor = ApplyChanges(editor, r);
 	if(setcursor)
 		editor.SetCursor(cursor);
 	return Null;
