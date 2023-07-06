@@ -185,7 +185,6 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 			visited.Clear();
 			for(const String& cls : base_id)
 				GatherVirtuals(bases, cls, signature, ids, visited);
-			
 		}
 
 		int q = id.ReverseFind("::");

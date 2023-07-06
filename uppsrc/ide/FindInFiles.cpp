@@ -518,8 +518,8 @@ void Ide::ReplaceFound(int i)
 	FlushFile();
 	ArrayCtrl& list = ffound[i];
 	Index<String> errors;
-	// file - line - [origline, [pos, len]]
-	VectorMap<String, VectorMap<int, Tuple<String, Vector<Tuple<int, int>>>>> files;
+	// file - line - [origline, [pos, len, listi]]
+	VectorMap<String, VectorMap<int, Tuple<String, Vector<Tuple<int, int, int>>>>> files;
 	for(int i = 0; i < list.GetCount(); i++) {
 		Value v = list.Get(i, "INFO");
 		bool err = true;
@@ -527,10 +527,12 @@ void Ide::ReplaceFound(int i)
 			const ErrorInfo& f = ValueTo<ErrorInfo>(v);
 			if(*f.message == '\1') {
 				Vector<String> h = Split(~f.message + 1, '\1', false);
-				auto& x = files.GetAdd(NormalizePath(f.file)).GetAdd(f.lineno - 1);
-				x.a = h[3];
-				x.b.Add(MakeTuple(f.linepos - 1, f.len));
-				err = false;
+				if(h.GetCount() > 3) {
+					auto& x = files.GetAdd(NormalizePath(f.file)).GetAdd(f.lineno - 1);
+					x.a = h[3];
+					x.b.Add(MakeTuple(f.linepos - 1, f.len, i));
+					err = false;
+				}
 			}
 		}
 		if(err)
@@ -540,33 +542,74 @@ void Ide::ReplaceFound(int i)
 	for(const auto& file : ~files) {
 		EditFile(file.key);
 		editor.NextUndo();
-		for(const auto& line : ~file.value) {
+		editor.MoveHome();
+		for(int li = 0; li < file.value.GetCount(); li++) {
 			bool err = false;
-			String orig = line.value.a;
+			String& orig = file.value[li].a;
 			String replaced = orig;
-			Sort(line.value.b, [](const auto& a, const auto& b) { return a.a > b.a; }); // replace in reverse order
-			for(const auto& r : line.value.b) {
-				if(r.a >= 0 && r.a + r.b < replaced.GetCount()) {
-					replaced.Remove(r.a, r.b);
-					replaced.Insert(r.a, replace);
+			Sort(file.value[li].b, [](const auto& a, const auto& b) { return a.a < b.a; });
+			int pos = 0;
+			for(auto& r : file.value[li].b) {
+				int p = r.a + pos;
+				if(p >= 0 && p + r.b < replaced.GetCount()) {
+					replaced.Remove(p, r.b);
+					replaced.Insert(p, replace);
+					r.a = p;
+					pos += replace.GetCount() - r.b;
+					r.b = replace.GetCount();
 				}
 				else
 					err = true;
 			}
-			if(!err && editor.GetUtf8Line(line.key) == orig) {
-				int pos = editor.GetPos(line.key);
-				editor.Remove(pos, editor.GetLineLength(i));
+			int linei = file.value.GetKey(li);
+			if(!err && editor.GetUtf8Line(linei) == orig) {
+				int pos = editor.GetPos(linei);
+				editor.Remove(pos, editor.GetLineLength(linei));
 				editor.Insert(pos, replaced);
 			}
 			else
 				err = true;
-			if(err)
-				errors.FindAdd(String() << file.key << " " << line.key + 1);
+			if(err) {
+				errors.FindAdd(String() << file.key << " " << linei + 1);
+				for(auto& r : file.value[li].b)
+					r.c = -1;
+			}
+			else
+				orig = replaced;
 		}
+		editor.MoveEnd();
 	}
 	if(editfile != fn)
 		EditFile(fn);
-	if(errors.GetCount())
+	if(errors.GetCount()) {
 		Exclamation("Some instances could not be replaced:&&\1" + Join(errors.GetKeys(), "\n"));
-	freplace[i].Hide();
+		freplace[i].Hide();
+		return;
+	}
+
+	for(const auto& file : ~files) {
+		for(const auto& line : ~file.value) {
+			for(const auto& r : line.value.b) {
+				int i = r.c; // source line in the list
+				if(i >= 0 && i < list.GetCount()) {
+					Value v = list.Get(i, "INFO");
+					bool err = true;
+					if(v.Is<ErrorInfo>()) {
+						const ErrorInfo& f0 = ValueTo<ErrorInfo>(v);
+						ErrorInfo f = f0;
+						if(*f.message == '\1') {
+							String l = line.value.a;
+							f.linepos = r.a + 1;
+							f.len = r.b;
+							f.message = "\1" + EditorSyntax::GetSyntaxForFilename(f.file) + "\1" +
+	                                    AsString(r.a) + "\1" + AsString(r.b) + "\1" +
+	                                    (l.GetCount() > 5000 ? l.Mid(0, 5000) : l);
+							list.Set(i, 2, f.message);
+							list.Set(i, 3, RawToValue(f));
+						}
+					}
+				}
+			}
+		}
+	}
 }
