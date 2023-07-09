@@ -236,7 +236,7 @@ public:
 	void                  Normalize();
 
 	Vector<int>           GetAllLanguages() const;
-	WString               GetPlainText(bool withcr = true) const;
+	WString               GetPlainText(bool withcr = true, bool allow_tabs = false) const;
 
 	void                  SetHeaderQtf(const char *qtf);
 	void                  SetFooterQtf(const char *qtf);

@@ -125,6 +125,7 @@ int Prompt(int dontshowagain, const char *dsa_id_, int beep,
 	qtfctrl.WhenLink = WhenLink;
 	icon.SetImage(iconbmp);
 	Button b1, b2, b3;
+	qtfctrl.CopyWithTabs();
 	qtfctrl.SetQTF(String("[g ") + qtf, GetRichTextStdScreenZoom());
 	int bcy = Ctrl::VertLayoutZoom(24);
 	int bcx = Ctrl::HorzLayoutZoom(72);

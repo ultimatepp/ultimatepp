@@ -107,9 +107,9 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 WString RichTextView::GetSelText() const
 {
 	if(anchor == cursor)
-		return text.GetPlainText();
+		return text.GetPlainText(true, copy_with_tabs);
 	else {
-		WString h = text.GetPlainText(false).Mid(sell, selh - sell);
+		WString h = text.GetPlainText(false, copy_with_tabs).Mid(sell, selh - sell);
 		WString r;
 		for(const wchar *s = ~h; s < h.End(); s++) {
 			if(*s == '\n')
