@@ -226,47 +226,21 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	_DBG_
 //	if(GetCursorSpelling(cursor).Find("DeleteFile") >= 0)
 	{
-		DLOG("=====================================");
-		DDUMP(ci.Kind());
-		DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
-		DDUMP(GetCursorSpelling(cursor));
-		DDUMP(GetTypeSpelling(cursor));
-		DDUMP(ci.RawId());
-		DDUMP(ci.Type());
-		DDUMP(ci.Scope());
-		DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
-		DDUMP(clang_Cursor_isNull(clang_getCursorReferenced(cursor)));
-		DDUMP(clang_Location_isFromMainFile(cxlocation));
 		CXCursor ref = clang_getCursorReferenced(cursor);
-		DDUMP(GetCursorSpelling(clang_getCursorReferenced(cursor)));
 		ClangCursorInfo cir(ref, pp_id);
-		DDUMP(cir.Scope());
-		DDUMP(GetTypeSpelling(clang_getCursorReferenced(cursor)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(clang_getCursorReferenced(cursor), pp_id)));
 
 		if(ci.Kind() == CXCursor_TypedefDecl) {
 			CXType type = clang_getTypedefDeclUnderlyingType(cursor);
-			DDUMP(FetchString(clang_getTypeSpelling(type)));
 			ClangCursorInfo cit(clang_getTypeDeclaration(type), pp_id);
-			DDUMP(cit.Id());
-			DDUMP(cit.Scope());
-			DDUMP(cit.Type());
 		}
 	}
 /*
 	{
 		CXCursor ref = clang_getCursorReferenced(cursor);
 	
-		DDUMP(clang_Cursor_isNull(ref));
 	
 		String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
 		if(rs.GetCount()) {
-			DDUMP(GetCursorKindName(clang_getCursorKind(ref)));
-			DDUMP(FetchString(clang_getCursorPrettyPrinted(ref, pp_pretty)));
-			DDUMP(FetchString(clang_getCursorUSR(ref)));
-			DDUMP(rs);
 		}
 	}
 */
@@ -354,7 +328,9 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	if(!clang_Cursor_isNull(ref)) {
 		LoadSourceLocation();
 		SourceLocation ref_loc = GetSourceLocation(GetLocation(clang_getCursorLocation(ref)));
-		int q = tfn.Find(ref_loc);
+		int q = -1;
+		if(ci.Kind() != CXCursor_CXXBaseSpecifier) // suppress template untyping for : WithDlgLayout<TopWindow>
+			q = tfn.Find(ref_loc);
 	
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
 

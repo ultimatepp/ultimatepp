@@ -38,7 +38,7 @@ bool Ide::OpenLink(const String& s, int pos)
 	if(link.StartsWith("http://") || link.StartsWith("https://"))
 		LaunchWebBrowser(link);
 	else
-	if(FileExists(link))
+	if(link.Find('*') < 0 && link.Find('?') < 0 && IsFullPath(link) && FileExists(link))
 		EditFile(link);
 	else
 		return false;
@@ -53,6 +53,7 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 	int lp = pos;
 	int li = editor.GetLinePos(lp);
 	ref_pos = Null;
+
 	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
 		for(const ReferenceItem& m : editor.references) {
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
@@ -288,48 +289,4 @@ void Ide::CtrlClick(int64 pos)
 {
 	if(pos < INT_MAX)
 		ContextGoto0((int)pos);
-}
-
-void Ide::FindDesignerItemReferences(const String& id, const String& name)
-{
-	ResetFileLine();
-	String path = NormalizePath(editfile);
-	int q = CodeIndex().Find(path);
-	if(q >= 0) {
-		AnnotationItem cm;
-		for(const AnnotationItem& m : CodeIndex()[q].items)
-			if(m.id.EndsWith(id) &&
-			   (m.id.GetCount() <= id.GetCount() || !iscid(m.id[m.id.GetCount() - id.GetCount() - 1]))) {
-				cm = m;
-				break;
-			}
-		if(cm.id.GetCount()) {
-			Vector<Tuple<String, Point>> set;
-			for(const auto& f : ~CodeIndex()) {
-				if(f.key != path) {
-					for(const AnnotationItem& m : f.value.items)
-						if(FindId(m.type, cm.id) >= 0 || FindId(m.bases, cm.id) >= 0 || FindId(m.pretty, cm.id) >= 0)
-							set.Add({ f.key, m.pos });
-					for(const ReferenceItem& m : f.value.refs)
-						if(FindId(m.id, cm.id) >= 0)
-							set.Add({ f.key, m.pos });
-				}
-			}
-			if(set.GetCount()) {
-				if(set.GetCount() > 1) {
-					SetFFound(ffoundi_next);
-					FFound().Clear();
-					Index<String> unique;
-					for(auto& m : set)
-						AddReferenceLine(m.a, m.b, name, unique);
-					SortByKey(CodeIndex());
-					FFoundFinish();
-				}
-				else
-					GotoPos(set[0].a, set[0].b);
-				return;
-			}
-		}
-	}
-	Exclamation("No usage has been found.");
 }

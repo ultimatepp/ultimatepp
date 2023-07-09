@@ -31,6 +31,8 @@ String GetGitBranch(const String& dir)
 
 void Ide::MakeTitle()
 {
+	if(replace_in_files) return;
+
 	String title;
 	title << Nvl(main, "TheIDE");
 
@@ -538,6 +540,8 @@ void Ide::BookKey(int key)
 
 void Ide::DoDisplay()
 {
+	if(replace_in_files)
+		return;
 	Point p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;

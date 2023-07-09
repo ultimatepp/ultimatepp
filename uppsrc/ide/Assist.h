@@ -32,7 +32,7 @@ struct Navigator {
 		virtual Size GetStdSize(const Value& q) const;
 	};
 
-	Ide             *theide;
+	Ide             *theide = nullptr;
 
 	Array<NavItem>                             nitem;
 	Vector<const NavItem *>                    litem;

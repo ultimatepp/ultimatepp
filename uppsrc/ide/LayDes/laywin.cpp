@@ -170,7 +170,7 @@ void LayDes::GotoUsing()
 	if(item.IsCursor()) // TODO not for label
 		TheIde()->FindDesignerItemReferences("With" + CurrentLayout().name + "::" + ~item.Get(1), ~item.Get(1));
 	else
-		TheIde()->FindDesignerItemReferences(CurrentLayout().name + "__layid", "With" + CurrentLayout().name);
+		TheIde()->FindDesignerItemReferences("With" + CurrentLayout().name, CurrentLayout().name);
 }
 
 void LayDes::OptionBar(Bar& bar)

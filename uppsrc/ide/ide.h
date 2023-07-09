@@ -467,6 +467,7 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
+	ParentCtrl       editor_p; // so that we can do curtain over editor
 	FileIn           view_file;
 	AssistEditor     editor2; // no edits happen in editor2, just view
 	FileIn           view_file2;
@@ -511,6 +512,7 @@ public:
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
+	bool      replace_in_files = false; // Find in files replace or Replace found items mode - do not update things
 
 	String    editfile2;
 
@@ -741,6 +743,7 @@ public:
 	void      ChangeFileCharset(const String& name, Package& p, byte charset);
 	void      ChangeCharset();
 	void      FlushFile();
+	void      LoadFileSilent(const String& path); // without changing package/file lists
 	void      EditFile0(const String& path, byte charset, int spellcheck_comments,
 	                    const String& headername = Null, bool reloading = false);
 	void      EditFile(const String& path);
@@ -961,6 +964,8 @@ public:
 		void  ResetFileLine();
 		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
+		void  UsageFinish();
+		void  UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
 		void  Usage(const String& id, const String& name, Point ref_pos);
@@ -1116,6 +1121,7 @@ public:
 	void      Periodic();
 	void      SyncClang();
 
+	void      PassEditor(AssistEditor& editor2);
 	void      PassEditor();
 	void      SyncEditorSplit();
 	void      SplitEditor(bool horz);

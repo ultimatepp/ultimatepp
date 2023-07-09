@@ -123,7 +123,7 @@ void Navigator::SyncCursor()
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 	
-	if(!navigating) {
+	if(!navigating && theide && !theide->replace_in_files) {
 		AnnotationItem q = theide->editor.FindCurrentAnnotation();
 		navigating = true;
 		for(int pass = 0; pass < 2; pass++)

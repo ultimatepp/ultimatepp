@@ -2,6 +2,8 @@
 
 void AssistEditor::SyncParamInfo()
 {
+	if(!theide)
+		return;
 	String qtf;
 	Ctrl *p = GetTopCtrl();
 	int mpar = INT_MAX;
@@ -77,6 +79,8 @@ void AssistEditor::SyncParamInfo()
 
 void AssistEditor::StartParamInfo(const AssistItem& m, int pos)
 {
+	if(!theide)
+		return;
 	int x = GetCursor32();
 	ParamInfo& f = param[parami];
 	f.line = GetLinePos32(x);
