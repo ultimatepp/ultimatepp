@@ -152,6 +152,12 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 		bool isvirtual = false;
 		bool istype = false;
 		String cls;
+		Progress pi("Indexing files");
+		while(Indexer::IsRunning()) {
+			if(pi.StepCanceled())
+				break;
+			GuiSleep(10);
+		}
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
 				if(m.id == id && m.isvirtual) {

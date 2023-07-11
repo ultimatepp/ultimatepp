@@ -308,8 +308,9 @@ class Indexer {
 	static CoEvent            event, scheduler;
 	static Mutex              mutex;
 	static Vector<Job>        jobs;
-	static int                jobi;
-	static int                jobs_done;
+	static std::atomic<int>   jobi;
+	static std::atomic<int>   jobs_done;
+	static std::atomic<int>   jobs_count; // way to get jobs.GetCount without mutex
 	static std::atomic<int>   running_indexers;
 	static bool               running_scheduler;
 	static String             main, includes, defines;
@@ -320,8 +321,10 @@ class Indexer {
 	static void BuildingPause();
 
 public:
-	static void Start(const String& main, const String& includes, const String& defines);
-	static bool IsRunning();
+	static void   Start(const String& main, const String& includes, const String& defines);
+	static bool   IsRunning();
+	static int    GetJobsCount()       { return jobs_count; }
+	static bool   IsSchedulerRunning() { return running_scheduler; }
 	static double Progress();
 };
 
