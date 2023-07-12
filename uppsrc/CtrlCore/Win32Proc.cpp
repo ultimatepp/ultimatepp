@@ -48,7 +48,7 @@ dword GetKeyStateSafe(dword what) {
 	return r;
 }
 
-static bool pendown=false;
+static bool pendown = false;
 
 bool GetShift()       { return !!(GetKeyStateSafe(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyStateSafe(VK_CONTROL) & 0x8000); }
