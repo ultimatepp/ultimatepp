@@ -1,4 +1,4 @@
-topic "Copyright © 1999-2022 U++ team";
+topic "Copyright © 1999-2023 U++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*+117 Copyright © 1998, 2023 U`+`+ team]&]
