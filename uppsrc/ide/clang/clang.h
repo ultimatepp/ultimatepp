@@ -146,6 +146,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind = Null;
 	bool   definition = false;
 	bool   isvirtual = false;
+	bool   isstatic = false;
 	
 	void Serialize(Stream& s);
 };

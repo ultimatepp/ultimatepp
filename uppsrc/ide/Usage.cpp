@@ -150,6 +150,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	}
 	else {
 		bool isvirtual = false;
+		bool isstatic = false;
 		bool istype = false;
 		String cls;
 		Progress pi("Indexing files");
@@ -160,15 +161,19 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 		}
 		for(const auto& f : ~CodeIndex())
 			for(const AnnotationItem& m : f.value.items) {
-				if(m.id == id && m.isvirtual) {
-					isvirtual = true;
-					cls = m.nest;
-					break;
-				}
-				if(m.id == id && IsStruct(m.kind)) {
-					istype = true;
-					cls = m.nest;
-					break;
+				if(m.id == id) {
+					if(m.isvirtual) {
+						isvirtual = true;
+						cls = m.nest;
+						break;
+					}
+					if(IsStruct(m.kind)) {
+						istype = true;
+						cls = m.nest;
+						break;
+					}
+					if(m.id == id && m.isstatic && f.key == editfile)
+						isstatic = true;
 				}
 			}
 		
@@ -196,32 +201,35 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 				GatherVirtuals(bases, cls, signature, ids, visited);
 		}
 
-		UsageId(name, id, ids, istype, unique);
+		UsageId(name, id, ids, istype, isstatic, unique);
 	}
 
 	UsageFinish();
 }
 
-void Ide::UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, Index<String>& unique)
+void Ide::UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique)
 {
 	int q = id.ReverseFind("::");
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
 	SortByKey(CodeIndex());
 	for(int src = 0; src < 2; src++)
-		for(const auto& f : ~CodeIndex())
-			if((findarg(GetFileExt(f.key), ".h", "") < 0) == src) { // headers first
-				auto Add = [&](Point mpos) {
-					AddReferenceLine(f.key, mpos, name, unique);
-				};
-				for(const AnnotationItem& m : f.value.items) {
-					if(ids.Find(m.id) >= 0 || istype && (m.id.StartsWith(constructor) || m.id.StartsWith(destructor)))
-						Add(m.pos);
+		for(const auto& f : ~CodeIndex()) {
+			if(!isstatic || f.key == editfile)
+				if((findarg(GetFileExt(f.key), ".h", "") < 0) == src) { // headers first
+					auto Add = [&](Point mpos) {
+						AddReferenceLine(f.key, mpos, name, unique);
+					};
+					for(const AnnotationItem& m : f.value.items) {
+						if(ids.Find(m.id) >= 0 || istype && (m.id.StartsWith(constructor) || m.id.StartsWith(destructor)))
+							Add(m.pos);
+					}
+					for(const ReferenceItem& m : f.value.refs)
+						if(ids.Find(m.id) >= 0) {
+							Add(m.pos);
+						}
 				}
-				for(const ReferenceItem& m : f.value.refs)
-					if(ids.Find(m.id) >= 0)
-						Add(m.pos);
-			}
+		}
 }
 
 void Ide::UsageFinish()
@@ -279,7 +287,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 			ids.Add(m.id);
 			SetFFound(ffoundi_next);
 			FFound().Clear();
-			UsageId(name, m.id, ids, IsStruct(m.kind), unique);
+			UsageId(name, m.id, ids, IsStruct(m.kind), m.isstatic, unique);
 			UsageFinish();
 			return;
 		}

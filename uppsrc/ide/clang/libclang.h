@@ -1972,6 +1972,7 @@ CXSourceLocation clang_getCursorLocation(CXCursor);
 CXCursor clang_getCursorReferenced(CXCursor);
 unsigned clang_isCursorDefinition(CXCursor);
 unsigned clang_CXXMethod_isVirtual(CXCursor C);
+unsigned clang_CXXMethod_isStatic(CXCursor C);
 int clang_Cursor_isNull(CXCursor cursor);
 CXCursor clang_getTranslationUnitCursor(CXTranslationUnit);
 CXPrintingPolicy clang_getCursorPrintingPolicy(CXCursor);
@@ -2026,3 +2027,22 @@ enum CXDiagnosticSeverity {
 };
 
 enum CXDiagnosticSeverity clang_getDiagnosticSeverity(CXDiagnostic);
+
+enum CX_StorageClass {
+  CX_SC_Invalid,
+  CX_SC_None,
+  CX_SC_Extern,
+  CX_SC_Static,
+  CX_SC_PrivateExtern,
+  CX_SC_OpenCLWorkGroupLocal,
+  CX_SC_Auto,
+  CX_SC_Register
+};
+
+/**
+ * Returns the storage class for a function or variable declaration.
+ *
+ * If the passed in Cursor is not a function or variable declaration,
+ * CX_SC_Invalid is returned else the storage class.
+ */
+enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor);

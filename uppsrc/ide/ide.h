@@ -965,7 +965,7 @@ public:
 		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
 		void  UsageFinish();
-		void  UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, Index<String>& unique);
+		void  UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
 		void  Usage(const String& id, const String& name, Point ref_pos);

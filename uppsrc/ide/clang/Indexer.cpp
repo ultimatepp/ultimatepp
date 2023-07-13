@@ -89,6 +89,7 @@ void AnnotationItem::Serialize(Stream& s)
 	  % pos
 	  % definition
 	  % isvirtual
+	  % isstatic
 	  % name
 	  % type
 	  % id
@@ -105,7 +106,8 @@ void ReferenceItem::Serialize(Stream& s)
 {
 	s % id
 	  % pos
-	  % ref_pos;
+	  % ref_pos
+	;
 }
 
 void FileAnnotation::Serialize(Stream& s)
@@ -115,7 +117,8 @@ void FileAnnotation::Serialize(Stream& s)
 	  % master_file
 	  % time
 	  % items
-	  % refs;
+	  % refs
+	;
 }
 
 String CachedAnnotationPath(const String& source_file, const String& defines, const String& includes, const String& master_file)
