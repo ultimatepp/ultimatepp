@@ -45,8 +45,9 @@ protected:
 	static void InitKeywords();
 	const wchar *DoComment(HighlightOutput& hls, const wchar *p, const wchar *e);
 
-	static Vector< Index<String> > keyword;
-	static Vector< Index<String> > name;
+	static Vector<Index<String>> keyword;
+	static Vector<int> breakers;
+	static Vector<Index<String>> name;
 	static Index<String> kw_upp;
 	static int kw_macros, kw_logs, kw_sql_base, kw_sql_func;
 

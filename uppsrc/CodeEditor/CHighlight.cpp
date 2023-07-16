@@ -389,9 +389,9 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			String iid = id;
 			if(highlight == HIGHLIGHT_SQL)
 				iid = ToUpper(iid);
-			int uq = kw_upp.Find(iid);
-			int nq = -1;
-			hls.Put(int(q - p), !include && (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
+			int uq = highlight == 0 ? kw_upp.Find(iid) : -1;
+			int nq = keyword[highlight].Find(iid);
+			hls.Put(int(q - p), !include && nq >= 0 ? hl_style[nq >= breakers[highlight] ? INK_BREAK_KEYWORD : INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :
