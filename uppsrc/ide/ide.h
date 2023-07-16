@@ -355,7 +355,7 @@ struct CursorInfoCtrl : Ctrl {
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
-int ApplyChanges(CodeEditor& editor, const String& new_content);
+int ApplyChanges(LineEdit& editor, const String& new_content);
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
@@ -534,6 +534,7 @@ public:
 		Point              columnline;
 		LineEdit::UndoData undodata;
 		int64              filehash = 0; // make sure undodata work
+		String             content;
 		LineInfo           lineinfo;
 		LineInfoRem        lineinforem;
 

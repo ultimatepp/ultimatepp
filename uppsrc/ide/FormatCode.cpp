@@ -128,11 +128,15 @@ VectorMap<String, String> ReadClangFormatFile(Stream& in)
 	return val;
 }
 
-int ApplyChanges(CodeEditor& editor, const String& new_content)
+int ApplyChanges(LineEdit& editor, const String& new_content)
 { // apply changes so that undo works correctly
 	Vector<String> ln = Split(new_content, '\n', false);
-	for(String& s : ln)
+	byte cs = ResolveCharset(editor.GetCharset());
+	for(String& s : ln) {
 		s.TrimEnd("\r");
+		if(cs != CHARSET_UTF8)
+			s = ToCharset(CHARSET_UTF8, s, cs);
+	}
 
 	Vector<String> ln2;
 	for(int i = 0; i < editor.GetLineCount(); i++)
@@ -143,12 +147,15 @@ int ApplyChanges(CodeEditor& editor, const String& new_content)
 	bool nu = true;
 	for(const auto& ts : CompareLineMaps(ln2, ln)) {
 		if(!ts.same) {
-			int tpos = editor.GetPos(ts.start1 + lined);
-			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
 			if(nu) {
 				editor.NextUndo();
 				nu = false;
 			}
+			int n = ts.start1 - editor.GetLineCount() + 1;
+			if(n > 0)
+				editor.Insert(editor.GetLength(), String('\n', n));
+			int tpos = editor.GetPos(ts.start1 + lined);
+			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
 			String rtext;
 			for(int i = 0; i < ts.count2; i++)
 				rtext << ln[ts.start2 + i] << "\n";
@@ -156,6 +163,8 @@ int ApplyChanges(CodeEditor& editor, const String& new_content)
 				rtext.TrimLast();
 				tsz--;
 			}
+			if(n > 0 && rtext.GetCount()) // inserting at the end of text
+				rtext.TrimLast();
 			editor.Remove(tpos, tsz);
 			cursor = editor.Insert(tpos, rtext);
 			lined += ts.count2 - ts.count1;

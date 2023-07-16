@@ -416,6 +416,7 @@ void Ide::FlushFile() {
 		FileData& fd = Filedata(editfile);
 		fd.undodata = editor.PickUndoData();
 		fd.filehash = EditorHash();
+		fd.content = editor.GetLength() < 1000000 ? FastCompress(editor.Get()) : String();
 	}
 	CancelCurrentFile();
 	CancelAutoComplete();
@@ -547,8 +548,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	bool tfile = GetFileExt(editfile) == ".t";
 	if(ff) {
 		edittime = ff.GetLastWriteTime();
-		if(edittime != fd.filetime || IsNull(fd.filetime))
-			fd.undodata.Clear();
 		view_file.SetBufferSize(256*1024);
 		view_file.Open(editfile);
 		if(view_file) {
@@ -607,9 +606,16 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
 		editor.SetEditPosSbOnly(fd.editpos);
 		if(!editor.IsView()) {
-			if(EditorHash() != fd.filehash)
-				fd.undodata.Clear();
-			editor.SetPickUndoData(pick(fd.undodata));
+			if(edittime != fd.filetime || IsNull(fd.filetime) || EditorHash() != fd.filehash) { // is undo valid (file is the same as when undo was stored)?
+				if(fd.content.GetCount() && fd.undodata.undo.GetCount()) { // undo is not valid, but restore content for valid undo and apply the changed file
+					String new_content = editor.Get();
+					editor.Set(FastDecompress(fd.content));
+					editor.SetPickUndoData(pick(fd.undodata)); // valid for fd.content
+					ApplyChanges(editor, new_content);
+				}
+			}
+			else
+				editor.SetPickUndoData(pick(fd.undodata));
 			editor.SetLineInfo(fd.lineinfo);
 			editor.SetLineInfoRem(pick(fd.lineinforem));
 		}
