@@ -803,8 +803,17 @@ void Ide::Diff()
 
 void Ide::DiffWith(const String& path)
 {
-	if(IsNull(editfile) || IsNull(path) || max(GetFileLength(editfile), GetFileLength(path)) > 100*1024*1024)
+#ifdef CPU_64
+	int64 maxsize = 2000*1024*1024;
+#else
+	int64 maxsize = 100*1024*1024;
+#endif
+	if(IsNull(editfile) || IsNull(path))
 		return;
+	if(max(GetFileLength(editfile), GetFileLength(path)) > maxsize) {
+		Exclamation("Too big to compare");
+		return;
+	}
 	FileDiff diffdlg(AnySourceFs());
 	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
 	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);

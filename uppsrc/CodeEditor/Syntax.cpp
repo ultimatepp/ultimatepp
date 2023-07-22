@@ -33,6 +33,16 @@ void EditorSyntax::ReformatComment(CodeEditor& e)
 {
 }
 
+bool EditorSyntax::GetBlockHeader(Point&, Point&)
+{
+	return false;
+}
+
+int EditorSyntax::GetBlockLevel()
+{
+	return 0;
+}
+
 void EditorSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 }

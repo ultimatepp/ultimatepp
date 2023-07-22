@@ -33,16 +33,16 @@ One<EditorSyntax> CodeEditor::GetSyntax(int line)
 			break;
 		}
 	line = min(line, GetLineCount());
-	if(line - ln > 10000) { // optimization hack for huge files
+	if(line - ln > 10000) { // optimization hack for very huge files
 		syntax = EditorSyntax::Create(highlight);
-		ln = line - 10000;
+		ln = line - 10000; // we just pray it gets synced
 	}
 	while(ln < line) {
 		WString l = GetWLine(ln);
 		CTIMING("ScanSyntax3");
 		syntax->ScanSyntax(l, l.End(), ln, GetTabSize());
 		ln++;
-		static int d[] = { 0, 100, 2000, 10000, 50000 };
+		static int d[] = { 0, 100, 1000, 3000, 7000 };
 		for(int i = 0; i < __countof(d); i++)
 			if(ln == cline - d[i]) {
 				syntax_cache[i + 1].data = syntax->Get();
@@ -67,6 +67,154 @@ void CodeEditor::Highlight(const String& h)
 	SetColor(LineEdit::WARN_WHITESPACE, hl_style[HighlightSetup::WARN_WHITESPACE].color);
 	Refresh();
 	EditorBarLayout();
+}
+
+void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int64 pos)
+{
+	CTIMING("HighlightLine");
+	HighlightOutput hls(hl);
+	WString l = GetWLine(line);
+	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
+	if(illuminated.GetCount()) {
+		int q = 0;
+		while(q < l.GetCount() && q < hl.GetCount()) {
+			q = l.Find(illuminated, q);
+			if(q < 0)
+				break;
+			int n = illuminated.GetCount();
+			if(n > 1 || !iscid(illuminated[0]) ||
+			   (q == 0 || !iscid(l[q - 1])) && (q + n >= l.GetCount() || !iscid(l[q + n])))
+				while(n-- && q < hl.GetCount()) {
+					const HlStyle& st = hl_style[PAPER_SELWORD];
+					hl[q].paper = st.color;
+					if(st.bold)
+						hl[q].font.Bold();
+					q++;
+				}
+			else
+				q++;
+		}
+	}
+	for(Point p : errors)
+		if(p.y == line && p.x < hl.GetCount()) {
+			hl[p.x].paper = hl_style[PAPER_ERROR_FILE].color;
+			hl[p.x].flags |= LineEdit::NOENDFILL;
+		}
+}
+
+void CodeEditor::Paint(Draw& w)
+{
+	LineEdit::Paint(w);
+
+	if(!blk0_header)
+		return;
+
+	int sline = GetColumnLine(GetCursor()).y - GetScrollPos().y;
+	if(sline >= 0 && sline < 2)
+		return;
+	Point start, end; // paint zero level block header
+	if(!GetSyntax(GetScrollPos().y + 1)->GetBlockHeader(start, end))
+		return;
+
+	if(IsNull(start) || IsNull(end) || end.y > start.y)
+		return;
+
+	int line0 = -1;
+	for(int i = end.y + 1; i <= start.y; i++) {
+		String l = GetUtf8Line(i);
+		bool hdr = false;
+		bool empty = true;
+		try {
+			CParser p(l);
+			while(!p.IsEof()) {
+				if(p.Char('(') || p.Id("class") || p.Id("struct") || p.Id("enum")) {
+					hdr = true;
+					break;
+				}
+				p.Skip();
+			}
+		}
+		catch(CParser::Error) {}
+		if(hdr) {
+			line0 = i;
+			break;
+		}
+		if(!empty && line0 < 0)
+			line0 = i;
+	}
+
+	if(line0 < 0)
+		return;
+
+	int l = GetPos(line0, 0);
+	int h = GetPos(start.y, start.x) - 1;
+	if(l < 0 || l >= h)
+		return;
+	
+	Font font = GetFont();
+
+	Size sz = GetSize();
+
+	Color paper = IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color) ?
+	              GrayColor(70) : SColorLtFace();
+
+	w.DrawRect(0, 0, GetSize().cx, GetFontSize().cy, paper);
+	
+	Size hsz = CodeEditorImg::HdrSep0().GetSize();
+	for(int x = 0; x < sz.cx; x += hsz.cx) {
+		w.DrawImage(x, GetFontSize().cy, CodeEditorImg::HdrSep0(), paper);
+		w.DrawImage(x, GetFontSize().cy, CodeEditorImg::HdrSep());
+	}
+	
+	String ls = TrimBoth(Get(l, h - l));
+	WString r;
+	for(const char *s = ls; *s;) {
+		if(IsSpace(*s)) {
+			while(IsSpace(*s))
+				s++;
+			r.Cat(' ');
+		}
+		else
+			r.Cat(*s++);
+	}
+	r << " {";
+	
+	Vector<LineEdit::Highlight> hln;
+	hln.SetCount(r.GetCount() + 1);
+	for(int i = 0; i < hln.GetCount(); i++) {
+		LineEdit::Highlight& h = hln[i];
+		h.paper = paper;
+		h.ink = SColorText();
+		h.chr = r[i];
+		h.font = GetFont();
+	}
+	
+	bool ldiff = false;
+
+	HighlightOutput hls(hln);
+	GetSyntax(0)->Highlight(r.Begin(), r.End(), hls, this, 0, 0);
+
+	int ii = 0;
+	int x = 0;
+	while(ii < hln.GetCount() - 1) {
+		int n = 1;
+		while(ii + n < hln.GetCount() - 1 && hln[ii + n].ink == hln[ii].ink && hln[ii + n].font == hln[ii].font)
+			n++;
+		w.DrawText(x, 0, ~r + ii, hln[ii].font, hln[ii].ink, n);
+		x += GetTextSize(~r + ii, hln[ii].font, n).cx;
+		ii += n;
+	}
+}
+
+void CodeEditor::RefreshBlkHeader()
+{
+	if(blk0_header)
+		Refresh(0, 0, GetSize().cx, GetFontSize().cy + CodeEditorImg::HdrSep().GetSize().cy);
+}
+
+void CodeEditor::NewScrollPos() {
+	bar.Scroll();
+	RefreshBlkHeader();
 }
 
 void CodeEditor::DirtyFrom(int line) {
@@ -174,10 +322,6 @@ void CodeEditor::Renumber2()
 int CodeEditor::GetLine2(int i) const
 {
 	return line2.GetCount() ? line2[min(line2.GetCount() - 1, i)] : 0;
-}
-
-void CodeEditor::NewScrollPos() {
-	bar.Scroll();
 }
 
 String CodeEditor::GetPasteText()
@@ -318,6 +462,7 @@ void CodeEditor::SelectionChanged()
 	}
 	CheckBrackets();
 	bar.Refresh();
+	RefreshBlkHeader();
 }
 
 void CodeEditor::Illuminate(const WString& text)
@@ -814,13 +959,6 @@ WString CodeEditor::GetI()
 	return ft;
 }
 
-//void CodeEditor::FindWord(bool back)
-//{
-//	WString I = GetI();
-//	if(!IsNull(I))
-//		Find(back, I, true, false, false, false, false);
-//}
-
 void CodeEditor::SetI(Ctrl *edit)
 {
 	*edit <<= GetI();
@@ -1160,39 +1298,6 @@ void CodeEditor::SetLineInfo(const LineInfo& lf)
 	bar.SetLineInfo(lf, GetLineCount());
 }
 
-void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int64 pos)
-{
-	CTIMING("HighlightLine");
-	HighlightOutput hls(hl);
-	WString l = GetWLine(line);
-	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
-	if(illuminated.GetCount()) {
-		int q = 0;
-		while(q < l.GetCount() && q < hl.GetCount()) {
-			q = l.Find(illuminated, q);
-			if(q < 0)
-				break;
-			int n = illuminated.GetCount();
-			if(n > 1 || !iscid(illuminated[0]) ||
-			   (q == 0 || !iscid(l[q - 1])) && (q + n >= l.GetCount() || !iscid(l[q + n])))
-				while(n-- && q < hl.GetCount()) {
-					const HlStyle& st = hl_style[PAPER_SELWORD];
-					hl[q].paper = st.color;
-					if(st.bold)
-						hl[q].font.Bold();
-					q++;
-				}
-			else
-				q++;
-		}
-	}
-	for(Point p : errors)
-		if(p.y == line && p.x < hl.GetCount()) {
-			hl[p.x].paper = hl_style[PAPER_ERROR_FILE].color;
-			hl[p.x].flags |= LineEdit::NOENDFILL;
-		}
-}
-
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)
 {
 	edit.AddButton().SetMonoImage(CodeEditorImg::I()).Tip(t_("Set word/selection (Ctrl+I)"))
@@ -1245,7 +1350,7 @@ void CodeEditor::ScrollBarItems::Paint(Draw& w)
 			int y = sb.GetSliderPos(i);
 			if(!IsNull(y))
 				w.DrawRect(sr.left + DPI(2), sr.top + y, DPI(2),
-				           max(sb.GetTotal() / sr.GetHeight(), DPI(4)),
+				           max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4)),
 				           Blend(SLtBlue(), bg, min(220, age)));
 		}
 	}
@@ -1308,6 +1413,7 @@ CodeEditor::CodeEditor()
 	selkind = SEL_CHARS;
 	withfindreplace = true;
 	wordwrap = false;
+	blk0_header = false;
 	closetip.Set(-200, [=] { SyncCloseTip(); });
 }
 

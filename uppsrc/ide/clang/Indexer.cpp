@@ -502,7 +502,7 @@ void Indexer::SchedulerThread()
 			running_scheduler = false;
 		}
 		ReduceCache(); // good place to do this
-		while(jobs_count) // wait for all jobs to finish so that files are not rescheduled before parsed
+		while(jobs_count && !Thread::IsShutdownThreads()) // wait for all jobs to finish so that files are not rescheduled before parsed
 			Sleep(100);
 	}
 }

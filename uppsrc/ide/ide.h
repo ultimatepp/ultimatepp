@@ -646,6 +646,7 @@ public:
 	String    libclang_options;
 	String    libclang_coptions;
 	bool      prefer_clang_format = false;
+	bool      blk0_header = true;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);

@@ -119,7 +119,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 {
 	if(IsNull(id))
 		return;
-
+	
 	ResetFileLine();
 
 	int li = editor.GetCursorLine();
@@ -150,7 +150,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	}
 	else {
 		bool isvirtual = false;
-		bool isstatic = false;
+		bool isstatic = false; // to limit file static variables to single file
 		bool istype = false;
 		String cls;
 		Progress pi("Indexing files");
@@ -172,7 +172,8 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 						cls = m.nest;
 						break;
 					}
-					if(m.id == id && m.isstatic && f.key == editfile)
+					if(m.id == id && m.isstatic && f.key == editfile &&
+					   m.nest.GetCount() == m.nspace.GetCount()) // ignore class variables
 						isstatic = true;
 				}
 			}

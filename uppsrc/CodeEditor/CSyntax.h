@@ -9,8 +9,9 @@ public:
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int64 pos);
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text);
-	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
+	virtual Vector<IfState> PickIfStack();
 	virtual void            ReformatComment(CodeEditor& e);
+	virtual bool            GetBlockHeader(Point& blk_start, Point& blk_end);
 
 protected:
 	bool        comment;       // we are in /* */ block comment
@@ -34,12 +35,15 @@ protected:
 	Vector<Isx>     par; // ( [ position stack
 	Vector<IfState> ifstack;
 
+	Point       blk_start = Null; // last zero block level { (so it is actually end of header)
+	Point       blk_end = Null; // last zero block level } or ; or prepro line
+
 	int         stmtline;     // line of latest "if", "else", "while", "do", "for" or -1
 	int         endstmtline;  // line of latest ';' (not in ( [ brackets)
 	int         seline;       // stmtline stored here on ';' (not in ( [ brackets)
 	int         spar;         // ( [ level, reset on "if", "else", "while", "do", "for"
 	
-	int         highlight;    // subtype (temporary)
+	int         highlight;    // subtype, 0 = C++
 
 	static int  InitUpp(const char **q);
 	static void InitKeywords();

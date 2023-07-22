@@ -27,10 +27,10 @@ bool IsUpperString(const char *q)
 Color CSyntax::BlockColor(int level)
 {
 	if(hilite_scope == 1)
-		return  GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
+		return GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
 	if(hilite_scope == 2) {
 		int q = level % 5;
-		return  GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
+		return GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
 	}
 	return GetHlStyle(PAPER_NORMAL).color;
 }
@@ -171,10 +171,13 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	LTIMING("HighlightLine");
 	if(highlight < 0 || highlight >= keyword.GetCount())
 		return;
-	CSyntax next;
-	next.Set(Get());
-	next.ScanSyntax(ltext, e, line + 1, tabsize);
-	bool macro = next.macro != MACRO_OFF;
+	bool macro;
+	{
+		CSyntax next;
+		next.Set(Get());
+		next.ScanSyntax(ltext, e, line + 1, tabsize);
+		macro = next.macro != MACRO_OFF;
+	}
 	
 	int linelen = int(e - ltext);
 	const wchar *p = ltext;

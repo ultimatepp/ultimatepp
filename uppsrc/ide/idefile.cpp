@@ -74,6 +74,7 @@ void Ide::SetupEditor(int f, String hl, String path)
 
 	editor.WordwrapComments(wordwrap_comments);
 	editor.WordWrap(wordwrap);
+	editor.Blk0Header(blk0_header);
 }
 
 void Ide::SetupEditor()
