@@ -33,6 +33,7 @@ private:
 	bool          lazy;
 	bool          shrink_oversized_objects;
 	bool          icursor = true;
+	bool          copy_with_tabs = false;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -116,8 +117,9 @@ public:
 	RichTextView&   NoLazy()                                  { return Lazy(false); }
 	RichTextView&   ShrinkOversizedObjects(bool b = true)     { shrink_oversized_objects = b; Refresh(); return *this; }
 	RichTextView&   NoShrinkOversizedObjects()                { return ShrinkOversizedObjects(false); }
-	RichTextView&   ICursor(bool b)                           { icursor = b; return *this; }
+	RichTextView&   ICursor(bool b = true)                    { icursor = b; return *this; }
 	RichTextView&   NoICursor()                               { return ICursor(false); }
+	RichTextView&   CopyWithTabs(bool b = true)               { copy_with_tabs = b; return *this; }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 

@@ -285,29 +285,45 @@ void RichTxt::RestoreFormat(int pi, const Formating& info, int& ii, const RichSt
 	}
 }
 
-WString RichTxt::GetPlainText(bool withcr) const {
+WString RichTxt::GetPlainText(bool withcr, bool allow_tabs) const
+{
 	WString clip;
-	for(int pi = 0; pi < GetPartCount(); pi++) {
-		if(pi) {
+	for(int pass = 0; pass < 2; pass++) { // test if we can use tabs
+		clip.Clear();
+		auto Eol = [&] {
 			if(withcr)
 				clip.Cat('\r');
 			clip.Cat('\n');
-		}
-		if(IsTable(pi)) {
-			const RichTable& tab = part[pi].Get<RichTable>();
-			for(int i = 0; i < tab.GetRows(); i++)
-				for(int j = 0; j < tab.GetColumns(); j++)
-					if(tab(i, j)) {
-						if(i || j) {
-							if(withcr)
-								clip.Cat('\r');
-							clip.Cat('\n');
+		};
+		for(int pi = 0; pi < GetPartCount(); pi++) {
+			if(pi)
+				Eol();
+			if(IsTable(pi)) {
+				const RichTable& tab = part[pi].Get<RichTable>();
+				for(int i = 0; i < tab.GetRows(); i++) {
+					bool next = false;
+					for(int j = 0; j < tab.GetColumns(); j++)
+						if(tab(i, j)) {
+							if(next) {
+								if(pass)
+									clip.Cat('\t');
+								else
+									Eol();
+							}
+							WString h = tab[i][j].text.GetPlainText(withcr);
+							if(allow_tabs && h.Find('\n') >= 0)
+								allow_tabs = false;
+							clip << h;
+							next = true;
 						}
-						clip << tab[i][j].text.GetPlainText(withcr);
-					}
+					Eol();
+				}
+			}
+			else
+				clip.Cat(Get(pi, RichStyle::GetDefault()).GetText());
 		}
-		else
-			clip.Cat(Get(pi, RichStyle::GetDefault()).GetText());
+		if(!allow_tabs)
+			break;
 	}
 	return clip;
 }

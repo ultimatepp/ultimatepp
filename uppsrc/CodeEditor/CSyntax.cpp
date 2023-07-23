@@ -193,6 +193,11 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 			}
 			break;
 		}
+		if(cl == 0) {
+			blk_end.y = line;
+			blk_end.x = e - ln;
+		}
+		p = e;
 	}
 	if(macro == CSyntax::MACRO_CONT && !(p < e && e[-1] == '\\'))
 		macro = CSyntax::MACRO_END;
@@ -209,7 +214,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 			int pc = 0;
 			for(;;) {
 				int raw_n;
-				if(p >= e) return;
+				if(p >= e) goto finish;
 				const wchar *pp;
 				if(!iscidl(pc) && (pp = isstmt(p)) != NULL) {
 					stmtline = line;
@@ -236,7 +241,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 					}
 					else
 						p++;
-					if(p >= e) return;
+					if(p >= e) goto finish;
 				}
 				else
 				if(!iscidl(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
@@ -247,12 +252,18 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 				}
 				else {
 					int c = *p++;
+					auto Cl0Pos = [&](Point& t) {
+						if(cl == 0) {
+							t.y = line;
+							t.x = p - 1 - ln;
+						}
+					};
 					if(c == '/') break;
 					if(c == '\'' || c == '\"') {
 						p = eatstring(p - 1);
 						if(p >= e) {
 							string = true;
-							return;
+							goto finish;
 						}
 					}
 					else
@@ -261,14 +272,17 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 						endstmtline = line;
 						stmtline = -1;
 						was_namespace = false;
+						Cl0Pos(blk_end);
 					}
 					else
 					if(c == '{') {
 						if(was_namespace) {
 							brk.Add(0);
 							was_namespace = false;
+							Cl0Pos(blk_end);
 						}
 						else {
+							Cl0Pos(blk_start);
 							cl++;
 							brk.Add('}');
 							bid.Add(lindent + 1);
@@ -284,6 +298,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 								cl--;
 								if(bid.GetCount() > 1)
 									bid.Drop();
+								Cl0Pos(blk_end);
 							}
 							brk.Drop();
 						}
@@ -335,7 +350,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 			}
 			if(*p == '/') {
 				linecomment = true;
-				return;
+				goto finish;
 			}
 			if(*p == '*') {
 				comment = true;
@@ -343,6 +358,22 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 			}
 		}
 	}
+
+finish:;
+/*	bool hdr = !wascomment && !comment && !linecomment && !string && macro != MACRO_CONT &&
+	           (cl == 0 || cl == 1 && blk_start);
+	if(hdr != header_line) {
+		if(header_line)
+			block_header_end = line;
+		else
+			block_header_start = line;
+		header_line = hdr;
+	}
+	if(cl == 0 && semicolon)
+		block_header_end = block_header_start = -1;
+
+	DLOG(line << " " << hdr << ", cl: " << cl << ", start: " << block_header_start << ", end: " << block_header_end
+	     << WString(ln, e));*/
 }
 
 void CSyntax::Serialize(Stream& s)
@@ -362,6 +393,8 @@ void CSyntax::Serialize(Stream& s)
 	s % bid;
 	s % par;
 	s % ifstack;
+	
+	s % blk_start % blk_end;
 
 	s % stmtline;
 	s % endstmtline;

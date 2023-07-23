@@ -111,11 +111,6 @@ Sizef GetFitSize(Sizef sz, double cx, double cy)
 		return sz * cx / sz.cx;
 }
 
-double SquareDist(const Pointf& p1, const Pointf& p2)
-{
-	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
-}
-
 Pointf Mid(const Pointf& a, const Pointf& b)
 {
 	return 0.5 * (a + b);

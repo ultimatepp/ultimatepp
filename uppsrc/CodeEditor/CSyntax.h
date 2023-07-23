@@ -9,8 +9,9 @@ public:
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int64 pos);
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text);
-	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
+	virtual Vector<IfState> PickIfStack();
 	virtual void            ReformatComment(CodeEditor& e);
+	virtual bool            GetBlockHeader(Point& blk_start, Point& blk_end);
 
 protected:
 	bool        comment;       // we are in /* */ block comment
@@ -29,24 +30,28 @@ protected:
 	int         cl, bl, pl; // levels of { [ (
 
 	Vector<int>     brk; // { ( [ stack (contains '{', ')', ']')
-	Vector<int>     blk; // { line stack //TODO:SYNTAX: Join blk and bid
+	Vector<int>     blk; // { line stack
 	Vector<int>     bid; // { indentation stack
 	Vector<Isx>     par; // ( [ position stack
 	Vector<IfState> ifstack;
+
+	Point       blk_start = Null; // last zero block level { (so it is actually end of header)
+	Point       blk_end = Null; // last zero block level } or ; or prepro line
 
 	int         stmtline;     // line of latest "if", "else", "while", "do", "for" or -1
 	int         endstmtline;  // line of latest ';' (not in ( [ brackets)
 	int         seline;       // stmtline stored here on ';' (not in ( [ brackets)
 	int         spar;         // ( [ level, reset on "if", "else", "while", "do", "for"
 	
-	int         highlight;    // subtype (temporary) TODO
+	int         highlight;    // subtype, 0 = C++
 
 	static int  InitUpp(const char **q);
 	static void InitKeywords();
 	const wchar *DoComment(HighlightOutput& hls, const wchar *p, const wchar *e);
 
-	static Vector< Index<String> > keyword;
-	static Vector< Index<String> > name;
+	static Vector<Index<String>> keyword;
+	static Vector<int> breakers;
+	static Vector<Index<String>> name;
 	static Index<String> kw_upp;
 	static int kw_macros, kw_logs, kw_sql_base, kw_sql_func;
 

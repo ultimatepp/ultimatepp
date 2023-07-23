@@ -205,7 +205,6 @@ bool RepoSync::ListSvn(const String& path)
 
 String GitCmd(const char *dir, const char *command)
 {
-	LOG("GitCmd " << dir << ", " << command);
 	String h = GetCurrentDirectory();
 	SetCurrentDirectory(dir);
 	String r = HostSys(String() << "git " << command);

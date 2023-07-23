@@ -307,4 +307,11 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text)
 	e.Refresh();
 }
 
+bool CSyntax::GetBlockHeader(Point& blk_start, Point& blk_end)
+{
+	blk_start = this->blk_start;
+	blk_end = this->blk_end;
+	return true;
+}
+
 }

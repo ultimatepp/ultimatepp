@@ -223,7 +223,7 @@ bool PopUpList::PopupArrayCtrl::Key(dword key, int n)
 		}
 		break;
 	}
-	return ArrayCtrl::Key(key, n);
+	return list->Key(key) || ArrayCtrl::Key(key, n);
 }
 
 PopUpList::Popup::Popup(PopUpList *list)

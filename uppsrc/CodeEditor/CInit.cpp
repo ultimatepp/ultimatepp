@@ -3,6 +3,7 @@
 namespace Upp {
 
 Vector <Index<String> > CSyntax::keyword;
+Vector<int>             CSyntax::breakers;
 Vector <Index<String> > CSyntax::name;
 Index<String>           CSyntax::kw_upp;
 int                     CSyntax::kw_macros;
@@ -24,39 +25,40 @@ void CSyntax::InitKeywords()
         "__finally", "__inline", "__int16", "__int32", "__int64",
         "__int8", "__leave", "__stdcall", "__try", "__uuidof",
         "alignas", "alignof", "and", "and_eq", "asm", "auto",
-        "bitand", "bitor", "bool", "break", "case", "catch",
+        "bitand", "bitor", "bool", "case", "catch",
         "char", "char8_t", "char16_t", "char32_t", "class",
-        "co_await", "co_return", "co_yield", "compl", "concept",
+        "co_await", "co_yield", "compl", "concept",
         "const", "const_cast", "consteval", "constexpr", "constinit",
-        "continue", "decltype", "default", "delete", "dllexport",
+        "decltype", "default", "delete", "dllexport",
         "dllimport", "do", "double", "dynamic_cast", "else", "enum",
         "explicit", "export", "extern", "false", "final", "float",
-        "for", "force_inline", "friend", "goto", "if", "import",
+        "for", "force_inline", "friend", "if", "import",
         "inline", "int", "long", "module", "mutable", "namespace",
         "never_inline", "new", "noexcept", "not", "not_eq", "nullptr",
         "operator", "or", "or_eq", "override", "private", "protected",
-        "public", "register", "reinterpret_cast", "requires", "return",
+        "public", "register", "reinterpret_cast", "requires",
         "short", "signed", "sizeof", "static", "static_assert",
         "static_cast", "struct", "switch", "template", "this", "thread",
-        "thread_local", "throw", "true", "try", "typedef", "typeid",
+        "thread_local", "true", "try", "typedef", "typeid",
         "typename", "union", "unsigned", "using", "virtual",
         "void", "volatile", "wchar_t", "while", "xor", "xor_eq",
+		"!break", "continue", "co_return", "goto", "return", "throw",
         NULL
     };
 	static const char *cs[] = {
 		"abstract", "event", "new", "struct",
 		"as", "explicit", "null", "switch",
 		"base", "extern", "object", "this",
-		"bool", "false", "operator", "throw",
-		"break", "finally", "out", "true",
+		"bool", "false", "operator",
+		"finally", "out", "true",
 		"byte", "fixed", "override", "try",
 		"case", "float", "params", "typeof",
 		"catch", "for", "private", "uint",
 		"char", "foreach", "protected", "ulong",
-		"checked", "goto", "public", "unchecked",
+		"checked", "public", "unchecked",
 		"class", "if", "readonly", "unsafe",
 		"const", "implicit", "ref", "ushort",
-		"continue", "in", "return", "using",
+		"in", "using",
 		"decimal", "int", "sbyte", "virtual",
 		"default", "interface", "sealed", "volatile",
 		"delegate", "internal", "short", "void",
@@ -65,6 +67,7 @@ void CSyntax::InitKeywords()
 		"else", "long", "static",
 		"enum", "namespace", "string",
 		"await", "async", "throws", "awaits",
+		"!break", "continue", "goto", "throw", "return",
 		NULL
 	};
 	static const char *upp[] = {
@@ -103,24 +106,26 @@ void CSyntax::InitKeywords()
 		NULL
 	};
 	static const char *java[] = {
-		"abstract", "assert", "boolean", "break", "byte", "case",
-		"catch", "char", "class", "const", "continue",
+		"abstract", "assert", "boolean", "byte", "case",
+		"catch", "char", "class", "const",
 		"default", "do", "double", "else", "enum", "extends",
 		"false", "final", "finally", "float", "for",
 		"goto", "if", "implements", "import", "instanceof",
 		"int", "interface", "long", "native", "new",
 		"null", "package", "private", "protected", "public",
 		"return", "short", "static", "strictfp", "super", "switch",
-		"synchronized", "this", "throw", "throws", "transient",
+		"synchronized", "this", "throws", "transient",
 		"true", "try", "void", "volatile", "while",
+		"!break", "continue", "throw",
 		NULL
 	};
 	static const char *javascript[] = {
-		"break", "continue", "do", "for", "import", "new", "this", "void",
-		"case", "default", "else", "function", "in", "return", "typeof", "while",
+		"do", "for", "import", "new", "this", "void",
+		"case", "default", "else", "function", "in", "typeof", "while",
 		"comment", "delete", "export", "if", "label", "switch", "var", "with",
 		"catch", "enum", "throw", "class", "extends", "try", "const", "finally",
 		"debugger", "super", "true", "false", "undefined",
+		"!break", "continue", "return",
 		NULL
 	};
 	static const char *css[] = {
@@ -343,8 +348,16 @@ void CSyntax::InitKeywords()
 int CSyntax::LoadSyntax(const char *keywords[], const char *names[])	// Changed
 {
 	Index<String>& key = keyword.Add();
-	while(*keywords)
-		key.Add(*keywords++);
+	int& brks = breakers.Add();
+	brks = INT_MAX;
+	while(*keywords) {
+		if(**keywords == '!') {
+			brks = key.GetCount();
+			key.Add(1 + *keywords++);
+		}
+		else
+			key.Add(*keywords++);
+	}
 	Index <String>& nam = name.Add();
 	while(*names)
 		nam.Add(*names++);

@@ -120,6 +120,8 @@ public:
 	                                  CodeEditor *editor, int line, int64 pos);
 	virtual Vector<IfState> PickIfStack();
 	virtual void            ReformatComment(CodeEditor& e);
+	virtual bool            GetBlockHeader(Point& blk_start, Point& blk_end);
+	virtual int             GetBlockLevel();
 	virtual ~EditorSyntax();
 
 	static Color IfColor(char ifstate);
