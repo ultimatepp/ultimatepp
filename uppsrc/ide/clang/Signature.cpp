@@ -47,7 +47,7 @@ bool IsBasicType(const String& id)
 
 bool IsIgnored(const String& id)
 {
-	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "template", "enum" };
+	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "final", "template", "enum" };
 	return kt.Find(id) >= 0;
 }
 

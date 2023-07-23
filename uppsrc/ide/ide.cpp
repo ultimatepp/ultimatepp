@@ -31,6 +31,8 @@ String GetGitBranch(const String& dir)
 
 void Ide::MakeTitle()
 {
+	if(replace_in_files) return;
+
 	String title;
 	title << Nvl(main, "TheIDE");
 
@@ -538,6 +540,8 @@ void Ide::BookKey(int key)
 
 void Ide::DoDisplay()
 {
+	if(replace_in_files)
+		return;
 	Point p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
@@ -799,8 +803,17 @@ void Ide::Diff()
 
 void Ide::DiffWith(const String& path)
 {
-	if(IsNull(editfile) || IsNull(path) || max(GetFileLength(editfile), GetFileLength(path)) > 100*1024*1024)
+#ifdef CPU_64
+	int64 maxsize = 2000*1024*1024;
+#else
+	int64 maxsize = 100*1024*1024;
+#endif
+	if(IsNull(editfile) || IsNull(path))
 		return;
+	if(max(GetFileLength(editfile), GetFileLength(path)) > maxsize) {
+		Exclamation("Too big to compare");
+		return;
+	}
 	FileDiff diffdlg(AnySourceFs());
 	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
 	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);

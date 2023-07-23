@@ -83,6 +83,8 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 
 void AssistEditor::TriggerSyncFile(int delay_ms)
 {
+	if(!theide)
+		return;
 	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
 		annotating = true;
 		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
@@ -293,6 +295,8 @@ void AssistEditor::SyncAssist()
 
 bool AssistEditor::IncludeAssist()
 {
+	if(!theide)
+		return false;
 	Vector<String> include;
 	String ln = GetUtf8Line(GetCursorLine());
 	CParser p(ln);
@@ -387,6 +391,8 @@ bool AssistEditor::IncludeAssist()
 CurrentFileContext AssistEditor::CurrentContext(int pos)
 {
 	CurrentFileContext cfx;
+	if(!theide)
+		return cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
@@ -435,6 +441,8 @@ bool IgnoredError(const String& s)
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
+	if(!theide)
+		return;
 	if(cfx.content.GetCount() && HasLibClang())
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
@@ -513,7 +521,7 @@ void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
 
 bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 {
-	if(annotating)
+	if(annotating || !theide)
 		return false;
 	if(GetChar(mt.pos) <= 32)
 		return false;
@@ -576,7 +584,7 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
-	if(assist.IsOpen())
+	if(assist.IsOpen() || !theide)
 		return false;
 	int p = mt.pos;
 	int line = GetLinePos(p);

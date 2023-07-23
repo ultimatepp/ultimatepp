@@ -25,6 +25,7 @@ FN(CXSourceLocation, clang_getCursorLocation, (CXCursor))
 FN(CXCursor, clang_getCursorReferenced, (CXCursor))
 FN(unsigned, clang_isCursorDefinition, (CXCursor))
 FN(unsigned, clang_CXXMethod_isVirtual, (CXCursor C))
+FN(unsigned, clang_CXXMethod_isStatic, (CXCursor C))
 FN(int, clang_Cursor_isNull, (CXCursor cursor))
 FN(CXCursor, clang_getTranslationUnitCursor, (CXTranslationUnit))
 FN(void, clang_PrintingPolicy_setProperty, (CXPrintingPolicy Policy,
@@ -73,3 +74,5 @@ FN(enum CXDiagnosticSeverity, clang_getDiagnosticSeverity, (CXDiagnostic))
 
 FN(CXType, clang_getTypedefDeclUnderlyingType, (CXCursor C))
 FN(CXCursor, clang_getTypeDeclaration, (CXType T))
+
+FN(enum CX_StorageClass, clang_Cursor_getStorageClass, (CXCursor))

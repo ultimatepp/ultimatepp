@@ -1,7 +1,7 @@
 #include <ide/ide.h>
 
-#define LTIMING(x)   //TIMING(x)
-#define LTIMESTOP(x) //DTIMESTOP(x)
+#define LTIMING(x)   //RTIMING(x)
+#define LTIMESTOP(x) //RTIMESTOP(x)
 #define LLOG(x)      //DLOG(x)
 #define LDUMP(x)     //DDUMP(x)
 #define LDUMPM(x)    //DDUMPM(x)
@@ -89,6 +89,7 @@ void AnnotationItem::Serialize(Stream& s)
 	  % pos
 	  % definition
 	  % isvirtual
+	  % isstatic
 	  % name
 	  % type
 	  % id
@@ -105,7 +106,8 @@ void ReferenceItem::Serialize(Stream& s)
 {
 	s % id
 	  % pos
-	  % ref_pos;
+	  % ref_pos
+	;
 }
 
 void FileAnnotation::Serialize(Stream& s)
@@ -115,7 +117,8 @@ void FileAnnotation::Serialize(Stream& s)
 	  % master_file
 	  % time
 	  % items
-	  % refs;
+	  % refs
+	;
 }
 
 String CachedAnnotationPath(const String& source_file, const String& defines, const String& includes, const String& master_file)
@@ -158,8 +161,9 @@ CoEvent              Indexer::event;
 CoEvent              Indexer::scheduler;
 Mutex                Indexer::mutex;
 Vector<Indexer::Job> Indexer::jobs;
-int                  Indexer::jobi;
-int                  Indexer::jobs_done;
+std::atomic<int>     Indexer::jobi;
+std::atomic<int>     Indexer::jobs_done;
+std::atomic<int>     Indexer::jobs_count;
 bool                 Indexer::running_scheduler;
 std::atomic<int>     Indexer::running_indexers;
 String               Indexer::main;
@@ -263,6 +267,7 @@ void Indexer::IndexerThread()
 			Mutex::Lock __(mutex);
 			if(--running_indexers == 0 && jobs.GetCount()) {
 				jobs.Clear();
+				jobs_count = 0;
 				scheduler.Broadcast();
 				last = true;
 			}
@@ -340,7 +345,7 @@ void Indexer::SchedulerThread()
 				ppi.Dirty();
 
 				{
-					LTIMING("Load workspace");
+					LTIMESTOP("Load workspace");
 					Workspace wspc;
 					wspc.Scan(main);
 
@@ -362,7 +367,7 @@ void Indexer::SchedulerThread()
 			}
 
 			{
-				LTIMING("Dependencies");
+				LTIMESTOP("Dependencies");
 				for(int speculative = 0; speculative < 2; speculative++) {
 					files.Clear();
 					ArrayMap<String, Index<String>> dics;
@@ -406,14 +411,17 @@ void Indexer::SchedulerThread()
 						master_file = master[q];
 					FileAnnotation0 f;
 					{
+						LTIMING("GuiLock 1");
 						GuiLock __;
 						f = CodeIndex().GetAdd(path);
 					}
 					if(f.includes != includes || f.defines != defines || f.master_file != master_file) {
+						LTIMING("LoadFile");
 						String h = LoadFile(CachedAnnotationPath(path, defines, includes, master_file));
 						if(h.GetCount()) {
 							FileAnnotation lf;
 							if(LoadFromString(lf, h)) {
+								LTIMING("GuiLock 2");
 								GuiLock __;
 								f = lf;
 								CodeIndex().GetAdd(path) = pick(lf);
@@ -441,6 +449,7 @@ void Indexer::SchedulerThread()
 				jobs.Clear();
 				jobi = 0;
 				jobs_done = 0;
+				jobs_count = 0;
 				for(const auto& pkg : ~sources) {
 					Job blitz_job;
 					blitz_job.includes = includes;
@@ -468,6 +477,7 @@ void Indexer::SchedulerThread()
 							}
 							else {
 								Job& job = jobs.Add();
+								jobs_count = jobs.GetCount();
 								job.includes = includes;
 								job.defines = defines;
 								job.path = pf.a;
@@ -478,6 +488,7 @@ void Indexer::SchedulerThread()
 
 					if(blitz_job.blitz.GetCount()) {
 						Job& job = jobs.Add();
+						jobs_count = jobs.GetCount();
 						job = blitz_job;
 						job.path = ConfigFile(pkg.key + "$$$blitz.cpp"); // the path is fake, file does not exist
 					}
@@ -485,28 +496,25 @@ void Indexer::SchedulerThread()
 			}
 			if(jobs.GetCount()) {
 				LLOG("======= Unleash indexers");
+				jobs_count = jobs.GetCount();
 				event.Broadcast();
 			}
 			running_scheduler = false;
 		}
 		ReduceCache(); // good place to do this
+		while(jobs_count && !Thread::IsShutdownThreads()) // wait for all jobs to finish so that files are not rescheduled before parsed
+			Sleep(100);
 	}
 }
 
 bool Indexer::IsRunning()
 {
-	if(running_scheduler)
-		return true;
-	Mutex::Lock __(mutex);
-	return jobs.GetCount();
+	return running_scheduler || jobs_count;
 }
 
 double Indexer::Progress()
 {
-	if(running_scheduler)
+	if(running_scheduler || jobs_count == 0)
 		return 0;
-	Mutex::Lock __(mutex);
-	if(jobs.GetCount() == 0)
-		return 1;
-	return (double)(jobs_done + jobi) / (2 * jobs.GetCount());
+	return (double)(jobs_done + jobi) / (2 * jobs_count);
 }

@@ -193,6 +193,7 @@ public:
 	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
 	virtual void  Layout();
+	virtual void  Paint(Draw& w);
 
 public:
 	struct MouseTip {
@@ -254,6 +255,7 @@ protected:
 	bool    do_ff_restore_pos;
 	bool    withfindreplace;
 	bool    wordwrap;
+	bool    blk0_header;
 
 	int     ff_start_pos;
 
@@ -347,6 +349,7 @@ protected:
 	void   NotFound();
 	void   NoFindError();
 	void   CheckSyntaxRefresh(int64 pos, const WString& text);
+	void   RefreshBlkHeader();
 
 	void   SetFound(int fi, int type, const WString& text);
 
@@ -523,6 +526,7 @@ public:
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
 	void     BarLine(bool b)                          { barline = b; }
 	void     WordWrap(bool b)                         { wordwrap = b; }
+	void     Blk0Header(bool b)                       { blk0_header = b; Refresh(); }
 	
 	void     PersistentFindReplace(bool b = true)     { persistent_find_replace = b; }
 	bool     IsPersistentFindReplace() const          { return persistent_find_replace; }

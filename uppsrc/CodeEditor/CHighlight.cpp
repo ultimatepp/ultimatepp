@@ -27,10 +27,10 @@ bool IsUpperString(const char *q)
 Color CSyntax::BlockColor(int level)
 {
 	if(hilite_scope == 1)
-		return  GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
+		return GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
 	if(hilite_scope == 2) {
 		int q = level % 5;
-		return  GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
+		return GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
 	}
 	return GetHlStyle(PAPER_NORMAL).color;
 }
@@ -171,10 +171,13 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	LTIMING("HighlightLine");
 	if(highlight < 0 || highlight >= keyword.GetCount())
 		return;
-	CSyntax next;
-	next.Set(Get());
-	next.ScanSyntax(ltext, e, line + 1, tabsize);
-	bool macro = next.macro != MACRO_OFF;
+	bool macro;
+	{
+		CSyntax next;
+		next.Set(Get());
+		next.ScanSyntax(ltext, e, line + 1, tabsize);
+		macro = next.macro != MACRO_OFF;
+	}
 	
 	int linelen = int(e - ltext);
 	const wchar *p = ltext;
@@ -389,9 +392,9 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			String iid = id;
 			if(highlight == HIGHLIGHT_SQL)
 				iid = ToUpper(iid);
-			int uq = kw_upp.Find(iid);
-			int nq = -1;
-			hls.Put(int(q - p), !include && (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
+			int uq = highlight == 0 ? kw_upp.Find(iid) : -1;
+			int nq = keyword[highlight].Find(iid);
+			hls.Put(int(q - p), !include && nq >= 0 ? hl_style[nq >= breakers[highlight] ? INK_BREAK_KEYWORD : INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :

@@ -157,6 +157,7 @@ void HighlightSetup::DarkTheme(bool host)
 	SetHlStyle(INK_RAW_STRING,            Color(235, 235, 255));
 	SetHlStyle(INK_OPERATOR,              Color(214, 214, 255));
 	SetHlStyle(INK_KEYWORD,               Color(214, 214, 255), true);
+	SetHlStyle(INK_BREAK_KEYWORD,         Color(186, 142, 255), true, false, true);
 	SetHlStyle(INK_UPP,                   Color(108, 236, 236));
 	SetHlStyle(PAPER_LNG,                 Color(13, 13, 0));
 	SetHlStyle(INK_ERROR,                 Color(255, 185, 185));
@@ -217,6 +218,7 @@ void HighlightSetup::WhiteTheme(bool host)
 
 	SetHlStyle(INK_OPERATOR, LtBlue);
 	SetHlStyle(INK_KEYWORD, LtBlue, true);
+	SetHlStyle(INK_BREAK_KEYWORD, Magenta, true, false, true);
 	SetHlStyle(INK_UPP, Cyan);
 	SetHlStyle(PAPER_LNG, Color(255, 255, 224));
 	SetHlStyle(INK_ERROR, LtRed);
