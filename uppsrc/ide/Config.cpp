@@ -375,7 +375,7 @@ void Ide::Serialize(Stream& s)
 	if(version >= 26)
 		s % prefer_clang_format;
 	
-	if(version >= 27)
+	if(version >= 28)
 		s % blk0_header;
 
 #ifdef PLATFORM_WIN32
