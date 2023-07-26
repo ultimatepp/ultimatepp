@@ -100,6 +100,12 @@ String LayDes::GetLayoutName() const
 	                                                               : String();
 }
 
+String LayDes::GetItemId() const
+{
+	return currentlayout >= 0 && cursor.GetCount() ? layout[currentlayout].item[cursor.Top()].variable
+	                                               : String();
+}
+
 bool LayDes::Load(const char *file, byte _charset)
 {
 	charset = _charset;
