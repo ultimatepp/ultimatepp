@@ -1,0 +1,5 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\FormatE.exe 02.08.2023 11:43:10, user: cxl
+
+FormatE(0.0, 2) = 0.00e+00
+FormatE(0.0, 2, FD_CAP_E | FD_EXP | FD_MINIMAL_EXP) = 0.00E0
+FormatE(1234, 2, FD_CAP_E | FD_EXP | FD_MINIMAL_EXP) = 1.23E3

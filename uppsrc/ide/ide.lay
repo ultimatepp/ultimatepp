@@ -82,8 +82,6 @@ LAYOUT(FindInFilesLayout, 568, 152)
 	ITEM(Upp::Option, regexp, SetLabel(t_("RegEx")).LeftPosZ(368, 112).BottomPosZ(33, 19))
 	ITEM(Upp::DropList, readonly, LeftPosZ(420, 76).BottomPosZ(33, 19))
 	ITEM(Upp::DropList, recent, LeftPosZ(500, 64).TopPosZ(100, 19))
-	ITEM(Upp::Label, dv___18, SetLabel(t_("Output")).LeftPosZ(52, 40).TopPosZ(124, 19))
-	ITEM(Upp::Switch, output, SetLabel(t_("I\nII\nIII")).LeftPosZ(96, 104).TopPosZ(124, 20))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(6, 22))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 22))
 END_LAYOUT

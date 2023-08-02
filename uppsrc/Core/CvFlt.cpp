@@ -299,7 +299,7 @@ char *FormatE(char *t, double x, int precision, dword flags)
 			do_point(t, flags);
 			tCat(t, '0', precision);
 		}
-		tCat(t, "e+00", 4);
+		FormatE10(t, 0, flags);
 	}
 	else {
 		char digits[32];

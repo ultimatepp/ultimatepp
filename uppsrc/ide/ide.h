@@ -248,8 +248,9 @@ private:
 		int    y;
 		Image  img;
 		String tip;
+		bool   highlight = false;
 
-		int    GetHeight() const { return img.GetSize().cy + SPACE; }
+		int    GetHeight() const;
 		int    GetRight() const  { return y + GetHeight(); }
 	};
 
@@ -259,12 +260,12 @@ private:
 	int        cursor;
 
 	void Repos();
-	void PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Image& img, Color hl);
+	void PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Tab& t, Color hl);
 	int  GetPos(Point p);
 
 public:
 	void Clear();
-	void Add(const Image& img, const String& tip);
+	void Add(const Image& img, const String& tip, bool highlight = false);
 	void SetCursor(int i);
 	int  GetCursor() const                                       { return cursor; }
 
@@ -479,9 +480,13 @@ public:
 	Splitter    editor_bottom;
 	Console     console;
 
-	ArrayCtrl   ffound[3];
-	Button      freplace[3];
-	int         ffoundi_next = 0;
+	struct FoundList : ArrayCtrl {
+		Button freplace;
+		
+		FoundList();
+	};
+
+	One<FoundList> ffound[16];
 
 	ArrayCtrl   error;
 	int         error_count;
@@ -493,9 +498,9 @@ public:
 	bool        removing_notes;
 
 	IdeCalc     calc;
-	Ptr<Ctrl>   bottomctrl;
+	Ptr<Ctrl>   bottomctrl; // debugger pane
 
-	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BFINDINFILES1, BFINDINFILES2, BFINDINFILES3, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BCALC, BDEBUG, BFINDINFILES1, BFINDINFILES2, BFINDINFILES3 };
 
 	FileOut    stdout_fout;
 
@@ -854,7 +859,7 @@ public:
 
 	void OnlineSearchMenu(Bar& menu);
 
-	void ReplaceFound(int i);
+	String GetFoundText(const ArrayCtrl& list);
 
 	void SearchMenu(Bar& bar);
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
@@ -1067,16 +1072,17 @@ public:
 	void      CopyError(bool all);
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();
-	void      SetFFound(int ii);
+	void      NewFFound();
 	ArrayCtrl& FFound();
 	void      FFoundFinish(bool replace = true);
-	void      ShowFound();
-	void      CopyFound(bool all);
-	void      FFoundMenu(Bar& bar);
+	void      ShowFound(ArrayCtrl& list);
+	void      CopyFound(ArrayCtrl& list, bool all);
+	void      FFoundMenu(ArrayCtrl& list, Bar& bar);
 	void      SelError();
 	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
+	void      ReplaceFound(ArrayCtrl& list);
 
 	struct FoundDisplay : Display {
 		Size DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const;

@@ -138,8 +138,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 		}
 	}
 	
-	SetFFound(ffoundi_next);
-	FFound().Clear();
+	NewFFound();
 
 	Index<String> unique;
 	if(local) {
@@ -286,8 +285,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 		   (m.id.GetCount() <= id.GetCount() || !iscid(m.id[m.id.GetCount() - id.GetCount() - 1]))) {
 			Index<String> ids, unique;
 			ids.Add(m.id);
-			SetFFound(ffoundi_next);
-			FFound().Clear();
+			NewFFound();
 			UsageId(name, m.id, ids, IsStruct(m.kind), m.isstatic, unique);
 			UsageFinish();
 			return;

@@ -197,7 +197,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 void Ide::FindInFiles(bool replace) {
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
-	ff.output <<= ffoundi_next;
 	rf(ff.find, d.find)
 	  (ff.replace, d.replace)
 	  (ff.ignorecase, d.ignorecase)
@@ -229,7 +228,7 @@ void Ide::FindInFiles(bool replace) {
 	if(c == IDOK) {
 		SaveFile();
 
-		SetFFound(~ff.output);
+		NewFFound();
 
 		FFound().HeaderTab(2).SetText("Source line");
 		Renumber();
@@ -312,15 +311,15 @@ void Ide::FFoundFinish(bool replace)
 	ArrayCtrl& ff = FFound();
 	int n = FFound().GetCount();
 	FFound().HeaderTab(2).SetText(Format("Source line (%d)", ff.GetCount()));
-	int i = btabs.GetCursor() - BFINDINFILES1;
-	if(i >= 0 && i < 3)
-		freplace[i].Show(replace && ff.GetCount());
+	int ii = btabs.GetCursor();
+	ffound[0]->freplace.Show(ff.GetCount());
+	BTabs(); // to update the found text
+	btabs.SetCursor(ii);
 }
 
 void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 {
-	SetFFound(ffoundi_next);
-	FFound().Clear();
+	NewFFound();
 	for(auto pos : f) {
 		editor.CachePos(pos.a);
 		int linei = editor.GetLinePos64(pos.a);
@@ -476,26 +475,46 @@ bool FindInFilesDlg::Key(dword key, int count)
 	return TopWindow::Key(key, count);
 }
 
-void Ide::SetFFound(int ii)
+void SetupError(ArrayCtrl& error, const char *s);
+
+Ide::FoundList::FoundList()
 {
-	ii = clamp(ii, 0, 2);
-	SetBottom(BFINDINFILES1 + ii);
-	ffoundi_next = (ii + 1) % 3;
+	SetupError(*this, "Source");
+	ColumnWidths("207 41 834");
+	ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
+	ColumnAt(2).SetDisplay(Single<FoundDisplay>());
+	WhenBar = [=](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
+	WhenSel = [=] { TheIde()->ShowFound(*this); };
+	freplace.SetLabel("Replace");
+	HeaderObject() << freplace.RightPosZ(0, 80).VSizePos();
+	freplace.Hide();
+	freplace << [=] { TheIde()->ReplaceFound(*this); };
+	freplace.SetImage(IdeImg::textfield_rename());
+}
+
+void Ide::NewFFound()
+{
+	if(ffound[0] && ffound[0]->GetCount())
+		for(int i = __countof(ffound) - 1; i > 0; i--)
+			ffound[i] = pick(ffound[i - 1]);
+	FFound();
+	SetBottom(BFINDINFILES1);
 }
 	
 ArrayCtrl& Ide::FFound()
 {
-	int i = btabs.GetCursor() - BFINDINFILES1;
-	return i >= 0 && i < 3 ? ffound[i] : ffound[0];
+	if(!ffound[0])
+		ffound[0].Create<FoundList>();
+	return *ffound[0];
 }
 
-void Ide::CopyFound(bool all)
+void Ide::CopyFound(ArrayCtrl& list, bool all)
 {
 	String txt;
-	for(int i = 0; i < FFound().GetCount(); i++) {
+	for(int i = 0; i < list.GetCount(); i++) {
 		if(all)
-			txt << FFound().Get(i, 0) << " (" << FFound().Get(i, 1) << "): ";
-		String h = FFound().Get(i, 2);
+			txt << list.Get(i, 0) << " (" << list.Get(i, 1) << "): ";
+		String h = list.Get(i, 2);
 		if(*h == '\1')
 			h = Split(~h + 1, '\1', false).Top();
 		txt << h << "\r\n";
@@ -503,20 +522,19 @@ void Ide::CopyFound(bool all)
 	WriteClipboardText(txt);
 }
 
-void Ide::FFoundMenu(Bar& bar)
+void Ide::FFoundMenu(ArrayCtrl& list, Bar& bar)
 {
-	bar.Add("Copy text", THISBACK1(CopyFound, false));
-	bar.Add("Copy all", THISBACK1(CopyFound, true));
+	ArrayCtrl *l = &list;
+	bar.Add("Copy text", [=] { CopyFound(*l, false); });
+	bar.Add("Copy all", [=] { CopyFound(*l, true); });
 }
 
 INITBLOCK {
 	RegisterGlobalConfig("Ide::ReplaceFound");
 }
 
-void Ide::ReplaceFound(int i)
+void Ide::ReplaceFound(ArrayCtrl& list)
 {
-	ArrayCtrl& list = ffound[i];
-	
 	Index<String> ch;
 	for(int i = 0; i < list.GetCount() && ch.GetCount() < 6; i++) {
 		Value v = list.Get(i, "INFO");

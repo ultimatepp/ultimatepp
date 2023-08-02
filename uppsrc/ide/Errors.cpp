@@ -564,10 +564,10 @@ void Ide::ConsoleRunEnd()
 	prenotes.Clear();
 }
 
-void Ide::ShowFound()
+void Ide::ShowFound(ArrayCtrl& list)
 {
-	if(FFound().IsCursor())
-		GoToError(FFound(), false);
+	if(list.IsCursor())
+		GoToError(list, false);
 }
 
 String Ide::GetErrorsText(bool all, bool src)
