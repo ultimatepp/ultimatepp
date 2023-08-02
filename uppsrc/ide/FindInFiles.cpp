@@ -484,7 +484,7 @@ Ide::FoundList::FoundList()
 	ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 	WhenBar = [=](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
-	WhenSel = [=] { TheIde()->ShowFound(*this); };
+	WhenLeftClick = WhenSel = [=] { TheIde()->ShowFound(*this); };
 	freplace.SetLabel("Replace");
 	HeaderObject() << freplace.RightPosZ(0, 80).VSizePos();
 	freplace.Hide();
