@@ -77,7 +77,7 @@ void RightTabs::Paint(Draw& w)
 			         i == hl ? Blend(SColorFace(), SColorPaper()) : SColorFace(),
 			         t, i == hl ? hc : Null);
 	}
-	if(cursor >= 0) {
+	if(cursor >= 0 && cursor < tab.GetCount()) {
 		Tab& t = tab[cursor];
 		PaintTab(w, 0, t.y, cx, t.GetHeight() + 3, SColorPaper(), t, cursor == hl ? hc : Null);
 	}
@@ -191,7 +191,7 @@ void Ide::BTabs()
 		String h = GetFoundText(*ffound[i]);
 		if(h.GetCount() > 16)
 			h = h.Mid(0, 16) + "..";
-		btabs.Add(IdeImg::query(), Nvl(h, "Query"), h.GetCount());
+		btabs.Add(IdeImg::query(), Nvl(h, "Empty"), h.GetCount());
 	}
 }
 
