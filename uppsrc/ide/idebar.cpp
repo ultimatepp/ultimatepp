@@ -557,12 +557,11 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		for(int pass = 0; pass < 2; pass++) {
 			bool sep = true;
 			for(String p : pass ? file : difflru)
-				if(!PathIsEqual(p, editfile)) {
+				if(!PathIsEqual(p, editfile) && FileExists(p)) {
 					if(sep)
 						bar.Separator();
 					sep = false;
-					bar.AddMenu(candiff && FileExists(p), p,
-					            IdeImg::DiffNext(), [=] { DiffWith(p); })
+					bar.AddMenu(p, IdeImg::DiffNext(), [=] { DiffWith(p); })
 					    .Help("Show differences between the current and that file");
 				}
 		}
