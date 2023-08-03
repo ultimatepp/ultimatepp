@@ -1247,6 +1247,10 @@ public:
 	~Ide();
 };
 
+void ForAllSourceFiles(Event<const VectorMap<String, String>&> fn);
+void ForAllNests(Event<const Vector<String>&> fn);
+void IdeBackgroundThread();
+
 inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
 
 inline void ShowConsole() { if(TheIde()) TheIde()->ShowConsole(); }

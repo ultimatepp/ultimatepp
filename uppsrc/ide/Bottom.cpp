@@ -31,7 +31,7 @@ void RightTabs::Add(const Image& img, const String& tip, bool highlight)
 	t.img = img;
 	t.tip = tip;
 	t.highlight = highlight;
-	cx = max(cx, img.GetSize().cx + DPI(2) + GetTextSize(tip, StdFont()).cx) + DPI(2);
+	cx = max(cx, img.GetSize().cx + DPI(80) + DPI(2));
 	Repos();
 }
 
@@ -50,19 +50,15 @@ void RightTabs::PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, con
 	Size isz = t.img.GetSize();
 	int ix = 0;
 	int iy = (cy - isz.cy) / 2 + y;
-	if(!IsNull(hl)) {
-		w.DrawImage(ix - 1, iy - 1, t.img, hl);
-		w.DrawImage(ix - 1, iy + 1, t.img, hl);
-		w.DrawImage(ix + 1, iy - 1, t.img, hl);
-		w.DrawImage(ix + 1, iy + 1, t.img, hl);
-	}
 	w.DrawImage(ix, iy, t.img);
 	int tx = ix + t.img.GetWidth() + DPI(2);
 	int ty = (cy - StdFont().GetCy()) / 2 + y;
-	if(t.highlight)
-		w.DrawRect(tx, ty, GetTextSize(t.tip, StdFont()).cx, StdFont().GetCy(),
-		           HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
-	w.DrawText(tx, ty, t.tip, StdFont(), SColorText());
+//	if(t.highlight)
+//		w.DrawRect(tx, ty, GetTextSize(t.tip, StdFont()).cx, StdFont().GetCy(),
+//		           HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
+	w.Clip(x, y, cx - 1, cy);
+	w.DrawText(tx, ty, t.tip, StdFont(), t.highlight ? SLtBlue() : SColorText());
+	w.End();
 }
 
 void RightTabs::Paint(Draw& w)
@@ -189,8 +185,6 @@ void Ide::BTabs()
 		if(!ffound[i])
 			break;
 		String h = GetFoundText(*ffound[i]);
-		if(h.GetCount() > 16)
-			h = h.Mid(0, 16) + "..";
 		btabs.Add(IdeImg::query(), Nvl(h, "Empty"), h.GetCount());
 	}
 }

@@ -69,6 +69,7 @@ file
 	Install.cpp,
 	Android.cpp,
 	idebar.cpp,
+	background.cpp,
 	idewin.cpp,
 	main.cpp,
 	CommandLineHandler.h,

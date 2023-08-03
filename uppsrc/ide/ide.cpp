@@ -167,7 +167,6 @@ void Ide::SetMain(const String& package)
 	SyncBuildMode();
 	SetHdependDirs();
 	SetBar();
-	HideBottom();
 	SyncUsc();
 	if(IsNull(e))
 		e = GetFirstFile();

@@ -461,32 +461,28 @@ void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 void Ide::DoDirDiff()
 {
 	Index<String> dir;
-	Vector<String> d = GetUppDirs();
-	for(int i = 0; i < d.GetCount(); i++)
-		dir.FindAdd(d[i]);
-	FindFile ff(ConfigFile("*.bm"));
-	while(ff) {
-		VectorMap<String, String> var;
-		LoadVarFile(ff.GetPath(), var);
-		Vector<String> p = Split(var.Get("UPP", String()), ';');
-		for(int i = 0; i < p.GetCount(); i++)
-			dir.FindAdd(p[i]);
-		ff.Next();
-	}
+
 	String n = GetFileFolder(editfile);
 	if(n.GetCount())
 		dir.FindAdd(n);
-	SortIndex(dir);
-	
+	for(String d : GetUppDirs())
+		dir.FindAdd(d);
+
+	ForAllNests([&](const Vector<String>& nests) {
+		for(String d : nests) {
+			dir.FindAdd(d);
+		}
+	});
+
 	static DirDiffDlg dlg;
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
-	for(int i = 0; i < dir.GetCount(); i++) {
-		dlg.Dir1AddList(dir[i]);
-		dlg.Dir2AddList(dir[i]);
+	for(String d : dir) {
+		dlg.Dir1AddList(d);
+		dlg.Dir2AddList(d);
 	}
-	if(d.GetCount())
-		dlg.Dir1(d[0]);
+	if(dir.GetCount() > 1)
+		dlg.Dir1(dir[1]);
 	if(!dlg.IsOpen()) {
 		dlg.SetFont(veditorfont);
 		dlg.Maximize();

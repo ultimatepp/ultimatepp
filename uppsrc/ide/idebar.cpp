@@ -547,11 +547,25 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			bar.AddMenu(candiff && FileExists(path), path,
 			            IdeImg::DiffNext(), [=] { DiffWith(path); })
 			    .Help("Show differences between the current and the next file");
-		for(String p : difflru)
-			if(p != path)
-				bar.AddMenu(candiff && FileExists(p), p,
-				            IdeImg::DiffNext(), [=] { DiffWith(p); })
-				    .Help("Show differences between the current and that file");
+		Vector<String> file;
+		if(bar.IsMenuBar()) {
+			ForAllSourceFiles([&](const VectorMap<String, String>& map) {
+				for(int i = map.Find(GetFileName(editfile)); i >= 0; i = map.FindNext(i))
+					file.Add(map[i]);
+			});
+		}
+		for(int pass = 0; pass < 2; pass++) {
+			bool sep = true;
+			for(String p : pass ? file : difflru)
+				if(!PathIsEqual(p, editfile)) {
+					if(sep)
+						bar.Separator();
+					sep = false;
+					bar.AddMenu(candiff && FileExists(p), p,
+					            IdeImg::DiffNext(), [=] { DiffWith(p); })
+					    .Help("Show differences between the current and that file");
+				}
+		}
 	});
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
