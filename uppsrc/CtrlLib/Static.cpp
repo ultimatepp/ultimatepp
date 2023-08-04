@@ -331,6 +331,14 @@ Size ImageCtrl::GetMinSize() const
 	return img.GetSize();
 }
 
+ImageCtrl& ImageCtrl::SetImage(const Image& _img)
+{
+	if(img.IsSame(_img))
+		return *this;
+	img = _img;
+	Refresh();
+	return *this;
+}
 
 DrawingCtrl& DrawingCtrl::Background(Color color)
 {

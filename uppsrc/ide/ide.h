@@ -663,7 +663,7 @@ public:
 
 	FrameTop<StaticBarArea> bararea;
 	CursorInfoCtrl          display;
-	ImageCtrl               indeximage;
+	ImageCtrl               indeximage, indeximage2;
 
 	byte      hilite_scope;
 	int       hilite_bracket;

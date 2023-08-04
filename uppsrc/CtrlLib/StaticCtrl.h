@@ -135,7 +135,7 @@ protected:
 	Image   img;
 
 public:
-	ImageCtrl&   SetImage(const Image& _img)          { img = _img; Refresh(); return *this; }
+	ImageCtrl&   SetImage(const Image& _img);
 
 	ImageCtrl()                                       { Transparent(); NoWantFocus(); }
 };

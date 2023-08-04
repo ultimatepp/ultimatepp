@@ -670,7 +670,7 @@ struct IndexerProgress : ImageMaker {
 		ImagePainter iw(sz);
 		iw.Clear(RGBAZero());
 		iw.Move(sz.cx / 2, sz.cy / 2).Arc(sz.cx / 2, sz.cy / 2, sz.cx / 2, -M_PI/2, pos * M_2PI).Line(sz.cx / 2, sz.cy / 2).Fill(SGray());
-		iw.DrawImage(0, 0, IdeImg::Indexer());
+	//	iw.DrawImage(0, 0, IdeImg::Indexer());
 		return iw;
 	}
 };
@@ -678,7 +678,7 @@ struct IndexerProgress : ImageMaker {
 void Ide::SyncClang()
 {
 	Vector<Color> a;
-	int phase = msecs() / 30; // TODO: Use phase
+	int phase = msecs() / 30;
 	auto AnimColor = [](int animator) {
 		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
 	};
@@ -705,9 +705,29 @@ void Ide::SyncClang()
 		IndexerProgress mi;
 		mi.pos = Indexer::Progress();
 		indeximage.SetImage(MakeImage(mi));
+		
+		static Image waitani[64];
+		ONCELOCK {
+			int sz = DPI(16);
+			for(int ani = 0; ani < 64; ani++) {
+				ImagePainter sw(sz, sz);
+				sw.Clear(RGBAZero());
+				Pointf prev = Null;
+				for(int i = 0; i <= 128; i++) {
+					Pointf next = (sz / 2 - 1) * Polar((i + ani * 4) * M_2PI / 256) + Pointf(sz / 2, sz / 2);
+					if(!IsNull(prev))
+						sw.Move(prev).Line(next).Stroke(DPI(i) / 128.0, Blend(SLtGray, SLtRed, 2 * i));
+					prev = next;
+				}
+				waitani[ani] = sw.GetResult();
+			}
+		}
+		indeximage2.SetImage(waitani[(msecs() / 20) & 63]);
 	}
-	else
+	else {
 		indeximage.SetImage(Null);
+		indeximage2.SetImage(Null);
+	}
 	animate_phase = phase;
 }
 

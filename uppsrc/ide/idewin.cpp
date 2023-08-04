@@ -612,6 +612,7 @@ Ide::Ide()
 	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
 	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
+	editor.search.Add(indeximage2.RightPos(DPI(1), DPI(16)).VSizePos());
 
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {
