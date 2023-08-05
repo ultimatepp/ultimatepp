@@ -243,7 +243,8 @@ bool RepoSync::ListGit(const String& path)
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
 			if(action >= 0) {
-				list.SetCtrl(ii, 0, revert.Add().SetLabel(an + (action == ADD ? "\nSkip" : "\nRevert")).NoWantFocus());
+				list.SetCtrl(ii, 0, revert.Add().SetLabel(an + (action == ADD ? "\nSkip" : "\nRevert"))
+				    .NoWantFocus());
 				revert.Top() <<= 0;
 				Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
 				b <<= THISBACK1(DoDiff, ii);
@@ -323,11 +324,7 @@ void RepoSync::SyncList()
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
 			list.SetLineCy(list.GetCount() - 1, (3 * EditField::GetStdHeight()) + 4);
 			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsgRepo).VSizePos(2, 2).HSizePos());
-			int q = msgmap.Find(w.key);
-			if(q >= 0) {
-				message.Top() <<= msgmap[q];
-				msgmap.Unlink(q);
-			}
+			message.Top() <<= msgmap.Get(w.key, Null);
 		}
 		else
 			list.Add(-1, Null, "", AttrText("Nothing to do").SetFont(StdFont().Italic()));
@@ -446,7 +443,7 @@ again:
 			url = GetGitUrl(repo_dir);
 			if(url.GetCount())
 				sys.Log("git origin url: " + url, Gray());
-			
+
 		}
 		if(svn) {
 			url = GetSvnUrl(repo_dir);
@@ -462,31 +459,30 @@ again:
 			if(action == REPOSITORY)
 				break;
 			String path = list.Get(l, 1);
+
 			bool revert = list.Get(l, 2) == 1;
-			if(svn && svn->commit.IsEnabled() && svn->commit) {
-				if(action == MESSAGE && commit) {
-					String msg = list.Get(l, 3);
-					if(sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\""))
-						msgmap.GetAdd(repo_dir) = msg;
-					l++;
-					break;
+
+			bool git_commit = git && git->commit.IsEnabled() && git->commit;
+			bool svn_commit = svn && svn->commit.IsEnabled() && svn->commit;
+
+			if(action == MESSAGE) {
+				String msg = list.Get(l, 3);
+				if(commit) {
+					if(svn_commit && sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\"") == 0 ||
+				       git_commit && sys.Git(repo_dir, "commit -a -m \"" << msg << "\"") == 0)
+						msg.Clear();
 				}
-				
-				if(SvnFile(sys, filelist, action, path, revert))
-					commit = true;
+				msgmap.GetAdd(repo_dir) = msg;
+				l++;
+				break;
 			}
-			if(git && git->commit.IsEnabled() && git->commit) {
-				if(action == MESSAGE && commit) {
-					String msg = list.Get(l, 3);
-					if(sys.Git(repo_dir, "commit -a -m \"" << msg << "\""))
-						msgmap.GetAdd(repo_dir) = msg;
-					l++;
-					break;
-				}
-				
-				if(GitFile(sys, action, path, revert))
-					commit = true;
-			}
+
+			if(svn_commit && SvnFile(sys, filelist, action, path, revert))
+				commit = true;
+
+			if(git_commit && GitFile(sys, action, path, revert))
+				commit = true;
+
 			l++;
 		}
 		if(svn && svn->update)
@@ -497,8 +493,6 @@ again:
 					int action = list.Get(l, 0);
 					if(action == REPOSITORY)
 						break;
-					if(action == MESSAGE)
-						msgmap.GetAdd(repo_dir) = list.Get(l, 3);
 					l++;
 				}
 				continue;
@@ -509,6 +503,8 @@ again:
 	sys.Log("Done", Gray());
 	ResetBlitz();
 	sys.Perform();
+	
+	msgmap.RemoveIf([&](int i) { return IsNull(msgmap[i]); });
 }
 
 bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool revert)
@@ -517,7 +513,7 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 	String file = GetFileName(path);
 	if(revert) {
 		if(action != ADD)
-			sys.Git(repo_dir, "checkout \"" + file + "\"");
+			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
 	if(action == ADD)
