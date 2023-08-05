@@ -420,6 +420,7 @@ void AppMain___()
 					SyncRefs();
 					ide.TriggerIndexer();
 				}
+				Thread::StartNice(IdeBackgroundThread);
 				ide.FileSelected();
 				ide.isscanning--;
 				ide.MakeTitle();

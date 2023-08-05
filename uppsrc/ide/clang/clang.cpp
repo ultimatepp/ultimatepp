@@ -37,7 +37,9 @@ String GetClangInternalIncludes()
 {
 	INTERLOCKED {
 		static String includes;
-		ONCELOCK {
+		static int cpp_version = 0;
+		if(cpp_version != LibClangCppVersion) {
+			cpp_version = LibClangCppVersion;
 			String dummy = ConfigFile("dummy.cpp");
 			Upp::SaveFile(dummy, String());
 			String h = Sys(
@@ -46,7 +48,7 @@ String GetClangInternalIncludes()
 			#else
 					"clang++"
 			#endif
-					" -v -x c++ -E " + dummy
+					" -v -x -std=c++" + AsString(cpp_version) + " c++ -E " + dummy
 			);
 			DeleteFile(dummy);
 			h.Replace("\r", "");
@@ -115,7 +117,7 @@ bool Clang::Parse(const String& filename_, const String& content,
 	String cmdline;
 	
 	if(IsCppSourceFile(filename))
-		cmdline << " -std=c++14 -xc++ " << LibClangCommandLine() << " ";
+		cmdline << " -std=c++" + AsString(LibClangCppVersion) + " -xc++ " << LibClangCommandLine() << " ";
 	else
 		cmdline << " -xc " << LibClangCommandLineC() << " ";
 

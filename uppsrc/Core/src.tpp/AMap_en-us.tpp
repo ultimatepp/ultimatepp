@@ -495,6 +495,11 @@ sorted`_list.GetCount()).&]
 [s7; [*C@3 sl]-|Sorted Vector of positions to remove.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:AMap`:`:RemoveIf`(P`):%- [@(0.0.255) template] <[@(0.0.255) typename] 
+P> [@(0.0.255) void] [* RemoveIf](P [*@3 p])&]
+[s2; Removes all elements whose index satisfies predicate [%-*@3 p].&]
+[s3;%- &]
+[s4;%- &]
 [s5;:AMap`:`:RemoveKey`(const K`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) const]_[*@4 K
 ][@(0.0.255) `&]_[*@3 k])&]
 [s2; Removes all elements with the specified value. This is a slow 

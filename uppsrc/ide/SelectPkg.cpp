@@ -793,7 +793,7 @@ void SelectPackageDlg::Load(const String& find)
 						if(IsNull(tm)) // package icon does not exist
 							d.icon = Null;
 						else
-						if(tm != d.itm) { // chached package icon outdated
+						if(tm != d.itm || d.icon.GetSize().cx != DPI(16)) { // chached package icon outdated
 							d.icon = StreamRaster::LoadFileAny(icon_path);
 							d.itm = tm;
 						}

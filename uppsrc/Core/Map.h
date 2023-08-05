@@ -141,7 +141,7 @@ public:
 
 	void     Remove(const int *sl, int n)           { key.Remove(sl, n); value.Remove(sl, n); }
 	void     Remove(const Vector<int>& sl)          { Remove(sl, sl.GetCount()); }
-	template <typename P> void RemoveIf(P p)        { Remove(FindAlli(p)); }
+	template <typename P> void RemoveIf(P p)        { Remove(FindAlli(*this, p)); }
 
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio);

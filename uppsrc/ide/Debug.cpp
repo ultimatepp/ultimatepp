@@ -149,7 +149,6 @@ void Ide::ExecuteBinary()
 	int exitcode;
 	switch(runmode) {
 	case RUN_WINDOW:
-		HideBottom();
 		h.Launch(cmdline, ShouldHaveConsole());
 		break;
 	case RUN_CONSOLE:
@@ -160,7 +159,6 @@ void Ide::ExecuteBinary()
 		PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
 		break;
 	case RUN_FILE: {
-			HideBottom();
 			String fn;
 			if(IsNull(stdout_file))
 				fn = ForceExt(target, ".ol");
@@ -339,7 +337,6 @@ void Ide::BuildAndDebug(bool runto)
 	Host host;
 	CreateHostRunDir(host);
 	host.ChDir(Nvl(rundir, GetFileFolder(target)));
-	HideBottom();
 	editor.Disable();
 
 	bool console = ShouldHaveConsole();
