@@ -365,6 +365,12 @@ void Ide::SetupFormat() {
 	DlSpellerLangs(edt.spellcheck_comments);
 	
 	web_search.Load();
+	
+	assist.std_cpp.Add(14, "C++ 14")
+	              .Add(17, "C++ 17")
+	              .Add(20, "C++ 20")
+	              .Add(23, "C++ 23")
+	;
 
 	rtvr
 		(hlt.hilite_scope, hs)
@@ -420,6 +426,7 @@ void Ide::SetupFormat() {
 		(assist.parsed_files, ParsedFiles)
 		(assist.no_empty_autocomplete, editor.no_empty_autocomplete)
 		(assist.blk0_header, blk0_header)
+		(assist.std_cpp, LibClangCppVersion)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)

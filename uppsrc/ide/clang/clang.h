@@ -13,6 +13,7 @@ extern bool AutoIndexer;
 extern bool RelaxedIndexerDependencies; // basically: Do not rescan all .cpps on .h change
 extern int  IndexerThreads;
 extern int  ParsedFiles;
+extern int  LibClangCppVersion;
 
 void ClangConfigSerialize(Stream& s);
 void ClangConfigSetDefaults();
