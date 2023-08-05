@@ -481,6 +481,7 @@ private:
 	
 	void        FindLayout(const String& name, const String& item_name);
 	String      GetLayoutName() const;
+	String      GetItemId() const;
 
 	bool        Load(const char *filename, byte charset);
 
@@ -514,6 +515,7 @@ public:
 
 	void FindLayout(const String& name, const String& item) { designer.FindLayout(name, item); }
 	String GetCurrentLayout() const             { return designer.GetLayoutName(); }
+	String GetCurrentItem() const               { return designer.GetItemId(); }
 
 	LayDesigner()                               { parent.Add(designer.DesignerCtrl().SizePos()); }
 };

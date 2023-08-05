@@ -418,7 +418,7 @@ void InstantSetup()
 			bmSet(bm, "BUILDER", "GCC");
 			bmSet(bm, "COMPILER", "");
 			bmSet(bm, "COMMON_OPTIONS", "-msse2 -D__CRT__NO_INLINE");
-			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++14");
+			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++17");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_LINK", "");
 			bmSet(bm, "COMMON_FLAGS", "");

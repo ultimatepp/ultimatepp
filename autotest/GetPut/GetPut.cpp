@@ -21,6 +21,15 @@ CONSOLE_APP_MAIN
 	DUMP(data);
 	DUMP(data.Get("0", "ZERO"));
 	DUMP(data.Get("1", "ONE"));
+
+	VectorMap<String, int> vm;
+	vm.GetAdd("getadd", 1);
+	vm.GetPut("getput", 2);
+	DDUMP(vm);
+	
+	vm.Unlink(0);
+	vm.GetPut("getput2", 3);
+	DDUMP(vm);
 	
 	CheckLogEtalon();
 }

@@ -702,6 +702,24 @@ void Ide::DoEditAsText(const String& path)
 	editashex.RemoveKey(editfile);
 }
 
+String GetLayItemId(const String& l)
+{
+	try {
+		CParser p(l); // ITEM(Upp::ArrayCtrl, list, LeftPosZ(8, 296).TopPosZ(8, 448))
+		if(p.Id("ITEM") || p.Id("UNTYPED")) {
+			p.Char('(');
+			if(p.IsId()) p.ReadId();
+			p.Char2(':', ':');
+			if(p.IsId()) p.ReadId();
+			p.Char(',');
+			if(p.IsId())
+				return p.ReadId();
+		}
+	}
+	catch(CParser::Error) {}
+	return Null;
+}
+
 void Ide::EditAsText()
 {
 	String path = editfile;
@@ -709,9 +727,11 @@ void Ide::EditAsText()
 		return;
 //	if(!FileExists(path))
 //		return;
-	String layout;
-	if(auto *l = dynamic_cast<LayDesigner *>(~designer))
+	String layout, item;
+	if(auto *l = dynamic_cast<LayDesigner *>(~designer)) {
 		layout = l->GetCurrentLayout();
+		item = l->GetCurrentItem();
+	}
 	DoEditAsText(path);
 	byte cs = editor.GetCharset();
 	int sc = editor.GetSpellcheckComments();
@@ -720,8 +740,14 @@ void Ide::EditAsText()
 	if(layout.GetCount()) {
 		layout = "LAYOUT(" + layout + ",";
 		for(int i = 0; i < editor.GetLineCount(); i++)
-			if(editor.GetUtf8Line(i).StartsWith(layout)) {
+			if(TrimBoth(editor.GetUtf8Line(i)).StartsWith(layout)) {
 				editor.GotoLine(i);
+				if(item.GetCount())
+					for(int j = i + 1; j < editor.GetLineCount(); j++)
+						if(GetLayItemId(editor.GetUtf8Line(j)) == item) {
+							editor.GotoLine(j);
+							break;
+						}
 				break;
 			}
 	}
@@ -730,14 +756,37 @@ void Ide::EditAsText()
 void Ide::EditUsingDesigner()
 {
 	String path = editfile;
-	if (editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
+	if(editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
 		return;
 	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
 	int sc = editor.GetSpellcheckComments();
+	String layout, item;
+	if(ToLower(GetFileExt(editfile)) == ".lay") {
+		int i = editor.GetLine(editor.GetCursor());
+		item = GetLayItemId(editor.GetUtf8Line(i));
+		for(; i >= 0; i--) {
+			String l = editor.GetUtf8Line(i);
+			try {
+				CParser p(l);
+				if(p.Id("LAYOUT")) {
+					p.Char('(');
+					layout = p.ReadId();
+					break;
+				}
+			}
+			catch(CParser::Error) {}
+		}
+		
+	}
 	FlushFile();
 	EditFile0(path, cs, sc);
+	if(layout.GetCount()) {
+		auto *l = dynamic_cast<LayDesigner *>(~designer);
+		if(l)
+			l->FindLayout(layout, item);
+	}
 }
 
 void Ide::AddEditFile(const String& path)
