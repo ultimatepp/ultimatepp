@@ -751,7 +751,6 @@ void SelectPackageDlg::Load(const String& find)
 		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
 			ArrayMap<String, PkData>& nest = data[i];
 			String nest_dir = NormalizePath(upp[i]);
-			DDUMP(nest_dir);
 			for(int i = 0; i < nest.GetCount() && loading; i++) {
 				if(msecs(update) >= 100) { // each 100 ms update the list (and open select dialog after splash screen is closed)
 					if(!IsSplashOpen() && !IsOpen())
@@ -764,7 +763,6 @@ void SelectPackageDlg::Load(const String& find)
 
 				PkData& d = nest[i];
 				String path = nest.GetKey(i);
-				DDUMP(path);
 				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
 					LSLOW(); // this is used for testing only, normally it is NOP
