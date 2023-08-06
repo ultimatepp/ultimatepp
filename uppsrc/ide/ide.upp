@@ -21,7 +21,8 @@ uses
 	Report,
 	Core/SSL,
 	plugin/md,
-	ide/clang;
+	ide/clang,
+	art/BlueBar;
 
 uses(LINTER) ide/Linter;
 
