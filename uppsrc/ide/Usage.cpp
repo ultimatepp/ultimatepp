@@ -235,8 +235,8 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 void Ide::UsageFinish()
 {
 	FFound().Sort(3, [](const Value& va, const Value& vb)->int {
-		const ErrorInfo& a = va.To<ErrorInfo>();
-		const ErrorInfo& b = vb.To<ErrorInfo>();
+		const ListLineInfo& a = va.To<ListLineInfo>();
+		const ListLineInfo& b = vb.To<ListLineInfo>();
 		return CombineCompare(GetFileName(a.file), GetFileName(b.file))
 		                     (a.file, b.file)
 		                     (a.lineno, b.lineno)

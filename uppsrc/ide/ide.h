@@ -1052,7 +1052,7 @@ public:
 		void Clear()            { init = false; file.Clear(); wspc_paths.Clear(); }
 	};
 
-	struct ErrorInfo {
+	struct ListLineInfo { // either error or found list (find in files / usage)
 		String file;
 		int    lineno;
 		int    linepos;
@@ -1060,8 +1060,9 @@ public:
 		int    kind;
 		String message;
 		String error_pos;
+		String line;
 
-		ErrorInfo() { lineno = linepos = kind = len = 0; }
+		ListLineInfo() { lineno = linepos = kind = len = 0; }
 	};
 
 	FindLineErrorCache error_cache;
@@ -1100,10 +1101,10 @@ public:
 	};
 
 	bool      FindLineError(int l);
-	void      GoToError(const ErrorInfo& f, bool error);
+	void      GoToError(const ListLineInfo& f, bool error);
 	void      GoToError(ArrayCtrl& a, bool error);
 
-	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
+	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInfo& f);
 	void      FindError();
 
 	void      FindWildcard();
