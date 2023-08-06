@@ -236,10 +236,7 @@ void TopicEditor::EditMenu(Bar& bar)
 	editor.CutTool(bar);
 	editor.CopyTool(bar);
 	editor.PasteTool(bar);
-	bar.Add(!IsReadOnly() && IsClipboardAvailableText(), "Paste plain text..", [=] {
-		editor.PasteText(AsRichText(ReadClipboardUnicodeText(), editor.GetFormatInfo()));
-	})
-	.Key(K_CTRL_V|K_SHIFT);
+	editor.PastePlainTextTool(bar);
 	editor.InsertImageTool(bar);
 	bar.Separator();
 	editor.UndoTool(bar);
