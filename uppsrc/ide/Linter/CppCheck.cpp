@@ -113,7 +113,7 @@ void CppCheck::DecodeXML(const XmlNode& results)
 				continue;
 			const XmlNode& loc = node["location"];
 			String severity = node.Attr("severity");
-			Ide::ErrorInfo e;
+			Ide::ListLineInfo e;
 			e.file    = loc.Attr("file");
 			e.lineno  = StrInt(loc.Attr("line"));
 			e.linepos = StrInt(loc.Attr("column"));
