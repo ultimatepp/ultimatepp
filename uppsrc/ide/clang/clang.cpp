@@ -48,7 +48,7 @@ String GetClangInternalIncludes()
 			#else
 					"clang++"
 			#endif
-					" -v -x -std=c++" + AsString(cpp_version) + " c++ -E " + dummy
+					" -v -std=c++" + AsString(cpp_version) + " -xc++ -E " + dummy
 			);
 			DeleteFile(dummy);
 			h.Replace("\r", "");

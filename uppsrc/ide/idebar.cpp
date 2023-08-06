@@ -131,7 +131,8 @@ void Ide::InsertAdvanced(Bar& bar)
 
 void Ide::Reformat(Bar& bar)
 {
-	bar.Sub("Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
+	bool b = !editor.IsReadOnly() && !designer;
+	bar.Sub(b, "Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
 }
 
 void Ide::EditSpecial(Bar& menu)

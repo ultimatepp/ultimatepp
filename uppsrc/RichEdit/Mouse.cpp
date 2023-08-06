@@ -294,6 +294,7 @@ void RichEdit::StdBar(Bar& menu)
 					menu.Separator();
 				}
 				PasteTool(menu);
+				PastePlainTextTool(menu);
 				ObjectTool(menu);
 			}
 		}

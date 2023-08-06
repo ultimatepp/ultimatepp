@@ -162,7 +162,7 @@ void TrivialHtmlParser::ReadStyle(Style& fmt, const String& style)
 		auto ReadLengthPar = [&](int& tsize, double psize = 2000) {
 			double l;
 			if(ReadLength(l, psize))
-				tsize = l;
+				tsize = (int)l;
 		};
 		auto ReadLengthParAdd = [&](int& tsize, double psize = 2000) {
 			int n = 0;
@@ -219,7 +219,7 @@ void TrivialHtmlParser::ReadStyle(Style& fmt, const String& style)
 		auto FontSize = [&] {
 			double l;
 			if(ReadLength(l, parent_fmt.GetHeight()))
-				fmt.Height(l);
+				fmt.Height((int)l);
 			else {
 				l = base_font.GetHeight();
 				if(p.Id("xx-small"))
@@ -255,7 +255,7 @@ void TrivialHtmlParser::ReadStyle(Style& fmt, const String& style)
 					else
 						return false;
 				}
-				fmt.Height(l);
+				fmt.Height((int)l);
 			}
 			return true;
 		};
@@ -325,10 +325,10 @@ void TrivialHtmlParser::ReadStyle(Style& fmt, const String& style)
 					break;
 			}
 			switch(m.GetCount()) {
-			case 1: r.left = r.right = r.top = r.bottom = m[0]; break;
-			case 2: r.left = r.right = m[1]; r.top = r.bottom = m[0]; break;
-			case 3: r.left = r.right = m[1]; r.top = m[0]; r.bottom = m[2]; break;
-			case 4: r.left = m[3]; r.right = m[1]; r.top = m[0]; r.bottom = m[2]; break;
+			case 1: r.left = r.right = r.top = r.bottom = (int)m[0]; break;
+			case 2: r.left = r.right = (int)m[1]; r.top = r.bottom = (int)m[0]; break;
+			case 3: r.left = r.right = (int)m[1]; r.top = (int)m[0]; r.bottom = (int)m[2]; break;
+			case 4: r.left = (int)m[3]; r.right = (int)m[1]; r.top = (int)m[0]; r.bottom = (int)m[2]; break;
 			default:;
 			}
 		};

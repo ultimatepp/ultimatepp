@@ -1,7 +1,7 @@
 topic "U++ FAQ";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b167;*4 $$3,5#07864147445237544204411237157677:title]
+[b167;t300;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -35,7 +35,7 @@ that you have created inside this directory, e.g. in MyApps folder.&]
 [s22; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ Yes.]&]
 [s23; Can I create OCX Control using U`+`+?&]
 [s22; [^topic`:`/`/Ole`/srcdoc`/ocx`$en`-us^ Yes you can.]&]
-[s23; When compiling using Visual C`+`+ 2005 compiler, I am getting 
+[s23; When compiling using Visual C`+`+ 2021 compiler, I am getting 
 errors like:&]
 [s0;l128; [/C1 F:`\upp`\uppsrc`\CtrlLib/CtrlLib.t : warning C4819: The 
 file contains a character that cannot be represented in the current 
@@ -200,4 +200,16 @@ more information in our official documentation available on our
 with U`+`+. If this doesn`'t help, you can always ask you question 
 on our official [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s23; The image on this site is too small. How can I make it bigger?&]
-[s22; Simply, click on it.]]
+[s22; Simply, click on it.&]
+[s23; What is the official name of the project?&]
+[s22;%- As of today, [* the official name of the project is U`+`+]. 
+This name should only be used in the context of our project.&]
+[s22;%- In the past, we used the name of Ultimate`+`+. However, we 
+came to the conclusion that this name doesn`'t fit well with 
+our project and has certain drawbacks. [* U`+`+ is simple, powerful, 
+and sufficient for our needs].&]
+[s22;%- If you plan to write an article or book about our framework, 
+please make sure you use our current official name. From a marketing 
+point of view, we need to focus only on one name and not use 
+any substitutions or alternative names.&]
+[s22; ]]
