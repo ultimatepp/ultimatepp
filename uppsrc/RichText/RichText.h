@@ -524,7 +524,7 @@ String EncodeHtml(const RichText& text, Index<String>& css,
 	return EncodeHtml(text, css, links, VectorMap<String, String>(), path, base, z);
 }
 
-RichText ParseTrivialHtml(const char *html, Font base_font = Serif(15 * 600 / 96.0));
+RichText ParseTrivialHtml(const char *html, Font base_font = Serif(int(15 * 600 / 96.0)));
 
 struct SimplePageDraw : PageDraw {
 	Draw& w;

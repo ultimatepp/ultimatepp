@@ -115,12 +115,13 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
 
 void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, int count)
 {
-	ErrorInfo f;
+	ListLineInfo f;
 	f.file = fn;
 	f.lineno = ln;
 	f.linepos = pos + 1;
 	f.len = count;
 	f.kind = 0;
+	f.line = line;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + (line.GetCount() > 5000 ? line.Mid(0, 5000) : line);
 	FFound().Add(fn, ln, f.message, RawToValue(f));
@@ -291,7 +292,7 @@ void Ide::FindInFiles(bool replace) {
 						break;
 				}
 				else {
-					ErrorInfo f;
+					ListLineInfo f;
 					f.file = files[i];
 					f.lineno = 1;
 					f.linepos = 0;
@@ -538,8 +539,8 @@ void Ide::ReplaceFound(ArrayCtrl& list)
 	Index<String> ch;
 	for(int i = 0; i < list.GetCount() && ch.GetCount() < 6; i++) {
 		Value v = list.Get(i, "INFO");
-		if(v.Is<ErrorInfo>()) {
-			const ErrorInfo& f = ValueTo<ErrorInfo>(v);
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
 			if(*f.message == '\1') {
 				Vector<String> h = Split(~f.message + 1, '\1', false);
 				if(h.GetCount() > 3 && f.linepos > 0)
@@ -577,8 +578,8 @@ void Ide::ReplaceFound(ArrayCtrl& list)
 	for(int i = 0; i < list.GetCount(); i++) {
 		Value v = list.Get(i, "INFO");
 		bool err = true;
-		if(v.Is<ErrorInfo>()) {
-			const ErrorInfo& f = ValueTo<ErrorInfo>(v);
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
 			if(*f.message == '\1') {
 				Vector<String> h = Split(~f.message + 1, '\1', false);
 				if(h.GetCount() > 3) {
@@ -659,9 +660,9 @@ void Ide::ReplaceFound(ArrayCtrl& list)
 					if(i >= 0 && i < list.GetCount()) {
 						Value v = list.Get(i, "INFO");
 						bool err = true;
-						if(v.Is<ErrorInfo>()) {
-							const ErrorInfo& f0 = ValueTo<ErrorInfo>(v);
-							ErrorInfo f = f0;
+						if(v.Is<ListLineInfo>()) {
+							const ListLineInfo& f0 = ValueTo<ListLineInfo>(v);
+							ListLineInfo f = f0;
 							if(*f.message == '\1') {
 								String l = line.value.a;
 								f.linepos = r.a + 1;

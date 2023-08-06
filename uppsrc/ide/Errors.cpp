@@ -1,6 +1,6 @@
 #include "ide.h"
 
-bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f)
+bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInfo& f)
 {
 	if(!cache.init) {
 		VectorMap<String, String> bm = GetMethodVars(method);
@@ -184,7 +184,7 @@ bool Ide::Next(ArrayCtrl& a, int d)
 			c += d;
 			if(c >= 0 && c < a.GetCount()) {
 				Value v = a.Get(c, "INFO");
-				if(v.Is<ErrorInfo>() && !IsNull(v.To<ErrorInfo>().file)) {
+				if(v.Is<ListLineInfo>() && !IsNull(v.To<ListLineInfo>().file)) {
 					a.SetCursor(c);
 					return true;
 				}
@@ -238,7 +238,7 @@ void Ide::SetErrorEditor()
 	Vector<String> errorfiles;
 	FindLineErrorCache cache;
 	for(int i = 0; i < console.GetLineCount(); i++) {
-		ErrorInfo f;
+		ListLineInfo f;
 		if(FindLineError(console.GetUtf8Line(i), cache, f)) {
 			String file = NormalizePath(f.file);
 		#ifdef PLATFORM_WIN32
@@ -253,7 +253,7 @@ void Ide::SetErrorEditor()
 	SetErrorFiles(errorfiles);
 }
 
-void Ide::GoToError(const ErrorInfo& f, bool error)
+void Ide::GoToError(const ListLineInfo& f, bool error)
 {
 	if(IsNull(f.file))
 		return;
@@ -277,12 +277,12 @@ void Ide::GoToError(const ErrorInfo& f, bool error)
 void Ide::GoToError(ArrayCtrl& a, bool error)
 {
 	Value v = a.Get("INFO");
-	if(v.Is<ErrorInfo>())
-		GoToError(ValueTo<ErrorInfo>(v), error);
+	if(v.Is<ListLineInfo>())
+		GoToError(ValueTo<ListLineInfo>(v), error);
 }
 
 bool Ide::FindLineError(int l) {
-	ErrorInfo f;
+	ListLineInfo f;
 	FindLineErrorCache cache;
 	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
 		GoToError(f, true);
@@ -319,7 +319,7 @@ void Ide::PutLinkingEnd(bool ok)
 		error.Add(Null, Null, AttrText("Linking has failed").Bold()
 			                  .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color));
 		for(int i = 0; i < linking_line.GetCount(); i++) {
-			ErrorInfo f;
+			ListLineInfo f;
 			if(!FindLineError(linking_line[i], error_cache, f)) {
 				f.file = Null;
 				f.lineno = Null;
@@ -469,7 +469,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		linking_line.Add(line);
 		return;
 	}
-	ErrorInfo f;
+	ListLineInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		if(assist)
 			f.kind = 1;
@@ -498,7 +498,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 	}
 	else {
 		int q = line.FindAfter(" from "); // GCC style "included from"
-		ErrorInfo fi;
+		ListLineInfo fi;
 		if(q >= 0 && FindLineError(line.Mid(q), error_cache, fi)) {
 			fi.message = line;
 			prenotes.Add(RawToValue(fi));
@@ -519,7 +519,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 				iserrorpos = false;
 		int i = n.GetCount() - 1;
 		if(iserrorpos && i >= 0) {
-			ErrorInfo f0 = ValueTo<ErrorInfo>(n[i]);
+			ListLineInfo f0 = ValueTo<ListLineInfo>(n[i]);
 			f0.error_pos = f.message;
 			n.Set(i, RawToValue(f0));
 		}
@@ -620,7 +620,7 @@ void Ide::SelError()
 			ValueArray n = v;
 			int ii = error.GetCursor();
 			for(int i = 0; i < n.GetCount(); i++) {
-				const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
+				const ListLineInfo& f = ValueTo<ListLineInfo>(n[i]);
 				bool ok = true;
 				for(const char *s = f.message; *s; s++)
 					if((byte)*s >= 128) { // clang UTF-8 is messy, just ignore those notes
