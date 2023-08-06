@@ -159,8 +159,8 @@ String Ide::GetFoundText(const ArrayCtrl& list)
 	if(list.GetCount()) {
 		Value v = list.Get(0, "INFO");
 		bool err = true;
-		if(v.Is<ErrorInfo>()) {
-			const ErrorInfo& f = ValueTo<ErrorInfo>(v);
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
 			if(*f.message == '\1') {
 				Vector<String> h = Split(~f.message + 1, '\1', false);
 				if(h.GetCount() > 3)

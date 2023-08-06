@@ -103,7 +103,7 @@ void Ide::Valgrind()
 										p.Skip();
 								}
 								if(dir.GetCount() && file.GetCount() && !IsNull(line)) {
-									ErrorInfo f;
+									ListLineInfo f;
 									String p = AppendFileName(dir, file);
 									f.lineno = Null;
 									if(FileExistsCached(p)) {
@@ -127,7 +127,7 @@ void Ide::Valgrind()
 					else
 						p.Skip();
 				}
-				ErrorInfo f;
+				ListLineInfo f;
 				f.file = path;
 				f.lineno = lineno;
 				f.linepos = 0;
