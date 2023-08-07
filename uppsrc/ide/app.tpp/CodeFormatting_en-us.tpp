@@ -50,14 +50,16 @@ on other things, such as the architecture of your application.&]
 lang`-format]. This is an industry standard`-tool widely used 
 among C/C`+`+ developers. It not only supports C`+`+, but other 
 languages as well, such as C, C#, JavaScript, JSON, and Objective`-C.&]
+[s5; The current version of formatting was introduced in 2023.1 version. 
+&]
 [s3;:2: 2. Formatting&]
 [s22;:2`_1: 2.1 Available options&]
 [s5; To reformat code, you can use several strategies:&]
-[s5;l160;i150;O0; [* Reformat code]&]
-[s5;l160;i150;O0; [* Reformat code with options..]&]
+[s5;l160;i150;O0; [* Reformat code ](Ctrl/⌘`+I)&]
+[s5;l160;i150;O0; [* Reformat code with options..] (Ctrl/⌘`+Shift`+I)&]
 [s5;l160;i150;O0; Reformat JSON&]
 [s5;l160;i150;O0; Reformat XML&]
-[s5;l160;i150;O0; Reformat comment paragraph&]
+[s5;l160;i150;O0; Reformat comment paragraph (Alt/⌃`+R)&]
 [s5; In this paragraph, we will discuss each of these options separately. 
 The above code formatting options can be found in the `"Assist 
 `-> Reformat`" menu.&]
