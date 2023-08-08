@@ -34,12 +34,12 @@ options]&]
 code]&]
 [s0;     [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_3^ 2.3 Reformat 
 code with options..]&]
-[s0; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_3^     ][^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_4^ 2
-.4 Reformat JSON]&]
-[s0; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_3^     ][^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_5^ 2
-.5 Reformat XML]&]
-[s0; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_3^     ][^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_6^ 2
-.6 Reformat Comment Paragraph]&]
+[s0;     [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_4^ 2.4 Reformat 
+JSON]&]
+[s0;     [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_5^ 2.5 Reformat 
+XML]&]
+[s0;     [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#2`_6^ 2.6 Reformat 
+Comment Paragraph]&]
 [s0; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#3^ 3. Troubleshooting]&]
 [s0;     [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us`#3`_1^ 3.1 The 
 clang`-format executable has not been found]&]
