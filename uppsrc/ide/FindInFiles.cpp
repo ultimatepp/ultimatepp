@@ -307,6 +307,12 @@ void Ide::FindInFiles(bool replace) {
 	}
 }
 
+void Ide::FFoundSetIcon(const Image& m)
+{
+	FFound();
+	ffound[0]->icon = m;
+}
+
 void Ide::FFoundFinish(bool replace)
 {
 	ArrayCtrl& ff = FFound();

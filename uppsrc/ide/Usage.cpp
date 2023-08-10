@@ -214,6 +214,7 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
 	SortByKey(CodeIndex());
+	int kind = Null;
 	for(int src = 0; src < 2; src++)
 		for(const auto& f : ~CodeIndex()) {
 			if(!isstatic || f.key == editfile)
@@ -222,6 +223,8 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 						AddReferenceLine(f.key, mpos, name, unique);
 					};
 					for(const AnnotationItem& m : f.value.items) {
+						if(m.id == id)
+							kind = m.kind;
 						if(ids.Find(m.id) >= 0 || istype && (m.id.StartsWith(constructor) || m.id.StartsWith(destructor)))
 							Add(m.pos);
 					}
@@ -230,6 +233,9 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 							Add(m.pos);
 				}
 		}
+	
+	if(!IsNull(kind))
+		FFoundSetIcon(CxxIcon(kind));
 }
 
 void Ide::UsageFinish()
