@@ -209,7 +209,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 
 void Ide::UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique)
 {
-//	DLOG("UsageId " << name << " " << id << " " << ids << " istype: " << istype << " " << unique << " static " << isstatic);
+	// DLOG("UsageId " << name << " " << id << " " << ids << " istype: " << istype << " " << unique << " static " << isstatic);
 	int q = id.ReverseFind("::");
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
