@@ -156,8 +156,8 @@ void RightTabs::FrameAddSize(Size& sz)
 
 String Ide::GetFoundText(const ArrayCtrl& list)
 {
-	if(list.GetCount()) {
-		Value v = list.Get(0, "INFO");
+	for(int i = 0; i < list.GetCount(); i++) {
+		Value v = list.Get(i, "INFO");
 		bool err = true;
 		if(v.Is<ListLineInfo>()) {
 			const ListLineInfo& f = ValueTo<ListLineInfo>(v);

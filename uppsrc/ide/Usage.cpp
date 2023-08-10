@@ -209,6 +209,7 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 
 void Ide::UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique)
 {
+//	DLOG("UsageId " << name << " " << id << " " << ids << " istype: " << istype << " " << unique << " static " << isstatic);
 	int q = id.ReverseFind("::");
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
@@ -225,9 +226,8 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 							Add(m.pos);
 					}
 					for(const ReferenceItem& m : f.value.refs)
-						if(ids.Find(m.id) >= 0) {
+						if(ids.Find(m.id) >= 0)
 							Add(m.pos);
-						}
 				}
 		}
 }
@@ -284,7 +284,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 		Index<String> ids, unique;
 		ids.Add(m.id);
 		NewFFound();
-		UsageId(name, m.id, ids, IsStruct(m.kind), m.isstatic, unique);
+		UsageId(name, m.id, ids, IsStruct(m.kind), false, unique);
 		UsageFinish();
 	};
 
