@@ -112,18 +112,17 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 			image = GetRaw(mode, id).image; // try to load from alternative iml
 		if(IsNull(image)) { // we do not have specific image for given mode, need to convert
 			ImageIml im;
-			if(mode & GUI_MODE_DARK) {
-				im = GetRaw(0, id + "__DARK");
+			if(mode & GUI_MODE_UHD) {
+				im = GetRaw(GUI_MODE_NORMAL, id + "__UHD");
 				if(IsNull(im.image))
-					im = GetRaw(GUI_MODE_DARK, id);
-				if(IsNull(im.image)) { // we do not have dark variant
-					if(mode & GUI_MODE_UHD) {
-						im = GetRaw(GUI_MODE_NORMAL, id + "__UHD");
-						if(IsNull(im.image))
-							im = GetRaw(GUI_MODE_UHD, id);
-					}
-				}
+					im = GetRaw(GUI_MODE_UHD, id);
 			}
+			if(IsNull(im.image))
+				if(mode & GUI_MODE_DARK) {
+					im = GetRaw(0, id + "__DARK");
+					if(IsNull(im.image))
+						im = GetRaw(GUI_MODE_DARK, id);
+				}
 			if(IsNull(im.image))
 				im = GetRaw(GUI_MODE_NORMAL, id);
 			if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
