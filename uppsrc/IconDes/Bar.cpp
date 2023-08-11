@@ -240,8 +240,22 @@ struct CachedIconImage : public Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                   Color ink, Color paper, dword style) const
 	{
-		w.DrawRect(r, paper);
-		Image m = q;
+		dword flags = 0;
+		Image m;
+		if(q.Is<Tuple<Image, dword>>()) {
+			const Tuple<Image, dword>& qq = q.To<Tuple<Image, dword>>();
+			m = qq.a;
+			flags = qq.b;
+		}
+		if(q.Is<Image>())
+			m = q;
+
+		if(style & (CURSOR|SELECT))
+			w.DrawRect(r, paper);
+		else
+			w.DrawRect(r, flags & IML_IMAGE_FLAG_DARK ? (IsDarkTheme() ? SColorPaper() : Black())
+			                                          : (!IsDarkTheme() ? SColorPaper() :  White()));
+
 		if(IsNull(m))
 			return;
 		Size rsz = r.GetSize();
@@ -261,7 +275,13 @@ struct CachedIconImage : public Display {
 	}
 	virtual Size GetStdSize(const Value& q) const
 	{
-		Image m = q;
+		Image m;
+		if(q.Is<Tuple<Image, dword>>()) {
+			const Tuple<Image, dword>& qq = q.To<Tuple<Image, dword>>();
+			m = qq.a;
+		}
+		if(q.Is<Image>())
+			m = q;
 		if(IsNull(m))
 			return Size(0, 0);
 		Size isz = m.GetSize();

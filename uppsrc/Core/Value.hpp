@@ -248,6 +248,7 @@ inline const T& Value::To() const
 	else
 	if(t < 255 && Is((byte)t))
 		return GetSmallRaw<T>();
+	// DLOG(String().Cat() << "Invalid value conversion: " << GetName() << " -> " << typeid(T).name());
 	throw ValueTypeError(String().Cat() << "Invalid value conversion: "
 	                     << GetName() << " -> " << typeid(T).name(),
 	                     *this, t);

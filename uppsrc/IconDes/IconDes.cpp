@@ -46,7 +46,7 @@ void IconDes::SyncShow()
 		iconshow.image = image;
 		iconshow.show_small = show_small;
 		iconshow.show_other = show_other;
-		ilist.Set(2, image);
+		ilist.Set(2, RawToValue(MakeTuple(image, c.flags)));
 	}
 	iconshow.Refresh();
 }
