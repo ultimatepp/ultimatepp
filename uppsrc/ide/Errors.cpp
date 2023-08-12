@@ -262,7 +262,24 @@ void Ide::GoToError(const ListLineInfo& f, bool error)
 	EditFile(file);
 	int lp = max(f.linepos - 1, 0);
 	int l = f.lineno - 1;
-	int pos = editor.GetPos(error ? editor.GetLineNo(l) : l, lp);
+	int pos;
+	if(error)
+		l = editor.GetLineNo(l);
+	else {
+		String ln = TrimLeft(f.line);
+		if(ln.GetCount())
+			for(int i = 0; i < 200; i++) {
+				if(l - i >= 0 && TrimLeft(editor.GetUtf8Line(l - i)) == ln) {
+					l = l - i;
+					break;
+				}
+				if(l + i < editor.GetLineCount() && TrimLeft(editor.GetUtf8Line(l + i)) == ln) {
+					l = l + i;
+					break;
+				}
+			}
+	}
+	pos = editor.GetPos(l, lp);
 	editor.SetCursor(pos);
 	if(*f.message == '\1') {
 		Vector<String> h = Split(~f.message + 1, '\1', false);
