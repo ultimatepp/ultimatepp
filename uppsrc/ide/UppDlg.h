@@ -437,6 +437,8 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	void Serialize(Stream& s);
 	void SaveOptions();
 	void SaveOptionsLoad();
+	
+	void MergeNests();
 
 	void Empty();
 	void FileEmpty();

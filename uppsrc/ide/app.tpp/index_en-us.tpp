@@ -31,6 +31,7 @@ Assemblies and Nests]&]
 Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us^ Command 
 line arguments]&]
+[s0;l224; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us^ Code Formatting]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Blitz`$en`-us^ BLITZ]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]

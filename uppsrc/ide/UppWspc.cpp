@@ -904,7 +904,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 			.Help("Insert file relative to current package");
 		menu.Add(!isaux, "Insert topic++ group..", TopicImg::IGroup(), THISBACK(AddTopicGroup));
 	}
-	menu.Add("Insert separator..", IdeImg::Separator(), [=] { AddSeparator(); })
+	menu.Add("Insert separator..", IdeImg::SeparatorOpen(), [=] { AddSeparator(); })
 		.Help("Add text separator line");
 	if(!isaux) {
 		menu.Add("Insert special", THISBACK(SpecialFileMenu))

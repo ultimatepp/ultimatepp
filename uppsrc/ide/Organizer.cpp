@@ -674,33 +674,58 @@ PackageEditor::PackageEditor()
 	bold <<=
 	italic <<= THISBACK(SaveOptionsLoad);
 	
-	merge << [=] {
-		const Workspace& wspc = GetIdeWorkspace();
-		if(wspc.GetCount() == 0)
-			return;
-		Vector<String> nests = GetUppDirs();
-		String app_nest = NormalizePath(nests[0]);
-		Progress pi;
-		Vector<String> tocopy, tocopy_nest;
-		for(int i = 0; i < wspc.GetCount(); i++) {
-			String pkg_name = wspc[i];
-			String pkg_dir = GetFileFolder(PackagePath(pkg_name));
-			String pkg_nest = GetPackagePathNest(pkg_dir);
-			if(NormalizePath(GetPackagePathNest(pkg_dir)) != app_nest) {
-				tocopy.Add(pkg_name);
-				tocopy_nest.Add(pkg_nest);
-			}
-		}
-		if(PromptOKCancel("Following packages will be copied to [* \1" + app_nest + "\1]:&&\1" + Join(tocopy, "\n"))) {
-			Progress pi;
-			for(int i = 0; i < tocopy.GetCount(); i++)
-				CopyFolder(AppendFileName(app_nest, tocopy[i]), AppendFileName(tocopy_nest[i], tocopy[i]), &pi);
-		}
-		ScanWorkspace();
-		SyncWorkspace();
-	};
+	merge << [=] { MergeNests(); };
 
 	FileCursor();
+}
+
+struct MergeNestsDlg : WithMergeNestsLayout<TopWindow> {
+	MergeNestsDlg();
+};
+
+MergeNestsDlg::MergeNestsDlg()
+{
+	CtrlLayoutOKCancel(*this, "Merge nests");
+	list.NoHeader().NoGrid().AddColumn();
+	mode << [=] { dir.Enable(~mode == 1); };
+	dir.SetFilter(CharFilterFileName);
+	dir <<= "imported";
+	mode <<= 1;
+}
+
+void PackageEditor::MergeNests()
+{
+	MergeNestsDlg dlg;
+	const Workspace& wspc = GetIdeWorkspace();
+	if(wspc.GetCount() == 0)
+		return;
+	Vector<String> nests = GetUppDirs();
+	String app_nest = NormalizePath(nests[0]);
+	Progress pi;
+	Vector<String> tocopy, tocopy_nest;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		String pkg_name = wspc[i];
+		String pkg_dir = GetFileFolder(PackagePath(pkg_name));
+		String pkg_nest = GetPackagePathNest(pkg_dir);
+		if(NormalizePath(GetPackagePathNest(pkg_dir)) != app_nest) {
+			dlg.list.Add(pkg_name);
+			tocopy.Add(pkg_name);
+			tocopy_nest.Add(pkg_nest);
+		}
+	}
+	dlg.mode.Set(0, 0, "Copy to " + app_nest);
+	if(dlg.ExecuteOK()) {
+		Progress pi;
+		if(~dlg.mode == 1) {
+			app_nest = AppendFileName(app_nest, ~~dlg.dir);
+			DeleteFolderDeep(app_nest);
+		}
+		for(int i = 0; i < tocopy.GetCount(); i++)
+			if(!CopyFolder(AppendFileName(app_nest, tocopy[i]), AppendFileName(tocopy_nest[i], tocopy[i]), &pi))
+				break;
+	}
+	ScanWorkspace();
+	SyncWorkspace();
 }
 
 void EditPackages(const char *main, const char *startwith, String& cfg) {

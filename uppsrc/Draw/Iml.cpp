@@ -109,25 +109,29 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 		auto Mode = [&](dword m, const char *s) { return mode & m ? String(s) : String(); };
 		image = GetRaw(GUI_MODE_NORMAL, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK")).image;
 		if(IsNull(image))
-			image = GetRaw(mode, id).image;
-		if(IsNull(image)) {
+			image = GetRaw(mode, id).image; // try to load from alternative iml
+		if(IsNull(image)) { // we do not have specific image for given mode, need to convert
 			ImageIml im;
-			if(mode & GUI_MODE_DARK) {
-				im = GetRaw(0, id + "__DARK");
+			if(mode & GUI_MODE_UHD) {
+				im = GetRaw(GUI_MODE_NORMAL, id + "__UHD");
 				if(IsNull(im.image))
-					im = GetRaw(GUI_MODE_DARK, id);
-				if(IsNull(im.image)) {
-					im = GetRaw(GUI_MODE_NORMAL, id);
-					if(!((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
-						im.image = DarkTheme(im.image);
-				}
+					im = GetRaw(GUI_MODE_UHD, id);
 			}
-			else
+			if(IsNull(im.image))
+				if(mode & GUI_MODE_DARK) {
+					im = GetRaw(0, id + "__DARK");
+					if(IsNull(im.image))
+						im = GetRaw(GUI_MODE_DARK, id);
+				}
+			if(IsNull(im.image))
 				im = GetRaw(GUI_MODE_NORMAL, id);
-			if((mode & GUI_MODE_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+			if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
 				im.image = Upscale2x(im.image);
+			if((mode & GUI_MODE_DARK) && !(im.flags & IML_IMAGE_FLAG_DARK) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
+				im.image = DarkTheme(im.image);
 			image = im.image;
 		}
+
 		if(!IsNull(image) && (mode & GUI_MODE_UHD)) // this is to support legacy code mostly
 			SetResolution(image, IMAGE_RESOLUTION_UHD);
 		ScanOpaque(image);

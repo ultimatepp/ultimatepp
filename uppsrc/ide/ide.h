@@ -486,6 +486,7 @@ public:
 
 	struct FoundList : ArrayCtrl {
 		Button freplace;
+		Image  icon;
 		
 		FoundList();
 	};
@@ -1079,6 +1080,7 @@ public:
 	void      ShowError();
 	void      NewFFound();
 	ArrayCtrl& FFound();
+	void      FFoundSetIcon(const Image& m);
 	void      FFoundFinish(bool replace = true);
 	void      ShowFound(ArrayCtrl& list);
 	void      CopyFound(ArrayCtrl& list, bool all);

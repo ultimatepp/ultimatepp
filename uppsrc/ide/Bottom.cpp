@@ -31,7 +31,7 @@ void RightTabs::Add(const Image& img, const String& tip, bool highlight)
 	t.img = img;
 	t.tip = tip;
 	t.highlight = highlight;
-	cx = max(cx, img.GetSize().cx + DPI(80) + DPI(2));
+	cx = max(cx, DPI(1) + max(img.GetWidth(), DPI(16)) + DPI(80) + DPI(2));
 	Repos();
 }
 
@@ -47,17 +47,11 @@ void RightTabs::PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, con
 	w.DrawRect(x, y, cx - 1, 1, fc);
 	w.DrawRect(x + cx - 1, y + 1, 1, cy - 2, fc);
 	w.DrawRect(x, y + cy - 1, cx - 1, 1, fc);
-	Size isz = t.img.GetSize();
-	int ix = 0;
-	int iy = (cy - isz.cy) / 2 + y;
-	w.DrawImage(ix, iy, t.img);
-	int tx = ix + t.img.GetWidth() + DPI(2);
-	int ty = (cy - StdFont().GetCy()) / 2 + y;
-//	if(t.highlight)
-//		w.DrawRect(tx, ty, GetTextSize(t.tip, StdFont()).cx, StdFont().GetCy(),
-//		           HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
 	w.Clip(x, y, cx - 1, cy);
-	w.DrawText(tx, ty, t.tip, StdFont(), t.highlight ? SLtBlue() : SColorText());
+	Size isz = t.img.GetSize();
+	int icx = max(DPI(16), isz.cx);
+	w.DrawImage(x + DPI(1) + (icx - isz.cx) / 2, (cy - isz.cy) / 2 + y, t.img);
+	w.DrawText(x + icx + DPI(3), (cy - StdFont().GetCy()) / 2 + y, t.tip, StdFont(), t.highlight ? SLtBlue() : SColorText());
 	w.End();
 }
 
@@ -156,8 +150,8 @@ void RightTabs::FrameAddSize(Size& sz)
 
 String Ide::GetFoundText(const ArrayCtrl& list)
 {
-	if(list.GetCount()) {
-		Value v = list.Get(0, "INFO");
+	for(int i = 0; i < list.GetCount(); i++) {
+		Value v = list.Get(i, "INFO");
 		bool err = true;
 		if(v.Is<ListLineInfo>()) {
 			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
@@ -185,7 +179,7 @@ void Ide::BTabs()
 		if(!ffound[i])
 			break;
 		String h = GetFoundText(*ffound[i]);
-		btabs.Add(IdeImg::query(), Nvl(h, "Empty"), h.GetCount());
+		btabs.Add(Nvl(ffound[i]->icon, IdeImg::query()), Nvl(h, "Empty"), h.GetCount());
 	}
 }
 

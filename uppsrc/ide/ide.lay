@@ -946,3 +946,11 @@ LAYOUT(ReplaceResultsLayout, 268, 68)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
+LAYOUT(MergeNestsLayout, 444, 196)
+	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 150).TopPosZ(4, 184))
+	ITEM(Upp::Switch, mode, SetLabel(t_("Copy to\nCopy to subfolder")).LeftPosZ(160, 280).TopPosZ(4, 48))
+	ITEM(Upp::EditString, dir, LeftPosZ(216, 224).TopPosZ(36, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+

@@ -36,7 +36,7 @@ void IconDes::SyncList()
 	for(int i = 0; i < slot.GetCount(); i++) {
 		Slot& c = slot[i];
 		if(ToUpper(c.name).Find(s) >= 0)
-			ilist.Add(i, FormatImageName(c), c.image);
+			ilist.Add(i, FormatImageName(c), RawToValue(MakeTuple(c.image, c.flags)));
 	}
 	ilist.ScrollTo(sc);
 	ilist.FindSetCursor(q);
@@ -542,7 +542,7 @@ IconDes::Slot& IconDes::AddImage(const String& name, const Image& image, bool ex
 	c.name = name;
 	c.image = image;
 	c.exp = exp;
-	ilist.Add(q, FormatImageName(c), c.image);
+	ilist.Add(q, FormatImageName(c), RawToValue(MakeTuple(c.image, c.flags)));
 	ilist.GoBegin();
 	return c;
 }

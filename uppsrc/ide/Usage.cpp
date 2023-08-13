@@ -209,10 +209,12 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 
 void Ide::UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique)
 {
+	// DLOG("UsageId " << name << " " << id << " " << ids << " istype: " << istype << " " << unique << " static " << isstatic);
 	int q = id.ReverseFind("::");
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
 	SortByKey(CodeIndex());
+	int kind = Null;
 	for(int src = 0; src < 2; src++)
 		for(const auto& f : ~CodeIndex()) {
 			if(!isstatic || f.key == editfile)
@@ -221,15 +223,19 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 						AddReferenceLine(f.key, mpos, name, unique);
 					};
 					for(const AnnotationItem& m : f.value.items) {
+						if(m.id == id)
+							kind = m.kind;
 						if(ids.Find(m.id) >= 0 || istype && (m.id.StartsWith(constructor) || m.id.StartsWith(destructor)))
 							Add(m.pos);
 					}
 					for(const ReferenceItem& m : f.value.refs)
-						if(ids.Find(m.id) >= 0) {
+						if(ids.Find(m.id) >= 0)
 							Add(m.pos);
-						}
 				}
 		}
+	
+	if(!IsNull(kind))
+		FFoundSetIcon(CxxIcon(kind));
 }
 
 void Ide::UsageFinish()
@@ -284,7 +290,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 		Index<String> ids, unique;
 		ids.Add(m.id);
 		NewFFound();
-		UsageId(name, m.id, ids, IsStruct(m.kind), m.isstatic, unique);
+		UsageId(name, m.id, ids, IsStruct(m.kind), false, unique);
 		UsageFinish();
 	};
 

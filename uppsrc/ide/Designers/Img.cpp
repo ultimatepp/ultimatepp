@@ -32,7 +32,7 @@ bool IsImgFile(const String& path)
 struct ImageViewModule : public IdeModule {
 	virtual String       GetID() { return "ImageViewModule"; }
 	virtual Image FileIcon(const char *path) {
-		return IsImgFile(path) ? IconDesImg::FileIcon() : Null;
+		return IsImgFile(path) ? IdeCommonImg::image() : Null;
 	}
 	virtual IdeDesigner *CreateDesigner(const char *path, byte) {
 		if(IsImgFile(path)) {

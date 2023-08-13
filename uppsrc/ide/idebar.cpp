@@ -662,10 +662,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 void Ide::BuildFileMenu(Bar& menu)
 {
 	bool b = idestate == EDITING && !IdeIsDebugLock();
-	menu.Add(b, "Compile " + GetFileName(editfile), IdeImg::Source(), THISBACK(FileCompile))
+	menu.Add(b, "Compile " + GetFileName(editfile), IdeCommonImg::Source(), THISBACK(FileCompile))
 		.Key(AK_COMPILEFILE)
 		.Help("Compile current file");
-	menu.Add(b, "Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK1(Preprocess, false))
+	menu.AddMenu(b, "Preprocess " + GetFileName(editfile), IdeCommonImg::Header(), THISBACK1(Preprocess, false))
 		.Key(AK_PREPROCESSFILE)
 		.Help("Preprocess current file into temporary file & open in editor");
 	if(findarg(current_builder, "GCC", "CLANG") >= 0)
