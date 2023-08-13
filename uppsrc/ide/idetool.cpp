@@ -186,7 +186,7 @@ void ShowQTF(const String& qtf, const char *title)
 
 	WithStatLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, title);
-	dlg.copy.WhenAction = [=] {
+	dlg.copy << [=] {
 		AppendClipboard(ParseQTF(qtf));
 		PromptOK("The whole content of the text view has been successfully copied to cliboard!");
 	};
