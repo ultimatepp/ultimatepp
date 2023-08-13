@@ -183,11 +183,13 @@ void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileSta
 void ShowQTF(const String& qtf, const char *title)
 {
 	RichText txt = ParseQTF(qtf);
-	ClearClipboard();
-	AppendClipboard(ParseQTF(qtf));
 
 	WithStatLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, title);
+	dlg.copy.WhenAction = [=] {
+		AppendClipboard(ParseQTF(qtf));
+		PromptOK("The whole content of the text view has been successfully copied to cliboard!");
+	};
 	dlg.stat = qtf;
 	dlg.Sizeable().Zoomable();
 	dlg.Run();

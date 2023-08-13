@@ -487,6 +487,7 @@ END_LAYOUT
 LAYOUT(StatLayout, 732, 552)
 	ITEM(Upp::RichTextView, stat, HSizePosZ(8, 8).VSizePosZ(8, 40))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, copy, SetLabel(t_("Copy to clipboard")).LeftPosZ(8, 104).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(SetupFontLayout, 528, 312)
