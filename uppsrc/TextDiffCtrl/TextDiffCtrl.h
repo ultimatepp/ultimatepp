@@ -193,14 +193,15 @@ struct TextDiffCtrl : public Splitter {
 	int  GetSc() const                                     { return left.GetSb(); }
 	void Sc(int sc)                                        { left.SetSb(sc); }
 
-	Callback1<int> WhenLeftLine;
-	Callback1<int> WhenRightLine;
+	Event<int> WhenLeftLine;
+	Event<int> WhenRightLine;
 
 	TextDiffCtrl();
 };
 
 struct DiffDlg : public TopWindow {
 	bool Key(dword key, int count) override;
+	void Close() override;
 
 	TextDiffCtrl         diff;
 	FrameTop<StaticRect> p;
@@ -216,7 +217,7 @@ struct DiffDlg : public TopWindow {
 
 	void Refresh();
 	void Write();
-	void Execute(const String& f);
+	void Set(const String& f);
 
 	static Event<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 
@@ -231,7 +232,8 @@ struct FileDiff : DiffDlg {
 	FrameTop<DataPusher> r;
 
 	virtual void Open();
-	void Execute(const String& f);
+
+	void Finish();
 
 	typedef FileDiff CLASSNAME;
 
@@ -241,7 +243,8 @@ struct FileDiff : DiffDlg {
 
 	FileSel& fs;
 
-	void Execute(const String& lpath, const String& rpath);
+	void Set(const String& f); // second one gets selected with fs
+	void Set(const String& lpath, const String& rpath);
 };
 
 class DirDiffDlg : public TopWindow {

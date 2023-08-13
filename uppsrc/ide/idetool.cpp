@@ -477,7 +477,7 @@ void Ide::DoDirDiff()
 		}
 	});
 
-	static DirDiffDlg dlg;
+	DirDiffDlg& dlg = CreateNewWindow<DirDiffDlg>();
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
 	for(String d : dir) {
@@ -486,14 +486,10 @@ void Ide::DoDirDiff()
 	}
 	if(dir.GetCount() > 1)
 		dlg.Dir1(dir[1]);
-	if(!dlg.IsOpen()) {
-		dlg.SetFont(veditorfont);
-		dlg.Maximize();
-		dlg.Title("Compare directories");
-		dlg.OpenMain();
-	}
-	else
-		dlg.SetFocus();
+	dlg.SetFont(veditorfont);
+	dlg.Maximize();
+	dlg.Title("Compare directories");
+	dlg.OpenMain();
 }
 
 void Ide::DoPatchDiff()

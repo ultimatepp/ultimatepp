@@ -700,8 +700,13 @@ public:
 	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
 	int           animate_indexer = 0, animate_indexer_dir = 0;
 	int           animate_phase = 0;
+	
+	Vector<Ptr<TopWindow>> window;
 
-// ------------------------------------
+	void          NewWindow(TopWindow *win);
+	template<class T, class... Args>
+	T&            CreateNewWindow(Args&&... args)     { T *q = new T(std::forward<Args>(args)...); NewWindow(q); return *q; }
+	void          DeleteWindows();
 
 	Time      config_time;
 	Time      ConfigTime();
@@ -809,12 +814,11 @@ public:
 		String GetOpposite();
 		void   GoOpposite();
 		void   Print();
+		void   DoDiff(FileDiff *diffdlg);
 		void   Diff();
 		void   DiffWith(const String& path);
 		void   DiffFiles(const char *lname, const String& l, const char *rname, const String& r);
 		String LoadConflictFile(const String& n);
-		void   GotoDiffLeft(int line, DiffDlg *df);
-		void   GotoDiffRight(int line, FileDiff *df);
 
 	void      Edit(Bar& menu);
 		bool  IsDesignerFile(const String& path);
@@ -992,6 +996,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
+		void  RunRepoDiff(const String& filepath);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);

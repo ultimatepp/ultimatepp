@@ -162,12 +162,8 @@ void XmlView::Reset()
 
 void Ide::Xml()
 {
-	static XmlView dlg;
+	XmlView& dlg = CreateNewWindow<XmlView>();
 	dlg.Load(editor.IsSelection() ? editor.GetSelection() : editor.Get());
-	if(!dlg.IsOpen()) {
-		LoadFromGlobal(dlg, "XMLview");
-		dlg.OpenMain();
-	}
-	else
-		dlg.SetForeground();
+	LoadFromGlobal(dlg, "XMLview");
+	dlg.OpenMain();
 }

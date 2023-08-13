@@ -12,14 +12,14 @@ struct RepoDiff : DiffDlg {
 	
 	void LoadGit();
 	void Load();
-	void Execute(const String& f);
+	void Set(const String& f);
 	
 	typedef RepoDiff CLASSNAME;
 	
 	RepoDiff();
 };
 
-void RepoDiff::Execute(const String& f)
+void RepoDiff::Set(const String& f)
 {
 	kind = GetRepoKind(f);
 	editfile = f;
@@ -89,7 +89,7 @@ void RepoDiff::Execute(const String& f)
 		LoadGit();
 	}
 
-	DiffDlg::Execute(f);
+	DiffDlg::Set(f);
 }
 
 void RepoDiff::LoadGit()
@@ -167,5 +167,21 @@ void RunRepoDiff(const String& filepath)
 	if(IsNull(filepath))
 		return;
 	RepoDiff dlg;
-	dlg.Execute(filepath);
+	dlg.Set(filepath);
+	dlg.Execute();
+}
+
+void Ide::RunRepoDiff(const String& filepath)
+{
+	if(IsNull(filepath))
+		return;
+	RepoDiff& dlg = CreateNewWindow<RepoDiff>();
+	dlg.Set(filepath);
+	dlg.diff.WhenRightLine = 
+	dlg.diff.WhenLeftLine = [=](int line) {
+		EditFile(filepath);
+		editor.SetCursor(editor.GetPos64(line));
+		editor.SetFocus();
+	};
+	dlg.OpenMain();
 }

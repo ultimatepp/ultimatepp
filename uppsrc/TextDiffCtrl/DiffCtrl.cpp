@@ -173,24 +173,24 @@ bool DiffDlg::Key(dword key, int count)
 	return TopWindow::Key(key, count);
 }
 
-void DiffDlg::Execute(const String& f)
+void DiffDlg::Close()
+{
+	StringStream ss;
+	SerializePlacement(ss);
+	String h = ss;
+	StoreToGlobal(h, "diff");
+	TopWindow::Close();
+}
+
+void DiffDlg::Set(const String& f)
 {
 	editfile = f;
 	l <<= editfile;
 	Title(editfile);
 	String h;
-	{
-		LoadFromGlobal(h, "diff");
-		StringStream ss(h);
-		SerializePlacement(ss);
-	}
-	TopWindow::Execute();
-	{
-		StringStream ss;
-		SerializePlacement(ss);
-		h = ss;
-		StoreToGlobal(h, "diff");
-	}
+	LoadFromGlobal(h, "diff");
+	StringStream ss(h);
+	SerializePlacement(ss);
 }
 
 void DiffDlg::Refresh()
@@ -288,17 +288,13 @@ void FileDiff::Open()
 	}
 	if(IsNull(r))
 		return;
-	backup = LoadFile(editfile);
-	diff.Set(backup, extfile = LoadFile(~~r));
+	Finish();
 }
 
-void FileDiff::Execute(const String& f)
+void FileDiff::Finish()
 {
-	editfile = f;
-	Open();
-	if(IsNull(r))
-		return;
-	DiffDlg::Execute(f);
+	backup = LoadFile(editfile);
+	diff.Set(backup, extfile = LoadFile(~~r));
 }
 
 FileDiff::FileDiff(FileSel& fs_)
@@ -310,10 +306,17 @@ FileDiff::FileDiff(FileSel& fs_)
 	r <<= THISBACK(Open);
 }
 
-void FileDiff::Execute(const String& lpath, const String& rpath)
+void FileDiff::Set(const String& f)
+{
+	editfile = f;
+	Open();
+}
+
+void FileDiff::Set(const String& lpath, const String& rpath)
 {
 	r <<= rpath;
-	Execute(lpath);
+	DiffDlg::Set(lpath);
+	Finish();
 }
 
 FileSel& DiffFs() {
