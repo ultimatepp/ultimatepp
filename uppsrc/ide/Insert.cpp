@@ -331,12 +331,12 @@ void Ide::EditorMenu(Bar& bar)
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
             "Compare with clipboard..", [=]() {
-        DiffDlg dlg;
+        DiffDlg& dlg = CreateNewWindow<DiffDlg>();
         dlg.diff.left.RemoveFrame(dlg.p);
         dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
                                                                : editor.Get());
 		dlg.Title("Compare with clipboard");
-        dlg.Run();
+        dlg.OpenMain();
     });
 	bar.MenuSeparator();
 	editor.StdBar(bar);
