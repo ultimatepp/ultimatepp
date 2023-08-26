@@ -75,6 +75,8 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 	
 	dir1 << [=] { SyncCompare(); };
 	dir2 << [=] { SyncCompare(); };
+	
+	session_id = String() << Random() << Random() << Random() << Random();
 }
 
 DirRepoDiffDlg::~DirRepoDiffDlg()
@@ -119,6 +121,9 @@ void DirRepoDiffDlg::Mode(int i)
 	
 	ClearFiles();
 	SyncCompare();
+	
+	editable_left = !IsGit(0);
+	editable_right = !IsGit(1);
 }
 
 void DirRepoDiffDlg::Revs(int i)
@@ -136,28 +141,29 @@ void DirRepoDiffDlg::Cleanup()
 
 void DirRepoDiffDlg::SyncCompare()
 {
-	compare.Enable((!IsNull(dir1) || !IsNull(mode[0]) && IsString(mode[0])) &&
-	               (!IsNull(dir2) || !IsNull(mode[1]) && IsString(mode[1])));
+	compare.Enable((!IsNull(dir1) || IsGit(0)) && (!IsNull(dir2) || IsGit(1)));
 }
 
 void DirRepoDiffDlg::Compare()
 {
-	Cleanup();
-	Progress pi;
-	auto Clone = [&](int i, EditString& es)->bool {
-		if(!IsNull(mode[i]) && IsString(mode[i])) {
-			String d = CacheFile(String() << "git-" << Random() << Random() << Random());
-			gitd << d;
-			if(!CopyFolder(d, ~~mode[i], &pi))
-				return false;
+	auto Clone = [&](int i, EditString& es, int& mid) -> bool {
+		mid = 0;
+		if(IsGit(i)) {
+			String repo = ~~mode[i];
+			String d = CacheFile("git-" + SHA1String(repo + "\1" + session_id));
+			if(!DirectoryExists(d)) {
+				gitd << d;
+				Progress pi;
+				if(!CopyFolder(d, ~~mode[i], &pi))
+					return false;
+			}
 			GitCmd(d, "checkout " + ~~r[i]);
 			es <<= d;
+			mid = d.GetCount();
 			return true;
 		}
 		return true;
 	};
-	pi.Close();
-	if(Clone(0, dir1) && Clone(1, dir2))
+	if(Clone(0, dir1, lmid) && Clone(1, dir2, rmid))
 		DirDiffDlg::Compare();
 }
-

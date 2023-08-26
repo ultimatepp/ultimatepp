@@ -449,6 +449,7 @@ void Ide::SyncRepoDir(const String& working)
 
 void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 {
+	if(df->GetLMid()) return;
 	EditFile(df->GetLeftFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
@@ -456,6 +457,7 @@ void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 
 void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 {
+	if(df->GetRMid()) return;
 	EditFile(df->GetRightFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();

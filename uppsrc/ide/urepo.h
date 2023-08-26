@@ -98,6 +98,7 @@ struct DirRepoDiffDlg : public DirDiffDlg {
 	DropList mode[2];
 	DropList r[2], branch[2];
 	Vector<String> gitd;
+	String         session_id;
 	
 	void Mode(int i);
 	void Revs(int i);
@@ -105,6 +106,7 @@ struct DirRepoDiffDlg : public DirDiffDlg {
 	void Compare();
 	void Cleanup();
 	void SyncCompare();
+	bool IsGit(int i) const { return !IsNull(mode[i]) && IsString(mode[i]); }
 
 	DirRepoDiffDlg();
 	~DirRepoDiffDlg();

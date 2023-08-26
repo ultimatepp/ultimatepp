@@ -78,18 +78,27 @@ void RepoDiff::Set(const String& f)
 
 void LoadBranches(DropList& branch, const String& dir)
 {
-	String branches = GitCmd(dir, "branch");
+	branch.Clear();
+	String branches = GitCmd(dir, "branch --all");
 	StringStream ss(branches);
 	String author, date, commit;
 	int ci = -1;
+	auto Add = [&](const String& l) {
+		String s = l.Mid(2);
+		int q = s.ReverseFind('/');
+		if(q >= 0)
+			branch.Add(s, s.Mid(q));
+		else
+			branch.Add(s);
+	};
 	while(!ss.IsEof()) {
 		String l = ss.GetLine();
 		if(l.StartsWith("* ")) {
 			ci = branch.GetCount();
-			branch.Add(l.Mid(2));
+			Add(l);
 		}
 		if(l.StartsWith("  "))
-			branch.Add(l.Mid(2));
+			Add(l);
 	}
 
 	if(ci >= 0)

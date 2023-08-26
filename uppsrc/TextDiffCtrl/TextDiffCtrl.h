@@ -276,6 +276,12 @@ protected:
 	Button                     revertleft, revertright;
 	Button                     removeleft, removeright;
 	
+	bool                       editable_left = true;
+	bool                       editable_right = true;
+	
+	int                        lmid = 0; // for git support
+	int                        rmid = 0; // for git support
+	
 	VectorMap<String, String>  backup;
 	
 	enum { NORMAL_FILE, DELETED_FILE, NEW_FILE, FAILED_FILE, PATCHED_FILE };
@@ -311,6 +317,8 @@ public:
 
 	String GetLeftFile() const                  { return ~lfile; }
 	String GetRightFile() const                 { return ~rfile; }
+	int    GetLMid() const                      { return lmid; }
+	int    GetRMid() const                      { return rmid; }
 
 	DirDiffDlg();
 };
