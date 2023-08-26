@@ -69,33 +69,39 @@ void RepoDiff::Set(const String& f)
 		pane << branch.LeftPos(0, Zx(100)).VSizePos()
 		     << r.HSizePos(Zx(100) + DPI(2), 0).VSizePos();
 
-		String branches = GitCmd(GetFileFolder(f), "branch");
-		StringStream ss(branches);
-		String author, date, commit;
-		int ci = -1;
-		while(!ss.IsEof()) {
-			String l = ss.GetLine();
-			if(l.StartsWith("* ")) {
-				ci = branch.GetCount();
-				branch.Add(l.Mid(2));
-			}
-			if(l.StartsWith("  "))
-				branch.Add(l.Mid(2));
-		}
-
-		if(ci >= 0)
-			branch.SetIndex(ci);
-		
+		LoadBranches(branch, GetFileFolder(f));
 		LoadGit();
 	}
 
 	DiffDlg::Set(f);
 }
 
-void RepoDiff::LoadGit()
+void LoadBranches(DropList& branch, const String& dir)
 {
-	String log = GitCmd(GetFileFolder(editfile), "log --format=medium --date=short "
-                        + ~~branch + " -- " + GetFileName(editfile));
+	String branches = GitCmd(dir, "branch");
+	StringStream ss(branches);
+	String author, date, commit;
+	int ci = -1;
+	while(!ss.IsEof()) {
+		String l = ss.GetLine();
+		if(l.StartsWith("* ")) {
+			ci = branch.GetCount();
+			branch.Add(l.Mid(2));
+		}
+		if(l.StartsWith("  "))
+			branch.Add(l.Mid(2));
+	}
+
+	if(ci >= 0)
+		branch.SetIndex(ci);
+}
+
+void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file)
+{
+	String gitcmd = "log --format=medium --date=short " + branch;
+	if(file.GetCount())
+		gitcmd << " -- " << GetFileName(file);
+	String log = GitCmd(dir, gitcmd);
 	StringStream ss(log);
 	String author, date, commit;
 	r.ClearList();
@@ -133,6 +139,11 @@ void RepoDiff::LoadGit()
 	
 	if(r.GetCount())
 		r.SetIndex(0);
+}
+
+void RepoDiff::LoadGit()
+{
+	LoadGitRevisions(r, GetFileFolder(editfile), ~~branch, editfile);
 	Load();
 }
 
@@ -177,7 +188,7 @@ void Ide::RunRepoDiff(const String& filepath)
 		return;
 	RepoDiff& dlg = CreateNewWindow<RepoDiff>();
 	dlg.Set(filepath);
-	dlg.diff.WhenRightLine = 
+	dlg.diff.WhenRightLine =
 	dlg.diff.WhenLeftLine = [=](int line) {
 		EditFile(filepath);
 		editor.SetCursor(editor.GetPos64(line));

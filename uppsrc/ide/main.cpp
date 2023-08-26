@@ -457,8 +457,11 @@ void AppMain___()
 	DeleteFolderDeep(preamble_dir);
 	
 	// delete crashed preamble dirs older than one day
+	// delete leftover dir/commit compare git repos older than one day
 	for(FindFile ff(AppendFileName(CacheDir(), "*.*")); ff; ff.Next())
-		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-") && Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
+		if(ff.IsFolder() &&
+		   (ff.GetName().StartsWith("preambles-") || ff.GetName().StartsWith("git-")) &&
+		   Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
 			DeleteFolderDeep(ff.GetPath()); // if still in use, this fails
 }
 

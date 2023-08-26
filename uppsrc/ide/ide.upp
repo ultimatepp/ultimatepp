@@ -118,6 +118,7 @@ file
 	RepoSync.cpp,
 	Credentials.cpp,
 	Diff.cpp,
+	DirRepoDiff.cpp,
 	urepo.iml,
 	urepo.lay,
 	Info readonly separator,

@@ -477,7 +477,7 @@ void Ide::DoDirDiff()
 		}
 	});
 
-	DirDiffDlg& dlg = CreateNewWindow<DirDiffDlg>();
+	DirRepoDiffDlg& dlg = CreateNewWindow<DirRepoDiffDlg>();
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
 	for(String d : dir) {
