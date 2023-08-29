@@ -976,16 +976,20 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count,
 			WCHAR name[256], system[256];
 			DWORD d;
 			if(c != 'A' && c != 'B' && n != DRIVE_UNKNOWN) {
-				bool b = GetVolumeInformationW(drive, name, 256, &d, &d, &d, system, 256);
-				if(b) {
-					if(*name) f.root_desc << " " << FromSystemCharsetW(name);
-				}
-				else if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
-					if(unmounted) {
-						f.root_desc = t_("Empty drive");
-					} else {
-						fi.Drop();
-						continue;
+				if(n == DRIVE_REMOTE) // if drive is not connected, GetVolumeInformation takes too long - not worth it
+					f.root_desc = t_("Network drive");
+				else {
+					bool b = GetVolumeInformationW(drive, name, 256, &d, &d, &d, system, 256);
+					if(b) {
+						if(*name) f.root_desc << " " << FromSystemCharsetW(name);
+					}
+					else if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
+						if(unmounted) {
+							f.root_desc = t_("Empty drive");
+						} else {
+							fi.Drop();
+							continue;
+						}
 					}
 				}
 			}
