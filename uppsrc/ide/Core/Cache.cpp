@@ -3,10 +3,18 @@
 String CacheDir()
 {
 	String dir;
-#ifdef PLATFORM_WIN32
-	dir = ConfigFile("cache");
+#ifdef _DEBUG
+	#ifdef PLATFORM_WIN32
+		dir = ConfigFile("cache.debug");
+	#else
+		dir = ConfigFile(".cache/upp.cache.debug");
+	#endif
 #else
-	dir = ConfigFile(".cache/upp.cache");
+	#ifdef PLATFORM_WIN32
+		dir = ConfigFile("cache");
+	#else
+		dir = ConfigFile(".cache/upp.cache");
+	#endif
 #endif
 	ONCELOCK {
 		RealizeDirectory(dir);

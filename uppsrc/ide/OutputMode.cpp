@@ -433,6 +433,8 @@ void Ide::SyncBuildMode()
 	String h = method + ' ';
 	h << (targetmode ? "Release" : "Debug");
 	buildmode <<= h;
+	TriggerIndexer();
+	editor.TriggerSyncFile(0);
 }
 
 void Ide::DropMethodList()
