@@ -58,6 +58,7 @@ file
 	Annotations.cpp,
 	Virtuals.cpp,
 	Events.cpp,
+	NavDlg.cpp,
 	Log.cpp,
 	MainConfig.cpp,
 	Setup.cpp,

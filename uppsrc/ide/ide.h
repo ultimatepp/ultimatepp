@@ -1000,6 +1000,7 @@ public:
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);
+		void  NavigatorDlg();
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
