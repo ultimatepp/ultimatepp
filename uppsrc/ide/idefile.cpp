@@ -391,9 +391,7 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
-	if(editor.IsDirty())
-		TriggerIndexer();
-
+	TriggerIndexer();
 	editor.ClearDirty();
 
 	if(ToLower(GetFileExt(editfile)) == ".usc")
