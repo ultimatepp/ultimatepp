@@ -77,6 +77,11 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 	dir2 << [=] { SyncCompare(); };
 	
 	session_id = String() << Random() << Random() << Random() << Random();
+	
+	branch[0].SetDropLines(32);
+	branch[1].SetDropLines(32);
+	r[0].SetDropLines(32);
+	r[1].SetDropLines(32);
 }
 
 DirRepoDiffDlg::~DirRepoDiffDlg()
@@ -157,7 +162,7 @@ void DirRepoDiffDlg::Compare()
 				if(!CopyFolder(d, ~~mode[i], &pi))
 					return false;
 			}
-			GitCmd(d, "checkout " + ~~r[i]);
+			GitCmd(d, "checkout --force " + ~~r[i]);
 			es <<= d;
 			mid = d.GetCount();
 			return true;
