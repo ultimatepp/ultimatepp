@@ -1,0 +1,18 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\File.exe 07.09.2023 08:18:10, user: cxl
+
+(bool)out = true
+(bool)out.IsError() = false
+(bool)out2 = false
+(bool)out2.IsError() = true
+--- out2 closed
+(bool)out = true
+(bool)out.IsError() = false
+(bool)out2 = false
+(bool)out2.IsError() = true
+--- out1 closed
+(bool)out = false
+(bool)out.IsError() = false
+(bool)out2 = false
+(bool)out2.IsError() = true
+(bool)in = false
+in.IsError() = true
