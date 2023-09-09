@@ -469,17 +469,18 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	                    iomode == CREATE ? O_CREAT|O_RDWR|O_TRUNC :
 	                    O_RDWR|O_CREAT,
 	              tmode);
+	LDUMP(handle);
 	if(handle >= 0) {
 		struct stat st[1];
 		fstat(handle, st);
+		int64 fsz = st->st_size;
 		if(!(st->st_mode & S_IFREG) ||  // not a regular file, e.g. folder - bad things would happen
-		   (mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0) { // lock if not sharing
+		   (mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0 || // lock if not sharing
+		   fsz < 0) {
 			close(handle);
 			handle = -1;
-			return false;
 		}
-		int64 fsz = st->st_size;
-		if(fsz >= 0) {
+		else {
 			OpenInit(mode, fsz);
 			LLOG("OPEN handle " << handle);
 			return true;

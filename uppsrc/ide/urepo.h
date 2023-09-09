@@ -90,3 +90,24 @@ bool GetCredentials(const String& url, const String& dir, String& username, Stri
 void EditCredentials(const Vector<String>& url_hints);
 
 void RunRepoDiff(const String& filepath);
+
+void LoadBranches(DropList& branch, const String& dir);
+void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file);
+
+struct DirRepoDiffDlg : public DirDiffDlg {
+	DropList mode[2];
+	DropList r[2], branch[2];
+	Vector<String> gitd;
+	String         session_id;
+	
+	void Mode(int i);
+	void Revs(int i);
+	void AddSelectGit(DropList& dl);
+	void Compare();
+	void Cleanup();
+	void SyncCompare();
+	bool IsGit(int i) const { return !IsNull(mode[i]) && IsString(mode[i]); }
+
+	DirRepoDiffDlg();
+	~DirRepoDiffDlg();
+};

@@ -125,6 +125,7 @@ DirDiffDlg::DirDiffDlg()
 		remove.SetLabel("Remove");
 		remove.Tip("F8");
 		remove.SetImage(CtrlImg::remove());
+		remove.Disable();
 		
 		remove << [=] {
 			String path = AppendFileName(~*dir, files.GetCurrentName());
@@ -197,6 +198,9 @@ void DirDiffDlg::Compare()
 
 	copyleft.Disable();
 	copyright.Disable();
+
+	removeleft.Disable();
+	removeright.Disable();
 	
 	files.Clear();
 	Vector<String> f = fs.PickKeys();
@@ -315,12 +319,18 @@ void DirDiffDlg::File()
 	}
 	if(GetFileLength(p1) < 4 * 1024 * 1024 && GetFileLength(p2) < 4 * 1024 * 1024)
 		diff.Set(f1, f2);
+	if(lmid < p1.GetCount())
+		p1 = p1.Mid(lmid);
 	lfile <<= p1;
+	if(rmid < p2.GetCount())
+		p2 = p2.Mid(rmid);
 	rfile <<= p2;
-	copyleft.Enable();
-	copyright.Enable();
-	revertleft.Enable(backup.Find(p1) >= 0);
-	revertright.Enable(backup.Find(p2) >= 0);
+	copyleft.Enable(editable_left);
+	copyright.Enable(editable_right);
+	removeleft.Enable(editable_left);
+	removeright.Enable(editable_right);
+	revertleft.Enable(backup.Find(p1) >= 0 && editable_left);
+	revertright.Enable(backup.Find(p2) >= 0 && editable_right);
 }
 
 void DirDiffDlg::Refresh()

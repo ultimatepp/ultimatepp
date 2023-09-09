@@ -174,12 +174,8 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 
 void Ide::Json()
 {
-	static JsonView dlg;
+	JsonView& dlg = CreateNewWindow<JsonView>();
 	dlg.Load(editor.IsSelection() ? editor.GetSelection() : editor.Get());
-	if(!dlg.IsOpen()) {
-		LoadFromGlobal(dlg, "JSONview");
-		dlg.OpenMain();
-	}
-	else
-		dlg.SetForeground();
+	LoadFromGlobal(dlg, "JSONview");
+	dlg.OpenMain();
 }

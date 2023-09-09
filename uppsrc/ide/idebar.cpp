@@ -482,7 +482,7 @@ void Ide::Project(Bar& menu)
 			menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
 				.Help("Configuring compiler, operating system, output application parameters, custom flags");
 		menu.Separator();
-		menu.Add(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
+		menu.AddMenu(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");
 		menu.AddMenu(AK_TRIMPORT, IdeImg::Language(), THISBACK1(SyncT, 1))
 		    .Help("Import runtime translation file");
@@ -805,6 +805,7 @@ void Ide::AssistMenu(Bar& menu)
 	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
 	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
 	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));

@@ -1,4 +1,4 @@
-description "Counting button clicks";
+description "Counting button clicks\377";
 
 uses
 	CtrlLib;

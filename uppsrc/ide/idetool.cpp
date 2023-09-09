@@ -183,11 +183,14 @@ void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileSta
 void ShowQTF(const String& qtf, const char *title)
 {
 	RichText txt = ParseQTF(qtf);
-	ClearClipboard();
-	AppendClipboard(ParseQTF(qtf));
 
 	WithStatLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, title);
+	dlg.copy << [=] {
+		ClearClipboard();
+		AppendClipboard(ParseQTF(qtf));
+		PromptOK("The whole content of the text view has been successfully copied to cliboard!");
+	};
 	dlg.stat = qtf;
 	dlg.Sizeable().Zoomable();
 	dlg.Run();
@@ -446,6 +449,7 @@ void Ide::SyncRepoDir(const String& working)
 
 void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 {
+	if(df->GetLMid()) return;
 	EditFile(df->GetLeftFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
@@ -453,6 +457,7 @@ void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 
 void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 {
+	if(df->GetRMid()) return;
 	EditFile(df->GetRightFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
@@ -474,7 +479,7 @@ void Ide::DoDirDiff()
 		}
 	});
 
-	static DirDiffDlg dlg;
+	DirRepoDiffDlg& dlg = CreateNewWindow<DirRepoDiffDlg>();
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
 	for(String d : dir) {
@@ -483,14 +488,10 @@ void Ide::DoDirDiff()
 	}
 	if(dir.GetCount() > 1)
 		dlg.Dir1(dir[1]);
-	if(!dlg.IsOpen()) {
-		dlg.SetFont(veditorfont);
-		dlg.Maximize();
-		dlg.Title("Compare directories");
-		dlg.OpenMain();
-	}
-	else
-		dlg.SetFocus();
+	dlg.SetFont(veditorfont);
+	dlg.Maximize();
+	dlg.Title("Compare directories");
+	dlg.OpenMain();
 }
 
 void Ide::DoPatchDiff()

@@ -57,7 +57,10 @@ void SearchEnginesDefaultSetup()
 	Progress pi("Search engines setup");
 	JsonArray ja;
 	for(int i = 0; i < __countof(defs); i++)
-		ja << Upp::Json("Name", defs[i].a)("URI", defs[i].b)("Icon", Encode64(GetWebsiteIconAsPNG(defs[i].b, pi)));
+		ja << Upp::Json("Name", defs[i].a)
+		               ("URI", defs[i].b)
+		               ("Icon", Encode64(i == 0 ? PNGEncoder().SaveString(IdeImg::Google())
+		                                        : GetWebsiteIconAsPNG(defs[i].b, pi)));
 
 	SaveChangedFile(SearchEnginesFile(), ja);
 }

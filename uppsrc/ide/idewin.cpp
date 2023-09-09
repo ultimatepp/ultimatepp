@@ -630,6 +630,19 @@ Ide::~Ide()
 	SetTheIde(NULL);
 }
 
+void Ide::DeleteWindows()
+{
+	for(Ptr<TopWindow> w : window)
+		if(w)
+			delete w;
+}
+
+void Ide::NewWindow(TopWindow *win)
+{
+	window.RemoveIf([&](int i) { return !window[i]; });
+	window.Add(win);
+}
+
 String LibClangCommandLine()
 {
 	GuiLock __;

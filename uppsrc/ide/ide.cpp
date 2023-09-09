@@ -793,31 +793,28 @@ int Ide::GetPackageIndex()
 	return -1;
 }
 
-void Ide::GotoDiffLeft(int line, DiffDlg *df)
+void Ide::DoDiff(FileDiff *df)
 {
-	EditFile(df->editfile);
-	editor.SetCursor(editor.GetPos64(line));
-	editor.SetFocus();
-}
-
-void Ide::GotoDiffRight(int line, FileDiff *df)
-{
-	EditFile(df->GetExtPath());
-	editor.SetCursor(editor.GetPos64(line));
-	editor.SetFocus();
+	auto Do = [=](const String& file, int line) {
+		EditFile(file);
+		editor.SetCursor(editor.GetPos64(line));
+		editor.SetFocus();
+	};
+	df->diff.WhenLeftLine = [=](int line) { Do(df->editfile, line); };
+	df->diff.WhenRightLine = [=](int line) { Do(df->GetExtPath(), line); };
+	df->OpenMain();
 }
 
 void Ide::Diff()
 {
 	if(IsNull(editfile))
 		return;
-	FileDiff diffdlg(AnySourceFs());
-	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
-	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
-	diffdlg.Execute(editfile);
+	FileDiff& diffdlg = CreateNewWindow<FileDiff>(AnySourceFs());
+	diffdlg.Set(editfile);
 	String s = diffdlg.GetExtPath();
 	if(FileExists(s))
 		LruAdd(difflru, s);
+	DoDiff(&diffdlg);
 }
 
 void Ide::DiffWith(const String& path)
@@ -833,10 +830,9 @@ void Ide::DiffWith(const String& path)
 		Exclamation("Too big to compare");
 		return;
 	}
-	FileDiff diffdlg(AnySourceFs());
-	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
-	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
-	diffdlg.Execute(editfile, path);
+	FileDiff& diffdlg = CreateNewWindow<FileDiff>(AnySourceFs());
+	diffdlg.Set(editfile, path);
+	DoDiff(&diffdlg);
 }
 
 struct ConflictDiff : TopWindow {

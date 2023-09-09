@@ -103,8 +103,19 @@ bool Clang::Parse(const String& filename_, const String& content,
 
 	Vector<String> args;
 
-	for(const String& s : Split(includes, ';'))
-		args.Add("-I" + s);
+	INTERLOCKED // as there is just single static 'use'
+		for(const String& s : Split(includes, ';')) {
+		#ifdef PLATFORM_WIN32 // we need to ignore internal VC++ headers
+			static VectorMap<String, bool> use;
+			int q = use.Find(s);
+			if(q < 0) {
+				q = use.GetCount();
+				use.Add(s, !FileExists(AppendFileName(s, "vcruntime.h")));
+			}
+			if(use[q])
+		#endif
+				args.Add("-I" + s);
+		}
 
 	if(iquote.GetCount()) // path to real_filename for #include "xxx" handling
 		args.Add("-I" + iquote);
