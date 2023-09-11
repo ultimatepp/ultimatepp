@@ -1,9 +1,5 @@
 #include "ide.h"
 
-#define IMAGECLASS UrepoImg
-#define IMAGEFILE  <ide/urepo.iml>
-#include <Draw/iml.h>
-
 struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
@@ -172,7 +168,7 @@ RepoDiff::RepoDiff()
 	pane.Height(EditField::GetStdHeight());
 	r.SetDropLines(32);
 	branch.SetDropLines(32);
-	Icon(UrepoImg::RepoDiff());
+	Icon(IdeImg::SvnDiff());
 	diff.InsertFrameRight(pane);
 	r << [=] { Load(); };
 	branch << [=] { LoadGit(); };
