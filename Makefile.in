@@ -15758,9 +15758,7 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)Draw/FontInt.h \
 	$(UPPDIR1)Draw/Image.h \
 	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml.h \
 	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/iml_source.h \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
