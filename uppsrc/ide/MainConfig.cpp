@@ -187,4 +187,5 @@ void Ide::OnMainConfigList()
 	MakeTitle();
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
+	editor.SetFocus();
 }
