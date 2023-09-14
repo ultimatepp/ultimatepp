@@ -402,7 +402,7 @@ void XmlParser::Next()
 				int w = tagtext.Find('\"', q);
 				if(w < 0)
 					return;
-				q = CharsetByName(tagtext.Mid(q, w));
+				q = CharsetByName(tagtext.Mid(q, w - q));
 				if(q)
 					scharset = q;
 				return;
