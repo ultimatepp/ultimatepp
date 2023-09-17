@@ -7,6 +7,7 @@ Update year in Copying files - replace "Copyright (c) 1998, 201x, The U++ Projec
 About, BSD
 
 2019-03-22: 2019
+2023-09-17: 2023
 
 ------------------------------------------------------------------2
 CLANG

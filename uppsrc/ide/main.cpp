@@ -402,7 +402,7 @@ void AppMain___()
 		if(FileExists(crash_file)) {
 			if(LibClangEnabled &&
 			   PromptYesNo("TheIDE has crashed the last time it was run. As the possible "
-			               "cause is libclang incompatibility, we Assist features are disabled for now."))
+			               "cause is libclang incompatibility, Assist features are disabled for now."))
 				LibClangEnabled = false;
 			DeleteFile(crash_file);
 		}
