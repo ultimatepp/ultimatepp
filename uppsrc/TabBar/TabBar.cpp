@@ -931,8 +931,8 @@ Value TabBar::AlignValue(int align, const Value &v, const Size &sz)
 	if(align == AlignedFrame::LEFT || align == AlignedFrame::RIGHT)
 		Swap(isz.cx, isz.cy);
 
-	ImageDraw w(isz.cx, isz.cy);
-	w.DrawRect(isz, SColorFace());
+	ImagePainter w(isz.cx, isz.cy);
+	w.Clear(RGBAZero());
 	ChPaint(w, isz, v);
 	return AlignImage(align, (Image)w);
 }
@@ -1163,10 +1163,6 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	bool ac = (n == active && enable);
 	bool hl = (n == highlight && enable) || (stacking && highlight >= 0 && tabs[highlight].stack == t.stack);
 
-	int ndx = !enable ? CTRL_DISABLED :
-		       ac ? CTRL_PRESSED :
-		       hl ? CTRL_HOT : CTRL_NORMAL;
-
 	int c = align == LEFT ? cnt - n : n;	
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() - lx + s.margin;
@@ -1194,6 +1190,10 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	
 	t.tab_pos = (ac ? ra : rn).TopLeft();
 	t.tab_size = (ac ? ra : rn).GetSize();
+
+	int ndx = !enable ? CTRL_DISABLED :
+		       ac ? CTRL_PRESSED :
+		       hl ? CTRL_HOT : CTRL_NORMAL;
 
 	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
 	

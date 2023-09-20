@@ -32,7 +32,7 @@ Image CxxIcon(int kind)
 }
 
 void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
-           int starti, int count, bool focuscursor, Color _ink, bool italic)
+               int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
 	static int maxascent = MaxAscent(BrowserFont());
 	for(int i = 0; i < count; i++) {
