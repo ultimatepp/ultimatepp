@@ -1203,7 +1203,6 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 		}
 
 		Image Make() const override {
-			DTIMING("AlignValue");
 			const Value& sv = (cnt == 1 ? s->both : c == 0 ? s->first : c == cnt - 1 ? s->last : s->normal)[ndx];
 			Size isz = size;
 			if(align == AlignedFrame::LEFT || align == AlignedFrame::RIGHT)
