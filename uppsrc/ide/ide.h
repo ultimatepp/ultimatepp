@@ -1259,7 +1259,9 @@ public:
 
 void ForAllSourceFiles(Event<const VectorMap<String, String>&> fn);
 void ForAllNests(Event<const Vector<String>&> fn);
-void IdeBackgroundThread();
+
+void StartIdeBackgroundThread();
+void TriggerIdeBackgroundThread(int delay_ms = 1000);
 
 inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
 

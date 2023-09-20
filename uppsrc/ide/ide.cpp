@@ -376,6 +376,7 @@ void Ide::Activate()
 	TopWindow::Activate();
 	git_branch_cache.Clear();
 	MakeTitle();
+	TriggerIdeBackgroundThread(5000);
 }
 
 bool Ide::Key(dword key, int count)
