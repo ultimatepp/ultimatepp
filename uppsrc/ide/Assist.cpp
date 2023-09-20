@@ -528,7 +528,7 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 	String name;
 	Point ref_pos;
 	String ref_id = theide->GetRefId(mt.pos, name, ref_pos);
-	if(ref_id.GetCount() == 0)
+	if(ref_id.GetCount() == 0 || IsNull(name))
 		return false;
 
 	int lp = mt.pos;

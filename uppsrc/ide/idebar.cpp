@@ -155,6 +155,8 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
+	menu.Add(AK_COPYRICH, [=] { CopyRich(); })
+	    .Help("Copy selection as syntax highlithed richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))

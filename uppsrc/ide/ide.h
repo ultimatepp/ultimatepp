@@ -881,6 +881,7 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		void  CopyRich();
 		void  Duplicate();
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
@@ -1270,6 +1271,8 @@ bool SetupGITMaster();
 
 String UppHub();
 void   UppHubAuto(const String& s);
+
+void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln);
 
 #include "urepo.h"
 
