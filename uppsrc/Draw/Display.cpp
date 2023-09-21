@@ -4,7 +4,7 @@ namespace Upp {
 
 #define IMAGECLASS DrawImg
 #define IMAGEFILE <Draw/DrawImg.iml>
-#include <Draw/iml.h>
+#include <Draw/iml_source.h>
 
 #define LLOG(x) // RLOG(x)
 
