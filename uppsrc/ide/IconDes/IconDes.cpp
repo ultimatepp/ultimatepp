@@ -69,11 +69,11 @@ void IdeIconDes::ToolEx(Bar& bar)
 {
 	bar.Separator();
 	if(!IsSingleMode()) {
-		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
 		bar.Add("Usage..", IdeCommonImg::Cpp(), [=] {
 			String name = GetCurrentName();
 			TheIde()->FindDesignerItemReferences(name + "()", name);
 		});
+		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
 	}
 }
 
