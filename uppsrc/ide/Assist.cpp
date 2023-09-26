@@ -336,11 +336,13 @@ bool AssistEditor::IncludeAssist()
 		return false;
 	}
 	Vector<String> folder, upper_folder, file, upper_file;
+	Index<String> done; // avoid duplicates
 	for(int i = 0; i < include.GetCount(); i++) {
 		FindFile ff(AppendFileName(AppendFileName(include[i], include_path), "*.*"));
 		while(ff) {
 			String fn = ff.GetName();
-			if(!ff.IsHidden()) {
+			if(done.Find(fn) < 0 && !ff.IsHidden()) {
+				done.Add(fn);
 				if(ff.IsFolder()) {
 					folder.Add(fn);
 					upper_folder.Add(ToUpper(fn));
