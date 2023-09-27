@@ -128,7 +128,7 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".sql")
 		img = IdeCommonImg::Sql();
 	else
-	if(filename == "Copying")
+	if(findarg(filename, "Copying", "License.txt") >= 0)
 		img = IdeCommonImg::License();
 	else
 	if(filename == "main.conf")

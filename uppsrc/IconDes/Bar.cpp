@@ -219,6 +219,7 @@ void IconDes::DrawBar(Bar& bar)
 void IconDes::MainToolBar(Bar& bar)
 {
 	EditBar(bar);
+	ToolEx(bar);
 	bar.Separator();
 	SelectBar(bar);
 	bar.Separator();
@@ -227,7 +228,6 @@ void IconDes::MainToolBar(Bar& bar)
 	bar.Add(status, INT_MAX, GetStdFontCy());
 	bar.Break();
 	DrawBar(bar);
-	ToolEx(bar);
 	bar.Separator();
 	SettingBar(bar);
 }
