@@ -1075,17 +1075,12 @@ to respond to platform setting of GUI font, U`+`+ provides functions
 to zoom coordinates accordingly. Such zooming scale distances 
 by the ratio of current standard GUI font size to design font 
 size (which is based on old Win95 standard font size). Functions 
-Zx and Zy scale the horizontal or vertical distance. Logical 
-coordinate methods that end with Z (like LeftPos[* Z]) are then 
-scaling the values with these functions.&]
+[* Zx] and [* Zy] scale the horizontal or vertical distance. Logical 
+coordinate methods that end with [* Z] (like [* LeftPosZ ]or [* TopPosZ]) 
+are then scaling the values with these functions.&]
 [s5; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
-][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
 [s0;l320;C+75%- &]
 [s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
 Upp;]&]
