@@ -224,9 +224,8 @@ Upp;]&]
 [s0;l320;~~~32~32;C+75%- &]
 [s0;l320;~~~32~32;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
 TopWindow `{]&]
-[s0;l320;~~~32~32;%- [C+75     ][*_C@(0.0.255)+75 virtual][*_C+75  ][*_C@(0.0.255)+75 void][*_C+75  
-Paint(Draw][*_C@(0.0.255)+75 `&][*_C+75  w) ][*_C@(0.0.255)+75 override][*_C+75  
-`{]&]
+[s0;l320;~~~32~32;%- [C+75     ][*_C@(0.0.255)+75 void][*_C+75  Paint(Draw][*_C@(0.0.255)+75 `&
+][*_C+75  w) ][*_C@(0.0.255)+75 override][*_C+75  `{]&]
 [s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawRect(GetSize(),
  SWhite());]&]
 [s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawText(][*_C@3+75 2
@@ -278,25 +277,24 @@ TopWindow `{]&]
 [s0;l320;%- [C+75     Point  p;]&]
 [s0;l320;%- [C+75     String text;]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 virtual][*_C+75  ][*_C@(0.0.255)+75 void][*_C+75  
-LeftDown(Point pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 overr
-ide][*_C+75  `{]&]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  LeftDown(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
 [s0;l320;%- [*C+75         ][*_C+75 p ][*_C@(0.0.255)+75 `=][*_C+75  pos;]&]
 [s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
 [s0;l320;%- [*C+75     ][*_C+75 `}]&]
 [s0;l320;*C+75%- &]
-[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 virtual][*_C+75  ][*_C@(0.0.255)+75 void][*_C+75  
-MouseMove(Point pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 over
-ride][*_C+75  `{]&]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  MouseMove(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
 [s0;l320;%- [*C+75         ][*_C+75 text ][*_C@(0.0.255)+75 `=][*_C+75  Format(][*_C@3+75 `"`[][*_C@(0.0.255)+75 %
 d][*_C@3+75 :][*_C@(0.0.255)+75 %d][*_C@3+75 `]`"][*_C+75 , pos][*_C@(0.0.255)+75 .][*_C+75 x,
  pos][*_C@(0.0.255)+75 .][*_C+75 y);]&]
 [s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
 [s0;l320;%- [*C+75     ][*_C+75 `}]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-Paint(Draw][C@(0.0.255)+75 `&][C+75  w) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
 SWhite);]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(p][C@(0.0.255)+75 .][C+75 x, 
@@ -502,9 +500,8 @@ MyApp?`"][C+75 ))]&]
 [s0;l320;%- [C+75             Break();]&]
 [s0;l320;%- [C+75     `}]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-RightDown(Point, ][C@(0.128.128)+75 dword][C+75 ) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         ][*_C+75 MenuBar][*_C@(0.0.255)+75 `::][*_C+75 Execute(]&]
 [s0;l320;%- [C+75             ][*_C@(0.0.255)+75 `[`=`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  
 bar) `{]&]
@@ -550,9 +547,8 @@ MyApp?`"][C+75 ))]&]
 [s0;l320;%- [C+75             Break();]&]
 [s0;l320;%- [C+75     `}]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-RightDown(Point, ][C@(0.128.128)+75 dword][C+75 ) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         ][*C@(0.0.255)+75 int][C+75  ][*_C+75 result][*C+75  
 ][C@(0.0.255)+75 `=][C+75  ][C@(0.128.128)+75 Null][C+75 ;]&]
 [s0;l320;%- [C+75         ][*_C+75 MenuBar menu][C+75 ;]&]
@@ -1075,17 +1071,12 @@ to respond to platform setting of GUI font, U`+`+ provides functions
 to zoom coordinates accordingly. Such zooming scale distances 
 by the ratio of current standard GUI font size to design font 
 size (which is based on old Win95 standard font size). Functions 
-Zx and Zy scale the horizontal or vertical distance. Logical 
-coordinate methods that end with Z (like LeftPos[* Z]) are then 
-scaling the values with these functions.&]
+[* Zx] and [* Zy] scale the horizontal or vertical distance. Logical 
+coordinate methods that end with [* Z] (like [* LeftPosZ ]or [* TopPosZ]) 
+are then scaling the values with these functions.&]
 [s5; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
-][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
 [s0;l320;C+75%- &]
 [s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
 Upp;]&]
@@ -1555,8 +1546,7 @@ react to Enter and Esc keys and add specific visual appearance.&]
 [* CtrlLayoutCancel], [* CtrlLayoutOKCancel ]etc. template functions 
 that both [^topic`:`/`/CtrlCore`/src`/Layout`_en`-us^ setup layout 
 and assign] Acceptors and Rejectors!&]
-[s5; &]
-[s7; [@(28.127.0) // main.cpp]&]
+[s5; [/ main.cpp:]&]
 [s0;l320;~~~>32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
 ][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
 [s0;l320;~~~>32;C+75%- &]
@@ -1585,8 +1575,8 @@ d][C@(0.0.255)+75 /][C+75 myapp][C@(0.0.255)+75 .][C+75 lay][C@(0.0.255)+75 >]&]
 [s0;l320;~~~>32;%- [C+75         Exclamation(][C@3+75 `"Canceled`"][C+75 );]&]
 [s0;l320;~~~>32;%- [C+75     `}]&]
 [s0;l320;~~~>32;%- [C+75 `}]&]
-[s7; &]
-[s7; [@(28.127.0) // myapp.lay]&]
+[s5;%- &]
+[s5; [/ myapp.lay:]&]
 [s0;l320;%- [*C@(0.0.255)+75 LAYOUT][C+75 (MyAppLayout, ][C@3+75 148][C+75 , 
 ][C@3+75 64][C+75 )]&]
 [s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 EditDate, 
@@ -1601,7 +1591,7 @@ opPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
 ][C+75 )][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 76][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .
 ][C+75 TopPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
 [s0;l320;%- [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 LAYOUT]&]
-[s0; &]
+[s5; &]
 [s7;@(28.127.0) &]
 [s7; 
 @@rawimage:697&461
@@ -1623,18 +1613,16 @@ Ctrl `{]&]
 [s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75  count ][C@(0.0.255)+75 `=][C+75  
 ][C@3+75 0][C+75 ;]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-Paint(Draw][C@(0.0.255)+75 `&][C+75  w) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
 White());]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 2][C+75 , 
 ][C@3+75 2][C+75 , AsString(count));]&]
 [s0;l320;%- [C+75     `}]&]
 [s0;l320;C+75%- &]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 ) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 )
+ ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         count][C@(0.0.255)+75 `+`+][C+75 ;]&]
 [s0;l320;%- [C+75         Refresh();]&]
 [s0;l320;%- [C+75     `}]&]
@@ -1754,8 +1742,7 @@ create an application that will support multiple locales. For
 this purpose, we will pick up one of the previous example in 
 which simple text is displayed inside the window, and we will 
 add translation support to it:&]
-[s0; &]
-[s7; [@(28.127.0) // main.cpp]&]
+[s5; [/ main.cpp:]&]
 [s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
 ][@0 h][@(0.0.255) >]&]
 [s0;l320;C+75%- &]
@@ -1778,9 +1765,8 @@ My application`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 );]&]
 etRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 550][C+75 , ][C@3+75 100][C+75 );]&]
 [s0;l320;%- [C+75     `}]&]
 [s0;l320;%- [C+75     ]&]
-[s0;l320;%- [C+75     ][*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
-Paint(Draw][C@(0.0.255)+75 `&][C+75  w) ][*C@(0.0.255)+75 override][C+75  
-`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
 SLtYellow);]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 20][C+75 , 
@@ -1828,12 +1814,12 @@ our users use.&]
 [s5; The generated file with translated entries is located below. 
 For the purpose of this section we used electronic translator, 
 so for any errors we are sorry.&]
-[s0; &]
+[s5; [/ Gui23.t:]&]
 [s7; [@(28.127.0) // Gui23.t]&]
 [s0;l320;%- [C+75 #ifdef `_MSC`_VER]&]
 [s0;l320;%- [C+75 #pragma setlocale(][C@3+75 `"C`"][C+75 )]&]
 [s0;l320;%- [C+75 #endif]&]
-[s0;l320;%- [/C+75 // main.cpp]&]
+[s0;l320;%- [/C@4+75 // main.cpp]&]
 [s0;l320;C+75%- &]
 [s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"My application`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 csCZ][C+75 (][C@3+75 `"Moje aplikace`"][C+75 )]&]
