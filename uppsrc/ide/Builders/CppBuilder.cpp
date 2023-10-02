@@ -360,9 +360,11 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 						}
 					}
 				}
+				else
 				if(p.Id("exclude")) {
 					ExtExclude(p, packageFolder, out, flags);
 				}
+				else
 				if(p.Id("include_path")) {
 					bool apply = CheckImportCondition(p, flags);
 					Vector<String> e = ReadPatterns(p);
@@ -376,10 +378,12 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 						}
 					}
 				}
+				else
 				if(p.Id("exclude_path")) {
 					ExtExclude(p, packageFolder, include_path, flags);
 				}
-				if(p.Id("includes")) {
+				else {
+					p.PassId("includes");
 					bool apply = CheckImportCondition(p, flags);
 					Vector<String> e = ReadPatterns(p);
 					if(apply) {
@@ -392,7 +396,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				}
 			}
 		}
-		catch(CParser::Error) {
+		catch(CParser::Error e) {
 			PutConsole("Invalid .ext file");
 			error = true;
 			return Vector<String>();
