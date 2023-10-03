@@ -69,7 +69,7 @@ test upptst/Https with CLANG, release, debug
 
 netasm, strawberry perl
 
-make sure Scripts folder is on path
+make sure Scripts folder is on windows path
 
 from perl prompt run
 
@@ -110,7 +110,7 @@ libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
 
 2020-09-03: 1.1.1g
 2022-03-05: 1.1.1n
-
+2023-09-28: 1.1.1w
 ------------------------------------------------------------------
 plugin/jpg
 

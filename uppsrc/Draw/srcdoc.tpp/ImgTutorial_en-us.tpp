@@ -50,31 +50,43 @@ tool bar icons) are usually designed using TheIDE`'s Image designer.&]
 using one of iml headers into C`+`+ and compiled into the application. 
 Such images are in the code represented as static methods of 
 class representing the single .iml file ([/ image list class)].&]
-[s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define IMAGECLASS ][*@(128.0.255) MyImages]&]
-[s7; [* #define IMAGEFILE  <][*@(128.0.255) Image01/Image01][* .iml>]&]
-[s7; [* #include <Draw/iml.h>]&]
-[s7; &]
-[s7; class MyApp : public TopWindow `{&]
-[s7; public:&]
-[s7; -|virtual void Paint(Draw`& draw);&]
-[s7; `};&]
-[s7; &]
-[s7; void MyApp`::Paint(Draw`& w)&]
-[s7; `{&]
-[s7; -|w.DrawRect(GetSize(), SColorFace());&]
-[s7; -|w.[* DrawImage](50, 50, [*@(128.0.255) MyImages]`::[*@(128.0.255) MyImage]());&]
-[s7; `}&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyApp().Sizeable().Run();&]
-[s7; `}&]
-[s7; &]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGECLASS MyImages]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGEFILE  ][*_C@(0.0.255)+75 <][*_C+75 Imag
+e01][*_C@(0.0.255)+75 /][*_C+75 images][*_C@(0.0.255)+75 .][*_C+75 iml][*_C@(0.0.255)+75 >]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 Draw][*_C@(0.0.255)+75 /
+][*_C+75 iml][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MyApp() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 const][C+75  ][*C@(0.0.255)+75 auto][C+75  
+isz ][C@(0.0.255)+75 `=][C+75  MyImages][C@(0.0.255)+75 `::][C+75 MyImage()][C@(0.0.255)+75 .
+][C+75 GetSize();]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 100][C+75  
+][C@(0.0.255)+75 `+][C+75  isz][C@(0.0.255)+75 .][C+75 cx, ][C@3+75 100][C+75  
+][C@(0.0.255)+75 `+][C+75  isz][C@(0.0.255)+75 .][C+75 cy);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SColorFace());]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][*_C+75 DrawImage][C+75 (][C@3+75 50][C+75 , 
+][C@3+75 50][C+75 , ][*_C+75 MyImages][*_C@(0.0.255)+75 `::][*_C+75 MyImage()][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:609&764
@@ -90,40 +102,61 @@ even change them:&]
 (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)
 &]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define IMAGECLASS MyImages&]
-[s7; #define IMAGEFILE  <Image02/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; class MyApp : public TopWindow `{&]
-[s7; public:&]
-[s7; -|virtual void Paint(Draw`& draw);&]
-[s7; `};&]
-[s7; &]
-[s7; void MyApp`::Paint(Draw`& w)&]
-[s7; `{&]
-[s7; -|w.DrawRect(GetSize(), SColorPaper());&]
-[s7; -|for(int i `= 0; i < MyImages`::[* GetCount](); i`+`+) `{&]
-[s7; -|-|w.DrawImage(50, 80 `+ 20 `* i, MyImages`::[* Get](i));&]
-[s7; -|-|w.DrawText(80, 80 `+ 20 `* i, MyImages`::[* GetId](i));&]
-[s7; -|`}&]
-[s7; -|w.DrawImage(20, 0, 50, 50, MyImages`::Get(MyImages`::[* I`_Circle]));&]
-[s7; -|w.DrawText(80, 0, AsString(MyImages`::[* Find](`"Circle`")));&]
-[s7; `}&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyApp().Sizeable().Run();&]
-[s7; -|Image m `= MyImages`::Circle();&]
-[s7; -|MyImages`::[* Set](MyImages`::I`_Circle, MyImages`::Triangle());&]
-[s7; -|MyImages`::[* Set](MyImages`::I`_Triangle, m);&]
-[s7; -|MyApp().Sizeable().Run();&]
-[s7; `}&]
-[s7; &]
-[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS MyImages]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE  ][C@(0.0.255)+75 <][C+75 Image02a][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MyApp() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 170][C+75 , 
+][C@3+75 170][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SColorPaper());]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+MyImages][C@(0.0.255)+75 `::][*_C+75 GetCount][C+75 (); i][C@(0.0.255)+75 `+`+][C+75 ) 
+`{]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 50][C+75 , 
+][C@3+75 80][C+75  ][C@(0.0.255)+75 `+][C+75  ][C@3+75 20][C+75  ][C@(0.0.255)+75 `*][C+75  
+i, MyImages][C@(0.0.255)+75 `::][*_C+75 Get][C+75 (i));]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 80][C+75 , 
+][C@3+75 80][C+75  ][C@(0.0.255)+75 `+][C+75  ][C@3+75 20][C+75  ][C@(0.0.255)+75 `*][C+75  
+i, MyImages][C@(0.0.255)+75 `::][*_C+75 GetId][C+75 (i));]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 20][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 50][C+75 , ][C@3+75 50][C+75 , MyImages][C@(0.0.255)+75 `::][C+75 Get(
+MyImages][C@(0.0.255)+75 `::][*_C+75 I`_Circle][C+75 ));]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 80][C+75 , 
+][C@3+75 0][C+75 , AsString(MyImages][C@(0.0.255)+75 `::][*_C+75 Find][C+75 (][C@3+75 `"Circle
+`"][C+75 )));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     Image m ][C@(0.0.255)+75 `=][C+75  MyImages][C@(0.0.255)+75 `::][C+75 Circ
+le();]&]
+[s0;l320;%- [C+75     MyImages][C@(0.0.255)+75 `::][*_C+75 Set][C+75 (MyImages][C@(0.0.255)+75 `:
+:][C+75 I`_Circle, MyImages][C@(0.0.255)+75 `::][C+75 Triangle());]&]
+[s0;l320;%- [C+75     MyImages][C@(0.0.255)+75 `::][*_C+75 Set][C+75 (MyImages][C@(0.0.255)+75 `:
+:][C+75 I`_Triangle, m);]&]
+[s0;l320;%- [C+75     MyApp()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5;~~~352~96; &]
 [s0;= 
 @@image:784&920
 (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)
@@ -139,38 +172,54 @@ in the above example).&]
 [s5; Image list classes also provide unified interface class to its 
 content: [* Iml]. In fact, method used in previous example are just 
 wrappers that call Iml methods:&]
-[s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define IMAGECLASS MyImages&]
-[s7; #define IMAGEFILE  <Image02b/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; class MyApp : public TopWindow `{&]
-[s7; -|[* Iml]`& iml;&]
-[s7; &]
-[s7; public:&]
-[s7; -|virtual void Paint(Draw`& draw);&]
-[s7; -|&]
-[s7; -|MyApp(Iml`& `_iml) : iml(`_iml) `{`}&]
-[s7; `};&]
-[s7; &]
-[s7; void MyApp`::Paint(Draw`& w)&]
-[s7; `{&]
-[s7; -|w.DrawRect(GetSize(), SColorPaper());&]
-[s7; -|for(int i `= 0; i < iml.[* GetCount](); i`+`+) `{&]
-[s7; -|-|w.DrawImage(50, 80 `+ 20 `* i, iml.[* Get](i));&]
-[s7; -|-|w.DrawText(80, 80 `+ 20 `* i, iml.[* GetId](i));&]
-[s7; -|`}&]
-[s7; `}&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyApp(MyImages`::[* Iml]()).Sizeable().Run();&]
-[s7; `}&]
-[s7; &]
+[s5; &]
+[s7;l320;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS MyImages]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE  ][C@(0.0.255)+75 <][C+75 Image02b][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 class][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [*C@(0.0.255)+75 public][C@(0.0.255)+75 :]&]
+[s0;l320;%- [C+75     MyApp(][*_C+75 Iml][*_C@(0.0.255)+75 `&][*_C+75  iml][C+75 ) 
+][C@(0.0.255)+75 :][C+75  ][*_C+75 m`_iml(iml)][C+75  `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 200][C+75 , 
+][C@3+75 200][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SColorPaper());]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+m`_iml][C@(0.0.255)+75 .][*_C+75 GetCount][C+75 (); i][C@(0.0.255)+75 `+`+][C+75 ) 
+`{]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 50][C+75 , 
+][C@3+75 80][C+75  ][C@(0.0.255)+75 `+][C+75  ][C@3+75 20][C+75  ][C@(0.0.255)+75 `*][C+75  
+i, m`_iml][C@(0.0.255)+75 .][*_C+75 Get][C+75 (i));]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 80][C+75 , 
+][C@3+75 80][C+75  ][C@(0.0.255)+75 `+][C+75  ][C@3+75 20][C+75  ][C@(0.0.255)+75 `*][C+75  
+i, m`_iml][C@(0.0.255)+75 .][*_C+75 GetId][C+75 (i));]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [*C@(0.0.255)+75 private][C@(0.0.255)+75 :]&]
+[s0;l320;%- [C+75     ][*_C+75 Iml][*_C@(0.0.255)+75 `&][*_C+75  m`_iml][C+75 ;]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp(MyImages][C@(0.0.255)+75 `::][*_C+75 Iml][C+75 ())][C@(0.0.255)+75 .
+][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1000&1194
@@ -180,66 +229,94 @@ wrappers that call Iml methods:&]
 [s3;:3: 3. Creating and altering images in the code using ImageBuffer&]
 [s5; ImageBuffer represent a write access to the immutable Image 
 value.&]
-[s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyApp : public TopWindow `{&]
-[s7; -|Image img;&]
-[s7; &]
-[s7; -|virtual void Paint(Draw`& w);&]
-[s7; -|virtual void LeftDown(Point p, dword keyflags);&]
-[s7; -|&]
-[s7; -|typedef MyApp CLASSNAME;&]
-[s7; -|MyApp();&]
-[s7; `};&]
-[s7; &]
-[s7; MyApp`::MyApp()&]
-[s7; `{&]
-[s7; -|[* ImageBuffer ]ib(50, 50);&]
-[s7; -|for(int y `= 0; y < 50; y`+`+) `{&]
-[s7; -|-|[* RGBA ]`*l `= ib`[y`];&]
-[s7; -|-|for(int x `= 0; x < 50; x`+`+) `{&]
-[s7; -|-|-|if(y `=`= 0 `|`| y `=`= 49 `|`| x `=`= 0 `|`| x `=`= 49)&]
-[s7; -|-|-|-|`*l`+`+ `= Black();&]
-[s7; -|-|-|else `{&]
-[s7; -|-|-|-|l`->a `= 2 `* (x `+ y);&]
-[s7; -|-|-|-|l`->r `= 4 `* x;&]
-[s7; -|-|-|-|l`->g `= 4 `* y;&]
-[s7; -|-|-|-|l`->b `= 200;&]
-[s7; -|-|-|-|l`+`+;&]
-[s7; -|-|-|`}&]
-[s7; -|-|`}&]
-[s7; -|`}&]
-[s7; -|[* Premultiply](ib);&]
-[s7; -|img `= ib;&]
-[s7; `}&]
-[s7; &]
-[s7; void MyApp`::Paint(Draw`& w)&]
-[s7; `{&]
-[s7; -|w.DrawRect(GetSize(), White);&]
-[s7; -|w.DrawImage(10, 5, img);&]
-[s7; -|w.DrawImage(40, 25, img);&]
-[s7; `}&]
-[s7; &]
-[s7; void MyApp`::LeftDown(Point p, dword keyflags)&]
-[s7; `{&]
-[s7; -|[* ImageBuffer] ib(img);&]
-[s7; -|for(int y `= 15; y < 35; y`+`+) `{&]
-[s7; -|-|RGBA `*l `= ib`[y`];&]
-[s7; -|-|for(int x `= 15; x < 35; x`+`+)&]
-[s7; -|-|-|l`[x`] `= [* 100 `* Red()];&]
-[s7; -|`}&]
-[s7; -|[* img `= ib];&]
-[s7; -|Refresh();&]
-[s7; `}&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyApp().Sizeable().Run();&]
-[s7; `}&]
-[s7; &]
+[s5; &]
+[s7;l320;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     Image img;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyApp() `{]&]
+[s0;l320;%- [C+75         ][*_C+75 ImageBuffer][C+75  ib(][C@3+75 50][C+75 , 
+][C@3+75 50][C+75 );]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; y ][C@(0.0.255)+75 <][C+75  
+][C@3+75 50][C+75 ; y][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320;%- [C+75             ][*_C+75 RGBA][C+75  ][C@(0.0.255)+75 `*][C+75 l 
+][C@(0.0.255)+75 `=][C+75  ib][C@(0.0.255)+75 `[][C+75 y][C@(0.0.255)+75 `]][C+75 ;]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+x ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; x ][C@(0.0.255)+75 <][C+75  
+][C@3+75 50][C+75 ; x][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320;%- [C+75                 ][*C@(0.0.255)+75 if][C+75 (y ][C@(0.0.255)+75 `=`=][C+75  
+][C@3+75 0][C+75  ][C@(0.0.255)+75 `|`|][C+75  y ][C@(0.0.255)+75 `=`=][C+75  
+][C@3+75 49][C+75  ][C@(0.0.255)+75 `|`|][C+75  x ][C@(0.0.255)+75 `=`=][C+75  
+][C@3+75 0][C+75  ][C@(0.0.255)+75 `|`|][C+75  x ][C@(0.0.255)+75 `=`=][C+75  
+][C@3+75 49][C+75 ) `{]&]
+[s0;l320;%- [C+75                     ][C@(0.0.255)+75 `*][C+75 l][C@(0.0.255)+75 `+`+][C+75  
+][C@(0.0.255)+75 `=][C+75  Black();]&]
+[s0;l320;%- [C+75                 `}]&]
+[s0;l320;%- [C+75                 ][*C@(0.0.255)+75 else][C+75  `{]&]
+[s0;l320;%- [C+75                     l][C@(0.0.255)+75 `->][C+75 a ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 2][C+75  ][C@(0.0.255)+75 `*][C+75  (x ][C@(0.0.255)+75 `+][C+75  
+y);]&]
+[s0;l320;%- [C+75                     l][C@(0.0.255)+75 `->][C+75 r ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 4][C+75  ][C@(0.0.255)+75 `*][C+75  x;]&]
+[s0;l320;%- [C+75                     l][C@(0.0.255)+75 `->][C+75 g ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 4][C+75  ][C@(0.0.255)+75 `*][C+75  y;]&]
+[s0;l320;%- [C+75                     l][C@(0.0.255)+75 `->][C+75 b ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 200][C+75 ;]&]
+[s0;l320;%- [C+75                     l][C@(0.0.255)+75 `+`+][C+75 ;]&]
+[s0;l320;%- [C+75                 `}]&]
+[s0;l320;%- [C+75             `}]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75         ][*_C+75 Premultiply][C+75 (ib);]&]
+[s0;l320;%- [C+75         img ][C@(0.0.255)+75 `=][C+75  ib;]&]
+[s0;l320;%- [C+75         ]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , img][C@(0.0.255)+75 .][C+75 G
+etSize()][C@(0.0.255)+75 .][C+75 cx ][C@(0.0.255)+75 `+][C+75  ][C@3+75 50][C+75 , 
+img][C@(0.0.255)+75 .][C+75 GetSize()][C@(0.0.255)+75 .][C+75 cy ][C@(0.0.255)+75 `+][C+75  
+][C@3+75 35][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+White);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 10][C+75 , 
+][C@3+75 5][C+75 , img);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 40][C+75 , 
+][C@3+75 25][C+75 , img);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point p, ][C@(0.128.128)+75 dwor
+d][C+75  keyflags) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         ][*_C+75 ImageBuffer][C+75  ib(img);]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 15][C+75 ; y ][C@(0.0.255)+75 <][C+75  
+][C@3+75 35][C+75 ; y][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320;%- [C+75             RGBA ][C@(0.0.255)+75 `*][C+75 l ][C@(0.0.255)+75 `=][C+75  
+ib][C@(0.0.255)+75 `[][C+75 y][C@(0.0.255)+75 `]][C+75 ;]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+x ][C@(0.0.255)+75 `=][C+75  ][C@3+75 15][C+75 ; x ][C@(0.0.255)+75 <][C+75  
+][C@3+75 35][C+75 ; x][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320;%- [C+75                 l][C@(0.0.255)+75 `[][C+75 x][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 `=][C+75  ][*_C@3+75 100][*_C+75  ][*_C@(0.0.255)+75 `*][*_C+75  
+Red()][C+75 ;]&]
+[s0;l320;%- [C+75             `}]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75         ][*_C+75 img ][*_C@(0.0.255)+75 `=][*_C+75  ib][C+75 ;]&]
+[s0;l320;%- [C+75         Refresh();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:584&629
@@ -249,14 +326,14 @@ value.&]
 (A3UAfgAAAAAAAAAAAHic7dwHdFzVuS/wsQ12QgJJIOGG0AIEQghwMSRAQkwgtARjYoopAUwJBi4hEAjp7d73Vl5eAAM2xr2o1+lFoy6NpFGbfnqv03uTbFPC22eOPJJlk2dJyBZe3uu/Zp3ZPtN+s7XPPudbnmSMSE6JZqVn0V1+EM0duJI7iYmsFjT3iZqfBTVrI+rtoifjmrUxzc8imkdjysajB/JQYrZJzyYPR2eT6a978Du5R01IuV0ZKW2EShvgbqlnpay5PagEbCh3I0r/7XHND6HkwZ7lqKpLny0ue+XDM/740df+l5KL/v7RN9d/tPyNj5Zv+uj7G5SseFfJD7d8bNQdZpF/85xH4eVAj/rpyrcfF0Xj4AAlEIC29IUPgLBm+eChtosfiwHbxS/klr36L7BnWfiCfyoByN9+ezJAW83Uzk9RwMdRM/WuqqSOKPVTlwM6p95VZcpRuUCWvfQhiOahguaGyWGsuXlUs1rS3EctWpcA0TybUgOol7w4tuSl9wC45tcfLnnlIxB1G9yWO9UNtXPpy/8Cg1/d8+hk0Qv/mkXUB6rvX33zahY9/97idfuXPFdcsi636IkxzeN5zc9Kt4/kwd2JnifSE3k0qdyCnjXxiVkF9IDcL2tugTUrmEnelR7Nz/jJgAn2qZhKDZDVKNQfE+VfwVsqZ13u05efJ5U8mQDHFPCHDKIcVh4KK1kTmghwUwMOQyDgeLRaWLSK0dzJKIen8tEK2F7n0ny1WbG92qH8K+C9j5rIFOEy8kT+Kz+ZcuezKWWfqd/pLBM7qgF606JKHqJ3APAAYzmqJ8AEAVPuCvdEgC1QBflKxcTGzaPKauFjeMuZRqr0gB3UJcTaKe9Z/dIXcsrjcOqwXC2dfK/wzIZIKPn+RzNsz/yDP/mGEuzyQcXzMrvmEq3C+426w/EGD8tbJp2iGikt1SIHwZb/mmaU8keeUdSRNuuUnwQcfVYrtu+JTOL1X8f+9ETk5TXh51eFnvlx8MkfBX9+a/DxG0HkR28AkR64Rsl9VwmrLmVuO99/33cyBASEFVuV98I2Bfa0v4ApQrm7wr34tum8CqDKWEZ+Mj7ZufbgP7FDB8bRyaxhlb996QCspE4FYBwm1/82U/12tm5TevvfE+t/E//Hi/H/eS72t2dif34q+ofHo39YG/3Nw5FXHgi/uDr03E+CT/xQWHO1//aLWlZeFYq/NzF6Lx8+lFeZRqYO3bUxFVONOuer0/7kbHDYCWF2Q/coj94J0qkRNCsV3tjf1mUbt+S029O7/pnc8MfE66/E//7L2P88F/3rOiAc+9OT0d89Fn314fBL94aevyv481vEh6+D7ry06ZqvgMcqvCCA9+vDk7wAHMzM6qkZeMPlE7EpwoB36lFVObAedvTO2vYoB5yFTbVdJSsp8UZffQjAZirXp979W+K1l+P/+/nYX56O/n5t5NcPR166P/zLe0LPrQw9d6cyXTzxQ/nR7wsPfAe66zLttV9VeK+FlKi8YO49wXsIb+Sle5Mb/pB858/Adq+7T+l55eHIL+8LPbcq+PTtwcdvlh/5vvzw9aC/0KGT1izn77sKvvty3ffPPTzv1zqV8XwDpKw6wF8NeOkSrwo41bacsvDE4vDY8t4zt6iwU3jB4SzxjxcTr/0KjNvywqBke0fw8ZuArfTAd8r90r1X8PdeCa86HK86OQBe0HNTaVGnLlQejqqj91DYQ3kV4cnrJJ+eAfzxvKF1t4OZVpkT/rou+ru1Zcngk7cEH1shP3TtpO3d35RWXybcczm86jLd985ReK8nFMxv+Q8avWXee0IHeJPl0wT1dObkn6fVTCA/lpwa5ev41AmvOZh35SRv9I9PRME6Ady++kjkxfvLnmCmnbRd9Q1p5YXSqouF1d9C7vqW/ntnT/B+lzg8L5iCgIw6dA/wLnkiV4Y9SHg6b1I54y4PY3AO/qlIeQyvjKjIiuFjPwALA2V58NvHwKwbfum+0C/unnYSEbznm8GfXiTf9XV51YXiTy9G77zYcN1Zk7zqAAZnFoAXOIPO24OloRufuC5RglVy4JR86bNFNWBbEVb/FWSa8FxyDHgTByek8D58XeSX90RfeTAKlgovPxh+8V7l5OLZOybn4QcvD913SWj1haFV54VWnS/dfQH2kwsM3z1T4V3BaL5PTgxgMHrPeP0g3gO2mscnLhAptqWrNGXeMvKk8BM5zSPKNaVZXg8/VlmTm8wBYeWv/v6rQ/+1MvKr+yMvPxD91RqwkAi/sGra6I2suSRy7wXhu88JrzpHvusc7PZzjNecrvDeIGluEBTeizBl9ALe8yHFHPCuOcBbsl3y5Piip/cvXre/dIHuvaXP75+MKvzkeDnKlbqflaI6H808VJhrJpGzgEj86bfBmjb8i7sBbOSl+8Iv3jOpum6FuvGvsVz0/guiq8+OrPpq8M6v4j8607z8CwrvzVHNTaIifCWj8H5lo8IL7iq8cdVW4Z0Cq+Yg3lJA58Q+U5Dnkokv6OhnCjIgElZeLK9dEXr2x+EX7g7/cvWk7XM/iqz7QfSpyZVDbPVZ0bvODN5xBvHDL5quOGWCFwSM4TIvGMYKb2kiUm3Bh336gO0v3l/8/L/A7dIXPjg0qryKDB4ConniU5JHp6SMvKYIiPjbzpMeujb41I9Cz/6kLBl+7rbIszdHnr4h+tR342uvmBS+80vhW0/Fb/ic6dtLFd47MoqkKqxckDzACw6dDyXK00LZdiqsWumYmiUvfgTwQRY9/x6IZt2HIKrzUYvmiQ9mFdX5g4O0H94HiLibvirecyVYgwHhMYdNsV13S3jdzeGnV0Seuj76xNWxRy+LP/wN0L+3tTL249NCN30Wv/Zk4zcXT/CCAN7r48rJxcTkICmFzocmjmjTbAHj0pcnqjxqDQhsqD0gQBhErbCo1Ec56nc6p5TNH90PiNgffBnMD+L9y+VHvhdcuyL4+Irg2htCa78XWntd+LGrI49cHn3w4tj954OZAQzd6K2fC644GbtmseGSRQrvXYWJAQx4lw8qvF/zlXmnDd2lL713GNsDmeAtl71enMwxcZ7rV1MSBkTEdafRt5zD3nUpd+9/8muuER78jrBmufDAcvGBK6U1lwXvuzi4+vzQXWeFfnxG6JZTgzcuE65fHPhPTdNFmgleVRjwqpPDwbyq8MThrDwhvPLhobz/XngWWQjCodSHnp9c6r7+DPeNZ/tuvcB3x8W+Oy7x3f4N/x0XBW6/ALrtPPS2s9EfnYnddAa64jTse59Fv3tS4KpFfZdpmn9wvsJ7T/EgXrAwm8Kr1kPVATy5HpuGPGVmOKztMR+Ts7Qt8T6zbSyN+W23Xlr37VO1V32pefnpjVd/ufGq07VXn6G7+gz98i+arjrVfOUp1is+Y7psqenSJdZvLtJ/Q6P9wflxxPfMO7mP4RXKvOrtxPmCMoyLB63KymuG0sw8Lep7Lq/lZppPYBad5aw7uZw4ee3eZzYXPpphCyU/ALYn/zR/0Nw7jXdV6eL/RNFh8vRtslQ9tdT+3HvqamFqysuG2a6X5rIGmPnCrHQsA6uFiVXZg+Oah/YqARtriso4VG/VjXLuyWruyii36r+WJ9tpmcarCAtKSegW36Jb/YtvU1KuOKvFaKUevVpQvoXyVehDqypTr+8dndwuzCbgw678mMfewigXuEBWHMiN1MTdmw5E7QG33yeVXE9MXGpQL+kAzMPy3uJTeEvCZeTDRt1BSXn/KQ+cXdRXn2kWzTaze7kjinpSrK4czvIt+w515vPpz6xhZzrnnGiHbZof5zQ3UJoLGjVnvHGC9xNvJ3jntU3j/ewJ3k+0KbzgOHhuxQne+Wiz49UsyHZ0xGbUpvF+Zjl5hLzvv/+v/fs/3Lv3w7GxDwqFD/K597OZ9zOp91OJ95Kx9xKR/bHQ/qi8LyLuC/P7QuzeIL1XJsclfFxCx0R4TAgUBV+R9xR5V4EbKXBDec6Z5/pznCPH9ea47izXmeXaM1xrhmtJc9Y0b07xxpSgTwnapNiUlBoSUl1CrokHq+Khinh4d+w44z3UNn3ANj7VVtgX5PYGmb0yNS4R4yI2JiBjAlTk/UXOW+TcBW60wA7n2cE8O5Bj+3KsI8f0ZNmuLNuRYdsyrD3N2tKcJcWZUpwhxeuSQnNSaEyI9QmpNi5XK7zBitjxx1u2zU2xTcTfi0f3x8L7I8F9YWlfqGQrM3slalwkxgVgi47xcJELFDlfkfUUWFeBGckzQ3nGmWP6c0xfju7N0t1ZpjPDtGeY1jTTkmasKdacYo0pTp/kdEm+OQF4hfq4WBuXquNyZSy4JxbaFf1U8C5bThwh76Rt9v10+v1kcsI2WrYV98n8XondK9LjIjku4GM8OsYBW6jI+ouMt8C4C8xonh7O04M5eiBH9+coR5bqyVJdGbojQ7elaXuatqUAL2NOMcYkC3i1Ca4pwTfEhTqFV6yOSZUxeU90ofOeN2NexTb/fmaKbQzYRvaHQ/tC8r7gFFuBGueJMQ4bY5EiCxUZYOsr0J4C7cpTI3lqKEc5c9RAjuzLkr1ZsjtDdmao9jTVmqbsKcqWoi0p2pRkDElGl2C1CbYpzjXE+bq4UBMTq2JSRRTwBndFjjNe1TZVso0n3ovF9kfKttI+SdgrcnsFZpynxjlgi4+xaJGBi3SgSPsKlLdAufPkaJ4czpGDOdKZI/qzhCNL9GSIrgzRkSbb02RrimxJkdYUZU5SpiRtSNC6BNMcZxsVXq4uxtfEhKqoWBGVdkeOP17VNpFSbKOqbXhfMLhPLtuy4zw9zpFjLD7GYEUaKdJQkfIXSG+B9OQJV54YyRFDOWIwhw9k8b4s3pvBuzN4VxrvSBNtKcKeImwpwpokzUnSmKD0gDdON8eZxjhbH+NqAW+0xBsBvPKu8HHGm8ocsI3vj0T3h1RbeZ8o7hX4vTw7zjHjLDXGEGM0sEWLFFwkAwXSVyC8ecKdx0dz+HAOH8phzizWn8UcGaw3g3Wnsc401p7C21K4PYXbkoQlSZgTgJfUxymtwks3xpj6GFsb5WqifFVEqIiIu8PHHy+wjSUV23DJVg7tk1RbYS/HjbPMOEON0eQYjRcptEgiRQIqEP4C7s3jnjzmymEjOWw4hw5m0YEs2pdBHRm0J412pdGOFNqewlpTWEsSsyVxSwI3JQhDnNDHSW2caooBXro+ytRG2eoIp/CGAa/0KeH9zBHzAtsIsI3tD0ZKtsF9grSXV23ZcYZWbCmiSGJFAtjCBTxQwHx5zJtH3Tl0NIeO5JChLOLMIv0ZpC+D9KaR7jTSlUI6UkhbCm1Noi1J1JrALAnMFMdLvIQ2RjbFqIZoiTdS4g3zFWFB4Q0tXN4bwcKscqa8kcT+UMlWCu8TS7acuJflxxl2nGbGKGqMJIoEXsTRIg4XMKiA+vOoN494cogrh4zm4OEsPJiFnRm4PwM70nBvGu5OwZ0puCMFtyURexJpSSDWBGqOo6Y4ZojjuhiujRFNUbIhStVH6NoIUx1mq8KcwhsSjzteYCtHS7ahfbxcshXGGW6cYsZIeowgiwRRxLEihhRQuIAG8ogvD3tzsDsHu3LQSBYaykKDGWggE+hLBxzpQE8K6k5BnSmoPQm1JWF7ArYlYGscKfGihhim8EYBL9EQIesjVG2YqVF5Q/wewBv8VPAe+dwLbMXIPqFky0p7GWGc5scptmRLFXGiiOFFFC0gcAGB8rA/D/lykCcHuXOB0WxgOBsYyvidGf9A2t+X9vem/D0pf1cq0JkMtCcDrQnInoBsccgah81xxBhDDDFUF8W0UbwpUuINA166JsxUhViFNygsZN4VrOa8GfMqtuF9XFCxpcVxih8nuTGCGcPpIkYWUbyIYAUYKcBwHgrkIX8u4M0FPDm/K+sfyfqGM77BjM+Z9vWnfX0pX2/K153ydSV9HUl/e8LfmgjY44ESL2SOwcYYbIgiuiiqjWBNEbwxTNSHydowVROiAW9lkAO8u+XjjJcv2TJyyVYYJ7gxnB3D6CJKFRGiCOMFGC1ASD4A5f9bo5l1AuYYZIwCXlgXQbQRtCmMNYbx+jBRF1J4q4MM4K2Q+U8J75HPvWxoLxPcS0njpDhO8GM4N4YxRZQuImQRJgoQVgigeT+c90O5ufD6zdGAKQoZIrAe8IbR5hJvQwjwkrVBCvBWySzg3bOQeadeMTtSXhrYyuOEOI4LYxg3hrJFhC7CVBEiCgG84EfzPiTvg3LewJx4feao3xQJGCKQPgxrw0hzGG0MYQ0hvC5IKLwyDXgrj0NeEthK45gwhvJjCFuEmSJEFwNkwU8UfFjei+a9cM4D5Txz4/WaIz5TxG8IB/RhSBeGm0NIUwhtCGL1gFcma2S6WuHlKqRPCe+RXu/Fga04hgpjMFeE2GKALvqpgo8sePG8F8t7kJwbzrmhnMufnROvJeI1hX3GsF8fDuhCkDYENwXRRsAr43UyWavwMlUSV7mwec+bMS8qjSHAli9CXNHPFH10wQtsibwHz7vRnAvJueDcaCA7MkPehdmOPi8sjkFCMQBs2aKPKXipgofMu4m8C8uNorlRJDcCZYcD2WFf5r9nyPtXzZK/aE76s2bpnzTL+pqD/Q1yX53cVy33VYh9u8W+HYJjm9C/mR94hx/YwDvf4pxvcIOvMZ/TnL8Aq3jTL+lcfaS8AaHo54s+ruhlCh664KbyLiI/iudGsNwImhuGs0NQdiiQGZw5b9n2j5rPOprk3nq5t1burRJ794g9u4Te7YJjK9+3me/bxDs2cv1vcwPrmYHX2M8v+voCrOIdWJjNmNcnFL1c0cMW3EzBRedHyfwIkRvGc8NYbgjJDsLZQSjj9GecvvRMecu2f9Cc0t0od9fJ3TViV5XYXSF07xK6d/Dd2/iezXzvO5xjA+d4k+l7g+1/jT518YULsIo3a14PX3RzBRdbGGXyI1R+mMwNEbkhPDeIZp1I1glnBqDMgD/dP3Pesu0fFn2+s1HuqBc7asTOSqFjj9C5i+8CvFv5rs1c9yaueyPT+xbrWE87Xge8Fy3AKt403iNfmLn4wihXGGHyw3R+iMoNkrlBIufEsgNoth/J9MOZvkC6z5/u86VmyqvYLjrl94s+//tFp7U1iO21Ylu10FYltFXw7bv4ju18x1auczPXuYnp2sh2v0X3rKd7XqdOW3LxAqzizfp67whXGGbzQ0x+kM45qZyTzA3g2X4s24dm+pCMA047Aulef6p35ryq7e8Wnfa7RV+wN4j2OsFeI7RW8q17+LbdfOsOrm0r176Zad/Edmyku96mu96kut+gTjvpmwuwijdr3iEuP8jmnUxugM4NULl+ItuHZx1YxoFmepF0L5zuCaR6/KnumfOqtr9d/IXfLv6StUGw1QotNbytim+p4O07Oft2rnUb07qFbXuXbttIt2+gOt6kut4gv3DypQuwijfrlYOTyw+wuX4m10/n+sisg8j24pleLNODpruRdDec6oZSXf5Uly85U97fLZ6w/c2S0y0NgqWOt9Tw1ireWsFZd3G2HUzLNta+hba/S7e+Q7VvpNrfIjvWk19cetkCrOLNmrefy/WxuT4m56CyvWS2h8h045luLN2FpruQVCec6oRSnYFkx8x5ge1vlii2ry75sqmBN9XxphreXMWZKzjzLsayg7Vso61b6ZZ3qZZ3KPtGsvVtsv1N8ovLvr0Aq3iz5nVwOQeb66WzPVS2m8x0EZkuPN2JpTvQVAeS6oBT7VCyPZBs9ydmygtsXwW2J3351yd9xdDAG+p5Qw1nrOKMFYxpD2vaSZu30ZatlHUzZdtEtrxD2t8mW9/Ev/TZKxZgFW/Wc28vl+thst10tovKdJKZDiLdgafbsVQ7mmpDUm1wsg1KtgYSrTPnffWk039dsn3l5P/QNfK6Ok5Xy+mqGX0Fa9hDG3bRxh2UaRtl2kJa3iWtm0jbRtz+FvGlU65cgFW8iWLQzK/3dnPZLjbbyWQ66Ew7lW4n021Eqg1PtWKpVjRpR5J2OGGHEvZAfKa8wPaVkxXbV5ae1dTINddz2lpGW81qK2ntHlq3izLspIzbScBr2kxaNuHWjYR1A3b6565agFW8WfN2ctkONtPOZNrodCuVbiVTdiJlx1MtWLIFTbYgCRucsEFx28x5ge3LS//j5aVnvbz0aw2NXGM901jHNlXTzZV0cwWl3U3pdpK67aR+K2ncgpveJcybMOtG/IxTr16AVbxDeI907m3nMm1sppVJ2+m0nUq1kCkbkbLhSRuWtKIJK5KwwnErpGSmvIrtsrN+texrv1p2Tl0TU1/P1tfRDbV0QzXVWEk17SGbd5HaHUAY128ljFsw4ybc/A52xmnXLMAq3qx5W7mMnU23MGkbnbJRKSuZshJJCwiesGAJMxo3I3EzHDdDMXMgZvZHzb6o2RuxgHjCFnfY6gpbR0O2kZBtONgyFLQPyq1Ouc2pfJYaM19j4Kr1XI2WqW1maxrp2nq6rpaqq6HqK8mGCrJxN9m0C2/eTszoi5uWo1PFmzVvC5e2sWkrkwKx0CkzlTSTSTORMOEJExY3oUqMSMwIx4xQ1BSImvwRky9i8obNIJ6w2R2yuELW0aB1JGgblluGZPuQ3DqofJZKM1dl4ioNTKWerW6mq5vo6gaqpo6qrSHrqsmSMN6wm2jaic2F9+hU8WbNa+XSFi5lZlNmJmWikyYqaSQTIAYibsDjBixuQGMGJGaAo0qgiCEQMfjDRl/Y6A2bvCGTJ2R2B82uoGVUto7IthG5ZRgIK0WHPRZuj5nZY2D36OkKLV3ZRFU1UlX1ZHUtWV1D1lTitRVE/R6sYTc+F96jU8WbNa+ZT5m4lJFNGZmkAYRO6KmEnozrCSU6PKbDYjo0qkOiOjiiB4HC+kBY7w8bfCEQozdo9ARNbtnski0u2ToKhKWWEYV3l4XZZWZ3GundBnq3jtrdTO1pIisayMp6sqoWr6ohaiqx2gocCM+F9+hU8WbNa+RTBi6l55J6NqljEjoaJK6l4loyriViWhwkqsWiWjSiRUDCWjisg8K6QEjnD+n9Qb0vaPDKRo9s8shmt2xxS1aXZBtVPst2K7vDQu8w0zsM1E49tVNL7momdzeRu+vxijqisharqsZrqrCaCnROvEelijdrXr2Q0vFJHZfUcgktm2hm4s20kiYq1kTGmoioEjzShEWa0HAzCBJuhkNaCCSoCwR1flnvkw0+2eiVTV7J5JHMbsniEsEzb22ht1robWZqu4naZiC368kdzUAY39VI7K7H9tThJWG0umpOo9djCXvNYa8x7DOE/ApvEG4OIo0y2iDj9QovVSMx1RJ7jHi1QrIZhE80cYkmNt4IwsQb6RhIAxVtIKMNRASkEQ83YqWgoSYk1AQHm0EgWRuQdQFZD5D9ksEnGYGwVzR7FN7NLfRmG7XFQm01k1tNJBDepsN3aImdTdjORnx3AxBGKxRhZC68bkvYA3hNIYVXHwzoglCzDDfJaKPCS9RJVK1EA94q8ZjwNonJRiEB0sDHGzgl9WysnonV01ElVKSeBAnXE+F6PNyAhxqwUAMabARB5CZYboZlLUCGJF1AUoT9otEnmrwCeOZNdmpTC7XJRr5rITebyC0mfIue2KrDtmnxHc1AGN1Zj+2uR/bUzonXZQ27zSGPKeQ1Bn36oF8nB7Qy3CyjTTLWIOH1Elkn0TUiU31seBukRL2YqBfidSB8vI6L1YKw0VoGJFJLR2qpsBIyXEeElODBegxEbkDlRlRuAkGkZljSwpIOEvUB0RAQjH6Fd0MbtdFObrSR79jITRb8XROx2YhtNuBb9UAY3a4II7sakD318Fx4R60hlyXkNgc9xqDXIPv0ckAnQ1oZaZLQRglvkIg6kaoVmRrhmPDWSYlaKV4rKqkRYjU8SLSGi1azESVMuAaEDtdQIZBaMlhLgMh1uFxfSgMmNaJSEyo1I6IWFnWwoIcEA8SDZ36rjQR5205uaME3WImNFmyTGSBjm/XoFiCsQ7Y3Izub4J0Nc+IdsYVGrUGXOeg2yR6j7DPIfj3gleBmCW2SsEaRqBepOoGuPTa8NXK8GkSKV4uxKhAhqoSPVHEg4Sq2FCZURYeq6WA1BSLXkHJtKXWEVI9LDbjUiIlNmNiMClpE0CG8HlZ413eQ69vJN1vxt+zE2y3Y2zZ8oxV7x4xuMmLvGpEtemSLDt7WDO9sgubCO2wLjliDoxbZZZY9JtlrBLxSQCfBWglpFrEmEW8QyHqBruOPCW9VMA5SKccqpViFFK0QQSIVAki4gg9XcCChCjZUyQYrmWAVI1fRcnUpNZRUS0l1pFRHiPWE2IALjbjQjPFajNehHHjm1zvJ1zvwN9qJ9W1YCRkIoxus2EYzssmMvGuEtxjgrTpou25OvEMtwWGbPGKVXRbZbZa9JslnkIAwpBNhrYg2C3ijQDTwVP2x4a0IxSuCsT0gchRktxRRIoaVCCChPTxIcA8XrODkClauLKWKkapBaKmGFmspsY4S6kmhgeAbCb4Z57S4wvvPbvyfXcRrndhr7fj6dmy9HX3Tjr1lQzbYkI0WeJMZftcIbTFAW/Rz4h20y0Mt8ohNHrXKbovkMUleo+Q3iAG9COsERCtgzTzRyFMN3DHh3R2OgewKRZUEI0rksBIJJLRLBAnuEoK7BXk3L+8ppYKTKkFYqYoVqxmxhhFqaaGO5uspvoHiGkmumVQ+y//pJf7Rjf1fgAyEO9DX27A32pA37chbLfDbNnijFXrHAm0yQVuMgbnwOlvlIbs8rAhLLqvkNktek+gzigGDAOkFRMdjWh5v5sjGufOyU/7rypHyzmM7+8pF51y15NyrTzr3mpPP++7S869d9vXrP3vB90658IbPX/SDU79x4xcuvulLl9x8+iW3zIm3TR5UhKWRFmkUCFtEj1n0mgS/UYAMPKznUR2Hazmy+Rjwzl/TzFsVb1oG2mVnmzTUKg0rwqLLJrqtgtcs+Ex8wMjDBg7Rc5iOI7TsccY7T1W8aenvkAbapUFFWBy2i6MtgssmeKy8z8L7zRxk4hAjhxlYQj9n3hUznnvnr2nmrYo3LX2d0kCH5GwXB9vE4VZhxC64Wni3jfdaOb+FC5g52MSiRhY3MMcZ7zxV8abF0SX1d4oDHaKzXRhqE4Zb+VE7727hPDbOZ+UCFhY2s6iZwU2fJO+yBcA7T1W86bzdYl+X2N8pODuFwQ5+uJ0faeNcrZzHznlbWL+NhawMYmEwM32c8c5TFa99QO7olzr7pC6H1O0Qe3tFR4/Q1y0MdPHOTn6ogxtp50bbOHcr67WzfjsDtTCIjcasxxvvPFXx2pxS+4DUMSB19otdfWKPQ+jtFRw9fH837+ziBru44U5utIN1tbOeNsbXygTsNNxCoy3HG+88VfFah6S2QandKXYMiJ39Qnef0OPgHQ6+r5cb6OGc3dxQFzvSybo6GU8H42unA2003EqjdmrOvOyUX4I69rzzVMWzDwNhsW1QbHcKnU6ha4Dv7ud7+ziHg+t3cM5edrCHHe5mRrsYdyft7aT9HTTUTiFtxxvvPFXxWkZE+7DYOiy0DQkdg3ynk+9ycj0DnKOf6+tjBxzsoIMZ6mVGemhXN+3pon1dFNRJIR3kccY7T1U8m0tsGRXsI0LrMN8+zHcMcV2DXLeT63WyjgG2v59x9jFDffSIg3b10p4eytdDBbpJuOuT4D1vAfHOUxXP6hZsLqHFxdtH+bYRrn2E6xzmuobYnkHWMcj0OZmBAXqwnx7up0f7KLeD8jpIfy8J9xDHGe88VfHMXsHq4W1uvsXNtbq4tlGuY5TtHGG7h5neIaZviO4fpJ1OeshJjQxQ7n7S20/6+wjIcbzxzlMVz+TjLT7e6uVsHs7u4VrdbLuL7XQxXaNMzwjtGKH7h2nnEDU0RI0Mki4n6XESvgEC6sfnfEmHWVC881TFMwZ4s5+z+Dmrj2vxsnYv2+ZhOjxMp5vudtG9LrpvlBoYoQZHyOFhcnSY8AwRvkE8MHi88c5TFc8AcyaIMwc4S4C1+Vm7n2n1Me0+utNLd3noHg/lcFP9btLpIodHidFRwj2Ce0fwwPDxxjtPVTw9whkRzgSzZpi1QkwLxNgDdFuA7vDTXT6qx0c5vGS/l3R6iCEPMeLGXS7c68L9o9gncL13IZ21zVMVT4dxBow1oqwZZSwIY0PoFphuhel2iOqEqO4A2esn+/zEgI8Y9OEjXtzlxT0ezO853njnqYqnJVg9wRpwxoQzZoy2YnQLSttRqg2hOhCyCyZ7YMIBEf0QPhjAhwP4qB/z+DGfD/0EeRfC9d4F2Gb/cSaKQTP7uYwT7QjbCd55bdN4j/Bn4k60I2yHXO89wftJthO889oWWqX4OGuz+6GtE+0I2wneeW2z+z2HE+0I2/Rfnz7B+4m2E7zz2g75afoTvJ9kO3Fom9d2gnde2wneeW2z+/XpE+0I2wneeW2H8p5+b0gVXvbTuBplnxOZXYDtFd1TeU+9g/ri/fwpPyFPuplQo1wQBgF7flxuLGUFeyCH7lPqv/HAnuoTHvqch/ZP72EPyeFeaGr/jdPe3se8t3/zVB/7DIc+8JD3dp1fc3mn5rxqhfdMvXKMU1J5YGNqKg/kkH869+Ac2q8+cNrdqU8FFt7nVh7utQ7k3IMz7YHnHrL/x77/mXyu6R/z//cmD/MeqpWNs3covF/eptyeyPzk/wGphbdm)
 &]
 [s5; &]
-[s5; To create a new image, create ImageBuffer of required size and 
-simply set RGBA pixels of the image. ImageBuffer provides operator`[`] 
-returning the pointer to scanlines. When created, assign ImageBuffer 
-instance to Image. Note that this operation clears the ImageBuffer 
-(for performance reasons).&]
+[s5; To create a new image, create [* ImageBuffer] of required size 
+and simply set [* RGBA] pixels of the image. ImageBuffer provides 
+operator`[`] returning the pointer to scanlines. When created, 
+assign ImageBuffer instance to Image. Note that this operation 
+clears the ImageBuffer (for performance reasons).&]
 [s5; Ultimate`+`+ expects pixel data to be in premultiplied alpha 
-format `- Premultiply can do that for the whole ImageBuffer (or 
-Image) in straight format.&]
+format `- [* Premultiply] can do that for the whole ImageBuffer 
+(or Image) in straight format.&]
 [s5; To alter existing Image, assign it to ImageBuffer, alter pixels 
 and assign back to the Image. Assigning Image to ImageBuffer 
 clears the Image (again, for performance reasons). In this case, 
@@ -276,59 +353,71 @@ whether a given stream is in appropriate format. StreamRaster
 then contains static methods like  `"LoadFileAny`" which detects 
 the format of an image file and loads it using the appropriate 
 StreamRaster class.&]
-[s7; &]
-[s7;%- #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7;%- struct MyApp : public TopWindow `{&]
-[s7;%- -|Image   img;&]
-[s7;%- -|FileSel fs;&]
-[s7; &]
-[s7;%- -|void Open();&]
-[s7; &]
-[s7;%- -|virtual void Paint(Draw`& w);&]
-[s7;%- -|virtual void LeftDown(Point, dword) `{ Open(); `}&]
-[s7;%- -|&]
-[s7;%- -|typedef MyApp CLASSNAME;&]
-[s7;%- -|MyApp();&]
-[s7;%- `};&]
-[s7; &]
-[s7;%- MyApp`::MyApp()&]
-[s7;%- `{&]
-[s7;%- -|fs.Type(`"Image file`", `"`*.bmp;`*.png;`*.tif;`*.tiff;`*.jpg;`*.jpeg;`*.gif`"
-);&]
-[s7;%- -|Sizeable();&]
-[s7;%- `}&]
-[s7; &]
-[s7;%- void MyApp`::Paint(Draw`& w)&]
-[s7;%- `{&]
-[s7;%- -|w.DrawRect(GetSize(), White);&]
-[s7;%- -|if(img)&]
-[s7;%- -|-|w.DrawImage(0, 0, img);&]
-[s7;%- -|else&]
-[s7;%- -|-|w.DrawText(0, 0, `"No image loaded!`", Arial(30).Italic());&]
-[s7;%- `}&]
-[s7; &]
-[s7;%- void MyApp`::Open()&]
-[s7;%- `{&]
-[s7;%- -|if(fs.ExecuteOpen(`"Choose the image file to open`")) `{&]
-[s7;%- -|-|img `= [* StreamRaster`::LoadFileAny](`~fs);&]
-[s7;%- -|-|Refresh();&]
-[s7;%- -|`}&]
-[s7;%- `}&]
-[s7; &]
-[s7;%- GUI`_APP`_MAIN&]
-[s7;%- `{&]
-[s7;%- -|MyApp app;&]
-[s7;%- -|app.Open();&]
-[s7;%- -|app.Run();&]
-[s7;%- `}&]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     Image   img;]&]
+[s0;l320;%- [C+75     FileSel fs;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyApp() `{]&]
+[s0;l320;%- [C+75         fs][C@(0.0.255)+75 .][C+75 Type(][C@3+75 `"Image 
+file`"][C+75 , ][C@3+75 `"`*.bmp;`*.png;`*.tif;`*.tiff;`*.jpg;`*.jpeg;`*.gif`"][C+75 );
+]&]
+[s0;l320;%- [C+75         Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+White);]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (img) `{]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawImage(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , img);]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 else][C+75  `{]&]
+[s0;l320;%- [C+75             w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 `"No image loaded!`"][C+75 , Arial(][C@3+75 30][C+75 )][C@(0.0.255)+75 .
+][C+75 Italic());]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 )
+ ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         Open();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Open() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (fs][C@(0.0.255)+75 .][C+75 ExecuteOpen(][C@3+75 `"
+Choose the image file to open`"][C+75 )) `{]&]
+[s0;l320;%- [C+75             img ][C@(0.0.255)+75 `=][C+75  ][*_C+75 StreamRaster][*_C@(0.0.255)+75 `:
+:][*_C+75 LoadFileAny][C+75 (][C@(0.0.255)+75 `~][C+75 fs);]&]
+[s0;l320;%- [C+75             Refresh();]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Open();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; Important thing to note is that while packages dealing with 
-specific formats self`-register for use with LoadFileAny, you 
-need to add specific packages dealing with format to TheIDE project 
-(plugin/bmp, plugin/png, plugin/jpg, plugin/tif, plugin/gif).&]
+specific formats self`-register for use with [* LoadFileAny], you 
+need to [* add specific packages] dealing with format to TheIDE 
+project:&]
+[s5;l192;i150;O0;  [* plugin/bmp] `- for BMP file format support&]
+[s5;l192;i150;O0; [* plugin/png] `- for PNG file format support&]
+[s5;l192;i150;O0; [* plugin/jpg] `- for JPEG file format support&]
+[s5;l192;i150;O0; [* plugin/tif ]`- for TIFF file format support&]
+[s5;l192;i150;O0; [* plugin/gif] `- for GIF file format support&]
 [s5; &]
 [s3;:5: 5. Processing raster images by scanlines&]
 [s5; Sometimes it is important to process images without loading 
@@ -336,41 +425,61 @@ all the RGBA data into the memory. In such case Raster and [* RasterEncoder]
 provide interface to process them by scanlines. This example 
 converts an image to grayscale (by using just G channel) and 
 saves it as low`-quality JPG image:&]
-[s7; &]
-[s7;%- #include <CtrlLib/CtrlLib.h>&]
-[s7;%- #include <plugin/jpg/jpg.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7;%- GUI`_APP`_MAIN&]
-[s7;%- `{&]
-[s7;%- -|FileSel fs;&]
-[s7;%- -|fs.Type(`"Image file`", `"`*.bmp;`*.png;`*.tif;`*.tiff;`*.jpg;`*.jpeg;`*.gif`"
-);&]
-[s7;%- -|if(!fs.ExecuteOpen(`"Choose the image file to convert`"))&]
-[s7;%- -|-|return;&]
-[s7;%- -|String fn `= `~fs;&]
-[s7;%- -|[* JPGEncoder] jpg(20);&]
-[s7;%- -|FileIn in(fn);&]
-[s7;%- -|[* One<StreamRaster> raster `= StreamRaster`::OpenAny(in)];&]
-[s7;%- -|if(!raster) `{&]
-[s7;%- -|-|Exclamation(`"Invalid input`");&]
-[s7;%- -|-|return;&]
-[s7;%- -|`}&]
-[s7;%- -|FileOut out(fn `+ `".out.jpg`");&]
-[s7;%- -|jpg.[* SetStream](out);&]
-[s7;%- -|jpg.[* Create(raster`->GetSize())];&]
-[s7;%- -|for(int i `= 0; i < raster`->[* GetHeight](); i`+`+) `{&]
-[s7;%- -|-|[* RasterLine] l `= raster`->[* GetLine](i);&]
-[s7;%- -|-|Buffer<RGBA> out(raster`->[* GetWidth]());&]
-[s7;%- -|-|for(int j `= 0; j < raster`->[* GetWidth](); j`+`+) `{&]
-[s7;%- -|-|-|out`[j`].g `= out`[j`].b `= out`[j`].r `= l`[j`].g;&]
-[s7;%- -|-|-|out`[j`].a `= 255;&]
-[s7;%- -|-|`}&]
-[s7;%- -|-|jpg.[* WriteLine](out);&]
-[s7;%- -|`}&]
-[s7;%- `}&]
-[s7; &]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /
+][C+75 jpg][C@(0.0.255)+75 /][C+75 jpg][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     FileSel fs;]&]
+[s0;l320;%- [C+75     fs][C@(0.0.255)+75 .][C+75 Type(][C@3+75 `"Image file`"][C+75 , 
+][C@3+75 `"`*.bmp;`*.png;`*.tif;`*.tiff;`*.jpg;`*.jpeg;`*.gif`"][C+75 );]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 fs][C@(0.0.255)+75 .][C+75 E
+xecuteOpen(][C@3+75 `"Choose the image file to convert`"][C+75 ))]&]
+[s0;l320;%- [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320;%- [C+75     String fn ][C@(0.0.255)+75 `=][C+75  ][C@(0.0.255)+75 `~][C+75 fs;]&]
+[s0;l320;%- [C+75     ][*_C+75 JPGEncoder][C+75  jpg(][C@3+75 20][C+75 );]&]
+[s0;l320;%- [C+75     FileIn in(fn);]&]
+[s0;l320;%- [C+75     ][*_C+75 One][*_C@(0.0.255)+75 <][*_C+75 StreamRaster][*_C@(0.0.255)+75 >
+][*_C+75  raster ][*_C@(0.0.255)+75 `=][*_C+75  StreamRaster][*_C@(0.0.255)+75 `::][*_C+75 O
+penAny(in)][C+75 ;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 raster) 
+`{]&]
+[s0;l320;%- [C+75         Exclamation(][C@3+75 `"Invalid input`"][C+75 );]&]
+[s0;l320;%- [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     FileOut out(fn ][C@(0.0.255)+75 `+][C+75  ][C@3+75 `".out.png`"][C+75 );]&]
+[s0;l320;%- [C+75     jpg][C@(0.0.255)+75 .][*_C+75 SetStream(out)][C+75 ;]&]
+[s0;l320;%- [C+75     jpg][C@(0.0.255)+75 .][*_C+75 Create(raster][*_C@(0.0.255)+75 `->][*_C+75 G
+etSize())][C+75 ;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+raster][C@(0.0.255)+75 `->][*_C+75 GetHeight][C+75 (); i][C@(0.0.255)+75 `+`+][C+75 ) 
+`{]&]
+[s0;l320;%- [C+75         ][*_C+75 RasterLine][C+75  l ][C@(0.0.255)+75 `=][C+75  
+raster][C@(0.0.255)+75 `->][*_C+75 GetLine][C+75 (i);]&]
+[s0;l320;%- [C+75         Buffer][C@(0.0.255)+75 <][C+75 RGBA][C@(0.0.255)+75 >][C+75  
+out(raster][C@(0.0.255)+75 `->][*_C+75 GetWidth][C+75 ());]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+j ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; j ][C@(0.0.255)+75 <][C+75  
+raster][C@(0.0.255)+75 `->][*_C+75 GetWidth][C+75 (); j][C@(0.0.255)+75 `+`+][C+75 ) 
+`{]&]
+[s0;l320;%- [C+75             out][C@(0.0.255)+75 `[][C+75 j][C@(0.0.255)+75 `].][C+75 g 
+][C@(0.0.255)+75 `=][C+75  out][C@(0.0.255)+75 `[][C+75 j][C@(0.0.255)+75 `].][C+75 b 
+][C@(0.0.255)+75 `=][C+75  out][C@(0.0.255)+75 `[][C+75 j][C@(0.0.255)+75 `].][C+75 r 
+][C@(0.0.255)+75 `=][C+75  l][C@(0.0.255)+75 `[][C+75 j][C@(0.0.255)+75 `].][C+75 g;]&]
+[s0;l320;%- [C+75             out][C@(0.0.255)+75 `[][C+75 j][C@(0.0.255)+75 `].][C+75 a 
+][C@(0.0.255)+75 `=][C+75  ][C@3+75 255][C+75 ;]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75         jpg][C@(0.0.255)+75 .][C+75 WriteLine(out);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; [* StreamRaster`::OpenAny] returns a StreamRaster derived class 
 capable of reading the input stream (or empty One if the format 
 is not recognized).&]
@@ -392,95 +501,137 @@ slow.&]
 [s5; Image cache can significantly speed up GUI when Images are generated 
 based on the set of parameters and the same set o parameters 
 repeats often.&]
-[s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; Image CreateBall(int r, Color color)&]
-[s7; `{&]
-[s7; -|int rr `= 2 `* r;&]
-[s7; -|int r2 `= r `* r;&]
-[s7; -|ImageBuffer b(rr, rr);&]
-[s7; -|for(int y `= 0; y < rr; y`+`+)&]
-[s7; -|-|for(int x `= 0; x < rr; x`+`+) `{&]
-[s7; -|-|-|RGBA`& a `= b`[y`]`[x`];&]
-[s7; -|-|-|a.r `= color.GetR();&]
-[s7; -|-|-|a.g `= color.GetG();&]
-[s7; -|-|-|a.b `= color.GetB();&]
-[s7; -|-|-|int q `= ((x `- r) `* (x `- r) `+ (y `- r) `* (y `- r)) `* 
-256 / r2;&]
-[s7; -|-|-|a.a `= q <`= 255 ? q : 0;&]
-[s7; -|-|`}&]
-[s7; -|Premultiply(b);&]
-[s7; -|return b;&]
-[s7; `}&]
-[s7; &]
-[s7; struct BallMaker : [* ImageMaker] `{&]
-[s7; -|Color color;&]
-[s7; -|int   r;&]
-[s7; -|&]
-[s7; -|[* virtual String Key() const;]&]
-[s7; [* -|virtual Image Make() const;]&]
-[s7; `};&]
-[s7; &]
-[s7; String BallMaker`::Key() const&]
-[s7; `{&]
-[s7; -|char h`[sizeof(int) `+ 3`];&]
-[s7; -|`*(int `*)h `= r;&]
-[s7; -|h`[sizeof(int)`] `= color.GetR();&]
-[s7; -|h`[sizeof(int) `+ 1`] `= color.GetG();&]
-[s7; -|h`[sizeof(int) `+ 2`] `= color.GetB();&]
-[s7; -|return String(h, sizeof(int) `+ 3);&]
-[s7; `}&]
-[s7; &]
-[s7; Image BallMaker`::Make() const&]
-[s7; `{&]
-[s7; -|return CreateBall(r, color);&]
-[s7; `}&]
-[s7; &]
-[s7; Image CreateBallCached(int r, Color color)&]
-[s7; `{&]
-[s7; -|BallMaker m;&]
-[s7; -|m.r `= r;&]
-[s7; -|m.color `= color;&]
-[s7; -|return [* MakeImage](m);&]
-[s7; `}&]
-[s7; &]
-[s7; struct MyApp : public TopWindow `{&]
-[s7; -|bool cached;&]
-[s7; &]
-[s7; -|virtual void Paint(Draw`& w) `{&]
-[s7; -|-|w.DrawRect(GetSize(), White);&]
-[s7; -|-|for(int y `= 0; y < 300; y `+`= 30)&]
-[s7; -|-|-|for(int i `= 10; i < 500; i `+`= i / 3) `{&]
-[s7; -|-|-|-|Color c `= Color((200 `* i) `& 255, (150 `* i) `& 255, (300 
-`* i) `& 255);&]
-[s7; -|-|-|-|w.DrawImage(i, y `+ i / 5,&]
-[s7; -|-|-|-|            (cached ? CreateBallCached : CreateBall)(i / 
-2, c));&]
-[s7; -|-|-|`}&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|virtual void LeftDown(Point, dword) `{&]
-[s7; -|-|cached `= true;&]
-[s7; -|-|Title(`"Now cached `- try to resize the window to see the 
-speed`");&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyApp() `{&]
-[s7; -|-|cached `= false;&]
-[s7; -|-|Title(`"Not cached `- try to resize the window to see the 
-speed, `"&]
-[s7; -|-|      `"click to activate the cache`");&]
-[s7; -|-|Sizeable().Zoomable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyApp().Run();&]
-[s7; `}&]
+[s5; &]
+[s7;l320;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 Image CreateBall(][*C@(0.0.255)+75 int][C+75  r, Color 
+color)]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75  rr ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 2][C+75  ][C@(0.0.255)+75 `*][C+75  r;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75  r2 ][C@(0.0.255)+75 `=][C+75  
+r ][C@(0.0.255)+75 `*][C+75  r;]&]
+[s0;l320;%- [C+75     ImageBuffer b(rr, rr);]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; y ][C@(0.0.255)+75 <][C+75  
+rr; y][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+x ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; x ][C@(0.0.255)+75 <][C+75  
+rr; x][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320;%- [C+75             RGBA][C@(0.0.255)+75 `&][C+75  a ][C@(0.0.255)+75 `=][C+75  
+b][C@(0.0.255)+75 `[][C+75 y][C@(0.0.255)+75 `]`[][C+75 x][C@(0.0.255)+75 `]][C+75 ;]&]
+[s0;l320;%- [C+75             a][C@(0.0.255)+75 .][C+75 r ][C@(0.0.255)+75 `=][C+75  
+color][C@(0.0.255)+75 .][C+75 GetR();]&]
+[s0;l320;%- [C+75             a][C@(0.0.255)+75 .][C+75 g ][C@(0.0.255)+75 `=][C+75  
+color][C@(0.0.255)+75 .][C+75 GetG();]&]
+[s0;l320;%- [C+75             a][C@(0.0.255)+75 .][C+75 b ][C@(0.0.255)+75 `=][C+75  
+color][C@(0.0.255)+75 .][C+75 GetB();]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 int][C+75  q ][C@(0.0.255)+75 `=][C+75  
+((x ][C@(0.0.255)+75 `-][C+75  r) ][C@(0.0.255)+75 `*][C+75  (x ][C@(0.0.255)+75 `-][C+75  
+r) ][C@(0.0.255)+75 `+][C+75  (y ][C@(0.0.255)+75 `-][C+75  r) ][C@(0.0.255)+75 `*][C+75  
+(y ][C@(0.0.255)+75 `-][C+75  r)) ][C@(0.0.255)+75 `*][C+75  ][C@3+75 256][C+75  
+][C@(0.0.255)+75 /][C+75  r2;]&]
+[s0;l320;%- [C+75             a][C@(0.0.255)+75 .][C+75 a ][C@(0.0.255)+75 `=][C+75  
+q ][C@(0.0.255)+75 <`=][C+75  ][C@3+75 255][C+75  ][C@(0.0.255)+75 ?][C+75  
+q ][C@(0.0.255)+75 :][C+75  ][C@3+75 0][C+75 ;]&]
+[s0;l320;%- [C+75         `}]&]
+[s0;l320;%- [C+75     ][*_C@(128.0.255)+75 return][C+75  b;]&]
+[s0;l320;%- [C+75 `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  BallMaker ][C@(0.0.255)+75 :][C+75  
+][*_C+75 ImageMaker][C+75  `{]&]
+[s0;l320;%- [C+75     Color color;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75    r;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*_C+75 String Key()][_C+75  ][*_C@(0.0.255)+75 const][_C+75  
+][*_C@(0.0.255)+75 override][*_C+75  `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 char][C+75  h][C@(0.0.255)+75 `[][*C@(0.0.255)+75 s
+izeof][C+75 (][*C@(0.0.255)+75 int][C+75 ) ][C@(0.0.255)+75 `+][C+75  ][C@3+75 3][C@(0.0.255)+75 `]
+][C+75 ;]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][C+75 (][*C@(0.0.255)+75 int][C+75  
+][C@(0.0.255)+75 `*][C+75 )h ][C@(0.0.255)+75 `=][C+75  r;]&]
+[s0;l320;%- [C+75         h][C@(0.0.255)+75 `[][*C@(0.0.255)+75 sizeof][C+75 (][*C@(0.0.255)+75 i
+nt][C+75 )][C@(0.0.255)+75 `]][C+75  ][C@(0.0.255)+75 `=][C+75  color][C@(0.0.255)+75 .][C+75 G
+etR();]&]
+[s0;l320;%- [C+75         h][C@(0.0.255)+75 `[][*C@(0.0.255)+75 sizeof][C+75 (][*C@(0.0.255)+75 i
+nt][C+75 ) ][C@(0.0.255)+75 `+][C+75  ][C@3+75 1][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 `=][C+75  color][C@(0.0.255)+75 .][C+75 GetG();]&]
+[s0;l320;%- [C+75         h][C@(0.0.255)+75 `[][*C@(0.0.255)+75 sizeof][C+75 (][*C@(0.0.255)+75 i
+nt][C+75 ) ][C@(0.0.255)+75 `+][C+75  ][C@3+75 2][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 `=][C+75  color][C@(0.0.255)+75 .][C+75 GetB();]&]
+[s0;l320;%- [C+75         ][*_C@(128.0.255)+75 return][C+75  String(h, 
+][*C@(0.0.255)+75 sizeof][C+75 (][*C@(0.0.255)+75 int][C+75 ) ][C@(0.0.255)+75 `+][C+75  
+][C@3+75 3][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*_C+75 Image Make() ][*_C@(0.0.255)+75 const][_C+75  
+][*_C@(0.0.255)+75 override][*_C+75  `{]&]
+[s0;l320;%- [C+75         ][*_C@(128.0.255)+75 return][C+75  CreateBall(r, 
+color);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 Image CreateBallCached(][*C@(0.0.255)+75 int][C+75  r, 
+Color color)]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     BallMaker m;]&]
+[s0;l320;%- [C+75     m][C@(0.0.255)+75 .][C+75 r ][C@(0.0.255)+75 `=][C+75  
+r;]&]
+[s0;l320;%- [C+75     m][C@(0.0.255)+75 .][C+75 color ][C@(0.0.255)+75 `=][C+75  
+color;]&]
+[s0;l320;%- [C+75     ][*_C@(128.0.255)+75 return][C+75  ][*_C+75 MakeImage][C+75 (m);]&]
+[s0;l320;%- [C+75 `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyApp ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 bool][C+75  cached;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+White);]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; y ][C@(0.0.255)+75 <][C+75  
+][C@3+75 300][C+75 ; y ][C@(0.0.255)+75 `+`=][C+75  ][C@3+75 30][C+75 )]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 10][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 500][C+75 ; i ][C@(0.0.255)+75 `+`=][C+75  i ][C@(0.0.255)+75 /][C+75  
+][C@3+75 3][C+75 ) `{]&]
+[s0;l320;%- [C+75                 Color c ][C@(0.0.255)+75 `=][C+75  Color((][C@3+75 200][C+75  
+][C@(0.0.255)+75 `*][C+75  i) ][C@(0.0.255)+75 `&][C+75  ][C@3+75 255][C+75 , 
+(][C@3+75 150][C+75  ][C@(0.0.255)+75 `*][C+75  i) ][C@(0.0.255)+75 `&][C+75  
+][C@3+75 255][C+75 , (][C@3+75 300][C+75  ][C@(0.0.255)+75 `*][C+75  i) ][C@(0.0.255)+75 `&][C+75  
+][C@3+75 255][C+75 );]&]
+[s0;l320;%- [C+75                 w][C@(0.0.255)+75 .][C+75 DrawImage(i, 
+y ][C@(0.0.255)+75 `+][C+75  i ][C@(0.0.255)+75 /][C+75  ][C@3+75 5][C+75 , 
+(cached ][C@(0.0.255)+75 ?][C+75  CreateBallCached ][C@(0.0.255)+75 :][C+75  
+CreateBall)(i ][C@(0.0.255)+75 /][C+75  ][C@3+75 2][C+75 , c));]&]
+[s0;l320;%- [C+75             `}]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 )
+ ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         cached ][C@(0.0.255)+75 `=][C+75  ][*C@(0.0.255)+75 true][C+75 ;]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"Now cached `- try to resize 
+the window to see the speed`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyApp() `{]&]
+[s0;l320;%- [C+75         cached ][C@(0.0.255)+75 `=][C+75  ][*C@(0.0.255)+75 false][C+75 ;]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"Not cached `- try to resize 
+the window to see the speed, click to activate the cache`"][C+75 );]&]
+[s0;l320;%- [C+75         Sizeable()][C@(0.0.255)+75 .][C+75 Zoomable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyApp()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; In this example, CreateBall routine creates the Image and takes 
 the time to do so. Anyway, in the Paint, the same resulting Image 

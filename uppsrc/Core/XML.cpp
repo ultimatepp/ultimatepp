@@ -1012,7 +1012,8 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.Shrink();
 		return m;
 	}
-	p.ReadText(); // skip empty text
+	if(p.ReadText().GetCount() == 0) // skip empty text
+		throw XmlError("Unexpected text");
 	return m;
 }
 

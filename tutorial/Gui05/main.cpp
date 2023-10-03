@@ -6,17 +6,17 @@ struct MyAppWindow : TopWindow {
 	Point  p;
 	String text;
 
-	virtual void LeftDown(Point pos, dword flags) override {
+	void LeftDown(Point pos, dword flags) override {
 		p = pos;
 		Refresh();
 	}
 
-	virtual void MouseMove(Point pos, dword flags) override {
+	void MouseMove(Point pos, dword flags) override {
 		text = Format("[%d:%d]", pos.x, pos.y);
 		Refresh();
 	}
 
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), SWhite);
 		w.DrawText(p.x, p.y, text, Arial(20), Magenta);
 	}
