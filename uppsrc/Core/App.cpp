@@ -531,6 +531,16 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 
 #if defined(PLATFORM_WIN32)
 
+#ifdef _DEBUG
+static BOOL WINAPI s_consoleCtrlHandler(DWORD signal) {
+	if(signal == CTRL_C_EVENT) {
+		extern bool NoMemoryLeaksCheck;
+		NoMemoryLeaksCheck = true;
+	}
+    return FALSE;
+}
+#endif
+
 void AppInitEnvironment__()
 {
 	SetLanguage(LNG_('E', 'N', 'U', 'S'));
@@ -567,6 +577,10 @@ void AppInitEnvironment__()
 void AppInit__(int argc, const char **argv)
 {
 	AppInitEnvironment__();
+
+#ifdef _DEBUG
+	SetConsoleCtrlHandler(s_consoleCtrlHandler, TRUE);
+#endif
 }
 #endif
 
