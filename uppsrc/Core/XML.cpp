@@ -332,10 +332,10 @@ void XmlParser::Next()
 
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
-	
+
 	if(type == XML_TEXT)
 		return;
-	
+
 	term++;
 	LoadMore();
 	if(*term == '!') {
@@ -1012,9 +1012,7 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.Shrink();
 		return m;
 	}
-	p.ReadText();
-//	if(p.ReadText().GetCount() == 0) // skip empty text
-//		throw XmlError("Unexpected text");
+	p.ReadText(); // skip empty text
 	return m;
 }
 
