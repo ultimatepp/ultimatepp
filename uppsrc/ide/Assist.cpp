@@ -278,12 +278,30 @@ void AssistEditor::SyncAssist()
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
+	VectorMap<String, int> found_name; // to accelerate resolving duplicities
+	Index<String> cpp;
 	for(int pass = 0; pass < 2; pass++) {
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
 			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
+			    int q = found_name.Find(m.name);
+			    if(q >= 0) { // resolve duplicities
+					int& ii = found_name[q];
+					if(ii >= 0) { // lazy call to CppText
+						const AssistItem& mm = assist_item[ii];
+						cpp.FindAdd(CppText(mm.name, mm.pretty));
+						ii = -1;
+					}
+					String g = CppText(m.name, m.pretty);
+					if(cpp.Find(g) >= 0)
+						continue;
+					else
+						cpp.Add(g);
+			    }
+				else
+			        found_name.Add(m.name, i);
 				found[i] = true;
 				assist_item_ndx.Add(i);
 			}
