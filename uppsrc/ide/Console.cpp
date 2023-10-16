@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#if 0
+
 static double sTimeElapsed() {
 	static int tm0;
 	ONCELOCK { tm0 = msecs(); };
@@ -19,6 +21,8 @@ static String sCmdLine(const char *cmdline)
 	q = s.GetCount() - 64;
 	return q >= 0 ? s.Mid(q) : s;
 }
+
+#endif
 
 #define LLOG(x) // DLOG(sTimeElapsed() << " s " << x);
 
