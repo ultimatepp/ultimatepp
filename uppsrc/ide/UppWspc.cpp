@@ -393,6 +393,11 @@ bool   WorkspaceWork::IsActiveFile() const
 	return i >= 0 && i < fileindex.GetCount() && fileindex[i] < actual.file.GetCount();
 }
 
+bool WorkspaceWork::IsActiveSeparator() const
+{
+	return IsSeparator(filelist.GetCursor());
+}
+
 Package::File& WorkspaceWork::ActiveFile()
 {
 	return actual.file[fileindex[filelist.GetCursor()]];

@@ -11,7 +11,7 @@ String ViewFileHash(const String& path)
 	FindFile ff(path);
 	if(ff) {
 		Sha1Stream sha;
-		sha << path << ';' << Time(ff.GetLastWriteTime()) << ';' << ff.GetLength();
+		sha << path << ',' << Time(ff.GetLastWriteTime()) << ',' << ff.GetLength();
 		return AppendFileName(ViewCache(), sha.FinishString());
 	}
 	return Null;

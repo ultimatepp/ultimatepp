@@ -56,7 +56,7 @@ public:
         Title("My application").Zoomable().Sizeable().SetRect(0, 0, 320, 200);
     }
 
-    virtual void Paint(Upp::Draw& w) override
+    void Paint(Upp::Draw& w) override
     {
         w.DrawRect(GetSize(), Upp::SWhite);
         w.DrawText(10, 10, "Hello, world!", Upp::Arial(30), Upp::Magenta);

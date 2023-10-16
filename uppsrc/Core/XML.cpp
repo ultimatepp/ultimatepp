@@ -332,10 +332,10 @@ void XmlParser::Next()
 
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
-	
+
 	if(type == XML_TEXT)
 		return;
-	
+
 	term++;
 	LoadMore();
 	if(*term == '!') {
@@ -1012,8 +1012,7 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.Shrink();
 		return m;
 	}
-	if(p.ReadText().GetCount() == 0) // skip empty text
-		throw XmlError("Unexpected text");
+	p.ReadText(); // skip empty text
 	return m;
 }
 
@@ -1027,6 +1026,12 @@ XmlNode ParseXML(XmlParser& p, dword style, ParseXmlFilter *filter)
 			XmlNode n = sReadXmlNode(p, filter, style);
 			if(n.GetType() != XML_DOC) // tag was ignored
 				r.Add() = pick(n);
+			else {
+				if(p.IsRelaxed())
+					p.Skip();
+				else
+					throw XmlError("Unexpected text");
+			}
 		}
 	return r;
 }
