@@ -316,7 +316,6 @@ void Ide::FFoundSetIcon(const Image& m)
 void Ide::FFoundFinish(bool replace)
 {
 	ArrayCtrl& ff = FFound();
-	int n = FFound().GetCount();
 	FFound().HeaderTab(2).SetText(Format("Source line (%d)", ff.GetCount()));
 	int ii = btabs.GetCursor();
 	ffound[0]->freplace.Show(ff.GetCount());
@@ -665,7 +664,6 @@ void Ide::ReplaceFound(ArrayCtrl& list)
 					int i = r.c; // source line in the list
 					if(i >= 0 && i < list.GetCount()) {
 						Value v = list.Get(i, "INFO");
-						bool err = true;
 						if(v.Is<ListLineInfo>()) {
 							const ListLineInfo& f0 = ValueTo<ListLineInfo>(v);
 							ListLineInfo f = f0;

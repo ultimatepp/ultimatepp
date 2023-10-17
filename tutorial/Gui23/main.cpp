@@ -11,7 +11,7 @@ struct MyAppWindow : TopWindow {
         Zoomable().Sizeable().SetRect(0, 0, 550, 100);
     }
     
-    virtual void Paint(Draw& w) override {
+    void Paint(Draw& w) override {
         w.DrawRect(GetSize(), SLtYellow);
         w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), Blue);
     }

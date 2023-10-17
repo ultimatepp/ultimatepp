@@ -3,7 +3,7 @@
 using namespace Upp;
 
 struct MyApp : TopWindow {
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White());
 
 		w.DrawRect(10, 10, 60, 80, Green());

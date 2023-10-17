@@ -16,7 +16,6 @@ NSString *PasteboardType(const String& fmt)
 	                   [NSString stringWithUTF8String:~fmt]);
 }
 
-
 NSPasteboard *Pasteboard(bool dnd = false)
 {
 	return dnd ? [NSPasteboard pasteboardWithName:NSPasteboardNameDrag] : [NSPasteboard generalPasteboard];
@@ -59,7 +58,6 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	Upp::String raw = render(fmt);
 	if(raw.GetCount() == 0 && source)
 		raw = source->GetDropData(fmt);
-
 	[pasteboard setData:[NSData dataWithBytes:~raw length:raw.GetCount()] forType:type];
 }
 
@@ -328,7 +326,7 @@ String GetImageClip(const Image& img, const String& fmt)
 
 void Append(VectorMap<String, ClipData>& data, const Image& img)
 {
-	data.GetAdd("image", ClipData(img, sImage));
+	data.GetAdd("image") = ClipData(img, sImage);
 }
 
 void AppendClipboardImage(const Image& img)
@@ -375,6 +373,24 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
+void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
+{ // TODO (does not work in modern MacOS)
+#if 0
+	if(files.GetCount() == 0)
+		return;
+	String xml =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+        "<plist version=\"1.0\"><array>\n"
+    ;
+	for(String f : files)
+		xml << XmlTag("string").Text(f);
+	xml << "</array></plist>";
+	DDUMP(xml);
+	clip.GetAdd("files") = xml;
+#endif
+}
+
 Ctrl * Ctrl::GetDragAndDropSource()
 {
 	return ClipboardOwner(true)->source;
@@ -413,6 +429,8 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	ASSERT_(sCurrentMouseEvent__, "Drag can only start within LeftDrag!");
 	if(!sCurrentMouseEvent__)
 		return DND_NONE;
+	if(data.GetCount() == 0)
+		return DND_NONE; // Cocoa crashes if there is nothing to drop
 	NSWindow *nswindow = (NSWindow *)GetTopCtrl()->GetNSWindow();
 	ASSERT_(nswindow, "Ctrl is not in open window");
 	if(!nswindow)
@@ -427,8 +445,8 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	}
 	for(String fmt : Split(fmts, ';')) // GetDropData formats
 		AppendClipboard(true, fmt, String(), NULL);
-
-	CGImageRef cgimg = createCGImage(sample);
+	
+	CGImageRef cgimg = createCGImage(Nvl(sample, DrawImg::DefaultDragImage()));
 
 	Size isz = sample.GetSize();
 	NSSize size;

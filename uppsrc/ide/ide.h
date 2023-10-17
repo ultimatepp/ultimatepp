@@ -653,6 +653,7 @@ public:
 	String    libclang_coptions;
 	bool      prefer_clang_format = false;
 	bool      blk0_header = true;
+	bool      win_deactivated = false;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -881,6 +882,7 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		void  CopyRich();
 		void  Duplicate();
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
@@ -1258,7 +1260,9 @@ public:
 
 void ForAllSourceFiles(Event<const VectorMap<String, String>&> fn);
 void ForAllNests(Event<const Vector<String>&> fn);
-void IdeBackgroundThread();
+
+void StartIdeBackgroundThread();
+void TriggerIdeBackgroundThread(int delay_ms = 1000);
 
 inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
 
@@ -1270,6 +1274,8 @@ bool SetupGITMaster();
 
 String UppHub();
 void   UppHubAuto(const String& s);
+
+void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln);
 
 #include "urepo.h"
 

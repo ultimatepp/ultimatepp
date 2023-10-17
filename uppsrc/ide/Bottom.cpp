@@ -152,7 +152,6 @@ String Ide::GetFoundText(const ArrayCtrl& list)
 {
 	for(int i = 0; i < list.GetCount(); i++) {
 		Value v = list.Get(i, "INFO");
-		bool err = true;
 		if(v.Is<ListLineInfo>()) {
 			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
 			if(*f.message == '\1') {

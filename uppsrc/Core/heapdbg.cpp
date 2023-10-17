@@ -225,9 +225,11 @@ void MemoryCheckDebug()
 	while(p != &dbg_live);
 }
 
+bool NoMemoryLeaksCheck;
+
 void MemoryDumpLeaks()
 {
-	if(PanicMode)
+	if(PanicMode || NoMemoryLeaksCheck)
 		return;
 #ifdef PLATFORM_MACOS
 	return; // ignore leaks in macos

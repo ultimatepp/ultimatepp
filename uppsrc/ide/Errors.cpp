@@ -259,6 +259,8 @@ void Ide::GoToError(const ListLineInfo& f, bool error)
 		return;
 	String file = NormalizePath(f.file);
 	DoEditAsText(file);
+	if(designer)
+		FlushFile();
 	EditFile(file);
 	int lp = max(f.linepos - 1, 0);
 	int l = f.lineno - 1;
@@ -267,7 +269,7 @@ void Ide::GoToError(const ListLineInfo& f, bool error)
 		l = editor.GetLineNo(l);
 	else {
 		String ln = TrimLeft(f.line);
-		if(ln.GetCount())
+		if(ln.GetCount() && l >= 0 && l < editor.GetLineCount())
 			for(int i = 0; i < 200; i++) {
 				if(l - i >= 0 && TrimLeft(editor.GetUtf8Line(l - i)) == ln) {
 					l = l - i;

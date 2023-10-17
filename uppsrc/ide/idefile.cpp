@@ -11,7 +11,7 @@ String ViewFileHash(const String& path)
 	FindFile ff(path);
 	if(ff) {
 		Sha1Stream sha;
-		sha << path << ';' << Time(ff.GetLastWriteTime()) << ';' << ff.GetLength();
+		sha << path << ',' << Time(ff.GetLastWriteTime()) << ',' << ff.GetLength();
 		return AppendFileName(ViewCache(), sha.FinishString());
 	}
 	return Null;
@@ -343,6 +343,8 @@ void Ide::SaveFile0(bool always)
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
 		TriggerIndexer();
+		if(IsNull(tm))
+			TriggerIdeBackgroundThread(2000);
 		return;
 	}
 
@@ -360,7 +362,8 @@ void Ide::SaveFile0(bool always)
 	if(!editor.IsDirty() && !always)
 		return;
 	TouchFile(editfile);
-	if(!FileExists(editfile))
+	bool file_exists = FileExists(editfile);
+	if(!file_exists)
 		InvalidateIncludes();
 	int auto_retry = 10; // file can be open by indexer
 	for(;;) {
@@ -390,6 +393,9 @@ void Ide::SaveFile0(bool always)
 
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
+
+	if(!file_exists)
+		TriggerIdeBackgroundThread(2000);
 
 	TriggerIndexer();
 	editor.ClearDirty();

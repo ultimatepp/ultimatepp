@@ -32,7 +32,7 @@ Image CxxIcon(int kind)
 }
 
 void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
-           int starti, int count, bool focuscursor, Color _ink, bool italic)
+               int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
 	static int maxascent = MaxAscent(BrowserFont());
 	for(int i = 0; i < count; i++) {
@@ -115,6 +115,35 @@ int PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String&
 	}
 	PaintText(w, x, y, pretty, n, 0, count, focuscursor, ink, false);
 	return x;
+}
+
+String CppText(const String& name, const String& pretty)
+{ // converts pretty to text that is unique wrt PaintCpp - to avoid duplicities in autocomplete
+	String g;
+	Vector<ItemTextPart> n = ParsePretty(name, pretty);
+	for(int i = 0; i < n.GetCount(); i++)
+		if(findarg(n[i].type, ITEM_NAME, ITEM_OPERATOR) >= 0 || pretty[n[i].pos] == '(') {
+			for(int j = i; j < n.GetCount(); j++)
+				g << pretty.Mid(n[j].pos, n[j].len);
+			while(i) {
+				const ItemTextPart& p = n[i - 1];
+				if(p.len == 1 && pretty[p.pos] == ' ')
+					i--;
+				else
+					break;
+			}
+			g << '@';
+			if(i > 2) { // autocomplete sometimes fully qualifies the the name, looks ugly, remove XXX:: from the end
+				ItemTextPart& p = n[i - 1];
+				if(p.type == ITEM_CPP && p.len == 2 && pretty[p.pos] == ':' && pretty[p.pos + 1] == ':' &&
+				   n[i - 2].type == ITEM_TEXT)
+					i -= 2;
+			}
+			for(int j = 0; j < i; j++)
+				g << pretty.Mid(n[j].pos, n[j].len);
+			break;
+		}
+	return TrimBoth(g);
 }
 
 void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const

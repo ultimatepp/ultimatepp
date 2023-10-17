@@ -402,7 +402,7 @@ void AppMain___()
 		if(FileExists(crash_file)) {
 			if(LibClangEnabled &&
 			   PromptYesNo("TheIDE has crashed the last time it was run. As the possible "
-			               "cause is libclang incompatibility, we Assist features are disabled for now."))
+			               "cause is libclang incompatibility, do you want to disable Assist features for now?"))
 				LibClangEnabled = false;
 			DeleteFile(crash_file);
 		}
@@ -420,7 +420,7 @@ void AppMain___()
 					SyncRefs();
 					ide.TriggerIndexer();
 				}
-				Thread::StartNice(IdeBackgroundThread);
+				StartIdeBackgroundThread();
 				ide.FileSelected();
 				ide.isscanning--;
 				ide.MakeTitle();

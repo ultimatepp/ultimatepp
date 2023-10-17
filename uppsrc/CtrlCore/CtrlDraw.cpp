@@ -549,7 +549,6 @@ void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 	if(IsPanicMode())
 		return;
 	RemoveFullRefresh();
-	Point sp = GetScreenRect().TopLeft();
 	UpdateArea0(draw, clip, backpaint);
 	SweepMkImageCache();
 }
