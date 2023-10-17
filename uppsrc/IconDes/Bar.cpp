@@ -209,6 +209,9 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
 	        [=] { show_small = !show_small; show_other = false; SyncShow(); SetBar(); })
 	   .Check(show_small);
+	bar.Add("Show secondardy grid", IconDesImg::grid2(),
+	        [=] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
+	   .Check(show_grid2);
 	bar.Separator();
 	bar.Add(c, AK_SLICE, IconDesImg::Slice(), THISBACK(Slice));
 }
@@ -216,6 +219,7 @@ void IconDes::DrawBar(Bar& bar)
 void IconDes::MainToolBar(Bar& bar)
 {
 	EditBar(bar);
+	ToolEx(bar);
 	bar.Separator();
 	SelectBar(bar);
 	bar.Separator();
@@ -224,7 +228,6 @@ void IconDes::MainToolBar(Bar& bar)
 	bar.Add(status, INT_MAX, GetStdFontCy());
 	bar.Break();
 	DrawBar(bar);
-	ToolEx(bar);
 	bar.Separator();
 	SettingBar(bar);
 }
@@ -301,7 +304,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 5;
+	int version = 6;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -327,6 +330,8 @@ void IconDes::SerializeSettings(Stream& s)
 		s % paste_mode;
 	if(version >= 5)
 		s % show_other;
+	if(version >= 6)
+		s % show_grid2;
 }
 
 void IconDes::SyncStatus()

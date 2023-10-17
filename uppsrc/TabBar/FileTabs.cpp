@@ -24,7 +24,7 @@ void FileTabs::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 	if(PaintIcons() && tab.HasIcon())
 	{
 		tab.AddImage(tab.img);
-		tab.AddSpace(TB_SPACEICON);
+		tab.AddSpace(DPI(TB_SPACEICON));
 	}
 
 	WString txt = IsString(tab.value) ? tab.value : StdConvert().Format(tab.value);
@@ -65,7 +65,7 @@ void FileTabs::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &f
 Size FileTabs::GetStackedSize(const Tab &t)
 {
 	if (stackedicons && t.HasIcon())
-		return min(t.img.GetSize(), Size(TB_ICON, TB_ICON)) + Size(TB_SPACEICON, 0) + 5;
+		return min(t.img.GetSize(), Size(DPI(TB_ICON), DPI(TB_ICON))) + Size(DPI(TB_SPACEICON), 0) + DPI(5);
 
 	WString txt = IsString(t.value) ? t.value : StdConvert().Format(t.value);
 	int extpos = txt.ReverseFind('.');

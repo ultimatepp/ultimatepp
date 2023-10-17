@@ -4,7 +4,7 @@ namespace Upp {
 
 #define IMAGECLASS DrawImg
 #define IMAGEFILE <Draw/DrawImg.iml>
-#include <Draw/iml.h>
+#include <Draw/iml_source.h>
 
 #define LLOG(x) // RLOG(x)
 
@@ -147,8 +147,16 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	int x = r.left;
 	int width = r.GetWidth();
 	bool alter_color = s & (CURSOR|SELECT|READONLY);
-	if(IsType<AttrText>(q)) {
-		const AttrText& t = ValueTo<AttrText>(q);
+	if(q.Is<Image>()) {
+		const Image& m = q.To<Image>();
+		Size isz = m.GetSize();
+		w.DrawImage(r.left + max((r.Width() - isz.cx) / 2, 0),
+		            r.top + max((r.Height() - isz.cy) / 2, 0),
+		            m);
+		return;
+	}
+	if(q.Is<AttrText>()) {
+		const AttrText& t = q.To<AttrText>();
 		txt = t.text.ToString();
 		font = t.font;
 		if(!IsNull(t.paper))
@@ -202,6 +210,10 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	Font font = StdFont();
 	String txt;
 	Size isz(0, 0);
+	if(q.Is<Image>()) {
+		const Image& m = q.To<Image>();
+		return m.GetSize();
+	}
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
 		txt = t.text.ToString();
