@@ -217,16 +217,15 @@ bool HasCrs(const String& path)
 
 void DiffDlg::Write()
 {
+	revert.Enable();
 	if(diff.right.IsSelection()) {
 		SaveFile(editfile, diff.Merge(true, HasCrs(editfile)));
 		Refresh();
-		revert.Enable();
 		return;
 	}
 	if(PromptYesNo("Do you want to overwrite&[* " + DeQtf(editfile) + "] ?")) {
 		SaveFile(editfile, extfile);
-		Break(IDOK);
-		revert.Enable();
+		Close();
 	}
 }
 

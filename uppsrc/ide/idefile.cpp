@@ -868,7 +868,9 @@ void Ide::CheckFileUpdate()
 
 	if(!editor.IsView() && !editor.IsReadOnly() && editor.GetUndoCount() &&
 	   max((int64)editor.GetLength(), ff.GetLength()) < 30*1024*1024) {
-		ApplyChanges(editor, LoadFile(editfile));
+	    int c = editor.GetCursor();
+	    ApplyChanges(editor, LoadFile(editfile));
+		editor.SetCursor(c);
 		editor.ClearDirty(); // as it is "loaded"
 	}
 	else

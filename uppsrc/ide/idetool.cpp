@@ -490,7 +490,6 @@ void Ide::DoDirDiff()
 		dlg.Dir1(dir[1]);
 	dlg.SetFont(veditorfont);
 	dlg.Maximize();
-	dlg.Title("Compare directories");
 	dlg.OpenMain();
 }
 
