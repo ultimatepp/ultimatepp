@@ -128,7 +128,7 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 			if(commit.GetCount()) {
 				String h = commit;
 				if(h.GetCount() > 4)
-					h.Trim(4);
+					h.Trim(6);
 				r.Add(commit, "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
 				              "[* \1" + Join(Split(msg, CharFilterWhitespace), " "));
 			}
