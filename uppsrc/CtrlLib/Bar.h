@@ -264,6 +264,7 @@ public:
 	               const Value& pane, const Value& iconbar = Null, int iconsz = 0);
 
 	int      GetHeight() const           { return pane.GetPaneSize(true, INT_MAX).cy; }
+	int      GetWidth() const            { return pane.GetPaneSize(true, INT_MAX).cx; }
 
 	BarCtrl& Align(int align);
 	BarCtrl& Top()                       { return Align(BAR_TOP); }
