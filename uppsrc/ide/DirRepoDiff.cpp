@@ -173,8 +173,4 @@ void DirRepoDiffDlg::Compare()
 	};
 	if(Clone(0, dir1, lmid) && Clone(1, dir2, rmid))
 		DirDiffDlg::Compare();
-	if(IsGit(0))
-		dir1 <<= Null;
-	if(IsGit(1))
-		dir2 <<= Null;
 }
