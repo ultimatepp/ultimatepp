@@ -2,6 +2,8 @@
 
 DirRepoDiffDlg::DirRepoDiffDlg()
 {
+	Title("Compare directories / commits");
+
 	int div = HorzLayoutZoom(4);
 	int cy = dir1.GetStdSize().cy;
 	int lcy = cy + div;
@@ -155,7 +157,7 @@ void DirRepoDiffDlg::Compare()
 		mid = 0;
 		if(IsGit(i)) {
 			String repo = ~~mode[i];
-			String d = CacheFile("git-" + SHA1String(repo + "\1" + session_id));
+			String d = CacheFile("git-" + SHA1String(repo + "\1" + session_id + "\1" + AsString(i)));
 			if(!DirectoryExists(d)) {
 				gitd << d;
 				Progress pi;

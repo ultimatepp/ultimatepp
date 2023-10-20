@@ -309,14 +309,14 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		if((*p == '\"' || *p == '\'') || linecont && string)
 			p = hls.CString(p);
 		else
-		if(*p == '(') {
+		if(*p == '(' && !ignore_errors) {
 			brk.Add(')');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(pl++, 0) % 4]);
 			p++;
 		}
 		else
-		if(*p == '{') {
+		if(*p == '{' && !ignore_errors) {
 			brk.Add(was_namespace ? 0 : '}');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(cl, 0) % 4]);
@@ -331,21 +331,21 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 		else
-		if(*p == '[') {
+		if(*p == '[' && !ignore_errors) {
 			brk.Add(']');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(bl++, 0) % 4]);
 			p++;
 		}
 		else
-		if(*p == ')' || *p == '}' || *p == ']') {
+		if((*p == ')' || *p == '}' || *p == ']') && !ignore_errors) {
 			int bc = brk.GetCount() ? brk.Pop() : 0;
 			if(*p == '}' && hilite_scope && block_level > 0 && bc)
 				hls.SetPaper(hls.pos, linelen + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - ltext) + pos, hls, editor);
 			int& l = *p == ')' ? pl : *p == '}' ? cl : bl;
 			if(bc && (bc != *p || l <= 0) || bc == 0 && *p != '}') {
-				hls.Put(p == ltext || ignore_errors ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
+				hls.Put(p == ltext ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				brk.Clear();
 				cl = bl = pl = 0;
 			}

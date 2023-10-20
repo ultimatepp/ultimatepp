@@ -104,7 +104,7 @@ void NavDlg::ListSel()
 			}
 		Sort(set);
 		navlines.Clear();
-		for(const NavLine l : set)
+		for(const NavLine& l : set)
 			navlines.Add(RawToValue(l));
 		navlines.GoBegin();
 	}

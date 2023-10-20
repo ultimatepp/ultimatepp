@@ -367,14 +367,19 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 		DeactivationSave(false);
 	}
 	TopWindow::DeactivateBy(new_focus);
+	win_deactivated = !new_focus || dynamic_cast<TopWindow *>(new_focus);
 }
 
 void Ide::Activate()
 {
-	TriggerIndexer();
-	editor.TriggerSyncFile(0);
+	if(win_deactivated) {
+		TriggerIndexer();
+		editor.TriggerSyncFile(0);
+		TriggerIdeBackgroundThread(5000);
+		git_branch_cache.Clear();
+		win_deactivated = false;
+	}
 	TopWindow::Activate();
-	git_branch_cache.Clear();
 	MakeTitle();
 }
 

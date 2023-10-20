@@ -110,11 +110,28 @@ void IconDes::Paint(Draw& w)
 	Point spot2 = image.Get2ndSpot();
 	int m = isz.cx * magnify + 1;
 	Point mpos = magnify * spos;
-	for(int y = isz.cy * magnify; y >= 0; y -= magnify)
-		w.DrawRect(-mpos.x, y - mpos.y, m, 1, Black());
+	int grid2 = 0;
+	if(max(isz.cx, isz.cy) > 16 && show_grid2) {
+		if(isz.cx % 3 == 0 && isz.cy % 3 == 0)
+			grid2 = 3;
+		else
+		if(isz.cx % 4 == 0 && isz.cy % 4 == 0)
+			grid2 = 4;
+	}
+	auto GridColor = [&](int x, int sz) -> Color {
+		if(grid2) {
+			if(x == sz / 2)
+				return LtMagenta();
+			if(x % grid2 == 0)
+				return LtRed();
+		}
+		return Black();
+	};
+	for(int y = isz.cy; y >= 0; y--)
+		w.DrawRect(-mpos.x, magnify * y - mpos.y, m, 1, GridColor(y, isz.cy));
 	m = isz.cy * magnify + 1;
-	for(int x = isz.cx * magnify; x >= 0; x -= magnify)
-		w.DrawRect(x - mpos.x, -mpos.y, 1, m, Black());
+	for(int x = isz.cx; x >= 0; x--)
+		w.DrawRect(magnify * x - mpos.x, -mpos.y, 1, m, GridColor(x, isz.cx));
 	if(!IsHotSpot()) {
 		hotspot = Null;
 		spot2 = Null;

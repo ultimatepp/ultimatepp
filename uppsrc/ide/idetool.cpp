@@ -490,7 +490,6 @@ void Ide::DoDirDiff()
 		dlg.Dir1(dir[1]);
 	dlg.SetFont(veditorfont);
 	dlg.Maximize();
-	dlg.Title("Compare directories");
 	dlg.OpenMain();
 }
 
@@ -561,6 +560,60 @@ void Ide::RemoveDs()
 		catch(CParser::Error) {}
 	}
 	editor.GotoLine(l);
+}
+
+void Ide::CopyRich()
+{
+	String qtf = "[C0 ";
+	for(WString l0 : Split(editor.GetSelectionW(), '\n', false)) {
+		WString ln;
+		int tabsize = editor.GetTabSize();
+		for(wchar c : l0)
+			if(c == '\t')
+				ln.Cat(' ', tabsize - ln.GetLength() % tabsize);
+			else
+			if(c >= ' ')
+				ln.Cat(c);
+
+		if(ln.GetCount() > 20000)
+			ln.Trim(20000);
+
+		Vector<LineEdit::Highlight> hln;
+		hln.SetCount(ln.GetCount() + 1);
+		for(int i = 0; i < hln.GetCount(); i++) {
+			LineEdit::Highlight& h = hln[i];
+			h.paper = White();
+			h.ink = editor.GetColor(TextCtrl::INK_NORMAL);
+			h.chr = ln[i];
+			h.font = StdFont();
+		}
+
+		HighlightLine(editfile, hln, ln);
+
+		int ii = 0;
+		while(ii < hln.GetCount() - 1) {
+			Color ink = hln[ii].ink;
+			Font font = hln[ii].font;
+
+			int n = 1;
+			while(ii + n < hln.GetCount() - 1 && hln[ii + n].ink == hln[ii].ink && hln[ii + n].font == font)
+				n++;
+			
+			qtf << "[@(" << ink.GetR() << "." << ink.GetG() << "." << ink.GetB() << ")";
+			if(font.IsBold())
+				qtf << "*";
+			if(font.IsItalic())
+				qtf << "/";
+			if(font.IsUnderline())
+				qtf << "_";
+			qtf << " \1" << ln.Mid(ii, n).ToString() << "\1]";
+			ii += n;
+		}
+		qtf << "&\n";
+	}
+	
+	ClearClipboard();
+	AppendClipboard(ParseQTF(qtf));
 }
 
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)

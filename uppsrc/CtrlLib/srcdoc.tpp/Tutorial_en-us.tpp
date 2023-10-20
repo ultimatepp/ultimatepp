@@ -135,13 +135,15 @@ be created.&]
 To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* GUI`_APP`_MAIN] `{&]
-[s7; -|PromptOK(`"Hello world`");&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN `{]&]
+[s0;l320;%- [C+75     PromptOK(][C@3+75 `"Hello world`"][C+75 );]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1068&818
@@ -164,14 +166,16 @@ can also open it using [* Open] or [* OpenMain]). Unlike [* Run], [* Execute]
 also closes the window at the end of modal loop. [* TopWindow] 
 is also closed by destructor.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN `{&]
-[s7; -|[* TopWindow] w;&]
-[s7; -|w.[* Run]();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN `{]&]
+[s0;l320;%- [C+75     ][*_C+75 TopWindow ][C+75 w;]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 Run][C+75 ();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:2692&1419
@@ -186,17 +190,22 @@ also setup the size of [* TopWindow] using [* SetRect] (note that
 unless instructed otherwise, U`+`+ will center the position of 
 window).&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow w;&]
-[s7; -|w.[* Title](`"My application`").[* Zoomable]().[* Sizeable]();&]
-[s7; -|w.[* SetRect](0, 0, 200, 300);&]
-[s7; -|w.Run();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow w;]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 Title][C+75 (][C@3+75 `"My 
+application`"][C+75 )][C@(0.0.255)+75 .][*_C+75 Zoomable][C+75 ()][C@(0.0.255)+75 .][*_C+75 S
+izeable][C+75 ();]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 SetRect][C+75 (][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 200][C+75 , ][C@3+75 300][C+75 );]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@image:2321&1125
@@ -207,27 +216,36 @@ window).&]
 [s5; In order to display something inside [* TopWindow] view area, 
 you have to create derived class and override [* Paint] method:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; [* -|virtual void Paint(Draw`& w) override `{]&]
-[s7; [* -|-|w.DrawRect(GetSize(), SWhite());]&]
-[s7; [* -|-|w.DrawText(20, 20, `"Hello world!`", Arial(30), Magenta);]&]
-[s7; [* -|`}]&]
-[s7; -|&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application`").Zoomable().Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.SetRect(0, 0, 200, 100);&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;~~~32~32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;~~~32~32;%- [C+75     ][*_C@(0.0.255)+75 void][*_C+75  Paint(Draw][*_C@(0.0.255)+75 `&
+][*_C+75  w) ][*_C@(0.0.255)+75 override][*_C+75  `{]&]
+[s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawRect(GetSize(),
+ SWhite());]&]
+[s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawText(][*_C@3+75 2
+0][*_C+75 , ][*_C@3+75 20][*_C+75 , ][*_C@3+75 `"Hello world!`"][*_C+75 , 
+Arial(][*_C@3+75 30][*_C+75 ), Magenta);]&]
+[s0;l320;~~~32~32;%- [C+75     ][*_C+75 `}]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;~~~32~32;%- [C+75         Title(][C@3+75 `"My application`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;~~~32~32;%- [C+75     `}]&]
+[s0;l320;~~~32~32;%- [C+75 `};]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~32~32;%- [C+75 `{]&]
+[s0;l320;~~~32~32;%- [C+75     MyAppWindow app;]&]
+[s0;l320;~~~32~32;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 400][C+75 , ][C@3+75 100][C+75 );]&]
+[s0;l320;~~~32~32;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1426&573
@@ -244,43 +262,58 @@ KDE.&]
 [s5; &]
 [s3;:5: 5. Reacting to input events&]
 [s5; In order to react to user actions like mouse clicks or keyboard 
-events, you have to override appropriate virtual methods. To 
-issue the repainting of view area, use the [* Refresh] method.&]
+events, you have to override appropriate virtual methods for 
+example [* LeftDown ]and [* MouseMove]. To issue the repainting of 
+view area, use the [* Refresh] method.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Point  p;&]
-[s7; -|String text;&]
-[s7; -|&]
-[s7; [* -|virtual void LeftDown(Point pos, dword flags) override `{]&]
-[s7; [* -|-|p `= pos;]&]
-[s7; [* -|-|Refresh();]&]
-[s7; [* -|`}]&]
-[s7;* &]
-[s7; [* -|virtual void MouseMove(Point pos, dword flags) override `{]&]
-[s7; [* -|-|text `= Format(`"`[%d:%d`]`", pos.x, pos.y);]&]
-[s7; [* -|-|Refresh();]&]
-[s7; [* -|`}]&]
-[s7; &]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SWhite);&]
-[s7; -|-|w.DrawText(p.x, p.y, text, Arial(20), Magenta);&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application`").Zoomable().Sizeable();&]
-[s7; -|-|p.x `= p.y `= 0;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Point  p;]&]
+[s0;l320;%- [C+75     String text;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  LeftDown(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
+[s0;l320;%- [*C+75         ][*_C+75 p ][*_C@(0.0.255)+75 `=][*_C+75  pos;]&]
+[s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
+[s0;l320;%- [*C+75     ][*_C+75 `}]&]
+[s0;l320;*C+75%- &]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  MouseMove(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
+[s0;l320;%- [*C+75         ][*_C+75 text ][*_C@(0.0.255)+75 `=][*_C+75  Format(][*_C@3+75 `"`[][*_C@(0.0.255)+75 %
+d][*_C@3+75 :][*_C@(0.0.255)+75 %d][*_C@3+75 `]`"][*_C+75 , pos][*_C@(0.0.255)+75 .][*_C+75 x,
+ pos][*_C@(0.0.255)+75 .][*_C+75 y);]&]
+[s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
+[s0;l320;%- [*C+75     ][*_C+75 `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SWhite);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(p][C@(0.0.255)+75 .][C+75 x, 
+p][C@(0.0.255)+75 .][C+75 y, text, Arial(][C@3+75 20][C+75 ), Magenta);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application`"][C+75 )][C@(0.0.255)+75 .][C+75 Zoo
+mable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         p][C@(0.0.255)+75 .][C+75 x ][C@(0.0.255)+75 `=][C+75  
+p][C@(0.0.255)+75 .][C+75 y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:2612&1625
@@ -296,35 +329,47 @@ as long as there are any top`-level windows opened. Use `"[* delete
 this]`" in overridden [* Close] method to close and deallocate 
 the main window.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Close() override `{&]
-[s7; -|-|[* delete this;]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void LeftDown(Point pos, dword flags) override `{&]
-[s7; [* -|-|(new MyAppWindow)`->OpenMain();]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SWhite());&]
-[s7; -|-|w.DrawText(0, 0, `"Click the view area to open next window!`", 
-Arial(20));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My multiwindowed application`").Zoomable().Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; [* -|(new MyAppWindow)`->OpenMain();]&]
-[s7; [* -|Ctrl`::EventLoop();]&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Close() ][*C@(0.0.255)+75 override][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*_C@(0.0.255)+75 delete this][*_C+75 ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point pos, 
+][C@(0.128.128)+75 dword][C+75  flags) ][*C@(0.0.255)+75 override][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*_C+75 (][*_C@(0.0.255)+75 new][*_C+75  MyAppWindow)][*_C@(0.0.255)+75 `-
+>][*_C+75 OpenMain();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SWhite());]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 `"Click the view area to open next window!`"][C+75 , 
+Arial(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My multiwindowed application`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     ][*_C+75 (][*_C@(0.0.255)+75 new][*_C+75  MyAppWindow)][*_C@(0.0.255)+75 `-
+>][*_C+75 OpenMain();]&]
+[s0;l320;%- [*C+75     ][*_C+75 Ctrl][*_C@(0.0.255)+75 `::][*_C+75 EventLoop();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:2000&1447
@@ -342,39 +387,52 @@ vents] to represent sub`-menus. Menu itself is managed by [* MenuBar].
 rame]. Frames are placed to the window border and reduce its 
 view area.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|void [* Exit]() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void [* SubMenu](Bar`& bar) `{&]
-[s7; -|-|bar.[* Add](`"Exit`", `[`=`] `{ [* Exit](); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void [* MainMenu](Bar`& bar) `{&]
-[s7; -|-|bar.[* Sub](`"Menu`", `[`=`](Bar`& bar) `{ [* SubMenu](bar); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu`").Sizeable();&]
-[s7; -|-|[* AddFrame](menu);&]
-[s7; -|-|menu.[* Set](`[`=`](Bar`& bar) `{ [* MainMenu](bar); `});&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 Exit()][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 SubMenu][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][*_C+75 Add][C+75 (][C@3+75 `"Exit`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75  `{ ][*_C+75 Exit][C+75 (); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 MainMenu][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][*_C+75 Sub][C+75 (][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+][*_C+75 SubMenu][C+75 (bar); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (menu);]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][*_C+75 Set][C+75 (][C@(0.0.255)+75 `[`=`]][C+75 (
+Bar][C@(0.0.255)+75 `&][C+75  bar) `{ ][*_C+75 MainMenu][C+75 (bar); 
+`});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s7;l0; &]
 [s5; &]
 [s0;= 
 @@rawimage:1434&1333
@@ -387,69 +445,84 @@ view area.&]
 if not always advisable, to `'inline`' the whole menu structure 
 to single MenuBar`::Set call:&]
 [s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; [* -|-|menu.Set(`[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|bar.Sub(`"Menu`", `[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|-|bar.Add(`"Exit`", `[`=`] `{]&]
-[s7; [* -|-|-|-|-|if(PromptOKCancel(`"Exit MyApp?`"))]&]
-[s7; [* -|-|-|-|-|-|Break();]&]
-[s7; [* -|-|-|-|`});]&]
-[s7; [* -|-|-|`});]&]
-[s7; [* -|-|`});]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 menu][*_C@(0.0.255)+75 .][*_C+75 Set(][*_C@(0.0.255)+75 `[`=
+`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  bar) `{]&]
+[s0;l320;%- [C+75             ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Sub(][*_C@3+75 `"Menu`"][*_C+75 ,
+ ][*_C@(0.0.255)+75 `[`=`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  
+bar) `{]&]
+[s0;l320;%- [C+75                 ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exi
+t`"][*_C+75 , ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{]&]
+[s0;l320;%- [C+75                     ][*_C@(0.0.255)+75 if][*_C+75 (PromptOKCancel(][*_C@3+75 `"
+Exit MyApp?`"][*_C+75 ))]&]
+[s0;l320;%- [C+75                         ][*_C+75 Break();]&]
+[s0;l320;%- [C+75                 ][*_C+75 `});]&]
+[s0;l320;%- [C+75             ][*_C+75 `});]&]
+[s0;l320;%- [C+75         ][*_C+75 `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s3;:8: 8. Context menu&]
 [s5; Context local menu (usually invoked by right mouse click) is 
 similar to the standard menu bar handling, just instead of adding 
 MenuBar to your application, you [/ execute] the menu event:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void RightDown(Point, dword) override `{&]
-[s7; -|-|[* MenuBar`::Execute(]&]
-[s7; [* -|-|-|`[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|-|bar.Add(`"Exit`", `[`=`] `{ Exit(); `});]&]
-[s7; [* -|-|-|`}]&]
-[s7; [* -|-|);]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with local menu`").Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         ][*_C+75 MenuBar][*_C@(0.0.255)+75 `::][*_C+75 Execute(]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 `[`=`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  
+bar) `{]&]
+[s0;l320;%- [C+75                 ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exi
+t`"][*_C+75 , ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{ Exit(); `});]&]
+[s0;l320;%- [C+75             ][*_C+75 `}]&]
+[s0;l320;%- [C+75         ][*_C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with local 
+menu`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
+[s5; &]
 [s0;= 
 @@rawimage:1710&1225
 (iVBORw0KGgoAAAANSUhEUgAAAeQAAAFdCAIAAABdCYkTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAArgSURBVHhe7d0/bxv3AcZxLkUDT9q82ICbKR3iRUuQN+DZGrM1g7cMhtcA3QwhS2LNGWp1EhDA3vUGPGgzoDcgARYg2OqUub/j70ge/0iiziStJ/p88MBgTscjT0W+puUCGfzr/e9mZnbL18T6n0f/NjOzWzuxNjMLmFibmQVMrM3MAibWZmYBE2szs4CJtZlZwMTazCxgYm1mFjCxNjPb0AaDwT/++2zmYFk5WL40c3Bm18T6m6Mftso1dn6YOf71iweDwYP7b6YOrnDD122u/82bJ/d6vVDvJ169hZcdv9vuwfGu/uoy+/wrmNltWIny3/7+1UyvFx6c3zKxfnDv8VQphgeLNeajX542GbXua139up//rjZ5X2a21s2keclSly0V662dB/de/DQ5+Gp7sLO91nz0y9Mmo9Z9ratf9/Pf1Sbvy8zWvXGgly912VKxvv+m/Lr9sD3y0/3mg3Y9Xh4Ptl6NTi4Rf/zk687TH+40n8Abwx+ktFd79eTe8Fj9DeCqg28mD4YHm5er6ot2rz88c6T9x9ETm59dtOoT26++2K4Hu78VlZXLTp02vsjksotea/oWxrv6nQxPuOq+Zq4wesrUK5ZnDX8w1Ri/eue1mv/t2qdM3/LUe5t7FTNb02qmly912ZKx7vSrJKApcnt8+Cm7/Yn2+JyZjS8yfDCoQR+m5OqDMw+aos10sG7+5LmDnTffOdimsNzC6LeiuvFNlQf3Hrd/qig1LA8uf63RLcxfbeop8+/kZvfV+VL3FUfxHb169ynNXbTvfPaWp06bexUzW9PWGOtRo9siT443D0b/2g9PmHr6sCND45MnOZi51MKDkwdN3aYiWHbF9S974vyLdh/XdW52+Om1eVySOvUSl11hwdXGT1n4Tm54X+0J17368LIdM3/UGJ92yXXMbH2rpS6/jh/MnLBwS8e61qot19S/2PUjZ/116rmjDLXPnU1D84lyrpuzBycP5qJ23fUXP3GpWLcXrL/9lMfbD8tFpm/8sissutroKQvfyQ3vqz3nuldfcNmFp11yHTNb02YCvXyvl41183j4ca/943b3eBOy7a1hVuqz6prza+CacDRfHT5rdIVJki47OH5KfdB0vPv7wSXXb9/G9BWaLC68fvfMetm65veezg9AtnaanySUx9OXXXCF+atNP2X+ndzsvtpzLnnFmdeauuzi05pXb99S879ve4KZrWML07xkr28S6/oZc+54WfmQOP7J9Xg1BI1RyuuztnbavwprG3H5wfFTRm+gPG6V0+avX85p3klx6V8wdi+14PF441DOPu6cvPi15q429dW5dzI6obXwvq655mWPJ6911ZusvwcPz1nv/8PHzMq/ZwujXA6WL80cnNk1sV5y9U/0Mwfn123E1QfNzKy7FcS6+QQ3/GP7zPH5ibWZWb99VqxHf2BfNrVibWbWbyv4ZG1mZuueWJuZBUyszcwCJtZmZgETazOzgIm1mVnAxNrMLGBibWYWsDbW/wPgFhNrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECs+/gPI+13BFgzse5DpCrfB9gYse5DpCrfB9gYse5jHKnf3v15N1dvX6xhY8S6D7Guty/WsDFi3YdY19sv34fT09Ozs7Pz8/NPnz5dXFzU48DKiXUfYl1vv3wfjo6Ojo+PT05OSq/FGtZHrPsQ63r75ftwcHBweHhYev3hw4fy4boeB1ZOrPsQ63r75fuwt7dXel0+X5+enoo1rI9Y9/FFY/32+8HE97/OfPXP3/745dHgu6d/zB1f6ertl+/D7u7u/v7+u3fvTk5OPn78WI8DKyfWfXzpWC/Z4uXPvPHq7Zfvw8uXL1+/fi3WsG5i3YdY19sXa9gYse7jNsX6/dNvB4+ev28e//rj4Ntffm5PKL+OPH07Onllq7cv1rAxYt3Hl4712I/P2iPlQf21/mOt+fjB6ldvX6xhY8S6j9v0yXq48pl68peNYg1/QWLdh1jX2xdr2Bix7uOWxboc8WMQ+IsT6z6+dKwnHj1/O/4Lxp+ff9f5C8bm5GdPhyf5C0bIJ9Z9fNFY34rV2xdr2Bix7kOs6+2LNWyMWPch1vX2xRo2Rqz7EOt6+2INGyPWfYh1vX2xho0R6z7Eut6+WMPGiHUf41jfcWINGyPWfYh1JdawMWLdR4kUlVjDZoj1Cpyenh4dHR0cHOzt7e3u7pZ+3R3+s16wGWK9AmdnZ8fHx4eHhyVb+/v75ZPm3eE/mAubIdYrcH5+fnJyUoJVPmC+u2PKLZcbL7dfvgkXFxftdwRYNbFegfKJsqSqfLQ8PT0t2bpTyi2XP1iU2y/fBLGG9RHrFSiRKkqtio93TL3r+h1ovx3AGog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCNDG2szMbvXe//5/Q2ieZvGUBGAAAAAASUVORK5CYII=)
@@ -460,41 +533,52 @@ MenuBar to your application, you [/ execute] the menu event:&]
 directly to MenuBar. Example also demonstrates how to convert 
 the menu item to some value, by using lambda capture by reference:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|virtual void RightDown(Point, dword) override `{&]
-[s7; -|-|int [* result ]`= Null;&]
-[s7; -|-|[* MenuBar menu];&]
-[s7; -|-|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|-|menu.Add(AsString(i), `[`=, [* `&result]`] `{ [* result ]`= i; 
-`});&]
-[s7; -|-|menu.Separator();&]
-[s7; -|-|menu.Add(`"Exit`", `[`=`] `{ Exit(); `});&]
-[s7; -|-|menu.[* Execute]();&]
-[s7; -|-|if(!IsNull([* result]))&]
-[s7; -|-|-|PromptOK(`"You have selected `" `+ AsString((int)result));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with context menu`").Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 int][C+75  ][*_C+75 result][*C+75  
+][C@(0.0.255)+75 `=][C+75  ][C@(0.128.128)+75 Null][C+75 ;]&]
+[s0;l320;%- [C+75         ][*_C+75 MenuBar menu][C+75 ;]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320;%- [C+75             menu][C@(0.0.255)+75 .][C+75 Add(AsString(i), 
+][C@(0.0.255)+75 `[`=][C+75 , ][*_C@(0.0.255)+75 `&][*_C+75 result][C@(0.0.255)+75 `]][C+75  
+`{ ][*_C+75 result][C+75  ][C@(0.0.255)+75 `=][C+75  i; `});]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Separator();]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75  `{ Exit(); `});]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][*_C+75 Execute()][C+75 ;]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 IsNull(][*_C+75 re
+sult][C+75 ))]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"You have selected `"][C+75  
+][C@(0.0.255)+75 `+][C+75  AsString((][*C@(0.0.255)+75 int][C+75 )result));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with context 
+menu`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1448&1660
@@ -518,42 +602,53 @@ can use image designer, part of TheIDE, to design Image constants&]
 use somewhat obfuscated but thankfully short sequence of preprocessor 
 commands:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define IMAGECLASS TutorialImg]&]
-[s7; [* #define IMAGEFILE <Gui10/images.iml>]&]
-[s7; [* #include <Draw/iml.h>]&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void SubMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Add(`"Exit`", [* TutorialImg`::Exit()], `[`=`] `{ Exit(); 
-`});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu and images`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; -|-|menu.Set(`[`=`](Bar`& bar) `{&]
-[s7; -|-|-|bar.Sub(`"Menu`", `[`=`](Bar`& bar) `{ SubMenu(bar); `});&]
-[s7; -|-|`});&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGEFILE ][*_C@(0.0.255)+75 <][*_C+75 Gui10
+][*_C@(0.0.255)+75 /][*_C+75 images][*_C@(0.0.255)+75 .][*_C+75 iml][*_C@(0.0.255)+75 >]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 Draw][*_C@(0.0.255)+75 /
+][*_C+75 iml][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+][*_C+75 TutorialImg][*_C@(0.0.255)+75 `::][*_C+75 Exit()][C+75 , ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ Exit(); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu and 
+images`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75             bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+SubMenu(bar); `});]&]
+[s0;l320;%- [C+75         `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [+75 `}]&]
 [s5; &]
 [s5; Here [*/ Gui10] is the name of package where .iml file resides.&]
 [s5; Image constants are represented by class methods of class defined 
@@ -591,57 +686,74 @@ or [* AddTool] instead of simple Add. Also, items without Image
 are automatically added to menus only and vice versa, items without 
 text are added to toolbars only.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s0;l321; [C@5;1 #define IMAGECLASS TutorialImg]&]
-[s7; #define IMAGEFILE <Gui11/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; [* -|ToolBar tool;]&]
-[s7; &]
-[s7; -|void MenuFn() `{&]
-[s7; -|-|PromptOK(`"Fn activated!`");&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void BarFn() `{&]
-[s7; -|-|PromptOK(`"Fn2 activated!`");&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void SubBar(Bar`& bar) `{&]
-[s0;l321; [C@5;1 -|-|bar.AddMenu(`"Function`", TutorialImg`::Fn(), `[`=`] 
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE ][C@(0.0.255)+75 <][C+75 Gui11][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;%- [C+75     ][*_C+75 ToolBar tool;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MenuFn() `{]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Fn activated!`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  BarFn() `{]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Fn2 activated!`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubBar(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 AddMenu(][C@3+75 `"Function`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Fn(), ][C@(0.0.255)+75 `[`=`]][C+75  
 `{ MenuFn(); `});]&]
-[s7; -|-|[* bar.Add(TutorialImg`::Fn2(), `[`=`] `{ BarFn(); `});]&]
-[s7; [* -|-|bar.Add(`"Exit`", TutorialImg`::Exit(), `[`=`] `{ Exit(); 
+[s0;l320;%- [C+75         ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(TutorialImg][*_C@(0.0.255)+75 `:
+:][*_C+75 Fn2(), ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{ BarFn(); `});]&]
+[s0;l320;%- [C+75         ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exit`"][*_C+75 ,
+ TutorialImg][*_C@(0.0.255)+75 `::][*_C+75 Exit(), ][*_C@(0.0.255)+75 `[`=`]][*_C+75  
+`{ Exit(); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MainMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+SubBar(bar); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with bars`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame(tool)][C+75 ;]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{ MainMenu(bar); `});]&]
+[s0;l320;%- [C+75         ][*_C+75 tool][*_C@(0.0.255)+75 .][*_C+75 Set(][*_C@(0.0.255)+75 `[`=
+`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  bar) `{ SubBar(bar); 
 `});]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void MainMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Sub(`"Menu`", `[`=`] (Bar`& bar) `{ SubBar(bar); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with bars`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; [* -|-|AddFrame(tool);]&]
-[s0;l321; -|-|[C@5;1 menu.Set(`[`=`](Bar`& bar) `{ MainMenu(bar); `});]&]
-[s7; -|-|[* tool.Set(`[`=`](Bar`& bar) `{ SubBar(bar); `});]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:1669&879
@@ -663,52 +775,80 @@ the use of THISFN macro, which is an shortcut alternative for
 some lambdas `- in this case [*@5 THISFN(SubBar)] is equivalent 
 to [*@5 `[`=`](Bar`& bar) `{ SubBar(bar); `}].&]
 [s5; &]
-[s0;l321; [C@5+75 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define IMAGECLASS TutorialImg&]
-[s7; #define IMAGEFILE <Gui12/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar   menu;&]
-[s7; -|ToolBar   tool;&]
-[s7; -|StatusBar status;&]
-[s7; -|&]
-[s7; -|[* typedef MyAppWindow CLASSNAME]; // so that we can use THISFN 
-shortcut&]
-[s7; &]
-[s7; -|void SubBar(Bar`& bar) `{&]
-[s7; -|-|bar.AddMenu(`"Function`", TutorialImg`::Fn(), `[`=`] `{&]
-[s7; -|-|-|PromptOK(`"Fn activated!`");&]
-[s7; -|-|`})[* .Help(`"This invokes MenuFn method of tutorial example`");]&]
-[s7; -|-|bar.Add(TutorialImg`::Fn2(), `[`=`] `{&]
-[s7; -|-|-|PromptOK(`"Fn2 activated!`");&]
-[s7; -|-|`})[* .Help(`"This invokes BarFn method of tutorial example`");]&]
-[s7; -|-|bar.Add(`"Exit`", TutorialImg`::Exit(), `[`=`] `{&]
-[s7; -|-|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|-|Break();&]
-[s7; -|-|`});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void MainMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Sub(`"Menu`", [* THISFN](SubBar));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with bars`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; -|-|[* AddFrame(TopSeparatorFrame());]&]
-[s7; -|-|AddFrame(tool);&]
-[s7; -|-|AddFrame(status);&]
-[s7; -|-|[* AddFrame(InsetFrame());]&]
-[s7; -|-|menu.Set([* THISFN](MainMenu));&]
-[s7; -|-|[* menu.WhenHelp `= status;]&]
-[s7; -|-|tool.Set(`[`=`](Bar`& bar) `{ SubBar(bar); `});&]
-[s7; -|-|[* tool.WhenHelp `= status;]&]
-[s7; -|`}&]
-[s7; `};&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE ][C@(0.0.255)+75 <][C+75 Gui12][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar   menu;]&]
+[s0;l320;%- [C+75     ToolBar   tool;]&]
+[s0;l320;%- [C+75     StatusBar status;]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*_C@(0.0.255)+75 typedef][*_C+75  MyAppWindow ][*_C@(0.128.128)+75 CL
+ASSNAME][*_C+75 ;][C+75  ][/C@4+75 // so that we can use THISFN shortcut]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubBar(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 AddMenu(][C@3+75 `"Function`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Fn(), ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][/C@4+75 // AddMenu `- only in menu]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"Fn activated!`"][C+75 );]&]
+[s0;l320;%- [C+75         `})][*_C@(0.0.255)+75 .][*_C+75 Help(][*_C@3+75 `"This 
+invokes MenuFn method of tutorial example`"][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(TutorialImg][C@(0.0.255)+75 `::][C+75 F
+n2(), ][C@(0.0.255)+75 `[`=`]][C+75  `{ ][/C@4+75 // does not have 
+image `- not in toolbar]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"Fn2 activated!`"][C+75 );]&]
+[s0;l320;%- [C+75         `})][*_C@(0.0.255)+75 .][*_C+75 Help(][*_C@3+75 `"This 
+invokes BarFn method of tutorial example`"][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Exit(), ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][/C@4+75 // in both toolbar and menu]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75                 Break();]&]
+[s0;l320;%- [C+75         `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MainMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][*_C@(0.128.128)+75 THISFN][C+75 (SubBar));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with bars`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (][*_C+75 TopSeparatorFrame());]&]
+[s0;l320;%- [C+75         AddFrame(tool);]&]
+[s0;l320;%- [C+75         AddFrame(status);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (][*_C+75 InsetFrame());]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][*_C@(0.128.128)+75 THISFN][C+75 (M
+ainMenu));]&]
+[s0;l320;%- [C+75         ][*_C+75 menu][*_C@(0.0.255)+75 .][*_C+75 WhenHelp 
+][*_C@(0.0.255)+75 `=][*_C+75  status;]&]
+[s0;l320;%- [C+75         tool][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{ SubBar(bar); `}); ][/C@4+75 // equivalent to THISFN(SubBar)]&]
+[s0;l320;%- [C+75         ][*_C+75 tool][*_C@(0.0.255)+75 .][*_C+75 WhenHelp 
+][*_C@(0.0.255)+75 `=][*_C+75  status;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:1837&876
@@ -720,24 +860,38 @@ shortcut&]
 as variable somewhere, usually as member variable of your window 
 or dialog class and use [* Add] (or [* operator <<]) to put it to 
 your window.&]
-[s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|[* Button button];&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`");&]
-[s7; -|-|[* Add(button.LeftPos(10, 100).TopPos(10, 30));]&]
-[s7; -|-|[* button.SetLabel(`"Click me!`");]&]
-[s7; [* -|-|button << `[`=`] `{]&]
-[s7; [* -|-|-|PromptOK(`"You have clicked the button!`");]&]
-[s7; [* -|-|`};]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; &]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*_C+75 Button button;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 Add(button][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 10
+][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 60][*_C+75 ));]&]
+[s0;l320;%- [C+75         ][*_C+75 button][*_C@(0.0.255)+75 .][*_C+75 SetLabel(][*_C@3+75 `"Cli
+ck me!`"][*_C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 button ][*_C@(0.0.255)+75 <<][*_C+75  
+][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{]&]
+[s0;l320;%- [C+75             ][*_C+75 PromptOK(][*_C@3+75 `"You have clicked 
+the button!`"][*_C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
+[s5; &]
 [s5; Position within parent view is given in logical coordinates 
 (e.g. [* LeftPos] or [* TopPos]) that allow no`-nonsense resizing 
 of dialog. Widget events (like `"button pushed`") are reflected 
@@ -745,19 +899,20 @@ by its callbacks. There exists a `"default`" [* WhenAction] Event
 in each widget that is invoked when user changes a value or a 
 state of widget. You can access it either directly&]
 [s7; &]
-[s7; widget.[* WhenAction] ....&]
+[s7; [@0 widget.][*_@0 WhenAction][*@0  ][@0 ....]&]
 [s7; &]
 [s5; or use operator<< version that adds and action to this widget&]
 [s7; &]
-[s7; widget [* <<] ....&]
+[s7; [@0 widget ][*@0 <<][@0  ....]&]
 [s7; &]
 [s5; Note also that to make the code more clear and less verbose, 
 U`+`+ uses `"method chaining`" technique, where methods (usually 
-those that affect appearance, position or behaviour of widgets 
+those that affect appearance, position or behavior of widgets 
 `- `"modifiers`" in U`+`+ lingo) are designed to return a reference 
 to `*this `- that should explain the line&]
 [s5; &]
-[s7; Add(button.LeftPos(10, 100).TopPos(10, 30));&]
+[s7;%- Add(button[@(0.0.255) .][@0 LeftPos(][@3 10][@0 , ][@3 100][@0 )][@(0.0.255) .][@0 TopPos(][@3 1
+0][@0 , ][@3 30][@0 ));]&]
 [s5; &]
 [s0;= 
 @@rawimage:1724&1324
@@ -772,44 +927,65 @@ and horizontal direction. If only one side is aligned, logical
 coordinate specifies the size. There is also specific kind of 
 logical coordinate the specifies the center position.&]
 [s5; &]
-[s0;l321; [C@5+75 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button lt, rt, lb, rb, lv, ht, hv, cb, rc;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`").Sizeable();&]
-[s7; -|-|`*this&]
-[s7; [* -|-|-|<< lt.SetLabel(`"left`-top`").LeftPos(10, 200).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rt.SetLabel(`"right`-top`").RightPos(10, 200).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< lb.SetLabel(`"left`-bottom`").LeftPos(10, 200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rb.SetLabel(`"right`-bottom`").RightPos(10, 200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< lv.SetLabel(`"left`-vsize`").LeftPos(10, 200).VSizePos(60, 
-60)]&]
-[s7; [* -|-|-|<< ht.SetLabel(`"hsize`-pos`").HSizePos(220, 220).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< hv.SetLabel(`"hsize`-vsize`").HSizePos(220, 220).VSizePos(60, 
-60)]&]
-[s7; [* -|-|-|<< cb.SetLabel(`"hcenter`-bottom`").HCenterPos(200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rc.SetLabel(`"right`-vcenter`").RightPos(10, 200).VCenterPos(40)]&]
-[s7; -|-|;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button lt, rt, lb, rb, lv, ht, hv, cb, rc;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lt][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-top`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rt][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-top`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lv][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-vsize`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VSizePos(][*_C@3+75 60][*_C+75 ,
+ ][*_C@3+75 60][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  ht][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hsize`-pos`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HSizePos(][*_C@3+75 2
+20][*_C+75 , ][*_C@3+75 220][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  hv][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hsize`-vsize`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HSizePos(][*_C@3+75 2
+20][*_C+75 , ][*_C@3+75 220][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VSizePos(][*_C@3+75 60][*_C+75 ,
+ ][*_C@3+75 60][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  cb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hcenter`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HCenterPos(][*_C@3+75 2
+00][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rc][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-vcenter`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VCenterPos(][*_C@3+75 40][*_C+75 )
+]&]
+[s0;l320;%- [C+75         ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:2000&923
@@ -830,43 +1006,63 @@ in this example start to overlap&]
 &]
 [s5; which is something that is in most cases undesirable. To fix 
 the problem, you can specify the minimal size of window:&]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button lt, rt, lb, rb, lv, ht, hv, cb, rc;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`").Sizeable().[* SetMinSize]([* Zsz](600, 
-400));&]
-[s7; -|-|`*this&]
-[s7; -|-|-|<< lt.SetLabel(`"left`-top`").LeftPos(10, 200).TopPos(10, 
-40)&]
-[s7; -|-|-|<< rt.SetLabel(`"right`-top`").RightPos(10, 200).TopPos(10, 
-40)&]
-[s7; -|-|-|<< lb.SetLabel(`"left`-bottom`").LeftPos(10, 200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< rb.SetLabel(`"right`-bottom`").RightPos(10, 200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< lv.SetLabel(`"left`-vsize`").LeftPos(10, 200).VSizePos(60, 
-60)&]
-[s7; -|-|-|<< ht.SetLabel(`"hsize`-pos`").HSizePos(220, 220).TopPos(10, 
-40)&]
-[s7; -|-|-|<< hv.SetLabel(`"hsize`-vsize`").HSizePos(220, 220).VSizePos(60, 
-60)&]
-[s7; -|-|-|<< cb.SetLabel(`"hcenter`-bottom`").HCenterPos(200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< rc.SetLabel(`"right`-vcenter`").RightPos(10, 200).VCenterPos(40)&]
-[s7; -|-|;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button lt, rt, lb, rb, lv, ht, hv, cb, rc;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable()][C@(0.0.255)+75 .][*_C+75 SetMinSize][C+75 (][*_C+75 Zsz][C+75 (][C@3+75 600][C+75 ,
+ ][C@3+75 400][C+75 ));]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lt][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-top`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rt][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-top`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 BottomPos(][C@3+75 10][C+75 , 
+][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 BottomPos(][C@3+75 10][C+75 , 
+][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lv][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-vsize`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 VSizePos(][C@3+75 60][C+75 , 
+][C@3+75 60][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  ht][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hsize`-pos`"][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos(][C@3+75 220][C+75 , 
+][C@3+75 220][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  hv][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hsize`-vsize`"][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos(][C@3+75 220][C+75 , 
+][C@3+75 220][C+75 )][C@(0.0.255)+75 .][C+75 VSizePos(][C@3+75 60][C+75 , 
+][C@3+75 60][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  cb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hcenter`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 HCenterPos(][C@3+75 200][C+75 )][C@(0.0.255)+75 .
+][C+75 BottomPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rc][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-vcenter`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 VCenterPos(][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75         ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; [* Zsz] function converts arguments using font zooming to account 
 for various base GUI font settings.&]
 [s3;:15: 15. Font`-zooming&]
@@ -875,30 +1071,36 @@ to respond to platform setting of GUI font, U`+`+ provides functions
 to zoom coordinates accordingly. Such zooming scale distances 
 by the ratio of current standard GUI font size to design font 
 size (which is based on old Win95 standard font size). Functions 
-Zx and Zy scale the horizontal or vertical distance. Logical 
-coordinate methods that end with Z (like LeftPos[* Z]) are then 
-scaling the values with these functions.&]
+[* Zx] and [* Zy] scale the horizontal or vertical distance. Logical 
+coordinate methods that end with [* Z] (like [* LeftPosZ ]or [* TopPosZ]) 
+are then scaling the values with these functions.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button button;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with font`-zoomed button`").Sizeable();&]
-[s7; -|-|`*this << button.SetLabel(`"Button`").LeftPos([* Zx](10), [* Zy](64)).[* TopPosZ](10
-, 24);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button button;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with font`-zoomed 
+button`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this][C+75  
+][C@(0.0.255)+75 <<][C+75  button][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Button`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPos(][*_C+75 Zx][C+75 (][C@3+75 10][C+75 ), 
+][*_C+75 Zy][C+75 (][C@3+75 64][C+75 ))][C@(0.0.255)+75 .][*_C+75 TopPosZ][C+75 (][C@3+75 10][C+75 ,
+ ][C@3+75 24][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1640&509
@@ -924,24 +1126,31 @@ documentation is available [*^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ here].&]
 [s5; A group of layouts is stored in .lay file. Format of .lay files 
 is such that it can be directly included into C`+`+:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define LAYOUTFILE <Gui16a/dlg.lay>]&]
-[s7; [* #include <CtrlCore/lay.h>]&]
-[s7; &]
-[s7; struct MyAppWindow : public [* WithDlgLayout<TopWindow>] `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|[* CtrlLayout(`*this, `"My dialog`");]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s0; &]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  LAYOUTFILE ][*_C@(0.0.255)+75 <][*_C+75 Gui1
+6a][*_C@(0.0.255)+75 /][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 lay][*_C@(0.0.255)+75 >]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 CtrlCore][*_C@(0.0.255)+75 /
+][*_C+75 lay][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  ][*_C+75 WithDlgLayout][*_C@(0.0.255)+75 <][*_C+75 TopWindo
+w][*_C@(0.0.255)+75 >][C+75  `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         ][*_C+75 CtrlLayout(][*_C@(0.0.255)+75 `*this][*_C+75 , 
+][*_C@3+75 `"MyDialog`"][*_C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s0;= 
 @@rawimage:1235&551
 (iVBORw0KGgoAAAANSUhEUgAAAOAAAABkCAIAAAAQbqt4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAASiSURBVHhe7Zw/TtxAFIfdRImo6KgogihIQxOJljvQUUTaKyCaVGmh5QJpIqXZggtwBESba+QGybz55/HYu+NFDH5rf59+Wo3fPHul1adnIxaab0+/CVEbEfTL809CFAZBieogKFEdBCWqg6BEdRCUqA6CEtXJBT17vjlsmubqJlZcTm5Pm+b06LFTdPGnBA5u73398fpg2ynDW2R+MVZ8/vUjK5qYotnKilkGBT09OO/YExQs2+Y7e35nQdBFxYj44eOnzNHBYj/Dgh5encZBKMWHy+bqcpNSmW12cF4ed3uyIOjSkuk40k6TYUGPHs2rl+zs+f5IBqqrm3Vz+BCajbjn1yeZoNIvPamFx1cygQU7XNMtK7SnvXIoHtxepxcn+5so5Xg7TTYJKko5XcSVxEI7Tf0d3PVk43BQ0LAVLtJZJG/UK2559iV7F6fmeDtNNgoavMwttAsZrrKwDXErXMFN3E5dtPZ0tqyU7fOAf6/w1vZqnYuTvc6bCuo8e/CupKKYqWaeUN1reoq/QnCub2HfXQRdTpyd5jUusobBbBRU1nbs9S20Al0ehp/0O1uyDrfsUA+Pqk5HW4lbaX/rcVvkFj+PZFKOd3SroDLw/HhL6yZm1MUnUedToO2Jp7inUiFo3XkX8dKRnBseCfghaQYZ1HGko7mgI+PuxVmxRuJYzepkj2IGzaCIpmi2smKW1whqb/H+GbF2ZFS/13sRhdlN0HCzrnvPbR8JBMbnovOaCUrIuwVBieogKFEdBCWqg6BEdRCUqI4X9C+AShAUVIOgoBoEBdUgKKgGQUE1CAqqQVBQDYKCarQL2nz/Q4rxH9Yc2QNB/8FWEHRKELQIgk5JKmjTNH4FCQg6JQhaBEGnBEGLLFzQ9aq5uHvxBxsY02MY2dYBQYsgKIKqBkERVDUImltlSp7VOhQu7tZ3F7bWdr/4SuhD0Cog6Car4pY11i1FylgMJ65XdoWgVUDQnlVWSEvPRXsgA7MdnxYpIWgVELRrlZjnbtlm1Rc0bLdtEQStAoJ2rYoFUTAKGppaL5OiB0GrgKAt1i9x0B6sVskENQe2mozN0ChIFUGrsHBBJwZBiyDolCBoEQSdEgQtgqBTkgoKgyDolCBoEQSdEvPpk2L8hzVHtAsKCwdBQTUICqpBUFANgoJqEBRUg6CgGgQF1RQE/ToO3w3w1pQF9b9Q2wyCQj2qCZp80XmHbym339IHEOoIKnZGz4rSveab9rAQagja/l2Sp1fogqCwkQqCDuhoSk5B62LnXzwkjwLZ3y3JdTzhcnb3zp+B1EugjqC5O9FZq6PblZpbJVK2a+n0XnY6QzXZhxkzxQT1LspBsLYnaPci2zph1lQQtG9oW0ititUh7RAULDUEtfK0eslBUClZD1sb18klCp0wZ+oIahDBPFFVZ1X/Xzz4XjlOtBMvHYNSpmuYLdUEHQarYDfKgo7Bd5dBUNiNgqBvDYLCbryzoAC7gaCgGgQF1SAoqAZBQTUICqpBUFANgoJqEBRUg6CgGgQF1SAoqAZBQTUICqpBUFANgoJqEBRUg6CgGgQF1SAoqAZBQTVeUEKU5un3f/yTFC35jMdxAAAAAElFTkSuQmCC)
@@ -954,38 +1163,57 @@ widgets, including its logical coordinates.&]
 [s5; To understand how layout mechanism works, let`'s examine the 
 content of .lay file:&]
 [s5; &]
-[s7; LAYOUT([* DlgLayout], 208, 64)&]
-[s7; -|ITEM([* Upp`::Label, dv`_`_`_0, SetLabel(t`_(`"Label`")).LeftPosZ(8, 
-36).TopPosZ(8, 19)])&]
-[s7; -|ITEM([* Upp`::EditString, text, LeftPosZ(48, 92).TopPosZ(8, 19)])&]
-[s7; -|ITEM([* Upp`::Option, option, SetLabel(t`_(`"Option`")).LeftPosZ(8, 
-108).TopPosZ(32, 15)])&]
-[s7; END`_LAYOUT&]
+[s0;l320;%- [*C@(0.0.255)+75 LAYOUT][C+75 (][*_C+75 DlgLayout][C+75 , ][C@3+75 208][C+75 , 
+][C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Lab
+el, dv`_`_`_0, SetLabel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Label`"][*_C@(0.128.128)+75 )
+][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 36][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 19][*_C+75 )][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Edi
+tString, text, LeftPosZ(][*_C@3+75 48][*_C+75 , ][*_C@3+75 92][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 19][*_C+75 )][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Opt
+ion, option, SetLabel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Option`"][*_C@(0.128.128)+75 )
+][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 108][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 32][*_C+75 , 
+][*_C@3+75 15][*_C+75 )][C+75 )]&]
+[s0;l320;%- [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 LAYOUT]&]
 [s5; &]
 [s5; Header [* CtrlCore/lay.h] includes [* LAYOUTFILE] several times, 
 altering definition of LAYOUT, ITEM and END`_LAYOUT to produce 
 C`+`+ code which simplified form for this example looks like&]
 [s5; &]
-[s7; template <class Base>&]
-[s7; struct With[* DlgLayout] : Base `{&]
-[s7; -|[* Label] [* dv`_`_`_0];&]
-[s7; -|[* EditString] [* text];&]
-[s7; -|[* Option] [* option];&]
-[s7; `};&]
-[s7; &]
-[s7; template <class T>&]
-[s7; CtrlLayout(T`& dlg, const char `*title)&]
-[s7; `{&]
-[s7; -|Size sz `= Ctrl`::LayoutZoom([* 208], [* 64])&]
-[s7; -|dlg.SetMinSize(sz);&]
-[s7; -|dlg.SetRect(sz);&]
-[s7; -|dlg.Title(title);&]
-[s7; -|dlg.[* dv`_`_`_0].[* SetLabel(t`_(`"Label`")).LeftPosZ(8, 36).TopPosZ(8, 
-19)];&]
-[s7; -|dlg.[* text].[* LeftPosZ(48, 92).TopPosZ(8, 19)];&]
-[s7; -|dlg.[* option].[* SetLabel(t`_(`"Option`")).LeftPosZ(8, 108).TopPosZ(32, 
-15)];&]
-[s7; `}&]
+[s7;%- [*@(0.0.255) template][@0  ][@(0.0.255) <][*@(0.0.255) class][@0  Base][@(0.0.255) >]&]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  With][*_C+75 DlgLayout][C+75  
+][C@(0.0.255)+75 :][C+75  Base `{]&]
+[s0;l320;%- [C+75     ][*_C+75 Label dv`_`_`_0;]&]
+[s0;l320;%- [C+75     ][*_C+75 EditString text;]&]
+[s0;l320;%- [C+75     ][*_C+75 Option option;]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 template][C+75  ][C@(0.0.255)+75 <][*C@(0.0.255)+75 class][C+75  
+T][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C+75 CtrlLayout(T][C@(0.0.255)+75 `&][C+75  dlg, ][*C@(0.0.255)+75 const][C+75  
+][*C@(0.0.255)+75 char][C+75  ][C@(0.0.255)+75 `*][C+75 title)]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     Size sz ][C@(0.0.255)+75 `=][C+75  Ctrl][C@(0.0.255)+75 `::][C+75 LayoutZo
+om(][*_C@3+75 208][*_C+75 , ][*_C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 SetMinSize(sz);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 SetRect(sz);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 Title(title);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 dv`_`_`_0][*_C@(0.0.255)+75 .][*_C+75 SetLa
+bel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Label`"][*_C@(0.128.128)+75 )][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 36][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 To
+pPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 19][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 text][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 4
+8][*_C+75 , ][*_C@3+75 92][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 19][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 option][*_C@(0.0.255)+75 .][*_C+75 SetLabel
+(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Option`"][*_C@(0.128.128)+75 )][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 108][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 T
+opPosZ(][*_C@3+75 32][*_C+75 , ][*_C@3+75 15][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; This way, U`+`+ keeps tight coupling between visual design and 
 C`+`+ code.&]
@@ -1008,21 +1236,27 @@ are not forced to use `"using namespace Upp`" in the context
 of using layouts. Below implementation presents how you could 
 avoid such situation:&]
 [s0; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; #define LAYOUTFILE <Gui16b/dlg.lay>&]
-[s7; #include <CtrlCore/lay.h>&]
-[s7; &]
-[s7; struct MyAppWindow : public WithDlgLayout<Upp`::TopWindow> `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|CtrlLayout(`*this, `"MyDialog`");&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  LAYOUTFILE ][C@(0.0.255)+75 <][C+75 Gui16b][C@(0.0.255)+75 /
+][C+75 dlg][C@(0.0.255)+75 .][C+75 lay][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlCore][C@(0.0.255)+75 /
+][C+75 lay][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  WithDlgLayout][C@(0.0.255)+75 <][C+75 Upp][C@(0.0.255)+75 `:
+:][C+75 TopWindow][C@(0.0.255)+75 >][C+75  `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         CtrlLayout(][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this][C+75 , 
+][C@3+75 `"MyDialog`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s3;:17: 17. Value of widget&]
 [s5; Many widgets have some sort of natural value. E.g. the value 
@@ -1033,48 +1267,58 @@ of the option.&]
 of widget via [* GetData] and [* SetData] methods. All types of values 
 are passed using polymorphic Value.&]
 [s5;* &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditString text;&]
-[s7; -|app.Add(text.TopPosZ(0, 20).HSizePos());&]
-[s7; &]
-[s7; -|text.[* SetData](`"Some text`");&]
-[s7; -|app.Run();&]
-[s7; -|PromptOK((String)text.[* GetData]());&]
-[s7; `}&]
-[s7; &]
-[s5; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditString text;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(text][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     text][C@(0.0.255)+75 .][*_C+75 SetData][C+75 (][C@3+75 `"Some 
+text`"][C+75 );]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     PromptOK((String)text][C@(0.0.255)+75 .][*_C+75 GetData][C+75 ());]&]
+[s0;l320;%- [C+75 `}]&]
+[s5;l320; &]
 [s5; Because this feature is used very frequently, U`+`+ provides 
 operator overloads for this interface `- [* operator<<`=] for SetData 
 and [* operator`~] for GetData.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditString text;&]
-[s7; -|app.Add(text.TopPosZ(0, 20).HSizePos());&]
-[s7; &]
-[s7; -|[* text <<`=] `"Some text `- operator version`";&]
-[s7; -|app.Run();&]
-[s7; -|PromptOK((String)[* `~text]);&]
-[s7; `}&]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditString text;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(text][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*_C+75 text ][*_C@(0.0.255)+75 <<`=][C+75  ][C@3+75 `"Some 
+text `- operator version`"][C+75 ;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     PromptOK((String)][*_C@(0.0.255)+75 `~][*_C+75 text][C+75 );]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s3;:18: 18. Accepting and rejecting widgets&]
 [s5; Ctrl interface provides&]
 [s5; &]
-[s7; -|virtual bool   [* Accept]();&]
-[s7; -|virtual void   [* Reject]();&]
+[s7;%- [*@(0.0.255) virtual][@0  ][*@(0.0.255) bool][@0    ][*_@0 Accept][@0 ();]&]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
+  ][*_C+75 Reject][C+75 ();]&]
 [s5; &]
 [s5; methods. [*/ Accepting] is usually a reaction to pressing OK button 
 or similar approve operation and usually involves testing for 
@@ -1092,21 +1336,25 @@ Cancel button is pressed or similar rejecting action. It simply
 cancels all pending operations on widget. Default implementation 
 calls Reject for all children.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditDate  date;&]
-[s7; -|app.Add(date.TopPosZ(0, 20).HSizePos());&]
-[s7; -|app.Run();&]
-[s7; -|if(app.[* Accept]())&]
-[s7; -|-|PromptOK(`"Correct date.`&`[`* `" `+ AsString(`~date));&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditDate  date;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (app][C@(0.0.255)+75 .][*_C+75 Accept][C+75 ())]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Correct date.`&`[`* `"][C+75  
+][C@(0.0.255)+75 `+][C+75  AsString(][C@(0.0.255)+75 `~][C+75 date));]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1029&260
@@ -1140,27 +1388,34 @@ interface. Flag is cleared by [* ClearModify] method.&]
 state, implementation of widgets is responsible for correct behaviour 
 with respect to listed flags.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(60));&]
-[s7; -|EditDate  date1, date2, date3;&]
-[s7; -|date1 <<`= date2 <<`= date3 <<`= GetSysDate();&]
-[s7; -|date1.[* ClearModify]();&]
-[s7; -|app.Add(date1.TopPosZ(0, 20).HSizePos());&]
-[s7; -|date2.[* Disable]();&]
-[s7; -|app.Add(date2.TopPosZ(20, 20).HSizePos());&]
-[s7; -|date3.[* SetReadOnly]();&]
-[s7; -|app.Add(date3.TopPosZ(40, 20).HSizePos());&]
-[s7; -|app.Run();&]
-[s7; -|if(date1.[* IsModified]())&]
-[s7; -|-|PromptOK(`"Date was modified!`");&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 60][C+75 ));]&]
+[s0;l320;%- [C+75     EditDate  date1, date2, date3;]&]
+[s0;l320;%- [C+75     date1 ][C@(0.0.255)+75 <<`=][C+75  date2 ][C@(0.0.255)+75 <<`=][C+75  
+date3 ][C@(0.0.255)+75 <<`=][C+75  GetSysDate();]&]
+[s0;l320;%- [C+75     date1][C@(0.0.255)+75 .][*_C+75 ClearModify][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date1][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     date2][C@(0.0.255)+75 .][*_C+75 Disable][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date2][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 2
+0][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     date3][C@(0.0.255)+75 .][*_C+75 SetReadOnly][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date3][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+0][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (date1][C@(0.0.255)+75 .][*_C+75 IsModified][C+75 (
+))]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Date was modified!`"][C+75 );]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1029&460
@@ -1176,48 +1431,61 @@ starts. In order to exit it, e.g. by pressing the button, you
 have to call TopWindow`'s [* Break] method. Argument passed to 
 Break is then returned from Run.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button exit;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(100), Zy(100));&]
-[s7; -|-|Add(exit.SetLabel(`"exit`").LeftPosZ(10, 64).TopPosZ(10, 24));&]
-[s7; -|-|exit << `[`=`] `{ [* Break](999); `};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button exit;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 100][C+75 ), 
+Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;%- [C+75         Add(exit][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"exit`"][C+75 )][C@(0.0.255)+75 .
+][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 1
+0][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;%- [C+75         exit ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][*_C+75 Break][C+75 (][C@3+75 999][C+75 ); `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; As this is very common situation, TopWindow provides another 
 method, [* Breaker], which returns an Event which, when invoked, 
 performs the [* Break].&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button exit;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(100), Zy(100));&]
-[s7; -|-|Add(exit.SetLabel(`"exit`").LeftPosZ(10, 64).TopPosZ(10, 24));&]
-[s7; -|-|exit <<`= [* Breaker](999);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;~~~>32;%- [C+75     Button exit;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;~~~>32;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , 
+Zx(][C@3+75 100][C+75 ), Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;~~~>32;%- [C+75         Add(exit][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"exit`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 10][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;~~~>32;%- [C+75         exit ][C@(0.0.255)+75 <<][C+75  ][*_C+75 Breaker][C+75 (][C@3+75 9
+99][C+75 );]&]
+[s0;l320;~~~>32;%- [C+75     `}]&]
+[s0;l320;~~~>32;%- [C+75 `};]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~>32;%- [C+75 `{]&]
+[s0;l320;~~~>32;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;~~~>32;%- [C+75 `}]&]
 [s5; &]
 [s5; Another common situation is handling OK and Cancel buttons. 
 OK button has to Accept the dialog before breaking the loop (if 
@@ -1226,76 +1494,104 @@ provides [* Acceptor] and [* Rejector] methods providing Callbacks
 that invoke [* Accept] and [* Reject] as needed before calling the 
 [* Break].&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button ok, cancel;&]
-[s7; -|EditDate date;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(200), Zy(90));&]
-[s7; -|-|Add(date.LeftPosZ(10, 80).TopPosZ(10, 20));&]
-[s7; -|-|Add(ok.SetLabel(`"OK`").LeftPosZ(10, 64).TopPosZ(40, 24));&]
-[s7; -|-|Add(cancel.SetLabel(`"Cancel`").LeftPosZ(100, 64).TopPosZ(40, 
-24));&]
-[s7; &]
-[s7; -|-|ok.[* Ok]() << [* Acceptor]([* IDOK]);&]
-[s7; -|-|cancel.[* Cancel]() << [* Rejector]([*@(128.0.255) IDCANCEL]);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|switch(app.Run()) `{&]
-[s7; -|case [*@(128.0.255) IDOK]:&]
-[s7; -|-|PromptOK(String().Cat() << `"OK: `" << `~app.date);&]
-[s7; -|-|break;&]
-[s7; -|case [*@(128.0.255) IDCANCEL]:&]
-[s7; -|-|Exclamation(`"Canceled`");&]
-[s7; -|`}&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button ok, cancel;]&]
+[s0;l320;%- [C+75     EditDate date;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), 
+Zy(][C@3+75 90][C+75 ));]&]
+[s0;l320;%- [C+75         Add(date][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 10][C+75 , 
+][C@3+75 80][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 10][C+75 , ][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75         Add(ok][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"OK`"][C+75 )][C@(0.0.255)+75 .
+][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+0][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;%- [C+75         Add(cancel][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Cancel`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 100][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 40][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75         ok][C@(0.0.255)+75 .][*_C+75 Ok][C+75 () ][C@(0.0.255)+75 <<][C+75  
+][*_C+75 Acceptor][C+75 (][*_C@(128.0.255)+75 IDOK][C+75 );]&]
+[s0;l320;%- [C+75         cancel][C@(0.0.255)+75 .][*_C+75 Cancel][C+75 () 
+][C@(0.0.255)+75 <<][C+75  ][*_C+75 Rejector][C+75 (][*_C@(128.0.255)+75 IDCANCEL][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 switch][C+75 (app][C@(0.0.255)+75 .][C+75 Run()) 
+`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 case][C+75  ][*_C@(128.0.255)+75 IDOK][C@(0.0.255)+75 :]&]
+[s0;l320;%- [C+75         PromptOK(String()][C@(0.0.255)+75 .][C+75 Cat() 
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"OK: `"][C+75  ][C@(0.0.255)+75 <<][C+75  
+][C@(0.0.255)+75 `~][C+75 app][C@(0.0.255)+75 .][C+75 date);]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 break][C+75 ;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 case][C+75  ][*_C@(128.0.255)+75 IDCANCEL][C@(0.0.255)+75 :
+]&]
+[s0;l320;%- [C+75         Exclamation(][C@3+75 `"Canceled`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; Calls to [* Ok] and [* Cancel] methods of Button here make Button 
 react to Enter and Esc keys and add specific visual appearance.&]
 [s5; To reduce tedious tasks even further, there are [* CtrlLayoutOK], 
 [* CtrlLayoutCancel], [* CtrlLayoutOKCancel ]etc. template functions 
 that both [^topic`:`/`/CtrlCore`/src`/Layout`_en`-us^ setup layout 
 and assign] Acceptors and Rejectors!&]
+[s5; [/ main.cpp:]&]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #define][C+75  LAYOUTFILE ][C@(0.0.255)+75 <][C+75 Gui20
+d][C@(0.0.255)+75 /][C+75 myapp][C@(0.0.255)+75 .][C+75 lay][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlCore][C@(0.0.255)+75 /
+][C+75 lay][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~>32;%- [C+75 `{]&]
+[s0;l320;~~~>32;%- [C+75     WithMyAppLayout][C@(0.0.255)+75 <][C+75 TopWindow][C@(0.0.255)+75 >
+][C+75  app;]&]
+[s0;l320;~~~>32;%- [C+75     ][*_C+75 CtrlLayoutOKCancel][C+75 (app, ][C@3+75 `"MyApp`"][C+75 )
+;]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 switch][C+75 (app][C@(0.0.255)+75 .][C+75 Run())
+ `{]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 case][C+75  IDOK][C@(0.0.255)+75 :]&]
+[s0;l320;~~~>32;%- [C+75         PromptOK(String()][C@(0.0.255)+75 .][C+75 Cat() 
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"OK: `"][C+75  ][C@(0.0.255)+75 <<][C+75  
+][C@(0.0.255)+75 `~][C+75 app][C@(0.0.255)+75 .][C+75 date);]&]
+[s0;l320;~~~>32;%- [C+75         ][*C@(0.0.255)+75 break][C+75 ;]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 case][C+75  IDCANCEL][C@(0.0.255)+75 :]&]
+[s0;l320;~~~>32;%- [C+75         Exclamation(][C@3+75 `"Canceled`"][C+75 );]&]
+[s0;l320;~~~>32;%- [C+75     `}]&]
+[s0;l320;~~~>32;%- [C+75 `}]&]
+[s5;%- &]
+[s5; [/ myapp.lay:]&]
+[s0;l320;%- [*C@(0.0.255)+75 LAYOUT][C+75 (MyAppLayout, ][C@3+75 148][C+75 , 
+][C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 EditDate, 
+date, LeftPosZ(][C@3+75 4][C+75 , ][C@3+75 88][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+][C+75 , ][C@3+75 19][C+75 ))]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 Button, 
+][*_C+75 ok][C+75 , SetLabel(][C@(0.128.128)+75 t`_(][C@3+75 `"OK`"][C@(0.128.128)+75 )][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 4][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 Button, 
+][*_C+75 cancel][C+75 , SetLabel(][C@(0.128.128)+75 t`_(][C@3+75 `"Cancel`"][C@(0.128.128)+75 )
+][C+75 )][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 76][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .
+][C+75 TopPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
+[s0;l320;%- [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 LAYOUT]&]
 [s5; &]
-[s7; [@(28.127.0) // main.cpp]&]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define LAYOUTFILE <Gui20d/myapp.lay>&]
-[s7; #include <CtrlCore/lay.h>&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|WithMyAppLayout<TopWindow> app;&]
-[s7; -|[* CtrlLayoutOKCancel](app, `"MyApp`");&]
-[s7; -|switch(app.Run()) `{&]
-[s7; -|case IDOK:&]
-[s7; -|-|PromptOK(String().Cat() << `"OK: `" << `~app.date);&]
-[s7; -|-|break;&]
-[s7; -|case IDCANCEL:&]
-[s7; -|-|Exclamation(`"Canceled`");&]
-[s7; -|`}&]
-[s7; `}&]
-[s7; &]
-[s7; [@(28.127.0) // myapp.lay]&]
-[s0;l321; [C@5;1 LAYOUT(MyAppLayout, 148, 64)]&]
-[s7; -|ITEM(EditDate, date, LeftPosZ(4, 88).TopPosZ(4, 19))&]
-[s7; -|ITEM(Button, [* ok], SetLabel(t`_(`"OK`")).LeftPosZ(4, 64).TopPosZ(32, 
-24))&]
-[s7; -|ITEM(Button, [* cancel], SetLabel(t`_(`"Cancel`")).LeftPosZ(76, 
-64).TopPosZ(32, 24))&]
-[s7; END`_LAYOUT&]
-[s0; &]
 [s7;@(28.127.0) &]
 [s7; 
 @@rawimage:697&461
@@ -1312,19 +1608,25 @@ All that is to be done is to derive your own class from Ctrl
 Ctrl`'s virtual methods to paint the widgets and do something 
 useful:&]
 [s5; &]
-[s7; struct MyCtrl : public Ctrl `{&]
-[s7; -|int count `= 0;&]
-[s7; -|&]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), White());&]
-[s7; -|-|w.DrawText(2, 2, AsString(count));&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|virtual void LeftDown(Point, dword) override `{&]
-[s7; -|-|count`+`+;&]
-[s7; -|-|Refresh();&]
-[s7; -|`}&]
-[s7; `};&]
+[s7;%- [*@(0.0.255) struct][@0  MyCtrl ][@(0.0.255) :][@0  ][*@(0.0.255) public][@0  
+Ctrl `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75  count ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 0][C+75 ;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+White());]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 2][C+75 , 
+][C@3+75 2][C+75 , AsString(count));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 )
+ ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         count][C@(0.0.255)+75 `+`+][C+75 ;]&]
+[s0;l320;%- [C+75         Refresh();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
 [s5; &]
 [s5; To put your widget into your layout based dialog, the simple 
 way is to add it as `"User class`". In that case you just fill 
@@ -1342,20 +1644,27 @@ of custom widget (so that the class is defined at that point).&]
 seldom used widgets, you can also teach TheIDE to show something 
 better using .usc script file:&]
 [s5; &]
-[s7; ctrl MyCtrl `{&]
-[s7; -|group `"Example`";&]
-[s7; &]
-[s7; -|GetMinSize() `{ sz `= GetTextSize(`"X`"); sz.cy `+`= 2; return 
-sz; `}&]
-[s7; -|GetStdSize() `{ sz `= GetMinSize(); sz.cx `*`= 7; return sz; 
-`}&]
-[s7; &]
-[s7; -|Paint(w) `{&]
-[s7; -|-|r `= GetRect();&]
-[s7; -|-|w.DrawRect(r, :White);&]
-[s7; -|-|w.DrawText(2, 2, `"0`", StdFont(), :Black);&]
-[s7; -|`}&]
-[s7; `};&]
+[s0;l320;%- [*C@(0.0.255)+75 ctrl][C+75  MyCtrl `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 group][C+75  ][C@3+75 `"Example`"][C+75 ;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][C@(0.128.128)+75 GetMinSize][C+75 () `{ sz ][C@(0.0.255)+75 `=][C+75  
+][C@(0.128.128)+75 GetTextSize][C+75 (][C@3+75 `"X`"][C+75 ); sz][C@(0.0.255)+75 .][C+75 cy 
+][C@(0.0.255)+75 `+`=][C+75  ][C@3+75 2][C+75 ; ][*C@(0.0.255)+75 return][C+75  
+sz; `}]&]
+[s0;l320;%- [C+75     ][C@(0.128.128)+75 GetStdSize][C+75 () `{ sz ][C@(0.0.255)+75 `=][C+75  
+][C@(0.128.128)+75 GetMinSize][C+75 (); sz][C@(0.0.255)+75 .][C+75 cx 
+][C@(0.0.255)+75 `*`=][C+75  ][C@3+75 7][C+75 ; ][*C@(0.0.255)+75 return][C+75  
+sz; `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     Paint(w) `{]&]
+[s0;l320;%- [C+75         r ][C@(0.0.255)+75 `=][C+75  GetRect();]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C@(0.128.128)+75 DrawRect][C+75 (r, 
+][C@(0.0.255)+75 :][C@(0.128.128)+75 White][C+75 );]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C@(0.128.128)+75 DrawText][C+75 (][C@3+75 2][C+75 ,
+ ][C@3+75 2][C+75 , ][C@3+75 `"0`"][C+75 , ][C@(0.128.128)+75 StdFont][C+75 (), 
+][C@(0.0.255)+75 :][C@(0.128.128)+75 Black][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
 [s5; &]
 [s5; [/ Note: This is not the C`+`+, but a piece of script in `"Esc`" 
 scripting language, interpreted by layout designer.]&]
@@ -1372,37 +1681,53 @@ non`-modal dialog as member variable of its owner window. Non`-modal
 dialog is dismissed using the [* Close] method just like any other 
 window.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct NonModalDialog : public TopWindow `{&]
-[s7; -|Button b;&]
-[s7; &]
-[s7; -|NonModalDialog() `{&]
-[s7; -|-|SetRect(0, 0, Zx(200), Zy(50));&]
-[s7; -|-|Add(b.SetLabel(`"Close non`-modal dialog`").SizePos());&]
-[s7; -|-|b << `[`=`] `{ [* Close](); `};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; struct MainWindow : public TopWindow `{&]
-[s7; -|[* NonModalDialog dlg;]&]
-[s7; -|Button b;&]
-[s7; &]
-[s7; -|MainWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(400), Zy(100));&]
-[s7; -|-|Add(b.SetLabel(`"Open/close non`-modal dialog`").SizePos());&]
-[s7; -|-|b << `[`=`] `{&]
-[s7; -|-|-|if(dlg.IsOpen())&]
-[s7; -|-|-|-|[* dlg.Close();]&]
-[s7; -|-|-|else&]
-[s7; -|-|-|-|[* dlg.Open(this);]&]
-[s7; -|-|`};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  NonModalDialog ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     Button b;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     NonModalDialog() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), 
+Zy(][C@3+75 50][C+75 ));]&]
+[s0;l320;%- [C+75         Add(b][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Close 
+non`-modal dialog`"][C+75 )][C@(0.0.255)+75 .][C+75 SizePos());]&]
+[s0;l320;%- [C+75         b ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][*_C+75 Close][C+75 (); `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MainWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     ][*_C+75 NonModalDialog dlg;]&]
+[s0;l320;%- [C+75     Button b;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MainWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 400][C+75 ), 
+Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;%- [C+75         Add(b][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Open/close 
+non`-modal dialog`"][C+75 )][C@(0.0.255)+75 .][C+75 SizePos());]&]
+[s0;l320;%- [C+75         b ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 if][C+75 (dlg][C@(0.0.255)+75 .][C+75 IsOpen())
+]&]
+[s0;l320;%- [C+75                 ][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 Close();]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 else]&]
+[s0;l320;%- [C+75                 ][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 Open(][*_C@(0.0.255)+75 t
+his][*_C+75 );]&]
+[s0;l320;%- [C+75         `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MainWindow win;]&]
+[s0;l320;%- [C+75     win][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5;/ &]
 [s0;= 
 @@image:2084&940
@@ -1417,53 +1742,64 @@ create an application that will support multiple locales. For
 this purpose, we will pick up one of the previous example in 
 which simple text is displayed inside the window, and we will 
 add translation support to it:&]
-[s0; &]
-[s7; [@(28.127.0) // main.cpp]&]
-[s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; [@(28.127.0) // The below include needs to be placed in one of 
-implementation file (.cpp)]&]
-[s7; #define TFILE <Gui23/Gui23.t>&]
-[s7; #include <Core/t.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title([* t`_(`"My application`")]);&]
-[s7; -|-|Zoomable().Sizeable().SetRect(0, 0, 400, 100);&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SLtYellow);&]
-[s7; -|-|w.DrawText(20, 20, [* t`_(`"Hello translation engine!`")], Arial(30), 
-Blue);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|[@(28.127.0) // Set system language for whole application]&]
-[s7; -|[* SetLanguage(GetSystemLNG());]&]
-[s7; &]
-[s7; -|[@(28.127.0) // Uncomment to force specific language...]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"en`-us`"); // English `= default]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"cs`-cz`"); // Czech]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"de`-de`"); // German]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"es`-es`"); // Spanish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"fr`-fr`"); // French]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"it`-it`"); // Italian]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"ja`-jp`"); // Japanese]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"pl`-pl`"); // Polish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"pt`-pt`"); // Portuguese]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"ru`-ru`"); // Russian]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"tr`-tr`"); // Turkish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"zh`-cn`"); // Traditional Chinese]&]
-[s7; &]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s7; &]
-[s0; &]
+[s5; [/ main.cpp:]&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [/C@4+75 // The below include needs to be placed in one 
+of implementation file (.cpp)]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  TFILE ][C@(0.0.255)+75 <][C+75 Gui23][C@(0.0.255)+75 /
+][C+75 Gui23][C@(0.0.255)+75 .][C+75 t][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 t
+][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][*_C@(0.128.128)$(255.255.192)+75 t`_(][*_C@3$(255.255.192)+75 `"
+My application`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 );]&]
+[s0;l320;%- [C+75         Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable()][C@(0.0.255)+75 .][C+75 S
+etRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 550][C+75 , ][C@3+75 100][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SLtYellow);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 20][C+75 , 
+][C@3+75 20][C+75 , ][*_C@(0.128.128)$(255.255.192)+75 t`_(][*_C@3$(255.255.192)+75 `"Hel
+lo translation engine!`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 , 
+Arial(][C@3+75 30][C+75 ), Blue);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     ][/C@4+75 // Set system language for whole application]&]
+[s0;l320;%- [C+75     ][*_C+75 SetLanguage(GetSystemLNG());]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][/C@4+75 // Uncomment to force specific language...]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"en`-us`"); // English 
+`= default]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"cs`-cz`"); // Czech]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"de`-de`"); // German]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"es`-es`"); // Spanish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"fr`-fr`"); // French]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"it`-it`"); // Italian]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"ja`-jp`"); // Japanese]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"pl`-pl`"); // Polish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"pt`-pt`"); // Portuguese]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"ru`-ru`"); // Russian]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"tr`-tr`"); // Turkish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"zh`-cn`"); // Traditional 
+Chinese]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; As you can see, all strings visible to the user are surrounded 
 by [* t`_] macro. This is the way to inform U`+`+ translation engine 
 that string is translatable. Right now we need to create translation 
@@ -1478,39 +1814,44 @@ our users use.&]
 [s5; The generated file with translated entries is located below. 
 For the purpose of this section we used electronic translator, 
 so for any errors we are sorry.&]
-[s0; &]
+[s5; [/ Gui23.t:]&]
 [s7; [@(28.127.0) // Gui23.t]&]
-[s0;l321; [C@5;1 #ifdef `_MSC`_VER]&]
-[s7; #pragma setlocale(`"C`")&]
-[s7; #endif&]
-[s7; // main.cpp&]
-[s7; &]
-[s7; T`_(`"My application`")&]
-[s7; csCZ(`"Moje aplikace`")&]
-[s7; deDE(`"Meine Bewerbung`")&]
-[s7; esES(`"Mi aplicación`")&]
-[s7; frFR(`"Mon application`")&]
-[s7; itIT(`"La mia applicazione`")&]
-[s7; jaJP(`"私のアプリケーション`")&]
-[s7; plPL(`"Moja aplikacja`")&]
-[s7; ptPT(`"Minha aplicação`")&]
-[s7; ruRU(`"Мое приложение`")&]
-[s7; trTR(`"Benim başvurum`")&]
-[s7; zhCN(`"我的應用程序`")&]
-[s7; &]
-[s7; T`_(`"Hello translation engine!`")&]
-[s7; csCZ(`"Ahoj překladač!`")&]
-[s7; deDE(`"Hallo Übersetzungsmaschine!`")&]
-[s7; esES(`"¡Hola motor de traducción!`")&]
-[s7; frFR(`"Bonjour le moteur de traduction!`")&]
-[s7; itIT(`"Ciao motore di traduzione!`")&]
-[s7; jaJP(`"こんにちは翻訳エンジン！`")&]
-[s7; plPL(`"Witaj silniku translacji!`")&]
-[s7; ptPT(`"Olá motor de tradução!`")&]
-[s7; ruRU(`"Привет движок перевода!`")&]
-[s7; trTR(`"Merhaba çeviri motoru!`")&]
-[s7; zhCN(`"您好翻譯引擎！`")&]
-[s0; &]
+[s0;l320;%- [C+75 #ifdef `_MSC`_VER]&]
+[s0;l320;%- [C+75 #pragma setlocale(][C@3+75 `"C`"][C+75 )]&]
+[s0;l320;%- [C+75 #endif]&]
+[s0;l320;%- [/C@4+75 // main.cpp]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"My application`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 csCZ][C+75 (][C@3+75 `"Moje aplikace`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 deDE][C+75 (][C@3+75 `"Meine Bewerbung`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 esES][C+75 (][C@3+75 `"Mi aplicación`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 frFR][C+75 (][C@3+75 `"Mon application`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 itIT][C+75 (][C@3+75 `"La mia applicazione`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 jaJP][C+75 (][C@3+75 `"私のアプリケーション`"][C+75 )
+]&]
+[s0;l320;%- [C@(0.128.128)+75 plPL][C+75 (][C@3+75 `"Moja aplikacja`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ptPT][C+75 (][C@3+75 `"Minha aplicação`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Мое приложение`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Benim başvurum`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"我的應用程序`"][C+75 )]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"Hello 
+translation engine!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 csCZ][C+75 (][C@3+75 `"Ahoj překladači!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 deDE][C+75 (][C@3+75 `"Hallo Übersetzungsmaschine!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 esES][C+75 (][C@3+75 `"¡Hola motor de traducción!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 frFR][C+75 (][C@3+75 `"Bonjour le moteur 
+de traduction!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 itIT][C+75 (][C@3+75 `"Ciao motore di traduzione!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 jaJP][C+75 (][C@3+75 `"こんにちは翻訳エンジン！`"
+][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 plPL][C+75 (][C@3+75 `"Witaj silniku translacji!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ptPT][C+75 (][C@3+75 `"Olá motor de tradução!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Привет движок 
+перевода!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Merhaba çeviri motoru!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
+[s0;l320; &]
 [s5; Before checking the results of the application, let`'s take 
 a closer look at framework construction used in this example. 
 The first one is [* SetLanguage()] function. It sets which language 
@@ -1531,8 +1872,10 @@ orum].&]
 the following lines of code to be placed [* in one of implementation 
 file] (.cpp):&]
 [s0; &]
-[s7; #define TFILE <Gui23/Gui23.t>&]
-[s7; #include <Core/t.h>&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  TFILE ][C@(0.0.255)+75 <][C+75 Gui23][C@(0.0.255)+75 /
+][C+75 Gui23][C@(0.0.255)+75 .][C+75 t][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 t
+][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
 [s0; &]
 [s5; The final results from various exemplary languages versions 
 are as follows:&]

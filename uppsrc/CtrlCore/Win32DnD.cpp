@@ -11,7 +11,7 @@ namespace Upp {
 #endif
 
 
-#define LLOG(x)  RLOG(x)
+#define LLOG(x) // RLOG(x)
 
 int  GetClipboardFormatCode(const char *format_id);
 

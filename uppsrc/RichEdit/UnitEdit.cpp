@@ -81,7 +81,7 @@ String UnitEdit::AsText(double d, int unit)
 	String utxt = UnitText(unit);
 	if(unit == UNIT_POINT)
 		d = floor(10 * d + 0.5) / 10;
-	return AsString(d, unit == UNIT_DOT ? 0 : unit == UNIT_MM ? 1 : 2) + ' ' + utxt;
+	return FormatF(d, unit == UNIT_DOT ? 0 : unit == UNIT_MM ? 1 : 2) + ' ' + utxt;
 }
 
 String UnitEdit::DotAsText(int dot, int unit)

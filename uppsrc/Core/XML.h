@@ -164,6 +164,7 @@ public:
 	int    GetColumn() const                                  { return GetColumn0() + 1; }
 
 	void   Relaxed(bool b = true)                             { relaxed = b; }
+	bool   IsRelaxed() const                                  { return relaxed; }
 	void   PreserveAllWhiteSpaces(bool b = true)              { preserveall = b; }
 	void   Raw(bool b = true)                                 { raw = b; }
 
