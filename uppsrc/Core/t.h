@@ -209,7 +209,7 @@ INITBLOCK_(COMBINE3(LNG_MODULE, LNG_VERB, LNG_VERA))
 		{ 0, NULL }
 	};
 #ifdef LNGMODULE
-	AddModule(langset, #LNGMODULE);
+	AddModule(langset, LNGMODULE);
 #else
 	AddModule(langset);
 #endif
