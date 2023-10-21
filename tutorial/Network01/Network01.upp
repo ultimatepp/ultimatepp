@@ -1,0 +1,13 @@
+description "Obtaining data from the internet using HttpRequest\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	outpuit.json,
+	main.cpp;
+
+mainconfig
+	"" = "";
+

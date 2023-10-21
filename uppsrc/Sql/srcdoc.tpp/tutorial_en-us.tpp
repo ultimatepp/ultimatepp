@@ -470,9 +470,6 @@ rom(TEST);]&]
 [s3;%% Recommended tutorials:&]
 [s5;%% If you want to learn more, we have several tutorials that 
 you can find useful:&]
-[s5;l160;i150;O0;~~~0;%% [^topic`:`/`/Skylark`/srcdoc`/Tutorial`_en`-us^ Skylark] 
-`- now you know everything about databases `- why not to use 
-your knowledge to become web development star?&]
 [s5;l160;i150;O0;~~~0;%% [^topic`:`/`/Core`/srcdoc`/Tutorial`_en`-us^ U`+`+ 
 Core value types] `- still not very confident with U`+`+. In 
 this tutorial you will learn basics.]]

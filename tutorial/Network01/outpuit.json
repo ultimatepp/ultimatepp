@@ -1,0 +1,9 @@
+
+[{
+	name : {
+		common : Germany,
+		official : Federal Republic of Germany,
+		nativeName : {deu : {official : Bundesrepublik Deutschland, common : Deutschland}}
+	},
+	capital : [Berlin]
+}]
