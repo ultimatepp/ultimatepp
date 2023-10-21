@@ -5,7 +5,6 @@ uses
 	Core/SSL;
 
 file
-	outpuit.json,
 	main.cpp;
 
 mainconfig
