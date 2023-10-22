@@ -37,17 +37,17 @@ to launch them or experiment with the code. Good luck!&]
 is not yet available.&]
 [s3;%% Table of contents&]
 [s0;%% &]
-[s0;%% [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#1^ 1. HTTP 
-Request]&]
-[s0;%%     [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#1`_1^ 1.1 
-Obtaining data from REST API]&]
+[s0;%% [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#1^ 1. Obtaining 
+data from REST API via HTTP Request]&]
+[s0; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#2^ 2 Building 
+RESTful server]&]
 [s0;^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#1`_2^%% &]
-[s3;:1:%% 1. HTTP Request&]
-[s22;:1`_1:%% 1.1 Obtaining data from REST API&]
+[s3;:1:%% 1. Obtaining data from REST API via HTTP Request&]
 [s5;%% One of the most popular APIs available now on the internet 
 is the REST API. In this tutorial, you will learn how to use 
-the [* HTTPRequest] class to communicate with such an API and use 
-the obtained data directly in the application.&]
+the [*^topic`:`/`/Core`/src`/HttpRequest`_en`-us`#HttpRequest`:`:class^ HTTPRequest
+] class to communicate with such an API and use the obtained 
+data directly in the application.&]
 [s5;%% [* HTTPRequest] is a class that performs synchronous or asynchronous 
 HTTP and [* HTTPS] requests. HTTPS requests are very common today. 
 More than 80% of services use this kind of connection. To support 
@@ -155,4 +155,155 @@ pRequest][*_C@(0.0.255) `::][*_C METHOD`_GET)][C@(0.0.255) .][C Execute();]&]
 [s5; Is it exactly the same as:&]
 [s0;l320; [*C@(0.0.255) auto][C  content ][C@(0.0.255) `=][C  http][C@(0.0.255) .][*_C GET()][C@(0.0.255) .
 ][C Execute();]&]
+[s5; &]
+[s3;:2: 2 Building RESTful server&]
+[s5; Now, it`'s time to build our own RESTful server, and don`'t 
+look at others. In this tutorial, we will build a simple service 
+with one node [* /countries] that will return predefined countries. 
+We need to start by creating a server that will listen on any 
+port that is not yet taken. To do it, let`'s create a [*^topic`:`/`/Core`/src`/TcpSocket`_en`-us`#TcpSocket`:`:class^ T
+cpSocket] instance and then call the [*^topic`:`/`/Core`/src`/TcpSocket`_en`-us`#TcpSocket`:`:Listen`(int`,int`,bool`,bool`,void`*`)^ L
+isten] method. This method, in its simplest form, requires providing 
+a port as an argument. The safe value in this case for development 
+purposes is 4000. Please keep in mind that the default port for 
+[* HTTP is 80] and for [* HTTPS is 443]. In the production enviromenet, 
+these ports must be used. However, in some operating systems, 
+these ports may be blocked by default, and to unlock them, some 
+additional actions might be needed. So, to save ourselves the 
+trouble, we will use a different port.&]
+[s5; After that, we will create a loop for our server logic. In each 
+loop iteration, we will handle one request from the client. To 
+do that, there is a need for the creation of a separate [* TcpSocket] 
+instance dedicated to handling that request. To accept an incoming 
+connection from the client, there is a need to call the socket 
+[*^topic`:`/`/Core`/src`/TcpSocket`_en`-us`#TcpSocket`:`:class^ Accept][*  
+]method. The arugmenet to this method is socket. In our case, 
+we need to pass a server socket. The code for this section is 
+implemented in the RunServerLoop() function in the code sample 
+attached to this paragraph.&]
+[s5; In the very final step, we will handle the client request. To 
+do that, we need to read the HTTP header provided by the client. 
+The header contains many valuable pieces of information, such 
+as the URI that was passed by the client and the HTTP method 
+that was used. To obtain the header, let`'s create an [*^topic`:`/`/Core`/src`/HttpHeader`_en`-us`#HttpHeader`:`:struct^ H
+ttpHeader] class instance and then call the [*^topic`:`/`/Core`/src`/HttpHeader`_en`-us`#HttpHeader`:`:Read`(TcpSocket`&`)^ R
+ead] method, with the socket responsible for handling connections 
+to the client as a parameter. In order to handle client requests, 
+we will need to use the following methods of the HttpHeader class:&]
+[s5;l320;i150;O0; [* GetURI()] `- returns URI associated with the header. 
+We will use this information to process client request. Moreover, 
+URI can also contain additional parameteres to the query.&]
+[s5;l320;i150;O0; [* GetMethod()] `- returns HTTP method associated 
+with the header.&]
+[s5; In the end, to send the response to the client, the [*^topic`:`/`/Core`/src`/Inet`_en`-us`#HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`,bool`)^ H
+ttpResponse] function must be used. To use it properly, you need 
+to provide a client socket, a status code, and optionally, if 
+you don`'t return error content type and data. After providing 
+parameters, the function will return all specified information 
+directly back to the client.&]
+[s5; main.cpp&]
+[s0;l320; [C@(128.0.255) #include][C  ][C@(0.0.255) <][C Core][C@(0.0.255) /][C Core][C@(0.0.255) .
+][C h][C@(0.0.255) >]&]
+[s0;l320;C &]
+[s0;l320; [*C@(0.0.255) using][C  ][*C@(0.0.255) namespace][C  Upp;]&]
+[s0;l320;C &]
+[s0;l320; [*C@(0.0.255) constexpr][C  ][*C@(0.0.255) int][C  SERVER`_PORT 
+][C@(0.0.255) `=][C  ][C@3 4000][C ;]&]
+[s0;l320;C &]
+[s0;l320; [*C@(0.0.255) void][C  ProcessHttpRequest(TcpSocket][C@(0.0.255) `&][C  
+client)]&]
+[s0;l320; [C `{]&]
+[s0;l320; [C     ][*_C HttpHeader header;]&]
+[s0;l320; [C     ][*C@(0.0.255) if][C (][C@(0.0.255) !][*_C header][*_C@(0.0.255) .][*_C Read(clien
+t)][C ) `{]&]
+[s0;l320; [C         Cerr() ][C@(0.0.255) <<][C  ][C@3 `"Failed to read HttpHeader.][C@(0.0.255) `\
+n][C@3 `"][C ;]&]
+[s0;l320; [C         HttpResponse(client, ][*C@(0.0.255) false][C , ][C@3 400][C , 
+][C@3 `"Invalid request`"][C );]&]
+[s0;l320; [C         ][*_C@(128.0.255) return][C ;]&]
+[s0;l320; [C     `}]&]
+[s0;l320;C &]
+[s0;l320; [C     ][*C@(0.0.255) auto][C  path ][C@(0.0.255) `=][C  ][*_C header][*_C@(0.0.255) .][*_C G
+etURI()][C ;]&]
+[s0;l320; [C     ][*C@(0.0.255) if][C (][*_C header][*_C@(0.0.255) .][*_C GetMethod()][C  
+][C@(0.0.255) `=`=][C  ][C@3 `"GET`"][C ) `{]&]
+[s0;l320; [C         ][*C@(0.0.255) if][C (path ][C@(0.0.255) `=`=][C  ][C@3 `"/countries`"][C ) 
+`{]&]
+[s0;l320; [C             JsonArray ja;]&]
+[s0;l320; [C             ja ][C@(0.0.255) <<][C  ][C@3 `"Czech Republic`"]&]
+[s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"Indonesia`"]&]
+[s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"Brazil`"]&]
+[s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"France`"][C ;]&]
+[s0;l320;C &]
+[s0;l320; [C             ][*_C HttpResponse(client, ][*_C@(0.0.255) false][*_C , 
+][*_C@3 200][*_C , ][*_C@3 `"OK`"][*_C , ][*_C@3 `"application/json`"][*_C , 
+ja][*_C@(0.0.255) .][*_C ToString())][C ;]&]
+[s0;l320; [C         `}]&]
+[s0;l320; [C     `}]&]
+[s0;l320;C &]
+[s0;l320; [C     HttpResponse(client, ][*C@(0.0.255) false][C , ][C@3 404][C , 
+][C@3 `"Not found`"][C );]&]
+[s0;l320; [C `}]&]
+[s0;l320;C &]
+[s0;l320; [*C@(0.0.255) void][C  RunServerLoop(TcpSocket][C@(0.0.255) `&][C  
+server)]&]
+[s0;l320; [C `{]&]
+[s0;l320; [C     ][*C@(0.0.255) for][C (;;) `{]&]
+[s0;l320; [C         TcpSocket client;]&]
+[s0;l320;C &]
+[s0;l320; [C         Cout() ][C@(0.0.255) <<][C  ][C@3 `"Waiting for incoming 
+connection from the client...][C@(0.0.255) `\n][C@3 `"][C ;]&]
+[s0;l320; [C         ][*C@(0.0.255) if][C (][C@(0.0.255) !][*_C client][*_C@(0.0.255) .][*_C Accept
+(server)][C ) `{]&]
+[s0;l320; [C             Cerr() ][C@(0.0.255) <<][C  ][C@3 `"Connection from 
+the client not accepted.][C@(0.0.255) `\n][C@3 `"][C ;]&]
+[s0;l320; [C             ][*_C@(128.0.255) continue][C ;]&]
+[s0;l320; [C         `}]&]
+[s0;l320;C &]
+[s0;l320; [C         ProcessHttpRequest(client);]&]
+[s0;l320; [C     `}]&]
+[s0;l320; [C `}]&]
+[s0;l320;C &]
+[s0;l320; [C CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C `{]&]
+[s0;l320; [C     ][*_C TcpSocket server;]&]
+[s0;l320; [C     ][*C@(0.0.255) if][C (][C@(0.0.255) !][*_C server][*_C@(0.0.255) .][*_C Listen(SER
+VER`_PORT)][C ) `{]&]
+[s0;l320; [C         Cerr() ][C@(0.0.255) <<][C  ][C@3 `"Cannot open server 
+port for listening with error ][C@(0.0.255) `\`"][C@3 `"][C  ][C@(0.0.255) <<][C  
+server][C@(0.0.255) .][C GetErrorDesc()]&]
+[s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"][C@(0.0.255) `\`"][C@3 .][C@(0.0.255) `\n
+][C@3 `"][C ;]&]
+[s0;l320; [C         ][*_C@(128.0.255) return][C ;]&]
+[s0;l320; [C     `}]&]
+[s0;l320;C &]
+[s0;l320; [C     RunServerLoop(server);]&]
+[s0;l320; [C `}]&]
+[s5; To test above the example a [*^https`:`/`/curl`.se`/^ curl] terminal 
+application can be used. This application is bundled with most 
+Linux distributions, and it can be easily downloaded for Windows. 
+The command that should be run in the terminal is as follows:&]
+[s0;l320;~~~32; [C$2 curl `-v http://127.0.0.1:4000/countries]&]
+[s5; The output of the command should be:&]
+[s0;l320; [C$2 `* __Trying 127.0.0.1:4000...]&]
+[s0;l320; [C `* Connected to 127.0.0.1 (127.0.0.1) port 4000]&]
+[s0;l320; [C > GET /countries HTTP/1.1]&]
+[s0;l320; [C > Host: 127.0.0.1:4000]&]
+[s0;l320; [C > User`-Agent: curl/8.4.0]&]
+[s0;l320; [C > Accept: `*/`*]&]
+[s0;l320; [C > _]&]
+[s0;l320; [C < HTTP/1.1 200 OK]&]
+[s0;l320; [C < Date: Sun, 22 Oct 2023 17:35:13 `+0200]&]
+[s0;l320; [C < Server: U`+`+ based server]&]
+[s0;l320; [C < Connection: close]&]
+[s0;l320; [C < Content`-Length: 48]&]
+[s0;l320; [C < Content`-Type: application/json]&]
+[s0;l320; [C < _]&]
+[s0;l320; [C `* Closing connection]&]
+[s0;l320; [C `[`"Czech Republic`",`"Indonesia`",`"Brazil`",`"France`"`]]&]
+[s5; As you can see in the above output, we received our desirable 
+response. The [* `-v] parameter stands for verbose mode, and it 
+is supposed to show additional information. It is very helpful 
+for debugging purposes. Without this parameter, the output is:&]
+[s0;l320; [C$2 `[`"Czech Republic`",`"Indonesia`",`"Brazil`",`"France`"`]]&]
 [s5; ]]
