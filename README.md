@@ -105,7 +105,7 @@ If the above list is not enough, please visit a dedicated [website](https://www.
 
 # Extensibility
 
-The functionality of the U++ framework can be easily extended by third-party packages. We introduced the concept of a global registry of repositories that can be downloaded and directly used in the project. To learn more about this technology, please visit [this](https://github.com/ultimatepp/UppHub) dedicated repository.
+The functionality of the U++ framework can be easily extended by third-party packages. We introduced the concept of a global registry of repositories that can be downloaded and directly used in the project. To learn more about this technology, please visit [UppHub](https://github.com/ultimatepp/UppHub) repository.
 
 UppHub conceptually is very similar to the package manager concept known from other technologies, and in big generalization, it can be called like that.
 
