@@ -265,7 +265,6 @@ public:
 
 	int      GetHeight() const           { return pane.GetPaneSize(true, INT_MAX).cy; }
 	int      GetWidth() const            { return pane.GetPaneSize(true, INT_MAX).cx; }
-	Size     GetSize() const             { return Size(GetWidth(), GetHeight()); }
 
 	BarCtrl& Align(int align);
 	BarCtrl& Top()                       { return Align(BAR_TOP); }
