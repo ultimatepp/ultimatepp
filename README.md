@@ -83,6 +83,22 @@ See here: [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html).
 
 If you would like to see more screenshots, click [here](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
+## Tutorials
+
+We prepeared several tutorials that will allow you to lear most of the aspects
+
+TheIDE:
+- [**Getting started with TheIDE**](https://www.ultimatepp.org/app$ide$GettingStarted$en-us.html) - the introduction to the concepts of TheIDE.
+- [TheIDE beginner guide](https://www.ultimatepp.org/app$ide$Guide_en-us.html) - continuation provides information how to solve common problems.
+
+U++ framework:
+- **Core Tutorial** - the introduction to the foundations behind the framework.
+- **GUI Tutorial** - learn how to build graphical user interfaces with the U++.
+- Draw Tutorial - get knowledge about drawing custom content inside window or control.
+- Image Tutorial - check out the mechanism behind the image manipulation.
+- Network Tutorial - learn how to use U++ core components for network application creation.
+- Sql Tutorial - introduction to using databases within U++ framework.
+
 # Repository
 
 ## Repository layout
@@ -91,5 +107,5 @@ The U++ repository is divided into several directories. The most important ones 
 * **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
-* **tutorial** - exemplary code from our [tutorials](https://www.ultimatepp.org/www$uppweb$Tutorials$en-us.html)
+* **tutorial** - exemplary code from our tutorials
 * **uppsrc** - main sources of the framework
