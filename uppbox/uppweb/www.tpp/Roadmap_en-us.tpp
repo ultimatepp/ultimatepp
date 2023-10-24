@@ -35,8 +35,7 @@ topic "Roadmap";
 [s0; Core&]
 [s0; &]
 [s0;i150;O0; CParser`::ReadDoubleNoE (to ignore E part of double)&]
-[s0;i150;O0; CParser`::ReadIdh (with `'`-`' in id), RichText: EncodeHTML 
-strikeout support&]
+[s0;i150;O0; CParser`::ReadIdh (with `'`-`' in id)&]
 [s0; &]
 [s0; Draw, CtrlLib&]
 [s0; &]
@@ -49,6 +48,7 @@ qtf escape code&]
 [s0;i150;O0; Clipboard `'HTML format`' support&]
 [s0;i150;O0; GetPlainText allow`_tabs parameter; CtrlLib Prompt now 
 sometimes uses `'`\t`' to separate table cells.&]
+[s0;i150;O0; EncodeHTML strikeout support&]
 [s0; &]
 [s0; ide&]
 [s0; &]
