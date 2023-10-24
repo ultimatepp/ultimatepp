@@ -53,6 +53,9 @@ Tutorial] `- get knowledge about drawing custom content inside
 window or control.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
 Tutorial] `- check out the mechanism behind the image manipulation.&]
+[s3;l160;i150;O0; [*^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us^ Network 
+Tutorial] `- learn how to use U`+`+ core components for network 
+application creation.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
 Tutorial] `- introduction to using databases within U`+`+ framework.&]
 [s0; &]

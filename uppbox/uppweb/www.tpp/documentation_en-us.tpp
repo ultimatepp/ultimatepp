@@ -101,6 +101,9 @@ with TheIDE] `- the introduction to the concepts of TheIDE.&]
 control.&]
 [s0;l160; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image Tutorial] 
 `- check out the mechanism behind the image manipulation.&]
+[s0;l160; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us^ Network 
+Tutorial] `- learn how to use U`+`+ core components for network 
+application creation.&]
 [s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial] 
 `- introduction to using databases within U`+`+ framework.&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]

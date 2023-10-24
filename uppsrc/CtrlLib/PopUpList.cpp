@@ -240,7 +240,7 @@ PopUpList::Popup::Popup(PopUpList *list)
 	ac.MouseMoveCursor();
 	ac.NoGrid();
 	ac.AutoHideSb();
-	ac.SetLineCy(Draw::GetStdFontCy());
+	ac.SetLineCy(list->GetLineCy());
 	for(int i = 0; i < list->items.GetCount(); i++) {
 		Value v = list->items[i];
 		word w = i < list->lineinfo.GetCount() ? list->lineinfo[i] : 0x7fff;
