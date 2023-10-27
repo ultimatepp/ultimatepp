@@ -1,0 +1,12 @@
+description "Internationalizing applications (i18n)\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Gui24.t;
+
+mainconfig
+	"" = "GUI";
+

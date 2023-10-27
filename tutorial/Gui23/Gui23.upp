@@ -1,11 +1,10 @@
-description "Internationalizing applications (i18n)\377";
+description "Refreshing GUI periodically\377";
 
 uses
 	CtrlLib;
 
 file
-	main.cpp,
-	Gui23.t;
+	main.cpp;
 
 mainconfig
 	"" = "GUI";
