@@ -23,7 +23,7 @@ struct RandomRectCtrl : public Ctrl {
 		int y = Random() % (sz.cy - length);
 		
 		rect = Rect(x, y, x + length, y + length);
-		color = Color(Random() % 255, Random() % 255, Random() % 255);
+		color = Color(Random() % 256, Random() % 256, Random() % 256);
 	}
 };
 
