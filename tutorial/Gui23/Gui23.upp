@@ -4,6 +4,7 @@ uses
 	CtrlLib;
 
 file
+	myapp.lay,
 	main.cpp;
 
 mainconfig

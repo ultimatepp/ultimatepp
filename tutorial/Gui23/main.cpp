@@ -2,31 +2,17 @@
 
 using namespace Upp;
 
-struct MyAppWindow : TopWindow {
+struct RandomRectCtrl : public Ctrl {
 	Rect  rect;
 	Color color;
-	
-	MyAppWindow() {
-		Zoomable().SetRect(0, 0, 200, 200);
-		
-		RandomizeRect();
-		SetTimeCallback(-2000, [=] { OnTimer(); });
-	}
-	
-	~MyAppWindow() {
-		KillTimeCallback();
-	}
 	
 	void Paint(Draw& w) override {
 		Size sz = GetSize();
 		
 		w.DrawRect(sz, White());
-		w.DrawRect(rect, color);
-	}
-	
-	void OnTimer() {
-		RandomizeRect();
-		Refresh();
+		if (!rect.IsEmpty()) {
+			w.DrawRect(rect, color);
+		}
 	}
 	
 	void RandomizeRect() {
@@ -38,6 +24,41 @@ struct MyAppWindow : TopWindow {
 		
 		rect = Rect(x, y, x + length, y + length);
 		color = Color(Random() % 255, Random() % 255, Random() % 255);
+	}
+};
+
+#define LAYOUTFILE <Gui23/myapp.lay>
+#include <CtrlCore/lay.h>
+
+struct MyAppWindow : public WithMyAppLayout<TopWindow> {
+	MyAppWindow() {
+		CtrlLayout(*this, "MyApp");
+		
+		start_stop_btn << [=] { OnStartStop(); };
+	}
+	
+	~MyAppWindow() {
+		// Not needed will be automatically call upon Ctrl destruction.
+		// KillTimeCallback();
+	}
+	
+	void OnStartStop() {
+		if (random_rect_ctrl.rect.IsEmpty()) {
+			start_stop_btn.SetLabel("Stop!");
+			
+			SetTimeCallback(-2000, [=] { OnTimer(); });
+		} else {
+			KillTimeCallback();
+			
+			start_stop_btn.SetLabel("Start!");
+			random_rect_ctrl.rect = {};
+			random_rect_ctrl.Refresh();
+		}
+	}
+	
+	void OnTimer() {
+		random_rect_ctrl.RandomizeRect();
+		random_rect_ctrl.Refresh();
 	}
 };
 
