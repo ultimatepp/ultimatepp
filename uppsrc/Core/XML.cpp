@@ -173,6 +173,11 @@ XmlTag& XmlTag::operator()(const char *attr, double q)
 	return operator()(attr, AsString(q));
 }
 
+XmlTag& XmlTag::operator()(const char *attr, float q)
+{
+	return operator()(attr, AsString(q));
+}
+
 force_inline
 String XmlParser::Convert(StringBuffer& b)
 {
@@ -679,6 +684,13 @@ double XmlParser::Double(const char *id, double def) const
 	if(id == attr1) return ScanDouble(attrval1);
 	int q = attr.Find(id);
 	return q < 0 ? def : ScanDouble(attr[q]);
+}
+
+float XmlParser::Float(const char *id, float def) const
+{
+	if(id == attr1) return (float)ScanDouble(attrval1);
+	int q = attr.Find(id);
+	return q < 0 ? def : (float)ScanDouble(attr[q]);
 }
 
 bool  XmlParser::IsText()

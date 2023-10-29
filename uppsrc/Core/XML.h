@@ -22,13 +22,14 @@ public:
 	String  Text(const String& s, byte charset = CHARSET_DEFAULT) { return Text(~s, charset); }
 	String  PreservedText(const char *s, byte charset = CHARSET_DEFAULT);
 	String  PreservedText(const String& s, byte charset = CHARSET_DEFAULT) { return PreservedText(~s, charset); }
-	
+
 	String  GetBegin() const                                      { return tag + '>'; }
 	String  GetEnd() const                                        { return end; }
 
 	XmlTag& operator()(const char *attr, const char *val);
 	XmlTag& operator()(const char *attr, int q);
 	XmlTag& operator()(const char *attr, double q);
+	XmlTag& operator()(const char *attr, float q);
 
 	XmlTag() {}
 	XmlTag(const char *tag)                                       { Tag(tag); }
@@ -51,7 +52,7 @@ class XmlParser {
 		CHUNK = 16384
 #endif
 	};
-	
+
 	struct Nesting {
 		Nesting(String tag = Null, bool blanks = false) : tag(tag), preserve_blanks(blanks) {}
 		String tag;
@@ -82,7 +83,7 @@ class XmlParser {
 	bool                      raw;
 
 	int                       line;
-	
+
 	byte                      acharset;
 	byte                      scharset;
 
@@ -104,7 +105,7 @@ class XmlParser {
 
 public:
 	void   SkipWhites();
-	
+
 	void   RegisterEntity(const String& id, const String& text);
 
 	bool   IsEof();
@@ -137,6 +138,7 @@ public:
 	String operator[](const char *id) const                   { return attr1 == id ? attrval1 : attr.Get(id, Null); }
 	int    Int(const char *id, int def = Null) const;
 	double Double(const char *id, double def = Null) const;
+	float  Float(const char *id, float def = Null) const;
 
 	bool   IsText();
 	String PeekText()                                         { return cdata; }
@@ -226,13 +228,13 @@ public:
 	XmlNode&       SetAttr(const char *id, int val);
 
 	void           SetAttrs(VectorMap<String, String>&& a);
-	
+
 	void           Shrink();
-	
+
 	rval_default(XmlNode);
 
 	XmlNode(const XmlNode& n, int);
-	
+
 	XmlNode()                                                 { type = XML_DOC; }
 
 	typedef Array<XmlNode>::ConstIterator ConstIterator;

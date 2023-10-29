@@ -61,8 +61,8 @@ String FormatDouble(double x);
 
 String FormatDoubleN(double x);
 
-inline String FormatFloat(float x) { return FormatDouble(x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL); }
-inline String FormatFloatN(float x) { return FormatDouble(x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP); }
+String FormatFloat(float x);
+String FormatFloatN(float x);
 
 String         FormatDate(Date date, const char *format, int language = 0);
 String         FormatTime(Time time, const char *format, int language = 0);

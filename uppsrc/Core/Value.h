@@ -34,6 +34,7 @@ const dword INT64_V  = 10;
 const dword BOOL_V   = 11;
 
 const dword VALUEMAP_V   = 12;
+const dword FLOAT_V   = 13;
 
 const dword UNKNOWN_V = (dword)0xffffffff;
 
@@ -43,6 +44,7 @@ inline dword ValueTypeNo(const T *)                 { return StaticTypeNo<T>() +
 template<> inline dword ValueTypeNo(const int*)     { return INT_V; }
 template<> inline dword ValueTypeNo(const int64*)   { return INT64_V; }
 template<> inline dword ValueTypeNo(const double*)  { return DOUBLE_V; }
+template<> inline dword ValueTypeNo(const float*)   { return FLOAT_V; }
 template<> inline dword ValueTypeNo(const bool*)    { return BOOL_V; }
 template<> inline dword ValueTypeNo(const String*)  { return STRING_V; }
 template<> inline dword ValueTypeNo(const WString*) { return WSTRING_V; }
@@ -55,7 +57,7 @@ class ValueType : public B {
 public:
 	static dword ValueTypeNo()                      { return type == UNKNOWN_V ? StaticTypeNo<T>() + 0x8000000 : type; }
 	friend dword ValueTypeNo(const T*)              { return T::ValueTypeNo(); }
-	
+
 	bool     IsNullInstance() const                 { return false; }
 	void     Serialize(Stream& s)                   { NEVER(); }
 	void     Xmlize(XmlIO& xio)                     { NEVER(); }
@@ -65,7 +67,7 @@ public:
 	String   ToString() const                       { return typeid(T).name(); }
 	int      Compare(const T&) const                { NEVER(); return 0; }
 	int      PolyCompare(const Value&) const        { NEVER(); return 0; }
-	
+
 	operator ValueTypeRef();
 };
 
@@ -115,7 +117,7 @@ public:
 		int        (*Compare)(const void *p1, const void *p2);
 		int        (*PolyCompare)(const void *p1, const Value& p2);
 	};
-	
+
 protected:
 	enum { STRING = 0, REF = 255, VOIDV = 3 };
 
@@ -123,7 +125,7 @@ protected:
 	static Sval *svo[256];
 	static Index<String>& NameNdx();
 	static Index<dword>&  TypeNdx();
-	
+
 	static void   AddName(dword type, const char *name);
 	static int    GetType(const char *name);
 	static String GetName(dword type);
@@ -154,10 +156,11 @@ protected:
 	T&       GetSmallRaw() const;
 	template <class T>
 	T&       GetSmall() const;
-	
+
 	int      GetOtherInt() const;
 	int64    GetOtherInt64() const;
 	double   GetOtherDouble() const;
+	float	 GetOtherFloat() const;
 	bool     GetOtherBool() const;
 	Date     GetOtherDate() const;
 	Time     GetOtherTime() const;
@@ -165,23 +168,23 @@ protected:
 	hash_t   GetOtherHashValue() const;
 
 	bool     IsPolyEqual(const Value& v) const;
-	
+
 	enum VSMALL { SMALL };
 
 	template <class T>
 	Value(const T& value, VSMALL);
-	
+
 	template <class T> friend Value SvoToValue(const T& x);
 
 	String  GetName() const;
-	
+
 	int     PolyCompare(const Value& v) const;
 	int     Compare2(const Value& v) const;
 
 	Vector<Value>&  UnShareArray();
 
 	const Vector<Value>& GetVA() const;
-	
+
 #if defined(_DEBUG) && defined(COMPILER_GCC)
 	uint32  magic[4];
 	void    Magic()               { magic[0] = 0xc436d851; magic[1] = 0x72f67c76; magic[2] = 0x3e5e10fd; magic[3] = 0xc90d370b; }
@@ -202,7 +205,7 @@ public:
 	static  void Register(const char *name = NULL);
 	template <class T>
 	static  void SvoRegister(const char *name = NULL);
-	
+
 	dword    GetType() const;
 	bool     IsError() const         { return GetType() == ERROR_V; }
 	bool     IsVoid() const          { return Is(VOIDV) || IsError(); }
@@ -220,19 +223,20 @@ public:
 	operator Date() const            { return Is(DATE_V) ? GetSmallRaw<Date>() : GetOtherDate(); }
 	operator Time() const            { return Is(TIME_V) ? GetSmallRaw<Time>() : GetOtherTime(); }
 	operator double() const          { return Is(DOUBLE_V) ? GetSmallRaw<double>() : GetOtherDouble(); }
-	operator float() const           { return float(Is(DOUBLE_V) ? GetSmallRaw<double>() : GetOtherDouble()); }
+	operator float() const           { return Is(FLOAT_V) ? GetSmallRaw<float>() : GetOtherFloat(); }
 	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
 	std::string  ToStd() const       { return operator String().ToStd(); }
 	std::wstring ToWStd() const      { return operator WString().ToStd(); }
-	
+
 	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
 	Value(const char *s) : data(s)   { Magic(); }
 	Value(int i)                     : data(i, INT_V, String::SPECIAL) { Magic(); }
 	Value(int64 i)                   : data(i, INT64_V, String::SPECIAL) { Magic(); }
 	Value(double d)                  : data(d, DOUBLE_V, String::SPECIAL) { Magic(); }
+	Value(float d)                   : data(d, FLOAT_V, String::SPECIAL) { Magic(); }
 	Value(bool b)                    : data(b, BOOL_V, String::SPECIAL) { Magic(); }
 	Value(Date d)                    : data(d, DATE_V, String::SPECIAL) { Magic(); }
 	Value(Time t)                    : data(t, TIME_V, String::SPECIAL) { Magic(); }
@@ -243,7 +247,7 @@ public:
 	bool operator==(const Value& v) const;
 	bool operator!=(const Value& v) const { return !operator==(v); }
 	bool IsSame(const Value& v) const;
-	
+
 	int  Compare(const Value& v) const;
 	bool operator<=(const Value& x) const { return Compare(x) <= 0; }
 	bool operator>=(const Value& x) const { return Compare(x) >= 0; }
@@ -262,13 +266,13 @@ public:
 
 	Value& operator=(const Value& v);
 	Value(const Value& v);
-	
+
 	int   GetCount() const;
 	const Value& operator[](int i) const;
 	const Value& operator[](const String& key) const;
 	const Value& operator[](const char *key) const;
 	const Value& operator[](const Id& key) const;
-	
+
 	Value& At(int i);
 	Value& operator()(int i)              { return At(i); }
 	void   Add(const Value& src);
@@ -346,6 +350,7 @@ inline bool operator!=(T x, const Value& v)   { return v.Is<VT>() ? (VT)v != x :
 VALUE_COMPARE(int)
 VALUE_COMPARE(int64)
 VALUE_COMPARE(double)
+VALUE_COMPARE(float)
 VALUE_COMPARE(bool)
 VALUE_COMPARE(Date)
 VALUE_COMPARE(Time)
@@ -367,7 +372,7 @@ inline bool IsDateTimeValueTypeNo(int q) { return (dword)q == DATE_V || (dword)q
 inline bool IsVoid(const Value& v)       { return v.IsVoid(); }
 inline bool IsError(const Value& v)      { return v.IsError(); }
 inline bool IsString(const Value& v)     { return v.Is<String>() || v.Is<WString>(); }
-inline bool IsNumber(const Value& v)     { return v.Is<double>() || v.Is<int>() || v.Is<int64>() || v.Is<bool>(); }
+inline bool IsNumber(const Value& v)     { return v.Is<double>() || v.Is<float>() || v.Is<int>() || v.Is<int64>() || v.Is<bool>(); }
 inline bool IsDateTime(const Value& v)   { return v.Is<Date>() || v.Is<Time>(); }
 inline bool IsValueArray(const Value& v) { return v.GetType() == VALUEARRAY_V || v.GetType() == VALUEMAP_V; }
 inline bool IsValueMap(const Value& v)   { return IsValueArray(v); }
