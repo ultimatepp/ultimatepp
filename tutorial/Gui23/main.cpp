@@ -1,40 +1,68 @@
 #include <CtrlLib/CtrlLib.h>
 
-#define TFILE <Gui23/Gui23.t>
-#include <Core/t.h>
-
 using namespace Upp;
 
-struct MyAppWindow : TopWindow {
-    MyAppWindow() {
-        Title(t_("My application"));
-        Zoomable().Sizeable().SetRect(0, 0, 550, 100);
-    }
-    
-    void Paint(Draw& w) override {
-        w.DrawRect(GetSize(), SLtYellow);
-        w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), Blue);
-    }
+struct RandomRectCtrl : public Ctrl {
+	Rect  rect;
+	Color color;
+	
+	void Paint(Draw& w) override {
+		Size sz = GetSize();
+		
+		w.DrawRect(sz, White());
+		if (!rect.IsEmpty()) {
+			w.DrawRect(rect, color);
+		}
+	}
+	
+	void RandomizeRect() {
+		Size sz = GetSize();
+		
+		int length = 50;
+		int x = Random() % (sz.cx - length);
+		int y = Random() % (sz.cy - length);
+		
+		rect = Rect(x, y, x + length, y + length);
+		color = Color(Random() % 256, Random() % 256, Random() % 256);
+	}
+};
+
+#define LAYOUTFILE <Gui23/myapp.lay>
+#include <CtrlCore/lay.h>
+
+struct MyAppWindow : public WithMyAppLayout<TopWindow> {
+	MyAppWindow() {
+		CtrlLayout(*this, "MyApp");
+		
+		start_stop_btn << [=] { OnStartStop(); };
+	}
+	
+	~MyAppWindow() {
+		// Not needed will be automatically call upon Ctrl destruction.
+		// KillTimeCallback();
+	}
+	
+	void OnStartStop() {
+		if (random_rect_ctrl.rect.IsEmpty()) {
+			start_stop_btn.SetLabel("Stop!");
+			
+			SetTimeCallback(-2000, [=] { OnTimer(); });
+		} else {
+			KillTimeCallback();
+			
+			start_stop_btn.SetLabel("Start!");
+			random_rect_ctrl.rect = {};
+			random_rect_ctrl.Refresh();
+		}
+	}
+	
+	void OnTimer() {
+		random_rect_ctrl.RandomizeRect();
+		random_rect_ctrl.Refresh();
+	}
 };
 
 GUI_APP_MAIN
 {
-	// Set system language for whole application
-	SetLanguage(GetSystemLNG());
-    
-    // Uncomment to force specific language...
-    // SetLanguage("en-us"); // English = default
-    // SetLanguage("cs-cz"); // Czech
-    // SetLanguage("de-de"); // German
-    // SetLanguage("es-es"); // Spanish
-    // SetLanguage("fr-fr"); // French
-    // SetLanguage("it-it"); // Italian
-    // SetLanguage("ja-jp"); // Japanese
-    // SetLanguage("pl-pl"); // Polish
-    // SetLanguage("pt-pt"); // Portuguese
-    // SetLanguage("ru-ru"); // Russian
-    // SetLanguage("tr-tr"); // Turkish
-    // SetLanguage("zh-cn"); // Traditional Chinese
-    
-    MyAppWindow().Run();
+	MyAppWindow().Run();
 }
