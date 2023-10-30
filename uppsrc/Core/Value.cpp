@@ -194,7 +194,7 @@ int Value::GetOtherInt() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (int)GetSmall<bool>() :
 	       data.IsSpecial(INT64_V) ? (int)GetSmall<int64>() :
-	       data.IsSpecial(FLOAT_V) ? (float)GetSmall<float>() :
+	       data.IsSpecial(FLOAT_V) ? (int)GetSmall<float>() :
 	       (int)GetSmall<double>();
 }
 
@@ -203,7 +203,7 @@ int64 Value::GetOtherInt64() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (int64)GetSmall<bool>() :
 	       data.IsSpecial(INT_V) ? (int64)GetSmall<int>() :
-	       data.IsSpecial(FLOAT_V) ? (float)GetSmall<float>() :
+	       data.IsSpecial(FLOAT_V) ? (int64)GetSmall<float>() :
 	       (int64)GetSmall<double>();
 }
 
@@ -212,7 +212,7 @@ double Value::GetOtherDouble() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (double)GetSmall<bool>() :
 	       data.IsSpecial(INT_V) ? (double)GetSmall<int>() :
-	       data.IsSpecial(FLOAT_V) ? (float)GetSmall<float>() :
+	       data.IsSpecial(FLOAT_V) ? (double)GetSmall<float>() :
 	       (double)GetSmall<int64>();
 }
 
